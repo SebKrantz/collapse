@@ -49,7 +49,7 @@ collap(X, by = NULL, FUN = mean, catFUN = Mode,
 
 \item{parallel}{If multiple functions are supplied to 'FUN' or 'catFUN', parallel = TRUE will automatically parallelize computation on $k-1$ of the available cores (using the \emph{parLapply} function from the \emph{parallel} package). The argument works together with data.table = TRUE to guarantee maximum performance on tasks involving large datsets and multiple functions.}
 
-\item{...}{Additional arguments supplied to 'FUN', 'catFUN' or to \emph{aggregate.data.frame} in the default mode. \\}
+\item{...}{Additional arguments supplied to 'FUN', 'catFUN' or to \emph{aggregate.data.frame} in the default mode.}
 }
 \description{
 The function \code{collap} allows you to aggregate datasets with

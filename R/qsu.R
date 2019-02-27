@@ -2,6 +2,26 @@
 #'
 #' This function allows you to create quick summaries for data.
 #'
+#' @param X A vector, matrix, data.frame or data.table to summarize (anything that can be coerced to data.frame)
+#' @param by Groups to summarize by, \bold{either contained in X} and indicated using a one-or two sided formula (two-sided if only certain columns in X are to be aggregated), column indices, a vector of column names, or a string of comma-separated column names, \bold{or externally supplied} in form of a vector, list of vectors or data.frame, with the number of elements/rows matching that of X.
+#' @param xt Groups to compute statistics overall, between and within. The same flexibility as with the 'by' argument applies. If used together with 'by', a subgroup of 'by' should be used. If a two-sided formula is used together with 'by', it does not matter whether the LHS variables are specified in the 'by', 'xt' or in both arguments.
+#' @param FUN Custom function(s) to apply to all columns in X apart from columns in the 'by' or 'xt' arguments. Functions must take a vector and return a vector of statistics. A single function can be supplied without quotes. Multiple functions can be supplied as a character vector, string of comma-separated function names, or as a named list of functions. Ad-hoc functions can be supplied. 'FUN' when it is used overrides the default set of statistics and the 'Q' and 'Ext' arguments.
+#' @param Q Number of quantiles to compute.
+#' @param Ext Request an Extended set of statistics including the \emph{median}, the \emph{skewness} and the \emph{kurtosis}
+#' @param trans A transformation function applied to the numeric columns of the data (for example \emph{log}, \emph{scale}, \emph{diff} or growth rates)
+#' @param trans.by If the 'by' option is used, 'trans' can be applied to groups separately (i.e. one could use it to obtain growth rates for multiple countries in a long country-time $\times$ variables dataset)
+#' @param ndigits Number of digits to show. If set to NULL, all digits will be shown.
+#' @param na.rm Internally removes missing values before applying any functions or transformations. It is not required for functions to have a 'na.rm' argument.
+#' @param pretty Returns result as a character matrix where trailing zeros are eliminated and large numbers are written in standard (as opposed to scientific) notation.
+#' @param labels Show variable labels next to statistics. If labels = TRUE, X must be a data.frame with variable labels stored as attributes [attr(X\$var1,"label")<-"label1"] etc. Alternatively, a character vector of labels of length ncol(X) can be passed to the labels argument.
+#' @param factors Specifies the treatment of factor variables. Default is treatment as categorical variables. Alternatively factors can be coerced to numerical variables by spcifying "as.numeric", or the factor levels can be extracted and coerced to a numerical variable by specifying "as.numeric.fractor" (internally defined as: as.numeric.factor <- function(x) \{as.numeric(levels(x))[x]\})
+#' @param combine.by If the 'by' option is used, combine.by = TRUE gives a compact output instead of a list.
+#' @param combine.xt If the 'xt' option is used combine.xt = FALSE returns a list with overall, between group and within group statistics.
+#' @param within.add.mean By default, within-group statistics are computed as $\bold{x}_{it}-\bar{\bold{x}}_i+\bar{\bar{\bold{x}}}$. If within.add.mean = FALSE, The within-transformed dataset is obtained as $\bold{x}_{it}-\bar{\bold{x}}_i$, which is a more classical within-transformation used i.e. for fixed-effects regression.
+#' @param data.out Output transformed data used to compute the summary. If the 'xt' option is used, the output will be a named list of three datasets: An overall dataset (= the original dataset if trans = NULL), an aggregated dataset for the between-statistics, and a within-transformed dataset. All datasets come with the original column order, the aggregated dataset is sorted by the 'xt' identifiers, and the within-transformed dataset has the same row-order as the original dataset. In the aggregated dataset categorical variables were aggregated using the mode, while in the within-transformed dataset categorical variables are unaffected/untransformed.
+#' @param data.out.drop Drop all identifiers supplied to 'by' or 'xt' before returning the dataset.
+#' @param xt.data.table If the 'xt' option is used, \emph{qsu} internally utilizes \emph{collap} to aggregate the data and compute the within-transformed dataset. If xt.data.table = TRUE, \emph{collap} will internally use \emph{data.table}, yielding a much faster computation on large datasets.
+#'
 #' @export
 qsu <- function(X, by = NULL, xt = NULL, FUN = NULL, Q = FALSE, Ext = FALSE,
                 trans = NULL, trans.by = FALSE, ndigits = 2, na.rm = TRUE, pretty = FALSE,

@@ -1,4 +1,4 @@
 ^collap\.Rproj$
 ^\.Rproj\.user$
-*.Rnw
+.*.Rnw
 README.md
