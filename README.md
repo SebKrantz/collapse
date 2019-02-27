@@ -1,7 +1,7 @@
 # collapse R package
 
 The creation of the `collapse` package was inspired by the STATA command `collapse`,
-but its main function `collap` is not simply a reproduction of `collapse` for R.
+but its main function `collap` is more than simply a reproduction of `collapse` for R.
 It offers a more advanced, flexible and faster aggregation function
 for working with multi-level (panel) data structures and multi-type data. Next to that,
 the function `qsu` (shorthand for quick summary) provides a 
