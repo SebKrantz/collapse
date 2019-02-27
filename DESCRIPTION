@@ -1,12 +1,21 @@
 Package: collap
-Title: What the Package Does (One Line, Title Case)
-Version: 0.0.0.9000
-Authors@R: 
-    person(given = "First",
-           family = "Last",
+Title: data aggregation and summary statistics for multi-type and multi-level data.
+Version: 0.0.1
+Date: 2019-02-27
+Authors@R: c(
+    person(given = "Sebastian Martin",
+           family = "Krants",
            role = c("aut", "cre"),
-           email = "first.last@example.com")
-Description: What the package does (one paragraph).
-License: What license it uses
+           email = "sebastian.krantz@graduateinstitute.ch"),
+    person(given = "Joris",
+           family = "Meys",
+           role = "aut",
+           email = "Joris.Meys@UGent.be")
+           )
+Description: Provides functions loosely based on STATA's collapse
+    function to perform advanced data aggregation and summary statistics for
+    multi-type datasets and multi-level (panel) data. 
+License: GPL (>=2)
 Encoding: UTF-8
 LazyData: true
+RoxygenNote: 6.1.1

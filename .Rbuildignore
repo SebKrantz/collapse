@@ -1,2 +1,4 @@
 ^collap\.Rproj$
 ^\.Rproj\.user$
+*.Rnw
+README.md
