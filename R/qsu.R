@@ -118,13 +118,6 @@ qsu <- function(X, by = NULL, xt = NULL, FUN = NULL, Q = FALSE, Ext = FALSE,
     numxt = 0
   }
 
-  # Some functions:
-  quickdf <- function(l) {
-    class(l) <- "data.frame"
-    attr(l, "row.names") <- .set_row_names(length(l[[1]]))
-    l
-  }
-
   # Character variables:
   cols = setdiff(seq_along(X),c(numby,numxt))
   nu = vapply(X, is.numeric, FUN.VALUE=logical(1))
