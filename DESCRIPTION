@@ -1,7 +1,7 @@
 Package: collapse
 Title: data aggregation and summary statistics for multi-type and multi-level data.
-Version: 0.0.1
-Date: 2019-02-27
+Version: 0.0.1.9000
+Date: 2019-02-28
 Authors@R: c(
     person(given = "Sebastian Martin",
            family = "Krants",

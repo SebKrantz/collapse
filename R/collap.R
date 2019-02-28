@@ -25,10 +25,14 @@
 #' @param ... Additional arguments supplied to 'FUN', 'catFUN' or to \emph{aggregate.data.frame} in the default mode.
 #'
 #' @export
-collap <- function(X, by = NULL, FUN = mean, catFUN = Mode, factors = "as.categorical",
-                   custom = NULL, custom.names = TRUE, collapse = TRUE, sort = TRUE,
-                   reshape.long = FALSE, na.rm = TRUE, replace.nan = TRUE, as.list = FALSE,
-                   dropcat = FALSE, dropby = FALSE, show.statistic = TRUE,
+collap <- function(X, by = NULL, FUN = mean,
+                   catFUN = Mode, factors = "as.categorical",
+                   custom = NULL, custom.names = TRUE,
+                   collapse = TRUE, sort = TRUE,
+                   reshape.long = FALSE, na.rm = TRUE,
+                   replace.nan = TRUE, as.list = FALSE,
+                   dropcat = FALSE, dropby = FALSE,
+                   show.statistic = TRUE,
                    data.table = FALSE, parallel = FALSE, ...) {
 
   # Identifying the inputs: X
@@ -43,23 +47,6 @@ collap <- function(X, by = NULL, FUN = mean, catFUN = Mode, factors = "as.catego
       isDT = TRUE
     } else isDT = FALSE
   } else isDT = FALSE
-
-
-  # Some functions
-  nantona <- function(x) {x[is.nan(x)] = NA; x}
-  quickdf <- function(l) {
-    class(l) <- "data.frame"
-    attr(l, "row.names") <- .set_row_names(length(l[[1]]))
-    l
-  }
-  ident <- function(x) {
-    y <- as.factor(x)
-    l <- length(levels(y))
-    s <- as.character(seq_len(l))
-    n <- nchar(s)
-    levels(y) <- paste0(strrep("0", n[l] - n), s)
-    as.character(y)
-  }
 
   # Identifying the inputs: FUN, catFUN and custom
   if (!is.null(custom)) FUN = custom
