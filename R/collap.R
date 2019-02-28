@@ -166,8 +166,7 @@ collap <- function(X, by = NULL, FUN = mean, catFUN = Mode, factors = "as.catego
           old = parse(text = paste0("df_old = data.table::setDT(df)[, lapply(.SD, ",nam,ifelse(missing(...),"",paste0(", ",deparse(substitute(...)))),"), keyby = by]"))
         }
         new = substitute(df <- data.table::setDT(df)[, .lapplyCall, keyby = by],
-                         list(.nam=as.name(nam), .dots=ifelse(missing(...), substitute(), substitute(...)),
-                              .lapplyCall = as.call(c(
+                         list(.lapplyCall = as.call(c(
                                 list(as.name("lapply"), as.name(".SD"), as.name(nam)),
                                 if (narmcalls) list(na.rm = TRUE) else list(), # here we handle narmcalls or nonarmcalls
                                 if (missing(...)) list() else as.list(substitute(...)) # here we handle dots
