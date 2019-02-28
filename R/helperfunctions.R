@@ -17,3 +17,5 @@ Mode <- function(x, na.rm = FALSE) {
   attributes(y) <- ax
   return(y)
 }
+
+.datatable.aware = TRUE

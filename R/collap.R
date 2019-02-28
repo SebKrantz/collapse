@@ -20,7 +20,7 @@
 #' @param as.list Optionally the output can be requested as a list of vectors or data.frames. There are two options here: If as.list = "by", then a list will be returned whose elements are the aggregated output for each group in 'by'. If multiple functions are supplied to either 'FUN' or 'catFUN', calling as.list = "FUN" will return a list with the dataset aggregated by the different functions. as.list = "by" may come at some slight extra computational cost but as.list = "FUN" does not.
 #' @param dropcat Drop all categorical variables apart from identifiers in 'by' (i.e. don't perform aggregation on them).
 #' @param dropby Drop the columns in 'by' from the final output.
-#' @param data.table By default \emph{collap} is built as a wrapper around \emph{aggregate.data.frame}. Calling this argument will internally use \emph{data.table} as workhorse function, yielding significant speed improvements for large datasets.
+#' @param data.table By default \emph{collap} is built as a wrapper around \emph{aggregate.data.frame}. Calling this argument will internally use \emph{data.table} as workhorse function, yielding significant speed improvements for large datasets. Requires \code{data.table} package to be installed.
 #' @param parallel If multiple functions are supplied to 'FUN' or 'catFUN', parallel = TRUE will automatically parallelize computation on $k-1$ of the available cores (using the \emph{parLapply} function from the \emph{parallel} package). The argument works together with data.table = TRUE to guarantee maximum performance on tasks involving large datsets and multiple functions.
 #' @param ... Additional arguments supplied to 'FUN', 'catFUN' or to \emph{aggregate.data.frame} in the default mode.
 #'
@@ -44,6 +44,8 @@ collap <- function(X, by = NULL, FUN = mean, catFUN = Mode, factors = "as.catego
     } else isDT = FALSE
   } else isDT = FALSE
 
+  if (data.table && !requireNamespace("data.table", quietly=TRUE))
+    stop("data.table package is not installed, install data.table or use `data.table=FALSE`")
 
   # Some functions
   nantona <- function(x) {x[is.nan(x)] = NA; x}
@@ -153,16 +155,30 @@ collap <- function(X, by = NULL, FUN = mean, catFUN = Mode, factors = "as.catego
   if (data.table) { # data.table solution -> maximum speed
     nlfs = all(nlf,ifelse(dropcat,TRUE,nlcf))
     bstats = c("mean","median","Mode","sd","var","min","max","skewness","kurtosis")
-    suppressPackageStartupMessages(library(data.table))
+    .SD = NULL
     agg <- function(df, by, FUN, nam, ...) {
-      if (na.rm && any(nam == bstats)) {
-        eval(parse(text = paste0("df = setDT(df)[, lapply(.SD, ",nam,", na.rm = TRUE",ifelse(missing(...),"",paste0(", ",deparse(substitute(...)))),"), keyby = by]")))
-      } else if (!na.rm && nlfs) {
-        eval(parse(text = paste0("df = setDT(df)[, lapply(.SD, ",nam,ifelse(missing(...),"",paste0(", ",deparse(substitute(...)))),"), keyby = by]")))
+      narmcalls = na.rm && any(nam == bstats)
+      nonarmcalls = !na.rm && nlfs
+      if (narmcalls || nonarmcalls) {
+        if (narmcalls) {
+          old = parse(text = paste0("df_old = data.table::setDT(df)[, lapply(.SD, ",nam,", na.rm = TRUE",ifelse(missing(...),"",paste0(", ",deparse(substitute(...)))),"), keyby = by]")) ## this line can be removed after fully moving from eval-parse to eval-subsitute
+        } else {
+          old = parse(text = paste0("df_old = data.table::setDT(df)[, lapply(.SD, ",nam,ifelse(missing(...),"",paste0(", ",deparse(substitute(...)))),"), keyby = by]"))
+        }
+        new = substitute(df <- data.table::setDT(df)[, .lapplyCall, keyby = by],
+                         list(.nam=as.name(nam), .dots=ifelse(missing(...), substitute(), substitute(...)),
+                              .lapplyCall = as.call(c(
+                                list(as.name("lapply"), as.name(".SD"), as.name(nam)),
+                                if (narmcalls) list(na.rm = TRUE) else list(), # here we handle narmcalls or nonarmcalls
+                                if (missing(...)) list() else as.list(substitute(...)) # here we handle dots
+                              ))))
+        eval(old) ## this line can be removed after fully moving from eval-parse to eval-subsitute
+        eval(new)
+        if(!isTRUE(all.equal(df, df_old))) browser() ## this line can be removed after fully moving from eval-parse to eval-subsitute
+        rm(df_old) ## this line can be removed after fully moving from eval-parse to eval-subsitute
       } else {
         df = setDT(df)[, lapply(.SD, FUNwrap, f = FUN, ...), keyby = by]
       }
-      setDF(df)
       if (na.rm && replace.nan) df = quickdf(lapply(df,nantona))
       return(df)
     }

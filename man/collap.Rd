@@ -45,7 +45,7 @@ collap(X, by = NULL, FUN = mean, catFUN = Mode,
 
 \item{show.statistic}{If multiple functions are called and reshape.long = TRUE, show.statistic = FALSE can be called to omit the 'Statistic' column and instead make appropriate row.names.}
 
-\item{data.table}{By default \emph{collap} is built as a wrapper around \emph{aggregate.data.frame}. Calling this argument will internally use \emph{data.table} as workhorse function, yielding significant speed improvements for large datasets.}
+\item{data.table}{By default \emph{collap} is built as a wrapper around \emph{aggregate.data.frame}. Calling this argument will internally use \emph{data.table} as workhorse function, yielding significant speed improvements for large datasets. Requires \code{data.table} package to be installed.}
 
 \item{parallel}{If multiple functions are supplied to 'FUN' or 'catFUN', parallel = TRUE will automatically parallelize computation on $k-1$ of the available cores (using the \emph{parLapply} function from the \emph{parallel} package). The argument works together with data.table = TRUE to guarantee maximum performance on tasks involving large datsets and multiple functions.}
 
