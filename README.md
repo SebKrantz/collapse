@@ -13,6 +13,10 @@ The package can be installed in R using the following code:
 
 remotes::install_github("SebKrantz/collapse")
 
+## Helping out
+
+Development takes place in the `devel` branch. All help is welcome ofcourse. If you want to contribute, please fork and create a pull request for merging with the `devel` branch.
+
 ## Warning
 
 The package is currently in development. No warranties whatsoever.
