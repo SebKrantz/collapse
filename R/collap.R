@@ -1,339 +1,762 @@
-#' Aggregation of multi-type and multi-level data
-#'
-#' The function \code{collap} allows you to aggregate datasets with
-#' multiple types (numeric, factor) in a single function call.
-#'
-#' @param X A vector, matrix, list, data.frame or data.table to aggregate (anything that can be coerced to data.frame)
-#' @param by Columns to aggregate by, \bold{either contained in X} and indicated using a one-or two sided formula (two-sided if only certain columns in X are to be aggregated), column indices, a vector of column names, or a string of comma-separated column names, \bold{or externally supplied} in form of a vector, list of vectors or data.frame, with the number of elements/rows matching that of X. If 'by' is left empty, columns are fully aggregated.
-#' @param FUN Function(s) to apply to numeric columns in X, defaults to the mean. A single function can be supplied without quotes. Multiple functions can be supplied as a character vector, string of comma-separated function names, or as a list of functions (preferably named). Ad-hoc functions can be supplied.
-#' @param catFUN Function(s) to apply to categorical columns in X, defaults to the Mode. If all elements in a group defined by 'by' are distinct, the Mode defaults to the first element. Multiple functions can be supplied in the same manor as to 'FUN'.
-#' @param factors Specifies treatment of factor variables. Default is treatment as categorical variables. Alternatively factors can be coerced to numerical variables by spcifying "as.numeric", or the factor levels can be extracted and coerced to a numerical variable by specifying "as.numeric.fractor" (internally defined as:
-#' \code{as.numeric.factor <- function(x) \{as.numeric(levels(x))[x]\})}
-#' @param custom Option to supply a custom vector or list of functions whose length must match the number of columns to be aggregated. Alternatively a named list can be provided with the names being the comma-separated names of the columns to be aggregated by different functions, i.e. list("var1,var2,var3" = mean, var4 = median, "var7,var8" = sd).
-#' @param custom.names Interact the column names with the respective function names in 'custom'.
-#' @param na.rm Removes missing values from all columns before applying any functions. This is done internally in \emph{collap}, thus it is not required for functions in 'FUN' or 'catFUN' to have a 'na.rm' argument.
-#' @param replace.nan Replaces NaN values with NA values. NaN's are frequently generated if na.rm = TRUE, and aggregation takes place over an empty subset.
-#' @param sort Sort restores the columns back to their original order after aggregation. If sort = FALSE, the dataset is returned with the 'by' columns in front, and the other columns following in the order of computation (first numeric columns and then categorical columns, or columns in the order they are passed to 'custom').
-#' @param collapse If collapse = FALSE, the aggregated data will be matched with the original data in the 'by' argument and \emph{collap} will return a dataset that is aggregated but of the same dimensions and row-order as the original data, i.e. a between-transformed dataset.
-#' @param reshape.long If multiple functions are supplied to either 'FUN' or 'catFUN', by default \emph{collap} returns a wider dataset. If reshape.long = TRUE, then a long form of the dataset is returned with an additional column 'Statistic' indicating the function used for aggregation.
-#' @param show.statistic If multiple functions are called and reshape.long = TRUE, show.statistic = FALSE can be called to omit the 'Statistic' column and instead make appropriate row.names.
-#' @param as.list Optionally the output can be requested as a list of vectors or data.frames. There are two options here: If as.list = "by", then a list will be returned whose elements are the aggregated output for each group in 'by'. If multiple functions are supplied to either 'FUN' or 'catFUN', calling as.list = "FUN" will return a list with the dataset aggregated by the different functions. as.list = "by" may come at some slight extra computational cost but as.list = "FUN" does not.
-#' @param dropcat Drop all categorical variables apart from identifiers in 'by' (i.e. don't perform aggregation on them).
-#' @param dropby Drop the columns in 'by' from the final output.
-#' @param data.table By default \emph{collap} is built as a wrapper around \emph{aggregate.data.frame}. Calling this argument will internally use \emph{data.table} as workhorse function, yielding significant speed improvements for large datasets.
-#' @param parallel If multiple functions are supplied to 'FUN' or 'catFUN', parallel = TRUE will automatically parallelize computation on $k-1$ of the available cores (using the \emph{parLapply} function from the \emph{parallel} package). The argument works together with data.table = TRUE to guarantee maximum performance on tasks involving large datsets and multiple functions.
-#' @param ... Additional arguments supplied to 'FUN', 'catFUN' or to \emph{aggregate.data.frame} in the default mode.
-#'
-#' @export
-collap <- function(X, by = NULL, FUN = mean, catFUN = Mode, factors = "as.categorical",
-                   custom = NULL, custom.names = TRUE, collapse = TRUE, sort = TRUE,
-                   reshape.long = FALSE, na.rm = TRUE, replace.nan = TRUE, as.list = FALSE,
-                   dropcat = FALSE, dropby = FALSE, show.statistic = TRUE,
-                   data.table = FALSE, parallel = FALSE, ...) {
+# Helper functions:
+condsetn <- function(x, value, cond) {
+  if(cond) attr(x, "names") <- value
+  x
+}
 
-  # Identifying the inputs: X
-  cl = class(X)
-  if (!all(cl == "data.frame")) {
-    iv = is.vector(X)
-    if (iv) namx = make.names(deparse(substitute(X)))
-    X = as.data.frame(X, stringsAsFactors = FALSE)
-    if (iv) names(X) = namx
-    if (any(cl == "data.table")) {
-      data.table = TRUE
-      isDT = TRUE
-    } else isDT = FALSE
-  } else isDT = FALSE
-
-
-  # Some functions
-  nantona <- function(x) {x[is.nan(x)] = NA; x}
-  quickdf <- function(l) {
-    class(l) <- "data.frame"
-    attr(l, "row.names") <- .set_row_names(length(l[[1]]))
-    l
+cols2log <- function(x, nam, cols) {
+  if(is.function(cols)) return(vapply(x, cols, TRUE)) else if(is.character(cols)) return(nam %in% cols) else {
+    r <- logical(length(x))
+    r[cols] <- TRUE
+    return(r)
   }
-  ident <- function(x) {
-    y <- as.factor(x)
-    l <- length(levels(y))
-    s <- as.character(seq_len(l))
-    n <- nchar(s)
-    levels(y) <- paste0(strrep("0", n[l] - n), s)
-    as.character(y)
-  }
+}
 
-  # Identifying the inputs: FUN, catFUN and custom
-  if (!is.null(custom)) FUN = custom
-  nlf = !is.list(FUN)
-  if (is.character(FUN)) {
+clpfun <- c("fmean","fmedian","fsum","fprod","fsd","fvar","fmin","fmax","fMode","fNobs","fNunique")
+
+
+# Main: 
+collap <- function(X, by = NULL, FUN = mean, ..., sort.row = TRUE, drop.by = FALSE) {
+  UseMethod("collap", X)
+}
+
+collap.default <- function(X, by, FUN = fmean, ..., sort.row = TRUE, drop.by = FALSE) {
+  if(!is.atomic(X)) stop("X needs to be an atomic vector")
+  
+  # if(is.null(by)) { # No groups
+  #   if(is.function(FUN)) return(FUN(X, ...)) else if(is.character(FUN)) {
+  #     FUN <- strsplit(FUN,",",fixed = TRUE)
+  #     if(length(FUN) == 1) return(match.fun(FUN[[1]])(X, ...)) else
+  #       return(qDF(lapply(FUN, match.fun, X, ...)))
+  #   } else if(is.list(FUN)) {
+  #     if(is.null(names(FUN))) stop("If a list of functions is passed to FUN, it needs to be named!")
+  #     qDF(lapply(FUN, match.fun, X, ...))
+  #   } else stop("FUN needs to be a function, string of functions, or named list of functions")
+  #   
+  # } else { # With groups
+    if(is.atomic(by)) {
+      namby <- deparse(substitute(by))
+      if(!is.factor(by)) by <- qF(by, ordered = sort.row) 
+      if(!drop.by) group <- setNames(list(attr(by, "levels")), namby)
+    } else {
+      if(!all(class(by) == "GRP")) by <- GRP(by, sort = sort.row, return.groups = !drop.by)
+      if(!drop.by) group <- by[["groups"]] # what if not-named ??
+    }
+    
+    if(is.function(FUN)) {
+      res <- if(any(deparse(substitute(FUN)) == clpfun)) FUN(X, by, ...) else BY.default(X, by, FUN, ...)
+      if(drop.by) return(res) else res <- setNames(list(res), deparse(substitute(X)))
+    } else if(is.character(FUN)) {
+      FUN <- strsplit(FUN,",",fixed = TRUE)[[1]]
+      aplyfun <- function(x) if(any(x == clpfun)) match.fun(x)(X, by, ...) else BY.default(X, by, x, ...)
+      res <- setNames(lapply(FUN, aplyfun), FUN)
+    } else if(is.list(FUN)) {
+      if(is.null(namFUN <- names(FUN))) stop("If a list of functions is passed to FUN, it needs to be named!")
+      aplyfun <- function(i) if(any(namFUN[i] == clpfun)) FUN[[i]](X, by, ...) else BY.default(X, by, FUN[[i]], ...)
+      res <- lapply(seq_along(FUN), aplyfun)
+      names(res) <- namFUN
+    } else stop("FUN needs to be a function, string of functions, or named list of functions")
+    if(drop.by) {
+      if(length(res) == 1) return(res[[1]]) else return(qDF(res))
+      } else {
+      res <- c(group, res)
+      if(all.identical(lapply(res, typeof))) return(do.call(cbind, res)) else
+        return(qDF(res))
+    }
+  # }
+}
+
+collap.matrix <- function(X, by, FUN = fmean, ..., sort.row = TRUE, drop.by = FALSE) {
+  
+  if(is.character(FUN)) { 
     FUN = unlist(strsplit(FUN,",",fixed = TRUE), use.names = FALSE)
-    FUN = sapply(FUN, match.fun, descend = FALSE)
-  } else if (nlf) {
-    nFUN = deparse(substitute(FUN))
-    FUN = list(FUN)
-    names(FUN) = nFUN
-  }
-  namFUN = names(FUN)
-  lFUN = length(FUN)
-  iFUN = seq_len(lFUN)
-  nlcf = !is.list(catFUN)
-  if (is.character(catFUN)) {
-    catFUN = unlist(strsplit(catFUN,",",fixed = TRUE), use.names = FALSE)
-    catFUN = sapply(catFUN, match.fun, descend = FALSE)
-  } else if (nlcf) {
-    nFUN = deparse(substitute(catFUN))
-    catFUN = list(catFUN)
-    names(catFUN) = nFUN
-  }
-  namcatFUN = names(catFUN)
-  lcatFUN = length(catFUN)
-  icatFUN = seq_len(lcatFUN)
-
-  # Identifying the inputs: by
-  if (!is.null(by)) {
-    clby = class(by)
-    if (is.list(by) || clby == "formula" || length(by) == NROW(X)) {
-      if (is.list(by)) {
-        if (any(lengths(by) != NROW(X))) stop("arguments must have same length")
-        naml = names(by)
-        if (is.null(naml)) {
-          names(by) = paste0("Group.",seq_along(by))
-        } else {
-          indl <- which(!nzchar(naml))
-          names(by)[indl] <- paste0("Group.", indl)
-        }
-        X = cbind(by,X)
-        by = names(by)
-      } else if (!any(clby == c("matrix","formula"))) {
-        namby = make.names(deparse(substitute(by)))
-        X = data.frame(Groupby = by, X, stringsAsFactors = FALSE)
-        by = names(X)[1] = namby
-      } else {
-        if (length(by)>2) X = get_all_vars(by,X)
-        by = attr(terms(by),"term.labels")
-      }
-    }
-    if (is.character(by)) {
-      by = unlist(strsplit(by,",",fixed = TRUE), use.names = FALSE)
-      num = match(by,names(X))
-    } else if (is.numeric(by)) {
-      num = by
-      by = names(X)[num]
+    FUN = lapply(FUN, match.fun, descend = FALSE) 
+  } else if (!is.list(FUN)) FUN = setNames(list(FUN), deparse(substitute(FUN))) 
+  namFUN <- names(FUN)
+  
+  # if(is.null(by)) {
+  #   aplyfun <- function(i) if(any(namFUN[i] == clpfun)) FUN[[i]](X, ...) else apply(X, 2, FUN[[i]], ...)
+  #   res <- setNames(lapply(seq_along(FUN), aplyfun), namFUN)
+  # } else {
+    if(is.atomic(by)) {
+      namby <- deparse(substitute(by))
+      if(!is.factor(by)) by <- qF(by, ordered = sort.row) 
+      if(!drop.by) group <- setNames(list(attr(by, "levels")), namby)
     } else {
-      stop("'by' must be either a formula, a numeric or character vector signifying the columns over which to aggregate, or a vector, list or data.frame")
+      if(!all(class(by) == "GRP")) by <- GRP(by, sort = sort.row, return.groups = !drop.by)
+      if(!drop.by) group <- by[["groups"]] # what if not-named ??
     }
-    lby = length(by)
-    iby = seq_len(lby)
-  } else {
-    by = "nullID"; num = 1; lby = 1; iby=1
-    X = data.frame(nullID = 1, X, stringsAsFactors = FALSE)
-  }
-
-  # Characterizing the variables
-  cols = setdiff(seq_along(X),num)
-  nu = setdiff(which(vapply(X, is.numeric, FUN.VALUE=logical(1))),num)
-  if (!is.character(factors) || factors!="as.categorical") {
-    fc = setdiff(which(vapply(X, is.factor, FUN.VALUE=logical(1))),num)
-    ff = match.fun(factors)
-    for (i in fc) X[[i]] = ff(X[[i]])
-    nu = sort(c(nu,fc))
-  }
-  nnu = setdiff(cols,nu)
-
-  # Preprocessing
-  cc = which(!complete.cases(X[num]))
-  if (length(cc)) X = X[-cc, , drop = FALSE]
-  Xby = X[num]
-  if (!collapse) ordr = do.call(order,Xby)
-
-  # Functions to perform the aggregation
-  if (na.rm) {
-    FUNwrap <- function(x,f, ...){x = x[!is.na(x)]; f(x, ...)}
-  } else
-    FUNwrap <- function(x,f, ...)f(x, ...)
-  if (data.table) { # data.table solution -> maximum speed
-    nlfs = all(nlf,ifelse(dropcat,TRUE,nlcf))
-    bstats = c("mean","median","Mode","sd","var","min","max","skewness","kurtosis")
-    suppressPackageStartupMessages(library(data.table))
-    agg <- function(df, by, FUN, nam, ...) {
-      if (na.rm && any(nam == bstats)) {
-        eval(parse(text = paste0("df = setDT(df)[, lapply(.SD, ",nam,", na.rm = TRUE",ifelse(missing(...),"",paste0(", ",deparse(substitute(...)))),"), keyby = by]")))
-      } else if (!na.rm && nlfs) {
-        eval(parse(text = paste0("df = setDT(df)[, lapply(.SD, ",nam,ifelse(missing(...),"",paste0(", ",deparse(substitute(...)))),"), keyby = by]")))
-      } else {
-        df = setDT(df)[, lapply(.SD, FUNwrap, f = FUN, ...), keyby = by]
-      }
-      setDF(df)
-      if (na.rm && replace.nan) df = quickdf(lapply(df,nantona))
-      return(df)
-    }
-  } else { # base R solution (default)
-    agg <- function(df, by, FUN, nam, ...) {
-      grp <- lapply(by, ident)
-      names(grp) <- NULL
-      grp <- do.call(paste, c(grp, list(sep = ".")))
-      y <- by[match(sort(unique(grp)), grp, 0L), , drop = FALSE]
-      nry <- NROW(y)
-      z <- lapply(df, function(e) {
-        ans <- lapply(X = split(e, grp), FUN = FUNwrap, f = FUN, ...)
-        unlist(ans, use.names = FALSE, recursive = FALSE) })
-      if (na.rm && replace.nan) z = lapply(z, nantona)
-      len <- length(y)
-      for (i in seq_along(z)) y[[len + i]] <- z[[i]]
-      names(y) <- c(names(by), names(df))
-      row.names(y) <- NULL
-      return(y)
-    }
-  }
-
-  # Exchanging arguments in special cases
-  if (!dropcat) {
-    if (length(nu)==0 && length(nnu)>0) {
-      nu = nnu; dropcat = TRUE; FUN = catFUN; lFUN = lcatFUN; iFUN = icatFUN; namFUN = namcatFUN
-    } else if (lFUN<=1 && lcatFUN>1) {
-      a = nu; nu = nnu; nnu = a; b = FUN; FUN = catFUN; catFUN = b
-      a = lFUN; lFUN = lcatFUN; lcatFUN = a; b = namFUN; namFUN = namcatFUN; namcatFUN = b
-      a = iFUN; iFUN = icatFUN; icatFUN = a
-    } else if (lcatFUN>1) {
-      reshape.long = FALSE; as.list = FALSE
-    }
-  }
-
-  # Computing output
-  if (is.null(custom)) {
-    if (parallel && lFUN>1) { # Numeric Variables
-      suppressPackageStartupMessages(library(parallel))
-      no_cores <- detectCores() - 1
-      cl <- makeCluster(no_cores)
-      clusterExport(cl,ifelse(data.table,"data.table","aggregate.data.frame"))
-      res = parLapply(cl,iFUN,function(i) agg(df=X[nu],by=Xby,FUN[[i]],namFUN[i], ...))
-      stopCluster(cl)
-    } else if (lFUN>1) {
-      res = lapply(iFUN,function(i) agg(df=X[nu],by=Xby,FUN[[i]],namFUN[i], ...))
-    } else {
-      res = agg(df=X[nu],by=Xby,FUN[[1]],namFUN, ...)
-    }
-    if (!dropcat && length(nnu)>0) { # Categorical Variables
-      if (parallel && lcatFUN>1) {
-        library(parallel)
-        no_cores <- detectCores() - 1
-        cl <- makeCluster(no_cores)
-        clusterExport(cl,ifelse(data.table,"data.table","aggregate.data.frame"))
-        Catres = parLapply(cl,icatFUN,function(i) agg(df=X[nnu],by=Xby,catFUN[[i]],namcatFUN[i], ...))
-        stopCluster(cl)
-      } else if (lcatFUN>1) {
-        Catres = lapply(icatFUN,function(i) agg(df=X[nnu],by=Xby,catFUN[[i]],namcatFUN[i], ...))
-      } else {
-        Catres = agg(df=X[nnu],by=Xby,catFUN[[1]],namcatFUN, ...)
-      }
-    }
-  } else { # Custom Mode
-    icf = is.character(unlist(FUN, use.names = FALSE))
-    if (!nlf && !is.null(namFUN)) {
-      indl = lapply(namFUN,function(x)match(unlist(strsplit(x,",",fixed = TRUE), use.names = FALSE), names(X)))
-      if (icf) {namFUN = unlist(FUN, use.names = FALSE); FUN = sapply(FUN, match.fun) }
-      unf = namFUN
-    } else {
-      ind = sort(union(nu,nnu)); fFUN = FUN; FUN = unique(FUN)
-      unf = if (is.null(namFUN)) seq_along(FUN) else unique(namFUN)
-      indl = lapply(FUN,function(x)ind[sapply(fFUN,identical,x)])
-      if (length(ind) != lFUN) stop("Vector of custom functions needs to match columns of data")
-    }
-    if ((nlf || icf) && custom.names) { res = lapply(seq_along(unf),function(i){r = agg(df=X[indl[[i]]],by=Xby,FUN[[i]],unf[i])
-    names(r)[-iby] = paste0(names(r)[-iby],".",unf[i]); r})
-    } else res = lapply(seq_along(unf),function(i) agg(df=X[indl[[i]]],by=Xby,FUN[[i]],unf[i]))
-    if (as.list != "FUN") {
-      res = data.frame(res[[1]][iby],cbind.data.frame(lapply(res,function(x)x[-iby]), stringsAsFactors = FALSE), stringsAsFactors = FALSE)
-      if (!collapse) res = merge.data.frame(Xby,res)[order(ordr), , drop = FALSE]
-      rownames(res) = NULL
-      if (sort) res = res[order(c(num,unlist(indl, use.names = FALSE)))]
-    } else names(res) = unf
-    lFUN = 1
-  }
-
-  # Preparing Output
-  if (is.null(custom)) {
-    if (reshape.long || lFUN == 1 || as.list == "FUN") { # Anything but multiple functions columns in parallel
-      if (lFUN>1) { # if multiple functions
-        if (!dropcat && length(nnu)>0) { # if categorical variables
-          if (as.list != "FUN" && show.statistic) { # show a statistic
-            res = lapply(iFUN,function(x){
-              data.frame(res[[x]][iby],Statistic=namFUN[x],res[[x]][-iby],Catres[-iby], stringsAsFactors = FALSE)})
-            if (!collapse) res = lapply(res,function(x)merge.data.frame(Xby, x)[order(ordr), , drop = FALSE])
-            if (sort) { ord = order(c(num,-Inf,nu,nnu))
-            res = lapply(res,function(x)x[ord])}
-          } else { # no statistic
-            res = lapply(iFUN,function(x){ # only if show.statistic argument
-              data.frame(res[[x]],Catres[-iby], stringsAsFactors = FALSE)})
-            if (!collapse) res = lapply(res,function(x)merge.data.frame(Xby, x)[order(ordr), , drop = FALSE])
-            if (sort) { ord = order(c(num,nu,nnu))
-            res = lapply(res,function(x)x[ord])}
-          }
-        } else {
-          if (as.list != "FUN" && show.statistic) {
-            res = lapply(iFUN, function(x){ # No categorical but with statistic
-              data.frame(res[[x]][iby],Statistic=namFUN[x],res[[x]][-iby], stringsAsFactors = FALSE)})
-            if (!collapse) res = lapply(res,function(x)merge.data.frame(Xby, x)[order(ordr), , drop = FALSE])
-            if (sort) { ord = order(c(num,-Inf,nu))
-            res = lapply(res,function(x)x[ord])}
-          } else { # No categorical no statistic
-            if (!collapse) res = lapply(res,function(x)merge.data.frame(Xby, x)[order(ordr), , drop = FALSE])
-            if (sort) { ord = order(c(num,nu))
-            res = lapply(res,function(x)x[ord])}
-          }
-        }
-        names(res) = namFUN
-        if (as.list != "FUN") { # Combine unless FUN
-          res = if (show.statistic) { do.call(rbind.data.frame, c(res, make.row.names = FALSE, stringsAsFactors = FALSE))
-          } else do.call(rbind.data.frame, c(res, stringsAsFactors = FALSE))
-        }
-      } else if (!dropcat && length(nnu)>0) { # Only one function but with categorical variables
-        res = data.frame(res,Catres[-iby], stringsAsFactors = FALSE)
-        if (!collapse) res = merge.data.frame(Xby,res)[order(ordr), , drop = FALSE]
-        if (sort) res = res[order(c(num,nu,nnu))]
-      } else { # if one function and no categorical variables
-        if (!collapse) res = merge.data.frame(Xby,res)[order(ordr), , drop = FALSE]
-        if (sort) res = res[order(c(num,nu))]
-      }
-    } else { # If multiple functions all in a row
-      res = lapply(iFUN,function(x) {
-        names(res[[x]])[-iby] = paste0(names(res[[x]])[-iby],".",namFUN[x]); res[[x]]})
-      res[-1] = lapply(iFUN[-1], function(x) res[[x]][-iby])
-      if (!dropcat && length(nnu)>0) { # If categorical variables
-        if (lcatFUN>1) { # Multiple categorical functions
-          Catres = lapply(icatFUN,function(x) {
-            names(Catres[[x]])[-iby] = paste0(names(Catres[[x]])[-iby],".",namcatFUN[x]); Catres[[x]]})
-          Catres[-1] = lapply(icatFUN[-1], function(x) Catres[[x]][-iby])
-          Catres = do.call(cbind,Catres)
-          nnu = rep(nnu,lcatFUN)
-        }
-        Catres = Catres[-iby]
-        res = do.call(cbind,res)
-        res = cbind.data.frame(res,Catres)
-        if (!collapse) res = merge.data.frame(Xby,res)[order(ordr), , drop = FALSE]
-        if (sort) res = res[order(c(num,rep(nu,lFUN),nnu))]
-      } else { # No categorical variables
-        res = do.call(cbind.data.frame,res)
-        if (!collapse) res = merge.data.frame(Xby,res)[order(ordr), , drop = FALSE]
-        if (sort) res = res[order(c(num,rep(nu,lFUN)))]
-      }
-    }
-  }
-  if (as.list != "FUN") {
-    if (lby == 1 && by == "nullID") res = res[-1]
-    if (as.list == "by" && by != "nullID") {
-      num = match(by,names(res))
-      res = split.data.frame(res[-num],res[num], drop = TRUE, lex.order = TRUE)
-    } else if (dropby) {
-      res = res[-match(by,names(res))]
-    }
-    if ((any(cl=="matrix") || (any(dim(res)==1) && (dropcat || length(nnu)<=0))) && (lFUN==1 || !reshape.long))
-      res = drop(as.matrix(res))
-    if (isDT) setDT(res)
-  } else {
-    if (lby == 1 && by == "nullID") lapply(res,function(x)x[-1])
-    if ((any(cl=="matrix") || (any(dim(res)==1) && (dropcat || length(nnu)<=0))) && (lFUN==1 || !reshape.long))
-      res = lapply(res,function(x)drop(as.matrix(x)))
-    if (isDT) lapply(res,setDT)
-  }
+    
+    aplyfun <- function(i) if(any(namFUN[i] == clpfun)) FUN[[i]](X, by, ...) else BY.matrix(X, by, FUN[[i]], ...)
+    res <- setNames(lapply(seq_along(FUN), aplyfun), namFUN)
+  # }
   return(res)
 }
+
+# newest version: built from L.data.frame ## arguments give.names and custom 
+# todo speed up: use internals of order ?? 
+# todo: set class = NULL for subsetting, and only set class = data.frame if BY is used !!!!
+collap.data.frame <- function(x, by, FUN = mean, catFUN = baseMode, cols = NULL, custom = NULL, 
+                              drop.by = FALSE, sort.col = TRUE, sort.row = TRUE, parallel = FALSE, mc.cores = "auto",
+                              multi.FUN.out = c("wide","list","long","long.dupl"), give.names = "auto", ...) {
+  
+  multi.FUN.out <- match.arg(multi.FUN.out)
+  widel <- multi.FUN.out == "wide"
+  customl <- !is.null(custom)
+  ax <- attributes(x)
+  nam <- ax[["names"]]
+  # attributes(x) <- NULL
+  attr(x, "class") <- "data.frame"
+  
+  if(parallel) {
+    if(mc.cores == "auto") mc.cores <- parallel::detectCores() - 1L
+    aplyfun <- function(...) parallel::mclapply(..., mc.cores = mc.cores)
+  } else aplyfun <- lapply
+  
+  # identifying by and cols
+  vl <- TRUE
+  if(is.call(by)) {
+      if(length(by) == 3L) {
+        v <- nam %in% all.vars(by[[2L]])
+        namby <- all.vars(by[[3L]])
+        numby <- match(namby, nam)
+      } else {
+        namby <- all.vars(by)
+        numby <- match(namby, nam)
+        if(!customl) {
+          v <- if(is.null(cols)) !logical(length(x)) else cols2log(x, nam, cols)
+          v[numby] <- FALSE
+        }
+      }
+      if(length(numby) == 1L) by <- qF(x[[numby]], ordered = sort.row) else 
+                              by <- GRP(x, numby, sort = sort.row)
+  } else if(is.atomic(by)) {
+    if(length(by) != nrow(x)) {
+      numby <- if(is.character(by)) 
+        match(unlist(strsplit(by,",",fixed = TRUE), use.names = FALSE), nam) else if(is.logical(by)) 
+        which(by) else by
+      namby <- nam[numby]
+      if(!customl) {
+        v <- if(is.null(cols)) !logical(length(x)) else cols2log(x, nam, cols)
+        v[numby] <- FALSE
+      }
+      if(length(numby) == 1L) by <- qF(x[[numby]], ordered = sort.row) else 
+                              by <- GRP(x, numby, sort = sort.row)
+    } else {
+      namby <- deparse(substitute(by))
+      numby <- 1L
+      if(!customl) if(is.null(cols)) vl <- FALSE else v <- cols2log(x, nam, cols)
+      if(!is.factor(by)) by <- qF(by, ordered = sort.row)
+    }
+  } else {
+    if(!customl) if(is.null(cols)) vl <- FALSE else v <- cols2log(x, nam, cols)
+    if(!all(class(by) == "GRP")) {
+      numby <- seq_along(by)
+      namby <- names(by) 
+      if(is.null(namby)) namby <- paste0("GRP.", numby)
+      by <- GRP(by, numby, sort = sort.row)
+    } else { 
+      namby <- by[["group.names"]] 
+      if(is.null(namby)) namby <- paste0("GRP.", 1L:length(by[[4L]]))
+      numby <- seq_along(namby)
+    }
+  }
+
+  if(!customl) {
+    
+    # identifying data
+    nu <- vapply(x, is.numeric, TRUE)
+    if(vl) {
+      nnu <- which(!nu & v) # faster way ??
+      nu <- which(nu & v) 
+    } else {
+      nnu <- which(!nu)
+      nu <- which(nu)
+    }
+    nul <- length(nu) > 0L
+    nnul <- length(nnu) > 0L
+    
+    # Identifying FUN and catFUN: 
+    if(nul) if(is.character(FUN)) {
+      FUN <- unlist(strsplit(FUN,",",fixed = TRUE), use.names = FALSE)
+      namFUN <- FUN
+      FUN <- if(length(FUN) > 1L) lapply(FUN, match.fun, descend = FALSE) else 
+                                  match.fun(FUN, descend = FALSE)
+    } else if(is.list(FUN)) {
+      namFUN <- names(FUN) 
+      if(is.null(namFUN)) namFUN <- all.vars(substitute(FUN))
+    } else namFUN <- deparse(substitute(FUN))
+  
+    if(nnul) if(is.character(catFUN)) {
+      catFUN <- unlist(strsplit(catFUN,",",fixed = TRUE), use.names = FALSE)
+      namcatFUN <- catFUN
+      catFUN <- if(length(catFUN) > 1L) lapply(catFUN, match.fun, descend = FALSE) else 
+                                        match.fun(catFUN, descend = FALSE)
+    } else if(is.list(catFUN)) {
+      namcatFUN <- names(catFUN) 
+      if(is.null(namcatFUN)) namcatFUN <- all.vars(substitute(catFUN))
+    } else namcatFUN <- deparse(substitute(catFUN))
+    
+    if(give.names == "auto") give.names <- !widel || length(FUN) > 1L || length(catFUN) > 1L
+    
+    # Aggregator function ! # drop level of nesting i.e. make rest length(by)+length(FUN)+length(catFUN)  ?? 
+    agg <- function(xnu, xnnu) { #by, FUN, namFUN, catFUN, namcatFUN, drop.by
+      lr <- nul + nnul + !drop.by
+      res <- vector("list", lr)
+        if(!drop.by) {
+          res[[1L]] <- if(is.atomic(by)) list(setNames(list(attr(by, "levels")), namby)) else list(by[[4L]]) # nah... could add later using "c" ?? 
+          ind <- 2L
+        } else ind <- 1L
+        if(nul) {
+          fFUN <- namFUN %in% clpfun
+          if(is.list(FUN)) 
+            res[[ind]] <- condsetn(aplyfun(seq_along(namFUN), function(i) 
+                          if(fFUN[i]) FUN[[i]](xnu, by, ..., use.g.names = FALSE) else 
+                          BY.data.frame(xnu, by, FUN[[i]], ..., use.g.names = FALSE)), namFUN, give.names) else
+            res[[ind]] <- if(fFUN) condsetn(list(FUN(xnu, by, ..., use.g.names = FALSE)), namFUN, give.names) else # give.names || !widel
+                          condsetn(list(BY.data.frame(xnu, by, FUN, ..., use.g.names = FALSE)), namFUN, give.names) # give.names || !widel
+        } 
+        if(nnul) {
+          fcatFUN <- namcatFUN %in% clpfun
+          if(is.list(catFUN)) 
+            res[[lr]] <- condsetn(aplyfun(seq_along(namcatFUN), function(i) 
+                         if(fcatFUN[i]) catFUN[[i]](xnnu, by, ..., use.g.names = FALSE) else 
+                         BY.data.frame(xnnu, by, catFUN[[i]], ..., use.g.names = FALSE)), namcatFUN, give.names) else
+            res[[lr]] <- if(fcatFUN) condsetn(list(catFUN(xnnu, by, ..., use.g.names = FALSE)), namcatFUN, give.names) else # give.names || !widel
+                         condsetn(list(BY.data.frame(xnnu, by, catFUN, ..., use.g.names = FALSE)), namcatFUN, give.names) # give.names || !widel
+        } 
+      return(res)
+    } # fastest isung res list ?? or better combine at the end ?? 
+    res <- agg(if(nul) x[nu] else NULL, if(nnul) x[nnu] else NULL)
+    
+    if(sort.col && widel) o <- order(c(if(drop.by) NULL else numby, 
+                                         if(nul) rep(nu,length(FUN)) else NULL, 
+                                         if(nnul) rep(nnu,length(catFUN)) else NULL), method = "radix")  
+    
+  } else { # custom aggregation: 
+    if(give.names == "auto") give.names <- TRUE
+    namFUN <- names(custom)
+    if(is.null(namFUN)) stop("custom needs to be a named list, see ?collap")
+    fFUN <- namFUN %in% clpfun
+    if(drop.by) {
+      res <- vector("list", 1L) 
+      ind <- 1L
+    } else { 
+      res <- vector("list", 2L)
+      res[[1L]] <- if(is.atomic(by)) list(setNames(list(attr(by, "levels")), namby)) else list(by[[4L]]) # nah... could add later using "c" ?? 
+      ind <- 2L
+    } 
+    res[[ind]] <- condsetn(aplyfun(seq_along(namFUN), function(i) 
+            if(fFUN[i]) match.fun(namFUN[i])(x[custom[[i]]], by, ..., use.g.names = FALSE) else 
+            BY.data.frame(x[custom[[i]]], by, namFUN[i], ..., use.g.names = FALSE)), namFUN, give.names)
+    if(sort.col && widel) {
+      o <- unlist(custom, use.names = FALSE)
+      o <- order(c(if(drop.by) NULL else if(is.character(o)) namby else numby, o), method = "radix")  
+    }
+  }
+  if(widel) res <- unlist(unlist(res, FALSE), FALSE) else {
+    if(length(FUN) > 1L || length(catFUN) > 1L || length(custom) > 1L) {
+      res <- unlist(res, FALSE)
+      if(multi.FUN.out == "list") {
+        ax[["row.names"]] <- if(is.list(by)) .set_row_names(by[[1L]]) else .set_row_names(length(res[[1L]]))  # fnlevels(by) best ??
+        if(drop.by) return(lapply(res, function(e) {  
+          ax[["names"]] <- names(e)
+          return(`attributes<-`(e, ax)) })) else 
+          return(lapply(res[-1L], function(e) {  
+              ax[["names"]] <- c(namby, names(e))
+              `attributes<-`(c(res[[1L]], e), ax) })) 
+      } else {
+        if(multi.FUN.out != "long.dupl") { 
+          res <- if(drop.by) .Call(data.table:::Crbindlist, res, TRUE, TRUE, "Function") else 
+                 .Call(data.table:::Crbindlist, lapply(res[-1L], function(e) c(res[[1L]], e)), TRUE, TRUE, "Function") 
+        } else {
+          if(!(nul && nnul) || customl) stop("long.dupl is only meaningful for aggregations with both numeric and categorical data, and multiple functions used for only one of the two data types!")
+          mFUN <- length(FUN) > 1L
+          nid <- if(mFUN) length(res) else 2L-drop.by
+          if(drop.by) {
+            res <- if(mFUN) lapply(res[-nid], function(e) c(e, res[[nid]])) else 
+                            lapply(res[-nid], function(e) c(res[[nid]], e))
+          } else res <- if(mFUN) lapply(res[-c(nid, 1L)], function(e) c(res[[1L]], e, res[[nid]])) else 
+                                 lapply(res[-c(nid, 1L)], function(e) c(res[[1L]], res[[nid]], e))
+          res <- .Call(data.table:::Crbindlist, res, FALSE, FALSE, "Function")  
+        }
+        if(sort.col)  o <- order(c(0L, if(drop.by) NULL else numby, nu, nnu), method = "radix")  
+      }
+    } else message("multi.FUN.out options are only meaningful if multiple functions are used!")
+  }  
+  
+  if(sort.col) .Call(data.table:::Csetcolorder, res, o)
+  ax[["names"]] <- names(res)
+  ax[["row.names"]] <- .set_row_names(length(res[[1L]]))
+  attributes(res) <- ax
+  return(res)
+}
+
+
+# Old Helpers:
+# FUNchar <- function(FUN) {
+#   if (is.function(FUN)) list(deparse(substitute(FUN)), FALSE) else if (is.character(FUN)) 
+#     list(unlist(strsplit(FUN, ",", fixed = TRUE), use.names = FALSE), FALSE) else if (is.list(FUN)) {
+#       if(names(FUN)) stop("If a list of functions is passed to FUN/catFUN, it needs to be named!")
+#       list(names(FUN), TRUE)
+#     } else stop("FUN/catFUN needs to be a function, string of functions, or named list of functions")
+# }
+# getdots <- function() { # data.tables getdots.R
+#   # return a string vector of the arguments in '...'
+#   # My long winded way: gsub(" ","",unlist(strsplit(deparse(substitute(list(...))),"[(,)]")))[-1]
+#   # Peter Dalgaard's & Brian Ripley helped out and ended up with :
+#   
+#   # as.character(match.call(sys.function(-1L), call=sys.call(-1L), expand.dots=FALSE)$...)
+#   match.call(sys.function(-1L), call=sys.call(-1L), expand.dots=FALSE)$...
+# }
+
+
+# # Previous Attempt:
+# collap.data.frame <- function(X, by = NULL, FUN = fmean, catFUN = fmode, Xcols = NULL, custom = NULL, 
+#                               drop.by = FALSE, sort.col = TRUE, sort.row = TRUE, reshape.long = FALSE, 
+#                               list.out = FALSE, ...) {
+#   nam <- attr(X, "names")
+#   # ax <- attributes(X)
+#   clx <- class(X)
+#   #   isDT <- inherits(X, "data.table")
+#   isDT <- any(clx == "data.table") # ax[["class"]]
+#   byl <- !is.null(by)
+#   Xcolsl <- !is.null(Xcols)
+#   
+#   if (byl) { # Aggregation by Groups
+#     listby = is.list(by)
+#     if (!listby) { # necessary??
+#       if (is.numeric(by)) {
+#         num = by
+#         by = nam[by]
+#       } else if (is.character(by)) {
+#         by = unlist(strsplit(by, ",", fixed = TRUE), use.names = FALSE)
+#         num = match(by, nam)
+#       } else {
+#         if (length(by)>2) {
+#           nam <- all.vars(by)
+#           if(isDT) X <- X[, nam, with = FALSE] else X <- X[nam]
+#           by <- all.vars(by[[3]])
+#         } else by <- all.vars(by) # or  all.vars(by[[3]]) ?? 
+#         num <- match(by, nam) # use setdiff??
+#       }
+#     } else {
+#       if (any(lengths(by) != NROW(X))) stop("arguments must have same length")
+#       indl <- which(!nzchar(names(by))) 
+#       names(by)[indl] <- paste0("Group.", indl)
+#     } 
+#     lby <- length(by)
+#     # iby <- seq_len(lby)
+#     
+#     if(is.null(custom)) { # Default mode !!
+#       
+#       # Characterizing the variables
+#       cols <- setdiff(seq_along(X), num) # better option than stediff ?? 
+#       nu <- setdiff(which(vapply(X, is.numeric, FUN.VALUE = logical(length(X)))), num) # speed gain ?? 
+#       lnu <- length(nu) # needed ???
+#       nul <- lnu > 0
+#       nnu <- setdiff(cols, nu)
+#       nnul <- length(nuu) > 0
+#       
+#       if(nul && nnul) { # Both numeric and categorical variables !!
+#         FUNc <- FUNchar(FUN) 
+#         tFUNc <- FUNc[[2]]
+#         FUNc <- FUNc[[1]]
+#         lFUNc <- length(FUNc)
+#         catFUNc <- FUNchar(catFUN) # additional security checks ?? 
+#         tcatFUNc <- catFUNc[[2]]
+#         catFUNc <- catFUNc[[1]]
+#         lcatFUNc <- length(catFUNc)
+#         
+#         if(lFUNc + lcatFUNc > 2) {  # multi-function aggregation
+#           clpf <- FUNc %in% clpfun # good ?? ????
+#           aclpf <- any(clpf)
+#           clpcf <- catFUNc %in% clpfun
+#           aclpcf <- any(clpcf)
+#           
+#           if(aclpf || aclpcf)  # some fast functions 
+#             g <- if(listby) GRP(by, seq_along(by), keep.groups = !drop.by, order = sort.row) else GRP(X, num, keep.groups = !drop.by, order = sort.row)
+#           res <- list(NULL,NULL) # needed ?? or res <- list(list(),list())
+#           if(aclpf) { 
+#             res[[1]] <- if(all(clpf)) lapply(FUNc, function(x) match.fun(x)(X[nu], g, ...)) else if(tFUNc) 
+#               lapply(seq_along(FUNc), function(i) if(clpf[i]) match.fun(FUNc[i])(X[nu], g, ...) else DTagg(FUN[[i]], nu, ...)) else 
+#                 lapply(seq_along(FUNc), function(i) if(clpf[i]) match.fun(FUNc[i])(X[nu], g, ...) else DTagg(as.name(FUNc[i]), nu, ...))
+#           } else 
+#             res[[1]] <- if(tFUNc) lapply(FUN, DTagg, nu, ...) else lapply(FUNc, function(x) DTagg(as.name(x), nu, ...))
+#           if(aclpcf) { 
+#             res[[2]] <- if(all(clpcf)) lapply(catFUNc, function(x) match.fun(x)(X[nnu], g, ...)) else if(tcatFUNc) 
+#               lapply(seq_along(catFUNc), function(i) if(clpcf[i]) match.fun(catFUNc[i])(X[nnu], g, ...) else DTagg(catFUN[[i]], nnu, ...)) else 
+#                 lapply(seq_along(catFUNc), function(i) if(clpcf[i]) match.fun(catFUNc[i])(X[nnu], g, ...) else DTagg(as.name(catFUNc[i]), nnu, ...))
+#           } else 
+#             res[[2]] <- if(tcatFUNc) lapply(catFUN, DTagg, nnu, ...) else lapply(catFUNc, function(x) DTagg(as.name(x), nnu, ...))
+#           res <- .Internal(unlist(res, FALSE, FALSE))
+#           names(res) <- c(FUNc, catFUNc)
+#         } else { # Single Function Aggregation 
+#           clpf <- any(FUNc == clpfun) # good ?? ????
+#           clpcf <- any(catFUNc == clpfun)
+#           
+#           if(clpf || clpcf)  # some fast functions 
+#             g <- if(listby) GRP(by, seq_along(by), keep.groups = !drop.by, order = sort.row) else GRP(X, num, keep.groups = !drop.by, order = sort.row)
+#           res <- list(NULL,NULL)
+#           if(clpf) res[[1]] <- match.fun(FUNc)(X[nu], g, use.g.names = FALSE, ...) else { # without fast functions
+#             if(!isDT) {
+#               setDT(X)
+#               isDT = TRUE
+#             }
+#             res[[1]] <- if(tFUNc) DTagg(FUN, nu, ...) else DTagg(as.name(FUNc), nu, ...)
+#           }
+#           if(clpcf) res[[2]] <- match.fun(catFUNc)(X[nnu], g, use.g.names = FALSE, ...) else { # without fast functions
+#             if(!isDT) setDT(X)
+#             res[[2]] <- if(tcatFUNc) DTagg(catFUN, nnu, ...) else DTagg(as.name(catFUNc), nnu, ...)
+#           }
+#           res <- .Internal(unlist(res, FALSE, FALSE))
+#           names(res) <- c(FUNc, catFUNc)
+#         }
+#       } else { # Only numeric or categorical variables
+#         if (nnul) {
+#           FUN <- catFUN
+#           nu <- nnu
+#         }
+#         FUNc <- FUNchar(FUN) 
+#         tFUNc <- FUNc[[2]]
+#         FUNc <- FUNc[[1]]
+#         if(length(FUNc) > 1) { # Multi-function aggregation
+#           clpf <- FUNc %in% clpfun
+#           if(any(clpf)) { # with some fast functions
+#             g <- if(listby) GRP(by, seq_along(by), keep.groups = !drop.by, order = sort.row) else GRP(X, num, keep.groups = !drop.by, order = sort.row)
+#             res <- if(all(clpf)) lapply(FUNc, function(x) match.fun(x)(X[nu], g, use.g.names = FALSE, ...)) else {
+#               setDT(X)
+#               if(tFUNc) lapply(seq_along(FUNc), function(i) if(clpf[i]) match.fun(FUNc[i])(X[nu], g, use.g.names = FALSE, ...) else DTagg(FUN[[i]], nu, ...)[,-1:lby]) else
+#                 lapply(seq_along(FUNc), function(i) if(clpf[i]) match.fun(FUNc[i])(X[nu], g, use.g.names = FALSE, ...) else DTagg(as.name(FUNc[i]), nu, ...)[,-1:lby])
+#             }
+#             if(reshape.long) {
+#               res[clpf] <- lapply(res[clpf],function(x)c(g[["groups"]],x))
+#               res <- data.table::rbindlist(res, fill = FALSE, idcol = ifelse(nul,"FUN","catFUN"))
+#               class(res) <- clx
+#             } else if (!list.out) {
+#               res[!clpf] <- lapply(res[!clpf],function(x)x[,-1:lby])
+#               res <- do.call(cbind.data.frame, c(g[["groups"]], res)) # faster ?? using c() ?? 
+#               class(res) <- clx
+#             }
+#           } else { # without fast functions
+#             setDT(X)
+#             res <- if(tFUNc) lapply(FUN, DTagg, nu, ...) else lapply(FUNc, function(x) DTagg(as.name(x), nu, ...))
+#             names(res) <- FUNc
+#             if(reshape.long) {
+#               res <- data.table::rbindlist(res, fill = FALSE, idcol = ifelse(nul,"FUN","catFUN"))
+#               class(res) <- clx
+#             } else if (!list.out) {
+#               res[-1] <- lapply(res[-1], function(x)x[,-1:lby])
+#               res <- do.call(cbind.data.frame, res) # faster ?? using c() ?? 
+#               class(res) <- clx
+#             }
+#           }
+#         } else { # Simple Aggregation
+#           if(any(FUNc == clpfun)) { # with a fast function
+#             g <- if(listby) GRP(by, seq_along(by), keep.groups = !drop.by, order = sort.row) else GRP(X, num, keep.groups = !drop.by, order = sort.row)
+#             res <- match.fun(FUNc)(X[nu], g, use.g.names = FALSE, ...)
+#           } else { # without fast functions
+#             setDT(X)
+#             res <- if(tFUNc) DTagg(FUN, nu, ...) else DTagg(as.name(FUNc), nu, ...)
+#           }
+#         }
+#       } 
+#     } else { # Custom Aggregation -> still implement !!
+#       
+#     }
+#   } else { # non-grouped aggregation !!!
+#     
+#     if(is.null(custom)) { # Default mode !!
+#       
+#       # Characterizing the variables
+#       cols <- seq_along(X)
+#       nu <- which(vapply(X, is.numeric, FUN.VALUE = logical(length(X)))) 
+#       nnu <- setdiff(cols, nu)
+#       
+#       if(length(nu) && length(nnu)) {
+#         res <- list(NULL, NULL)
+#         if(is.function(FUN)) res[[1]] <- lapply(X[nu], FUN, ...) else if(is.character(FUN))
+#       }
+#       # in general: just make funlist and use lapply, not DT!!
+#       
+#       if(length(nu) && length(nnu)) { # Both numeric and categorical variables !!
+#         
+#       }
+#       
+#     } else { # Custom Mode
+#       
+#     }
+#   }
+# }
+# 
+# 
+# # Original collap:
+# # If Xcols and 2-sided formula give error message and say: please choose!!
+# # I'd also remove the factors argument, and use factor.vars and as.numeric.factor, or simply aggregate as.numeric.factor(X)
+# collap.data.frame <- function(X, by = NULL, FUN = mean, catFUN = Mode, Xcols = NULL,
+#                               custom = NULL, custom.names = TRUE, sort.col = TRUE, # renamed sort to sort.col
+#                               sort.row = TRUE, # added argument -> if true use keyby with data.table, else by
+#                               reshape.long = FALSE,
+#                               list.out = FALSE, # renamed as.list to list.out -> more intuitive
+#                               drop.cat = FALSE, drop.by = FALSE, show.statistic = TRUE, # renamed dropcat and dropby to drop.cat and drop.by -> more consistent with the other arguments
+#                               parallel = FALSE, ...) # data.table is on now by default,if you think it is stable, we can do only data.table
+# {
+#   
+#   # All Arguments writen out with default settings (for testing)
+#   # X; by = NULL; FUN = mean; catFUN = Mode; factors = "as.categorical"
+#   # custom = NULL; custom.names = TRUE; collapse = TRUE; sort.col = TRUE
+#   # sort.row = TRUE; ndigits = NULL; simplify = FALSE; reshape.long = FALSE 
+#   # na.rm = TRUE; replace.nan = TRUE; list.out = FALSE; drop.cat = FALSE 
+#   # drop.by = FALSE; show.statistic = TRUE; data.table = TRUE; parallel = FALSE
+#   
+#   # Identifying the inputs: X
+#   cl = class(X)
+#   isDT = any(cl == "data.table")
+#   
+#   # Identifying the inputs: FUN, catFUN and custom
+#   customl = !is.null(custom)
+#   if(customl) {
+#     namFUN = names(FUN)
+#     FUN = lapply(namFUN, match.fun)
+#     lFUN = length(FUN)
+#     iFUN = seq_len(lFUN)
+#   } else {
+#     nlf = !is.list(FUN)
+#     if(is.character(FUN)) { 
+#       FUN = unlist(strsplit(FUN,",",fixed = TRUE), use.names = FALSE)
+#       FUN = sapply(FUN, match.fun, descend = FALSE) 
+#     } else if (nlf) {
+#       FUN = setNames(list(FUN), deparse(substitute(FUN)))
+#     }
+#     namFUN = names(FUN)
+#     lFUN = length(FUN)
+#     iFUN = seq_len(lFUN)
+#     
+#     nlcf = !is.list(catFUN)
+#     if(is.character(catFUN)) {
+#       catFUN = unlist(strsplit(catFUN,",",fixed = TRUE), use.names = FALSE)
+#       catFUN = sapply(catFUN, match.fun, descend = FALSE) 
+#     } else if (nlcf) { 
+#       catFUN = setNames(list(catFUN), deparse(substitute(catFUN)))
+#     }
+#     namcatFUN = names(catFUN)
+#     lcatFUN = length(catFUN)
+#     icatFUN = seq_len(lcatFUN)
+#   }
+#   
+#   # Identifying the inputs: by
+#   byl = !is.null(by)
+#   if(byl) {
+#       if(is.list(by)) {
+#         if(any(lengths(by) != nrow(X))) stop("arguments must have same length")
+#           naml = names(by)
+#         if(is.null(naml)) 
+#           names(by) = paste0("Group.",seq_along(by)) else {
+#           indl <- which(!nzchar(naml)) 
+#           names(by)[indl] <- paste0("Group.", indl)
+#         }
+#         X = cbind(by,X) # needed ?? use GRP !!!
+#         by = names(by)
+#         num = match(by, names(X))
+#       } else if(is.call(by)) {
+#         if(length(by)>2) X = get_all_vars(by,X)
+#         by = attr(terms(by),"term.labels") # faster way using all.vars
+#         num = match(by, names(X))
+#       } else if(is.character(by)) { 
+#       by = unlist(strsplit(by,",",fixed = TRUE), use.names = FALSE)
+#       num = match(by, names(X))
+#      } else if (is.numeric(by)) { 
+#       num = by 
+#       by = names(X)[num]
+#      } else stop("'by' must be either a formula, a numeric or character vector signifying the columns over which to aggregate, or a list of columns")
+#     lby = length(by)
+#     iby = seq_len(lby)
+#   } 
+#   
+#   # Characterizing the variables  
+#   cols = setdiff(seq_along(X), num)
+#   nu = setdiff(which(vapply(X, is.numeric, TRUE)), num)
+#   nnu = setdiff(cols,nu)
+#   
+#   # Preprocessing 
+#   Xby = X[num] # use GRP !!
+#   
+#   # Functions to perform the aggregation
+#     # nlfs = all(nlf,ifelse(drop.cat,TRUE,nlcf)) # not needed anymore !!
+#     agg <- function(df, by, FUN, nam, ...)  
+#       if(any(nam == clpfun)) FUN(df, by, ...) else BY.data.frame(df, by, FUN, ...)
+#     
+#   # Exchanging arguments in special cases
+#   if (!drop.cat) {
+#     if (length(nu)==0 && length(nnu)>0) {
+#       nu = nnu; drop.cat = TRUE; FUN = catFUN; lFUN = lcatFUN; iFUN = icatFUN; namFUN = namcatFUN 
+#     } else if (lFUN<=1 && lcatFUN>1) {
+#       a = nu; nu = nnu; nnu = a; b = FUN; FUN = catFUN; catFUN = b
+#       a = lFUN; lFUN = lcatFUN; lcatFUN = a; b = namFUN; namFUN = namcatFUN; namcatFUN = b
+#       a = iFUN; iFUN = icatFUN; icatFUN = a
+#     } else if (lcatFUN>1) { 
+#       reshape.long = FALSE; list.out = FALSE
+#     }
+#   }
+#   
+#   # Computing output
+#   if(!customl) {
+#     if(parallel && lFUN>1) { # Numeric Variables
+#       no_cores <- parallel::detectCores() - 1
+#       cl <- parallel::makeCluster(no_cores)
+#       # parallel::clusterExport(cl,ifelse(data.table,"data.table","aggregate.data.frame"))
+#       res = parallel::parLapply(cl,iFUN,function(i) agg(df=X[nu],by=Xby,FUN[[i]],namFUN[i], ...)) 
+#       stopCluster(cl)
+#     } else if (lFUN>1) {
+#       res = lapply(iFUN,function(i) agg(df=X[nu],by=Xby,FUN[[i]],namFUN[i], ...))
+#     } else {
+#       res = agg(df=X[nu],by=Xby,FUN[[1]],namFUN, ...)
+#     }
+#     if (!drop.cat && length(nnu)>0) { # Categorical Variables
+#       if(parallel && lcatFUN>1) {
+#         no_cores <- parallel::detectCores() - 1
+#         cl <- parallel::makeCluster(no_cores)
+#         # parallel::clusterExport(cl,ifelse(data.table,"data.table","aggregate.data.frame"))
+#         Catres = parallel::parLapply(cl,icatFUN,function(i) agg(df=X[nnu],by=Xby,catFUN[[i]],namcatFUN[i], ...)) 
+#         stopCluster(cl)
+#       } else if (lcatFUN>1) {
+#         Catres = lapply(icatFUN,function(i) agg(df=X[nnu],by=Xby,catFUN[[i]],namcatFUN[i], ...))
+#       } else {
+#         Catres = agg(df=X[nnu],by=Xby,catFUN[[1]],namcatFUN, ...)
+#       }
+#     }
+#   } else { # Custom Mode
+#     unlistFUN = unlist(FUN, use.names = FALSE)
+#     ivf = !is.list(unlistFUN) # If FUN is a vector that means it contains colindices or colnames
+#     if (ivf) {
+#       if (is.null(namFUN)) stop("Names of list must be valid function names")
+#       if (is.character(unlistFUN)) { # FUN contains column names as character strings
+#         indl = lapply(FUN,function(x)match(unlist(strsplit(x,",",fixed = TRUE), use.names = FALSE), names(X)))
+#         unf = namFUN 
+#         FUN = sapply(namFUN, match.fun) 
+#       } else { # FUN contains column indices
+#         indl = FUN
+#         unf = namFUN 
+#         FUN = sapply(namFUN, match.fun) 
+#       }
+#     } else { # # If FUN was a character string or a list of functions
+#       ind = sort(union(nu,nnu)); fFUN = FUN; FUN = unique(FUN)
+#       unf = if (is.null(namFUN)) seq_along(FUN) else unique(namFUN) 
+#       indl = lapply(FUN,function(x)ind[sapply(fFUN,identical,x)])
+#       if (length(ind) != lFUN) stop("Vector of custom functions needs to match columns of data")
+#     }
+#     if (!is.null(namFUN) && custom.names) { res = lapply(seq_along(unf),function(i){r = agg(df=X[indl[[i]]],by=Xby,FUN[[i]],unf[i]) 
+#     names(r)[-iby] = paste0(names(r)[-iby],".",unf[i]); r})
+#     } else res = lapply(seq_along(unf),function(i) agg(df=X[indl[[i]]],by=Xby,FUN[[i]],unf[i]))
+#     if (list.out != "FUN") {
+#       res = data.frame(res[[1]][iby],cbind.data.frame(lapply(res,function(x)x[-iby]), stringsAsFactors = FALSE), stringsAsFactors = FALSE)
+#       if (!collapse) res = merge.data.frame(Xby,res)[order(ordr), , drop = FALSE] 
+#       rownames(res) = NULL
+#       if (sort.col) res = res[order(c(num,unlist(indl, use.names = FALSE)))]  
+#     } else { names(res) = unf
+#     if (drop.by) res = lapply(res, function(x)x[-iby])
+#     }
+#     lFUN = 1
+#   }
+#   
+#   # Preparing Output
+#   if (is.null(custom)) {
+#     if (reshape.long || lFUN == 1 || list.out == "FUN") { # Anything but multiple functions columns in parallel
+#       if (lFUN>1) { # if multiple functions 
+#         if (!drop.cat && length(nnu)>0) { # if categorical variables 
+#           if (list.out != "FUN" && show.statistic) { # show a statistic
+#             res = lapply(iFUN,function(x){
+#               data.frame(res[[x]][iby],Statistic=namFUN[x],res[[x]][-iby],Catres[-iby], stringsAsFactors = FALSE)})
+#             if (!collapse) res = lapply(res,function(x)merge.data.frame(Xby, x)[order(ordr), , drop = FALSE])
+#             if (sort.col) { ord = order(c(num,-Inf,nu,nnu))
+#             res = lapply(res,function(x)x[ord])}
+#           } else { # no statistic 
+#             res = lapply(iFUN,function(x){ # only if show.statistic argument
+#               data.frame(res[[x]],Catres[-iby], stringsAsFactors = FALSE)})
+#             if (!collapse) res = lapply(res,function(x)merge.data.frame(Xby, x)[order(ordr), , drop = FALSE])
+#             if (sort.col) { ord = order(c(num,nu,nnu))
+#             res = lapply(res,function(x)x[ord])}
+#           }
+#         } else { 
+#           if (list.out != "FUN" && show.statistic) { 
+#             res = lapply(iFUN, function(x){ # No categorical but with statistic
+#               data.frame(res[[x]][iby],Statistic=namFUN[x],res[[x]][-iby], stringsAsFactors = FALSE)})
+#             if (!collapse) res = lapply(res,function(x)merge.data.frame(Xby, x)[order(ordr), , drop = FALSE])
+#             if (sort.col) { ord = order(c(num,-Inf,nu))
+#             res = lapply(res,function(x)x[ord])}
+#           } else { # No categorical no statistic
+#             if (!collapse) res = lapply(res,function(x)merge.data.frame(Xby, x)[order(ordr), , drop = FALSE])
+#             if (sort.col) { ord = order(c(num,nu))
+#             res = lapply(res,function(x)x[ord])}
+#           }
+#         }
+#         names(res) = namFUN
+#         if (list.out != "FUN") { # Combine unless FUN
+#           res = if (show.statistic) { do.call(rbind.data.frame, c(res, make.row.names = FALSE, stringsAsFactors = FALSE))
+#           } else do.call(rbind.data.frame, c(res, stringsAsFactors = FALSE))  
+#         }
+#       } else if (!drop.cat && length(nnu)>0) { # Only one function but with categorical variables
+#         res = data.frame(res,Catres[-iby], stringsAsFactors = FALSE)
+#         if (!collapse) res = merge.data.frame(Xby,res)[order(ordr), , drop = FALSE]
+#         if (sort.col) res = res[order(c(num,nu,nnu))]
+#       } else { # if one function and no categorical variables
+#         if (!collapse) res = merge.data.frame(Xby,res)[order(ordr), , drop = FALSE]
+#         if (sort.col) res = res[order(c(num,nu))]
+#       }
+#     } else { # If multiple functions all in a row
+#       res = lapply(iFUN,function(x) {
+#         names(res[[x]])[-iby] = paste0(names(res[[x]])[-iby],".",namFUN[x]); res[[x]]})
+#       res[-1] = lapply(iFUN[-1], function(x) res[[x]][-iby])
+#       if (!drop.cat && length(nnu)>0) { # If categorical variables
+#         if (lcatFUN>1) { # Multiple categorical functions 
+#           Catres = lapply(icatFUN,function(x) {
+#             names(Catres[[x]])[-iby] = paste0(names(Catres[[x]])[-iby],".",namcatFUN[x]); Catres[[x]]})
+#           Catres[-1] = lapply(icatFUN[-1], function(x) Catres[[x]][-iby])
+#           Catres = do.call(cbind,Catres)
+#           nnu = rep(nnu,lcatFUN)
+#         }
+#         Catres = Catres[-iby]
+#         res = do.call(cbind,res)
+#         res = cbind.data.frame(res,Catres)
+#         if (!collapse) res = merge.data.frame(Xby,res)[order(ordr), , drop = FALSE]
+#         if (sort.col) res = res[order(c(num,rep(nu,lFUN),nnu))] 
+#       } else { # No categorical variables 
+#         res = do.call(cbind.data.frame,res)
+#         if (!collapse) res = merge.data.frame(Xby,res)[order(ordr), , drop = FALSE]
+#         if (sort.col) res = res[order(c(num,rep(nu,lFUN)))] 
+#       }
+#     }
+#   }
+#   if (list.out==FALSE) { 
+#     if (lby == 1 && by == "nullID") res = res[-1]
+#     if (drop.by) res = res[-match(by,names(res))]
+#     if (isDT) setDT(res)
+#     types = vapply(res, class, FUN.VALUE = character(1))
+#     if (!is.null(ndigits)) {
+#       numt = which(types %in% c("numeric","integer","double","atomic"))
+#       res[numt] = round(res[numt],ndigits)
+#     }
+#     if (simplify) { # Probably an extended set of condition is faster than calling vapply again, to be comprehensive we also need to keep track of the Xby types to choose whether to simplify or not. 
+#       #if ((any(cl=="matrix") || (any(dim(res)==1) && (drop.cat || length(nnu)<=0))) && (lFUN==1 || !reshape.long))   
+#       if (length(unique(types))==1) res = drop(as.matrix(res))
+#     }
+#   } else {
+#     if (lby == 1 && by == "nullID") lapply(res,function(x)x[-1])
+#     if (list.out == "by" && by != "nullID") {
+#       num = match(by,names(res))
+#       res = split.data.frame(res[-num],res[num], drop = TRUE, lex.order = TRUE)
+#     }
+#     if (isDT) lapply(res,setDT)
+#     inndigits = !is.null(ndigits)
+#     res = lapply(res, function(x) {
+#       types = vapply(x, class, FUN.VALUE = character(1))
+#       numt = which(types %in% c("numeric","integer","double","atomic"))
+#       if (inndigits) x[numt] = round(x[numt],ndigits)
+#       if (simplify && length(unique(types))==1) x = drop(as.matrix(x))
+#       x
+#     }) # again, checking with conditions will be faster, therefore need to check Xby types above. 
+#     #if ((any(cl=="matrix") || (any(dim(res)==1) && (drop.cat || length(nnu)<=0))) && (lFUN==1 || !reshape.long)) 
+#     #res = lapply(res,function(x)drop(as.matrix(x)))
+#   }
+#   return(res)
+# }  

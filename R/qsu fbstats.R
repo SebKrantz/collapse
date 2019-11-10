@@ -1,5 +1,3 @@
-library(Rcpp)
-sourceCpp('R/C++/fbstats.cpp')
 
 # Note: for principal innovations of this code see fsum.R !!
 # nv <- function(x) unclass(x)[vapply(x, is.numeric, TRUE, USE.NAMES = FALSE)]
