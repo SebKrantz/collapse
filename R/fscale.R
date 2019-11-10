@@ -1,3 +1,10 @@
+library(Rcpp)
+sourceCpp('R/C++/fscale.cpp', rebuild = TRUE)
+sourceCpp('R/C++/fscalea.cpp', rebuild = TRUE)
+sourceCpp('R/C++/fscalel.cpp', rebuild = TRUE)
+source("R/collapse R/GRP.R")
+source("R/collapse R/small_helper.R")
+source("R/collapse R/quick_conversion.R")
 
 # w.type = "frequency"
 # Todo: center and scale arguments -> link to fmean and fsd with TRA ??

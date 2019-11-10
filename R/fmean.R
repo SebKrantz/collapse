@@ -1,3 +1,10 @@
+library(Rcpp)
+sourceCpp('R/C++/fmean.cpp')
+sourceCpp('R/C++/fmeana.cpp') 
+sourceCpp('R/C++/fmeanl.cpp')
+sourceCpp('R/C++/TRA.cpp')
+sourceCpp('R/C++/TRAl.cpp')
+sourceCpp('R/C++/TRAa.cpp')
 
 # Note: for principal innovations of this code see fsum.R !!
 

@@ -1,3 +1,10 @@
+library(Rcpp)
+sourceCpp('R/C++/fnobs.cpp')
+sourceCpp('R/C++/fnobsa.cpp')
+sourceCpp('R/C++/fnobsl.cpp')
+sourceCpp('R/C++/TRA.cpp')
+sourceCpp('R/C++/TRAl.cpp')
+sourceCpp('R/C++/TRAa.cpp')
 
 # For foundational changes to this code see fsum.R !!
 

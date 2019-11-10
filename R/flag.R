@@ -1,3 +1,10 @@
+library(Rcpp)
+sourceCpp('R/C++/flag.cpp', rebuild = TRUE) # Todo: Thoroughly check !!
+sourceCpp('R/C++/flaga.cpp', rebuild = TRUE)
+sourceCpp('R/C++/flagl.cpp', rebuild = TRUE) 
+source("R/collapse R/GRP.R")
+source("R/collapse R/small_helper.R")
+source("R/collapse R/quick_conversion.R")
 
 # instead of more options for L.matrix and L.data.frame, could do without method dispatch??
 

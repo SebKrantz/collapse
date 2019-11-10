@@ -1,3 +1,11 @@
+library(Rcpp)
+sourceCpp('R/C++/ffirst.cpp')
+sourceCpp('R/C++/ffirsta.cpp')
+sourceCpp('R/C++/ffirstl.cpp')
+sourceCpp('R/C++/TRA.cpp')
+sourceCpp('R/C++/TRAl.cpp')
+sourceCpp('R/C++/TRAa.cpp')
+
 
 # For foundational changes to this code see fsum.R !!
 

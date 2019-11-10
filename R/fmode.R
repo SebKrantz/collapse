@@ -1,3 +1,9 @@
+library(Rcpp)
+sourceCpp('R/C++/fmode.cpp') # Still test thoroughly !!, make better fmodelCpp !!!
+sourceCpp('R/C++/fmodea.cpp') # Still test thoroughly !!
+sourceCpp('R/C++/TRA.cpp')
+sourceCpp('R/C++/TRAl.cpp')
+sourceCpp('R/C++/TRAa.cpp')
 
 # Note: for principal innovations of this code see fsum.R !!
 

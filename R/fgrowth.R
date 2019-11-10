@@ -1,3 +1,10 @@
+library(Rcpp)
+sourceCpp('R/C++/fgrowth.cpp', rebuild = TRUE) # Todo: Thoroughly test these functions !!!
+sourceCpp('R/C++/fgrowtha.cpp', rebuild = TRUE)
+sourceCpp('R/C++/fgrowthl.cpp', rebuild = TRUE)
+source("R/collapse R/GRP.R")
+source("R/collapse R/small_helper.R")
+source("R/collapse R/quick_conversion.R")
 
 # For principle innovations of this code see flag.R and flag.cpp
 

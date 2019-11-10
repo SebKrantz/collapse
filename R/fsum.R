@@ -1,3 +1,10 @@
+library(Rcpp)
+sourceCpp('R/C++/fsum.cpp')
+sourceCpp('R/C++/fsuma.cpp')
+sourceCpp('R/C++/fsuml.cpp')
+sourceCpp('R/C++/TRA.cpp')
+sourceCpp('R/C++/TRAl.cpp')
+sourceCpp('R/C++/TRAa.cpp')
 
 
 fsum <- function(x, g = NULL, TRA = FALSE, na.rm = TRUE, use.g.names = TRUE, ...) {

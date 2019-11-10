@@ -1,3 +1,10 @@
+library(Rcpp)
+sourceCpp('R/C++/fmax.cpp')
+sourceCpp('R/C++/fmaxa.cpp')
+sourceCpp('R/C++/fmaxl.cpp')
+sourceCpp('R/C++/TRA.cpp')
+sourceCpp('R/C++/TRAl.cpp')
+sourceCpp('R/C++/TRAa.cpp')
 
 # For foundational changes to this code see fsum.R !!
 

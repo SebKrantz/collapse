@@ -1,3 +1,10 @@
+library(Rcpp)
+sourceCpp('R/C++/fdiff.cpp', rebuild = TRUE) 
+sourceCpp('R/C++/fdiffa.cpp', rebuild = TRUE)
+sourceCpp('R/C++/fdiffl.cpp', rebuild = TRUE) # On large test data (10 mio obs), unordered panel-difference still gave error !!!!!
+source("R/collapse R/GRP.R")
+source("R/collapse R/small_helper.R")
+source("R/collapse R/quick_conversion.R")
 
 # For principle innovations of this code see flag.R and flag.cpp
 

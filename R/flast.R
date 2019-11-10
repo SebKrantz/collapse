@@ -1,3 +1,10 @@
+library(Rcpp)
+sourceCpp('R/C++/flast.cpp')
+sourceCpp('R/C++/flasta.cpp')
+sourceCpp('R/C++/flastl.cpp')
+sourceCpp('R/C++/TRA.cpp')
+sourceCpp('R/C++/TRAl.cpp')
+sourceCpp('R/C++/TRAa.cpp')
 
 # For foundational changes to this code see fsum.R !!
 

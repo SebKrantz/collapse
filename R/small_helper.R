@@ -1,3 +1,5 @@
+library(Rcpp)
+sourceCpp("C++/small_helper.cpp")
 vlabels <- function(X) {
   if(is.atomic(X)) {
     res = attr(X, "label")
@@ -42,18 +44,18 @@ setDimnames <- function(object = nm, nm) {
   dimnames(object) <- nm 
   object
 }
-setAttributes <- function(object = nm, nm) {
-  attributes(object) <- nm 
-  object
-}
-duplAttributes <- function(x, y) {
-  attributes(x) <- attributes(y)
-  x
-}
-cond_duplicate_attributes <- function(x, y) {
-  if(typeof(x) == typeof(y)) attributes(x) <- attributes(y)
-  x
-}
+# setAttributes <- function(object = nm, nm) {
+#   attributes(object) <- nm 
+#   object
+# }
+# duplAttributes <- function(x, y) {
+#   attributes(x) <- attributes(y)
+#   x
+# }
+# cond_duplicate_attributes <- function(x, y) {
+#   if(typeof(x) == typeof(y)) attributes(x) <- attributes(y)
+#   x
+# }
 remove_attributes <- function(x) {
   attributes(x) <- NULL
   x
@@ -61,11 +63,12 @@ remove_attributes <- function(x) {
 pwcor <- function(x, ...) cor(x, use = "pairwise.complete.obs", ...)
 pwcov <- function(x, ...) cov(x, use = "pairwise.complete.obs", ...)
 na.rm <- function(x) x[!is.na(x)] # cpp version available !!
-fnlevels <- function(x) length(attr(x, "levels"))
-TRAtoInt <- function(x) {
-  TRAchar <- c("replace_fill","replace","-","-+","/","%","+","*")
-  if(is.character(x)) match(x, TRAchar) else x
-}
+fnlevels <- function(x) length(attr(x, "levels")) # make cpp version ?? 
+TRAtoInt <- function(x) # A lot faster than match based verion !!!
+  switch(x, replace_fill = 1L, replace = 2L, `-` = 3L, `-+` = 4L, `/` = 5L, `%` = 6L, `+` = 7L, `*` = 8L, 
+            stop("Unknown transformation!"))
+
+
 change_row_names <- function(x, rn) {
   ax <- attributes(x)
   ax[["row.names"]] <- rn
@@ -106,3 +109,34 @@ G_t <- function(x, m = TRUE) {
     if(is.integer(x)) return(x) else return(qG(x)) # make sure it is ordered !!! qG already ckecks factor !!
   } else if(all(class(l) == "GRP")) return(l[[2]]) else return(GRP(l, return.groups = FALSE)[[2]])
 }
+anyNAerror <- function(x, e) if(anyNA(x)) stop(e) else x
+# colsubset <- function(x, ind) { # also works for grouped tibbles !!
+#   ax <- attributes(x)
+#   attributes(x) <- NULL # faster than unclass !!
+#   if(!(is.numeric(ind) || is.logical(ind))) # could do error if index is out of range or logical vector too long !!
+#     ind <- if(is.function(ind)) vapply(x, ind, TRUE, USE.NAMES = FALSE) else 
+#            anyNAerror(match(ind, ax[["names"]]), "Unknown column names!")
+#   ax[["names"]] <- ax[["names"]][ind]
+#   return(setAttributes(x[ind], ax)) # return(`attributes<-`(x[ind], ax)) # This is slow on large data -> a lot of checks !!!
+# } 
+# checks implemented at little cost !!!
+colsubset <- function(x, ind) { # also works for grouped tibbles !!
+  ax <- attributes(x)
+  attributes(x) <- NULL # faster than unclass !! and good here since vapply on unclassed is faster !!
+  if(is.numeric(ind)) { 
+    if(max(abs(ind)) > length(x)) stop("Index out of range abs(1:length(x))") 
+  } else if(is.logical(ind)) { 
+    if(length(ind) != length(x)) stop("Logical subsetting vector must match length(x)") 
+  } else {
+    ind <- if(is.function(ind)) vapply(x, ind, TRUE, USE.NAMES = FALSE) else 
+      anyNAerror(match(ind, ax[["names"]]), "Unknown column names!")
+  }
+  ax[["names"]] <- ax[["names"]][ind]
+  return(setAttributes(x[ind], ax)) # return(`attributes<-`(x[ind], ax)) # This is slow on large data -> a lot of checks !!!
+}
+
+rgrep <- function(exp, nam, ...) if(length(exp) > 1L) sort(unique.default(unlist(lapply(exp, grep, nam, ...), use.names = FALSE))) else grep(exp, nam, ...)
+is.categorical <- function(x) !is.numeric(x)
+is.Date <- function(x) inherits(x, c("Date","POSIXlt","POSIXct"))
+NROW2 <- function(x, d) if(length(d)) d[1L] else length(x)
+NCOL2 <- function(d, ilv) if(ilv) d[2L] else 1L

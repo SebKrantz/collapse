@@ -1,3 +1,6 @@
+library(Rcpp)
+sourceCpp("R/C++/mrtl_type_dispatch_final.cpp")
+sourceCpp("R/C++/qFqG.cpp", rebuild = TRUE) # https://gallery.rcpp.org/articles/fast-factor-generation/
 qF <- function(x, ordered = TRUE) {
   if(is.factor(x)) return(x)
   qFCpp(x, ordered)
