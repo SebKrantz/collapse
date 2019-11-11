@@ -4,14 +4,14 @@ rapply2d <- function(X, FUN, ...) {
   aply2d(X)
 }
 
-# Use _ instead of . (because of classes) or no gap at all ?? 
+# Use _ instead of . (because of classes) or no gap at all ??
 # _ is good !! looks like dplyr and good practice !! (maybe there will be a class 'vars' one day )
 
 list_elem <- function(l, return = c("sublist","names","indices","named_indices"), keep.class = FALSE) {
-    switch(return[1L], sublist = if(keep.class) colsubset(l, is.list) else 
-              unclass(l)[vapply(l, is.list, TRUE, USE.NAMES = FALSE)], 
-           names = names(which(vapply(l, is.list, TRUE))), 
-           indices = which(vapply(l, is.list, TRUE, USE.NAMES = FALSE)), 
+    switch(return[1L], sublist = if(keep.class) colsubset(l, is.list) else
+              unclass(l)[vapply(l, is.list, TRUE, USE.NAMES = FALSE)],
+           names = names(which(vapply(l, is.list, TRUE))),
+           indices = which(vapply(l, is.list, TRUE, USE.NAMES = FALSE)),
            named.indices = which(vapply(l, is.list, TRUE)),
            stop("Unknown return option!"))
 }
@@ -23,14 +23,14 @@ list_elem <- function(l, return = c("sublist","names","indices","named_indices")
   ind <- which(vapply(l, is.list, TRUE, USE.NAMES = FALSE))
   if(len != length(ind)) stop("length(value) must match length(list_elem(l))")
   if(ilv) l[ind] <- value else l[[ind]] <- value
-  if(ilv && length(nam <- names(value)) == length(ind)) al[["names"]][ind] <- nam 
+  if(ilv && length(nam <- names(value)) == length(ind)) al[["names"]][ind] <- nam
   return(setAttributes(l, al))
 }
 atomic_elem <- function(l, return = c("sublist","names","indices","named_indices"), keep.class = FALSE) {
-  switch(return[1L], sublist = if(keep.class) colsubset(l, is.atomic) else 
-    unclass(l)[vapply(l, is.atomic, TRUE, USE.NAMES = FALSE)], 
-    names = names(which(vapply(l, is.atomic, TRUE))), 
-    indices = which(vapply(l, is.atomic, TRUE, USE.NAMES = FALSE)), 
+  switch(return[1L], sublist = if(keep.class) colsubset(l, is.atomic) else
+    unclass(l)[vapply(l, is.atomic, TRUE, USE.NAMES = FALSE)],
+    names = names(which(vapply(l, is.atomic, TRUE))),
+    indices = which(vapply(l, is.atomic, TRUE, USE.NAMES = FALSE)),
     named.indices = which(vapply(l, is.atomic, TRUE)),
     stop("Unknown return option!"))
 }
@@ -38,13 +38,13 @@ atomic_elem <- function(l, return = c("sublist","names","indices","named_indices
   al <- attributes(l)
   ilv <- is.list(value)
   len <- if(ilv) length(value) else 1L
-  attributes(l) <- NULL 
+  attributes(l) <- NULL
   ind <- which(vapply(l, is.atomic, TRUE, USE.NAMES = FALSE))
   if(len != length(ind)) stop("length(value) must match length(list_elem(l))")
   if(ilv) l[ind] <- value else l[[ind]] <- value
-  if(ilv && length(nam <- names(value)) == length(ind)) al[["names"]][ind] <- nam 
+  if(ilv && length(nam <- names(value)) == length(ind)) al[["names"]][ind] <- nam
   return(setAttributes(l, al))
-} 
+}
 
 is.regular <- function(x) is.list(x) || is.atomic(x) # fastest way??
 is.unlistable <- function(l) all(unlist(rapply2d(l, is.regular), use.names = FALSE)) # fastest way??
@@ -65,7 +65,7 @@ has_elem <- function(l, FoR, recursive = TRUE, DF.as.list = TRUE, regex = FALSE,
  # if(!is.list(l)) stop("l is not a list")
   if(is.function(FoR)) {
     if(recursive) {
-     if(DF.as.list) return(any(unlist(rapply(l, FoR, how = "list"), use.names = FALSE))) else 
+     if(DF.as.list) return(any(unlist(rapply(l, FoR, how = "list"), use.names = FALSE))) else
                     return(any(unlist(rapply2d(l, FoR), use.names = FALSE)))
     } else return(any(vapply(l, FoR, TRUE, USE.NAMES = FALSE)))
   } else if(is.character(FoR)) {
@@ -79,9 +79,9 @@ has_elem <- function(l, FoR, recursive = TRUE, DF.as.list = TRUE, regex = FALSE,
   } else stop("FoR must be a function or character vector of element names or regular expressions")
 }
 
-get_elem <-function(l, FoR, recursive = TRUE, DF.as.list = TRUE, keep.tree = FALSE, keep.class = FALSE, regex = TRUE, ...) { # FUNorl See if this is implemented in some other package already!!
+get_elem <-function(l, FoR, recursive = TRUE, DF.as.list = TRUE,
+                    keep.tree = FALSE, keep.class = FALSE, regex = FALSE, ...) { # FUNorl See if this is implemented in some other package already!!
   # if (!is.list(l)) stop("l is not a list")
-  rgrep <- function(exp, nam, ...) if (length(exp)>1) sort.int(unique.default(vapply(exp, grep, 1L, nam, ...))) else grep(exp, nam, ...)
   if (DF.as.list) is.subl <- function(x) is.list(x) else is.subl <- function(x) is.list(x) && !is.data.frame(x) # could do without, but it seems to remove data.frame attributes
   if (keep.class) cll <- class(l) # perhaps generalize to other attributes??
   if (is.function(FoR)) {
@@ -155,10 +155,10 @@ get_elem <-function(l, FoR, recursive = TRUE, DF.as.list = TRUE, keep.tree = FAL
 # there is base::getElement, but still, to be consistent with vars call this get.elem(), and lsubset
 # is only for subsetting a list with another list?
 reg_elem <- function(l, recursive = TRUE, keep.tree = FALSE, keep.class = FALSE) { # regular.elem, reg.elem, std.elem, data.elem, unl.elem?? data.table methods needed??, add recursive option!!!
-  if (is.list(l)) {
-    if (keep.class) cll <- class(l) # perhaps generalize to other attributes??
-    if (is.data.frame(l)) return(l)
-    if (recursive) {
+  if(is.list(l)) {
+    if(keep.class) cll <- class(l) # perhaps generalize to other attributes??
+    if(is.data.frame(l)) return(l)
+    if(recursive) {
       is.subl <- function(x) is.list(x) && !is.data.frame(x) # could do without, but it seems to remove data.frame attributes
       is.atordf <- function(x) is.atomic(x) || is.data.frame(x) # generally see waht happens with attributes!!
       regsearch <- function(x) if (any(subl <- vapply(x, is.subl, TRUE))) {
