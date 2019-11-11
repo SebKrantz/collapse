@@ -2,6 +2,7 @@ library(Rcpp)
 sourceCpp("C:/Users/Sebastian Krantz/Documents/R/C++/mrtl_type_dispatch.cpp")
 Crbindlist <- data.table:::Crbindlist
 Csetcolorder <- data.table:::Csetcolorder
+
 unlist2d <- function(X, idcols = ".id", row.names = FALSE, recursive = TRUE, id.factor = FALSE, DT = FALSE) {
   if (!is.list(X)) return(X) #stop("X is not a list")
   make.ids <- idcols[1L] != FALSE
@@ -10,7 +11,7 @@ unlist2d <- function(X, idcols = ".id", row.names = FALSE, recursive = TRUE, id.
   if(keep.row.names) row.names <- if(row.names[1L] == TRUE) "row.names" else row.names[1L]
 
   DFDTl <- function(l) {
-    attr(l, "row.names") <- .set_row_names(length(l[[1]]))
+    attr(l, "row.names") <- .set_row_names(length(l[[1L]]))
     class(l) <- if(DT) c("data.table","data.frame") else "data.frame"
     l
   }
@@ -38,21 +39,21 @@ unlist2d <- function(X, idcols = ".id", row.names = FALSE, recursive = TRUE, id.
   ul2d <- function(y) {
     if(is.data.frame(y) || is.atomic(y)) return(y)
     ident <- vapply(y, idf, 1L)
-    if(is.list(y) && all(ident>0L)) {
+    if(is.list(y) && all(ident > 0L)) {
       at <- ident == 3L
       if(any(at)) y[at] <- lapply(y[at], attol)
       if(keep.row.names && any(df <- ident == 2L)) y[df] <- lapply(y[df], addrn) # better cbind for data.table???? or x[["row.names"]] =.. and the sort later??
         if(make.ids) {
           if(id.factor) {
-            y <- y[ident!=1L] # better way?? y[ident!=1L] = NULL??
+            y <- y[ident != 1L] # better way?? y[ident!=1L] = NULL??
             nam <- names(y)
             names(y) <- NULL
             y <- DFDTl(.Call(Crbindlist, y, TRUE, recursive, id.names))
-            attributes(y[[1]]) <- list(levels = nam, class = c("ordered", "factor"))
-            # setattributes(y[[1]], pairlist(levels = nam, class = c("ordered", "factor")))
+            # attributes(y[[1L]]) <- list(levels = nam, class = c("ordered", "factor"))
+            setattributes(y[[1L]], pairlist(levels = nam, class = c("ordered", "factor"))) # a lot faster !!
             return(y)
-          } else return(DFDTl(.Call(Crbindlist, y[ident!=1L], TRUE, recursive, id.names)))
-        } else return(DFDTl(.Call(Crbindlist, y[ident!=1L], TRUE, recursive, NULL)))
+          } else return(DFDTl(.Call(Crbindlist, y[ident != 1L], TRUE, recursive, id.names)))
+        } else return(DFDTl(.Call(Crbindlist, y[ident != 1L], TRUE, recursive, NULL)))
     } else lapply(y, ul2d)
   }
 
@@ -76,41 +77,41 @@ unlist2d <- function(X, idcols = ".id", row.names = FALSE, recursive = TRUE, id.
       if(rn != 1L) .Call(Csetcolorder, X, c(rn,seq_along(X)[-rn]))  # X <- X[c(rn,seq_along(X)[-rn])] # New!!
     }
   }
-  attr(X, ".internal.selfref") <- NULL 
+  attr(X, ".internal.selfref") <- NULL
   # setattrib(X, ".internal.selfref", NULL) # what if recursive = FALSE -> doesn't work.. but takes more time!!
   return(X)
 }
 # STill do a lot of checking !!
 # perhaps process unnames vectors as columns, and names vectors as rows?? -> nah, it's rbinding
 
+# Examples:
 
-
-# example:
-l = lapply(split(iris[1:4], iris[5]), function(x)list(N = fNobs(x), mean = fmean(x), sd = fsd(x)))
-
-# neat example:
-l = list(a = mtcars[1:8],b = list(c = mtcars[4:11], d = list(e = mtcars[2:10])))
-unlist2d(rapply2d(l,colMeans), recursive = FALSE)
-unlist2d(rapply2d(l,colMeans)) # now error again!!!
-unlist2d(l)
-unlist2d(rapply2d(l,dapply,sd))
-
-unlist2d(split(iris,iris["Species"]))
-
-nl = lapply(split(mtcars,mtcars[2]),function(x)split(x,x["vs"]))
-str(nl)
-View(unlist2d(nl))
-View(unlist2d(nl, idcols = FALSE))
-View(unlist2d(nl, idcols = c(".cyl",".vs")))
-str(unlist2d(nl, recursive = FALSE)) # why is .id a character string?? -> names!!
-
-# Neat example:
-# list.elem(IRF) %>% rapply2d(colSums) %>% unlist2d(c("type","shock")) %>% filter(type == "irf") %>% num.vars %>% dapply(function(x)sum(abs(x)),MARGIN = 1)
-
-unlist2d(qsu(mtcars,~cyl,~vs, data.out = TRUE)) # not dim, but is.data.frame
-
-unlist2d(rapply2d(reg.elem(SV),dim)) # error!! lots of nested NULL's .. doesn't perform
-
+# # example:
+# l = lapply(split(iris[1:4], iris[5]), function(x)list(N = fNobs(x), mean = fmean(x), sd = fsd(x)))
+#
+# # neat example:
+# l = list(a = mtcars[1:8],b = list(c = mtcars[4:11], d = list(e = mtcars[2:10])))
+# unlist2d(rapply2d(l,colMeans), recursive = FALSE)
+# unlist2d(rapply2d(l,colMeans)) # now error again!!!
+# unlist2d(l)
+# unlist2d(rapply2d(l,dapply,sd))
+#
+# unlist2d(split(iris,iris["Species"]))
+#
+# nl = lapply(split(mtcars,mtcars[2]),function(x)split(x,x["vs"]))
+# str(nl)
+# View(unlist2d(nl))
+# View(unlist2d(nl, idcols = FALSE))
+# View(unlist2d(nl, idcols = c(".cyl",".vs")))
+# str(unlist2d(nl, recursive = FALSE)) # why is .id a character string?? -> names!!
+#
+# # Neat example:
+# # list.elem(IRF) %>% rapply2d(colSums) %>% unlist2d(c("type","shock")) %>% filter(type == "irf") %>% num.vars %>% dapply(function(x)sum(abs(x)),MARGIN = 1)
+#
+# unlist2d(qsu(mtcars,~cyl,~vs, data.out = TRUE)) # not dim, but is.data.frame
+#
+# unlist2d(rapply2d(reg.elem(SV),dim)) # error!! lots of nested NULL's .. doesn't perform
+#
 
 # Version befor: Above I added some efficiency !!
 # unlist2dOld <- function(X, idcols = ".id", row.names = FALSE, recursive = TRUE, id.factor = FALSE, DT = FALSE) {
