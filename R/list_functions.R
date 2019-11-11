@@ -62,21 +62,21 @@ ldepth <- function(l, DF.as.list = TRUE) { # or list.depth !! (problem here is w
   return(max(unlist(ld(l, 0L), use.names = FALSE)))
 } # If data.frame, search all, otherwise, make optional counting df or not, but don't search them.
 
-has_elem <- function(l, FoR, recursive = TRUE, DF.as.list = TRUE, regex = FALSE, ...) { # or data.frame.l ,search.data.frame, unpack.data.frame, as.list.data.frame
-  if(is.function(FoR)) {
+has_elem <- function(l, elem, recursive = TRUE, DF.as.list = TRUE, regex = FALSE, ...) { # or data.frame.l ,search.data.frame, unpack.data.frame, as.list.data.frame
+  if(is.function(elem)) {
     if(recursive) {
-     if(DF.as.list) return(any(unlist(rapply(l, FoR, how = "list"), use.names = FALSE))) else
-                    return(any(unlist(rapply2d(l, FoR), use.names = FALSE)))
-    } else return(any(vapply(l, FoR, TRUE, USE.NAMES = FALSE)))
-  } else if(is.character(FoR)) {
+     if(DF.as.list) return(any(unlist(rapply(l, elem, how = "list"), use.names = FALSE))) else
+                    return(any(unlist(rapply2d(l, elem), use.names = FALSE)))
+    } else return(any(vapply(l, elem, TRUE, USE.NAMES = FALSE)))
+  } else if(is.character(elem)) {
     if(recursive) {
       class(l) <- NULL # in case [ behaves weird
       is.subl <- if(DF.as.list) is.list else function(x) is.list(x) && !is.data.frame(x) # could do without, but it seems to remove data.frame attributes, and more speed!
       namply <- function(y) if(any(subl <- vapply(y, is.subl, TRUE)))
         c(names(subl), unlist(lapply(unclass(y)[subl], namply), use.names = FALSE)) else names(y) # also overall subl names are important, and unclass for DT subsetting !! !!! # names(which(!subl)) # names(y)[!subl] # which is faster !!
-      if(regex) return(length(rgrep(FoR, namply(l), ...)) > 0L) else return(any(namply(l) %in% FoR))
-    } else if(regex) return(length(rgrep(FoR, names(l), ...)) > 0L) else return(any(names(l) %in% FoR))
-  } else stop("FoR must be a function or character vector of element names or regular expressions")
+      if(regex) return(length(rgrep(elem, namply(l), ...)) > 0L) else return(any(namply(l) %in% elem))
+    } else if(regex) return(length(rgrep(elem, names(l), ...)) > 0L) else return(any(names(l) %in% elem))
+  } else stop("elem must be a function or character vector of element names or regular expressions")
 }
 
 # Experimental !!
@@ -166,34 +166,34 @@ list_extract_ind <- function(l, ind, is.subl, keep.tree = FALSE) {
 # Note: all currently remove empty list elements !!
 # keep.tree argument!! !! still issues wih xlevels
 
-get_elem <- function(l, FoR, recursive = TRUE, DF.as.list = TRUE,
+get_elem <- function(l, elem, recursive = TRUE, DF.as.list = TRUE,
                      keep.tree = FALSE, keep.class = FALSE, regex = FALSE, ...) {
   if(recursive) { # possibly if is.list(x) is redundant, because you check above!! -> nah, recursive??
     is.subl <- if(DF.as.list) is.list else function(x) is.list(x) && !is.data.frame(x) # could do without, but it seems to remove data.frame attributes
     if(keep.class) al <- attributes(l) # cll <- class(l) # perhaps generalize to other attributes??
-    if(is.function(FoR)) {
-      l <- list_extract_FUN(l, FoR, is.subl, keep.tree)
-    } else if(is.character(FoR)) {
-      l <- if(regex) list_extract_regex(l, FoR, is.subl, keep.tree, ...) else
-                     list_extract_names(l, FoR, is.subl, keep.tree)
-    } else l <- list_extract_ind(l, FoR, is.subl, keep.tree)
+    if(is.function(elem)) {
+      l <- list_extract_FUN(l, elem, is.subl, keep.tree)
+    } else if(is.character(elem)) {
+      l <- if(regex) list_extract_regex(l, elem, is.subl, keep.tree, ...) else
+                     list_extract_names(l, elem, is.subl, keep.tree)
+    } else l <- list_extract_ind(l, elem, is.subl, keep.tree)
     if(keep.class && is.list(l)) {
       al[["names"]] <- names(l)
       return(setAttributes(l, al)) # class(l) <- cll # when drop.tree is proper, l might not be a list
     } else return(l)
   } else {
-    if(is.function(FoR)) {
-      FoR <- which(vapply(l, FoR, TRUE, USE.NAMES = FALSE))
-    } else if(is.character(FoR)) {
-      FoR <- if(regex) rgrep(FoR, names(l), ...) else which(names(l) %in% FoR)
-    } else if(is.logical(FoR)) FoR <- which(FoR) # else stop("FoR must be a function, character vector or vector of regular expressions!")
-    if(keep.tree || length(FoR) != 1L) {
-      if(keep.class) return(colsubset(l, FoR)) else return(unclass(l)[FoR]) # <- # base::Filter(FoR, l)
-    } else return(l[[FoR]])
+    if(is.function(elem)) {
+      elem <- which(vapply(l, elem, TRUE, USE.NAMES = FALSE))
+    } else if(is.character(elem)) {
+      elem <- if(regex) rgrep(elem, names(l), ...) else which(names(l) %in% elem)
+    } else if(is.logical(elem)) elem <- which(elem) # else stop("elem must be a function, character vector or vector of regular expressions!")
+    if(keep.tree || length(elem) != 1L) {
+      if(keep.class) return(colsubset(l, elem)) else return(unclass(l)[elem]) # <- # base::Filter(elem, l)
+    } else return(l[[elem]])
   }
 }
 
-# Neat example: qDF(get.elem(V,"residuals"))
+# Neat example: qDF(get_elem(V,"residuals"))
 
 # there is base::getElement, but still, to be consistent with vars call this get.elem(), and lsubset
 
