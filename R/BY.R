@@ -27,13 +27,13 @@ fsplit <- function(x, f) {
 }
 
 # Faster version of BY:
-BY <- function(X, g, FUN, ..., simplify = TRUE, use.g.names = TRUE, sort = TRUE,
-               expand.wide = FALSE, parallel = FALSE, mc.cores = 1L) {
+BY <- function(X, g, FUN, ..., use.g.names = TRUE, sort = TRUE,
+               expand.wide = FALSE, simplify = TRUE, parallel = FALSE, mc.cores = 1L) {
   UseMethod("BY", X)
 }
 
-BY.default <- function(X, g, FUN, ..., simplify = TRUE, use.g.names = TRUE, sort = TRUE,
-                       expand.wide = FALSE, parallel = FALSE, mc.cores = 1L) { # what about ... in those other internal calls ???.
+BY.default <- function(X, g, FUN, ..., use.g.names = TRUE, sort = TRUE,
+                       expand.wide = FALSE, simplify = TRUE, parallel = FALSE, mc.cores = 1L) { # what about ... in those other internal calls ???.
   if(!is.atomic(X)) stop("X needs to be an atomic vector") # redundant ??
   aplyfun <- if(parallel) function(...) parallel::mclapply(..., mc.cores = mc.cores) else lapply
   if(!is.factor(g)) g <- if(is.GRP(g)) as.factor.GRP(g) else if(is.list(g))
@@ -70,8 +70,8 @@ BY.default <- function(X, g, FUN, ..., simplify = TRUE, use.g.names = TRUE, sort
 
 # do something about the attributes -> either lapply with attribute copy or splitfun with attribute copy !!
 # is typeof enough to warrant attribute copy ?? or also equal length needed ??
-BY.data.frame <- function(X, g, FUN, ..., simplify = TRUE, use.g.names = TRUE, sort = TRUE,
-                          expand.wide = FALSE, parallel = FALSE, mc.cores = 1L) {
+BY.data.frame <- function(X, g, FUN, ..., use.g.names = TRUE, sort = TRUE,
+                          expand.wide = FALSE, simplify = TRUE, parallel = FALSE, mc.cores = 1L) {
   aplyfun <- if(parallel) function(...) parallel::mclapply(..., mc.cores = mc.cores) else lapply
   if(!is.factor(g)) g <- if(is.GRP(g)) as.factor.GRP(g) else if(is.list(g))
                          as.factor.GRP(GRP(g, sort = sort)) else qF(g, ordered = sort)
@@ -84,6 +84,7 @@ BY.data.frame <- function(X, g, FUN, ..., simplify = TRUE, use.g.names = TRUE, s
       ax[["row.names"]] <- if(use.g.names && !inherits(X, "data.table")) attr(g, "levels") else .set_row_names(length(res[[1L]])) # faster than nlevels ??
       ax[["names"]] <- names(res)
     } else {
+      attributes(X) <- NULL # good?? -> yes, more speed !! also note that length(X[[1L]]) for lists is always faster than dim(X) where X is a data.frame !!!
       if(use.g.names && !inherits(X, "data.table")) {
         res <- vector("list", length(X))
         res[[1L]] <- unlist(lapply(fsplit(X[[1L]], g), FUN, ...), FALSE, TRUE)
@@ -98,7 +99,7 @@ BY.data.frame <- function(X, g, FUN, ..., simplify = TRUE, use.g.names = TRUE, s
         splitfun <- function(x) cond_duplAttributes(unlist(lapply(fsplit(x, g), FUN, ...), FALSE, FALSE), x)
         res <- aplyfun(X, splitfun)
         lr1 <- length(res[[1L]])
-        if(lr1 != nrow(X)) ax[["row.names"]] <- .set_row_names(lr1)
+        if(lr1 != length(X[[1L]])) ax[["row.names"]] <- .set_row_names(lr1) # nrow(X)
       }
     }
     return(setAttributes(res, ax))
@@ -110,9 +111,13 @@ BY.data.frame <- function(X, g, FUN, ..., simplify = TRUE, use.g.names = TRUE, s
   }
 }
 
+BY.grouped_df <- function(X, FUN, ..., use.g.names = TRUE, expand.wide = FALSE, simplify = TRUE, parallel = FALSE, mc.cores = 1L) {
+  g <- as.factor.GRP(GRP.grouped_df(X)) # still get grouping columns !!!
+BY.data.frame(X, g, FUN, ..., simplify, use.g.names, TRUE, expand.wide, parallel, mc.cores)
+}
 # conversion to DF and vice-versa ??
-BY.matrix <- function(X, g, FUN, ..., simplify = TRUE, use.g.names = TRUE, sort = TRUE,
-                          expand.wide = FALSE, parallel = FALSE, mc.cores = 1L) {
+BY.matrix <- function(X, g, FUN, ..., use.g.names = TRUE, sort = TRUE,
+                      expand.wide = FALSE, simplify = TRUE, parallel = FALSE, mc.cores = 1L) {
   aplyfun <- if(parallel) function(...) parallel::mclapply(..., mc.cores = mc.cores) else lapply
   if(!is.factor(g)) g <- if(is.GRP(g)) as.factor.GRP(g) else if(is.list(g))
                          as.factor.GRP(GRP(g, sort = sort)) else qF(g, ordered = sort)

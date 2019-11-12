@@ -1,26 +1,40 @@
-\name{dapply}
-\alias{dapply}
+\name{BY}
+\alias{BY}
+\alias{BY.default}
+\alias{BY.matrix}
+\alias{BY.data.frame}
+\alias{BY.grouped_df}
 %- Also NEED an '\alias' for EACH other topic documented here.
 \title{
-Data Apply
+Efficient Split-Apply-Combine Computing
 }
 \description{
-\code{dapply} efficiently applies functions to columns or rows of matrices and data frame's and (by default) returns an object of the same type and with the same attributes, or converts them without the loss of attributes. A simple parallelism is also available.
+\code{BY} is an S3 generic that efficiently applies functions over vectors or matrix- and data.frame columns by groups. A simple parallelism is also available.
 }
 \usage{
-dapply(X, FUN, ..., MARGIN = 2, parallel = FALSE, mc.cores = 1L,
-       return = c("same","matrix","data.frame"), drop = TRUE)
+\method{BY}{default}(X, g, FUN, ..., simplify = TRUE, use.g.names = TRUE, sort = TRUE,
+   expand.wide = FALSE, parallel = FALSE, mc.cores = 1L)
+
+\method{BY}{matrix}(X, g, FUN, ..., simplify = TRUE, use.g.names = TRUE, sort = TRUE,
+   expand.wide = FALSE, parallel = FALSE, mc.cores = 1L)
+
+\method{BY}{data.frame}(X, g, FUN, ..., simplify = TRUE, use.g.names = TRUE, sort = TRUE,
+   expand.wide = FALSE, parallel = FALSE, mc.cores = 1L)
+
+\method{BY}{grouped_df}(X, FUN, ..., simplify = TRUE, use.g.names = TRUE, sort = TRUE,
+   expand.wide = FALSE, parallel = FALSE, mc.cores = 1L)
+
 }
 %- maybe also 'usage' for other objects documented here.
 \arguments{
-  \item{X}{a matrix or data frame.}
+  \item{X}{a atomic vector, matrix or data frame.}
   \item{FUN}{a function, can be scalar- or vector-valued.}
   \item{...}{further arguments to \code{FUN}.}
-  \item{MARGIN}{integer. The margin which \code{FUN} will be applied over. Default \code{2} indicates columns while \code{1} indicates rows. See also Details. }
+  \item{simplify}{logical. Simplify the result to return an object of the same class and with the same attributes. If \code{FALSE}, the raw computation retult in form of a (nested) list is returned.}
+  \item{simplify}{logical. Simplify the result to return an object of the same class and with the same attributes. If \code{FALSE}, the raw computation retult in form of a (nested) list is returned.}
+  \item{sort}{logical. Sort the groups?. Internally passed to \code{GRP()} or \code{qF()}, and only effective if \code{g} is not already a factor or \code{GRP} object.}
   \item{parallel}{logical. \code{TRUE} implements simple parallel execution by internally calling \code{parallel::mclapply} instead of \code{base::lapply}.}
   \item{mc.cores}{integer. Argument to \code{parallel::mclapply} indicating the number of cores to use for parallel execution. Can use \code{parallel::detectCores()} to select all available cores. See also \code{?parallel::mclapply}.}
-  \item{return}{an integer or string indicating the type of object to return. The default \code{1 - "same"} returns the same object type (i.e. passing a matrix returns a matrix and passig a data frame returns a data frame). \code{2 - "matrix"} always returns the output as matrix and \code{3 - "data.frame"} always returns a data frame.}
-  \item{drop}{logical. If the result has only one row or one column, \code{drop = TRUE} will drop dimensions and return a (named) atomic vector.}
 }
 \details{
 \code{dapply} is an efficient command to apply functions to rows or columns of data without loosing information (attributes) about the data or changing the classes or format of the data. It is principally an efficient wrapper around \code{base::lapply} and works as follows:
