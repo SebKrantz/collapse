@@ -5,7 +5,7 @@ using namespace Rcpp;
 SEXP setAttributes(SEXP x, SEXP a) {
   SET_ATTRIB(x, Rf_coerceVector(a, LISTSXP));
   SET_OBJECT(x, TYPEOF(x)); // if(OBJECT(a))
-  return x;
+  return x; // wrap(x) // wrap better ?? -> error setting attributes of matrix !!-> Nope !! Still error for dapply(NGGDC, log, return = "matrix")
 }
 
 // [[Rcpp::export]]
@@ -28,7 +28,7 @@ void setattr_clp(SEXP x, SEXP a, SEXP v) {
 // [[Rcpp::export]]
 SEXP duplAttributes(SEXP x, SEXP y) {
   DUPLICATE_ATTRIB(x, y); // SET_ATTRIB(x, ATTRIB(y));
-  return x; 
+  return x;
 }
 
 // [[Rcpp::export]]
@@ -36,7 +36,7 @@ void duplattributes(SEXP x, SEXP y) {
   DUPLICATE_ATTRIB(x, y); // SET_ATTRIB(x, ATTRIB(y));
 }
 
-// // [[Rcpp::export]] // needed?? for what ?? 
+// // [[Rcpp::export]] // needed?? for what ??
 // void sduplattributes(SEXP x, SEXP y) {
 //   SHALLOW_DUPLICATE_ATTRIB(x, y); // DUPLICATE_ATTRIB(x, y);
 // }
@@ -57,10 +57,9 @@ void duplattributes(SEXP x, SEXP y) {
 //   for(int j = xs; j--; ) {
 //     for(int i = ns; i--; ) {
 //       if(n[i]>0) out[ns*j+i] = collapse(CharacterVector::create("L",std::to_string(n[i]),".",x[j])); // "L" + std::to_string(n[i]) + "." + x[j]; // or collapse(CharacterVector::Create(...))
-//       else if(n[i] == 0) out[ns*j+i] = x[j]; 
+//       else if(n[i] == 0) out[ns*j+i] = x[j];
 //       else out[ns*j+i] = collapse(CharacterVector::create("F",std::to_string(abs(n[i])),".",x[j])); // "F" + std::to_string(abs(n[i])) + "." + x[j];
 //     }
 //   }
 //   return out;
 // }
-  

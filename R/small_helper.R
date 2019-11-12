@@ -110,3 +110,4 @@ is.categorical <- function(x) !is.numeric(x)
 is.Date <- function(x) inherits(x, c("Date","POSIXlt","POSIXct"))
 NROW2 <- function(x, d) if(length(d)) d[1L] else length(x)
 NCOL2 <- function(d, ilv) if(ilv) d[2L] else 1L
+charorNULL <- function(x) if(is.character(x)) x else NULL

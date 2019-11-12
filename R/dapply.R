@@ -5,9 +5,9 @@ sourceCpp("C:/Users/Sebastian Krantz/Documents/R/mrtl_type_dispatch.cpp")
 # -> Do just like B and W, both dapply and setdapply, and each has Xcols and add = 0,1,2 option.
 # Note: in setdapply, 0 just means replace columns?? -> yes!!
 
-# This version does not always return data.frame !!, but currently needs properly defined matrices and data.fram input !!
-dapply3 <- function(X, FUN, ..., MARGIN = 2, parallel = FALSE,
-                    mc.cores = 1L, return = c("same","matrix","data.frame")) {
+# same as dapply 3 (compact), but takingdrop case before !! -> faster !! and also solving issue with row.names for matrices -> row and column names must be of same type !! as.matrix.data.frame converst row.names to character !!
+dapply <- function(X, FUN, ..., MARGIN = 2, parallel = FALSE, # drop argument !!
+                   mc.cores = 1L, return = c("same","matrix","data.frame"), drop = TRUE) {
   ax <- attributes(X)
   arl <- is.array(X)
   rowwl <- MARGIN == 1
@@ -16,91 +16,243 @@ dapply3 <- function(X, FUN, ..., MARGIN = 2, parallel = FALSE,
   if(arl) {
     dX <- dim(X)
     if(length(dX) > 2L) stop("dapply cannot handle higher-dimensional arrays")
-    if(!retmatl) { # without checking is.null(ax), can only input matrices and data.frames !!
-      dn <- dimnames(X) # faster than ax[["dimnames"]] !!
+    X <- if(rowwl) aplyfun(mrtl(X), FUN, ...) else aplyfun(mctl(X), FUN, ...)
+    lx1 <- length(X[[1L]])
+    if(lx1 == 1L && drop) return(setNames(unlist(X, use.names = FALSE), ax[["dimnames"]][[if(rowwl) 1L else 2L]]))
+    if(!retmatl) {
+      dn <- ax[["dimnames"]] # best ??
       ax <- c(list(names = dn[[2L]], row.names = dn[[1L]], class = "data.frame"),
               ax[!(names(ax) %in% c("dim","dimnames","class"))])
     }
-    X <- if(rowwl) aplyfun(mrtl(X), FUN, ...) else aplyfun(mctl(X), FUN, ...)
   } else {
     attributes(X) <- NULL
-    dX <- c(length(X[[1L]]), length(X))
+    dX <- c(length(X[[1L]]), length(X)) # do.call(cbind, X) is definitely faster than unlist(X, use.names = FALSE) and attaching dim attribute
     X <- if(rowwl) aplyfun(mrtl(do.call(cbind, X)), FUN, ...) else aplyfun(X, FUN, ...)
-    if(retmatl) ax <- c(list(dim = dX, dimnames = list(ax[["row.names"]], ax[["names"]])),
+    lx1 <- length(X[[1L]])
+    if(lx1 == 1L && drop) return(setNames(unlist(X, use.names = FALSE), if(rowwl) charorNULL(ax[["row.names"]]) else ax[["names"]]))
+    if(retmatl) ax <- c(list(dim = dX, dimnames = list(charorNULL(ax[["row.names"]]), ax[["names"]])),
                         ax[!(names(ax) %in% c("names","row.names","class"))])
   }
-  lx1 <- length(X[[1L]])
-  # diffl <- lx1 != switch(MARGIN, dX[2L], dX[1L]) # further input check ??
-  # if(diffl) nx1 <- names(X[[1L]])
-
   if(retmatl) {
     if(rowwl) {
-      if(lx1 != dX[2L] && !is.null(nx1 <- names(X[[1L]]))) ax[["dimnames"]][[2L]] <- nx1
+      if(lx1 != dX[2L]) {
+        ax[["dim"]][2L] <- lx1
+        ax[["dimnames"]][[2L]] <- if(!is.null(nx1 <- names(X[[1L]]))) nx1 else if(lx1 == 1L)
+                deparse(substitute(FUN)) else paste0(deparse(substitute(FUN)), seq_len(lx1))
+      }
       X <- matrix(unlist(X, use.names = FALSE), ncol = lx1, byrow = TRUE)
     } else {
-      if(lx1 != dX[1L] && !is.null(nx1 <- names(X[[1L]]))) ax[["dimnames"]][[1L]] <- nx1
+      if(lx1 != dX[1L]) {
+        ax[["dim"]][1L] <- lx1
+        ax[["dimnames"]][[1L]] <- if(!is.null(nx1 <- names(X[[1L]]))) nx1 else if(lx1 == 1L)
+          deparse(substitute(FUN)) else paste0(deparse(substitute(FUN)), seq_len(lx1))
+      }
       X <- do.call(cbind, X)
     }
   } else {
     if(rowwl) {
-      if(lx1 != dX[2L] && !is.null(nx1 <- names(X[[1L]]))) ax[["names"]] <- nx1
-      X <- mctl(matrix(unlist(X, use.names = FALSE), ncol = lx1, byrow = TRUE))
-    } else if(lx1 != dX[1L] && !is.null(nx1 <- names(X[[1L]]))) ax[["row.names"]] <- nx1
+      if(lx1 != dX[2L]) ax[["names"]] <- if(!is.null(nx1 <- names(X[[1L]]))) nx1 else if(lx1 == 1L)
+        deparse(substitute(FUN)) else paste0(deparse(substitute(FUN)), seq_len(lx1))
+      X <- mctl(matrix(unlist(X, use.names = FALSE), ncol = lx1, byrow = TRUE)) # definitely faster than do.call(rbind, X)
+    } else if(lx1 != dX[1L])
+      ax[["row.names"]] <- if(!is.null(nx1 <- names(X[[1L]]))) nx1 else .set_row_names(lx1)
   }
   return(setAttributes(X, ax))
 }
 
 
-# adding parallelism: No speed loss !!
-dapply <- function(X, FUN, ..., MARGIN = 2, parallel = FALSE, mc.cores = 1L) {
-  ax <- attributes(X)
-  aplyfun <- if(parallel) function(...) parallel::mclapply(..., mc.cores = mc.cores) else lapply
-  if(is.array(X)) {
-    dX <- dim(X) # ax[["dim"]] ?? -> nope, slower !!
-    if(length(dX) > 2L) stop("dapply cannot handle higher-dimensional arrays")
-    lXo <- dX[1L]
-    if(MARGIN == 1) {
-      X <- aplyfun(mrtl(X), FUN, ...)
-      lx1 <- length(X[[1L]])
-      nx1 <- names(X[[1L]])
-      X <- mctl(matrix(unlist(X, use.names = FALSE), ncol = lx1, byrow = TRUE)) # data.table transposelist?? -> slower!!
-      if(lx1 != dX[2L]) {
-        ax[["names"]] <- if(!is.null(nx1)) nx1 else if(lx1 == 1L)
-          deparse(substitute(FUN)) else paste(deparse(substitute(FUN)), seq_len(lx1), sep = ".")
-      } else ax[["names"]] <- ax[["dimnames"]][[2L]]
-    } else {
-      X <- aplyfun(mctl(X), FUN, ...)
-      ax[["names"]] <- ax[["dimnames"]][[2L]]
-    }
-    ax[["row.names"]] <- ax[["dimnames"]][[1L]]
-    ax[c("dim","dimnames")] <- NULL
-  } else {
-    attributes(X) <- NULL # faster !!
-    lXo <- length(X[[1L]])
-    if(MARGIN == 1L) {
-      lX <- length(X)
-      X <- aplyfun(mrtl(do.call(cbind, X)), FUN, ...) # X <- mrtl(matrix(unlist(X, use.names = FALSE), ncol = lX)) # slower!
-      lx1 <- length(X[[1L]])
-      nx1 <- names(X[[1L]])
-      X <- mctl(matrix(unlist(X, use.names = FALSE), ncol = lx1, byrow = TRUE)) # mctl(do.call(rbind, X)) # But this is lower (GGDC) !!
-      if(lx1 != lX) ax[["names"]] <- if(!is.null(nx1)) nx1 else if(lx1 == 1L)
-        deparse(substitute(FUN)) else paste(deparse(substitute(FUN)), seq_len(lx1), sep = ".")
-    } else X <- aplyfun(X, FUN, ...)
-  }
-  lXn <- length(X[[1L]])
-  if(is.null(ax)) {
-    class(X) <- "data.frame"
-    attr(X, "row.names") <- .set_row_names(lXn)
-  } else {
-    if(is.null(ax[["row.names"]]) || lXo != lXn) ax[["row.names"]] <- .set_row_names(lXn)
-    if(!any(ax[["class"]] == "data.frame")) ax[["class"]] <- c(ax[["class"]], "data.frame") # right order??
-    setattributes(X, ax) # a lot faster for large data !! # attributes(X) <- ax is a tiny bit faster for small data !!
-  }
-  return(X)
-}
+# Original version but adding parallelism: No speed loss !!
+# dapply <- function(X, FUN, ..., MARGIN = 2, parallel = FALSE, mc.cores = 1L) {
+#   ax <- attributes(X)
+#   aplyfun <- if(parallel) function(...) parallel::mclapply(..., mc.cores = mc.cores) else lapply
+#   if(is.array(X)) {
+#     dX <- dim(X) # ax[["dim"]] ?? -> nope, slower !!
+#     if(length(dX) > 2L) stop("dapply cannot handle higher-dimensional arrays")
+#     lXo <- dX[1L]
+#     if(MARGIN == 1) {
+#       X <- aplyfun(mrtl(X), FUN, ...)
+#       lx1 <- length(X[[1L]])
+#       nx1 <- names(X[[1L]])
+#       X <- mctl(matrix(unlist(X, use.names = FALSE), ncol = lx1, byrow = TRUE)) # data.table transposelist?? -> slower!!
+#       if(lx1 != dX[2L]) {
+#         ax[["names"]] <- if(!is.null(nx1)) nx1 else if(lx1 == 1L)
+#           deparse(substitute(FUN)) else paste(deparse(substitute(FUN)), seq_len(lx1), sep = ".")
+#       } else ax[["names"]] <- ax[["dimnames"]][[2L]]
+#     } else {
+#       X <- aplyfun(mctl(X), FUN, ...)
+#       ax[["names"]] <- ax[["dimnames"]][[2L]]
+#     }
+#     ax[["row.names"]] <- ax[["dimnames"]][[1L]]
+#     ax[c("dim","dimnames")] <- NULL
+#   } else {
+#     attributes(X) <- NULL # faster !!
+#     lXo <- length(X[[1L]])
+#     if(MARGIN == 1L) {
+#       lX <- length(X)
+#       X <- aplyfun(mrtl(do.call(cbind, X)), FUN, ...) # X <- mrtl(matrix(unlist(X, use.names = FALSE), ncol = lX)) # slower!
+#       lx1 <- length(X[[1L]])
+#       nx1 <- names(X[[1L]])
+#       X <- mctl(matrix(unlist(X, use.names = FALSE), ncol = lx1, byrow = TRUE)) # mctl(do.call(rbind, X)) # But this is lower (GGDC) !!
+#       if(lx1 != lX) ax[["names"]] <- if(!is.null(nx1)) nx1 else if(lx1 == 1L)
+#         deparse(substitute(FUN)) else paste(deparse(substitute(FUN)), seq_len(lx1), sep = ".")
+#     } else X <- aplyfun(X, FUN, ...)
+#   }
+#   lXn <- length(X[[1L]])
+#   if(is.null(ax)) {
+#     class(X) <- "data.frame"
+#     attr(X, "row.names") <- .set_row_names(lXn)
+#   } else {
+#     if(is.null(ax[["row.names"]]) || lXo != lXn) ax[["row.names"]] <- .set_row_names(lXn)
+#     if(!any(ax[["class"]] == "data.frame")) ax[["class"]] <- c(ax[["class"]], "data.frame") # right order??
+#     setattributes(X, ax) # a lot faster for large data !! # attributes(X) <- ax is a tiny bit faster for small data !!
+#   }
+#   return(X)
+# }
+
+# Newest version, but saving drop option for the end -> in most cases less efficient than the optimal version above !!
+# This version does not always return data.frame !!, but currently needs properly defined matrices and data.fram input !!
+# dapply3 <- function(X, FUN, ..., MARGIN = 2, parallel = FALSE, # drop argument !!
+#                     mc.cores = 1L, return = c("same","matrix","data.frame"), drop = TRUE) {
+#   ax <- attributes(X)
+#   arl <- is.array(X)
+#   rowwl <- MARGIN == 1
+#   retmatl <- switch(return[1L], same = arl, matrix = TRUE, data.frame = FALSE, stop("Unknown return option!"))
+#   aplyfun <- if(parallel) function(...) parallel::mclapply(..., mc.cores = mc.cores) else lapply
+#   if(arl) {
+#     dX <- dim(X)
+#     if(length(dX) > 2L) stop("dapply cannot handle higher-dimensional arrays")
+#     if(!retmatl) { # without checking is.null(ax), can only input matrices and data.frames !!
+#       dn <- dimnames(X) # faster than ax[["dimnames"]] !!
+#       ax <- c(list(names = dn[[2L]], row.names = dn[[1L]], class = "data.frame"),
+#               ax[!(names(ax) %in% c("dim","dimnames","class"))])
+#     }
+#     X <- if(rowwl) aplyfun(mrtl(X), FUN, ...) else aplyfun(mctl(X), FUN, ...)
+#   } else {
+#     attributes(X) <- NULL
+#     dX <- c(length(X[[1L]]), length(X)) # do.call(cbind, X) is definitely faster than unlist(X, use.names = FALSE) and attaching dim attribute
+#     X <- if(rowwl) aplyfun(mrtl(do.call(cbind, X)), FUN, ...) else aplyfun(X, FUN, ...)
+#     if(retmatl) ax <- c(list(dim = dX, dimnames = list(ax[["row.names"]], ax[["names"]])),
+#                         ax[!(names(ax) %in% c("names","row.names","class"))])
+#   }
+#   lx1 <- length(X[[1L]])
+#   if(retmatl) {
+#     if(rowwl) {
+#       if(lx1 != dX[2L]) {
+#         if(lx1 == 1L && drop) return(setNames(unlist(X, use.names = FALSE), ax[["dimnames"]][[1L]]))
+#         ax[["dim"]][2L] <- lx1
+#         ax[["dimnames"]][[2L]] <- if(!is.null(nx1 <- names(X[[1L]]))) nx1 else character(0)
+#       }
+#       X <- matrix(unlist(X, use.names = FALSE), ncol = lx1, byrow = TRUE)
+#     } else {
+#       if(lx1 != dX[1L]) {
+#         if(lx1 == 1L && drop) return(setNames(unlist(X, use.names = FALSE), ax[["dimnames"]][[2L]]))
+#         ax[["dim"]][1L] <- lx1
+#         ax[["dimnames"]][[1L]] <- if(!is.null(nx1 <- names(X[[1L]]))) nx1 else character(0)
+#       }
+#       X <- do.call(cbind, X)
+#     }
+#   } else {
+#     if(rowwl) {
+#       if(lx1 != dX[2L]) {
+#         if(lx1 == 1L && drop) return(setNames(unlist(X, use.names = FALSE), ax[["row.names"]]))
+#         ax[["names"]] <- if(!is.null(nx1 <- names(X[[1L]]))) nx1 else NULL
+#       }
+#       X <- mctl(matrix(unlist(X, use.names = FALSE), ncol = lx1, byrow = TRUE)) # definitely faster than do.call(rbind, X)
+#     } else if(lx1 != dX[1L]) {
+#       if(lx1 == 1L && drop) return(setNames(unlist(X, use.names = FALSE), ax[["names"]]))
+#       ax[["row.names"]] <- if(!is.null(nx1 <- names(X[[1L]]))) nx1 else .set_row_names(lx1)
+#     }
+#   }
+#   return(setAttributes(X, ax))
+# }
 
 
-# # Idea of implementing Xcols, but not really necessary I think!! data.table can do that!! this package should not substitute for data.table
+# Newest version but writing it all out in one hierarchy (instead of 2) -> Only little speed gain and much messier code !!
+# dapply4 <- function(X, FUN, ..., MARGIN = 2, parallel = FALSE, # drop argument !!
+#                     mc.cores = 1L, return = c("same","matrix","data.frame"), drop = TRUE) {
+#   ax <- attributes(X)
+#   rowwl <- MARGIN == 1
+#   aplyfun <- if(parallel) function(...) parallel::mclapply(..., mc.cores = mc.cores) else lapply
+#   if(is.array(X)) {
+#     dX <- dim(X)
+#     if(length(dX) > 2L) stop("dapply cannot handle higher-dimensional arrays")
+#     X <- if(rowwl) aplyfun(mrtl(X), FUN, ...) else aplyfun(mctl(X), FUN, ...)
+#     lx1 <- length(X[[1L]])
+#     if(lx1 == 1L && drop) return(setNames(unlist(X, use.names = FALSE),
+#                                           ax[["dimnames"]][[if(rowwl) 1L else 2L]]))
+#     if(switch(return[1L], same = TRUE, matrix = TRUE,
+#               data.frame = FALSE, stop("Unknown return option!"))) { # without checking is.null(ax), can only input matrices and data.frames !!
+#       if(rowwl) {
+#         if(lx1 != dX[2L]) {
+#           ax[["dim"]][2L] <- lx1
+#           ax[["dimnames"]][[2L]] <- if(!is.null(nx1 <- names(X[[1L]]))) nx1 else character(0)
+#         }
+#         return(setAttributes(matrix(unlist(X, use.names = FALSE), ncol = lx1, byrow = TRUE), ax))
+#       } else {
+#         if(lx1 != dX[1L]) {
+#           ax[["dim"]][1L] <- lx1
+#           ax[["dimnames"]][[1L]] <- if(!is.null(nx1 <- names(X[[1L]]))) nx1 else character(0)
+#         }
+#         return(setAttributes(do.call(cbind, X), ax))
+#       }
+#     } else {
+#       dn <- ax[["dimnames"]]
+#       if(rowwl) {
+#         ax <- if(lx1 != dX[2L]) c(list(names = if(!is.null(nx1 <- names(X[[1L]]))) nx1 else NULL,
+#                                        row.names = dn[[1L]], class = "data.frame"), ax[!(names(ax) %in% c("dim","dimnames","class"))]) else
+#                                          c(list(names = dn[[2L]], row.names = dn[[1L]], class = "data.frame"),
+#                                            ax[!(names(ax) %in% c("dim","dimnames","class"))])
+#         return(setAttributes(mctl(matrix(unlist(X, use.names = FALSE), ncol = lx1, byrow = TRUE)), ax))
+#       } else {
+#         ax <- if(lx1 != dX[1L]) c(list(names = dn[[2L]], row.names = if(!is.null(nx1 <- names(X[[1L]]))) nx1 else .set_row_names(lx1),
+#                                        class = "data.frame"), ax[!(names(ax) %in% c("dim","dimnames","class"))]) else
+#                                          c(list(names = dn[[2L]], row.names = dn[[1L]], class = "data.frame"),
+#                                            ax[!(names(ax) %in% c("dim","dimnames","class"))])
+#         return(setAttributes(X, ax))
+#       }
+#     }
+#
+#   } else { # X is data.frame !!
+#     attributes(X) <- NULL
+#     dX <- c(length(X[[1L]]), length(X))
+#     X <- if(rowwl) aplyfun(mrtl(do.call(cbind, X)), FUN, ...) else aplyfun(X, FUN, ...)
+#     lx1 <- length(X[[1L]])
+#     if(lx1 == 1L && drop) return(setNames(unlist(X, use.names = FALSE),
+#                                           if(rowwl) ax[["row.names"]] else ax[["names"]]))
+#
+#     if(switch(return[1L], same = FALSE, matrix = TRUE,
+#               data.frame = FALSE, stop("Unknown return option!"))) {
+#       if(rowwl) {
+#         ax <- if(lx1 != dX[2L]) c(list(dim = c(dX[1L], lx1), dimnames = list(ax[["row.names"]],
+#                                                                              if(!is.null(nx1 <- names(X[[1L]]))) nx1 else character(0))),
+#                                   ax[!(names(ax) %in% c("names","row.names","class"))]) else
+#                                     c(list(dim = dX, dimnames = list(ax[["row.names"]], ax[["names"]])),
+#                                       ax[!(names(ax) %in% c("names","row.names","class"))])
+#         return(setAttributes(matrix(unlist(X, use.names = FALSE), ncol = lx1, byrow = TRUE), ax))
+#       } else {
+#         ax <- if(lx1 != dX[1L]) c(list(dim = c(lx1, dX[2L]),
+#                                        dimnames = list(if(!is.null(nx1 <- names(X[[1L]]))) nx1 else character(0), ax[["row.names"]])),
+#                                   ax[!(names(ax) %in% c("names","row.names","class"))]) else
+#                                     c(list(dim = dX, dimnames = list(ax[["row.names"]], ax[["names"]])),
+#                                       ax[!(names(ax) %in% c("names","row.names","class"))])
+#         return(setAttributes(do.call(cbind, X), ax))
+#       }
+#     } else {
+#       if(rowwl) {
+#         if(lx1 != dX[2L]) ax[["names"]] <- if(!is.null(nx1 <- names(X[[1L]]))) nx1 else NULL
+#         return(setAttributes(mctl(matrix(unlist(X, use.names = FALSE), ncol = lx1, byrow = TRUE)), ax))
+#       } else {
+#         if(lx1 != dX[1L]) ax[["row.names"]] <- if(!is.null(nx1 <- names(X[[1L]]))) nx1 else .set_row_names(lx1)
+#         return(setAttributes(X, ax))
+#       }
+#     }
+#   }
+# }
+
+
+
+
+# # Old:  Idea of implementing Xcols, but not really necessary I think!! data.table can do that!! this package should not substitute for data.table
 # # also B() can do this, so you don't need dapply to do it! keep this function simple, it is already perfect the way it is, otherwise the programming gets really messy!!
 # # also consider that B() is based on data.table, so it will be faster for those kinds of adding column operations!!
 # indXcols <- function(X, xc, il) { # Faster way??
