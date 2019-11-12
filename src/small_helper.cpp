@@ -36,6 +36,17 @@ void duplattributes(SEXP x, SEXP y) {
   DUPLICATE_ATTRIB(x, y); // SET_ATTRIB(x, ATTRIB(y));
 }
 
+// [[Rcpp::export]]
+SEXP cond_duplAttributes(SEXP x, SEXP y) {
+  if(TYPEOF(x) == TYPEOF(y)) DUPLICATE_ATTRIB(x, y); // SET_ATTRIB(x, ATTRIB(y));
+  return x;
+}
+
+// [[Rcpp::export]]
+void cond_duplattributes(SEXP x, SEXP y) {
+  if(TYPEOF(x) == TYPEOF(y)) DUPLICATE_ATTRIB(x, y); // SET_ATTRIB(x, ATTRIB(y));
+}
+
 // // [[Rcpp::export]] // needed?? for what ??
 // void sduplattributes(SEXP x, SEXP y) {
 //   SHALLOW_DUPLICATE_ATTRIB(x, y); // DUPLICATE_ATTRIB(x, y);

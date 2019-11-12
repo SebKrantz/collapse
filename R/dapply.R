@@ -13,21 +13,20 @@ dapply <- function(X, FUN, ..., MARGIN = 2, parallel = FALSE, # drop argument !!
   rowwl <- MARGIN == 1
   retmatl <- switch(return[1L], same = arl, matrix = TRUE, data.frame = FALSE, stop("Unknown return option!"))
   aplyfun <- if(parallel) function(...) parallel::mclapply(..., mc.cores = mc.cores) else lapply
+  dX <- dim(X) # on large data dim(X) is definitely faster than dX <- c(length(X[[1L]]), length(X)) !!!
   if(arl) {
-    dX <- dim(X)
     if(length(dX) > 2L) stop("dapply cannot handle higher-dimensional arrays")
     X <- if(rowwl) aplyfun(mrtl(X), FUN, ...) else aplyfun(mctl(X), FUN, ...)
     lx1 <- length(X[[1L]])
     if(lx1 == 1L && drop) return(setNames(unlist(X, use.names = FALSE), ax[["dimnames"]][[if(rowwl) 1L else 2L]]))
     if(!retmatl) {
-      dn <- ax[["dimnames"]] # best ??
+      dn <- ax[["dimnames"]] # best ?? -> use res instead of reassigning X !!! -> no memory loss !!
       ax <- c(list(names = dn[[2L]], row.names = dn[[1L]], class = "data.frame"),
               ax[!(names(ax) %in% c("dim","dimnames","class"))])
     }
   } else {
     attributes(X) <- NULL
-    dX <- c(length(X[[1L]]), length(X)) # do.call(cbind, X) is definitely faster than unlist(X, use.names = FALSE) and attaching dim attribute
-    X <- if(rowwl) aplyfun(mrtl(do.call(cbind, X)), FUN, ...) else aplyfun(X, FUN, ...)
+    X <- if(rowwl) aplyfun(mrtl(do.call(cbind, X)), FUN, ...) else aplyfun(X, FUN, ...) # do.call(cbind, X) is definitely faster than unlist(X, use.names = FALSE) and attaching dim attribute
     lx1 <- length(X[[1L]])
     if(lx1 == 1L && drop) return(setNames(unlist(X, use.names = FALSE), if(rowwl) charorNULL(ax[["row.names"]]) else ax[["names"]]))
     if(retmatl) ax <- c(list(dim = dX, dimnames = list(charorNULL(ax[["row.names"]]), ax[["names"]])),
