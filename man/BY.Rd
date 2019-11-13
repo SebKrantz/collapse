@@ -32,32 +32,28 @@ Efficient Split-Apply-Combine Computing
 %- maybe also 'usage' for other objects documented here.
 \arguments{
   \item{X}{a atomic vector, matrix or data frame.}
+  \item{g}{a factor, \code{GRP} object, atomic vector (internally converted to factor) or a list of vectors / factors (internally converted to a \code{GRP} object) used to group \code{x}.}
   \item{FUN}{a function, can be scalar- or vector-valued.}
   \item{...}{further arguments to \code{FUN}.}
-  \item{simplify}{logical. Simplify the result to return an object of the same class and with the same attributes. If \code{FALSE}, the raw computation retult in form of a (nested) list is returned.}
-  \item{simplify}{logical. Simplify the result to return an object of the same class and with the same attributes. If \code{FALSE}, the raw computation retult in form of a (nested) list is returned.}
+  \item{use.g.names}{make group-names and add to the result as names (vector method) or row-names (matrix and data.frame method). No row-names are generated for data.tables and grouped tibbles.}
   \item{sort}{logical. Sort the groups?. Internally passed to \code{GRP()} or \code{qF()}, and only effective if \code{g} is not already a factor or \code{GRP} object.}
+  \item{expand.wide}{logical. If \code{FUN} is a vector-valued function that applied to a vector returns a vector of a fixed length > 1 (such as the \code{quantile} function), \code{expand.wide} can be used to return the result in a wider format (instead of stacking the resulting vectors of fixed length above each other in each output column).}
   \item{parallel}{logical. \code{TRUE} implements simple parallel execution by internally calling \code{parallel::mclapply} instead of \code{base::lapply}.}
   \item{mc.cores}{integer. Argument to \code{parallel::mclapply} indicating the number of cores to use for parallel execution. Can use \code{parallel::detectCores()} to select all available cores. See also \code{?parallel::mclapply}.}
+    \item{return}{an integer or string indicating the type of object to return. The default \code{1 - "same"} returns the same object type (i.e. passing a matrix returns a matrix and passig a data frame returns a data frame). \code{2 - "matrix"} always returns the output as matrix, \code{3 - "data.frame"} always returns a data frame and \code{4 - "list"} returns the raw (uncombined) output. \emph{Note}: \code{4 - "list"} works together with \code{expand.wide} to return a list of matrices.}
+%    \item{simplify}{logical. Simplify the result to return an object of the same class and with the same attributes. If \code{FALSE}, the raw computation retult in form of a (nested) list is returned.}
 }
 \details{
-\code{dapply} is an efficient command to apply functions to rows or columns of data without loosing information (attributes) about the data or changing the classes or format of the data. It is principally an efficient wrapper around \code{base::lapply} and works as follows:
+\code{BY} is an efficient and frugal reimplementation of the Split-Apply-Combine computing paradigm. It is faster than \code{base::tapply}, \code{base::by}, \code{base::aggregate} and \code{plyr}, and preserves data attributes just like \code{dapply}.
 
-\itemize{
-\item Save the attributes of \code{X}.
-\item If \code{MARGIN = 2} (columns), convert matrices to plain lists of columns using \code{mctl} and remove all attributes from data frames.
-\item If \code{MARGIN = 1} (rows), convert matrices to plain lists of rows using \code{mrtl}. For data frames remove all attributes, efficiently convert to matrix using \code{do.call(rbind, X)} and also convert to list of rows using \code{mrtl}.
-\item Call \code{base::lapply} or \code{parallel::mclapply} on these plain lists (which is faster than calling \code{lapply} on an object with attributes).
+I note at this point that the philosphy of \code{collapse} is to move beyond this rather slow computing paradigm, which is why the \code{\link{Fast Statistical Functions}} were implemented. However sometimes tasks need to be performed that involve more comlex and customized operations on data, and for these cases \code{BY} represents a very efficient solution.
 
-\item depending on the requested output type, use \code{base::matrix}, \code{base::unlist} or \code{do.call(cbind, ...)} to convert the result back to a matrix or list of columns.
+\code{BY} is built principally as a wrapper around \code{lapply(split(x, g), FUN, ...)}, but strongly optimizes on attribute cheking compared to \code{base} R. For more details examine the code yourself or look at the documentation for \code{\link{dapply}} which works very similar (the only difference really is the splitting performed in \code{BY}).
 
-\item modify the relevant attributes accordingly and efficiently attach to the object again using \code{collapse::setAttributes} (no further checks, non essential attributes are kept and added at the end of the attribute list).
-}
-
-This process of working with plain lists makes \code{dapply} not noticeably slower than calling \code{lapply} itself on a data frame. Because of the conversions involved, row-operations require some memory, but are still faster than \code{base::apply}.
+\code{BY} is used internally in \code{collap} (\code{collapse}'s main aggregation command) for functions that are not \code{\link{Fast Statistical Functions}}.
 }
 \value{
-\code{x} where \code{FUN} was applied to every row / column.
+\code{X} where \code{FUN} was applied to every column split by \code{g}.
 }
 \references{
 %% ~put references to the literature/web site here ~
@@ -75,28 +71,54 @@ This process of working with plain lists makes \code{dapply} not noticeably slow
 %% ~~objects to See Also as \code{\link{help}}, ~~~
 }
 \examples{
-dapply(mtcars, log)                     # Take natural log of each variable
-dapply(mtcars, log, return = "matrix")  # Return as matrix
-m <- as.matrix(mtcars)
-dapply(m, log)                          # Same thing
-dapply(m, log, return = "data.frame")   # Return data frame from matrix
-dapply(mtcars, sum); dapply(m, sum)     # Computing sum of each column, return as vector
-dapply(mtcars, sum, drop = FALSE)       # This returns a data.frame of 1 row
-dapply(mtcars, sum, MARGIN = 1)         # Compute row-sum of each column, return as vector. More efficient than rowSums(mtcars).
-dapply(m, sum, MARGIN = 1)              # Same thing for matrices, faster than apply(m, 1, sum)
-dapply(m, sum, MARGIN = 1, drop = FALSE) # Gives matrix with one column
-dapply(m, quantile, MARGIN = 1)         # Compute row-quantiles
-dapply(m, quantile)                     # Column-quantiles
-dapply(mtcars, quantile, MARGIN = 1)    # Same for data frames, output is also a data.frame
-dapply(mtcars, quantile)
+v <- iris$Sepal.Length   # A numeric vector
+f <- iris$Species        # A factor. Vectors and lists passed to g will internally be converted to factor
 
-# Let's now take a more complex classed object, like a dplyr grouped tibble:
+## default vector method
+BY(v, f, sum)                          # Sum by species
+BY(v, f, scale)                        # Scale by species (this is only a demo, please use fscale instead)
+BY(v, f, scale, use.g.names = FALSE)   # Omitting auto-generated names
+BY(v, f, quantile)                     # Species quantiles: by default stacked
+BY(v, f, quantile, expand.wide = TRUE) # Wide format
+
+## data.frame method
+BY(num_vars(iris), f, sum)             # Also returns a data.fram
+BY(num_vars(iris), f, sum, return = 2) # Return as matrix ... also works for all the other computations below
+BY(num_vars(iris), f, scale)
+BY(num_vars(iris), f, scale, use.g.names = FALSE)
+BY(num_vars(iris), f, quantile)
+BY(num_vars(iris), f, quantile, expand.wide = TRUE)
+BY(num_vars(iris), f, quantile,        # Return as list of matrices
+   expand.wide = TRUE, return = "list")
+
+## matrix method
+m <- qM(num_vars(iris))
+BY(m, f, sum)                          # Also return as matrix
+BY(m, f, sum, return = "data.frame")   # Return as data.frame ... also works for all the other computations below
+BY(m, f, scale)
+BY(m, f, scale, use.g.names = FALSE)
+BY(m, f, quantile)
+BY(m, f, quantile, expand.wide = TRUE)
+BY(m, f, quantile, expand.wide = TRUE, # Return as list of matrices
+   return = "list")
+
+# grouped tibble method
 library(dplyr)
-gmtcars <- group_by(mtcars,cyl,vs,am)
-dapply(gmtcars, log)                    # We can still take logs of rows or columns and get a grouped tibble back
-dapply(gmtcars, log, MARGIN = 1)
-dapply(gmtcars, quantile, MARGIN = 1)   # Also works for quantiles
-dapply(gmtcars, log, return = "matrix") # Output as matrix also works, groups are attached!
+giris <- group_by(iris, Species)
+giris \%>\% BY(sum)                     # Compute sum
+giris \%>\% BY(sum) \%>\% ungroup()       # drop groups attribute
+giris \%>\% BY(sum, use.g.names = TRUE, # Use row.names and
+             keep.group_keys = FALSE) # remove 'Species' and groups attribute
+giris \%>\% BY(sum, return = "matrix")  # Return matrix
+giris \%>\% BY(sum, return = "matrix",  # Matrix without groups attribute and row.names
+             use.g.names = TRUE) \%>\%
+             `attr<-`("groups", NULL)
+giris \%>\% BY(log)                     # Take logs
+giris \%>\% BY(log, use.g.names = TRUE, # Use row.names and
+             keep.group_keys = FALSE) # remove 'Species' and groups attribute
+giris \%>\% BY(quantile)                # Compute quantiles (output is stacked)
+giris \%>\% BY(quantile,                # Much better, also keeps 'Species'
+             expand.wide = TRUE)
 }
 % Add one or more standard keywords, see file 'KEYWORDS' in the
 % R documentation directory.

@@ -9,22 +9,22 @@
 \code{fprod} is a generic function that computes the (column-wise) product of all values in \code{x}, (optionally) grouped by \code{g}. The \code{TRA} argument can further be used to transform \code{x} using its (grouped) product.
 }
 \usage{
-\method{fprod}{default}(x, g = NULL, TRA = FALSE, na.rm = TRUE, 
+\method{fprod}{default}(x, g = NULL, TRA = FALSE, na.rm = TRUE,
       use.g.names = TRUE, ...)
 
-\method{fprod}{matrix}(x, g = NULL, TRA = FALSE, na.rm = TRUE, 
+\method{fprod}{matrix}(x, g = NULL, TRA = FALSE, na.rm = TRUE,
       drop = TRUE, use.g.names = TRUE, ...)
 
-\method{fprod}{data.frame}(x, g = NULL, TRA = FALSE, na.rm = TRUE, 
+\method{fprod}{data.frame}(x, g = NULL, TRA = FALSE, na.rm = TRUE,
       drop = TRUE, use.g.names = TRUE, ...)
 
-\method{fprod}{grouped_df}(x, TRA = FALSE, na.rm = TRUE, 
+\method{fprod}{grouped_df}(x, TRA = FALSE, na.rm = TRUE,
       drop.groups = FALSE, ...)
 }
 \arguments{
 \item{x}{a numeric vector, matrix, data.frame or grouped tibble (\code{dplyr::grouped_df}).}
 
-\item{g}{a factor, \code{GRP} object, atomic vector (internally converted to factor) or a list of vectors / factors (internally converted to a \code{GRP} object) used to group \code{x}}
+\item{g}{a factor, \code{GRP} object, atomic vector (internally converted to factor) or a list of vectors / factors (internally converted to a \code{GRP} object) used to group \code{x}.}
 
 \item{TRA}{an integer or quoted operator indicating the transformation to perform:
 1 - "replace_fill"     |     2 - "replace"     |     3 - "-"     |     4 - "-+"     |     5 - "/"     |     6 - "\%"     |     7 - "+"     |     8 - "*". See \code{\link{TRA}}.}
@@ -42,7 +42,7 @@ Non-grouped product computations internally utilize long-doubles in C++, for add
 
 Missing-value removal as controlled by the \code{na.rm} argument is done very efficiently by simply skipping them in the computation (thus setting \code{na.rm = FALSE} on data with no missing values doesn't give extra speed). Large performance gains can nevertheless be achieved in the presence of missing values if \code{na.rm = FALSE}, since then the corresponding computation is terminated once a \code{NA} is encountered and \code{NA} is returned (unlike \code{base::prod} which just runs through without any checks).
 
-This all seamlessly generalizes to grouped computations, which are performed in a single pass (without splitting the data) and therefore extremely fast. 
+This all seamlessly generalizes to grouped computations, which are performed in a single pass (without splitting the data) and therefore extremely fast.
 
 When applied to data frame's with groups or \code{drop = FALSE}, \code{fprod} preserves all column attributes (such as variable labels) but does not distinguish between classed and unclassed objects. The attributes of the \code{data.frame} itself are also perserved.
 

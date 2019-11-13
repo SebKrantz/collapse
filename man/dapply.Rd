@@ -39,7 +39,7 @@ dapply(X, FUN, ..., MARGIN = 2, parallel = FALSE, mc.cores = 1L,
 This process of working with plain lists makes \code{dapply} not noticeably slower than calling \code{lapply} itself on a data frame. Because of the conversions involved, row-operations require some memory, but are still faster than \code{base::apply}.
 }
 \value{
-\code{x} where \code{FUN} was applied to every row / column.
+\code{X} where \code{FUN} was applied to every row / column.
 }
 \references{
 %% ~put references to the literature/web site here ~

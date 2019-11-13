@@ -6,13 +6,8 @@ qF <- function(x, ordered = TRUE) {
   qFCpp(x, ordered)
 }
 
-
-# todo: what about cimpilation using compile::cmpfun??
-# todo: what if g is a list of factors ?? -> general concern for all functions !!
-
 # also what about split apply combining other data stricture i.e. factors, date and time ... -> try mode !!
 # -> need fplit and unlist (original) to account for factors. Note that fsplit does not deal with date and time ... but unlist can't handle those either... but nobody aggregates dates anyway...
-
 
 fsplit <- function(x, f) {
   if(is.null(attr(x, "class")))
@@ -136,7 +131,6 @@ BY.data.frame <- function(X, g, FUN, ..., use.g.names = TRUE, sort = TRUE,
   }
 }
 
-
 BY.matrix <- function(X, g, FUN, ..., use.g.names = TRUE, sort = TRUE,
                       expand.wide = FALSE, parallel = FALSE, mc.cores = 1L,
                       return = c("same","matrix","data.frame","list")) {
@@ -193,17 +187,46 @@ BY.matrix <- function(X, g, FUN, ..., use.g.names = TRUE, sort = TRUE,
     }
     return(setAttributes(res, ax))
   } else {
-    if(expand.wide) aplyfun(mctl(X, names = TRUE), function(x) do.call(rbind, lapply(fsplit(x, g), FUN, ...))) else if(use.g.names)
-      aplyfun(mctl(X, names = TRUE), function(x) lapply(fsplit(x, g), FUN, ...)) else
-        aplyfun(mctl(X, names = TRUE), function(x) `names<-`(lapply(fsplit(x, g), FUN, ...), NULL))
+    if(expand.wide) return(aplyfun(mctl(X, names = TRUE), function(x) do.call(rbind, lapply(fsplit(x, g), FUN, ...)))) else if(use.g.names)
+      return(aplyfun(mctl(X, names = TRUE), function(x) lapply(fsplit(x, g), FUN, ...))) else
+        return(aplyfun(mctl(X, names = TRUE), function(x) `names<-`(lapply(fsplit(x, g), FUN, ...), NULL)))
   }
 }
 
-
-BY.grouped_df <- function(X, FUN, ..., use.g.names = TRUE, expand.wide = FALSE, simplify = TRUE, parallel = FALSE, mc.cores = 1L) {
-  g <- as.factor.GRP(GRP.grouped_df(X)) # still get grouping columns !!!
-  BY.data.frame(X, g, FUN, ..., simplify, use.g.names, TRUE, expand.wide, parallel, mc.cores)
+BY.grouped_df <- function(X, FUN, ..., keep.group_keys = TRUE, use.g.names = FALSE,
+                          expand.wide = FALSE, parallel = FALSE, mc.cores = 1L,
+                          return = c("same","matrix","data.frame","list")) {
+  g <- GRP.grouped_df(X)
+  groups <- g[[4L]]
+  g <- as.factor.GRP(g)
+  gn <- which(names(X) %in% names(groups)) # correct !! else na.rm(match(names(groups), names(X))), but is slower !!
+  if(length(gn)) {
+    if(!keep.group_keys) return(BY.data.frame(X[-gn], g, FUN, ..., # colsubset(X, -gn) dont use colsubset -> doesn't drop group attachment !!, for the other cases can always use ungroup !!
+                           use.g.names = use.g.names, sort = TRUE, expand.wide = expand.wide,
+                           parallel = parallel, mc.cores = mc.cores, return = return))
+      res <- BY.data.frame(colsubset(X, -gn), g, FUN, ...,
+                           use.g.names = use.g.names, sort = TRUE, expand.wide = expand.wide,
+                           parallel = parallel, mc.cores = mc.cores, return = return)
+      if(is.data.frame(res)) {
+        nrr <- nrow(res)
+        same_size <- nrr == nrow(X)
+        if(same_size || all(nrr == lengths(groups))) {
+          if(same_size) {
+            ax <- attributes(X); attributes(res) <- NULL # faster removing attributes? (yes, a tiny bit!)  also set attributes of groups NULL ?? -> Nah !!
+            ax[["names"]] <- c(ax[["names"]][gn], ax[["names"]][-gn])
+            return(setAttributes(c(colsubset(X, gn), res), ax))
+          } else {
+            ax <- attributes(res); attributes(res) <- NULL
+            ax[["names"]] <- c(names(groups), ax[["names"]])
+            return(setAttributes(c(groups, res), ax))
+          }
+        } else return(res)
+      } else return(res)
+  } else return(BY.data.frame(X, g, FUN, ..., use.g.names = use.g.names, sort = TRUE, expand.wide = expand.wide,
+                              parallel = parallel, mc.cores = mc.cores, return = return))
 }
+
+
 
 # Previous Versions of BY.data.frame and BY.matrix: With parallelisma and sorting, but not different return options:
 #
