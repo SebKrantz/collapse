@@ -12,17 +12,21 @@ Efficient Split-Apply-Combine Computing
 \code{BY} is an S3 generic that efficiently applies functions over vectors or matrix- and data.frame columns by groups. A simple parallelism is also available.
 }
 \usage{
-\method{BY}{default}(X, g, FUN, ..., simplify = TRUE, use.g.names = TRUE, sort = TRUE,
-   expand.wide = FALSE, parallel = FALSE, mc.cores = 1L)
+\method{BY}{default}(X, g, FUN, ..., use.g.names = TRUE, sort = TRUE,
+   expand.wide = FALSE, parallel = FALSE, mc.cores = 1L,
+   return = c("same","list"))
 
-\method{BY}{matrix}(X, g, FUN, ..., simplify = TRUE, use.g.names = TRUE, sort = TRUE,
-   expand.wide = FALSE, parallel = FALSE, mc.cores = 1L)
+\method{BY}{matrix}(X, g, FUN, ..., use.g.names = TRUE, sort = TRUE,
+   expand.wide = FALSE, parallel = FALSE, mc.cores = 1L,
+   return = c("same","matrix","data.frame","list"))
 
-\method{BY}{data.frame}(X, g, FUN, ..., simplify = TRUE, use.g.names = TRUE, sort = TRUE,
-   expand.wide = FALSE, parallel = FALSE, mc.cores = 1L)
+\method{BY}{data.frame}(X, g, FUN, ..., use.g.names = TRUE, sort = TRUE,
+   expand.wide = FALSE, parallel = FALSE, mc.cores = 1L,
+   return = c("same","matrix","data.frame","list"))
 
-\method{BY}{grouped_df}(X, FUN, ..., simplify = TRUE, use.g.names = TRUE, sort = TRUE,
-   expand.wide = FALSE, parallel = FALSE, mc.cores = 1L)
+\method{BY}{grouped_df}(X, FUN, ..., use.g.names = TRUE, sort = TRUE,
+   expand.wide = FALSE, parallel = FALSE, mc.cores = 1L,
+   return = c("same","matrix","data.frame","list"))
 
 }
 %- maybe also 'usage' for other objects documented here.
