@@ -37,15 +37,15 @@ dapply <- function(X, FUN, ..., MARGIN = 2, parallel = FALSE, # drop argument !!
     if(rowwl) {
       if(lx1 != dX[2L]) {
         ax[["dim"]][2L] <- lx1
-        ax[["dimnames"]][[2L]] <- if(!is.null(nx1 <- names(res[[1L]]))) nx1 else if(lx1 == 1L)
-                deparse(substitute(FUN)) else paste0(deparse(substitute(FUN)), seq_len(lx1))
+        ax[["dimnames"]] <- list(dimnames(X)[[1L]], if(!is.null(nx1 <- names(res[[1L]]))) nx1 else if(lx1 == 1L)
+                            deparse(substitute(FUN)) else paste0(deparse(substitute(FUN)), seq_len(lx1)))
       }
       res <- matrix(unlist(res, use.names = FALSE), ncol = lx1, byrow = TRUE)
     } else {
       if(lx1 != dX[1L]) {
         ax[["dim"]][1L] <- lx1
-        ax[["dimnames"]][[1L]] <- if(!is.null(nx1 <- names(res[[1L]]))) nx1 else if(lx1 == 1L)
-          deparse(substitute(FUN)) else paste0(deparse(substitute(FUN)), seq_len(lx1))
+        ax[["dimnames"]] <- list(if(!is.null(nx1 <- names(res[[1L]]))) nx1 else if(lx1 == 1L)
+          deparse(substitute(FUN)) else paste0(deparse(substitute(FUN)), seq_len(lx1)), dimnames(X)[[2L]])
       }
       res <- do.call(cbind, res)
     }

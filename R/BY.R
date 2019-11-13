@@ -101,7 +101,7 @@ BY.data.frame <- function(X, g, FUN, ..., use.g.names = TRUE, sort = TRUE,
       attributes(X) <- NULL
       if(use.g.names && (matl || !inherits(X, "data.table"))) {
         res <- vector("list", length(X))
-        res[[1L]] <- unlist(lapply(fsplit(X[[1L]], g), FUN, ...), FALSE, TRUE)
+        res[[1L]] <- unlist(lapply(fsplit(X[[1L]], g), FUN, ...), FALSE, TRUE) # could make to use row.names -> `names<-`(X[[1L]], ax[["row.names"]]) !!!!!!!!!!!!!. but i discard it because this is not so common for data.frame to have non-numeric row names.
         if(matl) dn <- list(names(res[[1L]]), ax[["names"]]) else
           ax[["row.names"]] <- names(res[[1L]])
         setattr_clp(res[[1L]], "names", NULL) # faster than  names(res[[1]]) <- NULL
@@ -166,7 +166,7 @@ BY.matrix <- function(X, g, FUN, ..., use.g.names = TRUE, sort = TRUE,
       if(use.g.names) {
         res <- vector("list", ncol(X))
         res[[1L]] <- splitfun(X[, 1L], un = TRUE) # rewrite all in C++ ??
-        if(return == 2L) ax[["dimnames"]][[1L]] <- names(res[[1L]]) else
+        if(return == 2L) ax[["dimnames"]] <- list(names(res[[1L]]), dimnames(X)[[2L]]) else # ax[["dimnames"]][[1L]] <- names(res[[1L]]) # gives error if only one dimnames !!
           ax <- c(list(names = dimnames(X)[[2L]], row.names = names(res[[1L]]), class = "data.frame"),
                   ax[!(names(ax) %in% c("dim","dimnames","class"))])
         setattr_clp(res[[1L]], "names", NULL)
@@ -180,13 +180,13 @@ BY.matrix <- function(X, g, FUN, ..., use.g.names = TRUE, sort = TRUE,
         lr1 <- length(res[[1L]])
         if(return == 2L) {
           if(lr1 != nrow(X)) {
-            ax[["dimnames"]][1L] <- list(NULL) # character(0) doesn't work !!
+            if(!is.null(dimnames(X))) ax[["dimnames"]][1L] <- list(NULL) # character(0) doesn't work !!, the if check guars for error if no dimnames
             ax[["dim"]][1L] <- lr1
           }
           res <- do.call(cbind, res)
         } else {
-          ax <- c(list(names = names(res), row.names = if(lr1 == nrow(X))
-            dimnames(X)[[1L]] else .set_row_names(lr1), class = "data.frame"),
+          ax <- c(list(names = names(res), row.names = if(lr1 == nrow(X) && length(rn <- dimnames(X)[[1L]]))
+            rn else .set_row_names(lr1), class = "data.frame"),
             ax[!(names(ax) %in% c("dim","dimnames","class"))])
         }
       }
