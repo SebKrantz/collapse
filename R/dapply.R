@@ -13,22 +13,23 @@ dapply <- function(X, FUN, ..., MARGIN = 2, parallel = FALSE, # drop argument !!
   rowwl <- MARGIN == 1
   retmatl <- switch(return[1L], same = arl, matrix = TRUE, data.frame = FALSE, stop("Unknown return option!"))
   aplyfun <- if(parallel) function(...) parallel::mclapply(..., mc.cores = mc.cores) else lapply
-  dX <- dim(X) # on large data dim(X) is definitely faster than dX <- c(length(X[[1L]]), length(X)) !!!
   if(arl) {
+    dX <- dim(X)
     if(length(dX) > 2L) stop("dapply cannot handle higher-dimensional arrays")
-    X <- if(rowwl) aplyfun(mrtl(X), FUN, ...) else aplyfun(mctl(X), FUN, ...)
-    lx1 <- length(X[[1L]])
-    if(lx1 == 1L && drop) return(setNames(unlist(X, use.names = FALSE), ax[["dimnames"]][[if(rowwl) 1L else 2L]]))
+    res <- if(rowwl) aplyfun(mrtl(X), FUN, ...) else aplyfun(mctl(X), FUN, ...)
+    lx1 <- length(res[[1L]])
+    if(lx1 == 1L && drop) return(setNames(unlist(res, use.names = FALSE), ax[["dimnames"]][[if(rowwl) 1L else 2L]]))
     if(!retmatl) {
-      dn <- ax[["dimnames"]] # best ?? -> use res instead of reassigning X !!! -> no memory loss !!
+      dn <- dimnames(X) # ax[["dimnames"]] # best ?? -> use res instead of reassigning X !!! -> no memory loss !!
       ax <- c(list(names = dn[[2L]], row.names = dn[[1L]], class = "data.frame"),
               ax[!(names(ax) %in% c("dim","dimnames","class"))])
     }
   } else {
     attributes(X) <- NULL
-    X <- if(rowwl) aplyfun(mrtl(do.call(cbind, X)), FUN, ...) else aplyfun(X, FUN, ...) # do.call(cbind, X) is definitely faster than unlist(X, use.names = FALSE) and attaching dim attribute
-    lx1 <- length(X[[1L]])
-    if(lx1 == 1L && drop) return(setNames(unlist(X, use.names = FALSE), if(rowwl) charorNULL(ax[["row.names"]]) else ax[["names"]]))
+    dX <- c(length(X[[1L]]), length(X)) # much faster than dim(X) on a list !!
+    res <- if(rowwl) aplyfun(mrtl(do.call(cbind, X)), FUN, ...) else aplyfun(X, FUN, ...) # do.call(cbind, X) is definitely faster than unlist(X, use.names = FALSE) and attaching dim attribute
+    lx1 <- length(res[[1L]])
+    if(lx1 == 1L && drop) return(setNames(unlist(res, use.names = FALSE), if(rowwl) charorNULL(ax[["row.names"]]) else ax[["names"]]))
     if(retmatl) ax <- c(list(dim = dX, dimnames = list(charorNULL(ax[["row.names"]]), ax[["names"]])),
                         ax[!(names(ax) %in% c("names","row.names","class"))])
   }
@@ -36,27 +37,27 @@ dapply <- function(X, FUN, ..., MARGIN = 2, parallel = FALSE, # drop argument !!
     if(rowwl) {
       if(lx1 != dX[2L]) {
         ax[["dim"]][2L] <- lx1
-        ax[["dimnames"]][[2L]] <- if(!is.null(nx1 <- names(X[[1L]]))) nx1 else if(lx1 == 1L)
+        ax[["dimnames"]][[2L]] <- if(!is.null(nx1 <- names(res[[1L]]))) nx1 else if(lx1 == 1L)
                 deparse(substitute(FUN)) else paste0(deparse(substitute(FUN)), seq_len(lx1))
       }
-      X <- matrix(unlist(X, use.names = FALSE), ncol = lx1, byrow = TRUE)
+      res <- matrix(unlist(res, use.names = FALSE), ncol = lx1, byrow = TRUE)
     } else {
       if(lx1 != dX[1L]) {
         ax[["dim"]][1L] <- lx1
-        ax[["dimnames"]][[1L]] <- if(!is.null(nx1 <- names(X[[1L]]))) nx1 else if(lx1 == 1L)
+        ax[["dimnames"]][[1L]] <- if(!is.null(nx1 <- names(res[[1L]]))) nx1 else if(lx1 == 1L)
           deparse(substitute(FUN)) else paste0(deparse(substitute(FUN)), seq_len(lx1))
       }
-      X <- do.call(cbind, X)
+      res <- do.call(cbind, res)
     }
   } else {
     if(rowwl) {
-      if(lx1 != dX[2L]) ax[["names"]] <- if(!is.null(nx1 <- names(X[[1L]]))) nx1 else if(lx1 == 1L)
+      if(lx1 != dX[2L]) ax[["names"]] <- if(!is.null(nx1 <- names(res[[1L]]))) nx1 else if(lx1 == 1L)
         deparse(substitute(FUN)) else paste0(deparse(substitute(FUN)), seq_len(lx1))
-      X <- mctl(matrix(unlist(X, use.names = FALSE), ncol = lx1, byrow = TRUE)) # definitely faster than do.call(rbind, X)
+      res <- mctl(matrix(unlist(res, use.names = FALSE), ncol = lx1, byrow = TRUE)) # definitely faster than do.call(rbind, X)
     } else if(lx1 != dX[1L])
-      ax[["row.names"]] <- if(!is.null(nx1 <- names(X[[1L]]))) nx1 else .set_row_names(lx1)
+      ax[["row.names"]] <- if(!is.null(nx1 <- names(res[[1L]]))) nx1 else .set_row_names(lx1)
   }
-  return(setAttributes(X, ax))
+  return(setAttributes(res, ax))
 }
 
 

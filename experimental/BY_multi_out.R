@@ -25,6 +25,7 @@ BY.data.frame <- function(X, g, FUN, ..., use.g.names = TRUE, sort = TRUE,
 
       }
     } else {
+      attributes(X) <- NULL
       if(use.g.names && !inherits(X, "data.table")) {
         res <- vector("list", length(X))
         res[[1L]] <- unlist(lapply(fsplit(X[[1L]], g), FUN, ...), FALSE, TRUE)
