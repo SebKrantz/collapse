@@ -21,8 +21,8 @@ dapply <- function(X, FUN, ..., MARGIN = 2, parallel = FALSE, # drop argument !!
     if(lx1 == 1L && drop) return(setNames(unlist(res, use.names = FALSE), ax[["dimnames"]][[if(rowwl) 1L else 2L]]))
     if(!retmatl) {
       dn <- dimnames(X) # ax[["dimnames"]] # best ?? -> use res instead of reassigning X !!! -> no memory loss !!
-      ax <- c(list(names = dn[[2L]], row.names = dn[[1L]], class = "data.frame"),
-              ax[!(names(ax) %in% c("dim","dimnames","class"))])
+      ax <- c(list(names = dn[[2L]], row.names = if(is.null(dn[[1L]])) .set_row_names(dX[1L]) else dn[[1L]],
+                   class = "data.frame"), ax[!(names(ax) %in% c("dim","dimnames","class"))])
     }
   } else {
     attributes(X) <- NULL
@@ -37,15 +37,15 @@ dapply <- function(X, FUN, ..., MARGIN = 2, parallel = FALSE, # drop argument !!
     if(rowwl) {
       if(lx1 != dX[2L]) {
         ax[["dim"]][2L] <- lx1
-        ax[["dimnames"]] <- list(dimnames(X)[[1L]], if(!is.null(nx1 <- names(res[[1L]]))) nx1 else if(lx1 == 1L)
-                            deparse(substitute(FUN)) else paste0(deparse(substitute(FUN)), seq_len(lx1)))
+        ax[["dimnames"]] <- list(ax[["dimnames"]][[1L]], if(!is.null(nx1 <- names(res[[1L]]))) nx1 else if(lx1 == 1L)
+                    deparse(substitute(FUN)) else paste0(deparse(substitute(FUN)), seq_len(lx1)))
       }
       res <- matrix(unlist(res, use.names = FALSE), ncol = lx1, byrow = TRUE)
     } else {
       if(lx1 != dX[1L]) {
         ax[["dim"]][1L] <- lx1
         ax[["dimnames"]] <- list(if(!is.null(nx1 <- names(res[[1L]]))) nx1 else if(lx1 == 1L)
-          deparse(substitute(FUN)) else paste0(deparse(substitute(FUN)), seq_len(lx1)), dimnames(X)[[2L]])
+        deparse(substitute(FUN)) else paste0(deparse(substitute(FUN)), seq_len(lx1)), ax[["dimnames"]][[2L]])
       }
       res <- do.call(cbind, res)
     }
@@ -55,7 +55,7 @@ dapply <- function(X, FUN, ..., MARGIN = 2, parallel = FALSE, # drop argument !!
         deparse(substitute(FUN)) else paste0(deparse(substitute(FUN)), seq_len(lx1))
       res <- mctl(matrix(unlist(res, use.names = FALSE), ncol = lx1, byrow = TRUE)) # definitely faster than do.call(rbind, X)
     } else if(lx1 != dX[1L])
-      ax[["row.names"]] <- if(!is.null(nx1 <- names(res[[1L]]))) nx1 else .set_row_names(lx1)
+      ax[["row.names"]] <- if(!is.null(nx1 <- names(res[[1L]]))) nx1 else .set_row_names(lx1) # could also make deparse(substitute(FUN)), but that is not so typical for data.frames !!
   }
   return(setAttributes(res, ax))
 }
