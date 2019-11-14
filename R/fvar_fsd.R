@@ -1,18 +1,20 @@
 library(Rcpp)
-sourceCpp('R/C++/fvarsd.cpp')
-sourceCpp('R/C++/fvarsda.cpp')
-sourceCpp('R/C++/fvarsdl.cpp')
-sourceCpp('R/C++/TRA.cpp')
-sourceCpp('R/C++/TRAl.cpp')
-sourceCpp('R/C++/TRAa.cpp')
+sourceCpp('src/fsum.cpp')
+sourceCpp('src/fvarsd.cpp')
+sourceCpp('src/fvarsda.cpp')
+sourceCpp('src/fvarsdl.cpp')
+sourceCpp('src/TRA.cpp')
+sourceCpp('src/TRAl.cpp')
+sourceCpp('src/TRAa.cpp')
 
 # w.type = "frequency"
 # Note: for principal innovations of this code see fsum.R !!
 
-fsd <- function(x, g = NULL, w = NULL, TRA = FALSE, na.rm = TRUE, use.g.names = TRUE, stable.algo = TRUE, ...) {
+fsd <- function(x, g = NULL, w = NULL, TRA = FALSE, na.rm = TRUE, use.g.names = TRUE,
+                stable.algo = TRUE, drop = TRUE, keep.group_keys = TRUE, keep.w = TRUE, ...) {
   UseMethod("fsd", x)
 }
-fsd.default <- function(x, g = NULL, w = NULL, TRA = FALSE, na.rm = TRUE, use.g.names = TRUE, stable.algo = TRUE, ...) { 
+fsd.default <- function(x, g = NULL, w = NULL, TRA = FALSE, na.rm = TRUE, use.g.names = TRUE, stable.algo = TRUE, ...) {
   if(TRA == FALSE) {
     if(is.null(g)) return(fvarsdCpp(x,0L,0L,NULL,w,na.rm,stable.algo)) else if (is.atomic(g)) {
       if(use.g.names) {
@@ -27,8 +29,8 @@ fsd.default <- function(x, g = NULL, w = NULL, TRA = FALSE, na.rm = TRUE, use.g.
       }
     } else {
       if(!is.GRP(g)) g <- if(use.g.names) GRP(g) else GRP(g, return.groups = FALSE)
-      if(use.g.names) return(`names<-`(fvarsdCpp(x,g[[1]],g[[2]],g[[3]],w,na.rm,stable.algo), group.names.GRP(g))) else 
-        return(fvarsdCpp(x,g[[1]],g[[2]],g[[3]],w,na.rm,stable.algo))
+      if(use.g.names) return(`names<-`(fvarsdCpp(x,g[[1L]],g[[2L]],g[[3L]],w,na.rm,stable.algo), group.names.GRP(g))) else
+        return(fvarsdCpp(x,g[[1L]],g[[2L]],g[[3L]],w,na.rm,stable.algo))
     }
   } else {
     if(is.null(g)) return(TRACpp(x,fvarsdCpp(x,0L,0L,NULL,w,na.rm,stable.algo),0L,TRAtoInt(TRA))) else if (is.atomic(g)) {
@@ -38,17 +40,17 @@ fsd.default <- function(x, g = NULL, w = NULL, TRA = FALSE, na.rm = TRUE, use.g.
       }
     } else {
       if(!is.GRP(g)) g <- GRP(g, return.groups = FALSE)
-      return(TRACpp(x,fvarsdCpp(x,g[[1]],g[[2]],g[[3]],w,na.rm,stable.algo),g[[2]],TRAtoInt(TRA)))
+      return(TRACpp(x,fvarsdCpp(x,g[[1L]],g[[2L]],g[[3L]],w,na.rm,stable.algo),g[[2L]],TRAtoInt(TRA)))
     }
   }
 }
-fsd.matrix <- function(x, g = NULL, w = NULL, TRA = FALSE, na.rm = TRUE, drop = TRUE, use.g.names = TRUE, stable.algo = TRUE, ...) { 
+fsd.matrix <- function(x, g = NULL, w = NULL, TRA = FALSE, na.rm = TRUE, use.g.names = TRUE, stable.algo = TRUE, drop = TRUE, ...) {
   if(TRA == FALSE) {
     if(is.null(g)) return(fvarsdmCpp(x,0L,0L,NULL,w,na.rm,stable.algo,TRUE,drop)) else if (is.atomic(g)) {
       if(use.g.names) {
         if(!is.factor(g)) g <- qF(g)
         lev <- attr(g, "levels")
-        return(`dimnames<-`(fvarsdmCpp(x,length(lev),g,NULL,w,na.rm,stable.algo), list(lev, dimnames(x)[[2]])))
+        return(`dimnames<-`(fvarsdmCpp(x,length(lev),g,NULL,w,na.rm,stable.algo), list(lev, dimnames(x)[[2L]])))
       } else {
         if(is.factor(g)) return(fvarsdmCpp(x,fnlevels(g),g,NULL,w,na.rm,stable.algo)) else {
           g <- qG(g)
@@ -57,8 +59,8 @@ fsd.matrix <- function(x, g = NULL, w = NULL, TRA = FALSE, na.rm = TRUE, drop = 
       }
     } else {
       if(!is.GRP(g)) g <- if(use.g.names) GRP(g) else GRP(g, return.groups = FALSE)
-      if(use.g.names) return(`dimnames<-`(fvarsdmCpp(x,g[[1]],g[[2]],g[[3]],w,na.rm,stable.algo), list(group.names.GRP(g), dimnames(x)[[2]]))) else
-        return(fvarsdmCpp(x,g[[1]],g[[2]],g[[3]],w,na.rm,stable.algo))
+      if(use.g.names) return(`dimnames<-`(fvarsdmCpp(x,g[[1L]],g[[2L]],g[[3L]],w,na.rm,stable.algo), list(group.names.GRP(g), dimnames(x)[[2L]]))) else
+        return(fvarsdmCpp(x,g[[1L]],g[[2L]],g[[3L]],w,na.rm,stable.algo))
     }
   } else {
     if(is.null(g)) return(TRAmCpp(x,fvarsdmCpp(x,0L,0L,NULL,w,na.rm,stable.algo),0L,TRAtoInt(TRA))) else if (is.atomic(g)) {
@@ -68,11 +70,11 @@ fsd.matrix <- function(x, g = NULL, w = NULL, TRA = FALSE, na.rm = TRUE, drop = 
       }
     } else {
       if(!is.GRP(g)) g <- GRP(g, return.groups = FALSE)
-      return(TRAmCpp(x,fvarsdmCpp(x,g[[1]],g[[2]],g[[3]],w,na.rm,stable.algo),g[[2]],TRAtoInt(TRA)))
+      return(TRAmCpp(x,fvarsdmCpp(x,g[[1L]],g[[2L]],g[[3L]],w,na.rm,stable.algo),g[[2L]],TRAtoInt(TRA)))
     }
   }
 }
-fsd.data.frame <- function(x, g = NULL, w = NULL, TRA = FALSE, na.rm = TRUE, drop = TRUE, use.g.names = TRUE, stable.algo = TRUE, ...) {
+fsd.data.frame <- function(x, g = NULL, w = NULL, TRA = FALSE, na.rm = TRUE, use.g.names = TRUE, stable.algo = TRUE, drop = TRUE, ...) {
   if(TRA == FALSE) {
     if(is.null(g)) return(fvarsdlCpp(x,0L,0L,NULL,w,na.rm,stable.algo,TRUE,drop)) else if (is.atomic(g)) {
       if(use.g.names && !inherits(x, "data.table")) {
@@ -87,9 +89,9 @@ fsd.data.frame <- function(x, g = NULL, w = NULL, TRA = FALSE, na.rm = TRUE, dro
       }
     } else {
       if(!is.GRP(g)) g <- if(use.g.names) GRP(g) else GRP(g, return.groups = FALSE)
-      if(use.g.names && !inherits(x, "data.table") && !is.null(groups <- group.names.GRP(g))) 
-        return(setRow.names(fvarsdlCpp(x,g[[1]],g[[2]],g[[3]],w,na.rm,stable.algo), if(is.double(groups)) paste0(groups) else groups)) else 
-          return(fvarsdlCpp(x,g[[1]],g[[2]],g[[3]],w,na.rm,stable.algo)) 
+      if(use.g.names && !inherits(x, "data.table") && !is.null(groups <- group.names.GRP(g)))
+        return(setRow.names(fvarsdlCpp(x,g[[1L]],g[[2L]],g[[3L]],w,na.rm,stable.algo), groups)) else
+          return(fvarsdlCpp(x,g[[1L]],g[[2L]],g[[3L]],w,na.rm,stable.algo))
     }
   } else {
     if(is.null(g)) return(TRAlCpp(x,fvarsdlCpp(x,0L,0L,NULL,w,na.rm,stable.algo),0L,TRAtoInt(TRA))) else if (is.atomic(g)) {
@@ -99,49 +101,63 @@ fsd.data.frame <- function(x, g = NULL, w = NULL, TRA = FALSE, na.rm = TRUE, dro
       }
     } else {
       if(!is.GRP(g)) g <- GRP(g, return.groups = FALSE)
-      return(TRAlCpp(x,fvarsdlCpp(x,g[[1]],g[[2]],g[[3]],w,na.rm,stable.algo),g[[2]],TRAtoInt(TRA)))
+      return(TRAlCpp(x,fvarsdlCpp(x,g[[1L]],g[[2L]],g[[3L]],w,na.rm,stable.algo),g[[2L]],TRAtoInt(TRA)))
     }
   }
 }
-fsd.grouped_df <- function(x, w = NULL, TRA = FALSE, na.rm = TRUE, drop.groups = FALSE, drop.w = TRUE, stable.algo = TRUE, ...) { 
+fsd.grouped_df <- function(x, w = NULL, TRA = FALSE, na.rm = TRUE, use.g.names = FALSE, stable.algo = TRUE,
+                           keep.group_keys = TRUE, keep.w = TRUE, ...) {
   g <- GRP.grouped_df(x)
   wsym <- deparse(substitute(w))
   nam <- names(x)
-  gn <- match(names(g[[4]]), nam) 
-  gn2 = gn <- gn[!is.na(gn)]
+  gn2 <- gn <- which(nam %in% g[[5L]])
+  nTRAl <- TRA == FALSE
+  sumw <- NULL
+
   if(!(wsym == "NULL" || is.na(wn <- match(wsym, nam)))) {
-    w <- x[[wn]] 
+    w <- x[[wn]]
     if(any(gn == wn)) stop("Weights coincide with grouping variables!")
-    if(drop.w) if(drop.groups) gn <- c(gn,wn) else gn2 <- c(gn2,wn)
-  }
-  if(length(gn)) {
-    if(drop.groups) { 
-      if(TRA == FALSE) return(fvarsdlCpp(x[-gn],g[[1]],g[[2]],g[[3]],w,na.rm,stable.algo)) else {
-        x <- x[-gn] 
-        return(TRAlCpp(x,fvarsdlCpp(x,g[[1]],g[[2]],g[[3]],w,na.rm,stable.algo),g[[2]],TRAtoInt(TRA)))
-      }
-    } else {
-      ax <- attributes(x)
-      attributes(x) <- NULL 
-      ax[["names"]] <- c(ax[["names"]][gn], ax[["names"]][-gn2])
-      if(TRA == FALSE) {
-        ax[["row.names"]] <- .set_row_names(g[[1]])
-        return(`attributes<-`(c(g[[4]],fvarsdlCpp(x[-gn2],g[[1]],g[[2]],g[[3]],w,na.rm,stable.algo)), ax))
-      } else 
-        return(`attributes<-`(c(x[gn],TRAlCpp(x[-gn2],fvarsdlCpp(x[-gn2],g[[1]],g[[2]],g[[3]],w,na.rm,stable.algo),g[[2]],TRAtoInt(TRA))), ax))
+    gn <- c(gn, wn)
+    if(keep.w) {
+     if(nTRAl) sumw <- `names<-`(list(fsumCpp(w,g[[1L]],g[[2L]],na.rm)), paste0("sum.", wsym)) else if(keep.group_keys)
+     gn2 <- gn else sumw <- gn2 <- wn
     }
-  } else {
-    if(TRA == FALSE)
-      return(fvarsdlCpp(x,g[[1]],g[[2]],g[[3]],w,na.rm,stable.algo)) else 
-        return(TRAlCpp(x,fvarsdlCpp(x,g[[1]],g[[2]],g[[3]],w,na.rm,stable.algo),g[[2]],TRAtoInt(TRA)))
   }
+
+  gl <- length(gn) > 0L # necessary here, not before !!!
+
+  if(gl || nTRAl) {
+    ax <- attributes(x)
+    attributes(x) <- NULL
+    if(nTRAl) {
+      ax[["groups"]] <- NULL
+      ax[["class"]] <- ax[["class"]][ax[["class"]] != "grouped_df"]
+      ax[["row.names"]] <- if(use.g.names) group.names.GRP(g) else .set_row_names(g[[1L]])
+      if(gl) {
+        if(keep.group_keys) {
+          ax[["names"]] <- c(g[[5L]], names(sumw), ax[["names"]][-gn])
+          return(setAttributes(c(g[[4L]], sumw, fvarsdlCpp(x[-gn],g[[1L]],g[[2L]],g[[3L]],w,na.rm,stable.algo)), ax))
+        } else {
+          ax[["names"]] <- c(names(sumw), ax[["names"]][-gn])
+          return(setAttributes(c(sumw, fvarsdlCpp(x[-gn],g[[1L]],g[[2L]],g[[3L]],w,na.rm,stable.algo)), ax))
+        }
+      } else return(setAttributes(fvarsdlCpp(x,g[[1L]],g[[2L]],g[[3L]],w,na.rm,stable.algo), ax))
+    } else if(keep.group_keys || (keep.w && length(sumw))) {
+      ax[["names"]] <- c(ax[["names"]][gn2], ax[["names"]][-gn])
+      return(setAttributes(c(x[gn2],TRAlCpp(x[-gn],fvarsdlCpp(x[-gn],g[[1L]],g[[2L]],g[[3L]],w,na.rm,stable.algo),g[[2L]],TRAtoInt(TRA))), ax))
+    } else {
+      ax[["names"]] <- ax[["names"]][-gn]
+      return(setAttributes(TRAlCpp(x[-gn],fvarsdlCpp(x[-gn],g[[1L]],g[[2L]],g[[3L]],w,na.rm,stable.algo),g[[2L]],TRAtoInt(TRA)), ax))
+    }
+  } else return(TRAlCpp(x,fvarsdlCpp(x,g[[1L]],g[[2L]],g[[3L]],w,na.rm,stable.algo),g[[2L]],TRAtoInt(TRA)))
 }
 
 
-fvar <- function(x, g = NULL, w = NULL, TRA = FALSE, na.rm = TRUE, use.g.names = TRUE, stable.algo = TRUE, ...) {
+fvar <- function(x, g = NULL, w = NULL, TRA = FALSE, na.rm = TRUE, use.g.names = TRUE,
+                 stable.algo = TRUE, drop = TRUE, keep.group_keys = TRUE, keep.w = TRUE, ...) {
   UseMethod("fvar", x)
 }
-fvar.default <- function(x, g = NULL, w = NULL, TRA = FALSE, na.rm = TRUE, use.g.names = TRUE, stable.algo = TRUE, ...) { 
+fvar.default <- function(x, g = NULL, w = NULL, TRA = FALSE, na.rm = TRUE, use.g.names = TRUE, stable.algo = TRUE, ...) {
   if(TRA == FALSE) {
     if(is.null(g)) return(fvarsdCpp(x,0L,0L,NULL,w,na.rm,stable.algo,FALSE)) else if (is.atomic(g)) {
       if(use.g.names) {
@@ -156,8 +172,8 @@ fvar.default <- function(x, g = NULL, w = NULL, TRA = FALSE, na.rm = TRUE, use.g
       }
     } else {
       if(!is.GRP(g)) g <- if(use.g.names) GRP(g) else GRP(g, return.groups = FALSE)
-      if(use.g.names) return(`names<-`(fvarsdCpp(x,g[[1]],g[[2]],g[[3]],w,na.rm,stable.algo,FALSE), group.names.GRP(g))) else 
-        return(fvarsdCpp(x,g[[1]],g[[2]],g[[3]],w,na.rm,stable.algo,FALSE))
+      if(use.g.names) return(`names<-`(fvarsdCpp(x,g[[1L]],g[[2L]],g[[3L]],w,na.rm,stable.algo,FALSE), group.names.GRP(g))) else
+        return(fvarsdCpp(x,g[[1L]],g[[2L]],g[[3L]],w,na.rm,stable.algo,FALSE))
     }
   } else {
     if(is.null(g)) return(TRACpp(x,fvarsdCpp(x,0L,0L,NULL,w,na.rm,stable.algo,FALSE),0L,TRAtoInt(TRA))) else if (is.atomic(g)) {
@@ -167,17 +183,17 @@ fvar.default <- function(x, g = NULL, w = NULL, TRA = FALSE, na.rm = TRUE, use.g
       }
     } else {
       if(!is.GRP(g)) g <- GRP(g, return.groups = FALSE)
-      return(TRACpp(x,fvarsdCpp(x,g[[1]],g[[2]],g[[3]],w,na.rm,stable.algo,FALSE),g[[2]],TRAtoInt(TRA)))
+      return(TRACpp(x,fvarsdCpp(x,g[[1L]],g[[2L]],g[[3L]],w,na.rm,stable.algo,FALSE),g[[2L]],TRAtoInt(TRA)))
     }
   }
 }
-fvar.matrix <- function(x, g = NULL, w = NULL, TRA = FALSE, na.rm = TRUE, drop = TRUE, use.g.names = TRUE, stable.algo = TRUE, ...) { 
+fvar.matrix <- function(x, g = NULL, w = NULL, TRA = FALSE, na.rm = TRUE, use.g.names = TRUE, stable.algo = TRUE, drop = TRUE, ...) {
   if(TRA == FALSE) {
     if(is.null(g)) return(fvarsdmCpp(x,0L,0L,NULL,w,na.rm,stable.algo,FALSE,drop)) else if (is.atomic(g)) {
       if(use.g.names) {
         if(!is.factor(g)) g <- qF(g)
         lev <- attr(g, "levels")
-        return(`dimnames<-`(fvarsdmCpp(x,length(lev),g,NULL,w,na.rm,stable.algo,FALSE), list(lev, dimnames(x)[[2]])))
+        return(`dimnames<-`(fvarsdmCpp(x,length(lev),g,NULL,w,na.rm,stable.algo,FALSE), list(lev, dimnames(x)[[2L]])))
       } else {
         if(is.factor(g)) return(fvarsdmCpp(x,fnlevels(g),g,NULL,w,na.rm,stable.algo,FALSE)) else {
           g <- qG(g)
@@ -186,8 +202,8 @@ fvar.matrix <- function(x, g = NULL, w = NULL, TRA = FALSE, na.rm = TRUE, drop =
       }
     } else {
       if(!is.GRP(g)) g <- if(use.g.names) GRP(g) else GRP(g, return.groups = FALSE)
-      if(use.g.names) return(`dimnames<-`(fvarsdmCpp(x,g[[1]],g[[2]],g[[3]],w,na.rm,stable.algo,FALSE), list(group.names.GRP(g), dimnames(x)[[2]]))) else
-        return(fvarsdmCpp(x,g[[1]],g[[2]],g[[3]],w,na.rm,stable.algo,FALSE))
+      if(use.g.names) return(`dimnames<-`(fvarsdmCpp(x,g[[1L]],g[[2L]],g[[3L]],w,na.rm,stable.algo,FALSE), list(group.names.GRP(g), dimnames(x)[[2L]]))) else
+        return(fvarsdmCpp(x,g[[1L]],g[[2L]],g[[3L]],w,na.rm,stable.algo,FALSE))
     }
   } else {
     if(is.null(g)) return(TRAmCpp(x,fvarsdmCpp(x,0L,0L,NULL,w,na.rm,stable.algo,FALSE),0L,TRAtoInt(TRA))) else if (is.atomic(g)) {
@@ -197,11 +213,11 @@ fvar.matrix <- function(x, g = NULL, w = NULL, TRA = FALSE, na.rm = TRUE, drop =
       }
     } else {
       if(!is.GRP(g)) g <- GRP(g, return.groups = FALSE)
-      return(TRAmCpp(x,fvarsdmCpp(x,g[[1]],g[[2]],g[[3]],w,na.rm,stable.algo,FALSE),g[[2]],TRAtoInt(TRA)))
+      return(TRAmCpp(x,fvarsdmCpp(x,g[[1L]],g[[2L]],g[[3L]],w,na.rm,stable.algo,FALSE),g[[2L]],TRAtoInt(TRA)))
     }
   }
 }
-fvar.data.frame <- function(x, g = NULL, w = NULL, TRA = FALSE, na.rm = TRUE, drop = TRUE, use.g.names = TRUE, stable.algo = TRUE, ...) {
+fvar.data.frame <- function(x, g = NULL, w = NULL, TRA = FALSE, na.rm = TRUE, use.g.names = TRUE, stable.algo = TRUE, drop = TRUE, ...) {
   if(TRA == FALSE) {
     if(is.null(g)) return(fvarsdlCpp(x,0L,0L,NULL,w,na.rm,stable.algo,FALSE,drop)) else if (is.atomic(g)) {
       if(use.g.names && !inherits(x, "data.table")) {
@@ -216,9 +232,9 @@ fvar.data.frame <- function(x, g = NULL, w = NULL, TRA = FALSE, na.rm = TRUE, dr
       }
     } else {
       if(!is.GRP(g)) g <- if(use.g.names) GRP(g) else GRP(g, return.groups = FALSE)
-      if(use.g.names && !inherits(x, "data.table") && !is.null(groups <- group.names.GRP(g))) 
-        return(setRow.names(fvarsdlCpp(x,g[[1]],g[[2]],g[[3]],w,na.rm,stable.algo,FALSE), if(is.double(groups)) paste0(groups) else groups)) else 
-          return(fvarsdlCpp(x,g[[1]],g[[2]],g[[3]],w,na.rm,stable.algo,FALSE)) 
+      if(use.g.names && !inherits(x, "data.table") && !is.null(groups <- group.names.GRP(g)))
+        return(setRow.names(fvarsdlCpp(x,g[[1L]],g[[2L]],g[[3L]],w,na.rm,stable.algo,FALSE), groups)) else
+          return(fvarsdlCpp(x,g[[1L]],g[[2L]],g[[3L]],w,na.rm,stable.algo,FALSE))
     }
   } else {
     if(is.null(g)) return(TRAlCpp(x,fvarsdlCpp(x,0L,0L,NULL,w,na.rm,stable.algo,FALSE),0L,TRAtoInt(TRA))) else if (is.atomic(g)) {
@@ -228,40 +244,54 @@ fvar.data.frame <- function(x, g = NULL, w = NULL, TRA = FALSE, na.rm = TRUE, dr
       }
     } else {
       if(!is.GRP(g)) g <- GRP(g, return.groups = FALSE)
-      return(TRAlCpp(x,fvarsdlCpp(x,g[[1]],g[[2]],g[[3]],w,na.rm,stable.algo,FALSE),g[[2]],TRAtoInt(TRA)))
+      return(TRAlCpp(x,fvarsdlCpp(x,g[[1L]],g[[2L]],g[[3L]],w,na.rm,stable.algo,FALSE),g[[2L]],TRAtoInt(TRA)))
     }
   }
 }
-fvar.grouped_df <- function(x, w = NULL, TRA = FALSE, na.rm = TRUE, drop.groups = FALSE, drop.w = TRUE, stable.algo = TRUE, ...) { 
+fvar.grouped_df <- function(x, w = NULL, TRA = FALSE, na.rm = TRUE, use.g.names = FALSE, stable.algo = TRUE,
+                            keep.group_keys = TRUE, keep.w = TRUE, ...) {
   g <- GRP.grouped_df(x)
   wsym <- deparse(substitute(w))
   nam <- names(x)
-  gn <- match(names(g[[4]]), nam) 
-  gn2 = gn <- gn[!is.na(gn)]
+  gn2 <- gn <- which(nam %in% g[[5L]])
+  nTRAl <- TRA == FALSE
+  sumw <- NULL
+
   if(!(wsym == "NULL" || is.na(wn <- match(wsym, nam)))) {
-    w <- x[[wn]] 
+    w <- x[[wn]]
     if(any(gn == wn)) stop("Weights coincide with grouping variables!")
-    if(drop.w) if(drop.groups) gn <- c(gn,wn) else gn2 <- c(gn2,wn)
-  }
-  if(length(gn)) {
-    if(drop.groups) { 
-      if(TRA == FALSE) return(fvarsdlCpp(x[-gn],g[[1]],g[[2]],g[[3]],w,na.rm,stable.algo,FALSE)) else {
-        x <- x[-gn] 
-        return(TRAlCpp(x,fvarsdlCpp(x,g[[1]],g[[2]],g[[3]],w,na.rm,stable.algo,FALSE),g[[2]],TRAtoInt(TRA)))
-      }
-    } else {
-      ax <- attributes(x)
-      attributes(x) <- NULL 
-      ax[["names"]] <- c(ax[["names"]][gn], ax[["names"]][-gn2])
-      if(TRA == FALSE) {
-        ax[["row.names"]] <- .set_row_names(g[[1]])
-        return(`attributes<-`(c(g[[4]],fvarsdlCpp(x[-gn2],g[[1]],g[[2]],g[[3]],w,na.rm,stable.algo,FALSE)), ax))
-      } else 
-        return(`attributes<-`(c(x[gn],TRAlCpp(x[-gn2],fvarsdlCpp(x[-gn2],g[[1]],g[[2]],g[[3]],w,na.rm,stable.algo,FALSE),g[[2]],TRAtoInt(TRA))), ax))
+    gn <- c(gn, wn)
+    if(keep.w) {
+      if(nTRAl) sumw <- `names<-`(list(fsumCpp(w,g[[1L]],g[[2L]],na.rm)), paste0("sum.", wsym)) else if(keep.group_keys)
+        gn2 <- gn else sumw <- gn2 <- wn
     }
-  } else {
-    if(TRA == FALSE)
-      return(fvarsdlCpp(x,g[[1]],g[[2]],g[[3]],w,na.rm,stable.algo,FALSE)) else 
-        return(TRAlCpp(x,fvarsdlCpp(x,g[[1]],g[[2]],g[[3]],w,na.rm,stable.algo,FALSE),g[[2]],TRAtoInt(TRA)))
   }
+
+  gl <- length(gn) > 0L # necessary here, not before !!!
+
+  if(gl || nTRAl) {
+    ax <- attributes(x)
+    attributes(x) <- NULL
+    if(nTRAl) {
+      ax[["groups"]] <- NULL
+      ax[["class"]] <- ax[["class"]][ax[["class"]] != "grouped_df"]
+      ax[["row.names"]] <- if(use.g.names) group.names.GRP(g) else .set_row_names(g[[1L]])
+      if(gl) {
+        if(keep.group_keys) {
+          ax[["names"]] <- c(g[[5L]], names(sumw), ax[["names"]][-gn])
+          return(setAttributes(c(g[[4L]], sumw, fvarsdlCpp(x[-gn],g[[1L]],g[[2L]],g[[3L]],w,na.rm,stable.algo,FALSE)), ax))
+        } else {
+          ax[["names"]] <- c(names(sumw), ax[["names"]][-gn])
+          return(setAttributes(c(sumw, fvarsdlCpp(x[-gn],g[[1L]],g[[2L]],g[[3L]],w,na.rm,stable.algo,FALSE)), ax))
+        }
+      } else return(setAttributes(fvarsdlCpp(x,g[[1L]],g[[2L]],g[[3L]],w,na.rm,stable.algo,FALSE), ax))
+    } else if(keep.group_keys || (keep.w && length(sumw))) {
+      ax[["names"]] <- c(ax[["names"]][gn2], ax[["names"]][-gn])
+      return(setAttributes(c(x[gn2],TRAlCpp(x[-gn],fvarsdlCpp(x[-gn],g[[1L]],g[[2L]],g[[3L]],w,na.rm,stable.algo,FALSE),g[[2L]],TRAtoInt(TRA))), ax))
+    } else {
+      ax[["names"]] <- ax[["names"]][-gn]
+      return(setAttributes(TRAlCpp(x[-gn],fvarsdlCpp(x[-gn],g[[1L]],g[[2L]],g[[3L]],w,na.rm,stable.algo,FALSE),g[[2L]],TRAtoInt(TRA)), ax))
+    }
+  } else return(TRAlCpp(x,fvarsdlCpp(x,g[[1L]],g[[2L]],g[[3L]],w,na.rm,stable.algo,FALSE),g[[2L]],TRAtoInt(TRA)))
 }
+

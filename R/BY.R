@@ -198,8 +198,9 @@ BY.grouped_df <- function(X, FUN, ..., keep.group_keys = TRUE, use.g.names = FAL
                           return = c("same","matrix","data.frame","list")) {
   g <- GRP.grouped_df(X)
   groups <- g[[4L]]
+  gnam <- g[[5L]]
   g <- as.factor.GRP(g)
-  gn <- which(names(X) %in% names(groups)) # correct !! else na.rm(match(names(groups), names(X))), but is slower !!
+  gn <- which(names(X) %in% gnam) # correct !! else na.rm(match(names(groups), names(X))), but is slower !!
   if(length(gn)) {
     if(!keep.group_keys) return(BY.data.frame(X[-gn], g, FUN, ..., # colsubset(X, -gn) dont use colsubset -> doesn't drop group attachment !!, for the other cases can always use ungroup !!
                            use.g.names = use.g.names, sort = TRUE, expand.wide = expand.wide,
@@ -217,7 +218,9 @@ BY.grouped_df <- function(X, FUN, ..., keep.group_keys = TRUE, use.g.names = FAL
             return(setAttributes(c(colsubset(X, gn), res), ax))
           } else {
             ax <- attributes(res); attributes(res) <- NULL
-            ax[["names"]] <- c(names(groups), ax[["names"]])
+            ax[["groups"]] <- NULL
+            ax[["class"]] <- ax[["class"]][ax[["class"]] != "grouped_df"]
+            ax[["names"]] <- c(gnam, ax[["names"]])
             return(setAttributes(c(groups, res), ax))
           }
         } else return(res)

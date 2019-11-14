@@ -60,7 +60,8 @@ GRP.default <- function(X, by = NULL, sort = TRUE, order = 1L, na.last = FALSE,
 
 is.GRP <- function(x) inherits(x, "GRP")
 
-group.names.GRP <- function(g, force.char = FALSE) { # fastest !!!
+group.names.GRP <- function(g, force.char = TRUE) { # fastest !!!
+  if(is.null(g[[4L]])) return(NULL)
   groups <- g[[4L]]
   if(length(groups) == 1L) {
    if(force.char && !is.character(groups[[1L]])) paste0(groups[[1L]]) else groups[[1L]]
