@@ -9,7 +9,9 @@ qG <- function(x, ordered = TRUE) {
   if(is.factor(x)) return(x)
   qGCpp(x, ordered)
 }
-# what about attribute preervation ?? -> I think it is not good having all king sof stuff attached to a matrix ??
+# what about attribute preervation ??
+# -> I think it is not good having all kinds of stuff attached to a matrix ??
+# also dapply and BY convert known data types (matrix or data.frame. These functions can convert anything, so we need to be more careful !!)
 qDF <- function(X) {
   if(is.atomic(X)) {
     d <- dim(X)
