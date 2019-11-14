@@ -1,6 +1,6 @@
 library(Rcpp)
-sourceCpp("R/C++/mrtl_type_dispatch_final.cpp")
-sourceCpp("R/C++/qFqG.cpp", rebuild = TRUE) # https://gallery.rcpp.org/articles/fast-factor-generation/
+sourceCpp("src/mrtl_mctl.cpp")
+sourceCpp("src/qF_qG.cpp", rebuild = TRUE) # https://gallery.rcpp.org/articles/fast-factor-generation/
 qF <- function(x, ordered = TRUE) {
   if(is.factor(x)) return(x)
   qFCpp(x, ordered)
@@ -9,88 +9,82 @@ qG <- function(x, ordered = TRUE) {
   if(is.factor(x)) return(x)
   qGCpp(x, ordered)
 }
-qDF <- function(X) { 
+# what about attribute preervation ?? -> I think it is not good having all king sof stuff attached to a matrix ??
+qDF <- function(X) {
   if(is.atomic(X)) {
     d <- dim(X)
     ld <- length(d)
     if(ld == 2L)
-      mctl(X, names = TRUE, ret = 1L) else if (ld > 2L) {
-        dn <- dimnames(X)
-        dim(X) <- c(d[1L], prod(d[-1L]))
-        if (!is.null(dn)) {
-          for (i in 2L:ld) if (is.null(dn[[i]])) dn[[i]] <- seq_len(d[i])
-          dn[[2]] <- interaction(expand.grid(dn[-1L])) # Good??
-        }
-        mctl(X, names = TRUE, ret = 1L) 
-      } else {
-        lx <- length(X)
-        X <- setNames(list(X), deparse(substitute(X)))
-        attr(X,"row.names") <- .set_row_names(lx)
-        class(X) <- "data.frame"
-        X
+    return(mctl(X, names = TRUE, ret = 1L)) else if (ld > 2L) {
+      dn <- dimnames(X)
+      dim(X) <- c(d[1L], prod(d[-1L]))
+      if(!is.null(dn)) {
+        for (i in 2L:ld) if(is.null(dn[[i]])) dn[[i]] <- seq_len(d[i])
+        dimnames(X) <- list(dn[[1L]], interaction(expand.grid(dn[-1L]))) # Good??
       }
+      return(mctl(X, names = TRUE, ret = 1L))
+    } else {
+      lx <- length(X)
+      X <- `names<-`(list(X), deparse(substitute(X)))
+      attr(X, "row.names") <- .set_row_names(lx)
+      class(X) <- "data.frame"
+      return(X)
+    }
   } else {
-    if(inherits(X, "data.frame")) return(X)
-    if (is.null(attr(X,"names"))) attr(X,"names") <- paste0("V", seq_along(X))
-    if (is.null(attr(X,"row.names"))) attr(X,"row.names") <- .set_row_names(length(X[[1]]))
+    # if(inherits(X, "data.frame")) return(X)
+    if(is.null(attr(X, "names"))) attr(X, "names") <- paste0("V", seq_along(X))
+    if(is.null(attr(X, "row.names"))) attr(X, "row.names") <- .set_row_names(length(X[[1L]]))
     class(X) <- "data.frame"
-    X
+    return(X)
   }
 }
-qDT <- function(X) { # what if already DT ?? return ??  
+qDT <- function(X) { # what if already DT ?? return ??
   if(is.atomic(X)) {
     d <- dim(X)
     ld <- length(d)
-    if(ld == 2L) 
-      mctl(X, names = TRUE, ret = 2L) else if (ld > 2L) {
-        dn <- dimnames(X)
-        dim(X) <- c(d[1L], prod(d[-1L]))
-        if (!is.null(dn)) {
-          for (i in 2L:ld) if (is.null(dn[[i]])) dn[[i]] <- seq_len(d[i])
-          dn[[2]] <- interaction(expand.grid(dn[-1L])) # Good??
-        }
-        mctl(X, names = TRUE, ret = 2L)
-      } else {
-        lx <- length(X)
-        X <- setNames(list(X), deparse(substitute(X)))
-        attr(X,"row.names") <- .set_row_names(lx)
-        class(X) <- c("data.table","data.frame")
-        X
-      }
-  } else {
-    if(inherits(X, "data.table")) return(X)
-    if (is.null(attr(X, "names"))) attr(X, "names") <- paste0("V",seq_along(X))
-    attr(X, "row.names") <- .set_row_names(length(X[[1]]))
-    class(X) <- c("data.table","data.frame")
-    X
-  } 
-}
-qM <- function(X) {
-  if (is.atomic(X)) {
-    d <- dim(X)
-    ld <- length(d)
-    if (ld > 2L) {
+    if(ld == 2L)
+    return(mctl(X, names = TRUE, ret = 2L)) else if(ld > 2L) {
       dn <- dimnames(X)
       dim(X) <- c(d[1L], prod(d[-1L]))
-      if (!is.null(dn)) {
-        if (length(dn[[1L]])) rownames(X) <- dn[[1L]]
-        for (i in 2L:ld) if (is.null(dn[[i]])) dn[[i]] <- seq_len(d[i])
-        colnames(X) <- interaction(expand.grid(dn[-1L])) # Good??
+      if(!is.null(dn)) {
+        for (i in 2L:ld) if(is.null(dn[[i]])) dn[[i]] <- seq_len(d[i])
+        dimnames(X) <- list(dn[[1L]], interaction(expand.grid(dn[-1L]))) # Good??
       }
-      X
-    } else if (ld == 2L) X else 
-      matrix(X, ncol = 1, dimnames = list(NULL, deparse(substitute(X))))
+      return(mctl(X, names = TRUE, ret = 2L))
+    } else {
+      lx <- length(X)
+      X <- `names<-`(list(X), deparse(substitute(X)))
+      attr(X, "row.names") <- .set_row_names(lx)
+      class(X) <- c("data.table","data.frame")
+      return(X)
+    }
+  } else {
+    if(inherits(X, "data.table")) return(X)
+    if(is.null(attr(X, "names"))) attr(X, "names") <- paste0("V", seq_along(X))
+    attr(X, "row.names") <- .set_row_names(length(X[[1L]]))
+    class(X) <- c("data.table","data.frame")
+    return(X)
+  }
+}
+qM <- function(X) {
+  if(is.atomic(X)) {
+    d <- dim(X)
+    ld <- length(d)
+    if(ld > 2L) {
+      dn <- dimnames(X)
+      dim(X) <- c(d[1L], prod(d[-1L]))
+      if(!is.null(dn)) {
+        for (i in 2L:ld) if(is.null(dn[[i]])) dn[[i]] <- seq_len(d[i])
+        dimnames(X) <- list(dn[[1L]], interaction(expand.grid(dn[-1L]))) # Good??
+      }
+      return(X)
+    } else if(ld == 2L) return(X) else
+      return(matrix(X, ncol = 1, dimnames = list(NULL, deparse(substitute(X)))))
   } else {
     rn <- attr(X, "row.names")
-    # # if (is.null(cn)) cn <- paste0("C",seq_len(lx)) # Not really necessary
-    res <- do.call(cbind, X) # faster !1
+    res <- do.call(cbind, X)
     if(!(is.null(rn) || is.integer(rn))) dimnames(res) <- list(rn, names(X))
-    res
-    # rn <- attr(X, "row.names") # other solution: slightly slower !!
-    # res <- unlist(X, use.names = FALSE, recursive = FALSE)
-    # dim(res) <- dim.data.frame(X)
-    # dimnames(res) <- if(rn[1] == "1") list(NULL, names(X)) else list(rn, names(X))
-    # res
+    return(res)
   }
 }
 
@@ -100,7 +94,7 @@ qM <- function(X) {
 #   if (is.null(value)) {
 #     value <- list(.set_row_names(length(x[[1]])), paste0("V",seq_along(x)))
 #   } else {
-#     if(is.null(value[[1]])) value[[1]] <- .set_row_names(length(x[[1]]))  
+#     if(is.null(value[[1]])) value[[1]] <- .set_row_names(length(x[[1]]))
 #     if(is.null(value[[2]])) value[[2]] <- paste0("V",seq_along(x))
 #   }
 #   attr(x, "names") <- value[[2]]
@@ -112,12 +106,12 @@ qM <- function(X) {
 #   attr(x, "row.names") <- .set_row_names(length(x[[1]]))
 #   x
 # }
-# qDFOld <- function(X) { 
+# qDFOld <- function(X) {
 #   if (is.atomic(X)) {
 #     d <- dim(X)
 #     ld <- length(d)
 #     if (ld == 2L) {
-#       X <- setdndf(mctl(X), dimnames(X)) 
+#       X <- setdndf(mctl(X), dimnames(X))
 #     } else if (ld > 2L) {
 #       dn <- dimnames(X)
 #       dim(X) <- c(d[1L], prod(d[-1L]))
@@ -141,12 +135,12 @@ qM <- function(X) {
 #   # data.table::setattr(X, "row.names", .set_row_names(length(X[[1]])))
 #   X
 # }
-# qDTOld <- function(X) { 
+# qDTOld <- function(X) {
 #   if (is.atomic(X)) {
 #     d <- dim(X)
 #     ld <- length(d)
 #     if (ld == 2L) {
-#       X <- setdndt(mctl(X), dimnames(X)) 
+#       X <- setdndt(mctl(X), dimnames(X))
 #       #cn <- dimnames(X)[[2]]
 #       #if(is.null(cn)) cn <- paste0("V",seq_len(d[2]))
 #       #X <- setn(mctl(X), cn) # build your own faster setNames with attr(x, "names) ??
@@ -162,7 +156,7 @@ qM <- function(X) {
 #   } else {
 #     if (is.null(attr(X, "names"))) attr(X, "names") <- paste0("V",seq_along(X))
 #     attr(X, "row.names") <- .set_row_names(length(X[[1]]))
-#   } 
+#   }
 #   class(X) <- c("data.table","data.frame") # skip if X is already a data.table??
 #   #attr(X, "row.names") <- .set_row_names(length(X[[1]])) # use setattr ?? -> nope, slower
 #   X
