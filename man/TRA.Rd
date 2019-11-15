@@ -91,7 +91,7 @@ TRA(m, fmean(m, f), "replace", f)# Grouped (column) replacing... [same as fmean(
 TRA(m, fsd(m, f), "/", f)        # Grouped (column) scaling...   [same as fsd(m, f, TRA = "/")]...
 
 TRA(m, fmean(m, f), "-+", f)     # Grouped (column) centering on the overall mean... [same as fmean(m, f, TRA = "-+") or W(m, f, add.global.mean = TRUE)]
-TRA(m, TRA(m, fmean(m, f), "-", f), fmean(m), "+") # Also the same thing done manually !!
+TRA(TRA(m, fmean(m, f), "-", f), fmean(m), "+") # Also the same thing done manually !!
 
 # grouped tibble method
 library(dplyr)

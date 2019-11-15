@@ -58,13 +58,20 @@ TRA.grouped_df <- function(x, STATS, FUN = "-", keep.group_keys = TRUE, ...) {
   g <- GRP.grouped_df(x)
   gn <- which(names(x) %in% g[[5L]])
   if(g[[1L]] != nrow(STATS)) stop("number of groups must match nrow(STATS)")
-  if(length(gn) > 0L) {
+  if(length(gn) > 0L && length(STATS) != length(x)) {
     ax <- attributes(x)
     attributes(x) <- NULL
-    if(length(x) == length(STATS)) {
-      if(anyNA(gps <- match(g[[5L]], names(STATS)))) stop("if grouping columns are present in the data, the variable names of x and STATS must match")
-      STATS <- unclass(STATS)[-gps]
-    } else if(length(x)-length(gn) != length(STATS)) stop("length(STATS) must match length(x) exactly or length(x) - the number of grouping columns")
+    namst <- names(STATS) # Finish !! shoudl sweep out only the indicated column / and setcolorder afterwards ??
+    ginst <- namst %in% g[[5L]]
+    if(anyNA(mt <- match(namst, ax[["names"]]))) stop("the variable names of x and STATS must match")
+    nomt <- which(!(ax[["names"]] %in% namst))
+    if(!all(nomg <- nomatch %in% gn)) {
+      gn <- c(gn, nomatch[!nomg])
+      STATS <- unclass(STATS)[-match(g[[5L]], namst)]
+    }
+
+    if(any(ginst)) STATS <- unclass(STATS)[!ginst]
+
     if(keep.group_keys) {
       ax[["names"]] <- c(ax[["names"]][gn], ax[["names"]][-gn])
       return(setAttributes(c(x[gn],TRAlCpp(x[-gn],STATS,g[[2L]],TRAtoInt(FUN))), ax))
