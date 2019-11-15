@@ -45,7 +45,7 @@ flag.matrix <- function(x, n = 1, g = NULL, t = NULL, fill = NA, stubs = TRUE, .
     flagleadmCpp(x,n,fill,g[[1L]],g[[2L]],g[[3L]],G_t(t),stubs)
   }
 }
-flag.grouped_df <- function(x, n = 1, t = NULL, fill = NA, stubs = TRUE, keep.group_keys = TRUE, ...) {
+flag.grouped_df <- function(x, n = 1, t = NULL, fill = NA, stubs = TRUE, keep.ids = TRUE, ...) {
   g <- GRP.grouped_df(x)
   tsym <- deparse(substitute(t))
   nam <- names(x)
@@ -56,7 +56,7 @@ flag.grouped_df <- function(x, n = 1, t = NULL, fill = NA, stubs = TRUE, keep.gr
     gn <- c(gn, tn)
   }
   if(length(gn)) {
-    if(!keep.group_keys)
+    if(!keep.ids)
       return(flagleadlCpp(x[-gn],n,fill,g[[1L]],g[[2L]],g[[3L]],G_t(t),stubs)) else {
         ax <- attributes(x)
         class(x) <- NULL # Works for multiple lags !!
@@ -85,7 +85,7 @@ flag.pdata.frame <- function(x, n = 1, fill = NA, stubs = TRUE, ...) {
   flagleadlCpp(x,n,fill,fnlevels(index[[1L]]),index[[1L]],NULL,index[[2L]],stubs)
 }
 
-# use xt instead of by ??? #   x, n = 1, g = NULL, by = NULL, t = NULL, cols = is.numeric, fill = NA, stubs = TRUE, keep.ids = TRUE, keep.group_keys = TRUE, ...
+# use xt instead of by ??? #   x, n = 1, g = NULL, by = NULL, t = NULL, cols = is.numeric, fill = NA, stubs = TRUE, keep.ids = TRUE, ...
 L <- function(x, n = 1, ...) {
   UseMethod("L", x)
 }
@@ -109,10 +109,10 @@ L.data.frame <- function(x, n = 1, by = NULL, t = NULL, cols = is.numeric,
 
     if(is.call(by)) {
       if(length(by) == 3L) {
-        cols <- match(all.vars(by[[2L]]), nam)
-        gn <- match(all.vars(by[[3L]]), nam)
+        cols <- anyNAerror(match(all.vars(by[[2L]]), nam), "Unknown variables passed to by!")
+        gn <- anyNAerror(match(all.vars(by[[3L]]), nam), "Unknown variables passed to by!")
       } else {
-        gn <- match(all.vars(by), nam)
+        gn <- anyNAerror(match(all.vars(by), nam), "Unknown variables passed to by!")
         cols <- if(is.null(cols)) seq_along(x)[-gn] else cols2int(cols, x, nam)
       }
       by <- if(length(gn) == 1L) at2GRP(x[[gn]]) else GRP(x, gn, return.groups = FALSE)
@@ -126,7 +126,7 @@ L.data.frame <- function(x, n = 1, by = NULL, t = NULL, cols = is.numeric,
 
     if(is.call(t)) {
       t <- all.vars(t)
-      tn <- match(t, nam)
+      tn <- anyNAerror(match(t, nam), "Unknown variables passed to t!")
       t <- x[[tn]]
       cols <- if(is.null(cols)) seq_along(x)[-tn] else cols[cols != tn]
       if(keep.ids) gn <- c(gn, tn)
@@ -163,8 +163,7 @@ L.pdata.frame <- function(x, n = 1, cols = is.numeric, fill = NA, stubs = TRUE, 
   index <- ax[["index"]]
 
   if(keep.ids) {
-    gn <- match(names(index), nam)
-    gn <- gn[!is.na(gn)]
+    gn <- which(nam %in% names(index))
     if(length(gn) && is.null(cols)) cols <- seq_along(x)[-gn]
   } else gn <- NULL
 
@@ -194,7 +193,7 @@ flead.pseries <- function(x, n = 1, fill = NA, stubs = TRUE, ...) {
 flead.matrix <- function(x, n = 1, g = NULL, t = NULL, fill = NA, stubs = TRUE, ...) {
   flag.matrix(x, -n, g, t, fill, stubs, ...)
 }
-flead.grouped_df <- function(x, n = 1, t = NULL, fill = NA, stubs = TRUE, keep.group_keys = TRUE, ...) {
+flead.grouped_df <- function(x, n = 1, t = NULL, fill = NA, stubs = TRUE, keep.ids = TRUE, ...) {
   g <- GRP.grouped_df(x)
   tsym <- deparse(substitute(t))
   nam <- names(x)
@@ -205,7 +204,7 @@ flead.grouped_df <- function(x, n = 1, t = NULL, fill = NA, stubs = TRUE, keep.g
     gn <- c(gn, tn)
   }
   if(length(gn)) {
-    if(!keep.group_keys)
+    if(!keep.ids)
       return(flagleadlCpp(x[-gn],-n,fill,g[[1L]],g[[2L]],g[[3L]],G_t(t),stubs)) else {
         ax <- attributes(x)
         class(x) <- NULL # Works for multiple lags !!
@@ -221,7 +220,7 @@ flead.data.frame <- function(x, n = 1, g = NULL, t = NULL, fill = NA, stubs = TR
 flead.pdata.frame <- function(x, n = 1, fill = NA, stubs = TRUE, ...) {
   flag.pdata.frame(x, -n, fill, stubs, ...)
 }
- # x, n = 1, g = NULL, by = NULL, t = NULL, cols = is.numeric, fill = NA, stubs = TRUE, keep.ids = TRUE, keep.group_keys = TRUE, ...
+ # x, n = 1, g = NULL, by = NULL, t = NULL, cols = is.numeric, fill = NA, stubs = TRUE, keep.ids = TRUE, keep.ids = TRUE, ...
 F <- function(x, n = 1, ...) {
   UseMethod("F", x)
 }
