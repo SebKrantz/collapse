@@ -62,8 +62,8 @@ TRA.grouped_df <- function(x, STATS, FUN = "-", keep.group_keys = TRUE, ...) {
     ax <- attributes(x)
     attributes(x) <- NULL
     if(length(x) == length(STATS)) {
-      if(!all(ax[["names"]] == names(STATS))) stop("if grouping columns are present in the data, the names of x and STATS must match")
-      STATS <- unclass(STATS)[-gn]
+      if(anyNA(gps <- match(g[[5L]], names(STATS)))) stop("if grouping columns are present in the data, the variable names of x and STATS must match")
+      STATS <- unclass(STATS)[-gps]
     } else if(length(x)-length(gn) != length(STATS)) stop("length(STATS) must match length(x) exactly or length(x) - the number of grouping columns")
     if(keep.group_keys) {
       ax[["names"]] <- c(ax[["names"]][gn], ax[["names"]][-gn])

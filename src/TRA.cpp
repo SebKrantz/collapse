@@ -219,7 +219,7 @@ SEXP TRACpp(const SEXP& x, const SEXP& xAG, const IntegerVector& g = 0, int ret 
           break;
         case 4:
           {
-            double OM = 0;
+            long double OM = 0; // better precision !!
             int n = 0;
             for(int i = l; i--; ) { // Faster way ??
               if(std::isnan(xx[i])) out[i] = xx[i];
@@ -231,7 +231,7 @@ SEXP TRACpp(const SEXP& x, const SEXP& xAG, const IntegerVector& g = 0, int ret 
               }
             }
             OM = OM / n;
-            out = out + OM; // Fastest ??
+            out = out + (double)OM; // Fastest ??
             break;
           }
         case 5:

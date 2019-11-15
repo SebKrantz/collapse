@@ -447,7 +447,7 @@ List TRAlCpp(const List& x, const SEXP& xAG, const IntegerVector& g = 0, int ret
         if(column.size() != gs) stop("length(g) must match nrow(x)");
         NumericVector sgj = no_init_vector(gs);
         NumericVector sumj = AG[j];
-        double OM = 0;
+        long double OM = 0;
         int n = 0;
         for(int i = gs; i--; ) { // Faster way ??
           if(std::isnan(column[i])) sgj[i] = column[i];
@@ -459,7 +459,7 @@ List TRAlCpp(const List& x, const SEXP& xAG, const IntegerVector& g = 0, int ret
           }
         }
         OM = OM / n;
-        sgj = sgj + OM; // Fastest !!
+        sgj = sgj + (double)OM; // Fastest !!
         SHALLOW_DUPLICATE_ATTRIB(sgj, column); // here or before filling??
         out[j] = sgj;
       }

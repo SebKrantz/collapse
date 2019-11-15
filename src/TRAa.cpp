@@ -313,7 +313,7 @@ SEXP TRAmCpp(const SEXP& x, const SEXP& xAG, const IntegerVector& g = 0, int ret
             NumericMatrix::Column column = xx( _ , j);
             NumericMatrix::Column colo = out( _ , j);
             NumericMatrix::Column sumj = AG( _ , j);
-            double OM = 0;
+            long double OM = 0; // gives better numeric precision !! (closer to W!!)
             int n = 0;
             for(int i = l; i--; ) { // Faster way ??
               if(std::isnan(column[i])) colo[i] = column[i];
@@ -325,7 +325,7 @@ SEXP TRAmCpp(const SEXP& x, const SEXP& xAG, const IntegerVector& g = 0, int ret
               }
             }
             OM = OM / n;
-            colo = colo + OM; // Fastest ??
+            colo = colo + (double)OM; // Fastest ??
           }
             break;
           }
