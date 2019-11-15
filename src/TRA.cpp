@@ -12,10 +12,10 @@ using namespace Rcpp;
 // 7- Add
 // 8- Multiply
 
-// Todo: Checks !!
+// Todo: Checks
 
 // [[Rcpp::export]]
-SEXP TRACpp(SEXP x, SEXP xAG, IntegerVector g = 0, int ret = 1) {
+SEXP TRACpp(const SEXP& x, const SEXP& xAG, const IntegerVector& g = 0, int ret = 1) {
   int gs = g.size();
   if(ret <= 2) {
     switch(TYPEOF(x)) {
@@ -24,14 +24,15 @@ SEXP TRACpp(SEXP x, SEXP xAG, IntegerVector g = 0, int ret = 1) {
       NumericVector xx = x;
       NumericVector AG = xAG;
       int l = xx.size();
-      NumericVector out = no_init_vector(l); 
+      NumericVector out = no_init_vector(l);
       if(gs == 1) {
+        if(AG.size() != 1) stop("If g = NULL, STATS needs to be an atomic element!");
         double AGx = AG[0];
         switch(ret) {
-        case 1: 
+        case 1:
           std::fill(out.begin(), out.end(), AGx);
           break;
-        case 2: 
+        case 2:
           for(int i = l; i--; ) {
             if(std::isnan(xx[i])) out[i] = xx[i];
             else out[i] = AGx;
@@ -42,7 +43,7 @@ SEXP TRACpp(SEXP x, SEXP xAG, IntegerVector g = 0, int ret = 1) {
       } else {
         if(gs != l) stop("g must match nrow(x)");
         switch(ret) {
-        case 1: 
+        case 1:
           for(int i = l; i--; ) out[i] = AG[g[i]-1];
           break;
         case 2:
@@ -54,7 +55,7 @@ SEXP TRACpp(SEXP x, SEXP xAG, IntegerVector g = 0, int ret = 1) {
         default: stop("Unknown Transformation");
         }
       }
-      DUPLICATE_ATTRIB(out, xx); // or x ?? which is faster ?? 
+      DUPLICATE_ATTRIB(out, xx); // or x ?? which is faster ??
       return out;
     }
     case INTSXP:
@@ -62,14 +63,15 @@ SEXP TRACpp(SEXP x, SEXP xAG, IntegerVector g = 0, int ret = 1) {
       IntegerVector xx = x;
       IntegerVector AG = xAG;
       int l = xx.size();
-      IntegerVector out = no_init_vector(l); 
+      IntegerVector out = no_init_vector(l);
       if(gs == 1) {
+        if(AG.size() != 1) stop("If g = NULL, STATS needs to be an atomic element!");
         int AGx = AG[0];
         switch(ret) {
-        case 1: 
+        case 1:
           std::fill(out.begin(), out.end(), AGx);
           break;
-        case 2: 
+        case 2:
           for(int i = l; i--; ) {
             if(xx[i] == NA_INTEGER) out[i] = xx[i];
             else out[i] = AGx;
@@ -80,7 +82,7 @@ SEXP TRACpp(SEXP x, SEXP xAG, IntegerVector g = 0, int ret = 1) {
       } else {
         if(gs != l) stop("g must match nrow(x)");
         switch(ret) {
-        case 1: 
+        case 1:
           for(int i = l; i--; ) out[i] = AG[g[i]-1];
           break;
         case 2:
@@ -92,7 +94,7 @@ SEXP TRACpp(SEXP x, SEXP xAG, IntegerVector g = 0, int ret = 1) {
         default: stop("Unknown Transformation");
         }
       }
-      DUPLICATE_ATTRIB(out, xx); // or x ?? which is faster ?? 
+      DUPLICATE_ATTRIB(out, xx); // or x ?? which is faster ??
       return out;
     }
     case STRSXP:
@@ -100,9 +102,10 @@ SEXP TRACpp(SEXP x, SEXP xAG, IntegerVector g = 0, int ret = 1) {
       CharacterVector xx = x;
       CharacterVector AG = xAG;
       int l = xx.size();
-      CharacterVector out = no_init_vector(l); 
+      CharacterVector out = no_init_vector(l);
       // if(ret > 2) stop("The requested transformation is not possible with strings");
       if(gs == 1) {
+        if(AG.size() != 1) stop("If g = NULL, STATS needs to be an atomic element!");
         String AGx = AG[0];
         switch(ret) {
         case 1:
@@ -131,7 +134,7 @@ SEXP TRACpp(SEXP x, SEXP xAG, IntegerVector g = 0, int ret = 1) {
         default: stop("Unknown Transformation");
         }
       }
-      DUPLICATE_ATTRIB(out, xx); // or x ?? which is faster ?? 
+      DUPLICATE_ATTRIB(out, xx); // or x ?? which is faster ??
       return out;
     }
     case LGLSXP:
@@ -139,9 +142,10 @@ SEXP TRACpp(SEXP x, SEXP xAG, IntegerVector g = 0, int ret = 1) {
       LogicalVector xx = x;
       LogicalVector AG = xAG;
       int l = xx.size();
-      LogicalVector out = no_init_vector(l); 
+      LogicalVector out = no_init_vector(l);
       // if(ret > 2) stop("The requested transformation is not possible with strings");
       if(gs == 1) {
+        if(AG.size() != 1) stop("If g = NULL, STATS needs to be an atomic element!");
         bool AGx = AG[0];
         switch(ret) {
         case 1:
@@ -170,12 +174,12 @@ SEXP TRACpp(SEXP x, SEXP xAG, IntegerVector g = 0, int ret = 1) {
         default: stop("Unknown Transformation");
         }
       }
-      DUPLICATE_ATTRIB(out, xx); // or x ?? which is faster ?? 
+      DUPLICATE_ATTRIB(out, xx); // or x ?? which is faster ??
       return out;
     }
-    default: 
-      stop("Not supported SEXP type!");  
-    }  
+    default:
+      stop("Not supported SEXP type!");
+    }
   } else {
     switch(TYPEOF(x)) {
     case REALSXP:
@@ -184,24 +188,25 @@ SEXP TRACpp(SEXP x, SEXP xAG, IntegerVector g = 0, int ret = 1) {
       NumericVector xx = x;
       NumericVector AG = xAG;
       int l = xx.size();
-      NumericVector out = no_init_vector(l); 
+      NumericVector out = no_init_vector(l);
       if(gs == 1) {
+        if(AG.size() != 1) stop("If g = NULL, STATS needs to be an atomic element!");
         double AGx = AG[0];
         switch(ret) {
-        case 3: 
+        case 3:
           out = xx - AGx;
           break;
         case 4: stop("This transformation can only be performed with groups!");
-        case 5: 
+        case 5:
           out = xx / AGx;
           break;
-        case 6: 
+        case 6:
           out = xx * (100 / AGx);
           break;
-        case 7: 
+        case 7:
           out = xx + AGx;
           break;
-        case 8: 
+        case 8:
           out = xx * AGx;
           break;
         default: stop("Unknown Transformation");
@@ -209,14 +214,14 @@ SEXP TRACpp(SEXP x, SEXP xAG, IntegerVector g = 0, int ret = 1) {
       } else {
         if(gs != l) stop("g must match nrow(x)");
         switch(ret) {
-        case 3: 
+        case 3:
           for(int i = l; i--; ) out[i] = xx[i] - AG[g[i]-1];
           break;
-        case 4: 
+        case 4:
           {
             double OM = 0;
             int n = 0;
-            for(int i = l; i--; ) { // Faster way ?? 
+            for(int i = l; i--; ) { // Faster way ??
               if(std::isnan(xx[i])) out[i] = xx[i];
               else { // Problem: if one AG remained NA, oM becomes NA !!!
                 out[i] = xx[i] - AG[g[i]-1];
@@ -229,29 +234,29 @@ SEXP TRACpp(SEXP x, SEXP xAG, IntegerVector g = 0, int ret = 1) {
             out = out + OM; // Fastest ??
             break;
           }
-        case 5: 
+        case 5:
           for(int i = l; i--; ) out[i] = xx[i] / AG[g[i]-1];
           break;
-        case 6: 
+        case 6:
           for(int i = l; i--; ) out[i] = xx[i] * (100/AG[g[i]-1]);
           break;
-        case 7: 
+        case 7:
           for(int i = l; i--; ) out[i] = xx[i] + AG[g[i]-1];
           break;
-        case 8: 
+        case 8:
           for(int i = l; i--; ) out[i] = xx[i] * AG[g[i]-1];
           break;
         default: stop("Unknown Transformation");
         }
       }
-      DUPLICATE_ATTRIB(out, xx); // or x ?? which is faster ?? 
+      DUPLICATE_ATTRIB(out, xx); // or x ?? which is faster ??
       return out;
     }
     case STRSXP: stop("The requested transformation is not possible with strings");
     case LGLSXP: stop("The requested transformation is not possible with logical data");
-    default: 
-      stop("Not supported SEXP type!");  
-    }  
+    default:
+      stop("Not supported SEXP type!");
+    }
   }
 }
 
@@ -259,14 +264,14 @@ SEXP TRACpp(SEXP x, SEXP xAG, IntegerVector g = 0, int ret = 1) {
 // // [[Rcpp::export]]
 // NumericVector TRACpp(NumericVector x, NumericVector xAG, IntegerVector g = 0, int ret = 0) {
 //   int l = x.size(), gs = g.size();
-//   
+//
 //   if (gs == 1) { // ng redundant !! -> still do speed check!!
 //     double AG = xAG[0]; // initialize better ?? -> Nope, good !!
 //     switch(ret) {
 //       case 1: return rep(AG, l);
-//       case 2: 
+//       case 2:
 //       {
-//         NumericVector out = no_init_vector(l); // Initialize ?? 
+//         NumericVector out = no_init_vector(l); // Initialize ??
 //         for(int i = l; i--; ) {
 //           if(std::isnan(x[i])) out[i] = x[i];
 //           else out[i] = AG;
@@ -282,10 +287,10 @@ SEXP TRACpp(SEXP x, SEXP xAG, IntegerVector g = 0, int ret = 1) {
 //     }
 //   } else {
 //     if(gs != l) stop("g must match nrow(x)");
-//     NumericVector AG = xAG; // initialize better ?? 
-//     NumericVector out = no_init_vector(l); // Initialize ?? 
+//     NumericVector AG = xAG; // initialize better ??
+//     NumericVector out = no_init_vector(l); // Initialize ??
 //     switch(ret) {
-//       case 1: 
+//       case 1:
 //         for(int i = l; i--; ) out[i] = AG[g[i]-1];
 //         return out;
 //       case 2:
@@ -294,14 +299,14 @@ SEXP TRACpp(SEXP x, SEXP xAG, IntegerVector g = 0, int ret = 1) {
 //           else out[i] = AG[g[i]-1];
 //         }
 //         return out;
-//       case 3: 
+//       case 3:
 //         for(int i = l; i--; ) out[i] = x[i] - AG[g[i]-1];
 //         return out;
-//       case 4: 
+//       case 4:
 //       {
 //         double OM = 0;
 //         int n = 0;
-//         for(int i = l; i--; ) { // Faster way ?? 
+//         for(int i = l; i--; ) { // Faster way ??
 //           if(std::isnan(x[i])) out[i] = x[i];
 //           else {
 //             out[i] = x[i] - AG[g[i]-1];
@@ -313,16 +318,16 @@ SEXP TRACpp(SEXP x, SEXP xAG, IntegerVector g = 0, int ret = 1) {
 //         out = out + OM; // Fastest ??
 //         return out;
 //       }
-//       case 5: 
+//       case 5:
 //         for(int i = l; i--; ) out[i] = x[i] / AG[g[i]-1];
 //         return out;
-//       case 6: 
+//       case 6:
 //         for(int i = l; i--; ) out[i] = x[i] * (100/AG[g[i]-1]);
 //         return out;
-//       case 7: 
+//       case 7:
 //         for(int i = l; i--; ) out[i] = x[i] + AG[g[i]-1];
 //         return out;
-//       case 8: 
+//       case 8:
 //         for(int i = l; i--; ) out[i] = x[i] * AG[g[i]-1];
 //         return out;
 //     }
