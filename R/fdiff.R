@@ -140,7 +140,7 @@ D.data.frame <- function(x, n = 1, diff = 1, by = NULL, t = NULL, cols = is.nume
     ax <- attributes(x)
     x <- if(is.function(cols)) unclass(x)[vapply(x, cols, TRUE)] else unclass(x)[cols]
     ax[["names"]] <- names(x)
-    attributes(x) <- ax
+    setattributes(x, ax)
   }
 
   if(is.null(by))

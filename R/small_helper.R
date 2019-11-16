@@ -68,6 +68,16 @@ give_nam <- function(x, gn, stub) {
   attr(x, "names") <- paste0(stub, attr(x, "names"))
   x
 }
+add_stub <- function(x, stub) {
+  if(!is.character(stub)) return(x)
+  if(is.array(x)) {
+    if(length(dim(x)) > 2L) stop("Can't stub 3D of higher arrays!")
+    dn <- dimnames(x)
+    dimnames(x) <- list(dn[[1L]], paste0(stub, dn[[2L]]))
+  } else attr(x, "names") <- paste0(stub, attr(x, "names"))
+  x
+}
+
 cols2int <- function(cols, x, nam) {
   if(is.function(cols)) which(vapply(x, cols, TRUE)) else if(is.character(cols))
     match(cols, nam) else cols
