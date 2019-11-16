@@ -72,7 +72,7 @@ BY.data.frame <- function(X, g, FUN, ..., use.g.names = TRUE, sort = TRUE,
   return <- switch(return[1L], same = 1L, matrix = 2L, data.frame = 1L, list = 0L,
                    stop("Unknown return option!"))
   if(!is.factor(g)) g <- if(is.GRP(g)) as.factor.GRP(g) else if(is.list(g))
-    as.factor.GRP(GRP(g, sort = sort)) else qF(g, ordered = sort)
+                    as.factor.GRP(GRP(g, sort = sort)) else qF(g, ordered = sort)
   if(return != 0L) {
     ax <- attributes(X)
     if(expand.wide) {
