@@ -7,7 +7,7 @@ sourceCpp('src/TRAl.cpp')
 sourceCpp('src/TRAa.cpp')
 
 
-fsum <- function(x, g = NULL, TRA = FALSE, na.rm = TRUE, use.g.names = TRUE, drop = TRUE, keep.group_keys = TRUE, ...) {
+fsum <- function(x, ...) { # g = NULL, TRA = FALSE, na.rm = TRUE, use.g.names = TRUE, drop = TRUE, keep.group_keys = TRUE
   UseMethod("fsum", x)
 }
 fsum.default <- function(x, g = NULL, TRA = FALSE, na.rm = TRUE, use.g.names = TRUE, ...) {

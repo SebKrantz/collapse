@@ -8,12 +8,12 @@ sourceCpp('src/TRAa.cpp')
 
 # For foundational changes to this code see fsum.R !!
 
-fmax <- function(x, g = NULL, TRA = FALSE, na.rm = TRUE, use.g.names = TRUE, drop = TRUE, keep.group_keys = TRUE, ...) {
+fmax <- function(x, ...) { # g = NULL, TRA = FALSE, na.rm = TRUE, use.g.names = TRUE, drop = TRUE, keep.group_keys = TRUE,
   UseMethod("fmax", x)
 }
 fmax.default <- function(x, g = NULL, TRA = FALSE, na.rm = TRUE, use.g.names = TRUE, ...) {
   if(TRA == FALSE) {
-    if(is.null(g)) return(fmaxCpp(x,0L,0L,na.rm)) else if (is.atomic(g)) {
+    if(is.null(g)) return(fmaxCpp(x,0L,0L,na.rm)) else if(is.atomic(g)) {
       if(use.g.names) {
         if(!is.factor(g)) g <- qF(g)
         lev <- attr(g, "levels")
@@ -43,7 +43,7 @@ fmax.default <- function(x, g = NULL, TRA = FALSE, na.rm = TRUE, use.g.names = T
 }
 fmax.matrix <- function(x, g = NULL, TRA = FALSE, na.rm = TRUE, use.g.names = TRUE, drop = TRUE, ...) {
   if(TRA == FALSE) {
-    if(is.null(g)) return(fmaxmCpp(x,0L,0L,na.rm,drop)) else if (is.atomic(g)) {
+    if(is.null(g)) return(fmaxmCpp(x,0L,0L,na.rm,drop)) else if(is.atomic(g)) {
       if(use.g.names) {
         if(!is.factor(g)) g <- qF(g)
         lev <- attr(g, "levels")
@@ -73,7 +73,7 @@ fmax.matrix <- function(x, g = NULL, TRA = FALSE, na.rm = TRUE, use.g.names = TR
 }
 fmax.data.frame <- function(x, g = NULL, TRA = FALSE, na.rm = TRUE, use.g.names = TRUE, drop = TRUE, ...) {
   if(TRA == FALSE) {
-    if(is.null(g)) return(fmaxlCpp(x,0L,0L,na.rm,drop)) else if (is.atomic(g)) {
+    if(is.null(g)) return(fmaxlCpp(x,0L,0L,na.rm,drop)) else if(is.atomic(g)) {
       if(use.g.names && !inherits(x, "data.table")) {
         if(!is.factor(g)) g <- qF(g)
         lev <- attr(g, "levels")

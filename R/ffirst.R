@@ -9,12 +9,12 @@ sourceCpp('src/TRAa.cpp')
 
 # For foundational changes to this code see fsum.R !!
 
-ffirst <- function(x, g = NULL, TRA = FALSE, na.rm = TRUE, use.g.names = TRUE, drop = TRUE, keep.group_keys = TRUE, ...) {
+ffirst <- function(x, ...) { # g = NULL, TRA = FALSE, na.rm = TRUE, use.g.names = TRUE, drop = TRUE, keep.group_keys = TRUE,
   UseMethod("ffirst", x)
 }
 ffirst.default <- function(x, g = NULL, TRA = FALSE, na.rm = TRUE, use.g.names = TRUE, ...) {
   if(TRA == FALSE) {
-    if(is.null(g)) return(ffirstCpp(x,0L,0L,na.rm)) else if (is.atomic(g)) {
+    if(is.null(g)) return(ffirstCpp(x,0L,0L,na.rm)) else if(is.atomic(g)) {
       if(use.g.names) {
         if(!is.factor(g)) g <- qF(g)
         lev <- attr(g, "levels")
@@ -44,7 +44,7 @@ ffirst.default <- function(x, g = NULL, TRA = FALSE, na.rm = TRUE, use.g.names =
 }
 ffirst.matrix <- function(x, g = NULL, TRA = FALSE, na.rm = TRUE, use.g.names = TRUE, drop = TRUE, ...) {
   if(TRA == FALSE) {
-    if(is.null(g)) return(ffirstmCpp(x,0L,0L,na.rm,drop)) else if (is.atomic(g)) {
+    if(is.null(g)) return(ffirstmCpp(x,0L,0L,na.rm,drop)) else if(is.atomic(g)) {
       if(use.g.names) {
         if(!is.factor(g)) g <- qF(g)
         lev <- attr(g, "levels")
@@ -76,7 +76,7 @@ ffirst.data.frame <- function(x, g = NULL, TRA = FALSE, na.rm = TRUE, use.g.name
   if(TRA == FALSE) {
     if(is.null(g)) {
       if(drop) return(unlist(ffirstlCpp(x,0L,0L,na.rm))) else return(ffirstlCpp(x,0L,0L,na.rm))
-      } else if (is.atomic(g)) {
+      } else if(is.atomic(g)) {
       if(use.g.names && !inherits(x, "data.table")) {
         if(!is.factor(g)) g <- qF(g)
         lev <- attr(g, "levels")

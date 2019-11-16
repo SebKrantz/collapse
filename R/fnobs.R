@@ -8,7 +8,7 @@ sourceCpp('src/TRAa.cpp')
 
 # For foundational changes to this code see fsum.R !!
 
-fNobs <- function(x, g = NULL, TRA = FALSE, use.g.names = TRUE, drop = TRUE, keep.group_keys = TRUE, ...) {
+fNobs <- function(x, ...) { # g = NULL, TRA = FALSE, use.g.names = TRUE, drop = TRUE, keep.group_keys = TRUE,
   UseMethod("fNobs", x)
 }
 fNobs.default <- function(x, g = NULL, TRA = FALSE, use.g.names = TRUE, ...) {

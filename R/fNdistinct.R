@@ -9,7 +9,7 @@ sourceCpp('src/TRAa.cpp')
 # For foundational changes to this code see fsum.R !!
 # also: matrix method needs memory equal to size of the object, while data.frame method does not need any memory !!
 
-fNdistinct <- function(x, g = NULL, TRA = FALSE, na.rm = TRUE, use.g.names = TRUE, drop = TRUE, keep.group_keys = TRUE, ...) {
+fNdistinct <- function(x, ...) { # g = NULL, TRA = FALSE, na.rm = TRUE, use.g.names = TRUE, drop = TRUE, keep.group_keys = TRUE,
   UseMethod("fNdistinct", x)
 }
 fNdistinct.default <- function(x, g = NULL, TRA = FALSE, na.rm = TRUE, use.g.names = TRUE, ...) {

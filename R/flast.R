@@ -8,12 +8,12 @@ sourceCpp('src/TRAa.cpp')
 
 # For foundational changes to this code see fsum.R !!
 
-flast <- function(x, g = NULL, TRA = FALSE, na.rm = TRUE, use.g.names = TRUE, drop = TRUE, keep.group_keys = TRUE, ...) {
+flast <- function(x, ...) { # g = NULL, TRA = FALSE, na.rm = TRUE, use.g.names = TRUE, drop = TRUE, keep.group_keys = TRUE,
   UseMethod("flast", x)
 }
 flast.default <- function(x, g = NULL, TRA = FALSE, na.rm = TRUE, use.g.names = TRUE, ...) {
   if(TRA == FALSE) {
-    if(is.null(g)) return(flastCpp(x,0L,0L,na.rm)) else if (is.atomic(g)) {
+    if(is.null(g)) return(flastCpp(x,0L,0L,na.rm)) else if(is.atomic(g)) {
       if(use.g.names) {
         if(!is.factor(g)) g <- qF(g)
         lev <- attr(g, "levels")
@@ -43,7 +43,7 @@ flast.default <- function(x, g = NULL, TRA = FALSE, na.rm = TRUE, use.g.names = 
 }
 flast.matrix <- function(x, g = NULL, TRA = FALSE, na.rm = TRUE, use.g.names = TRUE, drop = TRUE, ...) {
   if(TRA == FALSE) {
-    if(is.null(g)) return(flastmCpp(x,0L,0L,na.rm,drop)) else if (is.atomic(g)) {
+    if(is.null(g)) return(flastmCpp(x,0L,0L,na.rm,drop)) else if(is.atomic(g)) {
       if(use.g.names) {
         if(!is.factor(g)) g <- qF(g)
         lev <- attr(g, "levels")
@@ -75,7 +75,7 @@ flast.data.frame <- function(x, g = NULL, TRA = FALSE, na.rm = TRUE, use.g.names
   if(TRA == FALSE) {
     if(is.null(g)) {
       if(drop) return(unlist(flastlCpp(x,0L,0L,na.rm))) else return(flastlCpp(x,0L,0L,na.rm))
-    } else if (is.atomic(g)) {
+    } else if(is.atomic(g)) {
       if(use.g.names && !inherits(x, "data.table")) {
         if(!is.factor(g)) g <- qF(g)
         lev <- attr(g, "levels")

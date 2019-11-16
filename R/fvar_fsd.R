@@ -10,8 +10,7 @@ sourceCpp('src/TRAa.cpp')
 # w.type = "frequency"
 # Note: for principal innovations of this code see fsum.R !!
 
-fsd <- function(x, g = NULL, w = NULL, TRA = FALSE, na.rm = TRUE, use.g.names = TRUE,
-                stable.algo = TRUE, drop = TRUE, keep.group_keys = TRUE, keep.w = TRUE, ...) {
+fsd <- function(x, ...) { # g = NULL, w = NULL, TRA = FALSE, na.rm = TRUE, use.g.names = TRUE, stable.algo = TRUE, drop = TRUE, keep.group_keys = TRUE, keep.w = TRUE,
   UseMethod("fsd", x)
 }
 fsd.default <- function(x, g = NULL, w = NULL, TRA = FALSE, na.rm = TRUE, use.g.names = TRUE, stable.algo = TRUE, ...) {
@@ -153,8 +152,7 @@ fsd.grouped_df <- function(x, w = NULL, TRA = FALSE, na.rm = TRUE, use.g.names =
 }
 
 
-fvar <- function(x, g = NULL, w = NULL, TRA = FALSE, na.rm = TRUE, use.g.names = TRUE,
-                 stable.algo = TRUE, drop = TRUE, keep.group_keys = TRUE, keep.w = TRUE, ...) {
+fvar <- function(x, ...) { # g = NULL, w = NULL, TRA = FALSE, na.rm = TRUE, use.g.names = TRUE, stable.algo = TRUE, drop = TRUE, keep.group_keys = TRUE, keep.w = TRUE,
   UseMethod("fvar", x)
 }
 fvar.default <- function(x, g = NULL, w = NULL, TRA = FALSE, na.rm = TRUE, use.g.names = TRUE, stable.algo = TRUE, ...) {
@@ -219,7 +217,7 @@ fvar.matrix <- function(x, g = NULL, w = NULL, TRA = FALSE, na.rm = TRUE, use.g.
 }
 fvar.data.frame <- function(x, g = NULL, w = NULL, TRA = FALSE, na.rm = TRUE, use.g.names = TRUE, stable.algo = TRUE, drop = TRUE, ...) {
   if(TRA == FALSE) {
-    if(is.null(g)) return(fvarsdlCpp(x,0L,0L,NULL,w,na.rm,stable.algo,FALSE,drop)) else if (is.atomic(g)) {
+    if(is.null(g)) return(fvarsdlCpp(x,0L,0L,NULL,w,na.rm,stable.algo,FALSE,drop)) else if(is.atomic(g)) {
       if(use.g.names && !inherits(x, "data.table")) {
         if(!is.factor(g)) g <- qF(g)
         lev <- attr(g, "levels")

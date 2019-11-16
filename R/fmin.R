@@ -8,12 +8,12 @@ sourceCpp('src/TRAa.cpp')
 
 # For foundational changes to this code see fsum.R !!
 
-fmin <- function(x, g = NULL, TRA = FALSE, na.rm = TRUE, use.g.names = TRUE, drop = TRUE, keep.group_keys = TRUE, ...) {
+fmin <- function(x, ...) { # g = NULL, TRA = FALSE, na.rm = TRUE, use.g.names = TRUE, drop = TRUE, keep.group_keys = TRUE,
   UseMethod("fmin", x)
 }
 fmin.default <- function(x, g = NULL, TRA = FALSE, na.rm = TRUE, use.g.names = TRUE, ...) {
   if(TRA == FALSE) {
-    if(is.null(g)) return(fminCpp(x,0L,0L,na.rm)) else if (is.atomic(g)) {
+    if(is.null(g)) return(fminCpp(x,0L,0L,na.rm)) else if(is.atomic(g)) {
       if(use.g.names) {
         if(!is.factor(g)) g <- qF(g)
         lev <- attr(g, "levels")
@@ -43,7 +43,7 @@ fmin.default <- function(x, g = NULL, TRA = FALSE, na.rm = TRUE, use.g.names = T
 }
 fmin.matrix <- function(x, g = NULL, TRA = FALSE, na.rm = TRUE, use.g.names = TRUE, drop = TRUE, ...) {
   if(TRA == FALSE) {
-    if(is.null(g)) return(fminmCpp(x,0L,0L,na.rm,drop)) else if (is.atomic(g)) {
+    if(is.null(g)) return(fminmCpp(x,0L,0L,na.rm,drop)) else if(is.atomic(g)) {
       if(use.g.names) {
         if(!is.factor(g)) g <- qF(g)
         lev <- attr(g, "levels")
@@ -73,7 +73,7 @@ fmin.matrix <- function(x, g = NULL, TRA = FALSE, na.rm = TRUE, use.g.names = TR
 }
 fmin.data.frame <- function(x, g = NULL, TRA = FALSE, na.rm = TRUE, use.g.names = TRUE, drop = TRUE, ...) {
   if(TRA == FALSE) {
-    if(is.null(g)) return(fminlCpp(x,0L,0L,na.rm,drop)) else if (is.atomic(g)) {
+    if(is.null(g)) return(fminlCpp(x,0L,0L,na.rm,drop)) else if(is.atomic(g)) {
       if(use.g.names && !inherits(x, "data.table")) {
         if(!is.factor(g)) g <- qF(g)
         lev <- attr(g, "levels")

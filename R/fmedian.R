@@ -8,12 +8,12 @@ sourceCpp('src/TRAa.cpp')
 
 # For foundational changes to this code see fsum.R !!
 
-fmedian <- function(x, g = NULL, TRA = FALSE, na.rm = TRUE, use.g.names = TRUE, drop = TRUE, keep.group_keys = TRUE, ...) {
+fmedian <- function(x, ...) { # g = NULL, TRA = FALSE, na.rm = TRUE, use.g.names = TRUE, drop = TRUE, keep.group_keys = TRUE,
   UseMethod("fmedian", x)
 }
 fmedian.default <- function(x, g = NULL, TRA = FALSE, na.rm = TRUE, use.g.names = TRUE, ...) {
   if(TRA == FALSE) {
-    if(is.null(g)) return(fmedianCpp(x,0L,0L,NULL,na.rm)) else if (is.atomic(g)) {
+    if(is.null(g)) return(fmedianCpp(x,0L,0L,NULL,na.rm)) else if(is.atomic(g)) {
       if(use.g.names) {
         if(!is.factor(g)) g <- qF(g)
         lev <- attr(g, "levels")
@@ -43,7 +43,7 @@ fmedian.default <- function(x, g = NULL, TRA = FALSE, na.rm = TRUE, use.g.names 
 }
 fmedian.matrix <- function(x, g = NULL, TRA = FALSE, na.rm = TRUE, use.g.names = TRUE, drop = TRUE, ...) {
   if(TRA == FALSE) {
-    if(is.null(g)) return(fmedianmCpp(x,0L,0L,NULL,na.rm,drop)) else if (is.atomic(g)) {
+    if(is.null(g)) return(fmedianmCpp(x,0L,0L,NULL,na.rm,drop)) else if(is.atomic(g)) {
       if(use.g.names) {
         if(!is.factor(g)) g <- qF(g)
         lev <- attr(g, "levels")
@@ -73,7 +73,7 @@ fmedian.matrix <- function(x, g = NULL, TRA = FALSE, na.rm = TRUE, use.g.names =
 }
 fmedian.data.frame <- function(x, g = NULL, TRA = FALSE, na.rm = TRUE, use.g.names = TRUE, drop = TRUE, ...) {
   if(TRA == FALSE) {
-    if(is.null(g)) return(fmedianlCpp(x,0L,0L,NULL,na.rm,drop)) else if (is.atomic(g)) {
+    if(is.null(g)) return(fmedianlCpp(x,0L,0L,NULL,na.rm,drop)) else if(is.atomic(g)) {
       if(use.g.names && !inherits(x, "data.table")) {
         if(!is.factor(g)) g <- qF(g)
         lev <- attr(g, "levels")

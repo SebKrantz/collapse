@@ -8,13 +8,12 @@ sourceCpp('src/TRAa.cpp')
 
 # Note: for principal innovations of this code see fsum.R !!
 
-fmode <- function(x, g = NULL, w = NULL, TRA = FALSE, na.rm = TRUE, use.g.names = TRUE,
-                  drop = TRUE, keep.group_keys = TRUE, keep.w = TRUE, ...) {
+fmode <- function(x, ...) { # g = NULL, w = NULL, TRA = FALSE, na.rm = TRUE, use.g.names = TRUE, drop = TRUE, keep.group_keys = TRUE, keep.w = TRUE,
   UseMethod("fmode", x)
 }
 fmode.default <- function(x, g = NULL, w = NULL, TRA = FALSE, na.rm = TRUE, use.g.names = TRUE, ...) {
   if(TRA == FALSE) {
-    if(is.null(g)) return(fmodeCpp(x,0L,0L,NULL,w,na.rm)) else if (is.atomic(g)) {
+    if(is.null(g)) return(fmodeCpp(x,0L,0L,NULL,w,na.rm)) else if(is.atomic(g)) {
       if(use.g.names) {
         if(!is.factor(g)) g <- qF(g)
         lev <- attr(g, "levels")
