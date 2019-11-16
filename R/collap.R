@@ -87,7 +87,7 @@ collap <- function(X, by, FUN = fmean, catFUN = fmode, cols = NULL, custom = NUL
 
     # Identifying FUN and catFUN:
     if(nul) if(is.character(FUN)) {
-      FUN <- unlist(strsplit(FUN,",",fixed = TRUE), use.names = FALSE)
+      # FUN <- unlist(strsplit(FUN,",",fixed = TRUE), use.names = FALSE)
       namFUN <- FUN
       FUN <- if(length(FUN) > 1L) lapply(FUN, match.fun, descend = FALSE) else
                                   match.fun(FUN, descend = FALSE)
@@ -97,7 +97,7 @@ collap <- function(X, by, FUN = fmean, catFUN = fmode, cols = NULL, custom = NUL
     } else namFUN <- deparse(substitute(FUN))
 
     if(nnul) if(is.character(catFUN)) {
-      catFUN <- unlist(strsplit(catFUN,",",fixed = TRUE), use.names = FALSE)
+      # catFUN <- unlist(strsplit(catFUN,",",fixed = TRUE), use.names = FALSE)
       namcatFUN <- catFUN
       catFUN <- if(length(catFUN) > 1L) lapply(catFUN, match.fun, descend = FALSE) else
                                         match.fun(catFUN, descend = FALSE)
