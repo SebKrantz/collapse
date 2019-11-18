@@ -1,29 +1,28 @@
-library(Rcpp)
-sourceCpp("R/C++/mrtl_type_dispatch_final.cpp", rebuild = TRUE)
-sourceCpp("R/C++/qFqG.cpp", rebuild = TRUE) # https://gallery.rcpp.org/articles/fast-factor-generation/
-qF <- function(x, ordered = TRUE) {
-  if(is.factor(x)) return(x)
-  qFCpp(x, ordered)
-}
+# library(Rcpp)
+# sourceCpp("R/C++/mrtl_type_dispatch_final.cpp", rebuild = TRUE)
+# sourceCpp("R/C++/qFqG.cpp", rebuild = TRUE) # https://gallery.rcpp.org/articles/fast-factor-generation/
+# qF <- function(x, ordered = TRUE) {
+#   if(is.factor(x)) return(x)
+#   qFCpp(x, ordered)
+# }
 
 # also what about split apply combining other data stricture i.e. factors, date and time ... -> try mode !!
 # -> need fplit and unlist (original) to account for factors. Note that fsplit does not deal with date and time ... but unlist can't handle those either... but nobody aggregates dates anyway...
 
-fsplit <- function(x, f) {
-  if(is.null(attr(x, "class")))
-    return(.Internal(split(x, f)))
-  lf <- levels(f)
-  y <- vector("list", length(lf))
-  names(y) <- lf
-  ind <- .Internal(split(seq_along(x), f))
-  for (k in lf) y[[k]] <- x[ind[[k]]]
-  y
-}
+# fsplit <- function(x, f) {
+#   if(is.null(attr(x, "class")))
+#     return(.Internal(split(x, f)))
+#   lf <- levels(f)
+#   y <- vector("list", length(lf))
+#   names(y) <- lf
+#   ind <- .Internal(split(seq_along(x), f))
+#   for (k in lf) y[[k]] <- x[ind[[k]]]
+#   y
+# }
+fsplit <- split.default # slightly slower !!
 
 # Faster version of BY:
-BY <- function(X, g, FUN, ..., use.g.names = TRUE, sort = TRUE,
-               expand.wide = FALSE, parallel = FALSE, mc.cores = 1L,
-               return = c("same","matrix","data.frame","list")) {
+BY <- function(X, ...) { # g, FUN, ..., use.g.names = TRUE, sort = TRUE, expand.wide = FALSE, parallel = FALSE, mc.cores = 1L, return = c("same","matrix","data.frame","list")
   UseMethod("BY", X)
 }
 

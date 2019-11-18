@@ -1,10 +1,10 @@
-library(Rcpp)
-sourceCpp('src/fdiff.cpp', rebuild = TRUE)
-sourceCpp('src/fdiffa.cpp', rebuild = TRUE)
-sourceCpp('src/fdiffl.cpp', rebuild = TRUE) # On large test data (10 mio obs), unordered panel-difference still gave error !!!!!
-source("R/GRP.R")
-source("R/small_helper.R")
-source("R/quick_conversion.R")
+# library(Rcpp)
+# sourceCpp('src/fdiff.cpp', rebuild = TRUE)
+# sourceCpp('src/fdiffa.cpp', rebuild = TRUE)
+# sourceCpp('src/fdiffl.cpp', rebuild = TRUE) # On large test data (10 mio obs), unordered panel-difference still gave error !!!!!
+# source("R/GRP.R")
+# source("R/small_helper.R")
+# source("R/quick_conversion.R")
 
 # For principle innovations of this code see flag.R and flag.cpp # stubs instead of give.names !!!
 

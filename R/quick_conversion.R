@@ -1,6 +1,6 @@
-library(Rcpp)
-sourceCpp("src/mrtl_mctl.cpp")
-sourceCpp("src/qF_qG.cpp", rebuild = TRUE) # https://gallery.rcpp.org/articles/fast-factor-generation/
+# library(Rcpp)
+# sourceCpp("src/mrtl_mctl.cpp")
+# sourceCpp("src/qF_qG.cpp", rebuild = TRUE) # https://gallery.rcpp.org/articles/fast-factor-generation/
 qF <- function(x, ordered = TRUE) {
   if(is.factor(x)) return(x)
   qFCpp(x, ordered)

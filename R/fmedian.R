@@ -1,10 +1,10 @@
-library(Rcpp)
-sourceCpp('src/fmedian.cpp')
-sourceCpp('src/fmediana.cpp')
-sourceCpp('src/fmedianl.cpp')
-sourceCpp('src/TRA.cpp')
-sourceCpp('src/TRAl.cpp')
-sourceCpp('src/TRAa.cpp')
+# library(Rcpp)
+# sourceCpp('src/fmedian.cpp')
+# sourceCpp('src/fmediana.cpp')
+# sourceCpp('src/fmedianl.cpp')
+# sourceCpp('src/TRA.cpp')
+# sourceCpp('src/TRAl.cpp')
+# sourceCpp('src/TRAa.cpp')
 
 # For foundational changes to this code see fsum.R !!
 

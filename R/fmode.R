@@ -1,10 +1,10 @@
-library(Rcpp)
-sourceCpp('src/fmax.cpp')
-sourceCpp('src/fmode.cpp') # Still test thoroughly !!, make better fmodelCpp !!!
-sourceCpp('src/fmodea.cpp') # Still test thoroughly !!
-sourceCpp('src/TRA.cpp')
-sourceCpp('src/TRAl.cpp')
-sourceCpp('src/TRAa.cpp')
+# library(Rcpp)
+# sourceCpp('src/fmax.cpp')
+# sourceCpp('src/fmode.cpp') # Still test thoroughly !!, make better fmodelCpp !!!
+# sourceCpp('src/fmodea.cpp') # Still test thoroughly !!
+# sourceCpp('src/TRA.cpp')
+# sourceCpp('src/TRAl.cpp')
+# sourceCpp('src/TRAa.cpp')
 
 # Note: for principal innovations of this code see fsum.R !!
 

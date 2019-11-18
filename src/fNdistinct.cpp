@@ -5,25 +5,25 @@ using namespace Rcpp ;
 // TODO: Perhaps redo everything with data pointers and 2d group indices (instead of filling the 2d structure every time !!): http://www.cplusplus.com/reference/vector/vector/data/
 // https://stackoverflow.com/questions/1733143/converting-between-c-stdvector-and-c-array-without-copying?rq=1
 
-// improve logical method ?? 
+// improve logical method ??
 
 template <int RTYPE>
-inline bool isnaNUM(typename Rcpp::traits::storage_type<RTYPE>::type x) { 
+inline bool isnaNUM(typename Rcpp::traits::storage_type<RTYPE>::type x) {
   return x != x;
 }
 
 template <int RTYPE>
-inline bool isnaOTH(typename Rcpp::traits::storage_type<RTYPE>::type x) { 
+inline bool isnaOTH(typename Rcpp::traits::storage_type<RTYPE>::type x) {
   return x == Vector<RTYPE>::get_na();
 }
 
 template <int RTYPE>
-IntegerVector fNdistinct2Impl(const Vector<RTYPE>& x, int ng, const IntegerVector& g, 
+IntegerVector fNdistinct2Impl(const Vector<RTYPE>& x, int ng, const IntegerVector& g,
                               const SEXP& gs, bool narm) {
   int l = x.size();
   typedef typename Rcpp::traits::storage_type<RTYPE>::type storage_t;
   auto isnanT = (RTYPE == REALSXP) ? isnaNUM<RTYPE> : isnaOTH<RTYPE>;
-  
+
   if(ng == 0) {
     sugar::IndexHash<RTYPE> hash(x);
      if(narm) {
@@ -50,14 +50,14 @@ IntegerVector fNdistinct2Impl(const Vector<RTYPE>& x, int ng, const IntegerVecto
     if(Rf_isNull(gs)) {
       for(int i = 0; i != l; ++i) ++out[g[i]-1];
       for(int i = 0; i != ng; ++i) {
-        gmap[i] = std::vector<storage_t> (out[i]); 
+        gmap[i] = std::vector<storage_t> (out[i]);
         out[i] = 0;
       }
       // memset(out, 0, sizeof(int)*ng); // Stable ??? -> Nope, gives error!!
     } else {
       IntegerVector gsv = gs;
       if(ng != gsv.size()) stop("ng must match length(gs)");
-      for(int i = 0; i != ng; ++i) gmap[i] = std::vector<storage_t> (gsv[i]); 
+      for(int i = 0; i != ng; ++i) gmap[i] = std::vector<storage_t> (gsv[i]);
     }
     for(int i = 0; i != l; ++i) gmap[g[i]-1][out[g[i]-1]++] = x[i];
     if(narm) {
@@ -95,11 +95,11 @@ IntegerVector fNdistinct2Impl(const Vector<RTYPE>& x, int ng, const IntegerVecto
 }
 
 template <> // No logical vector with sugar::IndexHash<RTYPE> !!!
-IntegerVector fNdistinct2Impl(const Vector<LGLSXP>& x, int ng, const IntegerVector& g, 
+IntegerVector fNdistinct2Impl(const Vector<LGLSXP>& x, int ng, const IntegerVector& g,
                               const SEXP& gs, bool narm) {
   int l = x.size();
-  
-  if(ng == 0) { 
+
+  if(ng == 0) {
     int Nunique = 0;
     if(narm) {
       bool which = true;
@@ -115,7 +115,7 @@ IntegerVector fNdistinct2Impl(const Vector<LGLSXP>& x, int ng, const IntegerVect
       }
     } else {
       bool seen1 = true, seen2 = true, seen3 = true;
-      for(int i = 0; i != l; ++i) { // better way?? 
+      for(int i = 0; i != l; ++i) { // better way??
         if(seen1 && x[i] == NA_LOGICAL) {
           ++Nunique;
           seen1 = false;
@@ -150,7 +150,7 @@ IntegerVector fNdistinct2Impl(const Vector<LGLSXP>& x, int ng, const IntegerVect
       }
     } else {
       LogicalVector seen1(ng, true), seen2(ng, true), seen3(ng, true);
-      for(int i = 0; i != l; ++i) { // better way?? 
+      for(int i = 0; i != l; ++i) { // better way??
         if(seen1[g[i]-1] && x[i] == NA_LOGICAL) {
           ++out[g[i]-1];
           seen1[g[i]-1] = false;
@@ -196,11 +196,11 @@ SEXP fNdistinctCpp(SEXP x, int ng = 0, IntegerVector g = 0, SEXP gs = R_NilValue
 
 
 // [[Rcpp::export]] // Better Solution ?? // What about string ??
-SEXP fNdistinctlCpp(const List& x, int ng = 0, const IntegerVector& g = 0, 
+SEXP fNdistinctlCpp(const List& x, int ng = 0, const IntegerVector& g = 0,
                     const SEXP& gs = R_NilValue, bool narm = true, bool drop = true) {
   int l = x.size();
   List out(l);
-  
+
   for(int j = l; j--; ) {
     switch(TYPEOF(x[j])) {
     case REALSXP:
@@ -235,355 +235,218 @@ SEXP fNdistinctlCpp(const List& x, int ng = 0, const IntegerVector& g = 0,
 
 
 
-// Previous std::sort based solution: Seems faster for Numeric Data !!! (about 100 milliseconds faster on NWDI grouped, but 300 milliseconds slower ungroupe) --------------
-// // 
-// inline bool isnan2(double x) {
-//   return x != x;
-// }
-// 
-// 
-// template <int RTYPE>
-// IntegerVector fNdistinctREAL(const Vector<RTYPE>& xx, int ng, IntegerVector g, SEXP gs, bool narm) {
-//   int l = xx.size();
-//   NumericVector x = Rf_duplicate(xx);
-// 
-//   if(ng == 0) {
-//     int Nunique = 0;
-//     if(narm) {
-//       auto pend = std::remove_if(x.begin(), x.end(), isnan2);
-//       std::sort(x.begin(), pend);
-//       Nunique = std::unique(x.begin(), pend) - x.begin();
-//     } else {
-//       std::sort(x.begin(), x.end());
-//       Nunique = std::unique(x.begin(), x.end()) - x.begin();
-//     }
-//     return IntegerVector::create(Nunique);
-//   } else {
-//     if(l != g.size()) stop("length(g) must match length(x)");
-//     std::vector<std::vector<double> > gmap(ng);
-//     IntegerVector out(ng);
-//     if(Rf_isNull(gs)) {
-//       for(int i = 0; i != l; ++i) ++out[g[i]-1];
-//       for(int i = 0; i != ng; ++i) gmap[i] = std::vector<double> (out[i]); // better using vector of vectors (faster initialization) ??
-//       memset(out, 0, sizeof(int)*ng);
-//       // return out;
-//     } else {
-//       IntegerVector gsv = gs;
-//       if(ng != gsv.size()) stop("ng must match length(gs)");
-//       for(int i = 0; i != ng; ++i) gmap[i] = std::vector<double> (gsv[i]); // better using vector of vectors (faster initialization) ?? -> nope !!
-//     }
-//     for(int i = 0; i != l; ++i) gmap[g[i]-1][out[g[i]-1]++] = x[i];
-//     if(narm) {
-//       for(int gr = 0; gr != ng; ++gr) {
-//         auto pend = std::remove_if(gmap[gr].begin(), gmap[gr].end(), isnan2);
-//         std::sort(gmap[gr].begin(), pend);
-//         out[gr] = std::unique(gmap[gr].begin(), pend) - gmap[gr].begin();
-//       }
-//     } else {
-//       for(int gr = 0; gr != ng; ++gr) {
-//         std::sort(gmap[gr].begin(), gmap[gr].end());
-//         out[gr] = std::unique(gmap[gr].begin(), gmap[gr].end()) - gmap[gr].begin();
-//       }
-//     }
-//     if(Rf_getAttrib(x, R_ClassSymbol) == R_NilValue) SHALLOW_DUPLICATE_ATTRIB(out, x);
-//     return out;
-//   }
-// }
-// 
-// template <int RTYPE>
-// IntegerVector fNdistinctImpl(const Vector<RTYPE>& xx, int ng, IntegerVector g, SEXP gs, bool narm) {
-//   int l = xx.size();
-//   Vector<RTYPE> x = Rf_duplicate(xx);
-// 
-//   typedef typename Rcpp::traits::storage_type<RTYPE>::type storage_t;
-// 
-//   if(ng == 0) {
-//     int Nunique = 0;
-//     if(narm) {
-//       // auto pend = (TYPEOF(x) == REALSXP) ? std::remove_if(x.begin(), x.end(), isnan2)
-//       //                                    : std::remove(x.begin(), x.end(), Vector<RTYPE>::get_na());
-//       auto pend = std::remove(x.begin(), x.end(), Vector<RTYPE>::get_na());
-//       std::sort(x.begin(), pend);
-//       Nunique = std::unique(x.begin(), pend) - x.begin();
-//     } else {
-//       std::sort(x.begin(), x.end());
-//       Nunique = std::unique(x.begin(), x.end()) - x.begin();
-//     }
-//     return IntegerVector::create(Nunique);
-//   } else {
-//     if(l != g.size()) stop("length(g) must match length(x)");
-//     std::vector<std::vector<storage_t> > gmap(ng);
-//     IntegerVector out(ng);
-//     if(Rf_isNull(gs)) {
-//       for(int i = 0; i != l; ++i) ++out[g[i]-1];
-//       for(int i = 0; i != ng; ++i) gmap[i] = std::vector<storage_t> (out[i]); // better using vector of vectors (faster initialization) ??
-//       memset(out, 0, sizeof(int)*ng);
-//       // return out;
-//     } else {
-//       IntegerVector gsv = gs;
-//       if(ng != gsv.size()) stop("ng must match length(gs)");
-//       for(int i = 0; i != ng; ++i) gmap[i] = std::vector<storage_t> (gsv[i]); // better using vector of vectors (faster initialization) ?? -> nope !!
-//     }
-//     for(int i = 0; i != l; ++i) gmap[g[i]-1][out[g[i]-1]++] = x[i];
-//     if(narm) {
-//       // if(TYPEOF(x) == REALSXP) {
-//       //   for(int gr = 0; gr != ng; ++gr) {
-//       //     auto pend = std::remove_if(gmap[gr].begin(), gmap[gr].end(), isnan2);
-//       //     std::sort(gmap[gr].begin(), pend);
-//       //     out[gr] = std::unique(gmap[gr].begin(), pend) - gmap[gr].begin();
-//       //   }
-//       // } else {
-//         for(int gr = 0; gr != ng; ++gr) {
-//           auto pend = std::remove(gmap[gr].begin(), gmap[gr].end(), Vector<RTYPE>::get_na());
-//           std::sort(gmap[gr].begin(), pend);
-//           out[gr] = std::unique(gmap[gr].begin(), pend) - gmap[gr].begin();
-//         }
-//       // }
-//     } else {
-//       for(int gr = 0; gr != ng; ++gr) {
-//         std::sort(gmap[gr].begin(), gmap[gr].end());
-//         out[gr] = std::unique(gmap[gr].begin(), gmap[gr].end()) - gmap[gr].begin();
-//       }
-//     }
-//     if(Rf_getAttrib(x, R_ClassSymbol) == R_NilValue) SHALLOW_DUPLICATE_ATTRIB(out, x);
-//     return out;
-//   }
-// }
-// 
-// // [[Rcpp::export]]
-// IntegerVector fNdistinctCpp(SEXP x, int ng = 0, IntegerVector g = 0, SEXP gs = R_NilValue, bool narm = true) {
-//  switch(TYPEOF(x)) {
-//  case REALSXP: return fNdistinctREAL<REALSXP>(x, ng, g, gs, narm);
-//  case INTSXP: return fNdistinctImpl<INTSXP>(x, ng, g, gs, narm);
-//  case STRSXP: return fNdistinctImpl<STRSXP>(x, ng, g, gs, narm);
-//  case LGLSXP: return fNdistinctImpl<LGLSXP>(x, ng, g, gs, narm);
-//  default: stop("Not supported SEXP type !");
-//  }
-// }
-// 
-// // [[Rcpp::export]]
-// SEXP fNdistinctmCpp(SEXP x, int ng = 0, IntegerVector g = 0, SEXP gs = R_NilValue, bool narm = true, bool drop = true) {
-// 
-//     switch(TYPEOF(x)) {
-//     case REALSXP: {
-//       NumericMatrix xm = x;
-//       int col = xm.ncol();
-//       if(ng == 0) {
-//         IntegerVector out = no_init_vector(col);
-//         for(int j = col; j--; ) out[j] = fNdistinctREAL<REALSXP>(xm( _ ,j), ng, g, gs, narm)[0];
-//         if(drop) out.attr("names") = colnames(xm);
-//         else {
-//          out.attr("dim") = Dimension(1, col);
-//          colnames(out) = colnames(xm);
-//         }
-//         return out;
-//       } else {
-//         IntegerMatrix out = no_init_matrix(ng, col);
-//         for(int j = col; j--; ) out(_ , j) = fNdistinctREAL<REALSXP>(xm( _ ,j), ng, g, gs, narm);
-//         colnames(out) = colnames(xm);
-//         return out;
-//       }
-//     }
-//     case INTSXP: {
-//       IntegerMatrix xm = x;
-//       int col = xm.ncol();
-//       if(ng == 0) {
-//         IntegerVector out = no_init_vector(col);
-//         for(int j = col; j--; ) out[j] = fNdistinctImpl<INTSXP>(xm(_ , j), ng, g, gs, narm)[0];
-//         if(drop) out.attr("names") = colnames(xm);
-//         else {
-//           out.attr("dim") = Dimension(1, col);
-//           colnames(out) = colnames(xm);
-//         }
-//         return out;
-//       } else {
-//         IntegerMatrix out = no_init_matrix(ng, col);
-//         for(int j = col; j--; ) out(_ , j) = fNdistinctImpl<INTSXP>(xm(_ , j), ng, g, gs, narm);
-//         colnames(out) = colnames(xm);
-//         return out;
-//       }
-//     }
-//     case STRSXP: {
-//       CharacterMatrix xm = x;
-//       int col = xm.ncol();
-//       if(ng == 0) {
-//         IntegerVector out = no_init_vector(col);
-//         for(int j = col; j--; ) out[j] = fNdistinctImpl<STRSXP>(xm(_ , j), ng, g, gs, narm)[0];
-//         if(drop) out.attr("names") = colnames(xm);
-//         else {
-//           out.attr("dim") = Dimension(1, col);
-//           colnames(out) = colnames(xm);
-//         }
-//         return out;
-//       } else {
-//         IntegerMatrix out = no_init_matrix(ng, col);
-//         for(int j = col; j--; ) out(_ , j) = fNdistinctImpl<STRSXP>(xm(_ , j), ng, g, gs, narm);
-//         colnames(out) = colnames(xm);
-//         return out;
-//       }
-//     }
-//     case LGLSXP: {
-//       LogicalMatrix xm = x;
-//       int col = xm.ncol();
-//       if(ng == 0) {
-//         IntegerVector out = no_init_vector(col);
-//         for(int j = col; j--; ) out[j] = fNdistinctImpl<LGLSXP>(xm(_ , j), ng, g, gs, narm)[0];
-//         if(drop) out.attr("names") = colnames(xm);
-//         else {
-//           out.attr("dim") = Dimension(1, col);
-//           colnames(out) = colnames(xm);
-//         }
-//       } else {
-//         IntegerMatrix out = no_init_matrix(ng, col);
-//         for(int j = col; j--; ) out(_ , j) = fNdistinctImpl<LGLSXP>(xm(_ , j), ng, g, gs, narm);
-//         colnames(out) = colnames(xm);
-//         return out;
-//       }
-//     }
-//     default: stop("Not supported SEXP type !");
-//     }
-// }
-// 
-// // [[Rcpp::export]]
-// List fNdistinctlCpp(List x, int ng = 0, IntegerVector g = 0, SEXP gs = R_NilValue, bool narm = true) {
-//   int l = x.size();
-//   List out(l);
-// 
-//   for(int j = l; j--; ) {
-//     switch(TYPEOF(x[j])) {
-//     case REALSXP:
-//       out[j] = fNdistinctREAL<REALSXP>(x[j], ng, g, gs, narm);
-//       break;
-//     case INTSXP:
-//       out[j] = fNdistinctImpl<INTSXP>(x[j], ng, g, gs, narm);
-//       break;
-//     case STRSXP:
-//       out[j] = fNdistinctImpl<STRSXP>(x[j], ng, g, gs, narm);
-//       break;
-//     case LGLSXP:
-//       out[j] = fNdistinctImpl<LGLSXP>(x[j], ng, g, gs, narm);
-//       break;
-//     default: stop("Not supported SEXP type !");
-//     }
-//   }
-//   DUPLICATE_ATTRIB(out, x);
-//   if(ng == 0) out.attr("row.names") = 1;
-//   else out.attr("row.names") = NumericVector::create(NA_REAL, -ng);
-// 
-//   return out;
-// }
-// 
-// 
-// 
+
+template <int RTYPE>
+SEXP fNdistinct2mImpl(const Matrix<RTYPE>& x, int ng, const IntegerVector& g,
+                      const SEXP& gs, bool narm, bool drop) {
+  int l = x.nrow(), col = x.ncol();
+  typedef typename Rcpp::traits::storage_type<RTYPE>::type storage_t;
+  auto isnanT = (RTYPE == REALSXP) ? isnaNUM<RTYPE> : isnaOTH<RTYPE>;
+
+  if(ng == 0) {
+    IntegerVector out = no_init_vector(col);
+    if(narm) {
+      for(int j = col; j--; ) {
+        ConstMatrixColumn<RTYPE> column = x(_ , j);
+        sugar::IndexHash<RTYPE> hash(wrap(column)); // why wrap needed ??
+        for(int i = 0; i != l; ++i) {
+          if(isnanT(column[i])) continue;
+          unsigned int addr = hash.get_addr(column[i]);
+          while(hash.data[addr] && hash.not_equal(column[hash.data[addr] - 1], column[i])) {
+            ++addr;
+            if(addr == static_cast<unsigned int>(hash.m)) addr = 0;
+          }
+          if(!hash.data[addr]) {
+            hash.data[addr] = i+1;
+            ++hash.size_;
+          }
+        }
+        out[j] = hash.size_;
+      }
+    } else {
+      for(int j = col; j--; ) {
+        ConstMatrixColumn<RTYPE> column = x(_ , j);
+        sugar::IndexHash<RTYPE> hash(wrap(column)); // why wrap needed ??
+        hash.fill();
+        out[j] = hash.size_;
+      }
+    }
+    if(drop) out.attr("names") = colnames(x);
+    else {
+      out.attr("dim") = Dimension(1, col);
+      colnames(out) = colnames(x);
+    }
+    return out;
+  } else {
+    if(l != g.size()) stop("length(g) must match length(x)");
+    std::vector<std::vector<storage_t> > gmap(ng);
+    IntegerMatrix out = no_init_matrix(ng, col);
+    int n[ng];
+    if(Rf_isNull(gs)) {
+      memset(n, 0, sizeof(int)*ng);
+      for(int i = 0; i != l; ++i) ++n[g[i]-1];
+      for(int i = 0; i != ng; ++i) gmap[i] = std::vector<storage_t> (n[i]);
+    } else {
+      IntegerVector gsv = gs;
+      if(ng != gsv.size()) stop("ng must match length(gs)");
+      for(int i = 0; i != ng; ++i) gmap[i] = std::vector<storage_t> (gsv[i]);
+    }
+    if(narm) {
+      for(int j = col; j--; ) {
+        ConstMatrixColumn<RTYPE> column = x(_ , j);
+        IntegerMatrix::Column outj = out(_, j);
+        memset(n, 0, sizeof(int)*ng);
+        for(int i = 0; i != l; ++i) gmap[g[i]-1][n[g[i]-1]++] = column[i]; // reading in all the values. Better way ??
+        for(int gr = 0; gr != ng; ++gr) {
+          const std::vector<storage_t>& temp = gmap[gr]; // good ?? // const Vector<RTYPE>& // wrap()
+          sugar::IndexHash<RTYPE> hash(wrap(temp));
+          for(int i = hash.n; i--; ) {
+            if(isnanT(temp[i])) continue;
+            unsigned int addr = hash.get_addr(temp[i]);
+            while(hash.data[addr] && hash.not_equal(temp[hash.data[addr] - 1], temp[i])) {
+              ++addr;
+              if(addr == static_cast<unsigned int>(hash.m)) addr = 0;
+            }
+            if(!hash.data[addr]) {
+              hash.data[addr] = i+1;
+              ++hash.size_;
+            }
+          }
+          outj[gr] = hash.size_;
+        }
+      }
+    } else {
+      for(int j = col; j--; ) {
+        ConstMatrixColumn<RTYPE> column = x(_ , j);
+        IntegerMatrix::Column outj = out(_, j);
+        memset(n, 0, sizeof(int)*ng);
+        for(int i = 0; i != l; ++i) gmap[g[i]-1][n[g[i]-1]++] = column[i]; // reading in all the values. Better way ??
+        for(int gr = 0; gr != ng; ++gr) {
+          sugar::IndexHash<RTYPE> hash(wrap(gmap[gr]));
+          hash.fill();
+          outj[gr] = hash.size_;
+        }
+      }
+    }
+    colnames(out) = colnames(x);
+    return out;
+  }
+}
+
+template <> // No logical vector with sugar::IndexHash<RTYPE> !!! !
+SEXP fNdistinct2mImpl(const Matrix<LGLSXP>& x, int ng, const IntegerVector& g, const SEXP& gs, bool narm, bool drop) {
+  int l = x.nrow(), col = x.ncol();
+
+  if(ng == 0) {
+    IntegerVector out(col);
+    if(narm) {
+      for(int j = col; j--; ) {
+        LogicalMatrix::ConstColumn column = x(_ , j);
+        bool which = true;
+        for(int i = 0; i != l; ++i) {
+          if(column[i] == NA_LOGICAL) continue;
+          if(column[i] == which) {
+            out[j] = 1;
+          } else {
+            which = column[i];
+            ++out[j];
+            if(out[j] == 2) break;
+          }
+        }
+      }
+    } else {
+      for(int j = col; j--; ) {
+        LogicalMatrix::ConstColumn column = x(_ , j);
+        bool seen1 = true, seen2 = true, seen3 = true;
+        for(int i = 0; i != l; ++i) { // better way??
+          if(seen1 && column[i] == NA_LOGICAL) {
+            ++out[j];
+            seen1 = false;
+          } else if(seen2 && column[i] == true) {
+            ++out[j];
+            seen2 = false;
+          } else if(seen3 && column[i] == false) {
+            ++out[j];
+            seen3 = false;
+          }
+          if(out[j] == 3) break;
+        }
+      }
+    }
+    if(drop) out.attr("names") = colnames(x);
+    else {
+      out.attr("dim") = Dimension(1, col);
+      colnames(out) = colnames(x);
+    }
+    return out;
+  } else {
+    IntegerMatrix out(ng, col); //  = no_init_matrix
+    if(narm) {
+      for(int j = col; j--; ) {
+        LogicalMatrix::ConstColumn column = x(_ , j);
+        IntegerMatrix::Column outj = out(_, j);
+        LogicalVector which(ng);
+        int ngs = 0;
+        for(int i = 0; i != l; ++i) {
+          if(column[i] == NA_LOGICAL) continue;
+          if(column[i] == which[g[i]-1]) {
+            outj[g[i]-1] = 1;
+          } else {
+            which[g[i]-1] = column[i];
+            ++outj[g[i]-1];
+            if(outj[g[i]-1] == 2) {
+              ++ngs;
+              if(ngs == ng) break;
+            }
+          }
+        }
+      }
+    } else {
+      for(int j = col; j--; ) {
+        LogicalMatrix::ConstColumn column = x(_ , j);
+        IntegerMatrix::Column outj = out(_, j);
+        LogicalVector seen1(ng, true), seen2(ng, true), seen3(ng, true);
+        for(int i = 0; i != l; ++i) { // better way??
+          if(seen1[g[i]-1] && column[i] == NA_LOGICAL) {
+            ++outj[g[i]-1];
+            seen1[g[i]-1] = false;
+          } else if(seen2[g[i]-1] && column[i] == true) {
+            ++outj[g[i]-1];
+            seen2[g[i]-1] = false;
+          } else if(seen3[g[i]-1] && column[i] == false) {
+            ++outj[g[i]-1];
+            seen3[g[i]-1] = false;
+          }
+        }
+      }
+    }
+    colnames(out) = colnames(x);
+    return out;
+  }
+}
+
+template <>
+SEXP fNdistinct2mImpl(const Matrix<CPLXSXP>& x, int ng, const IntegerVector& g, const SEXP& gs, bool narm, bool drop) {
+  stop("Not supported SEXP type!");
+}
+
+template <>
+SEXP fNdistinct2mImpl(const Matrix<VECSXP>& x, int ng, const IntegerVector& g, const SEXP& gs, bool narm, bool drop) {
+  stop("Not supported SEXP type!");
+}
+
+template <>
+SEXP fNdistinct2mImpl(const Matrix<RAWSXP>& x, int ng, const IntegerVector& g, const SEXP& gs, bool narm, bool drop) {
+  stop("Not supported SEXP type!");
+}
+
+template <>
+SEXP fNdistinct2mImpl(const Matrix<EXPRSXP>& x, int ng, const IntegerVector& g, const SEXP& gs, bool narm, bool drop) {
+  stop("Not supported SEXP type!");
+}
 
 
-
-
-
-
-
-// template <>
-// IntegerVector fNdistinctImpl(Vector<CPLXSXP> x, int ng, IntegerVector g, SEXP gs, bool narm) {
-//   stop("Not supported SEXP type!");
-// }
-// 
-// template <>
-// IntegerVector fNdistinctImpl(Vector<VECSXP> x, int ng, IntegerVector g, SEXP gs, bool narm) {
-//   stop("Not supported SEXP type!");
-// }
-// 
-// template <>
-// IntegerVector fNdistinctImpl(Vector<RAWSXP> x, int ng, IntegerVector g, SEXP gs, bool narm) {
-//   stop("Not supported SEXP type!");
-// }
-// 
-// template <>
-// IntegerVector fNdistinctImpl(Vector<EXPRSXP> x, int ng, IntegerVector g, SEXP gs, bool narm) {
-//   stop("Not supported SEXP type!");
-// }
-// 
-// 
-// // [[Rcpp::export]]
-// SEXP fNdistinct(SEXP x, int ng = 0, IntegerVector g = 0, SEXP gs = R_NilValue, bool narm = true) {
-//   RCPP_RETURN_VECTOR(fNdistinctImpl, x, ng, g, gs, narm);
-// }
-
-// Version for Numeric vectors only:
-// //[[Rcpp::export]]
-// IntegerVector fNdistinct(NumericVector x, int ng = 0, IntegerVector g = 0, IntegerVector gs = 0, bool narm = true) {
-//   int l = x.size();
-//   if(ng == 0) {
-//     int Nunique = 0;
-//     if(narm) {
-//       auto pend = std::remove_if(x.begin(), x.end(), isnan2);
-//       std::sort(x.begin(), pend);
-//       Nunique = std::unique(x.begin(), pend) - x.begin();      
-//     } else {
-//       std::sort(x.begin(), x.end());
-//       Nunique = std::unique(x.begin(), x.end()) - x.begin();
-//     }
-//     return IntegerVector::create(Nunique);
-//   } else {
-//     if(l != g.size()) stop("length(g) must match length(x)");
-//     if(ng != gs.size()) stop("ng must match length(gs)");
-//     std::vector<std::vector<double> > gmap(ng);
-//     IntegerVector out(ng);
-//     for(int i = 0; i != ng; ++i) gmap[i] = std::vector<double> (gs[i]); // better using vector of vectors (faster initialization) ??
-//     for(int i = 0; i != l; ++i) gmap[g[i]-1][out[g[i]-1]++] = x[i]; 
-//     if(narm) {
-//       for(int gr = 0; gr != ng; ++gr) {
-//         auto pend = std::remove_if(gmap[gr].begin(), gmap[gr].end(), isnan2);
-//         std::sort(gmap[gr].begin(), pend);
-//         out[gr] = std::unique(gmap[gr].begin(), pend) - gmap[gr].begin();      
-//       }
-//     } else {
-//       for(int gr = 0; gr != ng; ++gr) {
-//         std::sort(gmap[gr].begin(), gmap[gr].end());
-//         out[gr] = std::unique(gmap[gr].begin(), gmap[gr].end()) - gmap[gr].begin();      
-//       }
-//     }
-//     if(Rf_getAttrib(x, R_ClassSymbol) == R_NilValue) SHALLOW_DUPLICATE_ATTRIB(out, x); 
-//     return out;
-//   }
-// }
-
-
-
-// Old idea: Trying to get an ordering vector from R
-// //[[Rcpp::export]]
-// IntegerVector fNdistinct(NumericVector x, int ng = 0, IntegerVector g = 0, IntegerVector r = 0, bool narm = true) {
-//     int l = x.size();
-//   if(ng == 0) {
-//     int Nunique = 0;
-//     if(narm) {
-//       auto pend = std::remove_if(x.begin(), x.end(), isnan2);
-//       std::sort(x.begin(), pend);
-//       Nunique = std::unique(x.begin(), pend) - x.begin();      
-//     } else {
-//       std::sort(x.begin(), x.end());
-//       Nunique = std::unique(x.begin(), x.end()) - x.begin();
-//     }
-//     return IntegerVector::create(Nunique);
-//   } else {
-//     if(r.size() != g.size()) stop("length(r) must match length(g)");
-//     IntegerVector go = g[r];
-//     NumericVector xo = x[r];
-//     IntegerVector out(ng), last(ng);
-//     if(narm) {
-//       for(int i = 0; i != l; ++i) {
-//         if(std::isnan(xo[i]) || xo[i] == last[g[i]-1]) continue;
-//           last[g[i]-1] = xo[i];
-//           ++out[g[i]-1];
-//       }
-//     } else {
-//       for(int i = 0; i != l; ++i) {
-//         if(xo[i] != last[g[i]-1]) {
-//           last[g[i]-1] = xo[i];
-//           ++out[g[i]-1];
-//         }
-//       }
-//     }
-//     return out;
-//   }
-// }
-    
+// [[Rcpp::export]]
+SEXP fNdistinctmCpp(SEXP x, int ng = 0, IntegerVector g = 0, SEXP gs = R_NilValue, bool narm = true, bool drop = true) {
+  RCPP_RETURN_MATRIX(fNdistinct2mImpl, x, ng, g, gs, narm, drop);
+}

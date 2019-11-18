@@ -2,26 +2,26 @@
 using namespace Rcpp;
 
 // [[Rcpp::export]]
-NumericVector fminCpp(const NumericVector& x, int ng = 0, const IntegerVector& g = 0, 
+NumericVector fminCpp(const NumericVector& x, int ng = 0, const IntegerVector& g = 0,
                       bool narm = true) {
   int l = x.size();
-  
+
   if(ng == 0) {
     if(narm) {
       int j = l-1;
-      double min = x[j]; 
-      while(std::isnan(min) && j!=0) min = x[--j]; 
+      double min = x[j];
+      while(std::isnan(min) && j!=0) min = x[--j];
       if(j != 0) for(int i = j; i--; ) {
-        if(min > x[i]) min = x[i]; 
-      } 
+        if(min > x[i]) min = x[i];
+      }
       return NumericVector::create(min);
     } else {
       double min = x[0];
-      for(int i = 0; i != l; ++i) { 
+      for(int i = 0; i != l; ++i) {
         if(std::isnan(x[i])) {
-          min = x[i]; 
+          min = x[i];
           break;
-        } else { 
+        } else {
           if(min > x[i]) min = x[i];
         }
       }
@@ -57,160 +57,174 @@ NumericVector fminCpp(const NumericVector& x, int ng = 0, const IntegerVector& g
 }
 
 
-// Previous Version: Lots of comments and attempts of finding the most efficient algorithms implemented above !! with return !!
-// #include <Rcpp.h>
-// using namespace Rcpp;
-// 
-// // [[Rcpp::export]]
-// NumericVector fgminCpp(NumericVector x, int ng = 0, IntegerVector g = 0, 
-//                         bool narm = true, int ret = 0, bool fill = false) {
-//   int l = x.size();
-//   if (ng == 0) {
-//     double min = x[l-1]; // R_PosInf; // All operations involving NA or NaN evaluate as false!!
-//     if(narm) {
-//       int j = l-1; // right??
-//       while(std::isnan(min) && j!=0) { // fastest so far!! j!=0 faster than j>0
-//          // --j; // yes !! --j faster than --j ?? // https://stackoverflow.com/questions/21447332/increment-i-i-and-i-1
-//          min = x[--j]; // https://stackoverflow.com/questions/24901/is-there-a-performance-difference-between-i-and-i-in-c?noredirect=1&lq=1
-//       }
-//       // // bool t = true;
-//       // double inf = std::numeric_limits<double>::infinity();
-//       if(j != 0) for(int i = j; i--; ) {
-//         // if(std::isnan(x[i])) continue; 
-//         // // t = min < inf;
-//         // if(min > x[i] || !(min > -INFINITY)) min = x[i]; // INFINITY // min > x[i] || !(min < inf)
-//         // min > x[i] || !(min > inf) 7 milliseconds on 10 mio obs, but this statement is always true
-//         // if(min > x[i] || std::isnan(min)) min = x[i]; // best so far: 28 milliseconds
-//         if(min > x[i]) min = x[i];
-//         // if(x[i] <= INFINITY) min += x[i]; // 21 milliseconds for the sum !!
-//       } // evalCpp("NAN != INFINITY") consider this !! always TRUE
-//       if(ret == 1) { 
-//         if(fill) return rep(min, l);
-//         else {
-//           NumericVector out(l, min); 
-//           for(int i = l; i--; ) if(std::isnan(x[i])) out[i] = x[i]; 
-//           return out;
-//         }
-//       } else if (ret == 2) {
-//         if(fill) return x - min; 
-//         else {
-//           NumericVector out(l);
-//           for(int i = l; i--; ) { 
-//             if(std::isnan(x[i])) out[i] = x[i]; 
-//             else out[i] = x[i] - min; 
-//           }
-//           return out;
-//         }
-//       } else return NumericVector::create(min);
-//     } else {
-//       for(int i = 0; i != l; ++i) { // better since it seems most series have missing values at the beginning??
-//         if(std::isnan(x[i])) {
-//           min = x[i]; // Fast ?? -> Yup, great !!
-//           break;
-//         } else {// else if ?? -> nope, this is faster !!! -> good to know !!
-//           if(min > x[i]) min = x[i];
-//         }
-//       }
-//       if(ret == 1) { 
-//         return rep(min, l);
-//       } else if (ret == 2) {
-//         return x - min; 
-//       } else return NumericVector::create(min);
-//     } 
-//   } else { // with groups
-//     if(g.size() != l) stop("length(g) must match nrow(X)");
-//     // NumericVector min(ng, NA_REAL); //INFINITY); //R_PosInf); // INFINITY is slightly faster 
-//     if(narm) {
-//       NumericVector min(ng, NA_REAL); //INFINITY); //R_PosInf); // INFINITY is slightly faster 
-//       // int group = 0; // These don't improve speed!!
-//       // double val = 0;
-//       // int ngs = 0;
-//       for(int i = l; i--; ) {
-//         // if(std::isnan(x[i])) continue; // Not necessary -> 10 milliseconds gain
-//         // group = g[i]-1;
-//         // val = x[i];
-//         // val = min[g[i]-1];
-//         // if(min[group] > val) min[group] = val; 
-//         if(min[g[i]-1] > x[i] || std::isnan(min[g[i]-1])) min[g[i]-1] = x[i];  // fastest !!!!!!
-//         // if(std::isnan(min[g[i]-1]) && !std::isnan(x[i])) { Neat Idea but takes too long
-//         //   min[g[i]-1] = x[i];
-//         //   ++ngs;
-//         //   if(ngs == ng) {
-//         //     for(int j = i; j--; ) {
-//         //       if(min[g[j]-1] > x[j]) min[g[j]-1] = x[j];
-//         //     }
-//         //     break;
-//         //   }
-//         // }
-//         // if(min[g[i]-1] > x[i]) min[g[i]-1] = x[i];
-//       }
-//       if(ret == 1) { 
-//         NumericVector out(l);
-//         if(fill) {
-//           for(int i = l; i--; ) out[i] = min[g[i]-1];
-//           return out;
-//         } else {
-//           for(int i = l; i--; ) {
-//             if(std::isnan(x[i])) out[i] = x[i]; 
-//             else out[i] = min[g[i]-1]; 
-//           }
-//           return out; 
-//         }
-//       } else if (ret == 2) {
-//         NumericVector out(l);
-//         if(fill) {
-//           for(int i = l; i--; ) out[i] = x[i] - min[g[i]-1];
-//           return out;
-//         } else {
-//           for(int i = l; i--; ) {
-//             if(std::isnan(x[i])) out[i] = x[i]; 
-//             else out[i] = x[i] - min[g[i]-1]; 
-//           }
-//           return out; 
-//         }
-//       } else return min; 
-//     } else {
-//       NumericVector min(ng, INFINITY); //R_PosInf); // INFINITY is slightly faster 
-//       //for(int i = l; i--; ) if(min[g[i]-1] > x[i]) min[g[i]-1] = x[i];
-//       int ngs = 0;
-//       for(int i = 0; i != l; ++i) { // better since it seems most series have missing values at the beginning??
-//         // if(std::isnan(x[i]) && !std::isnan(min[g[i]-1])) { // Basic idea: 135 milliseconds
-//         //   min[g[i]-1] = x[i]; // Fast ?? -> Yup, great !!
-//         //   ++ngs;
-//         //   if(ngs == ng) break;
-//         // } else {
-//         //     if(min[g[i]-1] > x[i]) min[g[i]-1] = x[i]; // else faster?? 
-//         // }
-//         
-//         // if(!std::isnan(min[g[i]-1])) { // 188 milliseconds -> slower !!
-//         //   if(std::isnan(x[i])) {
-//         //     min[g[i]-1] = x[i]; // Fast ?? -> Yup, great !!
-//         //     ++ngs;
-//         //     if(ngs == ng) break;
-//         //   } else {
-//         //      if(min[g[i]-1] > x[i]) min[g[i]-1] = x[i];
-//         //   }
-//         // }
-//         
-//         if(std::isnan(x[i])) { // 135 milliseconds -> same as above!! still compare speed on other data!!
-//           if(!std::isnan(min[g[i]-1])) {
-//             min[g[i]-1] = x[i]; // Fast ?? -> Yup, great !!
-//             ++ngs;
-//             if(ngs == ng) break;
-//           }
-//         } else { // This is the best !!! not else if
-//          if(min[g[i]-1] > x[i]) min[g[i]-1] = x[i];
-//         }
-//       }
-//       if(ret == 1) { 
-//         NumericVector out(l);
-//         for(int i = l; i--; ) out[i] = min[g[i]-1];
-//         return out; 
-//       } else if (ret == 2) {
-//         NumericVector out(l);
-//         for(int i = l; i--; ) out[i] = x[i] - min[g[i]-1]; 
-//         return out; 
-//       } else return min; 
-//     }
-//   }
-// }
+
+
+// [[Rcpp::export]]
+SEXP fminmCpp(const NumericMatrix& x, int ng = 0, const IntegerVector& g = 0,
+              bool narm = true, bool drop = true) {
+  int l = x.nrow(), col = x.ncol();
+
+  if(ng == 0) {
+    NumericVector min = no_init_vector(col); // Initialize faster -> Nope !!!
+    if(narm) {
+      for(int j = col; j--; ) {
+        NumericMatrix::ConstColumn column = x( _ , j);
+        int k = l-1;
+        double minj = column[k];
+        while(std::isnan(minj) && k!=0) minj = column[--k];
+        if(k != 0) for(int i = k; i--; ) {
+          if(minj > column[i]) minj = column[i];
+        }
+        min[j] = minj;
+      }
+    } else {
+      for(int j = col; j--; ) {
+        NumericMatrix::ConstColumn column = x( _ , j);
+        double minj = column[0];
+        for(int i = 0; i != l; ++i) {
+          if(std::isnan(column[i])) {
+            minj = column[i];
+            break;
+          } else {
+            if(minj > column[i]) minj = column[i];
+          }
+        }
+        min[j] = minj;
+      }
+    }
+    if(drop) min.attr("names") = colnames(x);
+    else {
+      min.attr("dim") = Dimension(1, col);
+      colnames(min) = colnames(x);
+    }
+    return min;
+  } else { // with groups
+    if(g.size() != l) stop("length(g) must match nrow(X)");
+    NumericMatrix min = no_init_matrix(ng, col);
+    if(narm) {
+      std::fill(min.begin(), min.end(), NA_REAL);
+      for(int j = col; j--; ) {
+        NumericMatrix::ConstColumn column = x( _ , j);
+        NumericMatrix::Column minj = min( _ , j);
+        for(int i = l; i--; ) {
+          if(!std::isnan(column[i])) { // Keeping this is faster !!!!
+            if(minj[g[i]-1] > column[i] || std::isnan(minj[g[i]-1])) minj[g[i]-1] = column[i];
+          }
+        }
+      }
+    } else {
+      std::fill(min.begin(), min.end(), R_PosInf);
+      for(int j = col; j--; ) {
+        NumericMatrix::ConstColumn column = x( _ , j);
+        NumericMatrix::Column minj = min( _ , j);
+        int ngs = 0;
+        for(int i = 0; i != l; ++i) {
+          if(std::isnan(column[i])) {
+            if(!std::isnan(minj[g[i]-1])) {
+              minj[g[i]-1] = column[i];
+              ++ngs;
+              if(ngs == ng) break;
+            }
+          } else {
+            if(minj[g[i]-1] > column[i]) minj[g[i]-1] = column[i];
+          }
+        }
+      }
+    }
+    colnames(min) = colnames(x);
+    return min;
+  }
+}
+
+
+
+
+// [[Rcpp::export]]
+SEXP fminlCpp(const List& x, int ng = 0, const IntegerVector& g = 0,
+              bool narm = true, bool drop = true) {
+  int l = x.size();
+
+  if (ng == 0) {
+    NumericVector min = no_init_vector(l); // good and fast here !!
+    if(narm) {
+      for(int j = l; j--; ) {
+        NumericVector column = x[j];
+        int k = column.size()-1;
+        double mini = column[k];
+        while(std::isnan(mini) && k!=0) mini = column[--k];
+        if(k != 0) for(int i = k; i--; ) {
+          if(mini > column[i]) mini = column[i];
+        }
+        min[j] = mini;
+      }
+    } else {
+      for(int j = l; j--; ) {
+        NumericVector column = x[j];
+        double mini = column[0];
+        int row = column.size();
+        for(int i = 0; i != row; ++i) {
+          if(std::isnan(column[i])) {
+            mini = column[i];
+            break;
+          } else {
+            if(mini > column[i]) mini = column[i];
+          }
+        }
+        min[j] = mini;
+      }
+    }
+    if(drop) {
+      min.attr("names") = x.attr("names");
+      return min;
+    } else {
+      List out(l);
+      for(int j = l; j--; ) {
+        out[j] = min[j];
+        SHALLOW_DUPLICATE_ATTRIB(out[j], x[j]);
+      }
+      DUPLICATE_ATTRIB(out, x);
+      out.attr("row.names") = 1;
+      return out;
+    }
+  } else { // With groups !!
+    List min(l);
+    int gss = g.size();
+    if(narm) {
+      for(int j = l; j--; ) {
+        NumericVector column = x[j];
+        if(gss != column.size()) stop("length(g) must match nrow(X)");
+        NumericVector minj(ng, NA_REAL);
+        for(int i = gss; i--; ) {
+          if(!std::isnan(column[i])) { // Keeping this is faster !!!!
+            if(minj[g[i]-1] > column[i] || std::isnan(minj[g[i]-1])) minj[g[i]-1] = column[i];
+          }
+        }
+        SHALLOW_DUPLICATE_ATTRIB(minj, column);
+        min[j] = minj;
+      }
+    } else {
+      for(int j = l; j--; ) {
+        NumericVector column = x[j];
+        if(gss != column.size()) stop("length(g) must match nrow(X)");
+        NumericVector minj(ng, R_PosInf);
+        int ngs = 0;
+        for(int i = 0; i != gss; ++i) {
+          if(std::isnan(column[i])) {
+            if(!std::isnan(minj[g[i]-1])) {
+              minj[g[i]-1] = column[i];
+              ++ngs;
+              if(ngs == ng) break;
+            }
+          } else {
+            if(minj[g[i]-1] > column[i]) minj[g[i]-1] = column[i];
+          }
+        }
+        SHALLOW_DUPLICATE_ATTRIB(minj, column);
+        min[j] = minj;
+      }
+    }
+    DUPLICATE_ATTRIB(min, x);
+    min.attr("row.names") = NumericVector::create(NA_REAL, -ng);
+    return min;
+  }
+}

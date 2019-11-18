@@ -1,10 +1,10 @@
-library(Rcpp)
-sourceCpp('src/BW.cpp')
-sourceCpp('src/BWa.cpp')
-sourceCpp('src/BWl.cpp')
-source("R/GRP.R")
-source("R/small_helper.R")
-source("R/quick_conversion.R")
+# library(Rcpp)
+# sourceCpp('src/BW.cpp')
+# sourceCpp('src/BWa.cpp')
+# sourceCpp('src/BWl.cpp')
+# source("R/GRP.R")
+# source("R/small_helper.R")
+# source("R/quick_conversion.R")
 
 # Note: for principal innovations of this code see fsum.R and fscale.R. Old code is commented out below and was innovated in flag.R.
 #  replaced give.names = TRUE with stub

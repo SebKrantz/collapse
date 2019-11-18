@@ -1,10 +1,10 @@
-library(Rcpp)
-sourceCpp("R/C++/psmat.cpp", rebuild = TRUE) # Todo: What about factors and dates ?? Matrix return fastest ??
-sourceCpp("R/C++/qFqG.cpp", rebuild = TRUE)
-qF <- function(x, ordered = TRUE) {
-  if(is.factor(x)) return(x)
-  qFCpp(x, ordered)
-}
+# library(Rcpp)
+# sourceCpp("R/C++/psmat.cpp", rebuild = TRUE) # Todo: What about factors and dates ?? Matrix return fastest ??
+# sourceCpp("R/C++/qFqG.cpp", rebuild = TRUE)
+# qF <- function(x, ordered = TRUE) {
+#   if(is.factor(x)) return(x)
+#   qFCpp(x, ordered)
+# }
 
 # General Note : if add ... can put extra arguments that are not used. if not, gives unuse argument error !!!
 

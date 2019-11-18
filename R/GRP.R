@@ -1,11 +1,30 @@
-Cuniqlengths <- data.table:::Cuniqlengths
-Cfrank <- data.table:::Cfrank
-forderv <- data.table:::forderv
+# Cuniqlengths <- data.table:::Cuniqlengths
+# Cfrank <- data.table:::Cfrank
+# forderv <- data.table:::forderv
 
 # or getGRP: more speed using tabulate ?? or code your own??
-GRP <- function(X, by = NULL, sort = TRUE, order = 1L,
-                na.last = FALSE, return.groups = TRUE, return.order = FALSE) {
+GRP <- function(X, ...) { # by = NULL, sort = TRUE, order = 1L, na.last = FALSE, return.groups = TRUE, return.order = FALSE
   UseMethod("GRP", X)
+}
+
+# DTinit <- function() .Call(initsym)
+
+forderv <- function(x, by = seq_along(x), retGrp = FALSE, sort = TRUE, order = 1L, na.last = FALSE) {
+  .Call(initDTthreads)
+  if (is.atomic(x)) {
+    if (!missing(by) && !is.null(by))
+      stop("x is a single vector, non-NULL 'by' doesn't make sense")
+    by = NULL
+  }
+  else {
+    if (!length(x))
+      return(integer(0L))
+    if (is.character(by)) by = anyNAerror(match(by, names(x)), "Unknown column names!") # .Call(colnamesInt, x, by, FALSE) # colnamesInt(x, by, check_dups = FALSE)
+    if (length(order) == 1L)
+      order = rep(order, length(by))
+  }
+  order = as.integer(order)
+  .Call(forder, x, by, retGrp, sort, order, na.last)
 }
 
 # To do: use data.table:::CsubsetDT and CsubsetVector !!
@@ -23,12 +42,13 @@ GRP.default <- function(X, by = NULL, sort = TRUE, order = 1L, na.last = FALSE,
     namby <- paste(all.vars(call), collapse = ".")  # deparse(substitute(X)) # all.vars is faster !!!
   } else namby <- names(X)[by]
 
+  # o <- .Call(forder, X, by, TRUE, sort, order, na.last)
   o <- forderv(X, by, TRUE, sort, order, na.last) # faster calling c?? -> nah, the checks implemented in forderv are good  and efficient !!
   f <- attr(o, "starts") # , exact = TRUE -> slightly slower
 
   if(length(o)) { # if ordered, returns 0
-    len <- .Call(Cuniqlengths, f, length(o)) # len = data.table:::uniqlengths(f, length(o))
-    grpuo <- .Call(Cfrank, o, f, len, "dense") #-1L # grpuo = rep.int(seq_along(len),len)[data.table:::forderv(o)] # faster way?? -> try to speed this up..
+    len <- .Call(uniqlengths, f, length(o)) # data.table:::Cuniqlengths # len = data.table:::uniqlengths(f, length(o))
+    grpuo <- .Call(frank, o, f, len, "dense") #-1L # data.table:::Cfrank # grpuo = rep.int(seq_along(len),len)[data.table:::forderv(o)] # faster way?? -> try to speed this up..
     ordered <- c(GRP.sort = sort, initially.ordered = FALSE)
     if(return.groups) {
       groups <- if(inherits(X, "data.table")) # better or faster way ??
@@ -37,7 +57,7 @@ GRP.default <- function(X, by = NULL, sort = TRUE, order = 1L, na.last = FALSE,
         `names<-`(list(X[o[f]]), namby) else qDF(X)[o[f], by, drop = FALSE]
     } else groups <- NULL
   } else {
-    len <- .Call(Cuniqlengths, f, NROW(X)) # or cumsubtract !!!
+    len <- .Call(uniqlengths, f, NROW(X)) # data.table:::Cuniqlengths # or cumsubtract !!!
     grpuo <- rep.int(seq_along(len), len) # rep.int fastest ?? -> about same speed as rep !!  # o = f # for unique. right???
     ordered <- c(GRP.sort = sort, initially.ordered = TRUE)
     if(return.groups) {
@@ -130,7 +150,7 @@ as.factor.GRP <- function(g) {
   return(f)
 }
 
-GRP.qG <- function(X) {
+GRP.qG <- function(X, ...) {
   # nam <- deparse(substitute(X)) # takes 9 microseconds !!, all vars on call is faster !!
   ng <- attr(X, "N.groups")
   ordered <- if(is.ordered(X)) c(TRUE,TRUE) else c(FALSE,FALSE)
@@ -138,7 +158,7 @@ GRP.qG <- function(X) {
   call <- match.call()
   return(`class<-`(list(N.groups = ng,
                         group.id = X,
-                        group.sizes = .Internal(tabulate(X, ng)),
+                        group.sizes = tabulate(X, ng), # .Internal(tabulate(X, ng)),
                         groups = NULL,
                         group.vars = paste(all.vars(call), collapse = "."),
                         ordered = ordered,
@@ -146,7 +166,7 @@ GRP.qG <- function(X) {
                         call = call), "GRP"))
 }
 
-GRP.factor <- function(X) {
+GRP.factor <- function(X, ...) {
   # nam <- deparse(substitute(X)) # takes 9 microseconds !!
   lev <- attr(X, "levels")
   nl <- length(lev)
@@ -156,7 +176,7 @@ GRP.factor <- function(X) {
   nam <- paste(all.vars(call), collapse = ".")
   return(`class<-`(list(N.groups = nl,
                         group.id = X,
-                        group.sizes = .Internal(tabulate(X, nl)), # faster tabulating factors ??? -> Nope, same speed of nl is supplied !!
+                        group.sizes = tabulate(X, nl), # .Internal(tabulate(X, nl)), # faster tabulating factors ??? -> Nope, same speed of nl is supplied !!
                         groups = `names<-`(list(lev), nam),
                         group.vars = nam,
                         ordered = ordered,
@@ -164,7 +184,7 @@ GRP.factor <- function(X) {
                         call = call), "GRP"))
 }
 
-GRP.pseries <- function(X) {
+GRP.pseries <- function(X, ...) {
   g <- attr(X, "index") # index cannot be atomic since plm always adds a time variable !!
   if(length(g) > 2L) {
     mlg <- -length(g)
@@ -180,23 +200,23 @@ GRP.pseries <- function(X) {
   attributes(g) <- NULL
   return(`class<-`(list(N.groups = nl,
                         group.id = g,
-                        group.sizes = .Internal(tabulate(g, nl)), # faster tabulating factors ??? -> Nope, same speed of nl is supplied !!
+                        group.sizes = tabulate(g, nl), # .Internal(tabulate(g, nl)), # faster tabulating factors ??? -> Nope, same speed of nl is supplied !!
                         groups = `names<-`(list(lev), nam),
                         group.vars = nam,
                         ordered = ordered,
                         order = NULL,
                         call = match.call()), "GRP"))
 }
-GRP.pdata.frame <- function(X) GRP.pseries(X)
+GRP.pdata.frame <- function(X, ...) GRP.pseries(X, ...)
 
-GRP.grouped_df <- function(X) {
+GRP.grouped_df <- function(X, ...) {
   g <- unclass(attr(X, "groups"))
   lg <- length(g)
   gr <- g[[lg]]
   ng <- length(gr)
   gs <- lengths(gr) # faster sorting still ?? qsort ?? or data.table forder -> nope, slower than order !!
   return(`class<-`(list(N.groups = ng,
-                        group.id = rep(seq_len(ng), gs)[.Internal(radixsort(TRUE, FALSE, FALSE, TRUE, .Internal(unlist(gr, FALSE, FALSE))))], # #[order(unlist(gr, use.names = FALSE, recursive = FALSE))],
+                        group.id = rep(seq_len(ng), gs)[sort.list(unlist(gr, FALSE, FALSE))], # .Internal(radixsort(TRUE, FALSE, FALSE, TRUE, .Internal(unlist(gr, FALSE, FALSE))))  #
                         group.sizes = gs,
                         groups = g[-lg],
                         group.vars = names(g)[-lg],

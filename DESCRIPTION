@@ -2,19 +2,17 @@ Package: collapse
 Title: Advanced and Fast Data Transformation and Exploration
 Version: 0.0.0.9000
 Date: 2019-02-27
-Authors@R: c(
-    person(given = "Sebastian",
+Authors@R: person(given = "Sebastian",
            family = "Krantz",
            role = c("aut", "cre"),
-           email = "sebastian.krantz@graduateinstitute.ch"),
+           email = "sebastian.krantz@graduateinstitute.ch")
 Description: A package for advanced data transformation and exploration in R that is 
              extremely fast, flexible in use, parsimonious and programmer friendly. 
-
 License: GPL (>=2)
 Encoding: UTF-8
 LazyData: true
-Imports: Rcpp (>= 1.0.1), data.table
-LinkingTo: Rcpp, data.table
+Imports: Rcpp (>= 1.0.1), data.table, lfe
+LinkingTo: Rcpp, data.table, lfe
 Suggests: dplyr, plm
 SystemRequirements: C++11
 

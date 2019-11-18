@@ -1,10 +1,10 @@
-library(Rcpp)
-sourceCpp('src/fmin.cpp')
-sourceCpp('src/fmina.cpp')
-sourceCpp('src/fminl.cpp')
-sourceCpp('src/TRA.cpp')
-sourceCpp('src/TRAl.cpp')
-sourceCpp('src/TRAa.cpp')
+# library(Rcpp)
+# sourceCpp('src/fmin.cpp')
+# sourceCpp('src/fmina.cpp')
+# sourceCpp('src/fminl.cpp')
+# sourceCpp('src/TRA.cpp')
+# sourceCpp('src/TRAl.cpp')
+# sourceCpp('src/TRAa.cpp')
 
 # For foundational changes to this code see fsum.R !!
 

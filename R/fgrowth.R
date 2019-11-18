@@ -1,10 +1,10 @@
-library(Rcpp)
-sourceCpp('src/fgrowth.cpp', rebuild = TRUE) # Todo: Thoroughly test these functions !!!
-sourceCpp('src/fgrowtha.cpp', rebuild = TRUE)
-sourceCpp('src/fgrowthl.cpp', rebuild = TRUE)
-source("R/GRP.R")
-source("R/small_helper.R")
-source("R/quick_conversion.R")
+# library(Rcpp)
+# sourceCpp('src/fgrowth.cpp', rebuild = TRUE) # Todo: Thoroughly test these functions !!!
+# sourceCpp('src/fgrowtha.cpp', rebuild = TRUE)
+# sourceCpp('src/fgrowthl.cpp', rebuild = TRUE)
+# source("R/GRP.R")
+# source("R/small_helper.R")
+# source("R/quick_conversion.R")
 
 # For principle innovations of this code see flag.R and flag.cpp # stubs instead of give.names !!
 

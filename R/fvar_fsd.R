@@ -1,11 +1,11 @@
-library(Rcpp)
-sourceCpp('src/fsum.cpp')
-sourceCpp('src/fvarsd.cpp')
-sourceCpp('src/fvarsda.cpp')
-sourceCpp('src/fvarsdl.cpp')
-sourceCpp('src/TRA.cpp')
-sourceCpp('src/TRAl.cpp')
-sourceCpp('src/TRAa.cpp')
+# library(Rcpp)
+# sourceCpp('src/fsum.cpp')
+# sourceCpp('src/fvarsd.cpp')
+# sourceCpp('src/fvarsda.cpp')
+# sourceCpp('src/fvarsdl.cpp')
+# sourceCpp('src/TRA.cpp')
+# sourceCpp('src/TRAl.cpp')
+# sourceCpp('src/TRAa.cpp')
 
 # w.type = "frequency"
 # Note: for principal innovations of this code see fsum.R !!

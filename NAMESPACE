@@ -1,0 +1,6 @@
+useDynLib(collapse, .registration=TRUE)
+exportPattern("^[[:alpha:]]+")
+importFrom(Rcpp, evalCpp)
+importFrom("graphics", "hist", "par", "plot")
+importFrom("stats", "as.formula", "complete.cases", "cor", "cov",
+               "setNames", "terms.formula")

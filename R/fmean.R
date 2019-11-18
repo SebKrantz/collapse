@@ -1,11 +1,11 @@
-library(Rcpp)
-sourceCpp('src/fsum.cpp')
-sourceCpp('src/fmean.cpp')
-sourceCpp('src/fmeana.cpp')
-sourceCpp('src/fmeanl.cpp')
-sourceCpp('src/TRA.cpp')
-sourceCpp('src/TRAl.cpp')
-sourceCpp('src/TRAa.cpp')
+# library(Rcpp)
+# sourceCpp('src/fsum.cpp')
+# sourceCpp('src/fmean.cpp')
+# sourceCpp('src/fmeana.cpp')
+# sourceCpp('src/fmeanl.cpp')
+# sourceCpp('src/TRA.cpp')
+# sourceCpp('src/TRAl.cpp')
+# sourceCpp('src/TRAa.cpp')
 
 # Note: for principal innovations of this code see fsum.R !!
 

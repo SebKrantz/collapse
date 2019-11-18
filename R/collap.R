@@ -1,22 +1,11 @@
 # Helper functions:
-Crbindlist <- data.table:::Crbindlist
-Csetcolorder <- data.table:::Csetcolorder
-condsetn <- function(x, value, cond) {
-  if(cond) attr(x, "names") <- value
-  x
-}
-cols2log <- function(x, nam, cols) {
-  if(is.function(cols)) return(vapply(x, cols, TRUE)) else if(is.character(cols)) return(nam %in% cols) else {
-    r <- logical(length(x))
-    r[cols] <- TRUE
-    return(r)
-  }
-}
+# Crbindlist <- data.table:::Crbindlist
+# Csetcolorder <- data.table:::Csetcolorder
+
 # global macro
 .FAST_STAT_FUN <- c("fmean","fmedian","fmode","fsum","fprod","fsd","fvar",
                     "fmin","fmax","ffirst","flast","fNobs","fNunique",
                     "flag","flead","fdiff","fgrowth","fscale")
-
 
 # todo speed up: use internals of order ??
 collap <- function(X, by, FUN = fmean, catFUN = fmode, cols = NULL, custom = NULL,
@@ -138,9 +127,9 @@ collap <- function(X, by, FUN = fmean, catFUN = fmode, cols = NULL, custom = NUL
     } # fastest isung res list ?? or better combine at the end ??
     res <- agg(if(nul) `oldClass<-`(X[nu], "data.frame") else NULL, if(nnul) `oldClass<-`(X[nnu], "data.frame") else NULL) #colsubset(X, nu)
 
-    if(sort.col && widel) o <- order(c(if(!keep.by) NULL else numby,
-                                       if(nul) rep(nu,length(FUN)) else NULL,
-                                       if(nnul) rep(nnu,length(catFUN)) else NULL), method = "radix")
+    if(sort.col && widel) o <- sort.list(c(if(!keep.by) NULL else numby,
+                                           if(nul) rep(nu,length(FUN)) else NULL,
+                                           if(nnul) rep(nnu,length(catFUN)) else NULL), method = "radix")
 
   } else { # custom aggregation:
     if(give.names == "auto") give.names <- TRUE
@@ -160,7 +149,7 @@ collap <- function(X, by, FUN = fmean, catFUN = fmode, cols = NULL, custom = NUL
             BY.data.frame(X[custom[[i]]], by, namFUN[i], ..., use.g.names = FALSE)), namFUN, give.names)
     if(sort.col && widel) {
       o <- unlist(custom, use.names = FALSE)
-      o <- order(c(if(!keep.by) NULL else if(is.character(o)) namby else numby, o), method = "radix")
+      o <- sort.list(c(if(!keep.by) NULL else if(is.character(o)) namby else numby, o), method = "radix")
     }
   }
   if(widel) res <- unlist(unlist(res, FALSE), FALSE) else {
@@ -176,8 +165,8 @@ collap <- function(X, by, FUN = fmean, catFUN = fmode, cols = NULL, custom = NUL
               setAttributes(c(res[[1L]], e), ax) }))
       } else {
         if(multi.FUN.out != 4L) {
-          res <- if(!keep.by) .Call(Crbindlist, res, TRUE, TRUE, "Function") else
-                 .Call(Crbindlist, lapply(res[-1L], function(e) c(res[[1L]], e)), TRUE, TRUE, "Function")
+          res <- if(!keep.by) .Call(rbindlist, res, TRUE, TRUE, "Function") else # data.table:::Crbindlist
+                 .Call(rbindlist, lapply(res[-1L], function(e) c(res[[1L]], e)), TRUE, TRUE, "Function")
         } else {
           if(!(nul && nnul) || customl) stop("long_dupl is only meaningful for aggregations with both numeric and categorical data, and multiple functions used for only one of the two data types!")
           mFUN <- length(FUN) > 1L
@@ -187,14 +176,14 @@ collap <- function(X, by, FUN = fmean, catFUN = fmode, cols = NULL, custom = NUL
                             lapply(res[-nid], function(e) c(res[[nid]], e))
           } else res <- if(mFUN) lapply(res[-c(nid, 1L)], function(e) c(res[[1L]], e, res[[nid]])) else
                                  lapply(res[-c(nid, 1L)], function(e) c(res[[1L]], res[[nid]], e))
-          res <- .Call(Crbindlist, res, FALSE, FALSE, "Function")
+          res <- .Call(rbindlist, res, FALSE, FALSE, "Function")
         }
-        if(sort.col)  o <- order(c(0L, if(!keep.by) NULL else numby, nu, nnu), method = "radix")
+        if(sort.col)  o <- sort.list(c(0L, if(!keep.by) NULL else numby, nu, nnu), method = "radix")
       }
     } else message("multi.FUN.out options are only meaningful if multiple functions are used!")
   }
 
-  if(sort.col) .Call(Csetcolorder, res, o)
+  if(sort.col) .Call(setcolorder, res, o) # data.table:::Csetcolorder
   ax[["names"]] <- names(res)
   ax[["row.names"]] <- .set_row_names(length(res[[1L]]))
   return(setAttributes(res, ax))

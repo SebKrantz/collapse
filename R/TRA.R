@@ -1,7 +1,7 @@
-library(Rcpp)
-sourceCpp('src/TRA.cpp')
-sourceCpp('src/TRAl.cpp')
-sourceCpp('src/TRAa.cpp')
+# library(Rcpp)
+# sourceCpp('src/TRA.cpp')
+# sourceCpp('src/TRAl.cpp')
+# sourceCpp('src/TRAa.cpp')
 
 # sdfsdfsd
 # Note: ng is not supplied to TRACpp for easier stat functions, thus you need to check in R !!
@@ -54,33 +54,33 @@ TRA.data.frame <- function(x, STATS, FUN = "-", g = NULL, ...) {
     return(TRAlCpp(x,STATS,g[[2L]],TRAtoInt(FUN)))
   }
 }
-TRA.grouped_df <- function(x, STATS, FUN = "-", keep.group_keys = TRUE, ...) {
-  g <- GRP.grouped_df(x)
-  gn <- which(names(x) %in% g[[5L]])
-  if(g[[1L]] != nrow(STATS)) stop("number of groups must match nrow(STATS)")
-  if(length(gn) > 0L && length(STATS) != length(x)) {
-    ax <- attributes(x)
-    attributes(x) <- NULL
-    namst <- names(STATS) # Finish !! shoudl sweep out only the indicated column / and setcolorder afterwards ??
-    ginst <- namst %in% g[[5L]]
-    if(anyNA(mt <- match(namst, ax[["names"]]))) stop("the variable names of x and STATS must match")
-    nomt <- which(!(ax[["names"]] %in% namst))
-    if(!all(nomg <- nomatch %in% gn)) {
-      gn <- c(gn, nomatch[!nomg])
-      STATS <- unclass(STATS)[-match(g[[5L]], namst)]
-    }
-
-    if(any(ginst)) STATS <- unclass(STATS)[!ginst]
-
-    if(keep.group_keys) {
-      ax[["names"]] <- c(ax[["names"]][gn], ax[["names"]][-gn])
-      return(setAttributes(c(x[gn],TRAlCpp(x[-gn],STATS,g[[2L]],TRAtoInt(FUN))), ax))
-    } else {
-      ax[["names"]] <- ax[["names"]][-gn]
-      return(setAttributes(TRAlCpp(x[-gn],STATS,g[[2L]],TRAtoInt(FUN)), ax))
-    }
-  } else return(TRAlCpp(x,STATS,g[[2L]],TRAtoInt(FUN)))
-}
+# TRA.grouped_df <- function(x, STATS, FUN = "-", keep.group_keys = TRUE, ...) {
+#   g <- GRP.grouped_df(x)
+#   gn <- which(names(x) %in% g[[5L]])
+#   if(g[[1L]] != nrow(STATS)) stop("number of groups must match nrow(STATS)")
+#   if(length(gn) > 0L && length(STATS) != length(x)) {
+#     ax <- attributes(x)
+#     attributes(x) <- NULL
+#     namst <- names(STATS) # Finish !! shoudl sweep out only the indicated column / and setcolorder afterwards ??
+#     ginst <- namst %in% g[[5L]]
+#     if(anyNA(mt <- match(namst, ax[["names"]]))) stop("the variable names of x and STATS must match")
+#     nomt <- which(!(ax[["names"]] %in% namst))
+#     if(!all(nomg <- nomatch %in% gn)) {
+#       gn <- c(gn, nomatch[!nomg])
+#       STATS <- unclass(STATS)[-match(g[[5L]], namst)]
+#     }
+#
+#     if(any(ginst)) STATS <- unclass(STATS)[!ginst]
+#
+#     if(keep.group_keys) {
+#       ax[["names"]] <- c(ax[["names"]][gn], ax[["names"]][-gn])
+#       return(setAttributes(c(x[gn],TRAlCpp(x[-gn],STATS,g[[2L]],TRAtoInt(FUN))), ax))
+#     } else {
+#       ax[["names"]] <- ax[["names"]][-gn]
+#       return(setAttributes(TRAlCpp(x[-gn],STATS,g[[2L]],TRAtoInt(FUN)), ax))
+#     }
+#   } else return(TRAlCpp(x,STATS,g[[2L]],TRAtoInt(FUN)))
+# }
 
 
 # sourceCpp('R/C++/TRAset.cpp')

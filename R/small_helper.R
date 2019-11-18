@@ -1,5 +1,5 @@
-library(Rcpp)
-sourceCpp("C++/small_helper.cpp")
+# library(Rcpp)
+# sourceCpp("C++/small_helper.cpp")
 vlabels <- function(X) {
   if(is.atomic(X)) {
     res = attr(X, "label")
@@ -121,3 +121,14 @@ is.Date <- function(x) inherits(x, c("Date","POSIXlt","POSIXct"))
 NROW2 <- function(x, d) if(length(d)) d[1L] else length(x)
 NCOL2 <- function(d, ilv) if(ilv) d[2L] else 1L
 charorNULL <- function(x) if(is.character(x)) x else NULL
+condsetn <- function(x, value, cond) {
+  if(cond) attr(x, "names") <- value
+  x
+}
+cols2log <- function(x, nam, cols) {
+  if(is.function(cols)) return(vapply(x, cols, TRUE)) else if(is.character(cols)) return(nam %in% cols) else {
+    r <- logical(length(x))
+    r[cols] <- TRUE
+    return(r)
+  }
+}

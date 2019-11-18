@@ -2,30 +2,30 @@
 using namespace Rcpp;
 
 // [[Rcpp::export]]
-NumericVector fmeanCpp(const NumericVector& x, int ng = 0, const IntegerVector& g = 0, 
+NumericVector fmeanCpp(const NumericVector& x, int ng = 0, const IntegerVector& g = 0,
                        const SEXP& gs = R_NilValue, const SEXP& w = R_NilValue, bool narm = true) {
   int l = x.size();
-  
+
   if (Rf_isNull(w)) { // No weights !!
     if (ng == 0) {
       if(narm) {
         int j = l-1, n = 1; // 1 because for-loop starts from 2
-        long double sum = x[j]; 
-        while(std::isnan(sum) && j!=0) sum = x[--j]; 
+        long double sum = x[j];
+        while(std::isnan(sum) && j!=0) sum = x[--j];
         if(j != 0) for(int i = j; i--; ) {
           if(std::isnan(x[i])) continue;
           sum += x[i]; // Fastest ??
           ++n;
-        } 
+        }
         sum = sum/n;
         return NumericVector::create((double)sum);
       } else {
         long double sum = 0;
-        for(int i = 0; i != l; ++i) { 
+        for(int i = 0; i != l; ++i) {
           if(std::isnan(x[i])) {
-            sum = x[i]; 
+            sum = x[i];
             break;
-          } else { 
+          } else {
             sum += x[i];
           }
         }
@@ -37,11 +37,11 @@ NumericVector fmeanCpp(const NumericVector& x, int ng = 0, const IntegerVector& 
       if(narm) {
         NumericVector sum(ng, NA_REAL); // Other way ??
         IntegerVector n(ng, 1); // could also do no_init_vector and then add n[g[i]-1] = 1 in fir if condition... -> Nope, that is slower !!!
-        for(int i = l; i--; ) { 
+        for(int i = l; i--; ) {
           if(!std::isnan(x[i])) { // faster way to code this ??? -> Not Bad at all -> index for g[i]-1?? -> Nope, no noticeable improvement !!
             if(std::isnan(sum[g[i]-1])) sum[g[i]-1] = x[i];
             else {
-              sum[g[i]-1] += x[i]; 
+              sum[g[i]-1] += x[i];
               ++n[g[i]-1];
             }
           }
@@ -50,13 +50,13 @@ NumericVector fmeanCpp(const NumericVector& x, int ng = 0, const IntegerVector& 
         DUPLICATE_ATTRIB(sum, x);
         return sum;
       } else {
-        NumericVector sum(ng); // no_init_vector // good?? -> yes, but not initializing is numerically unstable.. 
+        NumericVector sum(ng); // no_init_vector // good?? -> yes, but not initializing is numerically unstable..
         int ngs = 0;
         if(Rf_isNull(gs)) {
           IntegerVector gsv(ng);
           if(gsv.size() != ng) stop("Vector of group-sizes must match number of groups");
-          for(int i = 0; i != l; ++i) { 
-            if(std::isnan(x[i])) { 
+          for(int i = 0; i != l; ++i) {
+            if(std::isnan(x[i])) {
               if(!std::isnan(sum[g[i]-1])) {
                 sum[g[i]-1] = x[i];
                 ++ngs;
@@ -67,12 +67,12 @@ NumericVector fmeanCpp(const NumericVector& x, int ng = 0, const IntegerVector& 
               ++gsv[g[i]-1];
             }
           }
-          for(int i = ng; i--; ) sum[i] /= gsv[i]; // Adding n takes twice as long, 
+          for(int i = ng; i--; ) sum[i] /= gsv[i]; // Adding n takes twice as long,
         } else {
           IntegerVector gsv = gs;
           if(gsv.size() != ng) stop("Vector of group-sizes must match number of groups");
-          for(int i = 0; i != l; ++i) { 
-            if(std::isnan(x[i])) { 
+          for(int i = 0; i != l; ++i) {
+            if(std::isnan(x[i])) {
               if(!std::isnan(sum[g[i]-1])) {
                 sum[g[i]-1] = x[i];
                 ++ngs;
@@ -94,22 +94,22 @@ NumericVector fmeanCpp(const NumericVector& x, int ng = 0, const IntegerVector& 
     if (ng == 0) {
       if(narm) {
         int j = l-1; // 1 because for-loop starts from 2
-        while((std::isnan(x[j]) || std::isnan(wg[j])) && j!=0) --j; // This does not make a difference in performance but is more parsimonious. 
-        long double sum = x[j]*wg[j], sumw = wg[j]; 
+        while((std::isnan(x[j]) || std::isnan(wg[j])) && j!=0) --j; // This does not make a difference in performance but is more parsimonious.
+        long double sum = x[j]*wg[j], sumw = wg[j];
         if(j != 0) for(int i = j; i--; ) {
           if(std::isnan(x[i]) || std::isnan(wg[i])) continue;
           sum += x[i]*wg[i]; // Fastest ??
           sumw += wg[i];
-        } 
+        }
         sum = sum/sumw;
         return NumericVector::create((double)sum);
       } else {
         long double sum = 0, sumw = 0;
-        for(int i = 0; i != l; ++i) { 
+        for(int i = 0; i != l; ++i) {
           if(std::isnan(x[i]) || std::isnan(wg[i])) { // good, check both ?? -> yes!!
-            sum = x[i]+wg[i]; 
+            sum = x[i]+wg[i];
             break;
-          } else { 
+          } else {
             sum += x[i]*wg[i];
             sumw += wg[i];
           }
@@ -122,13 +122,13 @@ NumericVector fmeanCpp(const NumericVector& x, int ng = 0, const IntegerVector& 
       if(narm) {
         NumericVector sum(ng, NA_REAL); // Other way ?? -> Nope, this is as good as it gets !!
         NumericVector sumw = no_init_vector(ng); // what if only NA ?? -> Works !! for some reason no problem !!, and faster !!
-        for(int i = l; i--; ) { 
+        for(int i = l; i--; ) {
           if(std::isnan(x[i]) || std::isnan(wg[i])) continue; // faster way to code this ??? -> Not Bad at all -> index for g[i]-1?? -> Nope, no noticeable improvement !!
           if(std::isnan(sum[g[i]-1])) {
             sum[g[i]-1] = x[i]*wg[i];
             sumw[g[i]-1] = wg[i];
           } else {
-            sum[g[i]-1] += x[i]*wg[i]; 
+            sum[g[i]-1] += x[i]*wg[i];
             sumw[g[i]-1] += wg[i];
           }
         }
@@ -138,8 +138,8 @@ NumericVector fmeanCpp(const NumericVector& x, int ng = 0, const IntegerVector& 
       } else {
         NumericVector sum(ng), sumw(ng); // good?? -> yes !! //  = no_init_vector// Not initializing numerically unstable !!
         int ngs = 0;
-        for(int i = 0; i != l; ++i) { 
-          if(std::isnan(x[i]) || std::isnan(wg[i])) { 
+        for(int i = 0; i != l; ++i) {
+          if(std::isnan(x[i]) || std::isnan(wg[i])) {
             if(!std::isnan(sum[g[i]-1])) {
               sum[g[i]-1] = sumw[g[i]-1] = x[i]+wg[i]; // or NA_REAL ?? -> Nope, good !!
               ++ngs;
@@ -150,7 +150,7 @@ NumericVector fmeanCpp(const NumericVector& x, int ng = 0, const IntegerVector& 
             sumw[g[i]-1] += wg[i];
           }
         }
-        sum = sum/sumw; 
+        sum = sum/sumw;
         DUPLICATE_ATTRIB(sum, x);
         return sum;
       }
@@ -160,438 +160,472 @@ NumericVector fmeanCpp(const NumericVector& x, int ng = 0, const IntegerVector& 
 
 
 
-// // Final version without weights
-// // [[Rcpp::export]]
-// NumericVector fgmeanCpp(NumericVector x, int ng = 0, IntegerVector g = 0, IntegerVector gs = 0, bool narm = true) {
-//   int l = x.size();
-//   if (ng == 0) {
-//     if(narm) {
-//       int j = l-1, n = 1; // 1 because for-loop starts from 2
-//       double sum = x[j]; 
-//       while(std::isnan(sum) && j!=0) sum = x[--j]; 
-//       if(j != 0) for(int i = j; i--; ) {
-//         if(std::isnan(x[i])) continue;
-//         sum += x[i]; // Fastest ??
-//         ++n;
-//       } 
-//       return NumericVector::create(sum/n);
-//     } else {
-//       double sum = 0;
-//       for(int i = 0; i != l; ++i) { 
-//         if(std::isnan(x[i])) {
-//           sum = x[i]; 
-//           break;
-//         } else { 
-//           sum += x[i];
-//         }
-//       }
-//       return NumericVector::create(sum/l);
-//     }
-//   } else { // with groups
-//     if(g.size() != l) stop("length(g) must match nrow(X)");
-//     if(narm) {
-//       NumericVector sum(ng, NA_REAL); // Other way ??
-//       IntegerVector n(ng, 1); // could also do no_init_vector and then add n[g[i]-1] = 1 in fir if condition... -> Nope, that is slower !!!
-//       for(int i = l; i--; ) { 
-//         if(!std::isnan(x[i])) { // faster way to code this ??? -> Not Bad at all -> index for g[i]-1?? -> Nope, no noticeable improvement !!
-//           if(std::isnan(sum[g[i]-1])) sum[g[i]-1] = x[i];
-//           else {
-//             sum[g[i]-1] += x[i]; 
-//             ++n[g[i]-1];
-//           }
-//         }
-//       }
-//       for(int i = ng; i--; ) sum[i] /= n[i];
-//       return sum;
-//     } else {
-//       NumericVector sum(ng); // good?? -> yes !!
-//       int ngs = 0;
-//       for(int i = 0; i != l; ++i) { 
-//         if(std::isnan(x[i])) { 
-//           if(!std::isnan(sum[g[i]-1])) {
-//             sum[g[i]-1] = x[i];
-//             ++ngs;
-//             if(ngs == ng) break;
-//           }
-//         } else {
-//           sum[g[i]-1] += x[i];
-//         }
-//       }
-//       for(int i = ng; i--; ) sum[i] /= gs[i]; // This is good because adding n takes twice as long, if factor, supply gs = tabulate(f,nlevels(f))
-//       return sum;
-//     }
-//   }
-// }
-
-// // Previous version -> non-efficient algorithms and internal return 
-// // [[Rcpp::export]]
-// NumericVector fgmeancpp(NumericVector x, int ng = 0, IntegerVector g = 0, IntegerVector gs = 0, 
-//                         bool narm = true, int ret = 0, bool fill = false) {
-//   int l = x.size();
-//   if (ng == 0) {
-//     double sum = 0;
-//     if(narm) {
-//       int n = 0;
-//         for(int i = l; i--; ) {
-//           if(std::isnan(x[i])) continue; 
-//           sum += x[i];
-//           n++;
-//         }
-//         sum /= n;
-//         if(ret == 1) { // possibility of reducing the number of passes??
-//           if(fill) return rep(sum, l);
-//           else {
-//             NumericVector out(l, sum); 
-//             for(int i = l; i--; ) if(std::isnan(x[i])) out[i] = x[i]; // 9.546032
-//             return out;
-//           }
-//         } else if (ret == 2) {
-//           if(fill) return x - sum; 
-//           else {
-//             NumericVector out(l);
-//             for(int i = l; i--; ) { 
-//               if(std::isnan(x[i])) out[i] = x[i]; // 9.266529
-//               else out[i] = x[i] - sum; 
-//             }
-//             return out;
-//           }
-//         } else return NumericVector::create(sum);
-//     } else {
-//       for(int i = l; i--; ) sum += x[i];
-//       sum /= l;
-//       if(ret == 1) { // possibility of reducing the number of passes??
-//         return rep(sum, l);
-//       } else if (ret == 2) {
-//         return x - sum; // x // x[i] -= sum[g[i]-1];
-//       } else return NumericVector::create(sum);
-//     }
-//   } else { // with groups
-//     NumericVector sum(gs);
-//     if(narm) {
-//       IntegerVector n(gs);
-//         for(int i = l; i--; ) {
-//           if(std::isnan(x[i])) continue; 
-//           sum[g[i]-1] += x[i];
-//           n[g[i]-1]++;
-//         }
-//         for(int i = ng; i--; ) sum[i] /= n[i];
-//         if(ret == 1) { // possibility of reducing the number of passes??
-//           NumericVector out(l);
-//           if(fill) {
-//             for(int i = l; i--; ) out[i] = sum[g[i]-1];
-//             return out;
-//           } else {
-//             for(int i = l; i--; ) {
-//               if(std::isnan(x[i])) out[i] = x[i]; // 18.1844
-//               else out[i] = sum[g[i]-1]; 
-//             }
-//             return out; 
-//           }
-//         } else if (ret == 2) {
-//           NumericVector out(l);
-//           if(fill) {
-//             for(int i = l; i--; ) out[i] = x[i] - sum[g[i]-1];
-//             return out;
-//           } else {
-//             for(int i = l; i--; ) {
-//               if(std::isnan(x[i])) out[i] = x[i]; 
-//               else out[i] = x[i] - sum[g[i]-1]; 
-//             }
-//             return out; 
-//           }
-//         } else return sum; 
-//     } else {
-//       if(gs.size() == 1) {
-//         IntegerVector n(gs);
-//         for(int i = l; i--; ) {
-//           sum[g[i]-1] += x[i];
-//           n[g[i]-1]++;
-//         }
-//         for(int i = ng; i--; ) sum[i] /= n[i];
-//       } else {
-//         for(int i = l; i--; ) sum[g[i]-1] += x[i];
-//         for(int i = ng; i--; ) sum[i] /= gs[i];
-//       }
-//       if(ret == 1) { // possibility of reducing the number of passes??
-//         NumericVector out(l);
-//         for(int i = l; i--; ) out[i] = sum[g[i]-1];
-//         return out; 
-//       } else if (ret == 2) {
-//         NumericVector out(l);
-//         for(int i = l; i--; ) out[i] = x[i] - sum[g[i]-1]; 
-//         return out; 
-//       } else return sum; 
-//     }
-//   }
-// }
 
 
+// [[Rcpp::export]]
+SEXP fmeanmCpp(const NumericMatrix& x, int ng = 0, const IntegerVector& g = 0, const SEXP& gs = R_NilValue,
+               const SEXP& w = R_NilValue, bool narm = true, bool drop = true) {
+  int l = x.nrow(), col = x.ncol();
+
+  if(Rf_isNull(w)) { // No weights !!
+    if(ng == 0) {
+      NumericVector sum = no_init_vector(col); //  Initialize faster -> Nope !!!
+      if(narm) {
+        for(int j = col; j--; ) { // Instead Am(j,_) you can use Am.row(j).
+          NumericMatrix::ConstColumn column = x( _ , j);
+          int k = l-1, nj = 1;
+          long double sumj = column[k];
+          while(std::isnan(sumj) && k!=0) sumj = column[--k];
+          if(k != 0) for(int i = k; i--; ) {
+            if(std::isnan(column[i])) continue;
+            sumj += column[i];
+            ++nj;
+          }
+          sumj = sumj/nj;
+          sum[j] = (double)sumj;
+        }
+      } else {
+        for(int j = col; j--; ) {
+          NumericMatrix::ConstColumn column = x( _ , j);
+          long double sumj = 0;
+          for(int i = 0; i != l; ++i) {
+            if(std::isnan(column[i])) {
+              sumj = column[i];
+              break;
+            } else {
+              sumj += column[i];
+            }
+          }
+          sumj = sumj/l;
+          sum[j] = (double)sumj;
+        }
+      }
+      if(drop) sum.attr("names") = colnames(x); // Slight speed loss 31 to 34 milliseconds on WDIM, but doing it in R not faster !!
+      else {
+        sum.attr("dim") = Dimension(1, col);
+        // sum.attr("dimnames") = List::create(R_NilValue,colnames(x));
+        colnames(sum) = colnames(x); // NEW! faster than R ?? -> yes, good !!!
+      }
+      return sum;
+    } else { // with groups
+      if(g.size() != l) stop("length(g) must match nrow(X)");
+      if(narm) {
+        NumericMatrix sum = no_init_matrix(ng, col);
+        std::fill(sum.begin(), sum.end(), NA_REAL); // fastest ?? or create vector and declare as matrix ??
+        // NumericVector sumt(ng*col, NA_REAL); // A tiny speed gain, but not much !! Same memory efficiency !!
+        // sumt.attr("dim") = Dimension(ng, col);
+        // NumericMatrix sum = as<NumericMatrix>(sumt);
+        for(int j = col; j--; ) {
+          NumericMatrix::ConstColumn column = x( _ , j);
+          NumericMatrix::Column sumj = sum( _ , j);
+          int nj[ng]; // Numerically stable and faster and more memory efficient than before !!
+          for(int i = l; i--; ) {
+            if(!std::isnan(column[i])) {
+              if(std::isnan(sumj[g[i]-1])) {
+                sumj[g[i]-1] = column[i];
+                nj[g[i]-1] = 1;
+              } else {
+                sumj[g[i]-1] += column[i];
+                ++nj[g[i]-1];
+              }
+            }
+          }
+          for(int i = ng; i--; ) sumj[i] /= nj[i];
+        }
+        colnames(sum) = colnames(x);  // extremely efficient !!
+        return sum;
+      } else {
+        NumericMatrix sum(ng, col); // no init numerically unstable !!!
+        if(Rf_isNull(gs)) {
+          int gsv[ng], memsize = sizeof(int)*ng;
+          for(int j = col; j--; ) {
+            NumericMatrix::ConstColumn column = x( _ , j);
+            NumericMatrix::Column sumj = sum( _ , j);
+            memset(gsv, 0, memsize); // still a tiny bit faster than std::vector, but both have the same memory efficiency !!
+            // std::vector<int> gsv(ng);
+            int ngs = 0;
+            for(int i = 0; i != l; ++i) {
+              if(std::isnan(column[i])) {
+                if(!std::isnan(sumj[g[i]-1])) {
+                  sumj[g[i]-1] = column[i];
+                  ++ngs;
+                  if(ngs == ng) break;
+                }
+              } else {
+                sumj[g[i]-1] += column[i];
+                ++gsv[g[i]-1];
+              }
+            }
+            for(int i = ng; i--; ) sumj[i] /= gsv[i];
+          }
+        } else {
+          IntegerVector gsv = gs;
+          if(gsv.size() != ng) stop("Vector of group-sizes must match number of groups");
+          for(int j = col; j--; ) {
+            NumericMatrix::ConstColumn column = x( _ , j);
+            NumericMatrix::Column sumj = sum( _ , j);
+            int ngs = 0;
+            for(int i = 0; i != l; ++i) {
+              if(std::isnan(column[i])) {
+                if(!std::isnan(sumj[g[i]-1])) {
+                  sumj[g[i]-1] = column[i];
+                  ++ngs;
+                  if(ngs == ng) break;
+                }
+              } else {
+                sumj[g[i]-1] += column[i];
+              }
+            }
+            for(int i = ng; i--; ) sumj[i] /= gsv[i];
+          }
+        }
+        colnames(sum) = colnames(x);  // extremely efficient !!
+        return sum;
+      }
+    }
+  } else { // With weights
+    NumericVector wg = w;
+    if(l != wg.size()) stop("length(w) must match nrow(X)");
+    if(ng == 0) {
+      NumericVector sum = no_init_vector(col); // Initialize faster -> Nope !!!
+      if(narm) {
+        for(int j = col; j--; ) { // Instead Am(j,_) you can use Am.row(j).
+          NumericMatrix::ConstColumn column = x( _ , j);
+          int k = l-1;
+          while((std::isnan(column[k]) || std::isnan(wg[k])) && k!=0) --k;
+          long double sumj = column[k]*wg[k], sumwj = wg[k];
+          if(k != 0) for(int i = k; i--; ) {
+            if(std::isnan(column[i]) || std::isnan(wg[i])) continue;
+            sumj += column[i]*wg[i];
+            sumwj += wg[i];
+          }
+          sumj = sumj/sumwj;
+          sum[j] = (double)sumj;
+        }
+      } else {
+        for(int j = col; j--; ) {
+          NumericMatrix::ConstColumn column = x( _ , j);
+          long double sumj = 0, sumwj = 0;
+          for(int i = 0; i != l; ++i) {
+            if(std::isnan(column[i]) || std::isnan(wg[i])) {
+              sumj = column[i]+wg[i];
+              break;
+            } else {
+              sumj += column[i]*wg[i];
+              sumwj += wg[i];
+            }
+          }
+          sumj = sumj/sumwj;
+          sum[j] = (double)sumj;
+        }
+      }
+      if(drop) sum.attr("names") = colnames(x); // Slight speed loss 31 to 34 milliseconds on WDIM, but doing it in R not faster !!
+      else {
+        sum.attr("dim") = Dimension(1, col);
+        // sum.attr("dimnames") = List::create(R_NilValue,colnames(x));
+        colnames(sum) = colnames(x); // NEW! faster than R ?? -> yes, good !!!
+      }
+      return sum;
+    } else { // with groups
+      if(g.size() != l) stop("length(g) must match nrow(X)");
+      if(narm) {
+        NumericMatrix sum = no_init_matrix(ng, col);
+        std::fill(sum.begin(), sum.end(), NA_REAL);
+        // NumericMatrix sumw = no_init_matrix(ng, col); // Numerically stable ??????? -> Yes !!
+        for(int j = col; j--; ) {
+          NumericMatrix::ConstColumn column = x( _ , j);
+          NumericMatrix::Column sumj = sum( _ , j);
+          // NumericMatrix::Column sumwj = sumw( _ , j);
+          double sumwj[ng]; // Numerically stable, Slightly faster and a lot more memory efficient!! (but long double is a lot slower)
+          for(int i = l; i--; ) {
+            if(std::isnan(column[i]) || std::isnan(wg[i])) continue;
+            if(std::isnan(sumj[g[i]-1])) {
+              sumj[g[i]-1] = column[i]*wg[i];
+              sumwj[g[i]-1] = wg[i];
+            } else {
+              sumj[g[i]-1] += column[i]*wg[i];
+              sumwj[g[i]-1] += wg[i];
+            }
+          }
+          for(int i = ng; i--; ) sumj[i] /= sumwj[i];
+          // sumj = sumj/sumwj;
+        }
+        colnames(sum) = colnames(x);  // extremely efficient !!
+        return sum;
+      } else {
+        NumericMatrix sum(ng, col); // no init numerically unstable !!!
+        // NumericMatrix sumw(ng, col); // also here ?? -> Nope
+        double sumwj[ng]; // Also a bit faster and a lot more memory efficient !!
+        int memsize = sizeof(double)*ng;
+        for(int j = col; j--; ) {
+          NumericMatrix::ConstColumn column = x( _ , j);
+          NumericMatrix::Column sumj = sum( _ , j);
+          // NumericMatrix::Column sumwj = sumw( _ , j);
+          memset(sumwj, 0, memsize);
+          int ngs = 0;
+          for(int i = 0; i != l; ++i) {
+            if(std::isnan(column[i]) || std::isnan(wg[i])) {
+              if(!std::isnan(sumj[g[i]-1])) {
+                sumj[g[i]-1] = sumwj[g[i]-1] = column[i]+wg[i]; // or NA_REAL ?? -> Nope, good !!
+                ++ngs;
+                if(ngs == ng) break;
+              }
+            } else {
+              sumj[g[i]-1] += column[i]*wg[i];
+              sumwj[g[i]-1] += wg[i];
+            }
+          }
+          for(int i = ng; i--; ) sumj[i] /= sumwj[i];
+          // sumj = sumj/sumwj;
+        }
+        colnames(sum) = colnames(x);  // extremely efficient !!
+        return sum;
+      }
+    }
+  }
+}
 
 
-// Version before reducing code::
-// #include <Rcpp.h>
-// using namespace Rcpp;
-// 
-// // [[Rcpp::export]]
-// NumericVector fgmeancpp(NumericVector x, int ng = 0, IntegerVector g = 0, IntegerVector gs = 0, 
-//                         bool narm = true, int ret = 0, bool fill = false) {
-//   int l = x.size();
-//   if (ng == 0) {
-//     double sum = 0;
-//     if(narm) {
-//       int n = 0;
-//       if(fill) {
-//         for(int i = l; i--; ) {
-//           if(std::isnan(x[i])) continue; // what about NA's with ret = 1 or 2
-//           sum += x[i];
-//           n++;
-//         }
-//         sum /= n;
-//         if(ret == 1) { // possibility of reducing the number of passes??
-//           return rep(sum, l);
-//         } else if (ret == 2) {
-//           return x - sum; // x // x[i] -= sum[g[i]-1];
-//         } else return NumericVector::create(sum);
-//       } else {
-//        // LogicalVector isnan(l); // This is taking time -> Allocating space !!!
-//         for(int i = l; i--; ) {
-//           // isnan[i] = std::isnan(x[i]); // 4.944284
-//           // if(isnan[i]) continue; // what about NA's with ret = 1 or 2
-//           if(std::isnan(x[i])) continue; // 2.368566
-//           sum += x[i];
-//           n++;
-//         }
-//         sum /= n;
-//         if(ret == 1) { // possibility of reducing the number of passes??
-//           NumericVector out(l, sum); 
-//           // for(int i = l; i--; ) if(isnan[i]) out[i] = x[i]; // 11.97013  // faster way?? vector subsetting??
-//           for(int i = l; i--; ) if(std::isnan(x[i])) out[i] = x[i]; // 9.546032
-//           return out;
-//         } else if (ret == 2) {
-//           NumericVector out(l);
-//           for(int i = l; i--; ) { 
-//             // if(isnan[i]) out[i] = x[i]; // 11.85642  // faster way?? vector subsetting??
-//             if(std::isnan(x[i])) out[i] = x[i]; // 9.266529
-//             else out[i] = x[i] - sum; 
-//           }
-//           return out;
-//         } else return NumericVector::create(sum);
-//       }
-//     } else {
-//       for(int i = l; i--; ) sum += x[i];
-//       sum /= l;
-//       if(ret == 1) { // possibility of reducing the number of passes??
-//         return rep(sum, l);
-//       } else if (ret == 2) {
-//         return x - sum; // x // x[i] -= sum[g[i]-1];
-//       } else return NumericVector::create(sum);
-//     }
-//   } else { // with groups
-//     NumericVector sum(gs);
-//     if(narm) {
-//       IntegerVector n(gs);
-//       if(fill) {
-//         for(int i = l; i--; ) {
-//           if(std::isnan(x[i])) continue; 
-//           sum[g[i]-1] += x[i];
-//           n[g[i]-1]++;
-//         }
-//         for(int i = ng; i--; ) sum[i] /= n[i];
-//         if(ret == 1) { // possibility of reducing the number of passes??
-//           NumericVector out(l);
-//           for(int i = l; i--; ) out[i] = sum[g[i]-1];
-//           return out; // return sum[g-1];
-//         } else if (ret == 2) {
-//           NumericVector out(l);
-//           for(int i = l; i--; )  out[i] = x[i] - sum[g[i]-1]; // x[i] -= sum[g[i]-1];
-//           return out; // x
-//         } else return sum; 
-//       } else {
-//         // LogicalVector isnan(l);
-//         for(int i = l; i--; ) {
-//           // isnan[i] = std::isnan(x[i]); // 11.79592
-//           // if(isnan[i]) continue;
-//           if(std::isnan(x[i])) continue; // 8.242974
-//           sum[g[i]-1] += x[i];
-//           n[g[i]-1]++;
-//         }
-//         for(int i = ng; i--; ) sum[i] /= n[i];
-//         if(ret == 1) { // possibility of reducing the number of passes??
-//           NumericVector out(l);
-//           for(int i = l; i--; ) {
-//             // if(isnan[i]) out[i] = x[i]; // 21.71893 // faster way?? vector subsetting??
-//             if(std::isnan(x[i])) out[i] = x[i]; // 18.1844
-//             else out[i] = sum[g[i]-1]; 
-//           }
-//           return out; // return sum[g-1];
-//         } else if (ret == 2) {
-//           NumericVector out(l);
-//           for(int i = l; i--; ) {
-//             // if(isnan[i]) out[i] = x[i]; // 21.61112  // faster way?? vector subsetting??
-//             if(std::isnan(x[i])) out[i] = x[i]; // 18.1551
-//             else out[i] = x[i] - sum[g[i]-1]; 
-//           }
-//           return out; // return sum[g-1];
-//         } else return sum; 
-//       }
-//     } else {
-//      if(gs.size() == 1) {
-//       IntegerVector n(gs);
-//       for(int i = l; i--; ) {
-//         sum[g[i]-1] += x[i];
-//         n[g[i]-1]++;
-//       }
-//       for(int i = ng; i--; ) sum[i] /= n[i];
-//      } else {
-//        for(int i = l; i--; ) sum[g[i]-1] += x[i];
-//        for(int i = ng; i--; ) sum[i] /= gs[i];
-//      }
-//      if(ret == 1) { // possibility of reducing the number of passes??
-//        NumericVector out(l);
-//        for(int i = l; i--; ) out[i] = sum[g[i]-1];
-//        return out; // return sum[g-1]; this is slower!!
-//      } else if (ret == 2) {
-//        NumericVector out(l);
-//        for(int i = l; i--; ) out[i] = x[i] - sum[g[i]-1]; // x[i] -= sum[g[i]-1];
-//        return out; // x
-//      } else return sum; 
-//    }
-//   }
-// }
 
-// // [[Rcpp::plugins(cpp11)]]
-// #include <numeric>
-// #include <Rcpp.h>
-// using namespace Rcpp;
 
-// Old version before introducing some efficient vectorizations:
-// // [[Rcpp::export]]
-// NumericVector fgmeancpp(NumericVector x, int ng = 0, IntegerVector g = 0, IntegerVector gs = 0, bool narm = true, int ret = 0, bool fill = false) {
-//   int l = x.size();
-//   if (ng == 0) {
-//     double sum = 0;
-//     if(narm) {
-//       int n = 0;
-//       if(fill) {
-//         for(int i = l; i--; ) {
-//           if(ISNAN(x[i])) continue; // what about NA's with ret = 1 or 2
-//           sum += x[i];
-//           n++;
-//         }
-//         sum /= n;
-//         if(ret == 1) { // possibility of reducing the number of passes??
-//           NumericVector out(l);
-//           for(int i = l; i--; ) out[i] = sum;
-//           return out;
-//         } else if (ret == 2) {
-//           NumericVector out(l);
-//           for(int i = l; i--; )  out[i] = x[i] - sum; // x[i] -= sum[g[i]-1];
-//           return out; // x
-//         } else return sum;
-//       } else {
-//         LogicalVector isnan(l);
-//         for(int i = l; i--; ) {
-//           isnan[i] = ISNAN(x[i]);
-//           if(isnan[i]) continue; // what about NA's with ret = 1 or 2
-//           sum += x[i];
-//           n++;
-//         }
-//         sum /= n;
-//         if(ret == 1) { // possibility of reducing the number of passes??
-//           NumericVector out(l);
-//           for(int i = l; i--; ) {
-//             if(isnan[i]) out[i] = x[i];  // faster way?? vector subsetting??
-//             else out[i] = sum; 
-//           }
-//           return out;
-//         } else if (ret == 2) {
-//           NumericVector out(l);
-//           for(int i = l; i--; ) {
-//             if(isnan[i]) out[i] = x[i];  // faster way?? vector subsetting??
-//             else out[i] = x[i] - sum; 
-//           }
-//           return out;
-//         } else return sum;
-//       }
-//     } else {
-//       for(int i = l; i--; ) sum += x[i];
-//       sum /= l;
-//       if(ret == 1) { // possibility of reducing the number of passes??
-//         NumericVector out(l);
-//         for(int i = l; i--; ) out[i] = sum;
-//         return out;
-//       } else if (ret == 2) {
-//         NumericVector out(l);
-//         for(int i = l; i--; )  out[i] = x[i] - sum; // x[i] -= sum[g[i]-1];
-//         return out; // x
-//       } else return sum;
-//     }
-//   } else { // with groups
-//     NumericVector sum(gs);
-//     if(narm) {
-//       IntegerVector n(gs);
-//       if(fill) {
-//         for(int i = l; i--; ) {
-//           if(ISNAN(x[i])) continue; 
-//           sum[g[i]-1] += x[i];
-//           n[g[i]-1]++;
-//         }
-//         for(int i = ng; i--; ) sum[i] /= n[i];
-//         if(ret == 1) { // possibility of reducing the number of passes??
-//           NumericVector out(l);
-//           for(int i = l; i--; ) out[i] = sum[g[i]-1];
-//           return out; // return sum[g-1]; // This is slower !!
-//         } else if (ret == 2) {
-//           NumericVector out(l);
-//           for(int i = l; i--; )  out[i] = x[i] - sum[g[i]-1]; // x[i] -= sum[g[i]-1];
-//           return out; // x
-//         } else return sum; 
-//       } else {
-//         LogicalVector isnan(l);
-//         for(int i = l; i--; ) {
-//           isnan[i] = ISNAN(x[i]);
-//           if(isnan[i]) continue; 
-//           sum[g[i]-1] += x[i];
-//           n[g[i]-1]++;
-//         }
-//         for(int i = ng; i--; ) sum[i] /= n[i];
-//         if(ret == 1) { // possibility of reducing the number of passes??
-//           NumericVector out(l);
-//           for(int i = l; i--; ) {
-//             if(isnan[i]) out[i] = x[i];  // faster way?? vector subsetting??
-//             else out[i] = sum[g[i]-1]; 
-//           }
-//           return out; // return sum[g-1];
-//         } else if (ret == 2) {
-//           NumericVector out(l);
-//           for(int i = l; i--; ) {
-//             if(isnan[i]) out[i] = x[i];  // faster way?? vector subsetting??
-//             else out[i] = x[i] - sum[g[i]-1]; 
-//           }
-//           return out; // return sum[g-1];
-//         } else return sum; 
-//       }
-//     } else {
-//       if(gs.size() == 1) {
-//         IntegerVector n(gs);
-//         for(int i = l; i--; ) {
-//           sum[g[i]-1] += x[i];
-//           n[g[i]-1]++;
-//         }
-//         for(int i = ng; i--; ) sum[i] /= n[i];
-//       } else {
-//         for(int i = l; i--; ) sum[g[i]-1] += x[i];
-//         for(int i = ng; i--; ) sum[i] /= gs[i];
-//       }
-//       if(ret == 1) { // possibility of reducing the number of passes??
-//         NumericVector out(l);
-//         for(int i = l; i--; ) out[i] = sum[g[i]-1];
-//         return out; // return sum[g-1];
-//       } else if (ret == 2) {
-//         NumericVector out(l);
-//         for(int i = l; i--; )  out[i] = x[i] - sum[g[i]-1]; // x[i] -= sum[g[i]-1];
-//         return out; // x
-//       } else return sum; 
-//     }
-//   }
-// }
+
+// [[Rcpp::export]]
+SEXP fmeanlCpp(const List& x, int ng = 0, const IntegerVector& g = 0, const SEXP& gs = R_NilValue,
+               const SEXP& w = R_NilValue, bool narm = true, bool drop = true) {
+  int l = x.size();
+
+  if(Rf_isNull(w)) { // No weights !!
+    if(ng == 0) {
+      NumericVector sum(l); // not initializing not faster WIth NWDI (35 instead of 32 milliseconds)
+      if(narm) {
+        for(int j = l; j--; ) {
+          NumericVector column = x[j];
+          int k = column.size()-1, ni = 1;
+          long double sumi = column[k]; // long double gives 45 instead of 35 milliseconds !!!
+          while(std::isnan(sumi) && k!=0) sumi = column[--k];
+          if(k != 0) for(int i = k; i--; ) {
+            if(std::isnan(column[i])) continue;
+            sumi += column[i];
+            ++ni;
+          }
+          sumi = sumi/ni;
+          sum[j] = (double)sumi;
+        }
+      } else {
+        for(int j = l; j--; ) {
+          NumericVector column = x[j];
+          long double sumi = 0;
+          int row = column.size();
+          for(int i = 0; i != row; ++i) {
+            if(std::isnan(column[i])) {
+              sumi = column[i];
+              break;
+            } else {
+              sumi += column[i];
+            }
+          }
+          sumi = sumi/row;
+          sum[j] = (double)sumi;
+        }
+      }
+      if(drop) {
+        sum.attr("names") = x.attr("names");
+        return sum;
+      } else {
+        List out(l);
+        for(int j = l; j--; ) {
+          out[j] = sum[j];
+          SHALLOW_DUPLICATE_ATTRIB(out[j], x[j]);
+        }
+        DUPLICATE_ATTRIB(out, x);
+        out.attr("row.names") = 1;
+        return out;
+      }
+    } else { // With groups !!
+      List sum(l);
+      int gss = g.size();
+      if(narm) {
+        for(int j = l; j--; ) {
+          NumericVector column = x[j];
+          if(gss != column.size()) stop("length(g) must match nrow(X)");
+          NumericVector sumj(ng, NA_REAL);
+          // IntegerVector nj(ng, 1); // faster than no_init_vector ?? -> good, cannot divide by interger 0!!, also else numerically unstable and no speed loss !!
+          std::vector<int>  nj(ng, 1); // better memory allocation, and nearly same speed as integer array -> doesn't work because sets all byte to 1 -> https://stackoverflow.com/questions/14761015/memset-an-array-to-1
+          for(int i = gss; i--; ) {
+            if(!std::isnan(column[i])) { // faster way to code this ??? -> Not Bad at all, 54.. millisec for WDIM
+              if(std::isnan(sumj[g[i]-1])) sumj[g[i]-1] = column[i];
+              else {
+                sumj[g[i]-1] += column[i];
+                ++nj[g[i]-1];
+              }
+            }
+          }
+          for(int i = ng; i--; ) sumj[i] /= nj[i];
+          SHALLOW_DUPLICATE_ATTRIB(sumj, column);
+          sum[j] = sumj;
+        }
+      } else {
+        if(Rf_isNull(gs)) {
+          int gsv[ng], memsize = sizeof(int)*ng;
+          for(int j = l; j--; ) {
+            NumericVector column = x[j];
+            if(gss != column.size()) stop("length(g) must match nrow(X)");
+            NumericVector sumj(ng); //  = no_init_vector //  Not initializing seems to be numerically unstable !!!!
+            memset(gsv, 0, memsize);
+            int ngs = 0;
+            for(int i = 0; i != gss; ++i) {
+              if(std::isnan(column[i])) {
+                if(!std::isnan(sumj[g[i]-1])) {
+                  sumj[g[i]-1] = column[i];
+                  ++ngs;
+                  if(ngs == ng) break;
+                }
+              } else {
+                sumj[g[i]-1] += column[i];
+                ++gsv[g[i]-1];
+              }
+            }
+            for(int i = ng; i--; ) sumj[i] /= gsv[i];
+            SHALLOW_DUPLICATE_ATTRIB(sumj, column);
+            sum[j] = sumj;
+          }
+        } else {
+          IntegerVector gsv = gs;
+          if(gsv.size() != ng) stop("Vector of group-sizes must match number of groups");
+          for(int j = l; j--; ) {
+            NumericVector column = x[j];
+            if(gss != column.size()) stop("length(g) must match nrow(X)");
+            NumericVector sumj(ng); //  = no_init_vector //  Not initializing seems to be numerically unstable !!!!
+            int ngs = 0;
+            for(int i = 0; i != gss; ++i) {
+              if(std::isnan(column[i])) {
+                if(!std::isnan(sumj[g[i]-1])) {
+                  sumj[g[i]-1] = column[i];
+                  ++ngs;
+                  if(ngs == ng) break;
+                }
+              } else {
+                sumj[g[i]-1] += column[i];
+              }
+            }
+            for(int i = ng; i--; ) sumj[i] /= gsv[i];
+            SHALLOW_DUPLICATE_ATTRIB(sumj, column);
+            sum[j] = sumj;
+          }
+        }
+      }
+      DUPLICATE_ATTRIB(sum, x);
+      sum.attr("row.names") = NumericVector::create(NA_REAL, -ng);
+      return sum;
+    }
+  } else { // With weights
+    NumericVector wg = w; // wg(w) //  No speed loss ?? -> Yes, and possibly even faster !!
+    int wgs = wg.size();
+    if (ng == 0) {
+      NumericVector sum(l); // not initializing not faster WIth NWDI (35 instead of 32 milliseconds)
+      if(narm) {
+        for(int j = l; j--; ) {
+          NumericVector column = x[j];
+          if(column.size() != wgs) stop("length(w) must match nrow(X)"); // Really necessary ??
+          int k = wgs-1;
+          while((std::isnan(column[k]) || std::isnan(wg[k])) && k!=0) --k;
+          long double sumi = column[k]*wg[k], sumwi = wg[k];
+          if(k != 0) for(int i = k; i--; ) {
+            if(std::isnan(column[i]) || std::isnan(wg[i])) continue;
+            sumi += column[i]*wg[i];
+            sumwi += wg[i];
+          }
+          sumi = sumi/sumwi;
+          sum[j] = (double)sumi;
+        }
+      } else {
+        for(int j = l; j--; ) {
+          NumericVector column = x[j];
+          if(column.size() != wgs) stop("length(w) must match nrow(X)"); // Really necessary ??
+          long double sumi = 0, sumwi = 0;
+          for(int i = 0; i != wgs; ++i) {
+            if(std::isnan(column[i]) || std::isnan(wg[i])) {
+              sumi = column[i]+wg[i];
+              break;
+            } else {
+              sumi += column[i]*wg[i];
+              sumwi += wg[i];
+            }
+          }
+          sumi = sumi/sumwi;
+          sum[j] = (double)sumi;
+        }
+      }
+      if(drop) {
+        sum.attr("names") = x.attr("names");
+        return sum;
+      } else {
+        List out(l);
+        for(int j = l; j--; ) {
+          out[j] = sum[j];
+          SHALLOW_DUPLICATE_ATTRIB(out[j], x[j]);
+        }
+        DUPLICATE_ATTRIB(out, x);
+        out.attr("row.names") = 1;
+        return out;
+      }
+    } else { // With groups !!
+      List sum(l);
+      int gss = g.size();
+      if(wgs != gss) stop("length(w) must match length(g)");
+      if(narm) {
+        for(int j = l; j--; ) {
+          NumericVector column = x[j];
+          if(gss != column.size()) stop("length(g) must match nrow(X)");
+          NumericVector sumj(ng, NA_REAL);
+          // NumericVector sumwj = no_init_vector(ng); // no_init_vector is faster and stable !!! (you only divide by it every round)
+          double sumwj[ng];
+          for(int i = gss; i--; ) {
+            if(std::isnan(column[i]) || std::isnan(wg[i])) continue;
+            if(std::isnan(sumj[g[i]-1])) {
+              sumj[g[i]-1] = column[i]*wg[i];
+              sumwj[g[i]-1] = wg[i];
+            } else {
+              sumj[g[i]-1] += column[i]*wg[i];
+              sumwj[g[i]-1] += wg[i];
+            }
+          }
+          // sumj = sumj/sumwj;
+          for(int i = ng; i--; ) sumj[i] /= sumwj[i];
+          SHALLOW_DUPLICATE_ATTRIB(sumj, column);
+          sum[j] = sumj;
+        }
+      } else {
+        double sumwj[ng];
+        int memsize = sizeof(double)*ng;
+        for(int j = l; j--; ) {
+          NumericVector column = x[j];
+          if(gss != column.size()) stop("length(g) must match nrow(X)");
+          NumericVector sumj(ng); //  = no_init_vector //  Not initializing seems to be numerically unstable !!!!
+          // NumericVector sumwj(ng); // Also here not initializing is numerically unstable
+          memset(sumwj, 0, memsize);
+          int ngs = 0;
+          for(int i = 0; i != gss; ++i) {
+            if(std::isnan(column[i]) || std::isnan(wg[i])) {
+              if(!std::isnan(sumj[g[i]-1])) {
+                sumj[g[i]-1] = sumwj[g[i]-1] = column[i]+wg[i]; // or NA_REAL ?? -> Nope, good !!
+                ++ngs;
+                if(ngs == ng) break;
+              }
+            } else {
+              sumj[g[i]-1] += column[i]*wg[i];
+              sumwj[g[i]-1] += wg[i];
+            }
+          }
+          // sumj = sumj/sumwj;
+          for(int i = ng; i--; ) sumj[i] /= sumwj[i];
+          SHALLOW_DUPLICATE_ATTRIB(sumj, column);
+          sum[j] = sumj;
+        }
+      }
+      DUPLICATE_ATTRIB(sum, x);
+      sum.attr("row.names") = NumericVector::create(NA_REAL, -ng);
+      return sum;
+    }
+  }
+}

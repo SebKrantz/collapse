@@ -1,9 +1,9 @@
-library(Rcpp)
-sourceCpp('src/fNdistinct.cpp')
-sourceCpp('src/fNdistincta.cpp')
-sourceCpp('src/TRA.cpp')
-sourceCpp('src/TRAl.cpp')
-sourceCpp('src/TRAa.cpp')
+# library(Rcpp)
+# sourceCpp('src/fNdistinct.cpp')
+# sourceCpp('src/fNdistincta.cpp')
+# sourceCpp('src/TRA.cpp')
+# sourceCpp('src/TRAl.cpp')
+# sourceCpp('src/TRAa.cpp')
 
 # Better data.frame funtcion ??
 # For foundational changes to this code see fsum.R !!

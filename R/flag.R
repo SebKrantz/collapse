@@ -1,10 +1,10 @@
-library(Rcpp)
-sourceCpp('src/flag.cpp', rebuild = TRUE) # Todo: Thoroughly check !!
-sourceCpp('src/flaga.cpp', rebuild = TRUE)
-sourceCpp('src/flagl.cpp', rebuild = TRUE)
-source("R/GRP.R")
-source("R/small_helper.R")
-source("R/quick_conversion.R")
+# library(Rcpp)
+# sourceCpp('src/flag.cpp', rebuild = TRUE) # Todo: Thoroughly check !!
+# sourceCpp('src/flaga.cpp', rebuild = TRUE)
+# sourceCpp('src/flagl.cpp', rebuild = TRUE)
+# source("R/GRP.R")
+# source("R/small_helper.R")
+# source("R/quick_conversion.R")
 
 # instead of more options for L.matrix and L.data.frame, could do without method dispatch??
 # stubs instead of give.names

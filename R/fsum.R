@@ -1,10 +1,10 @@
-library(Rcpp)
-sourceCpp('src/fsum.cpp')
-sourceCpp('src/fsuma.cpp')
-sourceCpp('src/fsuml.cpp')
-sourceCpp('src/TRA.cpp')
-sourceCpp('src/TRAl.cpp')
-sourceCpp('src/TRAa.cpp')
+# library(Rcpp)
+# sourceCpp('src/fsum.cpp')
+# sourceCpp('src/fsuma.cpp')
+# sourceCpp('src/fsuml.cpp')
+# sourceCpp('src/TRA.cpp')
+# sourceCpp('src/TRAl.cpp')
+# sourceCpp('src/TRAa.cpp')
 
 
 fsum <- function(x, ...) { # g = NULL, TRA = FALSE, na.rm = TRUE, use.g.names = TRUE, drop = TRUE, keep.group_keys = TRUE

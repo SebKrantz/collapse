@@ -1,31 +1,31 @@
-library(Rcpp)
-sourceCpp('R/C++/flag.cpp', rebuild = TRUE) # Todo: Thoroughly check !!
-sourceCpp('R/C++/fscale.cpp')
-sourceCpp('R/C++/fscalel.cpp')
-sourceCpp("R/C++/qFqG.cpp", rebuild = TRUE) 
-source("R/collapse R/GRP.R")
-qG <- function(x, ordered = TRUE) {
-  if(is.factor(x)) return(x)
-  qGCpp(x, ordered)
-}
+# library(Rcpp)
+# sourceCpp('R/C++/flag.cpp', rebuild = TRUE) # Todo: Thoroughly check !!
+# sourceCpp('R/C++/fscale.cpp')
+# sourceCpp('R/C++/fscalel.cpp')
+# sourceCpp("R/C++/qFqG.cpp", rebuild = TRUE)
+# source("R/collapse R/GRP.R")
+# qG <- function(x, ordered = TRUE) {
+#   if(is.factor(x)) return(x)
+#   qGCpp(x, ordered)
+# }
 
-# what about error message ?? 
+# what about error message ??
 
 psacf <- function(x, ...) UseMethod("psacf", x)
 psacf.default <- function(x, g, t = NULL, lag.max = NULL, type = c("correlation", "covariance","partial"), plot = TRUE, gscale = TRUE, ...) {
   if(!is.numeric(x)) stop("'x' must be a numeric vector")
   type <- match.arg(type)
   series <- deparse(substitute(x))
-  ispacf <- type == "partial"  
+  ispacf <- type == "partial"
   getacf <- function(ng, g) {
     if(is.null(t)) message("Panel Series ACF computed without timevar: Assuming ordered data") else if(!is.factor(t))
-    t <- if(is.atomic(t)) qG(t) else GRP(t, return.groups = FALSE)[[2]] # if(.Internal(islistfactor(t, FALSE))) interaction(t) else 
+    t <- if(is.atomic(t)) qG(t) else GRP(t, return.groups = FALSE)[[2]] # if(.Internal(islistfactor(t, FALSE))) interaction(t) else
     if(gscale) x <- fscaleCpp(x,ng,g)
-    if(type == "covariance") 
+    if(type == "covariance")
       c(1,cov(x, flagleadCpp(x,seq_len(lag.max),NA,ng,g,NULL,t,FALSE), use = "pairwise.complete.obs")) else
         c(1,cor(x, flagleadCpp(x,seq_len(lag.max),NA,ng,g,NULL,t,FALSE), use = "pairwise.complete.obs")) # or complete obs ??
   }
-  if(is.atomic(g)) { 
+  if(is.atomic(g)) {
     if(is.factor(g)) ng <- nlevels(g) else {
       g <- qG(g)
       ng <- attr(g,"N.groups")
@@ -50,7 +50,7 @@ psacf.default <- function(x, g, t = NULL, lag.max = NULL, type = c("correlation"
     lag <- array(seq_len(d[1]), c(lag.max,1,1))
   } else {
     dim(acf) <- d
-    lag <- array(0:lag.max, d) 
+    lag <- array(0:lag.max, d)
   }
   acf.out <- `class<-`(list(acf = acf, type = type, n.used = length(x), lag = lag, series = series, snames = NULL), "acf")
   if(plot) {
@@ -62,8 +62,8 @@ psacf.default <- function(x, g, t = NULL, lag.max = NULL, type = c("correlation"
 psacf.data.frame <- function(x, by, t = NULL, cols = is.numeric, lag.max = NULL, type = c("correlation", "covariance","partial"), plot = TRUE, gscale = TRUE, ...) {
   type <- match.arg(type)
   series <- deparse(substitute(x))
-  ispacf <- type == "partial"  
-  if(is.call(by)) { # best way ?? 
+  ispacf <- type == "partial"
+  if(is.call(by)) { # best way ??
     nam <- names(x)
     if(length(by) == 3) {
       v <- match(all.vars(by[[2]]), nam)
@@ -90,17 +90,17 @@ psacf.data.frame <- function(x, by, t = NULL, cols = is.numeric, lag.max = NULL,
   attributes(x) <- NULL
   getacf <- function(ng, by) {
     if(is.null(t)) message("Panel Series ACF computed without timevar: Assuming ordered data") else if(!is.factor(t))
-      t <- if(is.atomic(t)) qG(t) else GRP(t, return.groups = FALSE)[[2]] 
+      t <- if(is.atomic(t)) qG(t) else GRP(t, return.groups = FALSE)[[2]]
     if(gscale) x <- fscalelCpp(x,ng,by)
-    acf <- array(numeric(0), c(lag.max+1, lx, lx)) 
+    acf <- array(numeric(0), c(lag.max+1, lx, lx))
     fun <- if(type == "correlation") cor else cov
       for(i in seq_len(lx)) {
         xim <- flagleadCpp(x[[i]],0:lag.max,NA,ng,by,NULL,t,FALSE)
         for(j in seq_len(lx)) acf[ , j, i] <- fun(x[[j]], xim, use = "pairwise.complete.obs") # correct !!
       }
-    acf 
+    acf
   }
-  if(is.atomic(by)) { 
+  if(is.atomic(by)) {
     if(is.factor(by)) ng <- nlevels(by) else {
       by <- qG(by)
       ng <- attr(by,"N.groups")
@@ -116,12 +116,12 @@ psacf.data.frame <- function(x, by, t = NULL, cols = is.numeric, lag.max = NULL,
   lag[lower.tri(lag)] <- -1
   if(ispacf) {
     zvec <- double((1L+lag.max)*lx*lx)
-    z <- .C(stats:::C_multi_yw, aperm(xacf, 3:1), as.integer(nrx), as.integer(lag.max), as.integer(lx), 
+    z <- .C(stats:::C_multi_yw, aperm(xacf, 3:1), as.integer(nrx), as.integer(lag.max), as.integer(lx),
             coefs = zvec, pacf = zvec, var = zvec, aic = double(1L+lag.max), order = 0L, 1L)
     acf <- aperm(array(z$pacf, dim = c(lx, lx, lag.max + 1L)), 3:1)[-1L, , , drop = FALSE]
   }
-  acf.out <- `class<-`(list(acf = acf, type = type, n.used = nrx, 
-                            lag = if(ispacf) outer(1L:lag.max, lag) else outer(0L:lag.max, lag), 
+  acf.out <- `class<-`(list(acf = acf, type = type, n.used = nrx,
+                            lag = if(ispacf) outer(1L:lag.max, lag) else outer(0L:lag.max, lag),
                             series = series, snames = snames), "acf")
   if(plot) {
     stats:::plot.acf(acf.out, ylab = if(ispacf) "Panel Series Partial ACF" else "Panel Series ACF", ...)
@@ -139,7 +139,7 @@ psacf.pseries <- function(x, lag.max = NULL, type = c("correlation", "covariance
   if(is.null(lag.max)) lag.max <- round(2*sqrt(length(x)/nl))
   if(gscale) x <- fscaleCpp(x,nl,index[[1]])
   ispacf <- type == "partial"
-  acf <- if(type == "covariance") 
+  acf <- if(type == "covariance")
     c(1,cov(x, flagleadCpp(x,seq_len(lag.max),NA,nl,index[[1]],NULL,index[[2]],FALSE), use = "pairwise.complete.obs")) else
       c(1,cor(x, flagleadCpp(x,seq_len(lag.max),NA,nl,index[[1]],NULL,index[[2]],FALSE), use = "pairwise.complete.obs")) # or complete obs ??
   d <- c(lag.max+1,1,1)
@@ -148,7 +148,7 @@ psacf.pseries <- function(x, lag.max = NULL, type = c("correlation", "covariance
     lag <- array(seq_len(d[1]), c(lag.max,1,1))
   } else {
     dim(acf) <- d
-    lag <- array(0:lag.max, d) 
+    lag <- array(0:lag.max, d)
   }
   acf.out <- `class<-`(list(acf = acf, type = type, n.used = length(x), lag = lag, series = series, snames = NULL), "acf")
   if (plot) {
@@ -160,7 +160,7 @@ psacf.pseries <- function(x, lag.max = NULL, type = c("correlation", "covariance
 psacf.pdata.frame <- function(x, lag.max = NULL, type = c("correlation", "covariance","partial"), plot = TRUE, gscale = TRUE, ...) {
   type <- match.arg(type)
   series <- deparse(substitute(x))
-  ispacf <- type == "partial"  
+  ispacf <- type == "partial"
   lx <- length(x)
   nrx <- nrow(x)
   snames <- names(x)
@@ -170,7 +170,7 @@ psacf.pdata.frame <- function(x, lag.max = NULL, type = c("correlation", "covari
   attributes(x) <- NULL
     if(is.null(lag.max)) lag.max <- round(2*sqrt(nrx/ng))
     if(gscale) x <- fscalelCpp(x,ng,index[[1]])
-    acf <- array(numeric(0), c(lag.max+1, lx, lx)) 
+    acf <- array(numeric(0), c(lag.max+1, lx, lx))
     fun <- if(type == "correlation") cor else cov
     for(i in seq_len(lx)) {
       xim <- flagleadCpp(x[[i]],0:lag.max,NA,ng,index[[1]],NULL,index[[2]],FALSE)
@@ -180,12 +180,12 @@ psacf.pdata.frame <- function(x, lag.max = NULL, type = c("correlation", "covari
   lag[lower.tri(lag)] <- -1
   if(ispacf) {
     zvec <- double((1L+lag.max)*lx*lx)
-    z <- .C(stats:::C_multi_yw, aperm(xacf, 3:1), as.integer(nrx), as.integer(lag.max), as.integer(lx), 
+    z <- .C(stats:::C_multi_yw, aperm(xacf, 3:1), as.integer(nrx), as.integer(lag.max), as.integer(lx),
             coefs = zvec, pacf = zvec, var = zvec, aic = double(1L+lag.max), order = 0L, 1L)
     acf <- aperm(array(z$pacf, dim = c(lx, lx, lag.max + 1L)), 3:1)[-1L, , , drop = FALSE]
   }
-  acf.out <- `class<-`(list(acf = acf, type = type, n.used = nrx, 
-                            lag = if(ispacf) outer(1L:lag.max, lag) else outer(0L:lag.max, lag), 
+  acf.out <- `class<-`(list(acf = acf, type = type, n.used = nrx,
+                            lag = if(ispacf) outer(1L:lag.max, lag) else outer(0L:lag.max, lag),
                             series = series, snames = snames), "acf")
   if(plot) {
     stats:::plot.acf(acf.out, ylab = if(ispacf) "Panel Series Partial ACF" else "Panel Series ACF", ...)
@@ -206,7 +206,7 @@ pspacf.data.frame <- function(x, by, t = NULL, cols = is.numeric, lag.max = NULL
 }
 pspacf.pdata.frame <- function(x, lag.max = NULL, plot = TRUE, gscale = TRUE, ...) {
   psacf.pdata.frame(x, lag.max, "partial", plot, gscale, ...)
-}    
+}
 
 psccf <- function(x, y, ...) UseMethod("psccf", x)
 psccf.default <- function(x, y, g, t = NULL, lag.max = NULL, type = c("correlation", "covariance"), plot = TRUE, gscale = TRUE, ...) {
@@ -223,11 +223,11 @@ psccf.default <- function(x, y, g, t = NULL, lag.max = NULL, type = c("correlati
       x <- fscaleCpp(x,ng,g)
       y <- fscaleCpp(y,ng,g)
     }
-    if(type == "covariance") 
+    if(type == "covariance")
       drop(cov(x, flagleadCpp(y,-lag.max:lag.max,NA,ng,g,NULL,t,FALSE), use = "pairwise.complete.obs")) else
       drop(cor(x, flagleadCpp(y,-lag.max:lag.max,NA,ng,g,NULL,t,FALSE), use = "pairwise.complete.obs")) # or complete obs ??
   }
-  if(is.atomic(g)) { 
+  if(is.atomic(g)) {
     if(is.factor(g)) ng <- nlevels(g) else {
       g <- qG(g)
       ng <- attr(g,"N.groups")
@@ -273,7 +273,7 @@ psccf.pseries <- function(x, y, lag.max = NULL, type = c("correlation", "covaria
   }
   if (is.null(lag.max)) lag.max <- round(2*sqrt(length(x)/nl))
   l_seq <- -lag.max:lag.max
-  acf <- if(type == "covariance") 
+  acf <- if(type == "covariance")
     drop(cov(x, flagleadCpp(y,l_seq,NA,nl,index[[1]],NULL,index[[2]],FALSE), use = "pairwise.complete.obs")) else
     drop(cor(x, flagleadCpp(y,l_seq,NA,nl,index[[1]],NULL,index[[2]],FALSE), use = "pairwise.complete.obs")) # or complete obs ??
   d <- c(2*lag.max+1,1,1)
@@ -288,18 +288,18 @@ psccf.pseries <- function(x, y, lag.max = NULL, type = c("correlation", "covaria
 }
 
 
-# could do AR models also : 
-# psar.data.frame <- function (x, aic = TRUE, order.max = lag.max, na.action = na.fail, 
-#           demean = TRUE, series = NULL, var.method = 1L, ...) 
+# could do AR models also :
+# psar.data.frame <- function (x, aic = TRUE, order.max = lag.max, na.action = na.fail,
+#           demean = TRUE, series = NULL, var.method = 1L, ...)
 # {
-#   if (is.null(series)) 
+#   if (is.null(series))
 #     series <- deparse(substitute(x))
-#   if (ists <- is.ts(x)) 
+#   if (ists <- is.ts(x))
 #     xtsp <- tsp(x)
 #   x <- na.action(as.ts(x))
-#   if (anyNA(x)) 
+#   if (anyNA(x))
 #     stop("NAs in 'x'")
-#   if (ists) 
+#   if (ists)
 #     xtsp <- tsp(x)
 #   xfreq <- frequency(x)
 #   x <- as.matrix(x)
@@ -310,40 +310,40 @@ psccf.pseries <- function(x, y, lag.max = NULL, type = c("correlation", "covaria
 #     x <- sweep(x, 2L, x.mean, check.margin = FALSE)
 #   }
 #   else x.mean <- rep(0, nser)
-#   order.max <- if (is.null(order.max)) 
+#   order.max <- if (is.null(order.max))
 #     floor(10 * log10(n.used))
 #   else floor(order.max)
-#   if (order.max < 1L) 
+#   if (order.max < 1L)
 #     stop("'order.max' must be >= 1")
 #   xacf <- acf(x, type = "cov", plot = FALSE, lag.max = order.max)$acf
-#   z <- .C(stats:::C_multi_yw, 
-#           aperm(xacf, 3:1), 
-#           as.integer(n.used), 
-#           as.integer(order.max), 
-#           as.integer(nser), 
-#           coefs = double((1L +order.max) * nser * nser), 
-#           pacf = double((1L + order.max) * nser * nser), 
-#           var = double((1L + order.max) * nser * nser), 
-#           aic = double(1L + order.max), 
-#           order = integer(1L), 
+#   z <- .C(stats:::C_multi_yw,
+#           aperm(xacf, 3:1),
+#           as.integer(n.used),
+#           as.integer(order.max),
+#           as.integer(nser),
+#           coefs = double((1L +order.max) * nser * nser),
+#           pacf = double((1L + order.max) * nser * nser),
+#           var = double((1L + order.max) * nser * nser),
+#           aic = double(1L + order.max),
+#           order = integer(1L),
 #           as.integer(aic))
-#   partialacf <- aperm(array(z$pacf, dim = c(nser, nser, order.max + 
+#   partialacf <- aperm(array(z$pacf, dim = c(nser, nser, order.max +
 #                                               1L)), 3:1)[-1L, , , drop = FALSE]
-#   var.pred <- aperm(array(z$var, dim = c(nser, nser, order.max + 
+#   var.pred <- aperm(array(z$var, dim = c(nser, nser, order.max +
 #                                            1L)), 3:1)
 #   xaic <- setNames(z$aic - min(z$aic), 0:order.max)
 #   order <- z$order
 #   resid <- x
 #   if (order > 0) {
-#     ar <- -aperm(array(z$coefs, dim = c(nser, nser, order.max + 
+#     ar <- -aperm(array(z$coefs, dim = c(nser, nser, order.max +
 #                                           1L)), 3:1)[2L:(order + 1L), , , drop = FALSE]
-#     for (i in 1L:order) resid[-(1L:order), ] <- resid[-(1L:order), 
-#                                                       ] - x[(order - i + 1L):(n.used - i), ] %*% t(ar[i, 
+#     for (i in 1L:order) resid[-(1L:order), ] <- resid[-(1L:order),
+#                                                       ] - x[(order - i + 1L):(n.used - i), ] %*% t(ar[i,
 #                                                                                                       , ])
 #     resid[1L:order, ] <- NA
 #   }
 #   else ar <- array(dim = c(0, nser, nser))
-#   var.pred <- var.pred[order + 1L, , , drop = TRUE] * n.used/(n.used - 
+#   var.pred <- var.pred[order + 1L, , , drop = TRUE] * n.used/(n.used -
 #                                                                 nser * (demean + order))
 #   if (ists) {
 #     attr(resid, "tsp") <- xtsp
@@ -354,9 +354,9 @@ psccf.pseries <- function(x, y, lag.max = NULL, type = c("correlation", "covaria
 #   dimnames(ar) <- list(seq_len(order), snames, snames)
 #   dimnames(var.pred) <- list(snames, snames)
 #   dimnames(partialacf) <- list(1L:order.max, snames, snames)
-#   res <- list(order = order, ar = ar, var.pred = var.pred, 
-#               x.mean = x.mean, aic = xaic, n.used = n.used, order.max = order.max, 
-#               partialacf = partialacf, resid = resid, method = "Yule-Walker", 
+#   res <- list(order = order, ar = ar, var.pred = var.pred,
+#               x.mean = x.mean, aic = xaic, n.used = n.used, order.max = order.max,
+#               partialacf = partialacf, resid = resid, method = "Yule-Walker",
 #               series = series, frequency = xfreq, call = match.call())
 #   class(res) <- "ar"
 #   return(res)

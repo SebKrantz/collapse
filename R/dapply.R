@@ -1,5 +1,5 @@
-library(Rcpp)
-sourceCpp("C:/Users/Sebastian Krantz/Documents/R/mrtl_type_dispatch.cpp")
+# library(Rcpp)
+# sourceCpp("C:/Users/Sebastian Krantz/Documents/R/mrtl_type_dispatch.cpp")
 # todo, Make setdapply(), or Xcols option??. Should be consistent with the rest. all set-functions should have copy option, or: if assigned to something make copy, else no!!
 # definitely make add option for MARGIN = 1?? -> nah, rather setdapply, with Xcols and Add option
 # -> Do just like B and W, both dapply and setdapply, and each has Xcols and add = 0,1,2 option.
