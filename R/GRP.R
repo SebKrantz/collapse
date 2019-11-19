@@ -7,27 +7,18 @@ GRP <- function(X, ...) { # by = NULL, sort = TRUE, order = 1L, na.last = FALSE,
   UseMethod("GRP", X)
 }
 
-# DTinit <- function() .Call(initsym)
-
 forderv <- function(x, by = seq_along(x), retGrp = FALSE, sort = TRUE, order = 1L, na.last = FALSE) {
-  # .Call(initDTthreads) # redundant after init_collapse()
-  if (is.atomic(x)) {
-    if (!missing(by) && !is.null(by))
-      stop("x is a single vector, non-NULL 'by' doesn't make sense")
+  if(is.atomic(x)) {
+    if(!missing(by) && !is.null(by)) stop("x is a single vector, non-NULL 'by' doesn't make sense")
     by = NULL
-  }
-  else {
-    if (!length(x))
-      return(integer(0L))
-    if (is.character(by)) by = anyNAerror(match(by, names(x)), "Unknown column names!") # .Call(colnamesInt, x, by, FALSE) # colnamesInt(x, by, check_dups = FALSE)
-    if (length(order) == 1L)
-      order = rep(order, length(by))
+  } else {
+    if(!length(x)) return(integer(0L))
+    if(length(order) == 1L) order = rep(order, length(by))
   }
   order = as.integer(order)
   .Call(forder, x, by, retGrp, sort, order, na.last)
 }
 
-# To do: use data.table:::CsubsetDT and CsubsetVector !!
 GRP.default <- function(X, by = NULL, sort = TRUE, order = 1L, na.last = FALSE,
                         return.groups = TRUE, return.order = FALSE) { # , gs = TRUE # o
 
@@ -37,34 +28,34 @@ GRP.default <- function(X, by = NULL, sort = TRUE, order = 1L, na.last = FALSE,
     by <- seq_along(X)
     namby <- names(X)
   } else if(is.call(by)) {
-    namby <- by <- all.vars(by)
+    namby <- all.vars(by)
+    by <- anyNAerror(match(namby, names(X)), "Unknown column names!")
   } else if(is.null(by)) {
     namby <- paste(all.vars(call), collapse = ".")  # deparse(substitute(X)) # all.vars is faster !!!
-  } else namby <- names(X)[by]
+  } else if(is.character(by)) {
+    namby <- by
+    by <- anyNAerror(match(by, names(X)), "Unknown column names!")
+  } else {
+    by <- as.integer(by)
+    namby <- names(X)[by]
+  }
 
-  # o <- .Call(forder, X, by, TRUE, sort, order, na.last)
-  o <- forderv(X, by, TRUE, sort, order, na.last) # faster calling c?? -> nah, the checks implemented in forderv are good  and efficient !!
-  f <- attr(o, "starts") # , exact = TRUE -> slightly slower
+  o <- forderv(X, by, TRUE, sort, order, na.last)
+  f <- attr(o, "starts")
 
   if(length(o)) { # if ordered, returns 0
-    len <- .Call(uniqlengths, f, length(o)) # data.table:::Cuniqlengths # len = data.table:::uniqlengths(f, length(o))
-    grpuo <- .Call(frank, o, f, len, "dense") #-1L # data.table:::Cfrank # grpuo = rep.int(seq_along(len),len)[data.table:::forderv(o)] # faster way?? -> try to speed this up..
+    len <- .Call(uniqlengths, f, length(o))
+    grpuo <- .Call(frank, o, f, len, "dense")
     ordered <- c(GRP.sort = sort, initially.ordered = FALSE)
-    if(return.groups) {
-      groups <- if(inherits(X, "data.table")) # better or faster way ??
-        X[o[f], by, with = FALSE] else if(inherits(X, "data.frame"))
-        X[o[f], by, drop = FALSE] else if(is.atomic(X))
-        `names<-`(list(X[o[f]]), namby) else qDF(X)[o[f], by, drop = FALSE]
+    if(return.groups) { # subsetDT is faster than base, and subsetVector preserves variable labels !!
+        groups <- if(is.list(X)) .Call(subsetDT, X, o[f], by) else `names<-`(list(.Call(subsetVector, X, o[f])), namby)
     } else groups <- NULL
   } else {
     len <- .Call(uniqlengths, f, NROW(X)) # data.table:::Cuniqlengths # or cumsubtract !!!
-    grpuo <- rep.int(seq_along(len), len) # rep.int fastest ?? -> about same speed as rep !!  # o = f # for unique. right???
+    grpuo <- rep.int(seq_along(len), len) # rep.int fastest ?? -> about same speed as rep !!
     ordered <- c(GRP.sort = sort, initially.ordered = TRUE)
     if(return.groups) {
-      groups <- if(inherits(X, "data.table")) # better or faster way ??
-      X[f, by, with = FALSE] else if(inherits(X, "data.frame"))
-      X[f, by, drop = FALSE] else if(is.atomic(X))
-      `names<-`(list(X[f]), namby) else qDF(X)[f, by, drop = FALSE]
+      groups <- if(is.list(X)) .Call(subsetDT, X, f, by) else `names<-`(list(.Call(subsetVector, X, f)), namby)
     } else groups <- NULL
   }
   if(!return.order) o <- NULL
@@ -80,7 +71,7 @@ GRP.default <- function(X, by = NULL, sort = TRUE, order = 1L, na.last = FALSE,
 
 is.GRP <- function(x) inherits(x, "GRP")
 
-group.names.GRP <- function(g, force.char = TRUE) { # fastest !!!
+group.names.GRP <- function(g, force.char = TRUE) {
   if(is.null(g[[4L]])) return(NULL)
   groups <- g[[4L]]
   if(length(groups) == 1L) {
@@ -225,135 +216,3 @@ GRP.grouped_df <- function(X, ...) {
                         call = match.call()), "GRP"))
 }
 
-
-
-
-# More parsimonious but slower !!!!
-# GRP2 <- function(X, by = if(is.atomic(X)) NULL else seq_along(X), sort = TRUE, order = 1L,
-#                  na.last = FALSE, return.groups = TRUE, return.order = FALSE, ...) {
-#   if(is.call(by)) by = all.vars(by)
-#   o = data.table:::forderv(X, by, TRUE, sort, order, na.last)
-#   f = attr(o, "starts")
-#   mg = attr(o, "maxgrpn")
-#   if (length(o)) {
-#     len = .Call(data.table:::Cuniqlengths, f, length(o))
-#     grpuo = .Call(data.table:::Cfrank, o, f, len, "dense")
-#     ordered = c(GRP.sort = sort, initially.ordered = FALSE)
-#     if (return.groups) {
-#       groups = if (inherits(X, "data.table")) X[o[f], by, with = FALSE] else if (is.atomic(X)) X[o[f]] else X[o[f], by, drop = FALSE]
-#       if (return.order) {
-#         attributes(o) <- NULL
-#         res <- list(length(f), grpuo, len, f, mg, groups, ordered, o, match.call())
-#         attr(res,"names") = c("N.groups","group.id","group.sizes","starts","maxgrpn","groups","ordered","order","call")
-#       } else {
-#         res <- list(length(f), grpuo, len, f, mg, groups, ordered, match.call())
-#         attr(res,"names") = c("N.groups","group.id","group.sizes","starts","maxgrpn","groups","ordered","call")
-#       }
-#     } else {
-#       if (return.order) {
-#         attributes(o) <- NULL
-#         res <- list(length(f), grpuo, len, f, mg, ordered, o, match.call())
-#         attr(res,"names") = c("N.groups","group.id","group.sizes","starts","maxgrpn","ordered","order","call")
-#       } else {
-#         res <- list(length(f), grpuo, len, f, mg, ordered, match.call())
-#         attr(res,"names") = c("N.groups","group.id","group.sizes","starts","maxgrpn","ordered","call")
-#       }
-#     }
-#   } else {
-#     len = .Call(data.table:::Cuniqlengths, f, NROW(X)) # or cumsubtract !!
-#     grpuo = rep.int(seq_along(len),len)
-#     ordered = c(GRP.sort = sort, initially.ordered = TRUE)
-#     if (return.groups) {
-#       groups = if (inherits(X, "data.table")) X[f, by, with = FALSE] else if (is.atomic(X)) X[f] else X[f, by, drop = FALSE]
-#       if (return.order) {
-#         attributes(o) <- NULL
-#         res <- list(length(f), grpuo, len, f, mg, groups, ordered, o, call = match.call())
-#         attr(res,"names") = c("N.groups","group.id","group.sizes","starts","maxgrpn","groups","ordered","order","call")
-#       } else
-#         res <- list(length(f), grpuo, len, f, mg, groups, ordered, call = match.call())
-#       attr(res,"names") = c("N.groups","group.id","group.sizes","starts","maxgrpn","groups","ordered","call")
-#     } else {
-#       if (return.order) {
-#         attributes(o) <- NULL
-#         res <- list(length(f), grpuo, len, f, mg, ordered, o, call = match.call())
-#         attr(res,"names") = c("N.groups","group.id","group.sizes","starts","maxgrpn","ordered","order","call")
-#       } else {
-#         res <- list(length(f), grpuo, len, f, mg, ordered, call = match.call())
-#         attr(res,"names") = c("N.groups","group.id","group.sizes","starts","maxgrpn","ordered","call")
-#       }
-#     }
-#   }
-#   class(res) <- "GRP"
-#   res
-# }
-
-# with starts and maxgrpn
-# # or getGRP: more speed using tabulate ?? or code your own??
-# GRP <- function(X, by = if(is.atomic(X)) NULL else seq_along(X), sort = TRUE, order = 1L,
-#                 na.last = FALSE, return.groups = TRUE, return.order = FALSE, ...) { # , gs = TRUE # o
-#   if(is.call(by)) by = all.vars(by) # is.call is fastest!!!  attr(terms.formula(by), "term.labels")
-#   o = data.table:::forderv(X, by, TRUE, sort, order, na.last) # faster calling c??
-#   f = attr(o, "starts") # , exact = TRUE -> slightly slower
-#   if (length(o)) { # if ordered, returns 0 !!! perhaps rewrite Cforder function??
-#     len = .Call(data.table:::Cuniqlengths, f, length(o)) # len = data.table:::uniqlengths(f, length(o))
-#     # grpuo = rep.int(seq_along(len),len)[data.table:::forderv(o)] # faster way?? -> try to speed this up..
-#     grpuo = .Call(data.table:::Cfrank, o, f, len, "dense") #-1L
-#     res <- if (return.groups) {
-#       # if (gs)
-#       if (return.order) {
-#         attributes(o) <- NULL
-#         list(N.groups = length(f), group.id = grpuo, group.sizes = len, starts = f, maxgrpn = attr(o, "maxgrpn"), # speed up this part??
-#              groups = if (inherits(X, "data.table")) X[o[f], by, with = FALSE] else if (is.atomic(X)) X[o[f]] else
-#                X[o[f], by, drop = FALSE], ordered = c(GRP.sort = sort, initially.ordered = FALSE), order = o, call = match.call())
-#       } else
-#         list(N.groups = length(f), group.id = grpuo, group.sizes = len, starts = f, maxgrpn = attr(o, "maxgrpn"), # speed up this part??
-#              groups = if (inherits(X, "data.table")) X[o[f], by, with = FALSE] else if (is.atomic(X)) X[o[f]] else
-#                X[o[f], by, drop = FALSE], ordered = c(GRP.sort = sort, initially.ordered = FALSE), call = match.call())
-#       # else
-#       # list(ng = length(f), g = grpuo,  # speed up this part??
-#       #      groups = if (inherits(X, "data.table")) X[o[f], by, with = FALSE] else if (is.atomic(X)) X[o[f]] else
-#       #        X[o[f], by, drop = FALSE], ordered = order)
-#     } else {
-#       # if (gs)
-#       if (return.order) list(N.groups = length(f), group.id = grpuo, group.sizes = len,
-#                              ordered = c(GRP.sort = sort, initially.ordered = FALSE), order = o, call = match.call()) else # else list(ng = length(f), g = grpuo, ordered = order)
-#                                list(N.groups = length(f), group.id = grpuo, group.sizes = len,
-#                                     ordered = c(GRP.sort = sort, initially.ordered = FALSE), call = match.call())
-#     }
-#   } else {
-#     len = .Call(data.table:::Cuniqlengths, f, NROW(X)) # or cumsubtract !!!
-#     grpuo = rep.int(seq_along(len),len)
-#     # o = f # for unique. right???
-#     res <- if (return.groups) {
-#       # if (gs)
-#       if (return.order) {
-#         # o2 = .Call(data.table:::Cfrank, seq_len(NROW(X)), f, len, "sequence") # good ???? This does not really give order, but unique row id's !!!
-#         # attributes(o2) = attributes(o) # good ????
-#         attributes(o) <- NULL
-#         list(N.groups = length(f), group.id = grpuo, group.sizes = len, starts = f, maxgrpn = attr(o, "maxgrpn"), # speed up this part??
-#              groups = if (inherits(X, "data.table")) X[f, by, with = FALSE] else if (is.atomic(X)) X[f] else
-#                X[f, by, drop = FALSE], ordered = c(GRP.sort = sort, initially.ordered = TRUE), order = o2, call = match.call())
-#       } else
-#         list(N.groups = length(f), group.id = grpuo, group.sizes = len, starts = f, maxgrpn = attr(o, "maxgrpn"), # speed up this part??
-#              groups = if (inherits(X, "data.table")) X[f, by, with = FALSE] else if (is.atomic(X)) X[f] else
-#                X[f, by, drop = FALSE], ordered = c(GRP.sort = sort, initially.ordered = TRUE), call = match.call())
-#
-#       # else
-#       # list(ng = length(f), g = grpuo,  # speed up this part??
-#       #      groups = if (inherits(X, "data.table")) X[f, by, with = FALSE] else if (is.atomic(X)) X[f] else
-#       #        X[f, by, drop = FALSE], ordered = order)
-#     } else {
-#       #if (gs)
-#       if (return.order) {
-#         attributes(o) <- NULL
-#         list(N.groups = length(f), group.id = grpuo, group.sizes = len, starts = f, maxgrpn = attr(o, "maxgrpn"),
-#              ordered = c(GRP.sort = sort, initially.ordered = TRUE), order = o, call = match.call())
-#       } else # else list(ng = length(f), g = grpuo, ordered = order)
-#         list(N.groups = length(f), group.id = grpuo, group.sizes = len, starts = f, maxgrpn = attr(o, "maxgrpn"),
-#              ordered = c(GRP.sort = sort, initially.ordered = TRUE), call = match.call())
-#     }
-#   }
-#   class(res) <- "GRP"
-#   res
-#   # or only group: frankv(mtcars, cols = c("cyl","vs","am"), ties.method = "dense")
-# }

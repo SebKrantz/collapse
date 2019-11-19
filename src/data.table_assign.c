@@ -45,6 +45,22 @@ Moved out of ?setkey Details section in 1.12.2 (Mar 2019). Revisit this w.r.t. t
   \code{identical()} and \code{object.size()}.
 */
 
+// line 227:
+int checkOverAlloc(SEXP x)
+{
+  if (isNull(x))
+    error("Has getOption('datatable.alloccol') somehow become unset? It should be a number, by default 1024.");
+  if (!isInteger(x) && !isReal(x))
+    error("getOption('datatable.alloccol') should be a number, by default 1024. But its type is '%s'.", type2char(TYPEOF(x)));
+  if (LENGTH(x) != 1)
+    error("getOption('datatable.alloc') is a numeric vector ok but its length is %d. Its length should be 1.", LENGTH(x));
+  int ans = isInteger(x) ? INTEGER(x)[0] : (int)REAL(x)[0];
+  if (ans<0)
+    error("getOption('datatable.alloc')==%d.  It must be >=0 and not NA.", ans);
+  return ans;
+}
+
+
 SEXP keepattr(SEXP to, SEXP from)
 {
   // Same as R_copyDFattr in src/main/attrib.c, but that seems not exposed in R's api
