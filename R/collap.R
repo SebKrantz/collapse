@@ -10,10 +10,10 @@
 # todo speed up: use internals of order ??
 collap <- function(X, by, FUN = fmean, catFUN = fmode, cols = NULL, custom = NULL,
                    keep.by = TRUE, sort.col = TRUE, sort.row = TRUE, parallel = FALSE, mc.cores = 1L,
-                   multi.FUN.out = c("wide","list","long","long_dupl"), give.names = "auto", ...) {
+                   return = c("wide","list","long","long_dupl"), give.names = "auto", ...) {
 
-  multi.FUN.out <- switch(multi.FUN.out[1L], wide = 1L, list = 2L, long = 3L, long_dupl = 4L, stop("Unknown multi.FUN output option"))
-  widel <- multi.FUN.out == 1L
+  return <- switch(return[1L], wide = 1L, list = 2L, long = 3L, long_dupl = 4L, stop("Unknown return output option"))
+  widel <- return == 1L
   customl <- !is.null(custom)
   if(!is.data.frame(X)) X <- qDF(X)
   ax <- attributes(X)
@@ -102,7 +102,7 @@ collap <- function(X, by, FUN = fmean, catFUN = fmode, cols = NULL, custom = NUL
       lr <- nul + nnul + keep.by
       res <- vector("list", lr)
         if(keep.by) {
-          res[[1L]] <- if(is.atomic(by)) list(`names<-`(list(attr(by, "levels")), namby)) else list(by[[4L]]) # nah... could add later using "c" ??
+          res[[1L]] <- if(is.atomic(by)) list(`names<-`(list(unique_factor(by)), namby)) else list(by[[4L]]) # nah... could add later using "c" ??
           ind <- 2L
         } else ind <- 1L
         if(nul) {
@@ -155,7 +155,7 @@ collap <- function(X, by, FUN = fmean, catFUN = fmode, cols = NULL, custom = NUL
   if(widel) res <- unlist(unlist(res, FALSE), FALSE) else {
     if(length(FUN) > 1L || length(catFUN) > 1L || length(custom) > 1L) {
       res <- unlist(res, FALSE)
-      if(multi.FUN.out == 2L) {
+      if(return == 2L) {
         ax[["row.names"]] <- if(is.list(by)) .set_row_names(by[[1L]]) else .set_row_names(length(res[[1L]]))  # fnlevels(by) best ??
         if(!keep.by) return(lapply(res, function(e) {
           ax[["names"]] <- names(e)
@@ -164,7 +164,7 @@ collap <- function(X, by, FUN = fmean, catFUN = fmode, cols = NULL, custom = NUL
               ax[["names"]] <- c(namby, names(e))
               setAttributes(c(res[[1L]], e), ax) }))
       } else {
-        if(multi.FUN.out != 4L) {
+        if(return != 4L) {
           res <- if(!keep.by) .Call(rbindlist, res, TRUE, TRUE, "Function") else # data.table:::Crbindlist
                  .Call(rbindlist, lapply(res[-1L], function(e) c(res[[1L]], e)), TRUE, TRUE, "Function")
         } else {
@@ -180,7 +180,7 @@ collap <- function(X, by, FUN = fmean, catFUN = fmode, cols = NULL, custom = NUL
         }
         if(sort.col)  o <- sort.list(c(0L, if(!keep.by) NULL else numby, nu, nnu), method = "radix")
       }
-    } else message("multi.FUN.out options are only meaningful if multiple functions are used!")
+    } else message("return options other than 'wide' are only meaningful if multiple functions are used!")
   }
 
   if(sort.col) .Call(setcolorder, res, o) # data.table:::Csetcolorder

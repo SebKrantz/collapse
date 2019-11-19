@@ -132,3 +132,7 @@ cols2log <- function(x, nam, cols) {
     return(r)
   }
 }
+unique_factor <- function(x) {
+  res <- seq_along(attr(x, "levels"))
+  duplAttributes(res, x)
+}

@@ -5,28 +5,29 @@ using namespace Rcpp;
 // Old, non Cpp11 solution -> problem:: logical vectors not working !!!
 template <int RTYPE>
 IntegerVector qFCppImpl( const Vector<RTYPE>& x , bool ordered = false) {
-    Vector<RTYPE> levs = (ordered) ? sort_unique(x) : unique(x); 
+    Vector<RTYPE> levs = (ordered) ? sort_unique(x) : unique(x);
     IntegerVector out = match(x, levs);
-    if(TYPEOF(x) == STRSXP) { // slightly better 
-      out.attr("levels") = levs; 
+    SHALLOW_DUPLICATE_ATTRIB(out, x); // works for all atomic objects ??
+    if(TYPEOF(x) == STRSXP) { // slightly better
+      out.attr("levels") = levs;
     } else {
-      out.attr("levels") = Rf_coerceVector(levs, STRSXP); 
+      out.attr("levels") = Rf_coerceVector(levs, STRSXP);
     }
-    // out.attr("levels") = Rf_coerceVector(levs, STRSXP); 
+    // out.attr("levels") = Rf_coerceVector(levs, STRSXP);
     out.attr("class") = (ordered) ? CharacterVector::create("ordered","factor") : "factor";
     return out;
 }
 
 template <int RTYPE>
 IntegerVector qGCppImpl( const Vector<RTYPE>& x , bool ordered = false) {
-    Vector<RTYPE> levs = (ordered) ? sort_unique(x) : unique(x); 
+    Vector<RTYPE> levs = (ordered) ? sort_unique(x) : unique(x);
     IntegerVector out = match(x, levs); // faster than just match ??
     out.attr("N.groups") = levs.size();
     out.attr("class") = "qG";
     return out;
 }
 
-// [[Rcpp::export]]   // do Cpp 11 solution using return macro ?? 
+// [[Rcpp::export]]   // do Cpp 11 solution using return macro ??
 SEXP qFCpp( SEXP x , bool ordered = false) {
   switch( TYPEOF(x) ) {
   case INTSXP: return qFCppImpl<INTSXP>(x, ordered);
@@ -38,7 +39,7 @@ SEXP qFCpp( SEXP x , bool ordered = false) {
   return R_NilValue;
 }
 
-// [[Rcpp::export]]   // do Cpp 11 solution using return macro ?? 
+// [[Rcpp::export]]   // do Cpp 11 solution using return macro ??
 SEXP qGCpp( SEXP x , bool ordered = false) {
   switch( TYPEOF(x) ) {
   case INTSXP: return qGCppImpl<INTSXP>(x, ordered);
@@ -67,30 +68,30 @@ SEXP qGCpp( SEXP x , bool ordered = false) {
 //     return out;
 //   }
 // }
-// 
-// 
+//
+//
 // template <>
 // IntegerVector qFCppImpl( Vector<CPLXSXP> x , bool ordered) {
 //   stop("Not supported SEXP type!");
 // }
-// 
+//
 // template <>
 // IntegerVector qFCppImpl( Vector<VECSXP> x , bool ordered) {
 //   stop("Not supported SEXP type!");
 // }
-// 
+//
 // template <>
 // IntegerVector qFCppImpl( Vector<RAWSXP> x , bool ordered) {
 //   stop("Not supported SEXP type!");
 // }
-// 
+//
 // template <>
 // IntegerVector qFCppImpl( Vector<EXPRSXP> x , bool ordered) {
 //   stop("Not supported SEXP type!");
 // }
-// 
+//
 // // [[Rcpp::export]]
 // IntegerVector qFCpp(SEXP x , bool ordered = false) { // need const ???
 //   RCPP_RETURN_VECTOR(qFCppImpl, x, ordered);
 // }
-// 
+//
