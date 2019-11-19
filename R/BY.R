@@ -10,8 +10,8 @@
 # -> need fplit and unlist (original) to account for factors. Note that fsplit does not deal with date and time ... but unlist can't handle those either... but nobody aggregates dates anyway...
 
 # fsplit <- function(x, f) {
-#   if(is.null(attr(x, "class")))
-#     return(.Internal(split(x, f)))
+#   if(is.null(attr(x, "class"))) .Call(Csplit, x, f)
+#     # return(.Internal(split(x, f)))
 #   lf <- levels(f)
 #   y <- vector("list", length(lf))
 #   names(y) <- lf
@@ -19,7 +19,8 @@
 #   for (k in lf) y[[k]] <- x[ind[[k]]]
 #   y
 # }
-fsplit <- split.default # slightly slower !!
+
+fsplit <- split.default # slightly slower !! (Csplit not as fast as internal!! !!)
 
 # Faster version of BY:
 BY <- function(X, ...) { # g, FUN, ..., use.g.names = TRUE, sort = TRUE, expand.wide = FALSE, parallel = FALSE, mc.cores = 1L, return = c("same","matrix","data.frame","list")
