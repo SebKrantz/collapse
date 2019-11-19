@@ -3,3 +3,6 @@
 .RData
 .Ruserdata
 *vignette.pdf
+*.o
+*.so
+*.dll

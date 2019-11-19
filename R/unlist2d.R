@@ -48,12 +48,12 @@ unlist2d <- function(X, idcols = ".id", row.names = FALSE, recursive = TRUE, id.
             y <- y[ident != 1L] # better way?? y[ident!=1L] = NULL??
             nam <- names(y)
             names(y) <- NULL
-            y <- DFDTl(.Call(data.table:::Crbindlist, y, TRUE, recursive, id.names))
+            y <- DFDTl(.Call(rbindlist, y, TRUE, recursive, id.names))
             # attributes(y[[1L]]) <- list(levels = nam, class = c("ordered", "factor"))
             setattributes(y[[1L]], pairlist(levels = nam, class = c("ordered", "factor"))) # a lot faster !!
             return(y)
-          } else return(DFDTl(.Call(data.table:::Crbindlist, y[ident != 1L], TRUE, recursive, id.names)))
-        } else return(DFDTl(.Call(data.table:::Crbindlist, y[ident != 1L], TRUE, recursive, NULL)))
+          } else return(DFDTl(.Call(rbindlist, y[ident != 1L], TRUE, recursive, id.names)))
+        } else return(DFDTl(.Call(rbindlist, y[ident != 1L], TRUE, recursive, NULL)))
     } else lapply(y, ul2d)
   }
 
@@ -69,12 +69,12 @@ unlist2d <- function(X, idcols = ".id", row.names = FALSE, recursive = TRUE, id.
         names(X)[ids] <- if(length(idcols) == nid) idcols else paste(id.names, nids, sep = ".")
         if(keep.row.names) { # New!! It seems it lost a bot of speed through this part!!
           rn <- which(nams == row.names) # New!!
-          if(!all(ids == nids) || rn != nid + 1L) .Call(data.table:::Csetcolorder, X, c(ids, rn, seq_along(X)[-c(ids,rn)]))  # X <- X[c(ids,rn,seq_along(X)[-c(ids,rn)])] # New!! efficient? could replace only rownames if one of the conditions holds
-        } else if (!all(ids == nids)) .Call(data.table:::Csetcolorder, X, c(ids, seq_along(X)[-ids])) # X <- X[c(ids,seq_along(X)[-ids])] # Old!! before row.names!!
+          if(!all(ids == nids) || rn != nid + 1L) .Call(setcolorder, X, c(ids, rn, seq_along(X)[-c(ids,rn)]))  # X <- X[c(ids,rn,seq_along(X)[-c(ids,rn)])] # New!! efficient? could replace only rownames if one of the conditions holds
+        } else if (!all(ids == nids)) .Call(setcolorder, X, c(ids, seq_along(X)[-ids])) # X <- X[c(ids,seq_along(X)[-ids])] # Old!! before row.names!!
       }
     } else if (keep.row.names) { # New!!
       rn <- which(names(X) == row.names) # New!!
-      if(rn != 1L) .Call(data.table:::Csetcolorder, X, c(rn,seq_along(X)[-rn]))  # X <- X[c(rn,seq_along(X)[-rn])] # New!!
+      if(rn != 1L) .Call(setcolorder, X, c(rn,seq_along(X)[-rn]))  # X <- X[c(rn,seq_along(X)[-rn])] # New!!
     }
   }
   attr(X, ".internal.selfref") <- NULL

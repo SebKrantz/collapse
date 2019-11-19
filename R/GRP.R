@@ -10,7 +10,7 @@ GRP <- function(X, ...) { # by = NULL, sort = TRUE, order = 1L, na.last = FALSE,
 # DTinit <- function() .Call(initsym)
 
 forderv <- function(x, by = seq_along(x), retGrp = FALSE, sort = TRUE, order = 1L, na.last = FALSE) {
-  .Call(initDTthreads)
+  # .Call(initDTthreads) # redundant after init_collapse()
   if (is.atomic(x)) {
     if (!missing(by) && !is.null(by))
       stop("x is a single vector, non-NULL 'by' doesn't make sense")
