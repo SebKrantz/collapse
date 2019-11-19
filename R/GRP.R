@@ -51,7 +51,8 @@ GRP.default <- function(X, by = NULL, sort = TRUE, order = 1L, na.last = FALSE,
         groups <- if(is.list(X)) .Call(subsetDT, X, o[f], by) else `names<-`(list(.Call(subsetVector, X, o[f])), namby)
     } else groups <- NULL
   } else {
-    len <- .Call(uniqlengths, f, NROW(X)) # data.table:::Cuniqlengths # or cumsubtract !!!
+    lx <- if(inherits(X, "data.frame")) nrow(X) else if(is.atomic(X)) length(X) else length(X[[1L]])
+    len <- .Call(uniqlengths, f, lx) # data.table:::Cuniqlengths # or cumsubtract !!!
     grpuo <- rep.int(seq_along(len), len) # rep.int fastest ?? -> about same speed as rep !!
     ordered <- c(GRP.sort = sort, initially.ordered = TRUE)
     if(return.groups) {
