@@ -9,7 +9,7 @@
 Transform Data by (Groupwise) Replacing or Sweeping out Statistics
 }
 \description{
-\code{TRA} is an S3 generic that efficiently transforms data by either (column-wise) replacing data values with supplied statistics or sweeping the statistics out of the data. \code{TRA} supports grouped operations and/on data frame's, and is thus a generalization of \code{base::sweep}.
+\code{TRA} is an S3 generic that efficiently transforms data by either (column-wise) replacing data values with supplied statistics or sweeping the statistics out of the data. \code{TRA} supports grouped operations and data frame's, and is thus a generalization of \code{base::sweep}.
 }
 \usage{
 \method{TRA}{default}(x, STATS, FUN = "-", g = NULL, ...)
@@ -38,10 +38,11 @@ Transform Data by (Groupwise) Replacing or Sweeping out Statistics
   }
   }
 \item{g}{a factor, \code{GRP} object, atomic vector (internally converted to ordered factor) or a list of vectors / factors (internally converted to a \code{GRP} object) used to group \code{x}. Number of groups must match rows of \code{STATS}. See \code{STATS} and Details.}
-\item{keep.group_keys}{\emph{grouped_df method:} Logical. Remove grouping variables after computation. If grouping variables are found in the \code{grouped_df}, \code{STATS} can either be an aggregated version of the same data frame (including grouping variables) with variable names matching \code{x} (but not necessarily in the same order), or \code{STATS} can be a data frame of statistics matching only the non-grouping variable's/columns. See Details. }
+\item{keep.group_keys}{\emph{grouped_df method:} Logical. Remove grouping variables after computation. In contrat to the other methods, \code{TRA.grouped_df} matches column names exactly, thus \code{STATS} can be any subset of aggregated columns in \code{x} in any order, with or without grouping columns. \code{TRA.grouped_df} will transform the columns in \code{x} with their aggregated versions matched from \code{STATS} (ignoring grouping columns found in \code{x} or \code{STATS} and columns in \code{x} not found in \code{STATS}), and return \code{x} again. If \code{keep.group_keys = FALSE}, \code{x} is retured again without grouping columns. See Details and Examples.}
 }
+
 \details{
-Before going into the details of \code{TRA}, I would like note that I have tried to make this function as redundant as possible by adding a TRA-argument to all \link{Fast Statistical Functions} (ensuring that the exact same grouping vector is used for aggregation and transformation), and by creating the \code{B} (between-transform) and \code{W} (within-transform) operators as well as \code{fscale} as safer and faster solutions for frequent scaling, centering and averaging tasks. \code{TRA} is really a programmers function for cases when both aggregate statistics and transformed data need to be retained, or to work with more complex statistics (i.e. together with \code{dapply} or \code{BY}).
+Before going into the details, I note that I have tried to make \code{TRA} more or less redundant by adding a TRA-argument to all \link{Fast Statistical Functions} (ensuring that the exact same grouping vector is used for aggregation and transformation), and by creating the \code{B} (between-transform) and \code{W} (within-transform) operators as well as \code{fscale} as safer and faster solutions for frequent scaling, centering and averaging tasks. \code{TRA} is really a programmers function for cases when both aggregate statistics and transformed data need to be retained, or to work with more complex statistics (i.e. together with \code{dapply} or \code{BY}).
 
 Without groups \code{g = NULL}, \code{TRA} is nothing more than a column based version of \code{base::sweep}, albeit 4-times more efficient on matrices and many times more efficient on data frames. \code{TRA} always preserves all attributes of \code{x}.
 
@@ -51,10 +52,10 @@ For example Let \code{x = c(1.2, 4.6, 2.5, 9.1, 8.7, 3.3)}, g is an integer vect
 
 Correct computation requires that \code{g} as used in \code{fmean} and \code{g} passed to \code{TRA} are exactly the same vector. Using \code{g = c(1,3,3,2,1,2)} for \code{fmean} and \code{g = c(3,1,1,2,3,2)} for \code{TRA} will not give the right result. The safest way of programming with \code{TRA} is thus to repeatedly employ the same factor or \code{GRP} object for all grouped computations. Atomic vectors passed to \code{g} will be converted to ordered factors (see \code{qF}) and lists will be converted to ordered \code{GRP} objects (see \code{GRP}). This is also done by all \code{Fast Statistical Functions} and by default by \code{BY}, thus together with these functions, \code{TRA} can also safely be used with atomic- or list-groups (although of course this is less efficient). Problems may arise if other functions internally convert atomic vectors or lists to groups in a non-sorted way. \emph{Note}: \code{as.factor} conversions are ok as this also involves sorting.
 
-If \code{x} is a grouped tibble (\code{grouped_df}), \code{TRA} will check if grouping columns are present in the data. If they are, \code{STATS} must be either the same data aggregated (such that \code{all(names(x) \%in\% names(STATS))}), or exclude the grouping columns such that \code{ncol(STATS) == ncol(x)-N.group.cols}. If no grouping columns are found in the data, \code{TRA.grouped_df} works just like \code{TRA.data.frame} but uses the 'groups' attribute attached to \code{x}.
+If \code{x} is a grouped tibble (\code{grouped_df}), \code{TRA} matches the columns of \code{x} and \code{STATS} and also checks for grouping columns \code{names(attr(x, "groups"))} in \code{x} and \code{STATS}. \code{TRA.grouped_df} will then only transform those columns in \code{x} for which matching counterparts were found in \code{STATS}, excempting grouping columns, and returns \code{x} again (with columns in the name order). If \code{keep.group_keys = FALSE}, the grouping columns are dropped after computation, however the "groups" attribute is not dropped (it can be removed using \code{dplyr::ungroup()}).
 }
 \value{
-\code{X} where \code{FUN} was applied to every column split by \code{g}.
+\code{x} with columns replaced or swept out using \code{STATS}, grouped by \code{g}.
 }
 \references{
 %% ~put references to the literature/web site here ~
@@ -72,31 +73,35 @@ If \code{x} is a grouped tibble (\code{grouped_df}), \code{TRA} will check if gr
 %% ~~objects to See Also as \code{\link{help}}, ~~~
 }
 \examples{
-v <- iris$Sepal.Length  # A numeric vector
-f <- iris$Species       # A factor
-dat <- num_vars(iris)   # Numeric columns
-m <- qM(dat)            # Matrix of numeric data
+v <- iris$Sepal.Length          # A numeric vector
+f <- iris$Species               # A factor
+dat <- num_vars(iris)           # Numeric columns
+m <- qM(dat)                    # Matrix of numeric data
 
-TRA(v, fmean(v))        # Simple (column) centering     [same as fmean(v, TRA = "-") or W(v)]
-TRA(m, fmean(m))        # same as sweep(m, 2, fmean(m)) [same as fmean(m, TRA = "-") or W(m)]
-TRA(dat, fmean(dat))                                    [same as fmean(dat, TRA = "-") or W(dat)]
-TRA(v, fmean(v), "replace")    # Simple (column) replacing     [same as fmean(v, TRA = "replace") or B(v)]
-TRA(m, fmean(m), "replace")    # same as sweep(m, 2, fmean(m)) [same as fmean(m, TRA = "replace") or B(m)]
-TRA(dat, fmean(dat), "replace")                                [same as fmean(dat, TRA = "replace") or B(dat)]
-TRA(m, fsd(m), "/")     # Simple (column) scaling... [same as fsd(m, TRA = "/")]...
+head(TRA(v, fmean(v)))                # Simple (column) centering     [same as fmean(v, TRA = "-") or W(v)]
+head(TRA(m, fmean(m)))                # same as sweep(m, 2, fmean(m)) [same as fmean(m, TRA = "-") or W(m)]
+head(TRA(dat, fmean(dat)))            # [same as fmean(dat, TRA = "-") or W(dat)]
+head(TRA(v, fmean(v), "replace"))     # Simple (column) replacing     [same as fmean(v, TRA = "replace") or B(v)]
+head(TRA(m, fmean(m), "replace"))     # same as sweep(m, 2, fmean(m)) [same as fmean(m, TRA = "replace") or B(m)]
+head(TRA(dat, fmean(dat), "replace")) # [same as fmean(dat, TRA = "replace") or B(dat)]
+head(TRA(m, fsd(m), "/"))             # Simple (column) scaling... [same as fsd(m, TRA = "/")]...
 
 # Note: All grouped examples also apply for v and dat...
-TRA(m, fmean(m, f), "-", f)      # Grouped (column) centering... [same as fmean(m, f, TRA = "-") or W(m, f)]...
-TRA(m, fmean(m, f), "replace", f)# Grouped (column) replacing... [same as fmean(m, f, TRA = "replace") or B(m, f)]...
-TRA(m, fsd(m, f), "/", f)        # Grouped (column) scaling...   [same as fsd(m, f, TRA = "/")]...
+head(TRA(m, fmean(m, f), "-", f))       # Grouped (column) centering... [same as fmean(m, f, TRA = "-") or W(m, f)]...
+head(TRA(m, fmean(m, f), "replace", f)) # Grouped (column) replacing... [same as fmean(m, f, TRA = "replace") or B(m, f)]...
+head(TRA(m, fsd(m, f), "/", f))         # Grouped (column) scaling...   [same as fsd(m, f, TRA = "/")]...
 
-TRA(m, fmean(m, f), "-+", f)     # Grouped (column) centering on the overall mean... [same as fmean(m, f, TRA = "-+") or W(m, f, add.global.mean = TRUE)]
-TRA(TRA(m, fmean(m, f), "-", f), fmean(m), "+") # Also the same thing done manually !!
+head(TRA(m, fmean(m, f), "-+", f))      # Grouped (column) centering on the overall mean... [same as fmean(m, f, TRA = "-+") or W(m, f, add.global.mean = TRUE)]
+head(TRA(TRA(m, fmean(m, f), "-", f),   # Also the same thing done manually !!
+     fmean(m), "+"))
 
 # grouped tibble method
 library(dplyr)
 iris \%>\%  group_by(Species) \%>\% TRA(.,fmean(.))
-iris \%>\%  group_by(Species) \%>\% fmean(TRA = "-") # Same thing
+iris \%>\%  group_by(Species) \%>\% fmean(TRA = "-")        # Same thing
+iris \%>\%  group_by(Species) \%>\% TRA(.,fmean(.)[c(2,4)]) # Only transforming 2 columns
+iris \%>\%  group_by(Species) \%>\% TRA(.,fmean(.)[c(2,4)], # Dropping species column
+                            keep.group_keys = FALSE)
 }
 % Add one or more standard keywords, see file 'KEYWORDS' in the
 % R documentation directory.
