@@ -9,7 +9,8 @@
 
 # todo speed up: use internals of order ??
 collap <- function(X, by, FUN = fmean, catFUN = fmode, cols = NULL, custom = NULL,
-                   keep.by = TRUE, sort.col = TRUE, sort.row = TRUE, parallel = FALSE, mc.cores = 1L,
+                   keep.by = TRUE, keep.col.order = TRUE, sort.row = TRUE,
+                   parallel = FALSE, mc.cores = 1L,
                    return = c("wide","list","long","long_dupl"), give.names = "auto", ...) {
 
   return <- switch(return[1L], wide = 1L, list = 2L, long = 3L, long_dupl = 4L, stop("Unknown return output option"))
@@ -128,7 +129,7 @@ collap <- function(X, by, FUN = fmean, catFUN = fmode, cols = NULL, custom = NUL
     } # fastest isung res list ?? or better combine at the end ??
     res <- agg(if(nul) `oldClass<-`(X[nu], "data.frame") else NULL, if(nnul) `oldClass<-`(X[nnu], "data.frame") else NULL) #colsubset(X, nu)
 
-    if(sort.col && widel) o <- sort.list(c(if(!keep.by) NULL else if(!bycalll) rep(0L,length(numby)) else numby,
+    if(keep.col.order && widel) o <- sort.list(c(if(!keep.by) NULL else if(!bycalll) rep(0L,length(numby)) else numby,
                                            if(nul) rep(nu,length(FUN)) else NULL,
                                            if(nnul) rep(nnu,length(catFUN)) else NULL), method = "radix")
 
@@ -148,7 +149,7 @@ collap <- function(X, by, FUN = fmean, catFUN = fmode, cols = NULL, custom = NUL
     res[[ind]] <- condsetn(aplyfun(seq_along(namFUN), function(i)
             if(fFUN[i]) match.fun(namFUN[i])(`oldClass<-`(X[custom[[i]]], "data.frame"), by, ..., use.g.names = FALSE) else
             BY.data.frame(X[custom[[i]]], by, namFUN[i], ..., use.g.names = FALSE)), namFUN, give.names)
-    if(sort.col && widel) {
+    if(keep.col.order && widel) {
       o <- unlist(custom, use.names = FALSE)
       o <- sort.list(c(if(!keep.by) NULL else if(!bycalll) rep(0L,length(numby)) else if(is.character(o)) namby else numby, o), method = "radix")
     }
@@ -179,12 +180,12 @@ collap <- function(X, by, FUN = fmean, catFUN = fmode, cols = NULL, custom = NUL
                                  lapply(res[-c(nid, 1L)], function(e) c(res[[1L]], res[[nid]], e))
           res <- .Call(rbindlist, res, FALSE, FALSE, "Function")
         }
-        if(sort.col)  o <- sort.list(c(0L, if(!keep.by) NULL else if(!bycalll) rep(0L,length(numby)) else numby, nu, nnu), method = "radix")
+        if(keep.col.order)  o <- sort.list(c(0L, if(!keep.by) NULL else if(!bycalll) rep(0L,length(numby)) else numby, nu, nnu), method = "radix")
       }
     } else message("return options other than 'wide' are only meaningful if multiple functions are used!")
   }
 
-  if(sort.col) .Call(setcolorder, res, o) # data.table:::Csetcolorder
+  if(keep.col.order) .Call(setcolorder, res, o) # data.table:::Csetcolorder
   ax[["names"]] <- names(res)
   ax[["row.names"]] <- .set_row_names(length(res[[1L]]))
   return(setAttributes(res, ax))
