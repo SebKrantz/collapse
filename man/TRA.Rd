@@ -18,7 +18,7 @@ Transform Data by (Groupwise) Replacing or Sweeping out Statistics
 
 \method{TRA}{data.frame}(x, STATS, FUN = "-", g = NULL, ...)
 
-\method{TRA}{grouped_df}(x, STATS, FUN = "-", keep.group_keys = TRUE, ...)
+\method{TRA}{grouped_df}(x, STATS, FUN = "-", keep.group_vars = TRUE, ...)
 
 }
 %- maybe also 'usage' for other objects documented here.
@@ -38,7 +38,7 @@ Transform Data by (Groupwise) Replacing or Sweeping out Statistics
   }
   }
 \item{g}{a factor, \code{GRP} object, atomic vector (internally converted to ordered factor) or a list of vectors / factors (internally converted to a \code{GRP} object) used to group \code{x}. Number of groups must match rows of \code{STATS}. See \code{STATS} and Details.}
-\item{keep.group_keys}{\emph{grouped_df method:} Logical. Remove grouping variables after computation. In contrat to the other methods, \code{TRA.grouped_df} matches column names exactly, thus \code{STATS} can be any subset of aggregated columns in \code{x} in any order, with or without grouping columns. \code{TRA.grouped_df} will transform the columns in \code{x} with their aggregated versions matched from \code{STATS} (ignoring grouping columns found in \code{x} or \code{STATS} and columns in \code{x} not found in \code{STATS}), and return \code{x} again. If \code{keep.group_keys = FALSE}, \code{x} is retured again without grouping columns. See Details and Examples.}
+\item{keep.group_vars}{\emph{grouped_df method:} Logical. Remove grouping variables after computation. In contrat to the other methods, \code{TRA.grouped_df} matches column names exactly, thus \code{STATS} can be any subset of aggregated columns in \code{x} in any order, with or without grouping columns. \code{TRA.grouped_df} will transform the columns in \code{x} with their aggregated versions matched from \code{STATS} (ignoring grouping columns found in \code{x} or \code{STATS} and columns in \code{x} not found in \code{STATS}), and return \code{x} again. If \code{keep.group_vars = FALSE}, \code{x} is retured again without grouping columns. See Details and Examples.}
 }
 
 \details{
@@ -52,7 +52,7 @@ For example Let \code{x = c(1.2, 4.6, 2.5, 9.1, 8.7, 3.3)}, g is an integer vect
 
 Correct computation requires that \code{g} as used in \code{fmean} and \code{g} passed to \code{TRA} are exactly the same vector. Using \code{g = c(1,3,3,2,1,2)} for \code{fmean} and \code{g = c(3,1,1,2,3,2)} for \code{TRA} will not give the right result. The safest way of programming with \code{TRA} is thus to repeatedly employ the same factor or \code{GRP} object for all grouped computations. Atomic vectors passed to \code{g} will be converted to ordered factors (see \code{qF}) and lists will be converted to ordered \code{GRP} objects (see \code{GRP}). This is also done by all \code{Fast Statistical Functions} and by default by \code{BY}, thus together with these functions, \code{TRA} can also safely be used with atomic- or list-groups (although of course this is less efficient). Problems may arise if other functions internally convert atomic vectors or lists to groups in a non-sorted way. \emph{Note}: \code{as.factor} conversions are ok as this also involves sorting.
 
-If \code{x} is a grouped tibble (\code{grouped_df}), \code{TRA} matches the columns of \code{x} and \code{STATS} and also checks for grouping columns \code{names(attr(x, "groups"))} in \code{x} and \code{STATS}. \code{TRA.grouped_df} will then only transform those columns in \code{x} for which matching counterparts were found in \code{STATS}, excempting grouping columns, and returns \code{x} again (with columns in the name order). If \code{keep.group_keys = FALSE}, the grouping columns are dropped after computation, however the "groups" attribute is not dropped (it can be removed using \code{dplyr::ungroup()}).
+If \code{x} is a grouped tibble (\code{grouped_df}), \code{TRA} matches the columns of \code{x} and \code{STATS} and also checks for grouping columns \code{names(attr(x, "groups"))} in \code{x} and \code{STATS}. \code{TRA.grouped_df} will then only transform those columns in \code{x} for which matching counterparts were found in \code{STATS}, excempting grouping columns, and returns \code{x} again (with columns in the name order). If \code{keep.group_vars = FALSE}, the grouping columns are dropped after computation, however the "groups" attribute is not dropped (it can be removed using \code{dplyr::ungroup()}).
 }
 \value{
 \code{x} with columns replaced or swept out using \code{STATS}, grouped by \code{g}.
@@ -101,7 +101,7 @@ iris \%>\%  group_by(Species) \%>\% TRA(.,fmean(.))
 iris \%>\%  group_by(Species) \%>\% fmean(TRA = "-")        # Same thing
 iris \%>\%  group_by(Species) \%>\% TRA(.,fmean(.)[c(2,4)]) # Only transforming 2 columns
 iris \%>\%  group_by(Species) \%>\% TRA(.,fmean(.)[c(2,4)], # Dropping species column
-                            keep.group_keys = FALSE)
+                            keep.group_vars = FALSE)
 }
 % Add one or more standard keywords, see file 'KEYWORDS' in the
 % R documentation directory.

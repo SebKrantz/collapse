@@ -54,7 +54,7 @@ TRA.data.frame <- function(x, STATS, FUN = "-", g = NULL, ...) {
     return(TRAlCpp(x,STATS,g[[2L]],TRAtoInt(FUN)))
   }
 }
-TRA.grouped_df <- function(x, STATS, FUN = "-", keep.group_keys = TRUE, ...) {
+TRA.grouped_df <- function(x, STATS, FUN = "-", keep.group_vars = TRUE, ...) {
   g <- GRP.grouped_df(x)
   if(g[[1L]] != nrow(STATS)) stop("number of groups must match nrow(STATS)")
   namst <- names(STATS)
@@ -63,7 +63,7 @@ TRA.grouped_df <- function(x, STATS, FUN = "-", keep.group_keys = TRUE, ...) {
   if(anyNA(mt <- match(namst, names(x)))) stop("the variable names of x and STATS must match")
   mt <- mt[nognst]
   get_vars(x, mt) <- TRAlCpp(colsubset(x, mt),STATS[nognst],g[[2L]],TRAtoInt(FUN))
-  if(!keep.group_keys) return(colsubset(x, names(x) %!in% g[[5L]]))
+  if(!keep.group_vars) return(colsubset(x, names(x) %!in% g[[5L]]))
   return(x)
 }
 

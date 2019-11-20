@@ -9,7 +9,7 @@
 Efficient Split-Apply-Combine Computing
 }
 \description{
-\code{BY} is an S3 generic that efficiently applies functions over vectors or matrix- and data.frame columns by groups. A simple parallelism is also available.
+\code{BY} is an S3 generic that efficiently applies functions over vectors or matrix- and data.frame columns by groups, and returns various output formats. A simple parallelism is also available.
 }
 \usage{
 \method{BY}{default}(X, g, FUN, ..., use.g.names = TRUE, sort = TRUE,
@@ -24,8 +24,8 @@ Efficient Split-Apply-Combine Computing
    expand.wide = FALSE, parallel = FALSE, mc.cores = 1L,
    return = c("same","matrix","data.frame","list"))
 
-\method{BY}{grouped_df}(X, FUN, ..., use.g.names = TRUE, sort = TRUE,
-   expand.wide = FALSE, parallel = FALSE, mc.cores = 1L,
+\method{BY}{grouped_df}(X, FUN, ..., keep.group_vars = TRUE, use.g.names = FALSE,
+   sort = TRUE, expand.wide = FALSE, parallel = FALSE, mc.cores = 1L,
    return = c("same","matrix","data.frame","list"))
 
 }
@@ -41,12 +41,13 @@ Efficient Split-Apply-Combine Computing
   \item{parallel}{logical. \code{TRUE} implements simple parallel execution by internally calling \code{parallel::mclapply} instead of \code{base::lapply}.}
   \item{mc.cores}{integer. Argument to \code{parallel::mclapply} indicating the number of cores to use for parallel execution. Can use \code{parallel::detectCores()} to select all available cores. See also \code{?parallel::mclapply}.}
     \item{return}{an integer or string indicating the type of object to return. The default \code{1 - "same"} returns the same object type (i.e. passing a matrix returns a matrix and passig a data frame returns a data frame). \code{2 - "matrix"} always returns the output as matrix, \code{3 - "data.frame"} always returns a data frame and \code{4 - "list"} returns the raw (uncombined) output. \emph{Note}: \code{4 - "list"} works together with \code{expand.wide} to return a list of matrices.}
+\item{keep.group_vars}{\emph{grouped_df method:} Logical. \code{FALSE} removes grouping variables after computation.}
 %    \item{simplify}{logical. Simplify the result to return an object of the same class and with the same attributes. If \code{FALSE}, the raw computation retult in form of a (nested) list is returned.}
 }
 \details{
 \code{BY} is an efficient and frugal reimplementation of the Split-Apply-Combine computing paradigm. It is faster than \code{base::tapply}, \code{base::by}, \code{base::aggregate} and \code{plyr}, and preserves data attributes just like \code{dapply}.
 
-I note at this point that the philosphy of \code{collapse} is to move beyond this rather slow computing paradigm, which is why the \code{\link{Fast Statistical Functions}} were implemented. However sometimes tasks need to be performed that involve more comlex and customized operations on data, and for these cases \code{BY} represents a very efficient solution.
+I note at this point that the philosphy of \code{collapse} is to move beyond this rather slow computing paradigm, which is why the \code{\link{Fast Statistical Functions}} were implemented. However sometimes tasks need to be performed that involve more comlex and customized operations on data, and for these cases \code{BY} is a good solution.
 
 \code{BY} is built principally as a wrapper around \code{lapply(split(x, g), FUN, ...)}, but strongly optimizes on attribute cheking compared to \code{base} R. For more details examine the code yourself or look at the documentation for \code{\link{dapply}} which works very similar (the only difference really is the splitting performed in \code{BY}).
 
@@ -81,16 +82,6 @@ BY(v, f, scale, use.g.names = FALSE)   # Omitting auto-generated names
 BY(v, f, quantile)                     # Species quantiles: by default stacked
 BY(v, f, quantile, expand.wide = TRUE) # Wide format
 
-## data.frame method
-BY(num_vars(iris), f, sum)             # Also returns a data.fram
-BY(num_vars(iris), f, sum, return = 2) # Return as matrix ... also works for all the other computations below
-BY(num_vars(iris), f, scale)
-BY(num_vars(iris), f, scale, use.g.names = FALSE)
-BY(num_vars(iris), f, quantile)
-BY(num_vars(iris), f, quantile, expand.wide = TRUE)
-BY(num_vars(iris), f, quantile,        # Return as list of matrices
-   expand.wide = TRUE, return = "list")
-
 ## matrix method
 m <- qM(num_vars(iris))
 BY(m, f, sum)                          # Also return as matrix
@@ -102,20 +93,29 @@ BY(m, f, quantile, expand.wide = TRUE)
 BY(m, f, quantile, expand.wide = TRUE, # Return as list of matrices
    return = "list")
 
-# grouped tibble method
+## data.frame method
+BY(num_vars(iris), f, sum)             # Also returns a data.fram
+BY(num_vars(iris), f, sum, return = 2) # Return as matrix ... also works for all the other computations below
+BY(num_vars(iris), f, scale)
+BY(num_vars(iris), f, scale, use.g.names = FALSE)
+BY(num_vars(iris), f, quantile)
+BY(num_vars(iris), f, quantile, expand.wide = TRUE)
+BY(num_vars(iris), f, quantile,        # Return as list of matrices
+   expand.wide = TRUE, return = "list")
+
+## grouped tibble method
 library(dplyr)
 giris <- group_by(iris, Species)
 giris \%>\% BY(sum)                     # Compute sum
-giris \%>\% BY(sum) \%>\% ungroup()       # drop groups attribute
 giris \%>\% BY(sum, use.g.names = TRUE, # Use row.names and
-             keep.group_keys = FALSE) # remove 'Species' and groups attribute
+             keep.group_vars = FALSE) # remove 'Species' and groups attribute
 giris \%>\% BY(sum, return = "matrix")  # Return matrix
 giris \%>\% BY(sum, return = "matrix",  # Matrix without groups attribute and row.names
              use.g.names = TRUE) \%>\%
              `attr<-`("groups", NULL)
 giris \%>\% BY(log)                     # Take logs
 giris \%>\% BY(log, use.g.names = TRUE, # Use row.names and
-             keep.group_keys = FALSE) # remove 'Species' and groups attribute
+             keep.group_vars = FALSE) # remove 'Species' and groups attribute
 giris \%>\% BY(quantile)                # Compute quantiles (output is stacked)
 giris \%>\% BY(quantile,                # Much better, also keeps 'Species'
              expand.wide = TRUE)

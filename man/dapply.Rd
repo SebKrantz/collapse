@@ -57,28 +57,28 @@ This process of working with plain lists makes \code{dapply} not noticeably slow
 %% ~~objects to See Also as \code{\link{help}}, ~~~
 }
 \examples{
-dapply(mtcars, log)                     # Take natural log of each variable
-dapply(mtcars, log, return = "matrix")  # Return as matrix
+dapply(mtcars, log)                      # Take natural log of each variable
+dapply(mtcars, log, return = "matrix")   # Return as matrix
 m <- as.matrix(mtcars)
-dapply(m, log)                          # Same thing
-dapply(m, log, return = "data.frame")   # Return data frame from matrix
-dapply(mtcars, sum); dapply(m, sum)     # Computing sum of each column, return as vector
-dapply(mtcars, sum, drop = FALSE)       # This returns a data.frame of 1 row
-dapply(mtcars, sum, MARGIN = 1)         # Compute row-sum of each column, return as vector. More efficient than rowSums(mtcars).
-dapply(m, sum, MARGIN = 1)              # Same thing for matrices, faster than apply(m, 1, sum)
+dapply(m, log)                           # Same thing
+dapply(m, log, return = "data.frame")    # Return data frame from matrix
+dapply(mtcars, sum); dapply(m, sum)      # Computing sum of each column, return as vector
+dapply(mtcars, sum, drop = FALSE)        # This returns a data.frame of 1 row
+dapply(mtcars, sum, MARGIN = 1)          # Compute row-sum of each column, return as vector. More efficient than rowSums(mtcars).
+dapply(m, sum, MARGIN = 1)               # Same thing for matrices, faster than apply(m, 1, sum)
 dapply(m, sum, MARGIN = 1, drop = FALSE) # Gives matrix with one column
-dapply(m, quantile, MARGIN = 1)         # Compute row-quantiles
-dapply(m, quantile)                     # Column-quantiles
-dapply(mtcars, quantile, MARGIN = 1)    # Same for data frames, output is also a data.frame
+dapply(m, quantile, MARGIN = 1)          # Compute row-quantiles
+dapply(m, quantile)                      # Column-quantiles
+dapply(mtcars, quantile, MARGIN = 1)     # Same for data frames, output is also a data.frame
 dapply(mtcars, quantile)
 
 # Let's now take a more complex classed object, like a dplyr grouped tibble:
 library(dplyr)
 gmtcars <- group_by(mtcars,cyl,vs,am)
-dapply(gmtcars, log)                    # We can still take logs of rows or columns and get a grouped tibble back
+dapply(gmtcars, log)                     # We can still take logs of rows or columns and get a grouped tibble back
 dapply(gmtcars, log, MARGIN = 1)
-dapply(gmtcars, quantile, MARGIN = 1)   # Also works for quantiles
-dapply(gmtcars, log, return = "matrix") # Output as matrix also works, groups are attached!
+dapply(gmtcars, quantile, MARGIN = 1)    # Also works for quantiles
+dapply(gmtcars, log, return = "matrix")  # Output as matrix also works, groups are attached!
 }
 % Add one or more standard keywords, see file 'KEYWORDS' in the
 % R documentation directory.

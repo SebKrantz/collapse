@@ -193,7 +193,7 @@ BY.matrix <- function(X, g, FUN, ..., use.g.names = TRUE, sort = TRUE,
   }
 }
 
-BY.grouped_df <- function(X, FUN, ..., keep.group_keys = TRUE, use.g.names = FALSE,
+BY.grouped_df <- function(X, FUN, ..., keep.group_vars = TRUE, use.g.names = FALSE,
                           expand.wide = FALSE, parallel = FALSE, mc.cores = 1L,
                           return = c("same","matrix","data.frame","list")) {
   g <- GRP.grouped_df(X)
@@ -202,7 +202,7 @@ BY.grouped_df <- function(X, FUN, ..., keep.group_keys = TRUE, use.g.names = FAL
   g <- as.factor.GRP(g)
   gn <- which(names(X) %in% gnam) # correct !! else na.rm(match(names(groups), names(X))), but is slower !!
   if(length(gn)) {
-    if(!keep.group_keys) return(BY.data.frame(X[-gn], g, FUN, ..., # colsubset(X, -gn) dont use colsubset -> doesn't drop group attachment !!, for the other cases can always use ungroup !!
+    if(!keep.group_vars) return(BY.data.frame(X[-gn], g, FUN, ..., # colsubset(X, -gn) dont use colsubset -> doesn't drop group attachment !!, for the other cases can always use ungroup !!
                            use.g.names = use.g.names, sort = TRUE, expand.wide = expand.wide,
                            parallel = parallel, mc.cores = mc.cores, return = return))
       res <- BY.data.frame(colsubset(X, -gn), g, FUN, ...,
