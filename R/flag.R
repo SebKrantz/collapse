@@ -180,20 +180,22 @@ L.pdata.frame <- function(x, n = 1, cols = is.numeric, fill = NA, stubs = TRUE, 
     return(flagleadlCpp(x[cols],n,fill,fnlevels(index[[1L]]),index[[1L]],NULL,index[[2L]],stubs)) else
     return(flagleadlCpp(x,n,fill,fnlevels(index[[1L]]),index[[1L]],NULL,index[[2L]],stubs))
 }
- # , g = NULL, t = NULL, fill = NA, stubs = TRUE
-flead <- function(x, n = 1, ...) {
-  UseMethod("flead", x)
+
+
+ # x, n = 1, g = NULL, by = NULL, t = NULL, cols = is.numeric, fill = NA, stubs = TRUE, keep.ids = TRUE, keep.ids = TRUE, ...
+F <- function(x, n = 1, ...) {
+  UseMethod("F", x)
 }
-flead.default <- function(x, n = 1, g = NULL, t = NULL, fill = NA, stubs = TRUE, ...) {
+F.default <- function(x, n = 1, g = NULL, t = NULL, fill = NA, stubs = TRUE, ...) {
   flag.default(x, -n, g, t, fill, stubs, ...)
 }
-flead.pseries <- function(x, n = 1, fill = NA, stubs = TRUE, ...) {
+F.pseries <- function(x, n = 1, fill = NA, stubs = TRUE, ...) {
   flag.pseries(x, -n, fill, stubs, ...)
 }
-flead.matrix <- function(x, n = 1, g = NULL, t = NULL, fill = NA, stubs = TRUE, ...) {
+F.matrix <- function(x, n = 1, g = NULL, t = NULL, fill = NA, stubs = TRUE, ...) {
   flag.matrix(x, -n, g, t, fill, stubs, ...)
 }
-flead.grouped_df <- function(x, n = 1, t = NULL, fill = NA, stubs = TRUE, keep.ids = TRUE, ...) {
+F.grouped_df <- function(x, n = 1, t = NULL, fill = NA, stubs = TRUE, keep.ids = TRUE, ...) {
   g <- GRP.grouped_df(x)
   tsym <- deparse(substitute(t))
   nam <- names(x)
@@ -214,26 +216,6 @@ flead.grouped_df <- function(x, n = 1, t = NULL, fill = NA, stubs = TRUE, keep.i
       }
   } else return(flagleadlCpp(x,-n,fill,g[[1L]],g[[2L]],g[[3L]],G_t(t),stubs))
 }
-flead.data.frame <- function(x, n = 1, g = NULL, t = NULL, fill = NA, stubs = TRUE, ...) {
-  flag.data.frame(x, -n, g, t, fill, stubs, ...)
-}
-flead.pdata.frame <- function(x, n = 1, fill = NA, stubs = TRUE, ...) {
-  flag.pdata.frame(x, -n, fill, stubs, ...)
-}
- # x, n = 1, g = NULL, by = NULL, t = NULL, cols = is.numeric, fill = NA, stubs = TRUE, keep.ids = TRUE, keep.ids = TRUE, ...
-F <- function(x, n = 1, ...) {
-  UseMethod("F", x)
-}
-F.default <- function(x, n = 1, g = NULL, t = NULL, fill = NA, stubs = TRUE, ...) {
-  flag.default(x, -n, g, t, fill, stubs, ...)
-}
-F.pseries <- function(x, n = 1, fill = NA, stubs = TRUE, ...) {
-  flag.pseries(x, -n, fill, stubs, ...)
-}
-F.matrix <- function(x, n = 1, g = NULL, t = NULL, fill = NA, stubs = TRUE, ...) {
-  flag.matrix(x, -n, g, t, fill, stubs, ...)
-}
-F.grouped_df <- flead.grouped_df
 F.data.frame <- function(x, n = 1, by = NULL, t = NULL, cols = is.numeric,
                          fill = NA, stubs = TRUE, keep.ids = TRUE, ...) {
   L.data.frame(x, -n, by, t, cols, fill, stubs, keep.ids, ...)
@@ -241,6 +223,54 @@ F.data.frame <- function(x, n = 1, by = NULL, t = NULL, cols = is.numeric,
 F.pdata.frame <- function(x, n = 1, cols = is.numeric, fill = NA, stubs = TRUE, keep.ids = TRUE, ...) {
   L.pdata.frame(x, -n, cols, fill, stubs, keep.ids, ...)
 }
+
+
+# flead: Not necessary: flag is ok as programmers function:
+# # , g = NULL, t = NULL, fill = NA, stubs = TRUE
+# flead <- function(x, n = 1, ...) {
+#   UseMethod("flead", x)
+# }
+# flead.default <- function(x, n = 1, g = NULL, t = NULL, fill = NA, stubs = TRUE, ...) {
+#   flag.default(x, -n, g, t, fill, stubs, ...)
+# }
+# flead.pseries <- function(x, n = 1, fill = NA, stubs = TRUE, ...) {
+#   flag.pseries(x, -n, fill, stubs, ...)
+# }
+# flead.matrix <- function(x, n = 1, g = NULL, t = NULL, fill = NA, stubs = TRUE, ...) {
+#   flag.matrix(x, -n, g, t, fill, stubs, ...)
+# }
+# flead.grouped_df <- function(x, n = 1, t = NULL, fill = NA, stubs = TRUE, keep.ids = TRUE, ...) {
+#   g <- GRP.grouped_df(x)
+#   tsym <- deparse(substitute(t))
+#   nam <- names(x)
+#   gn <- which(nam %in% g[[5L]])
+#   if(!(tsym == "NULL" || is.na(tn <- match(tsym, nam)))) {
+#     if(any(gn == tn)) stop("timevar coincides with grouping variables!")
+#     t <- x[[tn]]
+#     gn <- c(gn, tn)
+#   }
+#   if(length(gn)) {
+#     if(!keep.ids)
+#       return(flagleadlCpp(x[-gn],-n,fill,g[[1L]],g[[2L]],g[[3L]],G_t(t),stubs)) else {
+#         ax <- attributes(x)
+#         class(x) <- NULL # Works for multiple lags !!
+#         res <- c(x[gn],flagleadlCpp(x[-gn],-n,fill,g[[1L]],g[[2L]],g[[3L]],G_t(t),stubs))
+#         ax[["names"]] <- names(res)
+#         return(setAttributes(res, ax))
+#       }
+#   } else return(flagleadlCpp(x,-n,fill,g[[1L]],g[[2L]],g[[3L]],G_t(t),stubs))
+# }
+# flead.data.frame <- function(x, n = 1, g = NULL, t = NULL, fill = NA, stubs = TRUE, ...) {
+#   flag.data.frame(x, -n, g, t, fill, stubs, ...)
+# }
+# flead.pdata.frame <- function(x, n = 1, fill = NA, stubs = TRUE, ...) {
+#   flag.pdata.frame(x, -n, fill, stubs, ...)
+# }
+
+
+
+
+
 
 
 
