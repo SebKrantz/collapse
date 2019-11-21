@@ -507,8 +507,15 @@ NumericVector fgrowthCpp(const NumericVector& x, const IntegerVector& n = 1, con
 
   DUPLICATE_ATTRIB(out, x);
   if(ncol != 1) {
-    if(x.hasAttribute("names")) out.attr("names") = R_NilValue;
+    Rf_setAttrib(out, R_NamesSymbol, R_NilValue); // if(x.hasAttribute("names")) out.attr("names") = R_NilValue;
     out.attr("dim") = Dimension(l, ncol);
+    if(Rf_isObject(x)) {
+      CharacterVector classes = out.attr("class");
+      classes.push_back("matrix");
+      out.attr("class") = classes;
+    } else {
+      out.attr("class") = "matrix";
+    }
     if(names) out.attr("dimnames") = List::create(x.attr("names"), colnam);
   }
 

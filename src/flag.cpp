@@ -178,9 +178,16 @@ Vector<RTYPE> flagleadCppImpl(const Vector<RTYPE>& x, const IntegerVector& n, co
   }
   DUPLICATE_ATTRIB(out, x);
   if(ns != 1) {
-    if(x.hasAttribute("names")) out.attr("names") = R_NilValue; // fastest ??
-    out.attr("dim") = Dimension(l, ns);
-    if(names) out.attr("dimnames") = List::create(x.attr("names"), colnam);
+    Rf_setAttrib(out, R_NamesSymbol, R_NilValue); // if(x.hasAttribute("names")) out.attr("names") = R_NilValue; // fastest ?? Rf_setAttrib(x, R_NamesSymbol, R_NilValue);
+    out.attr("dim") = Dimension(l, ns); // Rf_dimgets(Dimension(l, ns));
+    if(Rf_isObject(x)) { // out.attr("class") = CharacterVector::create(out.attr("class"),"matrix"); // Rf_dimgets(Dimension(l, ns));
+      CharacterVector classes = out.attr("class");
+      classes.push_back("matrix");
+      out.attr("class") = classes;
+    } else {
+      out.attr("class") = "matrix"; // Rf_classgets(Rf_installChar("matrix"));
+    }
+    if(names) out.attr("dimnames") = List::create(x.attr("names"), colnam); // Rf_dimnamesgets(List::create(x.attr("names"), colnam));
     // out.attr("class") = CharacterVector::create(x.attr("class"),"matrix");
   }
   return out;
