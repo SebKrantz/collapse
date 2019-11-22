@@ -31,7 +31,7 @@ psmat.default <- function(x, g, t = NULL, transpose = FALSE, ...) {
     }
   }
 }
-psmat.data.frame <- function(x, by, t = NULL, cols = NULL, transpose = FALSE, array = FALSE, ...) {
+psmat.data.frame <- function(x, by, t = NULL, cols = NULL, transpose = FALSE, array = TRUE, ...) {
   if(is.atomic(by) && length(by) == 1) {
     n <- round(by)
     if(transpose) {
@@ -86,12 +86,12 @@ psmat.pseries <- function(x, transpose = FALSE, ...) {
   if(length(index) > 2L) index <- c(interaction(index[-length(index)], drop = TRUE), index[length(index)])
   psmatCpp(x, index[[1L]], index[[2L]], transpose)
 }
-psmat.pdata.frame <- function(x, transpose = FALSE, array = FALSE, ...) {
+psmat.pdata.frame <- function(x, transpose = FALSE, array = TRUE, ...) {
   index <- attr(x, "index")
   if(length(index) > 2L) index <- c(interaction(index[-length(index)], drop = TRUE), index[length(index)])
   res <- lapply(x, psmatCpp, index[[1L]], index[[2L]], transpose)
   if(array) {
-   if(length(res) == 1L) return(res[[1L]]) else return(simplify2array(res))
+    if(length(res) == 1L) return(res[[1L]]) else return(simplify2array(res))
   } else return(res)
 }
 

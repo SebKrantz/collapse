@@ -6,20 +6,23 @@
 \alias{GRP.pseries}
 \alias{GRP.pdata.frame}
 \alias{GRP.grouped_df}
+\alias{is.GRP}
+\alias{print.GRP}
+\alias{plot.GRP}
 \title{Fast Grouping / \code{collapse} Grouping Objects}
 \usage{
 \method{GRP}{default}(X, by = if(is.atomic(X)) NULL else seq_along(X), sort = TRUE, order = 1L,
     na.last = FALSE, return.groups = TRUE, return.order = FALSE, ...)
 
-\method{GRP}{factor}(X)
-\method{GRP}{qG}(X)
-\method{GRP}{pseries}(X)
-\method{GRP}{pdata.frame}(X)
-\method{GRP}{grouped_df}(X)
+\method{GRP}{factor}(X, ...)
+\method{GRP}{qG}(X, ...)
+\method{GRP}{pseries}(X, ...)
+\method{GRP}{pdata.frame}(X, ...)
+\method{GRP}{grouped_df}(X, ...)
 
-\method{names}{GRP}(g)
-\method{print}{GRP}(g, n = 6)
-\method{plot}{GRP}(g, breaks = "auto", type = "s", horizontal = FALSE)
+\method{group_names}{GRP}(g)
+\method{print}{GRP}(g, n = 6, ...)
+\method{plot}{GRP}(g, breaks = "auto", type = "s", horizontal = FALSE, ...)
 }
 \arguments{
   \item{X}{a vector or data.frame (default method), or classed object (conversion methods).}

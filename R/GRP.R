@@ -20,7 +20,7 @@ forderv <- function(x, by = seq_along(x), retGrp = FALSE, sort = TRUE, order = 1
 }
 
 GRP.default <- function(X, by = NULL, sort = TRUE, order = 1L, na.last = FALSE,
-                        return.groups = TRUE, return.order = FALSE) { # , gs = TRUE # o
+                        return.groups = TRUE, return.order = FALSE, ...) { # , gs = TRUE # o
 
   call <- match.call()
 
@@ -72,7 +72,7 @@ GRP.default <- function(X, by = NULL, sort = TRUE, order = 1L, na.last = FALSE,
 
 is.GRP <- function(x) inherits(x, "GRP")
 
-group.names.GRP <- function(g, force.char = TRUE) {
+group_names.GRP <- function(g, force.char = TRUE) {
   if(is.null(g[[4L]])) return(NULL)
   groups <- g[[4L]]
   if(length(groups) == 1L) {
@@ -80,7 +80,7 @@ group.names.GRP <- function(g, force.char = TRUE) {
   } else do.call(paste, c(groups, list(sep = ".")))
 }
 
-print.GRP <- function(g, n = 6) {
+print.GRP <- function(g, n = 6, ...) {
   ord <- g[[6L]]
   cat(paste("collapse grouping object of length",length(g[[2L]]),"with",
             g[[1L]],ifelse(any(ord),"ordered","unordered"),"groups"), fill = TRUE)
@@ -109,7 +109,7 @@ print.GRP <- function(g, n = 6) {
   }
 }
 
-plot.GRP <- function(g, breaks = "auto", type = "s", horizontal = FALSE) {
+plot.GRP <- function(g, breaks = "auto", type = "s", horizontal = FALSE, ...) {
   settings <- par(c("mfrow","mar","mgp"))
   par(mfrow = if(horizontal) 1:2 else 2:1, mar = c(3.9,4.1,2.1,1), mgp = c(2.5,1,0))
   if(breaks == "auto") {

@@ -20,7 +20,7 @@
 #   y
 # }
 
-fsplit <- split.default # slightly slower !! (Csplit not as fast as internal!! !!)
+# fsplit <- split.default # slightly slower !! (Csplit not as fast as internal!! !!)
 
 # Faster version of BY:
 BY <- function(X, ...) { # g, FUN, ..., use.g.names = TRUE, sort = TRUE, expand.wide = FALSE, parallel = FALSE, mc.cores = 1L, return = c("same","matrix","data.frame","list")
@@ -35,7 +35,7 @@ BY.default <- function(X, g, FUN, ..., use.g.names = TRUE, sort = TRUE,
   simplify <- switch(return[1L], same = TRUE, list = FALSE, stop("BY.default only supports same (simplified) and list output!"))
   if(!is.factor(g)) g <- if(is.GRP(g)) as.factor.GRP(g) else if(is.list(g))
                          as.factor.GRP(GRP(g, sort = sort)) else qF(g, ordered = sort)
-    res <- aplyfun(fsplit(X, g), FUN, ...)
+    res <- aplyfun(split.default(X, g), FUN, ...)
     if(simplify) {
       if(expand.wide) {
         res <- do.call(rbind, res)
@@ -77,13 +77,13 @@ BY.data.frame <- function(X, g, FUN, ..., use.g.names = TRUE, sort = TRUE,
     ax <- attributes(X)
     if(expand.wide) {
       if(return == 1L) {
-        splitfun <- function(x) mctl(do.call(rbind, lapply(fsplit(x, g), FUN, ...)), names = TRUE)
+        splitfun <- function(x) mctl(do.call(rbind, lapply(split.default(x, g), FUN, ...)), names = TRUE)
         res <- unlist(aplyfun(X, splitfun), recursive = FALSE, use.names = TRUE)
         ax[["row.names"]] <- if(use.g.names && !inherits(X, "data.table")) attr(g, "levels") else .set_row_names(length(res[[1L]])) # faster than nlevels ??
         ax[["names"]] <- names(res)
       } else {
         attributes(X) <- NULL
-        splitfun <- function(x) do.call(rbind, lapply(fsplit(x, g), FUN, ...))
+        splitfun <- function(x) do.call(rbind, lapply(split.default(x, g), FUN, ...))
         res <- do.call(cbind, aplyfun(X, splitfun))
         dr <- dim(res)
         dn <- dimnames(res) # works, but what if dn[[2L]] is NULL ??
@@ -96,14 +96,14 @@ BY.data.frame <- function(X, g, FUN, ..., use.g.names = TRUE, sort = TRUE,
       attributes(X) <- NULL
       if(use.g.names && (matl || !inherits(X, "data.table"))) {
         res <- vector("list", length(X))
-        res[[1L]] <- unlist(lapply(fsplit(X[[1L]], g), FUN, ...), FALSE, TRUE) # could make to use row.names -> `names<-`(X[[1L]], ax[["row.names"]]) !!!!!!!!!!!!!. but i discard it because this is not so common for data.frame to have non-numeric row names.
+        res[[1L]] <- unlist(lapply(split.default(X[[1L]], g), FUN, ...), FALSE, TRUE) # could make to use row.names -> `names<-`(X[[1L]], ax[["row.names"]]) !!!!!!!!!!!!!. but i discard it because this is not so common for data.frame to have non-numeric row names.
         if(matl) dn <- list(names(res[[1L]]), ax[["names"]]) else
           ax[["row.names"]] <- names(res[[1L]])
         setattr_clp(res[[1L]], "names", NULL) # faster than  names(res[[1]]) <- NULL
         if(typeof(res[[1L]]) == typeof(X[[1L]]) && !matl) { # length(res[[1]]) == nrow(X) &&   safe ??
           duplattributes(res[[1L]], X[[1L]])
-          splitfun <- function(x) duplAttributes(unlist(lapply(fsplit(x, g), FUN, ...), FALSE, FALSE), x)
-        } else splitfun <- function(x) unlist(lapply(fsplit(x, g), FUN, ...), FALSE, FALSE)
+          splitfun <- function(x) duplAttributes(unlist(lapply(split.default(x, g), FUN, ...), FALSE, FALSE), x)
+        } else splitfun <- function(x) unlist(lapply(split.default(x, g), FUN, ...), FALSE, FALSE)
         res[-1L] <- aplyfun(X[-1L], splitfun)
         if(matl) {
           res <- do.call(cbind, res)
@@ -111,12 +111,12 @@ BY.data.frame <- function(X, g, FUN, ..., use.g.names = TRUE, sort = TRUE,
         }
       } else {
         if(matl) {
-          splitfun <- function(x) unlist(lapply(fsplit(x, g), FUN, ...), FALSE, FALSE)
+          splitfun <- function(x) unlist(lapply(split.default(x, g), FUN, ...), FALSE, FALSE)
           res <- do.call(cbind, aplyfun(X, splitfun))
           ax <- c(list(dim = dim(res), dimnames = list(NULL, ax[["names"]])),
                   ax[!(names(ax) %in% c("names","row.names","class"))])
         } else {
-          splitfun <- function(x) cond_duplAttributes(unlist(lapply(fsplit(x, g), FUN, ...), FALSE, FALSE), x)
+          splitfun <- function(x) cond_duplAttributes(unlist(lapply(split.default(x, g), FUN, ...), FALSE, FALSE), x)
           res <- aplyfun(X, splitfun)
           if(length(res[[1L]]) != length(X[[1L]])) ax[["row.names"]] <- .set_row_names(length(res[[1L]]))
         }
@@ -124,9 +124,9 @@ BY.data.frame <- function(X, g, FUN, ..., use.g.names = TRUE, sort = TRUE,
     }
     return(setAttributes(res, ax))
   } else {
-    if(expand.wide) return(aplyfun(X, function(x) do.call(rbind, lapply(fsplit(x, g), FUN, ...)))) else {
-      if(use.g.names) return(aplyfun(X, function(x) lapply(fsplit(x, g), FUN, ...))) else
-        return(aplyfun(X, function(x) `names<-`(lapply(fsplit(x, g), FUN, ...), NULL)))
+    if(expand.wide) return(aplyfun(X, function(x) do.call(rbind, lapply(split.default(x, g), FUN, ...)))) else {
+      if(use.g.names) return(aplyfun(X, function(x) lapply(split.default(x, g), FUN, ...))) else
+        return(aplyfun(X, function(x) `names<-`(lapply(split.default(x, g), FUN, ...), NULL)))
     }
   }
 }
@@ -143,12 +143,12 @@ BY.matrix <- function(X, g, FUN, ..., use.g.names = TRUE, sort = TRUE,
     ax <- attributes(X)
     if(expand.wide) {
       if(return == 1L) {
-        splitfun <- function(x) mctl(do.call(rbind, lapply(fsplit(x, g), FUN, ...)), names = TRUE)
+        splitfun <- function(x) mctl(do.call(rbind, lapply(split.default(x, g), FUN, ...)), names = TRUE)
         res <- unlist(aplyfun(mctl(X, names = TRUE), splitfun), recursive = FALSE, use.names = TRUE)
         ax <- c(list(names = names(res), row.names = if(use.g.names && !inherits(X, "data.table"))
           attr(g, "levels") else .set_row_names(length(res[[1L]])), class = "data.frame"), ax[!(names(ax) %in% c("dim","dimnames","class"))])
       } else {
-        splitfun <- function(x) do.call(rbind, lapply(fsplit(x, g), FUN, ...))
+        splitfun <- function(x) do.call(rbind, lapply(split.default(x, g), FUN, ...))
         res <- do.call(cbind, aplyfun(mctl(X), splitfun))
         dr <- dim(res)
         ax[["dimnames"]][1L] <- if(use.g.names) list(attr(g, "levels")) else list(NULL)        # works, but what if dn[[2L]] is NULL ??
@@ -156,7 +156,7 @@ BY.matrix <- function(X, g, FUN, ..., use.g.names = TRUE, sort = TRUE,
         ax[["dim"]] <- dr
       }
     } else {
-      splitfun <- function(x, un = FALSE) unlist(lapply(fsplit(x, g), FUN, ...), FALSE, un)
+      splitfun <- function(x, un = FALSE) unlist(lapply(split.default(x, g), FUN, ...), FALSE, un)
       if(use.g.names) {
         res <- vector("list", ncol(X))
         res[[1L]] <- splitfun(X[, 1L], un = TRUE) # rewrite all in C++ ??
@@ -187,9 +187,9 @@ BY.matrix <- function(X, g, FUN, ..., use.g.names = TRUE, sort = TRUE,
     }
     return(setAttributes(res, ax))
   } else {
-    if(expand.wide) return(aplyfun(mctl(X, names = TRUE), function(x) do.call(rbind, lapply(fsplit(x, g), FUN, ...)))) else if(use.g.names)
-      return(aplyfun(mctl(X, names = TRUE), function(x) lapply(fsplit(x, g), FUN, ...))) else
-        return(aplyfun(mctl(X, names = TRUE), function(x) `names<-`(lapply(fsplit(x, g), FUN, ...), NULL)))
+    if(expand.wide) return(aplyfun(mctl(X, names = TRUE), function(x) do.call(rbind, lapply(split.default(x, g), FUN, ...)))) else if(use.g.names)
+      return(aplyfun(mctl(X, names = TRUE), function(x) lapply(split.default(x, g), FUN, ...))) else
+        return(aplyfun(mctl(X, names = TRUE), function(x) `names<-`(lapply(split.default(x, g), FUN, ...), NULL)))
   }
 }
 

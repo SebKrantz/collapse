@@ -13,13 +13,13 @@ The \code{TRA} argument can further be used to transform \code{x} using its (gro
 \method{fmean}{default}(x, g = NULL, w = NULL, TRA = FALSE, na.rm = TRUE,
       use.g.names = TRUE, ...)
 
-\method{fmean}{matrix}(x, g = NULL, w = NULL, TRA = FALSE, na.rm = TRUE, 
-      drop = TRUE, use.g.names = TRUE, ...)
+\method{fmean}{matrix}(x, g = NULL, w = NULL, TRA = FALSE, na.rm = TRUE,
+      use.g.names = TRUE, drop = TRUE, ...)
 
-\method{fmean}{data.frame}(x, g = NULL, w = NULL, TRA = FALSE, na.rm = TRUE, 
-      drop = TRUE, use.g.names = TRUE, ...)
+\method{fmean}{data.frame}(x, g = NULL, w = NULL, TRA = FALSE, na.rm = TRUE,
+      use.g.names = TRUE, drop = TRUE, ...)
 
-\method{fmean}{grouped_df}(x, w = NULL, TRA = FALSE, na.rm = TRUE, 
+\method{fmean}{grouped_df}(x, w = NULL, TRA = FALSE, na.rm = TRUE,
       drop.groups = FALSE, drop.w = TRUE, ...)
 }
 \arguments{
@@ -34,13 +34,13 @@ The \code{TRA} argument can further be used to transform \code{x} using its (gro
 
 \item{na.rm}{logical. Skip missing values in \code{x}. Defaults to TRUE and implemented at very little computational cost. If \code{na.rm = FALSE} a \code{NA} is returned when encountered.}
 
-\item{drop}{\emph{matrix and data.frame method:} drop dimensions and return an atomic vector, if \code{g = NULL} and \code{TRA = FALSE}.}
-
 \item{use.g.names}{make group-names and add to the result as names (vector method) or row-names (matrix and data.frame method). No row-names are generated for data.tables and grouped tibbles.}
 
-\item{drop.groups}{\emph{grouped_df method:} Logical. Remove grouping variables after computation.}
+\item{drop}{\emph{matrix and data.frame method:} drop dimensions and return an atomic vector, if \code{g = NULL} and \code{TRA = FALSE}.}
 
-\item{drop.w}{\emph{grouped_df method:} Logical. Remove weighting variable after computation (if contained in \code{grouped_df}).}
+\item{keep.group_vars}{\emph{grouped_df method:} Logical. \code{FALSE} removes grouping variables after computation.}
+
+\item{keep.w}{\emph{grouped_df method:} Logical. Ratain summed weighting variable after computation (if contained in \code{grouped_df}).}
 
 }
 \details{
@@ -48,9 +48,9 @@ Non-grouped mean computations internally utilize long-doubles in C++, for additi
 
 Missing-value removal as controlled by the \code{na.rm} argument is done very efficiently by simply skipping them in the computation (thus setting \code{na.rm = FALSE} on data with no missing values doesn't give extra speed). Large performance gains can nevertheless be achieved in the presence of missing values if \code{na.rm = FALSE}, since then the corresponding computation is terminated once a \code{NA} is encountered and \code{NA} is returned (unlike \code{base::mean} which just runs through without any checks).
 
-The weighted mean is computed as \code{sum(x * w) / sum(w)}. If \code{na.rm = TRUE}, missing values will be removed from both \code{x} and \code{w} i.e. utilizing only \code{x[complete.cases(x,w)]} and \code{w[complete.cases(x,w)]}. 
+The weighted mean is computed as \code{sum(x * w) / sum(w)}. If \code{na.rm = TRUE}, missing values will be removed from both \code{x} and \code{w} i.e. utilizing only \code{x[complete.cases(x,w)]} and \code{w[complete.cases(x,w)]}.
 
-This all seamlessly generalizes to grouped computations, which are performed in a single pass (without splitting the data) and therefore extremely fast. 
+This all seamlessly generalizes to grouped computations, which are performed in a single pass (without splitting the data) and therefore extremely fast.
 
 When applied to data frame's with groups or \code{drop = FALSE}, \code{fmean} preserves all column attributes (such as variable labels) but does not distinguish between classed and unclassed object (thus applying \code{fmean} to a factor column will give a 'malformed factor' error). The attributes of the \code{data.frame} itself are also perserved.
 }
@@ -79,15 +79,15 @@ fmean(mtcars, g, TRA = "-") # etc...
 ## matrix method
 m <- qM(mtcars)
 fmean(m)
-fmean(m, g) 
+fmean(m, g)
 fmean(m, g, TRA = "-") # etc...
 
 ## method for grouped tibbles - for use with dplyr:
 library(dplyr)
-mtcars \%>\% group_by(cyl,vs,am) \%>\% fmean           # Ordinary 
+mtcars \%>\% group_by(cyl,vs,am) \%>\% fmean           # Ordinary
 mtcars \%>\% group_by(cyl,vs,am) \%>\% fmean(hp)       # Weighted
 mtcars \%>\% group_by(cyl,vs,am) \%>\% fmean(hp,"-")   # Weighted Transform
-mtcars \%>\% group_by(cyl,vs,am) \%>\% 
+mtcars \%>\% group_by(cyl,vs,am) \%>\%
            select(mpg,hp) \%>\% fmean(hp,"-")        # Only mpg
 }}
 

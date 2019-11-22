@@ -37,12 +37,12 @@ W.matrix <- function(x, g = NULL, w = NULL, na.rm = TRUE, add.global.mean = FALS
     return(add_stub(BWmCpp(x,g[[1L]],g[[2L]],g[[3L]],w,na.rm,add.global.mean), stub))
   }
 }
-W.grouped_df <- function(x, w = NULL, na.rm = TRUE, add.global.mean = FALSE, stub = "W.", keep.group_keys = TRUE, keep.w = TRUE, ...) {
+W.grouped_df <- function(x, w = NULL, na.rm = TRUE, add.global.mean = FALSE, stub = "W.", keep.group_vars = TRUE, keep.w = TRUE, ...) {
   g <- GRP.grouped_df(x)
   wsym <- deparse(substitute(w))
   nam <- names(x)
   gn2 <- which(nam %in% g[[5L]])
-  gn <- if(keep.group_keys) gn2 else NULL
+  gn <- if(keep.group_vars) gn2 else NULL
   if(!(wsym == "NULL" || is.na(wn <- match(wsym, nam)))) {
     w <- x[[wn]]
     if(any(gn2 == wn)) stop("Weights coincide with grouping variables!")
@@ -185,12 +185,12 @@ B.matrix <- function(x, g = NULL, w = NULL, na.rm = TRUE, fill = FALSE, stub = "
     return(add_stub(BWmCpp(x,g[[1L]],g[[2L]],g[[3L]],w,na.rm,fill,TRUE), stub))
   }
 }
-B.grouped_df <- function(x, w = NULL, na.rm = TRUE, fill = FALSE, stub = "B.", keep.group_keys = TRUE, keep.w = TRUE, ...) {
+B.grouped_df <- function(x, w = NULL, na.rm = TRUE, fill = FALSE, stub = "B.", keep.group_vars = TRUE, keep.w = TRUE, ...) {
   g <- GRP.grouped_df(x)
   wsym <- deparse(substitute(w))
   nam <- names(x)
   gn2 <- which(nam %in% g[[5L]])
-  gn <- if(keep.group_keys) gn2 else NULL
+  gn <- if(keep.group_vars) gn2 else NULL
   if(!(wsym == "NULL" || is.na(wn <- match(wsym, nam)))) {
     w <- x[[wn]]
     if(any(gn2 == wn)) stop("Weights coincide with grouping variables!")
@@ -308,7 +308,7 @@ B.data.frame <- function(x, by = NULL, w = NULL, cols = is.numeric, na.rm = TRUE
 
 
 # Previous Versions: also allow column indices and names, and properly adding (keeping) w to data -> updated code innovated in fscale.R
-# W.grouped_df <- function(x, w = NULL, na.rm = TRUE, add.global.mean = FALSE, give.names = FALSE, drop.groups = FALSE, drop.w = TRUE, ...) {
+# W.grouped_df <- function(x, w = NULL, na.rm = TRUE, add.global.mean = FALSE, give.names = FALSE, keep.group_vars = TRUE, drop.w = TRUE, ...) {
 #   g <- GRP.grouped_df(x)
 #   wsym <- deparse(substitute(w))
 #   nam <- names(x)
@@ -317,10 +317,10 @@ B.data.frame <- function(x, by = NULL, w = NULL, cols = is.numeric, na.rm = TRUE
 #   if(!(wsym == "NULL" || is.na(wn <- match(wsym, nam)))) {
 #     w <- x[[wn]]
 #     if(any(gn == wn)) stop("Weights coincide with grouping variables!")
-#     if(drop.w) if(!length(gn)) x[[wn]] <- NULL else if(drop.groups) gn <- c(gn,wn) else gn2 <- c(gn2,wn)
+#     if(drop.w) if(!length(gn)) x[[wn]] <- NULL else if(keep.group_vars) gn <- c(gn,wn) else gn2 <- c(gn2,wn)
 #   }
 #   if(length(gn)) {
-#     if(drop.groups)
+#     if(keep.group_vars)
 #       return(give_nam(BWlCpp(x[-gn],g[[1L]],g[[2L]],g[[3L]],w,na.rm,add.global.mean), give.names)) else {
 #         ax <- attributes(x)
 #         attributes(x) <- NULL

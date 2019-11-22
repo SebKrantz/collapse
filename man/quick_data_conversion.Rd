@@ -1,8 +1,10 @@
-\name{quick_data_conversion}
-\alias{quick_data_conversion}
+\name{Quick Data Conversion}
+\alias{quick-data-conversion}
 \alias{qDF}
 \alias{qDT}
 \alias{qM}
+\alias{mctl}
+\alias{mrtl}
 \alias{qF}
 \alias{qG}
 %- Also NEED an '\alias' for EACH other topic documented here.
@@ -12,9 +14,9 @@ Convert common data types quickly, without method dispatch and extensive checks:
 \itemize{
 \item \code{qDF} and \code{qDT} convert vectors, matrices, higher-dimensional arrays and suitable lists to \code{data.frame} and \code{data.table} respectively.
 \item \code{qM} converts vectors, higher-dimensional arrays, data.frames and suitable lists to matrix.
-\item \code{mctl} and \code{mrtl} are exported C++ functions that column -or row-wise convert a matrix to list, data.frame or data.table.
+\item \code{mctl} and \code{mrtl} are exported C++ functions that column -or row-wise convert a matrix to list, data.frame or data.table. They are used internally by \code{qDF} and \code{qDT}, \code{dapply}, \code{BY}, etc...
 \item \code{qF} converts atomic vectors to factor.
-\item \code{qG} converts atomic vectors to a quick-group (class attribute 'qG') - a kind of factor light which is just an integer vector with an attribute 'N.groups' indicating the number of groups. (This is convenient especially for numeric vectors because it saves converting the levels to character which can require a lot of time).
+\item \code{qG} is a programmers function that converts atomic vectors to a quick-group (class attribute 'qG') - a kind of factor light which is just an integer vector with an attribute 'N.groups' indicating the number of groups. (Thus saving time consumed by converting the levels of a numeric vector to character).
 }
 }
 \usage{
@@ -30,7 +32,7 @@ qG(x, ordered = TRUE)
 \arguments{
   \item{X}{A vector, matrix, higher-dimensional array, data.frame or list. \code{mctl} and \code{mrtl} only take matrices.}
   \item{x}{A atomic vector.}
-  \item{ordered}{should groups be ordered, so that 1 represents the first group, 2 the second etc.?}
+  \item{ordered}{logical. \code{TRUE} sorts the levels and returns an ordered facor (such that among the underlying integers 1 represents the first level, 2 the second etc...)}
   \item{names}{should the list be named?}
   \item{ret}{3 return options: 0L - return a list, 1L - return a data.frame, 2L - return a data.table.}
 }

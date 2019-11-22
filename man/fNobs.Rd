@@ -12,11 +12,11 @@
 \usage{
 \method{fNobs}{default}(x, g = NULL, TRA = FALSE, use.g.names = TRUE, ...)
 
-\method{fNobs}{matrix}(x, g = NULL, TRA = FALSE, drop = TRUE, use.g.names = TRUE, ...)
+\method{fNobs}{matrix}(x, g = NULL, TRA = FALSE, use.g.names = TRUE, drop = TRUE, ...)
 
-\method{fNobs}{data.frame}(x, g = NULL, TRA = FALSE, drop = TRUE, use.g.names = TRUE, ...)
+\method{fNobs}{data.frame}(x, g = NULL, TRA = FALSE, use.g.names = TRUE, drop = TRUE, ...)
 
-\method{fNobs}{grouped_df}(x, TRA = FALSE, drop.groups = FALSE, ...)
+\method{fNobs}{grouped_df}(x, TRA = FALSE, keep.group_vars = TRUE, ...)
 }
 \arguments{
 \item{x}{a vector, matrix, data.frame or grouped tibble (\code{dplyr::grouped_df}).}
@@ -26,12 +26,15 @@
 \item{TRA}{an integer or quoted operator indicating the transformation to perform:
 1 - "replace_fill"     |     2 - "replace"     |     3 - "-"     |     4 - "-+"     |     5 - "/"     |     6 - "\%"     |     7 - "+"     |     8 - "*". See \code{\link{TRA}}.}
 
-\item{drop}{for matrix and data.frame method: drop dimensions i.e. return a vector of column-Nobs if \code{g = NULL} and \code{TRA = FALSE}.}
+\item{use.g.names}{make group-names and add to the result as names (vector method) or row-names (matrix and data.frame method). No row-names are generated for data.tables and grouped tibbles.}
 
-\item{use.g.names}{make group-names and add to the result as names (vector method) or row-names (matrix and data.frame method). No row-names are generated for data.table's and grouped tibbles.}
+\item{drop}{\emph{matrix and data.frame method:} drop dimensions and return an atomic vector, if \code{g = NULL} and \code{TRA = FALSE}.}
+
+\item{keep.group_vars}{\emph{grouped_df method:} Logical. \code{FALSE} removes grouping variables after computation.}
+
 }
 \details{
-\code{fNobs} preserves all attributes of non-classed vectors / columns, and only the 'label' attribute (if available) of classed vectors / columns (i.e. dates or factors). When applied to data frames and matrices, the row-names are adjusted as necessary. 
+\code{fNobs} preserves all attributes of non-classed vectors / columns, and only the 'label' attribute (if available) of classed vectors / columns (i.e. dates or factors). When applied to data frames and matrices, the row-names are adjusted as necessary.
 }
 \value{
 Integer. The number of non-missing observations in \code{x}, grouped by \code{g}, or (if \code{TRA} is used) \code{x} transformed by its number of non-missing observations, grouped by \code{g}.
@@ -55,7 +58,7 @@ fNobs(aqm, airquality$Month)
 ## method for grouped tibbles - for use with dplyr:
 library(dplyr)
 airquality \%>\% group_by(Month) \%>\% fNobs
-wlddev \%>\% group_by(country) \%>\% 
+wlddev \%>\% group_by(country) \%>\%
            select(PCGDP,LIFEEX,GINI,ODA) \%>\% fNobs
 
 }

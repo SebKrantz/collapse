@@ -38,12 +38,12 @@ fscale.matrix <- function(x, g = NULL, w = NULL, na.rm = TRUE, stable.algo = TRU
     return(fscalemCpp(x,g[[1L]],g[[2L]],g[[3L]],w,na.rm,stable.algo))
   }
 }
-fscale.grouped_df <- function(x, w = NULL, na.rm = TRUE, stable.algo = TRUE, keep.group_keys = TRUE, keep.w = TRUE, ...) {
+fscale.grouped_df <- function(x, w = NULL, na.rm = TRUE, stable.algo = TRUE, keep.group_vars = TRUE, keep.w = TRUE, ...) {
   g <- GRP.grouped_df(x)
   wsym <- deparse(substitute(w))
   nam <- names(x)
   gn2 <- which(nam %in% g[[5L]])
-  gn <- if(keep.group_keys) gn2 else NULL
+  gn <- if(keep.group_vars) gn2 else NULL
   if(!(wsym == "NULL" || is.na(wn <- match(wsym, nam)))) {
     w <- x[[wn]]
     if(any(gn2 == wn)) stop("Weights coincide with grouping variables!")
@@ -92,12 +92,12 @@ STD.pseries <- function(x, effect = 1L, w = NULL, na.rm = TRUE, stable.algo = TR
 STD.matrix <- function(x, g = NULL, w = NULL, na.rm = TRUE, stable.algo = TRUE, stub = "STD.", ...) {
   add_stub(fscale.matrix(x, g, w, na.rm, stable.algo), stub)
 }
-STD.grouped_df <- function(x, w = NULL, na.rm = TRUE, stable.algo = TRUE, stub = "STD.", keep.group_keys = TRUE, keep.w = TRUE, ...) {
+STD.grouped_df <- function(x, w = NULL, na.rm = TRUE, stable.algo = TRUE, stub = "STD.", keep.group_vars = TRUE, keep.w = TRUE, ...) {
   g <- GRP.grouped_df(x)
   wsym <- deparse(substitute(w))
   nam <- names(x)
   gn2 <- which(nam %in% g[[5L]])
-  gn <- if(keep.group_keys) gn2 else NULL
+  gn <- if(keep.group_vars) gn2 else NULL
   if(!(wsym == "NULL" || is.na(wn <- match(wsym, nam)))) {
     w <- x[[wn]]
     if(any(gn2 == wn)) stop("Weights coincide with grouping variables!")

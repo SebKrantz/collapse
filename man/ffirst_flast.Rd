@@ -1,4 +1,4 @@
-\name{ffirst & flast}
+\name{First & Last Values}
 \alias{ffirst}
 \alias{ffirst.default}
 \alias{ffirst.matrix}
@@ -16,16 +16,20 @@
 
 \usage{
 ## Default S3 method:
-ffirst|flast(x, g = NULL, TRA = FALSE, na.rm = TRUE, use.g.names = TRUE, ...)
+ffirst(x, g = NULL, TRA = FALSE, na.rm = TRUE, use.g.names = TRUE, ...)
+ flast(x, g = NULL, TRA = FALSE, na.rm = TRUE, use.g.names = TRUE, ...)
 
 ## S3 method for class 'matrix'
-ffirst|flast(x, g = NULL, TRA = FALSE, na.rm = TRUE, drop = TRUE, use.g.names = TRUE, ...)
+ffirst(x, g = NULL, TRA = FALSE, na.rm = TRUE, use.g.names = TRUE, drop = TRUE, ...)
+ flast(x, g = NULL, TRA = FALSE, na.rm = TRUE, use.g.names = TRUE, drop = TRUE, ...)
 
 ## S3 method for class 'data.frame'
-ffirst|flast(x, g = NULL, TRA = FALSE, na.rm = TRUE, drop = TRUE, use.g.names = TRUE, ...)
+ffirst(x, g = NULL, TRA = FALSE, na.rm = TRUE, use.g.names = TRUE, drop = TRUE, ...)
+ flast(x, g = NULL, TRA = FALSE, na.rm = TRUE, use.g.names = TRUE, drop = TRUE, ...)
 
 ## S3 method for class 'grouped_df'
-ffirst|flast(x, TRA = FALSE, na.rm = TRUE, drop.groups = FALSE, ...)
+ffirst(x, TRA = FALSE, na.rm = TRUE, keep.group_vars = TRUE, ...)
+ flast(x, TRA = FALSE, na.rm = TRUE, keep.group_vars = TRUE, ...)
 }
 \arguments{
 \item{x}{a vector, matrix, data.frame or grouped tibble (\code{dplyr::grouped_df}).}
@@ -37,9 +41,12 @@ ffirst|flast(x, TRA = FALSE, na.rm = TRUE, drop.groups = FALSE, ...)
 
 \item{na.rm}{logical. Skip missing values and choose the first | last non-missing value i.e. if the first (1) | last (n) value is NA, take the second (2) | second-to-last (n-1) value etc...}
 
-\item{drop}{for matrix and data.frame method: drop dimensions and return an atomic vector, if \code{g = NULL} and \code{TRA = FALSE}.}
+\item{use.g.names}{make group-names and add to the result as names (vector method) or row-names (matrix and data.frame method). No row-names are generated for data.tables and grouped tibbles.}
 
-\item{use.g.names}{make group-names and add to the result as names (vector method) or row-names (matrix and data.frame method). No row-names are generated for data.table's and grouped tibbles. With groups and \code{na.rm = FALSE}, \code{use.g.names = FALSE} will cause the corresponding row-names to be retained. }
+\item{drop}{\emph{matrix and data.frame method:} drop dimensions and return an atomic vector, if \code{g = NULL} and \code{TRA = FALSE}.}
+
+\item{keep.group_vars}{\emph{grouped_df method:} Logical. \code{FALSE} removes grouping variables after computation.}
+
 }
 \value{
 \code{ffirst} returns the first value in \code{x}, grouped by \code{g}, or (if \code{TRA} is used) \code{x} transformed by its first value, grouped by \code{g}. Similarly \code{flast} returns the last value in \code{x}, ...

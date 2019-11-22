@@ -10,17 +10,17 @@
 The \code{TRA} argument can further be used to transform \code{x} using its (grouped, weighted) mode.
 }
 \usage{
-\method{fmode}{default}(x, g = NULL, w = NULL, TRA = FALSE, na.rm = TRUE, 
+\method{fmode}{default}(x, g = NULL, w = NULL, TRA = FALSE, na.rm = TRUE,
       use.g.names = TRUE, ...)
 
-\method{fmode}{matrix}(x, g = NULL, w = NULL, TRA = FALSE, na.rm = TRUE, 
-      drop = TRUE, use.g.names = TRUE, ...)
+\method{fmode}{matrix}(x, g = NULL, w = NULL, TRA = FALSE, na.rm = TRUE,
+      use.g.names = TRUE, drop = TRUE, ...)
 
-\method{fmode}{data.frame}(x, g = NULL, w = NULL, TRA = FALSE, na.rm = TRUE, 
-      drop = TRUE, use.g.names = TRUE, ...)
+\method{fmode}{data.frame}(x, g = NULL, w = NULL, TRA = FALSE, na.rm = TRUE,
+      use.g.names = TRUE, drop = TRUE, ...)
 
-\method{fmode}{grouped_df}(x, w = NULL, TRA = FALSE, na.rm = TRUE, 
-      drop.groups = FALSE, drop.w = TRUE, ...)
+\method{fmode}{grouped_df}(x, w = NULL, TRA = FALSE, na.rm = TRUE,
+      keep.group_vars = TRUE, keep.w = TRUE, ...)
 }
 \arguments{
 \item{x}{a numeric vector, matrix, data.frame or grouped tibble (\code{dplyr::grouped_df}).}
@@ -38,23 +38,26 @@ The \code{TRA} argument can further be used to transform \code{x} using its (gro
 
 \item{use.g.names}{make group-names and add to the result as names (vector method) or row-names (matrix and data.frame method). No row-names are generated for data.tables and grouped tibbles.}
 
-\item{drop.groups}{\emph{grouped_df method:} Logical. Remove grouping variables after computation.}
+\item{drop}{\emph{matrix and data.frame method:} drop dimensions and return an atomic vector, if \code{g = NULL} and \code{TRA = FALSE}.}
 
-\item{drop.w}{\emph{grouped_df method:} Logical. Remove weighting variable after computation (if contained in \code{grouped_df}).}
+\item{keep.group_vars}{\emph{grouped_df method:} Logical. \code{FALSE} removes grouping variables after computation.}
+
+\item{keep.w}{\emph{grouped_df method:} Logical. Ratain max of weighting variable after computation (if contained in \code{grouped_df}).}
+
 }
 \details{
 \code{fmode} implements a very fast algorithm to find the statistical mode utilizing index- hashing implemented in the \code{Rcpp::sugar::IndexHash} class.
 
-If all values are distinct, the first value is returned. If there are multiple dintinct values having the top frequency, the first value established as having the top frequency when passing through the data from element 1 to element n is returned. If \code{na.rm = FALSE}, \code{NA} is not removed but treated as any other value (i.e. it's frequency is counted). If all values are \code{NA}, \code{NA} is always returned. 
+If all values are distinct, the first value is returned. If there are multiple dintinct values having the top frequency, the first value established as having the top frequency when passing through the data from element 1 to element n is returned. If \code{na.rm = FALSE}, \code{NA} is not removed but treated as any other value (i.e. it's frequency is counted). If all values are \code{NA}, \code{NA} is always returned.
 
-The weighted mode is computed by summing up the weights for all distinct values and choosing the value with the largest sum. If \code{na.rm = TRUE}, missing values will be removed from both \code{x} and \code{w} i.e. utilizing only \code{x[complete.cases(x,w)]} and \code{w[complete.cases(x,w)]}. 
+The weighted mode is computed by summing up the weights for all distinct values and choosing the value with the largest sum. If \code{na.rm = TRUE}, missing values will be removed from both \code{x} and \code{w} i.e. utilizing only \code{x[complete.cases(x,w)]} and \code{w[complete.cases(x,w)]}.
 
-This all seamlessly generalizes to grouped computations, which are currently performed by mapping the data to a sparse-array directed by \code{g} and then going group-by group. 
+This all seamlessly generalizes to grouped computations, which are currently performed by mapping the data to a sparse-array directed by \code{g} and then going group-by group.
 
-\code{fmode} preserves all the attributes of the objects it is applied to (apart from names or row-names which are adjusted as necessary). If a data frame is passed to \code{fmode} and \code{drop = TRUE}, \code{base::unlist} will be called on the result, which might or might not be sensible depending on the data at hand. 
+\code{fmode} preserves all the attributes of the objects it is applied to (apart from names or row-names which are adjusted as necessary). If a data frame is passed to \code{fmode} and \code{drop = TRUE}, \code{base::unlist} will be called on the result, which might or might not be sensible depending on the data at hand.
 }
 \value{
-The statistical mode of \code{x}, grouped by \code{g}, or (if \code{TRA} is used) \code{x} transformed by its mode, grouped by \code{g}. See also Details. 
+The statistical mode of \code{x}, grouped by \code{g}, or (if \code{TRA} is used) \code{x} transformed by its mode, grouped by \code{g}. See also Details.
 }
 \examples{
 ## World Development Data
@@ -62,7 +65,7 @@ attach(wlddev)
 ## default vector method
 fmode(PCGDP)                    # Numeric mode
 fmode(PCGDP, iso3c)             # Grouped numeric mode
-fmode(PCGDP, iso3c, LIFEEX)     # Grouped and weighted numeric mode 
+fmode(PCGDP, iso3c, LIFEEX)     # Grouped and weighted numeric mode
 fmode(region)                   # Factor mode
 fmode(date)                     # Date mode (defaults to first value since panel is balanced)
 fmode(country)                  # Character mode (also defaults to first value)
@@ -70,7 +73,7 @@ fmode(OECD)                     # Logical mode
                                 # ...all the above can also be performed grouped and weighted
 ## matrix method
 m <- qM(airquality)
-fmode(m)                             
+fmode(m)
 fmode(m, na.rm = FALSE)         # NA frequency is also counted
 fmode(m, airquality$Month)      # Groupwise
 fmode(m, w = airquality$Day)    # Weighted: Later days in the month are given more weight

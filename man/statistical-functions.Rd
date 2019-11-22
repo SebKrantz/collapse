@@ -1,26 +1,25 @@
-\name{fast statistical functions}
+\name{Fast Statistical Functions}
 \alias{fstats}
 \alias{fast-statistical-functions}
-\alias{fast statistical functions}
 \title{Fast (Grouped, Weighted) Statistical Functions for Matrix-Like Objects}  % Vectors, Matrix and Data Frame Columns}
 \description{
-With \code{fsum}, \code{fprod}, \code{fmean}, \code{fmedian}, \code{fmode}, \code{fvar}, \code{fsd}, \code{fmin}, \code{fmax}, \code{ffirst}, \code{flast}, \code{fNobs} and \code{fNdistinct}, (and the vector-valued \code{fscale}, \code{B} and \code{W}) \code{collapse} presents a coherent set of extremely fast and flexible statistcal functions (S3 generics) to perform column-wise, grouped and weighted computuations on matrix-like objects (atomic vectors, matrices and data.frames, with special support for \code{dplyr} grouped tibbles and data.table's). 
+With \code{fsum}, \code{fprod}, \code{fmean}, \code{fmedian}, \code{fmode}, \code{fvar}, \code{fsd}, \code{fmin}, \code{fmax}, \code{ffirst}, \code{flast}, \code{fNobs} and \code{fNdistinct} (and the vector-valued \code{fscale/STD}, \code{B}, \code{W}, \code{flag/L/F}, \code{fdiff/D} and \code{fgrowth/G}), \code{collapse} presents a coherent set of extremely fast and flexible statistcal functions (S3 generics) to perform column-wise, grouped and weighted computuations on matrix-like objects (atomic vectors, matrices and data.frames, with special support for \code{dplyr} grouped tibbles and data.table's. Vector-valued functions also support \code{plm::pseries} and \code{plm::pdata.frame}'s).
 
 }
 \usage{
-## All functions (FUN) follow a common syntax in 4 methods:
+## All scalar functions (FUN) follow a common syntax in 4 methods:
 
-\method{FUN}{default}(x, g = NULL, [w = NULL,] TRA = FALSE, [na.rm = TRUE,] 
+\method{FUN}{default}(x, g = NULL, [w = NULL,] TRA = FALSE, [na.rm = TRUE,]
     use.g.names = TRUE, ...)
 
-\method{FUN}{matrix}(x, g = NULL, [w = NULL,] TRA = FALSE, [na.rm = TRUE,] 
+\method{FUN}{matrix}(x, g = NULL, [w = NULL,] TRA = FALSE, [na.rm = TRUE,]
     drop = TRUE, use.g.names = TRUE, ...)
 
-\method{FUN}{data.frame}(x, g = NULL, [w = NULL,] TRA = FALSE, [na.rm = TRUE,] 
+\method{FUN}{data.frame}(x, g = NULL, [w = NULL,] TRA = FALSE, [na.rm = TRUE,]
     drop = TRUE, use.g.names = TRUE, ...)
 
-\method{FUN}{grouped_df}(x, [w = NULL,] TRA = FALSE, [na.rm = TRUE,] 
-    drop.groups = FALSE, [drop.w = TRUE,] ...)
+\method{FUN}{grouped_df}(x, [w = NULL,] TRA = FALSE, [na.rm = TRUE,]
+    keep.group_vars = TRUE, [keep.w = TRUE,] ...)
 }
 \arguments{
 \item{x}{a vector, matrix, data.frame or grouped tibble (\code{dplyr::grouped_df}).}
@@ -38,17 +37,17 @@ With \code{fsum}, \code{fprod}, \code{fmean}, \code{fmedian}, \code{fmode}, \cod
 
 \item{use.g.names}{make group-names and add to the result as names (vector method) or row-names (matrix and data.frame method). No row-names are generated for data.tables and grouped tibbles.}
 
-\item{drop.groups}{\emph{grouped_df method:} Logical. Remove grouping variables after computation.}
+\item{keep.group_vars}{\emph{grouped_df method:} Logical. \code{FALSE} removes grouping variables after computation.}
 
-\item{drop.w}{\emph{grouped_df method:} Logical. Remove weighting variable after computation (if contained in \code{grouped_df}).}
+\item{keep.w}{\emph{grouped_df method:} Logical. \code{FALSE} removes weighting variable after computation (if contained in \code{grouped_df}).}
 
 \item{...}{extra arguments to some functions, i.e. the algorithm used.}
 }
 \details{
-Please see the documentation of individual functions. 
+Please see the documentation of individual functions.
 }
 \value{
-The computed value of \code{x}. 
+The computed value of \code{x}.
 }
 \examples{
 ## default vector method

@@ -1,6 +1,19 @@
-\name{fscale}
+\name{Scaling / Standardizing}
 \alias{fscale}
+\alias{fscale.default}
+\alias{fscale.matrix}
+\alias{fscale.data.frame}
+\alias{fscale.pseries}
+\alias{fscale.pdata.frame}
+\alias{fscale.grouped_df}
 \alias{standardize}
+\alias{STD}
+\alias{STD.default}
+\alias{STD.matrix}
+\alias{STD.data.frame}
+\alias{STD.pseries}
+\alias{STD.pdata.frame}
+\alias{STD.grouped_df}
 %- Also NEED an '\alias' for EACH other topic documented here.
 \title{
 Fast (Grouped, Weighted) Scaling and Centering of Matrix-like Objects
@@ -16,11 +29,11 @@ Note: For centering without scaling see \code{\link{W}}, for scaling without cen
 
 \method{fscale}{matrix}(x, g = NULL, w = NULL, na.rm = TRUE, stable.algo = TRUE, ...)
    STD(x, g = NULL, w = NULL, na.rm = TRUE, stable.algo = TRUE,
-       give.names = TRUE, ...)
+       stub = "STD.", ...)
 
 \method{fscale}{data.frame}(x, g = NULL, w = NULL, na.rm = TRUE, stable.algo = TRUE, ...)
    STD(x, by = NULL, w = NULL, cols = is.numeric, na.rm = TRUE,
-       stable.algo = TRUE, give.names = TRUE, keep.by = TRUE,
+       stable.algo = TRUE, stub = "STD.", keep.by = TRUE,
        keep.w = TRUE, ...)
 
 # Methods for compatibility with plm:
@@ -30,15 +43,15 @@ Note: For centering without scaling see \code{\link{W}}, for scaling without cen
 
 \method{fscale}{pdata.frame}(x, effect = 1L, w = NULL, na.rm = TRUE, stable.algo = TRUE, ...)
    STD(x, effect = 1L, w = NULL, cols = is.numeric, na.rm = TRUE,
-       stable.algo = TRUE, give.names = TRUE, keep.pids = TRUE,
+       stable.algo = TRUE, stub = "STD.", keep.ids = TRUE,
        keep.w = TRUE, ...)
 
 # Methods for compatibility with dplyr:
 
 \method{fscale}{grouped_df}(x, w = NULL, na.rm = TRUE, stable.algo = TRUE,
-       keep.groups = TRUE, keep.w = TRUE, ...)
+       keep.group_vars = TRUE, keep.w = TRUE, ...)
    STD(x, w = NULL, na.rm = TRUE, stable.algo = TRUE,
-       give.names = TRUE, keep.groups = TRUE, keep.w = TRUE, ...)
+       stub = "STD.", keep.group_vars = TRUE, keep.w = TRUE, ...)
 }
 %- maybe also 'usage' for other objects documented here.
 \arguments{
@@ -49,9 +62,9 @@ Note: For centering without scaling see \code{\link{W}}, for scaling without cen
   \item{na.rm}{skip missing values in \code{x} when computing means and sd's.}
     \item{effect}{\code{plm} methods: Select which panel identifier should be used as grouping variable. 1L means first variable in the \code{\link{index}}, 2L the second etc. if more than one integer is supplied, the corresponding index-variables are interacted. }
 
-  \item{give.names}{\code{TRUE} will rename all transformed columns by adding a prefix "STD.".}
+  \item{stub}{a prefix or stub to rename all transformed columns. \code{FALSE} will not rename columns.}
   \item{stable.algo}{TRUE uses a faster but numerically unstable algorithm to compute standard deviations. The default is Welfords numerically stable online algorithm. See Details.}
-  \item{keep.by\cr keep.pids \cr keep.groups}{\emph{data.frame, pdata.frame and grouped_df methods}: Retain grouping / panel-identifier columns in the output. For data frames this only works if groups were passed in a formula.}
+  \item{keep.by\cr keep.ids \cr keep.group_vars}{\emph{data.frame, pdata.frame and grouped_df methods}: Retain grouping / panel-identifier columns in the output. For data frames this only works if groups were passed in a formula.}
   \item{keep.w}{\emph{data.frame, pdata.frame and grouped_df methods}: Retain column containing the weights in the output. Only works if \code{w} is passed as formula / lazy-expression.}
 }
 \details{
@@ -85,32 +98,20 @@ By default means and standard deviations are computed using Wedford's numericall
 %% ~~objects to See Also as \code{\link{help}}, ~~~
 }
 \examples{
-## Simple centering and replacement
-B(mtcars)
-W(mtcars)
-B(mtcars) + W(mtcars) == mtcars # This should be true for all elements apart from rounding errors
+## Simple Scaling & Centering / Standardizing
+fscale(mtcars)             # Doesn't rename columns
+STD(mtcars)                # By default adds a prefix
+qsu(STD(mtcars))           # See that is works
 
-## Groupwise centering and replacement
-B(mtcars, mtcars$cyl)
-W(mtcars, mtcars$cyl)
-B(mtcars, mtcars$cyl) + W(mtcars, mtcars$cyl) == mtcars
+## Panel-Data
+head(fscale(get_vars(wlddev,9:12), wlddev$iso3c))   # Standardizing 4 series within each country (Note: get_vars(wlddev,9:12) is 2x faster than wlddev[9:12])
+head(STD(wlddev, ~iso3c, cols = 9:12))              # Same thing using STD, with identifier column added unless keep.by = FALSE
+pwcor(fscale(get_vars(wlddev,9:12), wlddev$iso3c))  # Correlaing these panel-series after standardizing values within each country
 
-## Using B() and W() in regressions
-  # Several ways of running the same regression with cyl-fixed effects
-  lm(W(mpg,cyl) ~ W(carb,cyl), data = mtcars)                     # Centering each variable individualls
-  lm(mpg ~ carb, data = W(mtcars, ~ cyl))                         # Centering the entire data
-  lm(mpg ~ carb, data = W(mtcars, ~ cyl, add.global.mean = TRUE)) # Here only the intercept changes
-  lm(mpg ~ carb + B(carb,cyl), data = mtcars)                     # Procedure suggested by Mundlack (1978) - partialling out group averages amounts to the same as demeaning the data
-
-  # Now with cyl, vs and am fixed effects
-  lm(W(mpg,list(cyl,vs,am)) ~ W(carb,list(cyl,vs,am)), data = mtcars)
-  lm(mpg ~ carb, data = W(mtcars, ~ cyl + vs + am))
-  lm(mpg ~ carb + B(carb,list(cyl,vs,am)), data = mtcars)
-
-  # Now with cyl, vs and am fixed effects weighted by hp:
-  lm(W(mpg,list(cyl,vs,am),hp) ~ W(carb,list(cyl,vs,am),hp), data = mtcars)
-  lm(mpg ~ carb, data = W(mtcars, ~ cyl + vs + am, ~ hp))
-  lm(mpg ~ carb + B(carb,list(cyl,vs,am),hp), data = mtcars) # This now gives a slightly different coefficient
+## Weighted Standardizing
+weights = abs(rnorm(nrow(wlddev)))
+head(fscale(get_vars(wlddev,9:12), wlddev$iso3c, weights))
+head(STD(wlddev, ~iso3c, weights, 9:12))
 
 }
 % Add one or more standard keywords, see file 'KEYWORDS' in the

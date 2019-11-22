@@ -27,35 +27,46 @@
 Fast Lags and Leads for Time-Series and Panel Data
 }
 \description{
-\code{flag} is an S3 generic to compute (sequences of) lags and leads. \code{L} and \code{F} are wrappers around \code{flag} representing the lag- and lead-operators, such that \code{L(x,-1) = F(x,1)} and \code{L(x,-3:3) = F(x,3:-3)}. \code{L} & \code{F} provide more flexibility than \code{flag} when applied to data.frame's, but are otherwise identical.
+\code{flag} is an S3 generic to compute (sequences of) lags and leads. \code{L} and \code{F} are wrappers around \code{flag} representing the lag- and lead-operators, such that \code{L(x,-1) = F(x,1) = F(x)} and \code{L(x,-3:3) = F(x,3:-3)}. \code{L} & \code{F} provide more flexibility than \code{flag} when applied to data.frame's, but are otherwise identical.
 
 (\code{flag} is more of a programmers function in style of the \code{\link{Fast Statistical Functions}} while \code{L} & \code{F} are more practical to use in regression formulas or for computations on data.frames.)
 }
 \usage{
 ## Default S3 methods:
-flag/L/F(x, n = 1, g = NULL, t = NULL, fill = NA, stubs = TRUE, ...)
+flag(x, n = 1, g = NULL, t = NULL, fill = NA, stubs = TRUE, ...)
+   L(x, n = 1, g = NULL, t = NULL, fill = NA, stubs = TRUE, ...)
+   F(x, n = 1, g = NULL, t = NULL, fill = NA, stubs = TRUE, ...)
 
 ## S3 methods for class 'matrix'
-flag/L/F(x, n = 1, g = NULL, t = NULL, fill = NA, stubs = TRUE, ...)
+flag(x, n = 1, g = NULL, t = NULL, fill = NA, stubs = TRUE, ...)
+   L(x, n = 1, g = NULL, t = NULL, fill = NA, stubs = TRUE, ...)
+   F(x, n = 1, g = NULL, t = NULL, fill = NA, stubs = TRUE, ...)
 
 ## S3 methods for class 'data.frame'
 flag(x, n = 1, g = NULL, t = NULL, fill = NA, stubs = TRUE, ...)
-L/F(x, n = 1, by = NULL, t = NULL, cols = is.numeric,
-    fill = NA, stubs = TRUE, keep.ids = TRUE, ...)
+   L(x, n = 1, by = NULL, t = NULL, cols = is.numeric,
+     fill = NA, stubs = TRUE, keep.ids = TRUE, ...)
+   F(x, n = 1, by = NULL, t = NULL, cols = is.numeric,
+     fill = NA, stubs = TRUE, keep.ids = TRUE, ...)
 
 # Methods for compatibility with plm:
 
 ## S3 methods for class 'pseries'
-flag/L/F(x, n = 1, fill = NA, stubs = TRUE, ...)
+flag(x, n = 1, fill = NA, stubs = TRUE, ...)
+   L(x, n = 1, fill = NA, stubs = TRUE, ...)
+   F(x, n = 1, fill = NA, stubs = TRUE, ...)
 
 ## S3 methods for class 'pdata.frame'
 flag(x, n = 1, fill = NA, stubs = TRUE, ...)
-L/F(x, n = 1, cols = is.numeric, fill = NA, stubs = TRUE, keep.ids = TRUE, ...)
+   L(x, n = 1, cols = is.numeric, fill = NA, stubs = TRUE, keep.ids = TRUE, ...)
+   F(x, n = 1, cols = is.numeric, fill = NA, stubs = TRUE, keep.ids = TRUE, ...)
 
 # Methods for compatibility with dplyr:
 
 ## S3 methods for class 'grouped_df'
-flag/L/F(x, n = 1, t = NULL, fill = NA, stubs = TRUE, keep.ids = TRUE, ...)
+flag(x, n = 1, t = NULL, fill = NA, stubs = TRUE, keep.ids = TRUE, ...)
+   L(x, n = 1, t = NULL, fill = NA, stubs = TRUE, keep.ids = TRUE, ...)
+   F(x, n = 1, t = NULL, fill = NA, stubs = TRUE, keep.ids = TRUE, ...)
 }
 %- maybe also 'usage' for other objects documented here.
 \arguments{

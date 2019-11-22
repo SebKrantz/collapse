@@ -7,7 +7,7 @@
 # sourceCpp('src/TRAa.cpp')
 
 
-fsum <- function(x, ...) { # g = NULL, TRA = FALSE, na.rm = TRUE, use.g.names = TRUE, drop = TRUE, keep.group_keys = TRUE
+fsum <- function(x, ...) { # g = NULL, TRA = FALSE, na.rm = TRUE, use.g.names = TRUE, drop = TRUE, keep.group_vars = TRUE
   UseMethod("fsum", x)
 }
 fsum.default <- function(x, g = NULL, TRA = FALSE, na.rm = TRUE, use.g.names = TRUE, ...) {
@@ -31,7 +31,7 @@ fsum.default <- function(x, g = NULL, TRA = FALSE, na.rm = TRUE, use.g.names = T
       #   } else return(fsumCpp(x,fnlevels(g),g,na.rm))
     } else {
       if(!is.GRP(g)) g <- if(use.g.names) GRP(g) else GRP(g, return.groups = FALSE)
-      if(use.g.names) return(`names<-`(fsumCpp(x,g[[1L]],g[[2L]],na.rm), group.names.GRP(g))) else
+      if(use.g.names) return(`names<-`(fsumCpp(x,g[[1L]],g[[2L]],na.rm), group_names.GRP(g))) else
         return(fsumCpp(x,g[[1L]],g[[2L]],na.rm))
     }
   } else {
@@ -70,7 +70,7 @@ fsum.matrix <- function(x, g = NULL, TRA = FALSE, na.rm = TRUE, use.g.names = TR
       #   } else return(fsummCpp(x,fnlevels(g),g,na.rm))
     } else {
       if(!is.GRP(g)) g <- if(use.g.names) GRP(g) else GRP(g, return.groups = FALSE)
-      if(use.g.names) return(`dimnames<-`(fsummCpp(x,g[[1L]],g[[2L]],na.rm), list(group.names.GRP(g), dimnames(x)[[2L]]))) else
+      if(use.g.names) return(`dimnames<-`(fsummCpp(x,g[[1L]],g[[2L]],na.rm), list(group_names.GRP(g), dimnames(x)[[2L]]))) else
         return(fsummCpp(x,g[[1L]],g[[2L]],na.rm))
     }
   } else {
@@ -109,7 +109,7 @@ fsum.data.frame <- function(x, g = NULL, TRA = FALSE, na.rm = TRUE, use.g.names 
       #   } else return(fsumlCpp(x,fnlevels(g),g,na.rm))
     } else {
       if(!is.GRP(g)) g <- if(use.g.names) GRP(g) else GRP(g, return.groups = FALSE)
-      if(use.g.names && !inherits(x, "data.table") && !is.null(groups <- group.names.GRP(g)))
+      if(use.g.names && !inherits(x, "data.table") && !is.null(groups <- group_names.GRP(g)))
         return(setRow.names(fsumlCpp(x,g[[1L]],g[[2L]],na.rm), groups)) else
           return(fsumlCpp(x,g[[1L]],g[[2L]],na.rm))
     }
@@ -128,7 +128,7 @@ fsum.data.frame <- function(x, g = NULL, TRA = FALSE, na.rm = TRUE, use.g.names 
     }
   }
 }
-fsum.grouped_df <- function(x, TRA = FALSE, na.rm = TRUE, use.g.names = FALSE, keep.group_keys = TRUE, ...) { # drop grouping columns argument ??
+fsum.grouped_df <- function(x, TRA = FALSE, na.rm = TRUE, use.g.names = FALSE, keep.group_vars = TRUE, ...) { # drop grouping columns argument ??
   g <- GRP.grouped_df(x)
   gn <- which(names(x) %in% g[[5L]]) # faster than na.rm(match(names(g[[4L]]), names(x)))
   nTRAl <- TRA == FALSE
@@ -136,13 +136,13 @@ fsum.grouped_df <- function(x, TRA = FALSE, na.rm = TRUE, use.g.names = FALSE, k
   if(gl || nTRAl) {
     ax <- attributes(x)
     attributes(x) <- NULL # remove attributes is more memory efficient than unclass !!
-    # if(gl) ax[["names"]] <- if(keep.group_keys) c(g[[5L]], ax[["names"]][-gn]) else ax[["names"]][-gn]
+    # if(gl) ax[["names"]] <- if(keep.group_vars) c(g[[5L]], ax[["names"]][-gn]) else ax[["names"]][-gn]
     if(nTRAl) {
       ax[["groups"]] <- NULL # best way ??? -> ye, not slower than following (tested GGDC) ngp <- name(ax) != "groups"
       ax[["class"]] <- ax[["class"]][ax[["class"]] != "grouped_df"]
-      ax[["row.names"]] <- if(use.g.names) group.names.GRP(g) else .set_row_names(g[[1L]])
+      ax[["row.names"]] <- if(use.g.names) group_names.GRP(g) else .set_row_names(g[[1L]])
       if(gl) {
-        if(keep.group_keys) {
+        if(keep.group_vars) {
           ax[["names"]] <- c(g[[5L]], ax[["names"]][-gn])
           return(setAttributes(c(g[[4L]],fsumlCpp(x[-gn],g[[1L]],g[[2L]],na.rm)), ax))
         } else {
@@ -150,7 +150,7 @@ fsum.grouped_df <- function(x, TRA = FALSE, na.rm = TRUE, use.g.names = FALSE, k
           return(setAttributes(fsumlCpp(x[-gn],g[[1L]],g[[2L]],na.rm), ax))
         }
       } else return(setAttributes(fsumlCpp(x,g[[1L]],g[[2L]],na.rm), ax))
-    } else if(keep.group_keys) {
+    } else if(keep.group_vars) {
          ax[["names"]] <- c(ax[["names"]][gn], ax[["names"]][-gn])
          return(setAttributes(c(x[gn],TRAlCpp(x[-gn],fsumlCpp(x[-gn],g[[1L]],g[[2L]],na.rm),g[[2L]],TRAtoInt(TRA))), ax))
     } else {

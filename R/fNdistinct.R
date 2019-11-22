@@ -9,7 +9,7 @@
 # For foundational changes to this code see fsum.R !!
 # also: matrix method needs memory equal to size of the object, while data.frame method does not need any memory !!
 
-fNdistinct <- function(x, ...) { # g = NULL, TRA = FALSE, na.rm = TRUE, use.g.names = TRUE, drop = TRUE, keep.group_keys = TRUE,
+fNdistinct <- function(x, ...) { # g = NULL, TRA = FALSE, na.rm = TRUE, use.g.names = TRUE, drop = TRUE, keep.group_vars = TRUE,
   UseMethod("fNdistinct", x)
 }
 fNdistinct.default <- function(x, g = NULL, TRA = FALSE, na.rm = TRUE, use.g.names = TRUE, ...) {
@@ -27,7 +27,7 @@ fNdistinct.default <- function(x, g = NULL, TRA = FALSE, na.rm = TRUE, use.g.nam
       }
     } else {
       if(!is.GRP(g)) g <- if(use.g.names) GRP(g) else GRP(g, return.groups = FALSE)
-      if(use.g.names) return(`names<-`(fNdistinctCpp(x,g[[1L]],g[[2L]],g[[3L]],na.rm), group.names.GRP(g))) else
+      if(use.g.names) return(`names<-`(fNdistinctCpp(x,g[[1L]],g[[2L]],g[[3L]],na.rm), group_names.GRP(g))) else
         return(fNdistinctCpp(x,g[[1L]],g[[2L]],g[[3L]],na.rm))
     }
   } else {
@@ -57,7 +57,7 @@ fNdistinct.matrix <- function(x, g = NULL, TRA = FALSE, na.rm = TRUE, use.g.name
       }
     } else {
       if(!is.GRP(g)) g <- if(use.g.names) GRP(g) else GRP(g, return.groups = FALSE)
-      if(use.g.names) return(`dimnames<-`(fNdistinctmCpp(x,g[[1L]],g[[2L]],g[[3L]],na.rm), list(group.names.GRP(g), dimnames(x)[[2L]]))) else
+      if(use.g.names) return(`dimnames<-`(fNdistinctmCpp(x,g[[1L]],g[[2L]],g[[3L]],na.rm), list(group_names.GRP(g), dimnames(x)[[2L]]))) else
         return(fNdistinctmCpp(x,g[[1L]],g[[2L]],g[[3L]],na.rm))
     }
   } else {
@@ -87,7 +87,7 @@ fNdistinct.data.frame <- function(x, g = NULL, TRA = FALSE, na.rm = TRUE, use.g.
       }
     } else {
       if(!is.GRP(g)) g <- if(use.g.names) GRP(g) else GRP(g, return.groups = FALSE)
-      if(use.g.names && !inherits(x, "data.table") && !is.null(groups <- group.names.GRP(g)))
+      if(use.g.names && !inherits(x, "data.table") && !is.null(groups <- group_names.GRP(g)))
         return(setRow.names(fNdistinctlCpp(x,g[[1L]],g[[2L]],g[[3L]],na.rm), groups)) else
           return(fNdistinctlCpp(x,g[[1L]],g[[2L]],g[[3L]],na.rm))
     }
@@ -103,7 +103,7 @@ fNdistinct.data.frame <- function(x, g = NULL, TRA = FALSE, na.rm = TRUE, use.g.
     }
   }
 }
-fNdistinct.grouped_df <- function(x, TRA = FALSE, na.rm = TRUE, use.g.names = FALSE, keep.group_keys = TRUE, ...) {
+fNdistinct.grouped_df <- function(x, TRA = FALSE, na.rm = TRUE, use.g.names = FALSE, keep.group_vars = TRUE, ...) {
   g <- GRP.grouped_df(x)
   gn <- which(names(x) %in% g[[5L]])
   nTRAl <- TRA == FALSE
@@ -114,9 +114,9 @@ fNdistinct.grouped_df <- function(x, TRA = FALSE, na.rm = TRUE, use.g.names = FA
     if(nTRAl) {
       ax[["groups"]] <- NULL
       ax[["class"]] <- ax[["class"]][ax[["class"]] != "grouped_df"]
-      ax[["row.names"]] <- if(use.g.names) group.names.GRP(g) else .set_row_names(g[[1L]])
+      ax[["row.names"]] <- if(use.g.names) group_names.GRP(g) else .set_row_names(g[[1L]])
       if(gl) {
-        if(keep.group_keys) {
+        if(keep.group_vars) {
           ax[["names"]] <- c(g[[5L]], ax[["names"]][-gn])
           return(setAttributes(c(g[[4L]],fNdistinctlCpp(x[-gn],g[[1L]],g[[2L]],g[[3L]],na.rm)), ax))
         } else {
@@ -124,7 +124,7 @@ fNdistinct.grouped_df <- function(x, TRA = FALSE, na.rm = TRUE, use.g.names = FA
           return(setAttributes(fNdistinctlCpp(x[-gn],g[[1L]],g[[2L]],g[[3L]],na.rm), ax))
         }
       } else return(setAttributes(fNdistinctlCpp(x,g[[1L]],g[[2L]],g[[3L]],na.rm), ax))
-    } else if(keep.group_keys) {
+    } else if(keep.group_vars) {
       ax[["names"]] <- c(ax[["names"]][gn], ax[["names"]][-gn])
       return(setAttributes(c(x[gn],TRAlCpp(x[-gn],fNdistinctlCpp(x[-gn],g[[1L]],g[[2L]],g[[3L]],na.rm),g[[2L]],TRAtoInt(TRA))), ax))
     } else {

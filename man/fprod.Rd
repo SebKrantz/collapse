@@ -13,13 +13,13 @@
       use.g.names = TRUE, ...)
 
 \method{fprod}{matrix}(x, g = NULL, TRA = FALSE, na.rm = TRUE,
-      drop = TRUE, use.g.names = TRUE, ...)
+      use.g.names = TRUE, drop = TRUE, ...)
 
 \method{fprod}{data.frame}(x, g = NULL, TRA = FALSE, na.rm = TRUE,
-      drop = TRUE, use.g.names = TRUE, ...)
+      use.g.names = TRUE, drop = TRUE, ...)
 
 \method{fprod}{grouped_df}(x, TRA = FALSE, na.rm = TRUE,
-      drop.groups = FALSE, ...)
+      keep.group_vars = TRUE, ...)
 }
 \arguments{
 \item{x}{a numeric vector, matrix, data.frame or grouped tibble (\code{dplyr::grouped_df}).}
@@ -31,11 +31,12 @@
 
 \item{na.rm}{logical. Skip missing values in \code{x}. Defaults to TRUE and implemented at very little computational cost. If \code{na.rm = FALSE} a \code{NA} is returned when encountered.}
 
-\item{drop}{\emph{matrix and data.frame method:} drop dimensions and return an atomic vector, if \code{g = NULL} and \code{TRA = FALSE}.}
-
 \item{use.g.names}{make group-names and add to the result as names (vector method) or row-names (matrix and data.frame method). No row-names are generated for data.tables and grouped tibbles.}
 
-\item{drop.groups}{\emph{grouped_df method:} Logical. Remove grouping variables after computation.}
+\item{drop}{\emph{matrix and data.frame method:} drop dimensions and return an atomic vector, if \code{g = NULL} and \code{TRA = FALSE}.}
+
+\item{keep.group_vars}{\emph{grouped_df method:} Logical. \code{FALSE} removes grouping variables after computation.}
+
 }
 \details{
 Non-grouped product computations internally utilize long-doubles in C++, for additional numeric precision.

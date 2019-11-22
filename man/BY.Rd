@@ -24,8 +24,7 @@ Efficient Split-Apply-Combine Computing
    expand.wide = FALSE, parallel = FALSE, mc.cores = 1L,
    return = c("same","matrix","data.frame","list"))
 
-\method{BY}{grouped_df}(X, FUN, ..., keep.group_vars = TRUE, use.g.names = FALSE,
-   sort = TRUE, expand.wide = FALSE, parallel = FALSE, mc.cores = 1L,
+\method{BY}{grouped_df}(X, FUN, ..., keep.group_vars = TRUE, use.g.names = FALSE, expand.wide = FALSE, parallel = FALSE, mc.cores = 1L,
    return = c("same","matrix","data.frame","list"))
 
 }

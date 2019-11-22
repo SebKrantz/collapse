@@ -9,17 +9,17 @@
 \code{fmedian} is a generic function that computes the (column-wise) median value of all values in \code{x}, (optionally) grouped by \code{g}. The \code{TRA} argument can further be used to transform \code{x} using its (grouped) median value.
 }
 \usage{
-\method{fmedian}{default}(x, g = NULL, TRA = FALSE, na.rm = TRUE, 
+\method{fmedian}{default}(x, g = NULL, TRA = FALSE, na.rm = TRUE,
         use.g.names = TRUE, ...)
 
-\method{fmedian}{matrix}(x, g = NULL, TRA = FALSE, na.rm = TRUE, 
-        drop = TRUE, use.g.names = TRUE, ...)
+\method{fmedian}{matrix}(x, g = NULL, TRA = FALSE, na.rm = TRUE,
+        use.g.names = TRUE, drop = TRUE, ...)
 
-\method{fmedian}{data.frame}(x, g = NULL, TRA = FALSE, na.rm = TRUE, 
-        drop = TRUE, use.g.names = TRUE, ...)
+\method{fmedian}{data.frame}(x, g = NULL, TRA = FALSE, na.rm = TRUE,
+        use.g.names = TRUE, drop = TRUE, ...)
 
-\method{fmedian}{grouped_df}(x, TRA = FALSE, na.rm = TRUE, 
-        drop.groups = FALSE, ...)
+\method{fmedian}{grouped_df}(x, TRA = FALSE, na.rm = TRUE,
+        keep.group_vars = TRUE, ...)
 }
 \arguments{
 \item{x}{a numeric vector, matrix, data.frame or grouped tibble (\code{dplyr::grouped_df}).}
@@ -31,16 +31,17 @@
 
 \item{na.rm}{logical. Skip missing values in \code{x}. Defaults to TRUE and implemented at very little computational cost. If \code{na.rm = FALSE} a \code{NA} is returned when encountered.}
 
-\item{drop}{\emph{matrix and data.frame method:} drop dimensions and return an atomic vector, if \code{g = NULL} and \code{TRA = FALSE}.}
-
 \item{use.g.names}{make group-names and add to the result as names (vector method) or row-names (matrix and data.frame method). No row-names are generated for data.tables and grouped tibbles.}
 
-\item{drop.groups}{\emph{grouped_df method:} Logical. Remove grouping variables after computation.}
+\item{drop}{\emph{matrix and data.frame method:} drop dimensions and return an atomic vector, if \code{g = NULL} and \code{TRA = FALSE}.}
+
+\item{keep.group_vars}{\emph{grouped_df method:} Logical. \code{FALSE} removes grouping variables after computation.}
+
 }
 \details{
 Median value estimation is done using \code{std::nth_element} in C++, which is an efficient partial sorting algorithm. A downside of this is that vectors need to be copied first and then partially sorted, thus \code{fmedian} currently requires additional memory equal to the size of the object (\code{x}).
 
-Grouped computations are currently performed by mapping the data to a sparse-array directed by \code{g} and then partially sorting each row (group) of that array. For reasons I don't fully understand this requires less memory than a full deep copy which is done with no groups. 
+Grouped computations are currently performed by mapping the data to a sparse-array directed by \code{g} and then partially sorting each row (group) of that array. For reasons I don't fully understand this requires less memory than a full deep copy which is done with no groups.
 
 When applied to data frame's with groups or \code{drop = FALSE}, \code{fmedian} preserves all column attributes (such as variable labels) but does not distinguish between classed and unclassed objects. The attributes of the \code{data.frame} itself are also perserved.
 

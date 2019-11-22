@@ -1,7 +1,17 @@
 \name{psacf}
 \alias{psacf}
+\alias{psacf.default}
+\alias{psacf.pseries}
+\alias{psacf.data.frame}
+\alias{psacf.pdata.frame}
 \alias{pspacf}
+\alias{pspacf.default}
+\alias{pspacf.pseries}
+\alias{pspacf.data.frame}
+\alias{pspacf.pdata.frame}
 \alias{psccf}
+\alias{psccf.default}
+\alias{psccf.pseries}
 %- Also NEED an '\alias' for EACH other topic documented here.
 \title{
 Auto- and Cross- Covariance and -Correlation Function Estimation for Panel-Series
@@ -11,27 +21,27 @@ Auto- and Cross- Covariance and -Correlation Function Estimation for Panel-Serie
 }
 \usage{
 ## Default S3 methods:
- psacf(x, g, t = NULL, lag.max = NULL, type = c("correlation", "covariance","partial"), 
+ psacf(x, g, t = NULL, lag.max = NULL, type = c("correlation", "covariance","partial"),
        plot = TRUE, gscale = TRUE, ...)
 pspacf(x, g, t = NULL, lag.max = NULL, plot = TRUE, gscale = TRUE, ...)
- psccf(x, y, g, t = NULL, lag.max = NULL, type = c("correlation", "covariance"), 
+ psccf(x, y, g, t = NULL, lag.max = NULL, type = c("correlation", "covariance"),
        plot = TRUE, gscale = TRUE, ...)
 
 ## S3 methods for class 'pseries'
- psacf(x, lag.max = NULL, type = c("correlation", "covariance","partial"), 
+ psacf(x, lag.max = NULL, type = c("correlation", "covariance","partial"),
        plot = TRUE, gscale = TRUE, ...)
 pspacf(x, lag.max = NULL, plot = TRUE, gscale = TRUE, ...)
- psccf(x, y, lag.max = NULL, type = c("correlation", "covariance"), 
+ psccf(x, y, lag.max = NULL, type = c("correlation", "covariance"),
        plot = TRUE, gscale = TRUE, ...)
 
 ## S3 methods for class 'data.frame'
- psacf(x, by, t = NULL, cols = is.numeric, lag.max = NULL, 
+ psacf(x, by, t = NULL, cols = is.numeric, lag.max = NULL,
        type = c("correlation", "covariance","partial"), plot = TRUE, gscale = TRUE, ...)
-pspacf(x, by, t = NULL, cols = is.numeric, lag.max = NULL, 
+pspacf(x, by, t = NULL, cols = is.numeric, lag.max = NULL,
        type = c("correlation", "covariance","partial"), plot = TRUE, gscale = TRUE, ...)
 
 ## S3 methods for class 'pdata.frame'
- psacf(x, lag.max = NULL, type = c("correlation", "covariance","partial"), 
+ psacf(x, lag.max = NULL, type = c("correlation", "covariance","partial"),
        plot = TRUE, gscale = TRUE, ...)
 pspacf(x, lag.max = NULL, plot = TRUE, gscale = TRUE, ...)
 
@@ -52,7 +62,7 @@ panel-data-frame (\code{plm::pdata.frame}).}
 \item{...}{further arguments to be passed to \code{stats:::plot.acf}.}
 }
 \details{
-If \code{gscale = TRUE} data are standardized within each group (using \code{collapse::fscale}) such that the group-mean is 0 and the group-standard deviation is 1. This is strongly recommended for most panels to get rid of individual-specific heterogeneity which would corrupt the ACF computations. 
+If \code{gscale = TRUE} data are standardized within each group (using \code{collapse::fscale}) such that the group-mean is 0 and the group-standard deviation is 1. This is strongly recommended for most panels to get rid of individual-specific heterogeneity which would corrupt the ACF computations.
 
 After scaling, \code{psacf}, \code{pspacf} and \code{psccf} compute the ACF/CCF by creating a matrix of panel-lags of the series using \code{collapse::flag} and then correlating this matrix with the series (\code{x, y}) using \code{stats::cor} and pairwise-complete observations. This may require a lot of memory on large data, but is done because passing a sequence of lags to \code{collapse::flag} and thus calling \code{collapse::flag} and \code{stats::cor} one time is much faster than calling them \code{lag.max} times. The partial ACF is computed from the ACF in the same way as in \code{stats::pacf}.
 }
@@ -95,8 +105,8 @@ LIFEEX <- pwlddev$LIFEEX                                        # Panel-Series o
 psacf(PCGDP)                                                    # Same as above, but more parsimonious
 pspacf(PCGDP)
 psccf(PCGDP, LIFEEX)
-psacf(pwlddev[c(9:10,12)])            
-pspacf(pwlddev[c(9:10,12)])            
+psacf(pwlddev[c(9:10,12)])
+pspacf(pwlddev[c(9:10,12)])
 }
 % Add one or more standard keywords, see file 'KEYWORDS' in the
 % R documentation directory.

@@ -1,17 +1,24 @@
 #include <Rcpp.h>
 using namespace Rcpp;
 
-// [[Rcpp::export]]
-SEXP setAttributes(SEXP x, SEXP a) {
-  SET_ATTRIB(x, Rf_coerceVector(a, LISTSXP));
-  SET_OBJECT(x, TYPEOF(x)); // or SET_OBJECT(x, OBJECT(x)) ?? see keepattr function in data.table_assign.c // if(OBJECT(a))
+// [[Rcpp::export]] // https://github.com/SurajGupta/r-source/blob/a28e609e72ed7c47f6ddfbb86c85279a0750f0b7/src/main/attrib.c
+SEXP setAttributes(SEXP x, SEXP a) { // https://github.com/SurajGupta/r-source/blob/a28e609e72ed7c47f6ddfbb86c85279a0750f0b7/src/main/duplicate.c
+  // bool S4l = IS_S4_OBJECT(x);
+  // int obj = OBJECT(x);
+  SET_ATTRIB(x, Rf_coerceVector(a, LISTSXP)); // Rf_shallow_duplicate(
+  // SET_OBJECT(x, obj); // or SET_OBJECT(x, OBJECT(x)) -> just OBJECT does not work !!   ?? see keepattr function in data.table_assign.c // if(OBJECT(a))
+  // SET_OBJECT(x, TYPEOF(x)); // This does not work with ts-matrices!!
+  // (S4l) ?  SET_S4_OBJECT(x) : UNSET_S4_OBJECT(x);
+  // Rf_setAttrib(x, R_ClassSymbol, Rf_getAttrib(x, R_ClassSymbol));
+  Rf_classgets(x, Rf_getAttrib(x, R_ClassSymbol)); // fast on large data (PRIO!! also works for unclassed objects)
   return x; // wrap(x) // wrap better ?? -> error setting attributes of matrix !!-> Nope !! Still error for dapply(NGGDC, log, return = "matrix")
 }
 
 // [[Rcpp::export]]
 void setattributes(SEXP x, SEXP a) {
   SET_ATTRIB(x, Rf_coerceVector(a, LISTSXP));
-  SET_OBJECT(x, TYPEOF(x)); // if(OBJECT(a))
+  // SET_OBJECT(x, TYPEOF(x)); // if(OBJECT(a))  // This does not work with ts-matrices!! could also make compatible with S4 objects !!
+  Rf_classgets(x, Rf_getAttrib(x, R_ClassSymbol));
 }
 
 // [[Rcpp::export]]
@@ -46,6 +53,14 @@ SEXP cond_duplAttributes(SEXP x, SEXP y) {
 void cond_duplattributes(SEXP x, SEXP y) {
   if(TYPEOF(x) == TYPEOF(y)) DUPLICATE_ATTRIB(x, y); // SET_ATTRIB(x, ATTRIB(y));
 }
+
+// // [[Rcpp::export]]
+// NumericVector narmCpp(NumericVector x) {
+//   NumericVector y = no_init_vector(x.size());
+//   std::remove_copy_if(x.begin(), x.end(), y.begin(), isnan2);
+//   return y;
+// }
+
 
 // // [[Rcpp::export]] // not faster than base method on large data (PRIO)!!
 // List LSubset(const List& x, const IntegerVector& rows = 0, const IntegerVector& cols = 0) {

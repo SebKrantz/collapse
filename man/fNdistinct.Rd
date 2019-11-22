@@ -10,17 +10,17 @@
 }
 
 \usage{
-\method{fNdistinct}{default}(x, g = NULL, TRA = FALSE, na.rm = FALSE, 
+\method{fNdistinct}{default}(x, g = NULL, TRA = FALSE, na.rm = FALSE,
            use.g.names = TRUE, ...)
 
-\method{fNdistinct}{matrix}(x, g = NULL, TRA = FALSE, na.rm = FALSE, 
-           drop = TRUE, use.g.names = TRUE, ...)
+\method{fNdistinct}{matrix}(x, g = NULL, TRA = FALSE, na.rm = FALSE,
+           use.g.names = TRUE, drop = TRUE, ...)
 
-\method{fNdistinct}{data.frame}(x, g = NULL, TRA = FALSE, na.rm = FALSE, 
-           drop = TRUE, use.g.names = TRUE, ...)
+\method{fNdistinct}{data.frame}(x, g = NULL, TRA = FALSE, na.rm = FALSE,
+           use.g.names = TRUE, drop = TRUE, ...)
 
-\method{fNdistinct}{grouped_df}(x, TRA = FALSE, na.rm = FALSE, 
-           drop.groups = FALSE, ...)
+\method{fNdistinct}{grouped_df}(x, TRA = FALSE, na.rm = FALSE,
+           keep.group_vars = TRUE, ...)
 }
 \arguments{
 \item{x}{a vector, matrix, data.frame or grouped tibble (\code{dplyr::grouped_df}).}
@@ -32,20 +32,21 @@
 
 \item{na.rm}{logical. TRUE: Skip missing values in \code{x} (faster computation). FALSE: Also consider 'NA' as one distinct value.}
 
-\item{drop}{\emph{matrix and data.frame method:} drop dimensions and return an atomic vector, if \code{g = NULL} and \code{TRA = FALSE}.}
-
 \item{use.g.names}{make group-names and add to the result as names (vector method) or row-names (matrix and data.frame method). No row-names are generated for data.tables and grouped tibbles.}
 
-\item{drop.groups}{\emph{grouped_df method:} Logical. Remove grouping variables after computation.}
+\item{drop}{\emph{matrix and data.frame method:} drop dimensions and return an atomic vector, if \code{g = NULL} and \code{TRA = FALSE}.}
+
+\item{keep.group_vars}{\emph{grouped_df method:} Logical. \code{FALSE} removes grouping variables after computation.}
+
 }
 \details{
 \code{fNdistinct} implements a very fast algorithm to find the number of distinct values utilizing index- hashing implemented in the \code{Rcpp::sugar::IndexHash} class.
 
-If \code{na.rm = TRUE} (the default), missing values will be skipped yielding substatial performance gains in data with many missing values. If \code{na.rm = TRUE}, missing values will simply be treated as any other value and read into the hash-map. Thus with the former, a numeric vector \code{c(1.25,NaN,3.56,NA)} will have a distinct value count of 2, whereas the latter will return a distinct value count of 4. 
+If \code{na.rm = TRUE} (the default), missing values will be skipped yielding substatial performance gains in data with many missing values. If \code{na.rm = TRUE}, missing values will simply be treated as any other value and read into the hash-map. Thus with the former, a numeric vector \code{c(1.25,NaN,3.56,NA)} will have a distinct value count of 2, whereas the latter will return a distinct value count of 4.
 
-Grouped computations are currently performed by mapping the data to a sparse-array directed by \code{g} and then hash-mapping each group. This is often not much slower than using a larger hash-map for the entire data when \code{g = NULL}. 
+Grouped computations are currently performed by mapping the data to a sparse-array directed by \code{g} and then hash-mapping each group. This is often not much slower than using a larger hash-map for the entire data when \code{g = NULL}.
 
-\code{fNdistinct} preserves all attributes of non-classed vectors / columns, and only the 'label' attribute (if available) of classed vectors / columns (i.e. dates or factors). When applied to data frames and matrices, the row-names are adjusted as necessary. 
+\code{fNdistinct} preserves all attributes of non-classed vectors / columns, and only the 'label' attribute (if available) of classed vectors / columns (i.e. dates or factors). When applied to data frames and matrices, the row-names are adjusted as necessary.
 
 }
 \value{
@@ -70,7 +71,7 @@ fNdistinct(aqm, airquality$Month)
 ## method for grouped tibbles - for use with dplyr:
 library(dplyr)
 airquality \%>\% group_by(Month) \%>\% fNdistinct
-wlddev \%>\% group_by(country) \%>\% 
+wlddev \%>\% group_by(country) \%>\%
              select(PCGDP,LIFEEX,GINI,ODA) \%>\% fNdistinct
 
 }

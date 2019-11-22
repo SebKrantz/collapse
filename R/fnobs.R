@@ -8,7 +8,7 @@
 
 # For foundational changes to this code see fsum.R !!
 
-fNobs <- function(x, ...) { # g = NULL, TRA = FALSE, use.g.names = TRUE, drop = TRUE, keep.group_keys = TRUE,
+fNobs <- function(x, ...) { # g = NULL, TRA = FALSE, use.g.names = TRUE, drop = TRUE, keep.group_vars = TRUE,
   UseMethod("fNobs", x)
 }
 fNobs.default <- function(x, g = NULL, TRA = FALSE, use.g.names = TRUE, ...) {
@@ -26,7 +26,7 @@ fNobs.default <- function(x, g = NULL, TRA = FALSE, use.g.names = TRUE, ...) {
       }
     } else {
       if(!is.GRP(g)) g <- if(use.g.names) GRP(g) else GRP(g, return.groups = FALSE)
-      if(use.g.names) return(`names<-`(fnobsCpp(x,g[[1L]],g[[2L]]), group.names.GRP(g))) else
+      if(use.g.names) return(`names<-`(fnobsCpp(x,g[[1L]],g[[2L]]), group_names.GRP(g))) else
         return(fnobsCpp(x,g[[1L]],g[[2L]]))
     }
   } else {
@@ -56,7 +56,7 @@ fNobs.matrix <- function(x, g = NULL, TRA = FALSE, use.g.names = TRUE, drop = TR
       }
     } else {
       if(!is.GRP(g)) g <- if(use.g.names) GRP(g) else GRP(g, return.groups = FALSE)
-      if(use.g.names) return(`dimnames<-`(fnobsmCpp(x,g[[1L]],g[[2L]]), list(group.names.GRP(g), dimnames(x)[[2L]]))) else
+      if(use.g.names) return(`dimnames<-`(fnobsmCpp(x,g[[1L]],g[[2L]]), list(group_names.GRP(g), dimnames(x)[[2L]]))) else
         return(fnobsmCpp(x,g[[1L]],g[[2L]]))
     }
   } else {
@@ -86,7 +86,7 @@ fNobs.data.frame <- function(x, g = NULL, TRA = FALSE, use.g.names = TRUE, drop 
       }
     } else {
       if(!is.GRP(g)) g <- if(use.g.names) GRP(g) else GRP(g, return.groups = FALSE)
-      if(use.g.names && !inherits(x, "data.table") && !is.null(groups <- group.names.GRP(g)))
+      if(use.g.names && !inherits(x, "data.table") && !is.null(groups <- group_names.GRP(g)))
         return(setRow.names(fnobslCpp(x,g[[1L]],g[[2L]]), groups)) else
           return(fnobslCpp(x,g[[1L]],g[[2L]]))
     }
@@ -102,7 +102,7 @@ fNobs.data.frame <- function(x, g = NULL, TRA = FALSE, use.g.names = TRUE, drop 
     }
   }
 }
-fNobs.grouped_df <- function(x, TRA = FALSE, use.g.names = FALSE, keep.group_keys = TRUE, ...) {
+fNobs.grouped_df <- function(x, TRA = FALSE, use.g.names = FALSE, keep.group_vars = TRUE, ...) {
   g <- GRP.grouped_df(x)
   gn <- which(names(x) %in% g[[5L]])
   nTRAl <- TRA == FALSE
@@ -113,9 +113,9 @@ fNobs.grouped_df <- function(x, TRA = FALSE, use.g.names = FALSE, keep.group_key
     if(nTRAl) {
       ax[["groups"]] <- NULL
       ax[["class"]] <- ax[["class"]][ax[["class"]] != "grouped_df"]
-      ax[["row.names"]] <- if(use.g.names) group.names.GRP(g) else .set_row_names(g[[1L]])
+      ax[["row.names"]] <- if(use.g.names) group_names.GRP(g) else .set_row_names(g[[1L]])
       if(gl) {
-        if(keep.group_keys) {
+        if(keep.group_vars) {
           ax[["names"]] <- c(g[[5L]], ax[["names"]][-gn])
           return(setAttributes(c(g[[4L]],fNobslCpp(x[-gn],g[[1L]],g[[2L]])), ax))
         } else {
@@ -123,7 +123,7 @@ fNobs.grouped_df <- function(x, TRA = FALSE, use.g.names = FALSE, keep.group_key
           return(setAttributes(fNobslCpp(x[-gn],g[[1L]],g[[2L]]), ax))
         }
       } else return(setAttributes(fNobslCpp(x,g[[1L]],g[[2L]]), ax))
-    } else if(keep.group_keys) {
+    } else if(keep.group_vars) {
       ax[["names"]] <- c(ax[["names"]][gn], ax[["names"]][-gn])
       return(setAttributes(c(x[gn],TRAlCpp(x[-gn],fNobslCpp(x[-gn],g[[1L]],g[[2L]]),g[[2L]],TRAtoInt(TRA))), ax))
     } else {

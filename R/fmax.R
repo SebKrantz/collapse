@@ -8,7 +8,7 @@
 
 # For foundational changes to this code see fsum.R !!
 
-fmax <- function(x, ...) { # g = NULL, TRA = FALSE, na.rm = TRUE, use.g.names = TRUE, drop = TRUE, keep.group_keys = TRUE,
+fmax <- function(x, ...) { # g = NULL, TRA = FALSE, na.rm = TRUE, use.g.names = TRUE, drop = TRUE, keep.group_vars = TRUE,
   UseMethod("fmax", x)
 }
 fmax.default <- function(x, g = NULL, TRA = FALSE, na.rm = TRUE, use.g.names = TRUE, ...) {
@@ -26,7 +26,7 @@ fmax.default <- function(x, g = NULL, TRA = FALSE, na.rm = TRUE, use.g.names = T
       }
     } else {
       if(!is.GRP(g)) g <- if(use.g.names) GRP(g) else GRP(g, return.groups = FALSE)
-      if(use.g.names) return(`names<-`(fmaxCpp(x,g[[1L]],g[[2L]],na.rm), group.names.GRP(g))) else
+      if(use.g.names) return(`names<-`(fmaxCpp(x,g[[1L]],g[[2L]],na.rm), group_names.GRP(g))) else
         return(fmaxCpp(x,g[[1L]],g[[2L]],na.rm))
     }
   } else {
@@ -56,7 +56,7 @@ fmax.matrix <- function(x, g = NULL, TRA = FALSE, na.rm = TRUE, use.g.names = TR
       }
     } else {
       if(!is.GRP(g)) g <- if(use.g.names) GRP(g) else GRP(g, return.groups = FALSE)
-      if(use.g.names) return(`dimnames<-`(fmaxmCpp(x,g[[1L]],g[[2L]],na.rm), list(group.names.GRP(g), dimnames(x)[[2L]]))) else
+      if(use.g.names) return(`dimnames<-`(fmaxmCpp(x,g[[1L]],g[[2L]],na.rm), list(group_names.GRP(g), dimnames(x)[[2L]]))) else
         return(fmaxmCpp(x,g[[1L]],g[[2L]],na.rm))
     }
   } else {
@@ -86,7 +86,7 @@ fmax.data.frame <- function(x, g = NULL, TRA = FALSE, na.rm = TRUE, use.g.names 
       }
     } else {
       if(!is.GRP(g)) g <- if(use.g.names) GRP(g) else GRP(g, return.groups = FALSE)
-      if(use.g.names && !inherits(x, "data.table") && !is.null(groups <- group.names.GRP(g)))
+      if(use.g.names && !inherits(x, "data.table") && !is.null(groups <- group_names.GRP(g)))
         return(setRow.names(fmaxlCpp(x,g[[1L]],g[[2L]],na.rm), groups)) else
           return(fmaxlCpp(x,g[[1L]],g[[2L]],na.rm))
     }
@@ -102,7 +102,7 @@ fmax.data.frame <- function(x, g = NULL, TRA = FALSE, na.rm = TRUE, use.g.names 
     }
   }
 }
-fmax.grouped_df <- function(x, TRA = FALSE, na.rm = TRUE, use.g.names = FALSE, keep.group_keys = TRUE, ...) {
+fmax.grouped_df <- function(x, TRA = FALSE, na.rm = TRUE, use.g.names = FALSE, keep.group_vars = TRUE, ...) {
   g <- GRP.grouped_df(x)
   gn <- which(names(x) %in% g[[5L]])
   nTRAl <- TRA == FALSE
@@ -113,9 +113,9 @@ fmax.grouped_df <- function(x, TRA = FALSE, na.rm = TRUE, use.g.names = FALSE, k
     if(nTRAl) {
       ax[["groups"]] <- NULL
       ax[["class"]] <- ax[["class"]][ax[["class"]] != "grouped_df"]
-      ax[["row.names"]] <- if(use.g.names) group.names.GRP(g) else .set_row_names(g[[1L]])
+      ax[["row.names"]] <- if(use.g.names) group_names.GRP(g) else .set_row_names(g[[1L]])
       if(gl) {
-        if(keep.group_keys) {
+        if(keep.group_vars) {
           ax[["names"]] <- c(g[[5L]], ax[["names"]][-gn])
           return(setAttributes(c(g[[4L]],fmaxlCpp(x[-gn],g[[1L]],g[[2L]],na.rm)), ax))
         } else {
@@ -123,7 +123,7 @@ fmax.grouped_df <- function(x, TRA = FALSE, na.rm = TRUE, use.g.names = FALSE, k
           return(setAttributes(fmaxlCpp(x[-gn],g[[1L]],g[[2L]],na.rm), ax))
         }
       } else return(setAttributes(fmaxlCpp(x,g[[1L]],g[[2L]],na.rm), ax))
-    } else if(keep.group_keys) {
+    } else if(keep.group_vars) {
       ax[["names"]] <- c(ax[["names"]][gn], ax[["names"]][-gn])
       return(setAttributes(c(x[gn],TRAlCpp(x[-gn],fmaxlCpp(x[-gn],g[[1L]],g[[2L]],na.rm),g[[2L]],TRAtoInt(TRA))), ax))
     } else {

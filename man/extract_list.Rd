@@ -1,11 +1,11 @@
 \name{extract_list}
 \alias{extract_list}
-\alias{atomic.elem}
-\alias{list.elem}
-\alias{reg.elem}
-\alias{irreg.elem}
-\alias{has.elem}
-\alias{get.elem}
+\alias{atomic_elem}
+\alias{list_elem}
+\alias{reg_elem}
+\alias{irreg_elem}
+\alias{has_elem}
+\alias{get_elem}
 %- Also NEED an '\alias' for EACH other topic documented here.
 \title{Extract List Elements by Type, Function or Regular Expression}
 \description{

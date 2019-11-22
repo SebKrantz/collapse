@@ -8,7 +8,7 @@
 
 # For foundational changes to this code see fsum.R !!
 
-fprod <- function(x, ...) { # g = NULL, TRA = FALSE, na.rm = TRUE, use.g.names = TRUE, drop = TRUE, keep.group_keys = TRUE,
+fprod <- function(x, ...) { # g = NULL, TRA = FALSE, na.rm = TRUE, use.g.names = TRUE, drop = TRUE, keep.group_vars = TRUE,
   UseMethod("fprod", x)
 }
 fprod.default <- function(x, g = NULL, TRA = FALSE, na.rm = TRUE, use.g.names = TRUE, ...) {
@@ -26,7 +26,7 @@ fprod.default <- function(x, g = NULL, TRA = FALSE, na.rm = TRUE, use.g.names = 
       }
     } else {
       if(!is.GRP(g)) g <- if(use.g.names) GRP(g) else GRP(g, return.groups = FALSE)
-      if(use.g.names) return(`names<-`(fprodCpp(x,g[[1L]],g[[2L]],na.rm), group.names.GRP(g))) else
+      if(use.g.names) return(`names<-`(fprodCpp(x,g[[1L]],g[[2L]],na.rm), group_names.GRP(g))) else
         return(fprodCpp(x,g[[1L]],g[[2L]],na.rm))
     }
   } else {
@@ -56,7 +56,7 @@ fprod.matrix <- function(x, g = NULL, TRA = FALSE, na.rm = TRUE, use.g.names = T
       }
     } else {
       if(!is.GRP(g)) g <- if(use.g.names) GRP(g) else GRP(g, return.groups = FALSE)
-      if(use.g.names) return(`dimnames<-`(fprodmCpp(x,g[[1L]],g[[2L]],na.rm), list(group.names.GRP(g), dimnames(x)[[2L]]))) else
+      if(use.g.names) return(`dimnames<-`(fprodmCpp(x,g[[1L]],g[[2L]],na.rm), list(group_names.GRP(g), dimnames(x)[[2L]]))) else
         return(fprodmCpp(x,g[[1L]],g[[2L]],na.rm))
     }
   } else {
@@ -86,7 +86,7 @@ fprod.data.frame <- function(x, g = NULL, TRA = FALSE, na.rm = TRUE, use.g.names
       }
     } else {
       if(!is.GRP(g)) g <- if(use.g.names) GRP(g) else GRP(g, return.groups = FALSE)
-      if(use.g.names && !inherits(x, "data.table") && !is.null(groups <- group.names.GRP(g)))
+      if(use.g.names && !inherits(x, "data.table") && !is.null(groups <- group_names.GRP(g)))
         return(setRow.names(fprodlCpp(x,g[[1L]],g[[2L]],na.rm), groups)) else
           return(fprodlCpp(x,g[[1L]],g[[2L]],na.rm))
     }
@@ -102,7 +102,7 @@ fprod.data.frame <- function(x, g = NULL, TRA = FALSE, na.rm = TRUE, use.g.names
     }
   }
 }
-fprod.grouped_df <- function(x, TRA = FALSE, na.rm = TRUE, use.g.names = FALSE, keep.group_keys = TRUE, ...) {
+fprod.grouped_df <- function(x, TRA = FALSE, na.rm = TRUE, use.g.names = FALSE, keep.group_vars = TRUE, ...) {
   g <- GRP.grouped_df(x)
   gn <- which(names(x) %in% g[[5L]])
   nTRAl <- TRA == FALSE
@@ -113,9 +113,9 @@ fprod.grouped_df <- function(x, TRA = FALSE, na.rm = TRUE, use.g.names = FALSE, 
     if(nTRAl) {
       ax[["groups"]] <- NULL
       ax[["class"]] <- ax[["class"]][ax[["class"]] != "grouped_df"]
-      ax[["row.names"]] <- if(use.g.names) group.names.GRP(g) else .set_row_names(g[[1L]])
+      ax[["row.names"]] <- if(use.g.names) group_names.GRP(g) else .set_row_names(g[[1L]])
       if(gl) {
-        if(keep.group_keys) {
+        if(keep.group_vars) {
           ax[["names"]] <- c(g[[5L]], ax[["names"]][-gn])
           return(setAttributes(c(g[[4L]],fprodlCpp(x[-gn],g[[1L]],g[[2L]],na.rm)), ax))
         } else {
@@ -123,7 +123,7 @@ fprod.grouped_df <- function(x, TRA = FALSE, na.rm = TRUE, use.g.names = FALSE, 
           return(setAttributes(fprodlCpp(x[-gn],g[[1L]],g[[2L]],na.rm), ax))
         }
       } else return(setAttributes(fprodlCpp(x,g[[1L]],g[[2L]],na.rm), ax))
-    } else if(keep.group_keys) {
+    } else if(keep.group_vars) {
       ax[["names"]] <- c(ax[["names"]][gn], ax[["names"]][-gn])
       return(setAttributes(c(x[gn],TRAlCpp(x[-gn],fprodlCpp(x[-gn],g[[1L]],g[[2L]],na.rm),g[[2L]],TRAtoInt(TRA))), ax))
     } else {

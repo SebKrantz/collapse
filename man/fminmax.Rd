@@ -1,4 +1,4 @@
-\name{fmax & fmin}
+\name{Maxima & Minima}
 \alias{fmax}
 \alias{fmax.default}
 \alias{fmax.matrix}
@@ -15,20 +15,20 @@
 }
 \usage{
 ## Default S3 method:
-fmax|fmin(x, g = NULL, TRA = FALSE, na.rm = TRUE, 
-          use.g.names = TRUE, ...)
+fmax(x, g = NULL, TRA = FALSE, na.rm = TRUE, use.g.names = TRUE, ...)
+fmin(x, g = NULL, TRA = FALSE, na.rm = TRUE, use.g.names = TRUE, ...)
 
 ## S3 method for class 'matrix'
-fmax|fmin(x, g = NULL, TRA = FALSE, na.rm = TRUE, 
-          drop = TRUE, use.g.names = TRUE, ...)
+fmax(x, g = NULL, TRA = FALSE, na.rm = TRUE, use.g.names = TRUE, drop = TRUE, ...)
+fmin(x, g = NULL, TRA = FALSE, na.rm = TRUE, use.g.names = TRUE, drop = TRUE, ...)
 
 ## S3 method for class 'data.frame'
-fmax|fmin(x, g = NULL, TRA = FALSE, na.rm = TRUE, 
-          drop = TRUE, use.g.names = TRUE, ...)
+fmax(x, g = NULL, TRA = FALSE, na.rm = TRUE, use.g.names = TRUE, drop = TRUE, ...)
+fmin(x, g = NULL, TRA = FALSE, na.rm = TRUE, use.g.names = TRUE, drop = TRUE, ...)
 
 ## S3 method for class 'grouped_df'
-fmax|fmin(x, TRA = FALSE, na.rm = TRUE, 
-          drop.groups = FALSE, ...)
+fmax(x, TRA = FALSE, na.rm = TRUE, keep.group_vars = TRUE, ...)
+fmin(x, TRA = FALSE, na.rm = TRUE, keep.group_vars = TRUE, ...)
 }
 \arguments{
 \item{x}{a numeric vector, matrix, data.frame or grouped tibble (\code{dplyr::grouped_df}).}
@@ -40,16 +40,16 @@ fmax|fmin(x, TRA = FALSE, na.rm = TRUE,
 
 \item{na.rm}{logical. Skip missing values in \code{x}. Defaults to TRUE and implemented at very little computational cost. If \code{na.rm = FALSE} a \code{NA} is returned when encountered.}
 
-\item{drop}{\emph{matrix and data.frame method:} drop dimensions and return an atomic vector, if \code{g = NULL} and \code{TRA = FALSE}.}
-
 \item{use.g.names}{make group-names and add to the result as names (vector method) or row-names (matrix and data.frame method). No row-names are generated for data.tables and grouped tibbles.}
 
-\item{drop.groups}{\emph{grouped_df method:} Logical. Remove grouping variables after computation.}
+\item{drop}{\emph{matrix and data.frame method:} drop dimensions and return an atomic vector, if \code{g = NULL} and \code{TRA = FALSE}.}
+
+\item{keep.group_vars}{\emph{grouped_df method:} Logical. \code{FALSE} removes grouping variables after computation.}
 }
 \details{
 Missing-value removal as controlled by the \code{na.rm} argument is done at no extra cost since in C++ any logical comarison involving \code{NA} or \code{NaN} evaluates to \code{FALSE}. Large performance gains can nevertheless be achieved in the presence of missing values if \code{na.rm = FALSE}, since then the corresponding computation is terminated once a \code{NA} is encountered and \code{NA} is returned (unlike \code{base::max} and \code{base::min} which just run through without any checks).
 
-This all seamlessly generalizes to grouped computations, which are performed in a single pass (without splitting the data) and therefore extremely fast. 
+This all seamlessly generalizes to grouped computations, which are performed in a single pass (without splitting the data) and therefore extremely fast.
 
 When applied to data frame's with groups or \code{drop = FALSE}, \code{fmax} and \code{fmin} preserve all column attributes (such as variable labels) but do not distinguish between classed and unclassed objects. The attributes of the \code{data.frame} itself are also perserved.
 }

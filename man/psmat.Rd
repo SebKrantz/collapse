@@ -1,8 +1,12 @@
 \name{psmat}
 \alias{psmat}
+\alias{psmat.default}
+\alias{psmat.pseries}
+\alias{psmat.data.frame}
+\alias{psmat.pdata.frame}
 %- Also NEED an '\alias' for EACH other topic documented here.
 \title{
-Matrix / Array from Panel-Series 
+Matrix / Array from Panel-Series
 }
 \description{
 \code{psmat} efficiently expands a panel-vector or \code{plm::pseries} into a matrix. If a data frame or \code{plm::pdata.frame} is passed, \code{psmat} returns a list of such matrices or a 3D array.  % By default the matrix is created such that group-identifiers constitute the rows and time the columns.
@@ -30,7 +34,7 @@ Matrix / Array from Panel-Series
 For \code{plm::pseries}, the first \code{index} variable is taken to be the group-id and the second the time variable. If more than 2 index variables are attached to \code{plm::pseries}, the last one is taken as the time variable and the others are taken as group-id's and interacted.
 }
 \value{
-a matrix containing the data in \code{x}, where by default the rows constitute the groups-ids (\code{g}) and the columns the time variable or individual ids (\code{t}). 
+a matrix containing the data in \code{x}, where by default the rows constitute the groups-ids (\code{g}) and the columns the time variable or individual ids (\code{t}).
 }
 \references{
 %% ~put references to the literature/web site here ~
@@ -59,7 +63,7 @@ ts.plot(psmat(wlddev$PCGDP, 216, transpose = TRUE))             # To plot this d
 tsml <- psmat(wlddev, ~ country, ~ year, 9:12, TRUE)            # Get list of transposed matrices from all 4 series in this dataset
 par(mfrow = c(2,2))                                             # Plot the 4 matrices
 for(n in names(tsml)) ts.plot(ts(tsml[[n]], 1960, 2018), main = n)
-par(mfrow = c(1,1))           
+par(mfrow = c(1,1))
 str(simplify2array(tsml))                                       # This generates 3D array of the data, same as setting option simplify = TRUE
 View(unlist2d(tsml, "Variable", "Year", id.factor = TRUE))      # Using unlist2d, we can also generate a nice data.frame from this data
 
