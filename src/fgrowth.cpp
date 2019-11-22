@@ -31,18 +31,16 @@ NumericVector fgrowthCpp(const NumericVector& x, const IntegerVector& n = 1, con
   }
   auto FUN = logdiff ? do_logdiff : do_growth;
   // double (*FUN)(double, double); // https://stackoverflow.com/questions/5582869/how-do-i-store-a-function-to-a-variable
-  std::string stub, stub2, stub3; // String -> error !!
+  std::string stub, stub2; // String -> error !!
   if(names) {
     if(logdiff) {
       //    FUN = do_logdiff;
-      stub = ".Dlog";
-      stub2 = "Dlog";
-      stub3 = ".FDlog";
+      stub = "Dlog";
+      stub2 = "FDlog";
     } else {
       //    FUN = do_growth;
-      stub = ".G";
-      stub2 = "G";
-      stub3 = ".FG";
+      stub = "G";
+      stub2 = "FG";
     }
   } // else {
   // FUN = logdiff ? do_logdiff : do_growth;
@@ -65,7 +63,7 @@ NumericVector fgrowthCpp(const NumericVector& x, const IntegerVector& n = 1, con
           NumericMatrix::Column outp = out( _ , pos);
           if(names) {
             if(L1) colnam[pos] = stub + diffc[0];
-            else colnam[pos] = ".L" + nc[p] + stub2 + diffc[0];
+            else colnam[pos] = "L" + nc[p] + stub + diffc[0];
           }
           ++pos;
           for(int i = np; i != l; ++i) outp[i] = FUN(x[i], x[i - np]);
@@ -88,7 +86,7 @@ NumericVector fgrowthCpp(const NumericVector& x, const IntegerVector& n = 1, con
               out( _ , pos) = outtemp;
               if(names) {
                 if(L1) colnam[pos] = stub + diffc[q];
-                else colnam[pos] = ".L" + nc[p] + stub2 + diffc[q];
+                else colnam[pos] = "L" + nc[p] + stub + diffc[q];
               }
               ++pos;
             }
@@ -100,8 +98,8 @@ NumericVector fgrowthCpp(const NumericVector& x, const IntegerVector& n = 1, con
           if(end <= 0) stop("abs(n * diff) needs to be < length(x)");
           NumericMatrix::Column outp = out( _ , pos);
           if(names) {
-            if(F1) colnam[pos] = stub3 + diffc[0];
-            else colnam[pos] = ".F" + nc[p] + stub2 + diffc[0];
+            if(F1) colnam[pos] = stub2 + diffc[0];
+            else colnam[pos] = "F" + nc[p] + stub + diffc[0];
           }
           ++pos;
           for(int i = l+np; i--; ) outp[i] = FUN(x[i], x[i - np]);
@@ -123,15 +121,15 @@ NumericVector fgrowthCpp(const NumericVector& x, const IntegerVector& n = 1, con
               for(int i = end; i != start; ++i) outtemp[i] = fill;
               out( _ , pos) = outtemp;
               if(names) {
-                if(F1) colnam[pos] = stub3 + diffc[q];
-                else colnam[pos] = ".F"+ nc[p] + stub2 + diffc[q];
+                if(F1) colnam[pos] = stub2 + diffc[q];
+                else colnam[pos] = "F"+ nc[p] + stub + diffc[q];
               }
               ++pos;
             }
           }
         } else {
           out( _ , pos) = x;
-          if(names) colnam[pos] = ".--";
+          if(names) colnam[pos] = "--";
           ++pos;
         }
       }
@@ -159,7 +157,7 @@ NumericVector fgrowthCpp(const NumericVector& x, const IntegerVector& n = 1, con
           NumericMatrix::Column outp = out( _ , pos);
           if(names) {
             if(L1) colnam[pos] = stub + diffc[0];
-            else colnam[pos] = ".L" + nc[p] + stub2 + diffc[0];
+            else colnam[pos] = "L" + nc[p] + stub + diffc[0];
           }
           ++pos;
           for(int i = np; i != l; ++i) outp[omap[i]] = FUN(x[omap[i]], x[omap[i - np]]);
@@ -182,7 +180,7 @@ NumericVector fgrowthCpp(const NumericVector& x, const IntegerVector& n = 1, con
               out( _ , pos) = outtemp;
               if(names) {
                 if(L1) colnam[pos] = stub + diffc[q];
-                else colnam[pos] = ".L" + nc[p] + stub2 + diffc[q];
+                else colnam[pos] = "L" + nc[p] + stub + diffc[q];
               }
               ++pos;
             }
@@ -194,8 +192,8 @@ NumericVector fgrowthCpp(const NumericVector& x, const IntegerVector& n = 1, con
           if(end <= 0) stop("abs(n * diff) needs to be < length(x)");
           NumericMatrix::Column outp = out( _ , pos);
           if(names) {
-            if(F1) colnam[pos] = stub3 + diffc[0];
-            else colnam[pos] = ".F" + nc[p] + stub2 + diffc[0];
+            if(F1) colnam[pos] = stub2 + diffc[0];
+            else colnam[pos] = "F" + nc[p] + stub + diffc[0];
           }
           ++pos;
           for(int i = l+np; i--; ) outp[omap[i]] = FUN(x[omap[i]], x[omap[i - np]]);
@@ -217,15 +215,15 @@ NumericVector fgrowthCpp(const NumericVector& x, const IntegerVector& n = 1, con
               for(int i = end; i != start; ++i) outtemp[omap[i]] = fill;
               out( _ , pos) = outtemp;
               if(names) {
-                if(F1) colnam[pos] = stub3 + diffc[q];
-                else colnam[pos] = ".F"+ nc[p] + stub2 + diffc[q];
+                if(F1) colnam[pos] = stub2 + diffc[q];
+                else colnam[pos] = "F"+ nc[p] + stub + diffc[q];
               }
               ++pos;
             }
           }
         } else {
           out( _ , pos) = x;
-          if(names) colnam[pos] = ".--";
+          if(names) colnam[pos] = "--";
           ++pos;
         }
       }
@@ -256,7 +254,7 @@ NumericVector fgrowthCpp(const NumericVector& x, const IntegerVector& n = 1, con
           memset(seen, 0, memsize);
           if(names) {
             if(L1) colnam[pos] = stub + diffc[0];
-            else colnam[pos] = ".L" + nc[p] + stub2 + diffc[0];
+            else colnam[pos] = "L" + nc[p] + stub + diffc[0];
           }
           ++pos;
           for(int i = 0; i != l; ++i) {
@@ -296,7 +294,7 @@ NumericVector fgrowthCpp(const NumericVector& x, const IntegerVector& n = 1, con
               out( _ , pos) = outtemp;
               if(names) {
                 if(L1) colnam[pos] = stub + diffc[q];
-                else colnam[pos] = ".L" + nc[p] + stub2 + diffc[q];
+                else colnam[pos] = "L" + nc[p] + stub + diffc[q];
               }
               ++pos;
             }
@@ -308,8 +306,8 @@ NumericVector fgrowthCpp(const NumericVector& x, const IntegerVector& n = 1, con
           NumericMatrix::Column outp = out( _ , pos);
           memset(seen, 0, memsize);
           if(names) {
-            if(F1) colnam[pos] = stub3 + diffc[0];
-            else colnam[pos] = ".F" + nc[p] + stub2 + diffc[0];
+            if(F1) colnam[pos] = stub2 + diffc[0];
+            else colnam[pos] = "F" + nc[p] + stub + diffc[0];
           }
           ++pos;
           for(int i = l; i--; ) {
@@ -348,15 +346,15 @@ NumericVector fgrowthCpp(const NumericVector& x, const IntegerVector& n = 1, con
               }
               out( _ , pos) = outtemp;
               if(names) {
-                if(F1) colnam[pos] = stub3 + diffc[q];
-                else colnam[pos] = ".F"+ nc[p] + stub2 + diffc[q];
+                if(F1) colnam[pos] = stub2 + diffc[q];
+                else colnam[pos] = "F"+ nc[p] + stub + diffc[q];
               }
               ++pos;
             }
           }
         } else {
           out( _ , pos) = x;
-          if(names) colnam[pos] = ".--";
+          if(names) colnam[pos] = "--";
           ++pos;
         }
       }
@@ -396,7 +394,7 @@ NumericVector fgrowthCpp(const NumericVector& x, const IntegerVector& n = 1, con
           NumericMatrix::Column outp = out( _ , pos);
           if(names) {
             if(L1) colnam[pos] = stub + diffc[0];
-            else colnam[pos] = ".L" + nc[p] + stub2 + diffc[0];
+            else colnam[pos] = "L" + nc[p] + stub + diffc[0];
           }
           ++pos;
           for(int i = 0; i != l; ++i) {
@@ -436,7 +434,7 @@ NumericVector fgrowthCpp(const NumericVector& x, const IntegerVector& n = 1, con
               out( _ , pos) = outtemp;
               if(names) {
                 if(L1) colnam[pos] = stub + diffc[q];
-                else colnam[pos] = ".L" + nc[p] + stub2 + diffc[q];
+                else colnam[pos] = "L" + nc[p] + stub + diffc[q];
               }
               ++pos;
             }
@@ -447,8 +445,8 @@ NumericVector fgrowthCpp(const NumericVector& x, const IntegerVector& n = 1, con
           if(d1 < 1) stop("diff must be a vector of integers > 0");
           NumericMatrix::Column outp = out( _ , pos);
           if(names) {
-            if(F1) colnam[pos] = stub3 + diffc[0];
-            else colnam[pos] = ".F" + nc[p] + stub2 + diffc[0];
+            if(F1) colnam[pos] = stub2 + diffc[0];
+            else colnam[pos] = "F" + nc[p] + stub + diffc[0];
           }
           ++pos;
           for(int i = 0; i != l; ++i) {
@@ -487,15 +485,15 @@ NumericVector fgrowthCpp(const NumericVector& x, const IntegerVector& n = 1, con
               }
               out( _ , pos) = outtemp;
               if(names) {
-                if(F1) colnam[pos] = stub3 + diffc[q];
-                else colnam[pos] = ".F"+ nc[p] + stub2 + diffc[q];
+                if(F1) colnam[pos] = stub2 + diffc[q];
+                else colnam[pos] = "F"+ nc[p] + stub + diffc[q];
               }
               ++pos;
             }
           }
         } else {
           out( _ , pos) = x;
-          if(names) colnam[pos] = ".--";
+          if(names) colnam[pos] = "--";
           ++pos;
         }
       }

@@ -35,17 +35,17 @@ Vector<RTYPE> flagleadCppImpl(const Vector<RTYPE>& x, const IntegerVector& n, co
         if(absn[p] > l) stop("lag-length exceeds length of vector");
         MatrixColumn<RTYPE> outp = out( _ , p);
         if(np>0) {
-          if(names) colnam[p] = ".L" + nc[p];
+          if(names) colnam[p] = "L" + nc[p];
           int i = 0;
           while(i != np) outp[i++] = ff;
           for( ; i != l; ++i) outp[i] = x[i - np];
         } else if(np<0) {
-          if(names) colnam[p] = ".F" + nc[p];
+          if(names) colnam[p] = "F" + nc[p];
           int i = l, st = l+np;
           while(i != st) outp[--i] = ff;
           for( ; i--; ) outp[i] = x[i - np];
         } else {
-          if(names) colnam[p] = ".--";
+          if(names) colnam[p] = "--";
           outp = x;
         }
       }
@@ -68,17 +68,17 @@ Vector<RTYPE> flagleadCppImpl(const Vector<RTYPE>& x, const IntegerVector& n, co
         if(absn[p] > l) stop("lag-length exceeds length of vector");
         MatrixColumn<RTYPE> outp = out( _ , p);
         if(np>0) {
-          if(names) colnam[p] = ".L" + nc[p];
+          if(names) colnam[p] = "L" + nc[p];
           int i = 0;
           while(i != np) outp[omap[i++]] = ff;
           for( ; i != l; ++i) outp[omap[i]] = x[omap[i - np]];
         } else if(np<0) {
-          if(names) colnam[p] = ".F" + nc[p];
+          if(names) colnam[p] = "F" + nc[p];
           int st = l+np, i = l;
           while(i != st) outp[omap[--i]] = ff;
           for( ; i--; ) outp[omap[i]] = x[omap[i - np]];
         } else {
-          if(names) colnam[p] = ".--";
+          if(names) colnam[p] = "--";
           outp = x;
         }
       }
@@ -93,7 +93,7 @@ Vector<RTYPE> flagleadCppImpl(const Vector<RTYPE>& x, const IntegerVector& n, co
         if(absn[p] > ags) stop("lag-length exceeds average group-size (%i)", ags);
         MatrixColumn<RTYPE> outp = out( _ , p);
         if(np>0) {
-          if(names) colnam[p] = ".L" + nc[p];
+          if(names) colnam[p] = "L" + nc[p];
           memset(seen, 0, memsize);
           for(int i = 0; i != l; ++i) {
             if(seen[g[i]] == np) {
@@ -105,7 +105,7 @@ Vector<RTYPE> flagleadCppImpl(const Vector<RTYPE>& x, const IntegerVector& n, co
           }
         } else if(np<0) {
           memset(seen, 0, memsize);
-          if(names) colnam[p] = ".F" + nc[p];
+          if(names) colnam[p] = "F" + nc[p];
           for(int i = l; i--; ) { // good??
             if(seen[g[i]] == np) {
               outp[i] = x[i-np];
@@ -115,7 +115,7 @@ Vector<RTYPE> flagleadCppImpl(const Vector<RTYPE>& x, const IntegerVector& n, co
             }
           }
         } else {
-          if(names) colnam[p] = ".--";
+          if(names) colnam[p] = "--";
           outp = x;
         }
       }
@@ -152,7 +152,7 @@ Vector<RTYPE> flagleadCppImpl(const Vector<RTYPE>& x, const IntegerVector& n, co
         if(absn[p] > ags) stop("lag-length exceeds average group-size (%i)", ags);
         MatrixColumn<RTYPE> outp = out( _ , p);
         if(np>0) {
-          if(names) colnam[p] = ".L" + nc[p];
+          if(names) colnam[p] = "L" + nc[p];
           for(int i = 0; i != l; ++i) {
             if(ord2[i] >= np) {
               outp[i] = x[omap[cgs[g[i]]+ord2[i]-np]];
@@ -161,7 +161,7 @@ Vector<RTYPE> flagleadCppImpl(const Vector<RTYPE>& x, const IntegerVector& n, co
             }
           }
         } else if(np<0) {
-          if(names) colnam[p] = ".F" + nc[p];
+          if(names) colnam[p] = "F" + nc[p];
           for(int i = 0; i != l; ++i) {
             if(ord2[i] < gsv[g[i]-1]+np) {
               outp[i] = x[omap[cgs[g[i]]+ord2[i]-np]];
@@ -170,7 +170,7 @@ Vector<RTYPE> flagleadCppImpl(const Vector<RTYPE>& x, const IntegerVector& n, co
             }
           }
         } else {
-          if(names) colnam[p] = ".--";
+          if(names) colnam[p] = "--";
           outp = x;
         }
       }

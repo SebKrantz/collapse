@@ -34,8 +34,8 @@ NumericVector fdiffCpp(const NumericVector& x, const IntegerVector& n = 1, const
           if(end >= l) stop("n * diff needs to be < length(x)");
           NumericMatrix::Column outp = out( _ , pos); // p*ds this gave D1L1, D2L1, D1L2, D2L2, but I want D1L1, D1L2, D2L1, D2L2
           if(names) {
-            if(L1) colnam[pos] = ".D" + diffc[0];
-            else colnam[pos] = ".L" + nc[p] + "D" + diffc[0]; //fmt::format("{}{}", "D.", np);
+            if(L1) colnam[pos] = "D" + diffc[0];
+            else colnam[pos] = "L" + nc[p] + "D" + diffc[0]; //fmt::format("{}{}", "D.", np);
           }
           ++pos;
           for(int i = np; i != l; ++i) outp[i] = x[i] - x[i - np];
@@ -57,8 +57,8 @@ NumericVector fdiffCpp(const NumericVector& x, const IntegerVector& n = 1, const
               for(int i = np*L_dq; i != end; ++i) outtemp[i] = fill; // good ?? -> yes !!
               out( _ , pos) = outtemp; // p*ds+q this gave D1L1, D2L1, D1L2, D2L2, but I want D1L1, D1L2, D2L1, D2L2
               if(names) {
-                if(L1) colnam[pos] = ".D" + diffc[q]; // fmt::format("{}{}", "D", q+1);
-                else colnam[pos] = ".L" + nc[p] + "D" + diffc[q]; //fmt::format("{}{}{}{}", "D", q+1, ".", np);
+                if(L1) colnam[pos] = "D" + diffc[q]; // fmt::format("{}{}", "D", q+1);
+                else colnam[pos] = "L" + nc[p] + "D" + diffc[q]; //fmt::format("{}{}{}{}", "D", q+1, ".", np);
               }
               ++pos;
             }
@@ -70,8 +70,8 @@ NumericVector fdiffCpp(const NumericVector& x, const IntegerVector& n = 1, const
           if(end <= 0) stop("abs(n * diff) needs to be < length(x)");
           NumericMatrix::Column outp = out( _ , pos);
           if(names) {
-            if(F1) colnam[pos] = ".FD" + diffc[0];
-            else colnam[pos] = ".F" + nc[p] + "D" + diffc[0]; // fmt::format("{}{}", "FD.", -np);
+            if(F1) colnam[pos] = "FD" + diffc[0];
+            else colnam[pos] = "F" + nc[p] + "D" + diffc[0]; // fmt::format("{}{}", "FD.", -np);
           }
           ++pos;
           for(int i = l+np; i--; ) outp[i] = x[i] - x[i - np];
@@ -93,15 +93,15 @@ NumericVector fdiffCpp(const NumericVector& x, const IntegerVector& n = 1, const
               for(int i = end; i != start; ++i) outtemp[i] = fill; // good ?? -> yes !!
               out( _ , pos) = outtemp;
               if(names) {
-                if(F1) colnam[pos] = ".FD" + diffc[q]; //  fmt::format("{}{}", "FD", q+1);
-                else colnam[pos] = ".F"+ nc[p] + "D" + diffc[q]; // fmt::format("{}{}{}{}", "FD", q+1, ".", -np);
+                if(F1) colnam[pos] = "FD" + diffc[q]; //  fmt::format("{}{}", "FD", q+1);
+                else colnam[pos] = "F"+ nc[p] + "D" + diffc[q]; // fmt::format("{}{}{}{}", "FD", q+1, ".", -np);
               }
               ++pos;
             }
           }
         } else {
           out( _ , pos) = x;
-          if(names) colnam[pos] = ".--";
+          if(names) colnam[pos] = "--";
           ++pos;
         }
       }
@@ -128,8 +128,8 @@ NumericVector fdiffCpp(const NumericVector& x, const IntegerVector& n = 1, const
           if(end >= l) stop("n * diff needs to be < length(x)");
           NumericMatrix::Column outp = out( _ , pos);
           if(names) {
-            if(L1) colnam[pos] = ".D" + diffc[0];
-            else colnam[pos] = ".L" + nc[p] + "D" + diffc[0];
+            if(L1) colnam[pos] = "D" + diffc[0];
+            else colnam[pos] = "L" + nc[p] + "D" + diffc[0];
           }
           ++pos;
           for(int i = np; i != l; ++i) outp[omap[i]] = x[omap[i]] - x[omap[i - np]];
@@ -151,8 +151,8 @@ NumericVector fdiffCpp(const NumericVector& x, const IntegerVector& n = 1, const
               for(int i = np*L_dq; i != end; ++i) outtemp[omap[i]] = fill;
               out( _ , pos) = outtemp;
               if(names) {
-                if(L1) colnam[pos] = ".D" + diffc[q];
-                else colnam[pos] = ".L" + nc[p] + "D" + diffc[q];
+                if(L1) colnam[pos] = "D" + diffc[q];
+                else colnam[pos] = "L" + nc[p] + "D" + diffc[q];
               }
               ++pos;
             }
@@ -164,8 +164,8 @@ NumericVector fdiffCpp(const NumericVector& x, const IntegerVector& n = 1, const
           if(end <= 0) stop("abs(n * diff) needs to be < length(x)");
           NumericMatrix::Column outp = out( _ , pos);
           if(names) {
-            if(F1) colnam[pos] = ".FD" + diffc[0];
-            else colnam[pos] = ".F" + nc[p] + "D" + diffc[0];
+            if(F1) colnam[pos] = "FD" + diffc[0];
+            else colnam[pos] = "F" + nc[p] + "D" + diffc[0];
           }
           ++pos;
           for(int i = l+np; i--; ) outp[omap[i]] = x[omap[i]] - x[omap[i - np]];
@@ -187,15 +187,15 @@ NumericVector fdiffCpp(const NumericVector& x, const IntegerVector& n = 1, const
               for(int i = end; i != start; ++i) outtemp[omap[i]] = fill;
               out( _ , pos) = outtemp;
               if(names) {
-                if(F1) colnam[pos] = ".FD" + diffc[q];
-                else colnam[pos] = ".F"+ nc[p] + "D" + diffc[q];
+                if(F1) colnam[pos] = "FD" + diffc[q];
+                else colnam[pos] = "F"+ nc[p] + "D" + diffc[q];
               }
               ++pos;
             }
           }
         } else {
           out( _ , pos) = x;
-          if(names) colnam[pos] = ".--";
+          if(names) colnam[pos] = "--";
           ++pos;
         }
       }
@@ -227,8 +227,8 @@ NumericVector fdiffCpp(const NumericVector& x, const IntegerVector& n = 1, const
           NumericMatrix::Column outp = out( _ , pos);
           memset(seen, 0, memsize);
           if(names) {
-            if(L1) colnam[pos] = ".D" + diffc[0];
-            else colnam[pos] = ".L" + nc[p] + "D" + diffc[0];
+            if(L1) colnam[pos] = "D" + diffc[0];
+            else colnam[pos] = "L" + nc[p] + "D" + diffc[0];
           }
           ++pos;
           for(int i = 0; i != l; ++i) { // this loop ??
@@ -267,8 +267,8 @@ NumericVector fdiffCpp(const NumericVector& x, const IntegerVector& n = 1, const
               }
               out( _ , pos) = outtemp;
               if(names) {
-                if(L1) colnam[pos] = ".D" + diffc[q];
-                else colnam[pos] = ".L" + nc[p] + "D" + diffc[q];
+                if(L1) colnam[pos] = "D" + diffc[q];
+                else colnam[pos] = "L" + nc[p] + "D" + diffc[q];
               }
               ++pos;
             }
@@ -280,8 +280,8 @@ NumericVector fdiffCpp(const NumericVector& x, const IntegerVector& n = 1, const
           NumericMatrix::Column outp = out( _ , pos);
           memset(seen, 0, memsize);
           if(names) {
-            if(F1) colnam[pos] = ".FD" + diffc[0];
-            else colnam[pos] = ".F" + nc[p] + "D" + diffc[0];
+            if(F1) colnam[pos] = "FD" + diffc[0];
+            else colnam[pos] = "F" + nc[p] + "D" + diffc[0];
           }
           ++pos;
           for(int i = l; i--; ) { // good?? -> yes !!
@@ -320,15 +320,15 @@ NumericVector fdiffCpp(const NumericVector& x, const IntegerVector& n = 1, const
               }
               out( _ , pos) = outtemp;
               if(names) {
-                if(F1) colnam[pos] = ".FD" + diffc[q];
-                else colnam[pos] = ".F"+ nc[p] + "D" + diffc[q];
+                if(F1) colnam[pos] = "FD" + diffc[q];
+                else colnam[pos] = "F"+ nc[p] + "D" + diffc[q];
               }
               ++pos;
             }
           }
         } else {
           out( _ , pos) = x;
-          if(names) colnam[pos] = ".--";
+          if(names) colnam[pos] = "--";
           ++pos;
         }
       }
@@ -368,8 +368,8 @@ NumericVector fdiffCpp(const NumericVector& x, const IntegerVector& n = 1, const
           if(d1 < 1) stop("diff must be a vector of integers > 0");
           NumericMatrix::Column outp = out( _ , pos);
           if(names) {
-            if(L1) colnam[pos] = ".D" + diffc[0];
-            else colnam[pos] = ".L" + nc[p] + "D" + diffc[0];
+            if(L1) colnam[pos] = "D" + diffc[0];
+            else colnam[pos] = "L" + nc[p] + "D" + diffc[0];
           }
           ++pos;
           for(int i = 0; i != l; ++i) { // ordinary computation on first iteration
@@ -408,8 +408,8 @@ NumericVector fdiffCpp(const NumericVector& x, const IntegerVector& n = 1, const
               }
               out( _ , pos) = outtemp;
               if(names) {
-                if(L1) colnam[pos] = ".D" + diffc[q];
-                else colnam[pos] = ".L" + nc[p] + "D" + diffc[q];
+                if(L1) colnam[pos] = "D" + diffc[q];
+                else colnam[pos] = "L" + nc[p] + "D" + diffc[q];
               }
               ++pos;
             }
@@ -420,8 +420,8 @@ NumericVector fdiffCpp(const NumericVector& x, const IntegerVector& n = 1, const
           if(d1 < 1) stop("diff must be a vector of integers > 0");
           NumericMatrix::Column outp = out( _ , pos);
           if(names) {
-            if(F1) colnam[pos] = ".FD" + diffc[0];
-            else colnam[pos] = ".F" + nc[p] + "D" + diffc[0];
+            if(F1) colnam[pos] = "FD" + diffc[0];
+            else colnam[pos] = "F" + nc[p] + "D" + diffc[0];
           }
           ++pos;
           for(int i = 0; i != l; ++i) { // Ordinary computation on first iteration
@@ -460,15 +460,15 @@ NumericVector fdiffCpp(const NumericVector& x, const IntegerVector& n = 1, const
               }
               out( _ , pos) = outtemp;
               if(names) {
-                if(F1) colnam[pos] = ".FD" + diffc[q];
-                else colnam[pos] = ".F"+ nc[p] + "D" + diffc[q];
+                if(F1) colnam[pos] = "FD" + diffc[q];
+                else colnam[pos] = "F"+ nc[p] + "D" + diffc[q];
               }
               ++pos;
             }
           }
         } else {
           out( _ , pos) = x;
-          if(names) colnam[pos] = ".--";
+          if(names) colnam[pos] = "--";
           ++pos;
         }
       }
