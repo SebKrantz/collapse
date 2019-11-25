@@ -72,65 +72,65 @@ GRP.default <- function(X, by = NULL, sort = TRUE, order = 1L, na.last = FALSE,
 
 is.GRP <- function(x) inherits(x, "GRP")
 
-group_names.GRP <- function(g, force.char = TRUE) {
-  if(is.null(g[[4L]])) return(NULL)
-  groups <- g[[4L]]
+group_names.GRP <- function(x, force.char = TRUE) { # , ...
+  if(is.null(x[[4L]])) return(NULL)
+  groups <- x[[4L]]
   if(length(groups) == 1L) {
    if(force.char && !is.character(groups[[1L]])) paste0(groups[[1L]]) else groups[[1L]]
   } else do.call(paste, c(groups, list(sep = ".")))
 }
 
-print.GRP <- function(g, n = 6, ...) {
-  ord <- g[[6L]]
-  cat(paste("collapse grouping object of length",length(g[[2L]]),"with",
-            g[[1L]],ifelse(any(ord),"ordered","unordered"),"groups"), fill = TRUE)
-  cat("\nCall: ", paste0(deparse(g[[8L]]),", ",ifelse(ord[2L],"ordered","unordered")), "\n\n", sep = "")
+print.GRP <- function(x, n = 6, ...) {
+  ord <- x[[6L]]
+  cat(paste("collapse grouping object of length",length(x[[2L]]),"with",
+            x[[1L]],ifelse(any(ord),"ordered","unordered"),"groups"), fill = TRUE)
+  cat("\nCall: ", paste0(deparse(x[[8L]]),", ",ifelse(ord[2L],"ordered","unordered")), "\n\n", sep = "")
   cat("Distribution of group sizes: ", fill = TRUE)
-  print.summaryDefault(summary.default(g[[3L]]))
-  if(!is.null(g[[4L]])) {
-    ug <- g[[4L]]
+  print.summaryDefault(summary.default(x[[3L]]))
+  if(!is.null(x[[4L]])) {
+    ug <- x[[4L]]
     cat("\nGroups with sizes: ", fill = TRUE)
     if(length(ug) == 1L) {
       ug <- ug[[1L]]
       if(length(ug) > 2L*n) {
-        ind <- seq.int(g[[1L]]-n+1L, g[[1L]])
-        print.default(setNames(g[[3L]][1:n], ug[1:n]))
+        ind <- seq.int(x[[1L]]-n+1L, x[[1L]])
+        print.default(setNames(x[[3L]][1:n], ug[1:n]))
         cat("  ---", fill = TRUE)
-        print.default(setNames(g[[3L]][ind], ug[ind]))
-      } else print.default(setNames(g[[3L]], ug))
+        print.default(setNames(x[[3L]][ind], ug[ind]))
+      } else print.default(setNames(x[[3L]], ug))
     } else {
       if(length(ug[[1L]]) > 2L*n) {
-        ind <- seq.int(g[[1L]]-n+1L, g[[1L]])
-        print.default(setNames(g[[3L]][1:n], do.call(paste, c(lapply(ug, function(x)x[1:n]), list(sep = ".")))))
+        ind <- seq.int(x[[1L]]-n+1L, x[[1L]])
+        print.default(setNames(x[[3L]][1:n], do.call(paste, c(lapply(ug, function(x)x[1:n]), list(sep = ".")))))
         cat("  ---", fill = TRUE)
-        print.default(setNames(g[[3L]][ind], do.call(paste, c(lapply(ug, function(x)x[ind]), list(sep = ".")))))
-      } else print.default(setNames(g[[3L]], do.call(paste, c(ug, list(sep = ".")))))
+        print.default(setNames(x[[3L]][ind], do.call(paste, c(lapply(ug, function(x)x[ind]), list(sep = ".")))))
+      } else print.default(setNames(x[[3L]], do.call(paste, c(ug, list(sep = ".")))))
     }
   }
 }
 
-plot.GRP <- function(g, breaks = "auto", type = "s", horizontal = FALSE, ...) {
+plot.GRP <- function(x, breaks = "auto", type = "s", horizontal = FALSE, ...) {
   settings <- par(c("mfrow","mar","mgp"))
   par(mfrow = if(horizontal) 1:2 else 2:1, mar = c(3.9,4.1,2.1,1), mgp = c(2.5,1,0))
   if(breaks == "auto") {
-    ugs <- length(unique.default(g[[3L]]))
+    ugs <- length(unique.default(x[[3L]]))
     breaks <- if(ugs > 80) 80 else ugs
   }
-  plot(seq_len(g[[1L]]), g[[3L]], type = type, xlab = "Group id", ylab = "Group Size",
-       main = paste0("Sizes of ",g[[1L]]," ",ifelse(any(g[[6L]]),"Ordered","Unordered")," Groups"), frame.plot = FALSE)
-  if(breaks == 1L) plot(g[[3L]][1L], g[[1L]], type = "h", ylab = "Frequency", xlab = "Group Size",
+  plot(seq_len(x[[1L]]), x[[3L]], type = type, xlab = "Group id", ylab = "Group Size",
+       main = paste0("Sizes of ",x[[1L]]," ",ifelse(any(x[[6L]]),"Ordered","Unordered")," Groups"), frame.plot = FALSE)
+  if(breaks == 1L) plot(x[[3L]][1L], x[[1L]], type = "h", ylab = "Frequency", xlab = "Group Size",
                         main = "Histogram of Group Sizes", frame.plot = FALSE) else
-  hist(g[[3L]], breaks, xlab = "Group Size", main = "Histogram of Group Sizes")
+  hist(x[[3L]], breaks, xlab = "Group Size", main = "Histogram of Group Sizes")
   par(settings)
 }
 
-as.factor.GRP <- function(g) {
-  if(is.factor(g)) return(g)
-  if(!is.GRP(g)) stop("g must be a 'GRP' object")
-  f <- g[[2L]]
-  gr <- g[[4L]]
+as.factor.GRP <- function(x) { # , ...
+  if(is.factor(x)) return(x)
+  if(!is.GRP(x)) stop("x must be a 'GRP' object")
+  f <- x[[2L]]
+  gr <- x[[4L]]
   if(is.null(gr)) {
-    attr(f, "levels") <- as.character(seq_len(g[[1L]]))
+    attr(f, "levels") <- as.character(seq_len(x[[1L]]))
   } else {
     if(length(gr) == 1L) {
       attr(f, "levels") <- if(is.character(gr[[1L]])) gr[[1L]] else as.character(gr[[1L]]) # or formatC ??
@@ -138,7 +138,7 @@ as.factor.GRP <- function(g) {
       attr(f, "levels") <- do.call(paste, c(gr, list(sep = ".")))
     }
   }
-  class(f) <- if(any(g[[6L]])) c("ordered","factor") else "factor"
+  class(f) <- if(any(x[[6L]])) c("ordered","factor") else "factor"
   return(f)
 }
 
