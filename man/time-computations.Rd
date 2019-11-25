@@ -1,8 +1,7 @@
-\name{Time-Series and Panel Series} % \name{Time-Series and Panel Computations}
-\alias{time-series-panel-series}
-\alias{tscomp}
-
-\title{\code{collapse} Time-Series and Panel Series}
+\name{time-series-panel-series} % \name{Time-Series and Panel Computations}
+\alias{Time-Series and Panel-Series}
+% \alias{tscomp}
+\title{Time-Series and Panel-Series} % \code{collapse}
 
 \description{
 \code{collapse} provides the following functions to work with time-dependent data:
@@ -15,14 +14,17 @@
 }
 \section{Table of Functions}{
   \tabular{lll}{\emph{ S3 Generic } \Sexpr{"\u200B"} \Sexpr{"\u200B"}  \tab \emph{ Methods } \Sexpr{"\u200B"} \Sexpr{"\u200B"}  \tab \emph{ Description }  \cr
-                 flag / L / F \tab default, matrix, data.frame, pseries, pdata.frame, grouped_df  \tab compute (sequences of) lags and leads \cr
-                 fdiff / D \tab default, matrix, data.frame, pseries, pdata.frame, grouped_df  \tab compute (sequences of lagged and iterated) differences \cr
-                 fgrowth / G \tab default, matrix, data.frame, pseries, pdata.frame, grouped_df  \tab compute (sequences of lagged and iterated) growth rates or log-differences \cr
-                 psmat \tab default, pseries, data.frame, pdata.frame \tab convert panel-data to matrix/array \cr
-                 psacf \tab default, pseries, data.frame, pdata.frame \tab compute ACF on panel-data \cr
-                 pspacf \tab default, pseries, data.frame, pdata.frame \tab compute PACF on panel-data \cr
-                 psccf \tab default, pseries, data.frame, pdata.frame \tab compute CCF on panel-data
+                 \code{\link[=flag]{flag/L/F}} \tab \code{default, matrix, data.frame, pseries, pdata.frame, grouped_df}  \tab compute (sequences of) lags and leads \cr
+                 \code{\link[=fdiff]{fdiff/D}} \tab \code{default, matrix, data.frame, pseries, pdata.frame, grouped_df}  \tab compute (sequences of lagged and iterated) differences \cr
+                 \code{\link[=fgrowth]{fgrowth/G}} \tab \code{default, matrix, data.frame, pseries, pdata.frame, grouped_df}  \tab compute (sequences of lagged and iterated) growth rates or log-differences \cr
+                 \code{\link{psmat}} \tab \code{default, pseries, data.frame, pdata.frame} \tab convert panel-data to matrix/array \cr
+                 \code{\link{psacf}} \tab \code{default, pseries, data.frame, pdata.frame} \tab compute ACF on panel-data \cr
+                 \code{\link{pspacf}} \tab \code{default, pseries, data.frame, pdata.frame} \tab compute PACF on panel-data \cr
+                 \code{\link{psccf}} \tab \code{default, pseries, data.frame, pdata.frame} \tab compute CCF on panel-data
 }
+}
+\seealso{
+\code{\link{collapse-package}}
 }
 
 
