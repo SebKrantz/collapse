@@ -1,53 +1,58 @@
-\name{Fast Statistical Functions}
-\alias{fstats}
-\alias{fast-statistical-functions}
+\name{fast-statistical-functions}
+\alias{Fast Statistical Functions}
+\alias{.FAST_STAT_FUN}
 \title{Fast (Grouped, Weighted) Statistical Functions for Matrix-Like Objects}  % Vectors, Matrix and Data Frame Columns}
 \description{
-With \code{fsum}, \code{fprod}, \code{fmean}, \code{fmedian}, \code{fmode}, \code{fvar}, \code{fsd}, \code{fmin}, \code{fmax}, \code{ffirst}, \code{flast}, \code{fNobs} and \code{fNdistinct} (and the vector-valued \code{fscale/STD}, \code{B}, \code{W}, \code{flag/L/F}, \code{fdiff/D} and \code{fgrowth/G}), \code{collapse} presents a coherent set of extremely fast and flexible statistcal functions (S3 generics) to perform column-wise, grouped and weighted computuations on matrix-like objects (atomic vectors, matrices and data.frames, with special support for \code{dplyr} grouped tibbles and data.table's. Vector-valued functions also support \code{plm::pseries} and \code{plm::pdata.frame}'s).
+With \code{\link{fsum}}, \code{\link{fprod}}, \code{\link{fmean}}, \code{\link{fmedian}}, \code{\link{fmode}}, \code{\link{fvar}}, \code{\link{fsd}}, \code{\link{fmin}}, \code{\link{fmax}}, \code{\link{ffirst}}, \code{\link{flast}}, \code{\link{fNobs}} and \code{\link{fNdistinct}}, \code{collapse} presents a coherent set of extremely fast and flexible statistcal functions (S3 generics) to perform column-wise, grouped and weighted computuations on atomic vectors, matrices and data.frames, with special support for \code{dplyr} grouped tibbles and data.table's.
+
+(\emph{Note}: The vector-valued functions \code{\link[=fscale]{fscale/STD}}, \code{\link{B}}, \code{\link{HDB}}, \code{\link{W}}, \code{\link{HDW}}, \code{\link[=flag]{flag/L/F}}, \code{\link[=fdiff]{fdiff/D}} and \code{\link[=fgrowth]{fgrowth/G}} are documented under \link{Data Transformations} and \link{Time-Series and Panel-Series}. These functions also support \code{plm::pseries} and \code{plm::pdata.frame}'s.)
 
 }
 \usage{
-## All scalar functions (FUN) follow a common syntax in 4 methods:
+## All functions (FUN) follow a common syntax in 4 methods:
 
 \method{FUN}{default}(x, g = NULL, [w = NULL,] TRA = FALSE, [na.rm = TRUE,]
     use.g.names = TRUE, ...)
 
 \method{FUN}{matrix}(x, g = NULL, [w = NULL,] TRA = FALSE, [na.rm = TRUE,]
-    drop = TRUE, use.g.names = TRUE, ...)
+    use.g.names = TRUE, drop = TRUE, ...)
 
 \method{FUN}{data.frame}(x, g = NULL, [w = NULL,] TRA = FALSE, [na.rm = TRUE,]
-    drop = TRUE, use.g.names = TRUE, ...)
+    use.g.names = TRUE, drop = TRUE, ...)
 
 \method{FUN}{grouped_df}(x, [w = NULL,] TRA = FALSE, [na.rm = TRUE,]
-    keep.group_vars = TRUE, [keep.w = TRUE,] ...)
+    use.g.names = FALSE, keep.group_vars = TRUE, [keep.w = TRUE,] ...)
 }
 \arguments{
 \item{x}{a vector, matrix, data.frame or grouped tibble (\code{dplyr::grouped_df}).}
 
-\item{g}{a factor, \code{GRP} object, atomic vector (internally converted to factor) or a list of vectors / factors (internally converted to a \code{GRP} object) used to group \code{x}.}
+\item{g}{a factor, \code{\link{GRP}} object, atomic vector (internally converted to factor) or a list of vectors / factors (internally converted to a \code{\link{GRP}} object) used to group \code{x}.}
 
-\item{w}{a numeric vector of (non-negative) weights, may contain missing values. Supported by \code{fmean, fvar, fsd} and \code{fmode}.}
+\item{w}{a numeric vector of (non-negative) weights, may contain missing values. Supported by \code{\link{fmean}}, \code{\link{ffvar}}, \code{\link{ffsd}} and \code{\link{ffmode}}.}
 
 \item{TRA}{an integer or quoted operator indicating the transformation to perform:
 1 - "replace_fill"     |     2 - "replace"     |     3 - "-"     |     4 - "-+"     |     5 - "/"     |     6 - "\%"     |     7 - "+"     |     8 - "*". See \code{\link{TRA}}.}
 
-\item{na.rm}{logical. Skip missing values in \code{x}. Defaults to TRUE in all functions and implemented at very little computational cost. Not available for \code{fNobs}.}
-
-\item{drop}{\emph{matrix and data.frame method:} Drop dimensions and return an atomic vector, if \code{g = NULL} and \code{TRA = FALSE}.}
+\item{na.rm}{logical. Skip missing values in \code{x}. Defaults to \code{TRUE} in all functions and implemented at very little computational cost. Not available for \code{\link{fNobs}}.}
 
 \item{use.g.names}{make group-names and add to the result as names (vector method) or row-names (matrix and data.frame method). No row-names are generated for data.tables and grouped tibbles.}
 
+\item{drop}{\emph{matrix and data.frame methods:} Drop dimensions and return an atomic vector if \code{g = NULL} and \code{TRA = FALSE}.}
+
 \item{keep.group_vars}{\emph{grouped_df method:} Logical. \code{FALSE} removes grouping variables after computation.}
 
-\item{keep.w}{\emph{grouped_df method:} Logical. \code{FALSE} removes weighting variable after computation (if contained in \code{grouped_df}).}
+\item{keep.w}{\emph{grouped_df method:} Logical. \code{TRUE} also aggregates weights and saves them in a column, \code{FALSE} removes weighting variable after computation (if contained in \code{grouped_df}).}
 
-\item{...}{extra arguments to some functions, i.e. the algorithm used.}
+\item{...}{arguments to be passed to or from other methods, and extra arguments to some functions, i.e. the algorithm used to compute variances etc.}
 }
 \details{
 Please see the documentation of individual functions.
 }
 \value{
-The computed value of \code{x}.
+ \code{x} aggregated. With data.frame's column-attributes and overall attributes are preserved.
+}
+\seealso{
+\link{collapse-package}, \link{Data Transformations}, \link{Time-Series and Panel-Series}
 }
 \examples{
 ## default vector method
@@ -55,25 +60,35 @@ mpg <- mtcars$mpg
 fsum(mpg)                         # Simple sum
 fsum(mpg, TRA = "\%")              # Simple transformation: obtain percentages of mpg
 fsum(mpg, mtcars$cyl)             # Grouped sum
+fmean(mpg, mtcars$cyl)            # Grouped mean
+fmean(mpg, w = mtcars$hp)         # Weighted mean, weighted by hp
+fmean(mpg, mtcars$cyl, mtcars$hp) # Grouped mean, weighted by hp
 fsum(mpg, mtcars$cyl, TRA = "\%")  # Percentages by group
+fmean(mpg, mtcars$cyl, mtcars$hp, # Replace vector elements with their weighted group-mean
+      TRA = "replace")
 
-## data.frame Method
+## data.frame method
 fsum(mtcars)
 fsum(mtcars, TRA = "\%")
 fsum(mtcars, mtcars[c(2,8:9)])           # Grouped column sum
 g <- GRP(mtcars, ~ cyl + vs + am)        # Here precomputing the groups!
 fsum(mtcars, g)                          # Faster !!
-fsum(mtcars, g, TRA = "\%")
+fmean(mtcars, g, mtcars$hp)
+fmean(mtcars, g, mtcars$hp, "-")         # demeaning by weighted group means... see also ?W
+
+fmode(wlddev, drop = FALSE)              # Compute statistical modes of variables in this data
+fmode(wlddev, wlddev$income)             # grouped statistical modes ..
 
 ## matrix method
 m <- qM(mtcars)
 fsum(m)
 fsum(m, g) # ...
 
-## method for grouped tibbles - for use with dplyr:
+## method for grouped tibbles - for use with dplyr
 library(dplyr)
 mtcars \%>\% group_by(cyl,vs,am) \%>\% select(mpg,carb) \%>\% fsum
 mtcars \%>\% group_by(cyl,vs,am) \%>\% fsum("\%")
-
+mtcars \%>\% group_by(cyl,vs,am) \%>\% fmean(hp)         # weighted grouped mean, save sum of weights
+mtcars \%>\% group_by(cyl,vs,am) \%>\% fmean(hp, keep.group_vars = FALSE)
 }
 

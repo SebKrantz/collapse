@@ -6,8 +6,8 @@
 \alias{fmode.grouped_df}
 \title{Fast (Grouped, Weighted) Statistical Mode for Matrix-Like Objects}  % Vectors, Matrix and Data Frame Columns}
 \description{
-\code{fmode} is a generic function and returns the (column-wise) statistical mode(s) i.e. the most frequent value(s) of \code{x}, (optionally) grouped by \code{g} and/or weighted by \code{w}.
-The \code{TRA} argument can further be used to transform \code{x} using its (grouped, weighted) mode.
+\code{fmode} is a generic function and returns the (column-wise) statistical mode i.e. the most frequent value of \code{x}, (optionally) grouped by \code{g} and/or weighted by \code{w}.
+The \code{\link{TRA}} argument can further be used to transform \code{x} using its (grouped, weighted) mode.
 }
 \usage{
 \method{fmode}{default}(x, g = NULL, w = NULL, TRA = FALSE, na.rm = TRUE,
@@ -20,33 +20,33 @@ The \code{TRA} argument can further be used to transform \code{x} using its (gro
       use.g.names = TRUE, drop = TRUE, ...)
 
 \method{fmode}{grouped_df}(x, w = NULL, TRA = FALSE, na.rm = TRUE,
-      keep.group_vars = TRUE, keep.w = TRUE, ...)
+      use.g.names = FALSE, keep.group_vars = TRUE, keep.w = TRUE, ...)
 }
 \arguments{
 \item{x}{a numeric vector, matrix, data.frame or grouped tibble (\code{dplyr::grouped_df}).}
 
-\item{g}{a factor, \code{GRP} object, atomic vector (internally converted to factor) or a list of vectors / factors (internally converted to a \code{GRP} object) used to group \code{x}.}
+\item{g}{a factor, \code{\link{GRP}} object, atomic vector (internally converted to factor) or a list of vectors / factors (internally converted to a \code{\link{GRP}} object) used to group \code{x}.}
 
 \item{w}{a numeric vector of (non-negative) weights, may contain missing values.}
 
 \item{TRA}{an integer or quoted operator indicating the transformation to perform:
 1 - "replace_fill"     |     2 - "replace"     |     3 - "-"     |     4 - "-+"     |     5 - "/"     |     6 - "\%"     |     7 - "+"     |     8 - "*". See \code{\link{TRA}}.}
 
-\item{na.rm}{logical. Skip missing values in \code{x}. Defaults to TRUE and implemented at very little computational cost. If \code{na.rm = FALSE}, \code{NA} is treated as any other value.}
-
-\item{drop}{\emph{matrix and data.frame method:} drop dimensions and return an atomic vector if \code{g = NULL} and \code{TRA = FALSE}.}
+\item{na.rm}{logical. Skip missing values in \code{x}. Defaults to \code{TRUE} and implemented at very little computational cost. If \code{na.rm = FALSE}, \code{NA} is treated as any other value.}
 
 \item{use.g.names}{make group-names and add to the result as names (vector method) or row-names (matrix and data.frame method). No row-names are generated for data.tables and grouped tibbles.}
 
-\item{drop}{\emph{matrix and data.frame method:} drop dimensions and return an atomic vector, if \code{g = NULL} and \code{TRA = FALSE}.}
+\item{drop}{\emph{matrix and data.frame method:} drop dimensions and return an atomic vector if \code{g = NULL} and \code{TRA = FALSE}.}
 
 \item{keep.group_vars}{\emph{grouped_df method:} Logical. \code{FALSE} removes grouping variables after computation.}
 
-\item{keep.w}{\emph{grouped_df method:} Logical. Ratain max of weighting variable after computation (if contained in \code{grouped_df}).}
+\item{keep.w}{\emph{grouped_df method:} Logical. Ratain \code{max} of weighting variable after computation (if contained in \code{grouped_df}).}
+
+\item{...}{arguments to be passed to or from other methods.}
 
 }
 \details{
-\code{fmode} implements a very fast algorithm to find the statistical mode utilizing index- hashing implemented in the \code{Rcpp::sugar::IndexHash} class.
+\code{fmode} implements a pretty fast algorithm to find the statistical mode utilizing index- hashing implemented in the \code{Rcpp::sugar::IndexHash} class.
 
 If all values are distinct, the first value is returned. If there are multiple dintinct values having the top frequency, the first value established as having the top frequency when passing through the data from element 1 to element n is returned. If \code{na.rm = FALSE}, \code{NA} is not removed but treated as any other value (i.e. it's frequency is counted). If all values are \code{NA}, \code{NA} is always returned.
 
@@ -57,7 +57,10 @@ This all seamlessly generalizes to grouped computations, which are currently per
 \code{fmode} preserves all the attributes of the objects it is applied to (apart from names or row-names which are adjusted as necessary). If a data frame is passed to \code{fmode} and \code{drop = TRUE}, \code{base::unlist} will be called on the result, which might or might not be sensible depending on the data at hand.
 }
 \value{
-The statistical mode of \code{x}, grouped by \code{g}, or (if \code{TRA} is used) \code{x} transformed by its mode, grouped by \code{g}. See also Details.
+The statistical mode of \code{x}, grouped by \code{g}, or (if \code{\link{TRA}} is used) \code{x} transformed by its mode, grouped by \code{g}. See also Details.
+}
+\seealso{
+\link{Fast Statistical Functions}
 }
 \examples{
 ## World Development Data

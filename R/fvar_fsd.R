@@ -43,7 +43,7 @@ fsd.default <- function(x, g = NULL, w = NULL, TRA = FALSE, na.rm = TRUE, use.g.
     }
   }
 }
-fsd.matrix <- function(x, g = NULL, w = NULL, TRA = FALSE, na.rm = TRUE, use.g.names = TRUE, stable.algo = TRUE, drop = TRUE, ...) {
+fsd.matrix <- function(x, g = NULL, w = NULL, TRA = FALSE, na.rm = TRUE, use.g.names = TRUE, drop = TRUE, stable.algo = TRUE, ...) {
   if(TRA == FALSE) {
     if(is.null(g)) return(fvarsdmCpp(x,0L,0L,NULL,w,na.rm,stable.algo,TRUE,drop)) else if (is.atomic(g)) {
       if(use.g.names) {
@@ -73,7 +73,7 @@ fsd.matrix <- function(x, g = NULL, w = NULL, TRA = FALSE, na.rm = TRUE, use.g.n
     }
   }
 }
-fsd.data.frame <- function(x, g = NULL, w = NULL, TRA = FALSE, na.rm = TRUE, use.g.names = TRUE, stable.algo = TRUE, drop = TRUE, ...) {
+fsd.data.frame <- function(x, g = NULL, w = NULL, TRA = FALSE, na.rm = TRUE, use.g.names = TRUE, drop = TRUE, stable.algo = TRUE, ...) {
   if(TRA == FALSE) {
     if(is.null(g)) return(fvarsdlCpp(x,0L,0L,NULL,w,na.rm,stable.algo,TRUE,drop)) else if (is.atomic(g)) {
       if(use.g.names && !inherits(x, "data.table")) {
@@ -104,8 +104,8 @@ fsd.data.frame <- function(x, g = NULL, w = NULL, TRA = FALSE, na.rm = TRUE, use
     }
   }
 }
-fsd.grouped_df <- function(x, w = NULL, TRA = FALSE, na.rm = TRUE, use.g.names = FALSE, stable.algo = TRUE,
-                           keep.group_vars = TRUE, keep.w = TRUE, ...) {
+fsd.grouped_df <- function(x, w = NULL, TRA = FALSE, na.rm = TRUE, use.g.names = FALSE,
+                           keep.group_vars = TRUE, keep.w = TRUE, stable.algo = TRUE, ...) {
   g <- GRP.grouped_df(x)
   wsym <- deparse(substitute(w))
   nam <- names(x)
@@ -152,6 +152,7 @@ fsd.grouped_df <- function(x, w = NULL, TRA = FALSE, na.rm = TRUE, use.g.names =
 }
 
 
+
 fvar <- function(x, ...) { # g = NULL, w = NULL, TRA = FALSE, na.rm = TRUE, use.g.names = TRUE, stable.algo = TRUE, drop = TRUE, keep.group_vars = TRUE, keep.w = TRUE,
   UseMethod("fvar", x)
 }
@@ -185,7 +186,7 @@ fvar.default <- function(x, g = NULL, w = NULL, TRA = FALSE, na.rm = TRUE, use.g
     }
   }
 }
-fvar.matrix <- function(x, g = NULL, w = NULL, TRA = FALSE, na.rm = TRUE, use.g.names = TRUE, stable.algo = TRUE, drop = TRUE, ...) {
+fvar.matrix <- function(x, g = NULL, w = NULL, TRA = FALSE, na.rm = TRUE, use.g.names = TRUE, drop = TRUE, stable.algo = TRUE, ...) {
   if(TRA == FALSE) {
     if(is.null(g)) return(fvarsdmCpp(x,0L,0L,NULL,w,na.rm,stable.algo,FALSE,drop)) else if (is.atomic(g)) {
       if(use.g.names) {
@@ -215,7 +216,7 @@ fvar.matrix <- function(x, g = NULL, w = NULL, TRA = FALSE, na.rm = TRUE, use.g.
     }
   }
 }
-fvar.data.frame <- function(x, g = NULL, w = NULL, TRA = FALSE, na.rm = TRUE, use.g.names = TRUE, stable.algo = TRUE, drop = TRUE, ...) {
+fvar.data.frame <- function(x, g = NULL, w = NULL, TRA = FALSE, na.rm = TRUE, use.g.names = TRUE, drop = TRUE, stable.algo = TRUE, ...) {
   if(TRA == FALSE) {
     if(is.null(g)) return(fvarsdlCpp(x,0L,0L,NULL,w,na.rm,stable.algo,FALSE,drop)) else if(is.atomic(g)) {
       if(use.g.names && !inherits(x, "data.table")) {
@@ -246,8 +247,9 @@ fvar.data.frame <- function(x, g = NULL, w = NULL, TRA = FALSE, na.rm = TRUE, us
     }
   }
 }
-fvar.grouped_df <- function(x, w = NULL, TRA = FALSE, na.rm = TRUE, use.g.names = FALSE, stable.algo = TRUE,
-                            keep.group_vars = TRUE, keep.w = TRUE, ...) {
+fvar.grouped_df <- function(x, w = NULL, TRA = FALSE, na.rm = TRUE, use.g.names = FALSE,
+                            keep.group_vars = TRUE, keep.w = TRUE, stable.algo = TRUE, ...) {
+
   g <- GRP.grouped_df(x)
   wsym <- deparse(substitute(w))
   nam <- names(x)
@@ -292,4 +294,6 @@ fvar.grouped_df <- function(x, w = NULL, TRA = FALSE, na.rm = TRUE, use.g.names 
     }
   } else return(TRAlCpp(x,fvarsdlCpp(x,g[[1L]],g[[2L]],g[[3L]],w,na.rm,stable.algo,FALSE),g[[2L]],TRAtoInt(TRA)))
 }
+
+
 

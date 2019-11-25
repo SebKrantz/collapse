@@ -19,23 +19,25 @@
      use.g.names = TRUE, drop = TRUE, ...)
 
 \method{fsum}{grouped_df}(x, TRA = FALSE, na.rm = TRUE,
-     keep.group_vars = TRUE, ...)
+     use.g.names = FALSE, keep.group_vars = TRUE, ...)
 }
 \arguments{
 \item{x}{a numeric vector, matrix, data.frame or grouped tibble (\code{dplyr::grouped_df}).}
 
-\item{g}{a factor, \code{GRP} object, atomic vector (internally converted to factor) or a list of vectors / factors (internally converted to a \code{GRP} object) used to group \code{x}}
+\item{g}{a factor, \code{GRP} object, atomic vector (internally converted to factor) or a list of vectors / factors (internally converted to a \code{GRP} object) used to group \code{x}.}
 
 \item{TRA}{an integer or quoted operator indicating the transformation to perform:
 1 - "replace_fill"     |     2 - "replace"     |     3 - "-"     |     4 - "-+"     |     5 - "/"     |     6 - "\%"     |     7 - "+"     |     8 - "*". See \code{\link{TRA}}.}
 
-\item{na.rm}{logical. Skip missing values in \code{x}. Defaults to TRUE and implemented at very little computational cost. If \code{na.rm = FALSE} a \code{NA} is returned when encountered.}
+\item{na.rm}{logical. Skip missing values in \code{x}. Defaults to \code{TRUE} and implemented at very little computational cost. If \code{na.rm = FALSE} a \code{NA} is returned when encountered.}
 
 \item{use.g.names}{make group-names and add to the result as names (vector method) or row-names (matrix and data.frame method). No row-names are generated for data.tables and grouped tibbles.}
 
-\item{drop}{\emph{matrix and data.frame method:} drop dimensions and return an atomic vector, if \code{g = NULL} and \code{TRA = FALSE}.}
+\item{drop}{\emph{matrix and data.frame method:} drop dimensions and return an atomic vector if \code{g = NULL} and \code{TRA = FALSE}.}
 
 \item{keep.group_vars}{\emph{grouped_df method:} Logical. \code{FALSE} removes grouping variables after computation.}
+
+\item{...}{arguments to be passed to or from other methods.}
 
 }
 \details{
@@ -49,7 +51,10 @@ When applied to data frame's with groups or \code{drop = FALSE}, \code{fsum} pre
 
 }
 \value{
-The sum of \code{x}, grouped by \code{g}, or (if \code{TRA} is used) \code{x} transformed by its sum, grouped by \code{g}.
+The sum of \code{x}, grouped by \code{g}, or (if \code{\link{TRA}} is used) \code{x} transformed by its sum, grouped by \code{g}.
+}
+\section{See Also}{
+\link{Fast Statistical Functions}
 }
 \section{Examples}{\preformatted{
 ## default vector method
@@ -63,7 +68,7 @@ fsum(mpg, g)
 fmean(mpg, g) == fsum(mpg, g) / fNobs(mpg, g)
 fsum(mpg, g, TRA = "\%")           # Percentages by group
 
-## data.frame Method
+## data.frame method
 fsum(mtcars)
 fsum(mtcars, TRA = "\%")
 fsum(mtcars, g)
@@ -76,7 +81,7 @@ fsum(m, TRA = "\%")
 fsum(m, g)
 fsum(m, g, TRA = "\%")
 
-## method for grouped tibbles - for use with dplyr:
+## method for grouped tibbles - for use with dplyr
 library(dplyr)
 mtcars \%>\% group_by(cyl,vs,am) \%>\% fsum
 mtcars \%>\% group_by(cyl,vs,am) \%>\% fsum("\%")

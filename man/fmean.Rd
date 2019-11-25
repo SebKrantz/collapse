@@ -6,8 +6,8 @@
 \alias{fmean.grouped_df}
 \title{Fast (Grouped, Weighted) Mean for Matrix-Like Objects}  % Vectors, Matrix and Data Frame Columns}
 \description{
-\code{fmean} is a generic function that computes the (column-wise) mean(s) of \code{x}, (optionally) grouped by \code{g} and/or weighted by \code{w}.
-The \code{TRA} argument can further be used to transform \code{x} using its (grouped, weighted) mean.
+\code{fmean} is a generic function that computes the (column-wise) mean of \code{x}, (optionally) grouped by \code{g} and/or weighted by \code{w}.
+The \code{\link{TRA}} argument can further be used to transform \code{x} using its (grouped, weighted) mean.
 }
 \usage{
 \method{fmean}{default}(x, g = NULL, w = NULL, TRA = FALSE, na.rm = TRUE,
@@ -20,27 +20,29 @@ The \code{TRA} argument can further be used to transform \code{x} using its (gro
       use.g.names = TRUE, drop = TRUE, ...)
 
 \method{fmean}{grouped_df}(x, w = NULL, TRA = FALSE, na.rm = TRUE,
-      drop.groups = FALSE, drop.w = TRUE, ...)
+      use.g.names = FALSE, keep.group_vars = TRUE, keep.w = TRUE, ...)
 }
 \arguments{
 \item{x}{a numeric vector, matrix, data.frame or grouped tibble (\code{dplyr::grouped_df}).}
 
-\item{g}{a factor, \code{GRP} object, atomic vector (internally converted to factor) or a list of vectors / factors (internally converted to a \code{GRP} object) used to group \code{x}.}
+\item{g}{a factor, \code{\link{GRP}} object, atomic vector (internally converted to factor) or a list of vectors / factors (internally converted to a \code{\link{GRP}} object) used to group \code{x}.}
 
 \item{w}{a numeric vector of (non-negative) weights, may contain missing values.}
 
 \item{TRA}{an integer or quoted operator indicating the transformation to perform:
 1 - "replace_fill"     |     2 - "replace"     |     3 - "-"     |     4 - "-+"     |     5 - "/"     |     6 - "\%"     |     7 - "+"     |     8 - "*". See \code{\link{TRA}}.}
 
-\item{na.rm}{logical. Skip missing values in \code{x}. Defaults to TRUE and implemented at very little computational cost. If \code{na.rm = FALSE} a \code{NA} is returned when encountered.}
+\item{na.rm}{logical. Skip missing values in \code{x}. Defaults to \code{TRUE} and implemented at very little computational cost. If \code{na.rm = FALSE} a \code{NA} is returned when encountered.}
 
 \item{use.g.names}{make group-names and add to the result as names (vector method) or row-names (matrix and data.frame method). No row-names are generated for data.tables and grouped tibbles.}
 
-\item{drop}{\emph{matrix and data.frame method:} drop dimensions and return an atomic vector, if \code{g = NULL} and \code{TRA = FALSE}.}
+\item{drop}{\emph{matrix and data.frame method:} drop dimensions and return an atomic vector if \code{g = NULL} and \code{TRA = FALSE}.}
 
 \item{keep.group_vars}{\emph{grouped_df method:} Logical. \code{FALSE} removes grouping variables after computation.}
 
 \item{keep.w}{\emph{grouped_df method:} Logical. Ratain summed weighting variable after computation (if contained in \code{grouped_df}).}
+
+\item{...}{arguments to be passed to or from other methods.}
 
 }
 \details{
@@ -55,9 +57,12 @@ This all seamlessly generalizes to grouped computations, which are performed in 
 When applied to data frame's with groups or \code{drop = FALSE}, \code{fmean} preserves all column attributes (such as variable labels) but does not distinguish between classed and unclassed object (thus applying \code{fmean} to a factor column will give a 'malformed factor' error). The attributes of the \code{data.frame} itself are also perserved.
 }
 \value{
-The mean of \code{x}, grouped by \code{g}, or (if \code{TRA} is used) \code{x} transformed by its mean, grouped by \code{g}.
+The mean of \code{x}, grouped by \code{g}, or (if \code{\link{TRA}} is used) \code{x} transformed by its mean, grouped by \code{g}.
 }
-\section{Examples}{\preformatted{
+\seealso{
+\code{\link{fmedian}}, \link{Fast Statistical Functions}
+}
+\examples{
 ## default vector method
 mpg <- mtcars$mpg
 fmean(mpg)                         # Simple mean
@@ -82,7 +87,7 @@ fmean(m)
 fmean(m, g)
 fmean(m, g, TRA = "-") # etc...
 
-## method for grouped tibbles - for use with dplyr:
+## method for grouped tibbles - for use with dplyr
 library(dplyr)
 mtcars \%>\% group_by(cyl,vs,am) \%>\% fmean           # Ordinary
 mtcars \%>\% group_by(cyl,vs,am) \%>\% fmean(hp)       # Weighted

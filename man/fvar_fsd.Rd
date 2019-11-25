@@ -1,4 +1,4 @@
-\name{fvar & fsd}
+\name{fvar-fsd}
 \alias{fvar}
 \alias{fvar.default}
 \alias{fvar.matrix}
@@ -11,15 +11,14 @@
 \alias{fsd.grouped_df}
 \title{Fast (Grouped, Weighted) Variance and Standard Deviation for Matrix-Like Objects}  % Vectors, Matrix and Data Frame Columns
 \description{
-\code{fvar} and \code{fsd} are generic functions that compute the (column-wise) variance(s) and standard deviation(s) of \code{x}, (optionally) grouped by \code{g} and/or frequency-weighted by \code{w}.
-The \code{TRA} argument can further be used to transform \code{x} using its (grouped, weighted) variance | sd.
+\code{fvar} and \code{fsd} are generic functions that compute the (column-wise) variance and standard deviation of \code{x}, (optionally) grouped by \code{g} and/or frequency-weighted by \code{w}. The \code{\link{TRA}} argument can further be used to transform \code{x} using its (grouped, weighted) variance/sd.
 }
 \usage{
 ## Default S3 methods:
 fvar(x, g = NULL, w = NULL, TRA = FALSE, na.rm = TRUE,
-    use.g.names = TRUE, stable.algo = TRUE, ...)
-fsd(x, g = NULL, w = NULL, TRA = FALSE, na.rm = TRUE,
-    use.g.names = TRUE, stable.algo = TRUE, ...)
+     use.g.names = TRUE, stable.algo = TRUE, ...)
+ fsd(x, g = NULL, w = NULL, TRA = FALSE, na.rm = TRUE,
+     use.g.names = TRUE, stable.algo = TRUE, ...)
 
 ## S3 methods for class 'matrix'
 fvar(x, g = NULL, w = NULL, TRA = FALSE, na.rm = TRUE,
@@ -27,39 +26,44 @@ fvar(x, g = NULL, w = NULL, TRA = FALSE, na.rm = TRUE,
  fsd(x, g = NULL, w = NULL, TRA = FALSE, na.rm = TRUE,
      use.g.names = TRUE, drop = TRUE, stable.algo = TRUE, ...)
 
-## S3 method for class 'data.frame'
+## S3 methods for class 'data.frame'
 fvar(x, g = NULL, w = NULL, TRA = FALSE, na.rm = TRUE,
      use.g.names = TRUE, drop = TRUE, stable.algo = TRUE, ...)
  fsd(x, g = NULL, w = NULL, TRA = FALSE, na.rm = TRUE,
      use.g.names = TRUE, drop = TRUE, stable.algo = TRUE, ...)
 
-## S3 method for class 'grouped_df'
+## S3 methods for class 'grouped_df'
 fvar(x, w = NULL, TRA = FALSE, na.rm = TRUE,
-     keep.group_vars = TRUE, keep.w = TRUE, stable.algo = TRUE, ...)
+     use.g.names = FALSE, keep.group_vars = TRUE, keep.w = TRUE,
+     stable.algo = TRUE, ...)
  fsd(x, w = NULL, TRA = FALSE, na.rm = TRUE,
-     keep.group_vars = TRUE, keep.w = TRUE, stable.algo = TRUE, ...)
+     use.g.names = FALSE, keep.group_vars = TRUE, keep.w = TRUE,
+     stable.algo = TRUE, ...)
 }
 \arguments{
 \item{x}{a numeric vector, matrix, data.frame or grouped tibble (\code{dplyr::grouped_df}).}
 
-\item{g}{a factor, \code{GRP} object, atomic vector (internally converted to factor) or a list of vectors / factors (internally converted to a \code{GRP} object) used to group \code{x}.}
+\item{g}{a factor, \code{\link{GRP}} object, atomic vector (internally converted to factor) or a list of vectors / factors (internally converted to a \code{\link{GRP}} object) used to group \code{x}.}
 
 \item{w}{a numeric vector of (non-negative) weights, may contain missing values.}
 
 \item{TRA}{an integer or quoted operator indicating the transformation to perform:
 1 - "replace_fill"     |     2 - "replace"     |     3 - "-"     |     4 - "-+"     |     5 - "/"     |     6 - "\%"     |     7 - "+"     |     8 - "*". See \code{\link{TRA}}.}
 
-\item{na.rm}{logical. Skip missing values in \code{x}. Defaults to TRUE and implemented at very little computational cost. If \code{na.rm = FALSE} a \code{NA} is returned when encountered.}
+\item{na.rm}{logical. Skip missing values in \code{x}. Defaults to \code{TRUE} and implemented at very little computational cost. If \code{na.rm = FALSE} a \code{NA} is returned when encountered.}
 
 \item{use.g.names}{make group-names and add to the result as names (vector method) or row-names (matrix and data.frame method). No row-names are generated for data.tables and grouped tibbles.}
 
-\item{drop}{\emph{matrix and data.frame method:} drop dimensions and return an atomic vector, if \code{g = NULL} and \code{TRA = FALSE}.}
-
-\item{stable.algo}{logical. TRUE (default) use Welford's numerically stable online algorithm. \code{FALSE} implements a faster but numerically instable one-pass method. See Details. }
+\item{drop}{\emph{matrix and data.frame method:} drop dimensions and return an atomic vector if \code{g = NULL} and \code{TRA = FALSE}.}
 
 \item{keep.group_vars}{\emph{grouped_df method:} Logical. \code{FALSE} removes grouping variables after computation.}
 
 \item{keep.w}{\emph{grouped_df method:} Logical. Retain summed weighting variable after computation (if contained in \code{grouped_df}).}
+
+\item{stable.algo}{logical. \code{TRUE} (default) use Welford's numerically stable online algorithm. \code{FALSE} implements a faster but numerically instable one-pass method. See Details. }
+
+\item{...}{arguments to be passed to or from other methods.}
+
 }
 \details{
 \emph{Welford's online algorithm} used by default to compute the variance is well described \href{https://en.wikipedia.org/wiki/Algorithms_for_calculating_variance}{here} (the section \emph{Weighted incremental algorithm} also shows how the weighted variance is obtained by this algorithm).
@@ -72,12 +76,15 @@ Missing-value removal as controlled by the \code{na.rm} argument is done very ef
 
 This all seamlessly generalizes to grouped computations, which are performed in a single pass (without splitting the data) and therefore extremely fast.
 
-When applied to data frame's with groups or \code{drop = FALSE}, \code{fvar|fsd} preserves all column attributes (such as variable labels) but does not distinguish between classed and unclassed object (thus applying \code{fvar|fsd} to a factor column will give a 'malformed factor' error, and applying it to a date variable will give an error or a pretty weird date). The attributes of the \code{data.frame} itself are also perserved.
+When applied to data frame's with groups or \code{drop = FALSE}, \code{fvar/fsd} preserves all column attributes (such as variable labels) but does not distinguish between classed and unclassed object (thus applying \code{fvar/fsd} to a factor column will give a 'malformed factor' error, and applying it to a date variable will give an error or a pretty weird date). The attributes of the \code{data.frame} itself are also perserved.
 }
 \value{
-\code{fvar} returns the variance of \code{x}, grouped by \code{g}, or (if \code{TRA} is used) \code{x} transformed by its variance, grouped by \code{g}. \code{fsd} computes the standard deviation of \code{x} in like manor.
+\code{fvar} returns the variance of \code{x}, grouped by \code{g}, or (if \code{\link{TRA}} is used) \code{x} transformed by its variance, grouped by \code{g}. \code{fsd} computes the standard deviation of \code{x} in like manor.
 }
-\section{Examples}{\preformatted{
+\seealso{
+\link{Fast Statistical Functions}
+}
+\examples{
 ## default vector method
 fvar(mtcars$mpg)                            # Simple variance (all examples below also hold for fvar!)
 fsd(mtcars$mpg)                             # Simple standard deviation
@@ -104,7 +111,7 @@ fsd(m, mtcars$cyl) # etc...
 ## method for grouped tibbles - for use with dplyr:
 library(dplyr)
 mtcars \%>\% group_by(cyl,vs,am) \%>\% fsd
-mtcars \%>\% group_by(cyl,vs,am) \%>\% fsd(drop.groups = TRUE) # remove grouping columns
+mtcars \%>\% group_by(cyl,vs,am) \%>\% fsd(keep.group_vars = FALSE) # remove grouping columns
 mtcars \%>\% group_by(cyl,vs,am) \%>\% fsd(hp)      # Weighted by hp. Since drop.w = TRUE by default, hp is removed from the result.
 mtcars \%>\% group_by(cyl,vs,am) \%>\% fsd(hp, "/") # Weighted scaling transformation
 }}

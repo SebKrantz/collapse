@@ -6,7 +6,7 @@
 \alias{fNdistinct.grouped_df}
 \title{Fast (Grouped) Distinct Value Count for Matrix-Like Objects}  % Vectors, Matrix and Data Frame Columns}
 \description{
-\code{fNdistinct} is a generic function that (column-wise) computes the number of distinct values in \code{x}, (optionally) grouped by \code{g}. It is significantly faster than \code{length(unique(x))}. The \code{TRA} argument can further be used to transform \code{x} using its (grouped) distinct value count.
+\code{fNdistinct} is a generic function that (column-wise) computes the number of distinct values in \code{x}, (optionally) grouped by \code{g}. It is significantly faster than \code{length(unique(x))}. The \code{\link{TRA}} argument can further be used to transform \code{x} using its (grouped) distinct value count.
 }
 
 \usage{
@@ -20,27 +20,29 @@
            use.g.names = TRUE, drop = TRUE, ...)
 
 \method{fNdistinct}{grouped_df}(x, TRA = FALSE, na.rm = FALSE,
-           keep.group_vars = TRUE, ...)
+           use.g.names = FALSE, keep.group_vars = TRUE, ...)
 }
 \arguments{
 \item{x}{a vector, matrix, data.frame or grouped tibble (\code{dplyr::grouped_df}).}
 
-\item{g}{a factor, \code{GRP} object, atomic vector (internally converted to factor) or a list of vectors / factors (internally converted to a \code{GRP} object) used to group \code{x}.}
+\item{g}{a factor, \code{\link{GRP}} object, atomic vector (internally converted to factor) or a list of vectors / factors (internally converted to a \code{\link{GRP}} object) used to group \code{x}.}
 
 \item{TRA}{an integer or quoted operator indicating the transformation to perform:
 1 - "replace_fill"     |     2 - "replace"     |     3 - "-"     |     4 - "-+"     |     5 - "/"     |     6 - "\%"     |     7 - "+"     |     8 - "*". See \code{\link{TRA}}.}
 
-\item{na.rm}{logical. TRUE: Skip missing values in \code{x} (faster computation). FALSE: Also consider 'NA' as one distinct value.}
+\item{na.rm}{logical. \code{TRUE}: Skip missing values in \code{x} (faster computation). \code{FALSE}: Also consider 'NA' as one distinct value.}
 
 \item{use.g.names}{make group-names and add to the result as names (vector method) or row-names (matrix and data.frame method). No row-names are generated for data.tables and grouped tibbles.}
 
-\item{drop}{\emph{matrix and data.frame method:} drop dimensions and return an atomic vector, if \code{g = NULL} and \code{TRA = FALSE}.}
+\item{drop}{\emph{matrix and data.frame method:} drop dimensions and return an atomic vector if \code{g = NULL} and \code{TRA = FALSE}.}
 
 \item{keep.group_vars}{\emph{grouped_df method:} Logical. \code{FALSE} removes grouping variables after computation.}
 
+\item{...}{arguments to be passed to or from other methods.}
+
 }
 \details{
-\code{fNdistinct} implements a very fast algorithm to find the number of distinct values utilizing index- hashing implemented in the \code{Rcpp::sugar::IndexHash} class.
+\code{fNdistinct} implements a fast algorithm to find the number of distinct values utilizing index- hashing implemented in the \code{Rcpp::sugar::IndexHash} class.
 
 If \code{na.rm = TRUE} (the default), missing values will be skipped yielding substatial performance gains in data with many missing values. If \code{na.rm = TRUE}, missing values will simply be treated as any other value and read into the hash-map. Thus with the former, a numeric vector \code{c(1.25,NaN,3.56,NA)} will have a distinct value count of 2, whereas the latter will return a distinct value count of 4.
 
@@ -50,7 +52,10 @@ Grouped computations are currently performed by mapping the data to a sparse-arr
 
 }
 \value{
-Integer. The number of distict values in \code{x}, grouped by \code{g}, or (if \code{TRA} is used) \code{x} transformed by its distinct value count, grouped by \code{g}.
+Integer. The number of distinct values in \code{x}, grouped by \code{g}, or (if \code{\link{TRA}} is used) \code{x} transformed by its distinct value count, grouped by \code{g}.
+}
+\seealso{
+\code{\link{fNobs}}, \link{Fast Statistical Functions}
 }
 \examples{
 ## default vector method

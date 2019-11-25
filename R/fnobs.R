@@ -13,92 +13,92 @@ fNobs <- function(x, ...) { # g = NULL, TRA = FALSE, use.g.names = TRUE, drop = 
 }
 fNobs.default <- function(x, g = NULL, TRA = FALSE, use.g.names = TRUE, ...) {
   if(TRA == FALSE) {
-    if(is.null(g)) return(fnobsCpp(x,0L,0L)) else if (is.atomic(g)) {
+    if(is.null(g)) return(fNobsCpp(x,0L,0L)) else if (is.atomic(g)) {
       if(use.g.names) {
         if(!is.factor(g)) g <- qF(g)
         lev <- attr(g, "levels")
-        return(`names<-`(fnobsCpp(x,length(lev),g), lev))
+        return(`names<-`(fNobsCpp(x,length(lev),g), lev))
       } else {
-        if(is.factor(g)) return(fnobsCpp(x,fnlevels(g),g)) else {
+        if(is.factor(g)) return(fNobsCpp(x,fnlevels(g),g)) else {
           g <- qG(g)
-          return(fnobsCpp(x,attr(g,"N.groups"),g))
+          return(fNobsCpp(x,attr(g,"N.groups"),g))
         }
       }
     } else {
       if(!is.GRP(g)) g <- if(use.g.names) GRP(g) else GRP(g, return.groups = FALSE)
-      if(use.g.names) return(`names<-`(fnobsCpp(x,g[[1L]],g[[2L]]), group_names.GRP(g))) else
-        return(fnobsCpp(x,g[[1L]],g[[2L]]))
+      if(use.g.names) return(`names<-`(fNobsCpp(x,g[[1L]],g[[2L]]), group_names.GRP(g))) else
+        return(fNobsCpp(x,g[[1L]],g[[2L]]))
     }
   } else {
-    if(is.null(g)) return(TRACpp(x,fnobsCpp(x,0L,0L),0L,TRAtoInt(TRA))) else if (is.atomic(g)) {
-      if(is.factor(g)) return(TRACpp(x,fnobsCpp(x,fnlevels(g),g),g,TRAtoInt(TRA))) else {
+    if(is.null(g)) return(TRACpp(x,fNobsCpp(x,0L,0L),0L,TRAtoInt(TRA))) else if (is.atomic(g)) {
+      if(is.factor(g)) return(TRACpp(x,fNobsCpp(x,fnlevels(g),g),g,TRAtoInt(TRA))) else {
         g <- qG(g)
-        return(TRACpp(x,fnobsCpp(x,attr(g,"N.groups"),g),g,TRAtoInt(TRA)))
+        return(TRACpp(x,fNobsCpp(x,attr(g,"N.groups"),g),g,TRAtoInt(TRA)))
       }
     } else {
       if(!is.GRP(g)) g <- GRP(g, return.groups = FALSE)
-      return(TRACpp(x,fnobsCpp(x,g[[1L]],g[[2L]]),g[[2L]],TRAtoInt(TRA)))
+      return(TRACpp(x,fNobsCpp(x,g[[1L]],g[[2L]]),g[[2L]],TRAtoInt(TRA)))
     }
   }
 }
 fNobs.matrix <- function(x, g = NULL, TRA = FALSE, use.g.names = TRUE, drop = TRUE, ...) {
   if(TRA == FALSE) {
-    if(is.null(g)) return(fnobsmCpp(x,0L,0L,drop)) else if (is.atomic(g)) {
+    if(is.null(g)) return(fNobsmCpp(x,0L,0L,drop)) else if (is.atomic(g)) {
       if(use.g.names) {
         if(!is.factor(g)) g <- qF(g)
         lev <- attr(g, "levels")
-        return(`dimnames<-`(fnobsmCpp(x,length(lev),g), list(lev, dimnames(x)[[2L]])))
+        return(`dimnames<-`(fNobsmCpp(x,length(lev),g), list(lev, dimnames(x)[[2L]])))
       } else {
-        if(is.factor(g)) return(fnobsmCpp(x,fnlevels(g),g)) else {
+        if(is.factor(g)) return(fNobsmCpp(x,fnlevels(g),g)) else {
           g <- qG(g)
-          return(fnobsmCpp(x,attr(g,"N.groups"),g))
+          return(fNobsmCpp(x,attr(g,"N.groups"),g))
         }
       }
     } else {
       if(!is.GRP(g)) g <- if(use.g.names) GRP(g) else GRP(g, return.groups = FALSE)
-      if(use.g.names) return(`dimnames<-`(fnobsmCpp(x,g[[1L]],g[[2L]]), list(group_names.GRP(g), dimnames(x)[[2L]]))) else
-        return(fnobsmCpp(x,g[[1L]],g[[2L]]))
+      if(use.g.names) return(`dimnames<-`(fNobsmCpp(x,g[[1L]],g[[2L]]), list(group_names.GRP(g), dimnames(x)[[2L]]))) else
+        return(fNobsmCpp(x,g[[1L]],g[[2L]]))
     }
   } else {
-    if(is.null(g)) return(TRAmCpp(x,fnobsmCpp(x,0L,0L),0L,TRAtoInt(TRA))) else if (is.atomic(g)) {
-      if(is.factor(g)) return(TRAmCpp(x,fnobsmCpp(x,fnlevels(g),g),g,TRAtoInt(TRA))) else {
+    if(is.null(g)) return(TRAmCpp(x,fNobsmCpp(x,0L,0L),0L,TRAtoInt(TRA))) else if (is.atomic(g)) {
+      if(is.factor(g)) return(TRAmCpp(x,fNobsmCpp(x,fnlevels(g),g),g,TRAtoInt(TRA))) else {
         g <- qG(g)
-        return(TRAmCpp(x,fnobsmCpp(x,attr(g,"N.groups"),g),g,TRAtoInt(TRA)))
+        return(TRAmCpp(x,fNobsmCpp(x,attr(g,"N.groups"),g),g,TRAtoInt(TRA)))
       }
     } else {
       if(!is.GRP(g)) g <- GRP(g, return.groups = FALSE)
-      return(TRAmCpp(x,fnobsmCpp(x,g[[1L]],g[[2L]]),g[[2L]],TRAtoInt(TRA)))
+      return(TRAmCpp(x,fNobsmCpp(x,g[[1L]],g[[2L]]),g[[2L]],TRAtoInt(TRA)))
     }
   }
 }
 fNobs.data.frame <- function(x, g = NULL, TRA = FALSE, use.g.names = TRUE, drop = TRUE, ...) {
   if(TRA == FALSE) {
-    if(is.null(g)) return(fnobslCpp(x,0L,0L,drop)) else if (is.atomic(g)) {
+    if(is.null(g)) return(fNobslCpp(x,0L,0L,drop)) else if (is.atomic(g)) {
       if(use.g.names && !inherits(x, "data.table")) {
         if(!is.factor(g)) g <- qF(g)
         lev <- attr(g, "levels")
-        return(setRow.names(fnobslCpp(x,length(lev),g), lev))
+        return(setRow.names(fNobslCpp(x,length(lev),g), lev))
       } else {
-        if(is.factor(g)) return(fnobslCpp(x,fnlevels(g),g)) else {
+        if(is.factor(g)) return(fNobslCpp(x,fnlevels(g),g)) else {
           g <- qG(g)
-          return(fnobslCpp(x,attr(g,"N.groups"),g))
+          return(fNobslCpp(x,attr(g,"N.groups"),g))
         }
       }
     } else {
       if(!is.GRP(g)) g <- if(use.g.names) GRP(g) else GRP(g, return.groups = FALSE)
       if(use.g.names && !inherits(x, "data.table") && !is.null(groups <- group_names.GRP(g)))
-        return(setRow.names(fnobslCpp(x,g[[1L]],g[[2L]]), groups)) else
-          return(fnobslCpp(x,g[[1L]],g[[2L]]))
+        return(setRow.names(fNobslCpp(x,g[[1L]],g[[2L]]), groups)) else
+          return(fNobslCpp(x,g[[1L]],g[[2L]]))
     }
   } else {
-    if(is.null(g)) return(TRAlCpp(x,fnobslCpp(x,0L,0L),0L,TRAtoInt(TRA))) else if (is.atomic(g)) {
-      if(is.factor(g)) return(TRAlCpp(x,fnobslCpp(x,fnlevels(g),g),g,TRAtoInt(TRA))) else {
+    if(is.null(g)) return(TRAlCpp(x,fNobslCpp(x,0L,0L),0L,TRAtoInt(TRA))) else if (is.atomic(g)) {
+      if(is.factor(g)) return(TRAlCpp(x,fNobslCpp(x,fnlevels(g),g),g,TRAtoInt(TRA))) else {
         g <- qG(g)
-        return(TRAlCpp(x,fnobslCpp(x,attr(g,"N.groups"),g),g,TRAtoInt(TRA)))
+        return(TRAlCpp(x,fNobslCpp(x,attr(g,"N.groups"),g),g,TRAtoInt(TRA)))
       }
     } else {
       if(!is.GRP(g)) g <- GRP(g, return.groups = FALSE)
-      return(TRAlCpp(x,fnobslCpp(x,g[[1L]],g[[2L]]),g[[2L]],TRAtoInt(TRA)))
+      return(TRAlCpp(x,fNobslCpp(x,g[[1L]],g[[2L]]),g[[2L]],TRAtoInt(TRA)))
     }
   }
 }
