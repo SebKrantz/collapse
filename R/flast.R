@@ -12,6 +12,7 @@ flast <- function(x, ...) { # g = NULL, TRA = FALSE, na.rm = TRUE, use.g.names =
   UseMethod("flast", x)
 }
 flast.default <- function(x, g = NULL, TRA = FALSE, na.rm = TRUE, use.g.names = TRUE, ...) {
+  if(!missing(...)) stop("Unknown argument ", dotstostr(...))
   if(TRA == FALSE) {
     if(is.null(g)) return(flastCpp(x,0L,0L,na.rm)) else if(is.atomic(g)) {
       if(use.g.names) {
@@ -42,6 +43,7 @@ flast.default <- function(x, g = NULL, TRA = FALSE, na.rm = TRUE, use.g.names = 
   }
 }
 flast.matrix <- function(x, g = NULL, TRA = FALSE, na.rm = TRUE, use.g.names = TRUE, drop = TRUE, ...) {
+  if(!missing(...)) stop("Unknown argument ", dotstostr(...))
   if(TRA == FALSE) {
     if(is.null(g)) return(flastmCpp(x,0L,0L,na.rm,drop)) else if(is.atomic(g)) {
       if(use.g.names) {
@@ -72,6 +74,7 @@ flast.matrix <- function(x, g = NULL, TRA = FALSE, na.rm = TRUE, use.g.names = T
   }
 }
 flast.data.frame <- function(x, g = NULL, TRA = FALSE, na.rm = TRUE, use.g.names = TRUE, drop = TRUE, ...) {
+  if(!missing(...)) stop("Unknown argument ", dotstostr(...))
   if(TRA == FALSE) {
     if(is.null(g)) {
       if(drop) return(unlist(flastlCpp(x,0L,0L,na.rm))) else return(flastlCpp(x,0L,0L,na.rm))
@@ -105,6 +108,7 @@ flast.data.frame <- function(x, g = NULL, TRA = FALSE, na.rm = TRUE, use.g.names
   }
 }
 flast.grouped_df <- function(x, TRA = FALSE, na.rm = TRUE, use.g.names = FALSE, keep.group_vars = TRUE, ...) {
+  if(!missing(...)) stop("Unknown argument ", dotstostr(...))
   g <- GRP.grouped_df(x)
   gn <- which(names(x) %in% g[[5L]])
   nTRAl <- TRA == FALSE

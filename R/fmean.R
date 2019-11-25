@@ -13,6 +13,7 @@ fmean <- function(x, ...) { # g = NULL, w = NULL, TRA = FALSE, na.rm = TRUE, use
   UseMethod("fmean", x)
 }
 fmean.default <- function(x, g = NULL, w = NULL, TRA = FALSE, na.rm = TRUE, use.g.names = TRUE, ...) {
+  if(!missing(...)) stop("Unknown argument ", dotstostr(...))
   if(TRA == FALSE) {
     if(is.null(g)) return(fmeanCpp(x,0L,0L,NULL,w,na.rm)) else if(is.atomic(g)) {
       if(use.g.names) {
@@ -43,6 +44,7 @@ fmean.default <- function(x, g = NULL, w = NULL, TRA = FALSE, na.rm = TRUE, use.
   }
 }
 fmean.matrix <- function(x, g = NULL, w = NULL, TRA = FALSE, na.rm = TRUE, use.g.names = TRUE, drop = TRUE, ...) {
+  if(!missing(...)) stop("Unknown argument ", dotstostr(...))
   if(TRA == FALSE) {
     if(is.null(g)) return(fmeanmCpp(x,0L,0L,NULL,w,na.rm,drop)) else if(is.atomic(g)) {
       if(use.g.names) {
@@ -73,6 +75,7 @@ fmean.matrix <- function(x, g = NULL, w = NULL, TRA = FALSE, na.rm = TRUE, use.g
   }
 }
 fmean.data.frame <- function(x, g = NULL, w = NULL, TRA = FALSE, na.rm = TRUE, use.g.names = TRUE, drop = TRUE, ...) {
+  if(!missing(...)) stop("Unknown argument ", dotstostr(...))
   if(TRA == FALSE) {
     if(is.null(g)) return(fmeanlCpp(x,0L,0L,NULL,w,na.rm,drop)) else if(is.atomic(g)) {
       if(use.g.names && !inherits(x, "data.table")) {
@@ -105,6 +108,7 @@ fmean.data.frame <- function(x, g = NULL, w = NULL, TRA = FALSE, na.rm = TRUE, u
 }
 fmean.grouped_df <- function(x, w = NULL, TRA = FALSE, na.rm = TRUE, use.g.names = FALSE,
                              keep.group_vars = TRUE, keep.w = TRUE, ...) {
+  if(!missing(...)) stop("Unknown argument ", dotstostr(...))
   g <- GRP.grouped_df(x)
   wsym <- deparse(substitute(w))
   nam <- names(x)

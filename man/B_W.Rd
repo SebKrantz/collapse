@@ -1,6 +1,4 @@
-\name{B & W}
-\alias{B&W}
-\alias{between}
+\name{B-W}
 \alias{B}
 \alias{B.default}
 \alias{B.matrix}
@@ -8,7 +6,6 @@
 \alias{B.pseries}
 \alias{B.pdata.frame}
 \alias{B.grouped_df}
-\alias{within}
 \alias{W}
 \alias{W.default}
 \alias{W.matrix}
@@ -31,9 +28,9 @@ W(x, g = NULL, w = NULL, na.rm = TRUE, add.global.mean = FALSE, ...)
 W(x, g = NULL, w = NULL, na.rm = TRUE, add.global.mean = FALSE, stub = "W.", ...)
 
 \method{B}{data.frame}(x, by = NULL, w = NULL, cols = is.numeric, na.rm = TRUE,
-  fill = FALSE, stub = "B.", keep.by = TRUE, keep.w = TRUE, ...)
+  fill = FALSE, keep.by = TRUE, keep.w = TRUE, stub = "B.", ...)
 W(x, by = NULL, w = NULL, cols = is.numeric, na.rm = TRUE,
-  add.global.mean = FALSE, stub = "W.", keep.by = TRUE, keep.w = TRUE, ...)
+  add.global.mean = FALSE, keep.by = TRUE, keep.w = TRUE, stub = "W.", ...)
 
 # Methods for compatibility with plm:
 
@@ -41,40 +38,41 @@ W(x, by = NULL, w = NULL, cols = is.numeric, na.rm = TRUE,
 W(x, effect = 1L, w = NULL, na.rm = TRUE, add.global.mean = FALSE, ...)
 
 \method{B}{pdata.frame}(x, effect = 1L, w = NULL, cols = is.numeric, na.rm = TRUE,
-  fill = FALSE, stub = "B.", keep.ids = TRUE, keep.w = TRUE, ...)
+  fill = FALSE, keep.ids = TRUE, keep.w = TRUE, stub = "B.", ...)
 W(x, effect = 1L, w = NULL, cols = is.numeric, na.rm = TRUE,
-  add.global.mean = FALSE, stub = "W.", keep.ids = TRUE, keep.w = TRUE, ...)
+  add.global.mean = FALSE, keep.ids = TRUE, keep.w = TRUE, stub = "W.", ...)
 
 # Methods for compatibility with dplyr:
 
-\method{B}{grouped_df}(x, w = NULL, na.rm = TRUE, fill = FALSE, stub = "B.",
-  keep.group_vars = TRUE, keep.w = TRUE, ...)
-W(x, w = NULL, na.rm = TRUE, add.global.mean = FALSE, stub = "W.",
-  keep.group_vars = TRUE, keep.w = TRUE, ...)
+\method{B}{grouped_df}(x, w = NULL, na.rm = TRUE, fill = FALSE,
+  keep.group_vars = TRUE, keep.w = TRUE, stub = "B.", ...)
+W(x, w = NULL, na.rm = TRUE, add.global.mean = FALSE,
+  keep.group_vars = TRUE, keep.w = TRUE, stub = "W.", ...)
 }
 %- maybe also 'usage' for other objects documented here.
 \arguments{
   \item{x}{a numeric vector, matrix, data.frame, panel-series (\code{\link{plm::pseries}}), panel-data.frame (\code{\link{plm::pdata.frame}}) or grouped tibble (\code{\link{dplyr::grouped_df}}).}
-  \item{g}{a factor, \code{GRP} object, atomic vector (internally converted to factor) or a list of vectors / factors (internally converted to a \code{GRP} object) used to group \code{x}.}
+  \item{g}{a factor, \code{\link{GRP}} object, atomic vector (internally converted to factor) or a list of vectors / factors (internally converted to a \code{\link{GRP}} object) used to group \code{x}.}
   \item{by}{\emph{STD data.frame method}: Same as g, but also allows one- or two-sided formulas i.e. \code{~ group1} or \code{var1 + var2 ~ group1 + group2}. See Examples.}
   \item{w}{a numeric vector of (non-negative) weights. \code{STD} \code{data.frame} and \code{pdata.frame} methods also allow a one-sided formula i.e. \code{~ weightcol}. The \code{grouped_df} (\code{dplyr}) method supports lazy-evaluation. See Examples.}
   %\item{w}{a numeric vector of (non-negative) weights. if \code{na.rm = TRUE}, the weight vector can have missing values, and those observations will be skipped in the computation of averages.}
-  \item{na.rm}{skip missing values in \code{x} when computing averages. If \code{na.rm = FALSE} and a \code{NA} or \code{NaN} is encountered, the average for that group will be      \code{NA}, and all data points belonging to that group will also be \code{NA}.}
+  \item{na.rm}{logical. skip missing values in \code{x} when computing averages. If \code{na.rm = FALSE} and a \code{NA} or \code{NaN} is encountered, the average for that group will be \code{NA}, and all data points belonging to that group will also be \code{NA}.}
   \item{stub}{a prefix or stub to rename all transformed columns. \code{FALSE} will not rename columns.}
-  \item{fill}{option to \code{B}: \code{TRUE} will overrwite missing values in \code{x} with the respective average. By default missing values in \code{x} are preserved.}
-  \item{add.global.mean}{option to \code{W}: \code{TRUE} will add back the global mean to all data values after subtracting out group-means.}
-  \item{keep.by\cr keep.ids \cr keep.group_vars}{\emph{data.frame, pdata.frame and grouped_df methods}: Retain grouping / panel-identifier columns in the output. For data frames this only works if groups were passed in a formula.}
-  \item{keep.w}{\emph{data.frame, pdata.frame and grouped_df methods}: Retain column containing the weights in the output. Only works if \code{w} is passed as formula / lazy-expression.}
+  \item{fill}{option to \code{B}: Logical. \code{TRUE} will overrwite missing values in \code{x} with the respective average. By default missing values in \code{x} are preserved.}
+  \item{add.global.mean}{option to \code{W}: Logical. \code{TRUE} will add back the global mean to all data values after subtracting out group-means.}
+  \item{keep.by\cr keep.ids \cr keep.group_vars}{\emph{data.frame, pdata.frame and grouped_df methods}: Logical. Retain grouping / panel-identifier columns in the output. For data frames this only works if grouping variables were passed in a formula.}
+  \item{keep.w}{\emph{data.frame, pdata.frame and grouped_df methods}: Logical. Retain column containing the weights in the output. Only works if \code{w} is passed as formula / lazy-expression.}
+  \item{...}{arguments to be passed to or from other methods.}
 }
 \details{
-Without groups, \code{B} will replace all data points in \code{x} with their mean or weighted mean (if \code{w} is supplied). Similarly \code{W} will subtract the mean from all data points i.e. center the data on the mean. \cr
+Without groups, \code{B} replaces all data points in \code{x} with their mean or weighted mean (if \code{w} is supplied). Similarly \code{W} subtracts the mean from all data points i.e. centers the data on the mean. \cr
 
 With groups supplied to \code{g}, the replacment / centering performed by \code{B} / \code{W} becomes groupwise. I like to think of this in terms of panel data: If \code{x} is a vector in such a dataset, \code{xit} denotes a single data-point belonging to group \code{i} in time-period \code{t} (\code{t} need not be a time-period). Then \code{xi.} denotes \code{x}, averaged over \code{t}. \code{B} now returns \code{xi.} and \code{W} returns \code{x - xi.}. Thus for any data \code{x} and any grouping vector \code{g}: \code{B(x,g) + W(x,g) = xi. + x - xi. = x}. In terms of variance, \code{B} only retains the variance between group averages, while \code{W}, by subtracting out group means, only retains the variance within those groups. \cr
 
 The data replacement performed by \code{B} can keep (default) or overwrite missing values (option \code{fill}) in \code{x}. \code{W} can center data simply (default), or add back the global / overall mean in groupwise computations (option \code{add.global.mean}). Let \code{x..} denote the global mean of \code{x}, then \code{W} with \code{add.global.mean = TRUE} returns \code{x - xi. + x..} instead of \code{x - xi.}. This is useful to get rid of group-differences but preserve the overall level of the data (as simple groupwise centering will set the overall mean of the data to 0). In regression analysis, centering with \code{add.global.mean = TRUE} will only change the constant term. See Examples.
 }
 \value{
-\code{B} returns \code{x} with every element replaced by its (groupwise) mean (\code{xi.}). \code{W} returns \code{x} where every element was subtracted its (groupwise) mean (\code{x - xi.}). See Details.
+\code{B} returns \code{x} with every element replaced by its (groupwise) mean (\code{xi.}). \code{W} returns \code{x} where every element was subtracted its (groupwise) mean (\code{x - xi.} or \code{x - xi. + x..}). See Details.
 }
 \references{
 %% ~put references to the literature/web site here ~
@@ -89,7 +87,7 @@ The data replacement performed by \code{B} can keep (default) or overwrite missi
 %% ~Make other sections like Warning with \section{Warning }{....} ~
 
 \seealso{
-%% ~~objects to See Also as \code{\link{help}}, ~~~
+\code{\link[=HDW]{HDB/HDW}}, \code{\link[=fscale]{fscale/STD}}, \code{\link{TRA}}, \link{Data Transformations}
 }
 \examples{
 ## Simple centering and averaging

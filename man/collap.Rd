@@ -1,4 +1,5 @@
 \name{collap}
+\alias{Advanced Data Aggregation}
 \alias{collap}
 %- Also NEED an '\alias' for EACH other topic documented here.
 \title{
@@ -7,7 +8,7 @@ Advanced Data Aggregation
 \description{
 \code{collap} is a fast and easy to use multi-purpose data aggregation command.
 
-It can aggregate data with multiple data types, aggregate (parallelized) using multiple functions to several output formats, and perform (parallelized) fully customized aggregations where the user decides which variables are aggregated using which functions. \code{collap} is made compatible with \code{collapse}'s fast statistical functions, allowing for extremely fast conventional and weighted aggregation, but even with \code{base} functions it is significantly faster than \code{stats::aggregate}.
+It can aggregate data with multiple data types, aggregate (parallelized) using multiple functions to several output formats, and perform (parallelized) fully customized aggregations where the user decides which variables are aggregated using which functions. \code{collap} is made compatible with \code{collapse}'s \link{Fast Statistical Functions}, allowing for extremely fast conventional and weighted aggregation, but even with \code{base} functions it is significantly faster than \code{\link{stats::aggregate}}.
 }
 \usage{
 collap(X, by, FUN = fmean, catFUN = fmode, cols = NULL, custom = NULL,
@@ -17,10 +18,10 @@ collap(X, by, FUN = fmean, catFUN = fmode, cols = NULL, custom = NULL,
 }
 %- maybe also 'usage' for other objects documented here.
 \arguments{
-  \item{X}{a data.frame, or an object coercible to data.frame using \code{qDF}.}
-    \item{by}{a one-or two sided formula, i.e. \code{~ group1} or \code{var1 + var2 ~ group1 + group2}, or alternativaley a factor, \code{GRP} object, atomic vector (internally converted to factor) or a list of vectors / factors (internally converted to a \code{GRP} object) used to group \code{X}.}
-\item{FUN}{A function, list of functions (i.e. \code{list(fsum, fmean, fsd)} or \code{list(myfun1 = function(x).., sd = sd)}), or character vector of function names automatically applied only to numeric variables.}
-\item{catFUN}{same as \code{FUN}, but applied only to categorical (non-numeric) typed columns (see \code{\link{cat_vars}}).}
+  \item{X}{a data.frame, or an object coercible to data.frame using \code{\link{qDF}}.}
+  \item{by}{a one-or two sided formula, i.e. \code{~ group1} or \code{var1 + var2 ~ group1 + group2}, or alternativaley a factor, \code{\link{GRP}} object, atomic vector (internally converted to factor) or a list of vectors / factors (internally converted to a \code{\link{GRP}} object) used to group \code{X}.}
+\item{FUN}{a function, list of functions (i.e. \code{list(fsum, fmean, fsd)} or \code{list(myfun1 = function(x).., sd = sd)}), or a character vector of function names, which are automatically applied only to numeric variables.}
+\item{catFUN}{same as \code{FUN}, but applied only to categorical (non-numeric) typed columns (\code{\link{is.categorical}}).}
 \item{cols}{select columns to aggregate using a function, column names or indices. \emph{Note}: \code{cols} is ignored if a two-sided formula is passsed to \code{by}.}
 \item{custom}{a named list specifying a fully customized aggregation task. The names of the list are function names and the content column-names or column-indices of associated columns. For example \code{custom = list(fmean = 1:6, fsd = 7:9, fmode = 10:11)} tells \code{collap} to aggregate columns 1-6 of \code{X} using the mean, columns 7-9 using the standard deviation etc. \emph{Note}: \code{custom} lets \code{collap} ignore any inputs passed to \code{FUN}, \code{catFUN} or \code{cols}.}
 \item{keep.by}{logical. \code{FALSE} will omit grouping variables from the output.}
@@ -28,20 +29,16 @@ collap(X, by, FUN = fmean, catFUN = fmode, cols = NULL, custom = NULL,
 \item{sort.row}{logical. Sort rows by the groups.}
 \item{parallel}{logical. Use \code{parallel::mclapply} instead of \code{lapply} for multi-function or custom aggregation.}
 \item{mc.cores}{integer. Argument to \code{parallel::mclapply} setting the number of cores to use.}
-\item{return}{character. Control the output format when aggregating with multiple functions or performing custom aggregation. "wide" (default) returns a wider data frame with added columns for each additional function. "list" returns a list of \code{data.frames} - one for each function. "long" adds a column "Function" and row-binds the results from differnt functions using \code{data.table::rbindlist}. "long.dupl" is a special option for aggregating multi-type data using multiple \code{FUN} but only one \code{catFUN} or vice-versa. In that case the format is long and data aggregated using only one function is duplicated. See Examples to understand this!}
+\item{return}{character. Control the output format when aggregating with multiple functions or performing custom aggregation. "wide" (default) returns a wider data frame with added columns for each additional function. "list" returns a list of \code{data.frame}'s - one for each function. "long" adds a column "Function" and row-binds the results from differnt functions using \code{\link{data.table::rbindlist}}. "long.dupl" is a special option for aggregating multi-type data using multiple \code{FUN} but only one \code{catFUN} or vice-versa. In that case the format is long and data aggregated using only one function is duplicated. See Examples to understand this!}
 \item{give.names}{logical. Create unique names of aggregated columnns by adding a prefix 'FUN.'. 'auto' will automatically create such prefixes whenever multiple functions are applied to a column or \code{custom} is used.}
 \item{...}{additional arguments passed to all functions supplied to \code{FUN}, \code{catFUN} or \code{custom}. }
 }
 
 \details{
-\code{collap} automatically checks each function passed to it whether it is a \code{collapse} function (i.e. whether the function name is contained in \code{.FAST_STAT_FUN}). If the function is a fast function, \code{collap} only does the grouping and then calls the function to carry out the grouped computations. If the function is not one of \code{.FAST_STAT_FUN}, \code{collapse::BY} is called internally to perform the computation. The resulting computataions from each function are put into a list and recombined to produce the desired output format as controlled by the \code{return} argument. When multiple functions are used with \code{collap}, setting \code{parallel = TRUE} and the number of cores with \code{mc.cores} will instruct \code{collap} to execute these function calls in parallel using \code{parallel::mclapply}. If only a single function is used which is not a \code{.FAST_STAT_FUN}, the \code{parallel} and \code{mc.cores} arguments are handed down to \code{collapse::BY}. See Examples.
+\code{collap} automatically checks each function passed to it whether it is a \link[=.FAST_STAT_FUN]{Fast Statistical Function} (i.e. whether the function name is contained in \code{.FAST_STAT_FUN}). If the function is a fast function, \code{collap} only does the grouping and then calls the function to carry out the grouped computations. If the function is not one of \code{.FAST_STAT_FUN}, \code{\link{BY}} is called internally to perform the computation. The resulting computataions from each function are put into a list and recombined to produce the desired output format as controlled by the \code{return} argument. When multiple functions are used with \code{collap}, setting \code{parallel = TRUE} and the number of cores with \code{mc.cores} will instruct \code{collap} to execute these function calls in parallel using \code{\link{parallel::mclapply}}. If only a single function is used which is not a \code{.FAST_STAT_FUN}, the \code{parallel} and \code{mc.cores} arguments are handed down to \code{\link{BY}}. See Examples.
 }
 \value{
-%%  ~Describe the value returned
-%%  If it is a LIST, use
-%%  \item{comp1 }{Description of 'comp1'}
-%%  \item{comp2 }{Description of 'comp2'}
-%% ...
+\code{X} aggregated by \code{by}.
 }
 \references{
 %% ~put references to the literature/web site here ~
@@ -56,7 +53,7 @@ collap(X, by, FUN = fmean, catFUN = fmode, cols = NULL, custom = NULL,
 %% ~Make other sections like Warning with \section{Warning }{....} ~
 
 \seealso{
-%% ~~objects to See Also as \code{\link{help}}, ~~~
+\code{\link{BY}}, \link{collapse-package}
 }
 \examples{
 ## World Development Panel Data

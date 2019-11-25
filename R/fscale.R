@@ -13,6 +13,7 @@ fscale <- function(x, ...) { # g = NULL, w = NULL, na.rm = TRUE, stable.algo = T
   UseMethod("fscale", x)
 }
 fscale.default <- function(x, g = NULL, w = NULL, na.rm = TRUE, stable.algo = TRUE, ...) {
+  if(!missing(...)) stop("Unknown argument ", dotstostr(...))
   if(is.null(g)) return(fscaleCpp(x,0L,0L,NULL,w,na.rm,stable.algo)) else if (is.atomic(g)) {
     if(is.factor(g)) return(fscaleCpp(x,fnlevels(g),g,NULL,w,na.rm,stable.algo)) else {
       g <- qG(g, ordered = FALSE)
@@ -24,10 +25,12 @@ fscale.default <- function(x, g = NULL, w = NULL, na.rm = TRUE, stable.algo = TR
   }
 }
 fscale.pseries <- function(x, effect = 1L, w = NULL, na.rm = TRUE, stable.algo = TRUE, ...) {
+  if(!missing(...)) stop("Unknown argument ", dotstostr(...))
   g <- if(length(effect) == 1L) attr(x, "index")[[effect]] else interaction(attr(x, "index")[effect], drop = TRUE)
   fscaleCpp(x,fnlevels(g),g,NULL,w,na.rm,stable.algo)
 }
 fscale.matrix <- function(x, g = NULL, w = NULL, na.rm = TRUE, stable.algo = TRUE, ...) {
+  if(!missing(...)) stop("Unknown argument ", dotstostr(...))
   if(is.null(g)) return(fscalemCpp(x,0L,0L,NULL,w,na.rm,stable.algo)) else if (is.atomic(g)) {
     if(is.factor(g)) return(fscalemCpp(x,fnlevels(g),g,NULL,w,na.rm,stable.algo)) else {
       g <- qG(g, ordered = FALSE)
@@ -38,7 +41,8 @@ fscale.matrix <- function(x, g = NULL, w = NULL, na.rm = TRUE, stable.algo = TRU
     return(fscalemCpp(x,g[[1L]],g[[2L]],g[[3L]],w,na.rm,stable.algo))
   }
 }
-fscale.grouped_df <- function(x, w = NULL, na.rm = TRUE, stable.algo = TRUE, keep.group_vars = TRUE, keep.w = TRUE, ...) {
+fscale.grouped_df <- function(x, w = NULL, na.rm = TRUE, keep.group_vars = TRUE, keep.w = TRUE, stable.algo = TRUE, ...) {
+  if(!missing(...)) stop("Unknown argument ", dotstostr(...))
   g <- GRP.grouped_df(x)
   wsym <- deparse(substitute(w))
   nam <- names(x)
@@ -61,6 +65,7 @@ fscale.grouped_df <- function(x, w = NULL, na.rm = TRUE, stable.algo = TRUE, kee
   } else return(fscalelCpp(x,g[[1L]],g[[2L]],g[[3L]],w,na.rm,stable.algo))
 }
 fscale.data.frame <- function(x, g = NULL, w = NULL, na.rm = TRUE, stable.algo = TRUE, ...) {
+  if(!missing(...)) stop("Unknown argument ", dotstostr(...))
   if(is.null(g)) return(fscalelCpp(x,0L,0L,NULL,w,na.rm,stable.algo)) else if(is.atomic(g)) {
     if(is.factor(g)) return(fscalelCpp(x,fnlevels(g),g,NULL,w,na.rm,stable.algo)) else {
       g <- qG(g, ordered = FALSE)
@@ -72,6 +77,7 @@ fscale.data.frame <- function(x, g = NULL, w = NULL, na.rm = TRUE, stable.algo =
   }
 }
 fscale.pdata.frame <- function(x, effect = 1L, w = NULL, na.rm = TRUE, stable.algo = TRUE, ...) {
+  if(!missing(...)) stop("Unknown argument ", dotstostr(...))
   g <- if(length(effect) == 1L) attr(x, "index")[[effect]] else interaction(attr(x, "index")[effect], drop = TRUE)
   fscaleCpp(x,fnlevels(g),g,NULL,w,na.rm,stable.algo)
 }
@@ -86,13 +92,16 @@ STD.default <- function(x, g = NULL, w = NULL, na.rm = TRUE, stable.algo = TRUE,
   fscale.default(x, g, w, na.rm, stable.algo)
 }
 STD.pseries <- function(x, effect = 1L, w = NULL, na.rm = TRUE, stable.algo = TRUE, ...) {
+  if(!missing(...)) stop("Unknown argument ", dotstostr(...))
   g <- if(length(effect) == 1L) attr(x, "index")[[effect]] else interaction(attr(x, "index")[effect], drop = TRUE)
   fscaleCpp(x,fnlevels(g),g,NULL,w,na.rm,stable.algo)
 }
 STD.matrix <- function(x, g = NULL, w = NULL, na.rm = TRUE, stable.algo = TRUE, stub = "STD.", ...) {
+  if(!missing(...)) stop("Unknown argument ", dotstostr(...))
   add_stub(fscale.matrix(x, g, w, na.rm, stable.algo), stub)
 }
-STD.grouped_df <- function(x, w = NULL, na.rm = TRUE, stable.algo = TRUE, stub = "STD.", keep.group_vars = TRUE, keep.w = TRUE, ...) {
+STD.grouped_df <- function(x, w = NULL, na.rm = TRUE, keep.group_vars = TRUE, keep.w = TRUE, stable.algo = TRUE, stub = "STD.", ...) {
+  if(!missing(...)) stop("Unknown argument ", dotstostr(...))
   g <- GRP.grouped_df(x)
   wsym <- deparse(substitute(w))
   nam <- names(x)
@@ -117,9 +126,9 @@ STD.grouped_df <- function(x, w = NULL, na.rm = TRUE, stable.algo = TRUE, stub =
 
 # updated (best) version !!
 STD.pdata.frame <- function(x, effect = 1L, w = NULL, cols = is.numeric,
-                            na.rm = TRUE, stable.algo = TRUE, stub = "STD.",
-                            keep.ids = TRUE, keep.w = TRUE, ...) {
-
+                            na.rm = TRUE, keep.ids = TRUE, keep.w = TRUE,
+                            stable.algo = TRUE, stub = "STD.", ...) {
+  if(!missing(...)) stop("Unknown argument ", dotstostr(...))
   ax <- attributes(x)
   class(x) <- NULL
   nam <- ax[["names"]]
@@ -156,10 +165,10 @@ STD.pdata.frame <- function(x, effect = 1L, w = NULL, cols = is.numeric,
   }
 }
 # updated, fast and data.table proof version !!!
-STD.data.frame <- function(x, by = NULL, w = NULL, cols = is.numeric, na.rm = TRUE,
-                           stable.algo = TRUE, stub = "STD.",
-                           keep.by = TRUE, keep.w = TRUE, ...) {
-
+STD.data.frame <- function(x, by = NULL, w = NULL, cols = is.numeric,
+                           na.rm = TRUE, keep.by = TRUE, keep.w = TRUE,
+                           stable.algo = TRUE, stub = "STD.", ...) {
+  if(!missing(...)) stop("Unknown argument ", dotstostr(...))
   # fastest solution??
   if(is.call(by) || is.call(w)) {
     ax <- attributes(x)

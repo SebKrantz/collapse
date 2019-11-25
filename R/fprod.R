@@ -12,6 +12,7 @@ fprod <- function(x, ...) { # g = NULL, TRA = FALSE, na.rm = TRUE, use.g.names =
   UseMethod("fprod", x)
 }
 fprod.default <- function(x, g = NULL, TRA = FALSE, na.rm = TRUE, use.g.names = TRUE, ...) {
+  if(!missing(...)) stop("Unknown argument ", dotstostr(...))
   if(TRA == FALSE) {
     if(is.null(g)) return(fprodCpp(x,0L,0L,na.rm)) else if (is.atomic(g)) {
       if(use.g.names) {
@@ -42,6 +43,7 @@ fprod.default <- function(x, g = NULL, TRA = FALSE, na.rm = TRUE, use.g.names = 
   }
 }
 fprod.matrix <- function(x, g = NULL, TRA = FALSE, na.rm = TRUE, use.g.names = TRUE, drop = TRUE, ...) {
+  if(!missing(...)) stop("Unknown argument ", dotstostr(...))
   if(TRA == FALSE) {
     if(is.null(g)) return(fprodmCpp(x,0L,0L,na.rm,drop)) else if (is.atomic(g)) {
       if(use.g.names) {
@@ -72,6 +74,7 @@ fprod.matrix <- function(x, g = NULL, TRA = FALSE, na.rm = TRUE, use.g.names = T
   }
 }
 fprod.data.frame <- function(x, g = NULL, TRA = FALSE, na.rm = TRUE, use.g.names = TRUE, drop = TRUE, ...) {
+  if(!missing(...)) stop("Unknown argument ", dotstostr(...))
   if(TRA == FALSE) {
     if(is.null(g)) return(fprodlCpp(x,0L,0L,na.rm,drop)) else if (is.atomic(g)) {
       if(use.g.names && !inherits(x, "data.table")) {
@@ -103,6 +106,7 @@ fprod.data.frame <- function(x, g = NULL, TRA = FALSE, na.rm = TRUE, use.g.names
   }
 }
 fprod.grouped_df <- function(x, TRA = FALSE, na.rm = TRUE, use.g.names = FALSE, keep.group_vars = TRUE, ...) {
+  if(!missing(...)) stop("Unknown argument ", dotstostr(...))
   g <- GRP.grouped_df(x)
   gn <- which(names(x) %in% g[[5L]])
   nTRAl <- TRA == FALSE

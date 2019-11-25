@@ -19,7 +19,6 @@ Transform Data by (Groupwise) Replacing or Sweeping out Statistics
 \method{TRA}{data.frame}(x, STATS, FUN = "-", g = NULL, ...)
 
 \method{TRA}{grouped_df}(x, STATS, FUN = "-", keep.group_vars = TRUE, ...)
-
 }
 %- maybe also 'usage' for other objects documented here.
 \arguments{
@@ -37,20 +36,21 @@ Transform Data by (Groupwise) Replacing or Sweeping out Statistics
                  8 \tab "*" \tab multiply
   }
   }
-\item{g}{a factor, \code{GRP} object, atomic vector (internally converted to ordered factor) or a list of vectors / factors (internally converted to a \code{GRP} object) used to group \code{x}. Number of groups must match rows of \code{STATS}. See \code{STATS} and Details.}
+\item{g}{a factor, \code{\link{GRP}} object, atomic vector (internally converted to ordered factor) or a list of vectors / factors (internally converted to a \code{\link{GRP}} object) used to group \code{x}. Number of groups must match rows of \code{STATS}. See \code{STATS} and Details.}
+
 \item{keep.group_vars}{\emph{grouped_df method:} Logical. Remove grouping variables after computation. In contrat to the other methods, \code{TRA.grouped_df} matches column names exactly, thus \code{STATS} can be any subset of aggregated columns in \code{x} in any order, with or without grouping columns. \code{TRA.grouped_df} will transform the columns in \code{x} with their aggregated versions matched from \code{STATS} (ignoring grouping columns found in \code{x} or \code{STATS} and columns in \code{x} not found in \code{STATS}), and return \code{x} again. If \code{keep.group_vars = FALSE}, \code{x} is retured again without grouping columns. See Details and Examples.}
+
+\item{...}{arguments to be passed to or from other methods.}
 }
 
 \details{
-Before going into the details, I note that I have tried to make \code{TRA} more or less redundant by adding a TRA-argument to all \link{Fast Statistical Functions} (ensuring that the exact same grouping vector is used for aggregation and transformation), and by creating the \code{B} (between-transform) and \code{W} (within-transform) operators as well as \code{fscale} as safer and faster solutions for frequent scaling, centering and averaging tasks. \code{TRA} is really a programmers function for cases when both aggregate statistics and transformed data need to be retained, or to work with more complex statistics (i.e. together with \code{dapply} or \code{BY}).
+Without groups (\code{g = NULL}), \code{TRA} is nothing more than a column based version of \code{base::sweep}, albeit 4-times more efficient on matrices and many times more efficient on data frames. \code{TRA} always preserves all attributes of \code{x}.
 
-Without groups \code{g = NULL}, \code{TRA} is nothing more than a column based version of \code{base::sweep}, albeit 4-times more efficient on matrices and many times more efficient on data frames. \code{TRA} always preserves all attributes of \code{x}.
-
-With groups passed to \code{g}, \code{TRA} expects (and checks for) a set of statistics such that \code{NROW(STATS)} equals the number of groups. If this condition is satisfied, \code{TRA} will (without further checks) assume that the first row of \code{STATS} (or first value if \code{x} is an atomic vector) is the set of statistics computed on the first group of \code{g}, the second row on the second group etc. and do groupwise replacing or sweeping out accordingly.
+With groups passed to \code{g}, \code{TRA} expects (and checks for) a set of statistics such that \code{NROW(STATS)} equals the number of groups. If this condition is satisfied, \code{TRA} will (without further checks) assume that the first row of \code{STATS} is the set of statistics computed on the first group of \code{g}, the second row on the second group etc. and do groupwise replacing or sweeping out accordingly.
 
 For example Let \code{x = c(1.2, 4.6, 2.5, 9.1, 8.7, 3.3)}, g is an integer vector in 3 groups \code{g = c(1,3,3,2,1,2)} and \code{STATS = fmean(x,g) = c(4.95, 6.20, 3.55)}. Then \code{out = TRA(x,fmean(x,g),"-",g) = c(-3.75,  1.05, -1.05,  2.90,  3.75, -2.90)} (same as \code{fmean(x, g, TRA = "-")}) does the equavalent to the following for-loop: \code{for(i in 1:6) out[i] = x[i] - fmean(x,g)[g[i]]}.
 
-Correct computation requires that \code{g} as used in \code{fmean} and \code{g} passed to \code{TRA} are exactly the same vector. Using \code{g = c(1,3,3,2,1,2)} for \code{fmean} and \code{g = c(3,1,1,2,3,2)} for \code{TRA} will not give the right result. The safest way of programming with \code{TRA} is thus to repeatedly employ the same factor or \code{GRP} object for all grouped computations. Atomic vectors passed to \code{g} will be converted to ordered factors (see \code{qF}) and lists will be converted to ordered \code{GRP} objects (see \code{GRP}). This is also done by all \code{Fast Statistical Functions} and by default by \code{BY}, thus together with these functions, \code{TRA} can also safely be used with atomic- or list-groups (although of course this is less efficient). Problems may arise if other functions internally convert atomic vectors or lists to groups in a non-sorted way. \emph{Note}: \code{as.factor} conversions are ok as this also involves sorting.
+Correct computation requires that \code{g} as used in \code{fmean} and \code{g} passed to \code{TRA} are exactly the same vector. Using \code{g = c(1,3,3,2,1,2)} for \code{fmean} and \code{g = c(3,1,1,2,3,2)} for \code{TRA} will not give the right result. The safest way of programming with \code{TRA} is thus to repeatedly employ the same factor or \code{\link{GRP}} object for all grouped computations. Atomic vectors passed to \code{g} will be converted to ordered factors (see \code{\link{qF}}) and lists will be converted to ordered \code{\link{GRP}} objects. This is also done by all \link{Fast Statistical Functions} and by default by \code{\link{BY}}, thus together with these functions, \code{TRA} can also safely be used with atomic- or list-groups. Problems may arise if other functions internally convert atomic vectors or lists to groups in a non-sorted way. \emph{Note}: \code{as.factor} conversions are ok as this also involves sorting.
 
 If \code{x} is a grouped tibble (\code{grouped_df}), \code{TRA} matches the columns of \code{x} and \code{STATS} and also checks for grouping columns \code{names(attr(x, "groups"))} in \code{x} and \code{STATS}. \code{TRA.grouped_df} will then only transform those columns in \code{x} for which matching counterparts were found in \code{STATS}, excempting grouping columns, and returns \code{x} again (with columns in the name order). If \code{keep.group_vars = FALSE}, the grouping columns are dropped after computation, however the "groups" attribute is not dropped (it can be removed using \code{dplyr::ungroup()}).
 }
@@ -64,13 +64,13 @@ If \code{x} is a grouped tibble (\code{grouped_df}), \code{TRA} matches the colu
 %%  ~~who you are~~
 }
 \note{
-%%  ~~further notes~~
+I have tried to make \code{TRA} as redundant as possible by adding a TRA-argument to all \link{Fast Statistical Functions} (ensuring that the exact same grouping vector is used for aggregation and transformation), and by creating the \code{\link{B}} (between-transform) and \code{\link{W}} (within-transform) operators as well as \code{\link[=fscale]{fscale/STD}} as safer and faster solutions for frequent scaling, centering and averaging tasks. \code{TRA} is really a programmers function for cases when both aggregate statistics and transformed data need to be retained, or to work with more complex statistics (i.e. together with \code{\link{dapply}} or \code{\link{BY}}).
 }
 
 %% ~Make other sections like Warning with \section{Warning }{....} ~
 
 \seealso{
-%% ~~objects to See Also as \code{\link{help}}, ~~~
+\code{\link{dapply}}, \code{\link{BY}}, \link{Fast Statistical Functions}, \link{Data Transformations}
 }
 \examples{
 v <- iris$Sepal.Length          # A numeric vector

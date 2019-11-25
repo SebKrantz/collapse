@@ -13,6 +13,7 @@ fgrowth <- function(x, n = 1, diff = 1, ...) { # , g = NULL, t = NULL, fill = NA
   UseMethod("fgrowth", x)
 }
 fgrowth.default <- function(x, n = 1, diff = 1, g = NULL, t = NULL, fill = NA, logdiff = FALSE, stubs = TRUE, ...) {
+  if(!missing(...)) stop(sprintf("Unknown argument %s passed to fgrowth.default", dotstostr(...)))
   if(is.null(g))
     return(fgrowthCpp(x,n,diff,fill,0L,0L,NULL,G_t(t,FALSE),logdiff,stubs)) else if(is.atomic(g)) {
       if(is.factor(g)) nl <- fnlevels(g) else {
@@ -26,6 +27,7 @@ fgrowth.default <- function(x, n = 1, diff = 1, g = NULL, t = NULL, fill = NA, l
     }
 }
 fgrowth.pseries <- function(x, n = 1, diff = 1, fill = NA, logdiff = FALSE, stubs = TRUE, ...) {
+  if(!missing(...)) stop(sprintf("Unknown argument %s passed to fgrowth.pseries", dotstostr(...)))
   index <- attr(x, "index")
   if(length(index) > 2L) index <- c(interaction(index[-length(index)], drop = TRUE), index[length(index)])
   if(is.matrix(x))
@@ -33,6 +35,7 @@ fgrowth.pseries <- function(x, n = 1, diff = 1, fill = NA, logdiff = FALSE, stub
   fgrowthCpp(x,n,diff,fill,fnlevels(index[[1L]]),index[[1L]],NULL,index[[2L]],logdiff,stubs)
 }
 fgrowth.matrix <- function(x, n = 1, diff = 1, g = NULL, t = NULL, fill = NA, logdiff = FALSE, stubs = TRUE, ...) {
+  if(!missing(...)) stop(sprintf("Unknown argument %s passed to fgrowth.matrix", dotstostr(...)))
   if(is.null(g))
     return(fgrowthmCpp(x,n,diff,fill,0L,0L,NULL,G_t(t,FALSE),logdiff,stubs)) else if(is.atomic(g)) {
       if(is.factor(g)) nl <- fnlevels(g) else {
@@ -46,6 +49,7 @@ fgrowth.matrix <- function(x, n = 1, diff = 1, g = NULL, t = NULL, fill = NA, lo
     }
 }
 fgrowth.grouped_df <- function(x, n = 1, diff = 1, t = NULL, fill = NA, logdiff = FALSE, stubs = TRUE, keep.ids = TRUE, ...) {
+  if(!missing(...)) stop(sprintf("Unknown argument %s passed to fgrowth.grouped_df", dotstostr(...)))
   g <- GRP.grouped_df(x)
   tsym <- deparse(substitute(t))
   nam <- names(x)
@@ -67,6 +71,7 @@ fgrowth.grouped_df <- function(x, n = 1, diff = 1, t = NULL, fill = NA, logdiff 
   } else return(fgrowthlCpp(x,n,diff,fill,g[[1L]],g[[2L]],g[[3L]],G_t(t),logdiff,stubs))
 }
 fgrowth.data.frame <- function(x, n = 1, diff = 1, g = NULL, t = NULL, fill = NA, logdiff = FALSE, stubs = TRUE, ...) {
+  if(!missing(...)) stop(sprintf("Unknown argument %s passed to fgrowth.data.frame", dotstostr(...)))
   if(is.null(g))
     return(fgrowthlCpp(x,n,diff,fill, t = G_t(t,FALSE), names = stubs)) else if(is.atomic(g)) {
       if(is.factor(g)) nl <- fnlevels(g) else {
@@ -80,6 +85,7 @@ fgrowth.data.frame <- function(x, n = 1, diff = 1, g = NULL, t = NULL, fill = NA
     }
 }
 fgrowth.pdata.frame <- function(x, n = 1, diff = 1, fill = NA, logdiff = FALSE, stubs = TRUE, ...) {
+  if(!missing(...)) stop(sprintf("Unknown argument %s passed to fgrowth.pdata.frame", dotstostr(...)))
   index <- attr(x, "index")
   if(length(index) > 2L) index <- c(interaction(index[-length(index)], drop = TRUE), index[length(index)])
   fgrowthlCpp(x,n,diff,fill,fnlevels(index[[1L]]),index[[1L]],NULL,index[[2L]],logdiff,stubs)
@@ -102,6 +108,7 @@ G.grouped_df <- fgrowth.grouped_df
 G.data.frame <- function(x, n = 1, diff = 1, by = NULL, t = NULL, cols = is.numeric,
                          fill = NA, logdiff = FALSE, stubs = TRUE, keep.ids = TRUE, ...) {
 
+  if(!missing(...)) stop(sprintf("Unknown argument %s passed to G.data.frame", dotstostr(...)))
   if(is.call(by) || is.call(t)) {
     ax <- attributes(x)
     class(x) <- NULL
@@ -158,6 +165,7 @@ G.data.frame <- function(x, n = 1, diff = 1, by = NULL, t = NULL, cols = is.nume
 }
 G.pdata.frame <- function(x, n = 1, diff = 1, cols = is.numeric, fill = NA, logdiff = FALSE, stubs = TRUE, keep.ids = TRUE, ...) {
 
+  if(!missing(...)) stop(sprintf("Unknown argument %s passed to G.pdata.frame", dotstostr(...)))
   ax <- attributes(x)
   nam <- ax[["names"]]
   index <- ax[["index"]]

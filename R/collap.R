@@ -4,8 +4,8 @@
 
 # global macro
 .FAST_STAT_FUN <- c("fmean","fmedian","fmode","fsum","fprod","fsd","fvar",
-                    "fmin","fmax","ffirst","flast","fNobs","fNunique",
-                    "flag","flead","fdiff","fgrowth","fscale")
+                    "fmin","fmax","ffirst","flast","fNobs","fNunique") #,
+                    # "flag","flead","fdiff","fgrowth","fscale") # different argument order !!
 
 # todo speed up: use internals of order ??
 collap <- function(X, by, FUN = fmean, catFUN = fmode, cols = NULL, custom = NULL,

@@ -12,6 +12,7 @@ fdiff <- function(x, n = 1, diff = 1, ...) { # , g = NULL, t = NULL, fill = NA, 
   UseMethod("fdiff", x)
 }
 fdiff.default <- function(x, n = 1, diff = 1, g = NULL, t = NULL, fill = NA, stubs = TRUE, ...) {
+  if(!missing(...)) stop(sprintf("Unknown argument %s passed to fdiff.default", dotstostr(...)))
   if(is.null(g))
     return(fdiffCpp(x,n,diff,fill,0L,0L,NULL,G_t(t,FALSE),stubs)) else if(is.atomic(g)) {
       if(is.factor(g)) nl <- fnlevels(g) else {
@@ -25,6 +26,7 @@ fdiff.default <- function(x, n = 1, diff = 1, g = NULL, t = NULL, fill = NA, stu
     }
 }
 fdiff.pseries <- function(x, n = 1, diff = 1, fill = NA, stubs = TRUE, ...) {
+  if(!missing(...)) stop(sprintf("Unknown argument %s passed to fdiff.pseries", dotstostr(...)))
   index <- attr(x, "index")
   if(length(index) > 2L) index <- c(interaction(index[-length(index)], drop = TRUE), index[length(index)])
   if(is.matrix(x))
@@ -32,6 +34,7 @@ fdiff.pseries <- function(x, n = 1, diff = 1, fill = NA, stubs = TRUE, ...) {
       fdiffCpp(x,n,diff,fill,fnlevels(index[[1L]]),index[[1L]],NULL,index[[2L]],stubs)
 }
 fdiff.matrix <- function(x, n = 1, diff = 1, g = NULL, t = NULL, fill = NA, stubs = TRUE, ...) {
+  if(!missing(...)) stop(sprintf("Unknown argument %s passed to fdiff.matrix", dotstostr(...)))
   if(is.null(g))
     return(fdiffmCpp(x,n,diff,fill,0L,0L,NULL,G_t(t,FALSE),stubs)) else if(is.atomic(g)) {
       if(is.factor(g)) nl <- fnlevels(g) else {
@@ -45,6 +48,7 @@ fdiff.matrix <- function(x, n = 1, diff = 1, g = NULL, t = NULL, fill = NA, stub
     }
 }
 fdiff.grouped_df <- function(x, n = 1, diff = 1, t = NULL, fill = NA, stubs = TRUE, keep.ids = TRUE, ...) {
+  if(!missing(...)) stop(sprintf("Unknown argument %s passed to fdiff.grouped_df", dotstostr(...)))
   g <- GRP.grouped_df(x)
   tsym <- deparse(substitute(t))
   nam <- names(x)
@@ -66,6 +70,7 @@ fdiff.grouped_df <- function(x, n = 1, diff = 1, t = NULL, fill = NA, stubs = TR
   } else return(fdifflCpp(x,n,diff,fill,g[[1L]],g[[2L]],g[[3L]],G_t(t),stubs))
 }
 fdiff.data.frame <- function(x, n = 1, diff = 1, g = NULL, t = NULL, fill = NA, stubs = TRUE, ...) {
+  if(!missing(...)) stop(sprintf("Unknown argument %s passed to fdiff.data.frame", dotstostr(...)))
   if(is.null(g))
     return(fdifflCpp(x,n,diff,fill,0L,0L,NULL,G_t(t,FALSE),stubs)) else if(is.atomic(g)) {
       if(is.factor(g)) nl <- fnlevels(g) else {
@@ -79,6 +84,7 @@ fdiff.data.frame <- function(x, n = 1, diff = 1, g = NULL, t = NULL, fill = NA, 
     }
 }
 fdiff.pdata.frame <- function(x, n = 1, diff = 1, fill = NA, stubs = TRUE, ...) {
+  if(!missing(...)) stop(sprintf("Unknown argument %s passed to fdiff.pdata.frame", dotstostr(...)))
   index <- attr(x, "index")
   if(length(index) > 2L) index <- c(interaction(index[-length(index)], drop = TRUE), index[length(index)])
   fdifflCpp(x,n,diff,fill,fnlevels(index[[1L]]),index[[1L]],NULL,index[[2L]],stubs)
@@ -101,6 +107,7 @@ D.grouped_df <- fdiff.grouped_df
 D.data.frame <- function(x, n = 1, diff = 1, by = NULL, t = NULL, cols = is.numeric,
                          fill = NA, stubs = TRUE, keep.ids = TRUE, ...) {
 
+  if(!missing(...)) stop(sprintf("Unknown argument %s passed to D.data.frame", dotstostr(...)))
   if(is.call(by) || is.call(t)) {
     ax <- attributes(x)
     class(x) <- NULL
@@ -155,8 +162,10 @@ D.data.frame <- function(x, n = 1, diff = 1, by = NULL, t = NULL, cols = is.nume
       fdifflCpp(x,n,diff,fill,by[[1L]],by[[2L]],by[[3L]],G_t(t),stubs)
     }
 }
-D.pdata.frame <- function(x, n = 1, diff = 1, cols = is.numeric, fill = NA, stubs = TRUE, keep.ids = TRUE, ...) {
+D.pdata.frame <- function(x, n = 1, diff = 1, cols = is.numeric, fill = NA, stubs = TRUE,
+                          keep.ids = TRUE, ...) {
 
+  if(!missing(...)) stop(sprintf("Unknown argument %s passed to D.pdata.frame", dotstostr(...)))
   ax <- attributes(x)
   nam <- ax[["names"]]
   index <- ax[["index"]]

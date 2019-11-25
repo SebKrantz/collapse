@@ -193,7 +193,7 @@ BY.matrix <- function(X, g, FUN, ..., use.g.names = TRUE, sort = TRUE,
   }
 }
 
-BY.grouped_df <- function(X, FUN, ..., keep.group_vars = TRUE, use.g.names = FALSE,
+BY.grouped_df <- function(X, FUN, ..., use.g.names = FALSE, keep.group_vars = TRUE,
                           expand.wide = FALSE, parallel = FALSE, mc.cores = 1L,
                           return = c("same","matrix","data.frame","list")) {
   g <- GRP.grouped_df(X)

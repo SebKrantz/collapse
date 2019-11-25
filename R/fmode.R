@@ -12,6 +12,7 @@ fmode <- function(x, ...) { # g = NULL, w = NULL, TRA = FALSE, na.rm = TRUE, use
   UseMethod("fmode", x)
 }
 fmode.default <- function(x, g = NULL, w = NULL, TRA = FALSE, na.rm = TRUE, use.g.names = TRUE, ...) {
+  if(!missing(...)) stop("Unknown argument ", dotstostr(...))
   if(TRA == FALSE) {
     if(is.null(g)) return(fmodeCpp(x,0L,0L,NULL,w,na.rm)) else if(is.atomic(g)) {
       if(use.g.names) {
@@ -42,6 +43,7 @@ fmode.default <- function(x, g = NULL, w = NULL, TRA = FALSE, na.rm = TRUE, use.
   }
 }
 fmode.matrix <- function(x, g = NULL, w = NULL, TRA = FALSE, na.rm = TRUE, use.g.names = TRUE, drop = TRUE, ...) {
+  if(!missing(...)) stop("Unknown argument ", dotstostr(...))
   if(TRA == FALSE) {
     if(is.null(g)) return(fmodemCpp(x,0L,0L,NULL,w,na.rm,drop)) else if (is.atomic(g)) {
       if(use.g.names) {
@@ -72,6 +74,7 @@ fmode.matrix <- function(x, g = NULL, w = NULL, TRA = FALSE, na.rm = TRUE, use.g
   }
 }
 fmode.data.frame <- function(x, g = NULL, w = NULL, TRA = FALSE, na.rm = TRUE, use.g.names = TRUE, drop = TRUE, ...) {
+  if(!missing(...)) stop("Unknown argument ", dotstostr(...))
   if(TRA == FALSE) {
     if(is.null(g)) {
       if(drop) return(unlist(fmodelCpp(x,0L,0L,NULL,w,na.rm))) else return(fmodelCpp(x,0L,0L,NULL,w,na.rm))
@@ -106,6 +109,7 @@ fmode.data.frame <- function(x, g = NULL, w = NULL, TRA = FALSE, na.rm = TRUE, u
 }
 fmode.grouped_df <- function(x, w = NULL, TRA = FALSE, na.rm = TRUE, use.g.names = FALSE,
                              keep.group_vars = TRUE, keep.w = TRUE, ...) {
+  if(!missing(...)) stop("Unknown argument ", dotstostr(...))
   g <- GRP.grouped_df(x)
   wsym <- deparse(substitute(w))
   nam <- names(x)

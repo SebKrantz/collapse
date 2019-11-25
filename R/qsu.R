@@ -9,6 +9,7 @@ qsu <- function(x, ...) { # g = NULL, pid = NULL, w = NULL, higher = FALSE, arra
   UseMethod("qsu", x)
 }
 qsu.default <- function(x, g = NULL, pid = NULL, w = NULL, higher = FALSE, array = TRUE, ...) {
+  if(!missing(...)) stop("Unknown argument ", dotstostr(...))
     if(is.null(g)) {
       if(is.null(pid)) return(fbstatsCpp(x,higher, w = w)) else if(is.atomic(pid)) {
         if(is.factor(pid)) nid <- fnlevels(pid) else {
@@ -42,6 +43,7 @@ qsu.default <- function(x, g = NULL, pid = NULL, w = NULL, higher = FALSE, array
     }
 }
 qsu.pseries <- function(x, g = NULL, w = NULL, higher = FALSE, array = TRUE, ...) {
+  if(!missing(...)) stop("Unknown argument ", dotstostr(...))
   index <- attr(x, "index")
   if(length(index) > 2L) index <- c(interaction(index[-length(index)], drop = TRUE), index[length(index)])
   if(is.null(g))
@@ -53,6 +55,7 @@ qsu.pseries <- function(x, g = NULL, w = NULL, higher = FALSE, array = TRUE, ...
     return(fbstatsCpp(x,higher,g[[1L]],g[[2L]],fnlevels(index[[1L]]),index[[1L]],w,array,TRUE,group_names.GRP(g)))
 }
 qsu.matrix <- function(x, g = NULL, pid = NULL, w = NULL, higher = FALSE, array = TRUE, ...) {
+  if(!missing(...)) stop("Unknown argument ", dotstostr(...))
   if(is.null(g)) {
     if(is.null(pid)) return(fbstatsmCpp(x,higher, w = w)) else if(is.atomic(pid)) {
       if(is.factor(pid)) nid <- fnlevels(pid) else {
@@ -86,6 +89,7 @@ qsu.matrix <- function(x, g = NULL, pid = NULL, w = NULL, higher = FALSE, array 
   }
 }
 qsu.data.frame <- function(x, by = NULL, xt = NULL, w = NULL, cols = NULL, higher = FALSE, array = TRUE, vlabels = FALSE, ...) {
+  if(!missing(...)) stop("Unknown argument ", dotstostr(...))
   formby <- is.call(by)
   formxt <- is.call(xt)
 
@@ -152,6 +156,7 @@ qsu.data.frame <- function(x, by = NULL, xt = NULL, w = NULL, cols = NULL, highe
   }
 }
 qsu.pdata.frame <- function(x, by = NULL, w = NULL, cols = NULL, higher = FALSE, array = TRUE, vlabels = FALSE, ...) {
+  if(!missing(...)) stop("Unknown argument ", dotstostr(...))
   index <- attr(x, "index")
   if(length(index) > 2L) index <- c(interaction(index[-length(index)], drop = TRUE), index[length(index)])
 

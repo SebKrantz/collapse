@@ -1,5 +1,4 @@
-\name{Lags & Leads}
-\alias{lags-leads}
+\name{flag-L-F}
 \alias{flag}
 \alias{flag.default}
 \alias{flag.matrix}
@@ -27,9 +26,9 @@
 Fast Lags and Leads for Time-Series and Panel Data
 }
 \description{
-\code{flag} is an S3 generic to compute (sequences of) lags and leads. \code{L} and \code{F} are wrappers around \code{flag} representing the lag- and lead-operators, such that \code{L(x,-1) = F(x,1) = F(x)} and \code{L(x,-3:3) = F(x,3:-3)}. \code{L} & \code{F} provide more flexibility than \code{flag} when applied to data.frame's, but are otherwise identical.
+\code{flag} is an S3 generic to compute (sequences of) lags and leads. \code{L} and \code{F} are wrappers around \code{flag} representing the lag- and lead-operators, such that \code{L(x,-1) = F(x,1) = F(x)} and \code{L(x,-3:3) = F(x,3:-3)}. \code{L} & \code{F} provide more flexibility than \code{flag} when applied to data frames, but are otherwise identical.
 
-(\code{flag} is more of a programmers function in style of the \code{\link{Fast Statistical Functions}} while \code{L} & \code{F} are more practical to use in regression formulas or for computations on data.frames.)
+(\code{flag} is more of a programmers function in style of the \link{Fast Statistical Functions} while \code{L} & \code{F} are more practical to use in regression formulas or for computations on data frames.)
 }
 \usage{
 ## Default S3 methods:
@@ -58,8 +57,10 @@ flag(x, n = 1, fill = NA, stubs = TRUE, ...)
 
 ## S3 methods for class 'pdata.frame'
 flag(x, n = 1, fill = NA, stubs = TRUE, ...)
-   L(x, n = 1, cols = is.numeric, fill = NA, stubs = TRUE, keep.ids = TRUE, ...)
-   F(x, n = 1, cols = is.numeric, fill = NA, stubs = TRUE, keep.ids = TRUE, ...)
+   L(x, n = 1, cols = is.numeric, fill = NA, stubs = TRUE,
+     keep.ids = TRUE, ...)
+   F(x, n = 1, cols = is.numeric, fill = NA, stubs = TRUE,
+     keep.ids = TRUE, ...)
 
 # Methods for compatibility with dplyr:
 
@@ -72,13 +73,14 @@ flag(x, n = 1, t = NULL, fill = NA, stubs = TRUE, keep.ids = TRUE, ...)
 \arguments{
   \item{x}{a vector, matrix, data.frame, panel-series (\code{\link{plm::pseries}}), panel-data.frame (\code{\link{plm::pdata.frame}}) or grouped tibble (\code{\link{dplyr::grouped_df}}). \emph{Note}: Data must not be numeric.}
   \item{n}{an integer vector indicating the lags/leads to compute.}
-  \item{g}{a factor, \code{GRP} object, atomic vector (internally converted to factor) or a list of vectors / factors (internally converted to a \code{GRP} object) used to group \code{x}.}
-  \item{by}{\emph{data.frame method}: same as g, but also allows for one- or two-sided formulas. See Examples.}
+  \item{g}{a factor, \code{\link{GRP}} object, atomic vector (internally converted to factor) or a list of vectors / factors (internally converted to a \code{\link{GRP}} object) used to group \code{x}.}
+  \item{by}{\emph{data.frame method}: Same as \code{g}, but also allows one- or two-sided formulas i.e. \code{~ group1} or \code{var1 + var2 ~ group1 + group2}. See Examples.}
   \item{t}{same input as \code{g}, to indicate the time-variable. For safe computation of lags/leads on unordered time-series and panels. \emph{Note}: Data frame method also allows one-sided formula i.e. \code{~time}, and \code{grouped_df} method also allows lazy-evaluation i.e. \code{time} (no quotes).}
   \item{cols}{\emph{data.frame method}: Select columns to lag/lead using a function, column names or indices. Default: All numeric variables. \emph{Note}: \code{cols} is ignored if a two-sided formula is passsed to \code{by}.}
   \item{fill}{value to insert when vectors are shifted. Default is \code{NA}. }
-  \item{stubs}{\code{TRUE} will rename all lagged / leaded columns by adding a stub or prefix "L\code{n}." / "F\code{n}.".}
-  \item{keep.ids}{\emph{data.frame / pdata.frame / grouped_df methods}: drop all panel-identifiers from the output (which includes all variables passed to 'by' or 't'). \emph{Note}: For panel-data.frame's and grouped tibbles identifiers are dropped, but the 'index' / 'groups' attributes are kept.}
+  \item{stubs}{logical. \code{TRUE} will rename all lagged / leaded columns by adding a stub or prefix "L\code{n}." / "F\code{n}.".}
+  \item{keep.ids}{\emph{data.frame / pdata.frame / grouped_df methods}: Logical. Drop all panel-identifiers from the output (which includes all variables passed to \code{by} or \code{t}). \emph{Note}: For panel-data.frame's and grouped tibbles identifiers are dropped, but the 'index' / 'groups' attributes are kept.}
+    \item{...}{arguments to be passed to or from other methods.}
 }
 \details{
 If a single integer is passed to \code{n}, and \code{g/by} and \code{t} are left empty, \code{flag/L/F} just returs \code{x} with all columns lagged / leaded by \code{n}. If \code{length(n)>1}, and \code{x} is an atomic vector, \code{flag/L/F} returns a matrix with lags / leads computed in the same order as passed to \code{n}. If instead \code{x} is a matrix / data.frame, a matrix / data.frame with \code{ncol(x)*length(n)} columns is returned where columns are sorted first by variable and then by lag (so all lags computed on a variable are grouped together). \code{x} can be of any standard data type.
@@ -90,7 +92,7 @@ It is also possible to compute lags / leads on unordered time-series (thus utili
 The methods applying to \code{plm} objects (panel-series and panel-data.frames) automatically utilize the panel-identifiers attached to these objects and thus securely compute fully identified panel-lags. If these objects have > 2 panel-identifiers attached to them, the last identifier is assumed to be the time-variable, and the others are taken as grouping-variables and interacted. I note that \code{flag/L/F} is significantly faster than \code{plm::lag/plm::lead} since the latter is written in R and based on a Split-Apply-Combine logic.
 }
 \value{
-\code{x} lagged / leaded by \code{n}. See Details and Examples.
+\code{x} lagged / leaded \code{n}-times, grouped by \code{g/by}, ordered by \code{t}. See Details and Examples.
 }
 \references{
 %% ~put references to the literature/web site here ~
@@ -105,7 +107,7 @@ The methods applying to \code{plm} objects (panel-series and panel-data.frames) 
 %% ~Make other sections like Warning with \section{Warning }{....} ~
 
 \seealso{
-%% ~~objects to See Also as \code{\link{help}}, ~~~
+\code{\link[=fdiff]{fdiff/D}}, \code{\link[=fgrowth]{fgrowth/G}}, \link{Time-Series and Panel-Series}
 }
 \examples{
 ## Simple Time-Series: Airpassengers

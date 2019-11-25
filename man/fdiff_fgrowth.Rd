@@ -1,5 +1,4 @@
-\name{Differences & Growth Rates}
-\alias{differences-growth-rates}
+\name{fdiff-fgrowth-D-G}
 \alias{fdiff}
 \alias{fdiff.default}
 \alias{fdiff.matrix}
@@ -30,13 +29,13 @@
 \alias{G.grouped_df}
 
 %- Also NEED an '\alias' for EACH other topic documented here.
-\title{
-Fast Lagged and Iterated Differences and Growth Rates for Time-Series and Panel Data
+\title{ % Lagged and Iterated
+Fast Differences and Growth Rates for Time-Series and Panel Data
 }
 \description{
-\code{fdiff} and \code{fgrowth} are S3 generics to compute (sequences of) suitably lagged / leaded and iterated differences and growth rates / log-differences, respectively. \code{D} and \code{G} are wrappers around \code{fdiff} and \code{fgrowth} representing the 'difference-operator' and the 'growth-operator'. \code{D} / \code{G} provide more flexibility than \code{fdiff} / \code{fgrowth} when applied to data.frame's, but are otherwise identical.
+\code{fdiff} and \code{fgrowth} are S3 generics to compute (sequences of) suitably lagged / leaded and iterated differences and growth rates / log-differences, respectively. \code{D} and \code{G} are wrappers around \code{fdiff} and \code{fgrowth} representing the 'difference-operator' and the 'growth-operator'. \code{D} / \code{G} provide more flexibility than \code{fdiff} / \code{fgrowth} when applied to data frames, but are otherwise identical.
 
-(\code{fdiff} and \code{fgrowth} are programmers functions in style of the \code{\link{Fast Statistical Functions}} while \code{D} & \code{G} are more practical to use in regression formulas or for computations on data.frames.)
+(\code{fdiff} and \code{fgrowth} are programmers functions in style of the \link{Fast Statistical Functions} while \code{D} & \code{G} are more practical to use in regression formulas or for computations on data frames.)
 }
 \usage{
 ## Default S3 methods:
@@ -85,15 +84,16 @@ fgrowth(x, n = 1, diff = 1, t = NULL, fill = NA, logdiff = FALSE, stubs = TRUE, 
 \arguments{
   \item{x}{a numeric vector, matrix, data.frame, panel-series (\code{\link{plm::pseries}}), panel-data.frame (\code{\link{plm::pdata.frame}}) or grouped tibble (\code{\link{dplyr::grouped_df}}).}
   \item{n}{a integer vector indicating the number of lags or leads.}
-  \item{diff}{a vector of integers > 1 indicating the order of differencing / growth rates.}
-  \item{g}{a factor, \code{GRP()} object, atomic vector (> internally converted to factor) or a list of vectors / factors (> internally converted to a \code{GRP()} object) used to group \code{x}.}
-  \item{by}{\emph{data.frame method}: same as g, but also allows for column-names, column-indices and one- or two-sided formulas. See Examples.}
-  \item{t}{same input as g, to indicate the time-variable. For safe computation of differnces/growth rates on unordered time-series and panels. \emph{Notes}: data.frame method also allows name, index or one-sided formula i.e. \code{~time}. grouped_df method also allows lazy-evaluation i.e. \code{time} (no quotes).}
+  \item{diff}{a vector of integers > 1 indicating the order of differencing / taking growth rates or log-differences.}
+  \item{g}{a factor, \code{\link{GRP}} object, atomic vector (internally converted to factor) or a list of vectors / factors (internally converted to a \code{\link{GRP}} object) used to group \code{x}.}
+  \item{by}{\emph{data.frame method}: Same as \code{g}, but also allows one- or two-sided formulas i.e. \code{~ group1} or \code{var1 + var2 ~ group1 + group2}. See Examples.}
+  \item{t}{same input as \code{g}, to indicate the time-variable. For safe computation of differnces/growth rates on unordered time-series and panels. \emph{Notes}: data.frame method also allows name, index or one-sided formula i.e. \code{~time}. grouped_df method also allows lazy-evaluation i.e. \code{time} (no quotes).}
   \item{cols}{\emph{data.frame method}: Select columns to difference/compute growth rates using a function, column names or indices. Default: All numeric variables. \emph{Note}: \code{cols} is ignored if a two-sided formula is passsed to \code{by}.}
   \item{fill}{value to insert when vectors are shifted. Default is \code{NA}. }
-  \item{logdiff}{compute log-differences instead of exact growth rates. See Details.}
-  \item{stubs}{\code{TRUE} will rename all differenced columns by adding a prefix "L\code{n}D\code{diff}." / "F\code{n}D\code{diff}." and a prefix "L\code{n}G\code{diff}." / "F\code{n}G\code{diff}." for growth rates.}
-  \item{keep.ids}{\emph{data.frame / pdata.frame / grouped_df methods}: Logical. \code{FALSE} drops all panel-identifiers from the output (which includes all variables passed to 'by' or 't'). For \code{pdata.frame}'s identifiers are dropped, but the 'index' attribute is always kept.}
+  \item{logdiff}{logical. compute log-differences instead of exact growth rates. See Details.}
+  \item{stubs}{logical. \code{TRUE} will rename all differenced columns by adding a prefix "L\code{n}D\code{diff}." / "F\code{n}D\code{diff}." and a prefix "L\code{n}G\code{diff}." / "F\code{n}G\code{diff}." for growth rates.}
+  \item{keep.ids}{\emph{data.frame / pdata.frame / grouped_df methods}: Logical. Drop all panel-identifiers from the output (which includes all variables passed to \code{by} or \code{t}). \emph{Note}: For panel-data.frame's and grouped tibbles identifiers are dropped, but the 'index' / 'groups' attributes are kept.}
+  \item{...}{arguments to be passed to or from other methods.}
 }
 \details{
 By default, \code{fdiff/D|fgrowth/G} return \code{x} with all columns differenced | converted to growth rates. Differences are computed as \code{repeat(diff){x[i] - x[i-n]}}, growth rates as \code{repeat(diff){(x[i] - x[i-n])/x[i-n]*100}} and log-differences as \code{repeat(diff){(log(x[i]) - log(x[i-n]))*100}}. Setting \code{diff = 2} thus returns differences of differences | growth rates of growth rates etc... and setting \code{n = 2} returns simple differences computed by subtracting twice-lagged \code{x} from \code{x}. It is also possible to compute forward differences | growth rates by passing negative \code{n} values. \code{n} also supports sequences of integers (lags), and \code{diff} supports positive sequences of integers (differences):
@@ -108,7 +108,7 @@ The methods applying to \code{plm} objects (panel-series and panel-data.frames) 
 }
 \value{
 \code{fdiff/D} returns \code{x} differenced \code{diff} times using lags \code{n} of itself.
-\code{fgrowth/G} returns \code{x} where the growth rate or log-difference was taken \code{diff} times using lags \code{n} of itself. See Details and Examples.
+\code{fgrowth/G} returns \code{x} where the growth rate or log-difference was taken \code{diff} times using lags \code{n} of itself. Computations can be grouped by \code{g/by} and/or ordered by \code{t}. See Details and Examples.
 }
 \references{
 %% ~put references to the literature/web site here ~
@@ -123,7 +123,7 @@ The methods applying to \code{plm} objects (panel-series and panel-data.frames) 
 %% ~Make other sections like Warning with \section{Warning }{....} ~
 
 \seealso{
-%% ~~objects to See Also as \code{\link{help}}, ~~~
+\code{\link[=flag]{flag/L/F}}, \link{Time-Series and Panel-Series}
 }
 \examples{
 ## Simple Time-Series: Airpassengers

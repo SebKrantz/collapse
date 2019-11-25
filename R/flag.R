@@ -13,6 +13,7 @@ flag <- function(x, n = 1, ...) {
   UseMethod("flag", x)
 }
 flag.default <- function(x, n = 1, g = NULL, t = NULL, fill = NA, stubs = TRUE, ...) {
+  if(!missing(...)) stop("Unknown argument ", dotstostr(...))
   if(is.null(g))
     return(flagleadCpp(x,n,fill,0L,0L,NULL,G_t(t,FALSE),stubs)) else if(is.atomic(g)) {
     if(is.factor(g)) nl <- fnlevels(g) else {
@@ -26,6 +27,7 @@ flag.default <- function(x, n = 1, g = NULL, t = NULL, fill = NA, stubs = TRUE, 
   }
 }
 flag.pseries <- function(x, n = 1, fill = NA, stubs = TRUE, ...) {
+  if(!missing(...)) stop("Unknown argument ", dotstostr(...))
   index <- attr(x, "index")
   if(length(index) > 2L) index <- c(interaction(index[-length(index)], drop = TRUE), index[length(index)])
   if(is.matrix(x))
@@ -33,6 +35,7 @@ flag.pseries <- function(x, n = 1, fill = NA, stubs = TRUE, ...) {
   flagleadCpp(x,n,fill,fnlevels(index[[1L]]),index[[1L]],NULL,index[[2L]],stubs)
 }
 flag.matrix <- function(x, n = 1, g = NULL, t = NULL, fill = NA, stubs = TRUE, ...) {
+  if(!missing(...)) stop("Unknown argument ", dotstostr(...))
   if(is.null(g))
     return(flagleadmCpp(x,n,fill,0L,0L,NULL,G_t(t,FALSE),stubs)) else if(is.atomic(g)) {
     if(is.factor(g)) nl <- fnlevels(g) else {
@@ -46,6 +49,7 @@ flag.matrix <- function(x, n = 1, g = NULL, t = NULL, fill = NA, stubs = TRUE, .
   }
 }
 flag.grouped_df <- function(x, n = 1, t = NULL, fill = NA, stubs = TRUE, keep.ids = TRUE, ...) {
+  if(!missing(...)) stop("Unknown argument ", dotstostr(...))
   g <- GRP.grouped_df(x)
   tsym <- deparse(substitute(t))
   nam <- names(x)
@@ -67,6 +71,7 @@ flag.grouped_df <- function(x, n = 1, t = NULL, fill = NA, stubs = TRUE, keep.id
   } else return(flagleadlCpp(x,n,fill,g[[1L]],g[[2L]],g[[3L]],G_t(t),stubs))
 }
 flag.data.frame <- function(x, n = 1, g = NULL, t = NULL, fill = NA, stubs = TRUE, ...) {
+  if(!missing(...)) stop("Unknown argument ", dotstostr(...))
   if(is.null(g))
     return(flagleadlCpp(x,n,fill,0L,0L,NULL,G_t(t,FALSE),stubs)) else if(is.atomic(g)) {
       if(is.factor(g)) nl <- fnlevels(g) else {
@@ -80,6 +85,7 @@ flag.data.frame <- function(x, n = 1, g = NULL, t = NULL, fill = NA, stubs = TRU
     }
 }
 flag.pdata.frame <- function(x, n = 1, fill = NA, stubs = TRUE, ...) {
+  if(!missing(...)) stop("Unknown argument ", dotstostr(...))
   index <- attr(x, "index")
   if(length(index) > 2L) index <- c(interaction(index[-length(index)], drop = TRUE), index[length(index)])
   flagleadlCpp(x,n,fill,fnlevels(index[[1L]]),index[[1L]],NULL,index[[2L]],stubs)
@@ -101,7 +107,7 @@ L.matrix <- function(x, n = 1, g = NULL, t = NULL, fill = NA, stubs = TRUE, ...)
 L.grouped_df <- flag.grouped_df
 L.data.frame <- function(x, n = 1, by = NULL, t = NULL, cols = is.numeric,
                          fill = NA, stubs = TRUE, keep.ids = TRUE, ...) {
-
+  if(!missing(...)) stop("Unknown argument ", dotstostr(...))
   if(is.call(by) || is.call(t)) {
     ax <- attributes(x)
     class(x) <- NULL
@@ -157,7 +163,7 @@ L.data.frame <- function(x, n = 1, by = NULL, t = NULL, cols = is.numeric,
   }
 }
 L.pdata.frame <- function(x, n = 1, cols = is.numeric, fill = NA, stubs = TRUE, keep.ids = TRUE, ...) {
-
+  if(!missing(...)) stop("Unknown argument ", dotstostr(...))
   ax <- attributes(x)
   nam <- ax[["names"]]
   index <- ax[["index"]]
@@ -196,6 +202,7 @@ F.matrix <- function(x, n = 1, g = NULL, t = NULL, fill = NA, stubs = TRUE, ...)
   flag.matrix(x, -n, g, t, fill, stubs, ...)
 }
 F.grouped_df <- function(x, n = 1, t = NULL, fill = NA, stubs = TRUE, keep.ids = TRUE, ...) {
+  if(!missing(...)) stop("Unknown argument ", dotstostr(...))
   g <- GRP.grouped_df(x)
   tsym <- deparse(substitute(t))
   nam <- names(x)

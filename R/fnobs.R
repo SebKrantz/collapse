@@ -12,6 +12,7 @@ fNobs <- function(x, ...) { # g = NULL, TRA = FALSE, use.g.names = TRUE, drop = 
   UseMethod("fNobs", x)
 }
 fNobs.default <- function(x, g = NULL, TRA = FALSE, use.g.names = TRUE, ...) {
+  if(!missing(...)) stop("Unknown argument ", dotstostr(...))
   if(TRA == FALSE) {
     if(is.null(g)) return(fNobsCpp(x,0L,0L)) else if (is.atomic(g)) {
       if(use.g.names) {
@@ -42,6 +43,7 @@ fNobs.default <- function(x, g = NULL, TRA = FALSE, use.g.names = TRUE, ...) {
   }
 }
 fNobs.matrix <- function(x, g = NULL, TRA = FALSE, use.g.names = TRUE, drop = TRUE, ...) {
+  if(!missing(...)) stop("Unknown argument ", dotstostr(...))
   if(TRA == FALSE) {
     if(is.null(g)) return(fNobsmCpp(x,0L,0L,drop)) else if (is.atomic(g)) {
       if(use.g.names) {
@@ -72,6 +74,7 @@ fNobs.matrix <- function(x, g = NULL, TRA = FALSE, use.g.names = TRUE, drop = TR
   }
 }
 fNobs.data.frame <- function(x, g = NULL, TRA = FALSE, use.g.names = TRUE, drop = TRUE, ...) {
+  if(!missing(...)) stop("Unknown argument ", dotstostr(...))
   if(TRA == FALSE) {
     if(is.null(g)) return(fNobslCpp(x,0L,0L,drop)) else if (is.atomic(g)) {
       if(use.g.names && !inherits(x, "data.table")) {
@@ -103,6 +106,7 @@ fNobs.data.frame <- function(x, g = NULL, TRA = FALSE, use.g.names = TRUE, drop 
   }
 }
 fNobs.grouped_df <- function(x, TRA = FALSE, use.g.names = FALSE, keep.group_vars = TRUE, ...) {
+  if(!missing(...)) stop("Unknown argument ", dotstostr(...))
   g <- GRP.grouped_df(x)
   gn <- which(names(x) %in% g[[5L]])
   nTRAl <- TRA == FALSE

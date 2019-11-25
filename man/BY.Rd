@@ -6,7 +6,7 @@
 \alias{BY.grouped_df}
 %- Also NEED an '\alias' for EACH other topic documented here.
 \title{
-Efficient Split-Apply-Combine Computing
+(Efficient) Split-Apply-Combine Computing
 }
 \description{
 \code{BY} is an S3 generic that efficiently applies functions over vectors or matrix- and data.frame columns by groups, and returns various output formats. A simple parallelism is also available.
@@ -24,33 +24,34 @@ Efficient Split-Apply-Combine Computing
    expand.wide = FALSE, parallel = FALSE, mc.cores = 1L,
    return = c("same","matrix","data.frame","list"))
 
-\method{BY}{grouped_df}(X, FUN, ..., keep.group_vars = TRUE, use.g.names = FALSE, expand.wide = FALSE, parallel = FALSE, mc.cores = 1L,
+\method{BY}{grouped_df}(X, FUN, ..., use.g.names = FALSE, keep.group_vars = TRUE,
+   expand.wide = FALSE, parallel = FALSE, mc.cores = 1L,
    return = c("same","matrix","data.frame","list"))
 
 }
 %- maybe also 'usage' for other objects documented here.
 \arguments{
   \item{X}{a atomic vector, matrix or data frame.}
-  \item{g}{a factor, \code{GRP} object, atomic vector (internally converted to factor) or a list of vectors / factors (internally converted to a \code{GRP} object) used to group \code{x}.}
+  \item{g}{a factor, \code{\link{GRP}} object, atomic vector (internally converted to factor) or a list of vectors / factors (internally converted to a \code{\link{GRP}} object) used to group \code{x}.}
   \item{FUN}{a function, can be scalar- or vector-valued.}
   \item{...}{further arguments to \code{FUN}.}
   \item{use.g.names}{make group-names and add to the result as names (vector method) or row-names (matrix and data.frame method). No row-names are generated for data.tables and grouped tibbles.}
-  \item{sort}{logical. Sort the groups?. Internally passed to \code{GRP()} or \code{qF()}, and only effective if \code{g} is not already a factor or \code{GRP} object.}
-  \item{expand.wide}{logical. If \code{FUN} is a vector-valued function that applied to a vector returns a vector of a fixed length > 1 (such as the \code{quantile} function), \code{expand.wide} can be used to return the result in a wider format (instead of stacking the resulting vectors of fixed length above each other in each output column).}
-  \item{parallel}{logical. \code{TRUE} implements simple parallel execution by internally calling \code{parallel::mclapply} instead of \code{base::lapply}.}
+  \item{sort}{logical. Sort the groups? Internally passed to \code{\link{GRP}} or \code{\link{qF}}, and only effective if \code{g} is not already a factor or \code{\link{GRP}} object.}
+  \item{expand.wide}{logical. If \code{FUN} is a vector-valued function returning a vector of fixed length > 1 (such as the \code{\link{quantile}} function), \code{expand.wide} can be used to return the result in a wider format (instead of stacking the resulting vectors of fixed length above each other in each output column).}
+\item{parallel}{logical. \code{TRUE} implements simple parallel execution by internally calling \code{parallel::mclapply} instead of \code{base::lapply}.}
   \item{mc.cores}{integer. Argument to \code{parallel::mclapply} indicating the number of cores to use for parallel execution. Can use \code{parallel::detectCores()} to select all available cores. See also \code{?parallel::mclapply}.}
-    \item{return}{an integer or string indicating the type of object to return. The default \code{1 - "same"} returns the same object type (i.e. passing a matrix returns a matrix and passig a data frame returns a data frame). \code{2 - "matrix"} always returns the output as matrix, \code{3 - "data.frame"} always returns a data frame and \code{4 - "list"} returns the raw (uncombined) output. \emph{Note}: \code{4 - "list"} works together with \code{expand.wide} to return a list of matrices.}
+\item{return}{an integer or string indicating the type of object to return. The default \code{1 - "same"} returns the same object type (i.e. passing a matrix returns a matrix and passig a data frame returns a data frame). \code{2 - "matrix"} always returns the output as matrix, \code{3 - "data.frame"} always returns a data frame and \code{4 - "list"} returns the raw (uncombined) output. \emph{Note}: \code{4 - "list"} works together with \code{expand.wide} to return a list of matrices.}
 \item{keep.group_vars}{\emph{grouped_df method:} Logical. \code{FALSE} removes grouping variables after computation.}
 %    \item{simplify}{logical. Simplify the result to return an object of the same class and with the same attributes. If \code{FALSE}, the raw computation retult in form of a (nested) list is returned.}
 }
 \details{
-\code{BY} is an efficient and frugal reimplementation of the Split-Apply-Combine computing paradigm. It is faster than \code{base::tapply}, \code{base::by}, \code{base::aggregate} and \code{plyr}, and preserves data attributes just like \code{dapply}.
+\code{BY} is a frugal reimplementation of the Split-Apply-Combine computing paradigm. It is faster than \code{base::tapply}, \code{base::by}, \code{base::aggregate} and \code{plyr}, and preserves data attributes just like \code{\link{dapply}}.
 
-I note at this point that the philosphy of \code{collapse} is to move beyond this rather slow computing paradigm, which is why the \code{\link{Fast Statistical Functions}} were implemented. However sometimes tasks need to be performed that involve more comlex and customized operations on data, and for these cases \code{BY} is a good solution.
+I note at this point that the philosphy of \code{collapse} is to move beyond this rather slow computing paradigm, which is why the \link{Fast Statistical Functions} were implemented. However sometimes tasks need to be performed that involve more comlex and customized operations on data, and for these cases \code{BY} is a good solution.
 
 \code{BY} is built principally as a wrapper around \code{lapply(split(x, g), FUN, ...)}, but strongly optimizes on attribute cheking compared to \code{base} R. For more details examine the code yourself or look at the documentation for \code{\link{dapply}} which works very similar (the only difference really is the splitting performed in \code{BY}).
 
-\code{BY} is used internally in \code{collap} (\code{collapse}'s main aggregation command) for functions that are not \code{\link{Fast Statistical Functions}}.
+\code{BY} is used internally in \code{\link{collap}} (\code{collapse}'s main aggregation command) for functions that are not \link{Fast Statistical Functions}.
 }
 \value{
 \code{X} where \code{FUN} was applied to every column split by \code{g}.
@@ -68,7 +69,7 @@ I note at this point that the philosphy of \code{collapse} is to move beyond thi
 %% ~Make other sections like Warning with \section{Warning }{....} ~
 
 \seealso{
-%% ~~objects to See Also as \code{\link{help}}, ~~~
+\code{\link{dapply}}, \code{\link{collap}}, \link{Fast Statistical Functions}, \link{Data Transformations}
 }
 \examples{
 v <- iris$Sepal.Length   # A numeric vector

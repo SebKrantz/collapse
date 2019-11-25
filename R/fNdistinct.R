@@ -13,6 +13,7 @@ fNdistinct <- function(x, ...) { # g = NULL, TRA = FALSE, na.rm = TRUE, use.g.na
   UseMethod("fNdistinct", x)
 }
 fNdistinct.default <- function(x, g = NULL, TRA = FALSE, na.rm = TRUE, use.g.names = TRUE, ...) {
+  if(!missing(...)) stop("Unknown argument ", dotstostr(...))
   if(TRA == FALSE) {
     if(is.null(g)) return(fNdistinctCpp(x, narm = na.rm)) else if (is.atomic(g)) {
       if(use.g.names) {
@@ -43,6 +44,7 @@ fNdistinct.default <- function(x, g = NULL, TRA = FALSE, na.rm = TRUE, use.g.nam
   }
 }
 fNdistinct.matrix <- function(x, g = NULL, TRA = FALSE, na.rm = TRUE, use.g.names = TRUE, drop = TRUE, ...) {
+  if(!missing(...)) stop("Unknown argument ", dotstostr(...))
   if(TRA == FALSE) {
     if(is.null(g)) return(fNdistinctmCpp(x,0L,0L,NULL,na.rm,drop)) else if (is.atomic(g)) {
       if(use.g.names) {
@@ -73,6 +75,7 @@ fNdistinct.matrix <- function(x, g = NULL, TRA = FALSE, na.rm = TRUE, use.g.name
   }
 }
 fNdistinct.data.frame <- function(x, g = NULL, TRA = FALSE, na.rm = TRUE, use.g.names = TRUE, drop = TRUE, ...) {
+  if(!missing(...)) stop("Unknown argument ", dotstostr(...))
   if(TRA == FALSE) {
     if(is.null(g)) return(fNdistinctlCpp(x,0L,0L,NULL,na.rm,drop)) else if (is.atomic(g)) {
       if(use.g.names && !inherits(x, "data.table")) {
@@ -104,6 +107,7 @@ fNdistinct.data.frame <- function(x, g = NULL, TRA = FALSE, na.rm = TRUE, use.g.
   }
 }
 fNdistinct.grouped_df <- function(x, TRA = FALSE, na.rm = TRUE, use.g.names = FALSE, keep.group_vars = TRUE, ...) {
+  if(!missing(...)) stop("Unknown argument ", dotstostr(...))
   g <- GRP.grouped_df(x)
   gn <- which(names(x) %in% g[[5L]])
   nTRAl <- TRA == FALSE

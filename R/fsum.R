@@ -11,6 +11,7 @@ fsum <- function(x, ...) { # g = NULL, TRA = FALSE, na.rm = TRUE, use.g.names = 
   UseMethod("fsum", x)
 }
 fsum.default <- function(x, g = NULL, TRA = FALSE, na.rm = TRUE, use.g.names = TRUE, ...) {
+  if(!missing(...)) stop("Unknown argument ", dotstostr(...))
   if(TRA == FALSE) {
     if(is.null(g)) return(fsumCpp(x,0L,0L,na.rm)) else if (is.atomic(g)) {
       if(use.g.names) {
@@ -50,6 +51,7 @@ fsum.default <- function(x, g = NULL, TRA = FALSE, na.rm = TRUE, use.g.names = T
   }
 }
 fsum.matrix <- function(x, g = NULL, TRA = FALSE, na.rm = TRUE, use.g.names = TRUE, drop = TRUE, ...) {
+  if(!missing(...)) stop("Unknown argument ", dotstostr(...))
   if(TRA == FALSE) {
     if(is.null(g)) return(fsummCpp(x,0L,0L,na.rm,drop)) else if (is.atomic(g)) {
       if(use.g.names) {
@@ -89,6 +91,7 @@ fsum.matrix <- function(x, g = NULL, TRA = FALSE, na.rm = TRUE, use.g.names = TR
   }
 }
 fsum.data.frame <- function(x, g = NULL, TRA = FALSE, na.rm = TRUE, use.g.names = TRUE, drop = TRUE, ...) {
+  if(!missing(...)) stop("Unknown argument ", dotstostr(...))
   if(TRA == FALSE) {
     if(is.null(g)) return(fsumlCpp(x,0L,0L,na.rm,drop)) else if (is.atomic(g)) {
       if(use.g.names && !inherits(x, "data.table")) {
@@ -129,6 +132,7 @@ fsum.data.frame <- function(x, g = NULL, TRA = FALSE, na.rm = TRUE, use.g.names 
   }
 }
 fsum.grouped_df <- function(x, TRA = FALSE, na.rm = TRUE, use.g.names = FALSE, keep.group_vars = TRUE, ...) { # drop grouping columns argument ??
+  if(!missing(...)) stop("Unknown argument ", dotstostr(...))
   g <- GRP.grouped_df(x)
   gn <- which(names(x) %in% g[[5L]]) # faster than na.rm(match(names(g[[4L]]), names(x)))
   nTRAl <- TRA == FALSE

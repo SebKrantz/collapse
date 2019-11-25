@@ -22,6 +22,7 @@ forderv <- function(x, by = seq_along(x), retGrp = FALSE, sort = TRUE, order = 1
 GRP.default <- function(X, by = NULL, sort = TRUE, order = 1L, na.last = FALSE,
                         return.groups = TRUE, return.order = FALSE, ...) { # , gs = TRUE # o
 
+  if(!missing(...)) stop("Unknown argument ", dotstostr(...))
   call <- match.call()
 
   if(is.list(X) && is.null(by)) {
@@ -81,6 +82,7 @@ group_names.GRP <- function(x, force.char = TRUE) { # , ...
 }
 
 print.GRP <- function(x, n = 6, ...) {
+  if(!missing(...)) stop("Unknown argument ", dotstostr(...))
   ord <- x[[6L]]
   cat(paste("collapse grouping object of length",length(x[[2L]]),"with",
             x[[1L]],ifelse(any(ord),"ordered","unordered"),"groups"), fill = TRUE)
@@ -110,6 +112,7 @@ print.GRP <- function(x, n = 6, ...) {
 }
 
 plot.GRP <- function(x, breaks = "auto", type = "s", horizontal = FALSE, ...) {
+  if(!missing(...)) stop("Unknown argument ", dotstostr(...))
   settings <- par(c("mfrow","mar","mgp"))
   par(mfrow = if(horizontal) 1:2 else 2:1, mar = c(3.9,4.1,2.1,1), mgp = c(2.5,1,0))
   if(breaks == "auto") {
@@ -143,6 +146,7 @@ as.factor.GRP <- function(x) { # , ...
 }
 
 GRP.qG <- function(X, ...) {
+  if(!missing(...)) stop("Unknown argument ", dotstostr(...))
   # nam <- deparse(substitute(X)) # takes 9 microseconds !!, all vars on call is faster !!
   ng <- attr(X, "N.groups")
   ordered <- if(is.ordered(X)) c(TRUE,TRUE) else c(FALSE,FALSE)
@@ -159,6 +163,7 @@ GRP.qG <- function(X, ...) {
 }
 
 GRP.factor <- function(X, ...) {
+  if(!missing(...)) stop("Unknown argument ", dotstostr(...))
   # nam <- deparse(substitute(X)) # takes 9 microseconds !!
   lev <- attr(X, "levels")
   nl <- length(lev)
@@ -177,6 +182,7 @@ GRP.factor <- function(X, ...) {
 }
 
 GRP.pseries <- function(X, ...) {
+  if(!missing(...)) stop("Unknown argument ", dotstostr(...))
   g <- attr(X, "index") # index cannot be atomic since plm always adds a time variable !!
   if(length(g) > 2L) {
     mlg <- -length(g)
@@ -202,6 +208,7 @@ GRP.pseries <- function(X, ...) {
 GRP.pdata.frame <- function(X, ...) GRP.pseries(X, ...)
 
 GRP.grouped_df <- function(X, ...) {
+  if(!missing(...)) stop("Unknown argument ", dotstostr(...))
   g <- unclass(attr(X, "groups"))
   lg <- length(g)
   gr <- g[[lg]]

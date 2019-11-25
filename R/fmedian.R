@@ -12,6 +12,7 @@ fmedian <- function(x, ...) { # g = NULL, TRA = FALSE, na.rm = TRUE, use.g.names
   UseMethod("fmedian", x)
 }
 fmedian.default <- function(x, g = NULL, TRA = FALSE, na.rm = TRUE, use.g.names = TRUE, ...) {
+  if(!missing(...)) stop("Unknown argument ", dotstostr(...))
   if(TRA == FALSE) {
     if(is.null(g)) return(fmedianCpp(x,0L,0L,NULL,na.rm)) else if(is.atomic(g)) {
       if(use.g.names) {
@@ -42,6 +43,7 @@ fmedian.default <- function(x, g = NULL, TRA = FALSE, na.rm = TRUE, use.g.names 
   }
 }
 fmedian.matrix <- function(x, g = NULL, TRA = FALSE, na.rm = TRUE, use.g.names = TRUE, drop = TRUE, ...) {
+  if(!missing(...)) stop("Unknown argument ", dotstostr(...))
   if(TRA == FALSE) {
     if(is.null(g)) return(fmedianmCpp(x,0L,0L,NULL,na.rm,drop)) else if(is.atomic(g)) {
       if(use.g.names) {
@@ -72,6 +74,7 @@ fmedian.matrix <- function(x, g = NULL, TRA = FALSE, na.rm = TRUE, use.g.names =
   }
 }
 fmedian.data.frame <- function(x, g = NULL, TRA = FALSE, na.rm = TRUE, use.g.names = TRUE, drop = TRUE, ...) {
+  if(!missing(...)) stop("Unknown argument ", dotstostr(...))
   if(TRA == FALSE) {
     if(is.null(g)) return(fmedianlCpp(x,0L,0L,NULL,na.rm,drop)) else if(is.atomic(g)) {
       if(use.g.names && !inherits(x, "data.table")) {
@@ -103,6 +106,7 @@ fmedian.data.frame <- function(x, g = NULL, TRA = FALSE, na.rm = TRUE, use.g.nam
   }
 }
 fmedian.grouped_df <- function(x, TRA = FALSE, na.rm = TRUE, use.g.names = FALSE, keep.group_vars = TRUE, ...) {
+  if(!missing(...)) stop("Unknown argument ", dotstostr(...))
   g <- GRP.grouped_df(x)
   gn <- which(names(x) %in% g[[5L]])
   nTRAl <- TRA == FALSE

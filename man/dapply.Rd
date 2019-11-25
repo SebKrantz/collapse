@@ -5,7 +5,7 @@
 Data Apply
 }
 \description{
-\code{dapply} efficiently applies functions to columns or rows of matrices and data frame's and (by default) returns an object of the same type and with the same attributes, or converts them without the loss of attributes. A simple parallelism is also available.
+\code{dapply} efficiently applies functions to columns or rows of matrices and data frame's and (default) returns an object of the same type and with the same attributes, or converts to the other type. A simple parallelism is also available.
 }
 \usage{
 dapply(X, FUN, ..., MARGIN = 2, parallel = FALSE, mc.cores = 1L,
@@ -27,19 +27,19 @@ dapply(X, FUN, ..., MARGIN = 2, parallel = FALSE, mc.cores = 1L,
 
 \itemize{
 \item Save the attributes of \code{X}.
-\item If \code{MARGIN = 2} (columns), convert matrices to plain lists of columns using \code{mctl} and remove all attributes from data frames.
-\item If \code{MARGIN = 1} (rows), convert matrices to plain lists of rows using \code{mrtl}. For data frames remove all attributes, efficiently convert to matrix using \code{do.call(rbind, X)} and also convert to list of rows using \code{mrtl}.
+\item If \code{MARGIN = 2} (columns), convert matrices to plain lists of columns using \code{\link{mctl}} and remove all attributes from data frames.
+\item If \code{MARGIN = 1} (rows), convert matrices to plain lists of rows using \code{\link{mrtl}}. For data frames remove all attributes, efficiently convert to matrix using \code{do.call(rbind, X)} and also convert to list of rows using \code{\link{mrtl}}.
 \item Call \code{base::lapply} or \code{parallel::mclapply} on these plain lists (which is faster than calling \code{lapply} on an object with attributes).
 
 \item depending on the requested output type, use \code{base::matrix}, \code{base::unlist} or \code{do.call(cbind, ...)} to convert the result back to a matrix or list of columns.
 
-\item modify the relevant attributes accordingly and efficiently attach to the object again using \code{collapse::setAttributes} (no further checks, non essential attributes are kept and added at the end of the attribute list).
+\item modify the relevant attributes accordingly and efficiently attach to the object again (no further checks, non essential attributes are kept and added at the end of the attribute list).
 }
 
-This process of working with plain lists makes \code{dapply} not noticeably slower than calling \code{lapply} itself on a data frame. Because of the conversions involved, row-operations require some memory, but are still faster than \code{base::apply}.
+This performance gain from working with plain lists makes \code{dapply} not much slower than calling \code{lapply} itself on a data frame. Because of the conversions involved, row-operations require some memory, but are still faster than \code{base::apply}.
 }
 \value{
-\code{X} where \code{FUN} was applied to every row / column.
+\code{X} where \code{FUN} was applied to every row or column.
 }
 \references{
 %% ~put references to the literature/web site here ~
@@ -54,7 +54,7 @@ This process of working with plain lists makes \code{dapply} not noticeably slow
 %% ~Make other sections like Warning with \section{Warning }{....} ~
 
 \seealso{
-%% ~~objects to See Also as \code{\link{help}}, ~~~
+\code{\link{BY}}, \code{\link{collap}}, \link{Fast Statistical Functions}, \link{Data Transformations}
 }
 \examples{
 dapply(mtcars, log)                      # Take natural log of each variable
@@ -72,7 +72,7 @@ dapply(m, quantile)                      # Column-quantiles
 dapply(mtcars, quantile, MARGIN = 1)     # Same for data frames, output is also a data.frame
 dapply(mtcars, quantile)
 
-# Let's now take a more complex classed object, like a dplyr grouped tibble:
+# Let's now take a more complex classed object, like a dplyr grouped tibble
 library(dplyr)
 gmtcars <- group_by(mtcars,cyl,vs,am)
 dapply(gmtcars, log)                     # We can still take logs of rows or columns and get a grouped tibble back

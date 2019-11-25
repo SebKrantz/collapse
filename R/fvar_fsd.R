@@ -14,6 +14,7 @@ fsd <- function(x, ...) { # g = NULL, w = NULL, TRA = FALSE, na.rm = TRUE, use.g
   UseMethod("fsd", x)
 }
 fsd.default <- function(x, g = NULL, w = NULL, TRA = FALSE, na.rm = TRUE, use.g.names = TRUE, stable.algo = TRUE, ...) {
+  if(!missing(...)) stop("Unknown argument ", dotstostr(...))
   if(TRA == FALSE) {
     if(is.null(g)) return(fvarsdCpp(x,0L,0L,NULL,w,na.rm,stable.algo)) else if (is.atomic(g)) {
       if(use.g.names) {
@@ -44,6 +45,7 @@ fsd.default <- function(x, g = NULL, w = NULL, TRA = FALSE, na.rm = TRUE, use.g.
   }
 }
 fsd.matrix <- function(x, g = NULL, w = NULL, TRA = FALSE, na.rm = TRUE, use.g.names = TRUE, drop = TRUE, stable.algo = TRUE, ...) {
+  if(!missing(...)) stop("Unknown argument ", dotstostr(...))
   if(TRA == FALSE) {
     if(is.null(g)) return(fvarsdmCpp(x,0L,0L,NULL,w,na.rm,stable.algo,TRUE,drop)) else if (is.atomic(g)) {
       if(use.g.names) {
@@ -74,6 +76,7 @@ fsd.matrix <- function(x, g = NULL, w = NULL, TRA = FALSE, na.rm = TRUE, use.g.n
   }
 }
 fsd.data.frame <- function(x, g = NULL, w = NULL, TRA = FALSE, na.rm = TRUE, use.g.names = TRUE, drop = TRUE, stable.algo = TRUE, ...) {
+  if(!missing(...)) stop("Unknown argument ", dotstostr(...))
   if(TRA == FALSE) {
     if(is.null(g)) return(fvarsdlCpp(x,0L,0L,NULL,w,na.rm,stable.algo,TRUE,drop)) else if (is.atomic(g)) {
       if(use.g.names && !inherits(x, "data.table")) {
@@ -106,6 +109,7 @@ fsd.data.frame <- function(x, g = NULL, w = NULL, TRA = FALSE, na.rm = TRUE, use
 }
 fsd.grouped_df <- function(x, w = NULL, TRA = FALSE, na.rm = TRUE, use.g.names = FALSE,
                            keep.group_vars = TRUE, keep.w = TRUE, stable.algo = TRUE, ...) {
+  if(!missing(...)) stop("Unknown argument ", dotstostr(...))
   g <- GRP.grouped_df(x)
   wsym <- deparse(substitute(w))
   nam <- names(x)
@@ -157,6 +161,7 @@ fvar <- function(x, ...) { # g = NULL, w = NULL, TRA = FALSE, na.rm = TRUE, use.
   UseMethod("fvar", x)
 }
 fvar.default <- function(x, g = NULL, w = NULL, TRA = FALSE, na.rm = TRUE, use.g.names = TRUE, stable.algo = TRUE, ...) {
+  if(!missing(...)) stop("Unknown argument ", dotstostr(...))
   if(TRA == FALSE) {
     if(is.null(g)) return(fvarsdCpp(x,0L,0L,NULL,w,na.rm,stable.algo,FALSE)) else if (is.atomic(g)) {
       if(use.g.names) {
@@ -187,6 +192,7 @@ fvar.default <- function(x, g = NULL, w = NULL, TRA = FALSE, na.rm = TRUE, use.g
   }
 }
 fvar.matrix <- function(x, g = NULL, w = NULL, TRA = FALSE, na.rm = TRUE, use.g.names = TRUE, drop = TRUE, stable.algo = TRUE, ...) {
+  if(!missing(...)) stop("Unknown argument ", dotstostr(...))
   if(TRA == FALSE) {
     if(is.null(g)) return(fvarsdmCpp(x,0L,0L,NULL,w,na.rm,stable.algo,FALSE,drop)) else if (is.atomic(g)) {
       if(use.g.names) {
@@ -217,6 +223,7 @@ fvar.matrix <- function(x, g = NULL, w = NULL, TRA = FALSE, na.rm = TRUE, use.g.
   }
 }
 fvar.data.frame <- function(x, g = NULL, w = NULL, TRA = FALSE, na.rm = TRUE, use.g.names = TRUE, drop = TRUE, stable.algo = TRUE, ...) {
+  if(!missing(...)) stop("Unknown argument ", dotstostr(...))
   if(TRA == FALSE) {
     if(is.null(g)) return(fvarsdlCpp(x,0L,0L,NULL,w,na.rm,stable.algo,FALSE,drop)) else if(is.atomic(g)) {
       if(use.g.names && !inherits(x, "data.table")) {
@@ -249,7 +256,7 @@ fvar.data.frame <- function(x, g = NULL, w = NULL, TRA = FALSE, na.rm = TRUE, us
 }
 fvar.grouped_df <- function(x, w = NULL, TRA = FALSE, na.rm = TRUE, use.g.names = FALSE,
                             keep.group_vars = TRUE, keep.w = TRUE, stable.algo = TRUE, ...) {
-
+  if(!missing(...)) stop("Unknown argument ", dotstostr(...))
   g <- GRP.grouped_df(x)
   wsym <- deparse(substitute(w))
   nam <- names(x)

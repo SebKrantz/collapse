@@ -12,6 +12,7 @@ psmat <- function(x, ...) { # g, t = NULL, cols = NULL, transpose = FALSE, simpl
   UseMethod("psmat", x)
 }
 psmat.default <- function(x, g, t = NULL, transpose = FALSE, ...) {
+  if(!missing(...)) stop("Unknown argument ", dotstostr(...))
   if(is.matrix(x)) stop("x is already a matrix")
   if(is.atomic(g) && length(g) == 1L) {
     if(transpose) matrix(x, ncol = round(g), dimnames =
@@ -32,6 +33,7 @@ psmat.default <- function(x, g, t = NULL, transpose = FALSE, ...) {
   }
 }
 psmat.data.frame <- function(x, by, t = NULL, cols = NULL, transpose = FALSE, array = TRUE, ...) {
+  if(!missing(...)) stop("Unknown argument ", dotstostr(...))
   if(is.atomic(by) && length(by) == 1L) {
     n <- round(by)
     if(transpose) {
@@ -82,12 +84,14 @@ psmat.data.frame <- function(x, by, t = NULL, cols = NULL, transpose = FALSE, ar
   } else return(res)
 }
 psmat.pseries <- function(x, transpose = FALSE, ...) {
+  if(!missing(...)) stop("Unknown argument ", dotstostr(...))
   index <- attr(x, "index")
   if(is.matrix(x)) stop("x is already a matrix")
   if(length(index) > 2L) index <- c(interaction(index[-length(index)], drop = TRUE), index[length(index)])
   psmatCpp(x, index[[1L]], index[[2L]], transpose)
 }
 psmat.pdata.frame <- function(x, transpose = FALSE, array = TRUE, ...) {
+  if(!missing(...)) stop("Unknown argument ", dotstostr(...))
   index <- attr(x, "index")
   if(length(index) > 2L) index <- c(interaction(index[-length(index)], drop = TRUE), index[length(index)])
   res <- lapply(x, psmatCpp, index[[1L]], index[[2L]], transpose)
@@ -97,7 +101,7 @@ psmat.pdata.frame <- function(x, transpose = FALSE, array = TRUE, ...) {
   } else return(res)
 }
 
-plot.psmat <- function(x, colours = TRUE, legend = FALSE, labs = NULL, ...) {
+plot.psmat <- function(x, legend = FALSE, colours = legend, labs = NULL, ...) {
   d <- dim(x)
   arl <- length(d) == 3L
   if(isFALSE(attr(x, "transpose"))) {
@@ -105,7 +109,7 @@ plot.psmat <- function(x, colours = TRUE, legend = FALSE, labs = NULL, ...) {
     d <- dim(x)
   }
   dn <- dimnames(x)
-  colours <- if(colours || labels) rainbow(d[2L]) else TRUE
+  colours <- if(colours) rainbow(d[2L]) else TRUE
   t <- as.numeric(dn[[1L]])
   if(!is.na(t[1L])) {
     mint <- min(t)
@@ -118,21 +122,19 @@ plot.psmat <- function(x, colours = TRUE, legend = FALSE, labs = NULL, ...) {
   if(arl) {
     vars <- if(is.null(labs)) dn[[3L]] else labs
     nv <- d[3L]
-    legpanel <- legend && ns > 20L
-    if(nv == 2L) mfr <- c(1,2+legpanel) else if(nv+legpanel <= 4L) mfr <- c(2,2) else {
+    if(nv == 2L) mfr <- c(1,2+legend) else if(nv+legend <= 4L) mfr <- c(2,2) else {
       sqnv <- sqrt(nv)
       fsqnv <- floor(sqnv)
-      mfr <- if(sqnv == fsqnv) c(fsqnv+legpanel,fsqnv) else c(fsqnv+1L,fsqnv)
+      mfr <- if(sqnv == fsqnv) c(fsqnv+legend,fsqnv) else c(fsqnv+1L,fsqnv)
     }
     settings <- par(c("mfrow","mar","mgp"))
     par(mfrow = mfr, mar = c(2.5,2.5,2.1,1.5), mgp = c(2.5,1,0))
     for(i in seq_along(vars)) ts.plot(ts(x[, , i], mint, maxt), main = vars[i], col = colours, xlab = NULL, ...)
-    if(legpanel) {
+    if(legend) {
       plot(1, type="n", axes=FALSE, xlab="", ylab="")
       legend('topleft', dn[[2L]], col = colours, lty=1, cex= if(ns > 80L) .65 else 1, bty = "n",
              ncol = if(ns <= 10L) 1L else if(nv == 2L) floor(ns^.25) else floor(ns^.37))
-    } else if(legend) legend('topleft', dn[[2L]], col = colours, lty=1, cex=.9, bty = "n",
-             ncol = if(ns <= 10L) 1L else floor(ns^.37))
+    }
     par(settings)
   } else {
     ts.plot(ts(x, mint, maxt), col = colours, ...)

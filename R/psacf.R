@@ -13,13 +13,14 @@
 
 psacf <- function(x, ...) UseMethod("psacf", x)
 psacf.default <- function(x, g, t = NULL, lag.max = NULL, type = c("correlation", "covariance","partial"), plot = TRUE, gscale = TRUE, ...) {
+  if(!missing(...)) stop("Unknown argument ", dotstostr(...))
   if(!is.numeric(x)) stop("'x' must be a numeric vector")
   type <- match.arg(type)
   series <- deparse(substitute(x))
   ispacf <- type == "partial"
   getacf <- function(ng, g) {
     if(is.null(t)) message("Panel Series ACF computed without timevar: Assuming ordered data") else if(!is.factor(t))
-    t <- if(is.atomic(t)) qG(t) else GRP(t, return.groups = FALSE)[[2]] # if(.Internal(islistfactor(t, FALSE))) interaction(t) else
+    t <- if(is.atomic(t)) qG(t) else GRP(t, return.groups = FALSE)[[2L]] # if(.Internal(islistfactor(t, FALSE))) interaction(t) else
     if(gscale) x <- fscaleCpp(x,ng,g)
     if(type == "covariance")
       c(1,cov(x, flagleadCpp(x,seq_len(lag.max),NA,ng,g,NULL,t,FALSE), use = "pairwise.complete.obs")) else
@@ -34,9 +35,9 @@ psacf.default <- function(x, g, t = NULL, lag.max = NULL, type = c("correlation"
     acf <- getacf(ng, g)
   } else {
     # if(!.Internal(islistfactor(x, FALSE))) {
-       if(!all(class(g) == "GRP")) g <- GRP(g, return.groups = FALSE)
-       if(is.null(lag.max)) lag.max <- round(2*sqrt(length(x)/g[[1]]))
-       acf <- getacf(g[[1]], g[[2]])
+       if(!is.GRP(g)) g <- GRP(g, return.groups = FALSE)
+       if(is.null(lag.max)) lag.max <- round(2*sqrt(length(x)/g[[1L]]))
+       acf <- getacf(g[[1L]], g[[2L]])
     # } else {
     #   g <- interaction(g)
     #   ng <- nlevels(g)
@@ -60,24 +61,25 @@ psacf.default <- function(x, g, t = NULL, lag.max = NULL, type = c("correlation"
   else acf.out
 }
 psacf.data.frame <- function(x, by, t = NULL, cols = is.numeric, lag.max = NULL, type = c("correlation", "covariance","partial"), plot = TRUE, gscale = TRUE, ...) {
+  if(!missing(...)) stop("Unknown argument ", dotstostr(...))
   type <- match.arg(type)
   series <- deparse(substitute(x))
   ispacf <- type == "partial"
   if(is.call(by)) { # best way ??
     nam <- names(x)
-    if(length(by) == 3) {
-      v <- match(all.vars(by[[2]]), nam)
-      by <- match(all.vars(by[[3]]), nam)
+    if(length(by) == 3L) {
+      v <- match(all.vars(by[[2L]]), nam)
+      by <- match(all.vars(by[[3L]]), nam)
     } else {
       by <- match(all.vars(by), nam)
       v <- if(is.null(cols)) seq_along(x)[-by] else if(is.function(cols)) setdiff(which(vapply(x, cols, TRUE)), by) else if(is.character(cols)) match(cols, nam) else cols
     }
     class(x) <- NULL
-    by <- if(length(by) == 1) x[[by]] else GRP(x, by, return.groups = FALSE)
+    by <- if(length(by) == 1L) x[[by]] else GRP(x, by, return.groups = FALSE)
     if(is.call(t)) { # If time-variable supplied !!
       t <- match(all.vars(t), nam)
       v <- setdiff(v, t)
-      t <- if(length(t) == 1) x[[t]] else GRP(x, t, return.groups = FALSE)
+      t <- if(length(t) == 1L) x[[t]] else GRP(x, t, return.groups = FALSE)
     }
     x <- x[v]
   } else if(!is.null(cols)) {
@@ -85,12 +87,12 @@ psacf.data.frame <- function(x, by, t = NULL, cols = is.numeric, lag.max = NULL,
     x <- if(is.function(cols)) x[vapply(x, cols, TRUE)] else x[cols]
   }
   lx <- length(x)
-  nrx <- length(x[[1]])
+  nrx <- length(x[[1L]])
   snames <- names(x)
   attributes(x) <- NULL
   getacf <- function(ng, by) {
     if(is.null(t)) message("Panel Series ACF computed without timevar: Assuming ordered data") else if(!is.factor(t))
-      t <- if(is.atomic(t)) qG(t) else GRP(t, return.groups = FALSE)[[2]]
+      t <- if(is.atomic(t)) qG(t) else GRP(t, return.groups = FALSE)[[2L]]
     if(gscale) x <- fscalelCpp(x,ng,by)
     acf <- array(numeric(0), c(lag.max+1, lx, lx))
     fun <- if(type == "correlation") cor else cov
@@ -109,14 +111,14 @@ psacf.data.frame <- function(x, by, t = NULL, cols = is.numeric, lag.max = NULL,
     acf <- getacf(ng, by)
   } else {
     if(!all(class(by) == "GRP")) by <- GRP(by, return.groups = FALSE)
-    if(is.null(lag.max)) lag.max <- round(2*sqrt(nrx/by[[1]]))
-    acf <- getacf(by[[1]], by[[2]])
+    if(is.null(lag.max)) lag.max <- round(2*sqrt(nrx/by[[1L]]))
+    acf <- getacf(by[[1L]], by[[2L]])
   }
   lag <- matrix(1, lx, lx)
   lag[lower.tri(lag)] <- -1
   if(ispacf) {
     zvec <- double((1L+lag.max)*lx*lx)
-    z <- .C(stats:::C_multi_yw, aperm(xacf, 3:1), as.integer(nrx), as.integer(lag.max), as.integer(lx),
+    z <- .C(stats:::C_multi_yw, aperm(acf, 3:1), as.integer(nrx), as.integer(lag.max), as.integer(lx),
             coefs = zvec, pacf = zvec, var = zvec, aic = double(1L+lag.max), order = 0L, 1L)
     acf <- aperm(array(z$pacf, dim = c(lx, lx, lag.max + 1L)), 3:1)[-1L, , , drop = FALSE]
   }
@@ -130,18 +132,19 @@ psacf.data.frame <- function(x, by, t = NULL, cols = is.numeric, lag.max = NULL,
   else acf.out
 }
 psacf.pseries <- function(x, lag.max = NULL, type = c("correlation", "covariance","partial"), plot = TRUE, gscale = TRUE, ...) {
+  if(!missing(...)) stop("Unknown argument ", dotstostr(...))
   if(!is.numeric(x)) stop("'x' must be a numeric pseries ")
   index <- attr(x, "index")
   if(length(index) > 2L) index <- c(interaction(index[-length(index)], drop = TRUE), index[length(index)])
-  nl <- nlevels(index[[1]])
+  nl <- nlevels(index[[1L]])
   type <- match.arg(type)
   series <- deparse(substitute(x))
   if(is.null(lag.max)) lag.max <- round(2*sqrt(length(x)/nl))
-  if(gscale) x <- fscaleCpp(x,nl,index[[1]])
+  if(gscale) x <- fscaleCpp(x,nl,index[[1L]])
   ispacf <- type == "partial"
   acf <- if(type == "covariance")
-    c(1,cov(x, flagleadCpp(x,seq_len(lag.max),NA,nl,index[[1]],NULL,index[[2]],FALSE), use = "pairwise.complete.obs")) else
-      c(1,cor(x, flagleadCpp(x,seq_len(lag.max),NA,nl,index[[1]],NULL,index[[2]],FALSE), use = "pairwise.complete.obs")) # or complete obs ??
+    c(1,cov(x, flagleadCpp(x,seq_len(lag.max),NA,nl,index[[1L]],NULL,index[[2L]],FALSE), use = "pairwise.complete.obs")) else
+      c(1,cor(x, flagleadCpp(x,seq_len(lag.max),NA,nl,index[[1L]],NULL,index[[2L]],FALSE), use = "pairwise.complete.obs")) # or complete obs ??
   d <- c(lag.max+1,1,1)
   if(ispacf) {
     acf <- .Call(stats:::C_pacf1, array(acf, d), lag.max)
@@ -158,6 +161,7 @@ psacf.pseries <- function(x, lag.max = NULL, type = c("correlation", "covariance
   else acf.out
 }
 psacf.pdata.frame <- function(x, lag.max = NULL, type = c("correlation", "covariance","partial"), plot = TRUE, gscale = TRUE, ...) {
+  if(!missing(...)) stop("Unknown argument ", dotstostr(...))
   type <- match.arg(type)
   series <- deparse(substitute(x))
   ispacf <- type == "partial"
@@ -166,21 +170,21 @@ psacf.pdata.frame <- function(x, lag.max = NULL, type = c("correlation", "covari
   snames <- names(x)
   index <- attr(x, "index")
   if(length(index) > 2L) index <- c(interaction(index[-length(index)], drop = TRUE), index[length(index)])
-  ng <- fnlevels(index[[1]])
+  ng <- fnlevels(index[[1L]])
   attributes(x) <- NULL
     if(is.null(lag.max)) lag.max <- round(2*sqrt(nrx/ng))
-    if(gscale) x <- fscalelCpp(x,ng,index[[1]])
+    if(gscale) x <- fscalelCpp(x,ng,index[[1L]])
     acf <- array(numeric(0), c(lag.max+1, lx, lx))
     fun <- if(type == "correlation") cor else cov
     for(i in seq_len(lx)) {
-      xim <- flagleadCpp(x[[i]],0:lag.max,NA,ng,index[[1]],NULL,index[[2]],FALSE)
+      xim <- flagleadCpp(x[[i]],0:lag.max,NA,ng,index[[1L]],NULL,index[[2L]],FALSE)
       for(j in seq_len(lx)) acf[ , j, i] <- fun(x[[j]], xim, use = "pairwise.complete.obs") # correct !!
     }
   lag <- matrix(1, lx, lx)
   lag[lower.tri(lag)] <- -1
   if(ispacf) {
     zvec <- double((1L+lag.max)*lx*lx)
-    z <- .C(stats:::C_multi_yw, aperm(xacf, 3:1), as.integer(nrx), as.integer(lag.max), as.integer(lx),
+    z <- .C(stats:::C_multi_yw, aperm(acf, 3:1), as.integer(nrx), as.integer(lag.max), as.integer(lx),
             coefs = zvec, pacf = zvec, var = zvec, aic = double(1L+lag.max), order = 0L, 1L)
     acf <- aperm(array(z$pacf, dim = c(lx, lx, lag.max + 1L)), 3:1)[-1L, , , drop = FALSE]
   }
@@ -210,6 +214,7 @@ pspacf.pdata.frame <- function(x, lag.max = NULL, plot = TRUE, gscale = TRUE, ..
 
 psccf <- function(x, y, ...) UseMethod("psccf", x)
 psccf.default <- function(x, y, g, t = NULL, lag.max = NULL, type = c("correlation", "covariance"), plot = TRUE, gscale = TRUE, ...) {
+  if(!missing(...)) stop("Unknown argument ", dotstostr(...))
   if(!is.numeric(x)) stop("'x' must be a numeric vector")
   if(!is.numeric(y)) stop("'y' must be a numeric vector")
   lx <- length(x)
@@ -218,7 +223,7 @@ psccf.default <- function(x, y, g, t = NULL, lag.max = NULL, type = c("correlati
   snames <- paste(c(deparse(substitute(x))[1L], deparse(substitute(y))[1L]), collapse = " & ")
   getccf <- function(ng, g) {
     if(is.null(t)) message("Panel Series ACF computed without timevar: Assuming ordered data") else if(!is.factor(t))
-      t <- if(is.atomic(t)) qG(t) else GRP(t, return.groups = FALSE)[[2]] # else if(.Internal(islistfactor(t, FALSE))) interaction(t)
+      t <- if(is.atomic(t)) qG(t) else GRP(t, return.groups = FALSE)[[2L]] # else if(.Internal(islistfactor(t, FALSE))) interaction(t)
     if(gscale) {
       x <- fscaleCpp(x,ng,g)
       y <- fscaleCpp(y,ng,g)
@@ -236,9 +241,9 @@ psccf.default <- function(x, y, g, t = NULL, lag.max = NULL, type = c("correlati
     acf <- getccf(ng, g)
   } else {
     # if(!.Internal(islistfactor(x, FALSE))) {
-      if(!all(class(g) == "GRP")) g <- GRP(g, return.groups = FALSE)
-      if(is.null(lag.max)) lag.max <- round(2*sqrt(lx/g[[1]]))
-      acf <- getccf(g[[1]], g[[2]])
+      if(!is.GRP(g)) g <- GRP(g, return.groups = FALSE)
+      if(is.null(lag.max)) lag.max <- round(2*sqrt(lx/g[[1L]]))
+      acf <- getccf(g[[1L]], g[[2L]])
     # } else {
     #   g <- interaction(g)
     #   ng <- nlevels(g)
@@ -257,25 +262,26 @@ psccf.default <- function(x, y, g, t = NULL, lag.max = NULL, type = c("correlati
   else acf.out
 }
 psccf.pseries <- function(x, y, lag.max = NULL, type = c("correlation", "covariance"), plot = TRUE, gscale = TRUE, ...) {
+  if(!missing(...)) stop("Unknown argument ", dotstostr(...))
   if(!is.numeric(x)) stop("'x' must be a numeric pseries")
-  if(!is.numeric(y) || !is.pseries(y)) stop("'y' must be a numeric pseries")
+  if(!is.numeric(y) || !inherits(y, "pseries")) stop("'y' must be a numeric pseries")
   lx <- length(x)
   if(lx != length(y)) stop("length(x) must be equal to length(y)")
   index <- attr(x, "index")
   if(!identical(index,attr(y,"index"))) stop("index of x and y differs")
   if(length(index) > 2L) index <- c(interaction(index[-length(index)], drop = TRUE), index[length(index)])
-  nl <- nlevels(index[[1]])
+  nl <- nlevels(index[[1L]])
   type <- match.arg(type)
   snames <- paste(c(deparse(substitute(x))[1L], deparse(substitute(y))[1L]), collapse = " & ")
   if (gscale) {
-    x <- fscaleCpp(x,nl,index[[1]])
-    y <- fscaleCpp(y,nl,index[[1]])
+    x <- fscaleCpp(x,nl,index[[1L]])
+    y <- fscaleCpp(y,nl,index[[1L]])
   }
   if (is.null(lag.max)) lag.max <- round(2*sqrt(length(x)/nl))
   l_seq <- -lag.max:lag.max
   acf <- if(type == "covariance")
-    drop(cov(x, flagleadCpp(y,l_seq,NA,nl,index[[1]],NULL,index[[2]],FALSE), use = "pairwise.complete.obs")) else
-    drop(cor(x, flagleadCpp(y,l_seq,NA,nl,index[[1]],NULL,index[[2]],FALSE), use = "pairwise.complete.obs")) # or complete obs ??
+    drop(cov(x, flagleadCpp(y,l_seq,NA,nl,index[[1L]],NULL,index[[2L]],FALSE), use = "pairwise.complete.obs")) else
+    drop(cor(x, flagleadCpp(y,l_seq,NA,nl,index[[1L]],NULL,index[[2L]],FALSE), use = "pairwise.complete.obs")) # or complete obs ??
   d <- c(2*lag.max+1,1,1)
   dim(acf) <- d
   acf.out <- `class<-`(list(acf = acf, type = type, n.used = lx,

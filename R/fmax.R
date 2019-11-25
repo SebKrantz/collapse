@@ -12,6 +12,7 @@ fmax <- function(x, ...) { # g = NULL, TRA = FALSE, na.rm = TRUE, use.g.names = 
   UseMethod("fmax", x)
 }
 fmax.default <- function(x, g = NULL, TRA = FALSE, na.rm = TRUE, use.g.names = TRUE, ...) {
+  if(!missing(...)) stop("Unknown argument ", dotstostr(...))
   if(TRA == FALSE) {
     if(is.null(g)) return(fmaxCpp(x,0L,0L,na.rm)) else if(is.atomic(g)) {
       if(use.g.names) {
@@ -42,6 +43,7 @@ fmax.default <- function(x, g = NULL, TRA = FALSE, na.rm = TRUE, use.g.names = T
   }
 }
 fmax.matrix <- function(x, g = NULL, TRA = FALSE, na.rm = TRUE, use.g.names = TRUE, drop = TRUE, ...) {
+  if(!missing(...)) stop("Unknown argument ", dotstostr(...))
   if(TRA == FALSE) {
     if(is.null(g)) return(fmaxmCpp(x,0L,0L,na.rm,drop)) else if(is.atomic(g)) {
       if(use.g.names) {
@@ -72,6 +74,7 @@ fmax.matrix <- function(x, g = NULL, TRA = FALSE, na.rm = TRUE, use.g.names = TR
   }
 }
 fmax.data.frame <- function(x, g = NULL, TRA = FALSE, na.rm = TRUE, use.g.names = TRUE, drop = TRUE, ...) {
+  if(!missing(...)) stop("Unknown argument ", dotstostr(...))
   if(TRA == FALSE) {
     if(is.null(g)) return(fmaxlCpp(x,0L,0L,na.rm,drop)) else if(is.atomic(g)) {
       if(use.g.names && !inherits(x, "data.table")) {
@@ -103,6 +106,7 @@ fmax.data.frame <- function(x, g = NULL, TRA = FALSE, na.rm = TRUE, use.g.names 
   }
 }
 fmax.grouped_df <- function(x, TRA = FALSE, na.rm = TRUE, use.g.names = FALSE, keep.group_vars = TRUE, ...) {
+  if(!missing(...)) stop("Unknown argument ", dotstostr(...))
   g <- GRP.grouped_df(x)
   gn <- which(names(x) %in% g[[5L]])
   nTRAl <- TRA == FALSE

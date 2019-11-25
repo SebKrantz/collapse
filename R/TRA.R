@@ -10,6 +10,7 @@ TRA <- function(x, STATS, FUN = "-", ...) {
   UseMethod("TRA", x)
 }
 TRA.default <- function(x, STATS, FUN = "-", g = NULL, ...) {
+  if(!missing(...)) stop("Unknown argument ", dotstostr(...))
   if(is.null(g)) return(TRACpp(x,STATS,0L,TRAtoInt(FUN))) else if(is.atomic(g)) {
     if(is.factor(g)) {
       if(fnlevels(g) != length(STATS)) stop("number of groups must match length(STATS)")
@@ -25,6 +26,7 @@ TRA.default <- function(x, STATS, FUN = "-", g = NULL, ...) {
   }
 }
 TRA.matrix <- function(x, STATS, FUN = "-", g = NULL, ...) {
+  if(!missing(...)) stop("Unknown argument ", dotstostr(...))
   if(is.null(g)) return(TRAmCpp(x,STATS,0L,TRAtoInt(FUN))) else if(is.atomic(g)) {
     if(is.factor(g)) {
       if(fnlevels(g) != nrow(STATS)) stop("number of groups must match nrow(STATS)")
@@ -40,6 +42,7 @@ TRA.matrix <- function(x, STATS, FUN = "-", g = NULL, ...) {
   }
 }
 TRA.data.frame <- function(x, STATS, FUN = "-", g = NULL, ...) {
+  if(!missing(...)) stop("Unknown argument ", dotstostr(...))
   if(is.null(g)) return(TRAlCpp(x,STATS,0L,TRAtoInt(FUN))) else if(is.atomic(g)) {
     if(is.factor(g)) {
       if(fnlevels(g) != nrow(STATS)) stop("number of groups must match nrow(STATS)")
@@ -55,6 +58,7 @@ TRA.data.frame <- function(x, STATS, FUN = "-", g = NULL, ...) {
   }
 }
 TRA.grouped_df <- function(x, STATS, FUN = "-", keep.group_vars = TRUE, ...) {
+  if(!missing(...)) stop("Unknown argument ", dotstostr(...))
   g <- GRP.grouped_df(x)
   if(g[[1L]] != nrow(STATS)) stop("number of groups must match nrow(STATS)")
   namst <- names(STATS)

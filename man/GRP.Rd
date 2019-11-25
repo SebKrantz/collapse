@@ -1,4 +1,5 @@
 \name{GRP}
+\alias{Quick Grouping}
 \alias{GRP}
 \alias{GRP.default}
 \alias{GRP.factor}
