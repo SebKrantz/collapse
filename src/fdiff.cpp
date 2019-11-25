@@ -205,11 +205,12 @@ NumericVector fdiffCpp(const NumericVector& x, const IntegerVector& n = 1, const
     int ags = l/ng, ngp = ng+1, maxdiff = max(diff); //  diff[ds-1]; // maybe wrong order ??
     // IntegerVector gsv = (Rf_isNull(gs)) ? IntegerVector(ng) : gs; //  no_init_vector(ng); // stable ?? -> Nope !!
     // http://www.cplusplus.com/articles/1AUq5Di1/ // using the ternary operator
-    IntegerVector gsv = NULL; // https://stackoverflow.com/questions/1793807/declaring-a-variable-in-an-if-else-block-in-c
+    IntegerVector gsv = no_init_vector(ng); // NULL; gives compile warning  // https://stackoverflow.com/questions/1793807/declaring-a-variable-in-an-if-else-block-in-c
     if(Rf_isNull(t)) { // Ordered data -> Solution seems to work well !!!
       if(maxdiff != 1) { // The gsv solution above faster than std::fill ????????????????????
         if(Rf_isNull(gs)) { // needed for proper iteration
-          gsv = IntegerVector(ng);
+          // gsv = IntegerVector(ng);
+          std::fill(gsv.begin(), gsv.end(), 0);
           for(int i = 0; i != l; ++i) ++gsv[g[i]-1];
         } else {
           gsv = gs;
@@ -339,7 +340,8 @@ NumericVector fdiffCpp(const NumericVector& x, const IntegerVector& n = 1, const
       IntegerVector min(ngp, INT_MAX);
       IntegerVector ord2 = no_init_vector(l);
       if(Rf_isNull(gs)) {
-        gsv = IntegerVector(ng);
+        // gsv = IntegerVector(ng);
+        std::fill(gsv.begin(), gsv.end(), 0);
         for(int i = 0; i != l; ++i) {
           ++gsv[g[i]-1];
           if(ord[i] < min[g[i]]) min[g[i]] = ord[i];
@@ -710,11 +712,12 @@ NumericMatrix fdiffmCpp(const NumericMatrix& x, const IntegerVector& n = 1, cons
   } else { // With groups
     if(l != g.size()) stop("nrow(x) must match length(g)");
     int ags = l/ng, ngp = ng+1, maxdiff = max(diff);
-    IntegerVector gsv = NULL;
+    IntegerVector gsv = no_init_vector(ng); // NULL; gives compile warning
     if(Rf_isNull(t)) { // Ordered data
       if(maxdiff != 1) {
         if(Rf_isNull(gs)) {
-          gsv = IntegerVector(ng);
+          // gsv = IntegerVector(ng);
+          std::fill(gsv.begin(), gsv.end(), 0);
           for(int i = 0; i != l; ++i) ++gsv[g[i]-1];
         } else {
           gsv = gs;
@@ -846,7 +849,8 @@ NumericMatrix fdiffmCpp(const NumericMatrix& x, const IntegerVector& n = 1, cons
       IntegerVector min(ngp, INT_MAX);
       IntegerVector ord2 = no_init_vector(l);
       if(Rf_isNull(gs)) {
-        gsv = IntegerVector(ng);
+        // gsv = IntegerVector(ng);
+        std::fill(gsv.begin(), gsv.end(), 0);
         for(int i = 0; i != l; ++i) {
           ++gsv[g[i]-1];
           if(ord[i] < min[g[i]]) min[g[i]] = ord[i];
@@ -1212,11 +1216,12 @@ List fdifflCpp(const List& x, const IntegerVector& n = 1, const IntegerVector& d
     }
   } else { // With groups
     int gss = g.size(), ags = gss/ng, ngp = ng+1, maxdiff = max(diff);
-    IntegerVector gsv = NULL;
+    IntegerVector gsv = no_init_vector(ng); // NULL; gives compiler warning
     if(Rf_isNull(t)) { // Ordered data
       if(maxdiff != 1) {
         if(Rf_isNull(gs)) {
-          gsv = IntegerVector(ng);
+          // gsv = IntegerVector(ng);
+          std::fill(gsv.begin(), gsv.end(), 0);
           for(int i = 0; i != gss; ++i) ++gsv[g[i]-1];
         } else {
           gsv = gs;
@@ -1348,7 +1353,8 @@ List fdifflCpp(const List& x, const IntegerVector& n = 1, const IntegerVector& d
       IntegerVector min(ngp, INT_MAX);
       IntegerVector ord2 = no_init_vector(gss);
       if(Rf_isNull(gs)) {
-        gsv = IntegerVector(ng);
+        // gsv = IntegerVector(ng);
+        std::fill(gsv.begin(), gsv.end(), 0);
         for(int i = 0; i != gss; ++i) {
           ++gsv[g[i]-1];
           if(ord[i] < min[g[i]]) min[g[i]] = ord[i];

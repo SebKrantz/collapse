@@ -864,9 +864,9 @@ List TRAlCpp(const List& x, const SEXP& xAG, const IntegerVector& g = 0, int ret
       default: stop("Not supported SEXP type!");
       } // Faster way ?? Switch statements other way around ???
     } else {
-      NumericVector AG = NULL;
+      NumericVector AG = no_init_vector(l); // NULL; // gives compile warning !!
       if(TYPEOF(xAG) == VECSXP) {
-        AG = NumericVector(l);
+        // AG = NumericVector(l); // stable now ??
         List temp = xAG;
         if(temp.size() != l) stop("length(STATS) must match length(x)");
         for(int i = l; i--; ) AG[i] = temp[i];

@@ -263,10 +263,11 @@ NumericVector fscaleCpp(const NumericVector& x, int ng = 0, const IntegerVector&
           for(int i = 0; i != l; ++i) out[i] = (x[i]-sum[g[i]-1])*sq_sum[g[i]-1];
         } else {
           NumericVector sq_sum(ng), sum(ng);
-          IntegerVector gsv = NULL;
+          IntegerVector gsv = no_init_vector(ng); // NULL; gives compiler warning
           int ngs = 0;
           if(Rf_isNull(gs)) {
-            gsv = IntegerVector(ng);
+            // gsv = IntegerVector(ng);
+            std::fill(gsv.begin(), gsv.end(), 0);
             for(int i = 0; i != l; ++i) {
               if(std::isnan(x[i])) {
                 if(std::isnan(sq_sum[g[i]-1])) continue;
@@ -939,8 +940,9 @@ List fscalelCpp(List x, int ng = 0, IntegerVector g = 0, SEXP gs = R_NilValue,
       if(ng == 0) {
         if(narm) {
           for(int j = l; j--; ) {
-            NumericVector column = x[j], outj = NULL;
+            NumericVector column = x[j]; // outj = NULL gives compile warning
             int row = column.size(), k = row-1;
+            NumericVector outj = no_init_vector(row);
             double ni = 0;
             long double meani = 0, d1i = 0, M2i = 0;
             while(std::isnan(column[k]) && k!=0) --k;
@@ -965,8 +967,9 @@ List fscalelCpp(List x, int ng = 0, IntegerVector g = 0, SEXP gs = R_NilValue,
           }
         } else {
           for(int j = l; j--; ) {
-            NumericVector column = x[j], outj = NULL;
+            NumericVector column = x[j]; //  outj = NULL; gives compile warning
             int row = column.size();
+            NumericVector outj = no_init_vector(row);
             double ni = 0;
             long double meani = 0, d1i = 0, M2i = 0;
             for(int i = 0; i != row; ++i) {
@@ -1058,8 +1061,9 @@ List fscalelCpp(List x, int ng = 0, IntegerVector g = 0, SEXP gs = R_NilValue,
       if(ng == 0) {
         if(narm) {
           for(int j = l; j--; ) {
-            NumericVector column = x[j], outj = NULL;
+            NumericVector column = x[j]; // outj = NULL; gives compile warning
             if(wgs != column.size()) stop("length(w) must match nrow(X)");
+            NumericVector outj = no_init_vector(wgs);
             int k = wgs-1;
             long double sumwi = 0, meani = 0, M2i = 0, d1i = 0;
             while((std::isnan(column[k]) || std::isnan(wg[k])) && k!=0) --k;
@@ -1085,8 +1089,9 @@ List fscalelCpp(List x, int ng = 0, IntegerVector g = 0, SEXP gs = R_NilValue,
           }
         } else {
           for(int j = l; j--; ) {
-            NumericVector column = x[j], outj = NULL;
+            NumericVector column = x[j]; //  outj = NULL; gives compile warning
             if(wgs != column.size()) stop("length(w) must match nrow(X)");
+            NumericVector outj = no_init_vector(wgs);
             long double sumwi = 0, meani = 0, M2i = 0, d1i = 0;
             for(int i = 0; i != wgs; ++i) {
               if(std::isnan(column[i]) || std::isnan(wg[i])) {
@@ -1182,8 +1187,9 @@ List fscalelCpp(List x, int ng = 0, IntegerVector g = 0, SEXP gs = R_NilValue,
       if(ng == 0) {
         if(narm) {
           for(int j = l; j--; ) {
-            NumericVector column = x[j], outj = NULL;
+            NumericVector column = x[j]; // outj = NULL; gives compile error
             int row = column.size(), k = row-1, nj = 1;
+            NumericVector outj = no_init_vector(row);
             long double sumj = column[k], sq_sumj = 0;
             while(std::isnan(sumj) && k!=0) sumj = column[--k];
             sq_sumj = sumj*sumj;
@@ -1209,8 +1215,9 @@ List fscalelCpp(List x, int ng = 0, IntegerVector g = 0, SEXP gs = R_NilValue,
           }
         } else {
           for(int j = l; j--; ) {
-            NumericVector column = x[j], outj = NULL;
+            NumericVector column = x[j]; // outj = NULL; gives compile warning
             int row = column.size();
+            NumericVector outj = no_init_vector(row);
             long double sumj = 0, sq_sumj = 0;
             for(int i = 0; i != row; ++i) {
               if(std::isnan(column[i])) {
@@ -1351,8 +1358,9 @@ List fscalelCpp(List x, int ng = 0, IntegerVector g = 0, SEXP gs = R_NilValue,
       if(ng == 0) {
         if(narm) {
           for(int j = l; j--; ) {
-            NumericVector column = x[j], outj = NULL;
+            NumericVector column = x[j]; // outj = NULL; gives compile warning
             if(wgs != column.size()) stop("length(w) must match nrow(X)");
+            NumericVector outj = no_init_vector(wgs);
             int k = wgs-1;
             while((std::isnan(column[k]) || std::isnan(wg[k])) && k!=0) --k;
             long double sumwj = wg[k], sumj = column[k]*sumwj, sq_sumj = column[k]*sumj;
@@ -1378,8 +1386,9 @@ List fscalelCpp(List x, int ng = 0, IntegerVector g = 0, SEXP gs = R_NilValue,
           }
         } else {
           for(int j = l; j--; ) {
-            NumericVector column = x[j], outj = NULL;
+            NumericVector column = x[j]; // outj = NULL; gives compile warning
             if(wgs != column.size()) stop("length(w) must match nrow(X)");
+            NumericVector outj = no_init_vector(wgs);
             long double sumj = 0, sumwj = 0, sq_sumj = 0;
             for(int i = 0; i != wgs; ++i) {
               if(std::isnan(column[i]) || std::isnan(wg[i])) {

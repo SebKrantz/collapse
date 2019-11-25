@@ -304,10 +304,11 @@ NumericVector fvarsdCpp(const NumericVector& x, int ng = 0, const IntegerVector&
           return sq_sum;
         } else {
           NumericVector sq_sum(ng), sum(ng);
-          IntegerVector gsv = NULL;
+          IntegerVector gsv = no_init_vector(ng); // NULL; gives compile warning
           int ngs = 0;
           if(Rf_isNull(gs)) {
-            gsv = IntegerVector(ng);
+            // gsv = IntegerVector(ng);
+            std::fill(gsv.begin(), gsv.end(), 0);
             for(int i = 0; i != l; ++i) {
               if(std::isnan(x[i])) {
                 if(std::isnan(sq_sum[g[i]-1])) continue;

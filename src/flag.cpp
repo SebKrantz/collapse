@@ -123,11 +123,11 @@ Vector<RTYPE> flagleadCppImpl(const Vector<RTYPE>& x, const IntegerVector& n, co
       IntegerVector ord = t;
       if(l != ord.size()) stop("length(x) must match length(t)");
       IntegerVector min(ngp, INT_MAX); // INFINITY gives bug !!!!!!!!
-      IntegerVector gsv = NULL; //no_init_vector(ng); // No real improvements here by using C++ arrays !!
+      IntegerVector gsv = no_init_vector(ng); // No real improvements here by using C++ arrays !!
       IntegerVector ord2 = no_init_vector(l); // use array ?????????????????
       if(Rf_isNull(gs)) {
-        // std::fill(gsv.begin(), gsv.end(), 0);
-        gsv = IntegerVector(ng);
+        std::fill(gsv.begin(), gsv.end(), 0);
+        // gsv = IntegerVector(ng);
         for(int i = 0; i != l; ++i) {
           ++gsv[g[i]-1];
           if(ord[i] < min[g[i]]) min[g[i]] = ord[i];
@@ -362,10 +362,11 @@ Matrix<RTYPE> flagleadmCppImpl(const Matrix<RTYPE>& x, const IntegerVector& n, c
       IntegerVector ord = t;
       if(l != ord.size()) stop("length(x) must match length(t)");
       IntegerVector min(ngp, INT_MAX);
-      IntegerVector gsv = NULL;
+      IntegerVector gsv = no_init_vector(ng); // NULL; gives compiler warning
       IntegerVector ord2 = no_init_vector(l); // See flag.cpp for any improvements on this code !!
       if(Rf_isNull(gs)) {
-        gsv = IntegerVector(ng);
+        // gsv = IntegerVector(ng);
+        std::fill(gsv.begin(), gsv.end(), 0);
         for(int i = 0; i != l; ++i) {
           ++gsv[g[i]-1];
           if(ord[i] < min[g[i]]) min[g[i]] = ord[i];
@@ -946,10 +947,11 @@ List flagleadlCpp(const List& x, const IntegerVector& n = 1, const SEXP& fill = 
       IntegerVector ord = t;
       if(gss != ord.size()) stop("length(g) must match length(t)");
       IntegerVector min(ngp, INT_MAX); // Necessary !!!
-      IntegerVector gsv = NULL;
+      IntegerVector gsv = no_init_vector(ng); // NULL; gives compiler warning
       IntegerVector ord2 = no_init_vector(gss); // See flag.cpp for any improvements on this code !!
       if(Rf_isNull(gs)) {
-        gsv = IntegerVector(ng);
+        // gsv = IntegerVector(ng);
+        std::fill(gsv.begin(), gsv.end(), 0);
         for(int i = 0; i != gss; ++i) {
           ++gsv[g[i]-1];
           if(ord[i] < min[g[i]]) min[g[i]] = ord[i];
