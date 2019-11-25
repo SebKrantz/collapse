@@ -83,5 +83,5 @@ library(dplyr)
 mtcars \%>\% group_by(cyl,vs,am) \%>\% fprod
 mtcars \%>\% group_by(cyl,vs,am) \%>\% fprod("/")
 mtcars \%>\% group_by(cyl,vs,am) \%>\% select(mpg) \%>\% fprod
-}}
+}
 

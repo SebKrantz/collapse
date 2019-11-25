@@ -81,5 +81,5 @@ library(dplyr)
 mtcars \%>\% group_by(cyl,vs,am) \%>\% fmedian
 mtcars \%>\% group_by(cyl,vs,am) \%>\% fmedian("-")
 mtcars \%>\% group_by(cyl,vs,am) \%>\% select(mpg) \%>\% fmedian
-}}
+}
 

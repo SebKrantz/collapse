@@ -114,5 +114,5 @@ mtcars \%>\% group_by(cyl,vs,am) \%>\% fsd
 mtcars \%>\% group_by(cyl,vs,am) \%>\% fsd(keep.group_vars = FALSE) # remove grouping columns
 mtcars \%>\% group_by(cyl,vs,am) \%>\% fsd(hp)      # Weighted by hp. Since drop.w = TRUE by default, hp is removed from the result.
 mtcars \%>\% group_by(cyl,vs,am) \%>\% fsd(hp, "/") # Weighted scaling transformation
-}}
+}
 
