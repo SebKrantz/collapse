@@ -1,5 +1,5 @@
-\name{Select Variables}
-\alias{select_variables}
+\name{select-replace-vars}
+\alias{Quick Select and Replace Variables}
 \alias{get_vars}
 \alias{num_vars}
 \alias{cat_vars}
@@ -46,7 +46,7 @@ get_vars(x, vars, regex = FALSE, ...) <- value
 \arguments{
   \item{x}{a data.frame. \emph{Note}: Functions als work with data.table's etc... as long as \code{x} is a list and \code{!is.null(dim(x))}.}
   \item{value}{a data.frame or list of columns whose dimensions exactly match those of the extracted subet of \code{x}.}
-  \item{vars}{column names (can be negative), indices, a suitable logical vector, a vector of regular expressions matching column names if \code{regex = TRUE}, or a function returning TRUE or FALSE when applied to the columns of \code{x}.}
+  \item{vars}{column names (can be negative), indices, a suitable logical vector, a vector of regular expressions matching column names if \code{regex = TRUE}, or a function returning \code{TRUE} or \code{FALSE} when applied to the columns of \code{x}.}
   \item{return}{an integer or string specifying what to return. The options are:
   \enumerate{
   \item "data"\cr
@@ -57,6 +57,7 @@ get_vars(x, vars, regex = FALSE, ...) <- value
   \emph{Note}: replacement functions currently only replace data, not column names or indices (ordering). However column names are replaced together with the data.
   }
 \item{regex}{logical. \code{TRUE} will do regular expression search on the column names of \code{x} using a (vector of) regular expression(s) passed to \code{vars}.}
+\item{...}{further arguments passed to \code{\link{grep}}, if \code{regex = TRUE}.}
 }
 \details{
 }
@@ -67,7 +68,9 @@ get_vars(x, vars, regex = FALSE, ...) <- value
 %%  \item{comp2 }{Description of 'comp2'}
 %% ...
 }
-
+\seealso{
+\link{collapse-package}
+}
 \examples{
 ## Wold Development Data
 head(num_vars(wlddev))                                     # Select numeric variables
