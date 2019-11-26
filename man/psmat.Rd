@@ -4,7 +4,7 @@
 \alias{psmat.pseries}
 \alias{psmat.data.frame}
 \alias{psmat.pdata.frame}
-\alias{plot.psmat}
+% \alias{plot.psmat}
 %- Also NEED an '\alias' for EACH other topic documented here.
 \title{
 Matrix / Array from Panel-Series
@@ -56,7 +56,7 @@ The \code{pdata.frame} method only works for properly subsetted objects of class
 %% ~Make other sections like Warning with \section{Warning }{....} ~
 
 \seealso{
-\code{\link{Time-Series and Panel-Series}} %% ~~objects to See Also as \code{\link{help}}, ~~~
+\link[=time-series-panel-series]{Time-Series and Panel-Series} %% ~~objects to See Also as \code{\link{help}}, ~~~
 }
 \examples{
 ## World Development Panel Data

@@ -1,18 +1,18 @@
 \name{B-W}
 \alias{B}
-\alias{B.default}
-\alias{B.matrix}
-\alias{B.data.frame}
-\alias{B.pseries}
-\alias{B.pdata.frame}
-\alias{B.grouped_df}
+% \alias{B.default}
+% \alias{B.matrix}
+% \alias{B.data.frame}
+% \alias{B.pseries}
+% \alias{B.pdata.frame}
+% \alias{B.grouped_df}
 \alias{W}
-\alias{W.default}
-\alias{W.matrix}
-\alias{W.data.frame}
-\alias{W.pseries}
-\alias{W.pdata.frame}
-\alias{W.grouped_df}
+% \alias{W.default}
+% \alias{W.matrix}
+% \alias{W.data.frame}
+% \alias{W.pseries}
+% \alias{W.pdata.frame}
+% \alias{W.grouped_df}
 %- Also NEED an '\alias' for EACH other topic documented here.
 \title{
 Between (Averaging) and Within (Centering) Transformations
@@ -90,7 +90,7 @@ The data replacement performed by \code{B} can keep (default) or overwrite missi
 %% ~Make other sections like Warning with \section{Warning }{....} ~
 
 \seealso{
-\code{\link[=HDW]{HDB/HDW}}, \code{\link[=fscale]{fscale/STD}}, \code{\link{TRA}}, \link{Data Transformations}
+\code{\link[=HDW]{HDB/HDW}}, \code{\link[=fscale]{fscale/STD}}, \code{\link{TRA}}, \link[=data-transformations]{Data Transformations}
 }
 \examples{
 ## Simple centering and averaging

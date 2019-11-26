@@ -6,15 +6,15 @@
 \alias{fscale.pseries}
 \alias{fscale.pdata.frame}
 \alias{fscale.grouped_df}
-\alias{standardize}
+% \alias{standardize}
 \alias{STD}
-\alias{STD.default}
-\alias{STD.matrix}
-\alias{STD.data.frame}
-\alias{STD.pseries}
-\alias{STD.pdata.frame}
-\alias{STD.grouped_df}
-%- Also NEED an '\alias' for EACH other topic documented here.
+% \alias{STD.default}
+% \alias{STD.matrix}
+% \alias{STD.data.frame}
+% \alias{STD.pseries}
+% \alias{STD.pdata.frame}
+% \alias{STD.grouped_df}
+% - Also NEED an '\alias' for EACH other topic documented here.
 \title{
 Fast (Grouped, Weighted) Scaling and Centering of Matrix-like Objects
 }
@@ -97,7 +97,7 @@ By default means and standard deviations are computed using Wedford's numericall
 %% ~Make other sections like Warning with \section{Warning }{....} ~
 
 \seealso{
-\code{\link[=B]{B/W}}, \link{Fast Statistical Functions}, \code{\link{TRA}}, \link{Data Transformations}
+\code{\link[=B]{B/W}}, \link[=fast-statistical-functions]{Fast Statistical Functions}, \code{\link{TRA}}, \link[=data-transformations]{Data Transformations}
 }
 \examples{
 ## Simple Scaling & Centering / Standardizing

@@ -1,15 +1,15 @@
 \name{time-series-panel-series} % \name{Time-Series and Panel Computations}
-\alias{Time-Series and Panel-Series}
+\alias{time-series-panel-series}
 % \alias{tscomp}
 \title{Time-Series and Panel-Series} % \code{collapse}
 
 \description{
 \code{collapse} provides the following functions to work with time-dependent data:
 \itemize{
-\item \code{flag}, and the lag- and lead- operators \code{\link{L}} and \code{\link{F}} are S3 generics to efficiently compute sequences of \bold{lags and leads} on ordered or unordered time-series and panel data.
-\item \code{fdiff}, \code{fgrowth}, and the operators \code{D} and \code{G} are S3 generics to efficiently compute sequences of suitably lagged and iterated \bold{differences and growth rates or log-differences} on ordered or unordered tim-series and panel data. They can also be used to compute forward (leaded) differences or growth rates.
-\item \code{psmat} is an S3 generic to efficiently expand panel-vectors or \code{plm::pseries} and data.frame's or \code{plm::pdata.frame}'s to \bold{panel-series matrices and 3D arrays}, respectively.
-\item \code{psacf}, \code{pspacf} and \code{psccf} are S3 generics to compute estimates of the \bold{auto-, partial auto- and cross- correlation or covariance functions} for panel-vectors or \code{plm::pseries}, and multivariate versions for data.frame's or \code{plm::pdata.frame}'s.
+\item \code{\link{flag}}, and the lag- and lead- operators \code{\link{L}} and \code{\link{F}} are S3 generics to efficiently compute sequences of \bold{lags and leads} on ordered or unordered time-series and panel data.
+\item \code{\link{fdiff}}, \code{\link{fgrowth}}, and the operators \code{\link{D}} and \code{\link{G}} are S3 generics to efficiently compute sequences of suitably lagged and iterated \bold{differences and growth rates or log-differences} on ordered or unordered tim-series and panel data. They can also be used to compute forward (leaded) differences or growth rates.
+\item \code{\link{psmat}} is an S3 generic to efficiently expand panel-vectors or \code{plm::pseries} and data.frame's or \code{plm::pdata.frame}'s to \bold{panel-series matrices and 3D arrays}, respectively.
+\item \code{\link{psacf}}, \code{\link{pspacf}} and \code{\link{psccf}} are S3 generics to compute estimates of the \bold{auto-, partial auto- and cross- correlation or covariance functions} for panel-vectors or \code{plm::pseries}, and multivariate versions for data.frame's or \code{plm::pdata.frame}'s.
 }
 }
 \section{Table of Functions}{
@@ -24,7 +24,7 @@
 }
 }
 \seealso{
-\code{\link{collapse-package}}
+\link[=collapse-documentation]{Collapse Overview}, \link[=data-transformations]{Data Transformations}
 }
 
 

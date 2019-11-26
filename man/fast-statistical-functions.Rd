@@ -1,15 +1,16 @@
 \name{fast-statistical-functions}
-\alias{Fast Statistical Functions}
+\alias{fast-statistical-functions}
 \alias{.FAST_STAT_FUN}
 \title{Fast (Grouped, Weighted) Statistical Functions for Matrix-Like Objects}  % Vectors, Matrix and Data Frame Columns}
 \description{
 With \code{\link{fsum}}, \code{\link{fprod}}, \code{\link{fmean}}, \code{\link{fmedian}}, \code{\link{fmode}}, \code{\link{fvar}}, \code{\link{fsd}}, \code{\link{fmin}}, \code{\link{fmax}}, \code{\link{ffirst}}, \code{\link{flast}}, \code{\link{fNobs}} and \code{\link{fNdistinct}}, \code{collapse} presents a coherent set of extremely fast and flexible statistcal functions (S3 generics) to perform column-wise, grouped and weighted computuations on atomic vectors, matrices and data.frames, with special support for \code{dplyr} grouped tibbles and data.table's.
 
-(\emph{Note}: The vector-valued functions \code{\link[=fscale]{fscale/STD}}, \code{\link{B}}, \code{\link{HDB}}, \code{\link{W}}, \code{\link{HDW}}, \code{\link[=flag]{flag/L/F}}, \code{\link[=fdiff]{fdiff/D}} and \code{\link[=fgrowth]{fgrowth/G}} are documented under \link{Data Transformations} and \link{Time-Series and Panel-Series}. These functions also support \code{plm::pseries} and \code{plm::pdata.frame}'s.)
+(\emph{Note}: The vector-valued functions \code{\link[=fscale]{fscale/STD}}, \code{\link{B}}, \code{\link{HDB}}, \code{\link{W}}, \code{\link{HDW}}, \code{\link[=flag]{flag/L/F}}, \code{\link[=fdiff]{fdiff/D}} and \code{\link[=fgrowth]{fgrowth/G}} are documented under \link[=data-transformations]{Data Transformations} and \link[=time-series-panel-series]{Time-Series and Panel-Series}. These functions also support \code{plm::pseries} and \code{plm::pdata.frame}'s.)
 
 }
 \usage{
 ## All functions (FUN) follow a common syntax in 4 methods:
+FUN(x, ...)
 
 \method{FUN}{default}(x, g = NULL, [w = NULL,] TRA = FALSE, [na.rm = TRUE,]
     use.g.names = TRUE, ...)
@@ -28,7 +29,7 @@ With \code{\link{fsum}}, \code{\link{fprod}}, \code{\link{fmean}}, \code{\link{f
 
 \item{g}{a factor, \code{\link{GRP}} object, atomic vector (internally converted to factor) or a list of vectors / factors (internally converted to a \code{\link{GRP}} object) used to group \code{x}.}
 
-\item{w}{a numeric vector of (non-negative) weights, may contain missing values. Supported by \code{\link{fmean}}, \code{\link{ffvar}}, \code{\link{ffsd}} and \code{\link{ffmode}}.}
+\item{w}{a numeric vector of (non-negative) weights, may contain missing values. Supported by \code{\link{fmean}}, \code{\link{fvar}}, \code{\link{fsd}} and \code{\link{fmode}}.}
 
 \item{TRA}{an integer or quoted operator indicating the transformation to perform:
 1 - "replace_fill"     |     2 - "replace"     |     3 - "-"     |     4 - "-+"     |     5 - "/"     |     6 - "\%"     |     7 - "+"     |     8 - "*". See \code{\link{TRA}}.}
@@ -52,7 +53,7 @@ Please see the documentation of individual functions.
  \code{x} aggregated. With data.frame's column-attributes and overall attributes are preserved.
 }
 \seealso{
-\link{collapse-package}, \link{Data Transformations}, \link{Time-Series and Panel-Series}
+\link[=collapse-documentation]{Collapse Overview}, \link[=data-transformations]{Data Transformations}, \link[=time-series-panel-series]{Time-Series and Panel-Series}
 }
 \examples{
 ## default vector method

@@ -1,5 +1,5 @@
 \name{GRP}
-\alias{Quick Grouping}
+% \alias{quick-grouping}
 \alias{GRP}
 \alias{GRP.default}
 \alias{GRP.factor}
@@ -8,8 +8,8 @@
 \alias{GRP.pdata.frame}
 \alias{GRP.grouped_df}
 \alias{is.GRP}
-\alias{print.GRP}
-\alias{plot.GRP}
+% \alias{print.GRP}
+% \alias{plot.GRP}
 \alias{group_names.GRP}
 \alias{as.factor.GRP}
 \title{Fast Grouping / \code{collapse} Grouping Objects}
@@ -79,7 +79,7 @@ as.factor.GRP(x)
                  }
 }
 \seealso{
-\code{\link{qF}}, \code{\link{qG}}, \link{collapse-package}
+\code{\link{qF}}, \code{\link{qG}}, \link[=collapse-documentation]{Collapse Overview}
 }
 \examples{
 ## default method

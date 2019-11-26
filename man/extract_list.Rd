@@ -1,5 +1,5 @@
-\name{extract_list}
-\alias{extract_list}
+\name{extract-list}
+% \alias{extract_list}
 \alias{atomic_elem}
 \alias{list_elem}
 \alias{reg_elem}

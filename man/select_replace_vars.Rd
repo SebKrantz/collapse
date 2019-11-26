@@ -1,5 +1,5 @@
 \name{select-replace-vars}
-\alias{Quick Select and Replace Variables}
+\alias{select-replace-vars}
 \alias{get_vars}
 \alias{num_vars}
 \alias{cat_vars}
@@ -69,7 +69,7 @@ get_vars(x, vars, regex = FALSE, ...) <- value
 %% ...
 }
 \seealso{
-\link{collapse-package}
+\link[=collapse-documentation]{Collapse Overview}
 }
 \examples{
 ## Wold Development Data

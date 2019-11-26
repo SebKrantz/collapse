@@ -62,7 +62,7 @@ When applied to data frame's with groups or \code{drop = FALSE}, \code{fmean} pr
 The mean of \code{x}, grouped by \code{g}, or (if \code{\link{TRA}} is used) \code{x} transformed by its mean, grouped by \code{g}.
 }
 \seealso{
-\code{\link{fmedian}}, \link{Fast Statistical Functions}
+\code{\link{fmedian}}, \code{\link{fmode}}, \link[=fast-statistical-functions]{Fast Statistical Functions}
 }
 \examples{
 ## default vector method

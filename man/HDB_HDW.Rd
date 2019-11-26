@@ -1,4 +1,4 @@
-\name{HDW & HDB}
+\name{HDW-HDB}
 \alias{HDW-HDB}
 \alias{HDW}
 \alias{HDW.default}
@@ -17,7 +17,7 @@
 Higher-Dimensional Centering and Linear Prediction
 }
 \description{
-\code{HDB} is a generalization of \code{B} to efficiently predict with multiple factors and linear models. Similarly \code{HDW} is a generalization of \code{W} and allows to center on multiple factors and partial-out linear models.
+\code{HDB} is a generalization of \code{B} to efficiently predict with multiple factors and linear models. Similarly \code{HDW} is a generalization of \code{W} to center on multiple factors and partial-out linear models.
 }
 \usage{
 \method{HDW}{default}(x, fl, w = NULL, na.rm = TRUE, fill = FALSE, ...)
@@ -36,7 +36,7 @@ Higher-Dimensional Centering and Linear Prediction
 }
 %- maybe also 'usage' for other objects documented here.
 \arguments{
-  \item{x}{a numeric vector, matrix, data.frame, panel-series (\code{\link{plm::pseries}}) or panel-data.frame (\code{\link{plm::pdata.frame}}).}
+  \item{x}{a numeric vector, matrix, data.frame, panel-series (\code{plm::pseries}) or panel-data.frame (\code{plm::pdata.frame}).}
   \item{fl}{a numeric vector, matrix, data.frame or list (which may or may not contain factors). In the data.frame method \code{fl} can alse be a one-or two sided \code{lm()} formula with variables contained in \code{x}. Interactions \code{(:)} and full interactions \code{(*)} are supported! See Examples.}
   \item{w}{a vector of (non-negative) weights. Currently only weighted centering on multiple factors is supported, not weighted linear models.}
   \item{Xcols}{Data Frame method: Select columns to center (partial-out) or predict using column names, indices or a function. Unless specified otherwise all numeric columns are selected. If \code{NULL}, all variables are selected.}

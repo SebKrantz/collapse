@@ -70,7 +70,7 @@ When applied to data frame's with groups or \code{drop = FALSE}, \code{fmax} and
 \code{fmax} returns the maximum value of \code{x}, grouped by \code{g}, or (if \code{\link{TRA}} is used) \code{x} transformed by its maximum value, grouped by \code{g}. Analogous, \code{fmin} returns the minimum value ...
 }
 \seealso{
-\link{Fast Statistical Functions}
+\link[=fast-statistical-functions]{Fast Statistical Functions}
 }
 \examples{
 ## default vector method

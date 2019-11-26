@@ -1,5 +1,5 @@
-\name{Small Helper}
-\alias{small_helper}
+\name{small-helpers}
+\alias{small-helpers}
 \alias{vlabels}
 \alias{vlabels<-}
 \alias{namlab}
@@ -77,7 +77,7 @@ na.rm(x)                      # Remove missing values from vector and return vec
 %% ~Make other sections like Warning with \section{Warning }{....} ~
 
 \seealso{
-%% ~~objects to See Also as \code{\link{help}}, ~~~
+\link[=collapse-documentation]{Collapse Overview} %% ~~objects to See Also as \code{\link{help}}, ~~~
 }
 \examples{
 ## Variable labels

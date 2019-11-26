@@ -1,5 +1,5 @@
-\name{quick-data-conversion}
-\alias{Quick Data Converion}
+\name{quick-conversion}
+\alias{quick-conversion}
 \alias{qDF}
 \alias{qDT}
 \alias{qM}
@@ -45,7 +45,7 @@ qG(x, ordered = TRUE)
 \code{qG} - returns a quick-group (= integer vector)
 }
 \seealso{
-\code{\link{GRP}}, \link{collapse-package}
+\code{\link{GRP}}, \link[=collapse-documentation]{Collapse Overview}
 }
 \examples{
 mtcarsM <- qM(mtcars)      # Matrix from data.frame

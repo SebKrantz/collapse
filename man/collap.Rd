@@ -1,5 +1,5 @@
 \name{collap}
-\alias{Advanced Data Aggregation}
+\alias{advanced-data-aggregation}
 \alias{collap}
 %- Also NEED an '\alias' for EACH other topic documented here.
 \title{
@@ -8,7 +8,7 @@ Advanced Data Aggregation
 \description{
 \code{collap} is a fast and easy to use multi-purpose data aggregation command.
 
-It can aggregate data with multiple data types, aggregate (parallelized) using multiple functions to several output formats, and perform (parallelized) fully customized aggregations where the user decides which variables are aggregated using which functions. \code{collap} is made compatible with \code{collapse}'s \link{Fast Statistical Functions}, allowing for extremely fast conventional and weighted aggregation, but even with \code{base} functions it is significantly faster than \code{\link{stats::aggregate}}.
+It can aggregate data with multiple data types, aggregate (parallelized) using multiple functions to several output formats, and perform (parallelized) fully customized aggregations where the user decides which variables are aggregated using which functions. \code{collap} is made compatible with \code{collapse}'s \link[=fast-statistical-functions]{Fast Statistical Functions}, allowing for extremely fast conventional and weighted aggregation, but even with \code{base} functions it is significantly faster than \code{stats::aggregate}.
 }
 \usage{
 collap(X, by, FUN = fmean, catFUN = fmode, cols = NULL, custom = NULL,
@@ -29,13 +29,13 @@ collap(X, by, FUN = fmean, catFUN = fmode, cols = NULL, custom = NULL,
 \item{sort.row}{logical. Sort rows by the groups.}
 \item{parallel}{logical. Use \code{parallel::mclapply} instead of \code{lapply} for multi-function or custom aggregation.}
 \item{mc.cores}{integer. Argument to \code{parallel::mclapply} setting the number of cores to use.}
-\item{return}{character. Control the output format when aggregating with multiple functions or performing custom aggregation. "wide" (default) returns a wider data frame with added columns for each additional function. "list" returns a list of \code{data.frame}'s - one for each function. "long" adds a column "Function" and row-binds the results from differnt functions using \code{\link{data.table::rbindlist}}. "long.dupl" is a special option for aggregating multi-type data using multiple \code{FUN} but only one \code{catFUN} or vice-versa. In that case the format is long and data aggregated using only one function is duplicated. See Examples to understand this!}
+\item{return}{character. Control the output format when aggregating with multiple functions or performing custom aggregation. "wide" (default) returns a wider data frame with added columns for each additional function. "list" returns a list of \code{data.frame}'s - one for each function. "long" adds a column "Function" and row-binds the results from differnt functions using \code{data.table::rbindlist}. "long.dupl" is a special option for aggregating multi-type data using multiple \code{FUN} but only one \code{catFUN} or vice-versa. In that case the format is long and data aggregated using only one function is duplicated. See Examples to understand this!}
 \item{give.names}{logical. Create unique names of aggregated columnns by adding a prefix 'FUN.'. 'auto' will automatically create such prefixes whenever multiple functions are applied to a column or \code{custom} is used.}
 \item{...}{additional arguments passed to all functions supplied to \code{FUN}, \code{catFUN} or \code{custom}. }
 }
 
 \details{
-\code{collap} automatically checks each function passed to it whether it is a \link[=.FAST_STAT_FUN]{Fast Statistical Function} (i.e. whether the function name is contained in \code{.FAST_STAT_FUN}). If the function is a fast function, \code{collap} only does the grouping and then calls the function to carry out the grouped computations. If the function is not one of \code{.FAST_STAT_FUN}, \code{\link{BY}} is called internally to perform the computation. The resulting computataions from each function are put into a list and recombined to produce the desired output format as controlled by the \code{return} argument. When multiple functions are used with \code{collap}, setting \code{parallel = TRUE} and the number of cores with \code{mc.cores} will instruct \code{collap} to execute these function calls in parallel using \code{\link{parallel::mclapply}}. If only a single function is used which is not a \code{.FAST_STAT_FUN}, the \code{parallel} and \code{mc.cores} arguments are handed down to \code{\link{BY}}. See Examples.
+\code{collap} automatically checks each function passed to it whether it is a \link[=fast-statistical-functions]{Fast Statistical Function} (i.e. whether the function name is contained in \code{.FAST_STAT_FUN}). If the function is a fast function, \code{collap} only does the grouping and then calls the function to carry out the grouped computations. If the function is not one of \code{.FAST_STAT_FUN}, \code{\link{BY}} is called internally to perform the computation. The resulting computataions from each function are put into a list and recombined to produce the desired output format as controlled by the \code{return} argument. When multiple functions are used with \code{collap}, setting \code{parallel = TRUE} and the number of cores with \code{mc.cores} will instruct \code{collap} to execute these function calls in parallel using \code{parallel::mclapply}. If only a single function is used which is not a \code{.FAST_STAT_FUN}, the \code{parallel} and \code{mc.cores} arguments are handed down to \code{\link{BY}}. See Examples.
 }
 \value{
 \code{X} aggregated by \code{by}.
@@ -53,7 +53,7 @@ collap(X, by, FUN = fmean, catFUN = fmode, cols = NULL, custom = NULL,
 %% ~Make other sections like Warning with \section{Warning }{....} ~
 
 \seealso{
-\code{\link{BY}}, \link{collapse-package}
+\code{\link{BY}}, \link[=fast-statistical-functions]{Fast Statistical Functions}, \link[=collapse-documentation]{Collapse Overview}
 }
 \examples{
 ## World Development Panel Data

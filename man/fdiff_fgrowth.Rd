@@ -14,19 +14,19 @@
 \alias{fgrowth.pdata.frame}
 \alias{fgrowth.grouped_df}
 \alias{D}
-\alias{D.default}
-\alias{D.matrix}
-\alias{D.data.frame}
-\alias{D.pseries}
-\alias{D.pdata.frame}
-\alias{D.grouped_df}
+% \alias{D.default}
+% \alias{D.matrix}
+% \alias{D.data.frame}
+% \alias{D.pseries}
+% \alias{D.pdata.frame}
+% \alias{D.grouped_df}
 \alias{G}
-\alias{G.default}
-\alias{G.matrix}
-\alias{G.data.frame}
-\alias{G.pseries}
-\alias{G.pdata.frame}
-\alias{G.grouped_df}
+% \alias{G.default}
+% \alias{G.matrix}
+% \alias{G.data.frame}
+% \alias{G.pseries}
+% \alias{G.pdata.frame}
+% \alias{G.grouped_df}
 
 %- Also NEED an '\alias' for EACH other topic documented here.
 \title{ % Lagged and Iterated
@@ -35,7 +35,7 @@ Fast Differences and Growth Rates for Time-Series and Panel Data
 \description{
 \code{fdiff} and \code{fgrowth} are S3 generics to compute (sequences of) suitably lagged / leaded and iterated differences and growth rates / log-differences, respectively. \code{D} and \code{G} are wrappers around \code{fdiff} and \code{fgrowth} representing the 'difference-operator' and the 'growth-operator'. \code{D} / \code{G} provide more flexibility than \code{fdiff} / \code{fgrowth} when applied to data frames, but are otherwise identical.
 
-(\code{fdiff} and \code{fgrowth} are programmers functions in style of the \link{Fast Statistical Functions} while \code{D} & \code{G} are more practical to use in regression formulas or for computations on data frames.)
+(\code{fdiff} and \code{fgrowth} are programmers functions in style of the \link[=fast-statistical-functions]{Fast Statistical Functions} while \code{D} & \code{G} are more practical to use in regression formulas or for computations on data frames.)
 }
 \usage{
   fdiff(x, n = 1, diff = 1, ...)
@@ -128,7 +128,7 @@ The methods applying to \code{plm} objects (panel-series and panel-data.frames) 
 %% ~Make other sections like Warning with \section{Warning }{....} ~
 
 \seealso{
-\code{\link[=flag]{flag/L/F}}, \link{Time-Series and Panel-Series}
+\code{\link[=flag]{flag/L/F}}, \link[=time-series-panel-series]{Time-Series and Panel-Series}
 }
 \examples{
 ## Simple Time-Series: Airpassengers

@@ -1,12 +1,12 @@
-\name{quick summary}
+\name{qsu} % quick-summary
 \alias{qsu}
-\alias{quicksummary}
-\alias{qsu.default}
-\alias{qsu.matrix}
-\alias{qsu.data.frame}
-\alias{qsu.pseries}
-\alias{qsu.pdata.frame}
-%- Also NEED an '\alias' for EACH other topic documented here.
+% \alias{quicksummary}
+% \alias{qsu.default}
+% \alias{qsu.matrix}
+% \alias{qsu.data.frame}
+% \alias{qsu.pseries}
+% \alias{qsu.pdata.frame}
+% - Also NEED an '\alias' for EACH other topic documented here.
 \title{
 Fast (Grouped, Weighted) Summary Statistics for Cross-Sectional and Panel-Data
 }
@@ -35,7 +35,7 @@ It computes a set of 7 statistics (nobs, mean, sd, min, max, skewness and kurtos
 }
 %- maybe also 'usage' for other objects documented here.
 \arguments{
-  \item{x}{a numeric vector, matrix, data.frame, panel-series (\code{\link{plm::pseries}}) or panel-data.frame (\code{\link{plm::pdata.frame}})}
+  \item{x}{a numeric vector, matrix, data.frame, panel-series (\code{plm::pseries}) or panel-data.frame (\code{plm::pdata.frame})}
   \item{g, by}{a factor, \code{GRP} object, atomic vector (internally converted to factor) or a list of vectors / factors (internally converted to a \code{GRP} object) used to group \code{x}. \code{by} also supports one- or two- sided formulas i.e. \code{~ grp1 + grp2} or \code{var1 + var2 ~ grp1 + grp2}.}
   \item{pid, xt}{same input as \code{g/by}: Specify a panel-identifier to also compute statistics on between- and within- transformed data. \code{xt} also supports one- or two-sided formulas. Transformations are taken independently from grouping with \code{g/by} (grouped statistics are computed on the transformed data). However, passing any LHS variables to \code{xt} will overrwite any \code{LHS} variables passed to \code{by}.}
   \item{w}{a vector of (non-negative) weights. Adding weights will compute the weighted mean, sd, skewness and kurtosis, and transform the data using weighted individual means if \code{pid/xt} is used.}
@@ -77,7 +77,7 @@ If weights \code{w} are used together with \code{pid, xt}, transformed data is c
 %% ~Make other sections like Warning with \section{Warning }{....} ~
 
 \seealso{
-%% ~~objects to See Also as \code{\link{help}}, ~~~
+\link[=fast-statistical-functions]{Fast Statistical Functions}, \link[=collapse-documentation]{Collapse Overview}  %% ~~objects to See Also as \code{\link{help}}, ~~~
 }
 \examples{
 

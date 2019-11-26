@@ -1,17 +1,17 @@
 \name{psacf}
 \alias{psacf}
-\alias{psacf.default}
-\alias{psacf.pseries}
-\alias{psacf.data.frame}
-\alias{psacf.pdata.frame}
+% \alias{psacf.default}
+% \alias{psacf.pseries}
+% \alias{psacf.data.frame}
+% \alias{psacf.pdata.frame}
 \alias{pspacf}
-\alias{pspacf.default}
-\alias{pspacf.pseries}
-\alias{pspacf.data.frame}
-\alias{pspacf.pdata.frame}
+% \alias{pspacf.default}
+% \alias{pspacf.pseries}
+% \alias{pspacf.data.frame}
+% \alias{pspacf.pdata.frame}
 \alias{psccf}
-\alias{psccf.default}
-\alias{psccf.pseries}
+% \alias{psccf.default}
+% \alias{psccf.pseries}
 %- Also NEED an '\alias' for EACH other topic documented here.
 \title{
 Auto- and Cross- Covariance and -Correlation Function Estimation for Panel-Series
@@ -87,7 +87,7 @@ The \code{pdata.frame} method only works for properly subsetted objects of class
 %% ~Make other sections like Warning with \section{Warning }{....} ~
 
 \seealso{
-\code{\link{Time-Series and Panel-Series}} %% ~~objects to See Also as \code{\link{help}}, ~~~
+\link[=time-series-panel-series]{Time-Series and Panel-Series} %% ~~objects to See Also as \code{\link{help}}, ~~~
 }
 \examples{
 ## World Development Panel Data
