@@ -133,18 +133,20 @@ Date_vars <- function(x, return = c("data","names","indices","named_indices")) {
   return(setAttributes(x, ax))
 }
 
+
 get_vars <- function(x, vars, return = c("data","names","indices","named_indices"), regex = FALSE, ...) { # vars is a function or regex call. perhaps also do like this for lsubset and has.elem??, because if ... is in the second place, you cannot put other things
-     switch(return[1L],
-            data = colsubset(x, if(is.character(vars) && regex) rgrep(vars, names(x), ...) else vars),
-            names = if(is.function(vars)) names(which(vapply(x, vars, TRUE))) else if(is.character(vars) && regex)
-                                         names(x)[rgrep(vars, names(x), ...)] else names(x)[vars],
-            indices = if(is.function(vars)) which(vapply(x, vars, TRUE, USE.NAMES = FALSE)) else if(is.character(vars) && regex)
-                       rgrep(vars, names(x), ...) else anyNAerror(match(vars, names(x)), "Unknown column names!"), # put error !!
-            named_indices = if(is.function(vars)) which(vapply(x, vars, TRUE)) else if(is.character(vars) && regex) {
-                           nam <- names(x)
-                           ind <- rgrep(vars, nam, ...)
-                          `names<-`(ind, nam[ind])} else stop("vars must be a function or a regular expression"),
-            stop("Unknown return option!"))
+ if(!regex && !missing(...)) stop("Unknown argument ", dotstostr(...))
+ switch(return[1L],
+        data = colsubset(x, if(is.character(vars) && regex) rgrep(vars, names(x), ...) else vars),
+        names = if(is.function(vars)) names(which(vapply(x, vars, TRUE))) else if(is.character(vars) && regex)
+                                     names(x)[rgrep(vars, names(x), ...)] else names(x)[vars],
+        indices = if(is.function(vars)) which(vapply(x, vars, TRUE, USE.NAMES = FALSE)) else if(is.character(vars) && regex)
+                   rgrep(vars, names(x), ...) else anyNAerror(match(vars, names(x)), "Unknown column names!"), # put error !!
+        named_indices = if(is.function(vars)) which(vapply(x, vars, TRUE)) else if(is.character(vars) && regex) {
+                       nam <- names(x)
+                       ind <- rgrep(vars, nam, ...)
+                      `names<-`(ind, nam[ind])} else stop("vars must be a function or a regular expression"),
+        stop("Unknown return option!"))
 }
 "get_vars<-" <- function(x, vars, regex = FALSE, ..., value) {
   ax <- attributes(x)
@@ -152,14 +154,14 @@ get_vars <- function(x, vars, return = c("data","names","indices","named_indices
   d <- dim(value)
   if(NROW2(value, d) != nrow(x)) stop("NROW(value) must match nrow(x)")
   attributes(x) <- NULL
-  # if(!(is.numeric(vars) || is.logical(vars))) # old version without checks !!!
-  #   vars <- if(is.function(vars)) which(vapply(x, vars, TRUE, USE.NAMES = FALSE)) else if(is.character(vars) && regex)
-  #          rgrep(vars, ax[["names"]], ...) else match(vars, ax[["names"]])
   if(is.numeric(vars)) {
+    if(!missing(...)) stop("Unknown argument ", dotstostr(...))
     if(max(abs(vars)) > length(x)) stop("Column index out of range abs(1:length(x))")
   } else if(is.logical(vars)) {
+    if(!missing(...)) stop("Unknown argument ", dotstostr(...))
     if(length(vars) != length(x)) stop("Logical subsetting vector must match length(x)")
   } else {
+    if(!regex && !missing(...)) stop("Unknown argument ", dotstostr(...))
     vars <- if(is.function(vars)) which(vapply(x, vars, TRUE, USE.NAMES = FALSE)) else if(is.character(vars) && regex)
            rgrep(vars, ax[["names"]], ...) else anyNAerror(match(vars, ax[["names"]]), "Unknown column names!")
   }
