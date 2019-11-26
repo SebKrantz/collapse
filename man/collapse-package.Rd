@@ -51,9 +51,10 @@ The following table fully summarizes the content of \code{collapse}. The documen
 
 \link{Time-Series and Panel-Series} \tab Efficiently compute (sequences of), lags / leads and (iterated) differences and growth rates / log-differences on (unordered) time-series and panel-data. Panel-data > (ts-)array conversions, panel- auto, partial- and cross - correlation functions \tab \code{\link[=flag]{flag/L/F}}, \code{\link[=fdiff]{fdiff/D}}, \code{\link[=fgrowth]{fgrowth/G}}, \code{\link{psmat}}, \code{\link{psacf}}, \code{\link{pspacf}}, \code{\link{psccf}}  \cr \cr \cr
 
+List Processing \tab (Recursive) row-binding / unlisting in 2-dimensions, data-apply, search and extract list-elements / list-subsetting, list-identification.  \tab \code{\link{unlist2d}}, \code{\link{rapply2d}}, \code{\link{get_elem}}, \code{\link{has_elem}}, \code{\link{atomic_elem}}, \code{\link{list_elem}}, \code{\link{reg_elem}}, \code{\link{irreg_elem}}, \code{\link{is.regular}}, \code{\link{is.unlistable}}, \code{\link{ldepth}} \cr
+
 \link[=qsu]{Summary Statistics} \tab Extremely fast (one-pass, grouped and weighted), summary statistics for cross-sectional and panel-data (within- and between-groups) \tab \code{qsu} \cr
 
-List Processing \tab (Recursive) row-binding / unlisting in 2-dimensions, data-apply, search and extract list-elements / list-subsetting, list-identification.  \tab \code{\link{unlist2d}}, \code{\link{rapply2d}}, \code{\link{get_elem}}, \code{\link{has_elem}}, \code{\link{atomic_elem}}, \code{\link{list_elem}}, \code{\link{reg_elem}}, \code{\link{irreg_elem}}, \code{\link{is.regular}}, \code{\link{is.unlistable}}, \code{\link{ldepth}} \cr
 %Visual Data Exploration \tab Pretty (grouped, weighted, and panel-decomposed) histogram-, density-, scatter- and correlation plots \tab histplot, densplot, scplot, corplot \cr
 Small Functions \tab set and extract variable labels, return object with dimnames, row- or col- names set, seq row col, pairwise cov cor, vector remove NA's, check all elements identical, recode values, replace NA/NAN/Inf,-Inf. \tab \code{\link{vlabels}}, \code{\link{namlab}}, \code{\link{seq_row}}, \code{\link{seq_col}}, \code{\link{setRownames}}, \code{\link{setColnames}}, \code{\link{setDimnames}}, \code{\link{pwcor}}, \code{\link{pwcov}}, \code{\link{na.rm}}, \code{\link{all.identical}}, Recode, replace_non_finite \cr
 }
