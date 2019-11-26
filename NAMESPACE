@@ -1,8 +1,9 @@
 useDynLib(collapse, .registration=TRUE)
 importFrom(Rcpp, evalCpp)
 importFrom("graphics", "hist", "par", "plot")
+importFrom("grDevices", "rainbow")
 importFrom("stats", "as.formula", "complete.cases", "cor", "cov",
-           "setNames", "terms.formula")
+          "setNames", "terms.formula", "ts", "ts.plot")
  export(add_stub)
  export(all.identical)
  export(as.factor.GRP)
@@ -154,6 +155,7 @@ importFrom("stats", "as.formula", "complete.cases", "cor", "cov",
  export(GRP.pdata.frame)
  export(GRP.pseries)
  export(GRP.qG)
+ export(group_names.GRP)
  export(has_elem)
  export(HDB)
  export(HDB.data.frame)
