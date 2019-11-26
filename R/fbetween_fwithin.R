@@ -8,20 +8,86 @@
 
 # Note: for principal innovations of this code see fsum.R and fscale.R. Old code is commented out below and was innovated in flag.R.
 #  replaced give.names = TRUE with stub
-W <- function(x, ...) { # g = NULL, w = NULL, na.rm = TRUE, add.global.mean = FALSE,
-  UseMethod("W", x)
+fwithin <- function(x, ...) { # g = NULL, w = NULL, na.rm = TRUE, add.global.mean = FALSE,
+  UseMethod("fwithin", x)
 }
-W.default <- function(x, g = NULL, w = NULL, na.rm = TRUE, add.global.mean = FALSE, ...) {
+fwithin.default <- function(x, g = NULL, w = NULL, na.rm = TRUE, add.global.mean = FALSE, ...) {
   if(!missing(...)) stop("Unknown argument ", dotstostr(...))
   if(is.null(g)) return(BWCpp(x,0L,0L,NULL,w,na.rm,add.global.mean)) else if (is.atomic(g)) {
-      if(is.factor(g)) return(BWCpp(x,fnlevels(g),g,NULL,w,na.rm,add.global.mean)) else {
-        g <- qG(g, ordered = FALSE)
-        return(BWCpp(x,attr(g,"N.groups"),g,NULL,w,na.rm,add.global.mean))
-      }
+    if(is.factor(g)) return(BWCpp(x,fnlevels(g),g,NULL,w,na.rm,add.global.mean)) else {
+      g <- qG(g, ordered = FALSE)
+      return(BWCpp(x,attr(g,"N.groups"),g,NULL,w,na.rm,add.global.mean))
+    }
   } else {
     if(!is.GRP(g)) g <- GRP(g, return.groups = FALSE)
     return(BWCpp(x,g[[1L]],g[[2L]],g[[3L]],w,na.rm,add.global.mean))
   }
+}
+fwithin.pseries <- function(x, effect = 1L, w = NULL, na.rm = TRUE, add.global.mean = FALSE, ...) {
+  if(!missing(...)) stop("Unknown argument ", dotstostr(...))
+  g <- if(length(effect) == 1L) attr(x, "index")[[effect]] else interaction(attr(x, "index")[effect], drop = TRUE)
+  BWCpp(x,fnlevels(g),g,NULL,w,na.rm,add.global.mean)
+}
+fwithin.matrix <- function(x, g = NULL, w = NULL, na.rm = TRUE, add.global.mean = FALSE, ...) {
+  if(!missing(...)) stop("Unknown argument ", dotstostr(...))
+  if(is.null(g)) return(BWmCpp(x,0L,0L,NULL,w,na.rm,add.global.mean)) else if(is.atomic(g)) {
+    if(is.factor(g)) return(BWmCpp(x,fnlevels(g),g,NULL,w,na.rm,add.global.mean)) else {
+      g <- qG(g, ordered = FALSE)
+      return(BWmCpp(x,attr(g,"N.groups"),g,NULL,w,na.rm,add.global.mean))
+    }
+  } else {
+    if(!is.GRP(g)) g <- GRP(g, return.groups = FALSE)
+    return(BWmCpp(x,g[[1L]],g[[2L]],g[[3L]],w,na.rm,add.global.mean))
+  }
+}
+fwithin.data.frame <- function(x, g = NULL, w = NULL, na.rm = TRUE, add.global.mean = FALSE, ...) {
+  if(!missing(...)) stop("Unknown argument ", dotstostr(...))
+  if(is.null(g)) return(BWlCpp(x,0L,0L,NULL,w,na.rm,add.global.mean)) else if(is.atomic(g)) {
+    if(is.factor(g)) return(BWlCpp(x,fnlevels(g),g,NULL,w,na.rm,add.global.mean)) else {
+      g <- qG(g, ordered = FALSE)
+      return(BWlCpp(x,attr(g,"N.groups"),g,NULL,w,na.rm,add.global.mean))
+    }
+  } else {
+    if(!is.GRP(g)) g <- GRP(g, return.groups = FALSE)
+    return(BWlCpp(x,g[[1L]],g[[2L]],g[[3L]],w,na.rm,add.global.mean))
+  }
+}
+fwithin.pdata.frame <- function(x, effect = 1L, w = NULL, na.rm = TRUE, add.global.mean = FALSE, ...) {
+  if(!missing(...)) stop("Unknown argument ", dotstostr(...))
+  g <- if(length(effect) == 1L) attr(x, "index")[[effect]] else interaction(attr(x, "index")[effect], drop = TRUE)
+  BWlCpp(x,fnlevels(g),g,NULL,w,na.rm,add.global.mean)
+}
+fwithin.grouped_df <- function(x, w = NULL, na.rm = TRUE, add.global.mean = FALSE,
+                               keep.group_vars = TRUE, keep.w = TRUE, ...) {
+  if(!missing(...)) stop("Unknown argument ", dotstostr(...))
+  g <- GRP.grouped_df(x)
+  wsym <- deparse(substitute(w))
+  nam <- names(x)
+  gn2 <- which(nam %in% g[[5L]])
+  gn <- if(keep.group_vars) gn2 else NULL
+  if(!(wsym == "NULL" || is.na(wn <- match(wsym, nam)))) {
+    w <- x[[wn]]
+    if(any(gn2 == wn)) stop("Weights coincide with grouping variables!")
+    gn2 <- c(gn2,wn)
+    if(keep.w) gn <- c(gn,wn)
+  }
+  if(length(gn2)) {
+    if(!length(gn))
+      return(BWlCpp(x[-gn2],g[[1L]],g[[2L]],g[[3L]],w,na.rm,add.global.mean)) else {
+        ax <- attributes(x)
+        attributes(x) <- NULL
+        ax[["names"]] <- c(nam[gn], nam[-gn2])
+        return(setAttributes(c(x[gn],BWlCpp(x[-gn2],g[[1L]],g[[2L]],g[[3L]],w,na.rm,add.global.mean)), ax))
+      }
+  } else return(BWlCpp(x,g[[1L]],g[[2L]],g[[3L]],w,na.rm,add.global.mean))
+}
+
+
+W <- function(x, ...) { # g = NULL, w = NULL, na.rm = TRUE, add.global.mean = FALSE,
+  UseMethod("W", x)
+}
+W.default <- function(x, g = NULL, w = NULL, na.rm = TRUE, add.global.mean = FALSE, ...) {
+  fwithin.default(x, g, w, na.rm, add.global.mean, ...)
 }
 W.pseries <- function(x, effect = 1L, w = NULL, na.rm = TRUE, add.global.mean = FALSE, ...) {
   if(!missing(...)) stop("Unknown argument ", dotstostr(...))
@@ -29,19 +95,10 @@ W.pseries <- function(x, effect = 1L, w = NULL, na.rm = TRUE, add.global.mean = 
   BWCpp(x,fnlevels(g),g,NULL,w,na.rm,add.global.mean)
 }
 W.matrix <- function(x, g = NULL, w = NULL, na.rm = TRUE, add.global.mean = FALSE, stub = "W.", ...) {
-  if(!missing(...)) stop("Unknown argument ", dotstostr(...))
-  if(is.null(g)) return(add_stub(BWmCpp(x,0L,0L,NULL,w,na.rm,add.global.mean), stub)) else if(is.atomic(g)) {
-    if(is.factor(g)) return(add_stub(BWmCpp(x,fnlevels(g),g,NULL,w,na.rm,add.global.mean), stub)) else {
-      g <- qG(g, ordered = FALSE)
-      return(add_stub(BWmCpp(x,attr(g,"N.groups"),g,NULL,w,na.rm,add.global.mean), stub))
-    }
-  } else {
-    if(!is.GRP(g)) g <- GRP(g, return.groups = FALSE)
-    return(add_stub(BWmCpp(x,g[[1L]],g[[2L]],g[[3L]],w,na.rm,add.global.mean), stub))
-  }
+  add_stub(fwithin.matrix(x, g, w, na.rm, add.global.mean, ...), stub)
 }
 W.grouped_df <- function(x, w = NULL, na.rm = TRUE, add.global.mean = FALSE,
-                         keep.group_vars = TRUE, keep.w = TRUE, stub = "W.", ...) {
+                         stub = "W.", keep.group_vars = TRUE, keep.w = TRUE, ...) {
   if(!missing(...)) stop("Unknown argument ", dotstostr(...))
   g <- GRP.grouped_df(x)
   wsym <- deparse(substitute(w))
@@ -65,7 +122,7 @@ W.grouped_df <- function(x, w = NULL, na.rm = TRUE, add.global.mean = FALSE,
   } else return(add_stub(BWlCpp(x,g[[1L]],g[[2L]],g[[3L]],w,na.rm,add.global.mean), stub))
 }
 W.pdata.frame <- function(x, effect = 1L, w = NULL, cols = is.numeric, na.rm = TRUE, add.global.mean = FALSE,
-                          keep.ids = TRUE, keep.w = TRUE, stub = "W.", ...) {
+                          stub = "W.", keep.ids = TRUE, keep.w = TRUE, ...) {
 
   if(!missing(...)) stop("Unknown argument ", dotstostr(...))
   ax <- attributes(x)
@@ -104,7 +161,7 @@ W.pdata.frame <- function(x, effect = 1L, w = NULL, cols = is.numeric, na.rm = T
   }
 }
 W.data.frame <- function(x, by = NULL, w = NULL, cols = is.numeric, na.rm = TRUE,
-                         add.global.mean = FALSE, keep.by = TRUE, keep.w = TRUE, stub = "W.", ...) {
+                         stub = "W.", add.global.mean = FALSE, keep.by = TRUE, keep.w = TRUE, ...) {
 
   if(!missing(...)) stop("Unknown argument ", dotstostr(...))
   if(is.call(by) || is.call(w)) {
@@ -164,12 +221,12 @@ W.data.frame <- function(x, by = NULL, w = NULL, cols = is.numeric, na.rm = TRUE
 }
 
 
-B <- function(x, ...) { # g = NULL, w = NULL, na.rm = TRUE, fill = FALSE,
-  UseMethod("B", x)
+fbetween <- function(x, ...) { # g = NULL, w = NULL, na.rm = TRUE, fill = FALSE,
+  UseMethod("fbetween", x)
 }
-B.default <- function(x, g = NULL, w = NULL, na.rm = TRUE, fill = FALSE, ...) {
+fbetween.default <- function(x, g = NULL, w = NULL, na.rm = TRUE, fill = FALSE, ...) {
   if(!missing(...)) stop("Unknown argument ", dotstostr(...))
-  if(is.null(g)) return(BWCpp(x,0L,0L,NULL,w,na.rm,fill,TRUE)) else if(is.atomic(g)) {
+  if(is.null(g)) return(BWCpp(x,0L,0L,NULL,w,na.rm,fill,TRUE)) else if (is.atomic(g)) {
     if(is.factor(g)) return(BWCpp(x,fnlevels(g),g,NULL,w,na.rm,fill,TRUE)) else {
       g <- qG(g, ordered = FALSE)
       return(BWCpp(x,attr(g,"N.groups"),g,NULL,w,na.rm,fill,TRUE))
@@ -179,25 +236,82 @@ B.default <- function(x, g = NULL, w = NULL, na.rm = TRUE, fill = FALSE, ...) {
     return(BWCpp(x,g[[1L]],g[[2L]],g[[3L]],w,na.rm,fill,TRUE))
   }
 }
+fbetween.pseries <- function(x, effect = 1L, w = NULL, na.rm = TRUE, fill = FALSE, ...) {
+  if(!missing(...)) stop("Unknown argument ", dotstostr(...))
+  g <- if(length(effect) == 1L) attr(x, "index")[[effect]] else interaction(attr(x, "index")[effect], drop = TRUE)
+  BWCpp(x,fnlevels(g),g,NULL,w,na.rm,fill,TRUE)
+}
+fbetween.matrix <- function(x, g = NULL, w = NULL, na.rm = TRUE, fill = FALSE, ...) {
+  if(!missing(...)) stop("Unknown argument ", dotstostr(...))
+  if(is.null(g)) return(BWmCpp(x,0L,0L,NULL,w,na.rm,fill,TRUE)) else if(is.atomic(g)) {
+    if(is.factor(g)) return(BWmCpp(x,fnlevels(g),g,NULL,w,na.rm,fill,TRUE)) else {
+      g <- qG(g, ordered = FALSE)
+      return(BWmCpp(x,attr(g,"N.groups"),g,NULL,w,na.rm,fill,TRUE))
+    }
+  } else {
+    if(!is.GRP(g)) g <- GRP(g, return.groups = FALSE)
+    return(BWmCpp(x,g[[1L]],g[[2L]],g[[3L]],w,na.rm,fill,TRUE))
+  }
+}
+fbetween.data.frame <- function(x, g = NULL, w = NULL, na.rm = TRUE, fill = FALSE, ...) {
+  if(!missing(...)) stop("Unknown argument ", dotstostr(...))
+  if(is.null(g)) return(BWlCpp(x,0L,0L,NULL,w,na.rm,fill,TRUE)) else if(is.atomic(g)) {
+    if(is.factor(g)) return(BWlCpp(x,fnlevels(g),g,NULL,w,na.rm,fill,TRUE)) else {
+      g <- qG(g, ordered = FALSE)
+      return(BWlCpp(x,attr(g,"N.groups"),g,NULL,w,na.rm,fill,TRUE))
+    }
+  } else {
+    if(!is.GRP(g)) g <- GRP(g, return.groups = FALSE)
+    return(BWlCpp(x,g[[1L]],g[[2L]],g[[3L]],w,na.rm,fill,TRUE))
+  }
+}
+fbetween.pdata.frame <- function(x, effect = 1L, w = NULL, na.rm = TRUE, fill = FALSE, ...) {
+  if(!missing(...)) stop("Unknown argument ", dotstostr(...))
+  g <- if(length(effect) == 1L) attr(x, "index")[[effect]] else interaction(attr(x, "index")[effect], drop = TRUE)
+  BWlCpp(x,fnlevels(g),g,NULL,w,na.rm,fill,TRUE)
+}
+fbetween.grouped_df <- function(x, w = NULL, na.rm = TRUE, fill = FALSE,
+                               keep.group_vars = TRUE, keep.w = TRUE, ...) {
+  if(!missing(...)) stop("Unknown argument ", dotstostr(...))
+  g <- GRP.grouped_df(x)
+  wsym <- deparse(substitute(w))
+  nam <- names(x)
+  gn2 <- which(nam %in% g[[5L]])
+  gn <- if(keep.group_vars) gn2 else NULL
+  if(!(wsym == "NULL" || is.na(wn <- match(wsym, nam)))) {
+    w <- x[[wn]]
+    if(any(gn2 == wn)) stop("Weights coincide with grouping variables!")
+    gn2 <- c(gn2,wn)
+    if(keep.w) gn <- c(gn,wn)
+  }
+  if(length(gn2)) {
+    if(!length(gn))
+      return(BWlCpp(x[-gn2],g[[1L]],g[[2L]],g[[3L]],w,na.rm,fill,TRUE)) else {
+        ax <- attributes(x)
+        attributes(x) <- NULL
+        ax[["names"]] <- c(nam[gn], nam[-gn2])
+        return(setAttributes(c(x[gn],BWlCpp(x[-gn2],g[[1L]],g[[2L]],g[[3L]],w,na.rm,fill,TRUE)), ax))
+      }
+  } else return(BWlCpp(x,g[[1L]],g[[2L]],g[[3L]],w,na.rm,fill,TRUE))
+}
+
+
+B <- function(x, ...) { # g = NULL, w = NULL, na.rm = TRUE, fill = FALSE,
+  UseMethod("B", x)
+}
+B.default <- function(x, g = NULL, w = NULL, na.rm = TRUE, fill = FALSE, ...) {
+  fbetween.default(x, g, w, na.rm, fill, ...)
+}
 B.pseries <- function(x, effect = 1L, w = NULL, na.rm = TRUE, fill = FALSE, ...) {
   if(!missing(...)) stop("Unknown argument ", dotstostr(...))
   g <- if(length(effect) == 1L) attr(x, "index")[[effect]] else interaction(attr(x, "index")[effect], drop = TRUE)
   BWCpp(x,fnlevels(g),g,NULL,w,na.rm,fill,TRUE)
 }
 B.matrix <- function(x, g = NULL, w = NULL, na.rm = TRUE, fill = FALSE, stub = "B.", ...) {
-  if(!missing(...)) stop("Unknown argument ", dotstostr(...))
-  if(is.null(g)) return(add_stub(BWmCpp(x,0L,0L,NULL,w,na.rm,fill,TRUE), stub)) else if(is.atomic(g)) {
-    if(is.factor(g)) return(add_stub(BWmCpp(x,fnlevels(g),g,NULL,w,na.rm,fill,TRUE), stub)) else {
-      g <- qG(g, ordered = FALSE)
-      return(add_stub(BWmCpp(x,attr(g,"N.groups"),g,NULL,w,na.rm,fill,TRUE), stub))
-    }
-  } else {
-    if(!is.GRP(g)) g <- GRP(g, return.groups = FALSE)
-    return(add_stub(BWmCpp(x,g[[1L]],g[[2L]],g[[3L]],w,na.rm,fill,TRUE), stub))
-  }
+  add_stub(fbetween.matrix(x, g, w, na.rm, fill, ...), stub)
 }
 B.grouped_df <- function(x, w = NULL, na.rm = TRUE, fill = FALSE,
-                         keep.group_vars = TRUE, keep.w = TRUE, stub = "B.", ...) {
+                         stub = "B.", keep.group_vars = TRUE, keep.w = TRUE, ...) {
   if(!missing(...)) stop("Unknown argument ", dotstostr(...))
   g <- GRP.grouped_df(x)
   wsym <- deparse(substitute(w))
@@ -221,7 +335,7 @@ B.grouped_df <- function(x, w = NULL, na.rm = TRUE, fill = FALSE,
   } else return(add_stub(BWlCpp(x,g[[1L]],g[[2L]],g[[3L]],w,na.rm,fill,TRUE), stub))
 }
 B.pdata.frame <- function(x, effect = 1L, w = NULL, cols = is.numeric, na.rm = TRUE, fill = FALSE,
-                          keep.ids = TRUE, keep.w = TRUE, stub = "B.", ...) {
+                          stub = "B.", keep.ids = TRUE, keep.w = TRUE, ...) {
   if(!missing(...)) stop("Unknown argument ", dotstostr(...))
   ax <- attributes(x)
   class(x) <- NULL
@@ -259,7 +373,7 @@ B.pdata.frame <- function(x, effect = 1L, w = NULL, cols = is.numeric, na.rm = T
   }
 }
 B.data.frame <- function(x, by = NULL, w = NULL, cols = is.numeric, na.rm = TRUE,
-                         fill = FALSE, keep.by = TRUE, keep.w = TRUE, stub = "B.", ...) {
+                         fill = FALSE, stub = "B.", keep.by = TRUE, keep.w = TRUE, ...) {
   if(!missing(...)) stop("Unknown argument ", dotstostr(...))
   if(is.call(by) || is.call(w)) {
     ax <- attributes(x)
