@@ -10,6 +10,8 @@
 The \code{\link{TRA}} argument can further be used to transform \code{x} using its (grouped, weighted) mode.
 }
 \usage{
+fmode(x, ...)
+
 \method{fmode}{default}(x, g = NULL, w = NULL, TRA = FALSE, na.rm = TRUE,
       use.g.names = TRUE, ...)
 

@@ -10,6 +10,8 @@
 }
 
 \usage{
+fNdistinct(x, ...)
+
 \method{fNdistinct}{default}(x, g = NULL, TRA = FALSE, na.rm = FALSE,
            use.g.names = TRUE, ...)
 

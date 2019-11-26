@@ -9,6 +9,8 @@
 \code{fmedian} is a generic function that computes the (column-wise) median value of all values in \code{x}, (optionally) grouped by \code{g}. The \code{\link{TRA}} argument can further be used to transform \code{x} using its (grouped) median value.
 }
 \usage{
+fmedian(x, ...)
+
 \method{fmedian}{default}(x, g = NULL, TRA = FALSE, na.rm = TRUE,
         use.g.names = TRUE, ...)
 

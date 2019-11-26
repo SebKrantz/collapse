@@ -31,6 +31,10 @@ Fast Lags and Leads for Time-Series and Panel Data
 (\code{flag} is more of a programmers function in style of the \link{Fast Statistical Functions} while \code{L} & \code{F} are more practical to use in regression formulas or for computations on data frames.)
 }
 \usage{
+flag(x, n = 1, ...)
+   L(x, n = 1, ...)
+   F(x, n = 1, ...)
+
 ## Default S3 methods:
 flag(x, n = 1, g = NULL, t = NULL, fill = NA, stubs = TRUE, ...)
    L(x, n = 1, g = NULL, t = NULL, fill = NA, stubs = TRUE, ...)
@@ -71,7 +75,7 @@ flag(x, n = 1, t = NULL, fill = NA, stubs = TRUE, keep.ids = TRUE, ...)
 }
 %- maybe also 'usage' for other objects documented here.
 \arguments{
-  \item{x}{a vector, matrix, data.frame, panel-series (\code{\link{plm::pseries}}), panel-data.frame (\code{\link{plm::pdata.frame}}) or grouped tibble (\code{\link{dplyr::grouped_df}}). \emph{Note}: Data must not be numeric.}
+  \item{x}{a vector, matrix, data.frame, panel-series (\code{plm::pseries}), panel-data.frame (\code{plm::pdata.frame}) or grouped tibble (\code{dplyr::grouped_df}). \emph{Note}: Data must not be numeric.}
   \item{n}{an integer vector indicating the lags/leads to compute.}
   \item{g}{a factor, \code{\link{GRP}} object, atomic vector (internally converted to factor) or a list of vectors / factors (internally converted to a \code{\link{GRP}} object) used to group \code{x}.}
   \item{by}{\emph{data.frame method}: Same as \code{g}, but also allows one- or two-sided formulas i.e. \code{~ group1} or \code{var1 + var2 ~ group1 + group2}. See Examples.}

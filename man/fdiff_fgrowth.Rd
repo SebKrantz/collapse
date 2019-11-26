@@ -38,6 +38,11 @@ Fast Differences and Growth Rates for Time-Series and Panel Data
 (\code{fdiff} and \code{fgrowth} are programmers functions in style of the \link{Fast Statistical Functions} while \code{D} & \code{G} are more practical to use in regression formulas or for computations on data frames.)
 }
 \usage{
+  fdiff(x, n = 1, diff = 1, ...)
+      D(x, n = 1, diff = 1, ...)
+fgrowth(x, n = 1, diff = 1, ...)
+      G(x, n = 1, diff = 1, ...)
+
 ## Default S3 methods:
   fdiff(x, n = 1, diff = 1, g = NULL, t = NULL, fill = NA, stubs = TRUE, ...)
       D(x, n = 1, diff = 1, g = NULL, t = NULL, fill = NA, stubs = TRUE, ...)
@@ -82,7 +87,7 @@ fgrowth(x, n = 1, diff = 1, t = NULL, fill = NA, logdiff = FALSE, stubs = TRUE, 
 }
 %- maybe also 'usage' for other objects documented here.
 \arguments{
-  \item{x}{a numeric vector, matrix, data.frame, panel-series (\code{\link{plm::pseries}}), panel-data.frame (\code{\link{plm::pdata.frame}}) or grouped tibble (\code{\link{dplyr::grouped_df}}).}
+  \item{x}{a numeric vector, matrix, data.frame, panel-series (\code{plm::pseries}), panel-data.frame (\code{plm::pdata.frame}) or grouped tibble (\code{dplyr::grouped_df}).}
   \item{n}{a integer vector indicating the number of lags or leads.}
   \item{diff}{a vector of integers > 1 indicating the order of differencing / taking growth rates or log-differences.}
   \item{g}{a factor, \code{\link{GRP}} object, atomic vector (internally converted to factor) or a list of vectors / factors (internally converted to a \code{\link{GRP}} object) used to group \code{x}.}

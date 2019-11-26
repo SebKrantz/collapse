@@ -9,6 +9,8 @@
 \code{fprod} is a generic function that computes the (column-wise) product of all values in \code{x}, (optionally) grouped by \code{g}. The \code{\link{TRA}} argument can further be used to transform \code{x} using its (grouped) product.
 }
 \usage{
+fprod(x, ...)
+
 \method{fprod}{default}(x, g = NULL, TRA = FALSE, na.rm = TRUE,
       use.g.names = TRUE, ...)
 

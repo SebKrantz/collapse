@@ -14,6 +14,9 @@
 \code{fvar} and \code{fsd} are generic functions that compute the (column-wise) variance and standard deviation of \code{x}, (optionally) grouped by \code{g} and/or frequency-weighted by \code{w}. The \code{\link{TRA}} argument can further be used to transform \code{x} using its (grouped, weighted) variance/sd.
 }
 \usage{
+fvar(x, ...)
+fsd(x, ...)
+
 ## Default S3 methods:
 fvar(x, g = NULL, w = NULL, TRA = FALSE, na.rm = TRUE,
      use.g.names = TRUE, stable.algo = TRUE, ...)

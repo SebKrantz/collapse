@@ -13,6 +13,8 @@ Matrix / Array from Panel-Series
 \code{psmat} efficiently expands a panel-vector or \code{plm::pseries} into a matrix. If a data frame or \code{plm::pdata.frame} is passed, \code{psmat} returns (default) a 3D array or a list of such matrices.  % By default the matrix is created such that group-identifiers constitute the rows and time the columns.
 }
 \usage{
+psmat(x, ...)
+
 \method{psmat}{default}(x, g, t = NULL, transpose = FALSE, ...)
 
 \method{psmat}{pseries}(x, transpose = FALSE, ...)
@@ -62,7 +64,7 @@ View(wlddev)                                                    # View data
 qsu(wlddev, xt = ~ iso3c, cols = 9:12, vlabels = TRUE)          # Sumarizing data
 View(psmat(wlddev$PCGDP, wlddev$iso3c, wlddev$year))            # Generating a matrix of GDP per Capita
 r <- psmat(wlddev, PCGDP ~ iso3c, ~ year)                       # Same thing using data.frame method
-plot(r, main = vlabels(wlddev)[9], ylab = "Year")               # Plot the matrix
+plot(r, main = vlabels(wlddev)[9], xlab = "Year")               # Plot the matrix
 str(r)                                                          # See srructure
 str(psmat(wlddev$PCGDP, wlddev$iso3c))                          # The Data is sorted, so one could leave out t
 str(psmat(wlddev$PCGDP, 216))                                   # This panel is also balanced, so indicating the number of groups would be sufficient to obtain a matrix
@@ -73,7 +75,7 @@ plot(ar)
 plot(ar, legend = TRUE)
 plot(psmat(collap(wlddev, ~region+year, cols = 9:12),           # More legible and fancy plot from aggregated data
            ~region, ~year), legend = TRUE,
-            labs = vlabels(wlddev)[9:12])
+     labs = vlabels(wlddev)[9:12])
 
 psml <- psmat(wlddev, ~ iso3c, ~ year, 9:12, array = FALSE)     # This gives list of ps-matrices instead
 View(unlist2d(psml, "Variable", "Country", id.factor = TRUE))   # Using unlist2d, we can also generate a nice data.frame from this data
@@ -83,9 +85,8 @@ pwlddev <- plm::pdata.frame(wlddev, index = c("iso3c","year"))  # Creating a Pan
 PCGDP <- pwlddev$PCGDP                                          # A panel-Series of GDP per Capita
 psmat(PCGDP)                                                    # Same as above, but more parsimonious and much faster than plm::as.matrix.pseries
 plot(psmat(PCGDP))
-plot(psmat(pwlddev[9:12])))
+plot(psmat(pwlddev[9:12]))
 plot(psmat(G(pwlddev[9:12])))                                   # Here plotting properly computed growth rates
-
 
 }
 % Add one or more standard keywords, see file 'KEYWORDS' in the

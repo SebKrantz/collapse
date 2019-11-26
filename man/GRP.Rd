@@ -18,6 +18,8 @@
 }
 
 \usage{
+GRP(X, ...)
+
 \method{GRP}{default}(X, by = NULL, sort = TRUE, order = 1L, na.last = FALSE,
     return.groups = TRUE, return.order = FALSE, ...)
 

@@ -21,6 +21,9 @@ Between (Averaging) and Within (Centering) Transformations
 \code{B} is a generic function to efficiently obtain averaged data. \code{W} is also generic and centers data on those averages. Averages can be simple or groupwise, ordinary or weighted.
 }
 \usage{
+B(x, ...)
+W(x, ...)
+
 \method{B}{default}(x, g = NULL, w = NULL, na.rm = TRUE, fill = FALSE, ...)
 W(x, g = NULL, w = NULL, na.rm = TRUE, add.global.mean = FALSE, ...)
 
@@ -51,7 +54,7 @@ W(x, w = NULL, na.rm = TRUE, add.global.mean = FALSE,
 }
 %- maybe also 'usage' for other objects documented here.
 \arguments{
-  \item{x}{a numeric vector, matrix, data.frame, panel-series (\code{\link{plm::pseries}}), panel-data.frame (\code{\link{plm::pdata.frame}}) or grouped tibble (\code{\link{dplyr::grouped_df}}).}
+  \item{x}{a numeric vector, matrix, data.frame, panel-series (\code{plm::pseries}), panel-data.frame (\code{plm::pdata.frame}) or grouped tibble (\code{dplyr::grouped_df}).}
   \item{g}{a factor, \code{\link{GRP}} object, atomic vector (internally converted to factor) or a list of vectors / factors (internally converted to a \code{\link{GRP}} object) used to group \code{x}.}
   \item{by}{\emph{STD data.frame method}: Same as g, but also allows one- or two-sided formulas i.e. \code{~ group1} or \code{var1 + var2 ~ group1 + group2}. See Examples.}
   \item{w}{a numeric vector of (non-negative) weights. \code{STD} \code{data.frame} and \code{pdata.frame} methods also allow a one-sided formula i.e. \code{~ weightcol}. The \code{grouped_df} (\code{dplyr}) method supports lazy-evaluation. See Examples.}

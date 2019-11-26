@@ -15,6 +15,9 @@
 }
 
 \usage{
+ffirst(x, ...)
+flast(x, ...)
+
 ## Default S3 methods:
 ffirst(x, g = NULL, TRA = FALSE, na.rm = TRUE,
        use.g.names = TRUE, ...)

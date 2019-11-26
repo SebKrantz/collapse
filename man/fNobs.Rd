@@ -10,6 +10,8 @@
 }
 
 \usage{
+fNobs(x, ...)
+
 \method{fNobs}{default}(x, g = NULL, TRA = FALSE, use.g.names = TRUE, ...)
 
 \method{fNobs}{matrix}(x, g = NULL, TRA = FALSE, use.g.names = TRUE, drop = TRUE, ...)

@@ -12,6 +12,8 @@
 \code{BY} is an S3 generic that efficiently applies functions over vectors or matrix- and data.frame columns by groups, and returns various output formats. A simple parallelism is also available.
 }
 \usage{
+BY(X, ...)
+
 \method{BY}{default}(X, g, FUN, ..., use.g.names = TRUE, sort = TRUE,
    expand.wide = FALSE, parallel = FALSE, mc.cores = 1L,
    return = c("same","list"))

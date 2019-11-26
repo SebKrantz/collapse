@@ -24,6 +24,9 @@ Fast (Grouped, Weighted) Scaling and Centering of Matrix-like Objects
 \emph{Note}: For centering without scaling see \code{\link{W}}, for scaling without centering use \code{\link[=fsd]{fsd(..., TRA = "/")}}.
 }
 \usage{
+fscale(x, ...)
+   STD(x, ...)
+
 \method{fscale}{default}(x, g = NULL, w = NULL, na.rm = TRUE, stable.algo = TRUE, ...)
    STD(x, g = NULL, w = NULL, na.rm = TRUE, stable.algo = TRUE, ...)
 
@@ -53,12 +56,12 @@ Fast (Grouped, Weighted) Scaling and Centering of Matrix-like Objects
 }
 %- maybe also 'usage' for other objects documented here.
 \arguments{
-  \item{x}{a numeric vector, matrix, data.frame, panel-series (\code{\link{plm::pseries}}), panel-data.frame (\code{\link{plm::pdata.frame}}) or grouped tibble (\code{\link{dplyr::grouped_df}}).}
+  \item{x}{a numeric vector, matrix, data.frame, panel-series (\code{plm::pseries}), panel-data.frame (\code{plm::pdata.frame}) or grouped tibble (\code{dplyr::grouped_df}).}
   \item{g}{a factor, \code{\link{GRP}} object, atomic vector (internally converted to factor) or a list of vectors / factors (internally converted to a \code{\link{GRP}} object) used to group \code{x}.}
   \item{by}{\emph{STD data.frame method}: Same as \code{g}, but also allows one- or two-sided formulas i.e. \code{~ group1} or \code{var1 + var2 ~ group1 + group2}. See Examples.}
   \item{w}{a numeric vector of (non-negative) weights. \code{STD} \code{data.frame} and \code{pdata.frame} methods also allow a one-sided formula i.e. \code{~ weightcol}. The \code{grouped_df} (\code{dplyr}) method supports lazy-evaluation. See Examples.}
   \item{na.rm}{logical. skip missing values in \code{x} when computing means and sd's.}
-    \item{effect}{\code{plm} methods: Select which panel identifier should be used as grouping variable. 1L means first variable in the \code{\link{index}}, 2L the second etc. if more than one integer is supplied, the corresponding index-variables are interacted. }
+    \item{effect}{\code{plm} methods: Select which panel identifier should be used as grouping variable. 1L means first variable in the \code{plm::index}, 2L the second etc. if more than one integer is supplied, the corresponding index-variables are interacted. }
 
   \item{stub}{a prefix or stub to rename all transformed columns. \code{FALSE} will not rename columns.}
   \item{stable.algo}{logical. TRUE uses a faster but numerically unstable algorithm to compute standard deviations. The default is Welfords numerically stable online algorithm. See Details.}

@@ -14,6 +14,9 @@
 \code{fmax} and \code{fmin} are generic functions that compute the (column-wise) maximum and minimum value of all values in \code{x}, (optionally) grouped by \code{g}. The \code{\link{TRA}} argument can further be used to transform \code{x} using its (grouped) maximum or minimum value.
 }
 \usage{
+fmax(x, ...)
+fmin(x, ...)
+
 ## Default S3 methods:
 fmax(x, g = NULL, TRA = FALSE, na.rm = TRUE,
      use.g.names = TRUE, ...)

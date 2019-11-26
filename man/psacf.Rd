@@ -20,6 +20,10 @@ Auto- and Cross- Covariance and -Correlation Function Estimation for Panel-Serie
 \code{psacf}, \code{pspacf} and \code{psccf} compute (and by default plot) estimates of the auto-, partial auto- and cross- correlation or covariance functions for panel-vectors and \code{plm::pseries}. They are faithful analogues to \code{stats::acf}, \code{stats::pacf} and \code{stats::ccf}.
 }
 \usage{
+psacf(x, ...)
+pspacf(x, ...)
+psccf(x, y, ...)
+
 ## Default S3 methods:
  psacf(x, g, t = NULL, lag.max = NULL, type = c("correlation", "covariance","partial"),
        plot = TRUE, gscale = TRUE, ...)
@@ -50,14 +54,14 @@ pspacf(x, lag.max = NULL, plot = TRUE, gscale = TRUE, ...)
 \arguments{
 \item{x, y}{a numeric vector, panel-series (\code{plm::pseries}), data.frame or
 panel-data-frame (\code{plm::pdata.frame}).}
-  \item{g}{a factor, \code{GRP()} object, atomic vector (internally converted to factor) or a list of vectors / factors (internally converted to a \code{GRP()} object) used to group \code{x, y}. }
+  \item{g}{a factor, \code{\link{GRP}} object, atomic vector (internally converted to factor) or a list of vectors / factors (internally converted to a \code{\link{GRP}} object) used to group \code{x, y}. }
   \item{by}{\emph{data frame method}: Same input as \code{g}, but also allows one- or two-sided formulas using the variables in \code{x}, i.e. \code{~ idvar} or \code{var1 + var2 ~ idvar1 + idvar2}.}
 
     \item{t}{same input as g, to indicate the time-variable. For secure computations on unordered panel-vectors. Data frame method also takes one-sided formula i.e. \code{~time}.}
     \item{cols}{\emph{data.frame method}: Select columns using a function, column names or indices. \emph{Note}: \code{cols} is ignored if a two-sided formula is passsed to \code{by}.}
 \item{lag.max}{maximum lag at which to calculate the acf. Default is \code{2*sqrt(length(x)/ng)} where \code{ng} is the number of groups in the panel-series / supplied to \code{g}.}
 \item{type}{character string giving the type of acf to be computed. Allowed values are "correlation" (the default), "covariance" or "partial".}
-\item{plot}{logical. If TRUE (the default) the acf is plotted.}
+\item{plot}{logical. If \code{TRUE} (the default) the acf is plotted.}
 \item{gscale}{logical. Do a groupwise scaling / standardization of \code{x, y} (using \code{collapse::fscale} and the groups supplied to \code{g}) before computing panel-autocorrelations. Recommended and \code{TRUE} by default.}
 \item{...}{further arguments to be passed to \code{stats:::plot.acf}.}
 }
@@ -83,11 +87,11 @@ The \code{pdata.frame} method only works for properly subsetted objects of class
 %% ~Make other sections like Warning with \section{Warning }{....} ~
 
 \seealso{
-%% ~~objects to See Also as \code{\link{help}}, ~~~
+\code{\link{Time-Series and Panel-Series}} %% ~~objects to See Also as \code{\link{help}}, ~~~
 }
 \examples{
 ## World Development Panel Data
-View(wlddev)                                                    # see also help(wlddev)
+head(wlddev)                                                    # see also help(wlddev)
 psacf(wlddev$PCGDP, wlddev$country, wlddev$year)                # ACF of GDP per Capita
 psacf(wlddev, PCGDP ~ country, ~year)                           # Same using data.frame method
 psacf(wlddev$PCGDP, wlddev$country)                             # The Data is sorted, so we could leave out t
