@@ -91,11 +91,12 @@ NumericVector BWCpp(const NumericVector& x, int ng = 0, const IntegerVector& g =
           }
         }
       } else {
-        NumericVector sum(ng); // no_init_vector // good?? -> yes, but not initializing is numerically unstable..
-        IntegerVector gsv = NULL;
+        NumericVector sum(ng); //  // good?? -> yes, but not initializing is numerically unstable..
+        IntegerVector gsv = no_init_vector(ng); // NULL; // gives compile warning !!
         int ngs = 0;
         if(Rf_isNull(gs)) {
-          gsv = IntegerVector(ng);
+          // gsv = IntegerVector(ng);
+          std::fill(gsv.begin(), gsv.end(), 0);
           for(int i = 0; i != l; ++i) {
             if(std::isnan(x[i])) {
               if(!std::isnan(sum[g[i]-1])) {
