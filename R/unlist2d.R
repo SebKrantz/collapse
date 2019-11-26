@@ -3,8 +3,8 @@
 # Crbindlist <- data.table:::Crbindlist
 # Csetcolorder <- data.table:::Csetcolorder
 
-unlist2d <- function(X, idcols = ".id", row.names = FALSE, recursive = TRUE, id.factor = FALSE, DT = FALSE) {
-  if (!is.list(X)) return(X) #stop("X is not a list")
+unlist2d <- function(l, idcols = ".id", row.names = FALSE, recursive = TRUE, id.factor = FALSE, DT = FALSE) {
+  if (!is.list(l)) return(l) #stop("l is not a list")
   make.ids <- idcols[1L] != FALSE
   if(make.ids) id.names <- if(idcols[1L] == TRUE) ".id" else idcols[1L]
   keep.row.names <- row.names[1L] != FALSE
@@ -16,7 +16,7 @@ unlist2d <- function(X, idcols = ".id", row.names = FALSE, recursive = TRUE, id.
     l
   }
   idf <- function(x) if(is.data.frame(x)) 2L else if (is.null(x)) 1L else 3L*is.atomic(x) # faster way ??
-  addrn <- function(x) if(any(names(x) == row.names)) x else c(setNames(list(attr(x, "row.names")),row.names),x) # faster way??
+  addrn <- function(x) if(any(names(x) == row.names)) x else c(`names<-`(list(attr(x, "row.names")),row.names),x) # faster way??
   attol <- function(x) {
     if (is.array(x)) {
       d <- dim(x)
@@ -30,8 +30,8 @@ unlist2d <- function(X, idcols = ".id", row.names = FALSE, recursive = TRUE, id.
       }
       dn <- dimnames(x)
       if(keep.row.names && !is.null(dn[[1L]]))
-        x <- setNames(c(list(dn[[1L]]), mctl(x)), c(row.names, dn[[2L]])) else
-        x <- setNames(mctl(x), dn[[2L]])
+        x <- `names<-`(c(list(dn[[1L]]), mctl(x)), c(row.names, dn[[2L]])) else
+        x <- `names<-`(mctl(x), dn[[2L]])
     } else x <- as.vector(x, "list")
     if (is.null(names(x))) names(x) <- paste0("V", seq_along(x))     # it seems this is not yet working for all (i.e. model objects..), also perhaps not start at V1, sepending on what other columsn there are.. i.e start at the right position??
     return(x)
@@ -57,29 +57,29 @@ unlist2d <- function(X, idcols = ".id", row.names = FALSE, recursive = TRUE, id.
     } else lapply(y, ul2d)
   }
 
-  X <- ul2d(X)
-  if (recursive) {
-    while(!is.data.frame(X)) X <- ul2d(X)
+  l <- ul2d(l)
+  if(recursive) {
+    while(!inherits(l, "data.frame")) l <- ul2d(l)
     if(make.ids) {
-      nams <- names(X)
+      nams <- names(l)
       ids <- which(nams == id.names)
       nid <- length(ids)
       if(nid > 1L) { # Still make sure row.names comes after ids, even if only one id!!
         nids <- seq_len(nid)
-        names(X)[ids] <- if(length(idcols) == nid) idcols else paste(id.names, nids, sep = ".")
+        names(l)[ids] <- if(length(idcols) == nid) idcols else paste(id.names, nids, sep = ".")
         if(keep.row.names) { # New!! It seems it lost a bot of speed through this part!!
           rn <- which(nams == row.names) # New!!
-          if(!all(ids == nids) || rn != nid + 1L) .Call(setcolorder, X, c(ids, rn, seq_along(X)[-c(ids,rn)]))  # X <- X[c(ids,rn,seq_along(X)[-c(ids,rn)])] # New!! efficient? could replace only rownames if one of the conditions holds
-        } else if (!all(ids == nids)) .Call(setcolorder, X, c(ids, seq_along(X)[-ids])) # X <- X[c(ids,seq_along(X)[-ids])] # Old!! before row.names!!
+          if(!all(ids == nids) || rn != nid + 1L) .Call(setcolorder, l, c(ids, rn, seq_along(l)[-c(ids,rn)]))  # l <- l[c(ids,rn,seq_along(l)[-c(ids,rn)])] # New!! efficient? could replace only rownames if one of the conditions holds
+        } else if (!all(ids == nids)) .Call(setcolorder, l, c(ids, seq_along(l)[-ids])) # l <- l[c(ids,seq_along(l)[-ids])] # Old!! before row.names!!
       }
     } else if (keep.row.names) { # New!!
-      rn <- which(names(X) == row.names) # New!!
-      if(rn != 1L) .Call(setcolorder, X, c(rn,seq_along(X)[-rn]))  # X <- X[c(rn,seq_along(X)[-rn])] # New!!
+      rn <- which(names(l) == row.names) # New!!
+      if(rn != 1L) .Call(setcolorder, l, c(rn,seq_along(l)[-rn]))  # l <- l[c(rn,seq_along(l)[-rn])] # New!!
     }
   }
-  attr(X, ".internal.selfref") <- NULL
-  # setattrib(X, ".internal.selfref", NULL) # what if recursive = FALSE -> doesn't work.. but takes more time!!
-  return(X)
+  attr(l, ".internal.selfref") <- NULL
+  # setattrib(l, ".internal.selfref", NULL) # what if recursive = FALSE -> doesn't work.. but takes more time!!
+  return(l)
 }
 # STill do a lot of checking !!
 # perhaps process unnames vectors as columns, and names vectors as rows?? -> nah, it's rbinding
@@ -121,7 +121,7 @@ unlist2d <- function(X, idcols = ".id", row.names = FALSE, recursive = TRUE, id.
 #   row.names <- if (row.names[1L] == TRUE) "row.names" else row.names[1L]
 #   keep.row.names <- row.names != FALSE
 #   idf <- function(x) if(is.data.frame(x)) 2L else if (is.null(x)) 1L else 3L*is.atomic(x) # faster way ??
-#   addrn <- function(x) if(any(names(x) == row.names)) x else c(setNames(list(row.names.data.frame(x)),row.names),x) # faster way??
+#   addrn <- function(x) if(any(names(x) == row.names)) x else c(`names<-`(list(row.names.data.frame(x)),row.names),x) # faster way??
 #   ul2d <- function(y) {
 #     if (is.data.frame(y) || is.atomic(y)) return(y)
 #     ident <- unlist(lapply(y,idf), use.names = FALSE)
@@ -218,7 +218,7 @@ unlist2d <- function(X, idcols = ".id", row.names = FALSE, recursive = TRUE, id.
 #   row.names <- if (row.names[1L] == TRUE) "row.names" else row.names[1L]
 #   keep.row.names <- row.names != FALSE
 #   idf <- function(x) if(is.data.frame(x)) 2L else if (is.null(x)) 1L else 3L*is.atomic(x) # faster way ??
-#   addrn <- function(x) if(any(names(x) == row.names)) x else c(setNames(list(row.names.data.frame(x)),row.names),x) # faster way??
+#   addrn <- function(x) if(any(names(x) == row.names)) x else c(`names<-`(list(row.names.data.frame(x)),row.names),x) # faster way??
 #   ul2d <- function(y) {
 #     if (is.data.frame(y) || is.atomic(y)) return(y)
 #     ident <- unlist(lapply(y,idf), use.names = FALSE)

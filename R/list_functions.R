@@ -1,5 +1,5 @@
 rapply2d <- function(X, FUN, ...) {
-  aply2d <- function(y) if (is.list(y) && !is.data.frame(y)) lapply(y, aply2d) else FUN(y, ...) #is.null(dim(y)) # qsu output shows list of DF can have dim attr.
+  aply2d <- function(y) if (is.list(y) && !inherits(y,  "data.frame")) lapply(y, aply2d) else FUN(y, ...) #is.null(dim(y)) # qsu output shows list of DF can have dim attr.
   #lapply(x,aply2d) # if this is enabled, rapply2d takes apart data.frame is passed
   aply2d(X)
 }
@@ -49,15 +49,15 @@ is.regular <- function(x) is.list(x) || is.atomic(x) # fastest way??
 is.unlistable <- function(l) all(unlist(rapply2d(l, is.regular), use.names = FALSE)) # fastest way??
 
 ldepth <- function(l, DF.as.list = TRUE) { # or list.depth !! (problem here is with list.elem -> I call the argument l, so ldepth is good) / depth / depthl  / l.depth Faster way?? what about data.frames??
-  if (is.data.frame(l)) { # fast defining different functions in if-clause ??
+  if (inherits(l,  "data.frame")) { # fast defining different functions in if-clause ??
     ld <- function(y,i) if (is.list(y)) lapply(y,ld,i+1L) else i
   } else if (DF.as.list) {
     ld <- function(y,i) {
-      df <- is.data.frame(y)
+      df <- inherits(y, "data.frame")
       if (is.list(y) && !df) lapply(y,ld,i+1L) else i+df
     }
   } else {
-    ld <- function(y,i) if (is.list(y) && !is.data.frame(y)) lapply(y,ld,i+1L) else i
+    ld <- function(y,i) if (is.list(y) && !inherits(y, "data.frame")) lapply(y,ld,i+1L) else i
   }
   return(max(unlist(ld(l, 0L), use.names = FALSE)))
 } # If data.frame, search all, otherwise, make optional counting df or not, but don't search them.
@@ -71,7 +71,7 @@ has_elem <- function(l, elem, recursive = TRUE, DF.as.list = TRUE, regex = FALSE
   } else if(is.character(elem)) {
     if(recursive) {
       class(l) <- NULL # in case [ behaves weird
-      is.subl <- if(DF.as.list) is.list else function(x) is.list(x) && !is.data.frame(x) # could do without, but it seems to remove data.frame attributes, and more speed!
+      is.subl <- if(DF.as.list) is.list else function(x) is.list(x) && !inherits(x, "data.frame") # could do without, but it seems to remove data.frame attributes, and more speed!
       namply <- function(y) if(any(subl <- vapply(y, is.subl, TRUE)))
         c(names(subl), unlist(lapply(unclass(y)[subl], namply), use.names = FALSE)) else names(y) # also overall subl names are important, and unclass for DT subsetting !! !!! # names(which(!subl)) # names(y)[!subl] # which is faster !!
       if(regex) return(length(rgrep(elem, namply(l), ...)) > 0L) else return(any(namply(l) %in% elem))
@@ -169,7 +169,7 @@ list_extract_ind <- function(l, ind, is.subl, keep.tree = FALSE) {
 get_elem <- function(l, elem, recursive = TRUE, DF.as.list = TRUE,
                      keep.tree = FALSE, keep.class = FALSE, regex = FALSE, ...) {
   if(recursive) { # possibly if is.list(x) is redundant, because you check above!! -> nah, recursive??
-    is.subl <- if(DF.as.list) is.list else function(x) is.list(x) && !is.data.frame(x) # could do without, but it seems to remove data.frame attributes
+    is.subl <- if(DF.as.list) is.list else function(x) is.list(x) && !inherits(x, "data.frame") # could do without, but it seems to remove data.frame attributes
     if(keep.class) al <- attributes(l) # cll <- class(l) # perhaps generalize to other attributes??
     if(is.function(elem)) {
       l <- list_extract_FUN(l, elem, is.subl, keep.tree)
@@ -199,9 +199,9 @@ get_elem <- function(l, elem, recursive = TRUE, DF.as.list = TRUE,
 
 reg_elem <- function(l, recursive = TRUE, keep.tree = FALSE, keep.class = FALSE) { # regular.elem, reg.elem, std.elem, data.elem, unl.elem?? data.table methods needed??, add recursive option!!!
   if(keep.class) al <- attributes(l)
-  if(is.data.frame(l)) return(l)
+  if(inherits(l, "data.frame")) return(l)
   if(recursive) {
-    is.subl <- function(x) is.list(x) && !is.data.frame(x)
+    is.subl <- function(x) is.list(x) && !inherits(x, "data.frame")
     l <- list_extract_FUN(l, is.regular, is.subl, keep.tree)
     if(keep.class && is.list(l)) {
       al[["names"]] <- names(l)
@@ -217,9 +217,9 @@ reg_elem <- function(l, recursive = TRUE, keep.tree = FALSE, keep.class = FALSE)
 irreg_elem <- function(l, recursive = TRUE, keep.tree = FALSE, keep.class = FALSE) { # irreg.elem or better nonstd.elem # add recursive option!!
   is.irregular <- function(x) !(is.list(x) || is.atomic(x)) # is.irregular fastest way??
   if(keep.class) al <- attributes(l)
-  if(is.data.frame(l)) stop("A data.frame is a regular object!")
+  if(inherits(l, "data.frame")) stop("A data.frame is a regular object!")
   if(recursive) {
-    is.subl <- function(x) is.list(x) && !is.data.frame(x)
+    is.subl <- function(x) is.list(x) && !inherits(x, "data.frame")
     l <- list_extract_FUN(l, is.irregular, is.subl, keep.tree)
     if(keep.class && is.list(l)) {
       al[["names"]] <- names(l)
