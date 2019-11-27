@@ -15,7 +15,7 @@ unlist2d <- function(l, idcols = ".id", row.names = FALSE, recursive = TRUE, id.
     class(l) <- if(DT) c("data.table","data.frame") else "data.frame"
     l
   }
-  idf <- function(x) if(is.data.frame(x)) 2L else if (is.null(x)) 1L else 3L*is.atomic(x) # faster way ??
+  idf <- function(x) if(inherits(x, "data.frame")) 2L else if (is.null(x)) 1L else 3L*is.atomic(x) # faster way ??
   addrn <- function(x) if(any(names(x) == row.names)) x else c(`names<-`(list(attr(x, "row.names")),row.names),x) # faster way??
   attol <- function(x) {
     if (is.array(x)) {
@@ -37,7 +37,7 @@ unlist2d <- function(l, idcols = ".id", row.names = FALSE, recursive = TRUE, id.
     return(x)
   }
   ul2d <- function(y) {
-    if(is.data.frame(y) || is.atomic(y)) return(y)
+    if(inherits(y, "data.frame") || is.atomic(y)) return(y)
     ident <- vapply(y, idf, 1L)
     if(is.list(y) && all(ident > 0L)) {
       at <- ident == 3L
@@ -48,12 +48,12 @@ unlist2d <- function(l, idcols = ".id", row.names = FALSE, recursive = TRUE, id.
             y <- y[ident != 1L] # better way?? y[ident!=1L] = NULL??
             nam <- names(y)
             names(y) <- NULL
-            y <- DFDTl(.Call(rbindlist, y, TRUE, recursive, id.names))
+            y <- DFDTl(.Call(rbindlist, y, TRUE, TRUE, id.names))
             # attributes(y[[1L]]) <- list(levels = nam, class = c("ordered", "factor"))
             setattributes(y[[1L]], pairlist(levels = nam, class = c("ordered", "factor"))) # a lot faster !!
             return(y)
-          } else return(DFDTl(.Call(rbindlist, y[ident != 1L], TRUE, recursive, id.names)))
-        } else return(DFDTl(.Call(rbindlist, y[ident != 1L], TRUE, recursive, NULL)))
+          } else return(DFDTl(.Call(rbindlist, y[ident != 1L], TRUE, TRUE, id.names)))
+        } else return(DFDTl(.Call(rbindlist, y[ident != 1L], TRUE, TRUE, NULL)))
     } else lapply(y, ul2d)
   }
 
