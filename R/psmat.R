@@ -56,11 +56,11 @@ psmat.data.frame <- function(x, by, t = NULL, cols = NULL, transpose = FALSE, ar
              anyNAerror(match(cols, nam), "Unknown column names!") else cols
       }
       class(x) <- NULL
-      by <- if(length(by) == 1L) x[[by]] else GRP(x, by, return.groups = FALSE)
+      by <- if(length(by) == 1L) x[[by]] else GRP(x, by) #, return.groups = FALSE)
       if(is.call(t)) { # If time-variable supplied !!
         t <- anyNAerror(match(all.vars(t), nam), "Unknown time variable!")
         v <- setdiff(v, t)
-        t <- if(length(t) == 1L) x[[t]] else GRP(x, t, return.groups = FALSE)
+        t <- if(length(t) == 1L) x[[t]] else GRP(x, t) #, return.groups = FALSE)
       }
       x <- x[v]
     } else if(!is.null(cols)) {
