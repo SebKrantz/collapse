@@ -5,7 +5,7 @@
 Recursively Apply a Function to a List of Data Objects
 }
 \description{
-\code{rapply2d} is a recursive version of \code{lapply} with two key differences to \code{rapply}: (1) Data frames are considered as atomic objects, not as (sub-)lists, and (2) the result is not simplified.
+\code{rapply2d} is a recursive version of \code{lapply} with two key differences to \code{rapply}: (1) Data frames are considered as final objects, not as (sub-)lists, and (2) the result is not simplified.
 }
 \usage{
 rapply2d(l, FUN, ...)
@@ -21,7 +21,7 @@ A list of the same structure as \code{l}, where \code{FUN} was applied to all el
 }
 %% ~Make other sections like Warning with \section{Warning }{....} ~
 \seealso{
-\code{\link{unlist2d}}
+\code{\link{unlist2d}}, \link[=list-processing]{List Processing}
 }
 \examples{
 l <- list(mtcars, list(mtcars, as.matrix(mtcars)))

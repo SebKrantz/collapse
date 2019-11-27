@@ -34,10 +34,15 @@ A single integer indicating the depth of the list.
 %% ~Make other sections like Warning with \section{Warning }{....} ~
 
 \seealso{
-\code{\link{is.unlistable}}
+\code{\link{is.unlistable}}, \code{\link{has_elem}}, \link[=list-processing]{List Processing}
 }
 \examples{
-##---- Should be DIRECTLY executable !! ----
-##-- ==>  Define data, use random,
-##--	or do  help(data=index)  for the standard data sets.
+l = list(1, 2)
+ldepth(l)
+l = list(1, 2, mtcars)
+ldepth(l)
+ldepth(l, DF.as.list = FALSE)
+l = list(1, 2, list(4, 5, list(6, mtcars)))
+ldepth(l)
+ldepth(l, DF.as.list = FALSE)
 }

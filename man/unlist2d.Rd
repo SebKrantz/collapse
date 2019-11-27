@@ -1,7 +1,7 @@
 \name{unlist2d}
 \alias{unlist2d}
 \title{
-Recursive Row-Binding / Unlisting in 2-Dimensions - to Data Frame
+Recursive Row-Binding / Unlisting in 2D - to Data Frame
 }
 \description{
 \code{unlist2d} efficiently unlists lists of regular R objects (objects built up from atomic elements) and creates a data.frame representation of the list. It is a faithful 2-dimensional generalization of \code{base::unlist}, and can also be understood as a recursive generalization of \code{do.call(rbind, l)}, for lists of vectors, data.frames, arrays or heterogenous objects.
@@ -49,12 +49,62 @@ The result of this iterative procedure is a single \code{data.frame} containing 
 %% ~Make other sections like Warning with \section{Warning }{....} ~
 
 \seealso{
-%% ~~objects to See Also as \code{\link{help}}, ~~~
+\code{\link{rapply2d}}, \link[=list-processing]{List Processing}
 }
 \examples{
+## basic examples:
+l <- list(mtcars, list(mtcars, mtcars))
+unlist2d(l)
+unlist2d(rapply2d(l, fmean))
+l = list(a = qM(mtcars[1:8]),
+         b = list(c = mtcars[4:11], d = list(e = mtcars[2:10], f = mtcars)))
+unlist2d(l, row.names = TRUE)
+unlist2d(rapply2d(l, fmean))
+unlist2d(rapply2d(l, fmean), recursive = FALSE)
+
 ## Groningen Growth and Development Center 10-Sector Database
-head(GGDC)
+head(GGDC10S) # See ?GGDC10S
+namlab(GGDC10S, class = TRUE)
+
+# Panel-Summarize this data by Variable (Emloyment and Value Added), output as list (instead of 4D array)
+l <- qsu(GGDC10S, by = ~Variable,
+         xt = ~ Variable + Country,
+         cols = 6:16, array = FALSE)
+str(l)                                         # A list of 2-levels containing matrices of statistics
+head(unlist2d(l))                              # Default output, but we are missing the variables (row-names of the matrices)
+head(unlist2d(l, row.names = TRUE))            # Here we go, but this is still not very nice
+head(unlist2d(l, idcols = c("Sector","Trans"), # Now this is looking pretty good
+              row.names = "Variable"))
+
+dat <- unlist2d(l, c("Sector","Trans"),        # Id-columns can also be generated as ordered factors
+                "Variable", id.factor = TRUE)
+str(dat)
+
+# Split this sectoral data, first by Variable (Emloyment and Value Added), then by Country
+sdat <- rapply2d(split(GGDC10S[c(1,6:16)], GGDC10S$Variable), function(x) split(x[-1],x[[1]]))
+
+# Compute pairwise correlations between sectors and recombine:
+dat <- unlist2d(rapply2d(sdat, pwcor),
+                idcols = c("Variable","Country"),
+                row.names = "Sector")
+head(dat)
+plot(hclust(as.dist(1-pwcor(dat[-(1:3)]))))    # Using these correlations as a distance metric to cluster sectors
+
+# Together with other functions like psmat, unlist2d can also effectively help reshape data:
+head(unlist2d(psmat(subset(GGDC10S, Variable == "VA"), ~Country, ~Year, cols = 6:16, array = FALSE),
+              idcols = "Sector", row.names = "Country"))
+
+
 }
+
+% # We can also examine the correlations of Growth rates of VA in each sector across countries
+% dat <- G(subset(GGDC10S, Variable == "VA"),1,1, ~ Country, ~Year, cols = 6:16)
+% dat <- psmat(dat, ~ Country, ~Year)
+% plot(dat, legend = TRUE)
+% dat[dat > 100] = NA       # remove outliers
+% plot(dat, legend = TRUE)
+% sort(apply(dat, 3, function(x) fmean.default(pwcor(x))))
+
 % Add one or more standard keywords, see file 'KEYWORDS' in the
 % R documentation directory.
 \keyword{ ~kwd1 }% use one of  RShowDoc("KEYWORDS")
