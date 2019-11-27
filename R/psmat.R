@@ -131,7 +131,7 @@ plot.psmat <- function(x, legend = FALSE, colours = legend, labs = NULL, ...) {
     par(mfrow = mfr, mar = c(2.5,2.5,2.1,1.5), mgp = c(2.5,1,0))
     for(i in seq_along(vars)) ts.plot(ts(x[, , i], mint, maxt), main = vars[i], col = colours, xlab = NULL, ...)
     if(legend) {
-      plot(1, type="n", axes=FALSE, xlab="", ylab="")
+      plot(1, type="n", axes=FALSE) #, xlab="", ylab="")
       legend('topleft', dn[[2L]], col = colours, lty=1, cex= if(ns > 80L) .65 else 1, bty = "n",
              ncol = if(ns <= 10L) 1L else if(nv == 2L) floor(ns^.25) else floor(ns^.37))
     }

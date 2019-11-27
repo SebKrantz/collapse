@@ -346,6 +346,7 @@ importFrom("stats", "as.formula", "complete.cases", "cor", "cov",
  S3method(psmat, default)
  S3method(psmat, pdata.frame)
  S3method(psmat, pseries)
+ S3method(plot, psmat)
  S3method(pspacf, data.frame)
  S3method(pspacf, default)
  S3method(pspacf, pdata.frame)
