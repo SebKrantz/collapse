@@ -2,11 +2,6 @@
 # Crbindlist <- data.table:::Crbindlist
 # Csetcolorder <- data.table:::Csetcolorder
 
-# global macro
-.FAST_STAT_FUN <- c("fmean","fmedian","fmode","fsum","fprod","fsd","fvar",
-                    "fmin","fmax","ffirst","flast","fNobs","fNunique") #,
-                    # "flag","flead","fdiff","fgrowth","fscale") # different argument order !!
-
 # todo speed up: use internals of order ??
 collap <- function(X, by, FUN = fmean, catFUN = fmode, cols = NULL, custom = NULL,
                    keep.by = TRUE, keep.col.order = TRUE, sort.row = TRUE,
@@ -146,12 +141,18 @@ collap <- function(X, by, FUN = fmean, catFUN = fmode, cols = NULL, custom = NUL
       res[[1L]] <- if(is.atomic(by)) list(`names<-`(list(unique_factor(by)), namby)) else list(by[[4L]]) # nah... could add later using "c" ??
       ind <- 2L
     }
+
+    numind <- vapply(custom, is.numeric, TRUE, USE.NAMES = FALSE)
+    if(!all(numind)) custom[!numind] <- lapply(custom[!numind], function(x) if(is.character(x))
+              anyNAerror(match(x, nam), "Unknown column name!") else
+                stop("custom list content must be variable names or indices must match length"))
+
     res[[ind]] <- condsetn(aplyfun(seq_along(namFUN), function(i)
             if(fFUN[i]) match.fun(namFUN[i])(`oldClass<-`(X[custom[[i]]], "data.frame"), by, ..., use.g.names = FALSE) else
             BY.data.frame(X[custom[[i]]], by, namFUN[i], ..., use.g.names = FALSE)), namFUN, give.names)
     if(keep.col.order && widel) {
       o <- unlist(custom, use.names = FALSE)
-      o <- sort.list(c(if(!keep.by) NULL else if(!bycalll) rep(0L,length(numby)) else if(is.character(o)) namby else numby, o), method = "radix")
+      o <- sort.list(c(if(!keep.by) NULL else if(!bycalll) rep(0L,length(numby)) else numby, o), method = "radix")
     }
   }
   if(widel) res <- unlist(unlist(res, FALSE), FALSE) else {
