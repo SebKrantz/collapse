@@ -85,6 +85,10 @@ remove_attributes <- function(x) {
   attributes(x) <- NULL
   x
 }
+addAttributes <- function(x, a) {
+  ax <- attributes(x)
+  setAttributes(x, c(ax,a))
+}
 fnlevels <- function(x) length(attr(x, "levels")) # make cpp version ??
 TRAtoInt <- function(x) # A lot faster than match based verion !!!
   switch(x, replace_fill = 1L, replace = 2L, `-` = 3L, `-+` = 4L, `/` = 5L, `%` = 6L, `+` = 7L, `*` = 8L,
@@ -150,4 +154,8 @@ unique_factor <- function(x) {
   res <- seq_along(attr(x, "levels"))
   duplAttributes(res, x)
 }
-
+dotstostr <- function(...) {
+  args <- deparse(substitute(c(...)))
+  nc <- nchar(args)
+  substr(args, 2, nc) # 3, nc-1 for no brackets !!
+}
