@@ -1,0 +1,250 @@
+---
+title: "Introduction to collapse"
+author: "Sebastian Krantz"
+date: "`r Sys.Date()`"
+output:
+  rmarkdown::html_vignette:
+    toc: TRUE
+vignette: >
+  %\VignetteIndexEntry{Introduction to collapse}
+  %\VignetteEngine{knitr::rmarkdown}
+  \usepackage[utf8]{inputenc}
+---
+
+```{r, echo = FALSE, message = FALSE}
+library(data.table)
+library(collapse)
+knitr::opts_chunk$set(
+  comment = "#",
+    error = FALSE,
+     tidy = FALSE,
+    cache = FALSE,
+ collapse = TRUE
+)
+X = mtcars[1:2]
+by = mtcars$cyl
+```
+
+`collapse` is a C/C++ based package for data manipulation in R. It's aims are 
+
+1. to facilitate complex data transformation and exploration tasks and 
+
+2. to help make R code fast, flexible, parsimonious and programmer friendly
+
+This vignette briefly demonstrates these two points and introduces the main feature of the package.
+
+***
+
+## Data {#data}
+
+In this vignette, we will use wlddev and GGDC10S data.
+
+```{r echo = FALSE}
+options(width = 100L)
+```
+
+
+## Advanced Data Programming using *Fast Statistical Functions*
+
+A key feature of `collapse` is it's broad set of *Fast Statistical Functions*, which are able to dramatically speed-up column-wise, grouped and weighted computations on vectors, matrices or data.frames. The basic syntax common to all of these functions is:
+```{r eval=FALSE, error=FALSE, warning=FALSE}
+FUN(x, g = NULL, [w = NULL,] TRA = FALSE, [na.rm = TRUE,] use.g.names = TRUE, drop = TRUE)
+
+```
+
+where `x` is a vector, matrix or data.frame, `g` takes supplied grouping information, `w` takes a weight vector and is available only to `fmean, fvar, fsd`, and `fmode`, `TRA` is one of `"replace_fill", "replace", "-", "-+", "/", "%", "+", "*"` and can be used to transform `x` using the computed statistics, `na.rm` efficiently removes missing values, is `TRUE` by default, and doesn't generate `NaN`'s if all values in a group are missing, `use.g.names` instructs the function to generate new row-names from the unique groups supplied to `g`, and `drop = TRUE` returns a vector when performing simple computations on matrix or data.frame columns. 
+
+With that in mind, let's start simple. To calculate the mean of each column in a data.frame or matrix, it is sufficient to type:
+
+```{r}
+fmean(mtcars)
+fmean(mtcars, drop = FALSE)  # This returns a 1-row data-frame
+
+m <- qM(mtcars) # This quickly converts objects to matrices
+fmean(m)
+fmean(mtcars, drop = FALSE)  # This returns a 1-row matrix
+
+```
+
+It is also possible to calculate fast groupwise statistics, by simply passing groupig vectors or lists of grouping vectors to the fast functions:
+
+```{r}
+fmean(mtcars, mtcars$cyl)
+fmean(mtcars, mtcars[c("cyl","vs","am")])
+```
+It is evident that in the example above we might be inclined to remove the grouping columns from the output. The unique row-names already indicate the combination of grouping variables. This could be done in a standard way using `match` to get the indices and `[` to subset the data, or in a slightly more efficient way (at least the subsetting part) using `get_vars`:
+```{r}
+ind <- get_vars(mtcars, c("cyl","vs","am"), return = "indices")
+fmean(get_vars(mtcars, -ind), get_vars(mtcars, ind))
+```
+This programming can become even more efficient using *factors* or *grouping objects*. `qF` efficiently turns atomic vectors into factors, and the `GRP()` function easily creates grouping objects (of class `GRP`) from vectors or lists of columns (which is always superior to creating multiple factors and interacting them). By default, both are ordered, but must not be:
+```{r, fig.width=5}
+f <- qF(mtcars$cyl)
+str(f)
+g <- GRP(mtcars, ~ cyl + vs + am) # Using the formula interface, could also use c("cyl","vs","am") or c(2,8:9)
+g
+plot(g)
+```
+
+With factors or `GRP` objects, computations are faster since the fast functions would otherwise internally group the vectors every time they are executed. Using the objects just computed to perform the same computation using multiple functions: 
+
+```{r}
+dat <- get_vars(mtcars, -ind)
+fmean(dat, f)
+fsd(dat, f)
+
+fmean(dat, g)
+fsd(dat, g)
+
+```
+Suppose now we wanted to create a new dataset which contains the `mean`, `sd`, `min` and `max` of the variables *mpg* and *disp* grouped by *cyl*, *vs* and *am*:
+
+```{r}
+dat <- get_vars(mtcars, c("mpg","disp")) 
+cbind(add_stub(fmean(dat, g), "mean_"),
+      add_stub(fsd(dat, g), "sd_"), 
+      add_stub(fmin(dat, g), "min_"),
+      add_stub(fmax(dat, g), "max_"))
+```
+We could also calculate groupwise-frequency weighted means and standard-deviations using the variable *hp* as a weight vector, and we could decide to include the original grouping columns and omit the generated row-names:
+```{r}
+weights <- mtcars$hp
+cbind(g[["groups"]],
+      add_stub(fmean(dat, g, weights, use.g.names = FALSE), "w_mean_"),
+      add_stub(fsd(dat, g, weights, use.g.names = FALSE), "w_sd_"), 
+      add_stub(fmin(dat, g, use.g.names = FALSE), "min_"),
+      add_stub(fmax(dat, g, use.g.names = FALSE), "max_"))
+```
+Finally, we could utilize the `TRA` argument to generate groupwise-weighted demeand, and scaled data, with additional columns giving the group-minnimum and maximum values:
+```{r}
+head(cbind(get_vars(mtcars, ind),
+      add_stub(fmean(dat, g, weights, "-"), "w_demean_"),
+      add_stub(fsd(dat, g, weights, "/"), "w_scale_"), 
+      add_stub(fmin(dat, g, "replace"), "min_"),
+      add_stub(fmax(dat, g, "replace"), "max_")))
+```
+
+
+Now these examples could be made more intricate using the full set of *Fast Statistical Functions* (`fsum, fprod, fmean, fmedian, fmode, fvar, fsd, fmin, fmax, ffirst, flast, fNobs, fNdistinct`) and also employing vector- valued functions and operators (`fscale/STD, fbetween/B, fwithin/W, fHDbetween/HDB, fHDwithin/HDW, flag/L/F, fdiff/D, fgrowth/G`) discussed later. See the documentation for more information, but the above demonstrates the intended use of these features. *Note* that the examples above focussed on programming with data.frames, but the *Fast Statistical Functions* and the principles laid out here work equally well on vectors and matrices!
+
+You will see that using `collapse`'s fast functions can speed up your grouped computations by orders of magnitude - even compared to packages like `dplyr` or `data.table`. Simple column-wise computations with these functions are also faster than `base` functions like `colMeans`, `colSums` etc.. (i.e. *Fast Statistical Functions* are slightly faster on matrices, and a lot faster on data.frames, which are first converted to matrix by these `base` functions). 
+
+
+## Advanced Data Aggregation with `collap()`
+It is now a good point to introduce the name-giving function of this package: `collap` is a fast multi-purpose aggregation command designed to solve complex aggregation problems efficiently and with a minimum of coding. `collap` performs optimally together with the *Fast Statistical Functions*, but will also work with other functions. 
+
+To perform the above aggregation with `collap()`, one would simply need to type:
+
+```{r}
+collap(mtcars, mpg + disp ~ cyl + vs + am, list(fmean, fsd, fmin, fmax), keep.col.order = FALSE)
+```
+
+The original idea behind `collap` is however better demonstrated with a different dataset. Consider the *World Development Dataset* `wlddev` included in the package:
+```{r}
+head(wlddev)
+namlab(wlddev, class = TRUE)
+nrow(wlddev)
+fNdistinct(wlddev)
+```
+This dataset contains 4 key World Bank development indicators for 216 countries over 59 years, in addition to lots of categorical identifers. Suppose we would like to aggregate this data by decade, but keep all that categorical information. With `collap` this is extremely simple:
+
+```{r}
+head(collap(wlddev, ~ iso3c + decade))
+```
+Note that the columns of the data are in the original order and also retain all their attributes. But how did this magic happen? Let's look briefly at the syntax of `collap`:
+```{r eval=FALSE}
+collap(X, by, FUN = fmean, catFUN = fmode, cols = NULL, custom = NULL,
+       keep.by = TRUE, keep.col.order = TRUE, sort.row = TRUE,
+       parallel = FALSE, mc.cores = 1L,
+       return = c("wide","list","long","long_dupl"), give.names = "auto") # , ...
+```
+
+It is clear that `X` is the data and `by` gives the grouping information, which can be a one-or two sided formula or vectors, factors, lists or `GRP` objects (like the *Fast Statistical Functions*). Now `FUN` provides the function(s) applied only to numeric variables in `X` and defaults to the mean, while `catFUN` provides the function(s) applied to only categorical variables in `X` and defaults to a fast implementation of the statistical mode (i.e. the most frequent value). If all values inside a group are either all equal or all distinct, `fmode` returns the first value instead. `keep.col.order = TRUE` specifies that the data is to be returned with the original column-order. Thus in the above example it was sufficient to supply `X` and `by` and `collap` did the rest for us. 
+
+Suppose now we only want to aggregate the 2 series. This can be done utilizing the `cols` argument:
+```{r}
+head(collap(wlddev, ~ iso3c + decade, cols = 9:12))
+```
+As before we could use multiple functions by putting them in a named or unnamed list:
+
+```{r}
+head(collap(wlddev, ~ iso3c + decade, list(fmean, fmedian, fsd), cols = 9:12))
+```
+
+with multiple functions, we could alse request `collap` to return a long-format of the data:
+```{r}
+head(collap(wlddev, ~ iso3c + decade, list(fmean, fmedian, fsd), cols = 9:12, return = "long"))
+```
+The final feature of `collap` I want to highlight at this point is the `custom` argument, which allows the user to circumvent the broad distinction into numeric and categorical data (and the associated `FUN` and `catFUN` arguments) and specify exactly which columns to aggregate using which functions:
+```{r}
+head(collap(wlddev, ~ iso3c + decade, 
+            custom = list(fmean = 9:12, fsd = 9:12, 
+                          ffirst = c("country","region","income"), 
+                          flast = c("year","date"),
+                          fmode = "OECD")))
+```
+
+
+
+## Data Transformations
+`collapse` also provides an ensemble of function to perform common data transformations extremely efficiently and user friendly.
+ 
+### Apply Functions to Rows or Columns of Data Objects with `dapply`
+
+`dapply` is a quite efficient apply command for matrices and data.frames. It can be used to apply functions to rows or (by default) columns of matrices or data.frames and return objects of the same type and with the same attributes, or convert into the other type without loosing attributes. 
+```{r}
+dapply(mtcars, sum)
+dapply(mtcars, sum, MARGIN = 1)
+dapply(mtcars, quantile)
+head(dapply(mtcars, quantile, MARGIN = 1))
+str(dapply(mtcars, log))
+str(dapply(m, log))
+str(dapply(mtcars, log, return = "matrix"))
+str(dapply(m, log, return = "data.frame"))
+```
+
+
+### (Efficient) Split-Apply-Combine Computing with `BY`
+`BY` is a generalization of `dapply` for grouped computations using functions that are not part of the *Fast Statistical Functions* introduced above. 
+
+```{r}
+v <- iris$Sepal.Length   # A numeric vector
+f <- iris$Species        # A factor. Vectors and lists passed to g will internally be converted to factor
+
+## default vector method
+BY(v, f, sum)                          # Sum by species
+BY(v, f, quantile)                     # Species quantiles: by default stacked
+BY(v, f, quantile, expand.wide = TRUE) # Wide format
+
+## matrix method
+miris <- qM(num_vars(iris))
+BY(miris, f, sum)                          # Also return as matrix
+BY(miris, f, sum, return = "data.frame")   # Return as data.frame ... also works for all the other computations below
+BY(miris, f, quantile)
+BY(miris, f, quantile, expand.wide = TRUE)
+BY(miris, f, quantile, expand.wide = TRUE, # Return as list of matrices
+   return = "list")
+
+## data.frame method
+BY(num_vars(iris), f, sum)             # Also returns a data.fram etc...
+```
+
+### (Groupwise) Replacing or Sweeping out Statistics with `TRA`
+TRA is an S3 generic that efficiently transforms data by either (column-wise) replacing data values with supplied statistics or sweeping the statistics out of the data. It is incorporated as an argument to all *Fast Statistical Functions* and therefore pretty redundat. 
+
+### fscale / STD
+### fbetween / B and fwithin / W
+### fHDbetween / HDB and fHDwithin / HDW
+
+
+## Time-Series and Panel-Series
+### flag / L / F
+### fdiff / D and fgrowth / G
+### Panel-Series to Array Conversions
+### Panel-Series Auto- Partial-Auto and Cross-Correlation and Covariance Functions
+
+## List Processing
+### List Identification
+### List Subsetting
+### Recursive Apply
+### Unlisting in 2D
