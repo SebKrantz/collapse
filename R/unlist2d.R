@@ -48,12 +48,12 @@ unlist2d <- function(l, idcols = ".id", row.names = FALSE, recursive = TRUE, id.
             y <- y[ident != 1L] # better way?? y[ident!=1L] = NULL??
             nam <- names(y)
             names(y) <- NULL
-            y <- DFDTl(.Call(rbindlist, y, TRUE, TRUE, id.names))
+            y <- DFDTl(.Call(C_rbindlist, y, TRUE, TRUE, id.names))
             # attributes(y[[1L]]) <- list(levels = nam, class = c("ordered", "factor"))
             setattributes(y[[1L]], pairlist(levels = nam, class = c("ordered", "factor"))) # a lot faster !!
             return(y)
-          } else return(DFDTl(.Call(rbindlist, y[ident != 1L], TRUE, TRUE, id.names)))
-        } else return(DFDTl(.Call(rbindlist, y[ident != 1L], TRUE, TRUE, NULL)))
+          } else return(DFDTl(.Call(C_rbindlist, y[ident != 1L], TRUE, TRUE, id.names)))
+        } else return(DFDTl(.Call(C_rbindlist, y[ident != 1L], TRUE, TRUE, NULL)))
     } else lapply(y, ul2d)
   }
 
@@ -69,12 +69,12 @@ unlist2d <- function(l, idcols = ".id", row.names = FALSE, recursive = TRUE, id.
         names(l)[ids] <- if(length(idcols) == nid) idcols else paste(id.names, nids, sep = ".")
         if(keep.row.names) { # New!! It seems it lost a bot of speed through this part!!
           rn <- which(nams == row.names) # New!!
-          if(!all(ids == nids) || rn != nid + 1L) .Call(setcolorder, l, c(ids, rn, seq_along(l)[-c(ids,rn)]))  # l <- l[c(ids,rn,seq_along(l)[-c(ids,rn)])] # New!! efficient? could replace only rownames if one of the conditions holds
-        } else if (!all(ids == nids)) .Call(setcolorder, l, c(ids, seq_along(l)[-ids])) # l <- l[c(ids,seq_along(l)[-ids])] # Old!! before row.names!!
+          if(!all(ids == nids) || rn != nid + 1L) .Call(C_setcolorder, l, c(ids, rn, seq_along(l)[-c(ids,rn)]))  # l <- l[c(ids,rn,seq_along(l)[-c(ids,rn)])] # New!! efficient? could replace only rownames if one of the conditions holds
+        } else if (!all(ids == nids)) .Call(C_setcolorder, l, c(ids, seq_along(l)[-ids])) # l <- l[c(ids,seq_along(l)[-ids])] # Old!! before row.names!!
       }
     } else if (keep.row.names) { # New!!
       rn <- which(names(l) == row.names) # New!!
-      if(rn != 1L) .Call(setcolorder, l, c(rn,seq_along(l)[-rn]))  # l <- l[c(rn,seq_along(l)[-rn])] # New!!
+      if(rn != 1L) .Call(C_setcolorder, l, c(rn,seq_along(l)[-rn]))  # l <- l[c(rn,seq_along(l)[-rn])] # New!!
     }
   }
   attr(l, ".internal.selfref") <- NULL

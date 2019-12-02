@@ -3,11 +3,11 @@
 # sourceCpp("src/qF_qG.cpp", rebuild = TRUE) # https://gallery.rcpp.org/articles/fast-factor-generation/
 qF <- function(x, ordered = TRUE) {
   if(is.factor(x)) return(x)
-  qFCpp(x, ordered)
+  .Call(Cpp_qF, x, ordered)
 }
 qG <- function(x, ordered = TRUE) {
   if(is.factor(x)) return(x)
-  qGCpp(x, ordered)
+  .Call(Cpp_qG, x, ordered)
 }
 # what about attribute preervation ??
 # -> I think it is not good having all kinds of stuff attached to a matrix ??
@@ -17,14 +17,14 @@ qDF <- function(X) {
     d <- dim(X)
     ld <- length(d)
     if(ld == 2L)
-    return(mctl(X, names = TRUE, ret = 1L)) else if (ld > 2L) {
+    return(.Call(Cpp_mctl, X, TRUE, 1L)) else if (ld > 2L) {
       dn <- dimnames(X)
       dim(X) <- c(d[1L], prod(d[-1L]))
       if(!is.null(dn)) {
         for (i in 2L:ld) if(is.null(dn[[i]])) dn[[i]] <- seq_len(d[i])
         dimnames(X) <- list(dn[[1L]], interaction(expand.grid(dn[-1L]))) # Good??
       }
-      return(mctl(X, names = TRUE, ret = 1L))
+      return(.Call(Cpp_mctl, X, TRUE, 1L))
     } else {
       lx <- length(X)
       X <- `names<-`(list(X), deparse(substitute(X)))
@@ -45,14 +45,14 @@ qDT <- function(X) { # what if already DT ?? return ??
     d <- dim(X)
     ld <- length(d)
     if(ld == 2L)
-    return(mctl(X, names = TRUE, ret = 2L)) else if(ld > 2L) {
+    return(.Call(Cpp_mctl, X, TRUE, 2L)) else if(ld > 2L) {
       dn <- dimnames(X)
       dim(X) <- c(d[1L], prod(d[-1L]))
       if(!is.null(dn)) {
         for (i in 2L:ld) if(is.null(dn[[i]])) dn[[i]] <- seq_len(d[i])
         dimnames(X) <- list(dn[[1L]], interaction(expand.grid(dn[-1L]))) # Good??
       }
-      return(mctl(X, names = TRUE, ret = 2L))
+      return(.Call(Cpp_mctl, X, TRUE, 2L))
     } else {
       lx <- length(X)
       X <- `names<-`(list(X), deparse(substitute(X)))

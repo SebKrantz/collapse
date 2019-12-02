@@ -11,50 +11,50 @@ TRA <- function(x, STATS, FUN = "-", ...) {
 }
 TRA.default <- function(x, STATS, FUN = "-", g = NULL, ...) {
   if(!missing(...)) stop("Unknown argument ", dotstostr(...))
-  if(is.null(g)) return(TRACpp(x,STATS,0L,TRAtoInt(FUN))) else if(is.atomic(g)) {
+  if(is.null(g)) return(.Call(Cpp_TRA,x,STATS,0L,TRAtoInt(FUN))) else if(is.atomic(g)) {
     if(is.factor(g)) {
       if(fnlevels(g) != length(STATS)) stop("number of groups must match length(STATS)")
     } else {
       g <- qG(g) # needs to be ordered to be compatible with fast functions !!
       if(attr(g, "N.groups") != length(STATS)) stop("number of groups must match length(STATS)")
     }
-    return(TRACpp(x,STATS,g,TRAtoInt(FUN)))
+    return(.Call(Cpp_TRA,x,STATS,g,TRAtoInt(FUN)))
   } else {
     if(!is.GRP(g)) g <- GRP(g, return.groups = FALSE)
     if(g[[1L]] != length(STATS)) stop("number of groups must match length(STATS)")
-    return(TRACpp(x,STATS,g[[2L]],TRAtoInt(FUN)))
+    return(.Call(Cpp_TRA,x,STATS,g[[2L]],TRAtoInt(FUN)))
   }
 }
 TRA.matrix <- function(x, STATS, FUN = "-", g = NULL, ...) {
   if(!missing(...)) stop("Unknown argument ", dotstostr(...))
-  if(is.null(g)) return(TRAmCpp(x,STATS,0L,TRAtoInt(FUN))) else if(is.atomic(g)) {
+  if(is.null(g)) return(.Call(Cpp_TRAm,x,STATS,0L,TRAtoInt(FUN))) else if(is.atomic(g)) {
     if(is.factor(g)) {
       if(fnlevels(g) != nrow(STATS)) stop("number of groups must match nrow(STATS)")
     } else {
       g <- qG(g) # needs to be ordered to be compatible with fast functions !!
       if(attr(g, "N.groups") != nrow(STATS)) stop("number of groups must match nrow(STATS)")
     }
-    return(TRAmCpp(x,STATS,g,TRAtoInt(FUN)))
+    return(.Call(Cpp_TRAm,x,STATS,g,TRAtoInt(FUN)))
   } else {
     if(!is.GRP(g)) g <- GRP(g, return.groups = FALSE)
     if(g[[1L]] != nrow(STATS)) stop("number of groups must match nrow(STATS)")
-    return(TRAmCpp(x,STATS,g[[2L]],TRAtoInt(FUN)))
+    return(.Call(Cpp_TRAm,x,STATS,g[[2L]],TRAtoInt(FUN)))
   }
 }
 TRA.data.frame <- function(x, STATS, FUN = "-", g = NULL, ...) {
   if(!missing(...)) stop("Unknown argument ", dotstostr(...))
-  if(is.null(g)) return(TRAlCpp(x,STATS,0L,TRAtoInt(FUN))) else if(is.atomic(g)) {
+  if(is.null(g)) return(.Call(Cpp_TRAl,x,STATS,0L,TRAtoInt(FUN))) else if(is.atomic(g)) {
     if(is.factor(g)) {
       if(fnlevels(g) != nrow(STATS)) stop("number of groups must match nrow(STATS)")
     } else {
       g <- qG(g) # needs to be ordered to be compatible with fast functions !!
       if(attr(g, "N.groups") != nrow(STATS)) stop("number of groups must match nrow(STATS)")
     }
-    return(TRAlCpp(x,STATS,g,TRAtoInt(FUN)))
+    return(.Call(Cpp_TRAl,x,STATS,g,TRAtoInt(FUN)))
   } else {
     if(!is.GRP(g)) g <- GRP(g, return.groups = FALSE)
     if(g[[1L]] != nrow(STATS)) stop("number of groups must match nrow(STATS)")
-    return(TRAlCpp(x,STATS,g[[2L]],TRAtoInt(FUN)))
+    return(.Call(Cpp_TRAl,x,STATS,g[[2L]],TRAtoInt(FUN)))
   }
 }
 TRA.grouped_df <- function(x, STATS, FUN = "-", keep.group_vars = TRUE, ...) {
@@ -66,7 +66,7 @@ TRA.grouped_df <- function(x, STATS, FUN = "-", keep.group_vars = TRUE, ...) {
   attributes(STATS) <- NULL
   if(anyNA(mt <- match(namst, names(x)))) stop("the variable names of x and STATS must match")
   mt <- mt[nognst]
-  get_vars(x, mt) <- TRAlCpp(colsubset(x, mt),STATS[nognst],g[[2L]],TRAtoInt(FUN))
+  get_vars(x, mt) <- .Call(Cpp_TRAl,colsubset(x, mt),STATS[nognst],g[[2L]],TRAtoInt(FUN))
   if(!keep.group_vars) return(colsubset(x, names(x) %!in% g[[5L]]))
   return(x)
 }

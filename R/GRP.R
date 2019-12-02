@@ -16,7 +16,7 @@ forderv <- function(x, by = seq_along(x), retGrp = FALSE, sort = TRUE, order = 1
     if(length(order) == 1L) order = rep(order, length(by))
   }
   order = as.integer(order)
-  .Call(forder, x, by, retGrp, sort, order, na.last)
+  .Call(C_forder, x, by, retGrp, sort, order, na.last)
 }
 
 GRP.default <- function(X, by = NULL, sort = TRUE, order = 1L, na.last = FALSE,
@@ -45,19 +45,19 @@ GRP.default <- function(X, by = NULL, sort = TRUE, order = 1L, na.last = FALSE,
   f <- attr(o, "starts")
 
   if(length(o)) { # if ordered, returns 0
-    len <- .Call(uniqlengths, f, length(o))
-    grpuo <- .Call(frank, o, f, len, "dense")
+    len <- .Call(C_uniqlengths, f, length(o))
+    grpuo <- .Call(C_frank, o, f, len, "dense")
     ordered <- c(GRP.sort = sort, initially.ordered = FALSE)
     if(return.groups) { # subsetDT is faster than base, and subsetVector preserves variable labels !!
-        groups <- if(is.list(X)) .Call(subsetDT, X, o[f], by) else `names<-`(list(.Call(subsetVector, X, o[f])), namby)
+        groups <- if(is.list(X)) .Call(C_subsetDT, X, o[f], by) else `names<-`(list(.Call(C_subsetVector, X, o[f])), namby)
     } else groups <- NULL
   } else {
     lx <- if(inherits(X, "data.frame")) nrow(X) else if(is.atomic(X)) length(X) else length(X[[1L]])
-    len <- .Call(uniqlengths, f, lx) # data.table:::Cuniqlengths # or cumsubtract !!!
+    len <- .Call(C_uniqlengths, f, lx) # data.table:::Cuniqlengths # or cumsubtract !!!
     grpuo <- rep.int(seq_along(len), len) # rep.int fastest ?? -> about same speed as rep !!
     ordered <- c(GRP.sort = sort, initially.ordered = TRUE)
     if(return.groups) {
-      groups <- if(is.list(X)) .Call(subsetDT, X, f, by) else `names<-`(list(.Call(subsetVector, X, f)), namby)
+      groups <- if(is.list(X)) .Call(C_subsetDT, X, f, by) else `names<-`(list(.Call(C_subsetVector, X, f)), namby)
     } else groups <- NULL
   }
   if(!return.order) o <- NULL

@@ -168,8 +168,8 @@ collap <- function(X, by, FUN = fmean, catFUN = fmode, cols = NULL, custom = NUL
               setAttributes(c(res[[1L]], e), ax) }))
       } else {
         if(return != 4L) {
-          res <- if(!keep.by) .Call(rbindlist, res, TRUE, TRUE, "Function") else # data.table:::Crbindlist
-                 .Call(rbindlist, lapply(res[-1L], function(e) c(res[[1L]], e)), TRUE, TRUE, "Function")
+          res <- if(!keep.by) .Call(C_rbindlist, res, TRUE, TRUE, "Function") else # data.table:::Crbindlist
+                 .Call(C_rbindlist, lapply(res[-1L], function(e) c(res[[1L]], e)), TRUE, TRUE, "Function")
         } else {
           if(!(nul && nnul) || customl) stop("long_dupl is only meaningful for aggregations with both numeric and categorical data, and multiple functions used for only one of the two data types!")
           mFUN <- length(FUN) > 1L
@@ -179,14 +179,14 @@ collap <- function(X, by, FUN = fmean, catFUN = fmode, cols = NULL, custom = NUL
                             lapply(res[-nid], function(e) c(res[[nid]], e))
           } else res <- if(mFUN) lapply(res[-c(nid, 1L)], function(e) c(res[[1L]], e, res[[nid]])) else
                                  lapply(res[-c(nid, 1L)], function(e) c(res[[1L]], res[[nid]], e))
-          res <- .Call(rbindlist, res, FALSE, FALSE, "Function")
+          res <- .Call(C_rbindlist, res, FALSE, FALSE, "Function")
         }
         if(keep.col.order)  o <- sort.list(c(0L, if(!keep.by) NULL else if(!bycalll) rep(0L,length(numby)) else numby, nu, nnu), method = "radix")
       }
     } else message("return options other than 'wide' are only meaningful if multiple functions are used!")
   }
 
-  if(keep.col.order) .Call(setcolorder, res, o) # data.table:::Csetcolorder
+  if(keep.col.order) .Call(C_setcolorder, res, o) # data.table:::Csetcolorder
   ax[["names"]] <- names(res)
   ax[["row.names"]] <- .set_row_names(length(res[[1L]]))
   return(setAttributes(res, ax))

@@ -1,7 +1,8 @@
 #include <Rcpp.h>
 using namespace Rcpp;
+// // [[Rcpp::interfaces(cpp)]] // not useful!!
 
-// [[Rcpp::export]]
+// [[Rcpp::export]] // // [[Rcpp::export(.fmaxCpp)]]
 NumericVector fmaxCpp(const NumericVector& x, int ng = 0, const IntegerVector& g = 0,
                       bool narm = true) {
   int l = x.size();

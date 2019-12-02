@@ -24,11 +24,11 @@ psmat.default <- function(x, g, t = NULL, transpose = FALSE, ...) {
                     g <- as.factor.GRP(g) else g <- as.factor.GRP(GRP(g)) # interaction(lapply(g, qF))
   if(is.null(t)) {
     message("No timevar provided: Assuming Balanced Panel")
-    psmatCpp(x, g, NULL, transpose)
+    .Call(Cpp_psmat,x, g, NULL, transpose)
   } else {
     if(!is.factor(t)) if(is.atomic(t)) t <- qF(t) else if(is.GRP(t))
                       t <- as.factor.GRP(t) else t <- as.factor.GRP(GRP(t)) # interaction(lapply(t, qF))
-    psmatCpp(x, g, t, transpose)
+    .Call(Cpp_psmat,x, g, t, transpose)
     }
   }
 }
@@ -88,7 +88,7 @@ psmat.pseries <- function(x, transpose = FALSE, ...) {
   index <- attr(x, "index")
   if(is.matrix(x)) stop("x is already a matrix")
   if(length(index) > 2L) index <- c(interaction(index[-length(index)], drop = TRUE), index[length(index)])
-  psmatCpp(x, index[[1L]], index[[2L]], transpose)
+  .Call(Cpp_psmat,x, index[[1L]], index[[2L]], transpose)
 }
 psmat.pdata.frame <- function(x, transpose = FALSE, array = TRUE, ...) {
   if(!missing(...)) stop("Unknown argument ", dotstostr(...))

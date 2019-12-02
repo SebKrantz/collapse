@@ -14,31 +14,31 @@ fscale <- function(x, ...) { # g = NULL, w = NULL, na.rm = TRUE, stable.algo = T
 }
 fscale.default <- function(x, g = NULL, w = NULL, na.rm = TRUE, stable.algo = TRUE, ...) {
   if(!missing(...)) stop("Unknown argument ", dotstostr(...))
-  if(is.null(g)) return(fscaleCpp(x,0L,0L,NULL,w,na.rm,stable.algo)) else if (is.atomic(g)) {
-    if(is.factor(g)) return(fscaleCpp(x,fnlevels(g),g,NULL,w,na.rm,stable.algo)) else {
+  if(is.null(g)) return(.Call(Cpp_fscale,x,0L,0L,NULL,w,na.rm,stable.algo)) else if (is.atomic(g)) {
+    if(is.factor(g)) return(.Call(Cpp_fscale,x,fnlevels(g),g,NULL,w,na.rm,stable.algo)) else {
       g <- qG(g, ordered = FALSE)
-      return(fscaleCpp(x,attr(g,"N.groups"),g,NULL,w,na.rm,stable.algo))
+      return(.Call(Cpp_fscale,x,attr(g,"N.groups"),g,NULL,w,na.rm,stable.algo))
     }
   } else {
     if(!is.GRP(g)) g <- GRP(g, return.groups = FALSE)
-    return(fscaleCpp(x,g[[1L]],g[[2L]],g[[3L]],w,na.rm,stable.algo))
+    return(.Call(Cpp_fscale,x,g[[1L]],g[[2L]],g[[3L]],w,na.rm,stable.algo))
   }
 }
 fscale.pseries <- function(x, effect = 1L, w = NULL, na.rm = TRUE, stable.algo = TRUE, ...) {
   if(!missing(...)) stop("Unknown argument ", dotstostr(...))
   g <- if(length(effect) == 1L) attr(x, "index")[[effect]] else interaction(attr(x, "index")[effect], drop = TRUE)
-  fscaleCpp(x,fnlevels(g),g,NULL,w,na.rm,stable.algo)
+  .Call(Cpp_fscale,x,fnlevels(g),g,NULL,w,na.rm,stable.algo)
 }
 fscale.matrix <- function(x, g = NULL, w = NULL, na.rm = TRUE, stable.algo = TRUE, ...) {
   if(!missing(...)) stop("Unknown argument ", dotstostr(...))
-  if(is.null(g)) return(fscalemCpp(x,0L,0L,NULL,w,na.rm,stable.algo)) else if (is.atomic(g)) {
-    if(is.factor(g)) return(fscalemCpp(x,fnlevels(g),g,NULL,w,na.rm,stable.algo)) else {
+  if(is.null(g)) return(.Call(Cpp_fscalem,x,0L,0L,NULL,w,na.rm,stable.algo)) else if (is.atomic(g)) {
+    if(is.factor(g)) return(.Call(Cpp_fscalem,x,fnlevels(g),g,NULL,w,na.rm,stable.algo)) else {
       g <- qG(g, ordered = FALSE)
-      return(fscalemCpp(x,attr(g,"N.groups"),g,NULL,w,na.rm,stable.algo))
+      return(.Call(Cpp_fscalem,x,attr(g,"N.groups"),g,NULL,w,na.rm,stable.algo))
     }
   } else {
     if(!is.GRP(g)) g <- GRP(g, return.groups = FALSE)
-    return(fscalemCpp(x,g[[1L]],g[[2L]],g[[3L]],w,na.rm,stable.algo))
+    return(.Call(Cpp_fscalem,x,g[[1L]],g[[2L]],g[[3L]],w,na.rm,stable.algo))
   }
 }
 fscale.grouped_df <- function(x, w = NULL, na.rm = TRUE, keep.group_vars = TRUE, keep.w = TRUE, stable.algo = TRUE, ...) {
@@ -56,30 +56,30 @@ fscale.grouped_df <- function(x, w = NULL, na.rm = TRUE, keep.group_vars = TRUE,
   }
   if(length(gn2)) {
     if(!length(gn))
-      return(fscalelCpp(x[-gn2],g[[1L]],g[[2L]],g[[3L]],w,na.rm,stable.algo)) else {
+      return(.Call(Cpp_fscalel,x[-gn2],g[[1L]],g[[2L]],g[[3L]],w,na.rm,stable.algo)) else {
         ax <- attributes(x)
         attributes(x) <- NULL
         ax[["names"]] <- c(nam[gn], nam[-gn2])
-        return(setAttributes(c(x[gn],fscalelCpp(x[-gn2],g[[1L]],g[[2L]],g[[3L]],w,na.rm,stable.algo)), ax))
+        return(setAttributes(c(x[gn],.Call(Cpp_fscalel,x[-gn2],g[[1L]],g[[2L]],g[[3L]],w,na.rm,stable.algo)), ax))
       }
-  } else return(fscalelCpp(x,g[[1L]],g[[2L]],g[[3L]],w,na.rm,stable.algo))
+  } else return(.Call(Cpp_fscalel,x,g[[1L]],g[[2L]],g[[3L]],w,na.rm,stable.algo))
 }
 fscale.data.frame <- function(x, g = NULL, w = NULL, na.rm = TRUE, stable.algo = TRUE, ...) {
   if(!missing(...)) stop("Unknown argument ", dotstostr(...))
-  if(is.null(g)) return(fscalelCpp(x,0L,0L,NULL,w,na.rm,stable.algo)) else if(is.atomic(g)) {
-    if(is.factor(g)) return(fscalelCpp(x,fnlevels(g),g,NULL,w,na.rm,stable.algo)) else {
+  if(is.null(g)) return(.Call(Cpp_fscalel,x,0L,0L,NULL,w,na.rm,stable.algo)) else if(is.atomic(g)) {
+    if(is.factor(g)) return(.Call(Cpp_fscalel,x,fnlevels(g),g,NULL,w,na.rm,stable.algo)) else {
       g <- qG(g, ordered = FALSE)
-      return(fscalelCpp(x,attr(g,"N.groups"),g,NULL,w,na.rm,stable.algo))
+      return(.Call(Cpp_fscalel,x,attr(g,"N.groups"),g,NULL,w,na.rm,stable.algo))
     }
   } else {
     if(!is.GRP(g)) g <- GRP(g, return.groups = FALSE)
-    return(fscalelCpp(x,g[[1L]],g[[2L]],g[[3L]],w,na.rm,stable.algo))
+    return(.Call(Cpp_fscalel,x,g[[1L]],g[[2L]],g[[3L]],w,na.rm,stable.algo))
   }
 }
 fscale.pdata.frame <- function(x, effect = 1L, w = NULL, na.rm = TRUE, stable.algo = TRUE, ...) {
   if(!missing(...)) stop("Unknown argument ", dotstostr(...))
   g <- if(length(effect) == 1L) attr(x, "index")[[effect]] else interaction(attr(x, "index")[effect], drop = TRUE)
-  fscaleCpp(x,fnlevels(g),g,NULL,w,na.rm,stable.algo)
+  .Call(Cpp_fscale,x,fnlevels(g),g,NULL,w,na.rm,stable.algo)
 }
 
 
@@ -94,7 +94,7 @@ STD.default <- function(x, g = NULL, w = NULL, na.rm = TRUE, stable.algo = TRUE,
 STD.pseries <- function(x, effect = 1L, w = NULL, na.rm = TRUE, stable.algo = TRUE, ...) {
   if(!missing(...)) stop("Unknown argument ", dotstostr(...))
   g <- if(length(effect) == 1L) attr(x, "index")[[effect]] else interaction(attr(x, "index")[effect], drop = TRUE)
-  fscaleCpp(x,fnlevels(g),g,NULL,w,na.rm,stable.algo)
+  .Call(Cpp_fscale,x,fnlevels(g),g,NULL,w,na.rm,stable.algo)
 }
 STD.matrix <- function(x, g = NULL, w = NULL, na.rm = TRUE, stable.algo = TRUE, stub = "STD.", ...) {
   if(!missing(...)) stop("Unknown argument ", dotstostr(...))
@@ -115,13 +115,13 @@ STD.grouped_df <- function(x, w = NULL, na.rm = TRUE, keep.group_vars = TRUE, ke
   }
   if(length(gn2)) {
     if(!length(gn))
-      return(add_stub(fscalelCpp(x[-gn2],g[[1L]],g[[2L]],g[[3L]],w,na.rm,stable.algo), stub)) else {
+      return(add_stub(.Call(Cpp_fscalel,x[-gn2],g[[1L]],g[[2L]],g[[3L]],w,na.rm,stable.algo), stub)) else {
         ax <- attributes(x)
         attributes(x) <- NULL
         ax[["names"]] <- c(nam[gn], if(is.character(stub)) paste0(stub, nam[-gn2]) else nam[-gn2])
-        return(setAttributes(c(x[gn],fscalelCpp(x[-gn2],g[[1L]],g[[2L]],g[[3L]],w,na.rm,stable.algo)), ax))
+        return(setAttributes(c(x[gn],.Call(Cpp_fscalel,x[-gn2],g[[1L]],g[[2L]],g[[3L]],w,na.rm,stable.algo)), ax))
       }
-  } else return(add_stub(fscalelCpp(x,g[[1L]],g[[2L]],g[[3L]],w,na.rm,stable.algo), stub))
+  } else return(add_stub(.Call(Cpp_fscalel,x,g[[1L]],g[[2L]],g[[3L]],w,na.rm,stable.algo), stub))
 }
 
 # updated (best) version !!
@@ -152,16 +152,16 @@ STD.pdata.frame <- function(x, effect = 1L, w = NULL, cols = is.numeric,
 
   if(length(gn) && !is.null(cols)) {
     ax[["names"]] <- c(nam[gn], if(is.character(stub)) paste0(stub, nam[cols]) else nam[cols])
-    return(setAttributes(c(x[gn], fscalelCpp(x[cols],fnlevels(g),g,NULL,w,na.rm,stable.algo)), ax))
+    return(setAttributes(c(x[gn], .Call(Cpp_fscalel,x[cols],fnlevels(g),g,NULL,w,na.rm,stable.algo)), ax))
   } else if(!length(gn)) {
     ax[["names"]] <- if(is.character(stub)) paste0(stub, nam[cols]) else nam[cols]
-    return(setAttributes(fscalelCpp(x[cols],fnlevels(g),g,NULL,w,na.rm,stable.algo), ax))
+    return(setAttributes(.Call(Cpp_fscalel,x[cols],fnlevels(g),g,NULL,w,na.rm,stable.algo), ax))
   } else {
     if(is.character(stub)) {
       ax[["names"]] <- paste0(stub, nam)
-      return(setAttributes(fscalelCpp(x,fnlevels(g),g,NULL,w,na.rm,stable.algo), ax))
+      return(setAttributes(.Call(Cpp_fscalel,x,fnlevels(g),g,NULL,w,na.rm,stable.algo), ax))
     } else
-    return(fscalelCpp(`oldClass<-`(x, ax[["class"]]),fnlevels(g),g,NULL,w,na.rm,stable.algo))
+    return(.Call(Cpp_fscalel,`oldClass<-`(x, ax[["class"]]),fnlevels(g),g,NULL,w,na.rm,stable.algo))
   }
 }
 # updated, fast and data.table proof version !!!
@@ -202,10 +202,10 @@ STD.data.frame <- function(x, by = NULL, w = NULL, cols = is.numeric,
 
     if(length(gn)) {
       ax[["names"]] <- c(nam[gn], if(is.character(stub)) paste0(stub, nam[cols]) else nam[cols])
-      return(setAttributes(c(x[gn], fscalelCpp(x[cols],by[[1L]],by[[2L]],by[[3L]],w,na.rm,stable.algo)), ax))
+      return(setAttributes(c(x[gn], .Call(Cpp_fscalel,x[cols],by[[1L]],by[[2L]],by[[3L]],w,na.rm,stable.algo)), ax))
     } else {
       ax[["names"]] <- if(is.character(stub)) paste0(stub, nam[cols]) else nam[cols]
-      return(setAttributes(fscalelCpp(x[cols],by[[1L]],by[[2L]],by[[3L]],w,na.rm,stable.algo), ax))
+      return(setAttributes(.Call(Cpp_fscalel,x[cols],by[[1L]],by[[2L]],by[[3L]],w,na.rm,stable.algo), ax))
     }
   } else if(!is.null(cols)) {
     ax <- attributes(x)
@@ -215,14 +215,14 @@ STD.data.frame <- function(x, by = NULL, w = NULL, cols = is.numeric,
   }
   if(is.character(stub)) names(x) <- paste0(stub, names(x))
 
-  if(is.null(by)) return(fscalelCpp(x,0L,0L,NULL,w,na.rm,stable.algo)) else if (is.atomic(by)) {
-    if(is.factor(by)) return(fscalelCpp(x,fnlevels(by),by,NULL,w,na.rm,stable.algo)) else {
+  if(is.null(by)) return(.Call(Cpp_fscalel,x,0L,0L,NULL,w,na.rm,stable.algo)) else if (is.atomic(by)) {
+    if(is.factor(by)) return(.Call(Cpp_fscalel,x,fnlevels(by),by,NULL,w,na.rm,stable.algo)) else {
       by <- qG(by, ordered = FALSE)
-      return(fscalelCpp(x,attr(by,"N.groups"),by,NULL,w,na.rm,stable.algo))
+      return(.Call(Cpp_fscalel,x,attr(by,"N.groups"),by,NULL,w,na.rm,stable.algo))
     }
   } else {
     if(!is.GRP(by)) by <- GRP(by, return.groups = FALSE)
-    return(fscalelCpp(x,by[[1L]],by[[2L]],by[[3L]],w,na.rm,stable.algo))
+    return(.Call(Cpp_fscalel,x,by[[1L]],by[[2L]],by[[3L]],w,na.rm,stable.algo))
   }
 }
 

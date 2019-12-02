@@ -14,62 +14,62 @@ flast <- function(x, ...) { # g = NULL, TRA = FALSE, na.rm = TRUE, use.g.names =
 flast.default <- function(x, g = NULL, TRA = FALSE, na.rm = TRUE, use.g.names = TRUE, ...) {
   if(!missing(...)) stop("Unknown argument ", dotstostr(...))
   if(TRA == FALSE) {
-    if(is.null(g)) return(flastCpp(x,0L,0L,na.rm)) else if(is.atomic(g)) {
+    if(is.null(g)) return(.Call(Cpp_flast,x,0L,0L,na.rm)) else if(is.atomic(g)) {
       if(use.g.names) {
         if(!is.factor(g)) g <- qF(g)
         lev <- attr(g, "levels")
-        return(`names<-`(flastCpp(x,length(lev),g,na.rm), lev))
+        return(`names<-`(.Call(Cpp_flast,x,length(lev),g,na.rm), lev))
       } else {
-        if(is.factor(g)) return(flastCpp(x,fnlevels(g),g,na.rm)) else {
+        if(is.factor(g)) return(.Call(Cpp_flast,x,fnlevels(g),g,na.rm)) else {
           g <- qG(g)
-          return(flastCpp(x,attr(g,"N.groups"),g,na.rm))
+          return(.Call(Cpp_flast,x,attr(g,"N.groups"),g,na.rm))
         }
       }
     } else {
       if(!is.GRP(g)) g <- if(use.g.names) GRP(g) else GRP(g, return.groups = FALSE)
-      if(use.g.names) return(`names<-`(flastCpp(x,g[[1L]],g[[2L]],na.rm), group_names.GRP(g))) else
-        return(flastCpp(x,g[[1L]],g[[2L]],na.rm))
+      if(use.g.names) return(`names<-`(.Call(Cpp_flast,x,g[[1L]],g[[2L]],na.rm), group_names.GRP(g))) else
+        return(.Call(Cpp_flast,x,g[[1L]],g[[2L]],na.rm))
     }
   } else {
-    if(is.null(g)) return(TRACpp(x,flastCpp(x,0L,0L,na.rm),0L,TRAtoInt(TRA))) else if (is.atomic(g)) {
-      if(is.factor(g)) return(TRACpp(x,flastCpp(x,fnlevels(g),g,na.rm),g,TRAtoInt(TRA))) else {
+    if(is.null(g)) return(.Call(Cpp_TRA,x,.Call(Cpp_flast,x,0L,0L,na.rm),0L,TRAtoInt(TRA))) else if (is.atomic(g)) {
+      if(is.factor(g)) return(.Call(Cpp_TRA,x,.Call(Cpp_flast,x,fnlevels(g),g,na.rm),g,TRAtoInt(TRA))) else {
         g <- qG(g)
-        return(TRACpp(x,flastCpp(x,attr(g,"N.groups"),g,na.rm),g,TRAtoInt(TRA)))
+        return(.Call(Cpp_TRA,x,.Call(Cpp_flast,x,attr(g,"N.groups"),g,na.rm),g,TRAtoInt(TRA)))
       }
     } else {
       if(!is.GRP(g)) g <- GRP(g, return.groups = FALSE)
-      return(TRACpp(x,flastCpp(x,g[[1L]],g[[2L]],na.rm),g[[2L]],TRAtoInt(TRA)))
+      return(.Call(Cpp_TRA,x,.Call(Cpp_flast,x,g[[1L]],g[[2L]],na.rm),g[[2L]],TRAtoInt(TRA)))
     }
   }
 }
 flast.matrix <- function(x, g = NULL, TRA = FALSE, na.rm = TRUE, use.g.names = TRUE, drop = TRUE, ...) {
   if(!missing(...)) stop("Unknown argument ", dotstostr(...))
   if(TRA == FALSE) {
-    if(is.null(g)) return(flastmCpp(x,0L,0L,na.rm,drop)) else if(is.atomic(g)) {
+    if(is.null(g)) return(.Call(Cpp_flastm,x,0L,0L,na.rm,drop)) else if(is.atomic(g)) {
       if(use.g.names) {
         if(!is.factor(g)) g <- qF(g)
         lev <- attr(g, "levels")
-        return(`dimnames<-`(flastmCpp(x,length(lev),g,na.rm), list(lev, dimnames(x)[[2L]])))
+        return(`dimnames<-`(.Call(Cpp_flastm,x,length(lev),g,na.rm,FALSE), list(lev, dimnames(x)[[2L]])))
       } else {
-        if(is.factor(g)) return(flastmCpp(x,fnlevels(g),g,na.rm)) else {
+        if(is.factor(g)) return(.Call(Cpp_flastm,x,fnlevels(g),g,na.rm,FALSE)) else {
           g <- qG(g)
-          return(flastmCpp(x,attr(g,"N.groups"),g,na.rm))
+          return(.Call(Cpp_flastm,x,attr(g,"N.groups"),g,na.rm,FALSE))
         }
       }
     } else {
       if(!is.GRP(g)) g <- if(use.g.names) GRP(g) else GRP(g, return.groups = FALSE)
-      if(use.g.names) return(`dimnames<-`(flastmCpp(x,g[[1L]],g[[2L]],na.rm), list(group_names.GRP(g), dimnames(x)[[2L]]))) else
-        return(flastmCpp(x,g[[1L]],g[[2L]],na.rm))
+      if(use.g.names) return(`dimnames<-`(.Call(Cpp_flastm,x,g[[1L]],g[[2L]],na.rm,FALSE), list(group_names.GRP(g), dimnames(x)[[2L]]))) else
+        return(.Call(Cpp_flastm,x,g[[1L]],g[[2L]],na.rm,FALSE))
     }
   } else {
-    if(is.null(g)) return(TRAmCpp(x,flastmCpp(x,0L,0L,na.rm),0L,TRAtoInt(TRA))) else if (is.atomic(g)) {
-      if(is.factor(g)) return(TRAmCpp(x,flastmCpp(x,fnlevels(g),g,na.rm),g,TRAtoInt(TRA))) else {
+    if(is.null(g)) return(.Call(Cpp_TRAm,x,.Call(Cpp_flastm,x,0L,0L,na.rm,TRUE),0L,TRAtoInt(TRA))) else if (is.atomic(g)) {
+      if(is.factor(g)) return(.Call(Cpp_TRAm,x,.Call(Cpp_flastm,x,fnlevels(g),g,na.rm,FALSE),g,TRAtoInt(TRA))) else {
         g <- qG(g)
-        return(TRAmCpp(x,flastmCpp(x,attr(g,"N.groups"),g,na.rm),g,TRAtoInt(TRA)))
+        return(.Call(Cpp_TRAm,x,.Call(Cpp_flastm,x,attr(g,"N.groups"),g,na.rm,FALSE),g,TRAtoInt(TRA)))
       }
     } else {
       if(!is.GRP(g)) g <- GRP(g, return.groups = FALSE)
-      return(TRAmCpp(x,flastmCpp(x,g[[1L]],g[[2L]],na.rm),g[[2L]],TRAtoInt(TRA)))
+      return(.Call(Cpp_TRAm,x,.Call(Cpp_flastm,x,g[[1L]],g[[2L]],na.rm,FALSE),g[[2L]],TRAtoInt(TRA)))
     }
   }
 }
@@ -77,33 +77,33 @@ flast.data.frame <- function(x, g = NULL, TRA = FALSE, na.rm = TRUE, use.g.names
   if(!missing(...)) stop("Unknown argument ", dotstostr(...))
   if(TRA == FALSE) {
     if(is.null(g)) {
-      if(drop) return(unlist(flastlCpp(x,0L,0L,na.rm))) else return(flastlCpp(x,0L,0L,na.rm))
+      if(drop) return(unlist(.Call(Cpp_flastl,x,0L,0L,na.rm))) else return(.Call(Cpp_flastl,x,0L,0L,na.rm))
     } else if(is.atomic(g)) {
       if(use.g.names && !inherits(x, "data.table")) {
         if(!is.factor(g)) g <- qF(g)
         lev <- attr(g, "levels")
-        return(setRow.names(flastlCpp(x,length(lev),g,na.rm), lev))
+        return(setRow.names(.Call(Cpp_flastl,x,length(lev),g,na.rm), lev))
       } else {
-        if(is.factor(g)) return(flastlCpp(x,fnlevels(g),g,na.rm)) else {
+        if(is.factor(g)) return(.Call(Cpp_flastl,x,fnlevels(g),g,na.rm)) else {
           g <- qG(g)
-          return(flastlCpp(x,attr(g,"N.groups"),g,na.rm))
+          return(.Call(Cpp_flastl,x,attr(g,"N.groups"),g,na.rm))
         }
       }
     } else {
       if(!is.GRP(g)) g <- if(use.g.names) GRP(g) else GRP(g, return.groups = FALSE)
       if(use.g.names && !inherits(x, "data.table") && !is.null(groups <- group_names.GRP(g)))
-        return(setRow.names(flastlCpp(x,g[[1L]],g[[2L]],na.rm), groups)) else
-          return(flastlCpp(x,g[[1L]],g[[2L]],na.rm))
+        return(setRow.names(.Call(Cpp_flastl,x,g[[1L]],g[[2L]],na.rm), groups)) else
+          return(.Call(Cpp_flastl,x,g[[1L]],g[[2L]],na.rm))
     }
   } else {
-    if(is.null(g)) return(TRAlCpp(x,flastlCpp(x,0L,0L,na.rm),0L,TRAtoInt(TRA))) else if (is.atomic(g)) {
-      if(is.factor(g)) return(TRAlCpp(x,flastlCpp(x,fnlevels(g),g,na.rm),g,TRAtoInt(TRA))) else {
+    if(is.null(g)) return(.Call(Cpp_TRAl,x,.Call(Cpp_flastl,x,0L,0L,na.rm),0L,TRAtoInt(TRA))) else if (is.atomic(g)) {
+      if(is.factor(g)) return(.Call(Cpp_TRAl,x,.Call(Cpp_flastl,x,fnlevels(g),g,na.rm),g,TRAtoInt(TRA))) else {
         g <- qG(g)
-        return(TRAlCpp(x,flastlCpp(x,attr(g,"N.groups"),g,na.rm),g,TRAtoInt(TRA)))
+        return(.Call(Cpp_TRAl,x,.Call(Cpp_flastl,x,attr(g,"N.groups"),g,na.rm),g,TRAtoInt(TRA)))
       }
     } else {
       if(!is.GRP(g)) g <- GRP(g, return.groups = FALSE)
-      return(TRAlCpp(x,flastlCpp(x,g[[1L]],g[[2L]],na.rm),g[[2L]],TRAtoInt(TRA)))
+      return(.Call(Cpp_TRAl,x,.Call(Cpp_flastl,x,g[[1L]],g[[2L]],na.rm),g[[2L]],TRAtoInt(TRA)))
     }
   }
 }
@@ -123,20 +123,20 @@ flast.grouped_df <- function(x, TRA = FALSE, na.rm = TRUE, use.g.names = FALSE, 
       if(gl) {
         if(keep.group_vars) {
           ax[["names"]] <- c(g[[5L]], ax[["names"]][-gn])
-          return(setAttributes(c(g[[4L]],flastlCpp(x[-gn],g[[1L]],g[[2L]],na.rm)), ax))
+          return(setAttributes(c(g[[4L]],.Call(Cpp_flastl,x[-gn],g[[1L]],g[[2L]],na.rm)), ax))
         } else {
           ax[["names"]] <- ax[["names"]][-gn]
-          return(setAttributes(flastlCpp(x[-gn],g[[1L]],g[[2L]],na.rm), ax))
+          return(setAttributes(.Call(Cpp_flastl,x[-gn],g[[1L]],g[[2L]],na.rm), ax))
         }
-      } else return(setAttributes(flastlCpp(x,g[[1L]],g[[2L]],na.rm), ax))
+      } else return(setAttributes(.Call(Cpp_flastl,x,g[[1L]],g[[2L]],na.rm), ax))
     } else if(keep.group_vars) {
       ax[["names"]] <- c(ax[["names"]][gn], ax[["names"]][-gn])
-      return(setAttributes(c(x[gn],TRAlCpp(x[-gn],flastlCpp(x[-gn],g[[1L]],g[[2L]],na.rm),g[[2L]],TRAtoInt(TRA))), ax))
+      return(setAttributes(c(x[gn],.Call(Cpp_TRAl,x[-gn],.Call(Cpp_flastl,x[-gn],g[[1L]],g[[2L]],na.rm),g[[2L]],TRAtoInt(TRA))), ax))
     } else {
       ax[["names"]] <- ax[["names"]][-gn]
-      return(setAttributes(TRAlCpp(x[-gn],flastlCpp(x[-gn],g[[1L]],g[[2L]],na.rm),g[[2L]],TRAtoInt(TRA)), ax))
+      return(setAttributes(.Call(Cpp_TRAl,x[-gn],.Call(Cpp_flastl,x[-gn],g[[1L]],g[[2L]],na.rm),g[[2L]],TRAtoInt(TRA)), ax))
     }
-  } else return(TRAlCpp(x,flastlCpp(x,g[[1L]],g[[2L]],na.rm),g[[2L]],TRAtoInt(TRA)))
+  } else return(.Call(Cpp_TRAl,x,.Call(Cpp_flastl,x,g[[1L]],g[[2L]],na.rm),g[[2L]],TRAtoInt(TRA)))
 }
 
 

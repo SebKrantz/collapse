@@ -15,15 +15,15 @@ fgrowth <- function(x, n = 1, diff = 1, ...) { # , g = NULL, t = NULL, fill = NA
 fgrowth.default <- function(x, n = 1, diff = 1, g = NULL, t = NULL, fill = NA, logdiff = FALSE, stubs = TRUE, ...) {
   if(!missing(...)) stop(sprintf("Unknown argument %s passed to fgrowth.default", dotstostr(...)))
   if(is.null(g))
-    return(fgrowthCpp(x,n,diff,fill,0L,0L,NULL,G_t(t,FALSE),logdiff,stubs)) else if(is.atomic(g)) {
+    return(.Call(Cpp_fgrowth,x,n,diff,fill,0L,0L,NULL,G_t(t,FALSE),logdiff,stubs)) else if(is.atomic(g)) {
       if(is.factor(g)) nl <- fnlevels(g) else {
         g <- qG(g)
         nl <- attr(g, "N.groups")
       }
-      return(fgrowthCpp(x,n,diff,fill,nl,g,NULL,G_t(t),logdiff,stubs))
+      return(.Call(Cpp_fgrowth,x,n,diff,fill,nl,g,NULL,G_t(t),logdiff,stubs))
     } else {
       if(!is.GRP(g)) g = GRP(g, return.groups = FALSE)
-      return(fgrowthCpp(x,n,diff,fill,g[[1L]],g[[2L]],g[[3L]],G_t(t),logdiff,stubs))
+      return(.Call(Cpp_fgrowth,x,n,diff,fill,g[[1L]],g[[2L]],g[[3L]],G_t(t),logdiff,stubs))
     }
 }
 fgrowth.pseries <- function(x, n = 1, diff = 1, fill = NA, logdiff = FALSE, stubs = TRUE, ...) {
@@ -31,21 +31,21 @@ fgrowth.pseries <- function(x, n = 1, diff = 1, fill = NA, logdiff = FALSE, stub
   index <- attr(x, "index")
   if(length(index) > 2L) index <- c(interaction(index[-length(index)], drop = TRUE), index[length(index)])
   if(is.matrix(x))
-  fgrowthmCpp(x,n,diff,fill,fnlevels(index[[1L]]),index[[1L]],NULL,index[[2L]],logdiff,stubs) else
-  fgrowthCpp(x,n,diff,fill,fnlevels(index[[1L]]),index[[1L]],NULL,index[[2L]],logdiff,stubs)
+  .Call(Cpp_fgrowthm,x,n,diff,fill,fnlevels(index[[1L]]),index[[1L]],NULL,index[[2L]],logdiff,stubs) else
+  .Call(Cpp_fgrowth,x,n,diff,fill,fnlevels(index[[1L]]),index[[1L]],NULL,index[[2L]],logdiff,stubs)
 }
 fgrowth.matrix <- function(x, n = 1, diff = 1, g = NULL, t = NULL, fill = NA, logdiff = FALSE, stubs = TRUE, ...) {
   if(!missing(...)) stop(sprintf("Unknown argument %s passed to fgrowth.matrix", dotstostr(...)))
   if(is.null(g))
-    return(fgrowthmCpp(x,n,diff,fill,0L,0L,NULL,G_t(t,FALSE),logdiff,stubs)) else if(is.atomic(g)) {
+    return(.Call(Cpp_fgrowthm,x,n,diff,fill,0L,0L,NULL,G_t(t,FALSE),logdiff,stubs)) else if(is.atomic(g)) {
       if(is.factor(g)) nl <- fnlevels(g) else {
         g <- qG(g)
         nl <- attr(g, "N.groups")
       }
-      fgrowthmCpp(x,n,diff,fill,nl,g,NULL,G_t(t),logdiff,stubs)
+      .Call(Cpp_fgrowthm,x,n,diff,fill,nl,g,NULL,G_t(t),logdiff,stubs)
     } else {
       if(!is.GRP(g)) g = GRP(g, return.groups = FALSE)
-      fgrowthmCpp(x,n,diff,fill,g[[1L]],g[[2L]],g[[3L]],G_t(t),logdiff,stubs)
+      .Call(Cpp_fgrowthm,x,n,diff,fill,g[[1L]],g[[2L]],g[[3L]],G_t(t),logdiff,stubs)
     }
 }
 fgrowth.grouped_df <- function(x, n = 1, diff = 1, t = NULL, fill = NA, logdiff = FALSE, stubs = TRUE, keep.ids = TRUE, ...) {
@@ -61,34 +61,34 @@ fgrowth.grouped_df <- function(x, n = 1, diff = 1, t = NULL, fill = NA, logdiff 
   }
   if(length(gn)) {
     if(!keep.ids)
-      return(fgrowthlCpp(x[-gn],n,diff,fill,g[[1L]],g[[2L]],g[[3L]],G_t(t),logdiff,stubs)) else {
+      return(.Call(Cpp_fgrowthl,x[-gn],n,diff,fill,g[[1L]],g[[2L]],g[[3L]],G_t(t),logdiff,stubs)) else {
         ax <- attributes(x)
         class(x) <- NULL # Works for multiple lags !!
-        res <- c(x[gn],fgrowthlCpp(x[-gn],n,diff,fill,g[[1L]],g[[2L]],g[[3L]],G_t(t),logdiff,stubs))
+        res <- c(x[gn],.Call(Cpp_fgrowthl,x[-gn],n,diff,fill,g[[1L]],g[[2L]],g[[3L]],G_t(t),logdiff,stubs))
         ax[["names"]] <- names(res)
         return(setAttributes(res, ax))
       }
-  } else return(fgrowthlCpp(x,n,diff,fill,g[[1L]],g[[2L]],g[[3L]],G_t(t),logdiff,stubs))
+  } else return(.Call(Cpp_fgrowthl,x,n,diff,fill,g[[1L]],g[[2L]],g[[3L]],G_t(t),logdiff,stubs))
 }
 fgrowth.data.frame <- function(x, n = 1, diff = 1, g = NULL, t = NULL, fill = NA, logdiff = FALSE, stubs = TRUE, ...) {
   if(!missing(...)) stop(sprintf("Unknown argument %s passed to fgrowth.data.frame", dotstostr(...)))
   if(is.null(g))
-    return(fgrowthlCpp(x,n,diff,fill, t = G_t(t,FALSE), names = stubs)) else if(is.atomic(g)) {
+    return(.Call(Cpp_fgrowthl,x,n,diff,fill,0L,0L,NULL,G_t(t,FALSE),logdiff,stubs)) else if(is.atomic(g)) {
       if(is.factor(g)) nl <- fnlevels(g) else {
         g <- qG(g)
         nl <- attr(g, "N.groups")
       }
-      fgrowthlCpp(x,n,diff,fill,nl,g,NULL,G_t(t),logdiff,stubs)
+      .Call(Cpp_fgrowthl,x,n,diff,fill,nl,g,NULL,G_t(t),logdiff,stubs)
     } else {
       if(!is.GRP(g)) g = GRP(g, return.groups = FALSE)
-      fgrowthlCpp(x,n,diff,fill,g[[1L]],g[[2L]],g[[3L]],G_t(t),logdiff,stubs)
+      .Call(Cpp_fgrowthl,x,n,diff,fill,g[[1L]],g[[2L]],g[[3L]],G_t(t),logdiff,stubs)
     }
 }
 fgrowth.pdata.frame <- function(x, n = 1, diff = 1, fill = NA, logdiff = FALSE, stubs = TRUE, ...) {
   if(!missing(...)) stop(sprintf("Unknown argument %s passed to fgrowth.pdata.frame", dotstostr(...)))
   index <- attr(x, "index")
   if(length(index) > 2L) index <- c(interaction(index[-length(index)], drop = TRUE), index[length(index)])
-  fgrowthlCpp(x,n,diff,fill,fnlevels(index[[1L]]),index[[1L]],NULL,index[[2L]],logdiff,stubs)
+  .Call(Cpp_fgrowthl,x,n,diff,fill,fnlevels(index[[1L]]),index[[1L]],NULL,index[[2L]],logdiff,stubs)
 }
 
 # x, n = 1, diff = 1, g = NULL, t = NULL, fill = NA, logdiff = FALSE, stubs = TRUE, ...
@@ -140,8 +140,8 @@ G.data.frame <- function(x, n = 1, diff = 1, by = NULL, t = NULL, cols = is.nume
     }
 
     res <- if(length(gn))
-      c(x[gn], fgrowthlCpp(x[cols],n,diff,fill,by[[1L]],by[[2L]],by[[3L]],G_t(t),logdiff,stubs)) else
-        fgrowthlCpp(x[cols],n,diff,fill,by[[1L]],by[[2L]],by[[3L]],G_t(t),logdiff,stubs)
+      c(x[gn], .Call(Cpp_fgrowthl,x[cols],n,diff,fill,by[[1L]],by[[2L]],by[[3L]],G_t(t),logdiff,stubs)) else
+        .Call(Cpp_fgrowthl,x[cols],n,diff,fill,by[[1L]],by[[2L]],by[[3L]],G_t(t),logdiff,stubs)
     ax[["names"]] <- names(res)
     return(setAttributes(res, ax))
   } else if(!is.null(cols)) {
@@ -152,15 +152,15 @@ G.data.frame <- function(x, n = 1, diff = 1, by = NULL, t = NULL, cols = is.nume
   }
 
   if(is.null(by))
-    return(fgrowthlCpp(x,n,diff,fill,0L,0L,NULL,G_t(t,FALSE),logdiff,stubs)) else if(is.atomic(by)) {
+    return(.Call(Cpp_fgrowthl,x,n,diff,fill,0L,0L,NULL,G_t(t,FALSE),logdiff,stubs)) else if(is.atomic(by)) {
       if(is.factor(by)) nl <- fnlevels(by) else {
         by <- qG(by)
         nl <- attr(by, "N.groups")
       }
-      fgrowthlCpp(x,n,diff,fill,nl,by,NULL,G_t(t),logdiff,stubs)
+      .Call(Cpp_fgrowthl,x,n,diff,fill,nl,by,NULL,G_t(t),logdiff,stubs)
     } else {
       if(!is.GRP(by)) by <- GRP(by, return.groups = FALSE)
-      fgrowthlCpp(x,n,diff,fill,by[[1L]],by[[2L]],by[[3L]],G_t(t),logdiff,stubs)
+      .Call(Cpp_fgrowthl,x,n,diff,fill,by[[1L]],by[[2L]],by[[3L]],G_t(t),logdiff,stubs)
     }
 }
 G.pdata.frame <- function(x, n = 1, diff = 1, cols = is.numeric, fill = NA, logdiff = FALSE, stubs = TRUE, keep.ids = TRUE, ...) {
@@ -181,12 +181,12 @@ G.pdata.frame <- function(x, n = 1, diff = 1, cols = is.numeric, fill = NA, logd
 
   if(length(gn) && !is.null(cols)) {
     class(x) <- NULL # Works for multiple lags !!
-    res <- c(x[gn], fgrowthlCpp(x[cols],n,diff,fill,fnlevels(index[[1L]]),index[[1L]],NULL,index[[2L]],logdiff,stubs))
+    res <- c(x[gn], .Call(Cpp_fgrowthl,x[cols],n,diff,fill,fnlevels(index[[1L]]),index[[1L]],NULL,index[[2L]],logdiff,stubs))
     ax[["names"]] <- names(res)
     return(setAttributes(res, ax))
   } else if(!length(gn)) # could speed up ??
-    return(fgrowthlCpp(x[cols],n,diff,fill,fnlevels(index[[1L]]),index[[1L]],NULL,index[[2L]],logdiff,stubs)) else
-      return(fgrowthlCpp(x,n,diff,fill,fnlevels(index[[1L]]),index[[1L]],NULL,index[[2L]],logdiff,stubs))
+    return(.Call(Cpp_fgrowthl,x[cols],n,diff,fill,fnlevels(index[[1L]]),index[[1L]],NULL,index[[2L]],logdiff,stubs)) else
+      return(.Call(Cpp_fgrowthl,x,n,diff,fill,fnlevels(index[[1L]]),index[[1L]],NULL,index[[2L]],logdiff,stubs))
 }
 
 

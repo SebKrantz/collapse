@@ -14,94 +14,94 @@ fmax <- function(x, ...) { # g = NULL, TRA = FALSE, na.rm = TRUE, use.g.names = 
 fmax.default <- function(x, g = NULL, TRA = FALSE, na.rm = TRUE, use.g.names = TRUE, ...) {
   if(!missing(...)) stop("Unknown argument ", dotstostr(...))
   if(TRA == FALSE) {
-    if(is.null(g)) return(fmaxCpp(x,0L,0L,na.rm)) else if(is.atomic(g)) {
+    if(is.null(g)) return(.Call(Cpp_fmax,x,0L,0L,na.rm)) else if(is.atomic(g)) {
       if(use.g.names) {
         if(!is.factor(g)) g <- qF(g)
         lev <- attr(g, "levels")
-        return(`names<-`(fmaxCpp(x,length(lev),g,na.rm), lev))
+        return(`names<-`(.Call(Cpp_fmax,x,length(lev),g,na.rm), lev))
       } else {
-        if(is.factor(g)) return(fmaxCpp(x,fnlevels(g),g,na.rm)) else {
+        if(is.factor(g)) return(.Call(Cpp_fmax,x,fnlevels(g),g,na.rm)) else {
           g <- qG(g)
-          return(fmaxCpp(x,attr(g,"N.groups"),g,na.rm))
+          return(.Call(Cpp_fmax,x,attr(g,"N.groups"),g,na.rm))
         }
       }
     } else {
       if(!is.GRP(g)) g <- if(use.g.names) GRP(g) else GRP(g, return.groups = FALSE)
-      if(use.g.names) return(`names<-`(fmaxCpp(x,g[[1L]],g[[2L]],na.rm), group_names.GRP(g))) else
-        return(fmaxCpp(x,g[[1L]],g[[2L]],na.rm))
+      if(use.g.names) return(`names<-`(.Call(Cpp_fmax,x,g[[1L]],g[[2L]],na.rm), group_names.GRP(g))) else
+        return(.Call(Cpp_fmax,x,g[[1L]],g[[2L]],na.rm))
     }
   } else {
-    if(is.null(g)) return(TRACpp(x,fmaxCpp(x,0L,0L,na.rm),0L,TRAtoInt(TRA))) else if (is.atomic(g)) {
-      if(is.factor(g)) return(TRACpp(x,fmaxCpp(x,fnlevels(g),g,na.rm),g,TRAtoInt(TRA))) else {
+    if(is.null(g)) return(.Call(Cpp_TRA,x,.Call(Cpp_fmax,x,0L,0L,na.rm),0L,TRAtoInt(TRA))) else if (is.atomic(g)) {
+      if(is.factor(g)) return(.Call(Cpp_TRA,x,.Call(Cpp_fmax,x,fnlevels(g),g,na.rm),g,TRAtoInt(TRA))) else {
         g <- qG(g)
-        return(TRACpp(x,fmaxCpp(x,attr(g,"N.groups"),g,na.rm),g,TRAtoInt(TRA)))
+        return(.Call(Cpp_TRA,x,.Call(Cpp_fmax,x,attr(g,"N.groups"),g,na.rm),g,TRAtoInt(TRA)))
       }
     } else {
       if(!is.GRP(g)) g <- GRP(g, return.groups = FALSE)
-      return(TRACpp(x,fmaxCpp(x,g[[1L]],g[[2L]],na.rm),g[[2L]],TRAtoInt(TRA)))
+      return(.Call(Cpp_TRA,x,.Call(Cpp_fmax,x,g[[1L]],g[[2L]],na.rm),g[[2L]],TRAtoInt(TRA)))
     }
   }
 }
 fmax.matrix <- function(x, g = NULL, TRA = FALSE, na.rm = TRUE, use.g.names = TRUE, drop = TRUE, ...) {
   if(!missing(...)) stop("Unknown argument ", dotstostr(...))
   if(TRA == FALSE) {
-    if(is.null(g)) return(fmaxmCpp(x,0L,0L,na.rm,drop)) else if(is.atomic(g)) {
+    if(is.null(g)) return(.Call(Cpp_fmaxm,x,0L,0L,na.rm,drop)) else if(is.atomic(g)) {
       if(use.g.names) {
         if(!is.factor(g)) g <- qF(g)
         lev <- attr(g, "levels")
-        return(`dimnames<-`(fmaxmCpp(x,length(lev),g,na.rm), list(lev, dimnames(x)[[2L]])))
+        return(`dimnames<-`(.Call(Cpp_fmaxm,x,length(lev),g,na.rm,FALSE), list(lev, dimnames(x)[[2L]])))
       } else {
-        if(is.factor(g)) return(fmaxmCpp(x,fnlevels(g),g,na.rm)) else {
+        if(is.factor(g)) return(.Call(Cpp_fmaxm,x,fnlevels(g),g,na.rm,FALSE)) else {
           g <- qG(g)
-          return(fmaxmCpp(x,attr(g,"N.groups"),g,na.rm))
+          return(.Call(Cpp_fmaxm,x,attr(g,"N.groups"),g,na.rm,FALSE))
         }
       }
     } else {
       if(!is.GRP(g)) g <- if(use.g.names) GRP(g) else GRP(g, return.groups = FALSE)
-      if(use.g.names) return(`dimnames<-`(fmaxmCpp(x,g[[1L]],g[[2L]],na.rm), list(group_names.GRP(g), dimnames(x)[[2L]]))) else
-        return(fmaxmCpp(x,g[[1L]],g[[2L]],na.rm))
+      if(use.g.names) return(`dimnames<-`(.Call(Cpp_fmaxm,x,g[[1L]],g[[2L]],na.rm,FALSE), list(group_names.GRP(g), dimnames(x)[[2L]]))) else
+        return(.Call(Cpp_fmaxm,x,g[[1L]],g[[2L]],na.rm,FALSE))
     }
   } else {
-    if(is.null(g)) return(TRAmCpp(x,fmaxmCpp(x,0L,0L,na.rm),0L,TRAtoInt(TRA))) else if (is.atomic(g)) {
-      if(is.factor(g)) return(TRAmCpp(x,fmaxmCpp(x,fnlevels(g),g,na.rm),g,TRAtoInt(TRA))) else {
+    if(is.null(g)) return(.Call(Cpp_TRAm,x,.Call(Cpp_fmaxm,x,0L,0L,na.rm,TRUE),0L,TRAtoInt(TRA))) else if (is.atomic(g)) {
+      if(is.factor(g)) return(.Call(Cpp_TRAm,x,.Call(Cpp_fmaxm,x,fnlevels(g),g,na.rm,FALSE),g,TRAtoInt(TRA))) else {
         g <- qG(g)
-        return(TRAmCpp(x,fmaxmCpp(x,attr(g,"N.groups"),g,na.rm),g,TRAtoInt(TRA)))
+        return(.Call(Cpp_TRAm,x,.Call(Cpp_fmaxm,x,attr(g,"N.groups"),g,na.rm,FALSE),g,TRAtoInt(TRA)))
       }
     } else {
       if(!is.GRP(g)) g <- GRP(g, return.groups = FALSE)
-      return(TRAmCpp(x,fmaxmCpp(x,g[[1L]],g[[2L]],na.rm),g[[2L]],TRAtoInt(TRA)))
+      return(.Call(Cpp_TRAm,x,.Call(Cpp_fmaxm,x,g[[1L]],g[[2L]],na.rm,FALSE),g[[2L]],TRAtoInt(TRA)))
     }
   }
 }
 fmax.data.frame <- function(x, g = NULL, TRA = FALSE, na.rm = TRUE, use.g.names = TRUE, drop = TRUE, ...) {
   if(!missing(...)) stop("Unknown argument ", dotstostr(...))
   if(TRA == FALSE) {
-    if(is.null(g)) return(fmaxlCpp(x,0L,0L,na.rm,drop)) else if(is.atomic(g)) {
+    if(is.null(g)) return(.Call(Cpp_fmaxl,x,0L,0L,na.rm,drop)) else if(is.atomic(g)) {
       if(use.g.names && !inherits(x, "data.table")) {
         if(!is.factor(g)) g <- qF(g)
         lev <- attr(g, "levels")
-        return(setRow.names(fmaxlCpp(x,length(lev),g,na.rm), lev))
+        return(setRow.names(.Call(Cpp_fmaxl,x,length(lev),g,na.rm,FALSE), lev))
       } else {
-        if(is.factor(g)) return(fmaxlCpp(x,fnlevels(g),g,na.rm)) else {
+        if(is.factor(g)) return(.Call(Cpp_fmaxl,x,fnlevels(g),g,na.rm,FALSE)) else {
           g <- qG(g)
-          return(fmaxlCpp(x,attr(g,"N.groups"),g,na.rm))
+          return(.Call(Cpp_fmaxl,x,attr(g,"N.groups"),g,na.rm,FALSE))
         }
       }
     } else {
       if(!is.GRP(g)) g <- if(use.g.names) GRP(g) else GRP(g, return.groups = FALSE)
       if(use.g.names && !inherits(x, "data.table") && !is.null(groups <- group_names.GRP(g)))
-        return(setRow.names(fmaxlCpp(x,g[[1L]],g[[2L]],na.rm), groups)) else
-          return(fmaxlCpp(x,g[[1L]],g[[2L]],na.rm))
+        return(setRow.names(.Call(Cpp_fmaxl,x,g[[1L]],g[[2L]],na.rm,FALSE), groups)) else
+          return(.Call(Cpp_fmaxl,x,g[[1L]],g[[2L]],na.rm,FALSE))
     }
   } else {
-    if(is.null(g)) return(TRAlCpp(x,fmaxlCpp(x,0L,0L,na.rm),0L,TRAtoInt(TRA))) else if (is.atomic(g)) {
-      if(is.factor(g)) return(TRAlCpp(x,fmaxlCpp(x,fnlevels(g),g,na.rm),g,TRAtoInt(TRA))) else {
+    if(is.null(g)) return(.Call(Cpp_TRAl,x,.Call(Cpp_fmaxl,x,0L,0L,na.rm,TRUE),0L,TRAtoInt(TRA))) else if (is.atomic(g)) {
+      if(is.factor(g)) return(.Call(Cpp_TRAl,x,.Call(Cpp_fmaxl,x,fnlevels(g),g,na.rm,FALSE),g,TRAtoInt(TRA))) else {
         g <- qG(g)
-        return(TRAlCpp(x,fmaxlCpp(x,attr(g,"N.groups"),g,na.rm),g,TRAtoInt(TRA)))
+        return(.Call(Cpp_TRAl,x,.Call(Cpp_fmaxl,x,attr(g,"N.groups"),g,na.rm,FALSE),g,TRAtoInt(TRA)))
       }
     } else {
       if(!is.GRP(g)) g <- GRP(g, return.groups = FALSE)
-      return(TRAlCpp(x,fmaxlCpp(x,g[[1L]],g[[2L]],na.rm),g[[2L]],TRAtoInt(TRA)))
+      return(.Call(Cpp_TRAl,x,.Call(Cpp_fmaxl,x,g[[1L]],g[[2L]],na.rm,FALSE),g[[2L]],TRAtoInt(TRA)))
     }
   }
 }
@@ -121,20 +121,20 @@ fmax.grouped_df <- function(x, TRA = FALSE, na.rm = TRUE, use.g.names = FALSE, k
       if(gl) {
         if(keep.group_vars) {
           ax[["names"]] <- c(g[[5L]], ax[["names"]][-gn])
-          return(setAttributes(c(g[[4L]],fmaxlCpp(x[-gn],g[[1L]],g[[2L]],na.rm)), ax))
+          return(setAttributes(c(g[[4L]],.Call(Cpp_fmaxl,x[-gn],g[[1L]],g[[2L]],na.rm,FALSE)), ax))
         } else {
           ax[["names"]] <- ax[["names"]][-gn]
-          return(setAttributes(fmaxlCpp(x[-gn],g[[1L]],g[[2L]],na.rm), ax))
+          return(setAttributes(.Call(Cpp_fmaxl,x[-gn],g[[1L]],g[[2L]],na.rm,FALSE), ax))
         }
-      } else return(setAttributes(fmaxlCpp(x,g[[1L]],g[[2L]],na.rm), ax))
+      } else return(setAttributes(.Call(Cpp_fmaxl,x,g[[1L]],g[[2L]],na.rm,FALSE), ax))
     } else if(keep.group_vars) {
       ax[["names"]] <- c(ax[["names"]][gn], ax[["names"]][-gn])
-      return(setAttributes(c(x[gn],TRAlCpp(x[-gn],fmaxlCpp(x[-gn],g[[1L]],g[[2L]],na.rm),g[[2L]],TRAtoInt(TRA))), ax))
+      return(setAttributes(c(x[gn],.Call(Cpp_TRAl,x[-gn],.Call(Cpp_fmaxl,x[-gn],g[[1L]],g[[2L]],na.rm,FALSE),g[[2L]],TRAtoInt(TRA))), ax))
     } else {
       ax[["names"]] <- ax[["names"]][-gn]
-      return(setAttributes(TRAlCpp(x[-gn],fmaxlCpp(x[-gn],g[[1L]],g[[2L]],na.rm),g[[2L]],TRAtoInt(TRA)), ax))
+      return(setAttributes(.Call(Cpp_TRAl,x[-gn],.Call(Cpp_fmaxl,x[-gn],g[[1L]],g[[2L]],na.rm,FALSE),g[[2L]],TRAtoInt(TRA)), ax))
     }
-  } else return(TRAlCpp(x,fmaxlCpp(x,g[[1L]],g[[2L]],na.rm),g[[2L]],TRAtoInt(TRA)))
+  } else return(.Call(Cpp_TRAl,x,.Call(Cpp_fmaxl,x,g[[1L]],g[[2L]],na.rm,FALSE),g[[2L]],TRAtoInt(TRA)))
 }
 
 
