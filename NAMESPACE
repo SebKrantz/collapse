@@ -216,6 +216,9 @@ importFrom("stats", "as.formula", "complete.cases", "cor", "cov",
  export(pwcov)
  export(na.rm)
  export(`%!in%`)
+ export(Recode)
+ export(replace_non_finite)
+ export(replace_outliers)
 
  S3method(B, data.frame)
  S3method(B, default)
