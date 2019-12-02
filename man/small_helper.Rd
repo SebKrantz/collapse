@@ -21,7 +21,7 @@
 \code{collapse} Small (Helper) Functions
 }
 \description{
-Elementary exported convenience functions in the \code{collapse} package, that help to deal with variable names, labels, missing values, matching and object checking etc...
+Elementary exported convenience functions in the \code{collapse} package, that help to deal with variable names, labels, missing values, matching and object checking etc... For recoding and replacing values see \code{\link{Recode}}.
 }
 \usage{
 vlabels(X)                    # Get labels of variables in X, stored in attr(X[[i]], "label")
@@ -54,30 +54,30 @@ na.rm(x)                      # Remove missing values from vector and return vec
   \item{dn}{a suitable list of dimension names.}
   \item{...}{for \code{pwcor} and \code{pwcov}: Other arguments passed to \code{stats::cor} and \code{stats::cov}. For \code{all.identical}, either multiple comma-separeted objects or a single list of objects.}
 }
-\details{
+% \details{
 %%  ~~ If necessary, more details than the description above ~~
-}
-\value{
+% }
+% \value{
 %%  ~Describe the value returned
 %%  If it is a LIST, use
 %%  \item{comp1 }{Description of 'comp1'}
 %%  \item{comp2 }{Description of 'comp2'}
 %% ...
-}
-\references{
+% }
+% \references{
 %% ~put references to the literature/web site here ~
-}
-\author{
+% }
+% \author{
 %%  ~~who you are~~
-}
-\note{
+% }
+% \note{
 %%  ~~further notes~~
-}
+% }
 
 %% ~Make other sections like Warning with \section{Warning }{....} ~
 
 \seealso{
-\link[=collapse-documentation]{Collapse Overview} %% ~~objects to See Also as \code{\link{help}}, ~~~
+\code{\link{Recode}}, \link[=collapse-documentation]{Collapse Overview} %% ~~objects to See Also as \code{\link{help}}, ~~~
 }
 \examples{
 ## Variable labels

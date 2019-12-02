@@ -72,12 +72,12 @@ After scaling, \code{psacf}, \code{pspacf} and \code{psccf} compute the ACF/CCF 
 }
 \value{
 An object of class "acf", see ?stats::acf. The result is returned invisibly if plot is TRUE.}
-\references{
+% \references{
 %% ~put references to the literature/web site here ~
-}
-\author{
+% }
+% \author{
 %%  ~~who you are~~
-}
+% }
 \note{
 For \code{plm::pseries} and \code{plm::pdata.frame}, the first index variable is taken to be the group-id and the second the time variable. If more than 2 index variables are attached to \code{plm::pseries}, the last one is taken as the time variable and the others are taken as group-id's and interacted.
 

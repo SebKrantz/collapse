@@ -59,12 +59,12 @@ If \code{x} is a grouped tibble (\code{grouped_df}), \code{TRA} matches the colu
 \value{
 \code{x} with columns replaced or swept out using \code{STATS}, grouped by \code{g}.
 }
-\references{
+% \references{
 %% ~put references to the literature/web site here ~
-}
-\author{
+% }
+% \author{
 %%  ~~who you are~~
-}
+% }
 \note{
 I have tried to make \code{TRA} as redundant as possible by adding a TRA-argument to all \link[=fast-statistical-functions]{Fast Statistical Functions} (ensuring that the exact same grouping vector is used for aggregation and transformation), and by creating the \code{\link{B}} (between-transform) and \code{\link{W}} (within-transform) operators as well as \code{\link[=fscale]{fscale/STD}} as safer and faster solutions for frequent scaling, centering and averaging tasks. \code{TRA} is really a programmers function for cases when both aggregate statistics and transformed data need to be retained, or to work with more complex statistics (i.e. together with \code{\link{dapply}} or \code{\link{BY}}).
 }

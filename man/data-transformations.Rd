@@ -25,11 +25,13 @@ All of \code{collapse}'s \link[=fast-statistical-functions]{Fast Statistical Fun
 
 \item \code{\link[=fscale]{fscale/STD}} is an S3 generic to perform (groupwise and / or weighted) \bold{scaling / standardizing} of data and is orders of magnitude faster than \code{base::scale}.
 
-\item \code{\link{W}}, shorthand for 'within transform', is an S3 generic to efficiently perform (groupwise and / or weighted) \bold{demeaning / centering} of data. Similarly \code{\link{B}}, shorthand for 'between transform', computes (groupwise and / or weighted) \bold{averages} of data.
+\item \code{\link[=fwithin]{fwithin/W}} is an S3 generic to efficiently perform (groupwise and / or weighted) \bold{within-transformations / demeaning / centering} of data. Similarly \code{\link[=fbetween]{fbetween/B}} computes (groupwise and / or weighted) \bold{between-transformations / averages}.
 
-\item \code{\link{HDW}}, shorthand for 'higher-dimensional within transform', is an S3 generic to efficiently \bold{center data on multiple groups} and partial-out linear models (possibly involving many levels of fixed effects and interactions). In other words, \code{\link{HDW}} efficiently computes \bold{residuals} from (potentially complex) linear models. Similarly \code{\link{HDB}}, shorthand for 'higher-dimensional between transformation', computes the corresponding means or \bold{fitted values}.
+\item \code{\link[=HDW]{fHDwithin/HDW}}, shorthand for 'higher-dimensional within transform', is an S3 generic to efficiently \bold{center data on multiple groups} and partial-out linear models (possibly involving many levels of fixed effects and interactions). In other words, \code{\link[=HDW]{fHDwithin/HDW}} efficiently computes \bold{residuals} from (potentially complex) linear models. Similarly \code{\link[=HDB]{fHDbetween/HDB}}, shorthand for 'higher-dimensional between transformation', computes the corresponding means or \bold{fitted values}.
 
 \item \code{\link[=flag]{flag/L/F}}, \code{\link[=fdiff]{fdiff/D}} and \code{\link[=fgrowth]{fgrowth/G}} are S3 generics to compute sequences of \bold{lags / leads} and suitably lagged and iterated \bold{differences} and \bold{growth rates} on time-series and panel data. More in \link[=time-series-panel-series]{Time-Series and Panel-Series}.
+
+\item \code{STD, W, B, HDW, HDB, L, D} and \code{G} are parsimonious wrappers around the \code{f-} functions above representing the corresponding transformation 'operators'. They have additional capabilities when applied to data-frames (i.e. variable selection, formula input, auto-renaming and id-variable preservation), and are easier to employ in regression formulas, but are otherwise identical in functionality.
 }
 }
 \section{Table of Functions}{
@@ -38,10 +40,10 @@ All of \code{collapse}'s \link[=fast-statistical-functions]{Fast Statistical Fun
   \code{\link{BY}} \tab \code{default, matrix, data.frame, grouped_df} \tab Split-Apply-Combine computing \cr
   \code{\link{TRA}} \tab \code{default, matrix, data.frame, grouped_df} \tab replace and sweep out statistics \cr
   \code{\link[=fscale]{fscale/STD}} \tab \code{default, matrix, data.frame, pseries, pdata.frame, grouped_df} \tab scale / standardize data \cr
-  \code{\link{W}} \tab \code{default, matrix, data.frame, pseries, pdata.frame, grouped_df}  \tab demean / center data \cr
-  \code{\link{B}} \tab \code{default, matrix, data.frame, pseries, pdata.frame, grouped_df}  \tab compute means / average data \cr
-  \code{\link{HDW}} \tab \code{default, matrix, data.frame, pseries, pdata.frame} \tab high-dimensional centering and lm residuals \cr
-  \code{\link{HDB}} \tab \code{default, matrix, data.frame, pseries, pdata.frame} \tab high-dimensional averages and lm fitted values \cr
+  \code{\link[=fwithin]{fwithin/W}} \tab \code{default, matrix, data.frame, pseries, pdata.frame, grouped_df}  \tab demean / center data \cr
+  \code{\link[=fbetween]{fbetween/B}} \tab \code{default, matrix, data.frame, pseries, pdata.frame, grouped_df}  \tab compute means / average data \cr
+  \code{\link[=HDW]{fHDwithin/HDW}} \tab \code{default, matrix, data.frame, pseries, pdata.frame} \tab high-dimensional centering and lm residuals \cr
+  \code{\link[=HDB]{fHDbetween/HDB}} \tab \code{default, matrix, data.frame, pseries, pdata.frame} \tab high-dimensional averages and lm fitted values \cr
   \code{\link[=flag]{flag/L/F}} \tab \code{default, matrix, data.frame, pseries, pdata.frame, grouped_df}  \tab (sequences of) lags / leads \cr
   \code{\link[=fdiff]{fdiff/D}} \tab \code{default, matrix, data.frame, pseries, pdata.frame, grouped_df}  \tab (sequences of lagged/leaded and iterated) differences \cr
   \code{\link[=fdiff]{fgrowth/G}} \tab \code{default, matrix, data.frame, pseries, pdata.frame, grouped_df}  \tab (sequences of lagged/leaded and iterated) growth rates or log-differences

@@ -41,15 +41,15 @@ This performance gain from working with plain lists makes \code{dapply} not much
 \value{
 \code{X} where \code{FUN} was applied to every row or column.
 }
-\references{
+% \references{
 %% ~put references to the literature/web site here ~
-}
-\author{
+% }
+% \author{
 %%  ~~who you are~~
-}
-\note{
+% }
+% \note{
 %%  ~~further notes~~
-}
+% }
 
 %% ~Make other sections like Warning with \section{Warning }{....} ~
 

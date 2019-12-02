@@ -115,15 +115,15 @@ The methods applying to \code{plm} objects (panel-series and panel-data.frames) 
 \code{fdiff/D} returns \code{x} differenced \code{diff} times using lags \code{n} of itself.
 \code{fgrowth/G} returns \code{x} where the growth rate or log-difference was taken \code{diff} times using lags \code{n} of itself. Computations can be grouped by \code{g/by} and/or ordered by \code{t}. See Details and Examples.
 }
-\references{
+% \references{
 %% ~put references to the literature/web site here ~
-}
-\author{
+% }
+% \author{
 %%  ~~who you are~~
-}
-\note{
+% }
+% \note{
 %%  ~~further notes~~
-}
+% }
 
 %% ~Make other sections like Warning with \section{Warning }{....} ~
 

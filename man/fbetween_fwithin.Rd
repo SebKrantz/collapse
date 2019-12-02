@@ -20,63 +20,39 @@
 Fast Between (Averaging) and Within (Centering) Transformations
 }
 \description{
-\code{fbetween} and \code{fwithin} are S3 generics to efficiently obtain between-transformed (averaged) or within-transformed (demeaned) data. These operations can be performed groupwise and/or weighted. \code{B} and \code{W} are wrappers around \code{fbetween} and \code{fwithin} representing the 'between-operator' and the 'within-operator'. \code{B} / \code{W} provide more flexibility than \code{fbetween} / \code{fwithin} when applied to data frames (i.e.  column subsetting, auto-renaming and id-variable-preservation capabilities...), but are otherwise identical.
+\code{fbetween} and \code{fwithin} are S3 generics to efficiently obtain between-transformed (averaged) or within-transformed (demeaned) data. These operations can be performed groupwise and/or weighted. \code{B} and \code{W} are wrappers around \code{fbetween} and \code{fwithin} representing the 'between-operator' and the 'within-operator'. \code{B} / \code{W} provide more flexibility than \code{fbetween} / \code{fwithin} when applied to data frames (i.e.  column subsetting, formula input, auto-renaming and id-variable-preservation capabilities...), but are otherwise identical.
 
-(Principally \code{fbetween} and \code{fwithin} are simple programmers functions in style of the \link[=fast-statistical-functions]{Fast Statistical Functions} while \code{B} and \code{W} are more practical to use in regression formulas or for ad-hoc computations on data frames.)
+(\code{fbetween} and \code{fwithin} are simple programmers functions in style of the \link[=fast-statistical-functions]{Fast Statistical Functions} while \code{B} and \code{W} are more practical to use in regression formulas or for ad-hoc computations on data frames.)
 }
 \usage{
-fbetween(x, ...)
-       B(x, ...)
- fwithin(x, ...)
-       W(x, ...)
-
-## Default S3 methods:
-fbetween(x, g = NULL, w = NULL, na.rm = TRUE, fill = FALSE, ...)
-       B(x, g = NULL, w = NULL, na.rm = TRUE, fill = FALSE, ...)
- fwithin(x, g = NULL, w = NULL, na.rm = TRUE, add.global.mean = FALSE, ...)
-       W(x, g = NULL, w = NULL, na.rm = TRUE, add.global.mean = FALSE, ...)
-
-## S3 methods for class 'matrix'
-fbetween(x, g = NULL, w = NULL, na.rm = TRUE, fill = FALSE, ...)
-       B(x, g = NULL, w = NULL, na.rm = TRUE, fill = FALSE, stub = "B.", ...)
- fwithin(x, g = NULL, w = NULL, na.rm = TRUE, add.global.mean = FALSE, ...)
-       W(x, g = NULL, w = NULL, na.rm = TRUE, add.global.mean = FALSE, stub = "W.", ...)
-
-## S3 methods for class 'data.frame'
-fbetween(x, g = NULL, w = NULL, na.rm = TRUE, fill = FALSE, ...)
-       B(x, by = NULL, w = NULL, cols = is.numeric, na.rm = TRUE,
-         fill = FALSE, stub = "B.", keep.by = TRUE, keep.w = TRUE, ...)
- fwithin(x, g = NULL, w = NULL, na.rm = TRUE, add.global.mean = FALSE, ...)
-       W(x, by = NULL, w = NULL, cols = is.numeric, na.rm = TRUE,
-         add.global.mean = FALSE, stub = "W.", keep.by = TRUE, keep.w = TRUE, ...)
+fbetween(x, \dots)
+ fwithin(x, \dots)
+       B(x, \dots)
+       W(x, \dots)
+% ## Default S3 methods:
+\S3method{fbetween}{default}(x, g = NULL, w = NULL, na.rm = TRUE, fill = FALSE, \dots)                          \S3method{fwithin}{default}(x, g = NULL, w = NULL, na.rm = TRUE, add.global.mean = FALSE, \dots)                \S3method{B}{default}(x, g = NULL, w = NULL, na.rm = TRUE, fill = FALSE, \dots)                          \S3method{W}{default}(x, g = NULL, w = NULL, na.rm = TRUE, add.global.mean = FALSE, \dots)
+% ## S3 methods for class 'matrix'
+\S3method{fbetween}{matrix}(x, g = NULL, w = NULL, na.rm = TRUE, fill = FALSE, \dots)                     \S3method{fwithin}{matrix}(x, g = NULL, w = NULL, na.rm = TRUE, add.global.mean = FALSE, \dots)               \S3method{B}{matrix}(x, g = NULL, w = NULL, na.rm = TRUE, fill = FALSE, stub = "B.", \dots)               \S3method{W}{matrix}(x, g = NULL, w = NULL, na.rm = TRUE, add.global.mean = FALSE, stub = "W.", \dots)
+%## S3 methods for class 'data.frame'
+\S3method{fbetween}{data.frame}(x, g = NULL, w = NULL, na.rm = TRUE, fill = FALSE, \dots)                \S3method{fwithin}{data.frame}(x, g = NULL, w = NULL, na.rm = TRUE, add.global.mean = FALSE, \dots)          \S3method{B}{data.frame}(x, by = NULL, w = NULL, cols = is.numeric, na.rm = TRUE,
+  fill = FALSE, stub = "B.", keep.by = TRUE, keep.w = TRUE, \dots)                                         \S3method{W}{data.frame}(x, by = NULL, w = NULL, cols = is.numeric, na.rm = TRUE,
+  add.global.mean = FALSE, stub = "W.", keep.by = TRUE, keep.w = TRUE, \dots)
 
 # Methods for compatibility with plm:
-
-## S3 methods for class 'pseries'
-fbetween(x, effect = 1L, w = NULL, na.rm = TRUE, fill = FALSE, ...)
-       B(x, effect = 1L, w = NULL, na.rm = TRUE, fill = FALSE, ...)
- fwithin(x, effect = 1L, w = NULL, na.rm = TRUE, add.global.mean = FALSE, ...)
-       W(x, effect = 1L, w = NULL, na.rm = TRUE, add.global.mean = FALSE, ...)
-
-## S3 methods for class 'pdata.frame'
-fbetween(x, effect = 1L, w = NULL, na.rm = TRUE, fill = FALSE, ...)
-       B(x, effect = 1L, w = NULL, cols = is.numeric, na.rm = TRUE,
-         fill = FALSE, stub = "B.", keep.ids = TRUE, keep.w = TRUE, ...)
- fwithin(x, effect = 1L, w = NULL, na.rm = TRUE, add.global.mean = FALSE, ...)
-       W(x, effect = 1L, w = NULL, cols = is.numeric, na.rm = TRUE,
-         add.global.mean = FALSE, stub = "W.", keep.ids = TRUE, keep.w = TRUE, ...)
+%## S3 methods for class 'pseries'
+\S3method{fbetween}{pseries}(x, effect = 1L, w = NULL, na.rm = TRUE, fill = FALSE, \dots)                    \S3method{fwithin}{pseries}(x, effect = 1L, w = NULL, na.rm = TRUE, add.global.mean = FALSE, \dots)             \S3method{B}{pseries}(x, effect = 1L, w = NULL, na.rm = TRUE, fill = FALSE, \dots)                        \S3method{W}{pseries}(x, effect = 1L, w = NULL, na.rm = TRUE, add.global.mean = FALSE, \dots)
+%## S3 methods for class 'pdata.frame'
+\S3method{fbetween}{pdata.frame}(x, effect = 1L, w = NULL, na.rm = TRUE, fill = FALSE, \dots)                 \S3method{fwithin}{pdata.frame}(x, effect = 1L, w = NULL, na.rm = TRUE, add.global.mean = FALSE, \dots)         \S3method{B}{pdata.frame}(x, effect = 1L, w = NULL, cols = is.numeric, na.rm = TRUE,
+         fill = FALSE, stub = "B.", keep.ids = TRUE, keep.w = TRUE, \dots)                               \S3method{W}{pdata.frame}(x, effect = 1L, w = NULL, cols = is.numeric, na.rm = TRUE,
+         add.global.mean = FALSE, stub = "W.", keep.ids = TRUE, keep.w = TRUE, \dots)
 
 # Methods for compatibility with dplyr:
-
-## S3 methods for class 'grouped_df'
-fbetween(x, w = NULL, na.rm = TRUE, fill = FALSE,
-         keep.group_vars = TRUE, keep.w = TRUE, ...)
-       B(x, w = NULL, na.rm = TRUE, fill = FALSE,
-         stub = "B.", keep.group_vars = TRUE, keep.w = TRUE, ...)
- fwithin(x, w = NULL, na.rm = TRUE, add.global.mean = FALSE,
-         keep.group_vars = TRUE, keep.w = TRUE, ...)
-       W(x, w = NULL, na.rm = TRUE, add.global.mean = FALSE,
-         stub = "W.", keep.group_vars = TRUE, keep.w = TRUE, ...)
+%## S3 methods for class 'grouped_df'
+\S3method{fbetween}{grouped_df}(x, w = NULL, na.rm = TRUE, fill = FALSE,
+         keep.group_vars = TRUE, keep.w = TRUE, \dots)                                                          \S3method{fwithin}{grouped_df}(x, w = NULL, na.rm = TRUE, add.global.mean = FALSE,
+         keep.group_vars = TRUE, keep.w = TRUE, \dots)                                                          \S3method{B}{grouped_df}(x, w = NULL, na.rm = TRUE, fill = FALSE,
+         stub = "B.", keep.group_vars = TRUE, keep.w = TRUE, \dots)                                          \S3method{W}{grouped_df}(x, w = NULL, na.rm = TRUE, add.global.mean = FALSE,
+         stub = "W.", keep.group_vars = TRUE, keep.w = TRUE, \dots)
 }
 %- maybe also 'usage' for other objects documented here.
 \arguments{
@@ -91,7 +67,7 @@ fbetween(x, w = NULL, na.rm = TRUE, fill = FALSE,
   \item{add.global.mean}{\emph{option to \code{fwithin/W}}: Logical. \code{TRUE} will add back the global mean to all data values after subtracting out group-means.}
   \item{keep.by\cr keep.ids \cr keep.group_vars}{\emph{B and W data.frame, pdata.frame and grouped_df methods}: Logical. Retain grouping / panel-identifier columns in the output. For data frames this only works if grouping variables were passed in a formula.}
   \item{keep.w}{\emph{B and W data.frame, pdata.frame and grouped_df methods}: Logical. Retain column containing the weights in the output. Only works if \code{w} is passed as formula / lazy-expression.}
-  \item{...}{arguments to be passed to or from other methods.}
+  \item{\dots}{arguments to be passed to or from other methods.}
 }
 \details{
 Without groups, \code{fbetween/B} replaces all data points in \code{x} with their mean or weighted mean (if \code{w} is supplied). Similarly \code{fwithin/W} subtracts the mean from all data points i.e. centers the data on the mean. \cr
@@ -103,15 +79,15 @@ The data replacement performed by \code{fbetween/B} can keep (default) or overwr
 \value{
 \code{fbetween/B} returns \code{x} with every element replaced by its (groupwise) mean (\code{xi.}). \code{fwithin/W} returns \code{x} where every element was subtracted its (groupwise) mean (\code{x - xi.} or \code{x - xi. + x..}). See Details.
 }
-\references{
+% \references{
 %% ~put references to the literature/web site here ~
-}
-\author{
+% }
+% \author{
 %%  ~~who you are~~
-}
-\note{
+% }
+% \note{
 %%  ~~further notes~~
-}
+% }
 
 %% ~Make other sections like Warning with \section{Warning }{....} ~
 

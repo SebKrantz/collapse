@@ -59,15 +59,15 @@ get_vars(x, vars, regex = FALSE, ...) <- value
 \item{regex}{logical. \code{TRUE} will do regular expression search on the column names of \code{x} using a (vector of) regular expression(s) passed to \code{vars}.}
 \item{...}{further arguments passed to \code{\link{grep}}, if \code{regex = TRUE}.}
 }
-\details{
-}
-\value{
+% \details{
+% }
+% \value{
 %%  ~Describe the value returned
 %%  If it is a LIST, use
 %%  \item{comp1 }{Description of 'comp1'}
 %%  \item{comp2 }{Description of 'comp2'}
 %% ...
-}
+% }
 \seealso{
 \link[=collapse-documentation]{Collapse Overview}
 }

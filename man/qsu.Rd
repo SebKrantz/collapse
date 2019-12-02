@@ -1,6 +1,6 @@
 \name{qsu} % quick-summary
 \alias{qsu}
-% \alias{quicksummary}
+\alias{quick-summary}
 % \alias{qsu.default}
 % \alias{qsu.matrix}
 % \alias{qsu.data.frame}
@@ -64,12 +64,12 @@ Apart from 'N/T' and the extrema, the standard-deviations ('SD') computed on bet
 \value{
 A matrix, array or list of matrices of summary statistics. All matrices and arrays have a class 'qsu' and a class 'table' attached, responding i.e. to \code{print.qsu} and \code{aperm.table}...
 }
-\references{
+% \references{
 %% ~put references to the literature/web site here ~
-}
-\author{
+% }
+% \author{
 %%  ~~who you are~~
-}
+% }
 \note{
 If weights \code{w} are used together with \code{pid, xt}, transformed data is computed using weighted individual means i.e. weighted \bold{\code{xi.}} and weighted \bold{\code{x..}}. Weighted statistics are subsequently computed on this weighted-transformed data.
 }

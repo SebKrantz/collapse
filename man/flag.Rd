@@ -26,7 +26,7 @@
 Fast Lags and Leads for Time-Series and Panel Data
 }
 \description{
-\code{flag} is an S3 generic to compute (sequences of) lags and leads. \code{L} and \code{F} are wrappers around \code{flag} representing the lag- and lead-operators, such that \code{L(x,-1) = F(x,1) = F(x)} and \code{L(x,-3:3) = F(x,3:-3)}. \code{L} & \code{F} provide more flexibility than \code{flag} when applied to data frames, but are otherwise identical.
+\code{flag} is an S3 generic to compute (sequences of) lags and leads. \code{L} and \code{F} are wrappers around \code{flag} representing the lag- and lead-operators, such that \code{L(x,-1) = F(x,1) = F(x)} and \code{L(x,-3:3) = F(x,3:-3)}. \code{L} & \code{F} provide more flexibility than \code{flag} when applied to data frames (i.e.  column subsetting, formula input and id-variable-preservation capabilities...), but are otherwise identical.
 
 (\code{flag} is more of a programmers function in style of the \link[=fast-statistical-functions]{Fast Statistical Functions} while \code{L} & \code{F} are more practical to use in regression formulas or for computations on data frames.)
 }
@@ -98,15 +98,15 @@ The methods applying to \code{plm} objects (panel-series and panel-data.frames) 
 \value{
 \code{x} lagged / leaded \code{n}-times, grouped by \code{g/by}, ordered by \code{t}. See Details and Examples.
 }
-\references{
+% \references{
 %% ~put references to the literature/web site here ~
-}
-\author{
+% }
+% \author{
 %%  ~~who you are~~
-}
-\note{
+% }
+% \note{
 %%  ~~further notes~~
-}
+% }
 
 %% ~Make other sections like Warning with \section{Warning }{....} ~
 

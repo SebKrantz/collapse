@@ -58,15 +58,15 @@ I note at this point that the philosphy of \code{collapse} is to move beyond thi
 \value{
 \code{X} where \code{FUN} was applied to every column split by \code{g}.
 }
-\references{
+% \references{
 %% ~put references to the literature/web site here ~
-}
-\author{
+% }
+% \author{
 %%  ~~who you are~~
-}
-\note{
+% }
+% \note{
 %%  ~~further notes~~
-}
+% }
 
 %% ~Make other sections like Warning with \section{Warning }{....} ~
 

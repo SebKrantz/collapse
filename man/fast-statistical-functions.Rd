@@ -8,43 +8,50 @@ With \code{\link{fsum}}, \code{\link{fprod}}, \code{\link{fmean}}, \code{\link{f
 (\emph{Note}: The vector-valued functions \code{\link[=fscale]{fscale/STD}}, \code{\link{B}}, \code{\link{HDB}}, \code{\link{W}}, \code{\link{HDW}}, \code{\link[=flag]{flag/L/F}}, \code{\link[=fdiff]{fdiff/D}} and \code{\link[=fgrowth]{fgrowth/G}} are documented under \link[=data-transformations]{Data Transformations} and \link[=time-series-panel-series]{Time-Series and Panel-Series}. These functions also support \code{plm::pseries} and \code{plm::pdata.frame}'s.)
 
 }
-\usage{
+\section{Usage}{\preformatted{
 ## All functions (FUN) follow a common syntax in 4 methods:
 FUN(x, ...)
 
-\method{FUN}{default}(x, g = NULL, [w = NULL,] TRA = FALSE, [na.rm = TRUE,]
+## Default S3 method:
+FUN(x, g = NULL, [w = NULL,] TRA = FALSE, [na.rm = TRUE,]
     use.g.names = TRUE, ...)
 
-\method{FUN}{matrix}(x, g = NULL, [w = NULL,] TRA = FALSE, [na.rm = TRUE,]
+## S3 method for class 'matrix'
+FUN(x, g = NULL, [w = NULL,] TRA = FALSE, [na.rm = TRUE,]
     use.g.names = TRUE, drop = TRUE, ...)
 
-\method{FUN}{data.frame}(x, g = NULL, [w = NULL,] TRA = FALSE, [na.rm = TRUE,]
+## S3 method for class 'data.frame'
+FUN(x, g = NULL, [w = NULL,] TRA = FALSE, [na.rm = TRUE,]
     use.g.names = TRUE, drop = TRUE, ...)
 
-\method{FUN}{grouped_df}(x, [w = NULL,] TRA = FALSE, [na.rm = TRUE,]
+## S3 method for class 'grouped_df'
+FUN(x, [w = NULL,] TRA = FALSE, [na.rm = TRUE,]
     use.g.names = FALSE, keep.group_vars = TRUE, [keep.w = TRUE,] ...)
 }
-\arguments{
-\item{x}{a vector, matrix, data.frame or grouped tibble (\code{dplyr::grouped_df}).}
+}
+\section{Arguments}{
+\tabular{lll}{
+\code{x} \tab \tab a vector, matrix, data.frame or grouped tibble (\code{dplyr::grouped_df}). \cr \cr \cr
 
-\item{g}{a factor, \code{\link{GRP}} object, atomic vector (internally converted to factor) or a list of vectors / factors (internally converted to a \code{\link{GRP}} object) used to group \code{x}.}
+\code{g} \tab\tab a factor, \code{\link{GRP}} object, atomic vector (internally converted to factor) or a list of vectors / factors (internally converted to a \code{\link{GRP}} object) used to group \code{x}. \cr \cr \cr
 
-\item{w}{a numeric vector of (non-negative) weights, may contain missing values. Supported by \code{\link{fmean}}, \code{\link{fvar}}, \code{\link{fsd}} and \code{\link{fmode}}.}
+\code{w} \tab\tab a numeric vector of (non-negative) weights, may contain missing values. Supported by \code{\link{fmean}}, \code{\link{fvar}}, \code{\link{fsd}} and \code{\link{fmode}}. \cr \cr \cr
 
-\item{TRA}{an integer or quoted operator indicating the transformation to perform:
-1 - "replace_fill"     |     2 - "replace"     |     3 - "-"     |     4 - "-+"     |     5 - "/"     |     6 - "\%"     |     7 - "+"     |     8 - "*". See \code{\link{TRA}}.}
+\code{TRA} \tab\tab an integer or quoted operator indicating the transformation to perform:
+1 - "replace_fill"     |     2 - "replace"     |     3 - "-"     |     4 - "-+"     |     5 - "/"     |     6 - "\%"     |     7 - "+"     |     8 - "*". See \code{\link{TRA}}. \cr \cr \cr
 
-\item{na.rm}{logical. Skip missing values in \code{x}. Defaults to \code{TRUE} in all functions and implemented at very little computational cost. Not available for \code{\link{fNobs}}.}
+\code{na.rm} \tab\tab logical. Skip missing values in \code{x}. Defaults to \code{TRUE} in all functions and implemented at very little computational cost. Not available for \code{\link{fNobs}}. \cr \cr \cr
 
-\item{use.g.names}{make group-names and add to the result as names (vector method) or row-names (matrix and data.frame method). No row-names are generated for data.tables and grouped tibbles.}
+\code{use.g.names} \tab\tab make group-names and add to the result as names (vector method) or row-names (matrix and data.frame method). No row-names are generated for data.tables and grouped tibbles. \cr \cr \cr
 
-\item{drop}{\emph{matrix and data.frame methods:} Drop dimensions and return an atomic vector if \code{g = NULL} and \code{TRA = FALSE}.}
+\code{drop} \tab\tab \emph{matrix and data.frame methods:} Drop dimensions and return an atomic vector if \code{g = NULL} and \code{TRA = FALSE}. \cr \cr \cr
 
-\item{keep.group_vars}{\emph{grouped_df method:} Logical. \code{FALSE} removes grouping variables after computation.}
+\code{keep.group_vars}  \tab\tab \emph{grouped_df method:} Logical. \code{FALSE} removes grouping variables after computation. \cr \cr \cr
 
-\item{keep.w}{\emph{grouped_df method:} Logical. \code{TRUE} also aggregates weights and saves them in a column, \code{FALSE} removes weighting variable after computation (if contained in \code{grouped_df}).}
+\code{keep.w} \tab\tab \emph{grouped_df method:} Logical. \code{TRUE} also aggregates weights and saves them in a column, \code{FALSE} removes weighting variable after computation (if contained in \code{grouped_df}). \cr \cr \cr
 
-\item{...}{arguments to be passed to or from other methods, and extra arguments to some functions, i.e. the algorithm used to compute variances etc.}
+\code{...} \tab\tab arguments to be passed to or from other methods, and extra arguments to some functions, i.e. the algorithm used to compute variances etc. \cr \cr \cr
+}
 }
 \details{
 Please see the documentation of individual functions.

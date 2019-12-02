@@ -30,21 +30,17 @@ The data.frame representation created by \code{unlist2d} is built as follows:
 The result of this iterative procedure is a single \code{data.frame} containing on the left side id-columns for each level of nesting (from higher to lower level), followed by a column containing all the row.names of the objects if \code{row.names = TRUE}, followed by the object columns, matched at each level of recursion. Optimal results are of course obtained with symmetric lists of arrays, matrices or data.frames, which \code{unlist2d} nicely converts to a beautiful data.frame ready for plotting or further analysis.
 }
 \value{
-%%  ~Describe the value returned
-%%  If it is a LIST, use
-%%  \item{comp1 }{Description of 'comp1'}
-%%  \item{comp2 }{Description of 'comp2'}
-%% ...
+A \code{data.frame} or (if \code{DT = TRUE}) \code{data.table}.
 }
-\references{
+% \references{
 %% ~put references to the literature/web site here ~
-}
-\author{
+% }
+% \author{
 %%  ~~who you are~~
-}
-\note{
+% }
+% \note{
 %%  ~~further notes~~
-}
+% }
 
 %% ~Make other sections like Warning with \section{Warning }{....} ~
 

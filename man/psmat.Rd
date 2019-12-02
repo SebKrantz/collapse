@@ -43,12 +43,12 @@ For \code{plm::pseries}, the first \code{index} variable is taken to be the grou
 \value{
 a matrix containing the data in \code{x}, where by default the rows constitute the groups-ids (\code{g/by}) and the columns the time variable or individual ids (\code{t}).
 }
-\references{
+% \references{
 %% ~put references to the literature/web site here ~
-}
-\author{
+% }
+% \author{
 %%  ~~who you are~~
-}
+% }
 \note{
 The \code{pdata.frame} method only works for properly subsetted objects of class 'pdata.frame'. A list of 'pseries' won't work.
 }

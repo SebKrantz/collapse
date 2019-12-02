@@ -84,15 +84,15 @@ By default means and standard deviations are computed using Wedford's numericall
 \value{
 \code{x} standardized (mean = 0, sd = 1), grouped by \code{g/by}. See Details.
 }
-\references{
+% \references{
 %% ~put references to the literature/web site here ~
-}
-\author{
+% }
+% \author{
 %%  ~~who you are~~
-}
-\note{
+% }
+% \note{
 %%  ~~further notes~~
-}
+% }
 
 %% ~Make other sections like Warning with \section{Warning }{....} ~
 

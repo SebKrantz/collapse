@@ -18,7 +18,7 @@ fNobs(x, ...)
 
 \method{fNobs}{data.frame}(x, g = NULL, TRA = FALSE, use.g.names = TRUE, drop = TRUE, ...)
 
-\method{fNobs}{grouped_df}(x, TRA = FALSE, keep.group_vars = TRUE, ...)
+\method{fNobs}{grouped_df}(x, TRA = FALSE, use.g.names = FALSE, keep.group_vars = TRUE, ...)
 }
 \arguments{
 \item{x}{a vector, matrix, data.frame or grouped tibble (\code{dplyr::grouped_df}).}

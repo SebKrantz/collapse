@@ -1,17 +1,28 @@
-\name{HDW-HDB}
-\alias{HDW-HDB}
+\name{fHDbetween-fHDwithin-HDB-HDW}
+\alias{fHDbetween}
+\alias{fHDbetween.default}
+\alias{fHDbetween.matrix}
+\alias{fHDbetween.data.frame}
+\alias{fHDbetween.pseries}
+\alias{fHDbetween.pdata.frame}
+\alias{fHDwithin}
+\alias{fHDwithin.default}
+\alias{fHDwithin.matrix}
+\alias{fHDwithin.data.frame}
+\alias{fHDwithin.pseries}
+\alias{fHDwithin.pdata.frame}
 \alias{HDW}
-\alias{HDW.default}
-\alias{HDW.matrix}
-\alias{HDW.data.frame}
-\alias{HDW.pseries}
-\alias{HDW.pdata.frame}
+% \alias{HDW.default}
+% \alias{HDW.matrix}
+% \alias{HDW.data.frame}
+% \alias{HDW.pseries}
+% \alias{HDW.pdata.frame}
 \alias{HDB}
-\alias{HDB.default}
-\alias{HDB.matrix}
-\alias{HDB.data.frame}
-\alias{HDB.pseries}
-\alias{HDB.pdata.frame}
+% \alias{HDB.default}
+% \alias{HDB.matrix}
+% \alias{HDB.data.frame}
+% \alias{HDB.pseries}
+% \alias{HDB.pdata.frame}
 %- Also NEED an '\alias' for EACH other topic documented here.
 \title{
 Higher-Dimensional Centering and Linear Prediction
@@ -56,15 +67,15 @@ The special methods for \code{plm::pseries} and \code{plm::pdata.frame} center a
 \value{
 \code{HDB} returns fitted values of regressing \code{x} on \code{fl}. \code{HDW} returns residuals. See Details and Examples.
 }
-\references{
+% \references{
 %% ~put references to the literature/web site here ~
-}
-\author{
+% }
+% \author{
 %%  ~~who you are~~
-}
-\note{
+% }
+% \note{
 %%  ~~further notes~~
-}
+% }
 
 %% ~Make other sections like Warning with \section{Warning }{....} ~
 

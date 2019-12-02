@@ -34,7 +34,7 @@ Smart attribute handling and additional methods ensure compatibility and support
 \section{Getting Started}{
 Please see \link[=collapse-documentation]{Collapse Documentation & Overview}, or one of the Vignettes.
 }
-\author{
+\section{Author(s)}{ % \author{
 Sebastian Krantz
 
 Maintainer: Sebastian Krantz \email{sebastian.krantz@graduateinstitute.ch}

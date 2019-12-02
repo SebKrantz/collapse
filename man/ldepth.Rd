@@ -21,15 +21,15 @@ The depth or level or nesting of a list or list-like structure (i.e. a classed o
 \value{
 A single integer indicating the depth of the list.
 }
-\references{
+% \references{
 %% ~put references to the literature/web site here ~
-}
-\author{
+% }
+% \author{
 %%  ~~who you are~~
-}
-\note{
+% }
+% \note{
 %%  ~~further notes~~
-}
+% }
 
 %% ~Make other sections like Warning with \section{Warning }{....} ~
 

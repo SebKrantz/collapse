@@ -40,25 +40,25 @@ replace_outliers(X, limits, value = NA, single.limit = c("SDs","min","max"))
   }
 }
 }
-\details{
+% \details{
 %%  ~~ If necessary, more details than the description above ~~
-}
-\value{
+% }
+% \value{
 %%  ~Describe the value returned
 %%  If it is a LIST, use
 %%  \item{comp1 }{Description of 'comp1'}
 %%  \item{comp2 }{Description of 'comp2'}
 %% ...
-}
-\references{
+% }
+% \references{
 %% ~put references to the literature/web site here ~
-}
-\author{
+% }
+% \author{
 %%  ~~who you are~~
-}
-\note{
+% }
+% \note{
 %%  ~~further notes~~
-}
+% }
 
 %% ~Make other sections like Warning with \section{Warning }{....} ~
 

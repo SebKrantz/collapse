@@ -12,16 +12,16 @@
 \usage{
 fNdistinct(x, ...)
 
-\method{fNdistinct}{default}(x, g = NULL, TRA = FALSE, na.rm = FALSE,
+\method{fNdistinct}{default}(x, g = NULL, TRA = FALSE, na.rm = TRUE,
            use.g.names = TRUE, ...)
 
-\method{fNdistinct}{matrix}(x, g = NULL, TRA = FALSE, na.rm = FALSE,
+\method{fNdistinct}{matrix}(x, g = NULL, TRA = FALSE, na.rm = TRUE,
            use.g.names = TRUE, drop = TRUE, ...)
 
-\method{fNdistinct}{data.frame}(x, g = NULL, TRA = FALSE, na.rm = FALSE,
+\method{fNdistinct}{data.frame}(x, g = NULL, TRA = FALSE, na.rm = TRUE,
            use.g.names = TRUE, drop = TRUE, ...)
 
-\method{fNdistinct}{grouped_df}(x, TRA = FALSE, na.rm = FALSE,
+\method{fNdistinct}{grouped_df}(x, TRA = FALSE, na.rm = TRUE,
            use.g.names = FALSE, keep.group_vars = TRUE, ...)
 }
 \arguments{
