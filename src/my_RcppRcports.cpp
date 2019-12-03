@@ -14,6 +14,11 @@ RcppExport SEXP subsetDT(SEXP, SEXP, SEXP);
 RcppExport SEXP subsetVector(SEXP, SEXP);
 RcppExport SEXP uniqlengths(SEXP, SEXP);
 
+static const R_CMethodDef CEntries[]  = {
+  {"C_multi_yw", (DL_FUNC) &multi_yw, 10},
+  {NULL, NULL, 0}
+};
+
 static const R_CallMethodDef CallEntries[] = {
   {"Cpp_BW", (DL_FUNC) &_collapse_BWCpp, 8},
   {"Cpp_BWm", (DL_FUNC) &_collapse_BWmCpp, 8},
@@ -86,7 +91,6 @@ static const R_CallMethodDef CallEntries[] = {
   {"Cpp_duplattributes", (DL_FUNC) &_collapse_duplattributes, 2},
   {"Cpp_cond_duplAttributes", (DL_FUNC) &_collapse_cond_duplAttributes, 2},
   {"Cpp_cond_duplattributes", (DL_FUNC) &_collapse_cond_duplattributes, 2},
-  {"C_multi_yw", (DL_FUNC) &multi_yw, 10},
   {"C_collapse_init", (DL_FUNC) &collapse_init, 0},
   {"C_dt_na",         (DL_FUNC) &dt_na,         2},
   {"C_forder",        (DL_FUNC) &forder,        6},
@@ -101,6 +105,6 @@ static const R_CallMethodDef CallEntries[] = {
 };
 
 RcppExport void R_init_collapse(DllInfo *dll) {
-  R_registerRoutines(dll, NULL, CallEntries, NULL, NULL);
+  R_registerRoutines(dll, CEntries, CallEntries, NULL, NULL);
   R_useDynamicSymbols(dll, FALSE);
 }
