@@ -10,9 +10,10 @@
 }
 
 .onAttach <- function(libname, pkgname) {
-  cat("collapse 0.0.0.9000 see ?`collapse-package` or ?`collapse-documentation`")
+  packageStartupMessage("collapse 0.0.0.9000 see ?`collapse-package` or ?`collapse-documentation`")
 }
 
 .onUnload <- function (libpath) {
   library.dynam.unload("collapse", libpath)
 }
+
