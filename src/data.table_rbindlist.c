@@ -223,18 +223,18 @@ SEXP rbindlist(SEXP l, SEXP usenamesArg, SEXP fillArg, SEXP idcolArg)
           break;
         }
       }
-      if (buff[0]) {
-        SEXP opt = GetOption(install("datatable.rbindlist.check"), R_NilValue);
-        if (!isNull(opt) && !(isString(opt) && length(opt)==1)) {
-          warning("options()$datatable.rbindlist.check is set but is not a single string. See news item 5 in v1.12.2.");
-          opt = R_NilValue;
-        }
-        const char *o = isNull(opt) ? "message" : CHAR(STRING_ELT(opt,0));
-        if      (strcmp(o,"message")==0) { eval(PROTECT(lang2(install("message"),PROTECT(ScalarString(mkChar(buff))))), R_GlobalEnv); UNPROTECT(2); }
-        else if (strcmp(o,"warning")==0) warning(buff);
-        else if (strcmp(o,"error")==0)   error(buff);
-        else if (strcmp(o,"none")!=0)    warning("options()$datatable.rbindlist.check=='%s' which is not 'message'|'warning'|'error'|'none'. See news item 5 in v1.12.2.", o);
-      }
+//      if (buff[0]) {
+//        SEXP opt = GetOption(install("datatable.rbindlist.check"), R_NilValue);
+//        if (!isNull(opt) && !(isString(opt) && length(opt)==1)) {
+//          warning("options()$datatable.rbindlist.check is set but is not a single string. See news item 5 in v1.12.2.");
+//          opt = R_NilValue;
+//        }
+//        const char *o = isNull(opt) ? "message" : CHAR(STRING_ELT(opt,0));
+//        if      (strcmp(o,"message")==0) { eval(PROTECT(lang2(install("message"),PROTECT(ScalarString(mkChar(buff))))), R_GlobalEnv); UNPROTECT(2); }
+//        else if (strcmp(o,"warning")==0) warning(buff);
+//        else if (strcmp(o,"error")==0)   error(buff);
+//        else if (strcmp(o,"none")!=0)    warning("options()$datatable.rbindlist.check=='%s' which is not 'message'|'warning'|'error'|'none'. See news item 5 in v1.12.2.", o);
+//      }
     }
   }
   if (usenames==NA_LOGICAL) {
