@@ -138,20 +138,20 @@ fmean.grouped_df <- function(x, w = NULL, TRA = FALSE, na.rm = TRUE, use.g.names
       if(gl) {
         if(keep.group_vars) {
           ax[["names"]] <- c(g[[5L]], names(sumw), ax[["names"]][-gn])
-          return(setAttributes(c(g[[4L]], sumw, .Call(Cpp_fmeanl,x[-gn],g[[1L]],g[[2L]],g[[3L]],w,na.rm,drop)), ax))
+          return(setAttributes(c(g[[4L]], sumw, .Call(Cpp_fmeanl,x[-gn],g[[1L]],g[[2L]],g[[3L]],w,na.rm,FALSE)), ax))
         } else {
           ax[["names"]] <- c(names(sumw), ax[["names"]][-gn])
-          return(setAttributes(c(sumw, .Call(Cpp_fmeanl,x[-gn],g[[1L]],g[[2L]],g[[3L]],w,na.rm,drop)), ax))
+          return(setAttributes(c(sumw, .Call(Cpp_fmeanl,x[-gn],g[[1L]],g[[2L]],g[[3L]],w,na.rm,FALSE)), ax))
         }
-      } else return(setAttributes(.Call(Cpp_fmeanl,x,g[[1L]],g[[2L]],g[[3L]],w,na.rm,drop), ax))
+      } else return(setAttributes(.Call(Cpp_fmeanl,x,g[[1L]],g[[2L]],g[[3L]],w,na.rm,FALSE), ax))
     } else if(keep.group_vars || (keep.w && length(sumw))) {
       ax[["names"]] <- c(ax[["names"]][gn2], ax[["names"]][-gn])
-      return(setAttributes(c(x[gn2],.Call(Cpp_TRAl,x[-gn],.Call(Cpp_fmeanl,x[-gn],g[[1L]],g[[2L]],g[[3L]],w,na.rm,drop),g[[2L]],TRAtoInt(TRA))), ax))
+      return(setAttributes(c(x[gn2],.Call(Cpp_TRAl,x[-gn],.Call(Cpp_fmeanl,x[-gn],g[[1L]],g[[2L]],g[[3L]],w,na.rm,FALSE),g[[2L]],TRAtoInt(TRA))), ax))
     } else {
       ax[["names"]] <- ax[["names"]][-gn]
-      return(setAttributes(.Call(Cpp_TRAl,x[-gn],.Call(Cpp_fmeanl,x[-gn],g[[1L]],g[[2L]],g[[3L]],w,na.rm,drop),g[[2L]],TRAtoInt(TRA)), ax))
+      return(setAttributes(.Call(Cpp_TRAl,x[-gn],.Call(Cpp_fmeanl,x[-gn],g[[1L]],g[[2L]],g[[3L]],w,na.rm,FALSE),g[[2L]],TRAtoInt(TRA)), ax))
     }
-  } else return(.Call(Cpp_TRAl,x,.Call(Cpp_fmeanl,x,g[[1L]],g[[2L]],g[[3L]],w,na.rm,drop),g[[2L]],TRAtoInt(TRA)))
+  } else return(.Call(Cpp_TRAl,x,.Call(Cpp_fmeanl,x,g[[1L]],g[[2L]],g[[3L]],w,na.rm,FALSE),g[[2L]],TRAtoInt(TRA)))
 }
 
 
