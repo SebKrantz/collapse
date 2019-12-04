@@ -91,6 +91,7 @@ static const R_CallMethodDef CallEntries[] = {
   {"Cpp_duplattributes", (DL_FUNC) &_collapse_duplattributes, 2},
   {"Cpp_cond_duplAttributes", (DL_FUNC) &_collapse_cond_duplAttributes, 2},
   {"Cpp_cond_duplattributes", (DL_FUNC) &_collapse_cond_duplattributes, 2},
+  {"Cpp_lassign", (DL_FUNC) &_collapse_lassignCpp, 4},
   {"C_collapse_init", (DL_FUNC) &collapse_init, 0},
   {"C_dt_na",         (DL_FUNC) &dt_na,         2},
   {"C_forder",        (DL_FUNC) &forder,        6},

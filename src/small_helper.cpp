@@ -61,6 +61,88 @@ void cond_duplattributes(SEXP x, SEXP y) {
 //   return y;
 // }
 
+// [[Rcpp::export]] // not faster than base method on large data (PRIO)!!
+List lassignCpp(const List& x, int s, const SEXP& rows = R_NilValue, double fill = NA_REAL) {
+  int l = x.size(), tr = TYPEOF(rows);
+  List out(l);
+  if(tr == INTSXP) {
+    IntegerVector rowsv = rows;
+    int rs = rowsv.size();
+    for(int j = l; j--; ) {
+      NumericVector column = x[j];
+      if(column.size() != rs) stop("length(rows) must match nrow(x)");
+      NumericVector outj(s, fill);
+      for(int i = 0; i != rs; ++i) outj[rowsv[i]-1] = column[i];
+      SHALLOW_DUPLICATE_ATTRIB(outj, column);
+      out[j] = outj;
+    }
+  } else if(tr == LGLSXP) {
+    LogicalVector rowsl = rows;
+    int rs = rowsl.size();
+    if(s != rs) stop("length(rows) must match length(s) if rows is a logical vector");
+    for(int j = l; j--; ) {
+      NumericVector column = x[j];
+      NumericVector outj = no_init_vector(s);
+      int k = 0;
+      for(int i = 0; i != rs; ++i) {
+        outj[i] = rowsl[i] ? column[k++] : fill;
+      }
+      SHALLOW_DUPLICATE_ATTRIB(outj, column);
+      out[j] = outj;
+    }
+  } else stop("rows must be positive integers or a logical vector");
+  DUPLICATE_ATTRIB(out, x);
+  return out;
+}
+
+
+// // [[Rcpp::export]] // not faster than base method on large data (PRIO)!!
+// List NUMlassignCpp(const List& x, const IntegerVector& rows = 0, const IntegerVector& cols = 0, double fill = NA_REAL) {
+//   int rs = rows.size(), cs = cols.size(), l = x.size();
+//   int outs = (cs == 1 && cols[0] == 0) ? l : cs;
+//   List out(outs);
+//   if(outs == l && rows[0] != 0) {
+//     for(int j = l; j--; ) {
+//       NumericVector column = x[j];
+//       int row = column.size();
+//       NumericVector outj(row, fill);
+//       // outj[rows] = column[rows]; // best ?? -> nope, below is better !!
+//       for(int i = 0; i != rs; ++i) {
+//         int ri = rows[i]-1;
+//         outj[ri] = column[ri];
+//       }
+//       SHALLOW_DUPLICATE_ATTRIB(outj, column);
+//       out[j] = outj;
+//     }
+//     DUPLICATE_ATTRIB(out, x);
+//     return out;
+//   } else if(outs != l && rows[0] != 0) {
+//     for(int j = cs; j--; ) {
+//       int col = cols[j]-1;
+//       NumericVector column = x[col];
+//       int row = column.size();
+//       NumericVector outj(row, fill);
+//       // outj[rows] = column[rows]; // best ?? -> nope, below is better !!
+//       for(int i = 0; i != rs; ++i) {
+//         int ri = rows[i]-1;
+//         outj[ri] = column[ri];
+//       }
+//       SHALLOW_DUPLICATE_ATTRIB(outj, column);
+//       out[j] = outj;
+//     }
+//   } else if(rs == 1 && rows[0] == 0) {
+//     out = x[cols-1];
+//   } else stop("Must subset either rows or columns or both!");
+//   DUPLICATE_ATTRIB(out, x);
+//   SEXP nam = Rf_getAttrib(x, R_NamesSymbol);
+//   if(nam != R_NilValue) {
+//     CharacterVector names = nam;
+//     out.attr("names") = names[cols-1];
+//   }
+//   return out;
+// }
+
+
 
 // // [[Rcpp::export]] // not faster than base method on large data (PRIO)!!
 // List LSubset(const List& x, const IntegerVector& rows = 0, const IntegerVector& cols = 0) {

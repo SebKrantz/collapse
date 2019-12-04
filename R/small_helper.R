@@ -104,7 +104,8 @@ give_nam <- function(x, gn, stub) {
 }
 cols2int <- function(cols, x, nam) {
   if(is.function(cols)) which(vapply(x, cols, TRUE)) else if(is.character(cols))
-    match(cols, nam) else cols
+    anyNAerror(match(cols, nam), "Unknown column names!") else if(is.logical(cols)) which(cols) else if(is.numeric(cols)) cols else
+      stop("cols must be a function, character vector, numeric indices or logical vector!")
 }
 at2GRP <- function(x) {
   if(is.factor(x))

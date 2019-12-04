@@ -1102,3 +1102,17 @@ BEGIN_RCPP
     return R_NilValue;
 END_RCPP
 }
+// lassignCpp
+List lassignCpp(const List& x, int s, const SEXP& rows, double fill);
+RcppExport SEXP _collapse_lassignCpp(SEXP xSEXP, SEXP sSEXP, SEXP rowsSEXP, SEXP fillSEXP) {
+BEGIN_RCPP
+    Rcpp::RObject rcpp_result_gen;
+    Rcpp::RNGScope rcpp_rngScope_gen;
+    Rcpp::traits::input_parameter< const List& >::type x(xSEXP);
+    Rcpp::traits::input_parameter< int >::type s(sSEXP);
+    Rcpp::traits::input_parameter< const SEXP& >::type rows(rowsSEXP);
+    Rcpp::traits::input_parameter< double >::type fill(fillSEXP);
+    rcpp_result_gen = Rcpp::wrap(lassignCpp(x, s, rows, fill));
+    return rcpp_result_gen;
+END_RCPP
+}
