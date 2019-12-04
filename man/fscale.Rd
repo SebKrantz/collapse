@@ -27,32 +27,26 @@ Fast (Grouped, Weighted) Scaling and Centering of Matrix-like Objects
 fscale(x, ...)
    STD(x, ...)
 
-\method{fscale}{default}(x, g = NULL, w = NULL, na.rm = TRUE, stable.algo = TRUE, ...)
-   STD(x, g = NULL, w = NULL, na.rm = TRUE, stable.algo = TRUE, ...)
+\method{fscale}{default}(x, g = NULL, w = NULL, na.rm = TRUE, stable.algo = TRUE, ...)                                          \method{STD}{default}(x, g = NULL, w = NULL, na.rm = TRUE, stable.algo = TRUE, ...)
 
-\method{fscale}{matrix}(x, g = NULL, w = NULL, na.rm = TRUE, stable.algo = TRUE, ...)
-   STD(x, g = NULL, w = NULL, na.rm = TRUE, stable.algo = TRUE,
-       stub = "STD.", ...)
+\method{fscale}{matrix}(x, g = NULL, w = NULL, na.rm = TRUE, stable.algo = TRUE, ...)                                          \method{STD}{matrix}(x, g = NULL, w = NULL, na.rm = TRUE, stable.algo = TRUE,
+    stub = "STD.", ...)
 
-\method{fscale}{data.frame}(x, g = NULL, w = NULL, na.rm = TRUE, stable.algo = TRUE, ...)
-   STD(x, by = NULL, w = NULL, cols = is.numeric, na.rm = TRUE,
-       keep.by = TRUE, keep.w = TRUE, stable.algo = TRUE, stub = "STD.", ...)
+\method{fscale}{data.frame}(x, g = NULL, w = NULL, na.rm = TRUE, stable.algo = TRUE, ...)                                          \method{STD}{data.frame}(x, by = NULL, w = NULL, cols = is.numeric, na.rm = TRUE,
+    keep.by = TRUE, keep.w = TRUE, stable.algo = TRUE, stub = "STD.", ...)
 
 # Methods for compatibility with plm:
 
-\method{fscale}{pseries}(x, effect = 1L, w = NULL, na.rm = TRUE, stable.algo = TRUE, ...)
-   STD(x, effect = 1L, w = NULL, na.rm = TRUE, stable.algo = TRUE, ...)
+\method{fscale}{pseries}(x, effect = 1L, w = NULL, na.rm = TRUE, stable.algo = TRUE, ...)                                          \method{STD}{pseries}(x, effect = 1L, w = NULL, na.rm = TRUE, stable.algo = TRUE, ...)
 
-\method{fscale}{pdata.frame}(x, effect = 1L, w = NULL, na.rm = TRUE, stable.algo = TRUE, ...)
-   STD(x, effect = 1L, w = NULL, cols = is.numeric, na.rm = TRUE,
-       keep.ids = TRUE, keep.w = TRUE, stable.algo = TRUE, stub = "STD.", ...)
+\method{fscale}{pdata.frame}(x, effect = 1L, w = NULL, na.rm = TRUE, stable.algo = TRUE, ...)                                          \method{STD}{pdata.frame}(x, effect = 1L, w = NULL, cols = is.numeric, na.rm = TRUE,
+    keep.ids = TRUE, keep.w = TRUE, stable.algo = TRUE, stub = "STD.", ...)
 
 # Methods for compatibility with dplyr:
 
 \method{fscale}{grouped_df}(x, w = NULL, na.rm = TRUE, keep.group_vars = TRUE,
-       keep.w = TRUE, stable.algo = TRUE, ...)
-   STD(x, w = NULL, na.rm = TRUE, keep.group_vars = TRUE,
-       keep.w = TRUE, stable.algo = TRUE, stub = "STD.", ...)
+       keep.w = TRUE, stable.algo = TRUE, ...)                                          \method{STD}{grouped_df}(x, w = NULL, na.rm = TRUE, keep.group_vars = TRUE,
+    keep.w = TRUE, stable.algo = TRUE, stub = "STD.", ...)
 }
 %- maybe also 'usage' for other objects documented here.
 \arguments{
@@ -128,5 +122,4 @@ wlddev \%>\% group_by(iso3c) \%>\% select(PCGDP,LIFEEX,ODA) \%>\% STD(ODA) # wei
 }
 % Add one or more standard keywords, see file 'KEYWORDS' in the
 % R documentation directory.
-\keyword{ ~kwd1 }% use one of  RShowDoc("KEYWORDS")
-\keyword{ ~kwd2 }% __ONLY ONE__ keyword per line
+\keyword{manip}% __ONLY ONE__ keyword per line % use one of  RShowDoc("KEYWORDS")

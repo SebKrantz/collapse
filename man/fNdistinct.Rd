@@ -68,7 +68,7 @@ fNdistinct(airquality$Solar.R, airquality$Month) # Grouped distinct value count
 fNdistinct(airquality)
 fNdistinct(airquality, airquality$Month)
 fNdistinct(wlddev)                               # Works with data of all types!
-View(fNdistinct(wlddev, wlddev$iso3c))
+head(fNdistinct(wlddev, wlddev$iso3c))
 
 ## matrix method
 aqm <- qM(airquality)

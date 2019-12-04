@@ -39,14 +39,15 @@ pwcov(X, ...)                 # Pairwise-covariances
 all.identical(...)            # Check the exact equality of multiple objects or of all elements in a single list
 is.categorical(x)             # The opposite of is.numeric
 is.Date(x)                    # Check if an object inherits a class "Date", "POSIXlt" or "POSIXct"
-x \%!in\% y                     # The opposite of \%in\%
+x \%!in\% table                 # The opposite of \%in\%
 na.rm(x)                      # Remove missing values from vector and return vector
 }
 %- maybe also 'usage' for other objects documented here.
 \arguments{
   \item{X}{a (numeric) matrix or data.frame.}
   \item{object}{an array or data.frame.}
-  \item{x, y}{(numeric) vectors.}
+  \item{x, table}{(numeric) vectors.}
+  \item{value}{a matching character vector of variable labels.}
   \item{class}{logical. Also show the classes of variables in X in a column?}
   \item{stub}{a single character stub, i.e. "log.", which by default will be pre-applied to all variable or column names in X.}
   \item{pre}{logical. \code{FALSE} will post-apply \code{stub}.}
@@ -92,5 +93,4 @@ all.identical(l)
 }
 % Add one or more standard keywords, see file 'KEYWORDS' in the
 % R documentation directory.
-\keyword{ ~kwd1 }% use one of  RShowDoc("KEYWORDS")
-\keyword{ ~kwd2 }% __ONLY ONE__ keyword per line
+\keyword{manip}% __ONLY ONE__ keyword per line % use one of  RShowDoc("KEYWORDS")

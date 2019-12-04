@@ -34,6 +34,9 @@ This dataset contains 4 indicators from the World Bank's World Development Indic
 % \references{
 %%  ~~ possibly secondary sources and usages ~~
 % }
+\seealso{
+\code{\link{GGDC10S}}, \link[=collapse-documentation]{Collapse Overview}
+}
 \examples{
 data(wlddev)
 }

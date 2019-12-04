@@ -1,11 +1,12 @@
 \name{qsu} % quick-summary
 \alias{qsu}
 \alias{quick-summary}
-% \alias{qsu.default}
-% \alias{qsu.matrix}
-% \alias{qsu.data.frame}
-% \alias{qsu.pseries}
-% \alias{qsu.pdata.frame}
+\alias{qsu.default}
+\alias{qsu.matrix}
+\alias{qsu.data.frame}
+\alias{qsu.pseries}
+\alias{qsu.pdata.frame}
+\alias{print.qsu}
 % - Also NEED an '\alias' for EACH other topic documented here.
 \title{
 Fast (Grouped, Weighted) Summary Statistics for Cross-Sectional and Panel-Data
@@ -16,22 +17,22 @@ Fast (Grouped, Weighted) Summary Statistics for Cross-Sectional and Panel-Data
 It computes a set of 7 statistics (nobs, mean, sd, min, max, skewness and kurtosis) using a numerically stable one-pass method generalized from Welford's Algorithm. Statistics can be computed weighted, by groups, and also within-and between entities (for panel-data, see Details).
 }
 \usage{
-\method{qsu}{default}(x, g = NULL, pid = NULL, w = NULL, higher = FALSE, array = TRUE, ...)
+\method{qsu}{default}(x, g = NULL, pid = NULL, w = NULL, higher = FALSE, array = TRUE, \dots)
 
-\method{qsu}{matrix}(x, g = NULL, pid = NULL, w = NULL, higher = FALSE, array = TRUE, ...)
+\method{qsu}{matrix}(x, g = NULL, pid = NULL, w = NULL, higher = FALSE, array = TRUE, \dots)
 
 \method{qsu}{data.frame}(x, by = NULL, xt = NULL, w = NULL, cols = NULL,
-    higher = FALSE, array = TRUE, vlabels = FALSE,...)
+    higher = FALSE, array = TRUE, vlabels = FALSE,\dots)
 
 # Methods for compatibility with plm:
 
-\method{qsu}{pseries}(x, g = NULL, w = NULL, higher = FALSE, array = TRUE, ...)
+\method{qsu}{pseries}(x, g = NULL, w = NULL, higher = FALSE, array = TRUE, \dots)
 
 \method{qsu}{pdata.frame}(x, by = NULL, w = NULL, cols = NULL,
-    higher = FALSE, array = TRUE, vlabels = FALSE, ...)
+    higher = FALSE, array = TRUE, vlabels = FALSE, \dots)
 
 
-\method{print}{qsu}(x, digits = 2, nonsci.digits = 9, na.print = "-", return = FALSE, ...)
+\method{print}{qsu}(x, digits = 2, nonsci.digits = 9, na.print = "-", return = FALSE, \dots)
 }
 %- maybe also 'usage' for other objects documented here.
 \arguments{
@@ -44,6 +45,11 @@ It computes a set of 7 statistics (nobs, mean, sd, min, max, skewness and kurtos
   \item{higher}{logical. Add higher moments (skewness and kurtosis).}
   \item{array}{logical. If computations have more than 2 dimensions (up to a maximum of 4D: variables, statistics, groups and panel-decomposition) output to array, else output (nested) list of matrices.}
   \item{vlabels}{logical. Use variable labels in the summary. See \code{\link{vlabels}}.}
+  \item{\dots}{arguments to be passed to or from other methods.}
+  \item{digits}{the number of digits to print after the comma/dot.}
+  \item{digits}{the number of digits to print before resorting to scientific notation (default is tp print out numbers with up to 9 digits and print larger numbers scientifically).}
+  \item{na.print}{character string to substitute for missing values.}
+  \item{return}{logical. Don't print but instead return the formatted object.}
 }
 \details{
 The algorithm used to compute statistics is well described \href{https://en.wikipedia.org/wiki/Algorithms_for_calculating_variance}{here} (see sections \emph{Welford's online algorithm}, \emph{Weighted incremental algorithm} and \emph{Higher-order statistics}. Skewness and kurtosis are calculated as described in \code{Higher-order statistics} and are mathematically identical to those implemented in the \code{moments} package. Just note that \code{qsu} computes the kurtosis (like \code{momens::kurtosis}), not the excess-kurtosis (=  kurtosis - 3) defined in \code{Higher-order statistics}. The \emph{Weighted incremental algorithm} decribed can easily be generalized to higher-order statistics).
@@ -113,7 +119,7 @@ print.qsu(psr[,"SD",,])                     # Considering only standard deviatio
 psrl <- qsu(wlddev, ~ region, ~ iso3c,      # Same, but output as nested list
             cols = 9:12, array = FALSE)
 psrl                                        # We can use unlist2d to create a tidy data-frame of this, see ?unlist2d
-View(unlist2d(psrl, c("Variable","Trans"),
+head(unlist2d(psrl, c("Variable","Trans"),
                     row.names = "Region"))
 
 # Weighted Summaries -----------------------
@@ -138,5 +144,4 @@ qsu(wlddev, w = weightsNA, higher = TRUE)   # But now these values are removed f
 
 % Add one or more standard keywords, see file 'KEYWORDS' in the
 % R documentation directory.
-\keyword{ ~kwd1 }% use one of  RShowDoc("KEYWORDS")
-\keyword{ ~kwd2 }% __ONLY ONE__ keyword per line
+\keyword{univar}% __ONLY ONE__ keyword per line % use one of  RShowDoc("KEYWORDS")

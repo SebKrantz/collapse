@@ -34,44 +34,26 @@ Fast Lags and Leads for Time-Series and Panel Data
 flag(x, n = 1, ...)
    L(x, n = 1, ...)
    F(x, n = 1, ...)
-
-## Default S3 methods:
-flag(x, n = 1, g = NULL, t = NULL, fill = NA, stubs = TRUE, ...)
-   L(x, n = 1, g = NULL, t = NULL, fill = NA, stubs = TRUE, ...)
-   F(x, n = 1, g = NULL, t = NULL, fill = NA, stubs = TRUE, ...)
-
-## S3 methods for class 'matrix'
-flag(x, n = 1, g = NULL, t = NULL, fill = NA, stubs = TRUE, ...)
-   L(x, n = 1, g = NULL, t = NULL, fill = NA, stubs = TRUE, ...)
-   F(x, n = 1, g = NULL, t = NULL, fill = NA, stubs = TRUE, ...)
-
-## S3 methods for class 'data.frame'
-flag(x, n = 1, g = NULL, t = NULL, fill = NA, stubs = TRUE, ...)
-   L(x, n = 1, by = NULL, t = NULL, cols = is.numeric,
-     fill = NA, stubs = TRUE, keep.ids = TRUE, ...)
-   F(x, n = 1, by = NULL, t = NULL, cols = is.numeric,
+%## Default S3 methods:
+\method{flag}{default}(x, n = 1, g = NULL, t = NULL, fill = NA, stubs = TRUE, ...)                                                                     \method{L}{default}(x, n = 1, g = NULL, t = NULL, fill = NA, stubs = TRUE, ...) \method{F}{default}(x, n = 1, g = NULL, t = NULL, fill = NA, stubs = TRUE, ...)
+%## S3 methods for class 'matrix'
+\method{flag}{matrix}(x, n = 1, g = NULL, t = NULL, fill = NA, stubs = TRUE, ...) \method{L}{matrix}(x, n = 1, g = NULL, t = NULL, fill = NA, stubs = TRUE, ...)  \method{F}{matrix}(x, n = 1, g = NULL, t = NULL, fill = NA, stubs = TRUE, ...)
+%## S3 methods for class 'data.frame'
+\method{flag}{data.frame}(x, n = 1, g = NULL, t = NULL, fill = NA, stubs = TRUE, ...)                                                                      \method{L}{data.frame}(x, n = 1, by = NULL, t = NULL, cols = is.numeric,
+     fill = NA, stubs = TRUE, keep.ids = TRUE, ...)                      \method{F}{data.frame}(x, n = 1, by = NULL, t = NULL, cols = is.numeric,
      fill = NA, stubs = TRUE, keep.ids = TRUE, ...)
 
 # Methods for compatibility with plm:
-
-## S3 methods for class 'pseries'
-flag(x, n = 1, fill = NA, stubs = TRUE, ...)
-   L(x, n = 1, fill = NA, stubs = TRUE, ...)
-   F(x, n = 1, fill = NA, stubs = TRUE, ...)
-
-## S3 methods for class 'pdata.frame'
-flag(x, n = 1, fill = NA, stubs = TRUE, ...)
-   L(x, n = 1, cols = is.numeric, fill = NA, stubs = TRUE,
-     keep.ids = TRUE, ...)
-   F(x, n = 1, cols = is.numeric, fill = NA, stubs = TRUE,
+%## S3 methods for class 'pseries'
+\method{flag}{pseries}(x, n = 1, fill = NA, stubs = TRUE, ...)                \method{L}{pseries}(x, n = 1, fill = NA, stubs = TRUE, ...)                   \method{F}{pseries}(x, n = 1, fill = NA, stubs = TRUE, ...)
+%## S3 methods for class 'pdata.frame'
+\method{flag}{pdata.frame}(x, n = 1, fill = NA, stubs = TRUE, ...)          \method{L}{pdata.frame}(x, n = 1, cols = is.numeric, fill = NA, stubs = TRUE,
+     keep.ids = TRUE, ...)                                                  \method{F}{pdata.frame}(x, n = 1, cols = is.numeric, fill = NA, stubs = TRUE,
      keep.ids = TRUE, ...)
 
 # Methods for compatibility with dplyr:
-
-## S3 methods for class 'grouped_df'
-flag(x, n = 1, t = NULL, fill = NA, stubs = TRUE, keep.ids = TRUE, ...)
-   L(x, n = 1, t = NULL, fill = NA, stubs = TRUE, keep.ids = TRUE, ...)
-   F(x, n = 1, t = NULL, fill = NA, stubs = TRUE, keep.ids = TRUE, ...)
+%## S3 methods for class 'grouped_df'
+\method{flag}{grouped_df}(x, n = 1, t = NULL, fill = NA, stubs = TRUE, keep.ids = TRUE, ...)                                                               \method{L}{grouped_df}(x, n = 1, t = NULL, fill = NA, stubs = TRUE, keep.ids = TRUE, ...)                                                                    \method{F}{grouped_df}(x, n = 1, t = NULL, fill = NA, stubs = TRUE, keep.ids = TRUE, ...)
 }
 %- maybe also 'usage' for other objects documented here.
 \arguments{
@@ -164,5 +146,5 @@ wlddev \%>\% group_by(iso3c) \%>\% select(year,PCGDP,LIFEEX) \%>\% L(0:2,year) #
 }
 % Add one or more standard keywords, see file 'KEYWORDS' in the
 % R documentation directory.
-\keyword{ ~kwd1 }% use one of  RShowDoc("KEYWORDS")
-\keyword{ ~kwd2 }% __ONLY ONE__ keyword per line
+\keyword{manip}% __ONLY ONE__ keyword per line % use one of  RShowDoc("KEYWORDS")
+\keyword{ts}% __ONLY ONE__ keyword per line

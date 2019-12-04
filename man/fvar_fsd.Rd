@@ -16,32 +16,24 @@
 \usage{
 fvar(x, ...)
 fsd(x, ...)
-
-## Default S3 methods:
-fvar(x, g = NULL, w = NULL, TRA = FALSE, na.rm = TRUE,
-     use.g.names = TRUE, stable.algo = TRUE, ...)
- fsd(x, g = NULL, w = NULL, TRA = FALSE, na.rm = TRUE,
-     use.g.names = TRUE, stable.algo = TRUE, ...)
-
-## S3 methods for class 'matrix'
-fvar(x, g = NULL, w = NULL, TRA = FALSE, na.rm = TRUE,
-     use.g.names = TRUE, drop = TRUE, stable.algo = TRUE, ...)
- fsd(x, g = NULL, w = NULL, TRA = FALSE, na.rm = TRUE,
-     use.g.names = TRUE, drop = TRUE, stable.algo = TRUE, ...)
-
-## S3 methods for class 'data.frame'
-fvar(x, g = NULL, w = NULL, TRA = FALSE, na.rm = TRUE,
-     use.g.names = TRUE, drop = TRUE, stable.algo = TRUE, ...)
- fsd(x, g = NULL, w = NULL, TRA = FALSE, na.rm = TRUE,
-     use.g.names = TRUE, drop = TRUE, stable.algo = TRUE, ...)
-
-## S3 methods for class 'grouped_df'
-fvar(x, w = NULL, TRA = FALSE, na.rm = TRUE,
+%## Default S3 methods:
+\method{fvar}{default}(x, g = NULL, w = NULL, TRA = FALSE, na.rm = TRUE,
+     use.g.names = TRUE, stable.algo = TRUE, ...)                         \method{fsd}{default}(x, g = NULL, w = NULL, TRA = FALSE, na.rm = TRUE,
+    use.g.names = TRUE, stable.algo = TRUE, ...)
+%## S3 methods for class 'matrix'
+\method{fvar}{matrix}(x, g = NULL, w = NULL, TRA = FALSE, na.rm = TRUE,
+     use.g.names = TRUE, drop = TRUE, stable.algo = TRUE, ...)                    \method{fsd}{matrix}(x, g = NULL, w = NULL, TRA = FALSE, na.rm = TRUE,
+    use.g.names = TRUE, drop = TRUE, stable.algo = TRUE, ...)
+%## S3 methods for class 'data.frame'
+\method{fvar}{data.frame}(x, g = NULL, w = NULL, TRA = FALSE, na.rm = TRUE,
+     use.g.names = TRUE, drop = TRUE, stable.algo = TRUE, ...)                    \method{fsd}{data.frame}(x, g = NULL, w = NULL, TRA = FALSE, na.rm = TRUE,
+    use.g.names = TRUE, drop = TRUE, stable.algo = TRUE, ...)
+%## S3 methods for class 'grouped_df'
+\method{fvar}{grouped_df}(x, w = NULL, TRA = FALSE, na.rm = TRUE,
      use.g.names = FALSE, keep.group_vars = TRUE, keep.w = TRUE,
-     stable.algo = TRUE, ...)
- fsd(x, w = NULL, TRA = FALSE, na.rm = TRUE,
-     use.g.names = FALSE, keep.group_vars = TRUE, keep.w = TRUE,
-     stable.algo = TRUE, ...)
+     stable.algo = TRUE, ...)                                              \method{fsd}{grouped_df}(x, w = NULL, TRA = FALSE, na.rm = TRUE,
+    use.g.names = FALSE, keep.group_vars = TRUE, keep.w = TRUE,
+    stable.algo = TRUE, ...)
 }
 \arguments{
 \item{x}{a numeric vector, matrix, data.frame or grouped tibble (\code{dplyr::grouped_df}).}
@@ -100,7 +92,7 @@ fsd(mtcars$mpg, mtcars$cyl, mtcars$hp, "/") # Group-scaling using weighted group
 
 ## data.frame method
 fsd(iris)                           # This works, although 'Species' is a factor variable
-fsd(iris, drop = FALSE)             # This gives an error, becase fsd wants to add back attributes to 'Species'
+# fsd(iris, drop = FALSE)           This gives an error, becase fsd wants to add back attributes to 'Species'
 fsd(mtcars, drop = FALSE)           # This works, all columns are numeric variables
 fsd(iris[-5], iris[5])              # By Species: iris[5] is still a list, and thus passed to GRP() first, see ?GRP
 fsd(iris[-5], iris[[5]])            # Same thing but much faster: fsd recognizes that 'Species' is a factor and uses it directly

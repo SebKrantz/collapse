@@ -1,6 +1,6 @@
 \name{collapse-documentation}
 \alias{collapse-documentation}
-
+\docType{package}
 \title{Collapse Documentation & Overview}
 \description{
 The following table fully summarizes the content of \code{collapse}. The documentation follows a hierarchical structure: This is the top page, linking to topical pages, linking to functions (unless fully documented on the topic page, i.e. only functions with separate pages are linked here). Typing \code{?FUN} always brings up the most relevant documentation page. % Functions with separate documentation entries (apart from the topic page) are linked. % Each topic further has it's own overview page in the documentation.

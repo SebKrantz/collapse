@@ -56,9 +56,9 @@ replace_outliers(X, limits, value = NA, single.limit = c("SDs","min","max"))
 % \author{
 %%  ~~who you are~~
 % }
-% \note{
-%%  ~~further notes~~
-% }
+\note{
+\code{Recode} is not suitable for recoding factors or other classed objects / columns, it simply does \code{X[X == value] <- replacement} in a more efficient way. For classed objects, see for example \code{dplyr::recode}.
+}
 
 %% ~Make other sections like Warning with \section{Warning }{....} ~
 
@@ -84,5 +84,4 @@ num_vars(dplyr::group_by(iris, Species)), 2)        # to remove outliers accordi
 }
 % Add one or more standard keywords, see file 'KEYWORDS' in the
 % R documentation directory.
-\keyword{ ~kwd1 }% use one of  RShowDoc("KEYWORDS")
-\keyword{ ~kwd2 }% __ONLY ONE__ keyword per line
+\keyword{manip}% __ONLY ONE__ keyword per line % use one of  RShowDoc("KEYWORDS")

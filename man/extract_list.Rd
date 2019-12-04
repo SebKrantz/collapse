@@ -43,6 +43,16 @@ has_elem(l, elem, recursive = TRUE, DF.as.list = TRUE, regex = FALSE, ...)
   \item{l}{a list.}
   \item{value}{a list of the same length as the extracted subet of \code{l}.}
   \item{elem}{a function returning \code{TRUE} or \code{FALSE} when applied to elements of \code{l}, or a character vector of element names or regular expressions (if \code{regex = TRUE}). \code{get_elem} also supports a vector or indices which will be used to subset all final objects.}
+\item{return}{an integer or string specifying what to return. The options are:
+  \enumerate{
+  \item "sublist"\cr
+  \item "names"\cr
+  \item "indices"\cr
+  \item "named_indices"
+  }
+  \emph{Note}: replacement functions currently only elements, not element names or indices (ordering). However element names are replaced together with the data.
+  }
+
   \item{recursive}{logical. should the list search be recursive (i.e. go though all the elements), or just at the top-level?}
   \item{DF.as.list}{logical. treat data.frame's like (sub-)lists or like atomic elements?}
   \item{keep.tree}{logical. \code{TRUE} always returns the entire list tree leading up to all matched results, while \code{FALSE} drops the top-level part of the tree if possible.}

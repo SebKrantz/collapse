@@ -6,7 +6,7 @@
 \alias{BY.grouped_df}
 %- Also NEED an '\alias' for EACH other topic documented here.
 \title{
-(Efficient) Split-Apply-Combine Computing
+Split-Apply-Combine Computing % (Efficient)
 }
 \description{
 \code{BY} is an S3 generic that efficiently applies functions over vectors or matrix- and data.frame columns by groups, and returns various output formats. A simple parallelism is also available.
@@ -47,7 +47,7 @@ BY(X, ...)
 %    \item{simplify}{logical. Simplify the result to return an object of the same class and with the same attributes. If \code{FALSE}, the raw computation retult in form of a (nested) list is returned.}
 }
 \details{
-\code{BY} is a frugal reimplementation of the Split-Apply-Combine computing paradigm. It is faster than \code{base::tapply}, \code{base::by}, \code{base::aggregate} and \code{plyr}, and preserves data attributes just like \code{\link{dapply}}.
+\code{BY} is a frugal reimplementation of the Split-Apply-Combine computing paradigm. It is faster than \code{base::tapply}, \code{base::by}, \code{base::aggregate} and \code{plyr}, and preserves data attributes just like \code{\link{dapply}}. % and more versatile though not faster than \code{dplyr}
 
 I note at this point that the philosphy of \code{collapse} is to move beyond this rather slow computing paradigm, which is why the \link[=fast-statistical-functions]{Fast Statistical Functions} were implemented. However sometimes tasks need to be performed that involve more comlex and customized operations on data, and for these cases \code{BY} is a good solution.
 
@@ -124,5 +124,5 @@ giris \%>\% BY(quantile,                # Much better, also keeps 'Species'
 }
 % Add one or more standard keywords, see file 'KEYWORDS' in the
 % R documentation directory.
-\keyword{ ~kwd1 }% use one of  RShowDoc("KEYWORDS")
-\keyword{ ~kwd2 }% __ONLY ONE__ keyword per line
+\keyword{manip}% __ONLY ONE__ keyword per line
+% \keyword{programming}% use one of  RShowDoc("KEYWORDS")

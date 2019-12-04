@@ -55,7 +55,7 @@ fNobs(airquality$Solar.R, airquality$Month) # Grouped Nobs
 fNobs(airquality)
 fNobs(airquality, airquality$Month)
 fNobs(wlddev)                               # Works with data of all types!
-View(fNobs(wlddev, wlddev$iso3c))
+head(fNobs(wlddev, wlddev$iso3c))
 
 ## matrix method
 aqm <- qM(airquality)

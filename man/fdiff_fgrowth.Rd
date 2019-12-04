@@ -38,52 +38,28 @@ Fast Differences and Growth Rates for Time-Series and Panel Data
 (\code{fdiff} and \code{fgrowth} are programmers functions in style of the \link[=fast-statistical-functions]{Fast Statistical Functions} while \code{D} & \code{G} are more practical to use in regression formulas or for computations on data frames.)
 }
 \usage{
-  fdiff(x, n = 1, diff = 1, ...)
-      D(x, n = 1, diff = 1, ...)
-fgrowth(x, n = 1, diff = 1, ...)
-      G(x, n = 1, diff = 1, ...)
-
-## Default S3 methods:
-  fdiff(x, n = 1, diff = 1, g = NULL, t = NULL, fill = NA, stubs = TRUE, ...)
-      D(x, n = 1, diff = 1, g = NULL, t = NULL, fill = NA, stubs = TRUE, ...)
-fgrowth(x, n = 1, diff = 1, g = NULL, t = NULL, fill = NA, logdiff = FALSE, stubs = TRUE, ...)
-      G(x, n = 1, diff = 1, g = NULL, t = NULL, fill = NA, logdiff = FALSE, stubs = TRUE, ...)
-
-## S3 methods for class 'matrix'
-  fdiff(x, n = 1, diff = 1, g = NULL, t = NULL, fill = NA, stubs = TRUE, ...)
-      D(x, n = 1, diff = 1, g = NULL, t = NULL, fill = NA, stubs = TRUE, ...)
-fgrowth(x, n = 1, diff = 1, g = NULL, t = NULL, fill = NA, logdiff = FALSE, stubs = TRUE, ...)
-      G(x, n = 1, diff = 1, g = NULL, t = NULL, fill = NA, logdiff = FALSE, stubs = TRUE, ...)
-
-## S3 methods for class 'data.frame'
-  fdiff(x, n = 1, diff = 1, g = NULL, t = NULL, fill = NA, stubs = TRUE, ...)
-      D(x, n = 1, diff = 1, by = NULL, t = NULL, cols = is.numeric,
-        fill = NA, stubs = TRUE, keep.ids = TRUE, ...)
-fgrowth(x, n = 1, diff = 1, g = NULL, t = NULL, fill = NA, logdiff = FALSE, stubs = TRUE,
-      G(x, n = 1, diff = 1, by = NULL, t = NULL, cols = is.numeric,
-        fill = NA, logdiff = FALSE, stubs = TRUE, keep.ids = TRUE, ...)
+  fdiff(x, n = 1, diff = 1, \dots)
+fgrowth(x, n = 1, diff = 1, \dots)
+      D(x, n = 1, diff = 1, \dots)
+      G(x, n = 1, diff = 1, \dots)
+% ## Default S3 methods:
+\method{fdiff}{default}(x, n = 1, diff = 1, g = NULL, t = NULL, fill = NA, stubs = TRUE, \dots)                 \method{fgrowth}{default}(x, n = 1, diff = 1, g = NULL, t = NULL, fill = NA, logdiff = FALSE, stubs = TRUE, \dots) \method{D}{default}(x, n = 1, diff = 1, g = NULL, t = NULL, fill = NA, stubs = TRUE, \dots)                   \method{G}{default}(x, n = 1, diff = 1, g = NULL, t = NULL, fill = NA, logdiff = FALSE, stubs = TRUE, \dots)
+%## S3 methods for class 'matrix'
+\method{fdiff}{matrix}(x, n = 1, diff = 1, g = NULL, t = NULL, fill = NA, stubs = TRUE, \dots)               \method{fgrowth}{matrix}(x, n = 1, diff = 1, g = NULL, t = NULL, fill = NA, logdiff = FALSE, stubs = TRUE, \dots) \method{D}{matrix}(x, n = 1, diff = 1, g = NULL, t = NULL, fill = NA, stubs = TRUE, \dots)                 \method{G}{matrix}(x, n = 1, diff = 1, g = NULL, t = NULL, fill = NA, logdiff = FALSE, stubs = TRUE, \dots)
+%## S3 methods for class 'data.frame'
+\method{fdiff}{data.frame}(x, n = 1, diff = 1, g = NULL, t = NULL, fill = NA, stubs = TRUE, \dots)         \method{fgrowth}{data.frame}(x, n = 1, diff = 1, g = NULL, t = NULL, fill = NA, logdiff = FALSE, stubs = TRUE, \dots)                                                                                                        \method{D}{data.frame}(x, n = 1, diff = 1, by = NULL, t = NULL, cols = is.numeric,
+        fill = NA, stubs = TRUE, keep.ids = TRUE, \dots)                                                           \method{G}{data.frame}(x, n = 1, diff = 1, by = NULL, t = NULL, cols = is.numeric,
+        fill = NA, logdiff = FALSE, stubs = TRUE, keep.ids = TRUE, \dots)
 
 # Methods for compatibility with plm:
-
-## S3 methods for class 'pseries'
-  fdiff(x, n = 1, diff = 1, fill = NA, stubs = TRUE, ...)
-      D(x, n = 1, diff = 1, fill = NA, stubs = TRUE, ...)
-fgrowth(x, n = 1, diff = 1, fill = NA, logdiff = FALSE, stubs = TRUE, ...)
-      G(x, n = 1, diff = 1, fill = NA, logdiff = FALSE, stubs = TRUE, ...)
-
-## S3 methods for class 'pdata.frame'
-  fdiff(x, n = 1, diff = 1, fill = NA, stubs = TRUE, ...)
-      D(x, n = 1, diff = 1, cols = is.numeric, fill = NA, stubs = TRUE, keep.ids = TRUE, ...)
-fgrowth(x, n = 1, diff = 1, fill = NA, logdiff = FALSE, stubs = TRUE, ...)
-      G(x, n = 1, diff = 1, cols = is.numeric, fill = NA, logdiff = FALSE, stubs = TRUE, keep.ids = TRUE, ...)
+%## S3 methods for class 'pseries'
+\method{fdiff}{pseries}(x, n = 1, diff = 1, fill = NA, stubs = TRUE, \dots)                                     \method{fgrowth}{pseries}(x, n = 1, diff = 1, fill = NA, logdiff = FALSE, stubs = TRUE, \dots)               \method{D}{pseries}(x, n = 1, diff = 1, fill = NA, stubs = TRUE, \dots)                                         \method{G}{pseries}(x, n = 1, diff = 1, fill = NA, logdiff = FALSE, stubs = TRUE, \dots)
+%## S3 methods for class 'pdata.frame'
+\method{fdiff}{pdata.frame}(x, n = 1, diff = 1, fill = NA, stubs = TRUE, \dots)                                   \method{fgrowth}{pdata.frame}(x, n = 1, diff = 1, fill = NA, logdiff = FALSE, stubs = TRUE, \dots)                 \method{D}{pdata.frame}(x, n = 1, diff = 1, cols = is.numeric, fill = NA, stubs = TRUE, keep.ids = TRUE, \dots)  \method{G}{pdata.frame}(x, n = 1, diff = 1, cols = is.numeric, fill = NA, logdiff = FALSE, stubs = TRUE, keep.ids = TRUE, \dots)
 
 # Methods for compatibility with dplyr:
-
-## S3 methods for class 'grouped_df'
-  fdiff(x, n = 1, diff = 1, t = NULL, fill = NA, stubs = TRUE, keep.ids = TRUE, ...)
-      D(x, n = 1, diff = 1, t = NULL, fill = NA, stubs = TRUE, keep.ids = TRUE, ...)
-fgrowth(x, n = 1, diff = 1, t = NULL, fill = NA, logdiff = FALSE, stubs = TRUE, keep.ids = TRUE, ...)
-      G(x, n = 1, diff = 1, t = NULL, fill = NA, logdiff = FALSE, stubs = TRUE, keep.ids = TRUE, ...)
+%## S3 methods for class 'grouped_df'
+\method{fdiff}{grouped_df}(x, n = 1, diff = 1, t = NULL, fill = NA, stubs = TRUE, keep.ids = TRUE, \dots)      \method{fgrowth}{grouped_df}(x, n = 1, diff = 1, t = NULL, fill = NA, logdiff = FALSE, stubs = TRUE, keep.ids = TRUE, \dots)                                                                                                     \method{D}{grouped_df}(x, n = 1, diff = 1, t = NULL, fill = NA, stubs = TRUE, keep.ids = TRUE, \dots)       \method{G}{grouped_df}(x, n = 1, diff = 1, t = NULL, fill = NA, logdiff = FALSE, stubs = TRUE, keep.ids = TRUE, \dots)
 }
 %- maybe also 'usage' for other objects documented here.
 \arguments{
@@ -98,7 +74,7 @@ fgrowth(x, n = 1, diff = 1, t = NULL, fill = NA, logdiff = FALSE, stubs = TRUE, 
   \item{logdiff}{logical. compute log-differences instead of exact growth rates. See Details.}
   \item{stubs}{logical. \code{TRUE} will rename all differenced columns by adding a prefix "L\code{n}D\code{diff}." / "F\code{n}D\code{diff}." and a prefix "L\code{n}G\code{diff}." / "F\code{n}G\code{diff}." for growth rates.}
   \item{keep.ids}{\emph{data.frame / pdata.frame / grouped_df methods}: Logical. Drop all panel-identifiers from the output (which includes all variables passed to \code{by} or \code{t}). \emph{Note}: For panel-data.frame's and grouped tibbles identifiers are dropped, but the 'index' / 'groups' attributes are kept.}
-  \item{...}{arguments to be passed to or from other methods.}
+  \item{\dots}{arguments to be passed to or from other methods.}
 }
 \details{
 By default, \code{fdiff/D|fgrowth/G} return \code{x} with all columns differenced | converted to growth rates. Differences are computed as \code{repeat(diff){x[i] - x[i-n]}}, growth rates as \code{repeat(diff){(x[i] - x[i-n])/x[i-n]*100}} and log-differences as \code{repeat(diff){(log(x[i]) - log(x[i-n]))*100}}. Setting \code{diff = 2} thus returns differences of differences | growth rates of growth rates etc... and setting \code{n = 2} returns simple differences computed by subtracting twice-lagged \code{x} from \code{x}. It is also possible to compute forward differences | growth rates by passing negative \code{n} values. \code{n} also supports sequences of integers (lags), and \code{diff} supports positive sequences of integers (differences):
@@ -205,5 +181,5 @@ wlddev \%>\% group_by(country) \%>\% select(year,PCGDP,LIFEEX) \%>\% G(0:1,1:2,y
 }
 % Add one or more standard keywords, see file 'KEYWORDS' in the
 % R documentation directory.
-\keyword{ ~kwd1 }% use one of  RShowDoc("KEYWORDS")
-\keyword{ ~kwd2 }% __ONLY ONE__ keyword per line
+\keyword{manip}% __ONLY ONE__ keyword per line % use one of  RShowDoc("KEYWORDS")
+\keyword{ts}

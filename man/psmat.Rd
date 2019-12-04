@@ -4,7 +4,7 @@
 \alias{psmat.pseries}
 \alias{psmat.data.frame}
 \alias{psmat.pdata.frame}
-% \alias{plot.psmat}
+\alias{plot.psmat}
 %- Also NEED an '\alias' for EACH other topic documented here.
 \title{
 Matrix / Array from Panel-Series
@@ -35,7 +35,11 @@ psmat(x, ...)
 \item{cols}{\emph{data.frame method}: Select columns using a function, column names or indices. \emph{Note}: \code{cols} is ignored if a two-sided formula is passsed to \code{by}.}
 \item{transpose}{logical. \code{TRUE} generates the matrix such that \code{g/by -> columns, t -> rows}. Default is \code{g/by -> rows, t -> columns}.}
 \item{array}{\emph{data.frame / pdata.frame methods}: logical. \code{TRUE} returns a 3D array (if just one column is selected a matrix is returned). Otherwise always return a list of matrices.}
-  \item{...}{arguments to be passed to or from other methods.}
+  \item{...}{arguments to be passed to or from other methods, or for the plot method additional arguments passed to \code{ts.plot}.}
+
+\item{legend}{logical. Automatically create a legend of panel-groups.}
+\item{colours}{logical. Automatically colour by panel-groups.}
+\item{lags}{provide a character-vector of variable labels / series titles when plotting an array.}
 }
 \details{
 For \code{plm::pseries}, the first \code{index} variable is taken to be the group-id and the second the time variable. If more than 2 index variables are attached to \code{plm::pseries}, the last one is taken as the time variable and the others are taken as group-id's and interacted.
@@ -60,9 +64,9 @@ The \code{pdata.frame} method only works for properly subsetted objects of class
 }
 \examples{
 ## World Development Panel Data
-View(wlddev)                                                    # View data
+head(wlddev)                                                    # View data
 qsu(wlddev, xt = ~ iso3c, cols = 9:12, vlabels = TRUE)          # Sumarizing data
-View(psmat(wlddev$PCGDP, wlddev$iso3c, wlddev$year))            # Generating a matrix of GDP per Capita
+str(psmat(wlddev$PCGDP, wlddev$iso3c, wlddev$year))            # Generating a matrix of GDP per Capita
 r <- psmat(wlddev, PCGDP ~ iso3c, ~ year)                       # Same thing using data.frame method
 plot(r, main = vlabels(wlddev)[9], xlab = "Year")               # Plot the matrix
 str(r)                                                          # See srructure
@@ -78,7 +82,7 @@ plot(psmat(collap(wlddev, ~region+year, cols = 9:12),           # More legible a
      labs = vlabels(wlddev)[9:12])
 
 psml <- psmat(wlddev, ~ iso3c, ~ year, 9:12, array = FALSE)     # This gives list of ps-matrices instead
-View(unlist2d(psml, "Variable", "Country", id.factor = TRUE))   # Using unlist2d, we can also generate a nice data.frame from this data
+head(unlist2d(psml, "Variable", "Country", id.factor = TRUE))   # Using unlist2d, we can also generate a nice data.frame from this data
 
 ## Using plm simplifies things
 pwlddev <- plm::pdata.frame(wlddev, index = c("iso3c","year"))  # Creating a Panel-Data Frame of this data
@@ -91,5 +95,4 @@ plot(psmat(G(pwlddev[9:12])))                                   # Here plotting 
 }
 % Add one or more standard keywords, see file 'KEYWORDS' in the
 % R documentation directory.
-\keyword{ ~kwd1 }% use one of  RShowDoc("KEYWORDS")
-\keyword{ ~kwd2 }% __ONLY ONE__ keyword per line
+\keyword{manip}% __ONLY ONE__ keyword per line % use one of  RShowDoc("KEYWORDS")

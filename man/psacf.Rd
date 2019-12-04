@@ -23,32 +23,21 @@ Auto- and Cross- Covariance and -Correlation Function Estimation for Panel-Serie
 psacf(x, ...)
 pspacf(x, ...)
 psccf(x, y, ...)
-
-## Default S3 methods:
- psacf(x, g, t = NULL, lag.max = NULL, type = c("correlation", "covariance","partial"),
+%## Default S3 methods:
+\method{psacf}{default}(x, g, t = NULL, lag.max = NULL, type = c("correlation", "covariance","partial"),
+       plot = TRUE, gscale = TRUE, ...)                                    \method{pspacf}{default}(x, g, t = NULL, lag.max = NULL, plot = TRUE, gscale = TRUE, ...)                                                                \method{psccf}{default}(x, y, g, t = NULL, lag.max = NULL, type = c("correlation", "covariance"),
        plot = TRUE, gscale = TRUE, ...)
-pspacf(x, g, t = NULL, lag.max = NULL, plot = TRUE, gscale = TRUE, ...)
- psccf(x, y, g, t = NULL, lag.max = NULL, type = c("correlation", "covariance"),
+%## S3 methods for class 'pseries'
+ \method{psacf}{pseries}(x, lag.max = NULL, type = c("correlation", "covariance","partial"),
+       plot = TRUE, gscale = TRUE, ...)                                          \method{pspacf}{pseries}(x, lag.max = NULL, plot = TRUE, gscale = TRUE, ...)  \method{psccf}{pseries}(x, y, lag.max = NULL, type = c("correlation", "covariance"),
        plot = TRUE, gscale = TRUE, ...)
-
-## S3 methods for class 'pseries'
- psacf(x, lag.max = NULL, type = c("correlation", "covariance","partial"),
-       plot = TRUE, gscale = TRUE, ...)
-pspacf(x, lag.max = NULL, plot = TRUE, gscale = TRUE, ...)
- psccf(x, y, lag.max = NULL, type = c("correlation", "covariance"),
-       plot = TRUE, gscale = TRUE, ...)
-
-## S3 methods for class 'data.frame'
- psacf(x, by, t = NULL, cols = is.numeric, lag.max = NULL,
+%## S3 methods for class 'data.frame'
+\method{psacf}{data.frame}(x, by, t = NULL, cols = is.numeric, lag.max = NULL,
+       type = c("correlation", "covariance","partial"), plot = TRUE, gscale = TRUE, ...)                                                                   \method{pspacf}{data.frame}(x, by, t = NULL, cols = is.numeric, lag.max = NULL,
        type = c("correlation", "covariance","partial"), plot = TRUE, gscale = TRUE, ...)
-pspacf(x, by, t = NULL, cols = is.numeric, lag.max = NULL,
-       type = c("correlation", "covariance","partial"), plot = TRUE, gscale = TRUE, ...)
-
-## S3 methods for class 'pdata.frame'
- psacf(x, lag.max = NULL, type = c("correlation", "covariance","partial"),
-       plot = TRUE, gscale = TRUE, ...)
-pspacf(x, lag.max = NULL, plot = TRUE, gscale = TRUE, ...)
-
+%## S3 methods for class 'pdata.frame'
+ \method{psacf}{pdata.frame}(x, lag.max = NULL, type = c("correlation", "covariance","partial"),
+       plot = TRUE, gscale = TRUE, ...)                                       \method{pspacf}{pdata.frame}(x, lag.max = NULL, plot = TRUE, gscale = TRUE, ...)
 }
 %- maybe also 'usage' for other objects documented here.
 \arguments{
@@ -114,5 +103,5 @@ pspacf(pwlddev[c(9:10,12)])
 }
 % Add one or more standard keywords, see file 'KEYWORDS' in the
 % R documentation directory.
-\keyword{ ~kwd1 }% use one of  RShowDoc("KEYWORDS")
-\keyword{ ~kwd2 }% __ONLY ONE__ keyword per line
+\keyword{manip}% __ONLY ONE__ keyword per line % use one of  RShowDoc("KEYWORDS")
+\keyword{ts}

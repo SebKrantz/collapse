@@ -16,29 +16,21 @@
 \usage{
 fmax(x, ...)
 fmin(x, ...)
-
-## Default S3 methods:
-fmax(x, g = NULL, TRA = FALSE, na.rm = TRUE,
+%## Default S3 methods:
+\method{fmax}{default}(x, g = NULL, TRA = FALSE, na.rm = TRUE,
+     use.g.names = TRUE, ...)                                              \method{fmin}{default}(x, g = NULL, TRA = FALSE, na.rm = TRUE,
      use.g.names = TRUE, ...)
-fmin(x, g = NULL, TRA = FALSE, na.rm = TRUE,
-     use.g.names = TRUE, ...)
-
-## S3 methods for class 'matrix'
-fmax(x, g = NULL, TRA = FALSE, na.rm = TRUE,
+%## S3 methods for class 'matrix'
+\method{fmax}{matrix}(x, g = NULL, TRA = FALSE, na.rm = TRUE,
+     use.g.names = TRUE, drop = TRUE, ...)          \method{fmin}{matrix}(x, g = NULL, TRA = FALSE, na.rm = TRUE,
      use.g.names = TRUE, drop = TRUE, ...)
-fmin(x, g = NULL, TRA = FALSE, na.rm = TRUE,
+%## S3 methods for class 'data.frame'
+\method{fmax}{data.frame}(x, g = NULL, TRA = FALSE, na.rm = TRUE,
+     use.g.names = TRUE, drop = TRUE, ...)          \method{fmin}{data.frame}(x, g = NULL, TRA = FALSE, na.rm = TRUE,
      use.g.names = TRUE, drop = TRUE, ...)
-
-## S3 methods for class 'data.frame'
-fmax(x, g = NULL, TRA = FALSE, na.rm = TRUE,
-     use.g.names = TRUE, drop = TRUE, ...)
-fmin(x, g = NULL, TRA = FALSE, na.rm = TRUE,
-     use.g.names = TRUE, drop = TRUE, ...)
-
-## S3 methods for class 'grouped_df'
-fmax(x, TRA = FALSE, na.rm = TRUE,
-     use.g.names = FALSE, keep.group_vars = TRUE, ...)
-fmin(x, TRA = FALSE, na.rm = TRUE,
+%## S3 methods for class 'grouped_df'
+\method{fmax}{grouped_df}(x, TRA = FALSE, na.rm = TRUE,
+     use.g.names = FALSE, keep.group_vars = TRUE, ...)          \method{fmin}{grouped_df}(x, TRA = FALSE, na.rm = TRUE,
      use.g.names = FALSE, keep.group_vars = TRUE, ...)
 }
 \arguments{

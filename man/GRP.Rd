@@ -8,8 +8,8 @@
 \alias{GRP.pdata.frame}
 \alias{GRP.grouped_df}
 \alias{is.GRP}
-% \alias{print.GRP}
-% \alias{plot.GRP}
+\alias{print.GRP}
+\alias{plot.GRP}
 \alias{group_names.GRP}
 \alias{as.factor.GRP}
 \title{Fast Grouping / \code{collapse} Grouping Objects}
@@ -55,6 +55,14 @@ as.factor.GRP(x)
   \item{return.order}{logical. include the output from \code{data.table:::forderv} in the created 'GRP' object.}
 
   \item{force.char}{logical. Always output group names as character vector, even if a single numeric vector was passed to \code{GRP.default}.}
+
+  \item{n}{integer. Number of groups to print out.}
+
+  \item{breaks}{integer. Number of breaks in the histogram of group-sizes.}
+
+  \item{type}{linetype for plot.}
+
+  \item{horizontal}{logical. \code{TRUE} arranges plots next to each other, instead of above each other.}
 
   \item{...}{arguments to be passed to or from other methods.}
 }
