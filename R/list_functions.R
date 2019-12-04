@@ -1,7 +1,7 @@
-rapply2d <- function(X, FUN, ...) {
+rapply2d <- function(l, FUN, ...) {
   aply2d <- function(y) if (is.list(y) && !inherits(y,  "data.frame")) lapply(y, aply2d) else FUN(y, ...) #is.null(dim(y)) # qsu output shows list of DF can have dim attr.
   #lapply(x,aply2d) # if this is enabled, rapply2d takes apart data.frame is passed
-  aply2d(X)
+  aply2d(l)
 }
 
 list_elem <- function(l, return = c("sublist","names","indices","named_indices"), keep.class = FALSE) {
