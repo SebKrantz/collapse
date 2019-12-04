@@ -120,7 +120,7 @@ RcppExport SEXP _collapse_mrtl(SEXP XSEXP, SEXP namesSEXP, SEXP retSEXP);
 // mctl
 RcppExport SEXP _collapse_mctl(SEXP XSEXP, SEXP namesSEXP, SEXP retSEXP);
 // na_rm
-RcppExport SEXP _collapse_na_rm(SEXP xSEXP);
+// RcppExport SEXP _collapse_na_rm(SEXP xSEXP);
 // psmatCpp
 RcppExport SEXP _collapse_psmatCpp(SEXP xSEXP, SEXP gSEXP, SEXP tSEXP, SEXP transposeSEXP);
 // qFCpp
@@ -143,3 +143,5 @@ RcppExport SEXP _collapse_duplattributes(SEXP xSEXP, SEXP ySEXP);
 RcppExport SEXP _collapse_cond_duplAttributes(SEXP xSEXP, SEXP ySEXP);
 // cond_duplattributes
 RcppExport SEXP _collapse_cond_duplattributes(SEXP xSEXP, SEXP ySEXP);
+// lassignCpp
+RcppExport SEXP _collapse_lassignCpp(SEXP xSEXP, SEXP sSEXP, SEXP rowsSEXP, SEXP fillSEXP);
