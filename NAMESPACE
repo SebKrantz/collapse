@@ -5,7 +5,7 @@ importFrom("graphics", "hist", "par", "plot")
 importFrom("grDevices", "rainbow")
 importFrom("lfe", "demeanlist")
 importFrom("stats", "as.formula", "complete.cases", "cor", "cov",
-           "setNames", "terms.formula", "ts", "ts.plot")
+           "setNames", "terms.formula", "ts", "ts.plot", "model.matrix.default")
  export(add_stub)
  export(all.identical)
  export(as.factor.GRP)
