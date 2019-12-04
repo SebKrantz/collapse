@@ -237,10 +237,6 @@ mctl <- function(X, names = FALSE, ret = 0L) {
     .Call(Cpp_mctl, X, names, ret)
 }
 
-na_rm <- function(x) {
-    .Call(Cpp_na_rm, x)
-}
-
 psmatCpp <- function(x, g, t = NULL, transpose = FALSE) {
     .Call(Cpp_psmat, x, g, t, transpose)
 }
@@ -285,3 +281,6 @@ cond_duplattributes <- function(x, y) {
     invisible(.Call(Cpp_cond_duplattributes, x, y))
 }
 
+lassignCpp <- function(x, s, rows = NULL, fill = NA_real_) {
+    .Call(Cpp_lassign, x, s, rows, fill)
+}
