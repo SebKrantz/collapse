@@ -148,29 +148,29 @@ BY.matrix <- function(X, g, FUN, ..., use.g.names = TRUE, sort = TRUE,
         ax <- c(list(names = names(res), row.names = if(use.g.names && !inherits(X, "data.table"))
           attr(g, "levels") else .set_row_names(length(res[[1L]])), class = "data.frame"), ax[!(names(ax) %in% c("dim","dimnames","class"))])
       } else {
-        splitfun <- function(x) do.call(rbind, lapply(split.default(x, g), FUN, ...))
-        res <- do.call(cbind, aplyfun(mctl(X), splitfun))
+        splitfun2 <- function(x) do.call(rbind, lapply(split.default(x, g), FUN, ...))
+        res <- do.call(cbind, aplyfun(mctl(X), splitfun2))
         dr <- dim(res)
         ax[["dimnames"]][1L] <- if(use.g.names) list(attr(g, "levels")) else list(NULL)        # works, but what if dn[[2L]] is NULL ??
         ax[["dimnames"]][[2L]] <- paste(rep(dimnames(X)[[2L]], each = dr[2L]/ncol(X)), dimnames(res)[[2L]], sep = ".")
         ax[["dim"]] <- dr
       }
     } else {
-      splitfun <- function(x, un = FALSE) unlist(lapply(split.default(x, g), FUN, ...), FALSE, un)
+      splitfun3 <- function(x, un = FALSE) unlist(lapply(split.default(x, g), FUN, ...), FALSE, un)
       if(use.g.names) {
         res <- vector("list", ncol(X))
-        res[[1L]] <- splitfun(X[, 1L], un = TRUE) # rewrite all in C++ ??
+        res[[1L]] <- splitfun3(X[, 1L], un = TRUE) # rewrite all in C++ ??
         if(return == 2L) ax[["dimnames"]] <- list(names(res[[1L]]), dimnames(X)[[2L]]) else # ax[["dimnames"]][[1L]] <- names(res[[1L]]) # gives error if only one dimnames !!
           ax <- c(list(names = dimnames(X)[[2L]], row.names = names(res[[1L]]), class = "data.frame"),
                   ax[!(names(ax) %in% c("dim","dimnames","class"))])
         setattr_clp(res[[1L]], "names", NULL)
-        res[-1L] <- aplyfun(mctl(X[, -1L, drop = FALSE]), splitfun)
+        res[-1L] <- aplyfun(mctl(X[, -1L, drop = FALSE]), splitfun3)
         if(return == 2L) {
           res <- do.call(cbind, res)
           ax[["dim"]] <- dim(res)
         }
       } else {
-        res <- aplyfun(mctl(X, names = TRUE), splitfun) # internal ??
+        res <- aplyfun(mctl(X, names = TRUE), splitfun3) # internal ??
         lr1 <- length(res[[1L]])
         if(return == 2L) {
           if(lr1 != nrow(X)) {
