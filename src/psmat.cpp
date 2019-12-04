@@ -28,6 +28,8 @@ Matrix<RTYPE> psmatCppImpl(Vector<RTYPE> x, IntegerVector g, SEXP t, bool transp
       }
     }
     out.attr("dimnames") = transpose ? List::create(seq_len(gs), glevs) : List::create(glevs, seq_len(gs));
+    out.attr("transpose") = transpose;
+    out.attr("class") = CharacterVector::create("psmat","matrix");
     return out;
   } else {
     IntegerVector tt = t;
@@ -35,7 +37,7 @@ Matrix<RTYPE> psmatCppImpl(Vector<RTYPE> x, IntegerVector g, SEXP t, bool transp
     // int maxt = max(tt); // needed ?? // check whether t.levels is same size as maxt ??
     CharacterVector tlevs = tt.attr("levels");
     int nt = tlevs.size();
-    Matrix<RTYPE> out = transpose ? no_init_matrix(nt, ng) : no_init_matrix(ng, nt); // best way to do this ?? Stable ?? -> Could conditionally create vector and the coerce to matrix -> faster init ?? 
+    Matrix<RTYPE> out = transpose ? no_init_matrix(nt, ng) : no_init_matrix(ng, nt); // best way to do this ?? Stable ?? -> Could conditionally create vector and the coerce to matrix -> faster init ??
     if(nt != gs) std::fill(out.begin(), out.end(), Vector<RTYPE>::get_na());  // memset(out, NA_REAL, sizeof(double)*ng*maxt); -> unstable !! // else balanced panel !!
     // List dim = ATTRIB(out);
     // SHALLOW_DUPLICATE_ATTRIB(out, x); // good ??
@@ -43,9 +45,11 @@ Matrix<RTYPE> psmatCppImpl(Vector<RTYPE> x, IntegerVector g, SEXP t, bool transp
     if(transpose) {
       for(int i = 0; i != l; ++i) out(tt[i]-1, g[i]-1) = x[i];
     } else {
-      for(int i = 0; i != l; ++i) out(g[i]-1, tt[i]-1) = x[i]; 
+      for(int i = 0; i != l; ++i) out(g[i]-1, tt[i]-1) = x[i];
     }
-    out.attr("dimnames") = transpose ? List::create(tlevs, glevs) : List::create(glevs, tlevs); 
+    out.attr("dimnames") = transpose ? List::create(tlevs, glevs) : List::create(glevs, tlevs);
+    out.attr("transpose") = transpose;
+    out.attr("class") = CharacterVector::create("psmat","matrix");
     return out;
   }
 }
@@ -102,14 +106,14 @@ SEXP psmatCpp(SEXP x, IntegerVector g, SEXP t = R_NilValue, bool transpose = fal
 //     // int maxt = max(tt); // needed ?? // check whether t.levels is same size as maxt ??
 //     CharacterVector tlevs = tt.attr("levels");
 //     int nt = tlevs.size();
-//     NumericMatrix out = transpose ? no_init_matrix(nt, ng) : no_init_matrix(ng, nt); // best way to do this ?? Stable ?? -> Could conditionally create vector and the coerce to matrix -> faster init ?? 
+//     NumericMatrix out = transpose ? no_init_matrix(nt, ng) : no_init_matrix(ng, nt); // best way to do this ?? Stable ?? -> Could conditionally create vector and the coerce to matrix -> faster init ??
 //     if(nt != gs) std::fill(out.begin(), out.end(), NA_REAL);  // memset(out, NA_REAL, sizeof(double)*ng*maxt); -> unstable !! // else balanced panel !!
 //     if(transpose) {
 //       for(int i = 0; i != l; ++i) out(tt[i]-1, g[i]-1) = x[i];
 //     } else {
-//       for(int i = 0; i != l; ++i) out(g[i]-1, tt[i]-1) = x[i]; 
+//       for(int i = 0; i != l; ++i) out(g[i]-1, tt[i]-1) = x[i];
 //     }
-//     out.attr("dimnames") = transpose ? List::create(tlevs, glevs) : List::create(glevs, tlevs); 
+//     out.attr("dimnames") = transpose ? List::create(tlevs, glevs) : List::create(glevs, tlevs);
 //     return out;
 //   }
 // }
