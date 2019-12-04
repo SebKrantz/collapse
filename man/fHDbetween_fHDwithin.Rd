@@ -88,8 +88,6 @@ In general full interactions specified with \code{(*)} can be very slow on large
 }
 }
 }
-
-}
 \value{
 \code{HDB} returns fitted values of regressing \code{x} on \code{fl}. \code{HDW} returns residuals. See Details and Examples.
 }
@@ -106,7 +104,7 @@ In general full interactions specified with \code{(*)} can be very slow on large
 %% ~Make other sections like Warning with \section{Warning }{....} ~
 
 \seealso{
-%% ~~objects to See Also as \code{\link{help}}, ~~~
+\code{\link[=fbetween]{fbetween/B and fwithin/W}}, \code{\link[=fscale]{fscale/STD}}, \code{\link{TRA}}, \link[=data-transformations]{Data Transformations}
 }
 \examples{
 lm(HDW_mpg ~ HDW_hp, data = HDW(mtcars, ~ factor(cyl)*carb + vs + wt:gear + wt:gear:carb))

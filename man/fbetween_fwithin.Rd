@@ -65,7 +65,7 @@ fbetween(x, \dots)
   \item{stub}{a prefix or stub to rename all transformed columns. \code{FALSE} will not rename columns.}
   \item{fill}{\emph{option to \code{fbetween/B}}: Logical. \code{TRUE} will overrwite missing values in \code{x} with the respective average. By default missing values in \code{x} are preserved.}
   \item{add.global.mean}{\emph{option to \code{fwithin/W}}: Logical. \code{TRUE} will add back the global mean to all data values after subtracting out group-means.}
-  \item{keep.by\cr keep.ids \cr keep.group_vars}{\emph{B and W data.frame, pdata.frame and grouped_df methods}: Logical. Retain grouping / panel-identifier columns in the output. For data frames this only works if grouping variables were passed in a formula.}
+  \item{keep.by, keep.ids, keep.group_vars}{\emph{B and W data.frame, pdata.frame and grouped_df methods}: Logical. Retain grouping / panel-identifier columns in the output. For data frames this only works if grouping variables were passed in a formula.}
   \item{keep.w}{\emph{B and W data.frame, pdata.frame and grouped_df methods}: Logical. Retain column containing the weights in the output. Only works if \code{w} is passed as formula / lazy-expression.}
   \item{\dots}{arguments to be passed to or from other methods.}
 }
@@ -92,7 +92,7 @@ The data replacement performed by \code{fbetween/B} can keep (default) or overwr
 %% ~Make other sections like Warning with \section{Warning }{....} ~
 
 \seealso{
-\code{\link[=HDW]{HDB/HDW}}, \code{\link[=fscale]{fscale/STD}}, \code{\link{TRA}}, \link[=data-transformations]{Data Transformations}
+\code{\link[=HDW]{fHDbetween/HDB and fHDwithin/HDW}}, \code{\link[=fscale]{fscale/STD}}, \code{\link{TRA}}, \link[=data-transformations]{Data Transformations}
 }
 \examples{
 ## Simple centering and averaging
