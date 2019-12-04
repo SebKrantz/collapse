@@ -15,6 +15,10 @@ LazyData: true
 Depends: R (>= 2.10)
 Imports: Rcpp (>= 1.0.1), data.table, lfe
 LinkingTo: Rcpp
-Suggests: dplyr, plm
+Suggests: 
+    dplyr,
+    plm,
+    knitr,
+    rmarkdown
 SystemRequirements: C++11
-
+VignetteBuilder: knitr
