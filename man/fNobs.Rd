@@ -12,13 +12,13 @@
 \usage{
 fNobs(x, ...)
 
-\method{fNobs}{default}(x, g = NULL, TRA = FALSE, use.g.names = TRUE, ...)
+\method{fNobs}{default}(x, g = NULL, TRA = NULL, use.g.names = TRUE, ...)
 
-\method{fNobs}{matrix}(x, g = NULL, TRA = FALSE, use.g.names = TRUE, drop = TRUE, ...)
+\method{fNobs}{matrix}(x, g = NULL, TRA = NULL, use.g.names = TRUE, drop = TRUE, ...)
 
-\method{fNobs}{data.frame}(x, g = NULL, TRA = FALSE, use.g.names = TRUE, drop = TRUE, ...)
+\method{fNobs}{data.frame}(x, g = NULL, TRA = NULL, use.g.names = TRUE, drop = TRUE, ...)
 
-\method{fNobs}{grouped_df}(x, TRA = FALSE, use.g.names = FALSE, keep.group_vars = TRUE, ...)
+\method{fNobs}{grouped_df}(x, TRA = NULL, use.g.names = FALSE, keep.group_vars = TRUE, ...)
 }
 \arguments{
 \item{x}{a vector, matrix, data.frame or grouped tibble (\code{dplyr::grouped_df}).}
@@ -30,7 +30,7 @@ fNobs(x, ...)
 
 \item{use.g.names}{make group-names and add to the result as names (vector method) or row-names (matrix and data.frame method). No row-names are generated for data.tables and grouped tibbles.}
 
-\item{drop}{\emph{matrix and data.frame method:} drop dimensions and return an atomic vector if \code{g = NULL} and \code{TRA = FALSE}.}
+\item{drop}{\emph{matrix and data.frame method:} drop dimensions and return an atomic vector if \code{g = NULL} and \code{TRA = NULL}.}
 
 \item{keep.group_vars}{\emph{grouped_df method:} Logical. \code{FALSE} removes grouping variables after computation.}
 

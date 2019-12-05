@@ -12,16 +12,16 @@ The \code{\link{TRA}} argument can further be used to transform \code{x} using i
 \usage{
 fmode(x, ...)
 
-\method{fmode}{default}(x, g = NULL, w = NULL, TRA = FALSE, na.rm = TRUE,
+\method{fmode}{default}(x, g = NULL, w = NULL, TRA = NULL, na.rm = TRUE,
       use.g.names = TRUE, ...)
 
-\method{fmode}{matrix}(x, g = NULL, w = NULL, TRA = FALSE, na.rm = TRUE,
+\method{fmode}{matrix}(x, g = NULL, w = NULL, TRA = NULL, na.rm = TRUE,
       use.g.names = TRUE, drop = TRUE, ...)
 
-\method{fmode}{data.frame}(x, g = NULL, w = NULL, TRA = FALSE, na.rm = TRUE,
+\method{fmode}{data.frame}(x, g = NULL, w = NULL, TRA = NULL, na.rm = TRUE,
       use.g.names = TRUE, drop = TRUE, ...)
 
-\method{fmode}{grouped_df}(x, w = NULL, TRA = FALSE, na.rm = TRUE,
+\method{fmode}{grouped_df}(x, w = NULL, TRA = NULL, na.rm = TRUE,
       use.g.names = FALSE, keep.group_vars = TRUE, keep.w = TRUE, ...)
 }
 \arguments{
@@ -38,7 +38,7 @@ fmode(x, ...)
 
 \item{use.g.names}{make group-names and add to the result as names (vector method) or row-names (matrix and data.frame method). No row-names are generated for data.tables and grouped tibbles.}
 
-\item{drop}{\emph{matrix and data.frame method:} drop dimensions and return an atomic vector if \code{g = NULL} and \code{TRA = FALSE}.}
+\item{drop}{\emph{matrix and data.frame method:} drop dimensions and return an atomic vector if \code{g = NULL} and \code{TRA = NULL}.}
 
 \item{keep.group_vars}{\emph{grouped_df method:} Logical. \code{FALSE} removes grouping variables after computation.}
 

@@ -17,24 +17,24 @@
 fmax(x, \dots)
 fmin(x, \dots)
 %## Default S3 methods:
-\method{fmax}{default}(x, g = NULL, TRA = FALSE, na.rm = TRUE,
+\method{fmax}{default}(x, g = NULL, TRA = NULL, na.rm = TRUE,
      use.g.names = TRUE, \dots)
-\method{fmin}{default}(x, g = NULL, TRA = FALSE, na.rm = TRUE,
+\method{fmin}{default}(x, g = NULL, TRA = NULL, na.rm = TRUE,
      use.g.names = TRUE, \dots)
 %## S3 methods for class 'matrix'
-\method{fmax}{matrix}(x, g = NULL, TRA = FALSE, na.rm = TRUE,
+\method{fmax}{matrix}(x, g = NULL, TRA = NULL, na.rm = TRUE,
      use.g.names = TRUE, drop = TRUE, \dots)
-\method{fmin}{matrix}(x, g = NULL, TRA = FALSE, na.rm = TRUE,
+\method{fmin}{matrix}(x, g = NULL, TRA = NULL, na.rm = TRUE,
      use.g.names = TRUE, drop = TRUE, \dots)
 %## S3 methods for class 'data.frame'
-\method{fmax}{data.frame}(x, g = NULL, TRA = FALSE, na.rm = TRUE,
+\method{fmax}{data.frame}(x, g = NULL, TRA = NULL, na.rm = TRUE,
      use.g.names = TRUE, drop = TRUE, \dots)
-\method{fmin}{data.frame}(x, g = NULL, TRA = FALSE, na.rm = TRUE,
+\method{fmin}{data.frame}(x, g = NULL, TRA = NULL, na.rm = TRUE,
      use.g.names = TRUE, drop = TRUE, \dots)
 %## S3 methods for class 'grouped_df'
-\method{fmax}{grouped_df}(x, TRA = FALSE, na.rm = TRUE,
+\method{fmax}{grouped_df}(x, TRA = NULL, na.rm = TRUE,
      use.g.names = FALSE, keep.group_vars = TRUE, \dots)
-\method{fmin}{grouped_df}(x, TRA = FALSE, na.rm = TRUE,
+\method{fmin}{grouped_df}(x, TRA = NULL, na.rm = TRUE,
      use.g.names = FALSE, keep.group_vars = TRUE, \dots)
 }
 \arguments{
@@ -49,7 +49,7 @@ fmin(x, \dots)
 
 \item{use.g.names}{make group-names and add to the result as names (vector method) or row-names (matrix and data.frame method). No row-names are generated for data.tables and grouped tibbles.}
 
-\item{drop}{\emph{matrix and data.frame method:} drop dimensions and return an atomic vector if \code{g = NULL} and \code{TRA = FALSE}.}
+\item{drop}{\emph{matrix and data.frame method:} drop dimensions and return an atomic vector if \code{g = NULL} and \code{TRA = NULL}.}
 
 \item{keep.group_vars}{\emph{grouped_df method:} Logical. \code{FALSE} removes grouping variables after computation.}
 

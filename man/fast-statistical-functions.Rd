@@ -13,19 +13,19 @@ With \code{\link{fsum}}, \code{\link{fprod}}, \code{\link{fmean}}, \code{\link{f
 FUN(x, ...)
 
 ## Default S3 method:
-FUN(x, g = NULL, [w = NULL,] TRA = FALSE, [na.rm = TRUE,]
+FUN(x, g = NULL, [w = NULL,] TRA = NULL, [na.rm = TRUE,]
     use.g.names = TRUE, ...)
 
 ## S3 method for class 'matrix'
-FUN(x, g = NULL, [w = NULL,] TRA = FALSE, [na.rm = TRUE,]
+FUN(x, g = NULL, [w = NULL,] TRA = NULL, [na.rm = TRUE,]
     use.g.names = TRUE, drop = TRUE, ...)
 
 ## S3 method for class 'data.frame'
-FUN(x, g = NULL, [w = NULL,] TRA = FALSE, [na.rm = TRUE,]
+FUN(x, g = NULL, [w = NULL,] TRA = NULL, [na.rm = TRUE,]
     use.g.names = TRUE, drop = TRUE, ...)
 
 ## S3 method for class 'grouped_df'
-FUN(x, [w = NULL,] TRA = FALSE, [na.rm = TRUE,]
+FUN(x, [w = NULL,] TRA = NULL, [na.rm = TRUE,]
     use.g.names = FALSE, keep.group_vars = TRUE, [keep.w = TRUE,] ...)
 }
 }
@@ -44,7 +44,7 @@ FUN(x, [w = NULL,] TRA = FALSE, [na.rm = TRUE,]
 
 \code{use.g.names} \tab\tab make group-names and add to the result as names (vector method) or row-names (matrix and data.frame method). No row-names are generated for data.tables and grouped tibbles. \cr \cr \cr
 
-\code{drop} \tab\tab \emph{matrix and data.frame methods:} Drop dimensions and return an atomic vector if \code{g = NULL} and \code{TRA = FALSE}. \cr \cr \cr
+\code{drop} \tab\tab \emph{matrix and data.frame methods:} Drop dimensions and return an atomic vector if \code{g = NULL} and \code{TRA = NULL}. \cr \cr \cr
 
 \code{keep.group_vars}  \tab\tab \emph{grouped_df method:} Logical. \code{FALSE} removes grouping variables after computation. \cr \cr \cr
 

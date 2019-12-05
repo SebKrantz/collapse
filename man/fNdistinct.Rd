@@ -12,16 +12,16 @@
 \usage{
 fNdistinct(x, ...)
 
-\method{fNdistinct}{default}(x, g = NULL, TRA = FALSE, na.rm = TRUE,
+\method{fNdistinct}{default}(x, g = NULL, TRA = NULL, na.rm = TRUE,
            use.g.names = TRUE, ...)
 
-\method{fNdistinct}{matrix}(x, g = NULL, TRA = FALSE, na.rm = TRUE,
+\method{fNdistinct}{matrix}(x, g = NULL, TRA = NULL, na.rm = TRUE,
            use.g.names = TRUE, drop = TRUE, ...)
 
-\method{fNdistinct}{data.frame}(x, g = NULL, TRA = FALSE, na.rm = TRUE,
+\method{fNdistinct}{data.frame}(x, g = NULL, TRA = NULL, na.rm = TRUE,
            use.g.names = TRUE, drop = TRUE, ...)
 
-\method{fNdistinct}{grouped_df}(x, TRA = FALSE, na.rm = TRUE,
+\method{fNdistinct}{grouped_df}(x, TRA = NULL, na.rm = TRUE,
            use.g.names = FALSE, keep.group_vars = TRUE, ...)
 }
 \arguments{
@@ -36,7 +36,7 @@ fNdistinct(x, ...)
 
 \item{use.g.names}{make group-names and add to the result as names (vector method) or row-names (matrix and data.frame method). No row-names are generated for data.tables and grouped tibbles.}
 
-\item{drop}{\emph{matrix and data.frame method:} drop dimensions and return an atomic vector if \code{g = NULL} and \code{TRA = FALSE}.}
+\item{drop}{\emph{matrix and data.frame method:} drop dimensions and return an atomic vector if \code{g = NULL} and \code{TRA = NULL}.}
 
 \item{keep.group_vars}{\emph{grouped_df method:} Logical. \code{FALSE} removes grouping variables after computation.}
 
