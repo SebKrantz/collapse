@@ -252,19 +252,3 @@ irreg_elem <- function(l, recursive = TRUE, keep.tree = FALSE, keep.class = FALS
 #microbenchmark(all(rapply(lm,is.atomic)),!is.list(unlist(lm, use.names = FALSE)),all(unlist(rapply2d(lm,is.std), use.names = FALSE)))
 #microbenchmark(all(rapply(GGDC,is.atomic)),!is.list(unlist(GGDC, use.names = FALSE)),all(unlist(rapply2d(GGDC,is.std), use.names = FALSE)))
 
-
-# Old versions: --------------------------------
-# list.elem <- function(l) base::Filter(is.list,l)
-# "list.elem<-" <- function(l, value) {
-#   if (inherits(l, "data.table"))
-#     l[,which(vapply(l, is.list, TRUE))] = value else
-#       l[vapply(l, is.list, TRUE)] = value
-#     l # right??
-# }
-# atomic.elem <- function(l) base::Filter(is.atomic,l) # Problem: identical(md,atomic.elem(md)) is not true!!
-# "atomic.elem<-" <- function(l, value) {
-#   if (inherits(l, "data.table"))
-#     l[,which(vapply(l, is.atomic, TRUE))] = value else
-#       l[vapply(l, is.atomic, TRUE)] = value
-#     l
-# } # https://stackoverflow.com/questions/25130531/how-to-select-only-numeric-columns-from-a-data-table

@@ -9,12 +9,12 @@
 # For foundational changes to this code see fsum.R !!
 # also: matrix method needs memory equal to size of the object, while data.frame method does not need any memory !!
 
-fNdistinct <- function(x, ...) { # g = NULL, TRA = FALSE, na.rm = TRUE, use.g.names = TRUE, drop = TRUE, keep.group_vars = TRUE,
+fNdistinct <- function(x, ...) { # g = NULL, TRA = NULL, na.rm = TRUE, use.g.names = TRUE, drop = TRUE, keep.group_vars = TRUE,
   UseMethod("fNdistinct", x)
 }
-fNdistinct.default <- function(x, g = NULL, TRA = FALSE, na.rm = TRUE, use.g.names = TRUE, ...) {
+fNdistinct.default <- function(x, g = NULL, TRA = NULL, na.rm = TRUE, use.g.names = TRUE, ...) {
   if(!missing(...)) stop("Unknown argument ", dotstostr(...))
-  if(TRA == FALSE) {
+  if(is.null(TRA)) {
     if(is.null(g)) return(.Call(Cpp_fNdistinct,x,0L,0L,NULL,na.rm)) else if (is.atomic(g)) {
       if(use.g.names) {
         if(!is.factor(g)) g <- qF(g)
@@ -43,9 +43,9 @@ fNdistinct.default <- function(x, g = NULL, TRA = FALSE, na.rm = TRUE, use.g.nam
     }
   }
 }
-fNdistinct.matrix <- function(x, g = NULL, TRA = FALSE, na.rm = TRUE, use.g.names = TRUE, drop = TRUE, ...) {
+fNdistinct.matrix <- function(x, g = NULL, TRA = NULL, na.rm = TRUE, use.g.names = TRUE, drop = TRUE, ...) {
   if(!missing(...)) stop("Unknown argument ", dotstostr(...))
-  if(TRA == FALSE) {
+  if(is.null(TRA)) {
     if(is.null(g)) return(.Call(Cpp_fNdistinctm,x,0L,0L,NULL,na.rm,drop)) else if (is.atomic(g)) {
       if(use.g.names) {
         if(!is.factor(g)) g <- qF(g)
@@ -74,9 +74,9 @@ fNdistinct.matrix <- function(x, g = NULL, TRA = FALSE, na.rm = TRUE, use.g.name
     }
   }
 }
-fNdistinct.data.frame <- function(x, g = NULL, TRA = FALSE, na.rm = TRUE, use.g.names = TRUE, drop = TRUE, ...) {
+fNdistinct.data.frame <- function(x, g = NULL, TRA = NULL, na.rm = TRUE, use.g.names = TRUE, drop = TRUE, ...) {
   if(!missing(...)) stop("Unknown argument ", dotstostr(...))
-  if(TRA == FALSE) {
+  if(is.null(TRA)) {
     if(is.null(g)) return(.Call(Cpp_fNdistinctl,x,0L,0L,NULL,na.rm,drop)) else if (is.atomic(g)) {
       if(use.g.names && !inherits(x, "data.table")) {
         if(!is.factor(g)) g <- qF(g)
@@ -106,11 +106,11 @@ fNdistinct.data.frame <- function(x, g = NULL, TRA = FALSE, na.rm = TRUE, use.g.
     }
   }
 }
-fNdistinct.grouped_df <- function(x, TRA = FALSE, na.rm = TRUE, use.g.names = FALSE, keep.group_vars = TRUE, ...) {
+fNdistinct.grouped_df <- function(x, TRA = NULL, na.rm = TRUE, use.g.names = FALSE, keep.group_vars = TRUE, ...) {
   if(!missing(...)) stop("Unknown argument ", dotstostr(...))
   g <- GRP.grouped_df(x)
   gn <- which(names(x) %in% g[[5L]])
-  nTRAl <- TRA == FALSE
+  nTRAl <- is.null(TRA)
   gl <- length(gn) > 0L
   if(gl || nTRAl) {
     ax <- attributes(x)

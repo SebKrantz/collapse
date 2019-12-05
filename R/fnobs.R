@@ -8,12 +8,12 @@
 
 # For foundational changes to this code see fsum.R !!
 
-fNobs <- function(x, ...) { # g = NULL, TRA = FALSE, use.g.names = TRUE, drop = TRUE, keep.group_vars = TRUE,
+fNobs <- function(x, ...) { # g = NULL, TRA = NULL, use.g.names = TRUE, drop = TRUE, keep.group_vars = TRUE,
   UseMethod("fNobs", x)
 }
-fNobs.default <- function(x, g = NULL, TRA = FALSE, use.g.names = TRUE, ...) {
+fNobs.default <- function(x, g = NULL, TRA = NULL, use.g.names = TRUE, ...) {
   if(!missing(...)) stop("Unknown argument ", dotstostr(...))
-  if(TRA == FALSE) {
+  if(is.null(TRA)) {
     if(is.null(g)) return(.Call(Cpp_fNobs,x,0L,0L)) else if (is.atomic(g)) {
       if(use.g.names) {
         if(!is.factor(g)) g <- qF(g)
@@ -42,9 +42,9 @@ fNobs.default <- function(x, g = NULL, TRA = FALSE, use.g.names = TRUE, ...) {
     }
   }
 }
-fNobs.matrix <- function(x, g = NULL, TRA = FALSE, use.g.names = TRUE, drop = TRUE, ...) {
+fNobs.matrix <- function(x, g = NULL, TRA = NULL, use.g.names = TRUE, drop = TRUE, ...) {
   if(!missing(...)) stop("Unknown argument ", dotstostr(...))
-  if(TRA == FALSE) {
+  if(is.null(TRA)) {
     if(is.null(g)) return(.Call(Cpp_fNobsm,x,0L,0L,drop)) else if (is.atomic(g)) {
       if(use.g.names) {
         if(!is.factor(g)) g <- qF(g)
@@ -73,9 +73,9 @@ fNobs.matrix <- function(x, g = NULL, TRA = FALSE, use.g.names = TRUE, drop = TR
     }
   }
 }
-fNobs.data.frame <- function(x, g = NULL, TRA = FALSE, use.g.names = TRUE, drop = TRUE, ...) {
+fNobs.data.frame <- function(x, g = NULL, TRA = NULL, use.g.names = TRUE, drop = TRUE, ...) {
   if(!missing(...)) stop("Unknown argument ", dotstostr(...))
-  if(TRA == FALSE) {
+  if(is.null(TRA)) {
     if(is.null(g)) return(.Call(Cpp_fNobsl,x,0L,0L,drop)) else if (is.atomic(g)) {
       if(use.g.names && !inherits(x, "data.table")) {
         if(!is.factor(g)) g <- qF(g)
@@ -105,11 +105,11 @@ fNobs.data.frame <- function(x, g = NULL, TRA = FALSE, use.g.names = TRUE, drop 
     }
   }
 }
-fNobs.grouped_df <- function(x, TRA = FALSE, use.g.names = FALSE, keep.group_vars = TRUE, ...) {
+fNobs.grouped_df <- function(x, TRA = NULL, use.g.names = FALSE, keep.group_vars = TRUE, ...) {
   if(!missing(...)) stop("Unknown argument ", dotstostr(...))
   g <- GRP.grouped_df(x)
   gn <- which(names(x) %in% g[[5L]])
-  nTRAl <- TRA == FALSE
+  nTRAl <- is.null(TRA)
   gl <- length(gn) > 0L
   if(gl || nTRAl) {
     ax <- attributes(x)
@@ -136,114 +136,3 @@ fNobs.grouped_df <- function(x, TRA = FALSE, use.g.names = FALSE, keep.group_var
     }
   } else return(.Call(Cpp_TRAl,x,.Call(Cpp_fNobsl,x,g[[1L]],g[[2L]],FALSE),g[[2L]],TRAtoInt(TRA)))
 }
-
-
-# Previous Versions:
-# fNobs <- function(x, g = NULL, drop = TRUE, trans = FALSE, use.g.names = TRUE, ...) {
-#   UseMethod("fnobs", x)
-# }
-# fNobs.default <- function(x, g = NULL, trans = FALSE, use.g.names = TRUE, ...) {
-#   if(trans == FALSE) {
-#     if(is.null(g)) fnobsCpp(x,0L,0L) else if (is.factor(g)) {
-#       if(use.g.names) {
-#         nam <- levels(g)
-#         res <- fnobsCpp(x,length(nam),g)
-#         names(res) <- nam
-#         res
-#       } else fnobsCpp(x,nlevels(g),g)
-#     } else {
-#       if(!is.list(g)) stop("g must be a a factor, or a GRP() object, see ?GRP")
-#       if(use.g.names) {
-#         if(is.atomic(g[["groups"]])) `names<-`(fnobsCpp(x,g[[1L]],g[[2L]]),g[["groups"]]) else `names<-`(fnobsCpp(x,g[[1L]],g[[2L]]), do.call(paste,c(g[["groups"]],list(sep = "."))))
-#       } else fnobsCpp(x,g[[1L]],g[[2L]]) # speed loss ??
-#     }
-#   } else {
-#     if(is.character(trans)) trans <- match(trans,c("replace.na.fill","replace","subtract","subtract.add.avg","divide","percentage","add","multiply"))
-#     if(is.null(g)) TRACpp(x,fnobsCpp(x,0L,0L),0L,trans) else if (is.factor(g))
-#       TRACpp(x,fnobsCpp(x,nlevels(g),g),g,trans) else {
-#         if(!is.list(g)) stop("g must be a a factor, or a GRP() object, see ?GRP")
-#         TRACpp(x,fnobsCpp(x,g[[1L]],g[[2L]]),g[[2L]],trans)
-#       }
-#   }
-# }
-# fNobs.matrix <- function(x, g = NULL, drop = TRUE, trans = FALSE, use.g.names = TRUE, ...) {
-#   if(trans == FALSE) {
-#     if(is.null(g)) fnobsmCpp(x,0L,0L,drop) else if (is.factor(g)) {
-#       if(use.g.names) {
-#         dn <- list(levels(g),dimnames(x)[[2L]])
-#         res <- fnobsmCpp(x,length(dn[[1L]]),g,drop)
-#         dimnames(res) <- dn
-#         res
-#       } else {
-#         res <- fnobsmCpp(x,nlevels(g),g,drop)
-#         dimnames(res) <- list(NULL,dimnames(x)[[2L]])
-#         res
-#       }
-#     } else {
-#       if(!is.list(g)) stop("g must be a a factor, or a GRP() object, see ?GRP")
-#       res <- fnobsmCpp(x,g[[1L]],g[[2L]],drop)
-#       dimnames(res) <- if(use.g.names) {
-#         if(is.atomic(g[["groups"]])) list(g[["groups"]], dimnames(x)[[2L]]) else list(do.call(paste,c(g[["groups"]],list(sep = "."))), dimnames(x)[[2L]])
-#       } else list(NULL,dimnames(x)[[2L]])
-#       res
-#     }
-#   } else {
-#     if(is.character(trans)) trans <- match(trans,c("replace.na.fill","replace","subtract","subtract.add.avg","divide","percentage","add","multiply"))
-#     if(is.null(g)) TRAmCpp(x,fnobsmCpp(x),0L,trans) else if (is.factor(g))
-#       TRAmCpp(x,fnobsmCpp(x,nlevels(g),g,TRUE),g,trans) else {
-#         if(!is.list(g)) stop("g must be a a factor, or a GRP() object, see ?GRP")
-#         TRAmCpp(x,fnobsmCpp(x,g[[1L]],g[[2L]],TRUE),g[[2L]],trans)
-#       }
-#   }
-# }
-# fNobs.data.frame <- function(x, g = NULL, drop = TRUE, trans = FALSE, use.g.names = TRUE, ...) {
-#   if(trans == FALSE && is.null(g) && drop) fnobslCpp(x) else {
-#     ax <- attributes(x)
-#     if(trans == FALSE) {
-#       if(is.null(g) && !drop) {
-#         res <- fnobslCpp(x,0L,0L,FALSE)
-#         ax[["row.names"]] <- 1L
-#       } else if (is.factor(g)) {
-#         lev <- levels(g)
-#         res <- fnobslCpp(x,length(lev),g,drop)
-#         ax[["row.names"]] <- if(use.g.names && !inherits(x,"data.table")) lev else .set_row_names(length(lev))
-#       } else {
-#         if(!is.list(g)) stop("g must be a a factor, or a GRP() object, see ?GRP")
-#         res <- fnobslCpp(x,g[[1L]],g[[2L]],drop)
-#         ax[["row.names"]] <- if(use.g.names && !inherits(x,"data.table") && !is.null(g[["groups"]])) { # necessary, else corrupted df
-#           if(is.atomic(g[["groups"]])) paste0(g[["groups"]]) else do.call(paste,c(g[["groups"]],list(sep = ".")))
-#         } else .set_row_names(g[[1L]])
-#       }
-#     } else {
-#       if(is.character(trans)) trans <- match(trans,c("replace.na.fill","replace","subtract","subtract.add.avg","divide","percentage","add","multiply"))
-#       res <- if(is.null(g)) TRAlCpp(x,fnobslCpp(x),0L,trans) else if (is.factor(g))
-#         TRAlCpp(x,fnobslCpp(x,nlevels(g),g,TRUE),g,trans) else {
-#           if(!is.list(g)) stop("g must be a a factor, or a GRP() object, see ?GRP")
-#           TRAlCpp(x,fnobslCpp(x,g[[1L]],g[[2L]],TRUE),g[[2L]],trans)
-#         }
-#     }
-#     attributes(res) <- ax
-#     res
-#   }
-# }
-# fNobs.list <- function(x, g = NULL, drop = TRUE, trans = FALSE, ...) {
-#   if(trans == FALSE && is.null(g) && drop) fnobslCpp(x) else {
-#     ax <- attributes(x)
-#     if(trans == FALSE) {
-#       if(is.null(g) && !drop) res <- fnobslCpp(x,0L,0L,FALSE) else if (is.factor(g))
-#         res <- fnobslCpp(x,nlevels(g),g,drop) else {
-#           if(!is.list(g)) stop("g must be a a factor, or a GRP() object, see ?GRP")
-#           res <- fnobslCpp(x,g[[1L]],g[[2L]],drop)
-#         }
-#     } else {
-#       if(is.character(trans)) trans <- match(trans,c("replace.na.fill","replace","subtract","subtract.add.avg","divide","percentage","add","multiply"))
-#       res <- if(is.null(g)) TRAlCpp(x,fnobslCpp(x),0L,trans) else if (is.factor(g))
-#         TRAlCpp(x,fnobslCpp(x,nlevels(g),g,TRUE),g,trans) else {
-#           if(!is.list(g)) stop("g must be a a factor, or a GRP() object, see ?GRP")
-#           TRAlCpp(x,fnobslCpp(x,g[[1L]],g[[2L]],TRUE),g[[2L]],trans)
-#         }
-#     }
-#     attributes(res) <- ax
-#     res
-#   }
-# }

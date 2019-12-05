@@ -8,12 +8,12 @@
 
 # For foundational changes to this code see fsum.R !!
 
-fmedian <- function(x, ...) { # g = NULL, TRA = FALSE, na.rm = TRUE, use.g.names = TRUE, drop = TRUE, keep.group_vars = TRUE,
+fmedian <- function(x, ...) { # g = NULL, TRA = NULL, na.rm = TRUE, use.g.names = TRUE, drop = TRUE, keep.group_vars = TRUE,
   UseMethod("fmedian", x)
 }
-fmedian.default <- function(x, g = NULL, TRA = FALSE, na.rm = TRUE, use.g.names = TRUE, ...) {
+fmedian.default <- function(x, g = NULL, TRA = NULL, na.rm = TRUE, use.g.names = TRUE, ...) {
   if(!missing(...)) stop("Unknown argument ", dotstostr(...))
-  if(TRA == FALSE) {
+  if(is.null(TRA)) {
     if(is.null(g)) return(.Call(Cpp_fmedian,x,0L,0L,NULL,na.rm)) else if(is.atomic(g)) {
       if(use.g.names) {
         if(!is.factor(g)) g <- qF(g)
@@ -42,9 +42,9 @@ fmedian.default <- function(x, g = NULL, TRA = FALSE, na.rm = TRUE, use.g.names 
     }
   }
 }
-fmedian.matrix <- function(x, g = NULL, TRA = FALSE, na.rm = TRUE, use.g.names = TRUE, drop = TRUE, ...) {
+fmedian.matrix <- function(x, g = NULL, TRA = NULL, na.rm = TRUE, use.g.names = TRUE, drop = TRUE, ...) {
   if(!missing(...)) stop("Unknown argument ", dotstostr(...))
-  if(TRA == FALSE) {
+  if(is.null(TRA)) {
     if(is.null(g)) return(.Call(Cpp_fmedianm,x,0L,0L,NULL,na.rm,drop)) else if(is.atomic(g)) {
       if(use.g.names) {
         if(!is.factor(g)) g <- qF(g)
@@ -73,9 +73,9 @@ fmedian.matrix <- function(x, g = NULL, TRA = FALSE, na.rm = TRUE, use.g.names =
     }
   }
 }
-fmedian.data.frame <- function(x, g = NULL, TRA = FALSE, na.rm = TRUE, use.g.names = TRUE, drop = TRUE, ...) {
+fmedian.data.frame <- function(x, g = NULL, TRA = NULL, na.rm = TRUE, use.g.names = TRUE, drop = TRUE, ...) {
   if(!missing(...)) stop("Unknown argument ", dotstostr(...))
-  if(TRA == FALSE) {
+  if(is.null(TRA)) {
     if(is.null(g)) return(.Call(Cpp_fmedianl,x,0L,0L,NULL,na.rm,drop)) else if(is.atomic(g)) {
       if(use.g.names && !inherits(x, "data.table")) {
         if(!is.factor(g)) g <- qF(g)
@@ -105,11 +105,11 @@ fmedian.data.frame <- function(x, g = NULL, TRA = FALSE, na.rm = TRUE, use.g.nam
     }
   }
 }
-fmedian.grouped_df <- function(x, TRA = FALSE, na.rm = TRUE, use.g.names = FALSE, keep.group_vars = TRUE, ...) {
+fmedian.grouped_df <- function(x, TRA = NULL, na.rm = TRUE, use.g.names = FALSE, keep.group_vars = TRUE, ...) {
   if(!missing(...)) stop("Unknown argument ", dotstostr(...))
   g <- GRP.grouped_df(x)
   gn <- which(names(x) %in% g[[5L]])
-  nTRAl <- TRA == FALSE
+  nTRAl <- is.null(TRA)
   gl <- length(gn) > 0L
   if(gl || nTRAl) {
     ax <- attributes(x)
