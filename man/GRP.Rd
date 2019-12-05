@@ -14,7 +14,7 @@
 \alias{as.factor.GRP}
 \title{Fast Grouping / \code{collapse} Grouping Objects}
 \description{
-  \code{GRP} performs fast, ordered and unordered, groupings of vectors and data.frames (or lists of vectors) using \code{data.table}'s fast grouping and ordering \code{C} routine (\code{forder}). The output is a list-like object of class 'GRP' which can be printed, plotted and used as an efficient input to all of \code{collapse}'s statistical functions, operators, and \code{collap} and \code{BY}.
+  \code{GRP} performs fast, ordered and unordered, groupings of vectors and data.frames (or lists of vectors) using \code{data.table}'s fast grouping and ordering \code{C} routine (\code{forder}). The output is a list-like object of class 'GRP' which can be printed, plotted and used as an efficient input to all of \code{collapse}'s fast functions, operators, as well as \code{\link{collap}}, \code{\link{BY}} and \code{\link{TRA}}.
 }
 
 \usage{
@@ -42,7 +42,7 @@ as.factor.GRP(x)
 
   \item{x}{a GRP object.}
 
-  \item{by}{if \code{X} is a data.frame or list, \code{by} can indicate columns to use for the grouping (by default all columns are used). columns must be passed using a vector of column names, indices, or using a one-sided formula i.e. \code{~ col1 + col2}.}
+  \item{by}{if \code{X} is a data.frame or list, \code{by} can indicate columns to use for the grouping (by default all columns are used). Columns must be passed using a vector of column names, indices, or using a one-sided formula i.e. \code{~ col1 + col2}.}
 
   \item{sort}{logical. sort the groups (argument passed to \code{data.table:::forderv}, \code{TRUE} is like using \code{keyby} with \code{data.table}, vs. \code{by}).}
 
@@ -66,8 +66,17 @@ as.factor.GRP(x)
 
   \item{...}{arguments to be passed to or from other methods.}
 }
+\details{
+\code{GRP} is a central function in the \code{collapse} package because it provides the key inputs to facilitate easy and efficient groupwise-programming at the \code{C/C++} level: Information about (1) the number of groups (2) an integer group-id indicating which values / rows belong to which group and (3) information about the size of each group. Provided with these informations, \code{collapse}'s \link[=fast-statistical-functions]{Fast Statistical Functions} pre-allocate intermediate and result vectors of the right sizes and (in most cases) perform grouped statistical computations in a single pass through the data.
+
+The sorting and ordering functionality for \code{GRP} only affects (2), that is groups receive different integer-id's depending on whether the groups are sorted \code{sort = TRUE}, and in which order (\code{order = 1} ascending or \code{order = -1} descending). This in-turn changes the order of values/rows in the output of \code{collapse} functions (the row/value corresponding to group 1 always comes out on top). The default setting with \code{sort = TRUE} and \code{order = 1} results in groups being sorted in ascending order. This is equivalent to performing grouped operations in \code{data.table} using \code{keyby}, whereas \code{sort = FALSE} is equivalent to \code{data.table} grouping with \code{by}.
+
+Evidently \code{GRP} is an S3 generic function with one default method supporting vector and list input and several conversion methods. The most important of these is the conversion of factors to 'GRP' objects and vice-versa. To obtain a 'GRP' object from a factor, one simply gets the number of groups calling \code{ng <- length(levels(f))} (1) and then computes the count of each level (3) using \code{\link[=tabulate]{tabulate(f, ng)}}. The integer group-id (2) is already given by the factor itself after removing the levels and class attributes. The levels are put in a list and moved to position (4) in the 'GRP' object, which is reserved for the unique groups. Going from factor to 'GRP' object thus only requires a tabulation of the levels, whereas creating a factor from a 'GRP' object using \code{as.factor.GRP} does not involve any computations, but may involve interactions if multiple grouping columns were used (which are then interacted to produce unique factor levels) or \code{\link{as.character}} conversions if the grouping column(s) were numeric (which are potentially expensive).
+
+\emph{Note}: For faster factor generation and a factor-light class 'qG' which avoids the coercion of factor levels to character also see \code{\link{qF}} and \code{\link{qG}}.
+}
 \value{
-  A list-like object of class 'GRP' containing information about the number of groups, the observations (rows) belonging to each group, the size of each group, the unique group names / definitions, whether the groups are ordered or not and (optionally) the ordering vector used to perform the ordering. The object is simple and structured as follows:
+  A list-like object of class `GRP' containing information about the number of groups, the observations (rows) belonging to each group, the size of each group, the unique group names / definitions, whether the groups are ordered or not and (optionally) the ordering vector used to perform the ordering. The object is structured as follows:
   \tabular{llll}{\emph{ List-index } \Sexpr{"\u200B"}  \tab \emph{ Element-name } \Sexpr{"\u200B"}  \tab \emph{ Content type } \Sexpr{"\u200B"} \Sexpr{"\u200B"} \Sexpr{"\u200B"} \Sexpr{"\u200B"} \Sexpr{"\u200B"} \Sexpr{"\u200B"} \Sexpr{"\u200B"} \Sexpr{"\u200B"} \Sexpr{"\u200B"} \Sexpr{"\u200B"} \Sexpr{"\u200B"} \Sexpr{"\u200B"} \Sexpr{"\u200B"} \Sexpr{"\u200B"} \tab \emph{ Content description} \cr
 
                  [[1]] \tab N.groups   \tab \code{integer(1)} \tab Number of Groups \cr
