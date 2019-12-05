@@ -1,6 +1,18 @@
 \name{fbetween-fwithin-B-W}
 \alias{B}
+\alias{B.default}
+\alias{B.matrix}
+\alias{B.data.frame}
+\alias{B.pseries}
+\alias{B.pdata.frame}
+\alias{B.grouped_df}
 \alias{W}
+\alias{W.default}
+\alias{W.matrix}
+\alias{W.data.frame}
+\alias{W.pseries}
+\alias{W.pdata.frame}
+\alias{W.grouped_df}
 \alias{fbetween}
 \alias{fbetween.default}
 \alias{fbetween.matrix}
@@ -30,29 +42,47 @@ fbetween(x, \dots)
        B(x, \dots)
        W(x, \dots)
 % ## Default S3 methods:
-\S3method{fbetween}{default}(x, g = NULL, w = NULL, na.rm = TRUE, fill = FALSE, \dots)                          \S3method{fwithin}{default}(x, g = NULL, w = NULL, na.rm = TRUE, add.global.mean = FALSE, \dots)                \S3method{B}{default}(x, g = NULL, w = NULL, na.rm = TRUE, fill = FALSE, \dots)                          \S3method{W}{default}(x, g = NULL, w = NULL, na.rm = TRUE, add.global.mean = FALSE, \dots)
+\method{fbetween}{default}(x, g = NULL, w = NULL, na.rm = TRUE, fill = FALSE, \dots)
+\method{fwithin}{default}(x, g = NULL, w = NULL, na.rm = TRUE, add.global.mean = FALSE, \dots)
+\method{B}{default}(x, g = NULL, w = NULL, na.rm = TRUE, fill = FALSE, \dots)
+\method{W}{default}(x, g = NULL, w = NULL, na.rm = TRUE, add.global.mean = FALSE, \dots)
 % ## S3 methods for class 'matrix'
-\S3method{fbetween}{matrix}(x, g = NULL, w = NULL, na.rm = TRUE, fill = FALSE, \dots)                     \S3method{fwithin}{matrix}(x, g = NULL, w = NULL, na.rm = TRUE, add.global.mean = FALSE, \dots)               \S3method{B}{matrix}(x, g = NULL, w = NULL, na.rm = TRUE, fill = FALSE, stub = "B.", \dots)               \S3method{W}{matrix}(x, g = NULL, w = NULL, na.rm = TRUE, add.global.mean = FALSE, stub = "W.", \dots)
+\method{fbetween}{matrix}(x, g = NULL, w = NULL, na.rm = TRUE, fill = FALSE, \dots)
+\method{fwithin}{matrix}(x, g = NULL, w = NULL, na.rm = TRUE, add.global.mean = FALSE, \dots)
+\method{B}{matrix}(x, g = NULL, w = NULL, na.rm = TRUE, fill = FALSE, stub = "B.", \dots)
+\method{W}{matrix}(x, g = NULL, w = NULL, na.rm = TRUE, add.global.mean = FALSE, stub = "W.", \dots)
 %## S3 methods for class 'data.frame'
-\S3method{fbetween}{data.frame}(x, g = NULL, w = NULL, na.rm = TRUE, fill = FALSE, \dots)                \S3method{fwithin}{data.frame}(x, g = NULL, w = NULL, na.rm = TRUE, add.global.mean = FALSE, \dots)          \S3method{B}{data.frame}(x, by = NULL, w = NULL, cols = is.numeric, na.rm = TRUE,
-  fill = FALSE, stub = "B.", keep.by = TRUE, keep.w = TRUE, \dots)                                         \S3method{W}{data.frame}(x, by = NULL, w = NULL, cols = is.numeric, na.rm = TRUE,
+\method{fbetween}{data.frame}(x, g = NULL, w = NULL, na.rm = TRUE, fill = FALSE, \dots)
+\method{fwithin}{data.frame}(x, g = NULL, w = NULL, na.rm = TRUE, add.global.mean = FALSE, \dots)
+\method{B}{data.frame}(x, by = NULL, w = NULL, cols = is.numeric, na.rm = TRUE,
+  fill = FALSE, stub = "B.", keep.by = TRUE, keep.w = TRUE, \dots)
+\method{W}{data.frame}(x, by = NULL, w = NULL, cols = is.numeric, na.rm = TRUE,
   add.global.mean = FALSE, stub = "W.", keep.by = TRUE, keep.w = TRUE, \dots)
 
 # Methods for compatibility with plm:
 %## S3 methods for class 'pseries'
-\S3method{fbetween}{pseries}(x, effect = 1L, w = NULL, na.rm = TRUE, fill = FALSE, \dots)                    \S3method{fwithin}{pseries}(x, effect = 1L, w = NULL, na.rm = TRUE, add.global.mean = FALSE, \dots)             \S3method{B}{pseries}(x, effect = 1L, w = NULL, na.rm = TRUE, fill = FALSE, \dots)                        \S3method{W}{pseries}(x, effect = 1L, w = NULL, na.rm = TRUE, add.global.mean = FALSE, \dots)
+\method{fbetween}{pseries}(x, effect = 1L, w = NULL, na.rm = TRUE, fill = FALSE, \dots)
+\method{fwithin}{pseries}(x, effect = 1L, w = NULL, na.rm = TRUE, add.global.mean = FALSE, \dots)
+\method{B}{pseries}(x, effect = 1L, w = NULL, na.rm = TRUE, fill = FALSE, \dots)
+\method{W}{pseries}(x, effect = 1L, w = NULL, na.rm = TRUE, add.global.mean = FALSE, \dots)
 %## S3 methods for class 'pdata.frame'
-\S3method{fbetween}{pdata.frame}(x, effect = 1L, w = NULL, na.rm = TRUE, fill = FALSE, \dots)                 \S3method{fwithin}{pdata.frame}(x, effect = 1L, w = NULL, na.rm = TRUE, add.global.mean = FALSE, \dots)         \S3method{B}{pdata.frame}(x, effect = 1L, w = NULL, cols = is.numeric, na.rm = TRUE,
-         fill = FALSE, stub = "B.", keep.ids = TRUE, keep.w = TRUE, \dots)                               \S3method{W}{pdata.frame}(x, effect = 1L, w = NULL, cols = is.numeric, na.rm = TRUE,
-         add.global.mean = FALSE, stub = "W.", keep.ids = TRUE, keep.w = TRUE, \dots)
+\method{fbetween}{pdata.frame}(x, effect = 1L, w = NULL, na.rm = TRUE, fill = FALSE, \dots)
+\method{fwithin}{pdata.frame}(x, effect = 1L, w = NULL, na.rm = TRUE, add.global.mean = FALSE, \dots)
+\method{B}{pdata.frame}(x, effect = 1L, w = NULL, cols = is.numeric, na.rm = TRUE,
+  fill = FALSE, stub = "B.", keep.ids = TRUE, keep.w = TRUE, \dots)
+\method{W}{pdata.frame}(x, effect = 1L, w = NULL, cols = is.numeric, na.rm = TRUE,
+  add.global.mean = FALSE, stub = "W.", keep.ids = TRUE, keep.w = TRUE, \dots)
 
 # Methods for compatibility with dplyr:
 %## S3 methods for class 'grouped_df'
-\S3method{fbetween}{grouped_df}(x, w = NULL, na.rm = TRUE, fill = FALSE,
-         keep.group_vars = TRUE, keep.w = TRUE, \dots)                                                          \S3method{fwithin}{grouped_df}(x, w = NULL, na.rm = TRUE, add.global.mean = FALSE,
-         keep.group_vars = TRUE, keep.w = TRUE, \dots)                                                          \S3method{B}{grouped_df}(x, w = NULL, na.rm = TRUE, fill = FALSE,
-         stub = "B.", keep.group_vars = TRUE, keep.w = TRUE, \dots)                                          \S3method{W}{grouped_df}(x, w = NULL, na.rm = TRUE, add.global.mean = FALSE,
-         stub = "W.", keep.group_vars = TRUE, keep.w = TRUE, \dots)
+\method{fbetween}{grouped_df}(x, w = NULL, na.rm = TRUE, fill = FALSE,
+         keep.group_vars = TRUE, keep.w = TRUE, \dots)
+\method{fwithin}{grouped_df}(x, w = NULL, na.rm = TRUE, add.global.mean = FALSE,
+        keep.group_vars = TRUE, keep.w = TRUE, \dots)
+\method{B}{grouped_df}(x, w = NULL, na.rm = TRUE, fill = FALSE,
+  stub = "B.", keep.group_vars = TRUE, keep.w = TRUE, \dots)
+\method{W}{grouped_df}(x, w = NULL, na.rm = TRUE, add.global.mean = FALSE,
+  stub = "W.", keep.group_vars = TRUE, keep.w = TRUE, \dots)
 }
 %- maybe also 'usage' for other objects documented here.
 \arguments{
@@ -61,7 +91,9 @@ fbetween(x, \dots)
   \item{by}{\emph{B and W data.frame method}: Same as g, but also allows one- or two-sided formulas i.e. \code{~ group1} or \code{var1 + var2 ~ group1 + group2}. See Examples.}
   \item{w}{a numeric vector of (non-negative) weights. \code{B / W} \code{data.frame} and \code{pdata.frame} methods also allow a one-sided formula i.e. \code{~ weightcol}. The \code{grouped_df} (\code{dplyr}) method supports lazy-evaluation. See Examples.}
   %\item{w}{a numeric vector of (non-negative) weights. if \code{na.rm = TRUE}, the weight vector can have missing values, and those observations will be skipped in the computation of averages.}
+    \item{cols}{\emph{data.frame method}: Select columns to center/average using a function, column names or indices. Default: All numeric variables. \emph{Note}: \code{cols} is ignored if a two-sided formula is passsed to \code{by}.}
   \item{na.rm}{logical. skip missing values in \code{x} when computing averages. If \code{na.rm = FALSE} and a \code{NA} or \code{NaN} is encountered, the average for that group will be \code{NA}, and all data points belonging to that group will also be \code{NA}.}
+      \item{effect}{\code{plm} methods: Select which panel identifier should be used as grouping variable. 1L means first variable in the \code{plm::index}, 2L the second etc. if more than one integer is supplied, the corresponding index-variables are interacted. }
   \item{stub}{a prefix or stub to rename all transformed columns. \code{FALSE} will not rename columns.}
   \item{fill}{\emph{option to \code{fbetween/B}}: Logical. \code{TRUE} will overrwite missing values in \code{x} with the respective average. By default missing values in \code{x} are preserved.}
   \item{add.global.mean}{\emph{option to \code{fwithin/W}}: Logical. \code{TRUE} will add back the global mean to all data values after subtracting out group-means.}
@@ -100,7 +132,7 @@ fbetween(mtcars)
 B(mtcars)
 fwithin(mtcars)
 W(mtcars)
-fbetween(mtcars) + fwithin(mtcars) == mtcars # This should be true for all elements apart from rounding errors
+fbetween(mtcars) + fwithin(mtcars) == mtcars # This should be true apart from rounding errors
 
 ## Groupwise centering and averaging
 fbetween(mtcars, mtcars$cyl)
@@ -114,11 +146,12 @@ cbind(get_vars(wlddev,"iso3c"),    # Same thing done manually using fwithin...
 ## Using B() and W() in regressions:
 
 # Several ways of running the same regression with cyl-fixed effects
-lm(W(mpg,cyl) ~ W(carb,cyl), data = mtcars)                     # Centering each variable individualls
+lm(W(mpg,cyl) ~ W(carb,cyl), data = mtcars)                     # Centering each individually
 lm(mpg ~ carb, data = W(mtcars, ~ cyl, stub = FALSE))           # Centering the entire data
 lm(mpg ~ carb, data = W(mtcars, ~ cyl, stub = FALSE,            # Here only the intercept changes
                         add.global.mean = TRUE))
-lm(mpg ~ carb + B(carb,cyl), data = mtcars)                     # Procedure suggested by Mundlack (1978) - partialling out group averages amounts to the same as demeaning the data
+lm(mpg ~ carb + B(carb,cyl), data = mtcars)                     # Procedure suggested by
+# ...Mundlack (1978) - partialling out group averages amounts to the same as demeaning the data
 
 # Now with cyl, vs and am fixed effects
 lm(W(mpg,list(cyl,vs,am)) ~ W(carb,list(cyl,vs,am)), data = mtcars)
@@ -128,7 +161,7 @@ lm(mpg ~ carb + B(carb,list(cyl,vs,am)), data = mtcars)
 # Now with cyl, vs and am fixed effects weighted by hp:
 lm(W(mpg,list(cyl,vs,am),hp) ~ W(carb,list(cyl,vs,am),hp), data = mtcars)
 lm(mpg ~ carb, data = W(mtcars, ~ cyl + vs + am, ~ hp, stub = FALSE))
-lm(mpg ~ carb + B(carb,list(cyl,vs,am),hp), data = mtcars)       # This gives a slightly different coefficient!!
+lm(mpg ~ carb + B(carb,list(cyl,vs,am),hp), data = mtcars)       # Gives a different coefficient!!
 
 }
 % Add one or more standard keywords, see file 'KEYWORDS' in the

@@ -19,19 +19,23 @@ ffirst(x, ...)
 flast(x, ...)
 %## Default S3 methods:
 \method{ffirst}{default}(x, g = NULL, TRA = FALSE, na.rm = TRUE,
-       use.g.names = TRUE, ...)                                               \method{flast}{default}(x, g = NULL, TRA = FALSE, na.rm = TRUE,
+       use.g.names = TRUE, ...)
+\method{flast}{default}(x, g = NULL, TRA = FALSE, na.rm = TRUE,
       use.g.names = TRUE, ...)
 %## S3 methods for class 'matrix'
 \method{ffirst}{matrix}(x, g = NULL, TRA = FALSE, na.rm = TRUE,
-       use.g.names = TRUE, drop = TRUE, ...)                              \method{flast}{matrix}(x, g = NULL, TRA = FALSE, na.rm = TRUE,
+       use.g.names = TRUE, drop = TRUE, ...)
+\method{flast}{matrix}(x, g = NULL, TRA = FALSE, na.rm = TRUE,
       use.g.names = TRUE, drop = TRUE, ...)
 %## S3 methods for class 'data.frame'
 \method{ffirst}{data.frame}(x, g = NULL, TRA = FALSE, na.rm = TRUE,
-       use.g.names = TRUE, drop = TRUE, ...)                              \method{flast}{data.frame}(x, g = NULL, TRA = FALSE, na.rm = TRUE,
+       use.g.names = TRUE, drop = TRUE, ...)
+\method{flast}{data.frame}(x, g = NULL, TRA = FALSE, na.rm = TRUE,
       use.g.names = TRUE, drop = TRUE, ...)
 %## S3 methods for class 'grouped_df'
 \method{ffirst}{grouped_df}(x, TRA = FALSE, na.rm = TRUE,
-       use.g.names = FALSE, keep.group_vars = TRUE, ...)                         \method{flast}{grouped_df}(x, TRA = FALSE, na.rm = TRUE,
+       use.g.names = FALSE, keep.group_vars = TRUE, ...)
+\method{flast}{grouped_df}(x, TRA = FALSE, na.rm = TRUE,
       use.g.names = FALSE, keep.group_vars = TRUE, ...)
 }
 \arguments{

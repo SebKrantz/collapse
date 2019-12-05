@@ -75,11 +75,11 @@ I note at this point that the philosphy of \code{collapse} is to move beyond thi
 }
 \examples{
 v <- iris$Sepal.Length   # A numeric vector
-f <- iris$Species        # A factor. Vectors and lists passed to g will internally be converted to factor
+f <- iris$Species        # A factor. Vectors/lists will internally be converted to factor
 
 ## default vector method
 BY(v, f, sum)                          # Sum by species
-BY(v, f, scale)                        # Scale by species (this is only a demo, please use fscale instead)
+BY(v, f, scale)                        # Scale by species (please use fscale instead)
 BY(v, f, scale, use.g.names = FALSE)   # Omitting auto-generated names
 BY(v, f, quantile)                     # Species quantiles: by default stacked
 BY(v, f, quantile, expand.wide = TRUE) # Wide format
@@ -87,7 +87,7 @@ BY(v, f, quantile, expand.wide = TRUE) # Wide format
 ## matrix method
 m <- qM(num_vars(iris))
 BY(m, f, sum)                          # Also return as matrix
-BY(m, f, sum, return = "data.frame")   # Return as data.frame ... also works for all the other computations below
+BY(m, f, sum, return = "data.frame")   # Return as data.frame ... also works for computations below
 BY(m, f, scale)
 BY(m, f, scale, use.g.names = FALSE)
 BY(m, f, quantile)
@@ -97,7 +97,7 @@ BY(m, f, quantile, expand.wide = TRUE, # Return as list of matrices
 
 ## data.frame method
 BY(num_vars(iris), f, sum)             # Also returns a data.fram
-BY(num_vars(iris), f, sum, return = 2) # Return as matrix ... also works for all the other computations below
+BY(num_vars(iris), f, sum, return = 2) # Return as matrix ... also works for computations below
 BY(num_vars(iris), f, scale)
 BY(num_vars(iris), f, scale, use.g.names = FALSE)
 BY(num_vars(iris), f, quantile)

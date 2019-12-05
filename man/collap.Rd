@@ -59,33 +59,34 @@ collap(X, by, FUN = fmean, catFUN = fmode, cols = NULL, custom = NULL,
 ## World Development Panel Data
 
 # Simple and Multi-Type Aggregation ----------------------------
-head(collap(wlddev, ~ country + decade))                        # Aggregate this data by country and decade
+head(collap(wlddev, ~ country + decade))                        # Aggregate by country and decade
 head(collap(wlddev, ~ country + decade, cols = is.numeric))     # Aggregate only numeric columns
 head(collap(wlddev, ~ country + decade, cols = 9:12))           # Only the 4 series
 head(collap(wlddev, PCGDP + LIFEEX ~ country + decade))         # Only GDP and life-expactancy
 head(collap(wlddev, PCGDP + LIFEEX ~ country + decade, fsum))   # Using the sum instead
 head(collap(wlddev, PCGDP + LIFEEX ~ country + decade, sum,     # Same using base::sum -> slower!!
             na.rm = TRUE))
-head(collap(wlddev, wlddev[c("country","decade")], fsum,        # same thing, now exploring different input formats
+head(collap(wlddev, wlddev[c("country","decade")], fsum,        # same, exploring different inputs
             cols = 9:10))
 head(collap(wlddev[9:10], wlddev[c("country","decade")], fsum))
 
-g <- GRP(wlddev, ~ country + decade)                            # Precomputing the grouping can help if I want to do multiple grouped operations on the same data !
-head(collap(wlddev, g, keep.by = FALSE))
-
-head(collap(wlddev, ~ country + decade, fmean, flast))          # Aggregate categorical data using not the mode but the last element
+g <- GRP(wlddev, ~ country + decade)                            # Precomputing the grouping
+head(collap(wlddev, g, keep.by = FALSE))                        # This is slightly faster now
+# Aggregate categorical data using not the mode but the last element
+head(collap(wlddev, ~ country + decade, fmean, flast))
 head(collap(wlddev, ~ country + decade, catFUN = flast,         # Aggregate only categorical data
             cols = is.categorical))
 
 # Weighted aggregation -----------------------------------------
-weights <- abs(rnorm(nrow(wlddev)))                             # Adding a random weight vector - may also have missing values
-head(collap(wlddev, ~ country + decade, w = weights))           # Takes weighted mean for numeric and weighted mode for categorical data.
+weights <- abs(rnorm(nrow(wlddev)))                             # Adding a random weight vector
+head(collap(wlddev, ~ country + decade, w = weights))           # Takes weighted mean for numeric..
+# ..and weighted mode for categorical data. The weight vector may also have missing values
 
 # Multi-Function Aggregation -----------------------------------
-head(collap(wlddev, ~ country + decade, list(fmean, fNobs),     # Saving mean and number of observations
+head(collap(wlddev, ~ country + decade, list(fmean, fNobs),     # Saving mean and Nobs
             cols = 9:12))
 
-head(collap(wlddev, ~ country + decade,                         # same using base R -> substantially slower
+head(collap(wlddev, ~ country + decade,                         # same using base R -> slower
             list(mean = mean,
                  Nobs = function(x,...) sum(!is.na(x))),
             cols = 9:12, na.rm = TRUE))
@@ -96,17 +97,17 @@ head(collap(wlddev, ~ country + decade,                         # list output fo
 head(collap(wlddev, ~ country + decade,                         # long output format
             list(fmean, fNobs), cols = 9:12, return = "long"))
 
-head(collap(wlddev, ~ country + decade,                         # also aggregating the categorical data, and duplicating it 2 times
-            list(fmean, fNobs), return = "long_dupl"))
+head(collap(wlddev, ~ country + decade,                         # also aggregating categorical data,
+            list(fmean, fNobs), return = "long_dupl"))          # and duplicating it 2 times
 
-head(collap(wlddev, ~ country + decade,                         # now also using 2 functions on categorical data
-            list(fmean, fNobs), list(fmode, flast),
+head(collap(wlddev, ~ country + decade,                         # now also using 2 functions on
+            list(fmean, fNobs), list(fmode, flast),             # categorical data
             keep.col.order = FALSE))
 
-head(collap(wlddev, ~ country + decade,                         # more functions, string input format, parallelized execution (choose more than 1 cores, depending on your machine)
-            c("fmean","fsum","fNobs","fsd","fvar"),
-            c("fmode","ffirst","flast","fNdistinct"),
-            parallel = TRUE, mc.cores = 1L,
+head(collap(wlddev, ~ country + decade,                         # more functions, string input,
+            c("fmean","fsum","fNobs","fsd","fvar"),             # parallelized execution
+            c("fmode","ffirst","flast","fNdistinct"),           # (choose more than 1 cores,
+            parallel = TRUE, mc.cores = 1L,                     # depending on your machine)
             keep.col.order = FALSE))
 
 # Custom Aggregation -------------------------------------------
@@ -117,8 +118,8 @@ head(collap(wlddev, ~ country + decade,                         # using column n
             custom = list(fmean = "PCGDP", fsd = c("LIFEEX","GINI"),
                           flast = "date")))
 
-head(collap(wlddev, ~ country + decade,                         # weighted parallelized custom aggregation
-            custom = list(fmean = 9:12, fsd = 9:10,
+head(collap(wlddev, ~ country + decade,                         # weighted parallelized custom
+            custom = list(fmean = 9:12, fsd = 9:10,             # aggregation
                           fmode = 7:8), w = weights,
             parallel = TRUE, mc.cores = 1L))
 }

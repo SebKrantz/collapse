@@ -14,26 +14,30 @@
 \code{fvar} and \code{fsd} are generic functions that compute the (column-wise) variance and standard deviation of \code{x}, (optionally) grouped by \code{g} and/or frequency-weighted by \code{w}. The \code{\link{TRA}} argument can further be used to transform \code{x} using its (grouped, weighted) variance/sd.
 }
 \usage{
-fvar(x, ...)
-fsd(x, ...)
+fvar(x, \dots)
+fsd(x, \dots)
 %## Default S3 methods:
 \method{fvar}{default}(x, g = NULL, w = NULL, TRA = FALSE, na.rm = TRUE,
-     use.g.names = TRUE, stable.algo = TRUE, ...)                         \method{fsd}{default}(x, g = NULL, w = NULL, TRA = FALSE, na.rm = TRUE,
-    use.g.names = TRUE, stable.algo = TRUE, ...)
+     use.g.names = TRUE, stable.algo = TRUE, \dots)
+\method{fsd}{default}(x, g = NULL, w = NULL, TRA = FALSE, na.rm = TRUE,
+    use.g.names = TRUE, stable.algo = TRUE, \dots)
 %## S3 methods for class 'matrix'
 \method{fvar}{matrix}(x, g = NULL, w = NULL, TRA = FALSE, na.rm = TRUE,
-     use.g.names = TRUE, drop = TRUE, stable.algo = TRUE, ...)                    \method{fsd}{matrix}(x, g = NULL, w = NULL, TRA = FALSE, na.rm = TRUE,
-    use.g.names = TRUE, drop = TRUE, stable.algo = TRUE, ...)
+     use.g.names = TRUE, drop = TRUE, stable.algo = TRUE, \dots)
+\method{fsd}{matrix}(x, g = NULL, w = NULL, TRA = FALSE, na.rm = TRUE,
+    use.g.names = TRUE, drop = TRUE, stable.algo = TRUE, \dots)
 %## S3 methods for class 'data.frame'
 \method{fvar}{data.frame}(x, g = NULL, w = NULL, TRA = FALSE, na.rm = TRUE,
-     use.g.names = TRUE, drop = TRUE, stable.algo = TRUE, ...)                    \method{fsd}{data.frame}(x, g = NULL, w = NULL, TRA = FALSE, na.rm = TRUE,
-    use.g.names = TRUE, drop = TRUE, stable.algo = TRUE, ...)
+     use.g.names = TRUE, drop = TRUE, stable.algo = TRUE, \dots)
+\method{fsd}{data.frame}(x, g = NULL, w = NULL, TRA = FALSE, na.rm = TRUE,
+    use.g.names = TRUE, drop = TRUE, stable.algo = TRUE, \dots)
 %## S3 methods for class 'grouped_df'
 \method{fvar}{grouped_df}(x, w = NULL, TRA = FALSE, na.rm = TRUE,
      use.g.names = FALSE, keep.group_vars = TRUE, keep.w = TRUE,
-     stable.algo = TRUE, ...)                                              \method{fsd}{grouped_df}(x, w = NULL, TRA = FALSE, na.rm = TRUE,
+     stable.algo = TRUE, \dots)
+\method{fsd}{grouped_df}(x, w = NULL, TRA = FALSE, na.rm = TRUE,
     use.g.names = FALSE, keep.group_vars = TRUE, keep.w = TRUE,
-    stable.algo = TRUE, ...)
+    stable.algo = TRUE, \dots)
 }
 \arguments{
 \item{x}{a numeric vector, matrix, data.frame or grouped tibble (\code{dplyr::grouped_df}).}
@@ -57,7 +61,7 @@ fsd(x, ...)
 
 \item{stable.algo}{logical. \code{TRUE} (default) use Welford's numerically stable online algorithm. \code{FALSE} implements a faster but numerically instable one-pass method. See Details. }
 
-\item{...}{arguments to be passed to or from other methods.}
+\item{\dots}{arguments to be passed to or from other methods.}
 
 }
 \details{
@@ -81,10 +85,10 @@ When applied to data frame's with groups or \code{drop = FALSE}, \code{fvar/fsd}
 }
 \examples{
 ## default vector method
-fvar(mtcars$mpg)                            # Simple variance (all examples below also hold for fvar!)
+fvar(mtcars$mpg)                            # Simple variance (all examples also hold for fvar!)
 fsd(mtcars$mpg)                             # Simple standard deviation
 fsd(mtcars$mpg, w = mtcars$hp)              # Weighted sd: Weighted by hp
-fsd(mtcars$mpg, TRA = "/")                  # Simple transformation: scaling (See also ?fscale for quickly standardizing i.e. scaling and centering data)
+fsd(mtcars$mpg, TRA = "/")                  # Simple transformation: scaling (See also ?fscale)
 fsd(mtcars$mpg, mtcars$cyl)                 # Grouped sd
 fsd(mtcars$mpg, mtcars$cyl, mtcars$hp)      # Grouped weighted sd
 fsd(mtcars$mpg, mtcars$cyl, TRA = "/")      # Scaling by group
@@ -92,11 +96,10 @@ fsd(mtcars$mpg, mtcars$cyl, mtcars$hp, "/") # Group-scaling using weighted group
 
 ## data.frame method
 fsd(iris)                           # This works, although 'Species' is a factor variable
-# fsd(iris, drop = FALSE)           This gives an error, becase fsd wants to add back attributes to 'Species'
 fsd(mtcars, drop = FALSE)           # This works, all columns are numeric variables
-fsd(iris[-5], iris[5])              # By Species: iris[5] is still a list, and thus passed to GRP() first, see ?GRP
-fsd(iris[-5], iris[[5]])            # Same thing but much faster: fsd recognizes that 'Species' is a factor and uses it directly
-fsd(iris[-5], iris[[5]], TRA = "/") # Data scaled by species (see also fscale for proper standardization)
+fsd(iris[-5], iris[5])              # By Species: iris[5] is still a list, and thus passed to GRP()
+fsd(iris[-5], iris[[5]])            # Same thing much faster: fsd recognizes 'Species' is a factor
+fsd(iris[-5], iris[[5]], TRA = "/") # Data scaled by species (see also fscale)
 
 ## matrix method
 m <- qM(mtcars)
@@ -107,7 +110,7 @@ fsd(m, mtcars$cyl) # etc...
 library(dplyr)
 mtcars \%>\% group_by(cyl,vs,am) \%>\% fsd
 mtcars \%>\% group_by(cyl,vs,am) \%>\% fsd(keep.group_vars = FALSE) # remove grouping columns
-mtcars \%>\% group_by(cyl,vs,am) \%>\% fsd(hp)      # Weighted by hp. Since drop.w = TRUE by default, hp is removed from the result.
+mtcars \%>\% group_by(cyl,vs,am) \%>\% fsd(hp)      # Weighted by hp
 mtcars \%>\% group_by(cyl,vs,am) \%>\% fsd(hp, "/") # Weighted scaling transformation
 }
 

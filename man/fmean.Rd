@@ -69,7 +69,7 @@ The mean of \code{x}, grouped by \code{g}, or (if \code{\link{TRA}} is used) \co
 mpg <- mtcars$mpg
 fmean(mpg)                         # Simple mean
 fmean(mpg, w = mtcars$hp)          # Weighted mean: Weighted by hp
-fmean(mpg, TRA = "-")              # Simple transformation: demeaning (See also ?W for a slightly quicker method)
+fmean(mpg, TRA = "-")              # Simple transformation: demeaning (See also ?W)
 fmean(mpg, mtcars$cyl)             # Grouped mean
 fmean(mpg, mtcars[8:9])            # another grouped mean.
 g <- GRP(mtcars[c(2,8:9)])

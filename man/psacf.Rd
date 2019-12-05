@@ -1,17 +1,17 @@
 \name{psacf}
 \alias{psacf}
-% \alias{psacf.default}
-% \alias{psacf.pseries}
-% \alias{psacf.data.frame}
-% \alias{psacf.pdata.frame}
+\alias{psacf.default}
+\alias{psacf.pseries}
+\alias{psacf.data.frame}
+\alias{psacf.pdata.frame}
 \alias{pspacf}
-% \alias{pspacf.default}
-% \alias{pspacf.pseries}
-% \alias{pspacf.data.frame}
-% \alias{pspacf.pdata.frame}
+\alias{pspacf.default}
+\alias{pspacf.pseries}
+\alias{pspacf.data.frame}
+\alias{pspacf.pdata.frame}
 \alias{psccf}
-% \alias{psccf.default}
-% \alias{psccf.pseries}
+\alias{psccf.default}
+\alias{psccf.pseries}
 %- Also NEED an '\alias' for EACH other topic documented here.
 \title{
 Auto- and Cross- Covariance and -Correlation Function Estimation for Panel-Series
@@ -20,24 +20,30 @@ Auto- and Cross- Covariance and -Correlation Function Estimation for Panel-Serie
 \code{psacf}, \code{pspacf} and \code{psccf} compute (and by default plot) estimates of the auto-, partial auto- and cross- correlation or covariance functions for panel-vectors and \code{plm::pseries}. They are faithful analogues to \code{stats::acf}, \code{stats::pacf} and \code{stats::ccf}.
 }
 \usage{
-psacf(x, ...)
-pspacf(x, ...)
-psccf(x, y, ...)
+psacf(x, \dots)
+pspacf(x, \dots)
+psccf(x, y, \dots)
 %## Default S3 methods:
 \method{psacf}{default}(x, g, t = NULL, lag.max = NULL, type = c("correlation", "covariance","partial"),
-       plot = TRUE, gscale = TRUE, ...)                                    \method{pspacf}{default}(x, g, t = NULL, lag.max = NULL, plot = TRUE, gscale = TRUE, ...)                                                                \method{psccf}{default}(x, y, g, t = NULL, lag.max = NULL, type = c("correlation", "covariance"),
-       plot = TRUE, gscale = TRUE, ...)
+      plot = TRUE, gscale = TRUE, \dots)
+\method{pspacf}{default}(x, g, t = NULL, lag.max = NULL, plot = TRUE, gscale = TRUE, \dots)
+\method{psccf}{default}(x, y, g, t = NULL, lag.max = NULL, type = c("correlation", "covariance"),
+      plot = TRUE, gscale = TRUE, \dots)
 %## S3 methods for class 'pseries'
- \method{psacf}{pseries}(x, lag.max = NULL, type = c("correlation", "covariance","partial"),
-       plot = TRUE, gscale = TRUE, ...)                                          \method{pspacf}{pseries}(x, lag.max = NULL, plot = TRUE, gscale = TRUE, ...)  \method{psccf}{pseries}(x, y, lag.max = NULL, type = c("correlation", "covariance"),
-       plot = TRUE, gscale = TRUE, ...)
+\method{psacf}{pseries}(x, lag.max = NULL, type = c("correlation", "covariance","partial"),
+      plot = TRUE, gscale = TRUE, \dots)
+\method{pspacf}{pseries}(x, lag.max = NULL, plot = TRUE, gscale = TRUE, \dots)
+\method{psccf}{pseries}(x, y, lag.max = NULL, type = c("correlation", "covariance"),
+      plot = TRUE, gscale = TRUE, \dots)
 %## S3 methods for class 'data.frame'
 \method{psacf}{data.frame}(x, by, t = NULL, cols = is.numeric, lag.max = NULL,
-       type = c("correlation", "covariance","partial"), plot = TRUE, gscale = TRUE, ...)                                                                   \method{pspacf}{data.frame}(x, by, t = NULL, cols = is.numeric, lag.max = NULL,
-       type = c("correlation", "covariance","partial"), plot = TRUE, gscale = TRUE, ...)
+      type = c("correlation", "covariance","partial"), plot = TRUE, gscale = TRUE, \dots)
+\method{pspacf}{data.frame}(x, by, t = NULL, cols = is.numeric, lag.max = NULL,
+       plot = TRUE, gscale = TRUE, \dots)
 %## S3 methods for class 'pdata.frame'
  \method{psacf}{pdata.frame}(x, lag.max = NULL, type = c("correlation", "covariance","partial"),
-       plot = TRUE, gscale = TRUE, ...)                                       \method{pspacf}{pdata.frame}(x, lag.max = NULL, plot = TRUE, gscale = TRUE, ...)
+      plot = TRUE, gscale = TRUE, \dots)
+\method{pspacf}{pdata.frame}(x, lag.max = NULL, plot = TRUE, gscale = TRUE, \dots)
 }
 %- maybe also 'usage' for other objects documented here.
 \arguments{
@@ -52,7 +58,7 @@ panel-data-frame (\code{plm::pdata.frame}).}
 \item{type}{character string giving the type of acf to be computed. Allowed values are "correlation" (the default), "covariance" or "partial".}
 \item{plot}{logical. If \code{TRUE} (the default) the acf is plotted.}
 \item{gscale}{logical. Do a groupwise scaling / standardization of \code{x, y} (using \code{collapse::fscale} and the groups supplied to \code{g}) before computing panel-autocorrelations. Recommended and \code{TRUE} by default.}
-\item{...}{further arguments to be passed to \code{stats:::plot.acf}.}
+\item{\dots}{further arguments to be passed to \code{stats:::plot.acf}.}
 }
 \details{
 If \code{gscale = TRUE} data are standardized within each group (using \code{collapse::fscale}) such that the group-mean is 0 and the group-standard deviation is 1. This is strongly recommended for most panels to get rid of individual-specific heterogeneity which would corrupt the ACF computations.
@@ -83,19 +89,19 @@ The \code{pdata.frame} method only works for properly subsetted objects of class
 head(wlddev)                                                    # see also help(wlddev)
 psacf(wlddev$PCGDP, wlddev$country, wlddev$year)                # ACF of GDP per Capita
 psacf(wlddev, PCGDP ~ country, ~year)                           # Same using data.frame method
-psacf(wlddev$PCGDP, wlddev$country)                             # The Data is sorted, so we could leave out t
+psacf(wlddev$PCGDP, wlddev$country)                             # The Data is sorted, can omit t
 pspacf(wlddev$PCGDP, wlddev$country)                            # Partial ACF
 psccf(wlddev$PCGDP, wlddev$LIFEEX, wlddev$country)              # CCF with Life-Expectancy at Birth
 
-psacf(wlddev, PCGDP + LIFEEX + ODA ~ country, ~year)            # ACF and CCF of GDP, Life Expactancy and ODA received
+psacf(wlddev, PCGDP + LIFEEX + ODA ~ country, ~year)            # ACF and CCF of GDP, LIFEEX and ODA
 psacf(wlddev, ~ country, ~year, c(9:10,12))                     # Same, using cols argument
 pspacf(wlddev, ~ country, ~year, c(9:10,12))                    # Partial ACF
 
 ## Using plm:
-pwlddev <- plm::pdata.frame(wlddev, index = c("country","year"))# Creating a Panel-Data Frame of this data
+pwlddev <- plm::pdata.frame(wlddev, index = c("country","year"))# Creating a Panel-Data Frame
 PCGDP <- pwlddev$PCGDP                                          # Panel-Series of GDP per Capita
 LIFEEX <- pwlddev$LIFEEX                                        # Panel-Series of Life Expectancy
-psacf(PCGDP)                                                    # Same as above, but more parsimonious
+psacf(PCGDP)                                                    # Same as above, more parsimonious
 pspacf(PCGDP)
 psccf(PCGDP, LIFEEX)
 psacf(pwlddev[c(9:10,12)])

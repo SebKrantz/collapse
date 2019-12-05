@@ -12,17 +12,17 @@
 \alias{fHDwithin.pseries}
 \alias{fHDwithin.pdata.frame}
 \alias{HDW}
-% \alias{HDW.default}
-% \alias{HDW.matrix}
-% \alias{HDW.data.frame}
-% \alias{HDW.pseries}
-% \alias{HDW.pdata.frame}
+\alias{HDW.default}
+\alias{HDW.matrix}
+\alias{HDW.data.frame}
+\alias{HDW.pseries}
+\alias{HDW.pdata.frame}
 \alias{HDB}
-% \alias{HDB.default}
-% \alias{HDB.matrix}
-% \alias{HDB.data.frame}
-% \alias{HDB.pseries}
-% \alias{HDB.pdata.frame}
+\alias{HDB.default}
+\alias{HDB.matrix}
+\alias{HDB.data.frame}
+\alias{HDB.pseries}
+\alias{HDB.pdata.frame}
 %- Also NEED an '\alias' for EACH other topic documented here.
 \title{
 Higher-Dimensional Centering and Linear Prediction
@@ -39,19 +39,40 @@ fHDbetween(x, \dots)
        HDB(x, \dots)
        HDW(x, \dots)
 % ## Default S3 methods:
-\S3method{fHDbetween}{default}(x, fl = NULL, w = NULL, na.rm = TRUE, fill = FALSE, \dots)                          \S3method{fHDwithin}{default}(x, fl = NULL, w = NULL, na.rm = TRUE, fill = FALSE, \dots)                \S3method{HDB}{default}(x, fl = NULL, w = NULL, na.rm = TRUE, fill = FALSE, \dots)                          \S3method{HDW}{default}(x, fl = NULL, w = NULL, na.rm = TRUE, fill = FALSE, \dots)
+\method{fHDbetween}{default}(x, fl, w = NULL, na.rm = TRUE, fill = FALSE, \dots)
+\method{fHDwithin}{default}(x, fl, w = NULL, na.rm = TRUE, fill = FALSE, \dots)
+\method{HDB}{default}(x, fl, w = NULL, na.rm = TRUE, fill = FALSE, \dots)
+\method{HDW}{default}(x, fl, w = NULL, na.rm = TRUE, fill = FALSE, \dots)
 % ## S3 methods for class 'matrix'
-\S3method{fHDbetween}{matrix}(x, fl = NULL, w = NULL, na.rm = TRUE, fill = FALSE, \dots)                     \S3method{fHDwithin}{matrix}(x, fl = NULL, w = NULL, na.rm = TRUE, fill = FALSE, \dots)               \S3method{HDB}{matrix}(x, fl = NULL, w = NULL, na.rm = TRUE, fill = FALSE, stub = "HDB_", \dots)               \S3method{HDW}{matrix}(x, fl = NULL, w = NULL, na.rm = TRUE, fill = FALSE, stub = "HDW_", \dots)
+\method{fHDbetween}{matrix}(x, fl, w = NULL, na.rm = TRUE, fill = FALSE, \dots)
+\method{fHDwithin}{matrix}(x, fl, w = NULL, na.rm = TRUE, fill = FALSE, \dots)
+\method{HDB}{matrix}(x, fl, w = NULL, na.rm = TRUE, fill = FALSE, stub = "HDB.", \dots)
+\method{HDW}{matrix}(x, fl, w = NULL, na.rm = TRUE, fill = FALSE, stub = "HDW.", \dots)
 %## S3 methods for class 'data.frame'
-\S3method{fHDbetween}{data.frame}(x, fl = NULL, w = NULL, na.rm = TRUE, fill = FALSE, variable.wise = FALSE, \dots)                \S3method{fHDwithin}{data.frame}(x, fl = NULL, w = NULL, na.rm = TRUE, fill = FALSE, variable.wise = FALSE, \dots)          \S3method{HDB}{data.frame}(x, fl = NULL, w = NULL, cols = is.numeric, na.rm = TRUE,
-  fill = FALSE, variable.wise = false, stub = "HDB_", \dots)                                         \S3method{HDW}{data.frame}(x, fl = NULL, w = NULL, cols = is.numeric, na.rm = TRUE, fill = FALSE, variable.wise = FALSE, stub = "HDW_", \dots)
+\method{fHDbetween}{data.frame}(x, fl, w = NULL, na.rm = TRUE, fill = FALSE,
+           variable.wise = FALSE, \dots)
+\method{fHDwithin}{data.frame}(x, fl, w = NULL, na.rm = TRUE, fill = FALSE,
+          variable.wise = FALSE, \dots)
+\method{HDB}{data.frame}(x, fl, w = NULL, cols = is.numeric, na.rm = TRUE, fill = FALSE,
+    variable.wise = FALSE, stub = "HDB.", \dots)
+\method{HDW}{data.frame}(x, fl, w = NULL, cols = is.numeric, na.rm = TRUE, fill = FALSE,
+    variable.wise = FALSE, stub = "HDW.", \dots)
 
 # Methods for compatibility with plm:
 %## S3 methods for class 'pseries'
-\S3method{fHDbetween}{pseries}(x, w = NULL, na.rm = TRUE, fill = TRUE, \dots)                    \S3method{fHDwithin}{pseries}(x, w = NULL, na.rm = TRUE, fill = TRUE, \dots)             \S3method{HDB}{pseries}(x, w = NULL, na.rm = TRUE, fill = TRUE, \dots)                        \S3method{HDW}{pseries}(x, w = NULL, na.rm = TRUE, fill = TRUE, \dots)
+\method{fHDbetween}{pseries}(x, w = NULL, na.rm = TRUE, fill = TRUE, \dots)
+\method{fHDwithin}{pseries}(x, w = NULL, na.rm = TRUE, fill = TRUE, \dots)
+\method{HDB}{pseries}(x, w = NULL, na.rm = TRUE, fill = TRUE, \dots)
+\method{HDW}{pseries}(x, w = NULL, na.rm = TRUE, fill = TRUE, \dots)
 %## S3 methods for class 'pdata.frame'
-\S3method{fHDbetween}{pdata.frame}(x, w = NULL, na.rm = TRUE, fill = TRUE, \dots)                 \S3method{fHDwithin}{pdata.frame}(x, w = NULL, na.rm = TRUE, fill = TRUE, \dots)         \S3method{HDB}{pdata.frame}(x, w = NULL, cols = is.numeric, na.rm = TRUE, fill = TRUE, stub = "HDB_", \dots)                               \S3method{HDW}{pdata.frame}(x, w = NULL, cols = is.numeric, na.rm = TRUE,
-         fill = TRUE, stub = "HDW_", \dots)
+\method{fHDbetween}{pdata.frame}(x, w = NULL, na.rm = TRUE, fill = TRUE,
+           variable.wise = FALSE, \dots)
+\method{fHDwithin}{pdata.frame}(x, w = NULL, na.rm = TRUE, fill = TRUE,
+          variable.wise = FALSE, \dots)
+\method{HDB}{pdata.frame}(x, w = NULL, cols = is.numeric, na.rm = TRUE, fill = TRUE,
+    variable.wise = FALSE, stub = "HDB.", \dots)
+\method{HDW}{pdata.frame}(x, w = NULL, cols = is.numeric, na.rm = TRUE, fill = TRUE,
+    variable.wise = FALSE, stub = "HDW.", \dots)
 }
 %- maybe also 'usage' for other objects documented here.
 \arguments{
@@ -107,16 +128,16 @@ In general full interactions specified with \code{(*)} can be very slow on large
 \code{\link[=fbetween]{fbetween/B and fwithin/W}}, \code{\link[=fscale]{fscale/STD}}, \code{\link{TRA}}, \link[=data-transformations]{Data Transformations}
 }
 \examples{
-lm(HDW_mpg ~ HDW_hp, data = HDW(mtcars, ~ factor(cyl)*carb + vs + wt:gear + wt:gear:carb))
+lm(HDW.mpg ~ HDW.hp, data = HDW(mtcars, ~ factor(cyl)*carb + vs + wt:gear + wt:gear:carb))
 lm(mpg ~ hp + factor(cyl)*carb + vs + wt:gear + wt:gear:carb, data = mtcars)
 
-lm(HDW_mpg ~ HDW_hp, data = HDW(mtcars, ~ factor(cyl)*carb + vs + wt:gear))
+lm(HDW.mpg ~ HDW.hp, data = HDW(mtcars, ~ factor(cyl)*carb + vs + wt:gear))
 lm(mpg ~ hp + factor(cyl)*carb + vs + wt:gear, data = mtcars)
 
-lm(HDW_mpg ~ HDW_hp, data = HDW(mtcars, ~ cyl*carb + vs + wt:gear))
+lm(HDW.mpg ~ HDW.hp, data = HDW(mtcars, ~ cyl*carb + vs + wt:gear))
 lm(mpg ~ hp + cyl*carb + vs + wt:gear, data = mtcars)
 
-lm(HDW_mpg ~ HDW_hp, data = HDW(mtcars, mpg + hp ~ cyl*carb + factor(cyl)*poly(drat,2)))
+lm(HDW.mpg ~ HDW.hp, data = HDW(mtcars, mpg + hp ~ cyl*carb + factor(cyl)*poly(drat,2)))
 lm(mpg ~ hp + cyl*carb + factor(cyl)*poly(drat,2), data = mtcars)
 }
 % Add one or more standard keywords, see file 'KEYWORDS' in the

@@ -14,24 +14,28 @@
 \code{fmax} and \code{fmin} are generic functions that compute the (column-wise) maximum and minimum value of all values in \code{x}, (optionally) grouped by \code{g}. The \code{\link{TRA}} argument can further be used to transform \code{x} using its (grouped) maximum or minimum value.
 }
 \usage{
-fmax(x, ...)
-fmin(x, ...)
+fmax(x, \dots)
+fmin(x, \dots)
 %## Default S3 methods:
 \method{fmax}{default}(x, g = NULL, TRA = FALSE, na.rm = TRUE,
-     use.g.names = TRUE, ...)                                              \method{fmin}{default}(x, g = NULL, TRA = FALSE, na.rm = TRUE,
-     use.g.names = TRUE, ...)
+     use.g.names = TRUE, \dots)
+\method{fmin}{default}(x, g = NULL, TRA = FALSE, na.rm = TRUE,
+     use.g.names = TRUE, \dots)
 %## S3 methods for class 'matrix'
 \method{fmax}{matrix}(x, g = NULL, TRA = FALSE, na.rm = TRUE,
-     use.g.names = TRUE, drop = TRUE, ...)          \method{fmin}{matrix}(x, g = NULL, TRA = FALSE, na.rm = TRUE,
-     use.g.names = TRUE, drop = TRUE, ...)
+     use.g.names = TRUE, drop = TRUE, \dots)
+\method{fmin}{matrix}(x, g = NULL, TRA = FALSE, na.rm = TRUE,
+     use.g.names = TRUE, drop = TRUE, \dots)
 %## S3 methods for class 'data.frame'
 \method{fmax}{data.frame}(x, g = NULL, TRA = FALSE, na.rm = TRUE,
-     use.g.names = TRUE, drop = TRUE, ...)          \method{fmin}{data.frame}(x, g = NULL, TRA = FALSE, na.rm = TRUE,
-     use.g.names = TRUE, drop = TRUE, ...)
+     use.g.names = TRUE, drop = TRUE, \dots)
+\method{fmin}{data.frame}(x, g = NULL, TRA = FALSE, na.rm = TRUE,
+     use.g.names = TRUE, drop = TRUE, \dots)
 %## S3 methods for class 'grouped_df'
 \method{fmax}{grouped_df}(x, TRA = FALSE, na.rm = TRUE,
-     use.g.names = FALSE, keep.group_vars = TRUE, ...)          \method{fmin}{grouped_df}(x, TRA = FALSE, na.rm = TRUE,
-     use.g.names = FALSE, keep.group_vars = TRUE, ...)
+     use.g.names = FALSE, keep.group_vars = TRUE, \dots)
+\method{fmin}{grouped_df}(x, TRA = FALSE, na.rm = TRUE,
+     use.g.names = FALSE, keep.group_vars = TRUE, \dots)
 }
 \arguments{
 \item{x}{a numeric vector, matrix, data.frame or grouped tibble (\code{dplyr::grouped_df}).}
@@ -49,7 +53,7 @@ fmin(x, ...)
 
 \item{keep.group_vars}{\emph{grouped_df method:} Logical. \code{FALSE} removes grouping variables after computation.}
 
-\item{...}{arguments to be passed to or from other methods.}
+\item{\dots}{arguments to be passed to or from other methods.}
 }
 \details{
 Missing-value removal as controlled by the \code{na.rm} argument is done at no extra cost since in C++ any logical comparison involving \code{NA} or \code{NaN} evaluates to \code{FALSE}. Large performance gains can nevertheless be achieved in the presence of missing values if \code{na.rm = FALSE}, since then the corresponding computation is terminated once a \code{NA} is encountered and \code{NA} is returned (unlike \code{base::max} and \code{base::min} which just run through without any checks).
@@ -68,7 +72,7 @@ When applied to data frame's with groups or \code{drop = FALSE}, \code{fmax} and
 ## default vector method
 mpg <- mtcars$mpg
 fmax(mpg)                         # maximum value
-fmin(mpg)                         # minimum value (all further examples use fmax but also apply to fmin)
+fmin(mpg)                         # minimum value (all examples below use fmax but apply to fmin)
 fmax(mpg, TRA = "\%")              # Simple transformation: Take percentage of maximum value
 fmax(mpg, mtcars$cyl)             # Grouped maximum value
 fmax(mpg, mtcars[c(2,8:9)])       # More groups...

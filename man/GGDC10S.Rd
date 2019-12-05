@@ -48,7 +48,8 @@ qsu(GGDC10S, ~ Variable, ~ Variable + Country, vlabels = TRUE)
 \dontrun{
 ## World Regions Structural Change Plot
 dat <- GGDC10S
-get_vars(dat, 6:15) <- replace_outliers(sweep(get_vars(dat, 6:15), 1, dat$SUM, "/"), 0, single.limit = "min")
+get_vars(dat, 6:15) <- replace_outliers(sweep(get_vars(dat, 6:15), 1, dat$SUM, "/"), 0,
+                                        single.limit = "min")
 names(dat) <- stringr::str_wrap(vlabels(dat), width = 20)
 dat$Variable <- Recode(dat$Variable,"VA"="Value Added Share","EMP"="Employment Share")
 dat <- collap(dat, ~ Variable + Region + Year, cols = 6:15)
@@ -60,7 +61,8 @@ ggplot(aes(x = Year, y = value, fill = Sector), data = dat) +
   theme_linedraw(base_size = 14) + facet_grid(Variable ~ Region, scales = "free_x") +
   scale_fill_manual(values = sub("#00FF66FF", "#00CC66", rainbow(10))) +
   scale_x_continuous(breaks = scales::pretty_breaks(n = 7), expand = c(0, 0))+
-  scale_y_continuous(breaks = scales::pretty_breaks(n = 10), expand = c(0, 0), labels = scales::percent) +
+  scale_y_continuous(breaks = scales::pretty_breaks(n = 10), expand = c(0, 0),
+                     labels = scales::percent) +
   theme(axis.text.x = element_text(angle = 315, hjust = 0, margin = ggplot2::margin(t = 0)),
         strip.background = element_rect(colour = "grey30", fill = "grey30"))
 }

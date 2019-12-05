@@ -14,19 +14,19 @@
 \alias{fgrowth.pdata.frame}
 \alias{fgrowth.grouped_df}
 \alias{D}
-% \alias{D.default}
-% \alias{D.matrix}
-% \alias{D.data.frame}
-% \alias{D.pseries}
-% \alias{D.pdata.frame}
-% \alias{D.grouped_df}
+\alias{D.default}
+\alias{D.matrix}
+\alias{D.data.frame}
+\alias{D.pseries}
+\alias{D.pdata.frame}
+\alias{D.grouped_df}
 \alias{G}
-% \alias{G.default}
-% \alias{G.matrix}
-% \alias{G.data.frame}
-% \alias{G.pseries}
-% \alias{G.pdata.frame}
-% \alias{G.grouped_df}
+\alias{G.default}
+\alias{G.matrix}
+\alias{G.data.frame}
+\alias{G.pseries}
+\alias{G.pdata.frame}
+\alias{G.grouped_df}
 
 %- Also NEED an '\alias' for EACH other topic documented here.
 \title{ % Lagged and Iterated
@@ -43,23 +43,57 @@ fgrowth(x, n = 1, diff = 1, \dots)
       D(x, n = 1, diff = 1, \dots)
       G(x, n = 1, diff = 1, \dots)
 % ## Default S3 methods:
-\method{fdiff}{default}(x, n = 1, diff = 1, g = NULL, t = NULL, fill = NA, stubs = TRUE, \dots)                 \method{fgrowth}{default}(x, n = 1, diff = 1, g = NULL, t = NULL, fill = NA, logdiff = FALSE, stubs = TRUE, \dots) \method{D}{default}(x, n = 1, diff = 1, g = NULL, t = NULL, fill = NA, stubs = TRUE, \dots)                   \method{G}{default}(x, n = 1, diff = 1, g = NULL, t = NULL, fill = NA, logdiff = FALSE, stubs = TRUE, \dots)
+\method{fdiff}{default}(x, n = 1, diff = 1, g = NULL, t = NULL, fill = NA,
+      stubs = TRUE, \dots)
+\method{fgrowth}{default}(x, n = 1, diff = 1, g = NULL, t = NULL, fill = NA,
+        logdiff = FALSE, stubs = TRUE, \dots)
+\method{D}{default}(x, n = 1, diff = 1, g = NULL, t = NULL, fill = NA,
+  stubs = TRUE, \dots)
+\method{G}{default}(x, n = 1, diff = 1, g = NULL, t = NULL, fill = NA,
+  logdiff = FALSE, stubs = TRUE, \dots)
 %## S3 methods for class 'matrix'
-\method{fdiff}{matrix}(x, n = 1, diff = 1, g = NULL, t = NULL, fill = NA, stubs = TRUE, \dots)               \method{fgrowth}{matrix}(x, n = 1, diff = 1, g = NULL, t = NULL, fill = NA, logdiff = FALSE, stubs = TRUE, \dots) \method{D}{matrix}(x, n = 1, diff = 1, g = NULL, t = NULL, fill = NA, stubs = TRUE, \dots)                 \method{G}{matrix}(x, n = 1, diff = 1, g = NULL, t = NULL, fill = NA, logdiff = FALSE, stubs = TRUE, \dots)
+\method{fdiff}{matrix}(x, n = 1, diff = 1, g = NULL, t = NULL, fill = NA,
+      stubs = TRUE, \dots)
+\method{fgrowth}{matrix}(x, n = 1, diff = 1, g = NULL, t = NULL, fill = NA,
+        logdiff = FALSE, stubs = TRUE, \dots)
+\method{D}{matrix}(x, n = 1, diff = 1, g = NULL, t = NULL, fill = NA,
+  stubs = TRUE, \dots)
+\method{G}{matrix}(x, n = 1, diff = 1, g = NULL, t = NULL, fill = NA,
+  logdiff = FALSE, stubs = TRUE, \dots)
 %## S3 methods for class 'data.frame'
-\method{fdiff}{data.frame}(x, n = 1, diff = 1, g = NULL, t = NULL, fill = NA, stubs = TRUE, \dots)         \method{fgrowth}{data.frame}(x, n = 1, diff = 1, g = NULL, t = NULL, fill = NA, logdiff = FALSE, stubs = TRUE, \dots)                                                                                                        \method{D}{data.frame}(x, n = 1, diff = 1, by = NULL, t = NULL, cols = is.numeric,
-        fill = NA, stubs = TRUE, keep.ids = TRUE, \dots)                                                           \method{G}{data.frame}(x, n = 1, diff = 1, by = NULL, t = NULL, cols = is.numeric,
-        fill = NA, logdiff = FALSE, stubs = TRUE, keep.ids = TRUE, \dots)
+\method{fdiff}{data.frame}(x, n = 1, diff = 1, g = NULL, t = NULL, fill = NA,
+      stubs = TRUE, \dots)
+\method{fgrowth}{data.frame}(x, n = 1, diff = 1, g = NULL, t = NULL, fill = NA,
+        logdiff = FALSE, stubs = TRUE, \dots)
+\method{D}{data.frame}(x, n = 1, diff = 1, by = NULL, t = NULL, cols = is.numeric,
+  fill = NA, stubs = TRUE, keep.ids = TRUE, \dots)
+\method{G}{data.frame}(x, n = 1, diff = 1, by = NULL, t = NULL, cols = is.numeric,
+  fill = NA, logdiff = FALSE, stubs = TRUE, keep.ids = TRUE, \dots)
 
 # Methods for compatibility with plm:
 %## S3 methods for class 'pseries'
-\method{fdiff}{pseries}(x, n = 1, diff = 1, fill = NA, stubs = TRUE, \dots)                                     \method{fgrowth}{pseries}(x, n = 1, diff = 1, fill = NA, logdiff = FALSE, stubs = TRUE, \dots)               \method{D}{pseries}(x, n = 1, diff = 1, fill = NA, stubs = TRUE, \dots)                                         \method{G}{pseries}(x, n = 1, diff = 1, fill = NA, logdiff = FALSE, stubs = TRUE, \dots)
+\method{fdiff}{pseries}(x, n = 1, diff = 1, fill = NA, stubs = TRUE, \dots)
+\method{fgrowth}{pseries}(x, n = 1, diff = 1, fill = NA, logdiff = FALSE, stubs = TRUE, \dots)
+\method{D}{pseries}(x, n = 1, diff = 1, fill = NA, stubs = TRUE, \dots)
+\method{G}{pseries}(x, n = 1, diff = 1, fill = NA, logdiff = FALSE, stubs = TRUE, \dots)
 %## S3 methods for class 'pdata.frame'
-\method{fdiff}{pdata.frame}(x, n = 1, diff = 1, fill = NA, stubs = TRUE, \dots)                                   \method{fgrowth}{pdata.frame}(x, n = 1, diff = 1, fill = NA, logdiff = FALSE, stubs = TRUE, \dots)                 \method{D}{pdata.frame}(x, n = 1, diff = 1, cols = is.numeric, fill = NA, stubs = TRUE, keep.ids = TRUE, \dots)  \method{G}{pdata.frame}(x, n = 1, diff = 1, cols = is.numeric, fill = NA, logdiff = FALSE, stubs = TRUE, keep.ids = TRUE, \dots)
+\method{fdiff}{pdata.frame}(x, n = 1, diff = 1, fill = NA, stubs = TRUE, \dots)
+\method{fgrowth}{pdata.frame}(x, n = 1, diff = 1, fill = NA, logdiff = FALSE, stubs = TRUE, \dots)
+\method{D}{pdata.frame}(x, n = 1, diff = 1, cols = is.numeric, fill = NA, stubs = TRUE,
+  keep.ids = TRUE, \dots)
+\method{G}{pdata.frame}(x, n = 1, diff = 1, cols = is.numeric, fill = NA,
+  logdiff = FALSE, stubs = TRUE, keep.ids = TRUE, \dots)
 
 # Methods for compatibility with dplyr:
 %## S3 methods for class 'grouped_df'
-\method{fdiff}{grouped_df}(x, n = 1, diff = 1, t = NULL, fill = NA, stubs = TRUE, keep.ids = TRUE, \dots)      \method{fgrowth}{grouped_df}(x, n = 1, diff = 1, t = NULL, fill = NA, logdiff = FALSE, stubs = TRUE, keep.ids = TRUE, \dots)                                                                                                     \method{D}{grouped_df}(x, n = 1, diff = 1, t = NULL, fill = NA, stubs = TRUE, keep.ids = TRUE, \dots)       \method{G}{grouped_df}(x, n = 1, diff = 1, t = NULL, fill = NA, logdiff = FALSE, stubs = TRUE, keep.ids = TRUE, \dots)
+\method{fdiff}{grouped_df}(x, n = 1, diff = 1, t = NULL, fill = NA, stubs = TRUE,
+      keep.ids = TRUE, \dots)
+\method{fgrowth}{grouped_df}(x, n = 1, diff = 1, t = NULL, fill = NA, logdiff = FALSE,
+        stubs = TRUE, keep.ids = TRUE, \dots)
+\method{D}{grouped_df}(x, n = 1, diff = 1, t = NULL, fill = NA, stubs = TRUE,
+  keep.ids = TRUE, \dots)
+\method{G}{grouped_df}(x, n = 1, diff = 1, t = NULL, fill = NA, logdiff = FALSE,
+  stubs = TRUE, keep.ids = TRUE, \dots)
 }
 %- maybe also 'usage' for other objects documented here.
 \arguments{
@@ -117,66 +151,70 @@ G(AirPassengers,1,2)                  # growth rate of growth rate
 D(AirPassengers,12)                   # seasonal difference (data is monthly)
 G(AirPassengers,12)                   # seasonal growth rate (data is monthly)
 
-D(AirPassengers,-2:2,1:3)             # sequence of leaded/lagged and iterated differences - output as matrix
+D(AirPassengers,-2:2,1:3)             # sequence of leaded/lagged and iterated differences
 
 # let's do some visual analysis
 plot(AirPassengers)                   # plot the series - seasonal pattern is evident
 plot(stl(AirPassengers, "periodic"))  # Seasonal decomposition
-plot(D(AirPassengers,c(1,12),1:2))    # plotting the ordinary and seasonal first and second differences
+plot(D(AirPassengers,c(1,12),1:2))    # plotting ordinary and seasonal first and second differences
 plot(G(AirPassengers,c(1,12),1:2))    # same using growth rates
-plot(stl(window(G(AirPassengers,12),  # Taking the seasonal growth rate removes most of the seasonal variation
+plot(stl(window(G(AirPassengers,12),  # Taking seasonal growth rate removes most seasonal variation
                 1950), "periodic"))
 
 
 ## Time-Series Matrix of 4 EU Stock Market Indicators, recorded 260 days per year
 plot(G(EuStockMarkets,c(0,260)))                    # Plot series and annual growth rates
-summary(lm(L260G1.DAX ~., G(EuStockMarkets,260)))   # Annual growth rate of DAX regressed on the growth rates of the other indicators
+summary(lm(L260G1.DAX ~., G(EuStockMarkets,260)))   # Annual growth rate of DAX regressed on the
+                                                    # growth rates of the other indicators
 
 ## World Development Panel Data
-head(fgrowth(num_vars(wlddev), 1, 1,                    # This computes the growth rate of all numeric variables
-             wlddev$country, wlddev$year))              # With fgrowth/fdiff all inputs need to be passed externally, so G/D is more convenient:
-head(G(wlddev, 1, 1, ~country, ~year))                  # Growth rate of all Numeric Variables, identifiers attached
-head(G(wlddev, 1, 1, ~country))                         # Without t: Also works because data is ordered
-head(G(wlddev, 1, 1, PCGDP + LIFEEX ~ country, ~year))  # Growth rate of GDP per Capita and Life Expectancy
+head(fgrowth(num_vars(wlddev), 1, 1,                    # Computes growth rates of numeric variables
+             wlddev$country, wlddev$year))              # fgrowth/fdiff require externally inputs...
+head(G(wlddev, 1, 1, ~country, ~year))                  # Growth of numeric variables, id's attached
+head(G(wlddev, 1, 1, ~country))                         # Without t: Works because data is ordered
+head(G(wlddev, 1, 1, PCGDP + LIFEEX ~ country, ~year))  # Growth of GDP per Capita & Life Expectancy
 head(G(wlddev, 0:1, 1, ~ country, ~year, cols = 9:10))  # Same, also retaining original series
 head(G(wlddev, 0:1, 1, ~ country, ~year, 9:10,          # Dropping id columns
        keep.ids = FALSE))
 
 # Dynamic Panel-Data Models:
-summary(lm(G(PCGDP,1,1,iso3c,year) ~                    # GDP growth regressed on it's lagged level and
-             L(PCGDP,1,iso3c,year) +                    # the growth rate of Life Expanctancy
+summary(lm(G(PCGDP,1,1,iso3c,year) ~                    # GDP growth regressed on it's lagged level
+             L(PCGDP,1,iso3c,year) +                    # and the growth rate of Life Expanctancy
              G(LIFEEX,1,1,iso3c,year), data = wlddev))
 
-g = qF(wlddev$country)                                  # Omitting t and precomputing g allows for a bit more parsimonious specification
-summary(lm(G(PCGDP,1,1,g) ~ L(PCGDP,1,g) +
+g = qF(wlddev$country)                                  # Omitting t and precomputing g allows for a
+summary(lm(G(PCGDP,1,1,g) ~ L(PCGDP,1,g) +              # bit more parsimonious specification
                             G(LIFEEX,1,1,g), wlddev))
 
-summary(lm(G1.PCGDP ~.,                                 # Now adding level and lagged level of LIFEEX and lagged growth rates
-L(G(wlddev,0:1,1, ~ country, ~year,9:10),0:1,
+summary(lm(G1.PCGDP ~.,                                 # Now adding level and lagged level of
+L(G(wlddev,0:1,1, ~ country, ~year,9:10),0:1,           # LIFEEX and lagged growth rates
   ~ country, ~year, keep.ids = FALSE)[-1]))
 
 ## Using plm can make things easier, but avoid attaching or 'with' calls:
 pwlddev <- plm::pdata.frame(wlddev, index = c("country","year"))
-head(G(pwlddev, 0:1, 1, 9:10))                          # Again computing growth rates of LIFEEX and PCGDP
+head(G(pwlddev, 0:1, 1, 9:10))                          # Again growth rates of LIFEEX and PCGDP
 PCGDP <- pwlddev$PCGDP                                  # A panel-Series of GDP per Capita
 D(PCGDP)                                                # Differencing the panel series.
-summary(lm(G1.PCGDP ~.,                                 # Running the dynamic model again -> code becomes a bit simpler
-           data = L(G(pwlddev,0:1,1,9:10),0:1,
+summary(lm(G1.PCGDP ~.,                                 # Running the dynamic model again ->
+           data = L(G(pwlddev,0:1,1,9:10),0:1,          # code becomes a bit simpler
                     keep.ids = FALSE)[-1]))
 
 # One could be tempted to also do something like this, but THIS DOES NOT WORK!!!:
-# lm drops the attributes (-> with(pwlddev, PCGDP) returns a vector and not a panel-series so G.default and L.matrix are used)
+# lm drops the attributes (-> with(pwlddev, PCGDP) drops attr. so G.default and L.matrix are used)
 summary(lm(G(PCGDP) ~ L(G(PCGDP,0:1)) + L(G(LIFEEX,0:1),0:1), pwlddev))
 
-# To make it work, one needs to create pseries (note: attach(pwlddev) also won't work as this also removes attributes)
+# To make it work, one needs to create pseries (note: attach(pwlddev) also won't work)
 LIFEEX <- pwlddev$LIFEEX
 summary(lm(G(PCGDP) ~ L(G(PCGDP,0:1)) + L(G(LIFEEX,0:1),0:1))) # THIS WORKS !!
 
 ## Using dplyr:
 library(dplyr)
-wlddev \%>\% group_by(country) \%>\% select(PCGDP,LIFEEX) \%>\% D(0:1,1:2)           # Adding a first and second difference
-wlddev \%>\% group_by(country) \%>\% select(year,PCGDP,LIFEEX) \%>\% D(0:1,1:2,year) # Also using t (safer)
-wlddev \%>\% group_by(country) \%>\% select(year,PCGDP,LIFEEX) \%>\% G(0:1,1:2,year, keep.ids = FALSE) # Growth rates, dropping id's
+wlddev \%>\% group_by(country) \%>\%
+             select(PCGDP,LIFEEX) \%>\% D(0:1,1:2)           # Adding a first and second difference
+wlddev \%>\% group_by(country) \%>\%
+             select(year,PCGDP,LIFEEX) \%>\% D(0:1,1:2,year) # Also using t (safer)
+wlddev \%>\% group_by(country) \%>\%                         # Growth rates, dropping id's
+             select(year,PCGDP,LIFEEX) \%>\% G(0:1,1:2,year, keep.ids = FALSE)
 
 }
 % Add one or more standard keywords, see file 'KEYWORDS' in the

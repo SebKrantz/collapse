@@ -92,7 +92,7 @@ as.factor.GRP(x)
 \examples{
 ## default method
 GRP(mtcars$cyl)
-GRP(mtcars, ~ cyl + vs + am)      # alternatively use GRP(mtcars, c("cyl","vs","am")) or GRP(mtcars, c(2,8:9))
+GRP(mtcars, ~ cyl + vs + am)      # or GRP(mtcars, c("cyl","vs","am")) or GRP(mtcars, c(2,8:9))
 g <- GRP(mtcars, ~ cyl + vs + am) # saving the object
 plot(g)                           # plotting it
 group_names.GRP(g)                # retain group names

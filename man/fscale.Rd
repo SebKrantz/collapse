@@ -8,12 +8,12 @@
 \alias{fscale.grouped_df}
 % \alias{standardize}
 \alias{STD}
-% \alias{STD.default}
-% \alias{STD.matrix}
-% \alias{STD.data.frame}
-% \alias{STD.pseries}
-% \alias{STD.pdata.frame}
-% \alias{STD.grouped_df}
+\alias{STD.default}
+\alias{STD.matrix}
+\alias{STD.data.frame}
+\alias{STD.pseries}
+\alias{STD.pdata.frame}
+\alias{STD.grouped_df}
 % - Also NEED an '\alias' for EACH other topic documented here.
 \title{
 Fast (Grouped, Weighted) Scaling and Centering of Matrix-like Objects
@@ -24,44 +24,51 @@ Fast (Grouped, Weighted) Scaling and Centering of Matrix-like Objects
 \emph{Note}: For centering without scaling see \code{\link{W}}, for scaling without centering use \code{\link[=fsd]{fsd(..., TRA = "/")}}.
 }
 \usage{
-fscale(x, ...)
-   STD(x, ...)
+fscale(x, \dots)
+   STD(x, \dots)
 
-\method{fscale}{default}(x, g = NULL, w = NULL, na.rm = TRUE, stable.algo = TRUE, ...)                                          \method{STD}{default}(x, g = NULL, w = NULL, na.rm = TRUE, stable.algo = TRUE, ...)
+\method{fscale}{default}(x, g = NULL, w = NULL, na.rm = TRUE, stable.algo = TRUE, \dots)
+\method{STD}{default}(x, g = NULL, w = NULL, na.rm = TRUE, stable.algo = TRUE, \dots)
 
-\method{fscale}{matrix}(x, g = NULL, w = NULL, na.rm = TRUE, stable.algo = TRUE, ...)                                          \method{STD}{matrix}(x, g = NULL, w = NULL, na.rm = TRUE, stable.algo = TRUE,
-    stub = "STD.", ...)
+\method{fscale}{matrix}(x, g = NULL, w = NULL, na.rm = TRUE, stable.algo = TRUE, \dots)
+\method{STD}{matrix}(x, g = NULL, w = NULL, na.rm = TRUE, stable.algo = TRUE,
+    stub = "STD.", \dots)
 
-\method{fscale}{data.frame}(x, g = NULL, w = NULL, na.rm = TRUE, stable.algo = TRUE, ...)                                          \method{STD}{data.frame}(x, by = NULL, w = NULL, cols = is.numeric, na.rm = TRUE,
-    keep.by = TRUE, keep.w = TRUE, stable.algo = TRUE, stub = "STD.", ...)
+\method{fscale}{data.frame}(x, g = NULL, w = NULL, na.rm = TRUE, stable.algo = TRUE, \dots)
+\method{STD}{data.frame}(x, by = NULL, w = NULL, cols = is.numeric, na.rm = TRUE,
+    keep.by = TRUE, keep.w = TRUE, stable.algo = TRUE, stub = "STD.", \dots)
 
 # Methods for compatibility with plm:
 
-\method{fscale}{pseries}(x, effect = 1L, w = NULL, na.rm = TRUE, stable.algo = TRUE, ...)                                          \method{STD}{pseries}(x, effect = 1L, w = NULL, na.rm = TRUE, stable.algo = TRUE, ...)
+\method{fscale}{pseries}(x, effect = 1L, w = NULL, na.rm = TRUE, stable.algo = TRUE, \dots)
+\method{STD}{pseries}(x, effect = 1L, w = NULL, na.rm = TRUE, stable.algo = TRUE, \dots)
 
-\method{fscale}{pdata.frame}(x, effect = 1L, w = NULL, na.rm = TRUE, stable.algo = TRUE, ...)                                          \method{STD}{pdata.frame}(x, effect = 1L, w = NULL, cols = is.numeric, na.rm = TRUE,
-    keep.ids = TRUE, keep.w = TRUE, stable.algo = TRUE, stub = "STD.", ...)
+\method{fscale}{pdata.frame}(x, effect = 1L, w = NULL, na.rm = TRUE, stable.algo = TRUE, \dots)
+\method{STD}{pdata.frame}(x, effect = 1L, w = NULL, cols = is.numeric, na.rm = TRUE,
+    keep.ids = TRUE, keep.w = TRUE, stable.algo = TRUE, stub = "STD.", \dots)
 
 # Methods for compatibility with dplyr:
 
 \method{fscale}{grouped_df}(x, w = NULL, na.rm = TRUE, keep.group_vars = TRUE,
-       keep.w = TRUE, stable.algo = TRUE, ...)                                          \method{STD}{grouped_df}(x, w = NULL, na.rm = TRUE, keep.group_vars = TRUE,
-    keep.w = TRUE, stable.algo = TRUE, stub = "STD.", ...)
+       keep.w = TRUE, stable.algo = TRUE, \dots)
+\method{STD}{grouped_df}(x, w = NULL, na.rm = TRUE, keep.group_vars = TRUE,
+    keep.w = TRUE, stable.algo = TRUE, stub = "STD.", \dots)
 }
 %- maybe also 'usage' for other objects documented here.
 \arguments{
   \item{x}{a numeric vector, matrix, data.frame, panel-series (\code{plm::pseries}), panel-data.frame (\code{plm::pdata.frame}) or grouped tibble (\code{dplyr::grouped_df}).}
   \item{g}{a factor, \code{\link{GRP}} object, atomic vector (internally converted to factor) or a list of vectors / factors (internally converted to a \code{\link{GRP}} object) used to group \code{x}.}
   \item{by}{\emph{STD data.frame method}: Same as \code{g}, but also allows one- or two-sided formulas i.e. \code{~ group1} or \code{var1 + var2 ~ group1 + group2}. See Examples.}
+    \item{cols}{\emph{data.frame method}: Select columns to scale using a function, column names or indices. Default: All numeric variables. \emph{Note}: \code{cols} is ignored if a two-sided formula is passsed to \code{by}.}
   \item{w}{a numeric vector of (non-negative) weights. \code{STD} \code{data.frame} and \code{pdata.frame} methods also allow a one-sided formula i.e. \code{~ weightcol}. The \code{grouped_df} (\code{dplyr}) method supports lazy-evaluation. See Examples.}
   \item{na.rm}{logical. skip missing values in \code{x} when computing means and sd's.}
     \item{effect}{\code{plm} methods: Select which panel identifier should be used as grouping variable. 1L means first variable in the \code{plm::index}, 2L the second etc. if more than one integer is supplied, the corresponding index-variables are interacted. }
 
   \item{stub}{a prefix or stub to rename all transformed columns. \code{FALSE} will not rename columns.}
   \item{stable.algo}{logical. TRUE uses a faster but numerically unstable algorithm to compute standard deviations. The default is Welfords numerically stable online algorithm. See Details.}
-  \item{keep.by\cr keep.ids \cr keep.group_vars}{\emph{data.frame, pdata.frame and grouped_df methods}: Logical. Retain grouping / panel-identifier columns in the output. For \code{STD.data.frame} this only works if grouping variables were passed in a formula.}
+  \item{keep.by, keep.ids, keep.group_vars}{\emph{data.frame, pdata.frame and grouped_df methods}: Logical. Retain grouping / panel-identifier columns in the output. For \code{STD.data.frame} this only works if grouping variables were passed in a formula.}
   \item{keep.w}{\emph{data.frame, pdata.frame and grouped_df methods}: Logical. Retain column containing the weights in the output. Only works if \code{w} is passed as formula / lazy-expression.}
-  \item{...}{arguments to be passed to or from other methods.}
+  \item{\dots}{arguments to be passed to or from other methods.}
 }
 \details{
 If \code{g = NULL}, \code{fscale} subracts from all data points in \code{x} the mean or weighted mean (if \code{w} is supplied), and then divides this difference by the standard deviation or frequency-weighted standard deviation (if \code{w} is supplied). The result is that all vectors in \code{x} will have mean 0 and standard deviation 1. \cr
@@ -100,9 +107,9 @@ STD(mtcars)                # By default adds a prefix
 qsu(STD(mtcars))           # See that is works
 
 ## Panel-Data
-head(fscale(get_vars(wlddev,9:12), wlddev$iso3c))   # Standardizing 4 series within each country (Note: get_vars(wlddev,9:12) is 2x faster than wlddev[9:12])
-head(STD(wlddev, ~iso3c, cols = 9:12))              # Same thing using STD, with identifier column added unless keep.by = FALSE
-pwcor(fscale(get_vars(wlddev,9:12), wlddev$iso3c))  # Correlaing these panel-series after standardizing values within each country
+head(fscale(get_vars(wlddev,9:12), wlddev$iso3c))   # Standardizing 4 series within each country
+head(STD(wlddev, ~iso3c, cols = 9:12))              # Same thing using STD, id's added
+pwcor(fscale(get_vars(wlddev,9:12), wlddev$iso3c))  # Correlaing panel-series after standardizing
 
 ## Using plm
 pwlddev <- plm::pdata.frame(wlddev, index = c("iso3c","year"))
@@ -118,7 +125,8 @@ head(STD(wlddev, ~iso3c, weights, 9:12))
 library(dplyr)
 wlddev \%>\% group_by(iso3c) \%>\% select(PCGDP,LIFEEX) \%>\% STD
 wlddev \%>\% group_by(iso3c) \%>\% select(PCGDP,LIFEEX) \%>\% STD(weights) # weighted standardizing
-wlddev \%>\% group_by(iso3c) \%>\% select(PCGDP,LIFEEX,ODA) \%>\% STD(ODA) # weighting by ODA -> keeps the weight column unless keep.w = FALSE
+wlddev \%>\% group_by(iso3c) \%>\% select(PCGDP,LIFEEX,ODA) \%>\% STD(ODA) # weighting by ODA ->
+# ..keeps the weight column unless keep.w = FALSE
 }
 % Add one or more standard keywords, see file 'KEYWORDS' in the
 % R documentation directory.

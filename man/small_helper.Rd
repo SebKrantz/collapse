@@ -24,21 +24,21 @@
 Elementary exported convenience functions in the \code{collapse} package, that help to deal with variable names, labels, missing values, matching and object checking etc... For recoding and replacing values see \code{\link{Recode}}.
 }
 \usage{
-vlabels(X)                    # Get labels of variables in X, stored in attr(X[[i]], "label")
+vlabels(X)                    # Get labels of variables in X, in attr(X[[i]], "label")
 vlabels(X) <- value           # Set labels of variables in X
-namlab(X, class = FALSE)      # Return a data.frame of variable names, labels and (optionally) classes
-add_stub(X, stub, pre = TRUE) # Add a stub (i.e. prefix or postfix) to the variables / column names of X and return X
+namlab(X, class = FALSE)      # Return a data.frame of variable names, labels and classes
+add_stub(X, stub, pre = TRUE) # Add a stub (i.e. prefix or postfix) to variables
 seq_row(X)                    # Integer sequences along rows of X
 seq_col(X)                    # Integer sequences along columns of X
-setRownames(object = nm,      # Set rownames of object and return object. If nm is left unspecified, set an integer sequence
+setRownames(object = nm,      # Set rownames of object and return object
         nm = seq_row(object))
 setColnames(object = nm, nm)  # Set colnames of object and return object
 setDimnames(object = dn, dn)  # Set dimension names of object and return object
 pwcor(X, ...)                 # Pairwise-correlations
 pwcov(X, ...)                 # Pairwise-covariances
-all.identical(...)            # Check the exact equality of multiple objects or of all elements in a single list
+all.identical(...)            # Check exact equality of multiple objects or list-elements
 is.categorical(x)             # The opposite of is.numeric
-is.Date(x)                    # Check if an object inherits a class "Date", "POSIXlt" or "POSIXct"
+is.Date(x)                    # Check if object is of class "Date", "POSIXlt" or "POSIXct"
 x \%!in\% table                 # The opposite of \%in\%
 na.rm(x)                      # Remove missing values from vector and return vector
 }

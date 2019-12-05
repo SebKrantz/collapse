@@ -80,20 +80,22 @@ f <- iris$Species               # A factor
 dat <- num_vars(iris)           # Numeric columns
 m <- qM(dat)                    # Matrix of numeric data
 
-head(TRA(v, fmean(v)))                # Simple (column) centering     [same as fmean(v, TRA = "-") or W(v)]
-head(TRA(m, fmean(m)))                # same as sweep(m, 2, fmean(m)) [same as fmean(m, TRA = "-") or W(m)]
+head(TRA(v, fmean(v)))                # Simple centering [same as fmean(v, TRA = "-") or W(v)]
+head(TRA(m, fmean(m)))                # [same as sweep(m, 2, fmean(m)), fmean(m, TRA = "-") or W(m)]
 head(TRA(dat, fmean(dat)))            # [same as fmean(dat, TRA = "-") or W(dat)]
-head(TRA(v, fmean(v), "replace"))     # Simple (column) replacing     [same as fmean(v, TRA = "replace") or B(v)]
-head(TRA(m, fmean(m), "replace"))     # same as sweep(m, 2, fmean(m)) [same as fmean(m, TRA = "replace") or B(m)]
+head(TRA(v, fmean(v), "replace"))     # Simple replacing [same as fmean(v, TRA = "replace") or B(v)]
+head(TRA(m, fmean(m), "replace"))     # [same as sweep(m, 2, fmean(m)), fmean(m, TRA = 1L) or B(m)]
 head(TRA(dat, fmean(dat), "replace")) # [same as fmean(dat, TRA = "replace") or B(dat)]
-head(TRA(m, fsd(m), "/"))             # Simple (column) scaling... [same as fsd(m, TRA = "/")]...
+head(TRA(m, fsd(m), "/"))             # Simple scaling... [same as fsd(m, TRA = "/")]...
 
 # Note: All grouped examples also apply for v and dat...
-head(TRA(m, fmean(m, f), "-", f))       # Grouped (column) centering... [same as fmean(m, f, TRA = "-") or W(m, f)]...
-head(TRA(m, fmean(m, f), "replace", f)) # Grouped (column) replacing... [same as fmean(m, f, TRA = "replace") or B(m, f)]...
-head(TRA(m, fsd(m, f), "/", f))         # Grouped (column) scaling...   [same as fsd(m, f, TRA = "/")]...
+head(TRA(m, fmean(m, f), "-", f))       # Centering [same as fmean(m, f, TRA = "-") or W(m, f)]
+head(TRA(m, fmean(m, f), "replace", f)) # Replacing [same fmean(m, f, TRA = "replace") or B(m, f)]
+head(TRA(m, fsd(m, f), "/", f))         # Scaling [same as fsd(m, f, TRA = "/")]
 
-head(TRA(m, fmean(m, f), "-+", f))      # Grouped (column) centering on the overall mean... [same as fmean(m, f, TRA = "-+") or W(m, f, add.global.mean = TRUE)]
+head(TRA(m, fmean(m, f), "-+", f))      # Centering on the overall mean ...
+                                        # [same as fmean(m, f, TRA = "-+") or
+                                        #           W(m, f, add.global.mean = TRUE)]
 head(TRA(TRA(m, fmean(m, f), "-", f),   # Also the same thing done manually !!
      fmean(m), "+"))
 

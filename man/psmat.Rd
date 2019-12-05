@@ -39,7 +39,7 @@ psmat(x, ...)
 
 \item{legend}{logical. Automatically create a legend of panel-groups.}
 \item{colours}{logical. Automatically colour by panel-groups.}
-\item{lags}{provide a character-vector of variable labels / series titles when plotting an array.}
+\item{labs}{provide a character-vector of variable labels / series titles when plotting an array.}
 }
 \details{
 For \code{plm::pseries}, the first \code{index} variable is taken to be the group-id and the second the time variable. If more than 2 index variables are attached to \code{plm::pseries}, the last one is taken as the time variable and the others are taken as group-id's and interacted.
@@ -66,31 +66,32 @@ The \code{pdata.frame} method only works for properly subsetted objects of class
 ## World Development Panel Data
 head(wlddev)                                                    # View data
 qsu(wlddev, xt = ~ iso3c, cols = 9:12, vlabels = TRUE)          # Sumarizing data
-str(psmat(wlddev$PCGDP, wlddev$iso3c, wlddev$year))            # Generating a matrix of GDP per Capita
+str(psmat(wlddev$PCGDP, wlddev$iso3c, wlddev$year))            # Generating matrix of GDP per Capita
 r <- psmat(wlddev, PCGDP ~ iso3c, ~ year)                       # Same thing using data.frame method
 plot(r, main = vlabels(wlddev)[9], xlab = "Year")               # Plot the matrix
 str(r)                                                          # See srructure
-str(psmat(wlddev$PCGDP, wlddev$iso3c))                          # The Data is sorted, so one could leave out t
-str(psmat(wlddev$PCGDP, 216))                                   # This panel is also balanced, so indicating the number of groups would be sufficient to obtain a matrix
+str(psmat(wlddev$PCGDP, wlddev$iso3c))                          # The Data is sorted, could omit t
+str(psmat(wlddev$PCGDP, 216))                                   # This panel is also balanced, so
+# ..indicating the number of groups would be sufficient to obtain a matrix
 
-ar <- psmat(wlddev, ~ iso3c, ~ year, 9:12)                      # Get array of transposed matrices from all 4 series in this dataset
+ar <- psmat(wlddev, ~ iso3c, ~ year, 9:12)                      # Get array of transposed matrices
 str(ar)
 plot(ar)
 plot(ar, legend = TRUE)
-plot(psmat(collap(wlddev, ~region+year, cols = 9:12),           # More legible and fancy plot from aggregated data
+plot(psmat(collap(wlddev, ~region+year, cols = 9:12),           # More legible and fancy plot
            ~region, ~year), legend = TRUE,
      labs = vlabels(wlddev)[9:12])
 
-psml <- psmat(wlddev, ~ iso3c, ~ year, 9:12, array = FALSE)     # This gives list of ps-matrices instead
-head(unlist2d(psml, "Variable", "Country", id.factor = TRUE))   # Using unlist2d, we can also generate a nice data.frame from this data
+psml <- psmat(wlddev, ~ iso3c, ~ year, 9:12, array = FALSE)     # This gives list of ps-matrices
+head(unlist2d(psml, "Variable", "Country", id.factor = TRUE))   # Using unlist2d, can generate DF
 
 ## Using plm simplifies things
-pwlddev <- plm::pdata.frame(wlddev, index = c("iso3c","year"))  # Creating a Panel-Data Frame of this data
+pwlddev <- plm::pdata.frame(wlddev, index = c("iso3c","year"))  # Creating a Panel-Data Frame
 PCGDP <- pwlddev$PCGDP                                          # A panel-Series of GDP per Capita
-psmat(PCGDP)                                                    # Same as above, but more parsimonious and much faster than plm::as.matrix.pseries
+psmat(PCGDP)                                                    # Same as above, more parsimonious
 plot(psmat(PCGDP))
 plot(psmat(pwlddev[9:12]))
-plot(psmat(G(pwlddev[9:12])))                                   # Here plotting properly computed growth rates
+plot(psmat(G(pwlddev[9:12])))                                   # Here plotting panel- growth rates
 
 }
 % Add one or more standard keywords, see file 'KEYWORDS' in the

@@ -47,7 +47,7 @@ It computes a set of 7 statistics (nobs, mean, sd, min, max, skewness and kurtos
   \item{vlabels}{logical. Use variable labels in the summary. See \code{\link{vlabels}}.}
   \item{\dots}{arguments to be passed to or from other methods.}
   \item{digits}{the number of digits to print after the comma/dot.}
-  \item{digits}{the number of digits to print before resorting to scientific notation (default is tp print out numbers with up to 9 digits and print larger numbers scientifically).}
+  \item{nonsci.digits}{the number of digits to print before resorting to scientific notation (default is tp print out numbers with up to 9 digits and print larger numbers scientifically).}
   \item{na.print}{character string to substitute for missing values.}
   \item{return}{logical. Don't print but instead return the formatted object.}
 }
@@ -95,18 +95,22 @@ qsu(wlddev, higher = TRUE)                  # Add skewness and kurtosis
 
 # Grouped Summaries ------------------------
 qsu(wlddev, ~ region, vlabels = TRUE)       # Statistics by World Bank Region
-qsu(wlddev, PCGDP + LIFEEX ~ income)        # Summarize GDP per Capita and Life Expectancy by World Bank Income Level
-stats <- qsu(wlddev, ~ region + income,     # Same variables, by both region and income
-             cols = 9:10, higher = TRUE)
+qsu(wlddev, PCGDP + LIFEEX ~ income)        # Summarize GDP per Capita and Life Expectancy by
+stats <- qsu(wlddev, ~ region + income,     # World Bank Income Level
+             cols = 9:10, higher = TRUE)    # Same variables, by both region and income
 aperm(stats)                                # A different perspective on the same stats
 
 # Panel-Data Summaries ---------------------
-qsu(wlddev, xt = ~ iso3c, vlabels = TRUE)   # Statistics Overall (standard), between and within countries - they show amongst other things that year and decade are individual-invariant, that we have GINI-data on only 161 countries, with only 8.42 observations per country on average, and that GDP, LIFEEX and GINI vary more between-countries, but ODA received varies more within countries over time.
+qsu(wlddev, xt = ~ iso3c, vlabels = TRUE)   # Adding between and within countries statistics
+# -> They show amongst other things that year and decade are individual-invariant,
+# that we have GINI-data on only 161 countries, with only 8.42 observations per country on average,
+# and that GDP, LIFEEX and GINI vary more between-countries, but ODA received varies more within
+# countries over time.
 
 # Using plm:
 pwlddev <- plm::pdata.frame(wlddev,         # Creating a Panel-Data Frame frame from this data
                   index = c("iso3c","year"))
-qsu(pwlddev)                                # Default summary for pdata.frame, same as qsu(wlddev, xt = ~ iso3c)
+qsu(pwlddev)                                # Summary for pdata.frame -> qsu(wlddev, xt = ~ iso3c)
 qsu(pwlddev$PCGDP)                          # Default summary for Panel-Series (class pseries)
 qsu(G(pwlddev$PCGDP))                       # Summarizing GDP growth, see also ?G
 
@@ -114,11 +118,16 @@ qsu(G(pwlddev$PCGDP))                       # Summarizing GDP growth, see also ?
 qsu(wlddev, ~ region, ~ iso3c, cols = 9:12) # Panel-Statistics by region
 psr <- qsu(pwlddev, ~ region, cols = 9:12)  # Same on plm pdata.frame
 psr                                         # -> Gives a 4D array
-print.qsu(psr[,"N/T",,])                    # Checking out the number of observations: In North america we only have 3 countries, for the GINI we only have 3.91 observations on average for 45 Sub-Saharan-African countries, etc...
-print.qsu(psr[,"SD",,])                     # Considering only standard deviations - in all regions variations in inequality (GINI) between countries are greater than variations in inequality within countries. The opposite is true for Life-Expectancy in all regions apart from Europe, etc...
+print.qsu(psr[,"N/T",,])                    # Checking out the number of observations:
+# In North america we only have 3 countries, for the GINI we only have 3.91 observations on average
+# for 45 Sub-Saharan-African countries, etc...
+print.qsu(psr[,"SD",,])                     # Considering only standard deviations
+# -> In all regions variations in inequality (GINI) between countries are greater than variations
+# in inequality within countries. The opposite is true for Life-Expectancy in all regions apart
+# from Europe, etc...
 psrl <- qsu(wlddev, ~ region, ~ iso3c,      # Same, but output as nested list
             cols = 9:12, array = FALSE)
-psrl                                        # We can use unlist2d to create a tidy data-frame of this, see ?unlist2d
+psrl                                        # We can use unlist2d to create a tidy data.frame
 head(unlist2d(psrl, c("Variable","Trans"),
                     row.names = "Region"))
 
@@ -126,9 +135,9 @@ head(unlist2d(psrl, c("Variable","Trans"),
 n <- nrow(wlddev)
 weights <- abs(rnorm(n))                    # Generate random weights
 qsu(wlddev, w = weights, higher = TRUE)     # Computed weighted mean, SD, skewness and kurtosis
-weightsNA <- weights                        # Weights may contain missing values, here inserting 1000
+weightsNA <- weights                        # Weights may contain missing values... inserting 1000
 weightsNA[sample.int(n, 1000)] <- NA
-qsu(wlddev, w = weightsNA, higher = TRUE)   # But now these values are removed from all numeric variables
+qsu(wlddev, w = weightsNA, higher = TRUE)   # But now these values are removed from all variables
 
 # Grouped and panel-summaries can also be weighted in the same manor
 }

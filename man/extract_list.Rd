@@ -21,9 +21,11 @@ A suite of functions to subset or extract from (potentially complex) lists and l
 }
 \usage{
 ## Non-recursive (top-level) subsetting and replacing
-atomic_elem(l, return = c("sublist","names","indices","named_indices"), keep.class = FALSE)
+atomic_elem(l, return = c("sublist","names","indices","named_indices"),
+            keep.class = FALSE)
 atomic_elem(l) <- value
-list_elem(l, return = c("sublist","names","indices","named_indices"), keep.class = FALSE)
+list_elem(l, return = c("sublist","names","indices","named_indices"),
+          keep.class = FALSE)
 list_elem(l) <- value
 
 ## Recursive separation of regular (atomic) and irregular (non-atomic) parts

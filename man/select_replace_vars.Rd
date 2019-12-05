@@ -75,20 +75,21 @@ get_vars(x, vars, regex = FALSE, ...) <- value
 ## Wold Development Data
 head(num_vars(wlddev))                                     # Select numeric variables
 head(get_vars(wlddev, is.numeric))                         # Same thing
-head(cat_vars(wlddev))                                     # Select categorical (non-numeric) variable
+head(cat_vars(wlddev))                                     # Select categorical (non-numeric) vars
 head(get_vars(wlddev, is.categorical))                     # Same thing
 
 num_vars(wlddev) <- num_vars(wlddev)                       # Replace Numeric Variables by themselves
 get_vars(wlddev,is.numeric) <- get_vars(wlddev,is.numeric) # Same thing
 
-head(get_vars(wlddev, 9:12))                               # Select columns 9 through 12. 2x faster than wlddev[9:12]
+head(get_vars(wlddev, 9:12))                               # Select columns 9 through 12, 2x faster
 head(get_vars(wlddev, -(9:12)))                            # All except columns 9 through 12
 head(get_vars(wlddev, c("PCGDP","LIFEEX","GINI","ODA")))   # Select using column names
-head(get_vars(wlddev, "[[:upper:]]", regex = TRUE))        # Same thing: Selecting variable names with only upper-case letters
+head(get_vars(wlddev, "[[:upper:]]", regex = TRUE))        # Same thing: match upper-case var. names
 
-get_vars(wlddev, 9:12) <- get_vars(wlddev, 9:12)           # Again simple replacement, 4-5x faster than wlddev[9:12] <- wlddev[9:12]
+# Again simple replacement, 4-5x faster than wlddev[9:12] <- wlddev[9:12]
+get_vars(wlddev, 9:12) <- get_vars(wlddev, 9:12)
 get_vars(wlddev, 9:12) <-                                  # Standardizing columns 9 through 12
-                STD(get_vars(wlddev,9:12), wlddev$iso3c)   # Note that this also change the names in the data, whereas
-head(wlddev)                                               # wlddev[9:12] <- ... replaces only data, not names!
-rm(wlddev)
+                STD(get_vars(wlddev,9:12), wlddev$iso3c)   # Note that this also change the names
+head(wlddev)                                               # in the data, whereas wlddev[9:12] <- ..
+rm(wlddev)                                                 # replaces only data, not names!
 }

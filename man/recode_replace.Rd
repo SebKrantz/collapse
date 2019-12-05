@@ -73,13 +73,14 @@ Recode(month.name, ber = NA, regex = TRUE)
 mtcr <- Recode(mtcars, `0` = 2, `4` = Inf, `1` = NaN)
 replace_non_finite(mtcr)
 replace_non_finite(mtcr, replace.nan = FALSE)
-replace_outliers(mtcars, c(2, 100))                 # replace all values below 2 and above 100 with NA
+replace_outliers(mtcars, c(2, 100))                 # replace all values below 2 and above 100 w. NA
 replace_outliers(mtcars, 2, single.limit = "min")   # replace all value smaller than 2 with NA
 replace_outliers(mtcars, 100, single.limit = "max") # replace all value larger than 100 with NA
 replace_outliers(mtcars, 2)                         # replace all values above or below 2 column-
-                                                    # standard-deviations from the column-mean with NA
-replace_outliers(                                   # Passing a grouped_df, pseries or pdata.frame also allows
-num_vars(dplyr::group_by(iris, Species)), 2)        # to remove outliers according to in-group standard-deviation. see ?fscale
+                                                    # standard-deviations from the column-mean w. NA
+replace_outliers(                                   # Passing a grouped_df, pseries or pdata.frame
+num_vars(dplyr::group_by(iris, Species)), 2)        # allows to remove outliers according to
+                                                    # in-group standard-deviation. see ?fscale
 
 }
 % Add one or more standard keywords, see file 'KEYWORDS' in the

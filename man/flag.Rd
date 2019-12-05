@@ -7,19 +7,19 @@
 \alias{flag.pdata.frame}
 \alias{flag.grouped_df}
 \alias{L}
-% \alias{L.default}
-% \alias{L.matrix}
-% \alias{L.data.frame}
-% \alias{L.pseries}
-% \alias{L.pdata.frame}
-% \alias{L.grouped_df}
+\alias{L.default}
+\alias{L.matrix}
+\alias{L.data.frame}
+\alias{L.pseries}
+\alias{L.pdata.frame}
+\alias{L.grouped_df}
 \alias{F}
-% \alias{F.default}
-% \alias{F.matrix}
-% \alias{F.data.frame}
-% \alias{F.pseries}
-% \alias{F.pdata.frame}
-% \alias{F.grouped_df}
+\alias{F.default}
+\alias{F.matrix}
+\alias{F.data.frame}
+\alias{F.pseries}
+\alias{F.pdata.frame}
+\alias{F.grouped_df}
 
 %- Also NEED an '\alias' for EACH other topic documented here.
 \title{
@@ -31,29 +31,41 @@ Fast Lags and Leads for Time-Series and Panel Data
 (\code{flag} is more of a programmers function in style of the \link[=fast-statistical-functions]{Fast Statistical Functions} while \code{L} & \code{F} are more practical to use in regression formulas or for computations on data frames.)
 }
 \usage{
-flag(x, n = 1, ...)
-   L(x, n = 1, ...)
-   F(x, n = 1, ...)
+flag(x, n = 1, \dots)
+   L(x, n = 1, \dots)
+   F(x, n = 1, \dots)
 %## Default S3 methods:
-\method{flag}{default}(x, n = 1, g = NULL, t = NULL, fill = NA, stubs = TRUE, ...)                                                                     \method{L}{default}(x, n = 1, g = NULL, t = NULL, fill = NA, stubs = TRUE, ...) \method{F}{default}(x, n = 1, g = NULL, t = NULL, fill = NA, stubs = TRUE, ...)
+\method{flag}{default}(x, n = 1, g = NULL, t = NULL, fill = NA, stubs = TRUE, \dots)
+\method{L}{default}(x, n = 1, g = NULL, t = NULL, fill = NA, stubs = TRUE, \dots)
+\method{F}{default}(x, n = 1, g = NULL, t = NULL, fill = NA, stubs = TRUE, \dots)
 %## S3 methods for class 'matrix'
-\method{flag}{matrix}(x, n = 1, g = NULL, t = NULL, fill = NA, stubs = TRUE, ...) \method{L}{matrix}(x, n = 1, g = NULL, t = NULL, fill = NA, stubs = TRUE, ...)  \method{F}{matrix}(x, n = 1, g = NULL, t = NULL, fill = NA, stubs = TRUE, ...)
+\method{flag}{matrix}(x, n = 1, g = NULL, t = NULL, fill = NA, stubs = TRUE, \dots)
+\method{L}{matrix}(x, n = 1, g = NULL, t = NULL, fill = NA, stubs = TRUE, \dots)
+\method{F}{matrix}(x, n = 1, g = NULL, t = NULL, fill = NA, stubs = TRUE, \dots)
 %## S3 methods for class 'data.frame'
-\method{flag}{data.frame}(x, n = 1, g = NULL, t = NULL, fill = NA, stubs = TRUE, ...)                                                                      \method{L}{data.frame}(x, n = 1, by = NULL, t = NULL, cols = is.numeric,
-     fill = NA, stubs = TRUE, keep.ids = TRUE, ...)                      \method{F}{data.frame}(x, n = 1, by = NULL, t = NULL, cols = is.numeric,
-     fill = NA, stubs = TRUE, keep.ids = TRUE, ...)
+\method{flag}{data.frame}(x, n = 1, g = NULL, t = NULL, fill = NA, stubs = TRUE, \dots)
+\method{L}{data.frame}(x, n = 1, by = NULL, t = NULL, cols = is.numeric,
+  fill = NA, stubs = TRUE, keep.ids = TRUE, \dots)
+\method{F}{data.frame}(x, n = 1, by = NULL, t = NULL, cols = is.numeric,
+  fill = NA, stubs = TRUE, keep.ids = TRUE, \dots)
 
 # Methods for compatibility with plm:
 %## S3 methods for class 'pseries'
-\method{flag}{pseries}(x, n = 1, fill = NA, stubs = TRUE, ...)                \method{L}{pseries}(x, n = 1, fill = NA, stubs = TRUE, ...)                   \method{F}{pseries}(x, n = 1, fill = NA, stubs = TRUE, ...)
+\method{flag}{pseries}(x, n = 1, fill = NA, stubs = TRUE, \dots)
+\method{L}{pseries}(x, n = 1, fill = NA, stubs = TRUE, \dots)
+\method{F}{pseries}(x, n = 1, fill = NA, stubs = TRUE, \dots)
 %## S3 methods for class 'pdata.frame'
-\method{flag}{pdata.frame}(x, n = 1, fill = NA, stubs = TRUE, ...)          \method{L}{pdata.frame}(x, n = 1, cols = is.numeric, fill = NA, stubs = TRUE,
-     keep.ids = TRUE, ...)                                                  \method{F}{pdata.frame}(x, n = 1, cols = is.numeric, fill = NA, stubs = TRUE,
-     keep.ids = TRUE, ...)
+\method{flag}{pdata.frame}(x, n = 1, fill = NA, stubs = TRUE, \dots)
+\method{L}{pdata.frame}(x, n = 1, cols = is.numeric, fill = NA, stubs = TRUE,
+  keep.ids = TRUE, \dots)
+\method{F}{pdata.frame}(x, n = 1, cols = is.numeric, fill = NA, stubs = TRUE,
+  keep.ids = TRUE, \dots)
 
 # Methods for compatibility with dplyr:
 %## S3 methods for class 'grouped_df'
-\method{flag}{grouped_df}(x, n = 1, t = NULL, fill = NA, stubs = TRUE, keep.ids = TRUE, ...)                                                               \method{L}{grouped_df}(x, n = 1, t = NULL, fill = NA, stubs = TRUE, keep.ids = TRUE, ...)                                                                    \method{F}{grouped_df}(x, n = 1, t = NULL, fill = NA, stubs = TRUE, keep.ids = TRUE, ...)
+\method{flag}{grouped_df}(x, n = 1, t = NULL, fill = NA, stubs = TRUE, keep.ids = TRUE, \dots)
+\method{L}{grouped_df}(x, n = 1, t = NULL, fill = NA, stubs = TRUE, keep.ids = TRUE, \dots)
+\method{F}{grouped_df}(x, n = 1, t = NULL, fill = NA, stubs = TRUE, keep.ids = TRUE, \dots)
 }
 %- maybe also 'usage' for other objects documented here.
 \arguments{
@@ -66,7 +78,7 @@ flag(x, n = 1, ...)
   \item{fill}{value to insert when vectors are shifted. Default is \code{NA}. }
   \item{stubs}{logical. \code{TRUE} will rename all lagged / leaded columns by adding a stub or prefix "L\code{n}." / "F\code{n}.".}
   \item{keep.ids}{\emph{data.frame / pdata.frame / grouped_df methods}: Logical. Drop all panel-identifiers from the output (which includes all variables passed to \code{by} or \code{t}). \emph{Note}: For panel-data.frame's and grouped tibbles identifiers are dropped, but the 'index' / 'groups' attributes are kept.}
-    \item{...}{arguments to be passed to or from other methods.}
+    \item{\dots}{arguments to be passed to or from other methods.}
 }
 \details{
 If a single integer is passed to \code{n}, and \code{g/by} and \code{t} are left empty, \code{flag/L/F} just returs \code{x} with all columns lagged / leaded by \code{n}. If \code{length(n)>1}, and \code{x} is an atomic vector, \code{flag/L/F} returns a matrix with lags / leads computed in the same order as passed to \code{n}. If instead \code{x} is a matrix / data.frame, a matrix / data.frame with \code{ncol(x)*length(n)} columns is returned where columns are sorted first by variable and then by lag (so all lags computed on a variable are grouped together). \code{x} can be of any standard data type.
@@ -106,37 +118,40 @@ all.identical(L(AirPassengers),       # 3 identical ways of computing 1 lag
 
 L(AirPassengers,-1:3)                 # 1 lead and 3 lags - output as matrix
 
-## Time-Series Matrix of 4 EU Stock Market Indicators
-tsp(EuStockMarkets)                                     # Data is recorded on 260 days per year, 1991-1998
+## Time-Series Matrix of 4 EU Stock Market Indicators, 1991-1998
+tsp(EuStockMarkets)                                     # Data is recorded on 260 days per year
 freq <- frequency(EuStockMarkets)
 plot(stl(EuStockMarkets[,"DAX"], freq))                 # There is some obvious seasonality
 L(EuStockMarkets,-1:3*freq)                             # 1 annual lead and 3 annual lags
-summary(lm(DAX ~., data = L(EuStockMarkets,-1:3*freq))) # DAX regressed on it's own annual lead, lags and the lead and lags of the other indicators
+summary(lm(DAX ~., data = L(EuStockMarkets,-1:3*freq))) # DAX regressed on it's own annual lead,
+                                                        # lags and the lead/lags of the other series
 
 ## World Development Panel Data
-head(flag(wlddev, 1, wlddev$iso3c, wlddev$year))        # This lags all variables. With flag all inputs need to be passed externally, so L is more convenient:
+head(flag(wlddev, 1, wlddev$iso3c, wlddev$year))        # This lags all variables,
 head(L(wlddev, 1, ~iso3c, ~year))                       # This lags all numeric variables
-head(L(wlddev, 1, ~iso3c))                              # Without t: Also works because data is ordered
-head(L(wlddev, 1, PCGDP + LIFEEX ~ iso3c, ~year))       # This lags GDP per Capita and Life Expectancy
+head(L(wlddev, 1, ~iso3c))                              # Without t: Works because data is ordered
+head(L(wlddev, 1, PCGDP + LIFEEX ~ iso3c, ~year))       # This lags GDP per Capita & Life Expectancy
 head(L(wlddev, 0:2, ~ iso3c, ~year, cols = 9:10))       # Same, also retaining original series
 head(L(wlddev, 1:2, PCGDP + LIFEEX ~ iso3c, ~year,      # Two lags, dropping id columns
        keep.ids = FALSE))
 
 # Different ways of regressing GDP on its's lags and life-Expectancy and it's lags
-summary(lm(PCGDP ~ ., L(wlddev, 0:2, ~iso3c, ~year, 9:10, keep.ids = FALSE)))     # 1 - Precomputing lags
-summary(lm(PCGDP ~ L(PCGDP,1:2,iso3c,year) + L(LIFEEX,0:2,iso3c,year), wlddev))   # 2 - Ad-hoc computation in lm formula
-summary(lm(PCGDP ~ L(PCGDP,1:2,iso3c) + L(LIFEEX,0:2,iso3c), wlddev))             # 3 - same but without year
-g = qF(wlddev$iso3c); t = qF(wlddev$year)
-summary(lm(PCGDP ~ L(PCGDP,1:2,g,t) + L(LIFEEX,0:2,g,t), wlddev))                 # 4- Precomputing panel-identifiers
+summary(lm(PCGDP ~ ., L(wlddev, 0:2, ~iso3c, ~year, 9:10, keep.ids = FALSE)))     # 1 - Precomputing
+summary(lm(PCGDP ~ L(PCGDP,1:2,iso3c,year) + L(LIFEEX,0:2,iso3c,year), wlddev))   # 2 - Ad-hoc
+summary(lm(PCGDP ~ L(PCGDP,1:2,iso3c) + L(LIFEEX,0:2,iso3c), wlddev))             # 3 - same no year
+g = qF(wlddev$iso3c); t = qF(wlddev$year)                                         # 4- Precomputing
+summary(lm(PCGDP ~ L(PCGDP,1:2,g,t) + L(LIFEEX,0:2,g,t), wlddev))                 # panel-id's
 
 ## Using plm:
 pwlddev <- plm::pdata.frame(wlddev, index = c("iso3c","year"))
-head(L(pwlddev, 0:2, 9:10))                                     # Again computing 2 lags of GDP and LIFEEX
+head(L(pwlddev, 0:2, 9:10))                                     # Again 2 lags of GDP and LIFEEX
 PCGDP <- pwlddev$PCGDP                                          # A panel-Series of GDP per Capita
-L(PCGDP)                                                        # Lagging the panel series. About 25x faster than plm::lag(PCGDP) on my computer
+L(PCGDP)                                                        # Lagging the panel series
 summary(lm(PCGDP ~ ., L(pwlddev, 0:2, 9:10, keep.ids = FALSE))) # Running the lm again: WORKS!
-summary(lm(PCGDP ~ L(PCGDP,1:2) + L(LIFEEX,0:2), pwlddev))      # THIS DOES NOT WORK: Unfortunately lm drops the attributes of the columns, so L.default is used here and ordinary lags are computed. (generally with and attach don't retain column attributes)
-LIFEEX <- pwlddev$LIFEEX                                        # To make it work, one could create pseries
+# THIS DOES NOT WORK: Unfortunately lm drops the attributes of the columns,
+# so L.default is used here and ordinary lags are computed. (with and attach don't retain attr.)
+summary(lm(PCGDP ~ L(PCGDP,1:2) + L(LIFEEX,0:2), pwlddev))
+LIFEEX <- pwlddev$LIFEEX                                        # To make it work, create pseries
 summary(lm(PCGDP ~ L(PCGDP,1:2) + L(LIFEEX,0:2)))               # THIS WORKS !!
 
 ## Using dplyr:

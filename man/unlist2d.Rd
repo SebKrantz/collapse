@@ -62,12 +62,12 @@ unlist2d(rapply2d(l, fmean), recursive = FALSE)
 head(GGDC10S) # See ?GGDC10S
 namlab(GGDC10S, class = TRUE)
 
-# Panel-Summarize this data by Variable (Emloyment and Value Added), output as list (instead of 4D array)
-l <- qsu(GGDC10S, by = ~Variable,
+# Panel-Summarize this data by Variable (Emloyment and Value Added)
+l <- qsu(GGDC10S, by = ~Variable,              # Output as list (instead of 4D array)
          xt = ~ Variable + Country,
          cols = 6:16, array = FALSE)
-str(l)                                         # A list of 2-levels containing matrices of statistics
-head(unlist2d(l))                              # Default output, but we are missing the variables (row-names of the matrices)
+str(l)                                         # A list of 2-levels with matrices of statistics
+head(unlist2d(l))                              # Default output, missing the variables (row-names)
 head(unlist2d(l, row.names = TRUE))            # Here we go, but this is still not very nice
 head(unlist2d(l, idcols = c("Sector","Trans"), # Now this is looking pretty good
               row.names = "Variable"))
@@ -84,7 +84,7 @@ dat <- unlist2d(rapply2d(sdat, pwcor),
                 idcols = c("Variable","Country"),
                 row.names = "Sector")
 head(dat)
-plot(hclust(as.dist(1-pwcor(dat[-(1:3)]))))    # Using these correlations as a distance metric to cluster sectors
+plot(hclust(as.dist(1-pwcor(dat[-(1:3)]))))    # Using corrs. as distance metric to cluster sectors
 
 # Together with other functions like psmat, unlist2d can also effectively help reshape data:
 head(unlist2d(psmat(subset(GGDC10S, Variable == "VA"), ~Country, ~Year, cols = 6:16, array = FALSE),
