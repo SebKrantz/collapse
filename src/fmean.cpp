@@ -46,7 +46,7 @@ NumericVector fmeanCpp(const NumericVector& x, int ng = 0, const IntegerVector& 
             }
           }
         }
-        for(int i = ng; i--; ) sum[i] /= n[i];
+        for(int i = ng; i--; ) sum[i] /= n[i]; // if(n[i] == 0) stop("group size of 0 encountered"); -> No check possible when initializing at 1!!
         DUPLICATE_ATTRIB(sum, x);
         return sum;
       } else {
@@ -82,7 +82,10 @@ NumericVector fmeanCpp(const NumericVector& x, int ng = 0, const IntegerVector& 
               sum[g[i]-1] += x[i];
             }
           }
-          for(int i = ng; i--; ) sum[i] /= gsv[i]; // This is good because adding n takes twice as long, if factor, supply gs = tabulate(f,nlevels(f))
+          for(int i = ng; i--; ) {
+            if(gsv[i] == 0) stop("group size of 0 encountered");
+            sum[i] /= gsv[i]; // This is good because adding n takes twice as long, if factor, supply gs = tabulate(f,nlevels(f))
+          }
         }
         DUPLICATE_ATTRIB(sum, x);
         return sum;
@@ -230,7 +233,7 @@ SEXP fmeanmCpp(const NumericMatrix& x, int ng = 0, const IntegerVector& g = 0, c
               }
             }
           }
-          for(int i = ng; i--; ) sumj[i] /= nj[i];
+          for(int i = ng; i--; ) sumj[i] /= nj[i]; //         if(gsv[i] == 0) stop("group size of 0 encountered"); cant check when not initializing !!
         }
         colnames(sum) = colnames(x);  // extremely efficient !!
         return sum;
@@ -276,7 +279,10 @@ SEXP fmeanmCpp(const NumericMatrix& x, int ng = 0, const IntegerVector& g = 0, c
                 sumj[g[i]-1] += column[i];
               }
             }
-            for(int i = ng; i--; ) sumj[i] /= gsv[i];
+            for(int i = ng; i--; ) {
+              if(gsv[i] == 0) stop("group size of 0 encountered");
+              sumj[i] /= gsv[i];
+            }
           }
         }
         colnames(sum) = colnames(x);  // extremely efficient !!
@@ -508,7 +514,10 @@ SEXP fmeanlCpp(const List& x, int ng = 0, const IntegerVector& g = 0, const SEXP
                 sumj[g[i]-1] += column[i];
               }
             }
-            for(int i = ng; i--; ) sumj[i] /= gsv[i];
+            for(int i = ng; i--; ) {
+              if(gsv[i] == 0) stop("group size of 0 encountered");
+              sumj[i] /= gsv[i];
+            }
             SHALLOW_DUPLICATE_ATTRIB(sumj, column);
             sum[j] = sumj;
           }

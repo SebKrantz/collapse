@@ -50,6 +50,7 @@ IntegerVector fNdistinctImpl(const Vector<RTYPE>& x, int ng, const IntegerVector
     if(Rf_isNull(gs)) {
       for(int i = 0; i != l; ++i) ++out[g[i]-1];
       for(int i = 0; i != ng; ++i) {
+        if(out[i] == 0) stop("group size of 0 encountered");
         gmap[i] = std::vector<storage_t> (out[i]);
         out[i] = 0;
       }
@@ -57,7 +58,10 @@ IntegerVector fNdistinctImpl(const Vector<RTYPE>& x, int ng, const IntegerVector
     } else {
       IntegerVector gsv = gs;
       if(ng != gsv.size()) stop("ng must match length(gs)");
-      for(int i = 0; i != ng; ++i) gmap[i] = std::vector<storage_t> (gsv[i]);
+      for(int i = 0; i != ng; ++i) {
+        if(gsv[i] == 0) stop("group size of 0 encountered");
+        gmap[i] = std::vector<storage_t> (gsv[i]);
+      }
     }
     for(int i = 0; i != l; ++i) gmap[g[i]-1][out[g[i]-1]++] = x[i];
     if(narm) {
@@ -285,11 +289,17 @@ SEXP fNdistinctmImpl(const Matrix<RTYPE>& x, int ng, const IntegerVector& g,
     if(Rf_isNull(gs)) {
       memset(n, 0, sizeof(int)*ng);
       for(int i = 0; i != l; ++i) ++n[g[i]-1];
-      for(int i = 0; i != ng; ++i) gmap[i] = std::vector<storage_t> (n[i]);
+      for(int i = 0; i != ng; ++i) {
+        if(n[i] == 0) stop("group size of 0 encountered");
+        gmap[i] = std::vector<storage_t> (n[i]);
+      }
     } else {
       IntegerVector gsv = gs;
       if(ng != gsv.size()) stop("ng must match length(gs)");
-      for(int i = 0; i != ng; ++i) gmap[i] = std::vector<storage_t> (gsv[i]);
+      for(int i = 0; i != ng; ++i) {
+        if(gsv[i] == 0) stop("group size of 0 encountered");
+        gmap[i] = std::vector<storage_t> (gsv[i]);
+      }
     }
     if(narm) {
       for(int j = col; j--; ) {

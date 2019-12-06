@@ -58,13 +58,17 @@ NumericVector fmedianCpp(const NumericVector& x, int ng = 0, const IntegerVector
     if(Rf_isNull(gs)) {
       for(int i = 0; i != l; ++i) ++gcount[g[i]];
       for(int i = 0; i != ng; ++i) {
+        if(gcount[i+1] == 0) stop("group size of 0 encountered");
         gmap[i] = std::vector<double> (gcount[i+1]);
         gcount[i+1] = 0;
       }
     } else {
       IntegerVector gsv = gs;
       if(ng != gsv.size()) stop("ng must match length(gs)");
-      for(int i = 0; i != ng; ++i) gmap[i] = std::vector<double>(gsv[i]);
+      for(int i = 0; i != ng; ++i) {
+        if(gsv[i] == 0) stop("group size of 0 encountered");
+        gmap[i] = std::vector<double>(gsv[i]);
+      }
     }
 
     if(narm) {
@@ -192,11 +196,17 @@ SEXP fmedianmCpp(const NumericMatrix& x, int ng = 0, const IntegerVector& g = 0,
     if(Rf_isNull(gs)) {
       memset(gcount, 0, memsize);
       for(int i = 0; i != l; ++i) ++gcount[g[i]];
-      for(int i = 0; i != ng; ++i) gmap[i] = std::vector<double> (gcount[i+1]);
+      for(int i = 0; i != ng; ++i) {
+        if(gcount[i+1] == 0) stop("group size of 0 encountered");
+        gmap[i] = std::vector<double> (gcount[i+1]);
+      }
     } else {
       IntegerVector gsv = gs;
       if(ng != gsv.size()) stop("ng must match length(gs)");
-      for(int i = 0; i != ng; ++i) gmap[i] = std::vector<double>(gsv[i]);
+      for(int i = 0; i != ng; ++i) {
+        if(gsv[i] == 0) stop("group size of 0 encountered");
+        gmap[i] = std::vector<double>(gsv[i]);
+      }
     }
     if(narm) {
       NumericMatrix med = no_init_matrix(ng, col);
@@ -332,11 +342,17 @@ SEXP fmedianlCpp(const List& x, int ng = 0, const IntegerVector& g = 0,
     if(Rf_isNull(gs)) {
       memset(gcount, 0, memsize);
       for(int i = 0; i != gss; ++i) ++gcount[g[i]];
-      for(int i = 0; i != ng; ++i) gmap[i] = std::vector<double> (gcount[i+1]);
+      for(int i = 0; i != ng; ++i) {
+        if(gcount[i+1] == 0) stop("group size of 0 encountered");
+        gmap[i] = std::vector<double> (gcount[i+1]);
+      }
     } else {
       IntegerVector gsv = gs;
       if(ng != gsv.size()) stop("ng must match length(gs)");
-      for(int i = 0; i != ng; ++i) gmap[i] = std::vector<double> (gsv[i]);
+      for(int i = 0; i != ng; ++i) {
+        if(gsv[i] == 0) stop("group size of 0 encountered");
+        gmap[i] = std::vector<double> (gsv[i]);
+      }
     }
     if(narm) {
       for(int j = l; j--; ) {

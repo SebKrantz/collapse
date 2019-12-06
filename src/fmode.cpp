@@ -84,13 +84,17 @@ Vector<RTYPE> fmodeImpl(const Vector<RTYPE>& x, int ng, const IntegerVector& g, 
       if(Rf_isNull(gs)) {
         for(int i = 0; i != l; ++i) ++n[g[i]];
         for(int i = 0; i != ng; ++i) {
+          if(n[i+1] == 0) stop("group size of 0 encountered");
           gmap[i] = std::vector<storage_t> (n[i+1]); // Vector<RTYPE>
           n[i+1] = 0;
         }
       } else {
         IntegerVector gsv = gs;
         if(ng != gsv.size()) stop("ng must match length(gs)");
-        for(int i = 0; i != ng; ++i) gmap[i] = std::vector<storage_t> (gsv[i]); // Vector<RTYPE>
+        for(int i = 0; i != ng; ++i) {
+          if(gsv[i] == 0) stop("group size of 0 encountered");
+          gmap[i] = std::vector<storage_t> (gsv[i]); // Vector<RTYPE>
+        }
       }
       for(int i = 0; i != l; ++i) gmap[g[i]-1][n[g[i]]++] = x[i];
       if(narm) {
@@ -224,6 +228,7 @@ Vector<RTYPE> fmodeImpl(const Vector<RTYPE>& x, int ng, const IntegerVector& g, 
       if(Rf_isNull(gs)) {
         for(int i = 0; i != l; ++i) ++n[g[i]];
         for(int i = 0; i != ng; ++i) {
+          if(n[i+1] == 0) stop("group size of 0 encountered");
           gmap[i] = std::vector<storage_t> (n[i+1]);
           wmap[i] = std::vector<double> (n[i+1]);
           n[i+1] = 0;
@@ -232,6 +237,7 @@ Vector<RTYPE> fmodeImpl(const Vector<RTYPE>& x, int ng, const IntegerVector& g, 
         IntegerVector gsv = gs;
         if(ng != gsv.size()) stop("ng must match length(gs)");
         for(int i = 0; i != ng; ++i) {
+          if(gsv[i] == 0) stop("group size of 0 encountered");
           gmap[i] = std::vector<storage_t> (gsv[i]);
           wmap[i] = std::vector<double> (gsv[i]);
         }
@@ -580,11 +586,17 @@ SEXP fmodemImpl(const Matrix<RTYPE>& x, int ng, const IntegerVector& g,
       if(Rf_isNull(gs)) {
         memset(n, 0, sizeof(int)*ngp);
         for(int i = 0; i != l; ++i) ++n[g[i]];
-        for(int i = 0; i != ng; ++i) gmap[i] = std::vector<storage_t> (n[i+1]);
+        for(int i = 0; i != ng; ++i) {
+          if(n[i+1] == 0) stop("group size of 0 encountered");
+          gmap[i] = std::vector<storage_t> (n[i+1]);
+        }
       } else {
         IntegerVector gsv = gs;
         if(ng != gsv.size()) stop("ng must match length(gs)");
-        for(int i = 0; i != ng; ++i) gmap[i] = std::vector<storage_t> (gsv[i]);
+        for(int i = 0; i != ng; ++i) {
+          if(gsv[i] == 0) stop("group size of 0 encountered");
+          gmap[i] = std::vector<storage_t> (gsv[i]);
+        }
       }
       if(narm) {
         for(int j = col; j--; ) {
@@ -741,6 +753,7 @@ SEXP fmodemImpl(const Matrix<RTYPE>& x, int ng, const IntegerVector& g,
       if(Rf_isNull(gs)) {
         for(int i = 0; i != l; ++i) ++n[g[i]];
         for(int i = 0; i != ng; ++i) {
+          if(n[i+1] == 0) stop("group size of 0 encountered");
           gmap[i] = std::vector<storage_t> (n[i+1]);
           wmap[i] = std::vector<double> (n[i+1]);
           n[i+1] = 0;
@@ -749,6 +762,7 @@ SEXP fmodemImpl(const Matrix<RTYPE>& x, int ng, const IntegerVector& g,
         IntegerVector gsv = gs;
         if(ng != gsv.size()) stop("ng must match length(gs)");
         for(int i = 0; i != ng; ++i) {
+          if(gsv[i] == 0) stop("group size of 0 encountered");
           gmap[i] = std::vector<storage_t> (gsv[i]);
           wmap[i] = std::vector<double> (gsv[i]);
         }
