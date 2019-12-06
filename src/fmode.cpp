@@ -129,7 +129,7 @@ Vector<RTYPE> fmodeImpl(const Vector<RTYPE>& x, int ng, const IntegerVector& g, 
           sugar::IndexHash<RTYPE> hash(wrap(temp));
           out[gr] = temp[0];
           int s = hash.n, n[s+1], max = 1; // fastest ?? use n ?? and reset partially ??
-          for(int i = s; i--; ) {
+          for(int i = 0; i != s; ++i) {
             unsigned int addr = hash.get_addr(temp[i]);
             while(hash.data[addr] && hash.not_equal(temp[hash.data[addr] - 1], temp[i])) {
               ++addr;
@@ -288,7 +288,7 @@ Vector<RTYPE> fmodeImpl(const Vector<RTYPE>& x, int ng, const IntegerVector& g, 
           out[gr] = temp[0];
           int s = hash.n, index = 0; // fastest ?? use n ?? and reset partially ??
           double max = DBL_MIN, n[s+1];
-          for(int i = s; i--; ) {
+          for(int i = 0; i != s; ++i) {
             unsigned int addr = hash.get_addr(temp[i]);
             while(hash.data[addr] && hash.not_equal(temp[hash.data[addr] - 1], temp[i])) {
               ++addr;
@@ -641,7 +641,7 @@ SEXP fmodemImpl(const Matrix<RTYPE>& x, int ng, const IntegerVector& g,
             sugar::IndexHash<RTYPE> hash(wrap(temp));
             outj[gr] = temp[0];
             int  s = hash.n, ns[s+1], max = 1;
-            for(int i = s; i--; ) {
+            for(int i = 0; i != s; ++i) {
               unsigned int addr = hash.get_addr(temp[i]);
               while(hash.data[addr] && hash.not_equal(temp[hash.data[addr] - 1], temp[i])) {
                 ++addr;
@@ -828,7 +828,7 @@ SEXP fmodemImpl(const Matrix<RTYPE>& x, int ng, const IntegerVector& g,
             int index = 0, s = hash.n; // fastest ?? use n ??
             double max = DBL_MIN, ns[s+1];
             outj[gr] = temp[0];
-            for(int i = s; i--; ) {
+            for(int i = 0; i != s; ++i) {
               unsigned int addr = hash.get_addr(temp[i]);
               while(hash.data[addr] && hash.not_equal(temp[hash.data[addr] - 1], temp[i])) {
                 ++addr;
