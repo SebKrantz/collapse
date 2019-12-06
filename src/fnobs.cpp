@@ -140,7 +140,7 @@ SEXP fNobsmCpp(SEXP x, int ng = 0, IntegerVector g = 0, bool drop = true){
 SEXP fNobslCpp(List x, int ng = 0, IntegerVector g = 0, bool drop = true) {
   int l = x.size();
 
-  if (ng == 0) {
+  if(ng == 0) {
     NumericVector nobs = no_init_vector(l);
     for(int j = l; j--; ) { // fastest loop ???
       // for(int j = 0; j != l; ++j) { Not sure, could be faster !!!
@@ -196,32 +196,33 @@ SEXP fNobslCpp(List x, int ng = 0, IntegerVector g = 0, bool drop = true) {
       return out;
     }
   } else { // With groups !!
+    int gss = g.size();
     List nobs(l);
     for(int j = l; j--; ) { // fastest loop ???
       IntegerVector ni(ng);
       switch(TYPEOF(x[j])) {
       case REALSXP: {
         NumericVector column = x[j];
-        int k = column.size();
-        for(int i = 0; i != k; ++i) if(!std::isnan(column[i])) ++ni[g[i]-1];
+        if(column.size() != gss) stop("length(g) must match nrow(X)");
+        for(int i = 0; i != gss; ++i) if(!std::isnan(column[i])) ++ni[g[i]-1];
         break;
       }
       case INTSXP: {
         IntegerVector column = x[j];
-        int k = column.size();
-        for(int i = 0; i != k; ++i) if(column[i] != NA_INTEGER) ++ni[g[i]-1];
+        if(column.size() != gss) stop("length(g) must match nrow(X)");
+        for(int i = 0; i != gss; ++i) if(column[i] != NA_INTEGER) ++ni[g[i]-1];
         break;
       }
       case STRSXP: {
         CharacterVector column = x[j];
-        int k = column.size();
-        for(int i = 0; i != k; ++i) if(column[i] != NA_STRING) ++ni[g[i]-1];
+        if(column.size() != gss) stop("length(g) must match nrow(X)");
+        for(int i = 0; i != gss; ++i) if(column[i] != NA_STRING) ++ni[g[i]-1];
         break;
       }
       case LGLSXP: {
         LogicalVector column = x[j];
-        int k = column.size();
-        for(int i = 0; i != k; ++i) if(column[i] != NA_LOGICAL) ++ni[g[i]-1];
+        if(column.size() != gss) stop("length(g) must match nrow(X)");
+        for(int i = 0; i != gss; ++i) if(column[i] != NA_LOGICAL) ++ni[g[i]-1];
         break;
       }
       default: {
