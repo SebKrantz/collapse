@@ -27,15 +27,16 @@ NumericVector fmedianCpp(const NumericVector& x, int ng = 0, const IntegerVector
       // auto pend = std::remove_if(xd.begin(), xd.end(), isnan2); // need remove_copy_if ??
       auto pend = std::remove_copy_if(x.begin(), x.end(), xd.begin(), isnan2); // faster !!
       int sz = pend - xd.begin(), middle = sz/2-1; // std::distance(xd.begin(), pend)
+      if(sz == 0) return NumericVector::create(x[0]);
       if(sz%2 == 0){
         std::nth_element(xd.begin(), xd.begin()+middle, pend);
         med = (xd[middle] + *(std::min_element(xd.begin()+middle+1, pend)))/2.0;
-      } else{
+      } else {
         std::nth_element(xd.begin(), xd.begin()+middle+1, pend);
         med = xd[middle+1];
       }
     } else {
-      for(int i = 0; i != l; ++i) if(std::isnan(x[i])) return(NumericVector::create(x[i]));
+      for(int i = 0; i != l; ++i) if(std::isnan(x[i])) return NumericVector::create(x[i]);
       NumericVector xd = Rf_duplicate(x);
       int middle = l/2-1;
       if(l%2 == 0){
