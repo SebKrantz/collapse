@@ -17,7 +17,7 @@ flag.default <- function(x, n = 1, g = NULL, t = NULL, fill = NA, stubs = TRUE, 
   if(is.null(g))
     return(.Call(Cpp_flaglead,x,n,fill,0L,0L,NULL,G_t(t,FALSE),stubs)) else if(is.atomic(g)) {
     if(is.factor(g)) nl <- fnlevels(g) else {
-      g <- qG(g)
+      g <- qG(g, na.exclude = FALSE)
       nl <- attr(g, "N.groups")
     }
     return(.Call(Cpp_flaglead,x,n,fill,nl,g,NULL,G_t(t),stubs))
@@ -39,7 +39,7 @@ flag.matrix <- function(x, n = 1, g = NULL, t = NULL, fill = NA, stubs = TRUE, .
   if(is.null(g))
     return(.Call(Cpp_flagleadm,x,n,fill,0L,0L,NULL,G_t(t,FALSE),stubs)) else if(is.atomic(g)) {
     if(is.factor(g)) nl <- fnlevels(g) else {
-      g <- qG(g)
+      g <- qG(g, na.exclude = FALSE)
       nl <- attr(g, "N.groups")
     }
     .Call(Cpp_flagleadm,x,n,fill,nl,g,NULL,G_t(t),stubs)
@@ -75,7 +75,7 @@ flag.data.frame <- function(x, n = 1, g = NULL, t = NULL, fill = NA, stubs = TRU
   if(is.null(g))
     return(.Call(Cpp_flagleadl,x,n,fill,0L,0L,NULL,G_t(t,FALSE),stubs)) else if(is.atomic(g)) {
       if(is.factor(g)) nl <- fnlevels(g) else {
-        g <- qG(g)
+        g <- qG(g, na.exclude = FALSE)
         nl <- attr(g, "N.groups")
       }
       .Call(Cpp_flagleadl,x,n,fill,nl,g,NULL,G_t(t),stubs)
@@ -153,7 +153,7 @@ L.data.frame <- function(x, n = 1, by = NULL, t = NULL, cols = is.numeric,
   if(is.null(by))
     return(.Call(Cpp_flagleadl,x,n,fill,0L,0L,NULL,G_t(t,FALSE),stubs)) else if(is.atomic(by)) {
     if(is.factor(by)) nl <- fnlevels(by) else {
-      by <- qG(by)
+      by <- qG(by, na.exclude = FALSE)
       nl <- attr(by, "N.groups")
     }
     .Call(Cpp_flagleadl,x,n,fill,nl,by,NULL,G_t(t),stubs)

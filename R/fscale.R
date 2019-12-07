@@ -16,7 +16,7 @@ fscale.default <- function(x, g = NULL, w = NULL, na.rm = TRUE, stable.algo = TR
   if(!missing(...)) stop("Unknown argument ", dotstostr(...))
   if(is.null(g)) return(.Call(Cpp_fscale,x,0L,0L,NULL,w,na.rm,stable.algo)) else if (is.atomic(g)) {
     if(is.factor(g)) return(.Call(Cpp_fscale,x,fnlevels(g),g,NULL,w,na.rm,stable.algo)) else {
-      g <- qG(g, ordered = FALSE)
+      g <- qG(g, ordered = FALSE, na.exclude = FALSE)
       return(.Call(Cpp_fscale,x,attr(g,"N.groups"),g,NULL,w,na.rm,stable.algo))
     }
   } else {
@@ -33,7 +33,7 @@ fscale.matrix <- function(x, g = NULL, w = NULL, na.rm = TRUE, stable.algo = TRU
   if(!missing(...)) stop("Unknown argument ", dotstostr(...))
   if(is.null(g)) return(.Call(Cpp_fscalem,x,0L,0L,NULL,w,na.rm,stable.algo)) else if (is.atomic(g)) {
     if(is.factor(g)) return(.Call(Cpp_fscalem,x,fnlevels(g),g,NULL,w,na.rm,stable.algo)) else {
-      g <- qG(g, ordered = FALSE)
+      g <- qG(g, ordered = FALSE, na.exclude = FALSE)
       return(.Call(Cpp_fscalem,x,attr(g,"N.groups"),g,NULL,w,na.rm,stable.algo))
     }
   } else {
@@ -68,7 +68,7 @@ fscale.data.frame <- function(x, g = NULL, w = NULL, na.rm = TRUE, stable.algo =
   if(!missing(...)) stop("Unknown argument ", dotstostr(...))
   if(is.null(g)) return(.Call(Cpp_fscalel,x,0L,0L,NULL,w,na.rm,stable.algo)) else if(is.atomic(g)) {
     if(is.factor(g)) return(.Call(Cpp_fscalel,x,fnlevels(g),g,NULL,w,na.rm,stable.algo)) else {
-      g <- qG(g, ordered = FALSE)
+      g <- qG(g, ordered = FALSE, na.exclude = FALSE)
       return(.Call(Cpp_fscalel,x,attr(g,"N.groups"),g,NULL,w,na.rm,stable.algo))
     }
   } else {
@@ -217,7 +217,7 @@ STD.data.frame <- function(x, by = NULL, w = NULL, cols = is.numeric,
 
   if(is.null(by)) return(.Call(Cpp_fscalel,x,0L,0L,NULL,w,na.rm,stable.algo)) else if (is.atomic(by)) {
     if(is.factor(by)) return(.Call(Cpp_fscalel,x,fnlevels(by),by,NULL,w,na.rm,stable.algo)) else {
-      by <- qG(by, ordered = FALSE)
+      by <- qG(by, ordered = FALSE, na.exclude = FALSE)
       return(.Call(Cpp_fscalel,x,attr(by,"N.groups"),by,NULL,w,na.rm,stable.algo))
     }
   } else {

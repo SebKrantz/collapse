@@ -16,12 +16,12 @@ fmode.default <- function(x, g = NULL, w = NULL, TRA = NULL, na.rm = TRUE, use.g
   if(is.null(TRA)) {
     if(is.null(g)) return(.Call(Cpp_fmode,x,0L,0L,NULL,w,na.rm)) else if(is.atomic(g)) {
       if(use.g.names) {
-        if(!is.factor(g)) g <- qF(g)
+        if(!is.factor(g)) g <- qF(g, na.exclude = FALSE)
         lev <- attr(g, "levels")
         return(`names<-`(.Call(Cpp_fmode,x,length(lev),g,NULL,w,na.rm), lev))
       } else {
         if(is.factor(g)) return(.Call(Cpp_fmode,x,fnlevels(g),g,NULL,w,na.rm)) else {
-          g <- qG(g)
+          g <- qG(g, na.exclude = FALSE)
           return(.Call(Cpp_fmode,x,attr(g,"N.groups"),g,NULL,w,na.rm))
         }
       }
@@ -33,7 +33,7 @@ fmode.default <- function(x, g = NULL, w = NULL, TRA = NULL, na.rm = TRUE, use.g
   } else {
     if(is.null(g)) return(.Call(Cpp_TRA,x,.Call(Cpp_fmode,x,0L,0L,NULL,w,na.rm),0L,TRAtoInt(TRA))) else if (is.atomic(g)) {
       if(is.factor(g)) return(.Call(Cpp_TRA,x,.Call(Cpp_fmode,x,fnlevels(g),g,NULL,w,na.rm),g,TRAtoInt(TRA))) else {
-        g <- qG(g)
+        g <- qG(g, na.exclude = FALSE)
         return(.Call(Cpp_TRA,x,.Call(Cpp_fmode,x,attr(g,"N.groups"),g,NULL,w,na.rm),g,TRAtoInt(TRA)))
       }
     } else {
@@ -47,12 +47,12 @@ fmode.matrix <- function(x, g = NULL, w = NULL, TRA = NULL, na.rm = TRUE, use.g.
   if(is.null(TRA)) {
     if(is.null(g)) return(.Call(Cpp_fmodem,x,0L,0L,NULL,w,na.rm,drop)) else if (is.atomic(g)) {
       if(use.g.names) {
-        if(!is.factor(g)) g <- qF(g)
+        if(!is.factor(g)) g <- qF(g, na.exclude = FALSE)
         lev <- attr(g, "levels")
         return(`dimnames<-`(.Call(Cpp_fmodem,x,length(lev),g,NULL,w,na.rm,FALSE), list(lev, dimnames(x)[[2L]])))
       } else {
         if(is.factor(g)) return(.Call(Cpp_fmodem,x,fnlevels(g),g,NULL,w,na.rm,FALSE)) else {
-          g <- qG(g)
+          g <- qG(g, na.exclude = FALSE)
           return(.Call(Cpp_fmodem,x,attr(g,"N.groups"),g,NULL,w,na.rm,FALSE))
         }
       }
@@ -64,7 +64,7 @@ fmode.matrix <- function(x, g = NULL, w = NULL, TRA = NULL, na.rm = TRUE, use.g.
   } else {
     if(is.null(g)) return(.Call(Cpp_TRAm,x,.Call(Cpp_fmodem,x,0L,0L,NULL,w,na.rm,TRUE),0L,TRAtoInt(TRA))) else if (is.atomic(g)) {
       if(is.factor(g)) return(.Call(Cpp_TRAm,x,.Call(Cpp_fmodem,x,fnlevels(g),g,NULL,w,na.rm,FALSE),g,TRAtoInt(TRA))) else {
-        g <- qG(g)
+        g <- qG(g, na.exclude = FALSE)
         return(.Call(Cpp_TRAm,x,.Call(Cpp_fmodem,x,attr(g,"N.groups"),g,NULL,w,na.rm,FALSE),g,TRAtoInt(TRA)))
       }
     } else {
@@ -80,12 +80,12 @@ fmode.data.frame <- function(x, g = NULL, w = NULL, TRA = NULL, na.rm = TRUE, us
       if(drop) return(unlist(.Call(Cpp_fmodel,x,0L,0L,NULL,w,na.rm))) else return(.Call(Cpp_fmodel,x,0L,0L,NULL,w,na.rm))
     } else if (is.atomic(g)) {
       if(use.g.names && !inherits(x, "data.table")) {
-        if(!is.factor(g)) g <- qF(g)
+        if(!is.factor(g)) g <- qF(g, na.exclude = FALSE)
         lev <- attr(g, "levels")
         return(setRow.names(.Call(Cpp_fmodel,x,length(lev),g,NULL,w,na.rm), lev))
       } else {
         if(is.factor(g)) return(.Call(Cpp_fmodel,x,fnlevels(g),g,NULL,w,na.rm)) else {
-          g <- qG(g)
+          g <- qG(g, na.exclude = FALSE)
           return(.Call(Cpp_fmodel,x,attr(g,"N.groups"),g,NULL,w,na.rm))
         }
       }
@@ -98,7 +98,7 @@ fmode.data.frame <- function(x, g = NULL, w = NULL, TRA = NULL, na.rm = TRUE, us
   } else {
     if(is.null(g)) return(.Call(Cpp_TRAl,x,.Call(Cpp_fmodel,x,0L,0L,NULL,w,na.rm),0L,TRAtoInt(TRA))) else if (is.atomic(g)) {
       if(is.factor(g)) return(.Call(Cpp_TRAl,x,.Call(Cpp_fmodel,x,fnlevels(g),g,NULL,w,na.rm),g,TRAtoInt(TRA))) else {
-        g <- qG(g)
+        g <- qG(g, na.exclude = FALSE)
         return(.Call(Cpp_TRAl,x,.Call(Cpp_fmodel,x,attr(g,"N.groups"),g,NULL,w,na.rm),g,TRAtoInt(TRA)))
       }
     } else {

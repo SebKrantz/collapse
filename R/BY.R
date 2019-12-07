@@ -34,7 +34,7 @@ BY.default <- function(X, g, FUN, ..., use.g.names = TRUE, sort = TRUE,
   aplyfun <- if(parallel) function(...) parallel::mclapply(..., mc.cores = mc.cores) else lapply
   simplify <- switch(return[1L], same = TRUE, list = FALSE, stop("BY.default only supports same (simplified) and list output!"))
   if(!is.factor(g)) g <- if(is.GRP(g)) as.factor.GRP(g) else if(is.list(g))
-                         as.factor.GRP(GRP(g, sort = sort)) else qF(g, ordered = sort)
+                         as.factor.GRP(GRP(g, sort = sort)) else qF(g, ordered = sort, na.exclude = FALSE)
     res <- aplyfun(split.default(X, g), FUN, ...)
     if(simplify) {
       if(expand.wide) {
@@ -72,7 +72,7 @@ BY.data.frame <- function(X, g, FUN, ..., use.g.names = TRUE, sort = TRUE,
   return <- switch(return[1L], same = 1L, matrix = 2L, data.frame = 1L, list = 0L,
                    stop("Unknown return option!"))
   if(!is.factor(g)) g <- if(is.GRP(g)) as.factor.GRP(g) else if(is.list(g))
-                    as.factor.GRP(GRP(g, sort = sort)) else qF(g, ordered = sort)
+                    as.factor.GRP(GRP(g, sort = sort)) else qF(g, ordered = sort, na.exclude = FALSE)
   if(return != 0L) {
     ax <- attributes(X)
     if(expand.wide) {
@@ -138,7 +138,7 @@ BY.matrix <- function(X, g, FUN, ..., use.g.names = TRUE, sort = TRUE,
   return <- switch(return[1L], same = 2L, matrix = 2L, data.frame = 1L, list = 0L,
                    stop("Unknown return option!"))
   if(!is.factor(g)) g <- if(is.GRP(g)) as.factor.GRP(g) else if(is.list(g))
-    as.factor.GRP(GRP(g, sort = sort)) else qF(g, ordered = sort)
+    as.factor.GRP(GRP(g, sort = sort)) else qF(g, ordered = sort, na.exclude = FALSE)
   if(return != 0L) {
     ax <- attributes(X)
     if(expand.wide) {

@@ -20,13 +20,13 @@ psmat.default <- function(x, g, t = NULL, transpose = FALSE, ...) {
     matrix(x, nrow = round(g), byrow = TRUE,
     dimnames = list(paste0("GRP.",seq_len(g)), seq_len(length(x)/round(g))))
   } else {
-  if(!is.factor(g)) if(is.atomic(g)) g <- qF(g) else if(is.GRP(g))
+  if(!is.factor(g)) if(is.atomic(g)) g <- qF(g, na.exclude = FALSE) else if(is.GRP(g))
                     g <- as.factor.GRP(g) else g <- as.factor.GRP(GRP(g)) # interaction(lapply(g, qF))
   if(is.null(t)) {
     message("No timevar provided: Assuming Balanced Panel")
     .Call(Cpp_psmat,x, g, NULL, transpose)
   } else {
-    if(!is.factor(t)) if(is.atomic(t)) t <- qF(t) else if(is.GRP(t))
+    if(!is.factor(t)) if(is.atomic(t)) t <- qF(t, na.exclude = FALSE) else if(is.GRP(t))
                       t <- as.factor.GRP(t) else t <- as.factor.GRP(GRP(t)) # interaction(lapply(t, qF))
     .Call(Cpp_psmat,x, g, t, transpose)
     }
@@ -67,13 +67,13 @@ psmat.data.frame <- function(x, by, t = NULL, cols = NULL, transpose = FALSE, ar
       class(x) <- NULL
       x <- if(is.function(cols)) x[vapply(x, cols, TRUE)] else x[cols]
     }
-    if(!is.factor(by)) if(is.atomic(by)) by <- qF(by) else if(is.GRP(by))
+    if(!is.factor(by)) if(is.atomic(by)) by <- qF(by, na.exclude = FALSE) else if(is.GRP(by))
       by <- as.factor.GRP(by) else by <- as.factor.GRP(GRP(by)) # interaction(lapply(by, qF))
       if(is.null(t)) {
         message("No timevar provided: Assuming Balanced Panel")
         res <- lapply(x, psmatCpp, by, NULL, transpose)
       } else {
-        if(!is.factor(t)) if(is.atomic(t)) t <- qF(t) else if(is.GRP(t))
+        if(!is.factor(t)) if(is.atomic(t)) t <- qF(t, na.exclude = FALSE) else if(is.GRP(t))
           t <- as.factor.GRP(t) else t <- as.factor.GRP(GRP(t)) # interaction(lapply(t, qF))
         res <- lapply(x, psmatCpp, by, t, transpose)
       }

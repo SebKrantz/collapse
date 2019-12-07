@@ -237,20 +237,16 @@ mctl <- function(X, names = FALSE, ret = 0L) {
     .Call(`_collapse_mctl`, X, names, ret)
 }
 
-na_rm <- function(x) {
-    .Call(`_collapse_na_rm`, x)
-}
-
 psmatCpp <- function(x, g, t = NULL, transpose = FALSE) {
     .Call(`_collapse_psmatCpp`, x, g, t, transpose)
 }
 
-qFCpp <- function(x, ordered = FALSE) {
-    .Call(`_collapse_qFCpp`, x, ordered)
+qFCpp <- function(x, ordered = TRUE, na_exclude = TRUE) {
+    .Call(`_collapse_qFCpp`, x, ordered, na_exclude)
 }
 
-qGCpp <- function(x, ordered = FALSE) {
-    .Call(`_collapse_qGCpp`, x, ordered)
+qGCpp <- function(x, ordered = TRUE, na_exclude = TRUE) {
+    .Call(`_collapse_qGCpp`, x, ordered, na_exclude)
 }
 
 setAttributes <- function(x, a) {

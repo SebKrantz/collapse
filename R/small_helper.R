@@ -63,7 +63,7 @@ all.identical <- function(...) {
 is.categorical <- function(x) !is.numeric(x)
 is.Date <- function(x) inherits(x, c("Date","POSIXlt","POSIXct"))
 "%!in%" <- function(x, table) match(x, table, nomatch = 0L) == 0L
-na.rm <- function(x) x[!is.na(x)] # more consistent with base than na_rm !!! if not Cpp version that's fine !!
+na_rm <- function(x) x[!is.na(x)] # more consistent with base than na_rm !!! if not Cpp version that's fine !!
 # na.rm <- function(x) { # cpp version available, but not faster !!
 #   if(!is.null(attr(x, "names"))) { # gives corruped time-series !!
 #     ax <- attributes(x)
@@ -72,6 +72,19 @@ na.rm <- function(x) x[!is.na(x)] # more consistent with base than na_rm !!! if 
 #     setAttributes(r, ax)
 #   } else duplAttributes(x[!is.na(x)], x)
 # }
+na_insert <- function(x, prop = 0.1) {
+  if(!is.null(d <- dim(x))) {
+    n <- d[1L]
+    p <- d[2L]
+    NAloc <- rep(FALSE, n * p)
+    NAloc[sample.int(n * p, floor(n * p * prop))] <- TRUE
+    x[matrix(NAloc, nrow = n, ncol = p)] <- NA
+  } else if(is.atomic(x)) {
+    l <- length(x)
+    x[sample.int(l, floow(l*prop))] <- NA
+  } else stop("x must be an atomic vector, matrix or data.frame")
+  return(x)
+}
 
 
 
@@ -87,7 +100,7 @@ remove_attributes <- function(x) {
 }
 addAttributes <- function(x, a) {
   ax <- attributes(x)
-  setAttributes(x, c(ax,a))
+  .Call(Cpp_setAttributes, x, c(ax, a))
 }
 fnlevels <- function(x) length(attr(x, "levels")) # make cpp version ??
 TRAtoInt <- function(x) # A lot faster than match based verion !!!
@@ -111,7 +124,7 @@ at2GRP <- function(x) {
   if(is.factor(x))
   return(list(length(attr(x, "levels")), x, NULL)) else {
     res <- list(NULL, NULL, NULL)
-    res[[2L]] <- qG(x, ordered = FALSE)
+    res[[2L]] <- qG(x, ordered = FALSE, na.exclude = FALSE)
     res[[1L]] <- attr(res[[2L]], "N.groups")
     return(res)
   }
@@ -122,7 +135,7 @@ G_t <- function(x, m = TRUE) {
     if(m) message("Panel-lag computed without timevar: Assuming ordered data")
     return(x)
   } else if(is.atomic(x)) {
-    if(is.integer(x)) return(x) else return(qG(x)) # make sure it is ordered !!! qG already ckecks factor !!
+    if(is.integer(x)) return(x) else return(qG(x, na.exclude = FALSE)) # make sure it is ordered !!! qG already ckecks factor !!
   } else if(is.GRP(x)) return(x[[2L]]) else return(GRP(x, return.groups = FALSE)[[2L]])
 }
 anyNAerror <- function(x, e) if(anyNA(x)) stop(e) else x
@@ -138,7 +151,7 @@ colsubset <- function(x, ind) { # also works for grouped tibbles !!
       anyNAerror(match(ind, ax[["names"]]), "Unknown column names!")
   }
   ax[["names"]] <- ax[["names"]][ind]
-  return(setAttributes(x[ind], ax)) # return(`attributes<-`(x[ind], ax)) # This is slow on large data -> a lot of checks !!!
+  return(.Call(Cpp_setAttributes, x[ind], ax)) # return(`attributes<-`(x[ind], ax)) # This is slow on large data -> a lot of checks !!!
 }
 rgrep <- function(exp, nam, ...) if(length(exp) > 1L) sort.int(unique.default(vapply(exp, grep, 1L, nam, ...))) else grep(exp, nam, ...)
 NROW2 <- function(x, d) if(length(d)) d[1L] else length(x)
@@ -153,7 +166,7 @@ cols2log <- function(x, nam, cols) {
 }
 unique_factor <- function(x) {
   res <- seq_along(attr(x, "levels"))
-  duplAttributes(res, x)
+  .Call(Cpp_duplAttributes, res, x)
 }
 dotstostr <- function(...) {
   args <- deparse(substitute(c(...)))

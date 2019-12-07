@@ -20,7 +20,7 @@ psacf.default <- function(x, g, t = NULL, lag.max = NULL, type = c("correlation"
   ispacf <- type == "partial"
   getacf <- function(ng, g) {
     if(is.null(t)) message("Panel Series ACF computed without timevar: Assuming ordered data") else if(!is.factor(t))
-    t <- if(is.atomic(t)) qG(t) else GRP(t, return.groups = FALSE)[[2L]] # if(.Internal(islistfactor(t, FALSE))) interaction(t) else
+    t <- if(is.atomic(t)) qG(t, na.exclude = FALSE) else GRP(t, return.groups = FALSE)[[2L]] # if(.Internal(islistfactor(t, FALSE))) interaction(t) else
     if(gscale) x <- fscaleCpp(x,ng,g)
     if(type == "covariance")
       c(1,cov(x, .Call(Cpp_flaglead,x,seq_len(lag.max),NA,ng,g,NULL,t,FALSE), use = "pairwise.complete.obs")) else
@@ -28,7 +28,7 @@ psacf.default <- function(x, g, t = NULL, lag.max = NULL, type = c("correlation"
   }
   if(is.atomic(g)) {
     if(is.factor(g)) ng <- nlevels(g) else {
-      g <- qG(g)
+      g <- qG(g, na.exclude = FALSE)
       ng <- attr(g,"N.groups")
     }
     if(is.null(lag.max)) lag.max <- round(2*sqrt(length(x)/ng))
@@ -92,7 +92,7 @@ psacf.data.frame <- function(x, by, t = NULL, cols = is.numeric, lag.max = NULL,
   attributes(x) <- NULL
   getacf <- function(ng, by) {
     if(is.null(t)) message("Panel Series ACF computed without timevar: Assuming ordered data") else if(!is.factor(t))
-      t <- if(is.atomic(t)) qG(t) else GRP(t, return.groups = FALSE)[[2L]]
+      t <- if(is.atomic(t)) qG(t, na.exclude = FALSE) else GRP(t, return.groups = FALSE)[[2L]]
     if(gscale) x <- fscalelCpp(x,ng,by)
     acf <- array(numeric(0), c(lag.max+1, lx, lx))
     fun <- if(type == "correlation") cor else cov
@@ -104,7 +104,7 @@ psacf.data.frame <- function(x, by, t = NULL, cols = is.numeric, lag.max = NULL,
   }
   if(is.atomic(by)) {
     if(is.factor(by)) ng <- nlevels(by) else {
-      by <- qG(by)
+      by <- qG(by, na.exclude = FALSE)
       ng <- attr(by,"N.groups")
     }
     if(is.null(lag.max)) lag.max <- round(2*sqrt(nrx/ng))
@@ -223,7 +223,7 @@ psccf.default <- function(x, y, g, t = NULL, lag.max = NULL, type = c("correlati
   snames <- paste(c(deparse(substitute(x))[1L], deparse(substitute(y))[1L]), collapse = " & ")
   getccf <- function(ng, g) {
     if(is.null(t)) message("Panel Series ACF computed without timevar: Assuming ordered data") else if(!is.factor(t))
-      t <- if(is.atomic(t)) qG(t) else GRP(t, return.groups = FALSE)[[2L]] # else if(.Internal(islistfactor(t, FALSE))) interaction(t)
+      t <- if(is.atomic(t)) qG(t, na.exclude = FALSE) else GRP(t, return.groups = FALSE)[[2L]] # else if(.Internal(islistfactor(t, FALSE))) interaction(t)
     if(gscale) {
       x <- fscaleCpp(x,ng,g)
       y <- fscaleCpp(y,ng,g)
@@ -234,7 +234,7 @@ psccf.default <- function(x, y, g, t = NULL, lag.max = NULL, type = c("correlati
   }
   if(is.atomic(g)) {
     if(is.factor(g)) ng <- nlevels(g) else {
-      g <- qG(g)
+      g <- qG(g, na.exclude = FALSE)
       ng <- attr(g,"N.groups")
     }
     if(is.null(lag.max)) lag.max <- round(2*sqrt(lx/ng))

@@ -33,13 +33,13 @@ collap <- function(X, by, FUN = fmean, catFUN = fmode, cols = NULL, custom = NUL
           v[numby] <- FALSE
         }
       }
-      if(length(numby) == 1L) by <- qF(X[[numby]], ordered = sort.row) else
+      if(length(numby) == 1L) by <- qF(X[[numby]], ordered = sort.row, na.exclude = FALSE) else
                               by <- GRP.default(X, numby, sort = sort.row, return.groups = keep.by)
   } else if(is.atomic(by)) {
     namby <- deparse(substitute(by))
     numby <- 1L
     if(!customl) if(is.null(cols)) vl <- FALSE else v <- cols2log(X, nam, cols)
-    if(!is.factor(by)) by <- qF(by, ordered = sort.row)
+    if(!is.factor(by)) by <- qF(by, ordered = sort.row, na.exclude = FALSE)
   } else {
     if(!customl) if(is.null(cols)) vl <- FALSE else v <- cols2log(X, nam, cols)
     if(!is.GRP(by)) {

@@ -4,9 +4,14 @@ using namespace Rcpp;
 
 // Old, non Cpp11 solution -> problem:: logical vectors not working !!!
 template <int RTYPE>
-IntegerVector qFCppImpl( const Vector<RTYPE>& x , bool ordered = false) {
+IntegerVector qFCppImpl( const Vector<RTYPE>& x , bool ordered = true, bool na_exclude = true) {
     Vector<RTYPE> levs = (ordered) ? sort_unique(x) : unique(x);
-    IntegerVector out = match(x, levs);
+    IntegerVector out = no_init_vector(levs.size());
+    if(na_exclude) {
+      out = match(x, levs);
+    } else {
+      out = Rf_match(levs, x, NA_INTEGER);
+    }
     SHALLOW_DUPLICATE_ATTRIB(out, x); // works for all atomic objects ??
     if(TYPEOF(x) == STRSXP) { // slightly better
       out.attr("levels") = levs;
@@ -19,20 +24,25 @@ IntegerVector qFCppImpl( const Vector<RTYPE>& x , bool ordered = false) {
 }
 
 template <int RTYPE>
-IntegerVector qGCppImpl( const Vector<RTYPE>& x , bool ordered = false) {
+IntegerVector qGCppImpl( const Vector<RTYPE>& x , bool ordered = true, bool na_exclude = true) {
     Vector<RTYPE> levs = (ordered) ? sort_unique(x) : unique(x);
-    IntegerVector out = match(x, levs); // faster than just match ??
+    IntegerVector out = no_init_vector(levs.size());
+    if(na_exclude) {
+      out = match(x, levs);
+    } else {
+      out = Rf_match(levs, x, NA_INTEGER);
+    }
     out.attr("N.groups") = levs.size();
     out.attr("class") = "qG";
     return out;
 }
 
 // [[Rcpp::export]]   // do Cpp 11 solution using return macro ??
-SEXP qFCpp( SEXP x , bool ordered = false) {
+SEXP qFCpp( SEXP x , bool ordered = true, bool na_exclude = true) {
   switch( TYPEOF(x) ) {
-  case INTSXP: return qFCppImpl<INTSXP>(x, ordered);
-  case REALSXP: return qFCppImpl<REALSXP>(x, ordered);
-  case STRSXP: return qFCppImpl<STRSXP>(x, ordered);
+  case INTSXP: return qFCppImpl<INTSXP>(x, ordered, na_exclude);
+  case REALSXP: return qFCppImpl<REALSXP>(x, ordered, na_exclude);
+  case STRSXP: return qFCppImpl<STRSXP>(x, ordered, na_exclude);
   // case LGLSXP: return qFCppImpl<LGLSXP>(x, ordered);
   default: stop("Not Supported SEXP Type");
   }
@@ -40,16 +50,32 @@ SEXP qFCpp( SEXP x , bool ordered = false) {
 }
 
 // [[Rcpp::export]]   // do Cpp 11 solution using return macro ??
-SEXP qGCpp( SEXP x , bool ordered = false) {
+SEXP qGCpp( SEXP x , bool ordered = true, bool na_exclude = true) {
   switch( TYPEOF(x) ) {
-  case INTSXP: return qGCppImpl<INTSXP>(x, ordered);
-  case REALSXP: return qGCppImpl<REALSXP>(x, ordered);
-  case STRSXP: return qGCppImpl<STRSXP>(x, ordered);
+  case INTSXP: return qGCppImpl<INTSXP>(x, ordered, na_exclude);
+  case REALSXP: return qGCppImpl<REALSXP>(x, ordered, na_exclude);
+  case STRSXP: return qGCppImpl<STRSXP>(x, ordered, na_exclude);
   // case LGLSXP: return qGCppImpl<LGLSXP>(x, ordered);
   default: stop("Not Supported SEXP Type");
   }
   return R_NilValue;
 }
+
+// template <int RTYPE>
+// Vector<RTYPE> funiqueImpl(const Vector<RTYPE>& x , bool ordered = false) {
+//   Vector<RTYPE> out = (ordered) ? sort_unique(x) : unique(x);
+//   return out;
+// }
+//
+// template <int RTYPE>
+// IntegerVector qGCppImpl( const Vector<RTYPE>& x , bool ordered = false) {
+//   Vector<RTYPE> levs = (ordered) ? sort_unique(x) : unique(x);
+//   IntegerVector out = match(x, levs); // faster than just match ??
+//   out.attr("N.groups") = levs.size();
+//   out.attr("class") = "qG";
+//   return out;
+// }
+
 
 // Cpp 11 Solution: Not working for some reason !!
 // template <int RTYPE>

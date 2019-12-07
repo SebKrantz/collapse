@@ -15,7 +15,7 @@ TRA.default <- function(x, STATS, FUN = "-", g = NULL, ...) {
     if(is.factor(g)) {
       if(fnlevels(g) != length(STATS)) stop("number of groups must match length(STATS)")
     } else {
-      g <- qG(g) # needs to be ordered to be compatible with fast functions !!
+      g <- qG(g, na.exclude = FALSE) # needs to be ordered to be compatible with fast functions !!
       if(attr(g, "N.groups") != length(STATS)) stop("number of groups must match length(STATS)")
     }
     return(.Call(Cpp_TRA,x,STATS,g,TRAtoInt(FUN)))
@@ -31,7 +31,7 @@ TRA.matrix <- function(x, STATS, FUN = "-", g = NULL, ...) {
     if(is.factor(g)) {
       if(fnlevels(g) != nrow(STATS)) stop("number of groups must match nrow(STATS)")
     } else {
-      g <- qG(g) # needs to be ordered to be compatible with fast functions !!
+      g <- qG(g, na.exclude = FALSE) # needs to be ordered to be compatible with fast functions !!
       if(attr(g, "N.groups") != nrow(STATS)) stop("number of groups must match nrow(STATS)")
     }
     return(.Call(Cpp_TRAm,x,STATS,g,TRAtoInt(FUN)))
@@ -47,7 +47,7 @@ TRA.data.frame <- function(x, STATS, FUN = "-", g = NULL, ...) {
     if(is.factor(g)) {
       if(fnlevels(g) != nrow(STATS)) stop("number of groups must match nrow(STATS)")
     } else {
-      g <- qG(g) # needs to be ordered to be compatible with fast functions !!
+      g <- qG(g, na.exclude = FALSE) # needs to be ordered to be compatible with fast functions !!
       if(attr(g, "N.groups") != nrow(STATS)) stop("number of groups must match nrow(STATS)")
     }
     return(.Call(Cpp_TRAl,x,STATS,g,TRAtoInt(FUN)))

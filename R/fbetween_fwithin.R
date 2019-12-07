@@ -15,7 +15,7 @@ fwithin.default <- function(x, g = NULL, w = NULL, na.rm = TRUE, add.global.mean
   if(!missing(...)) stop("Unknown argument ", dotstostr(...))
   if(is.null(g)) return(.Call(Cpp_BW,x,0L,0L,NULL,w,na.rm,add.global.mean,FALSE)) else if (is.atomic(g)) {
     if(is.factor(g)) return(.Call(Cpp_BW,x,fnlevels(g),g,NULL,w,na.rm,add.global.mean,FALSE)) else {
-      g <- qG(g, ordered = FALSE)
+      g <- qG(g, ordered = FALSE, na.exclude = FALSE)
       return(.Call(Cpp_BW,x,attr(g,"N.groups"),g,NULL,w,na.rm,add.global.mean,FALSE))
     }
   } else {
@@ -32,7 +32,7 @@ fwithin.matrix <- function(x, g = NULL, w = NULL, na.rm = TRUE, add.global.mean 
   if(!missing(...)) stop("Unknown argument ", dotstostr(...))
   if(is.null(g)) return(.Call(Cpp_BWm,x,0L,0L,NULL,w,na.rm,add.global.mean,FALSE)) else if(is.atomic(g)) {
     if(is.factor(g)) return(.Call(Cpp_BWm,x,fnlevels(g),g,NULL,w,na.rm,add.global.mean,FALSE)) else {
-      g <- qG(g, ordered = FALSE)
+      g <- qG(g, ordered = FALSE, na.exclude = FALSE)
       return(.Call(Cpp_BWm,x,attr(g,"N.groups"),g,NULL,w,na.rm,add.global.mean,FALSE))
     }
   } else {
@@ -44,7 +44,7 @@ fwithin.data.frame <- function(x, g = NULL, w = NULL, na.rm = TRUE, add.global.m
   if(!missing(...)) stop("Unknown argument ", dotstostr(...))
   if(is.null(g)) return(.Call(Cpp_BWl,x,0L,0L,NULL,w,na.rm,add.global.mean,FALSE)) else if(is.atomic(g)) {
     if(is.factor(g)) return(.Call(Cpp_BWl,x,fnlevels(g),g,NULL,w,na.rm,add.global.mean,FALSE)) else {
-      g <- qG(g, ordered = FALSE)
+      g <- qG(g, ordered = FALSE, na.exclude = FALSE)
       return(.Call(Cpp_BWl,x,attr(g,"N.groups"),g,NULL,w,na.rm,add.global.mean,FALSE))
     }
   } else {
@@ -211,7 +211,7 @@ W.data.frame <- function(x, by = NULL, w = NULL, cols = is.numeric, na.rm = TRUE
 
   if(is.null(by)) return(.Call(Cpp_BWl,x,0L,0L,NULL,w,na.rm,add.global.mean,FALSE)) else if (is.atomic(by)) {
     if(is.factor(by)) return(.Call(Cpp_BWl,x,fnlevels(by),by,NULL,w,na.rm,add.global.mean,FALSE)) else {
-      by <- qG(by, ordered = FALSE)
+      by <- qG(by, ordered = FALSE, na.exclude = FALSE)
       return(.Call(Cpp_BWl,x,attr(by,"N.groups"),by,NULL,w,na.rm,add.global.mean,FALSE))
     }
   } else {
@@ -228,7 +228,7 @@ fbetween.default <- function(x, g = NULL, w = NULL, na.rm = TRUE, fill = FALSE, 
   if(!missing(...)) stop("Unknown argument ", dotstostr(...))
   if(is.null(g)) return(.Call(Cpp_BW,x,0L,0L,NULL,w,na.rm,fill,TRUE)) else if (is.atomic(g)) {
     if(is.factor(g)) return(.Call(Cpp_BW,x,fnlevels(g),g,NULL,w,na.rm,fill,TRUE)) else {
-      g <- qG(g, ordered = FALSE)
+      g <- qG(g, ordered = FALSE, na.exclude = FALSE)
       return(.Call(Cpp_BW,x,attr(g,"N.groups"),g,NULL,w,na.rm,fill,TRUE))
     }
   } else {
@@ -245,7 +245,7 @@ fbetween.matrix <- function(x, g = NULL, w = NULL, na.rm = TRUE, fill = FALSE, .
   if(!missing(...)) stop("Unknown argument ", dotstostr(...))
   if(is.null(g)) return(.Call(Cpp_BWm,x,0L,0L,NULL,w,na.rm,fill,TRUE)) else if(is.atomic(g)) {
     if(is.factor(g)) return(.Call(Cpp_BWm,x,fnlevels(g),g,NULL,w,na.rm,fill,TRUE)) else {
-      g <- qG(g, ordered = FALSE)
+      g <- qG(g, ordered = FALSE, na.exclude = FALSE)
       return(.Call(Cpp_BWm,x,attr(g,"N.groups"),g,NULL,w,na.rm,fill,TRUE))
     }
   } else {
@@ -257,7 +257,7 @@ fbetween.data.frame <- function(x, g = NULL, w = NULL, na.rm = TRUE, fill = FALS
   if(!missing(...)) stop("Unknown argument ", dotstostr(...))
   if(is.null(g)) return(.Call(Cpp_BWl,x,0L,0L,NULL,w,na.rm,fill,TRUE)) else if(is.atomic(g)) {
     if(is.factor(g)) return(.Call(Cpp_BWl,x,fnlevels(g),g,NULL,w,na.rm,fill,TRUE)) else {
-      g <- qG(g, ordered = FALSE)
+      g <- qG(g, ordered = FALSE, na.exclude = FALSE)
       return(.Call(Cpp_BWl,x,attr(g,"N.groups"),g,NULL,w,na.rm,fill,TRUE))
     }
   } else {
@@ -422,7 +422,7 @@ B.data.frame <- function(x, by = NULL, w = NULL, cols = is.numeric, na.rm = TRUE
 
   if(is.null(by)) return(.Call(Cpp_BWl,x,0L,0L,NULL,w,na.rm,fill,TRUE)) else if (is.atomic(by)) {
     if(is.factor(by)) return(.Call(Cpp_BWl,x,fnlevels(by),by,NULL,w,na.rm,fill,TRUE)) else {
-      by <- qG(by, ordered = FALSE)
+      by <- qG(by, ordered = FALSE, na.exclude = FALSE)
       return(.Call(Cpp_BWl,x,attr(by,"N.groups"),by,NULL,w,na.rm,fill,TRUE))
     }
   } else {

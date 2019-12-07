@@ -241,12 +241,12 @@ psmatCpp <- function(x, g, t = NULL, transpose = FALSE) {
     .Call(Cpp_psmat, x, g, t, transpose)
 }
 
-qFCpp <- function(x, ordered = FALSE) {
-    .Call(Cpp_qF, x, ordered)
+qFCpp <- function(x, ordered = FALSE, na.exclude = TRUE) {
+    .Call(Cpp_qF, x, ordered, na.exclude)
 }
 
-qGCpp <- function(x, ordered = FALSE) {
-    .Call(Cpp_qG, x, ordered)
+qGCpp <- function(x, ordered = FALSE, na.exclude = TRUE) {
+    .Call(Cpp_qG, x, ordered, na.exclude)
 }
 
 setAttributes <- function(x, a) {

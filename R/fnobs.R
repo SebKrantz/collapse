@@ -16,12 +16,12 @@ fNobs.default <- function(x, g = NULL, TRA = NULL, use.g.names = TRUE, ...) {
   if(is.null(TRA)) {
     if(is.null(g)) return(.Call(Cpp_fNobs,x,0L,0L)) else if (is.atomic(g)) {
       if(use.g.names) {
-        if(!is.factor(g)) g <- qF(g)
+        if(!is.factor(g)) g <- qF(g, na.exclude = FALSE)
         lev <- attr(g, "levels")
         return(`names<-`(.Call(Cpp_fNobs,x,length(lev),g), lev))
       } else {
         if(is.factor(g)) return(.Call(Cpp_fNobs,x,fnlevels(g),g)) else {
-          g <- qG(g)
+          g <- qG(g, na.exclude = FALSE)
           return(.Call(Cpp_fNobs,x,attr(g,"N.groups"),g))
         }
       }
@@ -33,7 +33,7 @@ fNobs.default <- function(x, g = NULL, TRA = NULL, use.g.names = TRUE, ...) {
   } else {
     if(is.null(g)) return(.Call(Cpp_TRA,x,.Call(Cpp_fNobs,x,0L,0L),0L,TRAtoInt(TRA))) else if (is.atomic(g)) {
       if(is.factor(g)) return(.Call(Cpp_TRA,x,.Call(Cpp_fNobs,x,fnlevels(g),g),g,TRAtoInt(TRA))) else {
-        g <- qG(g)
+        g <- qG(g, na.exclude = FALSE)
         return(.Call(Cpp_TRA,x,.Call(Cpp_fNobs,x,attr(g,"N.groups"),g),g,TRAtoInt(TRA)))
       }
     } else {
@@ -47,12 +47,12 @@ fNobs.matrix <- function(x, g = NULL, TRA = NULL, use.g.names = TRUE, drop = TRU
   if(is.null(TRA)) {
     if(is.null(g)) return(.Call(Cpp_fNobsm,x,0L,0L,drop)) else if (is.atomic(g)) {
       if(use.g.names) {
-        if(!is.factor(g)) g <- qF(g)
+        if(!is.factor(g)) g <- qF(g, na.exclude = FALSE)
         lev <- attr(g, "levels")
         return(`dimnames<-`(.Call(Cpp_fNobsm,x,length(lev),g,FALSE), list(lev, dimnames(x)[[2L]])))
       } else {
         if(is.factor(g)) return(.Call(Cpp_fNobsm,x,fnlevels(g),g,FALSE)) else {
-          g <- qG(g)
+          g <- qG(g, na.exclude = FALSE)
           return(.Call(Cpp_fNobsm,x,attr(g,"N.groups"),g,FALSE))
         }
       }
@@ -64,7 +64,7 @@ fNobs.matrix <- function(x, g = NULL, TRA = NULL, use.g.names = TRUE, drop = TRU
   } else {
     if(is.null(g)) return(.Call(Cpp_TRAm,x,.Call(Cpp_fNobsm,x,0L,0L,TRUE),0L,TRAtoInt(TRA))) else if (is.atomic(g)) {
       if(is.factor(g)) return(.Call(Cpp_TRAm,x,.Call(Cpp_fNobsm,x,fnlevels(g),g,FALSE),g,TRAtoInt(TRA))) else {
-        g <- qG(g)
+        g <- qG(g, na.exclude = FALSE)
         return(.Call(Cpp_TRAm,x,.Call(Cpp_fNobsm,x,attr(g,"N.groups"),g,FALSE),g,TRAtoInt(TRA)))
       }
     } else {
@@ -78,12 +78,12 @@ fNobs.data.frame <- function(x, g = NULL, TRA = NULL, use.g.names = TRUE, drop =
   if(is.null(TRA)) {
     if(is.null(g)) return(.Call(Cpp_fNobsl,x,0L,0L,drop)) else if (is.atomic(g)) {
       if(use.g.names && !inherits(x, "data.table")) {
-        if(!is.factor(g)) g <- qF(g)
+        if(!is.factor(g)) g <- qF(g, na.exclude = FALSE)
         lev <- attr(g, "levels")
         return(setRow.names(.Call(Cpp_fNobsl,x,length(lev),g,FALSE), lev))
       } else {
         if(is.factor(g)) return(.Call(Cpp_fNobsl,x,fnlevels(g),g,FALSE)) else {
-          g <- qG(g)
+          g <- qG(g, na.exclude = FALSE)
           return(.Call(Cpp_fNobsl,x,attr(g,"N.groups"),g,FALSE))
         }
       }
@@ -96,7 +96,7 @@ fNobs.data.frame <- function(x, g = NULL, TRA = NULL, use.g.names = TRUE, drop =
   } else {
     if(is.null(g)) return(.Call(Cpp_TRAl,x,.Call(Cpp_fNobsl,x,0L,0L,TRUE),0L,TRAtoInt(TRA))) else if (is.atomic(g)) {
       if(is.factor(g)) return(.Call(Cpp_TRAl,x,.Call(Cpp_fNobsl,x,fnlevels(g),g,FALSE),g,TRAtoInt(TRA))) else {
-        g <- qG(g)
+        g <- qG(g, na.exclude = FALSE)
         return(.Call(Cpp_TRAl,x,.Call(Cpp_fNobsl,x,attr(g,"N.groups"),g,FALSE),g,TRAtoInt(TRA)))
       }
     } else {

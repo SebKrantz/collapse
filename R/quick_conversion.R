@@ -1,13 +1,13 @@
 # library(Rcpp)
 # sourceCpp("src/mrtl_mctl.cpp")
 # sourceCpp("src/qF_qG.cpp", rebuild = TRUE) # https://gallery.rcpp.org/articles/fast-factor-generation/
-qF <- function(x, ordered = TRUE) {
+qF <- function(x, ordered = TRUE, na.exclude = TRUE) {
   if(is.factor(x)) return(x)
-  .Call(Cpp_qF, x, ordered)
+  .Call(Cpp_qF, x, ordered, na.exclude)
 }
-qG <- function(x, ordered = TRUE) {
+qG <- function(x, ordered = TRUE, na.exclude = TRUE) {
   if(is.factor(x)) return(x)
-  .Call(Cpp_qG, x, ordered)
+  .Call(Cpp_qG, x, ordered, na.exclude)
 }
 # what about attribute preervation ??
 # -> I think it is not good having all kinds of stuff attached to a matrix ??
