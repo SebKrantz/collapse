@@ -225,7 +225,7 @@ SEXP fmaxlCpp(const List& x, int ng = 0, const IntegerVector& g = 0,
       }
     }
     DUPLICATE_ATTRIB(max, x);
-    max.attr("row.names") = NumericVector::create(NA_REAL, -ng);
+    max.attr("row.names") = IntegerVector::create(NA_INTEGER, -ng); // NumericVector::create(NA_REAL, -ng);
     return max;
   }
 }

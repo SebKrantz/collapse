@@ -224,7 +224,7 @@ SEXP fminlCpp(const List& x, int ng = 0, const IntegerVector& g = 0,
       }
     }
     DUPLICATE_ATTRIB(min, x);
-    min.attr("row.names") = NumericVector::create(NA_REAL, -ng);
+    min.attr("row.names") = IntegerVector::create(NA_INTEGER, -ng); // NumericVector::create(NA_REAL, -ng);
     return min;
   }
 }

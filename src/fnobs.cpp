@@ -238,7 +238,7 @@ SEXP fNobslCpp(List x, int ng = 0, IntegerVector g = 0, bool drop = true) {
       nobs[j] = ni;
     }
     DUPLICATE_ATTRIB(nobs, x);
-    nobs.attr("row.names") = NumericVector::create(NA_REAL, -ng);
+    nobs.attr("row.names") = IntegerVector::create(NA_INTEGER, -ng); // NumericVector::create(NA_REAL, -ng);
     return nobs;
   }
 }

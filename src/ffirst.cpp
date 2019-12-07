@@ -414,7 +414,7 @@ SEXP ffirstlCpp(const List& x, int ng = 0, const IntegerVector& g = 0, bool narm
         }
       }
       DUPLICATE_ATTRIB(first, x);
-      first.attr("row.names") = NumericVector::create(NA_REAL, -ng);
+      first.attr("row.names") = IntegerVector::create(NA_INTEGER, -ng); // NumericVector::create(NA_REAL, -ng);
     } else {
       LogicalVector glj(ng, true); //  Much faster method !! (precomputing indices and then going through data)
       IntegerVector firstindex = no_init_vector(ng);
@@ -467,7 +467,7 @@ SEXP ffirstlCpp(const List& x, int ng = 0, const IntegerVector& g = 0, bool narm
         const CharacterVector& rn = Rf_getAttrib(x, R_RowNamesSymbol); // const doesn't really make a difference !!
         Rf_setAttrib(first, R_RowNamesSymbol, rn[firstindex]); //  first.attr("row.names") = rn[firstindex]; // Other sloghtly faster, but no big deal !!
       } else {
-        first.attr("row.names") = NumericVector::create(NA_REAL, -ng);
+        first.attr("row.names") = IntegerVector::create(NA_INTEGER, -ng); // NumericVector::create(NA_REAL, -ng);
       }
     }
     return first;

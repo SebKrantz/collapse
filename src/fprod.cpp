@@ -232,7 +232,7 @@ SEXP fprodlCpp(const List& x, int ng = 0, const IntegerVector& g = 0,
       }
     }
     DUPLICATE_ATTRIB(prod, x);
-    prod.attr("row.names") = NumericVector::create(NA_REAL, -ng);
+    prod.attr("row.names") = IntegerVector::create(NA_INTEGER, -ng); // NumericVector::create(NA_REAL, -ng);
     return prod;
   }
 }

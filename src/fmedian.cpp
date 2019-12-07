@@ -412,7 +412,7 @@ SEXP fmedianlCpp(const List& x, int ng = 0, const IntegerVector& g = 0,
       }
     }
     DUPLICATE_ATTRIB(med, x);
-    med.attr("row.names") = NumericVector::create(NA_REAL, -ng);
+    med.attr("row.names") = IntegerVector::create(NA_INTEGER, -ng); // NumericVector::create(NA_REAL, -ng);
     return med;
   }
 }

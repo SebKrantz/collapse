@@ -1154,7 +1154,7 @@ SEXP fvarsdlCpp(const List& x, int ng = 0, const IntegerVector& g = 0,
           }
         }
         DUPLICATE_ATTRIB(out, x);
-        out.attr("row.names") = NumericVector::create(NA_REAL, -ng);
+        out.attr("row.names") = IntegerVector::create(NA_INTEGER, -ng); // NumericVector::create(NA_REAL, -ng);
         return out;
       }
     } else { // With weights
@@ -1304,7 +1304,7 @@ SEXP fvarsdlCpp(const List& x, int ng = 0, const IntegerVector& g = 0,
           }
         }
         DUPLICATE_ATTRIB(out, x);
-        out.attr("row.names") = NumericVector::create(NA_REAL, -ng);
+        out.attr("row.names") = IntegerVector::create(NA_INTEGER, -ng); // NumericVector::create(NA_REAL, -ng);
         return out;
       }
     }
@@ -1484,7 +1484,7 @@ SEXP fvarsdlCpp(const List& x, int ng = 0, const IntegerVector& g = 0,
           }
         }
         DUPLICATE_ATTRIB(out, x);
-        out.attr("row.names") = NumericVector::create(NA_REAL, -ng);
+        out.attr("row.names") = IntegerVector::create(NA_INTEGER, -ng); // NumericVector::create(NA_REAL, -ng);
         return out;
       }
     } else { // With weights
@@ -1623,7 +1623,7 @@ SEXP fvarsdlCpp(const List& x, int ng = 0, const IntegerVector& g = 0,
           }
         }
         DUPLICATE_ATTRIB(out, x);
-        out.attr("row.names") = NumericVector::create(NA_REAL, -ng);
+        out.attr("row.names") = IntegerVector::create(NA_INTEGER, -ng); // NumericVector::create(NA_REAL, -ng);
         return out;
       }
     }

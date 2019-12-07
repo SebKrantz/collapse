@@ -235,7 +235,7 @@ SEXP fsumlCpp(const List& x, int ng = 0, const IntegerVector& g = 0,
       }
     }
     DUPLICATE_ATTRIB(sum, x);
-    sum.attr("row.names") = NumericVector::create(NA_REAL, -ng);
+    sum.attr("row.names") = IntegerVector::create(NA_INTEGER, -ng); // NumericVector::create(NA_REAL, -ng);
     return sum;
   }
 }

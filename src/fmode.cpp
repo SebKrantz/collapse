@@ -499,7 +499,7 @@ SEXP fmodelCpp(const List& x, int ng = 0, const IntegerVector& g = 0, const SEXP
   }
   DUPLICATE_ATTRIB(out, x);
   if(ng == 0) out.attr("row.names") = 1;
-  else out.attr("row.names") = NumericVector::create(NA_REAL, -ng);
+  else out.attr("row.names") = IntegerVector::create(NA_INTEGER, -ng); // NumericVector::create(NA_REAL, -ng);
   return out;
 }
 

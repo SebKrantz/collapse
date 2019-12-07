@@ -12,7 +12,7 @@ template <int RTYPE>
     }
     if(names && X.hasAttribute("dimnames")) {
       List dn(2);
-      dn = X.attr("dimnames"); 
+      dn = X.attr("dimnames");
       if (Rf_isNull(dn[0])) {
         CharacterVector rn(l);
         for (int i = l; i--; ) {
@@ -22,21 +22,21 @@ template <int RTYPE>
       } else out.attr("names") = dn[0];
       if (ret != 0) {
         if (Rf_isNull(dn[1])) {
-          out.attr("row.names") = NumericVector::create(NA_REAL,-X.ncol());
+          out.attr("row.names") = IntegerVector::create(NA_INTEGER, -X.ncol()); //NumericVector::create(NA_REAL,-X.ncol());
         } else out.attr("row.names") = dn[1];
         if(ret == 1) {
-          out.attr("class") = "data.frame"; 
+          out.attr("class") = "data.frame";
         } else {
           out.attr("class") = CharacterVector::create("data.table","data.frame");
         }
       }
     } else if (ret != 0) {
-      CharacterVector rn(l); 
+      CharacterVector rn(l);
       for (int i = l; i--; ) {
         rn[i] = std::string("V") + std::to_string(i+1);
       }
-      out.attr("names") = rn; 
-      out.attr("row.names") = NumericVector::create(NA_REAL,-X.ncol());
+      out.attr("names") = rn;
+      out.attr("row.names") = IntegerVector::create(NA_INTEGER, -X.ncol()); // NumericVector::create(NA_REAL,-X.ncol());
       if (ret == 1) {
         out.attr("class") = "data.frame";
       } else {
@@ -56,7 +56,7 @@ template <int RTYPE>
 //   }
 //   if(names && X.hasAttribute("dimnames")) {
 //     List dn(2);
-//     dn = X.attr("dimnames"); 
+//     dn = X.attr("dimnames");
 //     if (Rf_isNull(dn[0])) {
 //       CharacterVector rn(l);
 //       for (int i = l; i--; ) {
@@ -69,17 +69,17 @@ template <int RTYPE>
 //         out.attr("row.names") = NumericVector::create(NA_REAL,-X.ncol());
 //       } else out.attr("row.names") = dn[1];
 //       if(ret == 1) {
-//         out.attr("class") = "data.frame"; 
+//         out.attr("class") = "data.frame";
 //       } else {
 //         out.attr("class") = CharacterVector::create("data.table","data.frame");
 //       }
 //     }
 //   } else if (ret != 0) {
-//     CharacterVector rn(l); 
+//     CharacterVector rn(l);
 //     for (int i = l; i--; ) {
 //       rn[i] = std::string("V") + std::to_string(i+1);
 //     }
-//     out.attr("names") = rn; 
+//     out.attr("names") = rn;
 //     out.attr("row.names") = NumericVector::create(NA_REAL,-X.ncol());
 //     if (ret == 1) {
 //       out.attr("class") = "data.frame";
@@ -89,7 +89,7 @@ template <int RTYPE>
 //   }
 //   return out;
 // }
-  
+
 // template <int RTYPE>
 //  Matrix<RTYPE> mrtmapplyImpl(Matrix<RTYPE> X, Function FUN) {
 //   int l = X.nrow();
@@ -114,7 +114,7 @@ template <int RTYPE>
     }
     if(names && X.hasAttribute("dimnames")) {
       List dn(2);
-      dn = X.attr("dimnames"); 
+      dn = X.attr("dimnames");
       if (Rf_isNull(dn[1])) {
         CharacterVector cn(l);
         for (int i = l; i--; ) {
@@ -124,21 +124,21 @@ template <int RTYPE>
       } else out.attr("names") = dn[1];
       if (ret != 0) {
         if (Rf_isNull(dn[0])) {
-          out.attr("row.names") = NumericVector::create(NA_REAL,-X.nrow());
+          out.attr("row.names") = IntegerVector::create(NA_INTEGER, -X.nrow()); // NumericVector::create(NA_REAL,-X.nrow());
         } else out.attr("row.names") = dn[0];
         if(ret == 1) {
-          out.attr("class") =  "data.frame"; 
+          out.attr("class") =  "data.frame";
         } else {
           out.attr("class") = CharacterVector::create("data.table","data.frame");
         }
       }
     } else if (ret != 0) {
-      CharacterVector cn(l); 
+      CharacterVector cn(l);
       for (int i = l; i--; ) {
         cn[i] = std::string("V") + std::to_string(i+1);
       }
-      out.attr("names") = cn; 
-      out.attr("row.names") = NumericVector::create(NA_REAL,-X.nrow());
+      out.attr("names") = cn;
+      out.attr("row.names") = IntegerVector::create(NA_INTEGER, -X.nrow()); // NumericVector::create(NA_REAL,-X.nrow());
       if (ret == 1) {
         out.attr("class") = "data.frame";
       } else {
@@ -158,7 +158,7 @@ template <int RTYPE>
 //   }
 //   if(names && X.hasAttribute("dimnames")) {
 //     List dn(2);
-//     dn = X.attr("dimnames"); 
+//     dn = X.attr("dimnames");
 //     if (Rf_isNull(dn[1])) {
 //       CharacterVector cn(l);
 //       for (int i = l; i--; ) {
@@ -171,17 +171,17 @@ template <int RTYPE>
 //         out.attr("row.names") = NumericVector::create(NA_REAL,-X.nrow());
 //       } else out.attr("row.names") = dn[0];
 //       if(ret == 1) {
-//         out.attr("class") =  "data.frame"; 
+//         out.attr("class") =  "data.frame";
 //       } else {
 //         out.attr("class") = CharacterVector::create("data.table","data.frame");
 //       }
 //     }
 //   } else if (ret != 0) {
-//     CharacterVector cn(l); 
+//     CharacterVector cn(l);
 //     for (int i = l; i--; ) {
 //       cn[i] = std::string("V") + std::to_string(i+1);
 //     }
-//     out.attr("names") = cn; 
+//     out.attr("names") = cn;
 //     out.attr("row.names") = NumericVector::create(NA_REAL,-X.nrow());
 //     if (ret == 1) {
 //       out.attr("class") = "data.frame";

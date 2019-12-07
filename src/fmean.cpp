@@ -524,7 +524,7 @@ SEXP fmeanlCpp(const List& x, int ng = 0, const IntegerVector& g = 0, const SEXP
         }
       }
       DUPLICATE_ATTRIB(sum, x);
-      sum.attr("row.names") = NumericVector::create(NA_REAL, -ng);
+      sum.attr("row.names") = IntegerVector::create(NA_INTEGER, -ng); // NumericVector::create(NA_REAL, -ng);
       return sum;
     }
   } else { // With weights
@@ -633,7 +633,7 @@ SEXP fmeanlCpp(const List& x, int ng = 0, const IntegerVector& g = 0, const SEXP
         }
       }
       DUPLICATE_ATTRIB(sum, x);
-      sum.attr("row.names") = NumericVector::create(NA_REAL, -ng);
+      sum.attr("row.names") = IntegerVector::create(NA_INTEGER, -ng); // NumericVector::create(NA_REAL, -ng);
       return sum;
     }
   }
