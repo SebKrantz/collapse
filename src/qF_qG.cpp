@@ -6,11 +6,12 @@ using namespace Rcpp;
 template <int RTYPE>
 IntegerVector qFCppImpl( const Vector<RTYPE>& x , bool ordered = true, bool na_exclude = true) {
     Vector<RTYPE> levs = (ordered) ? sort_unique(x) : unique(x);
-    IntegerVector out = no_init_vector(levs.size());
+    int ls = levs.size();
+    IntegerVector out = no_init_vector(ls);
     if(na_exclude) {
       out = match(x, levs);
     } else {
-      out = Rf_match(levs, x, NA_INTEGER);
+      out = Rf_matchE(levs, x, ls, wrap(Vector<RTYPE>::get_na())); // Rf_match(levs, x, NA_INTEGER);
     }
     SHALLOW_DUPLICATE_ATTRIB(out, x); // works for all atomic objects ??
     if(TYPEOF(x) == STRSXP) { // slightly better
@@ -26,13 +27,14 @@ IntegerVector qFCppImpl( const Vector<RTYPE>& x , bool ordered = true, bool na_e
 template <int RTYPE>
 IntegerVector qGCppImpl( const Vector<RTYPE>& x , bool ordered = true, bool na_exclude = true) {
     Vector<RTYPE> levs = (ordered) ? sort_unique(x) : unique(x);
-    IntegerVector out = no_init_vector(levs.size());
+    int ls = levs.size();
+    IntegerVector out = no_init_vector(ls);
     if(na_exclude) {
       out = match(x, levs);
     } else {
-      out = Rf_match(levs, x, NA_INTEGER);
+      out = Rf_matchE(levs, x, ls, wrap(Vector<RTYPE>::get_na())); // Rf_match(levs, x, NA_INTEGER);
     }
-    out.attr("N.groups") = levs.size();
+    out.attr("N.groups") = ls;
     out.attr("class") = "qG";
     return out;
 }
