@@ -1116,6 +1116,7 @@ List fscalelCpp(List x, int ng = 0, IntegerVector g = 0, SEXP gs = R_NilValue,
         }
       } else { // with groups and weights
         int gss = g.size();
+        if(gss != wgs) stop("length(w) must match length(g)");
         if(narm) {
           for(int j = l; j--; ) {
             NumericVector column = x[j];
