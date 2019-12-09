@@ -126,8 +126,9 @@ cols2int <- function(cols, x, nam) {
     return(which(cols))
   } else stop("cols must be a function, character vector, numeric indices or logical vector!")
 }
+is.nmfactor <- function(x) inherits(x, "factor") && !anyNA(unclass(x))
 at2GRP <- function(x) {
-  if(is.factor(x))
+  if(is.nmfactor(x))
   return(list(length(attr(x, "levels")), x, NULL)) else {
     res <- list(NULL, NULL, NULL)
     res[[2L]] <- qG(x, ordered = FALSE, na.exclude = FALSE)
@@ -180,4 +181,9 @@ dotstostr <- function(...) {
   nc <- nchar(args)
   substr(args, 2, nc) # 3, nc-1 for no brackets !!
 }
-is.nmfactor <- function(x) inherits(x, "factor") && !anyNA(x)
+addNA2 <- function(x) {
+  if(!anyNA(unclass(x))) return(x)
+  ll <- attr(x, "levels")
+  if(!anyNA(ll)) ll <- c(ll, NA)
+  return(factor(x, levels = ll, exclude = NULL))
+}
