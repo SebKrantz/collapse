@@ -32,7 +32,7 @@ IntegerVector qGCppImpl(const Vector<RTYPE>& x, bool ordered = true, bool na_exc
     }
     // SHALLOW_DUPLICATE_ATTRIB(out, x); // needed ??
     out.attr("N.groups") = levs.size();
-    out.attr("class") = "qG";
+    out.attr("class") = (ordered) ? CharacterVector::create("ordered","qG") : "qG";
     return out;
 }
 
