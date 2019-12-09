@@ -2,11 +2,15 @@
 # sourceCpp("src/mrtl_mctl.cpp")
 # sourceCpp("src/qF_qG.cpp", rebuild = TRUE) # https://gallery.rcpp.org/articles/fast-factor-generation/
 qF <- function(x, ordered = TRUE, na.exclude = TRUE) {
-  if(is.factor(x)) return(x)
+  if(is.factor(x)) {
+    if(ordered && !is.ordered(x)) class(x) <- c("ordered","factor")
+    if(!na.exclude) return(addNA(x, ifany = TRUE))
+    return(x)
+  }
   .Call(Cpp_qF, x, ordered, na.exclude)
 }
 qG <- function(x, ordered = TRUE, na.exclude = TRUE) {
-  if(is.factor(x)) return(x)
+  if(is.factor(x) && !na.exclude) return(addNA(x, ifany = TRUE)) else return(x)
   .Call(Cpp_qG, x, ordered, na.exclude)
 }
 # what about attribute preervation ??
