@@ -2,9 +2,8 @@
 #include <Rcpp.h>
 using namespace Rcpp;
 
-// Old, non Cpp11 solution -> problem:: logical vectors not working !!!
 template <int RTYPE>
-IntegerVector qFCppImpl( const Vector<RTYPE>& x , bool ordered = true, bool na_exclude = true) {
+IntegerVector qFCppImpl(const Vector<RTYPE>& x, bool ordered = true, bool na_exclude = true) {
     Vector<RTYPE> levs = (ordered) ? sort_unique(x) : unique(x);
     IntegerVector out = no_init_vector(levs.size());
     if(na_exclude) {
@@ -18,13 +17,12 @@ IntegerVector qFCppImpl( const Vector<RTYPE>& x , bool ordered = true, bool na_e
     } else {
       out.attr("levels") = Rf_coerceVector(levs, STRSXP);
     }
-    // out.attr("levels") = Rf_coerceVector(levs, STRSXP);
     out.attr("class") = (ordered) ? CharacterVector::create("ordered","factor") : "factor";
     return out;
 }
 
 template <int RTYPE>
-IntegerVector qGCppImpl( const Vector<RTYPE>& x , bool ordered = true, bool na_exclude = true) {
+IntegerVector qGCppImpl(const Vector<RTYPE>& x, bool ordered = true, bool na_exclude = true) {
     Vector<RTYPE> levs = (ordered) ? sort_unique(x) : unique(x);
     IntegerVector out = no_init_vector(levs.size());
     if(na_exclude) {
@@ -32,30 +30,149 @@ IntegerVector qGCppImpl( const Vector<RTYPE>& x , bool ordered = true, bool na_e
     } else {
       out = Rf_match(levs, x, NA_INTEGER); // Rf_matchE(levs, x, ls, wrap(Vector<RTYPE>::get_na()));
     }
+    // SHALLOW_DUPLICATE_ATTRIB(out, x); // needed ??
     out.attr("N.groups") = levs.size();
     out.attr("class") = "qG";
     return out;
 }
 
 // [[Rcpp::export]]   // do Cpp 11 solution using return macro ??
-SEXP qFCpp( SEXP x , bool ordered = true, bool na_exclude = true) {
-  switch( TYPEOF(x) ) {
+SEXP qFCpp(SEXP x, bool ordered = true, bool na_exclude = true) {
+  switch(TYPEOF(x)) {
   case INTSXP: return qFCppImpl<INTSXP>(x, ordered, na_exclude);
   case REALSXP: return qFCppImpl<REALSXP>(x, ordered, na_exclude);
   case STRSXP: return qFCppImpl<STRSXP>(x, ordered, na_exclude);
-  // case LGLSXP: return qFCppImpl<LGLSXP>(x, ordered);
+  case LGLSXP: {
+    LogicalVector xl = x;
+    int l = xl.size();
+    LogicalVector nd(3);
+    IntegerVector out = no_init_vector(l);
+    if(na_exclude) {
+      for(int i = 0; i != l; ++i) {
+        if(xl[i] == NA_LOGICAL) {
+          out[i] = NA_INTEGER;
+          nd[0] = true;
+        } else if(xl[i]) {
+          out[i] = 2;
+          nd[2] = true;
+        } else {
+          out[i] = 1;
+          nd[1] = true;
+        }
+      }
+    } else {
+      for(int i = 0; i != l; ++i) {
+        if(xl[i] == NA_LOGICAL) {
+          out[i] = 3;
+          nd[0] = true;
+        } else if(xl[i]) {
+          out[i] = 2;
+          nd[2] = true;
+        } else {
+          out[i] = 1;
+          nd[1] = true;
+        }
+      }
+    }
+    SHALLOW_DUPLICATE_ATTRIB(out, x);
+    out.attr("levels") = CharacterVector::create("NA", "FALSE", "TRUE")[nd];
+    out.attr("class") = (ordered) ? CharacterVector::create("ordered","factor") : "factor";
+    return out;
+  }
   default: stop("Not Supported SEXP Type");
   }
   return R_NilValue;
 }
 
 // [[Rcpp::export]]   // do Cpp 11 solution using return macro ??
-SEXP qGCpp( SEXP x , bool ordered = true, bool na_exclude = true) {
-  switch( TYPEOF(x) ) {
+SEXP qGCpp(SEXP x, bool ordered = true, bool na_exclude = true) {
+  switch(TYPEOF(x)) {
   case INTSXP: return qGCppImpl<INTSXP>(x, ordered, na_exclude);
   case REALSXP: return qGCppImpl<REALSXP>(x, ordered, na_exclude);
   case STRSXP: return qGCppImpl<STRSXP>(x, ordered, na_exclude);
-  // case LGLSXP: return qGCppImpl<LGLSXP>(x, ordered);
+  case LGLSXP: {
+    LogicalVector xl = x;
+    int l = xl.size();
+    LogicalVector nd(3);
+    IntegerVector out = no_init_vector(l);
+    if(na_exclude) {
+      for(int i = 0; i != l; ++i) {
+        if(xl[i] == NA_LOGICAL) {
+          out[i] = NA_INTEGER;
+          nd[0] = true;
+        } else if(xl[i]) {
+          out[i] = 2;
+          nd[2] = true;
+        } else {
+          out[i] = 1;
+          nd[1] = true;
+        }
+      }
+    } else {
+      for(int i = 0; i != l; ++i) {
+        if(xl[i] == NA_LOGICAL) {
+          out[i] = 3;
+          nd[0] = true;
+        } else if(xl[i]) {
+          out[i] = 2;
+          nd[2] = true;
+        } else {
+          out[i] = 1;
+          nd[1] = true;
+        }
+      }
+    }
+    SHALLOW_DUPLICATE_ATTRIB(out, x);
+    out.attr("N.groups") = int(nd[0]+nd[1]+nd[2]);
+    out.attr("class") = "qG";
+    return out;
+  }
+  default: stop("Not Supported SEXP Type");
+  }
+  return R_NilValue;
+}
+
+
+template <int RTYPE>
+Vector<RTYPE> funiqueImpl(const Vector<RTYPE>& x, bool ordered = false) {
+  if(ordered) {
+    Vector<RTYPE> out = sort_unique(x);
+    DUPLICATE_ATTRIB(out, x);
+    return out;
+  } else {
+    Vector<RTYPE> out = unique(x);
+    DUPLICATE_ATTRIB(out, x);
+    return out;
+  }
+}
+
+// [[Rcpp::export]]
+SEXP funique(SEXP x, bool ordered = false) {
+  switch(TYPEOF(x)) {
+  case INTSXP: return funiqueImpl<INTSXP>(x, ordered);
+  case REALSXP: return funiqueImpl<REALSXP>(x, ordered);
+  case STRSXP: return funiqueImpl<STRSXP>(x, ordered);
+  case LGLSXP: {
+    LogicalVector xl = x;
+    LogicalVector nd(3);
+    int ndc = 0;
+    for(int i = xl.size(); i--; ) {
+      if(nd[0] == false && xl[i] == NA_LOGICAL) {
+        nd[0] = true;
+        ++ndc;
+      } else if(nd[2] == false && xl[i]) {
+        nd[2] = true;
+        ++ndc;
+      } else if(nd[1] == false) {
+        nd[1] = true;
+        ++ndc;
+      }
+      if(ndc == 3) break;
+    }
+    LogicalVector out = LogicalVector::create(NA_LOGICAL, false, true)[nd];
+    DUPLICATE_ATTRIB(out, x);
+    return out;
+  }
   default: stop("Not Supported SEXP Type");
   }
   return R_NilValue;
