@@ -18,11 +18,13 @@ Vector<RTYPE> flagleadCppImpl(const Vector<RTYPE>& x, const IntegerVector& n, co
   }
   auto ff = fil[0];
 
-  int l = x.size(), ns = n.size();
+  int l = x.size(), ns = n.size(), prev = INT_MIN;
   IntegerVector absn = no_init_vector(ns);
   for(int i = 0; i != ns; ++i) {
-    if(n[i]<0) absn[i] = -n[i];
-    else absn[i] = n[i];
+    if(n[i] == prev) stop("duplicated values in n detected"); // because one might mistakenly pass a factor to the n-slot !!
+    prev = n[i];
+    if(prev < 0) absn[i] = -prev;
+    else absn[i] = prev;
   }
   if(ns == 1) names = false;
   CharacterVector nc = names ? Rf_coerceVector(absn, STRSXP) : NA_STRING;  // NumericVector(abs(n))
@@ -242,12 +244,15 @@ Matrix<RTYPE> flagleadmCppImpl(const Matrix<RTYPE>& x, const IntegerVector& n, c
   }
   auto ff = fil[0];
 
-  int l = x.nrow(), col = x.ncol(), ns = n.size(), pos = 0;
+  int l = x.nrow(), col = x.ncol(), ns = n.size(), pos = INT_MIN;
   IntegerVector absn = no_init_vector(ns);
   for(int i = 0; i != ns; ++i) {
-    if(n[i]<0) absn[i] = -n[i];
-    else absn[i] = n[i];
+    if(n[i] == pos) stop("duplicated values in n detected"); // because one might mistakenly pass a factor to the n-slot !!
+    pos = n[i];
+    if(pos < 0) absn[i] = -pos;
+    else absn[i] = pos;
   }
+  pos = 0;
   CharacterVector nc = names ? Rf_coerceVector(absn, STRSXP) : NA_STRING; // NumericVector(abs(n))
   CharacterVector colnam = names ? no_init_vector(col*ns) : no_init_vector(1); // what if no names ??
   CharacterVector coln = names ? coln_check(colnames(x)) : NA_STRING;
@@ -475,13 +480,16 @@ List flagleadlCpp(const List& x, const IntegerVector& n = 1, const SEXP& fill = 
     LogicalVector f = fill;
     lfill = f[0] == NA_LOGICAL;
   }
-  int l = x.size(), ns = n.size(), pos = 0;
+  int l = x.size(), ns = n.size(), pos = INT_MIN;
   List out(l*ns);
   IntegerVector absn = no_init_vector(ns);
   for(int i = 0; i != ns; ++i) {
-    if(n[i]<0) absn[i] = -n[i];
-    else absn[i] = n[i];
+    if(n[i] == pos) stop("duplicated values in n detected"); // because one might mistakenly pass a factor to the n-slot !!
+    pos = n[i];
+    if(pos < 0) absn[i] = -pos;
+    else absn[i] = pos;
   }
+  pos = 0;
   CharacterVector nc = names ? Rf_coerceVector(absn, STRSXP) : NA_STRING; // NumericVector(abs(n))
   CharacterVector nam = names ? no_init_vector(l*ns) : no_init_vector(1); // what if no names ??
   CharacterVector na = names ? coln_check(x.attr("names")) : NA_STRING;

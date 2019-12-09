@@ -22,13 +22,16 @@ NumericVector fgrowthCpp(const NumericVector& x, const IntegerVector& n = 1, con
                          const SEXP& gs = R_NilValue, const SEXP& t = R_NilValue,
                          bool logdiff = false, bool names = true) {
 
-  int l = x.size(), ns = n.size(), ds = diff.size(), zeros = 0, pos = 0;
+  int l = x.size(), ns = n.size(), ds = diff.size(), zeros = 0, pos = INT_MIN;
   IntegerVector absn = no_init_vector(ns);
   for(int i = ns; i--; ) {
-    if(n[i] == 0) ++zeros;
-    if(n[i] < 0) absn[i] = -n[i];
-    else absn[i] = n[i];
+    if(n[i] == pos) stop("duplicated values in n detected"); // because one might mistakenly pass a factor to the n-slot !!
+    pos = n[i];
+    if(pos == 0) ++zeros;
+    if(pos < 0) absn[i] = -pos;
+    else absn[i] = pos;
   }
+  pos = 0;
   auto FUN = logdiff ? do_logdiff : do_growth;
   // double (*FUN)(double, double); // https://stackoverflow.com/questions/5582869/how-do-i-store-a-function-to-a-variable
   std::string stub, stub2; // String -> error !!
@@ -536,13 +539,16 @@ NumericMatrix fgrowthmCpp(const NumericMatrix& x, const IntegerVector& n = 1, co
                           const SEXP& gs = R_NilValue, const SEXP& t = R_NilValue,
                           bool logdiff = false, bool names = true) {
 
-  int l = x.nrow(), col = x.ncol(), ns = n.size(), ds = diff.size(), zeros = 0, pos = 0;
+  int l = x.nrow(), col = x.ncol(), ns = n.size(), ds = diff.size(), zeros = 0, pos = INT_MIN;
   IntegerVector absn = no_init_vector(ns);
   for(int i = ns; i--; ) {
-    if(n[i] == 0) ++zeros;
-    if(n[i] < 0) absn[i] = -n[i];
-    else absn[i] = n[i];
+    if(n[i] == pos) stop("duplicated values in n detected"); // because one might mistakenly pass a factor to the n-slot !!
+    pos = n[i];
+    if(pos == 0) ++zeros;
+    if(pos < 0) absn[i] = -pos;
+    else absn[i] = pos;
   }
+  pos = 0;
   auto FUN = logdiff ? do_logdiff : do_growth;
   std::string stub, stub2;
   if(names) {
@@ -1052,13 +1058,16 @@ List fgrowthlCpp(const List& x, const IntegerVector& n = 1, const IntegerVector&
                  const SEXP& gs = R_NilValue, const SEXP& t = R_NilValue,
                  bool logdiff = false, bool names = true) {
 
-  int l = x.size(), ns = n.size(), ds = diff.size(), zeros = 0, pos = 0;
+  int l = x.size(), ns = n.size(), ds = diff.size(), zeros = 0, pos = INT_MIN;
   IntegerVector absn = no_init_vector(ns);
   for(int i = ns; i--; ) {
-    if(n[i] == 0) ++zeros;
-    if(n[i] < 0) absn[i] = -n[i];
-    else absn[i] = n[i];
+    if(n[i] == pos) stop("duplicated values in n detected"); // because one might mistakenly pass a factor to the n-slot !!
+    pos = n[i];
+    if(pos == 0) ++zeros;
+    if(pos < 0) absn[i] = -pos;
+    else absn[i] = pos;
   }
+  pos = 0;
   auto FUN = logdiff ? do_logdiff : do_growth;
   std::string stub, stub2;
   if(names) {
