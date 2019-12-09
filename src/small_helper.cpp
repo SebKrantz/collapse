@@ -61,6 +61,14 @@ void cond_duplattributes(SEXP x, SEXP y) {
 //   return y;
 // }
 
+// // [[Rcpp::export]]
+// bool fanyNAint(IntegerVector x) {
+//   for(int i = x.size(); i--; ) if(x[i] == NA_INTEGER) return true;
+//   return false;
+// }
+
+
+
 // [[Rcpp::export]] // not faster than base method on large data (PRIO)!!
 List lassignCpp(const List& x, int s, const SEXP& rows = R_NilValue, double fill = NA_REAL) {
   int l = x.size(), tr = TYPEOF(rows);
