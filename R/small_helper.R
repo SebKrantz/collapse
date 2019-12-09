@@ -81,10 +81,11 @@ na_insert <- function(x, prop = 0.1) {
     x[matrix(NAloc, nrow = n, ncol = p)] <- NA
   } else if(is.atomic(x)) {
     l <- length(x)
-    x[sample.int(l, floow(l*prop))] <- NA
+    x[sample.int(l, floor(l * prop))] <- NA
   } else stop("x must be an atomic vector, matrix or data.frame")
   return(x)
 }
+fnlevels <- function(x) length(attr(x, "levels")) # make cpp version ?? -> nope, slower !!
 
 
 
@@ -102,7 +103,6 @@ addAttributes <- function(x, a) {
   ax <- attributes(x)
   .Call(Cpp_setAttributes, x, c(ax, a))
 }
-fnlevels <- function(x) length(attr(x, "levels")) # make cpp version ??
 TRAtoInt <- function(x) # A lot faster than match based verion !!!
   switch(x, replace_fill = 1L, replace = 2L, `-` = 3L, `-+` = 4L, `/` = 5L, `%` = 6L, `+` = 7L, `*` = 8L,
             stop("Unknown transformation!"))
@@ -116,9 +116,15 @@ give_nam <- function(x, gn, stub) {
   x
 }
 cols2int <- function(cols, x, nam) {
-  if(is.function(cols)) which(vapply(x, cols, TRUE)) else if(is.character(cols))
-    anyNAerror(match(cols, nam), "Unknown column names!") else if(is.logical(cols)) which(cols) else if(is.numeric(cols)) cols else
-      stop("cols must be a function, character vector, numeric indices or logical vector!")
+ if(is.numeric(cols)) {
+  if(max(abs(cols)) > length(x)) stop("Index out of range abs(1:length(x))")
+  return(cols)
+ } else if(is.function(cols))
+  return(which(vapply(x, cols, TRUE))) else if(is.character(cols))
+  return(anyNAerror(match(cols, nam), "Unknown column names!")) else if(is.logical(cols)) {
+    if(llength(cols) != length(x)) stop("Logical subsetting vector must match columns!")
+    return(which(cols))
+  } else stop("cols must be a function, character vector, numeric indices or logical vector!")
 }
 at2GRP <- function(x) {
   if(is.factor(x))
@@ -153,10 +159,11 @@ colsubset <- function(x, ind) { # also works for grouped tibbles !!
   ax[["names"]] <- ax[["names"]][ind]
   return(.Call(Cpp_setAttributes, x[ind], ax)) # return(`attributes<-`(x[ind], ax)) # This is slow on large data -> a lot of checks !!!
 }
-rgrep <- function(exp, nam, ...) if(length(exp) > 1L) sort.int(unique.default(vapply(exp, grep, 1L, nam, ...))) else grep(exp, nam, ...)
+rgrep <- function(exp, nam, ...) if(length(exp) > 1L) funique(vapply(exp, grep, 1L, nam, ...), TRUE) else grep(exp, nam, ...)
 NROW2 <- function(x, d) if(length(d)) d[1L] else length(x)
 NCOL2 <- function(d, ilv) if(ilv) d[2L] else 1L
 charorNULL <- function(x) if(is.character(x)) x else NULL
+# more security here??
 cols2log <- function(x, nam, cols) {
   if(is.function(cols)) return(vapply(x, cols, TRUE)) else if(is.character(cols)) return(nam %in% cols) else {
     r <- logical(length(x))
@@ -173,3 +180,4 @@ dotstostr <- function(...) {
   nc <- nchar(args)
   substr(args, 2, nc) # 3, nc-1 for no brackets !!
 }
+is.nmfactor <- function(x) inherits(x, "factor") && !anyNA(x)
