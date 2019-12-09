@@ -4,13 +4,21 @@
 qF <- function(x, ordered = TRUE, na.exclude = TRUE) {
   if(is.factor(x)) {
     if(ordered && !is.ordered(x)) class(x) <- c("ordered","factor")
-    if(!na.exclude) return(addNA(x, ifany = TRUE))
-    return(x)
+    if(na.exclude) return(x) else return(addNA2(x))
   }
   .Call(Cpp_qF, x, ordered, na.exclude)
 }
 qG <- function(x, ordered = TRUE, na.exclude = TRUE) {
-  if(is.factor(x) && !na.exclude) return(addNA(x, ifany = TRUE)) else return(x)
+  if(is.factor(x)) {
+    ll <- attr(x, "levels")
+    if(na.exclude || !anyNA(unclass(x)))
+      return(`attributes<-`(x, list(N.groups = length(ll), class = c(if(ordered) "ordered", "qG"))))
+    ng <- if(anyNA(ll)) length(ll) else length(ll)+1L
+    attributes(x) <- NULL
+    x[is.na(x)] <- ng
+    attributes(x) <- list(N.groups = ng, class = c(if(ordered) "ordered", "qG"))
+    return(x)
+  }
   .Call(Cpp_qG, x, ordered, na.exclude)
 }
 # what about attribute preervation ??
