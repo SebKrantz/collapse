@@ -126,7 +126,6 @@ cols2int <- function(cols, x, nam) {
     return(which(cols))
   } else stop("cols must be a function, character vector, numeric indices or logical vector!")
 }
-is.nmfactor <- function(x) inherits(x, "factor") && !anyNA(unclass(x))
 at2GRP <- function(x) {
   if(is.nmfactor(x))
   return(list(length(attr(x, "levels")), x, NULL)) else {
@@ -181,9 +180,20 @@ dotstostr <- function(...) {
   nc <- nchar(args)
   substr(args, 2, nc) # 3, nc-1 for no brackets !!
 }
+is.nmfactor <- function(x) inherits(x, "factor") && (inherits(x, "na.included") || !anyNA(unclass(x)))
 addNA2 <- function(x) {
   if(!anyNA(unclass(x))) return(x)
-  ll <- attr(x, "levels")
-  if(!anyNA(ll)) ll <- c(ll, NA)
-  return(factor(x, levels = ll, exclude = NULL))
+  ax <- attributes(x)
+  if(!anyNA(ax[["levels"]])) ax[["levels"]] <- c(ax[["levels"]], NA)
+  attributes(x) <- NULL
+  x[is.na(x)] <- length(ax[["levels"]])
+  return(setAttributes(x, ax))
 }
+
+# addNA2 <- function(x) {
+#   clx <- c(class(x), "na.included")
+#   if(!anyNA(unclass(x))) return(`oldClass<-`(x, clx))
+#   ll <- attr(x, "levels")
+#   if(!anyNA(ll)) ll <- c(ll, NA)
+#   return(`oldClass<-`(factor(x, levels = ll, exclude = NULL), clx))
+# }

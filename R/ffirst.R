@@ -17,11 +17,11 @@ ffirst.default <- function(x, g = NULL, TRA = NULL, na.rm = TRUE, use.g.names = 
   if(is.null(TRA)) {
     if(is.null(g)) return(.Call(Cpp_ffirst,x,0L,0L,na.rm)) else if(is.atomic(g)) {
       if(use.g.names) {
-        if(!is.factor(g)) g <- qF(g, na.exclude = FALSE)
+        if(!is.nmfactor(g)) g <- qF(g, na.exclude = FALSE)
         lev <- attr(g, "levels")
         return(`names<-`(.Call(Cpp_ffirst,x,length(lev),g,na.rm), lev))
       } else {
-        if(is.factor(g)) return(.Call(Cpp_ffirst,x,fnlevels(g),g,na.rm)) else {
+        if(is.nmfactor(g)) return(.Call(Cpp_ffirst,x,fnlevels(g),g,na.rm)) else {
           g <- qG(g, na.exclude = FALSE)
           return(.Call(Cpp_ffirst,x,attr(g,"N.groups"),g,na.rm))
         }
@@ -33,7 +33,7 @@ ffirst.default <- function(x, g = NULL, TRA = NULL, na.rm = TRUE, use.g.names = 
     }
   } else {
     if(is.null(g)) return(.Call(Cpp_TRA,x,.Call(Cpp_ffirst,x,0L,0L,na.rm),0L,TRAtoInt(TRA))) else if (is.atomic(g)) {
-      if(is.factor(g)) return(.Call(Cpp_TRA,x,.Call(Cpp_ffirst,x,fnlevels(g),g,na.rm),g,TRAtoInt(TRA))) else {
+      if(is.nmfactor(g)) return(.Call(Cpp_TRA,x,.Call(Cpp_ffirst,x,fnlevels(g),g,na.rm),g,TRAtoInt(TRA))) else {
         g <- qG(g, na.exclude = FALSE)
         return(.Call(Cpp_TRA,x,.Call(Cpp_ffirst,x,attr(g,"N.groups"),g,na.rm),g,TRAtoInt(TRA)))
       }
@@ -48,11 +48,11 @@ ffirst.matrix <- function(x, g = NULL, TRA = NULL, na.rm = TRUE, use.g.names = T
   if(is.null(TRA)) {
     if(is.null(g)) return(.Call(Cpp_ffirstm,x,0L,0L,na.rm,drop)) else if(is.atomic(g)) {
       if(use.g.names) {
-        if(!is.factor(g)) g <- qF(g, na.exclude = FALSE)
+        if(!is.nmfactor(g)) g <- qF(g, na.exclude = FALSE)
         lev <- attr(g, "levels")
         return(`dimnames<-`(.Call(Cpp_ffirstm,x,length(lev),g,na.rm,FALSE), list(lev, dimnames(x)[[2L]])))
       } else {
-        if(is.factor(g)) return(.Call(Cpp_ffirstm,x,fnlevels(g),g,na.rm,FALSE)) else {
+        if(is.nmfactor(g)) return(.Call(Cpp_ffirstm,x,fnlevels(g),g,na.rm,FALSE)) else {
           g <- qG(g, na.exclude = FALSE)
           return(.Call(Cpp_ffirstm,x,attr(g,"N.groups"),g,na.rm,FALSE))
         }
@@ -64,7 +64,7 @@ ffirst.matrix <- function(x, g = NULL, TRA = NULL, na.rm = TRUE, use.g.names = T
     }
   } else {
     if(is.null(g)) return(.Call(Cpp_TRAm,x,.Call(Cpp_ffirstm,x,0L,0L,na.rm,TRUE),0L,TRAtoInt(TRA))) else if (is.atomic(g)) {
-      if(is.factor(g)) return(.Call(Cpp_TRAm,x,.Call(Cpp_ffirstm,x,fnlevels(g),g,na.rm,FALSE),g,TRAtoInt(TRA))) else {
+      if(is.nmfactor(g)) return(.Call(Cpp_TRAm,x,.Call(Cpp_ffirstm,x,fnlevels(g),g,na.rm,FALSE),g,TRAtoInt(TRA))) else {
         g <- qG(g, na.exclude = FALSE)
         return(.Call(Cpp_TRAm,x,.Call(Cpp_ffirstm,x,attr(g,"N.groups"),g,na.rm,FALSE),g,TRAtoInt(TRA)))
       }
@@ -81,11 +81,11 @@ ffirst.data.frame <- function(x, g = NULL, TRA = NULL, na.rm = TRUE, use.g.names
       if(drop) return(unlist(.Call(Cpp_ffirstl,x,0L,0L,na.rm))) else return(.Call(Cpp_ffirstl,x,0L,0L,na.rm))
       } else if(is.atomic(g)) {
       if(use.g.names && !inherits(x, "data.table")) {
-        if(!is.factor(g)) g <- qF(g, na.exclude = FALSE)
+        if(!is.nmfactor(g)) g <- qF(g, na.exclude = FALSE)
         lev <- attr(g, "levels")
         return(setRow.names(.Call(Cpp_ffirstl,x,length(lev),g,na.rm), lev))
       } else {
-        if(is.factor(g)) return(.Call(Cpp_ffirstl,x,fnlevels(g),g,na.rm)) else {
+        if(is.nmfactor(g)) return(.Call(Cpp_ffirstl,x,fnlevels(g),g,na.rm)) else {
           g <- qG(g, na.exclude = FALSE)
           return(.Call(Cpp_ffirstl,x,attr(g,"N.groups"),g,na.rm))
         }
@@ -98,7 +98,7 @@ ffirst.data.frame <- function(x, g = NULL, TRA = NULL, na.rm = TRUE, use.g.names
     }
   } else {
     if(is.null(g)) return(.Call(Cpp_TRAl,x,.Call(Cpp_ffirstl,x,0L,0L,na.rm),0L,TRAtoInt(TRA))) else if (is.atomic(g)) {
-      if(is.factor(g)) return(.Call(Cpp_TRAl,x,.Call(Cpp_ffirstl,x,fnlevels(g),g,na.rm),g,TRAtoInt(TRA))) else {
+      if(is.nmfactor(g)) return(.Call(Cpp_TRAl,x,.Call(Cpp_ffirstl,x,fnlevels(g),g,na.rm),g,TRAtoInt(TRA))) else {
         g <- qG(g, na.exclude = FALSE)
         return(.Call(Cpp_TRAl,x,.Call(Cpp_ffirstl,x,attr(g,"N.groups"),g,na.rm),g,TRAtoInt(TRA)))
       }

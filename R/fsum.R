@@ -15,11 +15,11 @@ fsum.default <- function(x, g = NULL, TRA = NULL, na.rm = TRUE, use.g.names = TR
   if(is.null(TRA)) {
     if(is.null(g)) return(.Call(Cpp_fsum,x,0L,0L,na.rm)) else if (is.atomic(g)) {
       if(use.g.names) {
-        if(!is.factor(g)) g <- qF(g, na.exclude = FALSE)
+        if(!is.nmfactor(g)) g <- qF(g, na.exclude = FALSE)
         lev <- attr(g, "levels")
         return(`names<-`(.Call(Cpp_fsum,x,length(lev),g,na.rm), lev))
       } else {
-        if(is.factor(g)) return(.Call(Cpp_fsum,x,fnlevels(g),g,na.rm)) else {
+        if(is.nmfactor(g)) return(.Call(Cpp_fsum,x,fnlevels(g),g,na.rm)) else {
           g <- qG(g, na.exclude = FALSE)
           return(.Call(Cpp_fsum,x,attr(g,"N.groups"),g,na.rm))
         }
@@ -37,7 +37,7 @@ fsum.default <- function(x, g = NULL, TRA = NULL, na.rm = TRUE, use.g.names = TR
     }
   } else {
     if(is.null(g)) return(.Call(Cpp_TRA,x,.Call(Cpp_fsum,x,0L,0L,na.rm),0L,TRAtoInt(TRA))) else if (is.atomic(g)) {
-      if(is.factor(g)) return(.Call(Cpp_TRA,x,.Call(Cpp_fsum,x,fnlevels(g),g,na.rm),g,TRAtoInt(TRA))) else {
+      if(is.nmfactor(g)) return(.Call(Cpp_TRA,x,.Call(Cpp_fsum,x,fnlevels(g),g,na.rm),g,TRAtoInt(TRA))) else {
         g <- qG(g, na.exclude = FALSE)
         return(.Call(Cpp_TRA,x,.Call(Cpp_fsum,x,attr(g,"N.groups"),g,na.rm),g,TRAtoInt(TRA)))
       }
@@ -55,11 +55,11 @@ fsum.matrix <- function(x, g = NULL, TRA = NULL, na.rm = TRUE, use.g.names = TRU
   if(is.null(TRA)) {
     if(is.null(g)) return(.Call(Cpp_fsumm,x,0L,0L,na.rm,drop)) else if (is.atomic(g)) {
       if(use.g.names) {
-        if(!is.factor(g)) g <- qF(g, na.exclude = FALSE)
+        if(!is.nmfactor(g)) g <- qF(g, na.exclude = FALSE)
         lev <- attr(g, "levels")
         return(`dimnames<-`(.Call(Cpp_fsumm,x,length(lev),g,na.rm,FALSE), list(lev, dimnames(x)[[2L]])))
       } else {
-        if(is.factor(g)) return(.Call(Cpp_fsumm,x,fnlevels(g),g,na.rm,FALSE)) else {
+        if(is.nmfactor(g)) return(.Call(Cpp_fsumm,x,fnlevels(g),g,na.rm,FALSE)) else {
           g <- qG(g, na.exclude = FALSE)
           return(.Call(Cpp_fsumm,x,attr(g,"N.groups"),g,na.rm,FALSE))
         }
@@ -77,7 +77,7 @@ fsum.matrix <- function(x, g = NULL, TRA = NULL, na.rm = TRUE, use.g.names = TRU
     }
   } else {
     if(is.null(g)) return(.Call(Cpp_TRAm,x,.Call(Cpp_fsumm,x,0L,0L,na.rm,TRUE),0L,TRAtoInt(TRA))) else if (is.atomic(g)) {
-      if(is.factor(g)) return(.Call(Cpp_TRAm,x,.Call(Cpp_fsumm,x,fnlevels(g),g,na.rm,FALSE),g,TRAtoInt(TRA))) else {
+      if(is.nmfactor(g)) return(.Call(Cpp_TRAm,x,.Call(Cpp_fsumm,x,fnlevels(g),g,na.rm,FALSE),g,TRAtoInt(TRA))) else {
         g <- qG(g, na.exclude = FALSE)
         return(.Call(Cpp_TRAm,x,.Call(Cpp_fsumm,x,attr(g,"N.groups"),g,na.rm,FALSE),g,TRAtoInt(TRA)))
       }
@@ -95,11 +95,11 @@ fsum.data.frame <- function(x, g = NULL, TRA = NULL, na.rm = TRUE, use.g.names =
   if(is.null(TRA)) {
     if(is.null(g)) return(.Call(Cpp_fsuml,x,0L,0L,na.rm,drop)) else if (is.atomic(g)) {
       if(use.g.names && !inherits(x, "data.table")) {
-        if(!is.factor(g)) g <- qF(g, na.exclude = FALSE)
+        if(!is.nmfactor(g)) g <- qF(g, na.exclude = FALSE)
         lev <- attr(g, "levels")
         return(setRow.names(.Call(Cpp_fsuml,x,length(lev),g,na.rm,FALSE), lev))
       } else {
-        if(is.factor(g)) return(.Call(Cpp_fsuml,x,fnlevels(g),g,na.rm,FALSE)) else {
+        if(is.nmfactor(g)) return(.Call(Cpp_fsuml,x,fnlevels(g),g,na.rm,FALSE)) else {
           g <- qG(g, na.exclude = FALSE)
           return(.Call(Cpp_fsuml,x,attr(g,"N.groups"),g,na.rm,FALSE))
         }
@@ -118,7 +118,7 @@ fsum.data.frame <- function(x, g = NULL, TRA = NULL, na.rm = TRUE, use.g.names =
     }
   } else {
     if(is.null(g)) return(.Call(Cpp_TRAl,x,.Call(Cpp_fsuml,x,0L,0L,na.rm,TRUE),0L,TRAtoInt(TRA))) else if (is.atomic(g)) {
-      if(is.factor(g)) return(.Call(Cpp_TRAl,x,.Call(Cpp_fsuml,x,fnlevels(g),g,na.rm,FALSE),g,TRAtoInt(TRA))) else {
+      if(is.nmfactor(g)) return(.Call(Cpp_TRAl,x,.Call(Cpp_fsuml,x,fnlevels(g),g,na.rm,FALSE),g,TRAtoInt(TRA))) else {
         g <- qG(g, na.exclude = FALSE)
         return(.Call(Cpp_TRAl,x,.Call(Cpp_fsuml,x,attr(g,"N.groups"),g,na.rm,FALSE),g,TRAtoInt(TRA)))
       }

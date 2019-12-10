@@ -3,20 +3,23 @@
 # sourceCpp("src/qF_qG.cpp", rebuild = TRUE) # https://gallery.rcpp.org/articles/fast-factor-generation/
 qF <- function(x, ordered = TRUE, na.exclude = TRUE) {
   if(is.factor(x)) {
-    if(ordered && !is.ordered(x)) class(x) <- c("ordered","factor")
-    if(na.exclude) return(x) else return(addNA2(x))
+    if(na.exclude || inherits(x, "na.included")) {
+      if(ordered && !is.ordered(x)) class(x) <- c("ordered", class(x))
+      return(x)
+    } else
+      return(`oldClass<-`(addNA2(x), c(if(ordered && !is.ordered(x)) "ordered", "factor", "na.included")))
   }
   .Call(Cpp_qF, x, ordered, na.exclude)
 }
 qG <- function(x, ordered = TRUE, na.exclude = TRUE) {
   if(is.factor(x)) {
     ll <- attr(x, "levels")
-    if(na.exclude || !anyNA(unclass(x)))
-      return(`attributes<-`(x, list(N.groups = length(ll), class = c(if(ordered) "ordered", "qG"))))
-    ng <- if(anyNA(ll)) length(ll) else length(ll)+1L
+    if(na.exclude || force(nainc <- inherits(x, "na.included")) || !anyNA(unclass(x)))
+      return(`attributes<-`(x, list(N.groups = length(ll), class = c(if(ordered) "ordered", "qG", if(!na.exclude || nainc) "na.included"))))
+    ng <- if(anyNA(ll)) length(ll) else length(ll) + 1L
     attributes(x) <- NULL
     x[is.na(x)] <- ng
-    attributes(x) <- list(N.groups = ng, class = c(if(ordered) "ordered", "qG"))
+    attributes(x) <- list(N.groups = ng, class = c(if(ordered) "ordered", "qG", "na.included"))
     return(x)
   }
   .Call(Cpp_qG, x, ordered, na.exclude)

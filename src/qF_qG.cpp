@@ -17,7 +17,9 @@ IntegerVector qFCppImpl(const Vector<RTYPE>& x, bool ordered = true, bool na_exc
     } else {
       out.attr("levels") = Rf_coerceVector(levs, STRSXP);
     }
-    out.attr("class") = (ordered) ? CharacterVector::create("ordered","factor") : "factor";
+    out.attr("class") = (ordered && !na_exclude) ? CharacterVector::create("ordered","factor","na.included") :
+                         ordered ? CharacterVector::create("ordered","factor") :
+                         (!na_exclude) ? CharacterVector::create("factor","na.included") : "factor";
     return out;
 }
 
@@ -32,7 +34,9 @@ IntegerVector qGCppImpl(const Vector<RTYPE>& x, bool ordered = true, bool na_exc
     }
     // SHALLOW_DUPLICATE_ATTRIB(out, x); // needed ??
     out.attr("N.groups") = levs.size();
-    out.attr("class") = (ordered) ? CharacterVector::create("ordered","qG") : "qG";
+    out.attr("class") = (ordered && !na_exclude) ? CharacterVector::create("ordered","qG","na.included") :
+                           ordered ? CharacterVector::create("ordered","qG") :
+                        (!na_exclude) ? CharacterVector::create("qG","na.included") : "qG";
     return out;
 }
 
@@ -76,7 +80,9 @@ SEXP qFCpp(SEXP x, bool ordered = true, bool na_exclude = true) {
     }
     SHALLOW_DUPLICATE_ATTRIB(out, x);
     out.attr("levels") = CharacterVector::create("NA", "FALSE", "TRUE")[nd];
-    out.attr("class") = (ordered) ? CharacterVector::create("ordered","factor") : "factor";
+    out.attr("class") = (ordered && !na_exclude) ? CharacterVector::create("ordered","factor","na.included") :
+                        ordered ? CharacterVector::create("ordered","factor") :
+                        (!na_exclude) ? CharacterVector::create("factor","na.included") : "factor";
     return out;
   }
   default: stop("Not Supported SEXP Type");
@@ -124,7 +130,9 @@ SEXP qGCpp(SEXP x, bool ordered = true, bool na_exclude = true) {
     }
     SHALLOW_DUPLICATE_ATTRIB(out, x);
     out.attr("N.groups") = int(nd[0]+nd[1]+nd[2]);
-    out.attr("class") = "qG";
+    out.attr("class") = (ordered && !na_exclude) ? CharacterVector::create("ordered","qG","na.included") :
+                         ordered ? CharacterVector::create("ordered","qG") :
+                        (!na_exclude) ? CharacterVector::create("qG","na.included") : "qG";
     return out;
   }
   default: stop("Not Supported SEXP Type");

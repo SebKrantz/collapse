@@ -17,11 +17,11 @@ fNdistinct.default <- function(x, g = NULL, TRA = NULL, na.rm = TRUE, use.g.name
   if(is.null(TRA)) {
     if(is.null(g)) return(.Call(Cpp_fNdistinct,x,0L,0L,NULL,na.rm)) else if (is.atomic(g)) {
       if(use.g.names) {
-        if(!is.factor(g)) g <- qF(g, na.exclude = FALSE)
+        if(!is.nmfactor(g)) g <- qF(g, na.exclude = FALSE)
         lev <- attr(g, "levels")
         return(`names<-`(.Call(Cpp_fNdistinct,x,length(lev),g,NULL,na.rm), lev))
       } else {
-        if(is.factor(g)) return(.Call(Cpp_fNdistinct,x,fnlevels(g),g,NULL,na.rm)) else {
+        if(is.nmfactor(g)) return(.Call(Cpp_fNdistinct,x,fnlevels(g),g,NULL,na.rm)) else {
           g <- qG(g, na.exclude = FALSE)
           return(.Call(Cpp_fNdistinct,x,attr(g,"N.groups"),g,NULL,na.rm))
         }
@@ -33,7 +33,7 @@ fNdistinct.default <- function(x, g = NULL, TRA = NULL, na.rm = TRUE, use.g.name
     }
   } else {
     if(is.null(g)) return(.Call(Cpp_TRA,x,.Call(Cpp_fNdistinct,x,0L,0L,NULL,na.rm),0L,TRAtoInt(TRA))) else if (is.atomic(g)) {
-      if(is.factor(g)) return(.Call(Cpp_TRA,x,.Call(Cpp_fNdistinct,x,fnlevels(g),g,NULL,na.rm),g,TRAtoInt(TRA))) else {
+      if(is.nmfactor(g)) return(.Call(Cpp_TRA,x,.Call(Cpp_fNdistinct,x,fnlevels(g),g,NULL,na.rm),g,TRAtoInt(TRA))) else {
         g <- qG(g, na.exclude = FALSE)
         return(.Call(Cpp_TRA,x,.Call(Cpp_fNdistinct,x,attr(g,"N.groups"),g,NULL,na.rm),g,TRAtoInt(TRA)))
       }
@@ -48,11 +48,11 @@ fNdistinct.matrix <- function(x, g = NULL, TRA = NULL, na.rm = TRUE, use.g.names
   if(is.null(TRA)) {
     if(is.null(g)) return(.Call(Cpp_fNdistinctm,x,0L,0L,NULL,na.rm,drop)) else if (is.atomic(g)) {
       if(use.g.names) {
-        if(!is.factor(g)) g <- qF(g, na.exclude = FALSE)
+        if(!is.nmfactor(g)) g <- qF(g, na.exclude = FALSE)
         lev <- attr(g, "levels")
         return(`dimnames<-`(.Call(Cpp_fNdistinctm,x,length(lev),g,NULL,na.rm,FALSE), list(lev, dimnames(x)[[2L]])))
       } else {
-        if(is.factor(g)) return(.Call(Cpp_fNdistinctm,x,fnlevels(g),g,NULL,na.rm,FALSE)) else {
+        if(is.nmfactor(g)) return(.Call(Cpp_fNdistinctm,x,fnlevels(g),g,NULL,na.rm,FALSE)) else {
           g <- qG(g, na.exclude = FALSE)
           return(.Call(Cpp_fNdistinctm,x,attr(g,"N.groups"),g,NULL,na.rm,FALSE))
         }
@@ -64,7 +64,7 @@ fNdistinct.matrix <- function(x, g = NULL, TRA = NULL, na.rm = TRUE, use.g.names
     }
   } else {
     if(is.null(g)) return(.Call(Cpp_TRAm,x,.Call(Cpp_fNdistinctm,x,0L,0L,NULL,na.rm,TRUE),0L,TRAtoInt(TRA))) else if (is.atomic(g)) {
-      if(is.factor(g)) return(.Call(Cpp_TRAm,x,.Call(Cpp_fNdistinctm,x,fnlevels(g),g,NULL,na.rm,FALSE),g,TRAtoInt(TRA))) else {
+      if(is.nmfactor(g)) return(.Call(Cpp_TRAm,x,.Call(Cpp_fNdistinctm,x,fnlevels(g),g,NULL,na.rm,FALSE),g,TRAtoInt(TRA))) else {
         g <- qG(g, na.exclude = FALSE)
         return(.Call(Cpp_TRAm,x,.Call(Cpp_fNdistinctm,x,attr(g,"N.groups"),g,NULL,na.rm,FALSE),g,TRAtoInt(TRA)))
       }
@@ -79,11 +79,11 @@ fNdistinct.data.frame <- function(x, g = NULL, TRA = NULL, na.rm = TRUE, use.g.n
   if(is.null(TRA)) {
     if(is.null(g)) return(.Call(Cpp_fNdistinctl,x,0L,0L,NULL,na.rm,drop)) else if (is.atomic(g)) {
       if(use.g.names && !inherits(x, "data.table")) {
-        if(!is.factor(g)) g <- qF(g, na.exclude = FALSE)
+        if(!is.nmfactor(g)) g <- qF(g, na.exclude = FALSE)
         lev <- attr(g, "levels")
         return(setRow.names(.Call(Cpp_fNdistinctl,x,length(lev),g,NULL,na.rm,FALSE), lev))
       } else {
-        if(is.factor(g)) return(.Call(Cpp_fNdistinctl,x,fnlevels(g),g,NULL,na.rm,FALSE)) else {
+        if(is.nmfactor(g)) return(.Call(Cpp_fNdistinctl,x,fnlevels(g),g,NULL,na.rm,FALSE)) else {
           g <- qG(g, na.exclude = FALSE)
           return(.Call(Cpp_fNdistinctl,x,attr(g,"N.groups"),g,NULL,na.rm,FALSE))
         }
@@ -96,7 +96,7 @@ fNdistinct.data.frame <- function(x, g = NULL, TRA = NULL, na.rm = TRUE, use.g.n
     }
   } else {
     if(is.null(g)) return(.Call(Cpp_TRAl,x,.Call(Cpp_fNdistinctl,x,0L,0L,NULL,na.rm,TRUE),0L,TRAtoInt(TRA))) else if (is.atomic(g)) {
-      if(is.factor(g)) return(.Call(Cpp_TRAl,x,.Call(Cpp_fNdistinctl,x,fnlevels(g),g,NULL,na.rm,FALSE),g,TRAtoInt(TRA))) else {
+      if(is.nmfactor(g)) return(.Call(Cpp_TRAl,x,.Call(Cpp_fNdistinctl,x,fnlevels(g),g,NULL,na.rm,FALSE),g,TRAtoInt(TRA))) else {
         g <- qG(g, na.exclude = FALSE)
         return(.Call(Cpp_TRAl,x,.Call(Cpp_fNdistinctl,x,attr(g,"N.groups"),g,NULL,na.rm,FALSE),g,TRAtoInt(TRA)))
       }

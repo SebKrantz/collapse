@@ -116,7 +116,7 @@ plot.GRP <- function(x, breaks = "auto", type = "s", horizontal = FALSE, ...) {
   settings <- par(c("mfrow","mar","mgp"))
   par(mfrow = if(horizontal) 1:2 else 2:1, mar = c(3.9,4.1,2.1,1), mgp = c(2.5,1,0))
   if(breaks == "auto") {
-    ugs <- length(unique.default(x[[3L]]))
+    ugs <- length(funique(x[[3L]]))
     breaks <- if(ugs > 80) 80 else ugs
   }
   plot(seq_len(x[[1L]]), x[[3L]], type = type, xlab = "Group id", ylab = "Group Size",
@@ -149,6 +149,7 @@ GRP.qG <- function(X, ...) {
   if(!missing(...)) stop("Unknown argument ", dotstostr(...))
   # nam <- deparse(substitute(X)) # takes 9 microseconds !!, all vars on call is faster !!
   ng <- attr(X, "N.groups")
+  if(!inherits(X, "na.included") || anyNA(unclass(X))) X[is.na(X)] <- ng
   ordered <- if(is.ordered(X)) c(TRUE,TRUE) else c(FALSE,FALSE)
   attributes(X) <- NULL
   call <- match.call()
@@ -165,6 +166,7 @@ GRP.qG <- function(X, ...) {
 GRP.factor <- function(X, ...) {
   if(!missing(...)) stop("Unknown argument ", dotstostr(...))
   # nam <- deparse(substitute(X)) # takes 9 microseconds !!
+  if(!inherits(X, "na.included")) X <- addNA2(X)
   lev <- attr(X, "levels")
   nl <- length(lev)
   ordered <- if(is.ordered(X)) c(TRUE,TRUE) else c(FALSE,FALSE)

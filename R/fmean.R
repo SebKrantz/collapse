@@ -17,11 +17,11 @@ fmean.default <- function(x, g = NULL, w = NULL, TRA = NULL, na.rm = TRUE, use.g
   if(is.null(TRA)) {
     if(is.null(g)) return(.Call(Cpp_fmean,x,0L,0L,NULL,w,na.rm)) else if(is.atomic(g)) {
       if(use.g.names) {
-        if(!is.factor(g)) g <- qF(g, na.exclude = FALSE)
+        if(!is.nmfactor(g)) g <- qF(g, na.exclude = FALSE)
         lev <- attr(g, "levels")
         return(`names<-`(.Call(Cpp_fmean,x,length(lev),g,NULL,w,na.rm), lev))
       } else {
-        if(is.factor(g)) return(.Call(Cpp_fmean,x,fnlevels(g),g,NULL,w,na.rm)) else {
+        if(is.nmfactor(g)) return(.Call(Cpp_fmean,x,fnlevels(g),g,NULL,w,na.rm)) else {
           g <- qG(g, na.exclude = FALSE)
           return(.Call(Cpp_fmean,x,attr(g,"N.groups"),g,NULL,w,na.rm))
         }
@@ -33,7 +33,7 @@ fmean.default <- function(x, g = NULL, w = NULL, TRA = NULL, na.rm = TRUE, use.g
     }
   } else {
     if(is.null(g)) return(.Call(Cpp_TRA,x,.Call(Cpp_fmean,x,0L,0L,NULL,w,na.rm),0L,TRAtoInt(TRA))) else if (is.atomic(g)) {
-      if(is.factor(g)) return(.Call(Cpp_TRA,x,.Call(Cpp_fmean,x,fnlevels(g),g,NULL,w,na.rm),g,TRAtoInt(TRA))) else {
+      if(is.nmfactor(g)) return(.Call(Cpp_TRA,x,.Call(Cpp_fmean,x,fnlevels(g),g,NULL,w,na.rm),g,TRAtoInt(TRA))) else {
         g <- qG(g, na.exclude = FALSE)
         return(.Call(Cpp_TRA,x,.Call(Cpp_fmean,x,attr(g,"N.groups"),g,NULL,w,na.rm),g,TRAtoInt(TRA)))
       }
@@ -48,11 +48,11 @@ fmean.matrix <- function(x, g = NULL, w = NULL, TRA = NULL, na.rm = TRUE, use.g.
   if(is.null(TRA)) {
     if(is.null(g)) return(.Call(Cpp_fmeanm,x,0L,0L,NULL,w,na.rm,drop)) else if(is.atomic(g)) {
       if(use.g.names) {
-        if(!is.factor(g)) g <- qF(g, na.exclude = FALSE)
+        if(!is.nmfactor(g)) g <- qF(g, na.exclude = FALSE)
         lev <- attr(g, "levels")
         return(`dimnames<-`(.Call(Cpp_fmeanm,x,length(lev),g,NULL,w,na.rm,drop), list(lev, dimnames(x)[[2L]])))
       } else {
-        if(is.factor(g)) return(.Call(Cpp_fmeanm,x,fnlevels(g),g,NULL,w,na.rm,drop)) else {
+        if(is.nmfactor(g)) return(.Call(Cpp_fmeanm,x,fnlevels(g),g,NULL,w,na.rm,drop)) else {
           g <- qG(g, na.exclude = FALSE)
           return(.Call(Cpp_fmeanm,x,attr(g,"N.groups"),g,NULL,w,na.rm,drop))
         }
@@ -64,7 +64,7 @@ fmean.matrix <- function(x, g = NULL, w = NULL, TRA = NULL, na.rm = TRUE, use.g.
     }
   } else {
     if(is.null(g)) return(.Call(Cpp_TRAm,x,.Call(Cpp_fmeanm,x,0L,0L,NULL,w,na.rm,TRUE),0L,TRAtoInt(TRA))) else if (is.atomic(g)) {
-      if(is.factor(g)) return(.Call(Cpp_TRAm,x,.Call(Cpp_fmeanm,x,fnlevels(g),g,NULL,w,na.rm,drop),g,TRAtoInt(TRA))) else {
+      if(is.nmfactor(g)) return(.Call(Cpp_TRAm,x,.Call(Cpp_fmeanm,x,fnlevels(g),g,NULL,w,na.rm,drop),g,TRAtoInt(TRA))) else {
         g <- qG(g, na.exclude = FALSE)
         return(.Call(Cpp_TRAm,x,.Call(Cpp_fmeanm,x,attr(g,"N.groups"),g,NULL,w,na.rm,drop),g,TRAtoInt(TRA)))
       }
@@ -79,11 +79,11 @@ fmean.data.frame <- function(x, g = NULL, w = NULL, TRA = NULL, na.rm = TRUE, us
   if(is.null(TRA)) {
     if(is.null(g)) return(.Call(Cpp_fmeanl,x,0L,0L,NULL,w,na.rm,drop)) else if(is.atomic(g)) {
       if(use.g.names && !inherits(x, "data.table")) {
-        if(!is.factor(g)) g <- qF(g, na.exclude = FALSE)
+        if(!is.nmfactor(g)) g <- qF(g, na.exclude = FALSE)
         lev <- attr(g, "levels")
         return(setRow.names(.Call(Cpp_fmeanl,x,length(lev),g,NULL,w,na.rm,drop), lev))
       } else {
-        if(is.factor(g)) return(.Call(Cpp_fmeanl,x,fnlevels(g),g,NULL,w,na.rm,drop)) else {
+        if(is.nmfactor(g)) return(.Call(Cpp_fmeanl,x,fnlevels(g),g,NULL,w,na.rm,drop)) else {
           g <- qG(g, na.exclude = FALSE)
           return(.Call(Cpp_fmeanl,x,attr(g,"N.groups"),g,NULL,w,na.rm,drop))
         }
@@ -96,7 +96,7 @@ fmean.data.frame <- function(x, g = NULL, w = NULL, TRA = NULL, na.rm = TRUE, us
     }
   } else {
     if(is.null(g)) return(.Call(Cpp_TRAl,x,.Call(Cpp_fmeanl,x,0L,0L,NULL,w,na.rm,TRUE),0L,TRAtoInt(TRA))) else if (is.atomic(g)) {
-      if(is.factor(g)) return(.Call(Cpp_TRAl,x,.Call(Cpp_fmeanl,x,fnlevels(g),g,NULL,w,na.rm,drop),g,TRAtoInt(TRA))) else {
+      if(is.nmfactor(g)) return(.Call(Cpp_TRAl,x,.Call(Cpp_fmeanl,x,fnlevels(g),g,NULL,w,na.rm,drop),g,TRAtoInt(TRA))) else {
         g <- qG(g, na.exclude = FALSE)
         return(.Call(Cpp_TRAl,x,.Call(Cpp_fmeanl,x,attr(g,"N.groups"),g,NULL,w,na.rm,drop),g,TRAtoInt(TRA)))
       }

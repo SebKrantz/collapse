@@ -12,7 +12,7 @@ TRA <- function(x, STATS, FUN = "-", ...) {
 TRA.default <- function(x, STATS, FUN = "-", g = NULL, ...) {
   if(!missing(...)) stop("Unknown argument ", dotstostr(...))
   if(is.null(g)) return(.Call(Cpp_TRA,x,STATS,0L,TRAtoInt(FUN))) else if(is.atomic(g)) {
-    if(is.factor(g)) {
+    if(is.nmfactor(g)) {
       if(fnlevels(g) != length(STATS)) stop("number of groups must match length(STATS)")
     } else {
       g <- qG(g, na.exclude = FALSE) # needs to be ordered to be compatible with fast functions !!
@@ -28,7 +28,7 @@ TRA.default <- function(x, STATS, FUN = "-", g = NULL, ...) {
 TRA.matrix <- function(x, STATS, FUN = "-", g = NULL, ...) {
   if(!missing(...)) stop("Unknown argument ", dotstostr(...))
   if(is.null(g)) return(.Call(Cpp_TRAm,x,STATS,0L,TRAtoInt(FUN))) else if(is.atomic(g)) {
-    if(is.factor(g)) {
+    if(is.nmfactor(g)) {
       if(fnlevels(g) != nrow(STATS)) stop("number of groups must match nrow(STATS)")
     } else {
       g <- qG(g, na.exclude = FALSE) # needs to be ordered to be compatible with fast functions !!
@@ -44,7 +44,7 @@ TRA.matrix <- function(x, STATS, FUN = "-", g = NULL, ...) {
 TRA.data.frame <- function(x, STATS, FUN = "-", g = NULL, ...) {
   if(!missing(...)) stop("Unknown argument ", dotstostr(...))
   if(is.null(g)) return(.Call(Cpp_TRAl,x,STATS,0L,TRAtoInt(FUN))) else if(is.atomic(g)) {
-    if(is.factor(g)) {
+    if(is.nmfactor(g)) {
       if(fnlevels(g) != nrow(STATS)) stop("number of groups must match nrow(STATS)")
     } else {
       g <- qG(g, na.exclude = FALSE) # needs to be ordered to be compatible with fast functions !!

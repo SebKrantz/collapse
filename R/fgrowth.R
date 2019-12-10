@@ -16,7 +16,7 @@ fgrowth.default <- function(x, n = 1, diff = 1, g = NULL, t = NULL, fill = NA, l
   if(!missing(...)) stop(sprintf("Unknown argument %s passed to fgrowth.default", dotstostr(...)))
   if(is.null(g))
     return(.Call(Cpp_fgrowth,x,n,diff,fill,0L,0L,NULL,G_t(t,FALSE),logdiff,stubs)) else if(is.atomic(g)) {
-      if(is.factor(g)) nl <- fnlevels(g) else {
+      if(is.nmfactor(g)) nl <- fnlevels(g) else {
         g <- qG(g, na.exclude = FALSE)
         nl <- attr(g, "N.groups")
       }
@@ -38,7 +38,7 @@ fgrowth.matrix <- function(x, n = 1, diff = 1, g = NULL, t = NULL, fill = NA, lo
   if(!missing(...)) stop(sprintf("Unknown argument %s passed to fgrowth.matrix", dotstostr(...)))
   if(is.null(g))
     return(.Call(Cpp_fgrowthm,x,n,diff,fill,0L,0L,NULL,G_t(t,FALSE),logdiff,stubs)) else if(is.atomic(g)) {
-      if(is.factor(g)) nl <- fnlevels(g) else {
+      if(is.nmfactor(g)) nl <- fnlevels(g) else {
         g <- qG(g, na.exclude = FALSE)
         nl <- attr(g, "N.groups")
       }
@@ -74,7 +74,7 @@ fgrowth.data.frame <- function(x, n = 1, diff = 1, g = NULL, t = NULL, fill = NA
   if(!missing(...)) stop(sprintf("Unknown argument %s passed to fgrowth.data.frame", dotstostr(...)))
   if(is.null(g))
     return(.Call(Cpp_fgrowthl,x,n,diff,fill,0L,0L,NULL,G_t(t,FALSE),logdiff,stubs)) else if(is.atomic(g)) {
-      if(is.factor(g)) nl <- fnlevels(g) else {
+      if(is.nmfactor(g)) nl <- fnlevels(g) else {
         g <- qG(g, na.exclude = FALSE)
         nl <- attr(g, "N.groups")
       }
@@ -153,7 +153,7 @@ G.data.frame <- function(x, n = 1, diff = 1, by = NULL, t = NULL, cols = is.nume
 
   if(is.null(by))
     return(.Call(Cpp_fgrowthl,x,n,diff,fill,0L,0L,NULL,G_t(t,FALSE),logdiff,stubs)) else if(is.atomic(by)) {
-      if(is.factor(by)) nl <- fnlevels(by) else {
+      if(is.nmfactor(by)) nl <- fnlevels(by) else {
         by <- qG(by, na.exclude = FALSE)
         nl <- attr(by, "N.groups")
       }

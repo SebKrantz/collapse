@@ -15,7 +15,7 @@ fscale <- function(x, ...) { # g = NULL, w = NULL, na.rm = TRUE, stable.algo = T
 fscale.default <- function(x, g = NULL, w = NULL, na.rm = TRUE, stable.algo = TRUE, ...) {
   if(!missing(...)) stop("Unknown argument ", dotstostr(...))
   if(is.null(g)) return(.Call(Cpp_fscale,x,0L,0L,NULL,w,na.rm,stable.algo)) else if (is.atomic(g)) {
-    if(is.factor(g)) return(.Call(Cpp_fscale,x,fnlevels(g),g,NULL,w,na.rm,stable.algo)) else {
+    if(is.nmfactor(g)) return(.Call(Cpp_fscale,x,fnlevels(g),g,NULL,w,na.rm,stable.algo)) else {
       g <- qG(g, ordered = FALSE, na.exclude = FALSE)
       return(.Call(Cpp_fscale,x,attr(g,"N.groups"),g,NULL,w,na.rm,stable.algo))
     }
@@ -32,7 +32,7 @@ fscale.pseries <- function(x, effect = 1L, w = NULL, na.rm = TRUE, stable.algo =
 fscale.matrix <- function(x, g = NULL, w = NULL, na.rm = TRUE, stable.algo = TRUE, ...) {
   if(!missing(...)) stop("Unknown argument ", dotstostr(...))
   if(is.null(g)) return(.Call(Cpp_fscalem,x,0L,0L,NULL,w,na.rm,stable.algo)) else if (is.atomic(g)) {
-    if(is.factor(g)) return(.Call(Cpp_fscalem,x,fnlevels(g),g,NULL,w,na.rm,stable.algo)) else {
+    if(is.nmfactor(g)) return(.Call(Cpp_fscalem,x,fnlevels(g),g,NULL,w,na.rm,stable.algo)) else {
       g <- qG(g, ordered = FALSE, na.exclude = FALSE)
       return(.Call(Cpp_fscalem,x,attr(g,"N.groups"),g,NULL,w,na.rm,stable.algo))
     }
@@ -67,7 +67,7 @@ fscale.grouped_df <- function(x, w = NULL, na.rm = TRUE, keep.group_vars = TRUE,
 fscale.data.frame <- function(x, g = NULL, w = NULL, na.rm = TRUE, stable.algo = TRUE, ...) {
   if(!missing(...)) stop("Unknown argument ", dotstostr(...))
   if(is.null(g)) return(.Call(Cpp_fscalel,x,0L,0L,NULL,w,na.rm,stable.algo)) else if(is.atomic(g)) {
-    if(is.factor(g)) return(.Call(Cpp_fscalel,x,fnlevels(g),g,NULL,w,na.rm,stable.algo)) else {
+    if(is.nmfactor(g)) return(.Call(Cpp_fscalel,x,fnlevels(g),g,NULL,w,na.rm,stable.algo)) else {
       g <- qG(g, ordered = FALSE, na.exclude = FALSE)
       return(.Call(Cpp_fscalel,x,attr(g,"N.groups"),g,NULL,w,na.rm,stable.algo))
     }
@@ -216,7 +216,7 @@ STD.data.frame <- function(x, by = NULL, w = NULL, cols = is.numeric,
   if(is.character(stub)) names(x) <- paste0(stub, names(x))
 
   if(is.null(by)) return(.Call(Cpp_fscalel,x,0L,0L,NULL,w,na.rm,stable.algo)) else if (is.atomic(by)) {
-    if(is.factor(by)) return(.Call(Cpp_fscalel,x,fnlevels(by),by,NULL,w,na.rm,stable.algo)) else {
+    if(is.nmfactor(by)) return(.Call(Cpp_fscalel,x,fnlevels(by),by,NULL,w,na.rm,stable.algo)) else {
       by <- qG(by, ordered = FALSE, na.exclude = FALSE)
       return(.Call(Cpp_fscalel,x,attr(by,"N.groups"),by,NULL,w,na.rm,stable.algo))
     }

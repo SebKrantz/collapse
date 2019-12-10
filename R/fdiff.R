@@ -15,7 +15,7 @@ fdiff.default <- function(x, n = 1, diff = 1, g = NULL, t = NULL, fill = NA, stu
   if(!missing(...)) stop(sprintf("Unknown argument %s passed to fdiff.default", dotstostr(...)))
   if(is.null(g))
     return(.Call(Cpp_fdiff,x,n,diff,fill,0L,0L,NULL,G_t(t,FALSE),stubs)) else if(is.atomic(g)) {
-      if(is.factor(g)) nl <- fnlevels(g) else {
+      if(is.nmfactor(g)) nl <- fnlevels(g) else {
         g <- qG(g, na.exclude = FALSE)
         nl <- attr(g, "N.groups")
       }
@@ -37,7 +37,7 @@ fdiff.matrix <- function(x, n = 1, diff = 1, g = NULL, t = NULL, fill = NA, stub
   if(!missing(...)) stop(sprintf("Unknown argument %s passed to fdiff.matrix", dotstostr(...)))
   if(is.null(g))
     return(.Call(Cpp_fdiffm,x,n,diff,fill,0L,0L,NULL,G_t(t,FALSE),stubs)) else if(is.atomic(g)) {
-      if(is.factor(g)) nl <- fnlevels(g) else {
+      if(is.nmfactor(g)) nl <- fnlevels(g) else {
         g <- qG(g, na.exclude = FALSE)
         nl <- attr(g, "N.groups")
       }
@@ -73,7 +73,7 @@ fdiff.data.frame <- function(x, n = 1, diff = 1, g = NULL, t = NULL, fill = NA, 
   if(!missing(...)) stop(sprintf("Unknown argument %s passed to fdiff.data.frame", dotstostr(...)))
   if(is.null(g))
     return(.Call(Cpp_fdiffl,x,n,diff,fill,0L,0L,NULL,G_t(t,FALSE),stubs)) else if(is.atomic(g)) {
-      if(is.factor(g)) nl <- fnlevels(g) else {
+      if(is.nmfactor(g)) nl <- fnlevels(g) else {
         g <- qG(g, na.exclude = FALSE)
         nl <- attr(g, "N.groups")
       }
@@ -152,7 +152,7 @@ D.data.frame <- function(x, n = 1, diff = 1, by = NULL, t = NULL, cols = is.nume
 
   if(is.null(by))
     return(.Call(Cpp_fdiffl,x,n,diff,fill,0L,0L,NULL,G_t(t,FALSE),stubs)) else if(is.atomic(by)) {
-      if(is.factor(by)) nl <- fnlevels(by) else {
+      if(is.nmfactor(by)) nl <- fnlevels(by) else {
         by <- qG(by, na.exclude = FALSE)
         nl <- attr(by, "N.groups")
       }
