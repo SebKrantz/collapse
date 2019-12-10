@@ -7,7 +7,7 @@ qF <- function(x, ordered = TRUE, na.exclude = TRUE) {
       if(ordered && !is.ordered(x)) class(x) <- c("ordered", class(x))
       return(x)
     } else
-      return(`oldClass<-`(addNA2(x), c(if(ordered && !is.ordered(x)) "ordered", "factor", "na.included")))
+      return(`oldClass<-`(addNA2(x), c(if(ordered) "ordered", "factor", "na.included")))
   }
   .Call(Cpp_qF, x, ordered, na.exclude)
 }
