@@ -19,7 +19,7 @@ forderv <- function(x, by = seq_along(x), retGrp = FALSE, sort = TRUE, order = 1
   .Call(C_forder, x, by, retGrp, sort, order, na.last)
 }
 
-GRP.default <- function(X, by = NULL, sort = TRUE, order = 1L, na.last = FALSE,
+GRP.default <- function(X, by = NULL, sort = TRUE, order = 1L, na.last = TRUE,
                         return.groups = TRUE, return.order = FALSE, ...) { # , gs = TRUE # o
 
   if(!missing(...)) stop("Unknown argument ", dotstostr(...))
@@ -36,10 +36,10 @@ GRP.default <- function(X, by = NULL, sort = TRUE, order = 1L, na.last = FALSE,
   } else if(is.character(by)) {
     namby <- by
     by <- anyNAerror(match(by, names(X)), "Unknown column names!")
-  } else {
+  } else if(is.numeric(by)) {
     by <- as.integer(by)
     namby <- names(X)[by]
-  }
+  } else stop("by needs to be either a one-sided formula, character column names or column indices!")
 
   o <- forderv(X, by, TRUE, sort, order, na.last)
   f <- attr(o, "starts")
@@ -141,7 +141,7 @@ as.factor.GRP <- function(x) { # , ...
       attr(f, "levels") <- do.call(paste, c(gr, list(sep = ".")))
     }
   }
-  class(f) <- if(any(x[[6L]])) c("ordered","factor") else "factor"
+  class(f) <- if(any(x[[6L]])) c("ordered","factor","na.included") else c("factor","na.included") # NA included ??
   return(f)
 }
 
