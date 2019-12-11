@@ -8,7 +8,7 @@ collap <- function(X, by, FUN = fmean, catFUN = fmode, cols = NULL, custom = NUL
   return <- switch(return[1L], wide = 1L, list = 2L, long = 3L, long_dupl = 4L, stop("Unknown return output option"))
   widel <- return == 1L
   customl <- !is.null(custom)
-  if(!is.data.frame(X)) X <- qDF(X)
+  if(!inherits(X, "data.frame")) X <- qDF(X)
   ax <- attributes(X)
   nam <- ax[["names"]]
   # attributes(X) <- NULL
@@ -22,7 +22,8 @@ collap <- function(X, by, FUN = fmean, catFUN = fmode, cols = NULL, custom = NUL
   bycalll <- is.call(by)
   if(bycalll) {
       if(length(by) == 3L) {
-        v <- nam %in% all.vars(by[[2L]])
+        v <- logical(length(X))
+        v[anyNAerror(match(all.vars(by[[2L]]), nam), "Unknown left-hand side variables selected!")] <- TRUE  # nam %in% all.vars(by[[2L]])
         namby <- all.vars(by[[3L]])
         numby <- anyNAerror(match(namby, nam), "Unknown 'by' columns selected!")
       } else {
@@ -49,7 +50,7 @@ collap <- function(X, by, FUN = fmean, catFUN = fmode, cols = NULL, custom = NUL
       by <- GRP.default(by, numby, sort = sort.row, return.groups = keep.by)
     } else {
       namby <- by[[5L]]
-      if(is.null(namby)) namby <- paste0("GRP.", 1L:length(by[[4L]])) # necessary ??
+      if(is.null(namby)) namby <- paste0("GRP.", seq_along(by[[4L]])) # necessary ??
       numby <- seq_along(namby)
     }
   }
@@ -121,14 +122,14 @@ collap <- function(X, by, FUN = fmean, catFUN = fmode, cols = NULL, custom = NUL
     } # fastest isung res list ?? or better combine at the end ??
     res <- agg(if(nul) `oldClass<-`(X[nu], "data.frame") else NULL, if(nnul) `oldClass<-`(X[nnu], "data.frame") else NULL) #colsubset(X, nu)
 
-    if(keep.col.order && widel) o <- sort.list(c(if(!keep.by) NULL else if(!bycalll) rep(0L,length(numby)) else numby,
+    if(keep.col.order && widel) o <- order(c(if(!keep.by) NULL else if(!bycalll) rep(0L,length(numby)) else numby,
                                            if(nul) rep(nu,length(FUN)) else NULL,
                                            if(nnul) rep(nnu,length(catFUN)) else NULL), method = "radix")
 
   } else { # custom aggregation:
     if(give.names == "auto") give.names <- TRUE
     namFUN <- names(custom)
-    if(is.null(namFUN)) stop("custom needs to be a named list, see ?collap")
+    if(!is.list(custom) || is.null(namFUN)) stop("custom needs to be a named list, see ?collap")
     fFUN <- namFUN %in% .FAST_STAT_FUN
     if(!keep.by) {
       res <- vector("list", 1L)
@@ -138,18 +139,17 @@ collap <- function(X, by, FUN = fmean, catFUN = fmode, cols = NULL, custom = NUL
       res[[1L]] <- if(is.atomic(by)) list(`names<-`(list(unique_factor(by)), namby)) else list(by[[4L]]) # nah... could add later using "c" ??
       ind <- 2L
     }
-
-    numind <- vapply(custom, is.numeric, TRUE, USE.NAMES = FALSE)
-    if(!all(numind)) custom[!numind] <- lapply(custom[!numind], function(x) if(is.character(x))
-              anyNAerror(match(x, nam), "Unknown column name!") else
-                stop("custom list content must be variable names or indices must match length"))
+    lx <- length(X)
+    custom <- lapply(custom, function(x) if(is.numeric(x) && max(abs(x)) <= lx)
+                             x else if(is.character(x)) anyNAerror(match(x, nam), "Unknown column names!") else
+                             stop("custom list content must be variable names or suitable column indices"))
 
     res[[ind]] <- condsetn(aplyfun(seq_along(namFUN), function(i)
             if(fFUN[i]) match.fun(namFUN[i])(`oldClass<-`(X[custom[[i]]], "data.frame"), by, ..., use.g.names = FALSE) else
             BY.data.frame(X[custom[[i]]], by, namFUN[i], ..., use.g.names = FALSE)), namFUN, give.names)
     if(keep.col.order && widel) {
       o <- unlist(custom, use.names = FALSE)
-      o <- sort.list(c(if(!keep.by) NULL else if(!bycalll) rep(0L,length(numby)) else numby, o), method = "radix")
+      o <- order(c(if(!keep.by) NULL else if(!bycalll) rep(0L,length(numby)) else numby, o), method = "radix")
     }
   }
   if(widel) res <- unlist(unlist(res, FALSE), FALSE) else {
@@ -178,7 +178,7 @@ collap <- function(X, by, FUN = fmean, catFUN = fmode, cols = NULL, custom = NUL
                                  lapply(res[-c(nid, 1L)], function(e) c(res[[1L]], res[[nid]], e))
           res <- .Call(C_rbindlist, res, FALSE, FALSE, "Function")
         }
-        if(keep.col.order)  o <- sort.list(c(0L, if(!keep.by) NULL else if(!bycalll) rep(0L,length(numby)) else numby, nu, nnu), method = "radix")
+        if(keep.col.order)  o <- order(c(0L, if(!keep.by) NULL else if(!bycalll) rep(0L,length(numby)) else numby, nu, nnu), method = "radix")
       }
     } else message("return options other than 'wide' are only meaningful if multiple functions are used!")
   }
