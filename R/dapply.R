@@ -10,7 +10,7 @@ dapply <- function(X, FUN, ..., MARGIN = 2, parallel = FALSE, # drop argument !!
                    mc.cores = 1L, return = c("same","matrix","data.frame"), drop = TRUE) {
   ax <- attributes(X)
   arl <- is.array(X)
-  rowwl <- MARGIN == 1
+  rowwl <- switch(MARGIN, `1` = TRUE, `2` = FALSE, stop("MARGIN only supports 2 - columns or 1 - rows"))
   retmatl <- switch(return[1L], same = arl, matrix = TRUE, data.frame = FALSE, stop("Unknown return option!"))
   aplyfun <- if(parallel) function(...) parallel::mclapply(..., mc.cores = mc.cores) else lapply
   if(arl) {
