@@ -41,12 +41,12 @@ getfl <- function(mf) {
       if(tvec[2] != 0) fctdat[(ctvec[1]+1):ctvec[2]] <- lapply(mf[globalslopes], function(x)
         setAttributes(rep(1L, NROW(x)), list(levels = "1", class = "factor", x = x)))
       if(tvec[3] != 0)
-        fctdat[(ctvec[2]+1):ctvec[3]] <- lapply(intterms[fctfct], function(x) if(length(x) == 2) do.call(`:`,mf[x]) else interaction(mf[x])) # or as.factor.GRP(GRP(mf[x]))
+        fctdat[(ctvec[2]+1):ctvec[3]] <- lapply(intterms[fctfct], function(x) if(length(x) == 2L) do.call(`:`, mf[x]) else as.factor.GRP(GRP(mf[x]))) # interaction(mf[x])) # or as.factor.GRP(GRP(mf[x]))
       if(tvec[4] != 0)
         fctdat[(ctvec[3]+1):ctvec[4]] <- lapply(intterms[!fctfct], function(x) {
           f <- x & facts
           nf <- x & !f
-          f <- if(sum(f) == 1) mf[[which(f)]] else if(sum(f) == 2) do.call(`:`, mf[f]) else interaction(mf[f])
+          f <- if(sum(f) == 1) mf[[which(f)]] else if(sum(f) == 2) do.call(`:`, mf[f]) else as.factor.GRP(GRP(mf[f])) # interaction(mf[f])
           attr(f, "x") <- if(sum(nf) > 1) do.call("*", mf[nf]) else mf[[which(nf)]]
           return(f)
         })
@@ -135,14 +135,18 @@ fHDwithin.default <- function(x, fl, w = NULL, na.rm = TRUE, fill = FALSE, ...) 
 
   if(nallfc || !fcl) {
     xmat <- qr.default(xmat)
-    Y <- if(nallfc) qr.resid(xmat, demeanlist(x, fl, weights = w, ...)) else
-      qr.resid(xmat, x)
-  } else Y <- demeanlist(x, fl, weights = w, ...)
-  if(na.rm && fill) {
-    x[cc] <- Y
+    if(na.rm && fill) {
+      x[-cc] <- NA
+      x[cc] <- if(nallfc) qr.resid(xmat, demeanlist(x[cc], fl, weights = w, ...)) else qr.resid(xmat, x[cc])
+      return(setAttributes(x, ax))
+    } else if(nallfc)
+      return(setAttributes(qr.resid(xmat, demeanlist(x, fl, weights = w, ...)), ax)) else
+        return(setAttributes(qr.resid(xmat, x), ax))
+  } else if(na.rm && fill) {
     x[-cc] <- NA
+    x[cc] <- demeanlist(x[cc], fl, weights = w, ...)
     return(setAttributes(x, ax))
-  } else return(setAttributes(Y, ax))
+  } else return(setAttributes(demeanlist(x, fl, weights = w, ...), ax))
 }
 fHDwithin.pseries <- function(x, w = NULL, na.rm = TRUE, fill = TRUE, ...) {
   if(na.rm && !all(xcc <- !is.na(x))) {
@@ -200,14 +204,18 @@ fHDwithin.matrix <- function(x, fl, w = NULL, na.rm = TRUE, fill = FALSE, ...) {
 
   if(nallfc || !fcl) {
     xmat <- qr.default(xmat)
-    Y <- if(nallfc) qr.resid(xmat, demeanlist(x, fl, weights = w, ...)) else
-         qr.resid(xmat, x)
-  } else Y <- demeanlist(x, fl, weights = w, ...)
-  if(na.rm && fill) {
-    x[cc, ] <- Y
+    if(na.rm && fill) {
+      x[-cc, ] <- NA
+      x[cc, ] <- if(nallfc) qr.resid(xmat, demeanlist(x[cc, ], fl, weights = w, ...)) else qr.resid(xmat, x[cc, ])
+      return(setAttributes(x, ax))
+    } else if(nallfc)
+      return(setAttributes(qr.resid(xmat, demeanlist(x, fl, weights = w, ...)), ax)) else
+        return(setAttributes(qr.resid(xmat, x), ax))
+  } else if(na.rm && fill) {
     x[-cc, ] <- NA
+    x[cc, ] <- demeanlist(x[cc, ], fl, weights = w, ...)
     return(setAttributes(x, ax))
-  } else return(setAttributes(Y, ax))
+  } else return(setAttributes(demeanlist(x, fl, weights = w, ...), ax))
 }
 fHDwithin.pdata.frame <- function(x, w = NULL, na.rm = TRUE, fill = TRUE, variable.wise = FALSE, ...) {
   ax <- attributes(x)
@@ -241,8 +249,8 @@ fHDwithin.data.frame <- function(x, fl, w = NULL, na.rm = TRUE, fill = FALSE, va
       cc <- which(cc)
       if(!is.null(w)) w <- w[cc]
       if(!variable.wise) {
-        x <- .Call(C_subsetDT, x, cc, seq_along(x))
         if(fill) nrx <- nrow(x) else ax[["row.names"]] <- ax[["row.names"]][cc] # best ??
+        x <- .Call(C_subsetDT, x, cc, seq_along(x))
       }
     } else na.rm <- FALSE
   }
@@ -442,14 +450,18 @@ fHDbetween.default <- function(x, fl, w = NULL, na.rm = TRUE, fill = FALSE, ...)
 
   if(nallfc || !fcl) {
     xmat <- qr.default(xmat)
-    Y <- if(nallfc) x - qr.resid(xmat, demeanlist(x, fl, weights = w, ...)) else
-          qr.fitted(xmat, x)
-  } else Y <- demeanlist(x, fl, weights = w, means = TRUE, ...)
-  if(na.rm && fill) {
-    x[cc] <- Y
+    if(na.rm && fill) {
+      x[-cc] <- NA
+      x[cc] <- if(nallfc) x[cc] - qr.resid(xmat, demeanlist(x[cc], fl, weights = w, ...)) else qr.fitted(xmat, x[cc])
+      return(setAttributes(x, ax))
+    } else if(nallfc)
+      return(setAttributes(x - qr.resid(xmat, demeanlist(x, fl, weights = w, ...)), ax)) else
+      return(setAttributes(qr.fitted(xmat, x), ax))
+  } else if(na.rm && fill) {
     x[-cc] <- NA
+    x[cc] <- demeanlist(x[cc], fl, weights = w, means = TRUE, ...)
     return(setAttributes(x, ax))
-  } else return(setAttributes(Y, ax))
+  } else return(setAttributes(demeanlist(x, fl, weights = w, means = TRUE, ...), ax))
 }
 fHDbetween.pseries <- function(x, w = NULL, na.rm = TRUE, fill = TRUE, ...) {
   if(na.rm && !all(xcc <- !is.na(x))) {
@@ -507,14 +519,18 @@ fHDbetween.matrix <- function(x, fl, w = NULL, na.rm = TRUE, fill = FALSE, ...) 
 
   if(nallfc || !fcl) {
     xmat <- qr.default(xmat)
-    Y <- if(nallfc) x - qr.resid(xmat, demeanlist(x, fl, weights = w, ...)) else
-         qr.fitted(xmat, x)
-  } else Y <- demeanlist(x, fl, weights = w, means = TRUE, ...)
-  if(na.rm && fill) {
-    x[cc, ] <- Y
+    if(na.rm && fill) {
+      x[-cc, ] <- NA
+      x[cc, ] <- if(nallfc) x[cc, ] - qr.resid(xmat, demeanlist(x[cc, ], fl, weights = w, ...)) else qr.fitted(xmat, x[cc, ])
+      return(setAttributes(x, ax))
+    } else if(nallfc)
+      return(setAttributes(x - qr.resid(xmat, demeanlist(x, fl, weights = w, ...)), ax)) else
+        return(setAttributes(qr.fitted(xmat, x), ax))
+  } else if(na.rm && fill) {
     x[-cc, ] <- NA
+    x[cc, ] <- demeanlist(x[cc, ], fl, weights = w, means = TRUE, ...)
     return(setAttributes(x, ax))
-  } else return(setAttributes(Y, ax))
+  } else return(setAttributes(demeanlist(x, fl, weights = w, means = TRUE, ...), ax))
 }
 fHDbetween.pdata.frame <- function(x, w = NULL, na.rm = TRUE, fill = TRUE, variable.wise = FALSE, ...) {
   ax <- attributes(x)
@@ -548,8 +564,8 @@ fHDbetween.data.frame <- function(x, fl, w = NULL, na.rm = TRUE, fill = FALSE, v
       cc <- which(cc)
       if(!is.null(w)) w <- w[cc]
       if(!variable.wise) {
-        x <- .Call(C_subsetDT, x, cc, seq_along(x))
         if(fill) nrx <- nrow(x) else ax[["row.names"]] <- ax[["row.names"]][cc] # best ??
+        x <- .Call(C_subsetDT, x, cc, seq_along(x))
       }
     } else na.rm <- FALSE
   }
