@@ -115,6 +115,7 @@ give_nam <- function(x, gn, stub) {
   attr(x, "names") <- paste0(stub, attr(x, "names"))
   x
 }
+anyNAerror <- function(x, e) if(anyNA(x)) stop(e) else x
 cols2int <- function(cols, x, nam) {
  if(is.numeric(cols)) {
   if(max(abs(cols)) > length(x)) stop("Index out of range abs(1:length(x))")
@@ -126,6 +127,33 @@ cols2int <- function(cols, x, nam) {
     return(which(cols))
   } else stop("cols must be a function, character vector, numeric indices or logical vector!")
 }
+cols2log <- function(x, nam, cols) {
+  if(is.logical(cols)) if(length(cols) == length(x)) return(cols) else stop("Logical subsetting vector must match columns!")
+  if(is.function(cols)) return(vapply(x, cols, TRUE))
+  r <- logical(length(x))
+  if(is.character(cols)) {
+    r[anyNAerror(match(cols, nam), "Unknown column names!")] <- TRUE
+  } else if(is.numeric(cols)) {
+    if(max(abs(cols)) > length(r)) stop("Index out of range abs(1:length(x))")
+    r[cols] <- TRUE
+  } else stop("cols must be a function, character vector, numeric indices or logical vector!")
+  return(r)
+}
+colsubset <- function(x, ind) { # also works for grouped tibbles !!
+  ax <- attributes(x)
+  attributes(x) <- NULL # faster than unclass !! and good here since vapply on unclassed is faster !!
+  if(is.numeric(ind)) {
+    if(max(abs(ind)) > length(x)) stop("Index out of range abs(1:length(x))")
+  } else if(is.logical(ind)) {
+    if(length(ind) != length(x)) stop("Logical subsetting vector must match length(x)")
+  } else {
+    ind <- if(is.function(ind)) vapply(x, ind, TRUE, USE.NAMES = FALSE) else
+      anyNAerror(match(ind, ax[["names"]]), "Unknown column names!")
+  }
+  ax[["names"]] <- ax[["names"]][ind]
+  return(.Call(Cpp_setAttributes, x[ind], ax)) # return(`attributes<-`(x[ind], ax)) # This is slow on large data -> a lot of checks !!!
+}
+
 at2GRP <- function(x) {
   if(is.nmfactor(x))
   return(list(length(attr(x, "levels")), x, NULL)) else {
@@ -144,33 +172,11 @@ G_t <- function(x, m = TRUE) {
     if(is.integer(x)) return(x) else return(qG(x, na.exclude = FALSE)) # make sure it is ordered !!! qG already ckecks factor !!
   } else if(is.GRP(x)) return(x[[2L]]) else return(GRP(x, return.groups = FALSE)[[2L]])
 }
-anyNAerror <- function(x, e) if(anyNA(x)) stop(e) else x
-colsubset <- function(x, ind) { # also works for grouped tibbles !!
-  ax <- attributes(x)
-  attributes(x) <- NULL # faster than unclass !! and good here since vapply on unclassed is faster !!
-  if(is.numeric(ind)) {
-    if(max(abs(ind)) > length(x)) stop("Index out of range abs(1:length(x))")
-  } else if(is.logical(ind)) {
-    if(length(ind) != length(x)) stop("Logical subsetting vector must match length(x)")
-  } else {
-    ind <- if(is.function(ind)) vapply(x, ind, TRUE, USE.NAMES = FALSE) else
-      anyNAerror(match(ind, ax[["names"]]), "Unknown column names!")
-  }
-  ax[["names"]] <- ax[["names"]][ind]
-  return(.Call(Cpp_setAttributes, x[ind], ax)) # return(`attributes<-`(x[ind], ax)) # This is slow on large data -> a lot of checks !!!
-}
 rgrep <- function(exp, nam, ...) if(length(exp) > 1L) funique(vapply(exp, grep, 1L, nam, ...), TRUE) else grep(exp, nam, ...)
 NROW2 <- function(x, d) if(length(d)) d[1L] else length(x)
 NCOL2 <- function(d, ilv) if(ilv) d[2L] else 1L
 charorNULL <- function(x) if(is.character(x)) x else NULL
 # more security here??
-cols2log <- function(x, nam, cols) {
-  if(is.function(cols)) return(vapply(x, cols, TRUE)) else if(is.character(cols)) return(nam %in% cols) else {
-    r <- logical(length(x))
-    r[cols] <- TRUE
-    return(r)
-  }
-}
 unique_factor <- function(x) {
   res <- seq_along(attr(x, "levels"))
   .Call(Cpp_duplAttributes, res, x)
