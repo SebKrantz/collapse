@@ -142,7 +142,7 @@ SEXP qGCpp(SEXP x, bool ordered = true, bool na_exclude = true) {
 
 
 template <int RTYPE>
-Vector<RTYPE> funiqueImpl(const Vector<RTYPE>& x, bool ordered = false) {
+Vector<RTYPE> funiqueImpl(const Vector<RTYPE>& x, bool ordered = true) {
   if(ordered) {
     Vector<RTYPE> out = sort_unique(x);
     DUPLICATE_ATTRIB(out, x);
@@ -155,7 +155,7 @@ Vector<RTYPE> funiqueImpl(const Vector<RTYPE>& x, bool ordered = false) {
 }
 
 // [[Rcpp::export]]
-SEXP funique(SEXP x, bool ordered = false) {
+SEXP funique(SEXP x, bool ordered = true) {
   switch(TYPEOF(x)) {
   case INTSXP: return funiqueImpl<INTSXP>(x, ordered);
   case REALSXP: return funiqueImpl<REALSXP>(x, ordered);
