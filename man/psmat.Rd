@@ -65,7 +65,7 @@ The \code{pdata.frame} method only works for properly subsetted objects of class
 \examples{
 ## World Development Panel Data
 head(wlddev)                                                    # View data
-qsu(wlddev, xt = ~ iso3c, cols = 9:12, vlabels = TRUE)          # Sumarizing data
+qsu(wlddev, pid = ~ iso3c, cols = 9:12, vlabels = TRUE)          # Sumarizing data
 str(psmat(wlddev$PCGDP, wlddev$iso3c, wlddev$year))            # Generating matrix of GDP per Capita
 r <- psmat(wlddev, PCGDP ~ iso3c, ~ year)                       # Same thing using data.frame method
 plot(r, main = vlabels(wlddev)[9], xlab = "Year")               # Plot the matrix
