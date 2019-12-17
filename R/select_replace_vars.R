@@ -152,20 +152,25 @@ get_vars <- function(x, vars, return = c("data","names","indices","named_indices
   ax <- attributes(x)
   ilv <- is.list(value)
   d <- dim(value)
+  # Slightly faster but a bit less secure..
+  # attributes(x) <- NULL
+  # if(NROW2(value, d) != length(x[[1L]])) stop("NROW(value) must match nrow(x)")
   if(NROW2(value, d) != nrow(x)) stop("NROW(value) must match nrow(x)")
   attributes(x) <- NULL
   if(is.numeric(vars)) {
     if(!missing(...)) stop("Unknown argument ", dotstostr(...))
     if(max(abs(vars)) > length(x)) stop("Column index out of range abs(1:length(x))")
+    if(any(vars < 0)) vars <- seq_along(x)[vars]
   } else if(is.logical(vars)) {
     if(!missing(...)) stop("Unknown argument ", dotstostr(...))
     if(length(vars) != length(x)) stop("Logical subsetting vector must match length(x)")
+    vars <- which(vars)
   } else {
     if(!regex && !missing(...)) stop("Unknown argument ", dotstostr(...))
     vars <- if(is.function(vars)) which(vapply(x, vars, TRUE, USE.NAMES = FALSE)) else if(is.character(vars) && regex)
            rgrep(vars, ax[["names"]], ...) else anyNAerror(match(vars, ax[["names"]]), "Unknown column names!")
   }
-  if(NCOL2(d, ilv) != length(vars)) stop("NCOL(value) must match length(num.vars(x))")
+  if(NCOL2(d, ilv) != length(vars)) stop("NCOL(value) must match length(vars)")
   if(ilv) x[vars] <- value else x[[vars]] <- value
   if(ilv && length(nam <- names(value)) == length(vars)) ax[["names"]][vars] <- nam
   return(setAttributes(x, ax))
