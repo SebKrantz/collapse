@@ -4,7 +4,7 @@
 qF <- function(x, ordered = TRUE, na.exclude = TRUE) {
   if(is.factor(x)) {
     if(na.exclude || inherits(x, "na.included")) {
-      if(ordered && !is.ordered(x)) class(x) <- c("ordered", class(x))
+      if(ordered && !is.ordered(x)) class(x) <- c("ordered", class(x)) # can setunordered ???
       return(x)
     } else
       return(`oldClass<-`(addNA2(x), c(if(ordered) "ordered", "factor", "na.included")))
