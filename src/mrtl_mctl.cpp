@@ -21,7 +21,7 @@ template <int RTYPE>
         out.attr("names") = rn;
       } else out.attr("names") = dn[0];
       if (ret != 0) {
-        if (Rf_isNull(dn[1])) {
+        if (Rf_isNull(dn[1]) || ret == 2) {
           out.attr("row.names") = IntegerVector::create(NA_INTEGER, -X.ncol()); //NumericVector::create(NA_REAL,-X.ncol());
         } else out.attr("row.names") = dn[1];
         if(ret == 1) {
@@ -123,7 +123,7 @@ template <int RTYPE>
         out.attr("names") = cn;
       } else out.attr("names") = dn[1];
       if (ret != 0) {
-        if (Rf_isNull(dn[0])) {
+        if (Rf_isNull(dn[0]) || ret == 2) {
           out.attr("row.names") = IntegerVector::create(NA_INTEGER, -X.nrow()); // NumericVector::create(NA_REAL,-X.nrow());
         } else out.attr("row.names") = dn[0];
         if(ret == 1) {
