@@ -15,7 +15,10 @@
 \alias{is.categorical}
 \alias{is.Date}
 \alias{\%!in\%}
-\alias{na.rm}
+\alias{na_rm}
+\alias{na_insert}
+\alias{fnlevels}
+\alias{funique}
 %- Also NEED an '\alias' for EACH other topic documented here.
 \title{
 \code{collapse} Small (Helper) Functions
@@ -28,19 +31,23 @@ vlabels(X)                    # Get labels of variables in X, in attr(X[[i]], "l
 vlabels(X) <- value           # Set labels of variables in X
 namlab(X, class = FALSE)      # Return a data.frame of variable names, labels and classes
 add_stub(X, stub, pre = TRUE) # Add a stub (i.e. prefix or postfix) to variables
+x \%!in\% table                 # The opposite of \%in\%
+fnlevels(x)                   # Faster version of nlevels(x) (for factors)
+funique(x, ordered = TRUE)    # Faster version of unique(x) and sort(unique(x)) for vectors
+na_rm(x)                      # Remove missing values from vector and return vector
+na_insert(X, prop = 0.1)      # Insert missing values at random in vectors, matrices DF's
+all.identical(...)            # Check exact equality of multiple objects or list-elements
+pwcor(X, ...)                 # Pairwise-correlations
+pwcov(X, ...)                 # Pairwise-covariances
 seq_row(X)                    # Integer sequences along rows of X
 seq_col(X)                    # Integer sequences along columns of X
 setRownames(object = nm,      # Set rownames of object and return object
         nm = seq_row(object))
 setColnames(object = nm, nm)  # Set colnames of object and return object
 setDimnames(object = dn, dn)  # Set dimension names of object and return object
-pwcor(X, ...)                 # Pairwise-correlations
-pwcov(X, ...)                 # Pairwise-covariances
-all.identical(...)            # Check exact equality of multiple objects or list-elements
 is.categorical(x)             # The opposite of is.numeric
 is.Date(x)                    # Check if object is of class "Date", "POSIXlt" or "POSIXct"
-x \%!in\% table                 # The opposite of \%in\%
-na.rm(x)                      # Remove missing values from vector and return vector
+as.numeric.factor(X)          # Coerce a factor, or all factor columns in X, to numeric
 }
 %- maybe also 'usage' for other objects documented here.
 \arguments{
@@ -53,6 +60,8 @@ na.rm(x)                      # Remove missing values from vector and return vec
   \item{pre}{logical. \code{FALSE} will post-apply \code{stub}.}
   \item{nm}{a suitable vector of row- or column-names.}
   \item{dn}{a suitable list of dimension names.}
+  \item{ordered}{logical. \code{TRUE} sorts the output, \code{FALSE} is slightly faster.}
+  \item{prop}{specify the proportion of observations randomly replaced with \code{NA}.}
   \item{...}{for \code{pwcor} and \code{pwcov}: Other arguments passed to \code{stats::cor} and \code{stats::cov}. For \code{all.identical}, either multiple comma-separeted objects or a single list of objects.}
 }
 % \details{
