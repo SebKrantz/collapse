@@ -66,5 +66,32 @@ ggplot(aes(x = Year, y = value, fill = Sector), data = dat) +
   theme(axis.text.x = element_text(angle = 315, hjust = 0, margin = ggplot2::margin(t = 0)),
         strip.background = element_rect(colour = "grey30", fill = "grey30"))
 }
+
+\dontrun{
+# A function to plot the structural change of an arbitrary country
+library(data.table)
+library(ggplot2)
+
+plotGGDC <- function(ctry) {
+dat <- qDT(GGDC10S)[Country == ctry]
+dat <- cbind(get_vars(dat, c("Variable","Year")),
+             replace_outliers(sweep(get_vars(dat, 6:15), 1, dat$SUM, "/"), 0, NA, "min"))
+dat$Variable <- Recode(dat$Variable,"VA"="Value Added Share","EMP"="Employment Share")
+dat <- melt(dat, 1:2, variable.name = "Sector")
+
+ggplot(aes(x = Year, y = value, fill = Sector), data = dat) +
+  geom_area(position = "fill", alpha = 0.9) + labs(x = NULL, y = NULL) +
+  theme_linedraw(base_size = 14) + facet_wrap( ~ Variable) +
+  scale_fill_manual(values = sub("#00FF66FF", "#00CC66", rainbow(10))) +
+  scale_x_continuous(breaks = scales::pretty_breaks(n = 7), expand = c(0, 0)) +
+  scale_y_continuous(breaks = scales::pretty_breaks(n = 10), expand = c(0, 0),
+                     labels = scales::percent) +
+  theme(axis.text.x = element_text(angle = 315, hjust = 0, margin = ggplot2::margin(t = 0)),
+        strip.background = element_rect(colour = "grey20", fill = "grey20"),
+        strip.text = element_text(face = "bold"))
+}
+plotGGDC("TZA")
+}
+
 }
 \keyword{datasets}
