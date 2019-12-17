@@ -390,7 +390,7 @@ HDW.data.frame <- function(x, fl, w = NULL, cols = is.numeric, na.rm = TRUE, fil
 
 HDW.pdata.frame <- function(x, w = NULL, cols = is.numeric, na.rm = TRUE, fill = TRUE,
                             variable.wise = FALSE, stub = "HDW.", ...) {
-  return(add_stub(fHDwithin.data.frame(if(is.null(cols)) x else colsubset(x, cols), w, na.rm, fill, variable.wise, ...), stub))
+    return(add_stub(fHDwithin.pdata.frame(if(is.null(cols)) x else colsubset(x, cols), w, na.rm, fill, variable.wise, ...), stub))
 }
 
 # Theory: y = ?1 x1 + ?2 x2 + e
@@ -703,7 +703,7 @@ HDB.data.frame <- function(x, fl, w = NULL, cols = is.numeric, na.rm = TRUE, fil
 }
 HDB.pdata.frame <- function(x, w = NULL, cols = is.numeric, na.rm = TRUE, fill = TRUE,
                             variable.wise = FALSE, stub = "HDB.", ...) {
-  return(add_stub(fHDbetween.data.frame(if(is.null(cols)) x else colsubset(x, cols), w, na.rm, fill, variable.wise, ...), stub))
+  return(add_stub(fHDbetween.pdata.frame(if(is.null(cols)) x else colsubset(x, cols), w, na.rm, fill, variable.wise, ...), stub))
 }
 
 
