@@ -24,11 +24,11 @@ psmat.default <- function(x, g, t = NULL, transpose = FALSE, ...) {
                     g <- as.factor.GRP(g) else g <- as.factor.GRP(GRP(g)) # interaction(lapply(g, qF))
   if(is.null(t)) {
     message("No timevar provided: Assuming Balanced Panel")
-    .Call(Cpp_psmat,x, g, NULL, transpose)
+    return(.Call(Cpp_psmat,x, g, NULL, transpose))
   } else {
     if(!is.nmfactor(t)) if(is.atomic(t)) t <- qF(t, na.exclude = FALSE) else if(is.GRP(t))
                       t <- as.factor.GRP(t) else t <- as.factor.GRP(GRP(t)) # interaction(lapply(t, qF))
-    .Call(Cpp_psmat,x, g, t, transpose)
+    return(.Call(Cpp_psmat,x, g, t, transpose))
     }
   }
 }
@@ -51,9 +51,7 @@ psmat.data.frame <- function(x, by, t = NULL, cols = NULL, transpose = FALSE, ar
         by <- anyNAerror(match(all.vars(by[[3L]]), nam), "Unknown by columns!")
       } else {
         by <- anyNAerror(match(all.vars(by), nam), "Unknown by columns!")
-        v <- if(is.null(cols)) seq_along(x)[-by] else if(is.function(cols))
-             setdiff(which(vapply(x, cols, TRUE)), by) else if(is.character(cols))
-             anyNAerror(match(cols, nam), "Unknown column names!") else cols
+        v <- if(is.null(cols)) seq_along(x)[-by] else setdiff(cols2int(cols, x, nam), by)
       }
       class(x) <- NULL
       by <- if(length(by) == 1L) x[[by]] else GRP(x, by) #, return.groups = FALSE)
@@ -63,18 +61,16 @@ psmat.data.frame <- function(x, by, t = NULL, cols = NULL, transpose = FALSE, ar
         t <- if(length(t) == 1L) x[[t]] else GRP(x, t) #, return.groups = FALSE)
       }
       x <- x[v]
-    } else if(!is.null(cols)) {
-      class(x) <- NULL
-      x <- if(is.function(cols)) x[vapply(x, cols, TRUE)] else x[cols]
-    }
+    } else if(!is.null(cols)) x <- unclass(x)[cols2int(cols, x, names(x))]
+
     if(!is.nmfactor(by)) if(is.atomic(by)) by <- qF(by, na.exclude = FALSE) else if(is.GRP(by))
-      by <- as.factor.GRP(by) else by <- as.factor.GRP(GRP(by)) # interaction(lapply(by, qF))
+                         by <- as.factor.GRP(by) else by <- as.factor.GRP(GRP(by)) # interaction(lapply(by, qF))
       if(is.null(t)) {
         message("No timevar provided: Assuming Balanced Panel")
         res <- lapply(x, psmatCpp, by, NULL, transpose)
       } else {
         if(!is.nmfactor(t)) if(is.atomic(t)) t <- qF(t, na.exclude = FALSE) else if(is.GRP(t))
-          t <- as.factor.GRP(t) else t <- as.factor.GRP(GRP(t)) # interaction(lapply(t, qF))
+                  t <- as.factor.GRP(t) else t <- as.factor.GRP(GRP(t)) # interaction(lapply(t, qF))
         res <- lapply(x, psmatCpp, by, t, transpose)
       }
   }
@@ -90,11 +86,12 @@ psmat.pseries <- function(x, transpose = FALSE, ...) {
   if(length(index) > 2L) index <- c(interaction(index[-length(index)], drop = TRUE), index[length(index)])
   .Call(Cpp_psmat,x, index[[1L]], index[[2L]], transpose)
 }
-psmat.pdata.frame <- function(x, transpose = FALSE, array = TRUE, ...) {
+psmat.pdata.frame <- function(x, cols = NULL, transpose = FALSE, array = TRUE, ...) {
   if(!missing(...)) stop("Unknown argument ", dotstostr(...))
   index <- attr(x, "index")
   if(length(index) > 2L) index <- c(interaction(index[-length(index)], drop = TRUE), index[length(index)])
-  res <- lapply(x, psmatCpp, index[[1L]], index[[2L]], transpose)
+
+  res <- lapply(if(is.null(cols)) x else unclass(x)[cols2int(cols, x, names(x))], psmatCpp, index[[1L]], index[[2L]], transpose)
   if(array) {
     if(length(res) == 1L) return(res[[1L]]) else
     return(addAttributes(simplify2array(res), list(transpose = transpose, class = c("psmat","array","table"))))
