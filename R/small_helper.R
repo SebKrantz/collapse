@@ -72,21 +72,27 @@ na_rm <- function(x) x[!is.na(x)] # more consistent with base than na_rm !!! if 
 #     setAttributes(r, ax)
 #   } else duplAttributes(x[!is.na(x)], x)
 # }
-na_insert <- function(x, prop = 0.1) {
-  if(!is.null(d <- dim(x))) {
+na_insert <- function(X, prop = 0.1) {
+  if(!is.null(d <- dim(X))) {
     n <- d[1L]
     p <- d[2L]
     NAloc <- rep(FALSE, n * p)
     NAloc[sample.int(n * p, floor(n * p * prop))] <- TRUE
-    x[matrix(NAloc, nrow = n, ncol = p)] <- NA
-  } else if(is.atomic(x)) {
-    l <- length(x)
-    x[sample.int(l, floor(l * prop))] <- NA
-  } else stop("x must be an atomic vector, matrix or data.frame")
-  return(x)
+    X[matrix(NAloc, nrow = n, ncol = p)] <- NA
+  } else if(is.atomic(X)) {
+    l <- length(X)
+    X[sample.int(l, floor(l * prop))] <- NA
+  } else stop("X must be an atomic vector, matrix or data.frame")
+  return(X)
 }
 fnlevels <- function(x) length(attr(x, "levels")) # make cpp version ?? -> nope, slower !!
-
+as.numeric.factor <- function(X) {
+  if(is.list(X)) {
+    fcts <- vapply(X, is.factor, TRUE, USE.NAMES = FALSE)
+    get_vars(X, fcts) <- lapply(colsubset(X, fcts), function(x) as.numeric(attr(x, "levels"))[x])
+    return(X)
+  } else return(as.numeric(attr(X, "levels"))[X])
+}
 
 
 
