@@ -25,8 +25,8 @@ qDT(X)
 qM(X)
 mctl(X, names = FALSE, ret = 0L)
 mrtl(X, names = FALSE, ret = 0L)
-qF(x, ordered = TRUE)
-qG(x, ordered = TRUE)
+qF(x, ordered = TRUE, na.exclude = TRUE)
+qG(x, ordered = TRUE, na.exclude = TRUE)
 }
 %- maybe also 'usage' for other objects documented here.
 \arguments{
