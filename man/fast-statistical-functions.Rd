@@ -50,13 +50,13 @@ FUN(x, [w = NULL,] TRA = NULL, [na.rm = TRUE,]
 
 \code{keep.w} \tab\tab \emph{grouped_df method:} Logical. \code{TRUE} also aggregates weights and saves them in a column, \code{FALSE} removes weighting variable after computation (if contained in \code{grouped_df}). \cr \cr \cr
 
-\code{...} \tab\tab arguments to be passed to or from other methods, and extra arguments to some functions, i.e. the algorithm used to compute variances etc. \cr \cr \cr
+\code{...} \tab\tab arguments to be passed to or from other methods, and extra arguments to some functions, i.e. the algorithm used to compute variances etc. \cr
 }
 }
-\details{
+\section{Details}{
 Please see the documentation of individual functions.
 }
-\value{
+\section{Value}{
  \code{x} aggregated. With data.frame's column-attributes and overall attributes are preserved.
 }
 \seealso{
