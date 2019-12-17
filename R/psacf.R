@@ -9,7 +9,7 @@
 #   qGCpp(x, ordered)
 # }
 
-# what about error message ??
+# TODO: could do switch instead of match.arg ...
 
 psacf <- function(x, ...) UseMethod("psacf", x)
 psacf.default <- function(x, g, t = NULL, lag.max = NULL, type = c("correlation", "covariance","partial"), plot = TRUE, gscale = TRUE, ...) {
@@ -72,7 +72,7 @@ psacf.data.frame <- function(x, by, t = NULL, cols = is.numeric, lag.max = NULL,
       by <- anyNAerror(match(all.vars(by[[3L]]), nam), "Unknown column names!")
     } else {
       by <- anyNAerror(match(all.vars(by), nam), "Unknown column names!")
-      v <- if(is.null(cols)) seq_along(x)[-by] else if(is.function(cols)) setdiff(which(vapply(x, cols, TRUE)), by) else if(is.character(cols)) match(cols, nam) else cols
+      v <- if(is.null(cols)) seq_along(x)[-by] else setdiff(cols2int(cols, x, nam), by)
     }
     class(x) <- NULL
     by <- if(length(by) == 1L) x[[by]] else GRP(x, by, return.groups = FALSE)
@@ -82,10 +82,8 @@ psacf.data.frame <- function(x, by, t = NULL, cols = is.numeric, lag.max = NULL,
       t <- if(length(t) == 1L) x[[t]] else GRP(x, t, return.groups = FALSE)
     }
     x <- x[v]
-  } else if(!is.null(cols)) {
-    class(x) <- NULL
-    x <- if(is.function(cols)) x[vapply(x, cols, TRUE)] else x[cols]
-  }
+  } else if(!is.null(cols)) x <- unclass(x)[cols2int(cols, x, names(x))]
+
   lx <- length(x)
   nrx <- length(x[[1L]])
   snames <- names(x)
@@ -105,7 +103,7 @@ psacf.data.frame <- function(x, by, t = NULL, cols = is.numeric, lag.max = NULL,
   if(is.atomic(by)) {
     if(is.nmfactor(by)) ng <- nlevels(by) else {
       by <- qG(by, na.exclude = FALSE)
-      ng <- attr(by,"N.groups")
+      ng <- attr(by, "N.groups")
     }
     if(is.null(lag.max)) lag.max <- round(2*sqrt(nrx/ng))
     acf <- getacf(ng, by)
@@ -126,7 +124,8 @@ psacf.data.frame <- function(x, by, t = NULL, cols = is.numeric, lag.max = NULL,
                             lag = if(ispacf) outer(1L:lag.max, lag) else outer(0L:lag.max, lag),
                             series = series, snames = snames), "acf")
   if(plot) {
-    plot(acf.out, ylab = if(ispacf) "Panel Series Partial ACF" else "Panel Series ACF", ...)
+    plot(acf.out, ylab = if(ispacf) "Panel Series Partial ACF" else "Panel Series ACF",
+         mar = if(lx > 2) c(3, 2.4, 2, 0.8) else par("mar"), ...)
     invisible(acf.out)
   }
   else acf.out
@@ -160,15 +159,16 @@ psacf.pseries <- function(x, lag.max = NULL, type = c("correlation", "covariance
   }
   else acf.out
 }
-psacf.pdata.frame <- function(x, lag.max = NULL, type = c("correlation", "covariance","partial"), plot = TRUE, gscale = TRUE, ...) {
+psacf.pdata.frame <- function(x, cols = is.numeric, lag.max = NULL, type = c("correlation", "covariance","partial"), plot = TRUE, gscale = TRUE, ...) {
   # if(!missing(...)) stop("Unknown argument ", dotstostr(...))
   type <- match.arg(type)
   series <- deparse(substitute(x))
   ispacf <- type == "partial"
-  lx <- length(x)
   nrx <- nrow(x)
-  snames <- names(x)
   index <- attr(x, "index")
+  if(!is.null(cols)) x <- unclass(x)[cols2int(cols, x, names(x))]
+  lx <- length(x)
+  snames <- names(x)
   if(length(index) > 2L) index <- c(interaction(index[-length(index)], drop = TRUE), index[length(index)])
   ng <- fnlevels(index[[1L]])
   attributes(x) <- NULL
@@ -192,7 +192,8 @@ psacf.pdata.frame <- function(x, lag.max = NULL, type = c("correlation", "covari
                             lag = if(ispacf) outer(1L:lag.max, lag) else outer(0L:lag.max, lag),
                             series = series, snames = snames), "acf")
   if(plot) {
-    plot(acf.out, ylab = if(ispacf) "Panel Series Partial ACF" else "Panel Series ACF", ...)
+    plot(acf.out, ylab = if(ispacf) "Panel Series Partial ACF" else "Panel Series ACF",
+         mar = if(lx > 2) c(3, 2.4, 2, 0.8) else par("mar"), ...)
     invisible(acf.out)
   }
   else acf.out
@@ -208,8 +209,8 @@ pspacf.pseries <- function(x, lag.max = NULL, plot = TRUE, gscale = TRUE, ...) {
 pspacf.data.frame <- function(x, by, t = NULL, cols = is.numeric, lag.max = NULL, plot = TRUE, gscale = TRUE, ...) {
   psacf.data.frame(x, by, t, cols, lag.max, "partial", plot, gscale, ...)
 }
-pspacf.pdata.frame <- function(x, lag.max = NULL, plot = TRUE, gscale = TRUE, ...) {
-  psacf.pdata.frame(x, lag.max, "partial", plot, gscale, ...)
+pspacf.pdata.frame <- function(x, cols = is.numeric, lag.max = NULL, plot = TRUE, gscale = TRUE, ...) {
+  psacf.pdata.frame(x, cols, lag.max, "partial", plot, gscale, ...)
 }
 
 psccf <- function(x, y, ...) UseMethod("psccf", x)
@@ -256,7 +257,7 @@ psccf.default <- function(x, y, g, t = NULL, lag.max = NULL, type = c("correlati
   acf.out <- `class<-`(list(acf = acf, type = type, n.used = lx,
                             lag = array(-lag.max:lag.max, d), series = snames, snames = snames), "acf")
   if (plot) {
-    plot(acf.out, ...)
+    plot(acf.out, ylab = "Panel Series CCF", ...)
     invisible(acf.out)
   }
   else acf.out
@@ -287,7 +288,7 @@ psccf.pseries <- function(x, y, lag.max = NULL, type = c("correlation", "covaria
   acf.out <- `class<-`(list(acf = acf, type = type, n.used = lx,
                             lag = array(l_seq, d), series = snames, snames = snames), "acf")
   if (plot) {
-    plot(acf.out, ...)
+    plot(acf.out, ylab = "Panel Series CCF", ...)
     invisible(acf.out)
   }
   else acf.out
