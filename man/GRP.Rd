@@ -20,7 +20,7 @@
 \usage{
 GRP(X, ...)
 
-\method{GRP}{default}(X, by = NULL, sort = TRUE, order = 1L, na.last = FALSE,
+\method{GRP}{default}(X, by = NULL, sort = TRUE, order = 1L, na.last = TRUE,
     return.groups = TRUE, return.order = FALSE, ...)
 
 \method{GRP}{factor}(X, ...)
