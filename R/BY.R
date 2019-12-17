@@ -96,11 +96,12 @@ BY.data.frame <- function(X, g, FUN, ..., use.g.names = TRUE, sort = TRUE,
       attributes(X) <- NULL
       if(use.g.names && (matl || !inherits(X, "data.table"))) {
         res <- vector("list", length(X))
-        res[[1L]] <- unlist(lapply(split.default(X[[1L]], g), FUN, ...), FALSE, TRUE) # could make to use row.names -> `names<-`(X[[1L]], ax[["row.names"]]) !!!!!!!!!!!!!. but i discard it because this is not so common for data.frame to have non-numeric row names.
+        res[[1L]] <- unlist(lapply(split.default(`names<-`(X[[1L]], ax[["row.names"]]), g), FUN, ...), FALSE, TRUE) # could make to use row.names -> `names<-`(X[[1L]], ax[["row.names"]]) !!!!!!!!!!!!!. but i discard it because this is not so common for data.frame to have non-numeric row names.
         if(matl) dn <- list(names(res[[1L]]), ax[["names"]]) else
           ax[["row.names"]] <- names(res[[1L]])
         setattr_clp(res[[1L]], "names", NULL) # faster than  names(res[[1]]) <- NULL
         if(typeof(res[[1L]]) == typeof(X[[1L]]) && !matl) { # length(res[[1]]) == nrow(X) &&   safe ??
+          setattr_clp(X[[1L]], "names", NULL)
           duplattributes(res[[1L]], X[[1L]])
           splitfun <- function(x) duplAttributes(unlist(lapply(split.default(x, g), FUN, ...), FALSE, FALSE), x)
         } else splitfun <- function(x) unlist(lapply(split.default(x, g), FUN, ...), FALSE, FALSE)
@@ -113,7 +114,8 @@ BY.data.frame <- function(X, g, FUN, ..., use.g.names = TRUE, sort = TRUE,
         if(matl) {
           splitfun <- function(x) unlist(lapply(split.default(x, g), FUN, ...), FALSE, FALSE)
           res <- do.call(cbind, aplyfun(X, splitfun))
-          ax <- c(list(dim = dim(res), dimnames = list(NULL, ax[["names"]])),
+          dimr <- dim(res)
+          ax <- c(list(dim = dimr, dimnames = list(if(length(X[[1L]]) == dimr[1L] && ax[["row.names"]][1L] != "1") ax[["row.names"]] else NULL, ax[["names"]])),
                   ax[!(names(ax) %in% c("names","row.names","class"))])
         } else {
           splitfun <- function(x) cond_duplAttributes(unlist(lapply(split.default(x, g), FUN, ...), FALSE, FALSE), x)
@@ -159,7 +161,7 @@ BY.matrix <- function(X, g, FUN, ..., use.g.names = TRUE, sort = TRUE,
       splitfun3 <- function(x, un = FALSE) unlist(lapply(split.default(x, g), FUN, ...), FALSE, un)
       if(use.g.names) {
         res <- vector("list", ncol(X))
-        res[[1L]] <- splitfun3(X[, 1L], un = TRUE) # rewrite all in C++ ??
+        res[[1L]] <- splitfun3(X[, 1L], un = TRUE) # rewrite all in C++ ?? # Note: X[, 1L] still keeps row.names, which are then interacted with group names.
         if(return == 2L) ax[["dimnames"]] <- list(names(res[[1L]]), dimnames(X)[[2L]]) else # ax[["dimnames"]][[1L]] <- names(res[[1L]]) # gives error if only one dimnames !!
           ax <- c(list(names = dimnames(X)[[2L]], row.names = names(res[[1L]]), class = "data.frame"),
                   ax[!(names(ax) %in% c("dim","dimnames","class"))])
