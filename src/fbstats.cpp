@@ -23,7 +23,7 @@ NumericVector fbstatstemp(NumericVector x, bool ext = false, int ng = 0, Integer
       long double mean = 0, d1 = 0, M2 = 0;
       if(Rf_isNull(w)) { // No weights
         while(std::isnan(x[j]) && j!=0) --j;
-        if(j == 0) stop("Not enough non-mising obs.");
+        if(j != 0) {  // if(j == 0) stop("Not enough non-mising obs.");
           for(int i = j+1; i--; ) {
             if(std::isnan(x[i])) continue;
             d1 = x[i]-mean;
@@ -33,12 +33,13 @@ NumericVector fbstatstemp(NumericVector x, bool ext = false, int ng = 0, Integer
             if(max < x[i]) max = x[i];
           }
           M2 = sqrt(M2/(n-1));
+        } else mean = M2 = min = max = NA_REAL;
       } else { // with weights
         NumericVector wg = w;
         if(l != wg.size()) stop("length(w) must match length(x)");
         long double sumw = 0;
         while((std::isnan(x[j]) || std::isnan(wg[j])) && j!=0) --j;
-        if(j == 0) stop("Not enough non-mising obs.");
+         if(j != 0) { // if(j == 0) stop("Not enough non-mising obs.");
           for(int i = j+1; i--; ) {
             if(std::isnan(x[i]) || std::isnan(wg[i])) continue;
             sumw += wg[i];
@@ -50,6 +51,7 @@ NumericVector fbstatstemp(NumericVector x, bool ext = false, int ng = 0, Integer
             if(max < x[i]) max = x[i];
           }
           M2 = sqrt(M2/(sumw-1));
+        } else mean = M2 = min = max = NA_REAL;
       }
       if(std::isnan(M2)) M2 = NA_REAL;
       NumericVector result = NumericVector::create(n,(double)mean,(double)M2,min,max);
@@ -63,7 +65,7 @@ NumericVector fbstatstemp(NumericVector x, bool ext = false, int ng = 0, Integer
       if(g.size() != l) stop("length(g) must match nrow(X)");
       long double d1 = 0;
       int k = 0;
-      NumericMatrix result = no_init_matrix(ng, 5);
+      NumericMatrix result = no_init_matrix(ng, 5); // Perhaps initializin is better ??
       NumericMatrix::Column n = result( _ , 0);
       NumericMatrix::Column mean = result( _ , 1);
       NumericMatrix::Column M2 = result( _ , 2);
@@ -117,7 +119,7 @@ NumericVector fbstatstemp(NumericVector x, bool ext = false, int ng = 0, Integer
       }
       if(setn) {
         result.attr("dimnames") = List::create(gn, CharacterVector::create("N","Mean","SD","Min","Max"));
-        result.attr("class") = CharacterVector::create("qsu","table");
+        result.attr("class") = CharacterVector::create("qsu","matrix","table");
       }
       return result;
     }
@@ -128,7 +130,7 @@ NumericVector fbstatstemp(NumericVector x, bool ext = false, int ng = 0, Integer
        long double mean = 0, d1 = 0, dn = 0, dn2 = 0, term1 = 0, M2 = 0, M3 = 0, M4 = 0;
        if(Rf_isNull(w)) { // No weights
          while(std::isnan(x[j]) && j!=0) --j;
-         if(j == 0) stop("Not enough non-mising obs.");
+         if(j != 0) {  // if(j == 0) stop("Not enough non-mising obs.");
          for(int i = j+1; i--; ) {
            if(std::isnan(x[i])) continue;
            d1 = x[i]-mean;
@@ -145,12 +147,13 @@ NumericVector fbstatstemp(NumericVector x, bool ext = false, int ng = 0, Integer
          M4 = (n*M4)/(M2*M2); // kurtosis // Excess kurtosis: - 3;
          M3 = (sqrt(n)*M3) / sqrt(pow(M2,3)); // Skewness
          M2 = sqrt(M2/(n-1)); // Standard Deviation
+         } else mean = M2 = M3 = M4 = min = max = NA_REAL;
        } else { // with weights
          NumericVector wg = w;
          if(l != wg.size()) stop("length(w) must match length(x)");
          long double sumw = 0;
          while((std::isnan(x[j]) || std::isnan(wg[j])) && j!=0) --j;
-         if(j == 0) stop("Not enough non-mising obs.");
+         if(j != 0) {  // if(j == 0) stop("Not enough non-mising obs.");
          for(int i = j+1; i--; ) {
            if(std::isnan(x[i]) || std::isnan(wg[i])) continue;
            sumw += wg[i]; // great! this is correct !!
@@ -169,6 +172,7 @@ NumericVector fbstatstemp(NumericVector x, bool ext = false, int ng = 0, Integer
          M4 = (sumw*M4)/(M2*M2); // kurtosis // Excess kurtosis: - 3;
          M3 = (sqrt(sumw)*M3) / sqrt(pow(M2,3)); // Skewness
          M2 = sqrt(M2/(sumw-1)); // Standard Deviation
+         } else mean = M2 = M3 = M4 = min = max = NA_REAL;
        }
        NumericVector result = NumericVector::create(n,(double)mean,(double)M2,min,max,(double)M3,(double)M4);
        if(setn) {
@@ -181,7 +185,7 @@ NumericVector fbstatstemp(NumericVector x, bool ext = false, int ng = 0, Integer
        if(g.size() != l) stop("length(g) must match nrow(X)");
        double d1 = 0, dn = 0, dn2 = 0, term1 = 0;
        int k = 0;
-       NumericMatrix result = no_init_matrix(ng, 7);
+       NumericMatrix result = no_init_matrix(ng, 7); // again: init better ??
        NumericMatrix::Column n = result( _ , 0);
        NumericMatrix::Column mean = result( _ , 1);
        NumericMatrix::Column M2 = result( _ , 2);
@@ -255,7 +259,7 @@ NumericVector fbstatstemp(NumericVector x, bool ext = false, int ng = 0, Integer
        }
        if(setn) {
          result.attr("dimnames") = List::create(gn, CharacterVector::create("N","Mean","SD","Min","Max","Skew","Kurt"));
-         result.attr("class") = CharacterVector::create("qsu","table");
+         result.attr("class") = CharacterVector::create("qsu","matrix","table");
        }
        return result;
      }
@@ -294,7 +298,7 @@ SEXP fbstatsCpp(const NumericVector& x, bool ext = false, int ng = 0, const Inte
       return(fbstatstemp(x, ext, ng, g, w, setn, gn));
     }
   } else {
-    if(pg.size() != l) stop("length(pg) must match nrow(X)");
+    if(pg.size() != l) stop("length(pid) must match nrow(X)");
     bool weights = !Rf_isNull(w);
     NumericVector sum(npg, NA_REAL);
     NumericVector sumw = (weights) ? no_init_vector(npg) : no_init_vector(1); // works ??
@@ -356,10 +360,11 @@ SEXP fbstatsCpp(const NumericVector& x, bool ext = false, int ng = 0, const Inte
         result.attr("dimnames") = List::create(CharacterVector::create("Overall","Between","Within"),
                                                       (ext) ? CharacterVector::create("N/T","Mean","SD","Min","Max","Skew","Kurt") :
                                                               CharacterVector::create("N/T","Mean","SD","Min","Max"));
-        result.attr("class") = CharacterVector::create("qsu","table");
+        result.attr("class") = CharacterVector::create("qsu","matrix","table");
       }
       return(result);
     } else {
+      if(g.size() != l) stop("length(g) must match nrow(X)");
       NumericVector between = no_init_vector(l);
       bool groupids[ng][npg]; // could do +1 trick, but that could be costly in term of memory, if few g and many pg !!!
       memset(groupids, true, sizeof(bool)*ng*npg); // works ?? necessary ??
@@ -386,7 +391,7 @@ SEXP fbstatsCpp(const NumericVector& x, bool ext = false, int ng = 0, const Inte
           result.attr("dimnames") = List::create(gn, (ext) ? CharacterVector::create("N/T","Mean","SD","Min","Max","Skew","Kurt") :
                                                           CharacterVector::create("N/T","Mean","SD","Min","Max"),
                                                         CharacterVector::create("Overall","Between","Within"));
-          result.attr("class") = CharacterVector::create("qsu","table");
+          result.attr("class") = CharacterVector::create("qsu","array","table");
         }
         return(result);
       } else {
@@ -414,16 +419,17 @@ SEXP fbstatsmCpp(const NumericMatrix& x, bool ext = false, int ng = 0, const Int
       for(int j = col; j--; ) out(j, _) = fbstatstemp(x(_, j), ext, 0L, 0L, w, false);
       out.attr("dimnames") = List::create(colnames(x), (ext) ? CharacterVector::create("N","Mean","SD","Min","Max","Skew","Kurt") :
                                             CharacterVector::create("N","Mean","SD","Min","Max"));
-      out.attr("class") = CharacterVector::create("qsu","table");
+      out.attr("class") = CharacterVector::create("qsu","matrix","table");
       return out;
     } else {
+      // if(g.size() != l) stop("length(g) must match nrow(X)"); // checked in fbstatstemp
       if(array) {
         NumericMatrix out = no_init_matrix(d*ng, col);
         for(int j = col; j--; ) out(_, j) = fbstatstemp(x(_, j), ext, ng, g, w, false);
         out.attr("dim") = Dimension(ng, d, col);
         out.attr("dimnames") = List::create(gn, (ext) ? CharacterVector::create("N","Mean","SD","Min","Max","Skew","Kurt") :
                                               CharacterVector::create("N","Mean","SD","Min","Max"), colnames(x));
-        out.attr("class") = CharacterVector::create("qsu","table");
+        out.attr("class") = CharacterVector::create("qsu","array","table");
         return out;
       } else {
         List out(col);
@@ -441,7 +447,7 @@ SEXP fbstatsmCpp(const NumericMatrix& x, bool ext = false, int ng = 0, const Int
         out.attr("dimnames") = List::create(CharacterVector::create("Overall","Between","Within"),
                  (ext) ? CharacterVector::create("N/T","Mean","SD","Min","Max","Skew","Kurt") :
                   CharacterVector::create("N/T","Mean","SD","Min","Max"), colnames(x));
-        out.attr("class") = CharacterVector::create("qsu","table");
+        out.attr("class") = CharacterVector::create("qsu","array","table");
         return out;
       } else {
         List out(col);
@@ -457,7 +463,7 @@ SEXP fbstatsmCpp(const NumericMatrix& x, bool ext = false, int ng = 0, const Int
         out.attr("dimnames") = List::create(gn, (ext) ? CharacterVector::create("N/T","Mean","SD","Min","Max","Skew","Kurt") :
                                               CharacterVector::create("N/T","Mean","SD","Min","Max"),
                                CharacterVector::create("Overall","Between","Within"), colnames(x));
-        out.attr("class") = CharacterVector::create("qsu","table");
+        out.attr("class") = CharacterVector::create("qsu","array","table");
         return out;
       } else {
         List out(col);
@@ -504,7 +510,7 @@ NumericVector fnobs5Impl(Vector<RTYPE> x, bool ext = false, int ng = 0, IntegerV
     if(setn) {
       out.attr("dimnames") = List::create(gn, (ext) ? CharacterVector::create("N","Mean","SD","Min","Max","Skew","Kurt") :
                                                    CharacterVector::create("N","Mean","SD","Min","Max"));
-      out.attr("class") = CharacterVector::create("qsu","table");
+      out.attr("class") = CharacterVector::create("qsu","matrix","table");
     }
     return out;
   }
@@ -514,7 +520,7 @@ template <int RTYPE>
 NumericMatrix fnobs5pImpl(Vector<RTYPE> x, bool ext = false, int ng = 0, IntegerVector g = 0, int npg = 0, IntegerVector pg = 0, bool real = false, bool array = true, SEXP gn = R_NilValue) {
 
   int l = x.size(), d = (ext) ? 7 : 5;
-  if(pg.size() != l) stop("length(pg) must match nrow(X)");
+  if(pg.size() != l) stop("length(pid) must match nrow(X)");
 
   if(ng == 0) {
     int n = 0, npgc = 0;
@@ -546,7 +552,7 @@ NumericMatrix fnobs5pImpl(Vector<RTYPE> x, bool ext = false, int ng = 0, Integer
       out.attr("dimnames") = List::create(CharacterVector::create("Overall","Between","Within"),
                              (ext) ? CharacterVector::create("N/T","Mean","SD","Min","Max","Skew","Kurt") :
                                             CharacterVector::create("N/T","Mean","SD","Min","Max"));
-      out.attr("class") = CharacterVector::create("qsu","table");
+      out.attr("class") = CharacterVector::create("qsu","matrix","table");
     }
     return out;
   } else { // with groups
@@ -587,7 +593,7 @@ NumericMatrix fnobs5pImpl(Vector<RTYPE> x, bool ext = false, int ng = 0, Integer
       out.attr("dimnames") = List::create(gn, (ext) ? CharacterVector::create("N/T","Mean","SD","Min","Max","Skew","Kurt") :
                                        CharacterVector::create("N/T","Mean","SD","Min","Max"),
                                       CharacterVector::create("Overall","Between","Within"));
-      out.attr("class") = CharacterVector::create("qsu","table");
+      out.attr("class") = CharacterVector::create("qsu","array","table");
     }
     return out;
   }
@@ -626,7 +632,7 @@ SEXP fbstatslCpp(const List& x, bool ext = false, int ng = 0, const IntegerVecto
       }
       out.attr("dimnames") = List::create(x.attr("names"), (ext) ? CharacterVector::create("N","Mean","SD","Min","Max","Skew","Kurt") :
                                             CharacterVector::create("N","Mean","SD","Min","Max"));
-      out.attr("class") = CharacterVector::create("qsu","table");
+      out.attr("class") = CharacterVector::create("qsu","matrix","table");
       return out;
     } else {
       if(array) {
@@ -655,7 +661,7 @@ SEXP fbstatslCpp(const List& x, bool ext = false, int ng = 0, const IntegerVecto
         out.attr("dim") = Dimension(ng, d, col);
         out.attr("dimnames") = List::create(gn, (ext) ? CharacterVector::create("N","Mean","SD","Min","Max","Skew","Kurt") :
                                               CharacterVector::create("N","Mean","SD","Min","Max"), x.attr("names"));
-        out.attr("class") = CharacterVector::create("qsu","table");
+        out.attr("class") = CharacterVector::create("qsu","array","table");
         return out;
       } else {
         List out(col);
@@ -713,7 +719,7 @@ SEXP fbstatslCpp(const List& x, bool ext = false, int ng = 0, const IntegerVecto
         out.attr("dimnames") = List::create(CharacterVector::create("Overall","Between","Within"),
                  (ext) ? CharacterVector::create("N/T","Mean","SD","Min","Max","Skew","Kurt") :
                         CharacterVector::create("N/T","Mean","SD","Min","Max"), x.attr("names"));
-        out.attr("class") = CharacterVector::create("qsu","table");
+        out.attr("class") = CharacterVector::create("qsu","array","table");
         return out;
       } else {
         List out(col);
@@ -769,7 +775,7 @@ SEXP fbstatslCpp(const List& x, bool ext = false, int ng = 0, const IntegerVecto
         out.attr("dimnames") = List::create(gn, (ext) ? CharacterVector::create("N/T","Mean","SD","Min","Max","Skew","Kurt") :
                                               CharacterVector::create("N/T","Mean","SD","Min","Max"),
                  CharacterVector::create("Overall","Between","Within"), x.attr("names"));
-        out.attr("class") = CharacterVector::create("qsu","table");
+        out.attr("class") = CharacterVector::create("qsu","array","table");
         return out;
       } else {
         List out(col);
