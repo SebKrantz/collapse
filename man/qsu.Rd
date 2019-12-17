@@ -21,7 +21,7 @@ It computes a set of 7 statistics (nobs, mean, sd, min, max, skewness and kurtos
 
 \method{qsu}{matrix}(x, g = NULL, pid = NULL, w = NULL, higher = FALSE, array = TRUE, \dots)
 
-\method{qsu}{data.frame}(x, by = NULL, xt = NULL, w = NULL, cols = NULL,
+\method{qsu}{data.frame}(x, by = NULL, pid = NULL, w = NULL, cols = NULL,
     higher = FALSE, array = TRUE, vlabels = FALSE,\dots)
 
 # Methods for compatibility with plm:
@@ -38,9 +38,9 @@ It computes a set of 7 statistics (nobs, mean, sd, min, max, skewness and kurtos
 \arguments{
   \item{x}{a numeric vector, matrix, data.frame, panel-series (\code{plm::pseries}) or panel-data.frame (\code{plm::pdata.frame})}
   \item{g, by}{a factor, \code{GRP} object, atomic vector (internally converted to factor) or a list of vectors / factors (internally converted to a \code{GRP} object) used to group \code{x}. \code{by} also supports one- or two- sided formulas i.e. \code{~ grp1 + grp2} or \code{var1 + var2 ~ grp1 + grp2}.}
-  \item{pid, xt}{same input as \code{g/by}: Specify a panel-identifier to also compute statistics on between- and within- transformed data. \code{xt} also supports one- or two-sided formulas. Transformations are taken independently from grouping with \code{g/by} (grouped statistics are computed on the transformed data). However, passing any LHS variables to \code{xt} will overrwite any \code{LHS} variables passed to \code{by}.}
-  \item{w}{a vector of (non-negative) weights. Adding weights will compute the weighted mean, sd, skewness and kurtosis, and transform the data using weighted individual means if \code{pid/xt} is used.}
-  \item{cols}{select columns to summarize using column names, indices or a function (i.e. \code{is.numeric}). Two-sided formulas passed to \code{by} or \code{xt} overrwite \code{cols}.}
+  \item{pid}{same input as \code{g/by}: Specify a panel-identifier to also compute statistics on between- and within- transformed data. \code{data.frame} method also supports one- or two-sided formulas. Transformations are taken independently from grouping with \code{g/by} (grouped statistics are computed on the transformed data). However, passing any LHS variables to \code{pid} will overrwite any \code{LHS} variables passed to \code{by}.}
+  \item{w}{a vector of (non-negative) weights. Adding weights will compute the weighted mean, sd, skewness and kurtosis, and transform the data using weighted individual means if \code{pid} is used.}
+  \item{cols}{select columns to summarize using column names, indices or a function (i.e. \code{is.numeric}). Two-sided formulas passed to \code{by} or \code{pid} overrwite \code{cols}.}
 
   \item{higher}{logical. Add higher moments (skewness and kurtosis).}
   \item{array}{logical. If computations have more than 2 dimensions (up to a maximum of 4D: variables, statistics, groups and panel-decomposition) output to array, else output (nested) list of matrices.}
@@ -56,7 +56,7 @@ The algorithm used to compute statistics is well described \href{https://en.wiki
 
 Grouped computations specified with \code{g, by} are carried out extremely efficiently as in \code{fsum} (in a single pass, without splitting the data).
 
-If \code{pid, xt} are used, \code{qsu} performs a panel-decomposition of each variable and computes 3 sets of statistics: Statistics computed on the 'Overall' (raw) data, statistics computed on the 'Between' - transformed (pid - averaged) data, and statistics computed on the 'Within' - transformed (pid - demeaned) data.
+If \code{pid} is used, \code{qsu} performs a panel-decomposition of each variable and computes 3 sets of statistics: Statistics computed on the 'Overall' (raw) data, statistics computed on the 'Between' - transformed (pid - averaged) data, and statistics computed on the 'Within' - transformed (pid - demeaned) data.
 
 More formally, let \bold{\code{x}} (bold) be a panel vector of data for \code{N} individuals indexed by \code{i}, recorded for \code{T} periods, indexed by \code{t}. \code{xit} then denotes a single data-point belonging to individual \code{i} in time-period \code{t} (\code{t/T} must not represent time). Then \code{xi.} denotes the average of all values for individual \code{i} (averaged over \code{t}), and by extension \bold{\code{xN.}} is the vector (length \code{N}) of such averages for all individuals. If no groups are supplied to \code{g, by}, the 'Between' statistics are computed on \bold{\code{xN.}}, the vector of individual averages. (This means that for a non-balanced panel or in the presence of missing values, the 'Overall' mean computed on \bold{\code{x}} can be slightly different than the 'Between' mean computed on \bold{\code{xN.}}). If groups are supplied to \code{g, by}, \bold{\code{xN.}} is expanded to the vector \bold{\code{xi.}} (length \code{N x T}) by replacing each value \code{xit} in \bold{\code{x}} with \code{xi.}, while preserving missing values in \bold{\code{x}}. Grouped Between-statistics are then computed on \bold{\code{xi.}}, with the only difference that the number ob observations ('Between-N') reported for each group is the number of distinct non-missing values of \bold{\code{xi.}} in each group (not the total number of non-missing values of \bold{\code{xi.}} in each group, which is already reported in 'Overall-N').
 
@@ -77,7 +77,7 @@ A matrix, array or list of matrices of summary statistics. All matrices and arra
 %%  ~~who you are~~
 % }
 \note{
-If weights \code{w} are used together with \code{pid, xt}, transformed data is computed using weighted individual means i.e. weighted \bold{\code{xi.}} and weighted \bold{\code{x..}}. Weighted statistics are subsequently computed on this weighted-transformed data.
+If weights \code{w} are used together with \code{pid}, transformed data is computed using weighted individual means i.e. weighted \bold{\code{xi.}} and weighted \bold{\code{x..}}. Weighted statistics are subsequently computed on this weighted-transformed data.
 }
 
 %% ~Make other sections like Warning with \section{Warning }{....} ~
@@ -101,7 +101,7 @@ stats <- qsu(wlddev, ~ region + income,     # World Bank Income Level
 aperm(stats)                                # A different perspective on the same stats
 
 # Panel-Data Summaries ---------------------
-qsu(wlddev, xt = ~ iso3c, vlabels = TRUE)   # Adding between and within countries statistics
+qsu(wlddev, pid = ~ iso3c, vlabels = TRUE)   # Adding between and within countries statistics
 # -> They show amongst other things that year and decade are individual-invariant,
 # that we have GINI-data on only 161 countries, with only 8.42 observations per country on average,
 # and that GDP, LIFEEX and GINI vary more between-countries, but ODA received varies more within
@@ -110,7 +110,7 @@ qsu(wlddev, xt = ~ iso3c, vlabels = TRUE)   # Adding between and within countrie
 # Using plm:
 pwlddev <- plm::pdata.frame(wlddev,         # Creating a Panel-Data Frame frame from this data
                   index = c("iso3c","year"))
-qsu(pwlddev)                                # Summary for pdata.frame -> qsu(wlddev, xt = ~ iso3c)
+qsu(pwlddev)                                # Summary for pdata.frame -> qsu(wlddev, pid = ~ iso3c)
 qsu(pwlddev$PCGDP)                          # Default summary for Panel-Series (class pseries)
 qsu(G(pwlddev$PCGDP))                       # Summarizing GDP growth, see also ?G
 
