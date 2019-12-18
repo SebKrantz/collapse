@@ -249,6 +249,10 @@ qGCpp <- function(x, ordered = TRUE, na_exclude = TRUE) {
     .Call(`_collapse_qGCpp`, x, ordered, na_exclude)
 }
 
+funique <- function(x, ordered = TRUE) {
+    .Call(`_collapse_funique`, x, ordered)
+}
+
 setAttributes <- function(x, a) {
     .Call(`_collapse_setAttributes`, x, a)
 }

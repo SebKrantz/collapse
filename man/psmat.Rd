@@ -21,7 +21,7 @@ psmat(x, ...)
 
 \method{psmat}{data.frame}(x, by, t = NULL, cols = NULL, transpose = FALSE, array = TRUE, ...)
 
-\method{psmat}{pdata.frame}(x, transpose = FALSE, array = TRUE, ...)
+\method{psmat}{pdata.frame}(x, cols = NULL, transpose = FALSE, array = TRUE, ...)
 
 
 \method{plot}{psmat}(x, legend = FALSE, colours = legend, labs = NULL, ...)

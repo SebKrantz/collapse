@@ -124,9 +124,11 @@ RcppExport SEXP _collapse_mctl(SEXP XSEXP, SEXP namesSEXP, SEXP retSEXP);
 // psmatCpp
 RcppExport SEXP _collapse_psmatCpp(SEXP xSEXP, SEXP gSEXP, SEXP tSEXP, SEXP transposeSEXP);
 // qFCpp
-RcppExport SEXP _collapse_qFCpp(SEXP xSEXP, SEXP orderedSEXP);
+RcppExport SEXP _collapse_qFCpp(SEXP xSEXP, SEXP orderedSEXP, SEXP na_excludeSEXP);
 // qGCpp
-RcppExport SEXP _collapse_qGCpp(SEXP xSEXP, SEXP orderedSEXP);
+RcppExport SEXP _collapse_qGCpp(SEXP xSEXP, SEXP orderedSEXP, SEXP na_excludeSEXP);
+// funique
+RcppExport SEXP _collapse_funique(SEXP xSEXP, SEXP orderedSEXP);
 // setAttributes
 RcppExport SEXP _collapse_setAttributes(SEXP xSEXP, SEXP aSEXP);
 // setattributes
@@ -145,3 +147,5 @@ RcppExport SEXP _collapse_cond_duplAttributes(SEXP xSEXP, SEXP ySEXP);
 RcppExport SEXP _collapse_cond_duplattributes(SEXP xSEXP, SEXP ySEXP);
 // lassignCpp
 RcppExport SEXP _collapse_lassignCpp(SEXP xSEXP, SEXP sSEXP, SEXP rowsSEXP, SEXP fillSEXP);
+// fanyNAint
+// RcppExport SEXP _collapse_fanyNAint(SEXP xSEXP);

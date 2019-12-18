@@ -41,9 +41,9 @@ psccf(x, y, \dots)
 \method{pspacf}{data.frame}(x, by, t = NULL, cols = is.numeric, lag.max = NULL,
        plot = TRUE, gscale = TRUE, \dots)
 %## S3 methods for class 'pdata.frame'
- \method{psacf}{pdata.frame}(x, lag.max = NULL, type = c("correlation", "covariance","partial"),
-      plot = TRUE, gscale = TRUE, \dots)
-\method{pspacf}{pdata.frame}(x, lag.max = NULL, plot = TRUE, gscale = TRUE, \dots)
+ \method{psacf}{pdata.frame}(x, cols = is.numeric, lag.max = NULL,
+      type = c("correlation", "covariance","partial"), plot = TRUE, gscale = TRUE, \dots)
+\method{pspacf}{pdata.frame}(x, cols = is.numeric, lag.max = NULL, plot = TRUE, gscale = TRUE, \dots)
 }
 %- maybe also 'usage' for other objects documented here.
 \arguments{
@@ -57,7 +57,7 @@ panel-data-frame (\code{plm::pdata.frame}).}
 \item{lag.max}{maximum lag at which to calculate the acf. Default is \code{2*sqrt(length(x)/ng)} where \code{ng} is the number of groups in the panel-series / supplied to \code{g}.}
 \item{type}{character string giving the type of acf to be computed. Allowed values are "correlation" (the default), "covariance" or "partial".}
 \item{plot}{logical. If \code{TRUE} (the default) the acf is plotted.}
-\item{gscale}{logical. Do a groupwise scaling / standardization of \code{x, y} (using \code{collapse::fscale} and the groups supplied to \code{g}) before computing panel-autocorrelations. Recommended and \code{TRUE} by default.}
+\item{gscale}{logical. Do a groupwise scaling / standardization of \code{x, y} (using \code{collapse::fscale} and the groups supplied to \code{g}) before computing panel-autocovariances / correlations.}
 \item{\dots}{further arguments to be passed to \code{stats:::plot.acf}.}
 }
 \details{

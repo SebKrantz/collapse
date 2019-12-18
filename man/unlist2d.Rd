@@ -63,8 +63,8 @@ head(GGDC10S) # See ?GGDC10S
 namlab(GGDC10S, class = TRUE)
 
 # Panel-Summarize this data by Variable (Emloyment and Value Added)
-l <- qsu(GGDC10S, by = ~Variable,              # Output as list (instead of 4D array)
-         xt = ~ Variable + Country,
+l <- qsu(GGDC10S, by = ~ Variable,             # Output as list (instead of 4D array)
+         pid = ~ Variable + Country,
          cols = 6:16, array = FALSE)
 str(l)                                         # A list of 2-levels with matrices of statistics
 head(unlist2d(l))                              # Default output, missing the variables (row-names)

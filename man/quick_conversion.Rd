@@ -35,6 +35,7 @@ qG(x, ordered = TRUE, na.exclude = TRUE)
   \item{ordered}{logical. \code{TRUE} sorts the levels and returns an ordered facor (such that among the underlying integers 1 represents the first level, 2 the second etc...).}
   \item{names}{logical. should the list be named?}
   \item{ret}{integer. 3 return options: 0L - return a list, 1L - return a data.frame, 2L - return a data.table.}
+  \item{na.exclude}{logical. \code{TRUE} retains missing values in character or numeric vectors (i.e. no non-missing underlying integer is generated). \code{FALSE} creates an integer for NA and also attaches a class 'na.included', which will make computations with \code{\link{collapse}} functions faster (since no NA chaecking is required). \emph{Note} that in both cases a 'NA' level is attached, so this option only concerns the underlying integer vector and the response to functions dealing with missing values (like \code{na_rm}).}
 }
 \value{
 \code{qDF} - returns a data.frame\cr

@@ -19,6 +19,7 @@
 \alias{na_insert}
 \alias{fnlevels}
 \alias{funique}
+\alias{as.numeric_factor}
 %- Also NEED an '\alias' for EACH other topic documented here.
 \title{
 \code{collapse} Small (Helper) Functions
@@ -33,7 +34,7 @@ namlab(X, class = FALSE)      # Return a data.frame of variable names, labels an
 add_stub(X, stub, pre = TRUE) # Add a stub (i.e. prefix or postfix) to variables
 x \%!in\% table                 # The opposite of \%in\%
 fnlevels(x)                   # Faster version of nlevels(x) (for factors)
-funique(x, ordered = TRUE)    # Faster version of unique(x) and sort(unique(x)) for vectors
+funique(x, ordered = TRUE)    # Faster unique(x) and sort(unique(x)) for vectors
 na_rm(x)                      # Remove missing values from vector and return vector
 na_insert(X, prop = 0.1)      # Insert missing values at random in vectors, matrices DF's
 all.identical(...)            # Check exact equality of multiple objects or list-elements
@@ -47,7 +48,7 @@ setColnames(object = nm, nm)  # Set colnames of object and return object
 setDimnames(object = dn, dn)  # Set dimension names of object and return object
 is.categorical(x)             # The opposite of is.numeric
 is.Date(x)                    # Check if object is of class "Date", "POSIXlt" or "POSIXct"
-as.numeric.factor(X)          # Coerce a factor, or all factor columns in X, to numeric
+as.numeric_factor(X)          # Coerce a factor, or all factor columns in X, to numeric
 }
 %- maybe also 'usage' for other objects documented here.
 \arguments{

@@ -241,12 +241,16 @@ psmatCpp <- function(x, g, t = NULL, transpose = FALSE) {
     .Call(Cpp_psmat, x, g, t, transpose)
 }
 
-qFCpp <- function(x, ordered = FALSE, na.exclude = TRUE) {
+qFCpp <- function(x, ordered = TRUE, na.exclude = TRUE) {
     .Call(Cpp_qF, x, ordered, na.exclude)
 }
 
-qGCpp <- function(x, ordered = FALSE, na.exclude = TRUE) {
+qGCpp <- function(x, ordered = TRUE, na.exclude = TRUE) {
     .Call(Cpp_qG, x, ordered, na.exclude)
+}
+
+funique <- function(x, ordered = TRUE) {
+    .Call(Cpp_funique, x, ordered)
 }
 
 setAttributes <- function(x, a) {
@@ -284,3 +288,7 @@ cond_duplattributes <- function(x, y) {
 lassignCpp <- function(x, s, rows = NULL, fill = NA_real_) {
     .Call(Cpp_lassign, x, s, rows, fill)
 }
+
+# fanyNAint <- function(x) {
+#     .Call(Cpp_fanyNAint, x)
+# }

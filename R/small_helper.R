@@ -86,7 +86,7 @@ na_insert <- function(X, prop = 0.1) {
   return(X)
 }
 fnlevels <- function(x) length(attr(x, "levels")) # make cpp version ?? -> nope, slower !!
-as.numeric.factor <- function(X) {
+as.numeric_factor <- function(X) {
   if(is.list(X)) {
     fcts <- vapply(X, is.factor, TRUE, USE.NAMES = FALSE)
     get_vars(X, fcts) <- lapply(colsubset(X, fcts), function(x) as.numeric(attr(x, "levels"))[x])
@@ -129,7 +129,7 @@ cols2int <- function(cols, x, nam) {
  } else if(is.function(cols))
   return(which(vapply(x, cols, TRUE))) else if(is.character(cols))
   return(anyNAerror(match(cols, nam), "Unknown column names!")) else if(is.logical(cols)) {
-    if(llength(cols) != length(x)) stop("Logical subsetting vector must match columns!")
+    if(length(cols) != length(x)) stop("Logical subsetting vector must match columns!")
     return(which(cols))
   } else stop("cols must be a function, character vector, numeric indices or logical vector!")
 }
