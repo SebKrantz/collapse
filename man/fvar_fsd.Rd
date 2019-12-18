@@ -81,7 +81,7 @@ When applied to data frame's with groups or \code{drop = FALSE}, \code{fvar/fsd}
 \code{fvar} returns the variance of \code{x}, grouped by \code{g}, or (if \code{\link{TRA}} is used) \code{x} transformed by its variance, grouped by \code{g}. \code{fsd} computes the standard deviation of \code{x} in like manor.
 }
 \seealso{
-\link[=fast-statistical-functions]{Fast Statistical Functions}
+\link[=fast-statistical-functions]{Fast Statistical Functions}, \link[=collapse-documentation]{Collapse Overview}
 }
 \examples{
 ## default vector method

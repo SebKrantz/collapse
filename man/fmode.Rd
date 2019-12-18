@@ -62,7 +62,7 @@ This all seamlessly generalizes to grouped computations, which are currently per
 The statistical mode of \code{x}, grouped by \code{g}, or (if \code{\link{TRA}} is used) \code{x} transformed by its mode, grouped by \code{g}. See also Details.
 }
 \seealso{
-\code{\link{fmean}}, \code{\link{fmedian}}, \link[=fast-statistical-functions]{Fast Statistical Functions}
+\code{\link{fmean}}, \code{\link{fmedian}}, \link[=fast-statistical-functions]{Fast Statistical Functions}, \link[=collapse-documentation]{Collapse Overview}
 }
 \examples{
 ## World Development Data

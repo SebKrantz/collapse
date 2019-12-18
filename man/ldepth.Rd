@@ -34,7 +34,7 @@ A single integer indicating the depth of the list.
 %% ~Make other sections like Warning with \section{Warning }{....} ~
 
 \seealso{
-\code{\link{is.unlistable}}, \code{\link{has_elem}}, \link[=list-processing]{List Processing}
+\code{\link{is.unlistable}}, \code{\link{has_elem}}, \link[=list-processing]{List Processing}, \link[=collapse-documentation]{Collapse Overview}
 }
 \examples{
 l = list(1, 2)

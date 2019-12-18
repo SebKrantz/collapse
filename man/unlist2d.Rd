@@ -45,7 +45,7 @@ A \code{data.frame} or (if \code{DT = TRUE}) \code{data.table}.
 %% ~Make other sections like Warning with \section{Warning }{....} ~
 
 \seealso{
-\code{\link{rapply2d}}, \link[=list-processing]{List Processing}
+\code{\link{rapply2d}}, \link[=list-processing]{List Processing}, \link[=collapse-documentation]{Collapse Overview}
 }
 \examples{
 ## basic examples:

@@ -56,7 +56,7 @@ When applied to data frame's with groups or \code{drop = FALSE}, \code{fsum} pre
 The sum of \code{x}, grouped by \code{g}, or (if \code{\link{TRA}} is used) \code{x} transformed by its sum, grouped by \code{g}.
 }
 \section{See Also}{
-\code{\link{fprod}}, \link[=fast-statistical-functions]{Fast Statistical Functions}
+\code{\link{fprod}}, \link[=fast-statistical-functions]{Fast Statistical Functions}, \link[=collapse-documentation]{Collapse Overview}
 }
 \section{Examples}{\preformatted{
 ## default vector method

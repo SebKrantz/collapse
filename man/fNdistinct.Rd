@@ -57,7 +57,7 @@ Grouped computations are currently performed by mapping the data to a sparse-arr
 Integer. The number of distinct values in \code{x}, grouped by \code{g}, or (if \code{\link{TRA}} is used) \code{x} transformed by its distinct value count, grouped by \code{g}.
 }
 \seealso{
-\code{\link{fNobs}}, \link[=fast-statistical-functions]{Fast Statistical Functions}
+\code{\link{fNobs}}, \link[=fast-statistical-functions]{Fast Statistical Functions}, \link[=collapse-documentation]{Collapse Overview}
 }
 \examples{
 ## default vector method

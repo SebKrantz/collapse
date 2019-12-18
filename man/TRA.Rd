@@ -72,7 +72,7 @@ I have tried to make \code{TRA} as redundant as possible by adding a TRA-argumen
 %% ~Make other sections like Warning with \section{Warning }{....} ~
 
 \seealso{
-\code{\link{dapply}}, \code{\link{BY}}, \link[=fast-statistical-functions]{Fast Statistical Functions}, \link[=data-transformations]{Data Transformations}
+\code{\link{dapply}}, \code{\link{BY}}, \link[=fast-statistical-functions]{Fast Statistical Functions}, \link[=data-transformations]{Data Transformations}, \link[=collapse-documentation]{Collapse Overview}
 }
 \examples{
 v <- iris$Sepal.Length          # A numeric vector

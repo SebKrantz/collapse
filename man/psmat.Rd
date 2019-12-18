@@ -60,7 +60,7 @@ The \code{pdata.frame} method only works for properly subsetted objects of class
 %% ~Make other sections like Warning with \section{Warning }{....} ~
 
 \seealso{
-\link[=time-series-panel-series]{Time-Series and Panel-Series} %% ~~objects to See Also as \code{\link{help}}, ~~~
+\link[=time-series-panel-series]{Time-Series and Panel-Series}, \link[=collapse-documentation]{Collapse Overview} %% ~~objects to See Also as \code{\link{help}}, ~~~
 }
 \examples{
 ## World Development Panel Data

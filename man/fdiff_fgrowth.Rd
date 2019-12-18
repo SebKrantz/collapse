@@ -138,7 +138,7 @@ The methods applying to \code{plm} objects (panel-series and panel-data.frames) 
 %% ~Make other sections like Warning with \section{Warning }{....} ~
 
 \seealso{
-\code{\link[=flag]{flag/L/F}}, \link[=time-series-panel-series]{Time-Series and Panel-Series}
+\code{\link[=flag]{flag/L/F}}, \link[=time-series-panel-series]{Time-Series and Panel-Series}, \link[=collapse-documentation]{Collapse Overview}
 }
 \examples{
 ## Simple Time-Series: Airpassengers

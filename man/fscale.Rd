@@ -98,7 +98,7 @@ By default means and standard deviations are computed using Wedford's numericall
 %% ~Make other sections like Warning with \section{Warning }{....} ~
 
 \seealso{
-\code{\link[=B]{B/W}}, \link[=fast-statistical-functions]{Fast Statistical Functions}, \code{\link{TRA}}, \link[=data-transformations]{Data Transformations}
+\code{\link[=B]{B/W}}, \link[=fast-statistical-functions]{Fast Statistical Functions}, \code{\link{TRA}}, \link[=data-transformations]{Data Transformations}, \link[=collapse-documentation]{Collapse Overview}
 }
 \examples{
 ## Simple Scaling & Centering / Standardizing
