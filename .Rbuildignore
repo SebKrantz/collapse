@@ -1,4 +1,6 @@
-^collap\.Rproj$
+^collapse\.Rproj$
 ^\.Rproj\.user$
 .*.Rnw
 README.md
+experimental
+vignettes/collapse_intro_cache

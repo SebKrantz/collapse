@@ -959,17 +959,6 @@ BEGIN_RCPP
     return rcpp_result_gen;
 END_RCPP
 }
-// na_rm
-SEXP na_rm(SEXP x);
-RcppExport SEXP _collapse_na_rm(SEXP xSEXP) {
-BEGIN_RCPP
-    Rcpp::RObject rcpp_result_gen;
-    Rcpp::RNGScope rcpp_rngScope_gen;
-    Rcpp::traits::input_parameter< SEXP >::type x(xSEXP);
-    rcpp_result_gen = Rcpp::wrap(na_rm(x));
-    return rcpp_result_gen;
-END_RCPP
-}
 // psmatCpp
 SEXP psmatCpp(SEXP x, IntegerVector g, SEXP t, bool transpose);
 RcppExport SEXP _collapse_psmatCpp(SEXP xSEXP, SEXP gSEXP, SEXP tSEXP, SEXP transposeSEXP) {
@@ -985,26 +974,40 @@ BEGIN_RCPP
 END_RCPP
 }
 // qFCpp
-SEXP qFCpp(SEXP x, bool ordered);
-RcppExport SEXP _collapse_qFCpp(SEXP xSEXP, SEXP orderedSEXP) {
+SEXP qFCpp(SEXP x, bool ordered, bool na_exclude);
+RcppExport SEXP _collapse_qFCpp(SEXP xSEXP, SEXP orderedSEXP, SEXP na_excludeSEXP) {
 BEGIN_RCPP
     Rcpp::RObject rcpp_result_gen;
     Rcpp::RNGScope rcpp_rngScope_gen;
     Rcpp::traits::input_parameter< SEXP >::type x(xSEXP);
     Rcpp::traits::input_parameter< bool >::type ordered(orderedSEXP);
-    rcpp_result_gen = Rcpp::wrap(qFCpp(x, ordered));
+    Rcpp::traits::input_parameter< bool >::type na_exclude(na_excludeSEXP);
+    rcpp_result_gen = Rcpp::wrap(qFCpp(x, ordered, na_exclude));
     return rcpp_result_gen;
 END_RCPP
 }
 // qGCpp
-SEXP qGCpp(SEXP x, bool ordered);
-RcppExport SEXP _collapse_qGCpp(SEXP xSEXP, SEXP orderedSEXP) {
+SEXP qGCpp(SEXP x, bool ordered, bool na_exclude);
+RcppExport SEXP _collapse_qGCpp(SEXP xSEXP, SEXP orderedSEXP, SEXP na_excludeSEXP) {
 BEGIN_RCPP
     Rcpp::RObject rcpp_result_gen;
     Rcpp::RNGScope rcpp_rngScope_gen;
     Rcpp::traits::input_parameter< SEXP >::type x(xSEXP);
     Rcpp::traits::input_parameter< bool >::type ordered(orderedSEXP);
-    rcpp_result_gen = Rcpp::wrap(qGCpp(x, ordered));
+    Rcpp::traits::input_parameter< bool >::type na_exclude(na_excludeSEXP);
+    rcpp_result_gen = Rcpp::wrap(qGCpp(x, ordered, na_exclude));
+    return rcpp_result_gen;
+END_RCPP
+}
+// funique
+SEXP funique(SEXP x, bool ordered);
+RcppExport SEXP _collapse_funique(SEXP xSEXP, SEXP orderedSEXP) {
+BEGIN_RCPP
+    Rcpp::RObject rcpp_result_gen;
+    Rcpp::RNGScope rcpp_rngScope_gen;
+    Rcpp::traits::input_parameter< SEXP >::type x(xSEXP);
+    Rcpp::traits::input_parameter< bool >::type ordered(orderedSEXP);
+    rcpp_result_gen = Rcpp::wrap(funique(x, ordered));
     return rcpp_result_gen;
 END_RCPP
 }

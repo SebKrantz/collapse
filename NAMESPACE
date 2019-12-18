@@ -1,5 +1,4 @@
 useDynLib(collapse, .registration=TRUE) # , .fixes = "C_"
-# useDynLib(collapse, "multi_yw")
 importFrom(Rcpp, evalCpp)
 importFrom("graphics", "hist", "par", "plot")
 importFrom("grDevices", "rainbow")
@@ -169,12 +168,16 @@ importFrom("stats", "as.formula", "complete.cases", "cor", "cov",
  export(setDimnames)
  export(pwcor)
  export(pwcov)
- export(na.rm)
+ export(na_rm)
+ export(na_insert)
  export(`%!in%`)
  export(Recode)
  export(replace_non_finite)
  export(replace_outliers)
  export(print.qsu)
+ export(fnlevels)
+ export(funique)
+ export(as.numeric_factor)
 
  S3method(B, data.frame)
  S3method(B, default)

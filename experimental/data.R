@@ -13,6 +13,12 @@ GGDCM = as.matrix(NGGDC)
 g = GRP(GGDC, ~ Variable + Country)
 t = GRP(GGDC$Year)
 
+# Something more random: regresing agricultural VA on mining and manufacturing VA with country-standardized data
+mylm <- lm(STD.AGR ~ STD.MIN + STD.MAN,
+           data = STD(subset(GGDC10S, Variable == "VA"), ~Country))
+summary(mylm)
+
+
 # panel-lag test-data:
 load("~/R/WDItest.RData")
 wlddev <- data
@@ -34,7 +40,7 @@ t = c(1:3,1:3,1:4)
 t2 = c(1,2,2,1:3,1:4)
 t3 = c(1:3,c(3,4,6),1:4)
 
-# longer: 
+# longer:
 y = 1:30
 ng = 3
 g = rep(1:3, each = 10)
@@ -120,9 +126,9 @@ for(i in 1:30) if(t[i]>2) outp[i] = outp2[i] - outp2[omap[[g[i]]][t[i]-1]] else 
 
 
 # testing lag function:
-sourceCpp("R/C++/Experiment/test3.cpp", rebuild = TRUE) 
-sourceCpp("R/C++/Experiment/test5.cpp", rebuild = TRUE) 
-sourceCpp("R/C++/Experiment/test6.cpp", rebuild = TRUE) 
+sourceCpp("R/C++/Experiment/test3.cpp", rebuild = TRUE)
+sourceCpp("R/C++/Experiment/test5.cpp", rebuild = TRUE)
+sourceCpp("R/C++/Experiment/test6.cpp", rebuild = TRUE)
 sourceCpp("R/C++/flag.cpp", rebuild = TRUE)
 
 

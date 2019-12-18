@@ -6,3 +6,5 @@
 *.o
 *.so
 *.dll
+collapse.dll
+inst/doc
