@@ -35,12 +35,14 @@ psmat.default <- function(x, g, t = NULL, transpose = FALSE, ...) {
 psmat.data.frame <- function(x, by, t = NULL, cols = NULL, transpose = FALSE, array = TRUE, ...) {
   if(!missing(...)) stop("Unknown argument ", dotstostr(...))
   if(is.atomic(by) && length(by) == 1L) {
+    nr <- nrow(x)
     n <- round(by)
+    if(!is.null(cols)) x <- unclass(x)[cols2int(cols, x, names(x))]
     if(transpose) {
-      dn <- list(seq_len(length(x)/n), paste0("GRP.",seq_len(by)))
+      dn <- list(seq_len(nr/n), paste0("GRP.",seq_len(by)))
       res <- lapply(x, matrix, ncol = n, dimnames = dn)
     } else {
-      dn <- list(paste0("GRP.",seq_len(by)), seq_len(length(x)/round(by)))
+      dn <- list(paste0("GRP.",seq_len(by)), seq_len(nr/n))
       res <- lapply(x, matrix, nrow = n, byrow = TRUE, dimnames = dn)
     }
   } else {
