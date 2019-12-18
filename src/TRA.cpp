@@ -41,7 +41,7 @@ SEXP TRACpp(const SEXP& x, const SEXP& xAG, const IntegerVector& g = 0, int ret 
         default: stop("Unknown Transformation");
         }
       } else {
-        if(gs != l) stop("g must match nrow(x)");
+        if(gs != l) stop("length(g) must match nrow(x)");
         switch(ret) {
         case 1:
           for(int i = l; i--; ) out[i] = AG[g[i]-1];
@@ -80,7 +80,7 @@ SEXP TRACpp(const SEXP& x, const SEXP& xAG, const IntegerVector& g = 0, int ret 
         default: stop("Unknown Transformation");
         }
       } else {
-        if(gs != l) stop("g must match nrow(x)");
+        if(gs != l) stop("length(g) must match nrow(x)");
         switch(ret) {
         case 1:
           for(int i = l; i--; ) out[i] = AG[g[i]-1];
@@ -120,7 +120,7 @@ SEXP TRACpp(const SEXP& x, const SEXP& xAG, const IntegerVector& g = 0, int ret 
         default: stop("Unknown Transformation");
         }
       } else {
-        if(gs != l) stop("g must match nrow(x)");
+        if(gs != l) stop("length(g) must match nrow(x)");
         switch(ret) {
         case 1:
           for(int i = l; i--; ) out[i] = AG[g[i]-1];
@@ -160,7 +160,7 @@ SEXP TRACpp(const SEXP& x, const SEXP& xAG, const IntegerVector& g = 0, int ret 
         default: stop("Unknown Transformation");
         }
       } else {
-        if(gs != l) stop("g must match nrow(x)");
+        if(gs != l) stop("length(g) must match nrow(x)");
         switch(ret) {
         case 1:
           for(int i = l; i--; ) out[i] = AG[g[i]-1];
@@ -212,7 +212,7 @@ SEXP TRACpp(const SEXP& x, const SEXP& xAG, const IntegerVector& g = 0, int ret 
         default: stop("Unknown Transformation");
         }
       } else {
-        if(gs != l) stop("g must match nrow(x)");
+        if(gs != l) stop("length(g) must match nrow(x)");
         switch(ret) {
         case 3:
           for(int i = l; i--; ) out[i] = xx[i] - AG[g[i]-1];
