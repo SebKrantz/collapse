@@ -37,7 +37,8 @@ It computes a set of 7 statistics (nobs, mean, sd, min, max, skewness and kurtos
 %- maybe also 'usage' for other objects documented here.
 \arguments{
   \item{x}{a numeric vector, matrix, data.frame, panel-series (\code{plm::pseries}) or panel-data.frame (\code{plm::pdata.frame})}
-  \item{g, by}{a factor, \code{GRP} object, atomic vector (internally converted to factor) or a list of vectors / factors (internally converted to a \code{GRP} object) used to group \code{x}. \code{by} also supports one- or two- sided formulas i.e. \code{~ grp1 + grp2} or \code{var1 + var2 ~ grp1 + grp2}.}
+  \item{g}{a factor, \code{\link{GRP}} object, atomic vector (internally converted to factor) or a list of vectors / factors (internally converted to a \code{\link{GRP}} object) used to group \code{x}.}
+  \item{by}{\emph{(p)data.frame method}: Same as \code{g}, but also allows one- or two-sided formulas i.e. \code{~ group1 + group2} or \code{var1 + var2 ~ group1 + group2}. See Examples.}
   \item{pid}{same input as \code{g/by}: Specify a panel-identifier to also compute statistics on between- and within- transformed data. \code{data.frame} method also supports one- or two-sided formulas. Transformations are taken independently from grouping with \code{g/by} (grouped statistics are computed on the transformed data). However, passing any LHS variables to \code{pid} will overrwite any \code{LHS} variables passed to \code{by}.}
   \item{w}{a vector of (non-negative) weights. Adding weights will compute the weighted mean, sd, skewness and kurtosis, and transform the data using weighted individual means if \code{pid} is used.}
   \item{cols}{select columns to summarize using column names, indices or a function (i.e. \code{is.numeric}). Two-sided formulas passed to \code{by} or \code{pid} overrwite \code{cols}.}
