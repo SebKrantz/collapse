@@ -1,6 +1,5 @@
-# collapse 0.0.1
+# collapse 1.0.0
 
 * Added a `NEWS.md` file to track changes to the package.
-* First version of the package, based on code by Sebastian Martin Krantz
-  shared on R-devel.
-* Major rework of the package using Rcpp, and expansion of scope of package to a broad     set of data transformation and exploration tasks. This rework was done largely without   git.
+* First version of the package featuring only the functions `collap` and `qsu`, installable version on github based on code shared by Sebastian Martin Krantz on R-devel.
+* Major rework of the package using Rcpp and data.table internals, introduction of fast statistical functions and operators and expansion of the scope of the package to a broad set of data transformation and exploration tasks. 
