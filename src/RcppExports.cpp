@@ -5,60 +5,6 @@
 
 using namespace Rcpp;
 
-// BWCpp
-NumericVector BWCpp(const NumericVector& x, int ng, const IntegerVector& g, const SEXP& gs, const SEXP& w, bool narm, bool option, bool B);
-RcppExport SEXP _collapse_BWCpp(SEXP xSEXP, SEXP ngSEXP, SEXP gSEXP, SEXP gsSEXP, SEXP wSEXP, SEXP narmSEXP, SEXP optionSEXP, SEXP BSEXP) {
-BEGIN_RCPP
-    Rcpp::RObject rcpp_result_gen;
-    Rcpp::RNGScope rcpp_rngScope_gen;
-    Rcpp::traits::input_parameter< const NumericVector& >::type x(xSEXP);
-    Rcpp::traits::input_parameter< int >::type ng(ngSEXP);
-    Rcpp::traits::input_parameter< const IntegerVector& >::type g(gSEXP);
-    Rcpp::traits::input_parameter< const SEXP& >::type gs(gsSEXP);
-    Rcpp::traits::input_parameter< const SEXP& >::type w(wSEXP);
-    Rcpp::traits::input_parameter< bool >::type narm(narmSEXP);
-    Rcpp::traits::input_parameter< bool >::type option(optionSEXP);
-    Rcpp::traits::input_parameter< bool >::type B(BSEXP);
-    rcpp_result_gen = Rcpp::wrap(BWCpp(x, ng, g, gs, w, narm, option, B));
-    return rcpp_result_gen;
-END_RCPP
-}
-// BWmCpp
-NumericMatrix BWmCpp(const NumericMatrix& x, int ng, const IntegerVector& g, const SEXP& gs, const SEXP& w, bool narm, bool option, bool B);
-RcppExport SEXP _collapse_BWmCpp(SEXP xSEXP, SEXP ngSEXP, SEXP gSEXP, SEXP gsSEXP, SEXP wSEXP, SEXP narmSEXP, SEXP optionSEXP, SEXP BSEXP) {
-BEGIN_RCPP
-    Rcpp::RObject rcpp_result_gen;
-    Rcpp::RNGScope rcpp_rngScope_gen;
-    Rcpp::traits::input_parameter< const NumericMatrix& >::type x(xSEXP);
-    Rcpp::traits::input_parameter< int >::type ng(ngSEXP);
-    Rcpp::traits::input_parameter< const IntegerVector& >::type g(gSEXP);
-    Rcpp::traits::input_parameter< const SEXP& >::type gs(gsSEXP);
-    Rcpp::traits::input_parameter< const SEXP& >::type w(wSEXP);
-    Rcpp::traits::input_parameter< bool >::type narm(narmSEXP);
-    Rcpp::traits::input_parameter< bool >::type option(optionSEXP);
-    Rcpp::traits::input_parameter< bool >::type B(BSEXP);
-    rcpp_result_gen = Rcpp::wrap(BWmCpp(x, ng, g, gs, w, narm, option, B));
-    return rcpp_result_gen;
-END_RCPP
-}
-// BWlCpp
-List BWlCpp(const List& x, int ng, const IntegerVector& g, const SEXP& gs, const SEXP& w, bool narm, bool option, bool B);
-RcppExport SEXP _collapse_BWlCpp(SEXP xSEXP, SEXP ngSEXP, SEXP gSEXP, SEXP gsSEXP, SEXP wSEXP, SEXP narmSEXP, SEXP optionSEXP, SEXP BSEXP) {
-BEGIN_RCPP
-    Rcpp::RObject rcpp_result_gen;
-    Rcpp::RNGScope rcpp_rngScope_gen;
-    Rcpp::traits::input_parameter< const List& >::type x(xSEXP);
-    Rcpp::traits::input_parameter< int >::type ng(ngSEXP);
-    Rcpp::traits::input_parameter< const IntegerVector& >::type g(gSEXP);
-    Rcpp::traits::input_parameter< const SEXP& >::type gs(gsSEXP);
-    Rcpp::traits::input_parameter< const SEXP& >::type w(wSEXP);
-    Rcpp::traits::input_parameter< bool >::type narm(narmSEXP);
-    Rcpp::traits::input_parameter< bool >::type option(optionSEXP);
-    Rcpp::traits::input_parameter< bool >::type B(BSEXP);
-    rcpp_result_gen = Rcpp::wrap(BWlCpp(x, ng, g, gs, w, narm, option, B));
-    return rcpp_result_gen;
-END_RCPP
-}
 // TRACpp
 SEXP TRACpp(const SEXP& x, const SEXP& xAG, const IntegerVector& g, int ret);
 RcppExport SEXP _collapse_TRACpp(SEXP xSEXP, SEXP xAGSEXP, SEXP gSEXP, SEXP retSEXP) {
@@ -186,6 +132,60 @@ BEGIN_RCPP
     Rcpp::traits::input_parameter< IntegerVector >::type g(gSEXP);
     Rcpp::traits::input_parameter< bool >::type drop(dropSEXP);
     rcpp_result_gen = Rcpp::wrap(fNobslCpp(x, ng, g, drop));
+    return rcpp_result_gen;
+END_RCPP
+}
+// BWCpp
+NumericVector BWCpp(const NumericVector& x, int ng, const IntegerVector& g, const SEXP& gs, const SEXP& w, bool narm, bool option, bool B);
+RcppExport SEXP _collapse_BWCpp(SEXP xSEXP, SEXP ngSEXP, SEXP gSEXP, SEXP gsSEXP, SEXP wSEXP, SEXP narmSEXP, SEXP optionSEXP, SEXP BSEXP) {
+BEGIN_RCPP
+    Rcpp::RObject rcpp_result_gen;
+    Rcpp::RNGScope rcpp_rngScope_gen;
+    Rcpp::traits::input_parameter< const NumericVector& >::type x(xSEXP);
+    Rcpp::traits::input_parameter< int >::type ng(ngSEXP);
+    Rcpp::traits::input_parameter< const IntegerVector& >::type g(gSEXP);
+    Rcpp::traits::input_parameter< const SEXP& >::type gs(gsSEXP);
+    Rcpp::traits::input_parameter< const SEXP& >::type w(wSEXP);
+    Rcpp::traits::input_parameter< bool >::type narm(narmSEXP);
+    Rcpp::traits::input_parameter< bool >::type option(optionSEXP);
+    Rcpp::traits::input_parameter< bool >::type B(BSEXP);
+    rcpp_result_gen = Rcpp::wrap(BWCpp(x, ng, g, gs, w, narm, option, B));
+    return rcpp_result_gen;
+END_RCPP
+}
+// BWmCpp
+NumericMatrix BWmCpp(const NumericMatrix& x, int ng, const IntegerVector& g, const SEXP& gs, const SEXP& w, bool narm, bool option, bool B);
+RcppExport SEXP _collapse_BWmCpp(SEXP xSEXP, SEXP ngSEXP, SEXP gSEXP, SEXP gsSEXP, SEXP wSEXP, SEXP narmSEXP, SEXP optionSEXP, SEXP BSEXP) {
+BEGIN_RCPP
+    Rcpp::RObject rcpp_result_gen;
+    Rcpp::RNGScope rcpp_rngScope_gen;
+    Rcpp::traits::input_parameter< const NumericMatrix& >::type x(xSEXP);
+    Rcpp::traits::input_parameter< int >::type ng(ngSEXP);
+    Rcpp::traits::input_parameter< const IntegerVector& >::type g(gSEXP);
+    Rcpp::traits::input_parameter< const SEXP& >::type gs(gsSEXP);
+    Rcpp::traits::input_parameter< const SEXP& >::type w(wSEXP);
+    Rcpp::traits::input_parameter< bool >::type narm(narmSEXP);
+    Rcpp::traits::input_parameter< bool >::type option(optionSEXP);
+    Rcpp::traits::input_parameter< bool >::type B(BSEXP);
+    rcpp_result_gen = Rcpp::wrap(BWmCpp(x, ng, g, gs, w, narm, option, B));
+    return rcpp_result_gen;
+END_RCPP
+}
+// BWlCpp
+List BWlCpp(const List& x, int ng, const IntegerVector& g, const SEXP& gs, const SEXP& w, bool narm, bool option, bool B);
+RcppExport SEXP _collapse_BWlCpp(SEXP xSEXP, SEXP ngSEXP, SEXP gSEXP, SEXP gsSEXP, SEXP wSEXP, SEXP narmSEXP, SEXP optionSEXP, SEXP BSEXP) {
+BEGIN_RCPP
+    Rcpp::RObject rcpp_result_gen;
+    Rcpp::RNGScope rcpp_rngScope_gen;
+    Rcpp::traits::input_parameter< const List& >::type x(xSEXP);
+    Rcpp::traits::input_parameter< int >::type ng(ngSEXP);
+    Rcpp::traits::input_parameter< const IntegerVector& >::type g(gSEXP);
+    Rcpp::traits::input_parameter< const SEXP& >::type gs(gsSEXP);
+    Rcpp::traits::input_parameter< const SEXP& >::type w(wSEXP);
+    Rcpp::traits::input_parameter< bool >::type narm(narmSEXP);
+    Rcpp::traits::input_parameter< bool >::type option(optionSEXP);
+    Rcpp::traits::input_parameter< bool >::type B(BSEXP);
+    rcpp_result_gen = Rcpp::wrap(BWlCpp(x, ng, g, gs, w, narm, option, B));
     return rcpp_result_gen;
 END_RCPP
 }
