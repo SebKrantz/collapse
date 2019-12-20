@@ -117,6 +117,7 @@ SEXP setcolorder(SEXP x, SEXP o);
 int StrCmp(SEXP x, SEXP y);
 uint64_t dtwiddle(void *p, int i);
 // SEXP setforderthreads(SEXP threads);
+SEXP setNumericRounding(SEXP droundArg); // added this line !!!
 SEXP forder(SEXP DT, SEXP by, SEXP retGrp, SEXP sortStrArg, SEXP orderArg, SEXP naArg);
 int getNumericRounding_C();
 
