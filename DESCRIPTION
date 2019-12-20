@@ -1,15 +1,23 @@
 Package: collapse
 Title: Advanced and Fast Data Transformation
-Version: 0.0.0.9000
-Date: 2019-12-18
-Authors@R: person(given = "Sebastian",
-           family = "Krantz",
-           role = c("aut", "cre"),
-           email = "sebastian.krantz@graduateinstitute.ch")
+Version: 1.0.0
+Date: 2019-12-19
+Authors@R: c(
+           person("Sebastian", "Krantz", role = c("aut", "cre"), 
+                  email = "sebastian.krantz@graduateinstitute.ch"),
+           person("Matt", "Dowle", role = "ctb"),
+           person("Arun", "Srinivasan", role = "ctb"),
+           person("Simen", "Gaure", role = "ctb"),
+           person("Dirk", "Eddelbuettel", role = "ctb"),
+           person("R Core Team and contributors worldwide", role = "ctb"),
+           person("All other data.table contributors", role = "ctb"),
+           person("All other Rcpp contributors", role = "ctb")
+           )
+BugReports: https://github.com/SebKrantz/collapse/issues
 Description: A C/C++ based package for advanced data transformation in R that is 
-             extremely fast, flexible and parsimonious to code with and programmer 
+             extremely fast, flexible and parsimonious to code and programmer 
              friendly. It is well integrated with dplyr, plm and data.table.
-License:  MPL-2.0
+License:  MPL-2.0 | file LICENSE
 Encoding: UTF-8
 LazyData: true
 Depends: R (>= 2.10)
