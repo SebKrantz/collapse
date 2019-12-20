@@ -15,14 +15,14 @@ Advanced and Fast Data Transformation % and Exploration % in R % and Fast  % Adv
 }
 }
 \details{
-% Put this below bullet points ?? % \code{collapse} provides a carefully conceived
-\code{collapse} provides a compact set of functions organized into several topics (see \link[=collapse-documentation]{Collapse Overiew}). Most are S3 generic with methods for vectors, matrices and data.frames. Inputs are quickly passed to compiled C/C++ code, enabling flexible and parsimonious coding at extreme speeds.
+% Put this below bullet points ?? % \code{collapse} provides a carefully conceived % \code{collapse} provides a compact set of functions
+\code{collapse} provides an integrated set of functions organized roughly into several topics (see \link[=collapse-documentation]{Collapse Overiew}). Many are S3 generic with methods for vectors, matrices and data.frames. Inputs are quickly passed to compiled C/C++ code, enabling flexible and parsimonious coding at extreme speeds.
 
 The package avoids non-standard evaluation and exports core methods for maximum programmability.  % Most are S3 generic with methods for common \code{R} objects (vectors, matrices, data.frames, ...) % high computation  %(aggregation and transformations ~10x \code{data.table} on data <1 Mio obs.).
 Smart attribute handling and additional methods ensure compatibility and support for \code{dplyr}, \code{data.table} and the \code{plm} approach to panel-data. % and \code{base/stats}. % extra methods warrant, provide ?
 
 %Beyond speed, flexibility and parsimony in coding, a central objective of \code{collapse} is to facilitate advanced / complex operations on data.
-\bold{Key functionality:}     (More details in \link[=collapse-documentation]{Collapse Overview}) % Key areas Key topics addressed by \code{collapse} are: % where \code{collapse} offers innovative solutions are:
+\bold{Key Features:}     (More details in \link[=collapse-documentation]{Collapse Overview}) % Key functionality: % Key areas Key topics addressed by \code{collapse} are: % where \code{collapse} offers innovative solutions are:
 
 \tabular{lll}{ % \Sexpr{"\u200B"} \Sexpr{"\u200B"}  \tab \emph{ Description }  \cr
                  (1) \tab\tab \emph{Advanced data programming}: A full set of fast statistical functions supporting grouped and weighted computations on vectors, matrices and data.frames. Quick (ordered) and reusable grouping, quick data-converions, and quick select and replace variables. \cr
@@ -39,9 +39,17 @@ Smart attribute handling and additional methods ensure compatibility and support
 Please see \link[=collapse-documentation]{Collapse Documentation & Overview}, or one of the Vignettes.
 }
 \section{Author(s)}{ % \author{
-Sebastian Krantz
+\bold{Maintainer}: Sebastian Krantz \email{sebastian.krantz@graduateinstitute.ch}
 
-Maintainer: Sebastian Krantz \email{sebastian.krantz@graduateinstitute.ch}
+Other contributors:
+\itemize{
+\item Matt Dowle, Arun Srinivasan and contributors worldwide (data.table)
+\item Simen Gaure (lfe)
+\item Dirk Eddelbuettel and contributors worldwide (Rcpp)
+\item R Core Team and contributors worldwide (stats)
+}
+I thank Ralf Stubner, Joseph Wood and Dirk Eddelbuettel for helpful answers on Stackoverflow,
+and Joris Meys on R-Devel for encouraging me and helping to set up the github page for \code{collapse}.
 }
 \section{Developing / Feature Requests / Bug Reporting}{
 \itemize{
