@@ -895,6 +895,6 @@ library(ggplot2)
 ```
 
 ## Going Further
-To learn more about `collapse`, I recommend just reading the documentation which is hierarchically organized, extensive and contains lots of examples. 
+To learn more about `collapse`, I recommend just reading the documentation (calling `help("collapse-documentation")`) which is hierarchically organized, extensive and contains lots of examples. 
 
 
