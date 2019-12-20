@@ -127,9 +127,9 @@ qsu.data.frame <- function(x, by = NULL, pid = NULL, w = NULL, cols = NULL, high
         pid <- qG(pid, na.exclude = FALSE)
         nid <- attr(pid, "N.groups")
       }
-      return(fbstatslCpp(x,higher,0L,0L,nid,pid,w,array))
+      return(drop(fbstatslCpp(x,higher,0L,0L,nid,pid,w,array)))
     } else if(!is.GRP(pid)) pid <- GRP(pid, return.groups = FALSE)
-    return(fbstatslCpp(x,higher,0L,0L,pid[[1L]],pid[[2L]],w,array))
+    return(drop(fbstatslCpp(x,higher,0L,0L,pid[[1L]],pid[[2L]],w,array)))
   } else if (is.atomic(by)) {
     if(!is.nmfactor(by)) by <- qF(by, na.exclude = FALSE)
     lev <- attr(by, "levels")
@@ -175,7 +175,7 @@ qsu.pdata.frame <- function(x, by = NULL, w = NULL, cols = NULL, higher = FALSE,
   if(vlabels) names(x) <- paste(names(x), vlabels(x), sep = ": ")
 
   if(is.null(by))
-    return(fbstatslCpp(x,higher,0L,0L,fnlevels(index[[1L]]),index[[1L]],w,array)) else if (is.atomic(by)) {
+    return(drop(fbstatslCpp(x,higher,0L,0L,fnlevels(index[[1L]]),index[[1L]],w,array))) else if (is.atomic(by)) {
       if(!is.nmfactor(by)) by <- qF(by, na.exclude = FALSE)
       lev <- attr(by, "levels")
       return(drop(fbstatslCpp(x,higher,length(lev),by,fnlevels(index[[1L]]),index[[1L]],w,array,lev)))
