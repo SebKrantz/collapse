@@ -1,7 +1,7 @@
 \name{data-transformations}
 \alias{data-transformations}
 
-\title{Data Transformations} % \code{collapse} Data Transformations
+\title{\code{collapse} Data Transformations} %
 
 \description{
 \code{collapse} provides an ensemble of functions to perform common data transformations efficiently and user friendly:

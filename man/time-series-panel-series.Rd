@@ -1,7 +1,7 @@
 \name{time-series-panel-series} % \name{Time-Series and Panel Computations}
 \alias{time-series-panel-series}
 % \alias{tscomp}
-\title{Time-Series and Panel-Series} % \code{collapse}
+\title{\code{collapse} Time-Series and Panel-Series} %
 
 \description{
 \code{collapse} provides the following functions to work with time-dependent data:

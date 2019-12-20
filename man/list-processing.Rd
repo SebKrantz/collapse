@@ -1,6 +1,6 @@
 \name{list-processing}
 \alias{list-processing}
-\title{List Processing}
+\title{\code{collapse} List Processing}
 
 \description{
 \code{collapse} provides the following set of functions to work with lists of R objects:
