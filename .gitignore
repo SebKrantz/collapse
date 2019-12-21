@@ -7,5 +7,4 @@
 *.so
 *.dll
 cran-comments.md
-collapse.dll
 inst/doc
