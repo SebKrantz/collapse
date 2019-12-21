@@ -178,6 +178,13 @@ importFrom("stats", "as.formula", "complete.cases", "cor", "cov",
  export(fnlevels)
  export(funique)
  export(as.numeric_factor)
+ export(.FAST_FUN)
+ export(.FAST_STAT_FUN)
+ export(.OPERATOR_FUN)
+ export(.COLLAPSE_TOPICS)
+ export(.COLLAPSE_ALL)
+ export(.COLLAPSE_GENERIC)
+ export(.COLLAPSE_DATA)
 
  S3method(B, data.frame)
  S3method(B, default)
