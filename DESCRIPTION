@@ -21,7 +21,7 @@ License:  MPL-2.0 | file LICENSE
 Encoding: UTF-8
 LazyData: true
 Depends: R (>= 2.10)
-Imports: Rcpp (>= 1.0.1), lfe
+Imports: Rcpp (>= 1.0.1), lfe (>= 2.7)
 LinkingTo: Rcpp
 Suggests: data.table, dplyr, plm, ggplot2, scales, vars, knitr, rmarkdown, testthat
 SystemRequirements: C++11
