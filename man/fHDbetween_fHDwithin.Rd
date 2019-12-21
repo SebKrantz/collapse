@@ -66,13 +66,13 @@ fHDbetween(x, \dots)
 \method{HDW}{pseries}(x, w = NULL, na.rm = TRUE, fill = TRUE, \dots)
 %## S3 methods for class 'pdata.frame'
 \method{fHDbetween}{pdata.frame}(x, w = NULL, na.rm = TRUE, fill = TRUE,
-           variable.wise = FALSE, \dots)
+           variable.wise = TRUE, \dots)
 \method{fHDwithin}{pdata.frame}(x, w = NULL, na.rm = TRUE, fill = TRUE,
-          variable.wise = FALSE, \dots)
+          variable.wise = TRUE, \dots)
 \method{HDB}{pdata.frame}(x, w = NULL, cols = is.numeric, na.rm = TRUE, fill = TRUE,
-    variable.wise = FALSE, stub = "HDB.", \dots)
+    variable.wise = TRUE, stub = "HDB.", \dots)
 \method{HDW}{pdata.frame}(x, w = NULL, cols = is.numeric, na.rm = TRUE, fill = TRUE,
-    variable.wise = FALSE, stub = "HDW.", \dots)
+    variable.wise = TRUE, stub = "HDW.", \dots)
 }
 %- maybe also 'usage' for other objects documented here.
 \arguments{
