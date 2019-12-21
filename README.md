@@ -1,9 +1,22 @@
-# collapse R package
+# collapse R Package: Advanced and Fast Data Transformation
 
-The creation of the `collapse` package was inspired by the like-named command in the STATA statistical software,
-and its main function `collap` can aggregate multi-type data exactly the way `collapse` does in STATA. But `collap` it is more than simply a reproduction of STATA's `collapse` for R: The function provides additional flexibility to perform basic and advanced aggregation tasks more user friendly and faster, particularly when working with multi-level (panel) data structures and multi-type data. Next to that,
-the function `qsu` (shorthand for quick summary) provides a way of calculating arbitrary summary statistics for cross-sectional and multi-level (panel) data, and a quick method to obtain within-transformed data. More specifically `qsu` provides the functionality of `summary`, `summaryBy` and STATA's `xtsummarize` and `xtsummarize` by groups in one command, in addition to some further features.
+*collapse* is a C/C++ based package for data manipulation in R. It's aims are
 
+* to facilitate complex data transformation and exploration tasks in R
+* to help make R code fast, flexible, parsimonious and programmer friendly 
+
+It is compatibile with *dplyr*, *data.table* and the *plm* approach to panel-data.
+
+**Key Features:**
+
+*  *Advanced data programming*: A full set of fast statistical functions supporting grouped and weighted computations on vectors, matrices and data.frames. Quick (ordered) and reusable grouping, quick data-converions, and quick select and replace variables. 
+*  *Advanced aggregation*: Fast and easy multi-data-type, multi-function, weighted, parallelized and fully customized data aggregation. 
+*  *Advanced transformations*: Efficient (grouped, weighted) sweeping out of statistics, scaling, centering, higher-dimensional centering, complex linear prediction and partialling-out. 
+*  *Advanced time-computations*: Efficient (sequences of) lags/leads, and (iterated) differences and growth rates on (unordered) time-series and panel data. Multivariate auto, partial and cross-correlation functions for panel data. Panel data to (ts-)array conversions. 
+*  *List Processing*: (Recursive) list-identification, extraction / subsetting, apply, and row-binding / unlisting in 2D. 
+* *Advanced data exploration*: Fast (grouped, weighted) summary statistics for cross-sectional and panel data. 
+
+*collapse* is built using *Rcpp*, uses C functions from *data.table* and *stats*, and imports from *lfe*.
 
 ## Installation
 
@@ -11,10 +24,7 @@ The package can be installed in R using the following code:
 
 remotes::install_github("SebKrantz/collapse")
 
-## Helping out
+## Contributing
 
-Development takes place in the `devel` branch. All help is welcome ofcourse. If you want to contribute, please fork and create a pull request for merging with the `devel` branch.
+If you want to contribute, please fork and create a pull request for merging with the `devel` branch.
 
-## Warning
-
-The package is currently in development. No warranties whatsoever.
