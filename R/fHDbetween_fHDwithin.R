@@ -217,7 +217,7 @@ fHDwithin.matrix <- function(x, fl, w = NULL, na.rm = TRUE, fill = FALSE, ...) {
     return(setAttributes(x, ax))
   } else return(setAttributes(demeanlist(x, fl, weights = w, ...), ax))
 }
-fHDwithin.pdata.frame <- function(x, w = NULL, na.rm = TRUE, fill = TRUE, variable.wise = FALSE, ...) {
+fHDwithin.pdata.frame <- function(x, w = NULL, na.rm = TRUE, fill = TRUE, variable.wise = TRUE, ...) {
   ax <- attributes(x)
   if(variable.wise) {
     attributes(x) <- NULL
@@ -389,7 +389,7 @@ HDW.data.frame <- function(x, fl, w = NULL, cols = is.numeric, na.rm = TRUE, fil
 }
 
 HDW.pdata.frame <- function(x, w = NULL, cols = is.numeric, na.rm = TRUE, fill = TRUE,
-                            variable.wise = FALSE, stub = "HDW.", ...) {
+                            variable.wise = TRUE, stub = "HDW.", ...) {
     return(add_stub(fHDwithin.pdata.frame(if(is.null(cols)) x else colsubset(x, cols), w, na.rm, fill, variable.wise, ...), stub))
 }
 
@@ -532,7 +532,7 @@ fHDbetween.matrix <- function(x, fl, w = NULL, na.rm = TRUE, fill = FALSE, ...) 
     return(setAttributes(x, ax))
   } else return(setAttributes(demeanlist(x, fl, weights = w, means = TRUE, ...), ax))
 }
-fHDbetween.pdata.frame <- function(x, w = NULL, na.rm = TRUE, fill = TRUE, variable.wise = FALSE, ...) {
+fHDbetween.pdata.frame <- function(x, w = NULL, na.rm = TRUE, fill = TRUE, variable.wise = TRUE, ...) {
   ax <- attributes(x)
   if(variable.wise) {
     attributes(x) <- NULL
@@ -702,7 +702,7 @@ HDB.data.frame <- function(x, fl, w = NULL, cols = is.numeric, na.rm = TRUE, fil
     return(add_stub(fHDbetween.data.frame(if(is.null(cols)) x else colsubset(x, cols), fl, w, na.rm, fill, variable.wise, ...), stub))
 }
 HDB.pdata.frame <- function(x, w = NULL, cols = is.numeric, na.rm = TRUE, fill = TRUE,
-                            variable.wise = FALSE, stub = "HDB.", ...) {
+                            variable.wise = TRUE, stub = "HDB.", ...) {
   return(add_stub(fHDbetween.pdata.frame(if(is.null(cols)) x else colsubset(x, cols), w, na.rm, fill, variable.wise, ...), stub))
 }
 
