@@ -1,5 +1,9 @@
 \name{collapse-documentation}
 \alias{collapse-documentation}
+\alias{.COLLAPSE_TOPICS}
+\alias{.COLLAPSE_ALL}
+\alias{.COLLAPSE_GENERIC}
+\alias{.COLLAPSE_DATA}
 \docType{package}
 \title{Collapse Documentation & Overview}
 \description{

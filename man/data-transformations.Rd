@@ -1,6 +1,6 @@
 \name{data-transformations}
 \alias{data-transformations}
-
+\alias{.OPERATOR_FUN}
 \title{\code{collapse} Data Transformations} %
 
 \description{
