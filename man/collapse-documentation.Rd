@@ -3,7 +3,7 @@
 \docType{package}
 \title{Collapse Documentation & Overview}
 \description{
-The following table fully summarizes the content of \code{\link{collapse}}. The documentation follows a hierarchical structure: This is the top overview page, linking to topical overview pages and associated functions (unless fully documented on the topic page). Typing \code{?FUN} always brings up the most relevant documentation page. % Functions with separate documentation entries (apart from the topic page) are linked. % Each topic further has it's own overview page in the documentation. % , linking to functions % , i.e. only functions with separate pages are linked here
+The following table fully summarizes the content of \code{\link{collapse}}. The documentation follows a hierarchical structure: This is the main overview page, linking to topical overview pages and associated functions (unless fully documented on the topic page). Typing \code{?FUN} always brings up the most relevant documentation page. % Functions with separate documentation entries (apart from the topic page) are linked. % Each topic further has it's own overview page in the documentation. % , linking to functions % , i.e. only functions with separate pages are linked here
 }
 
 \section{Topics and Functions}{
@@ -21,13 +21,13 @@ The following table fully summarizes the content of \code{\link{collapse}}. The 
 
 \link[=advanced-data-aggregation]{Advanced Data Aggregation} \tab\tab Fast and easy aggregation of multi-type data, using multiple-functions, and fully customizeable. Can perform weighted and parallelized aggregations. \tab\tab \code{collap} \cr \cr \cr
 
-\link[=data-transformations]{Data Transformations} \tab\tab Efficient row- column- data-apply, Split-Apply-Combine computing, fast (grouped and weighted) replace, sweep, scale / standardize, (higher-dimensional) within- and between-transformations (e.g. centering and averaging), complex lin. prediction and partialling out. \tab\tab \code{\link{dapply}}, \code{\link{BY}}, \code{\link{TRA}}, \code{\link[=fscale]{fscale/STD}}, \code{\link[=fbetween]{fbetween/B}}, \code{\link[=fwithin]{fwithin/W}}, \code{\link[=HDB]{fHDbetween/HDB}}, \code{\link[=HDW]{fHDwithin/HDW}}. \cr \cr \cr
+\link[=data-transformations]{Data Transformations} \tab\tab Efficient row- column- data-apply, Split-Apply-Combine computing, fast (grouped and weighted) replace, sweep, scale / standardize, (higher-dimensional) within- and between-transformations (e.g. centering and averaging), complex lin. prediction and partialling out. + methods for \code{dplyr} and \code{plm}. \tab\tab \code{\link{dapply}}, \code{\link{BY}}, \code{\link{TRA}}, \code{\link[=fscale]{fscale/STD}}, \code{\link[=fbetween]{fbetween/B}}, \code{\link[=fwithin]{fwithin/W}}, \code{\link[=HDB]{fHDbetween/HDB}}, \code{\link[=HDW]{fHDwithin/HDW}}. \cr \cr \cr
 
-\link[=time-series-panel-series]{Time-Series and Panel-Series} \tab\tab Efficient (sequences of), lags / leads and (iterated) differences and growth rates / log-differences on (unordered) time-series and panel-data. Panel-data > (ts-)array conversions, multivariate panel- auto, partial- and cross - correlation functions. \tab\tab \code{\link[=flag]{flag/L/F}}, \code{\link[=fdiff]{fdiff/D}}, \code{\link[=fgrowth]{fgrowth/G}}, \code{\link{psmat}}, \code{\link{psacf}}, \code{\link{pspacf}}, \code{\link{psccf}}  \cr
+\link[=time-series-panel-series]{Time-Series and Panel-Series} \tab\tab Efficient (sequences of), lags / leads and (iterated) differences and growth rates / log-differences on (unordered) time-series and panel-data. Panel-data > (ts-)array conversions, multivariate panel- auto, partial- and cross - correlation functions. + methods for \code{dplyr} and \code{plm}. \tab\tab \code{\link[=flag]{flag/L/F}}, \code{\link[=fdiff]{fdiff/D}}, \code{\link[=fgrowth]{fgrowth/G}}, \code{\link{psmat}}, \code{\link{psacf}}, \code{\link{pspacf}}, \code{\link{psccf}}  \cr
 
 \link[=list-processing]{List Processing} \tab\tab (Recursive) list-identification, search and extract list-elements / list-subsetting, data-apply, and row-binding / unlisting in 2-dimensions.  \tab\tab \code{\link{is.regular}}, \code{\link{is.unlistable}}, \code{\link{ldepth}}, \code{\link{has_elem}}, \code{\link{get_elem}}, \code{\link{atomic_elem}}, \code{\link{list_elem}}, \code{\link{reg_elem}}, \code{\link{irreg_elem}}, \code{\link{rapply2d}}, \code{\link{unlist2d}} \cr
 
-\link[=quick-summary]{Quick Summary Statistics} \tab\tab Extremely fast (one-pass, grouped and weighted), summary statistics for cross-sectional and panel-data (within- and between-groups). \tab\tab \code{qsu} \cr \cr \cr \cr
+\link[=quick-summary]{Quick Summary Statistics} \tab\tab Extremely fast (one-pass, grouped and weighted), summary statistics for cross-sectional and panel-data (within- and between-groups). + methods for \code{plm}. \tab\tab \code{qsu} \cr \cr \cr \cr
 
 %Visual Data Exploration \tab\tab Pretty (grouped, weighted, and panel-decomposed) histogram-, density-, scatter- and correlation plots \tab\tab histplot, densplot, scplot, corplot \cr
 
@@ -39,10 +39,10 @@ The following table fully summarizes the content of \code{\link{collapse}}. The 
 Data and Global Macros \tab\tab Groningen Growth and Development Centre 10-Sector Database, World Bank World Development dataset, and some global macros containing links to the topical documentation pages (including this page), all exported objects (excluding exported S3 methods and documentation entries), all generic functions, the 2 datasets, all fast functions, all fast statistical (scalar-valued) functions, and all transformation operators / operator-like functions.  \tab\tab \code{\link{GGDC10S}, \link{wlddev}, .COLLAPSE_TOPICS, .COLLAPSE_ALL, .COLLAPSE_GENERIC, .COLLAPSE_DATA, .FAST_FUN, .FAST_STAT_FUN, .OPERATOR_FUN} \cr
 
 }
+
+\bold{Maintainer}: Sebastian Krantz \email{sebastian.krantz@graduateinstitute.ch}
 }
-\author{
-Maintainer: Sebastian Krantz \email{sebastian.krantz@graduateinstitute.ch}
-}
+
 \seealso{
   \link{collapse-package}
 }
