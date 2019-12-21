@@ -177,7 +177,7 @@ head(TRA(series, gmeds, "-", g))
 
 # Fast transformations using dplyr:
 \dontrun{
-library(dplyr) # (here we are demeaning PCGDP and LIFEEX using the weighted means, weighted by ODA)
+library(dplyr) # (here we are demeaning PCGDP and LIFEEX using weighted means, weighted by ODA)
 wlddev \%>\% group_by(region,income) \%>\% select(PCGDP,LIFEEX,ODA) \%>\% fmean(ODA, "-")
 }
 
