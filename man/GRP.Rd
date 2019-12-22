@@ -77,22 +77,22 @@ Evidently \code{GRP} is an S3 generic function with one default method supportin
 }
 \value{
   A list-like object of class `GRP' containing information about the number of groups, the observations (rows) belonging to each group, the size of each group, the unique group names / definitions, whether the groups are ordered or not and (optionally) the ordering vector used to perform the ordering. The object is structured as follows:
-  \tabular{llll}{\emph{ List-index } \Sexpr{"\u200B"}  \tab \emph{ Element-name } \Sexpr{"\u200B"}  \tab \emph{ Content type } \Sexpr{"\u200B"} \Sexpr{"\u200B"} \Sexpr{"\u200B"} \Sexpr{"\u200B"} \Sexpr{"\u200B"} \Sexpr{"\u200B"} \Sexpr{"\u200B"} \Sexpr{"\u200B"} \Sexpr{"\u200B"} \Sexpr{"\u200B"} \Sexpr{"\u200B"} \Sexpr{"\u200B"} \Sexpr{"\u200B"} \Sexpr{"\u200B"} \tab \emph{ Content description} \cr
+  \tabular{lllllll}{\emph{ List-index }  \tab\tab \emph{ Element-name }   \tab\tab \emph{ Content type } \tab\tab \emph{ Content description} \cr
 
-                 [[1]] \tab N.groups   \tab \code{integer(1)} \tab Number of Groups \cr
+                 [[1]] \tab\tab N.groups   \tab\tab \code{integer(1)} \tab\tab Number of Groups \cr
 
-                 [[2]] \tab group.id \tab \code{integer(NROW(X))} \tab An integer group-identifier \cr
+                 [[2]] \tab\tab group.id \tab\tab \code{integer(NROW(X))} \tab\tab An integer group-identifier \cr
 
-                 [[3]] \tab group.sizes    \tab \code{integer(N.groups)} \tab Vector of group sizes \cr
+                 [[3]] \tab\tab group.sizes    \tab\tab \code{integer(N.groups)} \tab\tab Vector of group sizes \cr
 
-                 [[4]] \tab groups    \tab \code{unique(X)} or \code{NULL} \tab Unique groups (same format as input, sorted if \code{sort = TRUE}), or \code{NULL} if \code{return.groups = FALSE} \cr
+                 [[4]] \tab\tab groups    \tab\tab \code{unique(X)} or \code{NULL} \tab\tab Unique groups (same format as input, sorted if \code{sort = TRUE}), or \code{NULL} if \code{return.groups = FALSE} \cr
 
-                 [[5]] \tab group.vars   \tab \code{character} \tab The names of the grouping variables \cr
-                 [[6]] \tab ordered   \tab \code{logical(2)} \tab \code{[1]- TRUE} if \code{sort = TRUE}, \code{[2]- TRUE} if \code{X} already sorted \cr
+                 [[5]] \tab\tab group.vars   \tab\tab \code{character} \tab\tab The names of the grouping variables \cr
+                 [[6]] \tab\tab ordered   \tab\tab \code{logical(2)} \tab\tab \code{[1]- TRUE} if \code{sort = TRUE}, \code{[2]- TRUE} if \code{X} already sorted \cr
 
-                 [[7]] \tab order     \tab \code{integer(NROW(X))} or \code{NULL} \tab Ordering vector from \code{data.table:::forderv} or \code{NULL} if \code{return.order = FALSE} (the default) \cr
+                 [[7]] \tab\tab order     \tab\tab \code{integer(NROW(X))} or \code{NULL} \tab\tab Ordering vector from \code{data.table:::forderv} or \code{NULL} if \code{return.order = FALSE} (the default) \cr
 
-                 [[8]] \tab call \tab \code{call} \tab The \code{GRP()} call, obtained from \code{match.call()}
+                 [[8]] \tab\tab call \tab\tab \code{call} \tab\tab The \code{GRP()} call, obtained from \code{match.call()}
                  }
 }
 \seealso{

@@ -11,15 +11,15 @@
 
 \item \code{\link{TRA}} is an S3 generic to efficiently perform (groupwise) \bold{replacement and sweeping out of statistics}. %The basic syntax is \code{TRA(x, xag, g)} where \code{x} is data to be transformed, \code{xag} is some set of aggregate statistics to tranform \code{x} and \code{g} is an optional grouping vector for grouped transformations.
 Supported operations are:
-  \tabular{lll}{\emph{ Integer-id } \Sexpr{"\u200B"} \Sexpr{"\u200B"}  \tab \emph{ String-id } \Sexpr{"\u200B"} \Sexpr{"\u200B"}  \tab \emph{ Description }  \cr
-                 1 \tab "replace_fill" \Sexpr{"\u200B"} \Sexpr{"\u200B"}  \tab replace and overwrite missing values \cr
-                 2 \tab "replace" \tab replace but preserve missing values \cr
-                 3 \tab "-"   \tab subtract \cr
-                 4 \tab "-+"  \tab subtract group-statistics but add average of group statistics \cr
-                 5 \tab "/"   \tab divide \cr
-                 6 \tab "\%"     \tab compute percentages \cr
-                 7 \tab "+" \tab add \cr
-                 8 \tab "*" \tab multiply
+  \tabular{lllll}{\emph{ Integer-id }  \tab\tab \emph{ String-id }  \tab\tab \emph{ Description }  \cr % \Sexpr{"\u200B"} \Sexpr{"\u200B"} % \Sexpr{"\u200B"} \Sexpr{"\u200B"}
+                 1 \tab\tab "replace_fill"   \tab\tab replace and overwrite missing values \cr % \Sexpr{"\u200B"} \Sexpr{"\u200B"}
+                 2 \tab\tab "replace" \tab\tab replace but preserve missing values \cr
+                 3 \tab\tab "-"   \tab\tab subtract \cr
+                 4 \tab\tab "-+"  \tab\tab subtract group-statistics but add average of group statistics \cr
+                 5 \tab\tab "/"   \tab\tab divide \cr
+                 6 \tab\tab "\%"     \tab\tab compute percentages \cr
+                 7 \tab\tab "+" \tab\tab add \cr
+                 8 \tab\tab "*" \tab\tab multiply
 }
 All of \code{collapse}'s \link[=fast-statistical-functions]{Fast Statistical Functions} have a built-in \code{TRA} argument for faster access (i.e. you can compute (groupwise) statistics and use them to transform your data with a single function call).
 
@@ -35,18 +35,18 @@ All of \code{collapse}'s \link[=fast-statistical-functions]{Fast Statistical Fun
 }
 }
 \section{Table of Functions}{
-  \tabular{lll}{\emph{ Function / S3 Generic } \Sexpr{"\u200B"} \Sexpr{"\u200B"}  \tab \emph{ Methods } \Sexpr{"\u200B"} \Sexpr{"\u200B"}  \tab \emph{ Description }  \cr
-  \code{\link{dapply}} \tab No methods, works with matrices and data frames \tab apply functions to rows or columns \cr
-  \code{\link{BY}} \tab \code{default, matrix, data.frame, grouped_df} \tab Split-Apply-Combine computing \cr
-  \code{\link{TRA}} \tab \code{default, matrix, data.frame, grouped_df} \tab replace and sweep out statistics \cr
-  \code{\link[=fscale]{fscale/STD}} \tab \code{default, matrix, data.frame, pseries, pdata.frame, grouped_df} \tab scale / standardize data \cr
-  \code{\link[=fwithin]{fwithin/W}} \tab \code{default, matrix, data.frame, pseries, pdata.frame, grouped_df}  \tab demean / center data \cr
-  \code{\link[=fbetween]{fbetween/B}} \tab \code{default, matrix, data.frame, pseries, pdata.frame, grouped_df}  \tab compute means / average data \cr
-  \code{\link[=HDW]{fHDwithin/HDW}} \tab \code{default, matrix, data.frame, pseries, pdata.frame} \tab high-dimensional centering and lm residuals \cr
-  \code{\link[=HDB]{fHDbetween/HDB}} \tab \code{default, matrix, data.frame, pseries, pdata.frame} \tab high-dimensional averages and lm fitted values \cr
-  \code{\link[=flag]{flag/L/F}} \tab \code{default, matrix, data.frame, pseries, pdata.frame, grouped_df}  \tab (sequences of) lags / leads \cr
-  \code{\link[=fdiff]{fdiff/D}} \tab \code{default, matrix, data.frame, pseries, pdata.frame, grouped_df}  \tab (sequences of lagged/leaded and iterated) differences \cr
-  \code{\link[=fdiff]{fgrowth/G}} \tab \code{default, matrix, data.frame, pseries, pdata.frame, grouped_df}  \tab (sequences of lagged/leaded and iterated) growth rates or log-differences
+  \tabular{lllll}{\emph{ Function / S3 Generic }   \tab\tab \emph{ Methods }  \tab\tab \emph{ Description }  \cr % \Sexpr{"\u200B"} \Sexpr{"\u200B"} % \Sexpr{"\u200B"} \Sexpr{"\u200B"}
+  \code{\link{dapply}} \tab\tab No methods, works with matrices and data frames \tab\tab apply functions to rows or columns \cr
+  \code{\link{BY}} \tab\tab \code{default, matrix, data.frame, grouped_df} \tab\tab Split-Apply-Combine computing \cr
+  \code{\link{TRA}} \tab\tab \code{default, matrix, data.frame, grouped_df} \tab\tab replace and sweep out statistics \cr
+  \code{\link[=fscale]{fscale/STD}} \tab\tab \code{default, matrix, data.frame, pseries, pdata.frame, grouped_df} \tab\tab scale / standardize data \cr
+  \code{\link[=fwithin]{fwithin/W}} \tab\tab \code{default, matrix, data.frame, pseries, pdata.frame, grouped_df}  \tab\tab demean / center data \cr
+  \code{\link[=fbetween]{fbetween/B}} \tab\tab \code{default, matrix, data.frame, pseries, pdata.frame, grouped_df}  \tab\tab compute means / average data \cr
+  \code{\link[=HDW]{fHDwithin/HDW}} \tab\tab \code{default, matrix, data.frame, pseries, pdata.frame} \tab\tab high-dimensional centering and lm residuals \cr
+  \code{\link[=HDB]{fHDbetween/HDB}} \tab\tab \code{default, matrix, data.frame, pseries, pdata.frame} \tab\tab high-dimensional averages and lm fitted values \cr
+  \code{\link[=flag]{flag/L/F}} \tab\tab \code{default, matrix, data.frame, pseries, pdata.frame, grouped_df}  \tab\tab (sequences of) lags / leads \cr
+  \code{\link[=fdiff]{fdiff/D}} \tab\tab \code{default, matrix, data.frame, pseries, pdata.frame, grouped_df}  \tab\tab (sequences of lagged/leaded and iterated) differences \cr
+  \code{\link[=fdiff]{fgrowth/G}} \tab\tab \code{default, matrix, data.frame, pseries, pdata.frame, grouped_df}  \tab\tab (sequences of lagged/leaded and iterated) growth rates or log-differences
 }
 }
 \seealso{

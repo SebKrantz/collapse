@@ -12,7 +12,7 @@ The following table fully summarizes the content of \code{\link{collapse}}. The 
 
 \section{Topics and Functions}{
 
-\tabular{lllll}{ \emph{ Topic } \Sexpr{"\u200B"} \Sexpr{"\u200B"} \tab\tab \emph{ Main Features / Keywords} \tab\tab \emph{ Functions }  \cr
+\tabular{lllll}{ \emph{ Topic }  \tab\tab \emph{ Main Features / Keywords} \tab\tab \emph{ Functions }  \cr % \Sexpr{"\u200B"} \Sexpr{"\u200B"}
 
   \link[=fast-statistical-functions]{Fast Statistical Functions} \tab\tab Fast (grouped and weighted) statistical functions for vector, matrix, data.frame and grouped_df (dplyr compatible).  \tab\tab \code{\link{fsum}}, \code{\link{fprod}}, \code{\link{fmean}}, \code{\link{fmedian}}, \code{\link{fmode}}, \code{\link{fvar}}, \code{\link{fsd}}, \code{\link{fmin}}, \code{\link{fmax}}, \code{\link{ffirst}}, \code{\link{flast}}, \code{\link{fNobs}}, \code{\link{fNdistinct}} \cr \cr \cr
 

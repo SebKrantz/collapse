@@ -13,14 +13,14 @@
 }
 }
 \section{Table of Functions}{
-  \tabular{lll}{\emph{ S3 Generic } \Sexpr{"\u200B"} \Sexpr{"\u200B"}  \tab \emph{ Methods } \Sexpr{"\u200B"} \Sexpr{"\u200B"}  \tab \emph{ Description }  \cr
-                 \code{\link[=flag]{flag/L/F}} \tab \code{default, matrix, data.frame, pseries, pdata.frame, grouped_df}  \tab compute (sequences of) lags and leads \cr
-                 \code{\link[=fdiff]{fdiff/D}} \tab \code{default, matrix, data.frame, pseries, pdata.frame, grouped_df}  \tab compute (sequences of lagged and iterated) differences \cr
-                 \code{\link[=fgrowth]{fgrowth/G}} \tab \code{default, matrix, data.frame, pseries, pdata.frame, grouped_df}  \tab compute (sequences of lagged and iterated) growth rates or log-differences \cr
-                 \code{\link{psmat}} \tab \code{default, pseries, data.frame, pdata.frame} \tab convert panel-data to matrix/array \cr
-                 \code{\link{psacf}} \tab \code{default, pseries, data.frame, pdata.frame} \tab compute ACF on panel-data \cr
-                 \code{\link{pspacf}} \tab \code{default, pseries, data.frame, pdata.frame} \tab compute PACF on panel-data \cr
-                 \code{\link{psccf}} \tab \code{default, pseries, data.frame, pdata.frame} \tab compute CCF on panel-data
+  \tabular{lllll}{\emph{ S3 Generic }   \tab\tab \emph{ Methods }   \tab\tab \emph{ Description }  \cr % \Sexpr{"\u200B"} \Sexpr{"\u200B"} \Sexpr{"\u200B"} \Sexpr{"\u200B"}
+                 \code{\link[=flag]{flag/L/F}} \tab\tab \code{default, matrix, data.frame, pseries, pdata.frame, grouped_df}  \tab\tab compute (sequences of) lags and leads \cr
+                 \code{\link[=fdiff]{fdiff/D}} \tab\tab \code{default, matrix, data.frame, pseries, pdata.frame, grouped_df}  \tab\tab compute (sequences of lagged and iterated) differences \cr
+                 \code{\link[=fgrowth]{fgrowth/G}} \tab\tab \code{default, matrix, data.frame, pseries, pdata.frame, grouped_df}  \tab\tab compute (sequences of lagged and iterated) growth rates or log-differences \cr
+                 \code{\link{psmat}} \tab\tab \code{default, pseries, data.frame, pdata.frame} \tab\tab convert panel-data to matrix/array \cr
+                 \code{\link{psacf}} \tab\tab \code{default, pseries, data.frame, pdata.frame} \tab\tab compute ACF on panel-data \cr
+                 \code{\link{pspacf}} \tab\tab \code{default, pseries, data.frame, pdata.frame} \tab\tab compute PACF on panel-data \cr
+                 \code{\link{psccf}} \tab\tab \code{default, pseries, data.frame, pdata.frame} \tab\tab compute CCF on panel-data
 }
 }
 \seealso{

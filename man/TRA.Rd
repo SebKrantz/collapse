@@ -27,15 +27,15 @@ TRA(x, STATS, FUN = "-", ...)
   \item{x}{a atomic vector, matrix, data frame or grouped tibble (\code{dplyr::grouped_df}).}
   \item{STATS}{a matching set of summary statistics computed on \code{x}. If \code{g = NULL} (no groups), all methods support an atomic vector of statistics of length \code{NCOL(x)}. The matrix and data.frame methods also support a 1-row matrix or 1-row data.frame/list, repsectively. If groups are supplied to \code{g}, \code{STATS} needs to be of the same type as \code{x} and of appropriate dimensions (such that \code{NCOL(x) == NCOL(STATS)} and \code{NROW(STATS)} matches the number of groups supplied to \code{g} i.e. the number of levels if \code{g} is a factor, with the first row of \code{STATS} corresponding to the first level of \code{g} etc...)}
   \item{FUN}{an integer or character string indicating the operation to perform. There are 8 supported operations:
-    \tabular{lll}{\emph{ Int. } \Sexpr{"\u200B"} \Sexpr{"\u200B"}  \tab \emph{ String } \Sexpr{"\u200B"} \Sexpr{"\u200B"}  \tab \emph{ Description }  \cr
-                 1 \tab "replace_fill" \Sexpr{"\u200B"} \Sexpr{"\u200B"}  \tab replace and overwrite missing values \cr
-                 2 \tab "replace" \tab replace but preserve missing values \cr
-                 3 \tab "-"   \tab subtract (center) \cr
-                 4 \tab "-+"  \tab subtract group-statistics but add group-frequency weighted average of group statistics (center on global average statistic) \cr
-                 5 \tab "/"   \tab divide (scale) \cr
-                 6 \tab "\%"     \tab compute percentages (divide and multiply by 100) \cr
-                 7 \tab "+" \tab add \cr
-                 8 \tab "*" \tab multiply
+    \tabular{lllll}{\emph{ Int. }   \tab\tab \emph{ String }   \tab\tab \emph{ Description }  \cr % \Sexpr{"\u200B"} \Sexpr{"\u200B"} % \Sexpr{"\u200B"} \Sexpr{"\u200B"}
+                 1 \tab\tab "replace_fill"   \tab\tab replace and overwrite missing values \cr % \Sexpr{"\u200B"} \Sexpr{"\u200B"}
+                 2 \tab\tab "replace" \tab\tab replace but preserve missing values \cr
+                 3 \tab\tab "-"   \tab\tab subtract (center) \cr
+                 4 \tab\tab "-+"  \tab\tab subtract group-statistics but add group-frequency weighted average of group statistics (center on global average statistic) \cr
+                 5 \tab\tab "/"   \tab\tab divide (scale) \cr
+                 6 \tab\tab "\%"     \tab\tab compute percentages (divide and multiply by 100) \cr
+                 7 \tab\tab "+" \tab\tab add \cr
+                 8 \tab\tab "*" \tab\tab multiply
   }
   }
 \item{g}{a factor, \code{\link{GRP}} object, atomic vector (internally converted to ordered factor) or a list of vectors / factors (internally converted to a \code{\link{GRP}} object) used to group \code{x}. Number of groups must match rows of \code{STATS}. See \code{STATS} and Details.}
