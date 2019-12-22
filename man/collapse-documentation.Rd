@@ -21,7 +21,7 @@ The following table fully summarizes the content of \code{\link{collapse}}. The 
 \link[=select-replace-vars]{Quick Select and Replace Variables} \tab\tab Quick, flexible and secure select and replace variables from data.frames / data.tables / tibbles / grouped tibbles / pdata.frame etc... %, get data, variables names, variable indices
 \tab\tab \code{get_vars}, \code{num_vars}, \code{cat_vars}, \code{char_vars}, \code{fact_vars}, \code{logi_vars}, \code{Date_vars} \cr
 
-\link[=quick-conversion]{Quick Data Converion} \tab\tab Fast conversions, data.frame <> data.table, matrix <> list / data.frame / data.table, array > matrix / data.frame / data.table, list > data.frame / data.table, vector > factor / matrix / data.frame / data.table. \tab\tab \code{qDF}, \code{qDT}, \code{qM}, \code{qF}, \code{qG}, \code{mrtl}, \code{mctl} \cr \cr \cr
+\link[=quick-conversion]{Quick Data Conversion} \tab\tab Fast conversions, data.frame <> data.table, matrix <> list / data.frame / data.table, array > matrix / data.frame / data.table, list > data.frame / data.table, vector > factor / matrix / data.frame / data.table. \tab\tab \code{qDF}, \code{qDT}, \code{qM}, \code{qF}, \code{qG}, \code{mrtl}, \code{mctl} \cr \cr \cr
 
 \link[=advanced-data-aggregation]{Advanced Data Aggregation} \tab\tab Fast and easy aggregation of multi-type data, using multiple-functions, and fully customizeable. Can perform weighted and parallelized aggregations. \tab\tab \code{collap} \cr \cr \cr
 
@@ -31,7 +31,7 @@ The following table fully summarizes the content of \code{\link{collapse}}. The 
 
 \link[=list-processing]{List Processing} \tab\tab (Recursive) list-identification, search and extract list-elements / list-subsetting, data-apply, and row-binding / unlisting in 2-dimensions.  \tab\tab \code{\link{is.regular}}, \code{\link{is.unlistable}}, \code{\link{ldepth}}, \code{\link{has_elem}}, \code{\link{get_elem}}, \code{\link{atomic_elem}}, \code{\link{list_elem}}, \code{\link{reg_elem}}, \code{\link{irreg_elem}}, \code{\link{rapply2d}}, \code{\link{unlist2d}} \cr
 
-\link[=quick-summary]{Quick Summary Statistics} \tab\tab Extremely fast (one-pass, grouped and weighted), summary statistics for cross-sectional and panel-data (within- and between-groups). + methods for \code{plm}. \tab\tab \code{qsu} \cr \cr \cr \cr
+\link[=quick-summary]{Quick Summary Statistics} \tab\tab Extremely fast (one-pass, grouped and weighted), summary statistics for cross-sectional and complex multilevel (panel) data (within- and between-groups). + methods for \code{plm}. \tab\tab \code{qsu} \cr \cr \cr \cr
 
 %Visual Data Exploration \tab\tab Pretty (grouped, weighted, and panel-decomposed) histogram-, density-, scatter- and correlation plots \tab\tab histplot, densplot, scplot, corplot \cr
 
