@@ -313,7 +313,7 @@ static void array_op(Array arr1, Array arr2, char op, Array ans)
                       VECTOR(ans)[i] = VECTOR(arr1)[i] - VECTOR(arr2)[i];
                     break;
                     default:
-                        printf("Unknown op in array_op");
+                        error("Unknown op in array_op"); // printf
     }
   }
 
