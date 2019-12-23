@@ -14,7 +14,7 @@ Convert common data types quickly, without method dispatch and extensive checks:
 \itemize{
 \item \code{qDF} and \code{qDT} convert vectors, matrices, higher-dimensional arrays and suitable lists to \code{data.frame} and \code{data.table} respectively.
 \item \code{qM} converts vectors, higher-dimensional arrays, data.frames and suitable lists to matrix.
-\item \code{mctl} and \code{mrtl} are exported C++ functions that column -or row-wise convert a matrix to list, \code{data.frame} or \code{data.table}. They are used internally by \code{qDF} and \code{qDT}, \code{\link{dapply}}, \code{\link{BY}}, etc...
+\item \code{mctl} and \code{mrtl} are exported C++ functions that column- or row-wise convert a matrix to list, \code{data.frame} or \code{data.table}. They are used internally by \code{qDF} and \code{qDT}, \code{\link{dapply}}, \code{\link{BY}}, etc...
 \item \code{qF} converts atomic vectors to factor.
 \item \code{qG} is a programmers function that converts atomic vectors to a quick-group (class attribute 'qG') - a kind of factor light which is just an integer vector with an attribute 'N.groups' indicating the number of groups. (Thus saving time consumed by converting the levels of a numeric vector to character).
 }
@@ -31,12 +31,12 @@ qG(x, ordered = TRUE, na.exclude = TRUE)
 %- maybe also 'usage' for other objects documented here.
 \arguments{
   \item{X}{a vector, matrix, higher-dimensional array, data.frame or list. \code{mctl} and \code{mrtl} only take matrices.}
-  \item{x}{a atomic vector.}
-  \item{row.names.col}{should a column capturing names or row.names be added i.e. when converting atomic objects to data.frame or data.frame to data.table. Can be logical \code{TRUE}, which will add a column \code{"row.names"} in front, or can supply a name for the column i.e. \code{"column1"}.}
-  \item{ordered}{logical. \code{TRUE} sorts the levels and returns an ordered facor (such that among the underlying integers 1 represents the first level, 2 the second etc...).}
-  \item{names}{logical. should the list be named?}
+  \item{x}{a atomic vector or factor.}
+  \item{row.names.col}{should a column capturing names or row.names be added? i.e. when converting atomic objects to data.frame or data.frame to data.table. Can be logical \code{TRUE}, which will add a column \code{"row.names"} in front, or can supply a name for the column i.e. \code{"column1"}.}
+  \item{ordered}{logical. \code{TRUE} sorts the levels and returns an ordered facor.}
+  \item{names}{logical. Should the list be named?}
   \item{ret}{integer. 3 return options: 0L - return a list, 1L - return a data.frame, 2L - return a data.table.}
-  \item{na.exclude}{logical. \code{TRUE} retains missing values in character or numeric vectors (i.e. no non-missing underlying integer is generated). \code{FALSE} creates an integer for NA and also attaches a class 'na.included', which will make computations with \code{\link{collapse}} functions faster (since no NA chaecking is required). \emph{Note} that in both cases a 'NA' level is attached, so this option only concerns the underlying integer vector and the response to functions dealing with missing values (like \code{na_rm}).}
+  \item{na.exclude}{logical. \code{TRUE} preserves missing values in character or numeric vectors (i.e. no underlying integer is generated to represent \code{NA}, and functions like \code{na_rm} will remove missing values from the factor). \code{FALSE} creates an integer for \code{NA} and also attaches a class 'na.included', which will make computations with \code{\link{collapse}} functions faster (since no \code{NA} checking is required). \emph{Note} that in both cases a \code{'NA'} level is attached, so this option only concerns the underlying integer vector and the response to functions dealing with missing values (like \code{na_rm}).}
 }
 \value{
 \code{qDF} - returns a data.frame\cr
