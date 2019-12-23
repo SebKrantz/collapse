@@ -89,7 +89,7 @@ BY.data.frame <- function(X, g, FUN, ..., use.g.names = TRUE, sort = TRUE,
         dn <- dimnames(res) # works, but what if dn[[2L]] is NULL ??
         if(!use.g.names) dn[1L] <- list(NULL) # character(0)
         dn[[2L]] <- paste(rep(ax[["names"]], each = dr[2L]/length(X)), dn[[2L]], sep = ".")
-        ax <- c(list(dim = dr, dimnames = dn), ax[!(names(ax) %in% c("names","row.names","class"))])
+        ax <- list(dim = dr, dimnames = dn) # c(..., ax[!(names(ax) %in% c("names","row.names","class"))]) # Don't know why one would need this
       }
     } else {
       matl <- return == 2L
@@ -108,15 +108,15 @@ BY.data.frame <- function(X, g, FUN, ..., use.g.names = TRUE, sort = TRUE,
         res[-1L] <- aplyfun(X[-1L], splitfun)
         if(matl) {
           res <- do.call(cbind, res)
-          ax <- c(list(dim = lengths(dn), dimnames = dn), ax[!(names(ax) %in% c("names","row.names","class"))])
+          ax <- list(dim = lengths(dn), dimnames = dn) # c(..., ax[!(names(ax) %in% c("names","row.names","class"))]) # Don't know why one would need this!!
         }
       } else {
         if(matl) {
           splitfun <- function(x) unlist(lapply(split.default(x, g), FUN, ...), FALSE, FALSE)
           res <- do.call(cbind, aplyfun(X, splitfun))
           dimr <- dim(res)
-          ax <- c(list(dim = dimr, dimnames = list(if(length(X[[1L]]) == dimr[1L] && ax[["row.names"]][1L] != "1") ax[["row.names"]] else NULL, ax[["names"]])),
-                  ax[!(names(ax) %in% c("names","row.names","class"))])
+          ax <- list(dim = dimr, dimnames = list(if(length(X[[1L]]) == dimr[1L] && ax[["row.names"]][1L] != "1") ax[["row.names"]] else NULL, ax[["names"]]))
+                # c(...,  ax[!(names(ax) %in% c("names","row.names","class"))]) # # Don't know why one would need this!!
         } else {
           splitfun <- function(x) cond_duplAttributes(unlist(lapply(split.default(x, g), FUN, ...), FALSE, FALSE), x)
           res <- aplyfun(X, splitfun)
@@ -147,8 +147,8 @@ BY.matrix <- function(X, g, FUN, ..., use.g.names = TRUE, sort = TRUE,
       if(return == 1L) {
         splitfun <- function(x) mctl(do.call(rbind, lapply(split.default(x, g), FUN, ...)), names = TRUE)
         res <- unlist(aplyfun(mctl(X, names = TRUE), splitfun), recursive = FALSE, use.names = TRUE)
-        ax <- c(list(names = names(res), row.names = if(use.g.names && !inherits(X, "data.table"))
-          attr(g, "levels") else .set_row_names(length(res[[1L]])), class = "data.frame"), ax[!(names(ax) %in% c("dim","dimnames","class"))])
+        ax <- list(names = names(res), row.names = if(use.g.names && !inherits(X, "data.table"))
+          attr(g, "levels") else .set_row_names(length(res[[1L]])), class = "data.frame") # c(..., ax[!(names(ax) %in% c("dim","dimnames","class"))]) # # Don't know why one would need this!!
       } else {
         splitfun2 <- function(x) do.call(rbind, lapply(split.default(x, g), FUN, ...))
         res <- do.call(cbind, aplyfun(mctl(X), splitfun2))
@@ -163,8 +163,8 @@ BY.matrix <- function(X, g, FUN, ..., use.g.names = TRUE, sort = TRUE,
         res <- vector("list", ncol(X))
         res[[1L]] <- splitfun3(X[, 1L], un = TRUE) # rewrite all in C++ ?? # Note: X[, 1L] still keeps row.names, which are then interacted with group names.
         if(return == 2L) ax[["dimnames"]] <- list(names(res[[1L]]), dimnames(X)[[2L]]) else # ax[["dimnames"]][[1L]] <- names(res[[1L]]) # gives error if only one dimnames !!
-          ax <- c(list(names = dimnames(X)[[2L]], row.names = names(res[[1L]]), class = "data.frame"),
-                  ax[!(names(ax) %in% c("dim","dimnames","class"))])
+          ax <- list(names = dimnames(X)[[2L]], row.names = names(res[[1L]]), class = "data.frame")
+                # c(...,  ax[!(names(ax) %in% c("dim","dimnames","class"))]) # # Don't know why one would need this !!!
         setattr_clp(res[[1L]], "names", NULL)
         res[-1L] <- aplyfun(mctl(X[, -1L, drop = FALSE]), splitfun3)
         if(return == 2L) {
@@ -181,9 +181,9 @@ BY.matrix <- function(X, g, FUN, ..., use.g.names = TRUE, sort = TRUE,
           }
           res <- do.call(cbind, res)
         } else {
-          ax <- c(list(names = names(res), row.names = if(lr1 == nrow(X) && length(rn <- dimnames(X)[[1L]]))
-            rn else .set_row_names(lr1), class = "data.frame"),
-            ax[!(names(ax) %in% c("dim","dimnames","class"))])
+          ax <- list(names = names(res), row.names = if(lr1 == nrow(X) && length(rn <- dimnames(X)[[1L]]))
+            rn else .set_row_names(lr1), class = "data.frame")
+            # c(..., ax[!(names(ax) %in% c("dim","dimnames","class"))]) # Don't know why one would need this !!
         }
       }
     }

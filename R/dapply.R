@@ -21,8 +21,8 @@ dapply <- function(X, FUN, ..., MARGIN = 2, parallel = FALSE, # drop argument !!
     if(lx1 == 1L && drop) return(setNames(unlist(res, use.names = FALSE), ax[["dimnames"]][[if(rowwl) 1L else 2L]]))
     if(!retmatl) {
       dn <- dimnames(X) # ax[["dimnames"]] # best ?? -> use res instead of reassigning X !!! -> no memory loss !!
-      ax <- c(list(names = dn[[2L]], row.names = if(is.null(dn[[1L]])) .set_row_names(dX[1L]) else dn[[1L]],
-                   class = "data.frame"), ax[!(names(ax) %in% c("dim","dimnames","class"))])
+      ax <- list(names = dn[[2L]], row.names = if(is.null(dn[[1L]])) .set_row_names(dX[1L]) else dn[[1L]],
+                   class = "data.frame") # c( ... , ax[!(names(ax) %in% c("dim","dimnames","class"))]) # don't know why one would need this !!
     }
   } else {
     attributes(X) <- NULL
@@ -30,8 +30,8 @@ dapply <- function(X, FUN, ..., MARGIN = 2, parallel = FALSE, # drop argument !!
     res <- if(rowwl) aplyfun(mrtl(do.call(cbind, X)), FUN, ...) else aplyfun(X, FUN, ...) # do.call(cbind, X) is definitely faster than unlist(X, use.names = FALSE) and attaching dim attribute
     lx1 <- length(res[[1L]])
     if(lx1 == 1L && drop) return(setNames(unlist(res, use.names = FALSE), if(rowwl) charorNULL(ax[["row.names"]]) else ax[["names"]]))
-    if(retmatl) ax <- c(list(dim = dX, dimnames = list(charorNULL(ax[["row.names"]]), ax[["names"]])),
-                        ax[!(names(ax) %in% c("names","row.names","class"))])
+    if(retmatl) ax <- list(dim = dX, dimnames = list(charorNULL(ax[["row.names"]]), ax[["names"]]))
+                      # c(..., ax[!(names(ax) %in% c("names","row.names","class"))]) # don't know why one would need this !!
   }
   if(retmatl) {
     if(rowwl) {
