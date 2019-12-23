@@ -1,5 +1,5 @@
-\name{data-transformations}
-\alias{data-transformations}
+\name{A6-data-transformations}
+\alias{A6-data-transformations}
 \alias{.OPERATOR_FUN}
 \title{\code{collapse} Data Transformations} %
 
@@ -7,7 +7,7 @@
 \code{collapse} provides an ensemble of functions to perform common data transformations efficiently and user friendly:
 \itemize{
 \item \code{\link{dapply}} applies functions to \bold{rows or columns} of matrices and data.frame's.
-\item \code{\link{BY}} is an S3 generic for \bold{Split-Apply-Combine computing} and can perform aggregation as well as grouped transformations. (for aggregation please also see \code{\link{collap}} and \link[=fast-statistical-functions]{Fast Statistical Functions}).
+\item \code{\link{BY}} is an S3 generic for \bold{Split-Apply-Combine computing} and can perform aggregation as well as grouped transformations. (for aggregation please also see \code{\link{collap}} and \link[=A1-fast-statistical-functions]{Fast Statistical Functions}).
 
 \item \code{\link{TRA}} is an S3 generic to efficiently perform (groupwise) \bold{replacement and sweeping out of statistics}. %The basic syntax is \code{TRA(x, xag, g)} where \code{x} is data to be transformed, \code{xag} is some set of aggregate statistics to tranform \code{x} and \code{g} is an optional grouping vector for grouped transformations.
 Supported operations are:
@@ -21,7 +21,7 @@ Supported operations are:
                  7 \tab\tab "+" \tab\tab add \cr
                  8 \tab\tab "*" \tab\tab multiply
 }
-All of \code{collapse}'s \link[=fast-statistical-functions]{Fast Statistical Functions} have a built-in \code{TRA} argument for faster access (i.e. you can compute (groupwise) statistics and use them to transform your data with a single function call).
+All of \code{collapse}'s \link[=A1-fast-statistical-functions]{Fast Statistical Functions} have a built-in \code{TRA} argument for faster access (i.e. you can compute (groupwise) statistics and use them to transform your data with a single function call).
 
 \item \code{\link[=fscale]{fscale/STD}} is an S3 generic to perform (groupwise and / or weighted) \bold{scaling / standardizing} of data and is orders of magnitude faster than \code{base::scale}.
 
@@ -29,7 +29,7 @@ All of \code{collapse}'s \link[=fast-statistical-functions]{Fast Statistical Fun
 
 \item \code{\link[=HDW]{fHDwithin/HDW}}, shorthand for 'higher-dimensional within transform', is an S3 generic to efficiently \bold{center data on multiple groups} and partial-out linear models (possibly involving many levels of fixed effects and interactions). In other words, \code{\link[=HDW]{fHDwithin/HDW}} efficiently computes \bold{residuals} from (potentially complex) linear models. Similarly \code{\link[=HDB]{fHDbetween/HDB}}, shorthand for 'higher-dimensional between transformation', computes the corresponding means or \bold{fitted values}.
 
-\item \code{\link[=flag]{flag/L/F}}, \code{\link[=fdiff]{fdiff/D}} and \code{\link[=fgrowth]{fgrowth/G}} are S3 generics to compute sequences of \bold{lags / leads} and suitably lagged and iterated \bold{differences} and \bold{growth rates} on time-series and panel data. More in \link[=time-series-panel-series]{Time-Series and Panel-Series}.
+\item \code{\link[=flag]{flag/L/F}}, \code{\link[=fdiff]{fdiff/D}} and \code{\link[=fgrowth]{fgrowth/G}} are S3 generics to compute sequences of \bold{lags / leads} and suitably lagged and iterated \bold{differences} and \bold{growth rates} on time-series and panel data. More in \link[=A7-time-series-panel-series]{Time-Series and Panel-Series}.
 
 \item \code{STD, W, B, HDW, HDB, L, D} and \code{G} are parsimonious wrappers around the \code{f-} functions above representing the corresponding transformation 'operators'. They have additional capabilities when applied to data-frames (i.e. variable selection, formula input, auto-renaming and id-variable preservation), and are easier to employ in regression formulas, but are otherwise identical in functionality.
 }
@@ -50,7 +50,7 @@ All of \code{collapse}'s \link[=fast-statistical-functions]{Fast Statistical Fun
 }
 }
 \seealso{
-\link[=collapse-documentation]{Collapse Overview}, \link[=fast-statistical-functions]{Fast Statistical Functions}, \code{\link{collap}}, \link[=time-series-panel-series]{Time-Series and Panel-Series}
+\link[=collapse-documentation]{Collapse Overview}, \link[=A1-fast-statistical-functions]{Fast Statistical Functions}, \code{\link{collap}}, \link[=A7-time-series-panel-series]{Time-Series and Panel-Series}
 }
 
 

@@ -55,7 +55,7 @@ When applied to data frame's with groups or \code{drop = FALSE}, \code{fprod} pr
 The product of \code{x}, grouped by \code{g}, or (if \code{\link{TRA}} is used) \code{x} transformed by its product, grouped by \code{g}.
 }
 \seealso{
-\code{\link{fsum}}, \link[=fast-statistical-functions]{Fast Statistical Functions}, \link[=collapse-documentation]{Collapse Overview}
+\code{\link{fsum}}, \link[=A1-fast-statistical-functions]{Fast Statistical Functions}, \link[=collapse-documentation]{Collapse Overview}
 }
 \examples{
 ## default vector method

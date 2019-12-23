@@ -1,5 +1,5 @@
-\name{quick-conversion}
-\alias{quick-conversion}
+\name{A4-quick-conversion}
+\alias{A4-quick-conversion}
 \alias{qDF}
 \alias{qDT}
 \alias{qM}
@@ -20,8 +20,8 @@ Convert common data types quickly, without method dispatch and extensive checks:
 }
 }
 \usage{
-qDF(X)
-qDT(X)
+qDF(X, row.names.col = FALSE)
+qDT(X, row.names.col = FALSE)
 qM(X)
 mctl(X, names = FALSE, ret = 0L)
 mrtl(X, names = FALSE, ret = 0L)
@@ -32,6 +32,7 @@ qG(x, ordered = TRUE, na.exclude = TRUE)
 \arguments{
   \item{X}{a vector, matrix, higher-dimensional array, data.frame or list. \code{mctl} and \code{mrtl} only take matrices.}
   \item{x}{a atomic vector.}
+  \item{row.names.col}{should a column capturing names or row.names be added i.e. when converting atomic objects to data.frame or data.frame to data.table. Can be logical \code{TRUE}, which will add a column \code{"row.names"} in front, or can supply a name for the column i.e. \code{"column1"}.}
   \item{ordered}{logical. \code{TRUE} sorts the levels and returns an ordered facor (such that among the underlying integers 1 represents the first level, 2 the second etc...).}
   \item{names}{logical. should the list be named?}
   \item{ret}{integer. 3 return options: 0L - return a list, 1L - return a data.frame, 2L - return a data.table.}
@@ -50,8 +51,10 @@ qG(x, ordered = TRUE, na.exclude = TRUE)
 }
 \examples{
 mtcarsM <- qM(mtcars)      # Matrix from data.frame
-mtcarsDT <- qDT(mtcarsM)   # data.table from matrix columns, etc...
+mtcarsDT <- qDT(mtcarsM)   # data.table from matrix columns
 mrtl(mtcarsM, TRUE, 2L)    # data.table from matrix rows, etc...
+qDF(mtcarsM, "cars")       # Adding a row.names column when converting from matrix
+qDT(mtcars, "cars")        # Saving row.names when converting data.frame to data.table
 
 cylF <- qF(mtcars$cyl)     # Factor from atomic vector
 cylG <- qG(mtcars$cyl)     # Quick-group from atomic vector

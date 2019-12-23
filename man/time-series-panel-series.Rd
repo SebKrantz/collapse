@@ -1,5 +1,5 @@
-\name{time-series-panel-series} % \name{Time-Series and Panel Computations}
-\alias{time-series-panel-series}
+\name{A7-time-series-panel-series} % \name{Time-Series and Panel Computations}
+\alias{A7-time-series-panel-series}
 % \alias{tscomp}
 \title{\code{collapse} Time-Series and Panel-Series} %
 
@@ -24,7 +24,7 @@
 }
 }
 \seealso{
-\link[=collapse-documentation]{Collapse Overview}, \link[=data-transformations]{Data Transformations}
+\link[=collapse-documentation]{Collapse Overview}, \link[=A6-data-transformations]{Data Transformations}
 }
 
 

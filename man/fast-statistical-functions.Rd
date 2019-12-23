@@ -1,12 +1,12 @@
-\name{fast-statistical-functions}
-\alias{fast-statistical-functions}
+\name{A1-fast-statistical-functions}
+\alias{A1-fast-statistical-functions}
 \alias{.FAST_STAT_FUN}
 \alias{.FAST_FUN}
 \title{Fast (Grouped, Weighted) Statistical Functions for Matrix-Like Objects}  % Vectors, Matrix and Data Frame Columns}
 \description{
 With \code{\link{fsum}}, \code{\link{fprod}}, \code{\link{fmean}}, \code{\link{fmedian}}, \code{\link{fmode}}, \code{\link{fvar}}, \code{\link{fsd}}, \code{\link{fmin}}, \code{\link{fmax}}, \code{\link{ffirst}}, \code{\link{flast}}, \code{\link{fNobs}} and \code{\link{fNdistinct}}, \code{collapse} presents a coherent set of extremely fast and flexible statistcal functions (S3 generics) to perform column-wise, grouped and weighted computuations on atomic vectors, matrices and data.frames, with special support for \code{dplyr} grouped tibbles and data.table's.
 
-(\emph{Note}: The vector-valued functions and operators \code{\link[=fscale]{fscale/STD}}, \code{\link[=fbetween]{fbetween/B}}, \code{\link[=fHDbetween]{fHDbetween/HDB}}, \code{\link[=fwithin]{fwithin/W}}, \code{\link[=fHDwithin]{fHDwithin/HDW}}, \code{\link[=flag]{flag/L/F}}, \code{\link[=fdiff]{fdiff/D}} and \code{\link[=fgrowth]{fgrowth/G}} are documented under \link[=data-transformations]{Data Transformations} and \link[=time-series-panel-series]{Time-Series and Panel-Series}. These functions also support \code{plm::pseries} and \code{plm::pdata.frame}'s.)
+(\emph{Note}: The vector-valued functions and operators \code{\link[=fscale]{fscale/STD}}, \code{\link[=fbetween]{fbetween/B}}, \code{\link[=fHDbetween]{fHDbetween/HDB}}, \code{\link[=fwithin]{fwithin/W}}, \code{\link[=fHDwithin]{fHDwithin/HDW}}, \code{\link[=flag]{flag/L/F}}, \code{\link[=fdiff]{fdiff/D}} and \code{\link[=fgrowth]{fgrowth/G}} are documented under \link[=A6-data-transformations]{Data Transformations} and \link[=A7-time-series-panel-series]{Time-Series and Panel-Series}. These functions also support \code{plm::pseries} and \code{plm::pdata.frame}'s.)
 
 }
 \section{Usage}{\preformatted{
@@ -61,7 +61,7 @@ Please see the documentation of individual functions.
  \code{x} aggregated. With data.frame's column-attributes and overall attributes are preserved.
 }
 \seealso{
-\link[=collapse-documentation]{Collapse Overview}, \link[=data-transformations]{Data Transformations}, \link[=time-series-panel-series]{Time-Series and Panel-Series}
+\link[=collapse-documentation]{Collapse Overview}, \link[=A6-data-transformations]{Data Transformations}, \link[=A7-time-series-panel-series]{Time-Series and Panel-Series}
 }
 \examples{
 ## default vector method

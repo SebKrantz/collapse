@@ -35,7 +35,7 @@ Fast Differences and Growth Rates for Time-Series and Panel Data
 \description{
 \code{fdiff} and \code{fgrowth} are S3 generics to compute (sequences of) suitably lagged / leaded and iterated differences and growth rates / log-differences, respectively. \code{D} and \code{G} are wrappers around \code{fdiff} and \code{fgrowth} representing the 'difference-operator' and the 'growth-operator'. \code{D} / \code{G} provide more flexibility than \code{fdiff} / \code{fgrowth} when applied to data frames, but are otherwise identical.
 
-(\code{fdiff} and \code{fgrowth} are programmers functions in style of the \link[=fast-statistical-functions]{Fast Statistical Functions} while \code{D} & \code{G} are more practical to use in regression formulas or for computations on data frames.)
+(\code{fdiff} and \code{fgrowth} are programmers functions in style of the \link[=A1-fast-statistical-functions]{Fast Statistical Functions} while \code{D} & \code{G} are more practical to use in regression formulas or for computations on data frames.)
 }
 \usage{
   fdiff(x, n = 1, diff = 1, \dots)
@@ -138,7 +138,7 @@ The methods applying to \code{plm} objects (panel-series and panel-data.frames) 
 %% ~Make other sections like Warning with \section{Warning }{....} ~
 
 \seealso{
-\code{\link[=flag]{flag/L/F}}, \link[=time-series-panel-series]{Time-Series and Panel-Series}, \link[=collapse-documentation]{Collapse Overview}
+\code{\link[=flag]{flag/L/F}}, \link[=A7-time-series-panel-series]{Time-Series and Panel-Series}, \link[=collapse-documentation]{Collapse Overview}
 }
 \examples{
 ## Simple Time-Series: Airpassengers

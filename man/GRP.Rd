@@ -1,5 +1,5 @@
-\name{GRP}
-\alias{quick-grouping}
+\name{A2-quick-grouping}
+\alias{A2-quick-grouping}
 \alias{GRP}
 \alias{GRP.default}
 \alias{GRP.factor}
@@ -67,7 +67,7 @@ as.factor.GRP(x)
   \item{...}{arguments to be passed to or from other methods.}
 }
 \details{
-\code{GRP} is a central function in the \code{collapse} package because it provides the key inputs to facilitate easy and efficient groupwise-programming at the \code{C/C++} level: Information about (1) the number of groups (2) an integer group-id indicating which values / rows belong to which group and (3) information about the size of each group. Provided with these informations, \code{collapse}'s \link[=fast-statistical-functions]{Fast Statistical Functions} pre-allocate intermediate and result vectors of the right sizes and (in most cases) perform grouped statistical computations in a single pass through the data.
+\code{GRP} is a central function in the \code{collapse} package because it provides the key inputs to facilitate easy and efficient groupwise-programming at the \code{C/C++} level: Information about (1) the number of groups (2) an integer group-id indicating which values / rows belong to which group and (3) information about the size of each group. Provided with these informations, \code{collapse}'s \link[=A1-fast-statistical-functions]{Fast Statistical Functions} pre-allocate intermediate and result vectors of the right sizes and (in most cases) perform grouped statistical computations in a single pass through the data.
 
 The sorting and ordering functionality for \code{GRP} only affects (2), that is groups receive different integer-id's depending on whether the groups are sorted \code{sort = TRUE}, and in which order (\code{order = 1} ascending or \code{order = -1} descending). This in-turn changes the order of values/rows in the output of \code{collapse} functions (the row/value corresponding to group 1 always comes out on top). The default setting with \code{sort = TRUE} and \code{order = 1} results in groups being sorted in ascending order. This is equivalent to performing grouped operations in \code{data.table} using \code{keyby}, whereas \code{sort = FALSE} is equivalent to \code{data.table} grouping with \code{by}.
 

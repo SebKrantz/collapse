@@ -44,7 +44,7 @@ fNobs(x, ...)
 Integer. The number of non-missing observations in \code{x}, grouped by \code{g}, or (if \code{\link{TRA}} is used) \code{x} transformed by its number of non-missing observations, grouped by \code{g}.
 }
 \seealso{
-\code{\link{fNdistinct}}, \link[=fast-statistical-functions]{Fast Statistical Functions}, \link[=collapse-documentation]{Collapse Overview}
+\code{\link{fNdistinct}}, \link[=A1-fast-statistical-functions]{Fast Statistical Functions}, \link[=collapse-documentation]{Collapse Overview}
 }
 \examples{
 ## default vector method

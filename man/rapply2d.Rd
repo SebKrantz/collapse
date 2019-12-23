@@ -21,7 +21,7 @@ A list of the same structure as \code{l}, where \code{FUN} was applied to all el
 }
 %% ~Make other sections like Warning with \section{Warning }{....} ~
 \seealso{
-\code{\link{unlist2d}}, \link[=list-processing]{List Processing}, \link[=collapse-documentation]{Collapse Overview}
+\code{\link{unlist2d}}, \link[=A8-list-processing]{List Processing}, \link[=collapse-documentation]{Collapse Overview}
 }
 \examples{
 l <- list(mtcars, list(mtcars, as.matrix(mtcars)))

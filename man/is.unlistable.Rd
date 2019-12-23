@@ -36,7 +36,7 @@ is.unlistable(l)
 %% ~Make other sections like Warning with \section{Warning }{....} ~
 
 \seealso{
-\code{\link{ldepth}}, \code{\link{has_elem}}, \link[=list-processing]{List Processing}, \link[=collapse-documentation]{Collapse Overview}
+\code{\link{ldepth}}, \code{\link{has_elem}}, \link[=A8-list-processing]{List Processing}, \link[=collapse-documentation]{Collapse Overview}
 }
 \examples{
 is.regular(list(1,2))

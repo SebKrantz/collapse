@@ -1,5 +1,5 @@
-\name{select-replace-vars}
-\alias{select-replace-vars}
+\name{A3-select-replace-vars}
+\alias{A3-select-replace-vars}
 \alias{get_vars}
 \alias{num_vars}
 \alias{cat_vars}

@@ -33,7 +33,7 @@ dapply(X, FUN, ..., MARGIN = 2, parallel = FALSE, mc.cores = 1L,
 
 \item depending on the requested output type, use \code{base::matrix}, \code{base::unlist} or \code{do.call(cbind, ...)} to convert the result back to a matrix or list of columns.
 
-\item modify the relevant attributes accordingly and efficiently attach to the object again (no further checks, non essential attributes are kept and added at the end of the attribute list).
+\item modify the relevant attributes accordingly and efficiently attach to the object again (no further checks). % , non essential attributes are kept and added at the end of the attribute list
 }
 
 This performance gain from working with plain lists makes \code{dapply} not much slower than calling \code{lapply} itself on a data frame. Because of the conversions involved, row-operations require some memory, but are still faster than \code{base::apply}.
@@ -54,7 +54,7 @@ This performance gain from working with plain lists makes \code{dapply} not much
 %% ~Make other sections like Warning with \section{Warning }{....} ~
 
 \seealso{
-\code{\link{BY}}, \code{\link{collap}}, \link[=fast-statistical-functions]{Fast Statistical Functions}, \link[=data-transformations]{Data Transformations}, \link[=collapse-documentation]{Collapse Overview}
+\code{\link{BY}}, \code{\link{collap}}, \link[=A1-fast-statistical-functions]{Fast Statistical Functions}, \link[=A6-data-transformations]{Data Transformations}, \link[=collapse-documentation]{Collapse Overview}
 }
 \examples{
 dapply(mtcars, log)                      # Take natural log of each variable
@@ -78,7 +78,7 @@ gmtcars <- group_by(mtcars,cyl,vs,am)
 dapply(gmtcars, log)                     # Still gives a grouped tibble back
 dapply(gmtcars, log, MARGIN = 1)
 dapply(gmtcars, quantile, MARGIN = 1)    # Also works for quantiles
-dapply(gmtcars, log, return = "matrix")  # Output as matrix, groups are attached!
+dapply(gmtcars, log, return = "matrix")  # Output as matrix
 }
 % Add one or more standard keywords, see file 'KEYWORDS' in the
 % R documentation directory.

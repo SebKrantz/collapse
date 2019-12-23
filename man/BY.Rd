@@ -49,11 +49,11 @@ BY(X, ...)
 \details{
 \code{BY} is a frugal reimplementation of the Split-Apply-Combine computing paradigm. It is faster than \code{base::tapply}, \code{base::by}, \code{base::aggregate} and \code{plyr}, and preserves data attributes just like \code{\link{dapply}}. % and more versatile though not faster than \code{dplyr}
 
-I note at this point that the philosphy of \code{collapse} is to move beyond this rather slow computing paradigm, which is why the \link[=fast-statistical-functions]{Fast Statistical Functions} were implemented. However sometimes tasks need to be performed that involve more comlex and customized operations on data, and for these cases \code{BY} is a good solution.
+I note at this point that the philosphy of \code{collapse} is to move beyond this rather slow computing paradigm, which is why the \link[=A1-fast-statistical-functions]{Fast Statistical Functions} were implemented. However sometimes tasks need to be performed that involve more comlex and customized operations on data, and for these cases \code{BY} is a good solution.
 
 \code{BY} is built principally as a wrapper around \code{lapply(split(x, g), FUN, ...)}, but strongly optimizes on attribute cheking compared to \code{base} R. For more details examine the code yourself or look at the documentation for \code{\link{dapply}} which works very similar (the only difference really is the splitting performed in \code{BY}).
 
-\code{BY} is used internally in \code{\link{collap}} (\code{collapse}'s main aggregation command) for functions that are not \link[=fast-statistical-functions]{Fast Statistical Functions}.
+\code{BY} is used internally in \code{\link{collap}} (\code{collapse}'s main aggregation command) for functions that are not \link[=A1-fast-statistical-functions]{Fast Statistical Functions}.
 }
 \value{
 \code{X} where \code{FUN} was applied to every column split by \code{g}.
@@ -71,7 +71,7 @@ I note at this point that the philosphy of \code{collapse} is to move beyond thi
 %% ~Make other sections like Warning with \section{Warning }{....} ~
 
 \seealso{
-\code{\link{dapply}}, \code{\link{collap}}, \link[=fast-statistical-functions]{Fast Statistical Functions}, \link[=data-transformations]{Data Transformations}, \link[=collapse-documentation]{Collapse Overview}
+\code{\link{dapply}}, \code{\link{collap}}, \link[=A1-fast-statistical-functions]{Fast Statistical Functions}, \link[=A6-data-transformations]{Data Transformations}, \link[=collapse-documentation]{Collapse Overview}
 }
 \examples{
 v <- iris$Sepal.Length   # A numeric vector
@@ -112,9 +112,8 @@ giris \%>\% BY(sum)                     # Compute sum
 giris \%>\% BY(sum, use.g.names = TRUE, # Use row.names and
              keep.group_vars = FALSE) # remove 'Species' and groups attribute
 giris \%>\% BY(sum, return = "matrix")  # Return matrix
-giris \%>\% BY(sum, return = "matrix",  # Matrix without groups attribute and row.names
-             use.g.names = TRUE) \%>\%
-             `attr<-`("groups", NULL)
+giris \%>\% BY(sum, return = "matrix",  # Matrix with row.names
+                    use.g.names = TRUE)
 giris \%>\% BY(log)                     # Take logs
 giris \%>\% BY(log, use.g.names = TRUE, # Use row.names and
              keep.group_vars = FALSE) # remove 'Species' and groups attribute

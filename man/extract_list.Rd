@@ -71,7 +71,7 @@ If \code{keep.tree = TRUE}, \code{reg_elem}, \code{irreg_elem} and \code{get_ele
 
 % }
 \seealso{
- \link[=list-processing]{List Processing}, \link[=collapse-documentation]{Collapse Overview}
+ \link[=A8-list-processing]{List Processing}, \link[=collapse-documentation]{Collapse Overview}
 }
 \examples{
 l <- list(list(2,list("a",1)),list(1,list("b",2)))

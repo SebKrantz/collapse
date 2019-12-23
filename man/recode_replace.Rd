@@ -1,5 +1,5 @@
-\name{recode-replace}
-\alias{recode-replace}
+\name{AA1-recode-replace}
+\alias{AA1-recode-replace}
 \alias{Recode}
 \alias{replace_non_finite}
 \alias{replace_outliers}
@@ -63,7 +63,7 @@ replace_outliers(X, limits, value = NA, single.limit = c("SDs","min","max"))
 %% ~Make other sections like Warning with \section{Warning }{....} ~
 
 \seealso{
-\link[=small-helpers]{Small (Helper) Functions}, \link[=collapse-documentation]{Collapse Overview}
+\link[=AA2-small-helpers]{Small (Helper) Functions}, \link[=collapse-documentation]{Collapse Overview}
 }
 \examples{
 Recode(c("a","b","c"), a = "b", b = "c")

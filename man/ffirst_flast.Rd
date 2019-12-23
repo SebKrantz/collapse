@@ -61,7 +61,7 @@ flast(x, ...)
 \code{ffirst} returns the first value in \code{x}, grouped by \code{g}, or (if \code{\link{TRA}} is used) \code{x} transformed by its first value, grouped by \code{g}. Similarly \code{flast} returns the last value in \code{x}, ...
 }
 \seealso{
-\link[=fast-statistical-functions]{Fast Statistical Functions}, \link[=collapse-documentation]{Collapse Overview}
+\link[=A1-fast-statistical-functions]{Fast Statistical Functions}, \link[=collapse-documentation]{Collapse Overview}
 }
 \examples{
 ## default vector method

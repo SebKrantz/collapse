@@ -34,7 +34,7 @@ Fast Between (Averaging) and Within (Centering) Transformations
 \description{
 \code{fbetween} and \code{fwithin} are S3 generics to efficiently obtain between-transformed (averaged) or within-transformed (demeaned) data. These operations can be performed groupwise and/or weighted. \code{B} and \code{W} are wrappers around \code{fbetween} and \code{fwithin} representing the 'between-operator' and the 'within-operator'. \code{B} / \code{W} provide more flexibility than \code{fbetween} / \code{fwithin} when applied to data frames (i.e.  column subsetting, formula input, auto-renaming and id-variable-preservation capabilities...), but are otherwise identical.
 
-(\code{fbetween} and \code{fwithin} are simple programmers functions in style of the \link[=fast-statistical-functions]{Fast Statistical Functions} while \code{B} and \code{W} are more practical to use in regression formulas or for ad-hoc computations on data frames.)
+(\code{fbetween} and \code{fwithin} are simple programmers functions in style of the \link[=A1-fast-statistical-functions]{Fast Statistical Functions} while \code{B} and \code{W} are more practical to use in regression formulas or for ad-hoc computations on data frames.)
 }
 \usage{
 fbetween(x, \dots)
@@ -124,7 +124,7 @@ The data replacement performed by \code{fbetween/B} can keep (default) or overwr
 %% ~Make other sections like Warning with \section{Warning }{....} ~
 
 \seealso{
-\code{\link[=HDW]{fHDbetween/HDB and fHDwithin/HDW}}, \code{\link[=fscale]{fscale/STD}}, \code{\link{TRA}}, \link[=data-transformations]{Data Transformations}, \link[=collapse-documentation]{Collapse Overview}
+\code{\link[=HDW]{fHDbetween/HDB and fHDwithin/HDW}}, \code{\link[=fscale]{fscale/STD}}, \code{\link{TRA}}, \link[=A6-data-transformations]{Data Transformations}, \link[=collapse-documentation]{Collapse Overview}
 }
 \examples{
 ## Simple centering and averaging

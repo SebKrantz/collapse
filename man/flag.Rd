@@ -28,7 +28,7 @@ Fast Lags and Leads for Time-Series and Panel Data
 \description{
 \code{flag} is an S3 generic to compute (sequences of) lags and leads. \code{L} and \code{F} are wrappers around \code{flag} representing the lag- and lead-operators, such that \code{L(x,-1) = F(x,1) = F(x)} and \code{L(x,-3:3) = F(x,3:-3)}. \code{L} & \code{F} provide more flexibility than \code{flag} when applied to data frames (i.e.  column subsetting, formula input and id-variable-preservation capabilities...), but are otherwise identical.
 
-(\code{flag} is more of a programmers function in style of the \link[=fast-statistical-functions]{Fast Statistical Functions} while \code{L} & \code{F} are more practical to use in regression formulas or for computations on data frames.)
+(\code{flag} is more of a programmers function in style of the \link[=A1-fast-statistical-functions]{Fast Statistical Functions} while \code{L} & \code{F} are more practical to use in regression formulas or for computations on data frames.)
 }
 \usage{
 flag(x, n = 1, \dots)
@@ -105,7 +105,7 @@ The methods applying to \code{plm} objects (panel-series and panel-data.frames) 
 %% ~Make other sections like Warning with \section{Warning }{....} ~
 
 \seealso{
-\code{\link[=fdiff]{fdiff/D}}, \code{\link[=fgrowth]{fgrowth/G}}, \link[=time-series-panel-series]{Time-Series and Panel-Series}, \link[=collapse-documentation]{Collapse Overview}
+\code{\link[=fdiff]{fdiff/D}}, \code{\link[=fgrowth]{fgrowth/G}}, \link[=A7-time-series-panel-series]{Time-Series and Panel-Series}, \link[=collapse-documentation]{Collapse Overview}
 }
 \examples{
 ## Simple Time-Series: Airpassengers

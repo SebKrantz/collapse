@@ -1,6 +1,6 @@
-\name{qsu} % quick-summary
+\name{A9-quick-summary} % quick-summary
 \alias{qsu}
-\alias{quick-summary}
+\alias{A9-quick-summary}
 \alias{qsu.default}
 \alias{qsu.matrix}
 \alias{qsu.data.frame}
@@ -84,7 +84,7 @@ If weights \code{w} are used together with \code{pid}, transformed data is compu
 %% ~Make other sections like Warning with \section{Warning }{....} ~
 
 \seealso{
-\link[=fast-statistical-functions]{Fast Statistical Functions}, \link[=collapse-documentation]{Collapse Overview}  %% ~~objects to See Also as \code{\link{help}}, ~~~
+\link[=A1-fast-statistical-functions]{Fast Statistical Functions}, \link[=collapse-documentation]{Collapse Overview}  %% ~~objects to See Also as \code{\link{help}}, ~~~
 }
 \examples{
 

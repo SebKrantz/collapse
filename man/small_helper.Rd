@@ -1,5 +1,5 @@
-\name{small-helpers}
-\alias{small-helpers}
+\name{AA2-small-helpers}
+\alias{AA2-small-helpers}
 \alias{vlabels}
 \alias{vlabels<-}
 \alias{namlab}

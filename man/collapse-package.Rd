@@ -19,7 +19,7 @@ Advanced and Fast Data Transformation % and Exploration % in R % and Fast  % Adv
 \code{collapse} provides an integrated set of functions organized into several topics (see \link[=collapse-documentation]{Collapse Overiew}). Many are S3 generic with methods for vectors, matrices and data.frames. Inputs are quickly passed to compiled C/C++ code, enabling flexible and parsimonious coding at extreme speeds.
 
 The package avoids non-standard evaluation and exports core methods for maximum programmability.  % Most are S3 generic with methods for common \code{R} objects (vectors, matrices, data.frames, ...) % high computation  %(aggregation and transformations ~10x \code{data.table} on data <1 Mio obs.).
-Smart attribute handling and additional methods ensure compatibility and support for \code{dplyr}, \code{data.table} and the \code{plm} approach to panel-data. % and \code{base/stats}. % extra methods warrant, provide ?
+Smart attribute handling and additional methods ensure compatibility and support for \code{dplyr}, \code{data.table} and the \code{plm} approach to panel-data. \code{collapse} comes with a built-in hierarchical \link[=collapse-documentation]{documentation} facilitating the use of the package. % and \code{base/stats}. % extra methods warrant, provide ?
 
 %Beyond speed, flexibility and parsimony in coding, a central objective of \code{collapse} is to facilitate advanced / complex operations on data.
 \bold{Key Features:}     (More details in \link[=collapse-documentation]{Collapse Overview}) % Key functionality: % Key areas Key topics addressed by \code{collapse} are: % where \code{collapse} offers innovative solutions are:
@@ -144,7 +144,7 @@ dapply(series, quantile, na.rm = TRUE)
 # Data-Apply to rows
 head(dapply(series, sum, MARGIN = 1, na.rm = TRUE))
 
-# Split-apply combine cumputing on columns
+# Split-apply combine computing on columns
 BY(series, wlddev$region, sum, na.rm = TRUE)  # Please use: fsum(series, wlddev$region) -> faster
 BY(series, wlddev$region, quantile, na.rm = TRUE)
 BY(series, wlddev$region, quantile, na.rm = TRUE, expand.wide = TRUE)
@@ -152,8 +152,15 @@ BY(series, wlddev$region, quantile, na.rm = TRUE, expand.wide = TRUE)
 # Convert panel-data to array
 psar <- psmat(wlddev, ~country, ~year, cols = 9:12)
 str(psar)
-plot(psar)               # Visualize
-plot(psar, legend = TRUE)
+psar["Ireland",,]                              # Fast data access
+psar["Ireland",,"PCGDP"]
+psar[,"2016",]
+qDF(psar[,"2016",], row.names.col = "Country") # Convert to data.frame
+plot(psar)                                     # Visualize
+plot(psar, colour = TRUE, labs = vlabels(wlddev)[9:12])
+plot(psar[c("Brazil","India","South Africa","Russian Federation","China"),,
+          c("PCGDP","LIFEEX","ODA")], legend = TRUE, labs = vlabels(wlddev)[c(9:10,12)])
+plot(ts(psar["Brazil",,], 1960, 2018), main = "Brazil, 1960-2018")
 
 # Aggregate this data by country and decade: Numeric columns with mean, categorical with mode
 head(collap(wlddev, ~ country + decade, fmean, fmode))

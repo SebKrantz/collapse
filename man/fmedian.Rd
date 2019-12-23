@@ -53,7 +53,7 @@ When applied to data frame's with groups or \code{drop = FALSE}, \code{fmedian} 
 The median value of \code{x}, grouped by \code{g}, or (if \code{\link{TRA}} is used) \code{x} transformed by its median value, grouped by \code{g}.
 }
 \seealso{
-\code{\link{fmean}}, \code{\link{fmode}}, \link[=fast-statistical-functions]{Fast Statistical Functions}, \link[=collapse-documentation]{Collapse Overview}
+\code{\link{fmean}}, \code{\link{fmode}}, \link[=A1-fast-statistical-functions]{Fast Statistical Functions}, \link[=collapse-documentation]{Collapse Overview}
 }
 \examples{
 ## default vector method

@@ -1,5 +1,5 @@
-\name{collap}
-\alias{advanced-data-aggregation}
+\name{A5-advanced-aggregation}
+\alias{A5-advanced-aggregation}
 \alias{collap}
 %- Also NEED an '\alias' for EACH other topic documented here.
 \title{
@@ -8,7 +8,7 @@ Advanced Data Aggregation
 \description{
 \code{collap} is a fast and easy to use multi-purpose data aggregation command.
 
-It can aggregate data with multiple data types, aggregate (parallelized) using multiple functions to several output formats, and perform (parallelized) fully customized aggregations where the user decides which variables are aggregated using which functions. \code{collap} is made compatible with \code{collapse}'s \link[=fast-statistical-functions]{Fast Statistical Functions}, allowing for extremely fast conventional and weighted aggregation, but even with \code{base} functions it is significantly faster than \code{stats::aggregate}.
+It can aggregate data with multiple data types, aggregate (parallelized) using multiple functions to several output formats, and perform (parallelized) fully customized aggregations where the user decides which variables are aggregated using which functions. \code{collap} is made compatible with \code{collapse}'s \link[=A1-fast-statistical-functions]{Fast Statistical Functions}, allowing for extremely fast conventional and weighted aggregation, but even with \code{base} functions it is significantly faster than \code{stats::aggregate}.
 }
 \usage{
 collap(X, by, FUN = fmean, catFUN = fmode, cols = NULL, custom = NULL,
@@ -35,7 +35,7 @@ collap(X, by, FUN = fmean, catFUN = fmode, cols = NULL, custom = NULL,
 }
 
 \details{
-\code{collap} automatically checks each function passed to it whether it is a \link[=fast-statistical-functions]{Fast Statistical Function} (i.e. whether the function name is contained in \code{.FAST_STAT_FUN}). If the function is a fast function, \code{collap} only does the grouping and then calls the function to carry out the grouped computations. If the function is not one of \code{.FAST_STAT_FUN}, \code{\link{BY}} is called internally to perform the computation. The resulting computataions from each function are put into a list and recombined to produce the desired output format as controlled by the \code{return} argument. When multiple functions are used with \code{collap}, setting \code{parallel = TRUE} and the number of cores with \code{mc.cores} will instruct \code{collap} to execute these function calls in parallel using \code{parallel::mclapply}. If only a single function is used which is not a \code{.FAST_STAT_FUN}, the \code{parallel} and \code{mc.cores} arguments are handed down to \code{\link{BY}}. See Examples.
+\code{collap} automatically checks each function passed to it whether it is a \link[=A1-fast-statistical-functions]{Fast Statistical Function} (i.e. whether the function name is contained in \code{.FAST_STAT_FUN}). If the function is a fast function, \code{collap} only does the grouping and then calls the function to carry out the grouped computations. If the function is not one of \code{.FAST_STAT_FUN}, \code{\link{BY}} is called internally to perform the computation. The resulting computataions from each function are put into a list and recombined to produce the desired output format as controlled by the \code{return} argument. When multiple functions are used with \code{collap}, setting \code{parallel = TRUE} and the number of cores with \code{mc.cores} will instruct \code{collap} to execute these function calls in parallel using \code{parallel::mclapply}. If only a single function is used which is not a \code{.FAST_STAT_FUN}, the \code{parallel} and \code{mc.cores} arguments are handed down to \code{\link{BY}}. See Examples.
 }
 \value{
 \code{X} aggregated by \code{by}.
@@ -53,7 +53,7 @@ collap(X, by, FUN = fmean, catFUN = fmode, cols = NULL, custom = NULL,
 %% ~Make other sections like Warning with \section{Warning }{....} ~
 
 \seealso{
-\code{\link{BY}}, \link[=fast-statistical-functions]{Fast Statistical Functions}, \link[=collapse-documentation]{Collapse Overview}
+\code{\link{BY}}, \link[=A1-fast-statistical-functions]{Fast Statistical Functions}, \link[=collapse-documentation]{Collapse Overview}
 }
 \examples{
 ## World Development Panel Data
