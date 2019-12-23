@@ -1,9 +1,9 @@
 # global macros
 
-.COLLAPSE_TOPICS <- c("collapse-documentation","fast-statistical-functions","quick-grouping",
-                      "select-replace-vars","quick-conversion","advanced-data-aggregation",
-                      "data-transformations","time-series-panel-series","list-processing",
-                      "quick-summary","recode-replace","small-helpers")
+.COLLAPSE_TOPICS <- c("collapse-documentation","A1-fast-statistical-functions","A2-quick-grouping",
+                      "A3-select-replace-vars","A4-quick-conversion","A5-advanced-data-aggregation",
+                      "A6-data-transformations","A7-time-series-panel-series","A8-list-processing",
+                      "A9-quick-summary","AA1-recode-replace","AA2-small-helpers")
 
 .COLLAPSE_ALL    <-      c("%!in%","add_stub","all.identical","as.factor.GRP","as.numeric_factor",
                            "atomic_elem","atomic_elem<-","B","BY","cat_vars","cat_vars<-","char_vars",
