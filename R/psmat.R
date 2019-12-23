@@ -78,7 +78,7 @@ psmat.data.frame <- function(x, by, t = NULL, cols = NULL, transpose = FALSE, ar
   }
   if(array) {
     if(length(res) == 1L) return(res[[1L]]) else
-    return(addAttributes(simplify2array(res), list(transpose = transpose, class = c("psmat","array","table"))))
+    return(addAttributes(simplify2array(res), list(transpose = transpose, class = c("psmat","array"))))
   } else return(res)
 }
 psmat.pseries <- function(x, transpose = FALSE, ...) {
@@ -96,7 +96,7 @@ psmat.pdata.frame <- function(x, cols = NULL, transpose = FALSE, array = TRUE, .
   res <- lapply(if(is.null(cols)) x else unclass(x)[cols2int(cols, x, names(x))], psmatCpp, index[[1L]], index[[2L]], transpose)
   if(array) {
     if(length(res) == 1L) return(res[[1L]]) else
-    return(addAttributes(simplify2array(res), list(transpose = transpose, class = c("psmat","array","table"))))
+    return(addAttributes(simplify2array(res), list(transpose = transpose, class = c("psmat","array"))))
   } else return(res)
 }
 
@@ -141,6 +141,33 @@ plot.psmat <- function(x, legend = FALSE, colours = legend, labs = NULL, ...) {
                       cex= if(ns > 80L) .65 else 1, bty = "n",
                       ncol = if(d[2L] <= 10L) 1L else floor(d[2L]^.37))
   }
+}
+
+# print.psmat <- print.qsu # nah, too expensive
+
+print.psmat <- function(x, digits = NULL, quote = TRUE, na.print = "-", print.gap = NULL,
+                        right = FALSE, max = NULL, useSource = TRUE, ...) {
+  print.default(x, digits, quote, na.print, print.gap, right, max, useSource, ...)
+}
+
+`[.psmat` <- function(x, i, j, ..., drop = TRUE)
+{
+  ret <- NextMethod()
+  if(length(dim(ret)) > 1L) {
+    attr(ret, "transpose") <- attr(x, "transpose")
+    class(ret) <- class(x)
+  }
+  ret
+}
+
+aperm.psmat <- function(a, perm = NULL, resize = TRUE, keep.class = TRUE, ...)
+{
+  r <- aperm.default(a, perm, resize = resize)
+  if(keep.class) {
+    attr(r, "transpose") <- attr(a, "transpose")
+    class(r) <- class(a)
+  }
+  r
 }
 
 # is.balanced.panel()
