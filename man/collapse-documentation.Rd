@@ -8,7 +8,7 @@
 \docType{package}
 \title{Collapse Documentation & Overview}
 \description{
-The following table fully summarizes the contents of \code{\link{collapse}}. The documentation follows a hierarchical structure: This is the main overview page, linking to topical overview pages and associated function pages (unless the function is fully documented on the topic page). Calling \code{?FUN} always brings up the function/most-relevant documentation page. % Calling \code{help(FUN)} still brings up the right / most relevant page documenting the function. %  % Functions with separate documentation entries (apart from the topic page) are linked. % Each topic further has it's own overview page in the documentation. % , linking to functions % , i.e. only functions with separate pages are linked here
+The following table fully summarizes the contents of \code{\link{collapse}}. The documentation follows a hierarchical structure: This is the main overview page, linking to topical overview pages and associated function pages (unless functions are fully documented on the topic page). Calling \code{?FUN} brings up the most relevant documentation page. % Calling \code{help(FUN)} still brings up the right / most relevant page documenting the function. %  % Functions with separate documentation entries (apart from the topic page) are linked. % Each topic further has it's own overview page in the documentation. % , linking to functions % , i.e. only functions with separate pages are linked here
 }
 
 \section{Topics and Functions}{
@@ -32,7 +32,7 @@ The following table fully summarizes the contents of \code{\link{collapse}}. The
 
 \link[=A8-list-processing]{List Processing} \tab\tab (Recursive) list-identification, search and extract list-elements / list-subsetting, data-apply, and row-binding / unlisting in 2-dimensions.  \tab\tab \code{\link{is.regular}}, \code{\link{is.unlistable}}, \code{\link{ldepth}}, \code{\link{has_elem}}, \code{\link{get_elem}}, \code{\link{atomic_elem}}, \code{\link{list_elem}}, \code{\link{reg_elem}}, \code{\link{irreg_elem}}, \code{\link{rapply2d}}, \code{\link{unlist2d}} \cr
 
-\link[=A9-quick-summary]{Quick Summary Statistics} \tab\tab Extremely fast (one-pass, grouped and weighted), summary statistics for cross-sectional and complex multilevel (panel) data (within- and between-groups). + methods for \code{plm}. \tab\tab \code{qsu} \cr \cr \cr \cr
+\link[=A9-quick-summary]{Quick Summary Statistics} \tab\tab Extremely fast (one-pass, grouped and weighted), summary statistics for cross-sectional and complex multilevel/panel data (within- and between-groups). + methods for \code{plm}. \tab\tab \code{qsu} \cr \cr \cr \cr
 
 %Visual Data Exploration \tab\tab Pretty (grouped, weighted, and panel-decomposed) histogram-, density-, scatter- and correlation plots \tab\tab histplot, densplot, scplot, corplot \cr
 
@@ -47,7 +47,7 @@ Data and Global Macros \tab\tab Groningen Growth and Development Centre 10-Secto
 
 }
 \section{Details}{
-Calling \code{?FUN} brings up the right documentation page as in other R packages. The added top-level documentation infrastructure in \code{collapse} allows you to effectively navigate the package (as in other commercial software documentations like Mathematica). You can also call topical documentation pages directly from the console. The links to these pages are contained in \code{.COLLAPSE_TOPICS}.
+The added top-level documentation infrastructure in \code{collapse} allows you to effectively navigate the package (as in other commercial software documentations like Mathematica). Calling \code{?FUN} brings up the documentation page documenting the function as in other R packages. You can also call topical documentation pages directly from the console. The links to these pages are contained in \code{.COLLAPSE_TOPICS} (i.e. calling \code{help(.COLLAPSE_TOPICS[1])} brings up this page).
 }
 \author{
 \bold{Maintainer}: Sebastian Krantz \email{sebastian.krantz@graduateinstitute.ch}

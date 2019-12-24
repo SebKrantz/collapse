@@ -227,7 +227,7 @@ You will see that using `collapse`'s fast functions can speed up your grouped co
 
 
 ## Advanced Data Aggregation with `collap`
-It is now a good point to introduce the name-giving function of this package: `collap` is a fast multi-purpose aggregation command designed to solve complex aggregation problems efficiently and with a minimum of coding. `collap` performs optimally together with the *Fast Statistical Functions*, but will also work with other functions. 
+It is now a good point to introduce the name-giving (and originally only) function of this package: `collap` is a fast multi-purpose aggregation command designed to solve complex aggregation problems efficiently and with a minimum of coding. `collap` performs optimally together with the *Fast Statistical Functions*, but will also work with other functions. 
 
 To perform the above aggregation with `collap()`, one would simply need to type:
 

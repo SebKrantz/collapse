@@ -8,11 +8,12 @@ the demeanlist function (written in C), and Dirk Eddelbuettel, whose package
 Rcpp I have thoroughly exploited in the creation of this one, were added as 'ctb'.
 In addition, all authors have been mentioned on the collapse-package.Rd page.
 
-(An alternative would be listing us all as 'aut'. My current understanding though 
+(An alternative could be listing us all as 'aut'. My current understanding though 
  is that an 'aut' is someone with substantial stakes in the design, purpose or functionality 
  of a package, which is not the case here (none of these people know about or have actively 
- contributed to this package and I have not simply duplicated functionality of packages from which
- C-code was taken without substantial modifications).)
+ contributed to this package, I have not simply duplicated functionality of packages from which
+ C-code was taken without substantial modifications, and the overall functionality of 
+ collapse far outstrips that of the borrowed code).)
 
 (The C-functions imported can be seen in src/ExportSymbols.cpp lines 5-15, 
  the rest is C++ of which I am the sole author).
@@ -32,7 +33,7 @@ There were 4 NOTEs:
     sub-directories of 1Mb or more:
       libs   4.6Mb
 
-I guess this has to do with compiled files. Pre-compilation, 
+This has to do with compiled files (.dll's). Pre-compilation, 
 the size of all .R, .c, .cpp, .h, .man, .rda and .Rmd files 
 together is about 2.4 Mb, of which 0.5 Mb is data (.rda).
 
@@ -56,4 +57,4 @@ I am currently not using a Makevars to enable/compile openMP parallelism which c
 (but need not) be used by data.table's forder and subsetDT. The reason for this is that the
 package is compiled by Rcpp and one inevitably runs into this problem: https://stackoverflow.com/questions/54056594/cran-acceptable-way-of-linking-to-openmp-some-c-code-called-from-rcpp. Therefore I have disabled -Wunknown-pragmas warnings in data.table_forder.c and
 data.table_subset.c, which naturally occur when the package is compiled without openMP and with -Wall.
-I note that these warnings do not show up in R CMD check (so turning them on again would remove this note), but they are annoying running across the screen of the user installing the package. 
+I note that these warnings do not show up in R CMD check (so turning them on again would just remove this note), but they are very annoying running across the screen of the user installing the package. 

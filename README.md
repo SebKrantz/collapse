@@ -14,7 +14,7 @@ It is compatibile with *dplyr*, *data.table* and the *plm* approach to panel-dat
 *  *Advanced transformations*: Efficient (grouped, weighted) sweeping out of statistics, scaling, centering, higher-dimensional centering, complex linear prediction and partialling-out. 
 *  *Advanced time-computations*: Efficient (sequences of) lags/leads, and (iterated) differences and growth rates on (unordered) time-series and panel data. Multivariate auto, partial and cross-correlation functions for panel data. Panel data to (ts-)array conversions. 
 *  *List Processing*: (Recursive) list-identification, extraction / subsetting, apply, and row-binding / unlisting in 2D. 
-* *Advanced data exploration*: Fast (grouped, weighted) summary statistics for cross-sectional and panel data. 
+* *Advanced data exploration*: Fast (grouped, weighted, panel-decomposed) summary statistics for cross-sectional and complex multilevel/panel data. 
 
 *collapse* is built using *Rcpp*, uses C functions from *data.table* and *stats*, and imports from *lfe*.
 

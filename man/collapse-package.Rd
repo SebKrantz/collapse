@@ -30,7 +30,7 @@ Smart attribute handling and additional methods ensure compatibility and support
                  (3) \tab\tab \emph{Advanced transformations}: Efficient (grouped, weighted) sweeping out of statistics, scaling, centering, higher-dimensional centering, complex linear prediction and partialling-out. \cr
                  (4) \tab\tab \emph{Advanced time-computations}: Efficient (sequences of) lags/leads, and (iterated) differences and growth rates on (unordered) time-series and panel data. Multivariate auto, partial and cross-correlation functions for panel data. Panel data to (ts-)array conversions. \cr
                  (5) \tab\tab \emph{List Processing}: (Recursive) list-identification, extraction / subsetting, apply, and row-binding / unlisting in 2D. \cr
-                 (6) \tab\tab \emph{Advanced data exploration}: Fast (grouped, weighted, panel-decomposed) summary statistics for cross-sectional and complex multilevel (panel) data. \cr % Elegant (multivariate, grouped, weighted and panel-decomposed) histograms, density, scatter and correlation plots.  \cr
+                 (6) \tab\tab \emph{Advanced data exploration}: Fast (grouped, weighted, panel-decomposed) summary statistics for cross-sectional and complex multilevel/panel data. \cr % Elegant (multivariate, grouped, weighted and panel-decomposed) histograms, density, scatter and correlation plots.  \cr
 }
 \code{collapse} is built using \code{Rcpp} and imports \code{C} functions from \code{data.table}, \code{lfe} and \code{stats}. %, and uses \code{ggplot2} visualizations.
 
