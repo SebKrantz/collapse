@@ -16,7 +16,7 @@ Authors@R: c(
 BugReports: https://github.com/SebKrantz/collapse/issues
 Description: A C/C++ based package for advanced data transformation in R that is 
              extremely fast, flexible and parsimonious to code with and programmer 
-             friendly. It is well integrated with dplyr, plm and data.table.
+             friendly. It is well integrated with 'dplyr', 'plm' and 'data.table'.
              --- Key Features: ---
              (1) Advanced data programming: A full set of fast statistical functions 
                  supporting grouped and weighted computations on vectors, matrices 
@@ -34,7 +34,7 @@ Description: A C/C++ based package for advanced data transformation in R that is
              (5) List Processing: (Recursive) list-identification, extraction / 
                  subsetting, apply, and row-binding / unlisting in 2D.
              (6) Advanced data exploration: Fast (grouped, weighted, panel-decomposed) 
-                 summary statistics for complex multilevel (panel) data.
+                 summary statistics for complex multilevel/panel data.
 License:  MPL-2.0 | file LICENSE
 Encoding: UTF-8
 LazyData: true
