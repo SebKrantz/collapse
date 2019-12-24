@@ -4,6 +4,7 @@
 README.md
 cran-comments.md
 experimental
+testing
 vignettes/collapse_intro_cache
 ^doc$
 ^Meta$
