@@ -24,13 +24,15 @@ Smart attribute handling and additional methods ensure compatibility and support
 %Beyond speed, flexibility and parsimony in coding, a central objective of \code{collapse} is to facilitate advanced / complex operations on data.
 \bold{Key Features:}     (More details in \link[=collapse-documentation]{Collapse Overview}) % Key functionality: % Key areas Key topics addressed by \code{collapse} are: % where \code{collapse} offers innovative solutions are:
 
-\tabular{lll}{ % \Sexpr{"\u200B"} \Sexpr{"\u200B"}  \tab \emph{ Description }  \cr
-                 (1) \tab\tab \emph{Advanced data programming}: A full set of fast statistical functions supporting grouped and weighted computations on vectors, matrices and data.frames. Quick (ordered) and reusable grouping, quick data-converions, and quick select and replace variables. \cr
-                 (2) \tab\tab \emph{Advanced aggregation}: Fast and easy multi-data-type, multi-function, weighted, parallelized and fully customized data aggregation. \cr
-                 (3) \tab\tab \emph{Advanced transformations}: Efficient (grouped, weighted) sweeping out of statistics, scaling, centering, higher-dimensional centering, complex linear prediction and partialling-out. \cr
-                 (4) \tab\tab \emph{Advanced time-computations}: Efficient (sequences of) lags/leads, and (iterated) differences and growth rates on (unordered) time-series and panel data. Multivariate auto, partial and cross-correlation functions for panel data. Panel data to (ts-)array conversions. \cr
-                 (5) \tab\tab \emph{List Processing}: (Recursive) list-identification, extraction / subsetting, apply, and row-binding / unlisting in 2D. \cr
-                 (6) \tab\tab \emph{Advanced data exploration}: Fast (grouped, weighted, panel-decomposed) summary statistics for cross-sectional and complex multilevel/panel data. \cr % Elegant (multivariate, grouped, weighted and panel-decomposed) histograms, density, scatter and correlation plots.  \cr
+% \tabular{lll}{ % \Sexpr{"\u200B"} \Sexpr{"\u200B"}  \tab \emph{ Description }  \cr
+\enumerate{  % (1) \tab\tab ... \cr
+                \item  \emph{Advanced data programming}: A full set of fast statistical functions supporting grouped and weighted computations on vectors, matrices and data.frames. Quick (ordered) and reusable grouping, quick data-converions, and quick select and replace variables.
+                 \item \emph{Advanced aggregation}: Fast and easy multi-data-type, multi-function, weighted, parallelized and fully customized data aggregation.
+                 \item \emph{Advanced transformations}: Efficient (grouped, weighted) sweeping out of statistics, scaling, centering, higher-dimensional centering, complex linear prediction and partialling-out.
+                 \item \emph{Advanced time-computations}: Efficient (sequences of) lags/leads, and (iterated) differences and growth rates on (unordered) time-series and panel data. Multivariate auto, partial and cross-correlation functions for panel data. Panel data to (ts-)array conversions.
+                 \item \emph{List Processing}: (Recursive) list-identification, extraction / subsetting, apply, and row-binding / unlisting in 2D.
+                 \item \emph{Advanced data exploration}: Fast (grouped, weighted, panel-decomposed) summary statistics for cross-sectional and complex multilevel/panel data.  % Elegant (multivariate, grouped, weighted and panel-decomposed) histograms, density, scatter and correlation plots.  \cr
+% }
 }
 \code{collapse} is built using \code{Rcpp} and imports \code{C} functions from \code{data.table}, \code{lfe} and \code{stats}. %, and uses \code{ggplot2} visualizations.
 
