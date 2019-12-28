@@ -1,0 +1,77 @@
+---
+title: "collapse and data.table"
+author: "Sebastian Krantz"
+date: "`r Sys.Date()`"
+output:
+  rmarkdown::html_vignette:
+    toc: TRUE
+vignette: >
+  %\VignetteIndexEntry{Introduction to collapse}
+  %\VignetteEngine{knitr::rmarkdown}
+  \usepackage[utf8]{inputenc}
+---
+
+```{r, echo = FALSE, message = FALSE}
+# library(data.table)
+options(warn = -1)
+knitr::opts_chunk$set(
+  comment = "#",
+    error = FALSE,
+     tidy = FALSE,
+    cache = FALSE,
+ collapse = TRUE,
+ fig.width = 8, 
+ fig.height= 5,
+ out.width='100%'
+)
+```
+
+This vignette shows how the *collapse* package, and especially the fast functions contained therein, can be used together with *data.table* to compute new columns by reference and perform advanced tranformations with *data.table*. 
+
+For a more general introduction of the *collapse* package see the introductory vignette or read the documentation by calling `help('collapse-documentation')`.
+
+***
+
+```{r echo = FALSE}
+options(width = 100L)
+```
+
+When using *collapse's* fast functions inside a *data.table* environment, there is only really one thing to be aware of: Never use *data.table* grouping with `by` or `keyby` (since this will run a method-dispatch for every group and hence be very slow), but use the fast functions internal grouping facilities. 
+
+## Advanced Transformations with *data.table*
+
+
+
+<!-- ## Advanced Aggregation with *data.table* -->
+The above noted, there is really no benefit in running aggreggations with *data.table*. I recommend using the fast functions directly or using *collapse::collap* for aggregation. For the sake of completeness I nevertheless show below how one would do that in *data.table* 
+
+```{r}
+library(collapse)
+library(data.table)
+
+# Let's take the World Bank World Development data:
+head(wlddev)
+wlddev <- qDT(wlddev) # convert to data.table
+
+# Running weighted aggregations inside data.table (not very sensible though)
+wlddev[ , fmean(.SD, iso3c, ODA), .SDcols = 9:10]
+wlddev[ , fmean(get_vars(.SD, 9:10), iso3c, ODA)] # This is identical to the above
+fmean(get_vars(wlddev, 9:10),                     # Also the same, but 4x faster !!  
+      wlddev$iso3c, wlddev$ODA)
+
+
+# saving multiple statistics:
+wlddev[ , list(add_stub(fmean(.SD, iso3c, ODA), "w_mean_"), 
+               add_stub(fsd(.SD, iso3c, ODA), "w_sd_"),
+               add_stub(fmin(.SD, iso3c), "min_"),
+               add_stub(fmax(.SD, iso3c), "max_")), .SDcols = 9:10]
+
+# Same, 2x faster 
+qDT(c(add_stub(fmean(get_vars(wlddev, 9:10), wlddev$iso3c, wlddev$ODA), "w_mean_"), 
+      add_stub(fsd(get_vars(wlddev, 9:10), wlddev$iso3c, wlddev$ODA), "w_sd_"),
+      add_stub(fmin(get_vars(wlddev, 9:10), wlddev$iso3c), "min_"),
+      add_stub(fmax(get_vars(wlddev, 9:10), wlddev$iso3c), "max_")))
+
+```
+
+## Advanced Transformations with *data.table*
