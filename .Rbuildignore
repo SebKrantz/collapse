@@ -6,5 +6,6 @@ cran-comments.md
 experimental
 testing
 vignettes/collapse_intro_cache
+vignettes/collapse_and_data.table.Rmd
 ^doc$
 ^Meta$

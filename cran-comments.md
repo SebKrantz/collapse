@@ -20,8 +20,11 @@ In addition, all authors have been mentioned on the collapse-package.Rd page.
 
 ## Test environments
 * local Windows 8.1 install, R 3.6.1
-* ubuntu 12.04 (on travis-ci), R 3.1.2
 * win-builder (devel and release)
+* Ubuntu Linux 16.04 LTS, R-release, GCC (on Rhub)
+* Fedora Linux, R-devel, clang, gfortran (on Rhub)
+* macOS 10.11 El Capitan, R-release (on Rhub)
+
 
 ## R CMD check results
 There were no ERRORs or WARNINGs.
@@ -54,7 +57,6 @@ functionalities in 2 other CRAN packages.
     'src/data.table_forder.c' 'src/data.table_subset.c'
     
 I am currently not using a Makevars to enable/compile openMP parallelism which could 
-(but need not) be used by data.table's forder and subsetDT. The reason for this is that the
-package is compiled by Rcpp and one inevitably runs into this problem: https://stackoverflow.com/questions/54056594/cran-acceptable-way-of-linking-to-openmp-some-c-code-called-from-rcpp. Therefore I have disabled -Wunknown-pragmas warnings in data.table_forder.c and
-data.table_subset.c, which naturally occur when the package is compiled without openMP and with -Wall.
-I note that these warnings do not show up in R CMD check (so turning them on again would just remove this note), but they are very annoying running across the screen of the user installing the package. 
+(but need not) be used by data.table's forder and subsetDT. The reason for not using openMP 
+is that the package is compiled by Rcpp and one inevitably runs into this problem: https://stackoverflow.com/questions/54056594/cran-acceptable-way-of-linking-to-openmp-some-c-code-called-from-rcpp. Therefore I have disabled -Wunknown-pragmas warnings in data.table_forder.c and
+data.table_subset.c, which naturally occur when the package is compiled without openMP and with -Wall. I note that these warnings do not show up in R CMD check (so turning them on again would just remove this note), but they are very annoying running across the screen of the user installing the package. 
