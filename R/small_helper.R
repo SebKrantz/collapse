@@ -133,7 +133,7 @@ cols2int <- function(cols, x, nam) {
     return(which(cols))
   } else stop("cols must be a function, character vector, numeric indices or logical vector!")
 }
-cols2log <- function(x, nam, cols) {
+cols2log <- function(cols, x, nam) {
   if(is.logical(cols)) if(length(cols) == length(x)) return(cols) else stop("Logical subsetting vector must match columns!")
   if(is.function(cols)) return(vapply(x, cols, TRUE))
   r <- logical(length(x))
