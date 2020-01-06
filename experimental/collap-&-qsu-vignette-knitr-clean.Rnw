@@ -1,0 +1,278 @@
+\documentclass[a4paper]{article}
+
+%% Language and font encodings
+\usepackage[english]{babel}
+\usepackage[utf8x]{inputenc}
+\usepackage[T1]{fontenc}
+
+%% Sets page size and margins
+\usepackage[a4paper,top=2.5cm,bottom=2cm,left=2.5cm,right=2.5cm,marginparwidth=1.75cm]{geometry}
+
+%% Latex packages
+\usepackage{amsmath}
+\usepackage{graphicx}
+\usepackage[colorinlistoftodos]{todonotes}
+\usepackage[colorlinks=true, allcolors=blue]{hyperref}
+\usepackage{tabulary}
+\usepackage{adjustbox}
+\usepackage{mathtools}
+\usepackage{listings}
+
+\title{\textbf{Improved Data Aggregation and Summary\\ Statistics in R, with} \textit{collap} \textbf{and} \textit{qsu}}
+\author{Sebastian Krantz}
+
+
+\begin{document}
+\maketitle
+\begin{abstract}
+While there already exist a number of different functions and packages in R to aggregate data and compute summary statistics, none of the available solutions offers a flexible method to aggregate multivariate (multi-type) datasets in a single computational step. R also lacks a command to compute summary statistics appropriate to multi-level (panel) data structures, and a simple method to obtain between-or within-transformed datasets for analytical use. In addition, many aggregation solutions don't provide very tidy output, lack automation or flexibility in the syntax and the way inputs can be passed, or perform slow on large datasets. With \textit{collap} and \textit{qsu} I intend to thoroughly fill these gaps while accommodating existing functionality. Both functions can perform a broad range of aggregation and summarizing tasks on a wide variety of data objects, while providing the greatest conceivable flexibility to the user and tidy output. Both functions are built from base R, \textit{collap} is slightly faster than \textit{aggregate} in the default mode. Through an (optional) internal integration with the \textit{data.table} package, both functions can also perform extremely fast when it comes to large datasets.
+\end{abstract}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\section{Collap} 
+The creation of \textit{collap} was inspired by the STATA command \textit{collapse}, but \textit{collap} is not simply a reproduction of \textit{collapse} for R, but a more advanced, flexible and faster aggregation command that currently offered in either language. The function is built from base R, and optionally as a wrapper around \textit{data.table}, with the key aims of providing an easier user-interface and a greater range of convenience and functionality without compromizing on speed. Among it's key innovations is the large flexibility in inputs and outputs, and a new approach to data aggregation which recognizes that most datasets are comprised of numeric and categorical variables on which separate operations need to be performed in a multivariate aggregation task. In its custom mode, \textit{collap} provides the full functionality of STATA's \textit{collapse} e.g. the possibility to manually assign different columns of a multivariate dataset to different functions and then aggregating by multiple groups. \textit{collap} in it's default mode however features automatic data type recognition and thus allows the user to simply specify the operation(s) to be performed on numeric and categorical variables. These features, together with multi-function calls, sensible default settings in the arguments, flexible and tidy output, and the possibility to harness the full speed of \textit{data.table}, render \textit{collap} an very convenient tool to use on datasets of all shapes and sizes. \newline  
+
+Below I briefly list the key features of \textit{collap} which distinguish it from existing functions such as \textit{aggregate, data.table, plyr, dplyr, doBy::summaryBy, base::by} and the \textit{apply} family. Afterwards I will briefly outline the syntax of the function and then swiftly turn to demonstrate its functionality. I end by benchmarking the function directly against \textit{aggregate} and \textit{data.table}. 
+
+\subsection{Key Features} % -----------------------------------------------------------------------------
+\begin{itemize}
+\item Multivariate data aggregation with datasets of different types (automatic recognition of numeric and categorical variables) $+$ aggregation of data.tables, vectors, and numeric or categorical matrices
+\item Maximum flexibility in the passing of inputs and the format of the output obtained, powered by a simple and parsimonious syntax
+\item Fully custom aggregation by passing different aggregator functions to the columns of a dataset
+\item Possibility to apply multiple aggregator functions to a dataset and obtain the output in a wide- or long format, or as a list of datasets
+\item Option to obtain between-transformed data (data that is aggregated by group but expanded to the original dimensions and row-order)
+\item Tidy output (preserved names and column order, rows sorted by aggregation groups)
+\item Sensible default settings in the arguments (mean for numeric columns, mode for categorical columns, NA's are removed, NaN's accruing during aggregation are replaced with NA's etc..)
+\item Optional speed improvement with the built-in \textit{data.table} option 
+\item Full compatibility with \textit{data.table}: supplying a \textit{data.table} to \textit{collap} will toggle internal use of \textit{data.table} for aggregation and output as \textit{data.table} 
+\item Option to parallelize the computation of multiple functions for further speed improvement
+\end{itemize}
+
+<<echo=FALSE, cache=FALSE>>=
+options(width=100)
+opts_chunk$set(warning = FALSE, message = FALSE, size="small") 
+read_chunk("democode.R")
+@
+<<setup, cache=TRUE, echo=FALSE, message=FALSE, warning=FALSE>>= 
+@
+
+\subsection{Syntax of \textit{collap}} % --------------------------------------------------------------------
+\subsubsection*{Usage}
+\vspace{-3mm}
+<<econdata0, results='hide', warning=FALSE, message=FALSE>>=
+@
+\subsubsection*{Arguments}
+{\small
+\begin{tabular}{lp{13cm}} 
+\textbf{X} & A vector, matrix, list, data.frame or data.table to aggregate (anything that can be coerced to data.frame) \\[1em]
+\textbf{by} & Columns to aggregate by, \textbf{either contained in X} and indicated using a one-or two sided formula (two-sided if only certain columns in X are to be aggregated), column indices, a vector of column names, or a string of comma-separated column names, \textbf{or externally supplied} in form of a vector, list of vectors or data.frame, with the number of elements/rows matching that of X. If 'by' is left empty, columns are fully aggregated. \\[1em]
+\textbf{FUN} & Function(s) to apply to numeric columns in X, defaults to the mean. A single function can be supplied without quotes. Multiple functions can be supplied as a character vector, string of comma-separated function names, or as a list of functions (preferably named). Ad-hoc functions can be supplied.  \\[1em]
+\textbf{catFUN} & Function(s) to apply to categorical columns in X, defaults to the Mode. If all elements in a group defined by 'by' are distinct, the Mode defaults to the first element. Multiple functions can be supplied in the same manor as to 'FUN'. \\[1em]
+\textbf{factors} & Specifies treatment of factor variables. Default is treatment as categorical variables. Alternatively factors can be coerced to numerical variables by spcifying "as.numeric", or the factor levels can be extracted and coerced to a numerical variable by specifying "as.numeric.fractor" (internally defined as: as.numeric.factor <- function(x) \{as.numeric(levels(x))[x]\})\\[1em]
+\textbf{custom} & Option to supply a custom vector or list of functions whose length must match the number of columns to be aggregated. Alternatively a named list can be provided with the names being the comma-separated names of the columns to be aggregated by different functions, i.e. list("var1,var2,var3" = mean, var4 = median, "var7,var8" = sd). \\[1em]
+\textbf{custom.names} & Interact the column names with the respective function names in 'custom'.\\[1em]
+\textbf{na.rm} & Removes missing values from all columns before applying any functions. This is done internally in \textit{collap}, thus it is not required for functions in 'FUN' or 'catFUN' to have a 'na.rm' argument. \\[1em]
+\textbf{replace.nan} & Replaces NaN values with NA values. NaN's are frequently generated if na.rm = TRUE, and aggregation takes place over an empty subset. \\[1em]
+\textbf{sort} & Sort restores the columns back to their original order after aggregation. If sort = FALSE, the dataset is returned with the 'by' columns in front, and the other columns following in the order of computation (first numeric columns and then categorical columns, or columns in the order they are passed to 'custom').\\[1em]
+\end{tabular}
+
+\begin{tabular}{lp{13cm}} 
+\textbf{collapse} & If collapse = FALSE, the aggregated data will be matched with the original data in the 'by' argument and \textit{collap} will return a dataset that is aggregated but of the same dimensions and row-order as the original data, i.e. a between-transformed dataset. \\[1em]
+\textbf{reshape.long} & If multiple functions are supplied to either 'FUN' or 'catFUN', by default \textit{collap} returns a wider dataset. If reshape.long = TRUE, then a long form of the dataset is returned with an additional column 'Statistic' indicating the function used for aggregation. \\[1em]
+\textbf{show.statistic} & If multiple functions are called and reshape.long = TRUE, show.statistic = FALSE can be called to omit the 'Statistic' column and instead make appropriate row.names. \\[1em]
+\textbf{as.list} & Optionally the output can be requested as a list of vectors or data.frames. There are two options here: If as.list = "by", then a list will be returned whose elements are the aggregated output for each group in 'by'. If multiple functions are supplied to either 'FUN' or 'catFUN', calling as.list = "FUN" will return a list with the dataset aggregated by the different functions. as.list = "by" may come at some slight extra computational cost but as.list = "FUN" does not. \\[1em]
+\textbf{dropcat} & Drop all categorical variables apart from identifiers in 'by' (i.e. don't perform aggregation on them). \\[1em]
+\textbf{dropby} & Drop the columns in 'by' from the final output. \\[1em]
+\textbf{data.table} & By default \textit{collap} is built as a wrapper around \textit{aggregate.data.frame}. Calling this argument will internally use \textit{data.table} as workhorse function, yielding significant speed improvements for large datasets. \\[1em] 
+\textbf{parallel} & If multiple functions are supplied to 'FUN' or 'catFUN', parallel = TRUE will automatically parallelize computation on $k-1$ of the available cores (using the \textit{parLapply} function from the \textit{parallel} package). The argument works together with data.table = TRUE to guarantee maximum performance on tasks involving large datsets and multiple functions. \\[1em]
+$\dots$ & Additional arguments supplied to 'FUN', 'catFUN' or to \textit{aggregate.data.frame} in the default mode. \\
+\end{tabular}
+ \par}
+\vspace{5mm} 
+
+\subsection{Demonstration} % -----------------------------------------------------------------------------
+To demonstrate \textit{collap}, I download 4 US macroeconomic time-series from the Federal Reserve Bank of St. Louis database: The Real Gross Domestic Product (GDPC1), the Civilian Noninstitutional Population (CNP16OV), the Gross Domestic Product: Implicit Price Deflator (GDPDEF), and the Effective Federal Funds Rate (FEDFUNDS). The output shows that real GDP and it's deflator are only available at quarterly frequancy, whereas population and the interest rate are available as monthly series. Furthermore, the 'Date' variable is supplied as a character string.
+<<econdata1, cache=TRUE, message=FALSE, warning=FALSE>>= 
+@
+Since these data need to be at the same quarterly frequency to be useful for macroeconomic analysis, I use \textit{collap} to aggregate them: 
+<<econdata11, cache=TRUE, message=FALSE, warning=FALSE>>= 
+@
+The output shown provided by \textit{collap} is exactly the same dataset but now at quarterly frequency. \textit{collap} performed this operation by first extracting the "Year" and "Quarter" columns to create groups to aggregate over, then it removed missing values from the data (as na.rm = TRUE by default) and applied the mean (FUN default) to the 4 series, and the mode (catFUN default) to the 'Date' column. The mode chose the first date in each year and quarter since all dates are distinct. \textit{collap} then combined the columns again, put them back into the original order (as sort = TRUE by default), and replaced NaN's with NA's\footnote{NaN's occur when one aggregates over missing values with na.rm = TRUE, i.e. mean(c(NA,NA), na.rm = TRUE) gives NaN. This replacement is only done if replace.nan = TRUE. Setting this argument to FALSE gives a slight speed improvement.} (as replace.nan = TRUE by default). Having outlined basic working principles, I now turn to demonstrate some of the flexibility of \textit{collap} by showing the different ways inputs can be supplied to the function: 
+<<econdata2, cache=TRUE, message=FALSE, warning=FALSE>>= 
+@
+The two-sided formula interface is useful to aggregate only certain columns, i.e. here only real GDP and it's deflator: 
+<<econdata22, cache=TRUE, message=FALSE, warning=FALSE>>= 
+@
+With the 'dropcat' and 'dropby' arguments, \textit{collap} offers additional flexibility for certain cases. The 'dropcat' argument can be used to drop all categorical variables (except for those in 'by') prior to aggregation. This is particularly handy when considering that many datasets from statistical agencies provide not only main identifiers, but also some other identifiers and variables providing information about the dataset such as regional codes, series codes etc. which are often categorical. With 'dropcat' these variables can now be dropped, allowing the user to maintain only the identifiers and the aggregated numerical data. Similarly the 'dropby' argument allows the user to drop the aggregation identifiers supplied to 'by'. This is useful in cases where for example an external aggregation ID is supplied which should not be part of the resulting dataset, or when a single column is aggregated and the output is desired in form of a vector. The 'collapse' argument gives between-transformed data, which can be used to run a between-regression, or to obtain within-transformed data by subtracting it from the original data.
+<<econdata3, cache=TRUE, message=FALSE, warning=FALSE>>= 
+@
+When more than one function is called, by default \textit{collap} outputs a wider dataset, but the order of columns is still kept as long as sort = TRUE\footnote{Calling \textit{length} here serves to count the number of non-missing observations aggregated over to produce each value in the output table, since na.rm = TRUE by default.}. If reshape.long = TRUE and multiple functions are passed to either 'FUN' or 'catFUN', the data are returned in long form and unaffected columns are duplicated. If multiple functions are supplied to both 'FUN' and 'catFUN', the data are always returned in the wide-form, even if reshape.long = TRUE.
+<<econdata4, cache=TRUE, message=FALSE, warning=FALSE>>= 
+@
+The code below demonstrates the fully custom mode, which STATA users will find familiar from \textit{collapse}. It should be noted that it is not possible to supply a named list of functions to 'custom' the way it can be supplied to 'FUN' or 'catFUN'. Whenever a named list is supplied to 'custom', \textit{collap} will interpret the names as column names and search for them in the dataset. 
+<<econdata41, cache=TRUE, message=FALSE, warning=FALSE>>= 
+@
+Now I provide a taste of uses of \textit{collap} with different data objects. Some of these examples are a bit unconventional, especially since \textit{qsu} is better adapted to compute summary statistics, but they serve to demonstrate the flexibility of \textit{collap}.
+<<econdata42, cache=TRUE, message=FALSE, warning=FALSE>>= 
+@
+As noted before, if a \textit{data.table} is passed to \textit{collap}, \textit{collap} will automatically resort to the fast \textit{data.table} method for aggregation (same as setting data.table = TRUE) and also output a \textit{data.table}. If the user sets data.table = TRUE, and the input is not a \textit{data.table}, \textit{collap} will internally use \textit{data.table} for aggregation, but output an object of the original class. The code below briefly demonstrates the as.list argument, which can come in handy for certain tasks, if output in a list formal is preferred. 
+<<econdata43, cache=TRUE, message=FALSE, warning=FALSE>>= 
+@
+\subsection{Benchmark}
+I finally examine the performance of \textit{collap}, in its default mode and with the help of the built-in data.table option, and compare it to \textit{aggregate.data.frame} and \textit{data.table}. I let \textit{aggregate.data.frame} and \textit{data.table} perform exactly the same computational steps as \textit{collap}, although I do not bring the output of these functions in the same form (i.e. no column binding and sorting, and no replacement of NaN's with NA's). The benchmark comes in three steps: A microbenchmark on the dataset considered so far, a benchmark with a long dataset\footnote{Obtained by duplicating and row-binding the dataset at hand.}, and a benchmark with a wide dataset.  
+<<econdata5, cache=TRUE, message=FALSE, warning=FALSE>>= 
+@
+The microbenchmark shows that in the default mode \textit{collap} performs slightly faster than \textit{aggregate.data.frame}, and is about 2 milliseconds slower than \textit{data.table} in the data.table mode.
+<<econdata6, cache=TRUE, message=FALSE, warning=FALSE>>= 
+@
+The benchmark with the long dataset of approx. 4 million observations shows that the built-in data.table option endows \textit{collap} with a significant edge over \textit{aggregate.data.frame} (0.9 seconds vs. 18 seconds for this task), and is only neglegibly slower than \textit{data.table} itself. For the wide data benchmark I use the World Bank Development Indicators, a dataset providing around 1450 development indicators following 264 geographical entities grouped into 7 World Regions over 57 years.  Below I aggregate this dataset by region and year: 
+<<econdata71, cache=TRUE, echo=FALSE, message=FALSE, warning=FALSE>>= 
+@
+<<econdata72, cache=TRUE, message=FALSE, warning=FALSE>>= 
+@
+The results again are vary similar, \textit{collap} here is about the same speed as \textit{aggregate.data.frame} and also just as fast as \textit{data.table} - a blazing 0.6 seconds for this dataset - revealing the efficient programming behind it and rendering it a very useful tool even for advanced R users working on large datasets or data.tables. \newline
+
+Amongst others I have not demonstrated the parallel option. Generally speaking the speed improvement it brings is modest on two-core machines, but when several functions are applied and the dataset is long and large, \textit{collap} with the data.table and parallel options enabled can outperform \textit{data.table}. \newline
+
+\subsection{Conclusion} % -----------------------------------------------------------------------------
+\textit{collap} represents a new data-aggregation tool that offers a significant combination of extended functionality, performance and convenience that was previously unavailable in R in this area. Based on my own use I am convinced that this command will enhance the workflow and become a personal favourite of many data analysts. \newpage
+
+
+
+
+
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\section{Qsu}
+\textit{Qsu}, which stands shorthand for \textit{quick-summary}, is an advanced and fast summary command for cross-sectional and multilevel (panel) data. It's key feature is that it not only provides arbitrary summary statistics by group, but also within-and between groups, and also within and between subgroups defined by a group. \textit{qsu} also provides an easy and fast method to obtain within-transformed data, a feature many will find handy. Again below I briefly list the key advanteges of \textit{qsu} over existing functions such as \textit{base::summary, base::by, psych::describe, psych::describeBy, FSA::Summarize, Rmisc::summarySE, doby::summaryBy, pastecs::stat.desc, Hmisc::describe, stats::xtabs, fBasic::basicStats}, the \textit{apply} family etc., then I will briefly outline the syntax of the function and swiftly turn to demonstrate its functionality.
+
+
+\subsection{Key Features} % -----------------------------------------------------------------------------
+\begin{itemize}
+\item Parsimonious and speedy default summary (output familiar to STATA users from \textit{summarize}). Users can also request an extended set of statistics including skewness and kurtosis, and specify an arbitrary number of quantiles to be computed
+\item Multilevel (panel)-data summary (i.e. \textit{overall, between} entities and \textit{within} entities summary) (familar from \textit{xtsummarize} STATA command), the \textit{xt}-option
+\item Summary by Groups, the \textit{by}-option, can be combined with the \textit{xt}-option for subgroups
+\item Fully customizable set of summary statistics, works with the \textit{xt}- and \textit{by}-options (i.e. any function or set of functions that takes a data-vector as input and returns a vector of statistics can be used with \textit{qsu})
+\item Option to apply a transformation like scaling or log to the numeric columns of a dataset, transformations can be taken overall or by group
+\item Ability to display variable labels in the summary, i.e. for STATA, SPSS or SAS datasets imported into R using the \textit{haven} package, or downloaded using \textit{WDI} or other API's that supply labels
+\item Maximum flexibility in input and output specification
+\item Tidy output in a convenient format
+\item Option to output the transformed data used to compute the summary
+\end{itemize}
+
+<<qsusetup, cache=TRUE, echo=FALSE, message=FALSE, warning=FALSE>>=
+@
+
+\subsection{Syntax of \textit{qsu}} % ----------------------------------------------------------------------
+\subsubsection*{Usage}
+\vspace{-3mm}
+<<qsu0, results='hide', warning=FALSE, message=FALSE>>=
+@
+By default \textit{qsu} computes the following statistics: \textit{N} = Number of Observations, \textit{D} = Number of distinct values, \textit{Mean}, \textit{SD} = Standard Deviation, \textit{Min} = Minimum value, \textit{Max} = Maximum value. The latter four are only computed for numerical variables. If one or multiple grouping variable is supplied to \textit{xt}, by default \textit{qsu} will show classical (overall) statistics, but also compute statistics between and within groups. The most common form of multilevel data is longitudinal data which follows individuals or entities $i$ over time $t$ (but $t$ could just be another grouping variable). Denote $\textbf{x}_{it}$ the original data, then $\bar{\textbf{x}}_i$ is the between-transformed data, where the time-mean for each individual was taken, and $\textbf{x}_{it}-\bar{\textbf{x}}_i+\bar{\bar{\textbf{x}}}$ is the within-transformed (demeaned) data (the overall mean $\bar{\bar{\textbf{x}}}$ is added back to make results comparable). Providing summary statistics of $\bar{\textbf{x}}_i$ and $\textbf{x}_{it}-\bar{\textbf{x}}_i+\bar{\bar{\textbf{x}}}$ in addition to $\textbf{x}_{it}$ has the advantage that it uncoveres the structure of the longitudinal data in terms of the number of individuals and the average number of time-periods. Of particular interest in this summary is the standard deviation, which now decomposes overall variability into variability between individual averages, and variability within individuals over time. This variance decomposition, amongst other things, allows one to see which variables are time varying and which time-invariant individual characteristics, and it allows the researcher to gauge what proportion of the variance in model variables would be lost by employing a fixed effects estimator. If a multilevel dataset is characterized by more than two identifiers, i.e. $\textbf{x}_{jit}$, one can supply, $j$, $i$, $t$, $ij$, $it$ or $jt$ to the \textit{xt} option. One could also supply for example $j$ to the \textit{by} option, and $i$ to the \textit{xt} option. In that setup within and between transformed statistics over $i$ will be computed separately for each group defined by $j$. For example if $j$ is a region, $i$ district and $t$ a year, then this would show the variation between districts and over time for each region.
+
+\subsubsection*{Arguments}
+{\small
+\begin{tabular}{lp{13cm}}
+\textbf{X} & A vector, matrix, data.frame or data.table to summarize (anything that can be coerced to data.frame) \\[1em]
+\textbf{by} & Groups to summarize by, \textbf{either contained in X} and indicated using a one-or two sided formula (two-sided if only certain columns in X are to be aggregated), column indices, a vector of column names, or a string of comma-separated column names, \textbf{or externally supplied} in form of a vector, list of vectors or data.frame, with the number of elements/rows matching that of X. \\[1em]
+\textbf{xt} & Groups to compute statistics overall, between and within. The same flexibility as with the 'by' argument applies. If used together with 'by', a subgroup of 'by' should be used. If a two-sided formula is used together with 'by', it does not matter whether the LHS variables are specified in the 'by', 'xt' or in both arguments.\\[1em]
+\textbf{FUN} & Custom function(s) to apply to all columns in X apart from columns in the 'by' or 'xt' arguments. Functions must take a vector and return a vector of statistics. A single function can be supplied without quotes. Multiple functions can be supplied as a character vector, string of comma-separated function names, or as a named list of functions. Ad-hoc functions can be supplied. 'FUN' when it is used overrides the default set of statistics and the 'Q' and 'Ext' arguments. \\[1em]
+\textbf{Q} & Number of quantiles to compute. \\[1em]
+\textbf{Ext} & Request an Extended set of statistics including the \textit{median}, the \textit{skewness} and the \textit{kurtosis} \\[1em]
+\textbf{trans} & A transformation function applied to the numeric columns of the data (for example \textit{log}, \textit{scale}, \textit{diff} or growth rates) \\[1em]
+\textbf{trans.by} & If the 'by' option is used, 'trans' can be applied to groups separately (i.e. one could use it to obtain growth rates for multiple countries in a long country-time $\times$ variables dataset) \\[1em]
+\textbf{ndigits} & Number of digits to show. If set to NULL, all digits will be shown. \\[1em]
+\textbf{na.rm} & Internally removes missing values before applying any functions or transformations. It is not required for functions to have a 'na.rm' argument.\\[1em]
+\textbf{pretty} & Returns result as a character matrix where trailing zeros are eliminated and large numbers are written in standard (as opposed to scientific) notation. \\[1em]
+\textbf{labels} & Show variable labels next to statistics. If labels = TRUE, X must be a data.frame with variable labels stored as attributes [attr(X\$var1,"label")<-"label1"] etc. Alternatively, a character vector of labels of length ncol(X) can be passed to the labels argument. \\[1em]
+\textbf{factors} & Specifies the treatment of factor variables. Default is treatment as categorical variables. Alternatively factors can be coerced to numerical variables by spcifying "as.numeric", or the factor levels can be extracted and coerced to a numerical variable by specifying "as.numeric.fractor" (internally defined as: as.numeric.factor <- function(x) \{as.numeric(levels(x))[x]\})\\[1em]
+\textbf{combine.by} & If the 'by' option is used, combine.by = TRUE gives a compact output instead of a list.\\[1em]
+\textbf{combine.xt} & If the 'xt' option is used combine.xt = FALSE returns a list with overall, between group and within group statistics.\\[1em]
+\textbf{within.add.mean} & By default, within-group statistics are computed as $\textbf{x}_{it}-\bar{\textbf{x}}_i+\bar{\bar{\textbf{x}}}$. If within.add.mean = FALSE, The within-transformed dataset is obtained as $\textbf{x}_{it}-\bar{\textbf{x}}_i$, which is a more classical within-transformation used i.e. for fixed-effects regression. \\[1em]
+\end{tabular}
+
+\begin{tabular}{lp{13cm}}
+\textbf{data.out} & Output transformed data used to compute the summary. If the 'xt' option is used, the output will be a named list of three datasets: An overall dataset (= the original dataset if trans = NULL), an aggregated dataset for the between-statistics, and a within-transformed dataset. All datasets come with the original column order, the aggregated dataset is sorted by the 'xt' identifiers, and the within-transformed dataset has the same row-order as the original dataset. In the aggregated dataset categorical variables were aggregated using the mode, while in the within-transformed dataset categorical variables are unaffected/untransformed. \\[1em]
+\textbf{data.out.drop} & Drop all identifiers supplied to 'by' or 'xt' before returning the dataset. \\[1em]
+\textbf{xt.data.table} & If the 'xt' option is used, \textit{qsu} internally utilizes \textit{collap} to aggregate the data and compute the within-transformed dataset. If xt.data.table = TRUE, \textit{collap} will internally use \textit{data.table}, yielding a much faster computation on large datasets. \\[1em]
+\end{tabular}
+ \par}
+ 
+ \subsection{Demonstration} % -----------------------------------------------------------------------------
+% OPTIONAL ADDITIONAL EXAMPLES ON IRIS DATASET
+% In order to adobt a gentle approach I first demonstrate \textit{qsu} on the popular \textit{iris} dataset, and then proceed to a case study with World Bank data. In It's default setup, \textit{qsu} provides a very compact set of summary statistics. Numeric statistics can be obtained from factor variables by supplying to the factors option 'as.numeric' or 'as.numeric.factor'.
+% <<iris, cache=TRUE, warning=FALSE, message=FALSE>>=
+% @
+% The quantile option allows for the computation of an arbitrary number of quantiles. Pretty printing eliminates trailing zeros, returns all numbers in standard notation and replaces NA's with '-'. The 'Ext' option adds to the standard set of statistics the median, the skewness and the kurtosis. The latter two are internally defined, and need not be loaded from the \textit{moments} package. 
+% <<iris0, cache=TRUE, warning=FALSE, message=FALSE>>=
+% @
+% The custom option allows one to use \textit{qsu} with arbitrary functions as long as they process vectors and output vectors. In that sense \textit{qsu} works like \textit{sapply} with removal of missing values. Notice that \textit{qsu} always returns the ouput in the most parsimonious format, for example as a vector if the output is 1-dimensional. 
+% <<iris1, cache=TRUE, warning=FALSE, message=FALSE>>=
+% @
+% The 'by' argument offers the standard functionality of \textit{base::by} in addition to maximum flexibility in inputs (i.e. you could also supply column numbers, column names, vectors, lists or dataframes instead of a formula). The combine.by option toggles \textit{qsu} to return a sigle matrix or data.frame instead of a list.
+% <<iris2, cache=TRUE, warning=FALSE, message=FALSE>>=
+% @
+% The 'xt' argument is surely the biggest deal with \textit{qsu}. The \textit{iris} data is of the form $\textbf{x}_{ji}$, where $j$ is the species and $i$ is the individual flower. The between summary shows the summary statistics computed from species averages, and the within summary the statistics computes among flowers where the species average was subtracted and the overall average added again. Some will notice that STATA's \textit{xtsummarize} supplies $N$ overall, $n$ between and $T = N/n$, the average number of time-periods. I have refrained from reporting $T$ with \textit{qsu} because the '$T$' implies that there is a time-dimension, which, as in the \textit{iris} example, must not be the case, and because reporting a '$T$' instead of simply $N$ within can render obscure the dimensions of the underlying datasets being summarized. In this example of course it is very easy to see that $T=150/3=50$ flowers per species on average. Analogous to the 'by' argument, the 'xt' arguments also supports maximum input flexibility, and the combin.xt argument, which is TRUE by default, allows the user to obtain a list of three wholy separate sets of summary statistics computed on the three datasets. The examples below again show that \textit{qsu} intelligently processes the output, so that one can look at the overall, between and within variation of different variables in a convenient way. 
+% <<iris3, cache=TRUE, warning=FALSE, message=FALSE>>=
+% @
+% Below I briefly show how one can use \textit{qsu} to transform data before summarizing it. Transformations are only applied to numeric variables, can be applied by group, and the data.out option can be used to obtain the transformed data. 
+% <<iris4, cache=TRUE, warning=FALSE, message=FALSE>>=
+% @
+% If the data.out option is used with the 'xt' option, a list of three datasets, the original, the between transformed (and collapsed) and the within transformed dataset are supplied. These are the datasets used to compute the summary (apart from the within.add.mean option, which was set to FALSE here to obtain a classical within transformation, as outlined in the introduction). Unless otherwise specified in the 'factors' option, in the between dataset the mode is computed of all categorical variables not in 'xt', while in the within transformed dataset categorical variables are left unaffected. The columns of all the three datasets always come in the original order. This feature of \textit{qsu} starky simplifies the manual computation and comparison of various panel data estimators and procedures (i.e. pooled OLS, random effects, between estimator, fixed effects, Hausman \& Taylor 1985, Mundlack 1978 etc.). Below I show the pooled OLS, between and within estimators of the effect of Sepal.Width on Sepal.Length. As so often the within and the between estimator have opposing signs, with the POLS in the middle. The results indicate that there are species-specific unobservables correlated with Sepal.Width so that only the within estimator can potentially be trusted. 
+% <<iris5, cache=TRUE, warning=FALSE, message=FALSE>>=
+% @
+% I note that of course the standard errors on the within estimator would be incorrect, and packages to do fixed effect estimation provide a correction. A bootstrap supplied by the \textit{boot} package should however also do for manual estimation. Now \textit{qsu} can generally not be used to partial-out sophisticated sets of multiple fixed effects (a model.frame object can be passed to the 'xt' option, but groups will be defined by unique rows and not by regression on the object), for such operations \textit{lfe::felm} should be used and the residuals obtained. 
+
+To demonstrate \textit{qsu}, I take a classic example of multilevel data, and download 3 series from the World Bank Development Indicators database: The GDP per capita in constant 2010 US\$, the life expectancy at birth in years and the GINI index. Following the newest update the \textit{WDI} package also downloads the labels for these series and stores them in a similar way to the \textit{haven} library when importing STATA, SPSS or SAS files that typically contain labels. 
+<<WDI0, cache=TRUE, echo=FALSE, message=FALSE, warning=FALSE>>= 
+@
+<<WDI1, cache=TRUE, warning=FALSE, message=FALSE>>=
+@
+In the default mode, \textit{qsu} provides a simple set of summary statistics in an easily readable format. 'D' denots the number of distinct values, showing that the dataset tracks 264 countries and regional entities over 59 years, 1960-2018. The data-coverage on the GINI index is very low. Down below the 'pretty' argument is set to eliminate trailing zeros and replaces NA's with '-', the labels argument can be used to display variable labels if provided, and specifying factors = as.numeric coerces factor variables (here region and income) to numeric before summarizing them. 
+<<WDI2, cache=TRUE, warning=FALSE, message=FALSE>>=
+@
+The quantile argument 'Q' takes away 'Min' and 'Max' from the summary and shows the specified number of quantiles. If an extended set of statistics is requested by setting Ext = TRUE, the median, skewness and kurtosis are added to the summary. These statistics are internally defined and need not be loaded from the \textit{moments} library. Of course 'Q' and 'Ext' can be used jointly as the third example shows. 
+<<WDI21, cache=TRUE, warning=FALSE, message=FALSE>>=
+@
+The functionality offered by the 'by' argument is pretty standard, apart from the greater range of possible input formats that can be supplied, just as for \textit{collap}\footnote{I already demonstrated the flexibility in inputs with \textit{collap} and won't repear this demonstration here.}. The 'combine.by' argument provides a handy extension to obtain the output in a more convenient format.
+<<WDI3, cache=TRUE, warning=FALSE, message=FALSE>>=
+@
+One feature of \textit{qsu} is that it always seeks to provide output in a convenient format, for example if a single function is used to summarize multiple variables by some group, the output comes in a matrix format similar to the output \textit{collap} offers. If multiple functions are provided, the statistics form the columns and the variables and groups are interacted in the row-names, as in the example above. In that case a wide-format can only be obtained by employing \textit{collap} itself. If multiple groups are used together with 'combine.by' they are also interacted to provide output a long format. 
+<<WDI31, cache=TRUE, warning=FALSE, message=FALSE>>=
+@
+Of course \textit{qsu} also works with other summary commands, such as \textit{base::summary} or the \textit{quantile} function. 
+<<WDI32, cache=TRUE, warning=FALSE, message=FALSE>>=
+@
+The biggest innovation of \textit{qsu} is of course the 'xt' argument, which leads \textit{qsu} to output three sets of statistics for each variable: The standard overall sample statistics, the between-country statistics and the within-country statistics. For the within-summary not the number of observations, but the average number of time-periods $T=N_\text{overall}/N_\text{between}$ per individual entity is shown. The three identifiers region, income and year form a balanced panel, each tracking 216 entities over 59 years. If the panel is balanced, then the overall, between and within-entitiy means are equal, while if the panel is unbalanced only the overall and within entities means are equal\footnote{This is so by definition since the overall mean is added back to the within-transformed data. If within.add.mean = FALSE, the within mean will be 0 for all variables.}. The standard deviations show that region and income are time-invariant and year is country-invariant. The 'Trans' column can in the summary can be removed by calling show.trans = FALSE. The summary of the three variables below shows that for GDP per capita and life expectancy we have data on around 205 countries with on average around 50 years of data, while the GINI index is only recorded in 161 countries with 8 years of data on average. These variables are not balanced yielding a between-mean slightly different from the overall mean. The standard deviations show that all three variables elicit a significantly larger amount of variation between countries than within-countries/over time. 
+<<WDI4, cache=TRUE, warning=FALSE, message=FALSE>>=
+@
+Analogous to the 'by' argument, the 'xt' argument also has an associated 'combine.xt' argument which is TRUE by default in order to yield this compact format. If combine.xt = FALSE, \textit{qsu} will output a list with separate overall, between and within statistics. 
+<<WDI41, cache=TRUE, warning=FALSE, message=FALSE>>=
+@
+If only a single function is supplied, \textit{qsu} again gives the output in a more convenient format, allowing us to compare the variation of the three variables between countries and over time directly. Similarly to \textit{collap}, if the function name is provided in quotes, it is interacted with the column names. Now one problem in comparing the variability of GDP per capita, life expectancy and inequality of different countries is that these variables come at different scales. The 'trans' argument can therefore be used to scale the data, which will set the overall standard deviations of all variables to 1. It is now evident that the greatest variation between countries is in terms of GDP per capita, while the greatest development within countries was in terms of life expectancy. Overall, the GINI coefficient shows the lowest amount of variation between and within countries. 
+<<WDI42, cache=TRUE, warning=FALSE, message=FALSE>>=
+@
+
+Using now also the 'by' argument, the variations of the three variables can be explored for the 7 World Regions individually\footnote{It does not matter here whether the three variables are indicated on the LHS of the formulas passed to 'by' or to 'xt'.}. The statistics show that the greatest within-country changes in GDP per capita were in North America, the greatest changes in life expectancy were in South Asia, and the greatest changes in inequality were in Africa. The relative variation between and within countries for each region can be examined through setting trans.by = TRUE, which will apply the scaling to each region separately. 
+\vspace{-4mm}
+<<WDI43, cache=TRUE, warning=FALSE, message=FALSE, fig.asp=0.5>>=
+@
+\vspace{4mm}
+Below the variation in inequality is decomposed by income group. The analysis clearly shows that by far the  greatest within-country variation in inequality is in low income countries, while the greatest between country variation is in upper middle income countries. 
+<<WDI44, cache=TRUE, warning=FALSE, message=FALSE>>=
+@
+As a final step in this part of the analysis, the long-term correlations between the three variables are examined. For this the data is aggregated to decadal averages using \textit{collap}, and then \textit{qsu} is used to obtain aggregated and within country transformed versions of this dataset. The overall, between country and within country correlations of the three variables are then easily computed. The correlations show that overall and between countries inequality is negatively correlated with income and life expectancy, while within countries there is a zero relationship between income and inequality. A stylized fact that emerged in the economics literature is that the between-country correlation of growth and inequality is negative while the within-country relationship is positive. More recent empirical work however also shows that this relationship is highly non-linear. A general pattern in this data is that the between-country correlations are greater than the within-country correlations - a major point of critique for cross-country analysis. 
+<<WDI5, cache=TRUE, warning=FALSE, message=FALSE>>=
+@
+As a last part of the demonstration I show below that \textit{qsu} can also be used for certain data wrangling tasks, such as computing growth rates of one or multiple variables in multilevel datasets or obtaining a matrix of values from a column in a multilevel dataset. I conceed that a function like \textit{plyr} may be just as adept to this task, but the example is neat: Below I hierarchically cluster economies based on the correlatiof their GDP growth rates, and then use the average $R^2$ of a countries growth with all other countries to find the 20 most and the 20 least internationally integrated economies based on this metric. 
+<<WDI6, cache=TRUE, warning=FALSE, message=FALSE, fig.asp=0.7>>=
+@
+
+\subsection{A Note on Performance} % ----------------------------------------------------------------------
+I do not show official benchmarks results for \textit{qsu} since for most of it's functionality there is no function to directly compare it to. I have however tested it on the WDI dataset used in the \textit{collap} benchmark and found the following: In the default mode calling \textit{qsu} on the WDI dataset takes about 0.5 seconds, whereas using \textit{base::summary} takes about 1.1 seconds. For the xt method and with xt.data.table = TRUE, \textit{qsu} takes about 2.6 seconds to provide a complete overall, between and within country summary of the WDI dataset. The aggregate method takes longer at around 10 seconds. If only the data is requested with data.out = TRUE, within.add.mean = FALSE and xt.data.table = TRUE, \textit{qsu} takes only about 1.4 seconds to output the aggregated and within-transformed datasets. Given that \textit{data.table} itself takes about 0.6 seconds just to aggregate this dataset by country, 1.4 seconds for a within transformed dataset of this size is very fast. 
+
+
+\subsection{Conclusion} % ---------------------------------------------------------------------------------
+\textit{qsu} is an advanced summary command for cross-sectional and multilevel (panel) data, which also offers a significant edge over existing summary functions in terms of functionality, flexibility of use and performance. The seamless integration of the 'by', 'xt', 'FUN' and 'trans' arguments, together with its intelligent reshaping of outputs into a parsimonious format and the possibility to quickly compute and output transformed data, will make it, together with \textit{collap}, a prefered tool, at the very least for everyone frequently working with multilevel data in R.  
+
+\end{document}

@@ -1,21 +1,46 @@
 Package: collapse
-Title: data aggregation and summary statistics for multi-type and multi-level data.
-Version: 0.0.1
-Date: 2019-02-27
+Title: Advanced and Fast Data Transformation
+Version: 1.0.0
+Date: 2020-01-01
 Authors@R: c(
-    person(given = "Sebastian Martin",
-           family = "Krants",
-           role = c("aut", "cre"),
-           email = "sebastian.krantz@graduateinstitute.ch"),
-    person(given = "Joris",
-           family = "Meys",
-           role = "aut",
-           email = "Joris.Meys@UGent.be")
+           person("Sebastian", "Krantz", role = c("aut", "cre"), 
+                  email = "sebastian.krantz@graduateinstitute.ch"),
+           person("Matt", "Dowle", role = "ctb"),
+           person("Arun", "Srinivasan", role = "ctb"),
+           person("Simen", "Gaure", role = "ctb"),
+           person("Dirk", "Eddelbuettel", role = "ctb"),
+           person("R Core Team and contributors worldwide", role = "ctb"),
+           person("All other data.table contributors", role = "ctb"),
+           person("All other Rcpp contributors", role = "ctb")
            )
-Description: Provides functions loosely based on STATA's collapse
-    function to perform advanced data aggregation and summary statistics for
-    multi-type datasets and multi-level (panel) data. 
-License: GPL (>=2)
+BugReports: https://github.com/SebKrantz/collapse/issues
+Description: A C/C++ based package for advanced data transformation in R that is 
+             extremely fast, flexible and parsimonious to code with and programmer 
+             friendly. It is well integrated with 'dplyr', 'plm' and 'data.table'.
+             --- Key Features: ---
+             (1) Advanced data programming: A full set of fast statistical functions 
+                 supporting grouped and weighted computations on vectors, matrices 
+                 and data.frames. Quick (ordered) and reusable grouping, quick 
+                 data-conversions, and quick select and replace variables.
+             (2) Advanced aggregation: Fast and easy multi-data-type, multi-function, 
+                 weighted, parallelized and fully customized data aggregation.
+             (3) Advanced transformations: Efficient (grouped, weighted) sweeping out 
+                 of statistics, scaling, centering, higher-dimensional centering, 
+                 complex linear prediction and partialling-out.
+             (4) Advanced time-computations: Efficient (sequences of) lags/leads, and 
+                 (iterated) differences and growth rates on (unordered) time-series 
+                 and panel data. Multivariate auto, partial and cross-correlation 
+                 functions for panel data. Panel data to (ts-)array conversions.
+             (5) List Processing: (Recursive) list-identification, extraction / 
+                 subsetting, apply, and row-binding / unlisting in 2D.
+             (6) Advanced data exploration: Fast (grouped, weighted, panel-decomposed) 
+                 summary statistics for complex multilevel/panel data.
+License:  MPL-2.0 | file LICENSE
 Encoding: UTF-8
 LazyData: true
-RoxygenNote: 6.1.1
+Depends: R (>= 2.10)
+Imports: Rcpp (>= 1.0.1), lfe (>= 2.7)
+LinkingTo: Rcpp
+Suggests: data.table, dplyr, plm, ggplot2, scales, vars, knitr, rmarkdown, testthat
+SystemRequirements: C++11
+VignetteBuilder: knitr

@@ -3,3 +3,10 @@
 .RData
 .Ruserdata
 *vignette.pdf
+*.o
+*.so
+*.dll
+inst/doc
+doc
+Meta
+testing

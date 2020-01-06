@@ -1,0 +1,103 @@
+# library(Rcpp)
+# sourceCpp('src/TRA.cpp')
+# sourceCpp('src/TRAl.cpp')
+# sourceCpp('src/TRAa.cpp')
+
+# sdfsdfsd
+# Note: ng is not supplied to TRACpp for easier stat functions, thus you need to check in R !!
+
+TRA <- function(x, STATS, FUN = "-", ...) {
+  UseMethod("TRA", x)
+}
+TRA.default <- function(x, STATS, FUN = "-", g = NULL, ...) {
+  if(!missing(...)) stop("Unknown argument ", dotstostr(...))
+  if(is.null(g)) return(.Call(Cpp_TRA,x,STATS,0L,TRAtoInt(FUN))) else if(is.atomic(g)) {
+    if(is.nmfactor(g)) {
+      if(fnlevels(g) != length(STATS)) stop("number of groups must match length(STATS)")
+    } else {
+      g <- qG(g, na.exclude = FALSE) # needs to be ordered to be compatible with fast functions !!
+      if(attr(g, "N.groups") != length(STATS)) stop("number of groups must match length(STATS)")
+    }
+    return(.Call(Cpp_TRA,x,STATS,g,TRAtoInt(FUN)))
+  } else {
+    if(!is.GRP(g)) g <- GRP(g, return.groups = FALSE)
+    if(g[[1L]] != length(STATS)) stop("number of groups must match length(STATS)")
+    return(.Call(Cpp_TRA,x,STATS,g[[2L]],TRAtoInt(FUN)))
+  }
+}
+TRA.matrix <- function(x, STATS, FUN = "-", g = NULL, ...) {
+  if(!missing(...)) stop("Unknown argument ", dotstostr(...))
+  if(is.null(g)) return(.Call(Cpp_TRAm,x,STATS,0L,TRAtoInt(FUN))) else if(is.atomic(g)) {
+    if(is.nmfactor(g)) {
+      if(fnlevels(g) != nrow(STATS)) stop("number of groups must match nrow(STATS)")
+    } else {
+      g <- qG(g, na.exclude = FALSE) # needs to be ordered to be compatible with fast functions !!
+      if(attr(g, "N.groups") != nrow(STATS)) stop("number of groups must match nrow(STATS)")
+    }
+    return(.Call(Cpp_TRAm,x,STATS,g,TRAtoInt(FUN)))
+  } else {
+    if(!is.GRP(g)) g <- GRP(g, return.groups = FALSE)
+    if(g[[1L]] != nrow(STATS)) stop("number of groups must match nrow(STATS)")
+    return(.Call(Cpp_TRAm,x,STATS,g[[2L]],TRAtoInt(FUN)))
+  }
+}
+TRA.data.frame <- function(x, STATS, FUN = "-", g = NULL, ...) {
+  if(!missing(...)) stop("Unknown argument ", dotstostr(...))
+  if(is.null(g)) return(.Call(Cpp_TRAl,x,STATS,0L,TRAtoInt(FUN))) else if(is.atomic(g)) {
+    if(is.nmfactor(g)) {
+      if(fnlevels(g) != nrow(STATS)) stop("number of groups must match nrow(STATS)")
+    } else {
+      g <- qG(g, na.exclude = FALSE) # needs to be ordered to be compatible with fast functions !!
+      if(attr(g, "N.groups") != nrow(STATS)) stop("number of groups must match nrow(STATS)")
+    }
+    return(.Call(Cpp_TRAl,x,STATS,g,TRAtoInt(FUN)))
+  } else {
+    if(!is.GRP(g)) g <- GRP(g, return.groups = FALSE)
+    if(g[[1L]] != nrow(STATS)) stop("number of groups must match nrow(STATS)")
+    return(.Call(Cpp_TRAl,x,STATS,g[[2L]],TRAtoInt(FUN)))
+  }
+}
+TRA.grouped_df <- function(x, STATS, FUN = "-", keep.group_vars = TRUE, ...) {
+  if(!missing(...)) stop("Unknown argument ", dotstostr(...))
+  g <- GRP.grouped_df(x)
+  if(g[[1L]] != nrow(STATS)) stop("number of groups must match nrow(STATS)")
+  namst <- names(STATS)
+  nognst <- namst %!in% g[[5L]]
+  attributes(STATS) <- NULL
+  if(anyNA(mt <- match(namst, names(x)))) stop("the variable names of x and STATS must match")
+  mt <- mt[nognst]
+  get_vars(x, mt) <- .Call(Cpp_TRAl,colsubset(x, mt),STATS[nognst],g[[2L]],TRAtoInt(FUN))
+  if(!keep.group_vars) return(colsubset(x, names(x) %!in% g[[5L]]))
+  return(x)
+}
+
+
+# sourceCpp('R/C++/TRAset.cpp')
+# sourceCpp('R/C++/TRAsetl.cpp')
+# sourceCpp('R/C++/TRAseta.cpp')
+#
+# setTRA <- function(X, X_ag, g = 0L, trans = "replace", ...) {
+#   UseMethod("setTRA", X)
+# }
+# setTRA.default <- function(X, X_ag, g = 0L, trans = "replace", ...) {
+#   # if(!(is.atomic(X_ag) && is.null(dim(X_ag)))) stop("X_ag must be a vector") # Cpp already gives error !! matrix takes first element..
+#   if(is.character(trans)) trans <- match(trans,c("replace.na.fill","replace","subtract","subtract.add.avg","divide","percentage","add","multiply"))
+#   if(is.list(g)) setTRACpp(X, X_ag, g[[2]], trans) else setTRACpp(X, X_ag, g, trans)
+# }
+# setTRA.matrix <- function(X, X_ag, g = 0L, trans = "replace", ...) {
+#   if(!is.atomic(X_ag)) stop("X_ag must be a vector or matrix")
+#   if(is.character(trans)) trans <- match(trans,c("replace.na.fill","replace","subtract","subtract.add.avg","divide","percentage","add","multiply"))
+#   if(is.list(g)) setTRAmCpp(X, X_ag, g[[2]], trans) else setTRAmCpp(X, X_ag, g, trans)
+# }
+# setTRA.data.frame <- function(X, X_ag, g = 0L, trans = "replace", ...) {
+#   if(is.array(X_ag)) stop("X_ag must be a vetor or list / data.frame")
+#   if(is.list(X_ag) && length(X_ag[[1]]) == 1) X_ag <- unlist(X_ag, use.names = FALSE)
+#   if(is.character(trans)) trans <- match(trans,c("replace.na.fill","replace","subtract","subtract.add.avg","divide","percentage","add","multiply"))
+#   if(is.list(g)) setTRAlCpp(X, X_ag, g[[2]], trans) else setTRAlCpp(X, X_ag, g, trans)
+# }
+# setTRA.list <- function(X, X_ag, g = 0L, trans = "replace", ...) {
+#   if(is.array(X_ag)) stop("X_ag must be a vetor or list / data.frame")
+#   if(is.list(X_ag) && length(X_ag[[1]]) == 1) X_ag <- unlist(X_ag, use.names = FALSE)
+#   if(is.character(trans)) trans <- match(trans,c("replace.na.fill","replace","subtract","subtract.add.avg","divide","percentage","add","multiply"))
+#   if(is.list(g)) setTRAlCpp(X, X_ag, g[[2]], trans) else setTRAlCpp(X, X_ag, g, trans)
+# }

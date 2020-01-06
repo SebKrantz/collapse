@@ -1,0 +1,233 @@
+# library(Rcpp)
+# sourceCpp('src/flag.cpp', rebuild = TRUE) # Todo: Thoroughly check !!
+# sourceCpp('src/flaga.cpp', rebuild = TRUE)
+# sourceCpp('src/flagl.cpp', rebuild = TRUE)
+# source("R/GRP.R")
+# source("R/small_helper.R")
+# source("R/quick_conversion.R")
+
+# instead of more options for L.matrix and L.data.frame, could do without method dispatch??
+# stubs instead of give.names
+  # g = NULL, t = NULL, fill = NA, stubs = TRUE
+flag <- function(x, n = 1, ...) {
+  UseMethod("flag", x)
+}
+flag.default <- function(x, n = 1, g = NULL, t = NULL, fill = NA, stubs = TRUE, ...) {
+  if(!missing(...)) stop("Unknown argument ", dotstostr(...))
+  if(is.null(g))
+    return(.Call(Cpp_flaglead,x,n,fill,0L,0L,NULL,G_t(t,FALSE),stubs)) else if(is.atomic(g)) {
+    if(is.nmfactor(g)) nl <- fnlevels(g) else {
+      g <- qG(g, na.exclude = FALSE)
+      nl <- attr(g, "N.groups")
+    }
+    return(.Call(Cpp_flaglead,x,n,fill,nl,g,NULL,G_t(t),stubs))
+  } else {
+    if(!is.GRP(g)) g = GRP(g, return.groups = FALSE)
+    return(.Call(Cpp_flaglead,x,n,fill,g[[1L]],g[[2L]],g[[3L]],G_t(t),stubs))
+  }
+}
+flag.pseries <- function(x, n = 1, fill = NA, stubs = TRUE, ...) {
+  if(!missing(...)) stop("Unknown argument ", dotstostr(...))
+  index <- attr(x, "index")
+  if(length(index) > 2L) index <- c(interaction(index[-length(index)], drop = TRUE), index[length(index)])
+  if(is.matrix(x))
+  .Call(Cpp_flagleadm,x,n,fill,fnlevels(index[[1L]]),index[[1L]],NULL,index[[2L]],stubs) else
+  .Call(Cpp_flaglead,x,n,fill,fnlevels(index[[1L]]),index[[1L]],NULL,index[[2L]],stubs)
+}
+flag.matrix <- function(x, n = 1, g = NULL, t = NULL, fill = NA, stubs = TRUE, ...) {
+  if(!missing(...)) stop("Unknown argument ", dotstostr(...))
+  if(is.null(g))
+    return(.Call(Cpp_flagleadm,x,n,fill,0L,0L,NULL,G_t(t,FALSE),stubs)) else if(is.atomic(g)) {
+    if(is.nmfactor(g)) nl <- fnlevels(g) else {
+      g <- qG(g, na.exclude = FALSE)
+      nl <- attr(g, "N.groups")
+    }
+    .Call(Cpp_flagleadm,x,n,fill,nl,g,NULL,G_t(t),stubs)
+  } else {
+    if(!is.GRP(g)) g = GRP(g, return.groups = FALSE)
+    .Call(Cpp_flagleadm,x,n,fill,g[[1L]],g[[2L]],g[[3L]],G_t(t),stubs)
+  }
+}
+flag.grouped_df <- function(x, n = 1, t = NULL, fill = NA, stubs = TRUE, keep.ids = TRUE, ...) {
+  if(!missing(...)) stop("Unknown argument ", dotstostr(...))
+  g <- GRP.grouped_df(x)
+  tsym <- deparse(substitute(t))
+  nam <- names(x)
+  gn <- which(nam %in% g[[5L]])
+  if(!(tsym == "NULL" || is.na(tn <- match(tsym, nam)))) {
+    if(any(gn == tn)) stop("timevar coincides with grouping variables!")
+    t <- x[[tn]]
+    gn <- c(gn, tn)
+  }
+  if(length(gn)) {
+    if(!keep.ids)
+      return(.Call(Cpp_flagleadl,x[-gn],n,fill,g[[1L]],g[[2L]],g[[3L]],G_t(t),stubs)) else {
+        ax <- attributes(x)
+        class(x) <- NULL # Works for multiple lags !!
+        res <- c(x[gn],.Call(Cpp_flagleadl,x[-gn],n,fill,g[[1L]],g[[2L]],g[[3L]],G_t(t),stubs))
+        ax[["names"]] <- names(res)
+        return(setAttributes(res, ax))
+      }
+  } else return(.Call(Cpp_flagleadl,x,n,fill,g[[1L]],g[[2L]],g[[3L]],G_t(t),stubs))
+}
+flag.data.frame <- function(x, n = 1, g = NULL, t = NULL, fill = NA, stubs = TRUE, ...) {
+  if(!missing(...)) stop("Unknown argument ", dotstostr(...))
+  if(is.null(g))
+    return(.Call(Cpp_flagleadl,x,n,fill,0L,0L,NULL,G_t(t,FALSE),stubs)) else if(is.atomic(g)) {
+      if(is.nmfactor(g)) nl <- fnlevels(g) else {
+        g <- qG(g, na.exclude = FALSE)
+        nl <- attr(g, "N.groups")
+      }
+      .Call(Cpp_flagleadl,x,n,fill,nl,g,NULL,G_t(t),stubs)
+    } else {
+      if(!is.GRP(g)) g = GRP(g, return.groups = FALSE)
+      .Call(Cpp_flagleadl,x,n,fill,g[[1L]],g[[2L]],g[[3L]],G_t(t),stubs)
+    }
+}
+flag.pdata.frame <- function(x, n = 1, fill = NA, stubs = TRUE, ...) {
+  if(!missing(...)) stop("Unknown argument ", dotstostr(...))
+  index <- attr(x, "index")
+  if(length(index) > 2L) index <- c(interaction(index[-length(index)], drop = TRUE), index[length(index)])
+  .Call(Cpp_flagleadl,x,n,fill,fnlevels(index[[1L]]),index[[1L]],NULL,index[[2L]],stubs)
+}
+
+# use xt instead of by ??? #   x, n = 1, g = NULL, by = NULL, t = NULL, cols = is.numeric, fill = NA, stubs = TRUE, keep.ids = TRUE, ...
+L <- function(x, n = 1, ...) {
+  UseMethod("L", x)
+}
+L.default <- function(x, n = 1, g = NULL, t = NULL, fill = NA, stubs = TRUE, ...) {
+  flag.default(x, n, g, t, fill, stubs, ...)
+}
+L.pseries <- function(x, n = 1, fill = NA, stubs = TRUE, ...) {
+  flag.pseries(x, n, fill, stubs, ...)
+}
+L.matrix <- function(x, n = 1, g = NULL, t = NULL, fill = NA, stubs = TRUE, ...) {
+  flag.matrix(x, n, g, t, fill, stubs, ...)
+}
+L.grouped_df <- flag.grouped_df
+L.data.frame <- function(x, n = 1, by = NULL, t = NULL, cols = is.numeric,
+                         fill = NA, stubs = TRUE, keep.ids = TRUE, ...) {
+  if(!missing(...)) stop("Unknown argument ", dotstostr(...))
+  if(is.call(by) || is.call(t)) {
+    ax <- attributes(x)
+    class(x) <- NULL
+    nam <- ax[["names"]]
+
+    if(is.call(by)) {
+      if(length(by) == 3L) {
+        cols <- anyNAerror(match(all.vars(by[[2L]]), nam), "Unknown variables passed to by!")
+        gn <- anyNAerror(match(all.vars(by[[3L]]), nam), "Unknown variables passed to by!")
+      } else {
+        gn <- anyNAerror(match(all.vars(by), nam), "Unknown variables passed to by!")
+        cols <- if(is.null(cols)) seq_along(x)[-gn] else cols2int(cols, x, nam)
+      }
+      by <- if(length(gn) == 1L) at2GRP(x[[gn]]) else GRP(x, gn, return.groups = FALSE)
+      if(!keep.ids) gn <- NULL
+    } else {
+      gn <- NULL
+      if(!is.null(cols)) cols <- cols2int(cols, x, nam)
+      if(!is.GRP(by)) by <- if(is.null(by)) list(0L, 0L, NULL) else if(is.atomic(by)) # Necessary for if by is passed externally !!
+        at2GRP(by) else GRP(by, return.groups = FALSE)
+    }
+
+    if(is.call(t)) {
+      t <- all.vars(t)
+      tn <- anyNAerror(match(t, nam), "Unknown variables passed to t!")
+      t <- x[[tn]]
+      cols <- if(is.null(cols)) seq_along(x)[-tn] else cols[cols != tn]
+      if(keep.ids) gn <- c(gn, tn)
+    }
+
+    res <- if(length(gn))
+    c(x[gn], .Call(Cpp_flagleadl,x[cols],n,fill,by[[1L]],by[[2L]],by[[3L]],G_t(t),stubs)) else
+    .Call(Cpp_flagleadl,x[cols],n,fill,by[[1L]],by[[2L]],by[[3L]],G_t(t),stubs)
+    ax[["names"]] <- names(res)
+    return(setAttributes(res, ax))
+  } else if(!is.null(cols)) {
+    ax <- attributes(x)
+    x <- unclass(x)[cols2int(cols, x, ax[["names"]])]
+    ax[["names"]] <- names(x)
+    setattributes(x, ax)
+  }
+
+  if(is.null(by))
+    return(.Call(Cpp_flagleadl,x,n,fill,0L,0L,NULL,G_t(t,FALSE),stubs)) else if(is.atomic(by)) {
+    if(is.nmfactor(by)) nl <- fnlevels(by) else {
+      by <- qG(by, na.exclude = FALSE)
+      nl <- attr(by, "N.groups")
+    }
+    .Call(Cpp_flagleadl,x,n,fill,nl,by,NULL,G_t(t),stubs)
+  } else {
+    if(!is.GRP(by)) by <- GRP(by, return.groups = FALSE)
+    .Call(Cpp_flagleadl,x,n,fill,by[[1L]],by[[2L]],by[[3L]],G_t(t),stubs)
+  }
+}
+L.pdata.frame <- function(x, n = 1, cols = is.numeric, fill = NA, stubs = TRUE, keep.ids = TRUE, ...) {
+  if(!missing(...)) stop("Unknown argument ", dotstostr(...))
+  ax <- attributes(x)
+  nam <- ax[["names"]]
+  index <- ax[["index"]]
+
+  if(keep.ids) {
+    gn <- which(nam %in% names(index))
+    if(length(gn) && is.null(cols)) cols <- seq_along(x)[-gn]
+  } else gn <- NULL
+
+  if(length(index) > 2L) index <- c(interaction(index[-length(index)], drop = TRUE), index[length(index)])
+
+  if(!is.null(cols)) cols <- cols2int(cols, x, nam)
+
+  if(length(gn) && !is.null(cols)) {
+    class(x) <- NULL # Works for multiple lags !!
+    res <- c(x[gn], .Call(Cpp_flagleadl,x[cols],n,fill,fnlevels(index[[1L]]),index[[1L]],NULL,index[[2L]],stubs))
+    ax[["names"]] <- names(res)
+    return(setAttributes(res, ax))
+  } else if(!length(gn)) # could speed up ??
+    return(.Call(Cpp_flagleadl,x[cols],n,fill,fnlevels(index[[1L]]),index[[1L]],NULL,index[[2L]],stubs)) else
+    return(.Call(Cpp_flagleadl,x,n,fill,fnlevels(index[[1L]]),index[[1L]],NULL,index[[2L]],stubs))
+}
+
+
+ # x, n = 1, g = NULL, by = NULL, t = NULL, cols = is.numeric, fill = NA, stubs = TRUE, keep.ids = TRUE, keep.ids = TRUE, ...
+F <- function(x, n = 1, ...) {
+  UseMethod("F", x)
+}
+F.default <- function(x, n = 1, g = NULL, t = NULL, fill = NA, stubs = TRUE, ...) {
+  flag.default(x, -n, g, t, fill, stubs, ...)
+}
+F.pseries <- function(x, n = 1, fill = NA, stubs = TRUE, ...) {
+  flag.pseries(x, -n, fill, stubs, ...)
+}
+F.matrix <- function(x, n = 1, g = NULL, t = NULL, fill = NA, stubs = TRUE, ...) {
+  flag.matrix(x, -n, g, t, fill, stubs, ...)
+}
+F.grouped_df <- function(x, n = 1, t = NULL, fill = NA, stubs = TRUE, keep.ids = TRUE, ...) {
+  if(!missing(...)) stop("Unknown argument ", dotstostr(...))
+  g <- GRP.grouped_df(x)
+  tsym <- deparse(substitute(t))
+  nam <- names(x)
+  gn <- which(nam %in% g[[5L]])
+  if(!(tsym == "NULL" || is.na(tn <- match(tsym, nam)))) {
+    if(any(gn == tn)) stop("timevar coincides with grouping variables!")
+    t <- x[[tn]]
+    gn <- c(gn, tn)
+  }
+  if(length(gn)) {
+    if(!keep.ids)
+      return(.Call(Cpp_flagleadl,x[-gn],-n,fill,g[[1L]],g[[2L]],g[[3L]],G_t(t),stubs)) else {
+        ax <- attributes(x)
+        class(x) <- NULL # Works for multiple lags !!
+        res <- c(x[gn],.Call(Cpp_flagleadl,x[-gn],-n,fill,g[[1L]],g[[2L]],g[[3L]],G_t(t),stubs))
+        ax[["names"]] <- names(res)
+        return(setAttributes(res, ax))
+      }
+  } else return(.Call(Cpp_flagleadl,x,-n,fill,g[[1L]],g[[2L]],g[[3L]],G_t(t),stubs))
+}
+F.data.frame <- function(x, n = 1, by = NULL, t = NULL, cols = is.numeric,
+                         fill = NA, stubs = TRUE, keep.ids = TRUE, ...) {
+  L.data.frame(x, -n, by, t, cols, fill, stubs, keep.ids, ...)
+}
+F.pdata.frame <- function(x, n = 1, cols = is.numeric, fill = NA, stubs = TRUE, keep.ids = TRUE, ...) {
+  L.pdata.frame(x, -n, cols, fill, stubs, keep.ids, ...)
+}
+
