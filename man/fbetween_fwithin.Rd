@@ -91,7 +91,7 @@ fbetween(x, \dots)
   \item{by}{\emph{B and W data.frame method}: Same as g, but also allows one- or two-sided formulas i.e. \code{~ group1} or \code{var1 + var2 ~ group1 + group2}. See Examples.}
   \item{w}{a numeric vector of (non-negative) weights. \code{B / W} \code{data.frame} and \code{pdata.frame} methods also allow a one-sided formula i.e. \code{~ weightcol}. The \code{grouped_df} (\code{dplyr}) method supports lazy-evaluation. See Examples.}
   %\item{w}{a numeric vector of (non-negative) weights. if \code{na.rm = TRUE}, the weight vector can have missing values, and those observations will be skipped in the computation of averages.}
-    \item{cols}{\emph{data.frame method}: Select columns to center/average using a function, column names or indices. Default: All numeric variables. \emph{Note}: \code{cols} is ignored if a two-sided formula is passsed to \code{by}.}
+    \item{cols}{\emph{data.frame method}: Select columns to center/average using a function, column names or indices. Default: All numeric variables. \emph{Note}: \code{cols} is ignored if a two-sided formula is passed to \code{by}.}
   \item{na.rm}{logical. skip missing values in \code{x} when computing averages. If \code{na.rm = FALSE} and a \code{NA} or \code{NaN} is encountered, the average for that group will be \code{NA}, and all data points belonging to that group will also be \code{NA}.}
       \item{effect}{\code{plm} methods: Select which panel identifier should be used as grouping variable. 1L means first variable in the \code{plm::index}, 2L the second etc. if more than one integer is supplied, the corresponding index-variables are interacted. }
   \item{stub}{a prefix or stub to rename all transformed columns. \code{FALSE} will not rename columns.}

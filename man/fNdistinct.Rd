@@ -46,7 +46,7 @@ fNdistinct(x, ...)
 \details{
 \code{fNdistinct} implements a fast algorithm to find the number of distinct values utilizing index- hashing implemented in the \code{Rcpp::sugar::IndexHash} class.
 
-If \code{na.rm = TRUE} (the default), missing values will be skipped yielding substatial performance gains in data with many missing values. If \code{na.rm = TRUE}, missing values will simply be treated as any other value and read into the hash-map. Thus with the former, a numeric vector \code{c(1.25,NaN,3.56,NA)} will have a distinct value count of 2, whereas the latter will return a distinct value count of 4.
+If \code{na.rm = TRUE} (the default), missing values will be skipped yielding substantial performance gains in data with many missing values. If \code{na.rm = TRUE}, missing values will simply be treated as any other value and read into the hash-map. Thus with the former, a numeric vector \code{c(1.25,NaN,3.56,NA)} will have a distinct value count of 2, whereas the latter will return a distinct value count of 4.
 
 Grouped computations are currently performed by mapping the data to a sparse-array directed by \code{g} and then hash-mapping each group. This is often not much slower than using a larger hash-map for the entire data when \code{g = NULL}.
 

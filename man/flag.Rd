@@ -74,7 +74,7 @@ flag(x, n = 1, \dots)
   \item{g}{a factor, \code{\link{GRP}} object, atomic vector (internally converted to factor) or a list of vectors / factors (internally converted to a \code{\link{GRP}} object) used to group \code{x}.}
   \item{by}{\emph{data.frame method}: Same as \code{g}, but also allows one- or two-sided formulas i.e. \code{~ group1} or \code{var1 + var2 ~ group1 + group2}. See Examples.}
   \item{t}{same input as \code{g}, to indicate the time-variable. For safe computation of lags/leads on unordered time-series and panels. \emph{Note}: Data frame method also allows one-sided formula i.e. \code{~time}, and \code{grouped_df} method also allows lazy-evaluation i.e. \code{time} (no quotes).}
-  \item{cols}{\emph{data.frame method}: Select columns to lag/lead using a function, column names or indices. Default: All numeric variables. \emph{Note}: \code{cols} is ignored if a two-sided formula is passsed to \code{by}.}
+  \item{cols}{\emph{data.frame method}: Select columns to lag/lead using a function, column names or indices. Default: All numeric variables. \emph{Note}: \code{cols} is ignored if a two-sided formula is passed to \code{by}.}
   \item{fill}{value to insert when vectors are shifted. Default is \code{NA}. }
   \item{stubs}{logical. \code{TRUE} will rename all lagged / leaded columns by adding a stub or prefix "L\code{n}." / "F\code{n}.".}
   \item{keep.ids}{\emph{data.frame / pdata.frame / grouped_df methods}: Logical. Drop all panel-identifiers from the output (which includes all variables passed to \code{by} or \code{t}). \emph{Note}: For panel-data.frame's and grouped tibbles identifiers are dropped, but the 'index' / 'groups' attributes are kept.}

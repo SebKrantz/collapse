@@ -42,7 +42,7 @@ fmean(x, ...)
 
 \item{keep.group_vars}{\emph{grouped_df method:} Logical. \code{FALSE} removes grouping variables after computation.}
 
-\item{keep.w}{\emph{grouped_df method:} Logical. Ratain summed weighting variable after computation (if contained in \code{grouped_df}).}
+\item{keep.w}{\emph{grouped_df method:} Logical. Retain summed weighting variable after computation (if contained in \code{grouped_df}).}
 
 \item{...}{arguments to be passed to or from other methods.}
 
@@ -56,7 +56,7 @@ The weighted mean is computed as \code{sum(x * w) / sum(w)}. If \code{na.rm = TR
 
 This all seamlessly generalizes to grouped computations, which are performed in a single pass (without splitting the data) and therefore extremely fast.
 
-When applied to data frame's with groups or \code{drop = FALSE}, \code{fmean} preserves all column attributes (such as variable labels) but does not distinguish between classed and unclassed object (thus applying \code{fmean} to a factor column will give a 'malformed factor' error). The attributes of the \code{data.frame} itself are also perserved.
+When applied to data frame's with groups or \code{drop = FALSE}, \code{fmean} preserves all column attributes (such as variable labels) but does not distinguish between classed and unclassed object (thus applying \code{fmean} to a factor column will give a 'malformed factor' error). The attributes of the \code{data.frame} itself are also preserved.
 }
 \value{
 The mean of \code{x}, grouped by \code{g}, or (if \code{\link{TRA}} is used) \code{x} transformed by its mean, grouped by \code{g}.

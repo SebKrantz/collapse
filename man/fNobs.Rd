@@ -4,7 +4,7 @@
 \alias{fNobs.matrix}
 \alias{fNobs.data.frame}
 \alias{fNobs.grouped_df}
-\title{Fast (Grouped) Obervation Count for Matrix-Like Objects}  % Vectors, Matrix and Data Frame Columns}
+\title{Fast (Grouped) Observation Count for Matrix-Like Objects}  % Vectors, Matrix and Data Frame Columns}
 \description{
 \code{fNobs} is a generic function that (column-wise) computes the number of non-missing values in \code{x}, (optionally) grouped by \code{g}. It is much faster than \code{sum(!is.na(x))}. The \code{\link{TRA}} argument can further be used to transform \code{x} using its (grouped) observation count.
 }

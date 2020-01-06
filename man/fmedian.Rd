@@ -46,7 +46,7 @@ Median value estimation is done using \code{std::nth_element} in C++, which is a
 
 Grouped computations are currently performed by mapping the data to a sparse-array directed by \code{g} and then partially sorting each row (group) of that array. For reasons I don't fully understand this requires less memory than a full deep copy which is done with no groups.
 
-When applied to data frame's with groups or \code{drop = FALSE}, \code{fmedian} preserves all column attributes (such as variable labels) but does not distinguish between classed and unclassed objects. The attributes of the \code{data.frame} itself are also perserved.
+When applied to data frame's with groups or \code{drop = FALSE}, \code{fmedian} preserves all column attributes (such as variable labels) but does not distinguish between classed and unclassed objects. The attributes of the \code{data.frame} itself are also preserved.
 
 }
 \value{

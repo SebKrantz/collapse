@@ -16,7 +16,7 @@ Advanced and Fast Data Transformation % and Exploration % in R % and Fast  % Adv
 }
 \details{
 % Put this below bullet points ?? % \code{collapse} provides a carefully conceived % \code{collapse} provides a compact set of functions % organized roughly into several topics
-\code{collapse} provides an integrated set of functions organized into several topics (see \link[=collapse-documentation]{Collapse Overiew}). Many are S3 generic with methods for vectors, matrices and data.frames. Inputs are quickly passed to compiled C/C++ code, enabling flexible and parsimonious coding at extreme speeds.
+\code{collapse} provides an integrated set of functions organized into several topics (see \link[=collapse-documentation]{Collapse Overview}). Many are S3 generic with methods for vectors, matrices and data.frames. Inputs are quickly passed to compiled C/C++ code, enabling flexible and parsimonious coding at extreme speeds.
 
 The package avoids non-standard evaluation and exports core methods for maximum programmability.  % Most are S3 generic with methods for common \code{R} objects (vectors, matrices, data.frames, ...) % high computation  %(aggregation and transformations ~10x \code{data.table} on data <1 Mio obs.).
 Smart attribute handling and additional methods ensure compatibility and support for \code{dplyr}, \code{data.table} and the \code{plm} approach to panel-data. \code{collapse} comes with a built-in hierarchical \link[=collapse-documentation]{documentation} facilitating the use of the package. % and \code{base/stats}. % extra methods warrant, provide ?
@@ -26,7 +26,7 @@ Smart attribute handling and additional methods ensure compatibility and support
 
 % \tabular{lll}{ % \Sexpr{"\u200B"} \Sexpr{"\u200B"}  \tab \emph{ Description }  \cr
 \enumerate{  % (1) \tab\tab ... \cr
-                \item  \emph{Advanced data programming}: A full set of fast statistical functions supporting grouped and weighted computations on vectors, matrices and data.frames. Quick (ordered) and reusable grouping, quick data-converions, and quick select and replace variables.
+                \item  \emph{Advanced data programming}: A full set of fast statistical functions supporting grouped and weighted computations on vectors, matrices and data.frames. Quick (ordered) and reusable grouping, quick data-conversions, and quick select and replace variables.
                  \item \emph{Advanced aggregation}: Fast and easy multi-data-type, multi-function, weighted, parallelized and fully customized data aggregation.
                  \item \emph{Advanced transformations}: Efficient (grouped, weighted) sweeping out of statistics, scaling, centering, higher-dimensional centering, complex linear prediction and partialling-out.
                  \item \emph{Advanced time-computations}: Efficient (sequences of) lags/leads, and (iterated) differences and growth rates on (unordered) time-series and panel data. Multivariate auto, partial and cross-correlation functions for panel data. Panel data to (ts-)array conversions.

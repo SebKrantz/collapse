@@ -75,7 +75,7 @@ Missing-value removal as controlled by the \code{na.rm} argument is done very ef
 
 This all seamlessly generalizes to grouped computations, which are performed in a single pass (without splitting the data) and therefore extremely fast.
 
-When applied to data frame's with groups or \code{drop = FALSE}, \code{fvar/fsd} preserves all column attributes (such as variable labels) but does not distinguish between classed and unclassed object (thus applying \code{fvar/fsd} to a factor column will give a 'malformed factor' error, and applying it to a date variable will give an error or a pretty weird date). The attributes of the \code{data.frame} itself are also perserved.
+When applied to data frame's with groups or \code{drop = FALSE}, \code{fvar/fsd} preserves all column attributes (such as variable labels) but does not distinguish between classed and unclassed object (thus applying \code{fvar/fsd} to a factor column will give a 'malformed factor' error, and applying it to a date variable will give an error or a pretty weird date). The attributes of the \code{data.frame} itself are also preserved.
 }
 \value{
 \code{fvar} returns the variance of \code{x}, grouped by \code{g}, or (if \code{\link{TRA}} is used) \code{x} transformed by its variance, grouped by \code{g}. \code{fsd} computes the standard deviation of \code{x} in like manor.

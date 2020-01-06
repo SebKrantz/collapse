@@ -48,12 +48,12 @@ It computes a set of 7 statistics (nobs, mean, sd, min, max, skewness and kurtos
   \item{vlabels}{logical. Use variable labels in the summary. See \code{\link{vlabels}}.}
   \item{\dots}{arguments to be passed to or from other methods.}
   \item{digits}{the number of digits to print after the comma/dot.}
-  \item{nonsci.digits}{the number of digits to print before resorting to scientific notation (default is tp print out numbers with up to 9 digits and print larger numbers scientifically).}
+  \item{nonsci.digits}{the number of digits to print before resorting to scientific notation (default is to print out numbers with up to 9 digits and print larger numbers scientifically).}
   \item{na.print}{character string to substitute for missing values.}
   \item{return}{logical. Don't print but instead return the formatted object.}
 }
 \details{
-The algorithm used to compute statistics is well described \href{https://en.wikipedia.org/wiki/Algorithms_for_calculating_variance}{here} (see sections \emph{Welford's online algorithm}, \emph{Weighted incremental algorithm} and \emph{Higher-order statistics}. Skewness and kurtosis are calculated as described in \code{Higher-order statistics} and are mathematically identical to those implemented in the \code{moments} package. Just note that \code{qsu} computes the kurtosis (like \code{momens::kurtosis}), not the excess-kurtosis (=  kurtosis - 3) defined in \code{Higher-order statistics}. The \emph{Weighted incremental algorithm} decribed can easily be generalized to higher-order statistics).
+The algorithm used to compute statistics is well described \href{https://en.wikipedia.org/wiki/Algorithms_for_calculating_variance}{here} (see sections \emph{Welford's online algorithm}, \emph{Weighted incremental algorithm} and \emph{Higher-order statistics}. Skewness and kurtosis are calculated as described in \code{Higher-order statistics} and are mathematically identical to those implemented in the \code{moments} package. Just note that \code{qsu} computes the kurtosis (like \code{momens::kurtosis}), not the excess-kurtosis (=  kurtosis - 3) defined in \code{Higher-order statistics}. The \emph{Weighted incremental algorithm} described can easily be generalized to higher-order statistics).
 
 Grouped computations specified with \code{g, by} are carried out extremely efficiently as in \code{fsum} (in a single pass, without splitting the data).
 
@@ -63,9 +63,9 @@ More formally, let \bold{\code{x}} (bold) be a panel vector of data for \code{N}
 
 'Within' statistics are always computed on the vector \bold{\code{x - xi. + x..}}, where \bold{\code{x..}} is simply the 'Overall' mean computed from \bold{\code{x}}, which is added back to preserve the level of the data. The 'Within' mean computed on this data will always be identical to the 'Overall' mean. In the summary output, \code{qsu} reports not 'N', which would be identical to the 'Overall-N', but 'T', the average number of time-periods of data available for each individual obtained as 'T' = 'Overall-N / 'Between-N'. See Examples.
 
-Apart from 'N/T' and the extrema, the standard-deviations ('SD') computed on between- and within- tranformed data are extremely valuable because they indicate how much of the variation in a panel-variable is between-individuals and how much of the variation is within-individuals (over time). At the extremes, variables that have common values across individuals (such as the time-variable 't' in a balanced panel), can readily be identified as individual-invariant because the 'Between-SD' on this variable is 0 and the 'Within-SD' is equal to the 'Overall-SD'. Analogous, time-invariant individual characteristics (such as the individual-id 'i') have a 0 'Within-SD' and a 'Between-SD' equal to the 'Overall-SD'.
+Apart from 'N/T' and the extrema, the standard-deviations ('SD') computed on between- and within- transformed data are extremely valuable because they indicate how much of the variation in a panel-variable is between-individuals and how much of the variation is within-individuals (over time). At the extremes, variables that have common values across individuals (such as the time-variable 't' in a balanced panel), can readily be identified as individual-invariant because the 'Between-SD' on this variable is 0 and the 'Within-SD' is equal to the 'Overall-SD'. Analogous, time-invariant individual characteristics (such as the individual-id 'i') have a 0 'Within-SD' and a 'Between-SD' equal to the 'Overall-SD'.
 
-\code{qsu} comes with it's own print method which by default writes out up to 9 digits at 2 decimal places. Larger numbers are printed in scientific format. for numbers between 7 and 9 digits, a comma ',' is placed afer the 6th digit to designate the millions. Missing values are printed using '-'.
+\code{qsu} comes with it's own print method which by default writes out up to 9 digits at 2 decimal places. Larger numbers are printed in scientific format. for numbers between 7 and 9 digits, a comma ',' is placed after the 6th digit to designate the millions. Missing values are printed using '-'.
 
 }
 \value{

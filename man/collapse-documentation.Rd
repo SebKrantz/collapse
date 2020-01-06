@@ -24,7 +24,7 @@ The following table fully summarizes the contents of \code{\link{collapse}}. The
 
 \link[=A4-quick-conversion]{Quick Data Conversion} \tab\tab Fast conversions, data.frame <> data.table, matrix <> list / data.frame / data.table, array > matrix / data.frame / data.table, list > data.frame / data.table, vector > factor / matrix / data.frame / data.table. \tab\tab \code{qDF}, \code{qDT}, \code{qM}, \code{qF}, \code{qG}, \code{mrtl}, \code{mctl} \cr \cr \cr
 
-\link[=A5-advanced-aggregation]{Advanced Data Aggregation} \tab\tab Fast and easy aggregation of multi-type data, using multiple-functions, and fully customizeable. Can perform weighted and parallelized aggregations. \tab\tab \code{collap} \cr \cr \cr
+\link[=A5-advanced-aggregation]{Advanced Data Aggregation} \tab\tab Fast and easy aggregation of multi-type data, using multiple-functions, and fully customizable. Can perform weighted and parallelized aggregations. \tab\tab \code{collap} \cr \cr \cr
 
 \link[=A6-data-transformations]{Data Transformations} \tab\tab Efficient row- column- data-apply, Split-Apply-Combine computing, fast (grouped and weighted) replace, sweep, scale / standardize, (higher-dimensional) within- and between-transformations (e.g. centering and averaging), complex lin. prediction and partialling out. + methods for \code{dplyr} and \code{plm}. \tab\tab \code{\link{dapply}}, \code{\link{BY}}, \code{\link{TRA}}, \code{\link[=fscale]{fscale/STD}}, \code{\link[=fbetween]{fbetween/B}}, \code{\link[=fwithin]{fwithin/W}}, \code{\link[=HDB]{fHDbetween/HDB}}, \code{\link[=HDW]{fHDwithin/HDW}}. \cr \cr \cr
 

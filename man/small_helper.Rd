@@ -63,7 +63,7 @@ as.numeric_factor(X)          # Coerce a factor, or all factor columns in X, to 
   \item{dn}{a suitable list of dimension names.}
   \item{ordered}{logical. \code{TRUE} sorts the output, \code{FALSE} is slightly faster.}
   \item{prop}{specify the proportion of observations randomly replaced with \code{NA}.}
-  \item{...}{for \code{pwcor} and \code{pwcov}: Other arguments passed to \code{stats::cor} and \code{stats::cov}. For \code{all.identical}, either multiple comma-separeted objects or a single list of objects.}
+  \item{...}{for \code{pwcor} and \code{pwcov}: Other arguments passed to \code{stats::cor} and \code{stats::cov}. For \code{all.identical}, either multiple comma-separated objects or a single list of objects.}
 }
 % \details{
 %%  ~~ If necessary, more details than the description above ~~

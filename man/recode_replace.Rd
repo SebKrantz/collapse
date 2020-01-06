@@ -10,7 +10,7 @@ Recode and Replace Values in Matrix-Like Objects
 }
 \description{
 \itemize{
-\item \code{Recode} can be used to replace multiple values in vectors, matrices or data.frames, using either exact (\code{==}) or regular expresion matching.
+\item \code{Recode} can be used to replace multiple values in vectors, matrices or data.frames, using either exact (\code{==}) or regular expression matching.
 \item \code{replace_non_finite} replaces \code{NaN/Inf/-Inf} (or optionally only \code{Inf/-Inf}) with a value (default is \code{NA}).
 \item \code{replace_outliers} replaces values falling outside a 1- or 2-sided numeric threshold or outside a certain number of column- standard deviations with a value (default is \code{NA}).
 }
@@ -35,7 +35,7 @@ replace_outliers(X, limits, value = NA, single.limit = c("SDs","min","max"))
   \item{single.limit}{a character or integer (only applies if \code{length(limits) == 1}):
   \itemize{
   \item \code{1 - "SDs"} specifies that \code{limits} will be interpreted as a (two-sided) threshold in column standard-deviations. The underlying code is equivalent to \code{X[abs(fscale(X)) > limits] <- value}.
-  \item \code{2 - "min"} speciefies that \code{limits} will be interpreted as a (one-sided) minimum threshold. The underlying code is equivalent to \code{X[X < limits] <- value}.
+  \item \code{2 - "min"} specifies that \code{limits} will be interpreted as a (one-sided) minimum threshold. The underlying code is equivalent to \code{X[X < limits] <- value}.
   \item \code{3 - "max"} speciefies that \code{limits} will be interpreted as a (one-sided) maximum threshold. The underlying code is equivalent to \code{X[X > limits] <- value}.
   }
 }

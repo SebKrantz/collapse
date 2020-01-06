@@ -5,7 +5,7 @@
 * to facilitate complex data transformation and exploration tasks in R
 * to help make R code fast, flexible, parsimonious and programmer friendly 
 
-It is compatibile with *dplyr*, *data.table* and the *plm* approach to panel-data.
+It is compatible with *dplyr*, *data.table* and the *plm* approach to panel-data.
 
 **Key Features:**
 

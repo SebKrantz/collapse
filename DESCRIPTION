@@ -21,7 +21,7 @@ Description: A C/C++ based package for advanced data transformation in R that is
              (1) Advanced data programming: A full set of fast statistical functions 
                  supporting grouped and weighted computations on vectors, matrices 
                  and data.frames. Quick (ordered) and reusable grouping, quick 
-                 data-converions, and quick select and replace variables.
+                 data-conversions, and quick select and replace variables.
              (2) Advanced aggregation: Fast and easy multi-data-type, multi-function, 
                  weighted, parallelized and fully customized data aggregation.
              (3) Advanced transformations: Efficient (grouped, weighted) sweeping out 

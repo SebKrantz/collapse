@@ -53,7 +53,7 @@ panel-data-frame (\code{plm::pdata.frame}).}
   \item{by}{\emph{data frame method}: Same input as \code{g}, but also allows one- or two-sided formulas using the variables in \code{x}, i.e. \code{~ idvar} or \code{var1 + var2 ~ idvar1 + idvar2}.}
 
     \item{t}{same input as g, to indicate the time-variable. For secure computations on unordered panel-vectors. Data frame method also takes one-sided formula i.e. \code{~time}.}
-    \item{cols}{\emph{data.frame method}: Select columns using a function, column names or indices. \emph{Note}: \code{cols} is ignored if a two-sided formula is passsed to \code{by}.}
+    \item{cols}{\emph{data.frame method}: Select columns using a function, column names or indices. \emph{Note}: \code{cols} is ignored if a two-sided formula is passed to \code{by}.}
 \item{lag.max}{maximum lag at which to calculate the acf. Default is \code{2*sqrt(length(x)/ng)} where \code{ng} is the number of groups in the panel-series / supplied to \code{g}.}
 \item{type}{character string giving the type of acf to be computed. Allowed values are "correlation" (the default), "covariance" or "partial".}
 \item{plot}{logical. If \code{TRUE} (the default) the acf is plotted.}

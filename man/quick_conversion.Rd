@@ -33,7 +33,7 @@ qG(x, ordered = TRUE, na.exclude = TRUE)
   \item{X}{a vector, matrix, higher-dimensional array, data.frame or list. \code{mctl} and \code{mrtl} only take matrices.}
   \item{x}{a atomic vector or factor.}
   \item{row.names.col}{should a column capturing names or row.names be added? i.e. when converting atomic objects to data.frame or data.frame to data.table. Can be logical \code{TRUE}, which will add a column \code{"row.names"} in front, or can supply a name for the column i.e. \code{"column1"}.}
-  \item{ordered}{logical. \code{TRUE} sorts the levels and returns an ordered facor.}
+  \item{ordered}{logical. \code{TRUE} sorts the levels and returns an ordered factor.}
   \item{names}{logical. Should the list be named?}
   \item{ret}{integer. 3 return options: 0L - return a list, 1L - return a data.frame, 2L - return a data.table.}
   \item{na.exclude}{logical. \code{TRUE} preserves missing values in character or numeric vectors (i.e. no underlying integer is generated to represent \code{NA}, and functions like \code{na_rm} will remove missing values from the factor). \code{FALSE} creates an integer for \code{NA} and also attaches a class 'na.included', which will make computations with \code{\link{collapse}} functions faster (since no \code{NA} checking is required). \emph{Note} that in both cases a \code{'NA'} level is attached, so this option only concerns the underlying integer vector and the response to functions dealing with missing values (like \code{na_rm}).}

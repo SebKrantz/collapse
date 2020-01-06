@@ -103,7 +103,7 @@ fgrowth(x, n = 1, diff = 1, \dots)
   \item{g}{a factor, \code{\link{GRP}} object, atomic vector (internally converted to factor) or a list of vectors / factors (internally converted to a \code{\link{GRP}} object) used to group \code{x}.}
   \item{by}{\emph{data.frame method}: Same as \code{g}, but also allows one- or two-sided formulas i.e. \code{~ group1} or \code{var1 + var2 ~ group1 + group2}. See Examples.}
   \item{t}{same input as \code{g}, to indicate the time-variable. For safe computation of differnces/growth rates on unordered time-series and panels. \emph{Notes}: data.frame method also allows name, index or one-sided formula i.e. \code{~time}. grouped_df method also allows lazy-evaluation i.e. \code{time} (no quotes).}
-  \item{cols}{\emph{data.frame method}: Select columns to difference/compute growth rates using a function, column names or indices. Default: All numeric variables. \emph{Note}: \code{cols} is ignored if a two-sided formula is passsed to \code{by}.}
+  \item{cols}{\emph{data.frame method}: Select columns to difference/compute growth rates using a function, column names or indices. Default: All numeric variables. \emph{Note}: \code{cols} is ignored if a two-sided formula is passed to \code{by}.}
   \item{fill}{value to insert when vectors are shifted. Default is \code{NA}. }
   \item{logdiff}{logical. compute log-differences instead of exact growth rates. See Details.}
   \item{stubs}{logical. \code{TRUE} will rename all differenced columns by adding a prefix "L\code{n}D\code{diff}." / "F\code{n}D\code{diff}." and a prefix "L\code{n}G\code{diff}." / "F\code{n}G\code{diff}." for growth rates.}

@@ -77,14 +77,14 @@ fHDbetween(x, \dots)
 %- maybe also 'usage' for other objects documented here.
 \arguments{
   \item{x}{a numeric vector, matrix, data.frame, panel-series (\code{plm::pseries}) or panel-data.frame (\code{plm::pdata.frame}).}
-  \item{fl}{a numeric vector, factor, matrix, data.frame or list (which may or may not contain factors). In the data.frame method \code{fl} can alse be a one-or two sided \code{lm()} formula with variables contained in \code{x}. Interactions \code{(:)} and full interactions \code{(*)} are supported! See Examples.}
+  \item{fl}{a numeric vector, factor, matrix, data.frame or list (which may or may not contain factors). In the data.frame method \code{fl} can also be a one-or two sided \code{lm()} formula with variables contained in \code{x}. Interactions \code{(:)} and full interactions \code{(*)} are supported! See Examples.}
   \item{w}{a vector of (non-negative) weights. Currently only weighted centering on multiple factors is supported, not weighted linear models.}
   \item{cols}{\emph{data.frame methods}: Select columns to center (partial-out) or predict using column names, indices or a function. Unless specified otherwise all numeric columns are selected. If \code{NULL}, all variables are selected.}
   \item{na.rm}{remove missing values from both \code{x} and \code{fl}. by default rows with missing values in \code{x} or \code{fl} are removed. In that case an attribute "na.rm" is attached containing the rows removed.}
   \item{fill}{If \code{na.rm = TRUE}, \code{fill = TRUE} will not remove rows with missing values in \code{x} or \code{fl}, but fill them with \code{NA}'s.}
   \item{variable.wise}{\emph{data.frame methods}: Setting \code{variable.wise = TRUE} will process each column individually i.e. use all non-missing cases in each column and in \code{fl} (\code{fl} is only checked for missing values if \code{na.rm = TRUE}). This is a lot less efficient but uses all data available in each column. }
 \item{stub}{a prefix / stub to rename all transformed columns. \code{FALSE} will not rename columns.}
-  \item{\dots}{further arguments passed to \code{lfe::demeanlist} (if \code{fl} conatins factors), or to / from other methods.}
+  \item{\dots}{further arguments passed to \code{lfe::demeanlist} (if \code{fl} contains factors), or to / from other methods.}
 
 }
 \details{
@@ -104,8 +104,8 @@ In general full interactions specified with \code{(*)} can be very slow on large
 \itemize{
 \item \code{fHDbetween/HDW} can center data on multiple factors and also partial out continuous variables while \code{fbetween/W} only centers on one factor, but does that very efficiently...
 \item \code{HDW(data, ~ qF(group1) + qF(group2))} simultaneously centers numeric variables in data on \code{group1} and \code{group2}, while \code{W(data, ~ group1 + group2)} centers data on the interaction of \code{group1} and \code{group2}. The equivalent operation in \code{HDW} would be: \code{HDW(data, ~ qF(group1):qF(group2))}.
-\item \code{W} always does computations varaible-wise (i.e. it uses all joint observations of each variable and the interacted grouping variables), whereas by default \code{HDW} removes all cases missing in either \code{x} or \code{fl}. In short, \code{W(data, ~ group1 + group2)} is actually equivalent to \code{HDW(data, ~ qF(group1):qF(group2), variable.wise = TRUE)}. \code{HDW(data, ~ qF(group1):qF(group2))} would remove any missing cases.
-\item \code{fbetween/B} and \code{fwithin/W} have options to fill missing cases using group-averages and to add the global mean back to group-demeaned data. These options are not abailable in \code{fHDbetween/HDB} and \code{fHDwithin/HDW}. Since \code{fHDbetween/HDB} and \code{fHDwithin/HDW} by default remove missing cases, they also don't have options to keep grouping-columns as in \code{fbetween/B} and \code{fwithin/W}.
+\item \code{W} always does computations variable-wise (i.e. it uses all joint observations of each variable and the interacted grouping variables), whereas by default \code{HDW} removes all cases missing in either \code{x} or \code{fl}. In short, \code{W(data, ~ group1 + group2)} is actually equivalent to \code{HDW(data, ~ qF(group1):qF(group2), variable.wise = TRUE)}. \code{HDW(data, ~ qF(group1):qF(group2))} would remove any missing cases.
+\item \code{fbetween/B} and \code{fwithin/W} have options to fill missing cases using group-averages and to add the global mean back to group-demeaned data. These options are not available in \code{fHDbetween/HDB} and \code{fHDwithin/HDW}. Since \code{fHDbetween/HDB} and \code{fHDwithin/HDW} by default remove missing cases, they also don't have options to keep grouping-columns as in \code{fbetween/B} and \code{fwithin/W}.
 }
 }
 }
