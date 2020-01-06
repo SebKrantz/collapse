@@ -1,7 +1,0 @@
-\documentclass{article}
-\usepackage{pdfpages}
-%\VignetteIndexEntry{collapqsuvignette}
-
-\begin{document}
-\includepdf[pages=-, fitpaper=true]{collapqsuvignette.pdf}
-\end{document}
