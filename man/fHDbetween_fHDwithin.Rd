@@ -128,6 +128,18 @@ In general full interactions specified with \code{(*)} can be very slow on large
 \code{\link[=fbetween]{fbetween/B and fwithin/W}}, \code{\link[=fscale]{fscale/STD}}, \code{\link{TRA}}, \link[=A6-data-transformations]{Data Transformations}, \link[=collapse-documentation]{Collapse Overview}
 }
 \examples{
+HDW(mtcars$mpg, mtcars$carb)                   # Simple regression problems..
+HDW(mtcars$mpg, mtcars[-1])
+HDW(mtcars$mpg, qM(mtcars[-1]))
+HDW(qM(mtcars[3:4]), mtcars[1:2])
+HDW(iris[1:2], iris[3:4])                      # Partialling columns 3 and 4 out of colums 1 and 2
+HDW(iris[1:2], iris[3:5])                      # Adding the Species factor -> fixed effect
+HDW(wlddev, PCGDP + LIFEEX ~ iso3c + qF(year)) # Partialling out 2 fixed effects (iso3c is factor)
+HDW(wlddev, PCGDP + LIFEEX ~ iso3c + qF(year), variable.wise = TRUE) # Variable-wise computations
+HDW(wlddev, PCGDP + LIFEEX ~ iso3c + qF(year) + ODA) # Adding ODA as a continuouus regressor
+HDW(wlddev, PCGDP + LIFEEX ~ iso3c:qF(decade) + qF(year) + ODA) # Country-decade and year FE's
+
+# More complex examples (Only recommended for smaller data)
 lm(HDW.mpg ~ HDW.hp, data = HDW(mtcars, ~ factor(cyl)*carb + vs + wt:gear + wt:gear:carb))
 lm(mpg ~ hp + factor(cyl)*carb + vs + wt:gear + wt:gear:carb, data = mtcars)
 
