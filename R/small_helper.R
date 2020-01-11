@@ -178,7 +178,7 @@ G_t <- function(x, m = TRUE) {
     if(is.integer(x)) return(x) else return(qG(x, na.exclude = FALSE)) # make sure it is ordered !!! qG already ckecks factor !!
   } else if(is.GRP(x)) return(x[[2L]]) else return(GRP(x, return.groups = FALSE)[[2L]])
 }
-rgrep <- function(exp, nam, ...) if(length(exp) > 1L) funique(vapply(exp, grep, 1L, nam, ...), TRUE) else grep(exp, nam, ...)
+rgrep <- function(exp, nam, ...) if(length(exp) > 1L) funique(unlist(lapply(exp, grep, nam, ...), use.names = FALSE)) else grep(exp, nam, ...)
 NROW2 <- function(x, d) if(length(d)) d[1L] else length(x)
 NCOL2 <- function(d, ilv) if(ilv) d[2L] else 1L
 charorNULL <- function(x) if(is.character(x)) x else NULL
