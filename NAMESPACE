@@ -6,7 +6,7 @@ importFrom("lfe", "demeanlist")
 importFrom("stats", "as.formula", "complete.cases", "cor", "cov",
            "setNames", "terms.formula", "ts", "ts.plot", "model.matrix.default")
  export(add_stub)
- export(all.identical)
+ export(all_identical)
  export(as.factor.GRP)
  export(atomic_elem)
  export(`atomic_elem<-`)

@@ -369,7 +369,7 @@ head(TRA(miris, stats, "-"), 3)  # Centering. Same as sweep(miris, 2, stats, "-"
 The code below shows 3 identical ways to center data in the `collapse` package. For the very common centering and averaging tasks, `collapse` supplies 2 special functions `fwithin` and `fbetween` which are slightly faster and more memory efficient than `fmean(..., TRA = "-")` and `fmean(..., TRA = "replace")`. 
 ```{r}
 # 3 ways of centering data
-all.identical(TRA(miris, fmean(miris), "-"),  
+all_identical(TRA(miris, fmean(miris), "-"),  
               fmean(miris, TRA = "-"),   # better for any operation if the stats are not needed
               fwithin(miris))            # fastest, fwithin is discussed below  
 
@@ -577,10 +577,10 @@ psacf(wlddev, PCGDP + LIFEEX + ODA ~ iso3c, ~year)
 L(AirPassengers)                      
 
 # 3 identical ways of computing 1 lag
-all.identical(flag(AirPassengers), L(AirPassengers), F(AirPassengers,-1))
+all_identical(flag(AirPassengers), L(AirPassengers), F(AirPassengers,-1))
 
 # 3 identical ways of computing 1 lead
-all.identical(flag(AirPassengers, -1), L(AirPassengers, -1), F(AirPassengers))
+all_identical(flag(AirPassengers, -1), L(AirPassengers, -1), F(AirPassengers))
 
 # 1 lead and 3 lags - output as matrix
 head(L(AirPassengers,-1:3))     

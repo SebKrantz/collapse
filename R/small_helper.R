@@ -52,7 +52,7 @@ setDimnames <- function(object = dn, dn) {
 }
 pwcor <- function(X, ...) cor(X, ..., use = "pairwise.complete.obs")
 pwcov <- function(X, ...) cov(X, ..., use = "pairwise.complete.obs")
-all.identical <- function(...) {
+all_identical <- function(...) {
   if(length(match.call())-1L == 1L && is.list(...)) { # https://stackoverflow.com/questions/44011918/count-number-of-arguments-passed-to-function
     all(unlist(lapply(...[-1L], identical, ...[[1L]]), use.names = FALSE)) # use vapply ??
   } else {
@@ -60,6 +60,7 @@ all.identical <- function(...) {
     all(unlist(lapply(l[-1L], identical, l[[1L]]), use.names = FALSE)) # use vapply ??
   }
 }
+all.identical <- all_identical
 is.categorical <- function(x) !is.numeric(x)
 is.Date <- function(x) inherits(x, c("Date","POSIXlt","POSIXct"))
 "%!in%" <- function(x, table) match(x, table, nomatch = 0L) == 0L

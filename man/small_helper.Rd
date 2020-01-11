@@ -11,7 +11,7 @@
 \alias{setDimnames}
 \alias{pwcor}
 \alias{pwcov}
-\alias{all.identical}
+\alias{all_identical}
 \alias{is.categorical}
 \alias{is.Date}
 \alias{\%!in\%}
@@ -37,7 +37,7 @@ fnlevels(x)                   # Faster version of nlevels(x) (for factors)
 funique(x, ordered = TRUE)    # Faster unique(x) and sort(unique(x)) for vectors
 na_rm(x)                      # Remove missing values from vector and return vector
 na_insert(X, prop = 0.1)      # Insert missing values at random in vectors, matrices DF's
-all.identical(...)            # Check exact equality of multiple objects or list-elements
+all_identical(...)            # Check exact equality of multiple objects or list-elements
 pwcor(X, ...)                 # Pairwise-correlations
 pwcov(X, ...)                 # Pairwise-covariances
 seq_row(X)                    # Integer sequences along rows of X
@@ -63,7 +63,7 @@ as.numeric_factor(X)          # Coerce a factor, or all factor columns in X, to 
   \item{dn}{a suitable list of dimension names.}
   \item{ordered}{logical. \code{TRUE} sorts the output, \code{FALSE} is slightly faster.}
   \item{prop}{specify the proportion of observations randomly replaced with \code{NA}.}
-  \item{...}{for \code{pwcor} and \code{pwcov}: Other arguments passed to \code{stats::cor} and \code{stats::cov}. For \code{all.identical}, either multiple comma-separated objects or a single list of objects.}
+  \item{...}{for \code{pwcor} and \code{pwcov}: Other arguments passed to \code{stats::cor} and \code{stats::cov}. For \code{all_identical}, either multiple comma-separated objects or a single list of objects.}
 }
 % \details{
 %%  ~~ If necessary, more details than the description above ~~
@@ -97,9 +97,9 @@ vlabels(wlddev)
 vlabels(wlddev) <- vlabels(wlddev)
 
 ## Checking exact equality of multiple objects
-all.identical(iris, iris, iris, iris)
+all_identical(iris, iris, iris, iris)
 l <- replicate(100, fmean(num_vars(iris), iris$Species), simplify = FALSE)
-all.identical(l)
+all_identical(l)
 }
 % Add one or more standard keywords, see file 'KEYWORDS' in the
 % R documentation directory.

@@ -112,7 +112,7 @@ The methods applying to \code{plm} objects (panel-series and panel-data.frames) 
 L(AirPassengers)                      # 1 lag
 F(AirPassengers)                      # 1 lead
 
-all.identical(L(AirPassengers),       # 3 identical ways of computing 1 lag
+all_identical(L(AirPassengers),       # 3 identical ways of computing 1 lag
               flag(AirPassengers),
               F(AirPassengers,-1))
 

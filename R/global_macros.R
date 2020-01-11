@@ -5,7 +5,7 @@
                       "A6-data-transformations","A7-time-series-panel-series","A8-list-processing",
                       "A9-quick-summary","AA1-recode-replace","AA2-small-helpers")
 
-.COLLAPSE_ALL    <-      c("%!in%","add_stub","all.identical","as.factor.GRP","as.numeric_factor",
+.COLLAPSE_ALL    <-      c("%!in%","add_stub","all_identical","as.factor.GRP","as.numeric_factor",
                            "atomic_elem","atomic_elem<-","B","BY","cat_vars","cat_vars<-","char_vars",
                            "char_vars<-","collap","D","dapply","Date_vars","Date_vars<-","F","fact_vars",
                            "fact_vars<-","fbetween","fdiff","ffirst","fgrowth","fHDbetween","fHDwithin",
