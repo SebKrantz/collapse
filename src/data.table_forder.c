@@ -54,7 +54,7 @@ static uint8_t **key = NULL;
 static int *anso = NULL;
 static bool notFirst=false;
 
-#pragma GCC diagnostic ignored "-Wunknown-pragmas" // don't display this warning!! // https://stackoverflow.com/questions/1867065/how-to-suppress-gcc-warnings-from-library-headers?noredirect=1&lq=1
+// #pragma GCC diagnostic ignored "-Wunknown-pragmas" // don't display this warning!! // https://stackoverflow.com/questions/1867065/how-to-suppress-gcc-warnings-from-library-headers?noredirect=1&lq=1
 
 static char msg[1001];
 #define STOP(...) do {snprintf(msg, 1000, __VA_ARGS__); cleanup(); error(msg);} while(0)      // http://gcc.gnu.org/onlinedocs/cpp/Swallowing-the-Semicolon.html#Swallowing-the-Semicolon
@@ -293,16 +293,16 @@ static void range_str(SEXP *x, int n, uint64_t *out_min, uint64_t *out_max, int 
   if (ustr_n!=0) STOP("Internal error: ustr isn't empty when starting range_str: ustr_n=%d, ustr_alloc=%d", ustr_n, ustr_alloc);  // # nocov
   if (ustr_maxlen!=0) STOP("Internal error: ustr_maxlen isn't 0 when starting range_str");  // # nocov
   // savetl_init() has already been called at the start of forder
-  #pragma omp parallel for num_threads(getDTthreads())
+  // #pragma omp parallel for num_threads(getDTthreads())
   for(int i=0; i<n; i++) {
     SEXP s = x[i];
     if (s==NA_STRING) {
-      #pragma omp atomic update
+      // #pragma omp atomic update
       na_count++;
       continue;
     }
     if (TRUELENGTH(s)<0) continue;  // seen this group before
-    #pragma omp critical
+    // #pragma omp critical
     if (TRUELENGTH(s)>=0) {  // another thread may have set it while I was waiting, so check it again
       if (TRUELENGTH(s)>0)   // save any of R's own usage of tl (assumed positive, so we can both count and save in one scan), to restore
         savetl(s);           // afterwards. From R 2.14.0, tl is initialized to 0, prior to that it was random so this step saved too much.
@@ -493,7 +493,7 @@ SEXP forder(SEXP DT, SEXP by, SEXP retGrpArg, SEXP sortGroupsArg, SEXP ascArg, S
   SEXP ans = PROTECT(allocVector(INTSXP, nrow)); n_protect++;
   anso = INTEGER(ans);
   TEND(0)
-  #pragma omp parallel for num_threads(getDTthreads())
+  // #pragma omp parallel for num_threads(getDTthreads())
   for (int i=0; i<nrow; i++) anso[i]=i+1;   // gdb 8.1.0.20180409-git very slow here, oddly
   TEND(1)
   savetl_init();   // from now on use Error not error
@@ -652,7 +652,7 @@ SEXP forder(SEXP DT, SEXP by, SEXP retGrpArg, SEXP sortGroupsArg, SEXP ascArg, S
     switch(TYPEOF(x)) {
     case INTSXP : case LGLSXP : {
       int32_t *xd = INTEGER(x);
-      #pragma omp parallel for num_threads(getDTthreads())
+      // #pragma omp parallel for num_threads(getDTthreads())
       for (int i=0; i<nrow; i++) {
         uint64_t elem=0;
         if (xd[i]==NA_INTEGER) {  // TODO: go branchless if na_count==0
@@ -667,7 +667,7 @@ SEXP forder(SEXP DT, SEXP by, SEXP retGrpArg, SEXP sortGroupsArg, SEXP ascArg, S
     case REALSXP :
       if (inherits(x, "integer64")) {
         int64_t *xd = (int64_t *)REAL(x);
-        #pragma omp parallel for num_threads(getDTthreads())
+        // #pragma omp parallel for num_threads(getDTthreads())
         for (int i=0; i<nrow; i++) {
           uint64_t elem=0;
           if (xd[i]==INT64_MIN) {
@@ -680,7 +680,7 @@ SEXP forder(SEXP DT, SEXP by, SEXP retGrpArg, SEXP sortGroupsArg, SEXP ascArg, S
         }
       } else {
         double *xd = REAL(x);     // TODO: revisit double compression (skip bytes/mult by 10,100 etc) as currently it's often 6-8 bytes even for 3.14,3.15
-        #pragma omp parallel for num_threads(getDTthreads())
+        // #pragma omp parallel for num_threads(getDTthreads())
         for (int i=0; i<nrow; i++) {
           uint64_t elem=0;
           if (!R_FINITE(xd[i])) {
@@ -699,7 +699,7 @@ SEXP forder(SEXP DT, SEXP by, SEXP retGrpArg, SEXP sortGroupsArg, SEXP ascArg, S
       break;
     case STRSXP : {
       SEXP *xd = STRING_PTR(x);
-      #pragma omp parallel for num_threads(getDTthreads())
+      // #pragma omp parallel for num_threads(getDTthreads())
       for (int i=0; i<nrow; i++) {
         uint64_t elem=0;
         if (xd[i]==NA_STRING) {
@@ -749,7 +749,7 @@ SEXP forder(SEXP DT, SEXP by, SEXP retGrpArg, SEXP sortGroupsArg, SEXP ascArg, S
     // Alternatively, we could try and avoid creating anso[] until it's needed, but that has similar complexity issues as (ii)
     // Note that if nalast==-1 (remove NA) anso will contain 0's for the NAs and will be considered not-sorted.
     bool stop = false;
-    #pragma omp parallel for num_threads(getDTthreads())
+    // #pragma omp parallel for num_threads(getDTthreads())
     for (int i=0; i<nrow; i++) {
       if (stop) continue;
       if (anso[i]!=i+1) stop=true;
@@ -1057,12 +1057,12 @@ void radix_r(const int from, const int to, const int radix) {
   bool skip=true;
   const int n_rem = nradix-radix-1;   // how many radix are remaining after this one
   TEND(16)
-  #pragma omp parallel num_threads(getDTthreads())
+  // #pragma omp parallel num_threads(getDTthreads())
   {
     int     *my_otmp = malloc(batchSize * sizeof(int)); // thread-private write
     uint8_t *my_ktmp = malloc(batchSize * sizeof(uint8_t) * n_rem);
     // TODO: move these up above and point restrict[me] to them. Easier to Error that way if failed to alloc.
-    #pragma omp for
+    // #pragma omp for
     for (int batch=0; batch<nBatch; batch++) {
       const int my_n = (batch==nBatch-1) ? lastBatchSize : batchSize;  // lastBatchSize == batchSize when my_n is a multiple of batchSize
       const int my_from = from + batch*batchSize;
@@ -1162,7 +1162,7 @@ void radix_r(const int from, const int to, const int radix) {
   if (!skip) {
     int *TMP = malloc(my_n * sizeof(int));
     if (!TMP) STOP("Unable to allocate TMP for my_n=%d items in parallel batch counting", my_n);
-    #pragma omp parallel for num_threads(getDTthreads())
+    // #pragma omp parallel for num_threads(getDTthreads())
     for (int batch=0; batch<nBatch; batch++) {
       const int *restrict      my_starts = starts + batch*256;
       const uint16_t *restrict my_counts = counts + batch*256;
@@ -1178,7 +1178,7 @@ void radix_r(const int from, const int to, const int radix) {
     memcpy(anso+from, TMP, my_n*sizeof(int));
 
     for (int r=0; r<n_rem; r++) {    // TODO: groups of sizeof(anso)  4 byte int currently  (in future 8).  To save team startup cost (but unlikely significant anyway)
-      #pragma omp parallel for num_threads(getDTthreads())
+      // #pragma omp parallel for num_threads(getDTthreads())
       for (int batch=0; batch<nBatch; batch++) {
         const int *restrict      my_starts = starts + batch*256;
         const uint16_t *restrict my_counts = counts + batch*256;
@@ -1233,16 +1233,16 @@ void radix_r(const int from, const int to, const int radix) {
       // all groups are <=65535 and radix_r() will handle each one single-threaded. Therefore, this time
       // it does make sense to start a parallel team and there will be no nestedness here either.
       if (retgrp) {
-        #pragma omp parallel for ordered schedule(dynamic) num_threads(getDTthreads())
+        // #pragma omp parallel for ordered schedule(dynamic) num_threads(getDTthreads())
         for (int i=0; i<ngrp; i++) {
           int start = from + starts[ugrp[i]];
           radix_r(start, start+my_gs[i]-1, radix+1);
-          #pragma omp ordered
+          // #pragma omp ordered
           flush();
         }
       } else {
         // flush() is only relevant when retgrp==true so save the redundant ordered clause
-        #pragma omp parallel for schedule(dynamic) num_threads(getDTthreads())
+        // #pragma omp parallel for schedule(dynamic) num_threads(getDTthreads())
         for (int i=0; i<ngrp; i++) {
           int start = from + starts[ugrp[i]];
           radix_r(start, start+my_gs[i]-1, radix+1);

@@ -1,6 +1,6 @@
 #include "data.table.h"
 
-#pragma GCC diagnostic ignored "-Wunknown-pragmas" // don't display this warning!! // https://stackoverflow.com/questions/1867065/how-to-suppress-gcc-warnings-from-library-headers?noredirect=1&lq=1
+// #pragma GCC diagnostic ignored "-Wunknown-pragmas" // don't display this warning!! // https://stackoverflow.com/questions/1867065/how-to-suppress-gcc-warnings-from-library-headers?noredirect=1&lq=1
 
 static void subsetVectorRaw(SEXP ans, SEXP source, SEXP idx, const bool anyNA)
 // Only for use by subsetDT() or subsetVector() below, hence static
@@ -128,7 +128,7 @@ SEXP convertNegAndZeroIdx(SEXP idx, SEXP maxArg, SEXP allowOverMax)
                     int *idxp = INTEGER(idx);
 
                   bool stop = false;
-                  #pragma omp parallel for num_threads(getDTthreads())
+                  // #pragma omp parallel for num_threads(getDTthreads())
                   for (int i=0; i<n; i++) {
                     if (stop) continue;
                     int elem = idxp[i];
