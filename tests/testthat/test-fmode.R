@@ -177,7 +177,7 @@ test_that("fmode with weights performs like weighted.Mode (defined above)", {
   expect_equal(fmode(1:3, w = c(NA,1:2), na.rm = FALSE), weighted.Mode(1:3, c(NA,1:2)))
   expect_equal(fmode(-1:1, w = c(NA,1:2), na.rm = FALSE), weighted.Mode(-1:1, c(NA,1:2)))
   expect_equal(fmode(x, w = wNA), weighted.Mode(x, wNA, na.rm = TRUE))
-  expect_equal(fmode(x, w = wNA, na.rm = FALSE), weighted.Mode(x, wNA)) ## Why do many not working ???????????????
+  expect_equal(fmode(x, w = wNA, na.rm = FALSE), weighted.Mode(x, wNA)) #
   # expect_equal(fmode(xNA, w = wNA, na.rm = FALSE), weighted.Mode(xNA, wNA))
   expect_equal(fmode(xNA, w = wNA), weighted.Mode(xNA, wNA, na.rm = TRUE))
   # expect_equal(fmode(data, w = wdatNA), fmode(m, w = wdatNA))
