@@ -1,0 +1,1 @@
+PCG_CXXFLAGS += -O3
