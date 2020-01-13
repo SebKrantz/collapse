@@ -1,4 +1,12 @@
-# This is the first CRAN submission of collapse
+## Resubmission
+This is a resubmission. In this version I have:
+
+* Renamed all.identical to all_identical
+
+* Removed code suppressing pragma warnings in .c files and fixed the issues producing these warnings
+
+* Replaced variable-sized arrays in C++ with vectors to eliminate compiler warnings. 
+
 
 ## License and Authorship
 Since C-code from data.table and stats was copied/modified into src, data.table's
@@ -22,14 +30,13 @@ In addition, all authors have been mentioned on the collapse-package.Rd page.
 * local Windows 8.1 install, R 3.6.1
 * win-builder (devel and release)
 * Ubuntu Linux 16.04 LTS, R-release, GCC (on Rhub)
-* Fedora Linux, R-devel, clang, gfortran (on Rhub)
 * macOS 10.11 El Capitan, R-release (on Rhub)
 
 
 ## R CMD check results
 There were no ERRORs or WARNINGs.
 
-There were 4 NOTEs:
+There was 1 NOTE:
 
   * checking installed package size ... NOTE
     installed size is  6.7Mb
@@ -39,24 +46,3 @@ There were 4 NOTEs:
 This has to do with compiled files (.dll's). Pre-compilation, 
 the size of all .R, .c, .cpp, .h, .man, .rda and .Rmd files 
 together is about 2.4 Mb, of which 0.5 Mb is data (.rda).
-
-* checking S3 generic/method consistency ... NOTE
-  Found the following apparent S3 methods exported but not registered:
-    all.identical
-
-* checking Rd \usage sections ... NOTE
-  S3 methods shown with full name in documentation object 'small-helpers':
-    'all.identical'
-  
-all.identical is not an S3 method. I used '.' to align with base functions like
-all.equal, all.vars, all.names etc., and all_identical already exists with different
-functionalities in 2 other CRAN packages.
-
-* checking pragmas in C/C++ headers and code ... NOTE
-  Files which contain pragma(s) suppressing diagnostics:
-    'src/data.table_forder.c' 'src/data.table_subset.c'
-    
-I am currently not using a Makevars to enable/compile openMP parallelism which could 
-(but need not) be used by data.table's forder and subsetDT. The reason for not using openMP 
-is that the package is compiled by Rcpp and one inevitably runs into this problem: https://stackoverflow.com/questions/54056594/cran-acceptable-way-of-linking-to-openmp-some-c-code-called-from-rcpp. Therefore I have disabled -Wunknown-pragmas warnings in data.table_forder.c and
-data.table_subset.c, which naturally occur when the package is compiled without openMP and with -Wall. I note that these warnings do not show up in R CMD check (so turning them on again would just remove this note), but they are very annoying running across the screen of the user installing the package. 
