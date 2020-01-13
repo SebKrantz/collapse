@@ -244,3 +244,5 @@ G(pwlddev$PCGDP)                      # Panel-Growth rates
 G(pwlddev, 1, 1, 9:12)
 }
 }
+\keyword{package}
+\keyword{manip}

@@ -52,6 +52,7 @@ All of \code{collapse}'s \link[=A1-fast-statistical-functions]{Fast Statistical 
 \seealso{
 \link[=collapse-documentation]{Collapse Overview}, \link[=A1-fast-statistical-functions]{Fast Statistical Functions}, \code{\link{collap}}, \link[=A7-time-series-panel-series]{Time-Series and Panel-Series}
 }
-
+\keyword{manip}
+\keyword{documentation}
 
 

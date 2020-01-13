@@ -28,3 +28,5 @@ l <- list(mtcars, list(mtcars, as.matrix(mtcars)))
 rapply2d(l, fmean)
 unlist2d(rapply2d(l, fmean))
 }
+\keyword{manip}
+\keyword{list}

@@ -86,4 +86,5 @@ mtcars \%>\% group_by(cyl,vs,am) \%>\% fprod
 mtcars \%>\% group_by(cyl,vs,am) \%>\% fprod("/")
 mtcars \%>\% group_by(cyl,vs,am) \%>\% select(mpg) \%>\% fprod
 }
-
+\keyword{univar}
+\keyword{manip}

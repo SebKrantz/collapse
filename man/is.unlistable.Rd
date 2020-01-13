@@ -50,3 +50,4 @@ is.regular(l)
 is.unlistable(l)
 
 }
+\keyword{list}

@@ -55,5 +55,7 @@ The added top-level documentation infrastructure in \code{collapse} allows you t
 \seealso{
   \link{collapse-package}
 }
-
+% \keyword{package}
+\keyword{manip}
+\keyword{documentation}
 

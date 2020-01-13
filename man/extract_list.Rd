@@ -90,3 +90,5 @@ has_elem(l,"tol")
 get_elem(l, "tol")
 
 }
+\keyword{list}
+\keyword{manip}

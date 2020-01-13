@@ -85,4 +85,5 @@ num_vars(dplyr::group_by(iris, Species)), 2)        # allows to remove outliers 
 }
 % Add one or more standard keywords, see file 'KEYWORDS' in the
 % R documentation directory.
-\keyword{manip}% __ONLY ONE__ keyword per line % use one of  RShowDoc("KEYWORDS")
+\keyword{manip} % __ONLY ONE__ keyword per line % use one of  RShowDoc("KEYWORDS")
+\keyword{documentation}

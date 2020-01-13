@@ -82,4 +82,5 @@ wlddev \%>\% group_by(country) \%>\%
              select(PCGDP,LIFEEX,GINI,ODA) \%>\% fNdistinct
 
 }
-
+\keyword{univar}
+\keyword{manip}

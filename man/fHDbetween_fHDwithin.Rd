@@ -154,4 +154,5 @@ lm(mpg ~ hp + cyl*carb + factor(cyl)*poly(drat,2), data = mtcars)
 }
 % Add one or more standard keywords, see file 'KEYWORDS' in the
 % R documentation directory.
-\keyword{manip}% __ONLY ONE__ keyword per line
+\keyword{manip} % __ONLY ONE__ keyword per line
+\keyword{multivariate}

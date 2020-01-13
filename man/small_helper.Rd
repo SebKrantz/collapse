@@ -103,4 +103,7 @@ all_identical(l)
 }
 % Add one or more standard keywords, see file 'KEYWORDS' in the
 % R documentation directory.
-\keyword{manip}% __ONLY ONE__ keyword per line % use one of  RShowDoc("KEYWORDS")
+\keyword{utilities} % __ONLY ONE__ keyword per line % use one of  RShowDoc("KEYWORDS")
+\keyword{attribute}
+\keyword{misc}
+\keyword{documentation}

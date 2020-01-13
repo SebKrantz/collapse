@@ -92,4 +92,5 @@ fmode(wlddev, iso3c, LIFEEX)    # Grouped and weighted mode
 
 detach(wlddev)
 }
-
+\keyword{univar}
+\keyword{manip}

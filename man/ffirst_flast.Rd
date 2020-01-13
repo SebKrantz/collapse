@@ -87,4 +87,5 @@ airquality \%>\% group_by(Month) \%>\% select(Ozone) \%>\% ffirst(na.rm = FALSE)
 
 # Note: All examples generalize to flast!
 }
-
+\keyword{univar}
+\keyword{manip}

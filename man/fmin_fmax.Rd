@@ -99,4 +99,5 @@ mtcars \%>\% group_by(cyl,vs,am) \%>\% fmax
 mtcars \%>\% group_by(cyl,vs,am) \%>\% fmax("\%")
 mtcars \%>\% group_by(cyl,vs,am) \%>\% select(mpg) \%>\% fmax
 }
-
+\keyword{univar}
+\keyword{manip}

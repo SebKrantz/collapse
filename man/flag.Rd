@@ -161,5 +161,5 @@ wlddev \%>\% group_by(iso3c) \%>\% select(year,PCGDP,LIFEEX) \%>\% L(0:2,year) #
 }
 % Add one or more standard keywords, see file 'KEYWORDS' in the
 % R documentation directory.
-\keyword{manip}% __ONLY ONE__ keyword per line % use one of  RShowDoc("KEYWORDS")
-\keyword{ts}% __ONLY ONE__ keyword per line
+\keyword{manip} % __ONLY ONE__ keyword per line % use one of  RShowDoc("KEYWORDS")
+\keyword{ts} % __ONLY ONE__ keyword per line
