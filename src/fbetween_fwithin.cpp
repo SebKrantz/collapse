@@ -338,7 +338,7 @@ NumericMatrix BWmCpp(const NumericMatrix& x, int ng = 0, const IntegerVector& g 
           NumericMatrix::ConstColumn column = x( _ , j);
           NumericMatrix::Column outj = out( _ , j);
           std::vector<double> sumj(ng, NA_REAL); // faster than NumericVector ??
-          int nj[ng]; // use vector also ??
+          std::vector<int> nj(ng);  // int nj[ng]; // use vector also ??
           for(int i = l; i--; ) {
             if(!std::isnan(column[i])) {
               if(std::isnan(sumj[g[i]-1])) {
@@ -380,12 +380,13 @@ NumericMatrix BWmCpp(const NumericMatrix& x, int ng = 0, const IntegerVector& g 
         }
       } else {
         if(Rf_isNull(gs)) {
-          int gsv[ng], memsize = sizeof(int)*ng;
+          // int gsv[ng], memsize = sizeof(int)*ng;
           for(int j = col; j--; ) {
             NumericMatrix::ConstColumn column = x( _ , j);
             NumericMatrix::Column outj = out( _ , j);
             std::vector<double> sumj(ng); // better than array or NumericVector ??
-            memset(gsv, 0, memsize);
+            std::vector<int> gsv(ng);
+            // memset(gsv, 0, memsize);
             int ngs = 0;
             for(int i = 0; i != l; ++i) {
               if(std::isnan(column[i])) {
@@ -521,8 +522,8 @@ NumericMatrix BWmCpp(const NumericMatrix& x, int ng = 0, const IntegerVector& g 
         for(int j = col; j--; ) {
           NumericMatrix::ConstColumn column = x( _ , j);
           NumericMatrix::Column outj = out( _ , j);
-          std::vector<double> sumj(ng, NA_REAL); // best ??
-          double sumwj[ng]; // also make std::vector ??
+          std::vector<double> sumj(ng, NA_REAL), sumwj(ng); // best ??
+          // double sumwj[ng]; // also make std::vector ??
           for(int i = l; i--; ) {
             if(std::isnan(column[i]) || std::isnan(wg[i])) continue;
             if(std::isnan(sumj[g[i]-1])) {
@@ -561,13 +562,14 @@ NumericMatrix BWmCpp(const NumericMatrix& x, int ng = 0, const IntegerVector& g 
           }
         }
       } else {
-        double sumj[ng], sumwj[ng];
-        int memsize = sizeof(double)*ng;
+        // double sumj[ng], sumwj[ng];
+        // int memsize = sizeof(double)*ng;
         for(int j = col; j--; ) {
           NumericMatrix::ConstColumn column = x( _ , j);
           NumericMatrix::Column outj = out( _ , j);
-          memset(sumj, 0, memsize);
-          memset(sumwj, 0, memsize);
+          // memset(sumj, 0, memsize);
+          // memset(sumwj, 0, memsize);
+          std::vector<double> sumj(ng), sumwj(ng);
           int ngs = 0;
           for(int i = 0; i != l; ++i) {
             if(std::isnan(column[i]) || std::isnan(wg[i])) {
@@ -722,13 +724,14 @@ List BWlCpp(const List& x, int ng = 0, const IntegerVector& g = 0,
         }
       } else {
         if(Rf_isNull(gs)) {
-          int gsv[ng], memsize = sizeof(int)*ng;
+          // int gsv[ng], memsize = sizeof(int)*ng;
           for(int j = l; j--; ) {
             NumericVector column = x[j];
             int row = column.size();
             if(gss != row) stop("length(g) must match nrow(X)");
             std::vector<double> sumj(ng);
-            memset(gsv, 0, memsize);
+            // memset(gsv, 0, memsize);
+            std::vector<int> gsv(ng);
             int ngs = 0;
             for(int i = 0; i != row; ++i) {
               if(std::isnan(column[i])) {
@@ -878,8 +881,8 @@ List BWlCpp(const List& x, int ng = 0, const IntegerVector& g = 0,
           NumericVector column = x[j];
           int row = column.size();
           if(gss != row) stop("length(g) must match nrow(X)");
-          std::vector<double> sumj(ng, NA_REAL);
-          double sumwj[ng];
+          std::vector<double> sumj(ng, NA_REAL), sumwj(ng);
+          // double sumwj[ng];
           for(int i = row; i--; ) {
             if(std::isnan(column[i]) || std::isnan(wg[i])) continue;
             if(std::isnan(sumj[g[i]-1])) {
@@ -921,14 +924,15 @@ List BWlCpp(const List& x, int ng = 0, const IntegerVector& g = 0,
           out[j] = outj;
         }
       } else {
-        double sumj[ng], sumwj[ng];
-        int memsize = sizeof(double)*ng;
+        // double sumj[ng], sumwj[ng];
+        // int memsize = sizeof(double)*ng;
         for(int j = l; j--; ) {
           NumericVector column = x[j];
           int row = column.size();
           if(gss != row) stop("length(g) must match nrow(X)");
-          memset(sumj, 0, memsize);
-          memset(sumwj, 0, memsize);
+          // memset(sumj, 0, memsize);
+          // memset(sumwj, 0, memsize);
+          std::vector<double> sumj(ng), sumwj(ng);
           int ngs = 0;
           for(int i = 0; i != row; ++i) {
             if(std::isnan(column[i]) || std::isnan(wg[i])) {

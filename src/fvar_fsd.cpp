@@ -528,7 +528,8 @@ SEXP fvarsdmCpp(const NumericMatrix& x, int ng = 0, const IntegerVector& g = 0,
           for(int j = col; j--; ) {
             NumericMatrix::ConstColumn column = x( _ , j);
             NumericMatrix::Column M2j = M2( _ , j);
-            double meanj[ng], nj[ng], d1j = 0;
+            double d1j = 0; // , meanj[ng], nj[ng];
+            NumericVector meanj = no_init_vector(ng), nj = no_init_vector(ng);
             for(int i = l; i--; ) {
               if(std::isnan(column[i])) continue;
               if(std::isnan(M2j[g[i]-1])) {
@@ -663,7 +664,8 @@ SEXP fvarsdmCpp(const NumericMatrix& x, int ng = 0, const IntegerVector& g = 0,
           for(int j = col; j--; ) {
             NumericMatrix::ConstColumn column = x( _ , j);
             NumericMatrix::Column M2j = M2( _ , j);
-            double meanj[ng], sumwj[ng], d1j = 0;
+            double d1j = 0; // meanj[ng], sumwj[ng];
+            NumericVector meanj = no_init_vector(ng), sumwj = no_init_vector(ng);
             for(int i = l; i--; ) {
               if(std::isnan(column[i]) || std::isnan(wg[i])) continue;
               if(std::isnan(M2j[g[i]-1])) {
@@ -802,8 +804,8 @@ SEXP fvarsdmCpp(const NumericMatrix& x, int ng = 0, const IntegerVector& g = 0,
           for(int j = col; j--; ) {
             NumericMatrix::ConstColumn column = x( _ , j);
             NumericMatrix::Column sq_sumj = sq_sum( _ , j);
-            double sumj[ng];
-            int nj[ng];
+            NumericVector sumj = no_init_vector(ng); // double sumj[ng];
+            IntegerVector nj = no_init_vector(ng); // int nj[ng];
             for(int i = l; i--; ) {
               if(std::isnan(column[i])) continue;
               if(std::isnan(sq_sumj[g[i]-1])) {
@@ -828,11 +830,11 @@ SEXP fvarsdmCpp(const NumericMatrix& x, int ng = 0, const IntegerVector& g = 0,
         } else {
           NumericMatrix sq_sum(ng, col);
           if(Rf_isNull(gs)) {
-            int gsv[ng], memsize = sizeof(int)*ng;
+            // int gsv[ng], memsize = sizeof(int)*ng;
             for(int j = col; j--; ) {
               NumericMatrix::ConstColumn column = x( _ , j);
               NumericMatrix::Column sq_sumj = sq_sum( _ , j);
-              memset(gsv, 0, memsize);
+              std::vector<int> gsv(ng); // memset(gsv, 0, memsize);
               std::vector<double> sumj(ng);
               int ngs = 0;
               for(int i = 0; i != l; ++i) {
@@ -945,7 +947,7 @@ SEXP fvarsdmCpp(const NumericMatrix& x, int ng = 0, const IntegerVector& g = 0,
           for(int j = col; j--; ) {
             NumericMatrix::ConstColumn column = x( _ , j);
             NumericMatrix::Column sq_sumj = sq_sum( _ , j);
-            double sumj[ng], sumwj[ng];
+            NumericVector sumj = no_init_vector(ng), sumwj = no_init_vector(ng); // double sumj[ng], sumwj[ng];
             for(int i = l; i--; ) {
               if(std::isnan(column[i]) || std::isnan(wg[i])) continue;
               if(std::isnan(sq_sumj[g[i]-1])) {
@@ -1078,9 +1080,9 @@ SEXP fvarsdlCpp(const List& x, int ng = 0, const IntegerVector& g = 0,
           for(int j = l; j--; ) {
             NumericVector column = x[j];
             if(gss != column.size()) stop("length(g) must match nrow(X)");
-            NumericVector M2j(ng, NA_REAL);
-            double meanj[ng], d1j = 0;
-            std::vector<double> nj(ng, 1.0);
+            NumericVector M2j(ng, NA_REAL), nj(ng, 1.0), meanj = no_init_vector(ng);
+            double d1j = 0; // meanj[ng]
+            // std::vector<double> nj(ng, 1.0);
             for(int i = gss; i--; ) {
               if(std::isnan(column[i])) continue;
               if(std::isnan(M2j[g[i]-1])) {
@@ -1226,8 +1228,8 @@ SEXP fvarsdlCpp(const List& x, int ng = 0, const IntegerVector& g = 0,
           for(int j = l; j--; ) {
             NumericVector column = x[j];
             if(gss != column.size()) stop("length(g) must match nrow(X)");
-            NumericVector M2j(ng, NA_REAL);
-            double sumwj[ng], meanj[ng], d1j = 0;
+            NumericVector M2j(ng, NA_REAL), meanj = no_init_vector(ng), sumwj = no_init_vector(ng);
+            double d1j = 0; // , sumwj[ng], meanj[ng];
             for(int i = gss; i--; ) {
               if(std::isnan(column[i]) || std::isnan(wg[i])) continue;
               if(std::isnan(M2j[g[i]-1])) {
@@ -1377,8 +1379,8 @@ SEXP fvarsdlCpp(const List& x, int ng = 0, const IntegerVector& g = 0,
           for(int j = l; j--; ) {
             NumericVector column = x[j];
             if(gss != column.size()) stop("length(g) must match nrow(X)");
-            NumericVector sq_sumj(ng, NA_REAL);
-            double sumj[ng];
+            NumericVector sq_sumj(ng, NA_REAL), sumj = no_init_vector(ng);
+            // double sumj[ng];
             std::vector<int> nj(ng, 1);
             for(int i = gss; i--; ) {
               if(std::isnan(column[i])) continue;
@@ -1409,13 +1411,12 @@ SEXP fvarsdlCpp(const List& x, int ng = 0, const IntegerVector& g = 0,
           }
         } else {
           if(Rf_isNull(gs)) {
-            int gsv[ng], memsize = sizeof(int)*ng;
+            // int gsv[ng], memsize = sizeof(int)*ng;
             for(int j = l; j--; ) {
               NumericVector column = x[j];
               if(gss != column.size()) stop("length(g) must match nrow(X)");
-              NumericVector sq_sumj(ng);
-              memset(gsv, 0, memsize);
-              std::vector<double> sumj(ng);
+              NumericVector sq_sumj(ng), sumj(ng);
+              std::vector<int> gsv(ng); // memset(gsv, 0, memsize);
               int ngs = 0;
               for(int i = 0; i != gss; ++i) {
                 if(std::isnan(column[i])) {
@@ -1556,8 +1557,8 @@ SEXP fvarsdlCpp(const List& x, int ng = 0, const IntegerVector& g = 0,
           for(int j = l; j--; ) {
             NumericVector column = x[j];
             if(gss != column.size()) stop("length(g) must match nrow(X)");
-            NumericVector sq_sumj(ng, NA_REAL);
-            double sumj[ng], sumwj[ng];
+            NumericVector sq_sumj(ng, NA_REAL), sumj = no_init_vector(ng), sumwj = no_init_vector(ng);
+            // double sumj[ng], sumwj[ng];
             for(int i = gss; i--; ) {
               if(std::isnan(column[i]) || std::isnan(wg[i])) continue;
               if(std::isnan(sq_sumj[g[i]-1])) {

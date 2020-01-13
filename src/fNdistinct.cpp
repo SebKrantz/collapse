@@ -285,9 +285,9 @@ SEXP fNdistinctmImpl(const Matrix<RTYPE>& x, int ng, const IntegerVector& g,
     if(l != g.size()) stop("length(g) must match length(x)");
     std::vector<std::vector<storage_t> > gmap(ng);
     IntegerMatrix out = no_init_matrix(ng, col);
-    int n[ng];
+    std::vector<int> n(ng);
     if(Rf_isNull(gs)) {
-      memset(n, 0, sizeof(int)*ng);
+      // memset(n, 0, sizeof(int)*ng);
       for(int i = 0; i != l; ++i) ++n[g[i]-1];
       for(int i = 0; i != ng; ++i) {
         if(n[i] == 0) stop("group size of 0 encountered");
@@ -305,7 +305,7 @@ SEXP fNdistinctmImpl(const Matrix<RTYPE>& x, int ng, const IntegerVector& g,
       for(int j = col; j--; ) {
         ConstMatrixColumn<RTYPE> column = x(_ , j);
         IntegerMatrix::Column outj = out(_, j);
-        memset(n, 0, sizeof(int)*ng);
+        n.assign(ng, 0); // memset(n, 0, sizeof(int)*ng);
         for(int i = 0; i != l; ++i) gmap[g[i]-1][n[g[i]-1]++] = column[i]; // reading in all the values. Better way ??
         for(int gr = 0; gr != ng; ++gr) {
           const std::vector<storage_t>& temp = gmap[gr]; // good ?? // const Vector<RTYPE>& // wrap()
@@ -329,7 +329,7 @@ SEXP fNdistinctmImpl(const Matrix<RTYPE>& x, int ng, const IntegerVector& g,
       for(int j = col; j--; ) {
         ConstMatrixColumn<RTYPE> column = x(_ , j);
         IntegerMatrix::Column outj = out(_, j);
-        memset(n, 0, sizeof(int)*ng);
+        n.assign(ng, 0); // memset(n, 0, sizeof(int)*ng);
         for(int i = 0; i != l; ++i) gmap[g[i]-1][n[g[i]-1]++] = column[i]; // reading in all the values. Better way ??
         for(int gr = 0; gr != ng; ++gr) {
           sugar::IndexHash<RTYPE> hash(wrap(gmap[gr]));

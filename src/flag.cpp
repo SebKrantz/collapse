@@ -89,14 +89,14 @@ Vector<RTYPE> flagleadCppImpl(const Vector<RTYPE>& x, const IntegerVector& n, co
     if(l != g.size()) stop("length(x) must match length(g)");
     int ags = l/ng, ngp = ng+1;
     if(Rf_isNull(t)) { // Ordered data
-      int seen[ngp], memsize = sizeof(int)*ngp;
+      // int seen[ngp], memsize = sizeof(int)*ngp;
       for(int p = ns; p--; ) {
         int np = n[p];
         if(absn[p] > ags) stop("lag-length exceeds average group-size (%i)", ags);
         MatrixColumn<RTYPE> outp = out( _ , p);
         if(np>0) {
           if(names) colnam[p] = "L" + nc[p];
-          memset(seen, 0, memsize);
+          std::vector<int> seen(ngp); // memset(seen, 0, memsize);
           for(int i = 0; i != l; ++i) {
             if(seen[g[i]] == np) {
               outp[i] = x[i-np];
@@ -106,7 +106,7 @@ Vector<RTYPE> flagleadCppImpl(const Vector<RTYPE>& x, const IntegerVector& n, co
             }
           }
         } else if(np<0) {
-          memset(seen, 0, memsize);
+          std::vector<int> seen(ngp); // memset(seen, 0, memsize);
           if(names) colnam[p] = "F" + nc[p];
           for(int i = l; i--; ) { // good??
             if(seen[g[i]] == np) {
@@ -139,8 +139,8 @@ Vector<RTYPE> flagleadCppImpl(const Vector<RTYPE>& x, const IntegerVector& n, co
         if(ng != gsv.size()) stop("ng must match length(gs)");
         for(int i = 0; i != l; ++i) if(ord[i] < min[g[i]]) min[g[i]] = ord[i];
       }
-      IntegerVector omap(l);
-      int cgs[ngp];
+      IntegerVector omap(l), cgs = no_init_vector(ngp);
+      // int cgs[ngp];
       cgs[1] = 0;
       for(int i = 2; i != ngp; ++i) cgs[i] = cgs[i-1] + gsv[i-2]; // or get "starts from forderv"
       for(int i = 0; i != l; ++i) {
@@ -327,7 +327,7 @@ Matrix<RTYPE> flagleadmCppImpl(const Matrix<RTYPE>& x, const IntegerVector& n, c
     if(l != g.size()) stop("length(x) must match length(g)");
     int ags = l/ng, ngp = ng+1;
     if(Rf_isNull(t)) { // Ordered data
-      int seen[ngp], memsize = sizeof(int)*ngp;
+      // int seen[ngp], memsize = sizeof(int)*ngp;
       for(int j = 0; j != col; ++j) {
         ConstMatrixColumn<RTYPE> column = x( _ , j);
         for(int p = 0; p != ns; ++p) {
@@ -336,7 +336,7 @@ Matrix<RTYPE> flagleadmCppImpl(const Matrix<RTYPE>& x, const IntegerVector& n, c
           MatrixColumn<RTYPE> outj = out( _ , pos);
           if(np>0) {
             if(names) colnam[pos] = "L" + nc[p] + "." + coln[j];
-            memset(seen, 0, memsize);
+            std::vector<int> seen(ngp); // memset(seen, 0, memsize);
             for(int i = 0; i != l; ++i) {
               if(seen[g[i]] == np) {
                 outj[i] = column[i-np];
@@ -347,7 +347,7 @@ Matrix<RTYPE> flagleadmCppImpl(const Matrix<RTYPE>& x, const IntegerVector& n, c
             }
           } else if(np<0) {
             if(names) colnam[pos] = "F" + nc[p] + "." + coln[j];
-            memset(seen, 0, memsize);
+            std::vector<int> seen(ngp); // memset(seen, 0, memsize);
             for(int i = l; i--; ) { // good??
               if(seen[g[i]] == np) {
                 outj[i] = column[i-np];
@@ -381,8 +381,8 @@ Matrix<RTYPE> flagleadmCppImpl(const Matrix<RTYPE>& x, const IntegerVector& n, c
         if(ng != gsv.size()) stop("ng must match length(gs)");
         for(int i = 0; i != l; ++i) if(ord[i] < min[g[i]]) min[g[i]] = ord[i];
       }
-      IntegerVector omap(l);
-      int cgs[ngp], index[l]; // See flag.cpp for any improvements on this code !!
+      IntegerVector omap(l), cgs = no_init_vector(ngp), index = no_init_vector(l);
+      // int cgs[ngp], index[l]; // See flag.cpp for any improvements on this code !!
       cgs[1] = 0;
       for(int i = 2; i != ngp; ++i) cgs[i] = cgs[i-1] + gsv[i-2]; // or get "starts from forderv"
       for(int i = 0; i != l; ++i) {
@@ -773,7 +773,7 @@ List flagleadlCpp(const List& x, const IntegerVector& n = 1, const SEXP& fill = 
   } else { // With groups
     int gss = g.size(), ags = gss/ng, ngp = ng+1;
     if(Rf_isNull(t)) { // Ordered data
-      int seen[ngp], memsize = sizeof(int)*ngp;
+      std::vector<int> seen(ngp); // int seen[ngp], memsize = sizeof(int)*ngp;
       for(int j = 0; j != l; ++j) {
         switch(TYPEOF(x[j])) {
         case REALSXP: {
@@ -786,7 +786,7 @@ List flagleadlCpp(const List& x, const IntegerVector& n = 1, const SEXP& fill = 
             if(np>0) {
               NumericVector outjp = no_init_vector(gss);
               if(names) nam[pos] = "L" + nc[p] + "." + na[j];
-              memset(seen, 0, memsize);
+              seen.assign(ngp, 0); // std::vector<int> seen(ngp); // memset(seen, 0, memsize);
               for(int i = 0; i != gss; ++i) {
                 if(seen[g[i]] == np) {
                   outjp[i] = column[i-np];
@@ -800,7 +800,7 @@ List flagleadlCpp(const List& x, const IntegerVector& n = 1, const SEXP& fill = 
             } else if(np<0) {
               NumericVector outjp = no_init_vector(gss);
               if(names) nam[pos] = "F" + nc[p] + "." + na[j];
-              memset(seen, 0, memsize);
+              seen.assign(ngp, 0); //std::vector<int> seen(ngp); // memset(seen, 0, memsize);
               for(int i = gss; i--; ) { // good??
                 if(seen[g[i]] == np) {
                   outjp[i] = column[i-np];
@@ -829,7 +829,7 @@ List flagleadlCpp(const List& x, const IntegerVector& n = 1, const SEXP& fill = 
             if(np>0) {
               IntegerVector outjp = no_init_vector(gss);
               if(names) nam[pos] = "L" + nc[p] + "." + na[j];
-              memset(seen, 0, memsize);
+              seen.assign(ngp, 0); //std::vector<int> seen(ngp); // memset(seen, 0, memsize);
               for(int i = 0; i != gss; ++i) {
                 if(seen[g[i]] == np) {
                   outjp[i] = column[i-np];
@@ -843,7 +843,7 @@ List flagleadlCpp(const List& x, const IntegerVector& n = 1, const SEXP& fill = 
             } else if(np<0) {
               IntegerVector outjp = no_init_vector(gss);
               if(names) nam[pos] = "F" + nc[p] + "." + na[j];
-              memset(seen, 0, memsize);
+              seen.assign(ngp, 0); //std::vector<int> seen(ngp); // memset(seen, 0, memsize);
               for(int i = gss; i--; ) { // good??
                 if(seen[g[i]] == np) {
                   outjp[i] = column[i-np];
@@ -872,7 +872,7 @@ List flagleadlCpp(const List& x, const IntegerVector& n = 1, const SEXP& fill = 
             if(np>0) {
               CharacterVector outjp = no_init_vector(gss);
               if(names) nam[pos] = "L" + nc[p] + "." + na[j];
-              memset(seen, 0, memsize);
+              seen.assign(ngp, 0); //std::vector<int> seen(ngp); // memset(seen, 0, memsize);
               for(int i = 0; i != gss; ++i) {
                 if(seen[g[i]] == np) {
                   outjp[i] = column[i-np];
@@ -886,7 +886,7 @@ List flagleadlCpp(const List& x, const IntegerVector& n = 1, const SEXP& fill = 
             } else if(np<0) {
               CharacterVector outjp = no_init_vector(gss);
               if(names) nam[pos] = "F" + nc[p] + "." + na[j];
-              memset(seen, 0, memsize);
+              seen.assign(ngp, 0); //std::vector<int> seen(ngp); // memset(seen, 0, memsize);
               for(int i = gss; i--; ) { // good??
                 if(seen[g[i]] == np) {
                   outjp[i] = column[i-np];
@@ -915,7 +915,7 @@ List flagleadlCpp(const List& x, const IntegerVector& n = 1, const SEXP& fill = 
             if(np>0) {
               LogicalVector outjp = no_init_vector(gss);
               if(names) nam[pos] = "L" + nc[p] + "." + na[j];
-              memset(seen, 0, memsize);
+              seen.assign(ngp, 0); //std::vector<int> seen(ngp); // memset(seen, 0, memsize);
               for(int i = 0; i != gss; ++i) {
                 if(seen[g[i]] == np) {
                   outjp[i] = column[i-np];
@@ -929,7 +929,7 @@ List flagleadlCpp(const List& x, const IntegerVector& n = 1, const SEXP& fill = 
             } else if(np<0) {
               LogicalVector outjp = no_init_vector(gss);
               if(names) nam[pos] = "F" + nc[p] + "." + na[j];
-              memset(seen, 0, memsize);
+              seen.assign(ngp, 0); //std::vector<int> seen(ngp); // memset(seen, 0, memsize);
               for(int i = gss; i--; ) { // good??
                 if(seen[g[i]] == np) {
                   outjp[i] = column[i-np];
@@ -969,8 +969,8 @@ List flagleadlCpp(const List& x, const IntegerVector& n = 1, const SEXP& fill = 
         if(ng != gsv.size()) stop("ng must match length(gs)");
         for(int i = 0; i != gss; ++i) if(ord[i] < min[g[i]]) min[g[i]] = ord[i];
       }
-      IntegerVector omap(gss);
-      int cgs[ngp], index[gss]; // See flag.cpp for any improvements on this code !!
+      IntegerVector omap(gss), cgs = no_init_vector(ngp), index = no_init_vector(gss);
+      // int cgs[ngp], index[gss]; // See flag.cpp for any improvements on this code !!
       cgs[1] = 0;
       for(int i = 2; i != ngp; ++i) cgs[i] = cgs[i-1] + gsv[i-2]; // or get "starts from forderv"
       for(int i = 0; i != gss; ++i) {
