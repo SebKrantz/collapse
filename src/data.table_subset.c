@@ -12,16 +12,16 @@ static void subsetVectorRaw(SEXP ans, SEXP source, SEXP idx, const bool anyNA)
   // anyNA refers to NA _in idx_; if there's NA in the data (source) that's just regular data to be copied
   // negatives, zeros and out-of-bounds have already been dealt with in convertNegAndZero so we can rely
   // here on idx in range [1,length(ans)].
+  //  _Pragma("omp parallel for num_threads(getDTthreads())") (in PARLOOP below)
+  //  _Pragma("omp parallel for num_threads(getDTthreads())")
 
   #define PARLOOP(_NAVAL_)                                        \
   if (anyNA) {                                                    \
-    _Pragma("omp parallel for num_threads(getDTthreads())")       \
     for (int i=0; i<n; i++) {                                     \
       int elem = idxp[i];                                         \
       ap[i] = elem==NA_INTEGER ? _NAVAL_ : sp[elem-1];            \
     }                                                             \
   } else {                                                        \
-    _Pragma("omp parallel for num_threads(getDTthreads())")       \
     for (int i=0; i<n; i++) {                                     \
       ap[i] = sp[idxp[i]-1];                                      \
     }                                                             \
