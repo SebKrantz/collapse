@@ -1245,8 +1245,8 @@ List fscalelCpp(List x, int ng = 0, IntegerVector g = 0, SEXP gs = R_NilValue,
           for(int j = l; j--; ) {
             NumericVector column = x[j];
             if(gss != column.size()) stop("length(g) must match nrow(X)");
-            NumericVector sq_sumj(ng, NA_REAL), sumj = no_init_vector(ng);
-            IntegerVector nj = no_init_vector(ng);
+            NumericVector sq_sumj(ng, NA_REAL), sumj(ng); //  = no_init_vector
+            IntegerVector nj(ng); //  = no_init_vector
             // std::vector<double> sq_sumj(ng, NA_REAL); // faster and stable ??
             // double sumj[ng];
             // int nj[ng];
