@@ -339,7 +339,7 @@ SEXP fmeanmCpp(const NumericMatrix& x, int ng = 0, const IntegerVector& g = 0, c
         NumericMatrix sum = no_init_matrix(ng, col);
         std::fill(sum.begin(), sum.end(), NA_REAL);
         // NumericMatrix sumw = no_init_matrix(ng, col); // Numerically stable ??????? -> Yes !!
-        NumericVector sumwj = no_init_vector(ng);
+        NumericVector sumwj(ng); // = no_init_vector(ng);
         for(int j = col; j--; ) {
           NumericMatrix::ConstColumn column = x( _ , j);
           NumericMatrix::Column sumj = sum( _ , j);
@@ -586,7 +586,7 @@ SEXP fmeanlCpp(const List& x, int ng = 0, const IntegerVector& g = 0, const SEXP
       int gss = g.size();
       if(wgs != gss) stop("length(w) must match length(g)");
       if(narm) {
-        NumericVector sumwj = no_init_vector(ng); // stable and faster ??
+        NumericVector sumwj(ng);  // = no_init_vector(ng); // stable and faster ??
         for(int j = l; j--; ) {
           NumericVector column = x[j];
           if(gss != column.size()) stop("length(g) must match nrow(X)");
