@@ -113,8 +113,9 @@ print.GRP <- function(x, n = 6, ...) {
 
 plot.GRP <- function(x, breaks = "auto", type = "s", horizontal = FALSE, ...) {
   if(!missing(...)) stop("Unknown argument ", dotstostr(...))
-  settings <- par(c("mfrow","mar","mgp"))
-  par(mfrow = if(horizontal) 1:2 else 2:1, mar = c(3.9,4.1,2.1,1), mgp = c(2.5,1,0))
+  # settings <- par(c("mfrow","mar","mgp"))
+  oldpar <- par(mfrow = if(horizontal) 1:2 else 2:1, mar = c(3.9,4.1,2.1,1), mgp = c(2.5,1,0))
+  on.exit(par(oldpar))
   if(breaks == "auto") {
     ugs <- length(funique(x[[3L]]))
     breaks <- if(ugs > 80) 80 else ugs
@@ -124,7 +125,6 @@ plot.GRP <- function(x, breaks = "auto", type = "s", horizontal = FALSE, ...) {
   if(breaks == 1L) plot(x[[3L]][1L], x[[1L]], type = "h", ylab = "Frequency", xlab = "Group Size",
                         main = "Histogram of Group Sizes", frame.plot = FALSE) else
   hist(x[[3L]], breaks, xlab = "Group Size", main = "Histogram of Group Sizes")
-  par(settings)
 }
 
 as.factor.GRP <- function(x) { # , ...
