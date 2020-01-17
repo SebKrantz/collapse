@@ -2,26 +2,27 @@
 # sourceCpp("C++/small_helper.cpp")
 
 # Export --------------------------------------
-vlabels <- function(X) {
+vlabels <- function(X, attrn = "label") {
   if(is.atomic(X)) {
-    res <- attr(X, "label")
+    res <- attr(X, attrn)
     if(is.null(res)) NA else res
   } else {
-    res <- lapply(X, attr, "label")
+    res <- lapply(X, attr, attrn)
     res[vapply(res, is.null, TRUE)] <- NA
     unlist(res)
   }
 }
-"vlabels<-" <- function(X, value) {
+"vlabels<-" <- function(X, attrn = "label", value) {
   if(is.atomic(X)) {
-    attr(X, "label") <- value
+    attr(X, attrn) <- value
   } else {
-    for (i in seq_along(value)) attr(X[[i]], "label") <- value[i]
+    for (i in seq_along(value)) attr(X[[i]], attrn) <- value[i]
   }
   X
 }
-namlab <- function(X, class = FALSE) {
-  res <- if(class) list(names(X), vapply(X, class, character(1)), vlabels(X)) else list(names(X), vlabels(X))
+namlab <- function(X, class = FALSE, attrn = "label") {
+  pasteclass <- function(x) paste(class(x), collapse = " ")
+  res <- if(class) list(names(X), vapply(X, pasteclass, character(1)), vlabels(X, attrn)) else list(names(X), vlabels(X, attrn))
   attributes(res) <- list(names = if(class) c("Variable","Class","Label") else c("Variable","Label"),
                           row.names = .set_row_names(length(X)),
                           class = "data.frame")

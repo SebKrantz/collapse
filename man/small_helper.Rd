@@ -28,11 +28,11 @@
 Elementary exported convenience functions in the \code{collapse} package, that help to deal with variable names, labels, missing values, matching and object checking etc... For recoding and replacing values see \code{\link{Recode}}.
 }
 \usage{
-vlabels(X)                    # Get labels of variables in X, in attr(X[[i]], "label")
-vlabels(X) <- value           # Set labels of variables in X
-namlab(X, class = FALSE)      # Return a data.frame of variable names, labels and classes
+vlabels(X, attrn = "label")   # Get labels of variables in X, in attr(X[[i]], attr)
+vlabels(X, attrn = "label") <- value      # Set labels of variables in X
+namlab(X, class = FALSE, attrn = "label") # Return data.frame of names, labels and classes
 add_stub(X, stub, pre = TRUE) # Add a stub (i.e. prefix or postfix) to variables
-x \%!in\% table                 # The opposite of \%in\%
+x \%!in\% table               # The opposite of \%in\%
 fnlevels(x)                   # Faster version of nlevels(x) (for factors)
 funique(x, ordered = TRUE)    # Faster unique(x) and sort(unique(x)) for vectors
 na_rm(x)                      # Remove missing values from vector and return vector
@@ -55,6 +55,7 @@ as.numeric_factor(X)          # Coerce a factor, or all factor columns in X, to 
   \item{X}{a (numeric) matrix or data.frame.}
   \item{object}{an array or data.frame.}
   \item{x, table}{(numeric) vectors.}
+  \item{attrn}{Character. Name of attribute to store labels or retrieve labels from.}
   \item{value}{a matching character vector of variable labels.}
   \item{class}{logical. Also show the classes of variables in X in a column?}
   \item{stub}{a single character stub, i.e. "log.", which by default will be pre-applied to all variable or column names in X.}
