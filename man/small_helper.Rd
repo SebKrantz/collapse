@@ -32,7 +32,7 @@ vlabels(X, attrn = "label")   # Get labels of variables in X, in attr(X[[i]], at
 vlabels(X, attrn = "label") <- value      # Set labels of variables in X
 namlab(X, class = FALSE, attrn = "label") # Return data.frame of names, labels and classes
 add_stub(X, stub, pre = TRUE) # Add a stub (i.e. prefix or postfix) to variables
-x \%!in\% table               # The opposite of \%in\%
+x \%!in\% table                 # The opposite of \%in\%
 fnlevels(x)                   # Faster version of nlevels(x) (for factors)
 funique(x, ordered = TRUE)    # Faster unique(x) and sort(unique(x)) for vectors
 na_rm(x)                      # Remove missing values from vector and return vector
