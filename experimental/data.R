@@ -1,5 +1,5 @@
 PRIO <- haven::read_dta("C:/Users/Sebastian Krantz/Documents/Geneva Graduate Institute/S411006 - Environment and Development Economics/My Course 2017/Paper Material/Data and Analysis/Prio GRID/v2.0/Priogrid2.0.dta")
-WDI <- haven::read_dta("C:/Users/Sebastian Krantz/Documents/University College Roosevelt/SSC 400 - Honors Thesis/Data/World BANK/WDI/The World Bank Development Indicators.dta")
+WDI <- haven::read_dta("C:/Users/Sebastian Krantz/Documents/University College Roosevelt/SSC 400 - Honors Thesis/Data/World BANK/WDI/The World Bank Development Indicators (No duplicate series).dta")
 GGDC <- haven::read_dta("C:/Users/Sebastian Krantz/Documents/Geneva Graduate Institute/Dissertation/Data/GGDC_10sd_jan15_2014/10SD_jan15.dta")
 source("R/collapse R/GRP.R")
 

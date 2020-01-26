@@ -1,6 +1,6 @@
 #include "data.table.h"
 
-#pragma GCC diagnostic ignored "-Wunknown-pragmas" // don't display this warning!! // https://stackoverflow.com/questions/1867065/how-to-suppress-gcc-warnings-from-library-headers?noredirect=1&lq=1
+// #pragma GCC diagnostic ignored "-Wunknown-pragmas" // don't display this warning!! // https://stackoverflow.com/questions/1867065/how-to-suppress-gcc-warnings-from-library-headers?noredirect=1&lq=1
 
 static void subsetVectorRaw(SEXP ans, SEXP source, SEXP idx, const bool anyNA)
 // Only for use by subsetDT() or subsetVector() below, hence static
@@ -12,16 +12,16 @@ static void subsetVectorRaw(SEXP ans, SEXP source, SEXP idx, const bool anyNA)
   // anyNA refers to NA _in idx_; if there's NA in the data (source) that's just regular data to be copied
   // negatives, zeros and out-of-bounds have already been dealt with in convertNegAndZero so we can rely
   // here on idx in range [1,length(ans)].
+  //  _Pragma("omp parallel for num_threads(getDTthreads())") (in PARLOOP below)
+  //  _Pragma("omp parallel for num_threads(getDTthreads())")
 
   #define PARLOOP(_NAVAL_)                                        \
   if (anyNA) {                                                    \
-    _Pragma("omp parallel for num_threads(getDTthreads())")       \
     for (int i=0; i<n; i++) {                                     \
       int elem = idxp[i];                                         \
       ap[i] = elem==NA_INTEGER ? _NAVAL_ : sp[elem-1];            \
     }                                                             \
   } else {                                                        \
-    _Pragma("omp parallel for num_threads(getDTthreads())")       \
     for (int i=0; i<n; i++) {                                     \
       ap[i] = sp[idxp[i]-1];                                      \
     }                                                             \
@@ -128,7 +128,7 @@ SEXP convertNegAndZeroIdx(SEXP idx, SEXP maxArg, SEXP allowOverMax)
                     int *idxp = INTEGER(idx);
 
                   bool stop = false;
-                  #pragma omp parallel for num_threads(getDTthreads())
+                  // #pragma omp parallel for num_threads(getDTthreads())
                   for (int i=0; i<n; i++) {
                     if (stop) continue;
                     int elem = idxp[i];

@@ -67,7 +67,7 @@ ggplot(aes(x = Year, y = value, fill = Sector), data = dat) +
         strip.background = element_rect(colour = "grey30", fill = "grey30"))
 }
 
-\dontrun{
+%\dontrun{
 # A function to plot the structural change of an arbitrary country
 library(data.table)
 library(ggplot2)
@@ -91,7 +91,7 @@ ggplot(aes(x = Year, y = value, fill = Sector), data = dat) +
         strip.text = element_text(face = "bold"))
 }
 plotGGDC("TZA")
-}
+%}
 
 }
 \keyword{datasets}

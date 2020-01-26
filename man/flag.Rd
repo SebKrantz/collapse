@@ -112,7 +112,7 @@ The methods applying to \code{plm} objects (panel-series and panel-data.frames) 
 L(AirPassengers)                      # 1 lag
 F(AirPassengers)                      # 1 lead
 
-all.identical(L(AirPassengers),       # 3 identical ways of computing 1 lag
+all_identical(L(AirPassengers),       # 3 identical ways of computing 1 lag
               flag(AirPassengers),
               F(AirPassengers,-1))
 
@@ -161,5 +161,5 @@ wlddev \%>\% group_by(iso3c) \%>\% select(year,PCGDP,LIFEEX) \%>\% L(0:2,year) #
 }
 % Add one or more standard keywords, see file 'KEYWORDS' in the
 % R documentation directory.
-\keyword{manip}% __ONLY ONE__ keyword per line % use one of  RShowDoc("KEYWORDS")
-\keyword{ts}% __ONLY ONE__ keyword per line
+\keyword{manip} % __ONLY ONE__ keyword per line % use one of  RShowDoc("KEYWORDS")
+\keyword{ts} % __ONLY ONE__ keyword per line

@@ -115,3 +115,5 @@ library(dplyr)
 mtcars \%>\% group_by(cyl,vs,am) \%>\% GRP
 
 }
+\keyword{manip}
+\keyword{documentation}

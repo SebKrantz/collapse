@@ -13,7 +13,7 @@ vignette: >
 
 ```{r, echo = FALSE, message = FALSE}
 # library(data.table)
-options(warn = -1)
+# options(warn = -1)
 library(collapse)
 knitr::opts_chunk$set(
   comment = "#",
@@ -35,12 +35,12 @@ by = mtcars$cyl
 
 2. to help make R code fast, flexible, parsimonious and programmer friendly
 
-This vignette demonstrates these two points and briefly introduces all of the main features of the package.
+This vignette demonstrates these two points and briefly introduces all of the main features of the package. Apart from vignettes, `collapse` comes with a built-in hierarchical documentation available under `help("collapse-documentation")`, and `help("collapse-package")` provides a compact set of examples to quickly get you started. 
 
 ***
 
 ```{r echo = FALSE}
-options(width = 100L)
+oldoption <- options(width = 100L)
 ```
 
 ## Data and Quick Summary Statistics with `qsu`{#data}
@@ -369,7 +369,7 @@ head(TRA(miris, stats, "-"), 3)  # Centering. Same as sweep(miris, 2, stats, "-"
 The code below shows 3 identical ways to center data in the `collapse` package. For the very common centering and averaging tasks, `collapse` supplies 2 special functions `fwithin` and `fbetween` which are slightly faster and more memory efficient than `fmean(..., TRA = "-")` and `fmean(..., TRA = "replace")`. 
 ```{r}
 # 3 ways of centering data
-all.identical(TRA(miris, fmean(miris), "-"),  
+all_identical(TRA(miris, fmean(miris), "-"),  
               fmean(miris, TRA = "-"),   # better for any operation if the stats are not needed
               fwithin(miris))            # fastest, fwithin is discussed below  
 
@@ -449,11 +449,11 @@ head(B(wlddev, ~ iso3c, cols = 9:12, fill = TRUE))
 head(W(wlddev, ~ iso3c, cols = 9:12, add.global.mean = TRUE))
 
 # Visual demonstration of add.global.mean:
-par(mfrow = c(1,3))
+oldpar <- par(mfrow = c(1,3)) 
 plot(iris[1:2], col = iris$Species)
 plot(W(iris, ~ Species, add.global.mean = TRUE)[2:3], col = iris$Species)
 plot(W(iris, ~ Species)[2:3], col = iris$Species)
-par(mfrow = c(1,1))
+par(oldpar)
 ```
 Another great utility of operators is that they can be employed in regression formulas in a manor that is both very efficient and pleasing to the eyes. Below I demonstrate the use of `W` and `B` to efficiently run fixed-effects regressions with `lm`. 
 ```{r}
@@ -552,7 +552,8 @@ plot(psmat(collap(wlddev, ~region+year, cols = 9:12),
 ```{r}
 # This gives list of ps-matrices
 psml <- psmat(wlddev, ~ iso3c, ~ year, 9:12, array = FALSE)  
-str(psml)
+str(psml, give.attr = FALSE)
+
 # Using unlist2d, can generate a data.frame
 head(unlist2d(psml, "Variable", "Country", id.factor = TRUE))[1:10]
 ```
@@ -577,10 +578,10 @@ psacf(wlddev, PCGDP + LIFEEX + ODA ~ iso3c, ~year)
 L(AirPassengers)                      
 
 # 3 identical ways of computing 1 lag
-all.identical(flag(AirPassengers), L(AirPassengers), F(AirPassengers,-1))
+all_identical(flag(AirPassengers), L(AirPassengers), F(AirPassengers,-1))
 
 # 3 identical ways of computing 1 lead
-all.identical(flag(AirPassengers, -1), L(AirPassengers, -1), F(AirPassengers))
+all_identical(flag(AirPassengers, -1), L(AirPassengers, -1), F(AirPassengers))
 
 # 1 lead and 3 lags - output as matrix
 head(L(AirPassengers,-1:3))     
@@ -683,7 +684,7 @@ head(G(wlddev, 0:1, 1, PCGDP + LIFEEX ~ iso3c, ~year))
 head(G(GGDC10S, 1, 1, ~ Variable + Country, ~ Year, cols = 6:10))     
 ```
 One could also add variables by reference using `data.table`: 
-```{r}
+```{r, warning=FALSE}
 library(data.table)
 head(qDT(wlddev)[, paste0("G.", names(wlddev)[9:12]) := fgrowth(.SD,1,1,iso3c,year), .SDcols = 9:12])
 
@@ -720,9 +721,9 @@ summary(lm(HDW.L10G1.PCGDP ~. , moddat))
 
 For this I will use the `vars` package (I noticed there is a `panelvar` package, but I am more familiar with `vars` and `panelvar` does not feature high-performance code). Since `vars` natively does not support panel-VAR, we need to create the central `varest` object manually and then run the `irf` and `fevd` commands of the package on it which create the impulse response functions and the forecast error variance decompositions, respectively. Below I prepare the data for panel-VAR estimation with the `vars` package: 
 
-```{r}
+```{r, warning=FALSE, message=FALSE}
 library(data.table)
-suppressPackageStartupMessages(library(vars))
+library(vars)
 # We will estimate a panel-VAR with 1 lag
 p <- 1
 # This creates a data.table containing the value added of the 6 most important non-government sectors
@@ -790,7 +791,7 @@ str(pVAR$varresult$W.STD.AGR$residuals)
 
 # get_vars gets the residuals from all equations and puts them in a top-level list
 resid <- get_elem(pVAR, "residuals")
-str(resid)
+str(resid, give.attr = FALSE)
 
 plot.ts(do.call(cbind, resid), main = "Panel-VAR Residuals")
 ```
@@ -808,7 +809,7 @@ pFEVD <- fevd(pVAR)
 The `pIRF` object contains the IRF's with lower and upper confidence bounds and some atomic elements providing information about the object:
 ```{r}
 # See the structure of a vars IRF object: 
-str(pIRF)
+str(pIRF, give.attr = FALSE)
 ```
 We could separately access the top-level atomic or list elements using `atomic_elem` or `list_elem`.
 ```{r}
@@ -899,3 +900,6 @@ library(ggplot2)
 To learn more about `collapse`, I recommend just reading the documentation `help("collapse-documentation")` which is hierarchically organized, extensive and contains lots of examples. 
 
 
+```{r echo = FALSE}
+options(oldoption)
+```

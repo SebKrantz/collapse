@@ -11,7 +11,7 @@
 \alias{setDimnames}
 \alias{pwcor}
 \alias{pwcov}
-\alias{all.identical}
+\alias{all_identical}
 \alias{is.categorical}
 \alias{is.Date}
 \alias{\%!in\%}
@@ -28,16 +28,16 @@
 Elementary exported convenience functions in the \code{collapse} package, that help to deal with variable names, labels, missing values, matching and object checking etc... For recoding and replacing values see \code{\link{Recode}}.
 }
 \usage{
-vlabels(X)                    # Get labels of variables in X, in attr(X[[i]], "label")
-vlabels(X) <- value           # Set labels of variables in X
-namlab(X, class = FALSE)      # Return a data.frame of variable names, labels and classes
+vlabels(X, attrn = "label")   # Get labels of variables in X, in attr(X[[i]], attrn)
+vlabels(X, attrn = "label") <- value      # Set labels of variables in X
+namlab(X, class = FALSE, attrn = "label") # Return data.frame of names, labels and classes
 add_stub(X, stub, pre = TRUE) # Add a stub (i.e. prefix or postfix) to variables
 x \%!in\% table                 # The opposite of \%in\%
 fnlevels(x)                   # Faster version of nlevels(x) (for factors)
 funique(x, ordered = TRUE)    # Faster unique(x) and sort(unique(x)) for vectors
 na_rm(x)                      # Remove missing values from vector and return vector
 na_insert(X, prop = 0.1)      # Insert missing values at random in vectors, matrices DF's
-all.identical(...)            # Check exact equality of multiple objects or list-elements
+all_identical(...)            # Check exact equality of multiple objects or list-elements
 pwcor(X, ...)                 # Pairwise-correlations
 pwcov(X, ...)                 # Pairwise-covariances
 seq_row(X)                    # Integer sequences along rows of X
@@ -55,6 +55,7 @@ as.numeric_factor(X)          # Coerce a factor, or all factor columns in X, to 
   \item{X}{a (numeric) matrix or data.frame.}
   \item{object}{an array or data.frame.}
   \item{x, table}{(numeric) vectors.}
+  \item{attrn}{Character. Name of attribute to store labels or retrieve labels from.}
   \item{value}{a matching character vector of variable labels.}
   \item{class}{logical. Also show the classes of variables in X in a column?}
   \item{stub}{a single character stub, i.e. "log.", which by default will be pre-applied to all variable or column names in X.}
@@ -63,7 +64,7 @@ as.numeric_factor(X)          # Coerce a factor, or all factor columns in X, to 
   \item{dn}{a suitable list of dimension names.}
   \item{ordered}{logical. \code{TRUE} sorts the output, \code{FALSE} is slightly faster.}
   \item{prop}{specify the proportion of observations randomly replaced with \code{NA}.}
-  \item{...}{for \code{pwcor} and \code{pwcov}: Other arguments passed to \code{stats::cor} and \code{stats::cov}. For \code{all.identical}, either multiple comma-separated objects or a single list of objects.}
+  \item{...}{for \code{pwcor} and \code{pwcov}: Other arguments passed to \code{stats::cor} and \code{stats::cov}. For \code{all_identical}, either multiple comma-separated objects or a single list of objects.}
 }
 % \details{
 %%  ~~ If necessary, more details than the description above ~~
@@ -97,10 +98,13 @@ vlabels(wlddev)
 vlabels(wlddev) <- vlabels(wlddev)
 
 ## Checking exact equality of multiple objects
-all.identical(iris, iris, iris, iris)
+all_identical(iris, iris, iris, iris)
 l <- replicate(100, fmean(num_vars(iris), iris$Species), simplify = FALSE)
-all.identical(l)
+all_identical(l)
 }
 % Add one or more standard keywords, see file 'KEYWORDS' in the
 % R documentation directory.
-\keyword{manip}% __ONLY ONE__ keyword per line % use one of  RShowDoc("KEYWORDS")
+\keyword{utilities} % __ONLY ONE__ keyword per line % use one of  RShowDoc("KEYWORDS")
+\keyword{attribute}
+\keyword{misc}
+\keyword{documentation}

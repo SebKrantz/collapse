@@ -60,3 +60,5 @@ cylF <- qF(mtcars$cyl)     # Factor from atomic vector
 cylG <- qG(mtcars$cyl)     # Quick-group from atomic vector
 cylG                       # See the simple structure of this object
 }
+\keyword{manip}
+\keyword{documentation}

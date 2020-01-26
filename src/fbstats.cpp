@@ -366,16 +366,18 @@ SEXP fbstatsCpp(const NumericVector& x, bool ext = false, int ng = 0, const Inte
     } else {
       if(g.size() != l) stop("length(g) must match nrow(X)");
       NumericVector between = no_init_vector(l);
-      bool groupids[ng][npg]; // could do +1 trick, but that could be costly in term of memory, if few g and many pg !!!
-      memset(groupids, true, sizeof(bool)*ng*npg); // works ?? necessary ??
+      // bool groupids[ng][npg]; // could do +1 trick, but that could be costly in term of memory, if few g and many pg !!!
+      LogicalMatrix groupids = no_init_matrix(ng, npg);
+      // memset(groupids, true, sizeof(bool)*ng*npg); // works ?? necessary ??
+      std::fill(groupids.begin(), groupids.end(), true);
       NumericVector gnpids(ng); // best ??
       for(int i = 0; i != l; ++i) {
         if(std::isnan(x[i])) { // important !! ??  right ?? d
           between[i] = within[i] = NA_REAL; // x[i] ??
         } else {
-          if(groupids[g[i]-1][pg[i]-1]) { // added this part !!
+          if(groupids(g[i]-1, pg[i]-1)) { // added this part !!
             ++gnpids[g[i]-1];
-            groupids[g[i]-1][pg[i]-1] = false;
+            groupids(g[i]-1, pg[i]-1) = false;
           }
           between[i] = sum[pg[i]-1];
           within[i] = x[i] - between[i] + osum;
@@ -524,8 +526,9 @@ NumericMatrix fnobs5pImpl(Vector<RTYPE> x, bool ext = false, int ng = 0, Integer
 
   if(ng == 0) {
     int n = 0, npgc = 0;
-    bool npgs[npg+1];
-    memset(npgs, true, sizeof(bool)*(npg+1));
+    // bool npgs[npg+1];
+    // memset(npgs, true, sizeof(bool)*(npg+1));
+    std::vector<bool> npgs(npg+1, true);
     if(real) {
       for(int i = 0; i != l; ++i) {
         if(x[i] == x[i]) ++n;
@@ -563,15 +566,17 @@ NumericMatrix fnobs5pImpl(Vector<RTYPE> x, bool ext = false, int ng = 0, Integer
     NumericMatrix::Column n = out(_, 0);
     NumericMatrix::Column gnpids = out(_, 1);
     std::fill_n(gnpids.begin(), ng, 0.0);
-    bool groupids[ng][npg]; // could do +1 trick, but that could be costly in term of memory, if few g and many pg !!!
-    memset(groupids, true, sizeof(bool)*ng*npg);
+    // bool groupids[ng][npg]; // could do +1 trick, but that could be costly in term of memory, if few g and many pg !!!
+    // memset(groupids, true, sizeof(bool)*ng*npg);
+    LogicalMatrix groupids = no_init_matrix(ng, npg);
+    std::fill(groupids.begin(), groupids.end(), true);
     if(real) {
       for(int i = 0; i != l; ++i) {
         if(x[i] == x[i]) {
           ++n[g[i]-1];
-          if(groupids[g[i]-1][pg[i]-1]) {
+          if(groupids(g[i]-1, pg[i]-1)) {
             ++gnpids[g[i]-1];
-            groupids[g[i]-1][pg[i]-1] = false;
+            groupids(g[i]-1, pg[i]-1) = false;
           }
         }
       }
@@ -579,9 +584,9 @@ NumericMatrix fnobs5pImpl(Vector<RTYPE> x, bool ext = false, int ng = 0, Integer
       for(int i = 0; i != l; ++i) {
         if(x[i] != Vector<RTYPE>::get_na()) {
           ++n[g[i]-1];
-          if(groupids[g[i]-1][pg[i]-1]) {
+          if(groupids(g[i]-1, pg[i]-1)) {
             ++gnpids[g[i]-1];
-            groupids[g[i]-1][pg[i]-1] = false;
+            groupids(g[i]-1, pg[i]-1) = false;
           }
         }
       }

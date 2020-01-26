@@ -43,7 +43,7 @@ test_that("GRP gives errors for wrong input", {
 
 test_that("GRP <> factor conversions run seamlessly", {
   expect_identical(unclass(iris$Species), unclass(as.factor.GRP(GRP(iris$Species)))) # as.factor.GRP always adds class "na.included"
-  expect_identical(unclass(`vlabels<-`(wlddev$iso3c, NULL)), unclass(as.factor.GRP(GRP(wlddev$iso3c))))
+  expect_identical(unclass(`vlabels<-`(wlddev$iso3c, "label", NULL)), unclass(as.factor.GRP(GRP(wlddev$iso3c))))
   int <- sample.int(10,100,TRUE)
   expect_identical(unclass(qF(int)), unclass(as.factor.GRP(GRP(int))))
   expect_identical(unclass(qF(int)), unclass(as.factor.GRP(GRP(qF(int)))))

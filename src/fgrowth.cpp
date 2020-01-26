@@ -140,7 +140,7 @@ NumericVector fgrowthCpp(const NumericVector& x, const IntegerVector& n = 1, con
       IntegerVector ord = t;
       if(l != ord.size()) stop("length(x) must match length(t)");
       LogicalVector ocheck(l, true);
-      int omap[l];
+      IntegerVector omap = no_init_vector(l); // int omap[l];
       for(int i = 0; i != l; ++i) {
         if(ord[i] > l) stop("t needs to be a factor or integer vector of time-periods between 1 and length(x)");
         if(ocheck[ord[i]-1]) {
@@ -246,7 +246,7 @@ NumericVector fgrowthCpp(const NumericVector& x, const IntegerVector& n = 1, con
           if(ng != gsv.size()) stop("ng must match length(gs)");
         }
       }
-      int seen[ngp], memsize = sizeof(int)*(ngp);
+      // int seen[ngp], memsize = sizeof(int)*(ngp);
       for(int p = 0; p != ns; ++p) {
         int np = n[p];
         if(absn[p]*maxdiff > ags) stop("abs(n * diff) exceeds average group size: %i", ags);
@@ -255,7 +255,7 @@ NumericVector fgrowthCpp(const NumericVector& x, const IntegerVector& n = 1, con
           bool L1 = np == 1;
           if(d1 < 1) stop("diff must be a vector of integers > 0");
           NumericMatrix::Column outp = out( _ , pos);
-          memset(seen, 0, memsize);
+          std::vector<int> seen(ngp); // memset(seen, 0, memsize);
           if(names) {
             if(L1) colnam[pos] = stub + diffc[0];
             else colnam[pos] = "L" + nc[p] + stub + diffc[0];
@@ -270,7 +270,7 @@ NumericVector fgrowthCpp(const NumericVector& x, const IntegerVector& n = 1, con
           }
           if(d1 > 1) for(int k = 1; k != d1; ++k) {
             int start = np*(k+1);
-            memset(seen, 0, memsize);
+            std::vector<int> seen(ngp); // memset(seen, 0, memsize);
             for(int i = l; i--; ) {
               if(seen[g[i]] == gsv[g[i]-1]-start) outp[i] = fill;
               else {
@@ -286,7 +286,7 @@ NumericVector fgrowthCpp(const NumericVector& x, const IntegerVector& n = 1, con
               if(dq <= L_dq) stop("differences must be passed in ascending order");
               for(int k = L_dq; k != dq; ++k) {
                 int start = np*(k+1); // Right ?? -> seems so!!
-                memset(seen, 0, memsize); // Needed, because it loops from the beginning !!
+                std::vector<int> seen(ngp); // memset(seen, 0, memsize); // Needed, because it loops from the beginning !!
                 for(int i = l; i--; ) {
                   if(seen[g[i]] == gsv[g[i]-1]-start) outtemp[i] = fill;
                   else {
@@ -308,7 +308,7 @@ NumericVector fgrowthCpp(const NumericVector& x, const IntegerVector& n = 1, con
           bool F1 = np == -1;
           if(d1 < 1) stop("diff must be a vector of integers > 0");
           NumericMatrix::Column outp = out( _ , pos);
-          memset(seen, 0, memsize);
+          std::vector<int> seen(ngp); // memset(seen, 0, memsize);
           if(names) {
             if(F1) colnam[pos] = stub2 + diffc[0];
             else colnam[pos] = "F" + nc[p] + stub + diffc[0];
@@ -323,7 +323,7 @@ NumericVector fgrowthCpp(const NumericVector& x, const IntegerVector& n = 1, con
           }
           if(d1 > 1) for(int k = 1; k != d1; ++k) {
             int start = np*(k+1);
-            memset(seen, 0, memsize);
+            std::vector<int> seen(ngp); // memset(seen, 0, memsize);
             for(int i = 0; i != l; ++i) {
               if(seen[g[i]] == gsv[g[i]-1]+start) outp[i] = fill;
               else {
@@ -339,7 +339,7 @@ NumericVector fgrowthCpp(const NumericVector& x, const IntegerVector& n = 1, con
               if(dq <= L_dq) stop("differences must be passed in ascending order");
               for(int k = L_dq; k != dq; ++k) {
                 int start = np*(k+1);
-                memset(seen, 0, memsize);
+                std::vector<int> seen(ngp); // memset(seen, 0, memsize);
                 for(int i = 0; i != l; ++i) {
                   if(seen[g[i]] == gsv[g[i]-1]+start) outtemp[i] = fill;
                   else {
@@ -379,8 +379,8 @@ NumericVector fgrowthCpp(const NumericVector& x, const IntegerVector& n = 1, con
         if(ng != gsv.size()) stop("ng must match length(gs)");
         for(int i = 0; i != l; ++i) if(ord[i] < min[g[i]]) min[g[i]] = ord[i];
       }
-      IntegerVector omap(l);
-      int cgs[ngp], seen[ngp], memsize = sizeof(int)*(ngp);
+      IntegerVector omap(l), cgs = no_init_vector(ngp);
+      // int cgs[ngp], seen[ngp], memsize = sizeof(int)*(ngp);
       cgs[1] = 0;
       for(int i = 2; i != ngp; ++i) cgs[i] = cgs[i-1] + gsv[i-2];
       for(int i = 0; i != l; ++i) {
@@ -411,7 +411,7 @@ NumericVector fgrowthCpp(const NumericVector& x, const IntegerVector& n = 1, con
           }
           if(d1 > 1) for(int k = 1; k != d1; ++k) {
             int start = np*(k+1);
-            memset(seen, 0, memsize);
+            std::vector<int> seen(ngp); // memset(seen, 0, memsize);
             for(int i = l; i--; ) {
               if(seen[g[omap[i]]] == gsv[g[omap[i]]-1]-start) outp[omap[i]] = fill;
               else {
@@ -427,7 +427,7 @@ NumericVector fgrowthCpp(const NumericVector& x, const IntegerVector& n = 1, con
               if(dq <= L_dq) stop("differences must be passed in ascending order");
               for(int k = L_dq; k != dq; ++k) {
                 int start = np*(k+1);
-                memset(seen, 0, memsize);
+                std::vector<int> seen(ngp); // memset(seen, 0, memsize);
                 for(int i = l; i--; ) {
                   if(seen[g[omap[i]]] == gsv[g[omap[i]]-1]-start) outtemp[omap[i]] = fill;
                   else {
@@ -463,7 +463,7 @@ NumericVector fgrowthCpp(const NumericVector& x, const IntegerVector& n = 1, con
           }
           if(d1 > 1) for(int k = 1; k != d1; ++k) {
             int start = np*(k+1);
-            memset(seen, 0, memsize);
+            std::vector<int> seen(ngp); // memset(seen, 0, memsize);
             for(int i = 0; i != l; ++i) {
               if(seen[g[omap[i]]] == gsv[g[omap[i]]-1]+start) outp[omap[i]] = fill;
               else {
@@ -479,7 +479,7 @@ NumericVector fgrowthCpp(const NumericVector& x, const IntegerVector& n = 1, con
               if(dq <= L_dq) stop("differences must be passed in ascending order");
               for(int k = L_dq; k != dq; ++k) {
                 int start = np*(k+1);
-                memset(seen, 0, memsize);
+                std::vector<int> seen(ngp); // memset(seen, 0, memsize);
                 for(int i = 0; i != l; ++i) {
                   if(seen[g[omap[i]]] == gsv[g[omap[i]]-1]+start) outtemp[omap[i]] = fill;
                   else {
@@ -657,7 +657,7 @@ NumericMatrix fgrowthmCpp(const NumericMatrix& x, const IntegerVector& n = 1, co
       IntegerVector ord = t;
       if(l != ord.size()) stop("nrow(x) must match length(t)");
       LogicalVector ocheck(l, true);
-      int omap[l];
+      IntegerVector omap = no_init_vector(l); // int omap[l];
       for(int i = 0; i != l; ++i) {
         if(ord[i] > l) stop("t needs to be a factor or integer vector of time-periods between 1 and nrow(x)");
         if(ocheck[ord[i]-1]) {
@@ -766,7 +766,7 @@ NumericMatrix fgrowthmCpp(const NumericMatrix& x, const IntegerVector& n = 1, co
           if(ng != gsv.size()) stop("ng must match length(gs)");
         }
       }
-      int seen[ngp], memsize = sizeof(int)*(ngp);
+      // int seen[ngp], memsize = sizeof(int)*(ngp);
       for(int j = 0; j != col; ++j) {
         NumericMatrix::ConstColumn column = x( _ , j);
         for(int p = 0; p != ns; ++p) {
@@ -777,7 +777,7 @@ NumericMatrix fgrowthmCpp(const NumericMatrix& x, const IntegerVector& n = 1, co
             bool L1 = np == 1;
             if(d1 < 1) stop("diff must be a vector of integers > 0");
             NumericMatrix::Column outp = out( _ , pos);
-            memset(seen, 0, memsize);
+            std::vector<int> seen(ngp); // memset(seen, 0, memsize);
             if(names) {
               if(L1) colnam[pos] = stub + diffc[0] + "." + coln[j];
               else colnam[pos] = "L" + nc[p] + stub + diffc[0] + "." + coln[j];
@@ -792,7 +792,7 @@ NumericMatrix fgrowthmCpp(const NumericMatrix& x, const IntegerVector& n = 1, co
             }
             if(d1 > 1) for(int k = 1; k != d1; ++k) {
               int start = np*(k+1);
-              memset(seen, 0, memsize);
+              std::vector<int> seen(ngp); // memset(seen, 0, memsize);
               for(int i = l; i--; ) {
                 if(seen[g[i]] == gsv[g[i]-1]-start) outp[i] = fill;
                 else {
@@ -808,7 +808,7 @@ NumericMatrix fgrowthmCpp(const NumericMatrix& x, const IntegerVector& n = 1, co
                 if(dq <= L_dq) stop("differences must be passed in ascending order");
                 for(int k = L_dq; k != dq; ++k) {
                   int start = np*(k+1);
-                  memset(seen, 0, memsize);
+                  std::vector<int> seen(ngp); // memset(seen, 0, memsize);
                   for(int i = l; i--; ) {
                     if(seen[g[i]] == gsv[g[i]-1]-start) outtemp[i] = fill;
                     else {
@@ -830,7 +830,7 @@ NumericMatrix fgrowthmCpp(const NumericMatrix& x, const IntegerVector& n = 1, co
             bool F1 = np == -1;
             if(d1 < 1) stop("diff must be a vector of integers > 0");
             NumericMatrix::Column outp = out( _ , pos);
-            memset(seen, 0, memsize);
+            std::vector<int> seen(ngp); // memset(seen, 0, memsize);
             if(names) {
               if(F1) colnam[pos] = stub2 + diffc[0] + "." + coln[j];
               else colnam[pos] = "F" + nc[p] + stub + diffc[0] + "." + coln[j];
@@ -845,7 +845,7 @@ NumericMatrix fgrowthmCpp(const NumericMatrix& x, const IntegerVector& n = 1, co
             }
             if(d1 > 1) for(int k = 1; k != d1; ++k) {
               int start = np*(k+1);
-              memset(seen, 0, memsize);
+              std::vector<int> seen(ngp); // memset(seen, 0, memsize);
               for(int i = 0; i != l; ++i) {
                 if(seen[g[i]] == gsv[g[i]-1]+start) outp[i] = fill;
                 else {
@@ -861,7 +861,7 @@ NumericMatrix fgrowthmCpp(const NumericMatrix& x, const IntegerVector& n = 1, co
                 if(dq <= L_dq) stop("differences must be passed in ascending order");
                 for(int k = L_dq; k != dq; ++k) {
                   int start = np*(k+1);
-                  memset(seen, 0, memsize);
+                  std::vector<int> seen(ngp); // memset(seen, 0, memsize);
                   for(int i = 0; i != l; ++i) {
                     if(seen[g[i]] == gsv[g[i]-1]+start) outtemp[i] = fill;
                     else {
@@ -902,8 +902,8 @@ NumericMatrix fgrowthmCpp(const NumericMatrix& x, const IntegerVector& n = 1, co
         if(ng != gsv.size()) stop("ng must match length(gs)");
         for(int i = 0; i != l; ++i) if(ord[i] < min[g[i]]) min[g[i]] = ord[i];
       }
-      IntegerVector omap(l);
-      int cgs[ngp], seen[ngp], index[l], memsize = sizeof(int)*(ngp);
+      IntegerVector omap(l), cgs = no_init_vector(ngp), index = no_init_vector(l);
+      // int cgs[ngp], seen[ngp], index[l], memsize = sizeof(int)*(ngp);
       cgs[1] = 0;
       for(int i = 2; i != ngp; ++i) cgs[i] = cgs[i-1] + gsv[i-2];
       for(int i = 0; i != l; ++i) {
@@ -937,7 +937,7 @@ NumericMatrix fgrowthmCpp(const NumericMatrix& x, const IntegerVector& n = 1, co
             }
             if(d1 > 1) for(int k = 1; k != d1; ++k) {
               int start = np*(k+1);
-              memset(seen, 0, memsize);
+              std::vector<int> seen(ngp); // memset(seen, 0, memsize);
               for(int i = l; i--; ) {
                 if(seen[g[omap[i]]] == gsv[g[omap[i]]-1]-start) outp[omap[i]] = fill;
                 else {
@@ -953,7 +953,7 @@ NumericMatrix fgrowthmCpp(const NumericMatrix& x, const IntegerVector& n = 1, co
                 if(dq <= L_dq) stop("differences must be passed in ascending order");
                 for(int k = L_dq; k != dq; ++k) {
                   int start = np*(k+1);
-                  memset(seen, 0, memsize);
+                  std::vector<int> seen(ngp); // memset(seen, 0, memsize);
                   for(int i = l; i--; ) {
                     if(seen[g[omap[i]]] == gsv[g[omap[i]]-1]-start) outtemp[omap[i]] = fill;
                     else {
@@ -989,7 +989,7 @@ NumericMatrix fgrowthmCpp(const NumericMatrix& x, const IntegerVector& n = 1, co
             }
             if(d1 > 1) for(int k = 1; k != d1; ++k) {
               int start = np*(k+1);
-              memset(seen, 0, memsize);
+              std::vector<int> seen(ngp); // memset(seen, 0, memsize);
               for(int i = 0; i != l; ++i) {
                 if(seen[g[omap[i]]] == gsv[g[omap[i]]-1]+start) outp[omap[i]] = fill;
                 else {
@@ -1005,7 +1005,7 @@ NumericMatrix fgrowthmCpp(const NumericMatrix& x, const IntegerVector& n = 1, co
                 if(dq <= L_dq) stop("differences must be passed in ascending order");
                 for(int k = L_dq; k != dq; ++k) {
                   int start = np*(k+1);
-                  memset(seen, 0, memsize);
+                  std::vector<int> seen(ngp); // memset(seen, 0, memsize);
                   for(int i = 0; i != l; ++i) {
                     if(seen[g[omap[i]]] == gsv[g[omap[i]]-1]+start) outtemp[omap[i]] = fill;
                     else {
@@ -1174,7 +1174,8 @@ List fgrowthlCpp(const List& x, const IntegerVector& n = 1, const IntegerVector&
       }
     } else { // Unordered data: Timevar provided
       IntegerVector ord = t;
-      int os = ord.size(), omap[os];
+      int os = ord.size(); // omap[os];
+      IntegerVector omap = no_init_vector(os);
       LogicalVector ocheck(os, true);
       for(int i = 0; i != os; ++i) {
         if(ord[i] > os) stop("t needs to be a factor or integer vector of time-periods between 1 and nrow(x)");
@@ -1283,7 +1284,7 @@ List fgrowthlCpp(const List& x, const IntegerVector& n = 1, const IntegerVector&
           if(ng != gsv.size()) stop("ng must match length(gs)");
         }
       }
-      int seen[ngp], memsize = sizeof(int)*(ngp);
+      // int seen[ngp], memsize = sizeof(int)*(ngp);
       for(int j = 0; j != l; ++j) {
         NumericVector column = x[j];
         if(gss != column.size()) stop("nrow(x) must match length(g)");
@@ -1296,7 +1297,7 @@ List fgrowthlCpp(const List& x, const IntegerVector& n = 1, const IntegerVector&
             if(d1 < 1) stop("diff must be a vector of integers > 0");
             NumericVector outjp = no_init_vector(gss);
             SHALLOW_DUPLICATE_ATTRIB(outjp, column);
-            memset(seen, 0, memsize);
+            std::vector<int> seen(ngp); // memset(seen, 0, memsize);
             if(names) {
               if(L1) nam[pos] = stub + diffc[0] + "." + na[j];
               else nam[pos] = "L" + nc[p] + stub + diffc[0] + "." + na[j];
@@ -1310,7 +1311,7 @@ List fgrowthlCpp(const List& x, const IntegerVector& n = 1, const IntegerVector&
             }
             if(d1 > 1) for(int k = 1; k != d1; ++k) {
               int start = np*(k+1);
-              memset(seen, 0, memsize);
+              std::vector<int> seen(ngp); // memset(seen, 0, memsize);
               for(int i = gss; i--; ) {
                 if(seen[g[i]] == gsv[g[i]-1]-start) outjp[i] = fill;
                 else {
@@ -1327,7 +1328,7 @@ List fgrowthlCpp(const List& x, const IntegerVector& n = 1, const IntegerVector&
                 if(dq <= L_dq) stop("differences must be passed in ascending order");
                 for(int k = L_dq; k != dq; ++k) {
                   int start = np*(k+1);
-                  memset(seen, 0, memsize);
+                  std::vector<int> seen(ngp); // memset(seen, 0, memsize);
                   for(int i = gss; i--; ) {
                     if(seen[g[i]] == gsv[g[i]-1]-start) outtemp[i] = fill;
                     else {
@@ -1349,7 +1350,7 @@ List fgrowthlCpp(const List& x, const IntegerVector& n = 1, const IntegerVector&
             if(d1 < 1) stop("diff must be a vector of integers > 0");
             NumericVector outjp = no_init_vector(gss);
             SHALLOW_DUPLICATE_ATTRIB(outjp, column);
-            memset(seen, 0, memsize);
+            std::vector<int> seen(ngp); // memset(seen, 0, memsize);
             if(names) {
               if(F1) nam[pos] = stub2 + diffc[0] + "." + na[j];
               else nam[pos] = "F" + nc[p] + stub + diffc[0] + "." + na[j];
@@ -1363,7 +1364,7 @@ List fgrowthlCpp(const List& x, const IntegerVector& n = 1, const IntegerVector&
             }
             if(d1 > 1) for(int k = 1; k != d1; ++k) {
               int start = np*(k+1);
-              memset(seen, 0, memsize);
+              std::vector<int> seen(ngp); // memset(seen, 0, memsize);
               for(int i = 0; i != gss; ++i) {
                 if(seen[g[i]] == gsv[g[i]-1]+start) outjp[i] = fill;
                 else {
@@ -1380,7 +1381,7 @@ List fgrowthlCpp(const List& x, const IntegerVector& n = 1, const IntegerVector&
                 if(dq <= L_dq) stop("differences must be passed in ascending order");
                 for(int k = L_dq; k != dq; ++k) {
                   int start = np*(k+1);
-                  memset(seen, 0, memsize);
+                  std::vector<int> seen(ngp); // memset(seen, 0, memsize);
                   for(int i = 0; i != gss; ++i) {
                     if(seen[g[i]] == gsv[g[i]-1]+start) outtemp[i] = fill;
                     else {
@@ -1419,8 +1420,8 @@ List fgrowthlCpp(const List& x, const IntegerVector& n = 1, const IntegerVector&
         if(ng != gsv.size()) stop("ng must match length(gs)");
         for(int i = 0; i != gss; ++i) if(ord[i] < min[g[i]]) min[g[i]] = ord[i];
       }
-      IntegerVector omap(gss);
-      int cgs[ngp], seen[ngp], index[gss], memsize = sizeof(int)*(ngp);
+      IntegerVector omap(gss), cgs = no_init_vector(ngp), index = no_init_vector(gss);
+      // int cgs[ngp], seen[ngp], index[gss], memsize = sizeof(int)*(ngp);
       cgs[1] = 0;
       for(int i = 2; i != ngp; ++i) cgs[i] = cgs[i-1] + gsv[i-2];
       for(int i = 0; i != gss; ++i) {
@@ -1455,7 +1456,7 @@ List fgrowthlCpp(const List& x, const IntegerVector& n = 1, const IntegerVector&
             }
             if(d1 > 1) for(int k = 1; k != d1; ++k) {
               int start = np*(k+1);
-              memset(seen, 0, memsize);
+              std::vector<int> seen(ngp); // memset(seen, 0, memsize);
               for(int i = gss; i--; ) {
                 if(seen[g[omap[i]]] == gsv[g[omap[i]]-1]-start) outjp[omap[i]] = fill;
                 else {
@@ -1472,7 +1473,7 @@ List fgrowthlCpp(const List& x, const IntegerVector& n = 1, const IntegerVector&
                 if(dq <= L_dq) stop("differences must be passed in ascending order");
                 for(int k = L_dq; k != dq; ++k) {
                   int start = np*(k+1);
-                  memset(seen, 0, memsize);
+                  std::vector<int> seen(ngp); // memset(seen, 0, memsize);
                   for(int i = gss; i--; ) {
                     if(seen[g[omap[i]]] == gsv[g[omap[i]]-1]-start) outtemp[omap[i]] = fill;
                     else {
@@ -1507,7 +1508,7 @@ List fgrowthlCpp(const List& x, const IntegerVector& n = 1, const IntegerVector&
             }
             if(d1 > 1) for(int k = 1; k != d1; ++k) {
               int start = np*(k+1);
-              memset(seen, 0, memsize);
+              std::vector<int> seen(ngp); // memset(seen, 0, memsize);
               for(int i = 0; i != gss; ++i) {
                 if(seen[g[omap[i]]] == gsv[g[omap[i]]-1]+start) outjp[omap[i]] = fill;
                 else {
@@ -1524,7 +1525,7 @@ List fgrowthlCpp(const List& x, const IntegerVector& n = 1, const IntegerVector&
                 if(dq <= L_dq) stop("differences must be passed in ascending order");
                 for(int k = L_dq; k != dq; ++k) {
                   int start = np*(k+1);
-                  memset(seen, 0, memsize);
+                  std::vector<int> seen(ngp); // memset(seen, 0, memsize);
                   for(int i = 0; i != gss; ++i) {
                     if(seen[g[omap[i]]] == gsv[g[omap[i]]-1]+start) outtemp[omap[i]] = fill;
                     else {

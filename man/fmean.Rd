@@ -97,4 +97,5 @@ mtcars \%>\% group_by(cyl,vs,am) \%>\% fmean(hp,"-")   # Weighted Transform
 mtcars \%>\% group_by(cyl,vs,am) \%>\%
            select(mpg,hp) \%>\% fmean(hp,"-")        # Only mpg
 }
-
+\keyword{univar}
+\keyword{manip}

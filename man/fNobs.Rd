@@ -69,4 +69,5 @@ wlddev \%>\% group_by(country) \%>\%
            select(PCGDP,LIFEEX,GINI,ODA) \%>\% fNobs
 
 }
-
+\keyword{univar}
+\keyword{manip}

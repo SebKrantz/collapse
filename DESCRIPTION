@@ -1,7 +1,7 @@
 Package: collapse
 Title: Advanced and Fast Data Transformation
 Version: 1.0.0
-Date: 2020-01-01
+Date: 2020-01-17
 Authors@R: c(
            person("Sebastian", "Krantz", role = c("aut", "cre"), 
                   email = "sebastian.krantz@graduateinstitute.ch"),
@@ -10,8 +10,56 @@ Authors@R: c(
            person("Simen", "Gaure", role = "ctb"),
            person("Dirk", "Eddelbuettel", role = "ctb"),
            person("R Core Team and contributors worldwide", role = "ctb"),
-           person("All other data.table contributors", role = "ctb"),
-           person("All other Rcpp contributors", role = "ctb")
+           person("Joris", "Meys", role = "ctb"),
+           person("Ralf", "Stubner", role = "ctb"),
+           person("Joseph", "Wood", role = "ctb"),
+           person("Romain","Francois",     role="ctb"),
+           person("JJ","Allaire",          role="ctb"),
+           person("Kevin","Ushey",         role="ctb"),
+           person("Qiang","Kou",           role="ctb"),
+           person("Nathan","Russell",      role="ctb"),
+           person("Douglas","Bates",       role="ctb"),
+           person("John","Chambers",       role="ctb"),
+           person("Jan","Gorecki",          role="ctb"),
+           person("Michael","Chirico",      role="ctb"),
+           person("Pasha","Stetsenko",      role="ctb"),
+           person("Tom","Short",            role="ctb"),
+           person("Steve","Lianoglou",      role="ctb"),
+           person("Eduard","Antonyan",      role="ctb"),
+           person("Markus","Bonsch",        role="ctb"),
+           person("Hugh","Parsonage",       role="ctb"),
+           person("Scott","Ritchie",        role="ctb"),
+           person("Kun","Ren",              role="ctb"),
+           person("Xianying","Tan",         role="ctb"),
+           person("Rick","Saporta",         role="ctb"),
+           person("Otto","Seiskari",        role="ctb"),
+           person("Xianghui","Dong",        role="ctb"),
+           person("Michel","Lang",          role="ctb"),
+           person("Watal","Iwasaki",        role="ctb"),
+           person("Seth","Wenchel",         role="ctb"),
+           person("Karl","Broman",          role="ctb"),
+           person("Tobias","Schmidt",       role="ctb"),
+           person("David","Arenburg",       role="ctb"),
+           person("Ethan","Smith",          role="ctb"),
+           person("Francois","Cocquemas",   role="ctb"),
+           person("Matthieu","Gomez",       role="ctb"),
+           person("Philippe","Chataignon",  role="ctb"),
+           person("Declan","Groves",        role="ctb"),
+           person("Daniel","Possenriede",   role="ctb"),
+           person("Felipe","Parages",       role="ctb"),
+           person("Denes","Toth",           role="ctb"),
+           person("Mus","Yaramaz-David",    role="ctb"),
+           person("Ayappan","Perumal",      role="ctb"),
+           person("James","Sams",           role="ctb"),
+           person("Martin","Morgan",        role="ctb"),
+           person("Michael","Quinn",        role="ctb"),
+           person("@javrucebo","",          role="ctb"),
+           person("@marc-outins","",        role="ctb"),
+           person("Roy","Storey",           role="ctb"),
+           person("Manish","Saraswat",      role="ctb"),
+           person("Morgan","Jacob",         role="ctb"),
+           person("Michael","Schubmehl",    role="ctb"),
+           person("Davis","Vaughan",        role="ctb")
            )
 BugReports: https://github.com/SebKrantz/collapse/issues
 Description: A C/C++ based package for advanced data transformation in R that is 
@@ -35,7 +83,7 @@ Description: A C/C++ based package for advanced data transformation in R that is
                  subsetting, apply, and row-binding / unlisting in 2D.
              (6) Advanced data exploration: Fast (grouped, weighted, panel-decomposed) 
                  summary statistics for complex multilevel/panel data.
-License:  MPL-2.0 | file LICENSE
+License: GPL (>= 2)
 Encoding: UTF-8
 LazyData: true
 Depends: R (>= 2.10)

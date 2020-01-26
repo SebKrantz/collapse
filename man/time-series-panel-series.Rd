@@ -26,6 +26,8 @@
 \seealso{
 \link[=collapse-documentation]{Collapse Overview}, \link[=A6-data-transformations]{Data Transformations}
 }
-
+\keyword{ts}
+\keyword{manip}
+\keyword{documentation}
 
 

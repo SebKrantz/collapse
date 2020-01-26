@@ -52,9 +52,10 @@ NumericVector fmedianCpp(const NumericVector& x, int ng = 0, const IntegerVector
   } else { // with groups !!!
     if(l != g.size()) stop("length(g) must match length(x)");
     std::vector<std::vector<double> > gmap(ng);
-    //IntegerVector gcount(ng); // array better ?? 2.30 sec for 1e7 with 1e6 groups
-    int ngp = ng+1, gcount[ngp]; // Yes! 2.25 sec !!
-    memset(gcount, 0, sizeof(int)*ngp);
+    // IntegerVector gcount(ng); // array better ?? 2.30 sec for 1e7 with 1e6 groups
+    int ngp = ng+1; // , gcount[ngp]; // Yes! 2.25 sec !!
+    // memset(gcount, 0, sizeof(int)*ngp);
+    std::vector<int> gcount(ngp);
     if(Rf_isNull(gs)) {
       for(int i = 0; i != l; ++i) ++gcount[g[i]];
       for(int i = 0; i != ng; ++i) {
@@ -192,9 +193,10 @@ SEXP fmedianmCpp(const NumericMatrix& x, int ng = 0, const IntegerVector& g = 0,
   } else { // with groups
     if(l != g.size()) stop("length(g) must match nrow(x)");
     std::vector<std::vector<double> > gmap(ng);
-    int ngp = ng+1, gcount[ngp], memsize = sizeof(int)*ngp;
+    int ngp = ng+1; // , gcount[ngp], memsize = sizeof(int)*ngp;
+    std::vector<int> gcount(ngp);
     if(Rf_isNull(gs)) {
-      memset(gcount, 0, memsize);
+      // memset(gcount, 0, memsize);
       for(int i = 0; i != l; ++i) ++gcount[g[i]];
       for(int i = 0; i != ng; ++i) {
         if(gcount[i+1] == 0) stop("group size of 0 encountered");
@@ -214,7 +216,7 @@ SEXP fmedianmCpp(const NumericMatrix& x, int ng = 0, const IntegerVector& g = 0,
       for(int j = col; j--; ) {
         NumericMatrix::ConstColumn column = x( _ , j);
         NumericMatrix::Column medj = med( _ , j);
-        memset(gcount, 0, memsize);
+        gcount.assign(ngp, 0); // memset(gcount, 0, memsize);
         for(int i = 0; i != l; ++i) if(!std::isnan(column[i])) gmap[g[i]-1][gcount[g[i]]++] = column[i]; // good ??
         for(int i = 0; i != ng; ++i) {
           if(gcount[i+1] != 0) {
@@ -237,7 +239,7 @@ SEXP fmedianmCpp(const NumericMatrix& x, int ng = 0, const IntegerVector& g = 0,
       for(int j = col; j--; ) {
         NumericMatrix::ConstColumn column = x( _ , j);
         NumericMatrix::Column medj = med( _ , j);
-        memset(gcount, 0, memsize);
+        gcount.assign(ngp, 0); // memset(gcount, 0, memsize);
         int ngs = 0;
         for(int i = 0; i != l; ++i) {
           if(std::isnan(column[i])) {
@@ -338,9 +340,10 @@ SEXP fmedianlCpp(const List& x, int ng = 0, const IntegerVector& g = 0,
   } else { // with groups !!!
     List med(l);
     std::vector<std::vector<double> > gmap(ng);
-    int ngp = ng+1, gcount[ngp], memsize = sizeof(int)*ngp, gss = g.size();
+    int ngp = ng+1, gss = g.size(); //  , gcount[ngp], memsize = sizeof(int)*ngp;
+    std::vector<int> gcount(ngp);
     if(Rf_isNull(gs)) {
-      memset(gcount, 0, memsize);
+      // memset(gcount, 0, memsize);
       for(int i = 0; i != gss; ++i) ++gcount[g[i]];
       for(int i = 0; i != ng; ++i) {
         if(gcount[i+1] == 0) stop("group size of 0 encountered");
@@ -359,7 +362,7 @@ SEXP fmedianlCpp(const List& x, int ng = 0, const IntegerVector& g = 0,
         NumericVector column = x[j];
         NumericVector medj(ng, NA_REAL);
         if(gss != column.size()) stop("length(g) must match nrow(x)");
-        memset(gcount, 0, memsize);
+        gcount.assign(ngp, 0); // memset(gcount, 0, memsize);
         for(int i = 0; i != gss; ++i) if(!std::isnan(column[i])) gmap[g[i]-1][gcount[g[i]]++] = column[i]; // good ??
         for(int i = 0; i != ng; ++i) {
           if(gcount[i+1] != 0) {
@@ -382,7 +385,7 @@ SEXP fmedianlCpp(const List& x, int ng = 0, const IntegerVector& g = 0,
         NumericVector column = x[j];
         NumericVector medj(ng); //  = no_init_vector // no init numerically instable !!
         if(gss != column.size()) stop("length(g) must match nrow(x)");
-        memset(gcount, 0, memsize);
+        gcount.assign(ngp, 0); // memset(gcount, 0, memsize);
         int ngs = 0;
         for(int i = 0; i != gss; ++i) {
           if(std::isnan(column[i])) {

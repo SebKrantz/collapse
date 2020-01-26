@@ -118,4 +118,5 @@ microbenchmark(tdata[, lapply(.SD, sum), by = f],
  rowsum(tdata, f, reorder = FALSE) 1.747567 1.753313 1.629036 1.758043 1.839348 0.2720937   100  b
      fsum(tdata, f, na.rm = FALSE) 1.000000 1.000000 1.000000 1.000000 1.000000 1.0000000   100 a
 }}
-
+\keyword{univar}
+\keyword{manip}

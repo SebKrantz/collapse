@@ -93,3 +93,5 @@ get_vars(wlddev, 9:12) <-                                  # Standardizing colum
 head(wlddev)                                               # in the data, whereas wlddev[9:12] <- ..
 rm(wlddev)                                                 # replaces only data, not names!
 }
+\keyword{manip}
+\keyword{documentation}

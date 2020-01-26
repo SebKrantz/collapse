@@ -25,7 +25,7 @@ fmode(x, ...)
       use.g.names = FALSE, keep.group_vars = TRUE, keep.w = TRUE, ...)
 }
 \arguments{
-\item{x}{a numeric vector, matrix, data.frame or grouped tibble (\code{dplyr::grouped_df}).}
+\item{x}{a vector, matrix, data.frame or grouped tibble (\code{dplyr::grouped_df}).}
 
 \item{g}{a factor, \code{\link{GRP}} object, atomic vector (internally converted to factor) or a list of vectors / factors (internally converted to a \code{\link{GRP}} object) used to group \code{x}.}
 
@@ -92,4 +92,5 @@ fmode(wlddev, iso3c, LIFEEX)    # Grouped and weighted mode
 
 detach(wlddev)
 }
-
+\keyword{univar}
+\keyword{manip}

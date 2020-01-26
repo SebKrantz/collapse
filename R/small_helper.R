@@ -2,26 +2,27 @@
 # sourceCpp("C++/small_helper.cpp")
 
 # Export --------------------------------------
-vlabels <- function(X) {
+vlabels <- function(X, attrn = "label") {
   if(is.atomic(X)) {
-    res <- attr(X, "label")
+    res <- attr(X, attrn)
     if(is.null(res)) NA else res
   } else {
-    res <- lapply(X, attr, "label")
+    res <- lapply(X, attr, attrn)
     res[vapply(res, is.null, TRUE)] <- NA
     unlist(res)
   }
 }
-"vlabels<-" <- function(X, value) {
+"vlabels<-" <- function(X, attrn = "label", value) {
   if(is.atomic(X)) {
-    attr(X, "label") <- value
+    attr(X, attrn) <- value
   } else {
-    for (i in seq_along(value)) attr(X[[i]], "label") <- value[i]
+    for (i in seq_along(value)) attr(X[[i]], attrn) <- value[i]
   }
   X
 }
-namlab <- function(X, class = FALSE) {
-  res <- if(class) list(names(X), vapply(X, class, character(1)), vlabels(X)) else list(names(X), vlabels(X))
+namlab <- function(X, class = FALSE, attrn = "label") {
+  pasteclass <- function(x) paste(class(x), collapse = " ")
+  res <- if(class) list(names(X), vapply(X, pasteclass, character(1)), vlabels(X, attrn)) else list(names(X), vlabels(X, attrn))
   attributes(res) <- list(names = if(class) c("Variable","Class","Label") else c("Variable","Label"),
                           row.names = .set_row_names(length(X)),
                           class = "data.frame")
@@ -52,7 +53,7 @@ setDimnames <- function(object = dn, dn) {
 }
 pwcor <- function(X, ...) cor(X, ..., use = "pairwise.complete.obs")
 pwcov <- function(X, ...) cov(X, ..., use = "pairwise.complete.obs")
-all.identical <- function(...) {
+all_identical <- function(...) {
   if(length(match.call())-1L == 1L && is.list(...)) { # https://stackoverflow.com/questions/44011918/count-number-of-arguments-passed-to-function
     all(unlist(lapply(...[-1L], identical, ...[[1L]]), use.names = FALSE)) # use vapply ??
   } else {
@@ -60,6 +61,7 @@ all.identical <- function(...) {
     all(unlist(lapply(l[-1L], identical, l[[1L]]), use.names = FALSE)) # use vapply ??
   }
 }
+all.identical <- all_identical
 is.categorical <- function(x) !is.numeric(x)
 is.Date <- function(x) inherits(x, c("Date","POSIXlt","POSIXct"))
 "%!in%" <- function(x, table) match(x, table, nomatch = 0L) == 0L

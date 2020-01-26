@@ -113,4 +113,5 @@ mtcars \%>\% group_by(cyl,vs,am) \%>\% fsd(keep.group_vars = FALSE) # remove gro
 mtcars \%>\% group_by(cyl,vs,am) \%>\% fsd(hp)      # Weighted by hp
 mtcars \%>\% group_by(cyl,vs,am) \%>\% fsd(hp, "/") # Weighted scaling transformation
 }
-
+\keyword{univar}
+\keyword{manip}

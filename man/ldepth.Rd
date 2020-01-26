@@ -46,3 +46,4 @@ l = list(1, 2, list(4, 5, list(6, mtcars)))
 ldepth(l)
 ldepth(l, DF.as.list = FALSE)
 }
+\keyword{list}

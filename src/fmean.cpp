@@ -218,10 +218,11 @@ SEXP fmeanmCpp(const NumericMatrix& x, int ng = 0, const IntegerVector& g = 0, c
         // NumericVector sumt(ng*col, NA_REAL); // A tiny speed gain, but not much !! Same memory efficiency !!
         // sumt.attr("dim") = Dimension(ng, col);
         // NumericMatrix sum = as<NumericMatrix>(sumt);
+        IntegerVector nj = no_init_vector(ng); // better ??
         for(int j = col; j--; ) {
           NumericMatrix::ConstColumn column = x( _ , j);
           NumericMatrix::Column sumj = sum( _ , j);
-          int nj[ng]; // Numerically stable and faster and more memory efficient than before !!
+           // int nj[ng]; // Numerically stable and faster and more memory efficient than before !!
           for(int i = l; i--; ) {
             if(!std::isnan(column[i])) {
               if(std::isnan(sumj[g[i]-1])) {
@@ -240,12 +241,12 @@ SEXP fmeanmCpp(const NumericMatrix& x, int ng = 0, const IntegerVector& g = 0, c
       } else {
         NumericMatrix sum(ng, col); // no init numerically unstable !!!
         if(Rf_isNull(gs)) {
-          int gsv[ng], memsize = sizeof(int)*ng;
+          // int gsv[ng], memsize = sizeof(int)*ng;
           for(int j = col; j--; ) {
             NumericMatrix::ConstColumn column = x( _ , j);
             NumericMatrix::Column sumj = sum( _ , j);
-            memset(gsv, 0, memsize); // still a tiny bit faster than std::vector, but both have the same memory efficiency !!
-            // std::vector<int> gsv(ng);
+            // memset(gsv, 0, memsize); // still a tiny bit faster than std::vector, but both have the same memory efficiency !!
+            std::vector<int> gsv(ng);
             int ngs = 0;
             for(int i = 0; i != l; ++i) {
               if(std::isnan(column[i])) {
@@ -338,11 +339,13 @@ SEXP fmeanmCpp(const NumericMatrix& x, int ng = 0, const IntegerVector& g = 0, c
         NumericMatrix sum = no_init_matrix(ng, col);
         std::fill(sum.begin(), sum.end(), NA_REAL);
         // NumericMatrix sumw = no_init_matrix(ng, col); // Numerically stable ??????? -> Yes !!
+        NumericVector sumwj(ng); // = no_init_vector(ng);
         for(int j = col; j--; ) {
           NumericMatrix::ConstColumn column = x( _ , j);
           NumericMatrix::Column sumj = sum( _ , j);
+          // NumericVector sumwj = no_init_vector(ng);
           // NumericMatrix::Column sumwj = sumw( _ , j);
-          double sumwj[ng]; // Numerically stable, Slightly faster and a lot more memory efficient!! (but long double is a lot slower)
+          // double sumwj[ng]; // Numerically stable, Slightly faster and a lot more memory efficient!! (but long double is a lot slower)
           for(int i = l; i--; ) {
             if(std::isnan(column[i]) || std::isnan(wg[i])) continue;
             if(std::isnan(sumj[g[i]-1])) {
@@ -361,13 +364,13 @@ SEXP fmeanmCpp(const NumericMatrix& x, int ng = 0, const IntegerVector& g = 0, c
       } else {
         NumericMatrix sum(ng, col); // no init numerically unstable !!!
         // NumericMatrix sumw(ng, col); // also here ?? -> Nope
-        double sumwj[ng]; // Also a bit faster and a lot more memory efficient !!
-        int memsize = sizeof(double)*ng;
+        // double sumwj[ng]; // Also a bit faster and a lot more memory efficient !!
+        // int memsize = sizeof(double)*ng;
         for(int j = col; j--; ) {
           NumericMatrix::ConstColumn column = x( _ , j);
           NumericMatrix::Column sumj = sum( _ , j);
           // NumericMatrix::Column sumwj = sumw( _ , j);
-          memset(sumwj, 0, memsize);
+          std::vector<double> sumwj(ng); // memset(sumwj, 0, memsize);
           int ngs = 0;
           for(int i = 0; i != l; ++i) {
             if(std::isnan(column[i]) || std::isnan(wg[i])) {
@@ -472,12 +475,12 @@ SEXP fmeanlCpp(const List& x, int ng = 0, const IntegerVector& g = 0, const SEXP
         }
       } else {
         if(Rf_isNull(gs)) {
-          int gsv[ng], memsize = sizeof(int)*ng;
+          // int gsv[ng], memsize = sizeof(int)*ng;
           for(int j = l; j--; ) {
             NumericVector column = x[j];
             if(gss != column.size()) stop("length(g) must match nrow(X)");
             NumericVector sumj(ng); //  = no_init_vector //  Not initializing seems to be numerically unstable !!!!
-            memset(gsv, 0, memsize);
+            std::vector<int> gsv(ng); // memset(gsv, 0, memsize);
             int ngs = 0;
             for(int i = 0; i != gss; ++i) {
               if(std::isnan(column[i])) {
@@ -583,12 +586,13 @@ SEXP fmeanlCpp(const List& x, int ng = 0, const IntegerVector& g = 0, const SEXP
       int gss = g.size();
       if(wgs != gss) stop("length(w) must match length(g)");
       if(narm) {
+        NumericVector sumwj(ng);  // = no_init_vector(ng); // stable and faster ??
         for(int j = l; j--; ) {
           NumericVector column = x[j];
           if(gss != column.size()) stop("length(g) must match nrow(X)");
           NumericVector sumj(ng, NA_REAL);
-          // NumericVector sumwj = no_init_vector(ng); // no_init_vector is faster and stable !!! (you only divide by it every round)
-          double sumwj[ng];
+          // no_init_vector is faster and stable !!! (you only divide by it every round)
+          // double sumwj[ng];
           for(int i = gss; i--; ) {
             if(std::isnan(column[i]) || std::isnan(wg[i])) continue;
             if(std::isnan(sumj[g[i]-1])) {
@@ -605,14 +609,14 @@ SEXP fmeanlCpp(const List& x, int ng = 0, const IntegerVector& g = 0, const SEXP
           sum[j] = sumj;
         }
       } else {
-        double sumwj[ng];
-        int memsize = sizeof(double)*ng;
+        // double sumwj[ng];
+        // int memsize = sizeof(double)*ng;
         for(int j = l; j--; ) {
           NumericVector column = x[j];
           if(gss != column.size()) stop("length(g) must match nrow(X)");
-          NumericVector sumj(ng); //  = no_init_vector //  Not initializing seems to be numerically unstable !!!!
+          NumericVector sumj(ng), sumwj(ng); //  = no_init_vector //  Not initializing seems to be numerically unstable !!!!
           // NumericVector sumwj(ng); // Also here not initializing is numerically unstable
-          memset(sumwj, 0, memsize);
+          // memset(sumwj, 0, memsize);
           int ngs = 0;
           for(int i = 0; i != gss; ++i) {
             if(std::isnan(column[i]) || std::isnan(wg[i])) {

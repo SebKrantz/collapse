@@ -100,4 +100,6 @@ mtcars \%>\% group_by(cyl,vs,am) \%>\% fsum("\%")
 mtcars \%>\% group_by(cyl,vs,am) \%>\% fmean(hp)         # weighted grouped mean, save sum of weights
 mtcars \%>\% group_by(cyl,vs,am) \%>\% fmean(hp, keep.group_vars = FALSE)
 }
-
+\keyword{univar}
+\keyword{manip}
+\keyword{documentation}
