@@ -26,5 +26,5 @@ remotes::install_github("SebKrantz/collapse")
 
 ## Contributing
 
-If you want to contribute, please fork and create a pull request for merging with the `devel` branch.
+If you want to contribute, please fork and create a pull request for merging with the `development` branch.
 
