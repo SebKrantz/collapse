@@ -28,7 +28,7 @@
 Elementary exported convenience functions in the \code{collapse} package, that help to deal with variable names, labels, missing values, matching and object checking etc... For recoding and replacing values see \code{\link{Recode}}.
 }
 \usage{
-vlabels(X, attrn = "label")   # Get labels of variables in X, in attr(X[[i]], attr)
+vlabels(X, attrn = "label")   # Get labels of variables in X, in attr(X[[i]], attrn)
 vlabels(X, attrn = "label") <- value      # Set labels of variables in X
 namlab(X, class = FALSE, attrn = "label") # Return data.frame of names, labels and classes
 add_stub(X, stub, pre = TRUE) # Add a stub (i.e. prefix or postfix) to variables
