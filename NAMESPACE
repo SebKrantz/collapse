@@ -332,6 +332,8 @@ importFrom("stats", "as.formula", "complete.cases", "cor", "cov",
  S3method(plot, GRP)
  S3method(print, GRP)
  S3method(print, qsu)
+ S3method(print, pwcor)
+ S3method(print, pwcov)
  S3method(psacf, data.frame)
  S3method(psacf, default)
  S3method(psacf, pdata.frame)
