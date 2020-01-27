@@ -45,15 +45,16 @@ Timmer, M. P., de Vries, G. J., & de Vries, K. (2015). "Patterns of Structural C
 namlab(GGDC10S, class = TRUE)
 qsu(GGDC10S, ~ Variable, ~ Variable + Country, vlabels = TRUE)
 
-\dontrun{
 ## World Regions Structural Change Plot
+
+library(data.table)
 dat <- GGDC10S
 get_vars(dat, 6:15) <- replace_outliers(sweep(get_vars(dat, 6:15), 1, dat$SUM, "/"), 0,
                                         single.limit = "min")
-names(dat) <- stringr::str_wrap(vlabels(dat), width = 20)
+names(dat) <- vlabels(dat) # or use stringr::str_wrap(vlabels(dat), width = 20)
 dat$Variable <- Recode(dat$Variable,"VA"="Value Added Share","EMP"="Employment Share")
 dat <- collap(dat, ~ Variable + Region + Year, cols = 6:15)
-dat <- reshape2::melt(dat, 1:3, variable.name = "Sector")
+dat <- melt(qDT(dat), 1:3, variable.name = "Sector")
 
 library(ggplot2)
 ggplot(aes(x = Year, y = value, fill = Sector), data = dat) +
@@ -65,12 +66,10 @@ ggplot(aes(x = Year, y = value, fill = Sector), data = dat) +
                      labels = scales::percent) +
   theme(axis.text.x = element_text(angle = 315, hjust = 0, margin = ggplot2::margin(t = 0)),
         strip.background = element_rect(colour = "grey30", fill = "grey30"))
-}
 
-%\dontrun{
+
+
 # A function to plot the structural change of an arbitrary country
-library(data.table)
-library(ggplot2)
 
 plotGGDC <- function(ctry) {
 dat <- qDT(GGDC10S)[Country == ctry]
@@ -91,7 +90,6 @@ ggplot(aes(x = Year, y = value, fill = Sector), data = dat) +
         strip.text = element_text(face = "bold"))
 }
 plotGGDC("TZA")
-%}
 
 }
 \keyword{datasets}
