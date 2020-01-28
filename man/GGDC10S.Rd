@@ -46,6 +46,8 @@ namlab(GGDC10S, class = TRUE)
 qsu(GGDC10S, ~ Variable, ~ Variable + Country, vlabels = TRUE)
 
 library(data.table)
+library(ggplot2)
+
 \dontrun{
 ## World Regions Structural Change Plot
 
@@ -57,7 +59,6 @@ dat$Variable <- Recode(dat$Variable,"VA"="Value Added Share","EMP"="Employment S
 dat <- collap(dat, ~ Variable + Region + Year, cols = 6:15)
 dat <- melt(qDT(dat), 1:3, variable.name = "Sector")
 
-library(ggplot2)
 ggplot(aes(x = Year, y = value, fill = Sector), data = dat) +
   geom_area(position = "fill", alpha = 0.9) + labs(x = NULL, y = NULL) +
   theme_linedraw(base_size = 14) + facet_grid(Variable ~ Region, scales = "free_x") +

@@ -5,6 +5,7 @@
 \alias{psmat.data.frame}
 \alias{psmat.pdata.frame}
 \alias{plot.psmat}
+\alias{print.psmat}
 %- Also NEED an '\alias' for EACH other topic documented here.
 \title{
 Matrix / Array from Panel-Series

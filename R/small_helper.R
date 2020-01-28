@@ -53,8 +53,9 @@ setDimnames <- function(object = dn, dn) {
 }
 pwcor <- function(X, ...) `class<-`(cor(X, ..., use = "pairwise.complete.obs"), c("pwcor","matrix"))
 pwcov <- function(X, ...) `class<-`(cov(X, ..., use = "pairwise.complete.obs"), c("pwcov","matrix"))
-print.pwcov <- print.qsu
-print.pwcor <- function(x, digits = 2) print.table(dapply(round(x, digits), function(j) sub("^(-?)0.", "\\1.", j)), right = TRUE) # print.table(, right = TRUE)
+print.pwcov <- function(x, digits = 2, ...) print.default(formatC(round(x, digits), format = "g",
+                                               digits = 9, big.mark = ",", big.interval = 6), quote = FALSE, right = TRUE, ...)
+print.pwcor <- function(x, digits = 2, ...) print.table(dapply(round(x, digits), function(j) sub("^(-?)0.", "\\1.", j)), right = TRUE, ...) # print.table(, right = TRUE)
 
 all_identical <- function(...) {
   if(length(match.call())-1L == 1L && is.list(...)) { # https://stackoverflow.com/questions/44011918/count-number-of-arguments-passed-to-function

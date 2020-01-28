@@ -46,7 +46,7 @@ get_vars(x, vars, regex = FALSE, ...) <- value
 \arguments{
   \item{x}{a data.frame. \emph{Note}: Functions also work with data.table's etc... as long as \code{x} is a list and \code{!is.null(dim(x))}.}
   \item{value}{a data.frame or list of columns whose dimensions exactly match those of the extracted subet of \code{x}.}
-  \item{vars}{column names (can be negative), indices, a suitable logical vector, a vector of regular expressions matching column names if \code{regex = TRUE}, or a function returning \code{TRUE} or \code{FALSE} when applied to the columns of \code{x}.}
+  \item{vars}{a vector of column names, indices (can be negative), a suitable logical vector, a vector of regular expressions matching column names if \code{regex = TRUE}, or a function returning \code{TRUE} or \code{FALSE} when applied to the columns of \code{x}.}
   \item{return}{an integer or string specifying what to return. The options are:
   \enumerate{
   \item "data"\cr

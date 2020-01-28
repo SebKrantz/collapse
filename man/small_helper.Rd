@@ -20,6 +20,8 @@
 \alias{fnlevels}
 \alias{funique}
 \alias{as.numeric_factor}
+\alias{print.pwcov}
+\alias{print.pwcor}
 %- Also NEED an '\alias' for EACH other topic documented here.
 \title{
 \code{collapse} Small (Helper) Functions
@@ -49,13 +51,16 @@ setDimnames(object = dn, dn)  # Set dimension names of object and return object
 is.categorical(x)             # The opposite of is.numeric
 is.Date(x)                    # Check if object is of class "Date", "POSIXlt" or "POSIXct"
 as.numeric_factor(X)          # Coerce a factor, or all factor columns in X, to numeric
+
+\method{print}{pwcor}(x, digits = 2, \dots)
+\method{print}{pwcov}(x, digits = 2, \dots)
 }
 %- maybe also 'usage' for other objects documented here.
 \arguments{
   \item{X}{a (numeric) matrix or data.frame.}
   \item{object}{an array or data.frame.}
   \item{x, table}{(numeric) vectors.}
-  \item{attrn}{Character. Name of attribute to store labels or retrieve labels from.}
+  \item{attrn}{character. Name of attribute to store labels or retrieve labels from.}
   \item{value}{a matching character vector of variable labels.}
   \item{class}{logical. Also show the classes of variables in X in a column?}
   \item{stub}{a single character stub, i.e. "log.", which by default will be pre-applied to all variable or column names in X.}
@@ -64,6 +69,7 @@ as.numeric_factor(X)          # Coerce a factor, or all factor columns in X, to 
   \item{dn}{a suitable list of dimension names.}
   \item{ordered}{logical. \code{TRUE} sorts the output, \code{FALSE} is slightly faster.}
   \item{prop}{specify the proportion of observations randomly replaced with \code{NA}.}
+  \item{digits}{number of digits to print of covariance/correlation matrix.}
   \item{...}{for \code{pwcor} and \code{pwcov}: Other arguments passed to \code{stats::cor} and \code{stats::cov}. For \code{all_identical}, either multiple comma-separated objects or a single list of objects.}
 }
 % \details{
