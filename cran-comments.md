@@ -5,7 +5,8 @@ This is a resubmission. In this version I have:
 
 * Properly implemented an options(warn = -1) using on.exit.
 
-* Removed unnecessary \dontrun{} calls in documentation (GGDS10S.Rd).
+* Removed a commented-out \dontrun{} call in documentation (GGDS10S.Rd). (The first example in GGDS10S.Rd is still wrapped in \dontrun{} because it uses non-suggested packages and generates a
+runtime note on R CMD check)
 
 ## Test environments
 * local Windows 8.1 install, R 3.6.1
