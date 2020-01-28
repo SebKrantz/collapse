@@ -1,6 +1,7 @@
 \name{A5-advanced-aggregation}
 \alias{A5-advanced-aggregation}
 \alias{collap}
+\alias{collapv}
 %- Also NEED an '\alias' for EACH other topic documented here.
 \title{
 Advanced Data Aggregation
@@ -9,17 +10,24 @@ Advanced Data Aggregation
 \code{collap} is a fast and easy to use multi-purpose data aggregation command.
 
 It can aggregate data with multiple data types, aggregate (parallelized) using multiple functions to several output formats, and perform (parallelized) fully customized aggregations where the user decides which variables are aggregated using which functions. \code{collap} is made compatible with \code{collapse}'s \link[=A1-fast-statistical-functions]{Fast Statistical Functions}, allowing for extremely fast conventional and weighted aggregation, but even with \code{base} functions it is significantly faster than \code{stats::aggregate}.
+
+\code{collap} supports formula and data (i.e. grouping vectors or lists of vectors) input to \code{by}, whereas \code{collapv} allows names and indices of grouping columns to be passed to \code{by}.
 }
 \usage{
 collap(X, by, FUN = fmean, catFUN = fmode, cols = NULL, custom = NULL,
        keep.by = TRUE, keep.col.order = TRUE, sort.row = TRUE, parallel = FALSE,
        mc.cores = 1L, return = c("wide","list","long","long_dupl"),
        give.names = "auto", ...)
+
+collapv(X, by, FUN = fmean, catFUN = fmode, cols = NULL, custom = NULL,
+        keep.by = TRUE, keep.col.order = TRUE, sort.row = TRUE, parallel = FALSE,
+        mc.cores = 1L, return = c("wide","list","long","long_dupl"),
+        give.names = "auto", ...)
 }
 %- maybe also 'usage' for other objects documented here.
 \arguments{
   \item{X}{a data.frame, or an object coercible to data.frame using \code{\link{qDF}}.}
-  \item{by}{a one-or two sided formula, i.e. \code{~ group1} or \code{var1 + var2 ~ group1 + group2}, or alternatively a factor, \code{\link{GRP}} object, atomic vector (internally converted to factor) or a list of vectors / factors (internally converted to a \code{\link{GRP}} object) used to group \code{X}.}
+  \item{by}{a one-or two sided formula, i.e. \code{~ group1} or \code{var1 + var2 ~ group1 + group2}, or alternatively a factor, \code{\link{GRP}} object, atomic vector (internally converted to factor) or a list of vectors / factors (internally converted to a \code{\link{GRP}} object) used to group \code{X}. \code{collapv} additionally takes names or indices of grouping columns (could also use a logical vector or a selector function such as \code{\link{is.categorical}}).}
 \item{FUN}{a function, list of functions (i.e. \code{list(fsum, fmean, fsd)} or \code{list(myfun1 = function(x).., sd = sd)}), or a character vector of function names, which are automatically applied only to numeric variables.}
 \item{catFUN}{same as \code{FUN}, but applied only to categorical (non-numeric) typed columns (\code{\link{is.categorical}}).}
 \item{cols}{select columns to aggregate using a function, column names or indices. \emph{Note}: \code{cols} is ignored if a two-sided formula is passed to \code{by}.}
@@ -69,6 +77,8 @@ head(collap(wlddev, PCGDP + LIFEEX ~ country + decade, sum,     # Same using bas
 head(collap(wlddev, wlddev[c("country","decade")], fsum,        # same, exploring different inputs
             cols = 9:10))
 head(collap(wlddev[9:10], wlddev[c("country","decade")], fsum))
+head(collapv(wlddev, c("country","decade"), fsum))              # ... names/indices with collapv
+head(collapv(wlddev, c(1,5), fsum))
 
 g <- GRP(wlddev, ~ country + decade)                            # Precomputing the grouping
 head(collap(wlddev, g, keep.by = FALSE))                        # This is slightly faster now

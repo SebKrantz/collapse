@@ -1,13 +1,11 @@
 ## Resubmission
 This is a resubmission. In this version I have:
 
-* Added all data.table and Rcpp authors as 'ctb' since some data.table source code was used and a tiny fraction of Rcpp source code. Everybody who has potentially contributed even one line of code is now a 'ctb'.  
+* Only listed the main authors ('aut'/citation) of data.table and Rcpp as 'ctb' to my package as suggested by Uwe.  
 
-* Adopted Rcpp's GPL (>= 2) license which is the most restrictive and not in conflict with data.tables MPL 2.0. 
+* Properly implemented an options(warn = -1) using on.exit.
 
-* Removed a options(warn = -1), and properly implemented par resetting in plot methods using on.exit.
-
-* Removed unnecessary \dontrun{} calls in documentation.
+* Removed unnecessary \dontrun{} calls in documentation (GGDS10S.Rd).
 
 ## Test environments
 * local Windows 8.1 install, R 3.6.1

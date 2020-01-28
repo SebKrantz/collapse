@@ -7,7 +7,7 @@
 
 .COLLAPSE_ALL    <-      c("%!in%","add_stub","all_identical","as.factor.GRP","as.numeric_factor",
                            "atomic_elem","atomic_elem<-","B","BY","cat_vars","cat_vars<-","char_vars",
-                           "char_vars<-","collap","D","dapply","Date_vars","Date_vars<-","F","fact_vars",
+                           "char_vars<-","collap","collapv","D","dapply","Date_vars","Date_vars<-","F","fact_vars",
                            "fact_vars<-","fbetween","fdiff","ffirst","fgrowth","fHDbetween","fHDwithin",
                            "flag","flast","fmax","fmean","fmedian","fmin","fmode","fNdistinct","fnlevels",
                            "fNobs","fprod","fscale","fsd","fsum","funique","fvar","fwithin","G","get_elem",

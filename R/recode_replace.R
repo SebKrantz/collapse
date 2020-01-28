@@ -43,13 +43,13 @@ Recode <- function(X, ..., copy = FALSE, reserve.na.nan = TRUE, regex = FALSE) {
     }
   } else {
     if(is.list(X)) {
-      options(warn = -1) # faster than suppressWarnings !!
+      oldopts <- options(warn = -1) # faster than suppressWarnings !!
+      on.exit(options(oldopts))
       numnam <- as.numeric(nam) # suppressWarnings(numnam <- as.numeric(nam)) -> this line takes most time !!
       if(onearg && !is.na(numnam)) nam <- numnam else {
         nam <- as.vector(nam, "list")
         if(any(numnaml <- !is.na(numnam))) nam[numnaml] <- numnam[numnaml]
       }
-      options(warn = 1)
       if(onearg) X[comp(X, nam)] <- args[[1L]] else if(copy) {
         Y <- X
         for (j in seq_len(arglen)) X[comp(Y, nam[[j]])] <- args[[j]]
