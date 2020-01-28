@@ -226,9 +226,7 @@ head(cbind(get_vars(mtcars, ind),
 ```
 
 
-These examples could be made more intricate using the full set of *Fast Statistical Functions* and also employing vector- valued functions and operators (`fscale/STD, fbetween/B, fwithin/W, fHDbetween/HDB, fHDwithin/HDW, flag/L/F, fdiff/D, fgrowth/G`) discussed later. See the documentation under `help('collapse-documentation')` for more information. 
-
-The above examples demonstrate provide merely suggestions for use of these features and are focused on programming with data.frames. The *Fast Statistical Functions* and the principles laid out here work equally well on vectors and matrices!
+These examples could be made more intricate using the full set of *Fast Statistical Functions* and also employing vector- valued functions and operators (`fscale/STD, fbetween/B, fwithin/W, fHDbetween/HDB, fHDwithin/HDW, flag/L/F, fdiff/D, fgrowth/G`) discussed later. They also provide merely suggestions for use of these features and are focused on programming with data.frames. The *Fast Statistical Functions* and the principles laid out here work equally well on vectors and matrices, and the functions `qDF, qDT, qM and qF` deliver fast conversions!
 
 Using *collapse*'s fast functions can speed up grouped computations by orders of magnitude - even compared to packages like *dplyr* or *data.table*. Simple column-wise computations on matrics are also slightly faster than `base` functions like `colMeans`,
 `colSums`, and a lot faster on data.frame's. 
