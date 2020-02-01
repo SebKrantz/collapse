@@ -146,13 +146,12 @@ plot.psmat <- function(x, legend = FALSE, colours = legend, labs = NULL, ...) {
 
 # print.psmat <- print.qsu # nah, too expensive
 
-print.psmat <- function(x, digits = NULL, quote = TRUE, na.print = "-", print.gap = NULL,
-                        right = FALSE, max = NULL, useSource = TRUE, ...) {
-  print.default(x, digits, quote, na.print, print.gap, right, max, useSource, ...)
-}
+# Not really necessary !! (and gave CRAN error !!)
+# print.psmat <- function(x, digits = 3, ...) {
+#   print.default(unclass(x), digits = digits, ...)
+# }
 
-`[.psmat` <- function(x, i, j, ..., drop = TRUE)
-{
+`[.psmat` <- function(x, i, j, ..., drop = TRUE) {
   ret <- NextMethod()
   if(length(dim(ret)) > 1L) {
     attr(ret, "transpose") <- attr(x, "transpose")
@@ -161,8 +160,7 @@ print.psmat <- function(x, digits = NULL, quote = TRUE, na.print = "-", print.ga
   ret
 }
 
-aperm.psmat <- function(a, perm = NULL, resize = TRUE, keep.class = TRUE, ...)
-{
+aperm.psmat <- function(a, perm = NULL, resize = TRUE, keep.class = TRUE, ...) {
   r <- aperm.default(a, perm, resize = resize)
   if(keep.class) {
     attr(r, "transpose") <- attr(a, "transpose")
