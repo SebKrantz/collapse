@@ -9,7 +9,7 @@
 Pairwise Correlations, Covariances and Observation Count
 }
 \description{
-Computes pairwise Pearsons correlations, covariances and observation counts. Pairwise correlations and covariances can be computed together with observation counts and p-values, and output as 3D array (default) or list of matrices. For an equivalent and faster implementation of \code{pwcor} see \code{Hmisc::rcorr} (written in Fortran). A major feature \code{pwcor} and \code{pwcov} is their sophisticated print method.
+Computes pairwise Pearsons correlations, covariances and observation counts. Pairwise correlations and covariances can be computed together with observation counts and p-values, and output as 3D array (default) or list of matrices. For an equivalent and faster implementation of \code{pwcor} see \code{Hmisc::rcorr} (written in Fortran). A major feature of \code{pwcor} and \code{pwcov} is their sophisticated print method.
 }
 \usage{
 pwcor(X, ..., N = FALSE, P = FALSE, array = TRUE)

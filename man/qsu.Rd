@@ -84,7 +84,7 @@ If weights \code{w} are used together with \code{pid}, transformed data is compu
 %% ~Make other sections like Warning with \section{Warning }{....} ~
 
 \seealso{
-\link[=A1-fast-statistical-functions]{Fast Statistical Functions}, \link[=collapse-documentation]{Collapse Overview}  %% ~~objects to See Also as \code{\link{help}}, ~~~
+\code{\link{pwcor}}, \link[=A1-fast-statistical-functions]{Fast Statistical Functions}, \link[=collapse-documentation]{Collapse Overview}  %% ~~objects to See Also as \code{\link{help}}, ~~~
 }
 \examples{
 
