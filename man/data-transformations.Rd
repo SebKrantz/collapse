@@ -29,6 +29,8 @@ All of \code{collapse}'s \link[=A1-fast-statistical-functions]{Fast Statistical 
 
 \item \code{\link[=HDW]{fHDwithin/HDW}}, shorthand for 'higher-dimensional within transform', is an S3 generic to efficiently \bold{center data on multiple groups} and partial-out linear models (possibly involving many levels of fixed effects and interactions). In other words, \code{\link[=HDW]{fHDwithin/HDW}} efficiently computes \bold{residuals} from (potentially complex) linear models. Similarly \code{\link[=HDB]{fHDbetween/HDB}}, shorthand for 'higher-dimensional between transformation', computes the corresponding means or \bold{fitted values}.
 
+\item \code{\link{fFtest}} is a fast implementation of the R-Squared based F-test, to test \bold{exclusion restrictions} on linear models potentially involving multiple large factors (fixed effects). It internally utilizes \code{\link{fHDwithin}} to project out factors while counting the degrees of freedom.
+
 \item \code{\link[=flag]{flag/L/F}}, \code{\link[=fdiff]{fdiff/D}} and \code{\link[=fgrowth]{fgrowth/G}} are S3 generics to compute sequences of \bold{lags / leads} and suitably lagged and iterated \bold{differences} and \bold{growth rates} on time-series and panel data. More in \link[=A7-time-series-panel-series]{Time-Series and Panel-Series}.
 
 \item \code{STD, W, B, HDW, HDB, L, D} and \code{G} are parsimonious wrappers around the \code{f-} functions above representing the corresponding transformation 'operators'. They have additional capabilities when applied to data-frames (i.e. variable selection, formula input, auto-renaming and id-variable preservation), and are easier to employ in regression formulas, but are otherwise identical in functionality.
@@ -44,6 +46,7 @@ All of \code{collapse}'s \link[=A1-fast-statistical-functions]{Fast Statistical 
   \code{\link[=fbetween]{fbetween/B}} \tab\tab \code{default, matrix, data.frame, pseries, pdata.frame, grouped_df}  \tab\tab compute means / average data \cr
   \code{\link[=HDW]{fHDwithin/HDW}} \tab\tab \code{default, matrix, data.frame, pseries, pdata.frame} \tab\tab high-dimensional centering and lm residuals \cr
   \code{\link[=HDB]{fHDbetween/HDB}} \tab\tab \code{default, matrix, data.frame, pseries, pdata.frame} \tab\tab high-dimensional averages and lm fitted values \cr
+  \code{\link{fFtest}} \tab\tab No methods, it's a standalone test to which data needs to be supplied.  \tab\tab fast F-test of exclusion retrictions on linear models (involving factors) \cr
   \code{\link[=flag]{flag/L/F}} \tab\tab \code{default, matrix, data.frame, pseries, pdata.frame, grouped_df}  \tab\tab (sequences of) lags / leads \cr
   \code{\link[=fdiff]{fdiff/D}} \tab\tab \code{default, matrix, data.frame, pseries, pdata.frame, grouped_df}  \tab\tab (sequences of lagged/leaded and iterated) differences \cr
   \code{\link[=fdiff]{fgrowth/G}} \tab\tab \code{default, matrix, data.frame, pseries, pdata.frame, grouped_df}  \tab\tab (sequences of lagged/leaded and iterated) growth rates or log-differences
