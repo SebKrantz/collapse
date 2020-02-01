@@ -51,11 +51,262 @@ setDimnames <- function(object = dn, dn) {
   dimnames(object) <- dn
   object
 }
-pwcor <- function(X, ...) `class<-`(cor(X, ..., use = "pairwise.complete.obs"), c("pwcor","matrix"))
-pwcov <- function(X, ...) `class<-`(cov(X, ..., use = "pairwise.complete.obs"), c("pwcov","matrix"))
-print.pwcov <- function(x, digits = 2, ...) print.default(formatC(round(x, digits), format = "g",
-                                               digits = 9, big.mark = ",", big.interval = 6), quote = FALSE, right = TRUE, ...)
-print.pwcor <- function(x, digits = 2, ...) print.table(dapply(round(x, digits), function(j) sub("^(-?)0.", "\\1.", j)), right = TRUE, ...) # print.table(, right = TRUE)
+
+# sumcc <- function(x, y)  sum(complete.cases(x,y))
+# pwNobs <- function(x) qM(dapply(x, function(y) dapply(x, sumcc, y)))
+
+pwNobs <- function(X) { # Faster !!
+  dg <- fNobs(X)
+  if(is.matrix(X)) {
+    cn <- dimnames(X)[[2L]]
+    X <- mctl(X)
+  } else {
+    cn <- names(X)
+    class(X) <- NULL
+  }
+  n <- length(X)
+  N.mat <- matrix(NA, n, n, dimnames = list(cn, cn))
+  diag(N.mat) <- dg
+  for (i in 1:(n - 1)) {
+    for (j in (i + 1):n) {
+      N.mat[i, j] <- N.mat[j, i] <- sum(complete.cases(X[[i]], X[[j]]))
+    }
+  }
+  N.mat
+}
+
+corr.p <- function(r, n) {
+  if (n < 3L) return(1)
+  df <- n - 2L
+  t <- sqrt(df) * r/sqrt(1 - r^2)
+  return(2 * min(pt(t, df), pt(t, df, lower.tail = FALSE))) # taken from corr.test
+}
+
+corr.pmat <- function(cm, nm) {
+  n <- ncol(cm)
+  p.mat <- matrix(NA, n, n, dimnames = dimnames(cm))
+  # diag(p.mat) <- 0
+  for (i in 1:(n - 1)) {
+    for (j in (i + 1):n) {
+      p.mat[i, j] <- p.mat[j, i] <- corr.p(cm[i, j], nm[i, j])
+    }
+  }
+  p.mat
+}
+
+
+# test against Hmisc::rcorr -> yup, same both corr, n and p !!
+pwcor <- function(X, ..., N = FALSE, P = FALSE, array = TRUE) {
+  r <- cor(X, ..., use = "pairwise.complete.obs")
+  if(!N && !P) return(`class<-`(r, c("pwcor","matrix")))
+  n <- pwNobs(X) # what if using ... to supply y ???
+  if(N) {
+    res <- if(P) list(r = r, N = n, P = corr.pmat(r, n)) else list(r = r, N = n)
+  } else res <- list(r = r, P = corr.pmat(r, n))
+  if(array) {
+    res <- simplify2array(res)
+    class(res) <- c("pwcor","array","table")
+  } else class(res) <- "pwcor"
+  return(res)
+}
+
+pwcov <- function(X, ..., N = FALSE, P = FALSE, array = TRUE) {
+  r <- cov(X, ..., use = "pairwise.complete.obs")
+  if(!N && !P) return(`class<-`(r, c("pwcov","matrix")))
+  n <- pwNobs(X)
+  if(N) {
+    res <- if(P) list(cov = r, N = n, P = corr.pmat(cor(X, ..., use = "pairwise.complete.obs"), n)) else list(cov = r, N = n)
+  } else res <- list(cov = r, P = corr.pmat(cor(X, ..., use = "pairwise.complete.obs"), n))
+  if(array) {
+    res <- simplify2array(res)
+    class(res) <- c("pwcov","array","table")
+  } else class(res) <- "pwcov"
+  return(res)
+}
+
+print.pwcor <- function(x, digits = 2L, sig.level = 0.05, show = c("all","lower.tri","upper.tri"), spacing = 1L, ...) {
+  formfun <- function(x, dg1 = FALSE) {
+    xx <- format(round(x, digits)) # , digits = digits-1
+    xx <- sub("(-?)0\\.", "\\1.", xx)
+    if(dg1) diag(xx) <- paste0(c("  1",rep(" ",digits-1)), collapse = "") else {
+     xna <- is.na(x)
+     xx[xna] <- ""
+     xpos <- x >= 1 & !xna
+     xx[xpos] <- sub(paste0(c(".", rep("0",digits)), collapse = ""), "", xx[xpos]) # Problem: Deletes .00 also..
+    }
+    return(xx)
+  }
+  show <- switch(show[1L], all = 1L, lower.tri = 2L, upper.tri = 3L, stop("Unknown 'show' option"))
+  se <- "Allowed spacing options are 0, 1 and 2!"
+  if(is.array(x)) {
+    sc <- TRUE
+    d <- dim(x)
+    ld <- length(d)
+    if(ld > 2L) {
+      dn <- dimnames(x)
+      d3 <- dn[[3L]]
+      if(all(d3 %in% c("r","N","P"))) {
+        if(length(d3) == 3L) {
+          sig <- matrix(" ", d[1L], d[2L])
+          sig[x[,, 3L] <= sig.level] <- "*"
+          res <- sprintf(switch(spacing+1L, "%s%s(%i)", "%s%s (%i)", " %s%s (%i)", stop(se)), formfun(x[,, 1L], TRUE), sig, x[,, 2L]) # paste0(formfun(x[,, 1L]),sig,"(",x[,, 2L],")")
+        } else if(d3[2L] == "P") {
+          sig <- matrix(" ", d[1L], d[2L])
+          sig[x[,, 2L] <= sig.level] <- "*"
+          res <- sprintf(switch(spacing+1L, "%s%s", " %s%s", " %s %s", stop(se)), formfun(x[,, 1L], TRUE), sig)
+        } else res <- sprintf(switch(spacing+1L, "%s(%i)", "%s (%i)", " %s (%i)", stop(se)), formfun(x[,, 1L], TRUE), x[,, 2L])
+      } else {
+        sc <- FALSE
+        res <- duplAttributes(switch(spacing+1L, formfun(x), sprintf(" %s",formfun(x)), sprintf("  %s",formfun(x)), stop(se)), x) # remove this before publishing !!!
+      }
+      if(sc) attributes(res) <- list(dim = d[1:2], dimnames = dn[1:2])
+    } else res <- if(spacing == 0L) formfun(x, TRUE) else
+                   duplAttributes(sprintf(switch(spacing," %s","  %s",stop(se)), formfun(x, TRUE)), x)
+      if(sc && show != 1L) if(show == 2L) res[upper.tri(res)] <- "" else res[lower.tri(res)] <- ""
+  } else {
+    if(spacing == 0L) res <- lapply(x, formfun) else {
+      ff <- function(i) duplAttributes(sprintf(switch(spacing," %s","  %s",stop(se)),formfun(i)), i)
+      res <- lapply(x, ff)
+    }
+    if(show != 1L) res <- if(show == 2L) lapply(res, function(i){i[upper.tri(i)] <- ""; i}) else
+                                         lapply(res, function(i){i[lower.tri(i)] <- ""; i})
+  }
+  print.default(unclass(res), quote = FALSE, right = TRUE, ...)
+  invisible(x)
+} #print.table(dapply(round(x, digits), function(j) sub("^(-?)0.", "\\1.", j)), right = TRUE, ...) # print.table(, right = TRUE)
+
+
+print.pwcov <- function(x, digits = 2L, sig.level = 0.05, show = c("all","lower.tri","upper.tri"), spacing = 1L, ...) {
+  formfun <- function(x, adj = FALSE) {
+    xx <- format(round(x, digits), digits = 9, big.mark = ",", big.interval = 6)
+    xx <- sub("(-?)0\\.", "\\1.", xx)
+    if(adj) {
+      xna <- is.na(x)
+      xx[xna] <- ""
+      xpos <- x >= 1 & !xna
+      xx[xpos] <- sub(paste0(c(".", rep("0",digits)), collapse = ""), "", xx[xpos]) # Problem: Deletes .00 also..
+    }
+    return(xx)
+  }
+  show <- switch(show[1L], all = 1L, lower.tri = 2L, upper.tri = 3L, stop("Unknown 'show' option"))
+  se <- "Allowed spacing options are 0, 1 and 2!"
+  if(is.array(x)) {
+    sc <- TRUE
+    d <- dim(x)
+    ld <- length(d)
+    if(ld > 2L) {
+      dn <- dimnames(x)
+      d3 <- dn[[3L]]
+      if(all(d3 %in% c("cov","N","P"))) {
+        if(length(d3) == 3L) {
+          sig <- matrix(" ", d[1L], d[2L])
+          sig[x[,, 3L] <= sig.level] <- "*"
+          res <- sprintf(switch(spacing+1L, "%s%s(%i)", "%s%s (%i)", " %s%s (%i)", stop(se)), formfun(x[,, 1L]), sig, x[,, 2L]) # paste0(formfun(x[,, 1L]),sig,"(",x[,, 2L],")")
+        } else if(d3[2L] == "P") {
+          sig <- matrix(" ", d[1L], d[2L])
+          sig[x[,, 2L] <= sig.level] <- "*"
+          res <- sprintf(switch(spacing+1L, "%s%s", " %s%s", " %s %s", stop(se)), formfun(x[,, 1L]), sig)
+        } else res <- sprintf(switch(spacing+1L, "%s(%i)", "%s (%i)", " %s (%i)", stop(se)), formfun(x[,, 1L]), x[,, 2L])
+      } else {
+        sc <- FALSE
+        res <- duplAttributes(switch(spacing+1L, formfun(x, TRUE), sprintf(" %s",formfun(x, TRUE)), sprintf("  %s",formfun(x, TRUE)), stop(se)), x) # remove this before publishing !!!
+      }
+      if(sc) attributes(res) <- list(dim = d[1:2], dimnames = dn[1:2])
+    } else res <- if(spacing == 0L) formfun(x) else
+      duplAttributes(sprintf(switch(spacing," %s","  %s",stop(se)), formfun(x)), x)
+    if(sc && show != 1L) if(show == 2L) res[upper.tri(res)] <- "" else res[lower.tri(res)] <- ""
+  } else {
+    if(spacing == 0L) res <- lapply(x, formfun, TRUE) else {
+      ff <- function(i) duplAttributes(sprintf(switch(spacing," %s","  %s",stop(se)),formfun(i, TRUE)), i)
+      res <- lapply(x, ff)
+    }
+    if(show != 1L) res <- if(show == 2L) lapply(res, function(i){i[upper.tri(i)] <- ""; i}) else
+      lapply(res, function(i){i[lower.tri(i)] <- ""; i})
+  }
+  print.default(unclass(res), quote = FALSE, right = TRUE, ...)
+  invisible(x)
+} #print.table(dapply(round(x, digits), function(j) sub("^(-?)0.", "\\1.", j)), right = TRUE, ...) # print.table(, right = TRUE)
+
+
+# print.pwcov <- function(x, digits = 2, ...) print.default(formatC(round(x, digits), format = "g",
+#                                                                   digits = 9, big.mark = ",", big.interval = 6), quote = FALSE, right = TRUE, ...)
+
+
+
+
+getdf <- function(x) {
+  if(is.matrix(x)) return(ncol(x))
+  if(is.atomic(x)) if(is.factor(x)) return(fnlevels(x)-1L) else return(1L)
+  sum(vapply(x, function(i) if(is.factor(i)) fnlevels(i)-1L else 1L, 1L))
+}
+
+
+fFtest <- function(y, exc, X = NULL, full.df = TRUE, ...) {
+  if(!is.numeric(y)) stop("y needs to be a numeric vector")
+  if(!is.null(X)) {
+    Xn <- NCOL(X)
+    data <- if(is.numeric(X) && is.numeric(exc)) na.omit(cbind(y, X, exc)) else
+            na.omit(qDT(c(list(y = y), qDF(X), qDF(exc))))
+    if(full.df && is.list(data) && any(fc <- vapply(data, is.factor, TRUE))) {
+      cld <- class(data)
+      class(data) <- NULL
+      data[fc] <- lapply(data[fc], droplevels.factor)
+      df <- vapply(data, function(i) if(is.factor(i)) fnlevels(i)-1L else 1L, 1L) # getdf(data)
+      k <- sum(df) # 1 for intercept added with y
+      p <- sum(df[-seq_len(Xn+1L)])
+      y <- data[[1L]]
+      oldClass(data) <- cld
+    } else {
+      k <- ncol(data) # 1 for intercept added with y
+      p <- NCOL(exc)
+      y <- data[, 1L]
+    }
+    kr <- k-p-1
+    vy <- var(y)
+    n <- nrow(data)
+    r2f <- 1 - var(fHDwithin.default(y, data[, -1L], na.rm = FALSE, ...))/vy
+    r2r <- 1 - var(fHDwithin.default(y, data[, 2:(Xn+1L)], na.rm = FALSE, ...))/vy # this way is data.tabel proof !!
+    ndff <- k-1
+    ddff <- n-k
+    Fstatf <- r2f/ndff * ddff/(1-r2f)
+    pf <- pf(Fstatf, ndff, ddff, lower.tail = FALSE)
+    ddfr <- n-kr-1
+    Fstatr <- r2r/kr * ddfr/(1-r2r)
+    pr <- pf(Fstatr, kr, ddfr, lower.tail = FALSE)
+    Fstate <- (r2f - r2r)/p * ddff/(1-r2f) # https://www.youtube.com/watch?v=Pz3j4Zu8BOQ
+    pe <- pf(Fstate, p, ddff, lower.tail = FALSE)
+    res <- matrix(c(r2f, ndff, ddff, Fstatf, pf,
+                    r2r, kr, ddfr, Fstatr, pr,
+                    r2f-r2r, p, ddff, Fstate, pe), nrow = 3L, ncol = 5L, byrow = TRUE,
+                  dimnames = list(c("Full Model","Restricted Model","Exclusion Rest."),
+                                  c("R-Sq.","DF1","DF2","F-Stat.","P-Value")))
+    class(res) <- c("fFtest","matrix")
+  } else {
+    u <- fHDwithin.default(y, exc) # Residuals
+    miss <- attr(u, "na.rm")
+    if(full.df && !is.null(miss) && !is.numeric(exc)) {
+      p <- if(is.factor(exc)) fnlevels(exc[-miss, drop = TRUE])-1L else if(any(vapply(exc, is.factor, TRUE)))
+           getdf(droplevels.data.frame(exc[-miss, , drop = FALSE])) else length(exc)
+    } else if(full.df) {
+      p <- if(is.factor(exc) || (is.list(exc) && any(vapply(exc, is.factor, TRUE)))) getdf(droplevels(exc)) else NCOL(exc)
+    } else p <- NCOL(exc)
+    n <- length(u)
+    r2 <- 1 - var(u)/var(if(is.null(miss)) y else y[-miss]) # R-Squared
+    ddf <- n-p-1
+    Fstat <- r2/p * ddf/(1-r2) # F statistic for the model (the constant goes unrestricted)
+    Pv <- pf(Fstat, p, ddf, lower.tail = FALSE) # P-value corresponding to the F statistic
+    res <- c(`R-Sq.` = r2, `DF1` = p, `DF2` = ddf, `F-Stat.` = Fstat, `P-value` = Pv)
+    class(res) <- "fFtest"
+  }
+  return(res)
+}
+
+print.fFtest <- function(x, digits = 3, ...) {
+  xx <- unclass(format(round(x, digits)))
+  xpos <- x >= 1
+  xx[xpos] <- sub(paste0(c(".", rep("0",digits)), collapse = ""), "", xx[xpos]) # Problem: Deletes .00 also..
+  print.default(xx, quote = FALSE, right = TRUE, ...)
+}
 
 all_identical <- function(...) {
   if(length(match.call())-1L == 1L && is.list(...)) { # https://stackoverflow.com/questions/44011918/count-number-of-arguments-passed-to-function
@@ -93,11 +344,14 @@ na_insert <- function(X, prop = 0.1) {
 }
 fnlevels <- function(x) length(attr(x, "levels")) # make cpp version ?? -> nope, slower !!
 as.numeric_factor <- function(X) {
-  if(is.list(X)) {
+  if(is.atomic(X)) return(as.numeric(attr(X, "levels"))[X])
+
     fcts <- vapply(X, is.factor, TRUE, USE.NAMES = FALSE)
-    get_vars(X, fcts) <- lapply(colsubset(X, fcts), function(x) as.numeric(attr(x, "levels"))[x])
-    return(X)
-  } else return(as.numeric(attr(X, "levels"))[X])
+    # if(all(fcts)) return(dapply(X, function(x) as.numeric(attr(x, "levels"))[x]))
+    clx <- class(X)
+    class(X) <- NULL
+    X[fcts] <- lapply(X[fcts], function(x) as.numeric(attr(x, "levels"))[x])
+    return(`oldClass<-`(X, clx))
 }
 
 
