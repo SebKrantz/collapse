@@ -8,14 +8,16 @@ NumericVector fsumCpp(const NumericVector& x, int ng = 0, const IntegerVector& g
   if(ng == 0) {
     if(narm) {
       int j = l-1;
-      long double sum = x[j];
+      // long double sum = x[j];
+      double sum = x[j];
       while(std::isnan(sum) && j!=0) sum = x[--j];
       if(j != 0) for(int i = j; i--; ) {
         if(!std::isnan(x[i])) sum += x[i]; // Fastest ??
       }
-      return NumericVector::create((double)sum); // Converting long double directly to numeric vector is slow !!!
+      return NumericVector::create(sum); // create((double)sum) // Converting long double directly to numeric vector is slow !!!
     } else {
-      long double sum = 0;
+      // long double sum = 0;
+      double sum = 0;
       for(int i = 0; i != l; ++i) {
         if(std::isnan(x[i])) {
           sum = x[i];
@@ -24,7 +26,7 @@ NumericVector fsumCpp(const NumericVector& x, int ng = 0, const IntegerVector& g
           sum += x[i];
         }
       }
-      return NumericVector::create((double)sum);
+      return NumericVector::create(sum); // ::create((double)sum)
     }
   } else { // with groups
     if(g.size() != l) stop("length(g) must match nrow(X)");
@@ -73,17 +75,19 @@ SEXP fsummCpp(const NumericMatrix& x, int ng = 0, const IntegerVector& g = 0, //
       for(int j = col; j--; ) { // Instead Am(j,_) you can use Am.row(j).
         NumericMatrix::ConstColumn column = x( _ , j);
         int k = l-1;
-        long double sumj = column[k]; // Slight speed loss 38 vs 32 milliseconds on WDIM
+        // long double sumj = column[k]; // Slight speed loss 38 vs 32 milliseconds on WDIM
+        double sumj = column[k];
         while(std::isnan(sumj) && k!=0) sumj = column[--k];
         if(k != 0) for(int i = k; i--; ) {
           if(!std::isnan(column[i])) sumj += column[i];
         }
-        sum[j] = (double)sumj; // No speed loss, but more secure
+        sum[j] = sumj; // (double)sumj; // No speed loss, but more secure
       }
     } else {
       for(int j = col; j--; ) {
         NumericMatrix::ConstColumn column = x( _ , j);
-        long double sumj = 0;
+        // long double sumj = 0;
+        double sumj = 0;
         for(int i = 0; i != l; ++i) {
           if(std::isnan(column[i])) {
             sumj = column[i];
@@ -92,7 +96,7 @@ SEXP fsummCpp(const NumericMatrix& x, int ng = 0, const IntegerVector& g = 0, //
             sumj += column[i];
           }
         }
-        sum[j] = (double)sumj;
+        sum[j] = sumj; // (double)sumj;
       }
     }
     if(drop) sum.attr("names") = colnames(x); // Slight speed loss 31 to 34 milliseconds on WDIM, but doing it in R not faster !!
@@ -161,17 +165,19 @@ SEXP fsumlCpp(const List& x, int ng = 0, const IntegerVector& g = 0,
         // for(int j = 0; j != l; ++j) { // Not necessarily faster !!
         NumericVector column = x[j];
         int k = column.size()-1;
-        long double sumi = column[k]; // a bit extra speed with double, 31 vs 36 milliseconds on NWDI
+        // long double sumi = column[k]; // a bit extra speed with double, 31 vs 36 milliseconds on NWDI
+        double sumi = column[k];
         while(std::isnan(sumi) && k!=0) sumi = column[--k];
         if(k != 0) for(int i = k; i--; ) {
           if(!std::isnan(column[i])) sumi += column[i];
         }
-        sum[j] = (double)sumi;
+        sum[j] = sumi; // (double)sumi;
       }
     } else {
       for(int j = l; j--; ) {
         NumericVector column = x[j];
-        long double sumi = 0;
+        // long double sumi = 0;
+        double sumi = 0;
         int row = column.size();
         for(int i = 0; i != row; ++i) {
           if(std::isnan(column[i])) {
@@ -181,7 +187,7 @@ SEXP fsumlCpp(const List& x, int ng = 0, const IntegerVector& g = 0,
             sumi += column[i];
           }
         }
-        sum[j] = (double)sumi;
+        sum[j] = sumi; // (double)sumi;
       }
     }
     if(drop) {
