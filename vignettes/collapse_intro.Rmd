@@ -80,7 +80,7 @@ The output above is a 3D array of statistics which can also be subsetted or perm
 
 The statistics show that year is individual-invariant (evident from the 0 *Between*-country standard-deviation), that we have GINI-data on only 161 countries, with on average only 8.42 observations per country, and that PCGDP, LIFEEX and GINI vary more between countries, but ODA received varies more within countries over time. It is a common pattern that the *kurtosis* increases in within-transformed data, while the *skewness* decreases in most cases. 
 
-I note that other distributional statistics like the *median* and *quantiles* are currently not implemented for reasons having to do with computation speed (currently >10x faster than `base::summary` and suitable for really large panels) and the algorithm^[`qsu` uses a numerically stable online algorithm generalized from Welfords Algorithm to compute variances.] behind `qsu`, but might come in a further update of `qsu`. 
+I note that other distributional statistics like the *median* and *quantiles* are currently not implemented for reasons having to do with computation speed (currently >10x faster than `base::summary` and suitable for really large panels) and the algorithm^[`qsu` uses a numerically stable online algorithm generalized from Welford's Algorithm to compute variances.] behind `qsu`, but might come in a further update of `qsu`. 
 
 ### 1.2. GGDC 10-Sector Database
 The Groningen Growth and Development Centre 10-Sector Database provides long-run data on sectoral productivity performance in Africa, Asia, and Latin America. Variables covered in the data set are annual series of value added (VA, in local currency), and persons employed (EMP) for 10 broad sectors.
@@ -228,7 +228,7 @@ head(cbind(get_vars(mtcars, ind),
 
 These examples could be made more intricate using the full set of *Fast Statistical Functions* and also employing vector- valued functions and operators (`fscale/STD, fbetween/B, fwithin/W, fHDbetween/HDB, fHDwithin/HDW, flag/L/F, fdiff/D, fgrowth/G`) discussed later. They also provide merely suggestions for use of these features and are focused on programming with data.frames. The *Fast Statistical Functions* and the principles laid out here work equally well on vectors and matrices, and the functions `qDF, qDT, qM and qF` deliver fast conversions!
 
-Using *collapse*'s fast functions can speed up grouped computations by orders of magnitude - even compared to packages like *dplyr* or *data.table*. Simple column-wise computations on matrics are also slightly faster than `base` functions like `colMeans`,
+Using *collapse*'s fast functions can speed up grouped computations by orders of magnitude - even compared to packages like *dplyr* or *data.table*. Simple column-wise computations on matrices are also slightly faster than `base` functions like `colMeans`,
 `colSums`, and a lot faster on data.frame's. 
 
 
