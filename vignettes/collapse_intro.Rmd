@@ -522,7 +522,7 @@ system.time(W(x, f))
 Sometimes simple centering is not enough, for example if a linear model with multiple levels of fixed-effects needs to be estimated, potentially involving interactions with continuous covariates. For these purposes `fHDwithin / HDW` and `fHDbetween / HDB` were created as efficient multi-purpose functions for linear prediction and partialling out. They operate by splitting complex regression problems in 2 parts: Factors and factor-interactions are passed to `lfe::demeanlist`, an efficient `C` routine for centering vectors on multiple factors, whereas continuous variables are dealt with using a standard `qr` decomposition. The examples below show the use of the `HDW` operator in manually solving a regression problem with country and time fixed effects. 
 ```{r}
 data$year <- qF(data$year) # iso3c is already factor
-# classical lm() -> creates a matrix of 200+ country dummies and 59 year dummies
+# classical lm() -> creates a matrix of 196 country dummies and 56 year dummies
 coef(lm(PCGDP ~ LIFEEX + iso3c + year, data))[1:2]               
 
 # Centering each variable individually
@@ -534,7 +534,11 @@ coef(lm(HDW.PCGDP ~ HDW.LIFEEX, HDW(data, ~ iso3c + year)))
 # Procedure suggested by Mundlack (1978) - partialling out group averages demeans the data
 coef(lm(PCGDP ~ LIFEEX + HDB(LIFEEX, list(iso3c, year)), data))
 ```
-One can also use `fHDbetween / HDB` and `fHDwithin / HDW` to project out interactions and continuous covariates:
+We may wish to test whether including time fixed-effects in the above regression actually impacts the fit. This can be done with the fast F-test:
+```{r}
+fFtest(data$PCGDP, data$year, get_vars(data, c("LIFEEX","iso3c")))
+```
+The test shows that the time fixed-effects (i.e. year dummies) are jointly significant. One can also use `fHDbetween / HDB` and `fHDwithin / HDW` to project out interactions and continuous covariates:
 ```{r}
 wlddev$year <- as.numeric(wlddev$year)
 # classical lm() -> full country-year interaction, -> 200+ country dummies, 200+ trends, year and ODA
@@ -671,11 +675,15 @@ Similarly to `flag / L / F`, `fdiff / D` computes sequences of suitably lagged /
 ```{r}
 plot(stl(AirPassengers, "periodic"))
 ```
-We can plot the series and the ordinary and seasonal (12-month) growth rate using:
+We can actually test the statistical significance of this seasonality around a cubic trend using again the fast F-test (same as running a regression with and without seasonal dummies and a cubic polinomial trend, but faster):
+```{r}
+fFtest(AirPassengers, qF(cycle(AirPassengers)), poly(seq_along(AirPassengers), 3))
+```
+The test shows significant seasonality. We can plot the series and the ordinary and seasonal (12-month) growth rate using:
 ```{r}
 plot(G(AirPassengers, c(0,1,12)))
 ```
-It is evident that taking the seasonal growth rate removes most of the periodic behavior. We can also compute second differences or growth rates of growth rates. Below I plot the ordinary and seasonal first and second differences of the data:
+It is evident that taking the annualized growth rate removes most of the periodic behavior. We can also compute second differences or growth rates of growth rates. Below I plot the ordinary and annual first and second differences of the data:
 ```{r}
 plot(D(AirPassengers, c(1,12), 1:2))
 ```
