@@ -19,7 +19,7 @@ dapply(X, FUN, ..., MARGIN = 2, parallel = FALSE, mc.cores = 1L,
   \item{MARGIN}{integer. The margin which \code{FUN} will be applied over. Default \code{2} indicates columns while \code{1} indicates rows. See also Details. }
   \item{parallel}{logical. \code{TRUE} implements simple parallel execution by internally calling \code{parallel::mclapply} instead of \code{base::lapply}.}
   \item{mc.cores}{integer. Argument to \code{parallel::mclapply} indicating the number of cores to use for parallel execution. Can use \code{parallel::detectCores()} to select all available cores. See also \code{?parallel::mclapply}.}
-  \item{return}{an integer or string indicating the type of object to return. The default \code{1 - "same"} returns the same object type (i.e. passing a matrix returns a matrix and passnig a data frame returns a data frame). \code{2 - "matrix"} always returns the output as matrix and \code{3 - "data.frame"} always returns a data frame.}
+  \item{return}{an integer or string indicating the type of object to return. The default \code{1 - "same"} returns the same object type (i.e. passing a matrix returns a matrix and passing a data frame returns a data frame). \code{2 - "matrix"} always returns the output as matrix and \code{3 - "data.frame"} always returns a data frame.}
   \item{drop}{logical. If the result has only one row or one column, \code{drop = TRUE} will drop dimensions and return a (named) atomic vector.}
 }
 \details{
