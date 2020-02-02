@@ -1,4 +1,4 @@
-# collapse R Package: Advanced and Fast Data Transformation
+# Advanced and Fast Data Transformation in R
 
 *collapse* is a C/C++ based package for data manipulation in R. It's aims are
 
