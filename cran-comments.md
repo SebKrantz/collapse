@@ -8,6 +8,8 @@ This is a resubmission. In this version I have:
 * Removed a commented-out \dontrun{} call in documentation (GGDS10S.Rd). (The first example in GGDS10S.Rd is still wrapped in \dontrun{} because it uses non-suggested packages and generates a
 runtime note on R CMD check)
 
+* Placed some examples in collapse-package.Rd which were in \dontrun{} before in \donttest{}, to avoid a example runtime note. 
+
 ## Test environments
 * local Windows 8.1 install, R 3.6.1
 * win-builder (devel and release)
