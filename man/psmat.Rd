@@ -47,7 +47,7 @@ psmat(x, ...)
 For \code{plm::pseries}, the first \code{index} variable is taken to be the group-id and the second the time variable. If more than 2 index variables are attached to \code{plm::pseries}, the last one is taken as the time variable and the others are taken as group-id's and interacted.
 }
 \value{
-a matrix containing the data in \code{x}, where by default the rows constitute the groups-ids (\code{g/by}) and the columns the time variable or individual ids (\code{t}).
+a matrix or 3D array containing the data in \code{x}, where by default the rows constitute the groups-ids (\code{g/by}) and the columns the time variable or individual ids (\code{t}). 3D arrays contain the variables in the 3rd dimension. The objects have a class 'psmat', and also a 'transpose' attribute indicating whether \code{transpose = TRUE} or \code{transpose = FALSE}.
 }
 % \references{
 %% ~put references to the literature/web site here ~
@@ -56,7 +56,7 @@ a matrix containing the data in \code{x}, where by default the rows constitute t
 %%  ~~who you are~~
 % }
 \note{
-The \code{pdata.frame} method only works for properly subsetted objects of class 'pdata.frame'. A list of 'pseries' won't work.
+The \code{pdata.frame} method only works for properly subsetted objects of class 'pdata.frame'. A list of 'pseries' won't work. There also exist simple \code{aperm} and \code{[} (subset) methods for 'psmat' objects. These differ from the default methods only by keeping the class and the 'transpose' attribute.
 }
 
 %% ~Make other sections like Warning with \section{Warning }{....} ~
@@ -67,8 +67,8 @@ The \code{pdata.frame} method only works for properly subsetted objects of class
 \examples{
 ## World Development Panel Data
 head(wlddev)                                                    # View data
-qsu(wlddev, pid = ~ iso3c, cols = 9:12, vlabels = TRUE)          # Sumarizing data
-str(psmat(wlddev$PCGDP, wlddev$iso3c, wlddev$year))            # Generating matrix of GDP per Capita
+qsu(wlddev, pid = ~ iso3c, cols = 9:12, vlabels = TRUE)         # Sumarizing data
+str(psmat(wlddev$PCGDP, wlddev$iso3c, wlddev$year))             # Generating matrix of GDP
 r <- psmat(wlddev, PCGDP ~ iso3c, ~ year)                       # Same thing using data.frame method
 plot(r, main = vlabels(wlddev)[9], xlab = "Year")               # Plot the matrix
 str(r)                                                          # See srructure
