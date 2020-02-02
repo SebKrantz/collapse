@@ -100,11 +100,11 @@ series <- get_vars(wlddev, 9:12)
 
 # Replace columns, 3x faster than wlddev[9:12] <- series and also replaces names
 get_vars(wlddev, 9:12) <- series
-
+\donttest{
 # Fast subset by fast conversion to data.table with qDT
 library(data.table)
 qDT(wlddev)[country == "Ireland"]
-
+}
 # Calculating fast colum-wise statistics
 fNobs(series)                   # Number of non-missing values
 fmean(series)                   # means of series
@@ -129,11 +129,11 @@ plot(g)
 fmean(series, g)
 fmedian(series, g)
 fsd(series, g)
-
+\donttest{
 # Fast aggregations using dplyr:
 library(dplyr)
 wlddev \%>\% group_by(region,income) \%>\% select(PCGDP,LIFEEX) \%>\% fmean
-
+}
 # qM -> quickly convert data to matrix, qDF/qDT do the reverse
 fmean(rowSums(qM(series), na.rm = TRUE))
 
@@ -181,11 +181,11 @@ head(fmean(series, g, TRA = "-"))   # Demean / center by region and income
 head(fmedian(series, g, TRA = "-")) # De-median by region and income
 gmeds <- fmedian(series, g)         # Same thing in 2 steps
 head(TRA(series, gmeds, "-", g))
-
+\donttest{
 # Fast transformations using dplyr:
 # (here we are demeaning PCGDP and LIFEEX using weighted means, weighted by ODA)
 wlddev \%>\% group_by(region,income) \%>\% select(PCGDP,LIFEEX,ODA) \%>\% fmean(ODA, "-")
-
+}
 ## But there are also specialized transformation operators for common jobs:
 # Centering (Within-transforming) the 4 series by country
 head(W(wlddev, ~ country, cols = 9:12))
@@ -212,15 +212,15 @@ head(D(wlddev, -1:1, 1, ~ country, ~year, cols = 9:12))       # 1-year lagged an
 
 # Computing the 1- and 10-year growth rates of the 4 series (also keeping the level series)
 head(G(wlddev, c(0,1,10), 1, ~ country, ~year, cols = 9:12))
-
+\donttest{
 # Adding exactly identified growth rates using data.table
 setDT(wlddev)[, paste0("G.", names(wlddev)[9:12]) := fgrowth(.SD,1,1,iso3c,year), .SDcols = 9:12]
-
+}
 # Computing the 1- and 10-year log-differences of GDP per capita and Life-Expectancy
 head(G(wlddev, c(0,1,10), 1, PCGDP + LIFEEX ~ country, ~year, logdiff = TRUE))
 
 # Same transformations using plm package:
-
+\donttest{
 library(plm)
 pwlddev <- pdata.frame(wlddev, index = c("country","year"))
 W(pwlddev$PCGDP)                      # Country-demeaning
@@ -235,7 +235,7 @@ L(pwlddev$PCGDP, -1:3)                # Panel-lags
 L(pwlddev, -1:3, 9:12)
 G(pwlddev$PCGDP)                      # Panel-Growth rates
 G(pwlddev, 1, 1, 9:12)
-
+}
 }
 \keyword{package}
 \keyword{manip}
