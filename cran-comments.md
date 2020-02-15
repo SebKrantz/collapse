@@ -1,7 +1,7 @@
 ## Resubmission
 This is a resubmission (the 3rd one, original submission was on 13.01.2020). In this version I have:
 
-* Implemented some minor improvements and fixed some typos compared to the 2nd resubmission of 02.02.2020. Please get back to me considering this submission, you have not responded to the submission of 02.02. 
+* Implemented some minor improvements and fixed some typos compared to the 2nd resubmission of 02.02.2020. Please get back to me considering the current submission, you have not responded to the submission of 02.02. 
 
 * Only listed the main authors ('aut'/citation) of data.table and Rcpp as 'ctb' to my package as suggested by Uwe Ligges in a response to the first resubmission from 18.01.2020.  
 
@@ -23,7 +23,7 @@ There were no ERRORs or WARNINGs.
 There was 1 NOTE:
 
   * checking installed package size ... NOTE
-    installed size is  6.7Mb
+    installed size is  6.8Mb
     sub-directories of 1Mb or more:
       libs   4.6Mb
 
