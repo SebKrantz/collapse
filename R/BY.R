@@ -202,7 +202,7 @@ BY.grouped_df <- function(X, FUN, ..., use.g.names = FALSE, keep.group_vars = TR
   groups <- g[[4L]]
   gnam <- g[[5L]]
   g <- as.factor.GRP(g)
-  gn <- which(names(X) %in% gnam) # correct !! else na.rm(match(names(groups), names(X))), but is slower !!
+  gn <- which(attr(X, "names") %in% gnam) # correct !! else na.rm(match(names(groups), names(X))), but is slower !!
   if(length(gn)) {
     if(!keep.group_vars) return(BY.data.frame(X[-gn], g, FUN, ..., # colsubset(X, -gn) dont use colsubset -> doesn't drop group attachment !!, for the other cases can always use ungroup !!
                            use.g.names = use.g.names, sort = TRUE, expand.wide = expand.wide,

@@ -143,7 +143,7 @@ qM <- function(X) {
   } else {
     rn <- attr(X, "row.names")
     res <- do.call(cbind, X)
-    if(!(is.null(rn) || is.integer(rn))) dimnames(res) <- list(rn, names(X))
+    if(!(is.null(rn) || is.integer(rn))) dimnames(res) <- list(rn, attr(X, "names"))
     return(res)
   }
 }

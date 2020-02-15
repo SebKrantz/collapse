@@ -45,7 +45,7 @@ collap <- function(X, by, FUN = fmean, catFUN = fmode, cols = NULL, custom = NUL
     if(!customl) if(is.null(cols)) vl <- FALSE else v <- cols2log(cols, X, nam)
     if(!is.GRP(by)) {
       numby <- seq_along(by)
-      namby <- names(by)
+      namby <- attr(by, "names") # faster if and only if by is a data.frame
       if(is.null(namby)) namby <- paste0("GRP.", numby)
       by <- GRP.default(by, numby, sort = sort.row, return.groups = keep.by)
     } else {

@@ -27,18 +27,18 @@ GRP.default <- function(X, by = NULL, sort = TRUE, order = 1L, na.last = TRUE,
 
   if(is.list(X) && is.null(by)) {
     by <- seq_along(X)
-    namby <- names(X)
+    namby <- attr(X, "names")
   } else if(is.call(by)) {
     namby <- all.vars(by)
-    by <- anyNAerror(match(namby, names(X)), "Unknown column names!")
+    by <- anyNAerror(match(namby, attr(X, "names")), "Unknown column names!")
   } else if(is.null(by)) {
     namby <- paste(all.vars(call), collapse = ".")  # deparse(substitute(X)) # all.vars is faster !!!
   } else if(is.character(by)) {
     namby <- by
-    by <- anyNAerror(match(by, names(X)), "Unknown column names!")
+    by <- anyNAerror(match(by, attr(X, "names")), "Unknown column names!")
   } else if(is.numeric(by)) {
     by <- as.integer(by)
-    namby <- names(X)[by]
+    namby <- attr(X, "names")[by]
   } else stop("by needs to be either a one-sided formula, character column names or column indices!")
 
   o <- forderv(X, by, TRUE, sort, order, na.last)

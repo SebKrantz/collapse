@@ -52,7 +52,7 @@ flag.grouped_df <- function(x, n = 1, t = NULL, fill = NA, stubs = TRUE, keep.id
   if(!missing(...)) stop("Unknown argument ", dotstostr(...))
   g <- GRP.grouped_df(x)
   tsym <- deparse(substitute(t))
-  nam <- names(x)
+  nam <- attr(x, "names")
   gn <- which(nam %in% g[[5L]])
   if(!(tsym == "NULL" || is.na(tn <- match(tsym, nam)))) {
     if(any(gn == tn)) stop("timevar coincides with grouping variables!")
@@ -205,7 +205,7 @@ F.grouped_df <- function(x, n = 1, t = NULL, fill = NA, stubs = TRUE, keep.ids =
   if(!missing(...)) stop("Unknown argument ", dotstostr(...))
   g <- GRP.grouped_df(x)
   tsym <- deparse(substitute(t))
-  nam <- names(x)
+  nam <- attr(x, "names")
   gn <- which(nam %in% g[[5L]])
   if(!(tsym == "NULL" || is.na(tn <- match(tsym, nam)))) {
     if(any(gn == tn)) stop("timevar coincides with grouping variables!")

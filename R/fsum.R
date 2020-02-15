@@ -134,7 +134,7 @@ fsum.data.frame <- function(x, g = NULL, TRA = NULL, na.rm = TRUE, use.g.names =
 fsum.grouped_df <- function(x, TRA = NULL, na.rm = TRUE, use.g.names = FALSE, keep.group_vars = TRUE, ...) { # drop grouping columns argument ??
   if(!missing(...)) stop("Unknown argument ", dotstostr(...))
   g <- GRP.grouped_df(x)
-  gn <- which(names(x) %in% g[[5L]]) # faster than na.rm(match(names(g[[4L]]), names(x)))
+  gn <- which(attr(x, "names") %in% g[[5L]]) # faster than na.rm(match(names(g[[4L]]), names(x)))
   nTRAl <- is.null(TRA)
   gl <- length(gn) > 0L
   if(gl || nTRAl) {

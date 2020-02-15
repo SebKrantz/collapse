@@ -45,7 +45,7 @@ fscale.grouped_df <- function(x, w = NULL, na.rm = TRUE, keep.group_vars = TRUE,
   if(!missing(...)) stop("Unknown argument ", dotstostr(...))
   g <- GRP.grouped_df(x)
   wsym <- deparse(substitute(w))
-  nam <- names(x)
+  nam <- attr(x, "names")
   gn2 <- which(nam %in% g[[5L]])
   gn <- if(keep.group_vars) gn2 else NULL
   if(!(wsym == "NULL" || is.na(wn <- match(wsym, nam)))) {
@@ -104,7 +104,7 @@ STD.grouped_df <- function(x, w = NULL, na.rm = TRUE, keep.group_vars = TRUE, ke
   if(!missing(...)) stop("Unknown argument ", dotstostr(...))
   g <- GRP.grouped_df(x)
   wsym <- deparse(substitute(w))
-  nam <- names(x)
+  nam <- attr(x, "names")
   gn2 <- which(nam %in% g[[5L]])
   gn <- if(keep.group_vars) gn2 else NULL
   if(!(wsym == "NULL" || is.na(wn <- match(wsym, nam)))) {
@@ -213,7 +213,7 @@ STD.data.frame <- function(x, by = NULL, w = NULL, cols = is.numeric,
     ax[["names"]] <- names(x)
     setattributes(x, ax)
   }
-  if(is.character(stub)) names(x) <- paste0(stub, names(x))
+  if(is.character(stub)) attr(x, "names") <- paste0(stub, attr(x, "names"))
 
   if(is.null(by)) return(.Call(Cpp_fscalel,x,0L,0L,NULL,w,na.rm,stable.algo)) else if (is.atomic(by)) {
     if(is.nmfactor(by)) return(.Call(Cpp_fscalel,x,fnlevels(by),by,NULL,w,na.rm,stable.algo)) else {

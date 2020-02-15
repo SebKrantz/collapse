@@ -62,7 +62,7 @@ fwithin.grouped_df <- function(x, w = NULL, na.rm = TRUE, add.global.mean = FALS
   if(!missing(...)) stop("Unknown argument ", dotstostr(...))
   g <- GRP.grouped_df(x)
   wsym <- deparse(substitute(w))
-  nam <- names(x)
+  nam <- attr(x, "names")
   gn2 <- which(nam %in% g[[5L]])
   gn <- if(keep.group_vars) gn2 else NULL
   if(!(wsym == "NULL" || is.na(wn <- match(wsym, nam)))) {
@@ -102,7 +102,7 @@ W.grouped_df <- function(x, w = NULL, na.rm = TRUE, add.global.mean = FALSE,
   if(!missing(...)) stop("Unknown argument ", dotstostr(...))
   g <- GRP.grouped_df(x)
   wsym <- deparse(substitute(w))
-  nam <- names(x)
+  nam <- attr(x, "names")
   gn2 <- which(nam %in% g[[5L]])
   gn <- if(keep.group_vars) gn2 else NULL
   if(!(wsym == "NULL" || is.na(wn <- match(wsym, nam)))) {
@@ -207,7 +207,7 @@ W.data.frame <- function(x, by = NULL, w = NULL, cols = is.numeric, na.rm = TRUE
     ax[["names"]] <- names(x)
     setattributes(x, ax)
   }
-  if(is.character(stub)) names(x) <- paste0(stub, names(x))
+  if(is.character(stub)) attr(x, "names") <- paste0(stub, attr(x, "names"))
 
   if(is.null(by)) return(.Call(Cpp_BWl,x,0L,0L,NULL,w,na.rm,add.global.mean,FALSE)) else if (is.atomic(by)) {
     if(is.nmfactor(by)) return(.Call(Cpp_BWl,x,fnlevels(by),by,NULL,w,na.rm,add.global.mean,FALSE)) else {
@@ -275,7 +275,7 @@ fbetween.grouped_df <- function(x, w = NULL, na.rm = TRUE, fill = FALSE,
   if(!missing(...)) stop("Unknown argument ", dotstostr(...))
   g <- GRP.grouped_df(x)
   wsym <- deparse(substitute(w))
-  nam <- names(x)
+  nam <- attr(x, "names")
   gn2 <- which(nam %in% g[[5L]])
   gn <- if(keep.group_vars) gn2 else NULL
   if(!(wsym == "NULL" || is.na(wn <- match(wsym, nam)))) {
@@ -315,7 +315,7 @@ B.grouped_df <- function(x, w = NULL, na.rm = TRUE, fill = FALSE,
   if(!missing(...)) stop("Unknown argument ", dotstostr(...))
   g <- GRP.grouped_df(x)
   wsym <- deparse(substitute(w))
-  nam <- names(x)
+  nam <- attr(x, "names")
   gn2 <- which(nam %in% g[[5L]])
   gn <- if(keep.group_vars) gn2 else NULL
   if(!(wsym == "NULL" || is.na(wn <- match(wsym, nam)))) {
@@ -418,7 +418,7 @@ B.data.frame <- function(x, by = NULL, w = NULL, cols = is.numeric, na.rm = TRUE
     ax[["names"]] <- names(x)
     setattributes(x, ax)
   }
-  if(is.character(stub)) names(x) <- paste0(stub, names(x))
+  if(is.character(stub)) attr(x, "names") <- paste0(stub, attr(x, "names"))
 
   if(is.null(by)) return(.Call(Cpp_BWl,x,0L,0L,NULL,w,na.rm,fill,TRUE)) else if (is.atomic(by)) {
     if(is.nmfactor(by)) return(.Call(Cpp_BWl,x,fnlevels(by),by,NULL,w,na.rm,fill,TRUE)) else {
