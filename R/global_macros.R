@@ -1,6 +1,6 @@
 # global macros
 
-.COLLAPSE_TOPICS <- c("collapse-documentation","A1-fast-statistical-functions","A2-quick-grouping",
+.COLLAPSE_TOPICS <- c("collapse-documentation","A1-fast-statistical-functions","A2-fast-grouping",
                       "A3-select-replace-vars","A4-quick-conversion","A5-advanced-aggregation",
                       "A6-data-transformations","A7-time-series-panel-series","A8-list-processing",
                       "A9-summary-statistics","AA1-recode-replace","AA2-small-helpers")
