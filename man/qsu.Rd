@@ -1,6 +1,5 @@
-\name{A9-quick-summary} % quick-summary
+\name{qsu}
 \alias{qsu}
-\alias{A9-quick-summary}
 \alias{qsu.default}
 \alias{qsu.matrix}
 \alias{qsu.data.frame}

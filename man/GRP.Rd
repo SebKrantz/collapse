@@ -1,5 +1,5 @@
-\name{A2-quick-grouping}
-\alias{A2-quick-grouping}
+\name{A2-fast-grouping}
+\alias{A2-fast-grouping}
 \alias{GRP}
 \alias{GRP.default}
 \alias{GRP.factor}
