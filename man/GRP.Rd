@@ -29,6 +29,7 @@ GRP(X, ...)
 \method{GRP}{pdata.frame}(X, ...)
 \method{GRP}{grouped_df}(X, ...)
 
+is.GRP(x)
 group_names.GRP(x, force.char = TRUE)
 as.factor.GRP(x)
 
