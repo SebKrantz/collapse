@@ -114,11 +114,11 @@ qsu.data.frame <- function(x, by = NULL, pid = NULL, w = NULL, cols = NULL, high
     if(is.null(v)) {
       x <- if(is.null(cols)) x[-match(c(namby,nampid), names(x))] else x[cols2int(cols, x, names(x))]
     } else x <- x[v]
-  } else if(!is.null(cols)) x <- unclass(x)[cols2int(cols, x, names(x))]
+  } else if(!is.null(cols)) x <- unclass(x)[cols2int(cols, x, attr(x, "names"))]
 
 
   # Get vlabels !!
-  if(vlabels) names(x) <- paste(names(x), vlabels(x), sep = ": ")
+  if(vlabels) attr(x, "names") <- paste(attr(x, "names"), vlabels(x), sep = ": ")
 
   # original code:
   if(is.null(by)) {
@@ -170,9 +170,9 @@ qsu.pdata.frame <- function(x, by = NULL, w = NULL, cols = NULL, higher = FALSE,
     }
     by <- if(length(namby) == 1L) x[[namby]] else GRP(x, namby)
     x <- x[v]
-  } else if(!is.null(cols)) x <- unclass(x)[cols2int(cols, x, names(x))]
+  } else if(!is.null(cols)) x <- unclass(x)[cols2int(cols, x, attr(x, "names"))]
 
-  if(vlabels) names(x) <- paste(names(x), vlabels(x), sep = ": ")
+  if(vlabels) attr(x, "names") <- paste(attr(x, "names"), vlabels(x), sep = ": ")
 
   if(is.null(by))
     return(drop(fbstatslCpp(x,higher,0L,0L,fnlevels(index[[1L]]),index[[1L]],w,array))) else if (is.atomic(by)) {
@@ -189,14 +189,21 @@ qsu.pdata.frame <- function(x, by = NULL, w = NULL, cols = NULL, higher = FALSE,
 #   print.default(round(x, 2), na.print = "-", digits = 16)
 # }
 
-print.qsu <- function(x, digits = 2, nonsci.digits = 9, na.print = "-", return = FALSE, ...) {
+# Try to speed up !! Printing Takes 100 milliseconds on WDI !!
+print.qsu <- function(x, digits = 2, nonsci.digits = 9, na.print = "-", return = FALSE, print.gap = 2, ...) {
+  vec2mat <- function(x) if(is.array(x)) x else  # outer(1, x) # for variable spacing in vector printing...
+    `attributes<-`(x, list(dim = c(1L, length(x)), dimnames = list("", names(x)))) # faster and better !!
   formatfun <- function(x) { # , drop0trailing = FALSE redundat ??
-    xx <- formatC(unclass(round(x, digits)), format = "g", digits = nonsci.digits, big.mark = ",", big.interval = 6, ...) # format(unclass(round(x,2)), digits = digits, drop0trailing = TRUE, big.mark = ",", big.interval = 6, scientific = FALSE)
+    class(x) <- NULL
+    xx <- formatC(vec2mat(round(x, digits)), format = "g", flag = "#",
+                  digits = nonsci.digits, big.mark = ",", big.interval = 6,
+                  drop0trailing = TRUE, preserve.width = "individual") # format(unclass(round(x,2)), digits = digits, drop0trailing = TRUE, big.mark = ",", big.interval = 6, scientific = FALSE)
     if(any(ina <- is.na(x))) xx[ina] <- na.print
+    xx <- gsub(" ", "", xx, fixed = TRUE) # remove some weird white space (qsu(GGDS10S))
     return(xx)
   }
   xx <- if(is.atomic(x)) formatfun(x) else rapply(x, formatfun, how = "list") # No longer necessary, but keep, maybe you want to print lists using print.qsu.
-  if(return) return(xx) else print.default(xx, quote = FALSE, right = TRUE)
+  if(return) return(xx) else print.default(xx, quote = FALSE, right = TRUE, print.gap = print.gap, ...)
   invisible(x)
 }
 # View.qsu <- function(x) View(unclass(x))
