@@ -1,12 +1,13 @@
 ## Resubmission
-This is a resubmission. In this version I have:
+This is a resubmission (the 3rd one, original submission was on 13.01.2020). In this version I have:
 
-* Only listed the main authors ('aut'/citation) of data.table and Rcpp as 'ctb' to my package as suggested by Uwe.  
+* Implemented some minor improvements and fixed some typos compared to the 2nd resubmission of 02.02.2020. Please get back to me considering this submission, you have not responded to the submission of 02.02. 
 
-* Properly implemented an options(warn = -1) using on.exit.
+* Only listed the main authors ('aut'/citation) of data.table and Rcpp as 'ctb' to my package as suggested by Uwe Ligges in a response to the first resubmission from 18.01.2020.  
 
-* Removed a commented-out \dontrun{} call in documentation (GGDS10S.Rd). (The first example in GGDS10S.Rd is still wrapped in \dontrun{} because it uses non-suggested packages and generates a
-runtime note on R CMD check)
+* Properly implemented a remaining options(warn = -1) in recode_replace.R using on.exit.
+
+* Removed a commented-out \dontrun{} call in documentation (GGDS10S.Rd). (The first example in GGDS10S.Rd is still wrapped in \dontrun{} because it uses non-suggested packages and generates a runtime note on R CMD check)
 
 * Placed some examples in collapse-package.Rd which were in \dontrun{} before in \donttest{}, to avoid a example runtime note. 
 
