@@ -5,7 +5,7 @@ This is a resubmission (the 3rd one, original submission was on 13.01.2020). In 
 
 * Only listed the main authors ('aut'/citation) of data.table and Rcpp as 'ctb' to my package as suggested by Uwe Ligges in a response to the first resubmission from 18.01.2020.  
 
-* Properly implemented an options(warn = -1) using on.exit.
+* Properly implemented a remaining options(warn = -1) in recode_replace.R using on.exit.
 
 * Removed a commented-out \dontrun{} call in documentation (GGDS10S.Rd). (The first example in GGDS10S.Rd is still wrapped in \dontrun{} because it uses non-suggested packages and generates a runtime note on R CMD check)
 

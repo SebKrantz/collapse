@@ -13,7 +13,6 @@ vignette: >
 
 ```{r, echo = FALSE, message = FALSE}
 # library(data.table)
-options(warn = -1)
 knitr::opts_chunk$set(
   comment = "#",
     error = FALSE,
@@ -33,7 +32,7 @@ For a more general introduction of the *collapse* package see the introductory v
 ***
 
 ```{r echo = FALSE}
-options(width = 100L)
+oldopts <- options(width = 100L)
 ```
 
 When using *collapse's* fast functions inside a *data.table* environment, there is only really one thing to be aware of: Never use *data.table* grouping with `by` or `keyby` (since this will run a method-dispatch for every group and hence be very slow), but use the fast functions internal grouping facilities. 
@@ -75,3 +74,7 @@ qDT(c(add_stub(fmean(get_vars(wlddev, 9:10), wlddev$iso3c, wlddev$ODA), "w_mean_
 ```
 
 ## Advanced Transformations with *data.table*
+
+```{r echo = FALSE}
+options(oldopts)
+```
