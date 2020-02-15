@@ -2,8 +2,11 @@
 \alias{AA2-small-helpers}
 \alias{vlabels}
 \alias{vlabels<-}
+\alias{vclasses}
+\alias{vtypes}
 \alias{namlab}
 \alias{add_stub}
+\alias{rm_stub}
 \alias{seq_row}
 \alias{seq_col}
 \alias{setRownames}
@@ -23,13 +26,16 @@
 \code{collapse} Small (Helper) Functions
 }
 \description{
-Elementary exported convenience functions in the \code{collapse} package, that help to deal with variable names, labels, missing values, matching and object checking etc... For recoding and replacing values see \code{\link{Recode}}, for pairwise correlations and covariances see \code{\link{pwcor}}, for summary statistics see \code{\link{qsu}}.
+Elementary exported convenience functions in the \code{collapse} package, that help to deal with variable names, labels, missing values, matching and object checking etc... For recoding and replacing values see \code{\link{Recode}}. % for pairwise correlations and covariances see \code{\link{pwcor}}, for summary statistics see \code{\link{qsu}}.
 }
 \usage{
 vlabels(X, attrn = "label")   # Get labels of variables in X, in attr(X[[i]], attrn)
 vlabels(X, attrn = "label") <- value      # Set labels of variables in X
+vclasses(X)                   # Get classes of variables in X
+vtypes(X)                     # Get data storage types of variables in X (calling typeof)
 namlab(X, class = FALSE, attrn = "label") # Return data.frame of names, labels and classes
-add_stub(X, stub, pre = TRUE) # Add a stub (i.e. prefix or postfix) to variables
+add_stub(X, stub, pre = TRUE) # Add a stub (i.e. prefix or postfix) to column names
+rm_stub(X, stub, ...)         # Remove stub from column names (using base::sub)
 x \%!in\% table                 # The opposite of \%in\%
 fnlevels(x)                   # Faster version of nlevels(x) (for factors)
 funique(x, ordered = TRUE)    # Faster unique(x) and sort(unique(x)) for vectors
@@ -60,7 +66,7 @@ as.numeric_factor(X)          # Coerce a factor, or all factor columns in X, to 
   \item{dn}{a suitable list of dimension names.}
   \item{ordered}{logical. \code{TRUE} (default) sorts the output, \code{FALSE} is slightly faster.}
   \item{prop}{specify the proportion of observations randomly replaced with \code{NA}.}
- \item{...}{either multiple comma-separated objects or a single list of objects.}
+ \item{...}{for \code{all_identical}: either multiple comma-separated objects or a single list of objects. For \code{rm_stub}: Other arguments passed to \code{\link{sub}}.}
 }
 % \details{
 %%  ~~ If necessary, more details than the description above ~~
@@ -85,7 +91,7 @@ as.numeric_factor(X)          # Coerce a factor, or all factor columns in X, to 
 %% ~Make other sections like Warning with \section{Warning }{....} ~
 
 \seealso{
-\code{\link{Recode}}, \code{\link{pwcor}}, \code{\link{qsu}}, \link[=collapse-documentation]{Collapse Overview} %% ~~objects to See Also as \code{\link{help}}, ~~~
+\code{\link{Recode}}, \link[=collapse-documentation]{Collapse Overview} %% \code{\link{pwcor}}, \code{\link{qsu}}
 }
 \examples{
 ## Variable labels
@@ -94,7 +100,8 @@ vlabels(wlddev)
 vlabels(wlddev) <- vlabels(wlddev)
 
 ## Stub-renaming
-add_stub(log(mtcars), "log.")
+log_mtc <- add_stub(log(mtcars), "log.")
+rm_stub(log_mtc, "log.")                # use "^log." or ".log$" to only match beginning or end
 
 ## Checking exact equality of multiple objects
 all_identical(iris, iris, iris, iris)
