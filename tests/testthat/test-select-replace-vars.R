@@ -24,6 +24,10 @@ test_that("replacing vars works well", {
   expect_identical(wlddevold, wlddev)
 
   wlddevold <- wlddev
+  get_vars(wlddev, -(4:8)) <- as.list(get_vars(wlddev, -(4:8)))
+  expect_identical(wlddevold, wlddev)
+
+  wlddevold <- wlddev
   get_vars(wlddev, c("iso3c","PCGDP","ODA")) <- get_vars(wlddev, c("iso3c","PCGDP","ODA"))
   expect_identical(wlddevold, wlddev)
 
