@@ -1,4 +1,4 @@
-# collapse R Package: Advanced and Fast Data Transformation
+# *collapse*: Advanced and Fast Data Transformation in R
 
 *collapse* is a C/C++ based package for data manipulation in R. It's aims are
 
@@ -12,11 +12,11 @@ It is compatible with *dplyr*, *data.table* and the *plm* approach to panel-data
 *  *Advanced data programming*: A full set of fast statistical functions supporting grouped and/or weighted computations on vectors, matrices and data.frames. Quick (ordered) and reusable grouping, quick data-converions, and quick select and replace variables. 
 *  *Advanced aggregation*: Fast and easy multi-data-type, multi-function, weighted, parallelized and fully customized data aggregation. 
 *  *Advanced transformations*: Fast (grouped, weighted) sweeping out of statistics, scaling, centering, higher-dimensional centering, complex linear prediction and partialling-out. 
-*  *Advanced time-computations*: Fast (sequences of) lags/leads, and (iterated) differences and growth rates on (unordered) time-series and panel data. Multivariate auto, partial and cross-correlation functions for panel data. Panel data to (ts-)array conversions. 
+*  *Advanced time-computations*: Fast (sequences of) lags / leads, and (iterated) differences and growth rates on (unordered) time-series and panel data. Multivariate auto, partial and cross-correlation functions for panel data. Panel data to (ts-)array conversions. 
 *  *List Processing*: (Recursive) list-identification, extraction / subsetting, apply, and row-binding / unlisting in 2D. 
-* *Advanced data exploration*: Fast (grouped, weighted, panel-decomposed) summary statistics for cross-sectional and complex multilevel/panel data. 
+* *Advanced data exploration*: Fast (grouped, weighted, panel-decomposed) summary statistics for cross-sectional and complex multilevel / panel data. 
 
-*collapse* is built using *Rcpp*, uses C functions from *data.table* and *stats*, and imports from *lfe*.
+*collapse* is built using *Rcpp* and uses C functions from *data.table*, *lfe* and *stats*.
 
 ## Installation
 

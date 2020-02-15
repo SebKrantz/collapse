@@ -16,16 +16,16 @@ Advanced and Fast Data Transformation % and Exploration % in R % and Fast  % Adv
 It is compatible with \code{dplyr}, \code{data.table} and the \code{plm} approach to panel-data.
 
 % \cr
-\bold{Key Features:}     (In more detail in \link[=collapse-documentation]{Collapse Overview}) % Key functionality: % Key areas Key topics addressed by \code{collapse} are: % where \code{collapse} offers innovative solutions are:
+\bold{Key Features:}    % (In more detail in \link[=collapse-documentation]{Collapse Overview}) % Key functionality: % Key areas Key topics addressed by \code{collapse} are: % where \code{collapse} offers innovative solutions are:
 
 % \tabular{lll}{ % \Sexpr{"\u200B"} \Sexpr{"\u200B"}  \tab \emph{ Description }  \cr
 \enumerate{  % (1) \tab\tab ... \cr
                 \item  \emph{Advanced data programming}: A full set of fast statistical functions supporting grouped and/or weighted computations on vectors, matrices and data.frames. Quick (ordered) and reusable grouping, quick data-conversions, and quick select and replace variables.
                  \item \emph{Advanced aggregation}: Fast and easy multi-data-type, multi-function, weighted, parallelized and fully customized data aggregation.
                  \item \emph{Advanced transformations}: Fast (grouped, weighted) sweeping out of statistics, scaling, centering, higher-dimensional centering, complex linear prediction and partialling-out.
-                 \item \emph{Advanced time-computations}: Fast (sequences of) lags/leads, and (iterated) differences and growth rates on (unordered) time-series and panel data. Multivariate auto, partial and cross-correlation functions for panel data. Panel data to (ts-)array conversions.
-                 \item \emph{List Processing}: (Recursive) list-identification, extraction / subsetting, apply, and row-binding / unlisting in 2D.
-                 \item \emph{Advanced data exploration}: Fast (grouped, weighted, panel-decomposed) summary statistics for cross-sectional and complex multilevel/panel data.  % Elegant (multivariate, grouped, weighted and panel-decomposed) histograms, density, scatter and correlation plots.  \cr
+                 \item \emph{Advanced time-computations}: Fast (sequences of) lags / leads, and (iterated) differences and growth rates on (unordered) time-series and panel data. Multivariate auto, partial and cross-correlation functions for panel data. Panel data to (ts-)array conversions.
+                 \item \emph{List Processing}: (Recursive) list-identification, extraction / subsetting, data-apply, and row-binding / unlisting in 2D.
+                 \item \emph{Advanced data exploration}: Fast (grouped, weighted, panel-decomposed) summary statistics for cross-sectional and complex multilevel / panel data.  % Elegant (multivariate, grouped, weighted and panel-decomposed) histograms, density, scatter and correlation plots.  \cr
 % }
 }
 }
@@ -37,7 +37,7 @@ Please see \link[=collapse-documentation]{Collapse Documentation & Overview}, or
 \code{collapse} provides an integrated set of functions organized into several topics (see \link[=collapse-documentation]{Collapse Overview}). Many are S3 generic with methods for vectors, matrices and data.frames. Inputs are quickly passed to compiled C/C++ code, enabling flexible and parsimonious coding at extreme speeds.
 
 The package avoids non-standard evaluation and exports core methods for maximum programmability.  % Most are S3 generic with methods for common \code{R} objects (vectors, matrices, data.frames, ...) % high computation  %(aggregation and transformations ~10x \code{data.table} on data <1 Mio obs.).
-Smart attribute handling and additional methods ensure compatibility and support for \code{dplyr}, \code{data.table} and the \code{plm} approach to panel-data. \code{collapse} comes with a built-in hierarchical \link[=collapse-documentation]{documentation} facilitating the use of the package. % and \code{base/stats}. % extra methods warrant, provide ?
+Smart attribute handling and additional (not-exported) methods ensure compatibility and support for \code{dplyr}, \code{data.table} and the \code{plm} approach to panel-data. \code{collapse} comes with a built-in hierarchical \link[=collapse-documentation]{documentation} facilitating the use of the package. % and \code{base/stats}. % extra methods warrant, provide ?
 
 %Beyond speed, flexibility and parsimony in coding, a central objective of \code{collapse} is to facilitate advanced / complex operations on data.
 \code{collapse} is built with \code{Rcpp} and imports \code{C} functions from \code{data.table}, \code{lfe} and \code{stats}. %, and uses \code{ggplot2} visualizations.
@@ -75,8 +75,8 @@ and Joris Meys on R-Devel for encouraging me and helping to set up the github pa
 # World Bank World Development Data: 216 countries, 59 years, 4 series (columns 9-12)
 head(wlddev)
 
-# See variable names, labels and classes
-namlab(wlddev, class = TRUE)
+# Describe data
+descr(wlddev)
 
 # Panel-summarize columns 9 though 12 of this data (within and between countries)
 qsu(wlddev, pid = ~ country, cols = 9:12, vlabels = TRUE)
@@ -98,7 +98,7 @@ unlist2d(rapply2d(suml, fmean), idcols = c("Variable","Trans"))
 # Select columns from wlddev: same as wlddev[9:12] but 2x faster and works with data.tables etc.
 series <- get_vars(wlddev, 9:12)
 
-# Replace columns, 3x faster than wlddev[9:12] <- series and also replaces names
+# Replace columns, 4x faster than wlddev[9:12] <- series and also replaces names
 get_vars(wlddev, 9:12) <- series
 \donttest{
 # Fast subset by fast conversion to data.table with qDT
