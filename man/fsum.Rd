@@ -6,7 +6,7 @@
 \alias{fsum.grouped_df}
 \title{Fast (Grouped) Sum for Matrix-Like Objects}  % Vectors, Matrix and Data Frame Columns}
 \description{
-\code{fsum} is a generic function that computes the (column-wise) sum of all values in \code{x}, (optionally) grouped by \code{g}. The \code{TRA} argument can further be used to transform \code{x} using its (grouped) sum.
+\code{fsum} is a generic function that computes the (column-wise) sum of all values in \code{x}, (optionally) grouped by \code{g}. The \code{\link{TRA}} argument can further be used to transform \code{x} using its (grouped) sum.
 }
 \usage{
 fsum(x, ...)
@@ -43,7 +43,7 @@ fsum(x, ...)
 
 }
 \details{
-Non-grouped sum computations internally utilize long-doubles in C++, for additional numeric precision.
+% Non-grouped sum computations internally utilize long-doubles in C++, for additional numeric precision.
 
 Missing-value removal as controlled by the \code{na.rm} argument is done very efficiently by simply skipping them in the computation (thus setting \code{na.rm = FALSE} on data with no missing values doesn't give extra speed). Large performance gains can nevertheless be achieved in the presence of missing values if \code{na.rm = FALSE}, since then the corresponding computation is terminated once a \code{NA} is encountered and \code{NA} is returned (unlike \code{base::sum} which just runs through without any checks).
 

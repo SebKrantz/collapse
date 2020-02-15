@@ -112,7 +112,7 @@ fmode.grouped_df <- function(x, w = NULL, TRA = NULL, na.rm = TRUE, use.g.names 
   if(!missing(...)) stop("Unknown argument ", dotstostr(...))
   g <- GRP.grouped_df(x)
   wsym <- deparse(substitute(w))
-  nam <- names(x)
+  nam <- attr(x, "names")
   gn2 <- gn <- which(nam %in% g[[5L]])
   nTRAl <- is.null(TRA)
   sumw <- NULL

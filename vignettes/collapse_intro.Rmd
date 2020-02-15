@@ -80,7 +80,7 @@ The output above is a 3D array of statistics which can also be subsetted or perm
 
 The statistics show that year is individual-invariant (evident from the 0 *Between*-country standard-deviation), that we have GINI-data on only 161 countries, with on average only 8.42 observations per country, and that PCGDP, LIFEEX and GINI vary more between countries, but ODA received varies more within countries over time. It is a common pattern that the *kurtosis* increases in within-transformed data, while the *skewness* decreases in most cases. 
 
-I note that other distributional statistics like the *median* and *quantiles* are currently not implemented for reasons having to do with computation speed (currently >10x faster than `base::summary` and suitable for really large panels) and the algorithm^[`qsu` uses a numerically stable online algorithm generalized from Welfords Algorithm to compute variances.] behind `qsu`, but might come in a further update of `qsu`. 
+I note that other distributional statistics like the *median* and *quantiles* are currently not implemented for reasons having to do with computation speed (currently >10x faster than `base::summary` and suitable for really large panels) and the algorithm^[`qsu` uses a numerically stable online algorithm generalized from Welford's Algorithm to compute variances.] behind `qsu`, but might come in a further update of `qsu`. 
 
 ### 1.2. GGDC 10-Sector Database
 The Groningen Growth and Development Centre 10-Sector Database provides long-run data on sectoral productivity performance in Africa, Asia, and Latin America. Variables covered in the data set are annual series of value added (VA, in local currency), and persons employed (EMP) for 10 broad sectors.
@@ -226,11 +226,9 @@ head(cbind(get_vars(mtcars, ind),
 ```
 
 
-These examples could be made more intricate using the full set of *Fast Statistical Functions* and also employing vector- valued functions and operators (`fscale/STD, fbetween/B, fwithin/W, fHDbetween/HDB, fHDwithin/HDW, flag/L/F, fdiff/D, fgrowth/G`) discussed later. See the documentation under `help('collapse-documentation')` for more information. 
+These examples could be made more intricate using the full set of *Fast Statistical Functions* and also employing vector- valued functions and operators (`fscale/STD, fbetween/B, fwithin/W, fHDbetween/HDB, fHDwithin/HDW, flag/L/F, fdiff/D, fgrowth/G`) discussed later. They also provide merely suggestions for use of these features and are focused on programming with data.frames. The *Fast Statistical Functions* and the principles laid out here work equally well on vectors and matrices, and the functions `qDF, qDT, qM and qF` deliver fast conversions!
 
-The above examples demonstrate provide merely suggestions for use of these features and are focused on programming with data.frames. The *Fast Statistical Functions* and the principles laid out here work equally well on vectors and matrices!
-
-Using *collapse*'s fast functions can speed up grouped computations by orders of magnitude - even compared to packages like *dplyr* or *data.table*. Simple column-wise computations on matrics are also slightly faster than `base` functions like `colMeans`,
+Using *collapse*'s fast functions can speed up grouped computations by orders of magnitude - even compared to packages like *dplyr* or *data.table*. Simple column-wise computations on matrices are also slightly faster than `base` functions like `colMeans`,
 `colSums`, and a lot faster on data.frame's. 
 
 
@@ -524,7 +522,7 @@ system.time(W(x, f))
 Sometimes simple centering is not enough, for example if a linear model with multiple levels of fixed-effects needs to be estimated, potentially involving interactions with continuous covariates. For these purposes `fHDwithin / HDW` and `fHDbetween / HDB` were created as efficient multi-purpose functions for linear prediction and partialling out. They operate by splitting complex regression problems in 2 parts: Factors and factor-interactions are passed to `lfe::demeanlist`, an efficient `C` routine for centering vectors on multiple factors, whereas continuous variables are dealt with using a standard `qr` decomposition. The examples below show the use of the `HDW` operator in manually solving a regression problem with country and time fixed effects. 
 ```{r}
 data$year <- qF(data$year) # iso3c is already factor
-# classical lm() -> creates a matrix of 200+ country dummies and 59 year dummies
+# classical lm() -> creates a matrix of 196 country dummies and 56 year dummies
 coef(lm(PCGDP ~ LIFEEX + iso3c + year, data))[1:2]               
 
 # Centering each variable individually
@@ -536,7 +534,11 @@ coef(lm(HDW.PCGDP ~ HDW.LIFEEX, HDW(data, ~ iso3c + year)))
 # Procedure suggested by Mundlack (1978) - partialling out group averages demeans the data
 coef(lm(PCGDP ~ LIFEEX + HDB(LIFEEX, list(iso3c, year)), data))
 ```
-One can also use `fHDbetween / HDB` and `fHDwithin / HDW` to project out interactions and continuous covariates:
+We may wish to test whether including time fixed-effects in the above regression actually impacts the fit. This can be done with the fast F-test:
+```{r}
+fFtest(data$PCGDP, data$year, get_vars(data, c("LIFEEX","iso3c")))
+```
+The test shows that the time fixed-effects (i.e. year dummies) are jointly significant. One can also use `fHDbetween / HDB` and `fHDwithin / HDW` to project out interactions and continuous covariates:
 ```{r}
 wlddev$year <- as.numeric(wlddev$year)
 # classical lm() -> full country-year interaction, -> 200+ country dummies, 200+ trends, year and ODA
@@ -673,11 +675,15 @@ Similarly to `flag / L / F`, `fdiff / D` computes sequences of suitably lagged /
 ```{r}
 plot(stl(AirPassengers, "periodic"))
 ```
-We can plot the series and the ordinary and seasonal (12-month) growth rate using:
+We can actually test the statistical significance of this seasonality around a cubic trend using again the fast F-test (same as running a regression with and without seasonal dummies and a cubic polinomial trend, but faster):
+```{r}
+fFtest(AirPassengers, qF(cycle(AirPassengers)), poly(seq_along(AirPassengers), 3))
+```
+The test shows significant seasonality. We can plot the series and the ordinary and seasonal (12-month) growth rate using:
 ```{r}
 plot(G(AirPassengers, c(0,1,12)))
 ```
-It is evident that taking the seasonal growth rate removes most of the periodic behavior. We can also compute second differences or growth rates of growth rates. Below I plot the ordinary and seasonal first and second differences of the data:
+It is evident that taking the annualized growth rate removes most of the periodic behavior. We can also compute second differences or growth rates of growth rates. Below I plot the ordinary and annual first and second differences of the data:
 ```{r}
 plot(D(AirPassengers, c(1,12), 1:2))
 ```

@@ -19,8 +19,9 @@ NumericVector fbstatstemp(NumericVector x, bool ext = false, int ng = 0, Integer
    if(!ext) {
     if(ng == 0) { // No groups
       int j = l-1;
-      double n = 0, min = R_PosInf, max = R_NegInf;
-      long double mean = 0, d1 = 0, M2 = 0;
+      // double n = 0, min = R_PosInf, max = R_NegInf;
+      // long double mean = 0, d1 = 0, M2 = 0;
+      double n = 0, min = R_PosInf, max = R_NegInf, mean = 0, d1 = 0, M2 = 0;
       if(Rf_isNull(w)) { // No weights
         while(std::isnan(x[j]) && j!=0) --j;
         if(j != 0) {  // if(j == 0) stop("Not enough non-mising obs.");
@@ -37,7 +38,8 @@ NumericVector fbstatstemp(NumericVector x, bool ext = false, int ng = 0, Integer
       } else { // with weights
         NumericVector wg = w;
         if(l != wg.size()) stop("length(w) must match length(x)");
-        long double sumw = 0;
+        // long double sumw = 0;
+        double sumw = 0;
         while((std::isnan(x[j]) || std::isnan(wg[j])) && j!=0) --j;
          if(j != 0) { // if(j == 0) stop("Not enough non-mising obs.");
           for(int i = j+1; i--; ) {
@@ -54,7 +56,7 @@ NumericVector fbstatstemp(NumericVector x, bool ext = false, int ng = 0, Integer
         } else mean = M2 = min = max = NA_REAL;
       }
       if(std::isnan(M2)) M2 = NA_REAL;
-      NumericVector result = NumericVector::create(n,(double)mean,(double)M2,min,max);
+      NumericVector result = NumericVector::create(n,mean,M2,min,max); // NumericVector::create(n,(double)mean,(double)M2,min,max);
       if(setn) {
         result.attr("names") = CharacterVector::create("N","Mean","SD","Min","Max");
         result.attr("class") = CharacterVector::create("qsu","table");
@@ -63,7 +65,8 @@ NumericVector fbstatstemp(NumericVector x, bool ext = false, int ng = 0, Integer
 
     } else { // with groups
       if(g.size() != l) stop("length(g) must match nrow(X)");
-      long double d1 = 0;
+      // long double d1 = 0;
+      double d1 = 0;
       int k = 0;
       NumericMatrix result = no_init_matrix(ng, 5); // Perhaps initializin is better ??
       NumericMatrix::Column n = result( _ , 0);
@@ -126,8 +129,9 @@ NumericVector fbstatstemp(NumericVector x, bool ext = false, int ng = 0, Integer
    } else {
      if(ng == 0) { // No groups
        int j = l-1;
-       double n = 0, min = R_PosInf, max = R_NegInf;
-       long double mean = 0, d1 = 0, dn = 0, dn2 = 0, term1 = 0, M2 = 0, M3 = 0, M4 = 0;
+       // double n = 0, min = R_PosInf, max = R_NegInf;
+       // long double mean = 0, d1 = 0, dn = 0, dn2 = 0, term1 = 0, M2 = 0, M3 = 0, M4 = 0;
+       double n = 0, min = R_PosInf, max = R_NegInf, mean = 0, d1 = 0, dn = 0, dn2 = 0, term1 = 0, M2 = 0, M3 = 0, M4 = 0;
        if(Rf_isNull(w)) { // No weights
          while(std::isnan(x[j]) && j!=0) --j;
          if(j != 0) {  // if(j == 0) stop("Not enough non-mising obs.");
@@ -151,7 +155,8 @@ NumericVector fbstatstemp(NumericVector x, bool ext = false, int ng = 0, Integer
        } else { // with weights
          NumericVector wg = w;
          if(l != wg.size()) stop("length(w) must match length(x)");
-         long double sumw = 0;
+         // long double sumw = 0;
+         double sumw = 0;
          while((std::isnan(x[j]) || std::isnan(wg[j])) && j!=0) --j;
          if(j != 0) {  // if(j == 0) stop("Not enough non-mising obs.");
          for(int i = j+1; i--; ) {
@@ -174,7 +179,7 @@ NumericVector fbstatstemp(NumericVector x, bool ext = false, int ng = 0, Integer
          M2 = sqrt(M2/(sumw-1)); // Standard Deviation
          } else mean = M2 = M3 = M4 = min = max = NA_REAL;
        }
-       NumericVector result = NumericVector::create(n,(double)mean,(double)M2,min,max,(double)M3,(double)M4);
+       NumericVector result = NumericVector::create(n,mean,M2,min,max,M3,M4); // NumericVector::create(n,(double)mean,(double)M2,min,max,(double)M3,(double)M4);
        if(setn) {
          result.attr("names") = CharacterVector::create("N","Mean","SD","Min","Max","Skew","Kurt");
          result.attr("class") = CharacterVector::create("qsu","table");

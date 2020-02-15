@@ -12,7 +12,7 @@
 Fast (Grouped, Weighted) Summary Statistics for Cross-Sectional and Panel-Data
 }
 \description{
-\code{qsu}, shorthand for quick-summary is an extremely fast summary command inspired by the (xt)summarize command in the STATA statistical software.
+\code{qsu}, shorthand for quick-summary, is an extremely fast summary command inspired by the (xt)summarize command in the STATA statistical software.
 
 It computes a set of 7 statistics (nobs, mean, sd, min, max, skewness and kurtosis) using a numerically stable one-pass method generalized from Welford's Algorithm. Statistics can be computed weighted, by groups, and also within-and between entities (for panel-data, see Details).
 }
@@ -32,7 +32,8 @@ It computes a set of 7 statistics (nobs, mean, sd, min, max, skewness and kurtos
     higher = FALSE, array = TRUE, vlabels = FALSE, \dots)
 
 
-\method{print}{qsu}(x, digits = 2, nonsci.digits = 9, na.print = "-", return = FALSE, \dots)
+\method{print}{qsu}(x, digits = 2, nonsci.digits = 9, na.print = "-",
+      return = FALSE, print.gap = 2, \dots)
 }
 %- maybe also 'usage' for other objects documented here.
 \arguments{
@@ -51,15 +52,16 @@ It computes a set of 7 statistics (nobs, mean, sd, min, max, skewness and kurtos
   \item{nonsci.digits}{the number of digits to print before resorting to scientific notation (default is to print out numbers with up to 9 digits and print larger numbers scientifically).}
   \item{na.print}{character string to substitute for missing values.}
   \item{return}{logical. Don't print but instead return the formatted object.}
+  \item{print.gap}{integer. Spacing between printed columns. Passed to \code{print.default}.}
 }
 \details{
 The algorithm used to compute statistics is well described \href{https://en.wikipedia.org/wiki/Algorithms_for_calculating_variance}{here} (see sections \emph{Welford's online algorithm}, \emph{Weighted incremental algorithm} and \emph{Higher-order statistics}. Skewness and kurtosis are calculated as described in \code{Higher-order statistics} and are mathematically identical to those implemented in the \code{moments} package. Just note that \code{qsu} computes the kurtosis (like \code{momens::kurtosis}), not the excess-kurtosis (=  kurtosis - 3) defined in \code{Higher-order statistics}. The \emph{Weighted incremental algorithm} described can easily be generalized to higher-order statistics).
 
-Grouped computations specified with \code{g, by} are carried out extremely efficiently as in \code{fsum} (in a single pass, without splitting the data).
+Grouped computations specified with \code{g/by} are carried out extremely efficiently as in \code{fsum} (in a single pass, without splitting the data).
 
 If \code{pid} is used, \code{qsu} performs a panel-decomposition of each variable and computes 3 sets of statistics: Statistics computed on the 'Overall' (raw) data, statistics computed on the 'Between' - transformed (pid - averaged) data, and statistics computed on the 'Within' - transformed (pid - demeaned) data.
 
-More formally, let \bold{\code{x}} (bold) be a panel vector of data for \code{N} individuals indexed by \code{i}, recorded for \code{T} periods, indexed by \code{t}. \code{xit} then denotes a single data-point belonging to individual \code{i} in time-period \code{t} (\code{t/T} must not represent time). Then \code{xi.} denotes the average of all values for individual \code{i} (averaged over \code{t}), and by extension \bold{\code{xN.}} is the vector (length \code{N}) of such averages for all individuals. If no groups are supplied to \code{g, by}, the 'Between' statistics are computed on \bold{\code{xN.}}, the vector of individual averages. (This means that for a non-balanced panel or in the presence of missing values, the 'Overall' mean computed on \bold{\code{x}} can be slightly different than the 'Between' mean computed on \bold{\code{xN.}}). If groups are supplied to \code{g, by}, \bold{\code{xN.}} is expanded to the vector \bold{\code{xi.}} (length \code{N x T}) by replacing each value \code{xit} in \bold{\code{x}} with \code{xi.}, while preserving missing values in \bold{\code{x}}. Grouped Between-statistics are then computed on \bold{\code{xi.}}, with the only difference that the number ob observations ('Between-N') reported for each group is the number of distinct non-missing values of \bold{\code{xi.}} in each group (not the total number of non-missing values of \bold{\code{xi.}} in each group, which is already reported in 'Overall-N').
+More formally, let \bold{\code{x}} (bold) be a panel vector of data for \code{N} individuals indexed by \code{i}, recorded for \code{T} periods, indexed by \code{t}. \code{xit} then denotes a single data-point belonging to individual \code{i} in time-period \code{t} (\code{t/T} must not represent time). Then \code{xi.} denotes the average of all values for individual \code{i} (averaged over \code{t}), and by extension \bold{\code{xN.}} is the vector (length \code{N}) of such averages for all individuals. If no groups are supplied to \code{g/by}, the 'Between' statistics are computed on \bold{\code{xN.}}, the vector of individual averages. (This means that for a non-balanced panel or in the presence of missing values, the 'Overall' mean computed on \bold{\code{x}} can be slightly different than the 'Between' mean computed on \bold{\code{xN.}}). If groups are supplied to \code{g/by}, \bold{\code{xN.}} is expanded to the vector \bold{\code{xi.}} (length \code{N x T}) by replacing each value \code{xit} in \bold{\code{x}} with \code{xi.}, while preserving missing values in \bold{\code{x}}. Grouped Between-statistics are then computed on \bold{\code{xi.}}, with the only difference that the number ob observations ('Between-N') reported for each group is the number of distinct non-missing values of \bold{\code{xi.}} in each group (not the total number of non-missing values of \bold{\code{xi.}} in each group, which is already reported in 'Overall-N').
 
 'Within' statistics are always computed on the vector \bold{\code{x - xi. + x..}}, where \bold{\code{x..}} is simply the 'Overall' mean computed from \bold{\code{x}}, which is added back to preserve the level of the data. The 'Within' mean computed on this data will always be identical to the 'Overall' mean. In the summary output, \code{qsu} reports not 'N', which would be identical to the 'Overall-N', but 'T', the average number of time-periods of data available for each individual obtained as 'T' = 'Overall-N / 'Between-N'. See Examples.
 
@@ -84,7 +86,7 @@ If weights \code{w} are used together with \code{pid}, transformed data is compu
 %% ~Make other sections like Warning with \section{Warning }{....} ~
 
 \seealso{
-\link[=A1-fast-statistical-functions]{Fast Statistical Functions}, \link[=collapse-documentation]{Collapse Overview}  %% ~~objects to See Also as \code{\link{help}}, ~~~
+\code{\link{descr}}, \code{\link{pwcor}}, \link[=A1-fast-statistical-functions]{Fast Statistical Functions}, \link[=collapse-documentation]{Collapse Overview}  %% ~~objects to See Also as \code{\link{help}}, ~~~
 }
 \examples{
 

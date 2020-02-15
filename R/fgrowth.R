@@ -52,7 +52,7 @@ fgrowth.grouped_df <- function(x, n = 1, diff = 1, t = NULL, fill = NA, logdiff 
   if(!missing(...)) stop(sprintf("Unknown argument %s passed to fgrowth.grouped_df", dotstostr(...)))
   g <- GRP.grouped_df(x)
   tsym <- deparse(substitute(t))
-  nam <- names(x)
+  nam <- attr(x, "names")
   gn <- which(nam %in% g[[5L]])
   if(!(tsym == "NULL" || is.na(tn <- match(tsym, nam)))) {
     if(any(gn == tn)) stop("timevar coincides with grouping variables!")

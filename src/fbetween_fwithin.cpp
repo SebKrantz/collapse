@@ -13,7 +13,8 @@ NumericVector BWCpp(const NumericVector& x, int ng = 0, const IntegerVector& g =
       if(!B && option) stop("For this return option a grouping vector needs to be supplied");
       if(narm) {
         int j = l-1, n = 1; // 1 because for-loop starts from 2
-        long double sum = x[j];
+        // long double sum = x[j];
+        double sum = x[j];
         while(std::isnan(sum) && j!=0) sum = x[--j];
         if(j != 0) for(int i = j; i--; ) {
           if(std::isnan(x[i])) continue;
@@ -22,7 +23,7 @@ NumericVector BWCpp(const NumericVector& x, int ng = 0, const IntegerVector& g =
         }
         sum = sum/n;
         if(B) {
-          if(option) std::fill(out.begin(), out.end(), (double)sum); // fastest ?? -> yes !!
+          if(option) std::fill(out.begin(), out.end(), sum); // (double)sum // fastest ?? -> yes !!
           else {
             for(int i = 0; i != l; ++i) {
               if(std::isnan(x[i])) out[i] = x[i];
@@ -33,7 +34,8 @@ NumericVector BWCpp(const NumericVector& x, int ng = 0, const IntegerVector& g =
           out = x - sum; // conversion to double not necessary !!
         }
       } else {
-        long double sum = 0;
+        // long double sum = 0;
+        double sum = 0;
         for(int i = 0; i != l; ++i) {
           if(std::isnan(x[i])) {
             sum = x[i];
@@ -44,7 +46,7 @@ NumericVector BWCpp(const NumericVector& x, int ng = 0, const IntegerVector& g =
         }
         sum = sum/l;
         if(B) {
-          std::fill(out.begin(), out.end(), (double)sum); // fastes ??
+          std::fill(out.begin(), out.end(), sum); // (double)sum) // fastes ??
         } else {
           out = x - sum; // conversion to double not necessary !!
         }
@@ -154,7 +156,8 @@ NumericVector BWCpp(const NumericVector& x, int ng = 0, const IntegerVector& g =
       if(narm) {
         int j = l-1; // 1 because for-loop starts from 2
         while((std::isnan(x[j]) || std::isnan(wg[j])) && j!=0) --j; // This does not make a difference in performance but is more parsimonious.
-        long double sum = x[j]*wg[j], sumw = wg[j];
+        // long double sum = x[j]*wg[j], sumw = wg[j];
+        double sum = x[j]*wg[j], sumw = wg[j];
         if(j != 0) for(int i = j; i--; ) {
           if(std::isnan(x[i]) || std::isnan(wg[i])) continue;
           sum += x[i]*wg[i]; // Fastest ??
@@ -162,7 +165,7 @@ NumericVector BWCpp(const NumericVector& x, int ng = 0, const IntegerVector& g =
         }
         sum = sum/sumw;
         if(B) {
-          if(option) std::fill(out.begin(), out.end(), (double)sum); // fastes ??
+          if(option) std::fill(out.begin(), out.end(), sum); // (double)sum // fastes ??
           else {
             for(int i = 0; i != l; ++i) {
               if(std::isnan(x[i])) out[i] = x[i];
@@ -173,7 +176,8 @@ NumericVector BWCpp(const NumericVector& x, int ng = 0, const IntegerVector& g =
           out = x - sum; // conversion to double not necessary !!
         }
       } else {
-        long double sum = 0, sumw = 0;
+        // long double sum = 0, sumw = 0;
+        double sum = 0, sumw = 0;
         for(int i = 0; i != l; ++i) {
           if(std::isnan(x[i]) || std::isnan(wg[i])) { // good, check both ?? -> yes!!
             sum = x[i]+wg[i];
@@ -185,7 +189,7 @@ NumericVector BWCpp(const NumericVector& x, int ng = 0, const IntegerVector& g =
         }
         sum = sum/sumw;
         if(B) {
-          std::fill(out.begin(), out.end(), (double)sum); // fastes ??
+          std::fill(out.begin(), out.end(), sum); // (double)sum// fastes ??
         } else {
           out = x - sum; // conversion to double not necessary !!
         }
@@ -290,7 +294,8 @@ NumericMatrix BWmCpp(const NumericMatrix& x, int ng = 0, const IntegerVector& g 
           NumericMatrix::ConstColumn column = x( _ , j);
           NumericMatrix::Column outj = out( _ , j);
           int k = l-1, nj = 1;
-          long double sumj = column[k];
+          // long double sumj = column[k];
+          double sumj = column[k];
           while(std::isnan(sumj) && k!=0) sumj = column[--k];
           if(k != 0) for(int i = k; i--; ) {
             if(std::isnan(column[i])) continue;
@@ -299,7 +304,7 @@ NumericMatrix BWmCpp(const NumericMatrix& x, int ng = 0, const IntegerVector& g 
           }
           sumj = sumj/nj;
           if(B) {
-            if(option) std::fill(outj.begin(), outj.end(), (double)sumj);
+            if(option) std::fill(outj.begin(), outj.end(), sumj); // (double)sumj
             else {
               for(int i = 0; i != l; ++i) {
                 if(std::isnan(column[i])) outj[i] = column[i];
@@ -314,7 +319,8 @@ NumericMatrix BWmCpp(const NumericMatrix& x, int ng = 0, const IntegerVector& g 
         for(int j = col; j--; ) {
           NumericMatrix::ConstColumn column = x( _ , j);
           NumericMatrix::Column outj = out( _ , j);
-          long double sumj = 0;
+          // long double sumj = 0;
+          double sumj = 0;
           for(int i = 0; i != l; ++i) {
             if(std::isnan(column[i])) {
               sumj = column[i];
@@ -325,7 +331,7 @@ NumericMatrix BWmCpp(const NumericMatrix& x, int ng = 0, const IntegerVector& g 
           }
           sumj = sumj/l;
           if(B) {
-            std::fill(outj.begin(), outj.end(), (double)sumj);
+            std::fill(outj.begin(), outj.end(), sumj); // (double)sumj
           } else {
             outj = column - sumj;
           }
@@ -475,7 +481,8 @@ NumericMatrix BWmCpp(const NumericMatrix& x, int ng = 0, const IntegerVector& g 
           NumericMatrix::Column outj = out( _ , j);
           int k = l-1;
           while((std::isnan(column[k]) || std::isnan(wg[k])) && k!=0) --k;
-          long double sumj = column[k]*wg[k], sumwj = wg[k];
+          // long double sumj = column[k]*wg[k], sumwj = wg[k];
+          double sumj = column[k]*wg[k], sumwj = wg[k];
           if(k != 0) for(int i = k; i--; ) {
             if(std::isnan(column[i]) || std::isnan(wg[i])) continue;
             sumj += column[i]*wg[i];
@@ -483,7 +490,7 @@ NumericMatrix BWmCpp(const NumericMatrix& x, int ng = 0, const IntegerVector& g 
           }
           sumj = sumj/sumwj;
           if(B) {
-            if(option) std::fill(outj.begin(), outj.end(), (double)sumj);
+            if(option) std::fill(outj.begin(), outj.end(), sumj); //  (double)sumj
             else {
               for(int i = 0; i != l; ++i) {
                 if(std::isnan(column[i])) outj[i] = column[i];
@@ -498,7 +505,8 @@ NumericMatrix BWmCpp(const NumericMatrix& x, int ng = 0, const IntegerVector& g 
         for(int j = col; j--; ) {
           NumericMatrix::ConstColumn column = x( _ , j);
           NumericMatrix::Column outj = out( _ , j);
-          long double sumj = 0, sumwj = 0;
+          // long double sumj = 0, sumwj = 0;
+          double sumj = 0, sumwj = 0;
           for(int i = 0; i != l; ++i) {
             if(std::isnan(column[i]) || std::isnan(wg[i])) {
               sumj = column[i]+wg[i];
@@ -510,7 +518,7 @@ NumericMatrix BWmCpp(const NumericMatrix& x, int ng = 0, const IntegerVector& g 
           }
           sumj = sumj/sumwj;
           if(B) {
-            std::fill(outj.begin(), outj.end(), (double)sumj);
+            std::fill(outj.begin(), outj.end(), sumj); // (double)sumj
           } else {
             outj = column - sumj;
           }
@@ -628,7 +636,8 @@ List BWlCpp(const List& x, int ng = 0, const IntegerVector& g = 0,
           NumericVector column = x[j];
           int row = column.size();
           int k = row-1, ni = 1;
-          long double sumi = column[k];
+          // long double sumi = column[k];
+          double sumi = column[k];
           while(std::isnan(sumi) && k!=0) sumi = column[--k];
           if(k != 0) for(int i = k; i--; ) {
             if(std::isnan(column[i])) continue;
@@ -637,7 +646,7 @@ List BWlCpp(const List& x, int ng = 0, const IntegerVector& g = 0,
           }
           sumi = sumi/ni;
           if(B) {
-            if(option) out[j] = rep((double)sumi, row); // good ??
+            if(option) out[j] = rep(sumi, row); // rep((double)sumi, row); // good ??
             else {
               NumericVector outj = no_init_vector(row);
               for(int i = 0; i != row; ++i) {
@@ -654,7 +663,8 @@ List BWlCpp(const List& x, int ng = 0, const IntegerVector& g = 0,
       } else {
         for(int j = l; j--; ) {
           NumericVector column = x[j];
-          long double sumi = 0;
+          // long double sumi = 0;
+          double sumi = 0;
           int row = column.size();
           for(int i = 0; i != row; ++i) {
             if(std::isnan(column[i])) {
@@ -666,7 +676,7 @@ List BWlCpp(const List& x, int ng = 0, const IntegerVector& g = 0,
           }
           sumi = sumi/row;
           if(B) {
-            out[j] = rep((double)sumi, row);
+            out[j] = rep(sumi, row); // rep((double)sumi, row);
           } else {
             out[j] = column - sumi;
           }
@@ -827,7 +837,8 @@ List BWlCpp(const List& x, int ng = 0, const IntegerVector& g = 0,
           if(row != wgs) stop("length(w) must match nrow(X)");
           int k = row-1;
           while((std::isnan(column[k]) || std::isnan(wg[k])) && k!=0) --k;
-          long double sumi = column[k]*wg[k], sumwi = wg[k];
+          // long double sumi = column[k]*wg[k], sumwi = wg[k];
+          double sumi = column[k]*wg[k], sumwi = wg[k];
           if(k != 0) for(int i = k; i--; ) {
             if(std::isnan(column[i]) || std::isnan(wg[i])) continue;
             sumi += column[i]*wg[i];
@@ -835,7 +846,7 @@ List BWlCpp(const List& x, int ng = 0, const IntegerVector& g = 0,
           }
           sumi = sumi/sumwi;
           if(B) {
-            if(option) out[j] = rep((double)sumi, row);
+            if(option) out[j] = rep(sumi, row); // rep((double)sumi, row);
             else {
               NumericVector outj = no_init_vector(row);
               for(int i = 0; i != row; ++i) {
@@ -854,7 +865,8 @@ List BWlCpp(const List& x, int ng = 0, const IntegerVector& g = 0,
           NumericVector column = x[j];
           int row = column.size();
           if(row != wgs) stop("length(w) must match nrow(X)");
-          long double sumi = 0, sumwi = 0;
+          // long double sumi = 0, sumwi = 0;
+          double sumi = 0, sumwi = 0;
           for(int i = 0; i != row; ++i) {
             if(std::isnan(column[i]) || std::isnan(wg[i])) {
               sumi = column[i]+wg[i];
@@ -866,7 +878,7 @@ List BWlCpp(const List& x, int ng = 0, const IntegerVector& g = 0,
           }
           sumi = sumi/sumwi;
           if(B) {
-            out[j] = rep((double)sumi, row);
+            out[j] = rep(sumi, row); // rep((double)sumi, row);
           } else {
             out[j] = column - sumi;
           }

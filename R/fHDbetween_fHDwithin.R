@@ -328,7 +328,7 @@ HDW.matrix <- function(x, fl, w = NULL, na.rm = TRUE, fill = FALSE, stub = "HDW.
 HDW.data.frame <- function(x, fl, w = NULL, cols = is.numeric, na.rm = TRUE, fill = FALSE, variable.wise = FALSE, stub = "HDW.", ...) {
   if(is.call(fl)) {
     ax <- attributes(x)
-    nam <- names(x)
+    nam <- attr(x, "names")
     if(length(fl) == 3L) {
       fvars <- anyNAerror(match(all.vars(fl[[3L]]), nam), "Unknown variables in formula!")
       Xvars <- anyNAerror(match(all.vars(fl[[2L]]), nam), "Unknown variables in formula!")
@@ -642,7 +642,7 @@ HDB.matrix <- function(x, fl, w = NULL, na.rm = TRUE, fill = FALSE, stub = "HDB.
 HDB.data.frame <- function(x, fl, w = NULL, cols = is.numeric, na.rm = TRUE, fill = FALSE, variable.wise = FALSE, stub = "HDB.", ...) {
   if(is.call(fl)) {
     ax <- attributes(x)
-    nam <- names(x)
+    nam <- attr(x, "names")
     if(length(fl) == 3L) {
       fvars <- anyNAerror(match(all.vars(fl[[3L]]), nam), "Unknown variables in formula!")
       Xvars <- anyNAerror(match(all.vars(fl[[2L]]), nam), "Unknown variables in formula!")

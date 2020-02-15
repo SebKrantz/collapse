@@ -9,7 +9,7 @@
 \alias{flast.matrix}
 \alias{flast.data.frame}
 \alias{flast.grouped_df}
-\title{Fast (Grouped) First and Last Value from Matrix-Like Objects}  % Vectors, Matrix and Data Frame Columns}
+\title{Fast (Grouped) First and Last Value for Matrix-Like Objects}  % Vectors, Matrix and Data Frame Columns}
 \description{
 \code{ffirst} and \code{flast} are S3 generic functions that (column-wise) returns the first and last values in \code{x}, (optionally) grouped by \code{g}. The \code{\link{TRA}} argument can further be used to transform \code{x} using its (groupwise) first and last values.
 }

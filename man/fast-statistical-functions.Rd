@@ -58,7 +58,7 @@ FUN(x, [w = NULL,] TRA = NULL, [na.rm = TRUE,]
 Please see the documentation of individual functions.
 }
 \section{Value}{
- \code{x} aggregated. With data.frame's column-attributes and overall attributes are preserved.
+ \code{x} aggregated. data.frame column-attributes and overall attributes are preserved.
 }
 \seealso{
 \link[=collapse-documentation]{Collapse Overview}, \link[=A6-data-transformations]{Data Transformations}, \link[=A7-time-series-panel-series]{Time-Series and Panel-Series}

@@ -16,10 +16,11 @@ unlist2d <- function(l, idcols = ".id", row.names = FALSE, recursive = TRUE, id.
     l
   }
   idf <- function(x) if(inherits(x, "data.frame")) 2L else if (is.null(x)) 1L else 3L*is.atomic(x) # faster way ??
-  addrn <- function(x) if(any(names(x) == row.names)) x else c(`names<-`(list(attr(x, "row.names")),row.names),x) # faster way??
+  addrn <- function(x) if(any(attr(x, "names") == row.names)) x else c(`names<-`(list(attr(x, "row.names")),row.names),x) # faster way??
   attol <- function(x) {
-    if (is.array(x)) {
-      d <- dim(x)
+    # class(x) <- NULL # tables are also arrays, although only 1D, not because of the class but because they have a dimension attribute.
+    if (length(d <- dim(x)) > 1L) { # is.array(x) # length could also be 0...
+      # d <- dim(x)
       if (length(d) > 2L) { # breaking down HDA
         dn <- dimnames(x)
         dim(x) <- c(d[1L], prod(d[-1L]))
@@ -38,6 +39,7 @@ unlist2d <- function(l, idcols = ".id", row.names = FALSE, recursive = TRUE, id.
   }
   ul2d <- function(y) {
     if(inherits(y, "data.frame") || is.atomic(y)) return(y)
+    class(y) <- NULL # perhaps unclassing y would put more safety ?? -> yes !!
     ident <- vapply(y, idf, 1L)
     if(is.list(y) && all(ident > 0L)) {
       at <- ident == 3L
@@ -61,19 +63,19 @@ unlist2d <- function(l, idcols = ".id", row.names = FALSE, recursive = TRUE, id.
   if(recursive) {
     while(!inherits(l, "data.frame")) l <- ul2d(l)
     if(make.ids) {
-      nams <- names(l)
+      nams <- attr(l, "names")
       ids <- which(nams == id.names)
       nid <- length(ids)
       if(nid > 1L) { # Still make sure row.names comes after ids, even if only one id!!
         nids <- seq_len(nid)
-        names(l)[ids] <- if(length(idcols) == nid) idcols else paste(id.names, nids, sep = ".")
+        attr(l, "names")[ids] <- if(length(idcols) == nid) idcols else paste(id.names, nids, sep = ".")
         if(keep.row.names) { # New!! It seems it lost a bot of speed through this part!!
           rn <- which(nams == row.names) # New!!
           if(!all(ids == nids) || rn != nid + 1L) .Call(C_setcolorder, l, c(ids, rn, seq_along(l)[-c(ids,rn)]))  # l <- l[c(ids,rn,seq_along(l)[-c(ids,rn)])] # New!! efficient? could replace only rownames if one of the conditions holds
         } else if (!all(ids == nids)) .Call(C_setcolorder, l, c(ids, seq_along(l)[-ids])) # l <- l[c(ids,seq_along(l)[-ids])] # Old!! before row.names!!
       }
     } else if (keep.row.names) { # New!!
-      rn <- which(names(l) == row.names) # New!!
+      rn <- which(attr(l, "names") == row.names) # New!!
       if(rn != 1L) .Call(C_setcolorder, l, c(rn,seq_along(l)[-rn]))  # l <- l[c(rn,seq_along(l)[-rn])] # New!!
     }
   }

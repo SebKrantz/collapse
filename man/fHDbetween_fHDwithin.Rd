@@ -125,7 +125,7 @@ In general full interactions specified with \code{(*)} can be very slow on large
 %% ~Make other sections like Warning with \section{Warning }{....} ~
 
 \seealso{
-\code{\link[=fbetween]{fbetween/B and fwithin/W}}, \code{\link[=fscale]{fscale/STD}}, \code{\link{TRA}}, \link[=A6-data-transformations]{Data Transformations}, \link[=collapse-documentation]{Collapse Overview}
+\code{\link[=fbetween]{fbetween/B and fwithin/W}}, \code{\link[=fscale]{fscale/STD}}, \code{\link{TRA}}, \code{\link{fFtest}}, \link[=A6-data-transformations]{Data Transformations}, \link[=collapse-documentation]{Collapse Overview}
 }
 \examples{
 HDW(mtcars$mpg, mtcars$carb)                   # Simple regression problems..

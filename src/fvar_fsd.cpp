@@ -14,8 +14,9 @@ NumericVector fvarsdCpp(const NumericVector& x, int ng = 0, const IntegerVector&
       if(ng == 0) {
         if(narm) {
           int j = l-1;
-          double n = 0;
-          long double mean = 0, d1 = 0, M2 = 0; // LD really necessary ?? what about speed ??
+          // double n = 0;
+          // long double mean = 0, d1 = 0, M2 = 0; // LD really necessary ?? what about speed ??
+          double n = 0, mean = 0, d1 = 0, M2 = 0;
           while(std::isnan(x[j]) && j!=0) --j;
           if(j != 0) {
             for(int i = j+1; i--; ) {
@@ -27,11 +28,12 @@ NumericVector fvarsdCpp(const NumericVector& x, int ng = 0, const IntegerVector&
             M2 = M2/(n-1);
             if(sd) M2 = sqrt(M2);
             if(std::isnan(M2)) M2 = NA_REAL;
-            return NumericVector::create((double)M2);
+            return NumericVector::create(M2); // ::create((double)M2)
           } else return NumericVector::create(NA_REAL);
         } else {
-          double n = 0;
-          long double mean = 0, d1 = 0, M2 = 0;
+          // double n = 0;
+          // long double mean = 0, d1 = 0, M2 = 0;
+          double n = 0, mean = 0, d1 = 0, M2 = 0;
           for(int i = 0; i != l; ++i) {
             if(std::isnan(x[i])) {
               return NumericVector::create(NA_REAL);
@@ -44,11 +46,12 @@ NumericVector fvarsdCpp(const NumericVector& x, int ng = 0, const IntegerVector&
           M2 = M2/(l-1);
           if(sd) M2 = sqrt(M2);
           if(std::isnan(M2)) M2 = NA_REAL;
-          return NumericVector::create((double)M2);
+          return NumericVector::create(M2); // ::create((double)M2)
         }
       } else { // with groups
         if(g.size() != l) stop("length(g) must match nrow(X)");
-        long double d1 = 0;
+        // long double d1 = 0;
+        double d1 = 0;
         if(narm) {
           NumericVector M2(ng, NA_REAL);
           NumericVector mean = no_init_vector(ng);
@@ -125,7 +128,8 @@ NumericVector fvarsdCpp(const NumericVector& x, int ng = 0, const IntegerVector&
       if(ng == 0) {
         if(narm) {
           int j = l-1;
-          long double sumw = 0, mean = 0, M2 = 0, d1 = 0;
+          // long double sumw = 0, mean = 0, M2 = 0, d1 = 0;
+          double sumw = 0, mean = 0, M2 = 0, d1 = 0;
           while((std::isnan(x[j]) || std::isnan(wg[j])) && j!=0) --j;
           if(j != 0) {
             for(int i = j+1; i--; ) {
@@ -138,10 +142,11 @@ NumericVector fvarsdCpp(const NumericVector& x, int ng = 0, const IntegerVector&
             M2 /= sumw-1;
             if(sd) M2 = sqrt(M2);
             if(std::isnan(M2)) M2 = NA_REAL;
-            return NumericVector::create((double)M2);
+            return NumericVector::create(M2); // create((double)M2)
           } else return NumericVector::create(NA_REAL);
         } else {
-          long double sumw = 0, mean = 0, M2 = 0, d1 = 0;
+          // long double sumw = 0, mean = 0, M2 = 0, d1 = 0;
+          double sumw = 0, mean = 0, M2 = 0, d1 = 0;
           for(int i = 0; i != l; ++i) {
             if(std::isnan(x[i]) || std::isnan(wg[i])) {
               return NumericVector::create(NA_REAL);
@@ -155,11 +160,12 @@ NumericVector fvarsdCpp(const NumericVector& x, int ng = 0, const IntegerVector&
           M2 /= sumw-1;
           if(sd) M2 = sqrt(M2);
           if(std::isnan(M2)) M2 = NA_REAL;
-          return NumericVector::create((double)M2);
+          return NumericVector::create(M2); // create((double)M2)
         }
       } else { // with groups
         if(g.size() != l) stop("length(g) must match nrow(X)");
-        long double d1 = 0;
+        // long double d1 = 0;
+        double d1 = 0;
         if(narm) {
           NumericVector M2(ng, NA_REAL);
           NumericVector sumw = no_init_vector(ng);
@@ -477,8 +483,9 @@ SEXP fvarsdmCpp(const NumericMatrix& x, int ng = 0, const IntegerVector& g = 0,
           for(int j = col; j--; ) {
             NumericMatrix::ConstColumn column = x( _ , j);
             int k = l-1;
-            double ni = 0;
-            long double meani = 0, d1i = 0, M2i = 0;
+            // double ni = 0;
+            // long double meani = 0, d1i = 0, M2i = 0;
+            double ni = 0, meani = 0, d1i = 0, M2i = 0;
             while(std::isnan(column[k]) && k!=0) --k;
             if(k != 0) {
               for(int i = k+1; i--; ) {
@@ -490,14 +497,15 @@ SEXP fvarsdmCpp(const NumericMatrix& x, int ng = 0, const IntegerVector& g = 0,
               M2i /= ni-1;
               if(sd) M2i = sqrt(M2i);
               if(std::isnan(M2i)) M2i = NA_REAL;
-              out[j] = (double)M2i;
+              out[j] = M2i; // (double)M2i;
             } else out[j] = NA_REAL;
           }
         } else {
           for(int j = col; j--; ) {
             NumericMatrix::ConstColumn column = x( _ , j);
-            double ni = 0;
-            long double meani = 0, d1i = 0, M2i = 0;
+            // double ni = 0;
+            // long double meani = 0, d1i = 0, M2i = 0;
+            double ni = 0, meani = 0, d1i = 0, M2i = 0;
             for(int i = 0; i != l; ++i) {
               if(std::isnan(column[i])) {
                 M2i = NA_REAL;
@@ -511,7 +519,7 @@ SEXP fvarsdmCpp(const NumericMatrix& x, int ng = 0, const IntegerVector& g = 0,
             M2i /= l-1;
             if(sd) M2i = sqrt(M2i);
             if(std::isnan(M2i)) M2i = NA_REAL;
-            out[j] = (double)M2i;
+            out[j] = M2i; // (double)M2i;
           }
         }
         if(drop) out.attr("names") = colnames(x);
@@ -613,7 +621,8 @@ SEXP fvarsdmCpp(const NumericMatrix& x, int ng = 0, const IntegerVector& g = 0,
           for(int j = col; j--; ) {
             NumericMatrix::ConstColumn column = x( _ , j);
             int k = l-1;
-            long double sumwi = 0, meani = 0, M2i = 0, d1i = 0;
+            // long double sumwi = 0, meani = 0, M2i = 0, d1i = 0;
+            double sumwi = 0, meani = 0, M2i = 0, d1i = 0;
             while((std::isnan(column[k]) || std::isnan(wg[k])) && k!=0) --k;
             if(k != 0) {
               for(int i = k+1; i--; ) {
@@ -626,13 +635,14 @@ SEXP fvarsdmCpp(const NumericMatrix& x, int ng = 0, const IntegerVector& g = 0,
               M2i /= sumwi-1;
               if(sd) M2i = sqrt(M2i);
               if(std::isnan(M2i)) M2i = NA_REAL;
-              out[j] = (double)M2i;
+              out[j] = M2i; // (double)M2i;
             } else out[j] = NA_REAL;
           }
         } else {
           for(int j = col; j--; ) {
             NumericMatrix::ConstColumn column = x( _ , j);
-            long double sumwi = 0, meani = 0, M2i = 0, d1i = 0;
+            // long double sumwi = 0, meani = 0, M2i = 0, d1i = 0;
+            double sumwi = 0, meani = 0, M2i = 0, d1i = 0;
             for(int i = 0; i != l; ++i) {
               if(std::isnan(column[i]) || std::isnan(wg[i])) {
                 M2i = NA_REAL;
@@ -647,7 +657,7 @@ SEXP fvarsdmCpp(const NumericMatrix& x, int ng = 0, const IntegerVector& g = 0,
             M2i /= sumwi-1;
             if(sd) M2i = sqrt(M2i);
             if(std::isnan(M2i)) M2i = NA_REAL;
-            out[j] = (double)M2i;
+            out[j] = M2i; // (double)M2i;
           }
         }
         if(drop) out.attr("names") = colnames(x);
@@ -1022,8 +1032,9 @@ SEXP fvarsdlCpp(const List& x, int ng = 0, const IntegerVector& g = 0,
           for(int j = l; j--; ) {
             NumericVector column = x[j];
             int k = column.size()-1;
-            double ni = 0;
-            long double meani = 0, d1i = 0, M2i = 0;
+            // double ni = 0;
+            // long double meani = 0, d1i = 0, M2i = 0;
+            double ni = 0, meani = 0, d1i = 0, M2i = 0;
             while(std::isnan(column[k]) && k!=0) --k;
             if(k != 0) {
               for(int i = k+1; i--; ) {
@@ -1035,15 +1046,16 @@ SEXP fvarsdlCpp(const List& x, int ng = 0, const IntegerVector& g = 0,
               M2i /= ni-1;
               if(sd) M2i = sqrt(M2i);
               if(std::isnan(M2i)) M2i = NA_REAL;
-              out[j] = (double)M2i;
+              out[j] = M2i; // (double)M2i;
             } else out[j] = NA_REAL;
           }
         } else {
           for(int j = l; j--; ) {
             NumericVector column = x[j];
             int row = column.size();
-            double ni = 0;
-            long double meani = 0, d1i = 0, M2i = 0;
+            // double ni = 0;
+            // long double meani = 0, d1i = 0, M2i = 0;
+            double ni = 0, meani = 0, d1i = 0, M2i = 0;
             for(int i = 0; i != row; ++i) {
               if(std::isnan(column[i])) {
                 M2i = NA_REAL;
@@ -1057,7 +1069,7 @@ SEXP fvarsdlCpp(const List& x, int ng = 0, const IntegerVector& g = 0,
             M2i /= row-1;
             if(sd) M2i = sqrt(M2i);
             if(std::isnan(M2i)) M2i = NA_REAL;
-            out[j] = (double)M2i;
+            out[j] = M2i; // (double)M2i;
           }
         }
         if(drop) {
@@ -1169,7 +1181,8 @@ SEXP fvarsdlCpp(const List& x, int ng = 0, const IntegerVector& g = 0,
             NumericVector column = x[j];
             if(column.size() != wgs) stop("length(w) must match nrow(X)");
             int k = wgs-1;
-            long double sumwi = 0, meani = 0, M2i = 0, d1i = 0;
+            // long double sumwi = 0, meani = 0, M2i = 0, d1i = 0;
+            double sumwi = 0, meani = 0, M2i = 0, d1i = 0;
             while((std::isnan(column[k]) || std::isnan(wg[k])) && k!=0) --k;
             if(k != 0) {
               for(int i = k+1; i--; ) {
@@ -1182,14 +1195,15 @@ SEXP fvarsdlCpp(const List& x, int ng = 0, const IntegerVector& g = 0,
               M2i /= sumwi-1;
               if(sd) M2i = sqrt(M2i);
               if(std::isnan(M2i)) M2i = NA_REAL;
-              out[j] = (double)M2i;
+              out[j] = M2i; // (double)M2i;
             } else out[j] = NA_REAL;
           }
         } else {
           for(int j = l; j--; ) {
             NumericVector column = x[j];
             if(column.size() != wgs) stop("length(w) must match nrow(X)");
-            long double sumwi = 0, meani = 0, M2i = 0, d1i = 0;
+            // long double sumwi = 0, meani = 0, M2i = 0, d1i = 0;
+            double sumwi = 0, meani = 0, M2i = 0, d1i = 0;
             for(int i = 0; i != wgs; ++i) {
               if(std::isnan(column[i]) || std::isnan(wg[i])) {
                 M2i = NA_REAL;
@@ -1204,7 +1218,7 @@ SEXP fvarsdlCpp(const List& x, int ng = 0, const IntegerVector& g = 0,
             M2i /= sumwi-1;
             if(sd) M2i = sqrt(M2i);
             if(std::isnan(M2i)) M2i = NA_REAL;
-            out[j] = (double)M2i;
+            out[j] = M2i; // (double)M2i;
           }
         }
         if(drop) {

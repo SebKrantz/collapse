@@ -15,8 +15,9 @@ NumericVector fscaleCpp(const NumericVector& x, int ng = 0, const IntegerVector&
       if (ng == 0) {
         if(narm) {
           int j = l-1;
-          double n = 0;
-          long double mean = 0, d1 = 0, M2 = 0;
+          // double n = 0;
+          // long double mean = 0, d1 = 0, M2 = 0;
+          double n = 0, mean = 0, d1 = 0, M2 = 0;
           while(std::isnan(x[j]) && j!=0) --j;
           if(j != 0) {
             for(int i = j+1; i--; ) {
@@ -36,8 +37,9 @@ NumericVector fscaleCpp(const NumericVector& x, int ng = 0, const IntegerVector&
             std::fill(out.begin(), out.end(), NA_REAL);
           }
         } else {
-          double n = 0;
-          long double mean = 0, d1 = 0, M2 = 0;
+          // double n = 0;
+          // long double mean = 0, d1 = 0, M2 = 0;
+          double n = 0, mean = 0, d1 = 0, M2 = 0;
           for(int i = 0; i != l; ++i) {
             if(std::isnan(x[i])) {
               std::fill(out.begin(), out.end(), NA_REAL);
@@ -58,7 +60,8 @@ NumericVector fscaleCpp(const NumericVector& x, int ng = 0, const IntegerVector&
         }
       } else { // with groups
         if(g.size() != l) stop("length(g) must match nrow(X)");
-        long double d1 = 0;
+        // long double d1 = 0;
+        double d1 = 0;
         if(narm) {
           NumericVector M2(ng, NA_REAL);
           NumericVector mean = no_init_vector(ng);
@@ -104,7 +107,8 @@ NumericVector fscaleCpp(const NumericVector& x, int ng = 0, const IntegerVector&
       if (ng == 0) {
         if(narm) {
           int j = l-1;
-          long double sumw = 0, mean = 0, M2 = 0, d1 = 0;
+          // long double sumw = 0, mean = 0, M2 = 0, d1 = 0;
+          double sumw = 0, mean = 0, M2 = 0, d1 = 0;
           while((std::isnan(x[j]) || std::isnan(wg[j])) && j!=0) --j;
           if(j != 0) {
             for(int i = j+1; i--; ) {
@@ -125,7 +129,8 @@ NumericVector fscaleCpp(const NumericVector& x, int ng = 0, const IntegerVector&
             std::fill(out.begin(), out.end(), NA_REAL);
           }
         } else {
-          long double sumw = 0, mean = 0, M2 = 0, d1 = 0;
+          // long double sumw = 0, mean = 0, M2 = 0, d1 = 0;
+          double sumw = 0, mean = 0, M2 = 0, d1 = 0;
           for(int i = 0; i != l; ++i) {
             if(std::isnan(x[i]) || std::isnan(wg[i])) {
               std::fill(out.begin(), out.end(), NA_REAL);
@@ -147,7 +152,8 @@ NumericVector fscaleCpp(const NumericVector& x, int ng = 0, const IntegerVector&
         }
       } else { // with groups
         if(g.size() != l) stop("length(g) must match nrow(X)");
-        long double d1 = 0;
+        // long double d1 = 0;
+        double d1 = 0;
         if(narm) {
           NumericVector M2(ng, NA_REAL);
           NumericVector sumw = no_init_vector(ng);
@@ -429,8 +435,9 @@ NumericMatrix fscalemCpp(NumericMatrix x, int ng = 0, IntegerVector g = 0, SEXP 
             NumericMatrix::Column column = x( _ , j);
             NumericMatrix::Column outj = out( _ , j);
             int k = l-1;
-            double ni = 0;
-            long double meani = 0, d1i = 0, M2i = 0;
+            // double ni = 0;
+            // long double meani = 0, d1i = 0, M2i = 0;
+            double ni = 0, meani = 0, d1i = 0, M2i = 0;
             while(std::isnan(column[k]) && k!=0) --k;
             if(k != 0) {
               for(int i = k+1; i--; ) {
@@ -454,8 +461,9 @@ NumericMatrix fscalemCpp(NumericMatrix x, int ng = 0, IntegerVector g = 0, SEXP 
           for(int j = col; j--; ) {
             NumericMatrix::Column column = x( _ , j);
             NumericMatrix::Column outj = out( _ , j);
-            double ni = 0;
-            long double meani = 0, d1i = 0, M2i = 0;
+            // double ni = 0;
+            // long double meani = 0, d1i = 0, M2i = 0;
+            double ni = 0, meani = 0, d1i = 0, M2i = 0;
             for(int i = 0; i != l; ++i) {
               if(std::isnan(column[i])) {
                 M2i = NA_REAL;
@@ -485,7 +493,8 @@ NumericMatrix fscalemCpp(NumericMatrix x, int ng = 0, IntegerVector g = 0, SEXP 
             NumericVector M2j(ng, NA_REAL);
             // double meanj[ng], nj[ng]; // stable and faster ??
             // std::vector<double> M2j(ng, NA_REAL);
-            long double d1j = 0;
+            // long double d1j = 0;
+            double d1j = 0;
             for(int i = l; i--; ) {
               if(std::isnan(column[i])) continue;
               if(std::isnan(M2j[g[i]-1])) {
@@ -506,7 +515,8 @@ NumericMatrix fscalemCpp(NumericMatrix x, int ng = 0, IntegerVector g = 0, SEXP 
             NumericMatrix::Column column = x( _ , j);
             NumericMatrix::Column outj = out( _ , j);
             std::vector<double> meanj(ng), M2j(ng), nj(ng); // faster using std::vector ??
-            long double d1j = 0;
+            // long double d1j = 0;
+            double d1j = 0;
             int ngs = 0;
             for(int i = 0; i != l; ++i) {
               if(std::isnan(M2j[g[i]-1])) continue;
@@ -538,7 +548,8 @@ NumericMatrix fscalemCpp(NumericMatrix x, int ng = 0, IntegerVector g = 0, SEXP 
             NumericMatrix::Column column = x( _ , j);
             NumericMatrix::Column outj = out( _ , j);
             int k = l-1;
-            long double sumwi = 0, meani = 0, M2i = 0, d1i = 0;
+            // long double sumwi = 0, meani = 0, M2i = 0, d1i = 0;
+            double sumwi = 0, meani = 0, M2i = 0, d1i = 0;
             while((std::isnan(column[k]) || std::isnan(wg[k])) && k!=0) --k;
             if(k != 0) {
               for(int i = k+1; i--; ) {
@@ -563,7 +574,8 @@ NumericMatrix fscalemCpp(NumericMatrix x, int ng = 0, IntegerVector g = 0, SEXP 
           for(int j = col; j--; ) {
             NumericMatrix::Column column = x( _ , j);
             NumericMatrix::Column outj = out( _ , j);
-            long double sumwi = 0, meani = 0, M2i = 0, d1i = 0;
+            // long double sumwi = 0, meani = 0, M2i = 0, d1i = 0;
+            double sumwi = 0, meani = 0, M2i = 0, d1i = 0;
             for(int i = 0; i != l; ++i) {
               if(std::isnan(column[i]) || std::isnan(wg[i])) {
                 M2i = NA_REAL;
@@ -594,7 +606,8 @@ NumericMatrix fscalemCpp(NumericMatrix x, int ng = 0, IntegerVector g = 0, SEXP 
             NumericVector M2j(ng, NA_REAL);
             // std::vector<double> M2j(ng, NA_REAL); // faster ??
             // double meanj[ng], sumwj[ng]; // stable and faster ??
-            long double d1j = 0;
+            // long double d1j = 0;
+            double d1j = 0;
             for(int i = l; i--; ) {
               if(std::isnan(column[i]) || std::isnan(wg[i])) continue;
               if(std::isnan(M2j[g[i]-1])) {
@@ -616,7 +629,8 @@ NumericMatrix fscalemCpp(NumericMatrix x, int ng = 0, IntegerVector g = 0, SEXP 
             NumericMatrix::Column column = x( _ , j);
             NumericMatrix::Column outj = out( _ , j);
             std::vector<double> M2j(ng), meanj(ng), sumwj(ng); // faster than NumericVector ??
-            long double d1j = 0;
+            // long double d1j = 0;
+            double d1j = 0;
             int ngs = 0;
             for(int i = 0; i != l; ++i) {
               if(std::isnan(M2j[g[i]-1])) continue;
@@ -939,8 +953,9 @@ List fscalelCpp(List x, int ng = 0, IntegerVector g = 0, SEXP gs = R_NilValue,
             NumericVector column = x[j]; // outj = NULL gives compile warning
             int row = column.size(), k = row-1;
             NumericVector outj = no_init_vector(row);
-            double ni = 0;
-            long double meani = 0, d1i = 0, M2i = 0;
+            // double ni = 0;
+            // long double meani = 0, d1i = 0, M2i = 0;
+            double ni = 0, meani = 0, d1i = 0, M2i = 0;
             while(std::isnan(column[k]) && k!=0) --k;
             if(k != 0) {
               for(int i = k+1; i--; ) {
@@ -966,8 +981,9 @@ List fscalelCpp(List x, int ng = 0, IntegerVector g = 0, SEXP gs = R_NilValue,
             NumericVector column = x[j]; //  outj = NULL; gives compile warning
             int row = column.size();
             NumericVector outj = no_init_vector(row);
-            double ni = 0;
-            long double meani = 0, d1i = 0, M2i = 0;
+            // double ni = 0;
+            // long double meani = 0, d1i = 0, M2i = 0;
+            double ni = 0, meani = 0, d1i = 0, M2i = 0;
             for(int i = 0; i != row; ++i) {
               if(std::isnan(column[i])) {
                 M2i = NA_REAL;
@@ -998,7 +1014,8 @@ List fscalelCpp(List x, int ng = 0, IntegerVector g = 0, SEXP gs = R_NilValue,
             NumericVector M2j(ng, NA_REAL);
             // std::vector<double> M2j(ng, NA_REAL); // faster and stable ??
             // double meanj[ng], nj[ng];
-            long double d1j = 0;
+            // long double d1j = 0;
+            double d1j = 0;
             for(int i = gss; i--; ) {
               if(std::isnan(column[i])) continue;
               if(std::isnan(M2j[g[i]-1])) {
@@ -1023,7 +1040,8 @@ List fscalelCpp(List x, int ng = 0, IntegerVector g = 0, SEXP gs = R_NilValue,
             if(gss != column.size()) stop("length(g) must match nrow(X)");
             NumericVector outj = no_init_vector(gss);
             std::vector<double> meanj(ng), M2j(ng), nj(ng); // faster than NumericVector ??
-            long double d1j = 0;
+            // long double d1j = 0;
+            double d1j = 0;
             int ngs = 0;
             {
               for(int i = 0; i != gss; ++i) {
@@ -1060,7 +1078,8 @@ List fscalelCpp(List x, int ng = 0, IntegerVector g = 0, SEXP gs = R_NilValue,
             if(wgs != column.size()) stop("length(w) must match nrow(X)");
             NumericVector outj = no_init_vector(wgs);
             int k = wgs-1;
-            long double sumwi = 0, meani = 0, M2i = 0, d1i = 0;
+            // long double sumwi = 0, meani = 0, M2i = 0, d1i = 0;
+            double sumwi = 0, meani = 0, M2i = 0, d1i = 0;
             while((std::isnan(column[k]) || std::isnan(wg[k])) && k!=0) --k;
             if(k != 0) {
               for(int i = k+1; i--; ) {
@@ -1087,7 +1106,8 @@ List fscalelCpp(List x, int ng = 0, IntegerVector g = 0, SEXP gs = R_NilValue,
             NumericVector column = x[j]; //  outj = NULL; gives compile warning
             if(wgs != column.size()) stop("length(w) must match nrow(X)");
             NumericVector outj = no_init_vector(wgs);
-            long double sumwi = 0, meani = 0, M2i = 0, d1i = 0;
+            // long double sumwi = 0, meani = 0, M2i = 0, d1i = 0;
+            double sumwi = 0, meani = 0, M2i = 0, d1i = 0;
             for(int i = 0; i != wgs; ++i) {
               if(std::isnan(column[i]) || std::isnan(wg[i])) {
                 M2i = NA_REAL;
@@ -1121,7 +1141,8 @@ List fscalelCpp(List x, int ng = 0, IntegerVector g = 0, SEXP gs = R_NilValue,
             NumericVector M2j(ng, NA_REAL);
             // std::vector<double> M2j(ng, NA_REAL); // faster and stable ??
             // double meanj[ng], sumwj[ng];
-            long double d1j = 0;
+            // long double d1j = 0;
+            double d1j = 0;
             for(int i = gss; i--; ) {
               if(std::isnan(column[i]) || std::isnan(wg[i])) continue;
               if(std::isnan(M2j[g[i]-1])) {
@@ -1147,7 +1168,8 @@ List fscalelCpp(List x, int ng = 0, IntegerVector g = 0, SEXP gs = R_NilValue,
             if(gss != column.size()) stop("length(g) must match nrow(X)");
             NumericVector outj = no_init_vector(gss);
             std::vector<double> M2j(ng), meanj(ng), sumwj(ng); // faster than NumericVector??
-            long double d1j = 0;
+            // long double d1j = 0;
+            double d1j = 0;
             int ngs = 0;
             {
               for(int i = 0; i != gss; ++i) {

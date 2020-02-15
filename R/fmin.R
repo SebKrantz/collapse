@@ -108,7 +108,7 @@ fmin.data.frame <- function(x, g = NULL, TRA = NULL, na.rm = TRUE, use.g.names =
 fmin.grouped_df <- function(x, TRA = NULL, na.rm = TRUE, use.g.names = FALSE, keep.group_vars = TRUE, ...) {
   if(!missing(...)) stop("Unknown argument ", dotstostr(...))
   g <- GRP.grouped_df(x)
-  gn <- which(names(x) %in% g[[5L]])
+  gn <- which(attr(x, "names") %in% g[[5L]])
   nTRAl <- is.null(TRA)
   gl <- length(gn) > 0L
   if(gl || nTRAl) {

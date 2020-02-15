@@ -20,9 +20,17 @@ vlabels <- function(X, attrn = "label") {
   }
   X
 }
+pasteclass <- function(x) paste(class(x), collapse = " ")
+vclasses <- function(X) {
+  if(is.atomic(X)) return(pasteclass(X))
+  vapply(X, pasteclass, character(1))
+}
+vtypes <- function(X) {
+  if(is.atomic(X)) return(typeof(X))
+  vapply(X, typeof, character(1))
+}
 namlab <- function(X, class = FALSE, attrn = "label") {
-  pasteclass <- function(x) paste(class(x), collapse = " ")
-  res <- if(class) list(names(X), vapply(X, pasteclass, character(1)), vlabels(X, attrn)) else list(names(X), vlabels(X, attrn))
+  res <- if(class) list(attr(X, "names"), vapply(X, pasteclass, character(1)), vlabels(X, attrn)) else list(attr(X, "names"), vlabels(X, attrn))
   attributes(res) <- list(names = if(class) c("Variable","Class","Label") else c("Variable","Label"),
                           row.names = .set_row_names(length(X)),
                           class = "data.frame")
@@ -35,6 +43,15 @@ add_stub <- function(X, stub, pre = TRUE) {
     dn <- dimnames(X)
     dimnames(X) <- list(dn[[1L]], if(pre) paste0(stub, dn[[2L]]) else paste0(dn[[2L]], stub))
   } else attr(X, "names") <- if(pre) paste0(stub, attr(X, "names")) else paste0(attr(X, "names"), stub)
+  X
+}
+rm_stub <- function(X, stub, ...) {
+  if(!is.character(stub)) return(X)
+  if(is.array(X)) {
+    if(length(dim(X)) > 2L) stop("Can't remove stub from higher dimensional arrays!")
+    dn <- dimnames(X)
+    dimnames(X) <- list(dn[[1L]], sub(stub, "", dn[[2L]], ...)) # use ^ or $ to restrict to pre or port matching.
+  } else attr(X, "names") <- sub(stub, "", attr(X, "names"), ...)
   X
 }
 seq_row <- function(X) seq_len(nrow(X))
@@ -51,11 +68,6 @@ setDimnames <- function(object = dn, dn) {
   dimnames(object) <- dn
   object
 }
-pwcor <- function(X, ...) `class<-`(cor(X, ..., use = "pairwise.complete.obs"), c("pwcor","matrix"))
-pwcov <- function(X, ...) `class<-`(cov(X, ..., use = "pairwise.complete.obs"), c("pwcov","matrix"))
-print.pwcov <- print.qsu
-print.pwcor <- function(x, digits = 2) print.table(dapply(round(x, digits), function(j) sub("^(-?)0.", "\\1.", j)), right = TRUE) # print.table(, right = TRUE)
-
 all_identical <- function(...) {
   if(length(match.call())-1L == 1L && is.list(...)) { # https://stackoverflow.com/questions/44011918/count-number-of-arguments-passed-to-function
     all(unlist(lapply(...[-1L], identical, ...[[1L]]), use.names = FALSE)) # use vapply ??
@@ -92,14 +104,15 @@ na_insert <- function(X, prop = 0.1) {
 }
 fnlevels <- function(x) length(attr(x, "levels")) # make cpp version ?? -> nope, slower !!
 as.numeric_factor <- function(X) {
-  if(is.list(X)) {
+  if(is.atomic(X)) return(as.numeric(attr(X, "levels"))[X])
+
     fcts <- vapply(X, is.factor, TRUE, USE.NAMES = FALSE)
-    get_vars(X, fcts) <- lapply(colsubset(X, fcts), function(x) as.numeric(attr(x, "levels"))[x])
-    return(X)
-  } else return(as.numeric(attr(X, "levels"))[X])
+    # if(all(fcts)) return(dapply(X, function(x) as.numeric(attr(x, "levels"))[x]))
+    clx <- class(X)
+    class(X) <- NULL
+    X[fcts] <- lapply(X[fcts], function(x) as.numeric(attr(x, "levels"))[x])
+    return(`oldClass<-`(X, clx))
 }
-
-
 
 
 setRow.names <- function(df, nm) {
@@ -164,6 +177,14 @@ colsubset <- function(x, ind) { # also works for grouped tibbles !!
   ax[["names"]] <- ax[["names"]][ind]
   return(.Call(Cpp_setAttributes, x[ind], ax)) # return(`attributes<-`(x[ind], ax)) # This is slow on large data -> a lot of checks !!!
 }
+colsubsetFUN <- function(x, FUN) {
+  ax <- attributes(x)
+  attributes(x) <- NULL
+  ind <- vapply(x, FUN, TRUE, USE.NAMES = FALSE)
+  ax[["names"]] <- ax[["names"]][ind]
+  return(.Call(Cpp_setAttributes, x[ind], ax))
+}
+
 
 at2GRP <- function(x) {
   if(is.nmfactor(x))

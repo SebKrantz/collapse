@@ -39,5 +39,26 @@ This dataset contains 4 indicators from the World Bank's World Development Indic
 }
 \examples{
 data(wlddev)
+
+# Panel-summarizing the 4 series
+qsu(wlddev, pid = ~iso3c, cols = 9:12, vlabels = TRUE)
+
+# By Region
+qsu(wlddev, by = ~region, cols = 9:12, vlabels = TRUE)
+
+# Panel-summary by region
+qsu(wlddev, by = ~region, pid = ~iso3c, cols = 9:12, vlabels = TRUE)
+
+# Pairwise correlations: Ovarall
+print(pwcor(get_vars(wlddev, 9:12), N = TRUE, P = TRUE), show = "lower.tri")
+
+# Pairwise correlations: Between Countries
+print(pwcor(fmean(get_vars(wlddev, 9:12), wlddev$iso3c), N = TRUE, P = TRUE), show = "lower.tri")
+
+# Pairwise correlations: Within Countries
+print(pwcor(fwithin(get_vars(wlddev, 9:12), wlddev$iso3c), N = TRUE, P = TRUE), show = "lower.tri")
+
 }
+
+
 \keyword{datasets}

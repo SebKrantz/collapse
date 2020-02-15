@@ -9,7 +9,7 @@
 Transform Data by (Groupwise) Replacing or Sweeping out Statistics
 }
 \description{
-\code{TRA} is an S3 generic that efficiently transforms data by either (column-wise) replacing data values with supplied statistics or sweeping the statistics out of the data. \code{TRA} supports grouped operations and data frame's, and is thus a generalization of \code{base::sweep}.
+\code{TRA} is an S3 generic that efficiently transforms data by either (column-wise) replacing data values with supplied statistics or sweeping the statistics out of the data. \code{TRA} supports grouped operations and data frame's, and is thus a generalization of \code{\link{sweep}}.
 }
 \usage{
 TRA(x, STATS, FUN = "-", ...)

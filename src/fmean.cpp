@@ -10,7 +10,8 @@ NumericVector fmeanCpp(const NumericVector& x, int ng = 0, const IntegerVector& 
     if (ng == 0) {
       if(narm) {
         int j = l-1, n = 1; // 1 because for-loop starts from 2
-        long double sum = x[j];
+        // long double sum = x[j];
+        double sum = x[j];
         while(std::isnan(sum) && j!=0) sum = x[--j];
         if(j != 0) for(int i = j; i--; ) {
           if(std::isnan(x[i])) continue;
@@ -18,9 +19,10 @@ NumericVector fmeanCpp(const NumericVector& x, int ng = 0, const IntegerVector& 
           ++n;
         }
         sum = sum/n;
-        return NumericVector::create((double)sum);
+        return NumericVector::create(sum); // :create((double)sum)
       } else {
-        long double sum = 0;
+        // long double sum = 0;
+        double sum = 0;
         for(int i = 0; i != l; ++i) {
           if(std::isnan(x[i])) {
             sum = x[i];
@@ -30,7 +32,7 @@ NumericVector fmeanCpp(const NumericVector& x, int ng = 0, const IntegerVector& 
           }
         }
         sum = sum/l;
-        return NumericVector::create((double)sum);
+        return NumericVector::create(sum); // :create((double)sum)
       }
     } else { // with groups
       if(g.size() != l) stop("length(g) must match nrow(X)");
@@ -98,16 +100,18 @@ NumericVector fmeanCpp(const NumericVector& x, int ng = 0, const IntegerVector& 
       if(narm) {
         int j = l-1; // 1 because for-loop starts from 2
         while((std::isnan(x[j]) || std::isnan(wg[j])) && j!=0) --j; // This does not make a difference in performance but is more parsimonious.
-        long double sum = x[j]*wg[j], sumw = wg[j];
+        // long double sum = x[j]*wg[j], sumw = wg[j];
+        double sum = x[j]*wg[j], sumw = wg[j];
         if(j != 0) for(int i = j; i--; ) {
           if(std::isnan(x[i]) || std::isnan(wg[i])) continue;
           sum += x[i]*wg[i]; // Fastest ??
           sumw += wg[i];
         }
         sum = sum/sumw;
-        return NumericVector::create((double)sum);
+        return NumericVector::create(sum); // :create((double)sum)
       } else {
-        long double sum = 0, sumw = 0;
+        // long double sum = 0, sumw = 0;
+        double sum = 0, sumw = 0;
         for(int i = 0; i != l; ++i) {
           if(std::isnan(x[i]) || std::isnan(wg[i])) { // good, check both ?? -> yes!!
             sum = x[i]+wg[i];
@@ -118,7 +122,7 @@ NumericVector fmeanCpp(const NumericVector& x, int ng = 0, const IntegerVector& 
           }
         }
         sum = sum/sumw;
-        return NumericVector::create((double)sum);
+        return NumericVector::create(sum); // :create((double)sum)
       }
     } else { // with groups
       if(g.size() != l) stop("length(g) must match nrow(X)");
@@ -177,7 +181,8 @@ SEXP fmeanmCpp(const NumericMatrix& x, int ng = 0, const IntegerVector& g = 0, c
         for(int j = col; j--; ) { // Instead Am(j,_) you can use Am.row(j).
           NumericMatrix::ConstColumn column = x( _ , j);
           int k = l-1, nj = 1;
-          long double sumj = column[k];
+          // long double sumj = column[k];
+          double sumj = column[k];
           while(std::isnan(sumj) && k!=0) sumj = column[--k];
           if(k != 0) for(int i = k; i--; ) {
             if(std::isnan(column[i])) continue;
@@ -185,12 +190,13 @@ SEXP fmeanmCpp(const NumericMatrix& x, int ng = 0, const IntegerVector& g = 0, c
             ++nj;
           }
           sumj = sumj/nj;
-          sum[j] = (double)sumj;
+          sum[j] = sumj; // (double)sumj;
         }
       } else {
         for(int j = col; j--; ) {
           NumericMatrix::ConstColumn column = x( _ , j);
-          long double sumj = 0;
+          // long double sumj = 0;
+          double sumj = 0;
           for(int i = 0; i != l; ++i) {
             if(std::isnan(column[i])) {
               sumj = column[i];
@@ -200,7 +206,7 @@ SEXP fmeanmCpp(const NumericMatrix& x, int ng = 0, const IntegerVector& g = 0, c
             }
           }
           sumj = sumj/l;
-          sum[j] = (double)sumj;
+          sum[j] = sumj; // (double)sumj;
         }
       }
       if(drop) sum.attr("names") = colnames(x); // Slight speed loss 31 to 34 milliseconds on WDIM, but doing it in R not faster !!
@@ -300,19 +306,21 @@ SEXP fmeanmCpp(const NumericMatrix& x, int ng = 0, const IntegerVector& g = 0, c
           NumericMatrix::ConstColumn column = x( _ , j);
           int k = l-1;
           while((std::isnan(column[k]) || std::isnan(wg[k])) && k!=0) --k;
-          long double sumj = column[k]*wg[k], sumwj = wg[k];
+          // long double sumj = column[k]*wg[k], sumwj = wg[k];
+          double sumj = column[k]*wg[k], sumwj = wg[k];
           if(k != 0) for(int i = k; i--; ) {
             if(std::isnan(column[i]) || std::isnan(wg[i])) continue;
             sumj += column[i]*wg[i];
             sumwj += wg[i];
           }
           sumj = sumj/sumwj;
-          sum[j] = (double)sumj;
+          sum[j] = sumj; // (double)sumj;
         }
       } else {
         for(int j = col; j--; ) {
           NumericMatrix::ConstColumn column = x( _ , j);
-          long double sumj = 0, sumwj = 0;
+          // long double sumj = 0, sumwj = 0;
+          double sumj = 0, sumwj = 0;
           for(int i = 0; i != l; ++i) {
             if(std::isnan(column[i]) || std::isnan(wg[i])) {
               sumj = column[i]+wg[i];
@@ -323,7 +331,7 @@ SEXP fmeanmCpp(const NumericMatrix& x, int ng = 0, const IntegerVector& g = 0, c
             }
           }
           sumj = sumj/sumwj;
-          sum[j] = (double)sumj;
+          sum[j] = sumj; // (double)sumj;
         }
       }
       if(drop) sum.attr("names") = colnames(x); // Slight speed loss 31 to 34 milliseconds on WDIM, but doing it in R not faster !!
@@ -410,7 +418,8 @@ SEXP fmeanlCpp(const List& x, int ng = 0, const IntegerVector& g = 0, const SEXP
         for(int j = l; j--; ) {
           NumericVector column = x[j];
           int k = column.size()-1, ni = 1;
-          long double sumi = column[k]; // long double gives 45 instead of 35 milliseconds !!!
+          // long double sumi = column[k]; // long double gives 45 instead of 35 milliseconds !!!
+          double sumi = column[k];
           while(std::isnan(sumi) && k!=0) sumi = column[--k];
           if(k != 0) for(int i = k; i--; ) {
             if(std::isnan(column[i])) continue;
@@ -418,12 +427,13 @@ SEXP fmeanlCpp(const List& x, int ng = 0, const IntegerVector& g = 0, const SEXP
             ++ni;
           }
           sumi = sumi/ni;
-          sum[j] = (double)sumi;
+          sum[j] = sumi; // (double)sumi;
         }
       } else {
         for(int j = l; j--; ) {
           NumericVector column = x[j];
-          long double sumi = 0;
+          // long double sumi = 0;
+          double sumi = 0;
           int row = column.size();
           for(int i = 0; i != row; ++i) {
             if(std::isnan(column[i])) {
@@ -434,7 +444,7 @@ SEXP fmeanlCpp(const List& x, int ng = 0, const IntegerVector& g = 0, const SEXP
             }
           }
           sumi = sumi/row;
-          sum[j] = (double)sumi;
+          sum[j] = sumi; // (double)sumi;
         }
       }
       if(drop) {
@@ -541,20 +551,22 @@ SEXP fmeanlCpp(const List& x, int ng = 0, const IntegerVector& g = 0, const SEXP
           if(column.size() != wgs) stop("length(w) must match nrow(X)"); // Really necessary ??
           int k = wgs-1;
           while((std::isnan(column[k]) || std::isnan(wg[k])) && k!=0) --k;
-          long double sumi = column[k]*wg[k], sumwi = wg[k];
+          // long double sumi = column[k]*wg[k], sumwi = wg[k];
+          double sumi = column[k]*wg[k], sumwi = wg[k];
           if(k != 0) for(int i = k; i--; ) {
             if(std::isnan(column[i]) || std::isnan(wg[i])) continue;
             sumi += column[i]*wg[i];
             sumwi += wg[i];
           }
           sumi = sumi/sumwi;
-          sum[j] = (double)sumi;
+          sum[j] = sumi; // (double)sumi;
         }
       } else {
         for(int j = l; j--; ) {
           NumericVector column = x[j];
           if(column.size() != wgs) stop("length(w) must match nrow(X)"); // Really necessary ??
-          long double sumi = 0, sumwi = 0;
+          // long double sumi = 0, sumwi = 0;
+          double sumi = 0, sumwi = 0;
           for(int i = 0; i != wgs; ++i) {
             if(std::isnan(column[i]) || std::isnan(wg[i])) {
               sumi = column[i]+wg[i];
@@ -565,7 +577,7 @@ SEXP fmeanlCpp(const List& x, int ng = 0, const IntegerVector& g = 0, const SEXP
             }
           }
           sumi = sumi/sumwi;
-          sum[j] = (double)sumi;
+          sum[j] = sumi; // (double)sumi;
         }
       }
       if(drop) {
