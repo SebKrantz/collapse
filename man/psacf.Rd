@@ -17,7 +17,7 @@
 Auto- and Cross- Covariance and -Correlation Function Estimation for Panel-Series
 }
 \description{
-\code{psacf}, \code{pspacf} and \code{psccf} compute (and by default plot) estimates of the auto-, partial auto- and cross- correlation or covariance functions for panel-vectors and \code{plm::pseries}. They are faithful analogues to \code{stats::acf}, \code{stats::pacf} and \code{stats::ccf}.
+\code{psacf}, \code{pspacf} and \code{psccf} compute (and by default plot) estimates of the auto-, partial auto- and cross- correlation or covariance functions for panel-vectors and \code{plm::pseries}. They are analogues to \code{stats::acf}, \code{stats::pacf} and \code{stats::ccf}.
 }
 \usage{
 psacf(x, \dots)
@@ -74,6 +74,8 @@ An object of class "acf", see ?stats::acf. The result is returned invisibly if p
 %%  ~~who you are~~
 % }
 \note{
+% \code{psacf} does not compute the true ACF defined as dividing the autocorvariance function of \code{x} by the variance of \code{x}. Rather, for reasons having to do with computational efficiency and assuming use on larger panel-vectors, \code{psacf} simply uses \code{stats::cor} to correlate \code{x} with it's lags (thus dividing the autocovariance by the product of the standard deviations of \code{x} and it's lag).
+
 For \code{plm::pseries} and \code{plm::pdata.frame}, the first index variable is taken to be the group-id and the second the time variable. If more than 2 index variables are attached to \code{plm::pseries}, the last one is taken as the time variable and the others are taken as group-id's and interacted.
 
 The \code{pdata.frame} method only works for properly subsetted objects of class 'pdata.frame'. A list of 'pseries' won't work.

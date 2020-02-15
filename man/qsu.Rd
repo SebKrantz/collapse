@@ -12,7 +12,7 @@
 Fast (Grouped, Weighted) Summary Statistics for Cross-Sectional and Panel-Data
 }
 \description{
-\code{qsu}, shorthand for quick-summary is an extremely fast summary command inspired by the (xt)summarize command in the STATA statistical software.
+\code{qsu}, shorthand for quick-summary, is an extremely fast summary command inspired by the (xt)summarize command in the STATA statistical software.
 
 It computes a set of 7 statistics (nobs, mean, sd, min, max, skewness and kurtosis) using a numerically stable one-pass method generalized from Welford's Algorithm. Statistics can be computed weighted, by groups, and also within-and between entities (for panel-data, see Details).
 }
@@ -32,7 +32,8 @@ It computes a set of 7 statistics (nobs, mean, sd, min, max, skewness and kurtos
     higher = FALSE, array = TRUE, vlabels = FALSE, \dots)
 
 
-\method{print}{qsu}(x, digits = 2, nonsci.digits = 9, na.print = "-", return = FALSE, \dots)
+\method{print}{qsu}(x, digits = 2, nonsci.digits = 9, na.print = "-",
+      return = FALSE, print.gap = 2, \dots)
 }
 %- maybe also 'usage' for other objects documented here.
 \arguments{
@@ -51,6 +52,7 @@ It computes a set of 7 statistics (nobs, mean, sd, min, max, skewness and kurtos
   \item{nonsci.digits}{the number of digits to print before resorting to scientific notation (default is to print out numbers with up to 9 digits and print larger numbers scientifically).}
   \item{na.print}{character string to substitute for missing values.}
   \item{return}{logical. Don't print but instead return the formatted object.}
+  \item{print.gap}{integer. Spacing between printed columns. Passed to \code{print.default}.}
 }
 \details{
 The algorithm used to compute statistics is well described \href{https://en.wikipedia.org/wiki/Algorithms_for_calculating_variance}{here} (see sections \emph{Welford's online algorithm}, \emph{Weighted incremental algorithm} and \emph{Higher-order statistics}. Skewness and kurtosis are calculated as described in \code{Higher-order statistics} and are mathematically identical to those implemented in the \code{moments} package. Just note that \code{qsu} computes the kurtosis (like \code{momens::kurtosis}), not the excess-kurtosis (=  kurtosis - 3) defined in \code{Higher-order statistics}. The \emph{Weighted incremental algorithm} described can easily be generalized to higher-order statistics).
@@ -84,7 +86,7 @@ If weights \code{w} are used together with \code{pid}, transformed data is compu
 %% ~Make other sections like Warning with \section{Warning }{....} ~
 
 \seealso{
-\code{\link{pwcor}}, \link[=A1-fast-statistical-functions]{Fast Statistical Functions}, \link[=collapse-documentation]{Collapse Overview}  %% ~~objects to See Also as \code{\link{help}}, ~~~
+\code{\link{descr}}, \code{\link{pwcor}}, \link[=A1-fast-statistical-functions]{Fast Statistical Functions}, \link[=collapse-documentation]{Collapse Overview}  %% ~~objects to See Also as \code{\link{help}}, ~~~
 }
 \examples{
 

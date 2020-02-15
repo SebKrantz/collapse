@@ -6,7 +6,7 @@
 \alias{fsum.grouped_df}
 \title{Fast (Grouped) Sum for Matrix-Like Objects}  % Vectors, Matrix and Data Frame Columns}
 \description{
-\code{fsum} is a generic function that computes the (column-wise) sum of all values in \code{x}, (optionally) grouped by \code{g}. The \code{TRA} argument can further be used to transform \code{x} using its (grouped) sum.
+\code{fsum} is a generic function that computes the (column-wise) sum of all values in \code{x}, (optionally) grouped by \code{g}. The \code{\link{TRA}} argument can further be used to transform \code{x} using its (grouped) sum.
 }
 \usage{
 fsum(x, ...)
