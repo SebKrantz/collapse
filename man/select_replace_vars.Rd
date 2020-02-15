@@ -1,30 +1,39 @@
 \name{A3-select-replace-vars}
 \alias{A3-select-replace-vars}
 \alias{get_vars}
+\alias{gv}
 \alias{num_vars}
+\alias{nv}
 \alias{cat_vars}
 \alias{char_vars}
 \alias{fact_vars}
 \alias{logi_vars}
 \alias{Date_vars}
 \alias{get_vars<-}
+\alias{gv<-}
 \alias{num_vars<-}
+\alias{nv<-}
 \alias{cat_vars<-}
 \alias{char_vars<-}
 \alias{fact_vars<-}
 \alias{logi_vars<-}
 \alias{Date_vars<-}
+\alias{add_vars<-}
+\alias{av<-}
 %- Also NEED an '\alias' for EACH other topic documented here.
 \title{Quick Select and Replace Data Frame Columns} % by Type, Function or Regular Expression}
 \description{
-Efficiently select or replace a subset of columns from a data frame. This can be done by data type, or using column names, indices, logical vectors, functions or regular expressions.
+Efficiently select and replace (or add) a subset of columns from (to) a data frame. This can be done by data type, or using column names, indices, logical vectors, functions or regular expressions.
 
-The performance is generally faster and more secure than \code{`[`} (secure w.r.t. redefinitions of \code{`[.data.frame`} or \code{`[<-.data.frame`} for other classes and preventing the loss of attributes, but not in the sense of performing all kinds of costly checks in the presence of malformed data.frame's).
+The performance is generally faster than \code{`[`}. It is also secure w.r.t. redefinitions of \code{`[.data.frame`} or \code{`[<-.data.frame`} for other classes (i.e. data.table's, tibbles etc.) and prevents the loss of attributes, but does not offer a lot of security in terms of performing all kinds of costly checks on the data.frame's or when lists of unequal-length columns are offered as replacements.
 }
 \usage{
 ## Select and replace columns by data type
+
 num_vars(x, return = c("data","names","indices","named_indices"))
+      nv(x, return = c("data","names","indices","named_indices")) # Short for num_vars
 num_vars(x) <- value
+      nv(x) <- value                                              # Short for num_vars<-
 cat_vars(x, return = c("data","names","indices","named_indices"))
 cat_vars(x) <- value
 char_vars(x, return = c("data","names","indices","named_indices"))
@@ -38,14 +47,25 @@ Date_vars(x) <- value
 
 ## Select and replace columns by names, indices, logical vectors,
 ## regular expressions or using other functions to identify columns
+
 get_vars(x, vars, return = c("data","names","indices","named_indices"),
          regex = FALSE, ...)
+      gv(x, vars, return = c("data","names","indices","named_indices"),
+         regex = FALSE, ...)                                      # Short for get_vars
 get_vars(x, vars, regex = FALSE, ...) <- value
+      gv(x, vars, regex = FALSE, ...) <- value                    # Short for get_vars<-
+
+## Add columns to data.frame
+
+add_vars(x) <- value
+      av(x) <- value             # Short for add_vars<-
+
 }
 %- maybe also 'usage' for other objects documented here.
 \arguments{
-  \item{x}{a data.frame. \emph{Note}: Functions also work with data.table's etc... as long as \code{x} is a list and \code{!is.null(dim(x))}.}
-  \item{value}{a data.frame or list of columns whose dimensions exactly match those of the extracted subet of \code{x}.}
+% \emph{Note}: Functions also work with data.table's etc... as long as \code{x} is a list and \code{!is.null(dim(x))}.}
+  \item{x}{a data.frame.}
+  \item{value}{a data.frame or list of columns whose dimensions exactly match those of the extracted subet of \code{x}. If only 1 variable is in the subet of \code{x}, \code{value} can also be an atomic vector or matrix, provided that \code{NROW(value) == nrow(x)}.}
   \item{vars}{a vector of column names, indices (can be negative), a suitable logical vector, a vector of regular expressions matching column names if \code{regex = TRUE}, or a function returning \code{TRUE} or \code{FALSE} when applied to the columns of \code{x}.}
   \item{return}{an integer or string specifying what to return. The options are:
   \enumerate{
@@ -54,7 +74,7 @@ get_vars(x, vars, regex = FALSE, ...) <- value
   \item "indices"\cr
   \item "named_indices"
   }
-  \emph{Note}: replacement functions currently only replace data, not column names or indices (ordering). However column names are replaced together with the data.
+  \emph{Note}: replacement functions only replace data, not column names or indices (ordering). However column names are replaced together with the data.
   }
 \item{regex}{logical. \code{TRUE} will do regular expression search on the column names of \code{x} using a (vector of) regular expression(s) passed to \code{vars}.}
 \item{...}{further arguments passed to \code{\link{grep}}, if \code{regex = TRUE}.}
