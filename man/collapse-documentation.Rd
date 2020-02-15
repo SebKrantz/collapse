@@ -34,7 +34,7 @@ The following table fully summarizes the contents of \code{\link{collapse}}. The
 
 \link[=A9-summary-statistics]{Summary Statistics} \tab\tab Extremely fast (one-pass, grouped and weighted), summary statistics for cross-sectional and complex multilevel / panel data, with additional methods for pseries and pdata.frame (\code{plm}). Efficient detailed description of data.frame. Pairwise correlations and covariances (with observation count, p-value and pretty printing), pairwise observation count. \tab\tab \code{\link{qsu}}, \code{\link{descr}}, \code{\link{pwcor}}, \code{\link{pwcov}}, \code{\link{pwNobs}} \cr \cr \cr \cr
 
-%  (within- and between-groups)
+%  (within- and between-groups) ww
 
 %Visual Data Exploration \tab\tab Pretty (grouped, weighted, and panel-decomposed) histogram-, density-, scatter- and correlation plots \tab\tab histplot, densplot, scplot, corplot \cr
 
