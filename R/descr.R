@@ -2,7 +2,7 @@
 
 # Could make label attribute optional !!
 descr <- function(X, Ndistinct = TRUE, higher = TRUE, table = TRUE,
-                  Qprobs = c(0.01, 0.05, 0.25, 0.5, 0.75, 0.95, 0.99),
+                  Qprobs = c(0.01, 0.05, 0.25, 0.5, 0.75, 0.95, 0.99), cols = NULL,
                   label.attr = 'label', ...) {
   nam <- deparse(substitute(X))
 
@@ -18,10 +18,12 @@ descr <- function(X, Ndistinct = TRUE, higher = TRUE, table = TRUE,
   # Could make this more efficient ???
   descrcat <- function(x, tab = table) if(tab) list(Class = class(x), Label = attr(x, label.attr),
                                                     Stats = if(Ndistinct) c(N = fNobsCpp(x), Ndist = fNdistinctCpp(x)) else `names<-`(fNobsCpp(x), 'Nobs'),
-                                                    Table = table(x)) else
+                                                    Table = fNobs.default(x, x)) else # table(x). FNobs is a lot Faster, but includes NA as level !!
                                                       list(Class = class(x), Label = attr(x, label.attr),
                                                            Stats = if(Ndistinct) c(N = fNobsCpp(x), Ndist = fNdistinctCpp(x)) else `names<-`(fNobsCpp(x), 'Nobs'))
   class(X) <- NULL
+  if(!is.list(X)) X <- qDF(X)
+  if(!is.null(cols)) X <- X[cols2int(cols, X, attr(X, "names"))]
   res <- vector('list', length(X))
   num <- vapply(X, is.numeric, TRUE, USE.NAMES = FALSE)
   res[num] <- lapply(X[num], descrnum, ...)
@@ -39,8 +41,6 @@ descr <- function(X, Ndistinct = TRUE, higher = TRUE, table = TRUE,
 }
 
 print.descr <- function(x, n = 6, perc = TRUE, summary = TRUE, ...) {
-  tabbperc <- if(perc) function(t) `names<-`(paste0(t," (",round(t/sum(t)*100,1),"%)"), names(t)) else
-    function(t) `names<-`(unclass(t), names(t))
   w <- paste(rep("-", .Options$width), collapse = "")
   nam <- names(x)
   arstat <- attr(x, "arstat")
@@ -56,12 +56,23 @@ print.descr <- function(x, n = 6, perc = TRUE, summary = TRUE, ...) {
       if(arstat) cat("\n")
       cat(namxi[4L], ": \n", sep = "")
       if(namxi[4L] == "Table") {
-        if(length(xi[[4L]]) <= 2*n) print.table(tabbperc(xi[[4L]])) else {
-          t <- unclass(xi[[4L]])
+        t <- unclass(xi[[4L]])
+        if(length(t) <= 2*n) {
+          if(perc) print.default(formatC(rbind(Freq = t, Perc = round(t/sum(t)*100,2)), drop0trailing = TRUE), right = TRUE, quote = FALSE, print.gap = 2) else print.table(t)
+        } else {
           lt <- length(t)
-          print.table(tabbperc(t[seq_len(n)]))
-          cat("  ---\n")
-          print.table(tabbperc(t[seq(lt-n, lt)]))
+          t1 <- t[seq_len(n)]
+          t2 <- t[seq(lt-n, lt)]
+          if(perc) {
+            st <- sum(t)
+            print.default(formatC(rbind(Freq = t1, Perc = round(t1/st*100,2)), drop0trailing = TRUE), right = TRUE, quote = FALSE, print.gap = 2)
+            cat("  ---\n")
+            print.default(formatC(rbind(Freq = t2, Perc = round(t2/st*100,2)), drop0trailing = TRUE), right = TRUE, quote = FALSE, print.gap = 2)
+          } else {
+            print.table(t1)
+            cat("  ---\n")
+            print.table(t2)
+          }
           if(summary) {
             cat("\nSummary of Table: \n")
             print.summaryDefault(summary.default(t))
