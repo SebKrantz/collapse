@@ -13,7 +13,7 @@ Detailed Statistical Description of Data Frame
 \usage{
 descr(X, Ndistinct = TRUE, higher = TRUE, table = TRUE,
       Qprobs = c(0.01, 0.05, 0.25, 0.5, 0.75, 0.95, 0.99),
-      label.attr = "label", ...)
+      cols = NULL, label.attr = "label", ...)
 
 \method{print}{descr}(x, n = 6, perc = TRUE, summary = TRUE, ...)
 
@@ -22,7 +22,7 @@ descr(X, Ndistinct = TRUE, higher = TRUE, table = TRUE,
 %- maybe also 'usage' for other objects documented here.
 \arguments{
   \item{X}{
-a data.frame or list of atomic vectors.
+a data.frame or list of atomic vectors. Atomic vectors, matrices or arrays can be passed but will first be coerced to data.frame using \code{\link{qDF}}.
 }
   \item{Ndistinct}{
 logical. \code{TRUE} (default) computes the number of distinct values on all variables using \code{\link{fNdistinct}}.
@@ -35,6 +35,9 @@ logical. \code{TRUE} (default) calls \code{\link{table}} on all categorical vari
 }
   \item{Qprobs}{
 probabilities for quantiles to compute on numeric variables, passed down to \code{\link{quantile}}. If something non-numeric is passed (i.e. \code{NULL}, \code{FALSE}, \code{NA}, \code{""} etc.), no quantiles are computed.
+}
+  \item{cols}{
+select columns to describe using column names, indices or a function (i.e. \code{is.numeric}).
 }
   \item{label.attr}{
 character. The name of a label attribute to display for each variable (if variables are labeled).

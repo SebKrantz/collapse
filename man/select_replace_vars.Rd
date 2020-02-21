@@ -55,10 +55,10 @@ get_vars(x, vars, return = c("data","names","indices","named_indices"),
 get_vars(x, vars, regex = FALSE, ...) <- value
       gv(x, vars, regex = FALSE, ...) <- value                    # Short for get_vars<-
 
-## Add columns to data.frame
+## Add columns at any position within a data.frame
 
-add_vars(x) <- value
-      av(x) <- value             # Short for add_vars<-
+add_vars(x, pos = "end") <- value
+      av(x, pos = "end") <- value             # Short for add_vars<-
 
 }
 %- maybe also 'usage' for other objects documented here.
@@ -77,6 +77,7 @@ add_vars(x) <- value
   \emph{Note}: replacement functions only replace data, not column names or indices (ordering). However column names are replaced together with the data.
   }
 \item{regex}{logical. \code{TRUE} will do regular expression search on the column names of \code{x} using a (vector of) regular expression(s) passed to \code{vars}.}
+\item{pos}{the position where colums are added in the data.frame. \code{"end"} (default) will add columns at the end (right) of the data.frame, "front" will add columns in front (left). Alternatively one can pass a vector of positions (matching \code{length(value)} if value is a list). In that case the other columns will be shifted around the new ones while maintaining their order. }
 \item{...}{further arguments passed to \code{\link{grep}}, if \code{regex = TRUE}.}
 }
 % \details{
@@ -106,12 +107,19 @@ head(get_vars(wlddev, -(9:12)))                            # All except columns 
 head(get_vars(wlddev, c("PCGDP","LIFEEX","GINI","ODA")))   # Select using column names
 head(get_vars(wlddev, "[[:upper:]]", regex = TRUE))        # Same thing: match upper-case var. names
 
-# Again simple replacement, 4-5x faster than wlddev[9:12] <- wlddev[9:12]
-get_vars(wlddev, 9:12) <- get_vars(wlddev, 9:12)
-get_vars(wlddev, 9:12) <-                                  # Standardizing columns 9 through 12
-                STD(get_vars(wlddev,9:12), wlddev$iso3c)   # Note that this also change the names
-head(wlddev)                                               # in the data, whereas wlddev[9:12] <- ..
-rm(wlddev)                                                 # replaces only data, not names!
+get_vars(wlddev, 9:12) <- get_vars(wlddev, 9:12)           # 6x faster than wlddev[9:12] <- wlddev[9:12]
+add_vars(wlddev) <- STD(gv(wlddev,9:12), wlddev$iso3c)     # Add Standardized columns 9 through 12
+head(wlddev)                                               # gv and av are shortcuts
+
+get_vars(wlddev, 13:16) <- NULL                            # Efficient Deleting added columns again
+av(wlddev, "front") <- STD(gv(wlddev,9:12), wlddev$iso3c)  # Again adding in Front
+head(wlddev)
+get_vars(wlddev, 1:4) <- NULL                              # Deleting
+av(wlddev,c(10,12,14,16)) <- W(wlddev,~iso3c, cols = 9:12, # Adding next to original variables
+                               keep.by = FALSE)
+head(wlddev)
+get_vars(wlddev, c(10,12,14,16)) <- NULL                   # Deleting
+
 }
 \keyword{manip}
 \keyword{documentation}
