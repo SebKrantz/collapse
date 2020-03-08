@@ -212,9 +212,10 @@ SEXP fsumlCpp(const List& x, int ng = 0, const IntegerVector& g = 0,
         if(gss != column.size()) stop("length(g) must match nrow(X)");
         NumericVector sumj(ng, NA_REAL);
         for(int i = gss; i--; ) {
-          if(std::isnan(column[i])) continue; // faster way to code this ??? -> Not Bad at all, 54.. millisec for WDIM
-          if(std::isnan(sumj[g[i]-1])) sumj[g[i]-1] = column[i];
-          else sumj[g[i]-1] += column[i];
+          if(!std::isnan(column[i])) { // continue; // faster way to code this ??? -> Not Bad at all, 54.. millisec for WDIM
+            if(std::isnan(sumj[g[i]-1])) sumj[g[i]-1] = column[i];
+            else sumj[g[i]-1] += column[i];
+          }
         }
         SHALLOW_DUPLICATE_ATTRIB(sumj, column);
         sum[j] = sumj;
