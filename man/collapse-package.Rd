@@ -101,7 +101,7 @@ series <- get_vars(wlddev, 9:12)
 # Replace columns, 4x faster than wlddev[9:12] <- series and also replaces names
 get_vars(wlddev, 9:12) <- series
 \donttest{
-# Fast subset by fast conversion to data.table with qDT
+# Fast conversion to data.table with qDT, and subset rows..
 library(data.table)
 qDT(wlddev)[country == "Ireland"]
 }
@@ -130,8 +130,8 @@ fmean(series, g)
 fmedian(series, g)
 fsd(series, g)
 \donttest{
-# Fast aggregations using dplyr:
-library(dplyr)
+# Faster aggregations with dplyr:
+library(dplyr) # This is a lot faster than summarize_all(mean)
 wlddev \%>\% group_by(region,income) \%>\% select(PCGDP,LIFEEX) \%>\% fmean
 }
 # qM -> quickly convert data to matrix, qDF/qDT do the reverse
@@ -182,7 +182,7 @@ head(fmedian(series, g, TRA = "-")) # De-median by region and income
 gmeds <- fmedian(series, g)         # Same thing in 2 steps
 head(TRA(series, gmeds, "-", g))
 \donttest{
-# Fast transformations using dplyr:
+# Faster transformations with dplyr:
 # (here we are demeaning PCGDP and LIFEEX using weighted means, weighted by ODA)
 wlddev \%>\% group_by(region,income) \%>\% select(PCGDP,LIFEEX,ODA) \%>\% fmean(ODA, "-")
 }
