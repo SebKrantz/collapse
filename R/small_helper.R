@@ -69,7 +69,7 @@ setDimnames <- function(object = dn, dn) {
   object
 }
 all_identical <- function(...) {
-  if(length(match.call())-1L == 1L && is.list(...)) { # https://stackoverflow.com/questions/44011918/count-number-of-arguments-passed-to-function
+  if(length(list(...)) == 1L && is.list(...)) { # if(length(match.call())-1L == 1L && is.list(...)) # https://stackoverflow.com/questions/44011918/count-number-of-arguments-passed-to-function
     all(unlist(lapply(...[-1L], identical, ...[[1L]]), use.names = FALSE)) # use vapply ??
   } else {
     l <- list(...)
@@ -103,6 +103,9 @@ na_insert <- function(X, prop = 0.1) {
   return(X)
 }
 fnlevels <- function(x) length(attr(x, "levels")) # make cpp version ?? -> nope, slower !!
+fnrow <- function(x) length(unclass(x)[[1L]])
+forder.int <- function(x) if(is.unsorted(x)) .Call(C_forder, x, NULL, FALSE, TRUE, 1L, TRUE) else seq_along(x) # since forder gives integer(0) if sorted !!
+fsetdiff <- function(x, y) x[match(x, y, 0L) == 0L] # not unique !!
 as.numeric_factor <- function(X) {
   if(is.atomic(X)) return(as.numeric(attr(X, "levels"))[X])
 
@@ -140,13 +143,14 @@ give_nam <- function(x, gn, stub) {
   x
 }
 anyNAerror <- function(x, e) if(anyNA(x)) stop(e) else x
+ckmatch <- function(x, y, e = "Unknown columns:") if(anyNA(m <- match(x, y))) stop(paste(c(e, x[is.na(m)]), collapse = " ")) else m
 cols2int <- function(cols, x, nam) {
  if(is.numeric(cols)) {
   if(max(abs(cols)) > length(x)) stop("Index out of range abs(1:length(x))")
   return(cols)
  } else if(is.function(cols))
   return(which(vapply(x, cols, TRUE))) else if(is.character(cols))
-  return(anyNAerror(match(cols, nam), "Unknown column names!")) else if(is.logical(cols)) {
+  return(ckmatch(cols, nam)) else if(is.logical(cols)) {
     if(length(cols) != length(x)) stop("Logical subsetting vector must match columns!")
     return(which(cols))
   } else stop("cols must be a function, character vector, numeric indices or logical vector!")
@@ -156,7 +160,7 @@ cols2log <- function(cols, x, nam) {
   if(is.function(cols)) return(vapply(x, cols, TRUE))
   r <- logical(length(x))
   if(is.character(cols)) {
-    r[anyNAerror(match(cols, nam), "Unknown column names!")] <- TRUE
+    r[ckmatch(cols, nam)] <- TRUE
   } else if(is.numeric(cols)) {
     if(max(abs(cols)) > length(r)) stop("Index out of range abs(1:length(x))")
     r[cols] <- TRUE
@@ -172,7 +176,7 @@ colsubset <- function(x, ind) { # also works for grouped tibbles !!
     if(length(ind) != length(x)) stop("Logical subsetting vector must match length(x)")
   } else {
     ind <- if(is.function(ind)) vapply(x, ind, TRUE, USE.NAMES = FALSE) else
-      anyNAerror(match(ind, ax[["names"]]), "Unknown column names!")
+           ckmatch(ind, ax[["names"]])
   }
   ax[["names"]] <- ax[["names"]][ind]
   return(.Call(Cpp_setAttributes, x[ind], ax)) # return(`attributes<-`(x[ind], ax)) # This is slow on large data -> a lot of checks !!!
@@ -227,6 +231,7 @@ addNA2 <- function(x) {
   x[is.na(x)] <- length(ax[["levels"]])
   return(setAttributes(x, ax))
 }
+l1orn <- function(x, name) if(length(x) == 1L) x else nam
 
 # addNA2 <- function(x) {
 #   clx <- c(class(x), "na.included")

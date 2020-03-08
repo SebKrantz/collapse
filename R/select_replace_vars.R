@@ -310,7 +310,7 @@ gv <- get_vars
     lv <- length(value)
     tl <- lv+lx
     if(!is.numeric(pos) || length(pos) != lv || max(pos) > tl) stop("pos needs to be 'end', 'front' or a suitable numeric / integer vector of positions!")
-    o <- order(c(seq_len(tl)[-pos], pos), method = "radix")
+    o <- forder.int(c(seq_len(tl)[-pos], pos))  # order(c(seq_len(tl)[-pos], pos), method = "radix")
     ax[["names"]] <- if(length(nam <- names(value)))  c(ax[["names"]], nam)[o] else
         c(ax[["names"]], paste0("V", pos))[o] # FASTER THIS WAY? -> It seems so...
     return(setAttributes(c(x, value)[o], ax)) # fastest ?? use setcolorder ?? (probably not )
@@ -333,15 +333,27 @@ gv <- get_vars
       return(setAttributes(c(list(value), x), ax))
     }
     if(!is.numeric(pos) || length(pos) > 1L || pos > lx+1L) stop("pos needs to be 'end', 'front' or a suitable numeric / integer vector of positions!")
-    o <- order(c(1:lx, pos-1), method = "radix")
+    o <- forder.int(c(1:lx, pos-1))   # order(c(1:lx, pos-1), method = "radix")
     ax[["names"]] <- c(ax[["names"]], nam)[o]
     return(setAttributes(c(x, list(value))[o], ax)) # fastest ?? use setcolorder ??? (probably not)
   }
   # return(setAttributes(res, ax))
   # return(setAttributes(x, ax))
 }
-
 "av<-" <- `add_vars<-`
+
+add_vars <- function(x, ..., pos = "end") {
+  if(length(list(...)) == 1L) return(`add_vars<-`(x, pos, ...))
+  l <- c(...)
+  if(!all(fnrow(x) == lengths(l, FALSE))) stop("if multiple arguments are passed to '...', each needs to be a data.frame/list with column-lengths matching nrow(x)")
+  return(`add_vars<-`(x, pos, l)) # very minimal !! Doesn't work for vectors etc !!
+}
+av <- add_vars
+
+# add_vars <- function(x, ..., pos = "end") `add_vars<-`(x, pos, value) # add multiple ? -> cbind alternative FOR DATA:FRAMES ????
+# nah, rather do fcbindDF... but already have qDF(c(...)) very fast !!
+
+
 
 # Previous Version:
 # "add_vars<-" <- function(x, value) {

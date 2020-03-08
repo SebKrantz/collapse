@@ -108,7 +108,7 @@ BY.data.frame <- function(X, g, FUN, ..., use.g.names = TRUE, sort = TRUE,
         res[-1L] <- aplyfun(X[-1L], splitfun)
         if(matl) {
           res <- do.call(cbind, res)
-          ax <- list(dim = lengths(dn), dimnames = dn) # c(..., ax[!(names(ax) %in% c("names","row.names","class"))]) # Don't know why one would need this!!
+          ax <- list(dim = lengths(dn, FALSE), dimnames = dn) # c(..., ax[!(names(ax) %in% c("names","row.names","class"))]) # Don't know why one would need this!!
         }
       } else {
         if(matl) {
@@ -213,7 +213,7 @@ BY.grouped_df <- function(X, FUN, ..., use.g.names = FALSE, keep.group_vars = TR
       if(is.data.frame(res)) {
         nrr <- nrow(res)
         same_size <- nrr == nrow(X)
-        if(same_size || all(nrr == lengths(groups))) {
+        if(same_size || all(nrr == lengths(groups, FALSE))) {
           if(same_size) {
             ax <- attributes(X); attributes(res) <- NULL # faster removing attributes? (yes, a tiny bit!)  also set attributes of groups NULL ?? -> Nah !!
             ax[["names"]] <- c(ax[["names"]][gn], ax[["names"]][-gn])
