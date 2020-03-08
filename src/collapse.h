@@ -149,3 +149,5 @@ RcppExport SEXP _collapse_cond_duplattributes(SEXP xSEXP, SEXP ySEXP);
 RcppExport SEXP _collapse_lassignCpp(SEXP xSEXP, SEXP sSEXP, SEXP rowsSEXP, SEXP fillSEXP);
 // fanyNAint
 // RcppExport SEXP _collapse_fanyNAint(SEXP xSEXP);
+// groups2GRP
+RcppExport SEXP _collapse_groups2GRPCpp(SEXP xSEXP, SEXP lxSEXP, SEXP gsSEXP);

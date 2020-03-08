@@ -215,9 +215,9 @@ GRP.grouped_df <- function(X, ...) {
   lg <- length(g)
   gr <- g[[lg]]
   ng <- length(gr)
-  gs <- lengths(gr) # faster sorting still ?? qsort ?? or data.table forder -> nope, slower than order !!
-  return(`class<-`(list(N.groups = ng,
-                        group.id = rep(seq_len(ng), gs)[sort.list(unlist(gr, FALSE, FALSE))], # .Internal(radixsort(TRUE, FALSE, FALSE, TRUE, .Internal(unlist(gr, FALSE, FALSE))))  #
+  gs <- lengths(gr, FALSE) # faster sorting still ?? qsort ?? or data.table forder -> nope, slower than order !!
+  return(`class<-`(list(N.groups = ng, # The cpp here speeds up things a lot !!
+                        group.id = .Call(Cpp_groups2GRP, gr, fnrow(X), gs),  # rep(seq_len(ng), gs)[order(unlist(gr, FALSE, FALSE))], # .Internal(radixsort(TRUE, FALSE, FALSE, TRUE, .Internal(unlist(gr, FALSE, FALSE))))  #
                         group.sizes = gs,
                         groups = g[-lg],
                         group.vars = names(g)[-lg],
