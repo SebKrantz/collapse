@@ -9,6 +9,8 @@
 \alias{fact_vars}
 \alias{logi_vars}
 \alias{Date_vars}
+\alias{add_vars}
+\alias{av}
 \alias{get_vars<-}
 \alias{gv<-}
 \alias{num_vars<-}
@@ -57,6 +59,8 @@ get_vars(x, vars, regex = FALSE, ...) <- value
 
 ## Add columns at any position within a data.frame
 
+add_vars(x, ..., pos = "end")
+      av(x, ..., pos = "end")               # Short for add_vars
 add_vars(x, pos = "end") <- value
       av(x, pos = "end") <- value             # Short for add_vars<-
 
@@ -78,7 +82,7 @@ add_vars(x, pos = "end") <- value
   }
 \item{regex}{logical. \code{TRUE} will do regular expression search on the column names of \code{x} using a (vector of) regular expression(s) passed to \code{vars}.}
 \item{pos}{the position where colums are added in the data.frame. \code{"end"} (default) will add columns at the end (right) of the data.frame, "front" will add columns in front (left). Alternatively one can pass a vector of positions (matching \code{length(value)} if value is a list). In that case the other columns will be shifted around the new ones while maintaining their order. }
-\item{...}{further arguments passed to \code{\link{grep}}, if \code{regex = TRUE}.}
+\item{...}{for \code{get_vars}: further arguments passed to \code{\link{grep}}, if \code{regex = TRUE}. For \code{add_vars}: Same as \code{value}. A single argument passed may also be a vector or matrix, multiple arguments must each be a list (they are combined using \code{c(...)}).}
 }
 % \details{
 % }
@@ -107,7 +111,7 @@ head(get_vars(wlddev, -(9:12)))                            # All except columns 
 head(get_vars(wlddev, c("PCGDP","LIFEEX","GINI","ODA")))   # Select using column names
 head(get_vars(wlddev, "[[:upper:]]", regex = TRUE))        # Same thing: match upper-case var. names
 
-get_vars(wlddev, 9:12) <- get_vars(wlddev, 9:12)           # 6x faster than wlddev[9:12] <- wlddev[9:12]
+get_vars(wlddev, 9:12) <- get_vars(wlddev, 9:12)           # 6x faster wlddev[9:12] <- wlddev[9:12]
 add_vars(wlddev) <- STD(gv(wlddev,9:12), wlddev$iso3c)     # Add Standardized columns 9 through 12
 head(wlddev)                                               # gv and av are shortcuts
 

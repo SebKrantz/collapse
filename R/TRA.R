@@ -61,13 +61,13 @@ TRA.grouped_df <- function(x, STATS, FUN = "-", keep.group_vars = TRUE, ...) {
   if(!missing(...)) stop("Unknown argument ", dotstostr(...))
   g <- GRP.grouped_df(x)
   if(g[[1L]] != nrow(STATS)) stop("number of groups must match nrow(STATS)")
-  namst <- names(STATS)
+  namst <- attr(STATS, "names") # faster !!
   nognst <- namst %!in% g[[5L]]
   attributes(STATS) <- NULL
-  if(anyNA(mt <- match(namst, names(x)))) stop("the variable names of x and STATS must match")
+  if(anyNA(mt <- match(namst, attr(x, "names")))) stop("the variable names of x and STATS must match")
   mt <- mt[nognst]
   get_vars(x, mt) <- .Call(Cpp_TRAl,colsubset(x, mt),STATS[nognst],g[[2L]],TRAtoInt(FUN))
-  if(!keep.group_vars) return(colsubset(x, names(x) %!in% g[[5L]]))
+  if(!keep.group_vars) return(colsubset(x, attr(x, "names") %!in% g[[5L]]))
   return(x)
 }
 
