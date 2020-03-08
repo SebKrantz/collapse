@@ -1,3 +1,6 @@
 *.html
 *.R
 collapse_intro_cache
+collapse_and_dplyr_cache
+collapse_and_plm_cache
+collapse_and_data.table_cache
