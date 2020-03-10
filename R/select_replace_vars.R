@@ -204,20 +204,19 @@ Date_vars <- function(x, return = c("data","names","indices","named_indices")) {
   return(setAttributes(x, ax))
 }
 
-
 get_vars <- function(x, vars, return = c("data","names","indices","named_indices"), regex = FALSE, ...) { # vars is a function or regex call. perhaps also do like this for lsubset and has.elem??, because if ... is in the second place, you cannot put other things
  if(!regex && !missing(...)) stop("Unknown argument ", dotstostr(...))
  switch(return[1L],
-        data = colsubset(x, if(is.character(vars) && regex) rgrep(vars, attr(x, "names"), ...) else vars),
-        names = if(is.function(vars)) names(which(vapply(x, vars, TRUE))) else if(is.character(vars) && regex)
-                                     attr(x, "names")[rgrep(vars, attr(x, "names"), ...)] else attr(x, "names")[vars],
-        indices = if(is.function(vars)) which(vapply(x, vars, TRUE, USE.NAMES = FALSE)) else if(is.character(vars) && regex)
-                   rgrep(vars, attr(x, "names"), ...) else anyNAerror(match(vars, attr(x, "names")), "Unknown column names!"), # put error !!
+        data = colsubset(x, if(regex) rgrep(vars, attr(x, "names"), ...) else vars), # if(is.character(vars) && regex): redundant...
+        names = if(is.function(vars)) names(which(vapply(x, vars, TRUE))) else if(regex) # if(is.character(vars) && regex): redundant...
+                rgrep(vars, attr(x, "names"), value = TRUE, ...) else attr(x, "names")[vars],
+        indices = if(is.function(vars)) which(vapply(x, vars, TRUE, USE.NAMES = FALSE)) else if(regex) # if(is.character(vars) && regex): redundant...
+                   rgrep(vars, attr(x, "names"), ...) else ckmatch(vars, attr(x, "names")), # put error !!
         named_indices = if(is.function(vars)) which(vapply(x, vars, TRUE)) else if(is.character(vars)) {
-                       nam <- attr(x, "names")
-                       ind <- if(regex) rgrep(vars, nam, ...) else anyNAerror(match(vars, nam), "Unknown column names!")
-                      `names<-`(ind, nam[ind])
-                      } else stop("For named indices, vars must be a function, character names or a regular expression"),
+                           nam <- attr(x, "names")
+                           ind <- if(regex) rgrep(vars, nam, ...) else ckmatch(vars, nam)
+                          `names<-`(ind, nam[ind])
+                        } else stop("For named indices, vars must be a function, character names or a regular expression"),
         stop("Unknown return option!"))
 }
 gv <- get_vars
@@ -236,8 +235,8 @@ gv <- get_vars
     vars <- which(vars)
   } else {
     if(!regex && !missing(...)) stop("Unknown argument ", dotstostr(...))
-    vars <- if(is.function(vars)) which(vapply(x, vars, TRUE, USE.NAMES = FALSE)) else if(is.character(vars) && regex)
-      rgrep(vars, ax[["names"]], ...) else anyNAerror(match(vars, ax[["names"]]), "Unknown column names!")
+    vars <- if(is.function(vars)) which(vapply(x, vars, TRUE, USE.NAMES = FALSE)) else if(regex) # if(is.character(vars) && regex): redundant...
+      rgrep(vars, ax[["names"]], ...) else ckmatch(vars, ax[["names"]])
   }
   if(is.list(value)) {
     class(value) <- NULL # fastest ??

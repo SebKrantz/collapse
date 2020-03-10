@@ -7,8 +7,8 @@ pwNobs <- function(X) { # Faster !!
     cn <- dimnames(X)[[2L]]
     X <- mctl(X)
   } else {
-    cn <- attr(X, "names")
     class(X) <- NULL
+    cn <- names(X)
   }
   n <- length(X)
   N.mat <- matrix(NA, n, n, dimnames = list(cn, cn))

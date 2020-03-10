@@ -10,12 +10,12 @@ collap <- function(X, by, FUN = fmean, catFUN = fmode, cols = NULL, custom = NUL
   customl <- !is.null(custom)
   if(!inherits(X, "data.frame")) X <- qDF(X)
   ax <- attributes(X)
-  nam <- ax[["names"]]
-  # attributes(X) <- NULL
   class(X) <- NULL
+  nam <- names(X)
+  # attributes(X) <- NULL
   # attr(X, "class") <- "data.frame" # class needed for method dispatch of fast functions, not for BY !!
 
-  aplyfun <- if(parallel) function(...) parallel::mclapply(..., mc.cores = mc.cores) else lapply
+  aplyfun <- if(parallel) function(...) mclapply(..., mc.cores = mc.cores) else lapply
 
   # identifying by and cols
   vl <- TRUE
@@ -23,12 +23,12 @@ collap <- function(X, by, FUN = fmean, catFUN = fmode, cols = NULL, custom = NUL
   if(bycalll) {
       if(length(by) == 3L) {
         v <- logical(length(X))
-        v[anyNAerror(match(all.vars(by[[2L]]), nam), "Unknown left-hand side variables selected!")] <- TRUE  # nam %in% all.vars(by[[2L]])
+        v[ckmatch(all.vars(by[[2L]]), nam)] <- TRUE  # nam %in% all.vars(by[[2L]])
         namby <- all.vars(by[[3L]])
-        numby <- anyNAerror(match(namby, nam), "Unknown 'by' columns selected!")
+        numby <- ckmatch(namby, nam)
       } else {
         namby <- all.vars(by)
-        numby <- anyNAerror(match(namby, nam), "Unknown 'by' columns selected!")
+        numby <- ckmatch(namby, nam)
         if(!customl) {
           v <- if(is.null(cols)) !logical(length(X)) else cols2log(cols, X, nam)
           v[numby] <- FALSE
@@ -201,12 +201,12 @@ collapv <- function(X, by, FUN = fmean, catFUN = fmode, cols = NULL, custom = NU
   customl <- !is.null(custom)
   if(!inherits(X, "data.frame")) X <- qDF(X)
   ax <- attributes(X)
-  nam <- ax[["names"]]
-  # attributes(X) <- NULL
   class(X) <- NULL
+  nam <- names(X)
+  # attributes(X) <- NULL
   # attr(X, "class") <- "data.frame" # class needed for method dispatch of fast functions, not for BY !!
 
-  aplyfun <- if(parallel) function(...) parallel::mclapply(..., mc.cores = mc.cores) else lapply
+  aplyfun <- if(parallel) function(...) mclapply(..., mc.cores = mc.cores) else lapply
 
   # identifying by
   numby <- cols2int(by, X, nam)

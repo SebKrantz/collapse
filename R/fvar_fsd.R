@@ -111,7 +111,7 @@ fsd.grouped_df <- function(x, w = NULL, TRA = NULL, na.rm = TRUE, use.g.names = 
                            keep.group_vars = TRUE, keep.w = TRUE, stable.algo = TRUE, ...) {
   if(!missing(...)) stop("Unknown argument ", dotstostr(...))
   g <- GRP.grouped_df(x)
-  wsym <- deparse(substitute(w))
+  wsym <- deparse(substitute(w)) # Speed up somehow ??
   nam <- attr(x, "names")
   gn2 <- gn <- which(nam %in% g[[5L]])
   nTRAl <- is.null(TRA)

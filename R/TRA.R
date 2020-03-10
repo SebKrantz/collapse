@@ -64,7 +64,7 @@ TRA.grouped_df <- function(x, STATS, FUN = "-", keep.group_vars = TRUE, ...) {
   namst <- attr(STATS, "names") # faster !!
   nognst <- namst %!in% g[[5L]]
   attributes(STATS) <- NULL
-  if(anyNA(mt <- match(namst, attr(x, "names")))) stop("the variable names of x and STATS must match")
+  mt <- ckmatch(namst, attr(x, "names"), "Variables in STATS not found in x:")
   mt <- mt[nognst]
   get_vars(x, mt) <- .Call(Cpp_TRAl,colsubset(x, mt),STATS[nognst],g[[2L]],TRAtoInt(FUN))
   if(!keep.group_vars) return(colsubset(x, attr(x, "names") %!in% g[[5L]]))

@@ -25,7 +25,7 @@ fwithin.default <- function(x, g = NULL, w = NULL, na.rm = TRUE, add.global.mean
 }
 fwithin.pseries <- function(x, effect = 1L, w = NULL, na.rm = TRUE, add.global.mean = FALSE, ...) {
   if(!missing(...)) stop("Unknown argument ", dotstostr(...))
-  g <- if(length(effect) == 1L) attr(x, "index")[[effect]] else interaction(attr(x, "index")[effect], drop = TRUE)
+  g <- if(length(effect) == 1L) unclass(attr(x, "index"))[[effect]] else interaction(unclass(attr(x, "index"))[effect], drop = TRUE)
   .Call(Cpp_BW,x,fnlevels(g),g,NULL,w,na.rm,add.global.mean,FALSE)
 }
 fwithin.matrix <- function(x, g = NULL, w = NULL, na.rm = TRUE, add.global.mean = FALSE, ...) {
@@ -54,7 +54,7 @@ fwithin.data.frame <- function(x, g = NULL, w = NULL, na.rm = TRUE, add.global.m
 }
 fwithin.pdata.frame <- function(x, effect = 1L, w = NULL, na.rm = TRUE, add.global.mean = FALSE, ...) {
   if(!missing(...)) stop("Unknown argument ", dotstostr(...))
-  g <- if(length(effect) == 1L) attr(x, "index")[[effect]] else interaction(attr(x, "index")[effect], drop = TRUE)
+  g <- if(length(effect) == 1L) unclass(attr(x, "index"))[[effect]] else interaction(unclass(attr(x, "index"))[effect], drop = TRUE)
   .Call(Cpp_BWl,x,fnlevels(g),g,NULL,w,na.rm,add.global.mean,FALSE)
 }
 fwithin.grouped_df <- function(x, w = NULL, na.rm = TRUE, add.global.mean = FALSE,
@@ -66,7 +66,7 @@ fwithin.grouped_df <- function(x, w = NULL, na.rm = TRUE, add.global.mean = FALS
   gn2 <- which(nam %in% g[[5L]])
   gn <- if(keep.group_vars) gn2 else NULL
   if(!(wsym == "NULL" || is.na(wn <- match(wsym, nam)))) {
-    w <- x[[wn]]
+    w <- unclass(x)[[wn]]
     if(any(gn2 == wn)) stop("Weights coincide with grouping variables!")
     gn2 <- c(gn2,wn)
     if(keep.w) gn <- c(gn,wn)
@@ -91,7 +91,7 @@ W.default <- function(x, g = NULL, w = NULL, na.rm = TRUE, add.global.mean = FAL
 }
 W.pseries <- function(x, effect = 1L, w = NULL, na.rm = TRUE, add.global.mean = FALSE, ...) {
   if(!missing(...)) stop("Unknown argument ", dotstostr(...))
-  g <- if(length(effect) == 1L) attr(x, "index")[[effect]] else interaction(attr(x, "index")[effect], drop = TRUE)
+  g <- if(length(effect) == 1L) unclass(attr(x, "index"))[[effect]] else interaction(unclass(attr(x, "index"))[effect], drop = TRUE)
   .Call(Cpp_BW,x,fnlevels(g),g,NULL,w,na.rm,add.global.mean,FALSE)
 }
 W.matrix <- function(x, g = NULL, w = NULL, na.rm = TRUE, add.global.mean = FALSE, stub = "W.", ...) {
@@ -106,10 +106,10 @@ W.grouped_df <- function(x, w = NULL, na.rm = TRUE, add.global.mean = FALSE,
   gn2 <- which(nam %in% g[[5L]])
   gn <- if(keep.group_vars) gn2 else NULL
   if(!(wsym == "NULL" || is.na(wn <- match(wsym, nam)))) {
-    w <- x[[wn]]
+    w <- unclass(x)[[wn]]
     if(any(gn2 == wn)) stop("Weights coincide with grouping variables!")
     gn2 <- c(gn2,wn)
-    if(keep.w) gn <- c(gn,wn)
+    if(keep.w) gn <- c(gn, wn)
   }
   if(length(gn2)) {
     if(!length(gn))
@@ -127,12 +127,12 @@ W.pdata.frame <- function(x, effect = 1L, w = NULL, cols = is.numeric, na.rm = T
   if(!missing(...)) stop("Unknown argument ", dotstostr(...))
   ax <- attributes(x)
   class(x) <- NULL
-  nam <- ax[["names"]]
-  g <- if(length(effect) == 1L) ax[["index"]][[effect]] else
-       interaction(ax[["index"]][effect], drop = TRUE)
+  nam <- names(x)
+  g <- if(length(effect) == 1L) unclass(ax[["index"]])[[effect]] else
+       interaction(unclass(ax[["index"]])[effect], drop = TRUE)
 
   if(keep.ids) {
-    gn <- which(nam %in% names(ax[["index"]]))
+    gn <- which(nam %in% attr(ax[["index"]], "names"))
     if(length(gn) && is.null(cols)) cols <- seq_along(x)[-gn]
   } else gn <- NULL
 
@@ -140,7 +140,7 @@ W.pdata.frame <- function(x, effect = 1L, w = NULL, cols = is.numeric, na.rm = T
 
   if(is.call(w)) {
     w <- all.vars(w)
-    wn <- anyNAerror(match(w, nam), "Unknown weight variable!")
+    wn <- ckmatch(w, nam)
     w <- x[[wn]]
     cols <- if(is.null(cols)) seq_along(x)[-wn] else cols[cols != wn]
     if(keep.w) gn <- c(gn, wn)
@@ -167,14 +167,14 @@ W.data.frame <- function(x, by = NULL, w = NULL, cols = is.numeric, na.rm = TRUE
   if(is.call(by) || is.call(w)) {
     ax <- attributes(x)
     class(x) <- NULL
-    nam <- ax[["names"]]
+    nam <- names(x)
 
     if(is.call(by)) {
       if(length(by) == 3L) {
-        cols <- anyNAerror(match(all.vars(by[[2L]]), nam), "Unknown variables passed to by!")
-        gn <- anyNAerror(match(all.vars(by[[3L]]), nam), "Unknown variables passed to by!")
+        cols <- ckmatch(all.vars(by[[2L]]), nam)
+        gn <- ckmatch(all.vars(by[[3L]]), nam)
       } else {
-        gn <- anyNAerror(match(all.vars(by), nam), "Unknown variables passed to by!")
+        gn <- ckmatch(all.vars(by), nam)
         cols <- if(is.null(cols)) seq_along(x)[-gn] else cols2int(cols, x, nam)
       }
       by <- if(length(gn) == 1L) at2GRP(x[[gn]]) else GRP(x, gn, return.groups = FALSE)
@@ -188,7 +188,7 @@ W.data.frame <- function(x, by = NULL, w = NULL, cols = is.numeric, na.rm = TRUE
 
     if(is.call(w)) {
       w <- all.vars(w)
-      wn <- anyNAerror(match(w, nam), "Unknown weight variable!")
+      wn <- ckmatch(w, nam)
       w <- x[[wn]]
       cols <- if(is.null(cols)) seq_along(x)[-wn] else cols[cols != wn]
       if(keep.w) gn <- c(gn, wn)
@@ -201,9 +201,9 @@ W.data.frame <- function(x, by = NULL, w = NULL, cols = is.numeric, na.rm = TRUE
       ax[["names"]] <- if(is.character(stub)) paste0(stub, nam[cols]) else nam[cols]
       return(setAttributes(.Call(Cpp_BWl,x[cols],by[[1L]],by[[2L]],by[[3L]],w,na.rm,add.global.mean,FALSE), ax))
     }
-  } else if(!is.null(cols)) {
+  } else if(!is.null(cols)) { # Need to do like this, otherwise list-subsetting drops attributes !!
     ax <- attributes(x)
-    x <- if(is.function(cols)) unclass(x)[vapply(x, cols, TRUE)] else unclass(x)[cols]
+    x <- unclass(x)[cols2int(cols, x, ax[["names"]])]
     ax[["names"]] <- names(x)
     setattributes(x, ax)
   }
@@ -238,7 +238,7 @@ fbetween.default <- function(x, g = NULL, w = NULL, na.rm = TRUE, fill = FALSE, 
 }
 fbetween.pseries <- function(x, effect = 1L, w = NULL, na.rm = TRUE, fill = FALSE, ...) {
   if(!missing(...)) stop("Unknown argument ", dotstostr(...))
-  g <- if(length(effect) == 1L) attr(x, "index")[[effect]] else interaction(attr(x, "index")[effect], drop = TRUE)
+  g <- if(length(effect) == 1L) unclass(attr(x, "index"))[[effect]] else interaction(unclass(attr(x, "index"))[effect], drop = TRUE)
   .Call(Cpp_BW,x,fnlevels(g),g,NULL,w,na.rm,fill,TRUE)
 }
 fbetween.matrix <- function(x, g = NULL, w = NULL, na.rm = TRUE, fill = FALSE, ...) {
@@ -267,7 +267,7 @@ fbetween.data.frame <- function(x, g = NULL, w = NULL, na.rm = TRUE, fill = FALS
 }
 fbetween.pdata.frame <- function(x, effect = 1L, w = NULL, na.rm = TRUE, fill = FALSE, ...) {
   if(!missing(...)) stop("Unknown argument ", dotstostr(...))
-  g <- if(length(effect) == 1L) attr(x, "index")[[effect]] else interaction(attr(x, "index")[effect], drop = TRUE)
+  g <- if(length(effect) == 1L) unclass(attr(x, "index"))[[effect]] else interaction(unclass(attr(x, "index"))[effect], drop = TRUE)
   .Call(Cpp_BWl,x,fnlevels(g),g,NULL,w,na.rm,fill,TRUE)
 }
 fbetween.grouped_df <- function(x, w = NULL, na.rm = TRUE, fill = FALSE,
@@ -279,7 +279,7 @@ fbetween.grouped_df <- function(x, w = NULL, na.rm = TRUE, fill = FALSE,
   gn2 <- which(nam %in% g[[5L]])
   gn <- if(keep.group_vars) gn2 else NULL
   if(!(wsym == "NULL" || is.na(wn <- match(wsym, nam)))) {
-    w <- x[[wn]]
+    w <- unclass(x)[[wn]]
     if(any(gn2 == wn)) stop("Weights coincide with grouping variables!")
     gn2 <- c(gn2,wn)
     if(keep.w) gn <- c(gn,wn)
@@ -304,7 +304,7 @@ B.default <- function(x, g = NULL, w = NULL, na.rm = TRUE, fill = FALSE, ...) {
 }
 B.pseries <- function(x, effect = 1L, w = NULL, na.rm = TRUE, fill = FALSE, ...) {
   if(!missing(...)) stop("Unknown argument ", dotstostr(...))
-  g <- if(length(effect) == 1L) attr(x, "index")[[effect]] else interaction(attr(x, "index")[effect], drop = TRUE)
+  g <- if(length(effect) == 1L) unclass(attr(x, "index"))[[effect]] else interaction(unclass(attr(x, "index"))[effect], drop = TRUE)
   .Call(Cpp_BW,x,fnlevels(g),g,NULL,w,na.rm,fill,TRUE)
 }
 B.matrix <- function(x, g = NULL, w = NULL, na.rm = TRUE, fill = FALSE, stub = "B.", ...) {
@@ -319,10 +319,10 @@ B.grouped_df <- function(x, w = NULL, na.rm = TRUE, fill = FALSE,
   gn2 <- which(nam %in% g[[5L]])
   gn <- if(keep.group_vars) gn2 else NULL
   if(!(wsym == "NULL" || is.na(wn <- match(wsym, nam)))) {
-    w <- x[[wn]]
+    w <- unclass(x)[[wn]]
     if(any(gn2 == wn)) stop("Weights coincide with grouping variables!")
     gn2 <- c(gn2,wn)
-    if(keep.w) gn <- c(gn,wn)
+    if(keep.w) gn <- c(gn, wn)
   }
   if(length(gn2)) {
     if(!length(gn))
@@ -339,12 +339,12 @@ B.pdata.frame <- function(x, effect = 1L, w = NULL, cols = is.numeric, na.rm = T
   if(!missing(...)) stop("Unknown argument ", dotstostr(...))
   ax <- attributes(x)
   class(x) <- NULL
-  nam <- ax[["names"]]
-  g <- if(length(effect) == 1L) ax[["index"]][[effect]] else
-    interaction(ax[["index"]][effect], drop = TRUE)
+  nam <- names(x)
+  g <- if(length(effect) == 1L) unclass(ax[["index"]])[[effect]] else
+    interaction(unclass(ax[["index"]])[effect], drop = TRUE)
 
   if(keep.ids) {
-    gn <- which(nam %in% names(ax[["index"]]))
+    gn <- which(nam %in% attr(ax[["index"]], "names"))
     if(length(gn) && is.null(cols)) cols <- seq_along(x)[-gn]
   } else gn <- NULL
 
@@ -352,7 +352,7 @@ B.pdata.frame <- function(x, effect = 1L, w = NULL, cols = is.numeric, na.rm = T
 
   if(is.call(w)) {
     w <- all.vars(w)
-    wn <- anyNAerror(match(w, nam), "Unknown weight variable!")
+    wn <- ckmatch(w, nam)
     w <- x[[wn]]
     cols <- if(is.null(cols)) seq_along(x)[-wn] else cols[cols != wn]
     if(keep.w) gn <- c(gn, wn)
@@ -378,14 +378,14 @@ B.data.frame <- function(x, by = NULL, w = NULL, cols = is.numeric, na.rm = TRUE
   if(is.call(by) || is.call(w)) {
     ax <- attributes(x)
     class(x) <- NULL
-    nam <- ax[["names"]]
+    nam <- names(x)
 
     if(is.call(by)) {
       if(length(by) == 3L) {
-        cols <- anyNAerror(match(all.vars(by[[2L]]), nam), "Unknown variables passed to by!")
-        gn <- anyNAerror(match(all.vars(by[[3L]]), nam), "Unknown variables passed to by!")
+        cols <- ckmatch(all.vars(by[[2L]]), nam)
+        gn <- ckmatch(all.vars(by[[3L]]), nam)
       } else {
-        gn <- anyNAerror(match(all.vars(by), nam), "Unknown variables passed to by!")
+        gn <- ckmatch(all.vars(by), nam)
         cols <- if(is.null(cols)) seq_along(x)[-gn] else cols2int(cols, x, nam)
       }
       by <- if(length(gn) == 1L) at2GRP(x[[gn]]) else GRP(x, gn, return.groups = FALSE)
@@ -393,13 +393,13 @@ B.data.frame <- function(x, by = NULL, w = NULL, cols = is.numeric, na.rm = TRUE
     } else {
       gn <- NULL
       if(!is.null(cols)) cols <- cols2int(cols, x, nam)
-      if(!is.GRP(by)) by <- if(is.null(by)) list(0L, 0L, NULL) else if(is.atomic(by)) # Necessary for if by is passed externally !!
+      if(!is.GRP(by)) by <- if(is.null(by)) list(0L, 0L, NULL) else if(is.atomic(by)) # Necessary if by is passed externally !!
                             at2GRP(by) else GRP(by, return.groups = FALSE)
     }
 
     if(is.call(w)) {
       w <- all.vars(w)
-      wn <- anyNAerror(match(w, nam), "Unknown weight variable!")
+      wn <- ckmatch(w, nam)
       w <- x[[wn]]
       cols <- if(is.null(cols)) seq_along(x)[-wn] else cols[cols != wn]
       if(keep.w) gn <- c(gn, wn)
@@ -412,9 +412,9 @@ B.data.frame <- function(x, by = NULL, w = NULL, cols = is.numeric, na.rm = TRUE
       ax[["names"]] <- if(is.character(stub)) paste0(stub, nam[cols]) else nam[cols]
       return(setAttributes(.Call(Cpp_BWl,x[cols],by[[1L]],by[[2L]],by[[3L]],w,na.rm,fill,TRUE), ax))
     }
-  } else if(!is.null(cols)) {
+  } else if(!is.null(cols)) { # Necessary, else attributes are dropped by list-subsetting !!
     ax <- attributes(x)
-    x <- if(is.function(cols)) unclass(x)[vapply(x, cols, TRUE)] else unclass(x)[cols]
+    x <- unclass(x)[cols2int(cols, x, ax[["names"]])]
     ax[["names"]] <- names(x)
     setattributes(x, ax)
   }

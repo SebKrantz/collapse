@@ -7,7 +7,7 @@ myModFrame <- function(f, data) {
   v <- attr(t, "variables")
   res <- eval(substitute(with(data, e), list(e = v)))
   attributes(res) <- list(names = as.character(v[-1]),
-                          row.names = .set_row_names(nrow(data)),
+                          row.names = .set_row_names(fnrow(data)),
                           class = "data.frame",
                           terms = t)
   return(res)
@@ -219,7 +219,7 @@ fHDwithin.matrix <- function(x, fl, w = NULL, na.rm = TRUE, fill = FALSE, ...) {
 }
 fHDwithin.pdata.frame <- function(x, w = NULL, na.rm = TRUE, fill = TRUE, variable.wise = TRUE, ...) {
   ax <- attributes(x)
-  if(variable.wise) {
+  if(na.rm && fill && variable.wise) {
     attributes(x) <- NULL
     varwisecomp <- function(x, fl, w, ...) lapply(x, function(y) {
       ycc <- which(!is.na(y))
@@ -233,7 +233,7 @@ fHDwithin.pdata.frame <- function(x, w = NULL, na.rm = TRUE, fill = TRUE, variab
       Y <- demeanlist(.Call(C_subsetDT, x, cc, seq_along(x)),
                             lapply(ax[["index"]], function(y) y[cc]),
                             weights = w[cc], ...)
-    if(fill) return(setAttributes(.Call(Cpp_lassign, Y, nrow(x), cc, NA), ax)) else {
+    if(fill) return(setAttributes(.Call(Cpp_lassign, Y, fnrow(x), cc, NA), ax)) else {
       ax[["row.names"]] <- ax[["row.names"]][cc]
       return(setAttributes(Y, ax))
     }
@@ -249,7 +249,7 @@ fHDwithin.data.frame <- function(x, fl, w = NULL, na.rm = TRUE, fill = FALSE, va
       cc <- which(cc)
       if(!is.null(w)) w <- w[cc]
       if(!variable.wise) {
-        if(fill) nrx <- nrow(x) else ax[["row.names"]] <- ax[["row.names"]][cc] # best ??
+        if(fill) nrx <- fnrow(x) else ax[["row.names"]] <- ax[["row.names"]][cc] # best ??
         x <- .Call(C_subsetDT, x, cc, seq_along(x))
       }
     } else na.rm <- FALSE
@@ -330,12 +330,12 @@ HDW.data.frame <- function(x, fl, w = NULL, cols = is.numeric, na.rm = TRUE, fil
     ax <- attributes(x)
     nam <- attr(x, "names")
     if(length(fl) == 3L) {
-      fvars <- anyNAerror(match(all.vars(fl[[3L]]), nam), "Unknown variables in formula!")
-      Xvars <- anyNAerror(match(all.vars(fl[[2L]]), nam), "Unknown variables in formula!")
+      fvars <- ckmatch(all.vars(fl[[3L]]), nam)
+      Xvars <- ckmatch(all.vars(fl[[2L]]), nam)
       fl[[2L]] <- NULL
     } else {
-      fvars <- anyNAerror(match(all.vars(fl), nam), "Unknown variables in formula!")
-      Xvars <- if(!is.null(cols)) setdiff(cols2int(cols, x, nam), fvars) else seq_along(x)[-fvars]
+      fvars <- ckmatch(all.vars(fl), nam)
+      Xvars <- if(!is.null(cols)) fsetdiff(cols2int(cols, x, nam), fvars) else seq_along(x)[-fvars]
     }
     ax[["names"]] <- if(is.character(stub)) paste0(stub, nam[Xvars]) else nam[Xvars]
 
@@ -345,7 +345,7 @@ HDW.data.frame <- function(x, fl, w = NULL, cols = is.numeric, na.rm = TRUE, fil
         ax[["na.rm"]] <- which(miss)
         cc <- which(!miss)
         if(!is.null(w)) w <- w[cc]
-        if(!variable.wise) if(fill) nrx <- nrow(x) else ax[["row.names"]] <- ax[["row.names"]][cc] # best ??
+        if(!variable.wise) if(fill) nrx <- fnrow(x) else ax[["row.names"]] <- ax[["row.names"]][cc] # best ??
       } else na.rm <- FALSE
     }
 
@@ -534,7 +534,7 @@ fHDbetween.matrix <- function(x, fl, w = NULL, na.rm = TRUE, fill = FALSE, ...) 
 }
 fHDbetween.pdata.frame <- function(x, w = NULL, na.rm = TRUE, fill = TRUE, variable.wise = TRUE, ...) {
   ax <- attributes(x)
-  if(variable.wise) {
+  if(na.rm && fill && variable.wise) {
     attributes(x) <- NULL
     varwisecomp <- function(x, fl, w, ...) lapply(x, function(y) {
       ycc <- which(!is.na(y))
@@ -548,7 +548,7 @@ fHDbetween.pdata.frame <- function(x, w = NULL, na.rm = TRUE, fill = TRUE, varia
     Y <- demeanlist(.Call(C_subsetDT, x, cc, seq_along(x)),
                     lapply(ax[["index"]], function(y) y[cc]),
                     weights = w[cc], means = TRUE, ...)
-    if(fill) return(setAttributes(.Call(Cpp_lassign, Y, nrow(x), cc, NA), ax)) else {
+    if(fill) return(setAttributes(.Call(Cpp_lassign, Y, fnrow(x), cc, NA), ax)) else {
       ax[["row.names"]] <- ax[["row.names"]][cc]
       return(setAttributes(Y, ax))
     }
@@ -564,7 +564,7 @@ fHDbetween.data.frame <- function(x, fl, w = NULL, na.rm = TRUE, fill = FALSE, v
       cc <- which(cc)
       if(!is.null(w)) w <- w[cc]
       if(!variable.wise) {
-        if(fill) nrx <- nrow(x) else ax[["row.names"]] <- ax[["row.names"]][cc] # best ??
+        if(fill) nrx <- fnrow(x) else ax[["row.names"]] <- ax[["row.names"]][cc] # best ??
         x <- .Call(C_subsetDT, x, cc, seq_along(x))
       }
     } else na.rm <- FALSE
@@ -644,12 +644,12 @@ HDB.data.frame <- function(x, fl, w = NULL, cols = is.numeric, na.rm = TRUE, fil
     ax <- attributes(x)
     nam <- attr(x, "names")
     if(length(fl) == 3L) {
-      fvars <- anyNAerror(match(all.vars(fl[[3L]]), nam), "Unknown variables in formula!")
-      Xvars <- anyNAerror(match(all.vars(fl[[2L]]), nam), "Unknown variables in formula!")
+      fvars <- ckmatch(all.vars(fl[[3L]]), nam)
+      Xvars <- ckmatch(all.vars(fl[[2L]]), nam)
       fl[[2L]] <- NULL
     } else {
-      fvars <- anyNAerror(match(all.vars(fl), nam), "Unknown variables in formula!")
-      Xvars <- if(!is.null(cols)) setdiff(cols2int(cols, x, nam), fvars) else seq_along(x)[-fvars]
+      fvars <- ckmatch(all.vars(fl), nam)
+      Xvars <- if(!is.null(cols)) fsetdiff(cols2int(cols, x, nam), fvars) else seq_along(x)[-fvars]
     }
     ax[["names"]] <- if(is.character(stub)) paste0(stub, nam[Xvars]) else nam[Xvars]
 
@@ -659,7 +659,7 @@ HDB.data.frame <- function(x, fl, w = NULL, cols = is.numeric, na.rm = TRUE, fil
         ax[["na.rm"]] <- which(miss)
         cc <- which(!miss)
         if(!is.null(w)) w <- w[cc]
-        if(!variable.wise) if(fill) nrx <- nrow(x) else ax[["row.names"]] <- ax[["row.names"]][cc] # best ??
+        if(!variable.wise) if(fill) nrx <- fnrow(x) else ax[["row.names"]] <- ax[["row.names"]][cc] # best ??
       } else na.rm <- FALSE
     }
 

@@ -12,13 +12,13 @@ dapply <- function(X, FUN, ..., MARGIN = 2, parallel = FALSE, # drop argument !!
   arl <- is.array(X)
   rowwl <- switch(MARGIN, `1` = TRUE, `2` = FALSE, stop("MARGIN only supports 2 - columns or 1 - rows"))
   retmatl <- switch(return[1L], same = arl, matrix = TRUE, data.frame = FALSE, stop("Unknown return option!"))
-  aplyfun <- if(parallel) function(...) parallel::mclapply(..., mc.cores = mc.cores) else lapply
+  aplyfun <- if(parallel) function(...) mclapply(..., mc.cores = mc.cores) else lapply
   if(arl) {
     dX <- dim(X)
     if(length(dX) > 2L) stop("dapply cannot handle higher-dimensional arrays")
     res <- if(rowwl) aplyfun(mrtl(X), FUN, ...) else aplyfun(mctl(X), FUN, ...)
     lx1 <- length(res[[1L]])
-    if(lx1 == 1L && drop) return(setNames(unlist(res, use.names = FALSE), ax[["dimnames"]][[if(rowwl) 1L else 2L]]))
+    if(lx1 == 1L && drop) return(`names<-`(unlist(res, use.names = FALSE), ax[["dimnames"]][[if(rowwl) 1L else 2L]]))
     if(!retmatl) {
       dn <- dimnames(X) # ax[["dimnames"]] # best ?? -> use res instead of reassigning X !!! -> no memory loss !!
       ax <- list(names = dn[[2L]], row.names = if(is.null(dn[[1L]])) .set_row_names(dX[1L]) else dn[[1L]],
@@ -29,7 +29,7 @@ dapply <- function(X, FUN, ..., MARGIN = 2, parallel = FALSE, # drop argument !!
     dX <- c(length(X[[1L]]), length(X)) # much faster than dim(X) on a list !!
     res <- if(rowwl) aplyfun(mrtl(do.call(cbind, X)), FUN, ...) else aplyfun(X, FUN, ...) # do.call(cbind, X) is definitely faster than unlist(X, use.names = FALSE) and attaching dim attribute
     lx1 <- length(res[[1L]])
-    if(lx1 == 1L && drop) return(setNames(unlist(res, use.names = FALSE), if(rowwl) charorNULL(ax[["row.names"]]) else ax[["names"]]))
+    if(lx1 == 1L && drop) return(`names<-`(unlist(res, use.names = FALSE), if(rowwl) charorNULL(ax[["row.names"]]) else ax[["names"]]))
     if(retmatl) ax <- list(dim = dX, dimnames = list(charorNULL(ax[["row.names"]]), ax[["names"]]))
                       # c(..., ax[!(names(ax) %in% c("names","row.names","class"))]) # don't know why one would need this !!
   }
