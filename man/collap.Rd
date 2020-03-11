@@ -2,6 +2,7 @@
 \alias{A5-advanced-aggregation}
 \alias{collap}
 \alias{collapv}
+\alias{collapg}
 %- Also NEED an '\alias' for EACH other topic documented here.
 \title{
 Advanced Data Aggregation
@@ -11,17 +12,25 @@ Advanced Data Aggregation
 
 It can aggregate data with multiple data types, aggregate (parallelized) using multiple functions to several output formats, and perform (parallelized) fully customized aggregations where the user decides which variables are aggregated using which functions. \code{collap} is made compatible with \code{collapse}'s \link[=A1-fast-statistical-functions]{Fast Statistical Functions}, allowing for extremely fast conventional and weighted aggregation, but even with \code{base} functions it is significantly faster than \code{stats::aggregate}.
 
-\code{collap} supports formula and data (i.e. grouping vectors or lists of vectors) input to \code{by}, whereas \code{collapv} allows names and indices of grouping columns to be passed to \code{by}.
+% \code{collap} supports formula and data (i.e. grouping vectors or lists of vectors) input to \code{by}, whereas \code{collapv} allows names and indices of grouping columns to be passed to \code{by}.
 }
 \usage{
+# Main function: allows formula and data input to `by` argument
 collap(X, by, FUN = fmean, catFUN = fmode, cols = NULL, custom = NULL,
        keep.by = TRUE, keep.col.order = TRUE, sort.row = TRUE, parallel = FALSE,
        mc.cores = 1L, return = c("wide","list","long","long_dupl"),
        give.names = "auto", ...)
 
+# Auxiliary function: allows column names and indices input to `by` argument
 collapv(X, by, FUN = fmean, catFUN = fmode, cols = NULL, custom = NULL,
         keep.by = TRUE, keep.col.order = TRUE, sort.row = TRUE, parallel = FALSE,
         mc.cores = 1L, return = c("wide","list","long","long_dupl"),
+        give.names = "auto", ...)
+
+# Auxiliary function: allows dplyr 'grouped_df' input
+collapg(X, FUN = fmean, catFUN = fmode, cols = NULL, custom = NULL,
+        keep.group_vars = TRUE, keep.col.order = TRUE, sort.row = TRUE, parallel = FALSE,
+        mc.cores = 1L,return = c("wide","list","long","long_dupl"),
         give.names = "auto", ...)
 }
 %- maybe also 'usage' for other objects documented here.
@@ -32,7 +41,7 @@ collapv(X, by, FUN = fmean, catFUN = fmode, cols = NULL, custom = NULL,
 \item{catFUN}{same as \code{FUN}, but applied only to categorical (non-numeric) typed columns (\code{\link{is.categorical}}).}
 \item{cols}{select columns to aggregate using a function, column names or indices. \emph{Note}: \code{cols} is ignored if a two-sided formula is passed to \code{by}.}
 \item{custom}{a named list specifying a fully customized aggregation task. The names of the list are function names and the content columns to aggregate using this function (same input as \code{cols}). For example \code{custom = list(fmean = 1:6, fsd = 7:9, fmode = 10:11)} tells \code{collap} to aggregate columns 1-6 of \code{X} using the mean, columns 7-9 using the standard deviation etc. \emph{Note}: \code{custom} lets \code{collap} ignore any inputs passed to \code{FUN}, \code{catFUN} or \code{cols}.}
-\item{keep.by}{logical. \code{FALSE} will omit grouping variables from the output.}
+\item{keep.by, keep.group_vars}{logical. \code{FALSE} will omit grouping variables from the output.}
 \item{keep.col.order}{logical. Retain original column order post-aggregation.}
 \item{sort.row}{logical. Sort rows by the groups.}
 \item{parallel}{logical. Use \code{parallel::mclapply} instead of \code{lapply} for multi-function or custom aggregation.}
