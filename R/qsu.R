@@ -42,17 +42,16 @@ qsu.default <- function(x, g = NULL, pid = NULL, w = NULL, higher = FALSE, array
       return(fbstatsCpp(x,higher,g[[1L]],g[[2L]],pid[[1L]],pid[[2L]],w,array,TRUE,group_names.GRP(g)))
     }
 }
-qsu.pseries <- function(x, g = NULL, w = NULL, higher = FALSE, array = TRUE, ...) {
+qsu.pseries <- function(x, g = NULL, w = NULL, effect = 1L, higher = FALSE, array = TRUE, ...) {
   if(!missing(...)) stop("Unknown argument ", dotstostr(...))
-  index <- attr(x, "index")
-  if(length(index) > 2L) index <- c(interaction(index[-length(index)], drop = TRUE), index[length(index)])
+  pid <- if(length(effect) == 1L) unclass(attr(x, "index"))[[effect]] else interaction(unclass(attr(x, "index"))[effect], drop = TRUE)
   if(is.null(g))
-  return(fbstatsCpp(x,higher,0L,0L,fnlevels(index[[1L]]),index[[1L]],w)) else if (is.atomic(g)) {
+  return(fbstatsCpp(x,higher,0L,0L,fnlevels(pid),pid,w)) else if (is.atomic(g)) {
     if(!is.nmfactor(g)) g <- qF(g, na.exclude = FALSE)
     lev <- attr(g, "levels")
-    return(fbstatsCpp(x,higher,length(lev),g,fnlevels(index[[1L]]),index[[1L]],w,array,TRUE,lev))
+    return(fbstatsCpp(x,higher,length(lev),g,fnlevels(pid),pid,w,array,TRUE,lev))
   } else if(!is.GRP(g)) g <- GRP(g)
-    return(fbstatsCpp(x,higher,g[[1L]],g[[2L]],fnlevels(index[[1L]]),index[[1L]],w,array,TRUE,group_names.GRP(g)))
+    return(fbstatsCpp(x,higher,g[[1L]],g[[2L]],fnlevels(pid),pid,w,array,TRUE,group_names.GRP(g)))
 }
 qsu.matrix <- function(x, g = NULL, pid = NULL, w = NULL, higher = FALSE, array = TRUE, ...) {
   if(!missing(...)) stop("Unknown argument ", dotstostr(...))
@@ -97,22 +96,23 @@ qsu.data.frame <- function(x, by = NULL, pid = NULL, w = NULL, cols = NULL, high
   if(formby || formpid) {
     v <- NULL
     class(x) <- NULL
+    nam <- names(x)
     if(formby) {
       if(length(by) == 3L) {
-        v <- all.vars(by[[2L]])
-        namby <- all.vars(by[[3L]])
-      } else namby <- all.vars(by)
-      by <- if(length(namby) == 1L) x[[namby]] else GRP(x, namby)
-    } else namby <- NULL
+        v <- ckmatch(all.vars(by[[2L]]), nam)
+        byn <- ckmatch(all.vars(by[[3L]]), nam)
+      } else byn <- ckmatch(all.vars(by), nam)
+      by <- if(length(byn) == 1L) x[[byn]] else GRP.default(x[byn])
+    } else byn <- NULL
     if(formpid) {
       if(length(pid) == 3L) {
-        v <- all.vars(pid[[2L]])
-        nampid <- all.vars(pid[[3L]])
-      } else nampid <- all.vars(pid)
-      pid <- if(length(nampid) == 1L) x[[nampid]] else GRP(x, nampid)
-    } else nampid <- NULL
+        v <- ckmatch(all.vars(pid[[2L]]), nam)
+        pidn <- ckmatch(all.vars(pid[[3L]]), nam)
+      } else pidn <- ckmatch(all.vars(pid), nam)
+      pid <- if(length(pidn) == 1L) x[[pidn]] else GRP.default(x[pidn])
+    } else pidn <- NULL
     if(is.null(v)) {
-      x <- if(is.null(cols)) x[-match(c(namby,nampid), names(x))] else x[cols2int(cols, x, names(x))]
+      x <- if(is.null(cols)) x[-c(byn,pidn)] else x[cols2int(cols, x, nam)]
     } else x <- x[v]
   } else if(!is.null(cols)) x <- unclass(x)[cols2int(cols, x, attr(x, "names"))]
 
@@ -153,34 +153,34 @@ qsu.data.frame <- function(x, by = NULL, pid = NULL, w = NULL, cols = NULL, high
     return(drop(fbstatslCpp(x,higher,by[[1L]],by[[2L]],pid[[1L]],pid[[2L]],w,array,group_names.GRP(by))))
   }
 }
-qsu.pdata.frame <- function(x, by = NULL, w = NULL, cols = NULL, higher = FALSE, array = TRUE, vlabels = FALSE, ...) {
+qsu.pdata.frame <- function(x, by = NULL, w = NULL, cols = NULL, effect = 1L, higher = FALSE, array = TRUE, vlabels = FALSE, ...) {
   if(!missing(...)) stop("Unknown argument ", dotstostr(...))
-  index <- attr(x, "index")
-  if(length(index) > 2L) index <- c(interaction(index[-length(index)], drop = TRUE), index[length(index)])
+  pid <- if(length(effect) == 1L) unclass(attr(x, "index"))[[effect]] else interaction(unclass(attr(x, "index"))[effect], drop = TRUE)
 
   # fastest solution!
   if(is.call(by)) {
     class(x) <- NULL
+    nam <- names(x)
     if(length(by) == 3L) {
-      v <- all.vars(by[[2L]])
-      namby <- all.vars(by[[3L]])
+      v <- ckmatch(all.vars(by[[2L]]), nam)
+      byn <- ckmatch(all.vars(by[[3L]]), nam)
     } else {
-      namby <- all.vars(by)
-      v <- if(is.null(cols)) -match(namby, names(x)) else cols2int(cols, x, names(x))
+      byn <- ckmatch(all.vars(by), nam)
+      v <- if(is.null(cols)) -byn else cols2int(cols, x, nam)
     }
-    by <- if(length(namby) == 1L) x[[namby]] else GRP(x, namby)
+    by <- if(length(byn) == 1L) x[[byn]] else GRP.default(x[byn])
     x <- x[v]
   } else if(!is.null(cols)) x <- unclass(x)[cols2int(cols, x, attr(x, "names"))]
 
   if(vlabels) attr(x, "names") <- paste(attr(x, "names"), vlabels(x), sep = ": ")
 
   if(is.null(by))
-    return(drop(fbstatslCpp(x,higher,0L,0L,fnlevels(index[[1L]]),index[[1L]],w,array))) else if (is.atomic(by)) {
+    return(drop(fbstatslCpp(x,higher,0L,0L,fnlevels(pid),pid,w,array))) else if (is.atomic(by)) {
       if(!is.nmfactor(by)) by <- qF(by, na.exclude = FALSE)
       lev <- attr(by, "levels")
-      return(drop(fbstatslCpp(x,higher,length(lev),by,fnlevels(index[[1L]]),index[[1L]],w,array,lev)))
+      return(drop(fbstatslCpp(x,higher,length(lev),by,fnlevels(pid),pid,w,array,lev)))
     } else if(!is.GRP(by)) by <- GRP(by)
-    return(drop(fbstatslCpp(x,higher,by[[1L]],by[[2L]],fnlevels(index[[1L]]),index[[1L]],w,array,group_names.GRP(by))))
+    return(drop(fbstatslCpp(x,higher,by[[1L]],by[[2L]],fnlevels(pid),pid,w,array,group_names.GRP(by))))
 }
 
 # give class "qsu" !! Note: round gives error of list output!
