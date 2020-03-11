@@ -103,6 +103,7 @@ na_insert <- function(X, prop = 0.1) {
   return(X)
 }
 fnlevels <- function(x) length(attr(x, "levels")) # make cpp version ?? -> nope, slower !!
+flevels <- function(x) attr(x, "levels")
 fnrow <- function(x) length(unclass(x)[[1L]])
 forder.int <- function(x) if(is.unsorted(x)) .Call(C_forder, x, NULL, FALSE, TRUE, 1L, TRUE) else seq_along(x) # since forder gives integer(0) if sorted !!
 fsetdiff <- function(x, y) x[match(x, y, 0L) == 0L] # not unique !!
@@ -181,6 +182,12 @@ colsubset <- function(x, ind) { # also works for grouped tibbles !!
   ax[["names"]] <- ax[["names"]][ind]
   return(.Call(Cpp_setAttributes, x[ind], ax)) # return(`attributes<-`(x[ind], ax)) # This is slow on large data -> a lot of checks !!!
 }
+fcolsubset.int <- function(x, ind) {
+  ax <- attributes(x)
+  attributes(x) <- NULL
+  ax[["names"]] <- ax[["names"]][ind]
+  return(.Call(Cpp_setAttributes, x[ind], ax))
+}
 colsubsetFUN <- function(x, FUN) {
   ax <- attributes(x)
   attributes(x) <- NULL
@@ -231,7 +238,7 @@ addNA2 <- function(x) {
   x[is.na(x)] <- length(ax[["levels"]])
   return(setAttributes(x, ax))
 }
-l1orn <- function(x, name) if(length(x) == 1L) x else nam
+l1orn <- function(x, nam) if(length(x) == 1L) x else nam
 
 # addNA2 <- function(x) {
 #   clx <- c(class(x), "na.included")
