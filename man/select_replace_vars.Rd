@@ -69,7 +69,7 @@ add_vars(x, pos = "end") <- value
 \arguments{
 % \emph{Note}: Functions also work with data.table's etc... as long as \code{x} is a list and \code{!is.null(dim(x))}.}
   \item{x}{a data.frame.}
-  \item{value}{a data.frame or list of columns whose dimensions exactly match those of the extracted subet of \code{x}. If only 1 variable is in the subet of \code{x}, \code{value} can also be an atomic vector or matrix, provided that \code{NROW(value) == nrow(x)}.}
+  \item{value}{a data.frame or list of columns whose dimensions exactly match those of the extracted subset of \code{x}. If only 1 variable is in the subset of \code{x}, \code{value} can also be an atomic vector or matrix, provided that \code{NROW(value) == nrow(x)}.}
   \item{vars}{a vector of column names, indices (can be negative), a suitable logical vector, a vector of regular expressions matching column names if \code{regex = TRUE}, or a function returning \code{TRUE} or \code{FALSE} when applied to the columns of \code{x}.}
   \item{return}{an integer or string specifying what to return. The options are:
   \enumerate{
@@ -81,7 +81,7 @@ add_vars(x, pos = "end") <- value
   \emph{Note}: replacement functions only replace data, not column names or indices (ordering). However column names are replaced together with the data.
   }
 \item{regex}{logical. \code{TRUE} will do regular expression search on the column names of \code{x} using a (vector of) regular expression(s) passed to \code{vars}.}
-\item{pos}{the position where colums are added in the data.frame. \code{"end"} (default) will add columns at the end (right) of the data.frame, "front" will add columns in front (left). Alternatively one can pass a vector of positions (matching \code{length(value)} if value is a list). In that case the other columns will be shifted around the new ones while maintaining their order. }
+\item{pos}{the position where columns are added in the data.frame. \code{"end"} (default) will add columns at the end (right) of the data.frame, "front" will add columns in front (left). Alternatively one can pass a vector of positions (matching \code{length(value)} if value is a list). In that case the other columns will be shifted around the new ones while maintaining their order. }
 \item{...}{for \code{get_vars}: further arguments passed to \code{\link{grep}}, if \code{regex = TRUE}. For \code{add_vars}: Same as \code{value}. A single argument passed may also be a vector or matrix, multiple arguments must each be a list (they are combined using \code{c(...)}).}
 }
 % \details{

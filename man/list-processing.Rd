@@ -22,7 +22,7 @@
 }
 
 \item \bold{Unlisting / Row-Binding} \itemize{
-\item \code{\link{unlist2d}} efficiently unlists unlistable lists in 2-dimensions and creates a \code{data.frame} (or \code{data.table}) representation of the list (unlike \code{base::unlist} which returns an atomic vector). This is done by recursively flattening and row-binding R objects in the list (using \code{data.table::rbindlist}) while creating identifier columns for each level of the list-tree and (optionally) saving the row-names of the objects in a separate column. \code{\link{unlist2d}} can thus also be understood as a recursive generalization of \code{do.call(rbind, l)}, for lists of vectors, data.frames, arrays or heterogenous objects.
+\item \code{\link{unlist2d}} efficiently unlists unlistable lists in 2-dimensions and creates a \code{data.frame} (or \code{data.table}) representation of the list (unlike \code{base::unlist} which returns an atomic vector). This is done by recursively flattening and row-binding R objects in the list (using \code{data.table::rbindlist}) while creating identifier columns for each level of the list-tree and (optionally) saving the row-names of the objects in a separate column. \code{\link{unlist2d}} can thus also be understood as a recursive generalization of \code{do.call(rbind, l)}, for lists of vectors, data.frames, arrays or heterogeneous objects.
 }
 
 }

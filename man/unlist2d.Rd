@@ -4,7 +4,7 @@
 Recursive Row-Binding / Unlisting in 2D - to Data Frame
 }
 \description{
-\code{unlist2d} efficiently unlists lists of regular R objects (objects built up from atomic elements) and creates a data.frame representation of the list. It is a faithful 2-dimensional generalization of \code{base::unlist}, and can also be understood as a recursive generalization of \code{do.call(rbind, l)}, for lists of vectors, data.frames, arrays or heterogenous objects.
+\code{unlist2d} efficiently unlists lists of regular R objects (objects built up from atomic elements) and creates a data.frame representation of the list. It is a faithful 2-dimensional generalization of \code{base::unlist}, and can also be understood as a recursive generalization of \code{do.call(rbind, l)}, for lists of vectors, data.frames, arrays or heterogeneous objects.
 }
 \usage{
 unlist2d(l, idcols = ".id", row.names = FALSE, recursive = TRUE,

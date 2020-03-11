@@ -51,7 +51,7 @@ In addition, *collapse* provides 3 vignettes:
 ### Notes on Performance 
 Simple benchmarks are provided in the vignettes. In general:
 
-* For simple aggregations of large data (<= 10 mio. obs) the performance is identical to *data.table* (when using functions that *data.table* internally optimizes. The C/C++ programming principles applied and the grouping mechanism of *collapse* is the same as *data.table*). On very large data (100 mio. obs +), *data.table*'s thread paralellization will let it run faster on a multicore machine. 
+* For simple aggregations of large data (<= 10 mio. obs) the performance is identical to *data.table* (when using functions that *data.table* internally optimizes. The C/C++ programming principles applied and the grouping mechanism of *collapse* is the same as *data.table*). On very large data (100 mio. obs +), *data.table*'s thread parallelization will let it run faster on a multicore machine. 
 
 * For more complex categorical or weighed aggregations, or for data transformations like grouped scaling, centering or panel-differences, *collapse* is ~10x faster than *data.table* in nearly all applications. 
 
@@ -61,7 +61,7 @@ Simple benchmarks are provided in the vignettes. In general:
 
 ### Notes on the Integration with *dplyr*, *plm* and *data.table* 
 
-* *collapse* and *dplyr*: The *Fast Statistical Functions* and transformation functions and operators provided by *collapse* all have a *grouped_df* method, allowing them to be seamlessly integrated into *dplyr* / *tidyverse* worfklows. Doing so facilitates advanced operations in *dplyr* and provides stunning performance improvements (bringing *dplyr* close to *data.table* on large data aggregations, and making it faster than *data.table* for advanced transformations). This integration is discussed and demonstrated in a separate vignette. 
+* *collapse* and *dplyr*: The *Fast Statistical Functions* and transformation functions and operators provided by *collapse* all have a *grouped_df* method, allowing them to be seamlessly integrated into *dplyr* / *tidyverse* workflows. Doing so facilitates advanced operations in *dplyr* and provides stunning performance improvements (bringing *dplyr* close to *data.table* on large data aggregations, and making it faster than *data.table* for advanced transformations). This integration is discussed and demonstrated in a separate vignette. 
 
 * *collapse* and *plm*: Fast transformation functions and transformation operators provided by collapse also have *pseries* (panel-series) and *pdata.frame* (panel-data.frame) methods. This integrates them seamlessly into *plm* workflows and facilitates the manipulation of panel data. For typical panel-data operations like between- and within-transformations or panel lags / leads / differences, *collapse* functions are 20-100x faster than *plm* equivalents, and provide greater versatility (i.e. for applying transformations to multiple variables in a *pdata.frame*). This integration is also discussed and demonstrated in a separate vignette. 
 

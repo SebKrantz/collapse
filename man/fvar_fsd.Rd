@@ -59,7 +59,7 @@ fsd(x, \dots)
 
 \item{keep.w}{\emph{grouped_df method:} Logical. Retain summed weighting variable after computation (if contained in \code{grouped_df}).}
 
-\item{stable.algo}{logical. \code{TRUE} (default) use Welford's numerically stable online algorithm. \code{FALSE} implements a faster but numerically instable one-pass method. See Details. }
+\item{stable.algo}{logical. \code{TRUE} (default) use Welford's numerically stable online algorithm. \code{FALSE} implements a faster but numerically unstable one-pass method. See Details. }
 
 \item{\dots}{arguments to be passed to or from other methods.}
 
@@ -67,7 +67,7 @@ fsd(x, \dots)
 \details{
 \emph{Welford's online algorithm} used by default to compute the variance is well described \href{https://en.wikipedia.org/wiki/Algorithms_for_calculating_variance}{here} (the section \emph{Weighted incremental algorithm} also shows how the weighted variance is obtained by this algorithm).
 
-If \code{stable.algo = FALSE}, the variance is computed in one-pass as \code{(sum(x^2)-n*mean(x)^2)/(n-1)}, where \code{sum(x^2)} is the sum of squares from which the expected sum of squares \code{n*mean(x)^2} is subtracted, normalized by \code{n-1} (Bessel's correction). This is numerically instable if \code{sum(x^2)} and \code{n*mean(x)^2} are large numbers very close together, which will be the case for large \code{n}, large \code{x}-values and small variances (catastrophic cancellation occurs, leading to a loss of numeric precision). Numeric precision is however still maximized through the internal use of long doubles in C++, and the fast algorithm can be up to 4-times faster compared to Welford's method.
+If \code{stable.algo = FALSE}, the variance is computed in one-pass as \code{(sum(x^2)-n*mean(x)^2)/(n-1)}, where \code{sum(x^2)} is the sum of squares from which the expected sum of squares \code{n*mean(x)^2} is subtracted, normalized by \code{n-1} (Bessel's correction). This is numerically unstable if \code{sum(x^2)} and \code{n*mean(x)^2} are large numbers very close together, which will be the case for large \code{n}, large \code{x}-values and small variances (catastrophic cancellation occurs, leading to a loss of numeric precision). Numeric precision is however still maximized through the internal use of long doubles in C++, and the fast algorithm can be up to 4-times faster compared to Welford's method.
 
 The weighted variance is computed with frequency weights as \code{(sum(x^2*w)-sum(w)*weighted.mean(x,w)^2)/(sum(w)-1)}. If \code{na.rm = TRUE}, missing values will be removed from both \code{x} and \code{w} i.e. utilizing only \code{x[complete.cases(x,w)]} and \code{w[complete.cases(x,w)]}.
 

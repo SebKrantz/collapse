@@ -15,8 +15,7 @@ vignette: >
 
 ```{r, echo = FALSE, message = FALSE, warning=FALSE}
 library(collapse)
-library(data.table)
-library(dplyr)
+B <- collapse::B # making sure it masks vars::B by loading into GE
 knitr::opts_chunk$set(error = FALSE, message = FALSE, warning = FALSE, 
                       comment = "#", tidy = FALSE, cache = TRUE, collapse = TRUE,
                       fig.width = 8, fig.height = 5, 
@@ -33,7 +32,7 @@ knitr::opts_chunk$set(error = FALSE, message = FALSE, warning = FALSE,
 #  out.width='100%'
 # )
 
-oldopts <- options(width = 100L)
+oldopts <- options(width = 101L)
 
 X = mtcars[1:2]
 by = mtcars$cyl
@@ -58,6 +57,8 @@ This vignette utilizes the 2 datasets that come with *collapse*: `wlddev` and `G
 ### 1.1. World Bank Development Data
 This dataset contains 4 key World Bank Development Indicators covering 216 countries over 59 years. It is a balanced panel with $216 \times 59 = 12744$ observations.
 ```{R}
+library(collapse)
+
 head(wlddev)
 
 # The variables have "label" attributes. Use vlabels() to get and set labels
@@ -122,7 +123,7 @@ In terms of value added, the data covers 43 countries in 50 time-periods. Agricu
 
 I note that these two examples have not yet exhausted the capabilities of `qsu` which can also compute weighted versions of all the above statistics and output to list of matrices instead of higher-dimensional array. It is of course also possible to compute conventional and weighted statistics on cross-sectional data using `qsu`. 
 
-As a final step I introduce a plot function which can be used to plot the structural trnsformation of any supported country. Below I do so for Tanzania.
+As a final step I introduce a plot function which can be used to plot the structural transformation of any supported country. Below I do so for Tanzania.
 ```{r}
 library(data.table)
 library(ggplot2)
@@ -229,7 +230,7 @@ cbind(add_stub(fmean(dat, g), "mean_"),
       add_stub(fmin(dat, g), "min_"),
       add_stub(fmax(dat, g), "max_"))
 ```
-We could also calculate groupwise-frequency weighted means and standard-deviations using a weight vector, and we could decide to include the original grouping columns and omit the generated row-names, as shown below^[You may wonder why with weights the standard-deviations in the group '4.0.1' are `0` while they were `NA` without weights. This stirrs from the fact that group '4.0.1' only has one observation, and in the bessel-corrected estimate of the variance there is a `n - 1` in the denominator which becomes `0` if `n = 1` and division by `0` becomes `NA` in this case (fvar was designed that way to match the behavior or `stats::var`). In the weighted version the denominator is `sum(w) - 1`, and if `sum(w)` is not 1, then the denominator is not `0`. The standard-deviation however is still `0` because the sum of squares in the numerator is `0`. In other words this means that in a weighted aggregation singleton-groups are not treated like singleton groups unless the corresponding weight is `1`.]. 
+We could also calculate groupwise-frequency weighted means and standard-deviations using a weight vector, and we could decide to include the original grouping columns and omit the generated row-names, as shown below^[You may wonder why with weights the standard-deviations in the group '4.0.1' are `0` while they were `NA` without weights. This stirrs from the fact that group '4.0.1' only has one observation, and in the bessel-corrected estimate of the variance there is a `n - 1` in the denominator which becomes `0` if `n = 1` and division by `0` becomes `NA` in this case (`fvar` was designed that way to match the behavior or `stats::var`). In the weighted version the denominator is `sum(w) - 1`, and if `sum(w)` is not 1, then the denominator is not `0`. The standard-deviation however is still `0` because the sum of squares in the numerator is `0`. In other words this means that in a weighted aggregation singleton-groups are not treated like singleton groups unless the corresponding weight is `1`.]. 
 
 There is also a *collapse* predicate `add_vars` which serves as a much faster and more versatile alternative to `cbind.data.frame`. The intention behind `add_vars` is to be able to efficiently add multiple columns to an existing data.frame. Thus in a call `add_vars(data, newcols1, newcols2)`, `newcols1` and `newcols2` are added (by default) at the end of `data`, while preserving all attributes of `data`. 
 ```{r}
@@ -280,11 +281,11 @@ rm(mtcars)
 
 These examples above could be made more involved using the full set of *Fast Statistical Functions*, and also employing all of the vector- valued functions and operators (`fscale/STD, fbetween/B, fwithin/W, fHDbetween/HDB, fHDwithin/HDW, flag/L/F, fdiff/D, fgrowth/G`) discussed later. They also provide merely suggestions for use of these features and are focused on programming with data.frames (as the predicates `get_vars`, `add_vars` etc. are made for data.frames). The *Fast Statistical Functions* however work equally well on vectors and matrices. Not really discussed so far were a set of functions `qDF, qDT, qM` which deliver very fast conversions between matrices, data.frames and data.tables. 
 
-Using *collapse*'s fast functions and the programming principles laid out here can speed up grouped computations by orders of magnitude - even compared to packages like *dplyr* or *data.table* (see e.g. the bechmarks provided further down). Simple column-wise computations on matrices are also slightly faster than with `base` functions like `colMeans`, `colSums`, and of course a lot faster than applying these base functions to data.frame's (which involves a conversion to matrix). Fast row-wise operations are not really the focus of *collapse* for the moment, also provided that they are not so common. Using conversions with `qM` together with base functions like `rowSums` however does a very decent job of speeding them up (i.e. evaluate the speed of `rowSums(qM(mtcars))` against `rowSums(mtcars)`). 
+Using *collapse*'s fast functions and the programming principles laid out here can speed up grouped computations by orders of magnitude - even compared to packages like *dplyr* or *data.table* (see e.g. the benchmarks provided further down). Simple column-wise computations on matrices are also slightly faster than with `base` functions like `colMeans`, `colSums`, and of course a lot faster than applying these base functions to data.frame's (which involves a conversion to matrix). Fast row-wise operations are not really the focus of *collapse* for the moment, also provided that they are not so common. Using conversions with `qM` together with base functions like `rowSums` however does a very decent job of speeding them up (i.e. evaluate the speed of `rowSums(qM(mtcars))` against `rowSums(mtcars)`). 
 
 
 ## 3. Advanced Data Aggregation
-The kind of advanced groupwise programming introduced in the previous section is the fastest and most costumizeable way of dealing with many data transformation problems, and it is also made highly compatible with workflows in packages like *dplyr* and *plm* (see the two vignettes on these subjects). Some tasks such as multivariate aggregations on a single data.frame are however so common that this demands for a more compact solution that efficiently integrates multiple computational steps: 
+The kind of advanced groupwise programming introduced in the previous section is the fastest and most customizable way of dealing with many data transformation problems, and it is also made highly compatible with workflows in packages like *dplyr* and *plm* (see the two vignettes on these subjects). Some tasks such as multivariate aggregations on a single data.frame are however so common that this demands for a more compact solution that efficiently integrates multiple computational steps: 
 
 `collap` is a fast multi-purpose aggregation command designed to solve complex aggregation problems efficiently and with a minimum of coding. `collap` performs optimally together with the *Fast Statistical Functions*, but will also work with other functions. 
 
@@ -350,7 +351,6 @@ testdat[["g2"]] <- sample.int(100, 1e6, replace = TRUE) # 100 groups
 GRP(testdat, ~ g1 + g2) 
 
 # dplyr vs. data.table vs. collap (calling Fast Functions):
-library(data.table)
 library(dplyr)
 
 # Sum
@@ -419,7 +419,7 @@ system.time(collap(testdat, ~ g1 + g2, fNdistinct))
 
 ```
 
-I believe on really huge datasets arregated on a multi-core machine, *data.table*'s memory efficiency and thread-parallelization will let it run faster with some GeForce optimized functions, but that does not apply to most users (I have tested up to 10 million obs. on my laptop where *collapse* is still very much in line). In comparison to *collapse* and *data.table* the performance of *dplyr* on this data is rather poor, especially for base functions that are not highly optimized like `sum`. I do however very much appreciate the tidyverse ecosystem for highly organized data exploration and transformation. Therefore I have created methods for all of the *Fast Statistical Functions* as well as `collap`, enabling them to be used effectively in the *dplyr* ecosystem where they produce amazing speed gains. This is the subject of the '*collapse* and *dplyr*' vignette. 
+I believe on really huge datasets aggregated on a multi-core machine, *data.table*'s memory efficiency and thread-parallelization will let it run faster with some GeForce optimized functions, but that does not apply to most users (I have tested up to 10 million obs. on my laptop where *collapse* is still very much in line). In comparison to *collapse* and *data.table* the performance of *dplyr* on this data is rather poor, especially for base functions that are not highly optimized like `sum`. I do however very much appreciate the tidyverse ecosystem for highly organized data exploration and transformation. Therefore I have created methods for all of the *Fast Statistical Functions* as well as `collap`, enabling them to be used effectively in the *dplyr* ecosystem where they produce amazing speed gains. This is the subject of the '*collapse* and *dplyr*' vignette. 
 
 Apart from its non-reliance on non-standard evaluation, a central advantage of *collapse* for programming is the speed it maintains on smaller problems where it's more efficient R code compared to *dplyr* and *data.table* really plays out: 
 ```{r}
@@ -481,7 +481,7 @@ identical(dapply(mtcars, log), dapply(m, log, return = "data.frame"))
 I do not provide benchmarks here, but `dapply` is also very efficient. On data.frames, the performance is comparable to `lapply`, and `dapply` is about 2x faster than `apply` for row- or column-wise operations on matrices. The most important feature for me however is that it does not change the structure of the data at all: all attributes are preserved, so you can use `dapply` on a data table, grouped tibble, or on a time-series matrix and get a transformed object of the same class back (unless the result is a scalar in which case `dapply` by default simplifies and returns a vector).
 
 ### 4.2. Split-Apply-Combine Computing
-`BY` is a generalization of `dapply` for grouped computations using functions that are not part of the *Fast Statistical Functions* introduced above. It foundationally is a reimplementation of the `lapply(split(x, g), FUN, ...)` computing paradigm in base R, but substantially faster and more versatile than functions like `tapply`, `by` or `aggregate`. It is however not faster than *dplyr* which remains the best solution for larger grouped computations on data.frames requiring split-apply-combine computing.  
+`BY` is a generalization of `dapply` for grouped computations using functions that are not part of the *Fast Statistical Functions* introduced above. It fundamentally is a reimplementation of the `lapply(split(x, g), FUN, ...)` computing paradigm in base R, but substantially faster and more versatile than functions like `tapply`, `by` or `aggregate`. It is however not faster than *dplyr* which remains the best solution for larger grouped computations on data.frames requiring split-apply-combine computing.  
 
 `BY` is S3 generic with methods for vector, matrix, data.frame and grouped_df^[`BY.grouped_df` is probably only useful together with the `expand.wide = TRUE` argument which *dplyr* does not have, because otherwise *dplyr*'s `summarize` and `mutate` are substantially faster on larger data.]. It also supports the same grouping (`g`) inputs as the *Fast Statistical Functions* (grouping vectors, factors, lists or *GRP* objects). Below I demonstrate the use if `BY` on vectors matrices and data.frames.
 
@@ -590,7 +590,7 @@ head(STD(mtcars),2)
 # See that is works
 qsu(STD(mtcars))                   
 ```
-Scaling with \code{fscale / STD} can also be done groupwise and / or weighted. For example the Groningen Growth and Development Center 10-Sector Database^[Included as example data in *collapse* and summarized in section 1] provides annual series of value added in local currency and persons employed for 10 broad sectors in several African, Asian, and Latin American countries. 
+Scaling with `fscale / STD` can also be done groupwise and / or weighted. For example the Groningen Growth and Development Center 10-Sector Database^[Included as example data in *collapse* and summarized in section 1] provides annual series of value added in local currency and persons employed for 10 broad sectors in several African, Asian, and Latin American countries. 
 ```{r}
 head(GGDC10S)
 ```
@@ -628,7 +628,8 @@ head(add_vars(get_vars(wlddev, "iso3c"),     # Same thing done manually using fw
      add_stub(fwithin(get_vars(wlddev, 9:12), wlddev$iso3c), "W.")))
 ```
 It is also possible to drop the id's in `W` using the argument `keep.by = FALSE`. `fbetween / B` and `fwithin / W` each have one additional computational option: 
-```{r}
+
+```{r, fig.height=4}
 # This replaces missing values with the group-mean: Same as fmean(x, g, TRA = "replace_fill")
 head(B(wlddev, ~ iso3c, cols = 9:12, fill = TRUE))
 
@@ -640,9 +641,10 @@ head(W(wlddev, ~ iso3c, cols = 9:12, add.global.mean = TRUE))
 
 # Visual demonstration of centering on the global mean vs. simple centering
 oldpar <- par(mfrow = c(1,3)) 
-plot(iris[1:2], col = iris$Species)                                       # Raw data
-plot(W(iris, ~ Species)[2:3], col = iris$Species)                         # Simple centering
-plot(W(iris, ~ Species, add.global.mean = TRUE)[2:3], col = iris$Species) # Centering on overall mean: Preserves level of data
+plot(iris[1:2], col = iris$Species, main = "Raw Data")                       # Raw data
+plot(W(iris, ~ Species)[2:3], col = iris$Species, main = "Simple Centering") # Simple centering
+plot(W(iris, ~ Species, add.global.mean = TRUE)[2:3], col = iris$Species,    # Centering on overall mean: Preserves level of data
+     main = "add.global.mean") 
 par(oldpar)
 ```
 Another great utility of operators is that they can be employed in regression formulas in a manor that is both very efficient and pleasing to the eyes. Below I demonstrate the use of `W` and `B` to efficiently run fixed-effects regressions with `lm`. 
@@ -662,14 +664,14 @@ coef(lm(W.PCGDP ~ W.LIFEEX, W(data, PCGDP + LIFEEX ~ iso3c)))
 # Adding the overall mean back to the data only changes the intercept
 coef(lm(W.PCGDP ~ W.LIFEEX, W(data, PCGDP + LIFEEX  ~ iso3c, add.global.mean = TRUE)))
 
-# Procedure suggested by Mundlack (1978) - controlling for group averages instead of demeaning
+# Procedure suggested by Mundlak (1978) - controlling for group averages instead of demeaning
 coef(lm(PCGDP ~ LIFEEX + B(LIFEEX,iso3c), data))
 ```
 
 In general I recommend calling the full functions (i.e. `fwithin` or `fscale` etc.) for programming since they are a bit more efficient on the R-side of things and require all input in terms of data. For all other purposes I find the operators are more convenient. It is important to note that the operators can do everything the functions can do (i.e. you can also pass grouping vectors or *GRP* objects to them). They are just simple wrappers that in the data.frame method add 4 additional features:
 
 * The possibility of formula input to `by` i.e. `W(mtcars, ~ cyl)` or `W(mtcars, mpg ~ cyl)`
-* They preseve grouping columns (`cyl` in the above example) when passed in a formula (default `keep.by = TRUE`)
+* They preserve grouping columns (`cyl` in the above example) when passed in a formula (default `keep.by = TRUE`)
 * The ability to subset many columns using the `cols` argument (i.e. `W(mtcars, ~ cyl, cols = 4:7)` is the same as `W(mtcars, hp + drat + wt + qsec ~ cyl)`)
 * They rename transformed columns by adding a prefix (default `stub = "W."`)
 
@@ -678,12 +680,12 @@ That's it about operators! If you like this kind of parsimony use them, otherwis
 <!-- # Now with cyl, vs and am fixed effects -->
 <!-- lm(W(mpg,list(cyl,vs,am)) ~ W(carb,list(cyl,vs,am)), data = mtcars) -->
 <!-- lm(mpg ~ carb, data = W(mtcars, ~ cyl + vs + am, stub = FALSE)) -->
-<!-- lm(mpg ~ carb + B(carb,list(cyl,vs,am)), data = mtcars) -->
+<!-- lm(mpg ~ carb + collapse::B(carb,list(cyl,vs,am)), data = mtcars) -->
 
 <!-- # Now with cyl, vs and am fixed effects weighted by hp: -->
 <!-- lm(W(mpg,list(cyl,vs,am),hp) ~ W(carb,list(cyl,vs,am),hp), data = mtcars) -->
 <!-- lm(mpg ~ carb, data = W(mtcars, ~ cyl + vs + am, ~ hp, stub = FALSE)) -->
-<!-- lm(mpg ~ carb + B(carb,list(cyl,vs,am),hp), data = mtcars)       # This gives a slightly different coefficient!! -->
+<!-- lm(mpg ~ carb + collapse::B(carb,list(cyl,vs,am),hp), data = mtcars)       # This gives a slightly different coefficient!! -->
 
 ### 4.6. HD Centering and Linear Prediction
 Sometimes simple centering is not enough, for example if a linear model with multiple levels of fixed-effects needs to be estimated, potentially involving interactions with continuous covariates. For these purposes `fHDwithin / HDW` and `fHDbetween / HDB` were created as efficient multi-purpose functions for linear prediction and partialling out. They operate by splitting complex regression problems in 2 parts: Factors and factor-interactions are projected out using `lfe::demeanlist`, an efficient `C` routine for centering vectors on multiple factors, whereas continuous variables are dealt with using a standard `qr` decomposition in base R. The examples below show the use of the `HDW` operator in manually solving a regression problem with country and time fixed effects. 
@@ -700,7 +702,7 @@ coef(lm(HDW(PCGDP, list(iso3c, year)) ~ HDW(LIFEEX, list(iso3c, year)), data))
 # Centering the entire data
 coef(lm(HDW.PCGDP ~ HDW.LIFEEX, HDW(data, PCGDP + LIFEEX ~ iso3c + year)))     
 
-# Procedure suggested by Mundlack (1978) - controlling for averages instead of demeaning
+# Procedure suggested by Mundlak (1978) - controlling for averages instead of demeaning
 coef(lm(PCGDP ~ LIFEEX + HDB(LIFEEX, list(iso3c, year)), data))
 ```
 We may wish to test whether including time fixed-effects in the above regression actually impacts the fit. This can be done with the fast F-test:
@@ -729,11 +731,11 @@ head(HDW(iris[1:2], iris[3:4]))
 head(HDW(iris[1:2], iris[3:5]))
 ```
 
-I am hoping that the *lfe* package Author Simen Gaure will at some point improve the part of the algorithm projecting out interactions. Otherwise I will code something myself to improve this feature. There have also been several packages published recently to estimate heterogenous slopes models. I might take some time to look at those implementations and update `HDW` and `HDB` at some point. 
+I am hoping that the *lfe* package Author Simen Gaure will at some point improve the part of the algorithm projecting out interactions. Otherwise I will code something myself to improve this feature. There have also been several packages published recently to estimate heterogeneous slopes models. I might take some time to look at those implementations and update `HDW` and `HDB` at some point. 
 
 ### Transformation Benchmarks
 
-Below I provide benckmarks for some very common data transformation tasks, again comparing *collapse* to *dplyr* and *data.table*:
+Below I provide benchmarks for some very common data transformation tasks, again comparing *collapse* to *dplyr* and *data.table*:
 
 ```{r}
 # The average group size is 10, there are about 100000 groups
@@ -924,7 +926,7 @@ Similarly to `flag / L / F`, `fdiff / D` computes sequences of suitably lagged /
 ```{r}
 plot(stl(AirPassengers, "periodic"))
 ```
-We can actually test the statistical significance of this seasonality around a cubic trend using again the fast F-test (same as running a regression with and without seasonal dummies and a cubic polinomial trend, but faster):
+We can actually test the statistical significance of this seasonality around a cubic trend using again the fast F-test (same as running a regression with and without seasonal dummies and a cubic polynomial trend, but faster):
 ```{r}
 fFtest(AirPassengers, qF(cycle(AirPassengers)), poly(seq_along(AirPassengers), 3))
 ```
@@ -966,7 +968,6 @@ head(G(GGDC10S, 1, 1, ~ Variable + Country, ~ Year, cols = 6:10))
 ```
 One could also add variables by reference using *data.table*: 
 ```{r, warning=FALSE}
-library(data.table)
 head(qDT(wlddev)[, paste0("G.", names(wlddev)[9:12]) := fgrowth(.SD,1,1,iso3c,year), .SDcols = 9:12])
 
 ```
@@ -988,7 +989,7 @@ How long did it take to run this computation? About 4 milliseconds on my laptop 
 ```{r}
 microbenchmark(HDW(L(G(wlddev, c(0, 10), 1, ~iso3c, ~year, 9:10), c(0, 10), ~iso3c, ~year), ~iso3c + qF(year)))
 ```
-One of the inconveniences of the above computations is that it requires declaring the panel-identifiers `iso3c` and `year` again and again for each function. A great remedy here are the *plm* classes *pseries* and *pdata.frame* which *collapse* was built to support. To advovate for the use of these classes for panel-data, here I show how one could run the same regression with plm:
+One of the inconveniences of the above computations is that it requires declaring the panel-identifiers `iso3c` and `year` again and again for each function. A great remedy here are the *plm* classes *pseries* and *pdata.frame* which *collapse* was built to support. To advocate for the use of these classes for panel-data, here I show how one could run the same regression with plm:
 ```{r}
 pwlddev <- plm::pdata.frame(wlddev, index = c("iso3c", "year"))
 moddat <- HDW(L(G(pwlddev, c(0, 10), 1, 9:10), c(0, 10)))[-c(1,5)]
@@ -998,7 +999,7 @@ To learn more about the integration of *collapse* and *plm*, see the correspondi
 
 ### Time-Computation Benchmarks
 
-Below I provide some benckmarks for lags, differences and growth rates on panel-data. I will run microbenchmarks on the *wlddev* dataset. benchmarks on larger panels are already provided in the other vignettes. Again I compare *collapse* to *dplyr* and *data.table*:
+Below I provide some benchmarks for lags, differences and growth rates on panel-data. I will run microbenchmarks on the `wlddev` dataset. benchmarks on larger panels are already provided in the other vignettes. Again I compare *collapse* to *dplyr* and *data.table*:
 
 ```{r}
 # We have a balanced panel of 216 countries, each observed for 59 years
@@ -1045,7 +1046,7 @@ The results are similar to the grouped transformations: *collapse* dramatically 
 
 
 ## 6. List Processing and a Panel-VAR Example
-*collapse* also provides an ensemble of list-processing functions that grew out of a necessity of working with complex nested lists of data objects. The example provided in this section is also somewhat complex, but it demonstrates the utility of these functions while also providing a nice data-transformation task. When summarizing the `GGDC10S` data in section 1, it became clear that certain sectors have a high share of economic activity in almost all countries in the sample. The application I devised for this section is to see if there are common patterns in the interaction of these important sectors across countries. The approach for this will be an attempt of running a (Structural) Panel-Vector-Autoregression (SVAR) in value added with the 6 most important sectors (exluding government): Agriculture, manufacturing, wholesale and retail trade, construction, transport and storage and finance and real estate. 
+*collapse* also provides an ensemble of list-processing functions that grew out of a necessity of working with complex nested lists of data objects. The example provided in this section is also somewhat complex, but it demonstrates the utility of these functions while also providing a nice data-transformation task. When summarizing the `GGDC10S` data in section 1, it became clear that certain sectors have a high share of economic activity in almost all countries in the sample. The application I devised for this section is to see if there are common patterns in the interaction of these important sectors across countries. The approach for this will be an attempt of running a (Structural) Panel-Vector-Autoregression (SVAR) in value added with the 6 most important sectors (excluding government): Agriculture, manufacturing, wholesale and retail trade, construction, transport and storage and finance and real estate. 
 
 For this I will use the *vars* package^[I noticed there is a *panelvar* package, but I am more familiar with *vars* and *panelvar* can be pretty slow in my experience. We also have about 50 years of data here, so dynamic panel-bias is not a big issue.]. Since *vars* natively does not support panel-VAR, we need to create the central *varest* object manually and then run the `SVAR` function to impose identification restrictions. We start off exploring and harmonizing the data:
 <!-- and then the `irf` and `fevd` commands which create the impulse response functions and the forecast error variance decompositions, respectively.  -->
@@ -1076,7 +1077,6 @@ For this I will use the *vars* package^[I noticed there is a *panelvar* package,
 
 
 ```{r, warning=FALSE, message=FALSE}
-library(data.table)
 library(vars)
 # The 6 most important non-government sectors (see section 1)
 sec <- c("AGR","MAN","WRT","CON","TRA","FIRE")
@@ -1094,7 +1094,7 @@ AGRmat <- dapply(AGRmat, fHDwithin, poly(seq_row(AGRmat), 3), fill = TRUE)
 
 plot(AGRmat)
 ```
-This seems to have done a devent job in curbing some of that heterogeneity. Some series however have a high variance around that cubic trend. Therefore as a final step I standardize the data to bring the variances in line:
+This seems to have done a decent job in curbing some of that heterogeneity. Some series however have a high variance around that cubic trend. Therefore as a final step I standardize the data to bring the variances in line:
 
 ```{r}
 # Standadizing the cubic log-detrended data
@@ -1124,7 +1124,7 @@ Since the data is annual, let us estimate the Panel-VAR with one lag:
 add_vars(data) <- L(data, 1, ~ Country, ~ Year, keep.ids = FALSE) 
 # This removes missing values from all but the first row and drops identifier columns (vars is made for time-series without gaps)
 data <- rbind(data[1, -(1:2)], na.omit(data[-1, -(1:2)])) 
-data
+head(data)
 ```
 
 
@@ -1167,7 +1167,7 @@ The significant serial-correlation test below suggests that the panel-VAR with o
 ```{r}
 serial.test(pVAR)
 ```
- By default the VAR is identified using a Choleski odering, by which the first variable (here Agriculture) is assumed to not be directly impacted by any other sector in the same period, and this decends down to the last variable (Finance and Real Estate), which is assumed to be impacted by all other sectors in the current period. For structural identification it usually necessary to impose restrictions on the direct impact matrix in line with economic theory. I do not have any theories on the average worldwide interaction of broad economic sectors, but for identification I will just compute the correlation matrix in growth rates and restrict the lowest coefficients to be 0, which should be better than just imposing a random choleski ordering. This will also enable me to give a demonstration of the grouped tibble methods for *collapse* functions, discussed in more detail in the '*collapse* and *dplyr*' vignette: 
+ By default the VAR is identified using a Choleski ordering of the direct impact matrix in which the first variable (here Agriculture) is assumed to not be directly impacted by any other sector in the current period, and this descends down to the last variable (Finance and Real Estate), which is assumed to be impacted by all other sectors in the current period. For structural identification it usually necessary to impose restrictions on the direct impact matrix in line with economic theory. I do not have any theories on the average worldwide interaction of broad economic sectors, but to aid identification I will compute the correlation matrix in growth rates and restrict the lowest coefficients to be 0, which should be better than just imposing a random Choleski ordering. This will also enable me to give a demonstration of the grouped tibble methods for *collapse* functions, discussed in more detail in the '*collapse* and *dplyr*' vignette: 
 
 <!-- # This computes the correlation matrix in panel growth rates of VA of the 6 sectors, removing very large positive or negative growth rates:  -->
 <!-- corr <- GGDC10S %>% filter(Variable == "VA") %>%                           # Taking VA series -->
@@ -1207,11 +1207,11 @@ corr <- filter(GGDC10S, Variable == "VA") %>%   # Subset rows: Only VA
 
 corr
 
-# We need to impose K*(K-1)/2 = 15 with K = 6 restrictions for identification
+# We need to impose K*(K-1)/2 = 15 (with K = 6 variables) restrictions for identification
 corr[corr <= sort(corr)[15]] <- 0
 corr
 
-# The rest is unknown (i.e will be estimated)
+# The rest is unknown (i.e. will be estimated)
 corr[corr > 0 & corr < 1] <- NA
 
 # This estimates the Panel-SVAR using Maximum Likelihood:
@@ -1225,14 +1225,14 @@ Now this object is quite involved, which brings us to the actual subject of this
 str(pSVAR, give.attr = FALSE, max.level = 3)
 ```
 
-### 6.1 List Identification
+### 6.1 List Search and Identification
 
 When dealing with such a list-like object, we might be interested in its complexity by measuring the level of nesting. This can be done with `ldepth`:
 ```{r}
 # The list-tree of this object has 5 levels of nesting
 ldepth(pSVAR)
 
-# The data has a depth of 1, thus this dataset does not contain list-columns
+# This data has a depth of 1, thus this dataset does not contain list-columns
 ldepth(data)
 ```
 Further we might be interested in knowing whether this list-object contains non-atomic elements like call, terms or formulas. The function `is.regular` in the *collapse* package checks if an object is atomic or list-like, and the recursive version `is.unlistable` checks whether all objects in a nested structure are atomic or list-like:
@@ -1248,16 +1248,16 @@ has_elem(pSVAR, "fitted", regex = TRUE)
 # Does this object contain an element with "residuals" in its name?
 has_elem(pSVAR, "residuals", regex = TRUE)
 ```
-We could also want to know whether the object contains some kind of data-matrix. This can be ckecked by calling:
+We might also want to know whether the object contains some kind of data-matrix. This can be checked by calling:
 ```{r}
 # Is there a matrix stored in this object?
 has_elem(pSVAR, is.matrix)
 ```
 
-These functions can sometimes be helpful in exploring object, although for all practical purposes the viewer in Rstudio is very informative. A much greater advantage of having functions to search and ckeck lists is the ability to write more complex programs with them (which I will not demonstrate here). 
+These functions can sometimes be helpful in exploring object, although for all practical purposes the viewer in Rstudio is very informative. A much greater advantage of having functions to search and check lists is the ability to write more complex programs with them (which I will not demonstrate here). 
 
 ### 6.2 List Subsetting
-Having gathered some information about the `pSVAR` object in the previous section, this section introduces several extractor functions to pull out elements from such lists. `get_elem` can be used to pull out elements from lists in a simplified format. The *vars* package also provides convenient extractor functions for some quantities, but `get_elem` of course works in a much broader range of contexts. 
+Having gathered some information about the `pSVAR` object in the previous section, this section introduces several extractor functions to pull out elements from such lists: `get_elem` can be used to pull out elements from lists in a simplified format^[The *vars* package also provides convenient extractor functions for some quantities, but `get_elem` of course works in a much broader range of contexts.]. 
 ```{r}
 # This is the path to the residuals from a single equation
 str(pSVAR$var$varresult$STD.HDW.AGR$residuals)
@@ -1286,12 +1286,12 @@ The `pIRF` object contains the IRF's with lower and upper confidence bounds and 
 # See the structure of a vars IRF object: 
 str(pIRF, give.attr = FALSE)
 ```
-We could separately access the top-level atomic or list elements using `atomic_elem` or `list_elem`.
+We could separately access the top-level atomic or list elements using `atomic_elem` or `list_elem`:
 ```{r}
 # Pool-out top-level atomic elements in the list
-atomic_elem(pIRF)
+str(atomic_elem(pIRF))
 ```
-There are also recursive versions `reg_elem` and `irreg_elem` not discussed in this vignette. 
+There are also recursive versions of `atomic_elem` and `list_elem` named `reg_elem` and `irreg_elem` which can be used to split nested lists into the atomic and non-atomic parts. These are not covered in this vignette. 
 
 ### 6.3 Data Apply and Unlisting in 2D
 *vars* supplies plot methods for IRF and FEVD objects using base graphics, for example:
@@ -1301,30 +1301,37 @@ plot(pFEVD)
 ```
 `plot(pIRF)` would give us 6 charts of all sectoral responses to each sectoral shock. In this section I however want to generate nicer plots using `ggplot2` and also compute some statistics on the IRF data. Starting with the latter, the code below sums the 10-period impulse response coefficients of each sector in response to each sectoral impulse and stores them in a data.frame:
 ```{r}
-# Computing the cumulative impact after 10 periods, scaled by 100
-unlist2d(rapply2d(list_elem(pIRF), function(x) round(fsum(x)*100)), idcols = c("Type","Impulse"))
+# Computing the cumulative impact after 10 periods
+list_elem(pIRF) %>%                            # Pull out the sublist elements containing the IRF coefficients + CI's
+  rapply2d(function(x) round(fsum(x), 2)) %>%  # Recursively apply the column-sums to coefficient matrices (could also use colSums)
+  unlist2d(c("Type", "Impulse"))               # Recursively row-bind the result to a data.frame and add identifier columns
+                             # Round result to 2 digits
 ```
-The function `rapply2d` used here is very similar to `base::rapply`, with the difference that the result is not unlisted by default and that `rapply2d` will treat data.frame's like atomic objects and apply functions to them. `unlist2d` is an efficient generalization of `base::unlist` to 2-dimensions, or one could also think of it as a recursive generalization of `do.call(rbind, ...)`. It efficiently unlists nested lists of data objects and creates a data.frame with identifier columns for each level of nesting on the left, and the content of the list in columns on the right. 
+The function `rapply2d` used here is very similar to `base::rapply`, with the difference that the result is not simplified / unlisted by default and that `rapply2d` will treat data.frame's like atomic objects and apply functions to them. `unlist2d` is an efficient generalization of `base::unlist` to 2-dimensions, or one could also think of it as a recursive generalization of `do.call(rbind, ...)`. It efficiently unlists nested lists of data objects and creates a data.frame with identifier columns for each level of nesting on the left, and the content of the list in columns on the right. 
 
-The above cumulative coefficients suggest that a shock to agriculture has the greatest overall positive impact on value added on other sectors, followed by manufacturing which has a positive impact on all other sectors but a negative impact on agriculture. This however is likely just the consequence of the Choleski ordering, and without some kind of structural identification the whole panel-VAR is probably worthless.  
+The above cumulative coefficients suggest that Agriculture responds mostly to it's own shock, and a bit to shocks in Transport and Storage, Wholesale and Retail Trade and Manufacturing. The Finance and Real Estate sector seems even more independent and really only responds to it's own dynamics. Manufacturing and Transport and Storage seem to be pretty interlinked with the other broad sectors. Wholesale and Retail Trade and Construction exhibit some strange dynamics (i.e. WRT responds more to the CON shock that to it's own shock, and CON responds strongly negatively to the WRT shock). 
 
-Nevertheless we want to create `ggplot2` versions of the IRF's and FEVD's, and for that `unlist2d` will be particularly helpful in creating the data.frame represenation required. Starting with the IRF's, we will discard the upper and lower bounds and just use the impulses converted to a data.frame:
+Let us use `ggplot2` to create nice compact plots of the IRF's and FEVD's. For this task `unlist2d` will again be extremely helpful in creating the data.frame representation required. Starting with the IRF's, we will discard the upper and lower bounds and just use the impulses converted to a data.frame:
 ```{r}
 # This binds the matrices after adding integer row-names to them to a data.table
-data <- unlist2d(lapply(pIRF$irf, setRownames), idcols = "Impulse", row.names = "Time",
-                 id.factor = TRUE, DT = TRUE)
+
+data <- pIRF$irf %>%                      # Get only the coefficient matrices, discard the confidence bounds
+         lapply(setRownames) %>%          # Add integer rownames: setRownames(object, nm = seq_row(object))
+           unlist2d(idcols = "Impulse",   # Recursive unlisting to data.table creating a factor id-column
+                    row.names = "Time",   # and saving the generated rownames in a variable called 'Time'
+                    id.factor = TRUE,     # -> Create Id column ('Impulse') as factor
+                    DT = TRUE)            # -> Output as data.table (default is data.frame)
+
+head(data)
+
 # Coercing Time to numeric (from character)
 data$Time <- as.numeric(data$Time)
-# View the data
-head(data)
 
 # Using data.table's melt
 data <- melt(data, 1:2)
-
 head(data)
 
 # Here comes the plot:
-library(ggplot2)
   ggplot(data, aes(x = Time, y = value, color = Impulse)) + 
     geom_line(size = I(1)) + geom_hline(yintercept = 0) + 
     labs(y = NULL, title = "Orthogonal Impulse Response Functions") +
@@ -1343,20 +1350,15 @@ library(ggplot2)
 ```
 To round things off, below I do the same thing for the FEVD's:
 ```{r}
-# This binds the matrices after adding integer row-names to them to a data.table
+# Rewriting more compactly...
 data <- unlist2d(lapply(pFEVD, setRownames), idcols = "variable", row.names = "Time",
                  id.factor = TRUE, DT = TRUE)
-# Coercing Time to numeric (from character)
 data$Time <- as.numeric(data$Time)
-# View the data
 head(data)
-# Using data.table's melt
+
 data <- melt(data, 1:2, variable.name = "Sector")
 
-head(data)
-
 # Here comes the plot:
-library(ggplot2)
   ggplot(data, aes(x = Time, y = value, fill = Sector)) + 
     geom_area(position = "fill", alpha = 0.8) + 
     labs(y = NULL, title = "Forecast Error Variance Decompositions") +
@@ -1370,6 +1372,8 @@ library(ggplot2)
       strip.text = element_text(face = "bold", colour = "grey30"))
 
 ```
+Both the IRF's and the FEVD's show some strange behavior for Manufacturing, Wholesale and Retail Trade and Construction. There are also not much dynamics in the FEVD, suggesting that longer lag-lengths might be appropriate. The most important point of critique for this analysis is the structural identification strategy which is highly dubious (as correlation does not imply causation and I am also restricting sectoral relationships with a lower correlation to be 0 in the current period). A better method could be to aggregate the World Input-Output Database and use those shares for identification (which would be another very nice *collapse* exercise, but not for this vignette). 
+
 
 ## Going Further
 To learn more about *collapse*, I recommend just examining the documentation `help("collapse-documentation")` which is hierarchically organized, extensive and contains lots of examples. 
