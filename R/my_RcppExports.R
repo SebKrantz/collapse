@@ -285,6 +285,10 @@ cond_duplattributes <- function(x, y) {
     invisible(.Call(Cpp_cond_duplattributes, x, y))
 }
 
+groups2GRPCpp <- function(x, lx, gs) {
+    .Call(Cpp_groups2GRP, x, lx, gs)
+}
+
 lassignCpp <- function(x, s, rows = NULL, fill = NA_real_) {
     .Call(Cpp_lassign, x, s, rows, fill)
 }
