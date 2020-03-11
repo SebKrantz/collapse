@@ -19,8 +19,8 @@ vlabels <- function(X, attrn = "label") {
   }
   X
 }
+pasteclass <- function(x) paste(class(x), collapse = " ")
 vclasses <- function(X) {
-  pasteclass <- function(x) paste(class(x), collapse = " ")
   if(is.atomic(X)) return(pasteclass(X))
   vapply(X, pasteclass, character(1))
 }
