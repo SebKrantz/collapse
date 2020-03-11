@@ -20,8 +20,8 @@ Description: A C/C++ based package for advanced data transformation in R that is
     --- Key Features: ---
     (1) Advanced data programming: A full set of fast statistical functions 
         supporting grouped and/or weighted computations on vectors, matrices 
-        and data.frames. Fast (ordered) and reusable grouping, data 
-        conversions, and selecting, replacing or adding data.frame columns.
+        and data.frames. Fast (ordered) and reusable grouping, quick data 
+        conversions, and quick select, replace or add data.frame columns.
     (2) Advanced aggregation: Fast and easy multi-data-type, multi-function, 
         weighted, parallelized and fully customized data aggregation.
     (3) Advanced transformations: Fast (grouped, weighted) replacing and 
@@ -31,7 +31,7 @@ Description: A C/C++ based package for advanced data transformation in R that is
         (lagged / leaded, iterated) differences and growth rates on (unordered) 
         time-series and panel data. Multivariate auto, partial and cross-
         correlation functions for panel data. Panel data to (ts-)array conversions.
-    (5) List Processing: (Recursive) list-identification, extraction / 
+    (5) List Processing: (Recursive) list search / identification, extraction / 
         subsetting, data-apply, and row-binding / unlisting in 2D.
     (6) Advanced data exploration: Fast (grouped, weighted, panel-decomposed) 
         summary statistics for complex multilevel / panel data.
