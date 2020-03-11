@@ -7,6 +7,7 @@ descr <- function(X, Ndistinct = TRUE, higher = TRUE, table = TRUE,
   nam <- deparse(substitute(X))
 
   armat <- function(x, y) c(x[1L], Ndist = y, x[-1L])
+  natrm <- function(x) if(is.na(names(x)[length(x)])) x[-length(x)] else x # Remove NA from table !!
 
   dotsok <- if(!missing(...)) names(substitute(c(...))[-1L]) %!in% c('pid','g') else TRUE
 
@@ -18,12 +19,12 @@ descr <- function(X, Ndistinct = TRUE, higher = TRUE, table = TRUE,
   # Could make this more efficient ???
   descrcat <- function(x, tab = table) if(tab) list(Class = class(x), Label = attr(x, label.attr),
                                                     Stats = if(Ndistinct) c(N = fNobsCpp(x), Ndist = fNdistinctCpp(x)) else `names<-`(fNobsCpp(x), 'Nobs'),
-                                                    Table = fNobs.default(x, x)) else # table(x). FNobs is a lot Faster, but includes NA as level !!
+                                                    Table = natrm(fNobs.default(x, x))) else # table(x). FNobs is a lot Faster, but includes NA as level !!
                                                       list(Class = class(x), Label = attr(x, label.attr),
                                                            Stats = if(Ndistinct) c(N = fNobsCpp(x), Ndist = fNdistinctCpp(x)) else `names<-`(fNobsCpp(x), 'Nobs'))
   class(X) <- NULL
-  if(!is.list(X)) X <- qDF(X)
-  if(!is.null(cols)) X <- X[cols2int(cols, X, attr(X, "names"))]
+  if(!is.list(X)) X <- unclass(qDF(X))
+  if(!is.null(cols)) X <- X[cols2int(cols, X, names(X))]
   res <- vector('list', length(X))
   num <- vapply(X, is.numeric, TRUE, USE.NAMES = FALSE)
   res[num] <- lapply(X[num], descrnum, ...)
