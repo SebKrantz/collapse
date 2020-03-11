@@ -184,8 +184,9 @@ GRP.factor <- function(X, ...) {
 }
 
 GRP.pseries <- function(X, effect = 1L, ...) {
-  if(!missing(...)) stop("Unknown argument ", dotstostr(...))
   g <- unclass(attr(X, "index")) # index cannot be atomic since plm always adds a time variable !!
+  if(length(effect) > 1L) return(GRP.default(g[effect], ...))
+  if(!missing(...)) stop("Unknown argument ", dotstostr(...))
   # if(length(g) > 2L) {
   #   mlg <- -length(g)
   #   nam <- paste(names(g)[mlg], collapse = ".")
