@@ -1,15 +1,9 @@
 ## Resubmission
-This is a resubmission (the 3rd one, original submission was on 13.01.2020). In this version I have:
+This is a resubmission (Nr. 4, original submission was on 13.01.2020). In this version I have:
 
-* Implemented some minor improvements and fixed some typos compared to the 2nd resubmission of 02.02.2020. Please get back to me considering the current submission, you have not responded to the submission of 02.02. 
+* Added Martyn Plummer and 1999-2016 The R Core Team as cph in Authors@R as demanded by Swetlana Herbrandt in a response from 6th March 2020. In the previous submission R Core Team and contributors worldwide was just added as ctb.
 
-* Only listed the main authors ('aut'/citation) of data.table and Rcpp as 'ctb' to my package as suggested by Uwe Ligges in a response to the first resubmission from 18.01.2020.  
-
-* Properly implemented a remaining options(warn = -1) in recode_replace.R using on.exit.
-
-* Removed a commented-out \dontrun{} call in documentation (GGDS10S.Rd). (The first example in GGDS10S.Rd is still wrapped in \dontrun{} because it uses non-suggested packages and generates a runtime note on R CMD check)
-
-* Placed some examples in collapse-package.Rd which were in \dontrun{} before in \donttest{}, to avoid a example runtime note. 
+* Added 2 additional vignettes. 
 
 ## Test environments
 * local Windows 8.1 install, R 3.6.1
@@ -23,10 +17,11 @@ There were no ERRORs or WARNINGs.
 There was 1 NOTE:
 
   * checking installed package size ... NOTE
-    installed size is  6.8Mb
+    installed size is  7.8Mb
     sub-directories of 1Mb or more:
-      libs   4.6Mb
+      doc    1.7Mb
+      libs   4.7Mb
 
-This has to do with compiled files (.dll's). Pre-compilation, 
-the size of all .R, .c, .cpp, .h, .man, .rda and .Rmd files 
-together is about 2.4 Mb, of which 0.5 Mb is data (.rda).
+This has to do with compiled files. Data is only 0.5 Mb. 
+The note was already there in the previous submissions, 
+the added vignettes are small.
