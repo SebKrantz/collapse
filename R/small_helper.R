@@ -1,7 +1,6 @@
 # library(Rcpp)
 # sourceCpp("C++/small_helper.cpp")
 
-# Export --------------------------------------
 vlabels <- function(X, attrn = "label") {
   if(is.atomic(X)) {
     res <- attr(X, attrn)
@@ -20,8 +19,8 @@ vlabels <- function(X, attrn = "label") {
   }
   X
 }
-pasteclass <- function(x) paste(class(x), collapse = " ")
 vclasses <- function(X) {
+  pasteclass <- function(x) paste(class(x), collapse = " ")
   if(is.atomic(X)) return(pasteclass(X))
   vapply(X, pasteclass, character(1))
 }
@@ -103,7 +102,7 @@ na_insert <- function(X, prop = 0.1) {
   return(X)
 }
 fnlevels <- function(x) length(attr(x, "levels")) # make cpp version ?? -> nope, slower !!
-flevels <- function(x) attr(x, "levels")
+# flevels <- function(x) attr(x, "levels")
 fnrow <- function(x) length(unclass(x)[[1L]])
 forder.int <- function(x) if(is.unsorted(x)) .Call(C_forder, x, NULL, FALSE, TRUE, 1L, TRUE) else seq_along(x) # since forder gives integer(0) if sorted !!
 fsetdiff <- function(x, y) x[match(x, y, 0L) == 0L] # not unique !!
@@ -123,10 +122,10 @@ setRow.names <- function(df, nm) {
   attr(df, "row.names") <- nm
   df
 }
-remove_attributes <- function(x) {
-  attributes(x) <- NULL
-  x
-}
+# remove_attributes <- function(x) {
+#   attributes(x) <- NULL
+#   x
+# }
 addAttributes <- function(x, a) {
   ax <- attributes(x)
   .Call(Cpp_setAttributes, x, c(ax, a))
@@ -138,11 +137,11 @@ condsetn <- function(x, value, cond) {
   if(cond) attr(x, "names") <- value
   x
 }
-give_nam <- function(x, gn, stub) {
-  if(!gn) return(x)
-  attr(x, "names") <- paste0(stub, attr(x, "names"))
-  x
-}
+# give_nam <- function(x, gn, stub) {
+#   if(!gn) return(x)
+#   attr(x, "names") <- paste0(stub, attr(x, "names"))
+#   x
+# }
 anyNAerror <- function(x, e) if(anyNA(x)) stop(e) else x
 ckmatch <- function(x, y, e = "Unknown columns:") if(anyNA(m <- match(x, y))) stop(paste(c(e, x[is.na(m)]), collapse = " ")) else m
 cols2int <- function(cols, x, nam) {
@@ -216,8 +215,8 @@ G_t <- function(x, m = TRUE) {
   } else if(is.GRP(x)) return(x[[2L]]) else return(GRP(x, return.groups = FALSE)[[2L]])
 }
 rgrep <- function(exp, nam, ...) if(length(exp) == 1L) grep(exp, nam, ...) else funique(unlist(lapply(exp, grep, nam, ...), use.names = FALSE))
-NROW2 <- function(x, d) if(length(d)) d[1L] else length(x)
-NCOL2 <- function(d, ilv) if(ilv) d[2L] else 1L
+# NROW2 <- function(x, d) if(length(d)) d[1L] else length(x)
+# NCOL2 <- function(d, ilv) if(ilv) d[2L] else 1L
 charorNULL <- function(x) if(is.character(x)) x else NULL
 # more security here??
 unique_factor <- function(x) {
