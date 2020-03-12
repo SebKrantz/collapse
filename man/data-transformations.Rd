@@ -46,7 +46,7 @@ All of \code{collapse}'s \link[=A1-fast-statistical-functions]{Fast Statistical 
   \code{\link[=fbetween]{fbetween/B}} \tab\tab \code{default, matrix, data.frame, pseries, pdata.frame, grouped_df}  \tab\tab compute means / average data \cr
   \code{\link[=HDW]{fHDwithin/HDW}} \tab\tab \code{default, matrix, data.frame, pseries, pdata.frame} \tab\tab high-dimensional centering and lm residuals \cr
   \code{\link[=HDB]{fHDbetween/HDB}} \tab\tab \code{default, matrix, data.frame, pseries, pdata.frame} \tab\tab high-dimensional averages and lm fitted values \cr
-  \code{\link{fFtest}} \tab\tab No methods, it's a standalone test to which data needs to be supplied.  \tab\tab fast F-test of exclusion retrictions on linear models (involving factors) \cr
+  \code{\link{fFtest}} \tab\tab No methods, it's a standalone test to which data needs to be supplied.  \tab\tab fast F-test of exclusion restrictions on linear models (involving factors) \cr
   \code{\link[=flag]{flag/L/F}} \tab\tab \code{default, matrix, data.frame, pseries, pdata.frame, grouped_df}  \tab\tab (sequences of) lags / leads \cr
   \code{\link[=fdiff]{fdiff/D}} \tab\tab \code{default, matrix, data.frame, pseries, pdata.frame, grouped_df}  \tab\tab (sequences of lagged/leaded and iterated) differences \cr
   \code{\link[=fdiff]{fgrowth/G}} \tab\tab \code{default, matrix, data.frame, pseries, pdata.frame, grouped_df}  \tab\tab (sequences of lagged/leaded and iterated) growth rates or log-differences

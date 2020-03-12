@@ -25,9 +25,9 @@ It computes a set of 7 statistics (nobs, mean, sd, min, max, skewness and kurtos
 
 # Methods for compatibility with plm:
 
-\method{qsu}{pseries}(x, g = NULL, w = NULL, higher = FALSE, array = TRUE, \dots)
+\method{qsu}{pseries}(x, g = NULL, w = NULL, effect = 1L, higher = FALSE, array = TRUE, \dots)
 
-\method{qsu}{pdata.frame}(x, by = NULL, w = NULL, cols = NULL,
+\method{qsu}{pdata.frame}(x, by = NULL, w = NULL, cols = NULL, effect = 1L,
     higher = FALSE, array = TRUE, vlabels = FALSE, \dots)
 
 
@@ -39,13 +39,14 @@ It computes a set of 7 statistics (nobs, mean, sd, min, max, skewness and kurtos
   \item{x}{a numeric vector, matrix, data.frame, panel-series (\code{plm::pseries}) or panel-data.frame (\code{plm::pdata.frame})}
   \item{g}{a factor, \code{\link{GRP}} object, atomic vector (internally converted to factor) or a list of vectors / factors (internally converted to a \code{\link{GRP}} object) used to group \code{x}.}
   \item{by}{\emph{(p)data.frame method}: Same as \code{g}, but also allows one- or two-sided formulas i.e. \code{~ group1 + group2} or \code{var1 + var2 ~ group1 + group2}. See Examples.}
-  \item{pid}{same input as \code{g/by}: Specify a panel-identifier to also compute statistics on between- and within- transformed data. \code{data.frame} method also supports one- or two-sided formulas. Transformations are taken independently from grouping with \code{g/by} (grouped statistics are computed on the transformed data). However, passing any LHS variables to \code{pid} will overrwite any \code{LHS} variables passed to \code{by}.}
+  \item{pid}{same input as \code{g/by}: Specify a panel-identifier to also compute statistics on between- and within- transformed data. \code{data.frame} method also supports one- or two-sided formulas. Transformations are taken independently from grouping with \code{g/by} (grouped statistics are computed on the transformed data). However, passing any LHS variables to \code{pid} will overwrite any \code{LHS} variables passed to \code{by}.}
   \item{w}{a vector of (non-negative) weights. Adding weights will compute the weighted mean, sd, skewness and kurtosis, and transform the data using weighted individual means if \code{pid} is used.}
-  \item{cols}{select columns to summarize using column names, indices or a function (i.e. \code{is.numeric}). Two-sided formulas passed to \code{by} or \code{pid} overrwite \code{cols}.}
+  \item{cols}{select columns to summarize using column names, indices or a function (i.e. \code{is.numeric}). Two-sided formulas passed to \code{by} or \code{pid} overwrite \code{cols}.}
 
   \item{higher}{logical. Add higher moments (skewness and kurtosis).}
   \item{array}{logical. If computations have more than 2 dimensions (up to a maximum of 4D: variables, statistics, groups and panel-decomposition) output to array, else output (nested) list of matrices.}
   \item{vlabels}{logical. Use variable labels in the summary. See \code{\link{vlabels}}.}
+  \item{effect}{\code{plm} methods: Select which panel identifier should be used for between and within transformations of the data. 1L means first variable in the \code{plm::index}, 2L the second etc.. More than one variable can be supplied. }
   \item{\dots}{arguments to be passed to or from other methods.}
   \item{digits}{the number of digits to print after the comma/dot.}
   \item{nonsci.digits}{the number of digits to print before resorting to scientific notation (default is to print out numbers with up to 9 digits and print larger numbers scientifically).}

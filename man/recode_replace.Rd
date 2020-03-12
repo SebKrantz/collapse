@@ -36,7 +36,7 @@ replace_outliers(X, limits, value = NA, single.limit = c("SDs","min","max"))
   \itemize{
   \item \code{1 - "SDs"} specifies that \code{limits} will be interpreted as a (two-sided) threshold in column standard-deviations. The underlying code is equivalent to \code{X[abs(fscale(X)) > limits] <- value}.
   \item \code{2 - "min"} specifies that \code{limits} will be interpreted as a (one-sided) minimum threshold. The underlying code is equivalent to \code{X[X < limits] <- value}.
-  \item \code{3 - "max"} speciefies that \code{limits} will be interpreted as a (one-sided) maximum threshold. The underlying code is equivalent to \code{X[X > limits] <- value}.
+  \item \code{3 - "max"} specifies that \code{limits} will be interpreted as a (one-sided) maximum threshold. The underlying code is equivalent to \code{X[X > limits] <- value}.
   }
 }
 }

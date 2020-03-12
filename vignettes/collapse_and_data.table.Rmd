@@ -25,7 +25,7 @@ knitr::opts_chunk$set(
 )
 ```
 
-This vignette shows how the *collapse* package, and especially the fast functions contained therein, can be used together with *data.table* to compute new columns by reference and perform advanced tranformations with *data.table*. 
+This vignette shows how the *collapse* package, and especially the fast functions contained therein, can be used together with *data.table* to compute new columns by reference and perform advanced transformations with *data.table*. 
 
 For a more general introduction of the *collapse* package see the introductory vignette or read the documentation by calling `help('collapse-documentation')`.
 
@@ -42,7 +42,7 @@ When using *collapse's* fast functions inside a *data.table* environment, there 
 
 
 <!-- ## Advanced Aggregation with *data.table* -->
-The above noted, there is really no benefit in running aggreggations with *data.table*. I recommend using the fast functions directly or using *collapse::collap* for aggregation. For the sake of completeness I nevertheless show below how one would do that in *data.table* 
+The above noted, there is really no benefit in running aggregations with *data.table*. I recommend using the fast functions directly or using *collapse::collap* for aggregation. For the sake of completeness I nevertheless show below how one would do that in *data.table* 
 
 ```{r}
 library(collapse)

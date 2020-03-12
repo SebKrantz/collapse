@@ -34,10 +34,11 @@ psmat.default <- function(x, g, t = NULL, transpose = FALSE, ...) {
 }
 psmat.data.frame <- function(x, by, t = NULL, cols = NULL, transpose = FALSE, array = TRUE, ...) {
   if(!missing(...)) stop("Unknown argument ", dotstostr(...))
+  class(x) <- NULL # Setting globally !!
   if(is.atomic(by) && length(by) == 1L) {
-    nr <- nrow(x)
+    nr <- length(x[[1L]])
     n <- round(by)
-    if(!is.null(cols)) x <- unclass(x)[cols2int(cols, x, attr(x, "names"))]
+    if(!is.null(cols)) x <- x[cols2int(cols, x, names(x))]
     if(transpose) {
       dn <- list(seq_len(nr/n), paste0("GRP.",seq_len(by)))
       res <- lapply(x, matrix, ncol = n, dimnames = dn)
@@ -47,23 +48,22 @@ psmat.data.frame <- function(x, by, t = NULL, cols = NULL, transpose = FALSE, ar
     }
   } else {
     if(is.call(by)) {
-      nam <- attr(x, "names")
+      nam <- names(x)
       if(length(by) == 3L) {
-        v <- anyNAerror(match(all.vars(by[[2L]]), nam), "Unknown by columns!")
-        by <- anyNAerror(match(all.vars(by[[3L]]), nam), "Unknown by columns!")
+        v <- ckmatch(all.vars(by[[2L]]), nam)
+        by <- ckmatch(all.vars(by[[3L]]), nam)
       } else {
-        by <- anyNAerror(match(all.vars(by), nam), "Unknown by columns!")
-        v <- if(is.null(cols)) seq_along(x)[-by] else setdiff(cols2int(cols, x, nam), by)
+        by <- ckmatch(all.vars(by), nam)
+        v <- if(is.null(cols)) seq_along(x)[-by] else fsetdiff(cols2int(cols, x, nam), by)
       }
-      class(x) <- NULL
       by <- if(length(by) == 1L) x[[by]] else GRP(x, by) #, return.groups = FALSE)
       if(is.call(t)) { # If time-variable supplied !!
-        t <- anyNAerror(match(all.vars(t), nam), "Unknown time variable!")
-        v <- setdiff(v, t)
+        t <- ckmatch(all.vars(t), nam)
+        v <- fsetdiff(v, t)
         t <- if(length(t) == 1L) x[[t]] else GRP(x, t) #, return.groups = FALSE)
       }
       x <- x[v]
-    } else if(!is.null(cols)) x <- unclass(x)[cols2int(cols, x, attr(x, "names"))]
+    } else if(!is.null(cols)) x <- x[cols2int(cols, x, names(x))]
 
     if(!is.nmfactor(by)) if(is.atomic(by)) by <- qF(by, na.exclude = FALSE) else if(is.GRP(by))
                          by <- as.factor.GRP(by) else by <- as.factor.GRP(GRP(by)) # interaction(lapply(by, qF))
@@ -83,17 +83,17 @@ psmat.data.frame <- function(x, by, t = NULL, cols = NULL, transpose = FALSE, ar
 }
 psmat.pseries <- function(x, transpose = FALSE, ...) {
   if(!missing(...)) stop("Unknown argument ", dotstostr(...))
-  index <- attr(x, "index")
+  index <- unclass(attr(x, "index"))
   if(is.matrix(x)) stop("x is already a matrix")
   if(length(index) > 2L) index <- c(interaction(index[-length(index)], drop = TRUE), index[length(index)])
-  .Call(Cpp_psmat,x, index[[1L]], index[[2L]], transpose)
+  .Call(Cpp_psmat, x, index[[1L]], index[[2L]], transpose)
 }
 psmat.pdata.frame <- function(x, cols = NULL, transpose = FALSE, array = TRUE, ...) {
   if(!missing(...)) stop("Unknown argument ", dotstostr(...))
-  index <- attr(x, "index")
+  class(x) <- NULL
+  index <- unclass(attr(x, "index"))
   if(length(index) > 2L) index <- c(interaction(index[-length(index)], drop = TRUE), index[length(index)])
-
-  res <- lapply(if(is.null(cols)) x else unclass(x)[cols2int(cols, x, attr(x, "names"))], psmatCpp, index[[1L]], index[[2L]], transpose)
+  res <- lapply(if(is.null(cols)) x else x[cols2int(cols, x, names(x))], psmatCpp, index[[1L]], index[[2L]], transpose)
   if(array) {
     if(length(res) == 1L) return(res[[1L]]) else
     return(addAttributes(simplify2array(res), list(transpose = transpose, class = c("psmat","array"))))
@@ -146,10 +146,10 @@ plot.psmat <- function(x, legend = FALSE, colours = legend, labs = NULL, ...) {
 
 # print.psmat <- print.qsu # nah, too expensive
 
-# Not really necessary !! (and gave CRAN error !!)
-# print.psmat <- function(x, digits = 3, ...) {
-#   print.default(unclass(x), digits = digits, ...)
-# }
+
+print.psmat <- function(x, digits = 3, ...) {
+  print.default(`attr<-`(unclass(x), "transpose", NULL), digits = digits, ...)
+}
 
 `[.psmat` <- function(x, i, j, ..., drop = TRUE) {
   ret <- NextMethod()

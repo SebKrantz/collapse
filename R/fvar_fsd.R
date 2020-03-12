@@ -111,21 +111,22 @@ fsd.grouped_df <- function(x, w = NULL, TRA = NULL, na.rm = TRUE, use.g.names = 
                            keep.group_vars = TRUE, keep.w = TRUE, stable.algo = TRUE, ...) {
   if(!missing(...)) stop("Unknown argument ", dotstostr(...))
   g <- GRP.grouped_df(x)
-  wsym <- deparse(substitute(w))
+  wsym <- deparse(substitute(w)) # Speed up somehow ??
   nam <- attr(x, "names")
   gn2 <- gn <- which(nam %in% g[[5L]])
   nTRAl <- is.null(TRA)
   sumw <- NULL
 
   if(!(wsym == "NULL" || is.na(wn <- match(wsym, nam)))) {
-    w <- x[[wn]]
+    w <- unclass(x)[[wn]]
     if(any(gn == wn)) stop("Weights coincide with grouping variables!")
+    onlyw <- !length(gn)
     gn <- c(gn, wn)
     if(keep.w) {
      if(nTRAl) sumw <- `names<-`(list(fsumCpp(w,g[[1L]],g[[2L]],na.rm)), paste0("sum.", wsym)) else if(keep.group_vars)
      gn2 <- gn else sumw <- gn2 <- wn
     }
-  }
+  } else onlyw <- FALSE
 
   gl <- length(gn) > 0L # necessary here, not before !!!
 
@@ -137,7 +138,7 @@ fsd.grouped_df <- function(x, w = NULL, TRA = NULL, na.rm = TRUE, use.g.names = 
       ax[["class"]] <- ax[["class"]][ax[["class"]] != "grouped_df"]
       ax[["row.names"]] <- if(use.g.names) group_names.GRP(g) else .set_row_names(g[[1L]])
       if(gl) {
-        if(keep.group_vars) {
+        if(keep.group_vars && !onlyw) {
           ax[["names"]] <- c(g[[5L]], names(sumw), ax[["names"]][-gn])
           return(setAttributes(c(g[[4L]], sumw, .Call(Cpp_fvarsdl,x[-gn],g[[1L]],g[[2L]],g[[3L]],w,na.rm,stable.algo,TRUE,FALSE)), ax))
         } else {
@@ -265,14 +266,15 @@ fvar.grouped_df <- function(x, w = NULL, TRA = NULL, na.rm = TRUE, use.g.names =
   sumw <- NULL
 
   if(!(wsym == "NULL" || is.na(wn <- match(wsym, nam)))) {
-    w <- x[[wn]]
+    w <- unclass(x)[[wn]]
     if(any(gn == wn)) stop("Weights coincide with grouping variables!")
+    onlyw <- !length(gn)
     gn <- c(gn, wn)
     if(keep.w) {
       if(nTRAl) sumw <- `names<-`(list(fsumCpp(w,g[[1L]],g[[2L]],na.rm)), paste0("sum.", wsym)) else if(keep.group_vars)
         gn2 <- gn else sumw <- gn2 <- wn
     }
-  }
+  } else onlyw <- FALSE
 
   gl <- length(gn) > 0L # necessary here, not before !!!
 
@@ -284,7 +286,7 @@ fvar.grouped_df <- function(x, w = NULL, TRA = NULL, na.rm = TRUE, use.g.names =
       ax[["class"]] <- ax[["class"]][ax[["class"]] != "grouped_df"]
       ax[["row.names"]] <- if(use.g.names) group_names.GRP(g) else .set_row_names(g[[1L]])
       if(gl) {
-        if(keep.group_vars) {
+        if(keep.group_vars && !onlyw) {
           ax[["names"]] <- c(g[[5L]], names(sumw), ax[["names"]][-gn])
           return(setAttributes(c(g[[4L]], sumw, .Call(Cpp_fvarsdl,x[-gn],g[[1L]],g[[2L]],g[[3L]],w,na.rm,stable.algo,FALSE,FALSE)), ax))
         } else {

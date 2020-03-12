@@ -28,7 +28,7 @@ flag.default <- function(x, n = 1, g = NULL, t = NULL, fill = NA, stubs = TRUE, 
 }
 flag.pseries <- function(x, n = 1, fill = NA, stubs = TRUE, ...) {
   if(!missing(...)) stop("Unknown argument ", dotstostr(...))
-  index <- attr(x, "index")
+  index <- unclass(attr(x, "index"))
   if(length(index) > 2L) index <- c(interaction(index[-length(index)], drop = TRUE), index[length(index)])
   if(is.matrix(x))
   .Call(Cpp_flagleadm,x,n,fill,fnlevels(index[[1L]]),index[[1L]],NULL,index[[2L]],stubs) else
@@ -44,7 +44,7 @@ flag.matrix <- function(x, n = 1, g = NULL, t = NULL, fill = NA, stubs = TRUE, .
     }
     .Call(Cpp_flagleadm,x,n,fill,nl,g,NULL,G_t(t),stubs)
   } else {
-    if(!is.GRP(g)) g = GRP(g, return.groups = FALSE)
+    if(!is.GRP(g)) g <- GRP(g, return.groups = FALSE)
     .Call(Cpp_flagleadm,x,n,fill,g[[1L]],g[[2L]],g[[3L]],G_t(t),stubs)
   }
 }
@@ -56,7 +56,7 @@ flag.grouped_df <- function(x, n = 1, t = NULL, fill = NA, stubs = TRUE, keep.id
   gn <- which(nam %in% g[[5L]])
   if(!(tsym == "NULL" || is.na(tn <- match(tsym, nam)))) {
     if(any(gn == tn)) stop("timevar coincides with grouping variables!")
-    t <- x[[tn]]
+    t <- unclass(x)[[tn]]
     gn <- c(gn, tn)
   }
   if(length(gn)) {
@@ -80,13 +80,13 @@ flag.data.frame <- function(x, n = 1, g = NULL, t = NULL, fill = NA, stubs = TRU
       }
       .Call(Cpp_flagleadl,x,n,fill,nl,g,NULL,G_t(t),stubs)
     } else {
-      if(!is.GRP(g)) g = GRP(g, return.groups = FALSE)
+      if(!is.GRP(g)) g <- GRP(g, return.groups = FALSE)
       .Call(Cpp_flagleadl,x,n,fill,g[[1L]],g[[2L]],g[[3L]],G_t(t),stubs)
     }
 }
 flag.pdata.frame <- function(x, n = 1, fill = NA, stubs = TRUE, ...) {
   if(!missing(...)) stop("Unknown argument ", dotstostr(...))
-  index <- attr(x, "index")
+  index <- unclass(attr(x, "index"))
   if(length(index) > 2L) index <- c(interaction(index[-length(index)], drop = TRUE), index[length(index)])
   .Call(Cpp_flagleadl,x,n,fill,fnlevels(index[[1L]]),index[[1L]],NULL,index[[2L]],stubs)
 }
@@ -111,14 +111,14 @@ L.data.frame <- function(x, n = 1, by = NULL, t = NULL, cols = is.numeric,
   if(is.call(by) || is.call(t)) {
     ax <- attributes(x)
     class(x) <- NULL
-    nam <- ax[["names"]]
+    nam <- names(x)
 
     if(is.call(by)) {
       if(length(by) == 3L) {
-        cols <- anyNAerror(match(all.vars(by[[2L]]), nam), "Unknown variables passed to by!")
-        gn <- anyNAerror(match(all.vars(by[[3L]]), nam), "Unknown variables passed to by!")
+        cols <- ckmatch(all.vars(by[[2L]]), nam, "Unknown variables:")
+        gn <- ckmatch(all.vars(by[[3L]]), nam, "Unknown variables:")
       } else {
-        gn <- anyNAerror(match(all.vars(by), nam), "Unknown variables passed to by!")
+        gn <- ckmatch(all.vars(by), nam, "Unknown variables:")
         cols <- if(is.null(cols)) seq_along(x)[-gn] else cols2int(cols, x, nam)
       }
       by <- if(length(gn) == 1L) at2GRP(x[[gn]]) else GRP(x, gn, return.groups = FALSE)
@@ -132,9 +132,10 @@ L.data.frame <- function(x, n = 1, by = NULL, t = NULL, cols = is.numeric,
 
     if(is.call(t)) {
       t <- all.vars(t)
-      tn <- anyNAerror(match(t, nam), "Unknown variables passed to t!")
-      t <- x[[tn]]
-      cols <- if(is.null(cols)) seq_along(x)[-tn] else cols[cols != tn]
+      tn <- ckmatch(t, nam, "Unknown variables:")
+      t1 <- length(tn) == 1L
+      t <- if(t1) x[[tn]] else GRP.default(x[tn], return.groups = FALSE)[[2L]]
+      cols <- if(is.null(cols)) seq_along(x)[-tn] else if(t1) cols[cols != tn] else fsetdiff(cols, tn)
       if(keep.ids) gn <- c(gn, tn)
     }
 
@@ -143,7 +144,7 @@ L.data.frame <- function(x, n = 1, by = NULL, t = NULL, cols = is.numeric,
     .Call(Cpp_flagleadl,x[cols],n,fill,by[[1L]],by[[2L]],by[[3L]],G_t(t),stubs)
     ax[["names"]] <- names(res)
     return(setAttributes(res, ax))
-  } else if(!is.null(cols)) {
+  } else if(!is.null(cols)) { # Needs to be like this, otherwise subsetting dropps the attributes !!
     ax <- attributes(x)
     x <- unclass(x)[cols2int(cols, x, ax[["names"]])]
     ax[["names"]] <- names(x)
@@ -166,7 +167,7 @@ L.pdata.frame <- function(x, n = 1, cols = is.numeric, fill = NA, stubs = TRUE, 
   if(!missing(...)) stop("Unknown argument ", dotstostr(...))
   ax <- attributes(x)
   nam <- ax[["names"]]
-  index <- ax[["index"]]
+  index <- unclass(ax[["index"]])
 
   if(keep.ids) {
     gn <- which(nam %in% names(index))
@@ -183,7 +184,7 @@ L.pdata.frame <- function(x, n = 1, cols = is.numeric, fill = NA, stubs = TRUE, 
     ax[["names"]] <- names(res)
     return(setAttributes(res, ax))
   } else if(!length(gn)) # could speed up ??
-    return(.Call(Cpp_flagleadl,x[cols],n,fill,fnlevels(index[[1L]]),index[[1L]],NULL,index[[2L]],stubs)) else
+    return(.Call(Cpp_flagleadl,fcolsubset.int(x, cols),n,fill,fnlevels(index[[1L]]),index[[1L]],NULL,index[[2L]],stubs)) else
     return(.Call(Cpp_flagleadl,x,n,fill,fnlevels(index[[1L]]),index[[1L]],NULL,index[[2L]],stubs))
 }
 
@@ -209,7 +210,7 @@ F.grouped_df <- function(x, n = 1, t = NULL, fill = NA, stubs = TRUE, keep.ids =
   gn <- which(nam %in% g[[5L]])
   if(!(tsym == "NULL" || is.na(tn <- match(tsym, nam)))) {
     if(any(gn == tn)) stop("timevar coincides with grouping variables!")
-    t <- x[[tn]]
+    t <- unclass(x)[[tn]]
     gn <- c(gn, tn)
   }
   if(length(gn)) {

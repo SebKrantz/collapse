@@ -21,7 +21,7 @@ Fast (Grouped, Weighted) Scaling and Centering of Matrix-like Objects
 \description{
 \code{fscale} is a generic function to efficiently standardize (scale and center) data. \code{STD} is a wrapper around \code{fscale} representing the 'standardization operator', with more options than \code{fscale} when applied to matrices and data frames.  Standardization can be simple or groupwise, ordinary or weighted.
 
-\emph{Note}: For centering without scaling see \code{\link{W}}, for scaling without centering use \code{\link[=fsd]{fsd(..., TRA = "/")}}.
+\emph{Note}: For centering without scaling see \code{\link[=fwithin]{fwithin/W}}, for scaling without centering use \code{\link[=fsd]{fsd(..., TRA = "/")}}.
 }
 \usage{
 fscale(x, \dots)

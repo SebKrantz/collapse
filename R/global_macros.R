@@ -8,7 +8,7 @@
 .COLLAPSE_ALL <- sort(unique(c("%!in%","add_stub","rm_stub","all_identical","as.factor.GRP","as.numeric_factor",
                            "atomic_elem","atomic_elem<-","B","BY","cat_vars","cat_vars<-","char_vars",
                            "add_vars<-","add_vars","av<-","av","gv<-","gv","nv<-","nv",
-                           "char_vars<-","collap","collapv","D","dapply","Date_vars","Date_vars<-","F","fact_vars",
+                           "char_vars<-","collap","collapv","collapg","D","dapply","Date_vars","Date_vars<-","F","fact_vars",
                            "fact_vars<-","fbetween","fdiff","ffirst","fgrowth","fHDbetween","fHDwithin","fFtest",
                            "flag","flast","fmax","fmean","fmedian","fmin","fmode","fNdistinct","fnlevels",
                            "fNobs","fprod","fscale","fsd","fsum","funique","fvar","fwithin","G","get_elem",

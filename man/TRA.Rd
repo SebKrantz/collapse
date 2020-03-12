@@ -40,7 +40,7 @@ TRA(x, STATS, FUN = "-", ...)
   }
 \item{g}{a factor, \code{\link{GRP}} object, atomic vector (internally converted to ordered factor) or a list of vectors / factors (internally converted to a \code{\link{GRP}} object) used to group \code{x}. Number of groups must match rows of \code{STATS}. See \code{STATS} and Details.}
 
-\item{keep.group_vars}{\emph{grouped_df method:} Logical. Remove grouping variables after computation. In contrast to the other methods, \code{TRA.grouped_df} matches column names exactly, thus \code{STATS} can be any subset of aggregated columns in \code{x} in any order, with or without grouping columns. \code{TRA.grouped_df} will transform the columns in \code{x} with their aggregated versions matched from \code{STATS} (ignoring grouping columns found in \code{x} or \code{STATS} and columns in \code{x} not found in \code{STATS}), and return \code{x} again. If \code{keep.group_vars = FALSE}, \code{x} is retured again without grouping columns. See Details and Examples.}
+\item{keep.group_vars}{\emph{grouped_df method:} Logical. Remove grouping variables after computation. In contrast to the other methods, \code{TRA.grouped_df} matches column names exactly, thus \code{STATS} can be any subset of aggregated columns in \code{x} in any order, with or without grouping columns. \code{TRA.grouped_df} will transform the columns in \code{x} with their aggregated versions matched from \code{STATS} (ignoring grouping columns found in \code{x} or \code{STATS} and columns in \code{x} not found in \code{STATS}), and return \code{x} again. If \code{keep.group_vars = FALSE}, \code{x} is returned again without grouping columns. See Details and Examples.}
 
 \item{...}{arguments to be passed to or from other methods.}
 }

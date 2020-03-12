@@ -31,6 +31,7 @@ nv <- num_vars
     x[ind] <- value
     if(length(nam <- names(value))) ax[["names"]][ind] <- nam #  == length(ind)
   } else if(is.null(value)) {
+    if(!length(ind)) return(setAttributes(x, ax))
     ax[["names"]] <- ax[["names"]][-ind] # fastest ??? -> yes !!!
     return(setAttributes(x[-ind], ax))
   } else {
@@ -76,6 +77,7 @@ cat_vars <- function(x, return = c("data","names","indices","named_indices")) {
     x[ind] <- value
     if(length(nam <- names(value))) ax[["names"]][ind] <- nam
   } else if(is.null(value)) {
+    if(!length(ind)) return(setAttributes(x, ax))
     ax[["names"]] <- ax[["names"]][-ind]
     return(setAttributes(x[-ind], ax))
   } else {
@@ -104,6 +106,7 @@ char_vars <- function(x, return = c("data","names","indices","named_indices")) {
     x[ind] <- value
     if(length(nam <- names(value))) ax[["names"]][ind] <- nam
   } else if(is.null(value)) {
+    if(!length(ind)) return(setAttributes(x, ax))
     ax[["names"]] <- ax[["names"]][-ind]
     return(setAttributes(x[-ind], ax))
   } else {
@@ -132,6 +135,7 @@ fact_vars <- function(x, return = c("data","names","indices","named_indices")) {
     x[ind] <- value
     if(length(nam <- names(value))) ax[["names"]][ind] <- nam
   } else if(is.null(value)) {
+    if(!length(ind)) return(setAttributes(x, ax))
     ax[["names"]] <- ax[["names"]][-ind]
     return(setAttributes(x[-ind], ax))
   } else {
@@ -160,6 +164,7 @@ logi_vars <- function(x, return = c("data","names","indices","named_indices")) {
     x[ind] <- value
     if(length(nam <- names(value))) ax[["names"]][ind] <- nam
   } else if(is.null(value)) {
+    if(!length(ind)) return(setAttributes(x, ax))
     ax[["names"]] <- ax[["names"]][-ind]
     return(setAttributes(x[-ind], ax))
   } else {
@@ -188,6 +193,7 @@ Date_vars <- function(x, return = c("data","names","indices","named_indices")) {
     x[ind] <- value
     if(length(nam <- names(value))) ax[["names"]][ind] <- nam
   } else if(is.null(value)) {
+    if(!length(ind)) return(setAttributes(x, ax))
     ax[["names"]] <- ax[["names"]][-ind]
     return(setAttributes(x[-ind], ax))
   } else {
@@ -198,19 +204,19 @@ Date_vars <- function(x, return = c("data","names","indices","named_indices")) {
   return(setAttributes(x, ax))
 }
 
-
 get_vars <- function(x, vars, return = c("data","names","indices","named_indices"), regex = FALSE, ...) { # vars is a function or regex call. perhaps also do like this for lsubset and has.elem??, because if ... is in the second place, you cannot put other things
  if(!regex && !missing(...)) stop("Unknown argument ", dotstostr(...))
  switch(return[1L],
-        data = colsubset(x, if(is.character(vars) && regex) rgrep(vars, attr(x, "names"), ...) else vars),
-        names = if(is.function(vars)) names(which(vapply(x, vars, TRUE))) else if(is.character(vars) && regex)
-                                     attr(x, "names")[rgrep(vars, attr(x, "names"), ...)] else attr(x, "names")[vars],
-        indices = if(is.function(vars)) which(vapply(x, vars, TRUE, USE.NAMES = FALSE)) else if(is.character(vars) && regex)
-                   rgrep(vars, attr(x, "names"), ...) else anyNAerror(match(vars, attr(x, "names")), "Unknown column names!"), # put error !!
-        named_indices = if(is.function(vars)) which(vapply(x, vars, TRUE)) else if(is.character(vars) && regex) {
-                       nam <- attr(x, "names")
-                       ind <- rgrep(vars, nam, ...)
-                      `names<-`(ind, nam[ind])} else stop("vars must be a function or a regular expression"),
+        data = colsubset(x, if(regex) rgrep(vars, attr(x, "names"), ...) else vars), # if(is.character(vars) && regex): redundant...
+        names = if(is.function(vars)) names(which(vapply(x, vars, TRUE))) else if(regex) # if(is.character(vars) && regex): redundant...
+                rgrep(vars, attr(x, "names"), value = TRUE, ...) else attr(x, "names")[vars],
+        indices = if(is.function(vars)) which(vapply(x, vars, TRUE, USE.NAMES = FALSE)) else if(regex) # if(is.character(vars) && regex): redundant...
+                   rgrep(vars, attr(x, "names"), ...) else ckmatch(vars, attr(x, "names")), # put error !!
+        named_indices = if(is.function(vars)) which(vapply(x, vars, TRUE)) else if(is.character(vars)) {
+                           nam <- attr(x, "names")
+                           ind <- if(regex) rgrep(vars, nam, ...) else ckmatch(vars, nam)
+                          `names<-`(ind, nam[ind])
+                        } else stop("For named indices, vars must be a function, character names or a regular expression"),
         stop("Unknown return option!"))
 }
 gv <- get_vars
@@ -229,8 +235,8 @@ gv <- get_vars
     vars <- which(vars)
   } else {
     if(!regex && !missing(...)) stop("Unknown argument ", dotstostr(...))
-    vars <- if(is.function(vars)) which(vapply(x, vars, TRUE, USE.NAMES = FALSE)) else if(is.character(vars) && regex)
-      rgrep(vars, ax[["names"]], ...) else anyNAerror(match(vars, ax[["names"]]), "Unknown column names!")
+    vars <- if(is.function(vars)) which(vapply(x, vars, TRUE, USE.NAMES = FALSE)) else if(regex) # if(is.character(vars) && regex): redundant...
+      rgrep(vars, ax[["names"]], ...) else ckmatch(vars, ax[["names"]])
   }
   if(is.list(value)) {
     class(value) <- NULL # fastest ??
@@ -239,6 +245,7 @@ gv <- get_vars
     x[vars] <- value
     if(length(nam <- names(value))) ax[["names"]][vars] <- nam #  == length(vars)
   } else if(is.null(value)) {
+    if(!length(vars)) return(setAttributes(x, ax))
     ax[["names"]] <- ax[["names"]][-vars] # fastest ??? -> Yes !! This is slower: x[vars] <- NULL
     return(setAttributes(x[-vars], ax))
   } else {
@@ -281,7 +288,7 @@ gv <- get_vars
 # }
 
 
-"add_vars<-" <- function(x, value) {
+"add_vars<-" <- function(x, pos = "end", value) { # or pos ??
   ax <- attributes(x)
   attributes(x) <- NULL
   lx <- length(x)
@@ -289,9 +296,23 @@ gv <- get_vars
     class(value) <- NULL # fastest ??
     if(length(value[[1L]]) != length(x[[1L]])) stop("NROW(value) must match nrow(x)")
     # res <- c(x, value)  # FASTER than commented out below !!!
-    ax[["names"]] <- if(length(nam <- names(value)))  c(ax[["names"]], nam) else
-      c(ax[["names"]], paste0("V", seq(lx+1L, lx+length(value))))
-    return(setAttributes(c(x, value), ax))
+    if(is.character(pos)) {
+      if(pos == "end") {
+        ax[["names"]] <- if(length(nam <- names(value)))  c(ax[["names"]], nam) else
+          c(ax[["names"]], paste0("V", seq(lx+1L, lx+length(value))))
+        return(setAttributes(c(x, value), ax))
+      } else if(pos != "front") stop("pos needs to be 'end', 'front' or a suitable numeric / integer vector of positions!")
+        ax[["names"]] <- if(length(nam <- names(value)))  c(nam, ax[["names"]]) else
+          c(paste0("V", seq_along(value)), ax[["names"]])
+        return(setAttributes(c(value, x), ax))
+    }
+    lv <- length(value)
+    tl <- lv+lx
+    if(!is.numeric(pos) || length(pos) != lv || max(pos) > tl) stop("pos needs to be 'end', 'front' or a suitable numeric / integer vector of positions!")
+    o <- forder.int(c(seq_len(tl)[-pos], pos))  # order(c(seq_len(tl)[-pos], pos), method = "radix")
+    ax[["names"]] <- if(length(nam <- names(value)))  c(ax[["names"]], nam)[o] else
+        c(ax[["names"]], paste0("V", pos))[o] # FASTER THIS WAY? -> It seems so...
+    return(setAttributes(c(x, value)[o], ax)) # fastest ?? use setcolorder ?? (probably not )
     # ind <- seq(lx+1L, lx+length(value))
     # x[ind] <- value  # FASTER than simply using x[names(value)] <- value ??????????? -> Yes !!!
     # ax[["names"]] <- if(length(nam <- names(value)))  c(ax[["names"]], nam) else
@@ -300,15 +321,38 @@ gv <- get_vars
     if(NROW(value) != length(x[[1L]])) stop("NROW(value) must match nrow(x)")
     # res <- c(x, list(value)) # FASTER than below ??? -> Nope !!!!
     # ax[["names"]] <- c(ax[["names"]], paste0("V", lx+1L))
-    x[[lx+1L]] <- value
-    ax[["names"]] <- c(ax[["names"]], paste0("V", lx+1L))
-    return(setAttributes(x, ax))
+    nam <- deparse(substitute(value))
+    if(is.character(pos)) {
+      if(pos == "end") {
+        x[[lx+1L]] <- value
+        ax[["names"]] <- c(ax[["names"]], nam) # paste0("V", lx+1L)
+        return(setAttributes(x, ax))
+      } else if(pos != "front") stop("pos needs to be 'end', 'front' or a suitable numeric / integer vector of positions!")
+      ax[["names"]] <- c(nam, ax[["names"]]) # "V1"
+      return(setAttributes(c(list(value), x), ax))
+    }
+    if(!is.numeric(pos) || length(pos) > 1L || pos > lx+1L) stop("pos needs to be 'end', 'front' or a suitable numeric / integer vector of positions!")
+    o <- forder.int(c(1:lx, pos-1))   # order(c(1:lx, pos-1), method = "radix")
+    ax[["names"]] <- c(ax[["names"]], nam)[o]
+    return(setAttributes(c(x, list(value))[o], ax)) # fastest ?? use setcolorder ??? (probably not)
   }
   # return(setAttributes(res, ax))
   # return(setAttributes(x, ax))
 }
-
 "av<-" <- `add_vars<-`
+
+add_vars <- function(x, ..., pos = "end") {
+  if(length(list(...)) == 1L) return(`add_vars<-`(x, pos, ...))
+  l <- c(...)
+  if(!all(fnrow(x) == lengths(l, FALSE))) stop("if multiple arguments are passed to '...', each needs to be a data.frame/list with column-lengths matching nrow(x)")
+  return(`add_vars<-`(x, pos, l)) # very minimal !! Doesn't work for vectors etc !!
+}
+av <- add_vars
+
+# add_vars <- function(x, ..., pos = "end") `add_vars<-`(x, pos, value) # add multiple ? -> cbind alternative FOR DATA:FRAMES ????
+# nah, rather do fcbindDF... but already have qDF(c(...)) very fast !!
+
+
 
 # Previous Version:
 # "add_vars<-" <- function(x, value) {

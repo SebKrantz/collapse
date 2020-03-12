@@ -20,11 +20,11 @@ It is compatible with \code{dplyr}, \code{data.table} and the \code{plm} approac
 
 % \tabular{lll}{ % \Sexpr{"\u200B"} \Sexpr{"\u200B"}  \tab \emph{ Description }  \cr
 \enumerate{  % (1) \tab\tab ... \cr
-                \item  \emph{Advanced data programming}: A full set of fast statistical functions supporting grouped and/or weighted computations on vectors, matrices and data.frames. Quick (ordered) and reusable grouping, quick data-conversions, and quick select and replace variables.
+                \item  \emph{Advanced data programming}: A full set of fast statistical functions supporting grouped and/or weighted computations on vectors, matrices and data.frames. Fast (ordered) and reusable grouping, quick data conversions, and quick select, replace or add data.frame columns.
                  \item \emph{Advanced aggregation}: Fast and easy multi-data-type, multi-function, weighted, parallelized and fully customized data aggregation.
-                 \item \emph{Advanced transformations}: Fast (grouped, weighted) sweeping out of statistics, scaling, centering, higher-dimensional centering, complex linear prediction and partialling-out.
-                 \item \emph{Advanced time-computations}: Fast (sequences of) lags / leads, and (iterated) differences and growth rates on (unordered) time-series and panel data. Multivariate auto, partial and cross-correlation functions for panel data. Panel data to (ts-)array conversions.
-                 \item \emph{List Processing}: (Recursive) list-identification, extraction / subsetting, data-apply, and row-binding / unlisting in 2D.
+                 \item \emph{Advanced transformations}: Fast (grouped, weighted) replacing and sweeping out of statistics, scaling, centering, higher-dimensional centering, complex linear prediction and partialling-out.
+                 \item \emph{Advanced time-computations}: Fast (sequences of) lags / leads, and (lagged / leaded, iterated) differences and growth rates on (unordered) time-series and panel data. Multivariate auto-, partial- and cross-correlation functions for panel data. Panel data to (ts-)array conversions.
+                 \item \emph{List Processing}: (Recursive) list search / identification, extraction / subsetting, data-apply, and row-binding / unlisting in 2D.
                  \item \emph{Advanced data exploration}: Fast (grouped, weighted, panel-decomposed) summary statistics for cross-sectional and complex multilevel / panel data.  % Elegant (multivariate, grouped, weighted and panel-decomposed) histograms, density, scatter and correlation plots.  \cr
 % }
 }
@@ -101,7 +101,7 @@ series <- get_vars(wlddev, 9:12)
 # Replace columns, 4x faster than wlddev[9:12] <- series and also replaces names
 get_vars(wlddev, 9:12) <- series
 \donttest{
-# Fast subset by fast conversion to data.table with qDT
+# Fast conversion to data.table with qDT, and subset rows..
 library(data.table)
 qDT(wlddev)[country == "Ireland"]
 }
@@ -130,8 +130,8 @@ fmean(series, g)
 fmedian(series, g)
 fsd(series, g)
 \donttest{
-# Fast aggregations using dplyr:
-library(dplyr)
+# Faster aggregations with dplyr:
+library(dplyr) # This is a lot faster than summarize_all(mean)
 wlddev \%>\% group_by(region,income) \%>\% select(PCGDP,LIFEEX) \%>\% fmean
 }
 # qM -> quickly convert data to matrix, qDF/qDT do the reverse
@@ -182,7 +182,7 @@ head(fmedian(series, g, TRA = "-")) # De-median by region and income
 gmeds <- fmedian(series, g)         # Same thing in 2 steps
 head(TRA(series, gmeds, "-", g))
 \donttest{
-# Fast transformations using dplyr:
+# Faster transformations with dplyr:
 # (here we are demeaning PCGDP and LIFEEX using weighted means, weighted by ODA)
 wlddev \%>\% group_by(region,income) \%>\% select(PCGDP,LIFEEX,ODA) \%>\% fmean(ODA, "-")
 }

@@ -1105,6 +1105,19 @@ BEGIN_RCPP
     return R_NilValue;
 END_RCPP
 }
+// groups2GRPCpp
+IntegerVector groups2GRPCpp(const List& x, int lx, const IntegerVector& gs);
+RcppExport SEXP _collapse_groups2GRPCpp(SEXP xSEXP, SEXP lxSEXP, SEXP gsSEXP) {
+BEGIN_RCPP
+    Rcpp::RObject rcpp_result_gen;
+    Rcpp::RNGScope rcpp_rngScope_gen;
+    Rcpp::traits::input_parameter< const List& >::type x(xSEXP);
+    Rcpp::traits::input_parameter< int >::type lx(lxSEXP);
+    Rcpp::traits::input_parameter< const IntegerVector& >::type gs(gsSEXP);
+    rcpp_result_gen = Rcpp::wrap(groups2GRPCpp(x, lx, gs));
+    return rcpp_result_gen;
+END_RCPP
+}
 // lassignCpp
 List lassignCpp(const List& x, int s, const SEXP& rows, double fill);
 RcppExport SEXP _collapse_lassignCpp(SEXP xSEXP, SEXP sSEXP, SEXP rowsSEXP, SEXP fillSEXP) {

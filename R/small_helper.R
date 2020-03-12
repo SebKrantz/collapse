@@ -1,7 +1,6 @@
 # library(Rcpp)
 # sourceCpp("C++/small_helper.cpp")
 
-# Export --------------------------------------
 vlabels <- function(X, attrn = "label") {
   if(is.atomic(X)) {
     res <- attr(X, attrn)
@@ -69,7 +68,7 @@ setDimnames <- function(object = dn, dn) {
   object
 }
 all_identical <- function(...) {
-  if(length(match.call())-1L == 1L && is.list(...)) { # https://stackoverflow.com/questions/44011918/count-number-of-arguments-passed-to-function
+  if(length(list(...)) == 1L && is.list(...)) { # if(length(match.call())-1L == 1L && is.list(...)) # https://stackoverflow.com/questions/44011918/count-number-of-arguments-passed-to-function
     all(unlist(lapply(...[-1L], identical, ...[[1L]]), use.names = FALSE)) # use vapply ??
   } else {
     l <- list(...)
@@ -103,6 +102,10 @@ na_insert <- function(X, prop = 0.1) {
   return(X)
 }
 fnlevels <- function(x) length(attr(x, "levels")) # make cpp version ?? -> nope, slower !!
+# flevels <- function(x) attr(x, "levels")
+fnrow <- function(x) length(unclass(x)[[1L]])
+forder.int <- function(x) if(is.unsorted(x)) .Call(C_forder, x, NULL, FALSE, TRUE, 1L, TRUE) else seq_along(x) # since forder gives integer(0) if sorted !!
+fsetdiff <- function(x, y) x[match(x, y, 0L) == 0L] # not unique !!
 as.numeric_factor <- function(X) {
   if(is.atomic(X)) return(as.numeric(attr(X, "levels"))[X])
 
@@ -119,10 +122,10 @@ setRow.names <- function(df, nm) {
   attr(df, "row.names") <- nm
   df
 }
-remove_attributes <- function(x) {
-  attributes(x) <- NULL
-  x
-}
+# remove_attributes <- function(x) {
+#   attributes(x) <- NULL
+#   x
+# }
 addAttributes <- function(x, a) {
   ax <- attributes(x)
   .Call(Cpp_setAttributes, x, c(ax, a))
@@ -134,19 +137,20 @@ condsetn <- function(x, value, cond) {
   if(cond) attr(x, "names") <- value
   x
 }
-give_nam <- function(x, gn, stub) {
-  if(!gn) return(x)
-  attr(x, "names") <- paste0(stub, attr(x, "names"))
-  x
-}
+# give_nam <- function(x, gn, stub) {
+#   if(!gn) return(x)
+#   attr(x, "names") <- paste0(stub, attr(x, "names"))
+#   x
+# }
 anyNAerror <- function(x, e) if(anyNA(x)) stop(e) else x
+ckmatch <- function(x, y, e = "Unknown columns:") if(anyNA(m <- match(x, y))) stop(paste(c(e, x[is.na(m)]), collapse = " ")) else m
 cols2int <- function(cols, x, nam) {
  if(is.numeric(cols)) {
   if(max(abs(cols)) > length(x)) stop("Index out of range abs(1:length(x))")
   return(cols)
  } else if(is.function(cols))
   return(which(vapply(x, cols, TRUE))) else if(is.character(cols))
-  return(anyNAerror(match(cols, nam), "Unknown column names!")) else if(is.logical(cols)) {
+  return(ckmatch(cols, nam)) else if(is.logical(cols)) {
     if(length(cols) != length(x)) stop("Logical subsetting vector must match columns!")
     return(which(cols))
   } else stop("cols must be a function, character vector, numeric indices or logical vector!")
@@ -156,7 +160,7 @@ cols2log <- function(cols, x, nam) {
   if(is.function(cols)) return(vapply(x, cols, TRUE))
   r <- logical(length(x))
   if(is.character(cols)) {
-    r[anyNAerror(match(cols, nam), "Unknown column names!")] <- TRUE
+    r[ckmatch(cols, nam)] <- TRUE
   } else if(is.numeric(cols)) {
     if(max(abs(cols)) > length(r)) stop("Index out of range abs(1:length(x))")
     r[cols] <- TRUE
@@ -172,10 +176,16 @@ colsubset <- function(x, ind) { # also works for grouped tibbles !!
     if(length(ind) != length(x)) stop("Logical subsetting vector must match length(x)")
   } else {
     ind <- if(is.function(ind)) vapply(x, ind, TRUE, USE.NAMES = FALSE) else
-      anyNAerror(match(ind, ax[["names"]]), "Unknown column names!")
+           ckmatch(ind, ax[["names"]])
   }
   ax[["names"]] <- ax[["names"]][ind]
   return(.Call(Cpp_setAttributes, x[ind], ax)) # return(`attributes<-`(x[ind], ax)) # This is slow on large data -> a lot of checks !!!
+}
+fcolsubset.int <- function(x, ind) {
+  ax <- attributes(x)
+  attributes(x) <- NULL
+  ax[["names"]] <- ax[["names"]][ind]
+  return(.Call(Cpp_setAttributes, x[ind], ax))
 }
 colsubsetFUN <- function(x, FUN) {
   ax <- attributes(x)
@@ -204,9 +214,9 @@ G_t <- function(x, m = TRUE) {
     if(is.integer(x)) return(x) else return(qG(x, na.exclude = FALSE)) # make sure it is ordered !!! qG already ckecks factor !!
   } else if(is.GRP(x)) return(x[[2L]]) else return(GRP(x, return.groups = FALSE)[[2L]])
 }
-rgrep <- function(exp, nam, ...) if(length(exp) > 1L) funique(unlist(lapply(exp, grep, nam, ...), use.names = FALSE)) else grep(exp, nam, ...)
-NROW2 <- function(x, d) if(length(d)) d[1L] else length(x)
-NCOL2 <- function(d, ilv) if(ilv) d[2L] else 1L
+rgrep <- function(exp, nam, ...) if(length(exp) == 1L) grep(exp, nam, ...) else funique(unlist(lapply(exp, grep, nam, ...), use.names = FALSE))
+# NROW2 <- function(x, d) if(length(d)) d[1L] else length(x)
+# NCOL2 <- function(d, ilv) if(ilv) d[2L] else 1L
 charorNULL <- function(x) if(is.character(x)) x else NULL
 # more security here??
 unique_factor <- function(x) {
@@ -227,6 +237,7 @@ addNA2 <- function(x) {
   x[is.na(x)] <- length(ax[["levels"]])
   return(setAttributes(x, ax))
 }
+l1orn <- function(x, nam) if(length(x) == 1L) x else nam
 
 # addNA2 <- function(x) {
 #   clx <- c(class(x), "na.included")

@@ -1,0 +1,672 @@
+---
+title: "*collapse* and *dplyr*"
+subtitle: "Fast (weighted) Aggregations, Transformations and Time-Series/Panel Computations in a *dplyr* Workflow"
+author: "Sebastian Krantz"
+date: "`r Sys.Date()`"
+output: 
+  rmarkdown::html_vignette:
+    toc: true
+
+vignette: >
+  %\VignetteIndexEntry{collapse and dplyr: Fast (weighted) Aggregations, Transformations and Time-Series/Panel Computations in a dplyr Workflow}
+  %\VignetteEngine{knitr::rmarkdown}
+  %\VignetteEncoding{UTF-8}
+---
+
+```{r, echo = FALSE, message = FALSE, warning=FALSE}
+knitr::opts_chunk$set(error = FALSE, message = FALSE, warning = FALSE, 
+                      comment = "#", tidy = FALSE, cache = TRUE, collapse = TRUE,
+                      fig.width = 8, fig.height = 5, 
+                      out.width = '100%')
+
+# knitr::opts_chunk$set(
+#   comment = "#",
+#     error = FALSE,
+#      tidy = FALSE,
+#     cache = FALSE,
+#  collapse = TRUE,
+#  fig.width = 8, 
+#  fig.height= 5,
+#  out.width='100%'
+# )
+
+oldopts <- options(width = 100L)
+set.seed(101)
+```
+
+*collapse* is a C/C++ based package for data manipulation in R. It's aims are 
+
+1. to facilitate complex data transformation and exploration tasks and 
+
+2. to help make R code fast, flexible, parsimonious and programmer friendly.
+
+This vignette focuses on the integration of *collapse* and the popular *dplyr* package by Hadley Wickham. In particular it will demonstrate how using *collapse*'s fast functions can facilitate and speed up grouped and weighted aggregations and transformations, as well as panel-data computations (i.e. between- and within-transformations, panel-lags, differences and growth rates) in a *dplyr* workflow. 
+
+***
+
+*Note:* This vignette is targeted at *dplyr* users. *collapse* is a standalone package and delivers even faster performance using it's own grouping mechanism (based on *data.table* internals) and it's own set of functions to efficiently select and replace variables. The 'Introduction to *collapse*' vignette provides a thorough introduction to the package and a built-in structured documentation is available under `help("collapse-documentation")` after installing the package. In addition `help("collapse-package")` provides a compact set of examples for quick-start. 
+
+***
+
+## 1. Fast Aggregations
+
+A key feature of *collapse* is it's broad set of *Fast Statistical Functions* (`fsum, fprod, fmean, fmedian, fmode, fvar, fsd, fmin, fmax, ffirst, flast, fNobs, fNdistinct`) which are able to dramatically speed-up column-wise, grouped and weighted computations on vectors, matrices or data.frame's. The functions are S3 generic, with a default (vector), matrix and data.frame method, as well as a grouped_df method for grouped tibbles used by dplyr. The grouped tibble method has the following arguments:  
+
+```{r eval=FALSE}
+FUN.grouped_df(x, [w = NULL,] TRA = NULL, [na.rm = TRUE,]
+               use.g.names = FALSE, keep.group_vars = TRUE, [keep.w = TRUE,] ...)
+```
+
+where `w` is a weight variable (available only to `fmean, fmode, fvar` and `fsd`), and `TRA` and can be used to transform `x` using the computed statistics and one of 8 available transformations (`"replace_fill", "replace", "-", "-+", "/", "%", "+", "*"`). These transformations perform grouped replacing or sweeping out of the statistics computed by the function (discussed in section 2). `na.rm` efficiently removes missing values and is `TRUE` by default. `use.g.names` generates new row-names from the unique combinations of groups (default: disabled), whereas `keep.group_vars` (default: enabled) will keep the grouping columns as is custom in the native `data %>% group_by(...) %>% summarize(...)` workflow in *dplyr*. Finally, `keep.w` regulates whether a weighting variable used is also aggregated and saved in a column. For `fmean, fvar and fsd` this will compute the sum of the weights in each group, whereas `fmode` will return the maximum weight (corresponding to the mode) in each group. 
+
+With that in mind, let's consider some straightforward applications:
+
+### 1.1 Simple Aggregations
+
+Consider the Groningen Growth and Development Center 10-Sector Database included in *collapse*:
+
+```{r}
+library(collapse)
+head(GGDC10S)
+
+# Summarize the Data: 
+# descr(GGDC10S, cols = is.categorical)
+# aperm(qsu(GGDC10S, ~Variable, cols = is.numeric))
+```
+
+Simple column-wise computations using the fast functions and pipe operators are performed as follows:
+
+```{r}
+library(dplyr)
+
+GGDC10S %>% fNobs                       # Number of Observations
+GGDC10S %>% fNdistinct                  # Number of distinct values
+GGDC10S %>% select_at(6:16) %>% fmedian # Median
+GGDC10S %>% fmode                       # Mode
+GGDC10S %>% fmode(drop = FALSE)         # Keep data structure intact
+```
+
+Moving on to grouped statistics, we can compute the average value added and employment by sector and country using:
+
+```{r}
+GGDC10S %>% 
+  group_by(Variable,Country) %>%
+  select_at(6:16) %>% fmean
+
+```
+
+Similarly we can obtain the median or the standard deviation:
+```{r}
+GGDC10S %>% 
+  group_by(Variable,Country) %>%
+  select_at(6:16) %>% fmedian
+
+GGDC10S %>% 
+  group_by(Variable,Country) %>%
+  select_at(6:16) %>% fsd
+```
+
+It is important to not use *dplyr*'s `summarize` together with the fast functions since that would totally eliminate their speed gain. These functions are fast because they are executed only once and carry out the grouped computations in C++, whereas `summarize` will split and then apply the function to each group in the grouped tibble. - It will also work with the fast functions, but is slower than using primitive base functions since the fast functions are S3 generic -. 
+
+***
+
+#### Excursus: What is Happening Behind the Scenes?
+To drive this point home it is perhaps good to shed some light on what is happening behind the scenes of *dplyr* and *collapse*. Fundamentally both packages follow different computing paradigms: 
+
+*dplyr* is an efficient implementation of the Split-Apply-Combine computing paradigm. Data is split into groups, these data-chunks are then passed to a function carrying out the computation, and finally recombined to produce the aggregated data.frame. 
+<!-- The efficiency of that process depends on the efficiency of the grouping, splitting, the function(s) applied and the recombining.  -->
+This modus operandi is evident in the grouping mechanism of *dplyr*. When a data.frame is passed through *group_by*, a 'groups' attribute is attached: 
+
+```{r}
+GGDC10S %>% group_by(Variable,Country) %>% attr("groups")
+```
+
+This object is a data.frame giving the unique groups and in the third (last) column vectors containing the indices of the rows belonging to that group. A command like `summarize` uses this information to split the data.frame into groups which are then passed sequentially to the function used and later recombined. 
+
+Now *collapse* is based around one-pass grouped computations at the C++ level, in other words the data is not split and recombined but the entire computation is performed in a single C++ loop running through that data and completing the computations for each group simultaneously. This modus operandi is also evident in *collapse* grouping objects. The method `GRP.grouped_df` takes a *dplyr* grouping object from a grouped tibble and efficiently converts it to a *collapse* grouping object: 
+
+```{r}
+GGDC10S %>% group_by(Variable,Country) %>% GRP %>% str
+```
+
+This object is a list where the first three elements give the number of groups, the group-id to which each row belongs and a vector of group-sizes. A function like `fsum` uses this information to (for each column) create a result vector of size 'N.groups' and the run through the column using the 'group.id' vector to add the i'th data point to the 'group.id[i]'th element of the result vector. When the loop is finished, the grouped computation is also finished. 
+
+It is clear that *collapse* is prone to be faster than *dplyr* since it's method of computing involves less (and less computationally intensive) steps. A slight qualifier added to this is the additional conversion cost incurred by `GRP.grouped_df` when using the fast functions on grouped tibbles. This cost is however quite low as the benchmarks at the end show (since `GRP.grouped_df` is also implemented in C++). 
+<!-- This performance gain is realized especially as data become large, since the conversion perfomed by `GRP.grouped_df` also involves a small computational cost.  -->
+
+
+***
+
+### 1.2 Multi-Function Aggregations
+
+One can also aggregate with multiple functions at the same time, but then the programming becomes a bit verbose. In particular, one needs to use curly braces `{` to prevent first argument injection so that `%>% cbind(FUN1(.), FUN2(.))` does not evaluate as `%>% cbind(., FUN1(.), FUN2(.))`: 
+
+```{r}
+GGDC10S %>%
+  group_by(Variable,Country) %>%
+  select_at(6:16) %>% {
+    cbind(fmedian(.), 
+          add_stub(fmean(., keep.group_vars = FALSE), "mean_"))
+    } %>% head(3)
+```
+
+The function `add_stub` used above is a *collapse* function adding a prefix (default) or suffix to variables names. 
+
+A slightly more elegant solution to such multi-function aggregations can be found using `get_vars`, a collapse predicate to efficiently select variables. In contrast to `select_at`, `get_vars` does not automatically add the grouping columns to the selection. Next to `get_vars`, *collapse* also introduces the predicates `num_vars`, `cat_vars`, `char_vars`, `fact_vars`, `logi_vars` and `Date_vars` to select columns by type. Finally, the predicate `add_vars` provides a more efficient alternative to `cbind.data.frame`. The idea here is 'adding' variables to the data.frame in the first argument i.e. the attributes of the first argument are preserved, so the expression below still gives a tibble instead of a data.frame: 
+
+```{r}
+GGDC10S %>% 
+  group_by(Variable,Country) %>% {
+   add_vars(group_keys(.), 
+            ffirst(get_vars(., "Reg", regex = TRUE)),        # Regular expression matching column names
+            add_stub(fmean(num_vars(.)), "mean_"),           # num_vars selects all numeric variables
+            add_stub(fmedian(get_vars(., 9:12)), "median_"), # columns 9-12
+            add_stub(fmin(get_vars(., 9:10)), "min_"))       # columns 9:10
+  }
+```
+
+Another nice feature of `add_vars` is that it can also very efficiently reorder columns i.e. bind columns in a different order than they are passed. This can be done by simply specifying the positions the added columns should have in the final data.frame, and then `add_vars` shifts the first argument columns (the `group_keys` in the example below) to the right to fill in the gaps. 
+
+```{r}
+GGDC10S %>% 
+  group_by(Variable,Country) %>% {
+   add_vars(group_keys(.), 
+            add_stub(fmean(get_vars(., c("AGR","SUM"))), "mean_"), 
+            add_stub(fsd(get_vars(., c("AGR","SUM"))), "sd_"), 
+            pos = c(2,4,3,5))       
+  }
+```
+
+
+A much more compact solution to multi-function and multi-type aggregation with *dplyr* is offered by the function *collapg*: 
+
+```{r}
+# This aggregates numeric colums using the mean (fmean) and categorical columns with the mode (fmode)
+GGDC10S %>% group_by(Variable,Country) %>% collapg
+```
+
+By default it aggregates numeric columns using the mean and categorical columns using the mode, and preserves the order of all columns. Changing these defaults is very easy:
+
+```{r}
+# This aggregates numeric colums using the median and categorical columns using the first value
+GGDC10S %>% group_by(Variable,Country) %>% collapg(fmedian, flast)
+```
+
+One can apply multiple functions to both numeric and/or categorical data: 
+
+```{r}
+GGDC10S %>% group_by(Variable,Country) %>% 
+  collapg(list(fmean, fmedian), list(first, fmode, flast))
+```
+
+Applying multiple functions to only numeric (or only categorical) data allows return in a long format:
+```{r}
+GGDC10S %>% group_by(Variable,Country) %>% 
+  collapg(list(fmean, fmedian), cols = is.numeric, return = "long")
+```
+
+Finally, `collapg` also makes it very easy to apply aggregator functions to certain columns only:
+
+```{r}
+GGDC10S %>% group_by(Variable,Country) %>% 
+  collapg(custom = list(fmean = 6:8, fmedian = 10:12))
+```
+ To understand more about `collapg`, look it up in the documentation (`?collapg`). 
+
+### 1.3 Weighted Aggregations 
+
+Weighted aggregations are possible with the functions `fmean, fmode, fvar` and `fsd`. The implementation is such that by default (option `keep.w = TRUE`) these functions also aggregate the weights, so that further weighted computations can be performed on the aggregated data. `fmean`, `fsd` and `fvar` compute a grouped sum of the weight column and place it next to the group-identifiers, whereas `fmode` computes the maximum weight (corresponding to the mode).
+
+```{r}
+# This compute a frequency-weighted grouped standard-deviation, taking the total EMP / VA as weight
+GGDC10S %>% 
+  group_by(Variable,Country) %>%
+  select_at(6:16) %>% fsd(SUM)
+
+# This compute a weighted grouped mode, taking the total EMP / VA as weight
+GGDC10S %>% 
+  group_by(Variable,Country) %>%
+  select_at(6:16) %>% fmode(SUM)
+```
+
+The weighted variance / standard deviation is currently only implemented with frequency weights. Reliability weights may be implemented in a further update of *collapse*, if this is a strongly requested feature. 
+
+Weighted aggregations may also be performed with `collapg`, although this does not aggregate and save the weights. 
+
+```{r}
+# This aggregates numeric colums using the weighted mean and categorical columns using the weighted mode
+GGDC10S %>% group_by(Variable,Country) %>% collapg(w = .$SUM)
+```
+
+Thus to aggregate the entire data and save the weights one would need to opt for a manual solution: 
+
+```{r}
+GGDC10S %>% 
+  group_by(Variable,Country) %>% {
+    add_vars(fmean(select_at(., 6:16), SUM),      # Again select_at preserves grouping columns, 
+             fmode(get_vars(., c(2:3,16)), SUM),  # get_vars does not! Both preserve attributes
+             pos = c(5, 2:3))
+  }
+```
+<!-- ```{r} -->
+<!-- GGDC10S %>%  -->
+<!--   group_by(Variable,Country) %>% collapg(w = .$SUM) -->
+<!-- ``` -->
+
+
+### Benchmarks
+
+Below I  provide a set of benchmarks for the standard set of functions commonly used in aggregations. For this purpose I duplicate and row-bind the `GGDC10S` dataset used so far 200 times to yield a dataset of approx. 1 million observations, while keeping the groups unique. My windows laptop on which these benchmarks were run has a 2x 2.2 GHZ Intel i5 processor, 8GB DDR3 RAM and a Samsung SSD hard drive (so a decent laptop but nothing fancy).
+
+```{r, cache=TRUE}
+# This replicates the data 200 times while keeping Country and Variable (columns 1 and 4) unique
+data <- replicate(200, GGDC10S, simplify = FALSE) # gv and gv<- are shortcuts for get_vars and get_vars<-
+uniquify <- function(x, i) `gv<-`(x, c(1,4), value = lapply(gv(x, c(1,4)), paste0, i))
+data <- unlist2d(Map(uniquify, data, as.list(1:200)), idcols = FALSE)
+
+dim(data)
+GRP(data, c(1,4))$N.groups # This shows the number of groups. 
+
+# Grouping: This is still a key bottleneck of dplyr compared to data.table and collapse
+system.time(group_by(data,Variable,Country))
+system.time(GRP(data, c(1,4)))               
+
+library(microbenchmark)
+
+# Selection 
+microbenchmark(select_at(data, 6:16))
+microbenchmark(get_vars(data, 6:16))
+
+data <- data %>% group_by(Variable,Country) %>% select_at(6:16)
+
+# Conversion of Grouping object: This time is also required in all computations below using collapse fast functions
+microbenchmark(GRP(data)) 
+
+# Sum 
+system.time(fsum(data))
+system.time(summarise_all(data, sum, na.rm = TRUE))
+
+# Product
+system.time(fprod(data))
+system.time(summarise_all(data, prod, na.rm = TRUE))
+
+# Mean
+system.time(fmean(data))
+system.time(summarise_all(data, mean, na.rm = TRUE))
+
+# Weighted Mean
+system.time(fmean(data, SUM)) # This cannot easily be performed in dplyr
+
+# Median
+system.time(fmedian(data))
+system.time(summarise_all(data, median, na.rm = TRUE))
+
+# Standard-Deviation
+system.time(fsd(data))
+system.time(summarise_all(data, sd, na.rm = TRUE))
+
+# Weighted Standard-Deviation
+system.time(fsd(data, SUM))
+
+# Maximum
+system.time(fmax(data))
+system.time(summarise_all(data, max, na.rm = TRUE))
+
+# First Value
+system.time(ffirst(data, na.rm = FALSE))
+system.time(summarise_all(data, first))
+
+# Distinct Values
+system.time(fNdistinct(data))
+system.time(summarise_all(data, n_distinct, na.rm = TRUE))
+
+# Mode
+system.time(fmode(data))
+
+# Weighted Mode
+system.time(fmode(data, SUM))
+
+```
+
+The benchmarks show that at this data size efficient primitives like `base::sum` or `base::max` can still deliver very decent performance with `summarize`. Less optimized base functions like `mean`, `median` and `sd` however take multiple seconds to compute, and here `collapse` fast functions really prove to be very useful complements to the *dplyr* system. 
+
+Weighted statistics are also performed extremely fast by *collapse* functions. I would not know how to compute weighted statistics by groups in *dplyr*, as it would require the weighting variable to be split as well, which seems impossible in native *dplyr*.
+
+A further highlight of *collapse* is the extremely fast statistical mode function, which can also compute a weighted mode. Fast categorical aggregation has been an issue in R, and defining a mode function from base R and applying it to 17000 groups will probably let it run at least a minute. `fmode` reduces this time to half a second. 
+
+Thus in terms of data aggregation *collapse* fast functions are able to speed up *dplyr* to a level that makes it attractive again to R users working on medium-sized or larger data, and everyone programming with *dplyr*. I however strongly recommend *collapse* itself for easy and speedy programming as it does not rely on non-standard evaluation and has less R-overhead than *dplyr*.
+
+In all of this the grouping system of *dplyr* remains the central bottleneck. For example grouping 10 million observations in 1 million groups takes around 10 second with `group_by`, whereas `GRP` takes around 1.5 seconds, and this difference grows exponentially as data get larger. Rewriting `group_by` using `GRP` / *data.table*'s `forderv` and then writing a simple C++ conversion program for the grouping object could be a quick remedy for this issue, but that is at the discretion of Hadley Wickham and coauthors. 
+<!-- (If you need that speed program with *collapse* or use *data.table* with GeForce optimized functions). -->
+
+
+## 2. Fast Transformations
+
+Fast aggregation's are just the tip of the iceberg compared to what *collapse* can bring to *dplyr* in terms of grouped transformations. 
+
+### 2.1 Replacing and Sweeping out Statistics 
+<!-- using Fast Statistical Functions -->
+
+All statistical (scalar-valued) functions in the collapse package (`fsum, fprod, fmean, fmedian, fmode, fvar, fsd, fmin, fmax, ffirst, flast, fNobs, fNdistinct`) have a `TRA` argument which can be used to efficiently transforms data by either (column-wise) replacing data values with supplied statistics or sweeping the statistics out of the data. Operations can be specified using either an integer or quoted operator / string. The 8 operations supported by `TRA` are:
+
+* 1 - "replace_fill" : replace and overwrite missing values 
+
+* 2 - "replace" : replace but preserve missing values 
+
+* 3 - "-" : subtract (center)
+
+* 4 - "-+" : subtract group-statistics but add average of group statistics
+
+* 5 - "/" : divide (scale)
+
+* 6 - "%" : compute percentages (divide and multiply by 100)
+
+* 7 - "+" : add
+
+* 8 - "*" : multiply
+
+For functions supporting weights (`fmean, fmode, fvar` and `fsd`) the `TRA` argument is in the third position following the data and weight vector (in the *grouped_df* method), whereas functions not supporting weights have the argument in the second position. 
+
+Simple transformations are again straightforward to specify: 
+```{r}
+# This subtracts the median value from all data points i.e. centers on the median
+GGDC10S %>% num_vars %>% fmedian(TRA = "-")
+
+# This replaces all data points with the mode
+GGDC10S %>% char_vars %>% fmode(TRA = "replace")
+```
+
+We can also easily specify code to demean, scale or compute percentages^[100% being the sum of all VA/EMP in a given sector and country across all years, not the sectoral output share which would gave to be obtained using `sweep(GGDC10S[6:16], 1, GGDC10S$SUM, "/")`] by groups:
+
+
+```{r}
+# Demeaning sectoral data by Variable and Country (within transformation)
+GGDC10S %>% 
+  group_by(Variable,Country) %>%
+  select_at(6:16) %>% fmean(TRA = "-")
+
+# Scaling sectoral data by Variable and Country
+GGDC10S %>% 
+  group_by(Variable,Country) %>%
+    select_at(6:16) %>% fsd(TRA = "/")
+
+# Computing sercentages of sectoral data by Variable and Country
+GGDC10S %>% 
+  group_by(Variable,Country) %>%
+    select_at(6:16) %>% fsum("%")
+
+```
+
+Weighted demeaning and scaling can be computed using:
+
+```{r}
+# Weighted demeaning (within transformation)
+GGDC10S %>% 
+  group_by(Variable,Country) %>%
+  select_at(6:16) %>% fmean(SUM, "-")
+
+# Weighted scaling
+GGDC10S %>% 
+  group_by(Variable,Country) %>%
+  select_at(6:16) %>% fsd(SUM, "/")
+```
+
+Alternatively we could also replace data points with their groupwise weighted mean or standard deviation:
+
+```{r}
+# This conducts a weighted between transformation (replacing with weighted mean)
+GGDC10S %>% 
+  group_by(Variable,Country) %>%
+    select_at(6:16) %>% fmean(SUM, "replace")
+
+# This also replaces missing values in each group
+GGDC10S %>% 
+  group_by(Variable,Country) %>%
+    select_at(6:16) %>% fmean(SUM, "replace_fill")
+
+```
+
+It is also possible to center data points on the global mean, which is achieved by subtracting out group means and adding the overall mean of the data again: 
+```{r}
+# This group-centers data on the overall mean of the data
+GGDC10S %>% 
+  group_by(Variable,Country) %>%
+    select_at(6:16) %>% fmean(TRA = "-+") 
+```
+Sequential operations such as scaling and then centering are also easily performed: 
+```{r}
+# This scales and centers (i.e. standardizes) the data 
+GGDC10S %>% 
+  group_by(Variable,Country) %>%
+    select_at(6:16) %>% fsd(TRA = "/") %>% fmean(TRA = "-")
+```
+
+Of course it is also possible to combine multiple functions as in the aggregation section, or to add variables to existing data, as shown below: 
+
+```{r}
+# This group-centers data on the group-medians and adds the new variables right next to the original ones
+add_vars(GGDC10S, seq(7,27,2)) <- GGDC10S %>% 
+    group_by(Variable,Country) %>% get_vars(6:16) %>% 
+    fmedian(TRA = "-") %>% add_stub("demean_")
+
+GGDC10S
+rm(GGDC10S)
+```
+
+
+Certainly There are lots of other examples one could construct using the 8 operations and 13 functions listed above, the examples provided just outline the suggested programming basics. 
+
+<!-- ***could add add_vars example again*** -->
+
+### 2.2 More Control using the `TRA` Function
+
+Behind the scenes of the `TRA = ...` argument, the fast functions first compute the grouped statistics on all columns of the data, and these statistics are then directly fed into a C++ function that uses them to replace or sweep them out of data points in one of the 8 ways described above. This function can however also be called directly by the name of `TRA` (shorthand for 'transforming' data by replacing or sweeping out statistics). Fundamentally, `TRA` is a generalization of `base::sweep` for column-wise grouped operations^[Row-wise operations are not supported by TRA.]. Direct calls to `TRA` enable more control over inputs and outputs. 
+
+The two operations below are equivalent, although the first is slightly more efficient as it only requires one method dispatch and one check of the inputs:
+
+```{r}
+# This divides by the product
+GGDC10S %>% 
+  group_by(Variable,Country) %>%
+    select_at(6:16) %>% fprod(TRA = "/")
+
+# Same thing 
+GGDC10S %>% 
+  group_by(Variable,Country) %>%
+    select_at(6:16) %>% TRA(fprod(.),"/") # [same as TRA(.,fprod(.),"/")]
+```
+
+`TRA.grouped_df` was designed such that it matches the columns of statistics (aggregated columns) to those of the original data, and only transforms matching columns while returning the whole data.frame. Thus it is easily possible to only apply a transformation to the first two sectors:  
+
+```{r}
+# This only demeans Agriculture (AGR) and Mining (MIN)
+GGDC10S %>% 
+  group_by(Variable,Country) %>%
+    select_at(6:16) %>% TRA(fmean(get_vars(.,c("AGR","MIN"))),"-") 
+```
+
+Another potential use of `TRA` is to do computations in two- or more steps, for example if both aggregated and transformed data are needed, or if computations are more complex and involve other manipulations in between the aggregating and sweeping part:
+
+```{r}
+# Get grouped tibble
+gGGDC <- GGDC10S %>% group_by(Variable,Country)
+
+# Get aggregated data
+gsumGGDC <- gGGDC %>% select_at(6:16) %>% fsum
+gsumGGDC
+
+# Get transformed (scaled) data 
+TRA(gGGDC, gsumGGDC, "/")
+```
+
+
+I have already noted above that whether using the argument to fast statistical functions or `TRA` directly, these data transformations are essentially a two-step process: Statistics are first computed and then used to transform this original data. This process is already very efficient since all functions are written in C++, and programmatically separating the computation of statistics and data transformation tasks allows for unlimited combinations and drastically simplifies the code base of this package.
+
+Nonetheless there are of course more memory efficient and faster ways to program such data transformations, which principally involve doing them column-by-column with a single C++ function. To ensure that this package lives up to the highest standards of performance for common uses, I have implemented such slightly more efficient algorithms for the very commonly applied tasks of centering and averaging data by groups (widely known as 'between'-group and 'within'-group transformations), and scaling and centering data by groups (also known as 'standardizing' data). 
+
+### 2.3 Faster Centering, Averaging and Standardizing
+<!-- Between and Within Transformations and Standardization -->
+
+The functions `fbetween` and `fwithin` are faster implementations of `fmean` invoked with different `TRA` options:
+
+```{r}
+GGDC10S %>% # Same as ... %>% fmean(TRA = "replace")
+  group_by(Variable,Country) %>% select_at(6:16) %>% fbetween %>% head(2)
+
+GGDC10S %>% # Same as ... %>% fmean(TRA = "replace_fill")
+  group_by(Variable,Country) %>% select_at(6:16) %>% fbetween(fill = TRUE) %>% head(2)
+
+GGDC10S %>% # Same as ... %>% fmean(TRA = "-")
+  group_by(Variable,Country) %>% select_at(6:16) %>% fwithin %>% head(2)
+
+GGDC10S %>% # Same as ... %>% fmean(TRA = "-+")
+  group_by(Variable,Country) %>% select_at(6:16) %>% fwithin(add.global.mean = TRUE) %>% head(2)
+```
+
+Apart from higher speed, there is one additional advantage of using `fwithin` in particular, which regards the joint use of weights and the `add.global.mean` option: `... %>% fmean(w = SUM, TRA = "-+")` will not properly group-center the data on the overall weighted mean. Instead, it will group-center data on a frequency weighted average of the weighted group-means, thus not taking into account different aggregated weights attached to those weighted group-means themselves. The reason for this shortcoming is simply that `TRA` was not designed to take a separate weight vector as input. `fwithin(w = SUM, add.global.mean = TRUE)` does a better job and properly centers data on the weighted overall mean after subtracting out weighted group means: 
+
+```{r}
+GGDC10S %>% # This does not center data on a properly computed weighted overall mean
+  group_by(Variable,Country) %>% select_at(6:16) %>% fmean(SUM, TRA = "-+") 
+
+GGDC10S %>% # This does a proper job by both subtracting weighted group-means and adding a weighted overall mean
+  group_by(Variable,Country) %>% select_at(6:16) %>% fwithin(SUM, add.global.mean = TRUE) 
+```
+
+The sequential scaling and centering `... %>% fsd(TRA = "/") %>% fmean(TRA = "-")` shown in an earlier example is also not the best way of doing things. The function `fscale` does this much quicker in a single step:
+
+```{r}
+# This efficiently scales and centers (i.e. standardizes) the data 
+GGDC10S %>% 
+  group_by(Variable,Country) %>%
+    select_at(6:16) %>% fscale
+```
+
+
+### 2.4 Lags / Leads, Differences and Growth Rates
+
+It was suggested some time ago that leaving the best wine for the end is not he best strategy when giving a feast. Considering the marriage of *collapse* and *dplyr* the 3 functions for time-computations introduced in this section combine great flexibility with precision and computing power, and feature amongst the highlights of *collapse*. 
+
+The first function, `flag`, computes sequences of lags and leads on time-series and panel-data. `fdiff` computes sequences of lagged-leaded and iterated differences on time-series and panel-data, and `fgrowth` computes lagged-leaded and iterated growth-rates obtained via the exact computation method or through log-differencing. In addition: None of these functions require the data to be sorted, they can carry out fast computations on completely unordered data as long as a time-variable is supplied that uniquely identifies the data. 
+
+Beginning with `flag`, the following code computes 1 fully-identified panel-lag and 1 fully identified panel-lead of each variable in the data:
+```{r}
+GGDC10S %>% 
+  group_by(Variable,Country) %>%
+     select_at(5:16) %>% flag(-1:1, Year)
+```
+
+If the time-variable passed does not exactly identify the data (i.e. because of gaps or repeated values in each group), all 3 functions will issue appropriate error messages. It is also possible to omit the time-variable if one is certain that the data is sorted:  
+```{r}
+GGDC10S %>% 
+  group_by(Variable,Country) %>%
+     select_at(6:16) %>% flag
+```
+
+`fdiff` can compute continuous sequences of lagged, leaded and iterated differences. The code below computes the 1 and 10 year first and second differences of each variable in the data: 
+```{r}
+GGDC10S %>% 
+  group_by(Variable,Country) %>%
+     select_at(5:16) %>% fdiff(c(1, 10), 1:2, Year)
+```
+
+Finally, `fgrowth` computes growth rates in the same way. By default exact growth rates are computed, but the user can also request growth rates obtained by log-differencing: 
+```{r}
+# Exact growth rates, computed as: (x - lag(x)) / lag(x) * 100
+GGDC10S %>% 
+  group_by(Variable,Country) %>%
+     select_at(5:16) %>% fgrowth(c(1, 10), 1:2, Year)
+
+# Log-difference growth rates, computed as: log(x / lag(x)) * 100
+GGDC10S %>% 
+  group_by(Variable,Country) %>%
+     select_at(5:16) %>% fgrowth(c(1, 10), 1:2, Year, logdiff = TRUE)
+```
+
+`fdiff` and `fgrowth` can also perform leaded (forward) differences and growth rates, although I have never come to employ these in my personal work (i.e. `... %>% fgrowth(-c(1, 10), 1:2, Year)` would compute one and 10-year leaded first and second differences). Again it is possible to perform sequential operations: 
+
+```{r}
+# This computes the 1 and 10-year growth rates, for the current period and lagged by one period
+GGDC10S %>% 
+  group_by(Variable,Country) %>%
+     select_at(5:16) %>% fgrowth(c(1, 10), 1, Year) %>% flag(0:1, Year)
+```
+
+### Benchmarks
+
+Using the same data as in section 1.4 (1 million obs in 17000 groups), I run benchmarks of *collapse* functions against native dplyr solutions: 
+
+```{r, cache=TRUE}
+dim(data)
+GRP(data)
+
+# Grouped Sum (mutate does not have an option to preserve missing values as given by "replace")
+system.time(fsum(data, TRA = "replace_fill"))
+system.time(mutate_all(data, sum, na.rm = TRUE))
+
+# Dviding by grouped sum
+system.time(fsum(data, TRA = "/"))
+system.time(mutate_all(data, function(x) x/sum(x, na.rm = TRUE)))
+
+# Mean (between transformation)
+system.time(fmean(data, TRA = "replace_fill"))
+system.time(fbetween(data, fill = TRUE))
+system.time(mutate_all(data, mean, na.rm = TRUE))
+
+# De-Mean (within transformation)
+system.time(fmean(data, TRA = "-"))
+system.time(fwithin(data))
+system.time(mutate_all(data, function(x) x - mean(x, na.rm = TRUE)))
+
+# Centering on global mean
+system.time(fwithin(data, add.global.mean = TRUE))
+
+# Weighted Demeaning
+system.time(fwithin(data, SUM))
+system.time(fwithin(data, SUM, add.global.mean = TRUE))
+
+# Scaling
+system.time(fsd(data, TRA = "/"))
+system.time(mutate_all(data, function(x) x/sd(x, na.rm = TRUE)))
+
+# Standardizing
+system.time(fscale(data))
+# system.time(mutate_all(data, scale)) This takes 32 seconds to compute.. 
+
+# Weighted Scaling and standardizing
+system.time(fsd(data, SUM, TRA = "/"))
+system.time(fscale(data, SUM))
+
+# Lags and Leads
+system.time(flag(data))
+system.time(mutate_all(data, lag))
+system.time(flag(data, -1))
+system.time(mutate_all(data, lead))
+system.time(flag(data, -1:1))
+
+# Differences
+system.time(fdiff(data))
+system.time(fdiff(data,1,1:2))
+system.time(fdiff(data, c(1,10)))
+system.time(fdiff(data, c(1,10), 1:2))
+
+# Growth Rates
+system.time(fgrowth(data))
+system.time(fgrowth(data,1,1:2))
+system.time(fgrowth(data, c(1,10)))
+system.time(fgrowth(data, c(1,10), 1:2))
+
+```
+
+Again the benchmarks show stunning performance gains using *collapse* functions. 
+
+```{r, echo=FALSE}
+options(oldopts)
+```
+
+
+## References
+
+Timmer, M. P., de Vries, G. J., & de Vries, K. (2015). "Patterns of Structural Change in Developing Countries." . In J. Weiss, & M. Tribe (Eds.), *Routledge Handbook of Industry and Development.* (pp. 65-83). Routledge.
+
+

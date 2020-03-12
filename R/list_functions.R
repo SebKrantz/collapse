@@ -102,7 +102,7 @@ list_extract_FUN <- function(l, FUN, is.subl, keep.tree = FALSE) {
     wa <- vapply(a, length, 1L, USE.NAMES = FALSE) > 0L # note that this also gets rid of null elements!! could make it length or is.null!!!
     x <- c(x[wnsubl][matches], a[wa]) # The problem here: If all elements in a sublist are atomic, it still retains the sublist itself with NULL inside!!
     if(keep.tree || length(x) != 1L)
-      return(x[order(c(wnsubl[matches], wsubl[wa]))]) else return(x[[1L]]) # fastest way??
+      return(x[forder.int(c(wnsubl[matches], wsubl[wa]))]) else return(x[[1L]]) # fastest way??
   } else if(length(x)) { # This ensures correct behavior in the final nodes: if (length(x)) because problem encountered in get.elem(V, is.matrix) -> empty xlevels list, the lapply below does not execute
     matches <- which(vapply(x, FUN, TRUE, USE.NAMES = FALSE))
     if(keep.tree || length(matches) != 1L) return(x[matches]) else return(x[[matches]]) # needs to be != !!!!
@@ -120,7 +120,7 @@ list_extract_regex <- function(l, exp, is.subl, keep.tree = FALSE, ...) {
       wa <- vapply(a, length, 1L) > 0L # note that this also gets rid of null elements!! could make it length or is.null!!!
       x <- c(x[wres], a[wa])
       if(keep.tree || length(x) != 1L)
-        return(x[order(c(wres, wnressubl[wa]))]) else return(x[[1L]])
+        return(x[forder.int(c(wres, wnressubl[wa]))]) else return(x[[1L]])
     } else if(keep.tree || length(wres) != 1L) return(x[wres]) else return(x[[wres]])
   } else { # This ensures correct behavior in the final nodes:
     matches <- rgrep(exp, names(x), ...) # what if no matches here !!
@@ -143,7 +143,7 @@ list_extract_names <- function(l, nam, is.subl, keep.tree = FALSE) {
       wa <- vapply(a, length, 1L) > 0L
       x <- c(x[wres], a[wa])
       if(keep.tree || length(x) != 1L)
-        return(x[order(c(wres, wnressubl[wa]))]) else return(x[[1L]])
+        return(x[forder.int(c(wres, wnressubl[wa]))]) else return(x[[1L]])
     } else if(keep.tree || length(wres) != 1L) return(x[wres]) else return(x[[wres]])
   } else {
     matches <- match(nam, names(x))  # which(names(x) %in% nam)

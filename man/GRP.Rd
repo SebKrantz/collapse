@@ -25,8 +25,8 @@ GRP(X, ...)
 
 \method{GRP}{factor}(X, ...)
 \method{GRP}{qG}(X, ...)
-\method{GRP}{pseries}(X, ...)
-\method{GRP}{pdata.frame}(X, ...)
+\method{GRP}{pseries}(X, effect = 1L, ...)
+\method{GRP}{pdata.frame}(X, effect = 1L, ...)
 \method{GRP}{grouped_df}(X, ...)
 
 is.GRP(x)
@@ -56,6 +56,8 @@ as.factor.GRP(x)
   \item{return.order}{logical. include the output from \code{data.table:::forderv} in the created 'GRP' object.}
 
   \item{force.char}{logical. Always output group names as character vector, even if a single numeric vector was passed to \code{GRP.default}.}
+
+ \item{effect}{\code{plm} methods: Select which panel identifier should be used as grouping variable. 1L means first variable in the \code{plm::index}, 2L the second etc.. More than one variable can be supplied. }
 
   \item{n}{integer. Number of groups to print out.}
 

@@ -54,6 +54,9 @@ void cond_duplattributes(SEXP x, SEXP y) {
   if(TYPEOF(x) == TYPEOF(y)) DUPLICATE_ATTRIB(x, y); // SET_ATTRIB(x, ATTRIB(y));
 }
 
+
+
+
 // // [[Rcpp::export]]
 // NumericVector narmCpp(NumericVector x) {
 //   NumericVector y = no_init_vector(x.size());
@@ -67,6 +70,19 @@ void cond_duplattributes(SEXP x, SEXP y) {
 //   return false;
 // }
 
+
+// [[Rcpp::export]]
+IntegerVector groups2GRPCpp(const List& x, int lx, const IntegerVector& gs) {
+  int l = x.size(); // , sum = 0;
+  // for(int i = 0; i != l; ++i) sum += gs[i]; // could also input, just length of data...
+  IntegerVector out = no_init_vector(lx); // no_init_vector(sum);
+  for(int j = l; j--; ) { // This can go in any direction..
+    IntegerVector column = x[j]; // const ??
+    int jp = j+1;
+    for(int i = gs[j]; i--; ) out[column[i]-1] = jp; // This can goin any direction...
+  }
+  return out;
+}
 
 
 // [[Rcpp::export]] // not faster than base method on large data (PRIO)!!

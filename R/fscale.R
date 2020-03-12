@@ -26,7 +26,7 @@ fscale.default <- function(x, g = NULL, w = NULL, na.rm = TRUE, stable.algo = TR
 }
 fscale.pseries <- function(x, effect = 1L, w = NULL, na.rm = TRUE, stable.algo = TRUE, ...) {
   if(!missing(...)) stop("Unknown argument ", dotstostr(...))
-  g <- if(length(effect) == 1L) attr(x, "index")[[effect]] else interaction(attr(x, "index")[effect], drop = TRUE)
+  g <- if(length(effect) == 1L) unclass(attr(x, "index"))[[effect]] else interaction(unclass(attr(x, "index"))[effect], drop = TRUE)
   .Call(Cpp_fscale,x,fnlevels(g),g,NULL,w,na.rm,stable.algo)
 }
 fscale.matrix <- function(x, g = NULL, w = NULL, na.rm = TRUE, stable.algo = TRUE, ...) {
@@ -44,12 +44,12 @@ fscale.matrix <- function(x, g = NULL, w = NULL, na.rm = TRUE, stable.algo = TRU
 fscale.grouped_df <- function(x, w = NULL, na.rm = TRUE, keep.group_vars = TRUE, keep.w = TRUE, stable.algo = TRUE, ...) {
   if(!missing(...)) stop("Unknown argument ", dotstostr(...))
   g <- GRP.grouped_df(x)
-  wsym <- deparse(substitute(w))
+  wsym <- deparse(substitute(w)) # faster way ???
   nam <- attr(x, "names")
   gn2 <- which(nam %in% g[[5L]])
   gn <- if(keep.group_vars) gn2 else NULL
   if(!(wsym == "NULL" || is.na(wn <- match(wsym, nam)))) {
-    w <- x[[wn]]
+    w <- unclass(x)[[wn]]
     if(any(gn2 == wn)) stop("Weights coincide with grouping variables!")
     gn2 <- c(gn2, wn)
     if(keep.w) gn <- c(gn, wn)
@@ -78,7 +78,7 @@ fscale.data.frame <- function(x, g = NULL, w = NULL, na.rm = TRUE, stable.algo =
 }
 fscale.pdata.frame <- function(x, effect = 1L, w = NULL, na.rm = TRUE, stable.algo = TRUE, ...) {
   if(!missing(...)) stop("Unknown argument ", dotstostr(...))
-  g <- if(length(effect) == 1L) attr(x, "index")[[effect]] else interaction(attr(x, "index")[effect], drop = TRUE)
+  g <- if(length(effect) == 1L) unclass(attr(x, "index"))[[effect]] else interaction(unclass(attr(x, "index"))[effect], drop = TRUE)
   .Call(Cpp_fscale,x,fnlevels(g),g,NULL,w,na.rm,stable.algo)
 }
 
@@ -93,7 +93,7 @@ STD.default <- function(x, g = NULL, w = NULL, na.rm = TRUE, stable.algo = TRUE,
 }
 STD.pseries <- function(x, effect = 1L, w = NULL, na.rm = TRUE, stable.algo = TRUE, ...) {
   if(!missing(...)) stop("Unknown argument ", dotstostr(...))
-  g <- if(length(effect) == 1L) attr(x, "index")[[effect]] else interaction(attr(x, "index")[effect], drop = TRUE)
+  g <- if(length(effect) == 1L) unclass(attr(x, "index"))[[effect]] else interaction(unclass(attr(x, "index"))[effect], drop = TRUE)
   .Call(Cpp_fscale,x,fnlevels(g),g,NULL,w,na.rm,stable.algo)
 }
 STD.matrix <- function(x, g = NULL, w = NULL, na.rm = TRUE, stable.algo = TRUE, stub = "STD.", ...) {
@@ -108,7 +108,7 @@ STD.grouped_df <- function(x, w = NULL, na.rm = TRUE, keep.group_vars = TRUE, ke
   gn2 <- which(nam %in% g[[5L]])
   gn <- if(keep.group_vars) gn2 else NULL
   if(!(wsym == "NULL" || is.na(wn <- match(wsym, nam)))) {
-    w <- x[[wn]]
+    w <- unclass(x)[[wn]]
     if(any(gn2 == wn)) stop("Weights coincide with grouping variables!")
     gn2 <- c(gn2,wn)
     if(keep.w) gn <- c(gn,wn)
@@ -131,12 +131,12 @@ STD.pdata.frame <- function(x, effect = 1L, w = NULL, cols = is.numeric,
   if(!missing(...)) stop("Unknown argument ", dotstostr(...))
   ax <- attributes(x)
   class(x) <- NULL
-  nam <- ax[["names"]]
-  g <- if(length(effect) == 1L) ax[["index"]][[effect]] else
-       interaction(ax[["index"]][effect], drop = TRUE)
+  nam <- names(x)
+  g <- if(length(effect) == 1L) unclass(ax[["index"]])[[effect]] else
+       interaction(unclass(ax[["index"]])[effect], drop = TRUE)
 
   if(keep.ids) {
-    gn <- which(nam %in% names(ax[["index"]]))
+    gn <- which(nam %in% attr(ax[["index"]], "names"))
     if(length(gn) && is.null(cols)) cols <- seq_along(x)[-gn]
   } else gn <- NULL
 
@@ -144,7 +144,7 @@ STD.pdata.frame <- function(x, effect = 1L, w = NULL, cols = is.numeric,
 
   if(is.call(w)) {
     w <- all.vars(w)
-    wn <- anyNAerror(match(w, nam), "Unknown weight variable!")
+    wn <- ckmatch(w, nam, "Unknown weight variable:")
     w <- x[[wn]]
     cols <- if(is.null(cols)) seq_along(x)[-wn] else cols[cols != wn]
     if(keep.w) gn <- c(gn, wn)
@@ -173,14 +173,14 @@ STD.data.frame <- function(x, by = NULL, w = NULL, cols = is.numeric,
   if(is.call(by) || is.call(w)) {
     ax <- attributes(x)
     class(x) <- NULL
-    nam <- ax[["names"]]
+    nam <- names(x)
 
     if(is.call(by)) {
       if(length(by) == 3L) {
-        cols <- anyNAerror(match(all.vars(by[[2L]]), nam), "Unknown variables passed to by!")
-        gn <- anyNAerror(match(all.vars(by[[3L]]), nam), "Unknown variables passed to by!")
+        cols <- ckmatch(all.vars(by[[2L]]), nam)
+        gn <- ckmatch(all.vars(by[[3L]]), nam)
       } else {
-        gn <- anyNAerror(match(all.vars(by), nam), "Unknown variables passed to by!")
+        gn <- ckmatch(all.vars(by), nam)
         cols <- if(is.null(cols)) seq_along(x)[-gn] else cols2int(cols, x, nam)
       }
       by <- if(length(gn) == 1L) at2GRP(x[[gn]]) else GRP(x, gn, return.groups = FALSE)
@@ -194,7 +194,7 @@ STD.data.frame <- function(x, by = NULL, w = NULL, cols = is.numeric,
 
     if(is.call(w)) {
       w <- all.vars(w)
-      wn <- anyNAerror(match(w, nam), "Unknown weight variable!")
+      wn <- ckmatch(w, nam, "Unknown weight variable:")
       w <- x[[wn]]
       cols <- if(is.null(cols)) seq_along(x)[-wn] else cols[cols != wn]
       if(keep.w) gn <- c(gn, wn)
@@ -207,9 +207,9 @@ STD.data.frame <- function(x, by = NULL, w = NULL, cols = is.numeric,
       ax[["names"]] <- if(is.character(stub)) paste0(stub, nam[cols]) else nam[cols]
       return(setAttributes(.Call(Cpp_fscalel,x[cols],by[[1L]],by[[2L]],by[[3L]],w,na.rm,stable.algo), ax))
     }
-  } else if(!is.null(cols)) {
+  } else if(!is.null(cols)) { # Needs to be like this, otherwise subsetting dropps the attributes !!
     ax <- attributes(x)
-    x <- if(is.function(cols)) unclass(x)[vapply(x, cols, TRUE)] else unclass(x)[cols]
+    x <- unclass(x)[cols2int(cols, x, ax[["names"]])]
     ax[["names"]] <- names(x)
     setattributes(x, ax)
   }

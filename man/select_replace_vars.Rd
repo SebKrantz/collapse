@@ -9,6 +9,8 @@
 \alias{fact_vars}
 \alias{logi_vars}
 \alias{Date_vars}
+\alias{add_vars}
+\alias{av}
 \alias{get_vars<-}
 \alias{gv<-}
 \alias{num_vars<-}
@@ -55,17 +57,19 @@ get_vars(x, vars, return = c("data","names","indices","named_indices"),
 get_vars(x, vars, regex = FALSE, ...) <- value
       gv(x, vars, regex = FALSE, ...) <- value                    # Short for get_vars<-
 
-## Add columns to data.frame
+## Add columns at any position within a data.frame
 
-add_vars(x) <- value
-      av(x) <- value             # Short for add_vars<-
+add_vars(x, ..., pos = "end")
+      av(x, ..., pos = "end")               # Short for add_vars
+add_vars(x, pos = "end") <- value
+      av(x, pos = "end") <- value             # Short for add_vars<-
 
 }
 %- maybe also 'usage' for other objects documented here.
 \arguments{
 % \emph{Note}: Functions also work with data.table's etc... as long as \code{x} is a list and \code{!is.null(dim(x))}.}
   \item{x}{a data.frame.}
-  \item{value}{a data.frame or list of columns whose dimensions exactly match those of the extracted subet of \code{x}. If only 1 variable is in the subet of \code{x}, \code{value} can also be an atomic vector or matrix, provided that \code{NROW(value) == nrow(x)}.}
+  \item{value}{a data.frame or list of columns whose dimensions exactly match those of the extracted subset of \code{x}. If only 1 variable is in the subset of \code{x}, \code{value} can also be an atomic vector or matrix, provided that \code{NROW(value) == nrow(x)}.}
   \item{vars}{a vector of column names, indices (can be negative), a suitable logical vector, a vector of regular expressions matching column names if \code{regex = TRUE}, or a function returning \code{TRUE} or \code{FALSE} when applied to the columns of \code{x}.}
   \item{return}{an integer or string specifying what to return. The options are:
   \enumerate{
@@ -77,7 +81,8 @@ add_vars(x) <- value
   \emph{Note}: replacement functions only replace data, not column names or indices (ordering). However column names are replaced together with the data.
   }
 \item{regex}{logical. \code{TRUE} will do regular expression search on the column names of \code{x} using a (vector of) regular expression(s) passed to \code{vars}.}
-\item{...}{further arguments passed to \code{\link{grep}}, if \code{regex = TRUE}.}
+\item{pos}{the position where columns are added in the data.frame. \code{"end"} (default) will add columns at the end (right) of the data.frame, "front" will add columns in front (left). Alternatively one can pass a vector of positions (matching \code{length(value)} if value is a list). In that case the other columns will be shifted around the new ones while maintaining their order. }
+\item{...}{for \code{get_vars}: further arguments passed to \code{\link{grep}}, if \code{regex = TRUE}. For \code{add_vars}: Same as \code{value}. A single argument passed may also be a vector or matrix, multiple arguments must each be a list (they are combined using \code{c(...)}).}
 }
 % \details{
 % }
@@ -106,12 +111,19 @@ head(get_vars(wlddev, -(9:12)))                            # All except columns 
 head(get_vars(wlddev, c("PCGDP","LIFEEX","GINI","ODA")))   # Select using column names
 head(get_vars(wlddev, "[[:upper:]]", regex = TRUE))        # Same thing: match upper-case var. names
 
-# Again simple replacement, 4-5x faster than wlddev[9:12] <- wlddev[9:12]
-get_vars(wlddev, 9:12) <- get_vars(wlddev, 9:12)
-get_vars(wlddev, 9:12) <-                                  # Standardizing columns 9 through 12
-                STD(get_vars(wlddev,9:12), wlddev$iso3c)   # Note that this also change the names
-head(wlddev)                                               # in the data, whereas wlddev[9:12] <- ..
-rm(wlddev)                                                 # replaces only data, not names!
+get_vars(wlddev, 9:12) <- get_vars(wlddev, 9:12)           # 6x faster wlddev[9:12] <- wlddev[9:12]
+add_vars(wlddev) <- STD(gv(wlddev,9:12), wlddev$iso3c)     # Add Standardized columns 9 through 12
+head(wlddev)                                               # gv and av are shortcuts
+
+get_vars(wlddev, 13:16) <- NULL                            # Efficient Deleting added columns again
+av(wlddev, "front") <- STD(gv(wlddev,9:12), wlddev$iso3c)  # Again adding in Front
+head(wlddev)
+get_vars(wlddev, 1:4) <- NULL                              # Deleting
+av(wlddev,c(10,12,14,16)) <- W(wlddev,~iso3c, cols = 9:12, # Adding next to original variables
+                               keep.by = FALSE)
+head(wlddev)
+get_vars(wlddev, c(10,12,14,16)) <- NULL                   # Deleting
+
 }
 \keyword{manip}
 \keyword{documentation}
