@@ -22,7 +22,7 @@ test_that("GRP works as intended", {
  expect_visible(GRP(mtcNA, na.last = FALSE, order = -1, return.order = TRUE))
  expect_visible(GRP(wlddev))
  expect_visible(GRP(wlddev, return.groups = FALSE))
- expect_true(all.identical(GRP(mtcars, ~ cyl + vs + am)[1:7],
+ expect_true(all_equal(GRP(mtcars, ~ cyl + vs + am)[1:7],
                            GRP(mtcars, c("cyl","vs","am"))[1:7],
                            GRP(mtcars, c(2,8:9))[1:7]))
 })
