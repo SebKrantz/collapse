@@ -14,6 +14,10 @@ vignette: >
 ---
 
 ```{r, echo = FALSE, message = FALSE, warning=FALSE}
+library(data.table)    # Keep here becasue of not run options on CRAN
+library(microbenchmark)
+library(plm)
+library(collapse)
 knitr::opts_chunk$set(error = FALSE, message = FALSE, warning = FALSE, 
                       comment = "#", tidy = FALSE, cache = TRUE, collapse = TRUE,
                       fig.width = 8, fig.height = 5, 
@@ -29,6 +33,8 @@ knitr::opts_chunk$set(error = FALSE, message = FALSE, warning = FALSE,
 #  fig.height= 5,
 #  out.width='100%'
 # )
+
+NCRAN <- identical(Sys.getenv("NCRAN"), "TRUE")
 
 oldopts <- options(width = 100L)
 set.seed(101)
@@ -449,7 +455,7 @@ Of course we could also have applied some transformation (like computing pairwis
 
 Below I benchmark the *collapse* implementation against native *plm*. To do that I extend the dataset used so far to have approx 1 million observations: 
 
-```{r}
+```{r, eval=NCRAN}
 wlddevsmall <- get_vars(wlddev, c("iso3c","year","OECD","PCGDP","LIFEEX","GINI","ODA"))
 wlddevsmall$iso3c <- as.character(wlddevsmall$iso3c)
 data <- replicate(100, wlddevsmall, simplify = FALSE)
@@ -465,7 +471,7 @@ pdim(data)
 
 The data has 21600 individuals (countries) each observed for 59 years, the total number of rows is 1274400. We can pull out a series of life expectancy and run some benchmarks. My windows laptop on which these benchmarks were run has a 2x 2.2 GHZ Intel i5 processor, 8GB DDR3 RAM and a Samsung SSD hard drive (so a decent laptop but nothing fancy). 
 
-```{r}
+```{r, eval=NCRAN}
 # Creating the extended panel-series for Life Expectancy (l for large)
 LIFEEX_l <- data$LIFEEX
 str(LIFEEX_l)
@@ -513,7 +519,7 @@ system.time(psmat(LIFEEX_l))
 
 The results show that I did not promise to much in the introduction. A speed gain of 20-40x is the norm, and for certain operations such as the sequence of lags and leads the speed gain is about 100x, and for the panel-series to matrix conversion a 300x speed gain by using *collapse* vs. native *plm*. I am sure some will want to see a comparison with *data.table*:
 
-```{r}
+```{r, eval=NCRAN}
 system.time(L(data, cols = 3:6))
 library(data.table)
 setDT(data)
@@ -526,7 +532,7 @@ system.time(data[order(year), shift(.SD), by = iso3c, .SDcols = 3:6])
 
 The above dataset has 1 million obs in 20 thousand groups, but what about 10 million obs and 1 million groups? Do *collapse* functions scale efficiently as data and the number of groups grows large? Here is a simple benchmark:  
 
-```{r}
+```{r, eval=NCRAN}
 x <- rnorm(1e7)                                     # 10 million obs
 g <- qF(rep(1:1e6, each = 10), na.exclude = FALSE)  # 1 million individuals
 t <- qF(rep(1:10, 1e6), na.exclude = FALSE)         # 10 time-periods per individual
@@ -567,7 +573,7 @@ qsu(pwlddev, ~ income, w = rep(1, nrow(pwlddev)), cols = 9:12, higher = TRUE)
 
 Here it should be noted that any grouping is applied independently from the data-transformation, that is the data is first transformed, and then grouped statistics are calculated on the transformed data. The computation of statistics is very efficient. Here I summarize the extended life-expectancy series used in the benchmarks in Part 1: 
 
-```{r}
+```{r, eval=NCRAN}
 qsu(LIFEEX_l)
 
 system.time(qsu(LIFEEX_l))
@@ -848,7 +854,7 @@ HT_est(y = dat$LIFEEX,
 
 Now a central questions is of course: How computationally efficient is this estimator? Let us try to re-run it on the data generated for the benchmark in Part 1:
 
-```{r}
+```{r, eval=NCRAN}
 dat <- get_vars(data, c("iso3c","year","OECD","PCGDP","LIFEEX","GINI","ODA"))
 get_vars(dat, 4:7) <- log(get_vars(dat, 4:7))       # Taking logs of the data
 dat$OECD <- as.numeric(dat$OECD)                    # Creating OECD dummy
