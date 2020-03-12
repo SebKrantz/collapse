@@ -8,7 +8,7 @@ output:
     toc: true
 
 vignette: >
-  %\VignetteIndexEntry{Introduction to collapse}
+  %\VignetteIndexEntry{Introduction to collapse: Advanced and Fast Data Transformation in R}
   %\VignetteEngine{knitr::rmarkdown}
   %\VignetteEncoding{UTF-8}
 ---

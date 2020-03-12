@@ -8,7 +8,7 @@ output:
     toc: true
 
 vignette: >
-  %\VignetteIndexEntry{collapse and dplyr: fast (weighted) aggregations, transformations and time-series/panel computations in a dplyr workflow}
+  %\VignetteIndexEntry{collapse and dplyr: Fast (weighted) Aggregations, Transformations and Time-Series/Panel Computations in a dplyr Workflow}
   %\VignetteEngine{knitr::rmarkdown}
   %\VignetteEncoding{UTF-8}
 ---

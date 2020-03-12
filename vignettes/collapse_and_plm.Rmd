@@ -8,7 +8,7 @@ output:
     toc: true
 
 vignette: >
-  %\VignetteIndexEntry{collapse and plm: fast transformation and exploration of panel data}
+  %\VignetteIndexEntry{collapse and plm: Fast Transformation and Exploration of Panel Data}
   %\VignetteEngine{knitr::rmarkdown}
   %\VignetteEncoding{UTF-8}
 ---
