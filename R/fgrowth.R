@@ -20,10 +20,10 @@ fgrowth.default <- function(x, n = 1, diff = 1, g = NULL, t = NULL, fill = NA, l
         g <- qG(g, na.exclude = FALSE)
         nl <- attr(g, "N.groups")
       }
-      return(.Call(Cpp_fgrowth,x,n,diff,fill,nl,g,NULL,G_t(t),logdiff,stubs))
+      return(.Call(Cpp_fgrowth,x,n,diff,fill,nl,g,NULL,G_t(t,wm=3L),logdiff,stubs))
     } else {
       if(!is.GRP(g)) g <- GRP(g, return.groups = FALSE)
-      return(.Call(Cpp_fgrowth,x,n,diff,fill,g[[1L]],g[[2L]],g[[3L]],G_t(t),logdiff,stubs))
+      return(.Call(Cpp_fgrowth,x,n,diff,fill,g[[1L]],g[[2L]],g[[3L]],G_t(t,wm=3L),logdiff,stubs))
     }
 }
 fgrowth.pseries <- function(x, n = 1, diff = 1, fill = NA, logdiff = FALSE, stubs = TRUE, ...) {
@@ -42,10 +42,10 @@ fgrowth.matrix <- function(x, n = 1, diff = 1, g = NULL, t = NULL, fill = NA, lo
         g <- qG(g, na.exclude = FALSE)
         nl <- attr(g, "N.groups")
       }
-      .Call(Cpp_fgrowthm,x,n,diff,fill,nl,g,NULL,G_t(t),logdiff,stubs)
+      .Call(Cpp_fgrowthm,x,n,diff,fill,nl,g,NULL,G_t(t,wm=3L),logdiff,stubs)
     } else {
       if(!is.GRP(g)) g = GRP(g, return.groups = FALSE)
-      .Call(Cpp_fgrowthm,x,n,diff,fill,g[[1L]],g[[2L]],g[[3L]],G_t(t),logdiff,stubs)
+      .Call(Cpp_fgrowthm,x,n,diff,fill,g[[1L]],g[[2L]],g[[3L]],G_t(t,wm=3L),logdiff,stubs)
     }
 }
 fgrowth.grouped_df <- function(x, n = 1, diff = 1, t = NULL, fill = NA, logdiff = FALSE, stubs = TRUE, keep.ids = TRUE, ...) {
@@ -61,14 +61,14 @@ fgrowth.grouped_df <- function(x, n = 1, diff = 1, t = NULL, fill = NA, logdiff 
   }
   if(length(gn)) {
     if(!keep.ids)
-      return(.Call(Cpp_fgrowthl,x[-gn],n,diff,fill,g[[1L]],g[[2L]],g[[3L]],G_t(t),logdiff,stubs)) else {
+      return(.Call(Cpp_fgrowthl,x[-gn],n,diff,fill,g[[1L]],g[[2L]],g[[3L]],G_t(t,wm=3L),logdiff,stubs)) else {
         ax <- attributes(x)
         class(x) <- NULL # Works for multiple lags !!
-        res <- c(x[gn],.Call(Cpp_fgrowthl,x[-gn],n,diff,fill,g[[1L]],g[[2L]],g[[3L]],G_t(t),logdiff,stubs))
+        res <- c(x[gn],.Call(Cpp_fgrowthl,x[-gn],n,diff,fill,g[[1L]],g[[2L]],g[[3L]],G_t(t,wm=3L),logdiff,stubs))
         ax[["names"]] <- names(res)
         return(setAttributes(res, ax))
       }
-  } else return(.Call(Cpp_fgrowthl,x,n,diff,fill,g[[1L]],g[[2L]],g[[3L]],G_t(t),logdiff,stubs))
+  } else return(.Call(Cpp_fgrowthl,x,n,diff,fill,g[[1L]],g[[2L]],g[[3L]],G_t(t,wm=3L),logdiff,stubs))
 }
 fgrowth.data.frame <- function(x, n = 1, diff = 1, g = NULL, t = NULL, fill = NA, logdiff = FALSE, stubs = TRUE, ...) {
   if(!missing(...)) stop(sprintf("Unknown argument %s passed to fgrowth.data.frame", dotstostr(...)))
@@ -78,10 +78,10 @@ fgrowth.data.frame <- function(x, n = 1, diff = 1, g = NULL, t = NULL, fill = NA
         g <- qG(g, na.exclude = FALSE)
         nl <- attr(g, "N.groups")
       }
-      .Call(Cpp_fgrowthl,x,n,diff,fill,nl,g,NULL,G_t(t),logdiff,stubs)
+      .Call(Cpp_fgrowthl,x,n,diff,fill,nl,g,NULL,G_t(t,wm=3L),logdiff,stubs)
     } else {
       if(!is.GRP(g)) g = GRP(g, return.groups = FALSE)
-      .Call(Cpp_fgrowthl,x,n,diff,fill,g[[1L]],g[[2L]],g[[3L]],G_t(t),logdiff,stubs)
+      .Call(Cpp_fgrowthl,x,n,diff,fill,g[[1L]],g[[2L]],g[[3L]],G_t(t,wm=3L),logdiff,stubs)
     }
 }
 fgrowth.pdata.frame <- function(x, n = 1, diff = 1, fill = NA, logdiff = FALSE, stubs = TRUE, ...) {
@@ -141,8 +141,8 @@ G.data.frame <- function(x, n = 1, diff = 1, by = NULL, t = NULL, cols = is.nume
     }
 
     res <- if(length(gn))
-      c(x[gn], .Call(Cpp_fgrowthl,x[cols],n,diff,fill,by[[1L]],by[[2L]],by[[3L]],G_t(t),logdiff,stubs)) else
-        .Call(Cpp_fgrowthl,x[cols],n,diff,fill,by[[1L]],by[[2L]],by[[3L]],G_t(t),logdiff,stubs)
+      c(x[gn], .Call(Cpp_fgrowthl,x[cols],n,diff,fill,by[[1L]],by[[2L]],by[[3L]],G_t(t,wm=3L),logdiff,stubs)) else
+        .Call(Cpp_fgrowthl,x[cols],n,diff,fill,by[[1L]],by[[2L]],by[[3L]],G_t(t,wm=3L),logdiff,stubs)
     ax[["names"]] <- names(res)
     return(setAttributes(res, ax))
   } else if(!is.null(cols)) { # Needs to be like this, otherwise list-subsetting removes attributes !!
@@ -158,10 +158,10 @@ G.data.frame <- function(x, n = 1, diff = 1, by = NULL, t = NULL, cols = is.nume
         by <- qG(by, na.exclude = FALSE)
         nl <- attr(by, "N.groups")
       }
-      .Call(Cpp_fgrowthl,x,n,diff,fill,nl,by,NULL,G_t(t),logdiff,stubs)
+      .Call(Cpp_fgrowthl,x,n,diff,fill,nl,by,NULL,G_t(t,wm=3L),logdiff,stubs)
     } else {
       if(!is.GRP(by)) by <- GRP(by, return.groups = FALSE)
-      .Call(Cpp_fgrowthl,x,n,diff,fill,by[[1L]],by[[2L]],by[[3L]],G_t(t),logdiff,stubs)
+      .Call(Cpp_fgrowthl,x,n,diff,fill,by[[1L]],by[[2L]],by[[3L]],G_t(t,wm=3L),logdiff,stubs)
     }
 }
 G.pdata.frame <- function(x, n = 1, diff = 1, cols = is.numeric, fill = NA, logdiff = FALSE, stubs = TRUE, keep.ids = TRUE, ...) {

@@ -13,6 +13,7 @@
 \alias{setColnames}
 \alias{setDimnames}
 \alias{all_identical}
+\alias{all_equal}
 \alias{is.categorical}
 \alias{is.Date}
 \alias{\%!in\%}
@@ -42,6 +43,7 @@ funique(x, ordered = TRUE)    # Faster unique(x) and sort(unique(x)) for vectors
 na_rm(x)                      # Remove missing values from vector and return vector
 na_insert(X, prop = 0.1)      # Insert missing values at random in vectors, matrices DF's
 all_identical(...)            # Check exact equality of multiple objects or list-elements
+all_equal(...)                # Check near equality of multiple objects or list-elements
 seq_row(X)                    # Integer sequences along rows of X
 seq_col(X)                    # Integer sequences along columns of X
 setRownames(object = nm,      # Set rownames of object and return object
@@ -66,7 +68,7 @@ as.numeric_factor(X)          # Coerce a factor, or all factor columns in X, to 
   \item{dn}{a suitable list of dimension names.}
   \item{ordered}{logical. \code{TRUE} (default) sorts the output, \code{FALSE} is slightly faster.}
   \item{prop}{specify the proportion of observations randomly replaced with \code{NA}.}
- \item{...}{for \code{all_identical}: either multiple comma-separated objects or a single list of objects. For \code{rm_stub}: Other arguments passed to \code{\link{sub}}.}
+ \item{...}{for \code{all_identical / all_equal}: either multiple comma-separated objects or a single list of objects. For \code{rm_stub}: Other arguments passed to \code{\link{sub}}.}
 }
 % \details{
 %%  ~~ If necessary, more details than the description above ~~
