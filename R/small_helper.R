@@ -75,7 +75,15 @@ all_identical <- function(...) {
     all(unlist(lapply(l[-1L], identical, l[[1L]]), use.names = FALSE)) # use vapply ??
   }
 }
-all.identical <- all_identical
+all_equal <- function(...) {
+  if(length(list(...)) == 1L && is.list(...)) { # if(length(match.call())-1L == 1L && is.list(...)) # https://stackoverflow.com/questions/44011918/count-number-of-arguments-passed-to-function
+    all(unlist(lapply(...[-1L], all.equal, ...[[1L]]), use.names = FALSE)) # use vapply ??
+  } else {
+    l <- list(...)
+    all(unlist(lapply(l[-1L], all.equal, l[[1L]]), use.names = FALSE)) # use vapply ??
+  }
+}
+
 is.categorical <- function(x) !is.numeric(x)
 is.Date <- function(x) inherits(x, c("Date","POSIXlt","POSIXct"))
 "%!in%" <- function(x, table) match(x, table, nomatch = 0L) == 0L
@@ -206,9 +214,11 @@ at2GRP <- function(x) {
   }
 }
 # ret2int <- function(x) match(ret, c("cols","all","add")) # return = c("cols","all","add")
-G_t <- function(x, m = TRUE) {
+G_t <- function(x, m = TRUE, wm = 1L) {
   if(is.null(x)) {
-    if(m) message("Panel-lag computed without timevar: Assuming ordered data")
+    if(m) message(switch(wm, "Panel-lag computed without timevar: Assuming ordered data",
+                             "Panel-difference computed without timevar: Assuming ordered data",
+                             "Panel-growth rate computed without timevar: Assuming ordered data"))
     return(x)
   } else if(is.atomic(x)) {
     if(is.integer(x)) return(x) else return(qG(x, na.exclude = FALSE)) # make sure it is ordered !!! qG already ckecks factor !!

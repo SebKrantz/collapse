@@ -19,10 +19,10 @@ fdiff.default <- function(x, n = 1, diff = 1, g = NULL, t = NULL, fill = NA, stu
         g <- qG(g, na.exclude = FALSE)
         nl <- attr(g, "N.groups")
       }
-      return(.Call(Cpp_fdiff,x,n,diff,fill,nl,g,NULL,G_t(t),stubs))
+      return(.Call(Cpp_fdiff,x,n,diff,fill,nl,g,NULL,G_t(t,wm=2L),stubs))
     } else {
       if(!is.GRP(g)) g <- GRP(g, return.groups = FALSE)
-      return(.Call(Cpp_fdiff,x,n,diff,fill,g[[1L]],g[[2L]],g[[3L]],G_t(t),stubs))
+      return(.Call(Cpp_fdiff,x,n,diff,fill,g[[1L]],g[[2L]],g[[3L]],G_t(t,wm=2L),stubs))
     }
 }
 fdiff.pseries <- function(x, n = 1, diff = 1, fill = NA, stubs = TRUE, ...) {
@@ -41,10 +41,10 @@ fdiff.matrix <- function(x, n = 1, diff = 1, g = NULL, t = NULL, fill = NA, stub
         g <- qG(g, na.exclude = FALSE)
         nl <- attr(g, "N.groups")
       }
-      .Call(Cpp_fdiffm,x,n,diff,fill,nl,g,NULL,G_t(t),stubs)
+      .Call(Cpp_fdiffm,x,n,diff,fill,nl,g,NULL,G_t(t,wm=2L),stubs)
     } else {
       if(!is.GRP(g)) g <- GRP(g, return.groups = FALSE)
-      .Call(Cpp_fdiffm,x,n,diff,fill,g[[1L]],g[[2L]],g[[3L]],G_t(t),stubs)
+      .Call(Cpp_fdiffm,x,n,diff,fill,g[[1L]],g[[2L]],g[[3L]],G_t(t,wm=2L),stubs)
     }
 }
 fdiff.grouped_df <- function(x, n = 1, diff = 1, t = NULL, fill = NA, stubs = TRUE, keep.ids = TRUE, ...) {
@@ -60,14 +60,14 @@ fdiff.grouped_df <- function(x, n = 1, diff = 1, t = NULL, fill = NA, stubs = TR
   }
   if(length(gn)) {
     if(!keep.ids)
-      return(.Call(Cpp_fdiffl,x[-gn],n,diff,fill,g[[1L]],g[[2L]],g[[3L]],G_t(t),stubs)) else {
+      return(.Call(Cpp_fdiffl,x[-gn],n,diff,fill,g[[1L]],g[[2L]],g[[3L]],G_t(t,wm=2L),stubs)) else {
         ax <- attributes(x)
         class(x) <- NULL # Works for multiple lags !!
-        res <- c(x[gn],.Call(Cpp_fdiffl,x[-gn],n,diff,fill,g[[1L]],g[[2L]],g[[3L]],G_t(t),stubs))
+        res <- c(x[gn],.Call(Cpp_fdiffl,x[-gn],n,diff,fill,g[[1L]],g[[2L]],g[[3L]],G_t(t,wm=2L),stubs))
         ax[["names"]] <- names(res)
         return(setAttributes(res, ax))
       }
-  } else return(.Call(Cpp_fdiffl,x,n,diff,fill,g[[1L]],g[[2L]],g[[3L]],G_t(t),stubs))
+  } else return(.Call(Cpp_fdiffl,x,n,diff,fill,g[[1L]],g[[2L]],g[[3L]],G_t(t,wm=2L),stubs))
 }
 fdiff.data.frame <- function(x, n = 1, diff = 1, g = NULL, t = NULL, fill = NA, stubs = TRUE, ...) {
   if(!missing(...)) stop(sprintf("Unknown argument %s passed to fdiff.data.frame", dotstostr(...)))
@@ -77,10 +77,10 @@ fdiff.data.frame <- function(x, n = 1, diff = 1, g = NULL, t = NULL, fill = NA, 
         g <- qG(g, na.exclude = FALSE)
         nl <- attr(g, "N.groups")
       }
-      .Call(Cpp_fdiffl,x,n,diff,fill,nl,g,NULL,G_t(t),stubs)
+      .Call(Cpp_fdiffl,x,n,diff,fill,nl,g,NULL,G_t(t,wm=2L),stubs)
     } else {
       if(!is.GRP(g)) g <- GRP(g, return.groups = FALSE)
-      .Call(Cpp_fdiffl,x,n,diff,fill,g[[1L]],g[[2L]],g[[3L]],G_t(t),stubs)
+      .Call(Cpp_fdiffl,x,n,diff,fill,g[[1L]],g[[2L]],g[[3L]],G_t(t,wm=2L),stubs)
     }
 }
 fdiff.pdata.frame <- function(x, n = 1, diff = 1, fill = NA, stubs = TRUE, ...) {
@@ -140,8 +140,8 @@ D.data.frame <- function(x, n = 1, diff = 1, by = NULL, t = NULL, cols = is.nume
     }
 
     res <- if(length(gn))
-      c(x[gn], .Call(Cpp_fdiffl,x[cols],n,diff,fill,by[[1L]],by[[2L]],by[[3L]],G_t(t),stubs)) else
-        .Call(Cpp_fdiffl,x[cols],n,diff,fill,by[[1L]],by[[2L]],by[[3L]],G_t(t),stubs)
+      c(x[gn], .Call(Cpp_fdiffl,x[cols],n,diff,fill,by[[1L]],by[[2L]],by[[3L]],G_t(t,wm=2L),stubs)) else
+        .Call(Cpp_fdiffl,x[cols],n,diff,fill,by[[1L]],by[[2L]],by[[3L]],G_t(t,wm=2L),stubs)
     ax[["names"]] <- names(res)
     return(setAttributes(res, ax))
   } else if(!is.null(cols)) { # Needs to be done like this, otherwise list-subsetting drops attributes !!
@@ -157,10 +157,10 @@ D.data.frame <- function(x, n = 1, diff = 1, by = NULL, t = NULL, cols = is.nume
         by <- qG(by, na.exclude = FALSE)
         nl <- attr(by, "N.groups")
       }
-      .Call(Cpp_fdiffl,x,n,diff,fill,nl,by,NULL,G_t(t),stubs)
+      .Call(Cpp_fdiffl,x,n,diff,fill,nl,by,NULL,G_t(t,wm=2L),stubs)
     } else {
       if(!is.GRP(by)) by <- GRP(by, return.groups = FALSE)
-      .Call(Cpp_fdiffl,x,n,diff,fill,by[[1L]],by[[2L]],by[[3L]],G_t(t),stubs)
+      .Call(Cpp_fdiffl,x,n,diff,fill,by[[1L]],by[[2L]],by[[3L]],G_t(t,wm=2L),stubs)
     }
 }
 D.pdata.frame <- function(x, n = 1, diff = 1, cols = is.numeric, fill = NA, stubs = TRUE,
