@@ -75,7 +75,7 @@ all_identical <- function(...) {
     all(unlist(lapply(l[-1L], identical, l[[1L]]), use.names = FALSE)) # use vapply ??
   }
 }
-all_equal <- function(...) {
+all_obj_equal <- function(...) {
   if(length(list(...)) == 1L && is.list(...)) { # if(length(match.call())-1L == 1L && is.list(...)) # https://stackoverflow.com/questions/44011918/count-number-of-arguments-passed-to-function
     all(unlist(lapply(...[-1L], all.equal, ...[[1L]]), use.names = FALSE)) # use vapply ??
   } else {

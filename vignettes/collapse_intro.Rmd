@@ -14,6 +14,9 @@ vignette: >
 ---
 
 ```{r, echo = FALSE, message = FALSE, warning=FALSE}
+library(vars)
+library(dplyr)  # Needed because otherwise dplyr is loaded in benchmark chunk not run on CRAN !!
+library(microbenchmark) # Same thing
 library(collapse)
 B <- collapse::B # making sure it masks vars::B by loading into GE
 knitr::opts_chunk$set(error = FALSE, message = FALSE, warning = FALSE, 
@@ -31,6 +34,8 @@ knitr::opts_chunk$set(error = FALSE, message = FALSE, warning = FALSE,
 #  fig.height= 5,
 #  out.width='100%'
 # )
+
+NCRAN <- identical(Sys.getenv("NCRAN"), "TRUE")
 
 oldopts <- options(width = 101L)
 
@@ -341,7 +346,7 @@ Through setting the argument `give.names = FALSE`, the output can also be genera
 ### Aggregation Benchmarks
 When it comes to larger aggregation problems, the performance if *collapse* is in line with *data.table*, and offers the additional advantage of high-performance weighted and categorical aggregations: 
 
-```{r}
+```{r, eval=NCRAN}
 # Creating a data.table with 10 columns and 1 mio. obs, including missing values
 testdat <- na_insert(qDT(replicate(10, rnorm(1e6), simplify = FALSE)), prop = 0.1) # 10% missing
 testdat[["g1"]] <- sample.int(1000, 1e6, replace = TRUE) # 1000 groups
@@ -415,14 +420,12 @@ system.time(collap(testdat, ~ g1 + g2, fmode, w = w))
 # No straightforward data.table solution.. 
 system.time(testdat %>% group_by(g1,g2) %>% summarize_all(n_distinct, na.rm = TRUE))
 system.time(collap(testdat, ~ g1 + g2, fNdistinct)) 
-
-
 ```
 
 I believe on really huge datasets aggregated on a multi-core machine, *data.table*'s memory efficiency and thread-parallelization will let it run faster with some GeForce optimized functions, but that does not apply to most users (I have tested up to 10 million obs. on my laptop where *collapse* is still very much in line). In comparison to *collapse* and *data.table* the performance of *dplyr* on this data is rather poor, especially for base functions that are not highly optimized like `sum`. I do however very much appreciate the tidyverse ecosystem for highly organized data exploration and transformation. Therefore I have created methods for all of the *Fast Statistical Functions* as well as `collap`, enabling them to be used effectively in the *dplyr* ecosystem where they produce amazing speed gains. This is the subject of the '*collapse* and *dplyr*' vignette. 
 
 Apart from its non-reliance on non-standard evaluation, a central advantage of *collapse* for programming is the speed it maintains on smaller problems where it's more efficient R code compared to *dplyr* and *data.table* really plays out: 
-```{r}
+```{r, eval=NCRAN}
 # 12000 obs in 1500 groups: A more typical case
 GRP(wlddev, ~ iso3c + decade)
 
@@ -737,7 +740,7 @@ I am hoping that the *lfe* package Author Simen Gaure will at some point improve
 
 Below I provide benchmarks for some very common data transformation tasks, again comparing *collapse* to *dplyr* and *data.table*:
 
-```{r}
+```{r, eval=NCRAN}
 # The average group size is 10, there are about 100000 groups
 GRP(testdat, ~ g1 + g2) 
 
@@ -786,7 +789,6 @@ system.time(testdat %>% group_by(g1,g2) %>% mutate_all(sum, na.rm = TRUE))
 system.time(testdat[, setdiff(names(testdat), c("g1","g2")) := lapply(.SD, sum, na.rm = TRUE), keyby = c("g1","g2")])
 system.time(fsum(get_vars(testdat, -ind), get_vars(testdat, ind), "replace_fill")) # dplyr and data.table also fill missing values. 
 system.time(fsum(get_vars(testdat, -ind), get_vars(testdat, ind), "replace")) # This preserves missing values, and is not easily implemented in dplyr or data.table
-
 ```
 
 The message is clear: *collapse* outperforms *dplyr* and *data.table* both in scope and speed when it comes to grouped and / or weighted transformations of data. This capacity of *collapse* should make it attractive to econometricians and people programming with complex panel-data. In the '*collapse* and *plm*' vignette I provide a programming example by implementing a more general case of the Hausman and Taylor (1981) estimator with two levels of fixed effects, as well as further benchmarks. 
@@ -1001,7 +1003,7 @@ To learn more about the integration of *collapse* and *plm*, see the correspondi
 
 Below I provide some benchmarks for lags, differences and growth rates on panel-data. I will run microbenchmarks on the `wlddev` dataset. benchmarks on larger panels are already provided in the other vignettes. Again I compare *collapse* to *dplyr* and *data.table*:
 
-```{r}
+```{r, eval=NCRAN}
 # We have a balanced panel of 216 countries, each observed for 59 years
 descr(wlddev, cols = c("iso3c", "year"))
 
@@ -1039,7 +1041,6 @@ microbenchmark(collapse_ordered = D(wlddev, -1:3, 1:2, ~iso3c, ~year, cols = 9:1
 # The same applies to growth rates or log-differences. 
 microbenchmark(collapse_ordered_growth = G(wlddev, 1, 1, ~iso3c, ~year, cols = 9:12),
                collapse_ordered_logdiff = G(wlddev, 1, 1, ~iso3c, ~year, cols = 9:12, logdiff = TRUE))
-
 ```
 
 The results are similar to the grouped transformations: *collapse* dramatically facilitates and speeds up these complex operations in R. Again *plm* classes are very useful to avoid having to specify panel-identifiers all the time. See the '*collapse* and *plm*' vignette for more details. 

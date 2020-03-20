@@ -14,6 +14,9 @@ vignette: >
 ---
 
 ```{r, echo = FALSE, message = FALSE, warning=FALSE}
+library(dplyr)
+library(microbenchmark)
+library(collapse)
 knitr::opts_chunk$set(error = FALSE, message = FALSE, warning = FALSE, 
                       comment = "#", tidy = FALSE, cache = TRUE, collapse = TRUE,
                       fig.width = 8, fig.height = 5, 
@@ -29,6 +32,8 @@ knitr::opts_chunk$set(error = FALSE, message = FALSE, warning = FALSE,
 #  fig.height= 5,
 #  out.width='100%'
 # )
+
+NCRAN <- identical(Sys.getenv("NCRAN"), "TRUE")
 
 oldopts <- options(width = 100L)
 set.seed(101)
@@ -258,7 +263,7 @@ GGDC10S %>%
 
 Below I  provide a set of benchmarks for the standard set of functions commonly used in aggregations. For this purpose I duplicate and row-bind the `GGDC10S` dataset used so far 200 times to yield a dataset of approx. 1 million observations, while keeping the groups unique. My windows laptop on which these benchmarks were run has a 2x 2.2 GHZ Intel i5 processor, 8GB DDR3 RAM and a Samsung SSD hard drive (so a decent laptop but nothing fancy).
 
-```{r, cache=TRUE}
+```{r, eval=NCRAN}
 # This replicates the data 200 times while keeping Country and Variable (columns 1 and 4) unique
 data <- replicate(200, GGDC10S, simplify = FALSE) # gv and gv<- are shortcuts for get_vars and get_vars<-
 uniquify <- function(x, i) `gv<-`(x, c(1,4), value = lapply(gv(x, c(1,4)), paste0, i))
@@ -596,7 +601,7 @@ GGDC10S %>%
 
 Using the same data as in section 1.4 (1 million obs in 17000 groups), I run benchmarks of *collapse* functions against native dplyr solutions: 
 
-```{r, cache=TRUE}
+```{r, eval=NCRAN}
 dim(data)
 GRP(data)
 
