@@ -17,11 +17,14 @@
 \alias{is.categorical}
 \alias{is.Date}
 \alias{\%!in\%}
+\alias{ckmatch}
 \alias{na_rm}
 \alias{na_insert}
 \alias{fnlevels}
 \alias{funique}
+\alias{finteraction}
 \alias{as.numeric_factor}
+\alias{as.character_factor}
 %- Also NEED an '\alias' for EACH other topic documented here.
 \title{
 \code{collapse} Small (Helper) Functions
@@ -38,8 +41,11 @@ namlab(X, class = FALSE, attrn = "label") # Return data.frame of names, labels a
 add_stub(X, stub, pre = TRUE) # Add a stub (i.e. prefix or postfix) to column names
 rm_stub(X, stub, ...)         # Remove stub from column names (using base::sub)
 x \%!in\% table                 # The opposite of \%in\%
+ckmatch(x, table,             # Check-match: Throws an informative error if non-matched
+     e = "Unknown columns:")
 fnlevels(x)                   # Faster version of nlevels(x) (for factors)
 funique(x, ordered = TRUE)    # Faster unique(x) and sort(unique(x)) for vectors
+finteraction(...)             # Faster interactions, unused levels are dropped
 na_rm(x)                      # Remove missing values from vector and return vector
 na_insert(X, prop = 0.1)      # Insert missing values at random in vectors, matrices DF's
 all_identical(...)            # Check exact equality of multiple objects or list-elements
@@ -53,6 +59,7 @@ setDimnames(object = dn, dn)  # Set dimension names of object and return object
 is.categorical(x)             # The opposite of is.numeric
 is.Date(x)                    # Check if object is of class "Date", "POSIXlt" or "POSIXct"
 as.numeric_factor(X)          # Coerce a factor, or all factor columns in X, to numeric
+as.character_factor(X)        # Coerce a factor, or all factor columns in X, to character
 }
 %- maybe also 'usage' for other objects documented here.
 \arguments{
@@ -68,7 +75,8 @@ as.numeric_factor(X)          # Coerce a factor, or all factor columns in X, to 
   \item{dn}{a suitable list of dimension names.}
   \item{ordered}{logical. \code{TRUE} (default) sorts the output, \code{FALSE} is slightly faster.}
   \item{prop}{specify the proportion of observations randomly replaced with \code{NA}.}
- \item{...}{for \code{all_identical / all_obj_equal}: either multiple comma-separated objects or a single list of objects. For \code{rm_stub}: Other arguments passed to \code{\link{sub}}.}
+  \item{e}{The error message thrown by \code{ckmatch}.}
+ \item{...}{for \code{all_identical / all_obj_equal / finteraction}: either multiple comma-separated objects ( = vectors or factors in the case of \code{finteraction}) or a single list of objects. For \code{rm_stub}: Other arguments passed to \code{\link{sub}}.}
 }
 % \details{
 %%  ~~ If necessary, more details than the description above ~~
@@ -110,9 +118,12 @@ all_identical(iris, iris, iris, iris)
 l <- replicate(100, fmean(num_vars(iris), iris$Species), simplify = FALSE)
 all_identical(l)
 
-# Factor to numeric conversions:
+## Factor to numeric conversions:
 identical(mtcars,  as.numeric_factor(dapply(mtcars, qF)))
 
+## Fast interactions
+finteraction(mtcars$cyl, mtcars$vs)
+finteraction(mtcars)
 }
 % Add one or more standard keywords, see file 'KEYWORDS' in the
 % R documentation directory.
