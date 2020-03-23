@@ -1,10 +1,11 @@
 ^collapse\.Rproj$
 ^\.Rproj\.user$
 .*.Rnw
-README.md
-cran-comments.md
-experimental
-testing
+^README\.md$
+^README\.Rmd$
+^cran-comments\.md$
+^experimental$
+^testing$
 vignettes/collapse_intro_cache
 vignettes/collapse_and_plm_cache
 vignettes/collapse_and_dplyr_cache
