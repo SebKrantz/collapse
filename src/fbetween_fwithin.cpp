@@ -1,19 +1,23 @@
 #include <Rcpp.h>
 using namespace Rcpp;
 
+// NOTE: Speacial case is set_mean = -Inf, which is when on the R side mean = "overall.mean"
+
+// TODO: Best simply adding set_mean to the mean calculation, or better other solution ??
+
+
 // [[Rcpp::export]]
 NumericVector BWCpp(const NumericVector& x, int ng = 0, const IntegerVector& g = 0,
                     const SEXP& gs = R_NilValue, const SEXP& w = R_NilValue,
-                    bool narm = true, bool option = false, bool B = false) {
+                    bool narm = true, double set_mean = 0, bool B = false, bool fill = false) {
   int l = x.size();
   NumericVector out = no_init_vector(l);
 
   if (Rf_isNull(w)) { // No weights !!
     if (ng == 0) {
-      if(!B && option) stop("For this return option a grouping vector needs to be supplied");
+      if(!B && set_mean == R_NegInf) stop("For centering on the overall mean a grouping vector needs to be supplied");
       if(narm) {
         int j = l-1, n = 1; // 1 because for-loop starts from 2
-        // long double sum = x[j];
         double sum = x[j];
         while(std::isnan(sum) && j!=0) sum = x[--j];
         if(j != 0) for(int i = j; i--; ) {
@@ -21,9 +25,9 @@ NumericVector BWCpp(const NumericVector& x, int ng = 0, const IntegerVector& g =
           sum += x[i]; // Fastest ??
           ++n;
         }
-        sum = sum/n;
+        sum = sum/n - set_mean; // best ??
         if(B) {
-          if(option) std::fill(out.begin(), out.end(), sum); // (double)sum // fastest ?? -> yes !!
+          if(fill) std::fill(out.begin(), out.end(), sum); // (double)sum // fastest ?? -> yes !!
           else {
             for(int i = 0; i != l; ++i) {
               if(std::isnan(x[i])) out[i] = x[i];
@@ -34,7 +38,6 @@ NumericVector BWCpp(const NumericVector& x, int ng = 0, const IntegerVector& g =
           out = x - sum; // conversion to double not necessary !!
         }
       } else {
-        // long double sum = 0;
         double sum = 0;
         for(int i = 0; i != l; ++i) {
           if(std::isnan(x[i])) {
@@ -44,7 +47,7 @@ NumericVector BWCpp(const NumericVector& x, int ng = 0, const IntegerVector& g =
             sum += x[i];
           }
         }
-        sum = sum/l;
+        sum = sum/l - set_mean; // best ??
         if(B) {
           std::fill(out.begin(), out.end(), sum); // (double)sum) // fastes ??
         } else {
@@ -67,7 +70,7 @@ NumericVector BWCpp(const NumericVector& x, int ng = 0, const IntegerVector& g =
         }
         if(B) {
           for(int i = ng; i--; ) sum[i] /= n[i];
-          if(option) {
+          if(fill) {
             for(int i = 0; i != l; ++i) out[i] = sum[g[i]-1];
           } else {
             for(int i = 0; i != l; ++i) {
@@ -76,8 +79,12 @@ NumericVector BWCpp(const NumericVector& x, int ng = 0, const IntegerVector& g =
             }
           }
         } else {
-          if(!option) {
-            for(int i = ng; i--; ) sum[i] /= n[i]; // faster using two loops? or combine ? -> two loos (this solution) is a lot faster !!!!!!!
+          if(set_mean != R_NegInf) {
+            if(set_mean == 0) {
+              for(int i = ng; i--; ) sum[i] /= n[i]; // faster using two loops? or combine ? -> two loos (this solution) is a lot faster !!!!!!!
+            } else {
+              for(int i = ng; i--; ) sum[i] = sum[i] / n[i] - set_mean;
+            }
             for(int i = 0; i != l; ++i) out[i] = x[i] - sum[g[i]-1]; // best loop ?? -> just as fast as the other one !!
           } else {
             int on = 0;
@@ -130,8 +137,12 @@ NumericVector BWCpp(const NumericVector& x, int ng = 0, const IntegerVector& g =
           for(int i = ng; i--; ) sum[i] /= gsv[i];
           for(int i = 0; i != l; ++i) out[i] = sum[g[i]-1];
         } else {
-          if(!option) {
-            for(int i = ng; i--; ) sum[i] /= gsv[i];
+          if(set_mean != R_NegInf) {
+            if(set_mean == 0) {
+              for(int i = ng; i--; ) sum[i] /= gsv[i];
+            } else {
+              for(int i = ng; i--; ) sum[i] = sum[i] / gsv[i] - set_mean;
+            }
             for(int i = 0; i != l; ++i) out[i] = x[i] - sum[g[i]-1];
           } else {
             int on = 0;
@@ -152,20 +163,19 @@ NumericVector BWCpp(const NumericVector& x, int ng = 0, const IntegerVector& g =
     NumericVector wg = w; // wg(w) Identical speed
     if(l != wg.size()) stop("length(w) must match length(x)");
     if (ng == 0) {
-      if(!B && option) stop("For this return option a grouping vector needs to be supplied");
+      if(!B && set_mean == R_NegInf) stop("For centering on the overall mean a grouping vector needs to be supplied");
       if(narm) {
         int j = l-1; // 1 because for-loop starts from 2
         while((std::isnan(x[j]) || std::isnan(wg[j])) && j!=0) --j; // This does not make a difference in performance but is more parsimonious.
-        // long double sum = x[j]*wg[j], sumw = wg[j];
         double sum = x[j]*wg[j], sumw = wg[j];
         if(j != 0) for(int i = j; i--; ) {
           if(std::isnan(x[i]) || std::isnan(wg[i])) continue;
           sum += x[i]*wg[i]; // Fastest ??
           sumw += wg[i];
         }
-        sum = sum/sumw;
+        sum = sum/sumw - set_mean; // best ??
         if(B) {
-          if(option) std::fill(out.begin(), out.end(), sum); // (double)sum // fastes ??
+          if(fill) std::fill(out.begin(), out.end(), sum); // (double)sum // fastes ??
           else {
             for(int i = 0; i != l; ++i) {
               if(std::isnan(x[i])) out[i] = x[i];
@@ -176,7 +186,6 @@ NumericVector BWCpp(const NumericVector& x, int ng = 0, const IntegerVector& g =
           out = x - sum; // conversion to double not necessary !!
         }
       } else {
-        // long double sum = 0, sumw = 0;
         double sum = 0, sumw = 0;
         for(int i = 0; i != l; ++i) {
           if(std::isnan(x[i]) || std::isnan(wg[i])) { // good, check both ?? -> yes!!
@@ -187,7 +196,7 @@ NumericVector BWCpp(const NumericVector& x, int ng = 0, const IntegerVector& g =
             sumw += wg[i];
           }
         }
-        sum = sum/sumw;
+        sum = sum/sumw - set_mean; // best ??
         if(B) {
           std::fill(out.begin(), out.end(), sum); // (double)sum// fastes ??
         } else {
@@ -211,7 +220,7 @@ NumericVector BWCpp(const NumericVector& x, int ng = 0, const IntegerVector& g =
         }
         if(B) {
           sum = sum/sumw;
-          if(option) {
+          if(fill) {
             for(int i = 0; i != l; ++i) out[i] = sum[g[i]-1];
           } else {
             for(int i = 0; i != l; ++i) {
@@ -220,8 +229,12 @@ NumericVector BWCpp(const NumericVector& x, int ng = 0, const IntegerVector& g =
             }
           }
         } else {
-          if(!option) {
-            sum = sum/sumw;
+          if(set_mean != R_NegInf) {
+            if(set_mean == 0) {
+              sum = sum/sumw;
+            } else {
+              sum = sum/sumw - set_mean;
+            }
             for(int i = 0; i != l; ++i) out[i] = x[i] - sum[g[i]-1];
           } else {
             double osum = 0, osumw = 0;
@@ -236,8 +249,7 @@ NumericVector BWCpp(const NumericVector& x, int ng = 0, const IntegerVector& g =
           }
         }
       } else {
-        NumericVector sum(ng); // good?? -> yes !! //  = no_init_vector// Not initializing numerically unstable !!
-        NumericVector sumw(ng); // Necessary !!
+        NumericVector sum(ng), sumw(ng); // good?? -> yes !! //  = no_init_vector// Not initializing numerically unstable !!
         int ngs = 0;
         for(int i = 0; i != l; ++i) {
           if(std::isnan(x[i]) || std::isnan(wg[i])) {
@@ -255,8 +267,12 @@ NumericVector BWCpp(const NumericVector& x, int ng = 0, const IntegerVector& g =
           sum = sum/sumw;
           for(int i = 0; i != l; ++i) out[i] = sum[g[i]-1];
         } else {
-          if(!option) {
-            sum = sum/sumw;
+          if(set_mean != R_NegInf) {
+            if(set_mean == 0) {
+              sum = sum/sumw;
+            } else {
+              sum = sum/sumw - set_mean;
+            }
             for(int i = 0; i != l; ++i) out[i] = x[i] - sum[g[i]-1];
           } else {
             double osum = 0, osumw = 0;
@@ -277,24 +293,21 @@ NumericVector BWCpp(const NumericVector& x, int ng = 0, const IntegerVector& g =
   return out;
 }
 
-
-
 // [[Rcpp::export]]
 NumericMatrix BWmCpp(const NumericMatrix& x, int ng = 0, const IntegerVector& g = 0,
                      const SEXP& gs = R_NilValue, const SEXP& w = R_NilValue,
-                     bool narm = true, bool option = false, bool B = false) {
+                     bool narm = true, double set_mean = 0, bool B = false, bool fill = false) {
   int l = x.nrow(), col = x.ncol();
   NumericMatrix out = no_init_matrix(l, col);
 
   if (Rf_isNull(w)) { // No weights !!
     if(ng == 0) {
-      if(!B && option) stop("For this return option a grouping vector needs to be supplied");
+      if(!B && set_mean == R_NegInf) stop("For centering on the overall mean a grouping vector needs to be supplied");
       if(narm) {
         for(int j = col; j--; ) { // Instead Am(j,_) you can use Am.row(j).
           NumericMatrix::ConstColumn column = x( _ , j);
           NumericMatrix::Column outj = out( _ , j);
           int k = l-1, nj = 1;
-          // long double sumj = column[k];
           double sumj = column[k];
           while(std::isnan(sumj) && k!=0) sumj = column[--k];
           if(k != 0) for(int i = k; i--; ) {
@@ -302,9 +315,9 @@ NumericMatrix BWmCpp(const NumericMatrix& x, int ng = 0, const IntegerVector& g 
             sumj += column[i];
             ++nj;
           }
-          sumj = sumj/nj;
+          sumj = sumj/nj - set_mean; // best ??
           if(B) {
-            if(option) std::fill(outj.begin(), outj.end(), sumj); // (double)sumj
+            if(fill) std::fill(outj.begin(), outj.end(), sumj); // (double)sumj
             else {
               for(int i = 0; i != l; ++i) {
                 if(std::isnan(column[i])) outj[i] = column[i];
@@ -319,7 +332,6 @@ NumericMatrix BWmCpp(const NumericMatrix& x, int ng = 0, const IntegerVector& g 
         for(int j = col; j--; ) {
           NumericMatrix::ConstColumn column = x( _ , j);
           NumericMatrix::Column outj = out( _ , j);
-          // long double sumj = 0;
           double sumj = 0;
           for(int i = 0; i != l; ++i) {
             if(std::isnan(column[i])) {
@@ -329,7 +341,7 @@ NumericMatrix BWmCpp(const NumericMatrix& x, int ng = 0, const IntegerVector& g 
               sumj += column[i];
             }
           }
-          sumj = sumj/l;
+          sumj = sumj/l - set_mean; // best ??
           if(B) {
             std::fill(outj.begin(), outj.end(), sumj); // (double)sumj
           } else {
@@ -358,7 +370,7 @@ NumericMatrix BWmCpp(const NumericMatrix& x, int ng = 0, const IntegerVector& g 
           }
           if(B) {
             for(int i = ng; i--; ) sumj[i] /= nj[i];
-            if(option) {
+            if(fill) {
               for(int i = 0; i != l; ++i) outj[i] = sumj[g[i]-1];
             } else {
               for(int i = 0; i != l; ++i) {
@@ -367,8 +379,12 @@ NumericMatrix BWmCpp(const NumericMatrix& x, int ng = 0, const IntegerVector& g 
               }
             }
           } else {
-            if(!option) {
-              for(int i = ng; i--; ) sumj[i] /= nj[i];
+            if(set_mean != R_NegInf) {
+              if(set_mean == 0) {
+                for(int i = ng; i--; ) sumj[i] /= nj[i];
+              } else {
+                for(int i = ng; i--; ) sumj[i] = sumj[i] / nj[i] - set_mean;
+              }
               for(int i = 0; i != l; ++i) outj[i] = column[i] - sumj[g[i]-1];
             } else {
               int on = 0;
@@ -410,8 +426,12 @@ NumericMatrix BWmCpp(const NumericMatrix& x, int ng = 0, const IntegerVector& g 
               for(int i = ng; i--; ) sumj[i] /= gsv[i];
               for(int i = 0; i != l; ++i) outj[i] = sumj[g[i]-1];
             } else {
-              if(!option) {
-                for(int i = ng; i--; ) sumj[i] /= gsv[i];
+              if(set_mean != R_NegInf) {
+                if(set_mean == 0) {
+                  for(int i = ng; i--; ) sumj[i] /= gsv[i];
+                } else {
+                  for(int i = ng; i--; ) sumj[i] = sumj[i] / gsv[i] - set_mean;
+                }
                 for(int i = 0; i != l; ++i) outj[i] = column[i] - sumj[g[i]-1];
               } else {
                 int on = 0;
@@ -450,8 +470,12 @@ NumericMatrix BWmCpp(const NumericMatrix& x, int ng = 0, const IntegerVector& g 
               for(int i = ng; i--; ) sumj[i] /= gsv[i];
               for(int i = 0; i != l; ++i) outj[i] = sumj[g[i]-1];
             } else {
-              if(!option) {
-                for(int i = ng; i--; ) sumj[i] /= gsv[i];
+              if(set_mean != R_NegInf) {
+                if(set_mean == 0) {
+                  for(int i = ng; i--; ) sumj[i] /= gsv[i];
+                } else {
+                  for(int i = ng; i--; ) sumj[i] = sumj[i] / gsv[i] - set_mean;
+                }
                 for(int i = 0; i != l; ++i) outj[i] = column[i] - sumj[g[i]-1];
               } else {
                 int on = 0;
@@ -474,23 +498,22 @@ NumericMatrix BWmCpp(const NumericMatrix& x, int ng = 0, const IntegerVector& g 
     NumericVector wg = w;
     if(l != wg.size()) stop("length(w) must match nrow(X)");
     if(ng == 0) {
-      if(!B && option) stop("For this return option a grouping vector needs to be supplied");
+      if(!B && set_mean == R_NegInf) stop("For centering on the overall mean a grouping vector needs to be supplied");
       if(narm) {
         for(int j = col; j--; ) { // Instead Am(j,_) you can use Am.row(j).
           NumericMatrix::ConstColumn column = x( _ , j);
           NumericMatrix::Column outj = out( _ , j);
           int k = l-1;
           while((std::isnan(column[k]) || std::isnan(wg[k])) && k!=0) --k;
-          // long double sumj = column[k]*wg[k], sumwj = wg[k];
           double sumj = column[k]*wg[k], sumwj = wg[k];
           if(k != 0) for(int i = k; i--; ) {
             if(std::isnan(column[i]) || std::isnan(wg[i])) continue;
             sumj += column[i]*wg[i];
             sumwj += wg[i];
           }
-          sumj = sumj/sumwj;
+          sumj = sumj/sumwj - set_mean; // best ??
           if(B) {
-            if(option) std::fill(outj.begin(), outj.end(), sumj); //  (double)sumj
+            if(fill) std::fill(outj.begin(), outj.end(), sumj); //  (double)sumj
             else {
               for(int i = 0; i != l; ++i) {
                 if(std::isnan(column[i])) outj[i] = column[i];
@@ -505,7 +528,6 @@ NumericMatrix BWmCpp(const NumericMatrix& x, int ng = 0, const IntegerVector& g 
         for(int j = col; j--; ) {
           NumericMatrix::ConstColumn column = x( _ , j);
           NumericMatrix::Column outj = out( _ , j);
-          // long double sumj = 0, sumwj = 0;
           double sumj = 0, sumwj = 0;
           for(int i = 0; i != l; ++i) {
             if(std::isnan(column[i]) || std::isnan(wg[i])) {
@@ -516,7 +538,7 @@ NumericMatrix BWmCpp(const NumericMatrix& x, int ng = 0, const IntegerVector& g 
               sumwj += wg[i];
             }
           }
-          sumj = sumj/sumwj;
+          sumj = sumj/sumwj - set_mean; // best ??
           if(B) {
             std::fill(outj.begin(), outj.end(), sumj); // (double)sumj
           } else {
@@ -530,8 +552,7 @@ NumericMatrix BWmCpp(const NumericMatrix& x, int ng = 0, const IntegerVector& g 
         for(int j = col; j--; ) {
           NumericMatrix::ConstColumn column = x( _ , j);
           NumericMatrix::Column outj = out( _ , j);
-          std::vector<double> sumj(ng, NA_REAL), sumwj(ng); // best ??
-          // double sumwj[ng]; // also make std::vector ??
+          NumericVector sumj(ng, NA_REAL), sumwj(ng); // best ?? // std::vector<double>
           for(int i = l; i--; ) {
             if(std::isnan(column[i]) || std::isnan(wg[i])) continue;
             if(std::isnan(sumj[g[i]-1])) {
@@ -543,8 +564,8 @@ NumericMatrix BWmCpp(const NumericMatrix& x, int ng = 0, const IntegerVector& g 
             }
           }
           if(B) {
-            for(int i = ng; i--; ) sumj[i] /= sumwj[i];
-            if(option) {
+            sumj = sumj/sumwj;
+            if(fill) {
               for(int i = 0; i != l; ++i) outj[i] = sumj[g[i]-1];
             } else {
               for(int i = 0; i != l; ++i) {
@@ -553,8 +574,12 @@ NumericMatrix BWmCpp(const NumericMatrix& x, int ng = 0, const IntegerVector& g 
               }
             }
           } else {
-            if(!option) {
-              for(int i = ng; i--; ) sumj[i] /= sumwj[i];
+            if(set_mean != R_NegInf) {
+              if(set_mean == 0) {
+                sumj = sumj/sumwj;
+              } else {
+                sumj = sumj/sumwj - set_mean;
+              }
               for(int i = 0; i != l; ++i) outj[i] = column[i] - sumj[g[i]-1];
             } else {
               double osum = 0, osumw = 0;
@@ -570,14 +595,10 @@ NumericMatrix BWmCpp(const NumericMatrix& x, int ng = 0, const IntegerVector& g 
           }
         }
       } else {
-        // double sumj[ng], sumwj[ng];
-        // int memsize = sizeof(double)*ng;
         for(int j = col; j--; ) {
           NumericMatrix::ConstColumn column = x( _ , j);
           NumericMatrix::Column outj = out( _ , j);
-          // memset(sumj, 0, memsize);
-          // memset(sumwj, 0, memsize);
-          std::vector<double> sumj(ng), sumwj(ng);
+          NumericVector sumj(ng), sumwj(ng); // std::vector<double>
           int ngs = 0;
           for(int i = 0; i != l; ++i) {
             if(std::isnan(column[i]) || std::isnan(wg[i])) {
@@ -592,11 +613,15 @@ NumericMatrix BWmCpp(const NumericMatrix& x, int ng = 0, const IntegerVector& g 
             }
           }
           if(B) {
-            for(int i = ng; i--; ) sumj[i] /= sumwj[i];
+            sumj = sumj/sumwj;
             for(int i = 0; i != l; ++i) outj[i] = sumj[g[i]-1];
           } else {
-            if(!option) {
-              for(int i = ng; i--; ) sumj[i] /= sumwj[i];
+            if(set_mean != R_NegInf) {
+              if(set_mean == 0) {
+                sumj = sumj/sumwj;
+              } else {
+                sumj = sumj/sumwj - set_mean;
+              }
               for(int i = 0; i != l; ++i) outj[i] = column[i] - sumj[g[i]-1];
             } else {
               double osum = 0, osumw = 0;
@@ -618,67 +643,63 @@ NumericMatrix BWmCpp(const NumericMatrix& x, int ng = 0, const IntegerVector& g 
   return out;
 }
 
-
-
 // [[Rcpp::export]]
 List BWlCpp(const List& x, int ng = 0, const IntegerVector& g = 0,
             const SEXP& gs = R_NilValue, const SEXP& w = R_NilValue,
-            bool narm = true, bool option = false, bool B = false) {
+            bool narm = true, double set_mean = 0, bool B = false, bool fill = false) {
 
   int l = x.size();
   List out(l);
 
   if (Rf_isNull(w)) { // No weights !!
     if (ng == 0) {
-      if(!B && option) stop("For this return option a grouping vector needs to be supplied");
+      if(!B && set_mean == R_NegInf) stop("For centering on the overall mean a grouping vector needs to be supplied");
       if(narm) {
         for(int j = l; j--; ) {
           NumericVector column = x[j];
           int row = column.size();
-          int k = row-1, ni = 1;
-          // long double sumi = column[k];
-          double sumi = column[k];
-          while(std::isnan(sumi) && k!=0) sumi = column[--k];
+          int k = row-1, nj = 1;
+          double sumj = column[k];
+          while(std::isnan(sumj) && k!=0) sumj = column[--k];
           if(k != 0) for(int i = k; i--; ) {
             if(std::isnan(column[i])) continue;
-            sumi += column[i];
-            ++ni;
+            sumj += column[i];
+            ++nj;
           }
-          sumi = sumi/ni;
+          sumj = sumj/nj - set_mean; // best ??
           if(B) {
-            if(option) out[j] = rep(sumi, row); // rep((double)sumi, row); // good ??
+            if(fill) out[j] = rep(sumj, row); // rep((double)sumj, row); // good ??
             else {
               NumericVector outj = no_init_vector(row);
               for(int i = 0; i != row; ++i) {
                 if(std::isnan(column[i])) outj[i] = column[i];
-                else outj[i] = sumi;
+                else outj[i] = sumj;
               }
               out[j] = outj;
             }
           } else {
-            out[j] = column - sumi;
+            out[j] = column - sumj;
           }
           SHALLOW_DUPLICATE_ATTRIB(out[j], column); // good ??
         }
       } else {
         for(int j = l; j--; ) {
           NumericVector column = x[j];
-          // long double sumi = 0;
-          double sumi = 0;
+          double sumj = 0;
           int row = column.size();
           for(int i = 0; i != row; ++i) {
             if(std::isnan(column[i])) {
-              sumi = column[i];
+              sumj = column[i];
               break;
             } else {
-              sumi += column[i];
+              sumj += column[i];
             }
           }
-          sumi = sumi/row;
+          sumj = sumj/row - set_mean; // best ??
           if(B) {
-            out[j] = rep(sumi, row); // rep((double)sumi, row);
+            out[j] = rep(sumj, row); // rep((double)sumj, row);
           } else {
-            out[j] = column - sumi;
+            out[j] = column - sumj;
           }
           SHALLOW_DUPLICATE_ATTRIB(out[j], column);
         }
@@ -704,7 +725,7 @@ List BWlCpp(const List& x, int ng = 0, const IntegerVector& g = 0,
           NumericVector outj = no_init_vector(row);
           if(B) {
             for(int i = ng; i--; ) sumj[i] /= nj[i];
-            if(option) {
+            if(fill) {
               for(int i = 0; i != row; ++i) outj[i] = sumj[g[i]-1];
             } else {
               for(int i = 0; i != row; ++i) {
@@ -713,8 +734,12 @@ List BWlCpp(const List& x, int ng = 0, const IntegerVector& g = 0,
               }
             }
           } else {
-            if(!option) {
-              for(int i = ng; i--; ) sumj[i] /= nj[i];
+            if(set_mean != R_NegInf) {
+              if(set_mean == 0) {
+                for(int i = ng; i--; ) sumj[i] /= nj[i];
+              } else {
+                for(int i = ng; i--; ) sumj[i] = sumj[i] / nj[i] - set_mean;
+              }
               for(int i = 0; i != row; ++i) outj[i] = column[i] - sumj[g[i]-1];
             } else {
               int on = 0;
@@ -760,8 +785,12 @@ List BWlCpp(const List& x, int ng = 0, const IntegerVector& g = 0,
               for(int i = ng; i--; ) sumj[i] /= gsv[i];
               for(int i = 0; i != row; ++i) outj[i] = sumj[g[i]-1];
             } else {
-              if(!option) {
-                for(int i = ng; i--; ) sumj[i] /= gsv[i];
+              if(set_mean != R_NegInf) {
+                if(set_mean == 0) {
+                  for(int i = ng; i--; ) sumj[i] /= gsv[i];
+                } else {
+                  for(int i = ng; i--; ) sumj[i] = sumj[i] / gsv[i] - set_mean;
+                }
                 for(int i = 0; i != row; ++i) outj[i] = column[i] - sumj[g[i]-1];
               } else {
                 int on = 0;
@@ -804,8 +833,12 @@ List BWlCpp(const List& x, int ng = 0, const IntegerVector& g = 0,
               for(int i = ng; i--; ) sumj[i] /= gsv[i];
               for(int i = 0; i != row; ++i) outj[i] = sumj[g[i]-1];
             } else {
-              if(!option) {
-                for(int i = ng; i--; ) sumj[i] /= gsv[i];
+              if(set_mean != R_NegInf) {
+                if(set_mean == 0) {
+                  for(int i = ng; i--; ) sumj[i] /= gsv[i];
+                } else {
+                  for(int i = ng; i--; ) sumj[i] = sumj[i] / gsv[i] - set_mean;
+                }
                 for(int i = 0; i != row; ++i) outj[i] = column[i] - sumj[g[i]-1];
               } else {
                 int on = 0;
@@ -830,6 +863,7 @@ List BWlCpp(const List& x, int ng = 0, const IntegerVector& g = 0,
     NumericVector wg = w;
     int wgs = wg.size();
     if (ng == 0) {
+      if(!B && set_mean == R_NegInf) stop("For centering on the overall mean a grouping vector needs to be supplied");
       if(narm) {
         for(int j = l; j--; ) {
           NumericVector column = x[j];
@@ -837,26 +871,25 @@ List BWlCpp(const List& x, int ng = 0, const IntegerVector& g = 0,
           if(row != wgs) stop("length(w) must match nrow(X)");
           int k = row-1;
           while((std::isnan(column[k]) || std::isnan(wg[k])) && k!=0) --k;
-          // long double sumi = column[k]*wg[k], sumwi = wg[k];
-          double sumi = column[k]*wg[k], sumwi = wg[k];
+          double sumj = column[k]*wg[k], sumwi = wg[k];
           if(k != 0) for(int i = k; i--; ) {
             if(std::isnan(column[i]) || std::isnan(wg[i])) continue;
-            sumi += column[i]*wg[i];
+            sumj += column[i]*wg[i];
             sumwi += wg[i];
           }
-          sumi = sumi/sumwi;
+          sumj = sumj/sumwi - set_mean; // best ??
           if(B) {
-            if(option) out[j] = rep(sumi, row); // rep((double)sumi, row);
+            if(fill) out[j] = rep(sumj, row); // rep((double)sumj, row);
             else {
               NumericVector outj = no_init_vector(row);
               for(int i = 0; i != row; ++i) {
                 if(std::isnan(column[i])) outj[i] = column[i];
-                else outj[i] = sumi;
+                else outj[i] = sumj;
               }
               out[j] = outj;
             }
           } else {
-            out[j] = column - sumi;
+            out[j] = column - sumj;
           }
           SHALLOW_DUPLICATE_ATTRIB(out[j], column); // good like this ??
         }
@@ -865,22 +898,21 @@ List BWlCpp(const List& x, int ng = 0, const IntegerVector& g = 0,
           NumericVector column = x[j];
           int row = column.size();
           if(row != wgs) stop("length(w) must match nrow(X)");
-          // long double sumi = 0, sumwi = 0;
-          double sumi = 0, sumwi = 0;
+          double sumj = 0, sumwi = 0;
           for(int i = 0; i != row; ++i) {
             if(std::isnan(column[i]) || std::isnan(wg[i])) {
-              sumi = column[i]+wg[i];
+              sumj = column[i]+wg[i];
               break;
             } else {
-              sumi += column[i]*wg[i];
+              sumj += column[i]*wg[i];
               sumwi += wg[i];
             }
           }
-          sumi = sumi/sumwi;
+          sumj = sumj/sumwi - set_mean; // best ??
           if(B) {
-            out[j] = rep(sumi, row); // rep((double)sumi, row);
+            out[j] = rep(sumj, row); // rep((double)sumj, row);
           } else {
-            out[j] = column - sumi;
+            out[j] = column - sumj;
           }
           SHALLOW_DUPLICATE_ATTRIB(out[j], column);
         }
@@ -893,8 +925,7 @@ List BWlCpp(const List& x, int ng = 0, const IntegerVector& g = 0,
           NumericVector column = x[j];
           int row = column.size();
           if(gss != row) stop("length(g) must match nrow(X)");
-          std::vector<double> sumj(ng, NA_REAL), sumwj(ng);
-          // double sumwj[ng];
+          NumericVector sumj(ng, NA_REAL), sumwj(ng); // std::vector<double>
           for(int i = row; i--; ) {
             if(std::isnan(column[i]) || std::isnan(wg[i])) continue;
             if(std::isnan(sumj[g[i]-1])) {
@@ -907,8 +938,8 @@ List BWlCpp(const List& x, int ng = 0, const IntegerVector& g = 0,
           }
           NumericVector outj = no_init_vector(row);
           if(B) {
-            for(int i = ng; i--; ) sumj[i] /= sumwj[i];
-            if(option) {
+            sumj = sumj/sumwj;
+            if(fill) {
               for(int i = 0; i != row; ++i) outj[i] = sumj[g[i]-1];
             } else {
               for(int i = 0; i != row; ++i) {
@@ -917,8 +948,12 @@ List BWlCpp(const List& x, int ng = 0, const IntegerVector& g = 0,
               }
             }
           } else {
-            if(!option) {
-              for(int i = ng; i--; ) sumj[i] /= sumwj[i];
+            if(set_mean != R_NegInf) {
+              if(set_mean == 0) {
+                sumj = sumj/sumwj;
+              } else {
+                sumj = sumj/sumwj - set_mean;
+              }
               for(int i = 0; i != row; ++i) outj[i] = column[i] - sumj[g[i]-1];
             } else {
               double osum = 0, osumw = 0;
@@ -936,15 +971,11 @@ List BWlCpp(const List& x, int ng = 0, const IntegerVector& g = 0,
           out[j] = outj;
         }
       } else {
-        // double sumj[ng], sumwj[ng];
-        // int memsize = sizeof(double)*ng;
         for(int j = l; j--; ) {
           NumericVector column = x[j];
           int row = column.size();
           if(gss != row) stop("length(g) must match nrow(X)");
-          // memset(sumj, 0, memsize);
-          // memset(sumwj, 0, memsize);
-          std::vector<double> sumj(ng), sumwj(ng);
+          NumericVector sumj(ng), sumwj(ng); // std::vector<double>
           int ngs = 0;
           for(int i = 0; i != row; ++i) {
             if(std::isnan(column[i]) || std::isnan(wg[i])) {
@@ -960,11 +991,15 @@ List BWlCpp(const List& x, int ng = 0, const IntegerVector& g = 0,
           }
           NumericVector outj = no_init_vector(row);
           if(B) {
-            for(int i = ng; i--; ) sumj[i] /= sumwj[i];
+            sumj = sumj/sumwj;
             for(int i = 0; i != row; ++i) outj[i] = sumj[g[i]-1];
           } else {
-            if(!option) {
-              for(int i = ng; i--; ) sumj[i] /= sumwj[i];
+            if(set_mean != R_NegInf) {
+              if(set_mean == 0) {
+                sumj = sumj/sumwj;
+              } else {
+                sumj = sumj/sumwj - set_mean;
+              }
               for(int i = 0; i != row; ++i) outj[i] = column[i] - sumj[g[i]-1];
             } else {
               double osum = 0, osumw = 0;

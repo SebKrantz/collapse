@@ -20,9 +20,9 @@ static const R_CMethodDef CEntries[]  = {
 };
 
 static const R_CallMethodDef CallEntries[] = {
-  {"Cpp_BW", (DL_FUNC) &_collapse_BWCpp, 8},
-  {"Cpp_BWm", (DL_FUNC) &_collapse_BWmCpp, 8},
-  {"Cpp_BWl", (DL_FUNC) &_collapse_BWlCpp, 8},
+  {"Cpp_BW", (DL_FUNC) &_collapse_BWCpp, 9},
+  {"Cpp_BWm", (DL_FUNC) &_collapse_BWmCpp, 9},
+  {"Cpp_BWl", (DL_FUNC) &_collapse_BWlCpp, 9},
   {"Cpp_TRA", (DL_FUNC) &_collapse_TRACpp, 4},
   {"Cpp_TRAm", (DL_FUNC) &_collapse_TRAmCpp, 4},
   {"Cpp_TRAl", (DL_FUNC) &_collapse_TRAlCpp, 4},

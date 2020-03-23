@@ -1,416 +1,269 @@
 #include <Rcpp.h>
 using namespace Rcpp;
 
-// Note: All comments are in fvar.cpp
+// for mean there are 2 options: "overall.mean" = R_NegInf adds the overall mean. default is centering on 0, or centering on a mean provided, or FALSE = R_PosInf -> no centering, scaling preserves mean
+// for sd there is "within.sd" = R_NegInf, scaling by the frequency weighted within-group sd, default is 1, or scaling by a sd provided.
+// Note: All other comments are in fvar.cpp
 
 // [[Rcpp::export]]
-NumericVector fscaleCpp(const NumericVector& x, int ng = 0, const IntegerVector& g = 0,
-                        const SEXP& gs = R_NilValue, const SEXP& w = R_NilValue,
-                        bool narm = true, bool stable_algo = true) {
+NumericVector fscaleCpp(const NumericVector& x, int ng = 0, const IntegerVector& g = 0, const SEXP& w = R_NilValue,
+                        bool narm = true, double set_mean = 0, double set_sd = 1) { // could set mean and sd with SEXP, but complicated...
   int l = x.size();
   NumericVector out = no_init_vector(l);
-
-  if(stable_algo) { // WELFORDS ONLINE METHOD ---------------------------------------------------------
-    if(Rf_isNull(w)) { // No weights
-      if (ng == 0) {
-        if(narm) {
-          int j = l-1;
-          // double n = 0;
-          // long double mean = 0, d1 = 0, M2 = 0;
-          double n = 0, mean = 0, d1 = 0, M2 = 0;
-          while(std::isnan(x[j]) && j!=0) --j;
-          if(j != 0) {
-            for(int i = j+1; i--; ) {
-              if(std::isnan(x[i])) continue;
-              d1 = x[i]-mean;
-              mean += d1 * (1 / ++n);
-              M2 += d1*(x[i]-mean);
-            }
-            M2 = 1/sqrt(M2/(n-1));
-            if(std::isnan(M2)) {
-              std::fill(out.begin(), out.end(), NA_REAL);
-            } else {
-              out = (x-mean)*M2;
-              // for(int i = 0; i != l; ++i) out[i] = (x[i]-mean)*M2; // For some weird reason this is a lot slower than the above vectorized (2.5 milliseconds vs. 80 microseconds on a WDI series, the grouped version is much faster !!)
-            }
-          } else {
-            std::fill(out.begin(), out.end(), NA_REAL);
+  //   DUPLICATE_ATTRIB(out, x); // Any speed loss or overwriting attributes ??
+  if (Rf_isNull(w)) { // No weights
+    if (ng == 0) {
+      if(set_sd == R_NegInf) stop("within.sd can only be calculated when a grouping vector is supplied");
+      if(set_mean == R_NegInf) stop("without groups, centering on the overall mean amounts to scaling without centering, so use mean = FALSE instead, or supply a grouping vector to subtract out group means.");
+      double n = 0, mean = 0, d1 = 0, M2 = 0;
+      if(narm) {
+        int j = l-1;
+        while(std::isnan(x[j]) && j!=0) --j;
+        if(j != 0) {
+          for(int i = j+1; i--; ) {
+            if(std::isnan(x[i])) continue;
+            d1 = x[i]-mean;
+            mean += d1 * (1 / ++n);
+            M2 += d1*(x[i]-mean);
           }
-        } else {
-          // double n = 0;
-          // long double mean = 0, d1 = 0, M2 = 0;
-          double n = 0, mean = 0, d1 = 0, M2 = 0;
-          for(int i = 0; i != l; ++i) {
-            if(std::isnan(x[i])) {
-              std::fill(out.begin(), out.end(), NA_REAL);
-              return out;
-            } else {
-              d1 = x[i]-mean;
-              mean += d1*(1 / ++n);
-              M2 += d1*(x[i]-mean);
-            }
-          }
-          M2 = 1/sqrt(M2/(l-1));
-          if(std::isnan(M2)) {
+          M2 = set_sd/sqrt(M2/(n-1)); // good ?? -> Yes, works !!
+        } else { // use goto to make code simpler ?
+          std::fill(out.begin(), out.end(), NA_REAL);
+          DUPLICATE_ATTRIB(out, x);
+          return out;
+        }
+      } else {
+        for(int i = 0; i != l; ++i) {
+          if(std::isnan(x[i])) {
             std::fill(out.begin(), out.end(), NA_REAL);
+            DUPLICATE_ATTRIB(out, x);
+            return out;
           } else {
-            out = (x-mean)*M2;
-            // for(int i = 0; i != l; ++i) out[i] = (x[i]-mean)*M2;
+            d1 = x[i]-mean;
+            mean += d1*(1 / ++n);
+            M2 += d1*(x[i]-mean);
           }
         }
-      } else { // with groups
-        if(g.size() != l) stop("length(g) must match nrow(X)");
-        // long double d1 = 0;
-        double d1 = 0;
-        if(narm) {
-          NumericVector M2(ng, NA_REAL);
-          NumericVector mean = no_init_vector(ng);
-          NumericVector n(ng, 1.0);
-          for(int i = l; i--; ) {
-            if(std::isnan(x[i])) continue;
-            if(std::isnan(M2[g[i]-1])) {
-              mean[g[i]-1] = x[i];
-              M2[g[i]-1] = 0;
-            } else {
-              d1 = x[i]-mean[g[i]-1];
-              mean[g[i]-1] += d1 * (1 / ++n[g[i]-1]);
-              M2[g[i]-1] += d1*(x[i]-mean[g[i]-1]);
-            }
+        M2 = set_sd/sqrt(M2/(l-1));
+      }
+      if(std::isnan(M2)) {
+        std::fill(out.begin(), out.end(), NA_REAL);
+      } else {
+        if(set_mean == 0) out = (x-mean)*M2;
+        else if(set_mean == R_PosInf) out = (x-mean)*M2 + mean; // best ?? // !R_FINITE(set_mean)
+        else out = (x-mean)*M2 + set_mean; // best ??
+      }
+    } else { // with groups
+      if(g.size() != l) stop("length(g) must match nrow(X)");
+      double d1 = 0, gl_mean = 0; // Best way of doing this ?? How can you declare variables in global scope ??
+      NumericVector M2 = narm ? NumericVector(ng, NA_REAL) : NumericVector(ng);
+      NumericVector mean = narm ? no_init_vector(ng) : NumericVector(ng);
+      NumericVector n = narm ? NumericVector(ng, 1.0) : NumericVector(ng);
+      if(narm) {
+        for(int i = l; i--; ) {
+          if(std::isnan(x[i])) continue;
+          if(std::isnan(M2[g[i]-1])) {
+            mean[g[i]-1] = x[i];
+            M2[g[i]-1] = 0;
+          } else {
+            d1 = x[i]-mean[g[i]-1];
+            mean[g[i]-1] += d1 * (1 / ++n[g[i]-1]);
+            M2[g[i]-1] += d1*(x[i]-mean[g[i]-1]);
           }
-          for(int i = ng; i--; ) if(!std::isnan(M2[i])) M2[i] = 1/sqrt(M2[i]/(n[i]-1));
-          for(int i = 0; i != l; ++i) out[i] = (x[i]-mean[g[i]-1])*M2[g[i]-1];
-        } else {
-          NumericVector M2(ng), mean(ng), n(ng);
-          int ngs = 0;
-          for(int i = 0; i != l; ++i) {
-            if(std::isnan(M2[g[i]-1])) continue;
-            if(std::isnan(x[i])) {
-              M2[g[i]-1] = NA_REAL;
-              ++ngs;
-              if(ngs == ng) {
-                std::fill(out.begin(), out.end(), NA_REAL);
-                return out;
-              }
-            } else {
-              d1 = x[i]-mean[g[i]-1];
-              mean[g[i]-1] += d1 * (1 / ++n[g[i]-1]);
-              M2[g[i]-1] += d1*(x[i]-mean[g[i]-1]);
+        }
+      } else {
+        int ngs = 0;
+        for(int i = 0; i != l; ++i) {
+          if(std::isnan(M2[g[i]-1])) continue;
+          if(std::isnan(x[i])) {
+            M2[g[i]-1] = NA_REAL;
+            ++ngs;
+            if(ngs == ng) {
+              std::fill(out.begin(), out.end(), NA_REAL);
+              DUPLICATE_ATTRIB(out, x);
+              return out;
             }
+          } else {
+            d1 = x[i]-mean[g[i]-1];
+            mean[g[i]-1] += d1 * (1 / ++n[g[i]-1]);
+            M2[g[i]-1] += d1*(x[i]-mean[g[i]-1]);
           }
-          for(int i = ng; i--; ) if(!std::isnan(M2[i])) M2[i] = 1/sqrt(M2[i]/(n[i]-1));
-          for(int i = 0; i != l; ++i) out[i] = (x[i]-mean[g[i]-1])*M2[g[i]-1];
         }
       }
-    } else { // With weights
-      NumericVector wg = w;
-      if(l != wg.size()) stop("length(w) must match length(x)");
-      if (ng == 0) {
-        if(narm) {
-          int j = l-1;
-          // long double sumw = 0, mean = 0, M2 = 0, d1 = 0;
-          double sumw = 0, mean = 0, M2 = 0, d1 = 0;
-          while((std::isnan(x[j]) || std::isnan(wg[j])) && j!=0) --j;
-          if(j != 0) {
-            for(int i = j+1; i--; ) {
-              if(std::isnan(x[i]) || std::isnan(wg[i])) continue;
-              sumw += wg[i];
-              d1 = x[i] - mean;
-              mean += d1 * (wg[i] / sumw);
-              M2 += wg[i] * d1 * (x[i] - mean);
-            }
-            M2 = 1/sqrt(M2/(sumw-1));
-            if(std::isnan(M2)) {
-              std::fill(out.begin(), out.end(), NA_REAL);
-            } else {
-              out = (x-mean)*M2;
-              // for(int i = 0; i != l; ++i) out[i] = (x[i]-mean)*M2;
-            }
-          } else {
-            std::fill(out.begin(), out.end(), NA_REAL);
+      if(set_sd == R_NegInf) {
+        double within_sd = 0;
+        int sum_n = 0;
+        if(set_mean == R_NegInf) {
+          for(int i = ng; i--; ) {
+            if(std::isnan(M2[i])) continue;
+            within_sd += M2[i];
+            M2[i] = 1/sqrt(M2[i]/(n[i]-1));
+            gl_mean += mean[i]*n[i];
+            sum_n += n[i];
           }
+          gl_mean /= sum_n;
         } else {
-          // long double sumw = 0, mean = 0, M2 = 0, d1 = 0;
-          double sumw = 0, mean = 0, M2 = 0, d1 = 0;
-          for(int i = 0; i != l; ++i) {
-            if(std::isnan(x[i]) || std::isnan(wg[i])) {
-              std::fill(out.begin(), out.end(), NA_REAL);
-              return out;
-            } else {
-              sumw += wg[i];
-              d1 = x[i] - mean;
-              mean += d1 * (wg[i] / sumw);
-              M2 += wg[i] * d1 * (x[i] - mean);
-            }
+          for(int i = ng; i--; ) {
+            if(std::isnan(M2[i])) continue;
+            within_sd += M2[i];
+            M2[i] = 1/sqrt(M2[i]/(n[i]-1));
+            sum_n += n[i];
           }
-          M2 = 1/sqrt(M2/(sumw-1));
-          if(std::isnan(M2)) {
-            std::fill(out.begin(), out.end(), NA_REAL);
-          } else {
-            out = (x-mean)*M2;
-            // for(int i = 0; i != l; ++i) out[i] = (x[i]-mean)*M2;
-          }
+          gl_mean = set_mean;
         }
-      } else { // with groups
-        if(g.size() != l) stop("length(g) must match nrow(X)");
-        // long double d1 = 0;
-        double d1 = 0;
-        if(narm) {
-          NumericVector M2(ng, NA_REAL);
-          NumericVector sumw = no_init_vector(ng);
-          NumericVector mean = no_init_vector(ng);
-          for(int i = l; i--; ) {
-            if(std::isnan(x[i]) || std::isnan(wg[i])) continue;
-            if(std::isnan(M2[g[i]-1])) {
-              sumw[g[i]-1] = wg[i];
-              mean[g[i]-1] = x[i];
-              M2[g[i]-1] = 0;
-            } else {
-              sumw[g[i]-1] += wg[i];
-              d1 = x[i] - mean[g[i]-1];
-              mean[g[i]-1] += d1 * (wg[i] / sumw[g[i]-1]);
-              M2[g[i]-1] += wg[i] * d1 * (x[i] - mean[g[i]-1]);
-            }
+        within_sd = sqrt(within_sd/(sum_n-1));
+        M2 = M2 * within_sd; // fastest ??
+      } else {
+        if(set_mean == R_NegInf) {
+          int sum_n = 0;
+          for(int i = ng; i--; ) {
+            if(std::isnan(M2[i])) continue;
+            M2[i] = set_sd/sqrt(M2[i]/(n[i]-1));
+            gl_mean += mean[i]*n[i];
+            sum_n += n[i];
           }
-          for(int i = ng; i--; ) if(!std::isnan(M2[i])) M2[i] = 1/sqrt(M2[i]/(sumw[i]-1));
-          for(int i = 0; i != l; ++i) out[i] = (x[i]-mean[g[i]-1])*M2[g[i]-1];
+          gl_mean /= sum_n;
         } else {
-          NumericVector M2(ng), sumw(ng), mean(ng);
-          int ngs = 0;
-          for(int i = 0; i != l; ++i) {
-            if(std::isnan(M2[g[i]-1])) continue;
-            if(std::isnan(x[i]) || std::isnan(wg[i])) {
-              M2[g[i]-1] = NA_REAL;
-              ++ngs;
-              if(ngs == ng) {
-                std::fill(out.begin(), out.end(), NA_REAL);
-                return out;
-              }
-            } else {
-              sumw[g[i]-1] += wg[i];
-              d1 = x[i] - mean[g[i]-1];
-              mean[g[i]-1] += d1 * (wg[i] / sumw[g[i]-1]);
-              M2[g[i]-1] += wg[i] * d1 * (x[i] - mean[g[i]-1]);
-            }
-          }
-          for(int i = ng; i--; ) if(!std::isnan(M2[i])) M2[i] = 1/sqrt(M2[i]/(sumw[i]-1));
-          for(int i = 0; i != l; ++i) out[i] = (x[i]-mean[g[i]-1])*M2[g[i]-1];
+          gl_mean = set_mean;
+          for(int i = ng; i--; ) if(!std::isnan(M2[i])) M2[i] = set_sd/sqrt(M2[i]/(n[i]-1));
         }
+      }
+      if(set_mean == 0) {
+        for(int i = 0; i != l; ++i) out[i] = (x[i]-mean[g[i]-1])*M2[g[i]-1];
+      } else if(set_mean == R_PosInf) {
+        for(int i = 0; i != l; ++i) out[i] = (x[i]-mean[g[i]-1])*M2[g[i]-1] + mean[g[i]-1]; // best ??
+      } else {
+        for(int i = 0; i != l; ++i) out[i] = (x[i]-mean[g[i]-1])*M2[g[i]-1] + gl_mean; // best ??
       }
     }
-
-  } else { // ONE-PASS METHOD ---------------------------------------------------------
-    if(Rf_isNull(w)) { // No weights
-      if (ng == 0) {
-        if(narm) {
-          int j = l-1, n = 1;
-          long double sum = x[j], sq_sum;
-          while(std::isnan(sum) && j!=0) sum = x[--j];
-          sq_sum = sum*sum;
-          if(j != 0) {
-            for(int i = j; i--; ) {
-              if(std::isnan(x[i])) continue;
-              sum += x[i];
-              sq_sum += pow(x[i],2);
-              ++n;
-            }
-            sum /= n;
-            sq_sum = 1/sqrt((sq_sum-pow(sum,2)*n)/(n-1));
-            if(std::isnan(sq_sum)) {
-              std::fill(out.begin(), out.end(), NA_REAL);
-            } else {
-              out = (x-sum)*sq_sum;
-              // for(int i = 0; i != l; ++i) out[i] = (x[i]-sum)*sq_sum;
-            }
-          } else {
-            std::fill(out.begin(), out.end(), NA_REAL);
+  } else { // With weights
+    NumericVector wg = w;
+    if(l != wg.size()) stop("length(w) must match length(x)");
+    if (ng == 0) {
+      if(set_sd == R_NegInf) stop("within.sd can only be calculated when a grouping vector is supplied");
+      if(set_mean == R_NegInf) stop("without groups, centering on the overall mean amounts to scaling without centering, so use mean = FALSE instead, or supply a grouping vector to subtract out group means.");
+      double sumw = 0, mean = 0, M2 = 0, d1 = 0;
+      if(narm) {
+        int j = l-1;
+        while((std::isnan(x[j]) || std::isnan(wg[j])) && j!=0) --j;
+        if(j != 0) {
+          for(int i = j+1; i--; ) {
+            if(std::isnan(x[i]) || std::isnan(wg[i])) continue;
+            sumw += wg[i];
+            d1 = x[i] - mean;
+            mean += d1 * (wg[i] / sumw);
+            M2 += wg[i] * d1 * (x[i] - mean);
           }
         } else {
-          long double sum = 0, sq_sum = 0;
-          for(int i = 0; i != l; ++i) {
-            if(std::isnan(x[i])) {
-              std::fill(out.begin(), out.end(), NA_REAL);
-              return out;
-            } else {
-              sum += x[i];
-              sq_sum += pow(x[i],2);
-            }
-          }
-          sum /= l;
-          sq_sum = 1/sqrt((sq_sum-pow(sum,2)*l)/(l-1));
-          if(std::isnan(sq_sum)) {
-            std::fill(out.begin(), out.end(), NA_REAL);
-          } else {
-            out = (x-sum)*sq_sum;
-            // for(int i = 0; i != l; ++i) out[i] = (x[i]-sum)*sq_sum;
-          }
+          std::fill(out.begin(), out.end(), NA_REAL);
+          DUPLICATE_ATTRIB(out, x);
+          return out;
         }
-      } else { // with groups
-        if(g.size() != l) stop("length(g) must match nrow(X)");
-        if(narm) {
-          NumericVector sq_sum(ng, NA_REAL);
-          NumericVector sum = no_init_vector(ng);
-          IntegerVector n(ng, 1);
-          for(int i = l; i--; ) {
-            if(std::isnan(x[i])) continue;
-            if(std::isnan(sq_sum[g[i]-1])) {
-              sum[g[i]-1] = x[i];
-              sq_sum[g[i]-1] = pow(x[i],2);
-            } else {
-              sum[g[i]-1] += x[i];
-              sq_sum[g[i]-1] += pow(x[i],2);
-              ++n[g[i]-1];
-            }
-          }
-          for(int i = ng; i--; ) {
-            sum[i] /= n[i];
-            if(std::isnan(sq_sum[i])) continue;
-            sq_sum[i] = 1/sqrt((sq_sum[i] - pow(sum[i],2)*n[i])/(n[i]-1));
-          }
-          for(int i = 0; i != l; ++i) out[i] = (x[i]-sum[g[i]-1])*sq_sum[g[i]-1];
-        } else {
-          NumericVector sq_sum(ng), sum(ng);
-          IntegerVector gsv = no_init_vector(ng); // NULL; gives compiler warning
-          int ngs = 0;
-          if(Rf_isNull(gs)) {
-            // gsv = IntegerVector(ng);
-            std::fill(gsv.begin(), gsv.end(), 0);
-            for(int i = 0; i != l; ++i) {
-              if(std::isnan(x[i])) {
-                if(std::isnan(sq_sum[g[i]-1])) continue;
-                sq_sum[g[i]-1] = NA_REAL;
-                ++ngs;
-                if(ngs == ng) {
-                  std::fill(out.begin(), out.end(), NA_REAL);
-                  return out;
-                }
-              } else {
-                sum[g[i]-1] += x[i];
-                sq_sum[g[i]-1] += pow(x[i],2);
-                ++gsv[g[i]-1];
-              }
-            }
+      } else {
+        for(int i = 0; i != l; ++i) {
+          if(std::isnan(x[i]) || std::isnan(wg[i])) {
+            std::fill(out.begin(), out.end(), NA_REAL);
+            DUPLICATE_ATTRIB(out, x);
+            return out;
           } else {
-            gsv = gs;
-            if(gsv.size() != ng) stop("Vector of group-sizes must match number of groups");
-            for(int i = 0; i != l; ++i) {
-              if(std::isnan(x[i])) {
-                if(std::isnan(sq_sum[g[i]-1])) continue;
-                sq_sum[g[i]-1] = NA_REAL;
-                ++ngs;
-                if(ngs == ng) {
-                  std::fill(out.begin(), out.end(), NA_REAL);
-                  return out;
-                }
-              } else {
-                sum[g[i]-1] += x[i];
-                sq_sum[g[i]-1] += pow(x[i],2);
-              }
-            }
+            sumw += wg[i];
+            d1 = x[i] - mean;
+            mean += d1 * (wg[i] / sumw);
+            M2 += wg[i] * d1 * (x[i] - mean);
           }
-          for(int i = ng; i--; ) {
-            sum[i] /= gsv[i];
-            if(std::isnan(sq_sum[i])) continue;
-            sq_sum[i] = 1/sqrt((sq_sum[i] - pow(sum[i],2)*gsv[i])/(gsv[i]-1));
-          }
-          for(int i = 0; i != l; ++i) out[i] = (x[i]-sum[g[i]-1])*sq_sum[g[i]-1];
         }
       }
-    } else { // With weights
-      NumericVector wg = w;
-      if(l != wg.size()) stop("length(w) must match length(x)");
-      if (ng == 0) {
-        if(narm) {
-          int j = l-1;
-          while((std::isnan(x[j]) || std::isnan(wg[j])) && j!=0) --j;
-          long double sumw = wg[j], sum = x[j]*sumw, sq_sum = sum*x[j];
-          if(j != 0) {
-            for(int i = j; i--; ) {
-              if(std::isnan(x[i]) || std::isnan(wg[i])) continue;
-              sum += x[i]*wg[i];
-              sumw += wg[i];
-              sq_sum += pow(x[i],2)*wg[i];
-            }
-            sum /= sumw;
-            sq_sum = 1/sqrt((sq_sum - pow(sum,2)*sumw)/(sumw-1));
-            if(std::isnan(sq_sum)) {
-              std::fill(out.begin(), out.end(), NA_REAL);
-            } else {
-              out = (x-sum)*sq_sum;
-              // for(int i = 0; i != l; ++i) out[i] = (x[i]-sum)*sq_sum;
-            }
+      M2 = set_sd/sqrt(M2/(sumw-1));
+      if(std::isnan(M2)) {
+        std::fill(out.begin(), out.end(), NA_REAL);
+      } else {
+        if(set_mean == 0) out = (x-mean)*M2;
+        else if(set_mean == R_PosInf) out = (x-mean)*M2 + mean; // best ??
+        else out = (x-mean)*M2 + set_mean; // best ??
+      }
+    } else { // with groups
+      if(g.size() != l) stop("length(g) must match nrow(X)");
+      double d1 = 0, gl_mean = 0; // Best way of doing this ?? How can you declare variables in overall scope ??
+      NumericVector M2 = narm ? NumericVector(ng, NA_REAL) : NumericVector(ng);
+      NumericVector mean = narm ? no_init_vector(ng) : NumericVector(ng);
+      NumericVector sumw = narm ? no_init_vector(ng) : NumericVector(ng);
+      if(narm) {
+        for(int i = l; i--; ) {
+          if(std::isnan(x[i]) || std::isnan(wg[i])) continue;
+          if(std::isnan(M2[g[i]-1])) {
+            sumw[g[i]-1] = wg[i];
+            mean[g[i]-1] = x[i];
+            M2[g[i]-1] = 0;
           } else {
-            std::fill(out.begin(), out.end(), NA_REAL);
+            sumw[g[i]-1] += wg[i];
+            d1 = x[i] - mean[g[i]-1];
+            mean[g[i]-1] += d1 * (wg[i] / sumw[g[i]-1]);
+            M2[g[i]-1] += wg[i] * d1 * (x[i] - mean[g[i]-1]);
           }
-        } else {
-          long double sum = 0, sumw = 0, sq_sum = 0;
-          for(int i = 0; i != l; ++i) {
-            if(std::isnan(x[i]) || std::isnan(wg[i])) {
+        }
+      } else {
+        int ngs = 0;
+        for(int i = 0; i != l; ++i) {
+          if(std::isnan(M2[g[i]-1])) continue;
+          if(std::isnan(x[i]) || std::isnan(wg[i])) {
+            M2[g[i]-1] = NA_REAL;
+            ++ngs;
+            if(ngs == ng) {
               std::fill(out.begin(), out.end(), NA_REAL);
+              DUPLICATE_ATTRIB(out, x);
               return out;
-            } else {
-              sum += x[i]*wg[i];
-              sumw += wg[i];
-              sq_sum += pow(x[i],2)*wg[i];
             }
-          }
-          sum /= sumw;
-          sq_sum = 1/sqrt((sq_sum - pow(sum,2)*sumw)/(sumw-1));
-          if(std::isnan(sq_sum)) {
-            std::fill(out.begin(), out.end(), NA_REAL);
           } else {
-            out = (x-sum)*sq_sum;
-            // for(int i = 0; i != l; ++i) out[i] = (x[i]-sum)*sq_sum;
+            sumw[g[i]-1] += wg[i];
+            d1 = x[i] - mean[g[i]-1];
+            mean[g[i]-1] += d1 * (wg[i] / sumw[g[i]-1]);
+            M2[g[i]-1] += wg[i] * d1 * (x[i] - mean[g[i]-1]);
           }
         }
-      } else { // with groups
-        if(g.size() != l) stop("length(g) must match nrow(X)");
-        if(narm) {
-          NumericVector sq_sum(ng, NA_REAL);
-          NumericVector sumw = no_init_vector(ng);
-          NumericVector sum = no_init_vector(ng);
-          for(int i = l; i--; ) {
-            if(std::isnan(x[i]) || std::isnan(wg[i])) continue;
-            if(std::isnan(sq_sum[g[i]-1])) {
-              sum[g[i]-1] = x[i]*wg[i];
-              sumw[g[i]-1] = wg[i];
-              sq_sum[g[i]-1] = pow(x[i],2)*wg[i];
-            } else {
-              sum[g[i]-1] += x[i]*wg[i];
-              sumw[g[i]-1] += wg[i];
-              sq_sum[g[i]-1] += pow(x[i],2)*wg[i];
-            }
-          }
+      }
+      if(set_sd == R_NegInf) {
+        double within_sd = 0, sum_sumw = 0;
+        if(set_mean == R_NegInf) {
           for(int i = ng; i--; ) {
-            sum[i] /= sumw[i];
-            if(std::isnan(sq_sum[i])) continue;
-            sq_sum[i] = 1/sqrt((sq_sum[i] - pow(sum[i],2)*sumw[i])/(sumw[i]-1));
+            if(std::isnan(M2[i])) continue;
+            within_sd += M2[i];
+            M2[i] = 1/sqrt(M2[i]/(sumw[i]-1));
+            gl_mean += mean[i]*sumw[i];
+            sum_sumw += sumw[i];
           }
-          for(int i = 0; i != l; ++i) out[i] = (x[i]-sum[g[i]-1])*sq_sum[g[i]-1];
+          gl_mean /= sum_sumw;
         } else {
-          NumericVector sq_sum(ng), sumw(ng), sum(ng);
-          int ngs = 0;
-          for(int i = 0; i != l; ++i) {
-            if(std::isnan(sq_sum[g[i]-1])) continue;
-            if(std::isnan(x[i]) || std::isnan(wg[i])) {
-              sq_sum[g[i]-1] = NA_REAL;
-              ++ngs;
-              if(ngs == ng) {
-                std::fill(out.begin(), out.end(), NA_REAL);
-                return out;
-              }
-            } else {
-              sum[g[i]-1] += x[i]*wg[i];
-              sumw[g[i]-1] += wg[i];
-              sq_sum[g[i]-1] += pow(x[i],2)*wg[i];
-            }
-          }
           for(int i = ng; i--; ) {
-            sum[i] /= sumw[i];
-            if(std::isnan(sq_sum[i])) continue;
-            sq_sum[i] = 1/sqrt((sq_sum[i] - pow(sum[i],2)*sumw[i])/(sumw[i]-1));
+            if(std::isnan(M2[i])) continue;
+            within_sd += M2[i];
+            M2[i] = 1/sqrt(M2[i]/(sumw[i]-1));
+            sum_sumw += sumw[i];
           }
-          for(int i = 0; i != l; ++i) out[i] = (x[i]-sum[g[i]-1])*sq_sum[g[i]-1];
+          gl_mean = set_mean;
         }
+        within_sd = sqrt(within_sd/(sum_sumw-1));
+        M2 = M2 * within_sd; // fastest ??
+      } else {
+        if(set_mean == R_NegInf) {
+          double sum_sumw = 0;
+          for(int i = ng; i--; ) {
+            if(std::isnan(M2[i])) continue;
+            M2[i] = set_sd/sqrt(M2[i]/(sumw[i]-1));
+            gl_mean += mean[i]*sumw[i];
+            sum_sumw += sumw[i];
+          }
+          gl_mean /= sum_sumw;
+        } else {
+          gl_mean = set_mean;
+          for(int i = ng; i--; ) if(!std::isnan(M2[i])) M2[i] = set_sd/sqrt(M2[i]/(sumw[i]-1));
+        }
+      }
+      if(set_mean == 0) {
+        for(int i = 0; i != l; ++i) out[i] = (x[i]-mean[g[i]-1])*M2[g[i]-1];
+      } else if(set_mean == R_PosInf) {
+        for(int i = 0; i != l; ++i) out[i] = (x[i]-mean[g[i]-1])*M2[g[i]-1] + mean[g[i]-1]; // best ??
+      } else {
+        for(int i = 0; i != l; ++i) out[i] = (x[i]-mean[g[i]-1])*M2[g[i]-1] + gl_mean; // best ??
       }
     }
   }
@@ -419,515 +272,282 @@ NumericVector fscaleCpp(const NumericVector& x, int ng = 0, const IntegerVector&
 }
 
 
-
+// Still thoroughly check this one and the data.frame version !!
 // [[Rcpp::export]]
-NumericMatrix fscalemCpp(NumericMatrix x, int ng = 0, IntegerVector g = 0, SEXP gs = R_NilValue,
-                         SEXP w = R_NilValue, bool narm = true, bool stable_algo = true) {
+NumericMatrix fscalemCpp(const NumericMatrix& x, int ng = 0, const IntegerVector& g = 0, const SEXP& w = R_NilValue,
+                         bool narm = true, double set_mean = 0, double set_sd = 1) {
 
   int l = x.nrow(), col = x.ncol();
   NumericMatrix out = no_init_matrix(l, col);
 
-  if(stable_algo) { // WELFORDS ONLINE METHOD -------------------------------------
-    if (Rf_isNull(w)) { // No weights
-      if(ng == 0) {
-        if(narm) {
-          for(int j = col; j--; ) {
-            NumericMatrix::Column column = x( _ , j);
-            NumericMatrix::Column outj = out( _ , j);
-            int k = l-1;
-            // double ni = 0;
-            // long double meani = 0, d1i = 0, M2i = 0;
-            double ni = 0, meani = 0, d1i = 0, M2i = 0;
-            while(std::isnan(column[k]) && k!=0) --k;
-            if(k != 0) {
-              for(int i = k+1; i--; ) {
-                if(std::isnan(column[i])) continue;
-                d1i = column[i]-meani;
-                meani += d1i * (1 / ++ni);
-                M2i += d1i*(column[i]-meani);
-              }
-              M2i = 1/sqrt(M2i/(ni-1));
-              if(std::isnan(M2i)) {
-                std::fill(outj.begin(), outj.end(), NA_REAL);
-              } else {
-                outj = (column-meani)*M2i;
-                // for(int i = 0; i != l; ++i) outj[i] = (column[i]-meani)*M2i; // For some weird reason this is a lot slower than the above vectorized (4.7 seconds vs. 0.14 seconds on WDIM, the grouped version is much faster !!)
-              }
-            } else {
-              std::fill(outj.begin(), outj.end(), NA_REAL);
-            }
-          }
-        } else {
-          for(int j = col; j--; ) {
-            NumericMatrix::Column column = x( _ , j);
-            NumericMatrix::Column outj = out( _ , j);
-            // double ni = 0;
-            // long double meani = 0, d1i = 0, M2i = 0;
-            double ni = 0, meani = 0, d1i = 0, M2i = 0;
-            for(int i = 0; i != l; ++i) {
-              if(std::isnan(column[i])) {
-                M2i = NA_REAL;
-                break;
-              } else {
-                d1i = column[i]-meani;
-                meani += d1i * (1 / ++ni);
-                M2i += d1i*(column[i]-meani);
-              }
-            }
-            M2i = 1/sqrt(M2i/(l-1));
-            if(std::isnan(M2i)) {
-              std::fill(outj.begin(), outj.end(), NA_REAL);
-            } else {
-              outj = (column-meani)*M2i;
-              // for(int i = 0; i != l; ++i) outj[i] = (column[i]-meani)*M2i;
-            }
-          }
-        }
-      } else { // with groups
-        if(g.size() != l) stop("length(g) must match nrow(X)");
-        if(narm) {
-          NumericVector meanj = no_init_vector(ng), nj = no_init_vector(ng); // stable !!
-          for(int j = col; j--; ) {
-            NumericMatrix::Column column = x( _ , j);
-            NumericMatrix::Column outj = out( _ , j);
-            NumericVector M2j(ng, NA_REAL);
-            // double meanj[ng], nj[ng]; // stable and faster ??
-            // std::vector<double> M2j(ng, NA_REAL);
-            // long double d1j = 0;
-            double d1j = 0;
-            for(int i = l; i--; ) {
+  if (Rf_isNull(w)) { // No weights
+    if(ng == 0) {
+      if(set_sd == R_NegInf) stop("within.sd can only be calculated when a grouping vector is supplied");
+      if(set_mean == R_NegInf) stop("without groups, centering on the overall mean amounts to scaling without centering, so use mean = FALSE instead, or supply a grouping vector to subtract out group means.");
+      for(int j = col; j--; ) {
+        NumericMatrix::ConstColumn column = x( _ , j);
+        NumericMatrix::Column outj = out( _ , j);
+        double nj = 0, meanj = 0, d1 = 0, M2j = 0;
+        if(narm) { // faster using 2 loops over columns ???
+          int k = l-1;
+          while(std::isnan(column[k]) && k!=0) --k;
+          if(k != 0) {
+            for(int i = k+1; i--; ) {
               if(std::isnan(column[i])) continue;
-              if(std::isnan(M2j[g[i]-1])) {
-                meanj[g[i]-1] = column[i];
-                M2j[g[i]-1] = 0;
-                nj[g[i]-1] = 1;
-              } else {
-                d1j = column[i]-meanj[g[i]-1];
-                meanj[g[i]-1] += d1j * (1 / ++nj[g[i]-1]);
-                M2j[g[i]-1] += d1j*(column[i]-meanj[g[i]-1]);
-              }
+              d1 = column[i]-meanj;
+              meanj += d1 * (1 / ++nj);
+              M2j += d1*(column[i]-meanj);
             }
-            for(int i = ng; i--; ) if(!std::isnan(M2j[i])) M2j[i] = 1/sqrt(M2j[i]/(nj[i]-1));
-            for(int i = 0; i != l; ++i) outj[i] = (column[i]-meanj[g[i]-1])*M2j[g[i]-1];
+            M2j = set_sd/sqrt(M2j/(nj-1));
+          } else {
+            std::fill(outj.begin(), outj.end(), NA_REAL);
+            continue; // Necessary !!
           }
         } else {
-          for(int j = col; j--; ) {
-            NumericMatrix::Column column = x( _ , j);
-            NumericMatrix::Column outj = out( _ , j);
-            std::vector<double> meanj(ng), M2j(ng), nj(ng); // faster using std::vector ??
-            // long double d1j = 0;
-            double d1j = 0;
-            int ngs = 0;
-            for(int i = 0; i != l; ++i) {
-              if(std::isnan(M2j[g[i]-1])) continue;
-              if(std::isnan(column[i])) {
-                M2j[g[i]-1] = NA_REAL;
-                ++ngs;
-                if(ngs == ng) {
-                  std::fill(outj.begin(), outj.end(), NA_REAL);
-                  goto loopend;
-                }
-              } else {
-                d1j = column[i]-meanj[g[i]-1];
-                meanj[g[i]-1] += d1j * (1 / ++nj[g[i]-1]);
-                M2j[g[i]-1] += d1j*(column[i]-meanj[g[i]-1]);
-              }
+          for(int i = 0; i != l; ++i) {
+            if(std::isnan(column[i])) {
+              M2j = NA_REAL;
+              break;
+            } else {
+              d1 = column[i]-meanj;
+              meanj += d1 * (1 / ++nj);
+              M2j += d1*(column[i]-meanj);
             }
-            for(int i = ng; i--; ) if(!std::isnan(M2j[i])) M2j[i] = 1/sqrt(M2j[i]/(nj[i]-1));
-            for(int i = 0; i != l; ++i) outj[i] = (column[i]-meanj[g[i]-1])*M2j[g[i]-1];
-            loopend:;
           }
+          M2j = set_sd/sqrt(M2j/(l-1));
+        }
+        if(std::isnan(M2j)) {
+          std::fill(outj.begin(), outj.end(), NA_REAL);
+        } else {
+          if(set_mean == 0) outj = (column-meanj)*M2j;
+          else if(set_mean == R_PosInf) outj = (column-meanj)*M2j + meanj; // best ??
+          else outj = (column-meanj)*M2j + set_mean; // best ??
         }
       }
-    } else { // With weights
-      NumericVector wg = w;
-      if(l != wg.size()) stop("length(w) must match nrow(X)");
-      if(ng == 0) {
-        if(narm) {
-          for(int j = col; j--; ) {
-            NumericMatrix::Column column = x( _ , j);
-            NumericMatrix::Column outj = out( _ , j);
-            int k = l-1;
-            // long double sumwi = 0, meani = 0, M2i = 0, d1i = 0;
-            double sumwi = 0, meani = 0, M2i = 0, d1i = 0;
-            while((std::isnan(column[k]) || std::isnan(wg[k])) && k!=0) --k;
-            if(k != 0) {
-              for(int i = k+1; i--; ) {
-                if(std::isnan(column[i]) || std::isnan(wg[i])) continue;
-                sumwi += wg[i];
-                d1i = column[i] - meani;
-                meani += d1i * (wg[i] / sumwi);
-                M2i += wg[i] * d1i * (column[i] - meani);
-              }
-              M2i = 1/sqrt(M2i/(sumwi-1));
-              if(std::isnan(M2i)) {
+    } else { // with groups
+      if(g.size() != l) stop("length(g) must match nrow(X)");
+      // Better way ??
+      NumericVector meanj = no_init_vector(ng), nj = no_init_vector(ng), M2j = no_init_vector(ng);
+      for(int j = col; j--; ) {
+        NumericMatrix::ConstColumn column = x( _ , j);
+        NumericMatrix::Column outj = out( _ , j);
+        double d1 = 0, gl_meanj = 0;
+        if(narm) { // better do two loops ??
+          M2j = NumericVector(ng, NA_REAL);
+          for(int i = l; i--; ) {
+            if(std::isnan(column[i])) continue;
+            if(std::isnan(M2j[g[i]-1])) {
+              meanj[g[i]-1] = column[i];
+              M2j[g[i]-1] = 0;
+              nj[g[i]-1] = 1;
+            } else {
+              d1 = column[i]-meanj[g[i]-1];
+              meanj[g[i]-1] += d1 * (1 / ++nj[g[i]-1]);
+              M2j[g[i]-1] += d1*(column[i]-meanj[g[i]-1]);
+            }
+          }
+        } else {
+          for(int i = ng; i--; ) meanj[i] = M2j[i] = nj[i] = 0; // good ?? fast ??
+          int ngs = 0;
+          for(int i = 0; i != l; ++i) {
+            if(std::isnan(M2j[g[i]-1])) continue;
+            if(std::isnan(column[i])) {
+              M2j[g[i]-1] = NA_REAL;
+              ++ngs;
+              if(ngs == ng) {
                 std::fill(outj.begin(), outj.end(), NA_REAL);
-              } else {
-                outj = (column-meani)*M2i;
-                // for(int i = 0; i != l; ++i) outj[i] = (column[i]-meani)*M2i;
+                goto loopend;
               }
             } else {
-              std::fill(outj.begin(), outj.end(), NA_REAL);
-            }
-          }
-        } else {
-          for(int j = col; j--; ) {
-            NumericMatrix::Column column = x( _ , j);
-            NumericMatrix::Column outj = out( _ , j);
-            // long double sumwi = 0, meani = 0, M2i = 0, d1i = 0;
-            double sumwi = 0, meani = 0, M2i = 0, d1i = 0;
-            for(int i = 0; i != l; ++i) {
-              if(std::isnan(column[i]) || std::isnan(wg[i])) {
-                M2i = NA_REAL;
-                break;
-              } else {
-                sumwi += wg[i];
-                d1i = column[i] - meani;
-                meani += d1i * (wg[i] / sumwi);
-                M2i += wg[i] * d1i * (column[i] - meani);
-              }
-            }
-            M2i = 1/sqrt(M2i/(sumwi-1));
-            if(std::isnan(M2i)) {
-              std::fill(outj.begin(), outj.end(), NA_REAL);
-            } else {
-              outj = (column-meani)*M2i;
-              // for(int i = 0; i != l; ++i) outj[i] = (column[i]-meani)*M2i;
+              d1 = column[i]-meanj[g[i]-1];
+              meanj[g[i]-1] += d1 * (1 / ++nj[g[i]-1]);
+              M2j[g[i]-1] += d1*(column[i]-meanj[g[i]-1]);
             }
           }
         }
-      } else { // with groups and weights
-        if(g.size() != l) stop("length(g) must match nrow(X)");
-        if(narm) {
-          std::vector<double> meanj(ng), sumwj(ng);  // NumericVector meanj = no_init_vector(ng), sumwj = no_init_vector(ng); // stable !!
-          for(int j = col; j--; ) {
-            NumericMatrix::Column column = x( _ , j);
-            NumericMatrix::Column outj = out( _ , j);
-            NumericVector M2j(ng, NA_REAL);
-            // std::vector<double> M2j(ng, NA_REAL); // faster ??
-            // double meanj[ng], sumwj[ng]; // stable and faster ??
-            // long double d1j = 0;
-            double d1j = 0;
-            for(int i = l; i--; ) {
-              if(std::isnan(column[i]) || std::isnan(wg[i])) continue;
-              if(std::isnan(M2j[g[i]-1])) {
-                sumwj[g[i]-1] = wg[i];
-                meanj[g[i]-1] = column[i];
-                M2j[g[i]-1] = 0;
-              } else {
-                sumwj[g[i]-1] += wg[i];
-                d1j = column[i] - meanj[g[i]-1];
-                meanj[g[i]-1] += d1j * (wg[i] / sumwj[g[i]-1]);
-                M2j[g[i]-1] += wg[i] * d1j * (column[i] - meanj[g[i]-1]);
-              }
+        if(set_sd == R_NegInf) { // best way of coding ?? Goes through all the if conditions for every column...
+          double within_sdj = 0;
+          int sum_nj = 0;
+          if(set_mean == R_NegInf) {
+            for(int i = ng; i--; ) {
+              if(std::isnan(M2j[i])) continue;
+              within_sdj += M2j[i];
+              M2j[i] = 1/sqrt(M2j[i]/(nj[i]-1));
+              gl_meanj += meanj[i]*nj[i];
+              sum_nj += nj[i];
             }
-            for(int i = ng; i--; ) if(!std::isnan(M2j[i])) M2j[i] = 1/sqrt(M2j[i]/(sumwj[i]-1));
-            for(int i = 0; i != l; ++i) outj[i] = (column[i]-meanj[g[i]-1])*M2j[g[i]-1];
+            gl_meanj /= sum_nj;
+          } else {
+            for(int i = ng; i--; ) {
+              if(std::isnan(M2j[i])) continue;
+              within_sdj += M2j[i];
+              M2j[i] = 1/sqrt(M2j[i]/(nj[i]-1));
+              sum_nj += nj[i];
+            }
+            gl_meanj = set_mean;
           }
+          within_sdj = sqrt(within_sdj/(sum_nj-1));
+          M2j = M2j * within_sdj; // fastest ??
         } else {
-          for(int j = col; j--; ) {
-            NumericMatrix::Column column = x( _ , j);
-            NumericMatrix::Column outj = out( _ , j);
-            std::vector<double> M2j(ng), meanj(ng), sumwj(ng); // faster than NumericVector ??
-            // long double d1j = 0;
-            double d1j = 0;
-            int ngs = 0;
-            for(int i = 0; i != l; ++i) {
-              if(std::isnan(M2j[g[i]-1])) continue;
-              if(std::isnan(column[i]) || std::isnan(wg[i])) {
-                M2j[g[i]-1] = NA_REAL;
-                ++ngs;
-                if(ngs == ng) {
-                  std::fill(outj.begin(), outj.end(), NA_REAL);
-                  goto loopend2;
-                }
-              } else {
-                sumwj[g[i]-1] += wg[i];
-                d1j = column[i] - meanj[g[i]-1];
-                meanj[g[i]-1] += d1j * (wg[i] / sumwj[g[i]-1]);
-                M2j[g[i]-1] += wg[i] * d1j * (column[i] - meanj[g[i]-1]);
-              }
+          if(set_mean == R_NegInf) {
+            int sum_nj = 0;
+            for(int i = ng; i--; ) {
+              if(std::isnan(M2j[i])) continue;
+              M2j[i] = set_sd/sqrt(M2j[i]/(nj[i]-1));
+              gl_meanj += meanj[i]*nj[i];
+              sum_nj += nj[i];
             }
-            for(int i = ng; i--; ) if(!std::isnan(M2j[i])) M2j[i] = 1/sqrt(M2j[i]/(sumwj[i]-1));
-            for(int i = 0; i != l; ++i) outj[i] = (column[i]-meanj[g[i]-1])*M2j[g[i]-1];
-            loopend2:;
+            gl_meanj /= sum_nj;
+          } else {
+            gl_meanj = set_mean;
+            for(int i = ng; i--; ) if(!std::isnan(M2j[i])) M2j[i] = set_sd/sqrt(M2j[i]/(nj[i]-1));
           }
         }
+        if(set_mean == 0) {
+          for(int i = 0; i != l; ++i) outj[i] = (column[i]-meanj[g[i]-1])*M2j[g[i]-1];
+        } else if(set_mean == R_PosInf) {
+          for(int i = 0; i != l; ++i) outj[i] = (column[i]-meanj[g[i]-1])*M2j[g[i]-1] + meanj[g[i]-1]; // best ??
+        } else {
+          for(int i = 0; i != l; ++i) outj[i] = (column[i]-meanj[g[i]-1])*M2j[g[i]-1] + gl_meanj; // best ??
+        }
+        loopend:;
       }
     }
-
-  } else { // ONE-PASS METHOD -------------------------------------
-
-    if (Rf_isNull(w)) { // No weights
-      if(ng == 0) {
+  } else { // With weights
+    NumericVector wg = w;
+    if(l != wg.size()) stop("length(w) must match nrow(X)");
+    if(ng == 0) {
+      if(set_sd == R_NegInf) stop("within.sd can only be calculated when a grouping vector is supplied");
+      if(set_mean == R_NegInf) stop("without groups, centering on the overall mean amounts to scaling without centering, so use mean = FALSE instead, or supply a grouping vector to subtract out group means.");
+      for(int j = col; j--; ) {
+        NumericMatrix::ConstColumn column = x( _ , j);
+        NumericMatrix::Column outj = out( _ , j);
+        double sumwj = 0, meanj = 0, M2j = 0, d1 = 0;
         if(narm) {
-          for(int j = col; j--; ) {
-            NumericMatrix::Column column = x( _ , j);
-            NumericMatrix::Column outj = out( _ , j);
-            int k = l-1, nj = 1;
-            long double sumj = column[k], sq_sumj = 0;
-            while(std::isnan(sumj) && k!=0) sumj = column[--k];
-            sq_sumj = sumj*sumj;
-            if(k != 0) {
-              for(int i = k; i--; ) {
-                if(std::isnan(column[i])) continue;
-                sumj += column[i];
-                sq_sumj += pow(column[i],2);
-                ++nj;
-              }
-              sumj /= nj;
-              sq_sumj = 1/sqrt((sq_sumj-pow(sumj,2)*nj)/(nj-1));
-              if(std::isnan(sq_sumj)) {
-                std::fill(outj.begin(), outj.end(), NA_REAL);
-              } else {
-                outj = (column-sumj)*sq_sumj;
-                // for(int i = 0; i != l; ++i) outj[i] = (column[i]-sumj)*sq_sumj;
-              }
-            } else {
-              std::fill(outj.begin(), outj.end(), NA_REAL);
-            }
-          }
-        } else {
-          for(int j = col; j--; ) {
-            NumericMatrix::Column column = x( _ , j);
-            NumericMatrix::Column outj = out( _ , j);
-            long double sumj = 0, sq_sumj = 0;
-            for(int i = 0; i != l; ++i) {
-              if(std::isnan(column[i])) {
-                sq_sumj = NA_REAL;
-                break;
-              } else {
-                sumj += column[i];
-                sq_sumj += pow(column[i],2);
-              }
-            }
-            if(std::isnan(sq_sumj)) {
-              std::fill(outj.begin(), outj.end(), NA_REAL);
-            } else {
-              sumj /= l;
-              sq_sumj = 1/sqrt((sq_sumj-pow(sumj,2)*l)/(l-1));
-              if(std::isnan(sq_sumj)) {
-                std::fill(outj.begin(), outj.end(), NA_REAL);
-              } else {
-                outj = (column-sumj)*sq_sumj;
-                // for(int i = 0; i != l; ++i) outj[i] = (column[i]-sumj)*sq_sumj;
-              }
-            }
-          }
-        }
-      } else { // with groups
-        if(g.size() != l) stop("length(g) must match nrow(X)");
-        if(narm) {
-          for(int j = col; j--; ) {
-            NumericMatrix::Column column = x( _ , j);
-            NumericMatrix::Column outj = out( _ , j);
-            NumericVector sq_sumj(ng, NA_REAL), sumj = no_init_vector(ng);
-            IntegerVector nj = no_init_vector(ng);
-            // std::vector<double> sq_sumj(ng, NA_REAL); // faster ??
-            // double sumj[ng]; // stable and faster ??
-            // int nj[ng]; // stable and faster ??
-            for(int i = l; i--; ) {
-              if(std::isnan(column[i])) continue;
-              if(std::isnan(sq_sumj[g[i]-1])) {
-                sumj[g[i]-1] = column[i];
-                sq_sumj[g[i]-1] = pow(column[i],2);
-                nj[g[i]-1] = 1;
-              } else {
-                sumj[g[i]-1] += column[i];
-                sq_sumj[g[i]-1] += pow(column[i],2);
-                ++nj[g[i]-1];
-              }
-            }
-            for(int i = ng; i--; ) {
-              sumj[i] /= nj[i];
-              if(std::isnan(sq_sumj[i])) continue;
-              sq_sumj[i] = 1/sqrt((sq_sumj[i] - pow(sumj[i],2)*nj[i])/(nj[i]-1));
-            }
-            for(int i = 0; i != l; ++i) outj[i] = (column[i]-sumj[g[i]-1])*sq_sumj[g[i]-1];
-          }
-        } else {
-          if(Rf_isNull(gs)) {
-            // int gsv[ng], memsize = sizeof(int)*ng;
-            for(int j = col; j--; ) {
-              NumericMatrix::Column column = x( _ , j);
-              NumericMatrix::Column outj = out( _ , j);
-              std::vector<double> sq_sumj(ng), sumj(ng); // faster than NumericVector ??
-              std::vector<int> gsv(ng); // memset(gsv, 0, memsize);
-              int ngs = 0;
-              for(int i = 0; i != l; ++i) {
-                if(std::isnan(column[i])) {
-                  if(std::isnan(sq_sumj[g[i]-1])) continue;
-                  sq_sumj[g[i]-1] = column[i];
-                  ++ngs;
-                  if(ngs == ng) {
-                    std::fill(outj.begin(), outj.end(), NA_REAL);
-                    goto loopend3;
-                  }
-                } else {
-                  sumj[g[i]-1] += column[i];
-                  sq_sumj[g[i]-1] += pow(column[i],2);
-                  ++gsv[g[i]-1];
-                }
-              }
-              for(int i = ng; i--; ) {
-                sumj[i] /= gsv[i];
-                if(std::isnan(sq_sumj[i])) continue;
-                sq_sumj[i] = 1/sqrt((sq_sumj[i] - pow(sumj[i],2)*gsv[i])/(gsv[i]-1));
-              }
-              for(int i = 0; i != l; ++i) outj[i] = (column[i]-sumj[g[i]-1])*sq_sumj[g[i]-1];
-              loopend3:;
+          int k = l-1;
+          while((std::isnan(column[k]) || std::isnan(wg[k])) && k!=0) --k;
+          if(k != 0) {
+            for(int i = k+1; i--; ) {
+              if(std::isnan(column[i]) || std::isnan(wg[i])) continue;
+              sumwj += wg[i];
+              d1 = column[i] - meanj;
+              meanj += d1 * (wg[i] / sumwj);
+              M2j += wg[i] * d1 * (column[i] - meanj);
             }
           } else {
-            IntegerVector gsv = gs;
-            if(gsv.size() != ng) stop("Vector of group-sizes must match number of groups");
-            for(int j = col; j--; ) {
-              NumericMatrix::Column column = x( _ , j);
-              NumericMatrix::Column outj = out( _ , j);
-              std::vector<double> sq_sumj(ng), sumj(ng); // faster than NumericVector ??
-              int ngs = 0;
-              for(int i = 0; i != l; ++i) {
-                if(std::isnan(column[i])) {
-                  if(std::isnan(sq_sumj[g[i]-1])) continue;
-                  sq_sumj[g[i]-1] = column[i];
-                  ++ngs;
-                  if(ngs == ng) {
-                    std::fill(outj.begin(), outj.end(), NA_REAL);
-                    goto loopend5;
-                  }
-                } else {
-                  sumj[g[i]-1] += column[i];
-                  sq_sumj[g[i]-1] += pow(column[i],2);
-                }
-              }
-              for(int i = ng; i--; ) {
-                sumj[i] /= gsv[i];
-                if(std::isnan(sq_sumj[i])) continue;
-                sq_sumj[i] = 1/sqrt((sq_sumj[i] - pow(sumj[i],2)*gsv[i])/(gsv[i]-1));
-              }
-              for(int i = 0; i != l; ++i) outj[i] = (column[i]-sumj[g[i]-1])*sq_sumj[g[i]-1];
-              loopend5:;
+            std::fill(outj.begin(), outj.end(), NA_REAL);
+            continue; // Necessary !!
+          }
+        } else {
+          for(int i = 0; i != l; ++i) {
+            if(std::isnan(column[i]) || std::isnan(wg[i])) {
+              M2j = NA_REAL;
+              break;
+            } else {
+              sumwj += wg[i];
+              d1 = column[i] - meanj;
+              meanj += d1 * (wg[i] / sumwj);
+              M2j += wg[i] * d1 * (column[i] - meanj);
             }
           }
+        }
+        M2j = set_sd/sqrt(M2j/(sumwj-1));
+        if(std::isnan(M2j)) {
+          std::fill(outj.begin(), outj.end(), NA_REAL);
+        } else {
+          if(set_mean == 0) outj = (column-meanj)*M2j;
+          else if(set_mean == R_PosInf) outj = (column-meanj)*M2j + meanj; // best ??
+          else outj = (column-meanj)*M2j + set_mean; // best ??
         }
       }
-    } else { // With weights
-      NumericVector wg = w;
-      if(l != wg.size()) stop("length(w) must match nrow(X)");
-      if(ng == 0) {
+    } else { // with groups and weights
+      if(g.size() != l) stop("length(g) must match nrow(X)");
+      // Better way ??
+      NumericVector meanj = no_init_vector(ng), sumwj = no_init_vector(ng), M2j = no_init_vector(ng); // stable ??
+      for(int j = col; j--; ) {
+        NumericMatrix::ConstColumn column = x( _ , j);
+        NumericMatrix::Column outj = out( _ , j);
+        double d1 = 0, gl_meanj = 0;
         if(narm) {
-          for(int j = col; j--; ) {
-            NumericMatrix::Column column = x( _ , j);
-            NumericMatrix::Column outj = out( _ , j);
-            int k = l-1;
-            while((std::isnan(column[k]) || std::isnan(wg[k])) && k!=0) --k;
-            long double sumwj = wg[k], sumj = column[k]*sumwj, sq_sumj = column[k]*sumj;
-            if(k != 0) {
-              for(int i = k; i--; ) {
-                if(std::isnan(column[i]) || std::isnan(wg[i])) continue;
-                sumj += column[i]*wg[i];
-                sumwj += wg[i];
-                sq_sumj += pow(column[i],2)*wg[i];
-              }
-              sumj /= sumwj;
-              sq_sumj = 1/sqrt((sq_sumj - pow(sumj,2)*sumwj)/(sumwj-1));
-              if(std::isnan(sq_sumj)) {
-                std::fill(outj.begin(), outj.end(), NA_REAL);
-              } else {
-                outj = (column-sumj)*sq_sumj;
-                // for(int i = 0; i != l; ++i) outj[i] = (column[i]-sumj)*sq_sumj;
-              }
+          M2j = NumericVector(ng, NA_REAL);
+          for(int i = l; i--; ) {
+            if(std::isnan(column[i]) || std::isnan(wg[i])) continue;
+            if(std::isnan(M2j[g[i]-1])) {
+              sumwj[g[i]-1] = wg[i];
+              meanj[g[i]-1] = column[i];
+              M2j[g[i]-1] = 0;
             } else {
-              std::fill(outj.begin(), outj.end(), NA_REAL);
+              sumwj[g[i]-1] += wg[i];
+              d1 = column[i] - meanj[g[i]-1];
+              meanj[g[i]-1] += d1 * (wg[i] / sumwj[g[i]-1]);
+              M2j[g[i]-1] += wg[i] * d1 * (column[i] - meanj[g[i]-1]);
             }
           }
         } else {
-          for(int j = col; j--; ) {
-            NumericMatrix::Column column = x( _ , j);
-            NumericMatrix::Column outj = out( _ , j);
-            long double sumj = 0, sumwj = 0, sq_sumj = 0;
-            for(int i = 0; i != l; ++i) {
-              if(std::isnan(column[i]) || std::isnan(wg[i])) {
-                sq_sumj = NA_REAL;
-                break;
-              } else {
-                sumj += column[i]*wg[i];
-                sumwj += wg[i];
-                sq_sumj += pow(column[i],2)*wg[i];
-              }
-            }
-            if(std::isnan(sq_sumj)) {
-              std::fill(outj.begin(), outj.end(), NA_REAL);
-            } else {
-              sumj /= sumwj;
-              sq_sumj = 1/sqrt((sq_sumj - pow(sumj,2)*sumwj)/(sumwj-1));
-              if(std::isnan(sq_sumj)) {
+          for(int i = ng; i--; ) meanj[i] = M2j[i] = sumwj[i] = 0;  // fast ??
+          int ngs = 0;
+          for(int i = 0; i != l; ++i) {
+            if(std::isnan(M2j[g[i]-1])) continue;
+            if(std::isnan(column[i]) || std::isnan(wg[i])) {
+              M2j[g[i]-1] = NA_REAL;
+              ++ngs;
+              if(ngs == ng) {
                 std::fill(outj.begin(), outj.end(), NA_REAL);
-              } else {
-                outj = (column-sumj)*sq_sumj;
-                // for(int i = 0; i != l; ++i) outj[i] = (column[i]-sumj)*sq_sumj;
+                goto loopend2;
               }
+            } else {
+              sumwj[g[i]-1] += wg[i];
+              d1 = column[i] - meanj[g[i]-1];
+              meanj[g[i]-1] += d1 * (wg[i] / sumwj[g[i]-1]);
+              M2j[g[i]-1] += wg[i] * d1 * (column[i] - meanj[g[i]-1]);
             }
           }
         }
-      } else { // with groups and weights
-        if(g.size() != l) stop("length(g) must match nrow(X)");
-        if(narm) {
-          std::vector<double> sumj(ng), sumwj(ng); // stable !!
-          for(int j = col; j--; ) {
-            NumericMatrix::Column column = x( _ , j);
-            NumericMatrix::Column outj = out( _ , j);
-            NumericVector sq_sumj(ng, NA_REAL);
-            // std::vector<double> sq_sumj(ng, NA_REAL); // faster ??
-            // double sumj[ng], sumwj[ng]; // stable and faster ??
-            for(int i = l; i--; ) {
-              if(std::isnan(column[i]) || std::isnan(wg[i])) continue;
-              if(std::isnan(sq_sumj[g[i]-1])) {
-                sumj[g[i]-1] = column[i]*wg[i];
-                sumwj[g[i]-1] = wg[i];
-                sq_sumj[g[i]-1] = pow(column[i],2)*wg[i];
-              } else {
-                sumj[g[i]-1] += column[i]*wg[i];
-                sumwj[g[i]-1] += wg[i];
-                sq_sumj[g[i]-1] += pow(column[i],2)*wg[i];
-              }
-            }
+        if(set_sd == R_NegInf) { // best way of coding ?? Goes through all the if conditions for every column...
+          double within_sdj = 0, sum_sumwj = 0;
+          if(set_mean == R_NegInf) {
             for(int i = ng; i--; ) {
-              sumj[i] /= sumwj[i];
-              if(std::isnan(sq_sumj[i])) continue;
-              sq_sumj[i] = 1/sqrt((sq_sumj[i] - pow(sumj[i],2)*sumwj[i])/(sumwj[i]-1));
+              if(std::isnan(M2j[i])) continue;
+              within_sdj += M2j[i];
+              M2j[i] = 1/sqrt(M2j[i]/(sumwj[i]-1));
+              gl_meanj += meanj[i]*sumwj[i];
+              sum_sumwj += sumwj[i];
             }
-            for(int i = 0; i != l; ++i) outj[i] = (column[i]-sumj[g[i]-1])*sq_sumj[g[i]-1];
+            gl_meanj /= sum_sumwj;
+          } else {
+            for(int i = ng; i--; ) {
+              if(std::isnan(M2j[i])) continue;
+              within_sdj += M2j[i];
+              M2j[i] = 1/sqrt(M2j[i]/(sumwj[i]-1));
+              sum_sumwj += sumwj[i];
+            }
+            gl_meanj = set_mean;
           }
+          within_sdj = sqrt(within_sdj/(sum_sumwj-1));
+          M2j = M2j * within_sdj; // fastest ??
         } else {
-          for(int j = col; j--; ) {
-            NumericMatrix::Column column = x( _ , j);
-            NumericMatrix::Column outj = out( _ , j);
-            std::vector<double> sq_sumj(ng), sumj(ng), sumwj(ng); // faster than NumericVector ??
-            int ngs = 0;
-            for(int i = 0; i != l; ++i) {
-              if(std::isnan(sq_sumj[g[i]-1])) continue;
-              if(std::isnan(column[i]) || std::isnan(wg[i])) {
-                sq_sumj[g[i]-1] = NA_REAL;
-                ++ngs;
-                if(ngs == ng) {
-                  std::fill(outj.begin(), outj.end(), NA_REAL);
-                  goto loopend4;
-                }
-              } else {
-                sumj[g[i]-1] += column[i]*wg[i];
-                sumwj[g[i]-1] += wg[i];
-                sq_sumj[g[i]-1] += pow(column[i],2)*wg[i];
-              }
-            }
+          if(set_mean == R_NegInf) {
+            double sum_sumwj = 0;
             for(int i = ng; i--; ) {
-              sumj[i] /= sumwj[i]; //
-              if(std::isnan(sq_sumj[i])) continue;
-              sq_sumj[i] = 1/sqrt((sq_sumj[i] - pow(sumj[i],2)*sumwj[i])/(sumwj[i]-1));
+              if(std::isnan(M2j[i])) continue;
+              M2j[i] = set_sd/sqrt(M2j[i]/(sumwj[i]-1));
+              gl_meanj += meanj[i]*sumwj[i];
+              sum_sumwj += sumwj[i];
             }
-            for(int i = 0; i != l; ++i) outj[i] = (column[i]-sumj[g[i]-1])*sq_sumj[g[i]-1];
-            loopend4:;
+            gl_meanj /= sum_sumwj;
+          } else {
+            gl_meanj = set_mean;
+            for(int i = ng; i--; ) if(!std::isnan(M2j[i])) M2j[i] = set_sd/sqrt(M2j[i]/(sumwj[i]-1));
           }
         }
+        if(set_mean == 0) {
+          for(int i = 0; i != l; ++i) outj[i] = (column[i]-meanj[g[i]-1])*M2j[g[i]-1];
+        } else if(set_mean == R_PosInf) {
+          for(int i = 0; i != l; ++i) outj[i] = (column[i]-meanj[g[i]-1])*M2j[g[i]-1] + meanj[g[i]-1]; // best ??
+        } else {
+          for(int i = 0; i != l; ++i) outj[i] = (column[i]-meanj[g[i]-1])*M2j[g[i]-1] + gl_meanj; // best ??
+        }
+        loopend2:;
       }
     }
   }
@@ -935,575 +555,303 @@ NumericMatrix fscalemCpp(NumericMatrix x, int ng = 0, IntegerVector g = 0, SEXP 
   return out;
 }
 
-
-
-
+// Still thoroughly check !!
 // [[Rcpp::export]]
-List fscalelCpp(List x, int ng = 0, IntegerVector g = 0, SEXP gs = R_NilValue,
-                SEXP w = R_NilValue, bool narm = true, bool stable_algo = true) {
+List fscalelCpp(const List& x, int ng = 0, const IntegerVector& g = 0, const SEXP& w = R_NilValue,
+                bool narm = true, double set_mean = 0, double set_sd = 1) {
 
   int l = x.size();
   List out(l);
 
-  if(stable_algo) { // WELFORDS ONLINE METHOD -------------------------------------
-    if (Rf_isNull(w)) { // No weights
-      if(ng == 0) {
+  if (Rf_isNull(w)) { // No weights
+    if(ng == 0) {
+      if(set_sd == R_NegInf) stop("within.sd can only be calculated when a grouping vector is supplied");
+      if(set_mean == R_NegInf) stop("without groups, centering on the overall mean amounts to scaling without centering, so use mean = FALSE instead, or supply a grouping vector to subtract out group means.");
+      for(int j = l; j--; ) {
+        NumericVector column = x[j];
+        int row = column.size();
+        NumericVector outj = no_init_vector(row); // outj = NULL gives compile warning
+        double nj = 0, meanj = 0, d1 = 0, M2j = 0;
         if(narm) {
-          for(int j = l; j--; ) {
-            NumericVector column = x[j]; // outj = NULL gives compile warning
-            int row = column.size(), k = row-1;
-            NumericVector outj = no_init_vector(row);
-            // double ni = 0;
-            // long double meani = 0, d1i = 0, M2i = 0;
-            double ni = 0, meani = 0, d1i = 0, M2i = 0;
-            while(std::isnan(column[k]) && k!=0) --k;
-            if(k != 0) {
-              for(int i = k+1; i--; ) {
-                if(std::isnan(column[i])) continue;
-                d1i = column[i]-meani;
-                meani += d1i * (1 / ++ni);
-                M2i += d1i*(column[i]-meani);
-              }
-              M2i = 1/sqrt(M2i/(ni-1));
-              if(std::isnan(M2i)) {
-                outj = rep(NA_REAL, row); // fastest option !!
-              } else {
-                outj = (column-meani)*M2i;
-              }
-            } else {
-              outj = rep(NA_REAL, row);
-            }
-            SHALLOW_DUPLICATE_ATTRIB(outj, column);
-            out[j] = outj;
-          }
-        } else {
-          for(int j = l; j--; ) {
-            NumericVector column = x[j]; //  outj = NULL; gives compile warning
-            int row = column.size();
-            NumericVector outj = no_init_vector(row);
-            // double ni = 0;
-            // long double meani = 0, d1i = 0, M2i = 0;
-            double ni = 0, meani = 0, d1i = 0, M2i = 0;
-            for(int i = 0; i != row; ++i) {
-              if(std::isnan(column[i])) {
-                M2i = NA_REAL;
-                break;
-              } else {
-                d1i = column[i]-meani;
-                meani += d1i * (1 / ++ni);
-                M2i += d1i*(column[i]-meani);
-              }
-            }
-            M2i = 1/sqrt(M2i/(row-1));
-            if(std::isnan(M2i)) {
-              outj = rep(NA_REAL, row);
-            } else {
-              outj = (column-meani)*M2i;
-            }
-            SHALLOW_DUPLICATE_ATTRIB(outj, column);
-            out[j] = outj;
-          }
-        }
-      } else { // with groups
-        int gss = g.size();
-        if(narm) {
-          NumericVector meanj = no_init_vector(ng), nj = no_init_vector(ng); // stable !!
-          for(int j = l; j--; ) {
-            NumericVector column = x[j];
-            if(gss != column.size()) stop("length(g) must match nrow(X)");
-            NumericVector M2j(ng, NA_REAL);
-            // std::vector<double> M2j(ng, NA_REAL); // faster and stable ??
-            // double meanj[ng], nj[ng];
-            // long double d1j = 0;
-            double d1j = 0;
-            for(int i = gss; i--; ) {
+          int k = row-1;
+          while(std::isnan(column[k]) && k!=0) --k;
+          if(k != 0) {
+            for(int i = k+1; i--; ) {
               if(std::isnan(column[i])) continue;
-              if(std::isnan(M2j[g[i]-1])) {
-                meanj[g[i]-1] = column[i];
-                M2j[g[i]-1] = 0;
-                nj[g[i]-1] = 1;
-              } else {
-                d1j = column[i]-meanj[g[i]-1];
-                meanj[g[i]-1] += d1j * (1 / ++nj[g[i]-1]);
-                M2j[g[i]-1] += d1j*(column[i]-meanj[g[i]-1]);
-              }
+              d1 = column[i]-meanj;
+              meanj += d1 * (1 / ++nj);
+              M2j += d1*(column[i]-meanj);
             }
-            for(int i = ng; i--; ) if(!std::isnan(M2j[i])) M2j[i] = 1/sqrt(M2j[i]/(nj[i]-1));
-            NumericVector outj = no_init_vector(gss);
-            for(int i = 0; i != gss; ++i) outj[i] = (column[i]-meanj[g[i]-1])*M2j[g[i]-1];
-            SHALLOW_DUPLICATE_ATTRIB(outj, column);
-            out[j] = outj;
+            M2j = set_sd/sqrt(M2j/(nj-1));
+          } else {
+            std::fill(outj.begin(), outj.end(), NA_REAL); // outj = rep(NA_REAL, row); // fastest option !! (really faster than std::fill ??
+            goto loopend; // Necessary !!
           }
         } else {
-          for(int j = l; j--; ) {
-            NumericVector column = x[j];
-            if(gss != column.size()) stop("length(g) must match nrow(X)");
-            NumericVector outj = no_init_vector(gss);
-            std::vector<double> meanj(ng), M2j(ng), nj(ng); // faster than NumericVector ??
-            // long double d1j = 0;
-            double d1j = 0;
-            int ngs = 0;
-            {
-              for(int i = 0; i != gss; ++i) {
-                if(std::isnan(M2j[g[i]-1])) continue;
-                if(std::isnan(column[i])) {
-                  M2j[g[i]-1] = NA_REAL;
-                  ++ngs;
-                  if(ngs == ng) {
-                    outj = rep(NA_REAL, gss);
-                    goto loopend;
-                  }
-                } else {
-                  d1j = column[i]-meanj[g[i]-1];
-                  meanj[g[i]-1] += d1j * (1 / ++nj[g[i]-1]);
-                  M2j[g[i]-1] += d1j*(column[i]-meanj[g[i]-1]);
-                }
-              }
-              for(int i = ng; i--; ) if(!std::isnan(M2j[i])) M2j[i] = 1/sqrt(M2j[i]/(nj[i]-1));
-              for(int i = 0; i != gss; ++i) outj[i] = (column[i]-meanj[g[i]-1])*M2j[g[i]-1];
+          for(int i = 0; i != row; ++i) {
+            if(std::isnan(column[i])) {
+              M2j = NA_REAL;
+              break;
+            } else {
+              d1 = column[i]-meanj;
+              meanj += d1 * (1 / ++nj);
+              M2j += d1*(column[i]-meanj);
             }
-            loopend:;
-            SHALLOW_DUPLICATE_ATTRIB(outj, column);
-            out[j] = outj;
           }
+          M2j = set_sd/sqrt(M2j/(row-1));
         }
+        if(std::isnan(M2j)) {
+          std::fill(outj.begin(), outj.end(), NA_REAL);
+        } else {
+          if(set_mean == 0) outj = (column-meanj)*M2j;
+          else if(set_mean == R_PosInf) outj = (column-meanj)*M2j + meanj; // best ??
+          else outj = (column-meanj)*M2j + set_mean; // best ??
+        }
+        loopend:;
+        SHALLOW_DUPLICATE_ATTRIB(outj, column);
+        out[j] = outj;
       }
-    } else { // With weights
-      NumericVector wg = w;
-      int wgs = wg.size();
-      if(ng == 0) {
-        if(narm) {
-          for(int j = l; j--; ) {
-            NumericVector column = x[j]; // outj = NULL; gives compile warning
-            if(wgs != column.size()) stop("length(w) must match nrow(X)");
-            NumericVector outj = no_init_vector(wgs);
-            int k = wgs-1;
-            // long double sumwi = 0, meani = 0, M2i = 0, d1i = 0;
-            double sumwi = 0, meani = 0, M2i = 0, d1i = 0;
-            while((std::isnan(column[k]) || std::isnan(wg[k])) && k!=0) --k;
-            if(k != 0) {
-              for(int i = k+1; i--; ) {
-                if(std::isnan(column[i]) || std::isnan(wg[i])) continue;
-                sumwi += wg[i];
-                d1i = column[i] - meani;
-                meani += d1i * (wg[i] / sumwi);
-                M2i += wg[i] * d1i * (column[i] - meani);
-              }
-              M2i = 1/sqrt(M2i/(sumwi-1));
-              if(std::isnan(M2i)) {
-                outj = rep(NA_REAL, wgs);
-              } else {
-                outj = (column-meani)*M2i;
-              }
+    } else { // with groups
+      int gss = g.size();
+      // Better way ??
+      NumericVector meanj = no_init_vector(ng), nj = no_init_vector(ng), M2j = no_init_vector(ng);
+      for(int j = l; j--; ) {
+        NumericVector column = x[j];
+        if(gss != column.size()) stop("length(g) must match nrow(X)");
+        NumericVector outj = no_init_vector(gss);
+        double d1 = 0, gl_meanj = 0;
+        if(narm) { // better do two loops ??
+          M2j = NumericVector(ng, NA_REAL);
+          for(int i = gss; i--; ) {
+            if(std::isnan(column[i])) continue;
+            if(std::isnan(M2j[g[i]-1])) {
+              meanj[g[i]-1] = column[i];
+              M2j[g[i]-1] = 0;
+              nj[g[i]-1] = 1;
             } else {
-              outj = rep(NA_REAL, wgs);
+              d1 = column[i]-meanj[g[i]-1];
+              meanj[g[i]-1] += d1 * (1 / ++nj[g[i]-1]);
+              M2j[g[i]-1] += d1*(column[i]-meanj[g[i]-1]);
             }
-            SHALLOW_DUPLICATE_ATTRIB(outj, column);
-            out[j] = outj;
           }
         } else {
-          for(int j = l; j--; ) {
-            NumericVector column = x[j]; //  outj = NULL; gives compile warning
-            if(wgs != column.size()) stop("length(w) must match nrow(X)");
-            NumericVector outj = no_init_vector(wgs);
-            // long double sumwi = 0, meani = 0, M2i = 0, d1i = 0;
-            double sumwi = 0, meani = 0, M2i = 0, d1i = 0;
-            for(int i = 0; i != wgs; ++i) {
-              if(std::isnan(column[i]) || std::isnan(wg[i])) {
-                M2i = NA_REAL;
-                break;
-              } else {
-                sumwi += wg[i];
-                d1i = column[i] - meani;
-                meani += d1i * (wg[i] / sumwi);
-                M2i += wg[i] * d1i * (column[i] - meani);
+          for(int i = ng; i--; ) meanj[i] = M2j[i] = nj[i] = 0; // good ?? fast ??
+          int ngs = 0;
+          for(int i = 0; i != gss; ++i) {
+            if(std::isnan(M2j[g[i]-1])) continue;
+            if(std::isnan(column[i])) {
+              M2j[g[i]-1] = NA_REAL;
+              ++ngs;
+              if(ngs == ng) {
+                std::fill(outj.begin(), outj.end(), NA_REAL);
+                goto loopend2;
               }
-            }
-            M2i = 1/sqrt(M2i/(sumwi-1));
-            if(std::isnan(M2i)) {
-              outj = rep(NA_REAL, wgs);
             } else {
-              outj = (column-meani)*M2i;
+              d1 = column[i]-meanj[g[i]-1];
+              meanj[g[i]-1] += d1 * (1 / ++nj[g[i]-1]);
+              M2j[g[i]-1] += d1*(column[i]-meanj[g[i]-1]);
             }
-            SHALLOW_DUPLICATE_ATTRIB(outj, column);
-            out[j] = outj;
           }
         }
-      } else { // with groups and weights
-        int gss = g.size();
-        if(gss != wgs) stop("length(w) must match length(g)");
-        if(narm) {
-          // NumericVector meanj = no_init_vector(ng), sumwj = no_init_vector(ng);
-          std::vector<double> meanj(ng), sumwj(ng); // stable !!
-          for(int j = l; j--; ) {
-            NumericVector column = x[j];
-            if(gss != column.size()) stop("length(g) must match nrow(X)");
-            NumericVector M2j(ng, NA_REAL);
-            // std::vector<double> M2j(ng, NA_REAL); // faster and stable ??
-            // double meanj[ng], sumwj[ng];
-            // long double d1j = 0;
-            double d1j = 0;
-            for(int i = gss; i--; ) {
-              if(std::isnan(column[i]) || std::isnan(wg[i])) continue;
-              if(std::isnan(M2j[g[i]-1])) {
-                sumwj[g[i]-1] = wg[i];
-                meanj[g[i]-1] = column[i];
-                M2j[g[i]-1] = 0;
-              } else {
-                sumwj[g[i]-1] += wg[i];
-                d1j = column[i] - meanj[g[i]-1];
-                meanj[g[i]-1] += d1j * (wg[i] / sumwj[g[i]-1]);
-                M2j[g[i]-1] += wg[i] * d1j * (column[i] - meanj[g[i]-1]);
-              }
+        if(set_sd == R_NegInf) { // best way of coding ?? Goes through all the if conditions for every column...
+          double within_sdj = 0;
+          int sum_nj = 0;
+          if(set_mean == R_NegInf) {
+            for(int i = ng; i--; ) {
+              if(std::isnan(M2j[i])) continue;
+              within_sdj += M2j[i];
+              M2j[i] = 1/sqrt(M2j[i]/(nj[i]-1));
+              gl_meanj += meanj[i]*nj[i];
+              sum_nj += nj[i];
             }
-            for(int i = ng; i--; ) if(!std::isnan(M2j[i])) M2j[i] = 1/sqrt(M2j[i]/(sumwj[i]-1));
-            NumericVector outj = no_init_vector(gss);
-            for(int i = 0; i != gss; ++i) outj[i] = (column[i]-meanj[g[i]-1])*M2j[g[i]-1];
-            SHALLOW_DUPLICATE_ATTRIB(outj, column);
-            out[j] = outj;
+            gl_meanj /= sum_nj;
+          } else {
+            for(int i = ng; i--; ) {
+              if(std::isnan(M2j[i])) continue;
+              within_sdj += M2j[i];
+              M2j[i] = 1/sqrt(M2j[i]/(nj[i]-1));
+              sum_nj += nj[i];
+            }
+            gl_meanj = set_mean;
           }
+          within_sdj = sqrt(within_sdj/(sum_nj-1));
+          M2j = M2j * within_sdj; // fastest ??
         } else {
-          for(int j = l; j--; ) {
-            NumericVector column = x[j];
-            if(gss != column.size()) stop("length(g) must match nrow(X)");
-            NumericVector outj = no_init_vector(gss);
-            std::vector<double> M2j(ng), meanj(ng), sumwj(ng); // faster than NumericVector??
-            // long double d1j = 0;
-            double d1j = 0;
-            int ngs = 0;
-            {
-              for(int i = 0; i != gss; ++i) {
-                if(std::isnan(M2j[g[i]-1])) continue;
-                if(std::isnan(column[i]) || std::isnan(wg[i])) {
-                  M2j[g[i]-1] = NA_REAL;
-                  ++ngs;
-                  if(ngs == ng) {
-                    outj = rep(NA_REAL, gss);
-                    goto loopend2;
-                  }
-                } else {
-                  sumwj[g[i]-1] += wg[i];
-                  d1j = column[i] - meanj[g[i]-1];
-                  meanj[g[i]-1] += d1j * (wg[i] / sumwj[g[i]-1]);
-                  M2j[g[i]-1] += wg[i] * d1j * (column[i] - meanj[g[i]-1]);
-                }
-              }
-              for(int i = ng; i--; ) if(!std::isnan(M2j[i])) M2j[i] = 1/sqrt(M2j[i]/(sumwj[i]-1));
-              for(int i = 0; i != gss; ++i) outj[i] = (column[i]-meanj[g[i]-1])*M2j[g[i]-1];
+          if(set_mean == R_NegInf) {
+            int sum_nj = 0;
+            for(int i = ng; i--; ) {
+              if(std::isnan(M2j[i])) continue;
+              M2j[i] = set_sd/sqrt(M2j[i]/(nj[i]-1));
+              gl_meanj += meanj[i]*nj[i];
+              sum_nj += nj[i];
             }
-            loopend2:;
-            SHALLOW_DUPLICATE_ATTRIB(outj, column);
-            out[j] = outj;
+            gl_meanj /= sum_nj;
+          } else {
+            gl_meanj = set_mean;
+            for(int i = ng; i--; ) if(!std::isnan(M2j[i])) M2j[i] = set_sd/sqrt(M2j[i]/(nj[i]-1));
           }
         }
+        if(set_mean == 0) {
+          for(int i = 0; i != gss; ++i) outj[i] = (column[i]-meanj[g[i]-1])*M2j[g[i]-1];
+        } else if(set_mean == R_PosInf) {
+          for(int i = 0; i != gss; ++i) outj[i] = (column[i]-meanj[g[i]-1])*M2j[g[i]-1] + meanj[g[i]-1]; // best ??
+        } else {
+          for(int i = 0; i != gss; ++i) outj[i] = (column[i]-meanj[g[i]-1])*M2j[g[i]-1] + gl_meanj; // best ??
+        }
+        loopend2:;
+        SHALLOW_DUPLICATE_ATTRIB(outj, column);
+        out[j] = outj;
       }
     }
-
-  } else { // ONE-PASS METHOD -------------------------------------
-
-    if (Rf_isNull(w)) { // No weights
-      if(ng == 0) {
+  } else { // With weights
+    NumericVector wg = w;
+    int wgs = wg.size();
+    if(ng == 0) {
+      if(set_sd == R_NegInf) stop("within.sd can only be calculated when a grouping vector is supplied");
+      if(set_mean == R_NegInf) stop("without groups, centering on the overall mean amounts to scaling without centering, so use mean = FALSE instead, or supply a grouping vector to subtract out group means.");
+      for(int j = l; j--; ) {
+        NumericVector column = x[j];
+        if(wgs != column.size()) stop("length(w) must match nrow(X)");
+        NumericVector outj = no_init_vector(wgs);
+        double sumwj = 0, meanj = 0, M2j = 0, d1 = 0;
         if(narm) {
-          for(int j = l; j--; ) {
-            NumericVector column = x[j]; // outj = NULL; gives compile error
-            int row = column.size(), k = row-1, nj = 1;
-            NumericVector outj = no_init_vector(row);
-            long double sumj = column[k], sq_sumj = 0;
-            while(std::isnan(sumj) && k!=0) sumj = column[--k];
-            sq_sumj = sumj*sumj;
-            if(k != 0) {
-              for(int i = k; i--; ) {
-                if(std::isnan(column[i])) continue;
-                sumj += column[i];
-                sq_sumj += pow(column[i],2);
-                ++nj;
-              }
-              sumj /= nj;
-              sq_sumj = 1/sqrt((sq_sumj-pow(sumj,2)*nj)/(nj-1));
-              if(std::isnan(sq_sumj)) {
-                outj = rep(NA_REAL, row);
-              } else {
-                outj = (column-sumj)*sq_sumj;
-              }
-            } else {
-              outj = rep(NA_REAL, row);
-            }
-            SHALLOW_DUPLICATE_ATTRIB(outj, column);
-            out[j] = outj;
-          }
-        } else {
-          for(int j = l; j--; ) {
-            NumericVector column = x[j]; // outj = NULL; gives compile warning
-            int row = column.size();
-            NumericVector outj = no_init_vector(row);
-            long double sumj = 0, sq_sumj = 0;
-            for(int i = 0; i != row; ++i) {
-              if(std::isnan(column[i])) {
-                sq_sumj = NA_REAL;
-                break;
-              } else {
-                sumj += column[i];
-                sq_sumj += pow(column[i],2);
-              }
-            }
-            if(std::isnan(sq_sumj)) {
-              outj = rep(NA_REAL, row);
-            } else {
-              sumj /= row;
-              sq_sumj = 1/sqrt((sq_sumj-pow(sumj,2)*row)/(row-1));
-              if(std::isnan(sq_sumj)) {
-                outj = rep(NA_REAL, row);
-              } else {
-                outj = (column-sumj)*sq_sumj;
-              }
-            }
-            SHALLOW_DUPLICATE_ATTRIB(outj, column);
-            out[j] = outj;
-          }
-        }
-      } else { // with groups
-        int gss = g.size();
-        if(narm) {
-          for(int j = l; j--; ) {
-            NumericVector column = x[j];
-            if(gss != column.size()) stop("length(g) must match nrow(X)");
-            NumericVector sq_sumj(ng, NA_REAL), sumj(ng); //  = no_init_vector
-            IntegerVector nj(ng); //  = no_init_vector
-            // std::vector<double> sq_sumj(ng, NA_REAL); // faster and stable ??
-            // double sumj[ng];
-            // int nj[ng];
-            for(int i = gss; i--; ) {
-              if(std::isnan(column[i])) continue;
-              if(std::isnan(sq_sumj[g[i]-1])) {
-                sumj[g[i]-1] = column[i];
-                sq_sumj[g[i]-1] = pow(column[i],2);
-                nj[g[i]-1] = 1;
-              } else {
-                sumj[g[i]-1] += column[i];
-                sq_sumj[g[i]-1] += pow(column[i],2);
-                ++nj[g[i]-1];
-              }
-            }
-            for(int i = ng; i--; ) {
-              sumj[i] /= nj[i];
-              if(std::isnan(sq_sumj[i])) continue;
-              sq_sumj[i] = 1/sqrt((sq_sumj[i] - pow(sumj[i],2)*nj[i])/(nj[i]-1));
-            }
-            NumericVector outj = no_init_vector(gss);
-            for(int i = 0; i != gss; ++i) outj[i] = (column[i]-sumj[g[i]-1])*sq_sumj[g[i]-1];
-            SHALLOW_DUPLICATE_ATTRIB(outj, column);
-            out[j] = outj;
-          }
-        } else {
-          if(Rf_isNull(gs)) {
-            // int gsv[ng], memsize = sizeof(int)*ng;
-            for(int j = l; j--; ) {
-              NumericVector column = x[j];
-              if(gss != column.size()) stop("length(g) must match nrow(X)");
-              int ngs = 0;
-              NumericVector outj = no_init_vector(gss);
-              std::vector<double> sq_sumj(ng), sumj(ng); // faster than NumericVector??
-              std::vector<int> gsv(ng); // memset(gsv, 0, memsize);
-              {
-                for(int i = 0; i != gss; ++i) {
-                  if(std::isnan(column[i])) {
-                    if(std::isnan(sq_sumj[g[i]-1])) continue;
-                    sq_sumj[g[i]-1] = column[i];
-                    ++ngs;
-                    if(ngs == ng) {
-                      outj = rep(NA_REAL, gss);
-                      goto loopend3;
-                    }
-                  } else {
-                    sumj[g[i]-1] += column[i];
-                    sq_sumj[g[i]-1] += pow(column[i],2);
-                    ++gsv[g[i]-1];
-                  }
-                }
-                for(int i = ng; i--; ) {
-                  sumj[i] /= gsv[i];
-                  if(std::isnan(sq_sumj[i])) continue;
-                  sq_sumj[i] = 1/sqrt((sq_sumj[i] - pow(sumj[i],2)*gsv[i])/(gsv[i]-1));
-                }
-                for(int i = 0; i != gss; ++i) outj[i] = (column[i]-sumj[g[i]-1])*sq_sumj[g[i]-1];
-              }
-              loopend3:;
-              SHALLOW_DUPLICATE_ATTRIB(outj, column);
-              out[j] = outj;
+          int k = wgs-1;
+          while((std::isnan(column[k]) || std::isnan(wg[k])) && k!=0) --k;
+          if(k != 0) {
+            for(int i = k+1; i--; ) {
+              if(std::isnan(column[i]) || std::isnan(wg[i])) continue;
+              sumwj += wg[i];
+              d1 = column[i] - meanj;
+              meanj += d1 * (wg[i] / sumwj);
+              M2j += wg[i] * d1 * (column[i] - meanj);
             }
           } else {
-            IntegerVector gsv = gs;
-            if(gsv.size() != ng) stop("Vector of group-sizes must match number of groups");
-            for(int j = l; j--; ) {
-              NumericVector column = x[j];
-              if(gss != column.size()) stop("length(g) must match nrow(X)");
-              int ngs = 0;
-              NumericVector outj = no_init_vector(gss);
-              std::vector<double> sq_sumj(ng), sumj(ng); // faster than NumericVector??
-              {
-                for(int i = 0; i != gss; ++i) {
-                  if(std::isnan(column[i])) {
-                    if(std::isnan(sq_sumj[g[i]-1])) continue;
-                    sq_sumj[g[i]-1] = column[i];
-                    ++ngs;
-                    if(ngs == ng) {
-                      outj = rep(NA_REAL, gss);
-                      goto loopend5;
-                    }
-                  } else {
-                    sumj[g[i]-1] += column[i];
-                    sq_sumj[g[i]-1] += pow(column[i],2);
-                  }
-                }
-                for(int i = ng; i--; ) {
-                  sumj[i] /= gsv[i];
-                  if(std::isnan(sq_sumj[i])) continue;
-                  sq_sumj[i] = 1/sqrt((sq_sumj[i] - pow(sumj[i],2)*gsv[i])/(gsv[i]-1));
-                }
-                for(int i = 0; i != gss; ++i) outj[i] = (column[i]-sumj[g[i]-1])*sq_sumj[g[i]-1];
-              }
-              loopend5:;
-              SHALLOW_DUPLICATE_ATTRIB(outj, column);
-              out[j] = outj;
+            std::fill(outj.begin(), outj.end(), NA_REAL);
+            goto loopend3; // Necessary !!
+          }
+        } else {
+          for(int i = 0; i != wgs; ++i) {
+            if(std::isnan(column[i]) || std::isnan(wg[i])) {
+              M2j = NA_REAL;
+              break;
+            } else {
+              sumwj += wg[i];
+              d1 = column[i] - meanj;
+              meanj += d1 * (wg[i] / sumwj);
+              M2j += wg[i] * d1 * (column[i] - meanj);
             }
           }
         }
+        M2j = set_sd/sqrt(M2j/(sumwj-1));
+        if(std::isnan(M2j)) {
+          std::fill(outj.begin(), outj.end(), NA_REAL);
+        } else {
+          if(set_mean == 0) outj = (column-meanj)*M2j;
+          else if(set_mean == R_PosInf) outj = (column-meanj)*M2j + meanj; // best ??
+          else outj = (column-meanj)*M2j + set_mean; // best ??
+        }
+        loopend3:;
+        SHALLOW_DUPLICATE_ATTRIB(outj, column);
+        out[j] = outj;
       }
-    } else { // With weights
-      NumericVector wg = w;
-      int wgs = wg.size();
-      if(ng == 0) {
+    } else { // with groups and weights
+      int gss = g.size();
+      if(gss != wgs) stop("length(w) must match length(g)");
+
+      NumericVector meanj = no_init_vector(ng), sumwj = no_init_vector(ng), M2j = no_init_vector(ng); // stable ??
+      for(int j = l; j--; ) {
+        NumericVector column = x[j];
+        if(gss != column.size()) stop("length(g) must match nrow(X)");
+        NumericVector outj = no_init_vector(gss);
+        double d1 = 0, gl_meanj = 0;
         if(narm) {
-          for(int j = l; j--; ) {
-            NumericVector column = x[j]; // outj = NULL; gives compile warning
-            if(wgs != column.size()) stop("length(w) must match nrow(X)");
-            NumericVector outj = no_init_vector(wgs);
-            int k = wgs-1;
-            while((std::isnan(column[k]) || std::isnan(wg[k])) && k!=0) --k;
-            long double sumwj = wg[k], sumj = column[k]*sumwj, sq_sumj = column[k]*sumj;
-            if(k != 0) {
-              for(int i = k; i--; ) {
-                if(std::isnan(column[i]) || std::isnan(wg[i])) continue;
-                sumj += column[i]*wg[i];
-                sumwj += wg[i];
-                sq_sumj += pow(column[i],2)*wg[i];
-              }
-              sumj /= sumwj;
-              sq_sumj = 1/sqrt((sq_sumj - pow(sumj,2)*sumwj)/(sumwj-1));
-              if(std::isnan(sq_sumj)) {
-                outj = rep(NA_REAL, wgs);
-              } else {
-                outj = (column-sumj)*sq_sumj;
-              }
+          M2j = NumericVector(ng, NA_REAL);
+          for(int i = gss; i--; ) {
+            if(std::isnan(column[i]) || std::isnan(wg[i])) continue;
+            if(std::isnan(M2j[g[i]-1])) {
+              sumwj[g[i]-1] = wg[i];
+              meanj[g[i]-1] = column[i];
+              M2j[g[i]-1] = 0;
             } else {
-              outj = rep(NA_REAL, wgs);
+              sumwj[g[i]-1] += wg[i];
+              d1 = column[i] - meanj[g[i]-1];
+              meanj[g[i]-1] += d1 * (wg[i] / sumwj[g[i]-1]);
+              M2j[g[i]-1] += wg[i] * d1 * (column[i] - meanj[g[i]-1]);
             }
-            SHALLOW_DUPLICATE_ATTRIB(outj, column);
-            out[j] = outj;
           }
         } else {
-          for(int j = l; j--; ) {
-            NumericVector column = x[j]; // outj = NULL; gives compile warning
-            if(wgs != column.size()) stop("length(w) must match nrow(X)");
-            NumericVector outj = no_init_vector(wgs);
-            long double sumj = 0, sumwj = 0, sq_sumj = 0;
-            for(int i = 0; i != wgs; ++i) {
-              if(std::isnan(column[i]) || std::isnan(wg[i])) {
-                sq_sumj = NA_REAL;
-                break;
-              } else {
-                sumj += column[i]*wg[i];
-                sumwj += wg[i];
-                sq_sumj += pow(column[i],2)*wg[i];
+          for(int i = ng; i--; ) meanj[i] = M2j[i] = sumwj[i] = 0; // fast ??
+          int ngs = 0;
+          for(int i = 0; i != gss; ++i) {
+            if(std::isnan(M2j[g[i]-1])) continue;
+            if(std::isnan(column[i]) || std::isnan(wg[i])) {
+              M2j[g[i]-1] = NA_REAL;
+              ++ngs;
+              if(ngs == ng) {
+                std::fill(outj.begin(), outj.end(), NA_REAL);
+                goto loopend4;
               }
-            }
-            if(std::isnan(sq_sumj)) {
-              outj = rep(NA_REAL, wgs);
             } else {
-              sumj /= sumwj;
-              sq_sumj = 1/sqrt((sq_sumj - pow(sumj,2)*sumwj)/(sumwj-1));
-              if(std::isnan(sq_sumj)) {
-                outj = rep(NA_REAL, wgs);
-              } else {
-                outj = (column-sumj)*sq_sumj;
-              }
+              sumwj[g[i]-1] += wg[i];
+              d1 = column[i] - meanj[g[i]-1];
+              meanj[g[i]-1] += d1 * (wg[i] / sumwj[g[i]-1]);
+              M2j[g[i]-1] += wg[i] * d1 * (column[i] - meanj[g[i]-1]);
             }
-            SHALLOW_DUPLICATE_ATTRIB(outj, column);
-            out[j] = outj;
           }
         }
-      } else { // with groups and weights
-        int gss = g.size();
-        if(gss != wgs) stop("length(w) must match length(g)");
-        if(narm) {
-          // NumericVector sumj = no_init_vector(ng), sumwj = no_init_vector(ng);
-          std::vector<double> sumj(ng), sumwj(ng); // stable !!
-          for(int j = l; j--; ) {
-            NumericVector column = x[j];
-            if(gss != column.size()) stop("length(g) must match nrow(X)");
-            NumericVector sq_sumj(ng, NA_REAL);
-            // std::vector<double> sq_sumj(ng, NA_REAL); // faster and stable ??
-            // double sumj[ng], sumwj[ng];
-            for(int i = gss; i--; ) {
-              if(std::isnan(column[i]) || std::isnan(wg[i])) continue;
-              if(std::isnan(sq_sumj[g[i]-1])) {
-                sumj[g[i]-1] = column[i]*wg[i];
-                sumwj[g[i]-1] = wg[i];
-                sq_sumj[g[i]-1] = pow(column[i],2)*wg[i];
-              } else {
-                sumj[g[i]-1] += column[i]*wg[i];
-                sumwj[g[i]-1] += wg[i];
-                sq_sumj[g[i]-1] += pow(column[i],2)*wg[i];
-              }
-            }
+        if(set_sd == R_NegInf) { // best way of coding ?? Goes through all the if conditions for every column...
+          double within_sdj = 0, sum_sumwj = 0;
+          if(set_mean == R_NegInf) {
             for(int i = ng; i--; ) {
-              sumj[i] /= sumwj[i];
-              if(std::isnan(sq_sumj[i])) continue;
-              sq_sumj[i] = 1/sqrt((sq_sumj[i] - pow(sumj[i],2)*sumwj[i])/(sumwj[i]-1));
+              if(std::isnan(M2j[i])) continue;
+              within_sdj += M2j[i];
+              M2j[i] = 1/sqrt(M2j[i]/(sumwj[i]-1));
+              gl_meanj += meanj[i]*sumwj[i];
+              sum_sumwj += sumwj[i];
             }
-            NumericVector outj = no_init_vector(gss);
-            for(int i = 0; i != gss; ++i) outj[i] = (column[i]-sumj[g[i]-1])*sq_sumj[g[i]-1];
-            SHALLOW_DUPLICATE_ATTRIB(outj, column);
-            out[j] = outj;
+            gl_meanj /= sum_sumwj;
+          } else {
+            for(int i = ng; i--; ) {
+              if(std::isnan(M2j[i])) continue;
+              within_sdj += M2j[i];
+              M2j[i] = 1/sqrt(M2j[i]/(sumwj[i]-1));
+              sum_sumwj += sumwj[i];
+            }
+            gl_meanj = set_mean;
           }
+          within_sdj = sqrt(within_sdj/(sum_sumwj-1));
+          M2j = M2j * within_sdj; // fastest ??
         } else {
-          for(int j = l; j--; ) {
-            NumericVector column = x[j];
-            if(gss != column.size()) stop("length(g) must match nrow(X)");
-            NumericVector outj = no_init_vector(gss);
-            std::vector<double> sq_sumj(ng), sumj(ng), sumwj(ng); // faster than NumericVector ??
-            int ngs = 0;
-            {
-              for(int i = 0; i != gss; ++i) {
-                if(std::isnan(sq_sumj[g[i]-1])) continue;
-                if(std::isnan(column[i]) || std::isnan(wg[i])) {
-                  sq_sumj[g[i]-1] = NA_REAL;
-                  ++ngs;
-                  if(ngs == ng) {
-                    outj = rep(NA_REAL, gss);
-                    goto loopend4;
-                  }
-                } else {
-                  sumj[g[i]-1] += column[i]*wg[i];
-                  sumwj[g[i]-1] += wg[i];
-                  sq_sumj[g[i]-1] += pow(column[i],2)*wg[i];
-                }
-              }
-              for(int i = ng; i--; ) {
-                sumj[i] /= sumwj[i]; //
-                if(std::isnan(sq_sumj[i])) continue;
-                sq_sumj[i] = 1/sqrt((sq_sumj[i] - pow(sumj[i],2)*sumwj[i])/(sumwj[i]-1));
-              }
-              for(int i = 0; i != gss; ++i) outj[i] = (column[i]-sumj[g[i]-1])*sq_sumj[g[i]-1];
+          if(set_mean == R_NegInf) {
+            double sum_sumwj = 0;
+            for(int i = ng; i--; ) {
+              if(std::isnan(M2j[i])) continue;
+              M2j[i] = set_sd/sqrt(M2j[i]/(sumwj[i]-1));
+              gl_meanj += meanj[i]*sumwj[i];
+              sum_sumwj += sumwj[i];
             }
-            loopend4:;
-            SHALLOW_DUPLICATE_ATTRIB(outj, column);
-            out[j] = outj;
+            gl_meanj /= sum_sumwj;
+          } else {
+            gl_meanj = set_mean;
+            for(int i = ng; i--; ) if(!std::isnan(M2j[i])) M2j[i] = set_sd/sqrt(M2j[i]/(sumwj[i]-1));
           }
         }
+        if(set_mean == 0) {
+          for(int i = 0; i != gss; ++i) outj[i] = (column[i]-meanj[g[i]-1])*M2j[g[i]-1];
+        } else if(set_mean == R_PosInf) {
+          for(int i = 0; i != gss; ++i) outj[i] = (column[i]-meanj[g[i]-1])*M2j[g[i]-1] + meanj[g[i]-1]; // best ??
+        } else {
+          for(int i = 0; i != gss; ++i) outj[i] = (column[i]-meanj[g[i]-1])*M2j[g[i]-1] + gl_meanj; // best ??
+        }
+        loopend4:;
+        SHALLOW_DUPLICATE_ATTRIB(outj, column);
+        out[j] = outj;
       }
     }
   }
   DUPLICATE_ATTRIB(out, x);
   return out;
 }
+
+
+

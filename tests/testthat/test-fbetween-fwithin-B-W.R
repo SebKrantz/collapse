@@ -41,11 +41,11 @@ baseB <- function(x, na.rm = FALSE) {
   x[cc] <- ave(x[cc])
   return(x)
 }
-baseW <- function(x, na.rm = FALSE) {
-  if(!na.rm) return(x - ave(x))
+baseW <- function(x, na.rm = FALSE, mean = 0) {
+  if(!na.rm) return(x - ave(x) + mean)
   cc <- !is.na(x)
   m <- sum(x[cc]) / sum(cc)
-  return(x - m)
+  return(x - m + mean)
 }
 
 # NOTE: This is what fbetween and fwithin currently do: If missing values, compute weighted mean on available obs, and center x using it. but don't insert aditional missing values in x for missing weights ..
@@ -62,13 +62,13 @@ wbaseB <- function(x, w, na.rm = FALSE) {
     return(rep(wm, length(x)))
   }
 }
-wbaseW <- function(x, w, na.rm = FALSE) {
+wbaseW <- function(x, w, na.rm = FALSE, mean = 0) {
   if(na.rm) {
     cc <- complete.cases(x, w)
     w <- w[cc]
     wm <- sum(w * x[cc]) / sum(w)
   } else wm <- sum(w * x) / sum(w)
-    return(x - wm)
+    return(x - wm + mean)
 }
 
 # fbetween
@@ -525,6 +525,45 @@ test_that("fwithin performs like baseW", {
   expect_equal(fwithin(mtcNA, g), BY(mtcNA, g, baseW, na.rm = TRUE, use.g.names = FALSE))
 })
 
+test_that("fwithin with custom mean performs like baseW (defined above)", {
+  expect_equal(fwithin(x, mean = 4.8456), baseW(x, na.rm = TRUE, mean = 4.8456))
+  expect_equal(fwithin(x, na.rm = FALSE, mean = 4.8456), baseW(x, mean = 4.8456))
+  expect_equal(fwithin(xNA, na.rm = FALSE, mean = 4.8456), baseW(xNA, mean = 4.8456))
+  expect_equal(fwithin(xNA, mean = 4.8456), baseW(xNA, na.rm = TRUE, mean = 4.8456))
+  expect_equal(qM(fwithin(mtcars, mean = 4.8456)), fwithin(m, mean = 4.8456))
+  expect_equal(fwithin(m, mean = 4.8456), dapply(m, baseW, na.rm = TRUE, mean = 4.8456))
+  expect_equal(fwithin(m, na.rm = FALSE, mean = 4.8456), dapply(m, baseW, mean = 4.8456))
+  expect_equal(fwithin(mNA, na.rm = FALSE, mean = 4.8456), dapply(mNA, baseW, mean = 4.8456))
+  expect_equal(fwithin(mNA, mean = 4.8456), dapply(mNA, baseW, na.rm = TRUE, mean = 4.8456))
+  expect_equal(fwithin(x, f, mean = 4.8456), BY(x, f, baseW, na.rm = TRUE, use.g.names = FALSE, mean = 4.8456))
+  expect_equal(fwithin(x, f, na.rm = FALSE, mean = 4.8456), BY(x, f, baseW, use.g.names = FALSE, mean = 4.8456))
+  expect_equal(fwithin(xNA, f, na.rm = FALSE, mean = 4.8456), BY(xNA, f, baseW, use.g.names = FALSE, mean = 4.8456))
+  expect_equal(fwithin(xNA, f, mean = 4.8456), BY(xNA, f, baseW, na.rm = TRUE, use.g.names = FALSE, mean = 4.8456))
+  expect_equal(fwithin(m, g, mean = 4.8456), BY(m, g, baseW, na.rm = TRUE, use.g.names = FALSE, mean = 4.8456))
+  expect_equal(fwithin(m, g, na.rm = FALSE, mean = 4.8456), BY(m, g, baseW, use.g.names = FALSE, mean = 4.8456))
+  expect_equal(fwithin(mNA, g, na.rm = FALSE, mean = 4.8456), BY(mNA, g, baseW, use.g.names = FALSE, mean = 4.8456))
+  expect_equal(fwithin(mNA, g, mean = 4.8456), BY(mNA, g, baseW, na.rm = TRUE, use.g.names = FALSE, mean = 4.8456))
+  expect_equal(fwithin(mtcars, g, mean = 4.8456), BY(mtcars, g, baseW, na.rm = TRUE, use.g.names = FALSE, mean = 4.8456))
+  expect_equal(fwithin(mtcars, g, na.rm = FALSE, mean = 4.8456), BY(mtcars, g, baseW, use.g.names = FALSE, mean = 4.8456))
+  expect_equal(fwithin(mtcNA, g, na.rm = FALSE, mean = 4.8456), BY(mtcNA, g, baseW, use.g.names = FALSE, mean = 4.8456))
+  expect_equal(fwithin(mtcNA, g, mean = 4.8456), BY(mtcNA, g, baseW, na.rm = TRUE, use.g.names = FALSE, mean = 4.8456))
+})
+
+test_that("Centering on overall mean performs as indended", {
+  expect_equal(fwithin(x, f, mean = "overall.mean"), BY(x, f, baseW, na.rm = TRUE, use.g.names = FALSE) + ave(x))
+  expect_equal(fwithin(x, f, na.rm = FALSE, mean = "overall.mean"), BY(x, f, baseW, use.g.names = FALSE) + ave(x))
+  # expect_equal(fwithin(xNA, f, na.rm = FALSE, mean = "overall.mean"), BY(xNA, f, baseW, use.g.names = FALSE) + B(xNA)) # Not the same !!
+  expect_equal(fwithin(xNA, f, mean = "overall.mean"), BY(xNA, f, baseW, na.rm = TRUE, use.g.names = FALSE) + B(xNA))
+  expect_equal(fwithin(m, g, mean = "overall.mean"), BY(m, g, baseW, na.rm = TRUE, use.g.names = FALSE) + B(m))
+  expect_equal(fwithin(m, g, na.rm = FALSE, mean = "overall.mean"), BY(m, g, baseW, use.g.names = FALSE) + B(m))
+  # expect_equal(fwithin(mNA, g, na.rm = FALSE, mean = "overall.mean"), BY(mNA, g, baseW, use.g.names = FALSE) + B(mNA))
+  expect_equal(fwithin(mNA, g, mean = "overall.mean"), BY(mNA, g, baseW, na.rm = TRUE, use.g.names = FALSE) + B(mNA))
+  expect_equal(fwithin(mtcars, g, mean = "overall.mean"), BY(mtcars, g, baseW, na.rm = TRUE, use.g.names = FALSE) + B(mtcars))
+  expect_equal(fwithin(mtcars, g, na.rm = FALSE, mean = "overall.mean"), BY(mtcars, g, baseW, use.g.names = FALSE) + B(mtcars))
+  # expect_equal(fwithin(mtcNA, g, na.rm = FALSE, mean = "overall.mean"), BY(mtcNA, g, baseW, use.g.names = FALSE) + B(mtcNA))
+  expect_equal(fwithin(mtcNA, g, mean = "overall.mean"), BY(mtcNA, g, baseW, na.rm = TRUE, use.g.names = FALSE)+ B(mtcNA))
+})
+
 test_that("fwithin performs like fwithin with weights all equal", {
   expect_equal(fwithin(NA), fwithin(NA, w = 0.99999999))
   expect_equal(fwithin(NA, na.rm = FALSE), fwithin(NA, w = 2.946, na.rm = FALSE))
@@ -606,6 +645,46 @@ test_that("fwithin with weights performs like wbaseW (defined above)", {
   expect_equal(fwithin(xNA, f, wNA, na.rm = FALSE), unlist(Map(wbaseW, split(xNA, f), split(wNA, f)), use.names = FALSE))
   expect_equal(fwithin(xNA, f, wNA), unlist(Map(wbaseW, split(xNA, f), split(wNA, f), na.rm = TRUE), use.names = FALSE))
 })
+
+test_that("fwithin with custom mean and weights performs like wbaseW (defined above)", {
+  # complete weights
+  expect_equal(fwithin(x, mean = 4.8456, w = w), wbaseW(x, na.rm = TRUE, mean = 4.8456, w = w))
+  expect_equal(fwithin(x, na.rm = FALSE, mean = 4.8456, w = w), wbaseW(x, mean = 4.8456, w = w))
+  expect_equal(fwithin(xNA, na.rm = FALSE, mean = 4.8456, w = w), wbaseW(xNA, mean = 4.8456, w = w))
+  expect_equal(fwithin(xNA, mean = 4.8456, w = w), wbaseW(xNA, na.rm = TRUE, mean = 4.8456, w = w))
+  expect_equal(qM(fwithin(mtcars, mean = 4.8456, w = wdat)), fwithin(m, mean = 4.8456, w = wdat))
+  expect_equal(fwithin(m, mean = 4.8456, w = wdat), dapply(m, wbaseW, na.rm = TRUE, mean = 4.8456, w = wdat))
+  expect_equal(fwithin(m, na.rm = FALSE, mean = 4.8456, w = wdat), dapply(m, wbaseW, mean = 4.8456, w = wdat))
+  expect_equal(fwithin(mNA, na.rm = FALSE, mean = 4.8456, w = wdat), dapply(mNA, wbaseW, mean = 4.8456, w = wdat))
+  expect_equal(fwithin(mNA, mean = 4.8456, w = wdat), dapply(mNA, wbaseW, na.rm = TRUE, mean = 4.8456, w = wdat))
+  expect_equal(fwithin(x, f, w, mean = 4.8456), unlist(Map(wbaseW, split(x, f), split(w, f), na.rm = TRUE, mean = 4.8456), use.names = FALSE))
+  expect_equal(fwithin(x, f, w, mean = 4.8456, na.rm = FALSE), unlist(Map(wbaseW, split(x, f), split(w, f), mean = 4.8456), use.names = FALSE))
+  expect_equal(fwithin(xNA, f, w, mean = 4.8456, na.rm = FALSE), unlist(Map(wbaseW, split(xNA, f), split(w, f), mean = 4.8456), use.names = FALSE))
+  expect_equal(fwithin(xNA, f, w, mean = 4.8456), unlist(Map(wbaseW, split(xNA, f), split(w, f), na.rm = TRUE, mean = 4.8456), use.names = FALSE))
+  # missing weights
+  expect_equal(fwithin(x, mean = 4.8456, w = wNA), wbaseW(x, na.rm = TRUE, mean = 4.8456, w = wNA))
+  expect_equal(fwithin(x, na.rm = FALSE, mean = 4.8456, w = wNA), wbaseW(x, mean = 4.8456, w = wNA))
+  expect_equal(fwithin(xNA, na.rm = FALSE, mean = 4.8456, w = wNA), wbaseW(xNA, mean = 4.8456, w = wNA))
+  expect_equal(fwithin(xNA, mean = 4.8456, w = wNA), wbaseW(xNA, na.rm = TRUE, mean = 4.8456, w = wNA))
+  expect_equal(qM(fwithin(mtcars, mean = 4.8456, w = wdatNA)), fwithin(m, mean = 4.8456, w = wdatNA))
+  expect_equal(fwithin(m, mean = 4.8456, w = wdatNA), dapply(m, wbaseW, na.rm = TRUE, mean = 4.8456, w = wdatNA))
+  expect_equal(fwithin(m, na.rm = FALSE, mean = 4.8456, w = wdatNA), dapply(m, wbaseW, mean = 4.8456, w = wdatNA))
+  expect_equal(fwithin(mNA, na.rm = FALSE, mean = 4.8456, w = wdatNA), dapply(mNA, wbaseW, mean = 4.8456, w = wdatNA))
+  expect_equal(fwithin(mNA, mean = 4.8456, w = wdatNA), dapply(mNA, wbaseW, na.rm = TRUE, mean = 4.8456, w = wdatNA))
+  expect_equal(fwithin(x, f, wNA, mean = 4.8456), unlist(Map(wbaseW, split(x, f), split(wNA, f), na.rm = TRUE, mean = 4.8456), use.names = FALSE))
+  expect_equal(fwithin(x, f, wNA, mean = 4.8456, na.rm = FALSE), unlist(Map(wbaseW, split(x, f), split(wNA, f), mean = 4.8456), use.names = FALSE))
+  expect_equal(fwithin(xNA, f, wNA, mean = 4.8456, na.rm = FALSE), unlist(Map(wbaseW, split(xNA, f), split(wNA, f), mean = 4.8456), use.names = FALSE))
+  expect_equal(fwithin(xNA, f, wNA, mean = 4.8456), unlist(Map(wbaseW, split(xNA, f), split(wNA, f), na.rm = TRUE, mean = 4.8456), use.names = FALSE))
+})
+
+test_that("Weighted centering on overall weighted mean performs as indended", {
+  # complete weights
+  expect_equal(fwithin(x, f, w, mean = "overall.mean"), as.numeric(mapply(wbaseW, split(x, f), split(w, f), na.rm = TRUE)) + B(x, w = w))
+  expect_equal(fwithin(x, f, w, na.rm = FALSE, mean = "overall.mean"), as.numeric(mapply(wbaseW, split(x, f), split(w, f))) + B(x, w = w))
+  # expect_equal(fwithin(xNA, f, w, na.rm = FALSE, mean = "overall.mean"), as.numeric(mapply(wbaseW, split(xNA, f), split(w, f))) + B(xNA, w = w)) # Not the same !!
+  expect_equal(fwithin(xNA, f, w, mean = "overall.mean"), as.numeric(mapply(wbaseW, split(xNA, f), split(w, f), na.rm = TRUE)) + B(xNA, w = w))
+})
+# Do more than this to test the rest ...
 
 test_that("fwithin performs numerically stable", {
   expect_true(all_obj_equal(replicate(50, fwithin(1), simplify = FALSE)))
@@ -810,6 +889,18 @@ test_that("fwithin produces errors for wrong input", {
   expect_error(fwithin(wlddev, wlddev$iso3c))
   expect_error(fwithin(wlddev, wlddev$iso3c, wlddev$year))
 })
+
+test_that("fwithin shoots errors for wrong input to mean", {
+  expect_error(fwithin(x, mean = FALSE))
+  expect_error(fwithin(m, mean = FALSE))
+  expect_error(fwithin(mtcars, mean = FALSE))
+  expect_error(fwithin(x, mean = "overall.mean"))
+  expect_error(fwithin(m, mean = "overall.mean"))
+  expect_error(fwithin(mtcars, mean = "overall.mean"))
+  expect_error(fwithin(m, mean = fmean(m)))
+  expect_error(fwithin(mtcars, mean = fmean(mtcars)))
+})
+
 
 # W
 

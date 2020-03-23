@@ -43,45 +43,45 @@ fbetween(x, \dots)
        W(x, \dots)
 % ## Default S3 methods:
 \method{fbetween}{default}(x, g = NULL, w = NULL, na.rm = TRUE, fill = FALSE, \dots)
-\method{fwithin}{default}(x, g = NULL, w = NULL, na.rm = TRUE, add.global.mean = FALSE, \dots)
+\method{fwithin}{default}(x, g = NULL, w = NULL, na.rm = TRUE, mean = 0, \dots)
 \method{B}{default}(x, g = NULL, w = NULL, na.rm = TRUE, fill = FALSE, \dots)
-\method{W}{default}(x, g = NULL, w = NULL, na.rm = TRUE, add.global.mean = FALSE, \dots)
+\method{W}{default}(x, g = NULL, w = NULL, na.rm = TRUE, mean = 0, \dots)
 % ## S3 methods for class 'matrix'
 \method{fbetween}{matrix}(x, g = NULL, w = NULL, na.rm = TRUE, fill = FALSE, \dots)
-\method{fwithin}{matrix}(x, g = NULL, w = NULL, na.rm = TRUE, add.global.mean = FALSE, \dots)
+\method{fwithin}{matrix}(x, g = NULL, w = NULL, na.rm = TRUE, mean = 0, \dots)
 \method{B}{matrix}(x, g = NULL, w = NULL, na.rm = TRUE, fill = FALSE, stub = "B.", \dots)
-\method{W}{matrix}(x, g = NULL, w = NULL, na.rm = TRUE, add.global.mean = FALSE, stub = "W.", \dots)
+\method{W}{matrix}(x, g = NULL, w = NULL, na.rm = TRUE, mean = 0, stub = "W.", \dots)
 %## S3 methods for class 'data.frame'
 \method{fbetween}{data.frame}(x, g = NULL, w = NULL, na.rm = TRUE, fill = FALSE, \dots)
-\method{fwithin}{data.frame}(x, g = NULL, w = NULL, na.rm = TRUE, add.global.mean = FALSE, \dots)
+\method{fwithin}{data.frame}(x, g = NULL, w = NULL, na.rm = TRUE, mean = 0, \dots)
 \method{B}{data.frame}(x, by = NULL, w = NULL, cols = is.numeric, na.rm = TRUE,
   fill = FALSE, stub = "B.", keep.by = TRUE, keep.w = TRUE, \dots)
 \method{W}{data.frame}(x, by = NULL, w = NULL, cols = is.numeric, na.rm = TRUE,
-  add.global.mean = FALSE, stub = "W.", keep.by = TRUE, keep.w = TRUE, \dots)
+  mean = 0, stub = "W.", keep.by = TRUE, keep.w = TRUE, \dots)
 
 # Methods for compatibility with plm:
 %## S3 methods for class 'pseries'
 \method{fbetween}{pseries}(x, effect = 1L, w = NULL, na.rm = TRUE, fill = FALSE, \dots)
-\method{fwithin}{pseries}(x, effect = 1L, w = NULL, na.rm = TRUE, add.global.mean = FALSE, \dots)
+\method{fwithin}{pseries}(x, effect = 1L, w = NULL, na.rm = TRUE, mean = 0, \dots)
 \method{B}{pseries}(x, effect = 1L, w = NULL, na.rm = TRUE, fill = FALSE, \dots)
-\method{W}{pseries}(x, effect = 1L, w = NULL, na.rm = TRUE, add.global.mean = FALSE, \dots)
+\method{W}{pseries}(x, effect = 1L, w = NULL, na.rm = TRUE, mean = 0, \dots)
 %## S3 methods for class 'pdata.frame'
 \method{fbetween}{pdata.frame}(x, effect = 1L, w = NULL, na.rm = TRUE, fill = FALSE, \dots)
-\method{fwithin}{pdata.frame}(x, effect = 1L, w = NULL, na.rm = TRUE, add.global.mean = FALSE, \dots)
+\method{fwithin}{pdata.frame}(x, effect = 1L, w = NULL, na.rm = TRUE, mean = 0, \dots)
 \method{B}{pdata.frame}(x, effect = 1L, w = NULL, cols = is.numeric, na.rm = TRUE,
   fill = FALSE, stub = "B.", keep.ids = TRUE, keep.w = TRUE, \dots)
 \method{W}{pdata.frame}(x, effect = 1L, w = NULL, cols = is.numeric, na.rm = TRUE,
-  add.global.mean = FALSE, stub = "W.", keep.ids = TRUE, keep.w = TRUE, \dots)
+  mean = 0, stub = "W.", keep.ids = TRUE, keep.w = TRUE, \dots)
 
 # Methods for compatibility with dplyr:
 %## S3 methods for class 'grouped_df'
 \method{fbetween}{grouped_df}(x, w = NULL, na.rm = TRUE, fill = FALSE,
          keep.group_vars = TRUE, keep.w = TRUE, \dots)
-\method{fwithin}{grouped_df}(x, w = NULL, na.rm = TRUE, add.global.mean = FALSE,
+\method{fwithin}{grouped_df}(x, w = NULL, na.rm = TRUE, mean = 0,
         keep.group_vars = TRUE, keep.w = TRUE, \dots)
 \method{B}{grouped_df}(x, w = NULL, na.rm = TRUE, fill = FALSE,
   stub = "B.", keep.group_vars = TRUE, keep.w = TRUE, \dots)
-\method{W}{grouped_df}(x, w = NULL, na.rm = TRUE, add.global.mean = FALSE,
+\method{W}{grouped_df}(x, w = NULL, na.rm = TRUE, mean = 0,
   stub = "W.", keep.group_vars = TRUE, keep.w = TRUE, \dots)
 }
 %- maybe also 'usage' for other objects documented here.
@@ -95,7 +95,7 @@ fbetween(x, \dots)
       \item{effect}{\code{plm} methods: Select which panel identifier should be used as grouping variable. 1L means first variable in the \code{plm::index}, 2L the second etc. if more than one integer is supplied, the corresponding index-variables are interacted. }
   \item{stub}{a prefix or stub to rename all transformed columns. \code{FALSE} will not rename columns.}
   \item{fill}{\emph{option to \code{fbetween/B}}: Logical. \code{TRUE} will overwrite missing values in \code{x} with the respective average. By default missing values in \code{x} are preserved.}
-  \item{add.global.mean}{\emph{option to \code{fwithin/W}}: Logical. \code{TRUE} will add back the global mean to all data values after subtracting out group-means.}
+  \item{mean}{\emph{option to \code{fwithin/W}}: The mean to center on, default is 0, but a differnt mean can be supplied and will be added to the data after the centering is performed. A special option when performing grouped centering is \code{mean = "overall.mean"}. In that case the overall mean of the data will be added after subtracting out group means.}
   \item{keep.by, keep.ids, keep.group_vars}{\emph{B and W data.frame, pdata.frame and grouped_df methods}: Logical. Retain grouping / panel-identifier columns in the output. For data frames this only works if grouping variables were passed in a formula.}
   \item{keep.w}{\emph{B and W data.frame, pdata.frame and grouped_df methods}: Logical. Retain column containing the weights in the output. Only works if \code{w} is passed as formula / lazy-expression.}
   \item{\dots}{arguments to be passed to or from other methods.}
@@ -105,10 +105,10 @@ Without groups, \code{fbetween/B} replaces all data points in \code{x} with thei
 
 With groups supplied to \code{g}, the replacement / centering performed by \code{fbetween/B} | \code{fwithin/W} becomes groupwise. I like to think of this in terms of panel data: If \code{x} is a vector in such a dataset, \code{xit} denotes a single data-point belonging to group \code{i} in time-period \code{t} (\code{t} need not be a time-period). Then \code{xi.} denotes \code{x}, averaged over \code{t}. \code{fbetween/B} now returns \code{xi.} and \code{fwithin/W} returns \code{x - xi.}. Thus for any data \code{x} and any grouping vector \code{g}: \code{B(x,g) + W(x,g) = xi. + x - xi. = x}. In terms of variance, \code{fbetween/B} only retains the variance between group averages, while \code{fwithin/W}, by subtracting out group means, only retains the variance within those groups. \cr
 
-The data replacement performed by \code{fbetween/B} can keep (default) or overwrite missing values (option \code{fill}) in \code{x}. \code{fwithin/W} can center data simply (default), or add back the global / overall mean in groupwise computations (option \code{add.global.mean}). Let \code{x..} denote the global mean of \code{x}, then \code{fwithin/W} with \code{add.global.mean = TRUE} returns \code{x - xi. + x..} instead of \code{x - xi.}. This is useful to get rid of group-differences but preserve the overall level of the data (as simple groupwise centering will set the overall mean of the data to 0). In regression analysis, centering with \code{add.global.mean = TRUE} will only change the constant term. See Examples.
+The data replacement performed by \code{fbetween/B} can keep (default) or overwrite missing values (option \code{fill}) in \code{x}. \code{fwithin/W} can center data simply (default), or add back a mean after centering (option \code{mean = value}), or add the overall mean in groupwise computations (option \code{mean = "overall.mean"}). Let \code{x..} denote the overall mean of \code{x}, then \code{fwithin/W} with \code{mean = "overall.mean"} returns \code{x - xi. + x..} instead of \code{x - xi.}. This is useful to get rid of group-differences but preserve the overall level of the data (as simple groupwise centering will set the overall mean of the data to 0). In regression analysis, centering with \code{mean = "overall.mean"} will only change the constant term. See Examples.
 }
 \value{
-\code{fbetween/B} returns \code{x} with every element replaced by its (groupwise) mean (\code{xi.}). \code{fwithin/W} returns \code{x} where every element was subtracted its (groupwise) mean (\code{x - xi.} or \code{x - xi. + x..}). See Details.
+\code{fbetween/B} returns \code{x} with every element replaced by its (groupwise) mean (\code{xi.}). \code{fwithin/W} returns \code{x} where every element was subtracted its (groupwise) mean (\code{x - xi.} or \code{x - xi. + mean} or \code{x - xi. + x..}). See Details.
 }
 % \references{
 %% ~put references to the literature/web site here ~
@@ -148,7 +148,7 @@ cbind(get_vars(wlddev,"iso3c"),    # Same thing done manually using fwithin...
 lm(W(mpg,cyl) ~ W(carb,cyl), data = mtcars)                     # Centering each individually
 lm(mpg ~ carb, data = W(mtcars, ~ cyl, stub = FALSE))           # Centering the entire data
 lm(mpg ~ carb, data = W(mtcars, ~ cyl, stub = FALSE,            # Here only the intercept changes
-                        add.global.mean = TRUE))
+                        mean = "overall.mean"))
 lm(mpg ~ carb + B(carb,cyl), data = mtcars)                     # Procedure suggested by
 # ...Mundlack (1978) - partialling out group averages amounts to the same as demeaning the data
 

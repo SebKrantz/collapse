@@ -37,16 +37,16 @@ fNobslCpp <- function(x, ng = 0L, g = 0L, drop = TRUE) {
     .Call(`_collapse_fNobslCpp`, x, ng, g, drop)
 }
 
-BWCpp <- function(x, ng = 0L, g = 0L, gs = NULL, w = NULL, narm = TRUE, option = FALSE, B = FALSE) {
-    .Call(`_collapse_BWCpp`, x, ng, g, gs, w, narm, option, B)
+BWCpp <- function(x, ng = 0L, g = 0L, gs = NULL, w = NULL, narm = TRUE, set_mean = 0, B = FALSE, fill = FALSE) {
+    .Call(`_collapse_BWCpp`, x, ng, g, gs, w, narm, set_mean, B, fill)
 }
 
-BWmCpp <- function(x, ng = 0L, g = 0L, gs = NULL, w = NULL, narm = TRUE, option = FALSE, B = FALSE) {
-    .Call(`_collapse_BWmCpp`, x, ng, g, gs, w, narm, option, B)
+BWmCpp <- function(x, ng = 0L, g = 0L, gs = NULL, w = NULL, narm = TRUE, set_mean = 0, B = FALSE, fill = FALSE) {
+    .Call(`_collapse_BWmCpp`, x, ng, g, gs, w, narm, set_mean, B, fill)
 }
 
-BWlCpp <- function(x, ng = 0L, g = 0L, gs = NULL, w = NULL, narm = TRUE, option = FALSE, B = FALSE) {
-    .Call(`_collapse_BWlCpp`, x, ng, g, gs, w, narm, option, B)
+BWlCpp <- function(x, ng = 0L, g = 0L, gs = NULL, w = NULL, narm = TRUE, set_mean = 0, B = FALSE, fill = FALSE) {
+    .Call(`_collapse_BWlCpp`, x, ng, g, gs, w, narm, set_mean, B, fill)
 }
 
 fbstatsCpp <- function(x, ext = FALSE, ng = 0L, g = 0L, npg = 0L, pg = 0L, w = NULL, array = TRUE, setn = TRUE, gn = NULL) {
@@ -193,16 +193,16 @@ fprodlCpp <- function(x, ng = 0L, g = 0L, narm = TRUE, drop = TRUE) {
     .Call(`_collapse_fprodlCpp`, x, ng, g, narm, drop)
 }
 
-fscaleCpp <- function(x, ng = 0L, g = 0L, gs = NULL, w = NULL, narm = TRUE, stable_algo = TRUE) {
-    .Call(`_collapse_fscaleCpp`, x, ng, g, gs, w, narm, stable_algo)
+fscaleCpp <- function(x, ng = 0L, g = 0L, w = NULL, narm = TRUE, set_mean = 0, set_sd = 1) {
+    .Call(`_collapse_fscaleCpp`, x, ng, g, w, narm, set_mean, set_sd)
 }
 
-fscalemCpp <- function(x, ng = 0L, g = 0L, gs = NULL, w = NULL, narm = TRUE, stable_algo = TRUE) {
-    .Call(`_collapse_fscalemCpp`, x, ng, g, gs, w, narm, stable_algo)
+fscalemCpp <- function(x, ng = 0L, g = 0L, w = NULL, narm = TRUE, set_mean = 0, set_sd = 1) {
+    .Call(`_collapse_fscalemCpp`, x, ng, g, w, narm, set_mean, set_sd)
 }
 
-fscalelCpp <- function(x, ng = 0L, g = 0L, gs = NULL, w = NULL, narm = TRUE, stable_algo = TRUE) {
-    .Call(`_collapse_fscalelCpp`, x, ng, g, gs, w, narm, stable_algo)
+fscalelCpp <- function(x, ng = 0L, g = 0L, w = NULL, narm = TRUE, set_mean = 0, set_sd = 1) {
+    .Call(`_collapse_fscalelCpp`, x, ng, g, w, narm, set_mean, set_sd)
 }
 
 fsumCpp <- function(x, ng = 0L, g = 0L, narm = TRUE) {
