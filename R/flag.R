@@ -22,14 +22,14 @@ flag.default <- function(x, n = 1, g = NULL, t = NULL, fill = NA, stubs = TRUE, 
     }
     return(.Call(Cpp_flaglead,x,n,fill,nl,g,NULL,G_t(t),stubs))
   } else {
-    if(!is.GRP(g)) g = GRP(g, return.groups = FALSE)
+    if(!is.GRP(g)) g <- GRP.default(g, return.groups = FALSE)
     return(.Call(Cpp_flaglead,x,n,fill,g[[1L]],g[[2L]],g[[3L]],G_t(t),stubs))
   }
 }
 flag.pseries <- function(x, n = 1, fill = NA, stubs = TRUE, ...) {
   if(!missing(...)) stop("Unknown argument ", dotstostr(...))
   index <- unclass(attr(x, "index"))
-  if(length(index) > 2L) index <- c(interaction(index[-length(index)], drop = TRUE), index[length(index)])
+  if(length(index) > 2L) index <- c(finteraction(index[-length(index)]), index[length(index)])
   if(is.matrix(x))
   .Call(Cpp_flagleadm,x,n,fill,fnlevels(index[[1L]]),index[[1L]],NULL,index[[2L]],stubs) else
   .Call(Cpp_flaglead,x,n,fill,fnlevels(index[[1L]]),index[[1L]],NULL,index[[2L]],stubs)
@@ -44,7 +44,7 @@ flag.matrix <- function(x, n = 1, g = NULL, t = NULL, fill = NA, stubs = TRUE, .
     }
     .Call(Cpp_flagleadm,x,n,fill,nl,g,NULL,G_t(t),stubs)
   } else {
-    if(!is.GRP(g)) g <- GRP(g, return.groups = FALSE)
+    if(!is.GRP(g)) g <- GRP.default(g, return.groups = FALSE)
     .Call(Cpp_flagleadm,x,n,fill,g[[1L]],g[[2L]],g[[3L]],G_t(t),stubs)
   }
 }
@@ -80,14 +80,14 @@ flag.data.frame <- function(x, n = 1, g = NULL, t = NULL, fill = NA, stubs = TRU
       }
       .Call(Cpp_flagleadl,x,n,fill,nl,g,NULL,G_t(t),stubs)
     } else {
-      if(!is.GRP(g)) g <- GRP(g, return.groups = FALSE)
+      if(!is.GRP(g)) g <- GRP.default(g, return.groups = FALSE)
       .Call(Cpp_flagleadl,x,n,fill,g[[1L]],g[[2L]],g[[3L]],G_t(t),stubs)
     }
 }
 flag.pdata.frame <- function(x, n = 1, fill = NA, stubs = TRUE, ...) {
   if(!missing(...)) stop("Unknown argument ", dotstostr(...))
   index <- unclass(attr(x, "index"))
-  if(length(index) > 2L) index <- c(interaction(index[-length(index)], drop = TRUE), index[length(index)])
+  if(length(index) > 2L) index <- c(finteraction(index[-length(index)]), index[length(index)])
   .Call(Cpp_flagleadl,x,n,fill,fnlevels(index[[1L]]),index[[1L]],NULL,index[[2L]],stubs)
 }
 
@@ -121,13 +121,13 @@ L.data.frame <- function(x, n = 1, by = NULL, t = NULL, cols = is.numeric,
         gn <- ckmatch(all.vars(by), nam, "Unknown variables:")
         cols <- if(is.null(cols)) seq_along(x)[-gn] else cols2int(cols, x, nam)
       }
-      by <- if(length(gn) == 1L) at2GRP(x[[gn]]) else GRP(x, gn, return.groups = FALSE)
+      by <- if(length(gn) == 1L) at2GRP(x[[gn]]) else GRP.default(x, gn, return.groups = FALSE)
       if(!keep.ids) gn <- NULL
     } else {
       gn <- NULL
       if(!is.null(cols)) cols <- cols2int(cols, x, nam)
       if(!is.GRP(by)) by <- if(is.null(by)) list(0L, 0L, NULL) else if(is.atomic(by)) # Necessary for if by is passed externally !!
-        at2GRP(by) else GRP(by, return.groups = FALSE)
+        at2GRP(by) else GRP.default(by, return.groups = FALSE)
     }
 
     if(is.call(t)) {
@@ -159,7 +159,7 @@ L.data.frame <- function(x, n = 1, by = NULL, t = NULL, cols = is.numeric,
     }
     .Call(Cpp_flagleadl,x,n,fill,nl,by,NULL,G_t(t),stubs)
   } else {
-    if(!is.GRP(by)) by <- GRP(by, return.groups = FALSE)
+    if(!is.GRP(by)) by <- GRP.default(by, return.groups = FALSE)
     .Call(Cpp_flagleadl,x,n,fill,by[[1L]],by[[2L]],by[[3L]],G_t(t),stubs)
   }
 }
@@ -174,7 +174,7 @@ L.pdata.frame <- function(x, n = 1, cols = is.numeric, fill = NA, stubs = TRUE, 
     if(length(gn) && is.null(cols)) cols <- seq_along(x)[-gn]
   } else gn <- NULL
 
-  if(length(index) > 2L) index <- c(interaction(index[-length(index)], drop = TRUE), index[length(index)])
+  if(length(index) > 2L) index <- c(finteraction(index[-length(index)]), index[length(index)])
 
   if(!is.null(cols)) cols <- cols2int(cols, x, nam)
 

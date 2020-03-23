@@ -31,7 +31,7 @@ fsum.default <- function(x, g = NULL, TRA = NULL, na.rm = TRUE, use.g.names = TR
       #     return(`names<-`(.Call(Cpp_fsum,x,length(lev),g,na.rm), lev))
       #   } else return(.Call(Cpp_fsum,x,fnlevels(g),g,na.rm))
     } else {
-      if(!is.GRP(g)) g <- if(use.g.names) GRP(g) else GRP(g, return.groups = FALSE)
+      if(!is.GRP(g)) g <- if(use.g.names) GRP.default(g) else GRP.default(g, return.groups = FALSE)
       if(use.g.names) return(`names<-`(.Call(Cpp_fsum,x,g[[1L]],g[[2L]],na.rm), group_names.GRP(g))) else
         return(.Call(Cpp_fsum,x,g[[1L]],g[[2L]],na.rm))
     }
@@ -45,7 +45,7 @@ fsum.default <- function(x, g = NULL, TRA = NULL, na.rm = TRUE, use.g.names = TR
     #   g <- interaction(g)
     #   return(.Call(Cpp_TRA,x,.Call(Cpp_fsum,x,fnlevels(g),g,na.rm),g,TRAtoInt(TRA)))
     } else {
-      if(!is.GRP(g)) g <- GRP(g, return.groups = FALSE)
+      if(!is.GRP(g)) g <- GRP.default(g, return.groups = FALSE)
       return(.Call(Cpp_TRA,x,.Call(Cpp_fsum,x,g[[1L]],g[[2L]],na.rm),g[[2L]],TRAtoInt(TRA)))
     }
   }
@@ -71,7 +71,7 @@ fsum.matrix <- function(x, g = NULL, TRA = NULL, na.rm = TRUE, use.g.names = TRU
       #     return(`dimnames<-`(.Call(Cpp_fsumm,x,length(lev),g,na.rm,FALSE), list(lev, dimnames(x)[[2L]])))
       #   } else return(.Call(Cpp_fsumm,x,fnlevels(g),g,na.rm,FALSE))
     } else {
-      if(!is.GRP(g)) g <- if(use.g.names) GRP(g) else GRP(g, return.groups = FALSE)
+      if(!is.GRP(g)) g <- if(use.g.names) GRP.default(g) else GRP.default(g, return.groups = FALSE)
       if(use.g.names) return(`dimnames<-`(.Call(Cpp_fsumm,x,g[[1L]],g[[2L]],na.rm,FALSE), list(group_names.GRP(g), dimnames(x)[[2L]]))) else
         return(.Call(Cpp_fsumm,x,g[[1L]],g[[2L]],na.rm,FALSE))
     }
@@ -85,7 +85,7 @@ fsum.matrix <- function(x, g = NULL, TRA = NULL, na.rm = TRUE, use.g.names = TRU
       #   g <- interaction(g)
       #   return(.Call(Cpp_TRAm,x,.Call(Cpp_fsumm,x,fnlevels(g),g,na.rm,FALSE),g,TRAtoInt(TRA)))
     } else {
-      if(!is.GRP(g)) g <- GRP(g, return.groups = FALSE)
+      if(!is.GRP(g)) g <- GRP.default(g, return.groups = FALSE)
       return(.Call(Cpp_TRAm,x,.Call(Cpp_fsumm,x,g[[1L]],g[[2L]],na.rm,FALSE),g[[2L]],TRAtoInt(TRA)))
     }
   }
@@ -111,7 +111,7 @@ fsum.data.frame <- function(x, g = NULL, TRA = NULL, na.rm = TRUE, use.g.names =
       #     return(setRow.names(.Call(Cpp_fsuml,x,length(lev),g,na.rm,FALSE), lev))
       #   } else return(.Call(Cpp_fsuml,x,fnlevels(g),g,na.rm,FALSE))
     } else {
-      if(!is.GRP(g)) g <- if(use.g.names) GRP(g) else GRP(g, return.groups = FALSE)
+      if(!is.GRP(g)) g <- if(use.g.names) GRP.default(g) else GRP.default(g, return.groups = FALSE)
       if(use.g.names && !inherits(x, "data.table") && !is.null(groups <- group_names.GRP(g)))
         return(setRow.names(.Call(Cpp_fsuml,x,g[[1L]],g[[2L]],na.rm,FALSE), groups)) else
           return(.Call(Cpp_fsuml,x,g[[1L]],g[[2L]],na.rm,FALSE))
@@ -126,7 +126,7 @@ fsum.data.frame <- function(x, g = NULL, TRA = NULL, na.rm = TRUE, use.g.names =
       #   g <- interaction(g)
       #   return(.Call(Cpp_TRAl,x,.Call(Cpp_fsuml,x,fnlevels(g),g,na.rm,FALSE),g,TRAtoInt(TRA)))
     } else {
-      if(!is.GRP(g)) g <- GRP(g, return.groups = FALSE)
+      if(!is.GRP(g)) g <- GRP.default(g, return.groups = FALSE)
       return(.Call(Cpp_TRAl,x,.Call(Cpp_fsuml,x,g[[1L]],g[[2L]],na.rm,FALSE),g[[2L]],TRAtoInt(TRA)))
     }
   }

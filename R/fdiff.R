@@ -21,14 +21,14 @@ fdiff.default <- function(x, n = 1, diff = 1, g = NULL, t = NULL, fill = NA, stu
       }
       return(.Call(Cpp_fdiff,x,n,diff,fill,nl,g,NULL,G_t(t,wm=2L),stubs))
     } else {
-      if(!is.GRP(g)) g <- GRP(g, return.groups = FALSE)
+      if(!is.GRP(g)) g <- GRP.default(g, return.groups = FALSE)
       return(.Call(Cpp_fdiff,x,n,diff,fill,g[[1L]],g[[2L]],g[[3L]],G_t(t,wm=2L),stubs))
     }
 }
 fdiff.pseries <- function(x, n = 1, diff = 1, fill = NA, stubs = TRUE, ...) {
   if(!missing(...)) stop(sprintf("Unknown argument %s passed to fdiff.pseries", dotstostr(...)))
   index <- unclass(attr(x, "index"))
-  if(length(index) > 2L) index <- c(interaction(index[-length(index)], drop = TRUE), index[length(index)])
+  if(length(index) > 2L) index <- c(finteraction(index[-length(index)]), index[length(index)])
   if(is.matrix(x))
     .Call(Cpp_fdiffm,x,n,diff,fill,fnlevels(index[[1L]]),index[[1L]],NULL,index[[2L]],stubs) else
       .Call(Cpp_fdiff,x,n,diff,fill,fnlevels(index[[1L]]),index[[1L]],NULL,index[[2L]],stubs)
@@ -43,7 +43,7 @@ fdiff.matrix <- function(x, n = 1, diff = 1, g = NULL, t = NULL, fill = NA, stub
       }
       .Call(Cpp_fdiffm,x,n,diff,fill,nl,g,NULL,G_t(t,wm=2L),stubs)
     } else {
-      if(!is.GRP(g)) g <- GRP(g, return.groups = FALSE)
+      if(!is.GRP(g)) g <- GRP.default(g, return.groups = FALSE)
       .Call(Cpp_fdiffm,x,n,diff,fill,g[[1L]],g[[2L]],g[[3L]],G_t(t,wm=2L),stubs)
     }
 }
@@ -79,14 +79,14 @@ fdiff.data.frame <- function(x, n = 1, diff = 1, g = NULL, t = NULL, fill = NA, 
       }
       .Call(Cpp_fdiffl,x,n,diff,fill,nl,g,NULL,G_t(t,wm=2L),stubs)
     } else {
-      if(!is.GRP(g)) g <- GRP(g, return.groups = FALSE)
+      if(!is.GRP(g)) g <- GRP.default(g, return.groups = FALSE)
       .Call(Cpp_fdiffl,x,n,diff,fill,g[[1L]],g[[2L]],g[[3L]],G_t(t,wm=2L),stubs)
     }
 }
 fdiff.pdata.frame <- function(x, n = 1, diff = 1, fill = NA, stubs = TRUE, ...) {
   if(!missing(...)) stop(sprintf("Unknown argument %s passed to fdiff.pdata.frame", dotstostr(...)))
   index <- unclass(attr(x, "index"))
-  if(length(index) > 2L) index <- c(interaction(index[-length(index)], drop = TRUE), index[length(index)])
+  if(length(index) > 2L) index <- c(finteraction(index[-length(index)]), index[length(index)])
   .Call(Cpp_fdiffl,x,n,diff,fill,fnlevels(index[[1L]]),index[[1L]],NULL,index[[2L]],stubs)
 }
 
@@ -121,13 +121,13 @@ D.data.frame <- function(x, n = 1, diff = 1, by = NULL, t = NULL, cols = is.nume
         gn <- ckmatch(all.vars(by), nam)
         cols <- if(is.null(cols)) seq_along(x)[-gn] else cols2int(cols, x, nam)
       }
-      by <- if(length(gn) == 1L) at2GRP(x[[gn]]) else GRP(x, gn, return.groups = FALSE)
+      by <- if(length(gn) == 1L) at2GRP(x[[gn]]) else GRP.default(x, gn, return.groups = FALSE)
       if(!keep.ids) gn <- NULL
     } else {
       gn <- NULL
       if(!is.null(cols)) cols <- cols2int(cols, x, nam)
       if(!is.GRP(by)) by <- if(is.null(by)) list(0L, 0L, NULL) else if(is.atomic(by)) # Necessary for if by is passed externally !!
-        at2GRP(by) else GRP(by, return.groups = FALSE)
+        at2GRP(by) else GRP.default(by, return.groups = FALSE)
     }
 
     if(is.call(t)) {
@@ -159,7 +159,7 @@ D.data.frame <- function(x, n = 1, diff = 1, by = NULL, t = NULL, cols = is.nume
       }
       .Call(Cpp_fdiffl,x,n,diff,fill,nl,by,NULL,G_t(t,wm=2L),stubs)
     } else {
-      if(!is.GRP(by)) by <- GRP(by, return.groups = FALSE)
+      if(!is.GRP(by)) by <- GRP.default(by, return.groups = FALSE)
       .Call(Cpp_fdiffl,x,n,diff,fill,by[[1L]],by[[2L]],by[[3L]],G_t(t,wm=2L),stubs)
     }
 }
@@ -176,7 +176,7 @@ D.pdata.frame <- function(x, n = 1, diff = 1, cols = is.numeric, fill = NA, stub
     if(length(gn) && is.null(cols)) cols <- seq_along(x)[-gn]
   } else gn <- NULL
 
-  if(length(index) > 2L) index <- c(interaction(index[-length(index)], drop = TRUE), index[length(index)])
+  if(length(index) > 2L) index <- c(finteraction(index[-length(index)]), index[length(index)])
 
   if(!is.null(cols)) cols <- cols2int(cols, x, nam)
 
