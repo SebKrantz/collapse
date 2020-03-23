@@ -25,21 +25,26 @@ GRP.default <- function(X, by = NULL, sort = TRUE, order = 1L, na.last = TRUE,
   if(!missing(...)) stop("Unknown argument ", dotstostr(...))
   call <- match.call()
 
-  if(is.list(X) && is.null(by)) {
-    by <- seq_along(X)
-    namby <- attr(X, "names")
-  } else if(is.call(by)) {
-    namby <- all.vars(by)
-    by <- ckmatch(namby, attr(X, "names"))
-  } else if(is.null(by)) {
-    namby <- paste(all.vars(call), collapse = ".")  # deparse(substitute(X)) # all.vars is faster !!!
-  } else if(is.character(by)) {
-    namby <- by
-    by <- ckmatch(by, attr(X, "names"))
-  } else if(is.numeric(by)) {
-    by <- as.integer(by)
-    namby <- attr(X, "names")[by]
-  } else stop("by needs to be either a one-sided formula, character column names or column indices!")
+  if(is.list(X)) {
+    if(is.null(by)) {
+      by <- seq_along(X)
+      namby <- attr(X, "names")
+      if(is.null(namby)) attr(X, "names") <- namby <- paste0("Group.", by)
+    } else if(is.call(by)) {
+      namby <- all.vars(by)
+      by <- ckmatch(namby, attr(X, "names"))
+    } else if(is.character(by)) {
+      namby <- by
+      by <- ckmatch(by, attr(X, "names"))
+    } else if(is.numeric(by)) {
+      by <- as.integer(by)
+      namby <- attr(X, "names")[by]
+      if(is.null(namby)) {
+        namby <- paste0("Group.", seq_along(by))
+        attr(X, "names") <- paste0("Group.", seq_along(X)) # best ??
+      }
+    } else stop("by needs to be either a one-sided formula, character column names or column indices!")
+ } else namby <- paste(all.vars(call), collapse = ".")  # deparse(substitute(X)) # all.vars is faster !!!
 
   o <- forderv(X, by, TRUE, sort, order, na.last)
   f <- attr(o, "starts")
