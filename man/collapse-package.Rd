@@ -191,7 +191,7 @@ wlddev \%>\% group_by(region,income) \%>\% select(PCGDP,LIFEEX,ODA) \%>\% fmean(
 head(W(wlddev, ~ country, cols = 9:12))
 
 # Same but adding overall mean back after subtracting out group means
-head(W(wlddev, ~ country, cols = 9:12, add.global.mean = TRUE))
+head(W(wlddev, ~ country, cols = 9:12, mean = "overall.mean"))
 
 # Partialling out country and year fixed effects from 2 series (qF = quick-factor)
 head(HDW(wlddev, PCGDP + LIFEEX ~ qF(country) + qF(year)))
