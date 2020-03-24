@@ -38,7 +38,7 @@ test_that("fprod performs like base::prod", {
   expect_equal(fprod(x, f), BY(x, f, prod, na.rm = TRUE))
   expect_equal(fprod(x, f, na.rm = FALSE), BY(x, f, prod))
   expect_equal(fprod(xNA, f, na.rm = FALSE), BY(xNA, f, prod))
-  expect_equal(fprod(xNA, f), BY(xNA, f, prod, na.rm = TRUE))
+  expect_equal(na21(fprod(xNA, f)), BY(xNA, f, prod, na.rm = TRUE))
   expect_equal(fprod(m, g), BY(m, g, prod, na.rm = TRUE))
   expect_equal(fprod(m, g, na.rm = FALSE), BY(m, g, prod))
   expect_equal(fprod(mNA, g, na.rm = FALSE), BY(mNA, g, prod))
