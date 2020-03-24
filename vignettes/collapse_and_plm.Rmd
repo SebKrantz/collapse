@@ -133,14 +133,14 @@ head(fbetween(PCGDP), 30)
 head(fbetween(PCGDP, fill = TRUE), 30) 
 ```
 
-For `fwithin` there is also a second method of computation enabled by the argument `add.global.mean = TRUE`, which will add the overall mean of the series back to the data after subtracting out group means. This is to preserve the level of the data (and will only change the intercept when employed in a regression):
+In `fwithin` the `mean` argument allows to set an arbitrary data mean (different from 0) after the data is centered. In grouped centering task, as sensible choice for such an added mean would be the overall mean of the data series, enabled by the option `mean = "overall.mean". This will add the overall mean of the series back to the data after subtracting out group means, and thus preserve the level of the data (and will only change the intercept when employed in a regression):
 
 ```{r}
 # This performed standard grouped centering
 head(fwithin(LIFEEX))                          
 
 # This adds the overall average Life-Expectancy (across countries) to the country-demeaned series
-head(fwithin(LIFEEX, add.global.mean = TRUE))  
+head(fwithin(LIFEEX, mean = "overall.mean"))  
 ```
 
 `fbetween` and `fwithin` can also be applied to panel-data.frames where they will perform these computations variable by variable:
@@ -152,7 +152,7 @@ head(fbetween(num_vars(pwlddev), fill = TRUE), 3)
 
 head(fwithin(num_vars(pwlddev)), 3)
 
-head(fwithin(num_vars(pwlddev), add.global.mean = TRUE), 3)
+head(fwithin(num_vars(pwlddev), mean = "overall.mean"), 3)
 ```
 
 Now next to `fbetween` and `fwithin` there also exist short versions `B` and `W`, which I termed *transformation operators*. These are essentially wrappers around `fbetween` and `fwithin` and provide the same functionality, but are more parsimonious to employ in regression formulas and also offer additional features when applied to panel-data.frames. For panel-series, `B` and `W` are exact analogues to `fbetween` and `fwithin`, just under a shorter name:
@@ -161,10 +161,10 @@ Now next to `fbetween` and `fwithin` there also exist short versions `B` and `W`
 identical(fbetween(PCGDP), B(PCGDP))
 identical(fbetween(PCGDP, fill = TRUE), B(PCGDP, fill = TRUE))
 identical(fwithin(PCGDP), W(PCGDP))
-identical(fwithin(PCGDP, add.global.mean = TRUE), W(PCGDP, add.global.mean = TRUE))
+identical(fwithin(PCGDP, mean = "overall.mean"), W(PCGDP, mean = "overall.mean"))
 ```
 
-When applied to panel-data.frames, `B` and `W` offer some additional utility by (a) allowing you to select colums to transform using the `cols` argument (default is `cols = is.numeric`, so by default all numeric columns will be selected for transformation), (b) allowing you to add a prefix to the transformed columns with the `stub` argument (default is `stub = "B."` for `B` and `stub = "W."` for `W`) and (c) preserving the panel-id's with the `keep.ids` argument (default `keep.ids = TRUE`):
+When applied to panel-data.frames, `B` and `W` offer some additional utility by (a) allowing you to select columns to transform using the `cols` argument (default is `cols = is.numeric`, so by default all numeric columns will be selected for transformation), (b) allowing you to add a prefix to the transformed columns with the `stub` argument (default is `stub = "B."` for `B` and `stub = "W."` for `W`) and (c) preserving the panel-id's with the `keep.ids` argument (default `keep.ids = TRUE`):
 
 ```{r}
 head(B(pwlddev), 3)
@@ -184,10 +184,10 @@ head(B(pwlddev, w = ~ ODA), 3)
 head(W(pwlddev, w = ~ ODA, cols = c("PCGDP","LIFEEX","GINI")), 3)
 
 # This centers values on the ODA-weighted group mean and also adds the overall ODA-weighted mean of the data
-head(W(pwlddev, w = ~ ODA, cols = c("PCGDP","LIFEEX","GINI"), add.global.mean = TRUE), 3)
+head(W(pwlddev, w = ~ ODA, cols = c("PCGDP","LIFEEX","GINI"), mean = "overall.mean"), 3)
 ```
 
-As shown above, with `B` and `W` the weight column can also be passed as a formula or character string, whereas `fbetween` and `fwithin` require the all inputs to be passed directly in terms of data (i.e. `fbetween(get_vars(pwlddev, 9:11), w = pwlddev$ODA)`), and the weight vector or id colums are never preserved in the output. Therefore in most applications `B` and `W` are probably more convenient for quick use, whereas `fbetween` and `fwithin` are the preferred programmers choice, also because they have a little less R-overhead which makes them a tiny bit faster.
+As shown above, with `B` and `W` the weight column can also be passed as a formula or character string, whereas `fbetween` and `fwithin` require the all inputs to be passed directly in terms of data (i.e. `fbetween(get_vars(pwlddev, 9:11), w = pwlddev$ODA)`), and the weight vector or id columns are never preserved in the output. Therefore in most applications `B` and `W` are probably more convenient for quick use, whereas `fbetween` and `fwithin` are the preferred programmers choice, also because they have a little less R-overhead which makes them a tiny bit faster.
 
 ### 1.2 Higher-Dimensional Between and Within Transformations
 
@@ -280,13 +280,36 @@ head(STD(pwlddev, cols = 9:12))
 head(STD(pwlddev, cols = 9:12, effect = "year"))
 ```
 
-Scaling without centering can be done with the `fsd` function using:
+More customized scaling can be done with the help of the `mean` and `sd` arguments to `fscale / STD`. By default `mean = 0` and `sd = 1`, but these could be assigned any numeric values:
 
 ```{r}
-head(fsd(get_vars(pwlddev, 9:12), pwlddev$iso3c, TRA = "/"))
+# This will scale the data such that mean mean within each country is 5 and the standard deviation is 3
+qsu(fscale(pwlddev$PCGDP, mean = 5, sd = 3))
+```
+Even further customization (i.e. setting means and standard deviations for each group and / or each column) can of course be achieved by calling `TRA` on the result of `fscale` to sweep out an appropriate set of means and standard deviations. 
+
+Scaling without centering can be done with the option `mean = FALSE`. This will also preserve the mean of the data overall and within each group:
+```{r}
+# Scaling without centering: Mean preserving with fscale / STD
+qsu(fscale(pwlddev$PCGDP, mean = FALSE, sd = 3))
+
+# Scaling without centering can also be done using fsd, but this does not preserve the mean
+qsu(fsd(pwlddev$PCGDP, index(pwlddev, 1), TRA = "/"))
+
+# Again, the *Fast Statistical Functions* in *collapse* do not have methods for *pseries* or *pdata.frame*'s (yet). 
 ```
 
-Again, the *Fast Statistical Functions* in *collapse* do not have methods for *pseries* or *pdata.frame*'s (yet). 
+Finally a special kind of data harmonization in the first two moments can be done by setting `mean = "overall.mean"` and `sd = "within.sd"` in a grouped scaling task. This will harmonize the data across groups such that the mean of each group is equal to the overall data mean and the standard deviation equal to the within standard deviation (= the standard deviation calculated on the group-centered series):
+
+```{r}
+fmean(pwlddev$PCGDP)  # Overall mean
+fsd(W(pwlddev$PCGDP)) # Within sd
+
+# Scaling and centerin such that the mean of each country is the overall mean, and the sd of each country is the within sd
+qsu(fscale(pwlddev$PCGDP, mean = "overall.mean", sd = "within.sd"))
+```
+
+All of this seamlessly generalizes to weighted scaling an centering, using the `w` argument to add a weight vector.
 
 ### 1.4 Panel Lags / Leads, Differences and Growth Rates
 
@@ -563,7 +586,7 @@ Efficient summary statistics for panel data have long been implemented in other 
 qsu(pwlddev, cols = 9:12, higher = TRUE)
 ```
 
-Key statistics to look at in this summary are the sample size and the standard-deviation decomposed into the between-individuals and the within-individuals standard-deviation: For GDP per Capita we have 8995 observations in the panel series for 203 countries, with on average 44.31 observations (time-periods T) per country. The between-country standard deviation is 19600 USD, around 3-times larger than the within-country (over-time) standard deviation of 6300 USD. Regarding the mean, the Between-Mean computed as a cross-sectional average of country averages usually differs slightly from the overall average taken across all data points. The within-transformed data is computed and summarized with the overall mean added back (i.e. as in `fwithin(PCGDP, add.global.mean = TRUE)`). 
+Key statistics to look at in this summary are the sample size and the standard-deviation decomposed into the between-individuals and the within-individuals standard-deviation: For GDP per Capita we have 8995 observations in the panel series for 203 countries, with on average 44.31 observations (time-periods T) per country. The between-country standard deviation is 19600 USD, around 3-times larger than the within-country (over-time) standard deviation of 6300 USD. Regarding the mean, the Between-Mean computed as a cross-sectional average of country averages usually differs slightly from the overall average taken across all data points. The within-transformed data is computed and summarized with the overall mean added back (i.e. as in `fwithin(PCGDP, mean = "overall.mean")`). 
 
 We can also do groupwise panel-statistics and `qsu` also supports weights. For the sake of illustration, below I summarize the data by income group with unit weights^[Which of course amounts to the same as omitting the weights]:
 
@@ -758,12 +781,13 @@ Now the main problem arises from $E[Z_{2i}\alpha_i] \neq 0$, which would usually
 HT_est <- function(y, X1, Z2, X2 = NULL, Z1 = NULL, time.FE = FALSE) {
   
   # Create matrix of independent variables
-  X <- do.call(cbind, c(X1, X2, Z1, Z2)) 
+  X <- cbind(Intercept = 1, do.call(cbind, c(X1, X2, Z1, Z2)))
   
   # Create instrument matrix: if time.FE, higher-order demean X1 and X2, else normal demeaning
-  IVS <- do.call(cbind, c(if(time.FE) fHDwithin(X1, na.rm = FALSE) else fwithin(X1, na.rm = FALSE), 
+  IVS <- cbind(Intercept = 1, do.call(cbind, 
+               c(if(time.FE) fHDwithin(X1, na.rm = FALSE) else fwithin(X1, na.rm = FALSE), 
                  if(is.null(X2)) X2 else if(time.FE) fHDwithin(X2, na.rm = FALSE) else fwithin(X2, na.rm = FALSE),
-                 Z1, fbetween(X1, na.rm = FALSE)))
+                 Z1, fbetween(X1, na.rm = FALSE))))
   
   if(length(IVS) == length(X)) { # The IV estimator case
     return(drop(solve(crossprod(IVS, X), crossprod(IVS, y))))
@@ -875,7 +899,7 @@ microbenchmark(HT_est = HT_est(y = dat$LIFEEX,     # The estimator as before
                       time.FE = TRUE))
 ```
 
-At around 100000 obs and 13000 groups in an unbalanced panel, the computation involving 3 grouped centering and 1 grouped averaging task as well as 2 list-to matrix conversions and an IV-procedure took on about 10 milliseconds with only individual effects, and about 40 - 45 milliseconds with individual and time-fixed effects (projected out iteratively). This should leave some room for running this on much larger data, and even for implementing a bootstrap standard error at this sample size. 
+At around 100000 obs and 13000 groups in an unbalanced panel, the computation involving 3 grouped centering and 1 grouped averaging task as well as 2 list-to matrix conversions and an IV-procedure took about 10 milliseconds with only individual effects, and about 40 - 45 milliseconds with individual and time-fixed effects (projected out iteratively). This should leave some room for running this on much larger data, and even for implementing a bootstrap standard error at this sample size. 
 ```{r, echo=FALSE}
 options(oldopts)
 ```

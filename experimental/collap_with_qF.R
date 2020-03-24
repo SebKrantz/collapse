@@ -34,22 +34,23 @@ collap <- function(X, by, FUN = fmean, catFUN = fmode, cols = NULL, custom = NUL
           v[numby] <- FALSE
         }
       }
-    by <- GRP.default(X, numby, sort = sort.row, return.groups = keep.by)
+      if(length(numby) == 1L) by <- qF(X[[numby]], ordered = sort.row, na.exclude = FALSE) else
+                              by <- GRP.default(X, numby, sort = sort.row, return.groups = keep.by)
   } else if(is.atomic(by)) {
     namby <- deparse(substitute(by))
     numby <- 1L
     if(!customl) if(is.null(cols)) vl <- FALSE else v <- cols2log(cols, X, nam)
-    by <- GRP.default(by, sort = sort.row, return.groups = keep.by)
+    if(!is.factor(by)) by <- qF(by, ordered = sort.row, na.exclude = FALSE)
   } else {
     if(!customl) if(is.null(cols)) vl <- FALSE else v <- cols2log(cols, X, nam)
     if(!is.GRP(by)) {
       numby <- seq_along(by)
       namby <- attr(by, "names") # faster if and only if by is a data.frame
-      if(is.null(namby)) namby <- paste0("Group.", numby)
+      if(is.null(namby)) namby <- paste0("GRP.", numby)
       by <- GRP.default(by, numby, sort = sort.row, return.groups = keep.by)
     } else {
       namby <- by[[5L]]
-      if(is.null(namby)) namby <- paste0("Group.", seq_along(by[[4L]])) # necessary ??
+      if(is.null(namby)) namby <- paste0("GRP.", seq_along(by[[4L]])) # necessary ??
       numby <- seq_along(namby)
     }
   }
@@ -96,7 +97,7 @@ collap <- function(X, by, FUN = fmean, catFUN = fmode, cols = NULL, custom = NUL
       lr <- nul + nnul + keep.by
       res <- vector("list", lr)
         if(keep.by) {
-          res[[1L]] <- list(by[[4L]]) # nah... could add later using "c" ??
+          res[[1L]] <- if(is.atomic(by)) list(`names<-`(list(unique_factor(by)), namby)) else list(by[[4L]]) # nah... could add later using "c" ??
           ind <- 2L
         } else ind <- 1L
         if(nul) {
@@ -135,7 +136,7 @@ collap <- function(X, by, FUN = fmean, catFUN = fmode, cols = NULL, custom = NUL
       ind <- 1L
     } else {
       res <- vector("list", 2L)
-      res[[1L]] <- list(by[[4L]]) # nah... could add later using "c" ??
+      res[[1L]] <- if(is.atomic(by)) list(`names<-`(list(unique_factor(by)), namby)) else list(by[[4L]]) # nah... could add later using "c" ??
       ind <- 2L
     }
     custom <- lapply(custom, cols2int, X, nam) # could integrate below, but then reorder doesn't work !!
@@ -210,7 +211,8 @@ collapv <- function(X, by, FUN = fmean, catFUN = fmode, cols = NULL, custom = NU
   # identifying by
   numby <- cols2int(by, X, nam)
   namby <- nam[numby]
-  by <- GRP.default(X, numby, sort = sort.row, return.groups = keep.by)
+  by <- if(length(numby) == 1L) qF(X[[numby]], ordered = sort.row, na.exclude = FALSE) else
+         GRP.default(X, numby, sort = sort.row, return.groups = keep.by)
 
   if(!customl) {
 
@@ -252,7 +254,7 @@ collapv <- function(X, by, FUN = fmean, catFUN = fmode, cols = NULL, custom = NU
       lr <- nul + nnul + keep.by
       res <- vector("list", lr)
       if(keep.by) {
-        res[[1L]] <- list(by[[4L]]) # nah... could add later using "c" ??
+        res[[1L]] <- if(is.atomic(by)) list(`names<-`(list(unique_factor(by)), namby)) else list(by[[4L]]) # nah... could add later using "c" ??
         ind <- 2L
       } else ind <- 1L
       if(nul) {
@@ -291,7 +293,7 @@ collapv <- function(X, by, FUN = fmean, catFUN = fmode, cols = NULL, custom = NU
       ind <- 1L
     } else {
       res <- vector("list", 2L)
-      res[[1L]] <- list(by[[4L]]) # nah... could add later using "c" ??
+      res[[1L]] <- if(is.atomic(by)) list(`names<-`(list(unique_factor(by)), namby)) else list(by[[4L]]) # nah... could add later using "c" ??
       ind <- 2L
     }
     custom <- lapply(custom, cols2int, X, nam) # could integrate below, but then reorder doesn't work !!

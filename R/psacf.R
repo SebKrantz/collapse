@@ -19,7 +19,7 @@ psacf.default <- function(x, g, t = NULL, lag.max = NULL, type = c("correlation"
   series <- deparse(substitute(x))
   getacf <- function(ng, g) {
     if(is.null(t)) message("Panel Series ACF computed without timevar: Assuming ordered data") else if(!is.nmfactor(t))
-    t <- if(is.atomic(t)) qG(t, na.exclude = FALSE) else GRP(t, return.groups = FALSE)[[2L]] # if(.Internal(islistfactor(t, FALSE))) interaction(t) else
+    t <- if(is.atomic(t)) qG(t, na.exclude = FALSE) else GRP.default(t, return.groups = FALSE)[[2L]] # if(.Internal(islistfactor(t, FALSE))) interaction(t) else
     if(gscale) x <- fscaleCpp(x,ng,g)
     if(typei == 2L)
       cov(x, .Call(Cpp_flaglead,x,0:lag.max,NA,ng,g,NULL,t,FALSE), use = "pairwise.complete.obs") else
@@ -33,7 +33,7 @@ psacf.default <- function(x, g, t = NULL, lag.max = NULL, type = c("correlation"
     if(is.null(lag.max)) lag.max <- round(2*sqrt(length(x)/ng))
     acf <- getacf(ng, g)
   } else {
-    if(!is.GRP(g)) g <- GRP(g, return.groups = FALSE)
+    if(!is.GRP(g)) g <- GRP.default(g, return.groups = FALSE)
     if(is.null(lag.max)) lag.max <- round(2*sqrt(length(x)/g[[1L]]))
     acf <- getacf(g[[1L]], g[[2L]])
   }
@@ -67,11 +67,11 @@ psacf.data.frame <- function(x, by, t = NULL, cols = is.numeric, lag.max = NULL,
       by <- ckmatch(all.vars(by), nam)
       v <- if(is.null(cols)) seq_along(x)[-by] else fsetdiff(cols2int(cols, x, nam), by)
     }
-    by <- if(length(by) == 1L) x[[by]] else GRP(x, by, return.groups = FALSE)
+    by <- if(length(by) == 1L) x[[by]] else GRP.default(x, by, return.groups = FALSE)
     if(is.call(t)) { # If time-variable supplied !!
       t <- ckmatch(all.vars(t), nam, "Unknown time variable:")
       v <- fsetdiff(v, t)
-      t <- if(length(t) == 1L) x[[t]] else GRP(x, t, return.groups = FALSE)
+      t <- if(length(t) == 1L) x[[t]] else GRP.default(x, t, return.groups = FALSE)
     }
     x <- x[v]
   } else if(!is.null(cols)) x <- x[cols2int(cols, x, names(x))]
@@ -81,7 +81,7 @@ psacf.data.frame <- function(x, by, t = NULL, cols = is.numeric, lag.max = NULL,
   attributes(x) <- NULL # already class is 0... Necessayr ??
   getacf <- function(ng, by) {
     if(is.null(t)) message("Panel Series ACF computed without timevar: Assuming ordered data") else if(!is.nmfactor(t))
-      t <- if(is.atomic(t)) qG(t, na.exclude = FALSE) else GRP(t, return.groups = FALSE)[[2L]]
+      t <- if(is.atomic(t)) qG(t, na.exclude = FALSE) else GRP.default(t, return.groups = FALSE)[[2L]]
     if(gscale) x <- fscalelCpp(x,ng,by)
     acf <- array(numeric(0), c(lag.max+1, lx, lx))
     fun <- if(typei == 2L) cov else function(x, y, ...) cov(x, y, ...)/fvar.default(x) # cor
@@ -99,7 +99,7 @@ psacf.data.frame <- function(x, by, t = NULL, cols = is.numeric, lag.max = NULL,
     if(is.null(lag.max)) lag.max <- round(2*sqrt(nrx/ng))
     acf <- getacf(ng, by)
   } else {
-    if(!is.GRP(by)) by <- GRP(by, return.groups = FALSE)
+    if(!is.GRP(by)) by <- GRP.default(by, return.groups = FALSE)
     if(is.null(lag.max)) lag.max <- round(2*sqrt(nrx/by[[1L]]))
     acf <- getacf(by[[1L]], by[[2L]])
   }
@@ -126,7 +126,7 @@ psacf.data.frame <- function(x, by, t = NULL, cols = is.numeric, lag.max = NULL,
 psacf.pseries <- function(x, lag.max = NULL, type = c("correlation", "covariance","partial"), plot = TRUE, gscale = TRUE, ...) {
   if(!is.numeric(x)) stop("'x' must be a numeric pseries ")
   index <- unclass(attr(x, "index"))
-  if(length(index) > 2L) index <- c(interaction(index[-length(index)], drop = TRUE), index[length(index)])
+  if(length(index) > 2L) index <- c(finteraction(index[-length(index)]), index[length(index)])
   nl <- fnlevels(index[[1L]])
   typei <- switch(type[1L], correlation = 1L, covariance = 2L, partial = 3L, stop("Unknown type!")) # match.arg(type)
   series <- deparse(substitute(x)) # faster ??
@@ -161,7 +161,7 @@ psacf.pdata.frame <- function(x, cols = is.numeric, lag.max = NULL, type = c("co
   if(!is.null(cols)) x <- x[cols2int(cols, x, names(x))]
   lx <- length(x)
   snames <- names(x)
-  if(length(index) > 2L) index <- c(interaction(index[-length(index)], drop = TRUE), index[length(index)])
+  if(length(index) > 2L) index <- c(finteraction(index[-length(index)]), index[length(index)])
   ng <- fnlevels(index[[1L]])
   attributes(x) <- NULL # necessary after unclass above ??
     if(is.null(lag.max)) lag.max <- round(2*sqrt(nrx/ng))
@@ -221,7 +221,7 @@ psccf.default <- function(x, y, g, t = NULL, lag.max = NULL, type = c("correlati
   snames <- paste(c(deparse(substitute(x))[1L], deparse(substitute(y))[1L]), collapse = " & ")
   getccf <- function(ng, g) {
     if(is.null(t)) message("Panel Series ACF computed without timevar: Assuming ordered data") else if(!is.nmfactor(t))
-      t <- if(is.atomic(t)) qG(t, na.exclude = FALSE) else GRP(t, return.groups = FALSE)[[2L]] # else if(.Internal(islistfactor(t, FALSE))) interaction(t)
+      t <- if(is.atomic(t)) qG(t, na.exclude = FALSE) else GRP.default(t, return.groups = FALSE)[[2L]] # else if(.Internal(islistfactor(t, FALSE))) interaction(t)
     if(gscale) {
       x <- fscaleCpp(x,ng,g)
       y <- fscaleCpp(y,ng,g)
@@ -238,7 +238,7 @@ psccf.default <- function(x, y, g, t = NULL, lag.max = NULL, type = c("correlati
     if(is.null(lag.max)) lag.max <- round(2*sqrt(lx/ng))
     acf <- getccf(ng, g)
   } else {
-    if(!is.GRP(g)) g <- GRP(g, return.groups = FALSE)
+    if(!is.GRP(g)) g <- GRP.default(g, return.groups = FALSE)
     if(is.null(lag.max)) lag.max <- round(2*sqrt(lx/g[[1L]]))
     acf <- getccf(g[[1L]], g[[2L]])
   }
@@ -262,7 +262,7 @@ psccf.pseries <- function(x, y, lag.max = NULL, type = c("correlation", "covaria
   index <- attr(x, "index")
   if(!identical(index,attr(y,"index"))) stop("index of x and y differs")
   class(index) <- NULL
-  if(length(index) > 2L) index <- c(interaction(index[-length(index)], drop = TRUE), index[length(index)])
+  if(length(index) > 2L) index <- c(finteraction(index[-length(index)]), index[length(index)])
   nl <- fnlevels(index[[1L]])
   typei <- switch(type[1L], correlation = 1L, covariance = 2L, partial = 3L, stop("Unknown type!")) # match.arg(type)
   snames <- paste(c(deparse(substitute(x))[1L], deparse(substitute(y))[1L]), collapse = " & ")

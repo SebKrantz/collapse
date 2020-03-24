@@ -31,10 +31,11 @@ BY.default <- function(X, g, FUN, ..., use.g.names = TRUE, sort = TRUE,
                        expand.wide = FALSE, parallel = FALSE, mc.cores = 1L,
                        return = c("same","list")) { # what about ... in those other internal calls ???.
   if(!is.atomic(X)) stop("X needs to be an atomic vector") # redundant ??
+  if(!(is.function(FUN) || is.character(FUN))) stop("FUN needs to be a function")
   aplyfun <- if(parallel) function(...) mclapply(..., mc.cores = mc.cores) else lapply
   simplify <- switch(return[1L], same = TRUE, list = FALSE, stop("BY.default only supports same (simplified) and list output!"))
   if(!is.factor(g)) g <- if(is.GRP(g)) as.factor.GRP(g) else if(is.list(g))
-                         as.factor.GRP(GRP(g, sort = sort)) else qF(g, ordered = sort, na.exclude = FALSE)
+                         as.factor.GRP(GRP.default(g, sort = sort)) else qF(g, ordered = sort, na.exclude = FALSE)
     res <- aplyfun(split.default(X, g), FUN, ...)
     if(simplify) {
       if(expand.wide) {
@@ -68,11 +69,13 @@ BY.default <- function(X, g, FUN, ..., use.g.names = TRUE, sort = TRUE,
 BY.data.frame <- function(X, g, FUN, ..., use.g.names = TRUE, sort = TRUE,
                           expand.wide = FALSE, parallel = FALSE, mc.cores = 1L,
                           return = c("same","matrix","data.frame","list")) {
+  if(!is.list(X)) stop("X needs to be a list")
+  if(!(is.function(FUN) || is.character(FUN))) stop("FUN needs to be a function")
   aplyfun <- if(parallel) function(...) mclapply(..., mc.cores = mc.cores) else lapply
   return <- switch(return[1L], same = 1L, matrix = 2L, data.frame = 1L, list = 0L,
                    stop("Unknown return option!"))
   if(!is.factor(g)) g <- if(is.GRP(g)) as.factor.GRP(g) else if(is.list(g))
-                    as.factor.GRP(GRP(g, sort = sort)) else qF(g, ordered = sort, na.exclude = FALSE)
+                    as.factor.GRP(GRP.default(g, sort = sort)) else qF(g, ordered = sort, na.exclude = FALSE)
   if(return != 0L) {
     ax <- attributes(X)
     if(expand.wide) {
@@ -137,11 +140,13 @@ BY.data.frame <- function(X, g, FUN, ..., use.g.names = TRUE, sort = TRUE,
 BY.matrix <- function(X, g, FUN, ..., use.g.names = TRUE, sort = TRUE,
                       expand.wide = FALSE, parallel = FALSE, mc.cores = 1L,
                       return = c("same","matrix","data.frame","list")) {
+  if(!is.matrix(X)) stop("X needs to be a matrix")
+  if(!(is.function(FUN) || is.character(FUN))) stop("FUN needs to be a function")
   aplyfun <- if(parallel) function(...) parallel::mclapply(..., mc.cores = mc.cores) else lapply
   return <- switch(return[1L], same = 2L, matrix = 2L, data.frame = 1L, list = 0L,
                    stop("Unknown return option!"))
   if(!is.factor(g)) g <- if(is.GRP(g)) as.factor.GRP(g) else if(is.list(g))
-    as.factor.GRP(GRP(g, sort = sort)) else qF(g, ordered = sort, na.exclude = FALSE)
+    as.factor.GRP(GRP.default(g, sort = sort)) else qF(g, ordered = sort, na.exclude = FALSE)
   if(return != 0L) {
     ax <- attributes(X)
     if(expand.wide) {

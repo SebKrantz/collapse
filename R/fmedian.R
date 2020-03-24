@@ -26,7 +26,7 @@ fmedian.default <- function(x, g = NULL, TRA = NULL, na.rm = TRUE, use.g.names =
         }
       }
     } else {
-      if(!is.GRP(g)) g <- if(use.g.names) GRP(g) else GRP(g, return.groups = FALSE)
+      if(!is.GRP(g)) g <- if(use.g.names) GRP.default(g) else GRP.default(g, return.groups = FALSE)
       if(use.g.names) return(`names<-`(.Call(Cpp_fmedian,x,g[[1L]],g[[2L]],g[[3L]],na.rm), group_names.GRP(g))) else
         return(.Call(Cpp_fmedian,x,g[[1L]],g[[2L]],g[[3L]],na.rm))
     }
@@ -37,7 +37,7 @@ fmedian.default <- function(x, g = NULL, TRA = NULL, na.rm = TRUE, use.g.names =
         return(.Call(Cpp_TRA,x,.Call(Cpp_fmedian,x,attr(g,"N.groups"),g,NULL,na.rm),g,TRAtoInt(TRA)))
       }
     } else {
-      if(!is.GRP(g)) g <- GRP(g, return.groups = FALSE)
+      if(!is.GRP(g)) g <- GRP.default(g, return.groups = FALSE)
       return(.Call(Cpp_TRA,x,.Call(Cpp_fmedian,x,g[[1L]],g[[2L]],g[[3L]],na.rm),g[[2L]],TRAtoInt(TRA)))
     }
   }
@@ -57,7 +57,7 @@ fmedian.matrix <- function(x, g = NULL, TRA = NULL, na.rm = TRUE, use.g.names = 
         }
       }
     } else {
-      if(!is.GRP(g)) g <- if(use.g.names) GRP(g) else GRP(g, return.groups = FALSE)
+      if(!is.GRP(g)) g <- if(use.g.names) GRP.default(g) else GRP.default(g, return.groups = FALSE)
       if(use.g.names) return(`dimnames<-`(.Call(Cpp_fmedianm,x,g[[1L]],g[[2L]],g[[3L]],na.rm,FALSE), list(group_names.GRP(g), dimnames(x)[[2L]]))) else
         return(.Call(Cpp_fmedianm,x,g[[1L]],g[[2L]],g[[3L]],na.rm,FALSE))
     }
@@ -68,7 +68,7 @@ fmedian.matrix <- function(x, g = NULL, TRA = NULL, na.rm = TRUE, use.g.names = 
         return(.Call(Cpp_TRAm,x,.Call(Cpp_fmedianm,x,attr(g,"N.groups"),g,NULL,na.rm,FALSE),g,TRAtoInt(TRA)))
       }
     } else {
-      if(!is.GRP(g)) g <- GRP(g, return.groups = FALSE)
+      if(!is.GRP(g)) g <- GRP.default(g, return.groups = FALSE)
       return(.Call(Cpp_TRAm,x,.Call(Cpp_fmedianm,x,g[[1L]],g[[2L]],g[[3L]],na.rm,FALSE),g[[2L]],TRAtoInt(TRA)))
     }
   }
@@ -88,7 +88,7 @@ fmedian.data.frame <- function(x, g = NULL, TRA = NULL, na.rm = TRUE, use.g.name
         }
       }
     } else {
-      if(!is.GRP(g)) g <- if(use.g.names) GRP(g) else GRP(g, return.groups = FALSE)
+      if(!is.GRP(g)) g <- if(use.g.names) GRP.default(g) else GRP.default(g, return.groups = FALSE)
       if(use.g.names && !inherits(x, "data.table") && !is.null(groups <- group_names.GRP(g)))
         return(setRow.names(.Call(Cpp_fmedianl,x,g[[1L]],g[[2L]],g[[3L]],na.rm,FALSE), groups)) else
           return(.Call(Cpp_fmedianl,x,g[[1L]],g[[2L]],g[[3L]],na.rm,FALSE))
@@ -100,7 +100,7 @@ fmedian.data.frame <- function(x, g = NULL, TRA = NULL, na.rm = TRUE, use.g.name
         return(.Call(Cpp_TRAl,x,.Call(Cpp_fmedianl,x,attr(g,"N.groups"),g,NULL,na.rm,FALSE),g,TRAtoInt(TRA)))
       }
     } else {
-      if(!is.GRP(g)) g <- GRP(g, return.groups = FALSE)
+      if(!is.GRP(g)) g <- GRP.default(g, return.groups = FALSE)
       return(.Call(Cpp_TRAl,x,.Call(Cpp_fmedianl,x,g[[1L]],g[[2L]],g[[3L]],na.rm,FALSE),g[[2L]],TRAtoInt(TRA)))
     }
   }

@@ -41,12 +41,12 @@ getfl <- function(mf) {
       if(tvec[2] != 0) fctdat[(ctvec[1]+1):ctvec[2]] <- lapply(mf[globalslopes], function(x)
         setAttributes(rep(1L, NROW(x)), list(levels = "1", class = "factor", x = x)))
       if(tvec[3] != 0)
-        fctdat[(ctvec[2]+1):ctvec[3]] <- lapply(intterms[fctfct], function(x) if(length(x) == 2L) do.call(`:`, mf[x]) else as.factor.GRP(GRP(mf[x]))) # interaction(mf[x])) # or as.factor.GRP(GRP(mf[x]))
+        fctdat[(ctvec[2]+1):ctvec[3]] <- lapply(intterms[fctfct], function(x) if(length(x) == 2L) do.call(`:`, mf[x]) else as.factor.GRP(GRP.default(mf[x]))) # interaction(mf[x])) # or as.factor.GRP(GRP(mf[x]))
       if(tvec[4] != 0)
         fctdat[(ctvec[3]+1):ctvec[4]] <- lapply(intterms[!fctfct], function(x) {
           f <- x & facts
           nf <- x & !f
-          f <- if(sum(f) == 1) mf[[which(f)]] else if(sum(f) == 2) do.call(`:`, mf[f]) else as.factor.GRP(GRP(mf[f])) # interaction(mf[f])
+          f <- if(sum(f) == 1) mf[[which(f)]] else if(sum(f) == 2) do.call(`:`, mf[f]) else as.factor.GRP(GRP.default(mf[f])) # interaction(mf[f])
           attr(f, "x") <- if(sum(nf) > 1) do.call("*", mf[nf]) else mf[[which(nf)]]
           return(f)
         })

@@ -431,7 +431,7 @@ GGDC10S %>%
 
 ```
 
-It is also possible to center data points on the global mean, which is achieved by subtracting out group means and adding the overall mean of the data again: 
+It is also possible to center data points on the overall mean, which is achieved by subtracting out group means and adding the overall mean of the data again: 
 ```{r}
 # This group-centers data on the overall mean of the data
 GGDC10S %>% 
@@ -525,20 +525,20 @@ GGDC10S %>% # Same as ... %>% fmean(TRA = "-")
   group_by(Variable,Country) %>% select_at(6:16) %>% fwithin %>% head(2)
 
 GGDC10S %>% # Same as ... %>% fmean(TRA = "-+")
-  group_by(Variable,Country) %>% select_at(6:16) %>% fwithin(add.global.mean = TRUE) %>% head(2)
+  group_by(Variable,Country) %>% select_at(6:16) %>% fwithin(mean = "overall.mean") %>% head(2)
 ```
 
-Apart from higher speed, there is one additional advantage of using `fwithin` in particular, which regards the joint use of weights and the `add.global.mean` option: `... %>% fmean(w = SUM, TRA = "-+")` will not properly group-center the data on the overall weighted mean. Instead, it will group-center data on a frequency weighted average of the weighted group-means, thus not taking into account different aggregated weights attached to those weighted group-means themselves. The reason for this shortcoming is simply that `TRA` was not designed to take a separate weight vector as input. `fwithin(w = SUM, add.global.mean = TRUE)` does a better job and properly centers data on the weighted overall mean after subtracting out weighted group means: 
+Apart from higher speed, there is one additional advantage of using `fwithin` in particular, which regards the joint use of weights and the `mean = "overall.mean"` option: `... %>% fmean(w = SUM, TRA = "-+")` will not properly group-center the data on the overall weighted mean. Instead, it will group-center data on a frequency weighted average of the weighted group-means, thus not taking into account different aggregated weights attached to those weighted group-means themselves. The reason for this shortcoming is simply that `TRA` was not designed to take a separate weight vector as input. `fwithin(w = SUM, mean = "overall.mean")` does a better job and properly centers data on the weighted overall mean after subtracting out weighted group means: 
 
 ```{r}
 GGDC10S %>% # This does not center data on a properly computed weighted overall mean
   group_by(Variable,Country) %>% select_at(6:16) %>% fmean(SUM, TRA = "-+") 
 
 GGDC10S %>% # This does a proper job by both subtracting weighted group-means and adding a weighted overall mean
-  group_by(Variable,Country) %>% select_at(6:16) %>% fwithin(SUM, add.global.mean = TRUE) 
+  group_by(Variable,Country) %>% select_at(6:16) %>% fwithin(SUM, mean = "overall.mean") 
 ```
 
-The sequential scaling and centering `... %>% fsd(TRA = "/") %>% fmean(TRA = "-")` shown in an earlier example is also not the best way of doing things. The function `fscale` does this much quicker in a single step:
+The sequential scaling and centering `... %>% fsd(TRA = "/") %>% fmean(TRA = "-")` shown in an earlier example is also not the best way of doing things. The function `fscale` does this much quicker in a single step, and also allows for more customized operations with its `mean` and `sd` arguments.
 
 ```{r}
 # This efficiently scales and centers (i.e. standardizes) the data 
@@ -623,12 +623,12 @@ system.time(fmean(data, TRA = "-"))
 system.time(fwithin(data))
 system.time(mutate_all(data, function(x) x - mean(x, na.rm = TRUE)))
 
-# Centering on global mean
-system.time(fwithin(data, add.global.mean = TRUE))
+# Centering on overall mean
+system.time(fwithin(data, mean = "overall.mean"))
 
 # Weighted Demeaning
 system.time(fwithin(data, SUM))
-system.time(fwithin(data, SUM, add.global.mean = TRUE))
+system.time(fwithin(data, SUM, mean = "overall.mean"))
 
 # Scaling
 system.time(fsd(data, TRA = "/"))

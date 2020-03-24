@@ -84,6 +84,12 @@ all_obj_equal <- function(...) {
   }
 }
 
+finteraction <- function(...) { # does it drop levels ?? -> Yes !!!
+  ll <- length(list(...))
+  if(ll == 1L && is.list(...)) return(as.factor.GRP(GRP.default(...)))
+  as.factor.GRP(GRP.default(list(...)))
+}
+
 is.categorical <- function(x) !is.numeric(x)
 is.Date <- function(x) inherits(x, c("Date","POSIXlt","POSIXct"))
 "%!in%" <- function(x, table) match(x, table, nomatch = 0L) == 0L
@@ -116,13 +122,20 @@ forder.int <- function(x) if(is.unsorted(x)) .Call(C_forder, x, NULL, FALSE, TRU
 fsetdiff <- function(x, y) x[match(x, y, 0L) == 0L] # not unique !!
 as.numeric_factor <- function(X) {
   if(is.atomic(X)) return(as.numeric(attr(X, "levels"))[X])
-
     fcts <- vapply(X, is.factor, TRUE, USE.NAMES = FALSE)
     # if(all(fcts)) return(dapply(X, function(x) as.numeric(attr(x, "levels"))[x]))
     clx <- class(X)
     class(X) <- NULL
     X[fcts] <- lapply(X[fcts], function(x) as.numeric(attr(x, "levels"))[x])
     return(`oldClass<-`(X, clx))
+}
+as.character_factor <- function(X) {
+  if(is.atomic(X)) return(as.character(attr(X, "levels"))[X])
+  fcts <- vapply(X, is.factor, TRUE, USE.NAMES = FALSE)
+  clx <- class(X)
+  class(X) <- NULL
+  X[fcts] <- lapply(X[fcts], function(x) as.character(attr(x, "levels"))[x])
+  return(`oldClass<-`(X, clx))
 }
 
 
@@ -139,7 +152,7 @@ addAttributes <- function(x, a) {
   .Call(Cpp_setAttributes, x, c(ax, a))
 }
 TRAtoInt <- function(x) # A lot faster than match based verion !!!
-  switch(x, replace_fill = 1L, replace = 2L, `-` = 3L, `-+` = 4L, `/` = 5L, `%` = 6L, `+` = 7L, `*` = 8L,
+  switch(x, replace_fill = 1L, replace = 2L, `-` = 3L, `-+` = 4L, `/` = 5L, `%` = 6L, `+` = 7L, `*` = 8L, `%%` = 9L, `-%%` = 10L,
             stop("Unknown transformation!"))
 condsetn <- function(x, value, cond) {
   if(cond) attr(x, "names") <- value
@@ -151,7 +164,7 @@ condsetn <- function(x, value, cond) {
 #   x
 # }
 anyNAerror <- function(x, e) if(anyNA(x)) stop(e) else x
-ckmatch <- function(x, y, e = "Unknown columns:") if(anyNA(m <- match(x, y))) stop(paste(c(e, x[is.na(m)]), collapse = " ")) else m
+ckmatch <- function(x, table, e = "Unknown columns:") if(anyNA(m <- match(x, table))) stop(paste(e, paste(x[is.na(m)], collapse = ", "))) else m
 cols2int <- function(cols, x, nam) {
  if(is.numeric(cols)) {
   if(max(abs(cols)) > length(x)) stop("Index out of range abs(1:length(x))")
@@ -222,17 +235,17 @@ G_t <- function(x, m = TRUE, wm = 1L) {
     return(x)
   } else if(is.atomic(x)) {
     if(is.integer(x)) return(x) else return(qG(x, na.exclude = FALSE)) # make sure it is ordered !!! qG already ckecks factor !!
-  } else if(is.GRP(x)) return(x[[2L]]) else return(GRP(x, return.groups = FALSE)[[2L]])
+  } else if(is.GRP(x)) return(x[[2L]]) else return(GRP.default(x, return.groups = FALSE)[[2L]])
 }
 rgrep <- function(exp, nam, ...) if(length(exp) == 1L) grep(exp, nam, ...) else funique(unlist(lapply(exp, grep, nam, ...), use.names = FALSE))
 # NROW2 <- function(x, d) if(length(d)) d[1L] else length(x)
 # NCOL2 <- function(d, ilv) if(ilv) d[2L] else 1L
 charorNULL <- function(x) if(is.character(x)) x else NULL
 # more security here??
-unique_factor <- function(x) {
-  res <- seq_along(attr(x, "levels"))
-  .Call(Cpp_duplAttributes, res, x)
-}
+# unique_factor <- function(x) {  # Still needed with new collap solution ?? -> Nope !!
+#   res <- seq_along(attr(x, "levels"))
+#   .Call(Cpp_duplAttributes, res, x)
+# }
 dotstostr <- function(...) {
   args <- deparse(substitute(c(...)))
   nc <- nchar(args)

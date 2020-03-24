@@ -6,8 +6,8 @@
                       "A9-summary-statistics","AA1-recode-replace","AA2-small-helpers")
 
 .COLLAPSE_ALL <- sort(unique(c("%!in%","add_stub","rm_stub","all_identical","as.factor.GRP","as.numeric_factor",
-                           "atomic_elem","atomic_elem<-","B","BY","cat_vars","cat_vars<-","char_vars",
-                           "add_vars<-","add_vars","av<-","av","gv<-","gv","nv<-","nv",
+                           "atomic_elem","atomic_elem<-","B","BY","cat_vars","cat_vars<-","char_vars","ckmatch",
+                           "add_vars<-","add_vars","av<-","av","gv<-","gv","nv<-","nv","finteraction","as.character_factor",
                            "char_vars<-","collap","collapv","collapg","D","dapply","Date_vars","Date_vars<-","F","fact_vars",
                            "fact_vars<-","fbetween","fdiff","ffirst","fgrowth","fHDbetween","fHDwithin","fFtest",
                            "flag","flast","fmax","fmean","fmedian","fmin","fmode","fNdistinct","fnlevels",

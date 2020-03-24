@@ -12,14 +12,17 @@
 \item \code{\link{TRA}} is an S3 generic to efficiently perform (groupwise) \bold{replacement and sweeping out of statistics}. %The basic syntax is \code{TRA(x, xag, g)} where \code{x} is data to be transformed, \code{xag} is some set of aggregate statistics to tranform \code{x} and \code{g} is an optional grouping vector for grouped transformations.
 Supported operations are:
   \tabular{lllll}{\emph{ Integer-id }  \tab\tab \emph{ String-id }  \tab\tab \emph{ Description }  \cr % \Sexpr{"\u200B"} \Sexpr{"\u200B"} % \Sexpr{"\u200B"} \Sexpr{"\u200B"}
-                 1 \tab\tab "replace_fill"   \tab\tab replace and overwrite missing values \cr % \Sexpr{"\u200B"} \Sexpr{"\u200B"}
+                 1 \tab\tab "replace_fill"   \tab\tab replace and overwrite missing values \cr
                  2 \tab\tab "replace" \tab\tab replace but preserve missing values \cr
                  3 \tab\tab "-"   \tab\tab subtract \cr
-                 4 \tab\tab "-+"  \tab\tab subtract group-statistics but add average of group statistics \cr
+                 4 \tab\tab "-+"  \tab\tab subtract group-statistics but add group-frequency weighted average of group statistics \cr
                  5 \tab\tab "/"   \tab\tab divide \cr
                  6 \tab\tab "\%"     \tab\tab compute percentages \cr
                  7 \tab\tab "+" \tab\tab add \cr
-                 8 \tab\tab "*" \tab\tab multiply
+                 8 \tab\tab "*" \tab\tab multiply \cr
+                 9 \tab\tab "\%\%" \tab\tab modulus \cr
+                 10 \tab\tab "-\%\%" \tab\tab subtract modulus
+
 }
 All of \code{collapse}'s \link[=A1-fast-statistical-functions]{Fast Statistical Functions} have a built-in \code{TRA} argument for faster access (i.e. you can compute (groupwise) statistics and use them to transform your data with a single function call).
 

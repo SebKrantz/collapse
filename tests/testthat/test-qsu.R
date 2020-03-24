@@ -1,5 +1,6 @@
 context("quick-summary (qsu)")
 
+# Make more tests!! See also collapse general TODO !
 test_that("qsu gives errors for wrong input", {
   expect_error(qsu(wlddev$year, 2:4))
   expect_error(qsu(wlddev$year, pid = 2:4))

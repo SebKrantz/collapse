@@ -158,7 +158,7 @@ test_that("fvar with weights performs like wvar (defined above)", {
   expect_equal(fvar(x, f, w), mapply(wvar, split(x, f), split(w, f)))
   expect_equal(fvar(x, f, w, na.rm = FALSE), mapply(wvar, split(x, f), split(w, f)))
   expect_equal(fvar(xNA, f, w, na.rm = FALSE), mapply(wvar, split(xNA, f), split(w, f)))
-  expect_equal(fvar(xNA, f, w), mapply(wvar, split(xNA, f), split(w, f), na.rm = TRUE))
+  expect_equal(na20(fvar(xNA, f, w)), na20(mapply(wvar, split(xNA, f), split(w, f), na.rm = TRUE)))
   # missing weights
   expect_equal(fvar(NA, w = NA), wvar(NA, NA))
   expect_equal(fvar(NA, w = NA, na.rm = FALSE), wvar(NA, NA))
@@ -180,7 +180,7 @@ test_that("fvar with weights performs like wvar (defined above)", {
   expect_equal(fvar(x, f, wNA), mapply(wvar, split(x, f), split(wNA, f), na.rm = TRUE))
   expect_equal(fvar(x, f, wNA, na.rm = FALSE), mapply(wvar, split(x, f), split(wNA, f)))
   expect_equal(fvar(xNA, f, wNA, na.rm = FALSE), mapply(wvar, split(xNA, f), split(wNA, f)))
-#  expect_equal(fvar(xNA, f, wNA), na20(mapply(wvar, split(xNA, f), split(wNA, f), na.rm = TRUE)))
+  expect_equal(na20(fvar(xNA, f, wNA)), na20(mapply(wvar, split(xNA, f), split(wNA, f), na.rm = TRUE)))
 })
 
 test_that("fvar performs numerically stable", {
@@ -480,7 +480,7 @@ test_that("fvar with with direct algorithm and weights performs like wvar (defin
   expect_equal(fvar(x, f, w, stable.algo = FALSE), mapply(wvar, split(x, f), split(w, f)))
   expect_equal(fvar(x, f, w, na.rm = FALSE, stable.algo = FALSE), mapply(wvar, split(x, f), split(w, f)))
   expect_equal(fvar(xNA, f, w, na.rm = FALSE, stable.algo = FALSE), mapply(wvar, split(xNA, f), split(w, f)))
-  expect_equal(fvar(xNA, f, w, stable.algo = FALSE), mapply(wvar, split(xNA, f), split(w, f), na.rm = TRUE))
+  expect_equal(na20(fvar(xNA, f, w, stable.algo = FALSE)), na20(mapply(wvar, split(xNA, f), split(w, f), na.rm = TRUE)))
   # missing weights
   expect_equal(fvar(NA, w = NA, stable.algo = FALSE), wvar(NA, NA))
   expect_equal(fvar(NA, w = NA, na.rm = FALSE, stable.algo = FALSE), wvar(NA, NA))
@@ -502,7 +502,7 @@ test_that("fvar with with direct algorithm and weights performs like wvar (defin
   expect_equal(fvar(x, f, wNA, stable.algo = FALSE), mapply(wvar, split(x, f), split(wNA, f), na.rm = TRUE))
   expect_equal(fvar(x, f, wNA, na.rm = FALSE, stable.algo = FALSE), mapply(wvar, split(x, f), split(wNA, f)))
   expect_equal(fvar(xNA, f, wNA, na.rm = FALSE, stable.algo = FALSE), mapply(wvar, split(xNA, f), split(wNA, f)))
-#  expect_equal(fvar(xNA, f, wNA, stable.algo = FALSE), na20(mapply(wvar, split(xNA, f), split(wNA, f), na.rm = TRUE)))
+  expect_equal(na20(fvar(xNA, f, wNA, stable.algo = FALSE)), na20(mapply(wvar, split(xNA, f), split(wNA, f), na.rm = TRUE)))
 })
 
 test_that("fvar with direct algorithm performs numerically stable", {

@@ -136,8 +136,8 @@ BEGIN_RCPP
 END_RCPP
 }
 // BWCpp
-NumericVector BWCpp(const NumericVector& x, int ng, const IntegerVector& g, const SEXP& gs, const SEXP& w, bool narm, bool option, bool B);
-RcppExport SEXP _collapse_BWCpp(SEXP xSEXP, SEXP ngSEXP, SEXP gSEXP, SEXP gsSEXP, SEXP wSEXP, SEXP narmSEXP, SEXP optionSEXP, SEXP BSEXP) {
+NumericVector BWCpp(const NumericVector& x, int ng, const IntegerVector& g, const SEXP& gs, const SEXP& w, bool narm, double set_mean, bool B, bool fill);
+RcppExport SEXP _collapse_BWCpp(SEXP xSEXP, SEXP ngSEXP, SEXP gSEXP, SEXP gsSEXP, SEXP wSEXP, SEXP narmSEXP, SEXP set_meanSEXP, SEXP BSEXP, SEXP fillSEXP) {
 BEGIN_RCPP
     Rcpp::RObject rcpp_result_gen;
     Rcpp::RNGScope rcpp_rngScope_gen;
@@ -147,15 +147,16 @@ BEGIN_RCPP
     Rcpp::traits::input_parameter< const SEXP& >::type gs(gsSEXP);
     Rcpp::traits::input_parameter< const SEXP& >::type w(wSEXP);
     Rcpp::traits::input_parameter< bool >::type narm(narmSEXP);
-    Rcpp::traits::input_parameter< bool >::type option(optionSEXP);
+    Rcpp::traits::input_parameter< double >::type set_mean(set_meanSEXP);
     Rcpp::traits::input_parameter< bool >::type B(BSEXP);
-    rcpp_result_gen = Rcpp::wrap(BWCpp(x, ng, g, gs, w, narm, option, B));
+    Rcpp::traits::input_parameter< bool >::type fill(fillSEXP);
+    rcpp_result_gen = Rcpp::wrap(BWCpp(x, ng, g, gs, w, narm, set_mean, B, fill));
     return rcpp_result_gen;
 END_RCPP
 }
 // BWmCpp
-NumericMatrix BWmCpp(const NumericMatrix& x, int ng, const IntegerVector& g, const SEXP& gs, const SEXP& w, bool narm, bool option, bool B);
-RcppExport SEXP _collapse_BWmCpp(SEXP xSEXP, SEXP ngSEXP, SEXP gSEXP, SEXP gsSEXP, SEXP wSEXP, SEXP narmSEXP, SEXP optionSEXP, SEXP BSEXP) {
+NumericMatrix BWmCpp(const NumericMatrix& x, int ng, const IntegerVector& g, const SEXP& gs, const SEXP& w, bool narm, double set_mean, bool B, bool fill);
+RcppExport SEXP _collapse_BWmCpp(SEXP xSEXP, SEXP ngSEXP, SEXP gSEXP, SEXP gsSEXP, SEXP wSEXP, SEXP narmSEXP, SEXP set_meanSEXP, SEXP BSEXP, SEXP fillSEXP) {
 BEGIN_RCPP
     Rcpp::RObject rcpp_result_gen;
     Rcpp::RNGScope rcpp_rngScope_gen;
@@ -165,15 +166,16 @@ BEGIN_RCPP
     Rcpp::traits::input_parameter< const SEXP& >::type gs(gsSEXP);
     Rcpp::traits::input_parameter< const SEXP& >::type w(wSEXP);
     Rcpp::traits::input_parameter< bool >::type narm(narmSEXP);
-    Rcpp::traits::input_parameter< bool >::type option(optionSEXP);
+    Rcpp::traits::input_parameter< double >::type set_mean(set_meanSEXP);
     Rcpp::traits::input_parameter< bool >::type B(BSEXP);
-    rcpp_result_gen = Rcpp::wrap(BWmCpp(x, ng, g, gs, w, narm, option, B));
+    Rcpp::traits::input_parameter< bool >::type fill(fillSEXP);
+    rcpp_result_gen = Rcpp::wrap(BWmCpp(x, ng, g, gs, w, narm, set_mean, B, fill));
     return rcpp_result_gen;
 END_RCPP
 }
 // BWlCpp
-List BWlCpp(const List& x, int ng, const IntegerVector& g, const SEXP& gs, const SEXP& w, bool narm, bool option, bool B);
-RcppExport SEXP _collapse_BWlCpp(SEXP xSEXP, SEXP ngSEXP, SEXP gSEXP, SEXP gsSEXP, SEXP wSEXP, SEXP narmSEXP, SEXP optionSEXP, SEXP BSEXP) {
+List BWlCpp(const List& x, int ng, const IntegerVector& g, const SEXP& gs, const SEXP& w, bool narm, double set_mean, bool B, bool fill);
+RcppExport SEXP _collapse_BWlCpp(SEXP xSEXP, SEXP ngSEXP, SEXP gSEXP, SEXP gsSEXP, SEXP wSEXP, SEXP narmSEXP, SEXP set_meanSEXP, SEXP BSEXP, SEXP fillSEXP) {
 BEGIN_RCPP
     Rcpp::RObject rcpp_result_gen;
     Rcpp::RNGScope rcpp_rngScope_gen;
@@ -183,9 +185,10 @@ BEGIN_RCPP
     Rcpp::traits::input_parameter< const SEXP& >::type gs(gsSEXP);
     Rcpp::traits::input_parameter< const SEXP& >::type w(wSEXP);
     Rcpp::traits::input_parameter< bool >::type narm(narmSEXP);
-    Rcpp::traits::input_parameter< bool >::type option(optionSEXP);
+    Rcpp::traits::input_parameter< double >::type set_mean(set_meanSEXP);
     Rcpp::traits::input_parameter< bool >::type B(BSEXP);
-    rcpp_result_gen = Rcpp::wrap(BWlCpp(x, ng, g, gs, w, narm, option, B));
+    Rcpp::traits::input_parameter< bool >::type fill(fillSEXP);
+    rcpp_result_gen = Rcpp::wrap(BWlCpp(x, ng, g, gs, w, narm, set_mean, B, fill));
     return rcpp_result_gen;
 END_RCPP
 }
@@ -783,53 +786,53 @@ BEGIN_RCPP
 END_RCPP
 }
 // fscaleCpp
-NumericVector fscaleCpp(const NumericVector& x, int ng, const IntegerVector& g, const SEXP& gs, const SEXP& w, bool narm, bool stable_algo);
-RcppExport SEXP _collapse_fscaleCpp(SEXP xSEXP, SEXP ngSEXP, SEXP gSEXP, SEXP gsSEXP, SEXP wSEXP, SEXP narmSEXP, SEXP stable_algoSEXP) {
+NumericVector fscaleCpp(const NumericVector& x, int ng, const IntegerVector& g, const SEXP& w, bool narm, double set_mean, double set_sd);
+RcppExport SEXP _collapse_fscaleCpp(SEXP xSEXP, SEXP ngSEXP, SEXP gSEXP, SEXP wSEXP, SEXP narmSEXP, SEXP set_meanSEXP, SEXP set_sdSEXP) {
 BEGIN_RCPP
     Rcpp::RObject rcpp_result_gen;
     Rcpp::RNGScope rcpp_rngScope_gen;
     Rcpp::traits::input_parameter< const NumericVector& >::type x(xSEXP);
     Rcpp::traits::input_parameter< int >::type ng(ngSEXP);
     Rcpp::traits::input_parameter< const IntegerVector& >::type g(gSEXP);
-    Rcpp::traits::input_parameter< const SEXP& >::type gs(gsSEXP);
     Rcpp::traits::input_parameter< const SEXP& >::type w(wSEXP);
     Rcpp::traits::input_parameter< bool >::type narm(narmSEXP);
-    Rcpp::traits::input_parameter< bool >::type stable_algo(stable_algoSEXP);
-    rcpp_result_gen = Rcpp::wrap(fscaleCpp(x, ng, g, gs, w, narm, stable_algo));
+    Rcpp::traits::input_parameter< double >::type set_mean(set_meanSEXP);
+    Rcpp::traits::input_parameter< double >::type set_sd(set_sdSEXP);
+    rcpp_result_gen = Rcpp::wrap(fscaleCpp(x, ng, g, w, narm, set_mean, set_sd));
     return rcpp_result_gen;
 END_RCPP
 }
 // fscalemCpp
-NumericMatrix fscalemCpp(NumericMatrix x, int ng, IntegerVector g, SEXP gs, SEXP w, bool narm, bool stable_algo);
-RcppExport SEXP _collapse_fscalemCpp(SEXP xSEXP, SEXP ngSEXP, SEXP gSEXP, SEXP gsSEXP, SEXP wSEXP, SEXP narmSEXP, SEXP stable_algoSEXP) {
+NumericMatrix fscalemCpp(const NumericMatrix& x, int ng, const IntegerVector& g, const SEXP& w, bool narm, double set_mean, double set_sd);
+RcppExport SEXP _collapse_fscalemCpp(SEXP xSEXP, SEXP ngSEXP, SEXP gSEXP, SEXP wSEXP, SEXP narmSEXP, SEXP set_meanSEXP, SEXP set_sdSEXP) {
 BEGIN_RCPP
     Rcpp::RObject rcpp_result_gen;
     Rcpp::RNGScope rcpp_rngScope_gen;
-    Rcpp::traits::input_parameter< NumericMatrix >::type x(xSEXP);
+    Rcpp::traits::input_parameter< const NumericMatrix& >::type x(xSEXP);
     Rcpp::traits::input_parameter< int >::type ng(ngSEXP);
-    Rcpp::traits::input_parameter< IntegerVector >::type g(gSEXP);
-    Rcpp::traits::input_parameter< SEXP >::type gs(gsSEXP);
-    Rcpp::traits::input_parameter< SEXP >::type w(wSEXP);
+    Rcpp::traits::input_parameter< const IntegerVector& >::type g(gSEXP);
+    Rcpp::traits::input_parameter< const SEXP& >::type w(wSEXP);
     Rcpp::traits::input_parameter< bool >::type narm(narmSEXP);
-    Rcpp::traits::input_parameter< bool >::type stable_algo(stable_algoSEXP);
-    rcpp_result_gen = Rcpp::wrap(fscalemCpp(x, ng, g, gs, w, narm, stable_algo));
+    Rcpp::traits::input_parameter< double >::type set_mean(set_meanSEXP);
+    Rcpp::traits::input_parameter< double >::type set_sd(set_sdSEXP);
+    rcpp_result_gen = Rcpp::wrap(fscalemCpp(x, ng, g, w, narm, set_mean, set_sd));
     return rcpp_result_gen;
 END_RCPP
 }
 // fscalelCpp
-List fscalelCpp(List x, int ng, IntegerVector g, SEXP gs, SEXP w, bool narm, bool stable_algo);
-RcppExport SEXP _collapse_fscalelCpp(SEXP xSEXP, SEXP ngSEXP, SEXP gSEXP, SEXP gsSEXP, SEXP wSEXP, SEXP narmSEXP, SEXP stable_algoSEXP) {
+List fscalelCpp(const List& x, int ng, const IntegerVector& g, const SEXP& w, bool narm, double set_mean, double set_sd);
+RcppExport SEXP _collapse_fscalelCpp(SEXP xSEXP, SEXP ngSEXP, SEXP gSEXP, SEXP wSEXP, SEXP narmSEXP, SEXP set_meanSEXP, SEXP set_sdSEXP) {
 BEGIN_RCPP
     Rcpp::RObject rcpp_result_gen;
     Rcpp::RNGScope rcpp_rngScope_gen;
-    Rcpp::traits::input_parameter< List >::type x(xSEXP);
+    Rcpp::traits::input_parameter< const List& >::type x(xSEXP);
     Rcpp::traits::input_parameter< int >::type ng(ngSEXP);
-    Rcpp::traits::input_parameter< IntegerVector >::type g(gSEXP);
-    Rcpp::traits::input_parameter< SEXP >::type gs(gsSEXP);
-    Rcpp::traits::input_parameter< SEXP >::type w(wSEXP);
+    Rcpp::traits::input_parameter< const IntegerVector& >::type g(gSEXP);
+    Rcpp::traits::input_parameter< const SEXP& >::type w(wSEXP);
     Rcpp::traits::input_parameter< bool >::type narm(narmSEXP);
-    Rcpp::traits::input_parameter< bool >::type stable_algo(stable_algoSEXP);
-    rcpp_result_gen = Rcpp::wrap(fscalelCpp(x, ng, g, gs, w, narm, stable_algo));
+    Rcpp::traits::input_parameter< double >::type set_mean(set_meanSEXP);
+    Rcpp::traits::input_parameter< double >::type set_sd(set_sdSEXP);
+    rcpp_result_gen = Rcpp::wrap(fscalelCpp(x, ng, g, w, narm, set_mean, set_sd));
     return rcpp_result_gen;
 END_RCPP
 }

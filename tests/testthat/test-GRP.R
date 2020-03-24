@@ -3,6 +3,8 @@ context("GRP")
 mtcNA <- na_insert(mtcars)
 
 test_that("GRP works as intended", {
+ expect_visible(GRP(unname(as.list(mtcars))))
+ expect_visible(GRP(unname(as.list(mtcars)), 8:9))
  expect_visible(GRP(mtcars$mpg))
  expect_visible(GRP(1:10))
  expect_visible(GRP(1:10, order = -1))

@@ -10,10 +10,18 @@
 }
 
 .onAttach <- function(libname, pkgname) {
-  packageStartupMessage("collapse 1.0.0, see ?`collapse-package` or ?`collapse-documentation`")
+  packageStartupMessage("collapse 1.1.0, see ?`collapse-package` or ?`collapse-documentation`")
 }
 
 .onUnload <- function (libpath) {
   library.dynam.unload("collapse", libpath)
 }
 
+
+release_questions <- function() {
+  c(
+    "Have you updated the version number in DESCRIPTION, NEWS.md, NEWS.Rd, cran.comments and .onAttach?",
+    "Spell check ?",
+    "built vignettes properly with Sys.setenv(NCRAN = TRUE)?"
+  )
+}

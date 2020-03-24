@@ -12,6 +12,7 @@ Mode <- function(x, na.rm = FALSE) {
 test_that("collap performs as intended in simple uses", {
   expect_equal(collap(mtcars, mtcars$cyl, keep.by = FALSE), fmean(mtcars, mtcars$cyl, use.g.names = FALSE))
   expect_equal(collap(mtcars, mtcars[2], keep.by = FALSE), fmean(mtcars, mtcars$cyl, use.g.names = FALSE))
+  expect_equal(collap(mtcars, ~cyl), fmean(mtcars, mtcars$cyl, use.g.names = FALSE))
   expect_equal(collap(mtcars, ~cyl, keep.by = FALSE), fmean(mtcars[-2], mtcars$cyl, use.g.names = FALSE))
   expect_equal(collap(iris, ~Species, keep.by = FALSE), fmean(iris[-5], iris$Species, use.g.names = FALSE))
   expect_equal(collap(airquality, ~Month, keep.by = FALSE), fmean(airquality[-5], airquality$Month, use.g.names = FALSE))
@@ -39,8 +40,27 @@ test_that("collap performs as intended in simple uses", {
 
 })
 
+storage.mode(wlddev$year) <- "numeric" # Makes sure that no mismatch as year is aggregated
+test_that("collap preserves data attributes", {
+  expect_identical(lapply(collap(wlddev, ~country), attributes), lapply(wlddev, attributes))
+  expect_identical(vclasses(collap(wlddev, ~country)), vclasses(wlddev))
+  expect_identical(vtypes(collap(wlddev, ~country)), vtypes(wlddev))
+  expect_identical(lapply(collap(wlddev, ~iso3c), attributes), lapply(wlddev, attributes))
+  expect_identical(vclasses(collap(wlddev, ~iso3c)), vclasses(wlddev))
+  expect_identical(vtypes(collap(wlddev, ~iso3c)), vtypes(wlddev))
+  expect_identical(lapply(collap(wlddev, ~date), attributes), lapply(wlddev, attributes))
+  expect_identical(vclasses(collap(wlddev, ~date)), vclasses(wlddev))
+  expect_identical(vtypes(collap(wlddev, ~date)), vtypes(wlddev))
+  expect_identical(lapply(collap(wlddev, ~country + decade), attributes), lapply(wlddev, attributes))
+  expect_identical(vclasses(collap(wlddev, ~country + decade)), vclasses(wlddev))
+  expect_identical(vtypes(collap(wlddev, ~country + decade)), vtypes(wlddev))
+})
+
 test_that("collap performs as intended in simple uses with base/stats functions", {
   expect_equal(collap(mtcars, mtcars$cyl, sum, keep.by = FALSE), fsum(mtcars, mtcars$cyl, use.g.names = FALSE))
+  expect_equal(collap(mtcars, ~cyl, mean.default), fmean(mtcars, mtcars$cyl, use.g.names = FALSE))
+  expect_equal(collap(mtcars, ~cyl, mean), fmean(mtcars, mtcars$cyl, use.g.names = FALSE)) # error !!
+
   expect_equal(collap(mtcars, mtcars[2], sum, keep.by = FALSE), fsum(mtcars, mtcars$cyl, use.g.names = FALSE))
   expect_equal(collap(mtcars, ~cyl, sum, keep.by = FALSE), fsum(mtcars[-2], mtcars$cyl, use.g.names = FALSE))
   expect_equal(collap(iris, ~Species, sum, keep.by = FALSE), fsum(iris[-5], iris$Species, use.g.names = FALSE))
