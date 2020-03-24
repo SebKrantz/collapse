@@ -108,9 +108,12 @@ int *_Last_updated = NULL;
 
 static bool anyNamed(SEXP x) {
   if (MAYBE_REFERENCED(x)) return true;
-  if (isNewList(x)) for (int i=0; i<LENGTH(x); i++)
-    if (anyNamed(VECTOR_ELT(x,i))) return true;
-    return false;
+  if (isNewList(x)) { // fixed gcc10 issue through better indentation
+    for (int i=0; i<LENGTH(x); i++) {
+      if (anyNamed(VECTOR_ELT(x,i))) return true;
+    }
+  }
+  return false;
 }
 
 #define MSGSIZE 1000
