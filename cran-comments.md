@@ -1,7 +1,7 @@
 ## Submission collapse 1.1.0
 In this version I have:
 
-* Fixed the 2 test failures on windows old release (r-oldrel-windows-ix86+x86_64) as demanded by Prof. Brian Ripley in a e-mail from 20th of March.
+* Fixed the 2 test failures on windows old release (r-oldrel-windows-ix86+x86_64) as well as gcc10 issues as demanded by Prof. Brian Ripley in a e-mail from 20th of March.
 
 * Fixed some minor issues and added small improvements to the code. 
 

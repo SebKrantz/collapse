@@ -2,7 +2,7 @@
 \title{\emph{collapse} News}
 \section{Changes in version 1.1.0}{
   \itemize{
-\item Fixed issues with 2 tests failing on old windows release, and added some more tests.
+\item Fixed gcc10 compiler issues, and added some more tests.
 
 \item Fixed the issue that supplying an unnamed list to \code{GRP()}, i.e. \code{GRP(list(v1, v2))} would give an error. Unnamed lists are now automatically named 'Group.1', 'Group.2', etc...
 
