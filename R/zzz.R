@@ -10,7 +10,7 @@
 }
 
 .onAttach <- function(libname, pkgname) {
-  packageStartupMessage("collapse 1.0.0, see ?`collapse-package` or ?`collapse-documentation`")
+  packageStartupMessage("collapse 1.1.0, see ?`collapse-package` or ?`collapse-documentation`")
 }
 
 .onUnload <- function (libpath) {

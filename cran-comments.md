@@ -4,11 +4,8 @@ In this version I have:
 * Fixed the 2 test failures on windows old release (r-oldrel-windows-ix86+x86_64) as demanded by Prof. Brian Ripley in a e-mail from 20th of March.
 
 * Fixed some minor issues and added small improvements to the code. 
-<<<<<<< HEAD
 
-* Exported some additional functions and reworked fbetween and fscale for more customized scaling and centering of data. 
-=======
->>>>>>> 31e78cff8788ee1ef16cd6ef99c2962d0386fd7a
+* Exported some small additional functions and reworked fbetween and fscale for more customized scaling and centering of data. 
 
 ## Test environments
 * local Windows 8.1 install, R 3.6.1
