@@ -164,7 +164,7 @@ identical(fwithin(PCGDP), W(PCGDP))
 identical(fwithin(PCGDP, mean = "overall.mean"), W(PCGDP, mean = "overall.mean"))
 ```
 
-When applied to panel-data.frames, `B` and `W` offer some additional utility by (a) allowing you to select colums to transform using the `cols` argument (default is `cols = is.numeric`, so by default all numeric columns will be selected for transformation), (b) allowing you to add a prefix to the transformed columns with the `stub` argument (default is `stub = "B."` for `B` and `stub = "W."` for `W`) and (c) preserving the panel-id's with the `keep.ids` argument (default `keep.ids = TRUE`):
+When applied to panel-data.frames, `B` and `W` offer some additional utility by (a) allowing you to select columns to transform using the `cols` argument (default is `cols = is.numeric`, so by default all numeric columns will be selected for transformation), (b) allowing you to add a prefix to the transformed columns with the `stub` argument (default is `stub = "B."` for `B` and `stub = "W."` for `W`) and (c) preserving the panel-id's with the `keep.ids` argument (default `keep.ids = TRUE`):
 
 ```{r}
 head(B(pwlddev), 3)
@@ -187,7 +187,7 @@ head(W(pwlddev, w = ~ ODA, cols = c("PCGDP","LIFEEX","GINI")), 3)
 head(W(pwlddev, w = ~ ODA, cols = c("PCGDP","LIFEEX","GINI"), mean = "overall.mean"), 3)
 ```
 
-As shown above, with `B` and `W` the weight column can also be passed as a formula or character string, whereas `fbetween` and `fwithin` require the all inputs to be passed directly in terms of data (i.e. `fbetween(get_vars(pwlddev, 9:11), w = pwlddev$ODA)`), and the weight vector or id colums are never preserved in the output. Therefore in most applications `B` and `W` are probably more convenient for quick use, whereas `fbetween` and `fwithin` are the preferred programmers choice, also because they have a little less R-overhead which makes them a tiny bit faster.
+As shown above, with `B` and `W` the weight column can also be passed as a formula or character string, whereas `fbetween` and `fwithin` require the all inputs to be passed directly in terms of data (i.e. `fbetween(get_vars(pwlddev, 9:11), w = pwlddev$ODA)`), and the weight vector or id columns are never preserved in the output. Therefore in most applications `B` and `W` are probably more convenient for quick use, whereas `fbetween` and `fwithin` are the preferred programmers choice, also because they have a little less R-overhead which makes them a tiny bit faster.
 
 ### 1.2 Higher-Dimensional Between and Within Transformations
 
@@ -286,9 +286,9 @@ More customized scaling can be done with the help of the `mean` and `sd` argumen
 # This will scale the data such that mean mean within each country is 5 and the standard deviation is 3
 qsu(fscale(pwlddev$PCGDP, mean = 5, sd = 3))
 ```
-Even further customization (i.e. setting means and standard deviations for each group and / or each column) can of course be achieved by calling `TRA` on the result of `fscale` to sweep out an approporiate set of means and standard deviations. 
+Even further customization (i.e. setting means and standard deviations for each group and / or each column) can of course be achieved by calling `TRA` on the result of `fscale` to sweep out an appropriate set of means and standard deviations. 
 
-Scaling without centerin can be done with the option `mean = FALSE`. This will also preserve the mean of the data overall and within each group:
+Scaling without centering can be done with the option `mean = FALSE`. This will also preserve the mean of the data overall and within each group:
 ```{r}
 # Scaling without centering: Mean preserving with fscale / STD
 qsu(fscale(pwlddev$PCGDP, mean = FALSE, sd = 3))
