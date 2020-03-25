@@ -39,7 +39,7 @@ test_that("fsum performs like base::sum and base::colSums", {
   expect_equal(fsum(x, f), BY(x, f, sum, na.rm = TRUE))
   expect_equal(fsum(x, f, na.rm = FALSE), BY(x, f, sum))
   expect_equal(fsum(xNA, f, na.rm = FALSE), BY(xNA, f, sum))
-  expect_equal(fsum(xNA, f), BY(xNA, f, sum, na.rm = TRUE))
+  expect_equal(na20(fsum(xNA, f)), BY(xNA, f, sum, na.rm = TRUE))
   expect_equal(fsum(m, g), BY(m, g, sum, na.rm = TRUE))
   expect_equal(fsum(m, g, na.rm = FALSE), BY(m, g, sum))
   expect_equal(fsum(mNA, g, na.rm = FALSE), BY(mNA, g, sum))

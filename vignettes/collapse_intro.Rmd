@@ -164,7 +164,7 @@ FUN(x, g = NULL, [w = NULL,] TRA = NULL, [na.rm = TRUE,] use.g.names = TRUE, dro
 
 ```
 
-where `x` is a vector, matrix or data.frame, `g` takes groups supplied as vector, factor, list of vectors or *GRP* object, and `w` takes a weight vector (available only to `fmean, fmode, fvar` and `fsd`). `TRA` and can be used to transform `x` using the computed statistics and one of 8 available transformations (`"replace_fill", "replace", "-", "-+", "/", "%", "+", "*"`, discussed in section 4.3). `na.rm` efficiently removes missing values and is `TRUE` by default. `use.g.names = TRUE` generates new row-names from the unique groups supplied to `g`, and `drop = TRUE` returns a vector when performing simple (non-grouped) computations on matrix or data.frame columns. 
+where `x` is a vector, matrix or data.frame, `g` takes groups supplied as vector, factor, list of vectors or *GRP* object, and `w` takes a weight vector (available only to `fmean, fmode, fvar` and `fsd`). `TRA` and can be used to transform `x` using the computed statistics and one of 10 available transformations (`"replace_fill", "replace", "-", "-+", "/", "%", "+", "*", "%%, "-%%"`, discussed in section 4.3). `na.rm` efficiently removes missing values and is `TRUE` by default. `use.g.names = TRUE` generates new row-names from the unique groups supplied to `g`, and `drop = TRUE` returns a vector when performing simple (non-grouped) computations on matrix or data.frame columns. 
 
 With that in mind, let's start with some simple examples. To calculate the mean of each column in a data.frame or matrix, it is sufficient to type:
 
@@ -520,7 +520,7 @@ identical(BY(miris, f, sum), BY(num_vars(iris), f, sum, return = "matrix"))
 ```
 
 ### 4.3. Fast Replacing and Sweeping-out Statistics
-`TRA` is an S3 generic that efficiently transforms data by either (column-wise) replacing data values with supplied statistics or sweeping the statistics out of the data. The 8 operations supported by `TRA` are:
+`TRA` is an S3 generic that efficiently transforms data by either (column-wise) replacing data values with supplied statistics or sweeping the statistics out of the data. The 10 operations supported by `TRA` are:
 
 * 1 - "replace_fill" : replace and overwrite missing values (same as dplyr::mutate)
 
@@ -537,6 +537,10 @@ identical(BY(miris, f, sum), BY(num_vars(iris), f, sum, return = "matrix"))
 * 7 - "+" : add
 
 * 8 - "*" : multiply
+
+* 9 - "%%" : modulus
+
+* 10 - "-%%" : subtract modulus
 
 `TRA` is also incorporated as an argument to all *Fast Statistical Functions*. Therefore it is only really necessary and advisable to use the `TRA()` function if both aggregate statistics and transformed data are required, or to sweep out statistics otherwise obtained (e.g. regression or correlation coefficients etc.). Below I compute the column means of the iris-matrix obtained above, and use them to demean that matrix.
 ```{r}

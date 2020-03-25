@@ -22,6 +22,7 @@ release_questions <- function() {
   c(
     "Have you updated the version number in DESCRIPTION, NEWS.md, NEWS.Rd, cran.comments and .onAttach?",
     "Spell check ?",
-    "built vignettes properly with Sys.setenv(NCRAN = TRUE)?"
+    "built vignettes properly with Sys.setenv(NCRAN = TRUE)?",
+    "Have you updated all help files with code changes, even if it's only documenting arguments or links?"
   )
 }
