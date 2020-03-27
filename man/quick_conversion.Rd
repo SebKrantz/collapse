@@ -10,7 +10,7 @@
 %- Also NEED an '\alias' for EACH other topic documented here.
 \title{Quick Data Conversion}
 \description{
-Convert common data types quickly, without method dispatch and extensive checks:
+Convert common data objects quickly, without method dispatch and extensive checks:
 \itemize{
 \item \code{qDF} and \code{qDT} convert vectors, matrices, higher-dimensional arrays and suitable lists to \code{data.frame} and \code{data.table} respectively.
 \item \code{qM} converts vectors, higher-dimensional arrays, data.frames and suitable lists to matrix.

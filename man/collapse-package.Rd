@@ -39,8 +39,9 @@ Please see \link[=collapse-documentation]{Collapse Documentation & Overview}, or
 The package avoids non-standard evaluation and exports core methods for maximum programmability.  % Most are S3 generic with methods for common \code{R} objects (vectors, matrices, data.frames, ...) % high computation  %(aggregation and transformations ~10x \code{data.table} on data <1 Mio obs.).
 Smart attribute handling and additional (not-exported) methods ensure compatibility and support for \code{dplyr}, \code{data.table} and the \code{plm} approach to panel-data. \code{collapse} comes with a built-in hierarchical \link[=collapse-documentation]{documentation} facilitating the use of the package. % and \code{base/stats}. % extra methods warrant, provide ?
 
-%Beyond speed, flexibility and parsimony in coding, a central objective of \code{collapse} is to facilitate advanced / complex operations on data.
-\code{collapse} is built with \code{Rcpp} and imports \code{C} functions from \code{data.table}, \code{lfe} and \code{stats}. %, and uses \code{ggplot2} visualizations.
+% Beyond speed, flexibility and parsimony in coding, a central objective of \code{collapse} is to facilitate advanced / complex operations on data.
+\code{collapse} is mainly coded in C++ and built with \code{Rcpp}, but also uses C functions from \code{data.table} (grouping, row-subsetting, row-binding), \code{lfe} (centering on multiple factors) and \code{stats} (ACF and PACF).
+% \code{collapse} is built with \code{Rcpp} and imports \code{C} functions from \code{data.table}, \code{lfe} and \code{stats}. %, and uses \code{ggplot2} visualizations.
 
 }
 \section{Author(s)}{ % \author{
@@ -54,7 +55,7 @@ Other contributors from packages \code{collapse} utilizes:
 \item R Core Team and contributors worldwide (stats)
 }
 I also thank Ralf Stubner, Joseph Wood and Dirk Eddelbuettel for helpful answers on Stackoverflow,
-and Joris Meys on R-Devel for encouraging me and helping to set up the github page for \code{collapse}.
+and Joris Meys on R-Devel for encouraging me and helping to set up the \href{https://github.com/SebKrantz/collapse}{github repository} for \code{collapse}.
 }
 \section{Developing / Feature Requests / Bug Reporting}{
 \itemize{
@@ -134,15 +135,17 @@ fsd(series, g)
 library(dplyr) # This is a lot faster than summarize_all(mean)
 wlddev \%>\% group_by(region,income) \%>\% select(PCGDP,LIFEEX) \%>\% fmean
 }
-# qM -> quickly convert data to matrix, qDF/qDT do the reverse
-fmean(rowSums(qM(series), na.rm = TRUE))
 
 # Data-Apply to columns
 head(dapply(series, log))
 dapply(series, quantile, na.rm = TRUE)
 
-# Data-Apply to rows
-head(dapply(series, sum, MARGIN = 1, na.rm = TRUE))
+# Data-Apply to rows (for sum use rowSums(qM(series), na.rm = TRUE), same for rowMeans ...)
+head(dapply(series, max, MARGIN = 1, na.rm = TRUE))
+head(dapply(mtcars, quantile, MARGIN = 1))
+
+# qM -> quickly convert data to matrix, qDF/qDT do the reverse
+fmean(rowSums(qM(series), na.rm = TRUE))
 
 # Split-apply combine computing on columns
 BY(series, wlddev$region, sum, na.rm = TRUE)  # Please use: fsum(series, wlddev$region) -> faster
