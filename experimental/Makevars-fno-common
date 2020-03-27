@@ -1,0 +1,2 @@
+PKG_CFLAGS = -DNDEBUG -fpic  -g -O2 -Wall -pedantic -mtune=native -Werror=format-security -Wp,-D_FORTIFY_SOURCE=2 -fexceptions -fno-stack-protector -fno-common
+PKG_CXXFLAGS = -std=gnu++11 -DNDEBUG -fpic  -g -O2 -Wall -pedantic -mtune=native -Wno-ignored-attributes -Wno-parentheses -Werror=format-security -Wp,-D_FORTIFY_SOURCE=2 -fexceptions -fno-stack-protector -fno-common
