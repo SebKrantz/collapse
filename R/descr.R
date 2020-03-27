@@ -91,9 +91,9 @@ print.descr <- function(x, n = 6, perc = TRUE, summary = TRUE, ...) {
 # Note: This does not work for array stats (using g or pid.. )
 as.data.frame.descr <- function(x, ...) {
    if(attr(x, "arstat")) stop("Cannot handle arrays of statistics!")
-   r <- lapply(x, function(z) unlist(`names<-`(lapply(z[names(z) != "Table"], as.vector, "list"), NULL), recursive = FALSE))
+   r <- lapply(x, function(z) c(z[1:2], unlist(`names<-`(lapply(z[names(z) != "Table"][-(1:2)], as.vector, "list"), NULL), recursive = FALSE)))
    r <- .Call(C_rbindlist, r, TRUE, TRUE, "Variable")
-   if(names(r)[3L] == "") names(r)[2:3] <- c("Class", "Label") else names(r)[2L] <- "Class"
+   if(all(is.na(r[["Label"]]))) r[["Label"]] <- NULL
    attr(r, "row.names") <- .set_row_names(length(r[[1L]]))
    class(r) <- "data.frame"
    return(r)
