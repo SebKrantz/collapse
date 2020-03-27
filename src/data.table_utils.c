@@ -1,16 +1,16 @@
 #include "data.table.h"
 
-bool isRealReallyInt(SEXP x) {
-  if (!isReal(x)) return(false);
-  R_xlen_t n=xlength(x), i=0;
-  double *dx = REAL(x);
-  while (i<n &&
-         ( ISNA(dx[i]) ||
-         ( R_FINITE(dx[i]) && dx[i] == (int)(dx[i])))) {
-    i++;
-  }
-  return i==n;
-}
+// bool isRealReallyInt(SEXP x) {
+//  if (!isReal(x)) return(false);
+//  R_xlen_t n=xlength(x), i=0;
+//  double *dx = REAL(x);
+//  while (i<n &&
+//         ( ISNA(dx[i]) ||
+//         ( R_FINITE(dx[i]) && dx[i] == (int)(dx[i])))) {
+//    i++;
+//  }
+// return i==n;
+// }
 
 SEXP isReallyReal(SEXP x) {
   SEXP ans = PROTECT(allocVector(INTSXP, 1));
@@ -74,15 +74,6 @@ bool allNA(SEXP x, bool errorForBadType) {
   // turned off allNA list support for now to avoid accidentally using it internally where we did not intend; allNA not yet exported
   //   https://github.com/Rdatatable/data.table/pull/3909#discussion_r329065950
 }
-
-/* colnamesInt
- * for provided data.table (or a list-like) and a subset of its columns, it returns integer positions of those columns in DT
- * handle columns input as: integer, double, character and NULL (handled as seq_along(x))
- * adds validation for:
- *   correct range [1,ncol], and if type real checks whole integer
- *   existing columns for character
- *   optionally check for no duplicates
- */
 
 inline bool INHERITS(SEXP x, SEXP char_) {
   // Thread safe inherits() by pre-calling install() in init.c and then

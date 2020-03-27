@@ -5,7 +5,7 @@
 // raise(SIGINT);
 #include <stdint.h> // for uint64_t rather than unsigned long long
 #include <stdbool.h>
-#include "myomp.h"
+// #include "myomp.h"
 #include "types.h"
 
 // data.table depends on R>=3.0.0 when R_xlen_t was introduced
@@ -177,9 +177,9 @@ double i64quickselect(int64_t *x, int n);
 double wallclock();
 
 // openmp-utils.c
-void initDTthreads();
-int getDTthreads();
-void avoid_openmp_hang_within_fork();
+// void initDTthreads();
+// int getDTthreads();
+// void avoid_openmp_hang_within_fork();
 
 // froll.c
 void frollmean(unsigned int algo, double *x, uint64_t nx, ans_t *ans, int k, int align, double fill, bool narm, int hasna, bool verbose);

@@ -81,7 +81,7 @@ static void cleanup() {
   gs_alloc = 0;
   gs_n = 0;
 
-  if (gs_thread!=NULL) for (int i=0; i<getDTthreads(); i++) free(gs_thread[i]);
+  if (gs_thread!=NULL) free(gs_thread[0]);  // for (int i=0; i<getDTthreads(); i++) free(gs_thread[i]);
   free(gs_thread);       gs_thread=NULL;
   free(gs_thread_alloc); gs_thread_alloc=NULL;
   free(gs_thread_n);     gs_thread_n=NULL;
@@ -100,7 +100,7 @@ static void cleanup() {
 
 static void push(const int *x, const int n) {
   if (!retgrp) return;  // clearer to have the switch here rather than before each call
-  int me = omp_get_thread_num();
+  int me = 0; // omp_get_thread_num();
   int newn = gs_thread_n[me] + n;
   if (gs_thread_alloc[me] < newn) {
     gs_thread_alloc[me] = (newn < nrow/3) ? (1+(newn*2)/4096)*4096 : nrow;  // [2|3] to not overflow and 3 not 2 to avoid allocating close to nrow (nrow groups occurs when all size 1 groups)
@@ -113,7 +113,7 @@ static void push(const int *x, const int n) {
 
 static void flush() {
   if (!retgrp) return;
-  int me = omp_get_thread_num();
+  int me = 0; // omp_get_thread_num();
   int n = gs_thread_n[me];
   int newn = gs_n + n;
   if (gs_alloc < newn) {
@@ -135,7 +135,7 @@ static void flush() {
   #define TBEG() double tstart = wallclock();   // tstart declared locally for thread safety
   #define TEND(i) {  \
     double now = wallclock(); \
-    int w = omp_get_thread_num()*NBLOCK + i; \
+    int w = i; \
     tblock[w] += now-tstart; \
     nblock[w]++; \
     tstart = now; \
@@ -212,13 +212,13 @@ static void range_d(double *x, int n, uint64_t *out_min, uint64_t *out_max, int 
 }
 
 // non-critical function also used by bmerge and chmatch
-int StrCmp(SEXP x, SEXP y)
-{
-  if (x == y) return 0;             // same cached pointer (including NA_STRING==NA_STRING)
-  if (x == NA_STRING) return -1;    // x<y
-  if (y == NA_STRING) return 1;     // x>y
-  return strcmp(CHAR(ENC2UTF8(x)), CHAR(ENC2UTF8(y)));
-}
+// int StrCmp(SEXP x, SEXP y)
+// {
+//  if (x == y) return 0;             // same cached pointer (including NA_STRING==NA_STRING)
+//  if (x == NA_STRING) return -1;    // x<y
+//  if (y == NA_STRING) return 1;     // x>y
+//  return strcmp(CHAR(ENC2UTF8(x)), CHAR(ENC2UTF8(y)));
+// }
 /* ENC2UTF8 handles encoding issues by converting all marked non-utf8 encodings alone to utf8 first. The function could be wrapped
    in the first if-statement already instead of at the last stage, but this is to ensure that all-ascii cases are handled with maximum efficiency.
    This seems to fix the issues as far as I've checked. Will revisit if necessary.
@@ -724,7 +724,7 @@ SEXP forder(SEXP DT, SEXP by, SEXP retGrpArg, SEXP sortGroupsArg, SEXP ascArg, S
   Rprintf("nradix=%d\n", nradix);
   #endif
 
-  int nth = getDTthreads();
+  int nth = 1; // getDTthreads();
   TMP =  (int *)malloc(nth*UINT16_MAX*sizeof(int)); // used by counting sort (my_n<=65536) in radix_r()
   UGRP = (uint8_t *)malloc(nth*256);                // TODO: align TMP and UGRP to cache lines (and do the same for stack allocations too)
   if (!TMP || !UGRP /*|| TMP%64 || UGRP%64*/) STOP("Failed to allocate TMP or UGRP or they weren't cache line aligned: nth=%d", nth);
@@ -948,7 +948,7 @@ void radix_r(const int from, const int to, const int radix) {
     uint16_t my_counts[256] = {0};  // Needs to be all-0 on entry. This ={0} initialization should be fast as it's on stack. Otherwise, we have to manage
                                     // a stack of counts anyway since this is called recursively and these counts are needed to make the recursive calls.
                                     // This thread-private stack alloc has no chance of false sharing and gives omp and compiler best chance.
-    uint8_t *restrict my_ugrp = UGRP + omp_get_thread_num()*256;  // uninitialized is fine; will use the first ngrp items. Only used if sortType==0
+    uint8_t *restrict my_ugrp = UGRP; // + omp_get_thread_num()*256;  // uninitialized is fine; will use the first ngrp items. Only used if sortType==0
     // TODO: ensure my_counts, my_grp and my_tmp below are cache line aligned on both Linux and Windows.
     const uint8_t *restrict my_key = key[radix]+from;
     int ngrp = 0;          // number of groups (items in ugrp[]). Max value 256 but could be uint8_t later perhaps if 0 is understood as 1.
@@ -994,7 +994,7 @@ void radix_r(const int from, const int to, const int radix) {
         for (int i=0, sum=0; i<ngrp; i++) { uint8_t w=my_ugrp[i]; int tmp=my_counts[w]; my_starts[w]=my_starts_copy[w]=sum; sum+=tmp; }  // cumulate in ugrp appearance order
       }
 
-      int *restrict my_TMP = TMP + omp_get_thread_num()*UINT16_MAX; // Allocated up front to save malloc calls which i) block internally and ii) could fail
+      int *restrict my_TMP = TMP; // + omp_get_thread_num()*UINT16_MAX; // Allocated up front to save malloc calls which i) block internally and ii) could fail
       if (radix==0 && nalast!=-1) {
         // anso contains 1:n so skip reading and copying it. Only happens when nrow<65535. Saving worth the branch (untested) when user repeatedly calls a small-n small-cardinality order.
         for (int i=0; i<my_n; i++) anso[my_starts[my_key[i]]++] = i+1;  // +1 as R is 1-based.
@@ -1046,7 +1046,7 @@ void radix_r(const int from, const int to, const int radix) {
   }
   // else parallel batches. This is called recursively but only once or maybe twice before resolving to UINT16_MAX branch above
 
-  int batchSize = MIN(UINT16_MAX, 1+my_n/getDTthreads());  // (my_n-1)/nBatch + 1;   //UINT16_MAX == 65535
+  int batchSize = MIN(UINT16_MAX, 1+my_n); // 1+my_n/getDTthreads());  // (my_n-1)/nBatch + 1;   //UINT16_MAX == 65535
   int nBatch = (my_n-1)/batchSize + 1;   // TODO: make nBatch a multiple of nThreads?
   int lastBatchSize = my_n - (nBatch-1)*batchSize;
   uint16_t *counts = calloc(nBatch*256,sizeof(uint16_t));
