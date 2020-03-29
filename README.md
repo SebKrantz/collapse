@@ -1,5 +1,8 @@
 # *collapse*: Advanced and Fast Data Transformation in R
 
+<!-- badges: start -->
+[![CRAN status](https://www.r-pkg.org/badges/version/collapse)](https://cran.r-project.org/package=collapse)
+<!-- badges: end -->
 
 *collapse* is a C/C++ based package for data manipulation in R. It's aims are
 
