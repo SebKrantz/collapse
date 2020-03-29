@@ -1,16 +1,13 @@
-# .Call(setSizes)
-# .Call(initDTthreads)
-# init_collapse <- function() cat(.Call(collapse_init, "Welcome to collapse! See ?collapse"))
-#
 
 # See https://github.com/tidyverse/dplyr/blob/bbcfe99e29fe737d456b0d7adc33d3c445a32d9d/R/zzz.r
 .onLoad <- function(libname, pkgname) {
-  .Call(C_collapse_init)
-  invisible()
+  res <- .Call(C_collapse_init, "init.success")
+  if(!is.character(res) || res != "init.success") stop("collapse not succesfully loaded!")
+  invisible(res)
 }
 
 .onAttach <- function(libname, pkgname) {
-  packageStartupMessage("collapse 1.1.0, see ?`collapse-package` or ?`collapse-documentation`")
+  packageStartupMessage(paste0("collapse ",packageVersion("collapse"),", see ?`collapse-package` or ?`collapse-documentation`"))
 }
 
 .onUnload <- function (libpath) {
