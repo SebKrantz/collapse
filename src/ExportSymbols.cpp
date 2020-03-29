@@ -3,7 +3,7 @@
 using namespace Rcpp;
 
 RcppExport void multi_yw(void *, void *, void *, void *, void *, void *, void *, void *, void *, void *);
-RcppExport SEXP collapse_init();
+RcppExport SEXP collapse_init(SEXP);
 RcppExport SEXP dt_na(SEXP, SEXP);
 RcppExport SEXP forder(SEXP, SEXP, SEXP, SEXP, SEXP, SEXP);
 RcppExport SEXP frank(SEXP, SEXP, SEXP, SEXP);
@@ -95,7 +95,7 @@ static const R_CallMethodDef CallEntries[] = {
   {"Cpp_cond_duplattributes", (DL_FUNC) &_collapse_cond_duplattributes, 2},
   {"Cpp_groups2GRP", (DL_FUNC) &_collapse_groups2GRPCpp, 3},
   {"Cpp_lassign", (DL_FUNC) &_collapse_lassignCpp, 4},
-  {"C_collapse_init", (DL_FUNC) &collapse_init, 0},
+  {"C_collapse_init", (DL_FUNC) &collapse_init, 1},
   {"C_dt_na",         (DL_FUNC) &dt_na,         2},
   {"C_forder",        (DL_FUNC) &forder,        6},
   {"C_frank",         (DL_FUNC) &frank,         4},
