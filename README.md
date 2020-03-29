@@ -4,7 +4,6 @@
 [![CRAN status](https://www.r-pkg.org/badges/version/collapse)](https://cran.r-project.org/package=collapse)
 ![](http://cranlogs.r-pkg.org/badges/collapse?color=orange)
 ![](http://cranlogs.r-pkg.org/badges/grand-total/collapse?color=brightgreen)
-[![Coverage status](https://codecov.io/gh/SebKrantz/collapse/branch/master/graph/badge.svg)](https://codecov.io/github/SebKrantz/collapse?branch=master)
 <!-- badges: end -->
 
 *collapse* is a C/C++ based package for data manipulation in R. It's aims are
