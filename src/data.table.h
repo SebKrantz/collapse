@@ -91,7 +91,7 @@ extern SEXP sym_inherits;
 extern SEXP sym_datatable_locked;
 long long DtoLL(double x);
 double LLtoD(long long x);
-bool GetVerbose();
+// bool GetVerbose();
 extern double NA_INT64_D;
 extern long long NA_INT64_LL;
 extern Rcomplex NA_CPLX;  // initialized in init.c; see there for comments
