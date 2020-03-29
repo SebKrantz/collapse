@@ -1,7 +1,7 @@
 # collapse 1.1.0
 collapse 1.1.0 released end of March 2020: Some small fixes, improvements, and addressing test failures on some operating systems:
 
-* Fixed gcc10 compiler issues, and added some more tests.
+* Fixed remaining gcc10, LTO and valgrind issues in C/C++ code, and added some more tests.
 
 * Fixed the issue that supplying an unnamed list to `GRP()`, i.e. `GRP(list(v1, v2))` would give an error. Unnamed lists are now automatically named 'Group.1', 'Group.2', etc...
 
