@@ -68,7 +68,7 @@ NumericVector fbstatstemp(NumericVector x, bool ext = false, int ng = 0, Integer
       // long double d1 = 0;
       double d1 = 0;
       int k = 0;
-      NumericMatrix result = no_init_matrix(ng, 5); // Perhaps initializin is better ??
+      NumericMatrix result(ng, 5); //  = no_init_matrix initializing is better -> valgrind !!
       NumericMatrix::Column n = result( _ , 0);
       NumericMatrix::Column mean = result( _ , 1);
       NumericMatrix::Column M2 = result( _ , 2);
@@ -190,7 +190,7 @@ NumericVector fbstatstemp(NumericVector x, bool ext = false, int ng = 0, Integer
        if(g.size() != l) stop("length(g) must match nrow(X)");
        double d1 = 0, dn = 0, dn2 = 0, term1 = 0;
        int k = 0;
-       NumericMatrix result = no_init_matrix(ng, 7); // again: init better ??
+       NumericMatrix result(ng, 7); //  = no_init_matrix // Initializing better -> valgrind
        NumericMatrix::Column n = result( _ , 0);
        NumericMatrix::Column mean = result( _ , 1);
        NumericMatrix::Column M2 = result( _ , 2);
