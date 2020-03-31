@@ -1,4 +1,4 @@
-# *collapse*: Advanced and Fast Data Transformation in R
+# *collapse*: Advanced and Fast Data Transformation <img src='inst/figures/collapse logo small.png' width="150px" align="right" />
 
 <!-- badges: start -->
 [![CRAN status](https://www.r-pkg.org/badges/version/collapse)](https://cran.r-project.org/package=collapse)
