@@ -374,7 +374,7 @@ All statistical (scalar-valued) functions in the collapse package (`fsum, fprod,
 
 * 10 - "-%%" : subtract modulus
 
-For functions supporting weights (`fmean, fmode, fvar` and `fsd`) the `TRA` argument is in the third position following the data and weight vector (in the *grouped_df* method), whereas functions not supporting weights have the argument in the second position. 
+For functions supporting weights (`fsum, fprod, fmean, fmode, fvar` and `fsd`) the `TRA` argument is in the third position following the data and weight vector (in the *grouped_df* method), whereas functions not supporting weights have the argument in the second position. 
 
 Simple transformations are again straightforward to specify: 
 ```{r}
