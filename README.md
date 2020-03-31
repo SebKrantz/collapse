@@ -15,17 +15,17 @@ It is compatible with *dplyr*, *data.table* and the *plm* approach to panel-data
 
 **Key Features:**
 
-*  *Advanced data programming*: A full set of fast statistical functions supporting grouped and/or weighted computations on vectors, matrices and data.frames. Fast (ordered) and reusable grouping, quick data conversions, and quick select, replace or add data.frame columns. 
+*  **Advanced data programming**: A full set of fast statistical functions supporting grouped and/or weighted computations on vectors, matrices and data.frames. Fast (ordered) and reusable grouping, quick data conversions, and quick select, replace or add data.frame columns. 
 
-*  *Advanced aggregation*: Fast and easy multi-data-type, multi-function, weighted, parallelized and fully customized data aggregation. 
+*  **Advanced aggregation**: Fast and easy multi-data-type, multi-function, weighted, parallelized and fully customized data aggregation. 
 
-*  *Advanced transformations*: Fast (grouped, weighted) replacing and sweeping out of statistics, scaling, centering, higher-dimensional centering, complex linear prediction and partialling-out. 
+*  **Advanced transformations**: Fast (grouped, weighted) replacing and sweeping out of statistics, scaling, centering, higher-dimensional centering, complex linear prediction and partialling-out. 
 
-*  *Advanced time-computations*: Fast (sequences of) lags / leads, and (lagged / leaded, iterated) differences and growth rates on (unordered) time-series and panel data. Multivariate auto, partial and cross-correlation functions for panel data. Panel data to (ts-)array conversions. 
+*  **Advanced time-computations**: Fast (sequences of) lags / leads, and (lagged / leaded, iterated) differences and growth rates on (unordered) time-series and panel data. Multivariate auto, partial and cross-correlation functions for panel data. Panel data to (ts-)array conversions. 
 
-*  *List Processing*: (Recursive) list search / identification, extraction / subsetting, apply, and row-binding / unlisting in 2D. 
+*  **List Processing**: (Recursive) list search / identification, extraction / subsetting, apply, and row-binding / unlisting in 2D. 
 
-* *Advanced data exploration*: Fast (grouped, weighted, panel-decomposed) summary statistics for cross-sectional and complex multilevel / panel data. 
+* **Advanced data exploration**: Fast (grouped, weighted, panel-decomposed) summary statistics for cross-sectional and complex multilevel / panel data. 
 
 *collapse* is mainly coded in C++ and built with *Rcpp*, but also uses C functions from *data.table*, *lfe* and *stats*. Effort has been expended to minimize the 
 execution speed of R code employed. 
