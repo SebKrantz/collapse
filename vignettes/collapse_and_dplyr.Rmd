@@ -62,7 +62,7 @@ FUN.grouped_df(x, [w = NULL,] TRA = NULL, [na.rm = TRUE,]
                use.g.names = FALSE, keep.group_vars = TRUE, [keep.w = TRUE,] ...)
 ```
 
-where `w` is a weight variable (available only to `fmean, fmode, fvar` and `fsd`), and `TRA` and can be used to transform `x` using the computed statistics and one of 10 available transformations (`"replace_fill", "replace", "-", "-+", "/", "%", "+", "*", "%%", "-%%"`). These transformations perform grouped replacing or sweeping out of the statistics computed by the function (discussed in section 2). `na.rm` efficiently removes missing values and is `TRUE` by default. `use.g.names` generates new row-names from the unique combinations of groups (default: disabled), whereas `keep.group_vars` (default: enabled) will keep the grouping columns as is custom in the native `data %>% group_by(...) %>% summarize(...)` workflow in *dplyr*. Finally, `keep.w` regulates whether a weighting variable used is also aggregated and saved in a column. For `fmean, fvar and fsd` this will compute the sum of the weights in each group, whereas `fmode` will return the maximum weight (corresponding to the mode) in each group. 
+where `w` is a weight variable (available only to `fsum, fprod, fmean, fmode, fvar` and `fsd`), and `TRA` and can be used to transform `x` using the computed statistics and one of 10 available transformations (`"replace_fill", "replace", "-", "-+", "/", "%", "+", "*", "%%", "-%%"`). These transformations perform grouped replacing or sweeping out of the statistics computed by the function (discussed in section 2). `na.rm` efficiently removes missing values and is `TRUE` by default. `use.g.names` generates new row-names from the unique combinations of groups (default: disabled), whereas `keep.group_vars` (default: enabled) will keep the grouping columns as is custom in the native `data %>% group_by(...) %>% summarize(...)` workflow in *dplyr*. Finally, `keep.w` regulates whether a weighting variable used is also aggregated and saved in a column. For `fmean, fvar and fsd` this will compute the sum of the weights in each group, whereas `fmode` will return the maximum weight (corresponding to the mode) in each group. 
 
 With that in mind, let's consider some straightforward applications:
 
@@ -402,7 +402,7 @@ GGDC10S %>%
 # Computing sercentages of sectoral data by Variable and Country
 GGDC10S %>% 
   group_by(Variable,Country) %>%
-    select_at(6:16) %>% fsum("%")
+    select_at(6:16) %>% fsum(TRA = "%")
 
 ```
 

@@ -181,16 +181,16 @@ fmodemCpp <- function(x, ng = 0L, g = 0L, gs = NULL, w = NULL, narm = TRUE, drop
     .Call(`_collapse_fmodemCpp`, x, ng, g, gs, w, narm, drop)
 }
 
-fprodCpp <- function(x, ng = 0L, g = 0L, narm = TRUE) {
-    .Call(`_collapse_fprodCpp`, x, ng, g, narm)
+fprodCpp <- function(x, ng = 0L, g = 0L, w = NULL, narm = TRUE) {
+    .Call(`_collapse_fprodCpp`, x, ng, g, w, narm)
 }
 
-fprodmCpp <- function(x, ng = 0L, g = 0L, narm = TRUE, drop = TRUE) {
-    .Call(`_collapse_fprodmCpp`, x, ng, g, narm, drop)
+fprodmCpp <- function(x, ng = 0L, g = 0L, w = NULL, narm = TRUE, drop = TRUE) {
+    .Call(`_collapse_fprodmCpp`, x, ng, g, w, narm, drop)
 }
 
-fprodlCpp <- function(x, ng = 0L, g = 0L, narm = TRUE, drop = TRUE) {
-    .Call(`_collapse_fprodlCpp`, x, ng, g, narm, drop)
+fprodlCpp <- function(x, ng = 0L, g = 0L, w = NULL, narm = TRUE, drop = TRUE) {
+    .Call(`_collapse_fprodlCpp`, x, ng, g, w, narm, drop)
 }
 
 fscaleCpp <- function(x, ng = 0L, g = 0L, w = NULL, narm = TRUE, set_mean = 0, set_sd = 1) {
@@ -205,16 +205,16 @@ fscalelCpp <- function(x, ng = 0L, g = 0L, w = NULL, narm = TRUE, set_mean = 0, 
     .Call(`_collapse_fscalelCpp`, x, ng, g, w, narm, set_mean, set_sd)
 }
 
-fsumCpp <- function(x, ng = 0L, g = 0L, narm = TRUE) {
-    .Call(`_collapse_fsumCpp`, x, ng, g, narm)
+fsumCpp <- function(x, ng = 0L, g = 0L, w = NULL, narm = TRUE) {
+    .Call(`_collapse_fsumCpp`, x, ng, g, w, narm)
 }
 
-fsummCpp <- function(x, ng = 0L, g = 0L, narm = TRUE, drop = TRUE) {
-    .Call(`_collapse_fsummCpp`, x, ng, g, narm, drop)
+fsummCpp <- function(x, ng = 0L, g = 0L, w = NULL, narm = TRUE, drop = TRUE) {
+    .Call(`_collapse_fsummCpp`, x, ng, g, w, narm, drop)
 }
 
-fsumlCpp <- function(x, ng = 0L, g = 0L, narm = TRUE, drop = TRUE) {
-    .Call(`_collapse_fsumlCpp`, x, ng, g, narm, drop)
+fsumlCpp <- function(x, ng = 0L, g = 0L, w = NULL, narm = TRUE, drop = TRUE) {
+    .Call(`_collapse_fsumlCpp`, x, ng, g, w, narm, drop)
 }
 
 fvarsdCpp <- function(x, ng = 0L, g = 0L, gs = NULL, w = NULL, narm = TRUE, stable_algo = TRUE, sd = TRUE) {

@@ -365,7 +365,7 @@ SEXP fmeanmCpp(const NumericMatrix& x, int ng = 0, const IntegerVector& g = 0, c
             }
           }
           for(int i = ng; i--; ) sumj[i] /= sumwj[i];
-          // sumj = sumj/sumwj;
+          // sumj = sumj/sumwj; // This gives erriir because sumj is matrix column !!
         }
         colnames(sum) = colnames(x);  // extremely efficient !!
         return sum;
@@ -393,7 +393,7 @@ SEXP fmeanmCpp(const NumericMatrix& x, int ng = 0, const IntegerVector& g = 0, c
             }
           }
           for(int i = ng; i--; ) sumj[i] /= sumwj[i];
-          // sumj = sumj/sumwj;
+          // sumj = sumj/sumwj; // This gives erriir because sumj is matrix column !!
         }
         colnames(sum) = colnames(x);  // extremely efficient !!
         return sum;
@@ -615,8 +615,8 @@ SEXP fmeanlCpp(const List& x, int ng = 0, const IntegerVector& g = 0, const SEXP
               sumwj[g[i]-1] += wg[i];
             }
           }
-          // sumj = sumj/sumwj;
-          for(int i = ng; i--; ) sumj[i] /= sumwj[i];
+          sumj = sumj/sumwj;
+          // for(int i = ng; i--; ) sumj[i] /= sumwj[i];
           SHALLOW_DUPLICATE_ATTRIB(sumj, column);
           sum[j] = sumj;
         }
@@ -642,8 +642,8 @@ SEXP fmeanlCpp(const List& x, int ng = 0, const IntegerVector& g = 0, const SEXP
               sumwj[g[i]-1] += wg[i];
             }
           }
-          // sumj = sumj/sumwj;
-          for(int i = ng; i--; ) sumj[i] /= sumwj[i];
+          sumj = sumj/sumwj;
+          // for(int i = ng; i--; ) sumj[i] /= sumwj[i];
           SHALLOW_DUPLICATE_ATTRIB(sumj, column);
           sum[j] = sumj;
         }

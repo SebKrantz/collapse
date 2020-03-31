@@ -1,11 +1,14 @@
 #include <Rcpp.h>
 using namespace Rcpp;
 
+// Note: For weighted computations the model code is fmean.cpp.
+
 // [[Rcpp::export]]
 NumericVector fprodCpp(const NumericVector& x, int ng = 0, const IntegerVector& g = 0,
-                       bool narm = true) {
+                       const SEXP& w = R_NilValue, bool narm = true) {
   int l = x.size();
 
+ if(Rf_isNull(w)) { // No weights
   if(ng == 0) {
     if(narm) {
       int j = l-1;
@@ -57,6 +60,61 @@ NumericVector fprodCpp(const NumericVector& x, int ng = 0, const IntegerVector& 
       return prod;
     }
   }
+ } else { // With weights
+   NumericVector wg = w;
+   if(l != wg.size()) stop("length(w) must match length(x)");
+   if(ng == 0) {
+     if(narm) {
+       int j = l-1;
+       while((std::isnan(x[j]) || std::isnan(wg[j])) && j!=0) --j;
+       long double prod = x[j]*wg[j];
+       if(j != 0) for(int i = j; i--; ) {
+         if(std::isnan(x[i]) || std::isnan(wg[i])) continue;
+         prod *= x[i]*wg[i];
+       }
+       return NumericVector::create((double)prod);
+     } else {
+       long double prod = 1;
+       for(int i = 0; i != l; ++i) {
+         if(std::isnan(x[i]) || std::isnan(wg[i])) {
+           prod = x[i]+wg[i];
+           break;
+         } else {
+           prod *= x[i]*wg[i];
+         }
+       }
+       return NumericVector::create((double)prod);
+     }
+   } else { // with groups
+     if(g.size() != l) stop("length(g) must match nrow(X)");
+     if(narm) {
+       NumericVector prod(ng, NA_REAL);
+       for(int i = l; i--; ) {
+         if(std::isnan(x[i]) || std::isnan(wg[i])) continue;
+         if(std::isnan(prod[g[i]-1])) prod[g[i]-1] = x[i]*wg[i];
+         else prod[g[i]-1] *= x[i]*wg[i];
+       }
+       DUPLICATE_ATTRIB(prod, x);
+       return prod;
+     } else {
+       NumericVector prod(ng, 1.0);
+       int ngs = 0;
+       for(int i = 0; i != l; ++i) {
+         if(std::isnan(x[i]) || std::isnan(wg[i])) {
+           if(!std::isnan(prod[g[i]-1])) {
+             prod[g[i]-1] = x[i]+wg[i];
+             ++ngs;
+             if(ngs == ng) break;
+           }
+         } else {
+           prod[g[i]-1] *= x[i]*wg[i];
+         }
+       }
+       DUPLICATE_ATTRIB(prod, x);
+       return prod;
+     }
+   }
+ }
 }
 
 
@@ -64,9 +122,10 @@ NumericVector fprodCpp(const NumericVector& x, int ng = 0, const IntegerVector& 
 
 // [[Rcpp::export]]
 SEXP fprodmCpp(const NumericMatrix& x, int ng = 0, const IntegerVector& g = 0,
-               bool narm = true, bool drop = true) {
+               const SEXP& w = R_NilValue, bool narm = true, bool drop = true) {
   int l = x.nrow(), col = x.ncol();
 
+ if(Rf_isNull(w)) { // No weights
   if(ng == 0) {
     NumericVector prod = no_init_vector(col); // Initialize faster -> Nope !!!
     if(narm) {
@@ -141,6 +200,87 @@ SEXP fprodmCpp(const NumericMatrix& x, int ng = 0, const IntegerVector& g = 0,
       return prod;
     }
   }
+ } else { // With weights
+   NumericVector wg = w;
+   if(l != wg.size()) stop("length(w) must match nrow(X)");
+   if(ng == 0) {
+     NumericVector prod = no_init_vector(col);
+     if(narm) {
+       for(int j = col; j--; ) {
+         NumericMatrix::ConstColumn column = x( _ , j);
+         int k = l-1;
+         while((std::isnan(column[k]) || std::isnan(wg[k])) && k!=0) --k;
+         long double prodj = column[k]*wg[k];
+         if(k != 0) for(int i = k; i--; ) {
+           if(std::isnan(column[i]) || std::isnan(wg[i])) continue;
+           prodj *= column[i]*wg[i];
+         }
+         prod[j] = (double)prodj;
+       }
+     } else {
+       for(int j = col; j--; ) {
+         NumericMatrix::ConstColumn column = x( _ , j);
+         long double prodj = 1;
+         for(int i = 0; i != l; ++i) {
+           if(std::isnan(column[i]) || std::isnan(wg[i])) {
+             prodj = column[i]+wg[i];
+             break;
+           } else {
+             prodj *= column[i]*wg[i];
+           }
+         }
+         prod[j] = (double)prodj;
+       }
+     }
+     if(drop) prod.attr("names") = colnames(x);
+     else {
+       prod.attr("dim") = Dimension(1, col);
+       colnames(prod) = colnames(x);
+     }
+     return prod;
+   } else { // with groups
+     if(g.size() != l) stop("length(g) must match nrow(X)");
+     if(narm) {
+       NumericMatrix prod = no_init_matrix(ng, col);
+       std::fill(prod.begin(), prod.end(), NA_REAL);
+       for(int j = col; j--; ) {
+         NumericMatrix::ConstColumn column = x( _ , j);
+         NumericMatrix::Column prodj = prod( _ , j);
+         for(int i = l; i--; ) {
+           if(std::isnan(column[i]) || std::isnan(wg[i])) continue;
+           if(std::isnan(prodj[g[i]-1])) {
+             prodj[g[i]-1] = column[i]*wg[i];
+           } else {
+             prodj[g[i]-1] *= column[i]*wg[i];
+           }
+         }
+       }
+       colnames(prod) = colnames(x);
+       return prod;
+     } else {
+       NumericMatrix prod = no_init_matrix(ng, col);
+       std::fill(prod.begin(), prod.end(), 1.0);
+       for(int j = col; j--; ) {
+         NumericMatrix::ConstColumn column = x( _ , j);
+         NumericMatrix::Column prodj = prod( _ , j);
+         int ngs = 0;
+         for(int i = 0; i != l; ++i) {
+           if(std::isnan(column[i]) || std::isnan(wg[i])) {
+             if(!std::isnan(prodj[g[i]-1])) {
+               prodj[g[i]-1] = column[i]+wg[i];
+               ++ngs;
+               if(ngs == ng) break;
+             }
+           } else {
+             prodj[g[i]-1] *= column[i]*wg[i];
+           }
+         }
+       }
+       colnames(prod) = colnames(x);
+       return prod;
+     }
+   }
+ }
 }
 
 
@@ -148,9 +288,10 @@ SEXP fprodmCpp(const NumericMatrix& x, int ng = 0, const IntegerVector& g = 0,
 
 // [[Rcpp::export]]
 SEXP fprodlCpp(const List& x, int ng = 0, const IntegerVector& g = 0,
-               bool narm = true, bool drop = true) {
+               const SEXP& w = R_NilValue, bool narm = true, bool drop = true) {
   int l = x.size();
 
+ if(Rf_isNull(w)) { // No weights
   if(ng == 0) {
     NumericVector prod(l);
     if(narm) {
@@ -235,4 +376,97 @@ SEXP fprodlCpp(const List& x, int ng = 0, const IntegerVector& g = 0,
     prod.attr("row.names") = IntegerVector::create(NA_INTEGER, -ng); // NumericVector::create(NA_REAL, -ng);
     return prod;
   }
+ } else { // With weights
+   NumericVector wg = w;
+   int wgs = wg.size();
+   if (ng == 0) {
+     NumericVector prod(l);
+     if(narm) {
+       for(int j = l; j--; ) {
+         NumericVector column = x[j];
+         if(column.size() != wgs) stop("length(w) must match nrow(X)");
+         int k = wgs-1;
+         while((std::isnan(column[k]) || std::isnan(wg[k])) && k!=0) --k;
+         long double prodi = column[k]*wg[k];
+         if(k != 0) for(int i = k; i--; ) {
+           if(std::isnan(column[i]) || std::isnan(wg[i])) continue;
+           prodi *= column[i]*wg[i];
+         }
+         prod[j] = (double)prodi;
+       }
+     } else {
+       for(int j = l; j--; ) {
+         NumericVector column = x[j];
+         if(column.size() != wgs) stop("length(w) must match nrow(X)");
+         long double prodi = 1;
+         for(int i = 0; i != wgs; ++i) {
+           if(std::isnan(column[i]) || std::isnan(wg[i])) {
+             prodi = column[i]+wg[i];
+             break;
+           } else {
+             prodi *= column[i]*wg[i];
+           }
+         }
+         prod[j] = (double)prodi;
+       }
+     }
+     if(drop) {
+       prod.attr("names") = x.attr("names");
+       return prod;
+     } else {
+       List out(l);
+       for(int j = l; j--; ) {
+         out[j] = prod[j];
+         SHALLOW_DUPLICATE_ATTRIB(out[j], x[j]);
+       }
+       DUPLICATE_ATTRIB(out, x);
+       out.attr("row.names") = 1;
+       return out;
+     }
+   } else { // With groups
+     List prod(l);
+     int gss = g.size();
+     if(wgs != gss) stop("length(w) must match length(g)");
+     if(narm) {
+       for(int j = l; j--; ) {
+         NumericVector column = x[j];
+         if(gss != column.size()) stop("length(g) must match nrow(X)");
+         NumericVector prodj(ng, NA_REAL);
+         for(int i = gss; i--; ) {
+           if(std::isnan(column[i]) || std::isnan(wg[i])) continue;
+           if(std::isnan(prodj[g[i]-1])) {
+             prodj[g[i]-1] = column[i]*wg[i];
+           } else {
+             prodj[g[i]-1] *= column[i]*wg[i];
+           }
+         }
+         SHALLOW_DUPLICATE_ATTRIB(prodj, column);
+         prod[j] = prodj;
+       }
+     } else {
+       for(int j = l; j--; ) {
+         NumericVector column = x[j];
+         if(gss != column.size()) stop("length(g) must match nrow(X)");
+         NumericVector prodj(ng, 1.0);
+         int ngs = 0;
+         for(int i = 0; i != gss; ++i) {
+           if(std::isnan(column[i]) || std::isnan(wg[i])) {
+             if(!std::isnan(prodj[g[i]-1])) {
+               prodj[g[i]-1] = column[i]+wg[i];
+               ++ngs;
+               if(ngs == ng) break;
+             }
+           } else {
+             prodj[g[i]-1] *= column[i]*wg[i];
+           }
+         }
+         SHALLOW_DUPLICATE_ATTRIB(prodj, column);
+         prod[j] = prodj;
+       }
+     }
+     DUPLICATE_ATTRIB(prod, x);
+     prod.attr("row.names") = IntegerVector::create(NA_INTEGER, -ng);
+     return prod;
+   }
+ }
 }
