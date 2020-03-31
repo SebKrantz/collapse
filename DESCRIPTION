@@ -31,7 +31,7 @@ Description: A C/C++ based package for advanced data transformation in R that is
         (lagged / leaded, iterated) differences and growth rates on (unordered) 
         time-series and panel data. Multivariate auto, partial and cross-
         correlation functions for panel data. Panel data to (ts-)array conversions.
-    (5) List Processing: (Recursive) list search / identification, extraction / 
+    (5) List processing: (Recursive) list search / identification, extraction / 
         subsetting, data-apply, and row-binding / unlisting in 2D.
     (6) Advanced data exploration: Fast (grouped, weighted, panel-decomposed) 
         summary statistics for complex multilevel / panel data.
