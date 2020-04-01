@@ -2,6 +2,7 @@
 
 <!-- badges: start -->
 [![CRAN status](https://www.r-pkg.org/badges/version/collapse)](https://cran.r-project.org/package=collapse)
+[![Travis build status](https://travis-ci.com/SebKrantz/collapse.svg?branch=master)](https://travis-ci.com/SebKrantz/collapse)
 ![](http://cranlogs.r-pkg.org/badges/collapse?color=orange)
 ![](http://cranlogs.r-pkg.org/badges/grand-total/collapse?color=brightgreen)
 <!-- badges: end -->
@@ -32,44 +33,49 @@ execution speed of R code employed.
 
 ## Installation
 
-The package can be installed in R using the following code:
+```{r}
+install.packages("collapse")
 
-remotes::install_github("SebKrantz/collapse")
-
-It is also available on CRAN. 
-
-## Contributing
-
-If you want to contribute, please fork and create a pull request for merging with the `development` branch.
+# install the development version
+devtools::install_github("SebKrantz/collapse")
+```
 
 ## Package Documentation
 *collapse* installs with a built-in hierarchically structured documentation, implemented via a set of separate help pages. The top-level documentation page provides a quick overview of the entire functionality of the package and links to all other documentation pages. It can be accessed from the R console by calling `help('collapse-documentation')`. 
 
 In addition, *collapse* provides 3 vignettes:
 
-* 'Introduction to *collapse*': Introduces all main features of the package in a structured way.
+* [Introduction to *collapse*](<https://cran.r-project.org/web/packages/collapse/vignettes/collapse_intro.html>): Introduces all main features of the package in a structured way.
 
-* '*collapse* and *dplyr*': Demonstrates the integration of *collapse* with *dplyr* and the *tidyverse*.
+* [*collapse* and *dplyr*](<https://cran.r-project.org/web/packages/collapse/vignettes/collapse_and_dplyr.html>): Demonstrates the integration of *collapse* with *dplyr* and the *tidyverse*.
 
-* '*collapse* and *plm*': Demonstrates the integration of *collapse* with the *plm* package and provides examples of fast and easy programming with panel data. 
+* [*collapse* and *plm*](<https://cran.r-project.org/web/packages/collapse/vignettes/collapse_and_plm.html>): Demonstrates the integration of *collapse* with the *plm* package and provides examples of fast and easy programming with panel data. 
+
+## Contributing
+
+If you want to contribute, please fork and create a pull request for merging with the **development** branch. Presently I am particularly interested in fast algorithms to compute weighted medians and (weighted) quantiles, but I am happy to consider any contribution. 
+
+***
 
 ### Notes on Performance 
 Simple benchmarks are provided in the vignettes. In general:
 
-* For simple aggregations of large data (<= 10 mio. obs) the performance is identical to *data.table* (when using functions that *data.table* internally optimizes. The C/C++ programming principles applied and the grouping mechanism of *collapse* is the same as *data.table*). On very large data (100 mio. obs +), *data.table*'s thread parallelization will let it run faster on a multicore machine. 
+* On simple aggregations of large data (< 10 mio. obs) the performance is identical to *data.table* (when using functions that *data.table* GeForce optimizes. The C/C++ programming principles applied and the grouping mechanism of *collapse* are the same as *data.table*). On very large data (100 mio. obs +), *data.table*'s thread parallelization will let it run faster on a multicore machine. 
 
-* For more complex categorical or weighed aggregations, or for data transformations like grouped scaling, centering or panel-differences, *collapse* is ~10x faster than *data.table* in nearly all applications. 
+* For more complex categorical or weighed aggregations, and for nearly all transformations like grouped scaling, centering, panel-differences etc. *collapse* is ~10x faster than *data.table*. 
 
-* Due to its minimized R overhead and a complete avoidance of non-standard evaluation, *collapse* is very efficient and easy to use for advanced programming purposes. On smaller data a *collapse* implementation will execute within the microsecond domain, whereas packages like *dplyr* or *data.table* will typically evaluate in the millisecond domain (~10x slower).
+* Due to its minimized R overhead and avoidance of non-standard evaluation, *collapse* is very efficient for programming. On smaller data a *collapse* implementation will execute within the microsecond domain, whereas packages like *dplyr* or *data.table* will typically evaluate in the millisecond domain (~10x slower).
 
-* This performance extends to grouped and weighted computations on vectors and matrices (no internal conversions, vector and matrix methods are also written in C++). *collapse* is not limited to programming with data.frames and it is class-secure and attribute-preserving (thus it can be applied to data.table's, tibbles, grouped tibbles etc. and also to special atomic objects like time-series and time-series matrices etc.).
+* This performance extends to grouped and weighted computations on vectors and matrices (no internal conversions, vector and matrix methods are also written in C++). 
+
+<!-- *collapse* is not limited to programming with data.frames and it is class-secure and attribute-preserving (thus it can be applied to data.table's, tibbles, grouped tibbles etc. and also to special atomic objects like time-series and time-series matrices etc.). -->
 
 ### Notes on the Integration with *dplyr*, *plm* and *data.table* 
 
-* *collapse* and *dplyr*: The *Fast Statistical Functions* and transformation functions and operators provided by *collapse* all have a *grouped_df* method, allowing them to be seamlessly integrated into *dplyr* / *tidyverse* workflows. Doing so facilitates advanced operations in *dplyr* and provides stunning performance improvements (bringing *dplyr* close to *data.table* on large data aggregations, and making it faster than *data.table* for advanced transformations). This integration is discussed and demonstrated in a separate vignette. 
+* ***collapse*** **and** ***dplyr***: The *Fast Statistical Functions* and transformation functions and operators provided by *collapse* all have a *grouped_df* method, allowing them to be seamlessly integrated into *dplyr* / *tidyverse* workflows. Doing so facilitates advanced operations in *dplyr* and provides remarkable performance improvements (bringing *dplyr* close to *data.table* on large data aggregations, and making it faster than *data.table* for advanced transformations). See also [this vignette](<https://cran.r-project.org/web/packages/collapse/vignettes/collapse_and_dplyr.html>). 
 
-* *collapse* and *plm*: Fast transformation functions and transformation operators provided by collapse also have *pseries* (panel-series) and *pdata.frame* (panel-data.frame) methods. This integrates them seamlessly into *plm* workflows and facilitates the manipulation of panel data. For typical panel-data operations like between- and within-transformations or panel lags / leads / differences, *collapse* functions are 20-100x faster than *plm* equivalents, and provide greater versatility (i.e. for applying transformations to multiple variables in a *pdata.frame*). This integration is also discussed and demonstrated in a separate vignette. 
+* ***collapse*** **and** ***plm***: Fast transformation functions and transformation operators provided by *collapse* also have *pseries* (panel-series) and *pdata.frame* (panel-data.frame) methods. This integrates them seamlessly into *plm* workflows and facilitates the manipulation of panel data. For typical panel-data operations like between- and within-transformations or panel lags / leads / differences, *collapse* functions are 20-100x faster than *plm* equivalents, and provide greater versatility (i.e. for applying transformations to multiple variables in a *pdata.frame*). See also [this vignette](<https://cran.r-project.org/web/packages/collapse/vignettes/collapse_and_plm.html>).
 
-* *collapse* and *data.table*: All collapse functions can be applied to *data.table*'s and they will also return a *data.table* again. The C/C++ programming of *collapse* was inspired by *data.table* and directly relies on some *data.table* source code (i.e. for grouping and row-binding). 
+* ***collapse*** **and** ***data.table***: All collapse functions can be applied to *data.table*'s and they will also return a *data.table* again. The C/C++ programming of *collapse* was inspired by *data.table* and directly relies on some *data.table* source code (i.e. for grouping and row-binding). 
 
 
