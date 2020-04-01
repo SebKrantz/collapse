@@ -3,7 +3,7 @@
 using namespace Rcpp;
 
 RcppExport void multi_yw(void *, void *, void *, void *, void *, void *, void *, void *, void *, void *);
-RcppExport SEXP collapse_init();
+RcppExport SEXP collapse_init(SEXP);
 RcppExport SEXP dt_na(SEXP, SEXP);
 RcppExport SEXP forder(SEXP, SEXP, SEXP, SEXP, SEXP, SEXP);
 RcppExport SEXP frank(SEXP, SEXP, SEXP, SEXP);
@@ -65,15 +65,15 @@ static const R_CallMethodDef CallEntries[] = {
   {"Cpp_fmode", (DL_FUNC) &_collapse_fmodeCpp, 6},
   {"Cpp_fmodel", (DL_FUNC) &_collapse_fmodelCpp, 6},
   {"Cpp_fmodem", (DL_FUNC) &_collapse_fmodemCpp, 7},
-  {"Cpp_fprod", (DL_FUNC) &_collapse_fprodCpp, 4},
-  {"Cpp_fprodm", (DL_FUNC) &_collapse_fprodmCpp, 5},
-  {"Cpp_fprodl", (DL_FUNC) &_collapse_fprodlCpp, 5},
+  {"Cpp_fprod", (DL_FUNC) &_collapse_fprodCpp, 5},
+  {"Cpp_fprodm", (DL_FUNC) &_collapse_fprodmCpp, 6},
+  {"Cpp_fprodl", (DL_FUNC) &_collapse_fprodlCpp, 6},
   {"Cpp_fscale", (DL_FUNC) &_collapse_fscaleCpp, 7},
   {"Cpp_fscalem", (DL_FUNC) &_collapse_fscalemCpp, 7},
   {"Cpp_fscalel", (DL_FUNC) &_collapse_fscalelCpp, 7},
-  {"Cpp_fsum", (DL_FUNC) &_collapse_fsumCpp, 4},
-  {"Cpp_fsumm", (DL_FUNC) &_collapse_fsummCpp, 5},
-  {"Cpp_fsuml", (DL_FUNC) &_collapse_fsumlCpp, 5},
+  {"Cpp_fsum", (DL_FUNC) &_collapse_fsumCpp, 5},
+  {"Cpp_fsumm", (DL_FUNC) &_collapse_fsummCpp, 6},
+  {"Cpp_fsuml", (DL_FUNC) &_collapse_fsumlCpp, 6},
   {"Cpp_fvarsd", (DL_FUNC) &_collapse_fvarsdCpp, 8},
   {"Cpp_fvarsdm", (DL_FUNC) &_collapse_fvarsdmCpp, 9},
   {"Cpp_fvarsdl", (DL_FUNC) &_collapse_fvarsdlCpp, 9},
@@ -95,7 +95,7 @@ static const R_CallMethodDef CallEntries[] = {
   {"Cpp_cond_duplattributes", (DL_FUNC) &_collapse_cond_duplattributes, 2},
   {"Cpp_groups2GRP", (DL_FUNC) &_collapse_groups2GRPCpp, 3},
   {"Cpp_lassign", (DL_FUNC) &_collapse_lassignCpp, 4},
-  {"C_collapse_init", (DL_FUNC) &collapse_init, 0},
+  {"C_collapse_init", (DL_FUNC) &collapse_init, 1},
   {"C_dt_na",         (DL_FUNC) &dt_na,         2},
   {"C_forder",        (DL_FUNC) &forder,        6},
   {"C_frank",         (DL_FUNC) &frank,         4},

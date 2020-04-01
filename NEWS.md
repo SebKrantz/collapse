@@ -1,11 +1,13 @@
 # collapse 1.1.0
-collapse 1.1.0 released end of March 2020: Some small fixes, improvements, and addressing test failures on some operating systems:
+collapse 1.1.0 released early April 2020 - some small fixes and additions:
 
-* Fixed gcc10 compiler issues, and added some more tests.
+* Fixed remaining gcc10, LTO and valgrind issues in C/C++ code, and added some more tests (there are now ~ 5300 tests ensuring that *collapse* statistical functions perform as expected).
 
 * Fixed the issue that supplying an unnamed list to `GRP()`, i.e. `GRP(list(v1, v2))` would give an error. Unnamed lists are now automatically named 'Group.1', 'Group.2', etc...
 
 * Fixed an issue where aggregating by a single id in `collap()` (i.e. `collap(data, ~ id1)`), the id would be coded as factor in the aggregated data.frame. All variables including id's now retain their class and attributes in the aggregated data.
+
+* Added weights (`w`) argument to `fsum` and `fprod`. *Note*: `fmedian` will also support weights as soon as I am able to implement a sufficiently fast (i.e. linear time) algorithm. I also hope to introduce (weighted) quantiles. I am happy for any help with these features. 
 
 * Added an argument `mean = 0` to `fwithin / W`. This allows simple and grouped centering on an arbitrary mean, `0` being the default. For grouped centering `mean = "overall.mean"` can be specified, which will center data on the overall mean of the data. The logical argument `add.global.mean = TRUE` used to toggle this in *collapse* 1.0.0 is therefore depreciated. 
 

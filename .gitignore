@@ -6,6 +6,7 @@
 *.o
 *.so
 *.dll
+release-Announcement*
 inst/doc
 doc
 Meta

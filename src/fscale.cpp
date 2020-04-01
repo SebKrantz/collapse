@@ -56,9 +56,10 @@ NumericVector fscaleCpp(const NumericVector& x, int ng = 0, const IntegerVector&
     } else { // with groups
       if(g.size() != l) stop("length(g) must match nrow(X)");
       double d1 = 0, gl_mean = 0; // Best way of doing this ?? How can you declare variables in global scope ??
-      NumericVector M2 = narm ? NumericVector(ng, NA_REAL) : NumericVector(ng);
-      NumericVector mean = narm ? no_init_vector(ng) : NumericVector(ng);
-      NumericVector n = narm ? NumericVector(ng, 1.0) : NumericVector(ng);
+      // NumericVector mean =  narm ? no_init_vector(ng) : NumericVector(ng); // works but valgrind issue !!
+      // NumericVector M2 = narm ? NumericVector(ng, NA_REAL) : NumericVector(ng);
+      // NumericVector n = narm ? NumericVector(ng, 1.0) : NumericVector(ng);
+      NumericVector mean(ng), n(ng, (narm) ? 1.0 : 0.0), M2(ng, (narm) ? NA_REAL : 0.0);
       if(narm) {
         for(int i = l; i--; ) {
           if(std::isnan(x[i])) continue;
@@ -184,9 +185,9 @@ NumericVector fscaleCpp(const NumericVector& x, int ng = 0, const IntegerVector&
     } else { // with groups
       if(g.size() != l) stop("length(g) must match nrow(X)");
       double d1 = 0, gl_mean = 0; // Best way of doing this ?? How can you declare variables in overall scope ??
-      NumericVector M2 = narm ? NumericVector(ng, NA_REAL) : NumericVector(ng);
-      NumericVector mean = narm ? no_init_vector(ng) : NumericVector(ng);
-      NumericVector sumw = narm ? no_init_vector(ng) : NumericVector(ng);
+      // NumericVector M2 = narm ? NumericVector(ng, NA_REAL) : NumericVector(ng);
+      NumericVector M2(ng, (narm) ? NA_REAL : 0.0), mean(ng), sumw(ng); // = narm ? no_init_vector(ng) : NumericVector(ng); // works but valgrind issues !!!
+      // NumericVector sumw = narm ? no_init_vector(ng) : NumericVector(ng);
       if(narm) {
         for(int i = l; i--; ) {
           if(std::isnan(x[i]) || std::isnan(wg[i])) continue;
@@ -327,13 +328,14 @@ NumericMatrix fscalemCpp(const NumericMatrix& x, int ng = 0, const IntegerVector
     } else { // with groups
       if(g.size() != l) stop("length(g) must match nrow(X)");
       // Better way ??
-      NumericVector meanj = no_init_vector(ng), nj = no_init_vector(ng), M2j = no_init_vector(ng);
+      NumericVector meanj(ng), nj(ng), M2j(ng);
+      // NumericVector meanj = no_init_vector(ng), nj = no_init_vector(ng), M2j = no_init_vector(ng); // Works but valgrind issue !!
       for(int j = col; j--; ) {
         NumericMatrix::ConstColumn column = x( _ , j);
         NumericMatrix::Column outj = out( _ , j);
         double d1 = 0, gl_meanj = 0;
         if(narm) { // better do two loops ??
-          M2j = NumericVector(ng, NA_REAL);
+          std::fill(M2j.begin(), M2j.end(), NA_REAL);
           for(int i = l; i--; ) {
             if(std::isnan(column[i])) continue;
             if(std::isnan(M2j[g[i]-1])) {
@@ -347,7 +349,7 @@ NumericMatrix fscalemCpp(const NumericMatrix& x, int ng = 0, const IntegerVector
             }
           }
         } else {
-          for(int i = ng; i--; ) meanj[i] = M2j[i] = nj[i] = 0; // good ?? fast ??
+          for(int i = ng; i--; ) meanj[i] = M2j[i] = nj[i] = 0;
           int ngs = 0;
           for(int i = 0; i != l; ++i) {
             if(std::isnan(M2j[g[i]-1])) continue;
@@ -462,14 +464,15 @@ NumericMatrix fscalemCpp(const NumericMatrix& x, int ng = 0, const IntegerVector
       }
     } else { // with groups and weights
       if(g.size() != l) stop("length(g) must match nrow(X)");
-      // Better way ??
-      NumericVector meanj = no_init_vector(ng), sumwj = no_init_vector(ng), M2j = no_init_vector(ng); // stable ??
+      // Works but valgrind issue !!
+      // NumericVector meanj = no_init_vector(ng), sumwj = no_init_vector(ng), M2j = no_init_vector(ng); // stable ??
+      NumericVector meanj(ng), sumwj(ng), M2j(ng); // better for valgrind !!
       for(int j = col; j--; ) {
         NumericMatrix::ConstColumn column = x( _ , j);
         NumericMatrix::Column outj = out( _ , j);
         double d1 = 0, gl_meanj = 0;
         if(narm) {
-          M2j = NumericVector(ng, NA_REAL);
+          std::fill(M2j.begin(), M2j.end(), NA_REAL);
           for(int i = l; i--; ) {
             if(std::isnan(column[i]) || std::isnan(wg[i])) continue;
             if(std::isnan(M2j[g[i]-1])) {
@@ -484,7 +487,7 @@ NumericMatrix fscalemCpp(const NumericMatrix& x, int ng = 0, const IntegerVector
             }
           }
         } else {
-          for(int i = ng; i--; ) meanj[i] = M2j[i] = sumwj[i] = 0;  // fast ??
+          for(int i = ng; i--; ) meanj[i] = M2j[i] = sumwj[i] = 0;
           int ngs = 0;
           for(int i = 0; i != l; ++i) {
             if(std::isnan(M2j[g[i]-1])) continue;
@@ -614,14 +617,15 @@ List fscalelCpp(const List& x, int ng = 0, const IntegerVector& g = 0, const SEX
     } else { // with groups
       int gss = g.size();
       // Better way ??
-      NumericVector meanj = no_init_vector(ng), nj = no_init_vector(ng), M2j = no_init_vector(ng);
+      NumericVector meanj(ng), nj(ng), M2j(ng);
+      // NumericVector meanj = no_init_vector(ng), nj = no_init_vector(ng), M2j = no_init_vector(ng); // Works but valgrind issue !!
       for(int j = l; j--; ) {
         NumericVector column = x[j];
         if(gss != column.size()) stop("length(g) must match nrow(X)");
         NumericVector outj = no_init_vector(gss);
         double d1 = 0, gl_meanj = 0;
         if(narm) { // better do two loops ??
-          M2j = NumericVector(ng, NA_REAL);
+          std::fill(M2j.begin(), M2j.end(), NA_REAL);
           for(int i = gss; i--; ) {
             if(std::isnan(column[i])) continue;
             if(std::isnan(M2j[g[i]-1])) {
@@ -635,7 +639,7 @@ List fscalelCpp(const List& x, int ng = 0, const IntegerVector& g = 0, const SEX
             }
           }
         } else {
-          for(int i = ng; i--; ) meanj[i] = M2j[i] = nj[i] = 0; // good ?? fast ??
+          for(int i = ng; i--; ) meanj[i] = M2j[i] = nj[i] = 0;
           int ngs = 0;
           for(int i = 0; i != gss; ++i) {
             if(std::isnan(M2j[g[i]-1])) continue;
@@ -757,15 +761,15 @@ List fscalelCpp(const List& x, int ng = 0, const IntegerVector& g = 0, const SEX
     } else { // with groups and weights
       int gss = g.size();
       if(gss != wgs) stop("length(w) must match length(g)");
-
-      NumericVector meanj = no_init_vector(ng), sumwj = no_init_vector(ng), M2j = no_init_vector(ng); // stable ??
+      NumericVector meanj(ng), sumwj(ng), M2j(ng);
+      // NumericVector meanj = no_init_vector(ng), sumwj = no_init_vector(ng), M2j = no_init_vector(ng); // Works but valgrind issue !!
       for(int j = l; j--; ) {
         NumericVector column = x[j];
         if(gss != column.size()) stop("length(g) must match nrow(X)");
         NumericVector outj = no_init_vector(gss);
         double d1 = 0, gl_meanj = 0;
         if(narm) {
-          M2j = NumericVector(ng, NA_REAL);
+          std::fill(M2j.begin(), M2j.end(), NA_REAL);
           for(int i = gss; i--; ) {
             if(std::isnan(column[i]) || std::isnan(wg[i])) continue;
             if(std::isnan(M2j[g[i]-1])) {
@@ -780,7 +784,7 @@ List fscalelCpp(const List& x, int ng = 0, const IntegerVector& g = 0, const SEX
             }
           }
         } else {
-          for(int i = ng; i--; ) meanj[i] = M2j[i] = sumwj[i] = 0; // fast ??
+          for(int i = ng; i--; ) meanj[i] = M2j[i] = sumwj[i] = 0;
           int ngs = 0;
           for(int i = 0; i != gss; ++i) {
             if(std::isnan(M2j[g[i]-1])) continue;

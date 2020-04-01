@@ -5,7 +5,7 @@
 // raise(SIGINT);
 #include <stdint.h> // for uint64_t rather than unsigned long long
 #include <stdbool.h>
-#include "myomp.h"
+// #include "myomp.h"
 #include "types.h"
 
 // data.table depends on R>=3.0.0 when R_xlen_t was introduced
@@ -82,7 +82,8 @@ extern SEXP char_NULL;
 extern SEXP sym_sorted;
 extern SEXP sym_index;
 extern SEXP sym_BY;
-extern SEXP sym_starts, char_starts;
+extern SEXP sym_starts;
+extern SEXP char_starts;
 extern SEXP sym_maxgrpn;
 extern SEXP sym_colClassesAs;
 extern SEXP sym_verbose;
@@ -90,7 +91,7 @@ extern SEXP sym_inherits;
 extern SEXP sym_datatable_locked;
 long long DtoLL(double x);
 double LLtoD(long long x);
-bool GetVerbose();
+// bool GetVerbose();
 extern double NA_INT64_D;
 extern long long NA_INT64_LL;
 extern Rcomplex NA_CPLX;  // initialized in init.c; see there for comments
@@ -176,9 +177,9 @@ double i64quickselect(int64_t *x, int n);
 double wallclock();
 
 // openmp-utils.c
-void initDTthreads();
-int getDTthreads();
-void avoid_openmp_hang_within_fork();
+// void initDTthreads();
+// int getDTthreads();
+// void avoid_openmp_hang_within_fork();
 
 // froll.c
 void frollmean(unsigned int algo, double *x, uint64_t nx, ans_t *ans, int k, int align, double fill, bool narm, int hasna, bool verbose);

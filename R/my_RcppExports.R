@@ -181,16 +181,16 @@ fmodemCpp <- function(x, ng = 0L, g = 0L, gs = NULL, w = NULL, narm = TRUE, drop
     .Call(Cpp_fmodem, x, ng, g, gs, w, narm, drop)
 }
 
-fprodCpp <- function(x, ng = 0L, g = 0L, narm = TRUE) {
-    .Call(Cpp_fprod, x, ng, g, narm)
+fprodCpp <- function(x, ng = 0L, g = 0L, w = NULL, narm = TRUE) {
+    .Call(Cpp_fprod, x, ng, g, w, narm)
 }
 
-fprodmCpp <- function(x, ng = 0L, g = 0L, narm = TRUE, drop = TRUE) {
-    .Call(Cpp_fprodm, x, ng, g, narm, drop)
+fprodmCpp <- function(x, ng = 0L, g = 0L, w = NULL, narm = TRUE, drop = TRUE) {
+    .Call(Cpp_fprodm, x, ng, g, w, narm, drop)
 }
 
-fprodlCpp <- function(x, ng = 0L, g = 0L, narm = TRUE, drop = TRUE) {
-    .Call(Cpp_fprodl, x, ng, g, narm, drop)
+fprodlCpp <- function(x, ng = 0L, g = 0L, w = NULL, narm = TRUE, drop = TRUE) {
+    .Call(Cpp_fprodl, x, ng, g, w, narm, drop)
 }
 
 fscaleCpp <- function(x, ng = 0L, g = 0L, w = NULL, narm = TRUE, set_mean = 0, set_sd = 1) {
@@ -205,16 +205,16 @@ fscalelCpp <- function(x, ng = 0L, g = 0L, w = NULL, narm = TRUE, set_mean = 0, 
     .Call(Cpp_fscalel, x, ng, g, w, narm, set_mean, set_sd)
 }
 
-fsumCpp <- function(x, ng = 0L, g = 0L, narm = TRUE) {
-    .Call(Cpp_fsum, x, ng, g, narm)
+fsumCpp <- function(x, ng = 0L, g = 0L, w = NULL, narm = TRUE) {
+    .Call(Cpp_fsum, x, ng, g, w, narm)
 }
 
-fsummCpp <- function(x, ng = 0L, g = 0L, narm = TRUE, drop = TRUE) {
-    .Call(Cpp_fsumm, x, ng, g, narm, drop)
+fsummCpp <- function(x, ng = 0L, g = 0L, w = NULL, narm = TRUE, drop = TRUE) {
+    .Call(Cpp_fsumm, x, ng, g, w, narm, drop)
 }
 
-fsumlCpp <- function(x, ng = 0L, g = 0L, narm = TRUE, drop = TRUE) {
-    .Call(Cpp_fsuml, x, ng, g, narm, drop)
+fsumlCpp <- function(x, ng = 0L, g = 0L, w = NULL, narm = TRUE, drop = TRUE) {
+    .Call(Cpp_fsuml, x, ng, g, w, narm, drop)
 }
 
 fvarsdCpp <- function(x, ng = 0L, g = 0L, gs = NULL, w = NULL, narm = TRUE, stable_algo = TRUE, sd = TRUE) {

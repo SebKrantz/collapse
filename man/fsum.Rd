@@ -4,29 +4,31 @@
 \alias{fsum.matrix}
 \alias{fsum.data.frame}
 \alias{fsum.grouped_df}
-\title{Fast (Grouped) Sum for Matrix-Like Objects}  % Vectors, Matrix and Data Frame Columns}
+\title{Fast (Grouped, Weighted) Sum for Matrix-Like Objects}  % Vectors, Matrix and Data Frame Columns}
 \description{
-\code{fsum} is a generic function that computes the (column-wise) sum of all values in \code{x}, (optionally) grouped by \code{g}. The \code{\link{TRA}} argument can further be used to transform \code{x} using its (grouped) sum.
+\code{fsum} is a generic function that computes the (column-wise) sum of all values in \code{x}, (optionally) grouped by \code{g} and/or weighted by \code{w} (i.e. to calculate survey totals). The \code{\link{TRA}} argument can further be used to transform \code{x} using its (grouped, weighted) sum.
 }
 \usage{
 fsum(x, ...)
 
-\method{fsum}{default}(x, g = NULL, TRA = NULL, na.rm = TRUE,
+\method{fsum}{default}(x, g = NULL, w = NULL, TRA = NULL, na.rm = TRUE,
      use.g.names = TRUE, ...)
 
-\method{fsum}{matrix}(x, g = NULL, TRA = NULL, na.rm = TRUE,
+\method{fsum}{matrix}(x, g = NULL, w = NULL, TRA = NULL, na.rm = TRUE,
      use.g.names = TRUE, drop = TRUE, ...)
 
-\method{fsum}{data.frame}(x, g = NULL, TRA = NULL, na.rm = TRUE,
+\method{fsum}{data.frame}(x, g = NULL, w = NULL, TRA = NULL, na.rm = TRUE,
      use.g.names = TRUE, drop = TRUE, ...)
 
-\method{fsum}{grouped_df}(x, TRA = NULL, na.rm = TRUE,
-     use.g.names = FALSE, keep.group_vars = TRUE, ...)
+\method{fsum}{grouped_df}(x, w = NULL, TRA = NULL, na.rm = TRUE,
+     use.g.names = FALSE, keep.group_vars = TRUE, keep.w = TRUE, ...)
 }
 \arguments{
 \item{x}{a numeric vector, matrix, data.frame or grouped tibble (\code{dplyr::grouped_df}).}
 
 \item{g}{a factor, \code{GRP} object, atomic vector (internally converted to factor) or a list of vectors / factors (internally converted to a \code{GRP} object) used to group \code{x}.}
+
+\item{w}{a numeric vector of (non-negative) weights, may contain missing values.}
 
 \item{TRA}{an integer or quoted operator indicating the transformation to perform:
 1 - "replace_fill"     |     2 - "replace"     |     3 - "-"     |     4 - "-+"     |     5 - "/"     |     6 - "\%"     |     7 - "+"     |     8 - "*"     |     9 - "\%\%"     |     10 - "-\%\%". See \code{\link{TRA}}.}
@@ -39,6 +41,8 @@ fsum(x, ...)
 
 \item{keep.group_vars}{\emph{grouped_df method:} Logical. \code{FALSE} removes grouping variables after computation.}
 
+\item{keep.w}{\emph{grouped_df method:} Logical. Retain summed weighting variable after computation (if contained in \code{grouped_df}).}
+
 \item{...}{arguments to be passed to or from other methods.}
 
 }
@@ -47,13 +51,15 @@ fsum(x, ...)
 
 Missing-value removal as controlled by the \code{na.rm} argument is done very efficiently by simply skipping them in the computation (thus setting \code{na.rm = FALSE} on data with no missing values doesn't give extra speed). Large performance gains can nevertheless be achieved in the presence of missing values if \code{na.rm = FALSE}, since then the corresponding computation is terminated once a \code{NA} is encountered and \code{NA} is returned (unlike \code{base::sum} which just runs through without any checks).
 
+The weighted sum (i.e. survey total) is computed as \code{sum(x * w)}. If \code{na.rm = TRUE}, missing values will be removed from both \code{x} and \code{w} i.e. utilizing only \code{x[complete.cases(x,w)]} and \code{w[complete.cases(x,w)]}.
+
 This all seamlessly generalizes to grouped computations, which are performed in a single pass (without splitting the data) and therefore extremely fast. See Benchmark and Examples below.
 
 When applied to data frame's with groups or \code{drop = FALSE}, \code{fsum} preserves all column attributes (such as variable labels) but does not distinguish between classed and unclassed objects. The attributes of the \code{data.frame} itself are also preserved.
 
 }
 \value{
-The sum of \code{x}, grouped by \code{g}, or (if \code{\link{TRA}} is used) \code{x} transformed by its sum, grouped by \code{g}.
+The (\code{w} weighted) sum of \code{x}, grouped by \code{g}, or (if \code{\link{TRA}} is used) \code{x} transformed by its sum, grouped by \code{g}.
 }
 \section{See Also}{
 \code{\link{fprod}}, \link[=A1-fast-statistical-functions]{Fast Statistical Functions}, \link[=collapse-documentation]{Collapse Overview}
@@ -62,8 +68,10 @@ The sum of \code{x}, grouped by \code{g}, or (if \code{\link{TRA}} is used) \cod
 ## default vector method
 mpg <- mtcars$mpg
 fsum(mpg)                         # Simple sum
+fsum(mpg, w = mtcars$hp)          # Weighted sum (total): Weighted by hp
 fsum(mpg, TRA = "\%")              # Simple transformation: obtain percentages of mpg
 fsum(mpg, mtcars$cyl)             # Grouped sum
+fsum(mpg, mtcars$cyl, mtcars$hp)  # Weighted grouped sum (total)
 fsum(mpg, mtcars[c(2,8:9)])       # More groups...
 g <- GRP(mtcars, ~ cyl + vs + am) # Precomputing groups gives more speed !!
 fsum(mpg, g)
@@ -85,8 +93,8 @@ fsum(m, g, TRA = "\%")
 
 ## method for grouped tibbles - for use with dplyr
 library(dplyr)
-mtcars \%>\% group_by(cyl,vs,am) \%>\% fsum
-mtcars \%>\% group_by(cyl,vs,am) \%>\% fsum("\%")
+mtcars \%>\% group_by(cyl,vs,am) \%>\% fsum(hp)  # Weighted grouped sum (total)
+mtcars \%>\% group_by(cyl,vs,am) \%>\% fsum(TRA = "\%")
 mtcars \%>\% group_by(cyl,vs,am) \%>\% select(mpg) \%>\% fsum
 }}
 \section{Benchmark}{\preformatted{

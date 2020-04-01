@@ -1,7 +1,7 @@
 Package: collapse
 Title: Advanced and Fast Data Transformation
 Version: 1.1.0
-Date: 2020-03-24
+Date: 2020-03-27
 Authors@R: c(
            person("Sebastian", "Krantz", role = c("aut", "cre"), 
                   email = "sebastian.krantz@graduateinstitute.ch"),
@@ -31,7 +31,7 @@ Description: A C/C++ based package for advanced data transformation in R that is
         (lagged / leaded, iterated) differences and growth rates on (unordered) 
         time-series and panel data. Multivariate auto, partial and cross-
         correlation functions for panel data. Panel data to (ts-)array conversions.
-    (5) List Processing: (Recursive) list search / identification, extraction / 
+    (5) List processing: (Recursive) list search / identification, extraction / 
         subsetting, data-apply, and row-binding / unlisting in 2D.
     (6) Advanced data exploration: Fast (grouped, weighted, panel-decomposed) 
         summary statistics for complex multilevel / panel data.

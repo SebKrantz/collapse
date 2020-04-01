@@ -68,7 +68,7 @@ NumericVector fbstatstemp(NumericVector x, bool ext = false, int ng = 0, Integer
       // long double d1 = 0;
       double d1 = 0;
       int k = 0;
-      NumericMatrix result = no_init_matrix(ng, 5); // Perhaps initializin is better ??
+      NumericMatrix result(ng, 5); //  = no_init_matrix initializing is better -> valgrind !!
       NumericMatrix::Column n = result( _ , 0);
       NumericMatrix::Column mean = result( _ , 1);
       NumericMatrix::Column M2 = result( _ , 2);
@@ -97,7 +97,7 @@ NumericVector fbstatstemp(NumericVector x, bool ext = false, int ng = 0, Integer
       } else { // with weights
         NumericVector wg = w;
         if(l != wg.size()) stop("length(w) must match length(x)");
-        NumericVector sumw = no_init_vector(ng);
+        NumericVector sumw(ng); // = no_init_vector(ng); // better for valgrind !!
         for(int i = l; i--; ) {
           if(std::isnan(x[i]) || std::isnan(wg[i])) continue;
           k = g[i]-1;
@@ -190,7 +190,7 @@ NumericVector fbstatstemp(NumericVector x, bool ext = false, int ng = 0, Integer
        if(g.size() != l) stop("length(g) must match nrow(X)");
        double d1 = 0, dn = 0, dn2 = 0, term1 = 0;
        int k = 0;
-       NumericMatrix result = no_init_matrix(ng, 7); // again: init better ??
+       NumericMatrix result(ng, 7); //  = no_init_matrix // Initializing better -> valgrind
        NumericMatrix::Column n = result( _ , 0);
        NumericMatrix::Column mean = result( _ , 1);
        NumericMatrix::Column M2 = result( _ , 2);
@@ -230,7 +230,7 @@ NumericVector fbstatstemp(NumericVector x, bool ext = false, int ng = 0, Integer
        } else { // with weights
          NumericVector wg = w;
          if(l != wg.size()) stop("length(w) must match length(x)");
-         NumericVector sumw = no_init_vector(ng);
+         NumericVector sumw(ng); // = no_init_vector(ng); // better for valgrind !!
          for(int i = l; i--; ) {
            if(std::isnan(x[i]) || std::isnan(wg[i])) continue;
            k = g[i]-1;
@@ -306,7 +306,7 @@ SEXP fbstatsCpp(const NumericVector& x, bool ext = false, int ng = 0, const Inte
     if(pg.size() != l) stop("length(pid) must match nrow(X)");
     bool weights = !Rf_isNull(w);
     NumericVector sum(npg, NA_REAL);
-    NumericVector sumw = (weights) ? no_init_vector(npg) : no_init_vector(1); // works ??
+    NumericVector sumw((weights) ? npg : 1); // no_init_vector(npg) : no_init_vector(1); // better for valgrind !!
     double osum = 0;
 
 

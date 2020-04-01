@@ -164,7 +164,7 @@ FUN(x, g = NULL, [w = NULL,] TRA = NULL, [na.rm = TRUE,] use.g.names = TRUE, dro
 
 ```
 
-where `x` is a vector, matrix or data.frame, `g` takes groups supplied as vector, factor, list of vectors or *GRP* object, and `w` takes a weight vector (available only to `fmean, fmode, fvar` and `fsd`). `TRA` and can be used to transform `x` using the computed statistics and one of 10 available transformations (`"replace_fill", "replace", "-", "-+", "/", "%", "+", "*", "%%, "-%%"`, discussed in section 4.3). `na.rm` efficiently removes missing values and is `TRUE` by default. `use.g.names = TRUE` generates new row-names from the unique groups supplied to `g`, and `drop = TRUE` returns a vector when performing simple (non-grouped) computations on matrix or data.frame columns. 
+where `x` is a vector, matrix or data.frame, `g` takes groups supplied as vector, factor, list of vectors or *GRP* object, and `w` takes a weight vector (presently available only to `fsum, fprod, fmean, fmode, fvar` and `fsd`). `TRA` and can be used to transform `x` using the computed statistics and one of 10 available transformations (`"replace_fill", "replace", "-", "-+", "/", "%", "+", "*", "%%, "-%%"`, discussed in section 4.3). `na.rm` efficiently removes missing values and is `TRUE` by default. `use.g.names = TRUE` generates new row-names from the unique groups supplied to `g`, and `drop = TRUE` returns a vector when performing simple (non-grouped) computations on matrix or data.frame columns. 
 
 With that in mind, let's start with some simple examples. To calculate the mean of each column in a data.frame or matrix, it is sufficient to type:
 
@@ -781,7 +781,7 @@ system.time(HDW(testdat, ~ qF(g1) + qF(g2), w = w, variable.wise = TRUE)) # Weig
 # Proportions
 system.time(testdat %>% group_by(g1,g2) %>% mutate_all(function(x) x/sum(x, na.rm = TRUE)))
 system.time(testdat[, lapply(.SD, function(x) x/sum(x, na.rm = TRUE)), keyby = c("g1","g2")])
-system.time(fsum(get_vars(testdat, -ind), get_vars(testdat, ind), "/"))
+system.time(fsum(get_vars(testdat, -ind), get_vars(testdat, ind), TRA = "/"))
 
 # Scaling
 system.time(testdat %>% group_by(g1,g2) %>% mutate_all(function(x) x/sd(x, na.rm = TRUE)))
@@ -798,8 +798,8 @@ system.time(STD(testdat, ~ g1 + g2, ~ w))  # Weighted standardizing: Also diffic
 # Replacing data with any ststistic, here the sum:
 system.time(testdat %>% group_by(g1,g2) %>% mutate_all(sum, na.rm = TRUE))
 system.time(testdat[, setdiff(names(testdat), c("g1","g2")) := lapply(.SD, sum, na.rm = TRUE), keyby = c("g1","g2")])
-system.time(fsum(get_vars(testdat, -ind), get_vars(testdat, ind), "replace_fill")) # dplyr and data.table also fill missing values. 
-system.time(fsum(get_vars(testdat, -ind), get_vars(testdat, ind), "replace")) # This preserves missing values, and is not easily implemented in dplyr or data.table
+system.time(fsum(get_vars(testdat, -ind), get_vars(testdat, ind), TRA = "replace_fill")) # dplyr and data.table also fill missing values. 
+system.time(fsum(get_vars(testdat, -ind), get_vars(testdat, ind), TRA = "replace")) # This preserves missing values, and is not easily implemented in dplyr or data.table
 ```
 
 The message is clear: *collapse* outperforms *dplyr* and *data.table* both in scope and speed when it comes to grouped and / or weighted transformations of data. This capacity of *collapse* should make it attractive to econometricians and people programming with complex panel-data. In the '*collapse* and *plm*' vignette I provide a programming example by implementing a more general case of the Hausman and Taylor (1981) estimator with two levels of fixed effects, as well as further benchmarks. 
@@ -1179,7 +1179,7 @@ The significant serial-correlation test below suggests that the panel-VAR with o
 ```{r}
 serial.test(pVAR)
 ```
- By default the VAR is identified using a Choleski ordering of the direct impact matrix in which the first variable (here Agriculture) is assumed to not be directly impacted by any other sector in the current period, and this descends down to the last variable (Finance and Real Estate), which is assumed to be impacted by all other sectors in the current period. For structural identification it usually necessary to impose restrictions on the direct impact matrix in line with economic theory. I do not have any theories on the average worldwide interaction of broad economic sectors, but to aid identification I will compute the correlation matrix in growth rates and restrict the lowest coefficients to be 0, which should be better than just imposing a random Choleski ordering. This will also enable me to give a demonstration of the grouped tibble methods for *collapse* functions, discussed in more detail in the '*collapse* and *dplyr*' vignette: 
+ By default the VAR is identified using a Choleski ordering of the direct impact matrix in which the first variable (here Agriculture) is assumed to not be directly impacted by any other sector in the current period, and this descends down to the last variable (Finance and Real Estate), which is assumed to be impacted by all other sectors in the current period. For structural identification it is usually necessary to impose restrictions on the direct impact matrix in line with economic theory. I do not have any theories on the average worldwide interaction of broad economic sectors, but to aid identification I will compute the correlation matrix in growth rates and restrict the lowest coefficients to be 0, which should be better than just imposing a random Choleski ordering. This will also enable me to give a demonstration of the grouped tibble methods for *collapse* functions, discussed in more detail in the '*collapse* and *dplyr*' vignette: 
 
 <!-- # This computes the correlation matrix in panel growth rates of VA of the 6 sectors, removing very large positive or negative growth rates:  -->
 <!-- corr <- GGDC10S %>% filter(Variable == "VA") %>%                           # Taking VA series -->

@@ -4,6 +4,7 @@ importFrom("graphics", "hist", "par", "plot")
 importFrom("grDevices", "rainbow")
 importFrom("lfe", "demeanlist")
 importFrom("parallel", "mclapply")
+importFrom("utils", "packageVersion")
 importFrom("stats", "as.formula", "complete.cases", "cor", "cov", "var", "pt", "na.omit",
            "setNames", "terms.formula", "ts", "ts.plot", "model.matrix.default", "quantile")
  export(add_stub)

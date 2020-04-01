@@ -101,11 +101,12 @@ NumericVector BWCpp(const NumericVector& x, int ng = 0, const IntegerVector& g =
         }
       } else {
         NumericVector sum(ng); //  // good?? -> yes, but not initializing is numerically unstable..
-        IntegerVector gsv = no_init_vector(ng); // NULL; // gives compile warning !!
+        // better for valgrind !!
+        IntegerVector gsv = (Rf_isNull(gs)) ? IntegerVector(ng) : as<IntegerVector>(gs);  // no_init_vector(ng); // NULL; // gives compile warning !!
         int ngs = 0;
         if(Rf_isNull(gs)) {
           // gsv = IntegerVector(ng);
-          std::fill(gsv.begin(), gsv.end(), 0);
+          // std::fill(gsv.begin(), gsv.end(), 0);
           for(int i = 0; i != l; ++i) {
             if(std::isnan(x[i])) {
               if(!std::isnan(sum[g[i]-1])) {
@@ -119,7 +120,7 @@ NumericVector BWCpp(const NumericVector& x, int ng = 0, const IntegerVector& g =
             }
           }
         } else {
-          gsv = gs;
+          // gsv = gs;
           if(gsv.size() != ng) stop("Vector of group-sizes must match number of groups");
           for(int i = 0; i != l; ++i) {
             if(std::isnan(x[i])) {
@@ -206,8 +207,9 @@ NumericVector BWCpp(const NumericVector& x, int ng = 0, const IntegerVector& g =
     } else { // with groups
       if(g.size() != l) stop("length(g) must match nrow(X)");
       if(narm) {
-        NumericVector sum(ng, NA_REAL); // Other way ?? -> Nope, this is as good as it gets !!
-        NumericVector sumw = no_init_vector(ng); // what if only NA ?? -> Works !! for some reason no problem !!, and faster !!
+        NumericVector sum(ng, NA_REAL), sumw(ng); // Other way ?? -> Nope, this is as good as it gets !!
+        // better for valgrind !
+        // NumericVector sumw = no_init_vector(ng); // what if only NA ?? -> Works !! for some reason no problem !!, and faster !!
         for(int i = l; i--; ) {
           if(std::isnan(x[i]) || std::isnan(wg[i])) continue; // faster way to code this ??? -> Not Bad at all -> index for g[i]-1?? -> Nope, no noticeable improvement !!
           if(std::isnan(sum[g[i]-1])) {

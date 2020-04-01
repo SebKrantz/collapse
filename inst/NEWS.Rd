@@ -2,11 +2,13 @@
 \title{\emph{collapse} News}
 \section{Changes in version 1.1.0}{
   \itemize{
-\item Fixed gcc10 compiler issues, and added some more tests.
+\item Fixed remaining gcc10, LTO and valgrind issues in C/C++ code, and added some more tests (there are now ~ 5300 tests ensuring that \emph{collapse} statistical functions perform as expected).
 
 \item Fixed the issue that supplying an unnamed list to \code{GRP()}, i.e. \code{GRP(list(v1, v2))} would give an error. Unnamed lists are now automatically named 'Group.1', 'Group.2', etc...
 
 \item Fixed an issue where aggregating by a single id in \code{collap()} (i.e. \code{collap(data, ~ id1)}), the id would be coded as factor in the aggregated data.frame. All variables including id's now retain their class and attributes in the aggregated data.
+
+\item  Added weights (\code{w}) argument to \code{fsum} and \code{fprod}. \emph{Note}: \code{fmedian} will also support weights as soon as I am able to implement a sufficiently fast (i.e. linear time) algorithm. I also hope to introduce (weighted) quantiles. I am happy for any help with these features.
 
 \item Added an argument \code{mean = 0} to \code{fwithin / W}. This allows simple and grouped centering on an arbitrary mean, \code{0} being the default. For grouped centering \code{mean = "overall.mean"} can be specified, which will center data on the overall mean of the data. The logical argument \code{add.global.mean = TRUE} used to toggle this in *collapse* 1.0.0 is therefore depreciated.
 

@@ -6,6 +6,7 @@
 ^cran-comments\.md$
 ^experimental$
 ^testing$
+inst/figures
 vignettes/collapse_intro_cache
 vignettes/collapse_and_plm_cache
 vignettes/collapse_and_dplyr_cache

@@ -36,10 +36,10 @@ FUN(x, [w = NULL,] TRA = NULL, [na.rm = TRUE,]
 
 \code{g} \tab\tab a factor, \code{\link{GRP}} object, atomic vector (internally converted to factor) or a list of vectors / factors (internally converted to a \code{\link{GRP}} object) used to group \code{x}. \cr \cr \cr
 
-\code{w} \tab\tab a numeric vector of (non-negative) weights, may contain missing values. Supported by \code{\link{fmean}}, \code{\link{fvar}}, \code{\link{fsd}} and \code{\link{fmode}}. \cr \cr \cr
+\code{w} \tab\tab a numeric vector of (non-negative) weights, may contain missing values. Supported by \code{\link{fsum}}, \code{\link{fprod}}, \code{\link{fmean}}, \code{\link{fvar}}, \code{\link{fsd}} and \code{\link{fmode}}. \cr \cr \cr
 
 \code{TRA} \tab\tab an integer or quoted operator indicating the transformation to perform:
-1 - "replace_fill"     |     2 - "replace"     |     3 - "-"     |     4 - "-+"     |     5 - "/"     |     6 - "\%"     |     7 - "+"     |     8 - "*". See \code{\link{TRA}}. \cr \cr \cr
+1 - "replace_fill"     |     2 - "replace"     |     3 - "-"     |     4 - "-+"     |     5 - "/"     |     6 - "\%"     |     7 - "+"     |     8 - "*"     |     9 - "\%\%"     |     10 - "-\%\%". See \code{\link{TRA}}. \cr \cr \cr
 
 \code{na.rm} \tab\tab logical. Skip missing values in \code{x}. Defaults to \code{TRUE} in all functions and implemented at very little computational cost. Not available for \code{\link{fNobs}}. \cr \cr \cr
 
@@ -96,7 +96,7 @@ fsum(m, g) # ...
 ## method for grouped tibbles - for use with dplyr
 library(dplyr)
 mtcars \%>\% group_by(cyl,vs,am) \%>\% select(mpg,carb) \%>\% fsum
-mtcars \%>\% group_by(cyl,vs,am) \%>\% fsum("\%")
+mtcars \%>\% group_by(cyl,vs,am) \%>\% fsum(TRA = "\%")
 mtcars \%>\% group_by(cyl,vs,am) \%>\% fmean(hp)         # weighted grouped mean, save sum of weights
 mtcars \%>\% group_by(cyl,vs,am) \%>\% fmean(hp, keep.group_vars = FALSE)
 }
