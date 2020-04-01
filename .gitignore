@@ -2,6 +2,7 @@
 .Rhistory
 .RData
 .Ruserdata
+.Rproj
 *vignette.pdf
 *.o
 *.so
