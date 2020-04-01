@@ -1,10 +1,9 @@
 # library(Rcpp)
 # sourceCpp("C++/small_helper.cpp")
-
+null2NA <- function(x) if(is.null(x)) NA_character_ else x
 vlabels <- function(X, attrn = "label") {
   if(is.atomic(X)) {
-    res <- attr(X, attrn)
-    if(is.null(res)) NA else res
+    null2NA(attr(X, attrn))
   } else {
     res <- lapply(X, attr, attrn)
     res[vapply(res, is.null, TRUE)] <- NA
@@ -19,7 +18,8 @@ vlabels <- function(X, attrn = "label") {
   }
   X
 }
-pasteclass <- function(x) paste(class(x), collapse = " ")
+strclp <- function(x) if(length(x) > 1L) paste(x, collapse = " ") else x
+pasteclass <- function(x) if(length(cx <- class(x)) > 1L) paste(cx, collapse = " ") else cx # Faster if length(class(x)) == 1L
 vclasses <- function(X) {
   if(is.atomic(X)) return(pasteclass(X))
   vapply(X, pasteclass, character(1))
