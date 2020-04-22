@@ -19,12 +19,12 @@ Matrix<RTYPE> psmatCppImpl(Vector<RTYPE> x, IntegerVector g, SEXP t, bool transp
     if(transpose) {
       for(int i = 0; i != l; ++i) {
         if(seen[g[i]] == gs) stop("Panel not Balanced: Need to supply timevar");
-        out(seen[g[i]]++, g[i]-1) = x[i];
+        out(seen[g[i]]++, g[i]-1) = x[i]; // out[(g[i]-1)*gs + seen[g[i]]++] = x[i]; not really faster...
       }
     } else {
       for(int i = 0; i != l; ++i) {
         if(seen[g[i]] == gs) stop("Panel not Balanced: Need to supply timevar");
-        out(g[i]-1, seen[g[i]]++) = x[i];
+        out(g[i]-1, seen[g[i]]++) = x[i]; // out[(seen[g[i]]++)*ng + g[i]-1] = x[i]; not really faster...
       }
     }
     out.attr("dimnames") = transpose ? List::create(seq_len(gs), glevs) : List::create(glevs, seq_len(gs));
@@ -43,9 +43,9 @@ Matrix<RTYPE> psmatCppImpl(Vector<RTYPE> x, IntegerVector g, SEXP t, bool transp
     // SHALLOW_DUPLICATE_ATTRIB(out, x); // good ??
     // Rf_setAttrib(out, R_DimSymbol, dim[0]);
     if(transpose) {
-      for(int i = 0; i != l; ++i) out(tt[i]-1, g[i]-1) = x[i];
+      for(int i = 0; i != l; ++i) out[(g[i]-1)*nt + tt[i]-1] = x[i]; // out(tt[i]-1, g[i]-1) = x[i]; // tiny bit faster
     } else {
-      for(int i = 0; i != l; ++i) out(g[i]-1, tt[i]-1) = x[i];
+      for(int i = 0; i != l; ++i) out[(tt[i]-1)*ng + g[i]-1] = x[i]; // out(g[i]-1, tt[i]-1) = x[i]; // tiny bit faster
     }
     out.attr("dimnames") = transpose ? List::create(tlevs, glevs) : List::create(glevs, tlevs);
     out.attr("transpose") = transpose;
