@@ -6,11 +6,9 @@
 # sdfsdfsd
 # Note: ng is not supplied to TRACpp for easier stat functions, thus you need to check in R !!
 
-TRA <- function(x, STATS, FUN = "-", ...) {
-  UseMethod("TRA", x)
-}
+TRA <- function(x, STATS, FUN = "-", ...) UseMethod("TRA") # , x
 TRA.default <- function(x, STATS, FUN = "-", g = NULL, ...) {
-  if(!missing(...)) stop("Unknown argument ", dotstostr(...))
+  if(!missing(...)) unused_arg_warning(match.call(), ...)
   if(is.null(g)) return(.Call(Cpp_TRA,x,STATS,0L,TRAtoInt(FUN))) else if(is.atomic(g)) {
     if(is.nmfactor(g)) {
       if(fnlevels(g) != length(STATS)) stop("number of groups must match length(STATS)")
@@ -26,7 +24,7 @@ TRA.default <- function(x, STATS, FUN = "-", g = NULL, ...) {
   }
 }
 TRA.matrix <- function(x, STATS, FUN = "-", g = NULL, ...) {
-  if(!missing(...)) stop("Unknown argument ", dotstostr(...))
+  if(!missing(...)) unused_arg_warning(match.call(), ...)
   if(is.null(g)) return(.Call(Cpp_TRAm,x,STATS,0L,TRAtoInt(FUN))) else if(is.atomic(g)) {
     if(is.nmfactor(g)) {
       if(fnlevels(g) != nrow(STATS)) stop("number of groups must match nrow(STATS)")
@@ -42,7 +40,7 @@ TRA.matrix <- function(x, STATS, FUN = "-", g = NULL, ...) {
   }
 }
 TRA.data.frame <- function(x, STATS, FUN = "-", g = NULL, ...) {
-  if(!missing(...)) stop("Unknown argument ", dotstostr(...))
+  if(!missing(...)) unused_arg_warning(match.call(), ...)
   if(is.null(g)) return(.Call(Cpp_TRAl,x,STATS,0L,TRAtoInt(FUN))) else if(is.atomic(g)) {
     if(is.nmfactor(g)) {
       if(fnlevels(g) != nrow(STATS)) stop("number of groups must match nrow(STATS)")
@@ -58,16 +56,15 @@ TRA.data.frame <- function(x, STATS, FUN = "-", g = NULL, ...) {
   }
 }
 TRA.grouped_df <- function(x, STATS, FUN = "-", keep.group_vars = TRUE, ...) {
-  if(!missing(...)) stop("Unknown argument ", dotstostr(...))
+  if(!missing(...)) unused_arg_warning(match.call(), ...)
   g <- GRP.grouped_df(x)
-  if(g[[1L]] != nrow(STATS)) stop("number of groups must match nrow(STATS)")
-  namst <- attr(STATS, "names") # faster !!
-  nognst <- namst %!in% g[[5L]]
-  attributes(STATS) <- NULL
-  mt <- ckmatch(namst, attr(x, "names"), "Variables in STATS not found in x:")
+  class(STATS) <- NULL
+  if(g[[1L]] !=  length(STATS[[1L]])) stop("number of groups must match nrow(STATS)")
+  nognst <- names(STATS) %!in% g[[5L]]
+  mt <- ckmatch(names(STATS), attr(x, "names"), "Variables in STATS not found in x:")
   mt <- mt[nognst]
-  get_vars(x, mt) <- .Call(Cpp_TRAl,colsubset(x, mt),STATS[nognst],g[[2L]],TRAtoInt(FUN))
-  if(!keep.group_vars) return(colsubset(x, attr(x, "names") %!in% g[[5L]]))
+  get_vars(x, mt) <- .Call(Cpp_TRAl,unclass(x)[mt],STATS[nognst],g[[2L]],TRAtoInt(FUN))
+  if(!keep.group_vars) return(fcolsubset(x, attr(x, "names") %!in% g[[5L]]))
   return(x)
 }
 

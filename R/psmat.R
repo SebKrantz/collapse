@@ -8,11 +8,9 @@
 
 # General Note : if add ... can put extra arguments that are not used. if not, gives unuse argument error !!!
 
-psmat <- function(x, ...) { # g, t = NULL, cols = NULL, transpose = FALSE, simplify = FALSE
-  UseMethod("psmat", x)
-}
+psmat <- function(x, ...) UseMethod("psmat") # , x
 psmat.default <- function(x, g, t = NULL, transpose = FALSE, ...) {
-  if(!missing(...)) stop("Unknown argument ", dotstostr(...))
+  if(!missing(...)) unused_arg_warning(match.call(), ...)
   if(is.matrix(x)) stop("x is already a matrix")
   if(is.atomic(g) && length(g) == 1L) {
     if(transpose) matrix(x, ncol = round(g), dimnames =
@@ -33,7 +31,7 @@ psmat.default <- function(x, g, t = NULL, transpose = FALSE, ...) {
   }
 }
 psmat.data.frame <- function(x, by, t = NULL, cols = NULL, transpose = FALSE, array = TRUE, ...) {
-  if(!missing(...)) stop("Unknown argument ", dotstostr(...))
+  if(!missing(...)) unused_arg_warning(match.call(), ...)
   class(x) <- NULL # Setting globally !!
   if(is.atomic(by) && length(by) == 1L) {
     nr <- length(x[[1L]])
@@ -78,25 +76,25 @@ psmat.data.frame <- function(x, by, t = NULL, cols = NULL, transpose = FALSE, ar
   }
   if(array) {
     if(length(res) == 1L) return(res[[1L]]) else
-    return(addAttributes(simplify2array(res), list(transpose = transpose, class = c("psmat","array"))))
+    return(addAttributes(fsimplify2array(res), list(transpose = transpose, class = c("psmat","array"))))
   } else return(res)
 }
 psmat.pseries <- function(x, transpose = FALSE, ...) {
-  if(!missing(...)) stop("Unknown argument ", dotstostr(...))
+  if(!missing(...)) unused_arg_warning(match.call(), ...)
   index <- unclass(attr(x, "index"))
   if(is.matrix(x)) stop("x is already a matrix")
   if(length(index) > 2L) index <- c(finteraction(index[-length(index)]), index[length(index)])
   .Call(Cpp_psmat, x, index[[1L]], index[[2L]], transpose)
 }
 psmat.pdata.frame <- function(x, cols = NULL, transpose = FALSE, array = TRUE, ...) {
-  if(!missing(...)) stop("Unknown argument ", dotstostr(...))
+  if(!missing(...)) unused_arg_warning(match.call(), ...)
   class(x) <- NULL
   index <- unclass(attr(x, "index"))
   if(length(index) > 2L) index <- c(finteraction(index[-length(index)]), index[length(index)])
   res <- lapply(if(is.null(cols)) x else x[cols2int(cols, x, names(x))], psmatCpp, index[[1L]], index[[2L]], transpose)
   if(array) {
     if(length(res) == 1L) return(res[[1L]]) else
-    return(addAttributes(simplify2array(res), list(transpose = transpose, class = c("psmat","array"))))
+    return(addAttributes(fsimplify2array(res), list(transpose = transpose, class = c("psmat","array"))))
   } else return(res)
 }
 

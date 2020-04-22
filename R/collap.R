@@ -43,7 +43,7 @@ collap <- function(X, by, FUN = fmean, catFUN = fmode, cols = NULL, custom = NUL
   } else {
     if(!customl) if(is.null(cols)) vl <- FALSE else v <- cols2log(cols, X, nam)
     if(!is.GRP(by)) {
-      numby <- seq_along(by)
+      numby <- seq_along(unclass(by))
       namby <- attr(by, "names") # faster if and only if by is a data.frame
       if(is.null(namby)) namby <- paste0("Group.", numby)
       by <- GRP.default(by, numby, sort = sort.row, return.groups = keep.by)
@@ -57,7 +57,7 @@ collap <- function(X, by, FUN = fmean, catFUN = fmode, cols = NULL, custom = NUL
   if(!customl) {
 
     # identifying data
-    nu <- vapply(X, is.numeric, TRUE, USE.NAMES = FALSE)
+    nu <- vapply(unattrib(X), is.numeric, TRUE)
     if(vl) {
       nnu <- which(!nu & v) # faster way ??
       nu <- which(nu & v)
@@ -218,7 +218,7 @@ collapv <- function(X, by, FUN = fmean, catFUN = fmode, cols = NULL, custom = NU
     v[numby] <- FALSE
 
     # identifying data
-    nu <- vapply(X, is.numeric, TRUE, USE.NAMES = FALSE)
+    nu <- vapply(unattrib(X), is.numeric, TRUE)
     nnu <- which(!nu & v) # faster way ??
     nu <- which(nu & v)
     nul <- length(nu) > 0L
@@ -360,7 +360,7 @@ collapg <- function(X, FUN = fmean, catFUN = fmode, cols = NULL, custom = NULL,
   if(is.function(catFUN)) catFUN <- `names<-`(list(catFUN), l1orn(as.character(substitute(catFUN)), "catFUN")) else
     if(is.list(catFUN) && is.null(names(catFUN))) names(catFUN) <- all.vars(substitute(catFUN))
 
-  return(collap(colsubset(X, ngn), by, FUN, catFUN, cols, custom,
+  return(collap(fcolsubset(X, ngn), by, FUN, catFUN, cols, custom,
                 keep.group_vars, keep.col.order, sort.row, parallel,
                 mc.cores, return, give.names, ...))
 }

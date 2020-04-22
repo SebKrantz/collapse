@@ -5,11 +5,10 @@ csd <- function(x) if(is.double(x)) x else if(is.character(x) && x == "within.sd
 # w.type = "frequency"
 # Todo: center and scale arguments -> link to fmean and fsd with TRA ??
 
-fscale <- function(x, ...) { # g = NULL, w = NULL, na.rm = TRUE, mean = 0, sd = 1,
-  UseMethod("fscale", x)
-}
+fscale <- function(x, ...) UseMethod("fscale") # , x
+
 fscale.default <- function(x, g = NULL, w = NULL, na.rm = TRUE, mean = 0, sd = 1, ...) {
-  if(!missing(...)) stop("Unknown argument ", dotstostr(...))
+  if(!missing(...)) unused_arg_warning(match.call(), ...)
   if(is.null(g)) return(.Call(Cpp_fscale,x,0L,0L,w,na.rm,cm(mean),csd(sd))) else if (is.atomic(g)) {
     if(is.nmfactor(g)) return(.Call(Cpp_fscale,x,fnlevels(g),g,w,na.rm,cm(mean),csd(sd))) else {
       g <- qG(g, ordered = FALSE, na.exclude = FALSE)
@@ -21,12 +20,12 @@ fscale.default <- function(x, g = NULL, w = NULL, na.rm = TRUE, mean = 0, sd = 1
   }
 }
 fscale.pseries <- function(x, effect = 1L, w = NULL, na.rm = TRUE, mean = 0, sd = 1, ...) {
-  if(!missing(...)) stop("Unknown argument ", dotstostr(...))
+  if(!missing(...)) unused_arg_warning(match.call(), ...)
   g <- if(length(effect) == 1L) unclass(attr(x, "index"))[[effect]] else finteraction(unclass(attr(x, "index"))[effect])
   .Call(Cpp_fscale,x,fnlevels(g),g,w,na.rm,cm(mean),csd(sd))
 }
 fscale.matrix <- function(x, g = NULL, w = NULL, na.rm = TRUE, mean = 0, sd = 1, ...) {
-  if(!missing(...)) stop("Unknown argument ", dotstostr(...))
+  if(!missing(...)) unused_arg_warning(match.call(), ...)
   if(is.null(g)) return(.Call(Cpp_fscalem,x,0L,0L,w,na.rm,cm(mean),csd(sd))) else if (is.atomic(g)) {
     if(is.nmfactor(g)) return(.Call(Cpp_fscalem,x,fnlevels(g),g,w,na.rm,cm(mean),csd(sd))) else {
       g <- qG(g, ordered = FALSE, na.exclude = FALSE)
@@ -38,9 +37,9 @@ fscale.matrix <- function(x, g = NULL, w = NULL, na.rm = TRUE, mean = 0, sd = 1,
   }
 }
 fscale.grouped_df <- function(x, w = NULL, na.rm = TRUE, mean = 0, sd = 1, keep.group_vars = TRUE, keep.w = TRUE, ...) {
-  if(!missing(...)) stop("Unknown argument ", dotstostr(...))
+  if(!missing(...)) unused_arg_warning(match.call(), ...)
   g <- GRP.grouped_df(x)
-  wsym <- deparse(substitute(w)) # faster way ???
+  wsym <- l1orn(all.vars(substitute(w)), "NULL")
   nam <- attr(x, "names")
   gn2 <- which(nam %in% g[[5L]])
   gn <- if(keep.group_vars) gn2 else NULL
@@ -61,7 +60,7 @@ fscale.grouped_df <- function(x, w = NULL, na.rm = TRUE, mean = 0, sd = 1, keep.
   } else return(.Call(Cpp_fscalel,x,g[[1L]],g[[2L]],w,na.rm,cm(mean),csd(sd)))
 }
 fscale.data.frame <- function(x, g = NULL, w = NULL, na.rm = TRUE, mean = 0, sd = 1, ...) {
-  if(!missing(...)) stop("Unknown argument ", dotstostr(...))
+  if(!missing(...)) unused_arg_warning(match.call(), ...)
   if(is.null(g)) return(.Call(Cpp_fscalel,x,0L,0L,w,na.rm,cm(mean),csd(sd))) else if(is.atomic(g)) {
     if(is.nmfactor(g)) return(.Call(Cpp_fscalel,x,fnlevels(g),g,w,na.rm,cm(mean),csd(sd))) else {
       g <- qG(g, ordered = FALSE, na.exclude = FALSE)
@@ -73,33 +72,30 @@ fscale.data.frame <- function(x, g = NULL, w = NULL, na.rm = TRUE, mean = 0, sd 
   }
 }
 fscale.pdata.frame <- function(x, effect = 1L, w = NULL, na.rm = TRUE, mean = 0, sd = 1, ...) {
-  if(!missing(...)) stop("Unknown argument ", dotstostr(...))
+  if(!missing(...)) unused_arg_warning(match.call(), ...)
   g <- if(length(effect) == 1L) unclass(attr(x, "index"))[[effect]] else finteraction(unclass(attr(x, "index"))[effect])
   .Call(Cpp_fscale,x,fnlevels(g),g,w,na.rm,cm(mean),csd(sd))
 }
 
 
-# Todo: Could still implement return = c("cols","all","add")
+STD <- function(x, ...) UseMethod("STD") # , x
 
-STD <- function(x, ...) { # g = NULL, w = NULL, na.rm = TRUE, mean = 0, sd = 1,
-  UseMethod("STD", x)
-}
-STD.default <- function(x, g = NULL, w = NULL, na.rm = TRUE, mean = 0, sd = 1, ...) {
-  fscale.default(x, g, w, na.rm, mean, sd)
-}
+STD.default <- function(x, g = NULL, w = NULL, na.rm = TRUE, mean = 0, sd = 1, ...)
+  fscale.default(x, g, w, na.rm, mean, sd, ...)
+
 STD.pseries <- function(x, effect = 1L, w = NULL, na.rm = TRUE, mean = 0, sd = 1, ...) {
-  if(!missing(...)) stop("Unknown argument ", dotstostr(...))
+  if(!missing(...)) unused_arg_warning(match.call(), ...)
   g <- if(length(effect) == 1L) unclass(attr(x, "index"))[[effect]] else finteraction(unclass(attr(x, "index"))[effect])
   .Call(Cpp_fscale,x,fnlevels(g),g,w,na.rm,cm(mean),csd(sd))
 }
-STD.matrix <- function(x, g = NULL, w = NULL, na.rm = TRUE, mean = 0, sd = 1, stub = "STD.", ...) {
-  if(!missing(...)) stop("Unknown argument ", dotstostr(...))
-  add_stub(fscale.matrix(x, g, w, na.rm, mean, sd), stub)
-}
+
+STD.matrix <- function(x, g = NULL, w = NULL, na.rm = TRUE, mean = 0, sd = 1, stub = "STD.", ...)
+  add_stub(fscale.matrix(x, g, w, na.rm, mean, sd, ...), stub)
+
 STD.grouped_df <- function(x, w = NULL, na.rm = TRUE, mean = 0, sd = 1, stub = "STD.", keep.group_vars = TRUE, keep.w = TRUE, ...) {
-  if(!missing(...)) stop("Unknown argument ", dotstostr(...))
+  if(!missing(...)) unused_arg_warning(match.call(), ...)
   g <- GRP.grouped_df(x)
-  wsym <- deparse(substitute(w))
+  wsym <- l1orn(all.vars(substitute(w)), "NULL")
   nam <- attr(x, "names")
   gn2 <- which(nam %in% g[[5L]])
   gn <- if(keep.group_vars) gn2 else NULL
@@ -124,7 +120,7 @@ STD.grouped_df <- function(x, w = NULL, na.rm = TRUE, mean = 0, sd = 1, stub = "
 STD.pdata.frame <- function(x, effect = 1L, w = NULL, cols = is.numeric,
                             na.rm = TRUE, mean = 0, sd = 1, stub = "STD.", keep.ids = TRUE,
                             keep.w = TRUE, ...) {
-  if(!missing(...)) stop("Unknown argument ", dotstostr(...))
+  if(!missing(...)) unused_arg_warning(match.call(), ...)
   ax <- attributes(x)
   class(x) <- NULL
   nam <- names(x)
@@ -164,7 +160,7 @@ STD.pdata.frame <- function(x, effect = 1L, w = NULL, cols = is.numeric,
 STD.data.frame <- function(x, by = NULL, w = NULL, cols = is.numeric,
                            na.rm = TRUE, mean = 0, sd = 1, stub = "STD.", keep.by = TRUE,
                            keep.w = TRUE, ...) {
-  if(!missing(...)) stop("Unknown argument ", dotstostr(...))
+  if(!missing(...)) unused_arg_warning(match.call(), ...)
   # fastest solution??
   if(is.call(by) || is.call(w)) {
     ax <- attributes(x)
@@ -205,7 +201,8 @@ STD.data.frame <- function(x, by = NULL, w = NULL, cols = is.numeric,
     }
   } else if(!is.null(cols)) { # Needs to be like this, otherwise subsetting dropps the attributes !!
     ax <- attributes(x)
-    x <- unclass(x)[cols2int(cols, x, ax[["names"]])]
+    class(x) <- NULL
+    x <- x[cols2int(cols, x, names(x))]
     ax[["names"]] <- names(x)
     setattributes(x, ax)
   }

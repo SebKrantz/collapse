@@ -64,13 +64,13 @@ ldepth <- function(l, DF.as.list = TRUE) { # or list.depth !! (problem here is w
 
 has_elem <- function(l, elem, recursive = TRUE, DF.as.list = TRUE, regex = FALSE, ...) { # or data.frame.l ,search.data.frame, unpack.data.frame, as.list.data.frame
   if(is.function(elem)) {
-    if(!missing(...)) stop("Unknown argument ", dotstostr(...))
+    if(!missing(...)) unused_arg_warning(match.call(), ...)
     if(recursive) {
      if(DF.as.list) return(any(unlist(rapply(l, elem, how = "list"), use.names = FALSE))) else
                     return(any(unlist(rapply2d(l, elem), use.names = FALSE)))
     } else return(any(vapply(l, elem, TRUE, USE.NAMES = FALSE)))
   } else if(is.character(elem)) {
-    if(!regex && !missing(...)) stop("Unknown argument ", dotstostr(...))
+    if(!regex && !missing(...)) unused_arg_warning(match.call(), ...)
     if(recursive) {
       class(l) <- NULL # in case [ behaves weird
       is.subl <- if(DF.as.list) is.list else function(x) is.list(x) && !inherits(x, "data.frame") # could do without, but it seems to remove data.frame attributes, and more speed!
@@ -174,15 +174,15 @@ get_elem <- function(l, elem, recursive = TRUE, DF.as.list = TRUE,
     is.subl <- if(DF.as.list) is.list else function(x) is.list(x) && !inherits(x, "data.frame") # could do without, but it seems to remove data.frame attributes
     if(keep.class) al <- attributes(l) # cll <- class(l) # perhaps generalize to other attributes??
     if(is.function(elem)) {
-      if(!missing(...)) stop("Unknown argument ", dotstostr(...))
+      if(!missing(...)) unused_arg_warning(match.call(), ...)
       l <- list_extract_FUN(l, elem, is.subl, keep.tree)
     } else if(is.character(elem)) {
       if(regex) l <- list_extract_regex(l, elem, is.subl, keep.tree, ...) else {
-         if(!missing(...)) stop("Unknown argument ", dotstostr(...))
+         if(!missing(...)) unused_arg_warning(match.call(), ...)
          l <- list_extract_names(l, elem, is.subl, keep.tree)
       }
     } else {
-      if(!missing(...)) stop("Unknown argument ", dotstostr(...))
+      if(!missing(...)) unused_arg_warning(match.call(), ...)
       l <- list_extract_ind(l, elem, is.subl, keep.tree)
     }
     if(keep.class && is.list(l)) {
@@ -191,15 +191,15 @@ get_elem <- function(l, elem, recursive = TRUE, DF.as.list = TRUE,
     } else return(l)
   } else {
     if(is.function(elem)) {
-      if(!missing(...)) stop("Unknown argument ", dotstostr(...))
+      if(!missing(...)) unused_arg_warning(match.call(), ...)
       elem <- which(vapply(l, elem, TRUE, USE.NAMES = FALSE))
     } else if(is.character(elem)) {
       if(regex) elem <- rgrep(elem, names(l), ...) else {
-        if(!missing(...)) stop("Unknown argument ", dotstostr(...))
+        if(!missing(...)) unused_arg_warning(match.call(), ...)
         elem <- which(names(l) %in% elem)
       }
     } else if(is.logical(elem)) {
-      if(!missing(...)) stop("Unknown argument ", dotstostr(...))
+      if(!missing(...)) unused_arg_warning(match.call(), ...)
       elem <- which(elem) # else stop("elem must be a function, character vector or vector of regular expressions!")
     }
     if(keep.tree || length(elem) != 1L) {

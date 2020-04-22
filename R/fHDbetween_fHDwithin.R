@@ -5,9 +5,10 @@
 myModFrame <- function(f, data) {
   t <- terms.formula(f)
   v <- attr(t, "variables")
-  res <- eval(substitute(with(data, e), list(e = v)))
+  # res <- eval(substitute(with(data, e), list(e = v)))
+  res <- eval(v, data, parent.frame()) # faster !!
   attributes(res) <- list(names = as.character(v[-1]),
-                          row.names = .set_row_names(fnrow(data)),
+                          row.names = .set_row_names(fnrow2(data)),
                           class = "data.frame",
                           terms = t)
   return(res)
@@ -16,7 +17,7 @@ myModFrame <- function(f, data) {
 
 getfl <- function(mf) {
 
-  facts <- vapply(mf, is.factor, TRUE)
+  facts <- vapply(unattrib(mf), is.factor, TRUE)
 
   if(any(facts)) {
     terms <- attributes(attr(mf, "terms"))
@@ -28,7 +29,7 @@ getfl <- function(mf) {
     fctinteract <- fctterms & colSums(factors) > 1
 
     if(any(fctinteract)) { # if any interactions involving factors
-      singlefct <- match(tl[fctterms & !fctinteract], names(facts))
+      singlefct <- match(tl[fctterms & !fctinteract], names(mf))
       intterms <- lapply(which(fctinteract), function(i) factors[,i] > 0) # names(which( # better way ??
       factors <- factors[!facts, fctinteract, drop = FALSE]
       fctfct <- colSums(factors) == 0
@@ -90,9 +91,8 @@ subsetfl <- function(fl, cc) {
 # mf =  model.frame( ~ factor(cyl)*carb + vs + wt:gear + wt:gear:carb, data = mtcars)
 # getfl(model.frame( ~ factor(cyl)*carb + vs + wt:gear + wt:gear:carb, data = mtcars))
 
-fHDwithin <- function(x, ...) {
-  UseMethod("fHDwithin", x)
-}
+fHDwithin <- function(x, ...) UseMethod("fHDwithin") # , x
+
 fHDwithin.default <- function(x, fl, w = NULL, na.rm = TRUE, fill = FALSE, ...) {
   ax <- attributes(x)
   if(na.rm) {
@@ -101,25 +101,25 @@ fHDwithin.default <- function(x, fl, w = NULL, na.rm = TRUE, fill = FALSE, ...) 
       ax[["na.rm"]] <- which(!cc)
       cc <- which(cc)
       if(!fill) {
-        if(!is.null(ax[["names"]])) ax[["names"]] <- ax[["names"]][cc] # best ??
+        if(!is.null(names(x))) ax[["names"]] <- names(x)[cc] # best ??
         x <- x[cc]
       }
     } else na.rm <- FALSE
   }
 
   if(is.list(fl)) {
-    fc <- vapply(fl, is.factor, TRUE, USE.NAMES = FALSE)
+    fc <- vapply(unattrib(fl), is.factor, TRUE, USE.NAMES = FALSE)
     fcl <- any(fc)
-    if(!fcl && !missing(...)) stop("Unknown argument ", dotstostr(...))
+    if(!fcl && !missing(...)) unused_arg_warning(match.call(), ...)
     nallfc <- fcl && !all(fc)
-    if(na.rm) fl <- if(inherits(fl, "data.frame")) .Call(C_subsetDT, fl, cc, seq_along(fl)) else subsetfl(fl, cc)
+    if(na.rm) fl <- if(inherits(fl, "data.frame")) .Call(C_subsetDT, fl, cc, seq_along(unclass(fl))) else subsetfl(fl, cc)
     attributes(fl) <- NULL # good here ??
     if(nallfc) {
       xmat <- demeanlist(do.call(cbind, fl[!fc]), fl[fc], weights = w, ...)
       fl <- fl[fc]
     } else if(!fcl) xmat <- do.call(cbind, c(list(rep(1L, length(fl[[1L]]))), fl))
   } else if(is.matrix(fl)) {
-    if(!missing(...)) stop("Unknown argument ", dotstostr(...))
+    if(!missing(...)) unused_arg_warning(match.call(), ...)
     xmat <- if(na.rm) cbind(Intercept = 1L, fl[cc, , drop = FALSE]) else cbind(Intercept = 1L, fl)
     nallfc <- fcl <- FALSE
   } else if(is.factor(fl)) {
@@ -128,7 +128,7 @@ fHDwithin.default <- function(x, fl, w = NULL, na.rm = TRUE, fill = FALSE, ...) 
     nallfc <- FALSE
   } else {
     if(!is.numeric(fl)) stop("fl must be a list of vectors / factors, a numeric matrix or a numeric vector")
-    if(!missing(...)) stop("Unknown argument ", dotstostr(...))
+    if(!missing(...)) unused_arg_warning(match.call(), ...)
     xmat <- if(na.rm) cbind(Intercept = 1L, fl[cc]) else cbind(Intercept = 1L, fl)
     nallfc <- fcl <- FALSE
   }
@@ -169,7 +169,7 @@ fHDwithin.matrix <- function(x, fl, w = NULL, na.rm = TRUE, fill = FALSE, ...) {
       ax[["na.rm"]] <- which(!cc)
       cc <- which(cc)
       if(!fill) {
-        ax[["dimnames"]][[1L]] <- ax[["dimnames"]][[1L]][cc] # best ??
+        if(length(dimnames(x)[[1L]])) ax[["dimnames"]][[1L]] <- dimnames(x)[[1L]][cc] # best ??
         ax[["dim"]][1L] <- length(cc)
         x <- x[cc, , drop = FALSE]
       }
@@ -177,18 +177,18 @@ fHDwithin.matrix <- function(x, fl, w = NULL, na.rm = TRUE, fill = FALSE, ...) {
   }
 
   if(is.list(fl)) {
-    fc <- vapply(fl, is.factor, TRUE, USE.NAMES = FALSE)
+    fc <- vapply(unattrib(fl), is.factor, TRUE, USE.NAMES = FALSE)
     fcl <- any(fc)
-    if(!fcl && !missing(...)) stop("Unknown argument ", dotstostr(...))
+    if(!fcl && !missing(...)) unused_arg_warning(match.call(), ...)
     nallfc <- fcl && !all(fc)
-    if(na.rm) fl <- if(inherits(fl, "data.frame")) .Call(C_subsetDT, fl, cc, seq_along(fl)) else subsetfl(fl, cc)
+    if(na.rm) fl <- if(inherits(fl, "data.frame")) .Call(C_subsetDT, fl, cc, seq_along(unclass(fl))) else subsetfl(fl, cc)
     attributes(fl) <- NULL # good here ??
     if(nallfc) {
       xmat <- demeanlist(do.call(cbind, fl[!fc]), fl[fc], weights = w, ...)
       fl <- fl[fc]
     } else if(!fcl) xmat <- do.call(cbind, c(list(rep(1L, length(fl[[1L]]))), fl))
   } else if(is.matrix(fl)) {
-    if(!missing(...)) stop("Unknown argument ", dotstostr(...))
+    if(!missing(...)) unused_arg_warning(match.call(), ...)
     xmat <- if(na.rm) cbind(Intercept = 1L, fl[cc, , drop = FALSE]) else cbind(Intercept = 1L, fl)
     nallfc <- fcl <- FALSE
   } else if(is.factor(fl)) {
@@ -197,7 +197,7 @@ fHDwithin.matrix <- function(x, fl, w = NULL, na.rm = TRUE, fill = FALSE, ...) {
     nallfc <- FALSE
   } else {
     if(!is.numeric(fl)) stop("fl must be a list of vectors / factors, a numeric matrix or a numeric vector")
-    if(!missing(...)) stop("Unknown argument ", dotstostr(...))
+    if(!missing(...)) unused_arg_warning(match.call(), ...)
     xmat <- if(na.rm) cbind(Intercept = 1L, fl[cc]) else cbind(Intercept = 1L, fl)
     nallfc <- fcl <- FALSE
   }
@@ -227,13 +227,13 @@ fHDwithin.pdata.frame <- function(x, w = NULL, na.rm = TRUE, fill = TRUE, variab
       return(y)
     })
     return(setAttributes(varwisecomp(x, ax[["index"]], w, ...), ax))
-  } else if(na.rm && any(miss <- .Call(C_dt_na, x, seq_along(x)))) {
+  } else if(na.rm && any(miss <- .Call(C_dt_na, x, seq_along(unclass(x))))) {
       ax[["na.rm"]] <- which(miss)
       cc <- which(!miss)
-      Y <- demeanlist(.Call(C_subsetDT, x, cc, seq_along(x)),
+      Y <- demeanlist(.Call(C_subsetDT, x, cc, seq_along(unclass(x))),
                             lapply(ax[["index"]], function(y) y[cc]),
                             weights = w[cc], ...)
-    if(fill) return(setAttributes(.Call(Cpp_lassign, Y, fnrow(x), cc, NA), ax)) else {
+    if(fill) return(setAttributes(.Call(Cpp_lassign, Y, fnrow2(x), cc, NA), ax)) else {
       ax[["row.names"]] <- ax[["row.names"]][cc]
       return(setAttributes(Y, ax))
     }
@@ -249,25 +249,25 @@ fHDwithin.data.frame <- function(x, fl, w = NULL, na.rm = TRUE, fill = FALSE, va
       cc <- which(cc)
       if(!is.null(w)) w <- w[cc]
       if(!variable.wise) {
-        if(fill) nrx <- fnrow(x) else ax[["row.names"]] <- ax[["row.names"]][cc] # best ??
-        x <- .Call(C_subsetDT, x, cc, seq_along(x))
+        if(fill) nrx <- fnrow2(x) else ax[["row.names"]] <- ax[["row.names"]][cc] # best ??
+        x <- .Call(C_subsetDT, x, cc, seq_along(unclass(x)))
       }
     } else na.rm <- FALSE
   }
 
   if(is.list(fl)) { # fl is a list !!
-    fc <- vapply(fl, is.factor, TRUE, USE.NAMES = FALSE)
+    fc <- vapply(unattrib(fl), is.factor, TRUE, USE.NAMES = FALSE)
     fcl <- any(fc)
-    if(!fcl && !missing(...)) stop("Unknown argument ", dotstostr(...))
+    if(!fcl && !missing(...)) unused_arg_warning(match.call(), ...)
     nallfc <- fcl && !all(fc)
-    if(na.rm) fl <- if(inherits(fl, "data.frame")) .Call(C_subsetDT, fl, cc, seq_along(fl)) else subsetfl(fl, cc)
+    if(na.rm) fl <- if(inherits(fl, "data.frame")) .Call(C_subsetDT, fl, cc, seq_along(unclass(fl))) else subsetfl(fl, cc)
     attributes(fl) <- NULL # good here ??
     if(nallfc) {
       xmat <- demeanlist(do.call(cbind, fl[!fc]), fl[fc], weights = w, ...)
       fl <- fl[fc]
     } else if(!fcl) xmat <- do.call(cbind, c(list(rep(1L, length(fl[[1L]]))), fl))
   } else if(is.matrix(fl)) {
-      if(!missing(...)) stop("Unknown argument ", dotstostr(...))
+      if(!missing(...)) unused_arg_warning(match.call(), ...)
       xmat <- if(na.rm) cbind(Intercept = 1L, fl[cc, , drop = FALSE]) else cbind(Intercept = 1L, fl)
       nallfc <- fcl <- FALSE
   } else if(is.factor(fl)) {
@@ -276,14 +276,14 @@ fHDwithin.data.frame <- function(x, fl, w = NULL, na.rm = TRUE, fill = FALSE, va
     nallfc <- FALSE
   } else {
     if(!is.numeric(fl)) stop("fl must be a list of vectors / factors, a numeric matrix or a numeric vector")
-    if(!missing(...)) stop("Unknown argument ", dotstostr(...))
+    if(!missing(...)) unused_arg_warning(match.call(), ...)
     xmat <- if(na.rm) cbind(Intercept = 1L, fl[cc]) else cbind(Intercept = 1L, fl)
     nallfc <- fcl <- FALSE
   }
 
   if(variable.wise) {
     if(na.rm) { # this means there were mising values in fl, which were already removed!
-      return(setAttributes(lapply(x, function(y) {
+      return(setAttributes(lapply(unattrib(x), function(y) {
         y[-cc] <- NA # which is not faster !!
         ycc <- !is.na(y)
         YC <- which(ycc[cc])
@@ -292,7 +292,7 @@ fHDwithin.data.frame <- function(x, fl, w = NULL, na.rm = TRUE, fill = FALSE, va
         return(y)
       }), ax)) # Rfast fastlm??
     } else {
-      return(setAttributes(lapply(x, function(y) {
+      return(setAttributes(lapply(unattrib(x), function(y) {
         ycc <- which(!is.na(y))
         y[ycc] <- if(nallfc) qr.resid(qr.default(xmat[ycc, , drop = FALSE]), demeanlist(y[ycc], subsetfl(fl, ycc), weights = w[ycc], ...)) else if(fcl)
           demeanlist(y[ycc], subsetfl(fl, ycc), weights = w[ycc], ...) else qr.resid(qr.default(xmat[ycc, , drop = FALSE]), y[ycc])
@@ -313,29 +313,30 @@ fHDwithin.data.frame <- function(x, fl, w = NULL, na.rm = TRUE, fill = FALSE, va
 
 
 # Note: could also do Mudlack and add means to second regression -> better than two-times centering ??
-HDW <- function(x, ...) { # fl, w = NULL, na.rm = TRUE, fill = FALSE,
-  UseMethod("HDW", x)
-}
-HDW.default <- function(x, fl, w = NULL, na.rm = TRUE, fill = FALSE, ...) {
+HDW <- function(x, ...) UseMethod("HDW") # , x
+
+HDW.default <- function(x, fl, w = NULL, na.rm = TRUE, fill = FALSE, ...)
   fHDwithin.default(x, fl, w, na.rm, fill, ...)
-}
-HDW.pseries <- function(x, w = NULL, na.rm = TRUE, fill = TRUE, ...) {
+
+HDW.pseries <- function(x, w = NULL, na.rm = TRUE, fill = TRUE, ...)
   fHDwithin.pseries(x, w, na.rm, fill, ...)
-}
-HDW.matrix <- function(x, fl, w = NULL, na.rm = TRUE, fill = FALSE, stub = "HDW.", ...) {
+
+HDW.matrix <- function(x, fl, w = NULL, na.rm = TRUE, fill = FALSE, stub = "HDW.", ...)
   add_stub(fHDwithin.matrix(x, fl, w, na.rm, fill, ...), stub)
-}
+
+
+
 HDW.data.frame <- function(x, fl, w = NULL, cols = is.numeric, na.rm = TRUE, fill = FALSE, variable.wise = FALSE, stub = "HDW.", ...) {
   if(is.call(fl)) {
     ax <- attributes(x)
-    nam <- attr(x, "names")
+    nam <- ax[["names"]]
     if(length(fl) == 3L) {
       fvars <- ckmatch(all.vars(fl[[3L]]), nam)
       Xvars <- ckmatch(all.vars(fl[[2L]]), nam)
       fl[[2L]] <- NULL
     } else {
       fvars <- ckmatch(all.vars(fl), nam)
-      Xvars <- if(!is.null(cols)) fsetdiff(cols2int(cols, x, nam), fvars) else seq_along(x)[-fvars]
+      Xvars <- if(!is.null(cols)) fsetdiff(cols2int(cols, x, nam), fvars) else seq_along(unclass(x))[-fvars]
     }
     ax[["names"]] <- if(is.character(stub)) paste0(stub, nam[Xvars]) else nam[Xvars]
 
@@ -345,12 +346,12 @@ HDW.data.frame <- function(x, fl, w = NULL, cols = is.numeric, na.rm = TRUE, fil
         ax[["na.rm"]] <- which(miss)
         cc <- which(!miss)
         if(!is.null(w)) w <- w[cc]
-        if(!variable.wise) if(fill) nrx <- fnrow(x) else ax[["row.names"]] <- ax[["row.names"]][cc] # best ??
+        if(!variable.wise) if(fill) nrx <- fnrow2(x) else ax[["row.names"]] <- ax[["row.names"]][cc] # best ??
       } else na.rm <- FALSE
     }
 
     xmat <- NULL
-    list2env(getfl(myModFrame(fl, if(na.rm) .Call(C_subsetDT, x, cc, fvars) else colsubset(x, fvars))), envir = environment())
+    list2env(getfl(myModFrame(fl, if(na.rm) .Call(C_subsetDT, x, cc, fvars) else unclass(x)[fvars])), envir = environment())
     fcl <- !is.null(fl)
     nallfc <- fcl && !is.null(xmat)
     if(nallfc) xmat <- demeanlist(xmat[, -1L, drop = FALSE], fl, weights = w, ...)
@@ -389,9 +390,9 @@ HDW.data.frame <- function(x, fl, w = NULL, cols = is.numeric, na.rm = TRUE, fil
 }
 
 HDW.pdata.frame <- function(x, w = NULL, cols = is.numeric, na.rm = TRUE, fill = TRUE,
-                            variable.wise = TRUE, stub = "HDW.", ...) {
+                            variable.wise = TRUE, stub = "HDW.", ...)
     return(add_stub(fHDwithin.pdata.frame(if(is.null(cols)) x else colsubset(x, cols), w, na.rm, fill, variable.wise, ...), stub))
-}
+
 
 # Theory: y = ?1 x1 + ?2 x2 + e
 # FWT: M2 y = ?1 M2 x1 + e so residuals: e = M2 y - ?1 M2 x1 and fitted:
@@ -405,9 +406,8 @@ HDW.pdata.frame <- function(x, w = NULL, cols = is.numeric, na.rm = TRUE, fill =
 
 # Note: Only changes to fHDwithin is in the computation part: Perhaps you can combine the code in some better way to reduce code duplication ??
 
-fHDbetween <- function(x, ...) {
-  UseMethod("fHDbetween", x)
-}
+fHDbetween <- function(x, ...) UseMethod("fHDbetween") # , x
+
 fHDbetween.default <- function(x, fl, w = NULL, na.rm = TRUE, fill = FALSE, ...) {
   ax <- attributes(x)
   if(na.rm) {
@@ -416,25 +416,25 @@ fHDbetween.default <- function(x, fl, w = NULL, na.rm = TRUE, fill = FALSE, ...)
       ax[["na.rm"]] <- which(!cc)
       cc <- which(cc)
       if(!fill) {
-        if(!is.null(ax[["names"]])) ax[["names"]] <- ax[["names"]][cc] # best ??
+        if(!is.null(names(x))) ax[["names"]] <- names(x)[cc] # best ??
         x <- x[cc]
       }
     } else na.rm <- FALSE
   }
 
   if(is.list(fl)) {
-    fc <- vapply(fl, is.factor, TRUE, USE.NAMES = FALSE)
+    fc <- vapply(unattrib(fl), is.factor, TRUE, USE.NAMES = FALSE)
     fcl <- any(fc)
-    if(!fcl && !missing(...)) stop("Unknown argument ", dotstostr(...))
+    if(!fcl && !missing(...)) unused_arg_warning(match.call(), ...)
     nallfc <- fcl && !all(fc)
-    if(na.rm) fl <- if(inherits(fl, "data.frame")) .Call(C_subsetDT, fl, cc, seq_along(fl)) else subsetfl(fl, cc)
+    if(na.rm) fl <- if(inherits(fl, "data.frame")) .Call(C_subsetDT, fl, cc, seq_along(unclass(fl))) else subsetfl(fl, cc)
     attributes(fl) <- NULL # good here ??
     if(nallfc) {
       xmat <- demeanlist(do.call(cbind, fl[!fc]), fl[fc], weights = w, ...)
       fl <- fl[fc]
     } else if(!fcl) xmat <- do.call(cbind, c(list(rep(1L, length(fl[[1L]]))), fl))
   } else if(is.matrix(fl)) {
-    if(!missing(...)) stop("Unknown argument ", dotstostr(...))
+    if(!missing(...)) unused_arg_warning(match.call(), ...)
     xmat <- if(na.rm) cbind(Intercept = 1L, fl[cc, , drop = FALSE]) else cbind(Intercept = 1L, fl)
     nallfc <- fcl <- FALSE
   } else if(is.factor(fl)) {
@@ -443,7 +443,7 @@ fHDbetween.default <- function(x, fl, w = NULL, na.rm = TRUE, fill = FALSE, ...)
     nallfc <- FALSE
   } else {
     if(!is.numeric(fl)) stop("fl must be a list of vectors / factors, a numeric matrix or a numeric vector")
-    if(!missing(...)) stop("Unknown argument ", dotstostr(...))
+    if(!missing(...)) unused_arg_warning(match.call(), ...)
     xmat <- if(na.rm) cbind(Intercept = 1L, fl[cc]) else cbind(Intercept = 1L, fl)
     nallfc <- fcl <- FALSE
   }
@@ -484,7 +484,7 @@ fHDbetween.matrix <- function(x, fl, w = NULL, na.rm = TRUE, fill = FALSE, ...) 
       ax[["na.rm"]] <- which(!cc)
       cc <- which(cc)
       if(!fill) {
-        ax[["dimnames"]][[1L]] <- ax[["dimnames"]][[1L]][cc] # best ??
+        if(length(dimnames(x)[[1L]])) ax[["dimnames"]][[1L]] <- dimnames(x)[[1L]][cc] # best ??
         ax[["dim"]][1L] <- length(cc)
         x <- x[cc, , drop = FALSE]
       }
@@ -492,18 +492,18 @@ fHDbetween.matrix <- function(x, fl, w = NULL, na.rm = TRUE, fill = FALSE, ...) 
   }
 
   if(is.list(fl)) {
-    fc <- vapply(fl, is.factor, TRUE, USE.NAMES = FALSE)
+    fc <- vapply(unattrib(fl), is.factor, TRUE, USE.NAMES = FALSE)
     fcl <- any(fc)
-    if(!fcl && !missing(...)) stop("Unknown argument ", dotstostr(...))
+    if(!fcl && !missing(...)) unused_arg_warning(match.call(), ...)
     nallfc <- fcl && !all(fc)
-    if(na.rm) fl <- if(inherits(fl, "data.frame")) .Call(C_subsetDT, fl, cc, seq_along(fl)) else subsetfl(fl, cc)
+    if(na.rm) fl <- if(inherits(fl, "data.frame")) .Call(C_subsetDT, fl, cc, seq_along(unclass(fl))) else subsetfl(fl, cc)
     attributes(fl) <- NULL # good here ??
     if(nallfc) {
       xmat <- demeanlist(do.call(cbind, fl[!fc]), fl[fc], weights = w, ...)
       fl <- fl[fc]
     } else if(!fcl) xmat <- do.call(cbind, c(list(rep(1L, length(fl[[1L]]))), fl))
   } else if(is.matrix(fl)) {
-    if(!missing(...)) stop("Unknown argument ", dotstostr(...))
+    if(!missing(...)) unused_arg_warning(match.call(), ...)
     xmat <- if(na.rm) cbind(Intercept = 1L, fl[cc, , drop = FALSE]) else cbind(Intercept = 1L, fl)
     nallfc <- fcl <- FALSE
   } else if(is.factor(fl)) {
@@ -512,7 +512,7 @@ fHDbetween.matrix <- function(x, fl, w = NULL, na.rm = TRUE, fill = FALSE, ...) 
     nallfc <- FALSE
   } else {
     if(!is.numeric(fl)) stop("fl must be a list of vectors / factors, a numeric matrix or a numeric vector")
-    if(!missing(...)) stop("Unknown argument ", dotstostr(...))
+    if(!missing(...)) unused_arg_warning(match.call(), ...)
     xmat <- if(na.rm) cbind(Intercept = 1L, fl[cc]) else cbind(Intercept = 1L, fl)
     nallfc <- fcl <- FALSE
   }
@@ -542,13 +542,13 @@ fHDbetween.pdata.frame <- function(x, w = NULL, na.rm = TRUE, fill = TRUE, varia
       return(y)
     })
     return(setAttributes(varwisecomp(x, ax[["index"]], w, ...), ax))
-  } else if(na.rm && any(miss <- .Call(C_dt_na, x, seq_along(x)))) {
+  } else if(na.rm && any(miss <- .Call(C_dt_na, x, seq_along(unclass(x))))) {
     ax[["na.rm"]] <- which(miss)
     cc <- which(!miss)
-    Y <- demeanlist(.Call(C_subsetDT, x, cc, seq_along(x)),
+    Y <- demeanlist(.Call(C_subsetDT, x, cc, seq_along(unclass(x))),
                     lapply(ax[["index"]], function(y) y[cc]),
                     weights = w[cc], means = TRUE, ...)
-    if(fill) return(setAttributes(.Call(Cpp_lassign, Y, fnrow(x), cc, NA), ax)) else {
+    if(fill) return(setAttributes(.Call(Cpp_lassign, Y, fnrow2(x), cc, NA), ax)) else {
       ax[["row.names"]] <- ax[["row.names"]][cc]
       return(setAttributes(Y, ax))
     }
@@ -564,25 +564,25 @@ fHDbetween.data.frame <- function(x, fl, w = NULL, na.rm = TRUE, fill = FALSE, v
       cc <- which(cc)
       if(!is.null(w)) w <- w[cc]
       if(!variable.wise) {
-        if(fill) nrx <- fnrow(x) else ax[["row.names"]] <- ax[["row.names"]][cc] # best ??
-        x <- .Call(C_subsetDT, x, cc, seq_along(x))
+        if(fill) nrx <- fnrow2(x) else ax[["row.names"]] <- ax[["row.names"]][cc] # best ??
+        x <- .Call(C_subsetDT, x, cc, seq_along(unclass(x)))
       }
     } else na.rm <- FALSE
   }
 
   if(is.list(fl)) { # fl is a list !!
-    fc <- vapply(fl, is.factor, TRUE, USE.NAMES = FALSE)
+    fc <- vapply(unattrib(fl), is.factor, TRUE, USE.NAMES = FALSE)
     fcl <- any(fc)
-    if(!fcl && !missing(...)) stop("Unknown argument ", dotstostr(...))
+    if(!fcl && !missing(...)) unused_arg_warning(match.call(), ...)
     nallfc <- fcl && !all(fc)
-    if(na.rm) fl <- if(inherits(fl, "data.frame")) .Call(C_subsetDT, fl, cc, seq_along(fl)) else subsetfl(fl, cc)
+    if(na.rm) fl <- if(inherits(fl, "data.frame")) .Call(C_subsetDT, fl, cc, seq_along(unclass(fl))) else subsetfl(fl, cc)
     attributes(fl) <- NULL # good here ??
     if(nallfc) {
       xmat <- demeanlist(do.call(cbind, fl[!fc]), fl[fc], weights = w, ...)
       fl <- fl[fc]
     } else if(!fcl) xmat <- do.call(cbind, c(list(rep(1L, length(fl[[1L]]))), fl))
   } else if(is.matrix(fl)) {
-    if(!missing(...)) stop("Unknown argument ", dotstostr(...))
+    if(!missing(...)) unused_arg_warning(match.call(), ...)
     xmat <- if(na.rm) cbind(Intercept = 1L, fl[cc, , drop = FALSE]) else cbind(Intercept = 1L, fl)
     nallfc <- fcl <- FALSE
   } else if(is.factor(fl)) {
@@ -591,14 +591,14 @@ fHDbetween.data.frame <- function(x, fl, w = NULL, na.rm = TRUE, fill = FALSE, v
     nallfc <- FALSE
   } else {
     if(!is.numeric(fl)) stop("fl must be a list of vectors / factors, a numeric matrix or a numeric vector")
-    if(!missing(...)) stop("Unknown argument ", dotstostr(...))
+    if(!missing(...)) unused_arg_warning(match.call(), ...)
     xmat <- if(na.rm) cbind(Intercept = 1L, fl[cc]) else cbind(Intercept = 1L, fl)
     nallfc <- fcl <- FALSE
   }
 
   if(variable.wise) {
     if(na.rm) { # this means there were mising values in fl, which were already removed!
-      return(setAttributes(lapply(x, function(y) {
+      return(setAttributes(lapply(unattrib(x), function(y) {
         y[-cc] <- NA # which is not faster !!
         ycc <- !is.na(y)
         YC <- which(ycc[cc])
@@ -607,7 +607,7 @@ fHDbetween.data.frame <- function(x, fl, w = NULL, na.rm = TRUE, fill = FALSE, v
         return(y)
       }), ax)) # Rfast fastlm??
     } else {
-      return(setAttributes(lapply(x, function(y) {
+      return(setAttributes(lapply(unattrib(x), function(y) {
         ycc <- which(!is.na(y))
         y[ycc] <- if(nallfc) y[ycc] - qr.resid(qr.default(xmat[ycc, , drop = FALSE]), demeanlist(y[ycc], subsetfl(fl, ycc), weights = w[ycc], ...)) else if(fcl)
           demeanlist(y[ycc], subsetfl(fl, ycc), weights = w[ycc], means = TRUE, ...) else qr.fitted(qr.default(xmat[ycc, , drop = FALSE]), y[ycc])
@@ -627,29 +627,28 @@ fHDbetween.data.frame <- function(x, fl, w = NULL, na.rm = TRUE, fill = FALSE, v
 }
 
 
-HDB <- function(x, ...) { # fl, w = NULL, na.rm = TRUE, fill = FALSE,
-  UseMethod("HDB", x)
-}
-HDB.default <- function(x, fl, w = NULL, na.rm = TRUE, fill = FALSE, ...) {
+HDB <- function(x, ...) UseMethod("HDB") # , x
+
+HDB.default <- function(x, fl, w = NULL, na.rm = TRUE, fill = FALSE, ...)
   fHDbetween.default(x, fl, w, na.rm, fill, ...)
-}
-HDB.pseries <- function(x, w = NULL, na.rm = TRUE, fill = TRUE, ...) {
+
+HDB.pseries <- function(x, w = NULL, na.rm = TRUE, fill = TRUE, ...)
   fHDbetween.pseries(x, w, na.rm, fill, ...)
-}
-HDB.matrix <- function(x, fl, w = NULL, na.rm = TRUE, fill = FALSE, stub = "HDB.", ...) {
+
+HDB.matrix <- function(x, fl, w = NULL, na.rm = TRUE, fill = FALSE, stub = "HDB.", ...)
   add_stub(fHDbetween.matrix(x, fl, w, na.rm, fill, ...), stub)
-}
+
 HDB.data.frame <- function(x, fl, w = NULL, cols = is.numeric, na.rm = TRUE, fill = FALSE, variable.wise = FALSE, stub = "HDB.", ...) {
   if(is.call(fl)) {
     ax <- attributes(x)
-    nam <- attr(x, "names")
+    nam <- ax[["names"]]
     if(length(fl) == 3L) {
       fvars <- ckmatch(all.vars(fl[[3L]]), nam)
       Xvars <- ckmatch(all.vars(fl[[2L]]), nam)
       fl[[2L]] <- NULL
     } else {
       fvars <- ckmatch(all.vars(fl), nam)
-      Xvars <- if(!is.null(cols)) fsetdiff(cols2int(cols, x, nam), fvars) else seq_along(x)[-fvars]
+      Xvars <- if(!is.null(cols)) fsetdiff(cols2int(cols, x, nam), fvars) else seq_along(unclass(x))[-fvars]
     }
     ax[["names"]] <- if(is.character(stub)) paste0(stub, nam[Xvars]) else nam[Xvars]
 
@@ -659,12 +658,12 @@ HDB.data.frame <- function(x, fl, w = NULL, cols = is.numeric, na.rm = TRUE, fil
         ax[["na.rm"]] <- which(miss)
         cc <- which(!miss)
         if(!is.null(w)) w <- w[cc]
-        if(!variable.wise) if(fill) nrx <- fnrow(x) else ax[["row.names"]] <- ax[["row.names"]][cc] # best ??
+        if(!variable.wise) if(fill) nrx <- fnrow2(x) else ax[["row.names"]] <- ax[["row.names"]][cc] # best ??
       } else na.rm <- FALSE
     }
 
     xmat <- NULL
-    list2env(getfl(myModFrame(fl, if(na.rm) .Call(C_subsetDT, x, cc, fvars) else colsubset(x, fvars))), envir = environment())
+    list2env(getfl(myModFrame(fl, if(na.rm) .Call(C_subsetDT, x, cc, fvars) else unclass(x)[fvars])), envir = environment())
     fcl <- !is.null(fl)
     nallfc <- fcl && !is.null(xmat)
     if(nallfc) xmat <- demeanlist(xmat[, -1L, drop = FALSE], fl, weights = w, ...)
@@ -702,9 +701,9 @@ HDB.data.frame <- function(x, fl, w = NULL, cols = is.numeric, na.rm = TRUE, fil
     return(add_stub(fHDbetween.data.frame(if(is.null(cols)) x else colsubset(x, cols), fl, w, na.rm, fill, variable.wise, ...), stub))
 }
 HDB.pdata.frame <- function(x, w = NULL, cols = is.numeric, na.rm = TRUE, fill = TRUE,
-                            variable.wise = TRUE, stub = "HDB.", ...) {
+                            variable.wise = TRUE, stub = "HDB.", ...)
   return(add_stub(fHDbetween.pdata.frame(if(is.null(cols)) x else colsubset(x, cols), w, na.rm, fill, variable.wise, ...), stub))
-}
+
 
 
 

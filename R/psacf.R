@@ -12,7 +12,7 @@
 # TODO: could use source code of C_acf and adjust for panel: https://github.com/SurajGupta/r-source/blob/a28e609e72ed7c47f6ddfbb86c85279a0750f0b7/src/library/stats/src/filter.c
 # TODO: See test for pspacf -> a bit strange !!
 
-psacf <- function(x, ...) UseMethod("psacf", x)
+psacf <- function(x, ...) UseMethod("psacf") # , x
 psacf.default <- function(x, g, t = NULL, lag.max = NULL, type = c("correlation", "covariance","partial"), plot = TRUE, gscale = TRUE, ...) {
   if(!is.numeric(x)) stop("'x' must be a numeric vector")
   typei <- switch(type[1L], correlation = 1L, covariance = 2L, partial = 3L, stop("Unknown type!")) # match.arg(type)
@@ -50,7 +50,7 @@ psacf.default <- function(x, g, t = NULL, lag.max = NULL, type = c("correlation"
     plot(acf.out, ylab = if(typei == 3L) "Panel Series Partial ACF" else "Panel Series ACF", ...)
     invisible(acf.out)
   } else {
-    if(!missing(...)) stop("Unknown argument ", dotstostr(...))
+    if(!missing(...)) unused_arg_warning(match.call(), ...)
     return(acf.out)
   }
 }
@@ -119,7 +119,7 @@ psacf.data.frame <- function(x, by, t = NULL, cols = is.numeric, lag.max = NULL,
          mar = if(lx > 2) c(3, 2.4, 2, 0.8) else par("mar"), ...)
     invisible(acf.out)
   } else {
-    if(!missing(...)) stop("Unknown argument ", dotstostr(...))
+    if(!missing(...)) unused_arg_warning(match.call(), ...)
     return(acf.out)
   }
 }
@@ -148,7 +148,7 @@ psacf.pseries <- function(x, lag.max = NULL, type = c("correlation", "covariance
     plot(acf.out, ylab = if(typei == 3L) "Panel Series Partial ACF" else "Panel Series ACF", ...)
     invisible(acf.out)
   } else {
-    if(!missing(...)) stop("Unknown argument ", dotstostr(...))
+    if(!missing(...)) unused_arg_warning(match.call(), ...)
     return(acf.out)
   }
 }
@@ -188,12 +188,12 @@ psacf.pdata.frame <- function(x, cols = is.numeric, lag.max = NULL, type = c("co
          mar = if(lx > 2) c(3, 2.4, 2, 0.8) else par("mar"), ...)
     invisible(acf.out)
   } else {
-    if(!missing(...)) stop("Unknown argument ", dotstostr(...))
+    if(!missing(...)) unused_arg_warning(match.call(), ...)
     return(acf.out)
   }
 }
 
-pspacf <- function(x, ...) UseMethod("pspacf", x)
+pspacf <- function(x, ...) UseMethod("pspacf") # , x
 pspacf.default <- function(x, g, t = NULL, lag.max = NULL, plot = TRUE, gscale = TRUE, ...) {
   if(plot)
   psacf.default(x, g, t, lag.max, "partial", plot, gscale, main = paste0("Series ",deparse(substitute(x))), ...) else
@@ -211,7 +211,7 @@ pspacf.pdata.frame <- function(x, cols = is.numeric, lag.max = NULL, plot = TRUE
   psacf.pdata.frame(x, cols, lag.max, "partial", plot, gscale, ...)
 }
 
-psccf <- function(x, y, ...) UseMethod("psccf", x)
+psccf <- function(x, y, ...) UseMethod("psccf") # , x
 psccf.default <- function(x, y, g, t = NULL, lag.max = NULL, type = c("correlation", "covariance"), plot = TRUE, gscale = TRUE, ...) {
   if(!is.numeric(x)) stop("'x' must be a numeric vector")
   if(!is.numeric(y)) stop("'y' must be a numeric vector")
@@ -250,7 +250,7 @@ psccf.default <- function(x, y, g, t = NULL, lag.max = NULL, type = c("correlati
     plot(acf.out, ylab = "Panel Series CCF", ...)
     invisible(acf.out)
   } else {
-    if(!missing(...)) stop("Unknown argument ", dotstostr(...))
+    if(!missing(...)) unused_arg_warning(match.call(), ...)
     return(acf.out)
   }
 }
@@ -283,7 +283,7 @@ psccf.pseries <- function(x, y, lag.max = NULL, type = c("correlation", "covaria
     plot(acf.out, ylab = "Panel Series CCF", ...)
     invisible(acf.out)
   } else {
-    if(!missing(...)) stop("Unknown argument ", dotstostr(...))
+    if(!missing(...)) unused_arg_warning(match.call(), ...)
     return(acf.out)
   }
 }

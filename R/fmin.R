@@ -8,11 +8,10 @@
 
 # For foundational changes to this code see fsum.R !!
 
-fmin <- function(x, ...) { # g = NULL, TRA = NULL, na.rm = TRUE, use.g.names = TRUE, drop = TRUE, keep.group_vars = TRUE,
-  UseMethod("fmin", x)
-}
+fmin <- function(x, ...) UseMethod("fmin") # , x
+
 fmin.default <- function(x, g = NULL, TRA = NULL, na.rm = TRUE, use.g.names = TRUE, ...) {
-  if(!missing(...)) stop("Unknown argument ", dotstostr(...))
+  if(!missing(...)) unused_arg_warning(match.call(), ...)
   if(is.null(TRA)) {
     if(is.null(g)) return(.Call(Cpp_fmin,x,0L,0L,na.rm)) else if(is.atomic(g)) {
       if(use.g.names) {
@@ -43,7 +42,7 @@ fmin.default <- function(x, g = NULL, TRA = NULL, na.rm = TRUE, use.g.names = TR
   }
 }
 fmin.matrix <- function(x, g = NULL, TRA = NULL, na.rm = TRUE, use.g.names = TRUE, drop = TRUE, ...) {
-  if(!missing(...)) stop("Unknown argument ", dotstostr(...))
+  if(!missing(...)) unused_arg_warning(match.call(), ...)
   if(is.null(TRA)) {
     if(is.null(g)) return(.Call(Cpp_fminm,x,0L,0L,na.rm,drop)) else if(is.atomic(g)) {
       if(use.g.names) {
@@ -74,7 +73,7 @@ fmin.matrix <- function(x, g = NULL, TRA = NULL, na.rm = TRUE, use.g.names = TRU
   }
 }
 fmin.data.frame <- function(x, g = NULL, TRA = NULL, na.rm = TRUE, use.g.names = TRUE, drop = TRUE, ...) {
-  if(!missing(...)) stop("Unknown argument ", dotstostr(...))
+  if(!missing(...)) unused_arg_warning(match.call(), ...)
   if(is.null(TRA)) {
     if(is.null(g)) return(.Call(Cpp_fminl,x,0L,0L,na.rm,drop)) else if(is.atomic(g)) {
       if(use.g.names && !inherits(x, "data.table")) {
@@ -106,9 +105,10 @@ fmin.data.frame <- function(x, g = NULL, TRA = NULL, na.rm = TRUE, use.g.names =
   }
 }
 fmin.grouped_df <- function(x, TRA = NULL, na.rm = TRUE, use.g.names = FALSE, keep.group_vars = TRUE, ...) {
-  if(!missing(...)) stop("Unknown argument ", dotstostr(...))
+  if(!missing(...)) unused_arg_warning(match.call(), ...)
   g <- GRP.grouped_df(x)
-  gn <- which(attr(x, "names") %in% g[[5L]])
+  nam <- attr(x, "names")
+  gn <- which(nam %in% g[[5L]])
   nTRAl <- is.null(TRA)
   gl <- length(gn) > 0L
   if(gl || nTRAl) {
@@ -120,19 +120,24 @@ fmin.grouped_df <- function(x, TRA = NULL, na.rm = TRUE, use.g.names = FALSE, ke
       ax[["row.names"]] <- if(use.g.names) group_names.GRP(g) else .set_row_names(g[[1L]])
       if(gl) {
         if(keep.group_vars) {
-          ax[["names"]] <- c(g[[5L]], ax[["names"]][-gn])
+          ax[["names"]] <- c(g[[5L]], nam[-gn])
           return(setAttributes(c(g[[4L]],.Call(Cpp_fminl,x[-gn],g[[1L]],g[[2L]],na.rm,FALSE)), ax))
         } else {
-          ax[["names"]] <- ax[["names"]][-gn]
+          ax[["names"]] <- nam[-gn]
           return(setAttributes(.Call(Cpp_fminl,x[-gn],g[[1L]],g[[2L]],na.rm,FALSE), ax))
         }
+      } else if(keep.group_vars) {
+        ax[["names"]] <- c(g[[5L]], nam)
+        return(setAttributes(c(g[[4L]],.Call(Cpp_fminl,x,g[[1L]],g[[2L]],na.rm,FALSE)), ax))
       } else return(setAttributes(.Call(Cpp_fminl,x,g[[1L]],g[[2L]],na.rm,FALSE), ax))
     } else if(keep.group_vars) {
-      ax[["names"]] <- c(ax[["names"]][gn], ax[["names"]][-gn])
+      ax[["names"]] <- c(nam[gn], nam[-gn])
       return(setAttributes(c(x[gn],.Call(Cpp_TRAl,x[-gn],.Call(Cpp_fminl,x[-gn],g[[1L]],g[[2L]],na.rm,FALSE),g[[2L]],TRAtoInt(TRA))), ax))
     } else {
-      ax[["names"]] <- ax[["names"]][-gn]
+      ax[["names"]] <- nam[-gn]
       return(setAttributes(.Call(Cpp_TRAl,x[-gn],.Call(Cpp_fminl,x[-gn],g[[1L]],g[[2L]],na.rm,FALSE),g[[2L]],TRAtoInt(TRA)), ax))
     }
   } else return(.Call(Cpp_TRAl,x,.Call(Cpp_fminl,x,g[[1L]],g[[2L]],na.rm,FALSE),g[[2L]],TRAtoInt(TRA)))
 }
+
+

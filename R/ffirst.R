@@ -9,11 +9,10 @@
 
 # For foundational changes to this code see fsum.R !!
 
-ffirst <- function(x, ...) { # g = NULL, TRA = NULL, na.rm = TRUE, use.g.names = TRUE, drop = TRUE, keep.group_vars = TRUE,
-  UseMethod("ffirst", x)
-}
+ffirst <- function(x, ...) UseMethod("ffirst") # , x
+
 ffirst.default <- function(x, g = NULL, TRA = NULL, na.rm = TRUE, use.g.names = TRUE, ...) {
-  if(!missing(...)) stop("Unknown argument ", dotstostr(...))
+  if(!missing(...)) unused_arg_warning(match.call(), ...)
   if(is.null(TRA)) {
     if(is.null(g)) return(.Call(Cpp_ffirst,x,0L,0L,na.rm)) else if(is.atomic(g)) {
       if(use.g.names) {
@@ -44,7 +43,7 @@ ffirst.default <- function(x, g = NULL, TRA = NULL, na.rm = TRUE, use.g.names = 
   }
 }
 ffirst.matrix <- function(x, g = NULL, TRA = NULL, na.rm = TRUE, use.g.names = TRUE, drop = TRUE, ...) {
-  if(!missing(...)) stop("Unknown argument ", dotstostr(...))
+  if(!missing(...)) unused_arg_warning(match.call(), ...)
   if(is.null(TRA)) {
     if(is.null(g)) return(.Call(Cpp_ffirstm,x,0L,0L,na.rm,drop)) else if(is.atomic(g)) {
       if(use.g.names) {
@@ -75,7 +74,7 @@ ffirst.matrix <- function(x, g = NULL, TRA = NULL, na.rm = TRUE, use.g.names = T
   }
 }
 ffirst.data.frame <- function(x, g = NULL, TRA = NULL, na.rm = TRUE, use.g.names = TRUE, drop = TRUE, ...) {
-  if(!missing(...)) stop("Unknown argument ", dotstostr(...))
+  if(!missing(...)) unused_arg_warning(match.call(), ...)
   if(is.null(TRA)) {
     if(is.null(g)) {
       if(drop) return(unlist(.Call(Cpp_ffirstl,x,0L,0L,na.rm))) else return(.Call(Cpp_ffirstl,x,0L,0L,na.rm))
@@ -109,9 +108,10 @@ ffirst.data.frame <- function(x, g = NULL, TRA = NULL, na.rm = TRUE, use.g.names
   }
 }
 ffirst.grouped_df <- function(x, TRA = NULL, na.rm = TRUE, use.g.names = FALSE, keep.group_vars = TRUE, ...) {
-  if(!missing(...)) stop("Unknown argument ", dotstostr(...))
+  if(!missing(...)) unused_arg_warning(match.call(), ...)
   g <- GRP.grouped_df(x)
-  gn <- which(attr(x, "names") %in% g[[5L]])
+  nam <- attr(x, "names")
+  gn <- which(nam %in% g[[5L]])
   nTRAl <- is.null(TRA)
   gl <- length(gn) > 0L
   if(gl || nTRAl) {
@@ -123,18 +123,21 @@ ffirst.grouped_df <- function(x, TRA = NULL, na.rm = TRUE, use.g.names = FALSE, 
       ax[["row.names"]] <- if(use.g.names) group_names.GRP(g) else .set_row_names(g[[1L]])
       if(gl) {
         if(keep.group_vars) {
-          ax[["names"]] <- c(g[[5L]], ax[["names"]][-gn])
+          ax[["names"]] <- c(g[[5L]], nam[-gn])
           return(setAttributes(c(g[[4L]],.Call(Cpp_ffirstl,x[-gn],g[[1L]],g[[2L]],na.rm)), ax))
         } else {
-          ax[["names"]] <- ax[["names"]][-gn]
+          ax[["names"]] <- nam[-gn]
           return(setAttributes(.Call(Cpp_ffirstl,x[-gn],g[[1L]],g[[2L]],na.rm), ax))
         }
+      } else if(keep.group_vars) {
+        ax[["names"]] <- c(g[[5L]], nam)
+        return(setAttributes(c(g[[4L]],.Call(Cpp_ffirstl,x,g[[1L]],g[[2L]],na.rm)), ax))
       } else return(setAttributes(.Call(Cpp_ffirstl,x,g[[1L]],g[[2L]],na.rm), ax))
     } else if(keep.group_vars) {
-      ax[["names"]] <- c(ax[["names"]][gn], ax[["names"]][-gn])
+      ax[["names"]] <- c(nam[gn], nam[-gn])
       return(setAttributes(c(x[gn],.Call(Cpp_TRAl,x[-gn],.Call(Cpp_ffirstl,x[-gn],g[[1L]],g[[2L]],na.rm),g[[2L]],TRAtoInt(TRA))), ax))
     } else {
-      ax[["names"]] <- ax[["names"]][-gn]
+      ax[["names"]] <- nam[-gn]
       return(setAttributes(.Call(Cpp_TRAl,x[-gn],.Call(Cpp_ffirstl,x[-gn],g[[1L]],g[[2L]],na.rm),g[[2L]],TRAtoInt(TRA)), ax))
     }
   } else return(.Call(Cpp_TRAl,x,.Call(Cpp_ffirstl,x,g[[1L]],g[[2L]],na.rm),g[[2L]],TRAtoInt(TRA)))
