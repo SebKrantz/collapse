@@ -3,31 +3,29 @@
 # forderv <- data.table:::forderv
 
 # or getGRP: more speed using tabulate ?? or code your own??
-GRP <- function(X, ...) { # by = NULL, sort = TRUE, order = 1L, na.last = FALSE, return.groups = TRUE, return.order = FALSE
-  UseMethod("GRP", X)
-}
+GRP <- function(X, ...) UseMethod("GRP") # , X
 
 forderv <- function(x, by = seq_along(x), retGrp = FALSE, sort = TRUE, order = 1L, na.last = FALSE) {
   if(is.atomic(x)) {
     if(!missing(by) && !is.null(by)) stop("x is a single vector, non-NULL 'by' doesn't make sense")
-    by = NULL
+    by <- NULL
   } else {
-    if(!length(x)) return(integer(0L))
-    if(length(order) == 1L) order = rep(order, length(by))
+    if(!length(unclass(x))) return(integer(0L))
+    if(length(order) == 1L) order <- rep(order, length(by))
   }
-  order = as.integer(order)
+  order <- as.integer(order)
   .Call(C_forder, x, by, retGrp, sort, order, na.last)
 }
 
 GRP.default <- function(X, by = NULL, sort = TRUE, order = 1L, na.last = TRUE,
                         return.groups = TRUE, return.order = FALSE, ...) { # , gs = TRUE # o
 
-  if(!missing(...)) stop("Unknown argument ", dotstostr(...))
+  if(!missing(...)) unused_arg_warning(match.call(), ...)
   call <- match.call()
 
   if(is.list(X)) {
     if(is.null(by)) {
-      by <- seq_along(X)
+      by <- seq_along(unclass(X))
       namby <- attr(X, "names")
       if(is.null(namby)) attr(X, "names") <- namby <- paste0("Group.", by)
     } else if(is.call(by)) {
@@ -41,7 +39,7 @@ GRP.default <- function(X, by = NULL, sort = TRUE, order = 1L, na.last = TRUE,
       namby <- attr(X, "names")[by]
       if(is.null(namby)) {
         namby <- paste0("Group.", seq_along(by))
-        attr(X, "names") <- paste0("Group.", seq_along(X)) # best ??
+        attr(X, "names") <- paste0("Group.", seq_along(unclass(X))) # best ??
       }
     } else stop("by needs to be either a one-sided formula, character column names or column indices!")
  } else namby <- paste(all.vars(call), collapse = ".")  # deparse(substitute(X)) # all.vars is faster !!!
@@ -57,7 +55,7 @@ GRP.default <- function(X, by = NULL, sort = TRUE, order = 1L, na.last = TRUE,
         groups <- if(is.list(X)) .Call(C_subsetDT, X, o[f], by) else `names<-`(list(.Call(C_subsetVector, X, o[f])), namby)
     } else groups <- NULL
   } else {
-    lx <- if(inherits(X, "data.frame")) fnrow(X) else if(is.atomic(X)) length(X) else length(X[[1L]])
+    lx <- if(is.list(X)) fnrow2(X) else length(X)
     len <- .Call(C_uniqlengths, f, lx) # data.table:::Cuniqlengths # or cumsubtract !!!
     grpuo <- rep.int(seq_along(len), len) # rep.int fastest ?? -> about same speed as rep !!
     ordered <- c(GRP.sort = sort, initially.ordered = TRUE)
@@ -65,14 +63,13 @@ GRP.default <- function(X, by = NULL, sort = TRUE, order = 1L, na.last = TRUE,
       groups <- if(is.list(X)) .Call(C_subsetDT, X, f, by) else `names<-`(list(.Call(C_subsetVector, X, f)), namby)
     } else groups <- NULL
   }
-  if(!return.order) o <- NULL
   return(`class<-`(list(N.groups = length(f),
                         group.id = grpuo,
                         group.sizes = len,
                         groups = groups,
                         group.vars = namby,
                         ordered = ordered,
-                        order = o,
+                        order = if(return.order) o else NULL,
                         call = call), "GRP"))
 }
 
@@ -87,7 +84,7 @@ group_names.GRP <- function(x, force.char = TRUE) { # , ...
 }
 
 print.GRP <- function(x, n = 6, ...) {
-  if(!missing(...)) stop("Unknown argument ", dotstostr(...))
+  if(!missing(...)) unused_arg_warning(match.call(), ...)
   ord <- x[[6L]]
   cat(paste("collapse grouping object of length",length(x[[2L]]),"with",
             x[[1L]],ifelse(any(ord),"ordered","unordered"),"groups"), fill = TRUE)
@@ -95,7 +92,7 @@ print.GRP <- function(x, n = 6, ...) {
   cat("Distribution of group sizes: ", fill = TRUE)
   print.summaryDefault(summary.default(x[[3L]]))
   if(!is.null(x[[4L]])) {
-    ug <- x[[4L]]
+    ug <- unattrib(x[[4L]])
     cat("\nGroups with sizes: ", fill = TRUE)
     if(length(ug) == 1L) {
       ug <- ug[[1L]]
@@ -117,7 +114,7 @@ print.GRP <- function(x, n = 6, ...) {
 }
 
 plot.GRP <- function(x, breaks = "auto", type = "s", horizontal = FALSE, ...) {
-  if(!missing(...)) stop("Unknown argument ", dotstostr(...))
+  if(!missing(...)) unused_arg_warning(match.call(), ...)
   # settings <- par(c("mfrow","mar","mgp"))
   oldpar <- par(mfrow = if(horizontal) 1:2 else 2:1, mar = c(3.9,4.1,2.1,1), mgp = c(2.5,1,0))
   on.exit(par(oldpar))
@@ -136,7 +133,7 @@ as.factor.GRP <- function(x) { # , ...
   if(is.factor(x)) return(x)
   if(!is.GRP(x)) stop("x must be a 'GRP' object")
   f <- x[[2L]]
-  gr <- x[[4L]]
+  gr <- unclass(x[[4L]])
   if(is.null(gr)) {
     attr(f, "levels") <- as.character(seq_len(x[[1L]]))
   } else {
@@ -151,7 +148,7 @@ as.factor.GRP <- function(x) { # , ...
 }
 
 GRP.qG <- function(X, ...) {
-  if(!missing(...)) stop("Unknown argument ", dotstostr(...))
+  if(!missing(...)) unused_arg_warning(match.call(), ...)
   # nam <- deparse(substitute(X)) # takes 9 microseconds !!, all vars on call is faster !!
   ng <- attr(X, "N.groups")
   if(!inherits(X, "na.included") || anyNA(unclass(X))) X[is.na(X)] <- ng
@@ -169,7 +166,7 @@ GRP.qG <- function(X, ...) {
 }
 
 GRP.factor <- function(X, ...) {
-  if(!missing(...)) stop("Unknown argument ", dotstostr(...))
+  if(!missing(...)) unused_arg_warning(match.call(), ...)
   # nam <- deparse(substitute(X)) # takes 9 microseconds !!
   if(!inherits(X, "na.included")) X <- addNA2(X)
   lev <- attr(X, "levels")
@@ -191,7 +188,7 @@ GRP.factor <- function(X, ...) {
 GRP.pseries <- function(X, effect = 1L, ...) {
   g <- unclass(attr(X, "index")) # index cannot be atomic since plm always adds a time variable !!
   if(length(effect) > 1L) return(GRP.default(g[effect], ...))
-  if(!missing(...)) stop("Unknown argument ", dotstostr(...))
+  if(!missing(...)) unused_arg_warning(match.call(), ...)
   # if(length(g) > 2L) {
   #   mlg <- -length(g)
   #   nam <- paste(names(g)[mlg], collapse = ".")
@@ -215,15 +212,44 @@ GRP.pseries <- function(X, effect = 1L, ...) {
 }
 GRP.pdata.frame <- function(X, effect = 1L, ...) GRP.pseries(X, effect, ...)
 
+# TODO: broader scope for ... (i.e. names, indices ??)
+fgroup_by <- function(X, ..., sort = TRUE, order = 1L, na.last = TRUE, return.order = FALSE) {
+  e <- substitute(list(...))
+  attr(X, "groups") <- GRP.default(`names<-`(eval(e, X, parent.frame()), all.vars(e)), NULL,
+                                   sort, order, na.last, TRUE, return.order)
+  class(X) <- c("tbl_df", "tbl", "grouped_df", class(X)) # necesssary to avoid printing errors... (i.e. wrong group object etc...)
+  X
+}
+
+fgroup_vars <- function(X, return = c("data","names","indices","named_indices")) {
+  g <- attr(X, "groups")
+  vars <- if(is.GRP(g)) g[[5L]] else attr(g, "names")[-length(unclass(g))]
+  switch(return[1L],
+    data = {
+      ax <- attributes(X)
+      ax[["class"]] <- ax[["class"]][ax[["class"]] != "grouped_df"]
+      ind <- ckmatch(vars, ax[["names"]])
+      ax[["names"]] <- vars
+      setAttributes(unclass(X)[ind], ax[names(ax) != "groups"])
+    },
+    names = vars,
+    indices = ckmatch(vars, attr(X, "names")),
+    named_indices = `names<-`(ckmatch(vars, attr(X, "names")), vars),
+    stop("Unknown return option!"))
+}
+
 GRP.grouped_df <- function(X, ...) {
-  if(!missing(...)) stop("Unknown argument ", dotstostr(...))
-  g <- unclass(attr(X, "groups"))
+  if(!missing(...)) unused_arg_warning(match.call(), ...)
+  # g <- unclass(attr(X, "groups"))
+  g <- attr(X, "groups")
+  if(is.GRP(g)) return(g)
+  class(g) <- NULL
   lg <- length(g)
   gr <- g[[lg]]
   ng <- length(gr)
   gs <- lengths(gr, FALSE) # faster sorting still ?? qsort ?? or data.table forder -> nope, slower than order !!
   return(`class<-`(list(N.groups = ng, # The cpp here speeds up things a lot !!
-                        group.id = .Call(Cpp_groups2GRP, gr, fnrow(X), gs),  # rep(seq_len(ng), gs)[order(unlist(gr, FALSE, FALSE))], # .Internal(radixsort(TRUE, FALSE, FALSE, TRUE, .Internal(unlist(gr, FALSE, FALSE))))  #
+                        group.id = .Call(Cpp_groups2GRP, gr, fnrow2(X), gs),  # rep(seq_len(ng), gs)[order(unlist(gr, FALSE, FALSE))], # .Internal(radixsort(TRUE, FALSE, FALSE, TRUE, .Internal(unlist(gr, FALSE, FALSE))))  #
                         group.sizes = gs,
                         groups = g[-lg], # better reclass afterwards ???
                         group.vars = names(g)[-lg],

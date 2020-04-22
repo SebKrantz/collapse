@@ -7,6 +7,8 @@
 \alias{GRP.pseries}
 \alias{GRP.pdata.frame}
 \alias{GRP.grouped_df}
+\alias{fgroup_by}
+\alias{fgroup_vars}
 \alias{is.GRP}
 \alias{print.GRP}
 \alias{plot.GRP}
@@ -15,6 +17,10 @@
 \title{Fast Grouping / \code{collapse} Grouping Objects}
 \description{
   \code{GRP} performs fast, ordered and unordered, groupings of vectors and data.frames (or lists of vectors) using \code{data.table}'s fast grouping and ordering \code{C} routine (\code{forder}). The output is a list-like object of class 'GRP' which can be printed, plotted and used as an efficient input to all of \code{collapse}'s fast functions, operators, as well as \code{\link{collap}}, \code{\link{BY}} and \code{\link{TRA}}.
+
+\code{fgroup_by} is similar to \code{dplyr::group_by} but faster! It creates a 'grouped_df', but with a 'GRP' object attached - for faster dplyr-like programming with \code{collapse}'s fast functions.
+
+There are also several conversion methods to convert to and from 'GRP' objects. The most important of these is \code{GRP.grouped_df}, which returns a 'GRP' object from a 'grouped_df' created with \code{fgroup_by} or \code{dplyr::group_by}.
 }
 
 \usage{
@@ -29,9 +35,16 @@ GRP(X, ...)
 \method{GRP}{pdata.frame}(X, effect = 1L, ...)
 \method{GRP}{grouped_df}(X, ...)
 
+# Identify, get group names, and convert GRP object to factor
 is.GRP(x)
 group_names.GRP(x, force.char = TRUE)
 as.factor.GRP(x)
+
+# Fast version of dplyr::group_by for use with fast functions, see details
+fgroup_by(X, ..., sort = TRUE, order = 1L, na.last = TRUE, return.order = FALSE)
+
+# This gets grouping columns from a grouped_df created with dplyr::group_by or fgroup_by
+fgroup_vars(X, return = c("data","names","indices","named_indices"))
 
 \method{print}{GRP}(x, n = 6, ...)
 
@@ -67,14 +80,19 @@ as.factor.GRP(x)
 
   \item{horizontal}{logical. \code{TRUE} arranges plots next to each other, instead of above each other.}
 
-  \item{...}{arguments to be passed to or from other methods.}
+  \item{...}{for \code{fgroup_by}: unquoted comma-separated column names of grouping columns. Otherwise: arguments to be passed to or from other methods.}
 }
 \details{
 \code{GRP} is a central function in the \code{collapse} package because it provides the key inputs to facilitate easy and efficient groupwise-programming at the \code{C/C++} level: Information about (1) the number of groups (2) an integer group-id indicating which values / rows belong to which group and (3) information about the size of each group. Provided with these informations, \code{collapse}'s \link[=A1-fast-statistical-functions]{Fast Statistical Functions} pre-allocate intermediate and result vectors of the right sizes and (in most cases) perform grouped statistical computations in a single pass through the data.
 
 The sorting and ordering functionality for \code{GRP} only affects (2), that is groups receive different integer-id's depending on whether the groups are sorted \code{sort = TRUE}, and in which order (\code{order = 1} ascending or \code{order = -1} descending). This in-turn changes the order of values/rows in the output of \code{collapse} functions (the row/value corresponding to group 1 always comes out on top). The default setting with \code{sort = TRUE} and \code{order = 1} results in groups being sorted in ascending order. This is equivalent to performing grouped operations in \code{data.table} using \code{keyby}, whereas \code{sort = FALSE} is equivalent to \code{data.table} grouping with \code{by}.
 
-Evidently \code{GRP} is an S3 generic function with one default method supporting vector and list input and several conversion methods. The most important of these is the conversion of factors to 'GRP' objects and vice-versa. To obtain a 'GRP' object from a factor, one simply gets the number of groups calling \code{ng <- length(levels(f))} (1) and then computes the count of each level (3) using \code{\link[=tabulate]{tabulate(f, ng)}}. The integer group-id (2) is already given by the factor itself after removing the levels and class attributes. The levels are put in a list and moved to position (4) in the 'GRP' object, which is reserved for the unique groups. Going from factor to 'GRP' object thus only requires a tabulation of the levels, whereas creating a factor from a 'GRP' object using \code{as.factor.GRP} does not involve any computations, but may involve interactions if multiple grouping columns were used (which are then interacted to produce unique factor levels) or \code{\link{as.character}} conversions if the grouping column(s) were numeric (which are potentially expensive).
+Next to group, there is the function \code{fgroup_by}...
+
+\code{GRP} is an S3 generic function with one default method supporting vector and list input and several conversion methods.
+
+
+The most important of these is the conversion of factors to 'GRP' objects and vice-versa. To obtain a 'GRP' object from a factor, one simply gets the number of groups calling \code{ng <- length(levels(f))} (1) and then computes the count of each level (3) using \code{\link[=tabulate]{tabulate(f, ng)}}. The integer group-id (2) is already given by the factor itself after removing the levels and class attributes. The levels are put in a list and moved to position (4) in the 'GRP' object, which is reserved for the unique groups. Going from factor to 'GRP' object thus only requires a tabulation of the levels, whereas creating a factor from a 'GRP' object using \code{as.factor.GRP} does not involve any computations, but may involve interactions if multiple grouping columns were used (which are then interacted to produce unique factor levels) or \code{\link{as.character}} conversions if the grouping column(s) were numeric (which are potentially expensive).
 
 \emph{Note}: For faster factor generation and a factor-light class 'qG' which avoids the coercion of factor levels to character also see \code{\link{qF}} and \code{\link{qG}}.
 }
@@ -99,7 +117,7 @@ Evidently \code{GRP} is an S3 generic function with one default method supportin
                  }
 }
 \seealso{
-\code{\link{qF}}, \code{\link{qG}}, \link[=collapse-documentation]{Collapse Overview}
+\code{\link{qF}}, \code{\link{qG}}, \code{\link{finteraction}}, \link[=collapse-documentation]{Collapse Overview}
 }
 \examples{
 ## default method
@@ -113,9 +131,11 @@ fsum(mtcars, g)                   # compute the sum of mtcars, grouped by variab
 ## convert factor to GRP object
 GRP(iris$Species)
 
-## get GRP object from a dplyr grouped tibble
+## dplyr integration
 library(dplyr)
-mtcars \%>\% group_by(cyl,vs,am) \%>\% GRP
+mtcars \%>\% group_by(cyl,vs,am) \%>\% GRP    # get GRP object from a dplyr grouped tibble
+mtcars \%>\% group_by(cyl,vs,am) \%>\% fmean  # grouped mean using dplyr grouping
+mtcars \%>\% fgroup_by(cyl,vs,am) \%>\% fmean # faster alternative with collapse grouping
 
 }
 \keyword{manip}
