@@ -25,8 +25,8 @@ unlist2d <- function(l, idcols = ".id", row.names = FALSE, recursive = TRUE, id.
         dn <- dimnames(x)
         dim(x) <- c(d[1L], prod(d[-1L]))
         if (!is.null(dn)) {
-          for (i in 2L:length(d)) if (is.null(dn[[i]])) dn[[i]] <- seq_len(d[i])
-          dimnames(x) <- list(dn[[1L]], interaction(expand.grid(dn[-1L]))) # Good??
+          for (i in 2L:length(d)) if(is.null(dn[[i]])) dn[[i]] <- seq_len(d[i])
+          dimnames(x) <- list(dn[[1L]], interact_names(dn[-1L])) # Good??
         }
       }
       dn <- dimnames(x)
@@ -40,7 +40,7 @@ unlist2d <- function(l, idcols = ".id", row.names = FALSE, recursive = TRUE, id.
   ul2d <- function(y) {
     if(inherits(y, "data.frame") || is.atomic(y)) return(y)
     class(y) <- NULL # perhaps unclassing y would put more safety ?? -> yes !!
-    ident <- vapply(y, idf, 1L)
+    ident <- vapply(y, idf, 1L) # `attributes<-`(y, NULL) # possibly you can still get a few microseconds in the apply commands, but beware, this removes names in output!!
     if(is.list(y) && all(ident > 0L)) {
       at <- ident == 3L
       if(any(at)) y[at] <- lapply(y[at], attol)
