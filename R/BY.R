@@ -23,9 +23,8 @@
 # fsplit <- split.default # slightly slower !! (Csplit not as fast as internal!! !!)
 
 # Faster version of BY:
-BY <- function(X, ...) { # g, FUN, ..., use.g.names = TRUE, sort = TRUE, expand.wide = FALSE, parallel = FALSE, mc.cores = 1L, return = c("same","matrix","data.frame","list")
-  UseMethod("BY", X)
-}
+BY <- function(X, ...) UseMethod("BY") # , X
+
 
 BY.default <- function(X, g, FUN, ..., use.g.names = TRUE, sort = TRUE,
                        expand.wide = FALSE, parallel = FALSE, mc.cores = 1L,
@@ -213,18 +212,18 @@ BY.grouped_df <- function(X, FUN, ..., use.g.names = FALSE, keep.group_vars = TR
     if(!keep.group_vars) return(BY.data.frame(X[-gn], g, FUN, ..., # colsubset(X, -gn) dont use colsubset -> doesn't drop group attachment !!, for the other cases can always use ungroup !!
                            use.g.names = use.g.names, sort = TRUE, expand.wide = expand.wide,
                            parallel = parallel, mc.cores = mc.cores, return = return))
-      res <- BY.data.frame(colsubset(X, -gn), g, FUN, ...,
+      res <- BY.data.frame(fcolsubset(X, -gn), g, FUN, ...,
                            use.g.names = use.g.names, sort = TRUE, expand.wide = expand.wide,
                            parallel = parallel, mc.cores = mc.cores, return = return)
       if(is.data.frame(res)) {
-        nrr <- fnrow(res)
-        same_size <- nrr == fnrow(X)
+        nrr <- fnrow2(res)
+        same_size <- nrr == fnrow2(X)
         if(same_size || all(nrr == lengths(groups, FALSE))) {
           if(same_size) {
             ax <- attributes(X)
             attributes(res) <- NULL # faster removing attributes? (yes, a tiny bit!)  also set attributes of groups NULL ?? -> Nah !!
             ax[["names"]] <- c(ax[["names"]][gn], ax[["names"]][-gn])
-            return(setAttributes(c(colsubset(X, gn), res), ax))
+            return(setAttributes(c(fcolsubset(X, gn), res), ax))
           } else {
             ax <- attributes(res)
             attributes(res) <- NULL
