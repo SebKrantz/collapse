@@ -14,19 +14,19 @@ using namespace Rcpp;
 // 9- Modulus
 // 10- Subtract Modulus
 
-inline double dmod(double x, double y) {
+inline double mymod(double x, double y) {
   return x - (int)(x * (1/y)) * y; // faster than x - (int)(x/y) * y; // also C-style conversions seem to be faster ??
 }
 
-// #define dmod(x, y) (x - ((int)(x/y) * y)) // Macro: not faster !!
+// #define mymod(x, y) (x - ((int)(x/y) * y)) // Macro: not faster !!
 
 // template<typename T, typename U>
-// constexpr double dmod (T x, U mod)
+// constexpr double mymod (T x, U mod)
 // {
 //   return !mod ? x : x - mod * static_cast<long long>(x / mod);
 // }
 
-inline double drem(double x, double y) {
+inline double myremain(double x, double y) {
   return (int)(x * (1/y)) * y;
 }
 
@@ -229,10 +229,10 @@ SEXP TRACpp(const SEXP& x, const SEXP& xAG, const IntegerVector& g = 0, int ret 
           out = xx * AGx;
           break;
         case 9:
-          for(int i = 0; i != l; ++i) out[i] = dmod(xx[i], AGx);
+          for(int i = 0; i != l; ++i) out[i] = mymod(xx[i], AGx);
           break;
         case 10:
-          for(int i = 0; i != l; ++i) out[i] = drem(xx[i], AGx);
+          for(int i = 0; i != l; ++i) out[i] = myremain(xx[i], AGx);
           break;
         default: stop("Unknown Transformation");
         }
@@ -272,10 +272,10 @@ SEXP TRACpp(const SEXP& x, const SEXP& xAG, const IntegerVector& g = 0, int ret 
           for(int i = l; i--; ) out[i] = xx[i] * AG[g[i]-1];
           break;
         case 9:
-          for(int i = l; i--; ) out[i] = dmod(xx[i], AG[g[i]-1]);
+          for(int i = l; i--; ) out[i] = mymod(xx[i], AG[g[i]-1]);
           break;
         case 10:
-          for(int i = l; i--; ) out[i] = drem(xx[i], AG[g[i]-1]);
+          for(int i = l; i--; ) out[i] = myremain(xx[i], AG[g[i]-1]);
           break;
         default: stop("Unknown Transformation");
         }
@@ -577,7 +577,7 @@ SEXP TRAmCpp(const SEXP& x, const SEXP& xAG, const IntegerVector& g = 0, int ret
             NumericMatrix::Column colo = out( _ , j);
             NumericMatrix::Column column = xx( _ , j);
             double AGj = AG[j];
-            for(int i = 0; i != l; ++i) colo[i] = dmod(column[i], AGj);
+            for(int i = 0; i != l; ++i) colo[i] = mymod(column[i], AGj);
           }
           break;
         case 10:
@@ -585,7 +585,7 @@ SEXP TRAmCpp(const SEXP& x, const SEXP& xAG, const IntegerVector& g = 0, int ret
             NumericMatrix::Column colo = out( _ , j);
             NumericMatrix::Column column = xx( _ , j);
             double AGj = AG[j];
-            for(int i = 0; i != l; ++i) colo[i] = drem(column[i], AGj);
+            for(int i = 0; i != l; ++i) colo[i] = myremain(column[i], AGj);
           }
           break;
         default: stop("Unknown Transformation");
@@ -662,7 +662,7 @@ SEXP TRAmCpp(const SEXP& x, const SEXP& xAG, const IntegerVector& g = 0, int ret
             NumericMatrix::Column colo = out( _ , j);
             NumericMatrix::Column column = xx( _ , j);
             NumericMatrix::Column sumj = AG( _ , j);
-            for(int i = l; i--; ) colo[i] = dmod(column[i], sumj[g[i]-1]);
+            for(int i = l; i--; ) colo[i] = mymod(column[i], sumj[g[i]-1]);
           }
           break;
         case 10:
@@ -670,7 +670,7 @@ SEXP TRAmCpp(const SEXP& x, const SEXP& xAG, const IntegerVector& g = 0, int ret
             NumericMatrix::Column colo = out( _ , j);
             NumericMatrix::Column column = xx( _ , j);
             NumericMatrix::Column sumj = AG( _ , j);
-            for(int i = l; i--; ) colo[i] = drem(column[i], sumj[g[i]-1]);
+            for(int i = l; i--; ) colo[i] = myremain(column[i], sumj[g[i]-1]);
           }
           break;
         default: stop("Unknown Transformation");
@@ -991,7 +991,7 @@ List TRAlCpp(const List& x, const SEXP& xAG, const IntegerVector& g = 0, int ret
         int row = column.size();
         double AGj = AG[j];
         NumericVector outj = no_init_vector(row);
-        for(int i = 0; i != row; ++i) outj[i] = dmod(column[i], AGj);
+        for(int i = 0; i != row; ++i) outj[i] = mymod(column[i], AGj);
         SHALLOW_DUPLICATE_ATTRIB(outj, column);
         out[j] = outj;
       }
@@ -1003,7 +1003,7 @@ List TRAlCpp(const List& x, const SEXP& xAG, const IntegerVector& g = 0, int ret
         int row = column.size();
         double AGj = AG[j];
         NumericVector outj = no_init_vector(row);
-        for(int i = 0; i != row; ++i) outj[i] = drem(column[i], AGj);
+        for(int i = 0; i != row; ++i) outj[i] = myremain(column[i], AGj);
         SHALLOW_DUPLICATE_ATTRIB(outj, column);
         out[j] = outj;
       }
@@ -1218,7 +1218,7 @@ List TRAlCpp(const List& x, const SEXP& xAG, const IntegerVector& g = 0, int ret
         if(column.size() != gs) stop("length(g) must match nrow(x)");
         NumericVector sgj = no_init_vector(gs);
         NumericVector sumj = AG[j];
-        for(int i = gs; i--; ) sgj[i] = dmod(column[i], sumj[g[i]-1]);
+        for(int i = gs; i--; ) sgj[i] = mymod(column[i], sumj[g[i]-1]);
         SHALLOW_DUPLICATE_ATTRIB(sgj, column); // here or before filling??
         out[j] = sgj;
       }
@@ -1230,7 +1230,7 @@ List TRAlCpp(const List& x, const SEXP& xAG, const IntegerVector& g = 0, int ret
         if(column.size() != gs) stop("length(g) must match nrow(x)");
         NumericVector sgj = no_init_vector(gs);
         NumericVector sumj = AG[j];
-        for(int i = gs; i--; ) sgj[i] = drem(column[i], sumj[g[i]-1]);
+        for(int i = gs; i--; ) sgj[i] = myremain(column[i], sumj[g[i]-1]);
         SHALLOW_DUPLICATE_ATTRIB(sgj, column); // here or before filling??
         out[j] = sgj;
       }
