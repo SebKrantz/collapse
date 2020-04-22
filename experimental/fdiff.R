@@ -6,11 +6,10 @@
 # source("R/small_helper.R")
 # source("R/quick_conversion.R")
 
-# For principle innovations of this code see flag.R and flag.cpp # stubs instead of give.names !!!
+# For principle innovations of this code see flag.R and flag.cpp # stubs instead of give.names !!
 
-fdiff <- function(x, n = 1, diff = 1, ...) { # , g = NULL, t = NULL, fill = NA, stubs = TRUE
-  UseMethod("fdiff", x)
-}
+fdiff <- function(x, n = 1, diff = 1, ...) UseMethod("fdiff") # , x
+
 fdiff.default <- function(x, n = 1, diff = 1, g = NULL, t = NULL, fill = NA, stubs = TRUE, ...) {
   if(!missing(...)) stop(sprintf("Unknown argument %s passed to fdiff.default", dotstostr(...)))
   if(is.null(g))
@@ -50,7 +49,7 @@ fdiff.matrix <- function(x, n = 1, diff = 1, g = NULL, t = NULL, fill = NA, stub
 fdiff.grouped_df <- function(x, n = 1, diff = 1, t = NULL, fill = NA, stubs = TRUE, keep.ids = TRUE, ...) {
   if(!missing(...)) stop(sprintf("Unknown argument %s passed to fdiff.grouped_df", dotstostr(...)))
   g <- GRP.grouped_df(x)
-  tsym <- deparse(substitute(t))
+  tsym <- l1orn(all.vars(substitute(t)), "NULL")
   nam <- attr(x, "names")
   gn <- which(nam %in% g[[5L]])
   if(!(tsym == "NULL" || is.na(tn <- match(tsym, nam)))) {
@@ -90,20 +89,21 @@ fdiff.pdata.frame <- function(x, n = 1, diff = 1, fill = NA, stubs = TRUE, ...) 
   .Call(Cpp_fdiffl,x,n,diff,fill,fnlevels(index[[1L]]),index[[1L]],NULL,index[[2L]],stubs)
 }
 
+# Difference Operator (masks stats::D)
 # use xt instead of by ???
-D <- function(x, n = 1, diff = 1, ...) { # g = NULL, t = NULL, fill = NA, stubs = TRUE
-  UseMethod("D", x)
-}
-D.default <- function(x, n = 1, diff = 1, g = NULL, t = NULL, fill = NA, stubs = TRUE, ...) {
+D <- function(x, n = 1, diff = 1, ...) UseMethod("D") # , x
+
+D.default <- function(x, n = 1, diff = 1, g = NULL, t = NULL, fill = NA, stubs = TRUE, ...)
   fdiff.default(x, n, diff, g, t, fill, stubs, ...)
-}
-D.pseries <- function(x, n = 1, diff = 1, fill = NA, stubs = TRUE, ...) {
+
+D.pseries <- function(x, n = 1, diff = 1, fill = NA, stubs = TRUE, ...)
   fdiff.pseries(x, n, diff, fill, stubs, ...)
-}
-D.matrix <- function(x, n = 1, diff = 1, g = NULL, t = NULL, fill = NA, stubs = TRUE, ...) {
+
+D.matrix <- function(x, n = 1, diff = 1, g = NULL, t = NULL, fill = NA, stubs = TRUE, ...)
   fdiff.matrix(x, n, diff, g, t, fill, stubs, ...)
-}
+
 D.grouped_df <- fdiff.grouped_df
+
 D.data.frame <- function(x, n = 1, diff = 1, by = NULL, t = NULL, cols = is.numeric,
                          fill = NA, stubs = TRUE, keep.ids = TRUE, ...) {
 
@@ -146,7 +146,8 @@ D.data.frame <- function(x, n = 1, diff = 1, by = NULL, t = NULL, cols = is.nume
     return(setAttributes(res, ax))
   } else if(!is.null(cols)) { # Needs to be done like this, otherwise list-subsetting drops attributes !!
     ax <- attributes(x)
-    x <- unclass(x)[cols2int(cols, x, ax[["names"]])]
+    class(x) <- NULL
+    x <- x[cols2int(cols, x, names(x))]
     ax[["names"]] <- names(x)
     setattributes(x, ax)
   }
@@ -163,6 +164,7 @@ D.data.frame <- function(x, n = 1, diff = 1, by = NULL, t = NULL, cols = is.nume
       .Call(Cpp_fdiffl,x,n,diff,fill,by[[1L]],by[[2L]],by[[3L]],G_t(t,wm=2L),stubs)
     }
 }
+
 D.pdata.frame <- function(x, n = 1, diff = 1, cols = is.numeric, fill = NA, stubs = TRUE,
                           keep.ids = TRUE, ...) {
 
@@ -173,7 +175,7 @@ D.pdata.frame <- function(x, n = 1, diff = 1, cols = is.numeric, fill = NA, stub
 
   if(keep.ids) {
     gn <- which(nam %in% names(index))
-    if(length(gn) && is.null(cols)) cols <- seq_along(x)[-gn]
+    if(length(gn) && is.null(cols)) cols <- seq_along(unclass(x))[-gn]
   } else gn <- NULL
 
   if(length(index) > 2L) index <- c(finteraction(index[-length(index)]), index[length(index)])
@@ -186,6 +188,6 @@ D.pdata.frame <- function(x, n = 1, diff = 1, cols = is.numeric, fill = NA, stub
     ax[["names"]] <- names(res)
     return(setAttributes(res, ax))
   } else if(!length(gn)) # could speed up ??
-    return(.Call(Cpp_fdiffl,fcolsubset.int(x, cols),n,diff,fill,fnlevels(index[[1L]]),index[[1L]],NULL,index[[2L]],stubs)) else
+    return(.Call(Cpp_fdiffl,fcolsubset(x, cols),n,diff,fill,fnlevels(index[[1L]]),index[[1L]],NULL,index[[2L]],stubs)) else
       return(.Call(Cpp_fdiffl,x,n,diff,fill,fnlevels(index[[1L]]),index[[1L]],NULL,index[[2L]],stubs))
 }

@@ -9,9 +9,8 @@
 # For principle innovations of this code see flag.R and flag.cpp # stubs instead of give.names !!
 
 # ,logdiff,stubs  # TRY   x, n = 1, diff = 1, ..., t = NULL, fill = NA, logdiff = FALSE, stubs = TRUE
-fgrowth <- function(x, n = 1, diff = 1, ...) { # , g = NULL, t = NULL, fill = NA, logdiff = FALSE, stubs = TRUE
-  UseMethod("fgrowth", x)
-}
+fgrowth <- function(x, n = 1, diff = 1, ...) UseMethod("fgrowth") # , x
+
 fgrowth.default <- function(x, n = 1, diff = 1, g = NULL, t = NULL, fill = NA, logdiff = FALSE, stubs = TRUE, ...) {
   if(!missing(...)) stop(sprintf("Unknown argument %s passed to fgrowth.default", dotstostr(...)))
   if(is.null(g))
@@ -51,7 +50,7 @@ fgrowth.matrix <- function(x, n = 1, diff = 1, g = NULL, t = NULL, fill = NA, lo
 fgrowth.grouped_df <- function(x, n = 1, diff = 1, t = NULL, fill = NA, logdiff = FALSE, stubs = TRUE, keep.ids = TRUE, ...) {
   if(!missing(...)) stop(sprintf("Unknown argument %s passed to fgrowth.grouped_df", dotstostr(...)))
   g <- GRP.grouped_df(x)
-  tsym <- deparse(substitute(t))
+  tsym <- l1orn(all.vars(substitute(t)), "NULL")
   nam <- attr(x, "names")
   gn <- which(nam %in% g[[5L]])
   if(!(tsym == "NULL" || is.na(tn <- match(tsym, nam)))) {
@@ -91,20 +90,20 @@ fgrowth.pdata.frame <- function(x, n = 1, diff = 1, fill = NA, logdiff = FALSE, 
   .Call(Cpp_fgrowthl,x,n,diff,fill,fnlevels(index[[1L]]),index[[1L]],NULL,index[[2L]],logdiff,stubs)
 }
 
-# x, n = 1, diff = 1, g = NULL, t = NULL, fill = NA, logdiff = FALSE, stubs = TRUE, ...
-G <- function(x, n = 1, diff = 1, ...) {
-  UseMethod("G", x)
-}
-G.default <- function(x, n = 1, diff = 1, g = NULL, t = NULL, fill = NA, logdiff = FALSE, stubs = TRUE, ...) {
+# Growth Operator
+G <- function(x, n = 1, diff = 1, ...) UseMethod("G") # , x
+
+G.default <- function(x, n = 1, diff = 1, g = NULL, t = NULL, fill = NA, logdiff = FALSE, stubs = TRUE, ...)
   fgrowth.default(x, n, diff, g, t, fill, logdiff, stubs, ...)
-}
-G.pseries <- function(x, n = 1, diff = 1, fill = NA, logdiff = FALSE, stubs = TRUE, ...) {
+
+G.pseries <- function(x, n = 1, diff = 1, fill = NA, logdiff = FALSE, stubs = TRUE, ...)
   fgrowth.pseries(x, n, diff, fill, logdiff, stubs, ...)
-}
-G.matrix <- function(x, n = 1, diff = 1, g = NULL, t = NULL, fill = NA, logdiff = FALSE, stubs = TRUE, ...) {
+
+G.matrix <- function(x, n = 1, diff = 1, g = NULL, t = NULL, fill = NA, logdiff = FALSE, stubs = TRUE, ...)
   fgrowth.matrix(x, n, diff, g, t, fill, logdiff, stubs, ...)
-}
+
 G.grouped_df <- fgrowth.grouped_df
+
 G.data.frame <- function(x, n = 1, diff = 1, by = NULL, t = NULL, cols = is.numeric,
                          fill = NA, logdiff = FALSE, stubs = TRUE, keep.ids = TRUE, ...) {
 
@@ -147,7 +146,8 @@ G.data.frame <- function(x, n = 1, diff = 1, by = NULL, t = NULL, cols = is.nume
     return(setAttributes(res, ax))
   } else if(!is.null(cols)) { # Needs to be like this, otherwise list-subsetting removes attributes !!
     ax <- attributes(x)
-    x <- unclass(x)[cols2int(cols, x, ax[["names"]])]
+    class(x) <- NULL
+    x <- x[cols2int(cols, x, names(x))]
     ax[["names"]] <- names(x)
     setattributes(x, ax)
   }
@@ -164,6 +164,7 @@ G.data.frame <- function(x, n = 1, diff = 1, by = NULL, t = NULL, cols = is.nume
       .Call(Cpp_fgrowthl,x,n,diff,fill,by[[1L]],by[[2L]],by[[3L]],G_t(t,wm=3L),logdiff,stubs)
     }
 }
+
 G.pdata.frame <- function(x, n = 1, diff = 1, cols = is.numeric, fill = NA, logdiff = FALSE, stubs = TRUE, keep.ids = TRUE, ...) {
 
   if(!missing(...)) stop(sprintf("Unknown argument %s passed to G.pdata.frame", dotstostr(...)))
@@ -173,7 +174,7 @@ G.pdata.frame <- function(x, n = 1, diff = 1, cols = is.numeric, fill = NA, logd
 
   if(keep.ids) {
     gn <- which(nam %in% names(index))
-    if(length(gn) && is.null(cols)) cols <- seq_along(x)[-gn]
+    if(length(gn) && is.null(cols)) cols <- seq_along(unclass(x))[-gn]
   } else gn <- NULL
 
   if(length(index) > 2L) index <- c(finteraction(index[-length(index)]), index[length(index)])
@@ -186,6 +187,6 @@ G.pdata.frame <- function(x, n = 1, diff = 1, cols = is.numeric, fill = NA, logd
     ax[["names"]] <- names(res)
     return(setAttributes(res, ax))
   } else if(!length(gn)) # could speed up ??
-    return(.Call(Cpp_fgrowthl,fcolsubset.int(x, cols),n,diff,fill,fnlevels(index[[1L]]),index[[1L]],NULL,index[[2L]],logdiff,stubs)) else
+    return(.Call(Cpp_fgrowthl,fcolsubset(x, cols),n,diff,fill,fnlevels(index[[1L]]),index[[1L]],NULL,index[[2L]],logdiff,stubs)) else
       return(.Call(Cpp_fgrowthl,x,n,diff,fill,fnlevels(index[[1L]]),index[[1L]],NULL,index[[2L]],logdiff,stubs))
 }

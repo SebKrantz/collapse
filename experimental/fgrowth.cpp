@@ -12,7 +12,7 @@ inline double do_growth(double y, double x) {
 }
 
 inline double do_logdiff(double y, double x) {
-  return (log(y)-log(x))*100;
+  return log(y*(1/x))*100; // fastest !!
 }
 
 
