@@ -16,7 +16,7 @@ dapply <- function(X, FUN, ..., MARGIN = 2, parallel = FALSE, # drop argument !!
   if(arl) {
     dX <- dim(X)
     if(length(dX) > 2L) stop("dapply cannot handle higher-dimensional arrays")
-    res <- if(rowwl) aplyfun(mrtl(X), FUN, ...) else aplyfun(mctl(X), FUN, ...)
+    res <- if(rowwl) aplyfun(.Call(Cpp_mrtl, X, FALSE, 0L), FUN, ...) else aplyfun(.Call(Cpp_mctl, X, FALSE, 0L), FUN, ...)
     lx1 <- length(res[[1L]])
     if(lx1 == 1L && drop) return(`names<-`(unlist(res, use.names = FALSE), ax[["dimnames"]][[if(rowwl) 1L else 2L]]))
     if(!retmatl) {
@@ -27,7 +27,7 @@ dapply <- function(X, FUN, ..., MARGIN = 2, parallel = FALSE, # drop argument !!
   } else {
     attributes(X) <- NULL
     dX <- c(length(X[[1L]]), length(X)) # much faster than dim(X) on a list !!
-    res <- if(rowwl) aplyfun(mrtl(do.call(cbind, X)), FUN, ...) else aplyfun(X, FUN, ...) # do.call(cbind, X) is definitely faster than unlist(X, use.names = FALSE) and attaching dim attribute
+    res <- if(rowwl) aplyfun(.Call(Cpp_mrtl, do.call(cbind, X), FALSE, 0L), FUN, ...) else aplyfun(X, FUN, ...) # do.call(cbind, X) is definitely faster than unlist(X, use.names = FALSE) and attaching dim attribute
     lx1 <- length(res[[1L]])
     if(lx1 == 1L && drop) return(`names<-`(unlist(res, use.names = FALSE), if(rowwl) charorNULL(ax[["row.names"]]) else ax[["names"]]))
     if(retmatl) ax <- list(dim = dX, dimnames = list(charorNULL(ax[["row.names"]]), ax[["names"]]))
@@ -53,7 +53,7 @@ dapply <- function(X, FUN, ..., MARGIN = 2, parallel = FALSE, # drop argument !!
     if(rowwl) {
       if(lx1 != dX[2L]) ax[["names"]] <- if(!is.null(nx1 <- names(res[[1L]]))) nx1 else if(lx1 == 1L)
         deparse(substitute(FUN)) else paste0(deparse(substitute(FUN)), seq_len(lx1))
-      res <- mctl(matrix(unlist(res, use.names = FALSE), ncol = lx1, byrow = TRUE)) # definitely faster than do.call(rbind, X)
+      res <- .Call(Cpp_mctl, matrix(unlist(res, use.names = FALSE), ncol = lx1, byrow = TRUE), FALSE, 0L) # definitely faster than do.call(rbind, X)
     } else if(lx1 != dX[1L])
       ax[["row.names"]] <- if(!is.null(nx1 <- names(res[[1L]]))) nx1 else .set_row_names(lx1) # could also make deparse(substitute(FUN)), but that is not so typical for data.frames !!
   }

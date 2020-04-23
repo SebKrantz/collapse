@@ -79,7 +79,7 @@ BY.data.frame <- function(X, g, FUN, ..., use.g.names = TRUE, sort = TRUE,
     ax <- attributes(X)
     if(expand.wide) {
       if(return == 1L) {
-        splitfun <- function(x) mctl(do.call(rbind, lapply(split.default(x, g), FUN, ...)), names = TRUE)
+        splitfun <- function(x) .Call(Cpp_mctl, do.call(rbind, lapply(split.default(x, g), FUN, ...)), TRUE, 0L)
         res <- unlist(aplyfun(X, splitfun), recursive = FALSE, use.names = TRUE)
         ax[["row.names"]] <- if(use.g.names && !inherits(X, "data.table")) attr(g, "levels") else .set_row_names(length(res[[1L]])) # faster than nlevels ??
         ax[["names"]] <- names(res)
@@ -150,13 +150,13 @@ BY.matrix <- function(X, g, FUN, ..., use.g.names = TRUE, sort = TRUE,
     ax <- attributes(X)
     if(expand.wide) {
       if(return == 1L) {
-        splitfun <- function(x) mctl(do.call(rbind, lapply(split.default(x, g), FUN, ...)), names = TRUE)
-        res <- unlist(aplyfun(mctl(X, names = TRUE), splitfun), recursive = FALSE, use.names = TRUE)
+        splitfun <- function(x) .Call(Cpp_mctl, do.call(rbind, lapply(split.default(x, g), FUN, ...)), TRUE, 0L)
+        res <- unlist(aplyfun(.Call(Cpp_mctl, X, TRUE, 0L), splitfun), recursive = FALSE, use.names = TRUE)
         ax <- list(names = names(res), row.names = if(use.g.names) attr(g, "levels") else
           .set_row_names(length(res[[1L]])), class = "data.frame") # c(..., ax[!(names(ax) %in% c("dim","dimnames","class"))]) # # Don't know why one would need this!!
       } else {
         splitfun2 <- function(x) do.call(rbind, lapply(split.default(x, g), FUN, ...))
-        res <- do.call(cbind, aplyfun(mctl(X), splitfun2))
+        res <- do.call(cbind, aplyfun(.Call(Cpp_mctl, X, FALSE, 0L), splitfun2))
         dr <- dim(res)
         ax[["dimnames"]][1L] <- if(use.g.names) list(attr(g, "levels")) else list(NULL)        # works, but what if dn[[2L]] is NULL ??
         ax[["dimnames"]][[2L]] <- paste(rep(dimnames(X)[[2L]], each = dr[2L]/ncol(X)), dimnames(res)[[2L]], sep = ".")
@@ -171,13 +171,13 @@ BY.matrix <- function(X, g, FUN, ..., use.g.names = TRUE, sort = TRUE,
           ax <- list(names = dimnames(X)[[2L]], row.names = names(res[[1L]]), class = "data.frame")
                 # c(...,  ax[!(names(ax) %in% c("dim","dimnames","class"))]) # # Don't know why one would need this !!!
         setattr_clp(res[[1L]], "names", NULL)
-        res[-1L] <- aplyfun(mctl(X[, -1L, drop = FALSE]), splitfun3)
+        res[-1L] <- aplyfun(.Call(Cpp_mctl, X[, -1L, drop = FALSE], FALSE, 0L), splitfun3)
         if(return == 2L) {
           res <- do.call(cbind, res)
           ax[["dim"]] <- dim(res)
         }
       } else {
-        res <- aplyfun(mctl(X, names = TRUE), splitfun3) # internal ??
+        res <- aplyfun(.Call(Cpp_mctl, X, TRUE, 0L), splitfun3) # internal ??
         lr1 <- length(res[[1L]])
         if(return == 2L) {
           if(lr1 != nrow(X)) {
@@ -194,9 +194,9 @@ BY.matrix <- function(X, g, FUN, ..., use.g.names = TRUE, sort = TRUE,
     }
     return(setAttributes(res, ax))
   } else {
-    if(expand.wide) return(aplyfun(mctl(X, names = TRUE), function(x) do.call(rbind, lapply(split.default(x, g), FUN, ...)))) else if(use.g.names)
-      return(aplyfun(mctl(X, names = TRUE), function(x) lapply(split.default(x, g), FUN, ...))) else
-        return(aplyfun(mctl(X, names = TRUE), function(x) `names<-`(lapply(split.default(x, g), FUN, ...), NULL)))
+    if(expand.wide) return(aplyfun(.Call(Cpp_mctl, X, TRUE, 0L), function(x) do.call(rbind, lapply(split.default(x, g), FUN, ...)))) else if(use.g.names)
+      return(aplyfun(.Call(Cpp_mctl, X, TRUE, 0L), function(x) lapply(split.default(x, g), FUN, ...))) else
+        return(aplyfun(.Call(Cpp_mctl, X, TRUE, 0L), function(x) `names<-`(lapply(split.default(x, g), FUN, ...), NULL)))
   }
 }
 
@@ -223,7 +223,7 @@ BY.grouped_df <- function(X, FUN, ..., use.g.names = FALSE, keep.group_vars = TR
             ax <- attributes(X)
             attributes(res) <- NULL # faster removing attributes? (yes, a tiny bit!)  also set attributes of groups NULL ?? -> Nah !!
             ax[["names"]] <- c(ax[["names"]][gn], ax[["names"]][-gn])
-            return(setAttributes(c(fcolsubset(X, gn), res), ax))
+            return(setAttributes(c(unclass(X)[gn], res), ax))
           } else {
             ax <- attributes(res)
             attributes(res) <- NULL

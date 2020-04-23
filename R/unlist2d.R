@@ -31,8 +31,8 @@ unlist2d <- function(l, idcols = ".id", row.names = FALSE, recursive = TRUE, id.
       }
       dn <- dimnames(x)
       if(keep.row.names && !is.null(dn[[1L]]))
-        x <- `names<-`(c(list(dn[[1L]]), mctl(x)), c(row.names, dn[[2L]])) else
-        x <- `names<-`(mctl(x), dn[[2L]])
+        x <- `names<-`(c(list(dn[[1L]]),  .Call(Cpp_mctl, x, FALSE, 0L)), c(row.names, dn[[2L]])) else
+        x <- `names<-`(.Call(Cpp_mctl, x, FALSE, 0L), dn[[2L]])
     } else x <- as.vector(x, "list")
     if (is.null(names(x))) names(x) <- paste0("V", seq_along(x))     # it seems this is not yet working for all (i.e. model objects..), also perhaps not start at V1, sepending on what other columsn there are.. i.e start at the right position??
     return(x)
