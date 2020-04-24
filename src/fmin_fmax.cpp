@@ -1,9 +1,9 @@
 #include <Rcpp.h>
 using namespace Rcpp;
 
-// [[Rcpp::export]]
-NumericVector fminCpp(const NumericVector& x, int ng = 0, const IntegerVector& g = 0,
-                      bool narm = true) {
+template <typename F> // Faster non constant references here !
+NumericVector fminmaxCppImpl(NumericVector x, int ng = 0, IntegerVector g = 0,
+                             bool narm = true, F FUN = [](double a, double b) { return a > b; }, double init = R_PosInf) {
   int l = x.size();
 
   if(ng == 0) {
@@ -12,7 +12,7 @@ NumericVector fminCpp(const NumericVector& x, int ng = 0, const IntegerVector& g
       double min = x[j];
       while(std::isnan(min) && j!=0) min = x[--j];
       if(j != 0) for(int i = j; i--; ) {
-        if(min > x[i]) min = x[i];
+        if(FUN(min, x[i])) min = x[i];
       }
       return NumericVector::create(min);
     } else {
@@ -22,7 +22,7 @@ NumericVector fminCpp(const NumericVector& x, int ng = 0, const IntegerVector& g
           min = x[i];
           break;
         } else {
-          if(min > x[i]) min = x[i];
+          if(FUN(min, x[i])) min = x[i];
         }
       }
       return NumericVector::create(min);
@@ -32,12 +32,12 @@ NumericVector fminCpp(const NumericVector& x, int ng = 0, const IntegerVector& g
     if(narm) {
       NumericVector min(ng, NA_REAL); // Other way ??
       for(int i = l; i--; ) { // adding if isnan(x[i]) before is not faster !!!
-          if(min[g[i]-1] > x[i] || std::isnan(min[g[i]-1])) min[g[i]-1] = x[i];  // fastest !!
+        if(FUN(min[g[i]-1], x[i]) || std::isnan(min[g[i]-1])) min[g[i]-1] = x[i];  // fastest !!
       }
       DUPLICATE_ATTRIB(min, x);
       return min;
     } else {
-      NumericVector min(ng, R_PosInf); // INFINITY // DBL_MAX // good?? -> yes, same value bu better output !!
+      NumericVector min(ng, init); // INFINITY // DBL_MAX // good?? -> yes, same value bu better output !!
       int ngs = 0;
       for(int i = 0; i != l; ++i) {
         if(std::isnan(x[i])) {
@@ -47,7 +47,7 @@ NumericVector fminCpp(const NumericVector& x, int ng = 0, const IntegerVector& g
             if(ngs == ng) break;
           }
         } else {
-          if(min[g[i]-1] > x[i]) min[g[i]-1] = x[i];
+          if(FUN(min[g[i]-1], x[i])) min[g[i]-1] = x[i];
         }
       }
       DUPLICATE_ATTRIB(min, x);
@@ -57,11 +57,17 @@ NumericVector fminCpp(const NumericVector& x, int ng = 0, const IntegerVector& g
 }
 
 
-
-
 // [[Rcpp::export]]
-SEXP fminmCpp(const NumericMatrix& x, int ng = 0, const IntegerVector& g = 0,
-              bool narm = true, bool drop = true) {
+NumericVector fminmaxCpp(const NumericVector& x, int ng = 0, const IntegerVector& g = 0,
+                         bool narm = true, int ret = 1) {
+  if(ret == 1) return fminmaxCppImpl(x, ng, g, narm, [](double a, double b) { return a > b; }, R_PosInf);
+  return fminmaxCppImpl(x, ng, g, narm, [](double a, double b) { return a < b; }, R_NegInf);
+}
+
+
+template <typename F>
+SEXP fminmaxmCppImpl(const NumericMatrix& x, int ng = 0, const IntegerVector& g = 0,
+                     bool narm = true, bool drop = true, F FUN = [](double a, double b) { return a > b; }, double init = R_PosInf) {
   int l = x.nrow(), col = x.ncol();
 
   if(ng == 0) {
@@ -73,7 +79,7 @@ SEXP fminmCpp(const NumericMatrix& x, int ng = 0, const IntegerVector& g = 0,
         double minj = column[k];
         while(std::isnan(minj) && k!=0) minj = column[--k];
         if(k != 0) for(int i = k; i--; ) {
-          if(minj > column[i]) minj = column[i];
+          if(FUN(minj, column[i])) minj = column[i]; // continue here !!
         }
         min[j] = minj;
       }
@@ -86,7 +92,7 @@ SEXP fminmCpp(const NumericMatrix& x, int ng = 0, const IntegerVector& g = 0,
             minj = column[i];
             break;
           } else {
-            if(minj > column[i]) minj = column[i];
+            if(FUN(minj, column[i])) minj = column[i];
           }
         }
         min[j] = minj;
@@ -108,12 +114,12 @@ SEXP fminmCpp(const NumericMatrix& x, int ng = 0, const IntegerVector& g = 0,
         NumericMatrix::Column minj = min( _ , j);
         for(int i = l; i--; ) {
           if(!std::isnan(column[i])) { // Keeping this is faster !!!!
-            if(minj[g[i]-1] > column[i] || std::isnan(minj[g[i]-1])) minj[g[i]-1] = column[i];
+            if(FUN(minj[g[i]-1], column[i]) || std::isnan(minj[g[i]-1])) minj[g[i]-1] = column[i];
           }
         }
       }
     } else {
-      std::fill(min.begin(), min.end(), R_PosInf);
+      std::fill(min.begin(), min.end(), init);
       for(int j = col; j--; ) {
         NumericMatrix::ConstColumn column = x( _ , j);
         NumericMatrix::Column minj = min( _ , j);
@@ -126,7 +132,7 @@ SEXP fminmCpp(const NumericMatrix& x, int ng = 0, const IntegerVector& g = 0,
               if(ngs == ng) break;
             }
           } else {
-            if(minj[g[i]-1] > column[i]) minj[g[i]-1] = column[i];
+            if(FUN(minj[g[i]-1], column[i])) minj[g[i]-1] = column[i];
           }
         }
       }
@@ -136,16 +142,21 @@ SEXP fminmCpp(const NumericMatrix& x, int ng = 0, const IntegerVector& g = 0,
   }
 }
 
-
-
-
 // [[Rcpp::export]]
-SEXP fminlCpp(const List& x, int ng = 0, const IntegerVector& g = 0,
-              bool narm = true, bool drop = true) {
+SEXP fminmaxmCpp(const NumericMatrix& x, int ng = 0, const IntegerVector& g = 0,
+                 bool narm = true, bool drop = true, int ret = 1) {
+  if(ret == 1) return fminmaxmCppImpl(x, ng, g, narm, drop, [](double a, double b) { return a > b; }, R_PosInf);
+  return fminmaxmCppImpl(x, ng, g, narm, drop, [](double a, double b) { return a < b; }, R_NegInf);
+}
+
+
+template <typename F>
+SEXP fminmaxlCppImpl(const List& x, int ng = 0, const IntegerVector& g = 0,
+                     bool narm = true, bool drop = true, F FUN = [](double a, double b) { return a > b; }, double init = R_PosInf) {
   int l = x.size();
 
   if (ng == 0) {
-    NumericVector min = no_init_vector(l); // good and fast here !!
+    NumericVector min = no_init_vector(l); // good and fast here !
     if(narm) {
       for(int j = l; j--; ) {
         NumericVector column = x[j];
@@ -153,7 +164,7 @@ SEXP fminlCpp(const List& x, int ng = 0, const IntegerVector& g = 0,
         double mini = column[k];
         while(std::isnan(mini) && k!=0) mini = column[--k];
         if(k != 0) for(int i = k; i--; ) {
-          if(mini > column[i]) mini = column[i];
+          if(FUN(mini, column[i])) mini = column[i];
         }
         min[j] = mini;
       }
@@ -167,7 +178,7 @@ SEXP fminlCpp(const List& x, int ng = 0, const IntegerVector& g = 0,
             mini = column[i];
             break;
           } else {
-            if(mini > column[i]) mini = column[i];
+            if(FUN(mini, column[i])) mini = column[i];
           }
         }
         min[j] = mini;
@@ -186,7 +197,7 @@ SEXP fminlCpp(const List& x, int ng = 0, const IntegerVector& g = 0,
       out.attr("row.names") = 1;
       return out;
     }
-  } else { // With groups !!
+  } else { // With groups
     List min(l);
     int gss = g.size();
     if(narm) {
@@ -195,8 +206,8 @@ SEXP fminlCpp(const List& x, int ng = 0, const IntegerVector& g = 0,
         if(gss != column.size()) stop("length(g) must match nrow(X)");
         NumericVector minj(ng, NA_REAL);
         for(int i = gss; i--; ) {
-          if(!std::isnan(column[i])) { // Keeping this is faster !!!!
-            if(minj[g[i]-1] > column[i] || std::isnan(minj[g[i]-1])) minj[g[i]-1] = column[i];
+          if(!std::isnan(column[i])) { // Keeping this is faster !
+            if(FUN(minj[g[i]-1], column[i]) || std::isnan(minj[g[i]-1])) minj[g[i]-1] = column[i];
           }
         }
         SHALLOW_DUPLICATE_ATTRIB(minj, column);
@@ -206,7 +217,7 @@ SEXP fminlCpp(const List& x, int ng = 0, const IntegerVector& g = 0,
       for(int j = l; j--; ) {
         NumericVector column = x[j];
         if(gss != column.size()) stop("length(g) must match nrow(X)");
-        NumericVector minj(ng, R_PosInf);
+        NumericVector minj(ng, init);
         int ngs = 0;
         for(int i = 0; i != gss; ++i) {
           if(std::isnan(column[i])) {
@@ -216,7 +227,7 @@ SEXP fminlCpp(const List& x, int ng = 0, const IntegerVector& g = 0,
               if(ngs == ng) break;
             }
           } else {
-            if(minj[g[i]-1] > column[i]) minj[g[i]-1] = column[i];
+            if(FUN(minj[g[i]-1], column[i])) minj[g[i]-1] = column[i];
           }
         }
         SHALLOW_DUPLICATE_ATTRIB(minj, column);
@@ -224,7 +235,14 @@ SEXP fminlCpp(const List& x, int ng = 0, const IntegerVector& g = 0,
       }
     }
     DUPLICATE_ATTRIB(min, x);
-    min.attr("row.names") = IntegerVector::create(NA_INTEGER, -ng); // NumericVector::create(NA_REAL, -ng);
+    min.attr("row.names") = IntegerVector::create(NA_INTEGER, -ng);
     return min;
   }
+}
+
+// [[Rcpp::export]]
+SEXP fminmaxlCpp(const List& x, int ng = 0, const IntegerVector& g = 0,
+                 bool narm = true, bool drop = true, int ret = 1) {
+  if(ret == 1) return fminmaxlCppImpl(x, ng, g, narm, drop, [](double a, double b) { return a > b; }, R_PosInf);
+  return fminmaxlCppImpl(x, ng, g, narm, drop, [](double a, double b) { return a < b; }, R_NegInf);
 }
