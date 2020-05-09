@@ -2,10 +2,10 @@
 #include <Rcpp.h>
 using namespace Rcpp ;
 
-// TODO: Perhaps redo everything with data pointers and 2d group indices (instead of filling the 2d structure every time !!): http://www.cplusplus.com/reference/vector/vector/data/
+// TODO: Perhaps redo everything with data pointers and 2d group indices (instead of filling the 2d structure every time !): http://www.cplusplus.com/reference/vector/vector/data/
 // https://stackoverflow.com/questions/1733143/converting-between-c-stdvector-and-c-array-without-copying?rq=1
 
-// improve logical method ??
+// improve logical method ?
 
 template <int RTYPE>
 inline bool isnaNUM(typename Rcpp::traits::storage_type<RTYPE>::type x) {
@@ -54,7 +54,7 @@ IntegerVector fNdistinctImpl(const Vector<RTYPE>& x, int ng, const IntegerVector
         gmap[i] = std::vector<storage_t> (out[i]);
         out[i] = 0;
       }
-      // memset(out, 0, sizeof(int)*ng); // Stable ??? -> Nope, gives error!!
+      // memset(out, 0, sizeof(int)*ng); // Stable ? -> Nope, gives error
     } else {
       IntegerVector gsv = gs;
       if(ng != gsv.size()) stop("ng must match length(gs)");
@@ -66,7 +66,7 @@ IntegerVector fNdistinctImpl(const Vector<RTYPE>& x, int ng, const IntegerVector
     for(int i = 0; i != l; ++i) gmap[g[i]-1][out[g[i]-1]++] = x[i];
     if(narm) {
       for(int gr = 0; gr != ng; ++gr) {
-        const std::vector<storage_t>& temp = gmap[gr]; // good ?? // const Vector<RTYPE>& // wrap()
+        const std::vector<storage_t>& temp = gmap[gr]; // good ? // const Vector<RTYPE>& // wrap()
         sugar::IndexHash<RTYPE> hash(wrap(temp));
         for(int i = hash.n; i--; ) {
           if(isnanT(temp[i])) continue;
@@ -98,7 +98,7 @@ IntegerVector fNdistinctImpl(const Vector<RTYPE>& x, int ng, const IntegerVector
   }
 }
 
-template <> // No logical vector with sugar::IndexHash<RTYPE> !!!
+template <> // No logical vector with sugar::IndexHash<RTYPE> !
 IntegerVector fNdistinctImpl(const Vector<LGLSXP>& x, int ng, const IntegerVector& g,
                               const SEXP& gs, bool narm) {
   int l = x.size();
@@ -119,7 +119,7 @@ IntegerVector fNdistinctImpl(const Vector<LGLSXP>& x, int ng, const IntegerVecto
       }
     } else {
       bool seen1 = true, seen2 = true, seen3 = true;
-      for(int i = 0; i != l; ++i) { // better way??
+      for(int i = 0; i != l; ++i) { // better way?
         if(seen1 && x[i] == NA_LOGICAL) {
           ++Nunique;
           seen1 = false;
@@ -154,7 +154,7 @@ IntegerVector fNdistinctImpl(const Vector<LGLSXP>& x, int ng, const IntegerVecto
       }
     } else {
       LogicalVector seen1(ng, true), seen2(ng, true), seen3(ng, true);
-      for(int i = 0; i != l; ++i) { // better way??
+      for(int i = 0; i != l; ++i) { // better way?
         if(seen1[g[i]-1] && x[i] == NA_LOGICAL) {
           ++out[g[i]-1];
           seen1[g[i]-1] = false;
@@ -199,7 +199,7 @@ SEXP fNdistinctCpp(SEXP x, int ng = 0, IntegerVector g = 0, SEXP gs = R_NilValue
 }
 
 
-// [[Rcpp::export]] // Better Solution ?? // What about string ??
+// [[Rcpp::export]] // Better Solution ? // What about string ?
 SEXP fNdistinctlCpp(const List& x, int ng = 0, const IntegerVector& g = 0,
                     const SEXP& gs = R_NilValue, bool narm = true, bool drop = true) {
   int l = x.size();
@@ -224,13 +224,13 @@ SEXP fNdistinctlCpp(const List& x, int ng = 0, const IntegerVector& g = 0,
   }
   if(drop && ng == 0) {
     IntegerVector res = no_init_vector(l);
-    for(int i = l; i--; ) res[i] = out[i]; // Rf_coerceVector(out, INTSXP); // doesn't work !!
+    for(int i = l; i--; ) res[i] = out[i]; // Rf_coerceVector(out, INTSXP); // doesn't work
     res.attr("names") = x.attr("names");
     return res;
   } else {
     DUPLICATE_ATTRIB(out, x);
     if(ng == 0) out.attr("row.names") = 1;
-    else out.attr("row.names") = IntegerVector::create(NA_INTEGER, -ng); // NumericVector::create(NA_REAL, -ng);
+    else out.attr("row.names") = IntegerVector::create(NA_INTEGER, -ng);
     return out;
   }
 }
@@ -252,7 +252,7 @@ SEXP fNdistinctmImpl(const Matrix<RTYPE>& x, int ng, const IntegerVector& g,
     if(narm) {
       for(int j = col; j--; ) {
         ConstMatrixColumn<RTYPE> column = x(_ , j);
-        sugar::IndexHash<RTYPE> hash(wrap(column)); // why wrap needed ??
+        sugar::IndexHash<RTYPE> hash(wrap(column)); // why wrap needed ?
         for(int i = 0; i != l; ++i) {
           if(isnanT(column[i])) continue;
           unsigned int addr = hash.get_addr(column[i]);
@@ -270,7 +270,7 @@ SEXP fNdistinctmImpl(const Matrix<RTYPE>& x, int ng, const IntegerVector& g,
     } else {
       for(int j = col; j--; ) {
         ConstMatrixColumn<RTYPE> column = x(_ , j);
-        sugar::IndexHash<RTYPE> hash(wrap(column)); // why wrap needed ??
+        sugar::IndexHash<RTYPE> hash(wrap(column)); // why wrap needed ?
         hash.fill();
         out[j] = hash.size_;
       }
@@ -306,9 +306,9 @@ SEXP fNdistinctmImpl(const Matrix<RTYPE>& x, int ng, const IntegerVector& g,
         ConstMatrixColumn<RTYPE> column = x(_ , j);
         IntegerMatrix::Column outj = out(_, j);
         n.assign(ng, 0); // memset(n, 0, sizeof(int)*ng);
-        for(int i = 0; i != l; ++i) gmap[g[i]-1][n[g[i]-1]++] = column[i]; // reading in all the values. Better way ??
+        for(int i = 0; i != l; ++i) gmap[g[i]-1][n[g[i]-1]++] = column[i]; // reading in all the values. Better way ?
         for(int gr = 0; gr != ng; ++gr) {
-          const std::vector<storage_t>& temp = gmap[gr]; // good ?? // const Vector<RTYPE>& // wrap()
+          const std::vector<storage_t>& temp = gmap[gr]; // good ? // const Vector<RTYPE>& // wrap()
           sugar::IndexHash<RTYPE> hash(wrap(temp));
           for(int i = hash.n; i--; ) {
             if(isnanT(temp[i])) continue;
@@ -330,7 +330,7 @@ SEXP fNdistinctmImpl(const Matrix<RTYPE>& x, int ng, const IntegerVector& g,
         ConstMatrixColumn<RTYPE> column = x(_ , j);
         IntegerMatrix::Column outj = out(_, j);
         n.assign(ng, 0); // memset(n, 0, sizeof(int)*ng);
-        for(int i = 0; i != l; ++i) gmap[g[i]-1][n[g[i]-1]++] = column[i]; // reading in all the values. Better way ??
+        for(int i = 0; i != l; ++i) gmap[g[i]-1][n[g[i]-1]++] = column[i]; // reading in all the values. Better way ?
         for(int gr = 0; gr != ng; ++gr) {
           sugar::IndexHash<RTYPE> hash(wrap(gmap[gr]));
           hash.fill();
@@ -343,7 +343,7 @@ SEXP fNdistinctmImpl(const Matrix<RTYPE>& x, int ng, const IntegerVector& g,
   }
 }
 
-template <> // No logical vector with sugar::IndexHash<RTYPE> !!! !
+template <> // No logical vector with sugar::IndexHash<RTYPE> !
 SEXP fNdistinctmImpl(const Matrix<LGLSXP>& x, int ng, const IntegerVector& g, const SEXP& gs, bool narm, bool drop) {
   int l = x.nrow(), col = x.ncol();
 
@@ -368,7 +368,7 @@ SEXP fNdistinctmImpl(const Matrix<LGLSXP>& x, int ng, const IntegerVector& g, co
       for(int j = col; j--; ) {
         LogicalMatrix::ConstColumn column = x(_ , j);
         bool seen1 = true, seen2 = true, seen3 = true;
-        for(int i = 0; i != l; ++i) { // better way??
+        for(int i = 0; i != l; ++i) { // better way?
           if(seen1 && column[i] == NA_LOGICAL) {
             ++out[j];
             seen1 = false;
@@ -416,7 +416,7 @@ SEXP fNdistinctmImpl(const Matrix<LGLSXP>& x, int ng, const IntegerVector& g, co
         LogicalMatrix::ConstColumn column = x(_ , j);
         IntegerMatrix::Column outj = out(_, j);
         LogicalVector seen1(ng, true), seen2(ng, true), seen3(ng, true);
-        for(int i = 0; i != l; ++i) { // better way??
+        for(int i = 0; i != l; ++i) { // better way?
           if(seen1[g[i]-1] && column[i] == NA_LOGICAL) {
             ++outj[g[i]-1];
             seen1[g[i]-1] = false;

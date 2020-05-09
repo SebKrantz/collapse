@@ -2,7 +2,7 @@
 #include <Rcpp.h>
 using namespace Rcpp;
 
-// Implemented smarter copy names !!
+// TODO: Implemented smarter copy names ?!
 
 template <int RTYPE>
 inline bool isnaNUM(typename Rcpp::traits::storage_type<RTYPE>::type x) {
@@ -23,7 +23,7 @@ Vector<RTYPE> flastCppImpl(const Vector<RTYPE>& x, int ng, const IntegerVector& 
       int j = l-1;
       auto last = x[j];
       while(isnanT(last) && j!=0) last = x[--j];
-      Vector<RTYPE> out(1, last); // faster using create ??
+      Vector<RTYPE> out(1, last); // faster using create ?
       DUPLICATE_ATTRIB(out, x);
       if(Rf_getAttrib(x, R_NamesSymbol) != R_NilValue) {
         CharacterVector names = Rf_getAttrib(x, R_NamesSymbol);
@@ -181,7 +181,7 @@ SEXP flastmCppImpl(const Matrix<RTYPE>& x, int ng, const IntegerVector& g, bool 
       if(dn[0] != R_NilValue) {
         CharacterVector rn = dn[0];
         CharacterVector newrn = no_init_vector(ng);
-        LogicalVector glj(ng, true); // using std::vector<bool> here is more memory efficient but not faster !!
+        LogicalVector glj(ng, true); // using std::vector<bool> here is more memory efficient but not faster
         int ngs = 0;
         for(int i = l; i--; ) {
           if(glj[g[i]-1]) {
@@ -192,9 +192,9 @@ SEXP flastmCppImpl(const Matrix<RTYPE>& x, int ng, const IntegerVector& g, bool 
             if(ngs == ng) break;
           }
         }
-        last.attr("dimnames") = List::create(newrn, dn[1]); // best way !!
+        last.attr("dimnames") = List::create(newrn, dn[1]); // best way
       } else {
-        LogicalVector glj(ng, true); // using std::vector<bool> here is more memory efficient but not faster !!
+        LogicalVector glj(ng, true); // using std::vector<bool> here is more memory efficient but not faster
         int ngs = 0;
         for(int i = l; i--; ) {
           if(glj[g[i]-1]) {
@@ -330,7 +330,7 @@ SEXP flastlCpp(const List& x, int ng = 0, const IntegerVector& g = 0, bool narm 
     DUPLICATE_ATTRIB(last, x);
     last.attr("row.names") = 1;
     return last;
-  } else { // With groups !!
+  } else { // With groups
     int gss = g.size();
     if(narm) {
       for(int j = l; j--; ) {
@@ -412,7 +412,7 @@ SEXP flastlCpp(const List& x, int ng = 0, const IntegerVector& g = 0, bool narm 
       DUPLICATE_ATTRIB(last, x);
       last.attr("row.names") = NumericVector::create(NA_REAL, -ng);
     } else {
-      LogicalVector glj(ng, true); //  Much faster method !! (precomputing indices and then going through data)
+      LogicalVector glj(ng, true); //  Much faster method (precomputing indices and then going through data)
       IntegerVector lastindex = no_init_vector(ng);
       int ngs = 0;
       for(int i = gss; i--; ) {
@@ -460,8 +460,8 @@ SEXP flastlCpp(const List& x, int ng = 0, const IntegerVector& g = 0, bool narm 
       }
       DUPLICATE_ATTRIB(last, x);
       if(Rf_getAttrib(x, R_RowNamesSymbol) != R_NilValue) {
-        const CharacterVector& rn = Rf_getAttrib(x, R_RowNamesSymbol); // const doesn't really make a difference !!
-        Rf_setAttrib(last, R_RowNamesSymbol, rn[lastindex]); //  last.attr("row.names") = rn[lastindex]; // Other sloghtly faster, but no big deal !!
+        const CharacterVector& rn = Rf_getAttrib(x, R_RowNamesSymbol); // const doesn't really make a difference
+        Rf_setAttrib(last, R_RowNamesSymbol, rn[lastindex]); //  last.attr("row.names") = rn[lastindex]; // Other sloghtly faster, but no big deal
       } else {
         last.attr("row.names") = NumericVector::create(NA_REAL, -ng);
       }

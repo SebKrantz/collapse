@@ -48,13 +48,15 @@ IntegerMatrix pwNobsmCpp(SEXP x){
   RCPP_RETURN_MATRIX(pwNobsmCppImpl, x);
 }
 
-// Not fast !!!
+
+
+// Old / Experimental:
 //
 // inline bool nisnan(double x) {
 //   return x == x;
 // }
 //
-//
+// Not fast !!! :
 // // [[Rcpp::export]]
 // IntegerMatrix pwNobslCpp(const List& x) {
 //   int l = x.size();

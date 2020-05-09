@@ -2,7 +2,6 @@
 #include <Rcpp.h>
 using namespace Rcpp;
 
-// Rather call it fN  or fNobs ??
 template <int RTYPE>
 IntegerVector fNobsCppImpl(Vector<RTYPE> x, int ng, IntegerVector g) {
 
@@ -11,7 +10,7 @@ IntegerVector fNobsCppImpl(Vector<RTYPE> x, int ng, IntegerVector g) {
   if (ng == 0) {
       int n = 0;
       if(TYPEOF(x) == REALSXP) {
-        for(int i = 0; i != l; ++i) if(x[i] == x[i]) ++n; // This loop is faster !!
+        for(int i = 0; i != l; ++i) if(x[i] == x[i]) ++n; // This loop is faster
       } else {
         for(int i = 0; i != l; ++i) if(x[i] != Vector<RTYPE>::get_na()) ++n;
       }
@@ -65,12 +64,12 @@ template <int RTYPE>
 SEXP fNobsmCppImpl(Matrix<RTYPE> x, int ng, IntegerVector g, bool drop) {
   int l = x.nrow(), col = x.ncol();
 
-  if(ng == 0) { // Fastest loops ?? Is perhaps an iterator metter suited?? or a STD algorithm to count ??
+  if(ng == 0) { // Fastest loops ? Is perhaps an iterator better suited? or a STD algorithm to count ?
     IntegerVector nobs = no_init_vector(col);
     if(TYPEOF(x) == REALSXP) {
-      for(int j = col; j--; ) { // fastest loop???????????????
+      for(int j = col; j--; ) { // fastest loop?
         MatrixColumn<RTYPE> column = x( _ , j);
-        int ni = 0; // fastest way???????????????
+        int ni = 0; // fastest way?
         for(int i = 0; i != l; ++i) if(column[i] == column[i]) ++ni;
         nobs[j] = ni;
       }
@@ -90,7 +89,7 @@ SEXP fNobsmCppImpl(Matrix<RTYPE> x, int ng, IntegerVector g, bool drop) {
     return nobs;
   } else { // with groups
     if(g.size() != l) stop("length(g) must match nrow(X)");
-    IntegerMatrix nobs(ng, col); // init best solution ??
+    IntegerMatrix nobs(ng, col); // init best solution ?
     if(TYPEOF(x) == REALSXP) {
       for(int j = col; j--; ) {
         MatrixColumn<RTYPE> column = x( _ , j);
@@ -142,15 +141,15 @@ SEXP fNobslCpp(List x, int ng = 0, IntegerVector g = 0, bool drop = true) {
 
   if(ng == 0) {
     NumericVector nobs = no_init_vector(l);
-    for(int j = l; j--; ) { // fastest loop ???
-      // for(int j = 0; j != l; ++j) { Not sure, could be faster !!!
+    for(int j = l; j--; ) { // fastest loop ?
+      // for(int j = 0; j != l; ++j) { Not sure, could be faster
       int ni = 0;
-      switch(TYPEOF(x[j])) { // Faster than using iterator ?? // https://gallery.rcpp.org/articles/rcpp-wrap-and-recurse/
+      switch(TYPEOF(x[j])) { // Faster than using iterator ? // https://gallery.rcpp.org/articles/rcpp-wrap-and-recurse/
       case REALSXP: {
         NumericVector column = x[j];
         int k = column.size();
         for(int i = 0; i != k; ++i) if(!std::isnan(column[i])) ++ni;
-        // for(int i = 0; i != column.size(); ++i) if(!std::isnan(column[i])) ++ni; // Note: Column size function called repeatedly is very slow!!!
+        // for(int i = 0; i != column.size(); ++i) if(!std::isnan(column[i])) ++ni; // Note: Column size function called repeatedly is very slow
         break;
       }
       case INTSXP: {
@@ -195,10 +194,10 @@ SEXP fNobslCpp(List x, int ng = 0, IntegerVector g = 0, bool drop = true) {
       out.attr("row.names") = 1;
       return out;
     }
-  } else { // With groups !!
+  } else { // With groups
     int gss = g.size();
     List nobs(l);
-    for(int j = l; j--; ) { // fastest loop ???
+    for(int j = l; j--; ) { // fastest loop ?
       IntegerVector ni(ng);
       switch(TYPEOF(x[j])) {
       case REALSXP: {
@@ -238,7 +237,7 @@ SEXP fNobslCpp(List x, int ng = 0, IntegerVector g = 0, bool drop = true) {
       nobs[j] = ni;
     }
     DUPLICATE_ATTRIB(nobs, x);
-    nobs.attr("row.names") = IntegerVector::create(NA_INTEGER, -ng); // NumericVector::create(NA_REAL, -ng);
+    nobs.attr("row.names") = IntegerVector::create(NA_INTEGER, -ng);
     return nobs;
   }
 }

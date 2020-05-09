@@ -4,14 +4,9 @@ using namespace Rcpp;
 
 template <int RTYPE>
 IntegerVector qFCppImpl(const Vector<RTYPE>& x, bool ordered = true, bool na_exclude = true) {
-    Vector<RTYPE> levs = (ordered) ? sort_unique(x) : unique(x);
-    IntegerVector out = no_init_vector(levs.size());
-    if(na_exclude) {
-      out = match(x, levs);
-    } else {
-      out = Rf_match(levs, x, NA_INTEGER); // Rf_matchE(levs, x, ls, wrap(Vector<RTYPE>::get_na()));
-    }
-    SHALLOW_DUPLICATE_ATTRIB(out, x); // works for all atomic objects ??
+    Vector<RTYPE> levs = ordered ? sort_unique(x) : unique(x);
+    IntegerVector out = na_exclude ? match(x, levs) : as<IntegerVector>(Rf_match(levs, x, NA_INTEGER)); // Rf_matchE(levs, x, ls, wrap(Vector<RTYPE>::get_na()));
+    SHALLOW_DUPLICATE_ATTRIB(out, x); // works for all atomic objects ?
     if(TYPEOF(x) == STRSXP) { // slightly better
       out.attr("levels") = levs;
     } else {
@@ -25,14 +20,9 @@ IntegerVector qFCppImpl(const Vector<RTYPE>& x, bool ordered = true, bool na_exc
 
 template <int RTYPE>
 IntegerVector qGCppImpl(const Vector<RTYPE>& x, bool ordered = true, bool na_exclude = true) {
-    Vector<RTYPE> levs = (ordered) ? sort_unique(x) : unique(x);
-    IntegerVector out = no_init_vector(levs.size());
-    if(na_exclude) {
-      out = match(x, levs);
-    } else {
-      out = Rf_match(levs, x, NA_INTEGER); // Rf_matchE(levs, x, ls, wrap(Vector<RTYPE>::get_na()));
-    }
-    // SHALLOW_DUPLICATE_ATTRIB(out, x); // needed ??
+    Vector<RTYPE> levs = ordered ? sort_unique(x) : unique(x);
+    IntegerVector out = na_exclude ? match(x, levs) : as<IntegerVector>(Rf_match(levs, x, NA_INTEGER)); // Rf_matchE(levs, x, ls, wrap(Vector<RTYPE>::get_na()));
+    // SHALLOW_DUPLICATE_ATTRIB(out, x); // needed ? -> Nah, it's a programmers function..
     out.attr("N.groups") = levs.size();
     out.attr("class") = (ordered && !na_exclude) ? CharacterVector::create("ordered","qG","na.included") :
                            ordered ? CharacterVector::create("ordered","qG") :
@@ -40,7 +30,7 @@ IntegerVector qGCppImpl(const Vector<RTYPE>& x, bool ordered = true, bool na_exc
     return out;
 }
 
-// [[Rcpp::export]]   // do Cpp 11 solution using return macro ??
+// [[Rcpp::export]]   // do Cpp 11 solution using return macro ?
 SEXP qFCpp(SEXP x, bool ordered = true, bool na_exclude = true) {
   switch(TYPEOF(x)) {
   case INTSXP: return qFCppImpl<INTSXP>(x, ordered, na_exclude);
@@ -90,7 +80,7 @@ SEXP qFCpp(SEXP x, bool ordered = true, bool na_exclude = true) {
   return R_NilValue;
 }
 
-// [[Rcpp::export]]   // do Cpp 11 solution using return macro ??
+// [[Rcpp::export]]   // do Cpp 11 solution using return macro ?
 SEXP qGCpp(SEXP x, bool ordered = true, bool na_exclude = true) {
   switch(TYPEOF(x)) {
   case INTSXP: return qGCppImpl<INTSXP>(x, ordered, na_exclude);
@@ -186,6 +176,8 @@ SEXP funique(SEXP x, bool ordered = true) {
   return R_NilValue;
 }
 
+// Old / Experimental:
+
 // template <int RTYPE>
 // Vector<RTYPE> funiqueImpl(const Vector<RTYPE>& x , bool ordered = false) {
 //   Vector<RTYPE> out = (ordered) ? sort_unique(x) : unique(x);
@@ -202,7 +194,7 @@ SEXP funique(SEXP x, bool ordered = true) {
 // }
 
 
-// Cpp 11 Solution: Not working for some reason !!
+// Cpp 11 Solution: Not working for some reason !
 // template <int RTYPE>
 // IntegerVector qFCppImpl( Vector<RTYPE> x , bool ordered) {
 //   if(ordered) {

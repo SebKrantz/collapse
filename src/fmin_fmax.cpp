@@ -1,7 +1,7 @@
 #include <Rcpp.h>
 using namespace Rcpp;
 
-template <typename F> // Faster non constant references here !
+template <typename F> // Faster non constant references here ! (for some weird reason)
 NumericVector fminmaxCppImpl(NumericVector x, int ng = 0, IntegerVector g = 0,
                              bool narm = true, F FUN = [](double a, double b) { return a > b; }, double init = R_PosInf) {
   int l = x.size();
@@ -30,9 +30,9 @@ NumericVector fminmaxCppImpl(NumericVector x, int ng = 0, IntegerVector g = 0,
   } else { // with groups
     if(g.size() != l) stop("length(g) must match nrow(X)");
     if(narm) {
-      NumericVector min(ng, NA_REAL); // Other way ??
-      for(int i = l; i--; ) { // adding if isnan(x[i]) before is not faster !!!
-        if(FUN(min[g[i]-1], x[i]) || std::isnan(min[g[i]-1])) min[g[i]-1] = x[i];  // fastest !!
+      NumericVector min(ng, NA_REAL); // Other way ?
+      for(int i = l; i--; ) { // adding if isnan(x[i]) before is not faster
+        if(FUN(min[g[i]-1], x[i]) || std::isnan(min[g[i]-1])) min[g[i]-1] = x[i];  // fastest
       }
       DUPLICATE_ATTRIB(min, x);
       return min;
@@ -71,7 +71,7 @@ SEXP fminmaxmCppImpl(const NumericMatrix& x, int ng = 0, const IntegerVector& g 
   int l = x.nrow(), col = x.ncol();
 
   if(ng == 0) {
-    NumericVector min = no_init_vector(col); // Initialize faster -> Nope !!!
+    NumericVector min = no_init_vector(col); // Initialize faster -> Nope
     if(narm) {
       for(int j = col; j--; ) {
         NumericMatrix::ConstColumn column = x( _ , j);
@@ -79,7 +79,7 @@ SEXP fminmaxmCppImpl(const NumericMatrix& x, int ng = 0, const IntegerVector& g 
         double minj = column[k];
         while(std::isnan(minj) && k!=0) minj = column[--k];
         if(k != 0) for(int i = k; i--; ) {
-          if(FUN(minj, column[i])) minj = column[i]; // continue here !!
+          if(FUN(minj, column[i])) minj = column[i]; // continue here
         }
         min[j] = minj;
       }
@@ -113,7 +113,7 @@ SEXP fminmaxmCppImpl(const NumericMatrix& x, int ng = 0, const IntegerVector& g 
         NumericMatrix::ConstColumn column = x( _ , j);
         NumericMatrix::Column minj = min( _ , j);
         for(int i = l; i--; ) {
-          if(!std::isnan(column[i])) { // Keeping this is faster !!!!
+          if(!std::isnan(column[i])) { // Keeping this is faster !
             if(FUN(minj[g[i]-1], column[i]) || std::isnan(minj[g[i]-1])) minj[g[i]-1] = column[i];
           }
         }

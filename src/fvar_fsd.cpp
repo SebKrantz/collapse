@@ -1,7 +1,7 @@
 #include <Rcpp.h>
 using namespace Rcpp;
 
-// Note: All comments are in fvar.cpp
+// Note: More comments are in fvar.cpp (C++ folder, not on Github)
 
 // [[Rcpp::export]]
 NumericVector fvarsdCpp(const NumericVector& x, int ng = 0, const IntegerVector& g = 0, const SEXP& gs = R_NilValue,
@@ -15,7 +15,7 @@ NumericVector fvarsdCpp(const NumericVector& x, int ng = 0, const IntegerVector&
         if(narm) {
           int j = l-1;
           // double n = 0;
-          // long double mean = 0, d1 = 0, M2 = 0; // LD really necessary ?? what about speed ??
+          // long double mean = 0, d1 = 0, M2 = 0; // LD really necessary ? what about speed ?
           double n = 0, mean = 0, d1 = 0, M2 = 0;
           while(std::isnan(x[j]) && j!=0) --j;
           if(j != 0) {
@@ -166,7 +166,7 @@ NumericVector fvarsdCpp(const NumericVector& x, int ng = 0, const IntegerVector&
         // long double d1 = 0;
         double d1 = 0;
         if(narm) {
-          NumericVector M2(ng, NA_REAL), sumw(ng), mean(ng); // better for valgrind !!
+          NumericVector M2(ng, NA_REAL), sumw(ng), mean(ng); // better for valgrind
           // NumericVector sumw = no_init_vector(ng), mean = no_init_vector(ng);
           for(int i = l; i--; ) {
             if(std::isnan(x[i]) || std::isnan(wg[i])) continue;
@@ -277,7 +277,7 @@ NumericVector fvarsdCpp(const NumericVector& x, int ng = 0, const IntegerVector&
       } else { // with groups
         if(g.size() != l) stop("length(g) must match nrow(X)");
         if(narm) {
-          NumericVector sq_sum(ng, NA_REAL), sum(ng); // better for valgrind !!
+          NumericVector sq_sum(ng, NA_REAL), sum(ng); // better for valgrind
           // NumericVector sum = no_init_vector(ng);
           IntegerVector n(ng, 1);
           for(int i = l; i--; ) {
@@ -308,8 +308,8 @@ NumericVector fvarsdCpp(const NumericVector& x, int ng = 0, const IntegerVector&
           return sq_sum;
         } else {
           NumericVector sq_sum(ng), sum(ng);
-          // IntegerVector gsv = no_init_vector(ng); // NULL; gives compile warning
-          // no probelm but this is better for valgrind
+          // IntegerVector gsv = no_init_vector(ng);
+          // no problem but this is better for valgrind
           IntegerVector gsv = (Rf_isNull(gs)) ? IntegerVector(ng) : as<IntegerVector>(gs);
           int ngs = 0;
           if(Rf_isNull(gs)) {
@@ -398,7 +398,7 @@ NumericVector fvarsdCpp(const NumericVector& x, int ng = 0, const IntegerVector&
       } else { // with groups
         if(g.size() != l) stop("length(g) must match nrow(X)");
         if(narm) {
-          NumericVector sq_sum(ng, NA_REAL), sumw(ng), sum(ng); // better for valgrind !!
+          NumericVector sq_sum(ng, NA_REAL), sumw(ng), sum(ng); // better for valgrind
           // NumericVector sumw = no_init_vector(ng), sum = no_init_vector(ng);
           for(int i = l; i--; ) {
             if(std::isnan(x[i]) || std::isnan(wg[i])) continue;
@@ -532,12 +532,12 @@ SEXP fvarsdmCpp(const NumericMatrix& x, int ng = 0, const IntegerVector& g = 0,
         if(narm) {
           NumericMatrix M2 = no_init_matrix(ng, col);
           std::fill(M2.begin(), M2.end(), NA_REAL);
-          NumericVector meanj(ng), nj(ng); // better for valgrind !!
+          NumericVector meanj(ng), nj(ng); // better for valgrind
           for(int j = col; j--; ) {
             NumericMatrix::ConstColumn column = x( _ , j);
             NumericMatrix::Column M2j = M2( _ , j);
             double d1j = 0; // , meanj[ng], nj[ng];
-            // NumericVector meanj = no_init_vector(ng), nj = no_init_vector(ng); // better for valgrind !!
+            // NumericVector meanj = no_init_vector(ng), nj = no_init_vector(ng); // better for valgrind
             for(int i = l; i--; ) {
               if(std::isnan(column[i])) continue;
               if(std::isnan(M2j[g[i]-1])) {
@@ -671,12 +671,12 @@ SEXP fvarsdmCpp(const NumericMatrix& x, int ng = 0, const IntegerVector& g = 0,
         if(narm) {
           NumericMatrix M2 = no_init_matrix(ng, col);
           std::fill(M2.begin(), M2.end(), NA_REAL);
-          NumericVector meanj(ng), sumwj(ng); // better for valgrind !!
+          NumericVector meanj(ng), sumwj(ng); // better for valgrind
           for(int j = col; j--; ) {
             NumericMatrix::ConstColumn column = x( _ , j);
             NumericMatrix::Column M2j = M2( _ , j);
             double d1j = 0; // meanj[ng], sumwj[ng];
-            // NumericVector meanj = no_init_vector(ng), sumwj = no_init_vector(ng); better for valgrind !!
+            // NumericVector meanj = no_init_vector(ng), sumwj = no_init_vector(ng); better for valgrind
             for(int i = l; i--; ) {
               if(std::isnan(column[i]) || std::isnan(wg[i])) continue;
               if(std::isnan(M2j[g[i]-1])) {
@@ -812,7 +812,7 @@ SEXP fvarsdmCpp(const NumericMatrix& x, int ng = 0, const IntegerVector& g = 0,
         if(narm) {
           NumericMatrix sq_sum = no_init_matrix(ng, col);
           std::fill(sq_sum.begin(), sq_sum.end(), NA_REAL);
-          // better for valgrind (although no error) !
+          // better for valgrind (although no error)
           NumericVector sumj(ng); // = no_init_vector(ng); // double sumj[ng];
           IntegerVector nj(ng); // = no_init_vector(ng); // int nj[ng];
           for(int j = col; j--; ) {
@@ -956,7 +956,7 @@ SEXP fvarsdmCpp(const NumericMatrix& x, int ng = 0, const IntegerVector& g = 0,
         if(narm) {
           NumericMatrix sq_sum = no_init_matrix(ng, col);
           std::fill(sq_sum.begin(), sq_sum.end(), NA_REAL);
-          // better for valgrind (although no error) !
+          // better for valgrind (although no error)
           NumericVector sumj(ng), sumwj(ng); // double sumj[ng], sumwj[ng];
           for(int j = col; j--; ) {
             NumericMatrix::ConstColumn column = x( _ , j);
@@ -1096,7 +1096,7 @@ SEXP fvarsdlCpp(const List& x, int ng = 0, const IntegerVector& g = 0,
           for(int j = l; j--; ) {
             NumericVector column = x[j];
             if(gss != column.size()) stop("length(g) must match nrow(X)");
-            NumericVector M2j(ng, NA_REAL), nj(ng, 1.0), meanj(ng); // better for valgrind !! // = no_init_vector(ng);
+            NumericVector M2j(ng, NA_REAL), nj(ng, 1.0), meanj(ng); // better for valgrind // = no_init_vector(ng);
             double d1j = 0; // meanj[ng]
             // std::vector<double> nj(ng, 1.0);
             for(int i = gss; i--; ) {
@@ -1172,7 +1172,7 @@ SEXP fvarsdlCpp(const List& x, int ng = 0, const IntegerVector& g = 0,
           }
         }
         DUPLICATE_ATTRIB(out, x);
-        out.attr("row.names") = IntegerVector::create(NA_INTEGER, -ng); // NumericVector::create(NA_REAL, -ng);
+        out.attr("row.names") = IntegerVector::create(NA_INTEGER, -ng);
         return out;
       }
     } else { // With weights
@@ -1324,7 +1324,7 @@ SEXP fvarsdlCpp(const List& x, int ng = 0, const IntegerVector& g = 0,
           }
         }
         DUPLICATE_ATTRIB(out, x);
-        out.attr("row.names") = IntegerVector::create(NA_INTEGER, -ng); // NumericVector::create(NA_REAL, -ng);
+        out.attr("row.names") = IntegerVector::create(NA_INTEGER, -ng);
         return out;
       }
     }
@@ -1397,7 +1397,7 @@ SEXP fvarsdlCpp(const List& x, int ng = 0, const IntegerVector& g = 0,
           for(int j = l; j--; ) {
             NumericVector column = x[j];
             if(gss != column.size()) stop("length(g) must match nrow(X)");
-            NumericVector sq_sumj(ng, NA_REAL), sumj(ng); // better for valgrind !! // = no_init_vector(ng);
+            NumericVector sq_sumj(ng, NA_REAL), sumj(ng); // better for valgrind // = no_init_vector(ng);
             // double sumj[ng];
             std::vector<int> nj(ng, 1);
             for(int i = gss; i--; ) {
@@ -1503,7 +1503,7 @@ SEXP fvarsdlCpp(const List& x, int ng = 0, const IntegerVector& g = 0,
           }
         }
         DUPLICATE_ATTRIB(out, x);
-        out.attr("row.names") = IntegerVector::create(NA_INTEGER, -ng); // NumericVector::create(NA_REAL, -ng);
+        out.attr("row.names") = IntegerVector::create(NA_INTEGER, -ng);
         return out;
       }
     } else { // With weights
@@ -1575,7 +1575,7 @@ SEXP fvarsdlCpp(const List& x, int ng = 0, const IntegerVector& g = 0,
           for(int j = l; j--; ) {
             NumericVector column = x[j];
             if(gss != column.size()) stop("length(g) must match nrow(X)");
-            NumericVector sq_sumj(ng, NA_REAL), sumj(ng), sumwj(ng); // better for valgrind ! // = no_init_vector(ng), sumwj = no_init_vector(ng);
+            NumericVector sq_sumj(ng, NA_REAL), sumj(ng), sumwj(ng); // better for valgrind // = no_init_vector(ng), sumwj = no_init_vector(ng);
             // double sumj[ng], sumwj[ng];
             for(int i = gss; i--; ) {
               if(std::isnan(column[i]) || std::isnan(wg[i])) continue;
@@ -1642,7 +1642,7 @@ SEXP fvarsdlCpp(const List& x, int ng = 0, const IntegerVector& g = 0,
           }
         }
         DUPLICATE_ATTRIB(out, x);
-        out.attr("row.names") = IntegerVector::create(NA_INTEGER, -ng); // NumericVector::create(NA_REAL, -ng);
+        out.attr("row.names") = IntegerVector::create(NA_INTEGER, -ng);
         return out;
       }
     }

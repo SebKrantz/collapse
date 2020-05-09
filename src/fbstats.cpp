@@ -3,19 +3,17 @@
 using namespace Rcpp;
 
 
-// Still check printing (naming and setting classes) options !!
+// TODO: Still check printing (naming and setting classes) options
 
 // inline bool isnan2(double x) {
 //   return x != x;
 // }
 
-// use constant references on the temp function also ??
-// NumericVector // [[Rcpp::export]] // , NumericVector det = 0
+// use constant references on the temp function also ?
 NumericVector fbstatstemp(NumericVector x, bool ext = false, int ng = 0, IntegerVector g = 0, SEXP w = R_NilValue,
                           bool setn = true, SEXP gn = R_NilValue) {
-  int l = x.size(); // , dets = det.size();
+  int l = x.size();
 
- // if(dets == 1 && det[0] == 0) {  // simple summary
    if(!ext) {
     if(ng == 0) { // No groups
       int j = l-1;
@@ -68,7 +66,7 @@ NumericVector fbstatstemp(NumericVector x, bool ext = false, int ng = 0, Integer
       // long double d1 = 0;
       double d1 = 0;
       int k = 0;
-      NumericMatrix result(ng, 5); //  = no_init_matrix initializing is better -> valgrind !!
+      NumericMatrix result(ng, 5); //  = no_init_matrix initializing is better -> valgrind
       NumericMatrix::Column n = result( _ , 0);
       NumericMatrix::Column mean = result( _ , 1);
       NumericMatrix::Column M2 = result( _ , 2);
@@ -97,7 +95,7 @@ NumericVector fbstatstemp(NumericVector x, bool ext = false, int ng = 0, Integer
       } else { // with weights
         NumericVector wg = w;
         if(l != wg.size()) stop("length(w) must match length(x)");
-        NumericVector sumw(ng); // = no_init_vector(ng); // better for valgrind !!
+        NumericVector sumw(ng); // = no_init_vector(ng); // better for valgrind
         for(int i = l; i--; ) {
           if(std::isnan(x[i]) || std::isnan(wg[i])) continue;
           k = g[i]-1;
@@ -161,7 +159,7 @@ NumericVector fbstatstemp(NumericVector x, bool ext = false, int ng = 0, Integer
          if(j != 0) {  // if(j == 0) stop("Not enough non-mising obs.");
          for(int i = j+1; i--; ) {
            if(std::isnan(x[i]) || std::isnan(wg[i])) continue;
-           sumw += wg[i]; // great! this is correct !!
+           sumw += wg[i]; // great, this is correct:
            d1 = x[i]-mean;
            dn = d1 * (wg[i] / sumw);
            mean += dn;
@@ -230,7 +228,7 @@ NumericVector fbstatstemp(NumericVector x, bool ext = false, int ng = 0, Integer
        } else { // with weights
          NumericVector wg = w;
          if(l != wg.size()) stop("length(w) must match length(x)");
-         NumericVector sumw(ng); // = no_init_vector(ng); // better for valgrind !!
+         NumericVector sumw(ng); // = no_init_vector(ng); // better for valgrind
          for(int i = l; i--; ) {
            if(std::isnan(x[i]) || std::isnan(wg[i])) continue;
            k = g[i]-1;
@@ -269,8 +267,7 @@ NumericVector fbstatstemp(NumericVector x, bool ext = false, int ng = 0, Integer
        return result;
      }
    }
-
-  // } else { // detailed summary: fully sorting. Note: This doesn't work grouped, groups must also be sorted -> need to sort within each group or compute ordering !!
+  // } else { // detailed summary: fully sorting. Note: This doesn't work grouped, groups must also be sorted -> need to sort within each group or compute ordering
   //   NumericVector y = no_init_vector(l);
   //   auto pend = std::remove_copy_if(x.begin(), x.end(), y.begin(), isnan2);
   //   l = pend - x.begin(); //  middle = sz/2-1;
@@ -282,10 +279,10 @@ NumericVector fbstatstemp(NumericVector x, bool ext = false, int ng = 0, Integer
 
 inline NumericVector replaceC1(NumericMatrix x, NumericVector y, bool div = false) {
   if(div) {
-    NumericMatrix::Column C1 = x(_, 0); // best ??
+    NumericMatrix::Column C1 = x(_, 0); // best ?
     C1 = C1 / y;
   } else {
-    x(_, 0) = y; // best way ?? use NumericMatrix::Column ??
+    x(_, 0) = y; // best way ? use NumericMatrix::Column ?
   }
   return x;
 }
@@ -306,7 +303,7 @@ SEXP fbstatsCpp(const NumericVector& x, bool ext = false, int ng = 0, const Inte
     if(pg.size() != l) stop("length(pid) must match nrow(X)");
     bool weights = !Rf_isNull(w);
     NumericVector sum(npg, NA_REAL);
-    NumericVector sumw((weights) ? npg : 1); // no_init_vector(npg) : no_init_vector(1); // better for valgrind !!
+    NumericVector sumw((weights) ? npg : 1); // no_init_vector(npg) : no_init_vector(1); // better for valgrind
     double osum = 0;
 
 
@@ -322,8 +319,8 @@ SEXP fbstatsCpp(const NumericVector& x, bool ext = false, int ng = 0, const Inte
         }
       }
       int on = 0;
-      for(int i = npg; i--; ) { // Problem: if one sum remained NA, osum becomes NA !!!!! (also issue with B and W and TRA !!!)
-        if(std::isnan(sum[i])) continue; // solves the issue !!
+      for(int i = npg; i--; ) { // Problem: if one sum remained NA, osum becomes NA (also issue with B and W and TRA)
+        if(std::isnan(sum[i])) continue; // solves the issue
         osum += sum[i];
         on += n[i];
         sum[i] /= n[i];
@@ -344,7 +341,7 @@ SEXP fbstatsCpp(const NumericVector& x, bool ext = false, int ng = 0, const Inte
       }
       double osumw = 0;
       for(int i = npg; i--; ) {
-        if(std::isnan(sum[i])) continue; // solves the issue !!
+        if(std::isnan(sum[i])) continue; // solves the issue
         osum += sum[i];
         osumw += sumw[i];
         sum[i] /= sumw[i];
@@ -355,7 +352,7 @@ SEXP fbstatsCpp(const NumericVector& x, bool ext = false, int ng = 0, const Inte
     NumericVector within = no_init_vector(l);
 
     if(ng == 0) { // No groups
-      for(int i = 0; i != l; ++i) within[i] = x[i] - sum[pg[i]-1] + osum; // if-check for NA's is not faster !!!
+      for(int i = 0; i != l; ++i) within[i] = x[i] - sum[pg[i]-1] + osum; // if-check for NA's is not faster
       NumericMatrix result = no_init_matrix(3, d);
       result(0, _) = fbstatstemp(x, ext, 0L, 0L, w, false);
       result(1, _) = (weights) ? fbstatstemp(sum, ext, 0L, 0L, sumw, false) : fbstatstemp(sum, ext, 0L, 0L, w, false);
@@ -371,16 +368,16 @@ SEXP fbstatsCpp(const NumericVector& x, bool ext = false, int ng = 0, const Inte
     } else {
       if(g.size() != l) stop("length(g) must match nrow(X)");
       NumericVector between = no_init_vector(l);
-      // bool groupids[ng][npg]; // could do +1 trick, but that could be costly in term of memory, if few g and many pg !!!
+      // bool groupids[ng][npg]; // could do +1 trick, but that could be costly in term of memory if few g and many pg
       LogicalMatrix groupids = no_init_matrix(ng, npg);
-      // memset(groupids, true, sizeof(bool)*ng*npg); // works ?? necessary ??
+      // memset(groupids, true, sizeof(bool)*ng*npg); // works ? necessary ?
       std::fill(groupids.begin(), groupids.end(), true);
-      NumericVector gnpids(ng); // best ??
+      NumericVector gnpids(ng); // best ?
       for(int i = 0; i != l; ++i) {
-        if(std::isnan(x[i])) { // important !! ??  right ?? d
-          between[i] = within[i] = NA_REAL; // x[i] ??
+        if(std::isnan(x[i])) { // important ? right ?
+          between[i] = within[i] = NA_REAL; // x[i] ?
         } else {
-          if(groupids(g[i]-1, pg[i]-1)) { // added this part !!
+          if(groupids(g[i]-1, pg[i]-1)) { // added this part
             ++gnpids[g[i]-1];
             groupids(g[i]-1, pg[i]-1) = false;
           }
@@ -391,7 +388,7 @@ SEXP fbstatsCpp(const NumericVector& x, bool ext = false, int ng = 0, const Inte
       if(array) {
         NumericMatrix result = no_init_matrix(d*ng, 3);
         result(_,0) = fbstatstemp(x, ext, ng, g, w, false);
-        result(_,1) = replaceC1(as<NumericMatrix>(fbstatstemp(between, ext, ng, g, w, false)), gnpids); // how to do this ?? -> above best approach ??
+        result(_,1) = replaceC1(as<NumericMatrix>(fbstatstemp(between, ext, ng, g, w, false)), gnpids); // how to do this ? -> above best approach ?
         result(_,2) = replaceC1(as<NumericMatrix>(fbstatstemp(within, ext, ng, g, w, false)), gnpids, true);
         if(setn) {
           result.attr("dim") = Dimension(ng, d, 3);
@@ -402,9 +399,9 @@ SEXP fbstatsCpp(const NumericVector& x, bool ext = false, int ng = 0, const Inte
         }
         return(result);
       } else {
-        List result(3); // option array ??
+        List result(3); // option array ?
         result[0] = fbstatstemp(x, ext, ng, g, w, true, gn);
-        result[1] = replaceC1(as<NumericMatrix>(fbstatstemp(between, ext, ng, g, w, true, gn)), gnpids); // how to do this ?? -> above best approach ??
+        result[1] = replaceC1(as<NumericMatrix>(fbstatstemp(between, ext, ng, g, w, true, gn)), gnpids); // how to do this ? -> above best approach ?
         result[2] = replaceC1(as<NumericMatrix>(fbstatstemp(within, ext, ng, g, w, true, gn)), gnpids, true);
         result.attr("names") = CharacterVector::create("Overall","Between","Within");
         return(result);
@@ -449,7 +446,7 @@ SEXP fbstatsmCpp(const NumericMatrix& x, bool ext = false, int ng = 0, const Int
     if(ng == 0) {
       if(array) {
         NumericMatrix out = no_init_matrix(d*3, col);
-        for(int j = col; j--; ) out(_, j) = as<NumericVector>(fbstatsCpp(x(_, j), ext, 0L, 0L, npg, pg, w, true, false)); // or Rf_coerce ??
+        for(int j = col; j--; ) out(_, j) = as<NumericVector>(fbstatsCpp(x(_, j), ext, 0L, 0L, npg, pg, w, true, false)); // or Rf_coerce ?
         out.attr("dim") = Dimension(3, d, col);
         out.attr("dimnames") = List::create(CharacterVector::create("Overall","Between","Within"),
                  (ext) ? CharacterVector::create("N/T","Mean","SD","Min","Max","Skew","Kurt") :
@@ -465,8 +462,8 @@ SEXP fbstatsmCpp(const NumericMatrix& x, bool ext = false, int ng = 0, const Int
     } else {
       if(array) {
         NumericMatrix out = no_init_matrix(d*3*ng, col);
-        for(int j = col; j--; ) out(_, j) = as<NumericVector>(fbstatsCpp(x(_, j), ext, ng, g, npg, pg, w, true, false)); // or Rf_coerce ??
-        out.attr("dim") = IntegerVector::create(ng, d, 3, col); // works ??
+        for(int j = col; j--; ) out(_, j) = as<NumericVector>(fbstatsCpp(x(_, j), ext, ng, g, npg, pg, w, true, false)); // or Rf_coerce ?
+        out.attr("dim") = IntegerVector::create(ng, d, 3, col); // works ?
         out.attr("dimnames") = List::create(gn, (ext) ? CharacterVector::create("N/T","Mean","SD","Min","Max","Skew","Kurt") :
                                               CharacterVector::create("N/T","Mean","SD","Min","Max"),
                                CharacterVector::create("Overall","Between","Within"), colnames(x));
@@ -491,7 +488,7 @@ NumericVector fnobs5Impl(Vector<RTYPE> x, bool ext = false, int ng = 0, IntegerV
   if(ng == 0) {
     int n = 0;
     if(real) {
-      for(int i = 0; i != l; ++i) if(x[i] == x[i]) ++n; // This loop is faster !!
+      for(int i = 0; i != l; ++i) if(x[i] == x[i]) ++n; // This loop is faster
     } else {
       for(int i = 0; i != l; ++i) if(x[i] != Vector<RTYPE>::get_na()) ++n;
     }
@@ -506,7 +503,7 @@ NumericVector fnobs5Impl(Vector<RTYPE> x, bool ext = false, int ng = 0, IntegerV
   } else { // with groups
     if(g.size() != l) stop("length(g) must match nrow(X)");
     NumericMatrix out = no_init_matrix(ng, d);
-    std::fill_n(out.begin(), ng, 0.0); // works ?? -> yes !!
+    std::fill_n(out.begin(), ng, 0.0); // works ?? -> yes
     std::fill(out.begin()+ng, out.end(), NA_REAL);
     NumericMatrix::Column n = out(_, 0);
     if(real) {
@@ -566,12 +563,12 @@ NumericMatrix fnobs5pImpl(Vector<RTYPE> x, bool ext = false, int ng = 0, Integer
   } else { // with groups
     if(g.size() != l) stop("length(g) must match nrow(X)");
     NumericMatrix out = no_init_matrix(ng*d, 3);
-    std::fill_n(out.begin(), ng, 0.0); // works ?? -> yes !!
+    std::fill_n(out.begin(), ng, 0.0); // works ? -> yes
     std::fill(out.begin()+ng, out.end(), NA_REAL);
     NumericMatrix::Column n = out(_, 0);
     NumericMatrix::Column gnpids = out(_, 1);
     std::fill_n(gnpids.begin(), ng, 0.0);
-    // bool groupids[ng][npg]; // could do +1 trick, but that could be costly in term of memory, if few g and many pg !!!
+    // bool groupids[ng][npg]; // could do +1 trick, but that could be costly in term of memory, if few g and many pg
     // memset(groupids, true, sizeof(bool)*ng*npg);
     LogicalMatrix groupids = no_init_matrix(ng, npg);
     std::fill(groupids.begin(), groupids.end(), true);
@@ -700,7 +697,7 @@ SEXP fbstatslCpp(const List& x, bool ext = false, int ng = 0, const IntegerVecto
         return out;
       }
     }
-  } else { // with panel !!!
+  } else { // with panel
     if(ng == 0) {
       if(array) {
         NumericMatrix out = no_init_matrix(d*3, col);
@@ -709,7 +706,7 @@ SEXP fbstatslCpp(const List& x, bool ext = false, int ng = 0, const IntegerVecto
           case REALSXP:{
             NumericVector column = x[j];
             if(column.hasAttribute("class")) out(_, j) = fnobs5pImpl<REALSXP>(column, ext, 0L, 0L, npg, pg, true);
-            else out(_, j) = as<NumericVector>(fbstatsCpp(column, ext, 0L, 0L, npg, pg, w, true, false)); // or Rf_coerce ??
+            else out(_, j) = as<NumericVector>(fbstatsCpp(column, ext, 0L, 0L, npg, pg, w, true, false)); // or Rf_coerce ?
             break;
           }
           case INTSXP: {
@@ -765,7 +762,7 @@ SEXP fbstatslCpp(const List& x, bool ext = false, int ng = 0, const IntegerVecto
           case REALSXP:{
             NumericVector column = x[j];
             if(column.hasAttribute("class")) out(_, j) = fnobs5pImpl<REALSXP>(column, ext, ng, g, npg, pg, true);
-            else out(_, j) = as<NumericVector>(fbstatsCpp(column, ext, ng, g, npg, pg, w, true, false)); // or Rf_coerce ??
+            else out(_, j) = as<NumericVector>(fbstatsCpp(column, ext, ng, g, npg, pg, w, true, false)); // or Rf_coerce ?
             break;
           }
           case INTSXP: {
@@ -781,7 +778,7 @@ SEXP fbstatslCpp(const List& x, bool ext = false, int ng = 0, const IntegerVecto
           default: stop("Not supported SEXP type!");
           }
         }
-        out.attr("dim") = IntegerVector::create(ng, d, 3, col); // works ??
+        out.attr("dim") = IntegerVector::create(ng, d, 3, col); // works ?
         out.attr("dimnames") = List::create(gn, (ext) ? CharacterVector::create("N/T","Mean","SD","Min","Max","Skew","Kurt") :
                                               CharacterVector::create("N/T","Mean","SD","Min","Max"),
                  CharacterVector::create("Overall","Between","Within"), x.attr("names"));
@@ -818,7 +815,7 @@ SEXP fbstatslCpp(const List& x, bool ext = false, int ng = 0, const IntegerVecto
 }
 
 
-
+// Old / Experimental:
 //
 // template <>
 // NumericVector fnobs5Impl(Vector<CPLXSXP> x, int ng, IntegerVector g, bool real, bool setn) {

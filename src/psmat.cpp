@@ -14,7 +14,7 @@ Matrix<RTYPE> psmatCppImpl(Vector<RTYPE> x, IntegerVector g, SEXP t, bool transp
     IntegerVector seen(ngp);
     Matrix<RTYPE> out = transpose ? no_init_matrix(gs, ng) : no_init_matrix(ng, gs);
     // List dim = ATTRIB(out);
-    // SHALLOW_DUPLICATE_ATTRIB(out, x); // good ??
+    // SHALLOW_DUPLICATE_ATTRIB(out, x); // good ?
     // Rf_setAttrib(out, R_DimSymbol, dim[0]);
     if(transpose) {
       for(int i = 0; i != l; ++i) {
@@ -34,13 +34,13 @@ Matrix<RTYPE> psmatCppImpl(Vector<RTYPE> x, IntegerVector g, SEXP t, bool transp
   } else {
     IntegerVector tt = t;
     if(l != tt.size()) stop("length(t) must match length(x)");
-    // int maxt = max(tt); // needed ?? // check whether t.levels is same size as maxt ??
+    // int maxt = max(tt); // needed ? // check whether t.levels is same size as maxt ?
     CharacterVector tlevs = tt.attr("levels");
     int nt = tlevs.size();
-    Matrix<RTYPE> out = transpose ? no_init_matrix(nt, ng) : no_init_matrix(ng, nt); // best way to do this ?? Stable ?? -> Could conditionally create vector and the coerce to matrix -> faster init ??
-    if(nt != gs) std::fill(out.begin(), out.end(), Vector<RTYPE>::get_na());  // memset(out, NA_REAL, sizeof(double)*ng*maxt); -> unstable !! // else balanced panel !!
+    Matrix<RTYPE> out = transpose ? no_init_matrix(nt, ng) : no_init_matrix(ng, nt); // best way to do this ? Stable ? -> Could conditionally create vector and the coerce to matrix -> faster init ?
+    if(nt != gs) std::fill(out.begin(), out.end(), Vector<RTYPE>::get_na());  // memset(out, NA_REAL, sizeof(double)*ng*maxt); -> unstable ! // else balanced panel !
     // List dim = ATTRIB(out);
-    // SHALLOW_DUPLICATE_ATTRIB(out, x); // good ??
+    // SHALLOW_DUPLICATE_ATTRIB(out, x); // good ?
     // Rf_setAttrib(out, R_DimSymbol, dim[0]);
     if(transpose) {
       for(int i = 0; i != l; ++i) out[(g[i]-1)*nt + tt[i]-1] = x[i]; // out(tt[i]-1, g[i]-1) = x[i]; // tiny bit faster
