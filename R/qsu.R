@@ -1,11 +1,9 @@
-# library(Rcpp)
-# sourceCpp('R/C++/fbstats.cpp')
 
-# Note: for principal innovations of this code see fsum.R !!
+# Note: for principal innovations of this code see fsum.R
 
 qsu <- function(x, ...) UseMethod("qsu") # , x
 qsu.default <- function(x, g = NULL, pid = NULL, w = NULL, higher = FALSE, array = TRUE, ...) {
-  if(!missing(...)) unused_arg_warning(match.call(), ...)
+  if(!missing(...)) unused_arg_action(match.call(), ...)
     if(is.null(g)) {
       if(is.null(pid)) return(fbstatsCpp(x,higher, w = w)) else if(is.atomic(pid)) {
         if(is.nmfactor(pid)) nid <- fnlevels(pid) else {
@@ -39,8 +37,8 @@ qsu.default <- function(x, g = NULL, pid = NULL, w = NULL, higher = FALSE, array
     }
 }
 qsu.pseries <- function(x, g = NULL, w = NULL, effect = 1L, higher = FALSE, array = TRUE, ...) {
-  if(!missing(...)) unused_arg_warning(match.call(), ...)
-  pid <- if(length(effect) == 1L) unclass(attr(x, "index"))[[effect]] else finteraction(unclass(attr(x, "index"))[effect])
+  if(!missing(...)) unused_arg_action(match.call(), ...)
+  pid <- if(length(effect) == 1L) .subset2(attr(x, "index"), effect) else finteraction(.subset(attr(x, "index"), effect))
   if(is.null(g))
   return(fbstatsCpp(x,higher,0L,0L,fnlevels(pid),pid,w)) else if (is.atomic(g)) {
     if(!is.nmfactor(g)) g <- qF(g, na.exclude = FALSE)
@@ -50,7 +48,7 @@ qsu.pseries <- function(x, g = NULL, w = NULL, effect = 1L, higher = FALSE, arra
     return(fbstatsCpp(x,higher,g[[1L]],g[[2L]],fnlevels(pid),pid,w,array,TRUE,group_names.GRP(g)))
 }
 qsu.matrix <- function(x, g = NULL, pid = NULL, w = NULL, higher = FALSE, array = TRUE, ...) {
-  if(!missing(...)) unused_arg_warning(match.call(), ...)
+  if(!missing(...)) unused_arg_action(match.call(), ...)
   if(is.null(g)) {
     if(is.null(pid)) return(fbstatsmCpp(x,higher, w = w)) else if(is.atomic(pid)) {
       if(is.nmfactor(pid)) nid <- fnlevels(pid) else {
@@ -84,7 +82,7 @@ qsu.matrix <- function(x, g = NULL, pid = NULL, w = NULL, higher = FALSE, array 
   }
 }
 qsu.data.frame <- function(x, by = NULL, pid = NULL, w = NULL, cols = NULL, higher = FALSE, array = TRUE, vlabels = FALSE, ...) {
-  if(!missing(...)) unused_arg_warning(match.call(), ...)
+  if(!missing(...)) unused_arg_action(match.call(), ...)
   formby <- is.call(by)
   formpid <- is.call(pid)
 
@@ -110,10 +108,16 @@ qsu.data.frame <- function(x, by = NULL, pid = NULL, w = NULL, cols = NULL, high
     if(is.null(v)) {
       x <- if(is.null(cols)) x[-c(byn,pidn)] else x[cols2int(cols, x, nam)]
     } else x <- x[v]
-  } else if(!is.null(cols)) x <- unclass(x)[cols2int(cols, x, attr(x, "names"))]
+  } else if(!is.null(cols)) x <- .subset(x, cols2int(cols, x, attr(x, "names")))
 
+  # This could still be improved by incorporating it into the above block..
+  if(is.call(w)) {
+    wn <- ckmatch(all.vars(w), attr(x, "names"), "Unknown weight variable:")
+    w <- .subset2(x, wn)
+    x[[wn]] <- NULL
+  }
 
-  # Get vlabels !!
+  # Get vlabels
   if(vlabels) attr(x, "names") <- paste(attr(x, "names"), vlabels(x), sep = ": ")
 
   # original code:
@@ -149,11 +153,13 @@ qsu.data.frame <- function(x, by = NULL, pid = NULL, w = NULL, cols = NULL, high
     return(drop(fbstatslCpp(x,higher,by[[1L]],by[[2L]],pid[[1L]],pid[[2L]],w,array,group_names.GRP(by))))
   }
 }
+qsu.list <- function(x, by = NULL, pid = NULL, w = NULL, cols = NULL, higher = FALSE, array = TRUE, vlabels = FALSE, ...)
+  qsu.data.frame(x, by, pid, w, cols, higher, array, vlabels, ...)
 qsu.pdata.frame <- function(x, by = NULL, w = NULL, cols = NULL, effect = 1L, higher = FALSE, array = TRUE, vlabels = FALSE, ...) {
-  if(!missing(...)) unused_arg_warning(match.call(), ...)
-  pid <- if(length(effect) == 1L) unclass(attr(x, "index"))[[effect]] else finteraction(unclass(attr(x, "index"))[effect])
+  if(!missing(...)) unused_arg_action(match.call(), ...)
+  pid <- if(length(effect) == 1L) .subset2(attr(x, "index"), effect) else finteraction(.subset(attr(x, "index"), effect))
 
-  # fastest solution!
+  # fastest solution
   if(is.call(by)) {
     class(x) <- NULL
     nam <- names(x)
@@ -166,7 +172,14 @@ qsu.pdata.frame <- function(x, by = NULL, w = NULL, cols = NULL, effect = 1L, hi
     }
     by <- if(length(byn) == 1L) x[[byn]] else GRP.default(x[byn])
     x <- x[v]
-  } else if(!is.null(cols)) x <- unclass(x)[cols2int(cols, x, attr(x, "names"))]
+  } else if(!is.null(cols)) x <- .subset(x, cols2int(cols, x, attr(x, "names")))
+
+  # This could still be improved by incorporating it into the above block..
+  if(is.call(w)) {
+    wn <- ckmatch(all.vars(w), attr(x, "names"), "Unknown weight variable:")
+    w <- .subset2(x, wn)
+    x[[wn]] <- NULL
+  }
 
   if(vlabels) attr(x, "names") <- paste(attr(x, "names"), vlabels(x), sep = ": ")
 
@@ -180,7 +193,7 @@ qsu.pdata.frame <- function(x, by = NULL, w = NULL, cols = NULL, effect = 1L, hi
 }
 
 
-# Try to speed up !! Printing Takes 100 milliseconds on WDI !!
+# Try to speed up ! Printing Takes 100 milliseconds on WDI !
 print.qsu <- function(x, digits = 2, nonsci.digits = 9, na.print = "-", return = FALSE, print.gap = 2, ...) {
   vec2mat <- function(x) if(is.array(x)) x else  # outer(1, x) # for variable spacing in vector printing...
     `attributes<-`(x, list(dim = c(1L, length(x)), dimnames = list("", names(x)))) # faster and better !!
@@ -231,7 +244,7 @@ print.qsu <- function(x, digits = 2, nonsci.digits = 9, na.print = "-", return =
 #     } else x <- x[v]
 #   } else if(!is.null(cols)) {
 #     # class(x) <- NULL # but unclass is faster !!
-#     x <- if(is.function(cols)) unclass(x)[vapply(x, cols, TRUE)] else unclass(x)[cols]
+#     x <- if(is.function(cols)) unclass(x)[vapply(x, cols, TRUE)] else .subset(x, cols)
 #   }
 #   return(list(x, by, xt))
 # }
@@ -259,10 +272,10 @@ print.qsu <- function(x, digits = 2, nonsci.digits = 9, na.print = "-", return =
 #     } else namxt <- NULL
 #     if(is.null(v)) { # reassign ?? or set NULL ??? what is more memory efficient ??
 #       x <- if(is.null(cols)) unclass(x)[-match(c(namby,namxt), names(x))] else if(is.function(cols))
-#         unclass(x)[vapply(x, cols, TRUE)] else unclass(x)[cols]
+#         unclass(x)[vapply(x, cols, TRUE)] else .subset(x, cols)
 #     } else x <- unclass(x)[v]
 #   } else if(!is.null(cols)) {
-#     x <- if(is.function(cols)) unclass(x)[vapply(x, cols, TRUE)] else unclass(x)[cols]
+#     x <- if(is.function(cols)) unclass(x)[vapply(x, cols, TRUE)] else .subset(x, cols)
 #   }
 #   return(list(x, by, xt))
 # }
