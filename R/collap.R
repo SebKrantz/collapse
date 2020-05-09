@@ -1,5 +1,4 @@
 
-# todo speed up: use internals of order ??
 collap <- function(X, by, FUN = fmean, catFUN = fmode, cols = NULL, custom = NULL,
                    keep.by = TRUE, keep.col.order = TRUE, sort.row = TRUE,
                    parallel = FALSE, mc.cores = 1L,
@@ -13,7 +12,7 @@ collap <- function(X, by, FUN = fmean, catFUN = fmode, cols = NULL, custom = NUL
   class(X) <- NULL
   nam <- names(X)
   # attributes(X) <- NULL
-  # attr(X, "class") <- "data.frame" # class needed for method dispatch of fast functions, not for BY !!
+  # attr(X, "class") <- "data.frame" # class needed for method dispatch of fast functions, not for BY !
 
   aplyfun <- if(parallel) function(...) mclapply(..., mc.cores = mc.cores) else lapply
 
@@ -49,7 +48,7 @@ collap <- function(X, by, FUN = fmean, catFUN = fmode, cols = NULL, custom = NUL
       by <- GRP.default(by, numby, sort = sort.row, return.groups = keep.by)
     } else {
       namby <- by[[5L]]
-      if(is.null(namby)) namby <- paste0("Group.", seq_along(by[[4L]])) # necessary ??
+      if(is.null(namby)) namby <- paste0("Group.", seq_along(by[[4L]])) # necessary ?
       numby <- seq_along(namby)
     }
   }
@@ -59,7 +58,7 @@ collap <- function(X, by, FUN = fmean, catFUN = fmode, cols = NULL, custom = NUL
     # identifying data
     nu <- vapply(unattrib(X), is.numeric, TRUE)
     if(vl) {
-      nnu <- which(!nu & v) # faster way ??
+      nnu <- which(!nu & v) # faster way ?
       nu <- which(nu & v)
     } else {
       nnu <- which(!nu)
@@ -77,7 +76,7 @@ collap <- function(X, by, FUN = fmean, catFUN = fmode, cols = NULL, custom = NUL
     } else if(is.list(FUN)) {
       namFUN <- names(FUN)
       if(is.null(namFUN)) namFUN <- all.vars(substitute(FUN))
-    } else namFUN <- l1orn(as.character(substitute(FUN)), "FUN") # Faster !!
+    } else namFUN <- l1orn(as.character(substitute(FUN)), "FUN") # Faster !
 
     if(nnul) if(is.character(catFUN)) {
       # catFUN <- unlist(strsplit(catFUN,",",fixed = TRUE), use.names = FALSE)
@@ -87,16 +86,16 @@ collap <- function(X, by, FUN = fmean, catFUN = fmode, cols = NULL, custom = NUL
     } else if(is.list(catFUN)) {
       namcatFUN <- names(catFUN)
       if(is.null(namcatFUN)) namcatFUN <- all.vars(substitute(catFUN))
-    } else namcatFUN <- l1orn(as.character(substitute(catFUN)), "catFUN") # Faster !!
+    } else namcatFUN <- l1orn(as.character(substitute(catFUN)), "catFUN") # Faster !
 
     if(give.names == "auto") give.names <- !widel || length(FUN) > 1L || length(catFUN) > 1L
 
-    # Aggregator function ! # drop level of nesting i.e. make rest length(by)+length(FUN)+length(catFUN)  ??
-    agg <- function(xnu, xnnu) { #by, FUN, namFUN, catFUN, namcatFUN, drop.by
+    # Aggregator function # drop level of nesting i.e. make rest length(by)+length(FUN)+length(catFUN)  ?
+    agg <- function(xnu, xnnu) { # by, FUN, namFUN, catFUN, namcatFUN, drop.by
       lr <- nul + nnul + keep.by
       res <- vector("list", lr)
         if(keep.by) {
-          res[[1L]] <- list(by[[4L]]) # nah... could add later using "c" ??
+          res[[1L]] <- list(by[[4L]]) # could add later using "c" ?
           ind <- 2L
         } else ind <- 1L
         if(nul) {
@@ -119,11 +118,11 @@ collap <- function(X, by, FUN = fmean, catFUN = fmode, cols = NULL, custom = NUL
         }
       return(res)
     } # fastest isung res list ?? or better combine at the end ??
-    res <- agg(if(nul) `oldClass<-`(X[nu], "data.frame") else NULL, if(nnul) `oldClass<-`(X[nnu], "data.frame") else NULL) #colsubset(X, nu)
+    res <- agg(if(nul) `oldClass<-`(X[nu], "data.frame") else NULL, if(nnul) `oldClass<-`(X[nnu], "data.frame") else NULL)
 
     if(keep.col.order && widel) o <- forder.int(c(if(!keep.by) NULL else if(!bycalll) rep(0L,length(numby)) else numby,
                                                   if(nul) rep(nu,length(FUN)) else NULL,
-                                                  if(nnul) rep(nnu,length(catFUN)) else NULL)) # , method = "radix")
+                                                  if(nnul) rep(nnu,length(catFUN)) else NULL))
 
   } else { # custom aggregation:
     if(give.names == "auto") give.names <- TRUE
@@ -135,13 +134,13 @@ collap <- function(X, by, FUN = fmean, catFUN = fmode, cols = NULL, custom = NUL
       ind <- 1L
     } else {
       res <- vector("list", 2L)
-      res[[1L]] <- list(by[[4L]]) # nah... could add later using "c" ??
+      res[[1L]] <- list(by[[4L]]) # could add later using "c" ?
       ind <- 2L
     }
-    custom <- lapply(custom, cols2int, X, nam) # could integrate below, but then reorder doesn't work !!
+    custom <- lapply(custom, cols2int, X, nam) # could integrate below, but then reorder doesn't work !
     #lx <- length(X)
     # custom <- lapply(custom, function(x) if(is.numeric(x) && max(abs(x)) <= lx)
-    #                          x else if(is.character(x)) anyNAerror(match(x, nam), "Unknown column names!") else
+    #                          x else if(is.character(x)) ckmatch(x, nam) else
     #                          stop("custom list content must be variable names or suitable column indices"))
 
     res[[ind]] <- condsetn(aplyfun(seq_along(namFUN), function(i)
@@ -149,14 +148,14 @@ collap <- function(X, by, FUN = fmean, catFUN = fmode, cols = NULL, custom = NUL
             BY.data.frame(X[custom[[i]]], by, namFUN[i], ..., use.g.names = FALSE)), namFUN, give.names)
     if(keep.col.order && widel) {
       o <- unlist(custom, use.names = FALSE)
-      o <- forder.int(c(if(!keep.by) NULL else if(!bycalll) rep(0L,length(numby)) else numby, o)) #, method = "radix")
+      o <- forder.int(c(if(!keep.by) NULL else if(!bycalll) rep(0L,length(numby)) else numby, o))
     }
   }
   if(widel) res <- unlist(unlist(res, FALSE), FALSE) else {
     if(length(FUN) > 1L || length(catFUN) > 1L || length(custom) > 1L) {
       res <- unlist(res, FALSE)
       if(return == 2L) {
-        ax[["row.names"]] <- if(is.list(by)) .set_row_names(by[[1L]]) else .set_row_names(length(res[[1L]]))  # fnlevels(by) best ??
+        ax[["row.names"]] <- if(is.list(by)) .set_row_names(by[[1L]]) else .set_row_names(length(res[[1L]]))
         if(!keep.by) return(lapply(res, function(e) {
           ax[["names"]] <- names(e)
           return(setAttributes(e, ax)) })) else
@@ -178,7 +177,7 @@ collap <- function(X, by, FUN = fmean, catFUN = fmode, cols = NULL, custom = NUL
                                  lapply(res[-c(nid, 1L)], function(e) c(res[[1L]], res[[nid]], e))
           res <- .Call(C_rbindlist, res, FALSE, FALSE, "Function")
         }
-        if(keep.col.order)  o <- forder.int(c(0L, if(!keep.by) NULL else if(!bycalll) rep(0L,length(numby)) else numby, nu, nnu)) # , method = "radix")
+        if(keep.col.order)  o <- forder.int(c(0L, if(!keep.by) NULL else if(!bycalll) rep(0L,length(numby)) else numby, nu, nnu))
       }
     } else message("return options other than 'wide' are only meaningful if multiple functions are used!")
   }
@@ -189,7 +188,7 @@ collap <- function(X, by, FUN = fmean, catFUN = fmode, cols = NULL, custom = NUL
   return(setAttributes(res, ax))
 }
 
-# collapv: allows vector input to by !!!
+# collapv: allows vector input to by !
 collapv <- function(X, by, FUN = fmean, catFUN = fmode, cols = NULL, custom = NULL,
                    keep.by = TRUE, keep.col.order = TRUE, sort.row = TRUE,
                    parallel = FALSE, mc.cores = 1L,
@@ -203,7 +202,7 @@ collapv <- function(X, by, FUN = fmean, catFUN = fmode, cols = NULL, custom = NU
   class(X) <- NULL
   nam <- names(X)
   # attributes(X) <- NULL
-  # attr(X, "class") <- "data.frame" # class needed for method dispatch of fast functions, not for BY !!
+  # attr(X, "class") <- "data.frame" # class needed for method dispatch of fast functions, not for BY !
 
   aplyfun <- if(parallel) function(...) mclapply(..., mc.cores = mc.cores) else lapply
 
@@ -219,7 +218,7 @@ collapv <- function(X, by, FUN = fmean, catFUN = fmode, cols = NULL, custom = NU
 
     # identifying data
     nu <- vapply(unattrib(X), is.numeric, TRUE)
-    nnu <- which(!nu & v) # faster way ??
+    nnu <- which(!nu & v) # faster way ?
     nu <- which(nu & v)
     nul <- length(nu) > 0L
     nnul <- length(nnu) > 0L
@@ -233,7 +232,7 @@ collapv <- function(X, by, FUN = fmean, catFUN = fmode, cols = NULL, custom = NU
     } else if(is.list(FUN)) {
       namFUN <- names(FUN)
       if(is.null(namFUN)) namFUN <- all.vars(substitute(FUN))
-    } else namFUN <- l1orn(as.character(substitute(FUN)), "FUN") # Faster !!
+    } else namFUN <- l1orn(as.character(substitute(FUN)), "FUN") # Faster !
 
     if(nnul) if(is.character(catFUN)) {
       # catFUN <- unlist(strsplit(catFUN,",",fixed = TRUE), use.names = FALSE)
@@ -243,16 +242,16 @@ collapv <- function(X, by, FUN = fmean, catFUN = fmode, cols = NULL, custom = NU
     } else if(is.list(catFUN)) {
       namcatFUN <- names(catFUN)
       if(is.null(namcatFUN)) namcatFUN <- all.vars(substitute(catFUN))
-    } else namcatFUN <- l1orn(as.character(substitute(catFUN)), "catFUN") # Faster !!
+    } else namcatFUN <- l1orn(as.character(substitute(catFUN)), "catFUN") # Faster !
 
     if(give.names == "auto") give.names <- !widel || length(FUN) > 1L || length(catFUN) > 1L
 
-    # Aggregator function ! # drop level of nesting i.e. make rest length(by)+length(FUN)+length(catFUN)  ??
-    agg <- function(xnu, xnnu) { #by, FUN, namFUN, catFUN, namcatFUN, drop.by
+    # Aggregator function # drop level of nesting i.e. make rest length(by)+length(FUN)+length(catFUN)  ?
+    agg <- function(xnu, xnnu) { # by, FUN, namFUN, catFUN, namcatFUN, drop.by
       lr <- nul + nnul + keep.by
       res <- vector("list", lr)
       if(keep.by) {
-        res[[1L]] <- list(by[[4L]]) # nah... could add later using "c" ??
+        res[[1L]] <- list(by[[4L]]) # could add later using "c" ?
         ind <- 2L
       } else ind <- 1L
       if(nul) {
@@ -275,11 +274,11 @@ collapv <- function(X, by, FUN = fmean, catFUN = fmode, cols = NULL, custom = NU
       }
       return(res)
     } # fastest isung res list ?? or better combine at the end ??
-    res <- agg(if(nul) `oldClass<-`(X[nu], "data.frame") else NULL, if(nnul) `oldClass<-`(X[nnu], "data.frame") else NULL) #colsubset(X, nu)
+    res <- agg(if(nul) `oldClass<-`(X[nu], "data.frame") else NULL, if(nnul) `oldClass<-`(X[nnu], "data.frame") else NULL)
 
     if(keep.col.order && widel) o <- forder.int(c(if(!keep.by) NULL else numby,
                                                   if(nul) rep(nu,length(FUN)) else NULL,
-                                                  if(nnul) rep(nnu,length(catFUN)) else NULL)) # , method = "radix")
+                                                  if(nnul) rep(nnu,length(catFUN)) else NULL))
 
   } else { # custom aggregation:
     if(give.names == "auto") give.names <- TRUE
@@ -291,13 +290,13 @@ collapv <- function(X, by, FUN = fmean, catFUN = fmode, cols = NULL, custom = NU
       ind <- 1L
     } else {
       res <- vector("list", 2L)
-      res[[1L]] <- list(by[[4L]]) # nah... could add later using "c" ??
+      res[[1L]] <- list(by[[4L]]) # could add later using "c" ?
       ind <- 2L
     }
-    custom <- lapply(custom, cols2int, X, nam) # could integrate below, but then reorder doesn't work !!
+    custom <- lapply(custom, cols2int, X, nam) # could integrate below, but then reorder doesn't work !
     #lx <- length(X)
     # custom <- lapply(custom, function(x) if(is.numeric(x) && max(abs(x)) <= lx)
-    #                          x else if(is.character(x)) anyNAerror(match(x, nam), "Unknown column names!") else
+    #                          x else if(is.character(x)) ckmatch(x, nam) else
     #                          stop("custom list content must be variable names or suitable column indices"))
 
     res[[ind]] <- condsetn(aplyfun(seq_along(namFUN), function(i)
@@ -305,14 +304,14 @@ collapv <- function(X, by, FUN = fmean, catFUN = fmode, cols = NULL, custom = NU
         BY.data.frame(X[custom[[i]]], by, namFUN[i], ..., use.g.names = FALSE)), namFUN, give.names)
     if(keep.col.order && widel) {
       o <- unlist(custom, use.names = FALSE)
-      o <- forder.int(c(if(!keep.by) NULL else numby, o)) # , method = "radix")
+      o <- forder.int(c(if(!keep.by) NULL else numby, o))
     }
   }
   if(widel) res <- unlist(unlist(res, FALSE), FALSE) else {
     if(length(FUN) > 1L || length(catFUN) > 1L || length(custom) > 1L) {
       res <- unlist(res, FALSE)
       if(return == 2L) {
-        ax[["row.names"]] <- if(is.list(by)) .set_row_names(by[[1L]]) else .set_row_names(length(res[[1L]]))  # fnlevels(by) best ??
+        ax[["row.names"]] <- if(is.list(by)) .set_row_names(by[[1L]]) else .set_row_names(length(res[[1L]]))
         if(!keep.by) return(lapply(res, function(e) {
           ax[["names"]] <- names(e)
           return(setAttributes(e, ax)) })) else
@@ -334,7 +333,7 @@ collapv <- function(X, by, FUN = fmean, catFUN = fmode, cols = NULL, custom = NU
             lapply(res[-c(nid, 1L)], function(e) c(res[[1L]], res[[nid]], e))
           res <- .Call(C_rbindlist, res, FALSE, FALSE, "Function")
         }
-        if(keep.col.order)  o <- forder.int(c(0L, if(!keep.by) NULL else numby, nu, nnu)) # , method = "radix")
+        if(keep.col.order)  o <- forder.int(c(0L, if(!keep.by) NULL else numby, nu, nnu))
       }
     } else message("return options other than 'wide' are only meaningful if multiple functions are used!")
   }
@@ -345,13 +344,13 @@ collapv <- function(X, by, FUN = fmean, catFUN = fmode, cols = NULL, custom = NU
   return(setAttributes(res, ax))
 }
 
-# For dplyr integration !!!
+# For dplyr integration: takes grouped_df as input
 collapg <- function(X, FUN = fmean, catFUN = fmode, cols = NULL, custom = NULL,
                     keep.group_vars = TRUE, keep.col.order = TRUE, sort.row = TRUE,
                     parallel = FALSE, mc.cores = 1L,
                     return = c("wide","list","long","long_dupl"), give.names = "auto", ...) {
   by <- GRP.grouped_df(X)
-  ngn <- attr(X, "names") %!in% by[[5L]] # Note: this always leaves grouping columns on the left still !!
+  ngn <- attr(X, "names") %!in% by[[5L]] # Note: this always leaves grouping columns on the left still !
   clx <- class(X)
   attr(X, "groups") <- NULL
   oldClass(X) <- clx[clx != "grouped_df"]

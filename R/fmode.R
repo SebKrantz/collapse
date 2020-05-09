@@ -1,17 +1,10 @@
-# library(Rcpp)
-# sourceCpp('src/fmax.cpp')
-# sourceCpp('src/fmode.cpp') # Still test thoroughly !!, make better fmodelCpp !!!
-# sourceCpp('src/fmodea.cpp') # Still test thoroughly !!
-# sourceCpp('src/TRA.cpp')
-# sourceCpp('src/TRAl.cpp')
-# sourceCpp('src/TRAa.cpp')
 
-# Note: for principal innovations of this code see fsum.R !!
+# Note: for principal innovations of this code see fsum.R
 
 fmode <- function(x, ...) UseMethod("fmode") # , x
 
 fmode.default <- function(x, g = NULL, w = NULL, TRA = NULL, na.rm = TRUE, use.g.names = TRUE, ...) {
-  if(!missing(...)) unused_arg_warning(match.call(), ...)
+  if(!missing(...)) unused_arg_action(match.call(), ...)
   if(is.null(TRA)) {
     if(is.null(g)) return(.Call(Cpp_fmode,x,0L,0L,NULL,w,na.rm)) else if(is.atomic(g)) {
       if(use.g.names) {
@@ -30,19 +23,19 @@ fmode.default <- function(x, g = NULL, w = NULL, TRA = NULL, na.rm = TRUE, use.g
         return(.Call(Cpp_fmode,x,g[[1L]],g[[2L]],g[[3L]],w,na.rm))
     }
   } else {
-    if(is.null(g)) return(.Call(Cpp_TRA,x,.Call(Cpp_fmode,x,0L,0L,NULL,w,na.rm),0L,TRAtoInt(TRA))) else if (is.atomic(g)) {
-      if(is.nmfactor(g)) return(.Call(Cpp_TRA,x,.Call(Cpp_fmode,x,fnlevels(g),g,NULL,w,na.rm),g,TRAtoInt(TRA))) else {
+    if(is.null(g)) return(.Call(Cpp_TRA,x,.Call(Cpp_fmode,x,0L,0L,NULL,w,na.rm),0L,TtI(TRA))) else if (is.atomic(g)) {
+      if(is.nmfactor(g)) return(.Call(Cpp_TRA,x,.Call(Cpp_fmode,x,fnlevels(g),g,NULL,w,na.rm),g,TtI(TRA))) else {
         g <- qG(g, na.exclude = FALSE)
-        return(.Call(Cpp_TRA,x,.Call(Cpp_fmode,x,attr(g,"N.groups"),g,NULL,w,na.rm),g,TRAtoInt(TRA)))
+        return(.Call(Cpp_TRA,x,.Call(Cpp_fmode,x,attr(g,"N.groups"),g,NULL,w,na.rm),g,TtI(TRA)))
       }
     } else {
       if(!is.GRP(g)) g <- GRP.default(g, return.groups = FALSE)
-      return(.Call(Cpp_TRA,x,.Call(Cpp_fmode,x,g[[1L]],g[[2L]],g[[3L]],w,na.rm),g[[2L]],TRAtoInt(TRA)))
+      return(.Call(Cpp_TRA,x,.Call(Cpp_fmode,x,g[[1L]],g[[2L]],g[[3L]],w,na.rm),g[[2L]],TtI(TRA)))
     }
   }
 }
 fmode.matrix <- function(x, g = NULL, w = NULL, TRA = NULL, na.rm = TRUE, use.g.names = TRUE, drop = TRUE, ...) {
-  if(!missing(...)) unused_arg_warning(match.call(), ...)
+  if(!missing(...)) unused_arg_action(match.call(), ...)
   if(is.null(TRA)) {
     if(is.null(g)) return(.Call(Cpp_fmodem,x,0L,0L,NULL,w,na.rm,drop)) else if (is.atomic(g)) {
       if(use.g.names) {
@@ -61,19 +54,19 @@ fmode.matrix <- function(x, g = NULL, w = NULL, TRA = NULL, na.rm = TRUE, use.g.
         return(.Call(Cpp_fmodem,x,g[[1L]],g[[2L]],g[[3L]],w,na.rm,FALSE))
     }
   } else {
-    if(is.null(g)) return(.Call(Cpp_TRAm,x,.Call(Cpp_fmodem,x,0L,0L,NULL,w,na.rm,TRUE),0L,TRAtoInt(TRA))) else if (is.atomic(g)) {
-      if(is.nmfactor(g)) return(.Call(Cpp_TRAm,x,.Call(Cpp_fmodem,x,fnlevels(g),g,NULL,w,na.rm,FALSE),g,TRAtoInt(TRA))) else {
+    if(is.null(g)) return(.Call(Cpp_TRAm,x,.Call(Cpp_fmodem,x,0L,0L,NULL,w,na.rm,TRUE),0L,TtI(TRA))) else if (is.atomic(g)) {
+      if(is.nmfactor(g)) return(.Call(Cpp_TRAm,x,.Call(Cpp_fmodem,x,fnlevels(g),g,NULL,w,na.rm,FALSE),g,TtI(TRA))) else {
         g <- qG(g, na.exclude = FALSE)
-        return(.Call(Cpp_TRAm,x,.Call(Cpp_fmodem,x,attr(g,"N.groups"),g,NULL,w,na.rm,FALSE),g,TRAtoInt(TRA)))
+        return(.Call(Cpp_TRAm,x,.Call(Cpp_fmodem,x,attr(g,"N.groups"),g,NULL,w,na.rm,FALSE),g,TtI(TRA)))
       }
     } else {
       if(!is.GRP(g)) g <- GRP.default(g, return.groups = FALSE)
-      return(.Call(Cpp_TRAm,x,.Call(Cpp_fmodem,x,g[[1L]],g[[2L]],g[[3L]],w,na.rm,FALSE),g[[2L]],TRAtoInt(TRA)))
+      return(.Call(Cpp_TRAm,x,.Call(Cpp_fmodem,x,g[[1L]],g[[2L]],g[[3L]],w,na.rm,FALSE),g[[2L]],TtI(TRA)))
     }
   }
 }
 fmode.data.frame <- function(x, g = NULL, w = NULL, TRA = NULL, na.rm = TRUE, use.g.names = TRUE, drop = TRUE, ...) {
-  if(!missing(...)) unused_arg_warning(match.call(), ...)
+  if(!missing(...)) unused_arg_action(match.call(), ...)
   if(is.null(TRA)) {
     if(is.null(g)) {
       if(drop) return(unlist(.Call(Cpp_fmodel,x,0L,0L,NULL,w,na.rm))) else return(.Call(Cpp_fmodel,x,0L,0L,NULL,w,na.rm))
@@ -95,20 +88,22 @@ fmode.data.frame <- function(x, g = NULL, w = NULL, TRA = NULL, na.rm = TRUE, us
           return(.Call(Cpp_fmodel,x,g[[1L]],g[[2L]],g[[3L]],w,na.rm))
     }
   } else {
-    if(is.null(g)) return(.Call(Cpp_TRAl,x,.Call(Cpp_fmodel,x,0L,0L,NULL,w,na.rm),0L,TRAtoInt(TRA))) else if (is.atomic(g)) {
-      if(is.nmfactor(g)) return(.Call(Cpp_TRAl,x,.Call(Cpp_fmodel,x,fnlevels(g),g,NULL,w,na.rm),g,TRAtoInt(TRA))) else {
+    if(is.null(g)) return(.Call(Cpp_TRAl,x,.Call(Cpp_fmodel,x,0L,0L,NULL,w,na.rm),0L,TtI(TRA))) else if (is.atomic(g)) {
+      if(is.nmfactor(g)) return(.Call(Cpp_TRAl,x,.Call(Cpp_fmodel,x,fnlevels(g),g,NULL,w,na.rm),g,TtI(TRA))) else {
         g <- qG(g, na.exclude = FALSE)
-        return(.Call(Cpp_TRAl,x,.Call(Cpp_fmodel,x,attr(g,"N.groups"),g,NULL,w,na.rm),g,TRAtoInt(TRA)))
+        return(.Call(Cpp_TRAl,x,.Call(Cpp_fmodel,x,attr(g,"N.groups"),g,NULL,w,na.rm),g,TtI(TRA)))
       }
     } else {
       if(!is.GRP(g)) g <- GRP.default(g, return.groups = FALSE)
-      return(.Call(Cpp_TRAl,x,.Call(Cpp_fmodel,x,g[[1L]],g[[2L]],g[[3L]],w,na.rm),g[[2L]],TRAtoInt(TRA)))
+      return(.Call(Cpp_TRAl,x,.Call(Cpp_fmodel,x,g[[1L]],g[[2L]],g[[3L]],w,na.rm),g[[2L]],TtI(TRA)))
     }
   }
 }
+fmode.list <- function(x, g = NULL, w = NULL, TRA = NULL, na.rm = TRUE, use.g.names = TRUE, drop = TRUE, ...)
+  fmode.data.frame(x, g, w, TRA, na.rm, use.g.names, drop, ...)
 fmode.grouped_df <- function(x, w = NULL, TRA = NULL, na.rm = TRUE, use.g.names = FALSE,
                              keep.group_vars = TRUE, keep.w = TRUE, ...) {
-  if(!missing(...)) unused_arg_warning(match.call(), ...)
+  if(!missing(...)) unused_arg_action(match.call(), ...)
   g <- GRP.grouped_df(x)
   wsym <- l1orn(all.vars(substitute(w)), "NULL")
   nam <- attr(x, "names")
@@ -117,11 +112,11 @@ fmode.grouped_df <- function(x, w = NULL, TRA = NULL, na.rm = TRUE, use.g.names 
   maxw <- NULL
 
   if(!(wsym == "NULL" || is.na(wn <- match(wsym, nam)))) {
-    w <- unclass(x)[[wn]]
+    w <- .subset2(x, wn)
     if(any(gn == wn)) stop("Weights coincide with grouping variables!")
     gn <- c(gn, wn)
     if(keep.w) {
-      if(nTRAl) maxw <- `names<-`(list(fmaxCpp(w,g[[1L]],g[[2L]],na.rm)), paste0("max.", wsym)) else if(keep.group_vars)
+      if(nTRAl) maxw <- `names<-`(list(.Call(Cpp_fminmax,w,g[[1L]],g[[2L]],na.rm,2L)), paste0("max.", wsym)) else if(keep.group_vars)
         gn2 <- gn else maxw <- gn2 <- wn
     }
   }
@@ -149,10 +144,10 @@ fmode.grouped_df <- function(x, w = NULL, TRA = NULL, na.rm = TRUE, use.g.names 
       } else return(setAttributes(.Call(Cpp_fmodel,x,g[[1L]],g[[2L]],g[[3L]],w,na.rm), ax))
     } else if(keep.group_vars || (keep.w && length(maxw))) {
       ax[["names"]] <- c(nam[gn2], nam[-gn])
-      return(setAttributes(c(x[gn2],.Call(Cpp_TRAl,x[-gn],.Call(Cpp_fmodel,x[-gn],g[[1L]],g[[2L]],g[[3L]],w,na.rm),g[[2L]],TRAtoInt(TRA))), ax))
+      return(setAttributes(c(x[gn2],.Call(Cpp_TRAl,x[-gn],.Call(Cpp_fmodel,x[-gn],g[[1L]],g[[2L]],g[[3L]],w,na.rm),g[[2L]],TtI(TRA))), ax))
     } else {
       ax[["names"]] <- nam[-gn]
-      return(setAttributes(.Call(Cpp_TRAl,x[-gn],.Call(Cpp_fmodel,x[-gn],g[[1L]],g[[2L]],g[[3L]],w,na.rm),g[[2L]],TRAtoInt(TRA)), ax))
+      return(setAttributes(.Call(Cpp_TRAl,x[-gn],.Call(Cpp_fmodel,x[-gn],g[[1L]],g[[2L]],g[[3L]],w,na.rm),g[[2L]],TtI(TRA)), ax))
     }
-  } else return(.Call(Cpp_TRAl,x,.Call(Cpp_fmodel,x,g[[1L]],g[[2L]],g[[3L]],w,na.rm),g[[2L]],TRAtoInt(TRA)))
+  } else return(.Call(Cpp_TRAl,x,.Call(Cpp_fmodel,x,g[[1L]],g[[2L]],g[[3L]],w,na.rm),g[[2L]],TtI(TRA)))
 }

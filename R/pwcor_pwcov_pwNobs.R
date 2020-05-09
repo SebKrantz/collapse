@@ -1,7 +1,7 @@
 # sumcc <- function(x, y)  sum(complete.cases(x,y))
 # pwNobs <- function(x) qM(dapply(x, function(y) dapply(x, sumcc, y)))
 
-pwNobs <- function(X) { # Faster !!
+pwNobs <- function(X) {
   if(is.atomic(X) && is.matrix(X)) return(.Call(Cpp_pwNobsm, X)) # cn <- dimnames(X)[[2L]] # X <- mctl(X)
   if(!is.list(X)) stop("X must be a matrix or data.frame!") # -> if unequal length will warn below !!
   dg <- fNobs.data.frame(X)
@@ -10,7 +10,7 @@ pwNobs <- function(X) { # Faster !!
   nr <- length(X[[1L]])
   N.mat <- diag(dg)
   for (i in 1:(n - 1)) {
-    miss <- is.na(X[[i]]) # faster than complete.cases, also for large data !! // subsetting X[[j]] faster ?? -> NOPE !!
+    miss <- is.na(X[[i]]) # faster than complete.cases, also for large data ! // subsetting X[[j]] faster ?? -> NOPE !
     for (j in (i + 1):n) N.mat[i, j] <- N.mat[j, i] <- nr - sum(miss | is.na(X[[j]])) # sum(complete.cases(X[[i]], X[[j]]))
   }
   dimnames(N.mat) <- list(names(dg), names(dg))
@@ -54,7 +54,7 @@ complpwNobs <- function(X) {
 # Test:
 # all.equal(Hmisc::rcorr(qM(mtcars))$P, corr.pmat(r, n))
 
-# test against Hmisc::rcorr -> yup, same both corr, n and p !!
+
 pwcor <- function(X, ..., N = FALSE, P = FALSE, array = TRUE, use = "pairwise.complete.obs") {
   r <- cor(X, ..., use = use)
   if(!N && !P) return(`class<-`(r, c("pwcor","matrix")))
@@ -73,7 +73,7 @@ pwcov <- function(X, ..., N = FALSE, P = FALSE, array = TRUE, use = "pairwise.co
   r <- cov(X, ..., use = use)
   if(!N && !P) return(`class<-`(r, c("pwcov","matrix")))
   n <- switch(use, pairwise.complete.obs = pwNobs(X), complpwNobs(X)) # switch faster than if with characters !!
-  if(N) {                                           # good ??????????????????? // cov(X) / outer(fsd(X), fsd(X))
+  if(N) {                                           # good ??? // cov(X) / outer(fsd(X), fsd(X))
     res <- if(P) list(cov = r, N = n, P = corr.pmat(cor(X, ..., use = use), n)) else list(cov = r, N = n)
   } else res <- list(cov = r, P = corr.pmat(cor(X, ..., use = use), n))
   if(array) {
@@ -188,4 +188,4 @@ print.pwcov <- function(x, digits = 2L, sig.level = 0.05, show = c("all","lower.
 
 
 # print.pwcov <- function(x, digits = 2, ...) print.default(formatC(round(x, digits), format = "g",
-#                                                                   digits = 9, big.mark = ",", big.interval = 6), quote = FALSE, right = TRUE, ...)
+#                         digits = 9, big.mark = ",", big.interval = 6), quote = FALSE, right = TRUE, ...)

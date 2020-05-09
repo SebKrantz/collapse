@@ -1,18 +1,17 @@
-# # HDB and HDW
-# library(lfe)
-# library(Rcpp)
+
 
 myModFrame <- function(f, data) {
   t <- terms.formula(f)
   v <- attr(t, "variables")
   # res <- eval(substitute(with(data, e), list(e = v)))
-  res <- eval(v, data, parent.frame()) # faster !!
+  res <- eval(v, data, parent.frame()) # faster !
   attributes(res) <- list(names = as.character(v[-1]),
                           row.names = .set_row_names(fnrow2(data)),
                           class = "data.frame",
                           terms = t)
   return(res)
 }
+# Example:
 # mf <- myModFrame( ~ factor(cyl)*carb + factor(cyl):factor(vs) + vs + carb:am, data = mtcars)
 
 getfl <- function(mf) {
@@ -30,7 +29,7 @@ getfl <- function(mf) {
 
     if(any(fctinteract)) { # if any interactions involving factors
       singlefct <- match(tl[fctterms & !fctinteract], names(mf))
-      intterms <- lapply(which(fctinteract), function(i) factors[,i] > 0) # names(which( # better way ??
+      intterms <- lapply(which(fctinteract), function(i) factors[,i] > 0) # names(which( # better way ?
       factors <- factors[!facts, fctinteract, drop = FALSE]
       fctfct <- colSums(factors) == 0
       globalslopes <- tl %in% names(which(rowSums(factors) > 0))
@@ -85,10 +84,9 @@ subsetfl <- function(fl, cc) {
                         .Call(C_subsetVector, x, cc)))
   })
 }
-
+# Examples:
 # getfl(model.frame( ~ cyl + carb, data = mtcars))
 # getfl(model.frame( ~ factor(cyl)*carb, data = mtcars))
-# mf =  model.frame( ~ factor(cyl)*carb + vs + wt:gear + wt:gear:carb, data = mtcars)
 # getfl(model.frame( ~ factor(cyl)*carb + vs + wt:gear + wt:gear:carb, data = mtcars))
 
 fHDwithin <- function(x, ...) UseMethod("fHDwithin") # , x
@@ -110,7 +108,7 @@ fHDwithin.default <- function(x, fl, w = NULL, na.rm = TRUE, fill = FALSE, ...) 
   if(is.list(fl)) {
     fc <- vapply(unattrib(fl), is.factor, TRUE, USE.NAMES = FALSE)
     fcl <- any(fc)
-    if(!fcl && !missing(...)) unused_arg_warning(match.call(), ...)
+    if(!fcl && !missing(...)) unused_arg_action(match.call(), ...)
     nallfc <- fcl && !all(fc)
     if(na.rm) fl <- if(inherits(fl, "data.frame")) .Call(C_subsetDT, fl, cc, seq_along(unclass(fl))) else subsetfl(fl, cc)
     attributes(fl) <- NULL # good here ??
@@ -119,7 +117,7 @@ fHDwithin.default <- function(x, fl, w = NULL, na.rm = TRUE, fill = FALSE, ...) 
       fl <- fl[fc]
     } else if(!fcl) xmat <- do.call(cbind, c(list(rep(1L, length(fl[[1L]]))), fl))
   } else if(is.matrix(fl)) {
-    if(!missing(...)) unused_arg_warning(match.call(), ...)
+    if(!missing(...)) unused_arg_action(match.call(), ...)
     xmat <- if(na.rm) cbind(Intercept = 1L, fl[cc, , drop = FALSE]) else cbind(Intercept = 1L, fl)
     nallfc <- fcl <- FALSE
   } else if(is.factor(fl)) {
@@ -128,7 +126,7 @@ fHDwithin.default <- function(x, fl, w = NULL, na.rm = TRUE, fill = FALSE, ...) 
     nallfc <- FALSE
   } else {
     if(!is.numeric(fl)) stop("fl must be a list of vectors / factors, a numeric matrix or a numeric vector")
-    if(!missing(...)) unused_arg_warning(match.call(), ...)
+    if(!missing(...)) unused_arg_action(match.call(), ...)
     xmat <- if(na.rm) cbind(Intercept = 1L, fl[cc]) else cbind(Intercept = 1L, fl)
     nallfc <- fcl <- FALSE
   }
@@ -179,7 +177,7 @@ fHDwithin.matrix <- function(x, fl, w = NULL, na.rm = TRUE, fill = FALSE, ...) {
   if(is.list(fl)) {
     fc <- vapply(unattrib(fl), is.factor, TRUE, USE.NAMES = FALSE)
     fcl <- any(fc)
-    if(!fcl && !missing(...)) unused_arg_warning(match.call(), ...)
+    if(!fcl && !missing(...)) unused_arg_action(match.call(), ...)
     nallfc <- fcl && !all(fc)
     if(na.rm) fl <- if(inherits(fl, "data.frame")) .Call(C_subsetDT, fl, cc, seq_along(unclass(fl))) else subsetfl(fl, cc)
     attributes(fl) <- NULL # good here ??
@@ -188,7 +186,7 @@ fHDwithin.matrix <- function(x, fl, w = NULL, na.rm = TRUE, fill = FALSE, ...) {
       fl <- fl[fc]
     } else if(!fcl) xmat <- do.call(cbind, c(list(rep(1L, length(fl[[1L]]))), fl))
   } else if(is.matrix(fl)) {
-    if(!missing(...)) unused_arg_warning(match.call(), ...)
+    if(!missing(...)) unused_arg_action(match.call(), ...)
     xmat <- if(na.rm) cbind(Intercept = 1L, fl[cc, , drop = FALSE]) else cbind(Intercept = 1L, fl)
     nallfc <- fcl <- FALSE
   } else if(is.factor(fl)) {
@@ -197,7 +195,7 @@ fHDwithin.matrix <- function(x, fl, w = NULL, na.rm = TRUE, fill = FALSE, ...) {
     nallfc <- FALSE
   } else {
     if(!is.numeric(fl)) stop("fl must be a list of vectors / factors, a numeric matrix or a numeric vector")
-    if(!missing(...)) unused_arg_warning(match.call(), ...)
+    if(!missing(...)) unused_arg_action(match.call(), ...)
     xmat <- if(na.rm) cbind(Intercept = 1L, fl[cc]) else cbind(Intercept = 1L, fl)
     nallfc <- fcl <- FALSE
   }
@@ -258,7 +256,7 @@ fHDwithin.data.frame <- function(x, fl, w = NULL, na.rm = TRUE, fill = FALSE, va
   if(is.list(fl)) { # fl is a list !!
     fc <- vapply(unattrib(fl), is.factor, TRUE, USE.NAMES = FALSE)
     fcl <- any(fc)
-    if(!fcl && !missing(...)) unused_arg_warning(match.call(), ...)
+    if(!fcl && !missing(...)) unused_arg_action(match.call(), ...)
     nallfc <- fcl && !all(fc)
     if(na.rm) fl <- if(inherits(fl, "data.frame")) .Call(C_subsetDT, fl, cc, seq_along(unclass(fl))) else subsetfl(fl, cc)
     attributes(fl) <- NULL # good here ??
@@ -267,7 +265,7 @@ fHDwithin.data.frame <- function(x, fl, w = NULL, na.rm = TRUE, fill = FALSE, va
       fl <- fl[fc]
     } else if(!fcl) xmat <- do.call(cbind, c(list(rep(1L, length(fl[[1L]]))), fl))
   } else if(is.matrix(fl)) {
-      if(!missing(...)) unused_arg_warning(match.call(), ...)
+      if(!missing(...)) unused_arg_action(match.call(), ...)
       xmat <- if(na.rm) cbind(Intercept = 1L, fl[cc, , drop = FALSE]) else cbind(Intercept = 1L, fl)
       nallfc <- fcl <- FALSE
   } else if(is.factor(fl)) {
@@ -276,7 +274,7 @@ fHDwithin.data.frame <- function(x, fl, w = NULL, na.rm = TRUE, fill = FALSE, va
     nallfc <- FALSE
   } else {
     if(!is.numeric(fl)) stop("fl must be a list of vectors / factors, a numeric matrix or a numeric vector")
-    if(!missing(...)) unused_arg_warning(match.call(), ...)
+    if(!missing(...)) unused_arg_action(match.call(), ...)
     xmat <- if(na.rm) cbind(Intercept = 1L, fl[cc]) else cbind(Intercept = 1L, fl)
     nallfc <- fcl <- FALSE
   }
@@ -351,14 +349,14 @@ HDW.data.frame <- function(x, fl, w = NULL, cols = is.numeric, na.rm = TRUE, fil
     }
 
     xmat <- NULL
-    list2env(getfl(myModFrame(fl, if(na.rm) .Call(C_subsetDT, x, cc, fvars) else unclass(x)[fvars])), envir = environment())
+    list2env(getfl(myModFrame(fl, if(na.rm) .Call(C_subsetDT, x, cc, fvars) else .subset(x, fvars))), envir = environment())
     fcl <- !is.null(fl)
     nallfc <- fcl && !is.null(xmat)
     if(nallfc) xmat <- demeanlist(xmat[, -1L, drop = FALSE], fl, weights = w, ...)
 
     if(variable.wise) {
       if(na.rm) {
-        return(setAttributes(lapply(unclass(x)[Xvars], function(y) {
+        return(setAttributes(lapply(.subset(x, Xvars), function(y) {
           y[-cc] <- NA
           ycc <- !is.na(y)
           YC <- which(ycc[cc])
@@ -367,7 +365,7 @@ HDW.data.frame <- function(x, fl, w = NULL, cols = is.numeric, na.rm = TRUE, fil
           return(y)
         }), ax)) # Rfast fastlm??
       } else {
-        return(setAttributes(lapply(unclass(x)[Xvars], function(y) {
+        return(setAttributes(lapply(.subset(x, Xvars), function(y) {
           ycc <- which(!is.na(y))
           y[ycc] <- if(nallfc) qr.resid(qr.default(xmat[ycc, , drop = FALSE]), demeanlist(y[ycc], subsetfl(fl, ycc), weights = w[ycc], ...)) else if(fcl)
             demeanlist(y[ycc], subsetfl(fl, ycc), weights = w[ycc], ...) else qr.resid(qr.default(xmat[ycc, , drop = FALSE]), y[ycc])
@@ -375,12 +373,12 @@ HDW.data.frame <- function(x, fl, w = NULL, cols = is.numeric, na.rm = TRUE, fil
         }), ax)) # Rfast fastlm??
       }
     } else { # at this point missing values are already removed from  fl !!
-      # x <- if(na.rm) .Call(C_subsetDT, x, cc, Xvars) else unclass(x)[Xvars] # incorporated below -> more memory efficient
+      # x <- if(na.rm) .Call(C_subsetDT, x, cc, Xvars) else .subset(x, Xvars) # incorporated below -> more memory efficient
       if(nallfc || !fcl) {
         xmat <- qr.default(xmat)
-        Y <- if(nallfc) lapply(demeanlist(if(na.rm) .Call(C_subsetDT, x, cc, Xvars) else unclass(x)[Xvars], fl, weights = w, ...), function(y) qr.resid(xmat, y)) else
-          lapply(if(na.rm) .Call(C_subsetDT, x, cc, Xvars) else unclass(x)[Xvars], function(y) qr.resid(xmat, y))
-      } else Y <- demeanlist(if(na.rm) .Call(C_subsetDT, x, cc, Xvars) else unclass(x)[Xvars], fl, weights = w, ...)
+        Y <- if(nallfc) lapply(demeanlist(if(na.rm) .Call(C_subsetDT, x, cc, Xvars) else .subset(x, Xvars), fl, weights = w, ...), function(y) qr.resid(xmat, y)) else
+          lapply(if(na.rm) .Call(C_subsetDT, x, cc, Xvars) else .subset(x, Xvars), function(y) qr.resid(xmat, y))
+      } else Y <- demeanlist(if(na.rm) .Call(C_subsetDT, x, cc, Xvars) else .subset(x, Xvars), fl, weights = w, ...)
       if(na.rm && fill) { # x[cc, ] <- Y; x[-cc, ] <- NA
         return(setAttributes(.Call(Cpp_lassign, Y, nrx, cc, NA), ax))
       } else return(setAttributes(Y, ax))
@@ -425,7 +423,7 @@ fHDbetween.default <- function(x, fl, w = NULL, na.rm = TRUE, fill = FALSE, ...)
   if(is.list(fl)) {
     fc <- vapply(unattrib(fl), is.factor, TRUE, USE.NAMES = FALSE)
     fcl <- any(fc)
-    if(!fcl && !missing(...)) unused_arg_warning(match.call(), ...)
+    if(!fcl && !missing(...)) unused_arg_action(match.call(), ...)
     nallfc <- fcl && !all(fc)
     if(na.rm) fl <- if(inherits(fl, "data.frame")) .Call(C_subsetDT, fl, cc, seq_along(unclass(fl))) else subsetfl(fl, cc)
     attributes(fl) <- NULL # good here ??
@@ -434,7 +432,7 @@ fHDbetween.default <- function(x, fl, w = NULL, na.rm = TRUE, fill = FALSE, ...)
       fl <- fl[fc]
     } else if(!fcl) xmat <- do.call(cbind, c(list(rep(1L, length(fl[[1L]]))), fl))
   } else if(is.matrix(fl)) {
-    if(!missing(...)) unused_arg_warning(match.call(), ...)
+    if(!missing(...)) unused_arg_action(match.call(), ...)
     xmat <- if(na.rm) cbind(Intercept = 1L, fl[cc, , drop = FALSE]) else cbind(Intercept = 1L, fl)
     nallfc <- fcl <- FALSE
   } else if(is.factor(fl)) {
@@ -443,7 +441,7 @@ fHDbetween.default <- function(x, fl, w = NULL, na.rm = TRUE, fill = FALSE, ...)
     nallfc <- FALSE
   } else {
     if(!is.numeric(fl)) stop("fl must be a list of vectors / factors, a numeric matrix or a numeric vector")
-    if(!missing(...)) unused_arg_warning(match.call(), ...)
+    if(!missing(...)) unused_arg_action(match.call(), ...)
     xmat <- if(na.rm) cbind(Intercept = 1L, fl[cc]) else cbind(Intercept = 1L, fl)
     nallfc <- fcl <- FALSE
   }
@@ -494,7 +492,7 @@ fHDbetween.matrix <- function(x, fl, w = NULL, na.rm = TRUE, fill = FALSE, ...) 
   if(is.list(fl)) {
     fc <- vapply(unattrib(fl), is.factor, TRUE, USE.NAMES = FALSE)
     fcl <- any(fc)
-    if(!fcl && !missing(...)) unused_arg_warning(match.call(), ...)
+    if(!fcl && !missing(...)) unused_arg_action(match.call(), ...)
     nallfc <- fcl && !all(fc)
     if(na.rm) fl <- if(inherits(fl, "data.frame")) .Call(C_subsetDT, fl, cc, seq_along(unclass(fl))) else subsetfl(fl, cc)
     attributes(fl) <- NULL # good here ??
@@ -503,7 +501,7 @@ fHDbetween.matrix <- function(x, fl, w = NULL, na.rm = TRUE, fill = FALSE, ...) 
       fl <- fl[fc]
     } else if(!fcl) xmat <- do.call(cbind, c(list(rep(1L, length(fl[[1L]]))), fl))
   } else if(is.matrix(fl)) {
-    if(!missing(...)) unused_arg_warning(match.call(), ...)
+    if(!missing(...)) unused_arg_action(match.call(), ...)
     xmat <- if(na.rm) cbind(Intercept = 1L, fl[cc, , drop = FALSE]) else cbind(Intercept = 1L, fl)
     nallfc <- fcl <- FALSE
   } else if(is.factor(fl)) {
@@ -512,7 +510,7 @@ fHDbetween.matrix <- function(x, fl, w = NULL, na.rm = TRUE, fill = FALSE, ...) 
     nallfc <- FALSE
   } else {
     if(!is.numeric(fl)) stop("fl must be a list of vectors / factors, a numeric matrix or a numeric vector")
-    if(!missing(...)) unused_arg_warning(match.call(), ...)
+    if(!missing(...)) unused_arg_action(match.call(), ...)
     xmat <- if(na.rm) cbind(Intercept = 1L, fl[cc]) else cbind(Intercept = 1L, fl)
     nallfc <- fcl <- FALSE
   }
@@ -573,7 +571,7 @@ fHDbetween.data.frame <- function(x, fl, w = NULL, na.rm = TRUE, fill = FALSE, v
   if(is.list(fl)) { # fl is a list !!
     fc <- vapply(unattrib(fl), is.factor, TRUE, USE.NAMES = FALSE)
     fcl <- any(fc)
-    if(!fcl && !missing(...)) unused_arg_warning(match.call(), ...)
+    if(!fcl && !missing(...)) unused_arg_action(match.call(), ...)
     nallfc <- fcl && !all(fc)
     if(na.rm) fl <- if(inherits(fl, "data.frame")) .Call(C_subsetDT, fl, cc, seq_along(unclass(fl))) else subsetfl(fl, cc)
     attributes(fl) <- NULL # good here ??
@@ -582,7 +580,7 @@ fHDbetween.data.frame <- function(x, fl, w = NULL, na.rm = TRUE, fill = FALSE, v
       fl <- fl[fc]
     } else if(!fcl) xmat <- do.call(cbind, c(list(rep(1L, length(fl[[1L]]))), fl))
   } else if(is.matrix(fl)) {
-    if(!missing(...)) unused_arg_warning(match.call(), ...)
+    if(!missing(...)) unused_arg_action(match.call(), ...)
     xmat <- if(na.rm) cbind(Intercept = 1L, fl[cc, , drop = FALSE]) else cbind(Intercept = 1L, fl)
     nallfc <- fcl <- FALSE
   } else if(is.factor(fl)) {
@@ -591,7 +589,7 @@ fHDbetween.data.frame <- function(x, fl, w = NULL, na.rm = TRUE, fill = FALSE, v
     nallfc <- FALSE
   } else {
     if(!is.numeric(fl)) stop("fl must be a list of vectors / factors, a numeric matrix or a numeric vector")
-    if(!missing(...)) unused_arg_warning(match.call(), ...)
+    if(!missing(...)) unused_arg_action(match.call(), ...)
     xmat <- if(na.rm) cbind(Intercept = 1L, fl[cc]) else cbind(Intercept = 1L, fl)
     nallfc <- fcl <- FALSE
   }
@@ -663,14 +661,14 @@ HDB.data.frame <- function(x, fl, w = NULL, cols = is.numeric, na.rm = TRUE, fil
     }
 
     xmat <- NULL
-    list2env(getfl(myModFrame(fl, if(na.rm) .Call(C_subsetDT, x, cc, fvars) else unclass(x)[fvars])), envir = environment())
+    list2env(getfl(myModFrame(fl, if(na.rm) .Call(C_subsetDT, x, cc, fvars) else .subset(x, fvars))), envir = environment())
     fcl <- !is.null(fl)
     nallfc <- fcl && !is.null(xmat)
     if(nallfc) xmat <- demeanlist(xmat[, -1L, drop = FALSE], fl, weights = w, ...)
 
     if(variable.wise) {
       if(na.rm) {
-        return(setAttributes(lapply(unclass(x)[Xvars], function(y) {
+        return(setAttributes(lapply(.subset(x, Xvars), function(y) {
           y[-cc] <- NA
           ycc <- !is.na(y)
           YC <- which(ycc[cc])
@@ -679,7 +677,7 @@ HDB.data.frame <- function(x, fl, w = NULL, cols = is.numeric, na.rm = TRUE, fil
           return(y)
         }), ax)) # Rfast fastlm??
       } else {
-        return(setAttributes(lapply(unclass(x)[Xvars], function(y) {
+        return(setAttributes(lapply(.subset(x, Xvars), function(y) {
           ycc <- which(!is.na(y))
           y[ycc] <- if(nallfc) y[ycc] - qr.resid(qr.default(xmat[ycc, , drop = FALSE]), demeanlist(y[ycc], subsetfl(fl, ycc), weights = w[ycc], ...)) else if(fcl)
             demeanlist(y[ycc], subsetfl(fl, ycc), weights = w[ycc], means = TRUE, ...) else qr.fitted(qr.default(xmat[ycc, , drop = FALSE]), y[ycc])
@@ -687,12 +685,12 @@ HDB.data.frame <- function(x, fl, w = NULL, cols = is.numeric, na.rm = TRUE, fil
         }), ax)) # Rfast fastlm??
       }
     } else { # at this point missing values are already removed from  fl !!
-      # x <- if(na.rm) .Call(C_subsetDT, x, cc, Xvars) else unclass(x)[Xvars] # incorporated below -> more memory efficient
+      # x <- if(na.rm) .Call(C_subsetDT, x, cc, Xvars) else .subset(x, Xvars) # incorporated below -> more memory efficient
       if(nallfc || !fcl) {
         xmat <- qr.default(xmat)
-        Y <- if(nallfc) lapply(if(na.rm) .Call(C_subsetDT, x, cc, Xvars) else unclass(x)[Xvars], function(y) y - qr.resid(xmat, demeanlist(y, fl, weights = w, ...))) else
-          lapply(if(na.rm) .Call(C_subsetDT, x, cc, Xvars) else unclass(x)[Xvars], function(y) qr.fitted(xmat, y))
-      } else Y <- demeanlist(if(na.rm) .Call(C_subsetDT, x, cc, Xvars) else unclass(x)[Xvars], fl, weights = w, means = TRUE, ...)
+        Y <- if(nallfc) lapply(if(na.rm) .Call(C_subsetDT, x, cc, Xvars) else .subset(x, Xvars), function(y) y - qr.resid(xmat, demeanlist(y, fl, weights = w, ...))) else
+          lapply(if(na.rm) .Call(C_subsetDT, x, cc, Xvars) else .subset(x, Xvars), function(y) qr.fitted(xmat, y))
+      } else Y <- demeanlist(if(na.rm) .Call(C_subsetDT, x, cc, Xvars) else .subset(x, Xvars), fl, weights = w, means = TRUE, ...)
       if(na.rm && fill) { # x[cc, ] <- Y; x[-cc, ] <- NA
         return(setAttributes(.Call(Cpp_lassign, Y, nrx, cc, NA), ax))
       } else return(setAttributes(Y, ax))

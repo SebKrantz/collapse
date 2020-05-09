@@ -1,15 +1,9 @@
-# library(Rcpp)
-# sourceCpp('src/fsum.cpp')
-# sourceCpp('src/fsuma.cpp')
-# sourceCpp('src/fsuml.cpp')
-# sourceCpp('src/TRA.cpp')
-# sourceCpp('src/TRAl.cpp')
-# sourceCpp('src/TRAa.cpp')
 
 
 fsum <- function(x, ...) UseMethod("fsum") # , x
+
 fsum.default <- function(x, g = NULL, w = NULL, TRA = NULL, na.rm = TRUE, use.g.names = TRUE, ...) {
-  if(!missing(...)) unused_arg_warning(match.call(), ...)
+  if(!missing(...)) unused_arg_action(match.call(), ...)
   if(is.null(TRA)) {
     if(is.null(g)) return(.Call(Cpp_fsum,x,0L,0L,w,na.rm)) else if (is.atomic(g)) {
       if(use.g.names) {
@@ -34,22 +28,22 @@ fsum.default <- function(x, g = NULL, w = NULL, TRA = NULL, na.rm = TRUE, use.g.
         return(.Call(Cpp_fsum,x,g[[1L]],g[[2L]],w,na.rm))
     }
   } else {
-    if(is.null(g)) return(.Call(Cpp_TRA,x,.Call(Cpp_fsum,x,0L,0L,w,na.rm),0L,TRAtoInt(TRA))) else if (is.atomic(g)) {
-      if(is.nmfactor(g)) return(.Call(Cpp_TRA,x,.Call(Cpp_fsum,x,fnlevels(g),g,w,na.rm),g,TRAtoInt(TRA))) else {
+    if(is.null(g)) return(.Call(Cpp_TRA,x,.Call(Cpp_fsum,x,0L,0L,w,na.rm),0L,TtI(TRA))) else if (is.atomic(g)) {
+      if(is.nmfactor(g)) return(.Call(Cpp_TRA,x,.Call(Cpp_fsum,x,fnlevels(g),g,w,na.rm),g,TtI(TRA))) else {
         g <- qG(g, na.exclude = FALSE)
-        return(.Call(Cpp_TRA,x,.Call(Cpp_fsum,x,attr(g,"N.groups"),g,w,na.rm),g,TRAtoInt(TRA)))
+        return(.Call(Cpp_TRA,x,.Call(Cpp_fsum,x,attr(g,"N.groups"),g,w,na.rm),g,TtI(TRA)))
       }
     # } else if(.Internal(islistfactor(g, FALSE))) { -> slower than GRP for large data !!
     #   g <- interaction(g)
-    #   return(.Call(Cpp_TRA,x,.Call(Cpp_fsum,x,fnlevels(g),g,w,na.rm),g,TRAtoInt(TRA)))
+    #   return(.Call(Cpp_TRA,x,.Call(Cpp_fsum,x,fnlevels(g),g,w,na.rm),g,TtI(TRA)))
     } else {
       if(!is.GRP(g)) g <- GRP.default(g, return.groups = FALSE)
-      return(.Call(Cpp_TRA,x,.Call(Cpp_fsum,x,g[[1L]],g[[2L]],w,na.rm),g[[2L]],TRAtoInt(TRA)))
+      return(.Call(Cpp_TRA,x,.Call(Cpp_fsum,x,g[[1L]],g[[2L]],w,na.rm),g[[2L]],TtI(TRA)))
     }
   }
 }
 fsum.matrix <- function(x, g = NULL, w = NULL, TRA = NULL, na.rm = TRUE, use.g.names = TRUE, drop = TRUE, ...) {
-  if(!missing(...)) unused_arg_warning(match.call(), ...)
+  if(!missing(...)) unused_arg_action(match.call(), ...)
   if(is.null(TRA)) {
     if(is.null(g)) return(.Call(Cpp_fsumm,x,0L,0L,w,na.rm,drop)) else if (is.atomic(g)) {
       if(use.g.names) {
@@ -74,22 +68,22 @@ fsum.matrix <- function(x, g = NULL, w = NULL, TRA = NULL, na.rm = TRUE, use.g.n
         return(.Call(Cpp_fsumm,x,g[[1L]],g[[2L]],w,na.rm,FALSE))
     }
   } else {
-    if(is.null(g)) return(.Call(Cpp_TRAm,x,.Call(Cpp_fsumm,x,0L,0L,w,na.rm,TRUE),0L,TRAtoInt(TRA))) else if (is.atomic(g)) {
-      if(is.nmfactor(g)) return(.Call(Cpp_TRAm,x,.Call(Cpp_fsumm,x,fnlevels(g),g,w,na.rm,FALSE),g,TRAtoInt(TRA))) else {
+    if(is.null(g)) return(.Call(Cpp_TRAm,x,.Call(Cpp_fsumm,x,0L,0L,w,na.rm,TRUE),0L,TtI(TRA))) else if (is.atomic(g)) {
+      if(is.nmfactor(g)) return(.Call(Cpp_TRAm,x,.Call(Cpp_fsumm,x,fnlevels(g),g,w,na.rm,FALSE),g,TtI(TRA))) else {
         g <- qG(g, na.exclude = FALSE)
-        return(.Call(Cpp_TRAm,x,.Call(Cpp_fsumm,x,attr(g,"N.groups"),g,w,na.rm,FALSE),g,TRAtoInt(TRA)))
+        return(.Call(Cpp_TRAm,x,.Call(Cpp_fsumm,x,attr(g,"N.groups"),g,w,na.rm,FALSE),g,TtI(TRA)))
       }
       # } else if(.Internal(islistfactor(g, FALSE))) { -> slower than GRP for large data !!
       #   g <- interaction(g)
-      #   return(.Call(Cpp_TRAm,x,.Call(Cpp_fsumm,x,fnlevels(g),g,w,na.rm,FALSE),g,TRAtoInt(TRA)))
+      #   return(.Call(Cpp_TRAm,x,.Call(Cpp_fsumm,x,fnlevels(g),g,w,na.rm,FALSE),g,TtI(TRA)))
     } else {
       if(!is.GRP(g)) g <- GRP.default(g, return.groups = FALSE)
-      return(.Call(Cpp_TRAm,x,.Call(Cpp_fsumm,x,g[[1L]],g[[2L]],w,na.rm,FALSE),g[[2L]],TRAtoInt(TRA)))
+      return(.Call(Cpp_TRAm,x,.Call(Cpp_fsumm,x,g[[1L]],g[[2L]],w,na.rm,FALSE),g[[2L]],TtI(TRA)))
     }
   }
 }
 fsum.data.frame <- function(x, g = NULL, w = NULL, TRA = NULL, na.rm = TRUE, use.g.names = TRUE, drop = TRUE, ...) {
-  if(!missing(...)) unused_arg_warning(match.call(), ...)
+  if(!missing(...)) unused_arg_action(match.call(), ...)
   if(is.null(TRA)) {
     if(is.null(g)) return(.Call(Cpp_fsuml,x,0L,0L,w,na.rm,drop)) else if (is.atomic(g)) {
       if(use.g.names && !inherits(x, "data.table")) {
@@ -115,32 +109,34 @@ fsum.data.frame <- function(x, g = NULL, w = NULL, TRA = NULL, na.rm = TRUE, use
           return(.Call(Cpp_fsuml,x,g[[1L]],g[[2L]],w,na.rm,FALSE))
     }
   } else {
-    if(is.null(g)) return(.Call(Cpp_TRAl,x,.Call(Cpp_fsuml,x,0L,0L,w,na.rm,TRUE),0L,TRAtoInt(TRA))) else if (is.atomic(g)) {
-      if(is.nmfactor(g)) return(.Call(Cpp_TRAl,x,.Call(Cpp_fsuml,x,fnlevels(g),g,w,na.rm,FALSE),g,TRAtoInt(TRA))) else {
+    if(is.null(g)) return(.Call(Cpp_TRAl,x,.Call(Cpp_fsuml,x,0L,0L,w,na.rm,TRUE),0L,TtI(TRA))) else if (is.atomic(g)) {
+      if(is.nmfactor(g)) return(.Call(Cpp_TRAl,x,.Call(Cpp_fsuml,x,fnlevels(g),g,w,na.rm,FALSE),g,TtI(TRA))) else {
         g <- qG(g, na.exclude = FALSE)
-        return(.Call(Cpp_TRAl,x,.Call(Cpp_fsuml,x,attr(g,"N.groups"),g,w,na.rm,FALSE),g,TRAtoInt(TRA)))
+        return(.Call(Cpp_TRAl,x,.Call(Cpp_fsuml,x,attr(g,"N.groups"),g,w,na.rm,FALSE),g,TtI(TRA)))
       }
       # } else if(.Internal(islistfactor(g, FALSE))) { -> slower than GRP for large data !!
       #   g <- interaction(g)
-      #   return(.Call(Cpp_TRAl,x,.Call(Cpp_fsuml,x,fnlevels(g),g,w,na.rm,FALSE),g,TRAtoInt(TRA)))
+      #   return(.Call(Cpp_TRAl,x,.Call(Cpp_fsuml,x,fnlevels(g),g,w,na.rm,FALSE),g,TtI(TRA)))
     } else {
       if(!is.GRP(g)) g <- GRP.default(g, return.groups = FALSE)
-      return(.Call(Cpp_TRAl,x,.Call(Cpp_fsuml,x,g[[1L]],g[[2L]],w,na.rm,FALSE),g[[2L]],TRAtoInt(TRA)))
+      return(.Call(Cpp_TRAl,x,.Call(Cpp_fsuml,x,g[[1L]],g[[2L]],w,na.rm,FALSE),g[[2L]],TtI(TRA)))
     }
   }
 }
+fsum.list <- function(x, g = NULL, w = NULL, TRA = NULL, na.rm = TRUE, use.g.names = TRUE, drop = TRUE, ...)
+  fsum.data.frame(x, g, w, TRA, na.rm, use.g.names, drop, ...)
 fsum.grouped_df <- function(x, w = NULL, TRA = NULL, na.rm = TRUE, use.g.names = FALSE,
                              keep.group_vars = TRUE, keep.w = TRUE, ...) {
-  if(!missing(...)) unused_arg_warning(match.call(), ...)
+  if(!missing(...)) unused_arg_action(match.call(), ...)
   g <- GRP.grouped_df(x)
-  wsym <- l1orn(all.vars(substitute(w)), "NULL") # deparse
+  wsym <- l1orn(all.vars(substitute(w)), "NULL")
   nam <- attr(x, "names")
   gn2 <- gn <- which(nam %in% g[[5L]])
   nTRAl <- is.null(TRA)
   sumw <- NULL
 
   if(!(wsym == "NULL" || is.na(wn <- match(wsym, nam)))) {
-    w <- unclass(x)[[wn]] # faster using unclass??
+    w <- .subset2(x, wn) # faster using unclass?
     if(any(gn == wn)) stop("Weights coincide with grouping variables!")
     gn <- c(gn, wn)
     if(keep.w) {
@@ -149,7 +145,7 @@ fsum.grouped_df <- function(x, w = NULL, TRA = NULL, na.rm = TRUE, use.g.names =
     }
   }
 
-  gl <- length(gn) > 0L # necessary here, not before !!!
+  gl <- length(gn) > 0L # necessary here, not before !
 
   if(gl || nTRAl) {
     ax <- attributes(x)
@@ -172,10 +168,10 @@ fsum.grouped_df <- function(x, w = NULL, TRA = NULL, na.rm = TRUE, use.g.names =
       } else return(setAttributes(.Call(Cpp_fsuml,x,g[[1L]],g[[2L]],w,na.rm,FALSE), ax))
     } else if(keep.group_vars || (keep.w && length(sumw))) {
       ax[["names"]] <- c(nam[gn2], nam[-gn])
-      return(setAttributes(c(x[gn2],.Call(Cpp_TRAl,x[-gn],.Call(Cpp_fsuml,x[-gn],g[[1L]],g[[2L]],w,na.rm,FALSE),g[[2L]],TRAtoInt(TRA))), ax))
+      return(setAttributes(c(x[gn2],.Call(Cpp_TRAl,x[-gn],.Call(Cpp_fsuml,x[-gn],g[[1L]],g[[2L]],w,na.rm,FALSE),g[[2L]],TtI(TRA))), ax))
     } else {
       ax[["names"]] <- nam[-gn]
-      return(setAttributes(.Call(Cpp_TRAl,x[-gn],.Call(Cpp_fsuml,x[-gn],g[[1L]],g[[2L]],w,na.rm,FALSE),g[[2L]],TRAtoInt(TRA)), ax))
+      return(setAttributes(.Call(Cpp_TRAl,x[-gn],.Call(Cpp_fsuml,x[-gn],g[[1L]],g[[2L]],w,na.rm,FALSE),g[[2L]],TtI(TRA)), ax))
     }
-  } else return(.Call(Cpp_TRAl,x,.Call(Cpp_fsuml,x,g[[1L]],g[[2L]],w,na.rm,FALSE),g[[2L]],TRAtoInt(TRA)))
+  } else return(.Call(Cpp_TRAl,x,.Call(Cpp_fsuml,x,g[[1L]],g[[2L]],w,na.rm,FALSE),g[[2L]],TtI(TRA)))
 }
