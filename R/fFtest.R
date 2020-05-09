@@ -29,7 +29,7 @@ fFtest <- function(y, exc, X = NULL, full.df = TRUE, ...) {
     vy <- var(y)
     n <- nrow(data)
     r2f <- 1 - var(fHDwithin.default(y, data[, -1L], na.rm = FALSE, ...))/vy
-    r2r <- 1 - var(fHDwithin.default(y, data[, 2:(Xn+1L)], na.rm = FALSE, ...))/vy # this way is data.tabel proof !!
+    r2r <- 1 - var(fHDwithin.default(y, data[, 2:(Xn+1L)], na.rm = FALSE, ...))/vy # this way is data.table proof !
     ndff <- k-1
     ddff <- n-k
     Fstatf <- r2f/ndff * ddff/(1-r2f)
@@ -37,7 +37,7 @@ fFtest <- function(y, exc, X = NULL, full.df = TRUE, ...) {
     ddfr <- n-kr-1
     Fstatr <- r2r/kr * ddfr/(1-r2r)
     pr <- pf(Fstatr, kr, ddfr, lower.tail = FALSE)
-    Fstate <- (r2f - r2r)/p * ddff/(1-r2f) # https://www.youtube.com/watch?v=Pz3j4Zu8BOQ
+    Fstate <- (r2f - r2r)/p * ddff/(1-r2f)
     pe <- pf(Fstate, p, ddff, lower.tail = FALSE)
     res <- matrix(c(r2f, ndff, ddff, Fstatf, pf,
                     r2r, kr, ddfr, Fstatr, pr,
