@@ -1,22 +1,25 @@
-# library(Rcpp)
-# sourceCpp("src/mrtl_mctl.cpp")
-# sourceCpp("src/qF_qG.cpp", rebuild = TRUE) # https://gallery.rcpp.org/articles/fast-factor-generation/
+
 qF <- function(x, ordered = TRUE, na.exclude = TRUE) {
   if(is.factor(x)) {
     if(na.exclude || inherits(x, "na.included")) {
-      if(ordered && !is.ordered(x)) class(x) <- c("ordered", class(x)) # can setunordered ???
+      if(ordered && !is.ordered(x)) class(x) <- c("ordered", class(x)) # can set unordered ??
       return(x)
-    } else
-      return(`oldClass<-`(addNA2(x), c(if(ordered) "ordered", "factor", "na.included")))
+    }
+    return(`oldClass<-`(addNA2(x), c(if(ordered) "ordered", "factor", "na.included")))
   }
   .Call(Cpp_qF, x, ordered, na.exclude)
 }
+# TODO: Keep if(ordered) "ordered" ??
 qG <- function(x, ordered = TRUE, na.exclude = TRUE) {
-  if(is.factor(x)) {
-    ll <- attr(x, "levels")
-    if(na.exclude || force(nainc <- inherits(x, "na.included")) || !anyNA(unclass(x)))
-      return(`attributes<-`(x, list(N.groups = length(ll), class = c(if(ordered) "ordered", "qG", if(!na.exclude || nainc) "na.included"))))
-    ng <- if(anyNA(ll)) length(ll) else length(ll) + 1L
+  if(inherits(x, c("factor", "qG"))) {
+    if(na.exclude || inherits(x, "na.included") || !anyNA(unclass(x))) { # force(nainc <- inherits(x, "na.included"))
+      ng <- if(is.factor(x)) fnlevels(x) else attr(x, "N.groups") # TODO: could keep levels attribute for factors ??
+      return(`attributes<-`(x, list(N.groups = ng, class = c(if(ordered) "ordered", "qG", "na.included")))) # if(!na.exclude || nainc) "na.included" -> bug, naing not generated! And als having na.included is always better..
+    }
+    if(is.factor(x)) {
+      ll <- attr(x, "levels")
+      ng <- if(anyNA(ll)) length(ll) else length(ll) + 1L
+    } else ng <- attr(x, "N.groups") # NA is always counted by qG !!
     attributes(x) <- NULL
     x[is.na(x)] <- ng
     attributes(x) <- list(N.groups = ng, class = c(if(ordered) "ordered", "qG", "na.included"))
@@ -24,9 +27,8 @@ qG <- function(x, ordered = TRUE, na.exclude = TRUE) {
   }
   .Call(Cpp_qG, x, ordered, na.exclude)
 }
-# what about attribute preervation ??
-# -> I think it is not good having all kinds of stuff attached to a matrix ??
-# also dapply and BY convert known data types (matrix or data.frame. These functions can convert anything, so we need to be more careful !!)
+
+# what about attribute preervation ? -> I think it is not good having all kinds of stuff attached to a matrix. Also dapply and BY convert that way.
 qDF <- function(X, row.names.col = FALSE) {
   if(is.atomic(X)) {
     d <- dim(X)
@@ -37,7 +39,7 @@ qDF <- function(X, row.names.col = FALSE) {
         dim(X) <- c(d[1L], prod(d[-1L]))
         if(!is.null(dn)) {
           for (i in 2L:ld) if(is.null(dn[[i]])) dn[[i]] <- seq_len(d[i])
-          dimnames(X) <- list(dn[[1L]], interact_names(dn[-1L])) # Good??
+          dimnames(X) <- list(dn[[1L]], interact_names(dn[-1L])) # Good?
         }
       }
       if(!isFALSE(row.names.col) && !is.null(force(dn <- dimnames(X))[[1L]])) {
@@ -81,6 +83,7 @@ qDF <- function(X, row.names.col = FALSE) {
     return(X)
   }
 }
+
 qDT <- function(X, row.names.col = FALSE) {
   if(is.atomic(X)) {
     d <- dim(X)
@@ -91,7 +94,7 @@ qDT <- function(X, row.names.col = FALSE) {
         dim(X) <- c(d[1L], prod(d[-1L]))
         if(!is.null(dn)) {
           for (i in 2L:ld) if(is.null(dn[[i]])) dn[[i]] <- seq_len(d[i])
-          dimnames(X) <- list(dn[[1L]], interact_names(dn[-1L])) # Good??
+          dimnames(X) <- list(dn[[1L]], interact_names(dn[-1L])) # Good?
         }
       }
       if(!isFALSE(row.names.col) && !is.null(force(dn <- dimnames(X))[[1L]])) {
@@ -126,6 +129,7 @@ qDT <- function(X, row.names.col = FALSE) {
     return(X)
   }
 }
+
 qM <- function(X) {
   if(is.atomic(X)) {
     d <- dim(X)
@@ -135,7 +139,7 @@ qM <- function(X) {
       dim(X) <- c(d[1L], prod(d[-1L]))
       if(!is.null(dn)) {
         for (i in 2L:ld) if(is.null(dn[[i]])) dn[[i]] <- seq_len(d[i])
-        dimnames(X) <- list(dn[[1L]], interact_names(dn[-1L])) # Good??
+        dimnames(X) <- list(dn[[1L]], interact_names(dn[-1L])) # Good?
       }
       return(X)
     } else if(ld == 2L) return(X) else
