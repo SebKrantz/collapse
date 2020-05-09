@@ -1,13 +1,13 @@
 
 
-# Could make label attribute optional !!
+# Could make label attribute optional !
 descr <- function(X, Ndistinct = TRUE, higher = TRUE, table = TRUE,
                   Qprobs = c(0.01, 0.05, 0.25, 0.5, 0.75, 0.95, 0.99), cols = NULL,
                   label.attr = 'label', ...) {
   nam <- deparse(substitute(X))
 
   armat <- function(x, y) c(x[1L], Ndist = y, x[-1L])
-  natrm <- function(x) if(is.na(names(x)[length(x)])) x[-length(x)] else x # Remove NA from table !!
+  natrm <- function(x) if(is.na(names(x)[length(x)])) x[-length(x)] else x # Remove NA from table !
 
   dotsok <- if(!missing(...)) names(substitute(c(...))[-1L]) %!in% c('pid','g') else TRUE
 
@@ -16,10 +16,10 @@ descr <- function(X, Ndistinct = TRUE, higher = TRUE, table = TRUE,
   descrnum <- if(is.numeric(Qprobs)) function(x, ...) list(Class = class(x), Label = attr(x, label.attr), Stats = numstats(x, ...),
                                                           Quant = quantile(x, probs = Qprobs, na.rm = TRUE)) else
                                          function(x, ...) list(Class = class(x), Label = attr(x, label.attr), Stats = numstats(x, ...))
-  # Could make this more efficient ???
+  # Could make this more efficient ?
   descrcat <- function(x, tab = table) if(tab) list(Class = class(x), Label = attr(x, label.attr),
                                                     Stats = if(Ndistinct) c(N = fNobsCpp(x), Ndist = fNdistinctCpp(x)) else `names<-`(fNobsCpp(x), 'Nobs'),
-                                                    Table = natrm(fNobs.default(x, x))) else # table(x). FNobs is a lot Faster, but includes NA as level !!
+                                                    Table = natrm(fNobs.default(x, x))) else # table(x). fNobs is a lot Faster, but includes NA as level !
                                                       list(Class = class(x), Label = attr(x, label.attr),
                                                            Stats = if(Ndistinct) c(N = fNobsCpp(x), Ndist = fNdistinctCpp(x)) else `names<-`(fNobsCpp(x), 'Nobs'))
   class(X) <- NULL
