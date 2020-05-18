@@ -13,10 +13,10 @@ get_elem_FUN <- function(x, FUN, return = "sublist", keep_class = FALSE)
          stop("Unknown return option!"))
 
 list_elem <- function(l, return = "sublist", keep.class = FALSE)
-    get_elem_FUN(l, is.list, keep.class)
+    return(get_elem_FUN(l, is.list, return, keep.class))
 
 atomic_elem <- function(l, return = "sublist", keep.class = FALSE)
-    get_elem_FUN(l, is.atomic, keep.class)
+    get_elem_FUN(l, is.atomic, return, keep.class)
 
 
 "list_elem<-" <- function(l, value) {
