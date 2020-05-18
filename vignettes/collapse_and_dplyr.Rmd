@@ -855,7 +855,7 @@ gc()
 
 <!-- Thus in terms of data aggregation *collapse* fast functions are able to speed up *dplyr* to a level that makes it attractive again to R users working on medium-sized or larger data, and everyone programming with *dplyr*. I however strongly recommend *collapse* itself for easy and speedy programming as it does not rely on non-standard evaluation and has less R-overhead than *dplyr*. -->
 
-<!-- In all of this the grouping system of *dplyr* remains the central bottleneck. For example grouping 10 million observations in 1 million groups takes around 10 second with `group_by`, whereas `GRP` takes around 1.5 seconds, and this difference grows exponentially as data get larger. Rewriting `group_by` using `GRP` / *data.table*'s `forderv` and then writing a simple C++ conversion program for the grouping object could be a quick remedy for this issue, but that is at the discretion of Hadley Wickham and coauthors. -->
+<!-- In all of this the grouping system of *dplyr* remains the central bottleneck. For example grouping 10 million observations in 1 million groups takes around 10 second with `group_by`, whereas `GRP` takes around 1.5 seconds, and this difference grows exponentially as data get larger. Rewriting `group_by` using `GRP` / `radixorderv` and then writing a simple C++ conversion program for the grouping object could be a quick remedy for this issue, but that is at the discretion of Hadley Wickham and coauthors. -->
 <!-- (If you need that speed program with *collapse* or use *data.table* with GeForce optimized functions). -->
 
 Below I add in some benchmarks for weighted aggregations and aggregations using the statistical mode, which cannot easily or efficiently be performed with *dplyr*. 

@@ -32,7 +32,7 @@ BY.default <- function(X, g, FUN, ..., use.g.names = TRUE, sort = TRUE,
         res <- unlist(res, recursive = FALSE, use.names = FALSE)
         if(typeof(res) == typeof(X)) # length(res) == length(X) &&   what if X has names attribute ?
             duplattributes(res, X) else if(length(res) != ll) { # attributes(res) <- attributes(X)
-            if(!is.null(nr1) && length(res) == length(nr1)*ll) # additional check
+            if(!is.null(nr1) && length(res) == length(nr1)*ll) # additional check..
             names(res) <- rep(nr1, ll)
           }
         }
