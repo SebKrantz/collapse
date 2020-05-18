@@ -18,8 +18,8 @@ It is compatible with *dplyr*, *data.table* and the *plm* approach to panel-data
 
 *  **Advanced data programming**: A full set of fast statistical functions 
         supporting grouped and weighted computations on vectors, matrices and 
-        data frames. Fast (ordered) and programmable grouping, and fast factor 
-        generation, manipulation of data frames, and data object conversions.
+        data frames. Fast (ordered) and programmable grouping, factor 
+        generation, manipulation of data frames and data object conversions.
 
 *  **Advanced aggregation**: Fast and easy multi-data-type, multi-function, 
         weighted, parallelized and fully customized data aggregation.

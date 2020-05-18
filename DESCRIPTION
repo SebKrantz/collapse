@@ -20,8 +20,8 @@ Description: A C/C++ based package for advanced data transformation in R that is
     --- Key Features: ---
     (1) Advanced data programming: A full set of fast statistical functions 
         supporting grouped and weighted computations on vectors, matrices and 
-        data frames. Fast (ordered) and programmable grouping, and fast factor 
-        generation, manipulation of data frames, and data object conversions.
+        data frames. Fast (ordered) and programmable grouping, factor 
+        generation, manipulation of data frames and data object conversions.
     (2) Advanced aggregation: Fast and easy multi-data-type, multi-function, 
         weighted, parallelized and fully customized data aggregation.
     (3) Advanced transformations: Fast (grouped, weighted) replacing and 
