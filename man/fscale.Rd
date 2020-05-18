@@ -60,9 +60,9 @@ fscale(x, \dots)
   \item{g}{a factor, \code{\link{GRP}} object, atomic vector (internally converted to factor) or a list of vectors / factors (internally converted to a \code{\link{GRP}} object) used to group \code{x}.}
   \item{by}{\emph{STD data.frame method}: Same as \code{g}, but also allows one- or two-sided formulas i.e. \code{~ group1} or \code{var1 + var2 ~ group1 + group2}. See Examples.}
     \item{cols}{\emph{data.frame method}: Select columns to scale using a function, column names or indices. Default: All numeric variables. \emph{Note}: \code{cols} is ignored if a two-sided formula is passed to \code{by}.}
-  \item{w}{a numeric vector of (non-negative) weights. \code{STD} \code{data.frame} and \code{pdata.frame} methods also allow a one-sided formula i.e. \code{~ weightcol}. The \code{grouped_df} (\code{dplyr}) method supports lazy-evaluation. See Examples.}
+  \item{w}{a numeric vector of (non-negative) weights. \code{STD} data frame and \code{pdata.frame} methods also allow a one-sided formula i.e. \code{~ weightcol}. The \code{grouped_df} (\emph{dplyr}) method supports lazy-evaluation. See Examples.}
   \item{na.rm}{logical. skip missing values in \code{x} or \code{w} when computing means and sd's.}
-    \item{effect}{\code{plm} methods: Select which panel identifier should be used as grouping variable. 1L means first variable in the \code{plm::index}, 2L the second etc. if more than one integer is supplied, the corresponding index-variables are interacted. }
+    \item{effect}{\emph{plm} methods: Select which panel identifier should be used as grouping variable. 1L means first variable in the \code{plm::index}, 2L the second etc. if more than one integer is supplied, the corresponding index-variables are interacted. }
 
   \item{stub}{a prefix or stub to rename all transformed columns. \code{FALSE} will not rename columns.}
   \item{mean}{the mean to center on (default is 0). If \code{mean = FALSE}, no centering will be performed. In that case the scaling is mean-preserving. A numeric value different from 0 (i.e. \code{mean = 5}) will be added to the data after subtracting out the mean(s), such that the data will have a mean of 5. A special option when performing grouped scaling and centering is \code{mean = "overall.mean"}. In that case the overall mean of the data will be added after subtracting out group means.}

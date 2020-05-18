@@ -46,7 +46,7 @@ It computes a set of 7 statistics (nobs, mean, sd, min, max, skewness and kurtos
   \item{higher}{logical. Add higher moments (skewness and kurtosis).}
   \item{array}{logical. If computations have more than 2 dimensions (up to a maximum of 4D: variables, statistics, groups and panel-decomposition) output to array, else output (nested) list of matrices.}
   \item{vlabels}{logical. Use variable labels in the summary. See \code{\link{vlabels}}.}
-  \item{effect}{\code{plm} methods: Select which panel identifier should be used for between and within transformations of the data. 1L means first variable in the \code{plm::index}, 2L the second etc.. More than one variable can be supplied. }
+  \item{effect}{\emph{plm} methods: Select which panel identifier should be used for between and within transformations of the data. 1L means first variable in the \code{plm::index}, 2L the second etc.. More than one variable can be supplied. }
   \item{\dots}{arguments to be passed to or from other methods.}
   \item{digits}{the number of digits to print after the comma/dot.}
   \item{nonsci.digits}{the number of digits to print before resorting to scientific notation (default is to print out numbers with up to 9 digits and print larger numbers scientifically).}

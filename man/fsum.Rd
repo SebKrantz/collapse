@@ -35,7 +35,7 @@ fsum(x, ...)
 
 \item{na.rm}{logical. Skip missing values in \code{x}. Defaults to \code{TRUE} and implemented at very little computational cost. If \code{na.rm = FALSE} a \code{NA} is returned when encountered.}
 
-\item{use.g.names}{make group-names and add to the result as names (vector method) or row-names (matrix and data.frame method). No row-names are generated for data.tables and grouped tibbles.}
+\item{use.g.names}{make group-names and add to the result as names (vector method) or row-names (matrix and data.frame method). No row-names are generated for data.tables and (default) grouped tibbles.}
 
 \item{drop}{\emph{matrix and data.frame method:} drop dimensions and return an atomic vector if \code{g = NULL} and \code{TRA = NULL}.}
 
@@ -55,7 +55,7 @@ The weighted sum (i.e. survey total) is computed as \code{sum(x * w)}. If \code{
 
 This all seamlessly generalizes to grouped computations, which are performed in a single pass (without splitting the data) and therefore extremely fast. See Benchmark and Examples below.
 
-When applied to data frame's with groups or \code{drop = FALSE}, \code{fsum} preserves all column attributes (such as variable labels) but does not distinguish between classed and unclassed objects. The attributes of the \code{data.frame} itself are also preserved.
+When applied to data frame's with groups or \code{drop = FALSE}, \code{fsum} preserves all column attributes (such as variable labels) but does not distinguish between classed and unclassed objects. The attributes of the data frame itself are also preserved.
 
 }
 \value{
@@ -94,8 +94,9 @@ fsum(m, g, TRA = "\%")
 ## method for grouped tibbles - for use with dplyr
 library(dplyr)
 mtcars \%>\% group_by(cyl,vs,am) \%>\% fsum(hp)  # Weighted grouped sum (total)
-mtcars \%>\% group_by(cyl,vs,am) \%>\% fsum(TRA = "\%")
-mtcars \%>\% group_by(cyl,vs,am) \%>\% select(mpg) \%>\% fsum
+mtcars \%>\% fgroup_by(cyl,vs,am) \%>\% fsum(hp) # Equivalent but faster !!
+mtcars \%>\% fgroup_by(cyl,vs,am) \%>\% fsum(TRA = "\%")
+mtcars \%>\% fgroup_by(cyl,vs,am) \%>\% fselect(mpg) \%>\% fsum
 }}
 \section{Benchmark}{\preformatted{
 ## Let's run some benchmarks and compare fsum against data.table and base::rowsum

@@ -1,11 +1,8 @@
-% File src/library/base/man/transform.Rd
-% Part of the R package, https://www.R-project.org
-% Copyright 1995-2013 R Core Team
-% Distributed under GPL 2 or later
-
 \name{ftransform}
 \alias{ftransform}
+\alias{tfm}
 \alias{settransform}
+\alias{settfm}
 \alias{fcompute}
 \title{Fast Transform and Compute Columns on a Data Frame}
 \description{
@@ -15,9 +12,11 @@
 \usage{
 # Modify and return 'data.frame'
 ftransform(X, ...)
+tfm(X, ...)            # Shortcut for ftransform
 
 # Modify 'data.frame' by reference
 settransform(X, ...)
+settfm(X, ...)         # Shortcut for settransform
 
 # Compute and return new 'data.frame' from existing one
 fcompute(X, ...)
@@ -38,21 +37,21 @@ fcompute(X, ...)
   Finally, the function \code{fcompute} functions just like \code{ftransform}, but returns only the changed / computed columns without modifying or appending the data in \code{X}.
 }
 \value{
-  The modified value of \code{X}.
+  The modified data.frame \code{X}, or, for \code{fcompute}, a new data.frame with the columns computed on \code{X}. All attributes of \code{X} are preserved.
 }
-\seealso{\code{\link{with}}, \code{\link{within}},
-    \code{\link{fsubset}}
+\seealso{\code{\link{with}}, \code{\link{within}}, \link[=A3-data-frame-manipulation]{Data Frame Manipulation}, \link[=collapse-documentation]{Collapse Overview}
 }
 \examples{
 ## ftransform modifies and returns a data.frame
 ftransform(airquality, Ozone = -Ozone)
 ftransform(airquality, new = -Ozone, Temp = (Temp-32)/1.8)
-ftransform(airquality, new = -Ozone, new2 = 1, Temp = NULL)  # Deleting Temp, creating a columns of 1's
+ftransform(airquality, new = -Ozone, new2 = 1, Temp = NULL)  # Deleting Temp
 ftransform(airquality, Ozone = NULL, Temp = NULL)            # Deleting columns
 
 ## settransform modifies a data.frame in the global environment
 airquality_c <- airquality
 settransform(airquality_c, Ratio = Ozone / Temp, Ozone = NULL, Temp = NULL)
+head(airquality_c)
 rm(airquality_c)
 
 ## fcompute only returns the modified / computed data

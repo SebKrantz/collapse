@@ -7,7 +7,7 @@
 Detailed Statistical Description of Data Frame
 }
 \description{
-\code{descr} offers concise description of each variable in a \code{data.frame}. It is built as a wrapper around \code{qsu}, but by default also computes frequency tables with percentages for categorical variables, and quantiles and the number of distinct values for numeric variables (next to the mean, sd, min, max, skewness and kurtosis computed by \code{qsu}).
+\code{descr} offers concise description of each variable in a data frame. It is built as a wrapper around \code{qsu}, but by default also computes frequency tables with percentages for categorical variables, and quantiles and the number of distinct values for numeric variables (next to the mean, sd, min, max, skewness and kurtosis computed by \code{qsu}).
 
 }
 \usage{

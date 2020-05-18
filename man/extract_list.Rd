@@ -21,11 +21,9 @@ A suite of functions to subset or extract from (potentially complex) lists and l
 }
 \usage{
 ## Non-recursive (top-level) subsetting and replacing
-atomic_elem(l, return = c("sublist","names","indices","named_indices"),
-            keep.class = FALSE)
+atomic_elem(l, return = "sublist", keep.class = FALSE)
 atomic_elem(l) <- value
-list_elem(l, return = c("sublist","names","indices","named_indices"),
-          keep.class = FALSE)
+list_elem(l, return = "sublist", keep.class = FALSE)
 list_elem(l) <- value
 
 ## Recursive separation of regular (atomic) and irregular (non-atomic) parts
@@ -45,15 +43,18 @@ has_elem(l, elem, recursive = TRUE, DF.as.list = TRUE, regex = FALSE, ...)
   \item{l}{a list.}
   \item{value}{a list of the same length as the extracted subset of \code{l}.}
   \item{elem}{a function returning \code{TRUE} or \code{FALSE} when applied to elements of \code{l}, or a character vector of element names or regular expressions (if \code{regex = TRUE}). \code{get_elem} also supports a vector or indices which will be used to subset all final objects.}
-\item{return}{an integer or string specifying what to return. The options are:
-  \enumerate{
-  \item "sublist"\cr
-  \item "names"\cr
-  \item "indices"\cr
-  \item "named_indices"
+  \item{return}{an integer or string specifying what the selector function should return. The options are:
+      \tabular{lllll}{\emph{ Int. }   \tab\tab \emph{ String }   \tab\tab \emph{ Description }  \cr
+                 1 \tab\tab "sublist"   \tab\tab subset of data.frame (default) \cr
+                 2 \tab\tab "names" \tab\tab column names \cr
+                 3 \tab\tab "indices"   \tab\tab column indices \cr
+                 4 \tab\tab "named_indices"  \tab\tab named column indices \cr
+                 5 \tab\tab "logical"   \tab\tab logical selection vector \cr
+                 6 \tab\tab "named_logical"     \tab\tab named logical vector \cr
   }
-  \emph{Note}: replacement functions currently only elements, not element names or indices (ordering). However element names are replaced together with the data.
+  \emph{Note}: replacement functions only replace data, However column names are replaced together with the data.
   }
+
 
   \item{recursive}{logical. should the list search be recursive (i.e. go though all the elements), or just at the top-level?}
   \item{DF.as.list}{logical. treat data.frame's like (sub-)lists or like atomic elements?}

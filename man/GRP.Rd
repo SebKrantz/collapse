@@ -1,5 +1,4 @@
-\name{A2-fast-grouping}
-\alias{A2-fast-grouping}
+\name{GRP}
 \alias{GRP}
 \alias{GRP.default}
 \alias{GRP.factor}
@@ -14,11 +13,11 @@
 \alias{plot.GRP}
 \alias{group_names.GRP}
 \alias{as.factor.GRP}
-\title{Fast Grouping / \code{collapse} Grouping Objects}
+\title{Fast Grouping / \emph{collapse} Grouping Objects}
 \description{
-  \code{GRP} performs fast, ordered and unordered, groupings of vectors and data.frames (or lists of vectors) using \code{data.table}'s fast grouping and ordering \code{C} routine (\code{forder}). The output is a list-like object of class 'GRP' which can be printed, plotted and used as an efficient input to all of \code{collapse}'s fast functions, operators, as well as \code{\link{collap}}, \code{\link{BY}} and \code{\link{TRA}}.
+  \code{GRP} performs fast, ordered and unordered, groupings of vectors and data.frames (or lists of vectors) using \code{\link{radixorderv}}. The output is a list-like object of class 'GRP' which can be printed, plotted and used as an efficient input to all of \emph{collapse}'s fast functions, operators, as well as \code{\link{collap}}, \code{\link{BY}} and \code{\link{TRA}}.
 
-\code{fgroup_by} is similar to \code{dplyr::group_by} but faster! It creates a 'grouped_df', but with a 'GRP' object attached - for faster dplyr-like programming with \code{collapse}'s fast functions.
+\code{fgroup_by} is similar to \code{dplyr::group_by} but faster. It creates a 'grouped_df', but with a 'GRP' object attached - for faster dplyr-like programming with \emph{collapse}'s fast functions.
 
 There are also several conversion methods to convert to and from 'GRP' objects. The most important of these is \code{GRP.grouped_df}, which returns a 'GRP' object from a 'grouped_df' created with \code{fgroup_by} or \code{dplyr::group_by}.
 }
@@ -26,7 +25,7 @@ There are also several conversion methods to convert to and from 'GRP' objects. 
 \usage{
 GRP(X, ...)
 
-\method{GRP}{default}(X, by = NULL, sort = TRUE, order = 1L, na.last = TRUE,
+\method{GRP}{default}(X, by = NULL, sort = TRUE, decreasing = FALSE, na.last = TRUE,
     return.groups = TRUE, return.order = FALSE, ...)
 
 \method{GRP}{factor}(X, ...)
@@ -38,13 +37,13 @@ GRP(X, ...)
 # Identify, get group names, and convert GRP object to factor
 is.GRP(x)
 group_names.GRP(x, force.char = TRUE)
-as.factor.GRP(x)
+as.factor.GRP(x, ordered = FALSE)
 
 # Fast version of dplyr::group_by for use with fast functions, see details
-fgroup_by(X, ..., sort = TRUE, order = 1L, na.last = TRUE, return.order = FALSE)
+fgroup_by(X, ..., sort = TRUE, decreasing = FALSE, na.last = TRUE, return.order = FALSE)
 
 # This gets grouping columns from a grouped_df created with dplyr::group_by or fgroup_by
-fgroup_vars(X, return = c("data","names","indices","named_indices"))
+fgroup_vars(X, return = "data")
 
 \method{print}{GRP}(x, n = 6, ...)
 
@@ -58,19 +57,34 @@ fgroup_vars(X, return = c("data","names","indices","named_indices"))
 
   \item{by}{if \code{X} is a data.frame or list, \code{by} can indicate columns to use for the grouping (by default all columns are used). Columns must be passed using a vector of column names, indices, or using a one-sided formula i.e. \code{~ col1 + col2}.}
 
-  \item{sort}{logical. sort the groups (argument passed to \code{data.table:::forderv}, \code{TRUE} is like using \code{keyby} with \code{data.table}, vs. \code{by}).}
+  \item{sort}{logical. This argument only affects character vectors / columns passed. If \code{FALSE}, these are not ordered but simply grouped in the order of first appearance of unique elements. This provides a slight performance gain if only grouping but not alphabetic ordering is required (argument passed to \code{\link{radixorderv}}).}
 
-  \item{order}{integer. sort the groups in ascending (1L, default) or descending (-1L) order (argument passed to \code{data.table:::forderv}).}
+  \item{ordered}{logical. \code{TRUE} adds a class 'ordered' i.e. generates an ordered factor.}
 
-  \item{na.last}{logical. if missing values are encountered in grouping vector/columns, assign them to the last group (argument passed to \code{data.table:::forderv}).}
+  \item{decreasing}{logical. Should the sort order be increasing or decreasing? Can be a vector of length equal to the number of arguments in \code{X} / \code{by} (argument passed to \code{\link{radixorderv}}).}
+
+  \item{na.last}{logical. if missing values are encountered in grouping vector/columns, assign them to the last group (argument passed to \code{\link{radixorderv}}).}
 
   \item{return.groups}{logical. include the unique groups in the created 'GRP' object.}
 
-  \item{return.order}{logical. include the output from \code{data.table:::forderv} in the created 'GRP' object.}
+  \item{return.order}{logical. include the output from \code{\link{radixorderv}} in the created 'GRP' object.}
 
   \item{force.char}{logical. Always output group names as character vector, even if a single numeric vector was passed to \code{GRP.default}.}
 
- \item{effect}{\code{plm} methods: Select which panel identifier should be used as grouping variable. 1L means first variable in the \code{plm::index}, 2L the second etc.. More than one variable can be supplied. }
+ \item{effect}{\emph{plm} methods: Select which panel identifier should be used as grouping variable. 1L means first variable in the \code{plm::index}, 2L the second etc.. More than one variable can be supplied. }
+
+   \item{return}{an integer or string specifying what \code{fgroup_vars} should return. The options are:
+      \tabular{lllll}{\emph{ Int. }   \tab\tab \emph{ String }   \tab\tab \emph{ Description }  \cr
+                 1 \tab\tab "data"   \tab\tab full grouping columns (default) \cr
+                 2 \tab\tab "unique"   \tab\tab unique rows of grouping columns \cr
+                 3 \tab\tab "names" \tab\tab names of grouping columns \cr
+                 4 \tab\tab "indices"   \tab\tab integer indices of grouping columns \cr
+                 5 \tab\tab "named_indices"  \tab\tab named integer indices of grouping columns \cr
+                 6 \tab\tab "logical"   \tab\tab logical selection vector of grouping columns \cr
+                 7 \tab\tab "named_logical"     \tab\tab named logical selection vector of grouping columns \cr
+      }
+  }
+
 
   \item{n}{integer. Number of groups to print out.}
 
@@ -83,16 +97,19 @@ fgroup_vars(X, return = c("data","names","indices","named_indices"))
   \item{...}{for \code{fgroup_by}: unquoted comma-separated column names of grouping columns. Otherwise: arguments to be passed to or from other methods.}
 }
 \details{
-\code{GRP} is a central function in the \code{collapse} package because it provides the key inputs to facilitate easy and efficient groupwise-programming at the \code{C/C++} level: Information about (1) the number of groups (2) an integer group-id indicating which values / rows belong to which group and (3) information about the size of each group. Provided with these informations, \code{collapse}'s \link[=A1-fast-statistical-functions]{Fast Statistical Functions} pre-allocate intermediate and result vectors of the right sizes and (in most cases) perform grouped statistical computations in a single pass through the data.
+\code{GRP} is a central function in the \emph{collapse} package because it provides the key inputs to facilitate easy and efficient groupwise-programming at the \code{C/C++} level: Information about (1) the number of groups (2) an integer group-id indicating which values / rows belong to which group and (3) information about the size of each group. Provided with these informations, \emph{collapse}'s \link[=A1-fast-statistical-functions]{Fast Statistical Functions} pre-allocate intermediate and result vectors of the right sizes and (in most cases) perform grouped statistical computations in a single pass through the data.
 
-The sorting and ordering functionality for \code{GRP} only affects (2), that is groups receive different integer-id's depending on whether the groups are sorted \code{sort = TRUE}, and in which order (\code{order = 1} ascending or \code{order = -1} descending). This in-turn changes the order of values/rows in the output of \code{collapse} functions (the row/value corresponding to group 1 always comes out on top). The default setting with \code{sort = TRUE} and \code{order = 1} results in groups being sorted in ascending order. This is equivalent to performing grouped operations in \code{data.table} using \code{keyby}, whereas \code{sort = FALSE} is equivalent to \code{data.table} grouping with \code{by}.
+The sorting and ordering functionality for \code{GRP} only affects (2), that is groups receive different integer-id's depending on whether the groups are sorted \code{sort = TRUE}, and in which order (argument \code{decreasing}). This in-turn changes the order of values/rows in the output of \emph{collapse} functions. \emph{Note} that \code{sort = FALSE} is only effective on character vectors. Numeric grouping vectors will always produce ordered groupings.
 
-Next to group, there is the function \code{fgroup_by}...
+%This in-turn changes the order of values/rows in the output of \emph{collapse} functions (the row/value corresponding to group 1 always comes out on top). The default setting with \code{sort = TRUE} and \code{decreasing = FALSE} results in groups being sorted in ascending order. This is equivalent to performing grouped operations in \emph{data.table} using \code{keyby}, whereas \code{sort = FALSE} is equivalent to \emph{data.table} grouping with \code{by}, however this only works if the \code{by} columns are character, numeric grouping columns are always ordered.
 
-\code{GRP} is an S3 generic function with one default method supporting vector and list input and several conversion methods.
+Next to group, there is the function \code{fgroup_by} as a significantly faster alternative to \code{dplyr::group_by}. It creates a grouped tibble by attaching a 'GRP' object to a data frame. \emph{collapse} functions with a grouped_df method applied to that data frame will yield grouped computations. Note that \code{fgroup_by} can only be used in combination with \emph{collapse} functions, not with \emph{dplyr} verbs such as \code{summarize} or \code{mutate}.
 
+\code{GRP} is an S3 generic function with one default method supporting vector and list input and several conversion methods:
 
-The most important of these is the conversion of factors to 'GRP' objects and vice-versa. To obtain a 'GRP' object from a factor, one simply gets the number of groups calling \code{ng <- length(levels(f))} (1) and then computes the count of each level (3) using \code{\link[=tabulate]{tabulate(f, ng)}}. The integer group-id (2) is already given by the factor itself after removing the levels and class attributes. The levels are put in a list and moved to position (4) in the 'GRP' object, which is reserved for the unique groups. Going from factor to 'GRP' object thus only requires a tabulation of the levels, whereas creating a factor from a 'GRP' object using \code{as.factor.GRP} does not involve any computations, but may involve interactions if multiple grouping columns were used (which are then interacted to produce unique factor levels) or \code{\link{as.character}} conversions if the grouping column(s) were numeric (which are potentially expensive).
+The conversion of factors to 'GRP' objects by \code{GRP.factor} involves obtaining the number of groups calling \code{ng <- flevels(f)} and then computing the count of each level using \code{\link[=tabulate]{tabulate(f, ng)}}. The integer group-id (2) is already given by the factor itself after removing the levels and class attributes and replacing any missing values with \code{ng + 1L}. The levels are put in a list and moved to position (4) in the 'GRP' object, which is reserved for the unique groups. Going from factor to 'GRP' object thus only requires a tabulation of the levels, whereas creating a factor from a 'GRP' object using \code{as.factor.GRP} does not involve any computations, but may involve interactions if multiple grouping columns were used (which are then interacted to produce unique factor levels) or \code{\link{as.character}} conversions if the grouping column(s) were numeric (which are potentially expensive).
+
+The method \code{GRP.grouped_df} takes the 'groups' attribute from a grouped tibble and converts it to a 'GRP' object. If the grouped tibble was generated using \code{fgroup_by}, all work is done already. If it was created using \code{dplyr::group_by}, a C++ routine is called to efficiently convert the grouping object.
 
 \emph{Note}: For faster factor generation and a factor-light class 'qG' which avoids the coercion of factor levels to character also see \code{\link{qF}} and \code{\link{qG}}.
 }

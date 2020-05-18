@@ -1,9 +1,9 @@
 \name{A8-list-processing}
 \alias{A8-list-processing}
-\title{\code{collapse} List Processing}
+\title{List Processing} % \emph{collapse}
 
 \description{
-\code{collapse} provides the following set of functions to work with lists of R objects:
+\emph{collapse} provides the following set of functions to work with lists of R objects:
 \itemize{
 \item \bold{Search and Identification}\itemize{
 \item \code{\link{is.regular}} checks whether an R object is either atomic or a list. A (nested) list composed of regular objects at each level of the list-tree is unlistable to an atomic vector, checked by \code{\link{is.unlistable}}.
@@ -22,7 +22,7 @@
 }
 
 \item \bold{Unlisting / Row-Binding} \itemize{
-\item \code{\link{unlist2d}} efficiently unlists unlistable lists in 2-dimensions and creates a \code{data.frame} (or \code{data.table}) representation of the list (unlike \code{base::unlist} which returns an atomic vector). This is done by recursively flattening and row-binding R objects in the list (using \code{data.table::rbindlist}) while creating identifier columns for each level of the list-tree and (optionally) saving the row-names of the objects in a separate column. \code{\link{unlist2d}} can thus also be understood as a recursive generalization of \code{do.call(rbind, l)}, for lists of vectors, data.frames, arrays or heterogeneous objects.
+\item \code{\link{unlist2d}} efficiently unlists unlistable lists in 2-dimensions and creates a \code{data.frame} (or \emph{data.table}) representation of the list (unlike \code{base::unlist} which returns an atomic vector). This is done by recursively flattening and row-binding R objects in the list (using \code{data.table::rbindlist}) while creating identifier columns for each level of the list-tree and (optionally) saving the row-names of the objects in a separate column. \code{\link{unlist2d}} can thus also be understood as a recursive generalization of \code{do.call(rbind, l)}, for lists of vectors, data.frames, arrays or heterogeneous objects.
 }
 
 }
@@ -40,7 +40,7 @@
   \code{\link{atomic_elem}} \tab\tab top-level subset atomic elements \cr
   \code{\link{list_elem}} \tab\tab top-level subset list/list-like elements \cr
   \code{\link{rapply2d}} \tab\tab recursively apply functions to lists of data objects \cr
-  \code{\link{unlist2d}} \tab\tab recursively unlist/row-bind lists of data objects in 2D, to \code{data.frame} or \code{data.table} \cr
+  \code{\link{unlist2d}} \tab\tab recursively unlist/row-bind lists of data objects in 2D, to \code{data.frame} or \emph{data.table} \cr
 }
 }
 \seealso{

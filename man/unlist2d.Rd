@@ -4,7 +4,7 @@
 Recursive Row-Binding / Unlisting in 2D - to Data Frame
 }
 \description{
-\code{unlist2d} efficiently unlists lists of regular R objects (objects built up from atomic elements) and creates a data.frame representation of the list. It is a faithful 2-dimensional generalization of \code{base::unlist}, and can also be understood as a recursive generalization of \code{do.call(rbind, l)}, for lists of vectors, data.frames, arrays or heterogeneous objects.
+\code{unlist2d} efficiently unlists lists of regular R objects (objects built up from atomic elements) and creates a data frame representation of the list. It is a full 2-dimensional generalization of \code{base::unlist}, but is best understood and used as a recursive generalization of \code{do.call(rbind, l)}, for lists of vectors, data frames, arrays or heterogeneous objects (i.e. unlisting happens via recursive flattening and intelligent row-binding of objects, see Details and Examples).
 }
 \usage{
 unlist2d(l, idcols = ".id", row.names = FALSE, recursive = TRUE,
@@ -12,25 +12,25 @@ unlist2d(l, idcols = ".id", row.names = FALSE, recursive = TRUE,
 }
 %- maybe also 'usage' for other objects documented here.
 \arguments{
-  \item{l}{a unlistable list, see \code{\link{is.unlistable}}.}
-  \item{idcols}{a character stub or a vector of names for id-columns automatically added - one for each level of nesting in \code{l}. By default the stub is \code{".id"}, so columns will be of the form \code{".id.1", ".id.2",} etc... . if \code{idcols = TRUE}, the stub is also set to \code{".id"}. If \code{idcols = FALSE}, id-columns are omitted. The content of the id columns are the list names, or (if missing) integers for the list elements. Missing elements in asymmetric nested structures are filled up with \code{NA}. See examples. }
+  \item{l}{a unlistable list (with atomic elements in all final nodes, see \code{\link{is.unlistable}}).}
+  \item{idcols}{a character stub or a vector of names for id-columns automatically added - one for each level of nesting in \code{l}. By default the stub is \code{".id"}, so columns will be of the form \code{".id.1", ".id.2",} etc... . if \code{idcols = TRUE}, the stub is also set to \code{".id"}. If \code{idcols = FALSE}, id-columns are omitted. The content of the id columns are the list names, or (if missing) integers for the list elements. Missing elements in asymmetric nested structures are filled up with \code{NA}. See Examples. }
   \item{row.names}{\code{TRUE} extracts row names from all the objects in \code{l} (where available) and adds them to the output in a column named \code{"row.names"}. Alternatively, a column name i.e. \code{row.names = "file"} can be supplied.}
   \item{recursive}{if \code{FALSE}, only process the lowest (deepest) level of \code{l}.}
   \item{id.factor}{if \code{TRUE} and \code{idcols != FALSE}, create id columns as ordered factors instead of character or integer vectors. This is useful if id's are used for further analysis e.g. as inputs to \code{ggplot2}. }
-  \item{DT}{if \code{TRUE}, return a \code{data.table}, not a \code{data.frame}.}
+  \item{DT}{if \code{TRUE}, return a \emph{data.table}, not a data frame.}
 }
 \details{
-The data.frame representation created by \code{unlist2d} is built as follows:
+The data frame representation created by \code{unlist2d} is built as follows:
 \itemize{
-  \item Recurse down to the lowest level of the list-tree, data.frames are exempted and treated as a final elements.
-  \item Check out the objects, if they are vectors, matrices or arrays convert them to data.frame (in the case of atomic vectors each element becomes a column).
-  \item Row-bind these data.frame's using data.table's \code{rbindlist} function. Columns are matched by name. If the number of columns differ, fill empty spaces with NA's. Create an id-column on the left, filled with the object names or indices (if unnamed). If \code{row.names = TRUE}, store row.names of the objects (if available) in a separate column.
-  \item Move up to the next higher level of the list-tree and repeat: Convert atomic objects to data.frame and row-bind while matching all columns and filling unmatched ones with NA's. Create another id-column for each level of nesting passed through. If the list-tree is asymmetric, fill empty spaces in lower-level id columns with NA's.
+  \item Recurse down to the lowest level of the list-tree, data frames are exempted and treated as a final elements.
+  \item Check out the objects, if they are vectors, matrices or arrays convert them to data frame (in the case of atomic vectors each element becomes a column).
+  \item Row-bind these data frame's using data.table's \code{rbindlist} function. Columns are matched by name. If the number of columns differ, fill empty spaces with NA's. If \code{idcols != FALSE}, create a id-columns on the left, filled with the object names or indices (if unnamed). If \code{row.names = TRUE}, store row-names of the objects (if available) in a separate column.
+  \item Move up to the next higher level of the list-tree and repeat: Convert atomic objects to data frame and row-bind while matching all columns and filling unmatched ones with NA's. Create another id-column for each level of nesting passed through. If the list-tree is asymmetric, fill empty spaces in lower-level id columns with NA's.
 }
-The result of this iterative procedure is a single \code{data.frame} containing on the left side id-columns for each level of nesting (from higher to lower level), followed by a column containing all the row.names of the objects if \code{row.names = TRUE}, followed by the object columns, matched at each level of recursion. Optimal results are of course obtained with symmetric lists of arrays, matrices or data.frames, which \code{unlist2d} nicely converts to a beautiful data.frame ready for plotting or further analysis.
+The result of this iterative procedure is a single data frame containing on the left side id-columns for each level of nesting (from higher to lower level), followed by a column containing all the row.names of the objects if \code{row.names = TRUE}, followed by the object columns, matched at each level of recursion. Optimal results are of course obtained with symmetric lists of arrays, matrices or data frames, which \code{unlist2d} nicely converts to a beautiful data frame ready for plotting or further analysis. See examples below.
 }
 \value{
-A \code{data.frame} or (if \code{DT = TRUE}) \code{data.table}.
+A data frame or (if \code{DT = TRUE}) a \emph{data.table}.
 }
 % \references{
 %% ~put references to the literature/web site here ~
@@ -38,9 +38,9 @@ A \code{data.frame} or (if \code{DT = TRUE}) \code{data.table}.
 % \author{
 %%  ~~who you are~~
 % }
-% \note{
-%%  ~~further notes~~
-% }
+\note{
+For lists of data frames \code{unlist2d} works just like \code{data.table::rbindlist(l, use.names = TRUE, fill = TRUE, idcol = ".id")} (also the same speed), however for lists of lists \code{unlist2d} does not produce the same output as \code{data.table::rbindlist}.
+}
 
 %% ~Make other sections like Warning with \section{Warning }{....} ~
 

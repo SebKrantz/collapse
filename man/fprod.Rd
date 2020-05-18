@@ -36,7 +36,7 @@ fprod(x, ...)
 
 \item{na.rm}{logical. Skip missing values in \code{x}. Defaults to \code{TRUE} and implemented at very little computational cost. If \code{na.rm = FALSE} a \code{NA} is returned when encountered.}
 
-\item{use.g.names}{make group-names and add to the result as names (vector method) or row-names (matrix and data.frame method). No row-names are generated for data.tables and grouped tibbles.}
+\item{use.g.names}{make group-names and add to the result as names (vector method) or row-names (matrix and data.frame method). No row-names are generated for data.tables and (default) grouped tibbles.}
 
 \item{drop}{\emph{matrix and data.frame method:} drop dimensions and return an atomic vector if \code{g = NULL} and \code{TRA = NULL}.}
 
@@ -55,7 +55,7 @@ This all seamlessly generalizes to grouped computations, which are performed in 
 
 The weighted product is computed as \code{prod(x * w)}. If \code{na.rm = TRUE}, missing values will be removed from both \code{x} and \code{w} i.e. utilizing only \code{x[complete.cases(x,w)]} and \code{w[complete.cases(x,w)]}.
 
-When applied to data frame's with groups or \code{drop = FALSE}, \code{fprod} preserves all column attributes (such as variable labels) but does not distinguish between classed and unclassed objects. The attributes of the \code{data.frame} itself are also preserved.
+When applied to data frame's with groups or \code{drop = FALSE}, \code{fprod} preserves all column attributes (such as variable labels) but does not distinguish between classed and unclassed objects. The attributes of the data frame itself are also preserved.
 
 }
 \value{
@@ -92,8 +92,9 @@ fprod(m, g) # etc...
 ## method for grouped tibbles - for use with dplyr
 library(dplyr)
 mtcars \%>\% group_by(cyl,vs,am) \%>\% fprod(hp)   # Weighted grouped product
-mtcars \%>\% group_by(cyl,vs,am) \%>\% fprod(TRA = "/")
-mtcars \%>\% group_by(cyl,vs,am) \%>\% select(mpg) \%>\% fprod
+mtcars \%>\% fgroup_by(cyl,vs,am) \%>\% fprod(hp)  # Equivalent but faster
+mtcars \%>\% fgroup_by(cyl,vs,am) \%>\% fprod(TRA = "/")
+mtcars \%>\% fgroup_by(cyl,vs,am) \%>\% fselect(mpg) \%>\% fprod
 }
 \keyword{univar}
 \keyword{manip}

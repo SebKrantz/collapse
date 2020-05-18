@@ -34,7 +34,7 @@ fmedian(x, ...)
 
 \item{na.rm}{logical. Skip missing values in \code{x}. Defaults to \code{TRUE} and implemented at very little computational cost. If \code{na.rm = FALSE} a \code{NA} is returned when encountered.}
 
-\item{use.g.names}{make group-names and add to the result as names (vector method) or row-names (matrix and data.frame method). No row-names are generated for data.tables and grouped tibbles.}
+\item{use.g.names}{make group-names and add to the result as names (vector method) or row-names (matrix and data.frame method). No row-names are generated for data.tables and (default) grouped tibbles.}
 
 \item{drop}{\emph{matrix and data.frame method:} drop dimensions and return an atomic vector if \code{g = NULL} and \code{TRA = NULL}.}
 
@@ -47,7 +47,7 @@ Median value estimation is done using \code{std::nth_element} in C++, which is a
 
 Grouped computations are currently performed by mapping the data to a sparse-array directed by \code{g} and then partially sorting each row (group) of that array. For reasons I don't fully understand this requires less memory than a full deep copy which is done with no groups.
 
-When applied to data frame's with groups or \code{drop = FALSE}, \code{fmedian} preserves all column attributes (such as variable labels) but does not distinguish between classed and unclassed objects. The attributes of the \code{data.frame} itself are also preserved.
+When applied to data frame's with groups or \code{drop = FALSE}, \code{fmedian} preserves all column attributes (such as variable labels) but does not distinguish between classed and unclassed objects. The attributes of the data frame itself are also preserved.
 
 }
 \value{
@@ -71,6 +71,7 @@ fmedian(mpg, g, TRA = "-")           # Groupwise subtract median value
 fmedian(mtcars)
 fmedian(mtcars, TRA = "-")
 fmedian(mtcars, g)
+fmean(fgroup_by(mtcars, cyl, vs, am))   # another way of doing it...
 fmedian(mtcars, g, use.g.names = FALSE) # No row-names generated
 
 ## matrix method
@@ -82,8 +83,9 @@ fmedian(m, g) # etc...
 ## method for grouped tibbles - for use with dplyr
 library(dplyr)
 mtcars \%>\% group_by(cyl,vs,am) \%>\% fmedian
-mtcars \%>\% group_by(cyl,vs,am) \%>\% fmedian("-")
-mtcars \%>\% group_by(cyl,vs,am) \%>\% select(mpg) \%>\% fmedian
+mtcars \%>\% fgroup_by(cyl,vs,am) \%>\% fmedian # Faster grouping!
+mtcars \%>\% fgroup_by(cyl,vs,am) \%>\% fmedian("-") # De-median
+mtcars \%>\% fgroup_by(cyl,vs,am) \%>\% fselect(mpg) \%>\% fmedian
 }
 \keyword{univar}
 \keyword{manip}

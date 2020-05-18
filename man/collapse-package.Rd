@@ -3,51 +3,68 @@
 \alias{collapse}
 \docType{package}
 \title{ %   \code{collapse:}
-Advanced and Fast Data Transformation % and Exploration % in R % and Fast  % Advanced Data Aggregation, Transformation and Exploration in R % Fast Advanced Data Transformation and Exploration % Advanced and Fast % in R % Advanced Data Aggregation, Transformation and Exploration in R % or: Advanced and Fast Data Manipulation and Exploration. Or: Advanced and Fast Data Transformation and Exploration.. Or: Advanced Data Manipulation and Exploration. Or: Advanced and Fast Data Aggregation, Transformation and Exploration. Or: Fast Advanced Data Manipulation and Exploration. (Nah, 2 adjectives is bad, and you have to earn the title Fast !!) % Advanced and Fast Data Manipulation and Exploration (Manipulation sounds so meticulous, but your package moves in broad strokes)
-  % Fazit: The title is Great !!
+Advanced and Fast Data Transformation
 }
 \description{
-\code{collapse} is a C/C++ based package for data manipulation in R. It's aims are
+\emph{collapse} is a C/C++ based package for data manipulation in R. It's aims are
 \itemize{
 \item to facilitate complex data transformation and exploration tasks in R
-\item to help make R code fast, flexible, parsimonious and programmer friendly. % \code{collapse} is a fast  %to facilitate (advanced) data manipulation in R   % To achieve the latter,
+\item to help make R code fast, flexible, parsimonious and programmer friendly. % \emph{collapse} is a fast  %to facilitate (advanced) data manipulation in R   % To achieve the latter,
 % collapse provides a broad set.. -> Nah, it's not a misc package
 }
-It is compatible with \code{dplyr}, \code{data.table} and the \code{plm} approach to panel-data.
+It is compatible with \emph{dplyr}, \emph{data.table} and the \emph{plm} approach to panel-data.
 
 % \cr
-\bold{Key Features:}    % (In more detail in \link[=collapse-documentation]{Collapse Overview}) % Key functionality: % Key areas Key topics addressed by \code{collapse} are: % where \code{collapse} offers innovative solutions are:
+\bold{Key Features:}    % (In more detail in \link[=collapse-documentation]{Collapse Overview}) % Key functionality: % Key areas Key topics addressed by \emph{collapse} are: % where \emph{collapse} offers innovative solutions are:
 
 % \tabular{lll}{ % \Sexpr{"\u200B"} \Sexpr{"\u200B"}  \tab \emph{ Description }  \cr
 \enumerate{  % (1) \tab\tab ... \cr
-                \item  \emph{Advanced data programming}: A full set of fast statistical functions supporting grouped and/or weighted computations on vectors, matrices and data.frames. Fast (ordered) and reusable grouping, quick data conversions, and quick select, replace or add data.frame columns.
-                 \item \emph{Advanced aggregation}: Fast and easy multi-data-type, multi-function, weighted, parallelized and fully customized data aggregation.
-                 \item \emph{Advanced transformations}: Fast (grouped, weighted) replacing and sweeping out of statistics, scaling, centering, higher-dimensional centering, complex linear prediction and partialling-out.
-                 \item \emph{Advanced time-computations}: Fast (sequences of) lags / leads, and (lagged / leaded, iterated) differences and growth rates on (unordered) time-series and panel data. Multivariate auto-, partial- and cross-correlation functions for panel data. Panel data to (ts-)array conversions.
-                 \item \emph{List processing}: (Recursive) list search / identification, extraction / subsetting, data-apply, and row-binding / unlisting in 2D.
-                 \item \emph{Advanced data exploration}: Fast (grouped, weighted, panel-decomposed) summary statistics for cross-sectional and complex multilevel / panel data.  % Elegant (multivariate, grouped, weighted and panel-decomposed) histograms, density, scatter and correlation plots.  \cr
+
+                \item  \emph{Advanced data programming}: A full set of fast statistical functions
+        supporting grouped and weighted computations on vectors, matrices and
+        data frames. Fast (ordered) and programmable grouping, and fast factor
+        generation, manipulation of data frames, and data object conversions. %  select, subset, transform, replace, add and delete data.frame columns.
+                 \item \emph{Advanced aggregation}: Fast and easy multi-data-type, multi-function,
+        weighted, parallelized and fully customized data aggregation.
+                 \item \emph{Advanced transformations}: Fast (grouped, weighted) replacing and
+        sweeping out of statistics, scaling / standardizing, centering (i.e.
+        between and within transformations), higher-dimensional centering
+        (i.e. multiway fixed effects transformations), linear
+        prediction and partialling-out.
+                 \item \emph{Advanced time-computations}: Fast (sequences of) lags / leads, and
+        (lagged / leaded, iterated, quasi-, log-) differences and growth
+        rates on (unordered) time-series and panel data. Multivariate auto,
+        partial and cross-correlation functions for panel data.
+        Panel data to (ts-)array conversions.
+                 \item \emph{List processing}: (Recursive) list search / identification, extraction /
+        subsetting, data-apply, and generalized row-binding / unlisting in 2D.
+                 \item \emph{Advanced data exploration}: Fast (grouped, weighted, panel-decomposed)
+        summary statistics for complex multilevel / panel data.
 % }
 }
 }
 \section{Getting Started}{
-Please see \link[=collapse-documentation]{Collapse Documentation & Overview}, or the introductory vignette. A compact set of examples is also provided below.
+Please see \link[=collapse-documentation]{Collapse Documentation & Overview}, or the introductory vignette. A compact but non-exhaustive set of examples is also provided below.
 }
 \section{Details}{
-% Put this below bullet points ?? % \code{collapse} provides a carefully conceived % \code{collapse} provides a compact set of functions % organized roughly into several topics
-\code{collapse} provides an integrated set of functions organized into several topics (see \link[=collapse-documentation]{Collapse Overview}). Many are S3 generic with methods for vectors, matrices and data.frames. Inputs are quickly passed to compiled C/C++ code, enabling flexible and parsimonious coding at extreme speeds.
+% Put this below bullet points ?? % \emph{collapse} provides a carefully conceived % \emph{collapse} provides a compact set of functions % organized roughly into several topics
+\emph{collapse} provides an integrated set of functions organized into several topics (see \link[=collapse-documentation]{Collapse Overview}). Many functions are S3 generic with core methods for vectors, matrices and data.frames. Inputs are quickly passed to
+compiled C/C++ code, enabling flexible and parsimonious programming in R at extreme speeds.
 
-The package avoids non-standard evaluation and exports core methods for maximum programmability.  % Most are S3 generic with methods for common \code{R} objects (vectors, matrices, data.frames, ...) % high computation  %(aggregation and transformations ~10x \code{data.table} on data <1 Mio obs.).
-Smart attribute handling and additional (not-exported) methods ensure compatibility and support for \code{dplyr}, \code{data.table} and the \code{plm} approach to panel-data. \code{collapse} comes with a built-in hierarchical \link[=collapse-documentation]{documentation} facilitating the use of the package. % and \code{base/stats}. % extra methods warrant, provide ?
+Broad areas of use are fast grouped programming and data manipulation to implement complex statistical techniques, and fast data transformation and exploration code (i.e. for \code{shiny} apps). Applications include fast panel data estimators and techniques, fast weighted programming (i.e. for survey techniques), fast programming with and aggregation of categorical data, fast programming with time-series and panel-series data, and programming with lists of data objects.
 
-% Beyond speed, flexibility and parsimony in coding, a central objective of \code{collapse} is to facilitate advanced / complex operations on data.
-\code{collapse} is mainly coded in C++ and built with \code{Rcpp}, but also uses C functions from \code{data.table} (grouping, row-subsetting, row-binding), \code{lfe} (centering on multiple factors) and \code{stats} (ACF and PACF).
-% \code{collapse} is built with \code{Rcpp} and imports \code{C} functions from \code{data.table}, \code{lfe} and \code{stats}. %, and uses \code{ggplot2} visualizations.
+The package largely avoids non-standard evaluation and exports core methods for maximum programmability.  % Most are S3 generic with methods for common \code{R} objects (vectors, matrices, data.frames, ...) % high computation  %(aggregation and transformations ~10x \emph{data.table} on data <1 Mio obs.).
+Smart attribute handling and additional (not-exported) methods ensure compatibility and support for \emph{dplyr}, \emph{data.table} and the \emph{plm} approach to panel-data. \emph{collapse} comes with a built-in hierarchical \link[=collapse-documentation]{documentation} facilitating the use of the package. % and \code{base/stats}. % extra methods warrant, provide ?
+
+% Beyond speed, flexibility and parsimony in coding, a central objective of \emph{collapse} is to facilitate advanced / complex operations on data.
+\emph{collapse} is mainly coded in C++ and built with \code{Rcpp}, but also uses C functions from \emph{data.table} (grouping, subsetting, row-binding), \emph{lfe} (centering on multiple factors) and \emph{stats} (ACF and PACF).
+% \emph{collapse} is built with \code{Rcpp} and imports \code{C} functions from \emph{data.table}, \emph{lfe} and \emph{stats}. %, and uses \code{ggplot2} visualizations.
 
 }
 \section{Author(s)}{ % \author{
 \bold{Maintainer}: Sebastian Krantz \email{sebastian.krantz@graduateinstitute.ch}
 
-Other contributors from packages \code{collapse} utilizes:
+Other contributors from packages \emph{collapse} utilizes:
 \itemize{
 \item Matt Dowle, Arun Srinivasan and contributors worldwide (data.table)
 \item Simen Gaure (lfe)
@@ -55,7 +72,7 @@ Other contributors from packages \code{collapse} utilizes:
 \item R Core Team and contributors worldwide (stats)
 }
 I also thank Ralf Stubner, Joseph Wood and Dirk Eddelbuettel for helpful answers on Stackoverflow,
-and Joris Meys on R-Devel for encouraging me and helping to set up the \href{https://github.com/SebKrantz/collapse}{github repository} for \code{collapse}.
+and Joris Meys on R-Devel for encouraging me and helping to set up the \href{https://github.com/SebKrantz/collapse}{github repository} for \emph{collapse}.
 }
 \section{Developing / Feature Requests / Bug Reporting}{
 \itemize{
@@ -79,6 +96,9 @@ head(wlddev)
 # Describe data
 descr(wlddev)
 
+# Pairwise correlations with p-value
+pwcor(num_vars(wlddev), P = TRUE)
+
 # Panel-summarize columns 9 though 12 of this data (within and between countries)
 qsu(wlddev, pid = ~ country, cols = 9:12, vlabels = TRUE)
 
@@ -91,21 +111,24 @@ suml <- qsu(wlddev, ~ region, ~ country,
 str(suml)
 
 # Create data.frame from this list with 3 identifier columns
-unlist2d(suml, idcols = c("Variable","Trans"), row.names = "Region")
+head(unlist2d(suml, idcols = c("Variable","Trans"), row.names = "Region"))
+% # Compute the means of all the regions and create a simpler data.frame instead % unlist2d(rapply2d(suml, fmean), idcols = c("Variable","Trans"))
+# Select columns from wlddev
+series <- get_vars(wlddev, 9:12)     # same as wlddev[9:12] but 2x faster and works with data.tables
+series <- fselect(wlddev, PCGDP:ODA) # Same thing: > 100x faster t. dplyr::select(wlddev, PCGDP:ODA)
 
-# Compute the means of all the regions and create a simpler data.frame instead
-unlist2d(rapply2d(suml, fmean), idcols = c("Variable","Trans"))
-
-# Select columns from wlddev: same as wlddev[9:12] but 2x faster and works with data.tables etc.
-series <- get_vars(wlddev, 9:12)
-
-# Replace columns, 4x faster than wlddev[9:12] <- series and also replaces names
+# Replace columns, 8x faster than wlddev[9:12] <- series and also replaces names
 get_vars(wlddev, 9:12) <- series
-\donttest{
-# Fast conversion to data.table with qDT, and subset rows..
-library(data.table)
-qDT(wlddev)[country == "Ireland"]
-}
+
+# Fast subsetting
+head(fsubset(wlddev, country == "Ireland", -country, -iso3c))
+head(fsubset(wlddev, country == "Ireland" & year > 1990, year, PCGDP:ODA))
+ss(wlddev, 1:10, 1:10) # This is an order of magnitude faster than wlddev[1:10, 1:10]
+
+# Fast transforming
+head(ftransform(wlddev, ODA_GDP = ODA / PCGDP, ODA_LIFEEX = sqrt(ODA) / LIFEEX))
+head(ftransform(wlddev, ODA_GDP = ODA / PCGDP, PCGDP = NULL, ODA = NULL, GINI_sum = fsum(GINI)))
+
 # Calculating fast colum-wise statistics
 fNobs(series)                   # Number of non-missing values
 fmean(series)                   # means of series
@@ -119,7 +142,7 @@ fmedian(series, wlddev$region)  # regional medians
 fsd(series, wlddev$region)      # regional standard-deviations
 
 # Means by region and income
-fmean(series, get_vars(wlddev, c("region","income")))
+fmean(series, fselect(wlddev, region, income))
 
 # Same using GRP objects:
 g <- GRP(wlddev, ~ region + income)
@@ -130,18 +153,26 @@ plot(g)
 fmean(series, g)
 fmedian(series, g)
 fsd(series, g)
+
+# Another option is creating a grouped_df, using dplyr::group_by or the faster fgroup_by
+gseries <- fgroup_by(fselect(wlddev, region, income, PCGDP:ODA), region, income)
+str(gseries)
+fmean(gseries)          # grouped mean
+fmean(gseries, w = ODA) # weighted grouped mean, weighted by ODA
+fsd(gseries, w = ODA)   # Weighted group standard deviation
 \donttest{
 # Faster aggregations with dplyr:
-library(dplyr) # This is a lot faster than summarize_all(mean)
+library(dplyr) # This is already a lot faster than summarize_all(mean)
 wlddev \%>\% group_by(region,income) \%>\% select(PCGDP,LIFEEX) \%>\% fmean
+# Now this is getting fast, apart from the pipe which still slows things down...
+wlddev \%>\% fgroup_by(region,income) \%>\% fselect(PCGDP,LIFEEX) \%>\% fmean
 }
-
 # Data-Apply to columns
 head(dapply(series, log))
 dapply(series, quantile, na.rm = TRUE)
 
 # Data-Apply to rows (for sum use rowSums(qM(series), na.rm = TRUE), same for rowMeans ...)
-head(dapply(series, max, MARGIN = 1, na.rm = TRUE))
+head(dapply(mtcars, max, MARGIN = 1, na.rm = TRUE))
 head(dapply(mtcars, quantile, MARGIN = 1))
 
 # qM -> quickly convert data to matrix, qDF/qDT do the reverse
@@ -155,12 +186,11 @@ BY(series, wlddev$region, quantile, na.rm = TRUE, expand.wide = TRUE)
 # Convert panel-data to array
 psar <- psmat(wlddev, ~country, ~year, cols = 9:12)
 str(psar)
-psar["Ireland",,]                              # Fast data access
+psar["Ireland",,]                                       # Fast data access
 psar["Ireland",,"PCGDP"]
 psar[,"2016",]
-qDF(psar[,"2016",], row.names.col = "Country") # Convert to data.frame
-plot(psar)                                     # Visualize
-plot(psar, colour = TRUE, labs = vlabels(wlddev)[9:12])
+qDF(psar[,"2016",], row.names.col = "Country")          # Convert to data.frame
+plot(psar, colour = TRUE, labs = vlabels(wlddev)[9:12]) # Visualize
 plot(psar[c("Brazil","India","South Africa","Russian Federation","China"),,
           c("PCGDP","LIFEEX","ODA")], legend = TRUE, labs = vlabels(wlddev)[c(9:10,12)])
 plot(ts(psar["Brazil",,], 1960, 2018), main = "Brazil, 1960-2018")
@@ -186,11 +216,11 @@ gmeds <- fmedian(series, g)         # Same thing in 2 steps
 head(TRA(series, gmeds, "-", g))
 \donttest{
 # Faster transformations with dplyr:
-# (here we are demeaning PCGDP and LIFEEX using weighted means, weighted by ODA)
-wlddev \%>\% group_by(region,income) \%>\% select(PCGDP,LIFEEX,ODA) \%>\% fmean(ODA, "-")
+wlddev \%>\% fgroup_by(region,income) \%>\% fselect(PCGDP,LIFEEX,ODA) \%>\%
+fwithin(ODA) # Centering using weighted means, weighted by ODA
 }
-## But there are also specialized transformation operators for common jobs:
-# Centering (Within-transforming) the 4 series by country
+## But there are also tidy transformation operators for common jobs:
+# Centering (within-transforming) the 4 series by country
 head(W(wlddev, ~ country, cols = 9:12))
 
 # Same but adding overall mean back after subtracting out group means
@@ -217,8 +247,14 @@ head(D(wlddev, -1:1, 1, ~ country, ~year, cols = 9:12))       # 1-year lagged an
 head(G(wlddev, c(0,1,10), 1, ~ country, ~year, cols = 9:12))
 \donttest{
 # Adding exactly identified growth rates using data.table
+library(data.table)
 setDT(wlddev)[, paste0("G.", names(wlddev)[9:12]) := fgrowth(.SD,1,1,iso3c,year), .SDcols = 9:12]
 }
+# Deleting again and doing the dame thing with add_vars
+get_vars(wlddev, "G1.", regex = TRUE) <- NULL
+add_vars(wlddev) <- fgrowth(gv(wlddev, 9:12), 1, 1, wlddev$iso3c, wlddev$year)
+get_vars(wlddev, "G1.", regex = TRUE) <- NULL
+
 # Computing the 1- and 10-year log-differences of GDP per capita and Life-Expectancy
 head(G(wlddev, c(0,1,10), 1, PCGDP + LIFEEX ~ country, ~year, logdiff = TRUE))
 
@@ -226,18 +262,18 @@ head(G(wlddev, c(0,1,10), 1, PCGDP + LIFEEX ~ country, ~year, logdiff = TRUE))
 \donttest{
 library(plm)
 pwlddev <- pdata.frame(wlddev, index = c("country","year"))
-W(pwlddev$PCGDP)                      # Country-demeaning
-W(pwlddev, cols = 9:12)
-W(pwlddev$PCGDP, effect = 2)          # Time-demeaning
-W(pwlddev, effect = 2, cols = 9:12)
-HDW(pwlddev$PCGDP)                    # Country- and time-demeaning
-HDW(pwlddev, cols = 9:12)
-STD(pwlddev$PCGDP)                    # Standardizing by country
-STD(pwlddev, cols = 9:12)
-L(pwlddev$PCGDP, -1:3)                # Panel-lags
-L(pwlddev, -1:3, 9:12)
-G(pwlddev$PCGDP)                      # Panel-Growth rates
-G(pwlddev, 1, 1, 9:12)
+head(W(pwlddev$PCGDP))                      # Country-demeaning
+head(W(pwlddev, cols = 9:12))
+head(W(pwlddev$PCGDP, effect = 2))          # Time-demeaning
+head(W(pwlddev, effect = 2, cols = 9:12))
+head(HDW(pwlddev$PCGDP))                    # Country- and time-demeaning
+head(HDW(pwlddev, cols = 9:12))
+head(STD(pwlddev$PCGDP))                    # Standardizing by country
+head(STD(pwlddev, cols = 9:12))
+head(L(pwlddev$PCGDP, -1:3))                # Panel-lags
+head(L(pwlddev, -1:3, 9:12))
+head(G(pwlddev$PCGDP))                      # Panel-Growth rates
+head(G(pwlddev, 1, 1, 9:12))
 }
 }
 \keyword{package}

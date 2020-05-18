@@ -1,12 +1,12 @@
-\name{A3-fast-data-manipulation} % \name{Time-Series and Panel Computations}
-\alias{A3-fast-data-manipulation}
+\name{A3-data-frame-manipulation} % \name{Time-Series and Panel Computations}
+\alias{A3-data-frame-manipulation}
 % \alias{tscomp}
-\title{Fast Data Manipulation} %
+\title{Fast Data Frame Manipulation} %
 
 \description{
-\code{collapse} provides the following functions for fast manipulation of (mostly) data.frames.
+\emph{collapse} provides the following functions for fast manipulation of (mostly) data.frames.
 \itemize{
-\item \code{\link{fselect}} is a much faster alternative to \code{dplyr::select} to select columns using expressions involving column names. \code{\link{get_vars}} is a more versatile and programmer friendly function to efficienly select and replace columns by names, indices, logical vectors, regular expressions or using functions to identify columns.
+\item \code{\link{fselect}} is a much faster alternative to \code{dplyr::select} to select columns using expressions involving column names. \code{\link{get_vars}} is a more versatile and programmer friendly function to efficiently select and replace columns by names, indices, logical vectors, regular expressions or using functions to identify columns.
 
 \item The functions \code{\link{num_vars}}, \code{\link{cat_vars}}, \code{\link{char_vars}}, \code{\link{fact_vars}}, \code{\link{logi_vars}} and \code{\link{Date_vars}} are convenience functions to efficiently select and replace columns by data type.
 
@@ -14,7 +14,7 @@
 
 \item \code{\link{fsubset}} is a much faster version of \code{base::subset} for efficiently subset vectors, matrices and data.frames. If the non-standard evaluation offered by \code{\link{fsubset}} is not needed, the function \code{\link{ss}} is a much faster and also more secure alternative to \code{[.data.frame}.
 
-\item \code{\link{ftransform}} is a much faster version of \code{base::transform}, to modify and delete existing columns or append a data frame with new computed columns. \code{\link{settransform}} does all of that by reference, i.e. it modifies the data frame in the global environment. \code{\link{fcompute}} is similar to \code{\link{ftransform}} but only returns modifed and computed columns in a new data frame.
+\item \code{\link{ftransform}} is a much faster version of \code{base::transform}, to modify and delete existing columns or append a data frame with new computed columns. \code{\link{settransform}} does all of that by reference, i.e. it modifies the data frame in the global environment. \code{\link{fcompute}} is similar to \code{\link{ftransform}} but only returns modified and computed columns in a new data frame.
 
 }
 }
