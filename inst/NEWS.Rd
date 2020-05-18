@@ -68,6 +68,7 @@
 }
 
 \section{Changes in version 1.1.0 (early April 2020)}{
+
   \itemize{
 
 \item Fixed remaining gcc10, LTO and valgrind issues in C/C++ code, and added some more tests (there are now ~ 5300 tests ensuring that \emph{collapse} statistical functions perform as expected).
