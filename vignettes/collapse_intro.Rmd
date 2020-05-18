@@ -79,7 +79,7 @@ This vignette demonstrates these two points and introduces all main features of 
 
 <!-- and why learn *collapse*? -->
 ## Why learn *collapse*?
-*collapse* is a high-peformance package that extends and enhances the data-manipulation capabilities of R and existing popular packages (such as *dplyr*, *data.table*, and matrix packages). It's main focus is on grouped and weighted statistical programming, complex aggregations and transformations, time-series and panel-data operations, and programming with lists. Key strengths are:
+*collapse* is a high-performance package that extends and enhances the data-manipulation capabilities of R and existing popular packages (such as *dplyr*, *data.table*, and matrix packages). It's main focus is on grouped and weighted statistical programming, complex aggregations and transformations, time-series and panel-data operations, and programming with lists. Key strengths are:
 
 * *collapse* provides an organized and comprehensive suite of advanced statistical operations such as grouped, weighted and groupwise weighted statistics, grouped sweeping of statistics, scaling, centering, higher-dimensional centering and linear prediction, panel-data methods and summary statistics, and various time-series operations such as iterated-, panel-, quasi-, log- differences and growth rates.
 
@@ -88,7 +88,7 @@ This vignette demonstrates these two points and introduces all main features of 
 <!-- Core functions in *dplyr* or *data.table* seldomly execute below 1 millisecond.  -->
 * *collapse* is fully programmable in standard evaluation. It facilitates writing complex and performant code without the need of complex meta-programming. Core methods can be called directly and grouping time can be saved through creating grouping objects or grouped / panel data.frames. The result is that efficient *collapse* code is often not that far from a native C++ implementation.
 
-* *collapse* is broadly object oriented and not centered around data.frames. It supports all R data structures, in particular vectors / time-series / panel-series, matrices, data.frames / grouped data.frames (`dplyr::grouped_df`) / panel data.frams (`plm::pdata.frame`) and general lists of data objects. 
+* *collapse* is broadly object oriented and not centered around data.frames. It supports all R data structures, in particular vectors / time-series / panel-series, matrices, data.frames / grouped data.frames (`dplyr::grouped_df`) / panel data.frames (`plm::pdata.frame`) and general lists of data objects. 
 
 * *collapse* is well documented and receives continued maintenance and support. Performance and functionality will increase over time. The API for core functionality such as the fast statistical functions and transformation operators is guaranteed to remain unaltered for some time to come. 
 
@@ -124,7 +124,7 @@ Note that `descr` does not require data to be labeled. Since `wlddev` is a panel
 ```{r}
 varying(wlddev, wlddev$iso3c)
 ```
-`varying` tells us that all 4 variables `PCGDP`, `LIFEEX`, `GINI` and `ODA` vary over time. However the `OECD` variable does not, so this data does not track when countries entered the OECD. We can also have a more detailed look letting fvarying check variation in each country:
+`varying` tells us that all 4 variables `PCGDP`, `LIFEEX`, `GINI` and `ODA` vary over time. However the `OECD` variable does not, so this data does not track when countries entered the OECD. We can also have a more detailed look letting `varying` check the variation in each country:
 
 ```{r}
 head(varying(wlddev, wlddev$iso3c, any_group = FALSE))
@@ -159,7 +159,7 @@ qsu(wlddev, pid = ~ iso3c, cols = c(1,4,9:12), vlabels = TRUE, higher = TRUE)
 
 The above output reports 3 sets of summary statistics for each variable: Statistics computed on the *Overall* (raw) data, and on the *Between*-country (i.e. country averaged) and *Within*-country (i.e. country-demeaned) data^[in the *Within* data, the overall mean was added back after subtracting out country means, to preserve the level of the data, see also section 4.5.]. This is a powerful way to summarize panel data because aggregating the data by country gives us a cross-section of countries with no variation over time, whereas subtracting country specific means from the data eliminates the variation between countries. Thus we summarize the variation in our panel in 3 different ways: First we consider the raw data, then we create a cross-section of countries and summarize that, and then we sweep that cross-section out of the raw data and pretend we have a time-series. 
 
-So what can these statistics tell us about our data? The `N/T` columns shows that for `PCGDP` we have 8995 total overvations, that we observe GDP data for 203 countries and that we have on average 44.3 observations (time-periods) per country. In contrast the GINI Index is only available for 161 countries with 8.4 observations on average. The *Overall* and *Within* mean of the data are identical by definition, and the *Between* mean would also be the same in a balanced panel with no missing observations. In practice we have unequal amounts of observations for different countries, thus countries have different weights in the *Overall* mean and the difference between *Overall* and *Between*-country mean reflects this discrepancy. The most interesting statistic in this summary arguably is the standard deviation, and in particular the comparison of the *Between*-SD reflecting the variation between countries and the *Within*-SD reflecting average variation over time. This comparison shows that PCGDP, LIFEEX and GINI vary more between countries, but ODA received varies more within countries over time. The 0 *Between*-SD for the year variable and the fact that the *Overall* and *Within*-SD are equal shows that year is individual invariant. Thus `qsu` also provides the same information as `varying`, but with additional details on the relative magnitudes of cross-sectional and time-series variation. It is also a common pattern that the *kurtosis* increases in within-transformed data, while the *skewness* decreases in most cases. 
+So what can these statistics tell us about our data? The `N/T` columns shows that for `PCGDP` we have 8995 total observations, that we observe GDP data for 203 countries and that we have on average 44.3 observations (time-periods) per country. In contrast the GINI Index is only available for 161 countries with 8.4 observations on average. The *Overall* and *Within* mean of the data are identical by definition, and the *Between* mean would also be the same in a balanced panel with no missing observations. In practice we have unequal amounts of observations for different countries, thus countries have different weights in the *Overall* mean and the difference between *Overall* and *Between*-country mean reflects this discrepancy. The most interesting statistic in this summary arguably is the standard deviation, and in particular the comparison of the *Between*-SD reflecting the variation between countries and the *Within*-SD reflecting average variation over time. This comparison shows that PCGDP, LIFEEX and GINI vary more between countries, but ODA received varies more within countries over time. The 0 *Between*-SD for the year variable and the fact that the *Overall* and *Within*-SD are equal shows that year is individual invariant. Thus `qsu` also provides the same information as `varying`, but with additional details on the relative magnitudes of cross-sectional and time-series variation. It is also a common pattern that the *kurtosis* increases in within-transformed data, while the *skewness* decreases in most cases. 
 
 <!-- and `qsu` is extremely fast (< 1 millisecond for basically all computations on this data with a moderate laptop) -->
 
@@ -282,7 +282,7 @@ plotGGDC("TZA")
 ## 2. Fast Manipulation of Data Frame's 
 A first essential step towards optimizing R code for data manipulation is to facilitate and speed up very frequent manipulations of data frames such as selecting and replacing columns, subsetting, adding/computing new columns and deleting columns. For these tasks *collapse* introduces a set of highly optimized functions to efficiently manipulate data frames independent of class (i.e. you can also apply them for data.table's, tibbles, pdata.frame's etc.). 
 
-Some of these functions (`fselect`, `fsubset`, `ss` and `ftransform`) represent improved versions of existing ones (`dplyr::select`, `base::subset`, `base::[.data.frame` and `base::transform`) while others are added in. Also some functions (`fselect`, `fsubset`, `ftransform`, `settransform`, `fcompute`) use non-standard evaluation, whereas others (`get_vars`, `ss`, `num_vars`, etc.) offer some of the same functionality with standard evlauation and are thus more programmer frienly. Here we run through all of them briefly:
+Some of these functions (`fselect`, `fsubset`, `ss` and `ftransform`) represent improved versions of existing ones (`dplyr::select`, `base::subset`, `base::[.data.frame` and `base::transform`) while others are added in. Also some functions (`fselect`, `fsubset`, `ftransform`, `settransform`, `fcompute`) use non-standard evaluation, whereas others (`get_vars`, `ss`, `num_vars`, etc.) offer some of the same functionality with standard evlauation and are thus more programmer friendly. Here we run through all of them briefly:
 
 ### Selecting and Replacing Columns
 
@@ -510,7 +510,7 @@ tail(logGGDC, 3)
 microbenchmark(replace_Inf(GGDC10S), replace_Inf(GGDC10S, replace.nan = TRUE))
 ```
 
-`recode_num` and `recode_char` follow the syntax of `dplyr::recode` and provide more or less the same functionality except that they can efficiently be applid to matrices and data.frames, that `dplyr::recode` offers a method for factors not provided in *collapse*, and that `recode_char` allows for regular expression matching implemented via `base::grepl`:
+`recode_num` and `recode_char` follow the syntax of `dplyr::recode` and provide more or less the same functionality except that they can efficiently be applied to matrices and data.frames, that `dplyr::recode` offers a method for factors not provided in *collapse*, and that `recode_char` allows for regular expression matching implemented via `base::grepl`:
 
 ```{r}
 month.name
@@ -730,7 +730,7 @@ microbenchmark(call = add_vars(g[["groups"]],
 ```
 <!-- We can also use `add_vars` to bind columns in a different order than as they are passed. Specifying `add_vars(data, newcols1, newcols2, pos = "front")` would be equivalent to `add_vars(newcols1, newcols2, data)` while keeping the attributes of `data`. Moreover it is also possible to pass a vector of positions that the new columns should have in the combined data: -->
 
-### Transformtions Using the `TRA` Argument
+### Transformations Using the `TRA` Argument
 
 As a final layer of added complexity, we could utilize the `TRA` argument to generate groupwise-weighted demeaned, and scaled data, with additional columns giving the group-minimum and maximum values:
 
@@ -1231,7 +1231,7 @@ tryCatch(flag(1:6, 1, g, t = c(1,2,3,1,2,4)),
          error = function(e) e)
 ```
 
-Note that all of this does not require the panel to be balanced. `flag / L /F` works for unbalanced panel data as long as there are no gaps or repeated values in the time-variable for an individual. In such cases, `flag / L /F` can still be used, but one needs to call the function `seqid` first to gnerate an appropriate Id variable which identifies consecutive time-sequences at the sub-individual level.  One intended area of use, especially for the operators `L` and `F`, is to dramatically facilitate the implementation of dynamic models in various contexts. Below different ways `L` can be used to estimate a dynamic panel-model using `lm` are shown:
+Note that all of this does not require the panel to be balanced. `flag / L /F` works for unbalanced panel data as long as there are no gaps or repeated values in the time-variable for an individual. In such cases, `flag / L /F` can still be used, but one needs to call the function `seqid` first to generate an appropriate Id variable which identifies consecutive time-sequences at the sub-individual level.  One intended area of use, especially for the operators `L` and `F`, is to dramatically facilitate the implementation of dynamic models in various contexts. Below different ways `L` can be used to estimate a dynamic panel-model using `lm` are shown:
 ```{r}
 # Different ways of regressing GDP on its's lags and life-Expectancy and it's lags
 

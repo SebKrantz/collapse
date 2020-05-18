@@ -95,7 +95,7 @@ Date_vars(x) <- value
 \details{
 \code{get_vars(<-)} is around 2x faster than \code{`[.data.frame`} and 8x faster than \code{`[<-.data.frame`}, so the common operation \code{data[cols] <- someFUN(data[cols])} can be made 10x more efficient (abstracting from computations performed by \code{someFUN}) using \code{get_vars(data, cols) <- someFUN(get_vars(data, cols))} or the shorthand \code{gv(data, cols) <- someFUN(gv(data, cols))}.
 
-Similarly type-wise operations like \code{data[sapply(data, is.numeric)]} or \code{data[sapply(data, is.numeric)] <- value} are facilitated and more efficient using \code{num_vars(data)} and \code{num_vars(data) <- value} or the shorthands \code{nv} and \code{nv<-} etc.
+Similarly type-wise operations like \code{data[sapply(data, is.numeric)]} or \code{data[sapply(data, is.numeric)] <- value} are facilitated and more efficient using \code{num_vars(data)} and \code{num_vars(data) <- value} or the shortcuts \code{nv} and \code{nv<-} etc.
 
 \code{fselect} provides an efficient alternative to \code{dplyr::select}, allowing the selection of variables based on expressions evaluated within the data.frame, see Examples. It is about 100x faster than \code{dplyr::select} but also more simple as it does not provide special methods for grouped tibbles.
 

@@ -55,7 +55,7 @@ dat <- GGDC10S
 get_vars(dat, 6:15) <- replace_outliers(sweep(get_vars(dat, 6:15), 1, dat$SUM, "/"), 0,
                                         single.limit = "min")
 names(dat) <- stringr::str_wrap(vlabels(dat), width = 20)
-dat$Variable <- Recode(dat$Variable,"VA"="Value Added Share","EMP"="Employment Share")
+dat$Variable <- recode_char(dat$Variable,"VA"="Value Added Share","EMP"="Employment Share")
 dat <- collap(dat, ~ Variable + Region + Year, cols = 6:15)
 dat <- melt(qDT(dat), 1:3, variable.name = "Sector")
 
