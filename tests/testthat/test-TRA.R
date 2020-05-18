@@ -44,9 +44,9 @@ test_that("TRA performs like fbetween and fwithin", {
 })
 
 test_that("TRA gives errors for wrong input", {
-  expect_error(TRA(v, fmean(v), bla = 1))
-  expect_error(TRA(m, fmean(m), bla = 1))
-  expect_error(TRA(d, fmean(d), bla = 1))
+  expect_warning(TRA(v, fmean(v), bla = 1))
+  expect_warning(TRA(m, fmean(m), bla = 1))
+  expect_warning(TRA(d, fmean(d), bla = 1))
   expect_error(TRA(v, 1:2))
   expect_error(TRA(m, 1:2))
   expect_error(TRA(d, 1:2))

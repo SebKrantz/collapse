@@ -106,12 +106,11 @@ test_that("replacing with or adding atomic elements works well", {
 
   wlddev1 <- wlddev2 <- wlddev
   add_vars(wlddev1) <- wlddev$PCGDP
-  wlddev2["wlddev$PCGDP"] <- wlddev$PCGDP
-  expect_identical(wlddev1, wlddev2)
+  expect_identical(wlddev1, cbind(wlddev2, wlddev["PCGDP"]))
 
   wlddev1 <- wlddev2 <- wlddev
   add_vars(wlddev1) <- qM(wlddev[9:12])
-  wlddev2["qM(wlddev[9:12])"] <- qM(wlddev[9:12])
+  wlddev2["wlddev[9:12]"] <- qM(wlddev[9:12]) # formerly wlddev2["qM(wlddev[9:12])"], but no longer using deparse..
   expect_identical(wlddev1, wlddev2)
 
   wlddev1 <- wlddev2 <- wlddev
@@ -149,7 +148,7 @@ test_that("replace vars errors for wrong input", {
   expect_error(get_vars(wlddev, sapply(wlddev, is.numeric)[-1]) <- wlddev)
 })
 
-test_that("add vars errors for wrong input", {
+test_that("add_vars errors for wrong input", {
   expect_error(add_vars(wlddev, 14) <- wlddev[12])
   expect_error(add_vars(wlddev, "ODA3") <- wlddev[12])
 

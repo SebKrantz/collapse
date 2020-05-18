@@ -23,7 +23,7 @@ na20 <- function(x) {
   x
 }
 
-
+# This is correct, including Bessels correction.
 wvar <- function(x, w, na.rm = FALSE) {
   if(na.rm) {
     cc <- complete.cases(x, w)
@@ -177,7 +177,7 @@ test_that("fvar with weights performs like wvar (defined above)", {
   expect_equal(fvar(m, w = wdatNA, na.rm = FALSE), dapply(m, wvar, wdatNA))
   expect_equal(fvar(mNA, w = wdatNA, na.rm = FALSE), dapply(mNA, wvar, wdatNA))
   expect_equal(fvar(mNA, w = wdatNA), dapply(mNA, wvar, wdatNA, na.rm = TRUE))
-  expect_equal(fvar(x, f, wNA), mapply(wvar, split(x, f), split(wNA, f), na.rm = TRUE))
+  expect_equal(na20(fvar(x, f, wNA)), na20(mapply(wvar, split(x, f), split(wNA, f), na.rm = TRUE)))
   expect_equal(fvar(x, f, wNA, na.rm = FALSE), mapply(wvar, split(x, f), split(wNA, f)))
   expect_equal(fvar(xNA, f, wNA, na.rm = FALSE), mapply(wvar, split(xNA, f), split(wNA, f)))
   expect_equal(na20(fvar(xNA, f, wNA)), na20(mapply(wvar, split(xNA, f), split(wNA, f), na.rm = TRUE)))
@@ -499,7 +499,7 @@ test_that("fvar with with direct algorithm and weights performs like wvar (defin
   expect_equal(fvar(m, w = wdatNA, na.rm = FALSE, stable.algo = FALSE), dapply(m, wvar, wdatNA))
   expect_equal(fvar(mNA, w = wdatNA, na.rm = FALSE, stable.algo = FALSE), dapply(mNA, wvar, wdatNA))
   expect_equal(fvar(mNA, w = wdatNA, stable.algo = FALSE), dapply(mNA, wvar, wdatNA, na.rm = TRUE))
-  expect_equal(fvar(x, f, wNA, stable.algo = FALSE), mapply(wvar, split(x, f), split(wNA, f), na.rm = TRUE))
+  expect_equal(na20(fvar(x, f, wNA, stable.algo = FALSE)), na20(mapply(wvar, split(x, f), split(wNA, f), na.rm = TRUE)))
   expect_equal(fvar(x, f, wNA, na.rm = FALSE, stable.algo = FALSE), mapply(wvar, split(x, f), split(wNA, f)))
   expect_equal(fvar(xNA, f, wNA, na.rm = FALSE, stable.algo = FALSE), mapply(wvar, split(xNA, f), split(wNA, f)))
   expect_equal(na20(fvar(xNA, f, wNA, stable.algo = FALSE)), na20(mapply(wvar, split(xNA, f), split(wNA, f), na.rm = TRUE)))
