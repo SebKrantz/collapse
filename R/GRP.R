@@ -4,79 +4,85 @@
 
 GRP <- function(X, ...) UseMethod("GRP") # , X
 
-forderv <- function(x, by = seq_along(x), retGrp = FALSE, sort = TRUE, order = 1L, na.last = FALSE) {
-  if(is.atomic(x)) {
-    if(!missing(by) && !is.null(by)) stop("x is a single vector, non-NULL 'by' doesn't make sense")
-    by <- NULL
-  } else {
-    if(!length(unclass(x))) return(integer(0L))
-    if(length(order) == 1L) order <- rep(order, length(by))
-  }
-  .Call(C_forder, x, by, retGrp, sort, as.integer(order), na.last)
+radixorder <- function(..., na.last = TRUE, decreasing = FALSE, starts = FALSE, group.sizes = FALSE, sort = TRUE) {
+  z <- pairlist(...)
+  decreasing <- rep_len(as.logical(decreasing), length(z))
+  .Call(C_radixsort, na.last, decreasing, starts, group.sizes, sort, z)
 }
 
-GRP.default <- function(X, by = NULL, sort = TRUE, order = 1L, na.last = TRUE,
+radixorderv <- function(x, na.last = TRUE, decreasing = FALSE, starts = FALSE, group.sizes = FALSE, sort = TRUE) {
+  z <- if(is.atomic(x)) pairlist(x) else as.pairlist(unclass(x))
+  decreasing <- rep_len(as.logical(decreasing), length(z))
+  .Call(C_radixsort, na.last, decreasing, starts, group.sizes, sort, z)
+}
+
+GRP.default <- function(X, by = NULL, sort = TRUE, decreasing = FALSE, na.last = TRUE,
                         return.groups = TRUE, return.order = FALSE, ...) { # , gs = TRUE # o
 
-  if(!missing(...)) unused_arg_action(match.call(), ...)
   call <- match.call()
+
+  if(!missing(...)) {
+    if(all(names(list(...)) == "order")) {
+      decreasing <- ... == 1L
+      warning("'order' has been replaced with 'decreasing' and now takes logical arguments. 'order' can still be used but may be removed at some point.")
+    } else unused_arg_action(match.call(), ...)
+  }
 
   if(is.list(X)) {
     if(is.null(by)) {
       by <- seq_along(unclass(X))
       namby <- attr(X, "names")
       if(is.null(namby)) attr(X, "names") <- namby <- paste0("Group.", by)
-    } else if(is.call(by)) {
-      namby <- all.vars(by)
-      by <- ckmatch(namby, attr(X, "names"))
-    } else if(is.character(by)) {
-      namby <- by
-      by <- ckmatch(by, attr(X, "names"))
-    } else if(is.numeric(by)) {
-      by <- as.integer(by)
-      namby <- attr(X, "names")[by]
-      if(is.null(namby)) {
-        namby <- paste0("Group.", seq_along(by))
-        attr(X, "names") <- paste0("Group.", seq_along(unclass(X))) # best ?
-      }
-    } else stop("by needs to be either a one-sided formula, character column names or column indices!")
- } else namby <- paste(all.vars(call), collapse = ".")  # deparse(substitute(X)), all.vars is faster !
-
-  o <- forderv(X, by, TRUE, sort, order, na.last)
-  f <- attr(o, "starts")
-
-  if(length(o)) { # if ordered, returns 0
-    len <- .Call(C_uniqlengths, f, length(o))
-    grpuo <- .Call(C_frank, o, f, len, "dense")
-    ordered <- c(GRP.sort = sort, initially.ordered = FALSE)
-    if(return.groups) { # subsetVector preserves variable labels !
-        groups <- if(is.list(X)) .Call(C_subsetDT, X, o[f], by) else `names<-`(list(.Call(C_subsetVector, X, o[f])), namby)
-    } else groups <- NULL
+      o <- radixorderv(X, na.last, decreasing, TRUE, TRUE, sort)
+    } else {
+      if(is.call(by)) {
+        namby <- all.vars(by)
+        by <- ckmatch(namby, attr(X, "names"))
+      } else if(is.character(by)) {
+        namby <- by
+        by <- ckmatch(by, attr(X, "names"))
+      } else if(is.numeric(by)) {
+        by <- as.integer(by)
+        namby <- attr(X, "names")[by]
+        if(is.null(namby)) {
+          namby <- paste0("Group.", seq_along(by))
+          attr(X, "names") <- paste0("Group.", seq_along(unclass(X))) # best ?
+        }
+      } else stop("by needs to be either a one-sided formula, character column names or column indices!")
+      o <- radixorderv(.subset(X, by), na.last, decreasing, TRUE, TRUE, sort)
+    }
   } else {
-    lx <- if(is.list(X)) fnrow2(X) else length(X)
-    len <- .Call(C_uniqlengths, f, lx) # data.table:::Cuniqlengths # or cumsubtract?
-    grpuo <- rep.int(seq_along(len), len) # rep.int fastest ?? -> about same speed as rep
-    ordered <- c(GRP.sort = sort, initially.ordered = TRUE)
-    if(return.groups) {
-      groups <- if(is.list(X)) .Call(C_subsetDT, X, f, by) else `names<-`(list(.Call(C_subsetVector, X, f)), namby)
-    } else groups <- NULL
+   if(!is.null(by)) stop("by can only be used to subset list / data.frame columns")
+   namby <- paste(all.vars(call), collapse = ".")
+   o <- radixorderv(X, na.last, decreasing, TRUE, TRUE, sort)
   }
-  return(`class<-`(list(N.groups = length(f),
-                        group.id = grpuo,
-                        group.sizes = len,
+
+  st <- attr(o, "starts")
+  gs <- attr(o, "group.sizes")
+  sorted <- attr(o, "sorted")
+
+  if(return.groups) {
+      ust <- if(sorted) st else o[st]
+      groups <- if(is.list(X)) .Call(C_subsetDT, X, ust, by) else
+        `names<-`(list(.Call(C_subsetVector, X, ust)), namby) # subsetVector preserves attributes (such as "label")
+  } else groups <- NULL
+
+  return(`class<-`(list(N.groups = length(st),
+                        group.id = .Call(C_frankds, o, st, gs, TRUE),
+                        group.sizes = gs,
                         groups = groups,
                         group.vars = namby,
-                        ordered = ordered,
-                        order = if(return.order) o else NULL,
+                        ordered = c(GRP.sort = sort, initially.ordered = sorted),
+                        order = if(return.order) `attr<-`(o, "group.sizes", NULL) else NULL,
                         call = call), "GRP"))
 }
 
 is.GRP <- function(x) inherits(x, "GRP")
 
 group_names.GRP <- function(x, force.char = TRUE) { # , ...
-  if(is.null(x[[4L]])) return(NULL)
   groups <- x[[4L]]
-  if(length(groups) == 1L) {
+  if(is.null(groups)) return(NULL)
+  if(length(unclass(groups)) == 1L) {
    if(force.char && !is.character(groups[[1L]])) paste0(groups[[1L]]) else groups[[1L]]
   } else do.call(paste, c(groups, list(sep = ".")))
 }
@@ -126,7 +132,7 @@ plot.GRP <- function(x, breaks = "auto", type = "s", horizontal = FALSE, ...) {
   hist(x[[3L]], breaks, xlab = "Group Size", main = "Histogram of Group Sizes")
 }
 
-as.factor.GRP <- function(x) { # , ...
+as.factor.GRP <- function(x, ordered = FALSE) { # , ...
   if(is.factor(x)) return(x)
   if(!is.GRP(x)) stop("x must be a 'GRP' object")
   f <- x[[2L]]
@@ -135,27 +141,39 @@ as.factor.GRP <- function(x) { # , ...
     attr(f, "levels") <- as.character(seq_len(x[[1L]]))
   } else {
     if(length(gr) == 1L) {
-      attr(f, "levels") <- if(is.character(gr[[1L]])) gr[[1L]] else as.character(gr[[1L]]) # or formatC ?
+      attr(f, "levels") <- tochar(gr[[1L]]) # or formatC ?
     } else {
       attr(f, "levels") <- do.call(paste, c(gr, list(sep = ".")))
     }
   }
-  class(f) <- if(any(x[[6L]])) c("ordered","factor","na.included") else c("factor","na.included") # NA included ?
+  class(f) <- if(ordered) c("ordered","factor","na.included") else c("factor","na.included") # previously if any(x[[6L]])
   return(f)
+}
+
+finteraction <- function(..., ordered = FALSE, sort = TRUE) { # does it drop levels ? -> Yes !
+  ll <- length(list(...))
+  if(ll == 1L && is.list(...)) return(as.factor.GRP(GRP.default(..., sort = sort), ordered))
+  as.factor.GRP(GRP.default(list(...), sort = sort), ordered)
 }
 
 GRP.qG <- function(X, ...) {
   if(!missing(...)) unused_arg_action(match.call(), ...)
   ng <- attr(X, "N.groups")
-  if(!inherits(X, "na.included") || anyNA(unclass(X))) X[is.na(X)] <- ng
+  grl <- !is.null(groups <- attr(X, "groups"))
+  if(!inherits(X, "na.included")) if(anyNA(unclass(X))) {
+    ng <- ng + 1L
+    X[is.na(X)] <- ng
+    if(grl) groups <- c(groups, NA)
+  }
   ordered <- if(is.ordered(X)) c(TRUE,TRUE) else c(FALSE,FALSE)
   attributes(X) <- NULL
   call <- match.call()
+  gvars <- paste(all.vars(call), collapse = ".")
   return(`class<-`(list(N.groups = ng,
                         group.id = X,
                         group.sizes = tabulate(X, ng), # .Internal(tabulate(X, ng))
-                        groups = NULL,
-                        group.vars = paste(all.vars(call), collapse = "."),
+                        groups = if(grl) `names<-`(list(groups), gvars) else NULL,
+                        group.vars = gvars,
                         ordered = ordered,
                         order = NULL,
                         call = call), "GRP"))
@@ -166,7 +184,7 @@ GRP.factor <- function(X, ...) {
   if(!inherits(X, "na.included")) X <- addNA2(X)
   lev <- attr(X, "levels")
   nl <- length(lev)
-  ordered <- if(is.ordered(X)) c(TRUE,TRUE) else c(FALSE,FALSE)
+  ordered <- if(is.ordered(X)) c(TRUE, TRUE) else c(FALSE, FALSE)
   attributes(X) <- NULL
   call <- match.call()
   nam <- paste(all.vars(call), collapse = ".")
@@ -207,14 +225,14 @@ GRP.pseries <- function(X, effect = 1L, ...) {
 }
 GRP.pdata.frame <- function(X, effect = 1L, ...) GRP.pseries(X, effect, ...)
 
-fgroup_by <- function(X, ..., sort = TRUE, order = 1L, na.last = TRUE, return.order = FALSE) {      #   e <- substitute(list(...)) # faster but does not preserve attributes of unique groups !!
-  attr(X, "groups") <- GRP.default(fselect(X, ...), NULL, sort, order, na.last, TRUE, return.order) # `names<-`(eval(e, X, parent.frame()), all.vars(e))
+fgroup_by <- function(X, ..., sort = TRUE, decreasing = FALSE, na.last = TRUE, return.order = FALSE) {      #   e <- substitute(list(...)) # faster but does not preserve attributes of unique groups !!
+  attr(X, "groups") <- GRP.default(fselect(X, ...), NULL, sort, decreasing, na.last, TRUE, return.order) # `names<-`(eval(e, X, parent.frame()), all.vars(e))
   add_cl <- c("tbl_df", "tbl", "grouped_df")
   class(X) <- c(add_cl, fsetdiff(class(X), add_cl)) # necesssary to avoid printing errors... (i.e. wrong group object etc...)
   X
 }
 
-fgroup_vars <- function(X, return = c("data", "unique")) {
+fgroup_vars <- function(X, return = "data") {
   g <- attr(X, "groups")
   vars <- if(is.GRP(g)) g[[5L]] else attr(g, "names")[-length(unclass(g))]
   switch(return[1L],
@@ -255,5 +273,106 @@ GRP.grouped_df <- function(X, ...) {
                         ordered = c(TRUE, TRUE),
                         order = NULL,
                         call = match.call()), "GRP"))
+}
+
+is.qG <- function(x) inherits(x, "qG")
+
+# TODO: what about NA last option ?
+# TODO: More efficient remove missing values ??
+radixfact <- function(x, sort, ord, fact, naincl, retgrp = FALSE) {
+  o <- .Call(C_radixsort, TRUE, FALSE, fact || naincl || retgrp, naincl, sort, pairlist(x))
+  st <- attr(o, "starts")
+  f <- if(naincl) .Call(C_frankds, o, st, attr(o, "group.sizes"), TRUE) else # Fastest? -> Seems so..
+        .Call(Cpp_groupid, x, o, 1L, TRUE, FALSE)
+  if(fact) {
+    duplattributes(f, x)
+    if(naincl) {
+      attr(f, "levels") <- if(attr(o, "sorted")) tochar(x[st]) else tochar(x[o[st]]) # use C_subsetvector ?? -> test !!
+    } else {
+      attr(f, "levels") <- if(attr(o, "sorted")) tochar(na_rm(x[st])) else tochar(na_rm(x[o[st]]))
+    }
+    class(f) <- c(if(ord) "ordered", "factor", if(naincl) "na.included")
+  } else {
+    if(naincl) attr(f, "N.groups") <- length(st) # the order is important, this before retgrp !!
+    if(retgrp) {
+      if(naincl) {
+         attr(f, "groups") <- if(attr(o, "sorted")) .Call(C_subsetVector, x, st) else .Call(C_subsetVector, x, o[st])
+      } else {
+         attr(f, "groups") <- if(attr(o, "sorted")) na_rm(.Call(C_subsetVector, x, st)) else na_rm(.Call(C_subsetVector, x, o[st]))
+      }
+    }
+    class(f) <- c(if(ord) "ordered", "qG", if(naincl) "na.included")
+  }
+  return(f)
+}
+
+qF <- function(x, ordered = FALSE, na.exclude = TRUE, sort = TRUE, method = c("auto", "radix", "hash")) {
+  if(is.factor(x)) {
+    if(na.exclude || inherits(x, "na.included")) {
+      if(ordered && !is.ordered(x)) class(x) <- c("ordered", class(x)) # can set unordered ??
+      return(x)
+    }
+    return(`oldClass<-`(addNA2(x), c(if(ordered) "ordered", "factor", "na.included")))
+  } else if(is.qG(x)) {
+    groups <- attr(x, "groups")
+    groups <- if(is.null(groups)) as.character(seq_len(attr(x, "N.groups"))) else tochar(groups)
+    nainc <- inherits(x, "na.included")
+    if(na.exclude || nainc) {
+      clx <- c(if(ordered) "ordered", "factor", if(nainc) "na.included") # can set unordered ??
+    } else {
+      if(anyNA(unclass(x))) {
+        x[is.na(x)] <- attr(x, "N.groups") + 1L
+        groups <- c(groups, NA_character_) # faster doing groups[length(groups)+1] <- NA? -> Nope, what you have is fastest !
+      }
+      clx <- c(if(ordered) "ordered", "factor", "na.included")
+    }
+    return(`attributes<-`(x, list(levels = groups, class = clx)))
+  }
+  switch(method[1L], # if((is.character(x) && !na.exclude) || (length(x) < 500 && !(is.character(x) && na.exclude)))
+         auto  = if(is.character(x) || is.logical(x) || length(x) < 500) .Call(Cpp_qF, x, sort, ordered, na.exclude) else
+           radixfact(x, sort, ordered, TRUE, !na.exclude),
+         radix = radixfact(x, sort, ordered, TRUE, !na.exclude),
+         hash = .Call(Cpp_qF, x, sort, ordered, na.exclude),
+         stop("Unknown method"))
+}
+
+# TODO: Keep if(ordered) "ordered" ?
+qG <- function(x, ordered = FALSE, na.exclude = TRUE, sort = TRUE, return.groups = FALSE, method = c("auto", "radix", "hash")) {
+  if(inherits(x, c("factor", "qG"))) {
+    nainc <- inherits(x, "na.included")
+    if(na.exclude || nainc || !anyNA(unclass(x))) {
+      newclx <- c(if(ordered) "ordered", "qG", if(nainc || !na.exclude) "na.included")
+      if(is.factor(x)) {
+        ax <- if(return.groups) list(N.groups = fnlevels(x), groups = attr(x, "levels"), class = newclx) else
+          list(N.groups = fnlevels(x), class = newclx)
+      } else {
+        ax <- if(return.groups) list(N.groups = attr(x, "N.groups"), groups = attr(x, "groups"), class = newclx) else
+          list(N.groups = attr(x, "N.groups"), class = newclx)
+      }
+      return(`attributes<-`(x, ax))
+    }
+    newclx <- c(if(ordered) "ordered", "qG", "na.included")
+    if(is.factor(x)) {
+      lev <- attr(x, "levels")
+      if(anyNA(lev)) ng <- length(lev) else {
+        ng <- length(lev) + 1L
+        if(return.groups) lev <- c(lev, NA_character_)
+      }
+      attributes(x) <- NULL # factor method seems faster, however cannot assign integer, must assign factor level...
+    } else {
+      if(return.groups && !is.null(lev <- attr(x, "groups"))) lev <- c(lev, NA)
+      ng <- attr(x, "N.groups") + 1L
+    }
+    ax <- if(return.groups) list(N.groups = ng, groups = lev, class = newclx) else
+      list(N.groups = ng, class = newclx)
+    x[is.na(x)] <- ng
+    return(`attributes<-`(x, ax))
+  }
+  switch(method[1L], # if((is.character(x) && !na.exclude) || (length(x) < 500 && !(is.character(x) && na.exclude)))
+         auto  = if(is.character(x) || is.logical(x) || length(x) < 500) .Call(Cpp_qG, x, sort, ordered, na.exclude, return.groups) else
+           radixfact(x, sort, ordered, FALSE, !na.exclude, return.groups),
+         radix = radixfact(x, sort, ordered, FALSE, !na.exclude, return.groups),
+         hash =  .Call(Cpp_qG, x, sort, ordered, na.exclude, return.groups),
+         stop("Unknown method"))
 }
 
