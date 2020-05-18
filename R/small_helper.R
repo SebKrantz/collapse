@@ -99,12 +99,6 @@ all_obj_equal <- function(...) {
   }
 }
 
-finteraction <- function(...) { # does it drop levels ? -> Yes !
-  ll <- length(list(...))
-  if(ll == 1L && is.list(...)) return(as.factor.GRP(GRP.default(...)))
-  as.factor.GRP(GRP.default(list(...)))
-}
-
 interact_names <- function(l) do.call(paste, c(expand.grid(l, KEEP.OUT.ATTRS = FALSE, stringsAsFactors = FALSE), list(sep = ".")))
 
 unattrib <- function(object) `attributes<-`(object, NULL)
@@ -164,23 +158,24 @@ fnlevels <- function(x) length(attr(x, "levels"))
 
 # flevels <- function(x) attr(x, "levels")
 
-fnrow <- function(x) if(is.list(x)) length(.subset2(x, 1L)) else dim(x)[1L]
+fnrow <- function(X) if(is.list(X)) length(.subset2(X, 1L)) else dim(X)[1L]
 
 fnrow2 <- function(x) length(.subset2(x, 1L))
 
-fncol <- function(x) if(is.list(x)) length(unclass(x)) else dim(x)[2L]
+fncol <- function(X) if(is.list(X)) length(unclass(X)) else dim(X)[2L]
 
-fdim <- function(x) {
-   if(is.atomic(x)) return(dim(x)) # or if !is.list ?
-   class(x) <- NULL
-   c(length(x[[1L]]), length(x))
+fdim <- function(X) {
+   if(is.atomic(X)) return(dim(X)) # or if !is.list ?
+   class(X) <- NULL
+   c(length(X[[1L]]), length(X))
 }
 
 seq_row <- function(X) if(is.list(X)) seq_along(.subset2(X, 1L)) else seq_len(nrow(X))
 
 seq_col <- function(X) if(is.list(X)) seq_along(unclass(X)) else seq_len(ncol(X))
 
-forder.int <- function(x) if(is.unsorted(x)) .Call(C_forder, x, NULL, FALSE, TRUE, 1L, TRUE) else seq_along(x) # since forder gives integer(0) if sorted !
+# na.last is false !!
+forder.int <- function(x) .Call(C_radixsort, FALSE, FALSE, FALSE, FALSE, TRUE, pairlist(x)) # if(is.unsorted(x)) .Call(C_forder, x, NULL, FALSE, TRUE, 1L, TRUE) else seq_along(x) # since forder gives integer(0) if sorted !
 
 fsetdiff <- function(x, y) x[match(x, y, 0L) == 0L] # not unique !
 
@@ -195,11 +190,11 @@ as.numeric_factor <- function(X) {
 }
 
 as.character_factor <- function(X) {
-  if(is.atomic(X)) return(as.character(attr(X, "levels"))[X])
+  if(is.atomic(X)) return(tochar(attr(X, "levels"))[X])
   fcts <- vapply(unattrib(X), is.factor, TRUE)
   clx <- class(X)
   class(X) <- NULL
-  X[fcts] <- lapply(X[fcts], function(x) as.character(attr(x, "levels"))[x])
+  X[fcts] <- lapply(X[fcts], function(x) tochar(attr(x, "levels"))[x])
   return(`oldClass<-`(X, clx))
 }
 
@@ -296,14 +291,15 @@ G_t <- function(x, m = TRUE, wm = 1L) {
                              "Panel-growth rate computed without timevar: Assuming ordered data"))
     return(x)
   } # If integer time variable contains NA, noes not break C++ code..
-  if(is.atomic(x)) if(is.integer(unclass(x))) return(x) else return(qG(x, na.exclude = FALSE)) # make sure it is ordered ! qG already checks factor !
+  if(is.atomic(x)) if(is.integer(unclass(x))) return(x) else return(qG(x, ordered = TRUE, na.exclude = FALSE, method = "hash")) # make sure it is sorted ! qG already checks factor !
   if(is.GRP(x)) return(x[[2L]]) else return(GRP.default(x, return.groups = FALSE)[[2L]])
 }
 
-G_t2 <- function(x) {
-  if(is.atomic(x)) if(is.integer(unclass(x))) return(x) else return(qG(x, na.exclude = FALSE))
-  if(is.GRP(x)) return(x[[2L]]) else return(GRP.default(x, return.groups = FALSE)[[2L]])
-}
+# Not currently used !!
+# G_t2 <- function(x) {
+#   if(is.atomic(x)) if(is.integer(unclass(x))) return(x) else return(qG(x, ordered = TRUE, na.exclude = FALSE, method = "hash")) # Hashing seems generally faster for time-variables !!
+#   if(is.GRP(x)) return(x[[2L]]) else return(GRP.default(x, return.groups = FALSE)[[2L]])
+# }
 
 
 rgrep <- function(exp, nam, ...) if(length(exp) == 1L) grep(exp, nam, ...) else funique(unlist(lapply(exp, grep, nam, ...), use.names = FALSE))
@@ -313,6 +309,8 @@ rgrepl <- function(exp, nam, ...) if(length(exp) == 1L) grepl(exp, nam, ...) els
 # NCOL2 <- function(d, ilv) if(ilv) d[2L] else 1L
 
 charorNULL <- function(x) if(is.character(x)) x else NULL
+
+tochar <- function(x) if(is.character(x)) x else as.character(x)
 
 # more security here?
 # unique_factor <- function(x) {  # Still needed with new collap solution ? -> Nope !
@@ -328,7 +326,7 @@ charorNULL <- function(x) if(is.character(x)) x else NULL
 unused_arg_action <- function(call, ...) {
   wo <- switch(getOption("collapse_unused_arg_action"), none = 0L, message = 1L, warning = 2L, error = 3L,
                stop("Unused argument encountered. Please instruct collapse what to do about unused arguments by setting
-                     options('collapse_unused_arg_action' = 'warning'), or 'error', or 'message' or 'none'."))
+                     options(collapse_unused_arg_action = 'warning'), or 'error', or 'message' or 'none'."))
   if(wo != 0L) {
     args <- deparse(substitute(c(...)))
     nc <- nchar(args)
@@ -359,6 +357,7 @@ addNA2 <- function(x) {
 # }
 
 l1orn <- function(x, nam) if(length(x) == 1L) x else nam
+l1orlst <- function(x) if(length(x) == 1L) x else x[length(x)]
 
 fsimplify2array <- function(l) {
   res <- do.call(cbind, l) # lapply(l, `dimnames<-`, NULL) # also faster than unlist..
