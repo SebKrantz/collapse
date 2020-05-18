@@ -526,7 +526,7 @@ NumericVector fdiffgrowthCpp(const NumericVector& x, const IntegerVector& n = 1,
     return fdiffgrowthCppImpl(x, n, diff, fill, ng, g, gs, t, stub, names, [rho](double y, double x) { return std::log(y)-rho*std::log(x); }); // log(y*(1/(rho*x))) gives log(y) - log(rho*x), but we want log(y) - rho*log(x)
   case 3:
     if(names) stub = "G";
-    return fdiffgrowthCppImpl(x, n, diff, fill, ng, g, gs, t, stub, names, [rho](double y, double x) { return (y-x)*(rho/x); }); // same speed as fixing 100 !
+    return fdiffgrowthCppImpl(x, n, diff, fill, ng, g, gs, t, stub, names, [rho](double y, double x) { return (y-x)*(rho/x); }); // same speed as fixing 100 ! Faster using (y/x-1)*rho or (x*(1/x)-1)*rho ?
   case 4:
     fastld:
     if(names) stub = "Dlog";
