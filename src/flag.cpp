@@ -145,7 +145,7 @@ Vector<RTYPE> flagleadCppImpl(const Vector<RTYPE>& x, const IntegerVector& n, co
       // int cgs[ngp];
       // cgs[1] = 0;
       // for(int i = 2; i != ngp; ++i) cgs[i] = cgs[i-1] + gsv[i-2]; // or get "starts from forderv"
-      cgs[1] = 0;
+      cgs[0] = cgs[1] = 0;
       for(int i = 1; i != ng; ++i) {
         cgs[i+1] = cgs[i] + gsv[i-1]; // or get "starts from forderv"
         if(min[i] == NA_INTEGER) stop("Timevar contains missing values"); // Fastest here ?
@@ -393,7 +393,7 @@ Matrix<RTYPE> flagleadmCppImpl(const Matrix<RTYPE>& x, const IntegerVector& n, c
       }
       IntegerVector omap(l), cgs = no_init_vector(ngp), index = no_init_vector(l);
       // int cgs[ngp], index[l]; // See above for any improvements on this code !!
-      cgs[1] = 0;
+      cgs[0] = cgs[1] = 0;
       for(int i = 1; i != ng; ++i) {
         cgs[i+1] = cgs[i] + gsv[i-1]; // or get "starts from forderv"
         if(min[i] == NA_INTEGER) stop("Timevar contains missing values"); // Fastest here ?
@@ -988,7 +988,7 @@ List flagleadlCpp(const List& x, const IntegerVector& n = 1, const SEXP& fill = 
       }
       IntegerVector omap(gss), cgs = no_init_vector(ngp), index = no_init_vector(gss);
       // int cgs[ngp], index[gss]; // See flag.cpp for any improvements on this code !!
-      cgs[1] = 0;
+      cgs[0] = cgs[1] = 0;
       for(int i = 1; i != ng; ++i) {
         cgs[i+1] = cgs[i] + gsv[i-1]; // or get "starts from forderv"
         if(min[i] == NA_INTEGER) stop("Timevar contains missing values"); // Fastest here ?

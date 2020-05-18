@@ -358,7 +358,7 @@ NumericVector fdiffgrowthCppImpl(const NumericVector& x, const IntegerVector& n 
       }
       IntegerVector omap(l), cgs = no_init_vector(ngp);
       // int cgs[ngp], seen[ngp], memsize = sizeof(int)*(ngp);
-      cgs[1] = 0;
+      cgs[0] = cgs[1] = 0;
       for(int i = 1; i != ng; ++i) {
         cgs[i+1] = cgs[i] + gsv[i-1]; // or get "starts from forderv"
         if(min[i] == NA_INTEGER) stop("Timevar contains missing values"); // Fastest here ?
@@ -905,7 +905,7 @@ NumericMatrix fdiffgrowthmCppImpl(const NumericMatrix& x, const IntegerVector& n
       }
       IntegerVector omap(l), cgs = no_init_vector(ngp), index = no_init_vector(l);
       // int cgs[ngp], seen[ngp], index[l], memsize = sizeof(int)*(ngp);
-      cgs[1] = 0;
+      cgs[0] = cgs[1] = 0;
       for(int i = 1; i != ng; ++i) {
         cgs[i+1] = cgs[i] + gsv[i-1]; // or get "starts from forderv"
         if(min[i] == NA_INTEGER) stop("Timevar contains missing values"); // Fastest here ?
@@ -1446,7 +1446,7 @@ List fdiffgrowthlCppImpl(const List& x, const IntegerVector& n = 1, const Intege
       }
       IntegerVector omap(gss), cgs = no_init_vector(ngp), index = no_init_vector(gss);
       // int cgs[ngp], seen[ngp], index[gss], memsize = sizeof(int)*(ngp);
-      cgs[1] = 0;
+      cgs[0] = cgs[1] = 0;
       for(int i = 1; i != ng; ++i) {
         cgs[i+1] = cgs[i] + gsv[i-1]; // or get "starts from forderv"
         if(min[i] == NA_INTEGER) stop("Timevar contains missing values"); // Fastest here ?
