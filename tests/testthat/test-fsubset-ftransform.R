@@ -41,7 +41,7 @@ test_that("ss works like an improved version of [", {
   expect_identical(ss(airquality, 1:100, -(1:3)), airquality[1:100, -(1:3)])
   expect_identical(setRownames(ss(airquality, -(1:100), -(1:3))), setRownames(airquality[-(1:100), -(1:3)]))
   nam <- names(airquality)[2:5]
-  v <- sample.int(nrow(airquality), 100)
+  v <- sample.int(fnrow(airquality), 100)
   expect_identical(setRownames(ss(airquality, v, nam)), setRownames(airquality[v, nam, drop = FALSE]))
   expect_identical(setRownames(ss(airquality, -v, nam)), setRownames(airquality[-v, nam, drop = FALSE]))
   vl <- sample(c(TRUE, FALSE), nrow(airquality), replace = TRUE)
