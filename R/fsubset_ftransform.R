@@ -62,10 +62,12 @@ ftransform <- function(X, ...) { # `_data` ?
   ax <- attributes(X) # keep like this ?
   class(X) <- NULL
   e <- eval(substitute(list(...)), X, parent.frame()) # a list of computed values. What about attributes ?
+  nam <- names(e)
+  if(is.null(nam) || any(nam == "")) stop("all expressions have to be named")
   le <- lengths(e, FALSE)
   nr <- length(X[[1L]])
   rl <- le == nr # checking if computed values have the right length
-  inx <- match(names(e), names(X)) # calling names on a plain list is really fast -> no need to save objects..
+  inx <- match(nam, names(X)) # calling names on a plain list is really fast -> no need to save objects..
   matched <- !is.na(inx)
   if(all(rl)) { # All computed vectors have the right length
     if(any(matched)) X[inx[matched]] <- e[matched]
