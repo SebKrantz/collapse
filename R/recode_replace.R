@@ -268,7 +268,8 @@ replace_outliers <- function(X, limits, value = NA, single.limit = c("SDs", "min
 # Previous version of Recode (Until collapse 1.1.0), Now depreciated in favor or recode_num and recode_char
 comp <- function(x, val) do.call(cbind, lapply(x, `==`, val))
 comp_grepl <- function(x, val) do.call(cbind, lapply(x, function(y) grepl(val, y)))
-Recode <- function(X, ..., reserve.na.nan = TRUE, regex = FALSE) {
+
+Recode <- function(X, ..., copy = FALSE, reserve.na.nan = TRUE, regex = FALSE) {
   if(missing(...)) stop("Recode requires arguments of the form: value = replacement")
   if(is.list(X) && !inherits(X, "data.frame")) stop("Recode only works with atomic objects or data.frames")
   args <- list(...)
