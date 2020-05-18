@@ -1,4 +1,4 @@
-\name{fmax-fmin}
+\name{fmin, fmax}
 \alias{fmax}
 \alias{fmax.default}
 \alias{fmax.matrix}

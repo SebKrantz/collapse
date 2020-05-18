@@ -27,7 +27,7 @@ Description: A C/C++ based package for advanced data transformation in R that is
     (3) Advanced transformations: Fast (grouped, weighted) replacing and 
         sweeping out of statistics, scaling / standardizing, centering (i.e. 
         between and within transformations), higher-dimensional centering 
-        (i.e. multiway fixed effects transformations), linear 
+        (i.e. multiple fixed effects transformations), linear 
         prediction and partialling-out.
     (4) Advanced time-computations: Fast (sequences of) lags / leads, and 
         (lagged / leaded, iterated, quasi-, log-) differences and growth 

@@ -29,7 +29,7 @@ It is compatible with \emph{dplyr}, \emph{data.table} and the \emph{plm} approac
                  \item \emph{Advanced transformations}: Fast (grouped, weighted) replacing and
         sweeping out of statistics, scaling / standardizing, centering (i.e.
         between and within transformations), higher-dimensional centering
-        (i.e. multiway fixed effects transformations), linear
+        (i.e. multiple fixed effects transformations), linear
         prediction and partialling-out.
                  \item \emph{Advanced time-computations}: Fast (sequences of) lags / leads, and
         (lagged / leaded, iterated, quasi-, log-) differences and growth

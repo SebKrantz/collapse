@@ -27,7 +27,7 @@ It is compatible with *dplyr*, *data.table* and the *plm* approach to panel-data
 *  **Advanced transformations**: Fast (grouped, weighted) replacing and 
         sweeping out of statistics, scaling / standardizing, centering (i.e. 
         between and within transformations), higher-dimensional centering 
-        (i.e. multiway fixed effects transformations), linear 
+        (i.e. multiple fixed effects transformations), linear 
         prediction and partialling-out. 
 
 *  **Advanced time-computations**: Fast (sequences of) lags / leads, and 

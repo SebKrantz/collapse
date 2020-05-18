@@ -1,4 +1,4 @@
-\name{fvar-fsd}
+\name{fvar, fsd}
 \alias{fvar}
 \alias{fvar.default}
 \alias{fvar.matrix}

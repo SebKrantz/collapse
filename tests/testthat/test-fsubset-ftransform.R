@@ -42,16 +42,16 @@ test_that("ss works like an improved version of [", {
   expect_identical(setRownames(ss(airquality, -(1:100), -(1:3))), setRownames(airquality[-(1:100), -(1:3)]))
   nam <- names(airquality)[2:5]
   v <- sample.int(nrow(airquality), 100)
-  expect_identical(setRownames(ss(airquality, v, nam)), setRownames(airquality[v, nam]))
-  expect_identical(setRownames(ss(airquality, -v, nam)), setRownames(airquality[-v, nam]))
+  expect_identical(setRownames(ss(airquality, v, nam)), setRownames(airquality[v, nam, drop = FALSE]))
+  expect_identical(setRownames(ss(airquality, -v, nam)), setRownames(airquality[-v, nam, drop = FALSE]))
   vl <- sample(c(TRUE, FALSE), nrow(airquality), replace = TRUE)
   cl <- sample(c(TRUE, FALSE), ncol(airquality), replace = TRUE)
-  expect_identical(setRownames(ss(airquality, vl, nam)), setRownames(airquality[vl, nam]))
-  expect_identical(setRownames(ss(airquality, vl, cl)), setRownames(airquality[vl, cl]))
+  expect_identical(setRownames(ss(airquality, vl, nam)), setRownames(airquality[vl, nam, drop = FALSE]))
+  expect_identical(setRownames(ss(airquality, vl, cl)), setRownames(airquality[vl, cl, drop = FALSE]))
   vl <- na_insert(vl)
   cl[4L] <- NA
-  expect_identical(setRownames(ss(airquality, vl, nam)), setRownames(airquality[vl & !is.na(vl), nam]))
-  # expect_identical(setRownames(ss(airquality, vl, cl)), setRownames(airquality[vl & !is.na(vl), cl & !is.na(cl)])) # sometimes it fails ?!...
+  expect_identical(setRownames(ss(airquality, vl, nam)), setRownames(airquality[vl & !is.na(vl), nam, drop = FALSE]))
+  expect_identical(setRownames(ss(airquality, vl, cl)), setRownames(airquality[vl & !is.na(vl), cl & !is.na(cl), drop = FALSE]))
 })
 
 

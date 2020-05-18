@@ -1,4 +1,4 @@
-\name{ffirst-flast}
+\name{ffirst, flast}
 \alias{ffirst}
 \alias{ffirst.default}
 \alias{ffirst.matrix}
