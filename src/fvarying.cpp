@@ -8,8 +8,8 @@ LogicalVector varyingCppImpl(Vector<RTYPE> x, int ng, IntegerVector g, bool any_
 
   int l = x.size();
   typedef typename Rcpp::traits::storage_type<RTYPE>::type storage_t;
-  auto isnanT = (RTYPE == REALSXP) ? [](typename Rcpp::traits::storage_type<RTYPE>::type x) { return x != x; } :
-    [](typename Rcpp::traits::storage_type<RTYPE>::type x) { return x == Vector<RTYPE>::get_na(); };
+  auto isnanT = (RTYPE == REALSXP) ? [](storage_t x) { return x != x; } :
+    [](storage_t x) { return x == Vector<RTYPE>::get_na(); };
 
     if(ng == 0) { // Note: Does not return NA if all NA... can be checked with fNobs ...
       int j = l-1;
@@ -46,7 +46,7 @@ LogicalVector varyingCppImpl(Vector<RTYPE> x, int ng, IntegerVector g, bool any_
             }
           }
         }
-        Rf_setAttrib(varyg, R_NamesSymbol, Rf_getAttrib(x, R_NamesSymbol));
+        // Rf_setAttrib(varyg, R_NamesSymbol, R_NilValue);
         return varyg;
       }
     }

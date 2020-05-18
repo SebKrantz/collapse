@@ -9,7 +9,7 @@ IntegerVector fNobsCppImpl(Vector<RTYPE> x, int ng, IntegerVector g) {
 
   if (ng == 0) {
       int n = 0;
-      if(TYPEOF(x) == REALSXP) {
+      if(RTYPE == REALSXP) {
         for(int i = 0; i != l; ++i) if(x[i] == x[i]) ++n; // This loop is faster
       } else {
         for(int i = 0; i != l; ++i) if(x[i] != Vector<RTYPE>::get_na()) ++n;
@@ -18,7 +18,7 @@ IntegerVector fNobsCppImpl(Vector<RTYPE> x, int ng, IntegerVector g) {
   } else { // with groups
     if(g.size() != l) stop("length(g) must match nrow(X)");
     IntegerVector n(ng);
-      if(TYPEOF(x) == REALSXP) {
+      if(RTYPE == REALSXP) {
         for(int i = 0; i != l; ++i) if(x[i] == x[i]) ++n[g[i]-1];
       } else {
         for(int i = 0; i != l; ++i) if(x[i] != Vector<RTYPE>::get_na()) ++n[g[i]-1];
@@ -53,7 +53,7 @@ IntegerVector fNobsCppImpl(Vector<EXPRSXP> x, int ng, IntegerVector) {
 }
 
 // [[Rcpp::export]]
-IntegerVector fNobsCpp(SEXP x, int ng = 0, IntegerVector g = 0){
+IntegerVector fNobsCpp(const SEXP& x, int ng = 0, const IntegerVector& g = 0){
   RCPP_RETURN_VECTOR(fNobsCppImpl, x, ng, g);
 }
 
@@ -66,7 +66,7 @@ SEXP fNobsmCppImpl(Matrix<RTYPE> x, int ng, IntegerVector g, bool drop) {
 
   if(ng == 0) { // Fastest loops ? Is perhaps an iterator better suited? or a STD algorithm to count ?
     IntegerVector nobs = no_init_vector(col);
-    if(TYPEOF(x) == REALSXP) {
+    if(RTYPE == REALSXP) {
       for(int j = col; j--; ) { // fastest loop?
         MatrixColumn<RTYPE> column = x( _ , j);
         int ni = 0; // fastest way?
@@ -90,7 +90,7 @@ SEXP fNobsmCppImpl(Matrix<RTYPE> x, int ng, IntegerVector g, bool drop) {
   } else { // with groups
     if(g.size() != l) stop("length(g) must match nrow(X)");
     IntegerMatrix nobs(ng, col); // init best solution ?
-    if(TYPEOF(x) == REALSXP) {
+    if(RTYPE == REALSXP) {
       for(int j = col; j--; ) {
         MatrixColumn<RTYPE> column = x( _ , j);
         IntegerMatrix::Column nj = nobs( _ , j);
@@ -129,18 +129,18 @@ SEXP fNobsmCppImpl(Matrix<EXPRSXP> x, int ng, IntegerVector g, bool drop) {
 }
 
 // [[Rcpp::export]]
-SEXP fNobsmCpp(SEXP x, int ng = 0, IntegerVector g = 0, bool drop = true){
+SEXP fNobsmCpp(const SEXP& x, int ng = 0, const IntegerVector& g = 0, bool drop = true){
   RCPP_RETURN_MATRIX(fNobsmCppImpl, x, ng, g, drop);
 }
 
 
 
 // [[Rcpp::export]]
-SEXP fNobslCpp(List x, int ng = 0, IntegerVector g = 0, bool drop = true) {
+SEXP fNobslCpp(const List& x, int ng = 0, const IntegerVector& g = 0, bool drop = true) {
   int l = x.size();
 
   if(ng == 0) {
-    NumericVector nobs = no_init_vector(l);
+    IntegerVector nobs = no_init_vector(l);
     for(int j = l; j--; ) { // fastest loop ?
       // for(int j = 0; j != l; ++j) { Not sure, could be faster
       int ni = 0;
