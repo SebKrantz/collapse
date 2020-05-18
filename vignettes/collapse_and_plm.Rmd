@@ -19,7 +19,7 @@ library(microbenchmark)
 library(plm)
 library(collapse)
 knitr::opts_chunk$set(error = FALSE, message = FALSE, warning = FALSE, 
-                      comment = "#", tidy = FALSE, cache = TRUE, collapse = TRUE,
+                      comment = "#", tidy = FALSE, cache = FALSE, collapse = TRUE,
                       fig.width = 8, fig.height = 5, 
                       out.width = '100%')
 
