@@ -1,44 +1,31 @@
 #include "data.table.h"
 #include <Rdefines.h>
-#include <R_ext/Rdynload.h>
-#include <R_ext/Visibility.h>
+// #include <R_ext/Rdynload.h>
+// #include <R_ext/Visibility.h>
 
 
 // global constants extern in data.table.h for gcc10 -fno-common; #4091
 // these are written to once here on initialization, but because of that write they can't be declared const
 SEXP char_integer64;
-SEXP char_ITime;
-SEXP char_IDate;
-SEXP char_Date;
-SEXP char_POSIXct;
 SEXP char_nanotime;
-SEXP char_lens;
-SEXP char_indices;
-SEXP char_allLen1;
-SEXP char_allGrp1;
 SEXP char_factor;
 SEXP char_ordered;
-SEXP char_datatable;
 SEXP char_dataframe;
-SEXP char_NULL;
-SEXP sym_sorted;
+// not currently needed (base_radixsort uses install), but perhaps later..
+// SEXP sym_sorted;
+// SEXP sym_maxgrpn;
+// SEXP sym_starts;
+// SEXP char_starts;
 SEXP sym_index;
-SEXP sym_BY;
-SEXP sym_starts;
-SEXP char_starts;
-SEXP sym_maxgrpn;
-SEXP sym_colClassesAs;
-SEXP sym_verbose;
 SEXP sym_inherits;
-SEXP sym_datatable_locked;
+
 double NA_INT64_D;
 long long NA_INT64_LL;
 Rcomplex NA_CPLX;
 size_t sizes[100];  // max appears to be FUNSXP = 99, see Rinternals.h
 size_t typeorder[100];
-SEXP SelfRefSymbol;
 
-// Note sure I need any of the sizes for the code I am using !!
+// -> Needed for SIZEOF macro used in rbindlist Howver TYPEORDER macro and typeof is not used...
 static void setSizes() {
   for (int i=0; i<100; ++i) { sizes[i]=0; typeorder[i]=0; }
   // only these types are currently allowed as column types :
@@ -59,7 +46,7 @@ SEXP collapse_init(SEXP mess) // void SEXP mess DllInfo *info
   // R_registerRoutines(info, NULL, callMethods, NULL, externalMethods);
   // R_useDynamicSymbols(info, FALSE);
   setSizes();
-  const char *msg = "... failed. Please forward this message to maintainer('data.table').";
+  const char *msg = "... failed. Please forward this message to maintainer('collapse').";
   if ((int)NA_INTEGER != (int)INT_MIN) error("Checking NA_INTEGER [%d] == INT_MIN [%d] %s", NA_INTEGER, INT_MIN, msg);
   if ((int)NA_INTEGER != (int)NA_LOGICAL) error("Checking NA_INTEGER [%d] == NA_LOGICAL [%d] %s", NA_INTEGER, NA_LOGICAL, msg);
   if (sizeof(int) != 4) error("Checking sizeof(int) [%d] is 4 %s", sizeof(int), msg);
@@ -75,7 +62,7 @@ SEXP collapse_init(SEXP mess) // void SEXP mess DllInfo *info
   if (sizeof(uint8_t) != 1) error("Checking sizeof(uint8_t) [%d] is 1 %s", sizeof(uint8_t), msg);
   if (sizeof(int16_t) != 2) error("Checking sizeof(int16_t) [%d] is 2 %s", sizeof(int16_t), msg);
   if (sizeof(uint16_t) != 2) error("Checking sizeof(uint16_t) [%d] is 2 %s", sizeof(uint16_t), msg);
-  // error("Reached Here!");
+
   SEXP tmp = PROTECT(allocVector(INTSXP,2));
   if (LENGTH(tmp)!=2) error("Checking LENGTH(allocVector(INTSXP,2)) [%d] is 2 %s", LENGTH(tmp), msg);
   if (TRUELENGTH(tmp)!=0) error("Checking TRUELENGTH(allocVector(INTSXP,2)) [%d] is 0 %s", TRUELENGTH(tmp), msg);
@@ -95,11 +82,6 @@ SEXP collapse_init(SEXP mess) // void SEXP mess DllInfo *info
   long double ld = 3.14;
   memset(&ld, 0, sizeof(long double));
   if (ld != 0.0) error("Checking memset(&ld, 0, sizeof(long double)); ld == (long double)0.0 %s", msg);
-  // Check unsigned cast used in fread.c. This isn't overflow/underflow, just cast.
-  if ((uint_fast8_t)('0'-'/') != 1) error("The ascii character '/' is not just before '0'");
-  if ((uint_fast8_t)('/'-'0') < 10) error("The C expression (uint_fast8_t)('/'-'0')<10 is true. Should be false.");
-  if ((uint_fast8_t)(':'-'9') != 1) error("The ascii character ':' is not just after '9'");
-  if ((uint_fast8_t)('9'-':') < 10) error("The C expression (uint_fast8_t)('9'-':')<10 is true. Should be false.");
 
   // Variables rather than #define for NA_INT64 to ensure correct usage; i.e. not casted
   NA_INT64_LL = LLONG_MIN;
@@ -116,26 +98,15 @@ SEXP collapse_init(SEXP mess) // void SEXP mess DllInfo *info
   NA_CPLX.r = NA_REAL;  // NA_REAL is defined as R_NaReal which is not a strict constant and thus initializer {NA_REAL, NA_REAL} can't be used in .h
   NA_CPLX.i = NA_REAL;  // https://github.com/Rdatatable/data.table/pull/3689/files#r304117234
 
-  setNumericRounding(PROTECT(ScalarInteger(0))); // #1642, #1728, #1463, #485
-  UNPROTECT(1);
   // create needed strings in advance for speed, same techique as R_*Symbol
   // Following R-exts 5.9.4; paragraph and example starting "Using install ..."
   // either use PRINTNAME(install()) or R_PreserveObject(mkChar()) here.
   char_integer64 = PRINTNAME(install("integer64"));
-  char_ITime =     PRINTNAME(install("ITime"));
-  char_Date =      PRINTNAME(install("Date"));   // used for IDate too since IDate inherits from Date
-  char_POSIXct =   PRINTNAME(install("POSIXct"));
   char_nanotime =  PRINTNAME(install("nanotime"));
-  char_starts =    PRINTNAME(sym_starts = install("starts"));
-  char_lens =      PRINTNAME(install("lens"));
-  char_indices =   PRINTNAME(install("indices"));
-  char_allLen1 =   PRINTNAME(install("allLen1"));
-  char_allGrp1 =   PRINTNAME(install("allGrp1"));
+  // char_starts =    PRINTNAME(sym_starts = install("starts"));
   char_factor =    PRINTNAME(install("factor"));
   char_ordered =   PRINTNAME(install("ordered"));
-  char_datatable = PRINTNAME(install("data.table"));
   char_dataframe = PRINTNAME(install("data.frame"));
-  char_NULL =      PRINTNAME(install("NULL"));
 
   if (TYPEOF(char_integer64) != CHARSXP) {
     // checking one is enough in case of any R-devel changes
@@ -149,36 +120,19 @@ SEXP collapse_init(SEXP mess) // void SEXP mess DllInfo *info
   // avoids the gc without needing an extra PROTECT and immediate UNPROTECT after the setAttrib which would
   // look odd (and devs in future might be tempted to remove them). Avoiding passing install() to API calls
   // keeps the code neat and readable. Also see grep's added to CRAN_Release.cmd to find such calls.
-  sym_sorted  = install("sorted");
+
+  // not currently needed (base_radixsort uses install), but perhaps later..
+  // sym_sorted  = install("sorted");
+  // sym_maxgrpn = install("maxgrpn");
   sym_index   = install("index");
-  sym_BY      = install(".BY");
-  sym_maxgrpn = install("maxgrpn");
-  sym_colClassesAs = install("colClassesAs");
-  sym_verbose = install("datatable.verbose");
-  SelfRefSymbol = install(".internal.selfref");
   sym_inherits = install("inherits");
-  sym_datatable_locked = install(".data.table.locked");
-  // initDTthreads();
-  // avoid_openmp_hang_within_fork();
-  // int blabla = 1; // error("Reached Here!");
-  // message("init completed!");
-  // printf("init completed");
+
   return mess;
 }
-//
+
 
 inline long long DtoLL(double x) {
-  // Type punning such as
-  //     *(long long *)&REAL(column)[i]
-  // is undefined by C standards. This may have been the cause of 1.10.2 failing on 31 Jan 2017
-  // under clang 3.9.1 -O3 and solaris-sparc but not solaris-x86 or gcc.
-  // There is now a grep in CRAN_Release.cmd; use this union method instead.
-  // int64_t may help rather than 'long long' (TODO: replace all long long with int64_t)
-  // The two types must be the same size. That is checked in R_init_datatable (above)
-  // where sizeof(int64_t)==sizeof(double)==8 is checked.
-  // Endianness should not matter because whether big or little, endianness is the same
-  // inside this process, and the two types are the same size.
-  union {double d; int64_t i64;} u;  // not static, inline instead
+  union {double d; int64_t i64;} u;
   u.d = x;
   return (long long)u.i64;
 }
@@ -189,35 +143,3 @@ inline double LLtoD(long long x) {
   return u.d;
 }
 
-// bool GetVerbose() {
-  // don't call repetitively; save first in that case
-//  SEXP opt = GetOption(sym_verbose, R_NilValue);
-//  return isLogical(opt) && LENGTH(opt)==1 && LOGICAL(opt)[0]==1;
-// }
-
-// # nocov start
-// SEXP hasOpenMP() {
-  // Just for use by onAttach (hence nocov) to avoid an RPRINTF from C level which isn't suppressable by CRAN
-  // There is now a 'grep' in CRAN_Release.cmd to detect any use of RPRINTF in init.c, which is
-  // why RPRINTF is capitalized in this comment to avoid that grep.
-  // TODO: perhaps .Platform or .Machine in R itself could contain whether OpenMP is available.
-//  #ifdef _OPENMP
-//  return ScalarLogical(TRUE);
-//  #else
-//  return ScalarLogical(FALSE);
-//  #endif
-// }
-// # nocov end
-
-extern int *_Last_updated;  // assign.c
-
-// SEXP initLastUpdated(SEXP var) {
-//  if (!isInteger(var) || LENGTH(var)!=1) error(".Last.value in namespace is not a length 1 integer");
-//  _Last_updated = INTEGER(var);
-//  return R_NilValue;
-// }
-
-// SEXP dllVersion() {
-  // .onLoad calls this and checks the same as packageVersion() to ensure no R/C version mismatch, #3056
-//  return(ScalarString(mkChar("1.12.7")));
-// }
