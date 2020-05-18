@@ -1,70 +1,83 @@
 # sumcc <- function(x, y)  sum(complete.cases(x,y))
 # pwNobs <- function(x) qM(dapply(x, function(y) dapply(x, sumcc, y)))
 
-pwNobs <- function(X) { # Faster !!
-  dg <- fNobs(X)
-  if(is.matrix(X)) {
-    cn <- dimnames(X)[[2L]]
-    X <- mctl(X)
-  } else {
-    class(X) <- NULL
-    cn <- names(X)
-  }
+pwNobs <- function(X) {
+  if(is.atomic(X) && is.matrix(X)) return(.Call(Cpp_pwNobsm, X)) # cn <- dimnames(X)[[2L]] # X <- mctl(X)
+  if(!is.list(X)) stop("X must be a matrix or data.frame!") # -> if unequal length will warn below !!
+  dg <- fNobs.data.frame(X)
+  class(X) <- NULL
   n <- length(X)
-  N.mat <- matrix(NA, n, n, dimnames = list(cn, cn))
-  diag(N.mat) <- dg
+  nr <- length(X[[1L]])
+  N.mat <- diag(dg)
   for (i in 1:(n - 1)) {
-    for (j in (i + 1):n) {
-      N.mat[i, j] <- N.mat[j, i] <- sum(complete.cases(X[[i]], X[[j]]))
-    }
+    miss <- is.na(X[[i]]) # faster than complete.cases, also for large data ! // subsetting X[[j]] faster ?? -> NOPE !
+    for (j in (i + 1):n) N.mat[i, j] <- N.mat[j, i] <- nr - sum(miss | is.na(X[[j]])) # sum(complete.cases(X[[i]], X[[j]]))
   }
+  dimnames(N.mat) <- list(names(dg), names(dg))
   N.mat
 }
 
-corr.p <- function(r, n) {
-  if (n < 3L) return(1)
-  df <- n - 2L
-  t <- sqrt(df) * r/sqrt(1 - r^2)
-  return(2 * min(pt(t, df), pt(t, df, lower.tail = FALSE))) # taken from corr.test
-}
+# corr.p <- function(r, n) {
+#   if (n < 3L) return(1)
+#   df <- n - 2L
+#   t <- sqrt(df) * r/sqrt(1 - r^2)
+#   return(2 * min(pt(t, df), pt(t, df, lower.tail = FALSE))) # taken from corr.test
+# }
 
 corr.pmat <- function(cm, nm) {
-  n <- ncol(cm)
-  p.mat <- matrix(NA, n, n, dimnames = dimnames(cm))
-  # diag(p.mat) <- 0
-  for (i in 1:(n - 1)) {
-    for (j in (i + 1):n) {
-      p.mat[i, j] <- p.mat[j, i] <- corr.p(cm[i, j], nm[i, j])
-    }
-  }
-  p.mat
+  df <- nm - 2L
+  acm <- abs(cm)
+  diag(acm) <- NA_real_ # tiny bit faster here vs below..
+  `attributes<-`(2 * pt(sqrt(df) * acm/sqrt(1 - acm^2), df, lower.tail = FALSE),
+                 attributes(cm))
+  # n <- ncol(cm)
+  # p.mat <- matrix(NA, n, n, dimnames = dimnames(cm))
+  # for (i in 1:(n - 1)) {
+  #   for (j in (i + 1):n) {
+  #     p.mat[i, j] <- p.mat[j, i] <- corr.p(cm[i, j], nm[i, j])
+  #   }
+  # }
+  # p.mat
 }
 
+complpwNobs <- function(X) {
+  if(is.list(X)) {
+    n <- length(unclass(X))
+    coln <- attr(X, "names")
+  } else {
+    n <- ncol(X)
+    coln <- dimnames(X)[[2L]]
+  }
+  matrix(sum(complete.cases(X)), n, n, dimnames = list(coln, coln))
+}
 
-# test against Hmisc::rcorr -> yup, same both corr, n and p !!
-pwcor <- function(X, ..., N = FALSE, P = FALSE, array = TRUE) {
-  r <- cor(X, ..., use = "pairwise.complete.obs")
+# Test:
+# all.equal(Hmisc::rcorr(qM(mtcars))$P, corr.pmat(r, n))
+
+
+pwcor <- function(X, ..., N = FALSE, P = FALSE, array = TRUE, use = "pairwise.complete.obs") {
+  r <- cor(X, ..., use = use)
   if(!N && !P) return(`class<-`(r, c("pwcor","matrix")))
-  n <- pwNobs(X) # what if using ... to supply y ???
+  n <- switch(use, pairwise.complete.obs = pwNobs(X), complpwNobs(X)) # switch faster than if with characters !! # what if using ... to supply y ???
   if(N) {
     res <- if(P) list(r = r, N = n, P = corr.pmat(r, n)) else list(r = r, N = n)
   } else res <- list(r = r, P = corr.pmat(r, n))
   if(array) {
-    res <- simplify2array(res)
+    res <- fsimplify2array(res)
     class(res) <- c("pwcor","array","table")
   } else class(res) <- "pwcor"
   return(res)
 }
 
-pwcov <- function(X, ..., N = FALSE, P = FALSE, array = TRUE) {
-  r <- cov(X, ..., use = "pairwise.complete.obs")
+pwcov <- function(X, ..., N = FALSE, P = FALSE, array = TRUE, use = "pairwise.complete.obs") {
+  r <- cov(X, ..., use = use)
   if(!N && !P) return(`class<-`(r, c("pwcov","matrix")))
-  n <- pwNobs(X)
-  if(N) {
-    res <- if(P) list(cov = r, N = n, P = corr.pmat(cor(X, ..., use = "pairwise.complete.obs"), n)) else list(cov = r, N = n)
-  } else res <- list(cov = r, P = corr.pmat(cor(X, ..., use = "pairwise.complete.obs"), n))
+  n <- switch(use, pairwise.complete.obs = pwNobs(X), complpwNobs(X)) # switch faster than if with characters !!
+  if(N) {                                           # good ??? // cov(X) / outer(fsd(X), fsd(X))
+    res <- if(P) list(cov = r, N = n, P = corr.pmat(cor(X, ..., use = use), n)) else list(cov = r, N = n)
+  } else res <- list(cov = r, P = corr.pmat(cor(X, ..., use = use), n))
   if(array) {
-    res <- simplify2array(res)
+    res <- fsimplify2array(res)
     class(res) <- c("pwcov","array","table")
   } else class(res) <- "pwcov"
   return(res)
@@ -175,4 +188,4 @@ print.pwcov <- function(x, digits = 2L, sig.level = 0.05, show = c("all","lower.
 
 
 # print.pwcov <- function(x, digits = 2, ...) print.default(formatC(round(x, digits), format = "g",
-#                                                                   digits = 9, big.mark = ",", big.interval = 6), quote = FALSE, right = TRUE, ...)
+#                         digits = 9, big.mark = ",", big.interval = 6), quote = FALSE, right = TRUE, ...)

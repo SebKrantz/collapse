@@ -1,4 +1,4 @@
-\name{fmax-fmin}
+\name{fmin, fmax}
 \alias{fmax}
 \alias{fmax.default}
 \alias{fmax.matrix}
@@ -61,7 +61,7 @@ Missing-value removal as controlled by the \code{na.rm} argument is done at no e
 
 This all seamlessly generalizes to grouped computations, which are performed in a single pass (without splitting the data) and therefore extremely fast.
 
-When applied to data frame's with groups or \code{drop = FALSE}, \code{fmax} and \code{fmin} preserve all column attributes (such as variable labels) but do not distinguish between classed and unclassed objects. The attributes of the \code{data.frame} itself are also preserved.
+When applied to data frame's with groups or \code{drop = FALSE}, \code{fmax} and \code{fmin} preserve all column attributes (such as variable labels) but do not distinguish between classed and unclassed objects. The attributes of the data frame itself are also preserved.
 }
 \value{
 \code{fmax} returns the maximum value of \code{x}, grouped by \code{g}, or (if \code{\link{TRA}} is used) \code{x} transformed by its maximum value, grouped by \code{g}. Analogous, \code{fmin} returns the minimum value ...

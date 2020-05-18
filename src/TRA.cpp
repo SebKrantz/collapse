@@ -14,24 +14,21 @@ using namespace Rcpp;
 // 9- Modulus
 // 10- Subtract Modulus
 
-inline double dmod(double x, double y) {
-  return x - (int)(x * (1/y)) * y; // faster than x - (int)(x/y) * y; // also C-style conversions seem to be faster ??
+inline double mymod(double x, double y) {
+  return x - (int)(x * (1/y)) * y; // faster than x - (int)(x/y) * y; // also C-style conversions seem to be faster ?
 }
 
-// #define dmod(x, y) (x - ((int)(x/y) * y)) // Macro: not faster !!
+// #define mymod(x, y) (x - ((int)(x/y) * y)) // Macro: not faster !
 
 // template<typename T, typename U>
-// constexpr double dmod (T x, U mod)
+// constexpr double mymod (T x, U mod)
 // {
 //   return !mod ? x : x - mod * static_cast<long long>(x / mod);
 // }
 
-inline double drem(double x, double y) {
+inline double myremain(double x, double y) {
   return (int)(x * (1/y)) * y;
 }
-
-
-// Todo: Checks
 
 // [[Rcpp::export]]
 SEXP TRACpp(const SEXP& x, const SEXP& xAG, const IntegerVector& g = 0, int ret = 1) {
@@ -74,7 +71,7 @@ SEXP TRACpp(const SEXP& x, const SEXP& xAG, const IntegerVector& g = 0, int ret 
         default: stop("Unknown Transformation");
         }
       }
-      DUPLICATE_ATTRIB(out, xx); // or x ?? which is faster ??
+      DUPLICATE_ATTRIB(out, xx); // or x ?? which is faster ?
       return out;
     }
     case INTSXP:
@@ -113,7 +110,7 @@ SEXP TRACpp(const SEXP& x, const SEXP& xAG, const IntegerVector& g = 0, int ret 
         default: stop("Unknown Transformation");
         }
       }
-      DUPLICATE_ATTRIB(out, xx); // or x ?? which is faster ??
+      DUPLICATE_ATTRIB(out, xx); // or x ? which is faster ?
       return out;
     }
     case STRSXP:
@@ -153,7 +150,7 @@ SEXP TRACpp(const SEXP& x, const SEXP& xAG, const IntegerVector& g = 0, int ret 
         default: stop("Unknown Transformation");
         }
       }
-      DUPLICATE_ATTRIB(out, xx); // or x ?? which is faster ??
+      DUPLICATE_ATTRIB(out, xx); // or x ? which is faster ?
       return out;
     }
     case LGLSXP:
@@ -193,7 +190,7 @@ SEXP TRACpp(const SEXP& x, const SEXP& xAG, const IntegerVector& g = 0, int ret 
         default: stop("Unknown Transformation");
         }
       }
-      DUPLICATE_ATTRIB(out, xx); // or x ?? which is faster ??
+      DUPLICATE_ATTRIB(out, xx); // or x ? which is faster ?
       return out;
     }
     default:
@@ -229,10 +226,10 @@ SEXP TRACpp(const SEXP& x, const SEXP& xAG, const IntegerVector& g = 0, int ret 
           out = xx * AGx;
           break;
         case 9:
-          for(int i = 0; i != l; ++i) out[i] = dmod(xx[i], AGx);
+          for(int i = 0; i != l; ++i) out[i] = mymod(xx[i], AGx);
           break;
         case 10:
-          for(int i = 0; i != l; ++i) out[i] = drem(xx[i], AGx);
+          for(int i = 0; i != l; ++i) out[i] = myremain(xx[i], AGx);
           break;
         default: stop("Unknown Transformation");
         }
@@ -244,23 +241,23 @@ SEXP TRACpp(const SEXP& x, const SEXP& xAG, const IntegerVector& g = 0, int ret 
           break;
         case 4:
           {
-            long double OM = 0; // better precision !!
+            long double OM = 0; // better precision !
             int n = 0;
-            for(int i = l; i--; ) { // Faster way ??
+            for(int i = l; i--; ) { // Faster way ?
               if(std::isnan(xx[i])) out[i] = xx[i];
-              else { // Problem: if one AG remained NA, oM becomes NA !!!
+              else { // Problem: if one AG remained NA, oM becomes NA !
                 out[i] = xx[i] - AG[g[i]-1];
-                if(std::isnan(AG[g[i]-1])) continue; // solves the issue !!
+                if(std::isnan(AG[g[i]-1])) continue; // solves the issue !
                 OM += AG[g[i]-1]; // x[i]; // we want the overall average stat, not x
                 ++n;
               }
             }
             OM = OM / n;
-            out = out + (double)OM; // Fastest ??
+            out = out + (double)OM; // Fastest ?
             break;
           }
         case 5:
-          for(int i = l; i--; ) out[i] = xx[i] / AG[g[i]-1]; // fasteest ??
+          for(int i = l; i--; ) out[i] = xx[i] / AG[g[i]-1]; // fastest ?
           break;
         case 6:
           for(int i = l; i--; ) out[i] = xx[i] * (100/AG[g[i]-1]);
@@ -272,15 +269,15 @@ SEXP TRACpp(const SEXP& x, const SEXP& xAG, const IntegerVector& g = 0, int ret 
           for(int i = l; i--; ) out[i] = xx[i] * AG[g[i]-1];
           break;
         case 9:
-          for(int i = l; i--; ) out[i] = dmod(xx[i], AG[g[i]-1]);
+          for(int i = l; i--; ) out[i] = mymod(xx[i], AG[g[i]-1]);
           break;
         case 10:
-          for(int i = l; i--; ) out[i] = drem(xx[i], AG[g[i]-1]);
+          for(int i = l; i--; ) out[i] = myremain(xx[i], AG[g[i]-1]);
           break;
         default: stop("Unknown Transformation");
         }
       }
-      DUPLICATE_ATTRIB(out, xx); // or x ?? which is faster ??
+      DUPLICATE_ATTRIB(out, xx); // or x ? which is faster ?
       return out;
     }
     case STRSXP: stop("The requested transformation is not possible with strings");
@@ -350,7 +347,7 @@ SEXP TRAmCpp(const SEXP& x, const SEXP& xAG, const IntegerVector& g = 0, int ret
         default: stop("Unknown Transformation");
         }
       }
-      DUPLICATE_ATTRIB(out, xx); // or x ?? which is faster ??
+      DUPLICATE_ATTRIB(out, xx); // or x ? which is faster ?
       return out;
     }
     case INTSXP:
@@ -404,7 +401,7 @@ SEXP TRAmCpp(const SEXP& x, const SEXP& xAG, const IntegerVector& g = 0, int ret
         default: stop("Unknown Transformation");
         }
       }
-      DUPLICATE_ATTRIB(out, xx); // or x ?? which is faster ??
+      DUPLICATE_ATTRIB(out, xx); // or x ? which is faster ?
       return out;
     }
     case STRSXP:
@@ -461,7 +458,7 @@ SEXP TRAmCpp(const SEXP& x, const SEXP& xAG, const IntegerVector& g = 0, int ret
         default: stop("Unknown Transformation");
         }
       }
-      DUPLICATE_ATTRIB(out, xx); // or x ?? which is faster ??
+      DUPLICATE_ATTRIB(out, xx); // or x ? which is faster ?
       return out;
     }
     case LGLSXP:
@@ -518,7 +515,7 @@ SEXP TRAmCpp(const SEXP& x, const SEXP& xAG, const IntegerVector& g = 0, int ret
         default: stop("Unknown Transformation");
         }
       }
-      DUPLICATE_ATTRIB(out, xx); // or x ?? which is faster ??
+      DUPLICATE_ATTRIB(out, xx); // or x ? which is faster ?
       return out;
     }
     default:
@@ -548,7 +545,7 @@ SEXP TRAmCpp(const SEXP& x, const SEXP& xAG, const IntegerVector& g = 0, int ret
           for(int j = col; j--; ) {
             NumericMatrix::Column colo = out( _ , j);
             NumericMatrix::Column column = xx( _ , j);
-            colo = column * (1/AG[j]); // faster ??
+            colo = column * (1/AG[j]); // faster ?
           }
           break;
         case 6:
@@ -577,7 +574,7 @@ SEXP TRAmCpp(const SEXP& x, const SEXP& xAG, const IntegerVector& g = 0, int ret
             NumericMatrix::Column colo = out( _ , j);
             NumericMatrix::Column column = xx( _ , j);
             double AGj = AG[j];
-            for(int i = 0; i != l; ++i) colo[i] = dmod(column[i], AGj);
+            for(int i = 0; i != l; ++i) colo[i] = mymod(column[i], AGj);
           }
           break;
         case 10:
@@ -585,7 +582,7 @@ SEXP TRAmCpp(const SEXP& x, const SEXP& xAG, const IntegerVector& g = 0, int ret
             NumericMatrix::Column colo = out( _ , j);
             NumericMatrix::Column column = xx( _ , j);
             double AGj = AG[j];
-            for(int i = 0; i != l; ++i) colo[i] = drem(column[i], AGj);
+            for(int i = 0; i != l; ++i) colo[i] = myremain(column[i], AGj);
           }
           break;
         default: stop("Unknown Transformation");
@@ -604,24 +601,24 @@ SEXP TRAmCpp(const SEXP& x, const SEXP& xAG, const IntegerVector& g = 0, int ret
           }
           break;
         case 4:
-          { // Needed ??
+          { // Needed ?
             for(int j = col; j--; ) {
             NumericMatrix::Column column = xx( _ , j);
             NumericMatrix::Column colo = out( _ , j);
             NumericMatrix::Column sumj = AG( _ , j);
-            long double OM = 0; // gives better numeric precision !! (closer to W!!)
+            long double OM = 0; // gives better numeric precision ! (closer to W)
             int n = 0;
-            for(int i = l; i--; ) { // Faster way ??
+            for(int i = l; i--; ) { // Faster way ?
               if(std::isnan(column[i])) colo[i] = column[i];
-              else { // Problem: if one sumj remained NA, oM becomes NA !!!
+              else { // Problem: if one sumj remained NA, oM becomes NA !
                 colo[i] = column[i] - sumj[g[i]-1];
-                if(std::isnan(sumj[g[i]-1])) continue; // solves the issue !!
-                OM += sumj[g[i]-1]; // column[i]; good ??
+                if(std::isnan(sumj[g[i]-1])) continue; // solves the issue
+                OM += sumj[g[i]-1]; // column[i]; good ?
                 ++n;
               }
             }
             OM = OM / n;
-            colo = colo + (double)OM; // Fastest ??
+            colo = colo + (double)OM; // Fastest ?
           }
             break;
           }
@@ -630,7 +627,7 @@ SEXP TRAmCpp(const SEXP& x, const SEXP& xAG, const IntegerVector& g = 0, int ret
             NumericMatrix::Column colo = out( _ , j);
             NumericMatrix::Column column = xx( _ , j);
             NumericMatrix::Column sumj = AG( _ , j);
-            for(int i = l; i--; ) colo[i] = column[i] / sumj[g[i]-1]; // fastest ??
+            for(int i = l; i--; ) colo[i] = column[i] / sumj[g[i]-1]; // fastest ?
           }
           break;
         case 6:
@@ -662,7 +659,7 @@ SEXP TRAmCpp(const SEXP& x, const SEXP& xAG, const IntegerVector& g = 0, int ret
             NumericMatrix::Column colo = out( _ , j);
             NumericMatrix::Column column = xx( _ , j);
             NumericMatrix::Column sumj = AG( _ , j);
-            for(int i = l; i--; ) colo[i] = dmod(column[i], sumj[g[i]-1]);
+            for(int i = l; i--; ) colo[i] = mymod(column[i], sumj[g[i]-1]);
           }
           break;
         case 10:
@@ -670,13 +667,13 @@ SEXP TRAmCpp(const SEXP& x, const SEXP& xAG, const IntegerVector& g = 0, int ret
             NumericMatrix::Column colo = out( _ , j);
             NumericMatrix::Column column = xx( _ , j);
             NumericMatrix::Column sumj = AG( _ , j);
-            for(int i = l; i--; ) colo[i] = drem(column[i], sumj[g[i]-1]);
+            for(int i = l; i--; ) colo[i] = myremain(column[i], sumj[g[i]-1]);
           }
           break;
         default: stop("Unknown Transformation");
         }
       }
-      DUPLICATE_ATTRIB(out, xx); // or x ?? which is faster ??
+      DUPLICATE_ATTRIB(out, xx); // or x ? which is faster ?
       return out;
     }
     case STRSXP: stop("The requested transformation is not possible with strings");
@@ -694,7 +691,7 @@ List TRAlCpp(const List& x, const SEXP& xAG, const IntegerVector& g = 0, int ret
   int l = x.size(), gs = g.size();
   List out(l);
 
-  if(gs == 1) { // ng redundant !! -> still do speed check!!
+  if(gs == 1) { // ng redundant ! -> still do speed check!
     if(ret <= 2) {
       switch(TYPEOF(xAG)) {
       case VECSXP: {
@@ -707,28 +704,28 @@ List TRAlCpp(const List& x, const SEXP& xAG, const IntegerVector& g = 0, int ret
           case REALSXP: {
             NumericVector column = x[j];
             NumericVector outj(column.size(), AG[j]);
-            SHALLOW_DUPLICATE_ATTRIB(outj, column); // Here or before filling ??
+            SHALLOW_DUPLICATE_ATTRIB(outj, column); // Here or before filling ?
             out[j] = outj;
             break;
           }
           case INTSXP: {
             IntegerVector column = x[j];
             IntegerVector outj(column.size(), AG[j]);
-            SHALLOW_DUPLICATE_ATTRIB(outj, column); // Here or before filling ??
+            SHALLOW_DUPLICATE_ATTRIB(outj, column); // Here or before filling ?
             out[j] = outj;
             break;
           }
           case STRSXP: {
             CharacterVector column = x[j];
             CharacterVector outj(column.size(), wrap(AG[j]));
-            SHALLOW_DUPLICATE_ATTRIB(outj, column); // Here or before filling ??
+            SHALLOW_DUPLICATE_ATTRIB(outj, column); // Here or before filling ?
             out[j] = outj;
             break;
           }
           case LGLSXP: {
             LogicalVector column = x[j];
             LogicalVector outj(column.size(), AG[j]);
-            SHALLOW_DUPLICATE_ATTRIB(outj, column); // Here or before filling ??
+            SHALLOW_DUPLICATE_ATTRIB(outj, column); // Here or before filling ?
             out[j] = outj;
             break;
           }
@@ -749,7 +746,7 @@ List TRAlCpp(const List& x, const SEXP& xAG, const IntegerVector& g = 0, int ret
               if(std::isnan(column[i])) sgj[i] = column[i];
               else sgj[i] = sumj;
             }
-            SHALLOW_DUPLICATE_ATTRIB(sgj, column); // Here or before filling ??
+            SHALLOW_DUPLICATE_ATTRIB(sgj, column); // Here or before filling ?
             out[j] = sgj;
             break;
           }
@@ -762,7 +759,7 @@ List TRAlCpp(const List& x, const SEXP& xAG, const IntegerVector& g = 0, int ret
               if(column[i] == NA_INTEGER) sgj[i] = NA_INTEGER;
               else sgj[i] = sumj;
             }
-            SHALLOW_DUPLICATE_ATTRIB(sgj, column); // Here or before filling ??
+            SHALLOW_DUPLICATE_ATTRIB(sgj, column); // Here or before filling ?
             out[j] = sgj;
             break;
           }
@@ -775,7 +772,7 @@ List TRAlCpp(const List& x, const SEXP& xAG, const IntegerVector& g = 0, int ret
               if(column[i] == NA_STRING) sgj[i] = NA_STRING;
               else sgj[i] = sumj;
             }
-            SHALLOW_DUPLICATE_ATTRIB(sgj, column); // Here or before filling ??
+            SHALLOW_DUPLICATE_ATTRIB(sgj, column); // Here or before filling ?
             out[j] = sgj;
             break;
           }
@@ -788,7 +785,7 @@ List TRAlCpp(const List& x, const SEXP& xAG, const IntegerVector& g = 0, int ret
               if(column[i] == NA_LOGICAL) sgj[i] = NA_LOGICAL;
               else sgj[i] = sumj;
             }
-            SHALLOW_DUPLICATE_ATTRIB(sgj, column); // Here or before filling ??
+            SHALLOW_DUPLICATE_ATTRIB(sgj, column); // Here or before filling ?
             out[j] = sgj;
             break;
           }
@@ -808,7 +805,7 @@ List TRAlCpp(const List& x, const SEXP& xAG, const IntegerVector& g = 0, int ret
           for(int j = l; j--; ) {
           NumericVector column = x[j];
           NumericVector outj(column.size(), AG[j]);
-          SHALLOW_DUPLICATE_ATTRIB(outj, column); // Here or before filling ??
+          SHALLOW_DUPLICATE_ATTRIB(outj, column); // Here or before filling ?
           out[j] = outj;
         }
           break;
@@ -823,7 +820,7 @@ List TRAlCpp(const List& x, const SEXP& xAG, const IntegerVector& g = 0, int ret
             if(std::isnan(column[i])) sgj[i] = column[i];
             else sgj[i] = sumj;
           }
-          SHALLOW_DUPLICATE_ATTRIB(sgj, column); // Here or before filling ??
+          SHALLOW_DUPLICATE_ATTRIB(sgj, column); // Here or before filling ?
           out[j] = sgj;
         }
           break;
@@ -839,7 +836,7 @@ List TRAlCpp(const List& x, const SEXP& xAG, const IntegerVector& g = 0, int ret
           for(int j = l; j--; ) {
           IntegerVector column = x[j];
           IntegerVector outj(column.size(), AG[j]);
-          SHALLOW_DUPLICATE_ATTRIB(outj, column); // Here or before filling ??
+          SHALLOW_DUPLICATE_ATTRIB(outj, column); // Here or before filling ?
           out[j] = outj;
         }
           break;
@@ -854,7 +851,7 @@ List TRAlCpp(const List& x, const SEXP& xAG, const IntegerVector& g = 0, int ret
             if(column[i] == NA_INTEGER) sgj[i] = NA_INTEGER;
             else sgj[i] = sumj;
           }
-          SHALLOW_DUPLICATE_ATTRIB(sgj, column); // Here or before filling ??
+          SHALLOW_DUPLICATE_ATTRIB(sgj, column); // Here or before filling ?
           out[j] = sgj;
         }
           break;
@@ -870,7 +867,7 @@ List TRAlCpp(const List& x, const SEXP& xAG, const IntegerVector& g = 0, int ret
           for(int j = l; j--; ) {
           CharacterVector column = x[j];
           CharacterVector outj(column.size(), AG[j]);
-          SHALLOW_DUPLICATE_ATTRIB(outj, column); // Here or before filling ??
+          SHALLOW_DUPLICATE_ATTRIB(outj, column); // Here or before filling ?
           out[j] = outj;
         }
           break;
@@ -885,7 +882,7 @@ List TRAlCpp(const List& x, const SEXP& xAG, const IntegerVector& g = 0, int ret
             if(column[i] == NA_STRING) sgj[i] = NA_STRING;
             else sgj[i] = sumj;
           }
-          SHALLOW_DUPLICATE_ATTRIB(sgj, column); // Here or before filling ??
+          SHALLOW_DUPLICATE_ATTRIB(sgj, column); // Here or before filling ?
           out[j] = sgj;
         }
           break;
@@ -916,7 +913,7 @@ List TRAlCpp(const List& x, const SEXP& xAG, const IntegerVector& g = 0, int ret
             if(column[i] == NA_LOGICAL) sgj[i] = NA_LOGICAL;
             else sgj[i] = sumj;
           }
-          SHALLOW_DUPLICATE_ATTRIB(sgj, column); // Here or before filling ??
+          SHALLOW_DUPLICATE_ATTRIB(sgj, column); // Here or before filling ?
           out[j] = sgj;
         }
           break;
@@ -925,11 +922,11 @@ List TRAlCpp(const List& x, const SEXP& xAG, const IntegerVector& g = 0, int ret
         break;
       }
       default: stop("Not supported SEXP type!");
-      } // Faster way ?? Switch statements other way around ???
+      } // Faster way ? Switch statements other way around ?
     } else {
-      NumericVector AG = no_init_vector(l); // NULL; // gives compile warning !!
+      NumericVector AG = no_init_vector(l); // NULL; // gives compile warning !
       if(TYPEOF(xAG) == VECSXP) {
-        // AG = NumericVector(l); // stable now ??
+        // AG = NumericVector(l); // stable now ?
         List temp = xAG;
         if(temp.size() != l) stop("length(STATS) must match length(x)");
         for(int i = l; i--; ) AG[i] = temp[i];
@@ -937,7 +934,7 @@ List TRAlCpp(const List& x, const SEXP& xAG, const IntegerVector& g = 0, int ret
         AG = xAG;
         if(AG.size() != l) stop("length(STATS) must match length(x)");
       }
-      // Works for Lists ??
+      // Works for Lists ?
       switch(ret) {
       case 3: {
         for(int j = l; j--; ) {
@@ -952,7 +949,7 @@ List TRAlCpp(const List& x, const SEXP& xAG, const IntegerVector& g = 0, int ret
       case 5: {
         for(int j = l; j--; ) {
         NumericVector column = x[j];
-        NumericVector outj = column * (1/AG[j]); // faster on WDI !!
+        NumericVector outj = column * (1/AG[j]); // faster on WDI !
         SHALLOW_DUPLICATE_ATTRIB(outj, column);
         out[j] = outj;
       }
@@ -991,7 +988,7 @@ List TRAlCpp(const List& x, const SEXP& xAG, const IntegerVector& g = 0, int ret
         int row = column.size();
         double AGj = AG[j];
         NumericVector outj = no_init_vector(row);
-        for(int i = 0; i != row; ++i) outj[i] = dmod(column[i], AGj);
+        for(int i = 0; i != row; ++i) outj[i] = mymod(column[i], AGj);
         SHALLOW_DUPLICATE_ATTRIB(outj, column);
         out[j] = outj;
       }
@@ -1003,7 +1000,7 @@ List TRAlCpp(const List& x, const SEXP& xAG, const IntegerVector& g = 0, int ret
         int row = column.size();
         double AGj = AG[j];
         NumericVector outj = no_init_vector(row);
-        for(int i = 0; i != row; ++i) outj[i] = drem(column[i], AGj);
+        for(int i = 0; i != row; ++i) outj[i] = myremain(column[i], AGj);
         SHALLOW_DUPLICATE_ATTRIB(outj, column);
         out[j] = outj;
       }
@@ -1013,7 +1010,7 @@ List TRAlCpp(const List& x, const SEXP& xAG, const IntegerVector& g = 0, int ret
       }
     }
   } else {
-    List AG = xAG; // initialize better ??
+    List AG = xAG; // initialize better ?
     if(AG.size() != l) stop("length(STATS) must match length(x)");
     if(ret <= 2) {
       switch(ret) {
@@ -1026,7 +1023,7 @@ List TRAlCpp(const List& x, const SEXP& xAG, const IntegerVector& g = 0, int ret
         NumericVector sgj = no_init_vector(gs);
         NumericVector sumj = AG[j];
         for(int i = gs; i--; ) sgj[i] = sumj[g[i]-1];
-        SHALLOW_DUPLICATE_ATTRIB(sgj, column); // here or before filling??
+        SHALLOW_DUPLICATE_ATTRIB(sgj, column); // here or before filling?
         out[j] = sgj;
         break;
       }
@@ -1036,7 +1033,7 @@ List TRAlCpp(const List& x, const SEXP& xAG, const IntegerVector& g = 0, int ret
         IntegerVector sgj = no_init_vector(gs);
         IntegerVector sumj = AG[j];
         for(int i = gs; i--; ) sgj[i] = sumj[g[i]-1];
-        SHALLOW_DUPLICATE_ATTRIB(sgj, column); // here or before filling??
+        SHALLOW_DUPLICATE_ATTRIB(sgj, column); // here or before filling?
         out[j] = sgj;
         break;
       }
@@ -1046,7 +1043,7 @@ List TRAlCpp(const List& x, const SEXP& xAG, const IntegerVector& g = 0, int ret
         CharacterVector sgj = no_init_vector(gs);
         CharacterVector sumj = AG[j];
         for(int i = gs; i--; ) sgj[i] = sumj[g[i]-1];
-        SHALLOW_DUPLICATE_ATTRIB(sgj, column); // here or before filling??
+        SHALLOW_DUPLICATE_ATTRIB(sgj, column); // here or before filling?
         out[j] = sgj;
         break;
       }
@@ -1056,7 +1053,7 @@ List TRAlCpp(const List& x, const SEXP& xAG, const IntegerVector& g = 0, int ret
         LogicalVector sgj = no_init_vector(gs);
         LogicalVector sumj = AG[j];
         for(int i = gs; i--; ) sgj[i] = sumj[g[i]-1];
-        SHALLOW_DUPLICATE_ATTRIB(sgj, column); // here or before filling??
+        SHALLOW_DUPLICATE_ATTRIB(sgj, column); // here or before filling?
         out[j] = sgj;
         break;
       }
@@ -1077,7 +1074,7 @@ List TRAlCpp(const List& x, const SEXP& xAG, const IntegerVector& g = 0, int ret
             if(std::isnan(column[i])) sgj[i] = column[i];
             else sgj[i] = sumj[g[i]-1];
           }
-          SHALLOW_DUPLICATE_ATTRIB(sgj, column); // here or before filling??
+          SHALLOW_DUPLICATE_ATTRIB(sgj, column); // here or before filling?
           out[j] = sgj;
           break;
         }
@@ -1090,7 +1087,7 @@ List TRAlCpp(const List& x, const SEXP& xAG, const IntegerVector& g = 0, int ret
             if(column[i] == NA_INTEGER) sgj[i] = NA_INTEGER;
             else sgj[i] = sumj[g[i]-1];
           }
-          SHALLOW_DUPLICATE_ATTRIB(sgj, column); // here or before filling??
+          SHALLOW_DUPLICATE_ATTRIB(sgj, column); // here or before filling?
           out[j] = sgj;
           break;
         }
@@ -1103,7 +1100,7 @@ List TRAlCpp(const List& x, const SEXP& xAG, const IntegerVector& g = 0, int ret
             if(column[i] == NA_STRING) sgj[i] = NA_STRING;
             else sgj[i] = sumj[g[i]-1];
           }
-          SHALLOW_DUPLICATE_ATTRIB(sgj, column); // here or before filling??
+          SHALLOW_DUPLICATE_ATTRIB(sgj, column); // here or before filling?
           out[j] = sgj;
           break;
         }
@@ -1116,7 +1113,7 @@ List TRAlCpp(const List& x, const SEXP& xAG, const IntegerVector& g = 0, int ret
             if(column[i] == NA_LOGICAL) sgj[i] = NA_LOGICAL;
             else sgj[i] = sumj[g[i]-1];
           }
-          SHALLOW_DUPLICATE_ATTRIB(sgj, column); // here or before filling??
+          SHALLOW_DUPLICATE_ATTRIB(sgj, column); // here or before filling?
           out[j] = sgj;
           break;
         }
@@ -1135,7 +1132,7 @@ List TRAlCpp(const List& x, const SEXP& xAG, const IntegerVector& g = 0, int ret
       NumericVector sgj = no_init_vector(gs);
       NumericVector sumj = AG[j];
       for(int i = gs; i--; ) sgj[i] = column[i] - sumj[g[i]-1];
-      SHALLOW_DUPLICATE_ATTRIB(sgj, column); // here or before filling??
+      SHALLOW_DUPLICATE_ATTRIB(sgj, column); // here or before filling?
       out[j] = sgj;
     }
       break;
@@ -1148,18 +1145,18 @@ List TRAlCpp(const List& x, const SEXP& xAG, const IntegerVector& g = 0, int ret
         NumericVector sumj = AG[j];
         long double OM = 0;
         int n = 0;
-        for(int i = gs; i--; ) { // Faster way ??
+        for(int i = gs; i--; ) { // Faster way ?
           if(std::isnan(column[i])) sgj[i] = column[i];
           else {
             sgj[i] = column[i] - sumj[g[i]-1];
             if(std::isnan(sumj[g[i]-1])) continue;
-            OM += sumj[g[i]-1]; // column[i]; // good??
+            OM += sumj[g[i]-1]; // column[i]; // good?
             ++n;
           }
         }
         OM = OM / n;
-        sgj = sgj + (double)OM; // Fastest !!
-        SHALLOW_DUPLICATE_ATTRIB(sgj, column); // here or before filling??
+        sgj = sgj + (double)OM; // Fastest !
+        SHALLOW_DUPLICATE_ATTRIB(sgj, column); // here or before filling?
         out[j] = sgj;
       }
         break;
@@ -1170,8 +1167,8 @@ List TRAlCpp(const List& x, const SEXP& xAG, const IntegerVector& g = 0, int ret
         if(column.size() != gs) stop("length(g) must match nrow(x)");
         NumericVector sgj = no_init_vector(gs);
         NumericVector sumj = AG[j];
-        for(int i = gs; i--; ) sgj[i] = column[i] / sumj[g[i]-1]; // Faster than *(1/) on WDI !!!! (missing values !!)
-        SHALLOW_DUPLICATE_ATTRIB(sgj, column); // here or before filling??
+        for(int i = gs; i--; ) sgj[i] = column[i] / sumj[g[i]-1]; // Faster than *(1/) on WDI ! (missing values)
+        SHALLOW_DUPLICATE_ATTRIB(sgj, column); // here or before filling?
         out[j] = sgj;
       }
         break;
@@ -1183,7 +1180,7 @@ List TRAlCpp(const List& x, const SEXP& xAG, const IntegerVector& g = 0, int ret
         NumericVector sgj = no_init_vector(gs);
         NumericVector sumj = AG[j];
         for(int i = gs; i--; ) sgj[i] = column[i] * (100 / sumj[g[i]-1]);
-        SHALLOW_DUPLICATE_ATTRIB(sgj, column); // here or before filling??
+        SHALLOW_DUPLICATE_ATTRIB(sgj, column); // here or before filling?
         out[j] = sgj;
       }
         break;
@@ -1195,7 +1192,7 @@ List TRAlCpp(const List& x, const SEXP& xAG, const IntegerVector& g = 0, int ret
         NumericVector sgj = no_init_vector(gs);
         NumericVector sumj = AG[j];
         for(int i = gs; i--; ) sgj[i] = column[i] + sumj[g[i]-1];
-        SHALLOW_DUPLICATE_ATTRIB(sgj, column); // here or before filling??
+        SHALLOW_DUPLICATE_ATTRIB(sgj, column); // here or before filling?
         out[j] = sgj;
       }
         break;
@@ -1207,7 +1204,7 @@ List TRAlCpp(const List& x, const SEXP& xAG, const IntegerVector& g = 0, int ret
         NumericVector sgj = no_init_vector(gs);
         NumericVector sumj = AG[j];
         for(int i = gs; i--; ) sgj[i] = column[i] * sumj[g[i]-1];
-        SHALLOW_DUPLICATE_ATTRIB(sgj, column); // here or before filling??
+        SHALLOW_DUPLICATE_ATTRIB(sgj, column); // here or before filling?
         out[j] = sgj;
       }
         break;
@@ -1218,8 +1215,8 @@ List TRAlCpp(const List& x, const SEXP& xAG, const IntegerVector& g = 0, int ret
         if(column.size() != gs) stop("length(g) must match nrow(x)");
         NumericVector sgj = no_init_vector(gs);
         NumericVector sumj = AG[j];
-        for(int i = gs; i--; ) sgj[i] = dmod(column[i], sumj[g[i]-1]);
-        SHALLOW_DUPLICATE_ATTRIB(sgj, column); // here or before filling??
+        for(int i = gs; i--; ) sgj[i] = mymod(column[i], sumj[g[i]-1]);
+        SHALLOW_DUPLICATE_ATTRIB(sgj, column); // here or before filling?
         out[j] = sgj;
       }
         break;
@@ -1230,8 +1227,8 @@ List TRAlCpp(const List& x, const SEXP& xAG, const IntegerVector& g = 0, int ret
         if(column.size() != gs) stop("length(g) must match nrow(x)");
         NumericVector sgj = no_init_vector(gs);
         NumericVector sumj = AG[j];
-        for(int i = gs; i--; ) sgj[i] = drem(column[i], sumj[g[i]-1]);
-        SHALLOW_DUPLICATE_ATTRIB(sgj, column); // here or before filling??
+        for(int i = gs; i--; ) sgj[i] = myremain(column[i], sumj[g[i]-1]);
+        SHALLOW_DUPLICATE_ATTRIB(sgj, column); // here or before filling?
         out[j] = sgj;
       }
         break;

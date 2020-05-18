@@ -15,7 +15,7 @@ NumericVector fprodCpp(const NumericVector& x, int ng = 0, const IntegerVector& 
       long double prod = x[j];
       while(std::isnan(prod) && j!=0) prod = x[--j];
       if(j != 0) for(int i = j; i--; ) {
-        if(!std::isnan(x[i])) prod *= x[i]; // Fastest ??
+        if(!std::isnan(x[i])) prod *= x[i]; // Fastest ?
       }
       return NumericVector::create((double)prod);
     } else {
@@ -33,9 +33,9 @@ NumericVector fprodCpp(const NumericVector& x, int ng = 0, const IntegerVector& 
   } else { // with groups
     if(g.size() != l) stop("length(g) must match nrow(X)");
     if(narm) {
-      NumericVector prod(ng, NA_REAL); // Other way ??
+      NumericVector prod(ng, NA_REAL); // Other way ?
       for(int i = l; i--; ) {
-        if(!std::isnan(x[i])) { // faster way to code this ??? -> Not Bad at all
+        if(!std::isnan(x[i])) { // faster way to code this ? -> Not Bad at all
           if(std::isnan(prod[g[i]-1])) prod[g[i]-1] = x[i];
           else prod[g[i]-1] *= x[i];
         }
@@ -43,7 +43,7 @@ NumericVector fprodCpp(const NumericVector& x, int ng = 0, const IntegerVector& 
       DUPLICATE_ATTRIB(prod, x);
       return prod;
     } else {
-      NumericVector prod(ng, 1.0); // good?? -> yes
+      NumericVector prod(ng, 1.0); // good? -> yes
       int ngs = 0;
       for(int i = 0; i != l; ++i) {
         if(std::isnan(x[i])) {
@@ -127,7 +127,7 @@ SEXP fprodmCpp(const NumericMatrix& x, int ng = 0, const IntegerVector& g = 0,
 
  if(Rf_isNull(w)) { // No weights
   if(ng == 0) {
-    NumericVector prod = no_init_vector(col); // Initialize faster -> Nope !!!
+    NumericVector prod = no_init_vector(col); // Initialize faster -> Nope
     if(narm) {
       for(int j = col; j--; ) {
         NumericMatrix::ConstColumn column = x( _ , j);
@@ -178,7 +178,7 @@ SEXP fprodmCpp(const NumericMatrix& x, int ng = 0, const IntegerVector& g = 0,
       colnames(prod) = colnames(x);
       return prod;
     } else {
-      NumericMatrix prod = no_init_matrix(ng, col); // no init numerically unstable !!!
+      NumericMatrix prod = no_init_matrix(ng, col); // no init numerically unstable
       std::fill(prod.begin(), prod.end(), 1.0);
       for(int j = col; j--; ) {
         NumericMatrix::ConstColumn column = x( _ , j);
@@ -373,7 +373,7 @@ SEXP fprodlCpp(const List& x, int ng = 0, const IntegerVector& g = 0,
       }
     }
     DUPLICATE_ATTRIB(prod, x);
-    prod.attr("row.names") = IntegerVector::create(NA_INTEGER, -ng); // NumericVector::create(NA_REAL, -ng);
+    prod.attr("row.names") = IntegerVector::create(NA_INTEGER, -ng);
     return prod;
   }
  } else { // With weights

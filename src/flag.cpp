@@ -18,13 +18,15 @@ Vector<RTYPE> flagleadCppImpl(const Vector<RTYPE>& x, const IntegerVector& n, co
   }
   auto ff = fil[0];
 
-  int l = x.size(), ns = n.size(), prev = INT_MIN;
+  int l = x.size(), ns = n.size(), prev = INT_MAX;
   IntegerVector absn = no_init_vector(ns);
   for(int i = 0; i != ns; ++i) {
     if(n[i] == prev) stop("duplicated values in n detected"); // because one might mistakenly pass a factor to the n-slot !!
     prev = n[i];
-    if(prev < 0) absn[i] = -prev;
-    else absn[i] = prev;
+    if(prev < 0) {
+      if(prev == NA_INTEGER) stop("NA in n");
+      absn[i] = -prev;
+    } else absn[i] = prev;
   }
   if(ns == 1) names = false;
   CharacterVector nc = names ? Rf_coerceVector(absn, STRSXP) : NA_STRING;  // NumericVector(abs(n))
@@ -57,7 +59,7 @@ Vector<RTYPE> flagleadCppImpl(const Vector<RTYPE>& x, const IntegerVector& n, co
       LogicalVector ocheck(l, true);
       IntegerVector omap = no_init_vector(l);
       for(int i = 0; i != l; ++i) {
-        if(ord[i] > l) stop("t needs to be a factor or integer vector of time-periods between 1 and length(x)");
+        if(ord[i] > l || ord[i] < 1) stop("t needs to be a factor or integer vector of time-periods between 1 and length(x)");
         if(ocheck[ord[i]-1]) {
           ocheck[ord[i]-1] = false;
           omap[ord[i]-1] = i; // Note: omap is the same as order(ord) !!
@@ -92,7 +94,7 @@ Vector<RTYPE> flagleadCppImpl(const Vector<RTYPE>& x, const IntegerVector& n, co
       // int seen[ngp], memsize = sizeof(int)*ngp;
       for(int p = ns; p--; ) {
         int np = n[p];
-        if(absn[p] > ags) stop("lag-length exceeds average group-size (%i)", ags);
+        if(absn[p] > ags) warning("lag-length exceeds average group-size (%i). This could also be a result of unused factor levels. See #25.", ags);
         MatrixColumn<RTYPE> outp = out( _ , p);
         if(np>0) {
           if(names) colnam[p] = "L" + nc[p];
@@ -124,9 +126,9 @@ Vector<RTYPE> flagleadCppImpl(const Vector<RTYPE>& x, const IntegerVector& n, co
     } else { // Unordered data: Timevar provided
       IntegerVector ord = t;
       if(l != ord.size()) stop("length(x) must match length(t)");
-      IntegerVector min(ngp, INT_MAX); // INFINITY gives bug !!!!!!!!
+      IntegerVector min(ngp, INT_MAX); // INFINITY gives bug !!
       IntegerVector gsv = no_init_vector(ng); // No real improvements here by using C++ arrays !!
-      IntegerVector ord2 = no_init_vector(l); // use array ?????????????????
+      IntegerVector ord2 = no_init_vector(l); // use array ??
       if(Rf_isNull(gs)) {
         std::fill(gsv.begin(), gsv.end(), 0);
         // gsv = IntegerVector(ng);
@@ -141,17 +143,23 @@ Vector<RTYPE> flagleadCppImpl(const Vector<RTYPE>& x, const IntegerVector& n, co
       }
       IntegerVector omap(l), cgs = no_init_vector(ngp);
       // int cgs[ngp];
-      cgs[1] = 0;
-      for(int i = 2; i != ngp; ++i) cgs[i] = cgs[i-1] + gsv[i-2]; // or get "starts from forderv"
+      // cgs[1] = 0;
+      // for(int i = 2; i != ngp; ++i) cgs[i] = cgs[i-1] + gsv[i-2]; // or get "starts from forderv"
+      cgs[0] = cgs[1] = 0;
+      for(int i = 1; i != ng; ++i) {
+        cgs[i+1] = cgs[i] + gsv[i-1]; // or get "starts from forderv"
+        if(min[i] == NA_INTEGER) stop("Timevar contains missing values"); // Fastest here ?
+      }
+      if(min[ng] == NA_INTEGER) stop("Timevar contains missing values"); // Fastest here ?
       for(int i = 0; i != l; ++i) {
-        ord2[i] = ord[i] - min[g[i]]; // still room for speed improvement ?? ???????????
+        ord2[i] = ord[i] - min[g[i]]; // still room for speed improvement ?? -> could get rid of the first if condition, if there is a gap, there will be a repeated value error later on !!
         if(ord2[i] >= gsv[g[i]-1]) stop("Gaps in timevar within one or more groups");
         if(omap[cgs[g[i]]+ord2[i]] == 0) omap[cgs[g[i]]+ord2[i]] = i;
         else stop("Repeated values of timevar within one or more groups");
       }
       for(int p = ns; p--; ) {
         int np = n[p];
-        if(absn[p] > ags) stop("lag-length exceeds average group-size (%i)", ags);
+        if(absn[p] > ags) warning("lag-length exceeds average group-size (%i). This could also be a result of unused factor levels. See #25.", ags);
         MatrixColumn<RTYPE> outp = out( _ , p);
         if(np>0) {
           if(names) colnam[p] = "L" + nc[p];
@@ -244,13 +252,15 @@ Matrix<RTYPE> flagleadmCppImpl(const Matrix<RTYPE>& x, const IntegerVector& n, c
   }
   auto ff = fil[0];
 
-  int l = x.nrow(), col = x.ncol(), ns = n.size(), pos = INT_MIN;
+  int l = x.nrow(), col = x.ncol(), ns = n.size(), pos = INT_MAX;
   IntegerVector absn = no_init_vector(ns);
   for(int i = 0; i != ns; ++i) {
     if(n[i] == pos) stop("duplicated values in n detected"); // because one might mistakenly pass a factor to the n-slot !!
     pos = n[i];
-    if(pos < 0) absn[i] = -pos;
-    else absn[i] = pos;
+    if(pos < 0) {
+      if(pos == NA_INTEGER) stop("NA in n");
+      absn[i] = -pos;
+    } else absn[i] = pos;
   }
   pos = 0;
   CharacterVector nc = names ? Rf_coerceVector(absn, STRSXP) : NA_STRING; // NumericVector(abs(n))
@@ -291,7 +301,7 @@ Matrix<RTYPE> flagleadmCppImpl(const Matrix<RTYPE>& x, const IntegerVector& n, c
       LogicalVector ocheck(l, true);
       IntegerVector omap = no_init_vector(l);
       for(int i = 0; i != l; ++i) {
-        if(ord[i] > l) stop("t needs to be a factor or integer vector of time-periods between 1 and length(x)");
+        if(ord[i] > l || ord[i] < 1) stop("t needs to be a factor or integer vector of time-periods between 1 and length(x)");
         if(ocheck[ord[i]-1]) {
           ocheck[ord[i]-1] = false;
           omap[ord[i]-1] = i; // Note: omap is the same as order(ord) !!
@@ -332,7 +342,7 @@ Matrix<RTYPE> flagleadmCppImpl(const Matrix<RTYPE>& x, const IntegerVector& n, c
         ConstMatrixColumn<RTYPE> column = x( _ , j);
         for(int p = 0; p != ns; ++p) {
           int np = n[p];
-          if(absn[p] > ags) stop("lag-length exceeds average group-size (%i)", ags);
+          if(absn[p] > ags) warning("lag-length exceeds average group-size (%i). This could also be a result of unused factor levels. See #25.", ags);
           MatrixColumn<RTYPE> outj = out( _ , pos);
           if(np>0) {
             if(names) colnam[pos] = "L" + nc[p] + "." + coln[j];
@@ -382,9 +392,14 @@ Matrix<RTYPE> flagleadmCppImpl(const Matrix<RTYPE>& x, const IntegerVector& n, c
         for(int i = 0; i != l; ++i) if(ord[i] < min[g[i]]) min[g[i]] = ord[i];
       }
       IntegerVector omap(l), cgs = no_init_vector(ngp), index = no_init_vector(l);
-      // int cgs[ngp], index[l]; // See flag.cpp for any improvements on this code !!
-      cgs[1] = 0;
-      for(int i = 2; i != ngp; ++i) cgs[i] = cgs[i-1] + gsv[i-2]; // or get "starts from forderv"
+      // int cgs[ngp], index[l]; // See above for any improvements on this code !!
+      cgs[0] = cgs[1] = 0;
+      for(int i = 1; i != ng; ++i) {
+        cgs[i+1] = cgs[i] + gsv[i-1]; // or get "starts from forderv"
+        if(min[i] == NA_INTEGER) stop("Timevar contains missing values"); // Fastest here ?
+      }
+      if(min[ng] == NA_INTEGER) stop("Timevar contains missing values"); // Fastest here ?
+
       for(int i = 0; i != l; ++i) {
         ord2[i] = ord[i] - min[g[i]];
         if(ord2[i] >= gsv[g[i]-1]) stop("Gaps in timevar within one or more groups");
@@ -396,7 +411,7 @@ Matrix<RTYPE> flagleadmCppImpl(const Matrix<RTYPE>& x, const IntegerVector& n, c
         ConstMatrixColumn<RTYPE> column = x( _ , j);
         for(int p = 0; p != ns; ++p) {
           int np = n[p];
-          if(absn[p] > ags) stop("lag-length exceeds average group-size (%i)", ags);
+          if(absn[p] > ags) warning("lag-length exceeds average group-size (%i). This could also be a result of unused factor levels. See #25.", ags);
           MatrixColumn<RTYPE> outj = out( _ , pos);
           if(np>0) {
             if(names) colnam[pos] = "L" + nc[p] + "." + coln[j];
@@ -480,14 +495,16 @@ List flagleadlCpp(const List& x, const IntegerVector& n = 1, const SEXP& fill = 
     LogicalVector f = fill;
     lfill = f[0] == NA_LOGICAL;
   }
-  int l = x.size(), ns = n.size(), pos = INT_MIN;
+  int l = x.size(), ns = n.size(), pos = INT_MAX;
   List out(l*ns);
   IntegerVector absn = no_init_vector(ns);
   for(int i = 0; i != ns; ++i) {
     if(n[i] == pos) stop("duplicated values in n detected"); // because one might mistakenly pass a factor to the n-slot !!
     pos = n[i];
-    if(pos < 0) absn[i] = -pos;
-    else absn[i] = pos;
+    if(pos < 0) {
+      if(pos == NA_INTEGER) stop("NA in n");
+      absn[i] = -pos;
+    } else absn[i] = pos;
   }
   pos = 0;
   CharacterVector nc = names ? Rf_coerceVector(absn, STRSXP) : NA_STRING; // NumericVector(abs(n))
@@ -632,7 +649,7 @@ List flagleadlCpp(const List& x, const IntegerVector& n = 1, const SEXP& fill = 
       LogicalVector ocheck(os, true);
       IntegerVector omap = no_init_vector(os);
       for(int i = 0; i != os; ++i) {
-        if(ord[i] > os) stop("t needs to be a factor or integer vector of time-periods between 1 and length(x)");
+        if(ord[i] > os || ord[i] < 1) stop("t needs to be a factor or integer vector of time-periods between 1 and length(x)");
         if(ocheck[ord[i]-1]) {
           ocheck[ord[i]-1] = false;
           omap[ord[i]-1] = i; // Note: omap is the same as order(ord) !!
@@ -782,7 +799,7 @@ List flagleadlCpp(const List& x, const IntegerVector& n = 1, const SEXP& fill = 
           if(gss != column.size()) stop("length(x) must match length(g)");
           for(int p = 0; p != ns; ++p) {
             int np = n[p];
-            if(absn[p] > ags) stop("lag-length exceeds average group-size (%i)", ags);
+            if(absn[p] > ags) warning("lag-length exceeds average group-size (%i). This could also be a result of unused factor levels. See #25.", ags);
             if(np>0) {
               NumericVector outjp = no_init_vector(gss);
               if(names) nam[pos] = "L" + nc[p] + "." + na[j];
@@ -825,7 +842,7 @@ List flagleadlCpp(const List& x, const IntegerVector& n = 1, const SEXP& fill = 
           if(gss != column.size()) stop("length(x) must match length(g)");
           for(int p = 0; p != ns; ++p) {
             int np = n[p];
-            if(absn[p] > ags) stop("lag-length exceeds average group-size (%i)", ags);
+            if(absn[p] > ags) warning("lag-length exceeds average group-size (%i). This could also be a result of unused factor levels. See #25.", ags);
             if(np>0) {
               IntegerVector outjp = no_init_vector(gss);
               if(names) nam[pos] = "L" + nc[p] + "." + na[j];
@@ -868,7 +885,7 @@ List flagleadlCpp(const List& x, const IntegerVector& n = 1, const SEXP& fill = 
           if(gss != column.size()) stop("length(x) must match length(g)");
           for(int p = 0; p != ns; ++p) {
             int np = n[p];
-            if(absn[p] > ags) stop("lag-length exceeds average group-size (%i)", ags);
+            if(absn[p] > ags) warning("lag-length exceeds average group-size (%i). This could also be a result of unused factor levels. See #25.", ags);
             if(np>0) {
               CharacterVector outjp = no_init_vector(gss);
               if(names) nam[pos] = "L" + nc[p] + "." + na[j];
@@ -911,7 +928,7 @@ List flagleadlCpp(const List& x, const IntegerVector& n = 1, const SEXP& fill = 
           if(gss != column.size()) stop("length(x) must match length(g)");
           for(int p = 0; p != ns; ++p) {
             int np = n[p];
-            if(absn[p] > ags) stop("lag-length exceeds average group-size (%i)", ags);
+            if(absn[p] > ags) warning("lag-length exceeds average group-size (%i). This could also be a result of unused factor levels. See #25.", ags);
             if(np>0) {
               LogicalVector outjp = no_init_vector(gss);
               if(names) nam[pos] = "L" + nc[p] + "." + na[j];
@@ -971,8 +988,13 @@ List flagleadlCpp(const List& x, const IntegerVector& n = 1, const SEXP& fill = 
       }
       IntegerVector omap(gss), cgs = no_init_vector(ngp), index = no_init_vector(gss);
       // int cgs[ngp], index[gss]; // See flag.cpp for any improvements on this code !!
-      cgs[1] = 0;
-      for(int i = 2; i != ngp; ++i) cgs[i] = cgs[i-1] + gsv[i-2]; // or get "starts from forderv"
+      cgs[0] = cgs[1] = 0;
+      for(int i = 1; i != ng; ++i) {
+        cgs[i+1] = cgs[i] + gsv[i-1]; // or get "starts from forderv"
+        if(min[i] == NA_INTEGER) stop("Timevar contains missing values"); // Fastest here ?
+      }
+      if(min[ng] == NA_INTEGER) stop("Timevar contains missing values"); // Fastest here ?
+
       for(int i = 0; i != gss; ++i) {
         ord2[i] = ord[i] - min[g[i]];
         if(ord2[i] >= gsv[g[i]-1]) stop("Gaps in timevar within one or more groups");
@@ -988,7 +1010,7 @@ List flagleadlCpp(const List& x, const IntegerVector& n = 1, const SEXP& fill = 
           if(gss != column.size()) stop("length(x) must match length(g)");
           for(int p = 0; p != ns; ++p) {
             int np = n[p];
-            if(absn[p] > ags) stop("lag-length exceeds average group-size (%i)", ags);
+            if(absn[p] > ags) warning("lag-length exceeds average group-size (%i). This could also be a result of unused factor levels. See #25.", ags);
             if(np>0) {
               NumericVector outjp = no_init_vector(gss);
               if(names) nam[pos] = "L" + nc[p] + "." + na[j];
@@ -1027,7 +1049,7 @@ List flagleadlCpp(const List& x, const IntegerVector& n = 1, const SEXP& fill = 
           if(gss != column.size()) stop("length(x) must match length(g)");
           for(int p = 0; p != ns; ++p) {
             int np = n[p];
-            if(absn[p] > ags) stop("lag-length exceeds average group-size (%i)", ags);
+            if(absn[p] > ags) warning("lag-length exceeds average group-size (%i). This could also be a result of unused factor levels. See #25.", ags);
             if(np>0) {
               IntegerVector outjp = no_init_vector(gss);
               if(names) nam[pos] = "L" + nc[p] + "." + na[j];
@@ -1066,7 +1088,7 @@ List flagleadlCpp(const List& x, const IntegerVector& n = 1, const SEXP& fill = 
           if(gss != column.size()) stop("length(x) must match length(g)");
           for(int p = 0; p != ns; ++p) {
             int np = n[p];
-            if(absn[p] > ags) stop("lag-length exceeds average group-size (%i)", ags);
+            if(absn[p] > ags) warning("lag-length exceeds average group-size (%i). This could also be a result of unused factor levels. See #25.", ags);
             if(np>0) {
               CharacterVector outjp = no_init_vector(gss);
               if(names) nam[pos] = "L" + nc[p] + "." + na[j];
@@ -1105,7 +1127,7 @@ List flagleadlCpp(const List& x, const IntegerVector& n = 1, const SEXP& fill = 
           if(gss != column.size()) stop("length(x) must match length(g)");
           for(int p = 0; p != ns; ++p) {
             int np = n[p];
-            if(absn[p] > ags) stop("lag-length exceeds average group-size (%i)", ags);
+            if(absn[p] > ags) warning("lag-length exceeds average group-size (%i). This could also be a result of unused factor levels. See #25.", ags);
             if(np>0) {
               LogicalVector outjp = no_init_vector(gss);
               if(names) nam[pos] = "L" + nc[p] + "." + na[j];

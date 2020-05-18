@@ -16,17 +16,31 @@ It is compatible with *dplyr*, *data.table* and the *plm* approach to panel-data
 
 **Key Features:**
 
-*  **Advanced data programming**: A full set of fast statistical functions supporting grouped and/or weighted computations on vectors, matrices and data.frames. Fast (ordered) and reusable grouping, quick data conversions, and quick select, replace or add data.frame columns. 
+*  **Advanced data programming**: A full set of fast statistical functions 
+        supporting grouped and weighted computations on vectors, matrices and 
+        data frames. Fast (ordered) and programmable grouping, and fast factor 
+        generation, manipulation of data frames, and data object conversions.
 
-*  **Advanced aggregation**: Fast and easy multi-data-type, multi-function, weighted, parallelized and fully customized data aggregation. 
+*  **Advanced aggregation**: Fast and easy multi-data-type, multi-function, 
+        weighted, parallelized and fully customized data aggregation.
 
-*  **Advanced transformations**: Fast (grouped, weighted) replacing and sweeping out of statistics, scaling, centering, higher-dimensional centering, complex linear prediction and partialling-out. 
+*  **Advanced transformations**: Fast (grouped, weighted) replacing and 
+        sweeping out of statistics, scaling / standardizing, centering (i.e. 
+        between and within transformations), higher-dimensional centering 
+        (i.e. multiple fixed effects transformations), linear 
+        prediction and partialling-out. 
 
-*  **Advanced time-computations**: Fast (sequences of) lags / leads, and (lagged / leaded, iterated) differences and growth rates on (unordered) time-series and panel data. Multivariate auto, partial and cross-correlation functions for panel data. Panel data to (ts-)array conversions. 
+*  **Advanced time-computations**: Fast (sequences of) lags / leads, and 
+        (lagged / leaded, iterated, quasi-, log-) differences and growth 
+        rates on (unordered) time-series and panel data. Multivariate auto, 
+        partial and cross-correlation functions for panel data. 
+        Panel data to (ts-)array conversions. 
 
-*  **List processing**: (Recursive) list search / identification, extraction / subsetting, apply, and row-binding / unlisting in 2D. 
+*  **List processing**: (Recursive) list search / identification, extraction / 
+        subsetting, data-apply, and generalized row-binding / unlisting in 2D.
 
-* **Advanced data exploration**: Fast (grouped, weighted, panel-decomposed) summary statistics for cross-sectional and complex multilevel / panel data. 
+* **Advanced data exploration**: Fast (grouped, weighted, panel-decomposed) 
+        summary statistics for complex multilevel / panel data. 
 
 *collapse* is mainly coded in C++ and built with *Rcpp*, but also uses C functions from *data.table*, *lfe* and *stats*. Effort has been expended to minimize the 
 execution speed of R code employed. 
@@ -53,14 +67,15 @@ In addition, *collapse* provides 3 vignettes:
 
 ## Contributing
 
-If you want to contribute, please fork and create a pull request for merging with the **development** branch. Presently I am particularly interested in fast algorithms to compute weighted medians and (weighted) quantiles, but I am happy to consider any contribution. 
+If you want to contribute, please fork and create a pull request for merging with the **development** branch. Presently I am particularly interested in fast algorithms to compute weighted medians and (weighted) quantiles. 
+
 
 ***
 
 ### Notes on Performance 
-Simple benchmarks are provided in the vignettes. In general:
+Some simple benchmarks are provided in the vignettes. In general:
 
-* On simple aggregations of large data (< 10 mio. obs) the performance is identical to *data.table* (when using functions that *data.table* GeForce optimizes. The C/C++ programming principles applied and the grouping mechanism of *collapse* are the same as *data.table*). On very large data (100 mio. obs +), *data.table*'s thread parallelization will let it run faster on a multicore machine. 
+* On simple aggregations of large data (~ 10 mio. obs) the performance is comparable to *data.table* (when using functions that *data.table* GeForce optimizes. The C/C++ programming principles applied and the grouping mechanisms of *collapse* are similar to *data.table*). On very large data (100 mio. obs +), *data.table*'s thread parallelization will let it run faster on a multicore machine. 
 
 * For more complex categorical or weighed aggregations, and for nearly all transformations like grouped scaling, centering, panel-differences etc. *collapse* is ~10x faster than *data.table*. 
 

@@ -1,10 +1,10 @@
 \name{A6-data-transformations}
 \alias{A6-data-transformations}
 \alias{.OPERATOR_FUN}
-\title{\code{collapse} Data Transformations} %
+\title{Data Transformations} % \emph{collapse}
 
 \description{
-\code{collapse} provides an ensemble of functions to perform common data transformations efficiently and user friendly:
+\emph{collapse} provides an ensemble of functions to perform common data transformations efficiently and user friendly:
 \itemize{
 \item \code{\link{dapply}} applies functions to \bold{rows or columns} of matrices and data.frame's.
 \item \code{\link{BY}} is an S3 generic for \bold{Split-Apply-Combine computing} and can perform aggregation as well as grouped transformations. (for aggregation please also see \code{\link{collap}} and \link[=A1-fast-statistical-functions]{Fast Statistical Functions}).
@@ -24,7 +24,7 @@ Supported operations are:
                  10 \tab\tab "-\%\%" \tab\tab subtract modulus
 
 }
-All of \code{collapse}'s \link[=A1-fast-statistical-functions]{Fast Statistical Functions} have a built-in \code{TRA} argument for faster access (i.e. you can compute (groupwise) statistics and use them to transform your data with a single function call).
+All of \emph{collapse}'s \link[=A1-fast-statistical-functions]{Fast Statistical Functions} have a built-in \code{TRA} argument for faster access (i.e. you can compute (groupwise) statistics and use them to transform your data with a single function call).
 
 \item \code{\link[=fscale]{fscale/STD}} is an S3 generic to perform (groupwise and / or weighted) \bold{scaling / standardizing} of data and is orders of magnitude faster than \code{base::scale}.
 
@@ -34,9 +34,9 @@ All of \code{collapse}'s \link[=A1-fast-statistical-functions]{Fast Statistical 
 
 \item \code{\link{fFtest}} is a fast implementation of the R-Squared based F-test, to test \bold{exclusion restrictions} on linear models potentially involving multiple large factors (fixed effects). It internally utilizes \code{\link{fHDwithin}} to project out factors while counting the degrees of freedom.
 
-\item \code{\link[=flag]{flag/L/F}}, \code{\link[=fdiff]{fdiff/D}} and \code{\link[=fgrowth]{fgrowth/G}} are S3 generics to compute sequences of \bold{lags / leads} and suitably lagged and iterated \bold{differences} and \bold{growth rates} on time-series and panel data. More in \link[=A7-time-series-panel-series]{Time-Series and Panel-Series}.
+\item \code{\link[=flag]{flag/L/F}}, \code{\link[=fdiff]{fdiff/D/Dlog}} and \code{\link[=fgrowth]{fgrowth/G}} are S3 generics to compute sequences of \bold{lags / leads} and suitably lagged and iterated (quasi-, log-) \bold{differences} and \bold{growth rates} on time-series and panel data. More in \link[=A7-time-series-panel-series]{Time-Series and Panel-Series}.
 
-\item \code{STD, W, B, HDW, HDB, L, D} and \code{G} are parsimonious wrappers around the \code{f-} functions above representing the corresponding transformation 'operators'. They have additional capabilities when applied to data-frames (i.e. variable selection, formula input, auto-renaming and id-variable preservation), and are easier to employ in regression formulas, but are otherwise identical in functionality.
+\item \code{STD, W, B, HDW, HDB, L, D, Dlog} and \code{G} are parsimonious wrappers around the \code{f-} functions above representing the corresponding transformation 'operators'. They have additional capabilities when applied to data-frames (i.e. variable selection, formula input, auto-renaming and id-variable preservation), and are easier to employ in regression formulas, but are otherwise identical in functionality.
 }
 }
 \section{Table of Functions}{
@@ -51,7 +51,7 @@ All of \code{collapse}'s \link[=A1-fast-statistical-functions]{Fast Statistical 
   \code{\link[=HDB]{fHDbetween/HDB}} \tab\tab \code{default, matrix, data.frame, pseries, pdata.frame} \tab\tab high-dimensional averages and lm fitted values \cr
   \code{\link{fFtest}} \tab\tab No methods, it's a standalone test to which data needs to be supplied.  \tab\tab fast F-test of exclusion restrictions on linear models (involving factors) \cr
   \code{\link[=flag]{flag/L/F}} \tab\tab \code{default, matrix, data.frame, pseries, pdata.frame, grouped_df}  \tab\tab (sequences of) lags / leads \cr
-  \code{\link[=fdiff]{fdiff/D}} \tab\tab \code{default, matrix, data.frame, pseries, pdata.frame, grouped_df}  \tab\tab (sequences of lagged/leaded and iterated) differences \cr
+  \code{\link[=fdiff]{fdiff/D/Dlog}} \tab\tab \code{default, matrix, data.frame, pseries, pdata.frame, grouped_df}  \tab\tab (sequences of lagged/leaded and iterated) differences \cr
   \code{\link[=fdiff]{fgrowth/G}} \tab\tab \code{default, matrix, data.frame, pseries, pdata.frame, grouped_df}  \tab\tab (sequences of lagged/leaded and iterated) growth rates or log-differences
 }
 }

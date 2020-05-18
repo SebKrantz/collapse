@@ -1,15 +1,9 @@
-# library(Rcpp)
-# sourceCpp('R/C++/fbstats.cpp')
 
-# Note: for principal innovations of this code see fsum.R !!
-# nv <- function(x) unclass(x)[vapply(x, is.numeric, TRUE, USE.NAMES = FALSE)]
-# cols2int <- function(x, cols) if(is.function(cols)) which(vapply(x, cols, TRUE)) else if(is.character(cols)) match(cols, names(x)) else cols
+# Note: for principal innovations of this code see fsum.R
 
-qsu <- function(x, ...) { # g = NULL, pid = NULL, w = NULL, higher = FALSE, array = TRUE,
-  UseMethod("qsu", x)
-}
+qsu <- function(x, ...) UseMethod("qsu") # , x
 qsu.default <- function(x, g = NULL, pid = NULL, w = NULL, higher = FALSE, array = TRUE, ...) {
-  if(!missing(...)) stop("Unknown argument ", dotstostr(...))
+  if(!missing(...)) unused_arg_action(match.call(), ...)
     if(is.null(g)) {
       if(is.null(pid)) return(fbstatsCpp(x,higher, w = w)) else if(is.atomic(pid)) {
         if(is.nmfactor(pid)) nid <- fnlevels(pid) else {
@@ -43,8 +37,8 @@ qsu.default <- function(x, g = NULL, pid = NULL, w = NULL, higher = FALSE, array
     }
 }
 qsu.pseries <- function(x, g = NULL, w = NULL, effect = 1L, higher = FALSE, array = TRUE, ...) {
-  if(!missing(...)) stop("Unknown argument ", dotstostr(...))
-  pid <- if(length(effect) == 1L) unclass(attr(x, "index"))[[effect]] else finteraction(unclass(attr(x, "index"))[effect])
+  if(!missing(...)) unused_arg_action(match.call(), ...)
+  pid <- if(length(effect) == 1L) .subset2(attr(x, "index"), effect) else finteraction(.subset(attr(x, "index"), effect))
   if(is.null(g))
   return(fbstatsCpp(x,higher,0L,0L,fnlevels(pid),pid,w)) else if (is.atomic(g)) {
     if(!is.nmfactor(g)) g <- qF(g, na.exclude = FALSE)
@@ -54,7 +48,7 @@ qsu.pseries <- function(x, g = NULL, w = NULL, effect = 1L, higher = FALSE, arra
     return(fbstatsCpp(x,higher,g[[1L]],g[[2L]],fnlevels(pid),pid,w,array,TRUE,group_names.GRP(g)))
 }
 qsu.matrix <- function(x, g = NULL, pid = NULL, w = NULL, higher = FALSE, array = TRUE, ...) {
-  if(!missing(...)) stop("Unknown argument ", dotstostr(...))
+  if(!missing(...)) unused_arg_action(match.call(), ...)
   if(is.null(g)) {
     if(is.null(pid)) return(fbstatsmCpp(x,higher, w = w)) else if(is.atomic(pid)) {
       if(is.nmfactor(pid)) nid <- fnlevels(pid) else {
@@ -88,7 +82,7 @@ qsu.matrix <- function(x, g = NULL, pid = NULL, w = NULL, higher = FALSE, array 
   }
 }
 qsu.data.frame <- function(x, by = NULL, pid = NULL, w = NULL, cols = NULL, higher = FALSE, array = TRUE, vlabels = FALSE, ...) {
-  if(!missing(...)) stop("Unknown argument ", dotstostr(...))
+  if(!missing(...)) unused_arg_action(match.call(), ...)
   formby <- is.call(by)
   formpid <- is.call(pid)
 
@@ -114,10 +108,16 @@ qsu.data.frame <- function(x, by = NULL, pid = NULL, w = NULL, cols = NULL, high
     if(is.null(v)) {
       x <- if(is.null(cols)) x[-c(byn,pidn)] else x[cols2int(cols, x, nam)]
     } else x <- x[v]
-  } else if(!is.null(cols)) x <- unclass(x)[cols2int(cols, x, attr(x, "names"))]
+  } else if(!is.null(cols)) x <- .subset(x, cols2int(cols, x, attr(x, "names")))
 
+  # This could still be improved by incorporating it into the above block..
+  if(is.call(w)) {
+    wn <- ckmatch(all.vars(w), attr(x, "names"), "Unknown weight variable:")
+    w <- .subset2(x, wn)
+    x[[wn]] <- NULL
+  }
 
-  # Get vlabels !!
+  # Get vlabels
   if(vlabels) attr(x, "names") <- paste(attr(x, "names"), vlabels(x), sep = ": ")
 
   # original code:
@@ -153,11 +153,13 @@ qsu.data.frame <- function(x, by = NULL, pid = NULL, w = NULL, cols = NULL, high
     return(drop(fbstatslCpp(x,higher,by[[1L]],by[[2L]],pid[[1L]],pid[[2L]],w,array,group_names.GRP(by))))
   }
 }
+qsu.list <- function(x, by = NULL, pid = NULL, w = NULL, cols = NULL, higher = FALSE, array = TRUE, vlabels = FALSE, ...)
+  qsu.data.frame(x, by, pid, w, cols, higher, array, vlabels, ...)
 qsu.pdata.frame <- function(x, by = NULL, w = NULL, cols = NULL, effect = 1L, higher = FALSE, array = TRUE, vlabels = FALSE, ...) {
-  if(!missing(...)) stop("Unknown argument ", dotstostr(...))
-  pid <- if(length(effect) == 1L) unclass(attr(x, "index"))[[effect]] else finteraction(unclass(attr(x, "index"))[effect])
+  if(!missing(...)) unused_arg_action(match.call(), ...)
+  pid <- if(length(effect) == 1L) .subset2(attr(x, "index"), effect) else finteraction(.subset(attr(x, "index"), effect))
 
-  # fastest solution!
+  # fastest solution
   if(is.call(by)) {
     class(x) <- NULL
     nam <- names(x)
@@ -170,7 +172,14 @@ qsu.pdata.frame <- function(x, by = NULL, w = NULL, cols = NULL, effect = 1L, hi
     }
     by <- if(length(byn) == 1L) x[[byn]] else GRP.default(x[byn])
     x <- x[v]
-  } else if(!is.null(cols)) x <- unclass(x)[cols2int(cols, x, attr(x, "names"))]
+  } else if(!is.null(cols)) x <- .subset(x, cols2int(cols, x, attr(x, "names")))
+
+  # This could still be improved by incorporating it into the above block..
+  if(is.call(w)) {
+    wn <- ckmatch(all.vars(w), attr(x, "names"), "Unknown weight variable:")
+    w <- .subset2(x, wn)
+    x[[wn]] <- NULL
+  }
 
   if(vlabels) attr(x, "names") <- paste(attr(x, "names"), vlabels(x), sep = ": ")
 
@@ -183,13 +192,8 @@ qsu.pdata.frame <- function(x, by = NULL, w = NULL, cols = NULL, effect = 1L, hi
     return(drop(fbstatslCpp(x,higher,by[[1L]],by[[2L]],fnlevels(pid),pid,w,array,group_names.GRP(by))))
 }
 
-# give class "qsu" !! Note: round gives error of list output!
-# Also thing about aperm options !!
-# print.qsu <- function(x) {
-#   print.default(round(x, 2), na.print = "-", digits = 16)
-# }
 
-# Try to speed up !! Printing Takes 100 milliseconds on WDI !!
+# Try to speed up ! Printing Takes 100 milliseconds on WDI !
 print.qsu <- function(x, digits = 2, nonsci.digits = 9, na.print = "-", return = FALSE, print.gap = 2, ...) {
   vec2mat <- function(x) if(is.array(x)) x else  # outer(1, x) # for variable spacing in vector printing...
     `attributes<-`(x, list(dim = c(1L, length(x)), dimnames = list("", names(x)))) # faster and better !!
@@ -240,7 +244,7 @@ print.qsu <- function(x, digits = 2, nonsci.digits = 9, na.print = "-", return =
 #     } else x <- x[v]
 #   } else if(!is.null(cols)) {
 #     # class(x) <- NULL # but unclass is faster !!
-#     x <- if(is.function(cols)) unclass(x)[vapply(x, cols, TRUE)] else unclass(x)[cols]
+#     x <- if(is.function(cols)) unclass(x)[vapply(x, cols, TRUE)] else .subset(x, cols)
 #   }
 #   return(list(x, by, xt))
 # }
@@ -268,10 +272,10 @@ print.qsu <- function(x, digits = 2, nonsci.digits = 9, na.print = "-", return =
 #     } else namxt <- NULL
 #     if(is.null(v)) { # reassign ?? or set NULL ??? what is more memory efficient ??
 #       x <- if(is.null(cols)) unclass(x)[-match(c(namby,namxt), names(x))] else if(is.function(cols))
-#         unclass(x)[vapply(x, cols, TRUE)] else unclass(x)[cols]
+#         unclass(x)[vapply(x, cols, TRUE)] else .subset(x, cols)
 #     } else x <- unclass(x)[v]
 #   } else if(!is.null(cols)) {
-#     x <- if(is.function(cols)) unclass(x)[vapply(x, cols, TRUE)] else unclass(x)[cols]
+#     x <- if(is.function(cols)) unclass(x)[vapply(x, cols, TRUE)] else .subset(x, cols)
 #   }
 #   return(list(x, by, xt))
 # }
@@ -310,68 +314,4 @@ print.qsu <- function(x, digits = 2, nonsci.digits = 9, na.print = "-", return =
 #
 
 
-# fmean.data.frame <- function(x, g = NULL, w = NULL, TRA = FALSE, na.rm = TRUE, drop = TRUE, use.g.names = TRUE, ...) {
-#   if(TRA == FALSE) {
-#     if(is.null(g)) return(fmeanlCpp(x,0L,0L,NULL,w,na.rm,drop)) else if (is.atomic(g)) {
-#       if(use.g.names && !inherits(x, "data.table")) {
-#         if(!is.factor(g)) g <- qF(g)
-#         lev <- attr(g, "levels")
-#         return(setRow.names(fmeanlCpp(x,length(lev),g,NULL,w,na.rm), lev))
-#       } else {
-#         if(is.factor(g)) return(fmeanlCpp(x,fnlevels(g),g,NULL,w,na.rm)) else {
-#           g <- qG(g)
-#           return(fmeanlCpp(x,attr(g,"N.groups"),g,NULL,w,na.rm))
-#         }
-#       }
-#     } else {
-#       if(!all(class(g) == "GRP")) g <- if(use.g.names) GRP(g) else GRP(g, return.groups = FALSE)
-#       if(use.g.names && !inherits(x, "data.table") && !is.null(groups <- names.GRP(g)))
-#         return(setRow.names(fmeanlCpp(x,g[[1]],g[[2]],g[[3]],w,na.rm), if(is.double(groups)) paste0(groups) else groups)) else
-#           return(fmeanlCpp(x,g[[1]],g[[2]],g[[3]],w,na.rm))
-#     }
-#   } else {
-#     if(is.null(g)) return(TRAlCpp(x,fmeanlCpp(x,0L,0L,NULL,w,na.rm),0L,TRAtoInt(TRA))) else if (is.atomic(g)) {
-#       if(is.factor(g)) return(TRAlCpp(x,fmeanlCpp(x,fnlevels(g),g,NULL,w,na.rm),g,TRAtoInt(TRA))) else {
-#         g <- qG(g)
-#         return(TRAlCpp(x,fmeanlCpp(x,attr(g,"N.groups"),g,NULL,w,na.rm),g,TRAtoInt(TRA)))
-#       }
-#     } else {
-#       if(!all(class(g) == "GRP")) g <- GRP(g, return.groups = FALSE)
-#       return(TRAlCpp(x,fmeanlCpp(x,g[[1]],g[[2]],g[[3]],w,na.rm),g[[2]],TRAtoInt(TRA)))
-#     }
-#   }
-# }
-# fmean.grouped_df <- function(x, w = NULL, TRA = FALSE, na.rm = TRUE, drop.groups = FALSE, drop.w = TRUE, ...) {
-#   g <- GRP.grouped_df(x)
-#   wsym <- deparse(substitute(w))
-#   nam <- names(x)
-#   gn <- match(names(g[[4]]), nam)
-#   gn2 = gn <- gn[!is.na(gn)]
-#   if(!(wsym == "NULL" || is.na(wn <- match(wsym, nam)))) {
-#     w <- x[[wn]]
-#     if(any(gn == wn)) stop("Weights coincide with grouping variables!")
-#     if(drop.w) if(drop.groups) gn <- c(gn,wn) else gn2 <- c(gn2,wn)
-#   }
-#   if(length(gn)) {
-#     if(drop.groups) {
-#       if(TRA == FALSE) return(fmeanlCpp(x[-gn],g[[1]],g[[2]],g[[3]],w,na.rm)) else {
-#         x <- x[-gn]
-#         return(TRAlCpp(x,fmeanlCpp(x,g[[1]],g[[2]],g[[3]],w,na.rm),g[[2]],TRAtoInt(TRA)))
-#       }
-#     } else {
-#       ax <- attributes(x)
-#       attributes(x) <- NULL
-#       ax[["names"]] <- c(ax[["names"]][gn], ax[["names"]][-gn2])
-#       if(TRA == FALSE) {
-#         ax[["row.names"]] <- .set_row_names(g[[1]])
-#         return(`attributes<-`(c(g[[4]],fmeanlCpp(x[-gn2],g[[1]],g[[2]],g[[3]],w,na.rm)), ax))
-#       } else
-#         return(`attributes<-`(c(x[gn],TRAlCpp(x[-gn2],fmeanlCpp(x[-gn2],g[[1]],g[[2]],g[[3]],w,na.rm),g[[2]],TRAtoInt(TRA))), ax))
-#     }
-#   } else {
-#     if(TRA == FALSE)
-#       return(fmeanlCpp(x,g[[1]],g[[2]],g[[3]],w,na.rm)) else
-#         return(TRAlCpp(x,fmeanlCpp(x,g[[1]],g[[2]],g[[3]],w,na.rm),g[[2]],TRAtoInt(TRA)))
-#   }
-# }
 

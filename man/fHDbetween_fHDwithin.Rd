@@ -1,4 +1,4 @@
-\name{fHDbetween-fHDwithin-HDB-HDW}
+\name{fHDbetween, fHDwithin}
 \alias{fHDbetween}
 \alias{fHDbetween.default}
 \alias{fHDbetween.matrix}
@@ -97,6 +97,7 @@ The formula interface to the data.frame method (only supported by the operators 
 The special methods for \code{plm::pseries} and \code{plm::pdata.frame} center a panel-series or variables in a panel-data.frame on all panel-identifiers. By default in these methods \code{fill = TRUE} and \code{variable.wise = TRUE}, so missing values are kept. This change in the default arguments was done to ensure a coherent framework of functions and operators applied to \emph{plm} panel-data classes.
 }
 \note{
+\bold{Weights are currently only supported for centering / averaging, not for linear regression.}
 \subsection{Caution with full (*) and factor-continuous variable interactions:}{
 In general full interactions specified with \code{(*)} can be very slow on large data, and \code{lfe::demeanlist} is also not very speedy on interaction between factors and continuous variables, so these structures should be used with caution (don't just specify an interaction like that on a large dataset, start with smaller data and see how long computations take. Upon further updates of \code{lfe::demeanlist}, performance might improve).
 }

@@ -2,10 +2,10 @@
 #include <Rcpp.h>
 using namespace Rcpp ;
 
-// General to do: Check if you can do it without unsigned int and n[l+1] but just with int and n[l]!!!!
-// also:: perhaps redo everything with data pointers and 2d group indices (instead of filling the 2d structure every time !!): http://www.cplusplus.com/reference/vector/vector/data/
+// General to do: Check if you can do it without unsigned int and n[l+1] but just with int and n[l]!
+// also:: perhaps redo everything with data pointers and 2d group indices (instead of filling the 2d structure every time): http://www.cplusplus.com/reference/vector/vector/data/
 // https://stackoverflow.com/questions/1733143/converting-between-c-stdvector-and-c-array-without-copying?rq=1
-// For named vectors, could add right name!!
+// For named vectors, could add right name!
 
 template <int RTYPE>
 inline bool isnaNUM(typename Rcpp::traits::storage_type<RTYPE>::type x) {
@@ -23,11 +23,11 @@ Vector<RTYPE> fmodeImpl(const Vector<RTYPE>& x, int ng, const IntegerVector& g, 
   typedef typename Rcpp::traits::storage_type<RTYPE>::type storage_t;
   auto isnanT = (RTYPE == REALSXP) ? isnaNUM<RTYPE> : isnaOTH<RTYPE>;
 
-  if(Rf_isNull(w)) { // No Weights !!
+  if(Rf_isNull(w)) { // No Weights
     if(ng == 0) {
       sugar::IndexHash<RTYPE> hash(x);
-      int max = 1, index = 0; //  n[l+1] is unstable !!
-      IntegerVector n(l+1); //  = no_init_vector // better for valgrind !!
+      int max = 1, index = 0; //  n[l+1] is unstable
+      IntegerVector n(l+1); //  = no_init_vector // better for valgrind
       storage_t mode = x[0];
       if(narm) {
         int i = 0, end = l-1;
@@ -42,7 +42,7 @@ Vector<RTYPE> fmodeImpl(const Vector<RTYPE>& x, int ng, const IntegerVector& g, 
           if(!hash.data[addr]) {
             hash.data[addr] = i+1;
             ++hash.size_;
-            n[i+1] = 1; // good?? stable ??
+            n[i+1] = 1; // good ? stable ?
           } else {
             index = hash.data[addr];
             if(++n[index] > max) { // good, or create int index
@@ -61,7 +61,7 @@ Vector<RTYPE> fmodeImpl(const Vector<RTYPE>& x, int ng, const IntegerVector& g, 
           if(!hash.data[addr]) {
             hash.data[addr] = i+1;
             ++hash.size_;
-            n[i+1] = 1; // good?? stable ??
+            n[i+1] = 1; // good ? stable ?
           } else {
             index = hash.data[addr];
             if(++n[index] > max) { // good, or create int index
@@ -72,14 +72,14 @@ Vector<RTYPE> fmodeImpl(const Vector<RTYPE>& x, int ng, const IntegerVector& g, 
         }
       }
       Vector<RTYPE> out(1, mode);
-      DUPLICATE_ATTRIB(out, x); // could add right name for names vectors !!
+      DUPLICATE_ATTRIB(out, x); // could add right name for names vectors
       if(Rf_getAttrib(x, R_NamesSymbol) != R_NilValue) Rf_setAttrib(out, R_NamesSymbol, R_NilValue);
       return out;
     } else {
       if(l != g.size()) stop("length(g) must match length(x)");
-      std::vector<std::vector<storage_t> > gmap(ng); //
+      std::vector<std::vector<storage_t> > gmap(ng);
       Vector<RTYPE> out = no_init_vector(ng);
-      int ngp = ng+1; // , n[ngp]; // good ?? stable ?? -> yes !!
+      int ngp = ng+1; // , n[ngp]; // good ? stable ? -> yes !
       std::vector<int> n(ngp); // memset(n, 0, sizeof(int)*ngp);
       if(Rf_isNull(gs)) {
         for(int i = 0; i != l; ++i) ++n[g[i]];
@@ -99,12 +99,12 @@ Vector<RTYPE> fmodeImpl(const Vector<RTYPE>& x, int ng, const IntegerVector& g, 
       for(int i = 0; i != l; ++i) gmap[g[i]-1][n[g[i]]++] = x[i];
       if(narm) {
         for(int gr = 0; gr != ng; ++gr) {
-          const std::vector<storage_t>& temp = gmap[gr]; // wrap() // good ?? // const Vector<RTYPE>& // better for character strings !!
+          const std::vector<storage_t>& temp = gmap[gr]; // wrap() // good ? // const Vector<RTYPE>& // better for character strings
           sugar::IndexHash<RTYPE> hash(wrap(temp));
-          int i = 0, s = hash.n, end = s-1, max = 1; // n[s+1] // fastest ?? use n ??
-          IntegerVector n(s+1); //  = no_init_vector // better for valgrind !!
+          int i = 0, s = hash.n, end = s-1, max = 1; // n[s+1] // fastest ? use n ?
+          IntegerVector n(s+1); //  = no_init_vector // better for valgrind
           while(isnanT(temp[i]) && i!=end) ++i;
-          out[gr] = temp[i]; // good !!
+          out[gr] = temp[i]; // good
           if(i!=end) for( ; i != s; ++i) {
             if(isnanT(temp[i])) continue;
             unsigned int addr = hash.get_addr(temp[i]);
@@ -126,11 +126,11 @@ Vector<RTYPE> fmodeImpl(const Vector<RTYPE>& x, int ng, const IntegerVector& g, 
         }
       } else {
         for(int gr = 0; gr != ng; ++gr) {
-          const std::vector<storage_t>& temp = gmap[gr]; // good ?? // const Vector<RTYPE>& // wrap()
+          const std::vector<storage_t>& temp = gmap[gr]; // good ? // const Vector<RTYPE>& // wrap()
           sugar::IndexHash<RTYPE> hash(wrap(temp));
           out[gr] = temp[0];
-          int s = hash.n, max = 1; // n[s+1] // fastest ?? use n ?? and reset partially ??
-          IntegerVector n(s+1); //  = no_init_vector // better for valgrind !!
+          int s = hash.n, max = 1; // n[s+1] // fastest ? use n ? and reset partially ?
+          IntegerVector n(s+1); //  = no_init_vector // better for valgrind
           for(int i = 0; i != s; ++i) {
             unsigned int addr = hash.get_addr(temp[i]);
             while(hash.data[addr] && hash.not_equal(temp[hash.data[addr] - 1], temp[i])) {
@@ -154,7 +154,7 @@ Vector<RTYPE> fmodeImpl(const Vector<RTYPE>& x, int ng, const IntegerVector& g, 
       if(Rf_getAttrib(x, R_NamesSymbol) != R_NilValue) Rf_setAttrib(out, R_NamesSymbol, R_NilValue);
       return out;
     }
-  } else { // With Weights !!
+  } else { // With Weights
     NumericVector wg = w;
     if(l != wg.size()) stop("length(w) must match length(x)");
 
@@ -162,7 +162,7 @@ Vector<RTYPE> fmodeImpl(const Vector<RTYPE>& x, int ng, const IntegerVector& g, 
       sugar::IndexHash<RTYPE> hash(x);
       double max = DBL_MIN;
       int index = 0;
-      NumericVector n(l+1); //  = no_init_vector // better for valgrind !!
+      NumericVector n(l+1); //  = no_init_vector // better for valgrind
       storage_t mode = x[0];
       if(narm) {
         int i = 0, end = l-1;
@@ -177,8 +177,8 @@ Vector<RTYPE> fmodeImpl(const Vector<RTYPE>& x, int ng, const IntegerVector& g, 
           if(!hash.data[addr]) {
             hash.data[addr] = i+1;
             ++hash.size_;
-            n[i+1] = wg[i]; // good?? stable ??
-            if(wg[i] > max) { // necessary, because second loop only entered for more than one occurrence of the same value !!
+            n[i+1] = wg[i]; // good? stable ?
+            if(wg[i] > max) { // necessary, because second loop only entered for more than one occurrence of the same value
               max = wg[i];
               mode = x[i];
             }
@@ -201,8 +201,8 @@ Vector<RTYPE> fmodeImpl(const Vector<RTYPE>& x, int ng, const IntegerVector& g, 
           if(!hash.data[addr]) {
             hash.data[addr] = i+1;
             ++hash.size_;
-            n[i+1] = wg[i]; // good?? stable ??
-            if(wg[i] > max) { // necessary, because second loop only entered for more than one occurrence of the same value !!
+            n[i+1] = wg[i]; // good? stable ?
+            if(wg[i] > max) { // necessary, because second loop only entered for more than one occurrence of the same value
               max = wg[i];
               mode = x[i];
             }
@@ -222,10 +222,10 @@ Vector<RTYPE> fmodeImpl(const Vector<RTYPE>& x, int ng, const IntegerVector& g, 
       return out;
     } else {
       if(l != g.size()) stop("length(g) must match length(x)");
-      std::vector<std::vector<storage_t> > gmap(ng); //
+      std::vector<std::vector<storage_t> > gmap(ng);
       std::vector<std::vector<double> > wmap(ng);
       Vector<RTYPE> out = no_init_vector(ng);
-      int ngp = ng+1; // n[ngp]; // good ?? stable ?? -> yes !!
+      int ngp = ng+1; // n[ngp]; // good ? stable ? -> yes
       std::vector<int> n(ngp); // memset(n, 0, sizeof(int)*ngp);
       if(Rf_isNull(gs)) {
         for(int i = 0; i != l; ++i) ++n[g[i]];
@@ -250,14 +250,14 @@ Vector<RTYPE> fmodeImpl(const Vector<RTYPE>& x, int ng, const IntegerVector& g, 
       }
       if(narm) {
         for(int gr = 0; gr != ng; ++gr) {
-          std::vector<storage_t> temp = gmap[gr]; // good ?? // const Vector<RTYPE>& // wrap()
+          std::vector<storage_t> temp = gmap[gr]; // good ? // const Vector<RTYPE>& // wrap()
           const std::vector<double>& wtemp = wmap[gr];
           sugar::IndexHash<RTYPE> hash(wrap(temp));
           int i = 0, s = hash.n, end = s-1, index = 0;
           double max = DBL_MIN; // n[s+1]
-          NumericVector n(s+1); //  = no_init_vector // better for valgrind !!
+          NumericVector n(s+1); //  = no_init_vector // better for valgrind
           while((isnanT(temp[i]) || std::isnan(wtemp[i])) && i!=end) ++i;
-          out[gr] = temp[i]; // good !!
+          out[gr] = temp[i]; // good !
           if(i!=end) for( ; i != s; ++i) {
             if(isnanT(temp[i]) || std::isnan(wtemp[i])) continue;
             unsigned int addr = hash.get_addr(temp[i]);
@@ -269,7 +269,7 @@ Vector<RTYPE> fmodeImpl(const Vector<RTYPE>& x, int ng, const IntegerVector& g, 
               hash.data[addr] = i+1;
               ++hash.size_;
               n[i+1] = wtemp[i];
-              if(wtemp[i] > max) { // necessary, because second loop only entered for more than one occurrence of the same value !!
+              if(wtemp[i] > max) { // necessary, because second loop only entered for more than one occurrence of the same value
                 max = wtemp[i];
                 out[gr] = temp[i];
               }
@@ -285,13 +285,13 @@ Vector<RTYPE> fmodeImpl(const Vector<RTYPE>& x, int ng, const IntegerVector& g, 
         }
       } else {
         for(int gr = 0; gr != ng; ++gr) {
-          std::vector<storage_t> temp = gmap[gr]; // good ?? // const Vector<RTYPE>& // wrap()
+          std::vector<storage_t> temp = gmap[gr]; // good ? // const Vector<RTYPE>& // wrap()
           const std::vector<double>& wtemp = wmap[gr];
           sugar::IndexHash<RTYPE> hash(wrap(temp));
           out[gr] = temp[0];
-          int s = hash.n, index = 0; // fastest ?? use n ?? and reset partially ??
+          int s = hash.n, index = 0; // fastest ? use n ? and reset partially ?
           double max = DBL_MIN; // n[s+1];
-          NumericVector n(s+1); //  = no_init_vector // better for valgrind !!
+          NumericVector n(s+1); //  = no_init_vector // better for valgrind
           for(int i = 0; i != s; ++i) {
             unsigned int addr = hash.get_addr(temp[i]);
             while(hash.data[addr] && hash.not_equal(temp[hash.data[addr] - 1], temp[i])) {
@@ -302,7 +302,7 @@ Vector<RTYPE> fmodeImpl(const Vector<RTYPE>& x, int ng, const IntegerVector& g, 
               hash.data[addr] = i+1;
               ++hash.size_;
               n[i+1] = wtemp[i];
-              if(wtemp[i] > max) { // necessary, because second loop only entered for more than one occurrence of the same value !!
+              if(wtemp[i] > max) { // necessary, because second loop only entered for more than one occurrence of the same value
                 max = wtemp[i];
                 out[gr] = temp[i];
               }
@@ -324,7 +324,7 @@ Vector<RTYPE> fmodeImpl(const Vector<RTYPE>& x, int ng, const IntegerVector& g, 
   }
 }
 
-template <> // No logical vector with sugar::IndexHash<RTYPE> !!!
+template <> // No logical vector with sugar::IndexHash<RTYPE> !
 Vector<LGLSXP> fmodeImpl(const Vector<LGLSXP>& x, int ng, const IntegerVector& g, const SEXP& gs, const SEXP& w, bool narm) {
   int l = x.size();
 
@@ -345,7 +345,7 @@ Vector<LGLSXP> fmodeImpl(const Vector<LGLSXP>& x, int ng, const IntegerVector& g
       int NNA = 0;
       for(int i = 0; i != l; ++i) {
         if(x[i] == NA_LOGICAL) ++NNA;
-        else if(x[i]) ++Ntrue; // else if is crucial here !!
+        else if(x[i]) ++Ntrue; // else if is crucial here !
         else ++Nfalse;
       }
       LogicalVector out(1, (NNA > Ntrue && NNA > Nfalse) ? NA_LOGICAL : Ntrue >= Nfalse);
@@ -369,7 +369,7 @@ Vector<LGLSXP> fmodeImpl(const Vector<LGLSXP>& x, int ng, const IntegerVector& g
       if(Rf_getAttrib(x, R_NamesSymbol) != R_NilValue) Rf_setAttrib(out, R_NamesSymbol, R_NilValue);
       return out;
     } else {
-      IntegerVector Ntrue(ng), Nfalse(ng), NNA(ng); // better way ??
+      IntegerVector Ntrue(ng), Nfalse(ng), NNA(ng); // better way ?
       LogicalVector out = no_init_vector(ng);
       for(int i = 0; i != l; ++i) {
         if(x[i] == NA_LOGICAL) ++NNA[g[i]-1];
@@ -432,7 +432,7 @@ Vector<LGLSXP> fmodeImpl(const Vector<LGLSXP>& x, int ng, const IntegerVector& g
        if(Rf_getAttrib(x, R_NamesSymbol) != R_NilValue) Rf_setAttrib(out, R_NamesSymbol, R_NilValue);
        return out;
      } else {
-       NumericVector sumwtrue(ng), sumwfalse(ng), sumwNA(ng); // better way ??
+       NumericVector sumwtrue(ng), sumwfalse(ng), sumwNA(ng); // better way ?
        LogicalVector out = no_init_vector(ng);
        for(int i = 0; i != l; ++i) {
          if(std::isnan(wg[i])) continue;
@@ -478,8 +478,8 @@ SEXP fmodeCpp(SEXP x, int ng = 0, IntegerVector g = 0, SEXP gs = R_NilValue, SEX
 }
 
 
-// Replicating weight 2d array all  the time is stupid !!
-// [[Rcpp::export]] // Better Solution ?? // What about string ?? -> do like matrix, but keep vector LGLSXP method !!
+// Replicating weight 2d array all the time is stupid
+// [[Rcpp::export]]   // Better Solution ? // What about string ? -> do like matrix, but keep vector LGLSXP method
 SEXP fmodelCpp(const List& x, int ng = 0, const IntegerVector& g = 0, const SEXP& gs = R_NilValue, const SEXP& w = R_NilValue, bool narm = true) {
   int l = x.size();
   List out(l);
@@ -503,7 +503,7 @@ SEXP fmodelCpp(const List& x, int ng = 0, const IntegerVector& g = 0, const SEXP
   }
   DUPLICATE_ATTRIB(out, x);
   if(ng == 0) out.attr("row.names") = 1;
-  else out.attr("row.names") = IntegerVector::create(NA_INTEGER, -ng); // NumericVector::create(NA_REAL, -ng);
+  else out.attr("row.names") = IntegerVector::create(NA_INTEGER, -ng);
   return out;
 }
 
@@ -524,10 +524,10 @@ SEXP fmodemImpl(const Matrix<RTYPE>& x, int ng, const IntegerVector& g,
       if(narm) {
         for(int j = col; j--; ) {
           ConstMatrixColumn<RTYPE> column = x(_ , j);
-          sugar::IndexHash<RTYPE> hash(wrap(column)); // why wrap needed ??
-          int i = 0, end = l-1, max = 1, index = 0; // n[l+1]; // stable !!, but this not: IntegerVector n = no_init_vector(l);
-          IntegerVector n(l+1); //  = no_init_vector // better for valgrind !!
-          storage_t mode = column[0]; // best solution ??
+          sugar::IndexHash<RTYPE> hash(wrap(column)); // why wrap needed ?
+          int i = 0, end = l-1, max = 1, index = 0; // n[l+1]; // stable !, but this not: IntegerVector n = no_init_vector(l);
+          IntegerVector n(l+1); //  = no_init_vector // better for valgrind
+          storage_t mode = column[0]; // best solution ?
           while(isnanT(mode) && i!=end) mode = column[++i];
           if(i!=end) for( ; i != l; ++i) {
             if(isnanT(column[i])) continue;
@@ -539,7 +539,7 @@ SEXP fmodemImpl(const Matrix<RTYPE>& x, int ng, const IntegerVector& g,
             if(!hash.data[addr]) {
               hash.data[addr] = i+1;
               ++hash.size_;
-              n[i+1] = 1; // good?? stable ??
+              n[i+1] = 1; // good? stable ?
             } else {
               index = hash.data[addr];
               if(++n[index] > max) { // good, or create int index
@@ -553,10 +553,10 @@ SEXP fmodemImpl(const Matrix<RTYPE>& x, int ng, const IntegerVector& g,
       } else {
         for(int j = col; j--; ) {
           ConstMatrixColumn<RTYPE> column = x(_ , j);
-          sugar::IndexHash<RTYPE> hash(wrap(column)); // why wrap needed ??
+          sugar::IndexHash<RTYPE> hash(wrap(column)); // why wrap needed ?
           int max = 1, index = 0; // n[l+1];
-          IntegerVector n(l+1); //  = no_init_vector // better for valgrind !!
-          storage_t mode = column[0]; // best solution ??
+          IntegerVector n(l+1); //  = no_init_vector // better for valgrind
+          storage_t mode = column[0]; // best solution ?
           for(int i = 0; i != l; ++i) {
             unsigned int addr = hash.get_addr(column[i]);
             while(hash.data[addr] && hash.not_equal(column[hash.data[addr] - 1], column[i])) {
@@ -566,7 +566,7 @@ SEXP fmodemImpl(const Matrix<RTYPE>& x, int ng, const IntegerVector& g,
             if(!hash.data[addr]) {
               hash.data[addr] = i+1;
               ++hash.size_;
-              n[i+1] = 1; // good?? stable ??
+              n[i+1] = 1; // good? stable ?
             } else {
               index = hash.data[addr];
               if(++n[index] > max) { // good, or create int index
@@ -579,7 +579,7 @@ SEXP fmodemImpl(const Matrix<RTYPE>& x, int ng, const IntegerVector& g,
         }
       }
       if(drop) out.attr("names") = colnames(x);
-      else { // could do duplicate attrib, but problems, i.e. with ts matrices etc.. !! -> but what about factors or dates ??
+      else { // could do duplicate attrib, but problems, i.e. with ts matrices etc.. -> but what about factors or dates ?
         out.attr("dim") = Dimension(1, col);
         colnames(out) = colnames(x);
       }
@@ -610,14 +610,14 @@ SEXP fmodemImpl(const Matrix<RTYPE>& x, int ng, const IntegerVector& g,
           ConstMatrixColumn<RTYPE> column = x(_ , j);
           MatrixColumn<RTYPE> outj = out(_, j);
           n.assign(ngp, 0); // memset(n, 0, sizeof(int)*ngp);
-          for(int i = 0; i != l; ++i) gmap[g[i]-1][n[g[i]]++] = column[i]; // reading in all the values. Better way ??
+          for(int i = 0; i != l; ++i) gmap[g[i]-1][n[g[i]]++] = column[i]; // reading in all the values. Better way ?
           for(int gr = 0; gr != ng; ++gr) {
-            const std::vector<storage_t>& temp = gmap[gr]; // wrap() // good ?? // const Vector<RTYPE>&
+            const std::vector<storage_t>& temp = gmap[gr]; // wrap() // good ? // const Vector<RTYPE>&
             sugar::IndexHash<RTYPE> hash(wrap(temp));
-            int i = 0, s = hash.n, end = s-1, max = 1; // ns[s+1] // fastest ?? use n ??
-            IntegerVector ns(s+1); //  = no_init_vector // better for valgrind !!
+            int i = 0, s = hash.n, end = s-1, max = 1; // ns[s+1] // fastest ? use n ?
+            IntegerVector ns(s+1); //  = no_init_vector // better for valgrind
             while(isnanT(temp[i]) && i!=end) ++i;
-            outj[gr] = temp[i]; // good !!
+            outj[gr] = temp[i]; // good !
             if(i!=end) for( ; i != s; ++i) {
               if(isnanT(temp[i])) continue;
               unsigned int addr = hash.get_addr(temp[i]);
@@ -643,13 +643,13 @@ SEXP fmodemImpl(const Matrix<RTYPE>& x, int ng, const IntegerVector& g,
           ConstMatrixColumn<RTYPE> column = x(_ , j);
           MatrixColumn<RTYPE> outj = out(_, j);
           n.assign(ngp, 0); // memset(n, 0, sizeof(int)*ngp);
-          for(int i = 0; i != l; ++i) gmap[g[i]-1][n[g[i]]++] = column[i]; // reading in all the values. Better way ??
+          for(int i = 0; i != l; ++i) gmap[g[i]-1][n[g[i]]++] = column[i]; // reading in all the values. Better way ?
           for(int gr = 0; gr != ng; ++gr) {
-            const std::vector<storage_t>& temp = gmap[gr]; // wrap() // good ?? // const Vector<RTYPE>&
+            const std::vector<storage_t>& temp = gmap[gr]; // wrap() // good ? // const Vector<RTYPE>&
             sugar::IndexHash<RTYPE> hash(wrap(temp));
             outj[gr] = temp[0];
             int  s = hash.n, max = 1; // ns[s+1]
-            IntegerVector ns(s+1); //  = no_init_vector // better for valgrind !!
+            IntegerVector ns(s+1); //  = no_init_vector // better for valgrind
             for(int i = 0; i != s; ++i) {
               unsigned int addr = hash.get_addr(temp[i]);
               while(hash.data[addr] && hash.not_equal(temp[hash.data[addr] - 1], temp[i])) {
@@ -682,11 +682,11 @@ SEXP fmodemImpl(const Matrix<RTYPE>& x, int ng, const IntegerVector& g,
       if(narm) {
         for(int j = col; j--; ) {
           ConstMatrixColumn<RTYPE> column = x(_ , j);
-          sugar::IndexHash<RTYPE> hash(wrap(column)); // why wrap needed ??
+          sugar::IndexHash<RTYPE> hash(wrap(column)); // why wrap needed ?
           int i = 0, end = l-1, index = 0;
           double max = DBL_MIN; // , n[l+1]
-          NumericVector n(l+1); //  = no_init_vector // better for valgrind !!
-          storage_t mode = column[0]; // best solution ??
+          NumericVector n(l+1); //  = no_init_vector // better for valgrind
+          storage_t mode = column[0]; // best solution ?
           while((isnanT(mode) || std::isnan(wg[i])) && i!=end) mode = column[++i];
           if(i!=end) for( ; i != l; ++i) {
             if(isnanT(column[i]) || std::isnan(wg[i])) continue;
@@ -699,7 +699,7 @@ SEXP fmodemImpl(const Matrix<RTYPE>& x, int ng, const IntegerVector& g,
               hash.data[addr] = i+1;
               ++hash.size_;
               n[i+1] = wg[i];
-              if(wg[i] > max) { // necessary, because second loop only entered for more than one occurrence of the same value !!
+              if(wg[i] > max) { // necessary, because second loop only entered for more than one occurrence of the same value
                 max = wg[i];
                 mode = column[i];
               }
@@ -717,11 +717,11 @@ SEXP fmodemImpl(const Matrix<RTYPE>& x, int ng, const IntegerVector& g,
       } else {
         for(int j = col; j--; ) {
           ConstMatrixColumn<RTYPE> column = x(_ , j);
-          sugar::IndexHash<RTYPE> hash(wrap(column)); // why wrap needed ??
+          sugar::IndexHash<RTYPE> hash(wrap(column)); // why wrap needed ?
           int index = 0;
           double max = DBL_MIN; // , n[l+1]
-          NumericVector n(l+1); //  = no_init_vector // better for valgrind !!
-          storage_t mode = column[0]; // best solution ??
+          NumericVector n(l+1); //  = no_init_vector // better for valgrind
+          storage_t mode = column[0]; // best solution ?
           for(int i = 0; i != l; ++i) {
             unsigned int addr = hash.get_addr(column[i]);
             while(hash.data[addr] && hash.not_equal(column[hash.data[addr] - 1], column[i])) {
@@ -732,7 +732,7 @@ SEXP fmodemImpl(const Matrix<RTYPE>& x, int ng, const IntegerVector& g,
               hash.data[addr] = i+1;
               ++hash.size_;
               n[i+1] = wg[i];
-              if(wg[i] > max) { // necessary, because second loop only entered for more than one occurrence of the same value !!
+              if(wg[i] > max) { // necessary, because second loop only entered for more than one occurrence of the same value
                 max = wg[i];
                 mode = column[i];
               }
@@ -749,7 +749,7 @@ SEXP fmodemImpl(const Matrix<RTYPE>& x, int ng, const IntegerVector& g,
         }
       }
       if(drop) out.attr("names") = colnames(x);
-      else { // could do duplicate attrib, but problems, i.e. with ts matrices etc.. !! -> but what about factors or dates ??
+      else { // could do duplicate attrib, but problems, i.e. with ts matrices etc.. -> but what about factors or dates ?
         out.attr("dim") = Dimension(1, col);
         colnames(out) = colnames(x);
       }
@@ -779,7 +779,7 @@ SEXP fmodemImpl(const Matrix<RTYPE>& x, int ng, const IntegerVector& g,
         }
       }
       for(int i = 0; i != l; ++i) {
-        gmap[g[i]-1][n[g[i]]] = x[i]; // good ?? not column 1 ??
+        gmap[g[i]-1][n[g[i]]] = x[i]; // good ? not column 1 ?
         wmap[g[i]-1][n[g[i]]++] = wg[i];
       }
       if(narm) {
@@ -788,17 +788,17 @@ SEXP fmodemImpl(const Matrix<RTYPE>& x, int ng, const IntegerVector& g,
           MatrixColumn<RTYPE> outj = out(_, j);
           if(j != 0) {
             n.assign(ngp, 0); // memset(n, 0, sizeof(int)*ngp);
-            for(int i = 0; i != l; ++i) gmap[g[i]-1][n[g[i]]++] = column[i]; // reading in all the values. Better way ??
+            for(int i = 0; i != l; ++i) gmap[g[i]-1][n[g[i]]++] = column[i]; // reading in all the values. Better way ?
           }
           for(int gr = 0; gr != ng; ++gr) {
-            const std::vector<storage_t>& temp = gmap[gr]; // wrap() // good ?? // const Vector<RTYPE>&
+            const std::vector<storage_t>& temp = gmap[gr]; // wrap() // good ? // const Vector<RTYPE>&
             const std::vector<double>& wtemp = wmap[gr];
             sugar::IndexHash<RTYPE> hash(wrap(temp));
-            int i = 0, index = 0, s = hash.n, end = s-1; // fastest ?? use n ??
+            int i = 0, index = 0, s = hash.n, end = s-1; // fastest ? use n ?
             double max = DBL_MIN; // , ns[s+1];
-            NumericVector ns(s+1); //  = no_init_vector // better for valgrind !!
+            NumericVector ns(s+1); //  = no_init_vector // better for valgrind
             while((isnanT(temp[i]) || std::isnan(wtemp[i])) && i!=end) ++i;
-            outj[gr] = temp[i]; // good !!
+            outj[gr] = temp[i]; // good !
             if(i!=end) for( ; i != s; ++i) {
               if(isnanT(temp[i]) || std::isnan(wtemp[i])) continue;
               unsigned int addr = hash.get_addr(temp[i]);
@@ -810,7 +810,7 @@ SEXP fmodemImpl(const Matrix<RTYPE>& x, int ng, const IntegerVector& g,
                 hash.data[addr] = i+1;
                 ++hash.size_;
                 ns[i+1] = wtemp[i];
-                if(wtemp[i] > max) { // necessary, because second loop only entered for more than one occurrence of the same value !!
+                if(wtemp[i] > max) { // necessary, because second loop only entered for more than one occurrence of the same value
                   max = wtemp[i];
                   outj[gr] = temp[i];
                 }
@@ -831,15 +831,15 @@ SEXP fmodemImpl(const Matrix<RTYPE>& x, int ng, const IntegerVector& g,
           MatrixColumn<RTYPE> outj = out(_, j);
           if(j != 0) {
             n.assign(ngp, 0); // memset(n, 0, sizeof(int)*ngp);
-            for(int i = 0; i != l; ++i) gmap[g[i]-1][n[g[i]]++] = column[i]; // reading in all the values. Better way ??
+            for(int i = 0; i != l; ++i) gmap[g[i]-1][n[g[i]]++] = column[i]; // reading in all the values. Better way ?
           }
           for(int gr = 0; gr != ng; ++gr) {
-            const std::vector<storage_t>& temp = gmap[gr]; // wrap() // good ?? // const Vector<RTYPE>&
+            const std::vector<storage_t>& temp = gmap[gr]; // wrap() // good ? // const Vector<RTYPE>&
             const std::vector<double>& wtemp = wmap[gr];
             sugar::IndexHash<RTYPE> hash(wrap(temp));
-            int index = 0, s = hash.n; // fastest ?? use n ??
+            int index = 0, s = hash.n; // fastest ? use n ?
             double max = DBL_MIN; // ns[s+1];
-            NumericVector ns(s+1); //  = no_init_vector // better for valgrind !!
+            NumericVector ns(s+1); //  = no_init_vector // better for valgrind
             outj[gr] = temp[0];
             for(int i = 0; i != s; ++i) {
               unsigned int addr = hash.get_addr(temp[i]);
@@ -851,7 +851,7 @@ SEXP fmodemImpl(const Matrix<RTYPE>& x, int ng, const IntegerVector& g,
                 hash.data[addr] = i+1;
                 ++hash.size_;
                 ns[i+1] = wtemp[i];
-                if(wtemp[i] > max) { // necessary, because second loop only entered for more than one occurrence of the same value !!
+                if(wtemp[i] > max) { // necessary, because second loop only entered for more than one occurrence of the same value
                   max = wtemp[i];
                   outj[gr] = temp[i];
                 }
@@ -874,7 +874,7 @@ SEXP fmodemImpl(const Matrix<RTYPE>& x, int ng, const IntegerVector& g,
   }
 }
 
-template <> // No logical vector with sugar::IndexHash<RTYPE> !!!
+template <> // No logical vector with sugar::IndexHash<RTYPE> !
 SEXP fmodemImpl(const Matrix<LGLSXP>& x, int ng, const IntegerVector& g,
                 const SEXP& gs, const SEXP& w, bool narm, bool drop) {
   int l = x.nrow(), col = x.ncol();
@@ -899,7 +899,7 @@ SEXP fmodemImpl(const Matrix<LGLSXP>& x, int ng, const IntegerVector& g,
           LogicalMatrix::ConstColumn column = x(_ , j);
           int Ntrue = 0, Nfalse = 0, NNA = 0;
           for(int i = 0; i != l; ++i) {
-            if(column[i] == NA_LOGICAL) ++NNA; // error before, should put contunie or else if aftert this !!
+            if(column[i] == NA_LOGICAL) ++NNA; // error before, should put contunie or else if aftert this
             else if(column[i]) ++Ntrue;
             else ++Nfalse;
           }
@@ -916,7 +916,7 @@ SEXP fmodemImpl(const Matrix<LGLSXP>& x, int ng, const IntegerVector& g,
     } else {
       LogicalMatrix out = no_init_matrix(ng, col);
       if(narm) {
-        std::fill(out.begin(), out.end(), NA_LOGICAL); // memset(out, NA_LOGICAL, sizeof(bool)*ng*col); // doesn't work !! -> not a matrix anymore afterwards !!
+        std::fill(out.begin(), out.end(), NA_LOGICAL); // memset(out, NA_LOGICAL, sizeof(bool)*ng*col); // doesn't work -> not a matrix anymore afterwards
         for(int j = col; j--; ) {
           LogicalMatrix::ConstColumn column = x(_ , j);
           LogicalMatrix::Column outj = out(_, j);
@@ -973,7 +973,7 @@ SEXP fmodemImpl(const Matrix<LGLSXP>& x, int ng, const IntegerVector& g,
           double sumwtrue = 0, sumwfalse = 0, sumwNA = 0;
           for(int i = 0; i != l; ++i) {
             if(std::isnan(wg[i])) continue;
-            if(column[i] == NA_LOGICAL) sumwNA += wg[i]; // error before, should put contunie or else if aftert this !!
+            if(column[i] == NA_LOGICAL) sumwNA += wg[i]; // error before, should put contunie or else if aftert this
             else if(column[i]) sumwtrue += wg[i];
             else sumwfalse += wg[i];
           }
@@ -990,7 +990,7 @@ SEXP fmodemImpl(const Matrix<LGLSXP>& x, int ng, const IntegerVector& g,
     } else {
       LogicalMatrix out = no_init_matrix(ng, col);
       if(narm) {
-        std::fill(out.begin(), out.end(), NA_LOGICAL); // memset(out, NA_LOGICAL, sizeof(bool)*ng*col); // doesn't work !! -> not a matrix anymore afterwards !!
+        std::fill(out.begin(), out.end(), NA_LOGICAL); // memset(out, NA_LOGICAL, sizeof(bool)*ng*col); // doesn't work -> not a matrix anymore afterwards
         for(int j = col; j--; ) {
           LogicalMatrix::ConstColumn column = x(_ , j);
           LogicalMatrix::Column outj = out(_, j);

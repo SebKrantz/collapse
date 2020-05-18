@@ -5,7 +5,7 @@
 Recursively Apply a Function to a List of Data Objects
 }
 \description{
-\code{rapply2d} is a recursive version of \code{lapply} with two key differences to \code{rapply}: (1) Data frames are considered as final objects, not as (sub-)lists, and (2) the result is not simplified.
+\code{rapply2d} is a recursive version of \code{lapply} with two key differences to \code{\link{rapply}}: (1) Data frames are considered as final objects, not as (sub-)lists, and (2) the result is never simplified / unlisted.
 }
 \usage{
 rapply2d(l, FUN, ...)

@@ -1,8 +1,11 @@
 
-# See https://github.com/tidyverse/dplyr/blob/bbcfe99e29fe737d456b0d7adc33d3c445a32d9d/R/zzz.r
 .onLoad <- function(libname, pkgname) {
+
   res <- .Call(C_collapse_init, "init.success")
   if(!is.character(res) || res != "init.success") stop("collapse not succesfully loaded!")
+
+  options("collapse_unused_arg_action" = "warning") # error, warning, message or none
+
   invisible(res)
 }
 
@@ -14,12 +17,13 @@
   library.dynam.unload("collapse", libpath)
 }
 
-
 release_questions <- function() {
   c(
     "Have you updated the version number in DESCRIPTION, NEWS.md, NEWS.Rd, cran.comments and .onAttach?",
+    "Updated Readme?",
     "Spell check ?",
     "built vignettes properly with Sys.setenv(NCRAN = TRUE)?",
-    "Have you updated all help files with code changes, even if it's only documenting arguments or links?"
+    "Have you updated all help files with code changes, even if it's only documenting arguments or links?",
+    "All function in global_macros.R?"
   )
 }

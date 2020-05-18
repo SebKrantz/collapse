@@ -1,4 +1,4 @@
-\name{fbetween-fwithin-B-W}
+\name{fbetween, fwithin}
 \alias{B}
 \alias{B.default}
 \alias{B.matrix}
@@ -89,10 +89,10 @@ fbetween(x, \dots)
   \item{x}{a numeric vector, matrix, data.frame, panel-series (\code{plm::pseries}), panel-data.frame (\code{plm::pdata.frame}) or grouped tibble (\code{dplyr::grouped_df}).}
   \item{g}{a factor, \code{\link{GRP}} object, atomic vector (internally converted to factor) or a list of vectors / factors (internally converted to a \code{\link{GRP}} object) used to group \code{x}.}
   \item{by}{\emph{B and W data.frame method}: Same as g, but also allows one- or two-sided formulas i.e. \code{~ group1} or \code{var1 + var2 ~ group1 + group2}. See Examples.}
-  \item{w}{a numeric vector of (non-negative) weights. \code{B/W} \code{data.frame} and \code{pdata.frame} methods also allow a one-sided formula i.e. \code{~ weightcol}. The \code{grouped_df} (\code{dplyr}) method supports lazy-evaluation. See Examples.}
+  \item{w}{a numeric vector of (non-negative) weights. \code{B/W} data frame and \code{pdata.frame} methods also allow a one-sided formula i.e. \code{~ weightcol}. The \code{grouped_df} (\emph{dplyr}) method supports lazy-evaluation. See Examples.}
     \item{cols}{\emph{data.frame method}: Select columns to center/average using a function, column names or indices. Default: All numeric variables. \emph{Note}: \code{cols} is ignored if a two-sided formula is passed to \code{by}.}
   \item{na.rm}{logical. skip missing values in \code{x} when computing averages. If \code{na.rm = FALSE} and a \code{NA} or \code{NaN} is encountered, the average for that group will be \code{NA}, and all data points belonging to that group will also be \code{NA}.}
-      \item{effect}{\code{plm} methods: Select which panel identifier should be used as grouping variable. 1L means first variable in the \code{plm::index}, 2L the second etc. if more than one integer is supplied, the corresponding index-variables are interacted. }
+      \item{effect}{\emph{plm} methods: Select which panel identifier should be used as grouping variable. 1L means first variable in the \code{plm::index}, 2L the second etc. if more than one integer is supplied, the corresponding index-variables are interacted. }
   \item{stub}{a prefix or stub to rename all transformed columns. \code{FALSE} will not rename columns.}
   \item{fill}{\emph{option to \code{fbetween/B}}: Logical. \code{TRUE} will overwrite missing values in \code{x} with the respective average. By default missing values in \code{x} are preserved.}
   \item{mean}{\emph{option to \code{fwithin/W}}: The mean to center on, default is 0, but a different mean can be supplied and will be added to the data after the centering is performed. A special option when performing grouped centering is \code{mean = "overall.mean"}. In that case the overall mean of the data will be added after subtracting out group means.}

@@ -37,7 +37,7 @@ fmean(x, ...)
 
 \item{na.rm}{logical. Skip missing values in \code{x}. Defaults to \code{TRUE} and implemented at very little computational cost. If \code{na.rm = FALSE} a \code{NA} is returned when encountered.}
 
-\item{use.g.names}{make group-names and add to the result as names (vector method) or row-names (matrix and data.frame method). No row-names are generated for data.tables and grouped tibbles.}
+\item{use.g.names}{make group-names and add to the result as names (vector method) or row-names (matrix and data.frame method). No row-names are generated for data.tables and (default) grouped tibbles.}
 
 \item{drop}{\emph{matrix and data.frame method:} drop dimensions and return an atomic vector if \code{g = NULL} and \code{TRA = NULL}.}
 
@@ -57,7 +57,7 @@ The weighted mean is computed as \code{sum(x * w) / sum(w)}. If \code{na.rm = TR
 
 This all seamlessly generalizes to grouped computations, which are performed in a single pass (without splitting the data) and therefore extremely fast.
 
-When applied to data frame's with groups or \code{drop = FALSE}, \code{fmean} preserves all column attributes (such as variable labels) but does not distinguish between classed and unclassed object (thus applying \code{fmean} to a factor column will give a 'malformed factor' error). The attributes of the \code{data.frame} itself are also preserved.
+When applied to data frame's with groups or \code{drop = FALSE}, \code{fmean} preserves all column attributes (such as variable labels) but does not distinguish between classed and unclassed object (thus applying \code{fmean} to a factor column will give a 'malformed factor' error). The attributes of the data frame itself are also preserved.
 }
 \value{
 The (\code{w} weighted) mean of \code{x}, grouped by \code{g}, or (if \code{\link{TRA}} is used) \code{x} transformed by its mean, grouped by \code{g}.
@@ -82,7 +82,9 @@ fmean(mpg, g, mtcars$hp, "-")      # Group-demeaning using weighted group means
 ## data.frame method
 fmean(mtcars)
 fmean(mtcars, g)
+fmean(fgroup_by(mtcars, cyl, vs, am))  # another way of doing it...
 fmean(mtcars, g, TRA = "-") # etc...
+
 
 ## matrix method
 m <- qM(mtcars)
@@ -97,6 +99,9 @@ mtcars \%>\% group_by(cyl,vs,am) \%>\% fmean(hp)       # Weighted
 mtcars \%>\% group_by(cyl,vs,am) \%>\% fmean(hp,"-")   # Weighted Transform
 mtcars \%>\% group_by(cyl,vs,am) \%>\%
            select(mpg,hp) \%>\% fmean(hp,"-")        # Only mpg
+
+mtcars \%>\% fgroup_by(cyl,vs,am) \%>\%              # Equivalent but faster !!
+           fselect(mpg,hp) \%>\% fmean(hp,"-")
 }
 \keyword{univar}
 \keyword{manip}

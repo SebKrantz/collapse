@@ -1,9 +1,274 @@
-# Note: do.call(cbind, lapply(X, FUN)) is always faster than for loop !!
 
+
+# inspired by ?dplyr::recode
+# Think about adopting this code for as.numeric_factor and as.character_factor
+recode_num <- function(X, ..., default = NULL, missing = NULL) {
+  if(missing(...)) stop("recode_num requires arguments of the form: value = replacement")
+  args <- list(...)
+  nam <- as.numeric(names(args))
+  # nzchar(names(args)) ... check non-empty names ? -> nah, this package is not for dummies
+  if(anyNA(nam)) stop(paste("Non-numeric arguments:", paste(names(args)[is.na(nam)], collapse = ", ")))
+  arglen <- length(args)
+  missingl <- !is.null(missing)
+  if(missingl && any(nam == missing))  warning(paste0("To improve performance missing values are replaced prior to recode, so this replaces all missing values with ",
+                                               missing, " and those are then again replaced with ", nam[nam == missing], ". If this is not desired, call replace_NA after recode with missing = NULL."))
+  if(arglen == 1L) {
+    args <- args[[1L]]
+    if(is.null(default)) {
+      if(missingl) {
+        repfun <- function(y) if(is.numeric(y)) {
+          y[is.na(y)] <- missing
+          `[<-`(y, y == nam, value = args)
+          } else y
+      } else {
+        repfun <- function(y) if(is.numeric(y)) `[<-`(y, y == nam, value = args) else y
+      }
+    } else {
+      nr <- if(is.atomic(X)) NROW(X) else fnrow2(X)
+      if(missingl) {
+        repfun <- function(y) if(is.numeric(y)) {
+          z <- duplAttributes(rep(default, nr), y)
+          z[is.na(y)] <- missing # could put behind -> better but inconsistent
+          `[<-`(z, y == nam, value = args)
+        } else y
+      } else {
+        repfun <- function(y) if(is.numeric(y)) `[<-`(duplAttributes(rep(default, nr), y), y == nam, value = args) else y
+      }
+    }
+  } else {
+    seqarg <- seq_len(arglen)
+    if(is.null(default)) {
+      if(missingl) {
+        repfun <- function(y) if(is.numeric(y)) {
+          y[is.na(y)] <- missing
+          z <- y
+          for(i in seqarg) z[y == nam[i]] <- args[[i]]
+          z
+        } else y
+      } else {
+        repfun <- function(y) if(is.numeric(y)) {
+          z <- y
+          for(i in seqarg) z[y == nam[i]] <- args[[i]]
+          z
+        } else y
+      }
+    } else {
+      nr <- if(is.atomic(X)) NROW(X) else fnrow2(X)
+      if(missingl) {
+        repfun <- function(y) if(is.numeric(y)) {
+          z <- duplAttributes(rep(default, nr), y)
+          z[is.na(y)] <- missing # could put behind -> better but inconsistent
+          for(i in seqarg) z[y == nam[i]] <- args[[i]]
+          z
+        } else y
+      } else {
+        repfun <- function(y) if(is.numeric(y)) {
+          z <- duplAttributes(rep(default, nr), y)
+          for(i in seqarg) z[y == nam[i]] <- args[[i]]
+          z
+        } else y
+      }
+    }
+  }
+  if(is.list(X)) return(duplAttributes(lapply(unattrib(X), repfun), X))
+  if(!is.numeric(X)) stop("X needs to be numeric or a list")
+  return(repfun(X))
+}
+
+recode_char <- function(X, ..., default = NULL, missing = NULL, regex = FALSE) {
+  if(missing(...)) stop("recode_char requires arguments of the form: value = replacement")
+  args <- list(...)
+  nam <- names(args)
+  arglen <- length(args)
+  missingl <- !is.null(missing)
+  if(missingl && any(nam == missing))  warning(paste0("To improve performance missing values are replaced prior to recode, so this replaces all missing values with ",
+                                                      missing, " and those are then again replaced with ", nam[nam == missing], ". If this is not desired, call replace_NA after recode with missing = NULL."))
+  if(regex) {
+    if(arglen == 1L) {
+      args <- args[[1L]]
+      if(is.null(default)) {
+        if(missingl) {
+          repfun <- function(y) if(is.character(y)) {
+            y[is.na(y)] <- missing
+            `[<-`(y, grepl(nam, y), value = args)
+          } else y
+        } else {
+          repfun <- function(y) if(is.character(y)) `[<-`(y, grepl(nam, y), value = args) else y
+        }
+      } else {
+        nr <- if(is.atomic(X)) NROW(X) else fnrow2(X)
+        if(missingl) {
+          repfun <- function(y) if(is.character(y)) {
+            z <- duplAttributes(rep(default, nr), y)
+            z[is.na(y)] <- missing # could put behind -> better but inconsistent
+            `[<-`(z, grepl(nam, y), value = args)
+          } else y
+        } else {
+          repfun <- function(y) if(is.character(y)) `[<-`(duplAttributes(rep(default, nr), y), grepl(nam, y), value = args) else y
+        }
+      }
+    } else {
+      seqarg <- seq_len(arglen)
+      if(is.null(default)) {
+        if(missingl) {
+          repfun <- function(y) if(is.character(y)) {
+            y[is.na(y)] <- missing
+            z <- y
+            for(i in seqarg) z[grepl(nam[i], y)] <- args[[i]]
+            z
+          } else y
+        } else {
+          repfun <- function(y) if(is.character(y)) {
+            z <- y
+            for(i in seqarg) z[grepl(nam[i], y)] <- args[[i]]
+            z
+          } else y
+        }
+      } else {
+        nr <- if(is.atomic(X)) NROW(X) else fnrow2(X)
+        if(missingl) {
+          repfun <- function(y) if(is.character(y)) {
+            z <- duplAttributes(rep(default, nr), y)
+            z[is.na(y)] <- missing # could put behind -> better but inconsistent
+            for(i in seqarg) z[grepl(nam[i], y)] <- args[[i]]
+            z
+          } else y
+        } else {
+          repfun <- function(y) if(is.character(y)) {
+            z <- duplAttributes(rep(default, nr), y)
+            for(i in seqarg) z[grepl(nam[i], y)] <- args[[i]]
+            z
+          } else y
+        }
+      }
+    }
+  } else {
+    if(arglen == 1L) {
+      args <- args[[1L]]
+      if(is.null(default)) {
+        if(missingl) {
+          repfun <- function(y) if(is.character(y)) {
+            y[is.na(y)] <- missing
+            `[<-`(y, y == nam, value = args)
+          } else y
+        } else {
+          repfun <- function(y) if(is.character(y)) `[<-`(y, y == nam, value = args) else y
+        }
+      } else {
+        nr <- if(is.atomic(X)) NROW(X) else fnrow2(X)
+        if(missingl) {
+          repfun <- function(y) if(is.character(y)) {
+            z <- duplAttributes(rep(default, nr), y)
+            z[is.na(y)] <- missing # could put behind -> better but inconsistent
+            `[<-`(z, y == nam, value = args)
+          } else y
+        } else {
+          repfun <- function(y) if(is.character(y)) `[<-`(duplAttributes(rep(default, nr), y), y == nam, value = args) else y
+        }
+      }
+    } else {
+      seqarg <- seq_len(arglen)
+      if(is.null(default)) {
+        if(missingl) {
+          repfun <- function(y) if(is.character(y)) {
+            y[is.na(y)] <- missing
+            z <- y
+            for(i in seqarg) z[y == nam[i]] <- args[[i]]
+            z
+          } else y
+        } else {
+          repfun <- function(y) if(is.character(y)) {
+            z <- y
+            for(i in seqarg) z[y == nam[i]] <- args[[i]]
+            z
+          } else y
+        }
+      } else {
+        nr <- if(is.atomic(X)) NROW(X) else fnrow2(X)
+        if(missingl) {
+          repfun <- function(y) if(is.character(y)) {
+            z <- duplAttributes(rep(default, nr), y)
+            z[is.na(y)] <- missing # could put behind -> better but inconsistent
+            for(i in seqarg) z[y == nam[i]] <- args[[i]]
+            z
+          } else y
+        } else {
+          repfun <- function(y) if(is.character(y)) {
+            z <- duplAttributes(rep(default, nr), y)
+            for(i in seqarg) z[y == nam[i]] <- args[[i]]
+            z
+          } else y
+        }
+      }
+    }
+  }
+  if(is.list(X)) return(duplAttributes(lapply(unattrib(X), repfun), X))
+  if(!is.character(X)) stop("X needs to be character or a list")
+  return(repfun(X))
+}
+
+replace_NA <- function(X, value) {
+  if(is.list(X))
+    duplAttributes(lapply(unattrib(X), function(x) `[<-`(x, is.na(x), value = value)), X) else
+    `[<-`(X, is.na(X), value = value)
+}
+
+# Remove Inf (Infinity) and NaN (Not a number) from vectors or data frames:
+replace_Inf <- function(X, value = NA, replace.nan = FALSE) {
+  if(is.list(X)) {
+    # if(!inherits(X, "data.frame")) stop("replace_non_finite only works with atomic objects or data.frames")
+    if(replace.nan) return(duplAttributes(lapply(unattrib(X), function(x) if(is.numeric(x)) `[<-`(x, is.infinite(x) | is.nan(x), value = value) else x), X))
+    return(duplAttributes(lapply(unattrib(X), function(x) if(is.numeric(x)) `[<-`(x, is.infinite(x), value = value) else x), X))
+  }
+  if(!is.numeric(X)) stop("Infinite values can only be replaced in numeric objects!")
+  if(replace.nan) return(`[<-`(X, is.infinite(X) | is.nan(X), value = value)) #  !is.finite(X) also replaces NA
+  `[<-`(X, is.infinite(X), value = value)
+}
+replace_non_finite <- function(X, value = NA, replace.nan = TRUE) replace_Inf(X, value, replace.nan)
+
+replace_outliers <- function(X, limits, value = NA, single.limit = c("SDs", "min", "max", "overall_SDs")) {
+  ll <- length(limits)
+  if(lg1 <- ll > 1L) {
+    if(ll > 2L) stop("length(limits) must be 1 or 2")
+    l1 <- limits[1L]
+    l2 <- limits[2L]
+  }
+  if(is.list(X)) {
+    # if(!inherits(X, "data.frame")) stop("replace_outliers only works with atomic objects or data.frames")
+    if(lg1) return(duplAttributes(lapply(unattrib(X), function(x) if(is.numeric(x)) `[<-`(x, x < l1 | x > l2, value = value) else x), X)) # could use data.table::between -> but it seems not faster !
+    return(switch(single.limit[1L], # Allows grouped scaling if X is a grouped_df, but requires extra memory equal to X ... extra argument gSDs ?
+           SDs = {
+             if(inherits(X, c("grouped_df", "pdata.frame"))) {
+              num <- vapply(unattrib(X), is.numeric, TRUE)
+              num <- if(inherits(X, "grouped_df")) num & !fgroup_vars(X, "logical") else
+                      num & attr(attr(X, "index"), "names") %!in% attr(X, "names")
+              clx <- class(X)
+              STDXnum <- fscale(fcolsubset(X, num))
+              class(X) <- NULL
+              X[num] <- mapply(function(x, y) `[<-`(x, abs(y) > limits, value = value), unattrib(X)[num], unattrib(STDXnum), SIMPLIFY = FALSE)
+              `oldClass<-`(X, clx)
+             } else duplAttributes(lapply(unattrib(X), function(x) if(is.numeric(x)) `[<-`(x, abs(fscaleCpp(x)) > limits, value = value) else x), X)
+           },
+           min = duplAttributes(lapply(unattrib(X), function(x) if(is.numeric(x)) `[<-`(x, x < limits, value = value) else x), X),
+           max = duplAttributes(lapply(unattrib(X), function(x) if(is.numeric(x)) `[<-`(x, x > limits, value = value) else x), X),
+           overall_SDs = duplAttributes(lapply(unattrib(X), function(x) if(is.numeric(x)) `[<-`(x, abs(fscaleCpp(x)) > limits, value = value) else x), X),
+           stop("Unknown single.limit option")))
+  }
+  if(!is.numeric(X)) stop("Outliers can only be replaced in numeric objects!")
+  if(lg1) return(`[<-`(X, X < l1 | X > l2, value = value))
+  switch(single.limit[1L],
+    SDs = `[<-`(X, abs(fscale(X)) > limits, value = value),
+    min = `[<-`(X, X < limits, value = value),
+    max = `[<-`(X, X > limits, value = value),
+    overall_SDs = `[<-`(X, abs(fscaleCpp(X)) > limits, value = value),
+    stop("Unknown single.limit option"))
+}
+
+
+# Previous version of Recode (Until collapse 1.1.0), Now depreciated in favor or recode_num and recode_char
 comp <- function(x, val) do.call(cbind, lapply(x, `==`, val))
 comp_grepl <- function(x, val) do.call(cbind, lapply(x, function(y) grepl(val, y)))
 
-# possibly even faster by converting df to matrix and back for multiple comp ??
 Recode <- function(X, ..., copy = FALSE, reserve.na.nan = TRUE, regex = FALSE) {
   if(missing(...)) stop("Recode requires arguments of the form: value = replacement")
   if(is.list(X) && !inherits(X, "data.frame")) stop("Recode only works with atomic objects or data.frames")
@@ -65,38 +330,135 @@ Recode <- function(X, ..., copy = FALSE, reserve.na.nan = TRUE, regex = FALSE) {
   return(X)
 }
 
-# profvis({
-#   v <- c("a","b","c")
-#   Recode(v, a = "b")
-# })
 
-# Remove Inf (Infinity) and NaN (Not a number) from vectors or data frames:
-replace_non_finite <- function(X, value = NA, replace.nan = TRUE) {
-  if(is.list(X)) {
-    if(!inherits(X, "data.frame")) stop("replace_non_finite only works with atomic objects or data.frames")
-    if(replace.nan) {
-      infornan <- function(x) is.infinite(x) | is.nan(x)
-      X[do.call(cbind, lapply(X, infornan))] <- value       # for (i in seq_along(X)) X[[i]][!is.finite(X[[i]])] <- value #   is.infinite(X[[i]]) | is.nan(X[[i]])
-    } else X[do.call(cbind, lapply(X, is.infinite))] <- value       # for (i in seq_along(X)) X[[i]][is.infinite(X[[i]])] <- value
-  } else {
-    if(replace.nan) {
-      X[is.infinite(X) | is.nan(X)] <- value #  !is.finite(X) also replaces NA
-    } else X[is.infinite(X)] <- value
-  }
-  return(X)
-}
+# Experimental:
+# recode_num2 is slightly slower than recode_num above .... (because 2 times apply) but almost identical..
+# recode_num2 <- function(X, ...) { # , regex = FALSE # , default = NULL
+#   if(missing(...)) stop("Recode requires arguments of the form: value = replacement")
+#   args <- list(...)
+#   nam <- as.numeric(names(args))
+#   if(anyNA(nam)) stop(paste("Non-numeric arguments:", paste(names(args)[is.na(nam)], collapse = ", ")))
+#   arglen <- length(args)
+#
+#   if(arglen == 1L) {
+#     args <- args[[1L]]
+#     repfun <- function(y) `[<-`(y, y == nam, value = args)
+#   } else {
+#     seqarg <- seq_len(arglen)
+#     repfun <- function(y) {
+#       z <- y
+#       for(i in seqarg) z[y == nam[i]] <- args[[i]]
+#       z
+#     }
+#   }
+#   if(is.list(X)) {
+#     num <- vapply(unattrib(X), is.numeric, TRUE)
+#     clx <- class(X)
+#     class(X) <- NULL
+#     X[num] <- lapply(X[num], repfun)
+#     return(`oldClass<-`(X, clx))
+#   }
+#   if(!is.numeric(X)) stop("X needs to be numeric or a list")
+#   return(repfun(X))
+# }
+#
+#
+#
+# # possibly even faster by converting df to matrix and back for multiple comp ??
+# Recode2 <- function(X, ...) { # , regex = FALSE # , default = NULL
+#   if(missing(...)) stop("Recode requires arguments of the form: value = replacement")
+#   args <- list(...)
+#   nam <- names(args)
+#   arglen <- length(args)
+#   onearg <- arglen == 1L
+#
+#   if(onearg) {
+#     args <- args[[1L]]
+#     repfun <- function(y) {
+#       if(is.numeric(y)) {
+#         v <- as.numeric(nam)
+#         if(is.na(v)) {
+#           warning("Trying to replace a non-numeric expressiom in a numeric column: Skipping this column")
+#           return(y)
+#         }
+#         `[<-`(y, y == v, value = args)
+#       } else `[<-`(y, y == nam, value = args)
+#     }
+#   } else {
+#     seqarg <- seq_len(arglen)
+#     repfun <- function(y) {
+#       z <- y
+#       if(is.numeric(y)) {
+#         if(is.null(v)) {
+#           v <<- as.numeric(nam)
+#           if(anyNA(v)) {
+#             warning("Trying to replace a non-numeric expressiom in a numeric column: Skipping those expressions")
+#             v <- na_rm(v)
+#             if(!length(v)) return(y)
+#           }
+#         }
+#         for(i in seqarg) z[y == v[i]] <- args[[i]]
+#       } else {
+#         for(i in seqarg) z[y == nam[i]] <- args[[i]]
+#       }
+#       z
+#     }
+#   }
+#
+#   if(is.list(X)) {
+#     return(duplAttributes(lapply(unattrib(X), repfun), X))
+#   }
+#   if(!is.character(X)) storage.mode(nam) <- storage.mode(X)
+#   return(repfun(X))
+# }
+#
+#
+# rec1 <- function(x, ...) {
+#   args <- list(...)
+#   nam <- as.numeric(names(args))
+#   ax <- attributes(x)
+#   attributes(x) <- NULL
+#   for(i in seq_along(args)) {
+#     ni <- nam[i] # Faster!
+#     argi <- args[[i]]
+#     x <- lapply(x, function(y) `[<-`(y, y == ni, value = argi))
+#   }
+#   setAttributes(x, ax)
+# }
+# # More memory efficient !!
+# rec2 <- function(x, ...) {
+#   args <- list(...)
+#   nam <- as.numeric(names(args))
+#   if(length(args) > 1L) repfun <- function(y) {
+#     for(i in seq_along(args)) y[y == nam[i]] <- args[[i]]
+#     y
+#   } else repfun <- function(y) `[<-`(y, y == nam, value = args[[1L]])
+#   dapply(x, repfun)
+# }
+# # Even more memory efficient and faster !!
+# rec3 <- function(x, ...) {
+#   args <- list(...)
+#   nam <- as.numeric(names(args))
+#   if(length(args) > 1L) repfun <- function(y) {
+#     z <- y
+#     for(i in seq_along(args)) z[y == nam[i]] <- args[[i]]
+#     z
+#   } else repfun <- function(y) `[<-`(y, y == nam, value = args[[1L]])
+#   dapply(x, repfun)
+# }
+#
+#
+# tf <- function(x, ...) list(...)
+#
+# # profvis({
+# #   v <- c("a","b","c")
+# #   Recode(v, a = "b")
+# # })
 
 
-replace_outliers <- function(X, limits, value = NA, single.limit = c("SDs","min","max")) {
-  if(is.list(X) && !inherits(X, "data.frame")) stop("replace_outliers only works with atomic objects or data.frames")
-  if(length(limits) > 1L) return(replace(X, if(is.atomic(X)) X < limits[1L] | X > limits[2L] else do.call(cbind, lapply(X, function(x) x < limits[1L] | x > limits[2L])), value)) # could use data.table::between -> but not faster !!
-  switch(single.limit[1L],
-    SDs = replace(X, if(is.atomic(X)) abs(fscale(X)) > limits else abs(do.call(cbind, fscale(X))) > limits , value), # this is slightly faster, but doesn't allow grouped scaling: do.call(cbind, lapply(X, function(x) abs(fscale.default(x)) > limits))
-    min = replace(X, if(is.atomic(X)) X < limits else do.call(cbind, lapply(X, `<`, limits)), value),
-    max = replace(X, if(is.atomic(X)) X > limits else do.call(cbind, lapply(X, `>`, limits)), value),
-    stop("Unknown single.limit option"))
-}
 
+
+# Previous Versions (until collapse 1.1.0)
 
 # replace_outliers <- function(X, limits, value = NA, single.limit = c("SDs","Min","Max")) {
 #   if(length(limits) > 1L) {

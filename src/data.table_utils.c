@@ -1,36 +1,5 @@
 #include "data.table.h"
-
-// bool isRealReallyInt(SEXP x) {
-//  if (!isReal(x)) return(false);
-//  R_xlen_t n=xlength(x), i=0;
-//  double *dx = REAL(x);
-//  while (i<n &&
-//         ( ISNA(dx[i]) ||
-//         ( R_FINITE(dx[i]) && dx[i] == (int)(dx[i])))) {
-//    i++;
-//  }
-// return i==n;
-// }
-
-SEXP isReallyReal(SEXP x) {
-  SEXP ans = PROTECT(allocVector(INTSXP, 1));
-  INTEGER(ans)[0] = 0;
-  // return 0 (FALSE) when not type double, or is type double but contains integers
-  // used to error if not passed type double but this needed extra is.double() calls in calling R code
-  // which needed a repeat of the argument. Hence simpler and more robust to return 0 when not type double.
-  if (isReal(x)) {
-    int n=length(x), i=0;
-    double *dx = REAL(x);
-    while (i<n &&
-           ( ISNA(dx[i]) ||
-           ( R_FINITE(dx[i]) && dx[i] == (int)(dx[i])))) {
-      i++;
-    }
-    if (i<n) INTEGER(ans)[0] = i+1;  // return the location of first element which is really real; i.e. not an integer
-  }
-  UNPROTECT(1);
-  return(ans);
-}
+#include <Rdefines.h>
 
 bool allNA(SEXP x, bool errorForBadType) {
   // less space and time than all(is.na(x)) at R level because that creates full size is.na(x) first before all()
@@ -164,4 +133,263 @@ SEXP copyAsPlain(SEXP x) {
   UNPROTECT(1);
   return ans;
 }
+
+/* No longer needed in GRP.default ! -> group sizes are now directly calculated by radixsort!
+SEXP uniqlengths(SEXP x, SEXP n) {
+  // seems very similar to rbindlist.c:uniq_lengths. TODO: centralize into common function
+  if (TYPEOF(x) != INTSXP) error("Input argument 'x' to 'uniqlengths' must be an integer vector");
+  if (TYPEOF(n) != INTSXP || length(n) != 1) error("Input argument 'n' to 'uniqlengths' must be an integer vector of length 1");
+  R_len_t len = length(x);
+  SEXP ans = PROTECT(allocVector(INTSXP, len));
+  for (R_len_t i=1; i<len; i++) {
+    INTEGER(ans)[i-1] = INTEGER(x)[i] - INTEGER(x)[i-1];
+  }
+  if (len>0) INTEGER(ans)[len-1] = INTEGER(n)[0] - INTEGER(x)[len-1] + 1;
+  UNPROTECT(1);
+  return(ans);
+}
+ */
+
+// from data.table_frank.c -> simplified frank, only dense method !!
+
+SEXP dt_na(SEXP x, SEXP cols) {
+  int n=0, elem;
+
+  if (!isNewList(x)) error("Internal error. Argument 'x' to Cdt_na is type '%s' not 'list'", type2char(TYPEOF(x))); // # nocov
+  if (!isInteger(cols)) error("Internal error. Argument 'cols' to Cdt_na is type '%s' not 'integer'", type2char(TYPEOF(cols))); // # nocov
+  for (int i=0; i<LENGTH(cols); ++i) {
+    elem = INTEGER(cols)[i];
+    if (elem<1 || elem>LENGTH(x))
+      error("Item %d of 'cols' is %d which is outside 1-based range [1,ncol(x)=%d]", i+1, elem, LENGTH(x));
+    if (!n) n = length(VECTOR_ELT(x, elem-1));
+  }
+  SEXP ans = PROTECT(allocVector(LGLSXP, n));
+  int *ians = LOGICAL(ans);
+  for (int i=0; i<n; ++i) ians[i]=0;
+  for (int i=0; i<LENGTH(cols); ++i) {
+    SEXP v = VECTOR_ELT(x, INTEGER(cols)[i]-1);
+    if (!length(v) || isNewList(v) || isList(v)) continue; // like stats:::na.omit.data.frame, skip list/pairlist columns
+    if (n != length(v))
+      error("Column %d of input list x is length %d, inconsistent with first column of that item which is length %d.", i+1,length(v),n);
+    switch (TYPEOF(v)) {
+    case LGLSXP: {
+      const int *iv = LOGICAL(v);
+      for (int j=0; j<n; ++j) ians[j] |= (iv[j] == NA_LOGICAL);
+    }
+      break;
+    case INTSXP: {
+      const int *iv = INTEGER(v);
+      for (int j=0; j<n; ++j) ians[j] |= (iv[j] == NA_INTEGER);
+    }
+      break;
+    case STRSXP: {
+      const SEXP *sv = STRING_PTR(v);
+      for (int j=0; j<n; ++j) ians[j] |= (sv[j] == NA_STRING);
+    }
+      break;
+    case REALSXP: {
+      const double *dv = REAL(v);
+      if (INHERITS(v, char_integer64)) {
+        for (int j=0; j<n; ++j) {
+          ians[j] |= (DtoLL(dv[j]) == NA_INT64_LL);   // TODO: can be == NA_INT64_D directly
+        }
+      } else {
+        for (int j=0; j<n; ++j) ians[j] |= ISNAN(dv[j]);
+      }
+    }
+      break;
+    case RAWSXP: {
+      // no such thing as a raw NA
+      // vector already initialised to all 0's
+    }
+      break;
+    case CPLXSXP: {
+      // taken from https://github.com/wch/r-source/blob/d75f39d532819ccc8251f93b8ab10d5b83aac89a/src/main/coerce.c
+      for (int j=0; j<n; ++j) ians[j] |= (ISNAN(COMPLEX(v)[j].r) || ISNAN(COMPLEX(v)[j].i));
+    }
+      break;
+    default:
+      error("Unsupported column type '%s'", type2char(TYPEOF(v)));
+    }
+  }
+  UNPROTECT(1);
+  return(ans);
+}
+
+SEXP frankds(SEXP xorderArg, SEXP xstartArg, SEXP xlenArg, SEXP dns) {
+  int i=0, j=0, k=0, end=0, n, ng;
+  int *xstart = INTEGER(xstartArg), *xlen = INTEGER(xlenArg), *xorder = INTEGER(xorderArg);
+  n = length(xorderArg);
+  ng = length(xstartArg);
+  SEXP ans = PROTECT(allocVector(INTSXP, n));
+  int *ians = INTEGER(ans);
+  if(n > 0) {
+    if(asLogical(dns)) {
+      k=1;
+      for (i = 0; i < ng; i++) {
+        for (j = xstart[i]-1, end = xstart[i]+xlen[i]-1; j < end; j++)
+          ians[xorder[j]-1] = k;
+        k++;
+      }
+    } else {
+      for (i = 0; i < ng; i++) {
+        k=1;
+        for (j = xstart[i]-1, end = xstart[i]+xlen[i]-1; j < end; j++)
+          ians[xorder[j]-1] = k++;
+      }
+    }
+  }
+  UNPROTECT(1);
+  return(ans);
+}
+
+// extern SEXP char_integer64;
+
+// internal version of anyNA for data.tables
+// SEXP anyNA(SEXP x, SEXP cols) {
+//   int i, j, n=0, elem;
+//
+//   if (!isNewList(x)) error("Internal error. Argument 'x' to CanyNA is type '%s' not 'list'", type2char(TYPEOF(x))); // #nocov
+//   if (!isInteger(cols)) error("Internal error. Argument 'cols' to CanyNA is type '%s' not 'integer'", type2char(TYPEOF(cols))); // # nocov
+//   for (i=0; i<LENGTH(cols); i++) {
+//     elem = INTEGER(cols)[i];
+//     if (elem<1 || elem>LENGTH(x))
+//       error("Item %d of 'cols' is %d which is outside 1-based range [1,ncol(x)=%d]", i+1, elem, LENGTH(x));
+//     if (!n) n = length(VECTOR_ELT(x, elem-1));
+//   }
+//   SEXP ans = PROTECT(allocVector(LGLSXP, 1));
+//   LOGICAL(ans)[0]=0;
+//   for (i=0; i<LENGTH(cols); i++) {
+//     SEXP v = VECTOR_ELT(x, INTEGER(cols)[i]-1);
+//     if (!length(v) || isNewList(v) || isList(v)) continue; // like stats:::na.omit.data.frame, skip list/pairlist columns
+//     if (n != length(v))
+//       error("Column %d of input list x is length %d, inconsistent with first column of that item which is length %d.", i+1,length(v),n);
+//     j=0;
+//     switch (TYPEOF(v)) {
+//     case LGLSXP: {
+//       const int *iv = LOGICAL(v);
+//       while(j < n && iv[j] != NA_LOGICAL) j++;
+//       if (j < n) LOGICAL(ans)[0] = 1;
+//     }
+//       break;
+//     case INTSXP: {
+//       const int *iv = INTEGER(v);
+//       while(j < n && iv[j] != NA_INTEGER) j++;
+//       if (j < n) LOGICAL(ans)[0] = 1;
+//     }
+//       break;
+//     case STRSXP: {
+//       while (j < n && STRING_ELT(v, j) != NA_STRING) j++;
+//       if (j < n) LOGICAL(ans)[0] = 1;
+//     }
+//       break;
+//     case REALSXP: {
+//       const double *dv = REAL(v);
+//       if (INHERITS(v, char_integer64)) {
+//         for (j=0; j<n; j++) {
+//           if (DtoLL(dv[j]) == NA_INT64_LL) {
+//             LOGICAL(ans)[0] = 1;
+//             break;
+//           }
+//         }
+//       } else {
+//         while(j < n && !ISNAN(dv[j])) j++;
+//         if (j < n) LOGICAL(ans)[0] = 1;
+//       }
+//     }
+//       break;
+//     case RAWSXP: {
+//       // no such thing as a raw NA
+//       // vector already initialised to all 0's
+//     }
+//       break;
+//     case CPLXSXP: {
+//       // taken from https://github.com/wch/r-source/blob/d75f39d532819ccc8251f93b8ab10d5b83aac89a/src/main/coerce.c
+//       while (j < n && !ISNAN(COMPLEX(v)[j].r) && !ISNAN(COMPLEX(v)[j].i)) j++;
+//       if (j < n) LOGICAL(ans)[0] = 1;
+//     }
+//       break;
+//     default:
+//       error("Unsupported column type '%s'", type2char(TYPEOF(v)));
+//     }
+//     if (LOGICAL(ans)[0]) break;
+//   }
+//   UNPROTECT(1);
+//   return(ans);
+// }
+
+// from data.table_assign.c:
+SEXP setcolorder(SEXP x, SEXP o)
+{
+  SEXP names = getAttrib(x, R_NamesSymbol);
+  const int *od = INTEGER(o), ncol=LENGTH(x);
+  if (isNull(names)) error("dt passed to setcolorder has no names");
+  if (ncol != LENGTH(names))
+    error("Internal error: dt passed to setcolorder has %d columns but %d names", ncol, LENGTH(names));  // # nocov
+
+  // Double-check here at C level that o[] is a strict permutation of 1:ncol. Reordering columns by reference makes no
+  // difference to generations/refcnt so we can write behind barrier in this very special case of strict permutation.
+  bool *seen = Calloc(ncol, bool);
+  for (int i=0; i<ncol; ++i) {
+    if (od[i]==NA_INTEGER || od[i]<1 || od[i]>ncol)
+      error("Internal error: o passed to Csetcolorder contains an NA or out-of-bounds");  // # nocov
+    if (seen[od[i]-1])
+      error("Internal error: o passed to Csetcolorder contains a duplicate");             // # nocov
+    seen[od[i]-1] = true;
+  }
+  Free(seen);
+
+  SEXP *tmp = Calloc(ncol, SEXP);
+  SEXP *xd = VECTOR_PTR(x), *namesd = STRING_PTR(names);
+  for (int i=0; i<ncol; ++i) tmp[i] = xd[od[i]-1];
+  memcpy(xd, tmp, ncol*sizeof(SEXP)); // sizeof is type size_t so no overflow here
+  for (int i=0; i<ncol; ++i) tmp[i] = namesd[od[i]-1];
+  memcpy(namesd, tmp, ncol*sizeof(SEXP));
+  // No need to change key (if any); sorted attribute is column names not positions
+  Free(tmp);
+  return(R_NilValue);
+}
+
+SEXP keepattr(SEXP to, SEXP from)
+{
+  // Same as R_copyDFattr in src/main/attrib.c, but that seems not exposed in R's api
+  // Only difference is that we reverse from and to in the prototype, for easier calling above
+  SET_ATTRIB(to, ATTRIB(from));
+  IS_S4_OBJECT(from) ?  SET_S4_OBJECT(to) : UNSET_S4_OBJECT(to);
+  SET_OBJECT(to, OBJECT(from));
+  return to;
+}
+
+SEXP growVector(SEXP x, R_len_t newlen)
+{
+  // Similar to EnlargeVector in src/main/subassign.c, with the following changes :
+  // * replaced switch and loops with one memcpy for INTEGER and REAL, but need to age CHAR and VEC.
+  // * no need to cater for names
+  // * much shorter and faster
+  SEXP newx;
+  R_len_t i, len = length(x);
+  if (isNull(x)) error("growVector passed NULL");
+  PROTECT(newx = allocVector(TYPEOF(x), newlen));   // TO DO: R_realloc(?) here?
+  if (newlen < len) len=newlen;   // i.e. shrink
+  switch (TYPEOF(x)) {
+  case STRSXP :
+    for (i=0; i<len; i++)
+      SET_STRING_ELT(newx, i, STRING_ELT(x, i));
+    // TO DO. Using SET_ to ensure objects are aged, rather than memcpy. Perhaps theres a bulk/fast way to age CHECK_OLD_TO_NEW
+    break;
+  case VECSXP :
+    for (i=0; i<len; i++)
+      SET_VECTOR_ELT(newx, i, VECTOR_ELT(x, i));
+    // TO DO: Again, is there bulk op to avoid this loop, which still respects older generations
+    break;
+  default :
+    memcpy((char *)DATAPTR(newx), (char *)DATAPTR(x), len*SIZEOF(x));   // SIZEOF() returns size_t (just as sizeof()) so * shouldn't overflow // TODO remove DATAPTR
+  }
+  // if (verbose) Rprintf("Growing vector from %d to %d items of type '%s'\n", len, newlen, type2char(TYPEOF(x)));
+  // Would print for every column if here. Now just up in dogroups (one msg for each table grow).
+  keepattr(newx,x);
+  UNPROTECT(1);
+  return newx;
+}
+
 

@@ -14,17 +14,17 @@ Matrix<RTYPE> psmatCppImpl(Vector<RTYPE> x, IntegerVector g, SEXP t, bool transp
     IntegerVector seen(ngp);
     Matrix<RTYPE> out = transpose ? no_init_matrix(gs, ng) : no_init_matrix(ng, gs);
     // List dim = ATTRIB(out);
-    // SHALLOW_DUPLICATE_ATTRIB(out, x); // good ??
+    // SHALLOW_DUPLICATE_ATTRIB(out, x); // good ?
     // Rf_setAttrib(out, R_DimSymbol, dim[0]);
     if(transpose) {
       for(int i = 0; i != l; ++i) {
         if(seen[g[i]] == gs) stop("Panel not Balanced: Need to supply timevar");
-        out(seen[g[i]]++, g[i]-1) = x[i];
+        out(seen[g[i]]++, g[i]-1) = x[i]; // out[(g[i]-1)*gs + seen[g[i]]++] = x[i]; not really faster...
       }
     } else {
       for(int i = 0; i != l; ++i) {
         if(seen[g[i]] == gs) stop("Panel not Balanced: Need to supply timevar");
-        out(g[i]-1, seen[g[i]]++) = x[i];
+        out(g[i]-1, seen[g[i]]++) = x[i]; // out[(seen[g[i]]++)*ng + g[i]-1] = x[i]; not really faster...
       }
     }
     out.attr("dimnames") = transpose ? List::create(seq_len(gs), glevs) : List::create(glevs, seq_len(gs));
@@ -34,18 +34,18 @@ Matrix<RTYPE> psmatCppImpl(Vector<RTYPE> x, IntegerVector g, SEXP t, bool transp
   } else {
     IntegerVector tt = t;
     if(l != tt.size()) stop("length(t) must match length(x)");
-    // int maxt = max(tt); // needed ?? // check whether t.levels is same size as maxt ??
+    // int maxt = max(tt); // needed ? // check whether t.levels is same size as maxt ?
     CharacterVector tlevs = tt.attr("levels");
     int nt = tlevs.size();
-    Matrix<RTYPE> out = transpose ? no_init_matrix(nt, ng) : no_init_matrix(ng, nt); // best way to do this ?? Stable ?? -> Could conditionally create vector and the coerce to matrix -> faster init ??
-    if(nt != gs) std::fill(out.begin(), out.end(), Vector<RTYPE>::get_na());  // memset(out, NA_REAL, sizeof(double)*ng*maxt); -> unstable !! // else balanced panel !!
+    Matrix<RTYPE> out = transpose ? no_init_matrix(nt, ng) : no_init_matrix(ng, nt); // best way to do this ? Stable ? -> Could conditionally create vector and the coerce to matrix -> faster init ?
+    if(nt != gs) std::fill(out.begin(), out.end(), Vector<RTYPE>::get_na());  // memset(out, NA_REAL, sizeof(double)*ng*maxt); -> unstable ! // else balanced panel !
     // List dim = ATTRIB(out);
-    // SHALLOW_DUPLICATE_ATTRIB(out, x); // good ??
+    // SHALLOW_DUPLICATE_ATTRIB(out, x); // good ?
     // Rf_setAttrib(out, R_DimSymbol, dim[0]);
     if(transpose) {
-      for(int i = 0; i != l; ++i) out(tt[i]-1, g[i]-1) = x[i];
+      for(int i = 0; i != l; ++i) out[(g[i]-1)*nt + tt[i]-1] = x[i]; // out(tt[i]-1, g[i]-1) = x[i]; // tiny bit faster
     } else {
-      for(int i = 0; i != l; ++i) out(g[i]-1, tt[i]-1) = x[i];
+      for(int i = 0; i != l; ++i) out[(tt[i]-1)*ng + g[i]-1] = x[i]; // out(g[i]-1, tt[i]-1) = x[i]; // tiny bit faster
     }
     out.attr("dimnames") = transpose ? List::create(tlevs, glevs) : List::create(glevs, tlevs);
     out.attr("transpose") = transpose;

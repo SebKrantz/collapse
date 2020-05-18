@@ -47,13 +47,13 @@ BY(X, ...)
 %    \item{simplify}{logical. Simplify the result to return an object of the same class and with the same attributes. If \code{FALSE}, the raw computation retult in form of a (nested) list is returned.}
 }
 \details{
-\code{BY} is a frugal reimplementation of the Split-Apply-Combine computing paradigm. It is faster than \code{base::tapply}, \code{base::by}, \code{base::aggregate} and \code{plyr}, and preserves data attributes just like \code{\link{dapply}}. % and more versatile though not faster than \code{dplyr}
+\code{BY} is a frugal reimplementation of the Split-Apply-Combine computing paradigm. It is faster than \code{base::tapply}, \code{base::by}, \code{base::aggregate} and \code{plyr}, and preserves data attributes just like \code{\link{dapply}}. % and more versatile though not faster than \emph{dplyr}
 
-I note at this point that the philosophy of \code{collapse} is to move beyond this rather slow computing paradigm, which is why the \link[=A1-fast-statistical-functions]{Fast Statistical Functions} were implemented. However sometimes tasks need to be performed that involve more complex and customized operations on data, and for these cases \code{BY} is a good solution.
+I note at this point that the philosophy of \emph{collapse} is to move beyond this rather slow computing paradigm, which is why the \link[=A1-fast-statistical-functions]{Fast Statistical Functions} were implemented. However sometimes tasks need to be performed that involve more complex and customized operations on data, and for these cases \code{BY} is a good solution.
 
-\code{BY} is built principally as a wrapper around \code{lapply(split(x, g), FUN, ...)}, but strongly optimizes on attribute checking compared to \code{base} R. For more details examine the code yourself or look at the documentation for \code{\link{dapply}} which works very similar (the only difference really is the splitting performed in \code{BY}).
+\code{BY} is built principally as a wrapper around \code{lapply(split(x, g), FUN, ...)}, but strongly optimizes on attribute checking compared to \emph{base} R. For more details examine the code yourself or look at the documentation for \code{\link{dapply}} which works very similar (the only difference really is the splitting performed in \code{BY}).
 
-\code{BY} is used internally in \code{\link{collap}} (\code{collapse}'s main aggregation command) for functions that are not \link[=A1-fast-statistical-functions]{Fast Statistical Functions}.
+\code{BY} is used internally in \code{\link{collap}} (\emph{collapse}'s main aggregation command) for functions that are not \link[=A1-fast-statistical-functions]{Fast Statistical Functions}.
 }
 \value{
 \code{X} where \code{FUN} was applied to every column split by \code{g}.

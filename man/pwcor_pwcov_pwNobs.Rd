@@ -12,9 +12,9 @@ Pairwise Correlations, Covariances and Observation Count
 Computes pairwise Pearsons correlations, covariances and observation counts. Pairwise correlations and covariances can be computed together with observation counts and p-values, and output as 3D array (default) or list of matrices. For an equivalent and faster implementation of \code{pwcor} see \code{Hmisc::rcorr} (written in Fortran). A major feature of \code{pwcor} and \code{pwcov} is their sophisticated print method.
 }
 \usage{
-pwcor(X, ..., N = FALSE, P = FALSE, array = TRUE)
+pwcor(X, ..., N = FALSE, P = FALSE, array = TRUE, use = "pairwise.complete.obs")
 
-pwcov(X, ..., N = FALSE, P = FALSE, array = TRUE)
+pwcov(X, ..., N = FALSE, P = FALSE, array = TRUE, use = "pairwise.complete.obs")
 
 pwNobs(X)
 
@@ -32,6 +32,7 @@ pwNobs(X)
   \item{N}{logical. \code{TRUE} also computes pairwise observation counts.}
   \item{P}{logical. \code{TRUE} also computes pairwise p-values (same as \code{\link{cor.test}}).}
   \item{array}{logical. If \code{N = TRUE} or \code{P = TRUE}, \code{TRUE} (default) returns output as 3D array whereas \code{FALSE} returns a list of matrices.}
+  \item{use}{argument passed to \code{\link{cor}} / \code{\link{cov}}.}
   \item{digits}{integer. The number of digits to round to in print. }
   \item{sig.level}{numeric. P-value threshold below which a \code{'*'} is displayed above significant coefficients if \code{P = TRUE}. }
   \item{show}{character. The part of the correlation / covariance matrix to display. }

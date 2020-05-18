@@ -4,9 +4,9 @@
 \alias{.FAST_FUN}
 \title{Fast (Grouped, Weighted) Statistical Functions for Matrix-Like Objects}  % Vectors, Matrix and Data Frame Columns}
 \description{
-With \code{\link{fsum}}, \code{\link{fprod}}, \code{\link{fmean}}, \code{\link{fmedian}}, \code{\link{fmode}}, \code{\link{fvar}}, \code{\link{fsd}}, \code{\link{fmin}}, \code{\link{fmax}}, \code{\link{ffirst}}, \code{\link{flast}}, \code{\link{fNobs}} and \code{\link{fNdistinct}}, \code{collapse} presents a coherent set of extremely fast and flexible statistical functions (S3 generics) to perform column-wise, grouped and weighted computations on atomic vectors, matrices and data.frames, with special support for \code{dplyr} grouped tibbles and data.table's.
+With \code{\link{fsum}}, \code{\link{fprod}}, \code{\link{fmean}}, \code{\link{fmedian}}, \code{\link{fmode}}, \code{\link{fvar}}, \code{\link{fsd}}, \code{\link{fmin}}, \code{\link{fmax}}, \code{\link{ffirst}}, \code{\link{flast}}, \code{\link{fNobs}} and \code{\link{fNdistinct}}, \emph{collapse} presents a coherent set of extremely fast and flexible statistical functions (S3 generics) to perform column-wise, grouped and weighted computations on atomic vectors, matrices and data.frames, with special support for \emph{dplyr} grouped tibbles and data.table's.
 
-(\emph{Note}: The vector-valued functions and operators \code{\link[=fscale]{fscale/STD}}, \code{\link[=fbetween]{fbetween/B}}, \code{\link[=fHDbetween]{fHDbetween/HDB}}, \code{\link[=fwithin]{fwithin/W}}, \code{\link[=fHDwithin]{fHDwithin/HDW}}, \code{\link[=flag]{flag/L/F}}, \code{\link[=fdiff]{fdiff/D}} and \code{\link[=fgrowth]{fgrowth/G}} are documented under \link[=A6-data-transformations]{Data Transformations} and \link[=A7-time-series-panel-series]{Time-Series and Panel-Series}. These functions also support \code{plm::pseries} and \code{plm::pdata.frame}'s.)
+\emph{Notes}: (1) Panel-decomposed (i.e. between and within) statistics as well as grouped and weighted skewness and kurtosis are implemented in \code{\link{qsu}}. (2) The vector-valued functions and operators \code{\link[=fscale]{fscale/STD}}, \code{\link[=fbetween]{fbetween/B}}, \code{\link[=fHDbetween]{fHDbetween/HDB}}, \code{\link[=fwithin]{fwithin/W}}, \code{\link[=fHDwithin]{fHDwithin/HDW}}, \code{\link[=flag]{flag/L/F}}, \code{\link[=fdiff]{fdiff/D/Dlog}} and \code{\link[=fgrowth]{fgrowth/G}} are documented under \link[=A6-data-transformations]{Data Transformations} and \link[=A7-time-series-panel-series]{Time-Series and Panel-Series}. These functions also support \code{plm::pseries} and \code{plm::pdata.frame}'s.
 
 }
 \section{Usage}{\preformatted{
@@ -43,13 +43,13 @@ FUN(x, [w = NULL,] TRA = NULL, [na.rm = TRUE,]
 
 \code{na.rm} \tab\tab logical. Skip missing values in \code{x}. Defaults to \code{TRUE} in all functions and implemented at very little computational cost. Not available for \code{\link{fNobs}}. \cr \cr \cr
 
-\code{use.g.names} \tab\tab make group-names and add to the result as names (vector method) or row-names (matrix and data.frame method). No row-names are generated for data.tables and grouped tibbles. \cr \cr \cr
+\code{use.g.names} \tab\tab make group-names and add to the result as names (vector method) or row-names (matrix and data.frame method). No row-names are generated for data.tables and (default) grouped tibbles. \cr \cr \cr
 
 \code{drop} \tab\tab \emph{matrix and data.frame methods:} Drop dimensions and return an atomic vector if \code{g = NULL} and \code{TRA = NULL}. \cr \cr \cr
 
-\code{keep.group_vars}  \tab\tab \emph{grouped_df method:} Logical. \code{FALSE} removes grouping variables after computation. \cr \cr \cr
+\code{keep.group_vars}  \tab\tab \emph{grouped_df method:} Logical. \code{FALSE} removes grouping variables after computation. By default grouping variables are added, even if not present in the grouped_df. \cr \cr \cr
 
-\code{keep.w} \tab\tab \emph{grouped_df method:} Logical. \code{TRUE} also aggregates weights and saves them in a column, \code{FALSE} removes weighting variable after computation (if contained in \code{grouped_df}). \cr \cr \cr
+\code{keep.w} \tab\tab \emph{grouped_df method:} Logical. \code{TRUE} (default) also aggregates weights and saves them in a column, \code{FALSE} removes weighting variable after computation (if contained in \code{grouped_df}). \cr \cr \cr
 
 \code{...} \tab\tab arguments to be passed to or from other methods, and extra arguments to some functions, i.e. the algorithm used to compute variances etc. \cr
 }
@@ -67,23 +67,25 @@ Please see the documentation of individual functions.
 ## default vector method
 mpg <- mtcars$mpg
 fsum(mpg)                         # Simple sum
-fsum(mpg, TRA = "\%")              # Simple transformation: obtain percentages of mpg
+fsum(mpg, TRA = "/")              # Simple transformation: divide all values by the sum
 fsum(mpg, mtcars$cyl)             # Grouped sum
 fmean(mpg, mtcars$cyl)            # Grouped mean
 fmean(mpg, w = mtcars$hp)         # Weighted mean, weighted by hp
 fmean(mpg, mtcars$cyl, mtcars$hp) # Grouped mean, weighted by hp
-fsum(mpg, mtcars$cyl, TRA = "\%")  # Percentages by group
-fmean(mpg, mtcars$cyl, mtcars$hp, # Replace vector elements with their weighted group-mean
-      TRA = "replace")
+fsum(mpg, mtcars$cyl, TRA = "/")  # Proportions / division by group sums
+fmean(mpg, mtcars$cyl, mtcars$hp, # Subtract weighted group means, see also ?fwithin
+      TRA = "-")
 
 ## data.frame method
 fsum(mtcars)
-fsum(mtcars, TRA = "\%")
+fsum(mtcars, TRA = "\%")                 # This computes percentages
 fsum(mtcars, mtcars[c(2,8:9)])           # Grouped column sum
 g <- GRP(mtcars, ~ cyl + vs + am)        # Here precomputing the groups!
 fsum(mtcars, g)                          # Faster !!
 fmean(mtcars, g, mtcars$hp)
-fmean(mtcars, g, mtcars$hp, "-")         # demeaning by weighted group means... see also ?W
+fmean(mtcars, g, mtcars$hp, "-")         # demeaning by weighted group means...
+fmean(fgroup_by(mtcars, cyl, vs, am), hp, "-")  # another way of doing it...
+
 
 fmode(wlddev, drop = FALSE)              # Compute statistical modes of variables in this data
 fmode(wlddev, wlddev$income)             # grouped statistical modes ..
@@ -96,9 +98,10 @@ fsum(m, g) # ...
 ## method for grouped tibbles - for use with dplyr
 library(dplyr)
 mtcars \%>\% group_by(cyl,vs,am) \%>\% select(mpg,carb) \%>\% fsum
-mtcars \%>\% group_by(cyl,vs,am) \%>\% fsum(TRA = "\%")
-mtcars \%>\% group_by(cyl,vs,am) \%>\% fmean(hp)         # weighted grouped mean, save sum of weights
-mtcars \%>\% group_by(cyl,vs,am) \%>\% fmean(hp, keep.group_vars = FALSE)
+mtcars \%>\% fgroup_by(cyl,vs,am) \%>\% fselect(mpg,carb) \%>\% fsum # equivalent and faster !!
+mtcars \%>\% fgroup_by(cyl,vs,am) \%>\% fsum(TRA = "\%")
+mtcars \%>\% fgroup_by(cyl,vs,am) \%>\% fmean(hp)         # weighted grouped mean, save sum of weights
+mtcars \%>\% fgroup_by(cyl,vs,am) \%>\% fmean(hp, keep.group_vars = FALSE)
 }
 \keyword{univar}
 \keyword{manip}

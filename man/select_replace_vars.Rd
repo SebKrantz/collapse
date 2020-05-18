@@ -1,5 +1,9 @@
-\name{A3-select-replace-vars}
-\alias{A3-select-replace-vars}
+\name{select-replace-vars}
+\alias{select-replace-vars}
+\alias{fselect}
+\alias{fselect<-}
+\alias{slt}
+\alias{slt<-}
 \alias{get_vars}
 \alias{gv}
 \alias{num_vars}
@@ -22,84 +26,103 @@
 \alias{Date_vars<-}
 \alias{add_vars<-}
 \alias{av<-}
-%- Also NEED an '\alias' for EACH other topic documented here.
-\title{Quick Select and Replace Data Frame Columns} % by Type, Function or Regular Expression}
+\title{Fast Select, Replace or Add Data Frame Columns}
 \description{
-Efficiently select and replace (or add) a subset of columns from (to) a data frame. This can be done by data type, or using column names, indices, logical vectors, functions or regular expressions.
-
-The performance is generally faster than \code{`[`}. It is also secure w.r.t. redefinitions of \code{`[.data.frame`} or \code{`[<-.data.frame`} for other classes (i.e. data.table's, tibbles etc.) and prevents the loss of attributes, but does not offer a lot of security in terms of performing all kinds of costly checks on the data.frame's or when lists of unequal-length columns are offered as replacements.
+Efficiently select and replace (or add) a subset of columns from (to) a data frame. This can be done by data type, or using expressions, column names, indices, logical vectors, selector functions or regular expressions matching column names.
 }
 \usage{
-## Select and replace columns by data type
-
-num_vars(x, return = c("data","names","indices","named_indices"))
-      nv(x, return = c("data","names","indices","named_indices")) # Short for num_vars
-num_vars(x) <- value
-      nv(x) <- value                                              # Short for num_vars<-
-cat_vars(x, return = c("data","names","indices","named_indices"))
-cat_vars(x) <- value
-char_vars(x, return = c("data","names","indices","named_indices"))
-char_vars(x) <- value
-fact_vars(x, return = c("data","names","indices","named_indices"))
-fact_vars(x) <- value
-logi_vars(x, return = c("data","names","indices","named_indices"))
-logi_vars(x) <- value
-Date_vars(x, return = c("data","names","indices","named_indices"))
-Date_vars(x) <- value
+## Select and replace variables, analgous to dplyr::select but significantly faster
+fselect(x, ..., return = "data")
+fselect(x, ...) <- value
+slt(x, ..., return = "data")   # Shortcut for fselect
+slt(x, ...) <- value           # Shortcut for fselect<-
 
 ## Select and replace columns by names, indices, logical vectors,
-## regular expressions or using other functions to identify columns
+## regular expressions or using functions to identify columns
 
-get_vars(x, vars, return = c("data","names","indices","named_indices"),
+get_vars(x, vars, return = "data",
          regex = FALSE, ...)
-      gv(x, vars, return = c("data","names","indices","named_indices"),
-         regex = FALSE, ...)                                      # Short for get_vars
 get_vars(x, vars, regex = FALSE, ...) <- value
-      gv(x, vars, regex = FALSE, ...) <- value                    # Short for get_vars<-
+      gv(x, vars, return = "data",              # Shortcut for get_vars
+         regex = FALSE, ...)
+      gv(x, vars, regex = FALSE, ...) <- value  # Shortcut for get_vars<-
 
 ## Add columns at any position within a data.frame
 
 add_vars(x, ..., pos = "end")
-      av(x, ..., pos = "end")               # Short for add_vars
 add_vars(x, pos = "end") <- value
-      av(x, pos = "end") <- value             # Short for add_vars<-
+      av(x, ..., pos = "end")               # Shortcut for add_vars
+      av(x, pos = "end") <- value           # Shortcut for add_vars<-
 
+## Select and replace columns by data type
+
+num_vars(x, return = "data")
+num_vars(x) <- value
+      nv(x, return = "data")       # Shortcut for num_vars
+      nv(x) <- value               # Shortcut for num_vars<-
+cat_vars(x, return = "data")       # Categorical variables, see is.categorical
+cat_vars(x) <- value
+char_vars(x, return = "data")
+char_vars(x) <- value
+fact_vars(x, return = "data")
+fact_vars(x) <- value
+logi_vars(x, return = "data")
+logi_vars(x) <- value
+Date_vars(x, return = "data")      # See is.Date
+Date_vars(x) <- value
 }
-%- maybe also 'usage' for other objects documented here.
+
 \arguments{
-% \emph{Note}: Functions also work with data.table's etc... as long as \code{x} is a list and \code{!is.null(dim(x))}.}
   \item{x}{a data.frame.}
   \item{value}{a data.frame or list of columns whose dimensions exactly match those of the extracted subset of \code{x}. If only 1 variable is in the subset of \code{x}, \code{value} can also be an atomic vector or matrix, provided that \code{NROW(value) == nrow(x)}.}
-  \item{vars}{a vector of column names, indices (can be negative), a suitable logical vector, a vector of regular expressions matching column names if \code{regex = TRUE}, or a function returning \code{TRUE} or \code{FALSE} when applied to the columns of \code{x}.}
-  \item{return}{an integer or string specifying what to return. The options are:
-  \enumerate{
-  \item "data"\cr
-  \item "names"\cr
-  \item "indices"\cr
-  \item "named_indices"
+  \item{vars}{a vector of column names, indices (can be negative), a suitable logical vector, a vector of regular expressions matching column names (if \code{regex = TRUE}). It is also possible to pass a function returning \code{TRUE} or \code{FALSE} when applied to the columns of \code{x}.}
+  \item{return}{an integer or string specifying what the selector function should return. The options are:
+      \tabular{lllll}{\emph{ Int. }   \tab\tab \emph{ String }   \tab\tab \emph{ Description }  \cr
+                 1 \tab\tab "data"   \tab\tab subset of data.frame (default) \cr
+                 2 \tab\tab "names" \tab\tab column names \cr
+                 3 \tab\tab "indices"   \tab\tab column indices \cr
+                 4 \tab\tab "named_indices"  \tab\tab named column indices \cr
+                 5 \tab\tab "logical"   \tab\tab logical selection vector \cr
+                 6 \tab\tab "named_logical"     \tab\tab named logical vector \cr
   }
-  \emph{Note}: replacement functions only replace data, not column names or indices (ordering). However column names are replaced together with the data.
+  \emph{Note}: replacement functions only replace data, However column names are replaced together with the data.
   }
-\item{regex}{logical. \code{TRUE} will do regular expression search on the column names of \code{x} using a (vector of) regular expression(s) passed to \code{vars}.}
-\item{pos}{the position where columns are added in the data.frame. \code{"end"} (default) will add columns at the end (right) of the data.frame, "front" will add columns in front (left). Alternatively one can pass a vector of positions (matching \code{length(value)} if value is a list). In that case the other columns will be shifted around the new ones while maintaining their order. }
-\item{...}{for \code{get_vars}: further arguments passed to \code{\link{grep}}, if \code{regex = TRUE}. For \code{add_vars}: Same as \code{value}. A single argument passed may also be a vector or matrix, multiple arguments must each be a list (they are combined using \code{c(...)}).}
+\item{regex}{logical. \code{TRUE} will do regular expression search on the column names of \code{x} using a (vector of) regular expression(s) passed to \code{vars}. Matching is done using \code{\link{grep}}.}
+\item{pos}{the position where columns are added in the data.frame. \code{"end"} (default) will append the data.frame at the end (right) side. "front" will add columns in front (left). Alternatively one can pass a vector of positions (matching \code{length(value)} if value is a list). In that case the other columns will be shifted around the new ones while maintaining their order. }
+\item{...}{for \code{fselect}: column names and expressions. for \code{get_vars}: further arguments passed to \code{\link{grep}}, if \code{regex = TRUE}. For \code{add_vars}: Same as \code{value}. A single argument passed may also be a vector or matrix, multiple arguments must each be a list (they are combined using \code{c(...)}).}
 }
-% \details{
-% }
-% \value{
-%%  ~Describe the value returned
-%%  If it is a LIST, use
-%%  \item{comp1 }{Description of 'comp1'}
-%%  \item{comp2 }{Description of 'comp2'}
-%% ...
-% }
+
+\details{
+\code{get_vars(<-)} is around 2x faster than \code{`[.data.frame`} and 8x faster than \code{`[<-.data.frame`}, so the common operation \code{data[cols] <- someFUN(data[cols])} can be made 10x more efficient (abstracting from computations performed by \code{someFUN}) using \code{get_vars(data, cols) <- someFUN(get_vars(data, cols))} or the shorthand \code{gv(data, cols) <- someFUN(gv(data, cols))}.
+
+Similarly type-wise operations like \code{data[sapply(data, is.numeric)]} or \code{data[sapply(data, is.numeric)] <- value} are facilitated and more efficient using \code{num_vars(data)} and \code{num_vars(data) <- value} or the shortcuts \code{nv} and \code{nv<-} etc.
+
+\code{fselect} provides an efficient alternative to \code{dplyr::select}, allowing the selection of variables based on expressions evaluated within the data.frame, see Examples. It is about 100x faster than \code{dplyr::select} but also more simple as it does not provide special methods for grouped tibbles.
+
+Finally, \code{add_vars(data1, data2, data3, ...)} is a lot faster than \code{cbind(data1, data2, data3, ...)}, and preserves the attributes of \code{data1} (i.e. it is like adding columns to \code{data1}). The replacement function \code{add_vars(data) <- someFUN(get_vars(data, cols))} efficiently appends \code{data} with computed columns. The \code{pos} argument allows adding columns at positions other than the end (right) of the data frame, see Examples.
+
+All functions introduced here perform their operations class-independent. They all basically work like this: (1) save the attributes of \code{x}, (2) unclass \code{x}, (3) subset, replace or append \code{x} as a list, (4) modify the "names" component of the attributes of \code{x} accordingly and (5) efficiently attach the attributes again to the result from step (3).
+Thus they can freely be applied to data.table's, grouped tibbles, panel-data frames and other classes and will return an object of exactly the same class and the same attributes.
+
+% secure w.r.t. redefinitions of \code{`[.data.frame`} or \code{`[<-.data.frame`} for other classes (i.e. data.table's, tibbles etc.) and preserve all attributes of the data
+}
+\note{
+When lists of unequal-length columns are offered as replacements this yields a malformed data.frame (which will also print a warning in the console i.e. you will notice that). The functions here only check the length of the first column, which is one of the reasons why they are so fast.
+}
 \seealso{
-\link[=collapse-documentation]{Collapse Overview}
+\code{\link{fsubset}}, \code{\link{ftransform}}, \link[=A3-data-frame-manipulation]{Data Frame Manipulation}, \link[=collapse-documentation]{Collapse Overview}
 }
 \examples{
 ## Wold Development Data
+head(fselect(wlddev, country, year, PCGDP))                # Fast dplyr-like selecting
+head(fselect(wlddev, -country, -year, -PCGDP))
+head(fselect(wlddev, country, year, PCGDP:ODA))
+head(fselect(wlddev, -(PCGDP:ODA)))
+fselect(wlddev, country, year, PCGDP:ODA) <- NULL          # Efficient deleting
+head(wlddev)
+rm(wlddev)
+
 head(num_vars(wlddev))                                     # Select numeric variables
-head(get_vars(wlddev, is.numeric))                         # Same thing
 head(cat_vars(wlddev))                                     # Select categorical (non-numeric) vars
 head(get_vars(wlddev, is.categorical))                     # Same thing
 
@@ -111,7 +134,7 @@ head(get_vars(wlddev, -(9:12)))                            # All except columns 
 head(get_vars(wlddev, c("PCGDP","LIFEEX","GINI","ODA")))   # Select using column names
 head(get_vars(wlddev, "[[:upper:]]", regex = TRUE))        # Same thing: match upper-case var. names
 
-get_vars(wlddev, 9:12) <- get_vars(wlddev, 9:12)           # 6x faster wlddev[9:12] <- wlddev[9:12]
+get_vars(wlddev, 9:12) <- get_vars(wlddev, 9:12)           # 9x faster wlddev[9:12] <- wlddev[9:12]
 add_vars(wlddev) <- STD(gv(wlddev,9:12), wlddev$iso3c)     # Add Standardized columns 9 through 12
 head(wlddev)                                               # gv and av are shortcuts
 
@@ -126,4 +149,3 @@ get_vars(wlddev, c(10,12,14,16)) <- NULL                   # Deleting
 
 }
 \keyword{manip}
-\keyword{documentation}

@@ -1,6 +1,5 @@
-#include <Rcpp.h>
-
 // [[Rcpp::plugins(cpp11)]]
+#include <Rcpp.h>
 using namespace Rcpp;
 
 template <int RTYPE>
@@ -22,7 +21,7 @@ template <int RTYPE>
       } else out.attr("names") = dn[0];
       if (ret != 0) {
         if (Rf_isNull(dn[1]) || ret == 2) {
-          out.attr("row.names") = IntegerVector::create(NA_INTEGER, -X.ncol()); //NumericVector::create(NA_REAL,-X.ncol());
+          out.attr("row.names") = IntegerVector::create(NA_INTEGER, -X.ncol());
         } else out.attr("row.names") = dn[1];
         if(ret == 1) {
           out.attr("class") = "data.frame";
@@ -36,7 +35,7 @@ template <int RTYPE>
         rn[i] = std::string("V") + std::to_string(i+1);
       }
       out.attr("names") = rn;
-      out.attr("row.names") = IntegerVector::create(NA_INTEGER, -X.ncol()); // NumericVector::create(NA_REAL,-X.ncol());
+      out.attr("row.names") = IntegerVector::create(NA_INTEGER, -X.ncol());
       if (ret == 1) {
         out.attr("class") = "data.frame";
       } else {
@@ -44,8 +43,65 @@ template <int RTYPE>
       }
     }
     return out;
-  }
+}
 
+// [[Rcpp::export]]
+SEXP mrtl(SEXP X, bool names = false, int ret = 0){
+  RCPP_RETURN_MATRIX(mrtlImpl, X, names, ret);
+}
+
+
+template <int RTYPE>
+ List mctlImpl(Matrix<RTYPE> X, bool names, int ret) {
+    int l = X.ncol();
+    List out(l);
+    for(int i = l; i--; ) {
+      out[i] = X(_,i);
+    }
+    if(names && X.hasAttribute("dimnames")) {
+      List dn(2);
+      dn = X.attr("dimnames");
+      if (Rf_isNull(dn[1])) {
+        CharacterVector cn(l);
+        for (int i = l; i--; ) {
+          cn[i] = std::string("V") + std::to_string(i+1);
+        }
+        out.attr("names") = cn;
+      } else out.attr("names") = dn[1];
+      if (ret != 0) {
+        if (Rf_isNull(dn[0]) || ret == 2) {
+          out.attr("row.names") = IntegerVector::create(NA_INTEGER, -X.nrow());
+        } else out.attr("row.names") = dn[0];
+        if(ret == 1) {
+          out.attr("class") =  "data.frame";
+        } else {
+          out.attr("class") = CharacterVector::create("data.table","data.frame");
+        }
+      }
+    } else if (ret != 0) {
+      CharacterVector cn(l);
+      for (int i = l; i--; ) {
+        cn[i] = std::string("V") + std::to_string(i+1);
+      }
+      out.attr("names") = cn;
+      out.attr("row.names") = IntegerVector::create(NA_INTEGER, -X.nrow());
+      if (ret == 1) {
+        out.attr("class") = "data.frame";
+      } else {
+        out.attr("class") = CharacterVector::create("data.table","data.frame");
+      }
+    }
+    return out;
+}
+
+// [[Rcpp::export]]
+SEXP mctl(SEXP X, bool names = false, int ret = 0){
+  RCPP_RETURN_MATRIX(mctlImpl, X, names, ret);
+}
+
+
+
+// Experimental Matrix apply functions -> Need to make faster, see Hmisc::mApply
 // template <int RTYPE> // Slower than lapply(mctl...)
 //  List mrtlapplyImpl(Matrix<RTYPE> X, Function FUN, bool names, int ret) {
 //   int l = X.nrow();
@@ -103,50 +159,6 @@ template <int RTYPE>
 //   else rownames(out) = rownames(X);
 //   return out;
 // }
-
-
-template <int RTYPE>
- List mctlImpl(Matrix<RTYPE> X, bool names, int ret) {
-    int l = X.ncol();
-    List out(l);
-    for(int i = l; i--; ) {
-      out[i] = X(_,i);
-    }
-    if(names && X.hasAttribute("dimnames")) {
-      List dn(2);
-      dn = X.attr("dimnames");
-      if (Rf_isNull(dn[1])) {
-        CharacterVector cn(l);
-        for (int i = l; i--; ) {
-          cn[i] = std::string("V") + std::to_string(i+1);
-        }
-        out.attr("names") = cn;
-      } else out.attr("names") = dn[1];
-      if (ret != 0) {
-        if (Rf_isNull(dn[0]) || ret == 2) {
-          out.attr("row.names") = IntegerVector::create(NA_INTEGER, -X.nrow()); // NumericVector::create(NA_REAL,-X.nrow());
-        } else out.attr("row.names") = dn[0];
-        if(ret == 1) {
-          out.attr("class") =  "data.frame";
-        } else {
-          out.attr("class") = CharacterVector::create("data.table","data.frame");
-        }
-      }
-    } else if (ret != 0) {
-      CharacterVector cn(l);
-      for (int i = l; i--; ) {
-        cn[i] = std::string("V") + std::to_string(i+1);
-      }
-      out.attr("names") = cn;
-      out.attr("row.names") = IntegerVector::create(NA_INTEGER, -X.nrow()); // NumericVector::create(NA_REAL,-X.nrow());
-      if (ret == 1) {
-        out.attr("class") = "data.frame";
-      } else {
-        out.attr("class") = CharacterVector::create("data.table","data.frame");
-      }
-    }
-    return out;
-  }
 
 // template <int RTYPE> // Slower than lapply(mctl...)
 //  List mctlapplyImpl(Matrix<RTYPE> X, Function FUN, bool names, int ret) {
@@ -208,11 +220,6 @@ template <int RTYPE>
 // }
 
 
-// [[Rcpp::export]]
-SEXP mrtl(SEXP X, bool names = false, int ret = 0){
-  RCPP_RETURN_MATRIX(mrtlImpl, X, names, ret);
-}
-
 // // [[Rcpp::export]]
 // SEXP mrtlapply(SEXP X, Function FUN, bool names = false, int ret = 0){
 //   RCPP_RETURN_MATRIX(mrtlapplyImpl, X, FUN, names, ret);
@@ -223,10 +230,6 @@ SEXP mrtl(SEXP X, bool names = false, int ret = 0){
 //   RCPP_RETURN_MATRIX(mrtmapplyImpl, X, FUN);
 // }
 
-// [[Rcpp::export]]
-SEXP mctl(SEXP X, bool names = false, int ret = 0){
-  RCPP_RETURN_MATRIX(mctlImpl, X, names, ret);
-}
 
 // // [[Rcpp::export]]
 // SEXP mctlapply(SEXP X, Function FUN, bool names = false, int ret = 0){

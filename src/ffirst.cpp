@@ -2,7 +2,7 @@
 #include <Rcpp.h>
 using namespace Rcpp;
 
-// Implemented smarter copy names !!
+// TODO: Implemented smarter copy names ?!
 
 template <int RTYPE>
 inline bool isnaNUM(typename Rcpp::traits::storage_type<RTYPE>::type x) {
@@ -23,7 +23,7 @@ Vector<RTYPE> ffirstCppImpl(const Vector<RTYPE>& x, int ng, const IntegerVector&
       int j = 0;
       auto first = x[j];
       while(isnanT(first) && j!=end) first = x[++j];
-      Vector<RTYPE> out(1, first); // faster using create ??
+      Vector<RTYPE> out(1, first); // faster using create ?
       DUPLICATE_ATTRIB(out, x);
       if(Rf_getAttrib(x, R_NamesSymbol) != R_NilValue) {
         CharacterVector names = Rf_getAttrib(x, R_NamesSymbol);
@@ -131,7 +131,7 @@ SEXP ffirstCpp(SEXP x, int ng = 0, IntegerVector g = 0, bool narm = true){
 
 
 
-// with better handling row.names !!
+// with better handling row.names !
 
 template <int RTYPE>
 SEXP ffirstmCppImpl(const Matrix<RTYPE>& x, int ng, const IntegerVector& g, bool narm, bool drop) {
@@ -183,7 +183,7 @@ SEXP ffirstmCppImpl(const Matrix<RTYPE>& x, int ng, const IntegerVector& g, bool
       if(dn[0] != R_NilValue) {
         CharacterVector rn = dn[0];
         CharacterVector newrn = no_init_vector(ng);
-        LogicalVector glj(ng, true); // using std::vector<bool> here is more memory efficient but not faster !!
+        LogicalVector glj(ng, true); // using std::vector<bool> here is more memory efficient but not faster
         int ngs = 0;
         for(int i = 0; i != l; ++i) {
           if(glj[g[i]-1]) {
@@ -194,9 +194,9 @@ SEXP ffirstmCppImpl(const Matrix<RTYPE>& x, int ng, const IntegerVector& g, bool
             if(ngs == ng) break;
           }
         }
-        first.attr("dimnames") = List::create(newrn, dn[1]); // best way !!
+        first.attr("dimnames") = List::create(newrn, dn[1]); // best way
       } else {
-        LogicalVector glj(ng, true); // using std::vector<bool> here is more memory efficient but not faster !!
+        LogicalVector glj(ng, true); // using std::vector<bool> here is more memory efficient but not faster
         int ngs = 0;
         for(int i = 0; i != l; ++i) {
           if(glj[g[i]-1]) {
@@ -334,7 +334,7 @@ SEXP ffirstlCpp(const List& x, int ng = 0, const IntegerVector& g = 0, bool narm
     DUPLICATE_ATTRIB(first, x);
     first.attr("row.names") = 1;
     return first;
-  } else { // With groups !!
+  } else { // With groups
     int gss = g.size();
     if(narm) {
       for(int j = l; j--; ) {
@@ -414,9 +414,9 @@ SEXP ffirstlCpp(const List& x, int ng = 0, const IntegerVector& g = 0, bool narm
         }
       }
       DUPLICATE_ATTRIB(first, x);
-      first.attr("row.names") = IntegerVector::create(NA_INTEGER, -ng); // NumericVector::create(NA_REAL, -ng);
+      first.attr("row.names") = IntegerVector::create(NA_INTEGER, -ng);
     } else {
-      LogicalVector glj(ng, true); //  Much faster method !! (precomputing indices and then going through data)
+      LogicalVector glj(ng, true); //  Much faster method (precomputing indices and then going through data)
       IntegerVector firstindex = no_init_vector(ng);
       int ngs = 0;
       for(int i = 0; i != gss; ++i) {
@@ -464,10 +464,10 @@ SEXP ffirstlCpp(const List& x, int ng = 0, const IntegerVector& g = 0, bool narm
       }
       DUPLICATE_ATTRIB(first, x);
       if(Rf_getAttrib(x, R_RowNamesSymbol) != R_NilValue) {
-        const CharacterVector& rn = Rf_getAttrib(x, R_RowNamesSymbol); // const doesn't really make a difference !!
-        Rf_setAttrib(first, R_RowNamesSymbol, rn[firstindex]); //  first.attr("row.names") = rn[firstindex]; // Other sloghtly faster, but no big deal !!
+        const CharacterVector& rn = Rf_getAttrib(x, R_RowNamesSymbol); // const doesn't really make a difference
+        Rf_setAttrib(first, R_RowNamesSymbol, rn[firstindex]); //  first.attr("row.names") = rn[firstindex]; // Other sloghtly faster, but no big deal
       } else {
-        first.attr("row.names") = IntegerVector::create(NA_INTEGER, -ng); // NumericVector::create(NA_REAL, -ng);
+        first.attr("row.names") = IntegerVector::create(NA_INTEGER, -ng);
       }
     }
     return first;

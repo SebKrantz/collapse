@@ -55,7 +55,7 @@ dat <- GGDC10S
 get_vars(dat, 6:15) <- replace_outliers(sweep(get_vars(dat, 6:15), 1, dat$SUM, "/"), 0,
                                         single.limit = "min")
 names(dat) <- stringr::str_wrap(vlabels(dat), width = 20)
-dat$Variable <- Recode(dat$Variable,"VA"="Value Added Share","EMP"="Employment Share")
+dat$Variable <- recode_char(dat$Variable,"VA"="Value Added Share","EMP"="Employment Share")
 dat <- collap(dat, ~ Variable + Region + Year, cols = 6:15)
 dat <- melt(qDT(dat), 1:3, variable.name = "Sector")
 
@@ -68,22 +68,20 @@ ggplot(aes(x = Year, y = value, fill = Sector), data = dat) +
                      labels = scales::percent) +
   theme(axis.text.x = element_text(angle = 315, hjust = 0, margin = ggplot2::margin(t = 0)),
         strip.background = element_rect(colour = "grey30", fill = "grey30"))
-}
-
 
 # A function to plot the structural change of an arbitrary country
 
 plotGGDC <- function(ctry) {
-dat <- qDT(GGDC10S)[Country == ctry]
-dat <- cbind(get_vars(dat, c("Variable","Year")),
-             replace_outliers(sweep(get_vars(dat, 6:15), 1, dat$SUM, "/"), 0, NA, "min"))
-dat$Variable <- Recode(dat$Variable,"VA"="Value Added Share","EMP"="Employment Share")
-dat <- melt(dat, 1:2, variable.name = "Sector")
+dat <- fsubset(GGDC10S, Country == ctry)
+dat <- add_vars(fselect(dat, Variable, Year),
+       replace_outliers(sweep(get_vars(dat, 6:15), 1, dat$SUM, "/"), 0, NA, "min"))
+dat$Variable <- recode_char(dat$Variable,"VA"="Value Added Share","EMP"="Employment Share")
+dat <- melt(qDT(dat), 1:2, variable.name = "Sector")
 
 ggplot(aes(x = Year, y = value, fill = Sector), data = dat) +
   geom_area(position = "fill", alpha = 0.9) + labs(x = NULL, y = NULL) +
   theme_linedraw(base_size = 14) + facet_wrap( ~ Variable) +
-  scale_fill_manual(values = sub("#00FF66FF", "#00CC66", rainbow(10))) +
+  scale_fill_manual(values = sub("#00FF66", "#00CC66", rainbow(10))) +
   scale_x_continuous(breaks = scales::pretty_breaks(n = 7), expand = c(0, 0)) +
   scale_y_continuous(breaks = scales::pretty_breaks(n = 10), expand = c(0, 0),
                      labels = scales::percent) +
@@ -91,7 +89,10 @@ ggplot(aes(x = Year, y = value, fill = Sector), data = dat) +
         strip.background = element_rect(colour = "grey20", fill = "grey20"),
         strip.text = element_text(face = "bold"))
 }
+
 plotGGDC("TZA")
+
+}
 
 }
 \keyword{datasets}

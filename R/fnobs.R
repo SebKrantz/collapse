@@ -1,18 +1,10 @@
-# library(Rcpp)
-# sourceCpp('src/fnobs.cpp')
-# sourceCpp('src/fnobsa.cpp')
-# sourceCpp('src/fnobsl.cpp')
-# sourceCpp('src/TRA.cpp')
-# sourceCpp('src/TRAl.cpp')
-# sourceCpp('src/TRAa.cpp')
 
-# For foundational changes to this code see fsum.R !!
+# For foundational changes to this code see fsum.R
 
-fNobs <- function(x, ...) { # g = NULL, TRA = NULL, use.g.names = TRUE, drop = TRUE, keep.group_vars = TRUE,
-  UseMethod("fNobs", x)
-}
+fNobs <- function(x, ...) UseMethod("fNobs") # , x
+
 fNobs.default <- function(x, g = NULL, TRA = NULL, use.g.names = TRUE, ...) {
-  if(!missing(...)) stop("Unknown argument ", dotstostr(...))
+  if(!missing(...)) unused_arg_action(match.call(), ...)
   if(is.null(TRA)) {
     if(is.null(g)) return(.Call(Cpp_fNobs,x,0L,0L)) else if (is.atomic(g)) {
       if(use.g.names) {
@@ -31,19 +23,19 @@ fNobs.default <- function(x, g = NULL, TRA = NULL, use.g.names = TRUE, ...) {
         return(.Call(Cpp_fNobs,x,g[[1L]],g[[2L]]))
     }
   } else {
-    if(is.null(g)) return(.Call(Cpp_TRA,x,.Call(Cpp_fNobs,x,0L,0L),0L,TRAtoInt(TRA))) else if (is.atomic(g)) {
-      if(is.nmfactor(g)) return(.Call(Cpp_TRA,x,.Call(Cpp_fNobs,x,fnlevels(g),g),g,TRAtoInt(TRA))) else {
+    if(is.null(g)) return(.Call(Cpp_TRA,x,.Call(Cpp_fNobs,x,0L,0L),0L,TtI(TRA))) else if (is.atomic(g)) {
+      if(is.nmfactor(g)) return(.Call(Cpp_TRA,x,.Call(Cpp_fNobs,x,fnlevels(g),g),g,TtI(TRA))) else {
         g <- qG(g, na.exclude = FALSE)
-        return(.Call(Cpp_TRA,x,.Call(Cpp_fNobs,x,attr(g,"N.groups"),g),g,TRAtoInt(TRA)))
+        return(.Call(Cpp_TRA,x,.Call(Cpp_fNobs,x,attr(g,"N.groups"),g),g,TtI(TRA)))
       }
     } else {
       if(!is.GRP(g)) g <- GRP.default(g, return.groups = FALSE)
-      return(.Call(Cpp_TRA,x,.Call(Cpp_fNobs,x,g[[1L]],g[[2L]]),g[[2L]],TRAtoInt(TRA)))
+      return(.Call(Cpp_TRA,x,.Call(Cpp_fNobs,x,g[[1L]],g[[2L]]),g[[2L]],TtI(TRA)))
     }
   }
 }
 fNobs.matrix <- function(x, g = NULL, TRA = NULL, use.g.names = TRUE, drop = TRUE, ...) {
-  if(!missing(...)) stop("Unknown argument ", dotstostr(...))
+  if(!missing(...)) unused_arg_action(match.call(), ...)
   if(is.null(TRA)) {
     if(is.null(g)) return(.Call(Cpp_fNobsm,x,0L,0L,drop)) else if (is.atomic(g)) {
       if(use.g.names) {
@@ -62,19 +54,19 @@ fNobs.matrix <- function(x, g = NULL, TRA = NULL, use.g.names = TRUE, drop = TRU
         return(.Call(Cpp_fNobsm,x,g[[1L]],g[[2L]],FALSE))
     }
   } else {
-    if(is.null(g)) return(.Call(Cpp_TRAm,x,.Call(Cpp_fNobsm,x,0L,0L,TRUE),0L,TRAtoInt(TRA))) else if (is.atomic(g)) {
-      if(is.nmfactor(g)) return(.Call(Cpp_TRAm,x,.Call(Cpp_fNobsm,x,fnlevels(g),g,FALSE),g,TRAtoInt(TRA))) else {
+    if(is.null(g)) return(.Call(Cpp_TRAm,x,.Call(Cpp_fNobsm,x,0L,0L,TRUE),0L,TtI(TRA))) else if (is.atomic(g)) {
+      if(is.nmfactor(g)) return(.Call(Cpp_TRAm,x,.Call(Cpp_fNobsm,x,fnlevels(g),g,FALSE),g,TtI(TRA))) else {
         g <- qG(g, na.exclude = FALSE)
-        return(.Call(Cpp_TRAm,x,.Call(Cpp_fNobsm,x,attr(g,"N.groups"),g,FALSE),g,TRAtoInt(TRA)))
+        return(.Call(Cpp_TRAm,x,.Call(Cpp_fNobsm,x,attr(g,"N.groups"),g,FALSE),g,TtI(TRA)))
       }
     } else {
       if(!is.GRP(g)) g <- GRP.default(g, return.groups = FALSE)
-      return(.Call(Cpp_TRAm,x,.Call(Cpp_fNobsm,x,g[[1L]],g[[2L]],FALSE),g[[2L]],TRAtoInt(TRA)))
+      return(.Call(Cpp_TRAm,x,.Call(Cpp_fNobsm,x,g[[1L]],g[[2L]],FALSE),g[[2L]],TtI(TRA)))
     }
   }
 }
 fNobs.data.frame <- function(x, g = NULL, TRA = NULL, use.g.names = TRUE, drop = TRUE, ...) {
-  if(!missing(...)) stop("Unknown argument ", dotstostr(...))
+  if(!missing(...)) unused_arg_action(match.call(), ...)
   if(is.null(TRA)) {
     if(is.null(g)) return(.Call(Cpp_fNobsl,x,0L,0L,drop)) else if (is.atomic(g)) {
       if(use.g.names && !inherits(x, "data.table")) {
@@ -94,21 +86,24 @@ fNobs.data.frame <- function(x, g = NULL, TRA = NULL, use.g.names = TRUE, drop =
           return(.Call(Cpp_fNobsl,x,g[[1L]],g[[2L]],FALSE))
     }
   } else {
-    if(is.null(g)) return(.Call(Cpp_TRAl,x,.Call(Cpp_fNobsl,x,0L,0L,TRUE),0L,TRAtoInt(TRA))) else if (is.atomic(g)) {
-      if(is.nmfactor(g)) return(.Call(Cpp_TRAl,x,.Call(Cpp_fNobsl,x,fnlevels(g),g,FALSE),g,TRAtoInt(TRA))) else {
+    if(is.null(g)) return(.Call(Cpp_TRAl,x,.Call(Cpp_fNobsl,x,0L,0L,TRUE),0L,TtI(TRA))) else if (is.atomic(g)) {
+      if(is.nmfactor(g)) return(.Call(Cpp_TRAl,x,.Call(Cpp_fNobsl,x,fnlevels(g),g,FALSE),g,TtI(TRA))) else {
         g <- qG(g, na.exclude = FALSE)
-        return(.Call(Cpp_TRAl,x,.Call(Cpp_fNobsl,x,attr(g,"N.groups"),g,FALSE),g,TRAtoInt(TRA)))
+        return(.Call(Cpp_TRAl,x,.Call(Cpp_fNobsl,x,attr(g,"N.groups"),g,FALSE),g,TtI(TRA)))
       }
     } else {
       if(!is.GRP(g)) g <- GRP.default(g, return.groups = FALSE)
-      return(.Call(Cpp_TRAl,x,.Call(Cpp_fNobsl,x,g[[1L]],g[[2L]],FALSE),g[[2L]],TRAtoInt(TRA)))
+      return(.Call(Cpp_TRAl,x,.Call(Cpp_fNobsl,x,g[[1L]],g[[2L]],FALSE),g[[2L]],TtI(TRA)))
     }
   }
 }
+fNobs.list <- function(x, g = NULL, TRA = NULL, use.g.names = TRUE, drop = TRUE, ...)
+  fNobs.data.frame(x, g, TRA, use.g.names, drop, ...)
 fNobs.grouped_df <- function(x, TRA = NULL, use.g.names = FALSE, keep.group_vars = TRUE, ...) {
-  if(!missing(...)) stop("Unknown argument ", dotstostr(...))
+  if(!missing(...)) unused_arg_action(match.call(), ...)
   g <- GRP.grouped_df(x)
-  gn <- which(attr(x, "names") %in% g[[5L]])
+  nam <- attr(x, "names")
+  gn <- which(nam %in% g[[5L]])
   nTRAl <- is.null(TRA)
   gl <- length(gn) > 0L
   if(gl || nTRAl) {
@@ -120,19 +115,22 @@ fNobs.grouped_df <- function(x, TRA = NULL, use.g.names = FALSE, keep.group_vars
       ax[["row.names"]] <- if(use.g.names) group_names.GRP(g) else .set_row_names(g[[1L]])
       if(gl) {
         if(keep.group_vars) {
-          ax[["names"]] <- c(g[[5L]], ax[["names"]][-gn])
+          ax[["names"]] <- c(g[[5L]], nam[-gn])
           return(setAttributes(c(g[[4L]],.Call(Cpp_fNobsl,x[-gn],g[[1L]],g[[2L]],FALSE)), ax))
         } else {
-          ax[["names"]] <- ax[["names"]][-gn]
+          ax[["names"]] <- nam[-gn]
           return(setAttributes(.Call(Cpp_fNobsl,x[-gn],g[[1L]],g[[2L]],FALSE), ax))
         }
+      } else if(keep.group_vars) {
+        ax[["names"]] <- c(g[[5L]], nam)
+        return(setAttributes(c(g[[4L]],.Call(Cpp_fNobsl,x,g[[1L]],g[[2L]],FALSE)), ax))
       } else return(setAttributes(.Call(Cpp_fNobsl,x,g[[1L]],g[[2L]],FALSE), ax))
     } else if(keep.group_vars) {
-      ax[["names"]] <- c(ax[["names"]][gn], ax[["names"]][-gn])
-      return(setAttributes(c(x[gn],.Call(Cpp_TRAl,x[-gn],.Call(Cpp_fNobsl,x[-gn],g[[1L]],g[[2L]],FALSE),g[[2L]],TRAtoInt(TRA))), ax))
+      ax[["names"]] <- c(nam[gn], nam[-gn])
+      return(setAttributes(c(x[gn],.Call(Cpp_TRAl,x[-gn],.Call(Cpp_fNobsl,x[-gn],g[[1L]],g[[2L]],FALSE),g[[2L]],TtI(TRA))), ax))
     } else {
-      ax[["names"]] <- ax[["names"]][-gn]
-      return(setAttributes(.Call(Cpp_TRAl,x[-gn],.Call(Cpp_fNobsl,x[-gn],g[[1L]],g[[2L]],FALSE),g[[2L]],TRAtoInt(TRA)), ax))
+      ax[["names"]] <- nam[-gn]
+      return(setAttributes(.Call(Cpp_TRAl,x[-gn],.Call(Cpp_fNobsl,x[-gn],g[[1L]],g[[2L]],FALSE),g[[2L]],TtI(TRA)), ax))
     }
-  } else return(.Call(Cpp_TRAl,x,.Call(Cpp_fNobsl,x,g[[1L]],g[[2L]],FALSE),g[[2L]],TRAtoInt(TRA)))
+  } else return(.Call(Cpp_TRAl,x,.Call(Cpp_fNobsl,x,g[[1L]],g[[2L]],FALSE),g[[2L]],TtI(TRA)))
 }

@@ -1,10 +1,8 @@
-# library(Rcpp)
-# sourceCpp("C:/Users/Sebastian Krantz/Documents/R/C++/mrtl_type_dispatch.cpp")
-# Crbindlist <- data.table:::Crbindlist
-# Csetcolorder <- data.table:::Csetcolorder
+
 
 unlist2d <- function(l, idcols = ".id", row.names = FALSE, recursive = TRUE, id.factor = FALSE, DT = FALSE) {
-  if (!is.list(l)) return(l) #stop("l is not a list")
+
+  if (!is.list(l)) return(l) # stop("l is not a list")
   make.ids <- idcols[1L] != FALSE
   if(make.ids) id.names <- if(idcols[1L] == TRUE) ".id" else idcols[1L]
   keep.row.names <- row.names[1L] != FALSE
@@ -15,8 +13,8 @@ unlist2d <- function(l, idcols = ".id", row.names = FALSE, recursive = TRUE, id.
     class(l) <- if(DT) c("data.table","data.frame") else "data.frame"
     l
   }
-  idf <- function(x) if(inherits(x, "data.frame")) 2L else if (is.null(x)) 1L else 3L*is.atomic(x) # faster way ??
-  addrn <- function(x) if(any(attr(x, "names") == row.names)) x else c(`names<-`(list(attr(x, "row.names")),row.names),x) # faster way??
+  idf <- function(x) if(inherits(x, "data.frame")) 2L else if (is.null(x)) 1L else 3L*is.atomic(x) # faster way ?
+  addrn <- function(x) if(any(attr(x, "names") == row.names)) x else c(`names<-`(list(attr(x, "row.names")),row.names),x) # faster way ?
   attol <- function(x) {
     # class(x) <- NULL # tables are also arrays, although only 1D, not because of the class but because they have a dimension attribute.
     if (length(d <- dim(x)) > 1L) { # is.array(x) # length could also be 0...
@@ -25,34 +23,34 @@ unlist2d <- function(l, idcols = ".id", row.names = FALSE, recursive = TRUE, id.
         dn <- dimnames(x)
         dim(x) <- c(d[1L], prod(d[-1L]))
         if (!is.null(dn)) {
-          for (i in 2L:length(d)) if (is.null(dn[[i]])) dn[[i]] <- seq_len(d[i])
-          dimnames(x) <- list(dn[[1L]], interaction(expand.grid(dn[-1L]))) # Good??
+          for (i in 2L:length(d)) if(is.null(dn[[i]])) dn[[i]] <- seq_len(d[i])
+          dimnames(x) <- list(dn[[1L]], interact_names(dn[-1L])) # Good ?
         }
       }
       dn <- dimnames(x)
       if(keep.row.names && !is.null(dn[[1L]]))
-        x <- `names<-`(c(list(dn[[1L]]), mctl(x)), c(row.names, dn[[2L]])) else
-        x <- `names<-`(mctl(x), dn[[2L]])
+        x <- `names<-`(c(list(dn[[1L]]),  .Call(Cpp_mctl, x, FALSE, 0L)), c(row.names, dn[[2L]])) else
+        x <- `names<-`(.Call(Cpp_mctl, x, FALSE, 0L), dn[[2L]])
     } else x <- as.vector(x, "list")
-    if (is.null(names(x))) names(x) <- paste0("V", seq_along(x))     # it seems this is not yet working for all (i.e. model objects..), also perhaps not start at V1, sepending on what other columsn there are.. i.e start at the right position??
+    if (is.null(names(x))) names(x) <- paste0("V", seq_along(x))     # it seems this is not yet working for all (i.e. model objects..), also perhaps not start at V1, depending on what other columsn there are.. i.e start at the right position ?
     return(x)
   }
   ul2d <- function(y) {
     if(inherits(y, "data.frame") || is.atomic(y)) return(y)
-    class(y) <- NULL # perhaps unclassing y would put more safety ?? -> yes !!
-    ident <- vapply(y, idf, 1L)
+    class(y) <- NULL # perhaps unclassing y would put more safety ? -> yes !
+    ident <- vapply(y, idf, 1L) # `attributes<-`(y, NULL) # possibly you can still get a few microseconds in the apply commands, but beware, this removes names in output !
     if(is.list(y) && all(ident > 0L)) {
       at <- ident == 3L
       if(any(at)) y[at] <- lapply(y[at], attol)
-      if(keep.row.names && any(df <- ident == 2L)) y[df] <- lapply(y[df], addrn) # better cbind for data.table???? or x[["row.names"]] =.. and the sort later??
+      if(keep.row.names && any(df <- ident == 2L)) y[df] <- lapply(y[df], addrn) # better cbind for data.table ? or x[["row.names"]] =.. and the sort later ?
         if(make.ids) {
           if(id.factor) {
-            y <- y[ident != 1L] # better way?? y[ident!=1L] = NULL??
+            y <- y[ident != 1L] # better way ? y[ident!=1L] = NULL ?
             nam <- names(y)
             names(y) <- NULL
             y <- DFDTl(.Call(C_rbindlist, y, TRUE, TRUE, id.names))
             # attributes(y[[1L]]) <- list(levels = nam, class = c("ordered", "factor"))
-            setattributes(y[[1L]], pairlist(levels = nam, class = c("ordered", "factor"))) # a lot faster !!
+            setattributes(y[[1L]], pairlist(levels = nam, class = c("ordered", "factor"))) # a lot faster !
             return(y)
           } else return(DFDTl(.Call(C_rbindlist, y[ident != 1L], TRUE, TRUE, id.names)))
         } else return(DFDTl(.Call(C_rbindlist, y[ident != 1L], TRUE, TRUE, NULL)))
@@ -66,25 +64,24 @@ unlist2d <- function(l, idcols = ".id", row.names = FALSE, recursive = TRUE, id.
       nams <- attr(l, "names")
       ids <- which(nams == id.names)
       nid <- length(ids)
-      if(nid > 1L) { # Still make sure row.names comes after ids, even if only one id!!
+      if(nid > 1L) { # make sure row.names comes after ids, even if only one id!
         nids <- seq_len(nid)
         attr(l, "names")[ids] <- if(length(idcols) == nid) idcols else paste(id.names, nids, sep = ".")
-        if(keep.row.names) { # New!! It seems it lost a bot of speed through this part!!
-          rn <- which(nams == row.names) # New!!
-          if(!all(ids == nids) || rn != nid + 1L) .Call(C_setcolorder, l, c(ids, rn, seq_along(l)[-c(ids,rn)]))  # l <- l[c(ids,rn,seq_along(l)[-c(ids,rn)])] # New!! efficient? could replace only rownames if one of the conditions holds
-        } else if (!all(ids == nids)) .Call(C_setcolorder, l, c(ids, seq_along(l)[-ids])) # l <- l[c(ids,seq_along(l)[-ids])] # Old!! before row.names!!
+        if(keep.row.names) { # New! It seems it lost a bit of speed through this part
+          rn <- which(nams == row.names) # New!
+          if(!all(ids == nids) || rn != nid + 1L) .Call(C_setcolorder, l, c(ids, rn, seq_along(l)[-c(ids,rn)]))  # l <- l[c(ids,rn,seq_along(l)[-c(ids,rn)])] # New! efficient? could replace only rownames if one of the conditions holds
+        } else if (!all(ids == nids)) .Call(C_setcolorder, l, c(ids, seq_along(l)[-ids])) # l <- l[c(ids,seq_along(l)[-ids])] # Old! before row.names!
       }
-    } else if (keep.row.names) { # New!!
-      rn <- which(attr(l, "names") == row.names) # New!!
-      if(rn != 1L) .Call(C_setcolorder, l, c(rn,seq_along(l)[-rn]))  # l <- l[c(rn,seq_along(l)[-rn])] # New!!
+    } else if (keep.row.names) { # New!
+      rn <- which(attr(l, "names") == row.names) # New!
+      if(rn != 1L) .Call(C_setcolorder, l, c(rn,seq_along(l)[-rn]))  # l <- l[c(rn,seq_along(l)[-rn])] # New!
     }
   }
   attr(l, ".internal.selfref") <- NULL
   # setattrib(l, ".internal.selfref", NULL) # what if recursive = FALSE -> doesn't work.. but takes more time!!
   return(l)
 }
-# STill do a lot of checking !!
-# perhaps process unnames vectors as columns, and names vectors as rows?? -> nah, it's rbinding
+
 
 # Examples:
 

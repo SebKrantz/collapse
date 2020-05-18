@@ -15,9 +15,9 @@ NumericVector fsumCpp(const NumericVector& x, int ng = 0, const IntegerVector& g
       double sum = x[j];
       while(std::isnan(sum) && j!=0) sum = x[--j];
       if(j != 0) for(int i = j; i--; ) {
-        if(!std::isnan(x[i])) sum += x[i]; // Fastest ??
+        if(!std::isnan(x[i])) sum += x[i]; // Fastest ?
       }
-      return NumericVector::create(sum); // create((double)sum) // Converting long double directly to numeric vector is slow !!!
+      return NumericVector::create(sum); // create((double)sum) // Converting long double directly to numeric vector is slow !
     } else {
       // long double sum = 0;
       double sum = 0;
@@ -34,9 +34,9 @@ NumericVector fsumCpp(const NumericVector& x, int ng = 0, const IntegerVector& g
   } else { // with groups
     if(g.size() != l) stop("length(g) must match nrow(X)");
     if(narm) {
-      NumericVector sum(ng, NA_REAL); // Other way ??
+      NumericVector sum(ng, NA_REAL); // Other way ?
       for(int i = l; i--; ) {
-        if(!std::isnan(x[i])) { // faster way to code this ??? -> Not Bad at all
+        if(!std::isnan(x[i])) { // faster way to code this ? -> Not Bad at all
           if(std::isnan(sum[g[i]-1])) sum[g[i]-1] = x[i];
           else sum[g[i]-1] += x[i];
         }
@@ -44,7 +44,7 @@ NumericVector fsumCpp(const NumericVector& x, int ng = 0, const IntegerVector& g
       DUPLICATE_ATTRIB(sum, x);
       return sum;
     } else {
-      NumericVector sum(ng); // good?? -> yes !! // Not initializing numerically unstable !!!
+      NumericVector sum(ng); // good? -> yes ! // Not initializing numerically unstable
       int ngs = 0;
       for(int i = 0; i != l; ++i) {
         if(std::isnan(x[i])) {
@@ -121,13 +121,13 @@ NumericVector fsumCpp(const NumericVector& x, int ng = 0, const IntegerVector& g
 
 
 // [[Rcpp::export]]
-SEXP fsummCpp(const NumericMatrix& x, int ng = 0, const IntegerVector& g = 0, // No speed loss by putting SEXP !!
+SEXP fsummCpp(const NumericMatrix& x, int ng = 0, const IntegerVector& g = 0, // No speed loss by putting SEXP
               const SEXP& w = R_NilValue, bool narm = true, bool drop = true) {
   int l = x.nrow(), col = x.ncol();
 
  if(Rf_isNull(w)) { // No weights
   if(ng == 0) {
-    NumericVector sum = no_init_vector(col); // Initialize faster -> Nope !!!
+    NumericVector sum = no_init_vector(col); // Initialize faster -> Nope
     if(narm) {
       for(int j = col; j--; ) { // Instead Am(j,_) you can use Am.row(j).
         NumericMatrix::ConstColumn column = x( _ , j);
@@ -156,7 +156,7 @@ SEXP fsummCpp(const NumericMatrix& x, int ng = 0, const IntegerVector& g = 0, //
         sum[j] = sumj; // (double)sumj;
       }
     }
-    if(drop) sum.attr("names") = colnames(x); // Slight speed loss 31 to 34 milliseconds on WDIM, but doing it in R not faster !!
+    if(drop) sum.attr("names") = colnames(x); // Slight speed loss 31 to 34 milliseconds on WDIM, but doing it in R not faster
     else {
       // SHALLOW_DUPLICATE_ATTRIB(sum, x);
       sum.attr("dim") = Dimension(1, col);
@@ -178,10 +178,10 @@ SEXP fsummCpp(const NumericMatrix& x, int ng = 0, const IntegerVector& g = 0, //
           }
         }
       }
-      colnames(sum) = colnames(x);  // extremely efficient !!
+      colnames(sum) = colnames(x);  // quite efficient
       return sum;
     } else {
-      NumericMatrix sum(ng, col); // no init numerically unstable !!!
+      NumericMatrix sum(ng, col); // no init numerically unstable
       for(int j = col; j--; ) {
         NumericMatrix::ConstColumn column = x( _ , j);
         NumericMatrix::Column sumj = sum( _ , j);
@@ -202,7 +202,7 @@ SEXP fsummCpp(const NumericMatrix& x, int ng = 0, const IntegerVector& g = 0, //
       return sum;
     }
     // sum.attr("dimnames") = List::create(R_NilValue,colnames(x));
-    // colnames(sum) = colnames(x); // NEW! faster than R ?? -> nope, slower !! -> Do as above !!
+    // colnames(sum) = colnames(x);
   }
  } else { // With weights
    NumericVector wg = w;
@@ -298,7 +298,7 @@ SEXP fsumlCpp(const List& x, int ng = 0, const IntegerVector& g = 0, const SEXP&
     NumericVector sum(l); // not initializing not faster WIth NWDI (35 instead of 32 milliseconds)
     if(narm) {
       for(int j = l; j--; ) {
-        // for(int j = 0; j != l; ++j) { // Not necessarily faster !!
+        // for(int j = 0; j != l; ++j) { // Not necessarily faster
         NumericVector column = x[j];
         int k = column.size()-1;
         // long double sumi = column[k]; // a bit extra speed with double, 31 vs 36 milliseconds on NWDI
@@ -339,7 +339,7 @@ SEXP fsumlCpp(const List& x, int ng = 0, const IntegerVector& g = 0, const SEXP&
       out.attr("row.names") = 1;
       return out;
     }
-  } else { // With groups !!
+  } else { // With groups
     List sum(l);
     int gss = g.size();
     if(narm) {
@@ -348,7 +348,7 @@ SEXP fsumlCpp(const List& x, int ng = 0, const IntegerVector& g = 0, const SEXP&
         if(gss != column.size()) stop("length(g) must match nrow(X)");
         NumericVector sumj(ng, NA_REAL);
         for(int i = gss; i--; ) {
-          if(!std::isnan(column[i])) { // continue; // faster way to code this ??? -> Not Bad at all, 54.. millisec for WDIM
+          if(!std::isnan(column[i])) { // continue; // faster way to code this? -> Not Bad at all, 54.. millisec for WDIM
             if(std::isnan(sumj[g[i]-1])) sumj[g[i]-1] = column[i];
             else sumj[g[i]-1] += column[i];
           }
@@ -360,7 +360,7 @@ SEXP fsumlCpp(const List& x, int ng = 0, const IntegerVector& g = 0, const SEXP&
       for(int j = l; j--; ) {
         NumericVector column = x[j];
         if(gss != column.size()) stop("length(g) must match nrow(X)");
-        NumericVector sumj(ng); //  = no_init_vector(ng); // Not initializing in loop is numerically unstable !!
+        NumericVector sumj(ng); //  = no_init_vector(ng); // Not initializing in loop is numerically unstable
         int ngs = 0;
         for(int i = 0; i != gss; ++i) {
           if(std::isnan(column[i])) {
@@ -378,7 +378,7 @@ SEXP fsumlCpp(const List& x, int ng = 0, const IntegerVector& g = 0, const SEXP&
       }
     }
     DUPLICATE_ATTRIB(sum, x);
-    sum.attr("row.names") = IntegerVector::create(NA_INTEGER, -ng); // NumericVector::create(NA_REAL, -ng);
+    sum.attr("row.names") = IntegerVector::create(NA_INTEGER, -ng);
     return sum;
   }
  } else { // With weights

@@ -7,7 +7,6 @@ inline bool isnan2(double x) {
   return x != x;
 }
 
-// Todo: Numeric Stability?? Note: THis changes X !! need to make a copy !!
 // https://www.quantstart.com/articles/Passing-By-Reference-To-Const-in-C
 // https://www.cs.fsu.edu/~myers/c++/notes/references.html
 // https://stackoverflow.com/questions/24112893/within-c-functions-how-are-rcpp-objects-passed-to-other-functions-by-referen
@@ -21,11 +20,11 @@ NumericVector fmedianCpp(const NumericVector& x, int ng = 0, const IntegerVector
 
   if(ng == 0) {
     NumericVector med(1);
-    if(narm) { // xd = xd[!is_na(xd)]; // super slow !!
+    if(narm) { // xd = xd[!is_na(xd)]; // super slow !
       NumericVector xd = no_init_vector(l);
       // NumericVector::iterator pend = std::remove_if(xd.begin(), xd.end(), isnan2);
-      // auto pend = std::remove_if(xd.begin(), xd.end(), isnan2); // need remove_copy_if ??
-      auto pend = std::remove_copy_if(x.begin(), x.end(), xd.begin(), isnan2); // faster !!
+      // auto pend = std::remove_if(xd.begin(), xd.end(), isnan2); // need remove_copy_if ?
+      auto pend = std::remove_copy_if(x.begin(), x.end(), xd.begin(), isnan2); // faster !
       int sz = pend - xd.begin(), middle = sz/2-1; // std::distance(xd.begin(), pend)
       if(sz == 0) return NumericVector::create(x[0]);
       if(sz%2 == 0){
@@ -47,13 +46,13 @@ NumericVector fmedianCpp(const NumericVector& x, int ng = 0, const IntegerVector
         med = xd[middle+1];
       }
     }
-    // DUPLICATE_ATTRIB(med, x); // or keep double use wrap() ??
+    // DUPLICATE_ATTRIB(med, x); // or keep double use wrap() ?
     return med;
-  } else { // with groups !!!
+  } else { // with groups
     if(l != g.size()) stop("length(g) must match length(x)");
     std::vector<std::vector<double> > gmap(ng);
-    // IntegerVector gcount(ng); // array better ?? 2.30 sec for 1e7 with 1e6 groups
-    int ngp = ng+1; // , gcount[ngp]; // Yes! 2.25 sec !!
+    // IntegerVector gcount(ng); // array better ? 2.30 sec for 1e7 with 1e6 groups
+    int ngp = ng+1; // , gcount[ngp]; // Yes! 2.25 sec !
     // memset(gcount, 0, sizeof(int)*ngp);
     std::vector<int> gcount(ngp);
     if(Rf_isNull(gs)) {
@@ -74,30 +73,30 @@ NumericVector fmedianCpp(const NumericVector& x, int ng = 0, const IntegerVector
 
     if(narm) {
       NumericVector med(ng, NA_REAL);
-      for(int i = 0; i != l; ++i) if(!std::isnan(x[i])) gmap[g[i]-1][gcount[g[i]]++] = x[i]; // good ??
+      for(int i = 0; i != l; ++i) if(!std::isnan(x[i])) gmap[g[i]-1][gcount[g[i]]++] = x[i]; // good ?
       for(int i = 0; i != ng; ++i) {
         if(gcount[i+1] != 0) {
-          int n = gcount[i+1]; // fastest !!
-          auto begin = gmap[i].begin(), mid = begin + n/2-1, end = begin + n; // gmap[i].end()-(gmap[i].size()-n); // (gs[i]-n) // good ??
+          int n = gcount[i+1]; // fastest !
+          auto begin = gmap[i].begin(), mid = begin + n/2-1, end = begin + n; // gmap[i].end()-(gmap[i].size()-n); // (gs[i]-n) // good ?
           if(n%2 == 0){
             std::nth_element(begin, mid, end);
-            med[i] = (*(mid) + *(std::min_element(mid+1, end)))/2.0; // gmap[i][middle] or *(begin+middle) ? -> second !!
+            med[i] = (*(mid) + *(std::min_element(mid+1, end)))/2.0; // gmap[i][middle] or *(begin+middle) ? -> second
           } else{
             std::nth_element(begin, mid+1, end);
-            med[i] = *(mid+1); // gmap[i][middle+1] or *(begin+middle+1) ? -> second !!
+            med[i] = *(mid+1); // gmap[i][middle+1] or *(begin+middle+1) ? -> second
           }
         }
       }
       DUPLICATE_ATTRIB(med, x);
       return med;
     } else {
-      NumericVector med(ng); //  = no_init_vector // no init numerically unstable !!(calling isnan on a not-initialized vector is a bad idea)
-     // for(int i = 0; i != l; ++i) gmap[g[i]-1][gcount[g[i]]++] = xd[i]; // good ??
+      NumericVector med(ng); //  = no_init_vector // no init numerically unstable (calling isnan on a not-initialized vector is a bad idea)
+     // for(int i = 0; i != l; ++i) gmap[g[i]-1][gcount[g[i]]++] = xd[i]; // good ?
       int ngs = 0;
       for(int i = 0; i != l; ++i) {
-        // if(std::isnan(med[g[i]-1])) continue; // A lot faster for NWDI !! (reading into 2D structure takes time, unlike fsum !!)
+        // if(std::isnan(med[g[i]-1])) continue; // A lot faster for NWDI ! (reading into 2D structure takes time, unlike fsum)
         if(std::isnan(x[i])) {
-          if(!std::isnan(med[g[i]-1])) { // however, if there are no missing values, this is a lot faster 2.21 vs. 3.09 seconds on 1e7 with 1e6 groups !!
+          if(!std::isnan(med[g[i]-1])) { // however, if there are no missing values, this is a lot faster 2.21 vs. 3.09 seconds on 1e7 with 1e6 groups
             med[g[i]-1] = NA_REAL;
             ++ngs;
             if(ngs == ng) break;
@@ -108,7 +107,7 @@ NumericVector fmedianCpp(const NumericVector& x, int ng = 0, const IntegerVector
       }
       for(int i = 0; i != ng; ++i) {
         if(std::isnan(med[i])) continue;
-        int n = gcount[i+1]; //  gs[i] // fastest !!
+        int n = gcount[i+1]; //  gs[i] // fastest !
         auto begin = gmap[i].begin(), mid = begin + n/2-1, end = begin + n;
         if(n%2 == 0){
           std::nth_element(begin, mid, end);
@@ -217,7 +216,7 @@ SEXP fmedianmCpp(const NumericMatrix& x, int ng = 0, const IntegerVector& g = 0,
         NumericMatrix::ConstColumn column = x( _ , j);
         NumericMatrix::Column medj = med( _ , j);
         gcount.assign(ngp, 0); // memset(gcount, 0, memsize);
-        for(int i = 0; i != l; ++i) if(!std::isnan(column[i])) gmap[g[i]-1][gcount[g[i]]++] = column[i]; // good ??
+        for(int i = 0; i != l; ++i) if(!std::isnan(column[i])) gmap[g[i]-1][gcount[g[i]]++] = column[i]; // good ?
         for(int i = 0; i != ng; ++i) {
           if(gcount[i+1] != 0) {
             int n = gcount[i+1];
@@ -232,10 +231,10 @@ SEXP fmedianmCpp(const NumericMatrix& x, int ng = 0, const IntegerVector& g = 0,
           }
         }
       }
-      colnames(med) = colnames(x); // med.attr("dimnames") = List::create(R_NilValue, colnames(x)); // needed ??
+      colnames(med) = colnames(x); // med.attr("dimnames") = List::create(R_NilValue, colnames(x)); // needed ?
       return med;
     } else {
-      NumericMatrix med(ng, col); // no init numerically unstable !!
+      NumericMatrix med(ng, col); // no init numerically unstable
       for(int j = col; j--; ) {
         NumericMatrix::ConstColumn column = x( _ , j);
         NumericMatrix::Column medj = med( _ , j);
@@ -256,7 +255,7 @@ SEXP fmedianmCpp(const NumericMatrix& x, int ng = 0, const IntegerVector& g = 0,
           if(std::isnan(medj[i])) continue;
           int n = gcount[i+1];
           auto begin = gmap[i].begin(), mid = begin + n/2-1, end = begin + n;
-          if(n%2 == 0){ // speed up by saving iterators ?? -> Yes !!
+          if(n%2 == 0){ // speed up by saving iterators ?? -> Yes
             std::nth_element(begin, mid, end);
             medj[i] = (*(mid) + *(std::min_element(mid+1, end)))/2.0;
           } else{
@@ -265,7 +264,7 @@ SEXP fmedianmCpp(const NumericMatrix& x, int ng = 0, const IntegerVector& g = 0,
           }
         }
       }
-      colnames(med) = colnames(x); // med.attr("dimnames") = List::create(R_NilValue, colnames(x)); // needed ??
+      colnames(med) = colnames(x); // med.attr("dimnames") = List::create(R_NilValue, colnames(x)); // needed ?
       return med;
     }
   }
@@ -337,7 +336,7 @@ SEXP fmedianlCpp(const List& x, int ng = 0, const IntegerVector& g = 0,
       return out;
     }
 
-  } else { // with groups !!!
+  } else { // with groups
     List med(l);
     std::vector<std::vector<double> > gmap(ng);
     int ngp = ng+1, gss = g.size(); //  , gcount[ngp], memsize = sizeof(int)*ngp;
@@ -363,7 +362,7 @@ SEXP fmedianlCpp(const List& x, int ng = 0, const IntegerVector& g = 0,
         NumericVector medj(ng, NA_REAL);
         if(gss != column.size()) stop("length(g) must match nrow(x)");
         gcount.assign(ngp, 0); // memset(gcount, 0, memsize);
-        for(int i = 0; i != gss; ++i) if(!std::isnan(column[i])) gmap[g[i]-1][gcount[g[i]]++] = column[i]; // good ??
+        for(int i = 0; i != gss; ++i) if(!std::isnan(column[i])) gmap[g[i]-1][gcount[g[i]]++] = column[i]; // good ?
         for(int i = 0; i != ng; ++i) {
           if(gcount[i+1] != 0) {
             int n = gcount[i+1];
@@ -383,7 +382,7 @@ SEXP fmedianlCpp(const List& x, int ng = 0, const IntegerVector& g = 0,
     } else {
       for(int j = l; j--; ) {
         NumericVector column = x[j];
-        NumericVector medj(ng); //  = no_init_vector // no init numerically instable !!
+        NumericVector medj(ng); //  = no_init_vector // no init numerically instable !
         if(gss != column.size()) stop("length(g) must match nrow(x)");
         gcount.assign(ngp, 0); // memset(gcount, 0, memsize);
         int ngs = 0;
@@ -402,7 +401,7 @@ SEXP fmedianlCpp(const List& x, int ng = 0, const IntegerVector& g = 0,
           if(std::isnan(medj[i])) continue;
           int n = gcount[i+1];
           auto begin = gmap[i].begin(), mid = begin + n/2-1, end = begin + n;
-          if(n%2 == 0){ // speed up by saving iterators ?? -> Yes !!
+          if(n%2 == 0){ // speed up by saving iterators ? -> Yes !
             std::nth_element(begin, mid, end);
             medj[i] = (*(mid) + *(std::min_element(mid+1, end)))/2.0;
           } else{
@@ -415,7 +414,7 @@ SEXP fmedianlCpp(const List& x, int ng = 0, const IntegerVector& g = 0,
       }
     }
     DUPLICATE_ATTRIB(med, x);
-    med.attr("row.names") = IntegerVector::create(NA_INTEGER, -ng); // NumericVector::create(NA_REAL, -ng);
+    med.attr("row.names") = IntegerVector::create(NA_INTEGER, -ng);
     return med;
   }
 }

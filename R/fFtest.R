@@ -2,7 +2,7 @@
 getdf <- function(x) {
   if(is.matrix(x)) return(ncol(x))
   if(is.atomic(x)) if(is.factor(x)) return(fnlevels(x)-1L) else return(1L)
-  sum(vapply(x, function(i) if(is.factor(i)) fnlevels(i)-1L else 1L, 1L))
+  sum(vapply(unattrib(x), function(i) if(is.factor(i)) fnlevels(i)-1L else 1L, 1L))
 }
 
 
@@ -10,13 +10,12 @@ fFtest <- function(y, exc, X = NULL, full.df = TRUE, ...) {
   if(!is.numeric(y)) stop("y needs to be a numeric vector")
   if(!is.null(X)) {
     Xn <- NCOL(X)
-    data <- if(is.numeric(X) && is.numeric(exc)) na.omit(cbind(y, X, exc)) else
-      na.omit(qDT(c(list(y = y), qDF(X), qDF(exc))))
-    if(full.df && is.list(data) && any(fc <- vapply(data, is.factor, TRUE))) {
+    data <- if(is.numeric(X) && is.numeric(exc)) na_omit(cbind(y, X, exc)) else na_omit(qDT(c(list(y = y), qDF(X), qDF(exc))))
+    if(full.df && is.list(data) && any(fc <- vapply(unattrib(data), is.factor, TRUE))) {
       cld <- class(data)
       class(data) <- NULL
       data[fc] <- lapply(data[fc], droplevels.factor)
-      df <- vapply(data, function(i) if(is.factor(i)) fnlevels(i)-1L else 1L, 1L) # getdf(data)
+      df <- vapply(unattrib(data), function(i) if(is.factor(i)) fnlevels(i)-1L else 1L, 1L) # getdf(data)
       k <- sum(df) # 1 for intercept added with y
       p <- sum(df[-seq_len(Xn+1L)])
       y <- data[[1L]]
@@ -30,7 +29,7 @@ fFtest <- function(y, exc, X = NULL, full.df = TRUE, ...) {
     vy <- var(y)
     n <- nrow(data)
     r2f <- 1 - var(fHDwithin.default(y, data[, -1L], na.rm = FALSE, ...))/vy
-    r2r <- 1 - var(fHDwithin.default(y, data[, 2:(Xn+1L)], na.rm = FALSE, ...))/vy # this way is data.tabel proof !!
+    r2r <- 1 - var(fHDwithin.default(y, data[, 2:(Xn+1L)], na.rm = FALSE, ...))/vy # this way is data.table proof !
     ndff <- k-1
     ddff <- n-k
     Fstatf <- r2f/ndff * ddff/(1-r2f)
@@ -38,7 +37,7 @@ fFtest <- function(y, exc, X = NULL, full.df = TRUE, ...) {
     ddfr <- n-kr-1
     Fstatr <- r2r/kr * ddfr/(1-r2r)
     pr <- pf(Fstatr, kr, ddfr, lower.tail = FALSE)
-    Fstate <- (r2f - r2r)/p * ddff/(1-r2f) # https://www.youtube.com/watch?v=Pz3j4Zu8BOQ
+    Fstate <- (r2f - r2r)/p * ddff/(1-r2f)
     pe <- pf(Fstate, p, ddff, lower.tail = FALSE)
     res <- matrix(c(r2f, ndff, ddff, Fstatf, pf,
                     r2r, kr, ddfr, Fstatr, pr,
@@ -50,10 +49,10 @@ fFtest <- function(y, exc, X = NULL, full.df = TRUE, ...) {
     u <- fHDwithin.default(y, exc) # Residuals
     miss <- attr(u, "na.rm")
     if(full.df && !is.null(miss) && !is.numeric(exc)) {
-      p <- if(is.factor(exc)) fnlevels(exc[-miss, drop = TRUE])-1L else if(any(vapply(exc, is.factor, TRUE)))
-        getdf(droplevels.data.frame(exc[-miss, , drop = FALSE])) else length(exc)
+      p <- if(is.factor(exc)) fnlevels(exc[-miss, drop = TRUE])-1L else if(any(vapply(unattrib(exc), is.factor, TRUE)))
+        getdf(droplevels.data.frame(exc[-miss, , drop = FALSE])) else length(unclass(exc))
     } else if(full.df) {
-      p <- if(is.factor(exc) || (is.list(exc) && any(vapply(exc, is.factor, TRUE)))) getdf(droplevels(exc)) else NCOL(exc)
+      p <- if(is.factor(exc) || (is.list(exc) && any(vapply(unattrib(exc), is.factor, TRUE)))) getdf(droplevels(exc)) else NCOL(exc)
     } else p <- NCOL(exc)
     n <- length(u)
     r2 <- 1 - var(u)/var(if(is.null(miss)) y else y[-miss]) # R-Squared

@@ -1,0 +1,3 @@
+strippedLib: $(SHLIB)
+		if test -e "/usr/bin/strip" & test -e "/bin/uname" & [[ `uname` == "Linux" ]] ; then /usr/bin/strip --strip-debug $(SHLIB); fi
+.phony: strippedLib

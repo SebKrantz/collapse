@@ -6,7 +6,7 @@ NumericVector fmeanCpp(const NumericVector& x, int ng = 0, const IntegerVector& 
                        const SEXP& gs = R_NilValue, const SEXP& w = R_NilValue, bool narm = true) {
   int l = x.size();
 
-  if (Rf_isNull(w)) { // No weights !!
+  if (Rf_isNull(w)) { // No weights
     if (ng == 0) {
       if(narm) {
         int j = l-1, n = 1; // 1 because for-loop starts from 2
@@ -15,7 +15,7 @@ NumericVector fmeanCpp(const NumericVector& x, int ng = 0, const IntegerVector& 
         while(std::isnan(sum) && j!=0) sum = x[--j];
         if(j != 0) for(int i = j; i--; ) {
           if(std::isnan(x[i])) continue;
-          sum += x[i]; // Fastest ??
+          sum += x[i]; // Fastest ?
           ++n;
         }
         sum = sum/n;
@@ -37,10 +37,10 @@ NumericVector fmeanCpp(const NumericVector& x, int ng = 0, const IntegerVector& 
     } else { // with groups
       if(g.size() != l) stop("length(g) must match nrow(X)");
       if(narm) {
-        NumericVector sum(ng, NA_REAL); // Other way ??
-        IntegerVector n(ng, 1); // could also do no_init_vector and then add n[g[i]-1] = 1 in fir if condition... -> Nope, that is slower !!!
+        NumericVector sum(ng, NA_REAL); // Other way ?
+        IntegerVector n(ng, 1); // could also do no_init_vector and then add n[g[i]-1] = 1 in fir if condition... -> Nope, that is slower
         for(int i = l; i--; ) {
-          if(!std::isnan(x[i])) { // faster way to code this ??? -> Not Bad at all -> index for g[i]-1?? -> Nope, no noticeable improvement !!
+          if(!std::isnan(x[i])) { // faster way to code this ? -> Not Bad at all -> index for g[i]-1? -> Nope, no noticeable improvement
             if(std::isnan(sum[g[i]-1])) sum[g[i]-1] = x[i];
             else {
               sum[g[i]-1] += x[i];
@@ -48,11 +48,11 @@ NumericVector fmeanCpp(const NumericVector& x, int ng = 0, const IntegerVector& 
             }
           }
         }
-        for(int i = ng; i--; ) sum[i] /= n[i]; // if(n[i] == 0) stop("group size of 0 encountered"); -> No check possible when initializing at 1!!
+        for(int i = ng; i--; ) sum[i] /= n[i]; // if(n[i] == 0) stop("group size of 0 encountered"); -> No check possible when initializing at 1
         DUPLICATE_ATTRIB(sum, x);
         return sum;
       } else {
-        NumericVector sum(ng); // no_init_vector // good?? -> yes, but not initializing is numerically unstable..
+        NumericVector sum(ng); // no_init_vector // good? -> yes, but not initializing is numerically unstable..
         int ngs = 0;
         if(Rf_isNull(gs)) {
           IntegerVector gsv(ng);
@@ -113,7 +113,7 @@ NumericVector fmeanCpp(const NumericVector& x, int ng = 0, const IntegerVector& 
         // long double sum = 0, sumw = 0;
         double sum = 0, sumw = 0;
         for(int i = 0; i != l; ++i) {
-          if(std::isnan(x[i]) || std::isnan(wg[i])) { // good, check both ?? -> yes!!
+          if(std::isnan(x[i]) || std::isnan(wg[i])) { // good, check both ? -> yes
             sum = x[i]+wg[i];
             break;
           } else {
@@ -127,10 +127,10 @@ NumericVector fmeanCpp(const NumericVector& x, int ng = 0, const IntegerVector& 
     } else { // with groups
       if(g.size() != l) stop("length(g) must match nrow(X)");
       if(narm) {
-        NumericVector sum(ng, NA_REAL); // Other way ?? -> Nope, this is as good as it gets !!
-        NumericVector sumw(ng); // = no_init_vector(ng); // no init works!! but gives valgrind issue !!
+        NumericVector sum(ng, NA_REAL); // Other way ? -> Nope, this is as good as it gets
+        NumericVector sumw(ng); // = no_init_vector(ng); // no init works!! but gives valgrind issue
         for(int i = l; i--; ) {
-          if(std::isnan(x[i]) || std::isnan(wg[i])) continue; // faster way to code this ??? -> Not Bad at all -> index for g[i]-1?? -> Nope, no noticeable improvement !!
+          if(std::isnan(x[i]) || std::isnan(wg[i])) continue; // faster way to code this ? -> Not Bad at all -> index for g[i]-1? -> Nope, no noticeable improvement
           if(std::isnan(sum[g[i]-1])) {
             sum[g[i]-1] = x[i]*wg[i];
             sumw[g[i]-1] = wg[i];
@@ -139,16 +139,16 @@ NumericVector fmeanCpp(const NumericVector& x, int ng = 0, const IntegerVector& 
             sumw[g[i]-1] += wg[i];
           }
         }
-        sum = sum/sumw; // good ?? better return sum/sumw?? -> Nope, slower !!
+        sum = sum/sumw; // good ? better return sum/sumw? -> Nope, slower
         DUPLICATE_ATTRIB(sum, x);
         return sum;
       } else {
-        NumericVector sum(ng), sumw(ng); // good?? -> yes !! //  = no_init_vector// Not initializing numerically unstable !!
+        NumericVector sum(ng), sumw(ng); // good? -> yes ! //  = no_init_vector// Not initializing numerically unstable
         int ngs = 0;
         for(int i = 0; i != l; ++i) {
           if(std::isnan(x[i]) || std::isnan(wg[i])) {
             if(!std::isnan(sum[g[i]-1])) {
-              sum[g[i]-1] = sumw[g[i]-1] = x[i]+wg[i]; // or NA_REAL ?? -> Nope, good !!
+              sum[g[i]-1] = sumw[g[i]-1] = x[i]+wg[i]; // or NA_REAL ? -> Nope, good
               ++ngs;
               if(ngs == ng) break;
             }
@@ -174,9 +174,9 @@ SEXP fmeanmCpp(const NumericMatrix& x, int ng = 0, const IntegerVector& g = 0, c
                const SEXP& w = R_NilValue, bool narm = true, bool drop = true) {
   int l = x.nrow(), col = x.ncol();
 
-  if(Rf_isNull(w)) { // No weights !!
+  if(Rf_isNull(w)) { // No weights
     if(ng == 0) {
-      NumericVector sum = no_init_vector(col); //  Initialize faster -> Nope !!!
+      NumericVector sum = no_init_vector(col); //  Initialize faster -> Nope
       if(narm) {
         for(int j = col; j--; ) { // Instead Am(j,_) you can use Am.row(j).
           NumericMatrix::ConstColumn column = x( _ , j);
@@ -209,26 +209,26 @@ SEXP fmeanmCpp(const NumericMatrix& x, int ng = 0, const IntegerVector& g = 0, c
           sum[j] = sumj; // (double)sumj;
         }
       }
-      if(drop) sum.attr("names") = colnames(x); // Slight speed loss 31 to 34 milliseconds on WDIM, but doing it in R not faster !!
+      if(drop) sum.attr("names") = colnames(x); // Slight speed loss 31 to 34 milliseconds on WDIM, but doing it in R not faster
       else {
         sum.attr("dim") = Dimension(1, col);
         // sum.attr("dimnames") = List::create(R_NilValue,colnames(x));
-        colnames(sum) = colnames(x); // NEW! faster than R ?? -> yes, good !!!
+        colnames(sum) = colnames(x); // NEW! faster than R ? -> yes, good
       }
       return sum;
     } else { // with groups
       if(g.size() != l) stop("length(g) must match nrow(X)");
       if(narm) {
         NumericMatrix sum = no_init_matrix(ng, col);
-        std::fill(sum.begin(), sum.end(), NA_REAL); // fastest ?? or create vector and declare as matrix ??
-        // NumericVector sumt(ng*col, NA_REAL); // A tiny speed gain, but not much !! Same memory efficiency !!
+        std::fill(sum.begin(), sum.end(), NA_REAL); // fastest ? or create vector and declare as matrix ?
+        // NumericVector sumt(ng*col, NA_REAL); // A tiny speed gain, but not much !! Same memory efficiency
         // sumt.attr("dim") = Dimension(ng, col);
         // NumericMatrix sum = as<NumericMatrix>(sumt);
-        IntegerVector nj(ng); // = no_init_vector(ng); // better for valgrind !!
+        IntegerVector nj(ng); // = no_init_vector(ng); // better for valgrind
         for(int j = col; j--; ) {
           NumericMatrix::ConstColumn column = x( _ , j);
           NumericMatrix::Column sumj = sum( _ , j);
-           // int nj[ng]; // Numerically stable and faster and more memory efficient than before !!
+           // int nj[ng]; // Numerically stable and faster and more memory efficient than before
           for(int i = l; i--; ) {
             if(!std::isnan(column[i])) {
               if(std::isnan(sumj[g[i]-1])) {
@@ -240,18 +240,18 @@ SEXP fmeanmCpp(const NumericMatrix& x, int ng = 0, const IntegerVector& g = 0, c
               }
             }
           }
-          for(int i = ng; i--; ) sumj[i] /= nj[i]; //         if(gsv[i] == 0) stop("group size of 0 encountered"); cant check when not initializing !!
+          for(int i = ng; i--; ) sumj[i] /= nj[i]; // if(gsv[i] == 0) stop("group size of 0 encountered"); cant check when not initializing
         }
-        colnames(sum) = colnames(x);  // extremely efficient !!
+        colnames(sum) = colnames(x);  // extremely efficient
         return sum;
       } else {
-        NumericMatrix sum(ng, col); // no init numerically unstable !!!
+        NumericMatrix sum(ng, col); // no init numerically unstable
         if(Rf_isNull(gs)) {
           // int gsv[ng], memsize = sizeof(int)*ng;
           for(int j = col; j--; ) {
             NumericMatrix::ConstColumn column = x( _ , j);
             NumericMatrix::Column sumj = sum( _ , j);
-            // memset(gsv, 0, memsize); // still a tiny bit faster than std::vector, but both have the same memory efficiency !!
+            // memset(gsv, 0, memsize); // still a tiny bit faster than std::vector, but both have the same memory efficiency
             std::vector<int> gsv(ng);
             int ngs = 0;
             for(int i = 0; i != l; ++i) {
@@ -292,7 +292,7 @@ SEXP fmeanmCpp(const NumericMatrix& x, int ng = 0, const IntegerVector& g = 0, c
             }
           }
         }
-        colnames(sum) = colnames(x);  // extremely efficient !!
+        colnames(sum) = colnames(x);  // quite efficient
         return sum;
       }
     }
@@ -300,7 +300,7 @@ SEXP fmeanmCpp(const NumericMatrix& x, int ng = 0, const IntegerVector& g = 0, c
     NumericVector wg = w;
     if(l != wg.size()) stop("length(w) must match nrow(X)");
     if(ng == 0) {
-      NumericVector sum = no_init_vector(col); // Initialize faster -> Nope !!!
+      NumericVector sum = no_init_vector(col); // Initialize faster -> Nope
       if(narm) {
         for(int j = col; j--; ) { // Instead Am(j,_) you can use Am.row(j).
           NumericMatrix::ConstColumn column = x( _ , j);
@@ -334,11 +334,11 @@ SEXP fmeanmCpp(const NumericMatrix& x, int ng = 0, const IntegerVector& g = 0, c
           sum[j] = sumj; // (double)sumj;
         }
       }
-      if(drop) sum.attr("names") = colnames(x); // Slight speed loss 31 to 34 milliseconds on WDIM, but doing it in R not faster !!
+      if(drop) sum.attr("names") = colnames(x); // Slight speed loss 31 to 34 milliseconds on WDIM, but doing it in R not faster
       else {
         sum.attr("dim") = Dimension(1, col);
         // sum.attr("dimnames") = List::create(R_NilValue,colnames(x));
-        colnames(sum) = colnames(x); // NEW! faster than R ?? -> yes, good !!!
+        colnames(sum) = colnames(x); // NEW! faster than R ? -> yes, good
       }
       return sum;
     } else { // with groups
@@ -346,14 +346,14 @@ SEXP fmeanmCpp(const NumericMatrix& x, int ng = 0, const IntegerVector& g = 0, c
       if(narm) {
         NumericMatrix sum = no_init_matrix(ng, col);
         std::fill(sum.begin(), sum.end(), NA_REAL);
-        // NumericMatrix sumw = no_init_matrix(ng, col); // Numerically stable ??????? -> Yes !!
+        // NumericMatrix sumw = no_init_matrix(ng, col); // Numerically stable ? -> Yes
         NumericVector sumwj(ng); // = no_init_vector(ng);
         for(int j = col; j--; ) {
           NumericMatrix::ConstColumn column = x( _ , j);
           NumericMatrix::Column sumj = sum( _ , j);
           // NumericVector sumwj = no_init_vector(ng);
           // NumericMatrix::Column sumwj = sumw( _ , j);
-          // double sumwj[ng]; // Numerically stable, Slightly faster and a lot more memory efficient!! (but long double is a lot slower)
+          // double sumwj[ng]; // Numerically stable, Slightly faster and a lot more memory efficient (but long double is a lot slower)
           for(int i = l; i--; ) {
             if(std::isnan(column[i]) || std::isnan(wg[i])) continue;
             if(std::isnan(sumj[g[i]-1])) {
@@ -365,14 +365,14 @@ SEXP fmeanmCpp(const NumericMatrix& x, int ng = 0, const IntegerVector& g = 0, c
             }
           }
           for(int i = ng; i--; ) sumj[i] /= sumwj[i];
-          // sumj = sumj/sumwj; // This gives erriir because sumj is matrix column !!
+          // sumj = sumj/sumwj; // This gives error because sumj is matrix column !
         }
-        colnames(sum) = colnames(x);  // extremely efficient !!
+        colnames(sum) = colnames(x);  // quite efficient
         return sum;
       } else {
-        NumericMatrix sum(ng, col); // no init numerically unstable !!!
-        // NumericMatrix sumw(ng, col); // also here ?? -> Nope
-        // double sumwj[ng]; // Also a bit faster and a lot more memory efficient !!
+        NumericMatrix sum(ng, col); // no init numerically unstable
+        // NumericMatrix sumw(ng, col); // also here ? -> Nope
+        // double sumwj[ng]; // Also a bit faster and a lot more memory efficient
         // int memsize = sizeof(double)*ng;
         for(int j = col; j--; ) {
           NumericMatrix::ConstColumn column = x( _ , j);
@@ -383,7 +383,7 @@ SEXP fmeanmCpp(const NumericMatrix& x, int ng = 0, const IntegerVector& g = 0, c
           for(int i = 0; i != l; ++i) {
             if(std::isnan(column[i]) || std::isnan(wg[i])) {
               if(!std::isnan(sumj[g[i]-1])) {
-                sumj[g[i]-1] = sumwj[g[i]-1] = column[i]+wg[i]; // or NA_REAL ?? -> Nope, good !!
+                sumj[g[i]-1] = sumwj[g[i]-1] = column[i]+wg[i]; // or NA_REAL ? -> Nope, good
                 ++ngs;
                 if(ngs == ng) break;
               }
@@ -393,9 +393,9 @@ SEXP fmeanmCpp(const NumericMatrix& x, int ng = 0, const IntegerVector& g = 0, c
             }
           }
           for(int i = ng; i--; ) sumj[i] /= sumwj[i];
-          // sumj = sumj/sumwj; // This gives erriir because sumj is matrix column !!
+          // sumj = sumj/sumwj; // This gives erriir because sumj is matrix column
         }
-        colnames(sum) = colnames(x);  // extremely efficient !!
+        colnames(sum) = colnames(x);  // quite efficient
         return sum;
       }
     }
@@ -411,14 +411,14 @@ SEXP fmeanlCpp(const List& x, int ng = 0, const IntegerVector& g = 0, const SEXP
                const SEXP& w = R_NilValue, bool narm = true, bool drop = true) {
   int l = x.size();
 
-  if(Rf_isNull(w)) { // No weights !!
+  if(Rf_isNull(w)) { // No weights
     if(ng == 0) {
       NumericVector sum(l); // not initializing not faster WIth NWDI (35 instead of 32 milliseconds)
       if(narm) {
         for(int j = l; j--; ) {
           NumericVector column = x[j];
           int k = column.size()-1, ni = 1;
-          // long double sumi = column[k]; // long double gives 45 instead of 35 milliseconds !!!
+          // long double sumi = column[k]; // long double gives 45 instead of 35 milliseconds
           double sumi = column[k];
           while(std::isnan(sumi) && k!=0) sumi = column[--k];
           if(k != 0) for(int i = k; i--; ) {
@@ -460,7 +460,7 @@ SEXP fmeanlCpp(const List& x, int ng = 0, const IntegerVector& g = 0, const SEXP
         out.attr("row.names") = 1;
         return out;
       }
-    } else { // With groups !!
+    } else { // With groups
       List sum(l);
       int gss = g.size();
       if(narm) {
@@ -468,10 +468,10 @@ SEXP fmeanlCpp(const List& x, int ng = 0, const IntegerVector& g = 0, const SEXP
           NumericVector column = x[j];
           if(gss != column.size()) stop("length(g) must match nrow(X)");
           NumericVector sumj(ng, NA_REAL);
-          // IntegerVector nj(ng, 1); // faster than no_init_vector ?? -> good, cannot divide by interger 0!!, also else numerically unstable and no speed loss !!
+          // IntegerVector nj(ng, 1); // faster than no_init_vector ? -> good, cannot divide by interger 0, also else numerically unstable and no speed loss
           std::vector<int>  nj(ng, 1); // better memory allocation, and nearly same speed as integer array -> doesn't work because sets all byte to 1 -> https://stackoverflow.com/questions/14761015/memset-an-array-to-1
           for(int i = gss; i--; ) {
-            if(!std::isnan(column[i])) { // faster way to code this ??? -> Not Bad at all, 54.. millisec for WDIM
+            if(!std::isnan(column[i])) { // faster way to code this ? -> Not Bad at all, 54.. millisec for WDIM
               if(std::isnan(sumj[g[i]-1])) sumj[g[i]-1] = column[i];
               else {
                 sumj[g[i]-1] += column[i];
@@ -489,7 +489,7 @@ SEXP fmeanlCpp(const List& x, int ng = 0, const IntegerVector& g = 0, const SEXP
           for(int j = l; j--; ) {
             NumericVector column = x[j];
             if(gss != column.size()) stop("length(g) must match nrow(X)");
-            NumericVector sumj(ng); //  = no_init_vector //  Not initializing seems to be numerically unstable !!!!
+            NumericVector sumj(ng); //  = no_init_vector //  Not initializing seems to be numerically unstable
             std::vector<int> gsv(ng); // memset(gsv, 0, memsize);
             int ngs = 0;
             for(int i = 0; i != gss; ++i) {
@@ -514,7 +514,7 @@ SEXP fmeanlCpp(const List& x, int ng = 0, const IntegerVector& g = 0, const SEXP
           for(int j = l; j--; ) {
             NumericVector column = x[j];
             if(gss != column.size()) stop("length(g) must match nrow(X)");
-            NumericVector sumj(ng); //  = no_init_vector //  Not initializing seems to be numerically unstable !!!!
+            NumericVector sumj(ng); //  = no_init_vector //  Not initializing seems to be numerically unstable
             int ngs = 0;
             for(int i = 0; i != gss; ++i) {
               if(std::isnan(column[i])) {
@@ -537,18 +537,18 @@ SEXP fmeanlCpp(const List& x, int ng = 0, const IntegerVector& g = 0, const SEXP
         }
       }
       DUPLICATE_ATTRIB(sum, x);
-      sum.attr("row.names") = IntegerVector::create(NA_INTEGER, -ng); // NumericVector::create(NA_REAL, -ng);
+      sum.attr("row.names") = IntegerVector::create(NA_INTEGER, -ng);
       return sum;
     }
   } else { // With weights
-    NumericVector wg = w; // wg(w) //  No speed loss ?? -> Yes, and possibly even faster !!
+    NumericVector wg = w; // wg(w) //  No speed loss ? -> Yes, and possibly even faster
     int wgs = wg.size();
     if (ng == 0) {
       NumericVector sum(l); // not initializing not faster WIth NWDI (35 instead of 32 milliseconds)
       if(narm) {
         for(int j = l; j--; ) {
           NumericVector column = x[j];
-          if(column.size() != wgs) stop("length(w) must match nrow(X)"); // Really necessary ??
+          if(column.size() != wgs) stop("length(w) must match nrow(X)"); // Really necessary ?
           int k = wgs-1;
           while((std::isnan(column[k]) || std::isnan(wg[k])) && k!=0) --k;
           // long double sumi = column[k]*wg[k], sumwi = wg[k];
@@ -564,7 +564,7 @@ SEXP fmeanlCpp(const List& x, int ng = 0, const IntegerVector& g = 0, const SEXP
       } else {
         for(int j = l; j--; ) {
           NumericVector column = x[j];
-          if(column.size() != wgs) stop("length(w) must match nrow(X)"); // Really necessary ??
+          if(column.size() != wgs) stop("length(w) must match nrow(X)"); // Really necessary ?
           // long double sumi = 0, sumwi = 0;
           double sumi = 0, sumwi = 0;
           for(int i = 0; i != wgs; ++i) {
@@ -593,17 +593,17 @@ SEXP fmeanlCpp(const List& x, int ng = 0, const IntegerVector& g = 0, const SEXP
         out.attr("row.names") = 1;
         return out;
       }
-    } else { // With groups !!
+    } else { // With groups
       List sum(l);
       int gss = g.size();
       if(wgs != gss) stop("length(w) must match length(g)");
       if(narm) {
-        NumericVector sumwj(ng);  // = no_init_vector(ng); // stable and faster ??
+        NumericVector sumwj(ng);  // = no_init_vector(ng); // stable and faster ?
         for(int j = l; j--; ) {
           NumericVector column = x[j];
           if(gss != column.size()) stop("length(g) must match nrow(X)");
           NumericVector sumj(ng, NA_REAL);
-          // no_init_vector is faster and stable !!! (you only divide by it every round)
+          // no_init_vector is faster and stable (you only divide by it every round)
           // double sumwj[ng];
           for(int i = gss; i--; ) {
             if(std::isnan(column[i]) || std::isnan(wg[i])) continue;
@@ -626,14 +626,14 @@ SEXP fmeanlCpp(const List& x, int ng = 0, const IntegerVector& g = 0, const SEXP
         for(int j = l; j--; ) {
           NumericVector column = x[j];
           if(gss != column.size()) stop("length(g) must match nrow(X)");
-          NumericVector sumj(ng), sumwj(ng); //  = no_init_vector //  Not initializing seems to be numerically unstable !!!!
+          NumericVector sumj(ng), sumwj(ng); //  = no_init_vector //  Not initializing seems to be numerically unstable
           // NumericVector sumwj(ng); // Also here not initializing is numerically unstable
           // memset(sumwj, 0, memsize);
           int ngs = 0;
           for(int i = 0; i != gss; ++i) {
             if(std::isnan(column[i]) || std::isnan(wg[i])) {
               if(!std::isnan(sumj[g[i]-1])) {
-                sumj[g[i]-1] = sumwj[g[i]-1] = column[i]+wg[i]; // or NA_REAL ?? -> Nope, good !!
+                sumj[g[i]-1] = sumwj[g[i]-1] = column[i]+wg[i]; // or NA_REAL ? -> Nope, good
                 ++ngs;
                 if(ngs == ng) break;
               }
@@ -649,7 +649,7 @@ SEXP fmeanlCpp(const List& x, int ng = 0, const IntegerVector& g = 0, const SEXP
         }
       }
       DUPLICATE_ATTRIB(sum, x);
-      sum.attr("row.names") = IntegerVector::create(NA_INTEGER, -ng); // NumericVector::create(NA_REAL, -ng);
+      sum.attr("row.names") = IntegerVector::create(NA_INTEGER, -ng);
       return sum;
     }
   }
