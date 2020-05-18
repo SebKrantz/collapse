@@ -39,11 +39,11 @@ fscale.matrix <- function(x, g = NULL, w = NULL, na.rm = TRUE, mean = 0, sd = 1,
 fscale.grouped_df <- function(x, w = NULL, na.rm = TRUE, mean = 0, sd = 1, keep.group_vars = TRUE, keep.w = TRUE, ...) {
   if(!missing(...)) unused_arg_action(match.call(), ...)
   g <- GRP.grouped_df(x)
-  wsym <- l1orn(all.vars(substitute(w)), "NULL")
+  wsym <- l1orn(as.character(substitute(w)), NULL)
   nam <- attr(x, "names")
   gn2 <- which(nam %in% g[[5L]])
   gn <- if(keep.group_vars) gn2 else NULL
-  if(!(wsym == "NULL" || is.na(wn <- match(wsym, nam)))) {
+  if(!is.null(wsym) && !is.na(wn <- match(wsym, nam))) {
     w <- .subset2(x, wn)
     if(any(gn2 == wn)) stop("Weights coincide with grouping variables!")
     gn2 <- c(gn2, wn)
@@ -96,11 +96,11 @@ STD.matrix <- function(x, g = NULL, w = NULL, na.rm = TRUE, mean = 0, sd = 1, st
 STD.grouped_df <- function(x, w = NULL, na.rm = TRUE, mean = 0, sd = 1, stub = "STD.", keep.group_vars = TRUE, keep.w = TRUE, ...) {
   if(!missing(...)) unused_arg_action(match.call(), ...)
   g <- GRP.grouped_df(x)
-  wsym <- l1orn(all.vars(substitute(w)), "NULL")
+  wsym <- l1orn(as.character(substitute(w)), NULL)
   nam <- attr(x, "names")
   gn2 <- which(nam %in% g[[5L]])
   gn <- if(keep.group_vars) gn2 else NULL
-  if(!(wsym == "NULL" || is.na(wn <- match(wsym, nam)))) {
+  if(!is.null(wsym) && !is.na(wn <- match(wsym, nam))) {
     w <- .subset2(x, wn)
     if(any(gn2 == wn)) stop("Weights coincide with grouping variables!")
     gn2 <- c(gn2,wn)

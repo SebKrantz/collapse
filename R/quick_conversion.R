@@ -1,33 +1,4 @@
 
-qF <- function(x, ordered = TRUE, na.exclude = TRUE) {
-  if(is.factor(x)) {
-    if(na.exclude || inherits(x, "na.included")) {
-      if(ordered && !is.ordered(x)) class(x) <- c("ordered", class(x)) # can set unordered ??
-      return(x)
-    }
-    return(`oldClass<-`(addNA2(x), c(if(ordered) "ordered", "factor", "na.included")))
-  }
-  .Call(Cpp_qF, x, ordered, na.exclude)
-}
-# TODO: Keep if(ordered) "ordered" ??
-qG <- function(x, ordered = TRUE, na.exclude = TRUE) {
-  if(inherits(x, c("factor", "qG"))) {
-    if(na.exclude || inherits(x, "na.included") || !anyNA(unclass(x))) { # force(nainc <- inherits(x, "na.included"))
-      ng <- if(is.factor(x)) fnlevels(x) else attr(x, "N.groups") # TODO: could keep levels attribute for factors ??
-      return(`attributes<-`(x, list(N.groups = ng, class = c(if(ordered) "ordered", "qG", "na.included")))) # if(!na.exclude || nainc) "na.included" -> bug, naing not generated! And als having na.included is always better..
-    }
-    if(is.factor(x)) {
-      ll <- attr(x, "levels")
-      ng <- if(anyNA(ll)) length(ll) else length(ll) + 1L
-    } else ng <- attr(x, "N.groups") # NA is always counted by qG !!
-    attributes(x) <- NULL
-    x[is.na(x)] <- ng
-    attributes(x) <- list(N.groups = ng, class = c(if(ordered) "ordered", "qG", "na.included"))
-    return(x)
-  }
-  .Call(Cpp_qG, x, ordered, na.exclude)
-}
-
 # what about attribute preervation ? -> I think it is not good having all kinds of stuff attached to a matrix. Also dapply and BY convert that way.
 qDF <- function(X, row.names.col = FALSE) {
   if(is.atomic(X)) {
@@ -53,15 +24,15 @@ qDF <- function(X, row.names.col = FALSE) {
       nam <- names(X)
       if(isFALSE(row.names.col) || is.null(nam)) {
         if(is.null(nam)) {
-          res <- `names<-`(list(X), deparse(substitute(X)))
+          res <- `names<-`(list(X), l1orlst(as.character(substitute(X))))
           attr(res, "row.names") <- .set_row_names(length(X))
         } else {
-          res <- `names<-`(list(`names<-`(X, NULL)), deparse(substitute(X)))
+          res <- `names<-`(list(`names<-`(X, NULL)), l1orlst(as.character(substitute(X))))
           attr(res, "row.names") <- nam
         }
       } else {
         res <- list(nam, `names<-`(X, NULL))
-        names(res) <- c(if(is.character(row.names.col)) row.names.col[1L] else "row.names", deparse(substitute(X)))
+        names(res) <- c(if(is.character(row.names.col)) row.names.col[1L] else "row.names", l1orlst(as.character(substitute(X))))
         attr(res, "row.names") <- .set_row_names(length(X))
       }
       class(res) <- "data.frame"
@@ -106,10 +77,10 @@ qDT <- function(X, row.names.col = FALSE) {
       } else return(.Call(Cpp_mctl, X, TRUE, 2L))
     } else {
       if(isFALSE(row.names.col) || is.null(nam <- names(X))) {
-          res <- `names<-`(list(X), deparse(substitute(X)))
+          res <- `names<-`(list(X), l1orlst(as.character(substitute(X))))
       } else {
         res <- list(nam, `names<-`(X, NULL))
-        names(res) <- c(if(is.character(row.names.col)) row.names.col[1L] else "row.names", deparse(substitute(X)))
+        names(res) <- c(if(is.character(row.names.col)) row.names.col[1L] else "row.names", l1orlst(as.character(substitute(X))))
       }
       attr(res, "row.names") <- .set_row_names(length(X))
       class(res) <- c("data.table","data.frame")
@@ -143,7 +114,7 @@ qM <- function(X) {
       }
       return(X)
     } else if(ld == 2L) return(X) else
-      return(matrix(X, ncol = 1, dimnames = list(names(X), deparse(substitute(X)))))
+      return(matrix(X, ncol = 1, dimnames = list(names(X), l1orlst(as.character(substitute(X))))))
   } else {
     rn <- attr(X, "row.names")
     res <- do.call(cbind, X)

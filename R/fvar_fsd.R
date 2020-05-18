@@ -104,13 +104,13 @@ fsd.grouped_df <- function(x, w = NULL, TRA = NULL, na.rm = TRUE, use.g.names = 
                              keep.group_vars = TRUE, keep.w = TRUE, stable.algo = TRUE, ...) {
   if(!missing(...)) unused_arg_action(match.call(), ...)
   g <- GRP.grouped_df(x)
-  wsym <- l1orn(all.vars(substitute(w)), "NULL")
+  wsym <- l1orn(as.character(substitute(w)), NULL)
   nam <- attr(x, "names")
   gn2 <- gn <- which(nam %in% g[[5L]])
   nTRAl <- is.null(TRA)
   sumw <- NULL
 
-  if(!(wsym == "NULL" || is.na(wn <- match(wsym, nam)))) {
+  if(!is.null(wsym) && !is.na(wn <- match(wsym, nam))) {
     w <- .subset2(x, wn)
     if(any(gn == wn)) stop("Weights coincide with grouping variables!")
     gn <- c(gn, wn)
@@ -255,13 +255,13 @@ fvar.grouped_df <- function(x, w = NULL, TRA = NULL, na.rm = TRUE, use.g.names =
                            keep.group_vars = TRUE, keep.w = TRUE, stable.algo = TRUE, ...) {
   if(!missing(...)) unused_arg_action(match.call(), ...)
   g <- GRP.grouped_df(x)
-  wsym <- l1orn(all.vars(substitute(w)), "NULL")
+  wsym <- l1orn(as.character(substitute(w)), NULL)
   nam <- attr(x, "names")
   gn2 <- gn <- which(nam %in% g[[5L]])
   nTRAl <- is.null(TRA)
   sumw <- NULL
 
-  if(!(wsym == "NULL" || is.na(wn <- match(wsym, nam)))) {
+  if(!is.null(wsym) && !is.na(wn <- match(wsym, nam))) {
     w <- .subset2(x, wn)
     if(any(gn == wn)) stop("Weights coincide with grouping variables!")
     gn <- c(gn, wn)

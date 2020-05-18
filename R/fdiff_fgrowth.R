@@ -42,10 +42,10 @@ fdiff.matrix <- function(x, n = 1, diff = 1, g = NULL, t = NULL, fill = NA, logd
 fdiff.grouped_df <- function(x, n = 1, diff = 1, t = NULL, fill = NA, logdiff = FALSE, rho = 1, stubs = TRUE, keep.ids = TRUE, ...) {
   if(!missing(...)) unused_arg_action(match.call(), ...)
   g <- GRP.grouped_df(x)
-  tsym <- l1orn(all.vars(substitute(t)), "NULL")
+  tsym <- l1orn(as.character(substitute(t)), NULL)
   nam <- attr(x, "names")
   gn <- which(nam %in% g[[5L]])
-  if(!(tsym == "NULL" || is.na(tn <- match(tsym, nam)))) {
+  if(!is.null(tsym) && !is.na(tn <- match(tsym, nam))) {
     if(any(gn == tn)) stop("timevar coincides with grouping variables!")
     t <- .subset2(x, tn)
     gn <- c(gn, tn)
@@ -128,10 +128,10 @@ fgrowth.matrix <- function(x, n = 1, diff = 1, g = NULL, t = NULL, fill = NA, lo
 fgrowth.grouped_df <- function(x, n = 1, diff = 1, t = NULL, fill = NA, logdiff = FALSE, scale = 100, stubs = TRUE, keep.ids = TRUE, ...) {
   if(!missing(...)) unused_arg_action(match.call(), ...)
   g <- GRP.grouped_df(x)
-  tsym <- l1orn(all.vars(substitute(t)), "NULL")
+  tsym <- l1orn(as.character(substitute(t)), NULL)
   nam <- attr(x, "names")
   gn <- which(nam %in% g[[5L]])
-  if(!(tsym == "NULL" || is.na(tn <- match(tsym, nam)))) {
+  if(!is.null(tsym) && !is.na(tn <- match(tsym, nam))) {
     if(any(gn == tn)) stop("timevar coincides with grouping variables!")
     t <- .subset2(x, tn)
     gn <- c(gn, tn)
@@ -273,8 +273,10 @@ D.pseries <- function(x, n = 1, diff = 1, fill = NA, rho = 1, stubs = TRUE, ...)
 D.matrix <- function(x, n = 1, diff = 1, g = NULL, t = NULL, fill = NA, rho = 1, stubs = TRUE, ...)
   fdiff.matrix(x, n, diff, g, t, fill, FALSE, rho, stubs, ...)
 
-D.grouped_df <- function(x, n = 1, diff = 1, t = NULL, fill = NA, rho = 1, stubs = TRUE, keep.ids = TRUE, ...)
+D.grouped_df <- function(x, n = 1, diff = 1, t = NULL, fill = NA, rho = 1, stubs = TRUE, keep.ids = TRUE, ...) {
+  x <- x
   eval(substitute(fdiff.grouped_df(x, n, diff, t, fill, FALSE, rho, stubs, keep.ids, ...)))
+}
 
 D.data.frame <- function(x, n = 1, diff = 1, by = NULL, t = NULL, cols = is.numeric,
                          fill = NA, rho = 1, stubs = TRUE, keep.ids = TRUE, ...)
@@ -299,8 +301,10 @@ Dlog.pseries <- function(x, n = 1, diff = 1, fill = NA, rho = 1, stubs = TRUE, .
 Dlog.matrix <- function(x, n = 1, diff = 1, g = NULL, t = NULL, fill = NA, rho = 1, stubs = TRUE, ...)
   fdiff.matrix(x, n, diff, g, t, fill, TRUE, rho, stubs, ...)
 
-Dlog.grouped_df <- function(x, n = 1, diff = 1, t = NULL, fill = NA, rho = 1, stubs = TRUE, keep.ids = TRUE, ...)
+Dlog.grouped_df <- function(x, n = 1, diff = 1, t = NULL, fill = NA, rho = 1, stubs = TRUE, keep.ids = TRUE, ...) {
+  x <- x
   eval(substitute(fdiff.grouped_df(x, n, diff, t, fill, TRUE, rho, stubs, keep.ids, ...)))
+}
 
 Dlog.data.frame <- function(x, n = 1, diff = 1, by = NULL, t = NULL, cols = is.numeric,
                          fill = NA, rho = 1, stubs = TRUE, keep.ids = TRUE, ...)
@@ -326,8 +330,10 @@ G.pseries <- function(x, n = 1, diff = 1, fill = NA, logdiff = FALSE, scale = 10
 G.matrix <- function(x, n = 1, diff = 1, g = NULL, t = NULL, fill = NA, logdiff = FALSE, scale = 100, stubs = TRUE, ...)
   fgrowth.matrix(x, n, diff, g, t, fill, logdiff, scale, stubs, ...)
 
-G.grouped_df <- function(x, n = 1, diff = 1, t = NULL, fill = NA, logdiff = FALSE, scale = 100, stubs = TRUE, keep.ids = TRUE, ...)
+G.grouped_df <- function(x, n = 1, diff = 1, t = NULL, fill = NA, logdiff = FALSE, scale = 100, stubs = TRUE, keep.ids = TRUE, ...) {
+  x <- x
   eval(substitute(fgrowth.grouped_df(x, n, diff, t, fill, logdiff, scale, stubs, keep.ids, ...)))
+}
 
 G.data.frame <- function(x, n = 1, diff = 1, by = NULL, t = NULL, cols = is.numeric,
                          fill = NA, logdiff = FALSE, scale = 100, stubs = TRUE, keep.ids = TRUE, ...)

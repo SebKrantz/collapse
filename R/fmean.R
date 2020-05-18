@@ -103,13 +103,13 @@ fmean.grouped_df <- function(x, w = NULL, TRA = NULL, na.rm = TRUE, use.g.names 
                              keep.group_vars = TRUE, keep.w = TRUE, ...) {
   if(!missing(...)) unused_arg_action(match.call(), ...)
   g <- GRP.grouped_df(x)
-  wsym <- l1orn(all.vars(substitute(w)), "NULL") # deparse
+  wsym <- l1orn(as.character(substitute(w)), NULL)
   nam <- attr(x, "names")
   gn2 <- gn <- which(nam %in% g[[5L]])
   nTRAl <- is.null(TRA)
   sumw <- NULL
 
-  if(!(wsym == "NULL" || is.na(wn <- match(wsym, nam)))) {
+  if(!is.null(wsym) && !is.na(wn <- match(wsym, nam))) {
     w <- .subset2(x, wn) # faster using unclass?
     if(any(gn == wn)) stop("Weights coincide with grouping variables!")
     gn <- c(gn, wn)
@@ -161,7 +161,7 @@ fmean.grouped_df <- function(x, w = NULL, TRA = NULL, na.rm = TRUE, use.g.names 
 #   nTRAl <- is.null(TRA)
 #   sumw <- NULL
 #
-#   if(!(wsym == "NULL" || is.na(wn <- match(wsym, nam)))) {
+#   if(!is.null(wsym) && !is.na(wn <- match(wsym, nam))) {
 #     w <- .subset2(x, wn) # faster using unclass??
 #     if(any(gn == wn)) stop("Weights coincide with grouping variables!")
 #     onlyw <- !length(gn)

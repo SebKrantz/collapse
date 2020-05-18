@@ -10,7 +10,7 @@ fFtest <- function(y, exc, X = NULL, full.df = TRUE, ...) {
   if(!is.numeric(y)) stop("y needs to be a numeric vector")
   if(!is.null(X)) {
     Xn <- NCOL(X)
-    data <- if(is.numeric(X) && is.numeric(exc)) na.omit(cbind(y, X, exc)) else na_omit(qDT(c(list(y = y), qDF(X), qDF(exc))))
+    data <- if(is.numeric(X) && is.numeric(exc)) na_omit(cbind(y, X, exc)) else na_omit(qDT(c(list(y = y), qDF(X), qDF(exc))))
     if(full.df && is.list(data) && any(fc <- vapply(unattrib(data), is.factor, TRUE))) {
       cld <- class(data)
       class(data) <- NULL

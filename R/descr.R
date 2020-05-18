@@ -4,7 +4,7 @@
 descr <- function(X, Ndistinct = TRUE, higher = TRUE, table = TRUE,
                   Qprobs = c(0.01, 0.05, 0.25, 0.5, 0.75, 0.95, 0.99), cols = NULL,
                   label.attr = 'label', ...) {
-  nam <- deparse(substitute(X))
+  nam <- l1orlst(as.character(substitute(X)))
 
   armat <- function(x, y) c(x[1L], Ndist = y, x[-1L])
   natrm <- function(x) if(is.na(names(x)[length(x)])) x[-length(x)] else x # Remove NA from table !

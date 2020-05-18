@@ -7,7 +7,7 @@ psacf <- function(x, ...) UseMethod("psacf") # , x
 psacf.default <- function(x, g, t = NULL, lag.max = NULL, type = c("correlation", "covariance","partial"), plot = TRUE, gscale = TRUE, ...) {
   if(!is.numeric(x)) stop("'x' must be a numeric vector")
   typei <- switch(type[1L], correlation = 1L, covariance = 2L, partial = 3L, stop("Unknown type!"))
-  series <- deparse(substitute(x))
+  series <- l1orlst(as.character(substitute(x)))
   getacf <- function(ng, g) {
     if(is.null(t)) message("Panel Series ACF computed without timevar: Assuming ordered data") else if(!is.nmfactor(t))
     t <- if(is.atomic(t)) qG(t, na.exclude = FALSE) else GRP.default(t, return.groups = FALSE)[[2L]] # if(.Internal(islistfactor(t, FALSE))) interaction(t) else
@@ -48,7 +48,7 @@ psacf.default <- function(x, g, t = NULL, lag.max = NULL, type = c("correlation"
 
 psacf.data.frame <- function(x, by, t = NULL, cols = is.numeric, lag.max = NULL, type = c("correlation", "covariance","partial"), plot = TRUE, gscale = TRUE, ...) {
   typei <- switch(type[1L], correlation = 1L, covariance = 2L, partial = 3L, stop("Unknown type!"))
-  series <- deparse(substitute(x))
+  series <- l1orlst(as.character(substitute(x)))
   class(x) <- NULL
   if(is.call(by)) { # best way ?
     nam <- names(x)
@@ -122,7 +122,7 @@ psacf.pseries <- function(x, lag.max = NULL, type = c("correlation", "covariance
   if(length(index) > 2L) index <- c(finteraction(index[-length(index)]), index[length(index)])
   nl <- fnlevels(index[[1L]])
   typei <- switch(type[1L], correlation = 1L, covariance = 2L, partial = 3L, stop("Unknown type!"))
-  series <- deparse(substitute(x)) # faster ?
+  series <- l1orlst(as.character(substitute(x))) # faster ?
   if(is.null(lag.max)) lag.max <- round(2*sqrt(length(x)/nl))
   if(gscale) x <- fscaleCpp(x,nl,index[[1L]])
   acf <- if(typei == 2L)
@@ -148,7 +148,7 @@ psacf.pseries <- function(x, lag.max = NULL, type = c("correlation", "covariance
 
 psacf.pdata.frame <- function(x, cols = is.numeric, lag.max = NULL, type = c("correlation", "covariance","partial"), plot = TRUE, gscale = TRUE, ...) {
   typei <- switch(type[1L], correlation = 1L, covariance = 2L, partial = 3L, stop("Unknown type!"))
-  series <- deparse(substitute(x)) # faster solution ?
+  series <- l1orlst(as.character(substitute(x))) # faster solution ?
   index <- unclass(attr(x, "index"))
   class(x) <- NULL
   nrx <- length(x[[1L]])
@@ -191,13 +191,13 @@ pspacf <- function(x, ...) UseMethod("pspacf") # , x
 
 pspacf.default <- function(x, g, t = NULL, lag.max = NULL, plot = TRUE, gscale = TRUE, ...) {
   if(plot)
-  psacf.default(x, g, t, lag.max, "partial", plot, gscale, main = paste0("Series ",deparse(substitute(x))), ...) else
+  psacf.default(x, g, t, lag.max, "partial", plot, gscale, main = paste0("Series ",l1orlst(as.character(substitute(x)))), ...) else
   psacf.default(x, g, t, lag.max, "partial", plot, gscale, ...)
 }
 
 pspacf.pseries <- function(x, lag.max = NULL, plot = TRUE, gscale = TRUE, ...) {
   if(plot)
-  psacf.pseries(x, lag.max, "partial", plot, gscale, main = paste0("Series ",deparse(substitute(x))), ...) else
+  psacf.pseries(x, lag.max, "partial", plot, gscale, main = paste0("Series ",l1orlst(as.character(substitute(x)))), ...) else
   psacf.pseries(x, lag.max, "partial", plot, gscale, ...)
 }
 
@@ -217,7 +217,7 @@ psccf.default <- function(x, y, g, t = NULL, lag.max = NULL, type = c("correlati
   lx <- length(x)
   if(lx != length(y)) stop("length(x) must be equal to length(y)")
   typei <- switch(type[1L], correlation = 1L, covariance = 2L, partial = 3L, stop("Unknown type!"))
-  snames <- paste(c(deparse(substitute(x))[1L], deparse(substitute(y))[1L]), collapse = " & ")
+  snames <- paste(c(l1orlst(as.character(substitute(x))), l1orlst(as.character(substitute(x)))), collapse = " & ")
   getccf <- function(ng, g) {
     if(is.null(t)) message("Panel Series ACF computed without timevar: Assuming ordered data") else if(!is.nmfactor(t))
       t <- if(is.atomic(t)) qG(t, na.exclude = FALSE) else GRP.default(t, return.groups = FALSE)[[2L]] # else if(.Internal(islistfactor(t, FALSE))) interaction(t)
@@ -265,7 +265,7 @@ psccf.pseries <- function(x, y, lag.max = NULL, type = c("correlation", "covaria
   if(length(index) > 2L) index <- c(finteraction(index[-length(index)]), index[length(index)])
   nl <- fnlevels(index[[1L]])
   typei <- switch(type[1L], correlation = 1L, covariance = 2L, partial = 3L, stop("Unknown type!"))
-  snames <- paste(c(deparse(substitute(x))[1L], deparse(substitute(y))[1L]), collapse = " & ")
+  snames <- paste(c(l1orlst(as.character(substitute(x))), l1orlst(as.character(substitute(x)))), collapse = " & ")
   if (gscale) {
     x <- fscaleCpp(x,nl,index[[1L]])
     y <- fscaleCpp(y,nl,index[[1L]])
@@ -294,7 +294,7 @@ psccf.pseries <- function(x, y, lag.max = NULL, type = c("correlation", "covaria
 #           demean = TRUE, series = NULL, var.method = 1L, ...)
 # {
 #   if (is.null(series))
-#     series <- deparse(substitute(x))
+#     series <- l1orlst(as.character(substitute(x)))
 #   if (ists <- is.ts(x))
 #     xtsp <- tsp(x)
 #   x <- na.action(as.ts(x))
