@@ -109,15 +109,15 @@ fmode.grouped_df <- function(x, w = NULL, TRA = NULL, na.rm = TRUE, use.g.names 
   nam <- attr(x, "names")
   gn2 <- gn <- which(nam %in% g[[5L]])
   nTRAl <- is.null(TRA)
-  maxw <- NULL
+  sumw <- NULL
 
   if(!is.null(wsym) && !is.na(wn <- match(wsym, nam))) {
     w <- .subset2(x, wn)
     if(any(gn == wn)) stop("Weights coincide with grouping variables!")
     gn <- c(gn, wn)
     if(keep.w) {
-      if(nTRAl) maxw <- `names<-`(list(.Call(Cpp_fminmax,w,g[[1L]],g[[2L]],na.rm,2L)), paste0("max.", wsym)) else if(keep.group_vars)
-        gn2 <- gn else maxw <- gn2 <- wn
+      if(nTRAl) sumw <- `names<-`(list(fsumCpp(w,g[[1L]],g[[2L]],NULL,na.rm)), paste0("sum.", wsym)) else if(keep.group_vars)
+        gn2 <- gn else sumw <- gn2 <- wn
     }
   }
 
@@ -132,17 +132,17 @@ fmode.grouped_df <- function(x, w = NULL, TRA = NULL, na.rm = TRUE, use.g.names 
       ax[["row.names"]] <- if(use.g.names) group_names.GRP(g) else .set_row_names(g[[1L]])
       if(gl) {
         if(keep.group_vars) {
-          ax[["names"]] <- c(g[[5L]], names(maxw), nam[-gn])
-          return(setAttributes(c(g[[4L]], maxw, .Call(Cpp_fmodel,x[-gn],g[[1L]],g[[2L]],g[[3L]],w,na.rm)), ax))
+          ax[["names"]] <- c(g[[5L]], names(sumw), nam[-gn])
+          return(setAttributes(c(g[[4L]], sumw, .Call(Cpp_fmodel,x[-gn],g[[1L]],g[[2L]],g[[3L]],w,na.rm)), ax))
         } else {
-          ax[["names"]] <- c(names(maxw), nam[-gn])
-          return(setAttributes(c(maxw, .Call(Cpp_fmodel,x[-gn],g[[1L]],g[[2L]],g[[3L]],w,na.rm)), ax))
+          ax[["names"]] <- c(names(sumw), nam[-gn])
+          return(setAttributes(c(sumw, .Call(Cpp_fmodel,x[-gn],g[[1L]],g[[2L]],g[[3L]],w,na.rm)), ax))
         }
       } else if(keep.group_vars) {
         ax[["names"]] <- c(g[[5L]], nam)
         return(setAttributes(c(g[[4L]], .Call(Cpp_fmodel,x,g[[1L]],g[[2L]],g[[3L]],w,na.rm)), ax))
       } else return(setAttributes(.Call(Cpp_fmodel,x,g[[1L]],g[[2L]],g[[3L]],w,na.rm), ax))
-    } else if(keep.group_vars || (keep.w && length(maxw))) {
+    } else if(keep.group_vars || (keep.w && length(sumw))) {
       ax[["names"]] <- c(nam[gn2], nam[-gn])
       return(setAttributes(c(x[gn2],.Call(Cpp_TRAl,x[-gn],.Call(Cpp_fmodel,x[-gn],g[[1L]],g[[2L]],g[[3L]],w,na.rm),g[[2L]],TtI(TRA))), ax))
     } else {

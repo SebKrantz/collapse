@@ -43,7 +43,7 @@ fmode(x, ...)
 
 \item{keep.group_vars}{\emph{grouped_df method:} Logical. \code{FALSE} removes grouping variables after computation.}
 
-\item{keep.w}{\emph{grouped_df method:} Logical. Retain \code{max} of weighting variable after computation (if contained in \code{grouped_df}).}
+\item{keep.w}{\emph{grouped_df method:} Logical. Retain \code{sum} of weighting variable after computation (if contained in \code{grouped_df}).}
 
 \item{...}{arguments to be passed to or from other methods.}
 
