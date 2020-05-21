@@ -6,12 +6,14 @@ using namespace Rcpp;
 // TODO: can do something about doubles using == ?
 // TODO: Option na_fill ?
 
+// Note: For x[i] = NA_INTEGER, which is equal to INT_MIN, cannot calculate x[i]-prev !! -> fixed in 1.2.1
+
 // https://stackoverflow.com/questions/776624/whats-faster-iterating-an-stl-vector-with-vectoriterator-or-with-at
 
 // [[Rcpp::export]]
 IntegerVector seqid(const IntegerVector& x, const SEXP& o = R_NilValue, int del = 1, int start = 1,
                     bool na_skip = false, bool skip_seq = false, bool check_o = true) {
-  int l = x.size(), prev, id = start;
+  int l = x.size(), id = start, prev;
   IntegerVector out = no_init_vector(l);
   if(Rf_isNull(o)) {
     if(na_skip) {
@@ -22,7 +24,7 @@ IntegerVector seqid(const IntegerVector& x, const SEXP& o = R_NilValue, int del 
         out[j] = id;
         for(int i = j+1; i != l; ++i) {
           if(x[i] != NA_INTEGER) {
-            if(x[i]-prev != del) ++id; // x[i]-x[i-1]??
+            if(x[i] - prev != del) ++id; // x[i]-x[i-1]??
             prev = x[i];
             out[i] = id;
           } else { // Faster way ??
@@ -32,11 +34,18 @@ IntegerVector seqid(const IntegerVector& x, const SEXP& o = R_NilValue, int del 
         }
       }
     } else {
+      int nafill = INT_MAX - 1e7;
       prev = x[0];
+      if(prev == NA_INTEGER) prev = nafill;
       out[0] = id;
       for(int i = 1; i != l; ++i) {
-        if(x[i]-prev != del) ++id; // x[i]-x[i-1]??
-        prev = x[i];
+        if(x[i] == NA_INTEGER) {
+          ++id;
+          prev = nafill;
+        } else {
+          if(x[i] - prev != del) ++id;
+          prev = x[i];
+        }
         out[i] = id;
       }
     }
@@ -60,7 +69,7 @@ IntegerVector seqid(const IntegerVector& x, const SEXP& o = R_NilValue, int del 
             val = oo[i]-1;
             if(val < 0 || val >= l) stop("o out of allowed range [1, length(x)]");
             if(x[val] != NA_INTEGER) {
-              if(x[val]-prev != del) ++id; // x[i]-x[i-1]??
+              if(x[val] - prev != del) ++id; // x[i]-x[i-1]??
               prev = x[val];
               out[val] = id;
             } else {
@@ -80,7 +89,7 @@ IntegerVector seqid(const IntegerVector& x, const SEXP& o = R_NilValue, int del 
           for(int i = j+1; i != l; ++i) {
             val = oo[i]-1;
             if(x[val] != NA_INTEGER) {
-              if(x[val]-prev != del) ++id; // x[i]-x[i-1]??
+              if(x[val] - prev != del) ++id; // x[i]-x[i-1]??
               prev = x[val];
               out[val] = id;
             } else {
@@ -91,21 +100,33 @@ IntegerVector seqid(const IntegerVector& x, const SEXP& o = R_NilValue, int del 
         }
       }
     } else {
+      int nafill = INT_MAX - 1e7;
       prev = x[val];
+      if(prev == NA_INTEGER) prev = nafill;
       out[val] = id; // faster than iterator ??
       if(check_o) {
         for(int i = 1; i != l; ++i) { //   for(IntegerVector::iterator it = oo.begin()+1, end = oo.end(); it != end; ++it) { val = *it-1;
           val = oo[i]-1;
           if(val < 0 || val >= l) stop("o out of allowed range [1, length(x)]");
-          if(x[val]-prev != del) ++id;
-          prev = x[val];
+          if(x[val] == NA_INTEGER) {
+            ++id;
+            prev = nafill;
+          } else {
+            if(x[val] - prev != del) ++id;
+            prev = x[val];
+          }
           out[val] = id;
         }
       } else {
         for(int i = 1; i != l; ++i) { //   for(IntegerVector::iterator it = oo.begin()+1, end = oo.end(); it != end; ++it) { val = *it-1;
           val = oo[i]-1;
-          if(x[val]-prev != del) ++id;
-          prev = x[val];
+          if(x[val] == NA_INTEGER) {
+            ++id;
+            prev = nafill;
+          } else {
+            if(x[val] - prev != del) ++id;
+            prev = x[val];
+          }
           out[val] = id;
         }
       }
