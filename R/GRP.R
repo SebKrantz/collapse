@@ -228,7 +228,7 @@ GRP.pdata.frame <- function(X, effect = 1L, ...) GRP.pseries(X, effect, ...)
 fgroup_by <- function(X, ..., sort = TRUE, decreasing = FALSE, na.last = TRUE, return.order = FALSE) {      #   e <- substitute(list(...)) # faster but does not preserve attributes of unique groups !!
   attr(X, "groups") <- GRP.default(fselect(X, ...), NULL, sort, decreasing, na.last, TRUE, return.order) # `names<-`(eval(e, X, parent.frame()), all.vars(e))
   add_cl <- c("tbl_df", "tbl", "grouped_df")
-  class(X) <- c(add_cl, fsetdiff(class(X), add_cl)) # necesssary to avoid printing errors... (i.e. wrong group object etc...)
+  oldClass(X) <- c(add_cl, fsetdiff(class(X), add_cl)) # necesssary to avoid printing errors... (i.e. wrong group object etc...)
   X
 }
 
