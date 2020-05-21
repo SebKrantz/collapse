@@ -127,17 +127,17 @@ Vector<RTYPE> flagleadCppImpl(const Vector<RTYPE>& x, const IntegerVector& n, co
       IntegerVector ord = t;
       if(l != ord.size()) stop("length(x) must match length(t)");
       IntegerVector min(ngp, INT_MAX); // INFINITY gives bug !!
-      IntegerVector gsv = no_init_vector(ng); // No real improvements here by using C++ arrays !!
+      IntegerVector gsv = Rf_isNull(gs) ? IntegerVector(ng) : as<IntegerVector>(gs); // no_init_vector(ng); // No real improvements here by using C++ arrays !!
       IntegerVector ord2 = no_init_vector(l); // use array ??
       if(Rf_isNull(gs)) {
-        std::fill(gsv.begin(), gsv.end(), 0);
+        // std::fill(gsv.begin(), gsv.end(), 0);
         // gsv = IntegerVector(ng);
         for(int i = 0; i != l; ++i) {
           ++gsv[g[i]-1];
           if(ord[i] < min[g[i]]) min[g[i]] = ord[i];
         }
       } else {
-        gsv = gs;
+        // gsv = gs;
         if(ng != gsv.size()) stop("ng must match length(gs)");
         for(int i = 0; i != l; ++i) if(ord[i] < min[g[i]]) min[g[i]] = ord[i];
       }
@@ -145,7 +145,7 @@ Vector<RTYPE> flagleadCppImpl(const Vector<RTYPE>& x, const IntegerVector& n, co
       // int cgs[ngp];
       // cgs[1] = 0;
       // for(int i = 2; i != ngp; ++i) cgs[i] = cgs[i-1] + gsv[i-2]; // or get "starts from forderv"
-      cgs[0] = cgs[1] = 0;
+      cgs[1] = 0;
       for(int i = 1; i != ng; ++i) {
         cgs[i+1] = cgs[i] + gsv[i-1]; // or get "starts from forderv"
         if(min[i] == NA_INTEGER) stop("Timevar contains missing values"); // Fastest here ?
@@ -377,23 +377,23 @@ Matrix<RTYPE> flagleadmCppImpl(const Matrix<RTYPE>& x, const IntegerVector& n, c
       IntegerVector ord = t;
       if(l != ord.size()) stop("length(x) must match length(t)");
       IntegerVector min(ngp, INT_MAX);
-      IntegerVector gsv = no_init_vector(ng); // NULL; gives compiler warning
+      IntegerVector gsv = Rf_isNull(gs) ? IntegerVector(ng) : as<IntegerVector>(gs); // no_init_vector(ng); // NULL; gives compiler warning
       IntegerVector ord2 = no_init_vector(l); // See flag.cpp for any improvements on this code !!
       if(Rf_isNull(gs)) {
         // gsv = IntegerVector(ng);
-        std::fill(gsv.begin(), gsv.end(), 0);
+        // std::fill(gsv.begin(), gsv.end(), 0);
         for(int i = 0; i != l; ++i) {
           ++gsv[g[i]-1];
           if(ord[i] < min[g[i]]) min[g[i]] = ord[i];
         }
       } else {
-        gsv = gs;
+        // gsv = gs;
         if(ng != gsv.size()) stop("ng must match length(gs)");
         for(int i = 0; i != l; ++i) if(ord[i] < min[g[i]]) min[g[i]] = ord[i];
       }
       IntegerVector omap(l), cgs = no_init_vector(ngp), index = no_init_vector(l);
       // int cgs[ngp], index[l]; // See above for any improvements on this code !!
-      cgs[0] = cgs[1] = 0;
+      cgs[1] = 0;
       for(int i = 1; i != ng; ++i) {
         cgs[i+1] = cgs[i] + gsv[i-1]; // or get "starts from forderv"
         if(min[i] == NA_INTEGER) stop("Timevar contains missing values"); // Fastest here ?
@@ -972,23 +972,23 @@ List flagleadlCpp(const List& x, const IntegerVector& n = 1, const SEXP& fill = 
       IntegerVector ord = t;
       if(gss != ord.size()) stop("length(g) must match length(t)");
       IntegerVector min(ngp, INT_MAX); // Necessary !!!
-      IntegerVector gsv = no_init_vector(ng); // NULL; gives compiler warning
+      IntegerVector gsv = Rf_isNull(gs) ? IntegerVector(ng) : as<IntegerVector>(gs); // = no_init_vector(ng); // NULL; gives compiler warning
       IntegerVector ord2 = no_init_vector(gss); // See flag.cpp for any improvements on this code !!
       if(Rf_isNull(gs)) {
         // gsv = IntegerVector(ng);
-        std::fill(gsv.begin(), gsv.end(), 0);
+        // std::fill(gsv.begin(), gsv.end(), 0);
         for(int i = 0; i != gss; ++i) {
           ++gsv[g[i]-1];
           if(ord[i] < min[g[i]]) min[g[i]] = ord[i];
         }
       } else {
-        gsv = gs;
+        // gsv = gs;
         if(ng != gsv.size()) stop("ng must match length(gs)");
         for(int i = 0; i != gss; ++i) if(ord[i] < min[g[i]]) min[g[i]] = ord[i];
       }
       IntegerVector omap(gss), cgs = no_init_vector(ngp), index = no_init_vector(gss);
       // int cgs[ngp], index[gss]; // See flag.cpp for any improvements on this code !!
-      cgs[0] = cgs[1] = 0;
+      cgs[1] = 0;
       for(int i = 1; i != ng; ++i) {
         cgs[i+1] = cgs[i] + gsv[i-1]; // or get "starts from forderv"
         if(min[i] == NA_INTEGER) stop("Timevar contains missing values"); // Fastest here ?
