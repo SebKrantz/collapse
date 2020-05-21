@@ -48,7 +48,7 @@ test_that("psacf works as intended", {
   expect_equal(unclass(psacf(x, rep(1,length(x)), seq_along(x), lag.max = 12, plot = FALSE))[1:4], unclass(acf(x, lag.max = 12, plot = FALSE))[1:4], tolerance = 1e-3)
   expect_equal(unclass(psacf(x, rep(1,length(x)), seq_along(x), type = "covariance", lag.max = 12, gscale = FALSE, plot = FALSE))[1:4], unclass(acf(x, type = "covariance", lag.max = 12, plot = FALSE))[1:4], tolerance = 1e-3)
   expect_equal(unclass(pspacf(x, rep(1,length(x)), seq_along(x), lag.max = 12, plot = FALSE))[1:4], unclass(pacf(x, lag.max = 12, plot = FALSE))[1:4], tolerance = 1e-3)
-  dat <- na.omit(get_vars(wlddev, c(9:10,12)))
+  dat <- na_omit(get_vars(wlddev, c(9:10,12)))
   expect_equal(unclass(psacf(dat, rep(1,nrow(dat)), seq_row(dat), lag.max = 12, plot = FALSE))[1:4], unclass(acf(dat, lag.max = 12, plot = FALSE))[1:4], tolerance = 1e-2)
   expect_equal(unclass(psacf(dat, rep(1,nrow(dat)), seq_row(dat), type = "covariance", lag.max = 12, gscale = FALSE, plot = FALSE))[1:4], unclass(acf(dat, type = "covariance", lag.max = 12, plot = FALSE))[1:4], tolerance = 1e-2)
   # expect_equal(unclass(pspacf(dat, rep(1,nrow(dat)), seq_row(dat), lag.max = 12, plot = FALSE))[1:4], unclass(pacf(dat, lag.max = 12, plot = FALSE))[1:4], tolerance = 1e-2) # This is strange !!!!
