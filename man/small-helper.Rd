@@ -27,8 +27,7 @@
 \alias{unattrib}
 \alias{is.categorical}
 \alias{is.Date}
-\alias{as.numeric_factor}
-\alias{as.character_factor}
+
 %- Also NEED an '\alias' for EACH other topic documented here.
 \title{
 Small (Helper) Functions % \emph{collapse}
@@ -68,8 +67,7 @@ setDimnames(object = dn, dn)  # Set dimension names of object and return object
 unattrib(object)              # Remove all attributes from object
 is.categorical(x)             # The opposite of is.numeric
 is.Date(x)                    # Check if object is of class "Date", "POSIXlt" or "POSIXct"
-as.numeric_factor(X)          # Coerce a factor, or all factor columns in X, to numeric
-as.character_factor(X)        # Coerce a factor, or all factor columns in X, to character
+
 }
 %- maybe also 'usage' for other objects documented here.
 \arguments{
@@ -131,9 +129,6 @@ all_identical(iris, iris, iris, iris)
 l <- replicate(100, fmean(num_vars(iris), iris$Species), simplify = FALSE)
 all_identical(l)
 rm(l)
-
-## Factor to numeric conversions
-identical(mtcars,  as.numeric_factor(dapply(mtcars, qF)))
 
 ## Missing values
 mtc_na <- na_insert(mtcars, 0.15)    # Set 15\% of values missing at random
