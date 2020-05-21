@@ -1587,7 +1587,7 @@ static void dsort(double *x, int *o, int n)
 
  */
 
-SEXP radixsort(SEXP NA_last, SEXP decreasing, SEXP RETstrt, SEXP RETgs, SEXP SORTStr, SEXP args)
+SEXP Cradixsort(SEXP NA_last, SEXP decreasing, SEXP RETstrt, SEXP RETgs, SEXP SORTStr, SEXP args)
 {
   int n = -1, narg = 0, ngrp, tmp, *osub, thisgrpn;
   R_xlen_t nl = n;
