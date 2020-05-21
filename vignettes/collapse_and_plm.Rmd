@@ -13,6 +13,18 @@ vignette: >
   %\VignetteEncoding{UTF-8}
 ---
 
+```{css, echo=FALSE}
+pre {
+  max-height: 600px;
+  overflow-y: auto;
+}
+
+pre[class] {
+  max-height: 600px;
+}
+```
+
+
 ```{r, echo = FALSE, message = FALSE, warning=FALSE}
 library(data.table)    # Keep here becasue of not run options on CRAN
 library(microbenchmark)
@@ -48,7 +60,7 @@ set.seed(101)
 
 This vignette focuses on the integration of *collapse* and the popular *plm* ('Linear Models for Panel Data') package by Yves Croissant and Giovanni Millo. It will demonstrate the utility of the *pseries* and *pdata.frame* classes introduced in *plm* together with the corresponding methods for fast *collapse* functions (implemented in C or C++), to extend and facilitate extremely fast computations on panel-vectors and panel-data.frames (20-100 times faster than native *plm*). The *collapse* package should enable R programmers to - with very little effort - write high-performance code in the domain of panel-data exploration and panel-data econometrics. 
 
-The computations considered are between and within transformations (grouped averaging and centering), higher-dimensional between and within transformations (i.e. averaging and centering over multiple groups), standardizing (i.e. scaling and centering), weighted versions of all of the above, sequences of panel- lags / leads and lagged / leaded and iterated differences and growth rates / log-differences, panel- auto-, partial-auto and cross-correlation functions, panel-data to (ts-) matrix / array conversions, and summary statistics for panel-data. Not really covered in this vignette is the whole suite of *Fast Statistical Functions* in the *collapse* package, which may of course also be used for grouped and weighted operations on panel-data, but currently do not have methods for *plm* classes. 
+<!-- The computations considered are between and within transformations (grouped averaging and centering), higher-dimensional between and within transformations (i.e. averaging and centering over multiple groups), standardizing (i.e. scaling and centering), weighted versions of all of the above, sequences of panel- lags / leads and lagged / leaded and iterated differences and growth rates / log-differences, panel- auto-, partial-auto and cross-correlation functions, panel-data to (ts-) matrix / array conversions, and summary statistics for panel-data. Not really covered in this vignette is the whole suite of *Fast Statistical Functions* in the *collapse* package, which may of course also be used for grouped and weighted operations on panel-data, but currently do not have methods for *plm* classes.  -->
 
 ***
 
@@ -58,9 +70,11 @@ The computations considered are between and within transformations (grouped aver
 
 The vignette is structured as follows: 
 
-* In **Part 1** I introduce *collapse*'s fast functions and associated *transformation operators* to compute various transformations on panel-data, and deliver some benchmarks. 
-* In **Part 2** I use these functions to explore panel data a bit and introduce additional functions for summary statistics, panel-autocorrelations and testing fixed effects. 
-* In **Part 3** finally I provide an example programming application by coding a slightly extended and very efficient Hausman and Taylor (1981) estimator. 
+* **Part 1** introduces *collapse*'s fast functions and associated *transformation operators* to compute various transformations on panel-data, and deliver some benchmarks. 
+
+* **Part 2** uses these functions to explore panel data a bit and introduce additional functions for summary statistics, panel-autocorrelations and testing fixed effects. 
+
+* **Part 3** finally provides an example programming application by coding a slightly extended and very efficient Hausman and Taylor (1981) estimator. 
 
 For this vignette we will use a dataset (`wlddev`) supplied with *collapse* containing a panel of 4 key development indicators taken from the World Bank Development Indicators Database:
 
@@ -92,9 +106,9 @@ str(index(pwlddev))
 # This shows the individual and time dimensions
 pdim(pwlddev)
 
-# This shows which variables vary across which dimensions
-pvar(pwlddev)
 ```
+<!-- # This shows which variables vary across which dimensions -->
+<!-- pvar(pwlddev) -->
 
 A `plm::pdata.frame` is a data.frame with panel identifiers attached as a list of factors in an *index* attribute (non-factor index variables are converted to factor). Each column in that data.frame is a Panel-Series (`plm::pseries`), which also has the panel identifiers attached:
 
@@ -123,7 +137,7 @@ head(fwithin(LIFEEX))                         # Within individuals (default)
 head(fwithin(LIFEEX, effect = "year"))        # Within time
 ```
 
-by default `na.rm = TRUE` thus both functions skip (preserve) missing values in the data (which, by the way, is the default for all *collapse* functions). For `fbetween` the output behavior can be altered with the option `fill`: Setting `fill = TRUE` will compute the group-means on the complete cases in each group (as long as `na.rm = TRUE`), but replace all values in each group with the group mean (hence overwriting or 'filling up' missing values):
+by default `na.rm = TRUE` thus both functions skip (preserve) missing values in the data (which is the default for all *collapse* functions). For `fbetween` the output behavior can be altered with the option `fill`: Setting `fill = TRUE` will compute the group-means on the complete cases in each group (as long as `na.rm = TRUE`), but replace all values in each group with the group mean (hence overwriting or 'filling up' missing values):
 
 ```{r}
 # This preserves missing values in the output
@@ -133,7 +147,7 @@ head(fbetween(PCGDP), 30)
 head(fbetween(PCGDP, fill = TRUE), 30) 
 ```
 
-In `fwithin` the `mean` argument allows to set an arbitrary data mean (different from 0) after the data is centered. In grouped centering task, as sensible choice for such an added mean would be the overall mean of the data series, enabled by the option `mean = "overall.mean". This will add the overall mean of the series back to the data after subtracting out group means, and thus preserve the level of the data (and will only change the intercept when employed in a regression):
+In `fwithin` the `mean` argument allows to set an arbitrary data mean (different from 0) after the data is centered. In grouped centering task, as sensible choice for such an added mean would be the overall mean of the data series, enabled by the option `mean = "overall.mean"`. This will add the overall mean of the series back to the data after subtracting out group means, and thus preserve the level of the data (and will only change the intercept when employed in a regression):
 
 ```{r}
 # This performed standard grouped centering
@@ -143,7 +157,7 @@ head(fwithin(LIFEEX))
 head(fwithin(LIFEEX, mean = "overall.mean"))  
 ```
 
-`fbetween` and `fwithin` can also be applied to panel-data.frames where they will perform these computations variable by variable:
+`fbetween` and `fwithin` can also be applied to *pdata.frame*'s where they will perform these computations variable by variable:
 
 ```{r}
 head(fbetween(num_vars(pwlddev)), 3)
@@ -155,7 +169,7 @@ head(fwithin(num_vars(pwlddev)), 3)
 head(fwithin(num_vars(pwlddev), mean = "overall.mean"), 3)
 ```
 
-Now next to `fbetween` and `fwithin` there also exist short versions `B` and `W`, which I termed *transformation operators*. These are essentially wrappers around `fbetween` and `fwithin` and provide the same functionality, but are more parsimonious to employ in regression formulas and also offer additional features when applied to panel-data.frames. For panel-series, `B` and `W` are exact analogues to `fbetween` and `fwithin`, just under a shorter name:
+Now next to `fbetween` and `fwithin` there also exist short versions `B` and `W`, which are referred to as *transformation operators*. These are essentially wrappers around `fbetween` and `fwithin` and provide the same functionality, but are more parsimonious to employ in regression formulas and also offer additional features when applied to panel-data.frames. For panel-series, `B` and `W` are exact analogues to `fbetween` and `fwithin`, just under a shorter name:
 
 ```{r}
 identical(fbetween(PCGDP), B(PCGDP))
@@ -286,7 +300,7 @@ More customized scaling can be done with the help of the `mean` and `sd` argumen
 # This will scale the data such that mean mean within each country is 5 and the standard deviation is 3
 qsu(fscale(pwlddev$PCGDP, mean = 5, sd = 3))
 ```
-Even further customization (i.e. setting means and standard deviations for each group and / or each column) can of course be achieved by calling `TRA` on the result of `fscale` to sweep out an appropriate set of means and standard deviations. 
+Even further customization (i.e. setting means and standard deviations for each group and / or each column) can of course be achieved by calling `collapse::TRA` on the result of `fscale` to sweep out an appropriate set of means and standard deviations. 
 
 Scaling without centering can be done with the option `mean = FALSE`. This will also preserve the mean of the data overall and within each group:
 ```{r}
@@ -296,8 +310,9 @@ qsu(fscale(pwlddev$PCGDP, mean = FALSE, sd = 3))
 # Scaling without centering can also be done using fsd, but this does not preserve the mean
 qsu(fsd(pwlddev$PCGDP, index(pwlddev, 1), TRA = "/"))
 
-# Again, the *Fast Statistical Functions* in *collapse* do not have methods for *pseries* or *pdata.frame*'s (yet). 
 ```
+
+<!-- # Again, the *Fast Statistical Functions* in *collapse* do not have methods for *pseries* or *pdata.frame*'s (yet). -->
 
 Finally a special kind of data harmonization in the first two moments can be done by setting `mean = "overall.mean"` and `sd = "within.sd"` in a grouped scaling task. This will harmonize the data across groups such that the mean of each group is equal to the overall data mean and the standard deviation equal to the within standard deviation (= the standard deviation calculated on the group-centered series):
 
@@ -312,8 +327,9 @@ qsu(fscale(pwlddev$PCGDP, mean = "overall.mean", sd = "within.sd"))
 All of this seamlessly generalizes to weighted scaling an centering, using the `w` argument to add a weight vector.
 
 ### 1.4 Panel Lags / Leads, Differences and Growth Rates
+<!-- A proper *and* fast implementation of panel- lags, differences and growth rates has been missing in R so far. -->
 
-A proper *and* fast implementation of panel- lags, differences and growth rates has been missing in R so far. With `flag / L / F`, `fdiff / D` and `fgrowth / G`, *collapse* provides a fast and comprehensive C++ based solution to the computation of (sequences of) lags / leads and (sequences of) lagged / leaded and suitably iterated differences and growth rates / log-differences on panel-data. The *pseries* and *pdata.frame* methods to these functions and associated *transformation operators* automatically use the panel-identifiers in the 'index' attached to these objects (where the last variable in the 'index' is taken as the time-variable and the variables before that are taken as individual identifiers) to perform fast fully-identified time-dependent operations on panel-data, without the need of sorting the data.
+With `flag / L / F`, `fdiff / D` and `fgrowth / G`, *collapse* provides a fast and comprehensive C++ based solution to the computation of (sequences of) lags / leads and (sequences of) lagged / leaded and suitably iterated (quasi-, log-) differences and growth rates on panel-data. The *pseries* and *pdata.frame* methods to these functions and associated *transformation operators* use the panel-identifiers in the 'index' attached to these objects (where the last variable in the 'index' is taken as the time-variable and the variables before that are taken as individual identifiers) to perform fast fully-identified time-dependent operations on panel-data, without the need of sorting the data.
 
 <!-- With 'proper' I mean an implementation that does not require panel-vectors to be sorted (amounting i.e. to a grouped-lag on sorted data), but that takes into account both individual an time-identifiers in the computation. `plm::lag` and `dplyr::lag` (with the `order_by` argument) provide proper implementations but rely on base-R (split-apply-combine logic) which makes them slow. `data.table::shift` allows for pretty fast grouped lags on sorted data, but without taking into account the time-identifiers (you can do something like `DT[oder(time), shift(col1), by = pid]` in *data.table* but that sorts the data and is definitely more computationally expensive than the implementation introduced here).  -->
 
@@ -342,9 +358,11 @@ all_identical(L(LIFEEX, -1:3), F(LIFEEX, 1:-3), flag(LIFEEX, -1:3))
 
 # The native plm implementation also returns a matrix of lags but with different column names
 head(plm::lag(LIFEEX, -1:3), 4)
-# Just the meaning is a bit ambiguous...
-head(plm::lead(LIFEEX, 1:-3), 4)
+
 ```
+
+<!-- # Just the meaning is a bit ambiguous... -->
+<!-- head(plm::lead(LIFEEX, 1:-3), 4) -->
 
 Of course the lag orders may be unevenly spaced, i.e. `L(x, -1:3*12)` would compute seasonal lags on monthly data. On *pdata.frame*'s, the effects of `flag` and `L / F` differ insofar that `flag` will just lag the entire dataset without preserving identifiers (although the index attribute is always preserved), whereas `L / F` by default (`cols = is.numeric`) select the numeric variables and add the panel-id's on the left (default `keep.ids = TRUE`): 
 
@@ -386,32 +404,53 @@ identical(G(LIFEEX), fgrowth(LIFEEX))
 identical(fdiff(LIFEEX), diff(LIFEEX)) # Same as plm::diff.pseries (which does not compute iterated panel-differences)
 ```
 
-By default, growth rates are calculated as `(x - lag(x)) / lag(x) * 100`, but we can also compute growth rates based on log-differences which are often used in economics for various reasons (i.e. symmetry, exponential trends on macro-series, heteroskedasticity, properties of the log etc..). In that case the formula is `(log(x) - lag(log(x))) * 100` or `log(x/lag(x)) * 100`:
+By default, growth rates are calculated in percentage terms  which is set by the default argument `scale = 100`. It is also possible to compute log-differences with `fdiff(.., logdiff = TRUE)` or the `Dlog` operator, and growth rates in percentage terms based on log-differences using `fgrowth(.., logdiff = TRUE)`. 
+
+<!-- It is also possible to compute growth rates based on log-differences which are often used in economics for various reasons (i.e. symmetry, exponential trends on macro-series, heteroskedasticity, properties of the log etc..). In that case the formula is `(log(x) - lag(log(x))) * 100` or `log(x/lag(x)) * 100`: -->
 
 ```{r}
-# Panel log-difference (growth rate) of Life Expectancy
-head(fgrowth(LIFEEX, logdiff = TRUE))
+# Panel log-difference of Life Expectancy
+head(Dlog(LIFEEX))
 
-# Panel log-difference (growth rate) of log-difference (growth rate) of Life Expectancy
-head(fgrowth(LIFEEX, diff = 2, logdiff = TRUE))
-
-identical(G(LIFEEX, logdiff = TRUE), fgrowth(LIFEEX, logdiff = TRUE))
+# Panel log-difference growth rate (in percentage terms) of Life Expectancy
+head(G(LIFEEX, logdiff = TRUE))
 ```
 
-It is also possible to compute sequences of lagged / leaded and iterated differences and growth rates:
+It is also possible to compute sequences of lagged / leaded and iterated differences, logdiffereces and growth rates:
 
 ```{r}
 # first and second forward-difference and first and second difference of lags 1-3 of Life-Expectancy
 head(D(LIFEEX, -1:3, 1:2))
 
+# Same with Log-differences 
+head(Dlog(LIFEEX, -1:3, 1:2))
+
 # Same with (exact) growth rates
 head(G(LIFEEX, -1:3, 1:2))
-
-# Same with Log-differences (growth rates)
-head(G(LIFEEX, -1:3, 1:2, logdiff = TRUE))
 ```
 
-Another important advantage of the *collapse* functions compared to `plm::lag` or `plm::diff` is that the panel-identifiers are preserved, even if a matrix of lags / leads / differences or growth rates is returned. This allows for nested panel-computations, for example we can compute shifted sequences of lagged / leaded and iterated panel differences:
+A further possibility is to compute quasi-differences and quasi-log-differences of the form $x_t - \rho x_{t-s}$ or $log(x_t) - \rho log(x_{t-s})$. These are useful for panel-regressions suffering from serial-correlation, following Cochrane & Orcutt (1949), and can be specified with the `rho` argument to `fdiff`, `D` and `Dlog`. 
+
+```{r}
+# Regression of GDP on Life Expectance with country and time FE
+mod <- lm(PCGDP ~ LIFEEX, data = fHDwithin(fselect(pwlddev, PCGDP, LIFEEX), fill = FALSE))
+mod
+
+# Computing autocorrelation of residuals
+r <- residuals(mod)
+r <- pwcor(r, L(r, 1, substr(names(r), 1, 3)))  # Need this to compute a panel-lag
+r
+
+# Running the regression again quasi-differencing the transformed data
+modCO <- lm(PCGDP ~ LIFEEX, data = fdiff(fHDwithin(fselect(pwlddev, PCGDP, LIFEEX), variable.wise = FALSE), rho = r, stubs = FALSE))
+modCO
+
+# In this case rho is almost 1, so we might as well just difference the untransformed data and go with that
+# We also need to bootstrap this for proper standard errors. 
+```
+
+<!-- compared to `plm::lag` or `plm::diff`  -->
+A final important advantage of the *collapse* functions is that the panel-identifiers are preserved, even if a matrix of lags / leads / differences or growth rates is returned. This allows for nested panel-computations, for example we can compute shifted sequences of lagged / leaded and iterated panel differences:
 
 ```{r}
 # Sequence of differneces (same as above), adding one extra lag of the whole sequence
@@ -439,10 +478,10 @@ str(psmat(LIFEEX))
 str(psmat(LIFEEX, transpose = TRUE))
 
 # Same as plm::as.matrix.pseries, apart from attributes
-identical(`attributes<-`(psmat(LIFEEX), NULL),        
-          `attributes<-`(as.matrix(LIFEEX), NULL)) 
-identical(`attributes<-`(psmat(LIFEEX, transpose = TRUE), NULL), 
-          `attributes<-`(as.matrix(LIFEEX, idbyrow = FALSE), NULL)) 
+identical(unattrib(psmat(LIFEEX)),        
+          unattrib(as.matrix(LIFEEX))) 
+identical(unattrib(psmat(LIFEEX, transpose = TRUE)), 
+          unattrib(as.matrix(LIFEEX, idbyrow = FALSE))) 
 ```
 
 Applying `psmat` to a *pdata.frame* yields a 3D array:
@@ -477,7 +516,7 @@ Of course we could also have applied some transformation (like computing pairwis
 
 ### Benchmarks
 
-Below I benchmark the *collapse* implementation against native *plm*. To do that I extend the dataset used so far to have approx 1 million observations: 
+Below benchmarks are provided of the *collapse* implementation against native *plm*. To do this the dataset used so far is extended to have approx 1 million observations: 
 
 ```{r, eval=NCRAN}
 wlddevsmall <- get_vars(wlddev, c("iso3c","year","OECD","PCGDP","LIFEEX","GINI","ODA"))
@@ -493,65 +532,68 @@ data <- pdata.frame(data, index = c("iso3c", "year"))
 pdim(data)
 ```
 
-The data has 21600 individuals (countries) each observed for 59 years, the total number of rows is 1274400. We can pull out a series of life expectancy and run some benchmarks. My windows laptop on which these benchmarks were run has a 2x 2.2 GHZ Intel i5 processor, 8GB DDR3 RAM and a Samsung SSD hard drive (so a decent laptop but nothing fancy). 
+The data has 21600 individuals (countries) each observed for 59 years, the total number of rows is 1274400. We can pull out a series of life expectancy and run some benchmarks. The windows laptop on which these benchmarks were run has a 2x 2.2 GHZ Intel i5 processor, 8GB DDR3 RAM and a Samsung SSD hard drive. 
 
 ```{r, eval=NCRAN}
+library(microbenchmark)
 # Creating the extended panel-series for Life Expectancy (l for large)
 LIFEEX_l <- data$LIFEEX
 str(LIFEEX_l)
 
 # Between Transformations
-system.time(Between(LIFEEX_l, na.rm = TRUE))
-system.time(fbetween(LIFEEX_l))
+microbenchmark(Between(LIFEEX_l, na.rm = TRUE), times = 10)
+microbenchmark(fbetween(LIFEEX_l), times = 10)
 
 # Within Transformations
-system.time(Within(LIFEEX_l, na.rm = TRUE))
-system.time(fwithin(LIFEEX_l))
+microbenchmark(Within(LIFEEX_l, na.rm = TRUE), times = 10)
+microbenchmark(fwithin(LIFEEX_l), times = 10)
 
 # Higher-Dimenional Between and Within Transformations
-system.time(fHDbetween(LIFEEX_l))
-system.time(fHDwithin(LIFEEX_l))
+microbenchmark(fHDbetween(LIFEEX_l), times = 10)
+microbenchmark(fHDwithin(LIFEEX_l), times = 10)
 
 # Single Lag
-system.time(plm::lag(LIFEEX_l))
-system.time(flag(LIFEEX_l))
+microbenchmark(plm::lag(LIFEEX_l), times = 10)
+microbenchmark(flag(LIFEEX_l), times = 10)
 
 # Sequence of Lags / Leads
-system.time(plm::lag(LIFEEX_l, -1:3))
-system.time(flag(LIFEEX_l, -1:3))
+microbenchmark(plm::lag(LIFEEX_l, -1:3), times = 10)
+microbenchmark(flag(LIFEEX_l, -1:3), times = 10)
 
 # Single difference
-system.time(diff(LIFEEX_l))
-system.time(fdiff(LIFEEX_l))
+microbenchmark(diff(LIFEEX_l), times = 10)
+microbenchmark(fdiff(LIFEEX_l), times = 10)
 
 # Iterated Difference
-system.time(fdiff(LIFEEX_l, diff = 2))
+microbenchmark(fdiff(LIFEEX_l, diff = 2), times = 10)
 
 # Sequence of Lagged / Leaded and iterated differences
-system.time(fdiff(LIFEEX_l, -1:3, 1:2))
+microbenchmark(fdiff(LIFEEX_l, -1:3, 1:2), times = 10)
 
 # Single Growth Rate
-system.time(fgrowth(LIFEEX_l))
+microbenchmark(fgrowth(LIFEEX_l), times = 10)
 
 # Single Log-Difference
-system.time(fgrowth(LIFEEX_l, logdiff = TRUE))
+microbenchmark(fdiff(LIFEEX_l, logdiff = TRUE), times = 10)
 
 # Panel-Series to Matrix Conversion
 # system.time(as.matrix(LIFEEX_l))  This takes about 3 minutes to compute
-system.time(psmat(LIFEEX_l))
+microbenchmark(psmat(LIFEEX_l), times = 10)
 ```
 
-The results show that I did not promise to much in the introduction. A speed gain of 20-40x is the norm, and for certain operations such as the sequence of lags and leads the speed gain is about 100x, and for the panel-series to matrix conversion a 300x speed gain by using *collapse* vs. native *plm*. I am sure some will want to see a comparison with *data.table*:
+<!-- The results show that I did not promise to much in the introduction. A speed gain of 20-40x is the norm, and for certain operations such as the sequence of lags and leads the speed gain is about 100x, and for the panel-series to matrix conversion a 300x speed gain by using *collapse* vs. native *plm*.  -->
+
+This shows a comparison between flag and *data.table*'s shift:
 
 ```{r, eval=NCRAN}
-system.time(L(data, cols = 3:6))
+microbenchmark(L(data, cols = 3:6), times = 10)
 library(data.table)
 setDT(data)
 # 'Improper' panel-lag
-system.time(data[, shift(.SD), by = iso3c, .SDcols = 3:6])
+microbenchmark(data[, shift(.SD), by = iso3c, .SDcols = 3:6], times = 10)
 
 # This does what L is actually doing (without sorting the data)
-system.time(data[order(year), shift(.SD), by = iso3c, .SDcols = 3:6]) 
+microbenchmark(data[order(year), shift(.SD), by = iso3c, .SDcols = 3:6], times = 10) 
 ```
 
 The above dataset has 1 million obs in 20 thousand groups, but what about 10 million obs and 1 million groups? Do *collapse* functions scale efficiently as data and the number of groups grows large? Here is a simple benchmark:  
@@ -561,25 +603,61 @@ x <- rnorm(1e7)                                     # 10 million obs
 g <- qF(rep(1:1e6, each = 10), na.exclude = FALSE)  # 1 million individuals
 t <- qF(rep(1:10, 1e6), na.exclude = FALSE)         # 10 time-periods per individual
 
-system.time(fbetween(x, g))
-system.time(fwithin(x, g))
-system.time(flag(x, 1, g, t))
-system.time(flag(x, -1:1, g, t))
-system.time(fdiff(x, 1, 1, g, t))
-system.time(fdiff(x, 1, 2, g, t))
-system.time(fdiff(x, -1:1, 1:2, g, t))
+microbenchmark(fbetween(x, g), times = 10)
+microbenchmark(fwithin(x, g), times = 10)
+microbenchmark(flag(x, 1, g, t), times = 10)
+microbenchmark(flag(x, -1:1, g, t), times = 10)
+microbenchmark(fdiff(x, 1, 1, g, t), times = 10)
+microbenchmark(fdiff(x, 1, 2, g, t), times = 10)
+microbenchmark(fdiff(x, -1:1, 1:2, g, t), times = 10)
 ```
 
-The message is clear: *collapse* functions perform very well even as the number of groups grows large, in fact tests show that the large sample performance for aggregations with *collapse* is similar to *data.table*, and *collapse* grouped transformations like the ones shown here are generally faster than what can be done *data.table*. 
+The results show that *collapse* functions perform very well even as the number of groups grows large.
+
+<!-- in fact tests show that the large sample performance for aggregations with *collapse* is similar to *data.table*, and *collapse* grouped transformations like the ones shown here are generally faster than what can be done *data.table*.  -->
 
 The conclusion of this benchmark analysis is that *collapse*'s fast functions, with or without the help of *plm* classes, allow for very fast transformations of panel-data, and should enable R programmers and econometricians to implement high-performance panel-data estimators without having to dive into C/C++ themselves or resorting to *data.table* metaprogramming. 
 
 ## Part 2: Fast Exploration of Panel-Data
 
-*collapse* also provides some essential functions to summarize and explore panel data, such as fast summary-statistics for panel-data, panel-auto, partial-auto and cross-correlation functions, and a fast F-test to test fixed effects and other exclusion restrictions on (large) panel-data models. I also offer some suggestions on applying simple correlational and unsupervised learning tools to panel-series matrices to learn more about the data. 
+*collapse* also provides some essential functions to summarize and explore panel data, such as a fast check of variation over different dimensions, fast summary-statistics for panel-data, panel-auto, partial-auto and cross-correlation functions, and a fast F-test to test fixed effects and other exclusion restrictions on (large) panel-data models. Panel-data to matrix conversion further allows the application of some correlational and unsupervised learning tools such as PCA, clustering or dynamic factor analysis. 
 
+### 2.1 Variation Check for Panel-Data
 
-### 2.1 Summary Statistics for Panel-Data
+The function `varying` can be used to check over which panel-dimensions different variable have variation. When passed a *pdata.frame*, `varying` by default takes the first identifier and checks for variation *within* that dimension.
+
+```{r}
+# This checks for any variation within "iso3c", the first index variable: TRUE means data vary within country i.e. over time. 
+varying(pwlddev)
+```
+Alternatively any index variable or combination of index variables can be specified:
+
+```{r}
+# This checks any variation within time variable, i.e. cross-sectional variation. 
+varying(pwlddev, effect = "year")
+```
+Another possibility is checking for variation within each group:
+
+```{r}
+# This checks cross-sectional variation within each year for the 4 indicators. 
+head(varying(pwlddev, effect = "year", cols = 9:12, any_group = FALSE))
+```
+
+`varying` also has a pseries method. The code below checks for time-variation of the GINI index within each country. A `NA` is returned when there are no observations within a particular country. 
+
+```{r}
+head(varying(pwlddev$GINI, any_group = FALSE), 20)
+```
+
+If we would like to gave more information about this variation, we could also invoke the functions `fNdistinct` and `fsd`, which do not have *pseries* methods:
+
+```{r}
+head(fNdistinct(pwlddev$GINI, index(pwlddev, "iso3c")), 20)
+
+head(round(fsd(pwlddev$GINI, index(pwlddev, "iso3c")), 2), 20)
+```
+
+### 2.2 Summary Statistics for Panel-Data
 
 Efficient summary statistics for panel data have long been implemented in other statistical softwares. The command `qsu`, shorthand for 'quick-summary', is a very efficient summary statistics command inspired by the *xtsummarize* command in the STATA statistical software. It computes a default set of 5 statistics (N, mean, sd, min and max) and can also computed higher moments (skewness and kurtosis) in a single pass through the data (using a numerically stable online algorithm generalized from Welford's Algorithm for variance computations). With panel-data, `qsu` computes these statistics not just on the raw data, but also on the between-transformed and within-transformed data: 
 
@@ -587,23 +665,23 @@ Efficient summary statistics for panel data have long been implemented in other 
 qsu(pwlddev, cols = 9:12, higher = TRUE)
 ```
 
-Key statistics to look at in this summary are the sample size and the standard-deviation decomposed into the between-individuals and the within-individuals standard-deviation: For GDP per Capita we have 8995 observations in the panel series for 203 countries, with on average 44.31 observations (time-periods T) per country. The between-country standard deviation is 19600 USD, around 3-times larger than the within-country (over-time) standard deviation of 6300 USD. Regarding the mean, the Between-Mean computed as a cross-sectional average of country averages usually differs slightly from the overall average taken across all data points. The within-transformed data is computed and summarized with the overall mean added back (i.e. as in `fwithin(PCGDP, mean = "overall.mean")`). 
+Key statistics to look at in this summary are the sample size and the standard-deviation decomposed into the between-individuals and the within-individuals standard-deviation: For GDP per Capita we have 8995 observations in the panel series for 203 countries, with on average 44.31 observations (time-periods T) per country. The between-country standard deviation is 19600 USD, around 3-times larger than the within-country (over-time) standard deviation of 6300 USD. Regarding the mean, the between-mean, computed as a cross-sectional average of country averages, usually differs slightly from the overall average taken across all data points. The within-transformed data is computed and summarized with the overall mean added back (i.e. as in `fwithin(PCGDP, mean = "overall.mean")`). 
 
-We can also do groupwise panel-statistics and `qsu` also supports weights. For the sake of illustration, below I summarize the data by income group with unit weights^[Which of course amounts to the same as omitting the weights]:
+We can also do groupwise panel-statistics and `qsu` also supports weights (not shown): 
 
 ```{r}
-qsu(pwlddev, ~ income, w = rep(1, nrow(pwlddev)), cols = 9:12, higher = TRUE)
+qsu(pwlddev, ~ income, cols = 9:12, higher = TRUE)
 ```
 
-Here it should be noted that any grouping is applied independently from the data-transformation, that is the data is first transformed, and then grouped statistics are calculated on the transformed data. The computation of statistics is very efficient. Here I summarize the extended life-expectancy series used in the benchmarks in Part 1: 
+Here it should be noted that any grouping is applied independently from the data-transformation, i.e. the data is first transformed, and then grouped statistics are calculated on the transformed data. The computation of statistics is very efficient:
 
 ```{r, eval=NCRAN}
 qsu(LIFEEX_l)
 
-system.time(qsu(LIFEEX_l))
+microbenchmark(qsu(LIFEEX_l))
 ```
 
-Using the transformation functions and the functions `pwcor` and `pwcov`, we can also easily explore the aggregate correlation structure of the data:
+Using the transformation functions and the functions `pwcor` and `pwcov`, we can also easily explore the correlation structure of the data:
 
 ```{r}
 # Overall pairwise correlations with pairwise observation count and significance testing (* = significant at 5% level)
@@ -616,9 +694,9 @@ pwcor(fmean(get_vars(pwlddev, 9:12), pwlddev$iso3c), N = TRUE, P = TRUE)
 pwcor(W(pwlddev, cols = 9:12, keep.ids = FALSE), N = TRUE, P = TRUE)
 ```
 
-The correlations show that the between (cross-country) relationships between these macro-variables are quite strong, but within countries the relationships are much weaker, for example there seems to be no significant relationship between GDP per Capita and either inequality or ODA received within countries over time. 
+The correlations show that the between (cross-country) relationships of these macro-variables are quite strong, but within countries the relationships are much weaker, for example there seems to be no significant relationship between GDP per Capita and either inequality or ODA received within countries over time. 
 
-### 2.2 Exploring Panel-Data in Matrix / Array Form
+### 2.3 Exploring Panel-Data in Matrix / Array Form
 
 We can take a single panel-series such as GDP per Capita and explore it further:
 <!-- The function `psmat` very efficiently generates a matrix from the series: -->
@@ -640,7 +718,7 @@ min(pwNobs(suffsamp))
 # We can use the pairwise-correlations of the annual growth rates to hierarchically cluster the economies:
 plot(hclust(as.dist(1-pwcor(G(suffsamp)))))
 
-# Finally we could do PCA on the Growth Rates:
+# Finally we could do PCA on the growth rates:
 eig <- eigen(pwcor(G(suffsamp)))
 plot(seq_col(suffsamp), eig$values/sum(eig$values)*100, xlab = "Number of Principal Components", ylab = "% Variance Explained", main = "Screeplot")
 
@@ -660,9 +738,9 @@ plot(psmat(pwlddev, cols = 9:12), legend = TRUE)
 
 Above we have explored the cross-sectional relationship between the different national GDP series. Now we explore the time-dependence of the panel-vectors as a whole: 
 
-### 2.3 Panel- Auto-, Partial-Auto and Cross-Correlation Functions
+### 2.4 Panel- Auto-, Partial-Auto and Cross-Correlation Functions
 
-The functions `psacf`, `pspacf` and `psccf` mimic `stats::acf`, `stats::pacf` and `stats::ccf` for panel-vectors and panel data.frames. Below I show the panel-series autocorrelation function of the data:
+The functions `psacf`, `pspacf` and `psccf` mimic `stats::acf`, `stats::pacf` and `stats::ccf` for panel-vectors and panel data.frames. Below we compute the panel-series autocorrelation function of the data:
 
 ```{r}
 psacf(pwlddev, cols = 9:12)
@@ -670,7 +748,7 @@ psacf(pwlddev, cols = 9:12)
 
 The computation is conducted by first scaling and centering (i.e. standardizing) the panel-vectors by groups (using `fscale`, default argument `gscale = TRUE`), and then taking the covariance of each series with a matrix of properly computed panel-lags of itself (using `flag`), and dividing that by the variance of the overall series (using `fvar`). 
 
-In a similar way we can compute the Partial-ACF (using a multivariate Yule-Walker decomposition on the ACF, as in `stats::pacf`):
+In a similar way we can compute the Partial-ACF (using a multivariate Yule-Walker decomposition on the ACF, as in `stats::pacf`),
 
 ```{r}
 pspacf(pwlddev, cols = 9:12)
@@ -682,7 +760,7 @@ and the panel-cross-correlation function between GDP per capita and life expecta
 psccf(PCGDP, LIFEEX)
 ```
 
-### 2.4 Testing for Individual Specific and Time-Effects
+### 2.5 Testing for Individual Specific and Time-Effects
 
 As a final step of exploration, we could analyze our series and simple models for the significance and explanatory power of individual or time-fixed effects, without going all the way to running a Hausman Test of fixed vs. random effects on a fully specified model. The main function here is `fFtest` which efficiently computes a fast R-Squared based F-test of exclusion restrictions on models potentially involving many factors. By default (argument `full.df = TRUE`) the degrees of freedom of the test are adjusted to make it identical to the F-statistic from regressing the series on a set of country and time dummies^[In fact factors are projected out using `lfe::demeanlist` and no regression is run at all].
 
@@ -698,7 +776,7 @@ fFtest(LIFEEX, index(LIFEEX, 1)) # Testing individual effects
 fFtest(LIFEEX, index(LIFEEX, 2)) # Testing time effects
 
 ```
-Below I test the correlation between the country and time-means of GDP and Life-Expectancy:
+Below we test the correlation between the country and time-means of GDP and Life-Expectancy:
 ```{r}
 cor.test(B(PCGDP), B(LIFEEX)) # Testing correlation of country means
 
@@ -712,7 +790,7 @@ fFtest(PCGDP, index(PCGDP), get_vars(pwlddev, c("LIFEEX","ODA")))    # Testing i
 fFtest(PCGDP, index(PCGDP, 2), get_vars(pwlddev, c("iso3c","LIFEEX","ODA")))    # Testing time-fixed effects
 ```
 
-As can be expected in this cross-country data, individual and time-fixed effects play a large role in explaining the data, and these effects are correlated across series, suggesting that a fixed-effects model with both types of fixed-effects would be appropriate. To round things off, below I compute the Hausman test of Fixed vs. Random effects, which confirms these conclusion:   
+As can be expected in this cross-country data, individual and time-fixed effects play a large role in explaining the data, and these effects are correlated across series, suggesting that a fixed-effects model with both types of fixed-effects would be appropriate. To round things off, below we compute the Hausman test of Fixed vs. Random effects, which confirms this conclusion:   
 
 ```{r}
 phtest(PCGDP ~ LIFEEX, data = pwlddev)
@@ -754,16 +832,19 @@ phtest(PCGDP ~ LIFEEX, data = pwlddev)
 
 ## Part 3: Programming Panel-Data Estimators 
 
-A central goal of the *collapse* package is to facilitate advanced and fast programming with data. A prime area of application for the functions introduced above is to program efficient panel-data estimators. In this section I provide a short example of how this can be done. The application will be an implementation of the Hausman and Taylor (1981) estimator, considering a more general case than currently implemented in the *plm* package:
+A central goal of the *collapse* package is to facilitate advanced and fast programming with data. A primany field of application for the fast functions introduced above is to program efficient panel-data estimators. In this section we walk through a short example of how this can be done. The application will be an implementation of the Hausman and Taylor (1981) estimator, considering a more general case than currently implemented in the *plm* package.
 
 In Hausman and Taylor (1981), in a more general scenario, we have a linear panel-model of the form $$y_{it} = \beta_1X_{1it} + \beta_2X_{2it} + \beta_3Z_{1i} + \beta_4Z_{2i} + \alpha_i + \gamma_t + \epsilon$$ where $\alpha_i$ denotes unobserved individual specific effects and $\gamma_t$ denotes unobserved global events. This model has up to 4 kinds of covariates:  
 
 * Time-Varying covariates $X_{1it}$ that are uncorrelated with the individual specific effect $\alpha_i$, such that $E[X_{1it}\alpha_i] = 0$. It may be the case that $E[X_{1it}\gamma_t] \neq 0$
+
 * Time-Varying covariates $X_{2it}$ with $E[X_{2it}\alpha_i] \neq 0$ and possibly $E[X_{2it}\gamma_t] \neq 0$
+
 * Time-Invariant covariates $Z_{1i}$ with $E[Z_{1i}\alpha_i] = 0$
+
 * Time-Invariant covariates $Z_{2i}$ with $E[Z_{2i}\alpha_i] \neq 0$
 
-Now the main problem arises from $E[Z_{2i}\alpha_i] \neq 0$, which would usually prevent us from estimating $\beta_4$ since taking a within-transformation (fixed effects) would remove $Z_{2i}$ from the equation. Hausman and Taylor (1981) stipulated that since $E[X_{1it}\alpha_i] = 0$, once could use $X_{1i.}$ i.e. the between-transformed $X_{1it}$ to instrument for $Z_{2i}$. They propose an IV/2SLS estimation of the whole equation where the within-transformed covariates $\tilde{X}_{1it}$ and $\tilde{X}_{2it}$ are used to instrument $X_{1it}$ and $X_{2it}$, and $X_{1i.}$ instruments $Z_{2i}$. Assuming that missing values have been removed beforehand, and also taking into account the possibility that $E[X_{1it}\gamma_t] \neq 0$ and $E[X_{2it}\gamma_t] \neq 0$ (i.e. accounting for time fixed-effects), this estimator can be coded as follows:
+The main estimation problem arises from $E[Z_{2i}\alpha_i] \neq 0$, which would usually prevent us from estimating $\beta_4$ since taking a within-transformation (fixed effects) would remove $Z_{2i}$ from the equation. Hausman and Taylor (1981) stipulated that since $E[X_{1it}\alpha_i] = 0$, once could use $X_{1i.}$ i.e. the between-transformed $X_{1it}$ to instrument for $Z_{2i}$. They propose an IV/2SLS estimation of the whole equation where the within-transformed covariates $\tilde{X}_{1it}$ and $\tilde{X}_{2it}$ are used to instrument $X_{1it}$ and $X_{2it}$, and $X_{1i.}$ instruments $Z_{2i}$. Assuming that missing values have been removed beforehand, and also taking into account the possibility that $E[X_{1it}\gamma_t] \neq 0$ and $E[X_{2it}\gamma_t] \neq 0$ (i.e. accounting for time fixed-effects), this estimator can be coded as follows:
 
 
   <!-- # This function converts atomic vectors passed to named lists -->
@@ -799,15 +880,16 @@ HT_est <- function(y, X1, Z2, X2 = NULL, Z1 = NULL, time.FE = FALSE) {
 }
 ```
 
-The estimator is written in such a way that variables of the type $X_{2it}$ and $Z_{1i}$ are optional, and it also includes an option as to whether time fixed effects are also projected out or not. The expected inputs for $X_{1it}$ (`X1`), and $X_{2it}$ (`X2`) are column-subsets of a *pdata.frame*. 
+The estimator is written in such a way that variables of the type $X_{2it}$ and $Z_{1i}$ are optional, and it also includes an option to also project out time-FE or not. The expected inputs for $X_{1it}$ (`X1`), and $X_{2it}$ (`X2`) are column-subsets of a *pdata.frame*. 
 
 Having coded the estimator, it would be good to have an example to run it on. I have tried to squeeze an example out of the `wlddev` data used so far in this vignette. It is quite crappy and suffers from a weak-IV problem, but for there sake of illustration lets do it: 
+
 We want to estimate the panel-regression of life-expectancy on GDP per Capita, ODA received, the GINI index and a time-invariant dummy indicating whether the country is an OECD member. All variables except the dummy enter in logs, so this is an elasticity regression. 
-<!-- dat <- droplevels(na.omit(get_vars(wlddev, c("iso3c","year","OECD","PCGDP","GINI","LIFEEX","ODA")))) -->
+<!-- dat <- droplevels(na_omit(get_vars(wlddev, c("iso3c","year","OECD","PCGDP","GINI","LIFEEX","ODA")))) -->
 <!-- get_vars(dat, 4:7) <- log(get_vars(dat, 4:7)) -->
 <!-- dat <- pdata.frame(dat, index = c("iso3c", "year")) -->
 <!-- dat$OECD <- as.numeric(dat$OECD) # Creating OECD dummy -->
-
+<
 <!-- # This tests each oth the covariates is correlated with with alpha_i -->
 <!-- phtest(ODA ~ PCGDP, dat) -->
 <!-- phtest(ODA ~ LIFEEX, dat) -->
@@ -824,27 +906,27 @@ We want to estimate the panel-regression of life-expectancy on GDP per Capita, O
 
 ```{r, warning=FALSE}
 dat <- get_vars(wlddev, c("iso3c","year","OECD","PCGDP","LIFEEX","GINI","ODA"))
-get_vars(dat, 4:7) <- log(get_vars(dat, 4:7))       # Taking logs of the data
-dat$OECD <- as.numeric(dat$OECD)                    # Creating OECD dummy
-dat <- pdata.frame(droplevels(na.omit(dat)),        # Creating Panel-data.frame, after removing missing values
-                   index = c("iso3c", "year"))      # and dropping unused factor levels
+get_vars(dat, 4:7) <- lapply(get_vars(dat, 4:7), log) # Taking logs of the data
+dat$OECD <- as.numeric(dat$OECD)                      # Creating OECD dummy
+dat <- pdata.frame(droplevels(na_omit(dat)),          # Creating Panel-data.frame, after removing missing values
+                   index = c("iso3c", "year"))        # and dropping unused factor levels
 pdim(dat)
-pvar(dat)
+varying(dat)
 ```
 
-Using the GINI index cost a lot of observations and brought the sample size down from 12000 to under 1000, but the GINI index will be a key variable in what follows. Clearly the OECD dummy is time-invariant. Below I run Hausman-tests of fixed vs. random effects to determine which covariates might be correlated with the unobserved individual effects, and which model would be most appropriate. 
+Using the GINI index cost a lot of observations and brought the sample size down to 918, but the GINI index will be a key variable in what follows. Clearly the OECD dummy is time-invariant. Below we run Hausman-tests of fixed vs. random effects to determine which covariates might be correlated with the unobserved individual effects, and which model would be most appropriate. 
 
 ```{r}
-# This tests each oth the covariates is correlated with with alpha_i
-phtest(LIFEEX ~ PCGDP, dat)  # Likely correlated !
-phtest(LIFEEX ~ ODA, dat)    # Likely correlated !
-phtest(LIFEEX ~ GINI, dat)   # Likely not correlated !!
+# This tests whether each of the covariates is correlated with alpha_i
+phtest(LIFEEX ~ PCGDP, dat)  # Likely correlated 
+phtest(LIFEEX ~ ODA, dat)    # Likely correlated 
+phtest(LIFEEX ~ GINI, dat)   # Likely not correlated !
 phtest(LIFEEX ~ PCGDP + ODA + GINI, dat)  # Fixed Effects is the appropriate model for this regression
 ```
 
-The tests suggest that both GDP per Capita and ODA are correlated with country-specific unobservables affecting life-expectancy, and overall a fixed-effects model would be appropriate. However, the Hausman test on the GINI index fails to reject: Country specific unobservables affecting life-expectancy are not necessarily correlated with the level of inequality across countries.
+The tests suggest that both GDP per Capita and ODA are correlated with country-specific unobservables affecting life-expectancy, and overall a fixed-effects model would be appropriate. However, the Hausman test on the GINI index fails to reject: Country specific unobservables affecting average life-expectancy are not necessarily correlated with the level of inequality across countries.
 
-Now if we want to include the OECD dummy in the regression, we cannot use fixed-effects as this would wipe-out the dummy as well. If the dummy is uncorrelated with the country-specific unobservables affecting life-expectancy (the $\alpha_i$), then we could use a solution suggested by Mundlak (1978) and simply add between-transformed versions of PCGDP and ODA in the regression (in addition to PCGDP and ODA in levels), and so 'control' for the part of PCGDP and ODA correlated with the $\alpha_i$ (in the IV literature this is known as the control-function approach to IV estimation). If however the OECD dummy is correlated with the $\alpha_i$, then we need to use the Hausman and Taylor (1981) estimator. Below I suggest 2 methods of testing this correlation: 
+Now if we want to include the OECD dummy in the regression, we cannot use fixed-effects as this would wipe-out the dummy as well. If the dummy is uncorrelated with the country-specific unobservables affecting life-expectancy (the $\alpha_i$), then we could use a solution suggested by Mundlak (1978) and simply add between-transformed versions of PCGDP and ODA in the regression (in addition to PCGDP and ODA in levels), and so 'control' for the part of PCGDP and ODA correlated with the $\alpha_i$ (in the IV literature this is known as the control-function approach). If however the OECD dummy is correlated with the $\alpha_i$, then we need to use the Hausman and Taylor (1981) estimator. Below I suggest 2 methods of testing this correlation: 
 
 ```{r}
 # Testing the correlation between OECD dummy and the Between-transformed Life-Expectancy (i.e. not accounting for other covariates)
@@ -859,8 +941,7 @@ cor.test(fe, mODA[match(names(fe), names(mODA))]) # -> Not Significant.. but pro
 
 I interpret the test results as rejecting the hypothesis that the dummy is uncorrelated with $\alpha_i$, thus we do have a case for Hausman and Taylor (1981) here: the OECD dummy is a $Z_{2i}$ with $E[Z_{2i}\alpha_i]\neq 0$. The Hausman tests above suggested that the GINI index is the only variable uncorrelated with $\alpha_i$, thus GINI is $X_{1it}$ with $E[X_{1it}\alpha_i] = 0$. Finally PCGDP and ODA jointly constitute $X_{2it}$, where the Hausman tests strongly suggested that $E[X_{2it}\alpha_i] \neq 0$. We do not have a $Z_{1i}$ in this setup, i.e. a time-invariant variable uncorrelated with the $\alpha_i$. 
 
-
-The Hausman and Taylor (1981) estimator suggests that we should instrument the OECD dummy with $X_{1i.}$, the between-transformed GINI index. Let us therefore test the regression of the dummy on this instrument to see of it would be a good (i.e. relevant) instrument: 
+The Hausman and Taylor (1981) estimator stipulates that we should instrument the OECD dummy with $X_{1i.}$, the between-transformed GINI index. Let us therefore test the regression of the dummy on this instrument to see of it would be a good (i.e. relevant) instrument: 
 
 ```{r}
 # This computes the regression of OECD on the GINI instrument: Weak IV problem !!
@@ -881,12 +962,12 @@ Now a central questions is of course: How computationally efficient is this esti
 
 ```{r, eval=NCRAN}
 dat <- get_vars(data, c("iso3c","year","OECD","PCGDP","LIFEEX","GINI","ODA"))
-get_vars(dat, 4:7) <- log(get_vars(dat, 4:7))       # Taking logs of the data
-dat$OECD <- as.numeric(dat$OECD)                    # Creating OECD dummy
-dat <- pdata.frame(droplevels(na.omit(dat)),        # Creating Panel-data.frame, after removing missing values
-                   index = c("iso3c", "year"))      # and dropping unused factor levels
+get_vars(dat, 4:7) <- lapply(get_vars(dat, 4:7), log) # Taking logs of the data
+dat$OECD <- as.numeric(dat$OECD)                      # Creating OECD dummy
+dat <- pdata.frame(droplevels(na_omit(dat)),          # Creating Panel-data.frame, after removing missing values
+                   index = c("iso3c", "year"))        # and dropping unused factor levels
 pdim(dat)
-pvar(dat)
+varying(dat)
 
 library(microbenchmark)
 microbenchmark(HT_est = HT_est(y = dat$LIFEEX,     # The estimator as before
@@ -900,7 +981,7 @@ microbenchmark(HT_est = HT_est(y = dat$LIFEEX,     # The estimator as before
                       time.FE = TRUE))
 ```
 
-At around 100000 obs and 13000 groups in an unbalanced panel, the computation involving 3 grouped centering and 1 grouped averaging task as well as 2 list-to matrix conversions and an IV-procedure took about 10 milliseconds with only individual effects, and about 40 - 45 milliseconds with individual and time-fixed effects (projected out iteratively). This should leave some room for running this on much larger data, and even for implementing a bootstrap standard error at this sample size. 
+At around 100,000 obs and 13,000 groups in an unbalanced panel, the computation involving 3 grouped centering and 1 grouped averaging task as well as 2 list-to matrix conversions and an IV-procedure took about 10 milliseconds with only individual effects, and about 40 - 45 milliseconds with individual and time-fixed effects (projected out iteratively). This should leave some room for running this on much larger data, and even for implementing a bootstrap standard error at this sample size. 
 ```{r, echo=FALSE}
 options(oldopts)
 ```
@@ -910,4 +991,8 @@ options(oldopts)
 Hausman J, Taylor W (1981). “Panel Data and Unobservable Individual Effects.” *Econometrica*, 49, 1377–1398.
 
 Mundlak, Yair. 1978. “On the Pooling of Time Series and Cross Section Data.” *Econometrica* 46 (1): 69–85.
+
+Cochrane, D. & Orcutt, G. H. (1949). "Application of Least Squares Regression to Relationships Containing Auto-Correlated Error Terms". *Journal of the American Statistical Association.* 44 (245): 32–61. 
+
+Prais, S. J. & Winsten, C. B. (1954). "Trend Estimators and Serial Correlation". *Cowles Commission Discussion Paper No. 383.* Chicago.
 
