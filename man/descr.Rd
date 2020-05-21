@@ -73,11 +73,11 @@ descr(GGDC10S)
 as.data.frame(descr(wlddev))
 
 ## Passing Arguments down to qsu: For Panel-Data Statistics
-descr(iris, pid = iris$species)
+descr(iris, pid = iris$Species)
 descr(wlddev, pid = wlddev$iso3c)
 
 ## Grouped Statistics
-descr(iris, g = iris$species)
+descr(iris, g = iris$Species)
 descr(GGDC10S, g = GGDC10S$Region)
 
 }

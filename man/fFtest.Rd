@@ -73,7 +73,7 @@ fFtest(wlddev$PCGDP, wlddev$iso3c, wlddev$LIFEEX)
 fFtest(wlddev$PCGDP, qF(wlddev$year), wlddev[c("iso3c","LIFEEX")])
 
 # Same test done using lm:
-data <- na.omit(get_vars(wlddev, c("iso3c","year","PCGDP","LIFEEX")))
+data <- na_omit(get_vars(wlddev, c("iso3c","year","PCGDP","LIFEEX")))
 full <- lm(PCGDP ~ LIFEEX + iso3c + qF(year), data)
 rest <- lm(PCGDP ~ LIFEEX + iso3c, data)
 anova(rest, full)

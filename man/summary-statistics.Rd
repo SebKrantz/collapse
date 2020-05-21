@@ -12,7 +12,7 @@
 
 \item \code{\link{pwcor}}, \code{\link{pwcov}} and \code{\link{pwNobs}} compute pairwise correlations, covariances and observation counts on matrices and data frame's. Pairwise correlations and covariances can be computed together with observation counts and p-values, and output as 3D array (default) or list of matrices. A major feature of \code{pwcor} and \code{pwcov} is the print method displaying all of these statistics in a single correlation table.
 
-\item \code{varying} very efficiently checks for the presence of any variation in data (optionally) within groups (such as panel-identifiers).
+\item \code{\link{varying}} very efficiently checks for the presence of any variation in data (optionally) within groups (such as panel-identifiers).
 
 }
 }

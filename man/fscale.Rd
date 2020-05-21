@@ -1,4 +1,4 @@
-\name{fscale-STD}
+\name{fscale}
 \alias{fscale}
 \alias{fscale.default}
 \alias{fscale.matrix}
@@ -143,4 +143,4 @@ wlddev \%>\% group_by(iso3c) \%>\% select(PCGDP,LIFEEX,ODA) \%>\% STD(ODA) # wei
 % Add one or more standard keywords, see file 'KEYWORDS' in the
 % R documentation directory.
 \keyword{manip} % __ONLY ONE__ keyword per line % use one of  RShowDoc("KEYWORDS")
-\keyword{univar}
+

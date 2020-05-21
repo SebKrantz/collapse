@@ -83,4 +83,4 @@ varying(wlddev, wlddev$country, any_group = FALSE)
 }
 % Add one or more standard keywords, see file 'KEYWORDS' in the
 % R documentation directory.
-\keyword{manip}% use one of  RShowDoc("KEYWORDS")
+\keyword{manip} % use one of  RShowDoc("KEYWORDS")

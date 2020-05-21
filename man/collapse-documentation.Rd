@@ -64,6 +64,5 @@ The added top-level documentation infrastructure in \emph{collapse} allows you t
   \link{collapse-package}
 }
 % \keyword{package}
-\keyword{manip}
 \keyword{documentation}
 

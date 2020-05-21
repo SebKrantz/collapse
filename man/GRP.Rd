@@ -156,4 +156,4 @@ mtcars \%>\% fgroup_by(cyl,vs,am) \%>\% fmean # faster alternative with collapse
 
 }
 \keyword{manip}
-\keyword{documentation}
+

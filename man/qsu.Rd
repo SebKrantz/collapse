@@ -157,4 +157,3 @@ qsu(wlddev, w = weightsNA, higher = TRUE)   # But now these values are removed f
 % Add one or more standard keywords, see file 'KEYWORDS' in the
 % R documentation directory.
 \keyword{univar} % __ONLY ONE__ keyword per line % use one of  RShowDoc("KEYWORDS")
-\keyword{documentation}
