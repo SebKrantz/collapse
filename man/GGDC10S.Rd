@@ -52,12 +52,11 @@ library(ggplot2)
 ## World Regions Structural Change Plot
 
 dat <- GGDC10S
-get_vars(dat, 6:15) <- replace_outliers(sweep(get_vars(dat, 6:15), 1, dat$SUM, "/"), 0,
-                                        single.limit = "min")
+fselect(dat, AGR:OTH) <- replace_outliers(dapply(fselect(dat, AGR:OTH), `*`, 1 / dat$SUM), 0, NA, "min")
 names(dat) <- stringr::str_wrap(vlabels(dat), width = 20)
-dat$Variable <- recode_char(dat$Variable,"VA"="Value Added Share","EMP"="Employment Share")
+dat$Variable <- recode_char(dat$Variable, VA = "Value Added Share", EMP = "Employment Share")
 dat <- collap(dat, ~ Variable + Region + Year, cols = 6:15)
-dat <- melt(qDT(dat), 1:3, variable.name = "Sector")
+dat <- melt(qDT(dat), 1:3, variable.name = "Sector", na.rm = TRUE)
 
 ggplot(aes(x = Year, y = value, fill = Sector), data = dat) +
   geom_area(position = "fill", alpha = 0.9) + labs(x = NULL, y = NULL) +
@@ -72,11 +71,11 @@ ggplot(aes(x = Year, y = value, fill = Sector), data = dat) +
 # A function to plot the structural change of an arbitrary country
 
 plotGGDC <- function(ctry) {
-dat <- fsubset(GGDC10S, Country == ctry)
-dat <- add_vars(fselect(dat, Variable, Year),
-       replace_outliers(sweep(get_vars(dat, 6:15), 1, dat$SUM, "/"), 0, NA, "min"))
-dat$Variable <- recode_char(dat$Variable,"VA"="Value Added Share","EMP"="Employment Share")
-dat <- melt(qDT(dat), 1:2, variable.name = "Sector")
+dat <- fsubset(GGDC10S, Country == ctry, Variable, Year, AGR:SUM)
+fselect(dat, AGR:OTH) <- replace_outliers(dapply(fselect(dat, AGR:OTH), `*`, 1 / dat$SUM), 0, NA, "min")
+dat$SUM <- NULL
+dat$Variable <- recode_char(dat$Variable, VA = "Value Added Share", EMP = "Employment Share")
+dat <- melt(qDT(dat), 1:2, variable.name = "Sector", na.rm = TRUE)
 
 ggplot(aes(x = Year, y = value, fill = Sector), data = dat) +
   geom_area(position = "fill", alpha = 0.9) + labs(x = NULL, y = NULL) +
@@ -90,7 +89,7 @@ ggplot(aes(x = Year, y = value, fill = Sector), data = dat) +
         strip.text = element_text(face = "bold"))
 }
 
-plotGGDC("TZA")
+plotGGDC("BWA")
 
 }
 
