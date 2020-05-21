@@ -164,6 +164,8 @@ fnrow2 <- function(x) length(.subset2(x, 1L))
 
 fncol <- function(X) if(is.list(X)) length(unclass(X)) else dim(X)[2L]
 
+fNCOL <- function(X) if(is.list(X)) length(unclass(X)) else NCOL(X)
+
 fdim <- function(X) {
    if(is.atomic(X)) return(dim(X)) # or if !is.list ?
    class(X) <- NULL
@@ -179,22 +181,31 @@ forder.int <- function(x) .Call(C_radixsort, FALSE, FALSE, FALSE, FALSE, TRUE, p
 
 fsetdiff <- function(x, y) x[match(x, y, 0L) == 0L] # not unique !
 
-as.numeric_factor <- function(X) {
-  if(is.atomic(X)) return(as.numeric(attr(X, "levels"))[X])
+ffka <- function(x, f) {
+   ax <- attributes(x)
+  `attributes<-`(f(ax[["levels"]])[x],
+   ax[names(ax) %!in% c("levels", "class")])
+}
+
+as.numeric_factor <- function(X, keep.attr = TRUE) {
+  if(is.atomic(X)) if(keep.attr) return(ffka(X, as.numeric)) else
+    return(as.numeric(attr(X, "levels"))[X])
     fcts <- vapply(unattrib(X), is.factor, TRUE)
-    # if(all(fcts)) return(dapply(X, function(x) as.numeric(attr(x, "levels"))[x]))
     clx <- class(X)
     class(X) <- NULL
-    X[fcts] <- lapply(X[fcts], function(x) as.numeric(attr(x, "levels"))[x])
+    X[fcts] <- if(keep.attr) lapply(X[fcts], ffka, as.numeric) else
+      lapply(X[fcts], function(x) as.numeric(attr(x, "levels"))[x])
     return(`oldClass<-`(X, clx))
 }
 
-as.character_factor <- function(X) {
-  if(is.atomic(X)) return(tochar(attr(X, "levels"))[X])
+as.character_factor <- function(X, keep.attr = TRUE) {
+  if(is.atomic(X)) if(keep.attr) return(ffka(X, tochar)) else
+    return(as.character.factor(X))
   fcts <- vapply(unattrib(X), is.factor, TRUE)
   clx <- class(X)
   class(X) <- NULL
-  X[fcts] <- lapply(X[fcts], function(x) tochar(attr(x, "levels"))[x])
+  X[fcts] <- if(keep.attr) lapply(X[fcts], ffka, tochar) else
+    lapply(X[fcts], as.character.factor)
   return(`oldClass<-`(X, clx))
 }
 
