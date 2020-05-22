@@ -45,15 +45,15 @@ Timmer, M. P., de Vries, G. J., & de Vries, K. (2015). "Patterns of Structural C
 namlab(GGDC10S, class = TRUE)
 qsu(GGDC10S, ~ Variable, ~ Variable + Country, vlabels = TRUE)
 
+\dontrun{
 library(data.table)
 library(ggplot2)
 
-\dontrun{
 ## World Regions Structural Change Plot
 
 dat <- GGDC10S
-fselect(dat, AGR:OTH) <- replace_outliers(dapply(fselect(dat, AGR:OTH), `*`, 1 / dat$SUM), 0, NA, "min")
-names(dat) <- stringr::str_wrap(vlabels(dat), width = 20)
+fselect(dat, AGR:OTH) <- replace_outliers(dapply(fselect(dat, AGR:OTH), `*`, 1 / dat$SUM),
+                                          0, NA, "min")
 dat$Variable <- recode_char(dat$Variable, VA = "Value Added Share", EMP = "Employment Share")
 dat <- collap(dat, ~ Variable + Region + Year, cols = 6:15)
 dat <- melt(qDT(dat), 1:3, variable.name = "Sector", na.rm = TRUE)
@@ -72,7 +72,8 @@ ggplot(aes(x = Year, y = value, fill = Sector), data = dat) +
 
 plotGGDC <- function(ctry) {
 dat <- fsubset(GGDC10S, Country == ctry, Variable, Year, AGR:SUM)
-fselect(dat, AGR:OTH) <- replace_outliers(dapply(fselect(dat, AGR:OTH), `*`, 1 / dat$SUM), 0, NA, "min")
+fselect(dat, AGR:OTH) <- replace_outliers(dapply(fselect(dat, AGR:OTH), `*`, 1 / dat$SUM),
+                                          0, NA, "min")
 dat$SUM <- NULL
 dat$Variable <- recode_char(dat$Variable, VA = "Value Added Share", EMP = "Employment Share")
 dat <- melt(qDT(dat), 1:2, variable.name = "Sector", na.rm = TRUE)

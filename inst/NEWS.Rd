@@ -1,11 +1,14 @@
 \name{NEWS}
 \title{\emph{collapse} News}
 
-\section{Changes in version 1.2.1 (end May 2020)}{
+\section{Changes in version 1.2.1 (end of May 2020)}{
 
 \itemize{
+
 \item Minor fixes for 1.2.0 issues that prevented correct installation on Mac OS X and a vignette rebuilding error on solaris.
+
 \item \code{fmode.grouped_df} with groups and weights now saves the sum of the weights instead of the max (this makes more sense as the max only applies if all elements are unique).
+
 }
 
 }
