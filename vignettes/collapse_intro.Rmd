@@ -779,7 +779,7 @@ To perform the above aggregation with `collap`, one would simply need to type:
 collap(mtcars, mpg + disp ~ cyl + vs + am, list(fmean, fsd, fmin, fmax), w = weights, keep.col.order = FALSE)
 ```
 
-The original idea behind `collap` is however better demonstrated with a different dataset. Consider the *World Development Dataset* `wlddev` included in the package and introduced in section 1:
+`collap` here also saves the sum of the weights in a column. The original idea behind `collap` is however better demonstrated with a different dataset. Consider the *World Development Dataset* `wlddev` included in the package and introduced in section 1:
 ```{r}
 head(wlddev)
 ```
@@ -993,7 +993,7 @@ STD_GGDC10S <- STD(GGDC10S, ~ Variable + Country, cols = 6:16)
 head(STD_GGDC10S)
 
 # Correlating Standardized Value-Added across countries
-pwcor(fsubset(STD_GGDC10S, Variable == "VA", AGR:SUM))
+pwcor(fsubset(STD_GGDC10S, Variable == "VA", STD.AGR:STD.SUM))
 ```
 
 
@@ -1394,7 +1394,7 @@ Now this looks pretty good, and is about the most we can do in terms of harmoniz
 # Taking logs
 get_vars(data, 3:8) <- dapply(get_vars(data, 3:8), log)
 # Iteratively projecting out country FE and cubic trends from complete cases (still very slow)
-get_vars(data, 3:8) <- HDW(data, ~ qF(Country)*poly(Year, 3), fill = TRUE)
+get_vars(data, 3:8) <- HDW(data, ~ qF(Country)*poly(Year, 3), fill = TRUE, eps = 1e-05)
 # Scaling
 get_vars(data, 3:8) <- STD(data, ~ Country, cols = 3:8, keep.by = FALSE)
 
@@ -1435,7 +1435,7 @@ nam <- names(data)[1:6]
 
 pVAR <- list(varresult = setNames(lapply(seq_len(6), function(i)    # list of 6 lm's each regressing
                lm(as.formula(paste0(nam[i], "~ -1 + . ")),          # the sector on all lags of
-               get_vars(data, c(i, 7:length(data)))[-1])), nam),    # itself and other sectors, removing the missing first row
+               get_vars(data, c(i, 7:fncol(data))))), nam),         # itself and other sectors, removing the missing first row
              datamat = ss(data, -1),                                # The full data containing levels and lags of the sectors, removing the missing first row
              y = do.call(cbind, get_vars(data, 1:6)),               # Only the levels data as matrix
              type = "none",                                         # No constant or tend term: We harmonized the data already
