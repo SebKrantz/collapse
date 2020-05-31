@@ -5,7 +5,7 @@ using namespace Rcpp;
 RcppExport void multi_yw(void *, void *, void *, void *, void *, void *, void *, void *, void *, void *);
 RcppExport SEXP collapse_init(SEXP);
 RcppExport SEXP dt_na(SEXP, SEXP);
-RcppExport SEXP radixsort(SEXP, SEXP, SEXP, SEXP, SEXP, SEXP);
+RcppExport SEXP Cradixsort(SEXP, SEXP, SEXP, SEXP, SEXP, SEXP);
 RcppExport SEXP frankds(SEXP, SEXP, SEXP, SEXP);
 RcppExport SEXP pacf1(SEXP, SEXP);
 RcppExport SEXP rbindlist(SEXP, SEXP, SEXP, SEXP);
@@ -94,7 +94,7 @@ static const R_CallMethodDef CallEntries[] = {
   {"Cpp_groupid", (DL_FUNC) &_collapse_groupid, 5},
   {"C_collapse_init", (DL_FUNC) &collapse_init, 1},
   {"C_dt_na",         (DL_FUNC) &dt_na,         2},
-  {"C_radixsort",     (DL_FUNC) &radixsort,     6},
+  {"C_radixsort",     (DL_FUNC) &Cradixsort,    6},
   {"C_frankds",       (DL_FUNC) &frankds,       4},
   {"C_pacf1",         (DL_FUNC) &pacf1,         2},
   {"C_rbindlist",     (DL_FUNC) &rbindlist,     4},
@@ -107,4 +107,5 @@ static const R_CallMethodDef CallEntries[] = {
 RcppExport void R_init_collapse(DllInfo *dll) {
   R_registerRoutines(dll, CEntries, CallEntries, NULL, NULL);
   R_useDynamicSymbols(dll, FALSE);
+  R_forceSymbols(dll, TRUE);
 }

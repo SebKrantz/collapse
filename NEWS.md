@@ -1,3 +1,10 @@
+# collapse 1.2.1
+collapse 1.2.1, released end of May 2020, is a patch for 1.2.0:
+
+* Minor fixes for 1.2.0 issues that prevented correct installation on Mac OS X and a vignette rebuilding error on solaris.
+
+* *fmode.grouped_df* with groups and weights now saves the sum of the weights instead of the max (this makes more sense as the max only applies if all elements are unique). 
+
 # collapse 1.2.0
 collapse 1.2.0, released mid May 2020, is a major update of the package - changes and additions:
 

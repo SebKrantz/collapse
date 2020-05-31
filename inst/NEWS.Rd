@@ -1,6 +1,18 @@
 \name{NEWS}
 \title{\emph{collapse} News}
 
+\section{Changes in version 1.2.1 (end of May 2020)}{
+
+\itemize{
+
+\item Minor fixes for 1.2.0 issues that prevented correct installation on Mac OS X and a vignette rebuilding error on solaris.
+
+\item \code{fmode.grouped_df} with groups and weights now saves the sum of the weights instead of the max (this makes more sense as the max only applies if all elements are unique).
+
+}
+
+}
+
 \section{Changes in version 1.2.0 (mid May 2020)}{
 
 \subsection{Changes to Functionality}{
@@ -68,6 +80,7 @@
 }
 
 \section{Changes in version 1.1.0 (early April 2020)}{
+
   \itemize{
 
 \item Fixed remaining gcc10, LTO and valgrind issues in C/C++ code, and added some more tests (there are now ~ 5300 tests ensuring that \emph{collapse} statistical functions perform as expected).

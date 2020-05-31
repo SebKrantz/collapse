@@ -53,8 +53,8 @@ extern double NA_INT64_D;
 extern long long NA_INT64_LL;
 extern Rcomplex NA_CPLX;  // initialized in init.c; see there for comments
 
-// radixsort
-SEXP radixsort(SEXP NA_last, SEXP decreasing, SEXP RETstrt, SEXP RETgs, SEXP SORTStr, SEXP args);
+// radixsort Must do Cradixsort, otherwise issue on mac
+SEXP Cradixsort(SEXP NA_last, SEXP decreasing, SEXP RETstrt, SEXP RETgs, SEXP SORTStr, SEXP args);
 // static void dsort(double *x, int *o, int n);
 
 // dogroups.c

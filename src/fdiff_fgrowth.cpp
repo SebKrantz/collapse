@@ -211,15 +211,15 @@ NumericVector fdiffgrowthCppImpl(const NumericVector& x, const IntegerVector& n 
   } else {
     if(l != g.size()) stop("length(x) must match length(g)");
     int ags = l/ng, ngp = ng+1, maxdiff = max(diff);
-    IntegerVector gsv = no_init_vector(ng);
+    IntegerVector gsv = Rf_isNull(gs) ? IntegerVector(ng) : as<IntegerVector>(gs); // no_init_vector(ng);
     if(Rf_isNull(t)) {
       if(maxdiff != 1) {
         if(Rf_isNull(gs)) {
           // gsv = IntegerVector(ng);
-          std::fill(gsv.begin(), gsv.end(), 0);
+          // std::fill(gsv.begin(), gsv.end(), 0);
           for(int i = 0; i != l; ++i) ++gsv[g[i]-1];
         } else {
-          gsv = gs;
+          // gsv = gs;
           if(ng != gsv.size()) stop("ng must match length(gs)");
         }
       }
@@ -346,19 +346,19 @@ NumericVector fdiffgrowthCppImpl(const NumericVector& x, const IntegerVector& n 
       IntegerVector ord2 = no_init_vector(l);
       if(Rf_isNull(gs)) {
         // gsv = IntegerVector(ng);
-        std::fill(gsv.begin(), gsv.end(), 0);
+        // std::fill(gsv.begin(), gsv.end(), 0);
         for(int i = 0; i != l; ++i) {
           ++gsv[g[i]-1];
           if(ord[i] < min[g[i]]) min[g[i]] = ord[i];
         }
       } else {
-        gsv = gs;
+        // gsv = gs;
         if(ng != gsv.size()) stop("ng must match length(gs)");
         for(int i = 0; i != l; ++i) if(ord[i] < min[g[i]]) min[g[i]] = ord[i];
       }
       IntegerVector omap(l), cgs = no_init_vector(ngp);
       // int cgs[ngp], seen[ngp], memsize = sizeof(int)*(ngp);
-      cgs[0] = cgs[1] = 0;
+      cgs[1] = 0;
       for(int i = 1; i != ng; ++i) {
         cgs[i+1] = cgs[i] + gsv[i-1]; // or get "starts from forderv"
         if(min[i] == NA_INTEGER) stop("Timevar contains missing values"); // Fastest here ?
@@ -755,15 +755,15 @@ NumericMatrix fdiffgrowthmCppImpl(const NumericMatrix& x, const IntegerVector& n
   } else { // With groups
     if(l != g.size()) stop("nrow(x) must match length(g)");
     int ags = l/ng, ngp = ng+1, maxdiff = max(diff);
-    IntegerVector gsv = no_init_vector(ng);
+    IntegerVector gsv = Rf_isNull(gs) ? IntegerVector(ng) : as<IntegerVector>(gs); // no_init_vector(ng);
     if(Rf_isNull(t)) { // Ordered data
       if(maxdiff != 1) {
         if(Rf_isNull(gs)) {
           // gsv = IntegerVector(ng);
-          std::fill(gsv.begin(), gsv.end(), 0);
+          // std::fill(gsv.begin(), gsv.end(), 0);
           for(int i = 0; i != l; ++i) ++gsv[g[i]-1];
         } else {
-          gsv = gs;
+          // gsv = gs;
           if(ng != gsv.size()) stop("ng must match length(gs)");
         }
       }
@@ -893,19 +893,19 @@ NumericMatrix fdiffgrowthmCppImpl(const NumericMatrix& x, const IntegerVector& n
       IntegerVector ord2 = no_init_vector(l);
       if(Rf_isNull(gs)) {
         // gsv = IntegerVector(ng);
-        std::fill(gsv.begin(), gsv.end(), 0);
+        // std::fill(gsv.begin(), gsv.end(), 0);
         for(int i = 0; i != l; ++i) {
           ++gsv[g[i]-1];
           if(ord[i] < min[g[i]]) min[g[i]] = ord[i];
         }
       } else {
-        gsv = gs;
+        // gsv = gs;
         if(ng != gsv.size()) stop("ng must match length(gs)");
         for(int i = 0; i != l; ++i) if(ord[i] < min[g[i]]) min[g[i]] = ord[i];
       }
       IntegerVector omap(l), cgs = no_init_vector(ngp), index = no_init_vector(l);
       // int cgs[ngp], seen[ngp], index[l], memsize = sizeof(int)*(ngp);
-      cgs[0] = cgs[1] = 0;
+      cgs[1] = 0;
       for(int i = 1; i != ng; ++i) {
         cgs[i+1] = cgs[i] + gsv[i-1]; // or get "starts from forderv"
         if(min[i] == NA_INTEGER) stop("Timevar contains missing values"); // Fastest here ?
@@ -1296,15 +1296,15 @@ List fdiffgrowthlCppImpl(const List& x, const IntegerVector& n = 1, const Intege
     }
   } else { // With groups
     int gss = g.size(), ags = gss/ng, ngp = ng+1, maxdiff = max(diff);
-    IntegerVector gsv = no_init_vector(ng);
+    IntegerVector gsv = Rf_isNull(gs) ? IntegerVector(ng) : as<IntegerVector>(gs); // no_init_vector(ng);
     if(Rf_isNull(t)) { // Ordered data
       if(maxdiff != 1) {
         if(Rf_isNull(gs)) {
           // gsv = IntegerVector(ng);
-          std::fill(gsv.begin(), gsv.end(), 0);
+          // std::fill(gsv.begin(), gsv.end(), 0);
           for(int i = 0; i != gss; ++i) ++gsv[g[i]-1];
         } else {
-          gsv = gs;
+          // gsv = gs;
           if(ng != gsv.size()) stop("ng must match length(gs)");
         }
       }
@@ -1434,19 +1434,19 @@ List fdiffgrowthlCppImpl(const List& x, const IntegerVector& n = 1, const Intege
       IntegerVector ord2 = no_init_vector(gss);
       if(Rf_isNull(gs)) {
         // gsv = IntegerVector(ng);
-        std::fill(gsv.begin(), gsv.end(), 0);
+        // std::fill(gsv.begin(), gsv.end(), 0);
         for(int i = 0; i != gss; ++i) {
           ++gsv[g[i]-1];
           if(ord[i] < min[g[i]]) min[g[i]] = ord[i];
         }
       } else {
-        gsv = gs;
+        // gsv = gs;
         if(ng != gsv.size()) stop("ng must match length(gs)");
         for(int i = 0; i != gss; ++i) if(ord[i] < min[g[i]]) min[g[i]] = ord[i];
       }
       IntegerVector omap(gss), cgs = no_init_vector(ngp), index = no_init_vector(gss);
       // int cgs[ngp], seen[ngp], index[gss], memsize = sizeof(int)*(ngp);
-      cgs[0] = cgs[1] = 0;
+      cgs[1] = 0;
       for(int i = 1; i != ng; ++i) {
         cgs[i+1] = cgs[i] + gsv[i-1]; // or get "starts from forderv"
         if(min[i] == NA_INTEGER) stop("Timevar contains missing values"); // Fastest here ?

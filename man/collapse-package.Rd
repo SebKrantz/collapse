@@ -22,8 +22,8 @@ It is compatible with \emph{dplyr}, \emph{data.table} and the \emph{plm} approac
 
                 \item  \emph{Advanced data programming}: A full set of fast statistical functions
         supporting grouped and weighted computations on vectors, matrices and
-        data frames. Fast (ordered) and programmable grouping, and fast factor
-        generation, manipulation of data frames, and data object conversions. %  select, subset, transform, replace, add and delete data.frame columns.
+        data frames. Fast (ordered) and programmable grouping, factor
+        generation, manipulation of data frames and data object conversions. %  select, subset, transform, replace, add and delete data.frame columns.
                  \item \emph{Advanced aggregation}: Fast and easy multi-data-type, multi-function,
         weighted, parallelized and fully customized data aggregation.
                  \item \emph{Advanced transformations}: Fast (grouped, weighted) replacing and

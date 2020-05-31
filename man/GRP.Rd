@@ -128,7 +128,7 @@ The method \code{GRP.grouped_df} takes the 'groups' attribute from a grouped tib
                  [[5]] \tab\tab group.vars   \tab\tab \code{character} \tab\tab The names of the grouping variables \cr
                  [[6]] \tab\tab ordered   \tab\tab \code{logical(2)} \tab\tab \code{[1]- TRUE} if \code{sort = TRUE}, \code{[2]- TRUE} if \code{X} already sorted \cr
 
-                 [[7]] \tab\tab order     \tab\tab \code{integer(NROW(X))} or \code{NULL} \tab\tab Ordering vector from \code{data.table:::forderv} or \code{NULL} if \code{return.order = FALSE} (the default) \cr
+                 [[7]] \tab\tab order     \tab\tab \code{integer(NROW(X))} or \code{NULL} \tab\tab Ordering vector from \code{radixorderv} or \code{NULL} if \code{return.order = FALSE} (the default) \cr
 
                  [[8]] \tab\tab call \tab\tab \code{call} \tab\tab The \code{GRP()} call, obtained from \code{match.call()}
                  }
@@ -156,4 +156,4 @@ mtcars \%>\% fgroup_by(cyl,vs,am) \%>\% fmean # faster alternative with collapse
 
 }
 \keyword{manip}
-\keyword{documentation}
+
