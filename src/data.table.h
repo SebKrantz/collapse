@@ -1,3 +1,8 @@
+/*
+ This code is adapted from the data.table package: http://r-datatable.com
+ and licensed under a Mozialla Public License 2.0 (MPL-2.0) license.
+*/
+
 #include <R.h>
 #define USE_RINTERNALS
 #include <Rinternals.h>

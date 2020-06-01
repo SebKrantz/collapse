@@ -1,3 +1,8 @@
+/*
+ This code is adapted from the data.table package: http://r-datatable.com
+ and licensed under a Mozialla Public License 2.0 (MPL-2.0) license.
+*/
+
 #include "data.table.h"
 
 // #pragma GCC diagnostic ignored "-Wunknown-pragmas" // don't display this warning!! // https://stackoverflow.com/questions/1867065/how-to-suppress-gcc-warnings-from-library-headers?noredirect=1&lq=1
