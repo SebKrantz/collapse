@@ -182,7 +182,7 @@ l <- qsu(wlddev, by = ~ region, pid = ~ iso3c, cols = 9:12, vlabels = TRUE,
 str(l, give.attr = FALSE)
 ```
 
-Doing this has only one advantage on my opinion and that is that we can use `unlist2d` to transform this list into a tidy data.frame (more about this in the section on list-processing):
+Such a list of statistics matrices could, for example, be converted into a tidy data.frame using `unlist2d` (more about this in the section on list-processing):
 
 ```{r}
 head(unlist2d(l, idcols = c("Variable", "Trans"), row.names = "Region"))
@@ -250,7 +250,7 @@ In terms of value added, the data covers 43 countries in 50 time-periods. Agricu
 
 <!-- Note that these two examples have not yet exhausted the capabilities of `qsu` which can also compute weighted versions of all the above statistics and output to list of matrices instead of higher-dimensional array. It is of course also possible to compute conventional and weighted statistics on cross-sectional data using `qsu`.  -->
 
-As a final step we consider a plot function which can be used to plot the structural transformation of any supported country. Below for Tanzania:
+As a final step we consider a plot function which can be used to plot the structural transformation of any supported country. Below for Botswana:
 ```{r}
 library(data.table)
 library(ggplot2)
@@ -1452,7 +1452,7 @@ The significant serial-correlation test below suggests that the panel-VAR with o
 ```{r}
 serial.test(pVAR)
 ```
- By default the VAR is identified using a Choleski ordering of the direct impact matrix in which the first variable (here Agriculture) is assumed to not be directly impacted by any other sector in the current period, and this descends down to the last variable (Finance and Real Estate), which is assumed to be impacted by all other sectors in the current period. For structural identification it is usually necessary to impose restrictions on the direct impact matrix in line with economic theory. It is difficult to conceive theories on the average worldwide interaction of broad economic sectors, but to aid identification we will compute the correlation matrix in growth rates and restrict the lowest coefficients to be 0, which should be better than just imposing a random Choleski ordering. This will also enable me to give a demonstration of the grouped tibble methods for *collapse* functions, discussed in more detail in the '*collapse* and *dplyr*' vignette:
+ By default the VAR is identified using a Choleski ordering of the direct impact matrix in which the first variable (here Agriculture) is assumed to not be directly impacted by any other sector in the current period, and this descends down to the last variable (Finance and Real Estate), which is assumed to be impacted by all other sectors in the current period. For structural identification it is usually necessary to impose restrictions on the direct impact matrix in line with economic theory. It is difficult to conceive theories on the average worldwide interaction of broad economic sectors, but to aid identification we will compute the correlation matrix in growth rates and restrict the lowest coefficients to be 0, which should be better than just imposing a random Choleski ordering. This will also provide room for a demonstration of the grouped tibble methods for *collapse* functions, discussed in more detail in the '*collapse* and *dplyr*' vignette:
 
 <!-- # This computes the correlation matrix in panel growth rates of VA of the 6 sectors, removing very large positive or negative growth rates:  -->
 <!-- corr <- GGDC10S %>% fsubset(Variable == "VA") %>%                           # Taking VA series -->
