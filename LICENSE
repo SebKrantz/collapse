@@ -1,4 +1,4 @@
-This software is licensed under a GNU General Public License 2.0 (GPL-2.0).
+This is free software licensed under a GNU General Public License 2.0 (GPL-2.0).
 However some C-code was taken and adapted from the data.table package (http://r-datatable.com)
 and continues to carry the weaker Mozilla Public License 2.0 (MPL-2.0) adopted for this project. The 
 license statements for GPL-2.0 and MPL-2.0 are provided below. 
