@@ -1,7 +1,8 @@
-This is free software licensed under a GNU General Public License 2.0 (GPL-2.0).
-However some C-code was taken and adapted from the data.table package (http://r-datatable.com)
-and continues to carry the weaker Mozilla Public License 2.0 (MPL-2.0) adopted for this project. The 
-license statements for GPL-2.0 and MPL-2.0 are provided below. 
+This is free software licensed under a GNU General Public License 2.0 (GPL-2.0), and may be
+redistributed and/or modified under the terms of this license. However this software includes modified C-code
+from the data.table package (http://r-datatable.com) which is licensed under the weaker
+Mozilla Public License 2.0 (MPL-2.0) license. Any modification of these source files requires
+preservation of the MPL-2.0 license. The license statements for GPL-2.0 and MPL-2.0 are provided below.
 
 The MPL-2.0 License applies to the following files:
 
@@ -10,6 +11,8 @@ src/data.table_init.c
 src/data.table_rbindlist.c
 src/data.table_subset.c
 src/data.table_utils.c
+
+The rest is licensed GPL-2.0.
 
 ============================================================================================
 ********************************************************************************************
@@ -396,7 +399,7 @@ Mozilla Public License Version 2.0
     means any form of the work other than Source Code Form.
 
 1.7. "Larger Work"
-    means a work that combines Covered Software with other material, in 
+    means a work that combines Covered Software with other material, in
     a separate file or files, that is not Covered Software.
 
 1.8. "License"
