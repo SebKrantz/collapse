@@ -13,7 +13,6 @@ Authors@R: c(
            person("Martyn", "Plummer", role = "cph"),
            person("1999-2016 The R Core Team", role = "cph")
            )
-BugReports: https://github.com/SebKrantz/collapse/issues
 Description: A C/C++ based package for advanced data transformation in R that is 
     extremely fast, flexible and parsimonious to code with and programmer 
     friendly. It is well integrated with 'dplyr', 'plm' and 'data.table'.
@@ -38,7 +37,9 @@ Description: A C/C++ based package for advanced data transformation in R that is
         subsetting, data-apply, and generalized row-binding / unlisting in 2D.
     (6) Advanced data exploration: Fast (grouped, weighted, panel-decomposed) 
         summary statistics for complex multilevel / panel data.
-License: GPL (>= 2)
+URL: https://sebkrantz.github.io/collapse, https://github.com/SebKrantz/collapse
+BugReports: https://github.com/SebKrantz/collapse/issues
+License: GPL (>= 2) + FILE license
 Encoding: UTF-8
 LazyData: true
 Depends: R (>= 3.5.0)
