@@ -2,16 +2,16 @@
 <rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
   <channel>
     <title>collapse Package Blog</title>
-    <link>/</link>
+    <link>https://sebkrantz.github.io/collapse/blog/index.html</link>
     <description>Advanced and Fast Data Transformation in R - with the collapse package</description>
     <language>en-us</language>
     <lastBuildDate>Mon, 08 Jun 2020 00:00:00 +0000</lastBuildDate>
 
-	<atom:link href="/index.xml" rel="self" type="application/rss+xml" />
+	<atom:link href="index.xml" rel="self" type="application/rss+xml" />
 
     <item>
       <title>Welcome to collapse: Advanced and Fast Data Transformation in R</title>
-      <link>welcome_to_collapse</link>
+      <link>https://sebkrantz.github.io/collapse/blog/welcome_to_collapse.html</link>
       <pubDate>Mon, 08 Jun 2020 00:00:00 +0000</pubDate>
 
       <guid>welcome_to_collapse</guid>
