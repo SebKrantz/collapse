@@ -16,3 +16,7 @@ vignettes/collapse_and_data.table_cache
 ^doc$
 ^Meta$
 ^CRAN-RELEASE$
+^_pkgdown\.yml$
+^docs$
+^pkgdown$
+R/pkgdown_website\.R

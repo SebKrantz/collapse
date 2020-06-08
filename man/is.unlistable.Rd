@@ -1,4 +1,4 @@
-\name{is.regular-is.unlistable}
+\name{is.regular, is.unlistable}
 \alias{is.unlistable}
 \alias{is.regular}
 %- Also NEED an '\alias' for EACH other topic documented here.
