@@ -1,6 +1,6 @@
 ---
 title: "*collapse* and *dplyr*"
-subtitle: "Fast (Weighted) Aggregations, Transformations and Panel Computations in a Piped Workflow"
+subtitle: "Fast (Weighted) Aggregations and Transformations in a Piped Workflow"
 author: "Sebastian Krantz"
 date: "`r Sys.Date()`"
 output: 
@@ -8,7 +8,7 @@ output:
     toc: true
 
 vignette: >
-  %\VignetteIndexEntry{collapse and dplyr: Fast (Weighted) Aggregations, Transformations and Panel Computations in a Piped Workflow}
+  %\VignetteIndexEntry{collapse and dplyr: Fast (Weighted) Aggregations and Transformations in a Piped Workflow}
   %\VignetteEngine{knitr::rmarkdown}
   %\VignetteEncoding{UTF-8}
   

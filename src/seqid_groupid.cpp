@@ -133,7 +133,7 @@ IntegerVector seqid(const IntegerVector& x, const SEXP& o = R_NilValue, int del 
     }
   }
   out.attr("N.groups") = id - start + 1;
-  out.attr("class") = na_skip ? "qG" : CharacterVector::create("qG", "na.included");
+  if(start == 1) out.attr("class") = na_skip ? "qG" : CharacterVector::create("qG", "na.included");
   return out;
 }
 
@@ -287,7 +287,7 @@ IntegerVector groupidImpl(Vector<RTYPE> x, SEXP o, int start, bool na_skip, bool
       }
     }
     out.attr("N.groups") = id - start + 1;
-    out.attr("class") = na_skip ? "qG" : CharacterVector::create("qG", "na.included");
+    if(start == 1) out.attr("class") = na_skip ? "qG" : CharacterVector::create("qG", "na.included");
     return out;
 }
 

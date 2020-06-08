@@ -213,6 +213,20 @@ print.qsu <- function(x, digits = 2, nonsci.digits = 9, na.print = "-", return =
 # View.qsu <- function(x) View(unclass(x))
 
 
+aperm.qsu <- function(a, perm = NULL, resize = TRUE, keep.class = TRUE, ...) {
+  r <- aperm.default(a, perm, resize = resize)
+  if(keep.class) class(r) <- class(a)
+  r
+}
+
+
+`[.qsu` <- function(x, i, j, ..., drop = TRUE) {
+  ret <- NextMethod()
+  if(length(dim(ret)) > 1L) class(ret) <- class(x)
+  ret
+}
+
+
 # testing formula inputs:
 
 # best!!! (subsetting unclassed objects is better), and reassigning x does not take more memry than deleting columns, it is often faster !!, also GRP does not mind unclassed objects !!

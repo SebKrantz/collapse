@@ -26,10 +26,10 @@ descr <- function(X, Ndistinct = TRUE, higher = TRUE, table = TRUE,
   if(!is.list(X)) X <- unclass(qDF(X))
   if(!is.null(cols)) X <- X[cols2int(cols, X, names(X))]
   res <- vector('list', length(X))
-  num <- vapply(unattrib(X), is.numeric, TRUE, USE.NAMES = FALSE)
+  num <- vapply(unattrib(X), is.numeric, TRUE)
   res[num] <- lapply(X[num], descrnum, ...)
   if(!all(num)) {
-    date <- vapply(unattrib(X), is.Date, TRUE, USE.NAMES = FALSE)
+    date <- vapply(unattrib(X), is.Date, TRUE)
     if(any(date)) {
       res[date] <- lapply(X[date], descrcat, FALSE)
       cat <- !(num | date)

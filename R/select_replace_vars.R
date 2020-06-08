@@ -180,7 +180,7 @@ gv <- get_vars
     vars <- which(vars)
   } else {
     if(!regex && !missing(...)) unused_arg_action(match.call(), ...)
-    vars <- if(is.function(vars)) which(vapply(unattrib(x), vars, TRUE, USE.NAMES = FALSE)) else if(regex) # if(is.character(vars) && regex): redundant...
+    vars <- if(is.function(vars)) which(vapply(unattrib(x), vars, TRUE)) else if(regex) # if(is.character(vars) && regex): redundant...
             rgrep(vars, names(x), ...) else ckmatch(vars, names(x))
   }
   if(is.null(value)) {
