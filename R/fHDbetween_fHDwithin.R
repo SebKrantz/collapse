@@ -106,7 +106,7 @@ fHDwithin.default <- function(x, fl, w = NULL, na.rm = TRUE, fill = FALSE, ...) 
   }
 
   if(is.list(fl)) {
-    fc <- vapply(unattrib(fl), is.factor, TRUE, USE.NAMES = FALSE)
+    fc <- vapply(unattrib(fl), is.factor, TRUE)
     fcl <- any(fc)
     if(!fcl && !missing(...)) unused_arg_action(match.call(), ...)
     nallfc <- fcl && !all(fc)
@@ -175,7 +175,7 @@ fHDwithin.matrix <- function(x, fl, w = NULL, na.rm = TRUE, fill = FALSE, ...) {
   }
 
   if(is.list(fl)) {
-    fc <- vapply(unattrib(fl), is.factor, TRUE, USE.NAMES = FALSE)
+    fc <- vapply(unattrib(fl), is.factor, TRUE)
     fcl <- any(fc)
     if(!fcl && !missing(...)) unused_arg_action(match.call(), ...)
     nallfc <- fcl && !all(fc)
@@ -254,7 +254,7 @@ fHDwithin.data.frame <- function(x, fl, w = NULL, na.rm = TRUE, fill = FALSE, va
   }
 
   if(is.list(fl)) { # fl is a list !!
-    fc <- vapply(unattrib(fl), is.factor, TRUE, USE.NAMES = FALSE)
+    fc <- vapply(unattrib(fl), is.factor, TRUE)
     fcl <- any(fc)
     if(!fcl && !missing(...)) unused_arg_action(match.call(), ...)
     nallfc <- fcl && !all(fc)
@@ -421,7 +421,7 @@ fHDbetween.default <- function(x, fl, w = NULL, na.rm = TRUE, fill = FALSE, ...)
   }
 
   if(is.list(fl)) {
-    fc <- vapply(unattrib(fl), is.factor, TRUE, USE.NAMES = FALSE)
+    fc <- vapply(unattrib(fl), is.factor, TRUE)
     fcl <- any(fc)
     if(!fcl && !missing(...)) unused_arg_action(match.call(), ...)
     nallfc <- fcl && !all(fc)
@@ -490,7 +490,7 @@ fHDbetween.matrix <- function(x, fl, w = NULL, na.rm = TRUE, fill = FALSE, ...) 
   }
 
   if(is.list(fl)) {
-    fc <- vapply(unattrib(fl), is.factor, TRUE, USE.NAMES = FALSE)
+    fc <- vapply(unattrib(fl), is.factor, TRUE)
     fcl <- any(fc)
     if(!fcl && !missing(...)) unused_arg_action(match.call(), ...)
     nallfc <- fcl && !all(fc)
@@ -569,7 +569,7 @@ fHDbetween.data.frame <- function(x, fl, w = NULL, na.rm = TRUE, fill = FALSE, v
   }
 
   if(is.list(fl)) { # fl is a list !!
-    fc <- vapply(unattrib(fl), is.factor, TRUE, USE.NAMES = FALSE)
+    fc <- vapply(unattrib(fl), is.factor, TRUE)
     fcl <- any(fc)
     if(!fcl && !missing(...)) unused_arg_action(match.call(), ...)
     nallfc <- fcl && !all(fc)
