@@ -1,0 +1,145 @@
+destination: docs
+
+home:
+  title: Advanced and Fast Data Transformation in R
+
+# template:
+#   params:
+#     bootswatch: cyborg
+
+development:
+  mode: auto
+
+navbar:
+  title: "collapse"
+  left:
+    - text: "Documentation"
+      href: reference/index.html
+    - text: "Vignettes"
+      href: articles/index.html
+    - text: "News"
+      href: news/index.html
+    - text: "Blog"
+      href: blog/index.html
+
+  right:
+   - icon: fa-twitter
+     href: https://twitter.com/collapse
+   - icon: fa-github
+     href: https://github.com/SebKrantz/collapse
+
+articles:
+- title: Introduction to collapse
+  desc: Introduces all main features in a structured way
+  navbar: Introduction to collapse
+  contents:
+  - collapse_intro
+- title: collapse and dplyr
+  desc: Demonstrates the integration of collapse with dplyr / tidyverse workflows and associated performance improvements
+  navbar: collapse and dplyr
+  contents:
+  - collapse_and_dplyr
+- title: collapse and plm
+  desc: Demonstrates the integration of collapse with plm and shows examples of efficient programming with panel data
+  navbar: collapse and dplyr
+  contents:
+  - collapse_and_plm
+
+reference:
+- title: "Fast Statistical Functions"
+  desc: "Fast (grouped and weighted) statistical functions for vector, matrix, data.frame and grouped_df (dplyr compatible)."
+- contents:
+  - "A1-fast-statistical-functions"
+  - fmean
+  - fmedian
+  - fmode
+  - fsum
+  - fprod
+  - "fvar, fsd"
+  - "fmin, fmax"
+  - "ffirst, flast"
+  - fNobs
+  - fNdistinct
+- title: "Fast (Ordered) Grouping"
+  desc: "Fast (ordered or unordered) groupings from vectors, data.frames, lists. Fast ordering, factor generation and interactions, run-length type grouping and grouping of time-sequences."
+- contents:
+  - "A2-fast-grouping"
+  - GRP
+  - radixorder
+  - qF
+  - groupid
+  - seqid
+- title: "Fast Data Frame Manipulation"
+  desc: "Fast and flexible select, subset and transform data, including modifying and computing columns by reference."
+- contents:
+  - "A3-data-frame-manipulation"
+  - "select-replace-vars"
+  - fsubset
+  - ftransform
+- title: "Quick Data Conversions"
+  desc: "Quick conversions between data.frame's, data.table's, matrices, arrays, lists, vectors and factors - fast and flexible, without method dispatch or extensive checks."
+- contents:
+  - "A4-quick-conversion"
+  - qF
+- title: "Advanced Data Aggregation"
+  desc: "Fast and easy multi-data-type, multi-function, weighted, parallelized and fully customized data aggregation."
+- contents:
+  - "A5-advanced-aggregation"
+  - collap
+- title: "Data Transformations"
+  desc: "Fast (grouped, weighted) replacing and sweeping out of statistics, scaling / standardizing, centering, higher-dimensional centering, linear prediction and partialling-out."
+- contents:
+  - "A6-data-transformations"
+  - dapply
+  - BY
+  - TRA
+  - fscale
+  - "fbetween, fwithin"
+  - "fHDbetween, fHDwithin"
+  - fFtest
+- title: "Time-Series and Panel-Series"
+  desc: "Fast (sequences of) lags / leads, and (lagged / leaded, iterated, quasi-, log-) differences and growth rates on (unordered) time-series and panel data. Auto, partial and cross-correlation functions for panel data. Panel data to (ts-)array conversion."
+- contents:
+  - "A7-time-series-panel-series"
+  - flag
+  - fdiff
+  - fgrowth
+  - psacf
+  - psmat
+- title: "List Processing"
+  desc: "Recursive list search / identification, extraction / subsetting, data-apply, and generalized recursive row-binding / unlisting in 2D."
+- contents:
+  - "A8-list-processing"
+  - "is.regular, is.unlistable"
+  - ldepth
+  - "extract-list"
+  - rapply2d
+  - unlist2d
+- title: "Summary Statistics"
+  desc: "Fast (grouped, weighted, panel-decomposed) summary statistics for complex multilevel / panel data."
+- contents:
+  - "A9-summary-statistics"
+  - qsu
+  - descr
+  - "pwcor, pwcov, pwNobs"
+  - varying
+- title: "Recode and Replace Values"
+  desc: "Efficiently Recode and Replace Values in Matrix-Like Objects."
+- contents:
+  - "AA1-recode-replace"
+- title: "Small (Helper) Functions"
+  desc: "Convenience functions that help to deal with variable names, labels, missing values, matching and object checking etc.. Some functions are performance improved replacements for base R functions."
+- contents:
+  - "AA2-small-helpers"
+- title: "Data"
+  desc: "Groningen Growth and Development Centre 10-Sector Database and World Bank World Development dataset."
+- contents:
+  - GGDC10S
+  - wlddev
+- title: "Package Options"
+  desc: "Global options affecting package operation."
+- contents:
+  - "collapse-options"
+
+
+
