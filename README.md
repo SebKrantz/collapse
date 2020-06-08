@@ -1,4 +1,4 @@
-# collapse <img src='inst/figures/collapse logo small.png' width="150px" align="right" />
+# collapse <img src='man/figures/collapse logo small.png' width="150px" align="right" />
 
 <!-- badges: start -->
 [![CRAN status](https://www.r-pkg.org/badges/version/collapse)](https://cran.r-project.org/package=collapse)
@@ -87,10 +87,10 @@ Some simple benchmarks are provided in the vignettes. In general:
 
 ### Notes on the Integration with *dplyr*, *plm* and *data.table* 
 
-* ***collapse*** **and** ***dplyr***: The *Fast Statistical Functions* and transformation functions and operators provided by *collapse* all have a *grouped_df* method, allowing them to be seamlessly integrated into *dplyr* / *tidyverse* workflows. Doing so facilitates advanced operations in *dplyr* and provides remarkable performance improvements (bringing *dplyr* close to *data.table* on large data aggregations, and making it faster than *data.table* for advanced transformations). See also [this vignette](<https://cran.r-project.org/web/packages/collapse/vignettes/collapse_and_dplyr.html>). 
+* ***collapse*** **and** ***dplyr***: The *Fast Statistical Functions* and transformation functions and operators provided by *collapse* all have a *grouped_df* method, allowing them to be seamlessly integrated into *dplyr* / *tidyverse* workflows. Doing so facilitates advanced operations in *dplyr* and provides remarkable performance improvements (bringing *dplyr* close to *data.table* on large data aggregations, and making it faster than *data.table* for advanced transformations). In addition, *collapse* provides some simpler and faster replacements for common *dplyr* verbs (`fselect`, `fgroup_by`, `fsubset` (faster `dplyr::filter`), `ftransform` (faster `dplyr::mutate`) and `TRA` (faster `dplyr::mutate` for grouped replacing and sweeping out statistics)), providing further performance improvments for programming with piped expressions and non-standard evaluation. See also [this vignette](<https://cran.r-project.org/web/packages/collapse/vignettes/collapse_and_dplyr.html>). 
 
 * ***collapse*** **and** ***plm***: Fast transformation functions and transformation operators provided by *collapse* also have *pseries* (panel-series) and *pdata.frame* (panel-data.frame) methods. This integrates them seamlessly into *plm* workflows and facilitates the manipulation of panel data. For typical panel-data operations like between- and within-transformations or panel lags / leads / differences, *collapse* functions are 20-100x faster than *plm* equivalents, and provide greater versatility (i.e. for applying transformations to multiple variables in a *pdata.frame*). See also [this vignette](<https://cran.r-project.org/web/packages/collapse/vignettes/collapse_and_plm.html>).
 
-* ***collapse*** **and** ***data.table***: All collapse functions can be applied to *data.table*'s and they will also return a *data.table* again. The C/C++ programming of *collapse* was inspired by *data.table* and directly relies on some *data.table* source code (i.e. for grouping and row-binding). 
+* ***collapse*** **and** ***data.table***: All collapse functions can be applied to *data.table*'s and they will also return a *data.table* again. The C/C++ programming of *collapse* was inspired by *data.table* and directly relies on some *data.table* source code (i.e. for grouping and row-binding). The function `qDT` also exists to efficiently convert various objects to *data.table*, and various functions (`mrtl`, `mctl`, `unlist2d`, ...) have an option to output a *data.table*. 
 
 
