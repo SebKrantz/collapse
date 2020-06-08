@@ -2,8 +2,8 @@
 <rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
   <channel>
     <title>collapse Package Blog</title>
-    <link>https://sebkrantz.github.io/collapse/blog/index.html</link>
-    <description>Advanced and Fast Data Transformation in R - with the collapse package</description>
+    <link>https://sebkrantz.github.io/collapse/blog/index</link>
+    <description>Advanced and Fast Data Transformation in R - with the collapse Package</description>
     <language>en-us</language>
     <lastBuildDate>Mon, 08 Jun 2020 00:00:00 +0000</lastBuildDate>
 
@@ -11,10 +11,10 @@
 
     <item>
       <title>Welcome to collapse: Advanced and Fast Data Transformation in R</title>
-      <link>https://sebkrantz.github.io/collapse/blog/welcome_to_collapse.html</link>
+      <link>https://sebkrantz.github.io/collapse/blog/welcome_to_collapse</link>
       <pubDate>Mon, 08 Jun 2020 00:00:00 +0000</pubDate>
 
-      <guid>welcome_to_collapse</guid>
+      <guid>https://sebkrantz.github.io/collapse/blog/welcome_to_collapse</guid>
       <description>
 collapse was released on CRAN end of March. The current version 1.2.1 performs well on all operating systems, passing &amp;gt; 5600 unit tests covering all core functionality, thus a good point to start introducing the package to a larger audience. collapse has 2 main aims:
 1. To facilitate complex data transformation and exploration tasks in R.
