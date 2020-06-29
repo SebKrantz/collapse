@@ -139,24 +139,26 @@ SEXP qGCpp(SEXP x, bool sort = true, bool ordered = true, bool na_exclude = true
 
 
 template <int RTYPE>
-Vector<RTYPE> funiqueImpl(const Vector<RTYPE>& x, bool ordered = true) {
-  if(ordered) {
+Vector<RTYPE> funiqueImpl(const Vector<RTYPE>& x, bool sort = true) {
+  if(sort) {
     Vector<RTYPE> out = sort_unique(x);
     DUPLICATE_ATTRIB(out, x);
+    Rf_namesgets(out, R_NilValue);
     return out;
   } else {
     Vector<RTYPE> out = unique(x);
     DUPLICATE_ATTRIB(out, x);
+    Rf_namesgets(out, R_NilValue);
     return out;
   }
 }
 
 // [[Rcpp::export]]
-SEXP funique(SEXP x, bool ordered = true) {
+SEXP funiqueCpp(SEXP x, bool sort = true) {
   switch(TYPEOF(x)) {
-  case INTSXP: return funiqueImpl<INTSXP>(x, ordered);
-  case REALSXP: return funiqueImpl<REALSXP>(x, ordered);
-  case STRSXP: return funiqueImpl<STRSXP>(x, ordered);
+  case INTSXP: return funiqueImpl<INTSXP>(x, sort);
+  case REALSXP: return funiqueImpl<REALSXP>(x, sort);
+  case STRSXP: return funiqueImpl<STRSXP>(x, sort);
   case LGLSXP: {
     LogicalVector xl = x;
     LogicalVector nd(3);
@@ -176,6 +178,7 @@ SEXP funique(SEXP x, bool ordered = true) {
     }
     LogicalVector out = LogicalVector::create(false, true, NA_LOGICAL)[nd];
     DUPLICATE_ATTRIB(out, x);
+    Rf_namesgets(out, R_NilValue);
     return out;
   }
   default: stop("Not Supported SEXP Type");
