@@ -2,6 +2,12 @@
 #include <Rcpp.h>
 using namespace Rcpp;
 
+// Note: Now taking logs in R -> Faster and smaller compiled code !!
+/* some systems get this wrong, possibly depend on what libs are loaded */
+// static inline double R_log(double x) {
+//   return x > 0 ? log(x) : x == 0 ? R_NegInf : R_NaN;
+// }
+
 // new setup: ret = 1L - differences, ret = 2L - log differences, ret = 3L - exact growth rates, ret = 4L - log-difference growth
 // also: if rho != 1, quasi-differencing and log differencing with rho... i.e. for cochrane-orcutt regression
 
@@ -515,29 +521,24 @@ NumericVector fdiffgrowthCpp(const NumericVector& x, const IntegerVector& n = 1,
                          int ret = 1, double rho = 1, bool names = true) {
 
   std::string stub;
-  switch (ret)
-  {       // [rho] or [&rho] ?  // https://stackoverflow.com/questions/30217956/error-variable-cannot-be-implicitly-captured-because-no-default-capture-mode-h
-  case 1:
-    if(names) stub = (rho == 1) ? "D" : "QD"; // QD for quasi-differences !
-    return fdiffgrowthCppImpl(x, n, diff, fill, ng, g, gs, t, stub, names, [rho](double y, double x) { return y-rho*x; }); // return y-x; same efficiency as return y-rho*x; when rho = 1 -> smart compiler !, and reduced file size !!
-  case 2:
-    if(rho == 1) goto fastld;
-    if(names) stub = "QDlog";
-    return fdiffgrowthCppImpl(x, n, diff, fill, ng, g, gs, t, stub, names, [rho](double y, double x) { return std::log(y)-rho*std::log(x); }); // log(y*(1/(rho*x))) gives log(y) - log(rho*x), but we want log(y) - rho*log(x)
-  case 3:
+  if(ret < 4) {
+    double rho2;
+    if(ret == 3) {
+      rho2 = 1;
+      if(names) stub = "Dlog";
+    } else {
+      rho2 = rho;
+      if(names) stub = (ret == 1 && rho == 1) ? "D" : (ret == 1) ? "QD" : (rho == 1) ? "Dlog" : "QDlog"; // QD for quasi-differences
+    }
+    return fdiffgrowthCppImpl(x, n, diff, fill, ng, g, gs, t, stub, names, [rho2](double y, double x) { return y-rho2*x; }); // return y-x; same efficiency as return y-rho*x; when rho = 1 -> smart compiler !, and reduced file size !!
+  } else if (ret == 4) {
     if(names) stub = "G";
     return fdiffgrowthCppImpl(x, n, diff, fill, ng, g, gs, t, stub, names, [rho](double y, double x) { return (y-x)*(rho/x); }); // same speed as fixing 100 ! Faster using (y/x-1)*rho or (x*(1/x)-1)*rho ?
-  case 4:
-    fastld:
-    if(names) stub = "Dlog";
-    return fdiffgrowthCppImpl(x, n, diff, fill, ng, g, gs, t, stub, names, [rho](double y, double x) { return rho*std::log(y*(1/x)); });
-  default: stop("Unknown return option!");
-  }
+  } else stop("Unknown return option!");
 }
 
 inline SEXP coln_check(SEXP x) {
-  if(Rf_isNull(x)) return NA_STRING;
-  else return x;
+  return Rf_isNull(x) ? NA_STRING : x;
 }
 
 
@@ -1062,24 +1063,20 @@ NumericMatrix fdiffgrowthmCpp(const NumericMatrix& x, const IntegerVector& n = 1
                               const SEXP& gs = R_NilValue, const SEXP& t = R_NilValue,
                               int ret = 1, double rho = 1, bool names = true) {
   std::string stub;
-  switch (ret)
-  {       // [rho] or [&rho] ?  // https://stackoverflow.com/questions/30217956/error-variable-cannot-be-implicitly-captured-because-no-default-capture-mode-h
-  case 1:
-    if(names) stub = (rho == 1) ? "D" : "QD"; // QD for quasi-differences !
-    return fdiffgrowthmCppImpl(x, n, diff, fill, ng, g, gs, t, stub, names, [rho](double y, double x) { return y-rho*x; }); // return y-x; same efficiency as return y-rho*x; when rho = 1 -> smart compiler !, and reduced file size !!
-  case 2:
-    if(rho == 1) goto fastld;
-    if(names) stub = "QDlog";
-    return fdiffgrowthmCppImpl(x, n, diff, fill, ng, g, gs, t, stub, names, [rho](double y, double x) { return std::log(y)-rho*std::log(x); }); // log(y*(1/(rho*x))) gives log(y) - log(rho*x), but we want log(y) - rho*log(x)
-  case 3:
+  if(ret < 4) {
+    double rho2;
+    if(ret == 3) {
+      rho2 = 1;
+      if(names) stub = "Dlog";
+    } else {
+      rho2 = rho;
+      if(names) stub = (ret == 1 && rho == 1) ? "D" : (ret == 1) ? "QD" : (rho == 1) ? "Dlog" : "QDlog"; // QD for quasi-differences
+    }
+    return fdiffgrowthmCppImpl(x, n, diff, fill, ng, g, gs, t, stub, names, [rho2](double y, double x) { return y-rho2*x; }); // return y-x; same efficiency as return y-rho*x; when rho = 1 -> smart compiler !, and reduced file size !!
+  } else if (ret == 4) {
     if(names) stub = "G";
-    return fdiffgrowthmCppImpl(x, n, diff, fill, ng, g, gs, t, stub, names, [rho](double y, double x) { return (y-x)*(rho/x); }); // same speed as fixing 100 !
-  case 4:
-    fastld:
-    if(names) stub = "Dlog";
-    return fdiffgrowthmCppImpl(x, n, diff, fill, ng, g, gs, t, stub, names, [rho](double y, double x) { return rho*std::log(y*(1/x)); });
-  default: stop("Unknown return option!");
-  }
+    return fdiffgrowthmCppImpl(x, n, diff, fill, ng, g, gs, t, stub, names, [rho](double y, double x) { return (y-x)*(rho/x); }); // same speed as fixing 100 ! Faster using (y/x-1)*rho or (x*(1/x)-1)*rho ?
+  } else stop("Unknown return option!");
 }
 
 
@@ -1594,24 +1591,20 @@ List fdiffgrowthlCpp(const List& x, const IntegerVector& n = 1, const IntegerVec
                      int ret = 1, double rho = 1, bool names = true) {
 
   std::string stub;
-  switch (ret)
-  {       // [rho] or [&rho] ?  // https://stackoverflow.com/questions/30217956/error-variable-cannot-be-implicitly-captured-because-no-default-capture-mode-h
-  case 1:
-    if(names) stub = (rho == 1) ? "D" : "QD"; // QD for quasi-differences !
-    return fdiffgrowthlCppImpl(x, n, diff, fill, ng, g, gs, t, stub, names, [rho](double y, double x) { return y-rho*x; }); // return y-x; same efficiency as return y-rho*x; when rho = 1 -> smart compiler !, and reduced file size !!
-  case 2:
-    if(rho == 1) goto fastld;
-    if(names) stub = "QDlog";
-    return fdiffgrowthlCppImpl(x, n, diff, fill, ng, g, gs, t, stub, names, [rho](double y, double x) { return std::log(y)-rho*std::log(x); }); // log(y*(1/(rho*x))) gives log(y) - log(rho*x), but we want log(y) - rho*log(x)
-  case 3:
+  if(ret < 4) {
+    double rho2;
+    if(ret == 3) {
+      rho2 = 1;
+      if(names) stub = "Dlog";
+    } else {
+      rho2 = rho;
+      if(names) stub = (ret == 1 && rho == 1) ? "D" : (ret == 1) ? "QD" : (rho == 1) ? "Dlog" : "QDlog"; // QD for quasi-differences
+    }
+    return fdiffgrowthlCppImpl(x, n, diff, fill, ng, g, gs, t, stub, names, [rho2](double y, double x) { return y-rho2*x; }); // return y-x; same efficiency as return y-rho*x; when rho = 1 -> smart compiler !, and reduced file size !!
+  } else if (ret == 4) {
     if(names) stub = "G";
-    return fdiffgrowthlCppImpl(x, n, diff, fill, ng, g, gs, t, stub, names, [rho](double y, double x) { return (y-x)*(rho/x); }); // same speed as fixing 100 !
-  case 4:
-    fastld:
-    if(names) stub = "Dlog";
-    return fdiffgrowthlCppImpl(x, n, diff, fill, ng, g, gs, t, stub, names, [rho](double y, double x) { return rho*std::log(y*(1/x)); });
-  default: stop("Unknown return option!");
-  }
+    return fdiffgrowthlCppImpl(x, n, diff, fill, ng, g, gs, t, stub, names, [rho](double y, double x) { return (y-x)*(rho/x); }); // same speed as fixing 100 ! Faster using (y/x-1)*rho or (x*(1/x)-1)*rho ?
+  } else stop("Unknown return option!");
 }
 
 // Old attempts without template ....
@@ -1638,3 +1631,33 @@ List fdiffgrowthlCpp(const List& x, const IntegerVector& n = 1, const IntegerVec
 // #define FUN(y, x) (log((y)*(1/(x)))*100)
 // #endif
 
+
+// Previous: Internally computing log-differences--- compiled file was 648 kb, without debug info !!
+
+
+// // [[Rcpp::export]]
+// NumericVector fdiffgrowthCpp(const NumericVector& x, const IntegerVector& n = 1, const IntegerVector& diff = 1,
+//                              double fill = NA_REAL, int ng = 0, const IntegerVector& g = 0,
+//                              const SEXP& gs = R_NilValue, const SEXP& t = R_NilValue,
+//                              int ret = 1, double rho = 1, bool names = true) {
+//
+//   std::string stub;
+//   switch (ret)
+//   {       // [rho] or [&rho] ?  // https://stackoverflow.com/questions/30217956/error-variable-cannot-be-implicitly-captured-because-no-default-capture-mode-h
+//   case 1:
+//     if(names) stub = (rho == 1) ? "D" : "QD"; // QD for quasi-differences !
+//     return fdiffgrowthCppImpl(x, n, diff, fill, ng, g, gs, t, stub, names, [rho](double y, double x) { return y-rho*x; }); // return y-x; same efficiency as return y-rho*x; when rho = 1 -> smart compiler !, and reduced file size !!
+//   case 2:
+//     if(rho == 1) goto fastld;
+//     if(names) stub = "QDlog";
+//     return fdiffgrowthCppImpl(x, n, diff, fill, ng, g, gs, t, stub, names, [rho](double y, double x) { return R_log(y)-rho*R_log(x); }); // log(y*(1/(rho*x))) gives log(y) - log(rho*x), but we want log(y) - rho*log(x)
+//   case 3:
+//     if(names) stub = "G";
+//     return fdiffgrowthCppImpl(x, n, diff, fill, ng, g, gs, t, stub, names, [rho](double y, double x) { return (y-x)*(rho/x); }); // same speed as fixing 100 ! Faster using (y/x-1)*rho or (x*(1/x)-1)*rho ?
+//   case 4:
+//     fastld:
+//     if(names) stub = "Dlog";
+//     return fdiffgrowthCppImpl(x, n, diff, fill, ng, g, gs, t, stub, names, [rho](double y, double x) { return rho*R_log(y*(1/x)); });
+//   default: stop("Unknown return option!");
+//   }
+// }
