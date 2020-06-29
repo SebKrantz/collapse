@@ -5,7 +5,7 @@ pwNobs <- function(X) {
   if(is.atomic(X) && is.matrix(X)) return(.Call(Cpp_pwNobsm, X)) # cn <- dimnames(X)[[2L]] # X <- mctl(X)
   if(!is.list(X)) stop("X must be a matrix or data.frame!") # -> if unequal length will warn below !!
   dg <- fNobs.data.frame(X)
-  class(X) <- NULL
+  oldClass(X) <- NULL
   n <- length(X)
   nr <- length(X[[1L]])
   N.mat <- diag(dg)
@@ -57,30 +57,30 @@ complpwNobs <- function(X) {
 
 pwcor <- function(X, ..., N = FALSE, P = FALSE, array = TRUE, use = "pairwise.complete.obs") {
   r <- cor(X, ..., use = use)
-  if(!N && !P) return(`class<-`(r, c("pwcor","matrix")))
+  if(!N && !P) return(`oldClass<-`(r, c("pwcor","matrix")))
   n <- switch(use, pairwise.complete.obs = pwNobs(X), complpwNobs(X)) # switch faster than if with characters !! # what if using ... to supply y ???
   if(N) {
     res <- if(P) list(r = r, N = n, P = corr.pmat(r, n)) else list(r = r, N = n)
   } else res <- list(r = r, P = corr.pmat(r, n))
   if(array) {
     res <- fsimplify2array(res)
-    class(res) <- c("pwcor","array","table")
-  } else class(res) <- "pwcor"
-  return(res)
+    oldClass(res) <- c("pwcor","array","table")
+  } else oldClass(res) <- "pwcor"
+  res
 }
 
 pwcov <- function(X, ..., N = FALSE, P = FALSE, array = TRUE, use = "pairwise.complete.obs") {
   r <- cov(X, ..., use = use)
-  if(!N && !P) return(`class<-`(r, c("pwcov","matrix")))
+  if(!N && !P) return(`oldClass<-`(r, c("pwcov","matrix")))
   n <- switch(use, pairwise.complete.obs = pwNobs(X), complpwNobs(X)) # switch faster than if with characters !!
   if(N) {                                           # good ??? // cov(X) / outer(fsd(X), fsd(X))
     res <- if(P) list(cov = r, N = n, P = corr.pmat(cor(X, ..., use = use), n)) else list(cov = r, N = n)
   } else res <- list(cov = r, P = corr.pmat(cor(X, ..., use = use), n))
   if(array) {
     res <- fsimplify2array(res)
-    class(res) <- c("pwcov","array","table")
-  } else class(res) <- "pwcov"
-  return(res)
+    oldClass(res) <- c("pwcov","array","table")
+  } else oldClass(res) <- "pwcov"
+  res
 }
 
 print.pwcor <- function(x, digits = 2L, sig.level = 0.05, show = c("all","lower.tri","upper.tri"), spacing = 1L, ...) {

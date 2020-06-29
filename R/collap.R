@@ -34,19 +34,19 @@ collap <- function(X, by, FUN = fmean, catFUN = fmode, cols = NULL, w = NULL, wF
         v[numby] <- FALSE
       }
     }
-    by <- GRP.default(X, numby, sort = sort.row, return.groups = keep.by)
+    by <- GRP.default(X, numby, sort = sort.row, return.groups = keep.by, call = FALSE)
   } else if(is.atomic(by)) {
     namby <- l1orlst(as.character(substitute(by)))
     numby <- 1L
     if(ncustoml) if(is.null(cols)) vl <- FALSE else v <- cols2log(cols, X, nam)
-    by <- GRP.default(`names<-`(list(by), namby), sort = sort.row, return.groups = keep.by)
+    by <- GRP.default(`names<-`(list(by), namby), sort = sort.row, return.groups = keep.by, call = FALSE)
   } else {
     if(ncustoml) if(is.null(cols)) vl <- FALSE else v <- cols2log(cols, X, nam)
     if(!is.GRP(by)) {
       numby <- seq_along(unclass(by))
       namby <- attr(by, "names") # faster if and only if by is a data.frame
       if(is.null(namby)) namby <- paste0("Group.", numby)
-      by <- GRP.default(by, numby, sort = sort.row, return.groups = keep.by)
+      by <- GRP.default(by, numby, sort = sort.row, return.groups = keep.by, call = FALSE)
     } else {
       namby <- by[[5L]]
       if(is.null(namby)) namby <- paste0("Group.", seq_along(by[[4L]])) # necessary ?
@@ -239,7 +239,7 @@ collap <- function(X, by, FUN = fmean, catFUN = fmode, cols = NULL, w = NULL, wF
   if(keep.col.order) .Call(C_setcolorder, res, o) # data.table:::Csetcolorder
   ax[["names"]] <- names(res)
   ax[["row.names"]] <- .set_row_names(length(res[[1L]]))
-  return(setAttributes(res, ax))
+  setAttributes(res, ax)
 }
 
 
@@ -263,7 +263,7 @@ collapv <- function(X, by, FUN = fmean, catFUN = fmode, cols = NULL, w = NULL, w
   # identifying by
   numby <- cols2int(by, X, nam)
   namby <- nam[numby]
-  by <- GRP.default(X, numby, sort = sort.row, return.groups = keep.by)
+  by <- GRP.default(X, numby, sort = sort.row, return.groups = keep.by, call = FALSE)
   if(ncustoml) {
     v <- if(is.null(cols)) !logical(length(X)) else cols2log(cols, X, nam)
     v[numby] <- FALSE
@@ -445,7 +445,7 @@ collapv <- function(X, by, FUN = fmean, catFUN = fmode, cols = NULL, w = NULL, w
   if(keep.col.order) .Call(C_setcolorder, res, o) # data.table:::Csetcolorder
   ax[["names"]] <- names(res)
   ax[["row.names"]] <- .set_row_names(length(res[[1L]]))
-  return(setAttributes(res, ax))
+  setAttributes(res, ax)
 }
 
 
@@ -454,7 +454,7 @@ collapg <- function(X, FUN = fmean, catFUN = fmode, cols = NULL, w = NULL, wFUN 
                     keep.group_vars = TRUE, keep.w = TRUE, keep.col.order = TRUE, sort.row = TRUE,
                     parallel = FALSE, mc.cores = 1L,
                     return = c("wide","list","long","long_dupl"), give.names = "auto", ...) {
-  by <- GRP.grouped_df(X)
+  by <- GRP.grouped_df(X, call = FALSE)
   if(is.null(custom)) ngn <- attr(X, "names") %!in% by[[5L]] # Note: this always leaves grouping columns on the left still !
   clx <- class(X)
   attr(X, "groups") <- NULL
@@ -469,7 +469,7 @@ collapg <- function(X, FUN = fmean, catFUN = fmode, cols = NULL, w = NULL, wFUN 
     }
   }
   if(is.null(custom)) X <- fcolsubset(X, ngn) # else X <- X # because of non-standard eval.. X is "."
-  return(eval(substitute(collap(X, by, FUN, catFUN, cols, w, wFUN, custom,
-              keep.group_vars, keep.w, keep.col.order, sort.row, parallel,
-              mc.cores, return, give.names, ...))))
+  eval(substitute(collap(X, by, FUN, catFUN, cols, w, wFUN, custom,
+       keep.group_vars, keep.w, keep.col.order, sort.row, parallel,
+       mc.cores, return, give.names, ...)))
 }

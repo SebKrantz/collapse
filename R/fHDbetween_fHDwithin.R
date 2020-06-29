@@ -9,7 +9,7 @@ myModFrame <- function(f, data) {
                           row.names = .set_row_names(fnrow2(data)),
                           class = "data.frame",
                           terms = t)
-  return(res)
+  res
 }
 # Example:
 # mf <- myModFrame( ~ factor(cyl)*carb + factor(cyl):factor(vs) + vs + carb:am, data = mtcars)
@@ -20,8 +20,8 @@ getfl <- function(mf) {
 
   if(any(facts)) {
     terms <- attributes(attr(mf, "terms"))
-    clmf <- class(mf)
-    class(mf) <- NULL # good ??
+    clmf <- oldClass(mf)
+    oldClass(mf) <- NULL # good ??
     tl <- terms[["term.labels"]]
     factors <- terms[[2L]]
     fctterms <- colSums(factors[facts, , drop = FALSE]) > 0
@@ -41,12 +41,12 @@ getfl <- function(mf) {
       if(tvec[2] != 0) fctdat[(ctvec[1]+1):ctvec[2]] <- lapply(mf[globalslopes], function(x)
         setAttributes(rep(1L, NROW(x)), list(levels = "1", class = "factor", x = x)))
       if(tvec[3] != 0)
-        fctdat[(ctvec[2]+1):ctvec[3]] <- lapply(intterms[fctfct], function(x) if(length(x) == 2L) do.call(`:`, mf[x]) else as.factor.GRP(GRP.default(mf[x]))) # interaction(mf[x])) # or as.factor.GRP(GRP(mf[x]))
+        fctdat[(ctvec[2]+1):ctvec[3]] <- lapply(intterms[fctfct], function(x) if(length(x) == 2L) do.call(`:`, mf[x]) else as.factor.GRP(GRP.default(mf[x], call = FALSE))) # interaction(mf[x])) # or as.factor.GRP(GRP(mf[x]))
       if(tvec[4] != 0)
         fctdat[(ctvec[3]+1):ctvec[4]] <- lapply(intterms[!fctfct], function(x) {
           f <- x & facts
           nf <- x & !f
-          f <- if(sum(f) == 1) mf[[which(f)]] else if(sum(f) == 2) do.call(`:`, mf[f]) else as.factor.GRP(GRP.default(mf[f])) # interaction(mf[f])
+          f <- if(sum(f) == 1) mf[[which(f)]] else if(sum(f) == 2) do.call(`:`, mf[f]) else as.factor.GRP(GRP.default(mf[f], call = FALSE)) # interaction(mf[f])
           attr(f, "x") <- if(sum(nf) > 1) do.call("*", mf[nf]) else mf[[which(nf)]]
           return(f)
         })
@@ -72,7 +72,7 @@ getfl <- function(mf) {
     fctdat <- NULL
     moddat <- model.matrix.default(attr(mf, "terms"), data = mf) # .External2(stats:::C_modelmatrix, attr(mf, "terms"), mf)
   }
-  return(list(fl = fctdat, xmat = moddat))
+  list(fl = fctdat, xmat = moddat)
 }
 
 subsetfl <- function(fl, cc) {
@@ -154,10 +154,9 @@ fHDwithin.pseries <- function(x, w = NULL, na.rm = TRUE, fill = TRUE, ...) {
       return(x)
     } else return(addAttributes(demeanlist(x[xcc], g, weights = w[xcc], ...),
                                 list(index = g, na.rm = which(!xcc)))) # keeps attributes ?? -> Nope !!
-  } else {
-    g <- attr(x, "index") # what about cases ?? -> nah, named !!
-    return(`attr<-`(demeanlist(x, g, weights = w, ...), "index", g)) # keeps attributes ?? -> Nope !!
   }
+  g <- attr(x, "index") # what about cases ?? -> nah, named !!
+  `attr<-`(demeanlist(x, g, weights = w, ...), "index", g) # keeps attributes ?? -> Nope !!
 }
 fHDwithin.matrix <- function(x, fl, w = NULL, na.rm = TRUE, fill = FALSE, ...) {
   ax <- attributes(x)
@@ -289,14 +288,13 @@ fHDwithin.data.frame <- function(x, fl, w = NULL, na.rm = TRUE, fill = FALSE, va
           demeanlist(y[ycc], subsetfl(fl, YC), weights = w[YC], ...) else  qr.resid(qr.default(xmat[YC, , drop = FALSE]), y[ycc])
         return(y)
       }), ax)) # Rfast fastlm??
-    } else {
-      return(setAttributes(lapply(unattrib(x), function(y) {
-        ycc <- which(!is.na(y))
-        y[ycc] <- if(nallfc) qr.resid(qr.default(xmat[ycc, , drop = FALSE]), demeanlist(y[ycc], subsetfl(fl, ycc), weights = w[ycc], ...)) else if(fcl)
-          demeanlist(y[ycc], subsetfl(fl, ycc), weights = w[ycc], ...) else qr.resid(qr.default(xmat[ycc, , drop = FALSE]), y[ycc])
-        return(y)
-      }), ax)) # Rfast fastlm??
     }
+    return(setAttributes(lapply(unattrib(x), function(y) {
+      ycc <- which(!is.na(y))
+      y[ycc] <- if(nallfc) qr.resid(qr.default(xmat[ycc, , drop = FALSE]), demeanlist(y[ycc], subsetfl(fl, ycc), weights = w[ycc], ...)) else if(fcl)
+        demeanlist(y[ycc], subsetfl(fl, ycc), weights = w[ycc], ...) else qr.resid(qr.default(xmat[ycc, , drop = FALSE]), y[ycc])
+      return(y)
+    }), ax)) # Rfast fastlm??
   } else { # at this point missing values are already removed from x and fl !!
     if(nallfc || !fcl) {
       xmat <- qr.default(xmat)
@@ -364,14 +362,13 @@ HDW.data.frame <- function(x, fl, w = NULL, cols = is.numeric, na.rm = TRUE, fil
             demeanlist(y[ycc], subsetfl(fl, YC), weights = w[YC], ...) else  qr.resid(qr.default(xmat[YC, , drop = FALSE]), y[ycc])
           return(y)
         }), ax)) # Rfast fastlm??
-      } else {
-        return(setAttributes(lapply(.subset(x, Xvars), function(y) {
-          ycc <- which(!is.na(y))
-          y[ycc] <- if(nallfc) qr.resid(qr.default(xmat[ycc, , drop = FALSE]), demeanlist(y[ycc], subsetfl(fl, ycc), weights = w[ycc], ...)) else if(fcl)
-            demeanlist(y[ycc], subsetfl(fl, ycc), weights = w[ycc], ...) else qr.resid(qr.default(xmat[ycc, , drop = FALSE]), y[ycc])
-          return(y)
-        }), ax)) # Rfast fastlm??
       }
+      return(setAttributes(lapply(.subset(x, Xvars), function(y) {
+        ycc <- which(!is.na(y))
+        y[ycc] <- if(nallfc) qr.resid(qr.default(xmat[ycc, , drop = FALSE]), demeanlist(y[ycc], subsetfl(fl, ycc), weights = w[ycc], ...)) else if(fcl)
+          demeanlist(y[ycc], subsetfl(fl, ycc), weights = w[ycc], ...) else qr.resid(qr.default(xmat[ycc, , drop = FALSE]), y[ycc])
+        return(y)
+      }), ax)) # Rfast fastlm??
     } else { # at this point missing values are already removed from  fl !!
       # x <- if(na.rm) .Call(C_subsetDT, x, cc, Xvars) else .subset(x, Xvars) # incorporated below -> more memory efficient
       if(nallfc || !fcl) {
@@ -383,13 +380,13 @@ HDW.data.frame <- function(x, fl, w = NULL, cols = is.numeric, na.rm = TRUE, fil
         return(setAttributes(.Call(Cpp_lassign, Y, nrx, cc, NA), ax))
       } else return(setAttributes(Y, ax))
     }
-  } else # fl is not a formula !!
- return(add_stub(fHDwithin.data.frame(if(is.null(cols)) x else colsubset(x, cols), fl, w, na.rm, fill, variable.wise, ...), stub))
+  }  # fl is not a formula !!
+ add_stub(fHDwithin.data.frame(if(is.null(cols)) x else colsubset(x, cols), fl, w, na.rm, fill, variable.wise, ...), stub)
 }
 
 HDW.pdata.frame <- function(x, w = NULL, cols = is.numeric, na.rm = TRUE, fill = TRUE,
                             variable.wise = TRUE, stub = "HDW.", ...)
-    return(add_stub(fHDwithin.pdata.frame(if(is.null(cols)) x else colsubset(x, cols), w, na.rm, fill, variable.wise, ...), stub))
+add_stub(fHDwithin.pdata.frame(if(is.null(cols)) x else colsubset(x, cols), w, na.rm, fill, variable.wise, ...), stub)
 
 
 # Theory: y = ?1 x1 + ?2 x2 + e
@@ -469,10 +466,9 @@ fHDbetween.pseries <- function(x, w = NULL, na.rm = TRUE, fill = TRUE, ...) {
       return(x)
     } else return(addAttributes(demeanlist(x[xcc], g, weights = w[xcc], means = TRUE, ...),
                                 list(index = g, na.rm = which(!xcc)))) # keeps attributes ?? -> Nope !!
-  } else {
-    g <- attr(x, "index") # what about cases ?? -> nah, named !!
-    return(`attr<-`(demeanlist(x, g, weights = w, means = TRUE, ...), "index", g)) # keeps attributes ?? -> Nope !!
   }
+  g <- attr(x, "index") # what about cases ?? -> nah, named !!
+  `attr<-`(demeanlist(x, g, weights = w, means = TRUE, ...), "index", g) # keeps attributes ?? -> Nope !!
 }
 fHDbetween.matrix <- function(x, fl, w = NULL, na.rm = TRUE, fill = FALSE, ...) {
   ax <- attributes(x)
@@ -604,14 +600,13 @@ fHDbetween.data.frame <- function(x, fl, w = NULL, na.rm = TRUE, fill = FALSE, v
           demeanlist(y[ycc], subsetfl(fl, YC), weights = w[YC], means = TRUE, ...) else  qr.fitted(qr.default(xmat[YC, , drop = FALSE]), y[ycc])
         return(y)
       }), ax)) # Rfast fastlm??
-    } else {
-      return(setAttributes(lapply(unattrib(x), function(y) {
-        ycc <- which(!is.na(y))
-        y[ycc] <- if(nallfc) y[ycc] - qr.resid(qr.default(xmat[ycc, , drop = FALSE]), demeanlist(y[ycc], subsetfl(fl, ycc), weights = w[ycc], ...)) else if(fcl)
-          demeanlist(y[ycc], subsetfl(fl, ycc), weights = w[ycc], means = TRUE, ...) else qr.fitted(qr.default(xmat[ycc, , drop = FALSE]), y[ycc])
-        return(y)
-      }), ax)) # Rfast fastlm??
     }
+    return(setAttributes(lapply(unattrib(x), function(y) {
+      ycc <- which(!is.na(y))
+      y[ycc] <- if(nallfc) y[ycc] - qr.resid(qr.default(xmat[ycc, , drop = FALSE]), demeanlist(y[ycc], subsetfl(fl, ycc), weights = w[ycc], ...)) else if(fcl)
+        demeanlist(y[ycc], subsetfl(fl, ycc), weights = w[ycc], means = TRUE, ...) else qr.fitted(qr.default(xmat[ycc, , drop = FALSE]), y[ycc])
+      return(y)
+    }), ax)) # Rfast fastlm??
   } else { # at this point missing values are already removed from x and fl !!
     if(nallfc || !fcl) {
       xmat <- qr.default(xmat)
@@ -676,14 +671,13 @@ HDB.data.frame <- function(x, fl, w = NULL, cols = is.numeric, na.rm = TRUE, fil
             demeanlist(y[ycc], subsetfl(fl, YC), weights = w[YC], means = TRUE, ...) else  qr.fitted(qr.default(xmat[YC, , drop = FALSE]), y[ycc])
           return(y)
         }), ax)) # Rfast fastlm??
-      } else {
-        return(setAttributes(lapply(.subset(x, Xvars), function(y) {
-          ycc <- which(!is.na(y))
-          y[ycc] <- if(nallfc) y[ycc] - qr.resid(qr.default(xmat[ycc, , drop = FALSE]), demeanlist(y[ycc], subsetfl(fl, ycc), weights = w[ycc], ...)) else if(fcl)
-            demeanlist(y[ycc], subsetfl(fl, ycc), weights = w[ycc], means = TRUE, ...) else qr.fitted(qr.default(xmat[ycc, , drop = FALSE]), y[ycc])
-          return(y)
-        }), ax)) # Rfast fastlm??
       }
+      return(setAttributes(lapply(.subset(x, Xvars), function(y) {
+        ycc <- which(!is.na(y))
+        y[ycc] <- if(nallfc) y[ycc] - qr.resid(qr.default(xmat[ycc, , drop = FALSE]), demeanlist(y[ycc], subsetfl(fl, ycc), weights = w[ycc], ...)) else if(fcl)
+          demeanlist(y[ycc], subsetfl(fl, ycc), weights = w[ycc], means = TRUE, ...) else qr.fitted(qr.default(xmat[ycc, , drop = FALSE]), y[ycc])
+        return(y)
+      }), ax)) # Rfast fastlm??
     } else { # at this point missing values are already removed from  fl !!
       # x <- if(na.rm) .Call(C_subsetDT, x, cc, Xvars) else .subset(x, Xvars) # incorporated below -> more memory efficient
       if(nallfc || !fcl) {
@@ -695,19 +689,18 @@ HDB.data.frame <- function(x, fl, w = NULL, cols = is.numeric, na.rm = TRUE, fil
         return(setAttributes(.Call(Cpp_lassign, Y, nrx, cc, NA), ax))
       } else return(setAttributes(Y, ax))
     }
-  } else # fl is not a formula !!
-    return(add_stub(fHDbetween.data.frame(if(is.null(cols)) x else colsubset(x, cols), fl, w, na.rm, fill, variable.wise, ...), stub))
+  } # fl is not a formula !!
+ add_stub(fHDbetween.data.frame(if(is.null(cols)) x else colsubset(x, cols), fl, w, na.rm, fill, variable.wise, ...), stub)
 }
 HDB.pdata.frame <- function(x, w = NULL, cols = is.numeric, na.rm = TRUE, fill = TRUE,
                             variable.wise = TRUE, stub = "HDB.", ...)
-  return(add_stub(fHDbetween.pdata.frame(if(is.null(cols)) x else colsubset(x, cols), w, na.rm, fill, variable.wise, ...), stub))
+ add_stub(fHDbetween.pdata.frame(if(is.null(cols)) x else colsubset(x, cols), w, na.rm, fill, variable.wise, ...), stub)
 
 
 
 
 
-# todo: good performance with missing values ??
-# -> do pseries and pdata.frame method !!
+# todo: good performance with missing values ?
 
 
 #

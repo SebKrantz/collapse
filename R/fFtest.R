@@ -12,8 +12,8 @@ fFtest <- function(y, exc, X = NULL, full.df = TRUE, ...) {
     atl <- is.atomic(X) && is.numeric(X) && is.atomic(exc) && is.numeric(exc)
     data <- if(atl) na_omit(cbind(y, X, exc)) else na_omit(qDF(c(list(y = y), qDF(X), qDF(exc))))
     if(full.df && !atl && any(fc <- vapply(unattrib(data), is.factor, TRUE))) {
-      cld <- class(data)
-      class(data) <- NULL
+      cld <- oldClass(data)
+      oldClass(data) <- NULL
       data[fc] <- lapply(data[fc], droplevels.factor)
       df <- vapply(unattrib(data), function(i) if(is.factor(i)) fnlevels(i)-1L else 1L, 1L) # getdf(data)
       k <- sum(df) # 1 for intercept added with y
@@ -55,7 +55,7 @@ fFtest <- function(y, exc, X = NULL, full.df = TRUE, ...) {
                     r2f-r2r, p, ddff, Fstate, pe), nrow = 3L, ncol = 5L, byrow = TRUE,
                   dimnames = list(c("Full Model","Restricted Model","Exclusion Rest."),
                                   c("R-Sq.","DF1","DF2","F-Stat.","P-Value")))
-    class(res) <- c("fFtest","matrix")
+    oldClass(res) <- c("fFtest","matrix")
   } else {
     u <- fHDwithin.default(y, exc, na.rm = TRUE) # Residuals
     miss <- attr(u, "na.rm")
@@ -71,9 +71,9 @@ fFtest <- function(y, exc, X = NULL, full.df = TRUE, ...) {
     Fstat <- r2/p * ddf/(1-r2) # F statistic for the model (the constant goes unrestricted)
     Pv <- pf(Fstat, p, ddf, lower.tail = FALSE) # P-value corresponding to the F statistic
     res <- c(`R-Sq.` = r2, `DF1` = p, `DF2` = ddf, `F-Stat.` = Fstat, `P-value` = Pv)
-    class(res) <- "fFtest"
+    oldClass(res) <- "fFtest"
   }
-  return(res)
+  res
 }
 
 print.fFtest <- function(x, digits = 3, ...) {

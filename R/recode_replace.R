@@ -72,7 +72,7 @@ recode_num <- function(X, ..., default = NULL, missing = NULL) {
   }
   if(is.list(X)) return(duplAttributes(lapply(unattrib(X), repfun), X))
   if(!is.numeric(X)) stop("X needs to be numeric or a list")
-  return(repfun(X))
+  repfun(X)
 }
 
 recode_char <- function(X, ..., default = NULL, missing = NULL, regex = FALSE) {
@@ -204,7 +204,7 @@ recode_char <- function(X, ..., default = NULL, missing = NULL, regex = FALSE) {
   }
   if(is.list(X)) return(duplAttributes(lapply(unattrib(X), repfun), X))
   if(!is.character(X)) stop("X needs to be character or a list")
-  return(repfun(X))
+  repfun(X)
 }
 
 replace_NA <- function(X, value) {
@@ -242,9 +242,9 @@ replace_outliers <- function(X, limits, value = NA, single.limit = c("SDs", "min
               num <- vapply(unattrib(X), is.numeric, TRUE)
               num <- if(inherits(X, "grouped_df")) num & !fgroup_vars(X, "logical") else
                       num & attr(attr(X, "index"), "names") %!in% attr(X, "names")
-              clx <- class(X)
+              clx <- oldClass(X)
               STDXnum <- fscale(fcolsubset(X, num))
-              class(X) <- NULL
+              oldClass(X) <- NULL
               X[num] <- mapply(function(x, y) `[<-`(x, abs(y) > limits, value = value), unattrib(X)[num], unattrib(STDXnum), SIMPLIFY = FALSE)
               `oldClass<-`(X, clx)
              } else duplAttributes(lapply(unattrib(X), function(x) if(is.numeric(x)) `[<-`(x, abs(fscaleCpp(x)) > limits, value = value) else x), X)
