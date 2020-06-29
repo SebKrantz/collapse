@@ -50,7 +50,7 @@ dapply <- function(X, FUN, ..., MARGIN = 2, parallel = FALSE,
     } else if(lx1 != dX[1L])
       ax[["row.names"]] <- if(!is.null(nx1 <- names(res[[1L]]))) nx1 else .set_row_names(lx1) # could also make deparse(substitute(FUN)), but that is not so typical for data.frames !
   }
-  return(setAttributes(res, ax))
+  setAttributes(res, ax)
 }
 
 # Notes about this version: same as dapply 3 (compact), but takingdrop case before !! -> faster !! and also solving issue with row.names for matrices -> row and column names must be of same type !! as.matrix.data.frame converst row.names to character !!

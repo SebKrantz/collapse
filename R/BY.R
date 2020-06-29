@@ -10,7 +10,8 @@ BY.default <- function(X, g, FUN, ..., use.g.names = TRUE, sort = TRUE,
   aplyfun <- if(parallel) function(...) mclapply(..., mc.cores = mc.cores) else lapply
   simplify <- switch(return[1L], same = TRUE, list = FALSE, stop("BY.default only supports same (simplified) and list output!"))
   if(!is.factor(g)) g <- if(is.GRP(g)) as.factor.GRP(g) else if(is.list(g))
-                         as.factor.GRP(GRP.default(g, sort = sort)) else qF(g, ordered = sort, na.exclude = FALSE)
+                         as.factor.GRP(GRP.default(g, sort = sort, call = FALSE)) else
+                           qF(g, sort = sort, na.exclude = FALSE)
     res <- aplyfun(split.default(X, g), FUN, ...)
     if(simplify) {
       if(expand.wide) {
@@ -38,7 +39,7 @@ BY.default <- function(X, g, FUN, ..., use.g.names = TRUE, sort = TRUE,
         }
       }
     } else if(!use.g.names) names(res) <- NULL
-    return(res)
+  res
 }
 
 BY.data.frame <- function(X, g, FUN, ..., use.g.names = TRUE, sort = TRUE,
@@ -50,7 +51,8 @@ BY.data.frame <- function(X, g, FUN, ..., use.g.names = TRUE, sort = TRUE,
   return <- switch(return[1L], same = 1L, matrix = 2L, data.frame = 1L, list = 0L,
                    stop("Unknown return option!"))
   if(!is.factor(g)) g <- if(is.GRP(g)) as.factor.GRP(g) else if(is.list(g))
-                    as.factor.GRP(GRP.default(g, sort = sort)) else qF(g, ordered = sort, na.exclude = FALSE)
+                    as.factor.GRP(GRP.default(g, sort = sort, call = FALSE)) else
+                      qF(g, sort = sort, na.exclude = FALSE)
   if(return != 0L) {
     ax <- attributes(X)
     if(expand.wide) {
@@ -77,9 +79,9 @@ BY.data.frame <- function(X, g, FUN, ..., use.g.names = TRUE, sort = TRUE,
         res[[1L]] <- unlist(lapply(split.default(`names<-`(X[[1L]], ax[["row.names"]]), g), FUN, ...), FALSE, TRUE)
         if(matl) dn <- list(names(res[[1L]]), ax[["names"]]) else
           ax[["row.names"]] <- names(res[[1L]])
-        setattr_clp(res[[1L]], "names", NULL) # faster than  names(res[[1]]) <- NULL
+        setattr(res[[1L]], "names", NULL) # faster than  names(res[[1]]) <- NULL
         if(typeof(res[[1L]]) == typeof(X[[1L]]) && !matl) { # length(res[[1]]) == nrow(X) &&   safe ?
-          setattr_clp(X[[1L]], "names", NULL)
+          setattr(X[[1L]], "names", NULL)
           duplattributes(res[[1L]], X[[1L]])
           splitfun <- function(x) duplAttributes(unlist(lapply(split.default(x, g), FUN, ...), FALSE, FALSE), x)
         } else splitfun <- function(x) unlist(lapply(split.default(x, g), FUN, ...), FALSE, FALSE)
@@ -104,12 +106,10 @@ BY.data.frame <- function(X, g, FUN, ..., use.g.names = TRUE, sort = TRUE,
       }
     }
     return(setAttributes(res, ax))
-  } else {
-    if(expand.wide) return(aplyfun(X, function(x) do.call(rbind, lapply(split.default(x, g), FUN, ...)))) else {
-      if(use.g.names) return(aplyfun(X, function(x) lapply(split.default(x, g), FUN, ...))) else
-        return(aplyfun(X, function(x) `names<-`(lapply(split.default(x, g), FUN, ...), NULL)))
-    }
   }
+  if(expand.wide) return(aplyfun(X, function(x) do.call(rbind, lapply(split.default(x, g), FUN, ...))))
+  if(use.g.names) return(aplyfun(X, function(x) lapply(split.default(x, g), FUN, ...))) else
+  return(aplyfun(X, function(x) `names<-`(lapply(split.default(x, g), FUN, ...), NULL)))
 }
 
 BY.list <- function(X, g, FUN, ..., use.g.names = TRUE, sort = TRUE,
@@ -126,7 +126,8 @@ BY.matrix <- function(X, g, FUN, ..., use.g.names = TRUE, sort = TRUE,
   return <- switch(return[1L], same = 2L, matrix = 2L, data.frame = 1L, list = 0L,
                    stop("Unknown return option!"))
   if(!is.factor(g)) g <- if(is.GRP(g)) as.factor.GRP(g) else if(is.list(g))
-    as.factor.GRP(GRP.default(g, sort = sort)) else qF(g, ordered = sort, na.exclude = FALSE)
+    as.factor.GRP(GRP.default(g, sort = sort, call = FALSE)) else
+      qF(g, sort = sort, na.exclude = FALSE)
   if(return != 0L) {
     ax <- attributes(X)
     if(expand.wide) {
@@ -151,7 +152,7 @@ BY.matrix <- function(X, g, FUN, ..., use.g.names = TRUE, sort = TRUE,
         if(return == 2L) ax[["dimnames"]] <- list(names(res[[1L]]), dimnames(X)[[2L]]) else # ax[["dimnames"]][[1L]] <- names(res[[1L]]) # gives error if only one dimnames !
           ax <- list(names = dimnames(X)[[2L]], row.names = names(res[[1L]]), class = "data.frame")
                 # c(...,  ax[!(names(ax) %in% c("dim","dimnames","class"))]) # # Don't know why one would need this !
-        setattr_clp(res[[1L]], "names", NULL)
+        setattr(res[[1L]], "names", NULL)
         res[-1L] <- aplyfun(.Call(Cpp_mctl, X[, -1L, drop = FALSE], FALSE, 0L), splitfun3)
         if(return == 2L) {
           res <- do.call(cbind, res)
@@ -174,17 +175,16 @@ BY.matrix <- function(X, g, FUN, ..., use.g.names = TRUE, sort = TRUE,
       }
     }
     return(setAttributes(res, ax))
-  } else {
-    if(expand.wide) return(aplyfun(.Call(Cpp_mctl, X, TRUE, 0L), function(x) do.call(rbind, lapply(split.default(x, g), FUN, ...)))) else if(use.g.names)
-      return(aplyfun(.Call(Cpp_mctl, X, TRUE, 0L), function(x) lapply(split.default(x, g), FUN, ...))) else
-        return(aplyfun(.Call(Cpp_mctl, X, TRUE, 0L), function(x) `names<-`(lapply(split.default(x, g), FUN, ...), NULL)))
   }
+  if(expand.wide) return(aplyfun(.Call(Cpp_mctl, X, TRUE, 0L), function(x) do.call(rbind, lapply(split.default(x, g), FUN, ...))))
+  if(use.g.names) return(aplyfun(.Call(Cpp_mctl, X, TRUE, 0L), function(x) lapply(split.default(x, g), FUN, ...))) else
+  return(aplyfun(.Call(Cpp_mctl, X, TRUE, 0L), function(x) `names<-`(lapply(split.default(x, g), FUN, ...), NULL)))
 }
 
 BY.grouped_df <- function(X, FUN, ..., use.g.names = FALSE, keep.group_vars = TRUE,
                           expand.wide = FALSE, parallel = FALSE, mc.cores = 1L,
                           return = c("same","matrix","data.frame","list")) {
-  g <- GRP.grouped_df(X)
+  g <- GRP.grouped_df(X, call = FALSE)
   groups <- g[[4L]]
   gnam <- g[[5L]]
   g <- as.factor.GRP(g)
@@ -205,14 +205,13 @@ BY.grouped_df <- function(X, FUN, ..., use.g.names = FALSE, keep.group_vars = TR
             attributes(res) <- NULL # faster removing attributes? (yes, a tiny bit!)  also set attributes of groups NULL ? -> Nah
             ax[["names"]] <- c(ax[["names"]][gn], ax[["names"]][-gn])
             return(setAttributes(c(.subset(X, gn), res), ax))
-          } else {
-            ax <- attributes(res)
-            attributes(res) <- NULL
-            ax[["groups"]] <- NULL
-            ax[["class"]] <- ax[["class"]][ax[["class"]] != "grouped_df"]
-            ax[["names"]] <- c(gnam, ax[["names"]])
-            return(setAttributes(c(groups, res), ax))
           }
+          ax <- attributes(res)
+          attributes(res) <- NULL
+          ax[["groups"]] <- NULL
+          ax[["class"]] <- ax[["class"]][ax[["class"]] != "grouped_df"]
+          ax[["names"]] <- c(gnam, ax[["names"]])
+          return(setAttributes(c(groups, res), ax))
         } else return(res)
       } else return(res)
   } else return(BY.data.frame(X, g, FUN, ..., use.g.names = use.g.names, sort = TRUE, expand.wide = expand.wide,
