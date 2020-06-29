@@ -21,7 +21,9 @@
 // # include <config.h>
 // #endif
 
-#include "data.table.h"
+// #include "data.table.h"
+#include <R.h>
+#include <Rinternals.h>
 #include <Rdefines.h>
 
 // #include <R.h>

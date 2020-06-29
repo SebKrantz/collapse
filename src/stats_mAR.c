@@ -19,8 +19,11 @@
 
   #include <math.h>
   #include <string.h>
-  #include "data.table.h"
+  // #include "data.table.h"
+  #include <R.h>
+  #include <Rinternals.h>
   #include <Rdefines.h>
+  #include <stdbool.h>
 
 //  #include <R.h>
 #include <R_ext/Applic.h>	/* Fortran routines */
