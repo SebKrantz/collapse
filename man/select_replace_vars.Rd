@@ -6,6 +6,7 @@
 \alias{slt<-}
 \alias{get_vars}
 \alias{gv}
+\alias{gvr}
 \alias{num_vars}
 \alias{nv}
 \alias{cat_vars}
@@ -17,6 +18,7 @@
 \alias{av}
 \alias{get_vars<-}
 \alias{gv<-}
+\alias{gvr<-}
 \alias{num_vars<-}
 \alias{nv<-}
 \alias{cat_vars<-}
@@ -40,12 +42,13 @@ slt(x, ...) <- value           # Shortcut for fselect<-
 ## Select and replace columns by names, indices, logical vectors,
 ## regular expressions or using functions to identify columns
 
-get_vars(x, vars, return = "data",
-         regex = FALSE, ...)
+get_vars(x, vars, return = "data", regex = FALSE, ...)
+      gv(x, vars, return = "data")              # Shortcut for get_vars
+     gvr(x, vars, return = "data", ...)         # Shortcut for get_vars(..., regex = TRUE)
+
 get_vars(x, vars, regex = FALSE, ...) <- value
-      gv(x, vars, return = "data",              # Shortcut for get_vars
-         regex = FALSE, ...)
-      gv(x, vars, regex = FALSE, ...) <- value  # Shortcut for get_vars<-
+      gv(x, vars) <- value                      # Shortcut for get_vars<-
+     gvr(x, vars, ...) <- value                 # Shortcut for get_vars<-(..., regex = TRUE)
 
 ## Add columns at any position within a data.frame
 
@@ -133,6 +136,7 @@ head(get_vars(wlddev, 9:12))                               # Select columns 9 th
 head(get_vars(wlddev, -(9:12)))                            # All except columns 9 through 12
 head(get_vars(wlddev, c("PCGDP","LIFEEX","GINI","ODA")))   # Select using column names
 head(get_vars(wlddev, "[[:upper:]]", regex = TRUE))        # Same thing: match upper-case var. names
+head(gvr(wlddev, "[[:upper:]]"))                           # Same thing
 
 get_vars(wlddev, 9:12) <- get_vars(wlddev, 9:12)           # 9x faster wlddev[9:12] <- wlddev[9:12]
 add_vars(wlddev) <- STD(gv(wlddev,9:12), wlddev$iso3c)     # Add Standardized columns 9 through 12

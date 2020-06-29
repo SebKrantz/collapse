@@ -2,7 +2,7 @@
 
 fselect <- function(x, ..., return = "data") { # This also takes names and indices ....
   ax <- attributes(x)
-  class(x) <- NULL # attributes ?
+  oldClass(x) <- NULL # attributes ?
   nam <- names(x)
   nl <- `names<-`(as.vector(seq_along(x), "list"), nam)
   vars <- eval(substitute(c(...)), nl, parent.frame())
@@ -25,8 +25,8 @@ slt <- fselect # good, consistent
 
 
 "fselect<-" <- function(x, ..., value) {
-  clx <- class(x)
-  class(x) <- NULL
+  clx <- oldClass(x)
+  oldClass(x) <- NULL
   nl <- `names<-`(as.vector(seq_along(x), "list"), names(x))
   vars <- eval(substitute(c(...)), nl, parent.frame())
   if(!is.integer(vars)) stop("Unknown columns")
@@ -38,7 +38,7 @@ slt <- fselect # good, consistent
     return(setAttributes(.subset(x, -vars), ax))
   }
   if(is.list(value)) {
-    class(value) <- NULL
+    oldClass(value) <- NULL
     if(length(value[[1L]]) != length(x[[1L]])) stop("NROW(value) must match nrow(x)")
     if(length(value) != length(vars)) stop("NCOL(value) must match selected variables")
     x[vars] <- value
@@ -75,10 +75,10 @@ get_vars_FUN <- function(x, FUN, return = "data")
     ax[["names"]] <- ax[["names"]][-ind] # fastest ? -> yes !
     return(setAttributes(.subset(x, -ind), ax))
   }
-  clx <- class(x)
-  class(x) <- NULL
+  clx <- oldClass(x)
+  oldClass(x) <- NULL
   if(is.list(value)) {
-    class(value) <- NULL # fastest ?? if(is.object(value)) class(value) <- NULL ??
+    oldClass(value) <- NULL # fastest ?? if(is.object(value)) oldClass(value) <- NULL ??
     if(length(value[[1L]]) != length(x[[1L]])) stop("NROW(value) must match nrow(x)")
     if(length(value) != length(ind)) stop("NCOL(value) must match selected variables") # length(num_vars(x))
     x[ind] <- value
@@ -127,10 +127,10 @@ cat_vars <- function(x, return = "data") {
     ax[["names"]] <- ax[["names"]][-ind]
     return(setAttributes(.subset(x, -ind), ax))
   }
-  clx <- class(x)
-  class(x) <- NULL
+  clx <- oldClass(x)
+  oldClass(x) <- NULL
   if(is.list(value)) {
-    class(value) <- NULL
+    oldClass(value) <- NULL
     if(length(value[[1L]]) != length(x[[1L]])) stop("NROW(value) must match nrow(x)")
     if(length(value) != length(ind)) stop("NCOL(value) must match length(cat_vars(x))")
     x[ind] <- value
@@ -165,11 +165,49 @@ get_vars <- function(x, vars, return = "data", regex = FALSE, ...) {
         } else stop("For named logical, vars must be a function, character names or a regular expression"),
         stop("Unknown return option!"))
 }
-gv <- get_vars
+
+gv <- function(x, vars, return = "data") {
+  if(is.function(vars)) return(get_vars_FUN(x, vars, return))
+  switch(return,
+         data = colsubset(x, vars),
+         names = attr(x, "names")[vars], # error?
+         indices = if(is.character(vars)) ckmatch(vars, attr(x, "names")) else stop("For indices, vars must be a function or character names"),
+         named_indices = if(is.character(vars)) {
+           nam <- attr(x, "names")
+           ind <- ckmatch(vars, nam)
+           `names<-`(ind, nam[ind])
+         } else stop("For named indices, vars must be a function, character names or a regular expression"),
+         logical = if(is.character(vars)) attr(x, "names") %in% vars else stop("For logical, vars must be a function, character names or a regular expression"),
+         named_logical = if(is.character(vars)) {
+           nam <- attr(x, "names")
+           `names<-`(nam %in% vars, nam)
+         } else stop("For named logical, vars must be a function, character names or a regular expression"),
+         stop("Unknown return option!"))
+}
+
+gvr <- function(x, vars, return = "data", ...) {
+    switch(return,
+           data = fcolsubset(x, rgrep(vars, attr(x, "names"), ...)),
+           names = rgrep(vars, attr(x, "names"), value = TRUE, ...),
+           indices = rgrep(vars, attr(x, "names"), ...),
+           named_indices = {
+             nam <- attr(x, "names")
+             ind <- rgrep(vars, nam, ...)
+             `names<-`(ind, nam[ind])
+           },
+           logical = rgrepl(vars, attr(x, "names"), ...),
+           named_logical = {
+             nam <- attr(x, "names")
+             `names<-`(rgrepl(vars, nam, ...), nam)
+           },
+           stop("Unknown return option!"))
+  }
+
+
 
 "get_vars<-" <- function(x, vars, regex = FALSE, ..., value) {
-  clx <- class(x)
-  class(x) <- NULL
+  clx <- oldClass(x)
+  oldClass(x) <- NULL
   if(is.numeric(vars)) {
     if(!missing(...)) unused_arg_action(match.call(), ...)
     if(max(abs(vars)) > length(x)) stop("Column index out of range abs(1:length(x))")
@@ -191,7 +229,7 @@ gv <- get_vars
     return(setAttributes(x[-vars], ax))
   }
   if(is.list(value)) {
-    class(value) <- NULL
+    oldClass(value) <- NULL
     if(length(value[[1L]]) != length(x[[1L]])) stop("NROW(value) must match nrow(x)")
     if(length(value) != length(vars)) stop("NCOL(value) must match length(vars)")
     x[vars] <- value
@@ -204,8 +242,62 @@ gv <- get_vars
   return(`oldClass<-`(x, clx))
 }
 
-"gv<-" <- `get_vars<-`
+"gv<-" <- function(x, vars, value) {
+  clx <- oldClass(x)
+  oldClass(x) <- NULL
+  if(is.numeric(vars)) {
+    if(max(abs(vars)) > length(x)) stop("Column index out of range abs(1:length(x))")
+    if(any(vars < 0)) vars <- seq_along(x)[vars]
+  } else if(is.logical(vars)) {
+    if(length(vars) != length(x)) stop("Logical subsetting vector must match length(x)")
+    vars <- which(vars)
+  } else vars <- if(is.function(vars)) which(vapply(unattrib(x), vars, TRUE)) else ckmatch(vars, names(x))
 
+  if(is.null(value)) {
+    if(!length(vars)) return(`oldClass<-`(x, clx))
+    ax <- attributes(x)
+    ax[["names"]] <- names(x)[-vars]
+    ax[["class"]] <- clx
+    return(setAttributes(x[-vars], ax))
+  }
+  if(is.list(value)) {
+    oldClass(value) <- NULL
+    if(length(value[[1L]]) != length(x[[1L]])) stop("NROW(value) must match nrow(x)")
+    if(length(value) != length(vars)) stop("NCOL(value) must match length(vars)")
+    x[vars] <- value
+    if(length(nam <- names(value))) names(x)[vars] <- nam #  == length(vars)
+  } else {
+    if(NROW(unclass(value)) != length(x[[1L]])) stop("NROW(value) must match nrow(x)")
+    if(length(vars) != 1L) stop("NCOL(value) must match length(vars)")
+    x[[vars]] <- value
+  }
+  return(`oldClass<-`(x, clx))
+}
+"gvr<-" <- function(x, vars, ..., value) {
+  clx <- oldClass(x)
+  oldClass(x) <- NULL
+  vars <- rgrep(vars, names(x), ...)
+
+  if(is.null(value)) {
+    if(!length(vars)) return(`oldClass<-`(x, clx))
+    ax <- attributes(x)
+    ax[["names"]] <- names(x)[-vars]
+    ax[["class"]] <- clx
+    return(setAttributes(x[-vars], ax))
+  }
+  if(is.list(value)) {
+    oldClass(value) <- NULL
+    if(length(value[[1L]]) != length(x[[1L]])) stop("NROW(value) must match nrow(x)")
+    if(length(value) != length(vars)) stop("NCOL(value) must match length(vars)")
+    x[vars] <- value
+    if(length(nam <- names(value))) names(x)[vars] <- nam #  == length(vars)
+  } else {
+    if(NROW(unclass(value)) != length(x[[1L]])) stop("NROW(value) must match nrow(x)")
+    if(length(vars) != 1L) stop("NCOL(value) must match length(vars)")
+    x[[vars]] <- value
+  }
+  return(`oldClass<-`(x, clx))
+}
 
 # Make faster ?
 "add_vars<-" <- function(x, pos = "end", value) {
@@ -213,7 +305,7 @@ gv <- get_vars
   attributes(x) <- NULL
   lx <- length(x)
   if(is.list(value)) {
-    class(value) <- NULL # fastest ?
+    oldClass(value) <- NULL # fastest ?
     if(length(value[[1L]]) != length(x[[1L]])) stop("NROW(value) must match nrow(x)")
     # res <- c(x, value)  # FASTER than commented out below
     if(is.character(pos)) {
@@ -260,7 +352,7 @@ gv <- get_vars
 "av<-" <- `add_vars<-`
 
 add_vars <- function(x, ..., pos = "end") {
-  if(length(list(...)) == 1L) return(`add_vars<-`(x, pos, ...))
+  if(...length() == 1L) return(`add_vars<-`(x, pos, ...))
   l <- c(...)
   if(!all(fnrow2(x) == lengths(l, FALSE))) stop("if multiple arguments are passed to '...', each needs to be a data.frame/list with column-lengths matching nrow(x)")
   return(`add_vars<-`(x, pos, l)) # very minimal ! Doesn't work for vectors etc !
@@ -276,7 +368,7 @@ av <- add_vars
 #   e <- substitute(list(...))
 #   ax <- attributes(x)
 #   if(length(e) == 2L) { # only one ... could be a sequence with :
-#     class(x) <- NULL
+#     oldClass(x) <- NULL
 #     nam <- names(x)
 #     nl <- `names<-`(as.vector(seq_along(x), "list"), nam)
 #     vars <- eval(e[[2L]], nl, parent.frame())
@@ -295,7 +387,7 @@ av <- add_vars
 #   attributes(x) <- NULL
 #   ind <- which(vapply(x, is.numeric, TRUE, USE.NAMES = FALSE))
 #   if(is.list(value)) {
-#     class(value) <- NULL
+#     oldClass(value) <- NULL
 #     if(length(value[[1L]]) != length(x[[1L]])) stop("NROW(value) must match nrow(x)")
 #     if(length(value) != length(ind)) stop("NCOL(value) must match length(char_vars(x))")
 #     x[ind] <- value
@@ -344,7 +436,7 @@ av <- add_vars
 #       rgrep(vars, ax[["names"]], ...) else ckmatch(vars, ax[["names"]])
 #   }
 #   if(is.list(value)) {
-#     class(value) <- NULL # fastest ??
+#     oldClass(value) <- NULL # fastest ??
 #     if(length(value[[1L]]) != length(x[[1L]])) stop("NROW(value) must match nrow(x)")
 #     if(length(value) != length(vars)) stop("NCOL(value) must match length(vars)")
 #     x[vars] <- value
