@@ -1,7 +1,7 @@
 #include "data.table.h"
 /*
  This code is adapted from the data.table package: http://r-datatable.com
- and licensed under a Mozialla Public License 2.0 (MPL-2.0) license.
+ and licensed under a Mozilla Public License 2.0 (MPL-2.0) license.
 */
 
 
