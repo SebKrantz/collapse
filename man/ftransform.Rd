@@ -1,6 +1,8 @@
 \name{ftransform}
 \alias{ftransform}
 \alias{tfm}
+\alias{ftransform<-}
+\alias{tfm<-}
 \alias{settransform}
 \alias{settfm}
 \alias{fcompute}
@@ -18,12 +20,17 @@ tfm(X, ...)            # Shortcut for ftransform
 settransform(X, ...)
 settfm(X, ...)         # Shortcut for settransform
 
+# Replace modified columns in a 'data.frame'
+ftransform(X) <- value
+tfm(X) <- value        # Shortcut for ftransform<-
+
 # Compute and return new 'data.frame' from existing one
 fcompute(X, ...)
 }
 \arguments{
     \item{X}{a data.frame.}
-    \item{\dots}{further arguments of the form \code{column = value}. The \code{value} can be a combination of other columns, a scalar value, or \code{NULL}, which deletes \code{column}. }
+    \item{\dots}{further arguments of the form \code{column = value}. The \code{value} can be a combination of other columns, a scalar value, or \code{NULL}, which deletes \code{column}. Since v1.3.0 it is also possible to place a single list here, which will be treated the same as a list of \code{column = value} arguments. }
+    \item{value}{a named list of replacements, it will be treated like an evaluated list of \code{column = value} arguments.}
 }
 \details{
   The \code{\dots} arguments to \code{ftransform} are tagged
@@ -48,9 +55,15 @@ ftransform(airquality, new = -Ozone, Temp = (Temp-32)/1.8)
 ftransform(airquality, new = -Ozone, new2 = 1, Temp = NULL)  # Deleting Temp
 ftransform(airquality, Ozone = NULL, Temp = NULL)            # Deleting columns
 
+## Since v1.3.0 we can pass a list of columns, and there is a replacement method.
+ftransform(airquality, fscale(get_vars(airquality, 1:3)))
+ftransform(airquality) <- fscale(get_vars(airquality, 1:3))
+rm(airquality)
+
 ## settransform modifies a data.frame in the global environment
 airquality_c <- airquality
 settransform(airquality_c, Ratio = Ozone / Temp, Ozone = NULL, Temp = NULL)
+settransform(airquality_c, STD(airquality_c, cols = 1:2))    # This also works..
 head(airquality_c)
 rm(airquality_c)
 
