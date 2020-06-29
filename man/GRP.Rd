@@ -11,7 +11,7 @@
 \alias{is.GRP}
 \alias{print.GRP}
 \alias{plot.GRP}
-\alias{group_names.GRP}
+\alias{GRPnames}
 \alias{as.factor.GRP}
 \title{Fast Grouping / \emph{collapse} Grouping Objects}
 \description{
@@ -36,7 +36,7 @@ GRP(X, ...)
 
 # Identify, get group names, and convert GRP object to factor
 is.GRP(x)
-group_names.GRP(x, force.char = TRUE)
+GRPnames(x, force.char = TRUE)
 as.factor.GRP(x, ordered = FALSE)
 
 # Fast version of dplyr::group_by for use with fast functions, see details
@@ -142,7 +142,7 @@ GRP(mtcars$cyl)
 GRP(mtcars, ~ cyl + vs + am)      # or GRP(mtcars, c("cyl","vs","am")) or GRP(mtcars, c(2,8:9))
 g <- GRP(mtcars, ~ cyl + vs + am) # saving the object
 plot(g)                           # plotting it
-group_names.GRP(g)                # retain group names
+GRPnames(g)                # retain group names
 fsum(mtcars, g)                   # compute the sum of mtcars, grouped by variables cyl, vs and am.
 
 ## convert factor to GRP object
