@@ -18,6 +18,7 @@ LogicalVector varyingCppImpl(Vector<RTYPE> x, int ng, IntegerVector g, bool any_
       if(j != 0) for(int i = j; i--; ) if(!isnanT(x[i]) && x[i] != vi) return LogicalVector(1, true);
       return LogicalVector(1);
     } else { // with groups
+      if(g.size() != l) stop("length(g) must match length(x)");
       Vector<RTYPE> valg(ng, Vector<RTYPE>::get_na());
       if(any_group) {
         for(int i = 0; i != l; ++i) {
