@@ -37,19 +37,19 @@ Fast (Quasi-, Log-) Differences for Time-Series and Panel Data
       D(x, n = 1, diff = 1, \dots)
    Dlog(x, n = 1, diff = 1, \dots)
 % ## Default S3 methods:
-\method{fdiff}{default}(x, n = 1, diff = 1, g = NULL, t = NULL, fill = NA, logdiff = FALSE, rho = 1,
+\method{fdiff}{default}(x, n = 1, diff = 1, g = NULL, t = NULL, fill = NA, log = FALSE, rho = 1,
       stubs = TRUE, \dots)
 \method{D}{default}(x, n = 1, diff = 1, g = NULL, t = NULL, fill = NA, rho = 1,
   stubs = TRUE, \dots)
 \method{Dlog}{default}(x, n = 1, diff = 1, g = NULL, t = NULL, fill = NA, rho = 1, stubs = TRUE, \dots)
 %## S3 methods for class 'matrix'
-\method{fdiff}{matrix}(x, n = 1, diff = 1, g = NULL, t = NULL, fill = NA, logdiff = FALSE, rho = 1,
+\method{fdiff}{matrix}(x, n = 1, diff = 1, g = NULL, t = NULL, fill = NA, log = FALSE, rho = 1,
       stubs = TRUE, \dots)
 \method{D}{matrix}(x, n = 1, diff = 1, g = NULL, t = NULL, fill = NA, rho = 1,
   stubs = TRUE, \dots)
 \method{Dlog}{matrix}(x, n = 1, diff = 1, g = NULL, t = NULL, fill = NA, rho = 1, stubs = TRUE, \dots)
 %## S3 methods for class 'data.frame'
-\method{fdiff}{data.frame}(x, n = 1, diff = 1, g = NULL, t = NULL, fill = NA, logdiff = FALSE, rho = 1,
+\method{fdiff}{data.frame}(x, n = 1, diff = 1, g = NULL, t = NULL, fill = NA, log = FALSE, rho = 1,
       stubs = TRUE, \dots)
 \method{D}{data.frame}(x, n = 1, diff = 1, by = NULL, t = NULL, cols = is.numeric,
   fill = NA, rho = 1, stubs = TRUE, keep.ids = TRUE, \dots)
@@ -58,11 +58,11 @@ Fast (Quasi-, Log-) Differences for Time-Series and Panel Data
 
 # Methods for compatibility with plm:
 %## S3 methods for class 'pseries'
-\method{fdiff}{pseries}(x, n = 1, diff = 1, fill = NA, logdiff = FALSE, rho = 1, stubs = TRUE, \dots)
+\method{fdiff}{pseries}(x, n = 1, diff = 1, fill = NA, log = FALSE, rho = 1, stubs = TRUE, \dots)
 \method{D}{pseries}(x, n = 1, diff = 1, fill = NA, rho = 1, stubs = TRUE, \dots)
 \method{Dlog}{pseries}(x, n = 1, diff = 1, fill = NA, rho = 1, stubs = TRUE, \dots)
 %## S3 methods for class 'pdata.frame'
-\method{fdiff}{pdata.frame}(x, n = 1, diff = 1, fill = NA, logdiff = FALSE, rho = 1, stubs = TRUE, \dots)
+\method{fdiff}{pdata.frame}(x, n = 1, diff = 1, fill = NA, log = FALSE, rho = 1, stubs = TRUE, \dots)
 \method{D}{pdata.frame}(x, n = 1, diff = 1, cols = is.numeric, fill = NA, rho = 1, stubs = TRUE,
   keep.ids = TRUE, \dots)
 \method{Dlog}{pdata.frame}(x, n = 1, diff = 1, cols = is.numeric, fill = NA, rho = 1, stubs = TRUE,
@@ -70,7 +70,7 @@ Fast (Quasi-, Log-) Differences for Time-Series and Panel Data
 
 # Methods for compatibility with dplyr:
 %## S3 methods for class 'grouped_df'
-\method{fdiff}{grouped_df}(x, n = 1, diff = 1, t = NULL, fill = NA, logdiff = FALSE, rho = 1, stubs = TRUE,
+\method{fdiff}{grouped_df}(x, n = 1, diff = 1, t = NULL, fill = NA, log = FALSE, rho = 1, stubs = TRUE,
       keep.ids = TRUE, \dots)
 \method{D}{grouped_df}(x, n = 1, diff = 1, t = NULL, fill = NA, rho = 1, stubs = TRUE,
   keep.ids = TRUE, \dots)
@@ -87,7 +87,7 @@ Fast (Quasi-, Log-) Differences for Time-Series and Panel Data
   \item{t}{same input as \code{g}, to indicate the time-variable. For safe computation of differences on unordered time-series and panels. \emph{Notes}: data.frame method also allows name, index or one-sided formula i.e. \code{~time}. grouped_df method also allows lazy-evaluation i.e. \code{time} (no quotes).}
   \item{cols}{\emph{data.frame method}: Select columns to difference using a function, column names or indices. Default: All numeric variables. \emph{Note}: \code{cols} is ignored if a two-sided formula is passed to \code{by}.}
   \item{fill}{value to insert when vectors are shifted. Default is \code{NA}. }
-  \item{logdiff}{logical. \code{TRUE} Computes log-differences instead. See Details.}
+  \item{log}{logical. \code{TRUE} Computes log-differences instead. See Details.}
   \item{rho}{double. Autocorrelation parameter. Set to a value between 0 and 1 for quasi-differencing. However any numeric value can be supplied. }
   \item{stubs}{logical. \code{TRUE} will rename all differenced columns by adding prefixes "L\code{n}D\code{diff}." / "F\code{n}D\code{diff}." for differences "L\code{n}Dlog\code{diff}." / "F\code{n}Dlog\code{diff}." for log-differences and replacing "D" / "Dlog" with "QD" / "QDlog" for quasi-differences. }
   \item{keep.ids}{\emph{data.frame / pdata.frame / grouped_df methods}: Logical. Drop all panel-identifiers from the output (which includes all variables passed to \code{by} or \code{t}). \emph{Note}: For panel-data.frame's and grouped tibbles identifiers are dropped, but the 'index' / 'groups' attributes are kept.}
@@ -107,7 +107,7 @@ It is also possible to compute differences on unordered vectors / time-series (t
 The methods applying to \emph{plm} objects (panel-series and panel-data.frames) automatically utilize the panel-identifiers attached to these objects and thus securely compute fully identified panel-differences. If these objects have > 2 panel-identifiers attached to them, the last identifier is assumed to be the time-variable, and the others are taken as grouping-variables and interacted.
 }
 \value{
-\code{x} differenced \code{diff} times using lags \code{n} of itself. Quasi and log-differences are toggled by the \code{rho} and \code{logdiff} arguments or the \code{Dlog} operators. Computations can be grouped by \code{g/by} and/or ordered by \code{t}. See Details and Examples.
+\code{x} differenced \code{diff} times using lags \code{n} of itself. Quasi and log-differences are toggled by the \code{rho} and \code{log} arguments or the \code{Dlog} operators. Computations can be grouped by \code{g/by} and/or ordered by \code{t}. See Details and Examples.
 }
 \references{
 Cochrane, D.; Orcutt, G. H. (1949). Application of Least Squares Regression to Relationships Containing Auto-Correlated Error Terms. \emph{Journal of the American Statistical Association}. 44 (245): 32-61.
