@@ -13,7 +13,7 @@ get_elem_FUN <- function(x, FUN, return = "sublist", keep_class = FALSE)
          stop("Unknown return option!"))
 
 list_elem <- function(l, return = "sublist", keep.class = FALSE)
-    return(get_elem_FUN(l, is.list, return, keep.class))
+    get_elem_FUN(l, is.list, return, keep.class)
 
 atomic_elem <- function(l, return = "sublist", keep.class = FALSE)
     get_elem_FUN(l, is.atomic, return, keep.class)
@@ -28,7 +28,7 @@ atomic_elem <- function(l, return = "sublist", keep.class = FALSE)
   if(len != length(ind)) stop("length(value) must match length(list_elem(l))")
   if(ilv) l[ind] <- value else l[[ind]] <- value
   if(ilv && length(nam <- names(value))) al[["names"]][ind] <- nam
-  return(setAttributes(l, al))
+  setAttributes(l, al)
 }
 
 "atomic_elem<-" <- function(l, value) {
@@ -40,7 +40,7 @@ atomic_elem <- function(l, return = "sublist", keep.class = FALSE)
   if(len != length(ind)) stop("length(value) must match length(list_elem(l))")
   if(ilv) l[ind] <- value else l[[ind]] <- value
   if(ilv && length(nam <- names(value))) al[["names"]][ind] <- nam
-  return(setAttributes(l, al))
+  setAttributes(l, al)
 }
 
 is.regular <- function(x) is.list(x) || is.atomic(x) # fastest way?
@@ -49,30 +49,31 @@ is.unlistable <- function(l) all(unlist(rapply2d(l, is.regular), use.names = FAL
 
 # If data.frame, search all, otherwise, make optional counting df or not, but don't search them.
 ldepth <- function(l, DF.as.list = TRUE) {
-  if (inherits(l,  "data.frame")) { # fast defining different functions in if-clause ?
-    ld <- function(y,i) if (is.list(y)) lapply(y,ld,i+1L) else i
-  } else if (DF.as.list) {
+  if (inherits(l, "data.frame")) { # fast defining different functions in if-clause ?
+    ld <- function(y,i) if(is.list(y)) lapply(y,ld,i+1L) else i
+  } else if(DF.as.list) {
     ld <- function(y,i) {
       df <- inherits(y, "data.frame")
-      if (is.list(y) && !df) lapply(y,ld,i+1L) else i+df
+      if(is.list(y) && !df) lapply(y,ld,i+1L) else i+df
     }
   } else {
-    ld <- function(y,i) if (is.list(y) && !inherits(y, "data.frame")) lapply(y,ld,i+1L) else i
+    ld <- function(y,i) if(is.list(y) && !inherits(y, "data.frame")) lapply(y,ld,i+1L) else i
   }
-  return(max(unlist(ld(l, 0L), use.names = FALSE)))
+  max(unlist(ld(l, 0L), use.names = FALSE))
 }
 
 has_elem <- function(l, elem, recursive = TRUE, DF.as.list = TRUE, regex = FALSE, ...) {
   if(is.function(elem)) {
     if(!missing(...)) unused_arg_action(match.call(), ...)
     if(recursive) {
-     if(DF.as.list) return(any(unlist(rapply(l, elem, how = "list"), use.names = FALSE))) else
-                    return(any(unlist(rapply2d(l, elem), use.names = FALSE)))
-    } else return(any(vapply(l, elem, TRUE, USE.NAMES = FALSE)))
+     if(DF.as.list) return(any(unlist(rapply(l, elem, how = "list"), use.names = FALSE)))
+     return(any(unlist(rapply2d(l, elem), use.names = FALSE)))
+    }
+    return(any(vapply(l, elem, TRUE, USE.NAMES = FALSE)))
   } else if(is.character(elem)) {
     if(!regex && !missing(...)) unused_arg_action(match.call(), ...)
     if(recursive) {
-      class(l) <- NULL # in case [ behaves weird
+      oldClass(l) <- NULL # in case [ behaves weird
       is.subl <- if(DF.as.list) is.list else function(x) is.list(x) && !inherits(x, "data.frame") # could do without, but it seems to remove data.frame attributes, and more speed!
       namply <- function(y) if(any(subl <- vapply(y, is.subl, TRUE)))
         c(names(subl), unlist(lapply(.subset(y, subl), namply), use.names = FALSE)) else names(y) # also overall subl names are important, and .subset for DT subsetting ! # names(which(!subl)) # names(y)[!subl] # which is faster?
@@ -108,38 +109,36 @@ list_extract_FUN <- function(l, FUN, is.subl, keep.tree = FALSE) {
     if(keep.tree || length(matches) != 1L) return(x[matches]) else return(x[[matches]]) # needs to be !=
   }
  }
- return(regsearch(l))
+ regsearch(l)
 }
 
 list_extract_regex <- function(l, exp, is.subl, keep.tree = FALSE, ...) {
   regsearch <- function(x) {
   if(any(subl <- vapply(x, is.subl, TRUE, USE.NAMES = FALSE))) {
-      wres <- rgrep(exp, names(x), ...)
-      wnressubl <- setdiff(which(subl), wres)
+      matches <- rgrepl(exp, names(x), ...)
+      wres <- which(matches)  #   wres <- rgrep(exp, names(x), ...)
+      wnressubl <- if(length(wres)) which(subl & !matches) else which(subl) # fsetdiff(which(subl), wres)
     if(length(wnressubl)) { # faster way?
       a <- lapply(x[wnressubl], regsearch) # is this part still necessary?, or only for keep.tree
-      wa <- vapply(a, length, 1L) > 0L # note that this also gets rid of null elements!! could make it length or is.null!
+      wa <- vapply(a, length, 1L) > 0L # note that this also gets rid of null elements!! could make it length or is.null!, length is better for length 0 lists !!
       x <- c(x[wres], a[wa])
       if(keep.tree || length(x) != 1L)
         return(x[forder.int(c(wres, wnressubl[wa]))]) else return(x[[1L]])
     } else if(keep.tree || length(wres) != 1L) return(x[wres]) else return(x[[wres]])
   } else { # This ensures correct behavior in the final nodes:
-    matches <- rgrep(exp, names(x), ...) # what if no matches here !
+    matches <- rgrep(exp, names(x), ...)
     if(keep.tree || length(matches) != 1L) return(x[matches]) else return(x[[matches]]) # needs to be !=
   }
  }
- return(regsearch(l))
+ regsearch(l)
 }
 
 list_extract_names <- function(l, nam, is.subl, keep.tree = FALSE) {
  regsearch <- function(x) {
   if(any(subl <- vapply(x, is.subl, TRUE, USE.NAMES = FALSE))) {
-    wres <- match(nam, names(x))
-    if(anyNA(wres)) wres <- integer(0)
-    wnressubl <- setdiff(which(subl), wres)
-      # matches <- names(x) %in% nam # old solution: faster but does not work well if parent list is unnamed ! (i.e. l = list(lm1, lm1))
-      # wres <- which(matches)
-      # wnressubl <- which(subl & !matches)
+      matches <- names(x) %in% nam
+      wres <- which(matches) # match(nam, names(x), 0L) # better bcause gives integer(0) -> necessary as cannot do l[[0L]]
+      wnressubl <- if(length(wres)) which(subl & !matches) else which(subl) # fsetdiff(which(subl), wres)  # old solution: faster but does not work well if parent list is unnamed ! (i.e. l = list(lm1, lm1))
     if(length(wnressubl)) {
       a <- lapply(x[wnressubl], regsearch)
       wa <- vapply(a, length, 1L) > 0L
@@ -148,12 +147,11 @@ list_extract_names <- function(l, nam, is.subl, keep.tree = FALSE) {
         return(x[forder.int(c(wres, wnressubl[wa]))]) else return(x[[1L]])
     } else if(keep.tree || length(wres) != 1L) return(x[wres]) else return(x[[wres]])
   } else {
-    matches <- match(nam, names(x))  # which(names(x) %in% nam)
-    if(anyNA(matches)) matches <- integer(0)
-    if(keep.tree || length(matches) != 1L) return(x[matches]) else return(x[[matches]]) # needs to be !=
+    matches <- which(names(x) %in% nam)
+    if(keep.tree || length(matches) != 1L) return(x[matches]) else return(x[[matches]]) # needs to be !=, because interger(0) goes in first..
   }
  }
- return(regsearch(l))
+ regsearch(l)
 }
 
 # Idea: Also use indices and logical vectors ? i.e. get first two columns of alist of data.frames ?
@@ -165,7 +163,7 @@ list_extract_ind <- function(l, ind, is.subl, keep.tree = FALSE) {
   } else {
     regsearch <- function(x) if(is.subl(x)) lapply(x, regsearch) else x[[ind]]
   }
-  return(regsearch(l))
+  regsearch(l)
 }
 
 # Note: all functions currently remove empty list elements !
@@ -206,7 +204,7 @@ get_elem <- function(l, elem, recursive = TRUE, DF.as.list = TRUE,
       elem <- which(elem) # else stop("elem must be a function, character vector or vector of regular expressions!")
     }
     if(keep.tree || length(elem) != 1L) {
-      if(keep.class) return(colsubset(l, elem)) else return(.subset(l, elem)) # <- # base::Filter(elem, l)
+      if(keep.class) return(fcolsubset(l, elem)) else return(.subset(l, elem)) # <- # base::Filter(elem, l)
     } else return(.subset2(l, elem))
   }
 }
@@ -216,7 +214,7 @@ get_elem <- function(l, elem, recursive = TRUE, DF.as.list = TRUE,
 
 reg_elem <- function(l, recursive = TRUE, keep.tree = FALSE, keep.class = FALSE) {
   if(keep.class) al <- attributes(l)
-  if(inherits(l, "data.frame")) return(l)
+  # if(inherits(l, "data.frame")) if(keep.class) return(l) else return(unattrib(l))
   if(recursive) {
     is.subl <- function(x) is.list(x) && !inherits(x, "data.frame")
     l <- list_extract_FUN(l, is.regular, is.subl, keep.tree)
@@ -235,7 +233,7 @@ reg_elem <- function(l, recursive = TRUE, keep.tree = FALSE, keep.class = FALSE)
 irreg_elem <- function(l, recursive = TRUE, keep.tree = FALSE, keep.class = FALSE) {
   is.irregular <- function(x) !(is.list(x) || is.atomic(x)) # is.irregular fastest way?
   if(keep.class) al <- attributes(l)
-  if(inherits(l, "data.frame")) stop("A data.frame is a regular object!")
+  # if(inherits(l, "data.frame")) stop("A data.frame is a regular object!")
   if(recursive) {
     is.subl <- function(x) is.list(x) && !inherits(x, "data.frame")
     l <- list_extract_FUN(l, is.irregular, is.subl, keep.tree)
