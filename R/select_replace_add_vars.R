@@ -166,7 +166,11 @@ get_vars <- function(x, vars, return = "data", regex = FALSE, ...) {
         stop("Unknown return option!"))
 }
 
-gv <- function(x, vars, return = "data") {
+gv <- function(x, vars, return = "data", ...) {
+  if(!missing(...)) {
+    warning("Please use the new shortcut 'gvr' for regex column selection.")
+    return(get_vars(x, vars, return, ...))
+  }
   if(is.function(vars)) return(get_vars_FUN(x, vars, return))
   switch(return,
          data = colsubset(x, vars),
@@ -242,7 +246,11 @@ gvr <- function(x, vars, return = "data", ...) {
   return(`oldClass<-`(x, clx))
 }
 
-"gv<-" <- function(x, vars, value) {
+"gv<-" <- function(x, vars, value, ...) {
+  if(!missing(...)) {
+    warning("Please use the new shortcut 'gvr<-' for regex column replacement.")
+    return(`get_vars<-`(x, vars, ..., value = value))
+  }
   clx <- oldClass(x)
   oldClass(x) <- NULL
   if(is.numeric(vars)) {
@@ -273,7 +281,7 @@ gvr <- function(x, vars, return = "data", ...) {
   }
   return(`oldClass<-`(x, clx))
 }
-"gvr<-" <- function(x, vars, ..., value) {
+"gvr<-" <- function(x, vars, value, ...) {
   clx <- oldClass(x)
   oldClass(x) <- NULL
   vars <- rgrep(vars, names(x), ...)
