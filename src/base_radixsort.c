@@ -1980,7 +1980,7 @@ SEXP Cradixsort(SEXP NA_last, SEXP decreasing, SEXP RETstrt, SEXP RETgs, SEXP SO
 
 
 void Cdoubleradixsort(int *o, Rboolean NA_last, Rboolean decreasing, SEXP x) {
-  int n = -1;
+  int n = -1, tmp;
   R_xlen_t nl = n;
   void *xd;
 
@@ -2016,8 +2016,17 @@ void Cdoubleradixsort(int *o, Rboolean NA_last, Rboolean decreasing, SEXP x) {
   // savetl_init();   // from now on use Error not error.
   twiddle = &dtwiddle;
   is_nan  = &dnan;
-  // tmp = dsorted(xd, n);
-  dsort(xd, o, n);
+  tmp = dsorted(xd, n);
+  if (tmp) { // -1 or 1.
+    if (tmp == 1) { // same as expected in 'order' (1 = increasing, -1 = decreasing)
+      for (int i = 0; i < n; i++) o[i] = i + 1;
+    } else if (tmp == -1) { // -1 (or -n for result of strcmp), strictly opposite to -expected 'order'
+      for (int i = 0; i < n; i++) o[i] = n - i;
+    }
+  } else {
+      dsort(xd, o, n);
+  }
+  // dsort(xd, o, n);
 
 
   maxlen = 1;  // reset global. Minimum needed to count "" and NA
