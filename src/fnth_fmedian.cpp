@@ -110,6 +110,7 @@ NumericVector fnthCpp(const NumericVector& x, double Q = 0.5, int ng = 0, const 
       int k = 1;
       if(narm) {
         for(int i = 0; i != l; ++i) if(nisnan(x[i]) && nisnan(wg[i])) wsumQ += wg[i];
+        if(wsumQ == 0) return NumericVector::create(NA_REAL);
         wsumQ *= Q;
       } else {
         if(isnan2(x[o[l-1]-1])) return NumericVector::create(NA_REAL);
@@ -330,6 +331,10 @@ SEXP fnthmCpp(const NumericMatrix& x, double Q = 0.5, int ng = 0, const IntegerV
         if(narm) {
           wsumQ = 0;
           for(int i = 0; i != l; ++i) if(nisnan(column[i]) && nisnan(wg[i])) wsumQ += wg[i];
+          if(wsumQ == 0) {
+            out[j] = NA_REAL;
+            continue;
+          }
           wsumQ *= Q;
         } else {
           if(isnan2(column[o[l-1]-1])) {
@@ -586,6 +591,10 @@ SEXP fnthlCpp(const List& x, double Q = 0.5, int ng = 0, const IntegerVector& g 
         if(narm) {
           wsumQ = 0;
           for(int i = 0; i != lx1; ++i) if(nisnan(column[i]) && nisnan(wg[i])) wsumQ += wg[i];
+          if(wsumQ == 0) {
+            out[j] = NA_REAL;
+            continue;
+          }
           wsumQ *= Q;
         } else {
           if(isnan2(column[o[lx1-1]-1])) {
