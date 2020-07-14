@@ -23,16 +23,17 @@ Vector<RTYPE> fmodeImpl(const Vector<RTYPE>& x, int ng, const IntegerVector& g, 
       sugar::IndexHash<RTYPE> hash(x);
       int max = 1, index = 0; //  n[l+1] is unstable
       std::vector<int> n(l+1); //  = no_init_vector // better for valgrind
-      storage_t mode = x[0];
+      storage_t mode = hash.src[0];
       if(narm) {
         int i = 0, end = l-1;
-        while(isnanT(mode) && i!=end) mode = x[++i];
+        while(isnanT(mode) && i!=end) mode = hash.src[++i];
         if(i!=end) {
           for( ; i != l; ++i) {
-          if(isnanT(x[i])) continue;
-          addr = hash.get_addr(x[i]);
+          storage_t val = hash.src[i];
+          if(isnanT(val)) continue;
+          addr = hash.get_addr(val);
           index = hash.data[addr];
-          while(index && hash.not_equal(x[index - 1], x[i])) {
+          while(index && hash.not_equal(hash.src[index - 1], val)) {
             ++addr;
             if(addr == static_cast<unsigned int>(hash.m)) addr = 0;
             index = hash.data[addr];
@@ -43,25 +44,25 @@ Vector<RTYPE> fmodeImpl(const Vector<RTYPE>& x, int ng, const IntegerVector& g, 
             n[i+1] = 1; // good ? stable ?
             if(nfirstm && max == 1) { // Could also do this at the end in a separate loop. What is faster ? -> This seems better !
               if(minm) {
-                if(mode > x[i]) mode = x[i];
+                if(mode > val) mode = val;
               } else {
-                if(mode < x[i]) mode = x[i];
+                if(mode < val) mode = val;
               }
             }
           } else {
             // if(++n[index] > max) { // good, or create int index
             //   max = n[index];
-            //   mode = x[i];
+            //   mode = val;
             // }
             if(++n[index] >= max) {
               if(n[index] > max) {
                 max = n[index];
-                mode = x[i];
+                mode = val;
               } else if(nfirstm) {
                 if(minm) {
-                  if(mode > x[i]) mode = x[i];
+                  if(mode > val) mode = val;
                 } else {
-                  if(mode < x[i]) mode = x[i];
+                  if(mode < val) mode = val;
                 }
               }
             }
@@ -77,9 +78,10 @@ Vector<RTYPE> fmodeImpl(const Vector<RTYPE>& x, int ng, const IntegerVector& g, 
         }
       } else {
         for(int i = 0; i != l; ++i) {
-          addr = hash.get_addr(x[i]);
+          storage_t val = hash.src[i];
+          addr = hash.get_addr(val);
           index = hash.data[addr];
-          while(index && hash.not_equal(x[index - 1], x[i])) {
+          while(index && hash.not_equal(hash.src[index - 1], val)) {
             ++addr;
             if(addr == static_cast<unsigned int>(hash.m)) addr = 0;
             index = hash.data[addr];
@@ -90,25 +92,25 @@ Vector<RTYPE> fmodeImpl(const Vector<RTYPE>& x, int ng, const IntegerVector& g, 
             n[i+1] = 1; // good ? stable ?
             if(nfirstm && max == 1) { // Could also do this at the end in a separate loop. What is faster ? -> This seems better !
               if(minm) {
-                if(mode > x[i]) mode = x[i];
+                if(mode > val) mode = val;
               } else {
-                if(mode < x[i]) mode = x[i];
+                if(mode < val) mode = val;
               }
             }
           } else {
             // if(++n[index] > max) { // good, or create int index
             //   max = n[index];
-            //   mode = x[i];
+            //   mode = val;
             // }
             if(++n[index] >= max) { // good, or create int index
               if(n[index] > max) {
                 max = n[index];
-                mode = x[i];
+                mode = val;
               } else if(nfirstm) {
                 if(minm) {
-                  if(mode > x[i]) mode = x[i];
+                  if(mode > val) mode = val;
                 } else {
-                  if(mode < x[i]) mode = x[i];
+                  if(mode < val) mode = val;
                 }
               }
             }
@@ -129,40 +131,41 @@ Vector<RTYPE> fmodeImpl(const Vector<RTYPE>& x, int ng, const IntegerVector& g, 
     } else {
       if(l != g.size()) stop("length(g) must match length(x)");
       const int *pg = g.begin();
-      std::vector<std::vector<storage_t> > gmap(ng);
+      int ngp = ng+1;
+      std::vector<std::vector<storage_t> > gmap(ngp);
       Vector<RTYPE> out = no_init_vector(ng);
-      int ngp = ng+1; // , n[ngp]; // good ? stable ? -> yes !
       std::vector<int> n(ngp); // memset(n, 0, sizeof(int)*ngp);
       if(Rf_isNull(gs)) {
         for(int i = 0; i != l; ++i) ++n[pg[i]];
-        for(int i = 0; i != ng; ++i) {
-          if(n[i+1] == 0) stop("group size of 0 encountered");
-          gmap[i] = std::vector<storage_t> (n[i+1]); // Vector<RTYPE>
-          n[i+1] = 0;
+        for(int i = 1; i != ngp; ++i) {
+          if(n[i] == 0) stop("group size of 0 encountered");
+          gmap[i] = std::vector<storage_t> (n[i]); // Vector<RTYPE>
+          n[i] = 0;
         }
       } else {
         IntegerVector gsv = gs;
         if(ng != gsv.size()) stop("ng must match length(gs)");
         for(int i = 0; i != ng; ++i) {
           if(gsv[i] == 0) stop("group size of 0 encountered");
-          gmap[i] = std::vector<storage_t> (gsv[i]); // Vector<RTYPE>
+          gmap[i+1] = std::vector<storage_t> (gsv[i]); // Vector<RTYPE>
         }
       }
-      for(int i = 0; i != l; ++i) gmap[pg[i]-1][n[pg[i]]++] = x[i];
+      for(int i = 0; i != l; ++i) gmap[pg[i]][n[pg[i]]++] = x[i];
       if(narm) {
         for(int gr = 0; gr != ng; ++gr) {
-          const std::vector<storage_t>& temp = gmap[gr]; // wrap() // good ? // const Vector<RTYPE>& // better for character strings
-          sugar::IndexHash<RTYPE> hash(wrap(temp));
+          // const std::vector<storage_t>& temp = gmap[gr]; // wrap() // good ? // const Vector<RTYPE>& // better for character strings
+          sugar::IndexHash<RTYPE> hash(wrap(gmap[gr+1]));  // wrap(temp)
           int i = 0, s = hash.n, end = s-1, max = 1, index; // n[s+1] // fastest ? use n ?
           std::vector<int> n(s+1); //  = no_init_vector // better for valgrind
-          while(isnanT(temp[i]) && i!=end) ++i;
-          out[gr] = temp[i]; // good
+          while(isnanT(hash.src[i]) && i!=end) ++i;
+          out[gr] = hash.src[i]; // good
           if(i!=end) {
             for( ; i != s; ++i) {
-            if(isnanT(temp[i])) continue;
-            addr = hash.get_addr(temp[i]);
+            storage_t val = hash.src[i];
+            if(isnanT(val)) continue;
+            addr = hash.get_addr(val);
             index = hash.data[addr];
-            while(index && hash.not_equal(temp[index - 1], temp[i])) {
+            while(index && hash.not_equal(hash.src[index - 1], val)) {
               ++addr;
               if(addr == static_cast<unsigned int>(hash.m)) addr = 0;
               index = hash.data[addr];
@@ -173,26 +176,26 @@ Vector<RTYPE> fmodeImpl(const Vector<RTYPE>& x, int ng, const IntegerVector& g, 
               n[i+1] = 1;
               if(nfirstm && max == 1) { // Could also do this at the end in a separate loop. What is faster ? -> This seems better !
                 if(minm) {
-                  if(out[gr] > temp[i]) out[gr] = temp[i];
+                  if(out[gr] > val) out[gr] = val;
                 } else {
-                  if(out[gr] < temp[i]) out[gr] = temp[i];
+                  if(out[gr] < val) out[gr] = val;
                 }
               }
             } else {
               // if(++n[hash.data[addr]] > max) { // good, or create int index
               //   max = n[hash.data[addr]];
-              //   out[gr] = temp[i];
+              //   out[gr] = val;
               // }
               // index = hash.data[addr];
               if(++n[index] >= max) {
                 if(n[index] > max) {
                   max = n[index];
-                  out[gr] = temp[i];
+                  out[gr] = val;
                 } else if(nfirstm) {
                   if(minm) {
-                    if(out[gr] > temp[i]) out[gr] = temp[i];
+                    if(out[gr] > val) out[gr] = val;
                   } else {
-                    if(out[gr] < temp[i]) out[gr] = temp[i];
+                    if(out[gr] < val) out[gr] = val;
                   }
                 }
               }
@@ -200,24 +203,25 @@ Vector<RTYPE> fmodeImpl(const Vector<RTYPE>& x, int ng, const IntegerVector& g, 
           }
             // if(nfirstm && max == 1) { // Above seems better !
             //   if(minm) {
-            //     for(int i = 1; i != s; ++i) if(out[gr] > temp[i]) out[gr] = temp[i];
+            //     for(int i = 1; i != s; ++i) if(out[gr] > hash.src[i]) out[gr] = hash.src[i];
             //   } else {
-            //     for(int i = 1; i != s; ++i) if(out[gr] < temp[i]) out[gr] = temp[i];
+            //     for(int i = 1; i != s; ++i) if(out[gr] < hash.src[i]) out[gr] = hash.src[i];
             //   }
             // }
           }
         }
       } else {
         for(int gr = 0; gr != ng; ++gr) {
-          const std::vector<storage_t>& temp = gmap[gr]; // good ? // const Vector<RTYPE>& // wrap()
-          sugar::IndexHash<RTYPE> hash(wrap(temp));
-          out[gr] = temp[0];
+          // const std::vector<storage_t>& temp = gmap[gr]; // good ? // const Vector<RTYPE>& // wrap()
+          sugar::IndexHash<RTYPE> hash(wrap(gmap[gr+1])); // wrap(temp)
+          out[gr] = hash.src[0];
           int s = hash.n, max = 1, index; // n[s+1] // fastest ? use n ? and reset partially ?
           std::vector<int> n(s+1); //  = no_init_vector // better for valgrind
           for(int i = 0; i != s; ++i) {
-            addr = hash.get_addr(temp[i]);
+            storage_t val = hash.src[i];
+            addr = hash.get_addr(val);
             index = hash.data[addr];
-            while(index && hash.not_equal(temp[index - 1], temp[i])) {
+            while(index && hash.not_equal(hash.src[index - 1], val)) {
               ++addr;
               if(addr == static_cast<unsigned int>(hash.m)) addr = 0;
               index = hash.data[addr];
@@ -228,25 +232,25 @@ Vector<RTYPE> fmodeImpl(const Vector<RTYPE>& x, int ng, const IntegerVector& g, 
               n[i+1] = 1;
               if(nfirstm && max == 1) { // Could also do this at the end in a separate loop. What is faster ? -> This seems better !
                 if(minm) {
-                  if(out[gr] > temp[i]) out[gr] = temp[i];
+                  if(out[gr] > val) out[gr] = val;
                 } else {
-                  if(out[gr] < temp[i]) out[gr] = temp[i];
+                  if(out[gr] < val) out[gr] = val;
                 }
               }
             } else {
               // if(++n[hash.data[addr]] > max) { // good, or create int index
               //   max = n[hash.data[addr]];
-              //   out[gr] = temp[i];
+              //   out[gr] = val;
               // }
               if(++n[index] >= max) {
                 if(n[index] > max) {
                   max = n[index];
-                  out[gr] = temp[i];
+                  out[gr] = val;
                 } else if(nfirstm) {
                   if(minm) {
-                    if(out[gr] > temp[i]) out[gr] = temp[i];
+                    if(out[gr] > val) out[gr] = val;
                   } else {
-                    if(out[gr] < temp[i]) out[gr] = temp[i];
+                    if(out[gr] < val) out[gr] = val;
                   }
                 }
               }
@@ -254,9 +258,9 @@ Vector<RTYPE> fmodeImpl(const Vector<RTYPE>& x, int ng, const IntegerVector& g, 
           }
           // if(nfirstm && max == 1) { // Above seems better !
           //   if(minm) {
-          //     for(int i = 1; i != s; ++i) if(out[gr] > temp[i]) out[gr] = temp[i];
+          //     for(int i = 1; i != s; ++i) if(out[gr] > hash.src[i]) out[gr] = hash.src[i];
           //   } else {
-          //     for(int i = 1; i != s; ++i) if(out[gr] < temp[i]) out[gr] = temp[i];
+          //     for(int i = 1; i != s; ++i) if(out[gr] < hash.src[i]) out[gr] = hash.src[i];
           //   }
           // }
         }
@@ -275,15 +279,16 @@ Vector<RTYPE> fmodeImpl(const Vector<RTYPE>& x, int ng, const IntegerVector& g, 
       double max = DBL_MIN;
       int index = 0;
       std::vector<double> n(l+1); //  = no_init_vector // better for valgrind
-      storage_t mode = x[0];
+      storage_t mode = hash.src[0];
       if(narm) {
         int i = 0, end = l-1;
-        while((isnanT(mode) || std::isnan(pwg[i])) && i!=end) mode = x[++i];
+        while((isnanT(mode) || std::isnan(pwg[i])) && i!=end) mode = hash.src[++i];
         if(i!=end) for( ; i != l; ++i) {
-          if(isnanT(x[i]) || std::isnan(pwg[i])) continue;
-          addr = hash.get_addr(x[i]);
+          storage_t val = hash.src[i];
+          if(isnanT(val) || std::isnan(pwg[i])) continue;
+          addr = hash.get_addr(val);
           index = hash.data[addr];
-          while(index && hash.not_equal(x[index - 1], x[i])) {
+          while(index && hash.not_equal(hash.src[index - 1], val)) {
             ++addr;
             if(addr == static_cast<unsigned int>(hash.m)) addr = 0;
             index = hash.data[addr];
@@ -295,12 +300,12 @@ Vector<RTYPE> fmodeImpl(const Vector<RTYPE>& x, int ng, const IntegerVector& g, 
             if(pwg[i] >= max) { // necessary, because second loop only entered for more than one occurrence of the same value
               if(pwg[i] > max) {
                 max = pwg[i];
-                mode = x[i];
+                mode = val;
               } else if(nfirstm) { // Could also do this at the end in a separate loop. What is faster ??
                 if(minm) {
-                  if(mode > x[i]) mode = x[i];
+                  if(mode > val) mode = val;
                 } else {
-                  if(mode < x[i]) mode = x[i];
+                  if(mode < val) mode = val;
                 }
               }
             }
@@ -308,17 +313,17 @@ Vector<RTYPE> fmodeImpl(const Vector<RTYPE>& x, int ng, const IntegerVector& g, 
             n[index] += pwg[i];
             // if(n[index] > max) { // good, or create int index
             //   max = n[index];
-            //   mode = x[i];
+            //   mode = val;
             // }
             if(n[index] >= max) {
               if(n[index] > max) {
                 max = n[index];
-                mode = x[i];
+                mode = val;
               } else if(nfirstm) {
                 if(minm) {
-                  if(mode > x[i]) mode = x[i];
+                  if(mode > val) mode = val;
                 } else {
-                  if(mode < x[i]) mode = x[i];
+                  if(mode < val) mode = val;
                 }
               }
             }
@@ -326,9 +331,10 @@ Vector<RTYPE> fmodeImpl(const Vector<RTYPE>& x, int ng, const IntegerVector& g, 
         }
       } else {
         for(int i = 0; i != l; ++i) {
-          addr = hash.get_addr(x[i]);
+          storage_t val = hash.src[i];
+          addr = hash.get_addr(val);
           index = hash.data[addr];
-          while(index && hash.not_equal(x[index - 1], x[i])) {
+          while(index && hash.not_equal(hash.src[index - 1], val)) {
             ++addr;
             if(addr == static_cast<unsigned int>(hash.m)) addr = 0;
             index = hash.data[addr];
@@ -340,12 +346,12 @@ Vector<RTYPE> fmodeImpl(const Vector<RTYPE>& x, int ng, const IntegerVector& g, 
             if(pwg[i] >= max) { // necessary, because second loop only entered for more than one occurrence of the same value
               if(pwg[i] > max) {
                 max = pwg[i];
-                mode = x[i];
+                mode = val;
               } else if(nfirstm) { // Could also do this at the end in a separate loop. What is faster ??
                 if(minm) {
-                  if(mode > x[i]) mode = x[i];
+                  if(mode > val) mode = val;
                 } else {
-                  if(mode < x[i]) mode = x[i];
+                  if(mode < val) mode = val;
                 }
               }
             }
@@ -353,17 +359,17 @@ Vector<RTYPE> fmodeImpl(const Vector<RTYPE>& x, int ng, const IntegerVector& g, 
             n[index] += pwg[i];
             // if(n[index] > max) { // good, or create int index
             //   max = n[index];
-            //   mode = x[i];
+            //   mode = val;
             // }
             if(n[index] >= max) { // good, or create int index
               if(n[index] > max) {
                 max = n[index];
-                mode = x[i];
+                mode = val;
               } else if(nfirstm) {
                 if(minm) {
-                  if(mode > x[i]) mode = x[i];
+                  if(mode > val) mode = val;
                 } else {
-                  if(mode < x[i]) mode = x[i];
+                  if(mode < val) mode = val;
                 }
               }
             }
@@ -377,47 +383,48 @@ Vector<RTYPE> fmodeImpl(const Vector<RTYPE>& x, int ng, const IntegerVector& g, 
     } else {
       if(l != g.size()) stop("length(g) must match length(x)");
       const int *pg = g.begin();
-      std::vector<std::vector<storage_t> > gmap(ng);
-      std::vector<std::vector<double> > wmap(ng);
+      int ngp = ng+1;
+      std::vector<std::vector<storage_t> > gmap(ngp);
+      std::vector<std::vector<double> > wmap(ngp);
       Vector<RTYPE> out = no_init_vector(ng);
-      int ngp = ng+1; // n[ngp]; // good ? stable ? -> yes
-      std::vector<int> n(ngp); // memset(n, 0, sizeof(int)*ngp);
+      std::vector<int> n(ngp);
       if(Rf_isNull(gs)) {
         for(int i = 0; i != l; ++i) ++n[pg[i]];
-        for(int i = 0; i != ng; ++i) {
-          if(n[i+1] == 0) stop("group size of 0 encountered");
-          gmap[i] = std::vector<storage_t> (n[i+1]);
-          wmap[i] = std::vector<double> (n[i+1]);
-          n[i+1] = 0;
+        for(int i = 1; i != ngp; ++i) {
+          if(n[i] == 0) stop("group size of 0 encountered");
+          gmap[i] = std::vector<storage_t> (n[i]);
+          wmap[i] = std::vector<double> (n[i]);
+          n[i] = 0;
         }
       } else {
         IntegerVector gsv = gs;
         if(ng != gsv.size()) stop("ng must match length(gs)");
         for(int i = 0; i != ng; ++i) {
           if(gsv[i] == 0) stop("group size of 0 encountered");
-          gmap[i] = std::vector<storage_t> (gsv[i]);
-          wmap[i] = std::vector<double> (gsv[i]);
+          gmap[i+1] = std::vector<storage_t> (gsv[i]);
+          wmap[i+1] = std::vector<double> (gsv[i]);
         }
       }
       for(int i = 0; i != l; ++i) {
-        gmap[pg[i]-1][n[pg[i]]] = x[i];
-        wmap[pg[i]-1][n[pg[i]]++] = pwg[i];
+        gmap[pg[i]][n[pg[i]]] = x[i];
+        wmap[pg[i]][n[pg[i]]++] = pwg[i];
       }
       if(narm) {
         for(int gr = 0; gr != ng; ++gr) {
-          const std::vector<storage_t>& temp = gmap[gr]; // good ? // const Vector<RTYPE>& // wrap()
-          const std::vector<double>& wtemp = wmap[gr];
-          sugar::IndexHash<RTYPE> hash(wrap(temp));
+          // const std::vector<storage_t>& temp = gmap[gr]; // good ? // const Vector<RTYPE>& // wrap()
+          const std::vector<double>& wtemp = wmap[gr+1];
+          sugar::IndexHash<RTYPE> hash(wrap(gmap[gr+1])); // wrap(temp)
           int i = 0, s = hash.n, end = s-1, index;
           double max = DBL_MIN; // n[s+1]
           std::vector<double> n(s+1); //  = no_init_vector // better for valgrind
-          while((isnanT(temp[i]) || std::isnan(wtemp[i])) && i!=end) ++i;
-          out[gr] = temp[i]; // good !
+          while((isnanT(hash.src[i]) || std::isnan(wtemp[i])) && i!=end) ++i;
+          out[gr] = hash.src[i]; // good !
           if(i!=end) for( ; i != s; ++i) {
-            if(isnanT(temp[i]) || std::isnan(wtemp[i])) continue;
-            addr = hash.get_addr(temp[i]);
+            storage_t val = hash.src[i];
+            if(isnanT(val) || std::isnan(wtemp[i])) continue;
+            addr = hash.get_addr(val);
             index = hash.data[addr];
-            while(index && hash.not_equal(temp[index - 1], temp[i])) {
+            while(index && hash.not_equal(hash.src[index - 1], val)) {
               ++addr;
               if(addr == static_cast<unsigned int>(hash.m)) addr = 0;
               index = hash.data[addr];
@@ -429,12 +436,12 @@ Vector<RTYPE> fmodeImpl(const Vector<RTYPE>& x, int ng, const IntegerVector& g, 
               if(wtemp[i] >= max) { // necessary, because second loop only entered for more than one occurrence of the same value
                 if(wtemp[i] > max) {
                   max = wtemp[i];
-                  out[gr] = temp[i];
+                  out[gr] = val;
                 } else if(nfirstm) { // Could also do this at the end in a separate loop. What is faster ??
                   if(minm) {
-                    if(out[gr] > temp[i]) out[gr] = temp[i];
+                    if(out[gr] > val) out[gr] = val;
                   } else {
-                    if(out[gr] < temp[i]) out[gr] = temp[i];
+                    if(out[gr] < val) out[gr] = val;
                   }
                 }
               }
@@ -442,17 +449,17 @@ Vector<RTYPE> fmodeImpl(const Vector<RTYPE>& x, int ng, const IntegerVector& g, 
               n[index] += wtemp[i];
               // if(n[index] > max) {
               //   max = n[index];
-              //   out[gr] = temp[i];
+              //   out[gr] = val;
               // }
               if(n[index] >= max) {
                 if(n[index] > max) {
                   max = n[index];
-                  out[gr] = temp[i];
+                  out[gr] = val;
                 } else if(nfirstm) {
                   if(minm) {
-                    if(out[gr] > temp[i]) out[gr] = temp[i];
+                    if(out[gr] > val) out[gr] = val;
                   } else {
-                    if(out[gr] < temp[i]) out[gr] = temp[i];
+                    if(out[gr] < val) out[gr] = val;
                   }
                 }
               }
@@ -461,17 +468,18 @@ Vector<RTYPE> fmodeImpl(const Vector<RTYPE>& x, int ng, const IntegerVector& g, 
         }
       } else {
         for(int gr = 0; gr != ng; ++gr) {
-          const std::vector<storage_t>& temp = gmap[gr]; // good ? // const Vector<RTYPE>& // wrap()
+          // const std::vector<storage_t>& temp = gmap[gr]; // good ? // const Vector<RTYPE>& // wrap()
           const std::vector<double>& wtemp = wmap[gr];
-          sugar::IndexHash<RTYPE> hash(wrap(temp));
-          out[gr] = temp[0];
+          sugar::IndexHash<RTYPE> hash(wrap(gmap[gr+1])); // wrap(temp)
+          out[gr] = hash.src[0];
           int s = hash.n, index; // fastest ? use n ? and reset partially ?
           double max = DBL_MIN; // n[s+1];
           std::vector<double> n(s+1); //  = no_init_vector // better for valgrind
           for(int i = 0; i != s; ++i) {
-            addr = hash.get_addr(temp[i]);
+            storage_t val = hash.src[i];
+            addr = hash.get_addr(val);
             index = hash.data[addr];
-            while(index && hash.not_equal(temp[index - 1], temp[i])) {
+            while(index && hash.not_equal(hash.src[index - 1], val)) {
               ++addr;
               if(addr == static_cast<unsigned int>(hash.m)) addr = 0;
               index = hash.data[addr];
@@ -483,12 +491,12 @@ Vector<RTYPE> fmodeImpl(const Vector<RTYPE>& x, int ng, const IntegerVector& g, 
               if(wtemp[i] >= max) { // necessary, because second loop only entered for more than one occurrence of the same value
                 if(wtemp[i] > max) {
                   max = wtemp[i];
-                  out[gr] = temp[i];
+                  out[gr] = val;
                 } else if(nfirstm) { // Could also do this at the end in a separate loop. What is faster ??
                   if(minm) {
-                    if(out[gr] > temp[i]) out[gr] = temp[i];
+                    if(out[gr] > val) out[gr] = val;
                   } else {
-                    if(out[gr] < temp[i]) out[gr] = temp[i];
+                    if(out[gr] < val) out[gr] = val;
                   }
                 }
               }
@@ -496,17 +504,17 @@ Vector<RTYPE> fmodeImpl(const Vector<RTYPE>& x, int ng, const IntegerVector& g, 
               n[index] += wtemp[i];
               // if(n[index] > max) {
               //   max = n[index];
-              //   out[gr] = temp[i];
+              //   out[gr] = val;
               // }
               if(n[index] >= max) {
                 if(n[index] > max) {
                   max = n[index];
-                  out[gr] = temp[i];
+                  out[gr] = val;
                 } else if(nfirstm) {
                   if(minm) {
-                    if(out[gr] > temp[i]) out[gr] = temp[i];
+                    if(out[gr] > val) out[gr] = val;
                   } else {
-                    if(out[gr] < temp[i]) out[gr] = temp[i];
+                    if(out[gr] < val) out[gr] = val;
                   }
                 }
               }
