@@ -2,6 +2,40 @@
 #include <Rcpp.h>
 using namespace Rcpp;
 
+// TODO: could still remove NA, and also for sort_unique
+template<int RTYPE>
+Vector<RTYPE> uniqueord(const Vector<RTYPE>& x) {
+  sugar::IndexHash<RTYPE> hash(x);
+  hash.fill();
+  // int l = x.size(); // almost same speed as member fill.
+  // for(int i = 0; i != l; ++i) {
+  //   unsigned int addr = hash.get_addr(hash.src[i]);
+  //   while(hash.data[addr] && hash.not_equal(hash.src[hash.data[addr] - 1], hash.src[i])) {
+  //     ++addr;
+  //     if(addr == static_cast<unsigned int>(hash.m)) addr = 0;
+  //   }
+  //   if(!hash.data[addr]) {
+  //     hash.data[addr] = i+1;
+  //     ++hash.size_;
+  //   }
+  // }
+
+  int hs = hash.size_;
+  IntegerVector ord = no_init_vector(hs);
+  for(int i = 0, j = 0; j < hs; i++) if(hash.data[i]) ord[j++] = hash.data[i]-1;
+  std::sort(ord.begin(), ord.end());
+  Vector<RTYPE> res = no_init_vector(hs);
+  for(int i = 0; i < hs; ++i) res[i] = hash.src[ord[i]];
+  // inline Vector<RTYPE> keys() const{
+  //   Vector<RTYPE> res = no_init(size_) ;
+  //   for( int i=0, j=0; j<size_; i++){
+  //     if( data[i] ) res[j++] = src[data[i]-1] ;
+  //   }
+  //   return res ;
+  // }
+  return res;
+}
+
 template <int RTYPE>
 IntegerVector qFCppImpl(const Vector<RTYPE>& x, bool sort = true, bool ordered = true, bool na_exclude = true) {
     Vector<RTYPE> levs = (sort && na_exclude) ? na_omit(sort_unique(x)) :
@@ -143,12 +177,12 @@ Vector<RTYPE> funiqueImpl(const Vector<RTYPE>& x, bool sort = true) {
   if(sort) {
     Vector<RTYPE> out = sort_unique(x);
     DUPLICATE_ATTRIB(out, x);
-    Rf_namesgets(out, R_NilValue);
+    Rf_setAttrib(out, R_NamesSymbol, R_NilValue);
     return out;
   } else {
-    Vector<RTYPE> out = unique(x);
+    Vector<RTYPE> out = uniqueord<RTYPE>(x);
     DUPLICATE_ATTRIB(out, x);
-    Rf_namesgets(out, R_NilValue);
+    Rf_setAttrib(out, R_NamesSymbol, R_NilValue);
     return out;
   }
 }
@@ -178,7 +212,7 @@ SEXP funiqueCpp(SEXP x, bool sort = true) {
     }
     LogicalVector out = LogicalVector::create(false, true, NA_LOGICAL)[nd];
     DUPLICATE_ATTRIB(out, x);
-    Rf_namesgets(out, R_NilValue);
+    Rf_setAttrib(out, R_NamesSymbol, R_NilValue);
     return out;
   }
   default: stop("Not Supported SEXP Type");
