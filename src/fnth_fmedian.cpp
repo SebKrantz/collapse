@@ -199,9 +199,10 @@ SEXP fnthmCpp(const NumericMatrix& x, double Q = 0.5, int ng = 0, const IntegerV
 
   if(Rf_isNull(w)) {
     if(ng == 0) {
-      NumericVector column(l), out = no_init_vector(col);
-      auto begin = column.begin();
+      NumericVector out = no_init_vector(col);
       if(narm) {
+        NumericVector column = no_init_vector(l);
+        auto begin = column.begin();
         for(int j = col; j--; ) {
           NumericMatrix::ConstColumn colj = x( _ , j);
           auto pend = std::remove_copy_if(colj.begin(), colj.end(), begin, isnan2);
@@ -214,7 +215,6 @@ SEXP fnthmCpp(const NumericMatrix& x, double Q = 0.5, int ng = 0, const IntegerV
           out[j] = (tiesmean && sz%2 == 0) ? (column[nth] + *(std::min_element(begin+nth+1, pend)))*0.5 : column[nth];
         }
       } else {
-        auto end = column.end();
         int nth = lower ? (l-1)*Q : l*Q;
         bool tm = tiesmean && l%2 == 0;
         for(int j = col; j--; ) {
@@ -226,9 +226,9 @@ SEXP fnthmCpp(const NumericMatrix& x, double Q = 0.5, int ng = 0, const IntegerV
                 goto endloop;
               }
             }
-            column = Rf_duplicate(wrap(colj)); // best ?
-            std::nth_element(begin, begin+nth, end);
-            out[j] = tm ? (column[nth] + *(std::min_element(begin+nth+1, end)))*0.5 : column[nth];
+            NumericVector column = Rf_duplicate(wrap(colj)); // best ?
+            std::nth_element(column.begin(), column.begin()+nth, column.end());
+            out[j] = tm ? (column[nth] + *(std::min_element(column.begin()+nth+1, column.end())))*0.5 : column[nth];
           }
           endloop:;
         }
@@ -448,7 +448,7 @@ SEXP fnthlCpp(const List& x, double Q = 0.5, int ng = 0, const IntegerVector& g 
       if(narm) {
         for(int j = l; j--; ) {
           NumericVector colj = x[j];
-          NumericVector column(colj.size());
+          NumericVector column = no_init_vector(colj.size());
           auto begin = column.begin();
           auto pend = std::remove_copy_if(colj.begin(), colj.end(), begin, isnan2);
           int sz = pend - begin, nth = lower ? (sz-1)*Q : sz*Q;
