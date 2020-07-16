@@ -115,8 +115,8 @@ NumericVector fnthCpp(const NumericVector& x, double Q = 0.5, int ng = 0, const 
       } else {
         if(isnan2(x[o[l-1]-1])) return NumericVector::create(NA_REAL);
         wsumQ = std::accumulate(wg.begin(), wg.end(), 0.0) * Q;
-        if(isnan2(wsumQ)) return NumericVector::create(NA_REAL);
       }
+      if(isnan2(wsumQ)) stop("Missing weights in order statistics are currently only supported if x is also missing"); // return NumericVector::create(NA_REAL);
       if(lower) {
         while(wsum < wsumQ) wsum += wg[o[k++]-1];
         if(tiesmean && wsum == wsumQ) {
@@ -136,16 +136,24 @@ NumericVector fnthCpp(const NumericVector& x, double Q = 0.5, int ng = 0, const 
       NumericVector wsumQ(ng), wsum(ng), out(ng, NA_REAL);
       if(narm) {
         for(int i = 0; i != l; ++i) if(nisnan(x[i])) wsumQ[g[i]-1] += wg[i]; //  && nisnan(wg[i])
+        for(int i = ng; i--; ) {
+          if(isnan2(wsumQ[i])) stop("");
+          wsumQ[i] *= Q;
+        }
       } else {
         for(int i = 0; i != l; ++i) {
           if(nisnan(x[i])) {
             wsumQ[g[i]-1] += wg[i];
           } else {
-            wsum[g[i]-1] = DBL_MAX; // OK ?? // needed ?? // = wsumQ[g[i]-1]
+            wsum[g[i]-1] = DBL_MAX; // OK ? // needed ? // = wsumQ[g[i]-1]
           }
         }
+        for(int i = ng; i--; ) {
+          if(isnan2(wsumQ[i]) && wsum[i] != DBL_MAX) stop("Missing weights in order statistics are currently only supported if x is also missing");
+          wsumQ[i] *= Q;
+        }
       }
-      wsumQ = wsumQ * Q;
+      // wsumQ = wsumQ * Q;
       int gi, oi;
       if(tiesmean) {
         std::vector<bool> seen(ng);
@@ -156,7 +164,7 @@ NumericVector fnthCpp(const NumericVector& x, double Q = 0.5, int ng = 0, const 
           if(seen[gi]) continue;
           if(wsum[gi] < wsumQ[gi]) out[gi] = x[oi];
           else {
-            if(wsum[gi] != wsumQ[gi]) {
+            if(wsum[gi] > wsumQ[gi]) {
               seen[gi] = true;
               continue;
             }
@@ -327,8 +335,9 @@ SEXP fnthmCpp(const NumericMatrix& x, double Q = 0.5, int ng = 0, const IntegerV
       if(!narm) {
         wsumQ = std::accumulate(wg.begin(), wg.end(), 0.0) * Q;
         if(isnan2(wsumQ)) {
-          std::fill(out.begin(), out.end(), NA_REAL);
-          goto outnth;
+          stop("Missing weights in order statistics are currently only supported if x is also missing");
+          // std::fill(out.begin(), out.end(), NA_REAL);
+          // goto outnth;
         }
       }
       for(int j = col; j--; ) {
@@ -341,6 +350,7 @@ SEXP fnthmCpp(const NumericMatrix& x, double Q = 0.5, int ng = 0, const IntegerV
             out[j] = NA_REAL;
             continue;
           }
+          if(isnan2(wsumQ)) stop("Missing weights in order statistics are currently only supported if x is also missing");
           wsumQ *= Q;
         } else {
           if(isnan2(column[o[l-1]-1])) {
@@ -367,7 +377,7 @@ SEXP fnthmCpp(const NumericMatrix& x, double Q = 0.5, int ng = 0, const IntegerV
         }
         out[j] = column[o[k-1]-1];
       }
-      outnth:
+      // outnth:
         if(drop) out.attr("names") = colnames(x);
         else {
           out.attr("dim") = Dimension(1, col);
@@ -392,9 +402,13 @@ SEXP fnthmCpp(const NumericMatrix& x, double Q = 0.5, int ng = 0, const IntegerV
         if(narm) {
           std::fill(wsumQ.begin(), wsumQ.end(), 0.0);
           for(int i = 0; i != l; ++i) if(nisnan(column[i])) wsumQ[g[i]-1] += wg[i]; //  && nisnan(wg[i])
-          wsumQ = wsumQ * Q;
+          for(int i = ng; i--; ) {
+            if(isnan2(wsumQ[i])) stop("Missing weights in order statistics are currently only supported if x is also missing");
+            wsumQ[i] *= Q;
+          }
         } else {
           for(int i = 0; i != l; ++i) if(isnan2(column[i])) wsum[g[i]-1] = DBL_MAX; // OK ?? // needed??
+          for(int i = ng; i--; ) if(isnan2(wsumQ[i]) && wsum[i] != DBL_MAX) stop("Missing weights in order statistics are currently only supported if x is also missing");
         }
 
         if(tiesmean) {
@@ -406,7 +420,7 @@ SEXP fnthmCpp(const NumericMatrix& x, double Q = 0.5, int ng = 0, const IntegerV
             if(seen[gi]) continue;
             if(wsum[gi] < wsumQ[gi]) nthj[gi] = column[oi];
             else {
-              if(wsum[gi] != wsumQ[gi]) {
+              if(wsum[gi] > wsumQ[gi]) {
                 seen[gi] = true;
                 continue;
               }
@@ -588,8 +602,9 @@ SEXP fnthlCpp(const List& x, double Q = 0.5, int ng = 0, const IntegerVector& g 
       if(!narm) {
         wsumQ = std::accumulate(wg.begin(), wg.end(), 0.0) * Q;
         if(isnan2(wsumQ)) {
-          std::fill(out.begin(), out.end(), NA_REAL);
-          goto outnth;
+          stop("Missing weights in order statistics are currently only supported if x is also missing");
+          // std::fill(out.begin(), out.end(), NA_REAL);
+          // goto outnth;
         }
       }
       for(int j = l; j--; ) {
@@ -603,6 +618,7 @@ SEXP fnthlCpp(const List& x, double Q = 0.5, int ng = 0, const IntegerVector& g 
             out[j] = NA_REAL;
             continue;
           }
+          if(isnan2(wsumQ)) stop("Missing weights in order statistics are currently only supported if x is also missing");
           wsumQ *= Q;
         } else {
           if(isnan2(column[o[lx1-1]-1])) {
@@ -629,7 +645,7 @@ SEXP fnthlCpp(const List& x, double Q = 0.5, int ng = 0, const IntegerVector& g 
         }
         out[j] = column[o[k-1]-1];
       }
-      outnth:
+      // outnth:
         if(drop) {
           out.attr("names") = x.attr("names");
           return out;
@@ -652,7 +668,6 @@ SEXP fnthlCpp(const List& x, double Q = 0.5, int ng = 0, const IntegerVector& g 
         for(int i = 0; i != lx1; ++i) wsumQ[g[i]-1] += wg[i];
         wsumQ = wsumQ * Q;
       }
-
       for(int j = l; j--; ) {
         NumericVector column = x[j];
         if(lx1 != column.size()) stop("length(w) must match nrow(x)");
@@ -661,9 +676,13 @@ SEXP fnthlCpp(const List& x, double Q = 0.5, int ng = 0, const IntegerVector& g 
         if(narm) {
           std::fill(wsumQ.begin(), wsumQ.end(), 0.0);
           for(int i = 0; i != lx1; ++i) if(nisnan(column[i])) wsumQ[g[i]-1] += wg[i]; //  && nisnan(wg[i])
-          wsumQ = wsumQ * Q;
+          for(int i = ng; i--; ) {
+            if(isnan2(wsumQ[i])) stop("Missing weights in order statistics are currently only supported if x is also missing");
+            wsumQ[i] *= Q;
+          }
         } else {
           for(int i = 0; i != lx1; ++i) if(isnan2(column[i])) wsum[g[i]-1] = DBL_MAX; // OK ?? // needed??
+          for(int i = ng; i--; ) if(isnan2(wsumQ[i]) && wsum[i] != DBL_MAX) stop("Missing weights in order statistics are currently only supported if x is also missing");
         }
 
         if(tiesmean) {
@@ -675,7 +694,7 @@ SEXP fnthlCpp(const List& x, double Q = 0.5, int ng = 0, const IntegerVector& g 
             if(seen[gi]) continue;
             if(wsum[gi] < wsumQ[gi]) nthj[gi] = column[oi];
             else {
-              if(wsum[gi] != wsumQ[gi]) {
+              if(wsum[gi] > wsumQ[gi]) {
                 seen[gi] = true;
                 continue;
               }
