@@ -109,7 +109,7 @@ NumericVector fnthCpp(const NumericVector& x, double Q = 0.5, int ng = 0, const 
       double wsumQ = 0, wsum = wg[o[0]-1];
       int k = 1;
       if(narm) {
-        for(int i = 0; i != l; ++i) if(nisnan(x[i]) && nisnan(wg[i])) wsumQ += wg[i];
+        for(int i = 0; i != l; ++i) if(nisnan(x[i])) wsumQ += wg[i]; //  && nisnan(wg[i])
         if(wsumQ == 0) return NumericVector::create(NA_REAL);
         wsumQ *= Q;
       } else {
@@ -135,9 +135,15 @@ NumericVector fnthCpp(const NumericVector& x, double Q = 0.5, int ng = 0, const 
       if(l != g.size()) stop("length(g) must match length(x)");
       NumericVector wsumQ(ng), wsum(ng), out(ng, NA_REAL);
       if(narm) {
-        for(int i = 0; i != l; ++i) if(nisnan(x[i]) && nisnan(wg[i])) wsumQ[g[i]-1] += wg[i];
+        for(int i = 0; i != l; ++i) if(nisnan(x[i])) wsumQ[g[i]-1] += wg[i]; //  && nisnan(wg[i])
       } else {
-        for(int i = 0; i != l; ++i) wsumQ[g[i]-1] += wg[i];
+        for(int i = 0; i != l; ++i) {
+          if(nisnan(x[i])) {
+            wsumQ[g[i]-1] += wg[i];
+          } else {
+            wsum[g[i]-1] = DBL_MAX; // OK ?? // needed ?? // = wsumQ[g[i]-1]
+          }
+        }
       }
       wsumQ = wsumQ * Q;
       int gi, oi;
@@ -330,7 +336,7 @@ SEXP fnthmCpp(const NumericMatrix& x, double Q = 0.5, int ng = 0, const IntegerV
         Cdoubleradixsort(ord, TRUE, FALSE, wrap(column)); // starts from 1....
         if(narm) {
           wsumQ = 0;
-          for(int i = 0; i != l; ++i) if(nisnan(column[i]) && nisnan(wg[i])) wsumQ += wg[i];
+          for(int i = 0; i != l; ++i) if(nisnan(column[i])) wsumQ += wg[i]; //  && nisnan(wg[i])
           if(wsumQ == 0) {
             out[j] = NA_REAL;
             continue;
@@ -385,8 +391,10 @@ SEXP fnthmCpp(const NumericMatrix& x, double Q = 0.5, int ng = 0, const IntegerV
         NumericVector wsum(ng);
         if(narm) {
           std::fill(wsumQ.begin(), wsumQ.end(), 0.0);
-          for(int i = 0; i != l; ++i) if(nisnan(column[i]) && nisnan(wg[i])) wsumQ[g[i]-1] += wg[i];
+          for(int i = 0; i != l; ++i) if(nisnan(column[i])) wsumQ[g[i]-1] += wg[i]; //  && nisnan(wg[i])
           wsumQ = wsumQ * Q;
+        } else {
+          for(int i = 0; i != l; ++i) if(isnan2(column[i])) wsum[g[i]-1] = DBL_MAX; // OK ?? // needed??
         }
 
         if(tiesmean) {
@@ -590,7 +598,7 @@ SEXP fnthlCpp(const List& x, double Q = 0.5, int ng = 0, const IntegerVector& g 
         Cdoubleradixsort(ord, TRUE, FALSE, column); // starts from 1
         if(narm) {
           wsumQ = 0;
-          for(int i = 0; i != lx1; ++i) if(nisnan(column[i]) && nisnan(wg[i])) wsumQ += wg[i];
+          for(int i = 0; i != lx1; ++i) if(nisnan(column[i])) wsumQ += wg[i]; //  && nisnan(wg[i])
           if(wsumQ == 0) {
             out[j] = NA_REAL;
             continue;
@@ -652,8 +660,10 @@ SEXP fnthlCpp(const List& x, double Q = 0.5, int ng = 0, const IntegerVector& g 
         NumericVector wsum(ng), nthj(ng, NA_REAL);
         if(narm) {
           std::fill(wsumQ.begin(), wsumQ.end(), 0.0);
-          for(int i = 0; i != lx1; ++i) if(nisnan(column[i]) && nisnan(wg[i])) wsumQ[g[i]-1] += wg[i];
+          for(int i = 0; i != lx1; ++i) if(nisnan(column[i])) wsumQ[g[i]-1] += wg[i]; //  && nisnan(wg[i])
           wsumQ = wsumQ * Q;
+        } else {
+          for(int i = 0; i != lx1; ++i) if(isnan2(column[i])) wsum[g[i]-1] = DBL_MAX; // OK ?? // needed??
         }
 
         if(tiesmean) {
