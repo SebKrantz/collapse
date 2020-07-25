@@ -37,7 +37,7 @@ fdiff.pseries <- function(x, n = 1, diff = 1, fill = NA, log = FALSE, rho = 1, s
       .Call(Cpp_fdiffgrowth,x,n,diff,fill,fnlevels(index[[1L]]),index[[1L]],NULL,index[[2L]],1L+log,rho,stubs)
 }
 
-fdiff.matrix <- function(x, n = 1, diff = 1, g = NULL, t = NULL, fill = NA, log = FALSE, rho = 1, stubs = TRUE, ...) {
+fdiff.matrix <- function(x, n = 1, diff = 1, g = NULL, t = NULL, fill = NA, log = FALSE, rho = 1, stubs = length(n) + length(diff) > 2L, ...) {
   if(!missing(...)) if(checkld(...)) log <- list(...)[["logdiff"]] else unused_arg_action(match.call(), ...)
   if(log) x <- log(x)
   if(is.null(g)) return(.Call(Cpp_fdiffgrowthm,x,n,diff,fill,0L,0L,NULL,G_t(t,0L),1L+log,rho,stubs))
@@ -52,7 +52,7 @@ fdiff.matrix <- function(x, n = 1, diff = 1, g = NULL, t = NULL, fill = NA, log 
   .Call(Cpp_fdiffgrowthm,x,n,diff,fill,g[[1L]],g[[2L]],g[[3L]],G_t(t,2L),1L+log,rho,stubs)
 }
 
-fdiff.grouped_df <- function(x, n = 1, diff = 1, t = NULL, fill = NA, log = FALSE, rho = 1, stubs = TRUE, keep.ids = TRUE, ...) {
+fdiff.grouped_df <- function(x, n = 1, diff = 1, t = NULL, fill = NA, log = FALSE, rho = 1, stubs = length(n) + length(diff) > 2L, keep.ids = TRUE, ...) {
   if(!missing(...)) if(checkld(...)) log <- list(...)[["logdiff"]] else unused_arg_action(match.call(), ...)
   g <- GRP.grouped_df(x, call = FALSE)
   tsym <- l1orn(as.character(substitute(t)), NULL)
@@ -76,7 +76,7 @@ fdiff.grouped_df <- function(x, n = 1, diff = 1, t = NULL, fill = NA, log = FALS
   .Call(Cpp_fdiffgrowthl,cld(x,log),n,diff,fill,g[[1L]],g[[2L]],g[[3L]],G_t(t,2L),1L+log,rho,stubs)
 }
 
-fdiff.data.frame <- function(x, n = 1, diff = 1, g = NULL, t = NULL, fill = NA, log = FALSE, rho = 1, stubs = TRUE, ...) {
+fdiff.data.frame <- function(x, n = 1, diff = 1, g = NULL, t = NULL, fill = NA, log = FALSE, rho = 1, stubs = length(n) + length(diff) > 2L, ...) {
   if(!missing(...)) if(checkld(...)) log <- list(...)[["logdiff"]] else unused_arg_action(match.call(), ...)
   if(log) x <- fdapply(x, log)
   if(is.null(g)) return(.Call(Cpp_fdiffgrowthl,x,n,diff,fill,0L,0L,NULL,G_t(t,0L),1L+log,rho,stubs))
@@ -91,10 +91,10 @@ fdiff.data.frame <- function(x, n = 1, diff = 1, g = NULL, t = NULL, fill = NA, 
   .Call(Cpp_fdiffgrowthl,x,n,diff,fill,g[[1L]],g[[2L]],g[[3L]],G_t(t,2L),1L+log,rho,stubs)
 }
 
-fdiff.list <- function(x, n = 1, diff = 1, g = NULL, t = NULL, fill = NA, log = FALSE, rho = 1, stubs = TRUE, ...)
+fdiff.list <- function(x, n = 1, diff = 1, g = NULL, t = NULL, fill = NA, log = FALSE, rho = 1, stubs = length(n) + length(diff) > 2L, ...)
   fdiff.data.frame(x, n, diff, g, t, fill, log, rho, stubs, ...)
 
-fdiff.pdata.frame <- function(x, n = 1, diff = 1, fill = NA, log = FALSE, rho = 1, stubs = TRUE, ...) {
+fdiff.pdata.frame <- function(x, n = 1, diff = 1, fill = NA, log = FALSE, rho = 1, stubs = length(n) + length(diff) > 2L, ...) {
   if(!missing(...)) if(checkld(...)) log <- list(...)[["logdiff"]] else unused_arg_action(match.call(), ...)
   if(log) x <- fdapply(x, log)
   index <- unclass(attr(x, "index"))
@@ -132,7 +132,7 @@ fgrowth.pseries <- function(x, n = 1, diff = 1, fill = NA, logdiff = FALSE, scal
       .Call(Cpp_fdiffgrowth,x,n,diff,fill,fnlevels(index[[1L]]),index[[1L]],NULL,index[[2L]],4L-logdiff,scale,stubs)
 }
 
-fgrowth.matrix <- function(x, n = 1, diff = 1, g = NULL, t = NULL, fill = NA, logdiff = FALSE, scale = 100, stubs = TRUE, ...) {
+fgrowth.matrix <- function(x, n = 1, diff = 1, g = NULL, t = NULL, fill = NA, logdiff = FALSE, scale = 100, stubs = length(n) + length(diff) > 2L, ...) {
   if(!missing(...)) unused_arg_action(match.call(), ...)
   if(logdiff) x <- if(scale == 1) log(x) else scale * log(x)
   if(is.null(g)) return(.Call(Cpp_fdiffgrowthm,x,n,diff,fill,0L,0L,NULL,G_t(t,0L),4L-logdiff,scale,stubs))
@@ -147,7 +147,7 @@ fgrowth.matrix <- function(x, n = 1, diff = 1, g = NULL, t = NULL, fill = NA, lo
   .Call(Cpp_fdiffgrowthm,x,n,diff,fill,g[[1L]],g[[2L]],g[[3L]],G_t(t,3L),4L-logdiff,scale,stubs)
 }
 
-fgrowth.grouped_df <- function(x, n = 1, diff = 1, t = NULL, fill = NA, logdiff = FALSE, scale = 100, stubs = TRUE, keep.ids = TRUE, ...) {
+fgrowth.grouped_df <- function(x, n = 1, diff = 1, t = NULL, fill = NA, logdiff = FALSE, scale = 100, stubs = length(n) + length(diff) > 2L, keep.ids = TRUE, ...) {
   if(!missing(...)) unused_arg_action(match.call(), ...)
   g <- GRP.grouped_df(x, call = FALSE)
   tsym <- l1orn(as.character(substitute(t)), NULL)
@@ -171,7 +171,7 @@ fgrowth.grouped_df <- function(x, n = 1, diff = 1, t = NULL, fill = NA, logdiff 
   .Call(Cpp_fdiffgrowthl,cld(x),n,diff,fill,g[[1L]],g[[2L]],g[[3L]],G_t(t,3L),4L-logdiff,scale,stubs)
 }
 
-fgrowth.data.frame <- function(x, n = 1, diff = 1, g = NULL, t = NULL, fill = NA, logdiff = FALSE, scale = 100, stubs = TRUE, ...) {
+fgrowth.data.frame <- function(x, n = 1, diff = 1, g = NULL, t = NULL, fill = NA, logdiff = FALSE, scale = 100, stubs = length(n) + length(diff) > 2L, ...) {
   if(!missing(...)) unused_arg_action(match.call(), ...)
   if(logdiff) x <- if(scale == 1) fdapply(x, log) else fdapply(x, function(y) scale * log(y))
   if(is.null(g)) return(.Call(Cpp_fdiffgrowthl,x,n,diff,fill,0L,0L,NULL,G_t(t,0L),4L-logdiff,scale,stubs))
@@ -186,10 +186,10 @@ fgrowth.data.frame <- function(x, n = 1, diff = 1, g = NULL, t = NULL, fill = NA
   .Call(Cpp_fdiffgrowthl,x,n,diff,fill,g[[1L]],g[[2L]],g[[3L]],G_t(t,3L),4L-logdiff,scale,stubs)
 }
 
-fgrowth.list <- function(x, n = 1, diff = 1, g = NULL, t = NULL, fill = NA, logdiff = FALSE, scale = 100, stubs = TRUE, ...)
+fgrowth.list <- function(x, n = 1, diff = 1, g = NULL, t = NULL, fill = NA, logdiff = FALSE, scale = 100, stubs = length(n) + length(diff) > 2L, ...)
   fgrowth.data.frame(x, n, diff, g, t, fill, logdiff, scale, stubs, ...)
 
-fgrowth.pdata.frame <- function(x, n = 1, diff = 1, fill = NA, logdiff = FALSE, scale = 100, stubs = TRUE, ...) {
+fgrowth.pdata.frame <- function(x, n = 1, diff = 1, fill = NA, logdiff = FALSE, scale = 100, stubs = length(n) + length(diff) > 2L, ...) {
   if(!missing(...)) unused_arg_action(match.call(), ...)
   if(logdiff) x <- if(scale == 1) fdapply(x, log) else fdapply(x, function(y) scale * log(y))
   index <- unclass(attr(x, "index"))

@@ -24,7 +24,7 @@ flag.pseries <- function(x, n = 1, fill = NA, stubs = TRUE, ...) {
   .Call(Cpp_flaglead,x,n,fill,fnlevels(index[[1L]]),index[[1L]],NULL,index[[2L]],stubs)
 }
 
-flag.matrix <- function(x, n = 1, g = NULL, t = NULL, fill = NA, stubs = TRUE, ...) {
+flag.matrix <- function(x, n = 1, g = NULL, t = NULL, fill = NA, stubs = length(n) > 1L, ...) {
   if(!missing(...)) unused_arg_action(match.call(), ...)
   if(is.null(g)) return(.Call(Cpp_flagleadm,x,n,fill,0L,0L,NULL,G_t(t,0L),stubs))
   if(is.atomic(g)) {
@@ -38,7 +38,7 @@ flag.matrix <- function(x, n = 1, g = NULL, t = NULL, fill = NA, stubs = TRUE, .
   .Call(Cpp_flagleadm,x,n,fill,g[[1L]],g[[2L]],g[[3L]],G_t(t),stubs)
 }
 
-flag.grouped_df <- function(x, n = 1, t = NULL, fill = NA, stubs = TRUE, keep.ids = TRUE, ...) {
+flag.grouped_df <- function(x, n = 1, t = NULL, fill = NA, stubs = length(n) > 1L, keep.ids = TRUE, ...) {
   if(!missing(...)) unused_arg_action(match.call(), ...)
   g <- GRP.grouped_df(x, call = FALSE)
   tsym <- l1orn(as.character(substitute(t)), NULL)
@@ -59,7 +59,7 @@ flag.grouped_df <- function(x, n = 1, t = NULL, fill = NA, stubs = TRUE, keep.id
   }
   .Call(Cpp_flagleadl,x,n,fill,g[[1L]],g[[2L]],g[[3L]],G_t(t),stubs)
 }
-flag.data.frame <- function(x, n = 1, g = NULL, t = NULL, fill = NA, stubs = TRUE, ...) {
+flag.data.frame <- function(x, n = 1, g = NULL, t = NULL, fill = NA, stubs = length(n) > 1L, ...) {
   if(!missing(...)) unused_arg_action(match.call(), ...)
   if(is.null(g)) return(.Call(Cpp_flagleadl,x,n,fill,0L,0L,NULL,G_t(t,0L),stubs))
   if(is.atomic(g)) {
@@ -72,10 +72,10 @@ flag.data.frame <- function(x, n = 1, g = NULL, t = NULL, fill = NA, stubs = TRU
   if(!is.GRP(g)) g <- GRP.default(g, return.groups = FALSE, call = FALSE)
   .Call(Cpp_flagleadl,x,n,fill,g[[1L]],g[[2L]],g[[3L]],G_t(t),stubs)
 }
-flag.list <- function(x, n = 1, g = NULL, t = NULL, fill = NA, stubs = TRUE, ...)
+flag.list <- function(x, n = 1, g = NULL, t = NULL, fill = NA, stubs = length(n) > 1L, ...)
   flag.data.frame(x, n, g, t, fill, stubs, ...)
 
-flag.pdata.frame <- function(x, n = 1, fill = NA, stubs = TRUE, ...) {
+flag.pdata.frame <- function(x, n = 1, fill = NA, stubs = length(n) > 1L, ...) {
   if(!missing(...)) unused_arg_action(match.call(), ...)
   index <- unclass(attr(x, "index"))
   if(length(index) > 2L) index <- c(finteraction(index[-length(index)]), index[length(index)])
