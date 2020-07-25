@@ -6,7 +6,7 @@
 Regular Objects and Unlistable Lists
 }
 \description{
-A regular R object is an R object that is either atomic or a list - checked with \code{is.regular}. A (nested) list composed of regular objects at each level is unlistable - checked with \code{is.unlistable}.
+In \emph{collapse} a regular R object is defined as an R object that is either atomic or a list - checked with \code{is.regular}. A (nested) list composed of regular objects at each level is unlistable - checked with \code{is.unlistable}.
 }
 \usage{
 is.regular(x)
@@ -14,11 +14,11 @@ is.unlistable(l)
 }
 %- maybe also 'usage' for other objects documented here.
 \arguments{
-  \item{x}{a R object.}
+  \item{x}{an R object.}
   \item{l}{a list.}
 }
 \details{
-\code{is.regular} is simply defined as \code{is.atomic(x) || is.list(x)}. \code{is.unlistable} is defined as \code{all(unlist(rapply2d(l, is.regular), use.names = FALSE))}. It could of course also be defined as \code{all(rapply(l, is.atomic))}, but the above is a lot more efficient if \code{l} contains \code{data.frame}'s.
+\code{is.regular} is simply defined as \code{is.atomic(x) || is.list(x)}. \code{is.unlistable} is defined as \code{all(unlist(rapply2d(l, is.regular), use.names = FALSE))}. It could of course also be defined as \code{all(rapply(l, is.atomic))}, but the above is a lot more efficient if \code{l} contains data.frame's.
 }
 \value{
 \code{logical(1)} - \code{TRUE} or \code{FALSE}.
@@ -33,7 +33,7 @@ is.unlistable(l)
 %%  ~~further notes~~
 % }
 
-%% ~Make other sections like Warning with \section{Warning }{....} ~
+%% ~Make other sections like Warning with \section{Warning }{\dots.} ~
 
 \seealso{
 \code{\link{ldepth}}, \code{\link{has_elem}}, \link[=A8-list-processing]{List Processing}, \link[=collapse-documentation]{Collapse Overview}
@@ -51,3 +51,4 @@ is.unlistable(l)
 
 }
 \keyword{list}
+\keyword{utilities}

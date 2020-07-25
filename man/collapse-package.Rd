@@ -12,52 +12,81 @@ Advanced and Fast Data Transformation
 \item to help make R code fast, flexible, parsimonious and programmer friendly. % \emph{collapse} is a fast  %to facilitate (advanced) data manipulation in R   % To achieve the latter,
 % collapse provides a broad set.. -> Nah, it's not a misc package
 }
-It is compatible with \emph{dplyr}, \emph{data.table} and the \emph{plm} approach to panel-data.
+It is compatible with \emph{dplyr}, \emph{data.table} and the \emph{plm} approach to panel data.
 
-% \cr
-\bold{Key Features:}    % (In more detail in \link[=collapse-documentation]{Collapse Overview}) % Key functionality: % Key areas Key topics addressed by \emph{collapse} are: % where \emph{collapse} offers innovative solutions are:
-
-% \tabular{lll}{ % \Sexpr{"\u200B"} \Sexpr{"\u200B"}  \tab \emph{ Description }  \cr
-\enumerate{  % (1) \tab\tab ... \cr
-
-                \item  \emph{Advanced data programming}: A full set of fast statistical functions
-        supporting grouped and weighted computations on vectors, matrices and
-        data frames. Fast (ordered) and programmable grouping, factor
-        generation, manipulation of data frames and data object conversions. %  select, subset, transform, replace, add and delete data.frame columns.
-                 \item \emph{Advanced aggregation}: Fast and easy multi-data-type, multi-function,
-        weighted, parallelized and fully customized data aggregation.
-                 \item \emph{Advanced transformations}: Fast (grouped, weighted) replacing and
-        sweeping out of statistics, scaling / standardizing, centering (i.e.
-        between and within transformations), higher-dimensional centering
-        (i.e. multiple fixed effects transformations), linear
-        prediction and partialling-out.
-                 \item \emph{Advanced time-computations}: Fast (sequences of) lags / leads, and
-        (lagged / leaded, iterated, quasi-, log-) differences and growth
-        rates on (unordered) time-series and panel data. Multivariate auto,
-        partial and cross-correlation functions for panel data.
-        Panel data to (ts-)array conversions.
-                 \item \emph{List processing}: (Recursive) list search / identification, extraction /
-        subsetting, data-apply, and generalized row-binding / unlisting in 2D.
-                 \item \emph{Advanced data exploration}: Fast (grouped, weighted, panel-decomposed)
-        summary statistics for complex multilevel / panel data.
-% }
-}
 }
 \section{Getting Started}{
-Please see \link[=collapse-documentation]{Collapse Documentation & Overview}, or the introductory vignette. A compact but non-exhaustive set of examples is also provided below.
+Please see \link[=collapse-documentation]{Collapse Documentation & Overview}, or the introductory vignette. The documentation and vignettes can also comfortably be read on the \href{https://sebkrantz.github.io/collapse/}{package website}.
+A compact set of examples for quick-starters is provided below.
 }
+
+
+% \section{Key Features} {
+% \cr
+% \bold{Key Features:}    % (In more detail in \link[=collapse-documentation]{Collapse Overview}) % Key functionality: % Key areas Key topics addressed by \emph{collapse} are: % where \emph{collapse} offers innovative solutions are:
+
+% \tabular{lll}{ % \Sexpr{"\u200B"} \Sexpr{"\u200B"}  \tab \emph{ Description }  \cr
+% \enumerate{  % (1) \tab\tab \dots \cr
+
+%                 \item  \emph{Advanced data programming}: A full set of fast statistical functions
+%         supporting grouped and weighted computations on vectors, matrices and
+%         data frames. Fast (ordered) and programmable grouping, factor
+%         generation, manipulation of data frames and data object conversions. %  select, subset, transform, replace, add and delete data.frame columns.
+%                  \item \emph{Advanced aggregation}: Fast and easy multi-data-type, multi-function,
+%         weighted, parallelized and fully customized data aggregation.
+%                  \item \emph{Advanced transformations}: Fast (grouped, weighted) replacing and
+%         sweeping out of statistics, scaling / standardizing, centering (i.e.
+%         between and within transformations), higher-dimensional centering
+%         (i.e. multiple fixed effects transformations), linear
+%         prediction and partialling-out.
+%                  \item \emph{Advanced time-computations}: Fast (sequences of) lags / leads, and
+%         (lagged / leaded, iterated, quasi-, log-) differences and growth
+%         rates on (unordered) time series and panel data. Multivariate auto,
+%         partial and cross-correlation functions for panel data.
+%         Panel data to (ts-)array conversions.
+%                  \item \emph{List processing}: (Recursive) list search / identification, extraction /
+%         subsetting, data-apply, and generalized row-binding / unlisting in 2D.
+%                  \item \emph{Advanced data exploration}: Fast (grouped, weighted, panel-decomposed)
+%         summary statistics for complex multilevel / panel data.
+% }
+% }
+% }
+
 \section{Details}{
 % Put this below bullet points ?? % \emph{collapse} provides a carefully conceived % \emph{collapse} provides a compact set of functions % organized roughly into several topics
-\emph{collapse} provides an integrated set of functions organized into several topics (see \link[=collapse-documentation]{Collapse Overview}). Many functions are S3 generic with core methods for vectors, matrices and data.frames. Inputs are quickly passed to
-compiled C/C++ code, enabling flexible and parsimonious programming in R at extreme speeds.
+\emph{collapse} provides an integrated suite of statistical and data manipulation functions (see \link[=collapse-documentation]{Collapse Overview}). These imrove, complement and extend in significant ways the capabilities of R and manipulation packages like \emph{dplyr}, \emph{data.table}, \emph{plm}, \emph{matrixStats}, \emph{Rfast} etc. Key imrovements and extensions are:
 
-Broad areas of use are fast grouped programming and data manipulation to implement complex statistical techniques, and fast data transformation and exploration code (i.e. for \code{shiny} apps). Applications include fast panel data estimators and techniques, fast weighted programming (i.e. for survey techniques), fast programming with and aggregation of categorical data, fast programming with time-series and panel-series data, and programming with lists of data objects.
+\itemize{
+\item Fast C/C++ based (grouped) computations embedded in highly optimized R code.
+\item More complex statistical, grouped, weighted, time series/panel data and recursive (list-processing) operations.
+\item A flexible and generic approach supporting and preserving many R objects. % standard  % (S3 generic statistical functions, class/attribute preservation). % , compatibility with \emph{dplyr}, \emph{plm} and \emph{data.table}
+\item Optimized programming in standard and non-standard evaluation.
+}
+% To explain this a bit:
+The statistical and data transformation functions in \emph{collapse} are S3 generic with core methods for vectors, matrices and data.frame's, and internally support grouped and weighted computations carried out in C/C++. Thus functions need only be called once for column-wise and/or grouped computations, providing a lot of extra speed next to full support for sampling weights. Furthermore the R code is strongly optimized and inputs are swiftly passed to compiled C/C++ code, with further checks run at C/C++ level. Various efficient algorithms are implemented in C/C++. %This approach enables flexible and parsimonious programming and data manipulation in R at high speeds.
 
-The package largely avoids non-standard evaluation and exports core methods for maximum programmability.  % Most are S3 generic with methods for common \code{R} objects (vectors, matrices, data.frames, ...) % high computation  %(aggregation and transformations ~10x \emph{data.table} on data <1 Mio obs.).
-Smart attribute handling and additional (not-exported) methods ensure compatibility and support for \emph{dplyr}, \emph{data.table} and the \emph{plm} approach to panel-data. \emph{collapse} comes with a built-in hierarchical \link[=collapse-documentation]{documentation} facilitating the use of the package. % and \code{base/stats}. % extra methods warrant, provide ?
+%when passed to a \emph{collapse} statistical function together with a suitable data object
+To provide extra speed and programmer friendliness, core S3 methods and efficient grouping and ordering functionality can be accessed by the user. For example \code{GRP()} creates grouping objects directly passed to C++. \code{fgroup_by()} attaches these objects to a data frame yielding very efficient chained calls when combined with \emph{magrittr} pipes, \link[=A3-data-frame-manipulation]{fast manipulation functions} and \link[=A1-fast-statistical-functions]{fast statistical functions}. Performance gains are also realized when grouping with factors, or computing on grouped (\emph{dplyr}) or panel data (\emph{plm}) frames. Hence \emph{collapse} enables optimized programming and data manipulation in both standard and non-standard evaluation.
+
+ %The function \code{fgroup_by} can be used to efficiently create a grouped tibble inside dplyr-like chained calls (constructed with \emph{magrittr} pipes, fast manipulation functions like \code{fselect}, \code{fsubset}, \code{ftransform} and fast statistical functions). Thus \emph{collapse} enables optimized programming in both standard and non-standard evaluation.
+
+
+% attributes of atomic objects are preserved if the dimensions are unaltered by the computation, and data.frame attributes are always preserved,
+
+ Additional (hidden) S3 methods provide broad based compatibility and support for \emph{dplyr} (grouped tibble), \emph{data.table} and \emph{plm} panel data classes. All \emph{collapse} functions and core methods also seek to intelligently preserve object attributes (including column attributes such variable labels), ensuring great flexibility and non-destructive workflows. Missing values are efficiently skipped at C/C++ level. The default is always \emph{na.rm = TRUE}, whereas \emph{na.rm = FALSE} also yields efficient checking and early termination where appropriate.
+ %Hence they also handle various date and time series classes etc., and can easily be integreated into most approaches to data transformation.
+
+ %A global \code{option("collapse_unused_arg_action")} can be set to regulate the behavior when unused arguments are passed to a generic function. The default is to issue a warning.
+
+
+\emph{collapse} comes with a built-in hierarchical \link[=collapse-documentation]{documentation} facilitating the use of the package. The vignettes are complimentary and also follow a more structured approach. % and \code{base/stats}. % extra methods warrant, provide ?
+
+Apart from general performance considerations, \emph{collapse} excels at applications involving fast panel data transformations and techniques, fast weighted computations (i.e. for survey techniques), fast programming with and aggregation of categorical and mixed-type data, fast programming with (multivariate) time series and related methods, and programming with lists of data objects. %Other broad areas are fast grouped and weighted programming to implement new statistical techniques and packages, and fast data manipulation code (i.e. server-side for \code{shiny} apps).
+
+% The package largely avoids non-standard evaluation and exports core methods for maximum programmability.  % Most are S3 generic with methods for common \code{R} objects (vectors, matrices, data.frame's, \dots) % high computation  %(aggregation and transformations ~10x \emph{data.table} on data <1 Mio obs.).
 
 % Beyond speed, flexibility and parsimony in coding, a central objective of \emph{collapse} is to facilitate advanced / complex operations on data.
-\emph{collapse} is mainly coded in C++ and built with \code{Rcpp}, but also uses C functions from \emph{data.table} (grouping, subsetting, row-binding), \emph{lfe} (centering on multiple factors) and \emph{stats} (ACF and PACF).
+\emph{collapse} is mainly coded in C++ and built with \code{Rcpp}, but also uses C functions from \emph{data.table} (grouping, ordering, subsetting, row-binding), \emph{lfe} (centering on multiple factors) and \emph{stats} (ACF and PACF). For the moment \emph{collapse} does not use low-level parallelism (such as OpenMP).
 % \emph{collapse} is built with \code{Rcpp} and imports \code{C} functions from \emph{data.table}, \emph{lfe} and \emph{stats}. %, and uses \code{ggplot2} visualizations.
 
 }
@@ -71,8 +100,7 @@ Other contributors from packages \emph{collapse} utilizes:
 \item Dirk Eddelbuettel and contributors worldwide (Rcpp)
 \item R Core Team and contributors worldwide (stats)
 }
-I also thank Ralf Stubner, Joseph Wood and Dirk Eddelbuettel for helpful answers on Stackoverflow,
-and Joris Meys on R-Devel for encouraging me and helping to set up the \href{https://github.com/SebKrantz/collapse}{github repository} for \emph{collapse}.
+I thank Ralf Stubner, Joseph Wood and Dirk Eddelbuettel for helpful answers on Stackoverflow, Joris Meys on R-Devel for encouraging me and helping to set up the \href{https://github.com/SebKrantz/collapse}{github repository} for \emph{collapse}, Matthieu Stigler, Patrice Kiener, Zhiyi Xu and Kevin Tappe for feature requests and helpful suggestions.
 }
 \section{Developing / Feature Requests / Bug Reporting}{
 \itemize{
@@ -114,7 +142,7 @@ str(suml)
 head(unlist2d(suml, idcols = c("Variable","Trans"), row.names = "Region"))
 % # Compute the means of all the regions and create a simpler data.frame instead % unlist2d(rapply2d(suml, fmean), idcols = c("Variable","Trans"))
 # Select columns from wlddev
-series <- get_vars(wlddev, 9:12)     # same as wlddev[9:12] but 2x faster and works with data.tables
+series <- get_vars(wlddev, 9:12)     # same as wlddev[9:12] but 2x faster and works with \emph{data.table}'s
 series <- fselect(wlddev, PCGDP:ODA) # Same thing: > 100x faster t. dplyr::select(wlddev, PCGDP:ODA)
 
 # Replace columns, 8x faster than wlddev[9:12] <- series and also replaces names
@@ -164,14 +192,14 @@ fsd(gseries, w = ODA)   # Weighted group standard deviation
 # Faster aggregations with dplyr:
 library(dplyr) # This is already a lot faster than summarize_all(mean)
 wlddev \%>\% group_by(region,income) \%>\% select(PCGDP,LIFEEX) \%>\% fmean
-# Now this is getting fast, apart from the pipe which still slows things down...
+# Now this is getting fast, apart from the pipe which still slows things down..
 wlddev \%>\% fgroup_by(region,income) \%>\% fselect(PCGDP,LIFEEX) \%>\% fmean
 }
 # Data-Apply to columns
 head(dapply(series, log))
 dapply(series, quantile, na.rm = TRUE)
 
-# Data-Apply to rows (for sum use rowSums(qM(series), na.rm = TRUE), same for rowMeans ...)
+# Data-Apply to rows (for sum use rowSums(qM(series), na.rm = TRUE), same for rowMeans..)
 head(dapply(mtcars, max, MARGIN = 1, na.rm = TRUE))
 head(dapply(mtcars, quantile, MARGIN = 1))
 
@@ -183,7 +211,7 @@ BY(series, wlddev$region, sum, na.rm = TRUE)  # Please use: fsum(series, wlddev$
 BY(series, wlddev$region, quantile, na.rm = TRUE)
 BY(series, wlddev$region, quantile, na.rm = TRUE, expand.wide = TRUE)
 
-# Convert panel-data to array
+# Convert panel data to array
 psar <- psmat(wlddev, ~country, ~year, cols = 9:12)
 str(psar)
 psar["Ireland",,]                                       # Fast data access

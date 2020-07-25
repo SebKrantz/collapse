@@ -32,7 +32,7 @@
 Fast Between (Averaging) and Within (Centering) Transformations
 }
 \description{
-\code{fbetween} and \code{fwithin} are S3 generics to efficiently obtain between-transformed (averaged) or within-transformed (demeaned) data. These operations can be performed groupwise and/or weighted. \code{B} and \code{W} are wrappers around \code{fbetween} and \code{fwithin} representing the 'between-operator' and the 'within-operator'. \code{B} / \code{W} provide more flexibility than \code{fbetween} / \code{fwithin} when applied to data frames (i.e.  column subsetting, formula input, auto-renaming and id-variable-preservation capabilities...), but are otherwise identical.
+\code{fbetween} and \code{fwithin} are S3 generics to efficiently obtain between-transformed (averaged) or within-transformed (demeaned) data. These operations can be performed groupwise and/or weighted. \code{B} and \code{W} are wrappers around \code{fbetween} and \code{fwithin} representing the 'between-operator' and the 'within-operator'. \code{B} / \code{W} provide more flexibility than \code{fbetween} / \code{fwithin} when applied to data frames (i.e.  column subsetting, formula input, auto-renaming and id-variable-preservation capabilities\dots), but are otherwise identical.
 
 (\code{fbetween} and \code{fwithin} are simple programmers functions in style of the \link[=A1-fast-statistical-functions]{Fast Statistical Functions} while \code{B} and \code{W} are more practical to use in regression formulas or for ad-hoc computations on data frames.)
 }
@@ -86,13 +86,13 @@ fbetween(x, \dots)
 }
 %- maybe also 'usage' for other objects documented here.
 \arguments{
-  \item{x}{a numeric vector, matrix, data.frame, panel-series (\code{plm::pseries}), panel-data.frame (\code{plm::pdata.frame}) or grouped tibble (\code{dplyr::grouped_df}).}
+  \item{x}{a numeric vector, matrix, data.frame, panel series (\code{plm::pseries}), panel data.frame (\code{plm::pdata.frame}) or grouped tibble (\code{dplyr::grouped_df}).}
   \item{g}{a factor, \code{\link{GRP}} object, atomic vector (internally converted to factor) or a list of vectors / factors (internally converted to a \code{\link{GRP}} object) used to group \code{x}.}
   \item{by}{\emph{B and W data.frame method}: Same as g, but also allows one- or two-sided formulas i.e. \code{~ group1} or \code{var1 + var2 ~ group1 + group2}. See Examples.}
   \item{w}{a numeric vector of (non-negative) weights. \code{B/W} data frame and \code{pdata.frame} methods also allow a one-sided formula i.e. \code{~ weightcol}. The \code{grouped_df} (\emph{dplyr}) method supports lazy-evaluation. See Examples.}
-    \item{cols}{\emph{data.frame method}: Select columns to center/average using a function, column names or indices. Default: All numeric variables. \emph{Note}: \code{cols} is ignored if a two-sided formula is passed to \code{by}.}
-  \item{na.rm}{logical. skip missing values in \code{x} when computing averages. If \code{na.rm = FALSE} and a \code{NA} or \code{NaN} is encountered, the average for that group will be \code{NA}, and all data points belonging to that group will also be \code{NA}.}
-      \item{effect}{\emph{plm} methods: Select which panel identifier should be used as grouping variable. 1L means first variable in the \code{plm::index}, 2L the second etc. if more than one integer is supplied, the corresponding index-variables are interacted. }
+    \item{cols}{\emph{data.frame method}: Select columns to center/average using a function, column names, indices or a logical vector. Default: All numeric variables. \emph{Note}: \code{cols} is ignored if a two-sided formula is passed to \code{by}.}
+  \item{na.rm}{logical. Skip missing values in \code{x} and \code{w} when computing averages. If \code{na.rm = FALSE} and a \code{NA} or \code{NaN} is encountered, the average for that group will be \code{NA}, and all data points belonging to that group in the output vector will also be \code{NA}.}
+      \item{effect}{\emph{plm} methods: Select which panel identifier should be used as grouping variable. 1L takes the first variable in the \code{plm::index}, 2L the second etc..  Index variables can also be called by name using a character string. If more than one variable is supplied, the corresponding index-factors are interacted. }
   \item{stub}{a prefix or stub to rename all transformed columns. \code{FALSE} will not rename columns.}
   \item{fill}{\emph{option to \code{fbetween/B}}: Logical. \code{TRUE} will overwrite missing values in \code{x} with the respective average. By default missing values in \code{x} are preserved.}
   \item{mean}{\emph{option to \code{fwithin/W}}: The mean to center on, default is 0, but a different mean can be supplied and will be added to the data after the centering is performed. A special option when performing grouped centering is \code{mean = "overall.mean"}. In that case the overall mean of the data will be added after subtracting out group means.}
@@ -101,18 +101,18 @@ fbetween(x, \dots)
   \item{\dots}{arguments to be passed to or from other methods.}
 }
 \details{
-Without groups, \code{fbetween/B} replaces all data points in \code{x} with their mean or weighted mean (if \code{w} is supplied). Similarly \code{fwithin/W} subtracts the mean from all data points i.e. centers the data on the mean. \cr
+Without groups, \code{fbetween/B} replaces all data points in \code{x} with their mean or weighted mean (if \code{w} is supplied). Similarly \code{fwithin/W} subtracts the (weighted) mean from all data points i.e. centers the data on the mean. \cr
 
-With groups supplied to \code{g}, the replacement / centering performed by \code{fbetween/B} | \code{fwithin/W} becomes groupwise. I like to think of this in terms of panel data: If \code{x} is a vector in such a dataset, \code{xit} denotes a single data-point belonging to group \code{i} in time-period \code{t} (\code{t} need not be a time-period). Then \code{xi.} denotes \code{x}, averaged over \code{t}. \code{fbetween/B} now returns \code{xi.} and \code{fwithin/W} returns \code{x - xi.}. Thus for any data \code{x} and any grouping vector \code{g}: \code{B(x,g) + W(x,g) = xi. + x - xi. = x}. In terms of variance, \code{fbetween/B} only retains the variance between group averages, while \code{fwithin/W}, by subtracting out group means, only retains the variance within those groups. \cr
+With groups supplied to \code{g}, the replacement / centering performed by \code{fbetween/B} | \code{fwithin/W} becomes groupwise. In terms of panel data notation: If \code{x} is a vector in such a panel dataset, \code{xit} denotes a single data-point belonging to group \code{i} in time-period \code{t} (\code{t} need not be a time-period). Then \code{xi.} denotes \code{x}, averaged over \code{t}. \code{fbetween/B} now returns \code{xi.} and \code{fwithin/W} returns \code{x - xi.}. Thus for any data \code{x} and any grouping vector \code{g}: \code{B(x,g) + W(x,g) = xi. + x - xi. = x}. In terms of variance, \code{fbetween/B} only retains the variance between group averages, while \code{fwithin/W}, by subtracting out group means, only retains the variance within those groups. \cr
 
-The data replacement performed by \code{fbetween/B} can keep (default) or overwrite missing values (option \code{fill = TRUE}) in \code{x}. \code{fwithin/W} can center data simply (default), or add back a mean after centering (option \code{mean = value}), or add the overall mean in groupwise computations (option \code{mean = "overall.mean"}). Let \code{x..} denote the overall mean of \code{x}, then \code{fwithin/W} with \code{mean = "overall.mean"} returns \code{x - xi. + x..} instead of \code{x - xi.}. This is useful to get rid of group-differences but preserve the overall level of the data (as simple groupwise centering will set the overall mean of the data to 0, or any other arbitrary value passed to \code{mean}). In regression analysis, centering with \code{mean = "overall.mean"} will only change the constant term. See Examples.
+The data replacement performed by \code{fbetween/B} can keep (default) or overwrite missing values (option \code{fill = TRUE}) in \code{x}. \code{fwithin/W} can center data simply (default), or add back a mean after centering (option \code{mean = value}), or add the overall mean in groupwise computations (option \code{mean = "overall.mean"}). Let \code{x..} denote the overall mean of \code{x}, then \code{fwithin/W} with \code{mean = "overall.mean"} returns \code{x - xi. + x..} instead of \code{x - xi.}. This is useful to get rid of group-differences but preserve the overall level of the data. In regression analysis, centering with \code{mean = "overall.mean"} will only change the constant term. See Examples.
 }
 \value{
 \code{fbetween/B} returns \code{x} with every element replaced by its (groupwise) mean (\code{xi.}). \code{fwithin/W} returns \code{x} where every element was subtracted its (groupwise) mean (\code{x - xi.} or \code{x - xi. + mean} or \code{x - xi. + x..}). See Details.
 }
-% \references{
-%% ~put references to the literature/web site here ~
-% }
+\references{
+Mundlak, Yair. 1978. On the Pooling of Time Series and Cross Section Data. \emph{Econometrica} 46 (1): 69-85.
+}
 % \author{
 %%  ~~who you are~~
 % }
@@ -120,7 +120,7 @@ The data replacement performed by \code{fbetween/B} can keep (default) or overwr
 %%  ~~further notes~~
 % }
 
-%% ~Make other sections like Warning with \section{Warning }{....} ~
+%% ~Make other sections like Warning with \section{Warning }{\dots.} ~
 
 \seealso{
 \code{\link[=HDW]{fHDbetween/HDB and fHDwithin/HDW}}, \code{\link[=fscale]{fscale/STD}}, \code{\link{TRA}}, \link[=A6-data-transformations]{Data Transformations}, \link[=collapse-documentation]{Collapse Overview}
@@ -131,15 +131,15 @@ fbetween(mtcars)
 B(mtcars)
 fwithin(mtcars)
 W(mtcars)
-fbetween(mtcars) + fwithin(mtcars) == mtcars # This should be true apart from rounding errors
+all.equal(fbetween(mtcars) + fwithin(mtcars), mtcars)
 
 ## Groupwise centering and averaging
 fbetween(mtcars, mtcars$cyl)
  fwithin(mtcars, mtcars$cyl)
-fbetween(mtcars, mtcars$cyl) + fwithin(mtcars, mtcars$cyl) == mtcars
+all.equal(fbetween(mtcars, mtcars$cyl) + fwithin(mtcars, mtcars$cyl), mtcars)
 
 W(wlddev, ~ iso3c, cols = 9:12)    # Center the 4 series in this dataset by country
-cbind(get_vars(wlddev,"iso3c"),    # Same thing done manually using fwithin...
+cbind(get_vars(wlddev,"iso3c"),    # Same thing done manually using fwithin..
       add_stub(fwithin(get_vars(wlddev,9:12), wlddev$iso3c), "W."))
 
 ## Using B() and W() in regressions:
@@ -150,7 +150,7 @@ lm(mpg ~ carb, data = W(mtcars, ~ cyl, stub = FALSE))           # Centering the 
 lm(mpg ~ carb, data = W(mtcars, ~ cyl, stub = FALSE,            # Here only the intercept changes
                         mean = "overall.mean"))
 lm(mpg ~ carb + B(carb,cyl), data = mtcars)                     # Procedure suggested by
-# ...Mundlak (1978) - partialling out group averages amounts to the same as demeaning the data
+# ..Mundlak (1978) - partialling out group averages amounts to the same as demeaning the data
 
 # Now with cyl, vs and am fixed effects
 lm(W(mpg,list(cyl,vs,am)) ~ W(carb,list(cyl,vs,am)), data = mtcars)

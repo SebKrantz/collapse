@@ -12,7 +12,7 @@ groupid(x, o = NULL, start = 1L, na.skip = FALSE, check.o = TRUE)
 }
 %- maybe also 'usage' for other objects documented here.
 \arguments{
-  \item{x}{a atomic vector of any type. Attributes are not considered.} % Non-integer vectors are first converted to ordered factor.
+  \item{x}{an atomic vector of any type. Attributes are not considered.}
 
   \item{o}{an (optional) integer ordering vector specifying the order by which to pass through \code{x}.}
 
@@ -28,7 +28,7 @@ An integer vector of class 'qG'. See \code{\link{qG}}.
 }
 
 \seealso{
-\code{\link{seqid}}, \code{\link{qG}}, \link[=A2-fast-grouping]{Fast (Ordered) Grouping}, \link[=collapse-documentation]{Collapse Overview}
+\code{\link{seqid}}, \code{\link{qG}}, \link[=A2-fast-grouping]{Fast Grouping and Ordering}, \link[=collapse-documentation]{Collapse Overview}
 }
 \examples{
 groupid(airquality$Month)
