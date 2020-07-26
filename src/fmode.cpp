@@ -619,8 +619,8 @@ Vector<LGLSXP> fmodeImpl(const Vector<LGLSXP>& x, int ng, const IntegerVector& g
           if(x[i] == NA_LOGICAL) sumwNA += wg[i];
           else if(x[i]) sumwtrue += wg[i];
           else sumwfalse += wg[i];
-        }
-        out[0] = (sumwNA > sumwtrue && sumwNA > sumwfalse) ? NA_LOGICAL : (maxm || sumwtrue != sumwfalse) ? sumwtrue >= sumwfalse : false;
+        }         // important as w could be NA as well..
+        out[0] = ((sumwNA > sumwtrue && sumwNA > sumwfalse) || (sumwtrue == 0 && sumwfalse == 0)) ? NA_LOGICAL : (maxm || sumwtrue != sumwfalse) ? sumwtrue >= sumwfalse : false;
       }
       DUPLICATE_ATTRIB(out, x);
       if(Rf_getAttrib(x, R_NamesSymbol) != R_NilValue) Rf_setAttrib(out, R_NamesSymbol, R_NilValue);
@@ -655,12 +655,14 @@ Vector<LGLSXP> fmodeImpl(const Vector<LGLSXP>& x, int ng, const IntegerVector& g
         }
         if(maxm) {
           for(int i = ng; i--; ) {
-            if(sumwNA[i] > sumwtrue[i] && sumwNA[i] > sumwfalse[i]) out[i] = NA_LOGICAL;
+            // important as w could be NA as well..
+            if((sumwNA[i] > sumwtrue[i] && sumwNA[i] > sumwfalse[i]) || sumwtrue[i] + sumwfalse[i] == 0) out[i] = NA_LOGICAL;
             else out[i] = sumwtrue[i] >= sumwfalse[i];
           }
         } else {
           for(int i = ng; i--; ) {
-            if(sumwNA[i] > sumwtrue[i] && sumwNA[i] > sumwfalse[i]) out[i] = NA_LOGICAL;
+            // important as w could be NA as well..
+            if((sumwNA[i] > sumwtrue[i] && sumwNA[i] > sumwfalse[i]) || sumwtrue[i] + sumwfalse[i] == 0) out[i] = NA_LOGICAL;
             else out[i] = sumwtrue[i] > sumwfalse[i];
           }
         }
