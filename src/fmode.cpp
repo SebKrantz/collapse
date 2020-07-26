@@ -469,7 +469,7 @@ Vector<RTYPE> fmodeImpl(const Vector<RTYPE>& x, int ng, const IntegerVector& g, 
       } else {
         for(int gr = 0; gr != ng; ++gr) {
           // const std::vector<storage_t>& temp = gmap[gr]; // good ? // const Vector<RTYPE>& // wrap()
-          const std::vector<double>& wtemp = wmap[gr];
+          const std::vector<double>& wtemp = wmap[gr+1];
           sugar::IndexHash<RTYPE> hash(wrap(gmap[gr+1])); // wrap(temp)
           out[gr] = hash.src[0];
           int s = hash.n, index; // fastest ? use n ? and reset partially ?
