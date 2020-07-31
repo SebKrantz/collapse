@@ -41,7 +41,7 @@ descr <- function(X, Ndistinct = TRUE, higher = TRUE, table = TRUE,
   res
 }
 
-print.descr <- function(x, n = 6, perc = TRUE, digits = 3, t.table = TRUE, summary = TRUE, ...) {
+print.descr <- function(x, n = 7, perc = TRUE, digits = 2, t.table = TRUE, summary = TRUE, ...) {
   w <- paste(rep("-", .Options$width), collapse = "")
   nam <- names(x)
   arstat <- attr(x, "arstat")
