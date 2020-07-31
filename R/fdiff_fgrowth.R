@@ -8,13 +8,14 @@ checkld <- function(...) {
     TRUE
   } else FALSE
 }
+baselog <- base::log
 
 
 fdiff <- function(x, n = 1, diff = 1, ...) UseMethod("fdiff") # , x
 
 fdiff.default <- function(x, n = 1, diff = 1, g = NULL, t = NULL, fill = NA, log = FALSE, rho = 1, stubs = TRUE, ...) {
   if(!missing(...)) if(checkld(...)) log <- list(...)[["logdiff"]] else unused_arg_action(match.call(), ...)
-  if(log) x <- log(x)
+  if(log) x <- baselog(x)
   if(is.null(g)) return(.Call(Cpp_fdiffgrowth,x,n,diff,fill,0L,0L,NULL,G_t(t,0L),1L+log,rho,stubs))
   if(is.atomic(g)) {
     if(is.nmfactor(g)) nl <- fnlevels(g) else {
@@ -29,7 +30,7 @@ fdiff.default <- function(x, n = 1, diff = 1, g = NULL, t = NULL, fill = NA, log
 
 fdiff.pseries <- function(x, n = 1, diff = 1, fill = NA, log = FALSE, rho = 1, stubs = TRUE, ...) {
   if(!missing(...)) if(checkld(...)) log <- list(...)[["logdiff"]] else unused_arg_action(match.call(), ...)
-  if(log) x <- log(x)
+  if(log) x <- baselog(x)
   index <- unclass(attr(x, "index"))
   if(length(index) > 2L) index <- c(finteraction(index[-length(index)]), index[length(index)])
   if(is.matrix(x))
@@ -39,7 +40,7 @@ fdiff.pseries <- function(x, n = 1, diff = 1, fill = NA, log = FALSE, rho = 1, s
 
 fdiff.matrix <- function(x, n = 1, diff = 1, g = NULL, t = NULL, fill = NA, log = FALSE, rho = 1, stubs = length(n) + length(diff) > 2L, ...) {
   if(!missing(...)) if(checkld(...)) log <- list(...)[["logdiff"]] else unused_arg_action(match.call(), ...)
-  if(log) x <- log(x)
+  if(log) x <- baselog(x)
   if(is.null(g)) return(.Call(Cpp_fdiffgrowthm,x,n,diff,fill,0L,0L,NULL,G_t(t,0L),1L+log,rho,stubs))
   if(is.atomic(g)) {
     if(is.nmfactor(g)) nl <- fnlevels(g) else {
@@ -63,7 +64,7 @@ fdiff.grouped_df <- function(x, n = 1, diff = 1, t = NULL, fill = NA, log = FALS
     t <- .subset2(x, tn)
     gn <- c(gn, tn)
   }
-  cld <- function(x) if(log) fdapply(x, log) else x
+  cld <- function(x) if(log) fdapply(x, baselog) else x
   if(length(gn)) {
     if(!keep.ids)
     return(.Call(Cpp_fdiffgrowthl,cld(fcolsubset(x,-gn)),n,diff,fill,g[[1L]],g[[2L]],g[[3L]],G_t(t,2L),1L+log,rho,stubs))
@@ -78,7 +79,7 @@ fdiff.grouped_df <- function(x, n = 1, diff = 1, t = NULL, fill = NA, log = FALS
 
 fdiff.data.frame <- function(x, n = 1, diff = 1, g = NULL, t = NULL, fill = NA, log = FALSE, rho = 1, stubs = length(n) + length(diff) > 2L, ...) {
   if(!missing(...)) if(checkld(...)) log <- list(...)[["logdiff"]] else unused_arg_action(match.call(), ...)
-  if(log) x <- fdapply(x, log)
+  if(log) x <- fdapply(x, baselog)
   if(is.null(g)) return(.Call(Cpp_fdiffgrowthl,x,n,diff,fill,0L,0L,NULL,G_t(t,0L),1L+log,rho,stubs))
   if(is.atomic(g)) {
     if(is.nmfactor(g)) nl <- fnlevels(g) else {
@@ -96,7 +97,7 @@ fdiff.list <- function(x, n = 1, diff = 1, g = NULL, t = NULL, fill = NA, log = 
 
 fdiff.pdata.frame <- function(x, n = 1, diff = 1, fill = NA, log = FALSE, rho = 1, stubs = length(n) + length(diff) > 2L, ...) {
   if(!missing(...)) if(checkld(...)) log <- list(...)[["logdiff"]] else unused_arg_action(match.call(), ...)
-  if(log) x <- fdapply(x, log)
+  if(log) x <- fdapply(x, baselog)
   index <- unclass(attr(x, "index"))
   if(length(index) > 2L) index <- c(finteraction(index[-length(index)]), index[length(index)])
   .Call(Cpp_fdiffgrowthl,x,n,diff,fill,fnlevels(index[[1L]]),index[[1L]],NULL,index[[2L]],1L+log,rho,stubs)
@@ -109,7 +110,7 @@ fgrowth <- function(x, n = 1, diff = 1, ...) UseMethod("fgrowth") # , x
 
 fgrowth.default <- function(x, n = 1, diff = 1, g = NULL, t = NULL, fill = NA, logdiff = FALSE, scale = 100, stubs = TRUE, ...) {
   if(!missing(...)) unused_arg_action(match.call(), ...)
-  if(logdiff) x <- if(scale == 1) log(x) else scale * log(x)
+  if(logdiff) x <- if(scale == 1) baselog(x) else scale * baselog(x)
   if(is.null(g)) return(.Call(Cpp_fdiffgrowth,x,n,diff,fill,0L,0L,NULL,G_t(t,0L),4L-logdiff,scale,stubs))
   if(is.atomic(g)) {
     if(is.nmfactor(g)) nl <- fnlevels(g) else {
@@ -124,7 +125,7 @@ fgrowth.default <- function(x, n = 1, diff = 1, g = NULL, t = NULL, fill = NA, l
 
 fgrowth.pseries <- function(x, n = 1, diff = 1, fill = NA, logdiff = FALSE, scale = 100, stubs = TRUE, ...) {
   if(!missing(...)) unused_arg_action(match.call(), ...)
-  if(logdiff) x <- if(scale == 1) log(x) else scale * log(x)
+  if(logdiff) x <- if(scale == 1) baselog(x) else scale * baselog(x)
   index <- unclass(attr(x, "index"))
   if(length(index) > 2L) index <- c(finteraction(index[-length(index)]), index[length(index)])
   if(is.matrix(x))
@@ -134,7 +135,7 @@ fgrowth.pseries <- function(x, n = 1, diff = 1, fill = NA, logdiff = FALSE, scal
 
 fgrowth.matrix <- function(x, n = 1, diff = 1, g = NULL, t = NULL, fill = NA, logdiff = FALSE, scale = 100, stubs = length(n) + length(diff) > 2L, ...) {
   if(!missing(...)) unused_arg_action(match.call(), ...)
-  if(logdiff) x <- if(scale == 1) log(x) else scale * log(x)
+  if(logdiff) x <- if(scale == 1) baselog(x) else scale * baselog(x)
   if(is.null(g)) return(.Call(Cpp_fdiffgrowthm,x,n,diff,fill,0L,0L,NULL,G_t(t,0L),4L-logdiff,scale,stubs))
   if(is.atomic(g)) {
     if(is.nmfactor(g)) nl <- fnlevels(g) else {
@@ -158,7 +159,7 @@ fgrowth.grouped_df <- function(x, n = 1, diff = 1, t = NULL, fill = NA, logdiff 
     t <- .subset2(x, tn)
     gn <- c(gn, tn)
   }
-  cld <- function(x) if(!logdiff) x else if(scale != 1) fdapply(x, function(y) scale * log(y)) else fdapply(x, log)
+  cld <- function(x) if(!logdiff) x else if(scale != 1) fdapply(x, function(y) scale * baselog(y)) else fdapply(x, baselog)
   if(length(gn)) {
     if(!keep.ids)
     return(.Call(Cpp_fdiffgrowthl,cld(fcolsubset(x,-gn)),n,diff,fill,g[[1L]],g[[2L]],g[[3L]],G_t(t,3L),4L-logdiff,scale,stubs))
@@ -173,7 +174,7 @@ fgrowth.grouped_df <- function(x, n = 1, diff = 1, t = NULL, fill = NA, logdiff 
 
 fgrowth.data.frame <- function(x, n = 1, diff = 1, g = NULL, t = NULL, fill = NA, logdiff = FALSE, scale = 100, stubs = length(n) + length(diff) > 2L, ...) {
   if(!missing(...)) unused_arg_action(match.call(), ...)
-  if(logdiff) x <- if(scale == 1) fdapply(x, log) else fdapply(x, function(y) scale * log(y))
+  if(logdiff) x <- if(scale == 1) fdapply(x, baselog) else fdapply(x, function(y) scale * baselog(y))
   if(is.null(g)) return(.Call(Cpp_fdiffgrowthl,x,n,diff,fill,0L,0L,NULL,G_t(t,0L),4L-logdiff,scale,stubs))
   if(is.atomic(g)) {
     if(is.nmfactor(g)) nl <- fnlevels(g) else {
@@ -191,7 +192,7 @@ fgrowth.list <- function(x, n = 1, diff = 1, g = NULL, t = NULL, fill = NA, logd
 
 fgrowth.pdata.frame <- function(x, n = 1, diff = 1, fill = NA, logdiff = FALSE, scale = 100, stubs = length(n) + length(diff) > 2L, ...) {
   if(!missing(...)) unused_arg_action(match.call(), ...)
-  if(logdiff) x <- if(scale == 1) fdapply(x, log) else fdapply(x, function(y) scale * log(y))
+  if(logdiff) x <- if(scale == 1) fdapply(x, baselog) else fdapply(x, function(y) scale * baselog(y))
   index <- unclass(attr(x, "index"))
   if(length(index) > 2L) index <- c(finteraction(index[-length(index)]), index[length(index)])
   .Call(Cpp_fdiffgrowthl,x,n,diff,fill,fnlevels(index[[1L]]),index[[1L]],NULL,index[[2L]],4L-logdiff,scale,stubs)
@@ -204,7 +205,7 @@ DG_data_frame_template <- function(x, n = 1, diff = 1, by = NULL, t = NULL, cols
 
   if(!missing(...)) unused_arg_action(match.call(), ...)
 
-  cld <- function(y) switch(return, y, fdapply(y, log), if(rho == 1) fdapply(y, log) else fdapply(y, function(k) rho * log(k)), y)
+  cld <- function(y) switch(return, y, fdapply(y, baselog), if(rho == 1) fdapply(y, baselog) else fdapply(y, function(k) rho * baselog(k)), y)
 
   if(is.call(by) || is.call(t)) {
     ax <- attributes(x)
@@ -276,7 +277,7 @@ DG_pdata_frame_template <- function(x, n = 1, diff = 1, cols = is.numeric, fill 
 
   if(length(index) > 2L) index <- c(finteraction(index[-length(index)]), index[length(index)])
 
-  cld <- function(y) switch(return, y, fdapply(y, log), if(rho == 1) fdapply(y, log) else fdapply(y, function(k) rho * log(k)), y)
+  cld <- function(y) switch(return, y, fdapply(y, baselog), if(rho == 1) fdapply(y, baselog) else fdapply(y, function(k) rho * baselog(k)), y)
 
   if(!is.null(cols)) cols <- cols2int(cols, x, nam)
 
