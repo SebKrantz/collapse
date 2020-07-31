@@ -224,7 +224,11 @@ replace_Inf <- function(X, value = NA, replace.nan = FALSE) {
   if(replace.nan) return(`[<-`(X, is.infinite(X) | is.nan(X), value = value)) #  !is.finite(X) also replaces NA
   `[<-`(X, is.infinite(X), value = value)
 }
-replace_non_finite <- function(X, value = NA, replace.nan = TRUE) replace_Inf(X, value, replace.nan)
+
+replace_non_finite <- function(X, value = NA, replace.nan = TRUE) {
+  .Deprecated("replace_Inf")
+  replace_Inf(X, value, replace.nan)
+}
 
 replace_outliers <- function(X, limits, value = NA, single.limit = c("SDs", "min", "max", "overall_SDs")) {
   ll <- length(limits)
@@ -270,6 +274,7 @@ comp <- function(x, val) do.call(cbind, lapply(x, `==`, val))
 comp_grepl <- function(x, val) do.call(cbind, lapply(x, function(y) grepl(val, y)))
 
 Recode <- function(X, ..., copy = FALSE, reserve.na.nan = TRUE, regex = FALSE) {
+  .Deprecated("recode_num, recode_char")
   if(missing(...)) stop("Recode requires arguments of the form: value = replacement")
   if(is.list(X) && !inherits(X, "data.frame")) stop("Recode only works with atomic objects or data.frames")
   args <- list(...)
