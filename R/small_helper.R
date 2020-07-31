@@ -80,7 +80,7 @@ rm_stub <- function(X, stub, pre = TRUE) {
   X
 }
 
-setRownames <- function(object, nm = seq_row(object)) {
+setRownames <- function(object, nm = if(is.atomic(object)) seq_row(object) else NULL) {
   if(is.list(object)) {
     l <- length(.subset2(object, 1L))
     if(is.null(nm)) nm <- .set_row_names(l) else if(length(nm) != l) stop("supplied row-names must match list extent")
@@ -144,12 +144,11 @@ na_omit <- function(X, cols = NULL, na.attr = FALSE) {
   if(is.list(X)) {
     iX <- seq_along(unclass(X))
     rl <- if(is.null(cols)) !.Call(C_dt_na, X, iX) else !.Call(C_dt_na, X, cols2int(cols, X, attr(X, "names"))) # gives error if X not list
+    rkeep <- which(rl)
+    if(length(rkeep) == fnrow2(X)) return(X)
+    res <- .Call(C_subsetDT, X, rkeep, iX)
     rn <- attr(X, "row.names")
-    if(is.numeric(rn) || is.null(rn) || rn[1L] == "1") res <- .Call(C_subsetDT, X, which(rl), iX) else {
-      rkeep <- which(rl)
-      res <- .Call(C_subsetDT, X, rkeep, iX)
-      attr(res, "row.names") <- rn[rkeep]
-    }
+    if(!(is.numeric(rn) || is.null(rn) || rn[1L] == "1")) attr(res, "row.names") <- rn[rkeep]
   } else {
     rl <- if(is.null(cols)) complete.cases(X) else complete.cases(X[, cols])
     res <- if(is.matrix(X)) X[rl, , drop = FALSE] else X[rl]
@@ -163,7 +162,7 @@ na_insert <- function(X, prop = 0.1) {
     n <- fnrow2(X)
     nmiss <- floor(n * prop)
     return(duplAttributes(lapply(unattrib(X), function(x) `[<-`(x, sample.int(n, nmiss), value = NA)), X))
-  } else if(!is.null(d <- fdim(X))) {
+  } else if(length(d <- dim(X))) {
     n <- d[1L]
     p <- d[2L]
     NAloc <- rep(FALSE, n * p)
@@ -193,7 +192,7 @@ fNCOL <- function(X) if(is.list(X)) length(unclass(X)) else NCOL(X)
 fdim <- function(X) {
    if(is.atomic(X)) return(dim(X)) # or if !is.list ?
    oldClass(X) <- NULL
-   c(length(X[[1L]]), length(X))
+   c(length(X[[1L]]), length(X)) # Faster than c(length(.subset2(X, 1L)), length(unclass(X)))
 }
 
 seq_row <- function(X) if(is.list(X)) seq_along(.subset2(X, 1L)) else seq_len(nrow(X))
@@ -259,31 +258,32 @@ ckmatch <- function(x, table, e = "Unknown columns:") if(anyNA(m <- match(x, tab
 
 cols2int <- function(cols, x, nam) {
  if(is.numeric(cols)) {
-  if(max(abs(cols)) > length(unclass(x))) stop("Index out of range abs(1:length(x))")
+  if(max(abs(cols)) > length(unclass(x))) stop("Index out of range abs(1:length(x))") # length(nam) ?
   return(cols)
  }
  if(is.character(cols)) return(ckmatch(cols, nam))
  if(is.function(cols)) return(which(vapply(unattrib(x), cols, TRUE)))
  if(is.logical(cols)) {
-  if(length(cols) != length(unclass(x))) stop("Logical subsetting vector must match columns!")
+  if(length(cols) != length(unclass(x))) stop("Logical subsetting vector must match columns!") # length(nam) ?
   return(which(cols))
  }
  stop("cols must be a function, character vector, numeric indices or logical vector!")
 }
 
-cols2log <- function(cols, x, nam) {
-  lx <- length(unclass(x))
-  if(is.logical(cols)) if(length(cols) == lx) return(cols) else stop("Logical subsetting vector must match columns!")
-  if(is.function(cols)) return(vapply(unattrib(x), cols, TRUE))
-  r <- logical(lx)
-  if(is.character(cols)) {
-    r[ckmatch(cols, nam)] <- TRUE
-  } else if(is.numeric(cols)) {
-    if(max(abs(cols)) > lx) stop("Index out of range abs(1:length(x))")
-    r[cols] <- TRUE
-  } else stop("cols must be a function, character vector, numeric indices or logical vector!")
-  r
-}
+# Not needed anymore !!
+# cols2log <- function(cols, x, nam) {
+#   lx <- length(unclass(x))
+#   if(is.logical(cols)) if(length(cols) == lx) return(cols) else stop("Logical subsetting vector must match columns!")
+#   if(is.function(cols)) return(vapply(unattrib(x), cols, TRUE))
+#   r <- logical(lx)
+#   if(is.character(cols)) {
+#     r[ckmatch(cols, nam)] <- TRUE
+#   } else if(is.numeric(cols)) {
+#     if(max(abs(cols)) > lx) stop("Index out of range abs(1:length(x))")
+#     r[cols] <- TRUE
+#   } else stop("cols must be a function, character vector, numeric indices or logical vector!")
+#   r
+# }
 
 # Fastest! even though it involves code duplication..
 colsubset <- function(x, ind) {
@@ -359,7 +359,7 @@ G_t <- function(x, wm = 1L) {
 # }
 
 
-rgrep <- function(exp, nam, ...) if(length(exp) == 1L) grep(exp, nam, ...) else .Call(Cpp_funique, unlist(lapply(exp, grep, nam, ...), use.names = FALSE), TRUE)
+rgrep <- function(exp, nam, ..., sort = TRUE) if(length(exp) == 1L) grep(exp, nam, ...) else .Call(Cpp_funique, unlist(lapply(exp, grep, nam, ...), use.names = FALSE), sort)
 rgrepl <- function(exp, nam, ...) if(length(exp) == 1L) grepl(exp, nam, ...) else Reduce(`|`, lapply(exp, grepl, nam, ...))
 
 # NROW2 <- function(x, d) if(length(d)) d[1L] else length(x)
@@ -423,6 +423,7 @@ fsimplify2array <- function(l) {
   dimnames(res) <- c(dimnames(l[[1L]]), list(names(l)))
   res
 }
+
 
 
 # Experimental:
