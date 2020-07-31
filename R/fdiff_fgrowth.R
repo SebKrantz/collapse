@@ -66,14 +66,14 @@ fdiff.grouped_df <- function(x, n = 1, diff = 1, t = NULL, fill = NA, log = FALS
   cld <- function(x) if(log) fdapply(x, log) else x
   if(length(gn)) {
     if(!keep.ids)
-    return(.Call(Cpp_fdiffgrowthl,cld(fcolsubset(x,-gn),log),n,diff,fill,g[[1L]],g[[2L]],g[[3L]],G_t(t,2L),1L+log,rho,stubs))
+    return(.Call(Cpp_fdiffgrowthl,cld(fcolsubset(x,-gn)),n,diff,fill,g[[1L]],g[[2L]],g[[3L]],G_t(t,2L),1L+log,rho,stubs))
     ax <- attributes(x)
     class(x) <- NULL # Works for multiple lags !
-    res <- c(x[gn],.Call(Cpp_fdiffgrowthl,cld(x[-gn],log),n,diff,fill,g[[1L]],g[[2L]],g[[3L]],G_t(t,2L),1L+log,rho,stubs))
+    res <- c(x[gn],.Call(Cpp_fdiffgrowthl,cld(x[-gn]),n,diff,fill,g[[1L]],g[[2L]],g[[3L]],G_t(t,2L),1L+log,rho,stubs))
     ax[["names"]] <- names(res)
     return(setAttributes(res, ax))
   }
-  .Call(Cpp_fdiffgrowthl,cld(x,log),n,diff,fill,g[[1L]],g[[2L]],g[[3L]],G_t(t,2L),1L+log,rho,stubs)
+  .Call(Cpp_fdiffgrowthl,cld(x),n,diff,fill,g[[1L]],g[[2L]],g[[3L]],G_t(t,2L),1L+log,rho,stubs)
 }
 
 fdiff.data.frame <- function(x, n = 1, diff = 1, g = NULL, t = NULL, fill = NA, log = FALSE, rho = 1, stubs = length(n) + length(diff) > 2L, ...) {
