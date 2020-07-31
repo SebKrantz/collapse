@@ -93,14 +93,29 @@ fnth.data.frame <- function(x, n = 0.5, g = NULL, w = NULL, TRA = NULL, na.rm = 
 fnth.list <- function(x, n = 0.5, g = NULL, w = NULL, TRA = NULL, na.rm = TRUE, use.g.names = TRUE, drop = TRUE, ties = "mean", ...)
   fnth.data.frame(x, n, g, w, TRA, na.rm, use.g.names, drop, ties, ...)
 
-fnth.grouped_df <- function(x, n = 0.5, w = NULL, TRA = NULL, na.rm = TRUE, use.g.names = FALSE, keep.group_vars = TRUE, ties = "mean", ...) {
-  ret <- switch(ties, mean = 1L, min = 2L, max = 3L, stop("ties must be 'mean', 'min' or 'max'"))
+fnth.grouped_df <- function(x, n = 0.5, w = NULL, TRA = NULL, na.rm = TRUE, use.g.names = FALSE,
+                             keep.group_vars = TRUE, keep.w = TRUE, ties = "mean", ...) {
   if(!missing(...)) unused_arg_action(match.call(), ...)
+  ret <- switch(ties, mean = 1L, min = 2L, max = 3L, stop("ties must be 'mean', 'min' or 'max'"))
   g <- GRP.grouped_df(x, call = FALSE)
+  wsym <- l1orn(as.character(substitute(w)), NULL)
   nam <- attr(x, "names")
-  gn <- which(nam %in% g[[5L]])
+  gn2 <- gn <- which(nam %in% g[[5L]])
   nTRAl <- is.null(TRA)
-  gl <- length(gn) > 0L
+  sumw <- NULL
+
+  if(!is.null(wsym) && !is.na(wn <- match(wsym, nam))) {
+    w <- .subset2(x, wn) # faster using unclass?
+    if(any(gn == wn)) stop("Weights coincide with grouping variables!")
+    gn <- c(gn, wn)
+    if(keep.w) {
+      if(nTRAl) sumw <- `names<-`(list(fsumCpp(w,g[[1L]],g[[2L]],NULL,na.rm)), paste0("sum.", wsym)) else if(keep.group_vars)
+        gn2 <- gn else sumw <- gn2 <- wn
+    }
+  }
+
+  gl <- length(gn) > 0L # necessary here, not before !
+
   if(gl || nTRAl) {
     ax <- attributes(x)
     attributes(x) <- NULL
@@ -110,23 +125,24 @@ fnth.grouped_df <- function(x, n = 0.5, w = NULL, TRA = NULL, na.rm = TRUE, use.
       ax[["row.names"]] <- if(use.g.names) GRPnames(g) else .set_row_names(g[[1L]])
       if(gl) {
         if(keep.group_vars) {
-          ax[["names"]] <- c(g[[5L]], nam[-gn])
-          return(setAttributes(c(g[[4L]],.Call(Cpp_fnthl,x,n,x[-gn],g[[1L]],g[[2L]],g[[3L]],w,na.rm,FALSE,ret)), ax))
+          ax[["names"]] <- c(g[[5L]], names(sumw), nam[-gn])
+          return(setAttributes(c(g[[4L]], sumw, .Call(Cpp_fnthl,x[-gn],n,g[[1L]],g[[2L]],g[[3L]],w,na.rm,FALSE,ret)), ax))
         }
-        ax[["names"]] <- nam[-gn]
-        return(setAttributes(.Call(Cpp_fnthl,x,n,x[-gn],g[[1L]],g[[2L]],g[[3L]],w,na.rm,FALSE,ret), ax))
+        ax[["names"]] <- c(names(sumw), nam[-gn])
+        return(setAttributes(c(sumw, .Call(Cpp_fnthl,x[-gn],n,g[[1L]],g[[2L]],g[[3L]],w,na.rm,FALSE,ret)), ax))
       } else if(keep.group_vars) {
         ax[["names"]] <- c(g[[5L]], nam)
-        return(setAttributes(c(g[[4L]],.Call(Cpp_fnthl,x,n,g[[1L]],g[[2L]],g[[3L]],w,na.rm,FALSE,ret)), ax))
+        return(setAttributes(c(g[[4L]], .Call(Cpp_fnthl,x,n,g[[1L]],g[[2L]],g[[3L]],w,na.rm,FALSE,ret)), ax))
       } else return(setAttributes(.Call(Cpp_fnthl,x,n,g[[1L]],g[[2L]],g[[3L]],w,na.rm,FALSE,ret), ax))
-    } else if(keep.group_vars) {
-      ax[["names"]] <- c(nam[gn], nam[-gn])
-      return(setAttributes(c(x[gn],.Call(Cpp_TRAl,x[-gn],.Call(Cpp_fnthl,x,n,x[-gn],g[[1L]],g[[2L]],g[[3L]],w,na.rm,FALSE,ret),g[[2L]],TtI(TRA))), ax))
+    } else if(keep.group_vars || (keep.w && length(sumw))) {
+      ax[["names"]] <- c(nam[gn2], nam[-gn])
+      return(setAttributes(c(x[gn2],.Call(Cpp_TRAl,x[-gn],.Call(Cpp_fnthl,x[-gn],n,g[[1L]],g[[2L]],g[[3L]],w,na.rm,FALSE,ret),g[[2L]],TtI(TRA))), ax))
     }
     ax[["names"]] <- nam[-gn]
-    return(setAttributes(.Call(Cpp_TRAl,x[-gn],.Call(Cpp_fnthl,x,n,x[-gn],g[[1L]],g[[2L]],g[[3L]],w,na.rm,FALSE,ret),g[[2L]],TtI(TRA)), ax))
+    return(setAttributes(.Call(Cpp_TRAl,x[-gn],.Call(Cpp_fnthl,x[-gn],n,g[[1L]],g[[2L]],g[[3L]],w,na.rm,FALSE,ret),g[[2L]],TtI(TRA)), ax))
   } else return(.Call(Cpp_TRAl,x,.Call(Cpp_fnthl,x,n,g[[1L]],g[[2L]],g[[3L]],w,na.rm,FALSE,ret),g[[2L]],TtI(TRA)))
 }
+
 
 
 
@@ -220,13 +236,28 @@ fmedian.data.frame <- function(x, g = NULL, w = NULL, TRA = NULL, na.rm = TRUE, 
 fmedian.list <- function(x, g = NULL, w = NULL, TRA = NULL, na.rm = TRUE, use.g.names = TRUE, drop = TRUE, ...)
   fmedian.data.frame(x, g, w, TRA, na.rm, use.g.names, drop, ...)
 
-fmedian.grouped_df <- function(x, w = NULL, TRA = NULL, na.rm = TRUE, use.g.names = FALSE, keep.group_vars = TRUE, ...) {
+fmedian.grouped_df <- function(x, w = NULL, TRA = NULL, na.rm = TRUE, use.g.names = FALSE,
+                            keep.group_vars = TRUE, keep.w = TRUE, ties = "mean", ...) {
   if(!missing(...)) unused_arg_action(match.call(), ...)
   g <- GRP.grouped_df(x, call = FALSE)
+  wsym <- l1orn(as.character(substitute(w)), NULL)
   nam <- attr(x, "names")
-  gn <- which(nam %in% g[[5L]])
+  gn2 <- gn <- which(nam %in% g[[5L]])
   nTRAl <- is.null(TRA)
-  gl <- length(gn) > 0L
+  sumw <- NULL
+
+  if(!is.null(wsym) && !is.na(wn <- match(wsym, nam))) {
+    w <- .subset2(x, wn) # faster using unclass?
+    if(any(gn == wn)) stop("Weights coincide with grouping variables!")
+    gn <- c(gn, wn)
+    if(keep.w) {
+      if(nTRAl) sumw <- `names<-`(list(fsumCpp(w,g[[1L]],g[[2L]],NULL,na.rm)), paste0("sum.", wsym)) else if(keep.group_vars)
+        gn2 <- gn else sumw <- gn2 <- wn
+    }
+  }
+
+  gl <- length(gn) > 0L # necessary here, not before !
+
   if(gl || nTRAl) {
     ax <- attributes(x)
     attributes(x) <- NULL
@@ -236,20 +267,20 @@ fmedian.grouped_df <- function(x, w = NULL, TRA = NULL, na.rm = TRUE, use.g.name
       ax[["row.names"]] <- if(use.g.names) GRPnames(g) else .set_row_names(g[[1L]])
       if(gl) {
         if(keep.group_vars) {
-          ax[["names"]] <- c(g[[5L]], nam[-gn])
-          return(setAttributes(c(g[[4L]],.Call(Cpp_fnthl,x,0.5,x[-gn],g[[1L]],g[[2L]],g[[3L]],w,na.rm,FALSE,1L)), ax))
+          ax[["names"]] <- c(g[[5L]], names(sumw), nam[-gn])
+          return(setAttributes(c(g[[4L]], sumw, .Call(Cpp_fnthl,x[-gn],0.5,g[[1L]],g[[2L]],g[[3L]],w,na.rm,FALSE,1L)), ax))
         }
-        ax[["names"]] <- nam[-gn]
-        return(setAttributes(.Call(Cpp_fnthl,x,0.5,x[-gn],g[[1L]],g[[2L]],g[[3L]],w,na.rm,FALSE,1L), ax))
+        ax[["names"]] <- c(names(sumw), nam[-gn])
+        return(setAttributes(c(sumw, .Call(Cpp_fnthl,x[-gn],0.5,g[[1L]],g[[2L]],g[[3L]],w,na.rm,FALSE,1L)), ax))
       } else if(keep.group_vars) {
         ax[["names"]] <- c(g[[5L]], nam)
-        return(setAttributes(c(g[[4L]],.Call(Cpp_fnthl,x,0.5,g[[1L]],g[[2L]],g[[3L]],w,na.rm,FALSE,1L)), ax))
+        return(setAttributes(c(g[[4L]], .Call(Cpp_fnthl,x,0.5,g[[1L]],g[[2L]],g[[3L]],w,na.rm,FALSE,1L)), ax))
       } else return(setAttributes(.Call(Cpp_fnthl,x,0.5,g[[1L]],g[[2L]],g[[3L]],w,na.rm,FALSE,1L), ax))
-    } else if(keep.group_vars) {
-      ax[["names"]] <- c(nam[gn], nam[-gn])
-      return(setAttributes(c(x[gn],.Call(Cpp_TRAl,x[-gn],.Call(Cpp_fnthl,x,0.5,x[-gn],g[[1L]],g[[2L]],g[[3L]],w,na.rm,FALSE,1L),g[[2L]],TtI(TRA))), ax))
+    } else if(keep.group_vars || (keep.w && length(sumw))) {
+      ax[["names"]] <- c(nam[gn2], nam[-gn])
+      return(setAttributes(c(x[gn2],.Call(Cpp_TRAl,x[-gn],.Call(Cpp_fnthl,x[-gn],0.5,g[[1L]],g[[2L]],g[[3L]],w,na.rm,FALSE,1L),g[[2L]],TtI(TRA))), ax))
     }
     ax[["names"]] <- nam[-gn]
-    return(setAttributes(.Call(Cpp_TRAl,x[-gn],.Call(Cpp_fnthl,x,0.5,x[-gn],g[[1L]],g[[2L]],g[[3L]],w,na.rm,FALSE,1L),g[[2L]],TtI(TRA)), ax))
+    return(setAttributes(.Call(Cpp_TRAl,x[-gn],.Call(Cpp_fnthl,x[-gn],0.5,g[[1L]],g[[2L]],g[[3L]],w,na.rm,FALSE,1L),g[[2L]],TtI(TRA)), ax))
   } else return(.Call(Cpp_TRAl,x,.Call(Cpp_fnthl,x,0.5,g[[1L]],g[[2L]],g[[3L]],w,na.rm,FALSE,1L),g[[2L]],TtI(TRA)))
 }
