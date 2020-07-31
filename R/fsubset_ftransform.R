@@ -32,8 +32,6 @@ ss <- function(data, i, j) {
   return(`attr<-`(.Call(C_subsetDT, data, i, j), "row.names", rn[i]))
 }
 
-
-
 fsubset.data.frame <- function(x, subset, ...) {
   if(missing(...)) vars <- seq_along(unclass(x)) else {
     ix <- seq_along(unclass(x))

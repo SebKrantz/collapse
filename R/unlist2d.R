@@ -39,7 +39,7 @@ unlist2d <- function(l, idcols = ".id", row.names = FALSE, recursive = TRUE, id.
   ul2d <- function(y) {
     if(inherits(y, "data.frame") || is.atomic(y)) return(y)
     oldClass(y) <- NULL # perhaps unclassing y would put more safety ? -> yes !
-    ident <- vapply(`attributes<-`(y, NULL), idf, 1L) # removes names ??
+    ident <- vapply(`attributes<-`(y, NULL), idf, 1L) # removes names ?
     if(is.list(y) && all(ident > 0L)) {
       if(any(at <- ident == 3L)) y[at] <- lapply(y[at], attol)
       if(keeprn && any(df <- ident == 2L)) y[df] <- lapply(y[df], addrn) # better cbind for data.table ? or x[["row.names"]] =.. and the sort later ?
