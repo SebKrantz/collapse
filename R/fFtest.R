@@ -31,15 +31,15 @@ fFtest <- function(y, exc, X = NULL, full.df = TRUE, ...) {
       }
     }
     kr <- k-p-1
-    vy <- var(y)
+    vy <- fvar.default(y)
     if(atl) {
       n <- nrow(data)
-      r2f <- 1 - var(fHDwithin.default(y, data[, -1L], na.rm = FALSE, ...))/vy
-      r2r <- 1 - var(fHDwithin.default(y, data[, 2:(Xn+1L)], na.rm = FALSE, ...))/vy
+      r2f <- 1 - fvar.default(fHDwithin.default(y, data[, -1L], na.rm = FALSE, ...))/vy
+      r2r <- 1 - fvar.default(fHDwithin.default(y, data[, 2:(Xn+1L)], na.rm = FALSE, ...))/vy
     } else {
       n <- fnrow2(data)
-      r2f <- 1 - var(fHDwithin.default(y, fcolsubset(data, -1L), na.rm = FALSE, ...))/vy
-      r2r <- 1 - var(fHDwithin.default(y, fcolsubset(data, 2:(Xn+1L)), na.rm = FALSE, ...))/vy
+      r2f <- 1 - fvar.default(fHDwithin.default(y, fcolsubset(data, -1L), na.rm = FALSE, ...))/vy
+      r2r <- 1 - fvar.default(fHDwithin.default(y, fcolsubset(data, 2:(Xn+1L)), na.rm = FALSE, ...))/vy
     }
     ndff <- k-1
     ddff <- n-k
@@ -66,7 +66,7 @@ fFtest <- function(y, exc, X = NULL, full.df = TRUE, ...) {
       p <- if(is.factor(exc) || (is.list(exc) && any(vapply(unattrib(exc), is.factor, TRUE)))) getdf(droplevels(exc)) else fNCOL(exc)
     } else p <- fNCOL(exc)
     n <- length(u)
-    r2 <- 1 - var(u)/var(if(is.null(miss)) y else y[-miss]) # R-Squared
+    r2 <- 1 - fvar.default(u)/fvar.default(if(is.null(miss)) y else y[-miss]) # R-Squared
     ddf <- n-p-1
     Fstat <- r2/p * ddf/(1-r2) # F statistic for the model (the constant goes unrestricted)
     Pv <- pf(Fstat, p, ddf, lower.tail = FALSE) # P-value corresponding to the F statistic
