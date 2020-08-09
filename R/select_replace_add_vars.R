@@ -246,7 +246,7 @@ gvr <- function(x, vars, return = "data", ...) {
   return(`oldClass<-`(x, clx))
 }
 
-"gv<-" <- function(x, vars, value, ...) {
+"gv<-" <- function(x, vars, ..., value) {
   if(!missing(...)) {
     warning("Please use the new shortcut 'gvr<-' for regex column replacement.")
     return(`get_vars<-`(x, vars, ..., value = value))
@@ -281,7 +281,7 @@ gvr <- function(x, vars, return = "data", ...) {
   }
   return(`oldClass<-`(x, clx))
 }
-"gvr<-" <- function(x, vars, value, ...) {
+"gvr<-" <- function(x, vars, ..., value) {
   clx <- oldClass(x)
   oldClass(x) <- NULL
   vars <- rgrep(vars, names(x), ...)
