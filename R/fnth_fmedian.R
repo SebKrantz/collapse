@@ -237,7 +237,7 @@ fmedian.list <- function(x, g = NULL, w = NULL, TRA = NULL, na.rm = TRUE, use.g.
   fmedian.data.frame(x, g, w, TRA, na.rm, use.g.names, drop, ...)
 
 fmedian.grouped_df <- function(x, w = NULL, TRA = NULL, na.rm = TRUE, use.g.names = FALSE,
-                            keep.group_vars = TRUE, keep.w = TRUE, ties = "mean", ...) {
+                            keep.group_vars = TRUE, keep.w = TRUE, ...) {
   if(!missing(...)) unused_arg_action(match.call(), ...)
   g <- GRP.grouped_df(x, call = FALSE)
   wsym <- l1orn(as.character(substitute(w)), NULL)
