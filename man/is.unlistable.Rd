@@ -18,7 +18,7 @@ is.unlistable(l)
   \item{l}{a list.}
 }
 \details{
-\code{is.regular} is simply defined as \code{is.atomic(x) || is.list(x)}. \code{is.unlistable} is defined as \code{all(unlist(rapply2d(l, is.regular), use.names = FALSE))}. It could of course also be defined as \code{all(rapply(l, is.atomic))}, but the above is a lot more efficient if \code{l} contains data.frame's.
+\code{is.regular} is simply defined as \code{is.atomic(x) || is.list(x)}. \code{is.unlistable} is defined as \code{all(unlist(rapply2d(l, is.regular), use.names = FALSE))}. It could of course also be defined as \code{all(rapply(l, is.atomic))}, but the above is a lot more efficient if \code{l} contains data frames.
 }
 \value{
 \code{logical(1)} - \code{TRUE} or \code{FALSE}.

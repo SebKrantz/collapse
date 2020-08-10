@@ -21,7 +21,7 @@ fNobs(x, \dots)
 \method{fNobs}{grouped_df}(x, TRA = NULL, use.g.names = FALSE, keep.group_vars = TRUE, \dots)
 }
 \arguments{
-\item{x}{a vector, matrix, data.frame or grouped tibble (\code{dplyr::grouped_df}).}
+\item{x}{a vector, matrix, data frame or grouped tibble (\code{dplyr::grouped_df}).}
 
 \item{g}{a factor, \code{\link{GRP}} object, atomic vector (internally converted to factor) or a list of vectors / factors (internally converted to a \code{\link{GRP}} object) used to group \code{x}.}
 
@@ -29,7 +29,7 @@ fNobs(x, \dots)
 1 - "replace_fill"     |     2 - "replace"     |     3 - "-"     |     4 - "-+"     |     5 - "/"     |     6 - "\%"     |     7 - "+"     |     8 - "*"     |     9 - "\%\%"     |     10 - "-\%\%". See \code{\link{TRA}}.}
 
 
-\item{use.g.names}{logical. Make group-names and add to the result as names (default method) or row-names (matrix and data.frame methods). No row-names are generated for \emph{data.table}'s.}
+\item{use.g.names}{logical. Make group-names and add to the result as names (default method) or row-names (matrix and data frame methods). No row-names are generated for \emph{data.table}'s.}
 
 \item{drop}{\emph{matrix and data.frame method:} Logical. \code{TRUE} drops dimensions and returns an atomic vector if \code{g = NULL} and \code{TRA = NULL}.}
 

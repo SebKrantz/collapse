@@ -25,19 +25,19 @@ setrename(x, \dots, cols = NULL)
 \code{x} renamed.
 }
 \seealso{
-\link[=A3-data-frame-manipulation]{Data Frame Manipulation}, \link[=collapse-documentation]{Collapse Overview}
+\link[=A3-fast-data-manipulation]{Data Frame Manipulation}, \link[=collapse-documentation]{Collapse Overview}
 }
 \examples{
 ## Using tagged expressions
-frename(iris, Sepal.Length = SL, Sepal.Width = SW,
-              Petal.Length = PW, Petal.Width = PW)
-frename(iris, Sepal.Length = "S L", Sepal.Width = "S W",
-              Petal.Length = "P W", Petal.Width = "P W")
+head(frename(iris, Sepal.Length = SL, Sepal.Width = SW,
+                   Petal.Length = PW, Petal.Width = PW))
+head(frename(iris, Sepal.Length = "S L", Sepal.Width = "S W",
+                   Petal.Length = "P W", Petal.Width = "P W"))
 
 ## Using a function
-frename(iris, tolower)
-frename(iris, tolower, cols = 1:2)
-frename(iris, tolower, cols = is.numeric)
+head(frename(iris, tolower))
+head(frename(iris, tolower, cols = 1:2))
+head(frename(iris, tolower, cols = is.numeric))
 
 ## Renaming by reference
 setrename(iris, tolower)

@@ -44,12 +44,12 @@ slt(x, \dots) <- value           # Shortcut for fselect<-
 ## regular expressions or using functions to identify columns
 
 get_vars(x, vars, return = "data", regex = FALSE, \dots)
-      gv(x, vars, return = "data")              # Shortcut for get_vars
-     gvr(x, vars, return = "data", \dots)         # Shortcut for get_vars(\dots, regex = TRUE)
+      gv(x, vars, return = "data", \dots)     # Shortcut for get_vars
+     gvr(x, vars, return = "data", \dots)     # Shortcut for get_vars(\dots, regex = TRUE)
 
 get_vars(x, vars, regex = FALSE, \dots) <- value
-      gv(x, vars) <- value                      # Shortcut for get_vars<-
-     gvr(x, vars, \dots) <- value                 # Shortcut for get_vars<-(\dots, regex = TRUE)
+      gv(x, vars, \dots) <- value             # Shortcut for get_vars<-
+     gvr(x, vars, \dots) <- value             # Shortcut for get_vars<-(\dots, regex = TRUE)
 
 ## Add columns at any position within a data.frame
 
@@ -77,12 +77,12 @@ Date_vars(x) <- value
 }
 
 \arguments{
-  \item{x}{a data.frame.}
-  \item{value}{a data.frame or list of columns whose dimensions exactly match those of the extracted subset of \code{x}. If only 1 variable is in the subset of \code{x}, \code{value} can also be an atomic vector or matrix, provided that \code{NROW(value) == nrow(x)}.}
+  \item{x}{a data frame.}
+  \item{value}{a data frame or list of columns whose dimensions exactly match those of the extracted subset of \code{x}. If only 1 variable is in the subset of \code{x}, \code{value} can also be an atomic vector or matrix, provided that \code{NROW(value) == nrow(x)}.}
   \item{vars}{a vector of column names, indices (can be negative), a suitable logical vector, or a vector of regular expressions matching column names (if \code{regex = TRUE}). It is also possible to pass a function returning \code{TRUE} or \code{FALSE} when applied to the columns of \code{x}.}
   \item{return}{an integer or string specifying what the selector function should return. The options are:
       \tabular{lllll}{\emph{ Int. }   \tab\tab \emph{ String }   \tab\tab \emph{ Description }  \cr
-                 1 \tab\tab "data"   \tab\tab subset of data.frame (default) \cr
+                 1 \tab\tab "data"   \tab\tab subset of data frame (default) \cr
                  2 \tab\tab "names" \tab\tab column names \cr
                  3 \tab\tab "indices"   \tab\tab column indices \cr
                  4 \tab\tab "named_indices"  \tab\tab named column indices \cr
@@ -92,7 +92,7 @@ Date_vars(x) <- value
   \emph{Note}: replacement functions only replace data, However column names are replaced together with the data (if available).
   }
 \item{regex}{logical. \code{TRUE} will do regular expression search on the column names of \code{x} using a (vector of) regular expression(s) passed to \code{vars}. Matching is done using \code{\link{grep}}.}
-\item{pos}{the position where columns are added in the data.frame. \code{"end"} (default) will append the data.frame at the end (right) side. "front" will add columns in front (left). Alternatively one can pass a vector of positions (matching \code{length(value)} if value is a list). In that case the other columns will be shifted around the new ones while maintaining their order. }
+\item{pos}{the position where columns are added in the data frame. \code{"end"} (default) will append the data frame at the end (right) side. "front" will add columns in front (left). Alternatively one can pass a vector of positions (matching \code{length(value)} if value is a list). In that case the other columns will be shifted around the new ones while maintaining their order. }
 \item{\dots}{for \code{fselect}: column names and expressions. for \code{get_vars}: further arguments passed to \code{\link{grep}}, if \code{regex = TRUE}. For \code{add_vars}: Same as \code{value}, a single argument passed may also be a vector or matrix, multiple arguments must each be a list (they are combined using \code{c(\dots)}).}
 }
 
@@ -101,7 +101,7 @@ Date_vars(x) <- value
 
 Similarly type-wise operations like \code{data[sapply(data, is.numeric)]} or \code{data[sapply(data, is.numeric)] <- value} are facilitated and more efficient using \code{num_vars(data)} and \code{num_vars(data) <- value} or the shortcuts \code{nv} and \code{nv<-} etc.
 
-\code{fselect} provides an efficient alternative to \code{dplyr::select}, allowing the selection of variables based on expressions evaluated within the data.frame, see Examples. It is about 100x faster than \code{dplyr::select} but also more simple as it does not provide special methods for grouped tibbles.
+\code{fselect} provides an efficient alternative to \code{dplyr::select}, allowing the selection of variables based on expressions evaluated within the data frame, see Examples. It is about 100x faster than \code{dplyr::select} but also more simple as it does not provide special methods for grouped tibbles.
 
 Finally, \code{add_vars(data1, data2, data3, \dots)} is a lot faster than \code{cbind(data1, data2, data3, \dots)}, and preserves the attributes of \code{data1} (i.e. it is like adding columns to \code{data1}). The replacement function \code{add_vars(data) <- someFUN(get_vars(data, cols))} efficiently appends \code{data} with computed columns. The \code{pos} argument allows adding columns at positions other than the end (right) of the data frame, see Examples.
 
@@ -111,10 +111,10 @@ Thus they can freely be applied to data.table's, grouped tibbles, panel data fra
 % secure w.r.t. redefinitions of \code{`[.data.frame`} or \code{`[<-.data.frame`} for other classes (i.e. data.table's, tibbles etc.) and preserve all attributes of the data
 }
 \note{
-The functions here only check the length of the first column, which is one of the reasons why they are so fast. When lists of unequal-length columns are offered as replacements this yields a malformed data.frame (which will also print a warning in the console i.e. you will notice that).
+The functions here only check the length of the first column, which is one of the reasons why they are so fast. When lists of unequal-length columns are offered as replacements this yields a malformed data frame (which will also print a warning in the console i.e. you will notice that).
 }
 \seealso{
-\code{\link{fsubset}}, \code{\link{ftransform}}, \link[=A3-data-frame-manipulation]{Data Frame Manipulation}, \link[=collapse-documentation]{Collapse Overview}
+\code{\link{fsubset}}, \code{\link{ftransform}}, \link[=A3-fast-data-manipulation]{Data Frame Manipulation}, \link[=collapse-documentation]{Collapse Overview}
 }
 \examples{
 ## Wold Development Data

@@ -15,14 +15,14 @@ descr(X, Ndistinct = TRUE, higher = TRUE, table = TRUE,
       Qprobs = c(0.01, 0.05, 0.25, 0.5, 0.75, 0.95, 0.99),
       cols = NULL, label.attr = "label", \dots)
 
-\method{print}{descr}(x, n = 6, perc = TRUE, t.table = TRUE, summary = TRUE, \dots)
+\method{print}{descr}(x, n = 7, perc = TRUE, digits = 2, t.table = TRUE, summary = TRUE, \dots)
 
 \method{as.data.frame}{descr}(x, \dots)
 }
 %- maybe also 'usage' for other objects documented here.
 \arguments{
   \item{X}{
-a data.frame or list of atomic vectors. Atomic vectors, matrices or arrays can be passed but will first be coerced to data.frame using \code{\link{qDF}}.
+a data frame or list of atomic vectors. Atomic vectors, matrices or arrays can be passed but will first be coerced to data frame using \code{\link{qDF}}.
 }
   \item{Ndistinct}{
 logical. \code{TRUE} (default) computes the number of distinct values on all variables using \code{\link{fNdistinct}}.
@@ -48,6 +48,7 @@ other arguments passed to \code{\link{qsu.default}}.
 \item{x}{an object of class 'descr'.}
 \item{n}{integer. The number of first and last entries to display of the table computed for categorical variables. If the number of distinct elements is \code{< 2*n}, the whole table is printed.}
 \item{perc}{logical. \code{TRUE} (default) adds percentages to the frequencies in the table for categorical variables.}
+\item{digits}{integer. The number of decimals to print in statistics and percentage tables.}
 \item{t.table}{logical. \code{TRUE} (default) prints a transposed table.}
 \item{summary}{logical. \code{TRUE} (default) computes and displays a summary of the frequencies if the size of the table for a categorical variables exceeds \code{2*n}.}
 }
@@ -56,7 +57,7 @@ other arguments passed to \code{\link{qsu.default}}.
 
 \code{\link{qsu}} itself is yet about 10x faster than \code{descr}, and is optimized for grouped, panel data and weighted statistics. It is possible to also compute grouped, panel data and/or weighted statistics with \code{descr} by passing group-ids to \code{g}, panel-ids to \code{pid} or a weight vector to \code{w}. These arguments are handed down to \code{\link{qsu.default}} and only affect the statistics natively computed by \code{qsu}, i.e. passing a weight vector produces a weighted mean, sd, skewness and kurtosis but not weighted quantiles.
 
-The list-object returned from \code{descr} can be converted to a tidy data.frame using \code{as.data.frame}. This representation will not include frequency tables computed for categorical variables, and the method cannot handle arrays of statistics (applicable when \code{g} or \code{pid} arguments are passed to \code{descr}, in that case \code{as.data.frame.descr} will throw an appropriate error).
+The list-object returned from \code{descr} can be converted to a tidy data frame using \code{as.data.frame}. This representation will not include frequency tables computed for categorical variables, and the method cannot handle arrays of statistics (applicable when \code{g} or \code{pid} arguments are passed to \code{descr}, in that case \code{as.data.frame.descr} will throw an appropriate error).
 }
 \value{
 A 2-level nested list, the top-level containing the statistics computed for each variable, which are themselves stored in a list containing the class, the label, the basic statistics and quantiles / tables computed for the variable. The object is given a class 'descr' and also has the number of observations in the dataset attached as an 'N' attribute, as well as an attribute 'arstat' indicating whether the object contains arrays of statistics, and an attribute 'table' indicating whether \code{table = TRUE} (i.e. the object could contain tables for categorical variables).

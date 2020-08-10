@@ -21,23 +21,23 @@ It performs simple aggregations, multi-type data aggregations applying different
 collap(X, by, FUN = fmean, catFUN = fmode, cols = NULL, w = NULL, wFUN = fsum,
        custom = NULL, keep.by = TRUE, keep.w = TRUE, keep.col.order = TRUE,
        sort = TRUE, decreasing = FALSE, na.last = TRUE, parallel = FALSE, mc.cores = 1L,
-       return = c("wide", "list", "long", "long_dupl"), give.names = "auto", \dots)
+       return = c("wide","list","long","long_dupl"), give.names = "auto", sort.row, \dots)
 
 # Programmer function: allows column names and indices input to `by` and `w` arguments
 collapv(X, by, FUN = fmean, catFUN = fmode, cols = NULL, w = NULL, wFUN = fsum,
         custom = NULL, keep.by = TRUE, keep.w = TRUE, keep.col.order = TRUE,
         sort = TRUE, decreasing = FALSE, na.last = TRUE, parallel = FALSE, mc.cores = 1L,
-        return = c("wide", "list", "long", "long_dupl"), give.names = "auto", \dots)
+        return = c("wide","list","long","long_dupl"), give.names = "auto", sort.row, \dots)
 
 # Auxiliary function: for grouped tibble ('grouped_df') input + non-standard evaluation
 collapg(X, FUN = fmean, catFUN = fmode, cols = NULL, w = NULL, wFUN = fsum, custom = NULL,
         keep.group_vars = TRUE, keep.w = TRUE, keep.col.order = TRUE,
-        sort = TRUE, decreasing = FALSE, na.last = TRUE, parallel = FALSE, mc.cores = 1L,
-        return = c("wide", "list", "long", "long_dupl"), give.names = "auto", \dots)
+        parallel = FALSE, mc.cores = 1L,
+        return = c("wide","list","long","long_dupl"), give.names = "auto", sort.row, \dots)
 }
 %- maybe also 'usage' for other objects documented here.
 \arguments{
-  \item{X}{a data.frame, or an object coercible to data.frame using \code{\link{qDF}}.}
+  \item{X}{a data frame, or an object coercible to data frame using \code{\link{qDF}}.}
   \item{by}{for \code{collap}: a one-or two sided formula, i.e. \code{~ group1} or \code{var1 + var2 ~ group1 + group2}, or a atomic vector, list of vectors or \code{\link{GRP}} object used to group \code{X}. For \code{collapv}: names or indices of grouping columns, or a logical vector or selector function such as \code{\link{is.categorical}} selecting grouping columns.}
 \item{FUN}{a function, list of functions (i.e. \code{list(fsum, fmean, fsd)} or \code{list(myfun1 = function(x).., sd = sd)}), or a character vector of function names, which are automatically applied only to numeric variables.}
 \item{catFUN}{same as \code{FUN}, but applied only to categorical (non-numeric) typed columns (\code{\link{is.categorical}}).}
@@ -49,11 +49,12 @@ collapg(X, FUN = fmean, catFUN = fmode, cols = NULL, w = NULL, wFUN = fsum, cust
 \item{keep.by, keep.group_vars}{logical. \code{FALSE} will omit grouping variables from the output. \code{TRUE} keeps the variables, even if passed externally in a list or vector (unlike other \emph{collapse} functions).}
 \item{keep.w}{logical. \code{FALSE} will omit weight variable from the output i.e. no aggregation of the weights. \code{TRUE} aggregates and adds weights, even if passed externally as a vector (unlike other \emph{collapse} functions).}
 \item{keep.col.order}{logical. Retain original column order post-aggregation.}
-\item{sort, decreasing, na.last}{logical. Arguments passed to \code{\link{GRP.default}} and affecting the row-order in the aggregated data.frame.}
+\item{sort, decreasing, na.last}{logical. Arguments passed to \code{\link{GRP.default}} and affecting the row-order in the aggregated data frame.}
 \item{parallel}{logical. Use \code{parallel::mclapply} instead of \code{lapply} for multi-function or custom aggregation.}
 \item{mc.cores}{integer. Argument to \code{parallel::mclapply} setting the number of cores to use.}
 \item{return}{character. Control the output format when aggregating with multiple functions or performing custom aggregation. "wide" (default) returns a wider data frame with added columns for each additional function. "list" returns a list of data frames - one for each function. "long" adds a column "Function" and row-binds the results from different functions using \code{data.table::rbindlist}. "long.dupl" is a special option for aggregating multi-type data using multiple \code{FUN} but only one \code{catFUN} or vice-versa. In that case the format is long and data aggregated using only one function is duplicated. See Examples.}
 \item{give.names}{logical. Create unique names of aggregated columns by adding a prefix 'FUN.'. 'auto' will automatically create such prefixes whenever multiple functions are applied to a column or \code{custom} is used.}
+\item{sort.row}{depreciated, renamed to \code{sort}.}
 \item{\dots}{additional arguments passed to all functions supplied to \code{FUN}, \code{catFUN}, \code{wFUN} or \code{custom}. The behavior of \link[=A1-fast-statistical-functions]{Fast Statistical Functions} is regulated by \code{option("collapse_unused_arg_action")} and defaults to \code{"warning"}. }
 }
 
@@ -61,7 +62,7 @@ collapg(X, FUN = fmean, catFUN = fmode, cols = NULL, w = NULL, wFUN = fsum, cust
 \code{collap} automatically checks each function passed to it whether it is a \link[=A1-fast-statistical-functions]{Fast Statistical Function} (i.e. whether the function name is contained in \code{.FAST_STAT_FUN}). If the function is a fast statistical function, \code{collap} only does the grouping and then calls the function to carry out the grouped computations. If the function is not one of \code{.FAST_STAT_FUN}, \code{\link{BY}} is called internally to perform the computation. The resulting computations from each function are put into a list and recombined to produce the desired output format as controlled by the \code{return} argument. When multiple functions are used with \code{collap}, setting \code{parallel = TRUE} and the number of cores with \code{mc.cores} will instruct \code{collap} to execute these function calls in parallel using \code{parallel::mclapply}. If only a single function is used which is not a \code{.FAST_STAT_FUN}, the \code{parallel} and \code{mc.cores} arguments are handed down to \code{\link{BY}}. See Examples.
 }
 \value{
-\code{X} aggregated. If \code{X} is not a data.frame it is coerced to one using \code{\link{qDF}} and then aggregated.
+\code{X} aggregated. If \code{X} is not a data frame it is coerced to one using \code{\link{qDF}} and then aggregated.
 }
 % \references{
 %% ~put references to the literature/web site here ~
@@ -149,8 +150,8 @@ head(collap(wlddev, ~ country + decade,                         # Same using bas
                  Nobs = function(x, \dots) sum(!is.na(x))),
             cols = 9:12, na.rm = TRUE))
 
-head(collap(wlddev, ~ country + decade,                         # List output format
-            list(fmean, fNobs), cols = 9:12, return = "list"))
+lapply(collap(wlddev, ~ country + decade,                       # List output format
+            list(fmean, fNobs), cols = 9:12, return = "list"), head)
 
 head(collap(wlddev, ~ country + decade,                         # Long output format
             list(fmean, fNobs), cols = 9:12, return = "long"))

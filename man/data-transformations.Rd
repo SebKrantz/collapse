@@ -6,7 +6,7 @@
 \description{
 \emph{collapse} provides an ensemble of functions to perform common data transformations efficiently and user friendly:
 \itemize{
-\item \code{\link{dapply}} applies functions to \bold{rows or columns} of matrices and data.frame's, preserving the data format.
+\item \code{\link{dapply}} applies functions to \bold{rows or columns} of matrices and data frames, preserving the data format.
 \item \code{\link{BY}} is an S3 generic for \bold{Split-Apply-Combine computing} and can perform aggregation as well as grouped transformations (for aggregation please also see \code{\link{collap}} and the \link[=A1-fast-statistical-functions]{Fast Statistical Functions}).
 
 \item \code{\link{TRA}} is an S3 generic to efficiently perform (groupwise) \bold{replacement and sweeping out of statistics}. %The basic syntax is \code{TRA(x, xag, g)} where \code{x} is data to be transformed, \code{xag} is some set of aggregate statistics to tranform \code{x} and \code{g} is an optional grouping vector for grouped transformations.

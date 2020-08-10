@@ -28,7 +28,7 @@ tfm(X) <- value        # Shortcut for ftransform<-
 fcompute(X, \dots)
 }
 \arguments{
-    \item{X}{a data.frame or named list of columns.}
+    \item{X}{a data frame or named list of columns.}
     \item{\dots}{further arguments of the form \code{column = value}. The \code{value} can be a combination of other columns, a scalar value, or \code{NULL}, which deletes \code{column}. Alternatively it is also possible to place a single list here, which will be treated the same as a list of \code{column = value} arguments. }
     \item{value}{a named list of replacements, it will be treated like an evaluated list of \code{column = value} arguments.}
 }
@@ -46,41 +46,43 @@ fcompute(X, \dots)
   Finally, the function \code{fcompute} functions just like \code{ftransform}, but returns only the changed / computed columns without modifying or appending the data in \code{X}.
 }
 \value{
-  The modified data.frame \code{X}, or, for \code{fcompute}, a new data.frame with the columns computed on \code{X}. All attributes of \code{X} are preserved.
+  The modified data frame \code{X}, or, for \code{fcompute}, a new data frame with the columns computed on \code{X}. All attributes of \code{X} are preserved.
 }
-\seealso{\code{\link{with}}, \code{\link{within}}, \link[=A3-data-frame-manipulation]{Data Frame Manipulation}, \link[=collapse-documentation]{Collapse Overview}
+\seealso{\code{\link{with}}, \code{\link{within}}, \link[=A3-fast-data-manipulation]{Data Frame Manipulation}, \link[=collapse-documentation]{Collapse Overview}
 }
 \examples{
 ## ftransform modifies and returns a data.frame
-ftransform(airquality, Ozone = -Ozone)
-ftransform(airquality, new = -Ozone, Temp = (Temp-32)/1.8)
-ftransform(airquality, new = -Ozone, new2 = 1, Temp = NULL)  # Deleting Temp
-ftransform(airquality, Ozone = NULL, Temp = NULL)            # Deleting columns
+head(ftransform(airquality, Ozone = -Ozone))
+head(ftransform(airquality, new = -Ozone, Temp = (Temp-32)/1.8))
+head(ftransform(airquality, new = -Ozone, new2 = 1, Temp = NULL))  # Deleting Temp
+head(ftransform(airquality, Ozone = NULL, Temp = NULL))            # Deleting columns
 
 # This computes the median and standard-deviation of Ozone in each month
-ftransform(airquality, Ozone_Month_median = fmedian(Ozone, Month, TRA = "replace_fill"),
-                       Ozone_Month_sd = fsd(Ozone, Month, TRA = "replace_fill"))
+head(ftransform(airquality,
+                   Ozone_Month_median = fmedian(Ozone, Month, TRA = "replace_fill"),
+                   Ozone_Month_sd = fsd(Ozone, Month, TRA = "replace_fill")))
 
 # Grouping by month and above/below average temperature in each month
-ftransform(airquality, Ozone_Month_high_median =
-    fmedian(Ozone, list(Month, Temp > fbetween(Temp, Month)), TRA = "replace_fill"))
+head(ftransform(airquality, Ozone_Month_high_median =
+     fmedian(Ozone, list(Month, Temp > fbetween(Temp, Month)), TRA = "replace_fill")))
 
 ## Since v1.3.0 one can pass a list of columns, and there is a replacement method
-ftransform(airquality, STD(airquality, cols = 1:3))  # Could use magrittr::`\%<>\%`
+head(ftransform(airquality, STD(airquality, cols = 1:3)))  # Could use magrittr::`\%<>\%`
 ftransform(airquality) <- fscale(get_vars(airquality, 1:3))
 rm(airquality)
 
 # This feature also allows to flexibly do grouped operations creating multiple new columns
-ftransform(airquality, fmedian(list(Wind_Month_median = Wind,
-                                    Ozone_Month_median = Ozone), Month, TRA = "replace_fill"))
+head(ftransform(airquality,
+   fmedian(list(Wind_Month_median = Wind,
+                Ozone_Month_median = Ozone), Month, TRA = "replace_fill")))
 
 # This performs 2 different multi-column grouped operations (need c() to make it one list)
-ftransform(airquality, c(fmedian(list(Wind_Day_median = Wind,
+head(ftransform(airquality, c(fmedian(list(Wind_Day_median = Wind,
                                       Ozone_Day_median = Ozone), Day, TRA = "replace_fill"),
                          fsd(list(Wind_Month_sd = Wind,
-                                  Ozone_Month_sd = Ozone), Month, TRA = "replace_fill")))
+                                  Ozone_Month_sd = Ozone), Month, TRA = "replace_fill"))))
 
-## settransform works like ftransform but modifies a data.frame in the global environment..
+## settransform works like ftransform but modifies a data frame in the global environment..
 airquality_c <- airquality
 settransform(airquality_c, Ratio = Ozone / Temp, Ozone = NULL, Temp = NULL)
 settransform(airquality_c, STD(airquality_c, cols = 1:2))    # This also works..
@@ -88,9 +90,9 @@ head(airquality_c)
 rm(airquality_c)
 
 ## fcompute only returns the modified / computed columns
-fcompute(airquality, Ozone = -Ozone)
-fcompute(airquality, new = -Ozone, Temp = (Temp-32)/1.8)
-fcompute(airquality, new = -Ozone, new2 = 1)
+head(fcompute(airquality, Ozone = -Ozone))
+head(fcompute(airquality, new = -Ozone, Temp = (Temp-32)/1.8))
+head(fcompute(airquality, new = -Ozone, new2 = 1))
 
 }
 \keyword{manip}

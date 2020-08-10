@@ -2,7 +2,7 @@
 \alias{fFtest}
 %- Also NEED an '\alias' for EACH other topic documented here.
 \title{
-Fast F-test of Linear Models (with Factors)
+Fast F-test for Linear Models (with Factors)
 }
 \description{
 \code{fFtest} computes an R-squared based F-test for the exclusion of the variables in \code{exc}, where the full (unrestricted) model is defined by variables supplied to both \code{exc} and \code{X}. The test is efficient and designed for cases where both \code{exc} and \code{X} may contain multiple factors and continuous variables.
@@ -13,8 +13,8 @@ fFtest(y, exc, X = NULL, full.df = TRUE, \dots)
 %- maybe also 'usage' for other objects documented here.
 \arguments{
   \item{y}{a numeric vector: The dependent variable.}
-  \item{exc}{a numeric vector, factor, numeric matrix or list / data.frame of numeric vectors and/or factors: Variables to test / exclude.}
-  \item{X}{a numeric vector, factor, numeric matrix or list / data.frame of numeric vectors and/or factors: Covariates to include in both the restricted (without \code{exc}) and unrestricted model. If left empty (\code{X = NULL}), the test amounts to the F-test of the regression of \code{y} on \code{exc}.}
+  \item{exc}{a numeric vector, factor, numeric matrix or list / data frame of numeric vectors and/or factors: Variables to test / exclude.}
+  \item{X}{a numeric vector, factor, numeric matrix or list / data frame of numeric vectors and/or factors: Covariates to include in both the restricted (without \code{exc}) and unrestricted model. If left empty (\code{X = NULL}), the test amounts to the F-test of the regression of \code{y} on \code{exc}.}
   \item{full.df}{logical. If \code{TRUE} (default), the degrees of freedom are calculated as if both restricted and unrestricted models were estimated using \code{lm()} (i.e. as if factors were expanded to matrices of dummies). \code{FALSE} only uses one degree of freedom per factor.  }
 \item{\dots}{other arguments passed to \code{lfe::demeanlist}, the workhorse function underlying \code{fHDwithin}. }
 

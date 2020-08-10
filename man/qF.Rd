@@ -64,7 +64,7 @@ Neither \code{qF} nor \code{qG} can reorder groups / factor levels. These object
 %% ~Make other sections like Warning with \section{Warning }{\dots.} ~
 
 \seealso{
-\code{\link{groupid}}, \code{\link{GRP}}, \link[=A2-fast-grouping]{Fast Grouping and Ordering}, \link[=collapse-documentation]{Collapse Overview}
+\code{\link{groupid}}, \code{\link{GRP}}, \link[=A2-fast-grouping-ordering]{Fast Grouping and Ordering}, \link[=collapse-documentation]{Collapse Overview}
 }
 \examples{
 cylF <- qF(mtcars$cyl)     # Factor from atomic vector
@@ -80,7 +80,7 @@ library(microbenchmark)
 microbenchmark(fmax(dat, cf), fmax(dat, cf2))
 
 finteraction(mtcars$cyl, mtcars$vs)  # Interacting two variables (can be factors)
-finteraction(mtcars)                 # A more crude example..
+head(finteraction(mtcars))           # A more crude example..
 
 }
 \keyword{manip}

@@ -45,7 +45,7 @@ has_elem(l, elem, recursive = TRUE, DF.as.list = TRUE, regex = FALSE, \dots)
   \item{elem}{a function returning \code{TRUE} or \code{FALSE} when applied to elements of \code{l}, or a character vector of element names or regular expressions (if \code{regex = TRUE}). \code{get_elem} also supports a vector or indices which will be used to subset all final objects.}
   \item{return}{an integer or string specifying what the selector function should return. The options are:
       \tabular{lllll}{\emph{ Int. }   \tab\tab \emph{ String }   \tab\tab \emph{ Description }  \cr
-                 1 \tab\tab "sublist"   \tab\tab subset of data.frame (default) \cr
+                 1 \tab\tab "sublist"   \tab\tab subset of data frame (default) \cr
                  2 \tab\tab "names" \tab\tab column names \cr
                  3 \tab\tab "indices"   \tab\tab column indices \cr
                  4 \tab\tab "named_indices"  \tab\tab named column indices \cr
@@ -57,7 +57,7 @@ has_elem(l, elem, recursive = TRUE, DF.as.list = TRUE, regex = FALSE, \dots)
 
 
   \item{recursive}{logical. Should the list search be recursive (i.e. go though all the elements), or just at the top-level?}
-  \item{DF.as.list}{logical. \code{TRUE} treats data.frame's like (sub-)lists; \code{FALSE} like atomic elements.}
+  \item{DF.as.list}{logical. \code{TRUE} treats data frames like (sub-)lists; \code{FALSE} like atomic elements.}
   \item{keep.tree}{logical. \code{TRUE} always returns the entire list tree leading up to all matched results, while \code{FALSE} drops the top-level part of the tree if possible.}
   \item{keep.class}{logical. For classed objects: Should the class be retained?}
   \item{regex}{logical. Should regular expression search be used on the list names, or only exact matches?}

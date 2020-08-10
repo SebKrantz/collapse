@@ -16,12 +16,14 @@ Fast (Grouped, Weighted) Summary Statistics for Cross-Sectional and Panel Data
 It computes a set of 7 statistics (nobs, mean, sd, min, max, skewness and kurtosis) using a numerically stable one-pass method generalized from Welford's Algorithm. Statistics can be computed weighted, by groups, and also within-and between entities (for panel data, see Details).
 }
 \usage{
+qsu(x, \dots)
+
 \method{qsu}{default}(x, g = NULL, pid = NULL, w = NULL, higher = FALSE, array = TRUE, \dots)
 
 \method{qsu}{matrix}(x, g = NULL, pid = NULL, w = NULL, higher = FALSE, array = TRUE, \dots)
 
 \method{qsu}{data.frame}(x, by = NULL, pid = NULL, w = NULL, cols = NULL,
-    higher = FALSE, array = TRUE, vlabels = FALSE,\dots)
+    higher = FALSE, array = TRUE, vlabels = FALSE, \dots)
 
 # Methods for compatibility with plm:
 
@@ -36,7 +38,7 @@ It computes a set of 7 statistics (nobs, mean, sd, min, max, skewness and kurtos
 }
 %- maybe also 'usage' for other objects documented here.
 \arguments{
-  \item{x}{a vector, matrix, data.frame, panel series (\code{plm::pseries}) or panel data.frame (\code{plm::pdata.frame}).}
+  \item{x}{a vector, matrix, data frame, panel series (\code{plm::pseries}) or panel data frame (\code{plm::pdata.frame}).}
   \item{g}{a factor, \code{\link{GRP}} object, atomic vector (internally converted to factor) or a list of vectors / factors (internally converted to a \code{\link{GRP}} object) used to group \code{x}.}
   \item{by}{\emph{(p)data.frame method}: Same as \code{g}, but also allows one- or two-sided formulas i.e. \code{~ group1 + group2} or \code{var1 + var2 ~ group1 + group2}. See Examples.}
   \item{pid}{same input as \code{g/by}: Specify a panel-identifier to also compute statistics on between- and within- transformed data. Data frame method also supports one- or two-sided formulas. Transformations are taken independently from grouping with \code{g/by} (grouped statistics are computed on the transformed data if \code{g/by} is also used). However, passing any LHS variables to \code{pid} will overwrite any \code{LHS} variables passed to \code{by}.}

@@ -9,12 +9,12 @@
 Recode and Replace Values in Matrix-Like Objects
 }
 \description{
-A small suite of functions to efficiently perform common recoding and replacing tasks in matrix-like objects (vectors, matrices, arrays, data.frame's, lists of atomic objects):
+A small suite of functions to efficiently perform common recoding and replacing tasks in matrix-like objects (vectors, matrices, arrays, data frames, lists of atomic objects):
 \itemize{
-\item \code{recode_num} and \code{recode_char} can be used to efficiently recode multiple numeric or character values, respectively. The syntax is inspired by \code{dplyr::recode}, but the functionality is enhanced in the following respects: (1) they are faster than \code{dplyr::recode}, (2) when passed a data.frame/list, all appropriately typed columns will be recoded. (3) They preserve the attributes of the data object and of columns in a data.frame/list, and (4) \code{recode_char} also supports regular expression matching using \code{\link{grepl}}.
-\item \code{replace_NA} efficiently replaces \code{NA/NaN} with a value. data.frame's can be multi-typed.
-\item \code{replace_Inf} replaces \code{Inf/-Inf} (or optionally \code{NaN/Inf/-Inf}) with a value (default is \code{NA}). \code{replace_Inf} skips non-numeric columns in a data.frame.
-\item \code{replace_outliers} replaces values falling outside a 1- or 2-sided numeric threshold or outside a certain number of column- standard deviations with a value (default is \code{NA}). \code{replace_outliers} skips non-numeric columns in a data.frame.
+\item \code{recode_num} and \code{recode_char} can be used to efficiently recode multiple numeric or character values, respectively. The syntax is inspired by \code{dplyr::recode}, but the functionality is enhanced in the following respects: (1) they are faster than \code{dplyr::recode}, (2) when passed a data frame / list, all appropriately typed columns will be recoded. (3) They preserve the attributes of the data object and of columns in a data frame / list, and (4) \code{recode_char} also supports regular expression matching using \code{\link{grepl}}.
+\item \code{replace_NA} efficiently replaces \code{NA/NaN} with a value. data frames can be multi-typed.
+\item \code{replace_Inf} replaces \code{Inf/-Inf} (or optionally \code{NaN/Inf/-Inf}) with a value (default is \code{NA}). \code{replace_Inf} skips non-numeric columns in a data frame.
+\item \code{replace_outliers} replaces values falling outside a 1- or 2-sided numeric threshold or outside a certain number of column- standard deviations with a value (default is \code{NA}). \code{replace_outliers} skips non-numeric columns in a data frame.
 }
 }
 \usage{
@@ -31,7 +31,7 @@ replace_outliers(X, limits, value = NA,
 }
 %- maybe also 'usage' for other objects documented here.
 \arguments{
-  \item{X}{a vector, matrix, array, data.frame or list of atomic objects.}
+  \item{X}{a vector, matrix, array, data frame or list of atomic objects.}
   \item{\dots}{comma-separated recode arguments of the form: \code{value = replacement, `2` = 0, Secondary = "SEC"} etc.. \code{recode_char} with \code{regex = TRUE} also supports regular expressions i.e. \code{`^S|D$` = "STD"} etc.}
 \item{default}{optional argument to specify a scalar value to replace non-matched elements with.}
 \item{missing}{optional argument to specify a scalar value to replace missing elements with. \emph{Note} that to increase efficiency this is done before the rest of the recoding i.e. the recoding is performed on data where missing values are filled!}

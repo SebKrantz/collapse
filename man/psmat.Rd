@@ -30,9 +30,9 @@ psmat(x, \dots)
 }
 %- maybe also 'usage' for other objects documented here.
 \arguments{
-  \item{x}{a vector, panel series (\code{plm::pseries}), data.frame or panel data.frame (\code{plm::pdata.frame}).}
+  \item{x}{a vector, panel series (\code{plm::pseries}), data frame or panel data frame (\code{plm::pdata.frame}).}
   \item{g}{a factor, \code{GRP} object, atomic vector (internally converted to factor) or a list of vectors / factors (internally converted to a \code{GRP} object) used to group \code{x}. If the panel is balanced an integer indicating the number of groups can also be supplied. See Examples.}
-\item{by}{\emph{data frame method}: Same input as \code{g}, but also allows one- or two-sided formulas using the variables in \code{x}, i.e. \code{~ idvar} or \code{var1 + var2 ~ idvar1 + idvar2}.}
+\item{by}{\emph{data.frame method}: Same input as \code{g}, but also allows one- or two-sided formulas using the variables in \code{x}, i.e. \code{~ idvar} or \code{var1 + var2 ~ idvar1 + idvar2}.}
 \item{t}{same inputs as \code{g}, to indicate the time-variable or second identifier(s). \code{g} and \code{t} together should fully identify the panel. If \code{t = NULL}, the data is assumed sorted and \code{seq_col} is used to generate rownames for the output matrix.}
 \item{cols}{\emph{data.frame method}: Select columns using a function, column names, indices or a logical vector. \emph{Note}: \code{cols} is ignored if a two-sided formula is passed to \code{by}.}
 \item{transpose}{logical. \code{TRUE} generates the matrix such that \code{g/by -> columns, t -> rows}. Default is \code{g/by -> rows, t -> columns}.}
@@ -56,7 +56,7 @@ A matrix or 3D array containing the data in \code{x}, where by default the rows 
 %%  ~~who you are~~
 % }
 \note{
-The \code{pdata.frame} method only works for properly subsetted objects of class 'pdata.frame'. A list of 'pseries' won't work. There also exist simple \code{aperm} and \code{[} (subset) methods for 'psmat' objects. These differ from the default methods only by keeping the class and the 'transpose' attributeS.
+The \code{pdata.frame} method only works for properly subsetted objects of class 'pdata.frame'. A list of 'pseries' won't work. There also exist simple \code{aperm} and \code{[} (subset) methods for 'psmat' objects. These differ from the default methods only by keeping the class and the 'transpose' attribute.
 }
 
 %% ~Make other sections like Warning with \section{Warning }{\dots.} ~
@@ -85,12 +85,12 @@ plot(psmat(collap(wlddev, ~region+year, cols = 9:12),           # More legible a
      labs = vlabels(wlddev)[9:12])
 
 psml <- psmat(wlddev, ~ iso3c, ~ year, 9:12, array = FALSE)     # This gives list of ps-matrices
-head(unlist2d(psml, "Variable", "Country", id.factor = TRUE))   # Using unlist2d, can generate DF
+head(unlist2d(psml, "Variable", "Country", id.factor = TRUE),2) # Using unlist2d, can generate DF
 
 ## Using plm simplifies things
 pwlddev <- plm::pdata.frame(wlddev, index = c("iso3c","year"))  # Creating a Panel Data Frame
 PCGDP <- pwlddev$PCGDP                                          # A panel-Series of GDP per Capita
-psmat(PCGDP)                                                    # Same as above, more parsimonious
+head(psmat(PCGDP), 2)                                           # Same as above, more parsimonious
 plot(psmat(PCGDP))
 plot(psmat(pwlddev[9:12]))
 plot(psmat(G(pwlddev[9:12])))                                   # Here plotting panel- growth rates

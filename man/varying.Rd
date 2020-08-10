@@ -8,7 +8,7 @@
 \alias{varying.grouped_df}
 \title{Fast Check of Variation in Data}  % Vectors, Matrix and Data Frame Columns}
 \description{
-\code{varying} is a generic function that (column-wise) checks for variation in the values of \code{x}, (optionally) within the groups \code{g} (i.e. a panel-identifier).
+\code{varying} is a generic function that (column-wise) checks for variation in the values of \code{x}, (optionally) within the groups \code{g} (e.g. a panel-identifier).
 }
 \usage{
 varying(x, ...)
@@ -33,7 +33,7 @@ varying(x, ...)
 }
 %- maybe also 'usage' for other objects documented here.
 \arguments{
-\item{x}{a vector, matrix, data.frame, panel series (\code{plm::pseries}), panel data.frame (\code{plm::pdata.frame}) or grouped tibble (\code{dplyr::grouped_df}). Data must not be numeric.}
+\item{x}{a vector, matrix, data.frame, panel series (\code{plm::pseries}), panel data frame (\code{plm::pdata.frame}) or grouped tibble (\code{dplyr::grouped_df}). Data must not be numeric.}
 
 \item{g}{a factor, \code{GRP} object, atomic vector (internally converted to factor) or a list of vectors / factors (internally converted to a \code{GRP} object) used to group \code{x}.}
 
@@ -43,7 +43,7 @@ varying(x, ...)
 
   \item{cols}{select columns using column names, indices or a function (i.e. \code{is.numeric}). Two-sided formulas passed to \code{by} overwrite \code{cols}.}
 
-\item{use.g.names}{logical. Make group-names and add to the result as names (default method) or row-names (matrix and data.frame methods). No row-names are generated for \emph{data.table}'s.}
+\item{use.g.names}{logical. Make group-names and add to the result as names (default method) or row-names (matrix and data frame methods). No row-names are generated for \emph{data.table}'s.}
 
 \item{drop}{\emph{matrix and data.frame methods:} Logical. \code{TRUE} drops dimensions and returns an atomic vector if the result is 1-dimensional.}
 
@@ -65,7 +65,7 @@ If groups are supplied to \code{g} (or alternatively a \emph{grouped_df} to \cod
 }
 }
 \value{
-A logical vector or (if \code{!is.null(g)} and \code{any_group = FALSE}), a matrix or data.frame of logical vectors indicating whether the data vary (over the dimension supplied by \code{g}).
+A logical vector or (if \code{!is.null(g)} and \code{any_group = FALSE}), a matrix or data frame of logical vectors indicating whether the data vary (over the dimension supplied by \code{g}).
 }
 
 \seealso{
@@ -79,7 +79,7 @@ varying(wlddev)
 varying(wlddev, ~ country)
 
 ## Same as above but done for each country individually, countries without data are coded NA
-varying(wlddev, ~ country, any_group = FALSE)
+head(varying(wlddev, ~ country, any_group = FALSE))
 }
 % Add one or more standard keywords, see file 'KEYWORDS' in the
 % R documentation directory.

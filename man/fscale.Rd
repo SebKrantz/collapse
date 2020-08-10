@@ -21,7 +21,7 @@ Fast (Grouped, Weighted) Scaling and Centering of Matrix-like Objects
 \description{
 \code{fscale} is a generic function to efficiently standardize (scale and center) data. \code{STD} is a wrapper around \code{fscale} representing the 'standardization operator', with more options than \code{fscale} when applied to matrices and data frames.  Standardization can be simple or groupwise, ordinary or weighted. Arbitrary target means and standard deviations can be set, with special options for grouped scaling and centering. It is also possible to scale data without centering i.e. perform mean-preserving scaling.
 
-\emph{Note}: For centering without scaling see \code{\link[=fwithin]{fwithin/W}}. For simple i.e. not mean-preserving scaling use \code{\link[=fsd]{fsd(..., TRA = "/")}}. To sweep pre-computed means and scale-factors out of data see \code{\link{TRA}}.
+\emph{Note}: For centering without scaling see \code{\link[=fwithin]{fwithin/W}}. For simple not mean-preserving scaling use \code{\link[=fsd]{fsd(..., TRA = "/")}}. To sweep pre-computed means and scale-factors out of data see \code{\link{TRA}}.
 }
 \usage{
 fscale(x, \dots)
@@ -56,7 +56,7 @@ fscale(x, \dots)
 }
 %- maybe also 'usage' for other objects documented here.
 \arguments{
-  \item{x}{a numeric vector, matrix, data.frame, panel series (\code{plm::pseries}), panel data.frame (\code{plm::pdata.frame}) or grouped tibble (\code{dplyr::grouped_df}).}
+  \item{x}{a numeric vector, matrix, data frame, panel series (\code{plm::pseries}), panel data frame (\code{plm::pdata.frame}) or grouped tibble (\code{dplyr::grouped_df}).}
   \item{g}{a factor, \code{\link{GRP}} object, atomic vector (internally converted to factor) or a list of vectors / factors (internally converted to a \code{\link{GRP}} object) used to group \code{x}.}
   \item{by}{\emph{STD data.frame method}: Same as \code{g}, but also allows one- or two-sided formulas i.e. \code{~ group1} or \code{var1 + var2 ~ group1 + group2}. See Examples.}
     \item{cols}{\emph{data.frame method}: Select columns to scale using a function, column names, indices or a logical vector. Default: All numeric variables. \emph{Note}: \code{cols} is ignored if a two-sided formula is passed to \code{by}.}
@@ -104,8 +104,8 @@ Special options for grouped scaling are \code{mean = "overall.mean"} and \code{s
 }
 \examples{
 ## Simple Scaling & Centering / Standardizing
-fscale(mtcars)                     # Doesn't rename columns
-STD(mtcars)                        # By default adds a prefix
+head(fscale(mtcars))               # Doesn't rename columns
+head(STD(mtcars))                  # By default adds a prefix
 qsu(STD(mtcars))                   # See that is works
 qsu(STD(mtcars, mean = 5, sd = 3)) # Assigning a mean of 5 and a standard deviation of 3
 qsu(STD(mtcars, mean = FALSE))     # No centering: Scaling is mean-preserving
@@ -117,9 +117,10 @@ pwcor(fscale(get_vars(wlddev,9:12), wlddev$iso3c))  # Correlaing panel series af
 
 fmean(get_vars(wlddev, 9:12))                       # This calculates the overall means
 fsd(fwithin(get_vars(wlddev, 9:12), wlddev$iso3c))  # This calculates the within standard deviations
-qsu(fscale(get_vars(wlddev, 9:12), wlddev$iso3c,    # This group-centers on the overall mean and
-    mean = "overall.mean", sd = "within.sd"),       # group-scales to the within standard deviation
-    by = wlddev$iso3c)                              # -> data harmonized in the first 2 moments
+head(qsu(fscale(get_vars(wlddev, 9:12),             # This group-centers on the overall mean and
+    wlddev$iso3c,                                   # group-scales to the within standard deviation
+    mean = "overall.mean", sd = "within.sd"),       # -> data harmonized in the first 2 moments
+    by = wlddev$iso3c))
 
 
 ## Using plm

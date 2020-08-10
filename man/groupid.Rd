@@ -28,12 +28,12 @@ An integer vector of class 'qG'. See \code{\link{qG}}.
 }
 
 \seealso{
-\code{\link{seqid}}, \code{\link{qG}}, \link[=A2-fast-grouping]{Fast Grouping and Ordering}, \link[=collapse-documentation]{Collapse Overview}
+\code{\link{seqid}}, \code{\link{qG}}, \link[=A2-fast-grouping-ordering]{Fast Grouping and Ordering}, \link[=collapse-documentation]{Collapse Overview}
 }
 \examples{
 groupid(airquality$Month)
 groupid(airquality$Month, start = 0)
-groupid(wlddev$country)
+groupid(wlddev$country)[1:100]
 
 ## Same thing since country is alphabetically ordered: (groupid is faster..)
 all.equal(groupid(wlddev$country), qG(wlddev$country, na.exclude = FALSE))

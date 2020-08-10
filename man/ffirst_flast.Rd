@@ -17,29 +17,29 @@
 \usage{
 ffirst(x, \dots)
 flast(x, \dots)
-%## Default S3 methods:
+
 \method{ffirst}{default}(x, g = NULL, TRA = NULL, na.rm = TRUE,
        use.g.names = TRUE, \dots)
 \method{flast}{default}(x, g = NULL, TRA = NULL, na.rm = TRUE,
       use.g.names = TRUE, \dots)
-%## S3 methods for class 'matrix'
+
 \method{ffirst}{matrix}(x, g = NULL, TRA = NULL, na.rm = TRUE,
        use.g.names = TRUE, drop = TRUE, \dots)
 \method{flast}{matrix}(x, g = NULL, TRA = NULL, na.rm = TRUE,
       use.g.names = TRUE, drop = TRUE, \dots)
-%## S3 methods for class 'data.frame'
+
 \method{ffirst}{data.frame}(x, g = NULL, TRA = NULL, na.rm = TRUE,
        use.g.names = TRUE, drop = TRUE, \dots)
 \method{flast}{data.frame}(x, g = NULL, TRA = NULL, na.rm = TRUE,
       use.g.names = TRUE, drop = TRUE, \dots)
-%## S3 methods for class 'grouped_df'
+
 \method{ffirst}{grouped_df}(x, TRA = NULL, na.rm = TRUE,
        use.g.names = FALSE, keep.group_vars = TRUE, \dots)
 \method{flast}{grouped_df}(x, TRA = NULL, na.rm = TRUE,
       use.g.names = FALSE, keep.group_vars = TRUE, \dots)
 }
 \arguments{
-\item{x}{a vector, matrix, data.frame or grouped tibble (\code{dplyr::grouped_df}).}
+\item{x}{a vector, matrix, data frame or grouped tibble (\code{dplyr::grouped_df}).}
 
 \item{g}{a factor, \code{\link{GRP}} object, atomic vector (internally converted to factor) or a list of vectors / factors (internally converted to a \code{\link{GRP}} object) used to group \code{x}.}
 
@@ -49,7 +49,7 @@ flast(x, \dots)
 
 \item{na.rm}{logical. \code{TRUE} skips missing values and returns the first / last non-missing value i.e. if the first (1) / last (n) value is \code{NA}, take the second (2) / second-to-last (n-1) value etc..}
 
-\item{use.g.names}{logical. Make group-names and add to the result as names (default method) or row-names (matrix and data.frame methods). No row-names are generated for \emph{data.table}'s.}
+\item{use.g.names}{logical. Make group-names and add to the result as names (default method) or row-names (matrix and data frame methods). No row-names are generated for \emph{data.table}'s.}
 
 \item{drop}{\emph{matrix and data.frame method:} Logical. \code{TRUE} drops dimensions and returns an atomic vector if \code{g = NULL} and \code{TRA = NULL}.}
 

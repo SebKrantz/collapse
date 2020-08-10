@@ -10,7 +10,7 @@
 }
 
 .onAttach <- function(libname, pkgname) {
-  packageStartupMessage(paste0("collapse ",packageVersion("collapse"),", see ?`collapse-package` or ?`collapse-documentation`"))
+  packageStartupMessage(paste0("collapse ",packageVersion("collapse"),", see ?`collapse-package` or ?`collapse-documentation`\nNote: stats::D  ->  D.expression, D.call"))
 }
 
 .onUnload <- function (libpath) {
@@ -24,6 +24,9 @@ release_questions <- function() {
     "Spell check ?",
     "built vignettes properly with Sys.setenv(NCRAN = TRUE)?",
     "Have you updated all help files with code changes, even if it's only documenting arguments or links?",
-    "All function in global_macros.R?"
+    "updated collapse-package.Rd and collapse-documentation.Rd?",
+    "All function in global_macros.R?",
+    "checked all depreciated functions and arguments?",
+    "any changess to arguments or order of arguments in key functions (GRP etc.). Does everything work?"
   )
 }

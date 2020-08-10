@@ -24,7 +24,7 @@ fprod(x, \dots)
       use.g.names = FALSE, keep.group_vars = TRUE, keep.w = TRUE, \dots)
 }
 \arguments{
-\item{x}{a numeric vector, matrix, data.frame or grouped tibble (\code{dplyr::grouped_df}).}
+\item{x}{a numeric vector, matrix, data frame or grouped tibble (\code{dplyr::grouped_df}).}
 
 \item{g}{a factor, \code{\link{GRP}} object, atomic vector (internally converted to factor) or a list of vectors / factors (internally converted to a \code{\link{GRP}} object) used to group \code{x}.}
 
@@ -36,7 +36,7 @@ fprod(x, \dots)
 
 \item{na.rm}{logical. Skip missing values in \code{x}. Defaults to \code{TRUE} and implemented at very little computational cost. If \code{na.rm = FALSE} a \code{NA} is returned when encountered.}
 
-\item{use.g.names}{logical. Make group-names and add to the result as names (default method) or row-names (matrix and data.frame methods). No row-names are generated for \emph{data.table}'s.}
+\item{use.g.names}{logical. Make group-names and add to the result as names (default method) or row-names (matrix and data frame methods). No row-names are generated for \emph{data.table}'s.}
 
 \item{drop}{\emph{matrix and data.frame method:} Logical. \code{TRUE} drops dimensions and returns an atomic vector if \code{g = NULL} and \code{TRA = NULL}.}
 
@@ -79,20 +79,20 @@ fprod(mpg, g, TRA = "/")           # Groupwise divide by product
 
 ## data.frame method
 fprod(mtcars)
-fprod(mtcars, TRA = "/")
+head(fprod(mtcars, TRA = "/"))
 fprod(mtcars, g)
 fprod(mtcars, g, use.g.names = FALSE) # No row-names generated
 
 ## matrix method
 m <- qM(mtcars)
 fprod(m)
-fprod(m, TRA = "/")
+head(fprod(m, TRA = "/"))
 fprod(m, g) # etc..
 
 ## method for grouped tibbles - for use with dplyr
 library(dplyr)
 mtcars \%>\% group_by(cyl,vs,am) \%>\% fprod(hp)   # Weighted grouped product
-mtcars \%>\% fgroup_by(cyl,vs,am) \%>\% fprod(hp)  # Equivalent but faster
+mtcars \%>\% fgroup_by(cyl,vs,am) \%>\% fprod(hp)  # Equivalent and faster
 mtcars \%>\% fgroup_by(cyl,vs,am) \%>\% fprod(TRA = "/")
 mtcars \%>\% fgroup_by(cyl,vs,am) \%>\% fselect(mpg) \%>\% fprod
 }

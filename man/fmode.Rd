@@ -26,7 +26,7 @@ fmode(x, \dots)
       ties = "first", \dots)
 }
 \arguments{
-\item{x}{a vector, matrix, data.frame or grouped tibble (\code{dplyr::grouped_df}).}
+\item{x}{a vector, matrix, data frame or grouped tibble (\code{dplyr::grouped_df}).}
 
 \item{g}{a factor, \code{\link{GRP}} object, atomic vector (internally converted to factor) or a list of vectors / factors (internally converted to a \code{\link{GRP}} object) used to group \code{x}.}
 
@@ -38,7 +38,7 @@ fmode(x, \dots)
 
 \item{na.rm}{logical. Skip missing values in \code{x}. Defaults to \code{TRUE} and implemented at very little computational cost. If \code{na.rm = FALSE}, \code{NA} is treated as any other value.}
 
-\item{use.g.names}{logical. Make group-names and add to the result as names (default method) or row-names (matrix and data.frame methods). No row-names are generated for \emph{data.table}'s.}
+\item{use.g.names}{logical. Make group-names and add to the result as names (default method) or row-names (matrix and data frame methods). No row-names are generated for \emph{data.table}'s.}
 
 \item{ties}{an integer or character string specifying the method to resolve ties between multiple possible modes i.e. multiple values with the maximum frequency or sum of weights:
         \tabular{lllll}{\emph{ Int. }   \tab\tab \emph{ String }   \tab\tab \emph{ Description }  \cr
@@ -65,9 +65,9 @@ If \code{na.rm = FALSE}, \code{NA} is not removed but treated as any other value
 
 The weighted mode is computed by summing up the weights for all distinct values and choosing the value with the largest sum. If \code{na.rm = TRUE}, missing values will be removed from both \code{x} and \code{w} i.e. utilizing only \code{x[complete.cases(x,w)]} and \code{w[complete.cases(x,w)]}.
 
-It is possible that multiple values have the same mode that is the maximum frequency or sum of weights. Typical cases are simply when all values are either all the same or all distinct. In such cases, the default option \code{ties = "first"} returns the first occurring value in the data reaching the maximum frequency count or sum of weights. i.e. in a sample \code{x = c(1, 3, 2, 2, 4, 4, 1, 7)}, the first mode is 2 as \code{fmode} goes through the data from left to right. It is also possible to take the minimum or maximum mode, i.e. \code{fmode(x, ties = "min")} retuns 1, and \code{fmode(x, ties = "max")} returns 4. It should be noted that options \code{ties = "min"} and \code{ties = "max"} work well for numeric/integer/factor data as well as date/time variables, but give unintuitive results for character data (no strict alphabetic sorting). These options should also be used with care if missing values are counted (\code{na.rm = FALSE}): In C++, any logical comparison with \code{NA_real_} evaluates to \code{FALSE}, so \code{NA_real_} is never chosen as the min or max mode if other modes are available. Similarly for logical data. For integer data, \code{NA_integer_} is stored as the smallest integer in C++, so it will be chosen as the min mode. For character data the behavior is again undefined.
+It is possible that multiple values have the same mode that is the maximum frequency or sum of weights. Typical cases are simply when all values are either all the same or all distinct. In such cases, the default option \code{ties = "first"} returns the first occurring value in the data reaching the maximum frequency count or sum of weights. For example in a sample \code{x = c(1, 3, 2, 2, 4, 4, 1, 7)}, the first mode is 2 as \code{fmode} goes through the data from left to right. It is also possible to take the minimum or maximum mode, i.e. \code{fmode(x, ties = "min")} returns 1, and \code{fmode(x, ties = "max")} returns 4. It should be noted that options \code{ties = "min"} and \code{ties = "max"} work well for numeric/integer/factor data as well as date/time variables, but give unintuitive results for character data (no strict alphabetic sorting, similar to using \code{<} and \code{>} to compare character values in R). These options are also best avoided if missing values are counted (\code{na.rm = FALSE}) since no proper logical comparison with missing values is possible: With numeric data it depends, since in C++ any comparison with \code{NA_real_} evaluates to \code{FALSE}, \code{NA_real_} is chosen as the min or max mode only if it is also the first mode, and never otherwise. For integer data, \code{NA_integer_} is stored as the smallest integer in C++, so it will always be chosen as the min mode and never as the max mode. For character data, \code{NA_character_} is stored as the string \code{"NA"} in C++ and thus the behavior depends on the other character content.
 
-This all seamlessly generalizes to grouped computations, which are performed by mapping the data to a sparse-array directed by \code{g} and then going group-by group.
+This all seamlessly generalizes to grouped computations, which are performed by mapping the data to a sparse-array and then going group-by group.
 
 \code{fmode} preserves all the attributes of the objects it is applied to (apart from names or row-names which are adjusted as necessary in grouped operations). If a data frame is passed to \code{fmode} and \code{drop = TRUE} (the default), \code{base::unlist} will be called on the result, which might not be sensible depending on the data at hand.
 }
@@ -88,14 +88,14 @@ fmode(x[-length(x)], na.rm = FALSE) # Not anymore..
 ## World Development Data
 attach(wlddev)
 ## default vector method
-fmode(PCGDP)                    # Numeric mode
-fmode(PCGDP, iso3c)             # Grouped numeric mode
-fmode(PCGDP, iso3c, LIFEEX)     # Grouped and weighted numeric mode
-fmode(region)                   # Factor mode
-fmode(date)                     # Date mode (defaults to first value since panel is balanced)
-fmode(country)                  # Character mode (also defaults to first value)
-fmode(OECD)                     # Logical mode
-                                # ..all the above can also be performed grouped and weighted
+fmode(PCGDP)                      # Numeric mode
+head(fmode(PCGDP, iso3c))         # Grouped numeric mode
+head(fmode(PCGDP, iso3c, LIFEEX)) # Grouped and weighted numeric mode
+fmode(region)                     # Factor mode
+fmode(date)                       # Date mode (defaults to first value since panel is balanced)
+fmode(country)                    # Character mode (also defaults to first value)
+fmode(OECD)                       # Logical mode
+                                  # ..all the above can also be performed grouped and weighted
 ## matrix method
 m <- qM(airquality)
 fmode(m)
@@ -105,10 +105,10 @@ fmode(m, w = airquality$Day)    # Weighted: Later days in the month are given mo
 fmode(m>50, airquality$Month)   # Groupwise logical mode
                                 # etc..
 ## data.frame method
-fmode(wlddev)                   # Calling unlist -> coerce to character vector
-fmode(wlddev, drop = FALSE)     # Gives one row
-fmode(wlddev, iso3c)            # Grouped mode
-fmode(wlddev, iso3c, LIFEEX)    # Grouped and weighted mode
+fmode(wlddev)                      # Calling unlist -> coerce to character vector
+fmode(wlddev, drop = FALSE)        # Gives one row
+head(fmode(wlddev, iso3c))         # Grouped mode
+head(fmode(wlddev, iso3c, LIFEEX)) # Grouped and weighted mode
 
 detach(wlddev)
 }

@@ -22,10 +22,10 @@ fmedian(x, \dots)
         use.g.names = TRUE, drop = TRUE, \dots)
 
 \method{fmedian}{grouped_df}(x, w = NULL, TRA = NULL, na.rm = TRUE,
-        use.g.names = FALSE, keep.group_vars = TRUE, \dots)
+        use.g.names = FALSE, keep.group_vars = TRUE, keep.w = TRUE, \dots)
 }
 \arguments{
-\item{x}{a numeric vector, matrix, data.frame or grouped tibble (\code{dplyr::grouped_df}).}
+\item{x}{a numeric vector, matrix, data frame or grouped tibble (\code{dplyr::grouped_df}).}
 
 \item{g}{a factor, \code{\link{GRP}} object, atomic vector (internally converted to factor) or a list of vectors / factors (internally converted to a \code{\link{GRP}} object) used to group \code{x}.}
 
@@ -36,24 +36,26 @@ fmedian(x, \dots)
 
 \item{na.rm}{logical. Skip missing values in \code{x}. Defaults to \code{TRUE} and implemented at very little computational cost. If \code{na.rm = FALSE} a \code{NA} is returned when encountered.}
 
-\item{use.g.names}{logical. Make group-names and add to the result as names (default method) or row-names (matrix and data.frame methods). No row-names are generated for \emph{data.table}'s.}
+\item{use.g.names}{logical. Make group-names and add to the result as names (default method) or row-names (matrix and data frame methods). No row-names are generated for \emph{data.table}'s.}
 
 \item{drop}{\emph{matrix and data.frame method:} Logical. \code{TRUE} drops dimensions and returns an atomic vector if \code{g = NULL} and \code{TRA = NULL}.}
 
 \item{keep.group_vars}{\emph{grouped_df method:} Logical. \code{FALSE} removes grouping variables after computation.}
+
+\item{keep.w}{\emph{grouped_df method:} Logical. Retain summed weighting variable after computation (if contained in \code{grouped_df}).}
 
 \item{\dots}{arguments to be passed to or from other methods.}
 }
 \details{
 Median value estimation is done using \code{std::nth_element} in C++, which is an efficient partial sorting algorithm. A downside of this is that vectors need to be copied first and then partially sorted, thus \code{fmedian} currently requires additional memory equal to the size of the vector (\code{x} or a column of \code{x}).
 
-Grouped computations are currently performed by mapping the data to a sparse-array directed by \code{g} and then partially sorting each row (group) of that array. For reasons I don't fully understand this requires less memory than a full deep copy which is done with no groups.
+Grouped computations are currently performed by mapping the data to a sparse-array and then partially sorting each row (group) of that array. Because of compiler optimizations this requires less memory than a full deep copy done with no groups.  % For reasons I don't fully understand this requires less memory than a full deep copy which is done with no groups.
 
 The weighted median is defined as the element \code{k} from a set of sorted elements, such that the sum of weights of all elements larger and all elements smaller than k is \code{<= sum(w)/2}. If the half-sum of weights (\code{sum(w)/2}) is reached exactly for some element k, then (summing from the lower end) both k and k+1 would qualify as the weighted median (and some possible additional elements with zero weights following k would also qualify). \code{fmedian} solves these ties by taking a simple arithmetic mean of all elements qualifying as the weighted median.
 
 The weighted median is computed using \code{\link{radixorder}} to first obtain an ordering of all elements, so it is considerably more computationally expensive than the unweighted version. With groups, the entire vector is also ordered, and the weighted median is computed in a single ordered pass through the data (after group-summing the weights, skipping weights for which \code{x} is missing).
 
-If \code{x} is a matrix or data.frame, these computations are performed independently for each column. When applied to data frames with groups or \code{drop = FALSE}, \code{fmedian} preserves all column attributes (such as variable labels) but does not distinguish between classed and unclassed objects. The attributes of the data frame itself are also preserved.
+If \code{x} is a matrix or data frame, these computations are performed independently for each column. When applied to data frames with groups or \code{drop = FALSE}, \code{fmedian} preserves all column attributes (such as variable labels) but does not distinguish between classed and unclassed objects. The attributes of the data frame itself are also preserved.
 
 
 %smaller to the left and to the right of
@@ -83,15 +85,15 @@ fmedian(mpg, g, mtcars$hp, "-")      # Groupwise subtract weighted median value
 
 ## data.frame method
 fmedian(mtcars)
-fmedian(mtcars, TRA = "-")
+head(fmedian(mtcars, TRA = "-"))
 fmedian(mtcars, g)
-fmedian(fgroup_by(mtcars, cyl, vs, am))   # another way of doing it..
+fmedian(fgroup_by(mtcars, cyl, vs, am))   # Another way of doing it..
 fmedian(mtcars, g, use.g.names = FALSE)   # No row-names generated
 
 ## matrix method
 m <- qM(mtcars)
 fmedian(m)
-fmedian(m, TRA = "-")
+head(fmedian(m, TRA = "-"))
 fmedian(m, g) # etc..
 
 library(dplyr)

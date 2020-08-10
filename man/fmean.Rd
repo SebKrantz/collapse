@@ -25,7 +25,7 @@ fmean(x, \dots)
       use.g.names = FALSE, keep.group_vars = TRUE, keep.w = TRUE, \dots)
 }
 \arguments{
-\item{x}{a numeric vector, matrix, data.frame or grouped tibble (\code{dplyr::grouped_df}).}
+\item{x}{a numeric vector, matrix, data frame or grouped tibble (\code{dplyr::grouped_df}).}
 
 \item{g}{a factor, \code{\link{GRP}} object, atomic vector (internally converted to factor) or a list of vectors / factors (internally converted to a \code{\link{GRP}} object) used to group \code{x}.}
 
@@ -37,7 +37,7 @@ fmean(x, \dots)
 
 \item{na.rm}{logical. Skip missing values in \code{x}. Defaults to \code{TRUE} and implemented at very little computational cost. If \code{na.rm = FALSE} a \code{NA} is returned when encountered.}
 
-\item{use.g.names}{logical. Make group-names and add to the result as names (default method) or row-names (matrix and data.frame methods). No row-names are generated for \emph{data.table}'s.}
+\item{use.g.names}{logical. Make group-names and add to the result as names (default method) or row-names (matrix and data frame methods). No row-names are generated for \emph{data.table}'s.}
 
 \item{drop}{\emph{matrix and data.frame method:} Logical. \code{TRUE} drops dimensions and returns an atomic vector if \code{g = NULL} and \code{TRA = NULL}.}
 
@@ -82,25 +82,25 @@ fmean(mpg, g, mtcars$hp, "-")      # Group-demeaning using weighted group means
 ## data.frame method
 fmean(mtcars)
 fmean(mtcars, g)
-fmean(fgroup_by(mtcars, cyl, vs, am))  # another way of doing it..
-fmean(mtcars, g, TRA = "-") # etc..
+fmean(fgroup_by(mtcars, cyl, vs, am))  # Another way of doing it..
+head(fmean(mtcars, g, TRA = "-"))      # etc..
 
 ## matrix method
 m <- qM(mtcars)
 fmean(m)
 fmean(m, g)
-fmean(m, g, TRA = "-") # etc..
+head(fmean(m, g, TRA = "-")) # etc..
 
 ## method for grouped tibbles - for use with dplyr
 library(dplyr)
 mtcars \%>\% group_by(cyl,vs,am) \%>\% fmean           # Ordinary
 mtcars \%>\% group_by(cyl,vs,am) \%>\% fmean(hp)       # Weighted
-mtcars \%>\% group_by(cyl,vs,am) \%>\% fmean(hp,"-")   # Weighted Transform
+mtcars \%>\% group_by(cyl,vs,am) \%>\% fmean(hp, "-")  # Weighted Transform
 mtcars \%>\% group_by(cyl,vs,am) \%>\%
-           select(mpg,hp) \%>\% fmean(hp,"-")        # Only mpg
+           select(mpg,hp) \%>\% fmean(hp, "-")       # Only mpg
 
-mtcars \%>\% fgroup_by(cyl,vs,am) \%>\%              # Equivalent but faster !!
-           fselect(mpg,hp) \%>\% fmean(hp,"-")
+mtcars \%>\% fgroup_by(cyl,vs,am) \%>\%                # Equivalent and faster !
+           fselect(mpg,hp) \%>\% fmean(hp, "-")
 }
 \keyword{univar}
 \keyword{manip}

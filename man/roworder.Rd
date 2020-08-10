@@ -3,10 +3,10 @@
 \alias{roworderv}
 %- Also NEED an '\alias' for EACH other topic documented here.
 \title{
-Fast Row Reordering of Data Frame
+Fast Reordering of Data Frame Rows
 }
 \description{
-A fast substitute for \code{dplyr::arrange}. It returns a sorted copy of the data frame, unless the data is already sorted in which case no copy is made. In addition, rows can be manually reorderd. Use \code{data.table::setorder} to sort a data frame without creating a copy. %\code{roworder} also does not support grouped tibbles or pdata.frame's, i.e. every data.frame is treated the same.
+A fast substitute for \code{dplyr::arrange}. It returns a sorted copy of the data frame, unless the data is already sorted in which case no copy is made. In addition, rows can be manually re-ordered. Use \code{data.table::setorder} to sort a data frame without creating a copy. %\code{roworder} also does not support grouped tibbles or pdata.frame's, i.e. every data frame is treated the same.
 }
 \usage{
 roworder(X, \dots, na.last = TRUE)
@@ -16,7 +16,7 @@ roworderv(X, cols = NULL, neworder = NULL, decreasing = FALSE,
 }
 %- maybe also 'usage' for other objects documented here.
 \arguments{
-  \item{X}{a data.frame or list of equal-length columns. }
+  \item{X}{a data frame or list of equal-length columns. }
   \item{\dots}{comma-separated columns of \code{X} to sort by e.g. \code{var1, var2}. Negatives i.e. \code{-var1, var2} can be used to sort in decreasing order of \code{var1}.}
   \item{cols}{select columns to sort by using a function, column names, indices or a logical vector. The default \code{NULL} sorts by all columns in order of occurrence (from left to right). }
   \item{na.last}{logical. If \code{TRUE}, missing values in the sorting columns are placed last; if \code{FALSE}, they are placed first; if \code{NA} they are removed (argument passed to \code{\link{radixorderv}}).}
@@ -42,20 +42,20 @@ If you don't require a copy of the data, use \code{data.table::setorder} (you ca
 %% ~Make other sections like Warning with \section{Warning }{\dots.} ~
 
 \seealso{
-\code{\link{colorder}}, \code{\link{fsubset}}, \link[=A2-fast-grouping]{Fast Grouping and Ordering}, \link[=collapse-documentation]{Collapse Overview}.
+\code{\link{colorder}}, \code{\link{fsubset}}, \link[=A2-fast-grouping-ordering]{Fast Grouping and Ordering}, \link[=collapse-documentation]{Collapse Overview}.
 }
 \examples{
-roworder(airquality, Month, -Ozone)
-roworder(airquality, Month, -Ozone, na.last = NA)  # Removes the missing values in Ozone
+head(roworder(airquality, Month, -Ozone))
+head(roworder(airquality, Month, -Ozone, na.last = NA))  # Removes the missing values in Ozone
 
 ## Same in standard evaluation
-roworderv(airquality, c("Month", "Ozone"), decreasing = c(FALSE, TRUE))
-roworderv(airquality, c("Month", "Ozone"), decreasing = c(FALSE, TRUE), na.last = NA)
+head(roworderv(airquality, c("Month", "Ozone"), decreasing = c(FALSE, TRUE)))
+head(roworderv(airquality, c("Month", "Ozone"), decreasing = c(FALSE, TRUE), na.last = NA))
 
 ## Custom reordering
-roworderv(mtcars, neworder = 3:4)               # Bring rows 3 and 4 to the front
-roworderv(mtcars, neworder = 3:4, pos = "end")  # Bring them to the end
-roworderv(mtcars, neworder = mtcars$vs == 1)    # Bring rows with vs == 1 to the top
+head(roworderv(mtcars, neworder = 3:4))               # Bring rows 3 and 4 to the front
+head(roworderv(mtcars, neworder = 3:4, pos = "end"))  # Bring them to the end
+head(roworderv(mtcars, neworder = mtcars$vs == 1))    # Bring rows with vs == 1 to the top
 }
 % Add one or more standard keywords, see file 'KEYWORDS' in the
 % R documentation directory (show via RShowDoc("KEYWORDS")):

@@ -4,7 +4,7 @@
 Recursive Row-Binding / Unlisting in 2D - to Data Frame
 }
 \description{
-\code{unlist2d} efficiently unlists lists of regular R objects (objects built up from atomic elements) and creates a data frame representation of the list through recursive flattening and intelligent row-binding operations. It is a full 2-dimensional generalization of \code{\link{unlist}}, but best understood as a recursive generalization of \code{do.call(rbind, ...)}, and a powerful tool to create a tidy data frame representation from (nested) lists of vectors, data frames, matrices, arrays or heterogeneous objects. % (i.e. unlisting happens via recursive flattening and intelligent row-binding of objects, see Details and Examples).
+\code{unlist2d} efficiently unlists lists of regular R objects (objects built up from atomic elements) and creates a data frame representation of the list through recursive flattening and intelligent row-binding operations. It is a full 2-dimensional generalization of \code{\link{unlist}}, but best understood as a recursive generalization of \code{do.call(rbind, ...)}. This function is a powerful tool to create a tidy data frame representation from (nested) lists of vectors, data frames, matrices, arrays or heterogeneous objects. % (i.e. unlisting happens via recursive flattening and intelligent row-binding of objects, see Details and Examples).
 }
 \usage{
 unlist2d(l, idcols = ".id", row.names = FALSE, recursive = TRUE,
@@ -30,7 +30,7 @@ The data frame representation created by \code{unlist2d} is built as follows:
 The result of this iterative procedure is a single data frame containing on the left side id-columns for each level of nesting (from higher to lower level), followed by a column containing all the row.names of the objects (if \code{row.names != FALSE}), followed by the object columns, matched at each level of recursion. Optimal results are of course obtained with symmetric lists of arrays, matrices or data frames, which \code{unlist2d} efficiently binds into a beautiful data frame ready for plotting or further analysis. See examples below.
 }
 \value{
-A data.frame or (if \code{DT = TRUE}) a \emph{data.table}.
+A data frame or (if \code{DT = TRUE}) a \emph{data.table}.
 }
 % \references{
 %% ~put references to the literature/web site here ~
@@ -39,7 +39,7 @@ A data.frame or (if \code{DT = TRUE}) a \emph{data.table}.
 %%  ~~who you are~~
 % }
 \note{
-For lists of data.frame's \code{unlist2d} works just like \code{data.table::rbindlist(l, use.names = TRUE, fill = TRUE, idcol = ".id")} (also the same speed), however for lists of lists \code{unlist2d} does not produce the same output as \code{data.table::rbindlist}.
+For lists of data frames \code{unlist2d} works just like \code{data.table::rbindlist(l, use.names = TRUE, fill = TRUE, idcol = ".id")} (also the same speed), however for lists of lists \code{unlist2d} does not produce the same output as \code{data.table::rbindlist}.
 }
 
 %% ~Make other sections like Warning with \section{Warning }{....} ~
@@ -50,11 +50,11 @@ For lists of data.frame's \code{unlist2d} works just like \code{data.table::rbin
 \examples{
 ## Basic Examples:
 l <- list(mtcars, list(mtcars, mtcars))
-unlist2d(l)
+tail(unlist2d(l))
 unlist2d(rapply2d(l, fmean))
 l = list(a = qM(mtcars[1:8]),
          b = list(c = mtcars[4:11], d = list(e = mtcars[2:10], f = mtcars)))
-unlist2d(l, row.names = TRUE)
+tail(unlist2d(l, row.names = TRUE))
 unlist2d(rapply2d(l, fmean))
 unlist2d(rapply2d(l, fmean), recursive = FALSE)
 
@@ -66,7 +66,7 @@ namlab(GGDC10S, class = TRUE)
 l <- qsu(GGDC10S, by = ~ Variable,             # Output as list (instead of 4D array)
          pid = ~ Variable + Country,
          cols = 6:16, array = FALSE)
-str(l)                                         # A list of 2-levels with matrices of statistics
+str(l, give.attr = FALSE)                      # A list of 2-levels with matrices of statistics
 head(unlist2d(l))                              # Default output, missing the variables (row-names)
 head(unlist2d(l, row.names = TRUE))            # Here we go, but this is still not very nice
 head(unlist2d(l, idcols = c("Sector","Trans"), # Now this is looking pretty good
@@ -88,7 +88,7 @@ plot(hclust(as.dist(1-pwcor(dat[-(1:3)]))))    # Using corrs. as distance metric
 
 # Together with other functions like psmat, unlist2d can also effectively help reshape data:
 head(unlist2d(psmat(subset(GGDC10S, Variable == "VA"), ~Country, ~Year, cols = 6:16, array = FALSE),
-              idcols = "Sector", row.names = "Country"))
+              idcols = "Sector", row.names = "Country"), 2)
 
 
 }

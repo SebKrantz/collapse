@@ -22,13 +22,13 @@
 }
 
 \item \bold{Unlisting / Row-Binding} \itemize{
-\item \code{\link{unlist2d}} efficiently unlists unlistable lists in 2-dimensions and creates a data.frame (or \emph{data.table}) representation of the list (unlike \code{base::unlist} which returns an atomic vector). This is done by recursively flattening and row-binding R objects in the list (using \code{data.table::rbindlist}) while creating identifier columns for each level of the list-tree and (optionally) saving the row-names of the objects in a separate column. \code{\link{unlist2d}} can thus also be understood as a recursive generalization of \code{do.call(rbind, l)}, for lists of vectors, data.frame's, arrays or heterogeneous objects.
+\item \code{\link{unlist2d}} efficiently unlists unlistable lists in 2-dimensions and creates a data frame (or \emph{data.table}) representation of the list (unlike \code{base::unlist} which returns an atomic vector). This is done by recursively flattening and row-binding R objects in the list (using \code{data.table::rbindlist}) while creating identifier columns for each level of the list-tree and (optionally) saving the row-names of the objects in a separate column. \code{\link{unlist2d}} can thus also be understood as a recursive generalization of \code{do.call(rbind, l)}, for lists of vectors, data frames, arrays or heterogeneous objects.
 }
 
 }
 }
 \section{Table of Functions}{
-  \tabular{llll}{\emph{ Function}  \tab\tab \emph{ Description }  \cr % \Sexpr{"\u200B"} \Sexpr{"\u200B"}
+  \tabular{lll}{\emph{ Function }  \tab\tab \emph{ Description }  \cr
   \code{\link{is.regular}} \tab\tab \code{function(x) is.atomic(x) || is.list(x)} \cr
   \code{\link{is.unlistable}} \tab\tab Checks if list is unlistable \cr
   \code{\link{ldepth}} \tab\tab Level of nesting / maximum depth of list-tree \cr
@@ -39,7 +39,7 @@
   \code{\link{reg_elem}} \tab\tab Recursive version of \code{atomic_elem}: Subset / extract regular part of list \cr
   \code{\link{irreg_elem}} \tab\tab Subset / extract non-regular part of list \cr
   \code{\link{rapply2d}} \tab\tab Recursively apply functions to lists of data objects \cr
-  \code{\link{unlist2d}} \tab\tab Recursively unlist/row-bind lists of data objects in 2D, to data.frame or \emph{data.table} \cr
+  \code{\link{unlist2d}} \tab\tab Recursively unlist/row-bind lists of data objects in 2D, to data frame or \emph{data.table} \cr
 }
 }
 \seealso{

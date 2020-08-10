@@ -16,22 +16,22 @@
 \usage{
 fvar(x, \dots)
 fsd(x, \dots)
-%## Default S3 methods:
+
 \method{fvar}{default}(x, g = NULL, w = NULL, TRA = NULL, na.rm = TRUE,
      use.g.names = TRUE, stable.algo = TRUE, \dots)
 \method{fsd}{default}(x, g = NULL, w = NULL, TRA = NULL, na.rm = TRUE,
     use.g.names = TRUE, stable.algo = TRUE, \dots)
-%## S3 methods for class 'matrix'
+
 \method{fvar}{matrix}(x, g = NULL, w = NULL, TRA = NULL, na.rm = TRUE,
      use.g.names = TRUE, drop = TRUE, stable.algo = TRUE, \dots)
 \method{fsd}{matrix}(x, g = NULL, w = NULL, TRA = NULL, na.rm = TRUE,
     use.g.names = TRUE, drop = TRUE, stable.algo = TRUE, \dots)
-%## S3 methods for class 'data.frame'
+
 \method{fvar}{data.frame}(x, g = NULL, w = NULL, TRA = NULL, na.rm = TRUE,
      use.g.names = TRUE, drop = TRUE, stable.algo = TRUE, \dots)
 \method{fsd}{data.frame}(x, g = NULL, w = NULL, TRA = NULL, na.rm = TRUE,
     use.g.names = TRUE, drop = TRUE, stable.algo = TRUE, \dots)
-%## S3 methods for class 'grouped_df'
+
 \method{fvar}{grouped_df}(x, w = NULL, TRA = NULL, na.rm = TRUE,
      use.g.names = FALSE, keep.group_vars = TRUE, keep.w = TRUE,
      stable.algo = TRUE, \dots)
@@ -40,7 +40,7 @@ fsd(x, \dots)
     stable.algo = TRUE, \dots)
 }
 \arguments{
-\item{x}{a numeric vector, matrix, data.frame or grouped tibble (\code{dplyr::grouped_df}).}
+\item{x}{a numeric vector, matrix, data frame or grouped tibble (\code{dplyr::grouped_df}).}
 
 \item{g}{a factor, \code{\link{GRP}} object, atomic vector (internally converted to factor) or a list of vectors / factors (internally converted to a \code{\link{GRP}} object) used to group \code{x}.}
 
@@ -51,7 +51,7 @@ fsd(x, \dots)
 
 \item{na.rm}{logical. Skip missing values in \code{x}. Defaults to \code{TRUE} and implemented at very little computational cost. If \code{na.rm = FALSE} a \code{NA} is returned when encountered.}
 
-\item{use.g.names}{logical. Make group-names and add to the result as names (default method) or row-names (matrix and data.frame methods). No row-names are generated for \emph{data.table}'s and grouped tibbles.}
+\item{use.g.names}{logical. Make group-names and add to the result as names (default method) or row-names (matrix and data frame methods). No row-names are generated for \emph{data.table}'s and grouped tibbles.}
 
 \item{drop}{\emph{matrix and data.frame method:} Logical. \code{TRUE} drops dimensions and returns an atomic vector if \code{g = NULL} and \code{TRA = NULL}.}
 
@@ -102,7 +102,7 @@ fsd(iris)                           # This works, although 'Species' is a factor
 fsd(mtcars, drop = FALSE)           # This works, all columns are numeric variables
 fsd(iris[-5], iris[5])              # By Species: iris[5] is still a list, and thus passed to GRP()
 fsd(iris[-5], iris[[5]])            # Same thing much faster: fsd recognizes 'Species' is a factor
-fsd(iris[-5], iris[[5]], TRA = "/") # Data scaled by species (see also fscale)
+head(fsd(iris[-5], iris[[5]], TRA = "/")) # Data scaled by species (see also fscale)
 
 ## matrix method
 m <- qM(mtcars)

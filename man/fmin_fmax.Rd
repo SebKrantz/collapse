@@ -16,29 +16,29 @@
 \usage{
 fmax(x, \dots)
 fmin(x, \dots)
-%## Default S3 methods:
+
 \method{fmax}{default}(x, g = NULL, TRA = NULL, na.rm = TRUE,
      use.g.names = TRUE, \dots)
 \method{fmin}{default}(x, g = NULL, TRA = NULL, na.rm = TRUE,
      use.g.names = TRUE, \dots)
-%## S3 methods for class 'matrix'
+
 \method{fmax}{matrix}(x, g = NULL, TRA = NULL, na.rm = TRUE,
      use.g.names = TRUE, drop = TRUE, \dots)
 \method{fmin}{matrix}(x, g = NULL, TRA = NULL, na.rm = TRUE,
      use.g.names = TRUE, drop = TRUE, \dots)
-%## S3 methods for class 'data.frame'
+
 \method{fmax}{data.frame}(x, g = NULL, TRA = NULL, na.rm = TRUE,
      use.g.names = TRUE, drop = TRUE, \dots)
 \method{fmin}{data.frame}(x, g = NULL, TRA = NULL, na.rm = TRUE,
      use.g.names = TRUE, drop = TRUE, \dots)
-%## S3 methods for class 'grouped_df'
+
 \method{fmax}{grouped_df}(x, TRA = NULL, na.rm = TRUE,
      use.g.names = FALSE, keep.group_vars = TRUE, \dots)
 \method{fmin}{grouped_df}(x, TRA = NULL, na.rm = TRUE,
      use.g.names = FALSE, keep.group_vars = TRUE, \dots)
 }
 \arguments{
-\item{x}{a numeric vector, matrix, data.frame or grouped tibble (\code{dplyr::grouped_df}).}
+\item{x}{a numeric vector, matrix, data frame or grouped tibble (\code{dplyr::grouped_df}).}
 
 \item{g}{a factor, \code{\link{GRP}} object, atomic vector (internally converted to factor) or a list of vectors / factors (internally converted to a \code{\link{GRP}} object) used to group \code{x}.}
 
@@ -48,7 +48,7 @@ fmin(x, \dots)
 
 \item{na.rm}{logical. Skip missing values in \code{x}. Defaults to \code{TRUE} and implemented at very little computational cost. If \code{na.rm = FALSE} a \code{NA} is returned when encountered.}
 
-\item{use.g.names}{logical. Make group-names and add to the result as names (default method) or row-names (matrix and data.frame methods). No row-names are generated for \emph{data.table}'s.}
+\item{use.g.names}{logical. Make group-names and add to the result as names (default method) or row-names (matrix and data frame methods). No row-names are generated for \emph{data.table}'s.}
 
 \item{drop}{\emph{matrix and data.frame method:} Logical. \code{TRUE} drops dimensions and returns an atomic vector if \code{g = NULL} and \code{TRA = NULL}.}
 
@@ -84,14 +84,14 @@ fmax(mpg, g, TRA = "replace")     # Groupwise replace by maximum value
 
 ## data.frame method
 fmax(mtcars)
-fmax(mtcars, TRA = "\%")
+head(fmax(mtcars, TRA = "\%"))
 fmax(mtcars, g)
 fmax(mtcars, g, use.g.names = FALSE) # No row-names generated
 
 ## matrix method
 m <- qM(mtcars)
 fmax(m)
-fmax(m, TRA = "\%")
+head(fmax(m, TRA = "\%"))
 fmax(m, g) # etc..
 
 ## method for grouped tibbles - for use with dplyr

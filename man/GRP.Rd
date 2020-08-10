@@ -9,6 +9,7 @@
 \alias{GRP.grouped_df}
 \alias{fgroup_by}
 \alias{fgroup_vars}
+\alias{fungroup}
 \alias{is.GRP}
 \alias{print.GRP}
 \alias{plot.GRP}
@@ -16,11 +17,11 @@
 \alias{as.factor_GRP}
 \title{Fast Grouping / \emph{collapse} Grouping Objects}
 \description{
-  \code{GRP} performs fast, ordered and unordered, groupings of vectors and data.frame's (or lists of vectors) using \code{\link{radixorderv}}. The output is a list-like object of class 'GRP' which can be printed, plotted and used as an efficient input to all of \emph{collapse}'s fast statistical and transformation functions / operators, as well as to \code{\link{collap}}, \code{\link{BY}} and \code{\link{TRA}}.
+  \code{GRP} performs fast, ordered and unordered, groupings of vectors and data frames (or lists of vectors) using \code{\link{radixorderv}}. The output is a list-like object of class 'GRP' which can be printed, plotted and used as an efficient input to all of \emph{collapse}'s fast statistical and transformation functions / operators, as well as to \code{\link{collap}}, \code{\link{BY}} and \code{\link{TRA}}.
 
-\code{fgroup_by} is similar to \code{dplyr::group_by} but faster. It creates a 'grouped_df' with a 'GRP' object attached - for faster dplyr-like programming with \emph{collapse}'s fast functions.
+\code{fgroup_by} is similar to \code{dplyr::group_by} but faster. It creates a grouped tibble with a 'GRP' object attached - for faster dplyr-like programming with \emph{collapse}'s fast functions.
 
-There are also several conversion methods to convert to and from 'GRP' objects. Notable among these is \code{GRP.grouped_df}, which returns a 'GRP' object from a 'grouped_df' created with \code{dplyr::group_by} (or \code{fgroup_by}), and the duo \code{GRP.factor} and \code{as.factor_GRP}.
+There are also several conversion methods to convert to and from 'GRP' objects. Notable among these is \code{GRP.grouped_df}, which returns a 'GRP' object from a grouped tibble created with \code{dplyr::group_by} (or \code{fgroup_by}), and the duo \code{GRP.factor} and \code{as.factor_GRP}.
 }
 
 \usage{
@@ -43,8 +44,11 @@ as.factor_GRP(x, ordered = FALSE)
 # Fast version of dplyr::group_by for use with fast functions, see details
 fgroup_by(X, \dots, sort = TRUE, decreasing = FALSE, na.last = TRUE, return.order = FALSE)
 
-# This gets grouping columns from a grouped_df created with dplyr::group_by or fgroup_by
+# Get grouping columns from a grouped tibble created with dplyr::group_by or fgroup_by
 fgroup_vars(X, return = "data")
+
+# Remove the 'groups' attribute and return a normal data frame or tibble
+fungroup(X, untibble = isFALSE(attr(X, "was.tibble")))
 
 \method{print}{GRP}(x, n = 6, \dots)
 
@@ -52,11 +56,11 @@ fgroup_vars(X, return = "data")
 }
 
 \arguments{
-  \item{X}{a vector, list of columns or data.frame (default method), or a classed object (conversion/extractor methods).}
+  \item{X}{a vector, list of columns or data frame (default method), or a classed object (conversion/extractor methods).}
 
   \item{x}{a GRP object.}
 
-  \item{by}{if \code{X} is a data.frame or list, \code{by} can indicate columns to use for the grouping (by default all columns are used). Columns must be passed using a vector of column names, indices, or using a one-sided formula i.e. \code{~ col1 + col2}.}
+  \item{by}{if \code{X} is a data frame or list, \code{by} can indicate columns to use for the grouping (by default all columns are used). Columns must be passed using a vector of column names, indices, or using a one-sided formula i.e. \code{~ col1 + col2}.}
 
   \item{sort}{logical. This argument only affects character vectors / columns passed. If \code{FALSE}, these are not ordered but simply grouped in the order of first appearance of unique elements. This provides a slight performance gain if only grouping but not alphabetic ordering is required (argument passed to \code{\link{radixorderv}}).}
 
@@ -70,7 +74,7 @@ fgroup_vars(X, return = "data")
 
   \item{return.order}{logical. Include the output from \code{\link{radixorderv}} in the created GRP object.}
 
-  \item{return.sizes}{logical. \code{TRUE} tabulates factor levels using \code{\link{tabulate}} to create a vector of group sizes; \code{FALSE} leaves that slot empty when converting from factors.}
+  \item{group.sizes}{logical. \code{TRUE} tabulates factor levels using \code{\link{tabulate}} to create a vector of group sizes; \code{FALSE} leaves that slot empty when converting from factors.}
 
   \item{call}{logical. \code{TRUE} calls \code{\link{match.call}} and saves it in the final slot of the GRP object.}
 
@@ -90,6 +94,7 @@ fgroup_vars(X, return = "data")
       }
   }
 
+   \item{untibble}{logical. \code{TRUE} also removes classes \code{c("tbl_df", "tbl")} from \code{X}. \code{fgroup_by} attaches an attribute \code{"was.tibble"} indicating if \code{X} was a tibble prior to grouping. The argument thus defaults to \code{TRUE} if this attribute is attached and equal to \code{FALSE}, so that \code{identical(X, X \%>\% fgroup_by(...) \%>\% fungroup)}, regardless of the nature of \code{X}. }
 
   \item{n}{integer. Number of groups to print out.}
 
@@ -135,11 +140,11 @@ The method \code{GRP.grouped_df} takes the 'groups' attribute from a grouped tib
 
                  [[7]] \tab\tab order     \tab\tab \code{integer(NROW(X))} or \code{NULL} \tab\tab Ordering vector from \code{radixorderv} or \code{NULL} if \code{return.order = FALSE} (the default) \cr
 
-                 [[8]] \tab\tab call \tab\tab \code{call()} or \code{NULL} \tab\tab The \code{GRP()} call, obtained from \code{match.call(), or \code{NULL} if \code{call = FALSE}}
+                 [[8]] \tab\tab call \tab\tab \code{call()} or \code{NULL} \tab\tab The \code{GRP()} call, obtained from \code{match.call()}, or \code{NULL} if \code{call = FALSE}
                  }
 }
 \seealso{
-\code{\link{radixorder}}, \code{\link{qF}}, \link[=A2-fast-grouping]{Fast Grouping and Ordering}, \link[=collapse-documentation]{Collapse Overview}
+\code{\link{radixorder}}, \code{\link{qF}}, \link[=A2-fast-grouping-ordering]{Fast Grouping and Ordering}, \link[=collapse-documentation]{Collapse Overview}
 }
 \examples{
 ## default method

@@ -12,15 +12,15 @@ Fast Unique Elements / Rows
 \usage{
 funique(x, \dots)
 
-\method{funique}{default}(x, sort = FALSE, method = c("auto", "hash", "radix"), \dots)
+\method{funique}{default}(x, sort = FALSE, method = c("auto", "radix", "hash"), \dots)
 
 \method{funique}{data.frame}(x, cols = NULL, sort = FALSE, \dots)
 
 }
 %- maybe also 'usage' for other objects documented here.
 \arguments{
-  \item{x}{a atomic vector or data.frame / list of equal-length columns. }
-  \item{sort}{logical. \code{TRUE} orders the uniqe elements / rows. \code{FALSE} returns unique values in order of first occurrence, however numeric values are only provided in order of first occurrence when \code{method = "hash"} i.e. the radix method always sorts numeric data. }
+  \item{x}{a atomic vector or data frame / list of equal-length columns. }
+  \item{sort}{logical. \code{TRUE} orders the unique elements / rows. \code{FALSE} returns unique values in order of first occurrence, however numeric values are only provided in order of first occurrence when \code{method = "hash"} i.e. the radix method always sorts numeric data. }
    \item{method}{an integer or character string specifying the method of computation:
         \tabular{lllll}{\emph{ Int. }   \tab\tab \emph{ String }   \tab\tab \emph{ Description }  \cr
                  1 \tab\tab "auto"   \tab\tab automatic selection: hash for character, logical or if \code{length(x) < 500}, else radix. \cr
@@ -32,14 +32,14 @@ funique(x, \dots)
 \item{\dots}{arguments passed to \code{\link{radixorderv}}, e.g. \code{decreasing} or \code{na.last}. Only applicable in \code{funique.default} if \code{method = "radix"}.}
 }
 \details{
-If \code{x} is a data.frame / list and all rows are already unique, then \code{x} is returned. Otherwise a copy of \code{x} with duplicate rows removed is returned.  See \code{\link{qF}} for some additional computational details.
+If \code{x} is a data frame / list and all rows are already unique, then \code{x} is returned. Otherwise a copy of \code{x} with duplicate rows removed is returned.  See \code{\link{qF}} for some additional computational details.
 }
 \value{
 \code{x} with duplicate elements/rows removed. % sorted in ascending order if \code{sort = TRUE}, and in order of first occurrence if \code{sort = FALSE}.
 }
 
 \seealso{
-\code{\link{qF}}, \link[=A2-fast-grouping]{Fast Grouping and Ordering}, \link[=collapse-documentation]{Collapse Overview}.
+\code{\link{qF}}, \link[=A2-fast-grouping-ordering]{Fast Grouping and Ordering}, \link[=collapse-documentation]{Collapse Overview}.
 }
 \examples{
 funique(mtcars$cyl)

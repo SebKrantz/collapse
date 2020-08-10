@@ -19,7 +19,7 @@ replace_non_finite(X, value = NA, replace.nan = TRUE)
 }
 %- maybe also 'usage' for other objects documented here.
 \arguments{
-  \item{X}{a vector, matrix or data.frame.}
+  \item{X}{a vector, matrix or data frame.}
   \item{\dots}{comma-separated recode arguments of the form: \code{name = newname, `2` = 0, `NaN` = 0, `NA` = 0, `Inf` = NA, `-Inf` = NA}, etc\dots}
   \item{value}{a single (scalar) value to replace matching elements with. Default is \code{NA}.}
   \item{copy}{logical. For reciprocal or sequential replacements of the form \code{a = b, b = c} make a copy of \code{X} to prevent \code{a} being replaced with \code{b} and then all \code{b}-values being replaced with \code{c} again. In general \code{Recode} does the replacements one-after the other, starting with the first. }
@@ -50,9 +50,10 @@ replace_non_finite(X, value = NA, replace.nan = TRUE)
 %% ~Make other sections like Warning with \section{Warning }{\dots.} ~
 
 \seealso{
-\link[=AA1-recode-replace]{Recode Replace}, \link[=collapse-documentation]{Collapse Overview}
+\link[=AA1-recode-replace]{Recode and Replace Values}, \link[=collapse-documentation]{Collapse Overview}
 }
 \examples{
+\dontrun{
 Recode(c("a","b","c"), a = "b", b = "c")
 Recode(c("a","b","c"), a = "b", b = "c", copy = TRUE)
 Recode(c("a","b","c"), a = "b", b = "a", copy = TRUE)
@@ -60,7 +61,7 @@ Recode(month.name, ber = NA, regex = TRUE)
 mtcr <- Recode(mtcars, `0` = 2, `4` = Inf, `1` = NaN)
 replace_non_finite(mtcr)
 replace_non_finite(mtcr, replace.nan = FALSE)
-
+}
 }
 % Add one or more standard keywords, see file 'KEYWORDS' in the
 % R documentation directory.

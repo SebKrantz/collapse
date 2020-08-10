@@ -46,16 +46,16 @@ An integer ordering vector with attributes: Unless \code{na.last = NA} an attrib
 }
 
 \seealso{
-\link[=A2-fast-grouping]{Fast Grouping and Ordering}, \link[=collapse-documentation]{Collapse Overview}
+\link[=A2-fast-grouping-ordering]{Fast Grouping and Ordering}, \link[=collapse-documentation]{Collapse Overview}
 }
 \examples{
 radixorder(mtcars$mpg)
-mtcars[radixorder(mtcars$mpg), ]
+head(mtcars[radixorder(mtcars$mpg), ])
 radixorder(mtcars$cyl, mtcars$vs)
 
 o <- radixorder(mtcars$cyl, mtcars$vs, starts = TRUE)
 st <- attr(o, "starts")
-mtcars[o, ]
+head(mtcars[o, ])
 mtcars[o[st], c("cyl", "vs")]  # Unique groups
 
 # Note that if attr(o, "sorted") == TRUE, then all(o[st] == st)

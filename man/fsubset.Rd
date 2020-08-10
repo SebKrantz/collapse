@@ -19,7 +19,7 @@ sbt(x, \dots)     # Shortcut for fsubset
 
 \method{fsubset}{data.frame}(x, subset, \dots)
 
-# Fast subsetting data.frame's (replaces `[`)
+# Fast subsetting data frames (replaces `[`)
 ss(data, i, j)
 }
 
@@ -27,8 +27,8 @@ ss(data, i, j)
   \item{x}{object to be subsetted.}
   \item{data}{a data.frame.}
   \item{subset}{logical expression indicating elements or rows to keep:
-    missing values are taken as \code{FALSE}. The default and matrix methods only support logical vectors or row-indices (or a character vector of rownames if the matrix has rownames; the data.frame method also supports logical vectors or row-indices). }
-  \item{\dots}{For the matrix or data.frame method: multiple comma-separated expressions indicating columns to select. Otherwise: further arguments to be passed to or from other methods.}
+    missing values are taken as \code{FALSE}. The default and matrix methods only support logical vectors or row-indices (or a character vector of rownames if the matrix has rownames; the data frame method also supports logical vectors or row-indices). }
+  \item{\dots}{For the matrix or data frame method: multiple comma-separated expressions indicating columns to select. Otherwise: further arguments to be passed to or from other methods.}
   \item{drop}{passed on to \code{[} indexing operator. Only available for the matrix method.}
   \item{i}{positive or negative row-indices or a logical vector to subset the rows of \code{data}.}
   \item{j}{a vector of column names, positive or negative indices or a suitable logical vector to subset the columns of \code{data}. \emph{Note:} Negative indices are converted to positive ones using \code{j <- seq_along(data)[j]}.}
@@ -43,7 +43,7 @@ ss(data, i, j)
 
   For both matrices and data frames, the \code{\dots} argument can be used to subset columns, and is evaluated in a non-standard way. Thus it can support vectors of column names, indices or logical vectors, but also multiple comma separated column names passed without quotes, each of which may also be replaced by a sequence of columns i.e. \code{col1:coln} (see examples).
 
-  For data frames, the \code{subset} argument is also evaluated in a non-standard way. Thus next to vector of row-indices or logical vectors, it supports logical expressions of the form \code{col2 > 5 & col2 < col3} etc. (see examples). The data frame method uses \code{C_subsetDT}, an internal C function from the \emph{data.table} package to subset data.frame's, hence it is significantly faster than \code{base::subset.data.frame}. If fast data frame subsetting is required but no non-standard evaluation, the function \code{ss} is slightly simpler and faster.
+  For data frames, the \code{subset} argument is also evaluated in a non-standard way. Thus next to vector of row-indices or logical vectors, it supports logical expressions of the form \code{col2 > 5 & col2 < col3} etc. (see examples). The data frame method uses \code{C_subsetDT}, an internal C function from the \emph{data.table} package to subset data frames, hence it is significantly faster than \code{base::subset.data.frame}. If fast data frame subsetting is required but no non-standard evaluation, the function \code{ss} is slightly simpler and faster.
 
 Factors may have empty levels after subsetting; unused levels are not automatically removed.  See \code{\link{droplevels}} for a way to drop all unused levels from a data frame.
 
@@ -56,10 +56,10 @@ Factors may have empty levels after subsetting; unused levels are not automatica
   \code{\link{fselect}},
   \code{\link{get_vars}},
   \code{\link{ftransform}},
-\link[=A3-data-frame-manipulation]{Data Frame Manipulation}, \link[=collapse-documentation]{Collapse Overview}
+\link[=A3-fast-data-manipulation]{Data Frame Manipulation}, \link[=collapse-documentation]{Collapse Overview}
 }
 \examples{
-fsubset(airquality, Temp > 80, Ozone, Temp)
+fsubset(airquality, Temp > 90, Ozone, Temp)
 fsubset(airquality, Day == 1, -Temp)
 fsubset(airquality, Day == 1, -(Day:Temp))
 fsubset(airquality, Day == 1, Ozone:Wind)

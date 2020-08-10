@@ -11,7 +11,7 @@ Apart from the indicators the data contains a number of identifiers (character c
 }
 \usage{data("wlddev")}
 \format{
-  A data frame with 12744 observations on the following 12 variables. All variables are labelled e.g. have a 'label' attribute.
+  A data frame with 12744 observations on the following 12 variables. All variables are labeled e.g. have a 'label' attribute.
   \describe{
     \item{\code{country}}{\emph{chr} Country Name}
     \item{\code{iso3c}}{\emph{fct} Country Code}

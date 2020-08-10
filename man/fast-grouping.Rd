@@ -1,5 +1,5 @@
-\name{A2-fast-grouping}
-\alias{A2-fast-grouping}
+\name{A2-fast-grouping-ordering}
+\alias{A2-fast-grouping-ordering}
 \title{Fast Grouping and Ordering} % \emph{collapse}
 
 \description{
@@ -12,13 +12,13 @@
 
 \item \code{\link{fgroup_by}} provides a fast replacement for \code{dplyr::group_by}, creating a grouped tibble with a 'GRP' object attached. This grouped tibble can however only be used for grouped operations using \emph{collapse} fast functions. \emph{dplyr} functions will treat this tibble like an ordinary (non-grouped) one.
 
-\item \code{\link{funique}} is a faster version of \code{\link{unique}}. The data.frame method also allows selecting unique rows according to a subset of the columns.
+\item \code{\link{funique}} is a faster version of \code{\link{unique}}. The data frame method also allows selecting unique rows according to a subset of the columns.
 
 \item \code{\link{qF}}, shorthand for 'quick-factor' implements very fast (ordered) factor generation from atomic vectors using either radix ordering \code{method = "radix"} or index hashing \code{method = "hash"}. Factors can also be used for efficient grouped programming with \emph{collapse} functions, especially if they are generated using \code{qF(x, na.exclude = FALSE)} which assigns a level to missing values and attaches a class 'na.included' ensuring that no additional missing value checks are executed by \emph{collapse} functions.
 
 \item \code{\link{qG}}, shorthand for 'quick-group', generates a kind of factor-light without the levels attribute but instead an attribute providing the number of levels. Optionally the levels / groups can be attached, but without converting them to character. Objects have a class 'qG', which is also recognized in the \emph{collapse} ecosystem.
 
-\item \code{\link{finteraction}} is a fast alternative to \code{base::interaction} implemented as a wrapper around \code{as.factor_GRP(GRP(\dots))}. It can ge used to generate a factor from multiple vectors, factors or a list of vectors / factors. Unused factor levels are always dropped.
+\item \code{\link{finteraction}} is a fast alternative to \code{base::interaction} implemented as a wrapper around \code{as.factor_GRP(GRP(\dots))}. It can be used to generate a factor from multiple vectors, factors or a list of vectors / factors. Unused factor levels are always dropped.
 
 \item \code{\link{groupid}} is a generalization of \code{data.table::rleid} providing a run-length type group-id from atomic vectors. It is generalization as it also supports passing an ordering vector and skipping missing values. For example \code{\link{qF}} and \code{\link{qG}} with \code{method = "radix"} are essentially implemented using \code{groupid(x, radixorder(x))}.
 
@@ -27,20 +27,20 @@
 }
 \section{Table of Functions}{
   \tabular{lllll}{\emph{ Function / S3 Generic }   \tab\tab \emph{ Methods }   \tab\tab \emph{ Description }  \cr
-                 \code{\link[=radixorder]{radixorder(v)}}  \tab\tab No methods, for data.frame's and vectors  \tab\tab Radix-based ordering + grouping information \cr
-                 \code{\link[=roworder]{roworder(v)}} \tab\tab No methods, for data.frame's \tab\tab Row sorting/reordering \cr
+                 \code{\link[=radixorder]{radixorder(v)}}  \tab\tab No methods, for data frames and vectors  \tab\tab Radix-based ordering + grouping information \cr
+                 \code{\link[=roworder]{roworder(v)}} \tab\tab No methods, for data frames \tab\tab Row sorting/reordering \cr
                  \code{\link{GRP}} \tab\tab \code{default, GRP, factor, qG, grouped_df, pseries, pdata.frame}  \tab\tab Fast grouping and a flexible grouping object \cr
-                 \code{\link{fgroup_by}} \tab\tab No methods, for data.frame's  \tab\tab Fast grouped tibbles \cr
+                 \code{\link{fgroup_by}} \tab\tab No methods, for data frames  \tab\tab Fast grouped tibbles \cr
                  \code{\link{funique}} \tab\tab \code{default, data.frame}  \tab\tab Fast unique values/rows \cr
                  \code{\link{qF}} \tab\tab No methods, for vectors \tab\tab Quick factor generation \cr
                  \code{\link{qG}} \tab\tab No methods, for vectors \tab\tab Quick grouping of vectors and a 'factor-light' class \cr
-                 \code{\link{finteraction}} \tab\tab No methods, for data.frame's and vectors \tab\tab Fast interactions \cr
+                 \code{\link{finteraction}} \tab\tab No methods, for data frames and vectors \tab\tab Fast interactions \cr
                  \code{\link{groupid}} \tab\tab No methods, for vectors \tab\tab Run-length type group-id \cr
                  \code{\link{seqid}} \tab\tab No methods, for vectors \tab\tab Run-length type integer sequence-id \cr
 }
 }
 \seealso{
-\link[=collapse-documentation]{Collapse Overview}, \link[=A3-data-frame-manipulation]{Data Frame Manipulation}, \link[=A1-fast-statistical-functions]{Fast Statistical Functions}
+\link[=collapse-documentation]{Collapse Overview}, \link[=A3-fast-data-manipulation]{Data Frame Manipulation}, \link[=A1-fast-statistical-functions]{Fast Statistical Functions}
 }
 \keyword{manip}
 \keyword{documentation}

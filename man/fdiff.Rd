@@ -36,42 +36,43 @@ Fast (Quasi-, Log-) Differences for Time Series and Panel Data
   fdiff(x, n = 1, diff = 1, \dots)
       D(x, n = 1, diff = 1, \dots)
    Dlog(x, n = 1, diff = 1, \dots)
-% ## Default S3 methods:
+
 \method{fdiff}{default}(x, n = 1, diff = 1, g = NULL, t = NULL, fill = NA, log = FALSE, rho = 1,
       stubs = TRUE, \dots)
 \method{D}{default}(x, n = 1, diff = 1, g = NULL, t = NULL, fill = NA, rho = 1,
   stubs = TRUE, \dots)
 \method{Dlog}{default}(x, n = 1, diff = 1, g = NULL, t = NULL, fill = NA, rho = 1, stubs = TRUE, \dots)
-%## S3 methods for class 'matrix'
+
 \method{fdiff}{matrix}(x, n = 1, diff = 1, g = NULL, t = NULL, fill = NA, log = FALSE, rho = 1,
-      stubs = TRUE, \dots)
+      stubs = length(n) + length(diff) > 2L, \dots)
 \method{D}{matrix}(x, n = 1, diff = 1, g = NULL, t = NULL, fill = NA, rho = 1,
   stubs = TRUE, \dots)
 \method{Dlog}{matrix}(x, n = 1, diff = 1, g = NULL, t = NULL, fill = NA, rho = 1, stubs = TRUE, \dots)
-%## S3 methods for class 'data.frame'
+
 \method{fdiff}{data.frame}(x, n = 1, diff = 1, g = NULL, t = NULL, fill = NA, log = FALSE, rho = 1,
-      stubs = TRUE, \dots)
+      stubs = length(n) + length(diff) > 2L, \dots)
 \method{D}{data.frame}(x, n = 1, diff = 1, by = NULL, t = NULL, cols = is.numeric,
   fill = NA, rho = 1, stubs = TRUE, keep.ids = TRUE, \dots)
 \method{Dlog}{data.frame}(x, n = 1, diff = 1, by = NULL, t = NULL, cols = is.numeric,
      fill = NA, rho = 1, stubs = TRUE, keep.ids = TRUE, \dots)
 
 # Methods for compatibility with plm:
-%## S3 methods for class 'pseries'
+
 \method{fdiff}{pseries}(x, n = 1, diff = 1, fill = NA, log = FALSE, rho = 1, stubs = TRUE, \dots)
 \method{D}{pseries}(x, n = 1, diff = 1, fill = NA, rho = 1, stubs = TRUE, \dots)
 \method{Dlog}{pseries}(x, n = 1, diff = 1, fill = NA, rho = 1, stubs = TRUE, \dots)
-%## S3 methods for class 'pdata.frame'
-\method{fdiff}{pdata.frame}(x, n = 1, diff = 1, fill = NA, log = FALSE, rho = 1, stubs = TRUE, \dots)
+
+\method{fdiff}{pdata.frame}(x, n = 1, diff = 1, fill = NA, log = FALSE, rho = 1,
+      stubs = length(n) + length(diff) > 2L, \dots)
 \method{D}{pdata.frame}(x, n = 1, diff = 1, cols = is.numeric, fill = NA, rho = 1, stubs = TRUE,
   keep.ids = TRUE, \dots)
 \method{Dlog}{pdata.frame}(x, n = 1, diff = 1, cols = is.numeric, fill = NA, rho = 1, stubs = TRUE,
      keep.ids = TRUE, \dots)
 
 # Methods for compatibility with dplyr:
-%## S3 methods for class 'grouped_df'
-\method{fdiff}{grouped_df}(x, n = 1, diff = 1, t = NULL, fill = NA, log = FALSE, rho = 1, stubs = TRUE,
-      keep.ids = TRUE, \dots)
+
+\method{fdiff}{grouped_df}(x, n = 1, diff = 1, t = NULL, fill = NA, log = FALSE, rho = 1,
+      stubs = length(n) + length(diff) > 2L, keep.ids = TRUE, \dots)
 \method{D}{grouped_df}(x, n = 1, diff = 1, t = NULL, fill = NA, rho = 1, stubs = TRUE,
   keep.ids = TRUE, \dots)
 \method{Dlog}{grouped_df}(x, n = 1, diff = 1, t = NULL, fill = NA, rho = 1, stubs = TRUE,
@@ -79,7 +80,7 @@ Fast (Quasi-, Log-) Differences for Time Series and Panel Data
 }
 %- maybe also 'usage' for other objects documented here.
 \arguments{
-  \item{x}{a numeric vector / time series, (time series) matrix, data.frame, panel series (\code{plm::pseries}), panel data.frame (\code{plm::pdata.frame}) or grouped tibble (\code{dplyr::grouped_df}).}
+  \item{x}{a numeric vector / time series, (time series) matrix, data frame, panel series (\code{plm::pseries}), panel data frame (\code{plm::pdata.frame}) or grouped tibble (\code{dplyr::grouped_df}).}
   \item{n}{integer. A vector indicating the number of lags or leads.}
   \item{diff}{integer. A vector of integers > 1 indicating the order of differencing / log-differencing.}
   \item{g}{a factor, \code{\link{GRP}} object, atomic vector (internally converted to factor) or a list of vectors / factors (internally converted to a \code{\link{GRP}} object) used to group \code{x}.}
@@ -90,13 +91,13 @@ Fast (Quasi-, Log-) Differences for Time Series and Panel Data
   \item{log}{logical. \code{TRUE} Computes log-differences instead. See Details.}
   \item{rho}{double. Autocorrelation parameter. Set to a value between 0 and 1 for quasi-differencing. However any numeric value can be supplied. }
   \item{stubs}{logical. \code{TRUE} will rename all differenced columns by adding prefixes "L\code{n}D\code{diff}." / "F\code{n}D\code{diff}." for differences "L\code{n}Dlog\code{diff}." / "F\code{n}Dlog\code{diff}." for log-differences and replacing "D" / "Dlog" with "QD" / "QDlog" for quasi-differences. }
-  \item{keep.ids}{\emph{data.frame / pdata.frame / grouped_df methods}: Logical. Drop all panel-identifiers from the output (which includes all variables passed to \code{by} or \code{t}). \emph{Note}: For panel data.frame's and grouped tibbles identifiers are dropped, but the 'index' / 'groups' attributes are kept.}
+  \item{keep.ids}{\emph{data.frame / pdata.frame / grouped_df methods}: Logical. Drop all panel-identifiers from the output (which includes all variables passed to \code{by} or \code{t}). \emph{Note}: For panel data frames and grouped tibbles identifiers are dropped, but the 'index' / 'groups' attributes are kept.}
   \item{\dots}{arguments to be passed to or from other methods.}
 }
 \details{
 By default, \code{fdiff/D/Dlog} return \code{x} with all columns differenced / log-differenced. Differences are computed as \code{repeat(diff) x[i] - rho*x[i-n]}, and log-differences as \code{repeat(diff) log(x[i]) - rho*log(x[i-n])}. If \code{rho < 1}, this becomes quasi- (or partial) differencing, which is a technique suggested by Cochrane and Orcutt (1949) to deal with serial correlation in regression models, where \code{rho} is typically estimated by running a regression of the model residuals on the lagged residuals. Setting \code{diff = 2} returns differences of differences etc\dots and setting \code{n = 2} returns simple differences computed by subtracting twice-lagged \code{x} from \code{x}. It is also possible to compute forward differences by passing negative \code{n} values. \code{n} also supports arbitrary vectors of integers (lags), and \code{diff} supports positive sequences of integers (differences):
 
-If more than one value is passed to \code{n} and/or \code{diff}, the data is expanded-wide as follows: If \code{x} is an atomic vector or time series, a (time series) matrix is returned with columns ordered first by lag, then by difference. If \code{x} is a matrix or data.frame, each column is expanded in like manor such that the output has \code{ncol(x)*length(n)*length(diff)} columns ordered first by column name, then by lag, then by difference.
+If more than one value is passed to \code{n} and/or \code{diff}, the data is expanded-wide as follows: If \code{x} is an atomic vector or time series, a (time series) matrix is returned with columns ordered first by lag, then by difference. If \code{x} is a matrix or data frame, each column is expanded in like manor such that the output has \code{ncol(x)*length(n)*length(diff)} columns ordered first by column name, then by lag, then by difference.
 
 With groups/panel-identifiers supplied to \code{g/by}, \code{fdiff/D/Dlog} efficiently compute panel-differences. If \code{t} is left empty, the data needs to be ordered such that all values belonging to a group are consecutive and in the right order. It is not necessary that the groups themselves occur in the right order. If time-variable(s) are supplied to \code{t}, the panel is fully identified and differences can be securely computed even if the data is completely unordered.
 
@@ -104,7 +105,7 @@ With groups/panel-identifiers supplied to \code{g/by}, \code{fdiff/D/Dlog} effic
 
 It is also possible to compute differences on unordered vectors / time series (thus utilizing \code{t} but leaving \code{g/by} empty).
 
-The methods applying to \emph{plm} objects (panel series and panel data.frame's) automatically utilize the panel-identifiers attached to these objects and thus securely compute fully identified panel-differences. If these objects have > 2 panel-identifiers attached to them, the last identifier is assumed to be the time-variable, and the others are taken as grouping-variables and interacted.
+The methods applying to \emph{plm} objects (panel series and panel data frames) automatically utilize the panel-identifiers attached to these objects and thus securely compute fully identified panel-differences. If these objects have > 2 panel-identifiers attached to them, the last identifier is assumed to be the time-variable, and the others are taken as grouping-variables and interacted.
 }
 \value{
 \code{x} differenced \code{diff} times using lags \code{n} of itself. Quasi and log-differences are toggled by the \code{rho} and \code{log} arguments or the \code{Dlog} operator. Computations can be grouped by \code{g/by} and/or ordered by \code{t}. See Details and Examples.
@@ -129,15 +130,15 @@ Prais, S. J. & Winsten, C. B. (1954). Trend Estimators and Serial Correlation. \
 \examples{
 ## Simple Time Series: AirPassengers
 D(AirPassengers)                      # 1st difference, same as fdiff(AirPassengers)
-D(AirPassengers,-1)                   # Forward difference
+D(AirPassengers, -1)                  # Forward difference
 Dlog(AirPassengers)                   # Log-difference
-D(AirPassengers,1,2)                  # Second difference
-Dlog(AirPassengers,1,2)               # Second log-difference
-D(AirPassengers,12)                   # Seasonal difference (data is monthly)
+D(AirPassengers, 1, 2)                # Second difference
+Dlog(AirPassengers, 1, 2)             # Second log-difference
+D(AirPassengers, 12)                  # Seasonal difference (data is monthly)
 D(AirPassengers,                      # Quasi-difference, see a better example below
   rho = pwcor(AirPassengers, L(AirPassengers)))
 
-D(AirPassengers,-2:2,1:3)             # Sequence of leaded/lagged and iterated differences
+head(D(AirPassengers, -2:2, 1:3))     # Sequence of leaded/lagged and iterated differences
 
 # let's do some visual analysis
 plot(AirPassengers)                   # Plot the series - seasonal pattern is evident
@@ -188,7 +189,7 @@ L(D(wlddev,0:1,1, ~ country, ~year,9:10),0:1,           # LIFEEX and lagged diff
 pwlddev <- plm::pdata.frame(wlddev, index = c("country","year"))
 head(D(pwlddev, 0:1, 1, 9:10))                          # Again differences of LIFEEX and PCGDP
 PCGDP <- pwlddev$PCGDP                                  # A panel-Series of GDP per Capita
-D(PCGDP)                                                # Differencing the panel series.
+head(D(PCGDP))                                          # Differencing the panel series
 summary(lm(D1.PCGDP ~.,                                 # Running the dynamic model again ->
            data = L(D(pwlddev,0:1,1,9:10),0:1,          # code becomes a bit simpler
                     keep.ids = FALSE)[-1]))

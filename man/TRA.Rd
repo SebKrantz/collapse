@@ -46,7 +46,7 @@ TRA(x, STATS, FUN = "-", ...)
 }
 
 \details{
-Without groups (\code{g = NULL}), \code{TRA} is nothing more than a column based version of \code{\link{sweep}}, albeit 4-times more efficient on matrices and many times more efficient on data frames. In this case all methods support an atomic vector of statistics of length \code{NCOL(x)} passed to \code{STATS}. The matrix and data.frame methods also support a 1-row matrix or 1-row data.frame/list, respectively. \code{TRA} always preserves all attributes of \code{x}.
+Without groups (\code{g = NULL}), \code{TRA} is nothing more than a column based version of \code{\link{sweep}}, albeit 4-times more efficient on matrices and many times more efficient on data frames. In this case all methods support an atomic vector of statistics of length \code{NCOL(x)} passed to \code{STATS}. The matrix and data frame methods also support a 1-row matrix or 1-row data frame / list, respectively. \code{TRA} always preserves all attributes of \code{x}.
 
 With groups passed to \code{g}, \code{STATS} needs to be of the same type as \code{x} and of appropriate dimensions [such that \code{NCOL(x) == NCOL(STATS)} and \code{NROW(STATS)} equals the number of groups (i.e. the number of levels if \code{g} is a factor)]. If this condition is satisfied, \code{TRA} will assume that the first row of \code{STATS} is the set of statistics computed on the first group/level of \code{g}, the second row on the second group/level etc. and do groupwise replacing or sweeping out accordingly.
 

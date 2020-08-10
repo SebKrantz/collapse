@@ -57,19 +57,19 @@ The performance gain from working with plain lists makes \code{dapply} not much 
 \code{\link{BY}}, \code{\link{collap}}, \link[=A1-fast-statistical-functions]{Fast Statistical Functions}, \link[=A6-data-transformations]{Data Transformations}, \link[=collapse-documentation]{Collapse Overview}
 }
 \examples{
-dapply(mtcars, log)                      # Take natural log of each variable
-dapply(mtcars, log, return = "matrix")   # Return as matrix
+head(dapply(mtcars, log))                      # Take natural log of each variable
+head(dapply(mtcars, log, return = "matrix"))   # Return as matrix
 m <- as.matrix(mtcars)
-dapply(m, log)                           # Same thing
-dapply(m, log, return = "data.frame")    # Return data frame from matrix
-dapply(mtcars, sum); dapply(m, sum)      # Computing sum of each column, return as vector
-dapply(mtcars, sum, drop = FALSE)        # This returns a data.frame of 1 row
-dapply(mtcars, sum, MARGIN = 1)          # Compute row-sum of each column, return as vector
-dapply(m, sum, MARGIN = 1)               # Same thing for matrices, faster than apply(m, 1, sum)
-dapply(m, sum, MARGIN = 1, drop = FALSE) # Gives matrix with one column
-dapply(m, quantile, MARGIN = 1)          # Compute row-quantiles
-dapply(m, quantile)                      # Column-quantiles
-dapply(mtcars, quantile, MARGIN = 1)     # Same for data frames, output is also a data.frame
+head(dapply(m, log))                           # Same thing
+head(dapply(m, log, return = "data.frame"))    # Return data frame from matrix
+dapply(mtcars, sum); dapply(m, sum)            # Computing sum of each column, return as vector
+dapply(mtcars, sum, drop = FALSE)              # This returns a data frame of 1 row
+dapply(mtcars, sum, MARGIN = 1)                # Compute row-sum of each column, return as vector
+dapply(m, sum, MARGIN = 1)                     # Same thing for matrices, faster t. apply(m, 1, sum)
+head(dapply(m, sum, MARGIN = 1, drop = FALSE)) # Gives matrix with one column
+head(dapply(m, quantile, MARGIN = 1))          # Compute row-quantiles
+dapply(m, quantile)                            # Column-quantiles
+head(dapply(mtcars, quantile, MARGIN = 1))     # Same for data frames, output is also a data.frame
 dapply(mtcars, quantile)
 
 # With classed objects, we have to be a bit careful
@@ -79,13 +79,14 @@ dapply(EuStockMarkets, quantile)  # This gives an error because the tsp attribut
 dapply(EuStockMarkets, quantile, return = "matrix")    # These both work fine..
 dapply(EuStockMarkets, quantile, return = "data.frame")
 
-# Similarly for grouped tibbles and other data.frame classes
+# Similarly for grouped tibbles and other data frame classes
 library(dplyr)
 gmtcars <- group_by(mtcars,cyl,vs,am)
-dapply(gmtcars, log)                     # Still gives a grouped tibble back
+head(dapply(gmtcars, log))               # Still gives a grouped tibble back
 dapply(gmtcars, quantile, MARGIN = 1)    # Here it makes sense to keep the groups attribute
-dapply(gmtcars, quantile)                # This does not make much sense, better convert to plain data.frame:
-dapply(gmtcars, quantile, return = "data.frame")
+dapply(gmtcars, quantile)                # This does not make much sense, ...
+dapply(gmtcars, quantile,                # better convert to plain data.frame:
+       return = "data.frame")
 }
 % Add one or more standard keywords, see file 'KEYWORDS' in the
 % R documentation directory.

@@ -23,34 +23,34 @@ Auto- and Cross- Covariance and Correlation Function Estimation for Panel Series
 psacf(x, \dots)
 pspacf(x, \dots)
 psccf(x, y, \dots)
-%## Default S3 methods:
+
 \method{psacf}{default}(x, g, t = NULL, lag.max = NULL, type = c("correlation", "covariance","partial"),
       plot = TRUE, gscale = TRUE, \dots)
 \method{pspacf}{default}(x, g, t = NULL, lag.max = NULL, plot = TRUE, gscale = TRUE, \dots)
 \method{psccf}{default}(x, y, g, t = NULL, lag.max = NULL, type = c("correlation", "covariance"),
       plot = TRUE, gscale = TRUE, \dots)
-%## S3 methods for class 'pseries'
+
 \method{psacf}{pseries}(x, lag.max = NULL, type = c("correlation", "covariance","partial"),
       plot = TRUE, gscale = TRUE, \dots)
 \method{pspacf}{pseries}(x, lag.max = NULL, plot = TRUE, gscale = TRUE, \dots)
 \method{psccf}{pseries}(x, y, lag.max = NULL, type = c("correlation", "covariance"),
       plot = TRUE, gscale = TRUE, \dots)
-%## S3 methods for class 'data.frame'
+
 \method{psacf}{data.frame}(x, by, t = NULL, cols = is.numeric, lag.max = NULL,
       type = c("correlation", "covariance","partial"), plot = TRUE, gscale = TRUE, \dots)
 \method{pspacf}{data.frame}(x, by, t = NULL, cols = is.numeric, lag.max = NULL,
        plot = TRUE, gscale = TRUE, \dots)
-%## S3 methods for class 'pdata.frame'
+
  \method{psacf}{pdata.frame}(x, cols = is.numeric, lag.max = NULL,
       type = c("correlation", "covariance","partial"), plot = TRUE, gscale = TRUE, \dots)
 \method{pspacf}{pdata.frame}(x, cols = is.numeric, lag.max = NULL, plot = TRUE, gscale = TRUE, \dots)
 }
 %- maybe also 'usage' for other objects documented here.
 \arguments{
-\item{x, y}{a numeric vector, panel series (\code{plm::pseries}), data.frame or
+\item{x, y}{a numeric vector, panel series (\code{plm::pseries}), data frame or
 panel data-frame (\code{plm::pdata.frame}).}
   \item{g}{a factor, \code{\link{GRP}} object, atomic vector (internally converted to factor) or a list of vectors / factors (internally converted to a \code{\link{GRP}} object) used to group \code{x, y}. }
-  \item{by}{\emph{data frame method}: Same input as \code{g}, but also allows one- or two-sided formulas using the variables in \code{x}, i.e. \code{~ idvar} or \code{var1 + var2 ~ idvar1 + idvar2}.}
+  \item{by}{\emph{data.frame method}: Same input as \code{g}, but also allows one- or two-sided formulas using the variables in \code{x}, i.e. \code{~ idvar} or \code{var1 + var2 ~ idvar1 + idvar2}.}
 
     \item{t}{same input as g, to indicate the time-variable. For secure computations on unordered panel-vectors. Data frame method also allows one-sided formula i.e. \code{~time}.}
     \item{cols}{\emph{data.frame method}: Select columns using a function, column names, indices or a logical vector. \emph{Note}: \code{cols} is ignored if a two-sided formula is passed to \code{by}.}

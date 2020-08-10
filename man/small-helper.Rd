@@ -41,7 +41,7 @@ vlabels(X, attrn = "label")   # Get labels of variables in X, in attr(X[[i]], at
 vlabels(X, attrn = "label") <- value      # Set labels of variables in X
 vclasses(X)                   # Get classes of variables in X
 vtypes(X)                     # Get data storage types of variables in X (calling typeof)
-namlab(X, class = FALSE,      # Return data.frame of names, labels and classes
+namlab(X, class = FALSE,      # Return data frame of names, labels and classes
           attrn = "label")
 add_stub(X, stub, pre = TRUE) # Add a stub (i.e. prefix or postfix) to column names
 rm_stub(X, stub, pre = TRUE)  # Remove stub from column names
@@ -49,11 +49,11 @@ x \%!in\% table                 # The opposite of \%in\%
 ckmatch(x, table,             # Check-match: throws an informative error if non-matched
      e = "Unknown columns:")
 fnlevels(x)                   # Faster version of nlevels(x) (for factors)
-fnrow(X)                      # Faster nrow for data.frame's (not faster for matrices)
-fncol(X)                      # Faster ncol for data.frame's (not faster for matrices)
-fdim(X)                       # Faster dim for data.frame's (not faster for matrices)
+fnrow(X)                      # Faster nrow for data frames (not faster for matrices)
+fncol(X)                      # Faster ncol for data frames (not faster for matrices)
+fdim(X)                       # Faster dim for data frames (not faster for matrices)
 na_rm(x)                      # Remove missing values from vector and return vector
-na_omit(X, cols = NULL,       # Faster na.omit for matrices and data.frame's
+na_omit(X, cols = NULL,       # Faster na.omit for matrices and data frames
         na.attr = FALSE)
 na_insert(X, prop = 0.1)      # Insert missing values at random in vectors, matrices DF's
 all_identical(\dots)            # Check exact equality of multiple objects or list-elements
@@ -62,7 +62,7 @@ seq_row(X)                    # Fast integer sequences along rows of X
 seq_col(X)                    # Fast integer sequences along columns of X
 setRownames(object,
  nm = if(is.atomic(object))   # Set rownames of object and return object
- seq_row(object)) else NULL)
+ seq_row(object) else NULL)
 setColnames(object, nm)       # Set colnames of object and return object
 setDimnames(object, dn,
             which = NULL)     # Set dimension names of object and return object
@@ -73,7 +73,7 @@ is.Date(x)                    # Check if object is of class "Date", "POSIXlt" or
 }
 %- maybe also 'usage' for other objects documented here.
 \arguments{
-  \item{X}{a matrix or data.frame (some functions also support vectors and arrays although that is less common).}
+  \item{X}{a matrix or data frame (some functions also support vectors and arrays although that is less common).}
   \item{object}{a suitable R object.}
   \item{x, table}{a atomic vector.}
   \item{attrn}{character. Name of attribute to store labels or retrieve labels from.}
@@ -148,7 +148,7 @@ rm(l)
 ## Missing values
 mtc_na <- na_insert(mtcars, 0.15)    # Set 15\% of values missing at random
 fNobs(mtc_na)                        # See observation count
-na_omit(mtc_na)                      # 12x faster than na.omit(airquality)
+na_omit(mtc_na)                      # 12x faster than na.omit(mtc_na)
 na_omit(mtc_na, na.attr = TRUE)      # Adds attribute with removed cases, like na.omit
 na_omit(mtc_na, cols = c("vs","am")) # Removes only cases missing vs or am
 na_omit(qM(mtc_na))                  # Also works for matrices
