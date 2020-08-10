@@ -9,36 +9,37 @@ fscale <- function(x, ...) UseMethod("fscale") # , x
 
 fscale.default <- function(x, g = NULL, w = NULL, na.rm = TRUE, mean = 0, sd = 1, ...) {
   if(!missing(...)) unused_arg_action(match.call(), ...)
-  if(is.null(g)) return(.Call(Cpp_fscale,x,0L,0L,w,na.rm,cm(mean),csd(sd))) else if (is.atomic(g)) {
-    if(is.nmfactor(g)) return(.Call(Cpp_fscale,x,fnlevels(g),g,w,na.rm,cm(mean),csd(sd))) else {
-      g <- qG(g, ordered = FALSE, na.exclude = FALSE)
-      return(.Call(Cpp_fscale,x,attr(g,"N.groups"),g,w,na.rm,cm(mean),csd(sd)))
-    }
-  } else {
-    if(!is.GRP(g)) g <- GRP.default(g, return.groups = FALSE)
-    return(.Call(Cpp_fscale,x,g[[1L]],g[[2L]],w,na.rm,cm(mean),csd(sd)))
+  if(is.null(g)) return(.Call(Cpp_fscale,x,0L,0L,w,na.rm,cm(mean),csd(sd)))
+  if(is.atomic(g)) {
+    if(is.nmfactor(g)) return(.Call(Cpp_fscale,x,fnlevels(g),g,w,na.rm,cm(mean),csd(sd)))
+    g <- qG(g, sort = FALSE, na.exclude = FALSE)
+    return(.Call(Cpp_fscale,x,attr(g,"N.groups"),g,w,na.rm,cm(mean),csd(sd)))
   }
+  if(!is.GRP(g)) g <- GRP.default(g, return.groups = FALSE, call = FALSE)
+  .Call(Cpp_fscale,x,g[[1L]],g[[2L]],w,na.rm,cm(mean),csd(sd))
 }
+
 fscale.pseries <- function(x, effect = 1L, w = NULL, na.rm = TRUE, mean = 0, sd = 1, ...) {
   if(!missing(...)) unused_arg_action(match.call(), ...)
   g <- if(length(effect) == 1L) .subset2(attr(x, "index"), effect) else finteraction(.subset(attr(x, "index"), effect))
   .Call(Cpp_fscale,x,fnlevels(g),g,w,na.rm,cm(mean),csd(sd))
 }
+
 fscale.matrix <- function(x, g = NULL, w = NULL, na.rm = TRUE, mean = 0, sd = 1, ...) {
   if(!missing(...)) unused_arg_action(match.call(), ...)
-  if(is.null(g)) return(.Call(Cpp_fscalem,x,0L,0L,w,na.rm,cm(mean),csd(sd))) else if (is.atomic(g)) {
-    if(is.nmfactor(g)) return(.Call(Cpp_fscalem,x,fnlevels(g),g,w,na.rm,cm(mean),csd(sd))) else {
-      g <- qG(g, ordered = FALSE, na.exclude = FALSE)
-      return(.Call(Cpp_fscalem,x,attr(g,"N.groups"),g,w,na.rm,cm(mean),csd(sd)))
-    }
-  } else {
-    if(!is.GRP(g)) g <- GRP.default(g, return.groups = FALSE)
-    return(.Call(Cpp_fscalem,x,g[[1L]],g[[2L]],w,na.rm,cm(mean),csd(sd)))
+  if(is.null(g)) return(.Call(Cpp_fscalem,x,0L,0L,w,na.rm,cm(mean),csd(sd)))
+  if(is.atomic(g)) {
+    if(is.nmfactor(g)) return(.Call(Cpp_fscalem,x,fnlevels(g),g,w,na.rm,cm(mean),csd(sd)))
+    g <- qG(g, sort = FALSE, na.exclude = FALSE)
+    return(.Call(Cpp_fscalem,x,attr(g,"N.groups"),g,w,na.rm,cm(mean),csd(sd)))
   }
+  if(!is.GRP(g)) g <- GRP.default(g, return.groups = FALSE, call = FALSE)
+  .Call(Cpp_fscalem,x,g[[1L]],g[[2L]],w,na.rm,cm(mean),csd(sd))
 }
+
 fscale.grouped_df <- function(x, w = NULL, na.rm = TRUE, mean = 0, sd = 1, keep.group_vars = TRUE, keep.w = TRUE, ...) {
   if(!missing(...)) unused_arg_action(match.call(), ...)
-  g <- GRP.grouped_df(x)
+  g <- GRP.grouped_df(x, call = FALSE)
   wsym <- l1orn(as.character(substitute(w)), NULL)
   nam <- attr(x, "names")
   gn2 <- which(nam %in% g[[5L]])
@@ -50,29 +51,30 @@ fscale.grouped_df <- function(x, w = NULL, na.rm = TRUE, mean = 0, sd = 1, keep.
     if(keep.w) gn <- c(gn, wn)
   }
   if(length(gn2)) {
-    if(!length(gn))
-      return(.Call(Cpp_fscalel,x[-gn2],g[[1L]],g[[2L]],w,na.rm,cm(mean),csd(sd))) else {
-        ax <- attributes(x)
-        attributes(x) <- NULL
-        ax[["names"]] <- c(nam[gn], nam[-gn2])
-        return(setAttributes(c(x[gn],.Call(Cpp_fscalel,x[-gn2],g[[1L]],g[[2L]],w,na.rm,cm(mean),csd(sd))), ax))
-      }
-  } else return(.Call(Cpp_fscalel,x,g[[1L]],g[[2L]],w,na.rm,cm(mean),csd(sd)))
+    if(!length(gn)) return(.Call(Cpp_fscalel,x[-gn2],g[[1L]],g[[2L]],w,na.rm,cm(mean),csd(sd)))
+    ax <- attributes(x)
+    attributes(x) <- NULL
+    ax[["names"]] <- c(nam[gn], nam[-gn2])
+    return(setAttributes(c(x[gn],.Call(Cpp_fscalel,x[-gn2],g[[1L]],g[[2L]],w,na.rm,cm(mean),csd(sd))), ax))
+  }
+  .Call(Cpp_fscalel,x,g[[1L]],g[[2L]],w,na.rm,cm(mean),csd(sd))
 }
+
 fscale.data.frame <- function(x, g = NULL, w = NULL, na.rm = TRUE, mean = 0, sd = 1, ...) {
   if(!missing(...)) unused_arg_action(match.call(), ...)
-  if(is.null(g)) return(.Call(Cpp_fscalel,x,0L,0L,w,na.rm,cm(mean),csd(sd))) else if(is.atomic(g)) {
-    if(is.nmfactor(g)) return(.Call(Cpp_fscalel,x,fnlevels(g),g,w,na.rm,cm(mean),csd(sd))) else {
-      g <- qG(g, ordered = FALSE, na.exclude = FALSE)
-      return(.Call(Cpp_fscalel,x,attr(g,"N.groups"),g,w,na.rm,cm(mean),csd(sd)))
-    }
-  } else {
-    if(!is.GRP(g)) g <- GRP.default(g, return.groups = FALSE)
-    return(.Call(Cpp_fscalel,x,g[[1L]],g[[2L]],w,na.rm,cm(mean),csd(sd)))
+  if(is.null(g)) return(.Call(Cpp_fscalel,x,0L,0L,w,na.rm,cm(mean),csd(sd)))
+  if(is.atomic(g)) {
+    if(is.nmfactor(g)) return(.Call(Cpp_fscalel,x,fnlevels(g),g,w,na.rm,cm(mean),csd(sd)))
+    g <- qG(g, sort = FALSE, na.exclude = FALSE)
+    return(.Call(Cpp_fscalel,x,attr(g,"N.groups"),g,w,na.rm,cm(mean),csd(sd)))
   }
+  if(!is.GRP(g)) g <- GRP.default(g, return.groups = FALSE, call = FALSE)
+  .Call(Cpp_fscalel,x,g[[1L]],g[[2L]],w,na.rm,cm(mean),csd(sd))
 }
+
 fscale.list <- function(x, g = NULL, w = NULL, na.rm = TRUE, mean = 0, sd = 1, ...)
   fscale.data.frame(x, g, w, na.rm, mean, sd, ...)
+
 fscale.pdata.frame <- function(x, effect = 1L, w = NULL, na.rm = TRUE, mean = 0, sd = 1, ...) {
   if(!missing(...)) unused_arg_action(match.call(), ...)
   g <- if(length(effect) == 1L) .subset2(attr(x, "index"), effect) else finteraction(.subset(attr(x, "index"), effect))
@@ -95,7 +97,7 @@ STD.matrix <- function(x, g = NULL, w = NULL, na.rm = TRUE, mean = 0, sd = 1, st
 
 STD.grouped_df <- function(x, w = NULL, na.rm = TRUE, mean = 0, sd = 1, stub = "STD.", keep.group_vars = TRUE, keep.w = TRUE, ...) {
   if(!missing(...)) unused_arg_action(match.call(), ...)
-  g <- GRP.grouped_df(x)
+  g <- GRP.grouped_df(x, call = FALSE)
   wsym <- l1orn(as.character(substitute(w)), NULL)
   nam <- attr(x, "names")
   gn2 <- which(nam %in% g[[5L]])
@@ -107,14 +109,13 @@ STD.grouped_df <- function(x, w = NULL, na.rm = TRUE, mean = 0, sd = 1, stub = "
     if(keep.w) gn <- c(gn,wn)
   }
   if(length(gn2)) {
-    if(!length(gn))
-      return(add_stub(.Call(Cpp_fscalel,x[-gn2],g[[1L]],g[[2L]],w,na.rm,cm(mean),csd(sd)), stub)) else {
-        ax <- attributes(x)
-        attributes(x) <- NULL
-        ax[["names"]] <- c(nam[gn], if(is.character(stub)) paste0(stub, nam[-gn2]) else nam[-gn2])
-        return(setAttributes(c(x[gn],.Call(Cpp_fscalel,x[-gn2],g[[1L]],g[[2L]],w,na.rm,cm(mean),csd(sd))), ax))
-      }
-  } else return(add_stub(.Call(Cpp_fscalel,x,g[[1L]],g[[2L]],w,na.rm,cm(mean),csd(sd)), stub))
+    if(!length(gn)) return(add_stub(.Call(Cpp_fscalel,x[-gn2],g[[1L]],g[[2L]],w,na.rm,cm(mean),csd(sd)), stub))
+    ax <- attributes(x)
+    attributes(x) <- NULL
+    ax[["names"]] <- c(nam[gn], if(is.character(stub)) paste0(stub, nam[-gn2]) else nam[-gn2])
+    return(setAttributes(c(x[gn],.Call(Cpp_fscalel,x[-gn2],g[[1L]],g[[2L]],w,na.rm,cm(mean),csd(sd))), ax))
+  }
+  add_stub(.Call(Cpp_fscalel,x,g[[1L]],g[[2L]],w,na.rm,cm(mean),csd(sd)), stub)
 }
 
 # updated (best) version !
@@ -145,16 +146,16 @@ STD.pdata.frame <- function(x, effect = 1L, w = NULL, cols = is.numeric,
   if(length(gn) && !is.null(cols)) {
     ax[["names"]] <- c(nam[gn], if(is.character(stub)) paste0(stub, nam[cols]) else nam[cols])
     return(setAttributes(c(x[gn], .Call(Cpp_fscalel,x[cols],fnlevels(g),g,w,na.rm,cm(mean),csd(sd))), ax))
-  } else if(!length(gn)) {
+  }
+  if(!length(gn)) {
     ax[["names"]] <- if(is.character(stub)) paste0(stub, nam[cols]) else nam[cols]
     return(setAttributes(.Call(Cpp_fscalel,x[cols],fnlevels(g),g,w,na.rm,cm(mean),csd(sd)), ax))
-  } else {
-    if(is.character(stub)) {
-      ax[["names"]] <- paste0(stub, nam)
-      return(setAttributes(.Call(Cpp_fscalel,x,fnlevels(g),g,w,na.rm,cm(mean),csd(sd)), ax))
-    } else
-      return(.Call(Cpp_fscalel,`oldClass<-`(x, ax[["class"]]),fnlevels(g),g,w,na.rm,cm(mean),csd(sd)))
   }
+  if(is.character(stub)) {
+    ax[["names"]] <- paste0(stub, nam)
+    return(setAttributes(.Call(Cpp_fscalel,x,fnlevels(g),g,w,na.rm,cm(mean),csd(sd)), ax))
+  }
+  .Call(Cpp_fscalel,`oldClass<-`(x, ax[["class"]]),fnlevels(g),g,w,na.rm,cm(mean),csd(sd))
 }
 
 # updated, fast and data.table proof version !
@@ -176,13 +177,13 @@ STD.data.frame <- function(x, by = NULL, w = NULL, cols = is.numeric,
         gn <- ckmatch(all.vars(by), nam)
         cols <- if(is.null(cols)) seq_along(x)[-gn] else cols2int(cols, x, nam)
       }
-      by <- if(length(gn) == 1L) at2GRP(x[[gn]]) else GRP.default(x, gn, return.groups = FALSE)
+      by <- if(length(gn) == 1L) at2GRP(x[[gn]]) else GRP.default(x, gn, return.groups = FALSE, call = FALSE)
       if(!keep.by) gn <- NULL
     } else {
       gn <- NULL
       if(!is.null(cols)) cols <- cols2int(cols, x, nam)
       if(!is.GRP(by)) by <- if(is.null(by)) list(0L, 0L, NULL) else if(is.atomic(by)) # Necessary for if by is passed externally !
-        at2GRP(by) else GRP.default(by, return.groups = FALSE)
+        at2GRP(by) else GRP.default(by, return.groups = FALSE, call = FALSE)
     }
 
     if(is.call(w)) {
@@ -195,10 +196,9 @@ STD.data.frame <- function(x, by = NULL, w = NULL, cols = is.numeric,
     if(length(gn)) {
       ax[["names"]] <- c(nam[gn], if(is.character(stub)) paste0(stub, nam[cols]) else nam[cols])
       return(setAttributes(c(x[gn], .Call(Cpp_fscalel,x[cols],by[[1L]],by[[2L]],w,na.rm,cm(mean),csd(sd))), ax))
-    } else {
-      ax[["names"]] <- if(is.character(stub)) paste0(stub, nam[cols]) else nam[cols]
-      return(setAttributes(.Call(Cpp_fscalel,x[cols],by[[1L]],by[[2L]],w,na.rm,cm(mean),csd(sd)), ax))
     }
+    ax[["names"]] <- if(is.character(stub)) paste0(stub, nam[cols]) else nam[cols]
+    return(setAttributes(.Call(Cpp_fscalel,x[cols],by[[1L]],by[[2L]],w,na.rm,cm(mean),csd(sd)), ax))
   } else if(!is.null(cols)) { # Needs to be like this, otherwise subsetting dropps the attributes !!
     ax <- attributes(x)
     class(x) <- NULL
@@ -208,15 +208,14 @@ STD.data.frame <- function(x, by = NULL, w = NULL, cols = is.numeric,
   }
   if(is.character(stub)) attr(x, "names") <- paste0(stub, attr(x, "names"))
 
-  if(is.null(by)) return(.Call(Cpp_fscalel,x,0L,0L,w,na.rm,cm(mean),csd(sd))) else if (is.atomic(by)) {
-    if(is.nmfactor(by)) return(.Call(Cpp_fscalel,x,fnlevels(by),by,w,na.rm,cm(mean),csd(sd))) else {
-      by <- qG(by, ordered = FALSE, na.exclude = FALSE)
-      return(.Call(Cpp_fscalel,x,attr(by,"N.groups"),by,w,na.rm,cm(mean),csd(sd)))
-    }
-  } else {
-    if(!is.GRP(by)) by <- GRP.default(by, return.groups = FALSE)
-    return(.Call(Cpp_fscalel,x,by[[1L]],by[[2L]],w,na.rm,cm(mean),csd(sd)))
+  if(is.null(by)) return(.Call(Cpp_fscalel,x,0L,0L,w,na.rm,cm(mean),csd(sd)))
+  if(is.atomic(by)) {
+    if(is.nmfactor(by)) return(.Call(Cpp_fscalel,x,fnlevels(by),by,w,na.rm,cm(mean),csd(sd)))
+    by <- qG(by, sort = FALSE, na.exclude = FALSE)
+    return(.Call(Cpp_fscalel,x,attr(by,"N.groups"),by,w,na.rm,cm(mean),csd(sd)))
   }
+  if(!is.GRP(by)) by <- GRP.default(by, return.groups = FALSE, call = FALSE)
+  .Call(Cpp_fscalel,x,by[[1L]],by[[2L]],w,na.rm,cm(mean),csd(sd))
 }
 
 STD.list <- function(x, by = NULL, w = NULL, cols = is.numeric, na.rm = TRUE, mean = 0, sd = 1, stub = "STD.", keep.by = TRUE, keep.w = TRUE, ...)

@@ -40,8 +40,8 @@
 
 
 <meta property="og:title" content="Fast (Grouped, Weighted) Scaling and Centering of Matrix-like Objects — fscale" />
-<meta property="og:description" content="fscale is a generic function to efficiently standardize (scale and center) data. STD is a wrapper around fscale representing the 'standardization operator', with more options than fscale when applied to matrices and data frames.  Standardization can be simple or groupwise, ordinary or weighted.
-Note: For centering without scaling see fwithin/W. " />
+<meta property="og:description" content="fscale is a generic function to efficiently standardize (scale and center) data. STD is a wrapper around fscale representing the 'standardization operator', with more options than fscale when applied to matrices and data frames.  Standardization can be simple or groupwise, ordinary or weighted. Arbitrary target means and standard deviations can be set, with special options for grouped scaling and centering. It is also possible to scale data without centering i.e. perform mean-preserving scaling.
+Note: For centering without scaling see fwithin/W. For simple not mean-preserving scaling use fsd(..., TRA = &quot;/&quot;). To sweep pre-computed means and scale-factors out of data see TRA." />
 
 
 
@@ -73,7 +73,7 @@ Note: For centering without scaling see fwithin/W. " />
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">collapse</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">1.2.1</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">1.3.0</span>
       </span>
     </div>
 
@@ -88,13 +88,10 @@ Note: For centering without scaling see fwithin/W. " />
 <li>
   <a href="../news/index.html">News</a>
 </li>
-<li>
-  <a href="../blog/index.html">Blog</a>
-</li>
       </ul>
       <ul class="nav navbar-nav navbar-right">
         <li>
-  <a href="https://twitter.com/collapse">
+  <a href="https://twitter.com/collapse_R">
     <span class="fa fa-twitter"></span>
      
   </a>
@@ -124,8 +121,8 @@ Note: For centering without scaling see fwithin/W. " />
     </div>
 
     <div class="ref-description">
-    <p><code>fscale</code> is a generic function to efficiently standardize (scale and center) data. <code>STD</code> is a wrapper around <code>fscale</code> representing the 'standardization operator', with more options than <code>fscale</code> when applied to matrices and data frames.  Standardization can be simple or groupwise, ordinary or weighted.</p>
-<p><em>Note</em>: For centering without scaling see <code><a href='fbetween_fwithin.html'>fwithin/W</a></code>. <!-- % for scaling without centering use \code{\link[=fsd]{fsd(..., TRA = "/")}}. --></p>
+    <p><code>fscale</code> is a generic function to efficiently standardize (scale and center) data. <code>STD</code> is a wrapper around <code>fscale</code> representing the 'standardization operator', with more options than <code>fscale</code> when applied to matrices and data frames.  Standardization can be simple or groupwise, ordinary or weighted. Arbitrary target means and standard deviations can be set, with special options for grouped scaling and centering. It is also possible to scale data without centering i.e. perform mean-preserving scaling.</p>
+<p><em>Note</em>: For centering without scaling see <code><a href='fbetween_fwithin.html'>fwithin/W</a></code>. For simple not mean-preserving scaling use <code><a href='fvar_fsd.html'>fsd(..., TRA = "/")</a></code>. To sweep pre-computed means and scale-factors out of data see <code><a href='TRA.html'>TRA</a></code>.</p>
     </div>
 
     <pre class="usage"><span class='fu'>fscale</span>(<span class='no'>x</span>, <span class='no'>...</span>)
@@ -175,7 +172,7 @@ Note: For centering without scaling see fwithin/W. " />
     <colgroup><col class="name" /><col class="desc" /></colgroup>
     <tr>
       <th>x</th>
-      <td><p>a numeric vector, matrix, data.frame, panel-series (<code><a href='https://rdrr.io/pkg/plm/man/pseries.html'>plm::pseries</a></code>), panel-data.frame (<code><a href='https://rdrr.io/pkg/plm/man/pdata.frame.html'>plm::pdata.frame</a></code>) or grouped tibble (<code><a href='https://dplyr.tidyverse.org/reference/grouped_df.html'>dplyr::grouped_df</a></code>).</p></td>
+      <td><p>a numeric vector, matrix, data frame, panel series (<code><a href='https://rdrr.io/pkg/plm/man/pseries.html'>plm::pseries</a></code>), panel data frame (<code><a href='https://rdrr.io/pkg/plm/man/pdata.frame.html'>plm::pdata.frame</a></code>) or grouped tibble (<code><a href='https://dplyr.tidyverse.org/reference/grouped_df.html'>dplyr::grouped_df</a></code>).</p></td>
     </tr>
     <tr>
       <th>g</th>
@@ -187,7 +184,7 @@ Note: For centering without scaling see fwithin/W. " />
     </tr>
     <tr>
       <th>cols</th>
-      <td><p><em>data.frame method</em>: Select columns to scale using a function, column names or indices. Default: All numeric variables. <em>Note</em>: <code>cols</code> is ignored if a two-sided formula is passed to <code>by</code>.</p></td>
+      <td><p><em>data.frame method</em>: Select columns to scale using a function, column names, indices or a logical vector. Default: All numeric variables. <em>Note</em>: <code>cols</code> is ignored if a two-sided formula is passed to <code>by</code>.</p></td>
     </tr>
     <tr>
       <th>w</th>
@@ -195,11 +192,11 @@ Note: For centering without scaling see fwithin/W. " />
     </tr>
     <tr>
       <th>na.rm</th>
-      <td><p>logical. skip missing values in <code>x</code> or <code>w</code> when computing means and sd's.</p></td>
+      <td><p>logical. Skip missing values in <code>x</code> or <code>w</code> when computing means and sd's.</p></td>
     </tr>
     <tr>
       <th>effect</th>
-      <td><p><em>plm</em> methods: Select which panel identifier should be used as grouping variable. 1L means first variable in the <code><a href='https://rdrr.io/pkg/plm/man/re-export_functions.html'>plm::index</a></code>, 2L the second etc. if more than one integer is supplied, the corresponding index-variables are interacted.</p></td>
+      <td><p><em>plm</em> methods: Select which panel identifier should be used as group-id. 1L takes the first variable in the <code><a href='https://rdrr.io/pkg/plm/man/re-export_functions.html'>plm::index</a></code>, 2L the second etc.. Index variables can also be called by name using a character string. More than one variable can be supplied.</p></td>
     </tr>
     <tr>
       <th>stub</th>
@@ -233,51 +230,231 @@ Note: For centering without scaling see fwithin/W. " />
 <p>Means and standard deviations are computed using Welford's numerically stable online algorithm.</p>
 <p>With groups supplied to <code>g</code>, this standardizing becomes groupwise, so that in each group (in each column) the data points will have mean <code>mean</code> and standard deviation <code>sd</code>. Naturally if <code>mean = FALSE</code> then each group is just scaled and the mean is preserved. For centering without scaling see <code><a href='fbetween_fwithin.html'>fwithin</a></code>.</p>
 <p>If <code>na.rm = FALSE</code> and a <code>NA</code> or <code>NaN</code> is encountered, the mean and sd for that group will be <code>NA</code>, and all data points belonging to that group will also be <code>NA</code> in the output.</p>
-<p>If <code>na.rm = TRUE</code>, means and sd's are computed (column-wise) on the available data points, and also the weight vector can have missing values. In that case (<code>w</code> also has missing values), the weighted mean an sd are computed on (column-wise) <code><a href='https://rdrr.io/r/stats/complete.cases.html'>complete.cases(x, w)</a></code>, and <code>x</code> is scaled using these statistics. <em>Note</em> that <code>fscale</code> will not insert a missing value in <code>x</code> if the weight for that value is missing, rather, that value will be scaled using a weighted mean and standard-deviated computed without itself! (The intention here is that a few (randomly) missing weights shouldn't break the computation when <code>na.rm = TRUE</code>, but it is not meant for weight vectors with many missing values. If you don't like this behavior, you should prepare your data using <code>x[is.na(w), ] &lt;- NA</code>, or impute your weight vector for non-missing <code>x</code>).</p>
+<p>If <code>na.rm = TRUE</code>, means and sd's are computed (column-wise) on the available data points, and also the weight vector can have missing values. In that case, the weighted mean an sd are computed on (column-wise) <code><a href='https://rdrr.io/r/stats/complete.cases.html'>complete.cases(x, w)</a></code>, and <code>x</code> is scaled using these statistics. <em>Note</em> that <code>fscale</code> will not insert a missing value in <code>x</code> if the weight for that value is missing, rather, that value will be scaled using a weighted mean and standard-deviated computed without itself! (The intention here is that a few (randomly) missing weights shouldn't break the computation when <code>na.rm = TRUE</code>, but it is not meant for weight vectors with many missing values. If you don't like this behavior, you should prepare your data using <code>x[is.na(w), ] &lt;- NA</code>, or impute your weight vector for non-missing <code>x</code>).</p>
 <p>Special options for grouped scaling are <code>mean = "overall.mean"</code> and <code>sd = "within.sd"</code>. The former group-centers vectors on the overall mean of the data (see <code><a href='fbetween_fwithin.html'>fwithin</a></code> for more details) and the latter scales the data in each group to have the within-group standard deviation (= the standard deviation of the group-centered data). Thus scaling a grouped vector with options <code>mean = "overall.mean"</code> and <code>sd = "within.sd"</code> amounts to removing all differences in the mean and standard deviations between these groups. In weighted computations, <code>mean = "overall.mean"</code> will subtract weighted group-means from the data and add the overall weighted mean of the data, whereas <code>sd = "within.sd"</code> will compute the weighted within- standard deviation and apply it to each group.</p>
     <h2 class="hasAnchor" id="value"><a class="anchor" href="#value"></a>Value</h2>
 
     <p><code>x</code> standardized (mean = mean, standard deviation = sd), grouped by <code>g/by</code>, weighted with <code>w</code>. See Details.</p>
     <h2 class="hasAnchor" id="see-also"><a class="anchor" href="#see-also"></a>See also</h2>
 
-    <div class='dont-index'><p><code><a href='fbetween_fwithin.html'>fwithin/W</a></code>, <a href='fast-statistical-functions.html'>Fast Statistical Functions</a>, <code><a href='TRA.html'>TRA</a></code>, <a href='data-transformations.html'>Data Transformations</a>, <a href='collapse-documentation.html'>Collapse Overview</a></p></div>
+    <div class='dont-index'><p><code><a href='fbetween_fwithin.html'>fwithin</a></code>, <code><a href='fvar_fsd.html'>fsd</a></code>, <code><a href='TRA.html'>TRA</a></code>, <a href='fast-statistical-functions.html'>Fast Statistical Functions</a>, <a href='data-transformations.html'>Data Transformations</a>, <a href='index.html'>Collapse Overview</a></p></div>
 
     <h2 class="hasAnchor" id="examples"><a class="anchor" href="#examples"></a>Examples</h2>
-    <pre class="examples"><span class='co'>## Simple Scaling &amp; Centering / Standardizing</span>
-<span class='fu'>fscale</span>(<span class='no'>mtcars</span>)                     <span class='co'># Doesn't rename columns</span>
-<span class='fu'>STD</span>(<span class='no'>mtcars</span>)                        <span class='co'># By default adds a prefix</span>
-<span class='fu'><a href='qsu.html'>qsu</a></span>(<span class='fu'>STD</span>(<span class='no'>mtcars</span>))                   <span class='co'># See that is works</span>
-<span class='fu'><a href='qsu.html'>qsu</a></span>(<span class='fu'>STD</span>(<span class='no'>mtcars</span>, <span class='kw'>mean</span> <span class='kw'>=</span> <span class='fl'>5</span>, <span class='kw'>sd</span> <span class='kw'>=</span> <span class='fl'>3</span>)) <span class='co'># Assigning a mean of 5 and a standard deviation of 3</span>
-<span class='fu'><a href='qsu.html'>qsu</a></span>(<span class='fu'>STD</span>(<span class='no'>mtcars</span>, <span class='kw'>mean</span> <span class='kw'>=</span> <span class='fl'>FALSE</span>))     <span class='co'># No centering: Scaling is mean-preserving</span>
-
-<span class='co'>## Panel-Data</span>
-<span class='fu'><a href='https://rdrr.io/r/utils/head.html'>head</a></span>(<span class='fu'>fscale</span>(<span class='fu'><a href='select_replace_vars.html'>get_vars</a></span>(<span class='no'>wlddev</span>,<span class='fl'>9</span>:<span class='fl'>12</span>), <span class='no'>wlddev</span>$<span class='no'>iso3c</span>))   <span class='co'># Standardizing 4 series within each country</span>
-<span class='fu'><a href='https://rdrr.io/r/utils/head.html'>head</a></span>(<span class='fu'>STD</span>(<span class='no'>wlddev</span>, ~<span class='no'>iso3c</span>, <span class='kw'>cols</span> <span class='kw'>=</span> <span class='fl'>9</span>:<span class='fl'>12</span>))              <span class='co'># Same thing using STD, id's added</span>
-<span class='fu'><a href='pwcor_pwcov_pwNobs.html'>pwcor</a></span>(<span class='fu'>fscale</span>(<span class='fu'><a href='select_replace_vars.html'>get_vars</a></span>(<span class='no'>wlddev</span>,<span class='fl'>9</span>:<span class='fl'>12</span>), <span class='no'>wlddev</span>$<span class='no'>iso3c</span>))  <span class='co'># Correlaing panel-series after standardizing</span>
-
-<span class='fu'><a href='fmean.html'>fmean</a></span>(<span class='fu'><a href='select_replace_vars.html'>get_vars</a></span>(<span class='no'>wlddev</span>, <span class='fl'>9</span>:<span class='fl'>12</span>))                       <span class='co'># This calculates the overall means</span>
-<span class='fu'><a href='fvar_fsd.html'>fsd</a></span>(<span class='fu'><a href='fbetween_fwithin.html'>fwithin</a></span>(<span class='fu'><a href='select_replace_vars.html'>get_vars</a></span>(<span class='no'>wlddev</span>, <span class='fl'>9</span>:<span class='fl'>12</span>), <span class='no'>wlddev</span>$<span class='no'>iso3c</span>))  <span class='co'># This calculates the within standard deviations</span>
-<span class='fu'><a href='qsu.html'>qsu</a></span>(<span class='fu'>fscale</span>(<span class='fu'><a href='select_replace_vars.html'>get_vars</a></span>(<span class='no'>wlddev</span>, <span class='fl'>9</span>:<span class='fl'>12</span>), <span class='no'>wlddev</span>$<span class='no'>iso3c</span>,    <span class='co'># This group-centers on the overall mean and</span>
-    <span class='kw'>mean</span> <span class='kw'>=</span> <span class='st'>"overall.mean"</span>, <span class='kw'>sd</span> <span class='kw'>=</span> <span class='st'>"within.sd"</span>),       <span class='co'># group-scales to the within standard deviation</span>
-    <span class='kw'>by</span> <span class='kw'>=</span> <span class='no'>wlddev</span>$<span class='no'>iso3c</span>)                              <span class='co'># -&gt; data harmonized in the first 2 moments</span>
-
+    <pre class="examples"><div class='input'><span class='co'>## Simple Scaling &amp; Centering / Standardizing</span>
+<span class='fu'><a href='https://rdrr.io/r/utils/head.html'>head</a></span>(<span class='fu'>fscale</span>(<span class='no'>mtcars</span>))               <span class='co'># Doesn't rename columns</span></div><div class='output co'>#&gt;                          mpg        cyl        disp         hp       drat
+#&gt; Mazda RX4          0.1508848 -0.1049878 -0.57061982 -0.5350928  0.5675137
+#&gt; Mazda RX4 Wag      0.1508848 -0.1049878 -0.57061982 -0.5350928  0.5675137
+#&gt; Datsun 710         0.4495434 -1.2248578 -0.99018209 -0.7830405  0.4739996
+#&gt; Hornet 4 Drive     0.2172534 -0.1049878  0.22009369 -0.5350928 -0.9661175
+#&gt; Hornet Sportabout -0.2307345  1.0148821  1.04308123  0.4129422 -0.8351978
+#&gt; Valiant           -0.3302874 -0.1049878 -0.04616698 -0.6080186 -1.5646078
+#&gt;                             wt       qsec         vs         am       gear
+#&gt; Mazda RX4         -0.610399567 -0.7771651 -0.8680278  1.1899014  0.4235542
+#&gt; Mazda RX4 Wag     -0.349785269 -0.4637808 -0.8680278  1.1899014  0.4235542
+#&gt; Datsun 710        -0.917004624  0.4260068  1.1160357  1.1899014  0.4235542
+#&gt; Hornet 4 Drive    -0.002299538  0.8904872  1.1160357 -0.8141431 -0.9318192
+#&gt; Hornet Sportabout  0.227654255 -0.4637808 -0.8680278 -0.8141431 -0.9318192
+#&gt; Valiant            0.248094592  1.3269868  1.1160357 -0.8141431 -0.9318192
+#&gt;                         carb
+#&gt; Mazda RX4          0.7352031
+#&gt; Mazda RX4 Wag      0.7352031
+#&gt; Datsun 710        -1.1221521
+#&gt; Hornet 4 Drive    -1.1221521
+#&gt; Hornet Sportabout -0.5030337
+#&gt; Valiant           -1.1221521</div><div class='input'><span class='fu'><a href='https://rdrr.io/r/utils/head.html'>head</a></span>(<span class='fu'>STD</span>(<span class='no'>mtcars</span>))                  <span class='co'># By default adds a prefix</span></div><div class='output co'>#&gt;                      STD.mpg    STD.cyl    STD.disp     STD.hp   STD.drat
+#&gt; Mazda RX4          0.1508848 -0.1049878 -0.57061982 -0.5350928  0.5675137
+#&gt; Mazda RX4 Wag      0.1508848 -0.1049878 -0.57061982 -0.5350928  0.5675137
+#&gt; Datsun 710         0.4495434 -1.2248578 -0.99018209 -0.7830405  0.4739996
+#&gt; Hornet 4 Drive     0.2172534 -0.1049878  0.22009369 -0.5350928 -0.9661175
+#&gt; Hornet Sportabout -0.2307345  1.0148821  1.04308123  0.4129422 -0.8351978
+#&gt; Valiant           -0.3302874 -0.1049878 -0.04616698 -0.6080186 -1.5646078
+#&gt;                         STD.wt   STD.qsec     STD.vs     STD.am   STD.gear
+#&gt; Mazda RX4         -0.610399567 -0.7771651 -0.8680278  1.1899014  0.4235542
+#&gt; Mazda RX4 Wag     -0.349785269 -0.4637808 -0.8680278  1.1899014  0.4235542
+#&gt; Datsun 710        -0.917004624  0.4260068  1.1160357  1.1899014  0.4235542
+#&gt; Hornet 4 Drive    -0.002299538  0.8904872  1.1160357 -0.8141431 -0.9318192
+#&gt; Hornet Sportabout  0.227654255 -0.4637808 -0.8680278 -0.8141431 -0.9318192
+#&gt; Valiant            0.248094592  1.3269868  1.1160357 -0.8141431 -0.9318192
+#&gt;                     STD.carb
+#&gt; Mazda RX4          0.7352031
+#&gt; Mazda RX4 Wag      0.7352031
+#&gt; Datsun 710        -1.1221521
+#&gt; Hornet 4 Drive    -1.1221521
+#&gt; Hornet Sportabout -0.5030337
+#&gt; Valiant           -1.1221521</div><div class='input'><span class='fu'><a href='qsu.html'>qsu</a></span>(<span class='fu'>STD</span>(<span class='no'>mtcars</span>))                   <span class='co'># See that is works</span></div><div class='output co'>#&gt;            N  Mean  SD      Min     Max
+#&gt; STD.mpg   32    -0   1  -1.6079  2.2913
+#&gt; STD.cyl   32     0   1  -1.2249  1.0149
+#&gt; STD.disp  32    -0   1  -1.2879  1.9468
+#&gt; STD.hp    32     0   1   -1.381  2.7466
+#&gt; STD.drat  32    -0   1  -1.5646  2.4939
+#&gt; STD.wt    32    -0   1  -1.7418  2.2553
+#&gt; STD.qsec  32     0   1   -1.874  2.8268
+#&gt; STD.vs    32     0   1   -0.868   1.116
+#&gt; STD.am    32    -0   1  -0.8141  1.1899
+#&gt; STD.gear  32     0   1  -0.9318  1.7789
+#&gt; STD.carb  32    -0   1  -1.1222  3.2117</div><div class='input'><span class='fu'><a href='qsu.html'>qsu</a></span>(<span class='fu'>STD</span>(<span class='no'>mtcars</span>, <span class='kw'>mean</span> <span class='kw'>=</span> <span class='fl'>5</span>, <span class='kw'>sd</span> <span class='kw'>=</span> <span class='fl'>3</span>)) <span class='co'># Assigning a mean of 5 and a standard deviation of 3</span></div><div class='output co'>#&gt;            N  Mean  SD      Min      Max
+#&gt; STD.mpg   32     5   3   0.1764  11.8738
+#&gt; STD.cyl   32     5   3   1.3254   8.0446
+#&gt; STD.disp  32     5   3   1.1363  10.8403
+#&gt; STD.hp    32     5   3   0.8569  13.2397
+#&gt; STD.drat  32     5   3   0.3062  12.4817
+#&gt; STD.wt    32     5   3  -0.2253   11.766
+#&gt; STD.qsec  32     5   3   -0.622  13.4803
+#&gt; STD.vs    32     5   3   2.3959   8.3481
+#&gt; STD.am    32     5   3   2.5576   8.5697
+#&gt; STD.gear  32     5   3   2.2045  10.3368
+#&gt; STD.carb  32     5   3   1.6335   14.635</div><div class='input'><span class='fu'><a href='qsu.html'>qsu</a></span>(<span class='fu'>STD</span>(<span class='no'>mtcars</span>, <span class='kw'>mean</span> <span class='kw'>=</span> <span class='fl'>FALSE</span>))     <span class='co'># No centering: Scaling is mean-preserving</span></div><div class='output co'>#&gt;            N      Mean  SD       Min       Max
+#&gt; STD.mpg   32   20.0906   1   18.4827   22.3819
+#&gt; STD.cyl   32    6.1875   1    4.9626    7.2024
+#&gt; STD.disp  32  230.7219   1   229.434  232.6686
+#&gt; STD.hp    32  146.6875   1  145.3065  149.4341
+#&gt; STD.drat  32    3.5966   1     2.032    6.0905
+#&gt; STD.wt    32    3.2172   1    1.4755    5.4726
+#&gt; STD.qsec  32   17.8487   1   15.9747   20.6755
+#&gt; STD.vs    32    0.4375   1   -0.4305    1.5535
+#&gt; STD.am    32    0.4062   1   -0.4079    1.5962
+#&gt; STD.gear  32    3.6875   1    2.7557    5.4664
+#&gt; STD.carb  32    2.8125   1    1.6903    6.0242</div><div class='input'>
+<span class='co'>## Panel Data</span>
+<span class='fu'><a href='https://rdrr.io/r/utils/head.html'>head</a></span>(<span class='fu'>fscale</span>(<span class='fu'><a href='select_replace_vars.html'>get_vars</a></span>(<span class='no'>wlddev</span>,<span class='fl'>9</span>:<span class='fl'>12</span>), <span class='no'>wlddev</span>$<span class='no'>iso3c</span>))   <span class='co'># Standardizing 4 series within each country</span></div><div class='output co'>#&gt;   PCGDP    LIFEEX GINI        ODA
+#&gt; 1    NA -1.551093   NA -0.6132859
+#&gt; 2    NA -1.506322   NA -0.5543146
+#&gt; 3    NA -1.462247   NA -0.6130676
+#&gt; 4    NA -1.418570   NA -0.5527772
+#&gt; 5    NA -1.375191   NA -0.5200308
+#&gt; 6    NA -1.331912   NA -0.4864215</div><div class='input'><span class='fu'><a href='https://rdrr.io/r/utils/head.html'>head</a></span>(<span class='fu'>STD</span>(<span class='no'>wlddev</span>, ~<span class='no'>iso3c</span>, <span class='kw'>cols</span> <span class='kw'>=</span> <span class='fl'>9</span>:<span class='fl'>12</span>))              <span class='co'># Same thing using STD, id's added</span></div><div class='output co'>#&gt;   iso3c STD.PCGDP STD.LIFEEX STD.GINI    STD.ODA
+#&gt; 1   AFG        NA  -1.551093       NA -0.6132859
+#&gt; 2   AFG        NA  -1.506322       NA -0.5543146
+#&gt; 3   AFG        NA  -1.462247       NA -0.6130676
+#&gt; 4   AFG        NA  -1.418570       NA -0.5527772
+#&gt; 5   AFG        NA  -1.375191       NA -0.5200308
+#&gt; 6   AFG        NA  -1.331912       NA -0.4864215</div><div class='input'><span class='fu'><a href='pwcor_pwcov_pwNobs.html'>pwcor</a></span>(<span class='fu'>fscale</span>(<span class='fu'><a href='select_replace_vars.html'>get_vars</a></span>(<span class='no'>wlddev</span>,<span class='fl'>9</span>:<span class='fl'>12</span>), <span class='no'>wlddev</span>$<span class='no'>iso3c</span>))  <span class='co'># Correlaing panel series after standardizing</span></div><div class='output co'>#&gt;        PCGDP LIFEEX  GINI   ODA
+#&gt; PCGDP     1     .60  -.21   .05
+#&gt; LIFEEX   .60     1   -.09   .30
+#&gt; GINI    -.21   -.09    1   -.03
+#&gt; ODA      .05    .30  -.03    1 </div><div class='input'>
+<span class='fu'><a href='fmean.html'>fmean</a></span>(<span class='fu'><a href='select_replace_vars.html'>get_vars</a></span>(<span class='no'>wlddev</span>, <span class='fl'>9</span>:<span class='fl'>12</span>))                       <span class='co'># This calculates the overall means</span></div><div class='output co'>#&gt;        PCGDP       LIFEEX         GINI          ODA 
+#&gt; 1.156365e+04 6.384109e+01 3.939757e+01 4.287465e+08 </div><div class='input'><span class='fu'><a href='fvar_fsd.html'>fsd</a></span>(<span class='fu'><a href='fbetween_fwithin.html'>fwithin</a></span>(<span class='fu'><a href='select_replace_vars.html'>get_vars</a></span>(<span class='no'>wlddev</span>, <span class='fl'>9</span>:<span class='fl'>12</span>), <span class='no'>wlddev</span>$<span class='no'>iso3c</span>))  <span class='co'># This calculates the within standard deviations</span></div><div class='output co'>#&gt;        PCGDP       LIFEEX         GINI          ODA 
+#&gt; 6.334952e+03 5.829248e+00 3.040647e+00 6.070240e+08 </div><div class='input'><span class='fu'><a href='https://rdrr.io/r/utils/head.html'>head</a></span>(<span class='fu'><a href='qsu.html'>qsu</a></span>(<span class='fu'>fscale</span>(<span class='fu'><a href='select_replace_vars.html'>get_vars</a></span>(<span class='no'>wlddev</span>, <span class='fl'>9</span>:<span class='fl'>12</span>),             <span class='co'># This group-centers on the overall mean and</span>
+    <span class='no'>wlddev</span>$<span class='no'>iso3c</span>,                                   <span class='co'># group-scales to the within standard deviation</span>
+    <span class='kw'>mean</span> <span class='kw'>=</span> <span class='st'>"overall.mean"</span>, <span class='kw'>sd</span> <span class='kw'>=</span> <span class='st'>"within.sd"</span>),       <span class='co'># -&gt; data harmonized in the first 2 moments</span>
+    <span class='kw'>by</span> <span class='kw'>=</span> <span class='no'>wlddev</span>$<span class='no'>iso3c</span>))</div><div class='output co'>#&gt; , , PCGDP
+#&gt; 
+#&gt;       N        Mean         SD          Min         Max
+#&gt; ABW  32  11563.6529  6334.9523  -11684.3802  19256.8244
+#&gt; AFG  16  11563.6529  6334.9523    3001.7971    18493.53
+#&gt; AGO  38  11563.6529  6334.9523      58.6091  22218.6163
+#&gt; ALB  38  11563.6529  6334.9523    3046.7453  23022.1251
+#&gt; AND  48  11563.6529  6334.9523     803.0491  25506.1511
+#&gt; ARE  43  11563.6529  6334.9523    3061.0074  25309.0701
+#&gt; 
+#&gt; , , LIFEEX
+#&gt; 
+#&gt;       N     Mean      SD      Min      Max
+#&gt; ABW  57  63.8411  5.8292   50.106  71.2163
+#&gt; AFG  57  63.8411  5.8292  54.7994  72.7759
+#&gt; AGO  57  63.8411  5.8292  56.0748  75.7701
+#&gt; ALB  57  63.8411  5.8292  50.9166  73.5876
+#&gt; AND   0        0       -        0        0
+#&gt; ARE  57  63.8411  5.8292  50.0791  70.6117
+#&gt; 
+#&gt; , , GINI
+#&gt; 
+#&gt;      N     Mean      SD      Min      Max
+#&gt; ABW  0        0       -        0        0
+#&gt; AFG  0        0       -        0        0
+#&gt; AGO  2  39.3976  3.0406  41.5476  41.5476
+#&gt; ALB  5  39.3976  3.0406  34.8534  42.8826
+#&gt; AND  0        0       -        0        0
+#&gt; ARE  0        0       -        0        0
+#&gt; 
+#&gt; , , ODA
+#&gt; 
+#&gt;       N        Mean          SD          Min             Max
+#&gt; ABW  20  428,746468  607,024040  -557,600788  1.82207583e+09
+#&gt; AFG  58  428,746468  607,024040  23,280279.7  1.95895363e+09
+#&gt; AGO  56  428,746468  607,024040  -264,229614  3.10365038e+09
+#&gt; ALB  30  428,746468  607,024040  -815,513556  1.94166639e+09
+#&gt; AND   0           0           -            0               0
+#&gt; ARE  45  428,746468  607,024040  -156,627600  3.56976530e+09
+#&gt; </div><div class='input'>
 
 <span class='co'>## Using plm</span>
 <span class='no'>pwlddev</span> <span class='kw'>&lt;-</span> <span class='kw pkg'>plm</span><span class='kw ns'>::</span><span class='fu'><a href='https://rdrr.io/pkg/plm/man/pdata.frame.html'>pdata.frame</a></span>(<span class='no'>wlddev</span>, <span class='kw'>index</span> <span class='kw'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span>(<span class='st'>"iso3c"</span>,<span class='st'>"year"</span>))
-<span class='fu'><a href='https://rdrr.io/r/utils/head.html'>head</a></span>(<span class='fu'>STD</span>(<span class='no'>pwlddev</span>))                                  <span class='co'># Standardizing all numeric variables by country</span>
-<span class='fu'><a href='https://rdrr.io/r/utils/head.html'>head</a></span>(<span class='fu'>STD</span>(<span class='no'>pwlddev</span>, <span class='kw'>effect</span> <span class='kw'>=</span> <span class='fl'>2L</span>))                     <span class='co'># Standardizing all numeric variables by year</span>
-
+<span class='fu'><a href='https://rdrr.io/r/utils/head.html'>head</a></span>(<span class='fu'>STD</span>(<span class='no'>pwlddev</span>))                                  <span class='co'># Standardizing all numeric variables by country</span></div><div class='output co'>#&gt;          iso3c year STD.decade STD.PCGDP STD.LIFEEX STD.GINI STD.ODA
+#&gt; ABW-1960   ABW 1960  -1.629936        NA  -2.356240       NA      NA
+#&gt; ABW-1961   ABW 1961  -1.629936        NA  -2.207971       NA      NA
+#&gt; ABW-1962   ABW 1962  -1.629936        NA  -2.074817       NA      NA
+#&gt; ABW-1963   ABW 1963  -1.629936        NA  -1.951379       NA      NA
+#&gt; ABW-1964   ABW 1964  -1.629936        NA  -1.834059       NA      NA
+#&gt; ABW-1965   ABW 1965  -1.629936        NA  -1.718179       NA      NA</div><div class='input'><span class='fu'><a href='https://rdrr.io/r/utils/head.html'>head</a></span>(<span class='fu'>STD</span>(<span class='no'>pwlddev</span>, <span class='kw'>effect</span> <span class='kw'>=</span> <span class='fl'>2L</span>))                     <span class='co'># Standardizing all numeric variables by year</span></div><div class='output co'>#&gt;          iso3c year STD.decade STD.PCGDP STD.LIFEEX STD.GINI STD.ODA
+#&gt; ABW-1960   ABW 1960        NaN        NA  0.9653371       NA      NA
+#&gt; ABW-1961   ABW 1961        NaN        NA  0.9521446       NA      NA
+#&gt; ABW-1962   ABW 1962        NaN        NA  0.9613612       NA      NA
+#&gt; ABW-1963   ABW 1963        NaN        NA  0.9690544       NA      NA
+#&gt; ABW-1964   ABW 1964        NaN        NA  0.9592609       NA      NA
+#&gt; ABW-1965   ABW 1965        NaN        NA  0.9563056       NA      NA</div><div class='input'>
 <span class='co'>## Weighted Standardizing</span>
 <span class='no'>weights</span> <span class='kw'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/MathFun.html'>abs</a></span>(<span class='fu'><a href='https://rdrr.io/r/stats/Normal.html'>rnorm</a></span>(<span class='fu'><a href='https://rdrr.io/r/base/nrow.html'>nrow</a></span>(<span class='no'>wlddev</span>)))
-<span class='fu'><a href='https://rdrr.io/r/utils/head.html'>head</a></span>(<span class='fu'>fscale</span>(<span class='fu'><a href='select_replace_vars.html'>get_vars</a></span>(<span class='no'>wlddev</span>,<span class='fl'>9</span>:<span class='fl'>12</span>), <span class='no'>wlddev</span>$<span class='no'>iso3c</span>, <span class='no'>weights</span>))
-<span class='fu'><a href='https://rdrr.io/r/utils/head.html'>head</a></span>(<span class='fu'>STD</span>(<span class='no'>wlddev</span>, ~<span class='no'>iso3c</span>, <span class='no'>weights</span>, <span class='fl'>9</span>:<span class='fl'>12</span>))
-
+<span class='fu'><a href='https://rdrr.io/r/utils/head.html'>head</a></span>(<span class='fu'>fscale</span>(<span class='fu'><a href='select_replace_vars.html'>get_vars</a></span>(<span class='no'>wlddev</span>,<span class='fl'>9</span>:<span class='fl'>12</span>), <span class='no'>wlddev</span>$<span class='no'>iso3c</span>, <span class='no'>weights</span>))</div><div class='output co'>#&gt;   PCGDP    LIFEEX GINI        ODA
+#&gt; 1    NA -1.663336   NA -0.6485088
+#&gt; 2    NA -1.618356   NA -0.5908454
+#&gt; 3    NA -1.574076   NA -0.6482955
+#&gt; 4    NA -1.530196   NA -0.5893421
+#&gt; 5    NA -1.486616   NA -0.5573219
+#&gt; 6    NA -1.443135   NA -0.5244580</div><div class='input'><span class='fu'><a href='https://rdrr.io/r/utils/head.html'>head</a></span>(<span class='fu'>STD</span>(<span class='no'>wlddev</span>, ~<span class='no'>iso3c</span>, <span class='no'>weights</span>, <span class='fl'>9</span>:<span class='fl'>12</span>))</div><div class='output co'>#&gt;   iso3c STD.PCGDP STD.LIFEEX STD.GINI    STD.ODA
+#&gt; 1   AFG        NA  -1.663336       NA -0.6485088
+#&gt; 2   AFG        NA  -1.618356       NA -0.5908454
+#&gt; 3   AFG        NA  -1.574076       NA -0.6482955
+#&gt; 4   AFG        NA  -1.530196       NA -0.5893421
+#&gt; 5   AFG        NA  -1.486616       NA -0.5573219
+#&gt; 6   AFG        NA  -1.443135       NA -0.5244580</div><div class='input'>
 <span class='co'># Using dplyr</span>
 <span class='fu'><a href='https://rdrr.io/r/base/library.html'>library</a></span>(<span class='no'>dplyr</span>)
-<span class='no'>wlddev</span> <span class='kw'>%&gt;%</span> <span class='fu'><a href='https://dplyr.tidyverse.org/reference/group_by.html'>group_by</a></span>(<span class='no'>iso3c</span>) <span class='kw'>%&gt;%</span> <span class='fu'><a href='https://dplyr.tidyverse.org/reference/select.html'>select</a></span>(<span class='no'>PCGDP</span>,<span class='no'>LIFEEX</span>) <span class='kw'>%&gt;%</span> <span class='no'>STD</span>
-<span class='no'>wlddev</span> <span class='kw'>%&gt;%</span> <span class='fu'><a href='https://dplyr.tidyverse.org/reference/group_by.html'>group_by</a></span>(<span class='no'>iso3c</span>) <span class='kw'>%&gt;%</span> <span class='fu'><a href='https://dplyr.tidyverse.org/reference/select.html'>select</a></span>(<span class='no'>PCGDP</span>,<span class='no'>LIFEEX</span>) <span class='kw'>%&gt;%</span> <span class='fu'>STD</span>(<span class='no'>weights</span>) <span class='co'># weighted standardizing</span>
-<span class='no'>wlddev</span> <span class='kw'>%&gt;%</span> <span class='fu'><a href='https://dplyr.tidyverse.org/reference/group_by.html'>group_by</a></span>(<span class='no'>iso3c</span>) <span class='kw'>%&gt;%</span> <span class='fu'><a href='https://dplyr.tidyverse.org/reference/select.html'>select</a></span>(<span class='no'>PCGDP</span>,<span class='no'>LIFEEX</span>,<span class='no'>ODA</span>) <span class='kw'>%&gt;%</span> <span class='fu'>STD</span>(<span class='no'>ODA</span>) <span class='co'># weighting by ODA -&gt;</span>
-<span class='co'># ..keeps the weight column unless keep.w = FALSE</span></pre>
+<span class='no'>wlddev</span> <span class='kw'>%&gt;%</span> <span class='fu'><a href='https://dplyr.tidyverse.org/reference/group_by.html'>group_by</a></span>(<span class='no'>iso3c</span>) <span class='kw'>%&gt;%</span> <span class='fu'><a href='https://dplyr.tidyverse.org/reference/select.html'>select</a></span>(<span class='no'>PCGDP</span>,<span class='no'>LIFEEX</span>) <span class='kw'>%&gt;%</span> <span class='no'>STD</span></div><div class='output co'>#&gt; <span class='message'>Adding missing grouping variables: `iso3c`</span></div><div class='output co'>#&gt; <span style='color: #949494;'># A tibble: 12,744 x 3</span><span>
+#&gt; </span><span style='color: #949494;'># Groups:   iso3c [216]</span><span>
+#&gt;    iso3c STD.PCGDP STD.LIFEEX
+#&gt;  </span><span style='color: #BCBCBC;'>*</span><span> </span><span style='color: #949494;font-style: italic;'>&lt;fct&gt;</span><span>     </span><span style='color: #949494;font-style: italic;'>&lt;dbl&gt;</span><span>      </span><span style='color: #949494;font-style: italic;'>&lt;dbl&gt;</span><span>
+#&gt; </span><span style='color: #BCBCBC;'> 1</span><span> AFG          </span><span style='color: #BB0000;'>NA</span><span>      -</span><span style='color: #BB0000;'>1.55</span><span>
+#&gt; </span><span style='color: #BCBCBC;'> 2</span><span> AFG          </span><span style='color: #BB0000;'>NA</span><span>      -</span><span style='color: #BB0000;'>1.51</span><span>
+#&gt; </span><span style='color: #BCBCBC;'> 3</span><span> AFG          </span><span style='color: #BB0000;'>NA</span><span>      -</span><span style='color: #BB0000;'>1.46</span><span>
+#&gt; </span><span style='color: #BCBCBC;'> 4</span><span> AFG          </span><span style='color: #BB0000;'>NA</span><span>      -</span><span style='color: #BB0000;'>1.42</span><span>
+#&gt; </span><span style='color: #BCBCBC;'> 5</span><span> AFG          </span><span style='color: #BB0000;'>NA</span><span>      -</span><span style='color: #BB0000;'>1.38</span><span>
+#&gt; </span><span style='color: #BCBCBC;'> 6</span><span> AFG          </span><span style='color: #BB0000;'>NA</span><span>      -</span><span style='color: #BB0000;'>1.33</span><span>
+#&gt; </span><span style='color: #BCBCBC;'> 7</span><span> AFG          </span><span style='color: #BB0000;'>NA</span><span>      -</span><span style='color: #BB0000;'>1.29</span><span>
+#&gt; </span><span style='color: #BCBCBC;'> 8</span><span> AFG          </span><span style='color: #BB0000;'>NA</span><span>      -</span><span style='color: #BB0000;'>1.25</span><span>
+#&gt; </span><span style='color: #BCBCBC;'> 9</span><span> AFG          </span><span style='color: #BB0000;'>NA</span><span>      -</span><span style='color: #BB0000;'>1.20</span><span>
+#&gt; </span><span style='color: #BCBCBC;'>10</span><span> AFG          </span><span style='color: #BB0000;'>NA</span><span>      -</span><span style='color: #BB0000;'>1.16</span><span>
+#&gt; </span><span style='color: #949494;'># ... with 12,734 more rows</span><span></div><div class='input'><span class='no'>wlddev</span> <span class='kw'>%&gt;%</span> <span class='fu'><a href='https://dplyr.tidyverse.org/reference/group_by.html'>group_by</a></span>(<span class='no'>iso3c</span>) <span class='kw'>%&gt;%</span> <span class='fu'><a href='https://dplyr.tidyverse.org/reference/select.html'>select</a></span>(<span class='no'>PCGDP</span>,<span class='no'>LIFEEX</span>) <span class='kw'>%&gt;%</span> <span class='fu'>STD</span>(<span class='no'>weights</span>) <span class='co'># weighted standardizing</span></div><div class='output co'>#&gt; <span class='message'>Adding missing grouping variables: `iso3c`</span></div><div class='output co'>#&gt; </span><span style='color: #949494;'># A tibble: 12,744 x 3</span><span>
+#&gt; </span><span style='color: #949494;'># Groups:   iso3c [216]</span><span>
+#&gt;    iso3c STD.PCGDP STD.LIFEEX
+#&gt;  </span><span style='color: #BCBCBC;'>*</span><span> </span><span style='color: #949494;font-style: italic;'>&lt;fct&gt;</span><span>     </span><span style='color: #949494;font-style: italic;'>&lt;dbl&gt;</span><span>      </span><span style='color: #949494;font-style: italic;'>&lt;dbl&gt;</span><span>
+#&gt; </span><span style='color: #BCBCBC;'> 1</span><span> AFG          </span><span style='color: #BB0000;'>NA</span><span>      -</span><span style='color: #BB0000;'>1.66</span><span>
+#&gt; </span><span style='color: #BCBCBC;'> 2</span><span> AFG          </span><span style='color: #BB0000;'>NA</span><span>      -</span><span style='color: #BB0000;'>1.62</span><span>
+#&gt; </span><span style='color: #BCBCBC;'> 3</span><span> AFG          </span><span style='color: #BB0000;'>NA</span><span>      -</span><span style='color: #BB0000;'>1.57</span><span>
+#&gt; </span><span style='color: #BCBCBC;'> 4</span><span> AFG          </span><span style='color: #BB0000;'>NA</span><span>      -</span><span style='color: #BB0000;'>1.53</span><span>
+#&gt; </span><span style='color: #BCBCBC;'> 5</span><span> AFG          </span><span style='color: #BB0000;'>NA</span><span>      -</span><span style='color: #BB0000;'>1.49</span><span>
+#&gt; </span><span style='color: #BCBCBC;'> 6</span><span> AFG          </span><span style='color: #BB0000;'>NA</span><span>      -</span><span style='color: #BB0000;'>1.44</span><span>
+#&gt; </span><span style='color: #BCBCBC;'> 7</span><span> AFG          </span><span style='color: #BB0000;'>NA</span><span>      -</span><span style='color: #BB0000;'>1.40</span><span>
+#&gt; </span><span style='color: #BCBCBC;'> 8</span><span> AFG          </span><span style='color: #BB0000;'>NA</span><span>      -</span><span style='color: #BB0000;'>1.36</span><span>
+#&gt; </span><span style='color: #BCBCBC;'> 9</span><span> AFG          </span><span style='color: #BB0000;'>NA</span><span>      -</span><span style='color: #BB0000;'>1.31</span><span>
+#&gt; </span><span style='color: #BCBCBC;'>10</span><span> AFG          </span><span style='color: #BB0000;'>NA</span><span>      -</span><span style='color: #BB0000;'>1.27</span><span>
+#&gt; </span><span style='color: #949494;'># ... with 12,734 more rows</span><span></div><div class='input'><span class='no'>wlddev</span> <span class='kw'>%&gt;%</span> <span class='fu'><a href='https://dplyr.tidyverse.org/reference/group_by.html'>group_by</a></span>(<span class='no'>iso3c</span>) <span class='kw'>%&gt;%</span> <span class='fu'><a href='https://dplyr.tidyverse.org/reference/select.html'>select</a></span>(<span class='no'>PCGDP</span>,<span class='no'>LIFEEX</span>,<span class='no'>ODA</span>) <span class='kw'>%&gt;%</span> <span class='fu'>STD</span>(<span class='no'>ODA</span>) <span class='co'># weighting by ODA -&gt;</span></div><div class='output co'>#&gt; <span class='message'>Adding missing grouping variables: `iso3c`</span></div><div class='output co'>#&gt; </span><span style='color: #949494;'># A tibble: 12,744 x 4</span><span>
+#&gt; </span><span style='color: #949494;'># Groups:   iso3c [216]</span><span>
+#&gt;    iso3c       ODA STD.PCGDP STD.LIFEEX
+#&gt;  </span><span style='color: #BCBCBC;'>*</span><span> </span><span style='color: #949494;font-style: italic;'>&lt;fct&gt;</span><span>     </span><span style='color: #949494;font-style: italic;'>&lt;dbl&gt;</span><span>     </span><span style='color: #949494;font-style: italic;'>&lt;dbl&gt;</span><span>      </span><span style='color: #949494;font-style: italic;'>&lt;dbl&gt;</span><span>
+#&gt; </span><span style='color: #BCBCBC;'> 1</span><span> AFG   114</span><span style='text-decoration: underline;'>440</span><span>000        </span><span style='color: #BB0000;'>NA</span><span>      -</span><span style='color: #BB0000;'>4.15</span><span>
+#&gt; </span><span style='color: #BCBCBC;'> 2</span><span> AFG   233</span><span style='text-decoration: underline;'>350</span><span>000        </span><span style='color: #BB0000;'>NA</span><span>      -</span><span style='color: #BB0000;'>4.08</span><span>
+#&gt; </span><span style='color: #BCBCBC;'> 3</span><span> AFG   114</span><span style='text-decoration: underline;'>880</span><span>000        </span><span style='color: #BB0000;'>NA</span><span>      -</span><span style='color: #BB0000;'>4.02</span><span>
+#&gt; </span><span style='color: #BCBCBC;'> 4</span><span> AFG   236</span><span style='text-decoration: underline;'>450</span><span>000        </span><span style='color: #BB0000;'>NA</span><span>      -</span><span style='color: #BB0000;'>3.95</span><span>
+#&gt; </span><span style='color: #BCBCBC;'> 5</span><span> AFG   302</span><span style='text-decoration: underline;'>480</span><span>000        </span><span style='color: #BB0000;'>NA</span><span>      -</span><span style='color: #BB0000;'>3.88</span><span>
+#&gt; </span><span style='color: #BCBCBC;'> 6</span><span> AFG   370</span><span style='text-decoration: underline;'>250</span><span>000        </span><span style='color: #BB0000;'>NA</span><span>      -</span><span style='color: #BB0000;'>3.81</span><span>
+#&gt; </span><span style='color: #BCBCBC;'> 7</span><span> AFG   338</span><span style='text-decoration: underline;'>270</span><span>000        </span><span style='color: #BB0000;'>NA</span><span>      -</span><span style='color: #BB0000;'>3.74</span><span>
+#&gt; </span><span style='color: #BCBCBC;'> 8</span><span> AFG   259</span><span style='text-decoration: underline;'>230</span><span>000        </span><span style='color: #BB0000;'>NA</span><span>      -</span><span style='color: #BB0000;'>3.68</span><span>
+#&gt; </span><span style='color: #BCBCBC;'> 9</span><span> AFG   182</span><span style='text-decoration: underline;'>000</span><span>000        </span><span style='color: #BB0000;'>NA</span><span>      -</span><span style='color: #BB0000;'>3.61</span><span>
+#&gt; </span><span style='color: #BCBCBC;'>10</span><span> AFG   162</span><span style='text-decoration: underline;'>680</span><span>000        </span><span style='color: #BB0000;'>NA</span><span>      -</span><span style='color: #BB0000;'>3.54</span><span>
+#&gt; </span><span style='color: #949494;'># ... with 12,734 more rows</span><span></div><div class='input'># ..keeps the weight column unless keep.w = FALSE
+</div></span></pre>
   </div>
   <div class="col-md-3 hidden-xs hidden-sm" id="pkgdown-sidebar">
     <nav id="toc" data-toggle="toc" class="sticky-top">

@@ -1,14 +1,14 @@
 
-BWCpp <- function(x, ng = 0L, g = 0L, gs = NULL, w = NULL, narm = TRUE, set_mean = 0, B = FALSE, fill = FALSE) {
-    .Call(Cpp_BW, x, ng, g, gs, w, narm, set_mean, B, fill)
+BWCpp <- function(x, ng = 0L, g = 0L, gs = NULL, w = NULL, narm = TRUE, theta = 1, set_mean = 0, B = FALSE, fill = FALSE) {
+    .Call(Cpp_BW, x, ng, g, gs, w, narm, theta, set_mean, B, fill)
 }
 
-BWmCpp <- function(x, ng = 0L, g = 0L, gs = NULL, w = NULL, narm = TRUE, set_mean = 0, B = FALSE, fill = FALSE) {
-    .Call(Cpp_BWm, x, ng, g, gs, w, narm, set_mean, B, fill)
+BWmCpp <- function(x, ng = 0L, g = 0L, gs = NULL, w = NULL, narm = TRUE, theta = 1, set_mean = 0, B = FALSE, fill = FALSE) {
+    .Call(Cpp_BWm, x, ng, g, gs, w, narm, theta, set_mean, B, fill)
 }
 
-BWlCpp <- function(x, ng = 0L, g = 0L, gs = NULL, w = NULL, narm = TRUE, set_mean = 0, B = FALSE, fill = FALSE) {
-    .Call(Cpp_BWl, x, ng, g, gs, w, narm, set_mean, B, fill)
+BWlCpp <- function(x, ng = 0L, g = 0L, gs = NULL, w = NULL, narm = TRUE, theta = 1, set_mean = 0, B = FALSE, fill = FALSE) {
+    .Call(Cpp_BWl, x, ng, g, gs, w, narm, theta, set_mean, B, fill)
 }
 
 TRACpp <- function(x, xAG, g = 0L, ret = 1L) {
@@ -147,28 +147,40 @@ fmeanlCpp <- function(x, ng = 0L, g = 0L, gs = NULL, w = NULL, narm = TRUE, drop
     .Call(Cpp_fmeanl, x, ng, g, gs, w, narm, drop)
 }
 
-fmedianCpp <- function(x, ng = 0L, g = 0L, gs = NULL, narm = TRUE) {
-    .Call(Cpp_fmedian, x, ng, g, gs, narm)
+# fmedianCpp <- function(x, ng = 0L, g = 0L, gs = NULL, w = NULL, narm = TRUE) {
+#   .Call(Cpp_fmedian, x, ng, g, gs, w, narm)
+# }
+#
+# fmedianmCpp <- function(x, ng = 0L, g = 0L, gs = NULL, w = NULL, narm = TRUE, drop = TRUE) {
+#     .Call(Cpp_fmedianm, x, ng, g, gs, w, narm, drop)
+# }
+#
+# fmedianlCpp <- function(x, ng = 0L, g = 0L, gs = NULL, w = NULL, narm = TRUE, drop = TRUE) {
+#     .Call(Cpp_fmedianl, x, ng, g, gs, w, narm, drop)
+# }
+
+fnthCpp <- function(x, n = 0.5, ng = 0L, g = 0L, gs = NULL, w = NULL, narm = TRUE, ret = 1L) {
+  .Call(Cpp_fnth, x, n, ng, g, gs, w, narm, ret)
 }
 
-fmedianmCpp <- function(x, ng = 0L, g = 0L, gs = NULL, narm = TRUE, drop = TRUE) {
-    .Call(Cpp_fmedianm, x, ng, g, gs, narm, drop)
+fnthmCpp <- function(x, n = 0.5, ng = 0L, g = 0L, gs = NULL, w = NULL, narm = TRUE, drop = TRUE, ret = 1L) {
+  .Call(Cpp_fnthm, x, n, ng, g, gs, w, narm, drop, ret)
 }
 
-fmedianlCpp <- function(x, ng = 0L, g = 0L, gs = NULL, narm = TRUE, drop = TRUE) {
-    .Call(Cpp_fmedianl, x, ng, g, gs, narm, drop)
+fnthlCpp <- function(x, n = 0.5, ng = 0L, g = 0L, gs = NULL, w = NULL, narm = TRUE, drop = TRUE, ret = 1L) {
+  .Call(Cpp_fnthl, x, n, ng, g, gs, w, narm, drop, ret)
 }
 
-fmodeCpp <- function(x, ng = 0L, g = 0L, gs = NULL, w = NULL, narm = TRUE) {
-    .Call(Cpp_fmode, x, ng, g, gs, w, narm)
+fmodeCpp <- function(x, ng = 0L, g = 0L, gs = NULL, w = NULL, narm = TRUE, ret = 0L) {
+    .Call(Cpp_fmode, x, ng, g, gs, w, narm, ret)
 }
 
-fmodelCpp <- function(x, ng = 0L, g = 0L, gs = NULL, w = NULL, narm = TRUE) {
-    .Call(Cpp_fmodel, x, ng, g, gs, w, narm)
+fmodelCpp <- function(x, ng = 0L, g = 0L, gs = NULL, w = NULL, narm = TRUE, ret = 0L) {
+    .Call(Cpp_fmodel, x, ng, g, gs, w, narm, ret)
 }
 
-fmodemCpp <- function(x, ng = 0L, g = 0L, gs = NULL, w = NULL, narm = TRUE, drop = TRUE) {
-    .Call(Cpp_fmodem, x, ng, g, gs, w, narm, drop)
+fmodemCpp <- function(x, ng = 0L, g = 0L, gs = NULL, w = NULL, narm = TRUE, drop = TRUE, ret = 0L) {
+    .Call(Cpp_fmodem, x, ng, g, gs, w, narm, drop, ret)
 }
 
 fprodCpp <- function(x, ng = 0L, g = 0L, w = NULL, narm = TRUE) {
@@ -231,49 +243,49 @@ psmatCpp <- function(x, g, t = NULL, transpose = FALSE) {
     .Call(Cpp_psmat, x, g, t, transpose)
 }
 
-qFCpp <- function(x, sort = TRUE, ordered = TRUE, na.exclude = TRUE) {
-    .Call(Cpp_qF, x, sort, ordered, na.exclude)
+qFCpp <- function(x, sort = TRUE, ordered = FALSE, na.exclude = TRUE, ret = 1L) {
+    .Call(Cpp_qF, x, sort, ordered, na.exclude, ret)
 }
 
-qGCpp <- function(x, sort = TRUE, ordered = TRUE, na.exclude = TRUE, retgrp = FALSE) {
-    .Call(Cpp_qG, x, sort, ordered, na.exclude, retgrp)
-}
+# qGCpp <- function(x, sort = TRUE, ordered = TRUE, na.exclude = TRUE, retgrp = FALSE) {
+#     .Call(Cpp_qG, x, sort, ordered, na.exclude, retgrp)
+# }
 
-funique <- function(x, ordered = TRUE) {
-    .Call(Cpp_funique, x, ordered)
+funiqueCpp <- function(x, sort = TRUE) {
+    .Call(Cpp_funique, x, sort)
 }
 
 setAttributes <- function(x, a) {
-    .Call(Cpp_setAttributes, x, a)
+    .Call(C_setAttributes, x, a)
 }
 
 setattributes <- function(x, a) {
-    invisible(.Call(Cpp_setattributes, x, a))
+    invisible(.Call(C_setattributes, x, a))
 }
 
-setAttr <- function(x, a, v) {
-    .Call(Cpp_setAttr, x, a, v)
-}
+# setAttr <- function(x, a, v) {
+#     .Call(C_setAttr, x, a, v)
+# }
 
-setattr_clp <- function(x, a, v) {
-    invisible(.Call(Cpp_setattr_clp, x, a, v))
+setattr <- function(x, a, v) {
+    invisible(.Call(C_setattr, x, a, v))
 }
 
 duplAttributes <- function(x, y) {
-    .Call(Cpp_duplAttributes, x, y)
+    .Call(C_duplAttributes, x, y)
 }
 
 duplattributes <- function(x, y) {
-    invisible(.Call(Cpp_duplattributes, x, y))
+    invisible(.Call(C_duplattributes, x, y))
 }
 
 cond_duplAttributes <- function(x, y) {
-    .Call(Cpp_cond_duplAttributes, x, y)
+    .Call(C_cond_duplAttributes, x, y)
 }
 
-cond_duplattributes <- function(x, y) {
-    invisible(.Call(Cpp_cond_duplattributes, x, y))
-}
+# cond_duplattributes <- function(x, y) {
+#     invisible(.Call(C_cond_duplattributes, x, y))
+# }
 
 groups2GRPCpp <- function(x, lx, gs) {
     .Call(Cpp_groups2GRP, x, lx, gs)

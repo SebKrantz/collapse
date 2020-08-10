@@ -309,7 +309,7 @@ SEXP flastlCpp(const List& x, int ng = 0, const IntegerVector& g = 0, bool narm 
         }
         case STRSXP: {
           CharacterVector column = x[j];
-          CharacterVector out(1, *(column.end()-1));
+          CharacterVector out(1, String(*(column.end()-1)));
           SHALLOW_DUPLICATE_ATTRIB(out, column);
           last[j] = out;
           break;

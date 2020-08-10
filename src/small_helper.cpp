@@ -2,54 +2,6 @@
 using namespace Rcpp;
 
 // [[Rcpp::export]]
-SEXP setAttributes(SEXP x, SEXP a) {
-  SET_ATTRIB(x, Rf_coerceVector(a, LISTSXP));
-  Rf_classgets(x, Rf_getAttrib(x, R_ClassSymbol));
-  return x;
-}
-
-// [[Rcpp::export]]
-void setattributes(SEXP x, SEXP a) {
-  SET_ATTRIB(x, Rf_coerceVector(a, LISTSXP));
-  // SET_OBJECT(x, TYPEOF(x)); // if(OBJECT(a))  // This does not work with ts-matrices! could also make compatible with S4 objects !
-  Rf_classgets(x, Rf_getAttrib(x, R_ClassSymbol));
-}
-
-// [[Rcpp::export]]
-SEXP setAttr(SEXP x, SEXP a, SEXP v) {
-  Rf_setAttrib(x, a, v);
-  return x;
-}
-
-// [[Rcpp::export]]
-void setattr_clp(SEXP x, SEXP a, SEXP v) {
-  Rf_setAttrib(x, a, v);
-}
-
-// [[Rcpp::export]]
-SEXP duplAttributes(SEXP x, SEXP y) { // also look at data.table's keepattributes ...
-  DUPLICATE_ATTRIB(x, y); // SET_ATTRIB(x, ATTRIB(y));
-  return x;
-}
-
-// [[Rcpp::export]]
-void duplattributes(SEXP x, SEXP y) {
-  DUPLICATE_ATTRIB(x, y); // SET_ATTRIB(x, ATTRIB(y));
-}
-
-// [[Rcpp::export]]
-SEXP cond_duplAttributes(SEXP x, SEXP y) {
-  if(TYPEOF(x) == TYPEOF(y)) DUPLICATE_ATTRIB(x, y); // SET_ATTRIB(x, ATTRIB(y));
-  return x;
-}
-
-// [[Rcpp::export]]
-void cond_duplattributes(SEXP x, SEXP y) {
-  if(TYPEOF(x) == TYPEOF(y)) DUPLICATE_ATTRIB(x, y); // SET_ATTRIB(x, ATTRIB(y));
-}
-
-
-// [[Rcpp::export]]
 IntegerVector groups2GRPCpp(const List& x, int lx, const IntegerVector& gs) {
   int l = x.size(); // , sum = 0;
   // for(int i = 0; i != l; ++i) sum += gs[i]; // could also input, just length of data...
@@ -61,23 +13,6 @@ IntegerVector groups2GRPCpp(const List& x, int lx, const IntegerVector& gs) {
   }
   return out;
 }
-
-// A predecessor of seqid...
-// // [[Rcpp::export]]
-// IntegerVector gapid(const IntegerVector& x) {
-//   int l = x.size(), prev = x[0], id = 1;
-//   IntegerVector out = no_init_vector(l);
-//   out[0] = 1;
-//   for(int i = 1; i != l; ++i) {
-//     if(x[i]-prev != 1) ++id;
-//       prev = x[i];
-//       out[i] = id;
-//   }
-//   out.attr("N.groups") = id;
-//   out.attr("class") =  CharacterVector::create("qG","na.included");
-//   return out;
-// }
-//
 
 // [[Rcpp::export]] // not faster than base method on large data (PRIO)!
 List lassignCpp(const List& x, int s, const SEXP& rows = R_NilValue, double fill = NA_REAL) {
@@ -112,6 +47,56 @@ List lassignCpp(const List& x, int s, const SEXP& rows = R_NilValue, double fill
   DUPLICATE_ATTRIB(out, x);
   return out;
 }
+
+
+// // [[Rcpp::export]]
+// SEXP setAttributes(SEXP x, SEXP a) {
+//   SET_ATTRIB(x, Rf_coerceVector(a, LISTSXP));
+//   Rf_classgets(x, Rf_getAttrib(x, R_ClassSymbol));
+//   return x;
+// }
+//
+// // [[Rcpp::export]]
+// void setattributes(SEXP x, SEXP a) {
+//   SET_ATTRIB(x, Rf_coerceVector(a, LISTSXP));
+//   // SET_OBJECT(x, TYPEOF(x)); // if(OBJECT(a))  // This does not work with ts-matrices! could also make compatible with S4 objects !
+//   Rf_classgets(x, Rf_getAttrib(x, R_ClassSymbol));
+// }
+//
+// // [[Rcpp::export]]
+// SEXP setAttr(SEXP x, SEXP a, SEXP v) {
+//   Rf_setAttrib(x, a, v);
+//   return x;
+// }
+//
+// // [[Rcpp::export]]
+// void setattr(SEXP x, SEXP a, SEXP v) {
+//   Rf_setAttrib(x, a, v);
+// }
+//
+// // [[Rcpp::export]]
+// SEXP duplAttributes(SEXP x, SEXP y) { // also look at data.table's keepattributes ...
+//   DUPLICATE_ATTRIB(x, y); // SET_ATTRIB(x, ATTRIB(y));
+//   return x;
+// }
+//
+// // [[Rcpp::export]]
+// void duplattributes(SEXP x, SEXP y) {
+//   DUPLICATE_ATTRIB(x, y); // SET_ATTRIB(x, ATTRIB(y));
+// }
+//
+// // [[Rcpp::export]]
+// SEXP cond_duplAttributes(SEXP x, SEXP y) {
+//   if(TYPEOF(x) == TYPEOF(y)) DUPLICATE_ATTRIB(x, y); // SET_ATTRIB(x, ATTRIB(y));
+//   return x;
+// }
+//
+// // [[Rcpp::export]]
+// void cond_duplattributes(SEXP x, SEXP y) {
+//   if(TYPEOF(x) == TYPEOF(y)) DUPLICATE_ATTRIB(x, y); // SET_ATTRIB(x, ATTRIB(y));
+// }
+
+
 
 
 // Old / Experimental:

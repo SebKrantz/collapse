@@ -15,31 +15,31 @@
 }
 
 \usage{
-ffirst(x, ...)
-flast(x, ...)
-%## Default S3 methods:
+ffirst(x, \dots)
+flast(x, \dots)
+
 \method{ffirst}{default}(x, g = NULL, TRA = NULL, na.rm = TRUE,
-       use.g.names = TRUE, ...)
+       use.g.names = TRUE, \dots)
 \method{flast}{default}(x, g = NULL, TRA = NULL, na.rm = TRUE,
-      use.g.names = TRUE, ...)
-%## S3 methods for class 'matrix'
+      use.g.names = TRUE, \dots)
+
 \method{ffirst}{matrix}(x, g = NULL, TRA = NULL, na.rm = TRUE,
-       use.g.names = TRUE, drop = TRUE, ...)
+       use.g.names = TRUE, drop = TRUE, \dots)
 \method{flast}{matrix}(x, g = NULL, TRA = NULL, na.rm = TRUE,
-      use.g.names = TRUE, drop = TRUE, ...)
-%## S3 methods for class 'data.frame'
+      use.g.names = TRUE, drop = TRUE, \dots)
+
 \method{ffirst}{data.frame}(x, g = NULL, TRA = NULL, na.rm = TRUE,
-       use.g.names = TRUE, drop = TRUE, ...)
+       use.g.names = TRUE, drop = TRUE, \dots)
 \method{flast}{data.frame}(x, g = NULL, TRA = NULL, na.rm = TRUE,
-      use.g.names = TRUE, drop = TRUE, ...)
-%## S3 methods for class 'grouped_df'
+      use.g.names = TRUE, drop = TRUE, \dots)
+
 \method{ffirst}{grouped_df}(x, TRA = NULL, na.rm = TRUE,
-       use.g.names = FALSE, keep.group_vars = TRUE, ...)
+       use.g.names = FALSE, keep.group_vars = TRUE, \dots)
 \method{flast}{grouped_df}(x, TRA = NULL, na.rm = TRUE,
-      use.g.names = FALSE, keep.group_vars = TRUE, ...)
+      use.g.names = FALSE, keep.group_vars = TRUE, \dots)
 }
 \arguments{
-\item{x}{a vector, matrix, data.frame or grouped tibble (\code{dplyr::grouped_df}).}
+\item{x}{a vector, matrix, data frame or grouped tibble (\code{dplyr::grouped_df}).}
 
 \item{g}{a factor, \code{\link{GRP}} object, atomic vector (internally converted to factor) or a list of vectors / factors (internally converted to a \code{\link{GRP}} object) used to group \code{x}.}
 
@@ -47,19 +47,19 @@ flast(x, ...)
 1 - "replace_fill"     |     2 - "replace"     |     3 - "-"     |     4 - "-+"     |     5 - "/"     |     6 - "\%"     |     7 - "+"     |     8 - "*"     |     9 - "\%\%"     |     10 - "-\%\%". See \code{\link{TRA}}.}
 
 
-\item{na.rm}{logical. Skip missing values and choose the first / last non-missing value i.e. if the first (1) / last (n) value is NA, take the second (2) / second-to-last (n-1) value etc...}
+\item{na.rm}{logical. \code{TRUE} skips missing values and returns the first / last non-missing value i.e. if the first (1) / last (n) value is \code{NA}, take the second (2) / second-to-last (n-1) value etc..}
 
-\item{use.g.names}{make group-names and add to the result as names (vector method) or row-names (matrix and data.frame method). No row-names are generated for data.tables and grouped tibbles.}
+\item{use.g.names}{logical. Make group-names and add to the result as names (default method) or row-names (matrix and data frame methods). No row-names are generated for \emph{data.table}'s.}
 
-\item{drop}{\emph{matrix and data.frame method:} drop dimensions and return an atomic vector if \code{g = NULL} and \code{TRA = NULL}.}
+\item{drop}{\emph{matrix and data.frame method:} Logical. \code{TRUE} drops dimensions and returns an atomic vector if \code{g = NULL} and \code{TRA = NULL}.}
 
 \item{keep.group_vars}{\emph{grouped_df method:} Logical. \code{FALSE} removes grouping variables after computation.}
 
-\item{...}{arguments to be passed to or from other methods.}
+\item{\dots}{arguments to be passed to or from other methods.}
 
 }
 \value{
-\code{ffirst} returns the first value in \code{x}, grouped by \code{g}, or (if \code{\link{TRA}} is used) \code{x} transformed by its first value, grouped by \code{g}. Similarly \code{flast} returns the last value in \code{x}, ...
+\code{ffirst} returns the first value in \code{x}, grouped by \code{g}, or (if \code{\link{TRA}} is used) \code{x} transformed by its first value, grouped by \code{g}. Similarly \code{flast} returns the last value in \code{x}, \dots
 }
 \seealso{
 \link[=A1-fast-statistical-functions]{Fast Statistical Functions}, \link[=collapse-documentation]{Collapse Overview}
@@ -79,14 +79,14 @@ ffirst(airquality, airquality$Month, na.rm = FALSE) # Again first Ozone measurem
 ## matrix method
 aqm <- qM(airquality)
 ffirst(aqm)
-ffirst(aqm, airquality$Month) # etc...
+ffirst(aqm, airquality$Month) # etc..
 
 ## method for grouped tibbles - for use with dplyr
 library(dplyr)
 airquality \%>\% group_by(Month) \%>\% ffirst
 airquality \%>\% group_by(Month) \%>\% select(Ozone) \%>\% ffirst(na.rm = FALSE)
 
-# Note: All examples generalize to flast!
+# Note: All examples generalize to flast.
 }
 \keyword{univar}
 \keyword{manip}

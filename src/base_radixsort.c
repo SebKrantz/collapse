@@ -19,27 +19,13 @@
  *  along with this program; if not, a copy is available at
  *  https://www.R-project.org/Licenses/
  */
-
 #ifdef HAVE_CONFIG_H
 #include <config.h>
 #endif
 
-// #include <Defn.h> // Not available in C API !!
-// #include <Internal.h> // Not available in C API !!
-#include <R.h>
-#include <Rinternals.h>
-#include <stdint.h>
-// typedef uint64_t ZPOS64_T; // already defined in stdint.h
-#define IS_ASCII(x) (LEVELS(x) & 64) // from data.table.h
-// #define ASCII_MASK (1<<6) // evaluates to 64 !!
-// # define IS_ASCII(x) ((x)->sxpinfo.gp & ASCII_MASK)
-// #define IS_ASCII(x) (LEVELS(x) & ASCII_MASK)
 
-/* It would be better to find a way to avoid abusing TRUELENGTH, but
- in the meantime replace TRUELENGTH/SET_TRUELENGTH with
- TRLEN/SET_TRLEN that cast to int to avoid warnings. */
-#define TRLEN(x) ((int) TRUELENGTH(x))
-#define SET_TRLEN(x, v) SET_TRUELENGTH(x, ((int) (v)))
+#include "base_radixsort.h"
+
 
 // gs = groupsizes e.g.23, 12, 87, 2, 1, 34,...
 static int *gs[2] = { NULL };
@@ -1943,8 +1929,9 @@ SEXP Cradixsort(SEXP NA_last, SEXP decreasing, SEXP RETstrt, SEXP RETgs, SEXP SO
     SEXP s_maxgrpn = install("maxgrpn");
     setAttrib(ans, s_maxgrpn, ScalarInteger(maxgrpn));
     // Attribute indicating whether the vector was sorted !!
-    SEXP s_sorted = install("sorted");
-    setAttrib(ans, s_sorted, ScalarLogical(isSorted));
+    // SEXP s_sorted = install("sorted");
+    // setAttrib(ans, s_sorted, ScalarLogical(isSorted));
+
     // SEXP nms;
     // PROTECT(nms = allocVector(STRSXP, 2));
     // SET_STRING_ELT(nms, 0, mkChar("grouping"));
@@ -1952,6 +1939,11 @@ SEXP Cradixsort(SEXP NA_last, SEXP decreasing, SEXP RETstrt, SEXP RETgs, SEXP SO
     // setAttrib(ans, R_ClassSymbol, nms);
     // UNPROTECT(1);
   }
+
+  // Attribute indicating whether the vector was sorted !! -> always attach
+  SEXP s_sorted = install("sorted");
+  setAttrib(ans, s_sorted, ScalarLogical(isSorted));
+
 
   Rboolean dropZeros = !retGrp && !isSorted && nalast == 0;
   if (dropZeros) {
@@ -1984,4 +1976,67 @@ SEXP Cradixsort(SEXP NA_last, SEXP decreasing, SEXP RETstrt, SEXP RETgs, SEXP SO
 
   UNPROTECT(1);
   return ans;
+}
+
+
+void Cdoubleradixsort(int *o, Rboolean NA_last, Rboolean decreasing, SEXP x) {
+  int n = -1, tmp;
+  R_xlen_t nl = n;
+  void *xd;
+
+  nalast = (NA_last) ? 1 : -1; // 1=TRUE, -1=FALSE
+  /* When grouping, we round off doubles to account for imprecision */
+  setNumericRounding(0);
+  if(!isVector(x)) error("x is not a vector");
+  nl = XLENGTH(x);
+  order = (decreasing) ? -1 : 1;
+
+  // (ML) FIXME: need to support long vectors
+  if (nl > INT_MAX) error("long vectors not supported");
+
+  n = (int) nl;
+  // if (n != LENGTH(o)) error("lengths of all arguments must match"); Cannot get length from pointer to first element!!
+
+  // upper limit for stack size (all size 1 groups). We'll detect
+  // and avoid that limit, but if just one non-1 group (say 2), that
+  // can't be avoided.
+  gsmaxalloc = n;
+
+  // once for the result, needs to be length n.
+
+  // TO DO: save allocation if NULL is returned (isSorted = =TRUE) so
+  // [i|c|d]sort know they can populate o directly with no working
+  // memory needed to reorder existing order had to repace this from
+  // '0' to '-1' because 'nalast = 0' replace 'o[.]' with 0 values.
+
+  if (n > 0) o[0] = -1;
+  xd = DATAPTR(x);
+
+  stackgrps = FALSE;
+  // savetl_init();   // from now on use Error not error.
+  twiddle = &dtwiddle;
+  is_nan  = &dnan;
+  tmp = dsorted(xd, n);
+  if (tmp) { // -1 or 1.
+    if (tmp == 1) { // same as expected in 'order' (1 = increasing, -1 = decreasing)
+      for (int i = 0; i < n; i++) o[i] = i + 1;
+    } else if (tmp == -1) { // -1 (or -n for result of strcmp), strictly opposite to -expected 'order'
+      for (int i = 0; i < n; i++) o[i] = n - i;
+    }
+  } else {
+      dsort(xd, o, n);
+  }
+  // dsort(xd, o, n);
+
+
+  maxlen = 1;  // reset global. Minimum needed to count "" and NA
+  //savetl_end();
+
+  // gsfree(); // ok??
+  free(radix_xsub);          radix_xsub=NULL;    radix_xsuballoc=0; // needed in dradix !!
+  free(newo);    newo=NULL; // also needed !!
+  free(xtmp);                xtmp=NULL;          xtmp_alloc=0; // needed !!
+  free(otmp);                otmp=NULL;          otmp_alloc=0; // needed !!
+  // TO DO: use xtmp already got
+
 }

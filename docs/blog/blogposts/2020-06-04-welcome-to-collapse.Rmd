@@ -7,7 +7,7 @@ categories: ["R"]
 tags: ["collapse", "advanced", "fast", "transformation", "manipulation", "time-series", "multilevel", "panel", "weighted"]
 ---
 
-<img src='collapse logo small.png' width="150px" align="right" />
+<img src='collapse_logo_small.png' width="150px" align="right" />
 
 
 ```{r setup, include=FALSE}

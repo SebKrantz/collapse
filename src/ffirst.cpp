@@ -312,7 +312,7 @@ SEXP ffirstlCpp(const List& x, int ng = 0, const IntegerVector& g = 0, bool narm
         }
         case STRSXP: {
           CharacterVector column = x[j];
-          CharacterVector out(1, column[0]);
+          CharacterVector out(1, String(column[0]));
           SHALLOW_DUPLICATE_ATTRIB(out, column);
           first[j] = out;
           break;

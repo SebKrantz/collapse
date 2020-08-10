@@ -22,8 +22,8 @@ descr <- function(X, Ndistinct = TRUE, higher = TRUE, table = TRUE,
                                                     Table = natrm(fNobs.default(x, x))) else # table(x). fNobs is a lot Faster, but includes NA as level !
                                                       list(Class = class(x), Label = attr(x, label.attr),
                                                            Stats = if(Ndistinct) c(N = fNobsCpp(x), Ndist = fNdistinctCpp(x)) else `names<-`(fNobsCpp(x), 'Nobs'))
-  class(X) <- NULL
-  if(!is.list(X)) X <- unclass(qDF(X))
+
+  if(is.list(X)) class(X) <- NULL else X <- unclass(qDF(X))
   if(!is.null(cols)) X <- X[cols2int(cols, X, names(X))]
   res <- vector('list', length(X))
   num <- vapply(unattrib(X), is.numeric, TRUE)
@@ -37,14 +37,16 @@ descr <- function(X, Ndistinct = TRUE, higher = TRUE, table = TRUE,
     res[cat] <- lapply(X[cat], descrcat)
   }
   attributes(res) <- list(names = names(X), name = nam, N = length(X[[1L]]),
-                          arstat = !dotsok, class = "descr")
-  return(res)
+                          arstat = !dotsok, table = table, class = "descr")
+  res
 }
 
-print.descr <- function(x, n = 6, perc = TRUE, summary = TRUE, ...) {
+print.descr <- function(x, n = 7, perc = TRUE, digits = 2, t.table = TRUE, summary = TRUE, ...) {
   w <- paste(rep("-", .Options$width), collapse = "")
   nam <- names(x)
   arstat <- attr(x, "arstat")
+  cb <- function(...) if(t.table) cbind(...) else formatC(rbind(...), drop0trailing = TRUE)
+  ct <- function(z) if(t.table) cbind(Freq = z) else z
   cat('Dataset: ', attr(x,"name"),', ',length(x), ' Variables, N = ', attr(x, "N"), "\n", sep = "")
   cat(w, "\n", sep = "")
   for(i in seq_along(x)) {
@@ -52,34 +54,35 @@ print.descr <- function(x, n = 6, perc = TRUE, summary = TRUE, ...) {
     namxi <- names(xi)
     cat(nam[i]," (",strclp(xi[[1L]]),"): ",xi[[2L]], "\n", sep = "")
     cat(namxi[3L], ": \n", sep = "")
-    print.qsu(xi[[3L]])
+    print.qsu(xi[[3L]], digits)
     if(length(xi) > 3L) {
       if(arstat) cat("\n")
       cat(namxi[4L], ": \n", sep = "")
       if(namxi[4L] == "Table") {
         t <- unclass(xi[[4L]])
         if(length(t) <= 2*n) {
-          if(perc) print.default(formatC(rbind(Freq = t, Perc = round(t/sum(t)*100,2)), drop0trailing = TRUE), right = TRUE, quote = FALSE, print.gap = 2) else print.table(t)
+          if(perc) print.default(cb(Freq = t, Perc = round(t/sum(t)*100, digits)), right = TRUE, print.gap = 2, quote = FALSE) else
+            print.table(ct(t))
         } else {
           lt <- length(t)
           t1 <- t[seq_len(n)]
           t2 <- t[seq(lt-n, lt)]
           if(perc) {
             st <- sum(t)
-            print.default(formatC(rbind(Freq = t1, Perc = round(t1/st*100,2)), drop0trailing = TRUE), right = TRUE, quote = FALSE, print.gap = 2)
+            print.default(cb(Freq = t1, Perc = round(t1/st*100, digits)), right = TRUE, print.gap = 2, quote = FALSE)
             cat("  ---\n")
-            print.default(formatC(rbind(Freq = t2, Perc = round(t2/st*100,2)), drop0trailing = TRUE), right = TRUE, quote = FALSE, print.gap = 2)
+            print.default(cb(Freq = t2, Perc = round(t2/st*100, digits)), right = TRUE, print.gap = 2, quote = FALSE)
           } else {
-            print.table(t1)
+            print.table(ct(t1))
             cat("  ---\n")
-            print.table(t2)
+            print.table(ct(t2))
           }
           if(summary) {
             cat("\nSummary of Table: \n")
-            print.summaryDefault(summary.default(t))
+            print.summaryDefault(summary.default(t), digits)
           }
         }
-      } else print.qsu(xi[[4L]])
+      } else print.qsu(xi[[4L]], digits)
     }
     cat(w, "\n", sep = "") # More compressed -> better !
     # cat("\n", w, "\n", sep = "")
@@ -91,11 +94,16 @@ print.descr <- function(x, n = 6, perc = TRUE, summary = TRUE, ...) {
 # Note: This does not work for array stats (using g or pid.. )
 as.data.frame.descr <- function(x, ...) {
    if(attr(x, "arstat")) stop("Cannot handle arrays of statistics!")
-   r <- lapply(x, function(z) c(list(Class = strclp(z[[1L]]), Label = null2NA(z[[2L]])),
-        unlist(`names<-`(lapply(z[names(z) != "Table"][-(1:2)], as.vector, "list"), NULL), recursive = FALSE)))
+   if(attr(x, "table")) {
+     r <- lapply(x, function(z) c(list(Class = strclp(z[[1L]]), Label = null2NA(z[[2L]])),
+          unlist(`names<-`(lapply(z[names(z) != "Table"][-(1:2)], as.vector, "list"), NULL), recursive = FALSE)))
+   } else {
+     r <- lapply(x, function(z) c(list(Class = strclp(z[[1L]]), Label = null2NA(z[[2L]])),
+          unlist(`names<-`(lapply(z[-(1:2)], as.vector, "list"), NULL), recursive = FALSE)))
+   }
    r <- .Call(C_rbindlist, r, TRUE, TRUE, "Variable")
    if(all(is.na(r[["Label"]]))) r[["Label"]] <- NULL
    attr(r, "row.names") <- .set_row_names(length(r[[1L]]))
    class(r) <- "data.frame"
-   return(r)
+   r
 }

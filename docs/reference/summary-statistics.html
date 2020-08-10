@@ -41,10 +41,11 @@
 
 <meta property="og:title" content="Summary Statistics — A9-summary-statistics" />
 <meta property="og:description" content="collapse provides the following functions to efficiently summarize and examine data:
-qsu, shorthand for quick-summary, is an extremely fast summary command inspired by the (xt)summarize command in the STATA statistical software. It computes a set of 7 statistics (nobs, mean, sd, min, max, skewness and kurtosis) using a numerically stable one-pass method. Statistics can be computed weighted, by groups, and also within-and between entities (for multilevel / panel-data).
-descr computes a concise and detailed description of a data.frame, including frequency tables for categorical variables and various statistics and quantiles for numeric variables. It is inspired by Hmisc::describe, but about 10x faster.
-pwcor, pwcov and pwNobs compute pairwise correlations, covariances and observation counts on matrices and data frame's. Pairwise correlations and covariances can be computed together with observation counts and p-values, and output as 3D array (default) or list of matrices. A major feature of pwcor and pwcov is the print method displaying all of these statistics in a single correlation table.
+qsu, shorthand for quick-summary, is an extremely fast summary command inspired by the (xt)summarize command in the STATA statistical software. It computes a set of 7 statistics (nobs, mean, sd, min, max, skewness and kurtosis) using a numerically stable one-pass method. Statistics can be computed weighted, by groups, and also within-and between entities (for multilevel / panel data).
+descr computes a concise and detailed description of a data frame, including frequency tables for categorical variables and various statistics and quantiles for numeric variables. It is inspired by Hmisc::describe, but about 10x faster.
+pwcor, pwcov and pwNobs compute pairwise correlations, covariances and observation counts on matrices and data frames. Pairwise correlations and covariances can be computed together with observation counts and p-values, and output as 3D array (default) or list of matrices. A major feature of pwcor and pwcov is the print method displaying all of these statistics in a single correlation table.
 varying very efficiently checks for the presence of any variation in data (optionally) within groups (such as panel-identifiers).
+fFtest is a fast implementation of the R-Squared based F-test, to test exclusion restrictions in linear models potentially involving multiple large factors (fixed effects). It internally utilizes fHDwithin to project out factors while counting the degrees of freedom.
 
 " />
 
@@ -78,7 +79,7 @@ varying very efficiently checks for the presence of any variation in data (optio
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">collapse</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">1.2.1</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">1.3.0</span>
       </span>
     </div>
 
@@ -93,13 +94,10 @@ varying very efficiently checks for the presence of any variation in data (optio
 <li>
   <a href="../news/index.html">News</a>
 </li>
-<li>
-  <a href="../blog/index.html">Blog</a>
-</li>
       </ul>
       <ul class="nav navbar-nav navbar-right">
         <li>
-  <a href="https://twitter.com/collapse">
+  <a href="https://twitter.com/collapse_R">
     <span class="fa fa-twitter"></span>
      
   </a>
@@ -130,10 +128,11 @@ varying very efficiently checks for the presence of any variation in data (optio
 
     <div class="ref-description">
     <p><em>collapse</em> provides the following functions to efficiently summarize and examine data:</p><ul>
-<li><p><code><a href='qsu.html'>qsu</a></code>, shorthand for quick-summary, is an extremely fast summary command inspired by the (xt)summarize command in the STATA statistical software. It computes a set of 7 statistics (nobs, mean, sd, min, max, skewness and kurtosis) using a numerically stable one-pass method. Statistics can be computed weighted, by groups, and also within-and between entities (for multilevel / panel-data).</p></li>
-<li><p><code><a href='descr.html'>descr</a></code> computes a concise and detailed description of a data.frame, including frequency tables for categorical variables and various statistics and quantiles for numeric variables. It is inspired by <code><a href='https://rdrr.io/pkg/Hmisc/man/describe.html'>Hmisc::describe</a></code>, but about 10x faster.</p></li>
-<li><p><code><a href='pwcor_pwcov_pwNobs.html'>pwcor</a></code>, <code><a href='pwcor_pwcov_pwNobs.html'>pwcov</a></code> and <code><a href='pwcor_pwcov_pwNobs.html'>pwNobs</a></code> compute pairwise correlations, covariances and observation counts on matrices and data frame's. Pairwise correlations and covariances can be computed together with observation counts and p-values, and output as 3D array (default) or list of matrices. A major feature of <code>pwcor</code> and <code>pwcov</code> is the print method displaying all of these statistics in a single correlation table.</p></li>
+<li><p><code><a href='qsu.html'>qsu</a></code>, shorthand for quick-summary, is an extremely fast summary command inspired by the (xt)summarize command in the STATA statistical software. It computes a set of 7 statistics (nobs, mean, sd, min, max, skewness and kurtosis) using a numerically stable one-pass method. Statistics can be computed weighted, by groups, and also within-and between entities (for multilevel / panel data).</p></li>
+<li><p><code><a href='descr.html'>descr</a></code> computes a concise and detailed description of a data frame, including frequency tables for categorical variables and various statistics and quantiles for numeric variables. It is inspired by <code><a href='https://rdrr.io/pkg/Hmisc/man/describe.html'>Hmisc::describe</a></code>, but about 10x faster.</p></li>
+<li><p><code><a href='pwcor_pwcov_pwNobs.html'>pwcor</a></code>, <code><a href='pwcor_pwcov_pwNobs.html'>pwcov</a></code> and <code><a href='pwcor_pwcov_pwNobs.html'>pwNobs</a></code> compute pairwise correlations, covariances and observation counts on matrices and data frames. Pairwise correlations and covariances can be computed together with observation counts and p-values, and output as 3D array (default) or list of matrices. A major feature of <code>pwcor</code> and <code>pwcov</code> is the print method displaying all of these statistics in a single correlation table.</p></li>
 <li><p><code><a href='varying.html'>varying</a></code> very efficiently checks for the presence of any variation in data (optionally) within groups (such as panel-identifiers).</p></li>
+<li><p><code><a href='fFtest.html'>fFtest</a></code> is a fast implementation of the R-Squared based F-test, to test <b>exclusion restrictions</b> in linear models potentially involving multiple large factors (fixed effects). It internally utilizes <code><a href='fHDbetween_fHDwithin.html'>fHDwithin</a></code> to project out factors while counting the degrees of freedom.</p></li>
 </ul>
 
     </div>
@@ -144,18 +143,19 @@ varying very efficiently checks for the presence of any variation in data (optio
 
     <p></p><table class='table'>
 <tr><td><em> Function / S3 Generic </em></td><td></td><td><em> Methods </em></td><td></td><td><em> Description </em></td></tr>
-<tr><td><code><a href='qsu.html'>qsu</a></code></td><td></td><td><code>default, matrix, data.frame, pseries, pdata.frame</code></td><td></td><td>fast (grouped, weighted, panel-decomposed) summary statistics</td></tr>
-<tr><td><code><a href='descr.html'>descr</a></code></td><td></td><td>No methods, for data.frame's or lists of vectors</td><td></td><td>detailed statistical description of data.frame</td></tr>
-<tr><td><code><a href='pwcor_pwcov_pwNobs.html'>pwcor</a></code></td><td></td><td>No methods, for matrices or data.frame's</td><td></td><td>pairwise correlations</td></tr>
-<tr><td><code><a href='pwcor_pwcov_pwNobs.html'>pwcov</a></code></td><td></td><td>No methods, for matrices or data.frame's</td><td></td><td>pairwise covariances</td></tr>
-<tr><td><code><a href='pwcor_pwcov_pwNobs.html'>pwNobs</a></code></td><td></td><td>No methods, for matrices or data.frame's</td><td></td><td>pairwise observation counts</td></tr>
-<tr><td><code><a href='varying.html'>varying</a></code></td><td></td><td><code>default, matrix, data.frame, pseries, pdata.frame, grouped_df</code></td><td></td><td>fast variation check</td></tr>
+<tr><td><code><a href='qsu.html'>qsu</a></code></td><td></td><td><code>default, matrix, data.frame, pseries, pdata.frame</code></td><td></td><td>Fast (grouped, weighted, panel-decomposed) summary statistics</td></tr>
+<tr><td><code><a href='descr.html'>descr</a></code></td><td></td><td>No methods, for data frames or lists of vectors</td><td></td><td>Detailed statistical description of data frame</td></tr>
+<tr><td><code><a href='pwcor_pwcov_pwNobs.html'>pwcor</a></code></td><td></td><td>No methods, for matrices or data frames</td><td></td><td>Pairwise correlations</td></tr>
+<tr><td><code><a href='pwcor_pwcov_pwNobs.html'>pwcov</a></code></td><td></td><td>No methods, for matrices or data frames</td><td></td><td>Pairwise covariances</td></tr>
+<tr><td><code><a href='pwcor_pwcov_pwNobs.html'>pwNobs</a></code></td><td></td><td>No methods, for matrices or data frames</td><td></td><td>Pairwise observation counts</td></tr>
+<tr><td><code><a href='varying.html'>varying</a></code></td><td></td><td><code>default, matrix, data.frame, pseries, pdata.frame, grouped_df</code></td><td></td><td>Fast variation check</td></tr>
+<tr><td><code><a href='fFtest.html'>fFtest</a></code></td><td></td><td>No methods, it's a standalone test to which data needs to be supplied.</td><td></td><td>Fast F-test of exclusion restrictions in linear models (with factors variables)</td></tr>
 </table>
 
 
     <h2 class="hasAnchor" id="see-also"><a class="anchor" href="#see-also"></a>See also</h2>
 
-    <div class='dont-index'><p><a href='fast-statistical-functions.html'>Fast Statistical Functions</a>, <a href='collapse-documentation.html'>Collapse Overview</a></p></div>
+    <div class='dont-index'><p><a href='index.html'>Collapse Overview</a>, <a href='fast-statistical-functions.html'>Fast Statistical Functions</a></p></div>
 
   </div>
   <div class="col-md-3 hidden-xs hidden-sm" id="pkgdown-sidebar">

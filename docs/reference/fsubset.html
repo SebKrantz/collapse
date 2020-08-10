@@ -6,7 +6,7 @@
 <meta http-equiv="X-UA-Compatible" content="IE=edge">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-<title>Fast Subsetting — fsubset • collapse</title>
+<title>Fast Subsetting Matrix-Like Objects — fsubset • collapse</title>
 
 
 <!-- jquery -->
@@ -39,8 +39,8 @@
 
 
 
-<meta property="og:title" content="Fast Subsetting — fsubset" />
-<meta property="og:description" content="fsubset returns subsets of vectors, matrices or data frames which meet conditions. It is programmed very efficiently and uses C source code from the data.table package. Especially for data.frame's it is significantly (4-5 times) faster than base::subset (or dplyr::filter). The methods also provide more functionality compared to base::subset. The function ss provides a significantly faster alternative to [.data.frame." />
+<meta property="og:title" content="Fast Subsetting Matrix-Like Objects — fsubset" />
+<meta property="og:description" content="fsubset returns subsets of vectors, matrices or data frames which meet conditions. It is programmed very efficiently and uses C source code from the data.table package. Especially for data frames it is significantly (4-5 times) faster than base::subset or dplyr::filter. The methods also provide enhanced functionality compared to base::subset. The function ss provides a significantly faster alternative to [.data.frame." />
 
 
 
@@ -72,7 +72,7 @@
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">collapse</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">1.2.1</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">1.3.0</span>
       </span>
     </div>
 
@@ -87,13 +87,10 @@
 <li>
   <a href="../news/index.html">News</a>
 </li>
-<li>
-  <a href="../blog/index.html">Blog</a>
-</li>
       </ul>
       <ul class="nav navbar-nav navbar-right">
         <li>
-  <a href="https://twitter.com/collapse">
+  <a href="https://twitter.com/collapse_R">
     <span class="fa fa-twitter"></span>
      
   </a>
@@ -117,13 +114,13 @@
 <div class="row">
   <div class="col-md-9 contents">
     <div class="page-header">
-    <h1>Fast Subsetting</h1>
+    <h1>Fast Subsetting Matrix-Like Objects</h1>
     
     <div class="hidden name"><code>fsubset.Rd</code></div>
     </div>
 
     <div class="ref-description">
-    <p><code>fsubset</code> returns subsets of vectors, matrices or data frames which meet conditions. It is programmed very efficiently and uses C source code from the <em>data.table</em> package. Especially for data.frame's it is significantly (4-5 times) faster than <code><a href='https://rdrr.io/r/base/subset.html'>base::subset</a></code> (or <code><a href='https://dplyr.tidyverse.org/reference/filter.html'>dplyr::filter</a></code>). The methods also provide more functionality compared to <code><a href='https://rdrr.io/r/base/subset.html'>base::subset</a></code>. The function <code>ss</code> provides a significantly faster alternative to <code>[.data.frame</code>.</p>
+    <p><code>fsubset</code> returns subsets of vectors, matrices or data frames which meet conditions. It is programmed very efficiently and uses C source code from the <em>data.table</em> package. Especially for data frames it is significantly (4-5 times) faster than <code><a href='https://rdrr.io/r/base/subset.html'>base::subset</a></code> or <code><a href='https://dplyr.tidyverse.org/reference/filter.html'>dplyr::filter</a></code>. The methods also provide enhanced functionality compared to <code><a href='https://rdrr.io/r/base/subset.html'>base::subset</a></code>. The function <code>ss</code> provides a significantly faster alternative to <code>[.data.frame</code>.</p>
     </div>
 
     <pre class="usage"><span class='fu'>fsubset</span>(<span class='no'>x</span>, <span class='no'>...</span>)
@@ -138,7 +135,7 @@
 <span class='co'># S3 method for data.frame</span>
 <span class='fu'>fsubset</span>(<span class='no'>x</span>, <span class='no'>subset</span>, <span class='no'>...</span>)
 
-<span class='co'># Fast subsetting data.frames (replaces `[`)</span>
+<span class='co'># Fast subsetting data frames (replaces `[`)</span>
 <span class='fu'>ss</span>(<span class='no'>data</span>, <span class='no'>i</span>, <span class='no'>j</span>)</pre>
 
     <h2 class="hasAnchor" id="arguments"><a class="anchor" href="#arguments"></a>Arguments</h2>
@@ -155,11 +152,11 @@
     <tr>
       <th>subset</th>
       <td><p>logical expression indicating elements or rows to keep:
-    missing values are taken as false. The default and matrix methods only support logical vectors or row-indices (or a character vector of rownames if the matrix has rownames; the data.frame method also supports logical vectors or row-indices).</p></td>
+    missing values are taken as <code>FALSE</code>. The default and matrix methods only support logical vectors or row-indices (or a character vector of rownames if the matrix has rownames; the data frame method also supports logical vectors or row-indices).</p></td>
     </tr>
     <tr>
       <th>...</th>
-      <td><p>For the matrix data.frame method: multiple comma-separated expressions indicating columns to select. Otherwise: further arguments to be passed to or from other methods.</p></td>
+      <td><p>For the matrix or data frame method: multiple comma-separated expressions indicating columns to select. Otherwise: further arguments to be passed to or from other methods.</p></td>
     </tr>
     <tr>
       <th>drop</th>
@@ -171,18 +168,18 @@
     </tr>
     <tr>
       <th>j</th>
-      <td><p>a vector or column names, positive or negative indices or a suitable logical vector to subset the columns of <code>data</code>. <em>Note:</em> Negative indices are converted to positive ones using <code>j &lt;- seq_along(data)[j]</code>.</p></td>
+      <td><p>a vector of column names, positive or negative indices or a suitable logical vector to subset the columns of <code>data</code>. <em>Note:</em> Negative indices are converted to positive ones using <code>j &lt;- seq_along(data)[j]</code>.</p></td>
     </tr>
     </table>
 
     <h2 class="hasAnchor" id="details"><a class="anchor" href="#details"></a>Details</h2>
 
-    <p><code>fsubset</code> is a generic function, with methods supplied for matrices, data
-  frames and vectors (including lists). It represents an improvement in both speed and functionality over <code><a href='https://rdrr.io/r/base/subset.html'>base::subset</a></code>. The non-generic function <code>ss</code> is an improvement of <code>[.data.frame</code>. For subsetting columns alone, please see <a href='select_replace_vars.html'>selecting and replacing columns</a>.</p>
+    <p><code>fsubset</code> is a generic function, with methods supplied for vectors, matrices, and data
+  frames (including lists). It represents an improvement in both speed and functionality over <code><a href='https://rdrr.io/r/base/subset.html'>base::subset</a></code>. The non-generic function <code>ss</code> is an improvement of <code>[.data.frame</code>. For subsetting columns alone, please see <a href='select_replace_vars.html'>selecting and replacing columns</a>.</p>
 <p>For ordinary vectors, the result is <code><a href='https://rdrr.io/r/base/CallExternal.html'>.Call(C_subsetVector, x, subset)</a></code>, where <code>C_subsetVector</code> is an internal function in the <em>data.table</em> package. The <code>subset</code> can be integer or logical. Appropriate errors are delivered for wrong use.</p>
 <p>For matrices the implementation is all base-R but slightly more efficient and more versatile than <code><a href='https://rdrr.io/r/base/subset.html'>base::subset.matrix</a></code>. Thus it is possible to <code>subset</code> matrix rows using logical or integer vectors, or character vectors matching rownames. The <code>drop</code> argument is passed on to the indexing method for matrices.</p>
 <p>For both matrices and data frames, the <code>...</code> argument can be used to subset columns, and is evaluated in a non-standard way. Thus it can support vectors of column names, indices or logical vectors, but also multiple comma separated column names passed without quotes, each of which may also be replaced by a sequence of columns i.e. <code>col1:coln</code> (see examples).</p>
-<p>For data frames, the <code>subset</code> argument is also evaluated in a non-standard way. Thus next to vector of row-indices or logical vectors, it supports logical expressions of the form <code>col2 &gt; 5 &amp; col2 &lt; col3</code> etc. (see examples). The data frame method uses <code>C_subsetDT</code>, an internal C function from the <em>data.table</em> package to subset data.frames, hence it is significantly faster than <code><a href='https://rdrr.io/r/base/subset.html'>base::subset.data.frame</a></code>. If fast data frame subsetting is required but no non-standard evaluation, the function <code>ss</code> is slightly simpler and faster.</p>
+<p>For data frames, the <code>subset</code> argument is also evaluated in a non-standard way. Thus next to vector of row-indices or logical vectors, it supports logical expressions of the form <code>col2 &gt; 5 &amp; col2 &lt; col3</code> etc. (see examples). The data frame method uses <code>C_subsetDT</code>, an internal C function from the <em>data.table</em> package to subset data frames, hence it is significantly faster than <code><a href='https://rdrr.io/r/base/subset.html'>base::subset.data.frame</a></code>. If fast data frame subsetting is required but no non-standard evaluation, the function <code>ss</code> is slightly simpler and faster.</p>
 <p>Factors may have empty levels after subsetting; unused levels are not automatically removed.  See <code><a href='https://rdrr.io/r/base/droplevels.html'>droplevels</a></code> for a way to drop all unused levels from a data frame.</p>
     <h2 class="hasAnchor" id="value"><a class="anchor" href="#value"></a>Value</h2>
 
@@ -193,17 +190,64 @@
     <div class='dont-index'><p><code><a href='select_replace_vars.html'>fselect</a></code>,
   <code><a href='select_replace_vars.html'>get_vars</a></code>,
   <code><a href='ftransform.html'>ftransform</a></code>,
-<a href='fast-data-manipulation.html'>Data Frame Manipulation</a>, <a href='collapse-documentation.html'>Collapse Overview</a></p></div>
+<a href='fast-data-manipulation.html'>Data Frame Manipulation</a>, <a href='index.html'>Collapse Overview</a></p></div>
 
     <h2 class="hasAnchor" id="examples"><a class="anchor" href="#examples"></a>Examples</h2>
-    <pre class="examples"><span class='fu'>fsubset</span>(<span class='no'>airquality</span>, <span class='no'>Temp</span> <span class='kw'>&gt;</span> <span class='fl'>80</span>, <span class='no'>Ozone</span>, <span class='no'>Temp</span>)
-<span class='fu'>fsubset</span>(<span class='no'>airquality</span>, <span class='no'>Day</span> <span class='kw'>==</span> <span class='fl'>1</span>, -<span class='no'>Temp</span>)
-<span class='fu'>fsubset</span>(<span class='no'>airquality</span>, <span class='no'>Day</span> <span class='kw'>==</span> <span class='fl'>1</span>, -(<span class='no'>Day</span>:<span class='no'>Temp</span>))
-<span class='fu'>fsubset</span>(<span class='no'>airquality</span>, <span class='no'>Day</span> <span class='kw'>==</span> <span class='fl'>1</span>, <span class='no'>Ozone</span>:<span class='no'>Wind</span>)
-<span class='fu'>fsubset</span>(<span class='no'>airquality</span>, <span class='no'>Day</span> <span class='kw'>==</span> <span class='fl'>1</span> <span class='kw'>&amp;</span> !<span class='fu'><a href='https://rdrr.io/r/base/NA.html'>is.na</a></span>(<span class='no'>Ozone</span>), <span class='no'>Ozone</span>:<span class='no'>Wind</span>, <span class='no'>Month</span>)
-
-<span class='fu'>fsubset</span>(<span class='no'>airquality</span>, <span class='fl'>1</span>:<span class='fl'>10</span>, <span class='fl'>2</span>:<span class='fl'>3</span>)
-<span class='fu'>ss</span>(<span class='no'>airquality</span>, <span class='fl'>1</span>:<span class='fl'>10</span>, <span class='fl'>2</span>:<span class='fl'>3</span>)         <span class='co'># Slightly faster !</span></pre>
+    <pre class="examples"><div class='input'><span class='fu'>fsubset</span>(<span class='no'>airquality</span>, <span class='no'>Temp</span> <span class='kw'>&gt;</span> <span class='fl'>90</span>, <span class='no'>Ozone</span>, <span class='no'>Temp</span>)</div><div class='output co'>#&gt;    Ozone Temp
+#&gt; 1     NA   93
+#&gt; 2     NA   92
+#&gt; 3     97   92
+#&gt; 4     97   92
+#&gt; 5     NA   91
+#&gt; 6     NA   92
+#&gt; 7     76   97
+#&gt; 8    118   94
+#&gt; 9     84   96
+#&gt; 10    85   94
+#&gt; 11    96   91
+#&gt; 12    78   92
+#&gt; 13    73   93
+#&gt; 14    91   93</div><div class='input'><span class='fu'>fsubset</span>(<span class='no'>airquality</span>, <span class='no'>Day</span> <span class='kw'>==</span> <span class='fl'>1</span>, -<span class='no'>Temp</span>)</div><div class='output co'>#&gt;   Ozone Solar.R Wind Month Day
+#&gt; 1    41     190  7.4     5   1
+#&gt; 2    NA     286  8.6     6   1
+#&gt; 3   135     269  4.1     7   1
+#&gt; 4    39      83  6.9     8   1
+#&gt; 5    96     167  6.9     9   1</div><div class='input'><span class='fu'>fsubset</span>(<span class='no'>airquality</span>, <span class='no'>Day</span> <span class='kw'>==</span> <span class='fl'>1</span>, -(<span class='no'>Day</span>:<span class='no'>Temp</span>))</div><div class='output co'>#&gt;   Ozone Solar.R Wind
+#&gt; 1    41     190  7.4
+#&gt; 2    NA     286  8.6
+#&gt; 3   135     269  4.1
+#&gt; 4    39      83  6.9
+#&gt; 5    96     167  6.9</div><div class='input'><span class='fu'>fsubset</span>(<span class='no'>airquality</span>, <span class='no'>Day</span> <span class='kw'>==</span> <span class='fl'>1</span>, <span class='no'>Ozone</span>:<span class='no'>Wind</span>)</div><div class='output co'>#&gt;   Ozone Solar.R Wind
+#&gt; 1    41     190  7.4
+#&gt; 2    NA     286  8.6
+#&gt; 3   135     269  4.1
+#&gt; 4    39      83  6.9
+#&gt; 5    96     167  6.9</div><div class='input'><span class='fu'>fsubset</span>(<span class='no'>airquality</span>, <span class='no'>Day</span> <span class='kw'>==</span> <span class='fl'>1</span> <span class='kw'>&amp;</span> !<span class='fu'><a href='https://rdrr.io/r/base/NA.html'>is.na</a></span>(<span class='no'>Ozone</span>), <span class='no'>Ozone</span>:<span class='no'>Wind</span>, <span class='no'>Month</span>)</div><div class='output co'>#&gt;   Ozone Solar.R Wind Month
+#&gt; 1    41     190  7.4     5
+#&gt; 2   135     269  4.1     7
+#&gt; 3    39      83  6.9     8
+#&gt; 4    96     167  6.9     9</div><div class='input'>
+<span class='fu'>ss</span>(<span class='no'>airquality</span>, <span class='fl'>1</span>:<span class='fl'>10</span>, <span class='fl'>2</span>:<span class='fl'>3</span>)         <span class='co'># Significantly faster than airquality[1:10, 2:3]</span></div><div class='output co'>#&gt;    Solar.R Wind
+#&gt; 1      190  7.4
+#&gt; 2      118  8.0
+#&gt; 3      149 12.6
+#&gt; 4      313 11.5
+#&gt; 5       NA 14.3
+#&gt; 6       NA 14.9
+#&gt; 7      299  8.6
+#&gt; 8       99 13.8
+#&gt; 9       19 20.1
+#&gt; 10     194  8.6</div><div class='input'><span class='fu'>fsubset</span>(<span class='no'>airquality</span>, <span class='fl'>1</span>:<span class='fl'>10</span>, <span class='fl'>2</span>:<span class='fl'>3</span>)    <span class='co'># This is possible but not advised</span></div><div class='output co'>#&gt;    Solar.R Wind
+#&gt; 1      190  7.4
+#&gt; 2      118  8.0
+#&gt; 3      149 12.6
+#&gt; 4      313 11.5
+#&gt; 5       NA 14.3
+#&gt; 6       NA 14.9
+#&gt; 7      299  8.6
+#&gt; 8       99 13.8
+#&gt; 9       19 20.1
+#&gt; 10     194  8.6</div></pre>
   </div>
   <div class="col-md-3 hidden-xs hidden-sm" id="pkgdown-sidebar">
     <nav id="toc" data-toggle="toc" class="sticky-top">

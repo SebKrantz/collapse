@@ -12,25 +12,27 @@
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.12.1/css/v4-shims.min.css" integrity="sha256-wZjR52fzng1pJHwx4aV2AO3yyTOXrcDW7jBpJtTwVxw=" crossorigin="anonymous">
 <!-- clipboard.js --><script src="https://cdnjs.cloudflare.com/ajax/libs/clipboard.js/2.0.6/clipboard.min.js" integrity="sha256-inc5kl9MA1hkeYUt+EC3BhlIgyp/2jDIyBLS6k3UxPI=" crossorigin="anonymous"></script><!-- headroom.js --><script src="https://cdnjs.cloudflare.com/ajax/libs/headroom/0.11.0/headroom.min.js" integrity="sha256-AsUX4SJE1+yuDu5+mAVzJbuYNPHj/WroHuZ8Ir/CkE0=" crossorigin="anonymous"></script><script src="https://cdnjs.cloudflare.com/ajax/libs/headroom/0.11.0/jQuery.headroom.min.js" integrity="sha256-ZX/yNShbjqsohH1k95liqY9Gd8uOiE1S4vZc+9KQ1K4=" crossorigin="anonymous"></script><!-- pkgdown --><link href="pkgdown.css" rel="stylesheet">
 <script src="pkgdown.js"></script><meta property="og:title" content="Advanced and Fast Data Transformation in R">
-<meta property="og:description" content="A C/C++ based package for advanced data transformation in R that is 
-    extremely fast, flexible and parsimonious to code with and programmer 
-    friendly. It is well integrated with dplyr, plm and data.table.
+<meta property="og:description" content="A C/C++ based package for advanced data transformation and 
+    statistical computing in R that is extremely fast, flexible and 
+    parsimonious to code with and programmer friendly. 
+    It is well integrated with dplyr, plm and data.table.
     --- Key Features: ---
-    (1) Advanced data programming: A full set of fast statistical functions 
+    (1) Advanced statistical programming: A full set of fast statistical functions 
         supporting grouped and weighted computations on vectors, matrices and 
-        data frames. Fast (ordered) and programmable grouping, factor 
-        generation, manipulation of data frames and data object conversions.
+        data frames. Fast and programmable grouping, ordering, unique values / rows, 
+        factor generation and interactions. Fast and flexible functions for data 
+        manipulation and data object conversions.
     (2) Advanced aggregation: Fast and easy multi-data-type, multi-function, 
         weighted, parallelized and fully customized data aggregation.
-    (3) Advanced transformations: Fast (grouped, weighted) replacing and 
-        sweeping out of statistics, scaling / standardizing, centering (i.e. 
-        between and within transformations), higher-dimensional centering 
-        (i.e. multiple fixed effects transformations), linear 
-        prediction and partialling-out.
+    (3) Advanced transformations: Fast (grouped) replacing and sweeping out of 
+        statistics, and (grouped, weighted) scaling / standardizing, between 
+        (averaging) and (quasi-)within (centering / demeaning) transformations, 
+        higher-dimensional centering (i.e. multiple fixed effects transformations), 
+        linear prediction and partialling-out.
     (4) Advanced time-computations: Fast (sequences of) lags / leads, and 
         (lagged / leaded, iterated, quasi-, log-) differences and growth 
-        rates on (unordered) time-series and panel data. Multivariate auto, 
-        partial and cross-correlation functions for panel data. 
+        rates on (unordered) time series and panel data. Multivariate auto-, 
+        partial- and cross-correlation functions for panel data. 
         Panel data to (ts-)array conversions.
     (5) List processing: (Recursive) list search / identification, extraction / 
         subsetting, data-apply, and generalized row-binding / unlisting in 2D.
@@ -54,7 +56,7 @@
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="index.html">collapse</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">1.2.1</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">1.3.0</span>
       </span>
     </div>
 
@@ -69,13 +71,10 @@
 <li>
   <a href="news/index.html">News</a>
 </li>
-<li>
-  <a href="blog/index.html">Blog</a>
-</li>
       </ul>
 <ul class="nav navbar-nav navbar-right">
 <li>
-  <a href="https://twitter.com/collapse">
+  <a href="https://twitter.com/collapse_R">
     <span class="fa fa-twitter"></span>
      
   </a>
@@ -100,7 +99,7 @@
   <div class="contents col-md-9">
 <div id="collapse-" class="section level1">
 <div class="page-header"><h1 class="hasAnchor">
-<a href="#collapse-" class="anchor"></a>collapse <img src="reference/figures/collapse%20logo%20small.png" width="150px" align="right">
+<a href="#collapse-" class="anchor"></a>collapse <img src="reference/figures/collapse_logo_small.png" width="150px" align="right">
 </h1></div>
 <!-- badges: start -->
 
@@ -139,10 +138,31 @@ devtools::install_github("SebKrantz/collapse")</code></pre>
 <li><p><a href="https://cran.r-project.org/web/packages/collapse/vignettes/collapse_and_plm.html"><em>collapse</em> and <em>plm</em></a>: Demonstrates the integration of <em>collapse</em> with the <em>plm</em> package and provides examples of fast and easy programming with panel data.</p></li>
 </ul>
 </div>
-<div id="contributing" class="section level2">
+<div id="demonstration" class="section level2">
 <h2 class="hasAnchor">
-<a href="#contributing" class="anchor"></a>Contributing</h2>
-<p>If you want to contribute, please fork and create a pull request for merging with the <strong>development</strong> branch. Presently I am particularly interested in fast algorithms to compute weighted medians and (weighted) quantiles.</p>
+<a href="#demonstration" class="anchor"></a>Demonstration</h2>
+<pre class="{r}"><code>fNdistinct(wlddev)
+fNdistinct(wlddev, wlddev$iso3c)
+
+wlddev %&gt;% fgroup_by(iso3c) %&gt;% fNdistinct
+
+collap(wlddev, ~ country + decade, fmean, fmode)
+
+fscale(num_vars(wlddev), wlddec$iso3c)
+fwithin(num_vars(wlddev), wlddec$iso3c)
+
+wlddev %&gt;% fgroup_by(country, decade) %&gt;% fselect(PCGDP:ODA) %&gt;% fwithin(ODA)
+
+L(wlddev, -1:1, ~iso3c, ~year, cols = 9:12)
+
+wlddev %&gt;% fgroup_by(country) %&gt;% fselect(PCGDP:ODA, year) %&gt;% flag(-1:1, year)
+
+wlddev %&gt;% fgroup_by(country) %&gt;% fselect(PCGDP:ODA, year) %&gt;% fdiff(-1:1, 1:2, year)
+wlddev %&gt;% fgroup_by(country) %&gt;% fselect(PCGDP:ODA, year) %&gt;% fgrowth(1, 1, year)
+</code></pre>
+<!--
+## Contributing 
+If you want to contribute, please fork and create a pull request for merging with the **development** branch. Presently I am particularly interested in fast algorithms to compute weighted medians and (weighted) quantiles. -->
 <hr>
 <div id="notes-on-performance" class="section level3">
 <h3 class="hasAnchor">
@@ -161,7 +181,7 @@ devtools::install_github("SebKrantz/collapse")</code></pre>
 <a href="#notes-on-the-integration-with-dplyr-plm-and-datatable" class="anchor"></a>Notes on the Integration with <em>dplyr</em>, <em>plm</em> and <em>data.table</em>
 </h3>
 <ul>
-<li><p><strong><em>collapse</em></strong> <strong>and</strong> <strong><em>dplyr</em></strong>: The <em>Fast Statistical Functions</em> and transformation functions and operators provided by <em>collapse</em> all have a <em>grouped_df</em> method, allowing them to be seamlessly integrated into <em>dplyr</em> / <em>tidyverse</em> workflows. Doing so facilitates advanced operations in <em>dplyr</em> and provides remarkable performance improvements (bringing <em>dplyr</em> close to <em>data.table</em> on large data aggregations, and making it faster than <em>data.table</em> for advanced transformations). In addition, <em>collapse</em> provides some simpler and faster replacements for common <em>dplyr</em> verbs (<code>fselect</code>, <code>fgroup_by</code>, <code>fsubset</code> (faster <code><a href="https://dplyr.tidyverse.org/reference/filter.html">dplyr::filter</a></code>), <code>ftransform</code> (faster <code><a href="https://dplyr.tidyverse.org/reference/mutate.html">dplyr::mutate</a></code>) and <code>TRA</code> (faster <code><a href="https://dplyr.tidyverse.org/reference/mutate.html">dplyr::mutate</a></code> for grouped replacing and sweeping out statistics)), providing further performance improvments for programming with piped expressions and non-standard evaluation. See also <a href="https://cran.r-project.org/web/packages/collapse/vignettes/collapse_and_dplyr.html">this vignette</a>.</p></li>
+<li><p><strong><em>collapse</em></strong> <strong>and</strong> <strong><em>dplyr</em></strong>: The <em>Fast Statistical Functions</em> and transformation functions and operators provided by <em>collapse</em> all have a <em>grouped_df</em> method, allowing them to be seamlessly integrated into <em>dplyr</em> / <em>tidyverse</em> workflows. Doing so facilitates advanced operations in <em>dplyr</em> and provides remarkable performance improvements (bringing <em>dplyr</em> close to <em>data.table</em> on large data aggregations, and making it faster than <em>data.table</em> for advanced transformations). In addition, <em>collapse</em> provides some simpler and faster replacements for common <em>dplyr</em> verbs (<code>fselect</code>, <code>fgroup_by</code>, <code>fsubset</code> (faster <code><a href="https://dplyr.tidyverse.org/reference/filter.html">dplyr::filter</a></code>), <code>ftransform</code> (faster <code><a href="https://dplyr.tidyverse.org/reference/mutate.html">dplyr::mutate</a></code>) and <code>TRA</code> (faster <code><a href="https://dplyr.tidyverse.org/reference/mutate.html">dplyr::mutate</a></code> for grouped replacing and sweeping out statistics)), providing further performance improvements for programming with piped expressions and non-standard evaluation. See also <a href="https://cran.r-project.org/web/packages/collapse/vignettes/collapse_and_dplyr.html">this vignette</a>.</p></li>
 <li><p><strong><em>collapse</em></strong> <strong>and</strong> <strong><em>plm</em></strong>: Fast transformation functions and transformation operators provided by <em>collapse</em> also have <em>pseries</em> (panel-series) and <em>pdata.frame</em> (panel-data.frame) methods. This integrates them seamlessly into <em>plm</em> workflows and facilitates the manipulation of panel data. For typical panel-data operations like between- and within-transformations or panel lags / leads / differences, <em>collapse</em> functions are 20-100x faster than <em>plm</em> equivalents, and provide greater versatility (i.e. for applying transformations to multiple variables in a <em>pdata.frame</em>). See also <a href="https://cran.r-project.org/web/packages/collapse/vignettes/collapse_and_plm.html">this vignette</a>.</p></li>
 <li><p><strong><em>collapse</em></strong> <strong>and</strong> <strong><em>data.table</em></strong>: All collapse functions can be applied to <em>data.table</em>’s and they will also return a <em>data.table</em> again. The C/C++ programming of <em>collapse</em> was inspired by <em>data.table</em> and directly relies on some <em>data.table</em> source code (i.e. for grouping and row-binding). The function <code>qDT</code> also exists to efficiently convert various objects to <em>data.table</em>, and various functions (<code>mrtl</code>, <code>mctl</code>, <code>unlist2d</code>, …) have an option to output a <em>data.table</em>.</p></li>
 </ul>
@@ -185,7 +205,8 @@ devtools::install_github("SebKrantz/collapse")</code></pre>
 <div class="license">
 <h2>License</h2>
 <ul class="list-unstyled">
-<li>GPL (&gt;= 2)</li>
+<li>GPL (&gt;= 2) | file <a href="LICENSE-text.html">LICENSE</a>
+</li>
 </ul>
 </div>
 <div class="developers">

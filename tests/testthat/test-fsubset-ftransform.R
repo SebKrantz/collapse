@@ -1,4 +1,4 @@
-context("subset and transform data")
+context("fsubset and ftransform")
 
 v <- na_insert(mtcars$mpg)
 m <- na_insert(as.matrix(mtcars))

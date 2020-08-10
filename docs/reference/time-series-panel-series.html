@@ -6,7 +6,7 @@
 <meta http-equiv="X-UA-Compatible" content="IE=edge">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-<title>Time-Series and Panel-Series — A7-time-series-panel-series • collapse</title>
+<title>Time Series and Panel Series — A7-time-series-panel-series • collapse</title>
 
 
 <!-- jquery -->
@@ -39,12 +39,12 @@
 
 
 
-<meta property="og:title" content="Time-Series and Panel-Series — A7-time-series-panel-series" />
+<meta property="og:title" content="Time Series and Panel Series — A7-time-series-panel-series" />
 <meta property="og:description" content="collapse provides the following functions to work with time-dependent data:
-flag, and the lag- and lead- operators L and F are S3 generics to efficiently compute sequences of lags and leads on ordered or unordered time-series and panel data.
-fdiff, fgrowth, and the operators D, Dlog and G are S3 generics to efficiently compute sequences of suitably lagged / leaded and iterated differences, log-differences and growth rates on ordered or unordered time-series and panel data. fdiff/D/Dlog can also compute quasi-differences of the form \(x_t - \rho x_{t-1}\) or \(log(x_t) - \rho log(x_{t-1})\) for log-differences.
-psmat is an S3 generic to efficiently convert panel-vectors or plm::pseries and data.frame's or plm::pdata.frame's to panel-series matrices and 3D arrays, respectively.
-psacf, pspacf and psccf are S3 generics to compute estimates of the auto-, partial auto- and cross- correlation or covariance functions for panel-vectors or plm::pseries, and multivariate versions for data.frame's or plm::pdata.frame's.
+flag, and the lag- and lead- operators L and F are S3 generics to efficiently compute sequences of lags and leads on ordered or unordered time series and panel data.
+fdiff, fgrowth, and the operators D, Dlog and G are S3 generics to efficiently compute sequences of suitably lagged / leaded and iterated differences, log-differences and growth rates on ordered or unordered time series and panel data. fdiff/D/Dlog can also compute quasi-differences of the form \(x_t - \rho x_{t-1}\) or \(log(x_t) - \rho log(x_{t-1})\) for log-differences.
+psmat is an S3 generic to efficiently convert panel-vectors or plm::pseries and data frames or plm::pdata.frame's to panel series matrices and 3D arrays, respectively.
+psacf, pspacf and psccf are S3 generics to compute estimates of the auto-, partial auto- and cross- correlation or covariance functions for panel-vectors or plm::pseries, and multivariate versions for data frames or plm::pdata.frame's.
 
 " />
 
@@ -78,7 +78,7 @@ psacf, pspacf and psccf are S3 generics to compute estimates of the auto-, parti
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">collapse</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">1.2.1</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">1.3.0</span>
       </span>
     </div>
 
@@ -93,13 +93,10 @@ psacf, pspacf and psccf are S3 generics to compute estimates of the auto-, parti
 <li>
   <a href="../news/index.html">News</a>
 </li>
-<li>
-  <a href="../blog/index.html">Blog</a>
-</li>
       </ul>
       <ul class="nav navbar-nav navbar-right">
         <li>
-  <a href="https://twitter.com/collapse">
+  <a href="https://twitter.com/collapse_R">
     <span class="fa fa-twitter"></span>
      
   </a>
@@ -123,17 +120,17 @@ psacf, pspacf and psccf are S3 generics to compute estimates of the auto-, parti
 <div class="row">
   <div class="col-md-9 contents">
     <div class="page-header">
-    <h1>Time-Series and Panel-Series</h1>
+    <h1>Time Series and Panel Series</h1>
     
     <div class="hidden name"><code>time-series-panel-series.Rd</code></div>
     </div>
 
     <div class="ref-description">
     <p><em>collapse</em> provides the following functions to work with time-dependent data:</p><ul>
-<li><p><code><a href='flag.html'>flag</a></code>, and the lag- and lead- operators <code><a href='flag.html'>L</a></code> and <code><a href='flag.html'>F</a></code> are S3 generics to efficiently compute sequences of <b>lags and leads</b> on ordered or unordered time-series and panel data.</p></li>
-<li><p><code><a href='fdiff.html'>fdiff</a></code>, <code><a href='fgrowth.html'>fgrowth</a></code>, and the operators <code><a href='fdiff.html'>D</a></code>, <code><a href='fdiff.html'>Dlog</a></code> and <code><a href='fgrowth.html'>G</a></code> are S3 generics to efficiently compute sequences of suitably lagged / leaded and iterated <b>differences, log-differences and growth rates</b> on ordered or unordered time-series and panel data. <code><a href='fdiff.html'>fdiff/D/Dlog</a></code> can also compute <b>quasi-differences</b> of the form \(x_t - \rho x_{t-1}\) or \(log(x_t) - \rho log(x_{t-1})\) for log-differences.</p></li>
-<li><p><code><a href='psmat.html'>psmat</a></code> is an S3 generic to efficiently convert panel-vectors or <code><a href='https://rdrr.io/pkg/plm/man/pseries.html'>plm::pseries</a></code> and data.frame's or <code><a href='https://rdrr.io/pkg/plm/man/pdata.frame.html'>plm::pdata.frame</a></code>'s to <b>panel-series matrices and 3D arrays</b>, respectively.</p></li>
-<li><p><code><a href='psacf.html'>psacf</a></code>, <code><a href='psacf.html'>pspacf</a></code> and <code><a href='psacf.html'>psccf</a></code> are S3 generics to compute estimates of the <b>auto-, partial auto- and cross- correlation or covariance functions</b> for panel-vectors or <code><a href='https://rdrr.io/pkg/plm/man/pseries.html'>plm::pseries</a></code>, and multivariate versions for data.frame's or <code><a href='https://rdrr.io/pkg/plm/man/pdata.frame.html'>plm::pdata.frame</a></code>'s.</p></li>
+<li><p><code><a href='flag.html'>flag</a></code>, and the lag- and lead- operators <code><a href='flag.html'>L</a></code> and <code><a href='flag.html'>F</a></code> are S3 generics to efficiently compute sequences of <b>lags and leads</b> on ordered or unordered time series and panel data.</p></li>
+<li><p><code><a href='fdiff.html'>fdiff</a></code>, <code><a href='fgrowth.html'>fgrowth</a></code>, and the operators <code><a href='fdiff.html'>D</a></code>, <code><a href='fdiff.html'>Dlog</a></code> and <code><a href='fgrowth.html'>G</a></code> are S3 generics to efficiently compute sequences of suitably lagged / leaded and iterated <b>differences, log-differences and growth rates</b> on ordered or unordered time series and panel data. <code><a href='fdiff.html'>fdiff/D/Dlog</a></code> can also compute <b>quasi-differences</b> of the form \(x_t - \rho x_{t-1}\) or \(log(x_t) - \rho log(x_{t-1})\) for log-differences.</p></li>
+<li><p><code><a href='psmat.html'>psmat</a></code> is an S3 generic to efficiently convert panel-vectors or <code><a href='https://rdrr.io/pkg/plm/man/pseries.html'>plm::pseries</a></code> and data frames or <code><a href='https://rdrr.io/pkg/plm/man/pdata.frame.html'>plm::pdata.frame</a></code>'s to <b>panel series matrices and 3D arrays</b>, respectively.</p></li>
+<li><p><code><a href='psacf.html'>psacf</a></code>, <code><a href='psacf.html'>pspacf</a></code> and <code><a href='psacf.html'>psccf</a></code> are S3 generics to compute estimates of the <b>auto-, partial auto- and cross- correlation or covariance functions</b> for panel-vectors or <code><a href='https://rdrr.io/pkg/plm/man/pseries.html'>plm::pseries</a></code>, and multivariate versions for data frames or <code><a href='https://rdrr.io/pkg/plm/man/pdata.frame.html'>plm::pdata.frame</a></code>'s.</p></li>
 </ul>
 
     </div>
@@ -145,19 +142,19 @@ psacf, pspacf and psccf are S3 generics to compute estimates of the auto-, parti
     <p></p><table class='table'>
 <tr><td><em> S3 Generic </em></td><td></td><td><em> Methods </em></td><td></td><td><em> Description </em></td></tr>
 <tr><td><!-- % \Sexpr{"\u200B"} \Sexpr{"\u200B"} \Sexpr{"\u200B"} \Sexpr{"\u200B"} -->
-                 <code><a href='flag.html'>flag/L/F</a></code></td><td></td><td><code>default, matrix, data.frame, pseries, pdata.frame, grouped_df</code></td><td></td><td>compute (sequences of) lags and leads</td></tr>
-<tr><td><code><a href='fdiff.html'>fdiff/D/Dlog</a></code></td><td></td><td><code>default, matrix, data.frame, pseries, pdata.frame, grouped_df</code></td><td></td><td>compute (sequences of lagged / leaded and iterated) (quasi-)differences or (quasi-)log-differences</td></tr>
-<tr><td><code><a href='fgrowth.html'>fgrowth/G</a></code></td><td></td><td><code>default, matrix, data.frame, pseries, pdata.frame, grouped_df</code></td><td></td><td>compute (sequences of lagged / leaded and iterated) growth rates (exact or log-differences, in percentage terms).</td></tr>
-<tr><td><code><a href='psmat.html'>psmat</a></code></td><td></td><td><code>default, pseries, data.frame, pdata.frame</code></td><td></td><td>convert panel-data to matrix / array</td></tr>
-<tr><td><code><a href='psacf.html'>psacf</a></code></td><td></td><td><code>default, pseries, data.frame, pdata.frame</code></td><td></td><td>compute ACF on panel-data</td></tr>
-<tr><td><code><a href='psacf.html'>pspacf</a></code></td><td></td><td><code>default, pseries, data.frame, pdata.frame</code></td><td></td><td>compute PACF on panel-data</td></tr>
-<tr><td><code><a href='psacf.html'>psccf</a></code></td><td></td><td><code>default, pseries, data.frame, pdata.frame</code></td><td></td><td>compute CCF on panel-data</td></tr>
+                 <code><a href='flag.html'>flag/L/F</a></code></td><td></td><td><code>default, matrix, data.frame, pseries, pdata.frame, grouped_df</code></td><td></td><td>Compute (sequences of) lags and leads</td></tr>
+<tr><td><code><a href='fdiff.html'>fdiff/D/Dlog</a></code></td><td></td><td><code>default, matrix, data.frame, pseries, pdata.frame, grouped_df</code></td><td></td><td>Compute (sequences of lagged / leaded and iterated) (quasi-)differences or (quasi-)log-differences</td></tr>
+<tr><td><code><a href='fgrowth.html'>fgrowth/G</a></code></td><td></td><td><code>default, matrix, data.frame, pseries, pdata.frame, grouped_df</code></td><td></td><td>Compute (sequences of lagged / leaded and iterated) growth rates (exact or via log-differences, in percentage terms)</td></tr>
+<tr><td><code><a href='psmat.html'>psmat</a></code></td><td></td><td><code>default, pseries, data.frame, pdata.frame</code></td><td></td><td>Convert panel data to matrix / array</td></tr>
+<tr><td><code><a href='psacf.html'>psacf</a></code></td><td></td><td><code>default, pseries, data.frame, pdata.frame</code></td><td></td><td>Compute ACF on panel data</td></tr>
+<tr><td><code><a href='psacf.html'>pspacf</a></code></td><td></td><td><code>default, pseries, data.frame, pdata.frame</code></td><td></td><td>Compute PACF on panel data</td></tr>
+<tr><td><code><a href='psacf.html'>psccf</a></code></td><td></td><td><code>default, pseries, data.frame, pdata.frame</code></td><td></td><td>Compute CCF on panel data</td></tr>
 </table>
 
 
     <h2 class="hasAnchor" id="see-also"><a class="anchor" href="#see-also"></a>See also</h2>
 
-    <div class='dont-index'><p><a href='collapse-documentation.html'>Collapse Overview</a>, <a href='data-transformations.html'>Data Transformations</a></p></div>
+    <div class='dont-index'><p><a href='index.html'>Collapse Overview</a>, <a href='data-transformations.html'>Data Transformations</a></p></div>
 
   </div>
   <div class="col-md-3 hidden-xs hidden-sm" id="pkgdown-sidebar">

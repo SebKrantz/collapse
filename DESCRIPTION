@@ -1,7 +1,7 @@
 Package: collapse
 Title: Advanced and Fast Data Transformation
-Version: 1.2.1
-Date: 2020-05-22
+Version: 1.3.0
+Date: 2020-08-10
 Authors@R: c(
            person("Sebastian", "Krantz", role = c("aut", "cre"), 
                   email = "sebastian.krantz@graduateinstitute.ch"),
@@ -13,38 +13,42 @@ Authors@R: c(
            person("Martyn", "Plummer", role = "cph"),
            person("1999-2016 The R Core Team", role = "cph")
            )
-Description: A C/C++ based package for advanced data transformation in R that is 
-    extremely fast, flexible and parsimonious to code with and programmer 
-    friendly. It is well integrated with 'dplyr', 'plm' and 'data.table'.
+Description: A C/C++ based package for advanced data transformation and 
+    statistical computing in R that is extremely fast, flexible and 
+    parsimonious to code with and programmer friendly. 
+    It is well integrated with 'dplyr', 'plm' and 'data.table'.
     --- Key Features: ---
-    (1) Advanced data programming: A full set of fast statistical functions 
+    (1) Advanced statistical programming: A full set of fast statistical functions 
         supporting grouped and weighted computations on vectors, matrices and 
-        data frames. Fast (ordered) and programmable grouping, factor 
-        generation, manipulation of data frames and data object conversions.
+        data frames. Fast and programmable grouping, ordering, unique values / rows, 
+        factor generation and interactions. Fast and flexible functions for data 
+        manipulation and data object conversions.
     (2) Advanced aggregation: Fast and easy multi-data-type, multi-function, 
         weighted, parallelized and fully customized data aggregation.
-    (3) Advanced transformations: Fast (grouped, weighted) replacing and 
-        sweeping out of statistics, scaling / standardizing, centering (i.e. 
-        between and within transformations), higher-dimensional centering 
-        (i.e. multiple fixed effects transformations), linear 
-        prediction and partialling-out.
+    (3) Advanced transformations: Fast (grouped) replacing and sweeping out of 
+        statistics, and (grouped, weighted) scaling / standardizing, between 
+        (averaging) and (quasi-)within (centering / demeaning) transformations, 
+        higher-dimensional centering (i.e. multiple fixed effects transformations), 
+        linear prediction and partialling-out.
     (4) Advanced time-computations: Fast (sequences of) lags / leads, and 
         (lagged / leaded, iterated, quasi-, log-) differences and growth 
-        rates on (unordered) time-series and panel data. Multivariate auto, 
-        partial and cross-correlation functions for panel data. 
+        rates on (unordered) time series and panel data. Multivariate auto-, 
+        partial- and cross-correlation functions for panel data. 
         Panel data to (ts-)array conversions.
     (5) List processing: (Recursive) list search / identification, extraction / 
         subsetting, data-apply, and generalized row-binding / unlisting in 2D.
     (6) Advanced data exploration: Fast (grouped, weighted, panel-decomposed) 
         summary statistics for complex multilevel / panel data.
-URL: https://sebkrantz.github.io/collapse, https://github.com/SebKrantz/collapse
+URL: https://sebkrantz.github.io/collapse, 
+     https://github.com/SebKrantz/collapse,
+     https://twitter.com/collapse_R
 BugReports: https://github.com/SebKrantz/collapse/issues
-License: GPL (>= 2) + FILE license
+License: GPL (>= 2) | file LICENSE
 Encoding: UTF-8
 LazyData: true
 Depends: R (>= 3.5.0)
 Imports: Rcpp (>= 1.0.1), lfe (>= 2.7)
 LinkingTo: Rcpp
-Suggests: dplyr, plm, data.table, ggplot2, scales, vars, knitr, rmarkdown, testthat, microbenchmark
+Suggests: dplyr, plm, data.table, matrixStats, magrittr, ggplot2, scales, vars, knitr, rmarkdown, testthat, microbenchmark
 SystemRequirements: C++11
 VignetteBuilder: knitr

@@ -72,7 +72,7 @@
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">collapse</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">1.2.1</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">1.3.0</span>
       </span>
     </div>
 
@@ -87,13 +87,10 @@
 <li>
   <a href="../news/index.html">News</a>
 </li>
-<li>
-  <a href="../blog/index.html">Blog</a>
-</li>
       </ul>
       <ul class="nav navbar-nav navbar-right">
         <li>
-  <a href="https://twitter.com/collapse">
+  <a href="https://twitter.com/collapse_R">
     <span class="fa fa-twitter"></span>
      
   </a>
@@ -126,45 +123,45 @@
     <p><code>fvar</code> and <code>fsd</code> are generic functions that compute the (column-wise) variance and standard deviation of <code>x</code>, (optionally) grouped by <code>g</code> and/or frequency-weighted by <code>w</code>. The <code><a href='TRA.html'>TRA</a></code> argument can further be used to transform <code>x</code> using its (grouped, weighted) variance/sd.</p>
     </div>
 
-    <pre class="usage">fvar(x, ...)
-fsd(x, ...)
-&lt;!-- %## Default S3 methods: --&gt;
-# S3 method for default
-fvar(x, g = NULL, w = NULL, TRA = NULL, na.rm = TRUE,
-     use.g.names = TRUE, stable.algo = TRUE, ...)
-# S3 method for default
-fsd(x, g = NULL, w = NULL, TRA = NULL, na.rm = TRUE,
-    use.g.names = TRUE, stable.algo = TRUE, ...)
-&lt;!-- %## S3 methods for class 'matrix' --&gt;
-# S3 method for matrix
-fvar(x, g = NULL, w = NULL, TRA = NULL, na.rm = TRUE,
-     use.g.names = TRUE, drop = TRUE, stable.algo = TRUE, ...)
-# S3 method for matrix
-fsd(x, g = NULL, w = NULL, TRA = NULL, na.rm = TRUE,
-    use.g.names = TRUE, drop = TRUE, stable.algo = TRUE, ...)
-&lt;!-- %## S3 methods for class 'data.frame' --&gt;
-# S3 method for data.frame
-fvar(x, g = NULL, w = NULL, TRA = NULL, na.rm = TRUE,
-     use.g.names = TRUE, drop = TRUE, stable.algo = TRUE, ...)
-# S3 method for data.frame
-fsd(x, g = NULL, w = NULL, TRA = NULL, na.rm = TRUE,
-    use.g.names = TRUE, drop = TRUE, stable.algo = TRUE, ...)
-&lt;!-- %## S3 methods for class 'grouped_df' --&gt;
-# S3 method for grouped_df
-fvar(x, w = NULL, TRA = NULL, na.rm = TRUE,
-     use.g.names = FALSE, keep.group_vars = TRUE, keep.w = TRUE,
-     stable.algo = TRUE, ...)
-# S3 method for grouped_df
-fsd(x, w = NULL, TRA = NULL, na.rm = TRUE,
-    use.g.names = FALSE, keep.group_vars = TRUE, keep.w = TRUE,
-    stable.algo = TRUE, ...)</pre>
+    <pre class="usage"><span class='fu'>fvar</span>(<span class='no'>x</span>, <span class='no'>...</span>)
+<span class='fu'>fsd</span>(<span class='no'>x</span>, <span class='no'>...</span>)
+
+<span class='co'># S3 method for default</span>
+<span class='fu'>fvar</span>(<span class='no'>x</span>, <span class='kw'>g</span> <span class='kw'>=</span> <span class='kw'>NULL</span>, <span class='kw'>w</span> <span class='kw'>=</span> <span class='kw'>NULL</span>, <span class='kw'>TRA</span> <span class='kw'>=</span> <span class='kw'>NULL</span>, <span class='kw'>na.rm</span> <span class='kw'>=</span> <span class='fl'>TRUE</span>,
+     <span class='kw'>use.g.names</span> <span class='kw'>=</span> <span class='fl'>TRUE</span>, <span class='kw'>stable.algo</span> <span class='kw'>=</span> <span class='fl'>TRUE</span>, <span class='no'>...</span>)
+<span class='co'># S3 method for default</span>
+<span class='fu'>fsd</span>(<span class='no'>x</span>, <span class='kw'>g</span> <span class='kw'>=</span> <span class='kw'>NULL</span>, <span class='kw'>w</span> <span class='kw'>=</span> <span class='kw'>NULL</span>, <span class='kw'>TRA</span> <span class='kw'>=</span> <span class='kw'>NULL</span>, <span class='kw'>na.rm</span> <span class='kw'>=</span> <span class='fl'>TRUE</span>,
+    <span class='kw'>use.g.names</span> <span class='kw'>=</span> <span class='fl'>TRUE</span>, <span class='kw'>stable.algo</span> <span class='kw'>=</span> <span class='fl'>TRUE</span>, <span class='no'>...</span>)
+
+<span class='co'># S3 method for matrix</span>
+<span class='fu'>fvar</span>(<span class='no'>x</span>, <span class='kw'>g</span> <span class='kw'>=</span> <span class='kw'>NULL</span>, <span class='kw'>w</span> <span class='kw'>=</span> <span class='kw'>NULL</span>, <span class='kw'>TRA</span> <span class='kw'>=</span> <span class='kw'>NULL</span>, <span class='kw'>na.rm</span> <span class='kw'>=</span> <span class='fl'>TRUE</span>,
+     <span class='kw'>use.g.names</span> <span class='kw'>=</span> <span class='fl'>TRUE</span>, <span class='kw'>drop</span> <span class='kw'>=</span> <span class='fl'>TRUE</span>, <span class='kw'>stable.algo</span> <span class='kw'>=</span> <span class='fl'>TRUE</span>, <span class='no'>...</span>)
+<span class='co'># S3 method for matrix</span>
+<span class='fu'>fsd</span>(<span class='no'>x</span>, <span class='kw'>g</span> <span class='kw'>=</span> <span class='kw'>NULL</span>, <span class='kw'>w</span> <span class='kw'>=</span> <span class='kw'>NULL</span>, <span class='kw'>TRA</span> <span class='kw'>=</span> <span class='kw'>NULL</span>, <span class='kw'>na.rm</span> <span class='kw'>=</span> <span class='fl'>TRUE</span>,
+    <span class='kw'>use.g.names</span> <span class='kw'>=</span> <span class='fl'>TRUE</span>, <span class='kw'>drop</span> <span class='kw'>=</span> <span class='fl'>TRUE</span>, <span class='kw'>stable.algo</span> <span class='kw'>=</span> <span class='fl'>TRUE</span>, <span class='no'>...</span>)
+
+<span class='co'># S3 method for data.frame</span>
+<span class='fu'>fvar</span>(<span class='no'>x</span>, <span class='kw'>g</span> <span class='kw'>=</span> <span class='kw'>NULL</span>, <span class='kw'>w</span> <span class='kw'>=</span> <span class='kw'>NULL</span>, <span class='kw'>TRA</span> <span class='kw'>=</span> <span class='kw'>NULL</span>, <span class='kw'>na.rm</span> <span class='kw'>=</span> <span class='fl'>TRUE</span>,
+     <span class='kw'>use.g.names</span> <span class='kw'>=</span> <span class='fl'>TRUE</span>, <span class='kw'>drop</span> <span class='kw'>=</span> <span class='fl'>TRUE</span>, <span class='kw'>stable.algo</span> <span class='kw'>=</span> <span class='fl'>TRUE</span>, <span class='no'>...</span>)
+<span class='co'># S3 method for data.frame</span>
+<span class='fu'>fsd</span>(<span class='no'>x</span>, <span class='kw'>g</span> <span class='kw'>=</span> <span class='kw'>NULL</span>, <span class='kw'>w</span> <span class='kw'>=</span> <span class='kw'>NULL</span>, <span class='kw'>TRA</span> <span class='kw'>=</span> <span class='kw'>NULL</span>, <span class='kw'>na.rm</span> <span class='kw'>=</span> <span class='fl'>TRUE</span>,
+    <span class='kw'>use.g.names</span> <span class='kw'>=</span> <span class='fl'>TRUE</span>, <span class='kw'>drop</span> <span class='kw'>=</span> <span class='fl'>TRUE</span>, <span class='kw'>stable.algo</span> <span class='kw'>=</span> <span class='fl'>TRUE</span>, <span class='no'>...</span>)
+
+<span class='co'># S3 method for grouped_df</span>
+<span class='fu'>fvar</span>(<span class='no'>x</span>, <span class='kw'>w</span> <span class='kw'>=</span> <span class='kw'>NULL</span>, <span class='kw'>TRA</span> <span class='kw'>=</span> <span class='kw'>NULL</span>, <span class='kw'>na.rm</span> <span class='kw'>=</span> <span class='fl'>TRUE</span>,
+     <span class='kw'>use.g.names</span> <span class='kw'>=</span> <span class='fl'>FALSE</span>, <span class='kw'>keep.group_vars</span> <span class='kw'>=</span> <span class='fl'>TRUE</span>, <span class='kw'>keep.w</span> <span class='kw'>=</span> <span class='fl'>TRUE</span>,
+     <span class='kw'>stable.algo</span> <span class='kw'>=</span> <span class='fl'>TRUE</span>, <span class='no'>...</span>)
+<span class='co'># S3 method for grouped_df</span>
+<span class='fu'>fsd</span>(<span class='no'>x</span>, <span class='kw'>w</span> <span class='kw'>=</span> <span class='kw'>NULL</span>, <span class='kw'>TRA</span> <span class='kw'>=</span> <span class='kw'>NULL</span>, <span class='kw'>na.rm</span> <span class='kw'>=</span> <span class='fl'>TRUE</span>,
+    <span class='kw'>use.g.names</span> <span class='kw'>=</span> <span class='fl'>FALSE</span>, <span class='kw'>keep.group_vars</span> <span class='kw'>=</span> <span class='fl'>TRUE</span>, <span class='kw'>keep.w</span> <span class='kw'>=</span> <span class='fl'>TRUE</span>,
+    <span class='kw'>stable.algo</span> <span class='kw'>=</span> <span class='fl'>TRUE</span>, <span class='no'>...</span>)</pre>
 
     <h2 class="hasAnchor" id="arguments"><a class="anchor" href="#arguments"></a>Arguments</h2>
     <table class="ref-arguments">
     <colgroup><col class="name" /><col class="desc" /></colgroup>
     <tr>
       <th>x</th>
-      <td><p>a numeric vector, matrix, data.frame or grouped tibble (<code><a href='https://dplyr.tidyverse.org/reference/grouped_df.html'>dplyr::grouped_df</a></code>).</p></td>
+      <td><p>a numeric vector, matrix, data frame or grouped tibble (<code><a href='https://dplyr.tidyverse.org/reference/grouped_df.html'>dplyr::grouped_df</a></code>).</p></td>
     </tr>
     <tr>
       <th>g</th>
@@ -185,11 +182,11 @@ fsd(x, w = NULL, TRA = NULL, na.rm = TRUE,
     </tr>
     <tr>
       <th>use.g.names</th>
-      <td><p>make group-names and add to the result as names (vector method) or row-names (matrix and data.frame method). No row-names are generated for data.tables and grouped tibbles.</p></td>
+      <td><p>logical. Make group-names and add to the result as names (default method) or row-names (matrix and data frame methods). No row-names are generated for <em>data.table</em>'s and grouped tibbles.</p></td>
     </tr>
     <tr>
       <th>drop</th>
-      <td><p><em>matrix and data.frame method:</em> drop dimensions and return an atomic vector if <code>g = NULL</code> and <code>TRA = NULL</code>.</p></td>
+      <td><p><em>matrix and data.frame method:</em> Logical. <code>TRUE</code> drops dimensions and returns an atomic vector if <code>g = NULL</code> and <code>TRA = NULL</code>.</p></td>
     </tr>
     <tr>
       <th>keep.group_vars</th>
@@ -216,43 +213,108 @@ fsd(x, w = NULL, TRA = NULL, na.rm = TRUE,
 <p>The weighted variance is computed with frequency weights as <code>(sum(x^2*w)-sum(w)*weighted.mean(x,w)^2)/(sum(w)-1)</code>. If <code>na.rm = TRUE</code>, missing values will be removed from both <code>x</code> and <code>w</code> i.e. utilizing only <code>x[complete.cases(x,w)]</code> and <code>w[complete.cases(x,w)]</code>.</p>
 <p>Missing-value removal as controlled by the <code>na.rm</code> argument is done very efficiently by simply skipping the values (thus setting <code>na.rm = FALSE</code> on data with no missing values doesn't give extra speed). Large performance gains can nevertheless be achieved in the presence of missing values if <code>na.rm = FALSE</code>, since then the corresponding computation is terminated once a <code>NA</code> is encountered and <code>NA</code> is returned.</p>
 <p>This all seamlessly generalizes to grouped computations, which are performed in a single pass (without splitting the data) and therefore extremely fast.</p>
-<p>When applied to data frame's with groups or <code>drop = FALSE</code>, <code>fvar/fsd</code> preserves all column attributes (such as variable labels) but does not distinguish between classed and unclassed object (thus applying <code>fvar/fsd</code> to a factor column will give a 'malformed factor' error, and applying it to a date variable will give an error or a pretty weird date). The attributes of the <code>data.frame</code> itself are also preserved.</p>
+<p>When applied to data frames with groups or <code>drop = FALSE</code>, <code>fvar/fsd</code> preserves all column attributes (such as variable labels) but does not distinguish between classed and unclassed object (thus applying <code>fvar/fsd</code> to a factor column will give a 'malformed factor' error). The attributes of the data frame itself are also preserved.</p>
     <h2 class="hasAnchor" id="value"><a class="anchor" href="#value"></a>Value</h2>
 
     <p><code>fvar</code> returns the variance of <code>x</code>, grouped by <code>g</code>, or (if <code><a href='TRA.html'>TRA</a></code> is used) <code>x</code> transformed by its variance, grouped by <code>g</code>. <code>fsd</code> computes the standard deviation of <code>x</code> in like manor.</p>
+    <h2 class="hasAnchor" id="references"><a class="anchor" href="#references"></a>References</h2>
+
+    <p>Welford, B. P. (1962). Note on a method for calculating corrected sums of squares and products. <em>Technometrics</em>. 4 (3): 419-420. doi:10.2307/1266577.</p>
     <h2 class="hasAnchor" id="see-also"><a class="anchor" href="#see-also"></a>See also</h2>
 
-    <div class='dont-index'><p><a href='fast-statistical-functions.html'>Fast Statistical Functions</a>, <a href='collapse-documentation.html'>Collapse Overview</a></p></div>
+    <div class='dont-index'><p><a href='fast-statistical-functions.html'>Fast Statistical Functions</a>, <a href='index.html'>Collapse Overview</a></p></div>
 
     <h2 class="hasAnchor" id="examples"><a class="anchor" href="#examples"></a>Examples</h2>
-    <pre class="examples"><span class='co'>## default vector method</span>
-<span class='fu'>fvar</span>(<span class='no'>mtcars</span>$<span class='no'>mpg</span>)                            <span class='co'># Simple variance (all examples also hold for fvar!)</span>
-<span class='fu'>fsd</span>(<span class='no'>mtcars</span>$<span class='no'>mpg</span>)                             <span class='co'># Simple standard deviation</span>
-<span class='fu'>fsd</span>(<span class='no'>mtcars</span>$<span class='no'>mpg</span>, <span class='kw'>w</span> <span class='kw'>=</span> <span class='no'>mtcars</span>$<span class='no'>hp</span>)              <span class='co'># Weighted sd: Weighted by hp</span>
-<span class='fu'>fsd</span>(<span class='no'>mtcars</span>$<span class='no'>mpg</span>, <span class='kw'>TRA</span> <span class='kw'>=</span> <span class='st'>"/"</span>)                  <span class='co'># Simple transformation: scaling (See also ?fscale)</span>
-<span class='fu'>fsd</span>(<span class='no'>mtcars</span>$<span class='no'>mpg</span>, <span class='no'>mtcars</span>$<span class='no'>cyl</span>)                 <span class='co'># Grouped sd</span>
-<span class='fu'>fsd</span>(<span class='no'>mtcars</span>$<span class='no'>mpg</span>, <span class='no'>mtcars</span>$<span class='no'>cyl</span>, <span class='no'>mtcars</span>$<span class='no'>hp</span>)      <span class='co'># Grouped weighted sd</span>
-<span class='fu'>fsd</span>(<span class='no'>mtcars</span>$<span class='no'>mpg</span>, <span class='no'>mtcars</span>$<span class='no'>cyl</span>, <span class='kw'>TRA</span> <span class='kw'>=</span> <span class='st'>"/"</span>)      <span class='co'># Scaling by group</span>
-<span class='fu'>fsd</span>(<span class='no'>mtcars</span>$<span class='no'>mpg</span>, <span class='no'>mtcars</span>$<span class='no'>cyl</span>, <span class='no'>mtcars</span>$<span class='no'>hp</span>, <span class='st'>"/"</span>) <span class='co'># Group-scaling using weighted group sds</span>
-
+    <pre class="examples"><div class='input'><span class='co'>## default vector method</span>
+<span class='fu'>fvar</span>(<span class='no'>mtcars</span>$<span class='no'>mpg</span>)                            <span class='co'># Simple variance (all examples also hold for fvar!)</span></div><div class='output co'>#&gt; [1] 36.3241</div><div class='input'><span class='fu'>fsd</span>(<span class='no'>mtcars</span>$<span class='no'>mpg</span>)                             <span class='co'># Simple standard deviation</span></div><div class='output co'>#&gt; [1] 6.026948</div><div class='input'><span class='fu'>fsd</span>(<span class='no'>mtcars</span>$<span class='no'>mpg</span>, <span class='kw'>w</span> <span class='kw'>=</span> <span class='no'>mtcars</span>$<span class='no'>hp</span>)              <span class='co'># Weighted sd: Weighted by hp</span></div><div class='output co'>#&gt; [1] 5.150858</div><div class='input'><span class='fu'>fsd</span>(<span class='no'>mtcars</span>$<span class='no'>mpg</span>, <span class='kw'>TRA</span> <span class='kw'>=</span> <span class='st'>"/"</span>)                  <span class='co'># Simple transformation: scaling (See also ?fscale)</span></div><div class='output co'>#&gt;  [1] 3.484351 3.484351 3.783009 3.550719 3.102731 3.003178 2.372677 4.048484
+#&gt;  [9] 3.783009 3.185692 2.953402 2.721112 2.870441 2.522006 1.725583 1.725583
+#&gt; [17] 2.439045 5.375855 5.044012 5.624737 3.567311 2.571783 2.522006 2.206755
+#&gt; [25] 3.185692 4.529656 4.313958 5.044012 2.621559 3.268653 2.488822 3.550719</div><div class='input'><span class='fu'>fsd</span>(<span class='no'>mtcars</span>$<span class='no'>mpg</span>, <span class='no'>mtcars</span>$<span class='no'>cyl</span>)                 <span class='co'># Grouped sd</span></div><div class='output co'>#&gt;        4        6        8 
+#&gt; 4.509828 1.453567 2.560048 </div><div class='input'><span class='fu'>fsd</span>(<span class='no'>mtcars</span>$<span class='no'>mpg</span>, <span class='no'>mtcars</span>$<span class='no'>cyl</span>, <span class='no'>mtcars</span>$<span class='no'>hp</span>)      <span class='co'># Grouped weighted sd</span></div><div class='output co'>#&gt;        4        6        8 
+#&gt; 4.250863 1.294689 2.390448 </div><div class='input'><span class='fu'>fsd</span>(<span class='no'>mtcars</span>$<span class='no'>mpg</span>, <span class='no'>mtcars</span>$<span class='no'>cyl</span>, <span class='kw'>TRA</span> <span class='kw'>=</span> <span class='st'>"/"</span>)      <span class='co'># Scaling by group</span></div><div class='output co'>#&gt;  [1] 14.447218 14.447218  5.055626 14.722403  7.304550 12.452126  5.585833
+#&gt;  [8]  5.410406  5.055626 13.208885 12.245737  6.406130  6.757686  5.937388
+#&gt; [15]  4.062424  4.062424  5.742080  7.184310  6.740834  7.516917  4.767366
+#&gt; [22]  6.054574  5.937388  5.195215  7.499859  6.053446  5.765187  6.740834
+#&gt; [29]  6.171759 13.552866  5.859265  4.745192</div><div class='input'><span class='fu'>fsd</span>(<span class='no'>mtcars</span>$<span class='no'>mpg</span>, <span class='no'>mtcars</span>$<span class='no'>cyl</span>, <span class='no'>mtcars</span>$<span class='no'>hp</span>, <span class='st'>"/"</span>) <span class='co'># Group-scaling using weighted group sds</span></div><div class='output co'>#&gt;  [1] 16.220111 16.220111  5.363617 16.529066  7.822800 13.980191  5.982141
+#&gt;  [8]  5.740011  5.363617 14.829816 13.748475  6.860638  7.237136  6.358640
+#&gt; [15]  4.350648  4.350648  6.149474  7.621982  7.151489  7.974852  5.057797
+#&gt; [22]  6.484139  6.358640  5.563810  8.031966  6.422226  6.116405  7.151489
+#&gt; [29]  6.609639 15.216009  6.274973  5.034272</div><div class='input'>
 <span class='co'>## data.frame method</span>
-<span class='fu'>fsd</span>(<span class='no'>iris</span>)                           <span class='co'># This works, although 'Species' is a factor variable</span>
-<span class='fu'>fsd</span>(<span class='no'>mtcars</span>, <span class='kw'>drop</span> <span class='kw'>=</span> <span class='fl'>FALSE</span>)           <span class='co'># This works, all columns are numeric variables</span>
-<span class='fu'>fsd</span>(<span class='no'>iris</span>[-<span class='fl'>5</span>], <span class='no'>iris</span>[<span class='fl'>5</span>])              <span class='co'># By Species: iris[5] is still a list, and thus passed to GRP()</span>
-<span class='fu'>fsd</span>(<span class='no'>iris</span>[-<span class='fl'>5</span>], <span class='no'>iris</span><span class='kw'>[[</span><span class='fl'>5</span>]])            <span class='co'># Same thing much faster: fsd recognizes 'Species' is a factor</span>
-<span class='fu'>fsd</span>(<span class='no'>iris</span>[-<span class='fl'>5</span>], <span class='no'>iris</span><span class='kw'>[[</span><span class='fl'>5</span>]], <span class='kw'>TRA</span> <span class='kw'>=</span> <span class='st'>"/"</span>) <span class='co'># Data scaled by species (see also fscale)</span>
-
+<span class='fu'>fsd</span>(<span class='no'>iris</span>)                           <span class='co'># This works, although 'Species' is a factor variable</span></div><div class='output co'>#&gt; Sepal.Length  Sepal.Width Petal.Length  Petal.Width      Species 
+#&gt;    0.8280661    0.4358663    1.7652982    0.7622377    0.8192319 </div><div class='input'><span class='fu'>fsd</span>(<span class='no'>mtcars</span>, <span class='kw'>drop</span> <span class='kw'>=</span> <span class='fl'>FALSE</span>)           <span class='co'># This works, all columns are numeric variables</span></div><div class='output co'>#&gt;        mpg      cyl     disp       hp      drat        wt     qsec        vs
+#&gt; 1 6.026948 1.785922 123.9387 68.56287 0.5346787 0.9784574 1.786943 0.5040161
+#&gt;          am      gear   carb
+#&gt; 1 0.4989909 0.7378041 1.6152</div><div class='input'><span class='fu'>fsd</span>(<span class='no'>iris</span>[-<span class='fl'>5</span>], <span class='no'>iris</span>[<span class='fl'>5</span>])              <span class='co'># By Species: iris[5] is still a list, and thus passed to GRP()</span></div><div class='output co'>#&gt;            Sepal.Length Sepal.Width Petal.Length Petal.Width
+#&gt; setosa        0.3524897   0.3790644    0.1736640   0.1053856
+#&gt; versicolor    0.5161711   0.3137983    0.4699110   0.1977527
+#&gt; virginica     0.6358796   0.3224966    0.5518947   0.2746501</div><div class='input'><span class='fu'>fsd</span>(<span class='no'>iris</span>[-<span class='fl'>5</span>], <span class='no'>iris</span><span class='kw'>[[</span><span class='fl'>5</span>]])            <span class='co'># Same thing much faster: fsd recognizes 'Species' is a factor</span></div><div class='output co'>#&gt;            Sepal.Length Sepal.Width Petal.Length Petal.Width
+#&gt; setosa        0.3524897   0.3790644    0.1736640   0.1053856
+#&gt; versicolor    0.5161711   0.3137983    0.4699110   0.1977527
+#&gt; virginica     0.6358796   0.3224966    0.5518947   0.2746501</div><div class='input'><span class='fu'><a href='https://rdrr.io/r/utils/head.html'>head</a></span>(<span class='fu'>fsd</span>(<span class='no'>iris</span>[-<span class='fl'>5</span>], <span class='no'>iris</span><span class='kw'>[[</span><span class='fl'>5</span>]], <span class='kw'>TRA</span> <span class='kw'>=</span> <span class='st'>"/"</span>)) <span class='co'># Data scaled by species (see also fscale)</span></div><div class='output co'>#&gt;   Sepal.Length Sepal.Width Petal.Length Petal.Width
+#&gt; 1     14.46851    9.233260     8.061544    1.897793
+#&gt; 2     13.90112    7.914223     8.061544    1.897793
+#&gt; 3     13.33372    8.441838     7.485720    1.897793
+#&gt; 4     13.05003    8.178031     8.637369    1.897793
+#&gt; 5     14.18481    9.497068     8.061544    1.897793
+#&gt; 6     15.31960   10.288490     9.789018    3.795585</div><div class='input'>
 <span class='co'>## matrix method</span>
 <span class='no'>m</span> <span class='kw'>&lt;-</span> <span class='fu'><a href='quick-conversion.html'>qM</a></span>(<span class='no'>mtcars</span>)
-<span class='fu'>fsd</span>(<span class='no'>m</span>)
-<span class='fu'>fsd</span>(<span class='no'>m</span>, <span class='no'>mtcars</span>$<span class='no'>cyl</span>) <span class='co'># etc...</span>
-
+<span class='fu'>fsd</span>(<span class='no'>m</span>)</div><div class='output co'>#&gt;         mpg         cyl        disp          hp        drat          wt 
+#&gt;   6.0269481   1.7859216 123.9386938  68.5628685   0.5346787   0.9784574 
+#&gt;        qsec          vs          am        gear        carb 
+#&gt;   1.7869432   0.5040161   0.4989909   0.7378041   1.6152000 </div><div class='input'><span class='fu'>fsd</span>(<span class='no'>m</span>, <span class='no'>mtcars</span>$<span class='no'>cyl</span>) <span class='co'># etc..</span></div><div class='output co'>#&gt;        mpg cyl     disp       hp      drat        wt     qsec        vs
+#&gt; 4 4.509828   0 26.87159 20.93453 0.3654711 0.5695637 1.682445 0.3015113
+#&gt; 6 1.453567   0 41.56246 24.26049 0.4760552 0.3563455 1.706866 0.5345225
+#&gt; 8 2.560048   0 67.77132 50.97689 0.3723618 0.7594047 1.196014 0.0000000
+#&gt;          am      gear     carb
+#&gt; 4 0.4670994 0.5393599 0.522233
+#&gt; 6 0.5345225 0.6900656 1.812654
+#&gt; 8 0.3631365 0.7262730 1.556624</div><div class='input'>
 <span class='co'>## method for grouped tibbles - for use with dplyr:</span>
 <span class='fu'><a href='https://rdrr.io/r/base/library.html'>library</a></span>(<span class='no'>dplyr</span>)
-<span class='no'>mtcars</span> <span class='kw'>%&gt;%</span> <span class='fu'><a href='https://dplyr.tidyverse.org/reference/group_by.html'>group_by</a></span>(<span class='no'>cyl</span>,<span class='no'>vs</span>,<span class='no'>am</span>) <span class='kw'>%&gt;%</span> <span class='no'>fsd</span>
-<span class='no'>mtcars</span> <span class='kw'>%&gt;%</span> <span class='fu'><a href='https://dplyr.tidyverse.org/reference/group_by.html'>group_by</a></span>(<span class='no'>cyl</span>,<span class='no'>vs</span>,<span class='no'>am</span>) <span class='kw'>%&gt;%</span> <span class='fu'>fsd</span>(<span class='kw'>keep.group_vars</span> <span class='kw'>=</span> <span class='fl'>FALSE</span>) <span class='co'># remove grouping columns</span>
-<span class='no'>mtcars</span> <span class='kw'>%&gt;%</span> <span class='fu'><a href='https://dplyr.tidyverse.org/reference/group_by.html'>group_by</a></span>(<span class='no'>cyl</span>,<span class='no'>vs</span>,<span class='no'>am</span>) <span class='kw'>%&gt;%</span> <span class='fu'>fsd</span>(<span class='no'>hp</span>)      <span class='co'># Weighted by hp</span>
-<span class='no'>mtcars</span> <span class='kw'>%&gt;%</span> <span class='fu'><a href='https://dplyr.tidyverse.org/reference/group_by.html'>group_by</a></span>(<span class='no'>cyl</span>,<span class='no'>vs</span>,<span class='no'>am</span>) <span class='kw'>%&gt;%</span> <span class='fu'>fsd</span>(<span class='no'>hp</span>, <span class='st'>"/"</span>) <span class='co'># Weighted scaling transformation</span></pre>
+<span class='no'>mtcars</span> <span class='kw'>%&gt;%</span> <span class='fu'><a href='https://dplyr.tidyverse.org/reference/group_by.html'>group_by</a></span>(<span class='no'>cyl</span>,<span class='no'>vs</span>,<span class='no'>am</span>) <span class='kw'>%&gt;%</span> <span class='no'>fsd</span></div><div class='output co'>#&gt; <span style='color: #949494;'># A tibble: 7 x 11</span><span>
+#&gt;     cyl    vs    am    mpg  disp    hp   drat     wt    qsec   gear   carb
+#&gt;   </span><span style='color: #949494;font-style: italic;'>&lt;dbl&gt;</span><span> </span><span style='color: #949494;font-style: italic;'>&lt;dbl&gt;</span><span> </span><span style='color: #949494;font-style: italic;'>&lt;dbl&gt;</span><span>  </span><span style='color: #949494;font-style: italic;'>&lt;dbl&gt;</span><span> </span><span style='color: #949494;font-style: italic;'>&lt;dbl&gt;</span><span> </span><span style='color: #949494;font-style: italic;'>&lt;dbl&gt;</span><span>  </span><span style='color: #949494;font-style: italic;'>&lt;dbl&gt;</span><span>  </span><span style='color: #949494;font-style: italic;'>&lt;dbl&gt;</span><span>   </span><span style='color: #949494;font-style: italic;'>&lt;dbl&gt;</span><span>  </span><span style='color: #949494;font-style: italic;'>&lt;dbl&gt;</span><span>  </span><span style='color: #949494;font-style: italic;'>&lt;dbl&gt;</span><span>
+#&gt; </span><span style='color: #BCBCBC;'>1</span><span>     4     0     1 </span><span style='color: #BB0000;'>NA</span><span>     </span><span style='color: #BB0000;'>NA</span><span>    </span><span style='color: #BB0000;'>NA</span><span>    </span><span style='color: #BB0000;'>NA</span><span>     </span><span style='color: #BB0000;'>NA</span><span>     </span><span style='color: #BB0000;'>NA</span><span>      </span><span style='color: #BB0000;'>NA</span><span>     </span><span style='color: #BB0000;'>NA</span><span>    
+#&gt; </span><span style='color: #BCBCBC;'>2</span><span>     4     1     0  1.45  14.0  19.7   0.130  0.408  1.67    0.577  0.577
+#&gt; </span><span style='color: #BCBCBC;'>3</span><span>     4     1     1  4.76  18.8  24.1   0.378  0.440  0.945   0.378  0.535
+#&gt; </span><span style='color: #BCBCBC;'>4</span><span>     6     0     1  0.751  8.66 37.5   0.162  0.128  0.769   0.577  1.15 
+#&gt; </span><span style='color: #BCBCBC;'>5</span><span>     6     1     0  1.63  44.7   9.18  0.592  0.116  0.816   0.577  1.73 
+#&gt; </span><span style='color: #BCBCBC;'>6</span><span>     8     0     0  2.77  71.8  33.4   0.230  0.768  0.802   0      0.900
+#&gt; </span><span style='color: #BCBCBC;'>7</span><span>     8     0     1  0.566 35.4  50.2   0.481  0.283  0.070</span><span style='text-decoration: underline;'>7</span><span>  0      2.83 </div><div class='input'><span class='no'>mtcars</span> <span class='kw'>%&gt;%</span> <span class='fu'><a href='https://dplyr.tidyverse.org/reference/group_by.html'>group_by</a></span>(<span class='no'>cyl</span>,<span class='no'>vs</span>,<span class='no'>am</span>) <span class='kw'>%&gt;%</span> <span class='fu'>fsd</span>(<span class='kw'>keep.group_vars</span> <span class='kw'>=</span> <span class='fl'>FALSE</span>) <span class='co'># Remove grouping columns</span></div><div class='output co'>#&gt; </span><span style='color: #949494;'># A tibble: 7 x 8</span><span>
+#&gt;      mpg  disp    hp   drat     wt    qsec   gear   carb
+#&gt;    </span><span style='color: #949494;font-style: italic;'>&lt;dbl&gt;</span><span> </span><span style='color: #949494;font-style: italic;'>&lt;dbl&gt;</span><span> </span><span style='color: #949494;font-style: italic;'>&lt;dbl&gt;</span><span>  </span><span style='color: #949494;font-style: italic;'>&lt;dbl&gt;</span><span>  </span><span style='color: #949494;font-style: italic;'>&lt;dbl&gt;</span><span>   </span><span style='color: #949494;font-style: italic;'>&lt;dbl&gt;</span><span>  </span><span style='color: #949494;font-style: italic;'>&lt;dbl&gt;</span><span>  </span><span style='color: #949494;font-style: italic;'>&lt;dbl&gt;</span><span>
+#&gt; </span><span style='color: #BCBCBC;'>1</span><span> </span><span style='color: #BB0000;'>NA</span><span>     </span><span style='color: #BB0000;'>NA</span><span>    </span><span style='color: #BB0000;'>NA</span><span>    </span><span style='color: #BB0000;'>NA</span><span>     </span><span style='color: #BB0000;'>NA</span><span>     </span><span style='color: #BB0000;'>NA</span><span>      </span><span style='color: #BB0000;'>NA</span><span>     </span><span style='color: #BB0000;'>NA</span><span>    
+#&gt; </span><span style='color: #BCBCBC;'>2</span><span>  1.45  14.0  19.7   0.130  0.408  1.67    0.577  0.577
+#&gt; </span><span style='color: #BCBCBC;'>3</span><span>  4.76  18.8  24.1   0.378  0.440  0.945   0.378  0.535
+#&gt; </span><span style='color: #BCBCBC;'>4</span><span>  0.751  8.66 37.5   0.162  0.128  0.769   0.577  1.15 
+#&gt; </span><span style='color: #BCBCBC;'>5</span><span>  1.63  44.7   9.18  0.592  0.116  0.816   0.577  1.73 
+#&gt; </span><span style='color: #BCBCBC;'>6</span><span>  2.77  71.8  33.4   0.230  0.768  0.802   0      0.900
+#&gt; </span><span style='color: #BCBCBC;'>7</span><span>  0.566 35.4  50.2   0.481  0.283  0.070</span><span style='text-decoration: underline;'>7</span><span>  0      2.83 </div><div class='input'><span class='no'>mtcars</span> <span class='kw'>%&gt;%</span> <span class='fu'><a href='https://dplyr.tidyverse.org/reference/group_by.html'>group_by</a></span>(<span class='no'>cyl</span>,<span class='no'>vs</span>,<span class='no'>am</span>) <span class='kw'>%&gt;%</span> <span class='fu'>fsd</span>(<span class='no'>hp</span>)      <span class='co'># Weighted by hp</span></div><div class='output co'>#&gt; </span><span style='color: #949494;'># A tibble: 7 x 11</span><span>
+#&gt;     cyl    vs    am sum.hp   mpg  disp  drat     wt   qsec  gear  carb
+#&gt;   </span><span style='color: #949494;font-style: italic;'>&lt;dbl&gt;</span><span> </span><span style='color: #949494;font-style: italic;'>&lt;dbl&gt;</span><span> </span><span style='color: #949494;font-style: italic;'>&lt;dbl&gt;</span><span>  </span><span style='color: #949494;font-style: italic;'>&lt;dbl&gt;</span><span> </span><span style='color: #949494;font-style: italic;'>&lt;dbl&gt;</span><span> </span><span style='color: #949494;font-style: italic;'>&lt;dbl&gt;</span><span> </span><span style='color: #949494;font-style: italic;'>&lt;dbl&gt;</span><span>  </span><span style='color: #949494;font-style: italic;'>&lt;dbl&gt;</span><span>  </span><span style='color: #949494;font-style: italic;'>&lt;dbl&gt;</span><span> </span><span style='color: #949494;font-style: italic;'>&lt;dbl&gt;</span><span> </span><span style='color: #949494;font-style: italic;'>&lt;dbl&gt;</span><span>
+#&gt; </span><span style='color: #BCBCBC;'>1</span><span>     4     0     1     91 0      0    0     0      0      0     0    
+#&gt; </span><span style='color: #BCBCBC;'>2</span><span>     4     1     0    254 1.12  11.4  0.109 0.342  1.40   0.487 0.487
+#&gt; </span><span style='color: #BCBCBC;'>3</span><span>     4     1     1    564 4.56  17.9  0.312 0.447  0.934  0.401 0.500
+#&gt; </span><span style='color: #BCBCBC;'>4</span><span>     6     0     1    395 0.647  7.46 0.139 0.095</span><span style='text-decoration: underline;'>9</span><span> 0.651  0.497 0.995
+#&gt; </span><span style='color: #BCBCBC;'>5</span><span>     6     1     0    461 1.40  38.8  0.509 0.098</span><span style='text-decoration: underline;'>9</span><span> 0.701  0.499 1.50 
+#&gt; </span><span style='color: #BCBCBC;'>6</span><span>     8     0     0   </span><span style='text-decoration: underline;'>2</span><span>330 2.66  68.8  0.233 0.756  0.830  0     0.851
+#&gt; </span><span style='color: #BCBCBC;'>7</span><span>     8     0     1    599 0.398 24.8  0.338 0.199  0.049</span><span style='text-decoration: underline;'>7</span><span> 0     1.99 </div><div class='input'><span class='no'>mtcars</span> <span class='kw'>%&gt;%</span> <span class='fu'><a href='https://dplyr.tidyverse.org/reference/group_by.html'>group_by</a></span>(<span class='no'>cyl</span>,<span class='no'>vs</span>,<span class='no'>am</span>) <span class='kw'>%&gt;%</span> <span class='fu'>fsd</span>(<span class='no'>hp</span>, <span class='st'>"/"</span>) <span class='co'># Weighted scaling transformation</span></div><div class='output co'>#&gt; </span><span style='color: #949494;'># A tibble: 32 x 11</span><span>
+#&gt; </span><span style='color: #949494;'># Groups:   cyl, vs, am [7]</span><span>
+#&gt;      cyl    vs    am    hp   mpg  disp  drat    wt  qsec   gear  carb
+#&gt;  </span><span style='color: #BCBCBC;'>*</span><span> </span><span style='color: #949494;font-style: italic;'>&lt;dbl&gt;</span><span> </span><span style='color: #949494;font-style: italic;'>&lt;dbl&gt;</span><span> </span><span style='color: #949494;font-style: italic;'>&lt;dbl&gt;</span><span> </span><span style='color: #949494;font-style: italic;'>&lt;dbl&gt;</span><span> </span><span style='color: #949494;font-style: italic;'>&lt;dbl&gt;</span><span> </span><span style='color: #949494;font-style: italic;'>&lt;dbl&gt;</span><span> </span><span style='color: #949494;font-style: italic;'>&lt;dbl&gt;</span><span> </span><span style='color: #949494;font-style: italic;'>&lt;dbl&gt;</span><span> </span><span style='color: #949494;font-style: italic;'>&lt;dbl&gt;</span><span>  </span><span style='color: #949494;font-style: italic;'>&lt;dbl&gt;</span><span> </span><span style='color: #949494;font-style: italic;'>&lt;dbl&gt;</span><span>
+#&gt; </span><span style='color: #BCBCBC;'> 1</span><span>     6     0     1   110 32.5  21.4  28.0  27.3   25.3   8.04 4.02 
+#&gt; </span><span style='color: #BCBCBC;'> 2</span><span>     6     0     1   110 32.5  21.4  28.0  30.0   26.1   8.04 4.02 
+#&gt; </span><span style='color: #BCBCBC;'> 3</span><span>     4     1     1    93  5.00  6.05 12.3   5.19  19.9   9.98 2.00 
+#&gt; </span><span style='color: #BCBCBC;'> 4</span><span>     6     1     0   110 15.3   6.65  6.05 32.5   27.7   6.01 0.667
+#&gt; </span><span style='color: #BCBCBC;'> 5</span><span>     8     0     0   175  7.02  5.23 13.5   4.55  20.5 </span><span style='color: #BB0000;'>Inf</span><span>    2.35 
+#&gt; </span><span style='color: #BCBCBC;'> 6</span><span>     6     1     0   105 13.0   5.80  5.42 35.0   28.9   6.01 0.667
+#&gt; </span><span style='color: #BCBCBC;'> 7</span><span>     8     0     0   245  5.37  5.23 13.8   4.73  19.1 </span><span style='color: #BB0000;'>Inf</span><span>    4.70 
+#&gt; </span><span style='color: #BCBCBC;'> 8</span><span>     4     1     0    62 21.7  12.8  34.0   9.34  14.3   8.22 4.11 
+#&gt; </span><span style='color: #BCBCBC;'> 9</span><span>     4     1     0    95 20.3  12.3  36.1   9.22  16.3   8.22 4.11 
+#&gt; </span><span style='color: #BCBCBC;'>10</span><span>     6     1     0   123 13.8   4.32  7.69 34.8   26.1   8.01 2.67 
+#&gt; </span><span style='color: #949494;'># ... with 22 more rows</span><span></div></span></pre>
   </div>
   <div class="col-md-3 hidden-xs hidden-sm" id="pkgdown-sidebar">
     <nav id="toc" data-toggle="toc" class="sticky-top">

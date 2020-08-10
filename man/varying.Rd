@@ -8,7 +8,7 @@
 \alias{varying.grouped_df}
 \title{Fast Check of Variation in Data}  % Vectors, Matrix and Data Frame Columns}
 \description{
-\code{varying} is a generic function that (column-wise) checks for variation in the values of \code{x}, (optionally) within the groups \code{g} (i.e. a panel-identifier).
+\code{varying} is a generic function that (column-wise) checks for variation in the values of \code{x}, (optionally) within the groups \code{g} (e.g. a panel-identifier).
 }
 \usage{
 varying(x, ...)
@@ -33,7 +33,7 @@ varying(x, ...)
 }
 %- maybe also 'usage' for other objects documented here.
 \arguments{
-\item{x}{a vector, matrix, data.frame or grouped tibble (\code{dplyr::grouped_df}).}
+\item{x}{a vector, matrix, data.frame, panel series (\code{plm::pseries}), panel data frame (\code{plm::pdata.frame}) or grouped tibble (\code{dplyr::grouped_df}). Data must not be numeric.}
 
 \item{g}{a factor, \code{GRP} object, atomic vector (internally converted to factor) or a list of vectors / factors (internally converted to a \code{GRP} object) used to group \code{x}.}
 
@@ -43,11 +43,11 @@ varying(x, ...)
 
   \item{cols}{select columns using column names, indices or a function (i.e. \code{is.numeric}). Two-sided formulas passed to \code{by} overwrite \code{cols}.}
 
-\item{use.g.names}{make group-names and add to the result as names (vector method) or row-names (matrix and data.frame method). No row-names are generated for data.tables and (default) grouped tibbles.}
+\item{use.g.names}{logical. Make group-names and add to the result as names (default method) or row-names (matrix and data frame methods). No row-names are generated for \emph{data.table}'s.}
 
-\item{drop}{\emph{matrix and data.frame methods:} drop dimensions and return an atomic vector if the result is 1-dimensional.}
+\item{drop}{\emph{matrix and data.frame methods:} Logical. \code{TRUE} drops dimensions and returns an atomic vector if the result is 1-dimensional.}
 
-\item{effect}{\emph{plm} methods: Select which panel identifier should be used for between and within transformations of the data. 1L means first variable in the \code{plm::index}, 2L the second etc.. Index variables can also be called by name. More than one variable can be supplied.}
+\item{effect}{\emph{plm} methods: Select the panel identifier by which variation in the data should be examined. 1L takes the first variable in the \code{plm::index}, 2L the second etc.. Index variables can also be called by name. More than one index variable can be supplied, which will be interacted.}
 
 \item{keep.group_vars}{\emph{grouped_df method:} Logical. \code{FALSE} removes grouping variables after computation.}
 
@@ -60,26 +60,26 @@ Without groups passed to \code{g}, \code{varying} simply checks if there is any 
 If groups are supplied to \code{g} (or alternatively a \emph{grouped_df} to \code{x}), \code{varying} can operate in one of 2 modes:
 
 \itemize{
-\item If \code{any_group = TRUE} (the default), varying checks each column for variation in any of the groups defined by \code{g}, and returns \code{TRUE} if such within-variation was detected and \code{FALSE} otherwise. Thus only one logical value is returned for each column and the computation on each column is terminated as soon as any variation within any group was found.
-\item If \code{any_group = FALSE}, varying runs through the entire data checking each group for variation and returns, for each column in \code{x}, a logical vector reporting the variation check for all groups. If a group contains only missing values, a \code{NA} is returned for that group.
+\item If \code{any_group = TRUE} (the default), \code{varying} checks each column for variation in any of the groups defined by \code{g}, and returns \code{TRUE} if such within-variation was detected and \code{FALSE} otherwise. Thus only one logical value is returned for each column and the computation on each column is terminated as soon as any variation within any group was found.
+\item If \code{any_group = FALSE}, \code{varying} runs through the entire data checking each group for variation and returns, for each column in \code{x}, a logical vector reporting the variation check for all groups. If a group contains only missing values, a \code{NA} is returned for that group.
 }
 }
 \value{
-A logical vector or (if \code{!is.null(g)} and \code{any_group = FALSE}), a matrix or data.frame of logical vectors indicating whether the data vary (over the dimension supplied by \code{g}).
+A logical vector or (if \code{!is.null(g)} and \code{any_group = FALSE}), a matrix or data frame of logical vectors indicating whether the data vary (over the dimension supplied by \code{g}).
 }
 
 \seealso{
-\link[=A6-data-transformations]{Data Transformations}, \link[=collapse-documentation]{Collapse Overview}
+\link[=A9-summary-statistics]{Summary Statistics}, \link[=A6-data-transformations]{Data Transformations}, \link[=collapse-documentation]{Collapse Overview}
 }
 \examples{
 ## Checks overall variation in all columns
 varying(wlddev)
 
 ## Checks whether data are time-variant i.e. vary within country
-varying(wlddev, wlddev$country)
+varying(wlddev, ~ country)
 
-## Same as above but done for each country individually, countries wothout data are coded NA
-varying(wlddev, wlddev$country, any_group = FALSE)
+## Same as above but done for each country individually, countries without data are coded NA
+head(varying(wlddev, ~ country, any_group = FALSE))
 }
 % Add one or more standard keywords, see file 'KEYWORDS' in the
 % R documentation directory.

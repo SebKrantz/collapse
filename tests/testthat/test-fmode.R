@@ -1,78 +1,159 @@
 context("fmode")
 
-x <- rnorm(100)
-w <- abs(100*rnorm(100))
+x <- round(abs(10*rnorm(100)))
+w <- as.integer(round(abs(10*rnorm(100)))) # round(abs(rnorm(100)), 1) -> Numeric precision issues in R
 xNA <- x
 wNA <- w
 xNA[sample.int(100,20)] <- NA
 wNA[sample.int(100,20)] <- NA
 f <- as.factor(sample.int(10, 100, TRUE))
-
 data <- wlddev[wlddev$iso3c %in% c("BLZ","IND","USA","SRB","GRL"), ]
 l <- nrow(data)
 g <- GRP(droplevels(data$iso3c))
+gf <- as.factor_GRP(g)
 dataNA <- na_insert(data)
-m <- as.matrix(data)
-mNA <- as.matrix(dataNA)
-wdat <- abs(100*rnorm(l))
+m <- as.matrix(num_vars(data)) # without num_vars also works for ties = "first"
+mNA <- as.matrix(num_vars(dataNA))
+wdat <- as.integer(round(10*abs(rnorm(l)))) # round(abs(rnorm(l)), 1) -> Numeric precision issues in R
 wdatNA <- wdat
 wdatNA[sample.int(l, floor(l/5))] <- NA
+
+ncv <- !char_vars(data, "logical")
+getdata <- function(first) if(first) data else gv(data, ncv)
+getdataNA <- function(first) if(first) dataNA else gv(dataNA, ncv)
 
 # seteltNA <- function(x,i,j) {
 #   x[i,j] <- NA
 #   x
 # }
 
-Mode <- function(x, na.rm = FALSE) {
-  if(na.rm) x <- x[!is.na(x)]
-  ux <- unique(x)
-  ux[which.max(tabulate(match(x, ux)))]
+whichmax <- function(x) which(as.integer(x) == as.integer(max(x))) # This solves numeric precision issues
+minwa <- function(x) {
+  xna <- unattrib(x)
+  if(anyNA(xna)) {
+    if(is.integer(xna)) return(`attributes<-`(NA_integer_, attributes(x)))
+    # if(is.character(xna)) return(`attributes<-`(NA_character_, attributes(x)))
+    if(is.numeric(xna)) {
+      xna <- na_rm(xna)
+      if(!length(xna)) return(`attributes<-`(NA_real_, attributes(x)))
+    }
+  }
+  `attributes<-`(`storage.mode<-`(min(xna), storage.mode(x)), attributes(x))
+}
+maxwa <- function(x) {
+  xna <- unattrib(x)
+  if(is.numeric(xna) && anyNA(xna)) {
+    xna <- na_rm(xna)
+    if(!length(xna)) return(`attributes<-`(NA_real_, attributes(x)))
+  }
+  `attributes<-`(`storage.mode<-`(max(xna), storage.mode(x)), attributes(x))
 }
 
-weighted.Mode <- function(x, w, na.rm = FALSE) {
-  ax <- attributes(x)
+rowidv <- data.table::rowidv
+
+# firstmode <- function(x) {
+#   ox <- sort(x)
+#   ox[which.max(rowidv(ox))]
+# }
+unam <- function(x) `names<-`(x, NULL)
+
+Mode <- function(x, na.rm = FALSE, ties = "first") {
   if(na.rm) {
-    cc <- complete.cases(x, w)
+    miss <- is.na(x)
+    if(all(miss)) return(x[1L])
+    x <- x[!miss]
+  }
+  o <- radixorder(x)
+  ox <- unam(x)[o]
+  switch(ties,
+         first = unam(x)[which.max(rowidv(ox)[radixorder(o)])],
+         min = minwa(ox[whichmax(rowidv(ox))]),
+         max = maxwa(ox[whichmax(rowidv(ox))]),
+         stop("Unknown ties option"))
+}
+
+
+# Mode <- function(x, na.rm = FALSE, ties = "first") {
+#   if(na.rm) x <- x[!is.na(x)]
+#   ux <- unique(x)
+#   switch(ties,
+#          first = ux[which.max(tabulate(match(x, ux)))],
+#          min = minwa(ux[whichmax(tabulate(match(x, ux)))]),
+#          max = maxwa(ux[whichmax(tabulate(match(x, ux)))]),
+#          stop("Unknown ties option"))
+# }
+
+wMode <- function(x, w, na.rm = FALSE, ties = "first") {
+  ax <- attributes(x)
+  cc <- complete.cases(x, w)
+  if(!any(cc)) return(`storage.mode<-`(NA, storage.mode(x)))
+  if(na.rm) {
     w <- w[cc]
     x <- x[cc]
   }
-  sw <- fsum.default(w, x)
-  max <- which.max(sw)
-  res <- names(sw)[max]
-  storage.mode(res) <- storage.mode(x)
-  `attributes<-`(res, ax)
+  g <- GRP.default(x, call = FALSE)
+  switch(ties,
+         first = {
+           g <- as.factor_GRP(g)
+           o <- radixorder(unlist(split.default(seq_along(w), g), use.names = FALSE))
+           sw <- unlist(lapply(split.default(w, g), cumsum), use.names = FALSE)[o]
+           fsubset.default(x, which.max(sw))
+         },
+         min = minwa(fsubset.default(g[["groups"]][[1L]], whichmax(fsum.default(w, g, use.g.names = FALSE)))),
+         max = maxwa(fsubset.default(g[["groups"]][[1L]], whichmax(fsum.default(w, g, use.g.names = FALSE)))),
+         stop("Unknown ties option"))
+  # storage.mode(res) <- storage.mode(x)
+  # `attributes<-`(res, ax)
+}
+
+wBY <- function(x, f, FUN, w, ...) {
+  if(is.atomic(x) && !is.array(x)) return(mapply(FUN, split(x, f), split(w, f), ...))
+  wspl <- split(w, f)
+  if(is.atomic(x)) return(dapply(x, function(xi) mapply(FUN, split(xi, f), wspl, ...)))
+  dapply(dapply(x, function(xi) {
+    r <- Map(FUN, split(xi, f), wspl, ...)
+    if(is.Date(xi)) do.call(c, r) else unlist(r)
+    }), `names<-`, NULL)
 }
 
 test_that("fmode performs like Mode (defined above)", {
-  expect_equal(fmode(NA), Mode(NA))
-  expect_equal(fmode(NA, na.rm = FALSE), Mode(NA))
-  expect_equal(fmode(1), Mode(1, na.rm = TRUE))
-  expect_equal(fmode(1:3), Mode(1:3, na.rm = TRUE))
-  expect_equal(fmode(-1:1), Mode(-1:1, na.rm = TRUE))
-  expect_equal(fmode(1, na.rm = FALSE), Mode(1))
-  expect_equal(fmode(1:3, na.rm = FALSE), Mode(1:3))
-  expect_equal(fmode(-1:1, na.rm = FALSE), Mode(-1:1))
-  expect_equal(fmode(x), Mode(x, na.rm = TRUE))
-  expect_equal(fmode(x, na.rm = FALSE), Mode(x))
-  expect_equal(fmode(xNA, na.rm = FALSE), Mode(xNA))
-  expect_equal(fmode(xNA), Mode(xNA, na.rm = TRUE))
+  for(t in c("first","min","max")) {
+    # print(t)
+    tf <- t == "first"
+  expect_equal(fmode(NA, ties = t), Mode(NA, ties = t))
+  expect_equal(fmode(NA, na.rm = FALSE, ties = t), Mode(NA, ties = t))
+  expect_equal(fmode(1, ties = t), Mode(1, na.rm = TRUE, ties = t))
+  expect_equal(fmode(1:3, ties = t), Mode(1:3, na.rm = TRUE, ties = t))
+  expect_equal(fmode(-1:1, ties = t), Mode(-1:1, na.rm = TRUE, ties = t))
+  expect_equal(fmode(1, na.rm = FALSE, ties = t), Mode(1, ties = t))
+  expect_equal(fmode(1:3, na.rm = FALSE, ties = t), Mode(1:3, ties = t))
+  expect_equal(fmode(-1:1, na.rm = FALSE, ties = t), Mode(-1:1, ties = t))
+  expect_equal(fmode(x, ties = t), Mode(x, na.rm = TRUE, ties = t))
+  expect_equal(fmode(x, na.rm = FALSE, ties = t), Mode(x, ties = t))
+  if(tf) expect_equal(fmode(xNA, na.rm = FALSE, ties = t), Mode(xNA, ties = t))
+  expect_equal(fmode(xNA, ties = t), Mode(xNA, na.rm = TRUE, ties = t))
   # expect_equal(as.character(fmode(data, drop = FALSE)), fmode(m))
-  expect_equal(fmode(m), dapply(m, Mode, na.rm = TRUE))
-  expect_equal(fmode(m, na.rm = FALSE), dapply(m, Mode))
-  expect_equal(fmode(mNA, na.rm = FALSE), dapply(mNA, Mode))
-  expect_equal(fmode(mNA), dapply(mNA, Mode, na.rm = TRUE))
-  expect_equal(fmode(x, f), BY(x, f, Mode, na.rm = TRUE))
-  expect_equal(fmode(x, f, na.rm = FALSE), BY(x, f, Mode))
-  expect_equal(fmode(xNA, f, na.rm = FALSE), BY(xNA, f, Mode))
-  expect_equal(fmode(xNA, f), BY(xNA, f, Mode, na.rm = TRUE))
-  expect_equal(fmode(m, g), BY(m, g, Mode, na.rm = TRUE))
-  expect_equal(fmode(m, g, na.rm = FALSE), BY(m, g, Mode))
-  # expect_equal(seteltNA(fmode(mNA, g, na.rm = FALSE),4,5), seteltNA(BY(mNA, g, Mode),4,5)) # Mode gives NA
-  expect_equal(fmode(mNA, g), BY(mNA, g, Mode, na.rm = TRUE))
-  expect_equal(fmode(data, g), BY(data, g, Mode, na.rm = TRUE))
-  expect_equal(fmode(data, g, na.rm = FALSE), BY(data, g, Mode))
-  # expect_equal(seteltNA(fmode(dataNA, g, na.rm = FALSE),4,5), seteltNA(BY(dataNA, g, Mode),4,5))  # Mode gives NA
-  expect_equal(fmode(dataNA, g), BY(dataNA, g, Mode, na.rm = TRUE))
+  expect_equal(fmode(m, ties = t), dapply(m, Mode, na.rm = TRUE, ties = t))
+  expect_equal(fmode(m, na.rm = FALSE, ties = t), dapply(m, Mode, ties = t))
+  if(tf) expect_equal(fmode(mNA, na.rm = FALSE, ties = t), dapply(mNA, Mode, ties = t))
+  expect_equal(fmode(mNA, ties = t), dapply(mNA, Mode, na.rm = TRUE, ties = t))
+  expect_equal(fmode(getdata(tf), ties = t, drop = FALSE), dapply(getdata(tf), Mode, na.rm = TRUE, ties = t, drop = FALSE))
+  expect_equal(fmode(getdata(tf), na.rm = FALSE, ties = t, drop = FALSE), dapply(getdata(tf), Mode, ties = t, drop = FALSE))
+  if(tf) expect_equal(fmode(dataNA, na.rm = FALSE, ties = t, drop = FALSE), dapply(dataNA, Mode, ties = t, drop = FALSE))
+  expect_equal(fmode(getdataNA(tf), ties = t, drop = FALSE), dapply(getdataNA(tf), Mode, na.rm = TRUE, ties = t, drop = FALSE))
+  expect_equal(fmode(x, f, ties = t), BY(x, f, Mode, na.rm = TRUE, ties = t))
+  expect_equal(fmode(x, f, na.rm = FALSE, ties = t), BY(x, f, Mode, ties = t))
+  if(tf) expect_equal(fmode(xNA, f, na.rm = FALSE, ties = t), BY(xNA, f, Mode, ties = t))
+  expect_equal(fmode(xNA, f, ties = t), BY(xNA, f, Mode, na.rm = TRUE, ties = t))
+  expect_equal(fmode(m, g, ties = t), BY(m, g, Mode, na.rm = TRUE, ties = t))
+  expect_equal(fmode(m, g, na.rm = FALSE, ties = t), BY(m, g, Mode, ties = t))
+  if(tf) expect_equal(fmode(mNA, g, na.rm = FALSE), BY(mNA, g, Mode)) # Mode gives NA
+  expect_equal(fmode(mNA, g, ties = t), BY(mNA, g, Mode, na.rm = TRUE, ties = t))
+  expect_equal(fmode(getdata(tf), g, ties = t), BY(getdata(tf), g, Mode, na.rm = TRUE, ties = t))
+  expect_equal(fmode(getdata(tf), g, na.rm = FALSE, ties = t), BY(getdata(tf), g, Mode, ties = t))
+  if(tf) expect_equal(fmode(dataNA, g, na.rm = FALSE), BY(dataNA, g, Mode))  # Mode gives NA
+  expect_equal(fmode(getdataNA(tf), g, ties = t), BY(getdataNA(tf), g, Mode, na.rm = TRUE, ties = t))
+  }
 })
 
 test_that("fmode with weights performs as intended (unbiased)", {
@@ -110,175 +191,195 @@ test_that("fmode with weights performs as intended (unbiased)", {
 })
 
 test_that("fmode performs like fmode with weights all equal", {
-  expect_equal(fmode(NA), fmode(NA, w = 0.99999999))
-  expect_equal(fmode(NA, na.rm = FALSE), fmode(NA, w = 2.946, na.rm = FALSE))
-  expect_equal(fmode(1), fmode(1, w = 3))
-  expect_equal(fmode(1:3), fmode(1:3, w = rep(0.999,3)))
-  expect_equal(fmode(-1:1), fmode(-1:1, w = rep(4.2,3)))
-  expect_equal(fmode(1, na.rm = FALSE), fmode(1, w = 5, na.rm = FALSE))
-  expect_equal(fmode(1:3, na.rm = FALSE), fmode(1:3, w = rep(1.44565, 3), na.rm = FALSE))
-  expect_equal(fmode(-1:1, na.rm = FALSE), fmode(-1:1, w = rep(1.44565, 3), na.rm = FALSE))
-  expect_equal(fmode(x), fmode(x, w = rep(1,100)))
-  expect_equal(fmode(x, na.rm = FALSE), fmode(x, w = rep(1.44565, 100), na.rm = FALSE))
-  expect_equal(fmode(xNA, na.rm = FALSE), fmode(xNA, w = rep(4.676587, 100), na.rm = FALSE))
-  expect_equal(fmode(xNA), fmode(xNA, w = rep(4.676587, 100)))
-  expect_equal(fmode(m), fmode(m, w = rep(6587, l)))
-  expect_equal(fmode(m, na.rm = FALSE), fmode(m, w = rep(6587, l), na.rm = FALSE))
-  expect_equal(fmode(mNA, na.rm = FALSE), fmode(mNA, w = rep(6587, l), na.rm = FALSE))
-  expect_equal(fmode(mNA), fmode(mNA, w = rep(6587, l)))
-  expect_equal(fmode(data), fmode(data, w = rep(6787, l)))
-  expect_equal(fmode(data, na.rm = FALSE), fmode(data, w = rep(6787, l), na.rm = FALSE))
-  expect_equal(fmode(dataNA, na.rm = FALSE), fmode(dataNA, w = rep(6787, l), na.rm = FALSE))
-  expect_equal(fmode(dataNA), fmode(dataNA, w = rep(6787, l)))
-  expect_equal(fmode(x, f), fmode(x, f, rep(546,100)))
-  expect_equal(fmode(x, f, na.rm = FALSE), fmode(x, f, rep(5.88,100), na.rm = FALSE))
-  expect_equal(fmode(xNA, f, na.rm = FALSE), fmode(xNA, f, rep(52.7,100), na.rm = FALSE))
-  expect_equal(fmode(xNA, f), fmode(xNA, f, rep(5997456,100)))
-  expect_equal(fmode(m, g), fmode(m, g, rep(546,l)))
-  expect_equal(fmode(m, g, na.rm = FALSE), fmode(m, g, rep(0.0001,l), na.rm = FALSE))
-  expect_equal(fmode(mNA, g, na.rm = FALSE), fmode(mNA, g, rep(5.7,l), na.rm = FALSE))
-  expect_equal(fmode(mNA, g), fmode(mNA, g, rep(1,l)))
-  expect_equal(fmode(data, g), fmode(data, g, rep(53,l)))
-  expect_equal(fmode(data, g, na.rm = FALSE), fmode(data, g, rep(546,l), na.rm = FALSE))
-  expect_equal(fmode(dataNA, g, na.rm = FALSE), fmode(dataNA, g, rep(0.9,l), na.rm = FALSE)) # rep(0.999999,l) failed CRAN Arch i386
-  expect_equal(fmode(dataNA, g), fmode(dataNA, g, rep(999,l))) # rep(999.9999,l) failed CRAN Arch i386
+  for(t in c("first","min","max")) {
+  expect_equal(fmode(NA, ties = t), fmode(NA, w = 0.99999999, ties = t))
+  expect_equal(fmode(NA, na.rm = FALSE, ties = t), fmode(NA, w = 2.946, na.rm = FALSE, ties = t))
+  expect_equal(fmode(1, ties = t), fmode(1, w = 3, ties = t))
+  expect_equal(fmode(1:3, ties = t), fmode(1:3, w = rep(0.999,3), ties = t))
+  expect_equal(fmode(-1:1, ties = t), fmode(-1:1, w = rep(4.2,3), ties = t))
+  expect_equal(fmode(1, na.rm = FALSE, ties = t), fmode(1, w = 5, na.rm = FALSE, ties = t))
+  expect_equal(fmode(1:3, na.rm = FALSE, ties = t), fmode(1:3, w = rep(1.44565, 3), na.rm = FALSE, ties = t))
+  expect_equal(fmode(-1:1, na.rm = FALSE, ties = t), fmode(-1:1, w = rep(1.44565, 3), na.rm = FALSE, ties = t))
+  expect_equal(fmode(x, ties = t), fmode(x, w = rep(1,100), ties = t))
+  expect_equal(fmode(x, na.rm = FALSE, ties = t), fmode(x, w = rep(1.44565, 100), na.rm = FALSE, ties = t))
+  expect_equal(fmode(xNA, na.rm = FALSE, ties = t), fmode(xNA, w = rep(4.676587, 100), na.rm = FALSE, ties = t))
+  expect_equal(fmode(xNA, ties = t), fmode(xNA, w = rep(4.676587, 100), ties = t))
+  expect_equal(fmode(m, ties = t), fmode(m, w = rep(6587, l), ties = t))
+  expect_equal(fmode(m, na.rm = FALSE, ties = t), fmode(m, w = rep(6587, l), na.rm = FALSE, ties = t))
+  expect_equal(fmode(mNA, na.rm = FALSE, ties = t), fmode(mNA, w = rep(6587, l), na.rm = FALSE, ties = t))
+  expect_equal(fmode(mNA, ties = t), fmode(mNA, w = rep(6587, l), ties = t))
+  expect_equal(fmode(data, ties = t), fmode(data, w = rep(6787, l), ties = t))
+  expect_equal(fmode(data, na.rm = FALSE, ties = t), fmode(data, w = rep(6787, l), na.rm = FALSE, ties = t))
+  expect_equal(fmode(dataNA, na.rm = FALSE, ties = t), fmode(dataNA, w = rep(6787, l), na.rm = FALSE, ties = t))
+  expect_equal(fmode(dataNA, ties = t), fmode(dataNA, w = rep(6787, l), ties = t))
+  expect_equal(fmode(x, f, ties = t), fmode(x, f, rep(546,100), ties = t))
+  expect_equal(fmode(x, f, na.rm = FALSE, ties = t), fmode(x, f, rep(5.88,100), na.rm = FALSE, ties = t))
+  expect_equal(fmode(xNA, f, na.rm = FALSE, ties = t), fmode(xNA, f, rep(52.7,100), na.rm = FALSE, ties = t))
+  expect_equal(fmode(xNA, f, ties = t), fmode(xNA, f, rep(5997456,100), ties = t))
+  expect_equal(fmode(m, g, ties = t), fmode(m, g, rep(546,l), ties = t))
+  expect_equal(fmode(m, g, na.rm = FALSE, ties = t), fmode(m, g, rep(0.0001,l), na.rm = FALSE, ties = t))
+  expect_equal(fmode(mNA, g, na.rm = FALSE, ties = t), fmode(mNA, g, rep(5.7,l), na.rm = FALSE, ties = t))
+  expect_equal(fmode(mNA, g, ties = t), fmode(mNA, g, rep(1,l), ties = t))
+  expect_equal(fmode(data, g, ties = t), fmode(data, g, rep(53,l), ties = t))
+  expect_equal(fmode(data, g, na.rm = FALSE, ties = t), fmode(data, g, rep(546,l), na.rm = FALSE, ties = t))
+  expect_equal(fmode(dataNA, g, na.rm = FALSE, ties = t), fmode(dataNA, g, rep(0.9,l), na.rm = FALSE, ties = t)) # rep(0.999999,l) failed CRAN Arch i386
+  expect_equal(fmode(dataNA, g, ties = t), fmode(dataNA, g, rep(999,l), ties = t)) # rep(999.9999,l) failed CRAN Arch i386
+  }
 })
 
-test_that("fmode with weights performs like weighted.Mode (defined above)", {
+test_that("fmode with weights performs like wMode (defined above)", {
+  for(t in c("first","min","max")) {
+  # print(t)
+    tf <- t == "first"
   # complete weights
-  # expect_equal(fmode(NA, w = 1), weighted.Mode(NA, 1))
-  # expect_equal(fmode(NA, w = 1, na.rm = FALSE), weighted.Mode(NA, 1))
-  expect_equal(fmode(1, w = 1), weighted.Mode(1, w = 1))
-  expect_equal(fmode(1:3, w = 1:3), weighted.Mode(1:3, 1:3))
-  expect_equal(fmode(-1:1, w = 1:3), weighted.Mode(-1:1, 1:3))
-  expect_equal(fmode(1, w = 1, na.rm = FALSE), weighted.Mode(1, 1))
-  expect_equal(fmode(1:3, w = c(0.99,3454,1.111), na.rm = FALSE), weighted.Mode(1:3, c(0.99,3454,1.111)))
-  expect_equal(fmode(-1:1, w = 1:3, na.rm = FALSE), weighted.Mode(-1:1, 1:3))
-  expect_equal(fmode(x, w = w), weighted.Mode(x, w))
-  expect_equal(fmode(x, w = w, na.rm = FALSE), weighted.Mode(x, w))
-  expect_equal(fmode(xNA, w = w, na.rm = FALSE), weighted.Mode(xNA, w))
-  expect_equal(fmode(xNA, w = w), weighted.Mode(xNA, w, na.rm = TRUE))
-  # expect_equal(fmode(data, w = wdat, drop = FALSE), fmode(m, w = wdat))
-  expect_equal(fmode(m, w = wdat), dapply(m, weighted.Mode, wdat, na.rm = TRUE))
-  expect_equal(fmode(m, w = wdat, na.rm = FALSE), dapply(m, weighted.Mode, wdat))
-  expect_equal(fmode(mNA, w = wdat, na.rm = FALSE), dapply(mNA, weighted.Mode, wdat))
-  expect_equal(fmode(mNA, w = wdat), dapply(mNA, weighted.Mode, wdat, na.rm = TRUE))
-  expect_equal(fmode(x, f, w), mapply(weighted.Mode, split(x, f), split(w, f)))
-  expect_equal(fmode(x, f, w, na.rm = FALSE), mapply(weighted.Mode, split(x, f), split(w, f)))
-  expect_equal(fmode(xNA, f, w, na.rm = FALSE), mapply(weighted.Mode, split(xNA, f), split(w, f)))
-  expect_equal(fmode(xNA, f, w), mapply(weighted.Mode, split(xNA, f), split(w, f), na.rm = TRUE))
-  # missing weights
-  # expect_equal(fmode(NA, w = NA), weighted.Mode(NA, NA))
-  # expect_equal(fmode(NA, w = NA, na.rm = FALSE), weighted.Mode(NA, NA))
-  # expect_equal(fmode(1, w = NA), weighted.Mode(1, w = NA))
-  expect_equal(fmode(1:3, w = c(NA,1:2)), weighted.Mode(1:3, c(NA,1:2), na.rm = TRUE)) # weighted Mode doesn not remove NA's from weights !!
-  expect_equal(fmode(-1:1, w = c(NA,1:2)), weighted.Mode(-1:1, c(NA,1:2), na.rm = TRUE))
-  # expect_equal(fmode(1, w = NA, na.rm = FALSE), weighted.Mode(1, NA))
-  expect_equal(fmode(1:3, w = c(NA,1:2), na.rm = FALSE), weighted.Mode(1:3, c(NA,1:2)))
-  expect_equal(fmode(-1:1, w = c(NA,1:2), na.rm = FALSE), weighted.Mode(-1:1, c(NA,1:2)))
-  expect_equal(fmode(x, w = wNA), weighted.Mode(x, wNA, na.rm = TRUE))
-  expect_equal(fmode(x, w = wNA, na.rm = FALSE), weighted.Mode(x, wNA)) #
-  # expect_equal(fmode(xNA, w = wNA, na.rm = FALSE), weighted.Mode(xNA, wNA))
-  expect_equal(fmode(xNA, w = wNA), weighted.Mode(xNA, wNA, na.rm = TRUE))
-  # expect_equal(fmode(data, w = wdatNA), fmode(m, w = wdatNA))
-  expect_equal(fmode(m, w = wdatNA), dapply(m, weighted.Mode, wdatNA, na.rm = TRUE))
-  # expect_equal(fmode(m, w = wdatNA, na.rm = FALSE), dapply(m, weighted.Mode, wdatNA))
-  # expect_equal(fmode(mNA, w = wdatNA, na.rm = FALSE), dapply(mNA, weighted.Mode, wdatNA))
-  expect_equal(fmode(mNA, w = wdatNA), dapply(mNA, weighted.Mode, wdatNA, na.rm = TRUE))
-  expect_equal(fmode(x, f, wNA), mapply(weighted.Mode, split(x, f), split(wNA, f), na.rm = TRUE))
-  expect_equal(fmode(x, f, wNA, na.rm = FALSE), mapply(weighted.Mode, split(x, f), split(wNA, f)))
-  # expect_equal(fmode(xNA, f, wNA, na.rm = FALSE), mapply(weighted.Mode, split(xNA, f), split(wNA, f)))
-  expect_equal(fmode(xNA, f, wNA), mapply(weighted.Mode, split(xNA, f), split(wNA, f), na.rm = TRUE))
+  expect_equal(fmode(NA, w = 1, ties = t), wMode(NA, 1, ties = t))
+  expect_equal(fmode(NA, w = 1, na.rm = FALSE, ties = t), wMode(NA, 1, ties = t))
+  expect_equal(fmode(1, w = 1, ties = t), wMode(1, w = 1, ties = t))
+  expect_equal(fmode(1:3, w = 1:3, ties = t), wMode(1:3, 1:3, ties = t))
+  expect_equal(fmode(-1:1, w = 1:3, ties = t), wMode(-1:1, 1:3, ties = t))
+  expect_equal(fmode(1, w = 1, na.rm = FALSE, ties = t), wMode(1, 1, ties = t))
+  expect_equal(fmode(1:3, w = c(0.99,3454,1.111), na.rm = FALSE, ties = t), wMode(1:3, c(0.99,3454,1.111), ties = t))
+  expect_equal(fmode(-1:1, w = 1:3, na.rm = FALSE, ties = t), wMode(-1:1, 1:3, ties = t))
+  expect_equal(fmode(x, w = w, ties = t), wMode(x, w, ties = t))
+  expect_equal(fmode(x, w = w, na.rm = FALSE, ties = t), wMode(x, w, ties = t))
+  if(tf) expect_equal(fmode(xNA, w = w, na.rm = FALSE, ties = t), wMode(xNA, w, ties = t))
+  expect_equal(fmode(xNA, w = w, ties = t), wMode(xNA, w, na.rm = TRUE, ties = t))
+  # expect_equal(fmode(data, w = wdat, drop = FALSE, ties = t), fmode(m, w = wdat, ties = t))
+  expect_equal(fmode(m, w = wdat, ties = t), dapply(m, wMode, wdat, na.rm = TRUE, ties = t))
+  expect_equal(fmode(m, w = wdat, na.rm = FALSE, ties = t), dapply(m, wMode, wdat, ties = t))
+  if(tf) expect_equal(fmode(mNA, w = wdat, na.rm = FALSE, ties = t), dapply(mNA, wMode, wdat, ties = t))
+  expect_equal(fmode(mNA, w = wdat, ties = t), dapply(mNA, wMode, wdat, na.rm = TRUE, ties = t))
+  expect_equal(fmode(getdata(tf), w = wdat, drop = FALSE, ties = t), dapply(getdata(tf), wMode, wdat, na.rm = TRUE, drop = FALSE, ties = t))
+  expect_equal(fmode(getdata(tf), w = wdat, na.rm = FALSE, drop = FALSE, ties = t), dapply(getdata(tf), wMode, wdat, drop = FALSE, ties = t))
+  if(tf) expect_equal(fmode(dataNA, w = wdat, na.rm = FALSE, drop = FALSE, ties = t), dapply(dataNA, wMode, wdat, drop = FALSE, ties = t))
+  expect_equal(fmode(getdataNA(tf), w = wdat, drop = FALSE, ties = t), dapply(getdataNA(tf), wMode, wdat, na.rm = TRUE, drop = FALSE, ties = t))
+  expect_equal(fmode(x, f, w, ties = t), wBY(x, f, wMode, w, ties = t))
+  expect_equal(fmode(x, f, w, na.rm = FALSE, ties = t), wBY(x, f, wMode, w, ties = t))
+  if(tf) expect_equal(fmode(xNA, f, w, na.rm = FALSE, ties = t), wBY(xNA, f, wMode, w, ties = t))
+  expect_equal(fmode(xNA, f, w, ties = t), wBY(xNA, f, wMode, w, na.rm = TRUE, ties = t))
+  expect_equal(fmode(m, g, wdat, ties = t), wBY(m, gf, wMode, wdat, na.rm = TRUE, ties = t))
+  expect_equal(fmode(m, g, wdat, na.rm = FALSE, ties = t), wBY(m, gf, wMode, wdat, ties = t))
+  if(tf) expect_equal(fmode(mNA, g, wdat, na.rm = FALSE, ties = t),  wBY(mNA, gf, wMode, wdat, ties = t))
+  expect_equal(fmode(mNA, g, wdat, ties = t), wBY(mNA, gf, wMode, wdat, na.rm = TRUE, ties = t))
+  expect_equal(fmode(getdata(tf), g, wdat, ties = t), wBY(getdata(tf), gf, wMode, wdat, na.rm = TRUE, ties = t))
+  expect_equal(fmode(getdata(tf), g, wdat, na.rm = FALSE, ties = t), wBY(getdata(tf), gf, wMode, wdat, ties = t))
+  if(tf) expect_equal(fmode(dataNA, g, wdat, na.rm = FALSE, ties = t), wBY(dataNA, gf, wMode, wdat, ties = t))
+  expect_equal(fmode(getdataNA(tf), g, wdat, ties = t), wBY(getdataNA(tf), gf, wMode, wdat, na.rm = TRUE, ties = t))
+  # missing weights: # missing weights are summed : wsum is NA.... fmode does not properly deal with missing weights if na.rm = FALSE
+  expect_equal(fmode(NA, w = NA, ties = t), wMode(NA, NA, ties = t))
+  # expect_equal(fmode(1, w = NA, ties = t), wMode(1, w = NA, ties = t))
+  expect_equal(fmode(1:3, w = c(NA,1:2), ties = t), wMode(1:3, c(NA,1:2), na.rm = TRUE, ties = t))
+  expect_equal(fmode(-1:1, w = c(NA,1:2), ties = t), wMode(-1:1, c(NA,1:2), na.rm = TRUE, ties = t))
+  expect_equal(fmode(x, w = wNA, ties = t), wMode(x, wNA, na.rm = TRUE, ties = t))
+  expect_equal(fmode(xNA, w = wNA, ties = t), wMode(xNA, wNA, na.rm = TRUE, ties = t))
+  # expect_equal(fmode(data, w = wdatNA, ties = t), fmode(m, w = wdatNA, ties = t))
+  expect_equal(fmode(m, w = wdatNA, ties = t), dapply(m, wMode, wdatNA, na.rm = TRUE, ties = t))
+  expect_equal(fmode(mNA, w = wdatNA, ties = t), dapply(mNA, wMode, wdatNA, na.rm = TRUE, ties = t))
+  expect_equal(fmode(getdata(tf), w = wdatNA, ties = t, drop = FALSE), dapply(getdata(tf), wMode, wdatNA, na.rm = TRUE, ties = t, drop = FALSE))
+  expect_equal(fmode(getdataNA(tf), w = wdatNA, ties = t, drop = FALSE), dapply(getdataNA(tf), wMode, wdatNA, na.rm = TRUE, ties = t, drop = FALSE))
+  expect_equal(fmode(x, f, wNA, ties = t), wBY(x, f, wMode, wNA, na.rm = TRUE, ties = t))
+  expect_equal(fmode(xNA, f, wNA, ties = t), wBY(xNA, f, wMode, wNA, na.rm = TRUE, ties = t))
+  expect_equal(fmode(m, g, wdatNA, ties = t), wBY(m, gf, wMode, wdatNA, na.rm = TRUE, ties = t))
+  expect_equal(fmode(mNA, g, wdatNA, ties = t), wBY(mNA, gf, wMode, wdatNA, na.rm = TRUE, ties = t))
+  expect_equal(fmode(getdata(tf), g, wdatNA, ties = t), wBY(getdata(tf), gf, wMode, wdatNA, na.rm = TRUE, ties = t))
+  expect_equal(fmode(getdataNA(tf), g, wdatNA, ties = t), wBY(getdataNA(tf), gf, wMode, wdatNA, na.rm = TRUE, ties = t))
+  }
 })
 
 test_that("fmode performs numerically stable", {
-  expect_true(all_obj_equal(replicate(50, fmode(1), simplify = FALSE)))
-  expect_true(all_obj_equal(replicate(50, fmode(NA), simplify = FALSE)))
-  expect_true(all_obj_equal(replicate(50, fmode(NA, na.rm = FALSE), simplify = FALSE)))
-  expect_true(all_obj_equal(replicate(50, fmode(x), simplify = FALSE)))
-  expect_true(all_obj_equal(replicate(50, fmode(x, na.rm = FALSE), simplify = FALSE)))
-  expect_true(all_obj_equal(replicate(50, fmode(xNA, na.rm = FALSE), simplify = FALSE)))
-  expect_true(all_obj_equal(replicate(50, fmode(xNA), simplify = FALSE)))
-  expect_true(all_obj_equal(replicate(50, fmode(m), simplify = FALSE)))
-  expect_true(all_obj_equal(replicate(50, fmode(m, na.rm = FALSE), simplify = FALSE)))
-  expect_true(all_obj_equal(replicate(50, fmode(mNA, na.rm = FALSE), simplify = FALSE)))
-  expect_true(all_obj_equal(replicate(50, fmode(mNA), simplify = FALSE)))
-  expect_true(all_obj_equal(replicate(50, fmode(data), simplify = FALSE)))
-  expect_true(all_obj_equal(replicate(50, fmode(data, na.rm = FALSE), simplify = FALSE)))
-  expect_true(all_obj_equal(replicate(50, fmode(dataNA, na.rm = FALSE), simplify = FALSE)))
-  expect_true(all_obj_equal(replicate(50, fmode(dataNA), simplify = FALSE)))
-  expect_true(all_obj_equal(replicate(50, fmode(x, f), simplify = FALSE)))
-  expect_true(all_obj_equal(replicate(50, fmode(x, f, na.rm = FALSE), simplify = FALSE)))
-  expect_true(all_obj_equal(replicate(50, fmode(xNA, f, na.rm = FALSE), simplify = FALSE)))
-  expect_true(all_obj_equal(replicate(50, fmode(xNA, f), simplify = FALSE)))
-  expect_true(all_obj_equal(replicate(50, fmode(m, g), simplify = FALSE)))
-  expect_true(all_obj_equal(replicate(50, fmode(m, g, na.rm = FALSE), simplify = FALSE)))
-  expect_true(all_obj_equal(replicate(50, fmode(mNA, g, na.rm = FALSE), simplify = FALSE)))
-  expect_true(all_obj_equal(replicate(50, fmode(mNA, g), simplify = FALSE)))
-  expect_true(all_obj_equal(replicate(50, fmode(data, g), simplify = FALSE)))
-  expect_true(all_obj_equal(replicate(50, fmode(data, g, na.rm = FALSE), simplify = FALSE)))
-  expect_true(all_obj_equal(replicate(50, fmode(dataNA, g, na.rm = FALSE), simplify = FALSE)))
-  expect_true(all_obj_equal(replicate(50, fmode(dataNA, g), simplify = FALSE)))
+  for(t in c("first","min","max")) {
+  expect_true(all_obj_equal(replicate(50, fmode(1, ties = t), simplify = FALSE)))
+  expect_true(all_obj_equal(replicate(50, fmode(NA, ties = t), simplify = FALSE)))
+  expect_true(all_obj_equal(replicate(50, fmode(NA, na.rm = FALSE, ties = t), simplify = FALSE)))
+  expect_true(all_obj_equal(replicate(50, fmode(x, ties = t), simplify = FALSE)))
+  expect_true(all_obj_equal(replicate(50, fmode(x, na.rm = FALSE, ties = t), simplify = FALSE)))
+  expect_true(all_obj_equal(replicate(50, fmode(xNA, na.rm = FALSE, ties = t), simplify = FALSE)))
+  expect_true(all_obj_equal(replicate(50, fmode(xNA, ties = t), simplify = FALSE)))
+  expect_true(all_obj_equal(replicate(50, fmode(m, ties = t), simplify = FALSE)))
+  expect_true(all_obj_equal(replicate(50, fmode(m, na.rm = FALSE, ties = t), simplify = FALSE)))
+  expect_true(all_obj_equal(replicate(50, fmode(mNA, na.rm = FALSE, ties = t), simplify = FALSE)))
+  expect_true(all_obj_equal(replicate(50, fmode(mNA, ties = t), simplify = FALSE)))
+  expect_true(all_obj_equal(replicate(50, fmode(data, ties = t), simplify = FALSE)))
+  expect_true(all_obj_equal(replicate(50, fmode(data, na.rm = FALSE, ties = t), simplify = FALSE)))
+  expect_true(all_obj_equal(replicate(50, fmode(dataNA, na.rm = FALSE, ties = t), simplify = FALSE)))
+  expect_true(all_obj_equal(replicate(50, fmode(dataNA, ties = t), simplify = FALSE)))
+  expect_true(all_obj_equal(replicate(50, fmode(x, f, ties = t), simplify = FALSE)))
+  expect_true(all_obj_equal(replicate(50, fmode(x, f, na.rm = FALSE, ties = t), simplify = FALSE)))
+  expect_true(all_obj_equal(replicate(50, fmode(xNA, f, na.rm = FALSE, ties = t), simplify = FALSE)))
+  expect_true(all_obj_equal(replicate(50, fmode(xNA, f, ties = t), simplify = FALSE)))
+  expect_true(all_obj_equal(replicate(50, fmode(m, g, ties = t), simplify = FALSE)))
+  expect_true(all_obj_equal(replicate(50, fmode(m, g, na.rm = FALSE, ties = t), simplify = FALSE)))
+  expect_true(all_obj_equal(replicate(50, fmode(mNA, g, na.rm = FALSE, ties = t), simplify = FALSE)))
+  expect_true(all_obj_equal(replicate(50, fmode(mNA, g, ties = t), simplify = FALSE)))
+  expect_true(all_obj_equal(replicate(50, fmode(data, g, ties = t), simplify = FALSE)))
+  expect_true(all_obj_equal(replicate(50, fmode(data, g, na.rm = FALSE, ties = t), simplify = FALSE)))
+  expect_true(all_obj_equal(replicate(50, fmode(dataNA, g, na.rm = FALSE, ties = t), simplify = FALSE)))
+  expect_true(all_obj_equal(replicate(50, fmode(dataNA, g, ties = t), simplify = FALSE)))
+  }
 })
 
 test_that("fmode with complete weights performs numerically stable", {
-  expect_true(all_obj_equal(replicate(50, fmode(1, w = 1), simplify = FALSE)))
-  expect_true(all_obj_equal(replicate(50, fmode(NA, w = 1), simplify = FALSE)))
-  expect_true(all_obj_equal(replicate(50, fmode(NA, w = 1, na.rm = FALSE), simplify = FALSE)))
-  expect_true(all_obj_equal(replicate(50, fmode(x, w = w), simplify = FALSE)))
-  expect_true(all_obj_equal(replicate(50, fmode(x, w = w, na.rm = FALSE), simplify = FALSE)))
-  expect_true(all_obj_equal(replicate(50, fmode(xNA, w = w, na.rm = FALSE), simplify = FALSE)))
-  expect_true(all_obj_equal(replicate(50, fmode(xNA, w = w), simplify = FALSE)))
-  expect_true(all_obj_equal(replicate(50, fmode(m, w = wdat), simplify = FALSE)))
-  expect_true(all_obj_equal(replicate(50, fmode(m, w = wdat, na.rm = FALSE), simplify = FALSE)))
-  expect_true(all_obj_equal(replicate(50, fmode(mNA, w = wdat, na.rm = FALSE), simplify = FALSE)))
-  expect_true(all_obj_equal(replicate(50, fmode(mNA, w = wdat), simplify = FALSE)))
-  expect_true(all_obj_equal(replicate(50, fmode(data, w = wdat), simplify = FALSE)))
-  expect_true(all_obj_equal(replicate(50, fmode(data, w = wdat, na.rm = FALSE), simplify = FALSE)))
-  expect_true(all_obj_equal(replicate(50, fmode(dataNA, w = wdat, na.rm = FALSE), simplify = FALSE)))
-  expect_true(all_obj_equal(replicate(50, fmode(dataNA, w = wdat), simplify = FALSE)))
-  expect_true(all_obj_equal(replicate(50, fmode(x, f, w), simplify = FALSE)))
-  expect_true(all_obj_equal(replicate(50, fmode(x, f, w, na.rm = FALSE), simplify = FALSE)))
-  expect_true(all_obj_equal(replicate(50, fmode(xNA, f, w, na.rm = FALSE), simplify = FALSE)))
-  expect_true(all_obj_equal(replicate(50, fmode(xNA, f, w), simplify = FALSE)))
-  expect_true(all_obj_equal(replicate(50, fmode(m, g, wdat), simplify = FALSE)))
-  expect_true(all_obj_equal(replicate(50, fmode(m, g, wdat, na.rm = FALSE), simplify = FALSE)))
-  expect_true(all_obj_equal(replicate(50, fmode(mNA, g, wdat, na.rm = FALSE), simplify = FALSE)))
-  expect_true(all_obj_equal(replicate(50, fmode(mNA, g, wdat), simplify = FALSE)))
-  expect_true(all_obj_equal(replicate(50, fmode(data, g, wdat), simplify = FALSE)))
-  expect_true(all_obj_equal(replicate(50, fmode(data, g, wdat, na.rm = FALSE), simplify = FALSE)))
-  expect_true(all_obj_equal(replicate(50, fmode(dataNA, g, wdat, na.rm = FALSE), simplify = FALSE)))
-  expect_true(all_obj_equal(replicate(50, fmode(dataNA, g, wdat), simplify = FALSE)))
+  for(t in c("first","min","max")) {
+  expect_true(all_obj_equal(replicate(50, fmode(1, w = 1, ties = t), simplify = FALSE)))
+  expect_true(all_obj_equal(replicate(50, fmode(NA, w = 1, ties = t), simplify = FALSE)))
+  expect_true(all_obj_equal(replicate(50, fmode(NA, w = 1, na.rm = FALSE, ties = t), simplify = FALSE)))
+  expect_true(all_obj_equal(replicate(50, fmode(x, w = w, ties = t), simplify = FALSE)))
+  expect_true(all_obj_equal(replicate(50, fmode(x, w = w, na.rm = FALSE, ties = t), simplify = FALSE)))
+  expect_true(all_obj_equal(replicate(50, fmode(xNA, w = w, na.rm = FALSE, ties = t), simplify = FALSE)))
+  expect_true(all_obj_equal(replicate(50, fmode(xNA, w = w, ties = t), simplify = FALSE)))
+  expect_true(all_obj_equal(replicate(50, fmode(m, w = wdat, ties = t), simplify = FALSE)))
+  expect_true(all_obj_equal(replicate(50, fmode(m, w = wdat, na.rm = FALSE, ties = t), simplify = FALSE)))
+  expect_true(all_obj_equal(replicate(50, fmode(mNA, w = wdat, na.rm = FALSE, ties = t), simplify = FALSE)))
+  expect_true(all_obj_equal(replicate(50, fmode(mNA, w = wdat, ties = t), simplify = FALSE)))
+  expect_true(all_obj_equal(replicate(50, fmode(data, w = wdat, ties = t), simplify = FALSE)))
+  expect_true(all_obj_equal(replicate(50, fmode(data, w = wdat, na.rm = FALSE, ties = t), simplify = FALSE)))
+  expect_true(all_obj_equal(replicate(50, fmode(dataNA, w = wdat, na.rm = FALSE, ties = t), simplify = FALSE)))
+  expect_true(all_obj_equal(replicate(50, fmode(dataNA, w = wdat, ties = t), simplify = FALSE)))
+  expect_true(all_obj_equal(replicate(50, fmode(x, f, w, ties = t), simplify = FALSE)))
+  expect_true(all_obj_equal(replicate(50, fmode(x, f, w, na.rm = FALSE, ties = t), simplify = FALSE)))
+  expect_true(all_obj_equal(replicate(50, fmode(xNA, f, w, na.rm = FALSE, ties = t), simplify = FALSE)))
+  expect_true(all_obj_equal(replicate(50, fmode(xNA, f, w, ties = t), simplify = FALSE)))
+  expect_true(all_obj_equal(replicate(50, fmode(m, g, wdat, ties = t), simplify = FALSE)))
+  expect_true(all_obj_equal(replicate(50, fmode(m, g, wdat, na.rm = FALSE, ties = t), simplify = FALSE)))
+  expect_true(all_obj_equal(replicate(50, fmode(mNA, g, wdat, na.rm = FALSE, ties = t), simplify = FALSE)))
+  expect_true(all_obj_equal(replicate(50, fmode(mNA, g, wdat, ties = t), simplify = FALSE)))
+  expect_true(all_obj_equal(replicate(50, fmode(data, g, wdat, ties = t), simplify = FALSE)))
+  expect_true(all_obj_equal(replicate(50, fmode(data, g, wdat, na.rm = FALSE, ties = t), simplify = FALSE)))
+  expect_true(all_obj_equal(replicate(50, fmode(dataNA, g, wdat, na.rm = FALSE, ties = t), simplify = FALSE)))
+  expect_true(all_obj_equal(replicate(50, fmode(dataNA, g, wdat, ties = t), simplify = FALSE)))
+  }
 })
 
 test_that("fmode with missing weights performs numerically stable", {
-  expect_true(all_obj_equal(replicate(50, fmode(1, w = NA), simplify = FALSE)))
-  expect_true(all_obj_equal(replicate(50, fmode(NA, w = NA), simplify = FALSE)))
-  expect_true(all_obj_equal(replicate(50, fmode(NA, w = NA, na.rm = FALSE), simplify = FALSE)))
-  expect_true(all_obj_equal(replicate(50, fmode(x, w = wNA), simplify = FALSE)))
-  expect_true(all_obj_equal(replicate(50, fmode(x, w = wNA, na.rm = FALSE), simplify = FALSE)))
-  expect_true(all_obj_equal(replicate(50, fmode(xNA, w = wNA, na.rm = FALSE), simplify = FALSE)))
-  expect_true(all_obj_equal(replicate(50, fmode(xNA, w = wNA), simplify = FALSE)))
-  expect_true(all_obj_equal(replicate(50, fmode(m, w = wdatNA), simplify = FALSE)))
-  expect_true(all_obj_equal(replicate(50, fmode(m, w = wdatNA, na.rm = FALSE), simplify = FALSE)))
-  expect_true(all_obj_equal(replicate(50, fmode(mNA, w = wdatNA, na.rm = FALSE), simplify = FALSE)))
-  expect_true(all_obj_equal(replicate(50, fmode(mNA, w = wdatNA), simplify = FALSE)))
-  expect_true(all_obj_equal(replicate(50, fmode(data, w = wdatNA), simplify = FALSE)))
-  expect_true(all_obj_equal(replicate(50, fmode(data, w = wdatNA, na.rm = FALSE), simplify = FALSE)))
-  expect_true(all_obj_equal(replicate(50, fmode(dataNA, w = wdatNA, na.rm = FALSE), simplify = FALSE)))
-  expect_true(all_obj_equal(replicate(50, fmode(dataNA, w = wdatNA), simplify = FALSE)))
-  expect_true(all_obj_equal(replicate(50, fmode(x, f, wNA), simplify = FALSE)))
-  expect_true(all_obj_equal(replicate(50, fmode(x, f, wNA, na.rm = FALSE), simplify = FALSE)))
-  expect_true(all_obj_equal(replicate(50, fmode(xNA, f, wNA, na.rm = FALSE), simplify = FALSE)))
-  expect_true(all_obj_equal(replicate(50, fmode(xNA, f, wNA), simplify = FALSE)))
-  expect_true(all_obj_equal(replicate(50, fmode(m, g, wdatNA), simplify = FALSE)))
-  expect_true(all_obj_equal(replicate(50, fmode(m, g, wdatNA, na.rm = FALSE), simplify = FALSE)))
-  expect_true(all_obj_equal(replicate(50, fmode(mNA, g, wdatNA, na.rm = FALSE), simplify = FALSE)))
-  expect_true(all_obj_equal(replicate(50, fmode(mNA, g, wdatNA), simplify = FALSE)))
-  expect_true(all_obj_equal(replicate(50, fmode(data, g, wdatNA), simplify = FALSE)))
-  expect_true(all_obj_equal(replicate(50, fmode(data, g, wdatNA, na.rm = FALSE), simplify = FALSE)))
-  expect_true(all_obj_equal(replicate(50, fmode(dataNA, g, wdatNA, na.rm = FALSE), simplify = FALSE)))
-  expect_true(all_obj_equal(replicate(50, fmode(dataNA, g, wdatNA), simplify = FALSE)))
+  for(t in c("first","min","max")) {
+  expect_true(all_obj_equal(replicate(50, fmode(1, w = NA, ties = t), simplify = FALSE)))
+  expect_true(all_obj_equal(replicate(50, fmode(NA, w = NA, ties = t), simplify = FALSE)))
+  expect_true(all_obj_equal(replicate(50, fmode(NA, w = NA, na.rm = FALSE, ties = t), simplify = FALSE)))
+  expect_true(all_obj_equal(replicate(50, fmode(x, w = wNA, ties = t), simplify = FALSE)))
+  expect_true(all_obj_equal(replicate(50, fmode(x, w = wNA, na.rm = FALSE, ties = t), simplify = FALSE)))
+  expect_true(all_obj_equal(replicate(50, fmode(xNA, w = wNA, na.rm = FALSE, ties = t), simplify = FALSE)))
+  expect_true(all_obj_equal(replicate(50, fmode(xNA, w = wNA, ties = t), simplify = FALSE)))
+  expect_true(all_obj_equal(replicate(50, fmode(m, w = wdatNA, ties = t), simplify = FALSE)))
+  expect_true(all_obj_equal(replicate(50, fmode(m, w = wdatNA, na.rm = FALSE, ties = t), simplify = FALSE)))
+  expect_true(all_obj_equal(replicate(50, fmode(mNA, w = wdatNA, na.rm = FALSE, ties = t), simplify = FALSE)))
+  expect_true(all_obj_equal(replicate(50, fmode(mNA, w = wdatNA, ties = t), simplify = FALSE)))
+  expect_true(all_obj_equal(replicate(50, fmode(data, w = wdatNA, ties = t), simplify = FALSE)))
+  expect_true(all_obj_equal(replicate(50, fmode(data, w = wdatNA, na.rm = FALSE, ties = t), simplify = FALSE)))
+  expect_true(all_obj_equal(replicate(50, fmode(dataNA, w = wdatNA, na.rm = FALSE, ties = t), simplify = FALSE)))
+  expect_true(all_obj_equal(replicate(50, fmode(dataNA, w = wdatNA, ties = t), simplify = FALSE)))
+  expect_true(all_obj_equal(replicate(50, fmode(x, f, wNA, ties = t), simplify = FALSE)))
+  expect_true(all_obj_equal(replicate(50, fmode(x, f, wNA, na.rm = FALSE, ties = t), simplify = FALSE)))
+  expect_true(all_obj_equal(replicate(50, fmode(xNA, f, wNA, na.rm = FALSE, ties = t), simplify = FALSE)))
+  expect_true(all_obj_equal(replicate(50, fmode(xNA, f, wNA, ties = t), simplify = FALSE)))
+  expect_true(all_obj_equal(replicate(50, fmode(m, g, wdatNA, ties = t), simplify = FALSE)))
+  expect_true(all_obj_equal(replicate(50, fmode(m, g, wdatNA, na.rm = FALSE, ties = t), simplify = FALSE)))
+  expect_true(all_obj_equal(replicate(50, fmode(mNA, g, wdatNA, na.rm = FALSE, ties = t), simplify = FALSE)))
+  expect_true(all_obj_equal(replicate(50, fmode(mNA, g, wdatNA, ties = t), simplify = FALSE)))
+  expect_true(all_obj_equal(replicate(50, fmode(data, g, wdatNA, ties = t), simplify = FALSE)))
+  expect_true(all_obj_equal(replicate(50, fmode(data, g, wdatNA, na.rm = FALSE, ties = t), simplify = FALSE)))
+  expect_true(all_obj_equal(replicate(50, fmode(dataNA, g, wdatNA, na.rm = FALSE, ties = t), simplify = FALSE)))
+  expect_true(all_obj_equal(replicate(50, fmode(dataNA, g, wdatNA, ties = t), simplify = FALSE)))
+  }
 })
 
 test_that("fmode handles special values in the right way", {
@@ -323,14 +424,14 @@ test_that("fmode with weights handles special values in the right way", {
   expect_equal(fmode(NaN, w = NA), NaN)
   expect_equal(fmode(Inf, w = NA), Inf)
   expect_equal(fmode(-Inf, w = NA), -Inf)
-  # expect_equal(fmode(TRUE, w = NA), TRUE) # ????
-  # expect_equal(fmode(FALSE, w = NA), FALSE) # ????
-  # expect_equal(fmode(NA, w = NA, na.rm = FALSE), NA) # ????
+  expect_equal(fmode(TRUE, w = NA), NA)
+  expect_equal(fmode(FALSE, w = NA), NA)
+  expect_equal(fmode(NA, w = NA, na.rm = FALSE), NA)
   expect_equal(fmode(NaN, w = NA, na.rm = FALSE), NaN)
   expect_equal(fmode(Inf, w = NA, na.rm = FALSE), Inf)
   expect_equal(fmode(-Inf, w = NA, na.rm = FALSE), -Inf)
-  expect_equal(fmode(TRUE, w = NA, na.rm = FALSE), TRUE)
-  # expect_equal(fmode(FALSE, w = NA, na.rm = FALSE), FALSE) # ????
+  expect_equal(fmode(TRUE, w = NA, na.rm = FALSE), NA)
+  expect_equal(fmode(FALSE, w = NA, na.rm = FALSE), NA)
   expect_equal(fmode(1:3, w = c(1,Inf,3)), 2)
   expect_equal(fmode(1:3, w = c(1,-Inf,3)), 3)
   expect_equal(fmode(1:3, w = c(1,Inf,3), na.rm = FALSE), 2)
@@ -345,6 +446,7 @@ test_that("fmode produces errors for wrong input", {
   expect_error(fmode(1:2,1:3))
   expect_error(fmode(m,1:31))
   expect_error(fmode(data,1:31))
+  expect_error(fmode(data, w = 1:31))
   expect_visible(fmode("a", w = 1))
   expect_error(fmode(1:2, w = 1:3))
   expect_visible(fmode(NA_character_, w = 1))

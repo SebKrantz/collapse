@@ -1,9 +1,13 @@
 # keep.w toggle w being kept even if passed externally ? -> Also not done with W, B , etc !! -> but they also don't keep by ..
 collap <- function(X, by, FUN = fmean, catFUN = fmode, cols = NULL, w = NULL, wFUN = fsum, custom = NULL,
-                   keep.by = TRUE, keep.w = TRUE, keep.col.order = TRUE, sort.row = TRUE,
-                   parallel = FALSE, mc.cores = 1L,
-                   return = c("wide","list","long","long_dupl"), give.names = "auto", ...) {
+                   keep.by = TRUE, keep.w = TRUE, keep.col.order = TRUE, sort = TRUE, decreasing = FALSE,
+                   na.last = TRUE, parallel = FALSE, mc.cores = 1L,
+                   return = c("wide","list","long","long_dupl"), give.names = "auto", sort.row, ...) {
 
+  if(!missing(sort.row)) {
+    warning("argument sort.row is deprecated; please use sort instead.", call. = FALSE)
+    sort <- sort.row
+  }
   return <- switch(return[1L], wide = 1L, list = 2L, long = 3L, long_dupl = 4L, stop("Unknown return output option"))
   widel <- return == 1L
   ncustoml <- is.null(custom)
@@ -22,43 +26,30 @@ collap <- function(X, by, FUN = fmean, catFUN = fmode, cols = NULL, w = NULL, wF
   bycalll <- is.call(by)
   if(bycalll) {
     if(length(by) == 3L) {
-      v <- logical(length(X))
-      v[ckmatch(all.vars(by[[2L]]), nam)] <- TRUE  # nam %in% all.vars(by[[2L]])
-      namby <- all.vars(by[[3L]])
-      numby <- ckmatch(namby, nam)
+      v <- ckmatch(all.vars(by[[2L]]), nam)
+      numby <- ckmatch(all.vars(by[[3L]]), nam)
     } else {
-      namby <- all.vars(by)
-      numby <- ckmatch(namby, nam)
-      if(ncustoml) {
-        v <- if(is.null(cols)) !logical(length(X)) else cols2log(cols, X, nam)
-        v[numby] <- FALSE
-      }
+      numby <- ckmatch(all.vars(by), nam)
+      if(ncustoml) v <- if(is.null(cols)) seq_along(X)[-numby] else cols2int(cols, X, nam)
     }
-    by <- GRP.default(X, numby, sort = sort.row, return.groups = keep.by)
+    by <- GRP.default(X, numby, sort, decreasing, na.last, keep.by, call = FALSE)
   } else if(is.atomic(by)) {
-    namby <- l1orlst(as.character(substitute(by)))
     numby <- 1L
-    if(ncustoml) if(is.null(cols)) vl <- FALSE else v <- cols2log(cols, X, nam)
-    by <- GRP.default(`names<-`(list(by), namby), sort = sort.row, return.groups = keep.by)
+    if(ncustoml) if(is.null(cols)) vl <- FALSE else v <- cols2int(cols, X, nam)
+    by <- GRP.default(`names<-`(list(by), l1orlst(as.character(substitute(by)))), NULL, sort, decreasing, na.last, keep.by, call = FALSE)
   } else {
-    if(ncustoml) if(is.null(cols)) vl <- FALSE else v <- cols2log(cols, X, nam)
+    if(ncustoml) if(is.null(cols)) vl <- FALSE else v <- cols2int(cols, X, nam)
     if(!is.GRP(by)) {
       numby <- seq_along(unclass(by))
-      namby <- attr(by, "names") # faster if and only if by is a data.frame
-      if(is.null(namby)) namby <- paste0("Group.", numby)
-      by <- GRP.default(by, numby, sort = sort.row, return.groups = keep.by)
-    } else {
-      namby <- by[[5L]]
-      if(is.null(namby)) namby <- paste0("Group.", seq_along(by[[4L]])) # necessary ?
-      numby <- seq_along(namby)
-    }
+      by <- GRP.default(by, numby, sort, decreasing, na.last, keep.by, call = FALSE)
+    } else numby <- seq_along(by[[5L]])
   }
 
   if(!nwl) {
     if(is.call(w)) {
       namw <- all.vars(w)
       numw <- ckmatch(namw, nam)
-      if(vl && ncustoml) v[numw] <- FALSE
+      if(vl && ncustoml) v <- v[v != numw]
       w <- X[[numw]]
     } else if(keep.w) {
       numw <- 0L # length(X) + 1L
@@ -84,7 +75,6 @@ collap <- function(X, by, FUN = fmean, catFUN = fmode, cols = NULL, w = NULL, wF
         by[[4L]] <- c(if(keep.by) by[[4L]], `names<-`(list(wFUN(w, by, ..., use.g.names = FALSE)), namw))
         if(keep.col.order) numby <- c(if(keep.by) numby, numw)  # need to accommodate any option of keep.by, keep.w and keep.col.order
       }
-      if(return == 2L) namby <- c(if(keep.by) namby, namw)
       keep.by <- TRUE
     }
   }
@@ -94,8 +84,10 @@ collap <- function(X, by, FUN = fmean, catFUN = fmode, cols = NULL, w = NULL, wF
     # Identifying data
     nu <- vapply(unattrib(X), is.numeric, TRUE)
     if(vl) {
-      nnu <- which(!nu & v) # faster way ?
-      nu <- which(nu & v)
+      temp <- nu[v]
+      nnu <- v[!temp] # which(!nu & v) # faster way ?
+      nu <- v[temp] # which(nu & v)
+      rm(temp, v)
     } else {
       nnu <- which(!nu)
       nu <- which(nu)
@@ -211,11 +203,12 @@ collap <- function(X, by, FUN = fmean, catFUN = fmode, cols = NULL, w = NULL, wF
       if(return == 2L) {
         ax[["row.names"]] <- .set_row_names(by[[1L]])
         if(!keep.by) return(lapply(res, function(e) {
-          ax[["names"]] <- names(e)
-          return(setAttributes(e, ax)) })) else
-            return(lapply(res[-1L], function(e) {
-              ax[["names"]] <- c(namby, names(e))
-              setAttributes(c(res[[1L]], e), ax) }))
+                            ax[["names"]] <- names(e)
+                            setAttributes(e, ax) }))
+        namby <- attr(res[[1L]], "names") # always works ??
+        return(lapply(res[-1L], function(e) {
+          ax[["names"]] <- c(namby, names(e))
+          setAttributes(c(res[[1L]], e), ax) }))
       } else {
         if(return != 4L) {
           res <- if(!keep.by) .Call(C_rbindlist, res, TRUE, TRUE, "Function") else # data.table:::Crbindlist
@@ -239,16 +232,20 @@ collap <- function(X, by, FUN = fmean, catFUN = fmode, cols = NULL, w = NULL, wF
   if(keep.col.order) .Call(C_setcolorder, res, o) # data.table:::Csetcolorder
   ax[["names"]] <- names(res)
   ax[["row.names"]] <- .set_row_names(length(res[[1L]]))
-  return(setAttributes(res, ax))
+  setAttributes(res, ax)
 }
 
 
 # collapv: allows vector input to by and w
 collapv <- function(X, by, FUN = fmean, catFUN = fmode, cols = NULL, w = NULL, wFUN = fsum, custom = NULL,
-                    keep.by = TRUE, keep.w = TRUE, keep.col.order = TRUE, sort.row = TRUE,
-                    parallel = FALSE, mc.cores = 1L,
-                    return = c("wide","list","long","long_dupl"), give.names = "auto", ...) {
+                    keep.by = TRUE, keep.w = TRUE, keep.col.order = TRUE, sort = TRUE, decreasing = FALSE,
+                    na.last = TRUE, parallel = FALSE, mc.cores = 1L,
+                    return = c("wide","list","long","long_dupl"), give.names = "auto", sort.row, ...) {
 
+  if(!missing(sort.row)) {
+    warning("argument sort.row is deprecated; please use sort instead.", call. = FALSE)
+    sort <- sort.row
+  }
   return <- switch(return[1L], wide = 1L, list = 2L, long = 3L, long_dupl = 4L, stop("Unknown return output option"))
   widel <- return == 1L
   ncustoml <- is.null(custom)
@@ -262,18 +259,15 @@ collapv <- function(X, by, FUN = fmean, catFUN = fmode, cols = NULL, w = NULL, w
 
   # identifying by
   numby <- cols2int(by, X, nam)
-  namby <- nam[numby]
-  by <- GRP.default(X, numby, sort = sort.row, return.groups = keep.by)
-  if(ncustoml) {
-    v <- if(is.null(cols)) !logical(length(X)) else cols2log(cols, X, nam)
-    v[numby] <- FALSE
-  }
+  by <- GRP.default(X, numby, sort, decreasing, na.last, keep.by, call = FALSE)
+  if(ncustoml) v <- if(is.null(cols)) seq_along(X)[-numby] else cols2int(cols, X, nam)
+
 
   if(!nwl) {
     if(length(w) == 1L) {
       numw <- cols2int(w, X, nam)
       namw <- nam[numw]
-      if(ncustoml) v[numw] <- FALSE
+      if(ncustoml) v <- v[v != numw]
       w <- X[[numw]]
     } else if(keep.w) {
       numw <- 0L
@@ -299,7 +293,6 @@ collapv <- function(X, by, FUN = fmean, catFUN = fmode, cols = NULL, w = NULL, w
         by[[4L]] <- c(if(keep.by) by[[4L]], `names<-`(list(wFUN(w, by, ..., use.g.names = FALSE)), namw))
         if(keep.col.order) numby <- c(if(keep.by) numby, numw)
       }
-      if(return == 2L) namby <- c(if(keep.by) namby, namw)
       keep.by <- TRUE
     }
   }
@@ -308,8 +301,10 @@ collapv <- function(X, by, FUN = fmean, catFUN = fmode, cols = NULL, w = NULL, w
 
     # Identifying data
     nu <- vapply(unattrib(X), is.numeric, TRUE)
-    nnu <- which(!nu & v) # faster way ?
-    nu <- which(nu & v)
+    temp <- nu[v]
+    nnu <- v[!temp] # which(!nu & v) # faster way ?
+    nu <- v[temp] # which(nu & v)
+    rm(temp, v)
     nul <- length(nu) > 0L
     nnul <- length(nnu) > 0L
 
@@ -417,11 +412,12 @@ collapv <- function(X, by, FUN = fmean, catFUN = fmode, cols = NULL, w = NULL, w
       if(return == 2L) {
         ax[["row.names"]] <- .set_row_names(by[[1L]])
         if(!keep.by) return(lapply(res, function(e) {
-          ax[["names"]] <- names(e)
-          return(setAttributes(e, ax)) })) else
-            return(lapply(res[-1L], function(e) {
-              ax[["names"]] <- c(namby, names(e))
-              setAttributes(c(res[[1L]], e), ax) }))
+                            ax[["names"]] <- names(e)
+                            setAttributes(e, ax) }))
+        namby <- attr(res[[1L]], "names") # always works ??
+        return(lapply(res[-1L], function(e) {
+          ax[["names"]] <- c(namby, names(e))
+          setAttributes(c(res[[1L]], e), ax) }))
       } else {
         if(return != 4L) {
           res <- if(!keep.by) .Call(C_rbindlist, res, TRUE, TRUE, "Function") else # data.table:::Crbindlist
@@ -445,16 +441,15 @@ collapv <- function(X, by, FUN = fmean, catFUN = fmode, cols = NULL, w = NULL, w
   if(keep.col.order) .Call(C_setcolorder, res, o) # data.table:::Csetcolorder
   ax[["names"]] <- names(res)
   ax[["row.names"]] <- .set_row_names(length(res[[1L]]))
-  return(setAttributes(res, ax))
+  setAttributes(res, ax)
 }
 
 
 # For dplyr integration: takes grouped_df as input
 collapg <- function(X, FUN = fmean, catFUN = fmode, cols = NULL, w = NULL, wFUN = fsum, custom = NULL,
-                    keep.group_vars = TRUE, keep.w = TRUE, keep.col.order = TRUE, sort.row = TRUE,
-                    parallel = FALSE, mc.cores = 1L,
-                    return = c("wide","list","long","long_dupl"), give.names = "auto", ...) {
-  by <- GRP.grouped_df(X)
+                    keep.group_vars = TRUE, keep.w = TRUE, keep.col.order = TRUE, parallel = FALSE, mc.cores = 1L,
+                    return = c("wide","list","long","long_dupl"), give.names = "auto", sort.row, ...) {
+  by <- GRP.grouped_df(X, return.groups = keep.group_vars, call = FALSE)
   if(is.null(custom)) ngn <- attr(X, "names") %!in% by[[5L]] # Note: this always leaves grouping columns on the left still !
   clx <- class(X)
   attr(X, "groups") <- NULL
@@ -464,12 +459,12 @@ collapg <- function(X, FUN = fmean, catFUN = fmode, cols = NULL, w = NULL, wFUN 
       assign(wsym, .subset2(X, wsym))
       if(is.null(custom)) X <- fcolsubset(X, ngn & !windl) # else X <- X # Needed ?? -> nope !!
       return(eval(substitute(collap(X, by, FUN, catFUN, cols, w, wFUN, custom,
-                                    keep.group_vars, keep.w, keep.col.order, sort.row, parallel,
-                                    mc.cores, return, give.names, ...)), list(w = wsym)))
+                                    keep.group_vars, keep.w, keep.col.order, TRUE, FALSE, TRUE, parallel,
+                                    mc.cores, return, give.names, sort.row, ...)), list(w = wsym)))
     }
   }
   if(is.null(custom)) X <- fcolsubset(X, ngn) # else X <- X # because of non-standard eval.. X is "."
-  return(eval(substitute(collap(X, by, FUN, catFUN, cols, w, wFUN, custom,
-              keep.group_vars, keep.w, keep.col.order, sort.row, parallel,
-              mc.cores, return, give.names, ...))))
+  eval(substitute(collap(X, by, FUN, catFUN, cols, w, wFUN, custom,
+       keep.group_vars, keep.w, keep.col.order, TRUE, FALSE, TRUE, parallel,
+       mc.cores, return, give.names, sort.row, ...)))
 }

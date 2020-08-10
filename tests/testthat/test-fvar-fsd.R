@@ -11,6 +11,7 @@ wNA[sample.int(100,20)] <- NA
 wdatNA[sample.int(32, 5)] <- NA
 f <- as.factor(sample.int(10, 100, TRUE))
 g <- GRP(mtcars, ~ cyl + vs + am)
+gf <- as.factor_GRP(g)
 mtcNA <- na_insert(mtcars)
 mtcNA[27,1] <- NA # single group NA !!
 m <- as.matrix(mtcars)
@@ -28,12 +29,20 @@ wvar <- function(x, w, na.rm = FALSE) {
   if(na.rm) {
     cc <- complete.cases(x, w)
     x <- x[cc]
+    # if(length(x) < 2L) return(NA_real_)
     w <- w[cc]
-  }
+  } # else if(length(x) < 2L) return(if(is.na(x)) NA_real_ else 0)
   sum(w*(x-weighted.mean(x,w))^2)/(sum(w)-1)
 }
 
-# fvar by Welford's algoritm (default)
+wBY <- function(x, f, FUN, w, ...) {
+  if(is.atomic(x) && !is.array(x)) return(mapply(FUN, split(x, f), split(w, f), ...))
+  wspl <- split(w, f)
+  if(is.atomic(x)) return(dapply(x, function(xi) mapply(FUN, split(xi, f), wspl, ...)))
+  qDF(dapply(x, function(xi) mapply(FUN, split(xi, f), wspl, ...), return = "matrix"))
+}
+
+# fvar using Welford's Algoritm (default)
 
 test_that("fvar performs like base::var", {
   expect_equal(fvar(NA), var(NA))
@@ -53,6 +62,10 @@ test_that("fvar performs like base::var", {
   expect_equal(fvar(m, na.rm = FALSE), dapply(m, var))
   expect_equal(fvar(mNA, na.rm = FALSE), dapply(mNA, var))
   expect_equal(fvar(mNA), dapply(mNA, var, na.rm = TRUE))
+  expect_equal(fvar(mtcars), dapply(mtcars, var, na.rm = TRUE))
+  expect_equal(fvar(mtcars, na.rm = FALSE), dapply(mtcars, var))
+  expect_equal(fvar(mtcNA, na.rm = FALSE), dapply(mtcNA, var))
+  expect_equal(fvar(mtcNA), dapply(mtcNA, var, na.rm = TRUE))
   expect_equal(fvar(x, f), BY(x, f, var, na.rm = TRUE))
   expect_equal(fvar(x, f, na.rm = FALSE), BY(x, f, var))
   expect_equal(fvar(xNA, f, na.rm = FALSE), BY(xNA, f, var))
@@ -155,10 +168,22 @@ test_that("fvar with weights performs like wvar (defined above)", {
   expect_equal(fvar(m, w = wdat, na.rm = FALSE), dapply(m, wvar, wdat))
   expect_equal(fvar(mNA, w = wdat, na.rm = FALSE), dapply(mNA, wvar, wdat))
   expect_equal(fvar(mNA, w = wdat), dapply(mNA, wvar, wdat, na.rm = TRUE))
-  expect_equal(fvar(x, f, w), mapply(wvar, split(x, f), split(w, f)))
-  expect_equal(fvar(x, f, w, na.rm = FALSE), mapply(wvar, split(x, f), split(w, f)))
-  expect_equal(fvar(xNA, f, w, na.rm = FALSE), mapply(wvar, split(xNA, f), split(w, f)))
-  expect_equal(na20(fvar(xNA, f, w)), na20(mapply(wvar, split(xNA, f), split(w, f), na.rm = TRUE)))
+  expect_equal(fvar(mtcars, w = wdat), dapply(mtcars, wvar, wdat, na.rm = TRUE))
+  expect_equal(fvar(mtcars, w = wdat, na.rm = FALSE), dapply(mtcars, wvar, wdat))
+  expect_equal(fvar(mtcNA, w = wdat, na.rm = FALSE), dapply(mtcNA, wvar, wdat))
+  expect_equal(fvar(mtcNA, w = wdat), dapply(mtcNA, wvar, wdat, na.rm = TRUE))
+  expect_equal(fvar(x, f, w), wBY(x, f, wvar, w))
+  expect_equal(fvar(x, f, w, na.rm = FALSE), wBY(x, f, wvar, w))
+  expect_equal(fvar(xNA, f, w, na.rm = FALSE), wBY(xNA, f, wvar, w))
+  expect_equal(na20(fvar(xNA, f, w)), na20(wBY(xNA, f, wvar, w, na.rm = TRUE)))
+  expect_equal(fvar(m, g, wdat), wBY(m, gf, wvar, wdat))
+  expect_equal(fvar(m, g, wdat, na.rm = FALSE), wBY(m, gf, wvar, wdat))
+  expect_equal(fvar(mNA, g, wdat, na.rm = FALSE),  wBY(mNA, gf, wvar, wdat))
+  expect_equal(na20(fvar(mNA, g, wdat)), na20(wBY(mNA, gf, wvar, wdat, na.rm = TRUE)))
+  expect_equal(fvar(mtcars, g, wdat), wBY(mtcars, gf, wvar, wdat))
+  expect_equal(fvar(mtcars, g, wdat, na.rm = FALSE), wBY(mtcars, gf, wvar, wdat))
+  expect_equal(fvar(mtcNA, g, wdat, na.rm = FALSE), wBY(mtcNA, gf, wvar, wdat))
+  expect_equal(na20(fvar(mtcNA, g, wdat)), na20(wBY(mtcNA, gf, wvar, wdat, na.rm = TRUE)))
   # missing weights
   expect_equal(fvar(NA, w = NA), wvar(NA, NA))
   expect_equal(fvar(NA, w = NA, na.rm = FALSE), wvar(NA, NA))
@@ -177,10 +202,22 @@ test_that("fvar with weights performs like wvar (defined above)", {
   expect_equal(fvar(m, w = wdatNA, na.rm = FALSE), dapply(m, wvar, wdatNA))
   expect_equal(fvar(mNA, w = wdatNA, na.rm = FALSE), dapply(mNA, wvar, wdatNA))
   expect_equal(fvar(mNA, w = wdatNA), dapply(mNA, wvar, wdatNA, na.rm = TRUE))
-  expect_equal(na20(fvar(x, f, wNA)), na20(mapply(wvar, split(x, f), split(wNA, f), na.rm = TRUE)))
-  expect_equal(fvar(x, f, wNA, na.rm = FALSE), mapply(wvar, split(x, f), split(wNA, f)))
-  expect_equal(fvar(xNA, f, wNA, na.rm = FALSE), mapply(wvar, split(xNA, f), split(wNA, f)))
-  expect_equal(na20(fvar(xNA, f, wNA)), na20(mapply(wvar, split(xNA, f), split(wNA, f), na.rm = TRUE)))
+  expect_equal(fvar(mtcars, w = wdatNA), dapply(mtcars, wvar, wdatNA, na.rm = TRUE))
+  expect_equal(fvar(mtcars, w = wdatNA, na.rm = FALSE), dapply(mtcars, wvar, wdatNA))
+  expect_equal(fvar(mtcNA, w = wdatNA, na.rm = FALSE), dapply(mtcNA, wvar, wdatNA))
+  expect_equal(fvar(mtcNA, w = wdatNA), dapply(mtcNA, wvar, wdatNA, na.rm = TRUE))
+  expect_equal(na20(fvar(x, f, wNA)), na20(wBY(x, f, wvar, wNA, na.rm = TRUE)))
+  expect_equal(fvar(x, f, wNA, na.rm = FALSE), wBY(x, f, wvar, wNA))
+  expect_equal(fvar(xNA, f, wNA, na.rm = FALSE), wBY(xNA, f, wvar, wNA))
+  expect_equal(na20(fvar(xNA, f, wNA)), na20(wBY(xNA, f, wvar, wNA, na.rm = TRUE)))
+  expect_equal(na20(fvar(m, g, wdatNA)), na20(wBY(m, gf, wvar, wdatNA, na.rm = TRUE)))
+  expect_equal(fvar(m, g, wdatNA, na.rm = FALSE), wBY(m, gf, wvar, wdatNA))
+  expect_equal(fvar(mNA, g, wdatNA, na.rm = FALSE),  wBY(mNA, gf, wvar, wdatNA))
+  expect_equal(na20(fvar(mNA, g, wdatNA)), na20(wBY(mNA, gf, wvar, wdatNA, na.rm = TRUE)))
+  expect_equal(na20(fvar(mtcars, g, wdatNA)), na20(wBY(mtcars, gf, wvar, wdatNA, na.rm = TRUE)))
+  expect_equal(fvar(mtcars, g, wdatNA, na.rm = FALSE), wBY(mtcars, gf, wvar, wdatNA))
+  expect_equal(fvar(mtcNA, g, wdatNA, na.rm = FALSE), wBY(mtcNA, gf, wvar, wdatNA))
+  expect_equal(na20(fvar(mtcNA, g, wdatNA)), na20(wBY(mtcNA, gf, wvar, wdatNA, na.rm = TRUE)))
 })
 
 test_that("fvar performs numerically stable", {
@@ -337,6 +374,7 @@ test_that("fvar produces errors for wrong input", {
   expect_error(fvar(1:2,1:3))
   expect_error(fvar(m,1:31))
   expect_error(fvar(mtcars,1:31))
+  expect_error(fvar(mtcars, w = 1:31))
   expect_error(fvar("a", w = 1))
   expect_error(fvar(1:2, w = 1:3))
   expect_error(fvar(NA_character_, w = 1))
@@ -375,18 +413,22 @@ test_that("fvar with direct algorithm performs like base::var", {
   expect_equal(fvar(m, na.rm = FALSE, stable.algo = FALSE), dapply(m, var))
   expect_equal(fvar(mNA, na.rm = FALSE, stable.algo = FALSE), dapply(mNA, var))
   expect_equal(fvar(mNA, stable.algo = FALSE), dapply(mNA, var, na.rm = TRUE))
+  expect_equal(fvar(mtcars, stable.algo = FALSE), dapply(mtcars, var, na.rm = TRUE))
+  expect_equal(fvar(mtcars, na.rm = FALSE, stable.algo = FALSE), dapply(mtcars, var))
+  expect_equal(fvar(mtcNA, na.rm = FALSE, stable.algo = FALSE), dapply(mtcNA, var))
+  expect_equal(fvar(mtcNA, stable.algo = FALSE), dapply(mtcNA, var, na.rm = TRUE))
   expect_equal(fvar(x, f, stable.algo = FALSE), BY(x, f, var, na.rm = TRUE))
   expect_equal(fvar(x, f, na.rm = FALSE, stable.algo = FALSE), BY(x, f, var))
   expect_equal(fvar(xNA, f, na.rm = FALSE, stable.algo = FALSE), BY(xNA, f, var))
-  # expect_equal(fvar(xNA, f, stable.algo = FALSE), BY(xNA, f, var, na.rm = TRUE))
-  # expect_equal(fvar(m, g, stable.algo = FALSE), BY(m, g, var, na.rm = TRUE)) # failed on arch i386 CMD check
-  # expect_equal(fvar(m, g, na.rm = FALSE, stable.algo = FALSE), BY(m, g, var)) # failed on arch i386 CMD check
-  # expect_equal(fvar(mNA, g, na.rm = FALSE, stable.algo = FALSE), BY(mNA, g, var)) # failed on arch i386 CMD check
-  # expect_equal(fvar(mNA, g, stable.algo = FALSE), BY(mNA, g, var, na.rm = TRUE)) # failed on arch i386 CMD check
-  # expect_equal(fvar(mtcars, g, stable.algo = FALSE), BY(mtcars, g, var, na.rm = TRUE)) # failed on arch i386 CMD check
-  # expect_equal(fvar(mtcars, g, na.rm = FALSE, stable.algo = FALSE), BY(mtcars, g, var)) # failed on arch i386 CMD check
-  # expect_equal(fvar(mtcNA, g, na.rm = FALSE, stable.algo = FALSE), BY(mtcNA, g, var)) # failed on arch i386 CMD check
-  # expect_equal(fvar(mtcNA, g, stable.algo = FALSE), BY(mtcNA, g, var, na.rm = TRUE)) # failed on arch i386 CMD check
+  expect_equal(fvar(xNA, f, stable.algo = FALSE), BY(xNA, f, var, na.rm = TRUE)) # failed?
+  expect_equal(fvar(m, g, stable.algo = FALSE), BY(m, g, var, na.rm = TRUE)) # failed on arch i386 CMD check
+  expect_equal(fvar(m, g, na.rm = FALSE, stable.algo = FALSE), BY(m, g, var)) # failed on arch i386 CMD check
+  expect_equal(fvar(mNA, g, na.rm = FALSE, stable.algo = FALSE), BY(mNA, g, var)) # failed on arch i386 CMD check
+  expect_equal(fvar(mNA, g, stable.algo = FALSE), BY(mNA, g, var, na.rm = TRUE)) # failed on arch i386 CMD check
+  expect_equal(fvar(mtcars, g, stable.algo = FALSE), BY(mtcars, g, var, na.rm = TRUE)) # failed on arch i386 CMD check
+  expect_equal(fvar(mtcars, g, na.rm = FALSE, stable.algo = FALSE), BY(mtcars, g, var)) # failed on arch i386 CMD check
+  expect_equal(fvar(mtcNA, g, na.rm = FALSE, stable.algo = FALSE), BY(mtcNA, g, var)) # failed on arch i386 CMD check
+  expect_equal(fvar(mtcNA, g, stable.algo = FALSE), BY(mtcNA, g, var, na.rm = TRUE)) # failed on arch i386 CMD check
 })
 
 test_that("fvar with with direct algorithm and weights performs as intended (unbiased)", {
@@ -458,7 +500,7 @@ test_that("fvar with direct algorithm performs like fvar with unit weights", {
   expect_equal(fvar(mtcNA, g, stable.algo = FALSE), fvar(mtcNA, g, rep(1,32), stable.algo = FALSE))
 })
 
-test_that("fvar with with direct algorithm and weights performs like wvar (defined above)", {
+test_that("fvar with weights performs like wvar (defined above)", {
   # complete weights
   expect_equal(fvar(NA, w = 1, stable.algo = FALSE), wvar(NA, 1))
   expect_equal(fvar(NA, w = 1, na.rm = FALSE, stable.algo = FALSE), wvar(NA, 1))
@@ -477,10 +519,22 @@ test_that("fvar with with direct algorithm and weights performs like wvar (defin
   expect_equal(fvar(m, w = wdat, na.rm = FALSE, stable.algo = FALSE), dapply(m, wvar, wdat))
   expect_equal(fvar(mNA, w = wdat, na.rm = FALSE, stable.algo = FALSE), dapply(mNA, wvar, wdat))
   expect_equal(fvar(mNA, w = wdat, stable.algo = FALSE), dapply(mNA, wvar, wdat, na.rm = TRUE))
-  expect_equal(fvar(x, f, w, stable.algo = FALSE), mapply(wvar, split(x, f), split(w, f)))
-  expect_equal(fvar(x, f, w, na.rm = FALSE, stable.algo = FALSE), mapply(wvar, split(x, f), split(w, f)))
-  expect_equal(fvar(xNA, f, w, na.rm = FALSE, stable.algo = FALSE), mapply(wvar, split(xNA, f), split(w, f)))
-  expect_equal(na20(fvar(xNA, f, w, stable.algo = FALSE)), na20(mapply(wvar, split(xNA, f), split(w, f), na.rm = TRUE)))
+  expect_equal(fvar(mtcars, w = wdat, stable.algo = FALSE), dapply(mtcars, wvar, wdat, na.rm = TRUE))
+  expect_equal(fvar(mtcars, w = wdat, na.rm = FALSE, stable.algo = FALSE), dapply(mtcars, wvar, wdat))
+  expect_equal(fvar(mtcNA, w = wdat, na.rm = FALSE, stable.algo = FALSE), dapply(mtcNA, wvar, wdat))
+  expect_equal(fvar(mtcNA, w = wdat, stable.algo = FALSE), dapply(mtcNA, wvar, wdat, na.rm = TRUE))
+  expect_equal(fvar(x, f, w, stable.algo = FALSE), wBY(x, f, wvar, w))
+  expect_equal(fvar(x, f, w, na.rm = FALSE, stable.algo = FALSE), wBY(x, f, wvar, w))
+  expect_equal(fvar(xNA, f, w, na.rm = FALSE, stable.algo = FALSE), wBY(xNA, f, wvar, w))
+  expect_equal(na20(fvar(xNA, f, w, stable.algo = FALSE)), na20(wBY(xNA, f, wvar, w, na.rm = TRUE)))
+  expect_equal(fvar(m, g, wdat, stable.algo = FALSE), wBY(m, gf, wvar, wdat))
+  expect_equal(fvar(m, g, wdat, na.rm = FALSE, stable.algo = FALSE), wBY(m, gf, wvar, wdat))
+  expect_equal(fvar(mNA, g, wdat, na.rm = FALSE),  wBY(mNA, gf, wvar, wdat))
+  expect_equal(na20(fvar(mNA, g, wdat, stable.algo = FALSE)), na20(wBY(mNA, gf, wvar, wdat, na.rm = TRUE)))
+  expect_equal(fvar(mtcars, g, wdat, stable.algo = FALSE), wBY(mtcars, gf, wvar, wdat))
+  expect_equal(fvar(mtcars, g, wdat, na.rm = FALSE, stable.algo = FALSE), wBY(mtcars, gf, wvar, wdat))
+  expect_equal(fvar(mtcNA, g, wdat, na.rm = FALSE, stable.algo = FALSE), wBY(mtcNA, gf, wvar, wdat))
+  expect_equal(na20(fvar(mtcNA, g, wdat, stable.algo = FALSE)), na20(wBY(mtcNA, gf, wvar, wdat, na.rm = TRUE)))
   # missing weights
   expect_equal(fvar(NA, w = NA, stable.algo = FALSE), wvar(NA, NA))
   expect_equal(fvar(NA, w = NA, na.rm = FALSE, stable.algo = FALSE), wvar(NA, NA))
@@ -499,10 +553,22 @@ test_that("fvar with with direct algorithm and weights performs like wvar (defin
   expect_equal(fvar(m, w = wdatNA, na.rm = FALSE, stable.algo = FALSE), dapply(m, wvar, wdatNA))
   expect_equal(fvar(mNA, w = wdatNA, na.rm = FALSE, stable.algo = FALSE), dapply(mNA, wvar, wdatNA))
   expect_equal(fvar(mNA, w = wdatNA, stable.algo = FALSE), dapply(mNA, wvar, wdatNA, na.rm = TRUE))
-  expect_equal(na20(fvar(x, f, wNA, stable.algo = FALSE)), na20(mapply(wvar, split(x, f), split(wNA, f), na.rm = TRUE)))
-  expect_equal(fvar(x, f, wNA, na.rm = FALSE, stable.algo = FALSE), mapply(wvar, split(x, f), split(wNA, f)))
-  expect_equal(fvar(xNA, f, wNA, na.rm = FALSE, stable.algo = FALSE), mapply(wvar, split(xNA, f), split(wNA, f)))
-  expect_equal(na20(fvar(xNA, f, wNA, stable.algo = FALSE)), na20(mapply(wvar, split(xNA, f), split(wNA, f), na.rm = TRUE)))
+  expect_equal(fvar(mtcars, w = wdatNA, stable.algo = FALSE), dapply(mtcars, wvar, wdatNA, na.rm = TRUE))
+  expect_equal(fvar(mtcars, w = wdatNA, na.rm = FALSE, stable.algo = FALSE), dapply(mtcars, wvar, wdatNA))
+  expect_equal(fvar(mtcNA, w = wdatNA, na.rm = FALSE, stable.algo = FALSE), dapply(mtcNA, wvar, wdatNA))
+  expect_equal(fvar(mtcNA, w = wdatNA, stable.algo = FALSE), dapply(mtcNA, wvar, wdatNA, na.rm = TRUE))
+  expect_equal(na20(fvar(x, f, wNA, stable.algo = FALSE)), na20(wBY(x, f, wvar, wNA, na.rm = TRUE)))
+  expect_equal(fvar(x, f, wNA, na.rm = FALSE, stable.algo = FALSE), wBY(x, f, wvar, wNA))
+  expect_equal(fvar(xNA, f, wNA, na.rm = FALSE, stable.algo = FALSE), wBY(xNA, f, wvar, wNA))
+  expect_equal(na20(fvar(xNA, f, wNA, stable.algo = FALSE)), na20(wBY(xNA, f, wvar, wNA, na.rm = TRUE)))
+  expect_equal(na20(fvar(m, g, wdatNA, stable.algo = FALSE)), na20(wBY(m, gf, wvar, wdatNA, na.rm = TRUE)))
+  expect_equal(fvar(m, g, wdatNA, na.rm = FALSE, stable.algo = FALSE), wBY(m, gf, wvar, wdatNA))
+  expect_equal(fvar(mNA, g, wdatNA, na.rm = FALSE, stable.algo = FALSE),  wBY(mNA, gf, wvar, wdatNA))
+  expect_equal(na20(fvar(mNA, g, wdatNA, stable.algo = FALSE)), na20(wBY(mNA, gf, wvar, wdatNA, na.rm = TRUE)))
+  expect_equal(na20(fvar(mtcars, g, wdatNA, stable.algo = FALSE)), na20(wBY(mtcars, gf, wvar, wdatNA, na.rm = TRUE)))
+  expect_equal(fvar(mtcars, g, wdatNA, na.rm = FALSE, stable.algo = FALSE), wBY(mtcars, gf, wvar, wdatNA))
+  expect_equal(fvar(mtcNA, g, wdatNA, na.rm = FALSE, stable.algo = FALSE), wBY(mtcNA, gf, wvar, wdatNA))
+  expect_equal(na20(fvar(mtcNA, g, wdatNA, stable.algo = FALSE)), na20(wBY(mtcNA, gf, wvar, wdatNA, na.rm = TRUE)))
 })
 
 test_that("fvar with direct algorithm performs numerically stable", {
@@ -659,6 +725,7 @@ test_that("fvar with direct algorithm produces errors for wrong input", {
   expect_error(fvar(1:2,1:3, stable.algo = FALSE))
   expect_error(fvar(m,1:31, stable.algo = FALSE))
   expect_error(fvar(mtcars,1:31, stable.algo = FALSE))
+  expect_error(fvar(mtcars, w = 1:31, stable.algo = FALSE))
   expect_error(fvar("a", w = 1, stable.algo = FALSE))
   expect_error(fvar(1:2, w = 1:3, stable.algo = FALSE))
   expect_error(fvar(NA_character_, w = 1, stable.algo = FALSE))
@@ -696,6 +763,10 @@ test_that("fsd performs like base::sd", {
   expect_equal(fsd(m, na.rm = FALSE), dapply(m, sd))
   expect_equal(fsd(mNA, na.rm = FALSE), dapply(mNA, sd))
   expect_equal(fsd(mNA), dapply(mNA, sd, na.rm = TRUE))
+  expect_equal(fsd(mtcars), dapply(mtcars, sd, na.rm = TRUE))
+  expect_equal(fsd(mtcars, na.rm = FALSE), dapply(mtcars, sd))
+  expect_equal(fsd(mtcNA, na.rm = FALSE), dapply(mtcNA, sd))
+  expect_equal(fsd(mtcNA), dapply(mtcNA, sd, na.rm = TRUE))
   expect_equal(fsd(x, f), BY(x, f, sd, na.rm = TRUE))
   expect_equal(fsd(x, f, na.rm = FALSE), BY(x, f, sd))
   expect_equal(fsd(xNA, f, na.rm = FALSE), BY(xNA, f, sd))
@@ -763,6 +834,7 @@ test_that("fsd produces errors for wrong input", {
   expect_error(fsd(1:2,1:3))
   expect_error(fsd(m,1:31))
   expect_error(fsd(mtcars,1:31))
+  expect_error(fsd(mtcars, w = 1:31))
   expect_error(fsd("a", w = 1))
   expect_error(fsd(1:2, w = 1:3))
   expect_error(fsd(NA_character_, w = 1))

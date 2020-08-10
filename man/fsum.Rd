@@ -6,25 +6,25 @@
 \alias{fsum.grouped_df}
 \title{Fast (Grouped, Weighted) Sum for Matrix-Like Objects}  % Vectors, Matrix and Data Frame Columns}
 \description{
-\code{fsum} is a generic function that computes the (column-wise) sum of all values in \code{x}, (optionally) grouped by \code{g} and/or weighted by \code{w} (i.e. to calculate survey totals). The \code{\link{TRA}} argument can further be used to transform \code{x} using its (grouped, weighted) sum.
+\code{fsum} is a generic function that computes the (column-wise) sum of all values in \code{x}, (optionally) grouped by \code{g} and/or weighted by \code{w} (e.g. to calculate survey totals). The \code{\link{TRA}} argument can further be used to transform \code{x} using its (grouped, weighted) sum.
 }
 \usage{
-fsum(x, ...)
+fsum(x, \dots)
 
 \method{fsum}{default}(x, g = NULL, w = NULL, TRA = NULL, na.rm = TRUE,
-     use.g.names = TRUE, ...)
+     use.g.names = TRUE, \dots)
 
 \method{fsum}{matrix}(x, g = NULL, w = NULL, TRA = NULL, na.rm = TRUE,
-     use.g.names = TRUE, drop = TRUE, ...)
+     use.g.names = TRUE, drop = TRUE, \dots)
 
 \method{fsum}{data.frame}(x, g = NULL, w = NULL, TRA = NULL, na.rm = TRUE,
-     use.g.names = TRUE, drop = TRUE, ...)
+     use.g.names = TRUE, drop = TRUE, \dots)
 
 \method{fsum}{grouped_df}(x, w = NULL, TRA = NULL, na.rm = TRUE,
-     use.g.names = FALSE, keep.group_vars = TRUE, keep.w = TRUE, ...)
+     use.g.names = FALSE, keep.group_vars = TRUE, keep.w = TRUE, \dots)
 }
 \arguments{
-\item{x}{a numeric vector, matrix, data.frame or grouped tibble (\code{dplyr::grouped_df}).}
+\item{x}{a numeric vector, matrix, data frame or grouped tibble (\code{dplyr::grouped_df}).}
 
 \item{g}{a factor, \code{GRP} object, atomic vector (internally converted to factor) or a list of vectors / factors (internally converted to a \code{GRP} object) used to group \code{x}.}
 
@@ -35,15 +35,15 @@ fsum(x, ...)
 
 \item{na.rm}{logical. Skip missing values in \code{x}. Defaults to \code{TRUE} and implemented at very little computational cost. If \code{na.rm = FALSE} a \code{NA} is returned when encountered.}
 
-\item{use.g.names}{make group-names and add to the result as names (vector method) or row-names (matrix and data.frame method). No row-names are generated for data.tables and (default) grouped tibbles.}
+\item{use.g.names}{logical. Make group-names and add to the result as names (default method) or row-names (matrix and data frame methods). No row-names are generated for \emph{data.table}'s.}
 
-\item{drop}{\emph{matrix and data.frame method:} drop dimensions and return an atomic vector if \code{g = NULL} and \code{TRA = NULL}.}
+\item{drop}{\emph{matrix and data.frame method:} Logical. \code{TRUE} drops dimensions and returns an atomic vector if \code{g = NULL} and \code{TRA = NULL}.}
 
 \item{keep.group_vars}{\emph{grouped_df method:} Logical. \code{FALSE} removes grouping variables after computation.}
 
 \item{keep.w}{\emph{grouped_df method:} Logical. Retain summed weighting variable after computation (if contained in \code{grouped_df}).}
 
-\item{...}{arguments to be passed to or from other methods.}
+\item{\dots}{arguments to be passed to or from other methods.}
 
 }
 \details{
@@ -55,14 +55,14 @@ The weighted sum (i.e. survey total) is computed as \code{sum(x * w)}. If \code{
 
 This all seamlessly generalizes to grouped computations, which are performed in a single pass (without splitting the data) and therefore extremely fast. See Benchmark and Examples below.
 
-When applied to data frame's with groups or \code{drop = FALSE}, \code{fsum} preserves all column attributes (such as variable labels) but does not distinguish between classed and unclassed objects. The attributes of the data frame itself are also preserved.
+When applied to data frames with groups or \code{drop = FALSE}, \code{fsum} preserves all column attributes (such as variable labels) but does not distinguish between classed and unclassed objects. The attributes of the data frame itself are also preserved.
 
 }
 \value{
 The (\code{w} weighted) sum of \code{x}, grouped by \code{g}, or (if \code{\link{TRA}} is used) \code{x} transformed by its sum, grouped by \code{g}.
 }
 \section{See Also}{
-\code{\link{fprod}}, \link[=A1-fast-statistical-functions]{Fast Statistical Functions}, \link[=collapse-documentation]{Collapse Overview}
+\code{\link{fprod}}, \code{\link{fmean}}, \link[=A1-fast-statistical-functions]{Fast Statistical Functions}, \link[=collapse-documentation]{Collapse Overview}
 }
 \section{Examples}{\preformatted{
 ## default vector method
@@ -72,8 +72,8 @@ fsum(mpg, w = mtcars$hp)          # Weighted sum (total): Weighted by hp
 fsum(mpg, TRA = "\%")              # Simple transformation: obtain percentages of mpg
 fsum(mpg, mtcars$cyl)             # Grouped sum
 fsum(mpg, mtcars$cyl, mtcars$hp)  # Weighted grouped sum (total)
-fsum(mpg, mtcars[c(2,8:9)])       # More groups...
-g <- GRP(mtcars, ~ cyl + vs + am) # Precomputing groups gives more speed !!
+fsum(mpg, mtcars[c(2,8:9)])       # More groups..
+g <- GRP(mtcars, ~ cyl + vs + am) # Precomputing groups gives more speed !
 fsum(mpg, g)
 fmean(mpg, g) == fsum(mpg, g) / fNobs(mpg, g)
 fsum(mpg, g, TRA = "\%")           # Percentages by group
@@ -94,12 +94,12 @@ fsum(m, g, TRA = "\%")
 ## method for grouped tibbles - for use with dplyr
 library(dplyr)
 mtcars \%>\% group_by(cyl,vs,am) \%>\% fsum(hp)  # Weighted grouped sum (total)
-mtcars \%>\% fgroup_by(cyl,vs,am) \%>\% fsum(hp) # Equivalent but faster !!
+mtcars \%>\% fgroup_by(cyl,vs,am) \%>\% fsum(hp) # Equivalent and faster !!
 mtcars \%>\% fgroup_by(cyl,vs,am) \%>\% fsum(TRA = "\%")
 mtcars \%>\% fgroup_by(cyl,vs,am) \%>\% fselect(mpg) \%>\% fsum
 }}
 \section{Benchmark}{\preformatted{
-## Let's run some benchmarks and compare fsum against data.table and base::rowsum
+## This compares fsum with data.table (2 threads) and base::rowsum
 # Starting with small data
 mtcDT <- qDT(mtcars)
 f <- qF(mtcars$cyl)
@@ -108,7 +108,7 @@ library(microbenchmark)
 microbenchmark(mtcDT[, lapply(.SD, sum), by = f],
                rowsum(mtcDT, f, reorder = FALSE),
                fsum(mtcDT, f, na.rm = FALSE), unit = "relative")
-# My results:
+
                               expr        min         lq      mean    median        uq       max neval cld
  mtcDT[, lapply(.SD, sum), by = f] 145.436928 123.542134 88.681111 98.336378 71.880479 85.217726   100   c
  rowsum(mtcDT, f, reorder = FALSE)   2.833333   2.798203  2.489064  2.937889  2.425724  2.181173   100  b
@@ -121,7 +121,7 @@ f <- qF(sample.int(1e4, 1e5, TRUE))                        # A factor with 10.00
 microbenchmark(tdata[, lapply(.SD, sum), by = f],
                rowsum(tdata, f, reorder = FALSE),
                fsum(tdata, f, na.rm = FALSE), unit = "relative")
-# My results:
+
                               expr      min       lq     mean   median       uq       max neval cld
  tdata[, lapply(.SD, sum), by = f] 2.646992 2.975489 2.834771 3.081313 3.120070 1.2766475   100   c
  rowsum(tdata, f, reorder = FALSE) 1.747567 1.753313 1.629036 1.758043 1.839348 0.2720937   100  b

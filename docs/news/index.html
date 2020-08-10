@@ -71,7 +71,7 @@
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">collapse</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">1.2.1</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">1.3.0</span>
       </span>
     </div>
 
@@ -86,13 +86,10 @@
 <li>
   <a href="../news/index.html">News</a>
 </li>
-<li>
-  <a href="../blog/index.html">Blog</a>
-</li>
       </ul>
       <ul class="nav navbar-nav navbar-right">
         <li>
-  <a href="https://twitter.com/collapse">
+  <a href="https://twitter.com/collapse_R">
     <span class="fa fa-twitter"></span>
      
   </a>
@@ -120,6 +117,52 @@
       <small>Source: <a href='https://github.com/SebKrantz/collapse/blob/master/NEWS.md'><code>NEWS.md</code></a></small>
     </div>
 
+    <div id="collapse-130" class="section level1">
+<h1 class="page-header" data-toc-text="1.3.0">
+<a href="#collapse-130" class="anchor"></a>collapse 1.3.0<small> Unreleased </small>
+</h1>
+<p>collapse 1.3.0, released mid August 2020, is another major update:</p>
+<div id="changes-to-functionality" class="section level3">
+<h3 class="hasAnchor">
+<a href="#changes-to-functionality" class="anchor"></a>Changes to Functionality</h3>
+<ul>
+<li><p><code>dapply</code> and <code>BY</code> now drop all unnecessary attributes if <code>return = "matrix"</code> or <code>return = "data.frame"</code> are explicitly requested (the default <code>return = "same"</code> still seeks to preserve the input data structure).</p></li>
+<li><p><code>unlist2d</code> now saves integer rownames if <code>row.names = TRUE</code> and a list of matrices without rownames is passed, and <code>id.factor = TRUE</code> generates a normal factor not an ordered factor. It is however possible to write <code>id.factor = "ordered"</code> to get an ordered factor id.</p></li>
+<li><p><code>fdiff</code> argument <code>logdiff</code> renamed to <code>log</code>, and taking logs is now done in R (reduces size of C++ code and does not generate as many NaN’s). <code>logdiff</code> may still be used, but it may be deactivated in the future. Also in the matrix and data.frame methods for <code>flag</code>, <code>fdiff</code> and <code>fgrowth</code>, columns are only stub-renamed if more than one lag/difference/growth rate is computed.</p></li>
+</ul>
+</div>
+<div id="additions" class="section level3">
+<h3 class="hasAnchor">
+<a href="#additions" class="anchor"></a>Additions</h3>
+<ul>
+<li><p>Added <code>fnth</code> for fast (grouped, weighted) n’th element/quantile computations.</p></li>
+<li><p>Added <code><a href="../reference/roworder.html">roworder(v)</a></code> and <code><a href="../reference/colorder.html">colorder(v)</a></code> for fast row and column reordering.</p></li>
+<li><p>Added <code>frename</code> and <code>setrename</code> for fast and flexible renaming (by reference).</p></li>
+<li><p>Added function <code>fungroup</code>, as replacement for <code><a href="https://dplyr.tidyverse.org/reference/group_by.html">dplyr::ungroup</a></code>, intended for use with <code>fgroup_by</code>.</p></li>
+<li><p>The shortcut <code>gvr</code> was created for <code><a href="../reference/select_replace_vars.html">get_vars(..., regex = TRUE)</a></code>. Also a helper <code>.c</code> was introduced for non-standard concatenation (i.e. <code>.c(a, b) == c("a", "b")</code>).</p></li>
+</ul>
+</div>
+<div id="improvements" class="section level3">
+<h3 class="hasAnchor">
+<a href="#improvements" class="anchor"></a>Improvements</h3>
+<ul>
+<li><p><code>fmedian</code> now supports weights, computing a decently fast (grouped) weighted median based on radix ordering.</p></li>
+<li><p><code>fmode</code> now has the option to compute min and max mode, the default is still simply the first mode.</p></li>
+<li><p><code>fwithin</code> now supports quasi-demeaning (added argument <code>theta</code>) and can thus be used to manually estimate random-effects models.</p></li>
+<li><p><code>fmode</code> and <code>fNdistinct</code> have become a bit faster.</p></li>
+<li><p><code>fgroup_by</code> now preserves <em>data.table</em>’s.</p></li>
+<li><p><code>funique</code> is now generic with a default vector and data.frame method, providing fast unique values and rows of data. The default was changed to <code>sort = FALSE</code>.</p></li>
+<li><p><code>ftransform</code> now also supports a data.frame as replacement argument, which automatically replaces matching columns and adds unmatched ones. Also <code>ftransform&lt;-</code> was created as a more formal replacement method for this feature.</p></li>
+<li><p><code>collap</code> columns selected through <code>cols</code> argument are returned in the order selected if <code>keep.col.order = FALSE</code>. Argument <code>sort.row</code> is depreciated, and replace by argument <code>sort</code>. In addition the <code>decreasing</code> and <code>na.last</code> arguments were added and handed down to <code>GRP.default</code>.</p></li>
+<li><p><code>radixorder</code> ‘sorted’ attribute is now always attached.</p></li>
+<li><p><code><a href="https://rdrr.io/r/stats/deriv.html">stats::D</a></code> which is masked when collapse is attached, is now preserved through methods <code>D.expression</code> and <code>D.call</code>.</p></li>
+<li><p><code>GRP</code> option <code>call = FALSE</code> to omit a call to <code>match.call</code> -&gt; minor performance improvement.</p></li>
+<li><p>Several small performance improvements through rewriting some internal helper functions in C and reworking some R code.</p></li>
+<li><p>Performance improvements for some helper functions, <code>setRownames</code> / <code>setColnames</code>, <code>na_insert</code> etc.</p></li>
+<li><p>Increased scope of testing statistical functions. The functionality of the package is now secured by 7700 unit tests covering all central bits and pieces.</p></li>
+</ul>
+</div>
+</div>
     <div id="collapse-121" class="section level1">
 <h1 class="page-header" data-toc-text="1.2.1">
 <a href="#collapse-121" class="anchor"></a>collapse 1.2.1<small> 2020-05-26 </small>
@@ -135,9 +178,9 @@
 <a href="#collapse-120" class="anchor"></a>collapse 1.2.0<small> 2020-05-19 </small>
 </h1>
 <p>collapse 1.2.0, released mid May 2020, is a major update of the package - changes and additions:</p>
-<div id="changes-to-functionality" class="section level3">
+<div id="changes-to-functionality-1" class="section level3">
 <h3 class="hasAnchor">
-<a href="#changes-to-functionality" class="anchor"></a>Changes to Functionality</h3>
+<a href="#changes-to-functionality-1" class="anchor"></a>Changes to Functionality</h3>
 <ul>
 <li><p><em>grouped_df</em> methods for fast statistical functions now always attach the grouping variables to the output in aggregations, unless argument <code>keep.group_vars = FALSE</code>. (formerly grouping variables were only attached if also present in the data. Code hinged on this feature should be adjusted)</p></li>
 <li><p><code>qF</code> <code>ordered</code> argument default was changed to <code>ordered = FALSE</code>, and the <code>NA</code> level is only added if <code>na.exclude = FALSE</code>. Thus <code>qF</code> now behaves exactly like <code>as.factor</code>.</p></li>
@@ -154,25 +197,9 @@
 </ul>
 <!-- It is still recommended to remove unused factor levels when programming with factors, some functions check for them, others not. For example `fmean(data, f)` will simply generate a missing row for each unused factor level. If in doubt, use safer `GRP` objects for grouped programming. A general level check for all functions will not be implemented as this requires an additional pass in some cases. -->
 </div>
-<div id="improvements" class="section level3">
+<div id="additions-1" class="section level3">
 <h3 class="hasAnchor">
-<a href="#improvements" class="anchor"></a>Improvements</h3>
-<ul>
-<li><p>Faster grouping with <code>GRP</code> and faster factor generation with added radix method + automatic dispatch between hash and radix method. <code>qF</code> is now ~ 5x faster than <code>as.factor</code> on character and around 30x faster on numeric data. Also <code>qG</code> was enhanced.</p></li>
-<li><p>Further slight speed tweaks here and there.</p></li>
-<li><p><code>collap</code> now provides more control for weighted aggregations with additional arguments <code>w</code>, <code>keep.w</code> and <code>wFUN</code> to aggregate the weights as well. The defaults are <code>keep.w = TRUE</code> and <code>wFUN = fsum</code>. A specialty of <code>collap</code> remains that <code>keep.by</code> and <code>keep.w</code> also work for external objects passed, so code of the form <code><a href="../reference/collap.html">collap(data, by, FUN, catFUN, w = data$weights)</a></code> will now have an aggregated <code>weights</code> vector in the first column.</p></li>
-</ul>
-<!-- In such cases use `keep.w = FALSE` to omit the weights or `collap(data, by, FUN, catFUN, w = ~ weights)` to keep the column order. --><ul>
-<li><p><code>qsu</code> now also allows weights to be passed in formula i.e. <code><a href="../reference/qsu.html">qsu(data, by = ~ group, pid = ~ panelid, w = ~ weights)</a></code>.</p></li>
-<li><p><code>fdiff</code> now supports quasi-differences i.e. <span class="math inline"><em>x</em><sub><em>t</em></sub> − <em>ρ</em><em>x</em><sub><em>t</em> − 1</sub></span> and quasi-log differences i.e. <span class="math inline"><em>l</em><em>o</em><em>g</em>(<em>x</em><sub><em>t</em></sub>) − <em>ρ</em><em>l</em><em>o</em><em>g</em>(<em>x</em><sub><em>t</em> − 1</sub>)</span>. an arbitrary <span class="math inline"><em>ρ</em></span> can be supplied.</p></li>
-<li><p>Added a <code>Dlog</code> operator for faster access to log-differences.</p></li>
-<li><p><code>fgrowth</code> has a <code>scale</code> argument, the default is <code>scale = 100</code> which provides growth rates in percentage terms (as before), but this may now be changed.</p></li>
-<li><p>All statistical and transformation functions now have a hidden list method, so they can be applied to unclassed list-objects as well. An error is however provided in grouped operations with unequal-length columns.</p></li>
-</ul>
-</div>
-<div id="additions" class="section level3">
-<h3 class="hasAnchor">
-<a href="#additions" class="anchor"></a>Additions</h3>
+<a href="#additions-1" class="anchor"></a>Additions</h3>
 <ul>
 <li>
 <p>Added a suite of functions for fast data manipulation:</p>
@@ -195,6 +222,22 @@
 <li><p>Added function <code>varying</code> to efficiently check the variation of multi-type data over a dimension or within groups.</p></li>
 <li><p>Added function <code>radixorder</code>, same as <code><a href="https://rdrr.io/r/base/order.html">base::order(..., method = "radix")</a></code> but more accessible and with built-in grouping features.</p></li>
 <li><p>Added functions <code>seqid</code> and <code>groupid</code> for generalized run-length type id variable generation from grouping and time variables. <code>seqid</code> in particular strongly facilitates lagging / differencing irregularly spaced panels using <code>flag</code>, <code>fdiff</code> etc.</p></li>
+</ul>
+</div>
+<div id="improvements-1" class="section level3">
+<h3 class="hasAnchor">
+<a href="#improvements-1" class="anchor"></a>Improvements</h3>
+<ul>
+<li><p>Faster grouping with <code>GRP</code> and faster factor generation with added radix method + automatic dispatch between hash and radix method. <code>qF</code> is now ~ 5x faster than <code>as.factor</code> on character and around 30x faster on numeric data. Also <code>qG</code> was enhanced.</p></li>
+<li><p>Further slight speed tweaks here and there.</p></li>
+<li><p><code>collap</code> now provides more control for weighted aggregations with additional arguments <code>w</code>, <code>keep.w</code> and <code>wFUN</code> to aggregate the weights as well. The defaults are <code>keep.w = TRUE</code> and <code>wFUN = fsum</code>. A specialty of <code>collap</code> remains that <code>keep.by</code> and <code>keep.w</code> also work for external objects passed, so code of the form <code><a href="../reference/collap.html">collap(data, by, FUN, catFUN, w = data$weights)</a></code> will now have an aggregated <code>weights</code> vector in the first column.</p></li>
+</ul>
+<!-- In such cases use `keep.w = FALSE` to omit the weights or `collap(data, by, FUN, catFUN, w = ~ weights)` to keep the column order. --><ul>
+<li><p><code>qsu</code> now also allows weights to be passed in formula i.e. <code><a href="../reference/qsu.html">qsu(data, by = ~ group, pid = ~ panelid, w = ~ weights)</a></code>.</p></li>
+<li><p><code>fdiff</code> now supports quasi-differences i.e. <span class="math inline"><em>x</em><sub><em>t</em></sub> − <em>ρ</em><em>x</em><sub><em>t</em> − 1</sub></span> and quasi-log differences i.e. <span class="math inline"><em>l</em><em>o</em><em>g</em>(<em>x</em><sub><em>t</em></sub>) − <em>ρ</em><em>l</em><em>o</em><em>g</em>(<em>x</em><sub><em>t</em> − 1</sub>)</span>. an arbitrary <span class="math inline"><em>ρ</em></span> can be supplied.</p></li>
+<li><p>Added a <code>Dlog</code> operator for faster access to log-differences.</p></li>
+<li><p><code>fgrowth</code> has a <code>scale</code> argument, the default is <code>scale = 100</code> which provides growth rates in percentage terms (as before), but this may now be changed.</p></li>
+<li><p>All statistical and transformation functions now have a hidden list method, so they can be applied to unclassed list-objects as well. An error is however provided in grouped operations with unequal-length columns.</p></li>
 </ul>
 </div>
 </div>

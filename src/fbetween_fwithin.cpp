@@ -8,7 +8,7 @@ using namespace Rcpp;
 // [[Rcpp::export]]
 NumericVector BWCpp(const NumericVector& x, int ng = 0, const IntegerVector& g = 0,
                     const SEXP& gs = R_NilValue, const SEXP& w = R_NilValue,
-                    bool narm = true, double set_mean = 0, bool B = false, bool fill = false) {
+                    bool narm = true, double theta = 1, double set_mean = 0, bool B = false, bool fill = false) {
   int l = x.size();
   NumericVector out = no_init_vector(l);
 
@@ -24,7 +24,7 @@ NumericVector BWCpp(const NumericVector& x, int ng = 0, const IntegerVector& g =
           sum += x[i]; // Fastest ?
           ++n;
         }
-        sum = sum/n - set_mean; // best ?
+        sum = theta * sum/n - set_mean; // best ?
         if(B) {
           if(fill) std::fill(out.begin(), out.end(), sum); // (double)sum // fastest ? -> yes !
           else {
@@ -46,7 +46,7 @@ NumericVector BWCpp(const NumericVector& x, int ng = 0, const IntegerVector& g =
             sum += x[i];
           }
         }
-        sum = sum/l - set_mean; // best ?
+        sum = theta * sum/l - set_mean; // best ?
         if(B) {
           std::fill(out.begin(), out.end(), sum); // (double)sum) // fastest ?
         } else {
@@ -79,10 +79,10 @@ NumericVector BWCpp(const NumericVector& x, int ng = 0, const IntegerVector& g =
           }
         } else {
           if(set_mean != R_NegInf) {
-            if(set_mean == 0) {
+            if(set_mean == 0 && theta == 1) {
               for(int i = ng; i--; ) sum[i] /= n[i]; // faster using two loops? or combine ? -> two loos (this solution) is a lot faster !
             } else {
-              for(int i = ng; i--; ) sum[i] = sum[i] / n[i] - set_mean;
+              for(int i = ng; i--; ) sum[i] = theta / n[i] * sum[i] - set_mean;
             }
             for(int i = 0; i != l; ++i) out[i] = x[i] - sum[g[i]-1]; // best loop ? -> just as fast as the other one !
           } else {
@@ -95,6 +95,10 @@ NumericVector BWCpp(const NumericVector& x, int ng = 0, const IntegerVector& g =
               sum[i] /= n[i]; // fastest ?
             }
             osum = osum/on;
+            if(theta != 1) {
+              sum = theta * sum;
+              osum = theta * osum;
+            }
             for(int i = 0; i != l; ++i) out[i] = x[i] - sum[g[i]-1] + osum;
           }
         }
@@ -138,10 +142,10 @@ NumericVector BWCpp(const NumericVector& x, int ng = 0, const IntegerVector& g =
           for(int i = 0; i != l; ++i) out[i] = sum[g[i]-1];
         } else {
           if(set_mean != R_NegInf) {
-            if(set_mean == 0) {
+            if(set_mean == 0 && theta == 1) {
               for(int i = ng; i--; ) sum[i] /= gsv[i];
             } else {
-              for(int i = ng; i--; ) sum[i] = sum[i] / gsv[i] - set_mean;
+              for(int i = ng; i--; ) sum[i] = theta / gsv[i] * sum[i] - set_mean;
             }
             for(int i = 0; i != l; ++i) out[i] = x[i] - sum[g[i]-1];
           } else {
@@ -154,6 +158,10 @@ NumericVector BWCpp(const NumericVector& x, int ng = 0, const IntegerVector& g =
               sum[i] /= gsv[i]; // fastest ?
             }
             osum = osum/on;
+            if(theta != 1) {
+              sum = theta * sum;
+              osum = theta * osum;
+            }
             for(int i = 0; i != l; ++i) out[i] = x[i] - sum[g[i]-1] + osum;
           }
         }
@@ -173,7 +181,7 @@ NumericVector BWCpp(const NumericVector& x, int ng = 0, const IntegerVector& g =
           sum += x[i]*wg[i]; // Fastest ?
           sumw += wg[i];
         }
-        sum = sum/sumw - set_mean; // best ?
+        sum = theta * sum/sumw - set_mean; // best ?
         if(B) {
           if(fill) std::fill(out.begin(), out.end(), sum); // (double)sum // fastes ?
           else {
@@ -196,7 +204,7 @@ NumericVector BWCpp(const NumericVector& x, int ng = 0, const IntegerVector& g =
             sumw += wg[i];
           }
         }
-        sum = sum/sumw - set_mean; // best ?
+        sum = theta * sum/sumw - set_mean; // best ?
         if(B) {
           std::fill(out.begin(), out.end(), sum); // (double)sum// fastes ?
         } else {
@@ -231,10 +239,10 @@ NumericVector BWCpp(const NumericVector& x, int ng = 0, const IntegerVector& g =
           }
         } else {
           if(set_mean != R_NegInf) {
-            if(set_mean == 0) {
+            if(set_mean == 0 && theta == 1) {
               sum = sum/sumw;
             } else {
-              sum = sum/sumw - set_mean;
+              sum = theta * sum/sumw - set_mean;
             }
             for(int i = 0; i != l; ++i) out[i] = x[i] - sum[g[i]-1];
           } else {
@@ -246,6 +254,10 @@ NumericVector BWCpp(const NumericVector& x, int ng = 0, const IntegerVector& g =
               sum[i] /= sumw[i]; // fastest ?
             }
             osum = osum/osumw;
+            if(theta != 1) {
+              sum = theta * sum;
+              osum = theta * osum;
+            }
             for(int i = 0; i != l; ++i) out[i] = x[i] - sum[g[i]-1] + osum;
           }
         }
@@ -269,10 +281,10 @@ NumericVector BWCpp(const NumericVector& x, int ng = 0, const IntegerVector& g =
           for(int i = 0; i != l; ++i) out[i] = sum[g[i]-1];
         } else {
           if(set_mean != R_NegInf) {
-            if(set_mean == 0) {
+            if(set_mean == 0 && theta == 1) {
               sum = sum/sumw;
             } else {
-              sum = sum/sumw - set_mean;
+              sum = theta * sum/sumw - set_mean;
             }
             for(int i = 0; i != l; ++i) out[i] = x[i] - sum[g[i]-1];
           } else {
@@ -284,6 +296,10 @@ NumericVector BWCpp(const NumericVector& x, int ng = 0, const IntegerVector& g =
               sum[i] /= sumw[i]; // fastest ?
             }
             osum = osum/osumw;
+            if(theta != 1) {
+              sum = theta * sum;
+              osum = theta * osum;
+            }
             for(int i = 0; i != l; ++i) out[i] = x[i] - sum[g[i]-1] + osum;
           }
         }
@@ -297,7 +313,7 @@ NumericVector BWCpp(const NumericVector& x, int ng = 0, const IntegerVector& g =
 // [[Rcpp::export]]
 NumericMatrix BWmCpp(const NumericMatrix& x, int ng = 0, const IntegerVector& g = 0,
                      const SEXP& gs = R_NilValue, const SEXP& w = R_NilValue,
-                     bool narm = true, double set_mean = 0, bool B = false, bool fill = false) {
+                     bool narm = true, double theta = 1, double set_mean = 0, bool B = false, bool fill = false) {
   int l = x.nrow(), col = x.ncol();
   NumericMatrix out = no_init_matrix(l, col);
 
@@ -316,7 +332,7 @@ NumericMatrix BWmCpp(const NumericMatrix& x, int ng = 0, const IntegerVector& g 
             sumj += column[i];
             ++nj;
           }
-          sumj = sumj/nj - set_mean; // best ?
+          sumj = theta * sumj/nj - set_mean; // best ?
           if(B) {
             if(fill) std::fill(outj.begin(), outj.end(), sumj); // (double)sumj
             else {
@@ -342,7 +358,7 @@ NumericMatrix BWmCpp(const NumericMatrix& x, int ng = 0, const IntegerVector& g 
               sumj += column[i];
             }
           }
-          sumj = sumj/l - set_mean; // best ?
+          sumj = theta * sumj/l - set_mean; // best ?
           if(B) {
             std::fill(outj.begin(), outj.end(), sumj); // (double)sumj
           } else {
@@ -356,7 +372,7 @@ NumericMatrix BWmCpp(const NumericMatrix& x, int ng = 0, const IntegerVector& g 
         for(int j = col; j--; ) {
           NumericMatrix::ConstColumn column = x( _ , j);
           NumericMatrix::Column outj = out( _ , j);
-          std::vector<double> sumj(ng, NA_REAL); // faster than NumericVector ?
+          NumericVector sumj(ng, NA_REAL); // std::vector<double> // faster than NumericVector ?
           std::vector<int> nj(ng);  // int nj[ng]; // use vector also ?
           for(int i = l; i--; ) {
             if(!std::isnan(column[i])) {
@@ -381,10 +397,10 @@ NumericMatrix BWmCpp(const NumericMatrix& x, int ng = 0, const IntegerVector& g 
             }
           } else {
             if(set_mean != R_NegInf) {
-              if(set_mean == 0) {
+              if(set_mean == 0 && theta == 1) {
                 for(int i = ng; i--; ) sumj[i] /= nj[i];
               } else {
-                for(int i = ng; i--; ) sumj[i] = sumj[i] / nj[i] - set_mean;
+                for(int i = ng; i--; ) sumj[i] = theta / nj[i] * sumj[i] - set_mean;
               }
               for(int i = 0; i != l; ++i) outj[i] = column[i] - sumj[g[i]-1];
             } else {
@@ -397,6 +413,10 @@ NumericMatrix BWmCpp(const NumericMatrix& x, int ng = 0, const IntegerVector& g 
                 sumj[i] /= nj[i];
               }
               osum = osum/on;
+              if(theta != 1) {
+                sumj = theta * sumj;
+                osum = theta * osum;
+              }
               for(int i = 0; i != l; ++i) outj[i] = column[i] - sumj[g[i]-1] + osum;
             }
           }
@@ -407,7 +427,7 @@ NumericMatrix BWmCpp(const NumericMatrix& x, int ng = 0, const IntegerVector& g 
           for(int j = col; j--; ) {
             NumericMatrix::ConstColumn column = x( _ , j);
             NumericMatrix::Column outj = out( _ , j);
-            std::vector<double> sumj(ng); // better than array or NumericVector ?
+            NumericVector sumj(ng); // std::vector<double> // better than array or NumericVector ?
             std::vector<int> gsv(ng);
             // memset(gsv, 0, memsize);
             int ngs = 0;
@@ -428,10 +448,10 @@ NumericMatrix BWmCpp(const NumericMatrix& x, int ng = 0, const IntegerVector& g 
               for(int i = 0; i != l; ++i) outj[i] = sumj[g[i]-1];
             } else {
               if(set_mean != R_NegInf) {
-                if(set_mean == 0) {
+                if(set_mean == 0 && theta == 1) {
                   for(int i = ng; i--; ) sumj[i] /= gsv[i];
                 } else {
-                  for(int i = ng; i--; ) sumj[i] = sumj[i] / gsv[i] - set_mean;
+                  for(int i = ng; i--; ) sumj[i] = theta / gsv[i] * sumj[i] - set_mean;
                 }
                 for(int i = 0; i != l; ++i) outj[i] = column[i] - sumj[g[i]-1];
               } else {
@@ -444,6 +464,10 @@ NumericMatrix BWmCpp(const NumericMatrix& x, int ng = 0, const IntegerVector& g 
                   sumj[i] /= gsv[i];
                 }
                 osum = osum/on;
+                if(theta != 1) {
+                  sumj = theta * sumj;
+                  osum = theta * osum;
+                }
                 for(int i = 0; i != l; ++i) outj[i] = column[i] - sumj[g[i]-1] + osum;
               }
             }
@@ -454,7 +478,7 @@ NumericMatrix BWmCpp(const NumericMatrix& x, int ng = 0, const IntegerVector& g 
           for(int j = col; j--; ) {
             NumericMatrix::ConstColumn column = x( _ , j);
             NumericMatrix::Column outj = out( _ , j);
-            std::vector<double> sumj(ng);
+            NumericVector sumj(ng); // std::vector<double>
             int ngs = 0;
             for(int i = 0; i != l; ++i) {
               if(std::isnan(column[i])) {
@@ -472,10 +496,10 @@ NumericMatrix BWmCpp(const NumericMatrix& x, int ng = 0, const IntegerVector& g 
               for(int i = 0; i != l; ++i) outj[i] = sumj[g[i]-1];
             } else {
               if(set_mean != R_NegInf) {
-                if(set_mean == 0) {
+                if(set_mean == 0 && theta == 1) {
                   for(int i = ng; i--; ) sumj[i] /= gsv[i];
                 } else {
-                  for(int i = ng; i--; ) sumj[i] = sumj[i] / gsv[i] - set_mean;
+                  for(int i = ng; i--; ) sumj[i] = theta / gsv[i] * sumj[i] - set_mean;
                 }
                 for(int i = 0; i != l; ++i) outj[i] = column[i] - sumj[g[i]-1];
               } else {
@@ -488,6 +512,10 @@ NumericMatrix BWmCpp(const NumericMatrix& x, int ng = 0, const IntegerVector& g 
                   sumj[i] /= gsv[i];
                 }
                 osum = osum/on;
+                if(theta != 1) {
+                  sumj = theta * sumj;
+                  osum = theta * osum;
+                }
                 for(int i = 0; i != l; ++i) outj[i] = column[i] - sumj[g[i]-1] + osum;
               }
             }
@@ -512,7 +540,7 @@ NumericMatrix BWmCpp(const NumericMatrix& x, int ng = 0, const IntegerVector& g 
             sumj += column[i]*wg[i];
             sumwj += wg[i];
           }
-          sumj = sumj/sumwj - set_mean; // best ?
+          sumj = theta * sumj/sumwj - set_mean; // best ?
           if(B) {
             if(fill) std::fill(outj.begin(), outj.end(), sumj); //  (double)sumj
             else {
@@ -539,7 +567,7 @@ NumericMatrix BWmCpp(const NumericMatrix& x, int ng = 0, const IntegerVector& g 
               sumwj += wg[i];
             }
           }
-          sumj = sumj/sumwj - set_mean; // best ?
+          sumj = theta * sumj/sumwj - set_mean; // best ?
           if(B) {
             std::fill(outj.begin(), outj.end(), sumj); // (double)sumj
           } else {
@@ -576,10 +604,10 @@ NumericMatrix BWmCpp(const NumericMatrix& x, int ng = 0, const IntegerVector& g 
             }
           } else {
             if(set_mean != R_NegInf) {
-              if(set_mean == 0) {
+              if(set_mean == 0 && theta == 1) {
                 sumj = sumj/sumwj;
               } else {
-                sumj = sumj/sumwj - set_mean;
+                sumj = theta * sumj/sumwj - set_mean;
               }
               for(int i = 0; i != l; ++i) outj[i] = column[i] - sumj[g[i]-1];
             } else {
@@ -591,6 +619,10 @@ NumericMatrix BWmCpp(const NumericMatrix& x, int ng = 0, const IntegerVector& g 
                 sumj[i] /= sumwj[i];
               }
               osum = osum/osumw;
+              if(theta != 1) {
+                sumj = theta * sumj;
+                osum = theta * osum;
+              }
               for(int i = 0; i != l; ++i) outj[i] = column[i] - sumj[g[i]-1] + osum;
             }
           }
@@ -618,10 +650,10 @@ NumericMatrix BWmCpp(const NumericMatrix& x, int ng = 0, const IntegerVector& g 
             for(int i = 0; i != l; ++i) outj[i] = sumj[g[i]-1];
           } else {
             if(set_mean != R_NegInf) {
-              if(set_mean == 0) {
+              if(set_mean == 0 && theta == 1) {
                 sumj = sumj/sumwj;
               } else {
-                sumj = sumj/sumwj - set_mean;
+                sumj = theta * sumj/sumwj - set_mean;
               }
               for(int i = 0; i != l; ++i) outj[i] = column[i] - sumj[g[i]-1];
             } else {
@@ -633,6 +665,10 @@ NumericMatrix BWmCpp(const NumericMatrix& x, int ng = 0, const IntegerVector& g 
                 sumj[i] /= sumwj[i];
               }
               osum = osum/osumw;
+              if(theta != 1) {
+                sumj = theta * sumj;
+                osum = theta * osum;
+              }
               for(int i = 0; i != l; ++i) outj[i] = column[i] - sumj[g[i]-1] + osum;
             }
           }
@@ -647,7 +683,7 @@ NumericMatrix BWmCpp(const NumericMatrix& x, int ng = 0, const IntegerVector& g 
 // [[Rcpp::export]]
 List BWlCpp(const List& x, int ng = 0, const IntegerVector& g = 0,
             const SEXP& gs = R_NilValue, const SEXP& w = R_NilValue,
-            bool narm = true, double set_mean = 0, bool B = false, bool fill = false) {
+            bool narm = true, double theta = 1, double set_mean = 0, bool B = false, bool fill = false) {
 
   int l = x.size();
   List out(l);
@@ -667,7 +703,7 @@ List BWlCpp(const List& x, int ng = 0, const IntegerVector& g = 0,
             sumj += column[i];
             ++nj;
           }
-          sumj = sumj/nj - set_mean; // best ?
+          sumj = theta * sumj/nj - set_mean; // best ?
           if(B) {
             if(fill) out[j] = rep(sumj, row); // rep((double)sumj, row); // good ?
             else {
@@ -696,7 +732,7 @@ List BWlCpp(const List& x, int ng = 0, const IntegerVector& g = 0,
               sumj += column[i];
             }
           }
-          sumj = sumj/row - set_mean; // best ?
+          sumj = theta * sumj/row - set_mean; // best ?
           if(B) {
             out[j] = rep(sumj, row); // rep((double)sumj, row);
           } else {
@@ -712,7 +748,7 @@ List BWlCpp(const List& x, int ng = 0, const IntegerVector& g = 0,
           NumericVector column = x[j];
           int row = column.size();
           if(gss != row) stop("length(g) must match nrow(X)");
-          std::vector<double> sumj(ng, NA_REAL);
+          NumericVector sumj(ng, NA_REAL); // std::vector<double>
           std::vector<int>  nj(ng, 1);
           for(int i = row; i--; ) {
             if(!std::isnan(column[i])) {
@@ -736,10 +772,10 @@ List BWlCpp(const List& x, int ng = 0, const IntegerVector& g = 0,
             }
           } else {
             if(set_mean != R_NegInf) {
-              if(set_mean == 0) {
+              if(set_mean == 0 && theta == 1) {
                 for(int i = ng; i--; ) sumj[i] /= nj[i];
               } else {
-                for(int i = ng; i--; ) sumj[i] = sumj[i] / nj[i] - set_mean;
+                for(int i = ng; i--; ) sumj[i] = theta / nj[i] * sumj[i] - set_mean;
               }
               for(int i = 0; i != row; ++i) outj[i] = column[i] - sumj[g[i]-1];
             } else {
@@ -752,6 +788,10 @@ List BWlCpp(const List& x, int ng = 0, const IntegerVector& g = 0,
                 sumj[i] /= nj[i];
               }
               osum = osum/on;
+              if(theta != 1) {
+                sumj = theta * sumj;
+                osum = theta * osum;
+              }
               for(int i = 0; i != row; ++i) outj[i] = column[i] - sumj[g[i]-1] + osum;
             }
           }
@@ -765,7 +805,7 @@ List BWlCpp(const List& x, int ng = 0, const IntegerVector& g = 0,
             NumericVector column = x[j];
             int row = column.size();
             if(gss != row) stop("length(g) must match nrow(X)");
-            std::vector<double> sumj(ng);
+            NumericVector sumj(ng); // std::vector<double>
             // memset(gsv, 0, memsize);
             std::vector<int> gsv(ng);
             int ngs = 0;
@@ -787,10 +827,10 @@ List BWlCpp(const List& x, int ng = 0, const IntegerVector& g = 0,
               for(int i = 0; i != row; ++i) outj[i] = sumj[g[i]-1];
             } else {
               if(set_mean != R_NegInf) {
-                if(set_mean == 0) {
+                if(set_mean == 0 && theta == 1) {
                   for(int i = ng; i--; ) sumj[i] /= gsv[i];
                 } else {
-                  for(int i = ng; i--; ) sumj[i] = sumj[i] / gsv[i] - set_mean;
+                  for(int i = ng; i--; ) sumj[i] = theta / gsv[i] * sumj[i] - set_mean;
                 }
                 for(int i = 0; i != row; ++i) outj[i] = column[i] - sumj[g[i]-1];
               } else {
@@ -803,6 +843,10 @@ List BWlCpp(const List& x, int ng = 0, const IntegerVector& g = 0,
                   sumj[i] /= gsv[i];
                 }
                 osum = osum/on;
+                if(theta != 1) {
+                  sumj = theta * sumj;
+                  osum = theta * osum;
+                }
                 for(int i = 0; i != row; ++i) outj[i] = column[i] - sumj[g[i]-1] + osum;
               }
             }
@@ -835,10 +879,10 @@ List BWlCpp(const List& x, int ng = 0, const IntegerVector& g = 0,
               for(int i = 0; i != row; ++i) outj[i] = sumj[g[i]-1];
             } else {
               if(set_mean != R_NegInf) {
-                if(set_mean == 0) {
+                if(set_mean == 0 && theta == 1) {
                   for(int i = ng; i--; ) sumj[i] /= gsv[i];
                 } else {
-                  for(int i = ng; i--; ) sumj[i] = sumj[i] / gsv[i] - set_mean;
+                  for(int i = ng; i--; ) sumj[i] = theta / gsv[i] * sumj[i] - set_mean;
                 }
                 for(int i = 0; i != row; ++i) outj[i] = column[i] - sumj[g[i]-1];
               } else {
@@ -851,6 +895,10 @@ List BWlCpp(const List& x, int ng = 0, const IntegerVector& g = 0,
                   sumj[i] /= gsv[i];
                 }
                 osum = osum/on;
+                if(theta != 1) {
+                  sumj = theta * sumj;
+                  osum = theta * osum;
+                }
                 for(int i = 0; i != row; ++i) outj[i] = column[i] - sumj[g[i]-1] + osum;
               }
             }
@@ -878,7 +926,7 @@ List BWlCpp(const List& x, int ng = 0, const IntegerVector& g = 0,
             sumj += column[i]*wg[i];
             sumwi += wg[i];
           }
-          sumj = sumj/sumwi - set_mean; // best ?
+          sumj = theta * sumj/sumwi - set_mean; // best ?
           if(B) {
             if(fill) out[j] = rep(sumj, row); // rep((double)sumj, row);
             else {
@@ -909,7 +957,7 @@ List BWlCpp(const List& x, int ng = 0, const IntegerVector& g = 0,
               sumwi += wg[i];
             }
           }
-          sumj = sumj/sumwi - set_mean; // best ?
+          sumj = theta * sumj/sumwi - set_mean; // best ?
           if(B) {
             out[j] = rep(sumj, row); // rep((double)sumj, row);
           } else {
@@ -950,10 +998,10 @@ List BWlCpp(const List& x, int ng = 0, const IntegerVector& g = 0,
             }
           } else {
             if(set_mean != R_NegInf) {
-              if(set_mean == 0) {
+              if(set_mean == 0 && theta == 1) {
                 sumj = sumj/sumwj;
               } else {
-                sumj = sumj/sumwj - set_mean;
+                sumj = theta * sumj/sumwj - set_mean;
               }
               for(int i = 0; i != row; ++i) outj[i] = column[i] - sumj[g[i]-1];
             } else {
@@ -965,6 +1013,10 @@ List BWlCpp(const List& x, int ng = 0, const IntegerVector& g = 0,
                 sumj[i] /= sumwj[i];
               }
               osum = osum/osumw;
+              if(theta != 1) {
+                sumj = theta * sumj;
+                osum = theta * osum;
+              }
               for(int i = 0; i != row; ++i) outj[i] = column[i] - sumj[g[i]-1] + osum;
             }
           }
@@ -996,10 +1048,10 @@ List BWlCpp(const List& x, int ng = 0, const IntegerVector& g = 0,
             for(int i = 0; i != row; ++i) outj[i] = sumj[g[i]-1];
           } else {
             if(set_mean != R_NegInf) {
-              if(set_mean == 0) {
+              if(set_mean == 0 && theta == 1) {
                 sumj = sumj/sumwj;
               } else {
-                sumj = sumj/sumwj - set_mean;
+                sumj = theta * sumj/sumwj - set_mean;
               }
               for(int i = 0; i != row; ++i) outj[i] = column[i] - sumj[g[i]-1];
             } else {
@@ -1011,6 +1063,10 @@ List BWlCpp(const List& x, int ng = 0, const IntegerVector& g = 0,
                 sumj[i] /= sumwj[i];
               }
               osum = osum/osumw;
+              if(theta != 1) {
+                sumj = theta * sumj;
+                osum = theta * osum;
+              }
               for(int i = 0; i != row; ++i) outj[i] = column[i] - sumj[g[i]-1] + osum;
             }
           }

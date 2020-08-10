@@ -19,9 +19,9 @@
 Fast (Grouped, Weighted) Scaling and Centering of Matrix-like Objects
 }
 \description{
-\code{fscale} is a generic function to efficiently standardize (scale and center) data. \code{STD} is a wrapper around \code{fscale} representing the 'standardization operator', with more options than \code{fscale} when applied to matrices and data frames.  Standardization can be simple or groupwise, ordinary or weighted.
+\code{fscale} is a generic function to efficiently standardize (scale and center) data. \code{STD} is a wrapper around \code{fscale} representing the 'standardization operator', with more options than \code{fscale} when applied to matrices and data frames.  Standardization can be simple or groupwise, ordinary or weighted. Arbitrary target means and standard deviations can be set, with special options for grouped scaling and centering. It is also possible to scale data without centering i.e. perform mean-preserving scaling.
 
-\emph{Note}: For centering without scaling see \code{\link[=fwithin]{fwithin/W}}. % for scaling without centering use \code{\link[=fsd]{fsd(..., TRA = "/")}}.
+\emph{Note}: For centering without scaling see \code{\link[=fwithin]{fwithin/W}}. For simple not mean-preserving scaling use \code{\link[=fsd]{fsd(..., TRA = "/")}}. To sweep pre-computed means and scale-factors out of data see \code{\link{TRA}}.
 }
 \usage{
 fscale(x, \dots)
@@ -56,14 +56,13 @@ fscale(x, \dots)
 }
 %- maybe also 'usage' for other objects documented here.
 \arguments{
-  \item{x}{a numeric vector, matrix, data.frame, panel-series (\code{plm::pseries}), panel-data.frame (\code{plm::pdata.frame}) or grouped tibble (\code{dplyr::grouped_df}).}
+  \item{x}{a numeric vector, matrix, data frame, panel series (\code{plm::pseries}), panel data frame (\code{plm::pdata.frame}) or grouped tibble (\code{dplyr::grouped_df}).}
   \item{g}{a factor, \code{\link{GRP}} object, atomic vector (internally converted to factor) or a list of vectors / factors (internally converted to a \code{\link{GRP}} object) used to group \code{x}.}
   \item{by}{\emph{STD data.frame method}: Same as \code{g}, but also allows one- or two-sided formulas i.e. \code{~ group1} or \code{var1 + var2 ~ group1 + group2}. See Examples.}
-    \item{cols}{\emph{data.frame method}: Select columns to scale using a function, column names or indices. Default: All numeric variables. \emph{Note}: \code{cols} is ignored if a two-sided formula is passed to \code{by}.}
+    \item{cols}{\emph{data.frame method}: Select columns to scale using a function, column names, indices or a logical vector. Default: All numeric variables. \emph{Note}: \code{cols} is ignored if a two-sided formula is passed to \code{by}.}
   \item{w}{a numeric vector of (non-negative) weights. \code{STD} data frame and \code{pdata.frame} methods also allow a one-sided formula i.e. \code{~ weightcol}. The \code{grouped_df} (\emph{dplyr}) method supports lazy-evaluation. See Examples.}
-  \item{na.rm}{logical. skip missing values in \code{x} or \code{w} when computing means and sd's.}
-    \item{effect}{\emph{plm} methods: Select which panel identifier should be used as grouping variable. 1L means first variable in the \code{plm::index}, 2L the second etc. if more than one integer is supplied, the corresponding index-variables are interacted. }
-
+  \item{na.rm}{logical. Skip missing values in \code{x} or \code{w} when computing means and sd's.}
+  \item{effect}{\emph{plm} methods: Select which panel identifier should be used as group-id. 1L takes the first variable in the \code{plm::index}, 2L the second etc.. Index variables can also be called by name using a character string. More than one variable can be supplied. }
   \item{stub}{a prefix or stub to rename all transformed columns. \code{FALSE} will not rename columns.}
   \item{mean}{the mean to center on (default is 0). If \code{mean = FALSE}, no centering will be performed. In that case the scaling is mean-preserving. A numeric value different from 0 (i.e. \code{mean = 5}) will be added to the data after subtracting out the mean(s), such that the data will have a mean of 5. A special option when performing grouped scaling and centering is \code{mean = "overall.mean"}. In that case the overall mean of the data will be added after subtracting out group means.}
  \item{sd}{the standard deviation to scale the data to (default is 1). A numeric value different from 0 (i.e. \code{sd = 3}) will scale the data to have a standard deviation  of 3. A special option when performing grouped scaling is \code{sd = "within.sd"}. In that case the within standard deviation (= the standard deviation of the group-centered series) will be calculated and applied to each group. The results is that the variance of the data within each group is harmonized without forcing a certain variance (such as 1).}
@@ -80,7 +79,7 @@ With groups supplied to \code{g}, this standardizing becomes groupwise, so that 
 
 If \code{na.rm = FALSE} and a \code{NA} or \code{NaN} is encountered, the mean and sd for that group will be \code{NA}, and all data points belonging to that group will also be \code{NA} in the output.
 
-If \code{na.rm = TRUE}, means and sd's are computed (column-wise) on the available data points, and also the weight vector can have missing values. In that case (\code{w} also has missing values), the weighted mean an sd are computed on (column-wise) \code{complete.cases(x, w)}, and \code{x} is scaled using these statistics. \emph{Note} that \code{fscale} will not insert a missing value in \code{x} if the weight for that value is missing, rather, that value will be scaled using a weighted mean and standard-deviated computed without itself! (The intention here is that a few (randomly) missing weights shouldn't break the computation when \code{na.rm = TRUE}, but it is not meant for weight vectors with many missing values. If you don't like this behavior, you should prepare your data using \code{x[is.na(w), ] <- NA}, or impute your weight vector for non-missing \code{x}).
+If \code{na.rm = TRUE}, means and sd's are computed (column-wise) on the available data points, and also the weight vector can have missing values. In that case, the weighted mean an sd are computed on (column-wise) \code{complete.cases(x, w)}, and \code{x} is scaled using these statistics. \emph{Note} that \code{fscale} will not insert a missing value in \code{x} if the weight for that value is missing, rather, that value will be scaled using a weighted mean and standard-deviated computed without itself! (The intention here is that a few (randomly) missing weights shouldn't break the computation when \code{na.rm = TRUE}, but it is not meant for weight vectors with many missing values. If you don't like this behavior, you should prepare your data using \code{x[is.na(w), ] <- NA}, or impute your weight vector for non-missing \code{x}).
 
 Special options for grouped scaling are \code{mean = "overall.mean"} and \code{sd = "within.sd"}. The former group-centers vectors on the overall mean of the data (see \code{\link{fwithin}} for more details) and the latter scales the data in each group to have the within-group standard deviation (= the standard deviation of the group-centered data). Thus scaling a grouped vector with options \code{mean = "overall.mean"} and \code{sd = "within.sd"} amounts to removing all differences in the mean and standard deviations between these groups. In weighted computations, \code{mean = "overall.mean"} will subtract weighted group-means from the data and add the overall weighted mean of the data, whereas \code{sd = "within.sd"} will compute the weighted within- standard deviation and apply it to each group.
 
@@ -98,29 +97,30 @@ Special options for grouped scaling are \code{mean = "overall.mean"} and \code{s
 %%  ~~further notes~~
 % }
 
-%% ~Make other sections like Warning with \section{Warning }{....} ~
+%% ~Make other sections like Warning with \section{Warning }{\dots.} ~
 
 \seealso{
-\code{\link[=fwithin]{fwithin/W}}, \link[=A1-fast-statistical-functions]{Fast Statistical Functions}, \code{\link{TRA}}, \link[=A6-data-transformations]{Data Transformations}, \link[=collapse-documentation]{Collapse Overview}
+\code{\link{fwithin}}, \code{\link{fsd}}, \code{\link{TRA}}, \link[=A1-fast-statistical-functions]{Fast Statistical Functions}, \link[=A6-data-transformations]{Data Transformations}, \link[=collapse-documentation]{Collapse Overview}
 }
 \examples{
 ## Simple Scaling & Centering / Standardizing
-fscale(mtcars)                     # Doesn't rename columns
-STD(mtcars)                        # By default adds a prefix
+head(fscale(mtcars))               # Doesn't rename columns
+head(STD(mtcars))                  # By default adds a prefix
 qsu(STD(mtcars))                   # See that is works
 qsu(STD(mtcars, mean = 5, sd = 3)) # Assigning a mean of 5 and a standard deviation of 3
 qsu(STD(mtcars, mean = FALSE))     # No centering: Scaling is mean-preserving
 
-## Panel-Data
+## Panel Data
 head(fscale(get_vars(wlddev,9:12), wlddev$iso3c))   # Standardizing 4 series within each country
 head(STD(wlddev, ~iso3c, cols = 9:12))              # Same thing using STD, id's added
-pwcor(fscale(get_vars(wlddev,9:12), wlddev$iso3c))  # Correlaing panel-series after standardizing
+pwcor(fscale(get_vars(wlddev,9:12), wlddev$iso3c))  # Correlaing panel series after standardizing
 
 fmean(get_vars(wlddev, 9:12))                       # This calculates the overall means
 fsd(fwithin(get_vars(wlddev, 9:12), wlddev$iso3c))  # This calculates the within standard deviations
-qsu(fscale(get_vars(wlddev, 9:12), wlddev$iso3c,    # This group-centers on the overall mean and
-    mean = "overall.mean", sd = "within.sd"),       # group-scales to the within standard deviation
-    by = wlddev$iso3c)                              # -> data harmonized in the first 2 moments
+head(qsu(fscale(get_vars(wlddev, 9:12),             # This group-centers on the overall mean and
+    wlddev$iso3c,                                   # group-scales to the within standard deviation
+    mean = "overall.mean", sd = "within.sd"),       # -> data harmonized in the first 2 moments
+    by = wlddev$iso3c))
 
 
 ## Using plm

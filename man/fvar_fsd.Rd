@@ -16,22 +16,22 @@
 \usage{
 fvar(x, \dots)
 fsd(x, \dots)
-%## Default S3 methods:
+
 \method{fvar}{default}(x, g = NULL, w = NULL, TRA = NULL, na.rm = TRUE,
      use.g.names = TRUE, stable.algo = TRUE, \dots)
 \method{fsd}{default}(x, g = NULL, w = NULL, TRA = NULL, na.rm = TRUE,
     use.g.names = TRUE, stable.algo = TRUE, \dots)
-%## S3 methods for class 'matrix'
+
 \method{fvar}{matrix}(x, g = NULL, w = NULL, TRA = NULL, na.rm = TRUE,
      use.g.names = TRUE, drop = TRUE, stable.algo = TRUE, \dots)
 \method{fsd}{matrix}(x, g = NULL, w = NULL, TRA = NULL, na.rm = TRUE,
     use.g.names = TRUE, drop = TRUE, stable.algo = TRUE, \dots)
-%## S3 methods for class 'data.frame'
+
 \method{fvar}{data.frame}(x, g = NULL, w = NULL, TRA = NULL, na.rm = TRUE,
      use.g.names = TRUE, drop = TRUE, stable.algo = TRUE, \dots)
 \method{fsd}{data.frame}(x, g = NULL, w = NULL, TRA = NULL, na.rm = TRUE,
     use.g.names = TRUE, drop = TRUE, stable.algo = TRUE, \dots)
-%## S3 methods for class 'grouped_df'
+
 \method{fvar}{grouped_df}(x, w = NULL, TRA = NULL, na.rm = TRUE,
      use.g.names = FALSE, keep.group_vars = TRUE, keep.w = TRUE,
      stable.algo = TRUE, \dots)
@@ -40,7 +40,7 @@ fsd(x, \dots)
     stable.algo = TRUE, \dots)
 }
 \arguments{
-\item{x}{a numeric vector, matrix, data.frame or grouped tibble (\code{dplyr::grouped_df}).}
+\item{x}{a numeric vector, matrix, data frame or grouped tibble (\code{dplyr::grouped_df}).}
 
 \item{g}{a factor, \code{\link{GRP}} object, atomic vector (internally converted to factor) or a list of vectors / factors (internally converted to a \code{\link{GRP}} object) used to group \code{x}.}
 
@@ -51,9 +51,9 @@ fsd(x, \dots)
 
 \item{na.rm}{logical. Skip missing values in \code{x}. Defaults to \code{TRUE} and implemented at very little computational cost. If \code{na.rm = FALSE} a \code{NA} is returned when encountered.}
 
-\item{use.g.names}{make group-names and add to the result as names (vector method) or row-names (matrix and data.frame method). No row-names are generated for data.tables and grouped tibbles.}
+\item{use.g.names}{logical. Make group-names and add to the result as names (default method) or row-names (matrix and data frame methods). No row-names are generated for \emph{data.table}'s and grouped tibbles.}
 
-\item{drop}{\emph{matrix and data.frame method:} drop dimensions and return an atomic vector if \code{g = NULL} and \code{TRA = NULL}.}
+\item{drop}{\emph{matrix and data.frame method:} Logical. \code{TRUE} drops dimensions and returns an atomic vector if \code{g = NULL} and \code{TRA = NULL}.}
 
 \item{keep.group_vars}{\emph{grouped_df method:} Logical. \code{FALSE} removes grouping variables after computation.}
 
@@ -75,10 +75,13 @@ Missing-value removal as controlled by the \code{na.rm} argument is done very ef
 
 This all seamlessly generalizes to grouped computations, which are performed in a single pass (without splitting the data) and therefore extremely fast.
 
-When applied to data frame's with groups or \code{drop = FALSE}, \code{fvar/fsd} preserves all column attributes (such as variable labels) but does not distinguish between classed and unclassed object (thus applying \code{fvar/fsd} to a factor column will give a 'malformed factor' error, and applying it to a date variable will give an error or a pretty weird date). The attributes of the \code{data.frame} itself are also preserved.
+When applied to data frames with groups or \code{drop = FALSE}, \code{fvar/fsd} preserves all column attributes (such as variable labels) but does not distinguish between classed and unclassed object (thus applying \code{fvar/fsd} to a factor column will give a 'malformed factor' error). The attributes of the data frame itself are also preserved.
 }
 \value{
 \code{fvar} returns the variance of \code{x}, grouped by \code{g}, or (if \code{\link{TRA}} is used) \code{x} transformed by its variance, grouped by \code{g}. \code{fsd} computes the standard deviation of \code{x} in like manor.
+}
+\references{
+Welford, B. P. (1962). Note on a method for calculating corrected sums of squares and products. \emph{Technometrics}. 4 (3): 419-420. doi:10.2307/1266577.
 }
 \seealso{
 \link[=A1-fast-statistical-functions]{Fast Statistical Functions}, \link[=collapse-documentation]{Collapse Overview}
@@ -99,17 +102,17 @@ fsd(iris)                           # This works, although 'Species' is a factor
 fsd(mtcars, drop = FALSE)           # This works, all columns are numeric variables
 fsd(iris[-5], iris[5])              # By Species: iris[5] is still a list, and thus passed to GRP()
 fsd(iris[-5], iris[[5]])            # Same thing much faster: fsd recognizes 'Species' is a factor
-fsd(iris[-5], iris[[5]], TRA = "/") # Data scaled by species (see also fscale)
+head(fsd(iris[-5], iris[[5]], TRA = "/")) # Data scaled by species (see also fscale)
 
 ## matrix method
 m <- qM(mtcars)
 fsd(m)
-fsd(m, mtcars$cyl) # etc...
+fsd(m, mtcars$cyl) # etc..
 
 ## method for grouped tibbles - for use with dplyr:
 library(dplyr)
 mtcars \%>\% group_by(cyl,vs,am) \%>\% fsd
-mtcars \%>\% group_by(cyl,vs,am) \%>\% fsd(keep.group_vars = FALSE) # remove grouping columns
+mtcars \%>\% group_by(cyl,vs,am) \%>\% fsd(keep.group_vars = FALSE) # Remove grouping columns
 mtcars \%>\% group_by(cyl,vs,am) \%>\% fsd(hp)      # Weighted by hp
 mtcars \%>\% group_by(cyl,vs,am) \%>\% fsd(hp, "/") # Weighted scaling transformation
 }

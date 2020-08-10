@@ -2,6 +2,7 @@
 #include <Rcpp.h>
 using namespace Rcpp;
 
+// prefix with RcppExport ? -> Yes, necessary !
 RcppExport void multi_yw(void *, void *, void *, void *, void *, void *, void *, void *, void *, void *);
 RcppExport SEXP collapse_init(SEXP);
 RcppExport SEXP dt_na(SEXP, SEXP);
@@ -12,6 +13,12 @@ RcppExport SEXP rbindlist(SEXP, SEXP, SEXP, SEXP);
 RcppExport SEXP setcolorder(SEXP, SEXP);
 RcppExport SEXP subsetDT(SEXP, SEXP, SEXP);
 RcppExport SEXP subsetVector(SEXP, SEXP);
+RcppExport SEXP setAttributes(SEXP x, SEXP a);
+RcppExport void setattributes(SEXP x, SEXP a);
+RcppExport void setattr(SEXP x, SEXP a, SEXP v);
+RcppExport SEXP duplAttributes(SEXP x, SEXP y);
+RcppExport void duplattributes(SEXP x, SEXP y);
+RcppExport SEXP cond_duplAttributes(SEXP x, SEXP y);
 
 static const R_CMethodDef CEntries[]  = {
   {"C_multi_yw", (DL_FUNC) &multi_yw, 10},
@@ -19,9 +26,9 @@ static const R_CMethodDef CEntries[]  = {
 };
 
 static const R_CallMethodDef CallEntries[] = {
-  {"Cpp_BW", (DL_FUNC) &_collapse_BWCpp, 9},
-  {"Cpp_BWm", (DL_FUNC) &_collapse_BWmCpp, 9},
-  {"Cpp_BWl", (DL_FUNC) &_collapse_BWlCpp, 9},
+  {"Cpp_BW", (DL_FUNC) &_collapse_BWCpp, 10},
+  {"Cpp_BWm", (DL_FUNC) &_collapse_BWmCpp, 10},
+  {"Cpp_BWl", (DL_FUNC) &_collapse_BWlCpp, 10},
   {"Cpp_TRA", (DL_FUNC) &_collapse_TRACpp, 4},
   {"Cpp_TRAm", (DL_FUNC) &_collapse_TRAmCpp, 4},
   {"Cpp_TRAl", (DL_FUNC) &_collapse_TRAlCpp, 4},
@@ -56,12 +63,15 @@ static const R_CallMethodDef CallEntries[] = {
   {"Cpp_fmean", (DL_FUNC) &_collapse_fmeanCpp, 6},
   {"Cpp_fmeanm", (DL_FUNC) &_collapse_fmeanmCpp, 7},
   {"Cpp_fmeanl", (DL_FUNC) &_collapse_fmeanlCpp, 7},
-  {"Cpp_fmedian", (DL_FUNC) &_collapse_fmedianCpp, 5},
-  {"Cpp_fmedianm", (DL_FUNC) &_collapse_fmedianmCpp, 6},
-  {"Cpp_fmedianl", (DL_FUNC) &_collapse_fmedianlCpp, 6},
-  {"Cpp_fmode", (DL_FUNC) &_collapse_fmodeCpp, 6},
-  {"Cpp_fmodel", (DL_FUNC) &_collapse_fmodelCpp, 6},
-  {"Cpp_fmodem", (DL_FUNC) &_collapse_fmodemCpp, 7},
+  // {"Cpp_fmedian", (DL_FUNC) &_collapse_fmedianCpp, 6},
+  // {"Cpp_fmedianm", (DL_FUNC) &_collapse_fmedianmCpp, 7},
+  // {"Cpp_fmedianl", (DL_FUNC) &_collapse_fmedianlCpp, 7},
+  {"Cpp_fnth", (DL_FUNC) &_collapse_fnthCpp, 8},
+  {"Cpp_fnthm", (DL_FUNC) &_collapse_fnthmCpp, 9},
+  {"Cpp_fnthl", (DL_FUNC) &_collapse_fnthlCpp, 9},
+  {"Cpp_fmode", (DL_FUNC) &_collapse_fmodeCpp, 7},
+  {"Cpp_fmodel", (DL_FUNC) &_collapse_fmodelCpp, 7},
+  {"Cpp_fmodem", (DL_FUNC) &_collapse_fmodemCpp, 8},
   {"Cpp_fprod", (DL_FUNC) &_collapse_fprodCpp, 5},
   {"Cpp_fprodm", (DL_FUNC) &_collapse_fprodmCpp, 6},
   {"Cpp_fprodl", (DL_FUNC) &_collapse_fprodlCpp, 6},
@@ -77,17 +87,17 @@ static const R_CallMethodDef CallEntries[] = {
   {"Cpp_mrtl", (DL_FUNC) &_collapse_mrtl, 3},
   {"Cpp_mctl", (DL_FUNC) &_collapse_mctl, 3},
   {"Cpp_psmat", (DL_FUNC) &_collapse_psmatCpp, 4},
-  {"Cpp_qF", (DL_FUNC) &_collapse_qFCpp, 4},
-  {"Cpp_qG", (DL_FUNC) &_collapse_qGCpp, 5},
-  {"Cpp_funique", (DL_FUNC) &_collapse_funique, 2},
-  {"Cpp_setAttributes", (DL_FUNC) &_collapse_setAttributes, 2},
-  {"Cpp_setattributes", (DL_FUNC) &_collapse_setattributes, 2},
-  {"Cpp_setAttr", (DL_FUNC) &_collapse_setAttr, 3},
-  {"Cpp_setattr_clp", (DL_FUNC) &_collapse_setattr_clp, 3},
-  {"Cpp_duplAttributes", (DL_FUNC) &_collapse_duplAttributes, 2},
-  {"Cpp_duplattributes", (DL_FUNC) &_collapse_duplattributes, 2},
-  {"Cpp_cond_duplAttributes", (DL_FUNC) &_collapse_cond_duplAttributes, 2},
-  {"Cpp_cond_duplattributes", (DL_FUNC) &_collapse_cond_duplattributes, 2},
+  {"Cpp_qF", (DL_FUNC) &_collapse_qFCpp, 5},
+  // {"Cpp_qG", (DL_FUNC) &_collapse_qGCpp, 5},
+  {"Cpp_funique", (DL_FUNC) &_collapse_funiqueCpp, 2},
+  {"C_setAttributes", (DL_FUNC) &setAttributes, 2},
+  {"C_setattributes", (DL_FUNC) &setattributes, 2},
+  // {"C_setAttr", (DL_FUNC) &setAttr, 3},
+  {"C_setattr", (DL_FUNC) &setattr, 3},
+  {"C_duplAttributes", (DL_FUNC) &duplAttributes, 2},
+  {"C_duplattributes", (DL_FUNC) &duplattributes, 2},
+  {"C_cond_duplAttributes", (DL_FUNC) &cond_duplAttributes, 2},
+  // {"C_cond_duplattributes", (DL_FUNC) &cond_duplattributes, 2},
   {"Cpp_groups2GRP", (DL_FUNC) &_collapse_groups2GRPCpp, 3},
   {"Cpp_lassign", (DL_FUNC) &_collapse_lassignCpp, 4},
   {"Cpp_seqid", (DL_FUNC) &_collapse_seqid, 7},

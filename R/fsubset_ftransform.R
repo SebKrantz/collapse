@@ -6,17 +6,16 @@ sbt <- fsubset
 # Also not really faster than default for numeric (but a bit faster for factors ...)
 fsubset.default <- function(x, subset, ...) {
   if(!missing(...)) unused_arg_action(match.call(), ...)
-  if(is.logical(subset)) .Call(C_subsetVector, x, which(subset)) else
-    .Call(C_subsetVector, x, subset)
+  if(is.logical(subset)) return(.Call(C_subsetVector, x, which(subset)))
+  .Call(C_subsetVector, x, subset)
 }
 
 fsubset.matrix <- function(x, subset, ..., drop = FALSE) {
-  if(missing(...)) return(x[subset, , drop = drop]) else { # better row subsetting ? (like df, method? use mctl ?)
-    nl <- `names<-`(as.vector(1L:ncol(x), "list"), dimnames(x)[[2L]])
-    vars <- eval(substitute(c(...)), nl, parent.frame()) # better than list(...) ? -> Yes, great !
-    if(missing(subset)) return(x[, vars, drop = drop]) else
-      return(x[subset, vars, drop = drop])
-  }
+  if(missing(...)) return(x[subset, , drop = drop])  # better row subsetting ? (like df, method? use mctl ?)
+  nl <- `names<-`(as.vector(1L:ncol(x), "list"), dimnames(x)[[2L]])
+  vars <- eval(substitute(c(...)), nl, parent.frame()) # better than list(...) ? -> Yes, great !
+  if(missing(subset)) return(x[, vars, drop = drop])
+  x[subset, vars, drop = drop]
 }
 
 # Just indices, no lazy eval
@@ -32,8 +31,6 @@ ss <- function(data, i, j) {
   if(is.numeric(rn) || is.null(rn) || rn[1L] == "1") return(.Call(C_subsetDT, data, i, j))
   return(`attr<-`(.Call(C_subsetDT, data, i, j), "row.names", rn[i]))
 }
-
-
 
 fsubset.data.frame <- function(x, subset, ...) {
   if(missing(...)) vars <- seq_along(unclass(x)) else {
@@ -60,8 +57,9 @@ fsubset.data.frame <- function(x, subset, ...) {
 ftransform <- function(X, ...) { # `_data` ?
   if(!is.list(X)) stop("X needs to be a list of equal length columns or a data.frame")
   ax <- attributes(X) # keep like this ?
-  class(X) <- NULL
+  oldClass(X) <- NULL
   e <- eval(substitute(list(...)), X, parent.frame()) # a list of computed values. What about attributes ?
+  if(length(e) == 1L && is.list(e[[1L]])) e <- unclass(e[[1L]]) # support list input -> added in v1.3.0
   nam <- names(e)
   if(is.null(nam) || any(nam == "")) stop("all expressions have to be named")
   le <- lengths(e, FALSE)
@@ -88,9 +86,47 @@ ftransform <- function(X, ...) { # `_data` ?
   }
   if(all(matched)) return(`oldClass<-`(X, ax[["class"]]))
   ax[["names"]] <- c(names(X), names(e)[!matched])
-  return(setAttributes(c(X, e[!matched]), ax))
+  setAttributes(c(X, e[!matched]), ax)
 }
 tfm <- ftransform # of trfm ? trf is easiest to type... Lets go with consistency and take first, middle and end consonant
+
+# Note: Only edit the code for ftransform, not this one...
+# About 4 microseconds faster than above... and more secure because standard eval..
+`ftransform<-` <- function(X, value) {
+  if(!is.list(X)) stop("X needs to be a list of equal length columns or a data.frame")
+  if(!is.list(value)) stop("value needs to be a named list")
+  ax <- attributes(X)
+  oldClass(X) <- NULL
+  oldClass(value) <- NULL
+  nam <- names(value)
+  if(is.null(nam) || any(nam == "")) stop("all list-elements have to be named")
+  le <- lengths(value, FALSE)
+  nr <- length(X[[1L]])
+  rl <- le == nr
+  inx <- match(nam, names(X))
+  matched <- !is.na(inx)
+  if(all(rl)) {
+    if(any(matched)) X[inx[matched]] <- value[matched]
+  } else {
+    if(any(1L < le & !rl)) stop("Lengths of replacements must be equal to nrow(X) or 1, or NULL to delete columns")
+    if(any(le1 <- le == 1L)) value[le1] <- lapply(value[le1], rep, nr)
+    if(any(le0 <- le == 0L)) {
+      if(any(le0 & !matched)) stop(paste("Can only delete existing columns, columns",paste(names(value)[le0 & !matched], collapse = ", "),"not found in X"))
+      if(all(le0)) {
+        X[inx[le0]] <- NULL
+        return(`oldClass<-`(X, ax[["class"]]))
+      }
+      matched <- matched[!le0]
+      value <- value[!le0]
+      if(any(matched)) X[inx[!le0][matched]] <- value[matched]
+      X[inx[le0]] <- NULL
+    } else if(any(matched)) X[inx[matched]] <- value[matched]
+  }
+  if(all(matched)) return(`oldClass<-`(X, ax[["class"]]))
+  ax[["names"]] <- c(names(X), names(value)[!matched])
+  setAttributes(c(X, value[!matched]), ax)
+}
+`tfm<-` <- `ftransform<-`
 
 # Example:
 # ftransform(mtcars, cyl = cyl + 10, vs2 = 1, mpg = NULL)
@@ -103,14 +139,15 @@ settfm <- settransform
 fcompute <- function(X, ...) { # within ?
   ax <- attributes(X)
   e <- eval(substitute(list(...)), X, parent.frame())
+  if(length(e) == 1L && is.list(e[[1L]])) e <- unclass(e[[1L]]) # support list input -> added in v1.3.0 # sensible ??? what application ??
   ax[["names"]] <- names(e)
   le <- lengths(e, FALSE)
-  nr <- length(X[[1L]])
+  nr <- fnrow2(X)
   rl <- le == nr
   if(all(rl)) return(setAttributes(e, ax)) # All computed vectors have the right length
   if(any(1L < le & !rl)) stop("Lengths of replacements must be equal to nrow(X) or 1")
   e[!rl] <- lapply(e[!rl], rep, nr)
-  return(setAttributes(e, ax))
+  setAttributes(e, ax)
 }
 
 
@@ -130,7 +167,7 @@ fcompute <- function(X, ...) { # within ?
 # fsubset.matrix <- function(x, subset, select, drop = FALSE, ...) {
 #   if(!missing(...)) stop("Unknown argument ", dotstostr(...))
 #   if(missing(select)) {
-#     if(is.object(x)) return(`oldClass<-`(unclass(x)[subset, , drop = drop], class(x))) else
+#     if(is.object(x)) return(`oldClass<-`(unclass(x)[subset, , drop = drop], oldClass(x))) else
 #       return(x[subset, , drop = drop])
 #   } else {
 #     nl <- as.vector(1L:ncol(x), "list")
@@ -138,7 +175,7 @@ fcompute <- function(X, ...) { # within ?
 #     vars <- eval(substitute(select), nl, parent.frame())
 #     if(is.object(x)) {
 #       if(missing(subset)) return(`oldClass<-`(unclass(x)[, vars, drop = drop], class(x))) else
-#         return(`oldClass<-`(unclass(x)[subset, vars, drop = drop], class(x)))
+#         return(`oldClass<-`(unclass(x)[subset, vars, drop = drop], oldClass(x)))
 #     } else {
 #       if(missing(subset)) return(x[, vars, drop = drop]) else
 #         return(x[subset, vars, drop = drop])

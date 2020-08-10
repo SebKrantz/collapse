@@ -1,6 +1,6 @@
 /*
  This code is adapted from the data.table package: http://r-datatable.com
- and licensed under a Mozialla Public License 2.0 (MPL-2.0) license.
+ and licensed under a Mozilla Public License 2.0 (MPL-2.0) license.
 */
 
 #include <R.h>
@@ -59,7 +59,8 @@ extern long long NA_INT64_LL;
 extern Rcomplex NA_CPLX;  // initialized in init.c; see there for comments
 
 // radixsort Must do Cradixsort, otherwise issue on mac
-SEXP Cradixsort(SEXP NA_last, SEXP decreasing, SEXP RETstrt, SEXP RETgs, SEXP SORTStr, SEXP args);
+// SEXP Cradixsort(SEXP NA_last, SEXP decreasing, SEXP RETstrt, SEXP RETgs, SEXP SORTStr, SEXP args);
+// void Cdoubleradixsort(int *o, bool NA_last, bool decreasing, SEXP x);
 // static void dsort(double *x, int *o, int n);
 
 // dogroups.c

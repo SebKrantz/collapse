@@ -1,3 +1,58 @@
+# collapse 1.3.0
+collapse 1.3.0, released mid August 2020, is another major update:
+
+### Changes to Functionality
+
+* `dapply` and `BY` now drop all unnecessary attributes if `return = "matrix"` or `return = "data.frame"` are explicitly requested (the default `return = "same"` still seeks to preserve the input data structure).
+
+* `unlist2d` now saves integer rownames if `row.names = TRUE` and a list of matrices without rownames is passed, and `id.factor = TRUE` generates a normal factor not an ordered factor. It is however possible to write `id.factor = "ordered"` to get an ordered factor id.  
+
+* `fdiff` argument `logdiff` renamed to `log`, and taking logs is now done in R (reduces size of C++ code and does not generate as many NaN's). `logdiff` may still be used, but it may be deactivated in the future. Also in the matrix and data.frame methods for `flag`, `fdiff` and `fgrowth`, columns are only stub-renamed if more than one lag/difference/growth rate is computed. 
+
+### Additions
+
+* Added `fnth` for fast (grouped, weighted) n'th element/quantile computations.
+
+* Added `roworder(v)` and `colorder(v)` for fast row and column reordering.  
+
+* Added `frename` and `setrename` for fast and flexible renaming (by reference).  
+
+* Added function `fungroup`, as replacement for `dplyr::ungroup`, intended for use with `fgroup_by`. 
+
+* The shortcut `gvr` was created for `get_vars(..., regex = TRUE)`. Also a helper `.c` was introduced for non-standard concatenation (i.e. `.c(a, b) == c("a", "b")`). 
+
+
+### Improvements
+
+* `fmedian` now supports weights, computing a decently fast (grouped) weighted median based on radix ordering. 
+
+* `fmode` now has the option to compute min and max mode, the default is still simply the first mode. 
+
+* `fwithin` now supports quasi-demeaning (added argument `theta`) and can thus be used to manually estimate random-effects models. 
+
+* `fmode` and `fNdistinct` have become a bit faster.
+
+* `fgroup_by` now preserves *data.table*'s.
+
+* `funique` is now generic with a default vector and data.frame method, providing fast unique values and rows of data. The default was changed to `sort = FALSE`.   
+
+* `ftransform` now also supports a data.frame as replacement argument, which automatically replaces matching columns and adds unmatched ones. Also `ftransform<-` was created as a more formal replacement method for this feature.
+
+* `collap` columns selected through `cols` argument are returned in the order selected if `keep.col.order = FALSE`. Argument `sort.row` is depreciated, and replace by argument `sort`. In addition the `decreasing` and `na.last` arguments were added and handed down to `GRP.default`. 
+
+* `radixorder` 'sorted' attribute is now always attached.
+
+* `stats::D` which is masked when collapse is attached, is now preserved through methods `D.expression` and `D.call`. 
+
+* `GRP` option `call = FALSE` to omit a call to `match.call` -> minor performance improvement.
+
+* Several small performance improvements through rewriting some internal helper functions in C and reworking some R code. 
+
+* Performance improvements for some helper functions, `setRownames` / `setColnames`, `na_insert` etc.  
+
+* Increased scope of testing statistical functions. The functionality of the package is now secured by 7700 unit tests covering all central bits and pieces. 
+
+
 # collapse 1.2.1
 collapse 1.2.1, released end of May 2020, is a patch for 1.2.0:
 
@@ -24,6 +79,26 @@ collapse 1.2.0, released mid May 2020, is a major update of the package - change
 
 <!-- It is still recommended to remove unused factor levels when programming with factors, some functions check for them, others not. For example `fmean(data, f)` will simply generate a missing row for each unused factor level. If in doubt, use safer `GRP` objects for grouped programming. A general level check for all functions will not be implemented as this requires an additional pass in some cases. -->
 
+### Additions
+
+* Added a suite of functions for fast data manipulation: 
+  + `fselect` selects variables from a data frame and is equivalent but much faster than `dplyr::select`.
+  + `fsubset` is a much faster version of `base::subset` to subset vectors, matrices and data.frames. The function `ss` was also added as a faster alternative to `[.data.frame`. 
+  + `ftransform` is a much faster update of `base::transform`, to transform data frames by adding, modifying or deleting columns. The function `settransform` does all of that by reference.
+  + `fcompute` is equivalent to `ftransform` but returns a new data frame containing only the columns computed from an existing one. 
+  + `na_omit` is a much faster and enhanced version of `base::na.omit`. 
+  + `replace_NA` efficiently replaces missing values in multi-type data. 
+  
+  
+* Added function `fgroup_by` as a much faster version of `dplyr::group_by` based on *collapse* grouping. It attaches a 'GRP' object to a data frame, but only works with *collapse*'s fast functions. This allows *dplyr* like manipulations that are fully *collapse* based and thus significantly faster, i.e. `data %>% fgroup_by(g1,g2) %>% fselect(cola,colb) %>% fmean`. Note that `data %>% dplyr::group_by(g1,g2) %>% dplyr::select(cola,colb) %>% fmean` still works, in which case the *dplyr* 'group' object is converted to 'GRP' as before. However `data %>% fgroup_by(g1,g2) %>% dplyr::summarize(...)` does not work.
+
+* Added function `varying` to efficiently check the variation of multi-type data over a dimension or within groups.
+
+* Added function `radixorder`, same as `base::order(..., method = "radix")` but more accessible and with built-in grouping features. 
+
+* Added functions `seqid` and `groupid` for generalized run-length type id variable generation from grouping and time variables. `seqid` in particular strongly facilitates lagging / differencing irregularly spaced panels using `flag`, `fdiff` etc. 
+
+
 ### Improvements
 * Faster grouping with `GRP` and faster factor generation with added radix method + automatic dispatch between hash and radix method. `qF` is now ~ 5x faster than `as.factor` on character and around 30x faster on numeric data. Also `qG` was enhanced. 
 
@@ -44,24 +119,6 @@ collapse 1.2.0, released mid May 2020, is a major update of the package - change
 * All statistical and transformation functions now have a hidden list method, so they can be applied to unclassed list-objects as well. An error is however provided in grouped operations with unequal-length columns. 
 
 
-### Additions
-
-* Added a suite of functions for fast data manipulation: 
-  + `fselect` selects variables from a data frame and is equivalent but much faster than `dplyr::select`.
-  + `fsubset` is a much faster version of `base::subset` to subset vectors, matrices and data.frames. The function `ss` was also added as a faster alternative to `[.data.frame`. 
-  + `ftransform` is a much faster update of `base::transform`, to transform data frames by adding, modifying or deleting columns. The function `settransform` does all of that by reference.
-  + `fcompute` is equivalent to `ftransform` but returns a new data frame containing only the columns computed from an existing one. 
-  + `na_omit` is a much faster and enhanced version of `base::na.omit`. 
-  + `replace_NA` efficiently replaces missing values in multi-type data. 
-  
-  
-* Added function `fgroup_by` as a much faster version of `dplyr::group_by` based on *collapse* grouping. It attaches a 'GRP' object to a data frame, but only works with *collapse*'s fast functions. This allows *dplyr* like manipulations that are fully *collapse* based and thus significantly faster, i.e. `data %>% fgroup_by(g1,g2) %>% fselect(cola,colb) %>% fmean`. Note that `data %>% dplyr::group_by(g1,g2) %>% dplyr::select(cola,colb) %>% fmean` still works, in which case the *dplyr* 'group' object is converted to 'GRP' as before. However `data %>% fgroup_by(g1,g2) %>% dplyr::summarize(...)` does not work.
-
-* Added function `varying` to efficiently check the variation of multi-type data over a dimension or within groups.
-
-* Added function `radixorder`, same as `base::order(..., method = "radix")` but more accessible and with built-in grouping features. 
-
-* Added functions `seqid` and `groupid` for generalized run-length type id variable generation from grouping and time variables. `seqid` in particular strongly facilitates lagging / differencing irregularly spaced panels using `flag`, `fdiff` etc. 
 
 # collapse 1.1.0
 collapse 1.1.0 released early April 2020 - some small fixes and additions:

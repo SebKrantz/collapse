@@ -9,45 +9,45 @@
 Pairwise Correlations, Covariances and Observation Count
 }
 \description{
-Computes pairwise Pearsons correlations, covariances and observation counts. Pairwise correlations and covariances can be computed together with observation counts and p-values, and output as 3D array (default) or list of matrices. For an equivalent and faster implementation of \code{pwcor} see \code{Hmisc::rcorr} (written in Fortran). A major feature of \code{pwcor} and \code{pwcov} is their sophisticated print method.
+Computes (pairwise) Pearsons correlations, covariances and observation counts. Pairwise correlations and covariances can be computed together with observation counts and p-values, and output as 3D array (default) or list of matrices. \code{pwcor} and \code{pwcov} offer an elaborate print method. For an equivalent and faster implementation of \code{pwcor} see \code{Hmisc::rcorr} (written in Fortran), for weighted correlations see \code{weights::wtd.cors} (written in C).
 }
 \usage{
-pwcor(X, ..., N = FALSE, P = FALSE, array = TRUE, use = "pairwise.complete.obs")
+pwcor(X, \dots, N = FALSE, P = FALSE, array = TRUE, use = "pairwise.complete.obs")
 
-pwcov(X, ..., N = FALSE, P = FALSE, array = TRUE, use = "pairwise.complete.obs")
+pwcov(X, \dots, N = FALSE, P = FALSE, array = TRUE, use = "pairwise.complete.obs")
 
 pwNobs(X)
 
 \method{print}{pwcor}(x, digits = 2L, sig.level = 0.05, show = c("all","lower.tri","upper.tri"),
-      spacing = 1L, ...)
+      spacing = 1L, \dots)
 
 \method{print}{pwcov}(x, digits = 2L, sig.level = 0.05, show = c("all","lower.tri","upper.tri"),
-      spacing = 1L, ...)
+      spacing = 1L, \dots)
 
 }
 %- maybe also 'usage' for other objects documented here.
 \arguments{
-  \item{X}{a matrix or data.frame, for \code{pwcor} and \code{pwcov} all columns must be numeric.}
+  \item{X}{a matrix or data.frame, for \code{pwcor} and \code{pwcov} all columns must be numeric. All functions are faster on matrices, so converting is advised for large data (see \code{\link{qM}}).}
   \item{x}{an object of class 'pwcor' / 'pwcov'. }
   \item{N}{logical. \code{TRUE} also computes pairwise observation counts.}
-  \item{P}{logical. \code{TRUE} also computes pairwise p-values (same as \code{\link{cor.test}}).}
+  \item{P}{logical. \code{TRUE} also computes pairwise p-values (same as \code{\link{cor.test}} and \code{Hmisc::rcorr}).}
   \item{array}{logical. If \code{N = TRUE} or \code{P = TRUE}, \code{TRUE} (default) returns output as 3D array whereas \code{FALSE} returns a list of matrices.}
-  \item{use}{argument passed to \code{\link{cor}} / \code{\link{cov}}.}
+  \item{use}{argument passed to \code{\link{cor}} / \code{\link{cov}}. If \code{use != "pairwise.complete.obs"}, \code{sum(complete.cases(X))} is used for \code{N}, and p-values are computed accordingly. }
   \item{digits}{integer. The number of digits to round to in print. }
   \item{sig.level}{numeric. P-value threshold below which a \code{'*'} is displayed above significant coefficients if \code{P = TRUE}. }
   \item{show}{character. The part of the correlation / covariance matrix to display. }
   \item{spacing}{integer. Controls the spacing between different reported quantities in the printout of the matrix: 0 - compressed, 1 - single space, 2 - double space.}
-  \item{...}{other arguments passed to \code{\link{cor}} or \code{\link{cov}}. Only sensible if \code{P = FALSE}. }
+  \item{\dots}{other arguments passed to \code{\link{cor}} or \code{\link{cov}}. Only sensible if \code{P = FALSE}. }
 }
 
 \value{
-a numeric matrix, 3D array or list of matrices of the computed statistics. For \code{pwcor} and \code{pwcov} the object has a class 'pwcor' and 'pwcov', respectively.
+a numeric matrix, 3D array or list of matrices with the computed statistics. For \code{pwcor} and \code{pwcov} the object has a class 'pwcor' and 'pwcov', respectively.
 }
 
-%% ~Make other sections like Warning with \section{Warning }{....} ~
+%% ~Make other sections like Warning with \section{Warning }{\dots.} ~
 
 \seealso{
-\code{\link{qsu}}, \link[=collapse-documentation]{Collapse Overview} %% ~~objects to See Also as
+\code{\link{qsu}}, \link[=A9-summary-statistics]{Summary Statistics}, \link[=collapse-documentation]{Collapse Overview} %% ~~objects to See Also as
 }
 \examples{
 mna <- na_insert(mtcars)

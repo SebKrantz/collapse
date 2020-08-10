@@ -7,7 +7,7 @@ Generate Group-Id from Integer Sequences
 \description{
 \code{seqid} can be used to group sequences of integers in a vector, e.g. \code{seqid(c(1:3, 5:7))} becomes \code{c(rep(1,3), rep(2,3))}. It also supports increments \code{> 1}, unordered sequences, and missing values in the sequence.
 
-Some applications are to facilitate identification of, and grouped operations on, (irregular) time-series and panels.
+Some applications are to facilitate identification of, and grouped operations on, (irregular) time series and panels.
 }
 \usage{
 seqid(x, o = NULL, del = 1L, start = 1L, na.skip = FALSE,
@@ -15,11 +15,11 @@ seqid(x, o = NULL, del = 1L, start = 1L, na.skip = FALSE,
 }
 %- maybe also 'usage' for other objects documented here.
 \arguments{
-  \item{x}{a factor or integer vector. Numeric vectors will be converted to integer i.e. rounded.} % Non-integer vectors are first converted to ordered factor.
+  \item{x}{a factor or integer vector. Numeric vectors will be converted to integer i.e. rounded downwards.}
 
   \item{o}{an (optional) integer ordering vector specifying the order by which to pass through \code{x}.}
 
-  \item{del}{integer. The integer deliminating two consecutive points in a sequence. \code{del = 1} means \code{seqid} tracks sequences of the form \code{c(1,2,3,..)}, \code{del = 2} tracks sequences \code{c(1,3,5,..)} etc.}
+  \item{del}{integer. The integer deliminating two consecutive points in a sequence. \code{del = 1} lets \code{seqid} track sequences of the form \code{c(1,2,3,..)}, \code{del = 2} tracks sequences \code{c(1,3,5,..)} etc.}
 
   \item{start}{integer. The starting value of the resulting sequence id. Default is starting from 1. For C++ programmers, starting from 0 could be a better choice. }
 
@@ -31,22 +31,22 @@ seqid(x, o = NULL, del = 1L, start = 1L, na.skip = FALSE,
 
 }
 \details{
-\code{seqid} was created primarily to deal with problems of computing lagged values, differences and growth rates on irregularly spaced time-series and panels (\href{https://github.com/SebKrantz/collapse/issues/26}{#26}). \code{flag}, \code{fdiff} and \code{fgrowth} do not natively support such panels because they do not pre-compute an ordering of the data but directly compute the ordering from the supplied id and time variables while providing errors for gaps and repeated time values. see \code{\link{flag}} for computational details.
+\code{seqid} was created primarily to deal with problems of computing lagged values, differences and growth rates on irregularly spaced time series and panels (\href{https://github.com/SebKrantz/collapse/issues/26}{#26}). \code{flag}, \code{fdiff} and \code{fgrowth} do not natively support such panels because they do not pre-compute an ordering of the data but directly compute the ordering from the supplied id and time variables while providing errors for gaps and repeated time values. see \code{\link{flag}} for computational details.
 
-However fortunately any irregular time-series or panel-series can be expressed as a regular panel-series with a group-id created such that the time-periods within each group are consecutive.
+Fortunately any irregular time series or panel series can be expressed as a regular panel series with a group-id created such that the time-periods within each group are consecutive.
 
-A simple solution to applying existing functionality (\code{flag}, \code{fdiff} and \code{fgrowth}) to irregular time-series and panels is thus to create a group-id that fully identifies the data together with the time variable. \code{seqid} makes this very easy: For an irregular panel with some arbitrary gaps or repeated values in the time variable, an appropriate id variable can be generated using \code{settransform(data, newid = seqid(time, radixorder(id, time)))}. Lags can then be computed using \code{L(data, 1, ~newid, ~time)} etc. This way \emph{collapse} maintains a balance between offering very fast computations on 99\% of time series and panels (which may be unbalanced but where observations for each entity are consecutive in time), and flexibility of application.
+A simple solution to applying existing functionality (\code{flag}, \code{fdiff} and \code{fgrowth}) to irregular time series and panels is thus to create a group-id that fully identifies the data together with the time variable. \code{seqid} makes this very easy: For an irregular panel with some arbitrary gaps or repeated values in the time variable, an appropriate id variable can be generated using \code{settransform(data, newid = seqid(time, radixorder(id, time)))}. Lags can then be computed using \code{L(data, 1, ~newid, ~time)} etc. This way \emph{collapse} maintains a balance between offering very fast computations on regular time series and panels (which may be unbalanced but where observations for each entity are consecutive in time), and flexibility of application.
 
 In general, for any regularly spaced panel the identity given by \code{identical(groupid(id, order(id, time)), seqid(time, order(id, time)))} should hold.
 
-I note that regularly spaced panels with gaps in time (such as a panel-survey) can be handled either by \code{seqid(..., del = gap)} or, in most cases, simply by converting the time variable to factor using \code{\link{qF}}, which will make observations consecutive.
+Regularly spaced panels with gaps in time (such as a panel-survey with measurements every 2 years) can be handled either by \code{seqid(\dots, del = gap)} or, in most cases, simply by converting the time variable to factor using \code{\link{qF}}, which will make observations consecutive.
 
 % \enumerate{
-% \item Sort the data in ascending order (e.g. using \code{data.table::setorder(data, time)} for time-series and \code{data.table::setorder(data, id, time)} for panels)
+% \item Sort the data in ascending order (e.g. using \code{data.table::setorder(data, time)} for time series and \code{data.table::setorder(data, id, time)} for panels)
 % \item Generate a new id variable using \code{seqid} (e.g. \code{settransform(data, newid = seqid(time))})
 % \item Use the new id to identify the data together with the time variable (e.g. compute a panel-lag using \code{L(data, 1, ~newid, ~time)} or create a panel data frame: \code{pdata <- plm::pdata.frame(data, index = c("newid", "time")); L(pdata)})
 % }
-There are potentially other more analytical applications for \code{seqid}...
+There are potentially other more analytical applications for \code{seqid}\dots
 
 For the opposite operation of creating a new time-variable that is consecutive in each group, see \code{data.table::rowid}.
 
@@ -57,7 +57,7 @@ An integer vector of class 'qG'. See \code{\link{qG}}.
 }
 
 \seealso{
-\code{\link{groupid}}, \code{\link{qG}}, \link[=A2-fast-grouping]{Fast (Ordered) Grouping}, \link[=collapse-documentation]{Collapse Overview}
+\code{\link{groupid}}, \code{\link{qG}}, \link[=A2-fast-grouping-ordering]{Fast Grouping and Ordering}, \link[=collapse-documentation]{Collapse Overview}
 
 }
 \examples{
@@ -77,12 +77,12 @@ data
 ## Lag the panel
 L(data, 1, value ~ newid, ~time)
 
-## A different solution: Simply creating a consecutive time variable
+## A different possibility: Creating a consecutive time variable
 settransform(data, newtime = data.table::rowid(id))
 data
 L(data, 1, value ~ id, ~newtime)
 
-## With sorted data we could of course also omit the time variable alltogether...
+## With sorted data, the time variable can also just be omitted..
 L(data, 1, value ~ id)
 
 }

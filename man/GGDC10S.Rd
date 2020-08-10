@@ -43,9 +43,9 @@ Timmer, M. P., de Vries, G. J., & de Vries, K. (2015). "Patterns of Structural C
 }
 \examples{
 namlab(GGDC10S, class = TRUE)
-qsu(GGDC10S, ~ Variable, ~ Variable + Country, vlabels = TRUE)
+# aperm(qsu(GGDC10S, ~ Variable, ~ Variable + Country, vlabels = TRUE))
 
-\dontrun{
+\donttest{
 library(data.table)
 library(ggplot2)
 

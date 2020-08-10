@@ -28,7 +28,7 @@ o = order(o)
 od = order(rnorm(length(td)))
 muo = m[od, ]
 datauo = data[od, ]
-guo = as.factor.GRP(g)[od]
+guo = as.factor_GRP(g)[od]
 tduo = td[od]
 t2duo = seq_along(od)[od]
 od = order(od)
@@ -54,6 +54,10 @@ test_that("fdiff performs like basediff", {
   expect_equal(fdiff(m, 2, 2, stubs = FALSE), dapply(m, basediff, 2, 2))
   expect_equal(fdiff(mNA, stubs = FALSE), dapply(mNA, basediff))
   expect_equal(fdiff(mNA, 2, 2, stubs = FALSE), dapply(mNA, basediff, 2, 2))
+  expect_equal(fdiff(data, stubs = FALSE), dapply(data, basediff))
+  expect_equal(fdiff(data, 2, 2, stubs = FALSE), dapply(data, basediff, 2, 2))
+  expect_equal(fdiff(dataNA, stubs = FALSE), dapply(dataNA, basediff))
+  expect_equal(fdiff(dataNA, 2, 2, stubs = FALSE), dapply(dataNA, basediff, 2, 2))
   expect_equal(fdiff(x, 1, 1, f), BY(x, f, basediff, use.g.names = FALSE))
   expect_equal(fdiff(x, 2, 2, f), BY(x, f, basediff, 2, 2, use.g.names = FALSE))
   expect_equal(fdiff(xNA, 1, 1, f), BY(xNA, f, basediff, use.g.names = FALSE))
@@ -472,6 +476,10 @@ test_that("fgrowth performs like basegrowth", {
   expect_equal(fgrowth(m, 2, stubs = FALSE), dapply(m, basegrowth, 2))
   expect_equal(fgrowth(mNA, stubs = FALSE), dapply(mNA, basegrowth))
   expect_equal(fgrowth(mNA, 2, stubs = FALSE), dapply(mNA, basegrowth, 2))
+  expect_equal(fgrowth(data, stubs = FALSE), dapply(data, basegrowth))
+  expect_equal(fgrowth(data, 2, stubs = FALSE), dapply(data, basegrowth, 2))
+  expect_equal(fgrowth(dataNA, stubs = FALSE), dapply(dataNA, basegrowth))
+  expect_equal(fgrowth(dataNA, 2, stubs = FALSE), dapply(dataNA, basegrowth, 2))
   expect_equal(fgrowth(x, 1, 1, f), BY(x, f, basegrowth, use.g.names = FALSE))
   expect_equal(fgrowth(x, 2, 1, f), BY(x, f, basegrowth, 2, use.g.names = FALSE))
   expect_equal(fgrowth(xNA, 1, 1, f), BY(xNA, f, basegrowth, use.g.names = FALSE))
@@ -1106,6 +1114,8 @@ test_that("fgrowth with logdiff performs numerically stable in unordered computa
   expect_true(all_obj_equal(replicate(50, fgrowth(datauo, -2:2, 1:2, guo, tduo, logdiff = TRUE), simplify = FALSE)))
 })
 
+options(warn = -1)
+
 test_that("fgrowth with logdiff handles special values in the right way", {
   expect_equal(fgrowth(c(1,NA), logdiff = TRUE), c(NA_real_,NaN))
   expect_equal(fgrowth(c(NA,1), logdiff = TRUE), c(NA_real_,NaN))
@@ -1241,6 +1251,7 @@ test_that("G with logdiff produces errors for wrong input", {
   expect_error(G(1:4, g = c(1,2,2), t = c(1,2,1,2), logdiff = TRUE))
 })
 
+
 test_that("G.data.frame method with logdiff is foolproof", {
   expect_visible(G(wlddev, logdiff = TRUE))
   expect_visible(G(wlddev, by = wlddev$iso3c, logdiff = TRUE))
@@ -1291,4 +1302,6 @@ test_that("G.data.frame method with logdiff is foolproof", {
   expect_error(G(wlddev, 2,1,~iso3c3, ~year, cols = 9:12, logdiff = TRUE))
   expect_error(G(wlddev, cols = c("PC3GDP","LIFEEX"), logdiff = TRUE))
 })
+
+options(warn = 1)
 
