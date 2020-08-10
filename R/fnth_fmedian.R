@@ -1,6 +1,6 @@
 # Note: for foundational changes to this code see fsum.R
 
-fnth <- function(x, ...) UseMethod("fnth") # , x
+fnth <- function(x, n = 0.5, ...) UseMethod("fnth") # , x
 
 fnth.default <- function(x, n = 0.5, g = NULL, w = NULL, TRA = NULL, na.rm = TRUE, use.g.names = TRUE, ties = "mean", ...) {
   ret <- switch(ties, mean = 1L, min = 2L, max = 3L, stop("ties must be 'mean', 'min' or 'max'"))
