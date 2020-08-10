@@ -40,7 +40,7 @@
 
 
 <meta property="og:title" content="Fast (Grouped, Weighted) Product for Matrix-Like Objects — fprod" />
-<meta property="og:description" content="fprod is a generic function that computes the (column-wise) product of all values in x, (optionally) grouped by g and/or weighted by w. The TRA argument can further be used to transform x using its (grouped) product." />
+<meta property="og:description" content="fprod is a generic function that computes the (column-wise) product of all values in x, (optionally) grouped by g and/or weighted by w. The TRA argument can further be used to transform x using its (grouped, weighted) product." />
 
 
 
@@ -72,7 +72,7 @@
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">collapse</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">1.2.1</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">1.3.0</span>
       </span>
     </div>
 
@@ -87,13 +87,10 @@
 <li>
   <a href="../news/index.html">News</a>
 </li>
-<li>
-  <a href="../blog/index.html">Blog</a>
-</li>
       </ul>
       <ul class="nav navbar-nav navbar-right">
         <li>
-  <a href="https://twitter.com/collapse">
+  <a href="https://twitter.com/collapse_R">
     <span class="fa fa-twitter"></span>
      
   </a>
@@ -123,7 +120,7 @@
     </div>
 
     <div class="ref-description">
-    <p><code>fprod</code> is a generic function that computes the (column-wise) product of all values in <code>x</code>, (optionally) grouped by <code>g</code> and/or weighted by <code>w</code>. The <code><a href='TRA.html'>TRA</a></code> argument can further be used to transform <code>x</code> using its (grouped) product.</p>
+    <p><code>fprod</code> is a generic function that computes the (column-wise) product of all values in <code>x</code>, (optionally) grouped by <code>g</code> and/or weighted by <code>w</code>. The <code><a href='TRA.html'>TRA</a></code> argument can further be used to transform <code>x</code> using its (grouped, weighted) product.</p>
     </div>
 
     <pre class="usage"><span class='fu'>fprod</span>(<span class='no'>x</span>, <span class='no'>...</span>)
@@ -149,7 +146,7 @@
     <colgroup><col class="name" /><col class="desc" /></colgroup>
     <tr>
       <th>x</th>
-      <td><p>a numeric vector, matrix, data.frame or grouped tibble (<code><a href='https://dplyr.tidyverse.org/reference/grouped_df.html'>dplyr::grouped_df</a></code>).</p></td>
+      <td><p>a numeric vector, matrix, data frame or grouped tibble (<code><a href='https://dplyr.tidyverse.org/reference/grouped_df.html'>dplyr::grouped_df</a></code>).</p></td>
     </tr>
     <tr>
       <th>g</th>
@@ -170,11 +167,11 @@
     </tr>
     <tr>
       <th>use.g.names</th>
-      <td><p>make group-names and add to the result as names (vector method) or row-names (matrix and data.frame method). No row-names are generated for data.tables and (default) grouped tibbles.</p></td>
+      <td><p>logical. Make group-names and add to the result as names (default method) or row-names (matrix and data frame methods). No row-names are generated for <em>data.table</em>'s.</p></td>
     </tr>
     <tr>
       <th>drop</th>
-      <td><p><em>matrix and data.frame method:</em> drop dimensions and return an atomic vector if <code>g = NULL</code> and <code>TRA = NULL</code>.</p></td>
+      <td><p><em>matrix and data.frame method:</em> Logical. <code>TRUE</code> drops dimensions and returns an atomic vector if <code>g = NULL</code> and <code>TRA = NULL</code>.</p></td>
     </tr>
     <tr>
       <th>keep.group_vars</th>
@@ -196,45 +193,180 @@
 <p>Missing-value removal as controlled by the <code>na.rm</code> argument is done very efficiently by simply skipping them in the computation (thus setting <code>na.rm = FALSE</code> on data with no missing values doesn't give extra speed). Large performance gains can nevertheless be achieved in the presence of missing values if <code>na.rm = FALSE</code>, since then the corresponding computation is terminated once a <code>NA</code> is encountered and <code>NA</code> is returned (unlike <code><a href='https://rdrr.io/r/base/prod.html'>base::prod</a></code> which just runs through without any checks).</p>
 <p>This all seamlessly generalizes to grouped computations, which are performed in a single pass (without splitting the data) and therefore extremely fast.</p>
 <p>The weighted product is computed as <code><a href='https://rdrr.io/r/base/prod.html'>prod(x * w)</a></code>. If <code>na.rm = TRUE</code>, missing values will be removed from both <code>x</code> and <code>w</code> i.e. utilizing only <code>x[complete.cases(x,w)]</code> and <code>w[complete.cases(x,w)]</code>.</p>
-<p>When applied to data frame's with groups or <code>drop = FALSE</code>, <code>fprod</code> preserves all column attributes (such as variable labels) but does not distinguish between classed and unclassed objects. The attributes of the data frame itself are also preserved.</p>
+<p>When applied to data frames with groups or <code>drop = FALSE</code>, <code>fprod</code> preserves all column attributes (such as variable labels) but does not distinguish between classed and unclassed objects. The attributes of the data frame itself are also preserved.</p>
     <h2 class="hasAnchor" id="value"><a class="anchor" href="#value"></a>Value</h2>
 
-    <p>The product of <code>x</code>, grouped by <code>g</code>, or (if <code><a href='TRA.html'>TRA</a></code> is used) <code>x</code> transformed by its product, grouped by <code>g</code>.</p>
+    <p>The (<code>w</code> weighted) product of <code>x</code>, grouped by <code>g</code>, or (if <code><a href='TRA.html'>TRA</a></code> is used) <code>x</code> transformed by its product, grouped by <code>g</code>.</p>
     <h2 class="hasAnchor" id="see-also"><a class="anchor" href="#see-also"></a>See also</h2>
 
-    <div class='dont-index'><p><code><a href='fsum.html'>fsum</a></code>, <a href='fast-statistical-functions.html'>Fast Statistical Functions</a>, <a href='collapse-documentation.html'>Collapse Overview</a></p></div>
+    <div class='dont-index'><p><code><a href='fsum.html'>fsum</a></code>, <a href='fast-statistical-functions.html'>Fast Statistical Functions</a>, <a href='index.html'>Collapse Overview</a></p></div>
 
     <h2 class="hasAnchor" id="examples"><a class="anchor" href="#examples"></a>Examples</h2>
-    <pre class="examples"><span class='co'>## default vector method</span>
+    <pre class="examples"><div class='input'><span class='co'>## default vector method</span>
 <span class='no'>mpg</span> <span class='kw'>&lt;-</span> <span class='no'>mtcars</span>$<span class='no'>mpg</span>
-<span class='fu'>fprod</span>(<span class='no'>mpg</span>)                         <span class='co'># Simple product</span>
-<span class='fu'>fprod</span>(<span class='no'>mpg</span>, <span class='kw'>w</span> <span class='kw'>=</span> <span class='no'>mtcars</span>$<span class='no'>hp</span>)          <span class='co'># Weighted product</span>
-<span class='fu'>fprod</span>(<span class='no'>mpg</span>, <span class='kw'>TRA</span> <span class='kw'>=</span> <span class='st'>"/"</span>)              <span class='co'># Simple transformation: Divide by product</span>
-<span class='fu'>fprod</span>(<span class='no'>mpg</span>, <span class='no'>mtcars</span>$<span class='no'>cyl</span>)             <span class='co'># Grouped product</span>
-<span class='fu'>fprod</span>(<span class='no'>mpg</span>, <span class='no'>mtcars</span>$<span class='no'>cyl</span>, <span class='no'>mtcars</span>$<span class='no'>hp</span>)  <span class='co'># Weighted grouped product</span>
-<span class='fu'>fprod</span>(<span class='no'>mpg</span>, <span class='no'>mtcars</span>[<span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span>(<span class='fl'>2</span>,<span class='fl'>8</span>:<span class='fl'>9</span>)])       <span class='co'># More groups...</span>
-<span class='no'>g</span> <span class='kw'>&lt;-</span> <span class='fu'><a href='GRP.html'>GRP</a></span>(<span class='no'>mtcars</span>, ~ <span class='no'>cyl</span> + <span class='no'>vs</span> + <span class='no'>am</span>)  <span class='co'># Precomputing groups gives more speed !!</span>
-<span class='fu'>fprod</span>(<span class='no'>mpg</span>, <span class='no'>g</span>)
-<span class='fu'>fprod</span>(<span class='no'>mpg</span>, <span class='no'>g</span>, <span class='kw'>TRA</span> <span class='kw'>=</span> <span class='st'>"/"</span>)           <span class='co'># Groupwise divide by product</span>
-
+<span class='fu'>fprod</span>(<span class='no'>mpg</span>)                         <span class='co'># Simple product</span></div><div class='output co'>#&gt; [1] 1.264241e+41</div><div class='input'><span class='fu'>fprod</span>(<span class='no'>mpg</span>, <span class='kw'>w</span> <span class='kw'>=</span> <span class='no'>mtcars</span>$<span class='no'>hp</span>)          <span class='co'># Weighted product</span></div><div class='output co'>#&gt; [1] 8.870404e+108</div><div class='input'><span class='fu'>fprod</span>(<span class='no'>mpg</span>, <span class='kw'>TRA</span> <span class='kw'>=</span> <span class='st'>"/"</span>)              <span class='co'># Simple transformation: Divide by product</span></div><div class='output co'>#&gt;  [1] 1.661076e-40 1.661076e-40 1.803454e-40 1.692716e-40 1.479149e-40
+#&gt;  [6] 1.431690e-40 1.131114e-40 1.930012e-40 1.803454e-40 1.518698e-40
+#&gt; [11] 1.407960e-40 1.297221e-40 1.368410e-40 1.202303e-40 8.226283e-41
+#&gt; [16] 8.226283e-41 1.162753e-40 2.562803e-40 2.404606e-40 2.681452e-40
+#&gt; [21] 1.700626e-40 1.226032e-40 1.202303e-40 1.052015e-40 1.518698e-40
+#&gt; [26] 2.159399e-40 2.056571e-40 2.404606e-40 1.249762e-40 1.558248e-40
+#&gt; [31] 1.186483e-40 1.692716e-40</div><div class='input'><span class='fu'>fprod</span>(<span class='no'>mpg</span>, <span class='no'>mtcars</span>$<span class='no'>cyl</span>)             <span class='co'># Grouped product</span></div><div class='output co'>#&gt;            4            6            8 
+#&gt; 4.204745e+15 1.150054e+09 2.614398e+16 </div><div class='input'><span class='fu'>fprod</span>(<span class='no'>mpg</span>, <span class='no'>mtcars</span>$<span class='no'>cyl</span>, <span class='no'>mtcars</span>$<span class='no'>hp</span>)  <span class='co'># Weighted grouped product</span></div><div class='output co'>#&gt;            4            6            8 
+#&gt; 3.686893e+36 4.255338e+23 5.653910e+48 </div><div class='input'><span class='fu'>fprod</span>(<span class='no'>mpg</span>, <span class='no'>mtcars</span>[<span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span>(<span class='fl'>2</span>,<span class='fl'>8</span>:<span class='fl'>9</span>)])       <span class='co'># More groups..</span></div><div class='output co'>#&gt;        4.0.1        4.1.0        4.1.1        6.0.1        6.1.0        8.0.0 
+#&gt; 2.600000e+01 1.196088e+04 1.352082e+10 8.687700e+03 1.323773e+05 1.103122e+14 
+#&gt;        8.0.1 
+#&gt; 2.370000e+02 </div><div class='input'><span class='no'>g</span> <span class='kw'>&lt;-</span> <span class='fu'><a href='GRP.html'>GRP</a></span>(<span class='no'>mtcars</span>, ~ <span class='no'>cyl</span> + <span class='no'>vs</span> + <span class='no'>am</span>)  <span class='co'># Precomputing groups gives more speed !</span>
+<span class='fu'>fprod</span>(<span class='no'>mpg</span>, <span class='no'>g</span>)</div><div class='output co'>#&gt;        4.0.1        4.1.0        4.1.1        6.0.1        6.1.0        8.0.0 
+#&gt; 2.600000e+01 1.196088e+04 1.352082e+10 8.687700e+03 1.323773e+05 1.103122e+14 
+#&gt;        8.0.1 
+#&gt; 2.370000e+02 </div><div class='input'><span class='fu'>fprod</span>(<span class='no'>mpg</span>, <span class='no'>g</span>, <span class='kw'>TRA</span> <span class='kw'>=</span> <span class='st'>"/"</span>)           <span class='co'># Groupwise divide by product</span></div><div class='output co'>#&gt;  [1] 2.417211e-03 2.417211e-03 1.686288e-09 1.616591e-04 1.695190e-13
+#&gt;  [6] 1.367304e-04 1.296321e-13 2.039984e-03 1.906214e-03 1.450400e-04
+#&gt; [11] 1.344641e-04 1.486690e-13 1.568277e-13 1.377908e-13 9.427792e-14
+#&gt; [16] 9.427792e-14 1.332582e-13 2.396304e-09 2.248384e-09 2.507244e-09
+#&gt; [21] 1.797527e-03 1.405104e-13 1.377908e-13 1.205670e-13 1.740515e-13
+#&gt; [26] 2.019108e-09 1.000000e+00 2.248384e-09 6.666667e-02 2.267574e-03
+#&gt; [31] 6.329114e-02 1.582744e-09</div><div class='input'>
 <span class='co'>## data.frame method</span>
-<span class='fu'>fprod</span>(<span class='no'>mtcars</span>)
-<span class='fu'>fprod</span>(<span class='no'>mtcars</span>, <span class='kw'>TRA</span> <span class='kw'>=</span> <span class='st'>"/"</span>)
-<span class='fu'>fprod</span>(<span class='no'>mtcars</span>, <span class='no'>g</span>)
-<span class='fu'>fprod</span>(<span class='no'>mtcars</span>, <span class='no'>g</span>, <span class='kw'>use.g.names</span> <span class='kw'>=</span> <span class='fl'>FALSE</span>) <span class='co'># No row-names generated</span>
-
+<span class='fu'>fprod</span>(<span class='no'>mtcars</span>)</div><div class='output co'>#&gt;          mpg          cyl         disp           hp         drat           wt 
+#&gt; 1.264241e+41 5.163908e+24 2.789968e+73 7.016390e+67 4.366447e+17 3.884021e+15 
+#&gt;         qsec           vs           am         gear         carb 
+#&gt; 9.651882e+39 0.000000e+00 0.000000e+00 7.522960e+17 1.391569e+12 </div><div class='input'><span class='fu'><a href='https://rdrr.io/r/utils/head.html'>head</a></span>(<span class='fu'>fprod</span>(<span class='no'>mtcars</span>, <span class='kw'>TRA</span> <span class='kw'>=</span> <span class='st'>"/"</span>))</div><div class='output co'>#&gt;                            mpg          cyl         disp           hp
+#&gt; Mazda RX4         1.661076e-40 1.161911e-24 5.734833e-72 1.567758e-66
+#&gt; Mazda RX4 Wag     1.661076e-40 1.161911e-24 5.734833e-72 1.567758e-66
+#&gt; Datsun 710        1.803454e-40 7.746072e-25 3.871012e-72 1.325468e-66
+#&gt; Hornet 4 Drive    1.692716e-40 1.161911e-24 9.247418e-72 1.567758e-66
+#&gt; Hornet Sportabout 1.479149e-40 1.549214e-24 1.290337e-71 2.494160e-66
+#&gt; Valiant           1.431690e-40 1.161911e-24 8.064609e-72 1.496496e-66
+#&gt;                           drat           wt         qsec  vs  am         gear
+#&gt; Mazda RX4         8.931747e-18 6.745586e-16 1.705367e-39 NaN Inf 5.317056e-18
+#&gt; Mazda RX4 Wag     8.931747e-18 7.402122e-16 1.763387e-39 NaN Inf 5.317056e-18
+#&gt; Datsun 710        8.817237e-18 5.973191e-16 1.928121e-39 Inf Inf 5.317056e-18
+#&gt; Hornet 4 Drive    7.053790e-18 8.277504e-16 2.014115e-39 Inf NaN 3.987792e-18
+#&gt; Hornet Sportabout 7.214103e-18 8.856800e-16 1.763387e-39 NaN NaN 3.987792e-18
+#&gt; Valiant           6.320928e-18 8.908293e-16 2.094928e-39 Inf NaN 3.987792e-18
+#&gt;                           carb
+#&gt; Mazda RX4         2.874452e-12
+#&gt; Mazda RX4 Wag     2.874452e-12
+#&gt; Datsun 710        7.186131e-13
+#&gt; Hornet 4 Drive    7.186131e-13
+#&gt; Hornet Sportabout 1.437226e-12
+#&gt; Valiant           7.186131e-13</div><div class='input'><span class='fu'>fprod</span>(<span class='no'>mtcars</span>, <span class='no'>g</span>)</div><div class='output co'>#&gt;                mpg         cyl         disp           hp         drat
+#&gt; 4.0.1 2.600000e+01           4 1.203000e+02 9.100000e+01      4.43000
+#&gt; 4.1.0 1.196088e+04          64 2.480709e+06 5.713300e+05     53.51976
+#&gt; 4.1.1 1.352082e+10       16384 4.158694e+13 1.686524e+13  20659.68036
+#&gt; 6.0.1 8.687700e+03         216 3.712000e+06 2.117500e+06     55.06020
+#&gt; 6.1.0 1.323773e+05        1296 1.630611e+09 1.747400e+08    130.62669
+#&gt; 8.0.0 1.103122e+14 68719476736 3.515354e+30 2.445279e+27 829662.18170
+#&gt; 8.0.1 2.370000e+02          64 1.056510e+05 8.844000e+04     14.93880
+#&gt;                 wt         qsec vs am   gear   carb
+#&gt; 4.0.1 2.140000e+00 1.670000e+01  0  1      5      2
+#&gt; 4.1.0 2.476955e+01 9.164580e+03  1  0     48      4
+#&gt; 4.1.1 1.231073e+02 7.933555e+08  1  1  20480      8
+#&gt; 6.0.1 2.086503e+01 4.342313e+03  0  1     80     96
+#&gt; 6.1.0 1.316358e+02 1.359535e+05  1  0    144     16
+#&gt; 8.0.0 1.914897e+07 6.360378e+14  0  0 531441 442368
+#&gt; 8.0.1 1.131690e+01 2.117000e+02  0  1     25     32</div><div class='input'><span class='fu'>fprod</span>(<span class='no'>mtcars</span>, <span class='no'>g</span>, <span class='kw'>use.g.names</span> <span class='kw'>=</span> <span class='fl'>FALSE</span>) <span class='co'># No row-names generated</span></div><div class='output co'>#&gt;            mpg         cyl         disp           hp         drat           wt
+#&gt; 1 2.600000e+01           4 1.203000e+02 9.100000e+01      4.43000 2.140000e+00
+#&gt; 2 1.196088e+04          64 2.480709e+06 5.713300e+05     53.51976 2.476955e+01
+#&gt; 3 1.352082e+10       16384 4.158694e+13 1.686524e+13  20659.68036 1.231073e+02
+#&gt; 4 8.687700e+03         216 3.712000e+06 2.117500e+06     55.06020 2.086503e+01
+#&gt; 5 1.323773e+05        1296 1.630611e+09 1.747400e+08    130.62669 1.316358e+02
+#&gt; 6 1.103122e+14 68719476736 3.515354e+30 2.445279e+27 829662.18170 1.914897e+07
+#&gt; 7 2.370000e+02          64 1.056510e+05 8.844000e+04     14.93880 1.131690e+01
+#&gt;           qsec vs am   gear   carb
+#&gt; 1 1.670000e+01  0  1      5      2
+#&gt; 2 9.164580e+03  1  0     48      4
+#&gt; 3 7.933555e+08  1  1  20480      8
+#&gt; 4 4.342313e+03  0  1     80     96
+#&gt; 5 1.359535e+05  1  0    144     16
+#&gt; 6 6.360378e+14  0  0 531441 442368
+#&gt; 7 2.117000e+02  0  1     25     32</div><div class='input'>
 <span class='co'>## matrix method</span>
 <span class='no'>m</span> <span class='kw'>&lt;-</span> <span class='fu'><a href='quick-conversion.html'>qM</a></span>(<span class='no'>mtcars</span>)
-<span class='fu'>fprod</span>(<span class='no'>m</span>)
-<span class='fu'>fprod</span>(<span class='no'>m</span>, <span class='kw'>TRA</span> <span class='kw'>=</span> <span class='st'>"/"</span>)
-<span class='fu'>fprod</span>(<span class='no'>m</span>, <span class='no'>g</span>) <span class='co'># etc...</span>
-
+<span class='fu'>fprod</span>(<span class='no'>m</span>)</div><div class='output co'>#&gt;          mpg          cyl         disp           hp         drat           wt 
+#&gt; 1.264241e+41 5.163908e+24 2.789968e+73 7.016390e+67 4.366447e+17 3.884021e+15 
+#&gt;         qsec           vs           am         gear         carb 
+#&gt; 9.651882e+39 0.000000e+00 0.000000e+00 7.522960e+17 1.391569e+12 </div><div class='input'><span class='fu'><a href='https://rdrr.io/r/utils/head.html'>head</a></span>(<span class='fu'>fprod</span>(<span class='no'>m</span>, <span class='kw'>TRA</span> <span class='kw'>=</span> <span class='st'>"/"</span>))</div><div class='output co'>#&gt;                            mpg          cyl         disp           hp
+#&gt; Mazda RX4         1.661076e-40 1.161911e-24 5.734833e-72 1.567758e-66
+#&gt; Mazda RX4 Wag     1.661076e-40 1.161911e-24 5.734833e-72 1.567758e-66
+#&gt; Datsun 710        1.803454e-40 7.746072e-25 3.871012e-72 1.325468e-66
+#&gt; Hornet 4 Drive    1.692716e-40 1.161911e-24 9.247418e-72 1.567758e-66
+#&gt; Hornet Sportabout 1.479149e-40 1.549214e-24 1.290337e-71 2.494160e-66
+#&gt; Valiant           1.431690e-40 1.161911e-24 8.064609e-72 1.496496e-66
+#&gt;                           drat           wt         qsec  vs  am         gear
+#&gt; Mazda RX4         8.931747e-18 6.745586e-16 1.705367e-39 NaN Inf 5.317056e-18
+#&gt; Mazda RX4 Wag     8.931747e-18 7.402122e-16 1.763387e-39 NaN Inf 5.317056e-18
+#&gt; Datsun 710        8.817237e-18 5.973191e-16 1.928121e-39 Inf Inf 5.317056e-18
+#&gt; Hornet 4 Drive    7.053790e-18 8.277504e-16 2.014115e-39 Inf NaN 3.987792e-18
+#&gt; Hornet Sportabout 7.214103e-18 8.856800e-16 1.763387e-39 NaN NaN 3.987792e-18
+#&gt; Valiant           6.320928e-18 8.908293e-16 2.094928e-39 Inf NaN 3.987792e-18
+#&gt;                           carb
+#&gt; Mazda RX4         2.874452e-12
+#&gt; Mazda RX4 Wag     2.874452e-12
+#&gt; Datsun 710        7.186131e-13
+#&gt; Hornet 4 Drive    7.186131e-13
+#&gt; Hornet Sportabout 1.437226e-12
+#&gt; Valiant           7.186131e-13</div><div class='input'><span class='fu'>fprod</span>(<span class='no'>m</span>, <span class='no'>g</span>) <span class='co'># etc..</span></div><div class='output co'>#&gt;                mpg         cyl         disp           hp         drat
+#&gt; 4.0.1 2.600000e+01           4 1.203000e+02 9.100000e+01      4.43000
+#&gt; 4.1.0 1.196088e+04          64 2.480709e+06 5.713300e+05     53.51976
+#&gt; 4.1.1 1.352082e+10       16384 4.158694e+13 1.686524e+13  20659.68036
+#&gt; 6.0.1 8.687700e+03         216 3.712000e+06 2.117500e+06     55.06020
+#&gt; 6.1.0 1.323773e+05        1296 1.630611e+09 1.747400e+08    130.62669
+#&gt; 8.0.0 1.103122e+14 68719476736 3.515354e+30 2.445279e+27 829662.18170
+#&gt; 8.0.1 2.370000e+02          64 1.056510e+05 8.844000e+04     14.93880
+#&gt;                 wt         qsec vs am   gear   carb
+#&gt; 4.0.1 2.140000e+00 1.670000e+01  0  1      5      2
+#&gt; 4.1.0 2.476955e+01 9.164580e+03  1  0     48      4
+#&gt; 4.1.1 1.231073e+02 7.933555e+08  1  1  20480      8
+#&gt; 6.0.1 2.086503e+01 4.342313e+03  0  1     80     96
+#&gt; 6.1.0 1.316358e+02 1.359535e+05  1  0    144     16
+#&gt; 8.0.0 1.914897e+07 6.360378e+14  0  0 531441 442368
+#&gt; 8.0.1 1.131690e+01 2.117000e+02  0  1     25     32</div><div class='input'>
 <span class='co'>## method for grouped tibbles - for use with dplyr</span>
 <span class='fu'><a href='https://rdrr.io/r/base/library.html'>library</a></span>(<span class='no'>dplyr</span>)
-<span class='no'>mtcars</span> <span class='kw'>%&gt;%</span> <span class='fu'><a href='https://dplyr.tidyverse.org/reference/group_by.html'>group_by</a></span>(<span class='no'>cyl</span>,<span class='no'>vs</span>,<span class='no'>am</span>) <span class='kw'>%&gt;%</span> <span class='fu'>fprod</span>(<span class='no'>hp</span>)   <span class='co'># Weighted grouped product</span>
-<span class='no'>mtcars</span> <span class='kw'>%&gt;%</span> <span class='fu'><a href='GRP.html'>fgroup_by</a></span>(<span class='no'>cyl</span>,<span class='no'>vs</span>,<span class='no'>am</span>) <span class='kw'>%&gt;%</span> <span class='fu'>fprod</span>(<span class='no'>hp</span>)  <span class='co'># Equivalent but faster</span>
-<span class='no'>mtcars</span> <span class='kw'>%&gt;%</span> <span class='fu'><a href='GRP.html'>fgroup_by</a></span>(<span class='no'>cyl</span>,<span class='no'>vs</span>,<span class='no'>am</span>) <span class='kw'>%&gt;%</span> <span class='fu'>fprod</span>(<span class='kw'>TRA</span> <span class='kw'>=</span> <span class='st'>"/"</span>)
-<span class='no'>mtcars</span> <span class='kw'>%&gt;%</span> <span class='fu'><a href='GRP.html'>fgroup_by</a></span>(<span class='no'>cyl</span>,<span class='no'>vs</span>,<span class='no'>am</span>) <span class='kw'>%&gt;%</span> <span class='fu'><a href='select_replace_vars.html'>fselect</a></span>(<span class='no'>mpg</span>) <span class='kw'>%&gt;%</span> <span class='no'>fprod</span></pre>
+<span class='no'>mtcars</span> <span class='kw'>%&gt;%</span> <span class='fu'><a href='https://dplyr.tidyverse.org/reference/group_by.html'>group_by</a></span>(<span class='no'>cyl</span>,<span class='no'>vs</span>,<span class='no'>am</span>) <span class='kw'>%&gt;%</span> <span class='fu'>fprod</span>(<span class='no'>hp</span>)   <span class='co'># Weighted grouped product</span></div><div class='output co'>#&gt; <span style='color: #949494;'># A tibble: 7 x 11</span><span>
+#&gt;     cyl    vs    am prod.hp     mpg    disp    drat      wt    qsec    gear
+#&gt;   </span><span style='color: #949494;font-style: italic;'>&lt;dbl&gt;</span><span> </span><span style='color: #949494;font-style: italic;'>&lt;dbl&gt;</span><span> </span><span style='color: #949494;font-style: italic;'>&lt;dbl&gt;</span><span>   </span><span style='color: #949494;font-style: italic;'>&lt;dbl&gt;</span><span>   </span><span style='color: #949494;font-style: italic;'>&lt;dbl&gt;</span><span>   </span><span style='color: #949494;font-style: italic;'>&lt;dbl&gt;</span><span>   </span><span style='color: #949494;font-style: italic;'>&lt;dbl&gt;</span><span>   </span><span style='color: #949494;font-style: italic;'>&lt;dbl&gt;</span><span>   </span><span style='color: #949494;font-style: italic;'>&lt;dbl&gt;</span><span>   </span><span style='color: #949494;font-style: italic;'>&lt;dbl&gt;</span><span>
+#&gt; </span><span style='color: #BCBCBC;'>1</span><span>     4     0     1 9.10</span><span style='color: #949494;'>e</span><span> 1 2.37</span><span style='color: #949494;'>e</span><span> 3 1.09</span><span style='color: #949494;'>e</span><span> 4 4.03</span><span style='color: #949494;'>e</span><span> 2 1.95</span><span style='color: #949494;'>e</span><span> 2 1.52</span><span style='color: #949494;'>e</span><span> 3 4.55</span><span style='color: #949494;'>e</span><span> 2
+#&gt; </span><span style='color: #BCBCBC;'>2</span><span>     4     1     0 5.71</span><span style='color: #949494;'>e</span><span> 5 6.83</span><span style='color: #949494;'>e</span><span> 9 1.42</span><span style='color: #949494;'>e</span><span>12 3.06</span><span style='color: #949494;'>e</span><span> 7 1.42</span><span style='color: #949494;'>e</span><span> 7 5.24</span><span style='color: #949494;'>e</span><span> 9 2.74</span><span style='color: #949494;'>e</span><span> 7
+#&gt; </span><span style='color: #BCBCBC;'>3</span><span>     4     1     1 1.69</span><span style='color: #949494;'>e</span><span>13 2.28</span><span style='color: #949494;'>e</span><span>23 7.01</span><span style='color: #949494;'>e</span><span>26 3.48</span><span style='color: #949494;'>e</span><span>17 2.08</span><span style='color: #949494;'>e</span><span>15 1.34</span><span style='color: #949494;'>e</span><span>22 3.45</span><span style='color: #949494;'>e</span><span>17
+#&gt; </span><span style='color: #BCBCBC;'>4</span><span>     6     0     1 2.12</span><span style='color: #949494;'>e</span><span> 6 1.84</span><span style='color: #949494;'>e</span><span>10 7.86</span><span style='color: #949494;'>e</span><span>12 1.17</span><span style='color: #949494;'>e</span><span> 8 4.42</span><span style='color: #949494;'>e</span><span> 7 9.19</span><span style='color: #949494;'>e</span><span> 9 1.69</span><span style='color: #949494;'>e</span><span> 8
+#&gt; </span><span style='color: #BCBCBC;'>5</span><span>     6     1     0 1.75</span><span style='color: #949494;'>e</span><span> 8 2.31</span><span style='color: #949494;'>e</span><span>13 2.85</span><span style='color: #949494;'>e</span><span>17 2.28</span><span style='color: #949494;'>e</span><span>10 2.30</span><span style='color: #949494;'>e</span><span>10 2.38</span><span style='color: #949494;'>e</span><span>13 2.52</span><span style='color: #949494;'>e</span><span>10
+#&gt; </span><span style='color: #BCBCBC;'>6</span><span>     8     0     0 2.45</span><span style='color: #949494;'>e</span><span>27 2.70</span><span style='color: #949494;'>e</span><span>41 8.60</span><span style='color: #949494;'>e</span><span>57 2.03</span><span style='color: #949494;'>e</span><span>33 4.68</span><span style='color: #949494;'>e</span><span>34 1.56</span><span style='color: #949494;'>e</span><span>42 1.30</span><span style='color: #949494;'>e</span><span>33
+#&gt; </span><span style='color: #BCBCBC;'>7</span><span>     8     0     1 8.84</span><span style='color: #949494;'>e</span><span> 4 2.10</span><span style='color: #949494;'>e</span><span> 7 9.34</span><span style='color: #949494;'>e</span><span> 9 1.32</span><span style='color: #949494;'>e</span><span> 6 1.00</span><span style='color: #949494;'>e</span><span> 6 1.87</span><span style='color: #949494;'>e</span><span> 7 2.21</span><span style='color: #949494;'>e</span><span> 6
+#&gt; </span><span style='color: #949494;'># ... with 1 more variable: carb </span><span style='color: #949494;font-style: italic;'>&lt;dbl&gt;</span><span></div><div class='input'><span class='no'>mtcars</span> <span class='kw'>%&gt;%</span> <span class='fu'><a href='GRP.html'>fgroup_by</a></span>(<span class='no'>cyl</span>,<span class='no'>vs</span>,<span class='no'>am</span>) <span class='kw'>%&gt;%</span> <span class='fu'>fprod</span>(<span class='no'>hp</span>)  <span class='co'># Equivalent and faster</span></div><div class='output co'>#&gt; </span><span style='color: #949494;'># A tibble: 7 x 11</span><span>
+#&gt;     cyl    vs    am prod.hp     mpg    disp    drat      wt    qsec    gear
+#&gt;   </span><span style='color: #949494;font-style: italic;'>&lt;dbl&gt;</span><span> </span><span style='color: #949494;font-style: italic;'>&lt;dbl&gt;</span><span> </span><span style='color: #949494;font-style: italic;'>&lt;dbl&gt;</span><span>   </span><span style='color: #949494;font-style: italic;'>&lt;dbl&gt;</span><span>   </span><span style='color: #949494;font-style: italic;'>&lt;dbl&gt;</span><span>   </span><span style='color: #949494;font-style: italic;'>&lt;dbl&gt;</span><span>   </span><span style='color: #949494;font-style: italic;'>&lt;dbl&gt;</span><span>   </span><span style='color: #949494;font-style: italic;'>&lt;dbl&gt;</span><span>   </span><span style='color: #949494;font-style: italic;'>&lt;dbl&gt;</span><span>   </span><span style='color: #949494;font-style: italic;'>&lt;dbl&gt;</span><span>
+#&gt; </span><span style='color: #BCBCBC;'>1</span><span>     4     0     1 9.10</span><span style='color: #949494;'>e</span><span> 1 2.37</span><span style='color: #949494;'>e</span><span> 3 1.09</span><span style='color: #949494;'>e</span><span> 4 4.03</span><span style='color: #949494;'>e</span><span> 2 1.95</span><span style='color: #949494;'>e</span><span> 2 1.52</span><span style='color: #949494;'>e</span><span> 3 4.55</span><span style='color: #949494;'>e</span><span> 2
+#&gt; </span><span style='color: #BCBCBC;'>2</span><span>     4     1     0 5.71</span><span style='color: #949494;'>e</span><span> 5 6.83</span><span style='color: #949494;'>e</span><span> 9 1.42</span><span style='color: #949494;'>e</span><span>12 3.06</span><span style='color: #949494;'>e</span><span> 7 1.42</span><span style='color: #949494;'>e</span><span> 7 5.24</span><span style='color: #949494;'>e</span><span> 9 2.74</span><span style='color: #949494;'>e</span><span> 7
+#&gt; </span><span style='color: #BCBCBC;'>3</span><span>     4     1     1 1.69</span><span style='color: #949494;'>e</span><span>13 2.28</span><span style='color: #949494;'>e</span><span>23 7.01</span><span style='color: #949494;'>e</span><span>26 3.48</span><span style='color: #949494;'>e</span><span>17 2.08</span><span style='color: #949494;'>e</span><span>15 1.34</span><span style='color: #949494;'>e</span><span>22 3.45</span><span style='color: #949494;'>e</span><span>17
+#&gt; </span><span style='color: #BCBCBC;'>4</span><span>     6     0     1 2.12</span><span style='color: #949494;'>e</span><span> 6 1.84</span><span style='color: #949494;'>e</span><span>10 7.86</span><span style='color: #949494;'>e</span><span>12 1.17</span><span style='color: #949494;'>e</span><span> 8 4.42</span><span style='color: #949494;'>e</span><span> 7 9.19</span><span style='color: #949494;'>e</span><span> 9 1.69</span><span style='color: #949494;'>e</span><span> 8
+#&gt; </span><span style='color: #BCBCBC;'>5</span><span>     6     1     0 1.75</span><span style='color: #949494;'>e</span><span> 8 2.31</span><span style='color: #949494;'>e</span><span>13 2.85</span><span style='color: #949494;'>e</span><span>17 2.28</span><span style='color: #949494;'>e</span><span>10 2.30</span><span style='color: #949494;'>e</span><span>10 2.38</span><span style='color: #949494;'>e</span><span>13 2.52</span><span style='color: #949494;'>e</span><span>10
+#&gt; </span><span style='color: #BCBCBC;'>6</span><span>     8     0     0 2.45</span><span style='color: #949494;'>e</span><span>27 2.70</span><span style='color: #949494;'>e</span><span>41 8.60</span><span style='color: #949494;'>e</span><span>57 2.03</span><span style='color: #949494;'>e</span><span>33 4.68</span><span style='color: #949494;'>e</span><span>34 1.56</span><span style='color: #949494;'>e</span><span>42 1.30</span><span style='color: #949494;'>e</span><span>33
+#&gt; </span><span style='color: #BCBCBC;'>7</span><span>     8     0     1 8.84</span><span style='color: #949494;'>e</span><span> 4 2.10</span><span style='color: #949494;'>e</span><span> 7 9.34</span><span style='color: #949494;'>e</span><span> 9 1.32</span><span style='color: #949494;'>e</span><span> 6 1.00</span><span style='color: #949494;'>e</span><span> 6 1.87</span><span style='color: #949494;'>e</span><span> 7 2.21</span><span style='color: #949494;'>e</span><span> 6
+#&gt; </span><span style='color: #949494;'># ... with 1 more variable: carb </span><span style='color: #949494;font-style: italic;'>&lt;dbl&gt;</span><span></div><div class='input'><span class='no'>mtcars</span> <span class='kw'>%&gt;%</span> <span class='fu'><a href='GRP.html'>fgroup_by</a></span>(<span class='no'>cyl</span>,<span class='no'>vs</span>,<span class='no'>am</span>) <span class='kw'>%&gt;%</span> <span class='fu'>fprod</span>(<span class='kw'>TRA</span> <span class='kw'>=</span> <span class='st'>"/"</span>)</div><div class='output co'>#&gt; </span><span style='color: #949494;'># A tibble: 32 x 11</span><span>
+#&gt;      cyl    vs    am      mpg     disp       hp    drat      wt     qsec    gear
+#&gt;  </span><span style='color: #BCBCBC;'>*</span><span> </span><span style='color: #949494;font-style: italic;'>&lt;dbl&gt;</span><span> </span><span style='color: #949494;font-style: italic;'>&lt;dbl&gt;</span><span> </span><span style='color: #949494;font-style: italic;'>&lt;dbl&gt;</span><span>    </span><span style='color: #949494;font-style: italic;'>&lt;dbl&gt;</span><span>    </span><span style='color: #949494;font-style: italic;'>&lt;dbl&gt;</span><span>    </span><span style='color: #949494;font-style: italic;'>&lt;dbl&gt;</span><span>   </span><span style='color: #949494;font-style: italic;'>&lt;dbl&gt;</span><span>   </span><span style='color: #949494;font-style: italic;'>&lt;dbl&gt;</span><span>    </span><span style='color: #949494;font-style: italic;'>&lt;dbl&gt;</span><span>   </span><span style='color: #949494;font-style: italic;'>&lt;dbl&gt;</span><span>
+#&gt; </span><span style='color: #BCBCBC;'> 1</span><span>     6     0     1 2.42</span><span style='color: #949494;'>e</span><span style='color: #BB0000;'>- 3</span><span> 4.31</span><span style='color: #949494;'>e</span><span style='color: #BB0000;'>- 5</span><span> 5.19</span><span style='color: #949494;'>e</span><span style='color: #BB0000;'>- 5</span><span> 7.08</span><span style='color: #949494;'>e</span><span style='color: #BB0000;'>-2</span><span> 1.26</span><span style='color: #949494;'>e</span><span style='color: #BB0000;'>-1</span><span> 3.79</span><span style='color: #949494;'>e</span><span style='color: #BB0000;'>- 3</span><span> 5.00</span><span style='color: #949494;'>e</span><span style='color: #BB0000;'>-2</span><span>
+#&gt; </span><span style='color: #BCBCBC;'> 2</span><span>     6     0     1 2.42</span><span style='color: #949494;'>e</span><span style='color: #BB0000;'>- 3</span><span> 4.31</span><span style='color: #949494;'>e</span><span style='color: #BB0000;'>- 5</span><span> 5.19</span><span style='color: #949494;'>e</span><span style='color: #BB0000;'>- 5</span><span> 7.08</span><span style='color: #949494;'>e</span><span style='color: #BB0000;'>-2</span><span> 1.38</span><span style='color: #949494;'>e</span><span style='color: #BB0000;'>-1</span><span> 3.92</span><span style='color: #949494;'>e</span><span style='color: #BB0000;'>- 3</span><span> 5.00</span><span style='color: #949494;'>e</span><span style='color: #BB0000;'>-2</span><span>
+#&gt; </span><span style='color: #BCBCBC;'> 3</span><span>     4     1     1 1.69</span><span style='color: #949494;'>e</span><span style='color: #BB0000;'>- 9</span><span> 2.60</span><span style='color: #949494;'>e</span><span style='color: #BB0000;'>-12</span><span> 5.51</span><span style='color: #949494;'>e</span><span style='color: #BB0000;'>-12</span><span> 1.86</span><span style='color: #949494;'>e</span><span style='color: #BB0000;'>-4</span><span> 1.88</span><span style='color: #949494;'>e</span><span style='color: #BB0000;'>-2</span><span> 2.35</span><span style='color: #949494;'>e</span><span style='color: #BB0000;'>- 8</span><span> 1.95</span><span style='color: #949494;'>e</span><span style='color: #BB0000;'>-4</span><span>
+#&gt; </span><span style='color: #BCBCBC;'> 4</span><span>     6     1     0 1.62</span><span style='color: #949494;'>e</span><span style='color: #BB0000;'>- 4</span><span> 1.58</span><span style='color: #949494;'>e</span><span style='color: #BB0000;'>- 7</span><span> 6.30</span><span style='color: #949494;'>e</span><span style='color: #BB0000;'>- 7</span><span> 2.36</span><span style='color: #949494;'>e</span><span style='color: #BB0000;'>-2</span><span> 2.44</span><span style='color: #949494;'>e</span><span style='color: #BB0000;'>-2</span><span> 1.43</span><span style='color: #949494;'>e</span><span style='color: #BB0000;'>- 4</span><span> 2.08</span><span style='color: #949494;'>e</span><span style='color: #BB0000;'>-2</span><span>
+#&gt; </span><span style='color: #BCBCBC;'> 5</span><span>     8     0     0 1.70</span><span style='color: #949494;'>e</span><span style='color: #BB0000;'>-13</span><span> 1.02</span><span style='color: #949494;'>e</span><span style='color: #BB0000;'>-28</span><span> 7.16</span><span style='color: #949494;'>e</span><span style='color: #BB0000;'>-26</span><span> 3.80</span><span style='color: #949494;'>e</span><span style='color: #BB0000;'>-6</span><span> 1.80</span><span style='color: #949494;'>e</span><span style='color: #BB0000;'>-7</span><span> 2.68</span><span style='color: #949494;'>e</span><span style='color: #BB0000;'>-14</span><span> 5.65</span><span style='color: #949494;'>e</span><span style='color: #BB0000;'>-6</span><span>
+#&gt; </span><span style='color: #BCBCBC;'> 6</span><span>     6     1     0 1.37</span><span style='color: #949494;'>e</span><span style='color: #BB0000;'>- 4</span><span> 1.38</span><span style='color: #949494;'>e</span><span style='color: #BB0000;'>- 7</span><span> 6.01</span><span style='color: #949494;'>e</span><span style='color: #BB0000;'>- 7</span><span> 2.11</span><span style='color: #949494;'>e</span><span style='color: #BB0000;'>-2</span><span> 2.63</span><span style='color: #949494;'>e</span><span style='color: #BB0000;'>-2</span><span> 1.49</span><span style='color: #949494;'>e</span><span style='color: #BB0000;'>- 4</span><span> 2.08</span><span style='color: #949494;'>e</span><span style='color: #BB0000;'>-2</span><span>
+#&gt; </span><span style='color: #BCBCBC;'> 7</span><span>     8     0     0 1.30</span><span style='color: #949494;'>e</span><span style='color: #BB0000;'>-13</span><span> 1.02</span><span style='color: #949494;'>e</span><span style='color: #BB0000;'>-28</span><span> 1.00</span><span style='color: #949494;'>e</span><span style='color: #BB0000;'>-25</span><span> 3.87</span><span style='color: #949494;'>e</span><span style='color: #BB0000;'>-6</span><span> 1.86</span><span style='color: #949494;'>e</span><span style='color: #BB0000;'>-7</span><span> 2.49</span><span style='color: #949494;'>e</span><span style='color: #BB0000;'>-14</span><span> 5.65</span><span style='color: #949494;'>e</span><span style='color: #BB0000;'>-6</span><span>
+#&gt; </span><span style='color: #BCBCBC;'> 8</span><span>     4     1     0 2.04</span><span style='color: #949494;'>e</span><span style='color: #BB0000;'>- 3</span><span> 5.91</span><span style='color: #949494;'>e</span><span style='color: #BB0000;'>- 5</span><span> 1.09</span><span style='color: #949494;'>e</span><span style='color: #BB0000;'>- 4</span><span> 6.89</span><span style='color: #949494;'>e</span><span style='color: #BB0000;'>-2</span><span> 1.29</span><span style='color: #949494;'>e</span><span style='color: #BB0000;'>-1</span><span> 2.18</span><span style='color: #949494;'>e</span><span style='color: #BB0000;'>- 3</span><span> 8.33</span><span style='color: #949494;'>e</span><span style='color: #BB0000;'>-2</span><span>
+#&gt; </span><span style='color: #BCBCBC;'> 9</span><span>     4     1     0 1.91</span><span style='color: #949494;'>e</span><span style='color: #BB0000;'>- 3</span><span> 5.68</span><span style='color: #949494;'>e</span><span style='color: #BB0000;'>- 5</span><span> 1.66</span><span style='color: #949494;'>e</span><span style='color: #BB0000;'>- 4</span><span> 7.32</span><span style='color: #949494;'>e</span><span style='color: #BB0000;'>-2</span><span> 1.27</span><span style='color: #949494;'>e</span><span style='color: #BB0000;'>-1</span><span> 2.50</span><span style='color: #949494;'>e</span><span style='color: #BB0000;'>- 3</span><span> 8.33</span><span style='color: #949494;'>e</span><span style='color: #BB0000;'>-2</span><span>
+#&gt; </span><span style='color: #BCBCBC;'>10</span><span>     6     1     0 1.45</span><span style='color: #949494;'>e</span><span style='color: #BB0000;'>- 4</span><span> 1.03</span><span style='color: #949494;'>e</span><span style='color: #BB0000;'>- 7</span><span> 7.04</span><span style='color: #949494;'>e</span><span style='color: #BB0000;'>- 7</span><span> 3.00</span><span style='color: #949494;'>e</span><span style='color: #BB0000;'>-2</span><span> 2.61</span><span style='color: #949494;'>e</span><span style='color: #BB0000;'>-2</span><span> 1.35</span><span style='color: #949494;'>e</span><span style='color: #BB0000;'>- 4</span><span> 2.78</span><span style='color: #949494;'>e</span><span style='color: #BB0000;'>-2</span><span>
+#&gt; </span><span style='color: #949494;'># ... with 22 more rows, and 1 more variable: carb </span><span style='color: #949494;font-style: italic;'>&lt;dbl&gt;</span><span></div><div class='input'><span class='no'>mtcars</span> <span class='kw'>%&gt;%</span> <span class='fu'><a href='GRP.html'>fgroup_by</a></span>(<span class='no'>cyl</span>,<span class='no'>vs</span>,<span class='no'>am</span>) <span class='kw'>%&gt;%</span> <span class='fu'><a href='select_replace_vars.html'>fselect</a></span>(<span class='no'>mpg</span>) <span class='kw'>%&gt;%</span> <span class='no'>fprod</span></div><div class='output co'>#&gt; </span><span style='color: #949494;'># A tibble: 7 x 4</span><span>
+#&gt;     cyl    vs    am     mpg
+#&gt;   </span><span style='color: #949494;font-style: italic;'>&lt;dbl&gt;</span><span> </span><span style='color: #949494;font-style: italic;'>&lt;dbl&gt;</span><span> </span><span style='color: #949494;font-style: italic;'>&lt;dbl&gt;</span><span>   </span><span style='color: #949494;font-style: italic;'>&lt;dbl&gt;</span><span>
+#&gt; </span><span style='color: #BCBCBC;'>1</span><span>     4     0     1 2.60</span><span style='color: #949494;'>e</span><span> 1
+#&gt; </span><span style='color: #BCBCBC;'>2</span><span>     4     1     0 1.20</span><span style='color: #949494;'>e</span><span> 4
+#&gt; </span><span style='color: #BCBCBC;'>3</span><span>     4     1     1 1.35</span><span style='color: #949494;'>e</span><span>10
+#&gt; </span><span style='color: #BCBCBC;'>4</span><span>     6     0     1 8.69</span><span style='color: #949494;'>e</span><span> 3
+#&gt; </span><span style='color: #BCBCBC;'>5</span><span>     6     1     0 1.32</span><span style='color: #949494;'>e</span><span> 5
+#&gt; </span><span style='color: #BCBCBC;'>6</span><span>     8     0     0 1.10</span><span style='color: #949494;'>e</span><span>14
+#&gt; </span><span style='color: #BCBCBC;'>7</span><span>     8     0     1 2.37</span><span style='color: #949494;'>e</span><span> 2</div></span></pre>
   </div>
   <div class="col-md-3 hidden-xs hidden-sm" id="pkgdown-sidebar">
     <nav id="toc" data-toggle="toc" class="sticky-top">

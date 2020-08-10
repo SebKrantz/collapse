@@ -72,7 +72,7 @@
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">collapse</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">1.2.1</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">1.3.0</span>
       </span>
     </div>
 
@@ -87,13 +87,10 @@
 <li>
   <a href="../news/index.html">News</a>
 </li>
-<li>
-  <a href="../blog/index.html">Blog</a>
-</li>
       </ul>
       <ul class="nav navbar-nav navbar-right">
         <li>
-  <a href="https://twitter.com/collapse">
+  <a href="https://twitter.com/collapse_R">
     <span class="fa fa-twitter"></span>
      
   </a>
@@ -126,11 +123,12 @@
     <p>Convenience functions in the <em>collapse</em> package that help to deal with variable names, labels, missing values, matching and object checking etc.. Some functions are performance improved replacements for base R functions. <!-- % For recoding and replacing values see \code{\link{Recode}}. % for pairwise correlations and covariances see \code{\link{pwcor}}, for summary statistics see \code{\link{qsu}}. --></p>
     </div>
 
-    <pre class="usage"><span class='fu'>vlabels</span>(<span class='no'>X</span>, <span class='kw'>attrn</span> <span class='kw'>=</span> <span class='st'>"label"</span>)   <span class='co'># Get labels of variables in X, in attr(X[[i]], attrn)</span>
+    <pre class="usage"><span class='fu'>.c</span>(<span class='no'>...</span>)                       <span class='co'># Non-standard concatenation i.e. .c(a, b) == c("a", "b")</span>
+<span class='fu'>vlabels</span>(<span class='no'>X</span>, <span class='kw'>attrn</span> <span class='kw'>=</span> <span class='st'>"label"</span>)   <span class='co'># Get labels of variables in X, in attr(X[[i]], attrn)</span>
 <span class='fu'>vlabels</span>(<span class='no'>X</span>, <span class='kw'>attrn</span> <span class='kw'>=</span> <span class='st'>"label"</span>) <span class='kw'>&lt;-</span> <span class='no'>value</span>      <span class='co'># Set labels of variables in X</span>
 <span class='fu'>vclasses</span>(<span class='no'>X</span>)                   <span class='co'># Get classes of variables in X</span>
 <span class='fu'>vtypes</span>(<span class='no'>X</span>)                     <span class='co'># Get data storage types of variables in X (calling typeof)</span>
-<span class='fu'>namlab</span>(<span class='no'>X</span>, <span class='kw'>class</span> <span class='kw'>=</span> <span class='fl'>FALSE</span>,      <span class='co'># Return data.frame of names, labels and classes</span>
+<span class='fu'>namlab</span>(<span class='no'>X</span>, <span class='kw'>class</span> <span class='kw'>=</span> <span class='fl'>FALSE</span>,      <span class='co'># Return data frame of names, labels and classes</span>
           <span class='kw'>attrn</span> <span class='kw'>=</span> <span class='st'>"label"</span>)
 <span class='fu'>add_stub</span>(<span class='no'>X</span>, <span class='no'>stub</span>, <span class='kw'>pre</span> <span class='kw'>=</span> <span class='fl'>TRUE</span>) <span class='co'># Add a stub (i.e. prefix or postfix) to column names</span>
 <span class='fu'>rm_stub</span>(<span class='no'>X</span>, <span class='no'>stub</span>, <span class='kw'>pre</span> <span class='kw'>=</span> <span class='fl'>TRUE</span>)  <span class='co'># Remove stub from column names</span>
@@ -138,22 +136,23 @@
 <span class='fu'>ckmatch</span>(<span class='no'>x</span>, <span class='no'>table</span>,             <span class='co'># Check-match: throws an informative error if non-matched</span>
      <span class='kw'>e</span> <span class='kw'>=</span> <span class='st'>"Unknown columns:"</span>)
 <span class='fu'>fnlevels</span>(<span class='no'>x</span>)                   <span class='co'># Faster version of nlevels(x) (for factors)</span>
-<span class='fu'>funique</span>(<span class='no'>x</span>, <span class='kw'>ordered</span> <span class='kw'>=</span> <span class='fl'>TRUE</span>)    <span class='co'># Faster unique(x) and sort(unique(x)) for vectors</span>
-<span class='fu'>fnrow</span>(<span class='no'>X</span>)                      <span class='co'># Faster nrow for data.frames (not faster for matrices)</span>
-<span class='fu'>fncol</span>(<span class='no'>X</span>)                      <span class='co'># Faster ncol for data.frames (not faster for matrices)</span>
-<span class='fu'>fdim</span>(<span class='no'>X</span>)                       <span class='co'># Faster dim for data.frames (not faster for matrices)</span>
+<span class='fu'>fnrow</span>(<span class='no'>X</span>)                      <span class='co'># Faster nrow for data frames (not faster for matrices)</span>
+<span class='fu'>fncol</span>(<span class='no'>X</span>)                      <span class='co'># Faster ncol for data frames (not faster for matrices)</span>
+<span class='fu'>fdim</span>(<span class='no'>X</span>)                       <span class='co'># Faster dim for data frames (not faster for matrices)</span>
 <span class='fu'>na_rm</span>(<span class='no'>x</span>)                      <span class='co'># Remove missing values from vector and return vector</span>
-<span class='fu'>na_omit</span>(<span class='no'>X</span>, <span class='kw'>cols</span> <span class='kw'>=</span> <span class='kw'>NULL</span>,       <span class='co'># Faster na.omit for matrices and data.frames</span>
+<span class='fu'>na_omit</span>(<span class='no'>X</span>, <span class='kw'>cols</span> <span class='kw'>=</span> <span class='kw'>NULL</span>,       <span class='co'># Faster na.omit for matrices and data frames</span>
         <span class='kw'>na.attr</span> <span class='kw'>=</span> <span class='fl'>FALSE</span>)
 <span class='fu'>na_insert</span>(<span class='no'>X</span>, <span class='kw'>prop</span> <span class='kw'>=</span> <span class='fl'>0.1</span>)      <span class='co'># Insert missing values at random in vectors, matrices DF's</span>
 <span class='fu'>all_identical</span>(<span class='no'>...</span>)            <span class='co'># Check exact equality of multiple objects or list-elements</span>
 <span class='fu'>all_obj_equal</span>(<span class='no'>...</span>)            <span class='co'># Check near equality of multiple objects or list-elements</span>
 <span class='fu'>seq_row</span>(<span class='no'>X</span>)                    <span class='co'># Fast integer sequences along rows of X</span>
 <span class='fu'>seq_col</span>(<span class='no'>X</span>)                    <span class='co'># Fast integer sequences along columns of X</span>
-<span class='fu'>setRownames</span>(<span class='kw'>object</span> <span class='kw'>=</span> <span class='no'>nm</span>,      <span class='co'># Set rownames of object and return object</span>
-        <span class='kw'>nm</span> <span class='kw'>=</span> <span class='fu'>seq_row</span>(<span class='no'>object</span>))
-<span class='fu'>setColnames</span>(<span class='kw'>object</span> <span class='kw'>=</span> <span class='no'>nm</span>, <span class='no'>nm</span>)  <span class='co'># Set colnames of object and return object</span>
-<span class='fu'>setDimnames</span>(<span class='kw'>object</span> <span class='kw'>=</span> <span class='no'>dn</span>, <span class='no'>dn</span>)  <span class='co'># Set dimension names of object and return object</span>
+<span class='fu'>setRownames</span>(<span class='no'>object</span>,
+ <span class='kw'>nm</span> <span class='kw'>=</span> <span class='kw'>if</span>(<span class='fu'><a href='https://rdrr.io/r/base/is.recursive.html'>is.atomic</a></span>(<span class='no'>object</span>))   <span class='co'># Set rownames of object and return object</span>
+ <span class='fu'>seq_row</span>(<span class='no'>object</span>) <span class='kw'>else</span> <span class='kw'>NULL</span>)
+<span class='fu'>setColnames</span>(<span class='no'>object</span>, <span class='no'>nm</span>)       <span class='co'># Set colnames of object and return object</span>
+<span class='fu'>setDimnames</span>(<span class='no'>object</span>, <span class='no'>dn</span>,
+            <span class='kw'>which</span> <span class='kw'>=</span> <span class='kw'>NULL</span>)     <span class='co'># Set dimension names of object and return object</span>
 <span class='fu'>unattrib</span>(<span class='no'>object</span>)              <span class='co'># Remove all attributes from object</span>
 <span class='fu'>is.categorical</span>(<span class='no'>x</span>)             <span class='co'># The opposite of is.numeric</span>
 <span class='fu'>is.Date</span>(<span class='no'>x</span>)                    <span class='co'># Check if object is of class "Date", "POSIXlt" or "POSIXct"</span></pre>
@@ -163,7 +162,7 @@
     <colgroup><col class="name" /><col class="desc" /></colgroup>
     <tr>
       <th>X</th>
-      <td><p>a matrix or data.frame (some functions also support vectors and arrays although that is less common).</p></td>
+      <td><p>a matrix or data frame (some functions also support vectors and arrays although that is less common).</p></td>
     </tr>
     <tr>
       <th>object</th>
@@ -195,7 +194,7 @@
     </tr>
     <tr>
       <th>cols</th>
-      <td><p>only removes rows with missing values on these columns. Columns can be selected using column names, indices or a selector function (i.e. <code>is.numeric</code>).</p></td>
+      <td><p>only removes rows with missing values on these columns. Columns can be selected using column names, indices, a logical vector or a selector function (i.e. <code>is.numeric</code>).</p></td>
     </tr>
     <tr>
       <th>na.attr</th>
@@ -207,57 +206,268 @@
     </tr>
     <tr>
       <th>dn</th>
-      <td><p>a suitable list of dimension names.</p></td>
+      <td><p>a suitable vector or list of names for dimension(s).</p></td>
     </tr>
     <tr>
-      <th>ordered</th>
-      <td><p>logical. <code>TRUE</code> (default) sorts the output, <code>FALSE</code> is slightly faster.</p></td>
+      <th>which</th>
+      <td><p>integer. If <code>NULL</code>, <code>dn</code> has to be a list fully specifying the dimension names of the object. Alternatively, a vector or list of names for dimensions <code>which</code> can be supplied. See Examples.</p></td>
     </tr>
     <tr>
       <th>prop</th>
-      <td><p>specify the proportion of observations randomly replaced with <code>NA</code>.</p></td>
+      <td><p>double. Specify the proportion of observations randomly replaced with <code>NA</code>.</p></td>
     </tr>
     <tr>
       <th>e</th>
-      <td><p>The error message thrown by <code>ckmatch</code> for non-matched elements.</p></td>
+      <td><p>the error message thrown by <code>ckmatch</code> for non-matched elements. The message is followed by the comma-separated non-matched elements.</p></td>
     </tr>
     <tr>
       <th>...</th>
-      <td><p>for <code>all_identical / all_obj_equal</code>: either multiple comma-separated objects or a single list of objects in which all elements will be checked for exact or numeric equality by <code>all_identical</code> and <code>all_obj_equal</code>, respectively.</p></td>
+      <td><p>for <code>.c</code>: Comma-separated expressions. For <code>all_identical / all_obj_equal</code>: Either multiple comma-separated objects or a single list of objects in which all elements will be checked for exact / numeric equality.</p></td>
     </tr>
     </table>
 
     <h2 class="hasAnchor" id="see-also"><a class="anchor" href="#see-also"></a>See also</h2>
 
-    <div class='dont-index'><p><a href='collapse-documentation.html'>Collapse Overview</a> <!-- %% \code{\link{pwcor}}, \code{\link{qsu}} --></p></div>
+    <div class='dont-index'><p><a href='index.html'>Collapse Overview</a> <!-- %% \code{\link{pwcor}}, \code{\link{qsu}} --></p></div>
 
     <h2 class="hasAnchor" id="examples"><a class="anchor" href="#examples"></a>Examples</h2>
-    <pre class="examples"><span class='co'>## Variable labels</span>
-<span class='fu'>namlab</span>(<span class='no'>wlddev</span>, <span class='kw'>class</span> <span class='kw'>=</span> <span class='fl'>TRUE</span>)
-<span class='fu'>vlabels</span>(<span class='no'>wlddev</span>)
-<span class='fu'>vlabels</span>(<span class='no'>wlddev</span>) <span class='kw'>&lt;-</span> <span class='fu'>vlabels</span>(<span class='no'>wlddev</span>)
+    <pre class="examples"><div class='input'><span class='co'>## Non-standard concatenation</span>
+<span class='fu'>.c</span>(<span class='no'>a</span>, <span class='no'>b</span>, <span class='st'>"c d"</span>, <span class='no'>e</span> <span class='kw'>==</span> <span class='no'>f</span>)</div><div class='output co'>#&gt; [1] "a"      "b"      "c d"    "e == f"</div><div class='input'>
+<span class='co'>## Variable labels</span>
+<span class='fu'>namlab</span>(<span class='no'>wlddev</span>, <span class='kw'>class</span> <span class='kw'>=</span> <span class='fl'>TRUE</span>)</div><div class='output co'>#&gt;    Variable     Class                                   Label
+#&gt; 1   country character                            Country Name
+#&gt; 2     iso3c    factor                            Country Code
+#&gt; 3      date      Date              Date Recorded (Fictitious)
+#&gt; 4      year   integer                                    Year
+#&gt; 5    decade   numeric                                  Decade
+#&gt; 6    region    factor                                  Region
+#&gt; 7    income    factor                            Income Level
+#&gt; 8      OECD   logical                 Is OECD Member Country?
+#&gt; 9     PCGDP   numeric      GDP per capita (constant 2010 US$)
+#&gt; 10   LIFEEX   numeric Life expectancy at birth, total (years)
+#&gt; 11     GINI   numeric        GINI index (World Bank estimate)
+#&gt; 12      ODA   numeric    Net ODA received (constant 2015 US$)</div><div class='input'><span class='fu'>vlabels</span>(<span class='no'>wlddev</span>)</div><div class='output co'>#&gt;                                   country 
+#&gt;                            "Country Name" 
+#&gt;                                     iso3c 
+#&gt;                            "Country Code" 
+#&gt;                                      date 
+#&gt;              "Date Recorded (Fictitious)" 
+#&gt;                                      year 
+#&gt;                                    "Year" 
+#&gt;                                    decade 
+#&gt;                                  "Decade" 
+#&gt;                                    region 
+#&gt;                                  "Region" 
+#&gt;                                    income 
+#&gt;                            "Income Level" 
+#&gt;                                      OECD 
+#&gt;                 "Is OECD Member Country?" 
+#&gt;                                     PCGDP 
+#&gt;      "GDP per capita (constant 2010 US$)" 
+#&gt;                                    LIFEEX 
+#&gt; "Life expectancy at birth, total (years)" 
+#&gt;                                      GINI 
+#&gt;        "GINI index (World Bank estimate)" 
+#&gt;                                       ODA 
+#&gt;    "Net ODA received (constant 2015 US$)" </div><div class='input'><span class='fu'>vlabels</span>(<span class='no'>wlddev</span>) <span class='kw'>&lt;-</span> <span class='fu'>vlabels</span>(<span class='no'>wlddev</span>)
 
 <span class='co'>## Stub-renaming</span>
 <span class='no'>log_mtc</span> <span class='kw'>&lt;-</span> <span class='fu'>add_stub</span>(<span class='fu'><a href='https://rdrr.io/r/base/Log.html'>log</a></span>(<span class='no'>mtcars</span>), <span class='st'>"log."</span>)
-<span class='fu'>rm_stub</span>(<span class='no'>log_mtc</span>, <span class='st'>"log."</span>)
-<span class='fu'><a href='https://rdrr.io/r/base/rm.html'>rm</a></span>(<span class='no'>log_mtc</span>)
+<span class='fu'><a href='https://rdrr.io/r/utils/head.html'>head</a></span>(<span class='no'>log_mtc</span>)</div><div class='output co'>#&gt;                    log.mpg  log.cyl log.disp   log.hp log.drat    log.wt
+#&gt; Mazda RX4         3.044522 1.791759 5.075174 4.700480 1.360977 0.9631743
+#&gt; Mazda RX4 Wag     3.044522 1.791759 5.075174 4.700480 1.360977 1.0560527
+#&gt; Datsun 710        3.126761 1.386294 4.682131 4.532599 1.348073 0.8415672
+#&gt; Hornet 4 Drive    3.063391 1.791759 5.552960 4.700480 1.124930 1.1678274
+#&gt; Hornet Sportabout 2.928524 2.079442 5.886104 5.164786 1.147402 1.2354715
+#&gt; Valiant           2.895912 1.791759 5.416100 4.653960 1.015231 1.2412686
+#&gt;                   log.qsec log.vs log.am log.gear  log.carb
+#&gt; Mazda RX4         2.800933   -Inf      0 1.386294 1.3862944
+#&gt; Mazda RX4 Wag     2.834389   -Inf      0 1.386294 1.3862944
+#&gt; Datsun 710        2.923699      0      0 1.386294 0.0000000
+#&gt; Hornet 4 Drive    2.967333      0   -Inf 1.098612 0.0000000
+#&gt; Hornet Sportabout 2.834389   -Inf   -Inf 1.098612 0.6931472
+#&gt; Valiant           3.006672      0   -Inf 1.098612 0.0000000</div><div class='input'><span class='fu'><a href='https://rdrr.io/r/utils/head.html'>head</a></span>(<span class='fu'>rm_stub</span>(<span class='no'>log_mtc</span>, <span class='st'>"log."</span>))</div><div class='output co'>#&gt;                        mpg      cyl     disp       hp     drat        wt
+#&gt; Mazda RX4         3.044522 1.791759 5.075174 4.700480 1.360977 0.9631743
+#&gt; Mazda RX4 Wag     3.044522 1.791759 5.075174 4.700480 1.360977 1.0560527
+#&gt; Datsun 710        3.126761 1.386294 4.682131 4.532599 1.348073 0.8415672
+#&gt; Hornet 4 Drive    3.063391 1.791759 5.552960 4.700480 1.124930 1.1678274
+#&gt; Hornet Sportabout 2.928524 2.079442 5.886104 5.164786 1.147402 1.2354715
+#&gt; Valiant           2.895912 1.791759 5.416100 4.653960 1.015231 1.2412686
+#&gt;                       qsec   vs   am     gear      carb
+#&gt; Mazda RX4         2.800933 -Inf    0 1.386294 1.3862944
+#&gt; Mazda RX4 Wag     2.834389 -Inf    0 1.386294 1.3862944
+#&gt; Datsun 710        2.923699    0    0 1.386294 0.0000000
+#&gt; Hornet 4 Drive    2.967333    0 -Inf 1.098612 0.0000000
+#&gt; Hornet Sportabout 2.834389 -Inf -Inf 1.098612 0.6931472
+#&gt; Valiant           3.006672    0 -Inf 1.098612 0.0000000</div><div class='input'><span class='fu'><a href='https://rdrr.io/r/base/rm.html'>rm</a></span>(<span class='no'>log_mtc</span>)
 
+<span class='co'>## Setting dimension names of an object</span>
+<span class='fu'><a href='https://rdrr.io/r/utils/head.html'>head</a></span>(<span class='fu'>setRownames</span>(<span class='no'>mtcars</span>))</div><div class='output co'>#&gt;    mpg cyl disp  hp drat    wt  qsec vs am gear carb
+#&gt; 1 21.0   6  160 110 3.90 2.620 16.46  0  1    4    4
+#&gt; 2 21.0   6  160 110 3.90 2.875 17.02  0  1    4    4
+#&gt; 3 22.8   4  108  93 3.85 2.320 18.61  1  1    4    1
+#&gt; 4 21.4   6  258 110 3.08 3.215 19.44  1  0    3    1
+#&gt; 5 18.7   8  360 175 3.15 3.440 17.02  0  0    3    2
+#&gt; 6 18.1   6  225 105 2.76 3.460 20.22  1  0    3    1</div><div class='input'><span class='no'>ar</span> <span class='kw'>&lt;-</span> <span class='fu'><a href='https://rdrr.io/r/base/array.html'>array</a></span>(<span class='fl'>1</span>:<span class='fl'>9</span>, <span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span>(<span class='fl'>3</span>,<span class='fl'>3</span>,<span class='fl'>3</span>))
+<span class='fu'>setRownames</span>(<span class='no'>ar</span>)</div><div class='output co'>#&gt; , , 1
+#&gt; 
+#&gt;   [,1] [,2] [,3]
+#&gt; 1    1    4    7
+#&gt; 2    2    5    8
+#&gt; 3    3    6    9
+#&gt; 
+#&gt; , , 2
+#&gt; 
+#&gt;   [,1] [,2] [,3]
+#&gt; 1    1    4    7
+#&gt; 2    2    5    8
+#&gt; 3    3    6    9
+#&gt; 
+#&gt; , , 3
+#&gt; 
+#&gt;   [,1] [,2] [,3]
+#&gt; 1    1    4    7
+#&gt; 2    2    5    8
+#&gt; 3    3    6    9
+#&gt; </div><div class='input'><span class='fu'>setColnames</span>(<span class='no'>ar</span>, <span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span>(<span class='st'>"a"</span>,<span class='st'>"b"</span>,<span class='st'>"c"</span>))</div><div class='output co'>#&gt; , , 1
+#&gt; 
+#&gt;      a b c
+#&gt; [1,] 1 4 7
+#&gt; [2,] 2 5 8
+#&gt; [3,] 3 6 9
+#&gt; 
+#&gt; , , 2
+#&gt; 
+#&gt;      a b c
+#&gt; [1,] 1 4 7
+#&gt; [2,] 2 5 8
+#&gt; [3,] 3 6 9
+#&gt; 
+#&gt; , , 3
+#&gt; 
+#&gt;      a b c
+#&gt; [1,] 1 4 7
+#&gt; [2,] 2 5 8
+#&gt; [3,] 3 6 9
+#&gt; </div><div class='input'><span class='fu'>setDimnames</span>(<span class='no'>ar</span>, <span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span>(<span class='st'>"a"</span>,<span class='st'>"b"</span>,<span class='st'>"c"</span>), <span class='kw'>which</span> <span class='kw'>=</span> <span class='fl'>3</span>)</div><div class='output co'>#&gt; , , a
+#&gt; 
+#&gt;      [,1] [,2] [,3]
+#&gt; [1,]    1    4    7
+#&gt; [2,]    2    5    8
+#&gt; [3,]    3    6    9
+#&gt; 
+#&gt; , , b
+#&gt; 
+#&gt;      [,1] [,2] [,3]
+#&gt; [1,]    1    4    7
+#&gt; [2,]    2    5    8
+#&gt; [3,]    3    6    9
+#&gt; 
+#&gt; , , c
+#&gt; 
+#&gt;      [,1] [,2] [,3]
+#&gt; [1,]    1    4    7
+#&gt; [2,]    2    5    8
+#&gt; [3,]    3    6    9
+#&gt; </div><div class='input'><span class='fu'>setDimnames</span>(<span class='no'>ar</span>, <span class='fu'><a href='https://rdrr.io/r/base/list.html'>list</a></span>(<span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span>(<span class='st'>"d"</span>,<span class='st'>"e"</span>,<span class='st'>"f"</span>), <span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span>(<span class='st'>"a"</span>,<span class='st'>"b"</span>,<span class='st'>"c"</span>)), <span class='kw'>which</span> <span class='kw'>=</span> <span class='fl'>2</span>:<span class='fl'>3</span>)</div><div class='output co'>#&gt; , , a
+#&gt; 
+#&gt;      d e f
+#&gt; [1,] 1 4 7
+#&gt; [2,] 2 5 8
+#&gt; [3,] 3 6 9
+#&gt; 
+#&gt; , , b
+#&gt; 
+#&gt;      d e f
+#&gt; [1,] 1 4 7
+#&gt; [2,] 2 5 8
+#&gt; [3,] 3 6 9
+#&gt; 
+#&gt; , , c
+#&gt; 
+#&gt;      d e f
+#&gt; [1,] 1 4 7
+#&gt; [2,] 2 5 8
+#&gt; [3,] 3 6 9
+#&gt; </div><div class='input'><span class='fu'>setDimnames</span>(<span class='no'>ar</span>, <span class='fu'><a href='https://rdrr.io/r/base/list.html'>list</a></span>(<span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span>(<span class='st'>"g"</span>,<span class='st'>"h"</span>,<span class='st'>"i"</span>), <span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span>(<span class='st'>"d"</span>,<span class='st'>"e"</span>,<span class='st'>"f"</span>), <span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span>(<span class='st'>"a"</span>,<span class='st'>"b"</span>,<span class='st'>"c"</span>)))</div><div class='output co'>#&gt; , , a
+#&gt; 
+#&gt;   d e f
+#&gt; g 1 4 7
+#&gt; h 2 5 8
+#&gt; i 3 6 9
+#&gt; 
+#&gt; , , b
+#&gt; 
+#&gt;   d e f
+#&gt; g 1 4 7
+#&gt; h 2 5 8
+#&gt; i 3 6 9
+#&gt; 
+#&gt; , , c
+#&gt; 
+#&gt;   d e f
+#&gt; g 1 4 7
+#&gt; h 2 5 8
+#&gt; i 3 6 9
+#&gt; </div><div class='input'>
 <span class='co'>## Checking exact equality of multiple objects</span>
-<span class='fu'>all_identical</span>(<span class='no'>iris</span>, <span class='no'>iris</span>, <span class='no'>iris</span>, <span class='no'>iris</span>)
-<span class='no'>l</span> <span class='kw'>&lt;-</span> <span class='fu'><a href='https://rdrr.io/r/base/lapply.html'>replicate</a></span>(<span class='fl'>100</span>, <span class='fu'><a href='fmean.html'>fmean</a></span>(<span class='fu'><a href='select_replace_vars.html'>num_vars</a></span>(<span class='no'>iris</span>), <span class='no'>iris</span>$<span class='no'>Species</span>), <span class='kw'>simplify</span> <span class='kw'>=</span> <span class='fl'>FALSE</span>)
-<span class='fu'>all_identical</span>(<span class='no'>l</span>)
-<span class='fu'><a href='https://rdrr.io/r/base/rm.html'>rm</a></span>(<span class='no'>l</span>)
+<span class='fu'>all_identical</span>(<span class='no'>iris</span>, <span class='no'>iris</span>, <span class='no'>iris</span>, <span class='no'>iris</span>)</div><div class='output co'>#&gt; [1] TRUE</div><div class='input'><span class='no'>l</span> <span class='kw'>&lt;-</span> <span class='fu'><a href='https://rdrr.io/r/base/lapply.html'>replicate</a></span>(<span class='fl'>100</span>, <span class='fu'><a href='fmean.html'>fmean</a></span>(<span class='fu'><a href='select_replace_vars.html'>num_vars</a></span>(<span class='no'>iris</span>), <span class='no'>iris</span>$<span class='no'>Species</span>), <span class='kw'>simplify</span> <span class='kw'>=</span> <span class='fl'>FALSE</span>)
+<span class='fu'>all_identical</span>(<span class='no'>l</span>)</div><div class='output co'>#&gt; [1] TRUE</div><div class='input'><span class='fu'><a href='https://rdrr.io/r/base/rm.html'>rm</a></span>(<span class='no'>l</span>)
 
 <span class='co'>## Missing values</span>
 <span class='no'>mtc_na</span> <span class='kw'>&lt;-</span> <span class='fu'>na_insert</span>(<span class='no'>mtcars</span>, <span class='fl'>0.15</span>)    <span class='co'># Set 15% of values missing at random</span>
-<span class='fu'><a href='fNobs.html'>fNobs</a></span>(<span class='no'>mtc_na</span>)                        <span class='co'># See observation count</span>
-<span class='fu'>na_omit</span>(<span class='no'>mtc_na</span>)                      <span class='co'># 12x faster than na.omit(airquality)</span>
-<span class='fu'>na_omit</span>(<span class='no'>mtc_na</span>, <span class='kw'>na.attr</span> <span class='kw'>=</span> <span class='fl'>TRUE</span>)      <span class='co'># Adds attribute with removed cases, like na.omit</span>
-<span class='fu'>na_omit</span>(<span class='no'>mtc_na</span>, <span class='kw'>cols</span> <span class='kw'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span>(<span class='st'>"vs"</span>,<span class='st'>"am"</span>)) <span class='co'># Removes only cases missing vs or am</span>
-<span class='fu'>na_omit</span>(<span class='fu'><a href='quick-conversion.html'>qM</a></span>(<span class='no'>mtc_na</span>))                  <span class='co'># Also works for matrices</span>
-<span class='fu'>na_omit</span>(<span class='no'>mtc_na</span>$<span class='no'>vs</span>, <span class='kw'>na.attr</span> <span class='kw'>=</span> <span class='fl'>TRUE</span>)   <span class='co'># Also works with vectors</span>
-<span class='fu'>na_rm</span>(<span class='no'>mtc_na</span>$<span class='no'>vs</span>)                     <span class='co'># For vectors na_rm is faster ...</span>
-<span class='fu'><a href='https://rdrr.io/r/base/rm.html'>rm</a></span>(<span class='no'>mtc_na</span>)</pre>
+<span class='fu'><a href='fNobs.html'>fNobs</a></span>(<span class='no'>mtc_na</span>)                        <span class='co'># See observation count</span></div><div class='output co'>#&gt;  mpg  cyl disp   hp drat   wt qsec   vs   am gear carb 
+#&gt;   28   28   28   28   28   28   28   28   28   28   28 </div><div class='input'><span class='fu'>na_omit</span>(<span class='no'>mtc_na</span>)                      <span class='co'># 12x faster than na.omit(mtc_na)</span></div><div class='output co'>#&gt;                 mpg cyl  disp  hp drat    wt  qsec vs am gear carb
+#&gt; Mazda RX4 Wag  21.0   6 160.0 110 3.90 2.875 17.02  0  1    4    4
+#&gt; Datsun 710     22.8   4 108.0  93 3.85 2.320 18.61  1  1    4    1
+#&gt; Duster 360     14.3   8 360.0 245 3.21 3.570 15.84  0  0    3    4
+#&gt; Merc 240D      24.4   4 146.7  62 3.69 3.190 20.00  1  0    4    2
+#&gt; Merc 450SE     16.4   8 275.8 180 3.07 4.070 17.40  0  0    3    3
+#&gt; Fiat X1-9      27.3   4  79.0  66 4.08 1.935 18.90  1  1    4    1
+#&gt; Ford Pantera L 15.8   8 351.0 264 4.22 3.170 14.50  0  1    5    4</div><div class='input'><span class='fu'>na_omit</span>(<span class='no'>mtc_na</span>, <span class='kw'>na.attr</span> <span class='kw'>=</span> <span class='fl'>TRUE</span>)      <span class='co'># Adds attribute with removed cases, like na.omit</span></div><div class='output co'>#&gt;                 mpg cyl  disp  hp drat    wt  qsec vs am gear carb
+#&gt; Mazda RX4 Wag  21.0   6 160.0 110 3.90 2.875 17.02  0  1    4    4
+#&gt; Datsun 710     22.8   4 108.0  93 3.85 2.320 18.61  1  1    4    1
+#&gt; Duster 360     14.3   8 360.0 245 3.21 3.570 15.84  0  0    3    4
+#&gt; Merc 240D      24.4   4 146.7  62 3.69 3.190 20.00  1  0    4    2
+#&gt; Merc 450SE     16.4   8 275.8 180 3.07 4.070 17.40  0  0    3    3
+#&gt; Fiat X1-9      27.3   4  79.0  66 4.08 1.935 18.90  1  1    4    1
+#&gt; Ford Pantera L 15.8   8 351.0 264 4.22 3.170 14.50  0  1    5    4</div><div class='input'><span class='fu'>na_omit</span>(<span class='no'>mtc_na</span>, <span class='kw'>cols</span> <span class='kw'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span>(<span class='st'>"vs"</span>,<span class='st'>"am"</span>)) <span class='co'># Removes only cases missing vs or am</span></div><div class='output co'>#&gt;                      mpg cyl  disp  hp drat    wt  qsec vs am gear carb
+#&gt; Mazda RX4           21.0  NA 160.0 110 3.90    NA 16.46  0  1   NA    4
+#&gt; Mazda RX4 Wag       21.0   6 160.0 110 3.90 2.875 17.02  0  1    4    4
+#&gt; Datsun 710          22.8   4 108.0  93 3.85 2.320 18.61  1  1    4    1
+#&gt; Hornet 4 Drive      21.4   6 258.0 110 3.08    NA 19.44  1  0    3    1
+#&gt; Hornet Sportabout   18.7   8 360.0  NA 3.15 3.440 17.02  0  0    3    2
+#&gt; Valiant             18.1   6    NA 105 2.76 3.460 20.22  1  0    3    1
+#&gt; Duster 360          14.3   8 360.0 245 3.21 3.570 15.84  0  0    3    4
+#&gt; Merc 240D           24.4   4 146.7  62 3.69 3.190 20.00  1  0    4    2
+#&gt; Merc 230            22.8   4 140.8  95 3.92 3.150 22.90  1  0   NA    2
+#&gt; Merc 450SE          16.4   8 275.8 180 3.07 4.070 17.40  0  0    3    3
+#&gt; Merc 450SL            NA   8 275.8 180   NA 3.730 17.60  0  0    3    3
+#&gt; Merc 450SLC         15.2   8    NA 180 3.07 3.780 18.00  0  0    3   NA
+#&gt; Lincoln Continental 10.4   8 460.0  NA 3.00 5.424 17.82  0  0    3   NA
+#&gt; Chrysler Imperial   14.7   8 440.0 230 3.23 5.345    NA  0  0    3    4
+#&gt; Honda Civic         30.4   4  75.7  52   NA 1.615 18.52  1  1    4    2
+#&gt; Toyota Corona       21.5   4 120.1  97 3.70 2.465 20.01  1  0    3   NA
+#&gt; Dodge Challenger      NA   8 318.0 150 2.76    NA 16.87  0  0   NA    2
+#&gt; AMC Javelin         15.2  NA 304.0 150 3.15 3.435 17.30  0  0    3    2
+#&gt; Pontiac Firebird      NA   8 400.0 175 3.08 3.845    NA  0  0    3    2
+#&gt; Fiat X1-9           27.3   4  79.0  66 4.08 1.935 18.90  1  1    4    1
+#&gt; Porsche 914-2       26.0   4 120.3  91 4.43    NA 16.70  0  1    5   NA
+#&gt; Lotus Europa        30.4  NA  95.1 113 3.77 1.513 16.90  1  1    5    2
+#&gt; Ford Pantera L      15.8   8 351.0 264 4.22 3.170 14.50  0  1    5    4
+#&gt; Maserati Bora       15.0  NA 301.0 335   NA 3.570    NA  0  1    5    8
+#&gt; Volvo 142E          21.4   4 121.0 109 4.11 2.780 18.60  1  1   NA    2</div><div class='input'><span class='fu'>na_omit</span>(<span class='fu'><a href='quick-conversion.html'>qM</a></span>(<span class='no'>mtc_na</span>))                  <span class='co'># Also works for matrices</span></div><div class='output co'>#&gt;                 mpg cyl  disp  hp drat    wt  qsec vs am gear carb
+#&gt; Mazda RX4 Wag  21.0   6 160.0 110 3.90 2.875 17.02  0  1    4    4
+#&gt; Datsun 710     22.8   4 108.0  93 3.85 2.320 18.61  1  1    4    1
+#&gt; Duster 360     14.3   8 360.0 245 3.21 3.570 15.84  0  0    3    4
+#&gt; Merc 240D      24.4   4 146.7  62 3.69 3.190 20.00  1  0    4    2
+#&gt; Merc 450SE     16.4   8 275.8 180 3.07 4.070 17.40  0  0    3    3
+#&gt; Fiat X1-9      27.3   4  79.0  66 4.08 1.935 18.90  1  1    4    1
+#&gt; Ford Pantera L 15.8   8 351.0 264 4.22 3.170 14.50  0  1    5    4</div><div class='input'><span class='fu'>na_omit</span>(<span class='no'>mtc_na</span>$<span class='no'>vs</span>, <span class='kw'>na.attr</span> <span class='kw'>=</span> <span class='fl'>TRUE</span>)   <span class='co'># Also works with vectors</span></div><div class='output co'>#&gt;  [1] 0 0 1 1 0 1 0 1 1 1 0 0 0 0 0 1 1 1 1 0 0 0 1 0 1 0 0 1
+#&gt; attr(,"na.action")
+#&gt; [1] 11 15 24 30
+#&gt; attr(,"class")
+#&gt; [1] "omit"</div><div class='input'><span class='fu'>na_rm</span>(<span class='no'>mtc_na</span>$<span class='no'>vs</span>)                     <span class='co'># For vectors na_rm is faster ...</span></div><div class='output co'>#&gt;  [1] 0 0 1 1 0 1 0 1 1 1 0 0 0 0 0 1 1 1 1 0 0 0 1 0 1 0 0 1</div><div class='input'><span class='fu'><a href='https://rdrr.io/r/base/rm.html'>rm</a></span>(<span class='no'>mtc_na</span>)</div></pre>
   </div>
   <div class="col-md-3 hidden-xs hidden-sm" id="pkgdown-sidebar">
     <nav id="toc" data-toggle="toc" class="sticky-top">

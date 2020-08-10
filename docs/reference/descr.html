@@ -40,7 +40,7 @@
 
 
 <meta property="og:title" content="Detailed Statistical Description of Data Frame — descr" />
-<meta property="og:description" content="descr offers concise description of each variable in a data frame. It is built as a wrapper around qsu, but by default also computes frequency tables with percentages for categorical variables, and quantiles and the number of distinct values for numeric variables (next to the mean, sd, min, max, skewness and kurtosis computed by qsu)." />
+<meta property="og:description" content="descr offers a concise description of each variable in a data frame. It is built as a wrapper around qsu, but by default also computes frequency tables with percentages for categorical variables, and quantiles and the number of distinct values for numeric variables (next to the mean, sd, min, max, skewness and kurtosis computed by qsu)." />
 
 
 
@@ -72,7 +72,7 @@
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">collapse</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">1.2.1</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">1.3.0</span>
       </span>
     </div>
 
@@ -87,13 +87,10 @@
 <li>
   <a href="../news/index.html">News</a>
 </li>
-<li>
-  <a href="../blog/index.html">Blog</a>
-</li>
       </ul>
       <ul class="nav navbar-nav navbar-right">
         <li>
-  <a href="https://twitter.com/collapse">
+  <a href="https://twitter.com/collapse_R">
     <span class="fa fa-twitter"></span>
      
   </a>
@@ -123,7 +120,7 @@
     </div>
 
     <div class="ref-description">
-    <p><code>descr</code> offers concise description of each variable in a data frame. It is built as a wrapper around <code>qsu</code>, but by default also computes frequency tables with percentages for categorical variables, and quantiles and the number of distinct values for numeric variables (next to the mean, sd, min, max, skewness and kurtosis computed by <code>qsu</code>).</p>
+    <p><code>descr</code> offers a concise description of each variable in a data frame. It is built as a wrapper around <code><a href='qsu.html'>qsu</a></code>, but by default also computes frequency tables with percentages for categorical variables, and quantiles and the number of distinct values for numeric variables (next to the mean, sd, min, max, skewness and kurtosis computed by <code>qsu</code>).</p>
     </div>
 
     <pre class="usage"><span class='fu'>descr</span>(<span class='no'>X</span>, <span class='kw'>Ndistinct</span> <span class='kw'>=</span> <span class='fl'>TRUE</span>, <span class='kw'>higher</span> <span class='kw'>=</span> <span class='fl'>TRUE</span>, <span class='kw'>table</span> <span class='kw'>=</span> <span class='fl'>TRUE</span>,
@@ -131,7 +128,7 @@
       <span class='kw'>cols</span> <span class='kw'>=</span> <span class='kw'>NULL</span>, <span class='kw'>label.attr</span> <span class='kw'>=</span> <span class='st'>"label"</span>, <span class='no'>...</span>)
 
 <span class='co'># S3 method for descr</span>
-<span class='fu'><a href='https://rdrr.io/r/base/print.html'>print</a></span>(<span class='no'>x</span>, <span class='kw'>n</span> <span class='kw'>=</span> <span class='fl'>6</span>, <span class='kw'>perc</span> <span class='kw'>=</span> <span class='fl'>TRUE</span>, <span class='kw'>summary</span> <span class='kw'>=</span> <span class='fl'>TRUE</span>, <span class='no'>...</span>)
+<span class='fu'><a href='https://rdrr.io/r/base/print.html'>print</a></span>(<span class='no'>x</span>, <span class='kw'>n</span> <span class='kw'>=</span> <span class='fl'>7</span>, <span class='kw'>perc</span> <span class='kw'>=</span> <span class='fl'>TRUE</span>, <span class='kw'>digits</span> <span class='kw'>=</span> <span class='fl'>2</span>, <span class='kw'>t.table</span> <span class='kw'>=</span> <span class='fl'>TRUE</span>, <span class='kw'>summary</span> <span class='kw'>=</span> <span class='fl'>TRUE</span>, <span class='no'>...</span>)
 
 <span class='co'># S3 method for descr</span>
 <span class='fu'><a href='https://rdrr.io/r/base/as.data.frame.html'>as.data.frame</a></span>(<span class='no'>x</span>, <span class='no'>...</span>)</pre>
@@ -141,7 +138,7 @@
     <colgroup><col class="name" /><col class="desc" /></colgroup>
     <tr>
       <th>X</th>
-      <td><p>a data.frame or list of atomic vectors. Atomic vectors, matrices or arrays can be passed but will first be coerced to data.frame using <code><a href='quick-conversion.html'>qDF</a></code>.</p></td>
+      <td><p>a data frame or list of atomic vectors. Atomic vectors, matrices or arrays can be passed but will first be coerced to data frame using <code><a href='quick-conversion.html'>qDF</a></code>.</p></td>
     </tr>
     <tr>
       <th>Ndistinct</th>
@@ -157,11 +154,11 @@
     </tr>
     <tr>
       <th>Qprobs</th>
-      <td><p>probabilities for quantiles to compute on numeric variables, passed down to <code><a href='https://rdrr.io/r/stats/quantile.html'>quantile</a></code>. If something non-numeric is passed (i.e. <code>NULL</code>, <code>FALSE</code>, <code>NA</code>, <code>""</code> etc.), no quantiles are computed.</p></td>
+      <td><p>double. Probabilities for quantiles to compute on numeric variables, passed down to <code><a href='https://rdrr.io/r/stats/quantile.html'>quantile</a></code>. If something non-numeric is passed (i.e. <code>NULL</code>, <code>FALSE</code>, <code>NA</code>, <code>""</code> etc.), no quantiles are computed.</p></td>
     </tr>
     <tr>
       <th>cols</th>
-      <td><p>select columns to describe using column names, indices or a function (i.e. <code>is.numeric</code>).</p></td>
+      <td><p>select columns to describe using column names, indices, a logical vector or a function (i.e. <code>is.numeric</code>).</p></td>
     </tr>
     <tr>
       <th>label.attr</th>
@@ -177,11 +174,19 @@
     </tr>
     <tr>
       <th>n</th>
-      <td><p>integer. The number of first and last entries to display of the table computed for categorical variables.</p></td>
+      <td><p>integer. The number of first and last entries to display of the table computed for categorical variables. If the number of distinct elements is <code>&lt; 2*n</code>, the whole table is printed.</p></td>
     </tr>
     <tr>
       <th>perc</th>
-      <td><p>logical. <code>TRUE</code> (default) adds percentages in brackets behind the frequencies in the table for categorical variables.</p></td>
+      <td><p>logical. <code>TRUE</code> (default) adds percentages to the frequencies in the table for categorical variables.</p></td>
+    </tr>
+    <tr>
+      <th>digits</th>
+      <td><p>integer. The number of decimals to print in statistics and percentage tables.</p></td>
+    </tr>
+    <tr>
+      <th>t.table</th>
+      <td><p>logical. <code>TRUE</code> (default) prints a transposed table.</p></td>
     </tr>
     <tr>
       <th>summary</th>
@@ -192,30 +197,1024 @@
     <h2 class="hasAnchor" id="details"><a class="anchor" href="#details"></a>Details</h2>
 
     <p><code>descr</code> was heavily inspired by <code><a href='https://rdrr.io/pkg/Hmisc/man/describe.html'>Hmisc::describe</a></code>, but computes about 10x faster. The performance is comparable to <code><a href='https://rdrr.io/r/base/summary.html'>base::summary</a></code>. <code>descr</code> was built as a wrapper around <code><a href='qsu.html'>qsu</a></code>, to enrich the set of statistics computed by <code><a href='qsu.html'>qsu</a></code> for both numeric and categorical variables.</p>
-<p><code><a href='qsu.html'>qsu</a></code> itself is yet about 10x faster than <code>descr</code>, and is optimized for grouped, panel-data and weighted statistics. It is possible to also compute grouped, panel-data and/or weighted statistics with <code>desc</code> by passing group-ids to <code>g</code>, panel-ids to <code>pid</code> or a weight vector to <code>w</code>. These arguments are handed down to <code><a href='qsu.html'>qsu.default</a></code> and only affect the statistics natively computed by <code>qsu</code>, i.e. passing a weight vector produces a weighted mean, sd, skewness and kurtosis but not weighted quantiles.</p>
-<p>The list-object returned from <code>descr</code> can be converted to a tidy data.frame using <code>as.data.frame</code>. This representation will not include frequency tables computed for categorical variables, and the method cannot handle arrays of statistics (applicable when <code>g</code> or <code>pid</code> arguments are passed to <code>descr</code>, in that case <code>as.data.frame.descr</code> will throw an appropriate error).</p>
+<p><code><a href='qsu.html'>qsu</a></code> itself is yet about 10x faster than <code>descr</code>, and is optimized for grouped, panel data and weighted statistics. It is possible to also compute grouped, panel data and/or weighted statistics with <code>descr</code> by passing group-ids to <code>g</code>, panel-ids to <code>pid</code> or a weight vector to <code>w</code>. These arguments are handed down to <code><a href='qsu.html'>qsu.default</a></code> and only affect the statistics natively computed by <code>qsu</code>, i.e. passing a weight vector produces a weighted mean, sd, skewness and kurtosis but not weighted quantiles.</p>
+<p>The list-object returned from <code>descr</code> can be converted to a tidy data frame using <code>as.data.frame</code>. This representation will not include frequency tables computed for categorical variables, and the method cannot handle arrays of statistics (applicable when <code>g</code> or <code>pid</code> arguments are passed to <code>descr</code>, in that case <code>as.data.frame.descr</code> will throw an appropriate error).</p>
     <h2 class="hasAnchor" id="value"><a class="anchor" href="#value"></a>Value</h2>
 
-    <p>A 2-level nested list, the top-level containing the statistics computed for each variable, which are themselves stored in a list containing the class, the label, the basic statistics and quantiles / tables computed for the variable. The object is given a class 'descr' and also has the number of observations in the dataset attached as an 'N' attribute, as well as an attribute 'arstat' indicating whether the object contains arrays of statistics.</p>
+    <p>A 2-level nested list, the top-level containing the statistics computed for each variable, which are themselves stored in a list containing the class, the label, the basic statistics and quantiles / tables computed for the variable. The object is given a class 'descr' and also has the number of observations in the dataset attached as an 'N' attribute, as well as an attribute 'arstat' indicating whether the object contains arrays of statistics, and an attribute 'table' indicating whether <code>table = TRUE</code> (i.e. the object could contain tables for categorical variables).</p>
     <h2 class="hasAnchor" id="see-also"><a class="anchor" href="#see-also"></a>See also</h2>
 
-    <div class='dont-index'><p><code><a href='qsu.html'>qsu</a></code>, <code><a href='pwcor_pwcov_pwNobs.html'>pwcor</a></code>, <a href='fast-statistical-functions.html'>Fast Statistical Functions</a>, <a href='collapse-documentation.html'>Collapse Overview</a></p></div>
+    <div class='dont-index'><p><code><a href='qsu.html'>qsu</a></code>, <code><a href='pwcor_pwcov_pwNobs.html'>pwcor</a></code>, <a href='summary-statistics.html'>Summary Statistics</a>, <a href='fast-statistical-functions.html'>Fast Statistical Functions</a>, <a href='index.html'>Collapse Overview</a></p></div>
 
     <h2 class="hasAnchor" id="examples"><a class="anchor" href="#examples"></a>Examples</h2>
-    <pre class="examples"><span class='co'>## Standard Use</span>
-<span class='fu'>descr</span>(<span class='no'>iris</span>)
-<span class='fu'>descr</span>(<span class='no'>wlddev</span>)
-<span class='fu'>descr</span>(<span class='no'>GGDC10S</span>)
-
-<span class='fu'><a href='https://rdrr.io/r/base/as.data.frame.html'>as.data.frame</a></span>(<span class='fu'>descr</span>(<span class='no'>wlddev</span>))
-
-<span class='co'>## Passing Arguments down to qsu: For Panel-Data Statistics</span>
-<span class='fu'>descr</span>(<span class='no'>iris</span>, <span class='kw'>pid</span> <span class='kw'>=</span> <span class='no'>iris</span>$<span class='no'>Species</span>)
-<span class='fu'>descr</span>(<span class='no'>wlddev</span>, <span class='kw'>pid</span> <span class='kw'>=</span> <span class='no'>wlddev</span>$<span class='no'>iso3c</span>)
-
+    <pre class="examples"><div class='input'><span class='co'>## Standard Use</span>
+<span class='fu'>descr</span>(<span class='no'>iris</span>)</div><div class='output co'>#&gt; Dataset: iris, 5 Variables, N = 150
+#&gt; --------------------------------------------------------------------------------
+#&gt; Sepal.Length (numeric): 
+#&gt; Stats: 
+#&gt;     N  Ndist  Mean    SD  Min  Max  Skew  Kurt
+#&gt;   150     35  5.84  0.83  4.3  7.9  0.31  2.43
+#&gt; Quant: 
+#&gt;    1%   5%  25%  50%  75%   95%  99%
+#&gt;   4.4  4.6  5.1  5.8  6.4  7.25  7.7
+#&gt; --------------------------------------------------------------------------------
+#&gt; Sepal.Width (numeric): 
+#&gt; Stats: 
+#&gt;     N  Ndist  Mean    SD  Min  Max  Skew  Kurt
+#&gt;   150     23  3.06  0.44    2  4.4  0.32  3.18
+#&gt; Quant: 
+#&gt;    1%    5%  25%  50%  75%  95%   99%
+#&gt;   2.2  2.34  2.8    3  3.3  3.8  4.15
+#&gt; --------------------------------------------------------------------------------
+#&gt; Petal.Length (numeric): 
+#&gt; Stats: 
+#&gt;     N  Ndist  Mean    SD  Min  Max   Skew  Kurt
+#&gt;   150     43  3.76  1.77    1  6.9  -0.27   1.6
+#&gt; Quant: 
+#&gt;     1%   5%  25%   50%  75%  95%  99%
+#&gt;   1.15  1.3  1.6  4.35  5.1  6.1  6.7
+#&gt; --------------------------------------------------------------------------------
+#&gt; Petal.Width (numeric): 
+#&gt; Stats: 
+#&gt;     N  Ndist  Mean    SD  Min  Max  Skew  Kurt
+#&gt;   150     22   1.2  0.76  0.1  2.5  -0.1  1.66
+#&gt; Quant: 
+#&gt;    1%   5%  25%  50%  75%  95%  99%
+#&gt;   0.1  0.2  0.3  1.3  1.8  2.3  2.5
+#&gt; --------------------------------------------------------------------------------
+#&gt; Species (factor): 
+#&gt; Stats: 
+#&gt;     N  Ndist
+#&gt;   150      3
+#&gt; Table: 
+#&gt;             Freq   Perc
+#&gt; setosa        50  33.33
+#&gt; versicolor    50  33.33
+#&gt; virginica     50  33.33
+#&gt; --------------------------------------------------------------------------------</div><div class='input'><span class='fu'>descr</span>(<span class='no'>wlddev</span>)</div><div class='output co'>#&gt; Dataset: wlddev, 12 Variables, N = 12744
+#&gt; --------------------------------------------------------------------------------
+#&gt; country (character): Country Name
+#&gt; Stats: 
+#&gt;       N  Ndist
+#&gt;   12744    216
+#&gt; Table: 
+#&gt;                      Freq  Perc
+#&gt; Afghanistan            59  0.46
+#&gt; Albania                59  0.46
+#&gt; Algeria                59  0.46
+#&gt; American Samoa         59  0.46
+#&gt; Andorra                59  0.46
+#&gt; Angola                 59  0.46
+#&gt; Antigua and Barbuda    59  0.46
+#&gt;   ---
+#&gt;                        Freq  Perc
+#&gt; Vanuatu                  59  0.46
+#&gt; Venezuela, RB            59  0.46
+#&gt; Vietnam                  59  0.46
+#&gt; Virgin Islands (U.S.)    59  0.46
+#&gt; West Bank and Gaza       59  0.46
+#&gt; Yemen, Rep.              59  0.46
+#&gt; Zambia                   59  0.46
+#&gt; Zimbabwe                 59  0.46
+#&gt; 
+#&gt; Summary of Table: 
+#&gt;    Min. 1st Qu.  Median    Mean 3rd Qu.    Max. 
+#&gt;      59      59      59      59      59      59 
+#&gt; --------------------------------------------------------------------------------
+#&gt; iso3c (factor): Country Code
+#&gt; Stats: 
+#&gt;       N  Ndist
+#&gt;   12744    216
+#&gt; Table: 
+#&gt;      Freq  Perc
+#&gt; ABW    59  0.46
+#&gt; AFG    59  0.46
+#&gt; AGO    59  0.46
+#&gt; ALB    59  0.46
+#&gt; AND    59  0.46
+#&gt; ARE    59  0.46
+#&gt; ARG    59  0.46
+#&gt;   ---
+#&gt;      Freq  Perc
+#&gt; VNM    59  0.46
+#&gt; VUT    59  0.46
+#&gt; WSM    59  0.46
+#&gt; XKX    59  0.46
+#&gt; YEM    59  0.46
+#&gt; ZAF    59  0.46
+#&gt; ZMB    59  0.46
+#&gt; ZWE    59  0.46
+#&gt; 
+#&gt; Summary of Table: 
+#&gt;    Min. 1st Qu.  Median    Mean 3rd Qu.    Max. 
+#&gt;      59      59      59      59      59      59 
+#&gt; --------------------------------------------------------------------------------
+#&gt; date (Date): Date Recorded (Fictitious)
+#&gt; Stats: 
+#&gt;       N  Ndist
+#&gt;   12744     59
+#&gt; --------------------------------------------------------------------------------
+#&gt; year (integer): Year
+#&gt; Stats: 
+#&gt;       N  Ndist  Mean     SD   Min   Max  Skew  Kurt
+#&gt;   12744     59  1989  17.03  1960  2018    -0   1.8
+#&gt; Quant: 
+#&gt;     1%    5%   25%   50%   75%   95%   99%
+#&gt;   1960  1962  1974  1989  2004  2016  2018
+#&gt; --------------------------------------------------------------------------------
+#&gt; decade (numeric): Decade
+#&gt; Stats: 
+#&gt;       N  Ndist     Mean     SD   Min   Max  Skew  Kurt
+#&gt;   12744      7  1988.98  17.63  1960  2020  0.01  1.95
+#&gt; Quant: 
+#&gt;     1%    5%   25%   50%   75%   95%   99%
+#&gt;   1960  1960  1970  1990  2000  2020  2020
+#&gt; --------------------------------------------------------------------------------
+#&gt; region (factor): Region
+#&gt; Stats: 
+#&gt;       N  Ndist
+#&gt;   12744      7
+#&gt; Table: 
+#&gt;                             Freq   Perc
+#&gt; East Asia &amp; Pacific         2124  16.67
+#&gt; Europe &amp; Central Asia       3422  26.85
+#&gt; Latin America &amp; Caribbean   2478  19.44
+#&gt; Middle East &amp; North Africa  1239   9.72
+#&gt; North America                177   1.39
+#&gt; South Asia                   472   3.70
+#&gt; Sub-Saharan Africa          2832  22.22
+#&gt; --------------------------------------------------------------------------------
+#&gt; income (factor): Income Level
+#&gt; Stats: 
+#&gt;       N  Ndist
+#&gt;   12744      4
+#&gt; Table: 
+#&gt;                      Freq   Perc
+#&gt; High income          4720  37.04
+#&gt; Low income           1947  15.28
+#&gt; Lower middle income  2773  21.76
+#&gt; Upper middle income  3304  25.93
+#&gt; --------------------------------------------------------------------------------
+#&gt; OECD (logical): Is OECD Member Country?
+#&gt; Stats: 
+#&gt;       N  Ndist
+#&gt;   12744      2
+#&gt; Table: 
+#&gt;         Freq   Perc
+#&gt; FALSE  10620  83.33
+#&gt; TRUE    2124  16.67
+#&gt; --------------------------------------------------------------------------------
+#&gt; PCGDP (numeric): GDP per capita (constant 2010 US$)
+#&gt; Stats: 
+#&gt;      N  Ndist      Mean        SD     Min        Max  Skew   Kurt
+#&gt;   8995   8995  11563.65  18348.41  131.65  191586.64  3.11  16.96
+#&gt; Quant: 
+#&gt;       1%      5%      25%      50%       75%       95%       99%
+#&gt;   223.54  374.38  1215.59  3619.61  14084.71  46591.94  87780.62
+#&gt; --------------------------------------------------------------------------------
+#&gt; LIFEEX (numeric): Life expectancy at birth, total (years)
+#&gt; Stats: 
+#&gt;       N  Ndist   Mean     SD    Min    Max   Skew  Kurt
+#&gt;   11068  10048  63.84  11.45  18.91  85.42  -0.67  2.65
+#&gt; Quant: 
+#&gt;      1%     5%    25%    50%   75%    95%    99%
+#&gt;   35.49  42.23  55.84  66.97  72.5  78.82  81.83
+#&gt; --------------------------------------------------------------------------------
+#&gt; GINI (numeric): GINI index (World Bank estimate)
+#&gt; Stats: 
+#&gt;      N  Ndist  Mean    SD   Min   Max  Skew  Kurt
+#&gt;   1356    363  39.4  9.68  16.2  65.8  0.46  2.29
+#&gt; Quant: 
+#&gt;      1%    5%   25%   50%   75%   95%    99%
+#&gt;   24.66  26.5  31.7  37.4  46.8  57.2  60.84
+#&gt; --------------------------------------------------------------------------------
+#&gt; ODA (numeric): Net ODA received (constant 2015 US$)
+#&gt; Stats: 
+#&gt;      N  Ndist        Mean          SD              Min             Max  Skew
+#&gt;   8336   7564  428,746468  819,868971  -1.08038000e+09  2.45521800e+10  7.19
+#&gt;    Kurt
+#&gt;   122.9
+#&gt; Quant: 
+#&gt;           1%        5%        25%         50%         75%             95%
+#&gt;   -11,731500  1,097500  41,020000  157,360000  463,057500  1.82400500e+09
+#&gt;              99%
+#&gt;   3.48697750e+09
+#&gt; --------------------------------------------------------------------------------</div><div class='input'><span class='fu'>descr</span>(<span class='no'>GGDC10S</span>)</div><div class='output co'>#&gt; Dataset: GGDC10S, 16 Variables, N = 5027
+#&gt; --------------------------------------------------------------------------------
+#&gt; Country (character): Country
+#&gt; Stats: 
+#&gt;      N  Ndist
+#&gt;   5027     43
+#&gt; Table: 
+#&gt;      Freq  Perc
+#&gt; ARG   124  2.47
+#&gt; BOL   123  2.45
+#&gt; BRA   124  2.47
+#&gt; BWA   104  2.07
+#&gt; CHL   125  2.49
+#&gt; CHN   125  2.49
+#&gt; COL   123  2.45
+#&gt;   ---
+#&gt;      Freq  Perc
+#&gt; SWE   126  2.51
+#&gt; THA   124  2.47
+#&gt; TWN   126  2.51
+#&gt; TZA   104  2.07
+#&gt; USA   129  2.57
+#&gt; VEN   125  2.49
+#&gt; ZAF   104  2.07
+#&gt; ZMB   104  2.07
+#&gt; 
+#&gt; Summary of Table: 
+#&gt;    Min. 1st Qu.  Median    Mean 3rd Qu.    Max. 
+#&gt;       4     105     124     117     126     129 
+#&gt; --------------------------------------------------------------------------------
+#&gt; Regioncode (character): Region code
+#&gt; Stats: 
+#&gt;      N  Ndist
+#&gt;   5027      6
+#&gt; Table: 
+#&gt;       Freq   Perc
+#&gt; ASI   1372  27.29
+#&gt; EUR   1004  19.97
+#&gt; LAM   1117  22.22
+#&gt; MENA   257   5.11
+#&gt; NAM    129   2.57
+#&gt; SSA   1148  22.84
+#&gt; --------------------------------------------------------------------------------
+#&gt; Region (character): Region
+#&gt; Stats: 
+#&gt;      N  Ndist
+#&gt;   5027      6
+#&gt; Table: 
+#&gt;                               Freq   Perc
+#&gt; Asia                          1372  27.29
+#&gt; Europe                        1004  19.97
+#&gt; Latin America                 1117  22.22
+#&gt; Middle East and North Africa   257   5.11
+#&gt; North America                  129   2.57
+#&gt; Sub-saharan Africa            1148  22.84
+#&gt; --------------------------------------------------------------------------------
+#&gt; Variable (character): Variable
+#&gt; Stats: 
+#&gt;      N  Ndist
+#&gt;   5027      2
+#&gt; Table: 
+#&gt;      Freq   Perc
+#&gt; EMP  2516  50.05
+#&gt; VA   2511  49.95
+#&gt; --------------------------------------------------------------------------------
+#&gt; Year (numeric): Year
+#&gt; Stats: 
+#&gt;      N  Ndist     Mean     SD   Min   Max   Skew  Kurt
+#&gt;   5027     67  1981.58  17.57  1947  2013  -0.05  1.86
+#&gt; Quant: 
+#&gt;     1%    5%   25%   50%   75%   95%   99%
+#&gt;   1950  1953  1967  1982  1997  2009  2011
+#&gt; --------------------------------------------------------------------------------
+#&gt; AGR (numeric): Agriculture 
+#&gt; Stats: 
+#&gt;      N  Ndist        Mean           SD  Min             Max   Skew    Kurt
+#&gt;   4364   4353  2,526696.5  37,129098.1    0  1.19187778e+09  23.95  642.16
+#&gt; Quant: 
+#&gt;     1%     5%    25%      50%       75%          95%          99%
+#&gt;   0.09  23.18  930.7  4394.52  29781.04  2,393977.49  24,932575.1
+#&gt; --------------------------------------------------------------------------------
+#&gt; MIN (numeric): Mining
+#&gt; Stats: 
+#&gt;      N  Ndist         Mean           SD  Min             Max   Skew    Kurt
+#&gt;   4355   4224  1,867908.95  32,334251.7    0  1.10344053e+09  25.27  712.33
+#&gt; Quant: 
+#&gt;     1%   5%    25%     50%      75%        95%          99%
+#&gt;   0.02  1.2  38.95  173.22  4841.26  713420.36  14,309891.9
+#&gt; --------------------------------------------------------------------------------
+#&gt; MAN (numeric): Manufacturing
+#&gt; Stats: 
+#&gt;      N  Ndist         Mean           SD  Min             Max   Skew   Kurt
+#&gt;   4355   4353  5,538491.36  63,090998.4    0  1.86843541e+09  20.71  498.7
+#&gt; Quant: 
+#&gt;     1%     5%     25%     50%       75%          95%         99%
+#&gt;   0.05  27.31  620.44  3718.1  52805.35  2,978846.99  108,499037
+#&gt; --------------------------------------------------------------------------------
+#&gt; PU (numeric): Utilities
+#&gt; Stats: 
+#&gt;      N  Ndist       Mean           SD  Min          Max  Skew    Kurt
+#&gt;   4354   4237  335679.47  2,576027.41    0  65,324543.8  13.5  244.29
+#&gt; Quant: 
+#&gt;   1%    5%    25%     50%      75%        95%          99%
+#&gt;    0  2.16  25.74  167.95  4892.25  291356.48  11,866259.3
+#&gt; --------------------------------------------------------------------------------
+#&gt; CON (numeric): Construction
+#&gt; Stats: 
+#&gt;      N  Ndist         Mean         SD  Min         Max   Skew    Kurt
+#&gt;   4355   4339  1,801597.63  24,382598    0  860,638677  26.15  774.73
+#&gt; Quant: 
+#&gt;     1%     5%     25%      50%       75%        95%          99%
+#&gt;   0.02  15.03  215.57  1473.45  13514.84  829361.57  37,430603.6
+#&gt; --------------------------------------------------------------------------------
+#&gt; WRT (numeric): Trade, restaurants and hotels
+#&gt; Stats: 
+#&gt;      N  Ndist         Mean           SD  Min             Max   Skew    Kurt
+#&gt;   4355   4344  3,392909.52  36,950812.9    0  1.15497404e+09  21.19  530.06
+#&gt; Quant: 
+#&gt;     1%     5%     25%      50%       75%          95%          99%
+#&gt;   0.03  25.07  650.38  3773.64  41648.17  2,646521.57  79,618054.2
+#&gt; --------------------------------------------------------------------------------
+#&gt; TRA (numeric): Transport, storage and communication
+#&gt; Stats: 
+#&gt;      N  Ndist         Mean           SD  Min         Max   Skew    Kurt
+#&gt;   4355   4334  1,473269.72  16,815143.2    0  547,047040  22.77  604.58
+#&gt; Quant: 
+#&gt;     1%     5%     25%     50%       75%          95%          99%
+#&gt;   0.05  12.28  205.79  1174.8  18927.21  1,059843.16  31,750009.1
+#&gt; --------------------------------------------------------------------------------
+#&gt; FIRE (numeric): Finance, insurance, real estate and business services
+#&gt; Stats: 
+#&gt;      N  Ndist         Mean           SD       Min         Max   Skew    Kurt
+#&gt;   4355   4349  1,657114.84  13,709981.9  -2848.81  387,997506  16.48  356.43
+#&gt; Quant: 
+#&gt;   1%    5%     25%     50%      75%          95%        99%
+#&gt;    0  3.87  128.18  960.13  13460.4  1,599086.92  55,536957
+#&gt; --------------------------------------------------------------------------------
+#&gt; GOV (numeric): Government services
+#&gt; Stats: 
+#&gt;      N  Ndist         Mean           SD  Min         Max   Skew    Kurt
+#&gt;   3482   3470  1,712300.28  16,967383.7    0  485,535400  18.67  430.18
+#&gt; Quant: 
+#&gt;     1%     5%     25%      50%       75%          95%          99%
+#&gt;   0.02  48.14  723.98  3928.51  37689.12  1,400263.37  56,340246.3
+#&gt; --------------------------------------------------------------------------------
+#&gt; OTH (numeric): Community, social and personal services
+#&gt; Stats: 
+#&gt;      N  Ndist         Mean           SD  Min         Max   Skew    Kurt
+#&gt;   4248   4238  1,684527.32  15,613923.6    0  402,671182  14.93  273.79
+#&gt; Quant: 
+#&gt;     1%     5%     25%      50%       75%        95%          99%
+#&gt;   0.02  15.92  310.09  1433.17  13321.29  605013.39  42,264477.4
+#&gt; --------------------------------------------------------------------------------
+#&gt; SUM (numeric): Summation of sector GDP
+#&gt; Stats: 
+#&gt;      N  Ndist         Mean          SD  Min             Max   Skew    Kurt
+#&gt;   4364   4364  21,566436.8  251,812500    0  8.06794210e+09  22.53  589.58
+#&gt; Quant: 
+#&gt;     1%      5%      25%       50%        75%          95%         99%
+#&gt;   0.38  269.63  4803.94  23186.19  284646.08  15,030223.5  435,513356
+#&gt; --------------------------------------------------------------------------------</div><div class='input'>
+<span class='fu'><a href='https://rdrr.io/r/base/as.data.frame.html'>as.data.frame</a></span>(<span class='fu'>descr</span>(<span class='no'>wlddev</span>))</div><div class='output co'>#&gt;    Variable     Class                                   Label     N Ndist
+#&gt; 1   country character                            Country Name 12744   216
+#&gt; 2     iso3c    factor                            Country Code 12744   216
+#&gt; 3      date      Date              Date Recorded (Fictitious) 12744    59
+#&gt; 4      year   integer                                    Year 12744    59
+#&gt; 5    decade   numeric                                  Decade 12744     7
+#&gt; 6    region    factor                                  Region 12744     7
+#&gt; 7    income    factor                            Income Level 12744     4
+#&gt; 8      OECD   logical                 Is OECD Member Country? 12744     2
+#&gt; 9     PCGDP   numeric      GDP per capita (constant 2010 US$)  8995  8995
+#&gt; 10   LIFEEX   numeric Life expectancy at birth, total (years) 11068 10048
+#&gt; 11     GINI   numeric        GINI index (World Bank estimate)  1356   363
+#&gt; 12      ODA   numeric    Net ODA received (constant 2015 US$)  8336  7564
+#&gt;            Mean           SD           Min          Max          Skew
+#&gt; 1            NA           NA            NA           NA            NA
+#&gt; 2            NA           NA            NA           NA            NA
+#&gt; 3            NA           NA            NA           NA            NA
+#&gt; 4  1.989000e+03 1.703005e+01  1.960000e+03 2.018000e+03 -6.402075e-16
+#&gt; 5  1.988983e+03 1.763107e+01  1.960000e+03 2.020000e+03  6.221301e-03
+#&gt; 6            NA           NA            NA           NA            NA
+#&gt; 7            NA           NA            NA           NA            NA
+#&gt; 8            NA           NA            NA           NA            NA
+#&gt; 9  1.156365e+04 1.834841e+04  1.316464e+02 1.915866e+05  3.112130e+00
+#&gt; 10 6.384109e+01 1.144971e+01  1.890700e+01 8.541707e+01 -6.692252e-01
+#&gt; 11 3.939757e+01 9.676435e+00  1.620000e+01 6.580000e+01  4.613314e-01
+#&gt; 12 4.287465e+08 8.198690e+08 -1.080380e+09 2.455218e+10  7.191848e+00
+#&gt;          Kurt            1%           5%          25%          50%          75%
+#&gt; 1          NA            NA           NA           NA           NA           NA
+#&gt; 2          NA            NA           NA           NA           NA           NA
+#&gt; 3          NA            NA           NA           NA           NA           NA
+#&gt; 4    1.799310  1.960000e+03    1962.0000 1.974000e+03 1.989000e+03 2.004000e+03
+#&gt; 5    1.946267  1.960000e+03    1960.0000 1.970000e+03 1.990000e+03 2.000000e+03
+#&gt; 6          NA            NA           NA           NA           NA           NA
+#&gt; 7          NA            NA           NA           NA           NA           NA
+#&gt; 8          NA            NA           NA           NA           NA           NA
+#&gt; 9   16.958507  2.235368e+02     374.3818 1.215588e+03 3.619608e+03 1.408471e+04
+#&gt; 10   2.645842  3.549402e+01      42.2278 5.584225e+01 6.696500e+01 7.250112e+01
+#&gt; 11   2.293188  2.465500e+01      26.5000 3.170000e+01 3.740000e+01 4.680000e+01
+#&gt; 12 122.900291 -1.173150e+07 1097500.0000 4.102000e+07 1.573600e+08 4.630575e+08
+#&gt;             95%          99%
+#&gt; 1            NA           NA
+#&gt; 2            NA           NA
+#&gt; 3            NA           NA
+#&gt; 4  2.016000e+03 2.018000e+03
+#&gt; 5  2.020000e+03 2.020000e+03
+#&gt; 6            NA           NA
+#&gt; 7            NA           NA
+#&gt; 8            NA           NA
+#&gt; 9  4.659194e+04 8.778062e+04
+#&gt; 10 7.882439e+01 8.183329e+01
+#&gt; 11 5.720000e+01 6.084500e+01
+#&gt; 12 1.824005e+09 3.486977e+09</div><div class='input'>
+<span class='co'>## Passing Arguments down to qsu: For Panel Data Statistics</span>
+<span class='fu'>descr</span>(<span class='no'>iris</span>, <span class='kw'>pid</span> <span class='kw'>=</span> <span class='no'>iris</span>$<span class='no'>Species</span>)</div><div class='output co'>#&gt; Dataset: iris, 5 Variables, N = 150
+#&gt; --------------------------------------------------------------------------------
+#&gt; Sepal.Length (numeric): 
+#&gt; Stats: 
+#&gt;          N/T  Mean    SD   Min   Max   Skew  Kurt
+#&gt; Overall  150  5.84  0.83   4.3   7.9   0.31  2.43
+#&gt; Between    3  5.84   0.8  5.01  6.59  -0.21   1.5
+#&gt; Within    50  5.84  0.51  4.16  7.16   0.12  3.26
+#&gt; 
+#&gt; Quant: 
+#&gt;    1%   5%  25%  50%  75%   95%  99%
+#&gt;   4.4  4.6  5.1  5.8  6.4  7.25  7.7
+#&gt; --------------------------------------------------------------------------------
+#&gt; Sepal.Width (numeric): 
+#&gt; Stats: 
+#&gt;          N/T  Mean    SD   Min   Max  Skew  Kurt
+#&gt; Overall  150  3.06  0.44     2   4.4  0.32  3.18
+#&gt; Between    3  3.06  0.34  2.77  3.43  0.43   1.5
+#&gt; Within    50  3.06  0.34  1.93  4.03  0.03  3.51
+#&gt; 
+#&gt; Quant: 
+#&gt;    1%    5%  25%  50%  75%  95%   99%
+#&gt;   2.2  2.34  2.8    3  3.3  3.8  4.15
+#&gt; --------------------------------------------------------------------------------
+#&gt; Petal.Length (numeric): 
+#&gt; Stats: 
+#&gt;          N/T  Mean    SD   Min   Max   Skew  Kurt
+#&gt; Overall  150  3.76  1.77     1   6.9  -0.27   1.6
+#&gt; Between    3  3.76  2.09  1.46  5.55  -0.42   1.5
+#&gt; Within    50  3.76  0.43   2.5  5.11   0.12  3.89
+#&gt; 
+#&gt; Quant: 
+#&gt;     1%   5%  25%   50%  75%  95%  99%
+#&gt;   1.15  1.3  1.6  4.35  5.1  6.1  6.7
+#&gt; --------------------------------------------------------------------------------
+#&gt; Petal.Width (numeric): 
+#&gt; Stats: 
+#&gt;          N/T  Mean    SD   Min   Max   Skew  Kurt
+#&gt; Overall  150   1.2  0.76   0.1   2.5   -0.1  1.66
+#&gt; Between    3   1.2   0.9  0.25  2.03  -0.25   1.5
+#&gt; Within    50   1.2   0.2  0.57  1.67  -0.05  3.36
+#&gt; 
+#&gt; Quant: 
+#&gt;    1%   5%  25%  50%  75%  95%  99%
+#&gt;   0.1  0.2  0.3  1.3  1.8  2.3  2.5
+#&gt; --------------------------------------------------------------------------------
+#&gt; Species (factor): 
+#&gt; Stats: 
+#&gt;     N  Ndist
+#&gt;   150      3
+#&gt; 
+#&gt; Table: 
+#&gt;             Freq   Perc
+#&gt; setosa        50  33.33
+#&gt; versicolor    50  33.33
+#&gt; virginica     50  33.33
+#&gt; --------------------------------------------------------------------------------</div><div class='input'><span class='fu'>descr</span>(<span class='no'>wlddev</span>, <span class='kw'>pid</span> <span class='kw'>=</span> <span class='no'>wlddev</span>$<span class='no'>iso3c</span>)</div><div class='output co'>#&gt; Dataset: wlddev, 12 Variables, N = 12744
+#&gt; --------------------------------------------------------------------------------
+#&gt; country (character): Country Name
+#&gt; Stats: 
+#&gt;       N  Ndist
+#&gt;   12744    216
+#&gt; 
+#&gt; Table: 
+#&gt;                      Freq  Perc
+#&gt; Afghanistan            59  0.46
+#&gt; Albania                59  0.46
+#&gt; Algeria                59  0.46
+#&gt; American Samoa         59  0.46
+#&gt; Andorra                59  0.46
+#&gt; Angola                 59  0.46
+#&gt; Antigua and Barbuda    59  0.46
+#&gt;   ---
+#&gt;                        Freq  Perc
+#&gt; Vanuatu                  59  0.46
+#&gt; Venezuela, RB            59  0.46
+#&gt; Vietnam                  59  0.46
+#&gt; Virgin Islands (U.S.)    59  0.46
+#&gt; West Bank and Gaza       59  0.46
+#&gt; Yemen, Rep.              59  0.46
+#&gt; Zambia                   59  0.46
+#&gt; Zimbabwe                 59  0.46
+#&gt; 
+#&gt; Summary of Table: 
+#&gt;    Min. 1st Qu.  Median    Mean 3rd Qu.    Max. 
+#&gt;      59      59      59      59      59      59 
+#&gt; --------------------------------------------------------------------------------
+#&gt; iso3c (factor): Country Code
+#&gt; Stats: 
+#&gt;       N  Ndist
+#&gt;   12744    216
+#&gt; 
+#&gt; Table: 
+#&gt;      Freq  Perc
+#&gt; ABW    59  0.46
+#&gt; AFG    59  0.46
+#&gt; AGO    59  0.46
+#&gt; ALB    59  0.46
+#&gt; AND    59  0.46
+#&gt; ARE    59  0.46
+#&gt; ARG    59  0.46
+#&gt;   ---
+#&gt;      Freq  Perc
+#&gt; VNM    59  0.46
+#&gt; VUT    59  0.46
+#&gt; WSM    59  0.46
+#&gt; XKX    59  0.46
+#&gt; YEM    59  0.46
+#&gt; ZAF    59  0.46
+#&gt; ZMB    59  0.46
+#&gt; ZWE    59  0.46
+#&gt; 
+#&gt; Summary of Table: 
+#&gt;    Min. 1st Qu.  Median    Mean 3rd Qu.    Max. 
+#&gt;      59      59      59      59      59      59 
+#&gt; --------------------------------------------------------------------------------
+#&gt; date (Date): Date Recorded (Fictitious)
+#&gt; Stats: 
+#&gt;       N  Ndist
+#&gt;   12744     59
+#&gt; --------------------------------------------------------------------------------
+#&gt; year (integer): Year
+#&gt; Stats: 
+#&gt;            N/T  Mean     SD   Min   Max  Skew  Kurt
+#&gt; Overall  12744  1989  17.03  1960  2018    -0   1.8
+#&gt; Between    216  1989      0  1989  1989     -     -
+#&gt; Within      59  1989  17.03  1960  2018    -0   1.8
+#&gt; 
+#&gt; Quant: 
+#&gt;     1%    5%   25%   50%   75%   95%   99%
+#&gt;   1960  1962  1974  1989  2004  2016  2018
+#&gt; --------------------------------------------------------------------------------
+#&gt; decade (numeric): Decade
+#&gt; Stats: 
+#&gt;            N/T     Mean     SD      Min      Max  Skew  Kurt
+#&gt; Overall  12744  1988.98  17.63     1960     2020  0.01  1.95
+#&gt; Between    216  1988.98      0  1988.98  1988.98     -     -
+#&gt; Within      59  1988.98  17.63     1960     2020  0.01  1.95
+#&gt; 
+#&gt; Quant: 
+#&gt;     1%    5%   25%   50%   75%   95%   99%
+#&gt;   1960  1960  1970  1990  2000  2020  2020
+#&gt; --------------------------------------------------------------------------------
+#&gt; region (factor): Region
+#&gt; Stats: 
+#&gt;       N  Ndist
+#&gt;   12744      7
+#&gt; 
+#&gt; Table: 
+#&gt;                             Freq   Perc
+#&gt; East Asia &amp; Pacific         2124  16.67
+#&gt; Europe &amp; Central Asia       3422  26.85
+#&gt; Latin America &amp; Caribbean   2478  19.44
+#&gt; Middle East &amp; North Africa  1239   9.72
+#&gt; North America                177   1.39
+#&gt; South Asia                   472   3.70
+#&gt; Sub-Saharan Africa          2832  22.22
+#&gt; --------------------------------------------------------------------------------
+#&gt; income (factor): Income Level
+#&gt; Stats: 
+#&gt;       N  Ndist
+#&gt;   12744      4
+#&gt; 
+#&gt; Table: 
+#&gt;                      Freq   Perc
+#&gt; High income          4720  37.04
+#&gt; Low income           1947  15.28
+#&gt; Lower middle income  2773  21.76
+#&gt; Upper middle income  3304  25.93
+#&gt; --------------------------------------------------------------------------------
+#&gt; OECD (logical): Is OECD Member Country?
+#&gt; Stats: 
+#&gt;       N  Ndist
+#&gt;   12744      2
+#&gt; 
+#&gt; Table: 
+#&gt;         Freq   Perc
+#&gt; FALSE  10620  83.33
+#&gt; TRUE    2124  16.67
+#&gt; --------------------------------------------------------------------------------
+#&gt; PCGDP (numeric): GDP per capita (constant 2010 US$)
+#&gt; Stats: 
+#&gt;            N/T      Mean        SD        Min        Max  Skew   Kurt
+#&gt; Overall   8995  11563.65  18348.41     131.65  191586.64  3.11  16.96
+#&gt; Between    203  12488.86  19628.37      255.4  141165.08  3.21  17.25
+#&gt; Within   44.31  11563.65   6334.95  -30529.09   75348.07   0.7  17.05
+#&gt; 
+#&gt; Quant: 
+#&gt;       1%      5%      25%      50%       75%       95%       99%
+#&gt;   223.54  374.38  1215.59  3619.61  14084.71  46591.94  87780.62
+#&gt; --------------------------------------------------------------------------------
+#&gt; LIFEEX (numeric): Life expectancy at birth, total (years)
+#&gt; Stats: 
+#&gt;            N/T   Mean     SD    Min    Max   Skew  Kurt
+#&gt; Overall  11068  63.84  11.45  18.91  85.42  -0.67  2.65
+#&gt; Between    207  64.53  10.02  39.35  85.42  -0.53  2.23
+#&gt; Within   53.47  63.84   5.83  33.47  83.86  -0.25  3.75
+#&gt; 
+#&gt; Quant: 
+#&gt;      1%     5%    25%    50%   75%    95%    99%
+#&gt;   35.49  42.23  55.84  66.97  72.5  78.82  81.83
+#&gt; --------------------------------------------------------------------------------
+#&gt; GINI (numeric): GINI index (World Bank estimate)
+#&gt; Stats: 
+#&gt;           N/T   Mean    SD    Min    Max  Skew  Kurt
+#&gt; Overall  1356   39.4  9.68   16.2   65.8  0.46  2.29
+#&gt; Between   161  39.58  8.37  23.37  61.71  0.52  2.67
+#&gt; Within   8.42   39.4  3.04  23.96   54.8  0.14  5.78
+#&gt; 
+#&gt; Quant: 
+#&gt;      1%    5%   25%   50%   75%   95%    99%
+#&gt;   24.66  26.5  31.7  37.4  46.8  57.2  60.84
+#&gt; --------------------------------------------------------------------------------
+#&gt; ODA (numeric): Net ODA received (constant 2015 US$)
+#&gt; Stats: 
+#&gt;            N/T        Mean          SD              Min             Max  Skew
+#&gt; Overall   8336  428,746468  819,868971  -1.08038000e+09  2.45521800e+10  7.19
+#&gt; Between    178  418,026522  548,293709        423846.15  3.53258914e+09  2.47
+#&gt; Within   46.83  428,746468  607,024040  -2.47969577e+09  2.35093916e+10  10.3
+#&gt;            Kurt
+#&gt; Overall   122.9
+#&gt; Between   10.65
+#&gt; Within   298.12
+#&gt; 
+#&gt; Quant: 
+#&gt;           1%        5%        25%         50%         75%             95%
+#&gt;   -11,731500  1,097500  41,020000  157,360000  463,057500  1.82400500e+09
+#&gt;              99%
+#&gt;   3.48697750e+09
+#&gt; --------------------------------------------------------------------------------</div><div class='input'>
 <span class='co'>## Grouped Statistics</span>
-<span class='fu'>descr</span>(<span class='no'>iris</span>, <span class='kw'>g</span> <span class='kw'>=</span> <span class='no'>iris</span>$<span class='no'>Species</span>)
-<span class='fu'>descr</span>(<span class='no'>GGDC10S</span>, <span class='kw'>g</span> <span class='kw'>=</span> <span class='no'>GGDC10S</span>$<span class='no'>Region</span>)</pre>
+<span class='fu'>descr</span>(<span class='no'>iris</span>, <span class='kw'>g</span> <span class='kw'>=</span> <span class='no'>iris</span>$<span class='no'>Species</span>)</div><div class='output co'>#&gt; Dataset: iris, 5 Variables, N = 150
+#&gt; --------------------------------------------------------------------------------
+#&gt; Sepal.Length (numeric): 
+#&gt; Stats: 
+#&gt;              N  Mean    SD  Min  Max  Skew  Kurt
+#&gt; setosa      50  5.01  0.35  4.3  5.8  0.12  2.65
+#&gt; versicolor  50  5.94  0.52  4.9    7   0.1   2.4
+#&gt; virginica   50  6.59  0.64  4.9  7.9  0.11  2.91
+#&gt; 
+#&gt; Quant: 
+#&gt;    1%   5%  25%  50%  75%   95%  99%
+#&gt;   4.4  4.6  5.1  5.8  6.4  7.25  7.7
+#&gt; --------------------------------------------------------------------------------
+#&gt; Sepal.Width (numeric): 
+#&gt; Stats: 
+#&gt;              N  Mean    SD  Min  Max   Skew  Kurt
+#&gt; setosa      50  3.43  0.38  2.3  4.4   0.04  3.74
+#&gt; versicolor  50  2.77  0.31    2  3.4  -0.35  2.55
+#&gt; virginica   50  2.97  0.32  2.2  3.8   0.35  3.52
+#&gt; 
+#&gt; Quant: 
+#&gt;    1%    5%  25%  50%  75%  95%   99%
+#&gt;   2.2  2.34  2.8    3  3.3  3.8  4.15
+#&gt; --------------------------------------------------------------------------------
+#&gt; Petal.Length (numeric): 
+#&gt; Stats: 
+#&gt;              N  Mean    SD  Min  Max   Skew  Kurt
+#&gt; setosa      50  1.46  0.17    1  1.9    0.1   3.8
+#&gt; versicolor  50  4.26  0.47    3  5.1  -0.59  2.93
+#&gt; virginica   50  5.55  0.55  4.5  6.9   0.53  2.74
+#&gt; 
+#&gt; Quant: 
+#&gt;     1%   5%  25%   50%  75%  95%  99%
+#&gt;   1.15  1.3  1.6  4.35  5.1  6.1  6.7
+#&gt; --------------------------------------------------------------------------------
+#&gt; Petal.Width (numeric): 
+#&gt; Stats: 
+#&gt;              N  Mean    SD  Min  Max   Skew  Kurt
+#&gt; setosa      50  0.25  0.11  0.1  0.6   1.22  4.43
+#&gt; versicolor  50  1.33   0.2    1  1.8  -0.03  2.51
+#&gt; virginica   50  2.03  0.27  1.4  2.5  -0.13  2.34
+#&gt; 
+#&gt; Quant: 
+#&gt;    1%   5%  25%  50%  75%  95%  99%
+#&gt;   0.1  0.2  0.3  1.3  1.8  2.3  2.5
+#&gt; --------------------------------------------------------------------------------
+#&gt; Species (factor): 
+#&gt; Stats: 
+#&gt;     N  Ndist
+#&gt;   150      3
+#&gt; 
+#&gt; Table: 
+#&gt;             Freq   Perc
+#&gt; setosa        50  33.33
+#&gt; versicolor    50  33.33
+#&gt; virginica     50  33.33
+#&gt; --------------------------------------------------------------------------------</div><div class='input'><span class='fu'>descr</span>(<span class='no'>GGDC10S</span>, <span class='kw'>g</span> <span class='kw'>=</span> <span class='no'>GGDC10S</span>$<span class='no'>Region</span>)</div><div class='output co'>#&gt; Dataset: GGDC10S, 16 Variables, N = 5027
+#&gt; --------------------------------------------------------------------------------
+#&gt; Country (character): Country
+#&gt; Stats: 
+#&gt;      N  Ndist
+#&gt;   5027     43
+#&gt; 
+#&gt; Table: 
+#&gt;      Freq  Perc
+#&gt; ARG   124  2.47
+#&gt; BOL   123  2.45
+#&gt; BRA   124  2.47
+#&gt; BWA   104  2.07
+#&gt; CHL   125  2.49
+#&gt; CHN   125  2.49
+#&gt; COL   123  2.45
+#&gt;   ---
+#&gt;      Freq  Perc
+#&gt; SWE   126  2.51
+#&gt; THA   124  2.47
+#&gt; TWN   126  2.51
+#&gt; TZA   104  2.07
+#&gt; USA   129  2.57
+#&gt; VEN   125  2.49
+#&gt; ZAF   104  2.07
+#&gt; ZMB   104  2.07
+#&gt; 
+#&gt; Summary of Table: 
+#&gt;    Min. 1st Qu.  Median    Mean 3rd Qu.    Max. 
+#&gt;       4     105     124     117     126     129 
+#&gt; --------------------------------------------------------------------------------
+#&gt; Regioncode (character): Region code
+#&gt; Stats: 
+#&gt;      N  Ndist
+#&gt;   5027      6
+#&gt; 
+#&gt; Table: 
+#&gt;       Freq   Perc
+#&gt; ASI   1372  27.29
+#&gt; EUR   1004  19.97
+#&gt; LAM   1117  22.22
+#&gt; MENA   257   5.11
+#&gt; NAM    129   2.57
+#&gt; SSA   1148  22.84
+#&gt; --------------------------------------------------------------------------------
+#&gt; Region (character): Region
+#&gt; Stats: 
+#&gt;      N  Ndist
+#&gt;   5027      6
+#&gt; 
+#&gt; Table: 
+#&gt;                               Freq   Perc
+#&gt; Asia                          1372  27.29
+#&gt; Europe                        1004  19.97
+#&gt; Latin America                 1117  22.22
+#&gt; Middle East and North Africa   257   5.11
+#&gt; North America                  129   2.57
+#&gt; Sub-saharan Africa            1148  22.84
+#&gt; --------------------------------------------------------------------------------
+#&gt; Variable (character): Variable
+#&gt; Stats: 
+#&gt;      N  Ndist
+#&gt;   5027      2
+#&gt; 
+#&gt; Table: 
+#&gt;      Freq   Perc
+#&gt; EMP  2516  50.05
+#&gt; VA   2511  49.95
+#&gt; --------------------------------------------------------------------------------
+#&gt; Year (numeric): Year
+#&gt; Stats: 
+#&gt;                                  N     Mean     SD   Min   Max  Skew  Kurt
+#&gt; Asia                          1372  1980.69  18.01  1950  2012     0   1.8
+#&gt; Europe                        1004  1979.99  18.14  1948  2011    -0   1.8
+#&gt; Latin America                 1117  1980.53  17.92  1950  2012     0   1.8
+#&gt; Middle East and North Africa   257  1980.62   18.6  1948  2013    -0   1.8
+#&gt; North America                  129  1978.75  18.69  1947  2011     0   1.8
+#&gt; Sub-saharan Africa            1148  1985.59  15.07  1960  2013     0   1.8
+#&gt; 
+#&gt; Quant: 
+#&gt;     1%    5%   25%   50%   75%   95%   99%
+#&gt;   1950  1953  1967  1982  1997  2009  2011
+#&gt; --------------------------------------------------------------------------------
+#&gt; AGR (numeric): Agriculture 
+#&gt; Stats: 
+#&gt;                                  N         Mean           SD      Min
+#&gt; Asia                          1103  9,239810.75  73,388917.1     5.24
+#&gt; Europe                         791      8703.97     11906.16    69.65
+#&gt; Latin America                 1049    485922.33  3,170330.86        0
+#&gt; Middle East and North Africa   203     21797.51     38344.85   412.17
+#&gt; North America                  125     33982.97     42429.57  2061.82
+#&gt; Sub-saharan Africa            1093    283350.54   1,427564.7     0.04
+#&gt;                                          Max   Skew    Kurt
+#&gt; Asia                          1.19187778e+09  12.01  162.23
+#&gt; Europe                              57488.44   1.61    4.76
+#&gt; Latin America                      39,194000   8.82   86.32
+#&gt; Middle East and North Africa        243355.5   2.91   13.21
+#&gt; North America                         161017   1.25    3.36
+#&gt; Sub-saharan Africa               17,625142.9   7.33   64.98
+#&gt; 
+#&gt; Quant: 
+#&gt;     1%     5%    25%      50%       75%          95%          99%
+#&gt;   0.09  23.18  930.7  4394.52  29781.04  2,393977.49  24,932575.1
+#&gt; --------------------------------------------------------------------------------
+#&gt; MIN (numeric): Mining
+#&gt; Stats: 
+#&gt;                                  N         Mean           SD     Min
+#&gt; Asia                          1103  6,714864.24  63,913433.6    0.16
+#&gt; Europe                         782      3388.68       7699.3     2.8
+#&gt; Latin America                 1049     501758.2  3,672600.12       0
+#&gt; Middle East and North Africa   203      10615.2     36879.15   10.34
+#&gt; North America                  125     35859.04     61778.02  550.95
+#&gt; Sub-saharan Africa            1093    176227.49  1,195624.72    0.01
+#&gt;                                          Max   Skew    Kurt
+#&gt; Asia                          1.10344053e+09   12.7   180.6
+#&gt; Europe                              64788.06   4.17   24.65
+#&gt; Latin America                      69,625000  11.68  171.51
+#&gt; Middle East and North Africa          290739   5.32   33.85
+#&gt; North America                         316776   2.37    8.87
+#&gt; Sub-saharan Africa               15,568361.4   8.87   88.61
+#&gt; 
+#&gt; Quant: 
+#&gt;     1%   5%    25%     50%      75%        95%          99%
+#&gt;   0.02  1.2  38.95  173.22  4841.26  713420.36  14,309891.9
+#&gt; --------------------------------------------------------------------------------
+#&gt; MAN (numeric): Manufacturing
+#&gt; Stats: 
+#&gt;                                  N         Mean           SD       Min
+#&gt; Asia                          1103  20,767547.9   124,017608    136.89
+#&gt; Europe                         782     55223.95     91748.81    333.81
+#&gt; Latin America                 1049    960811.72  6,047028.87         0
+#&gt; Middle East and North Africa   203     22235.72     43022.59    240.69
+#&gt; North America                  125     343074.7    506122.03  12897.93
+#&gt; Sub-saharan Africa            1093     105260.5     555212.8      0.02
+#&gt;                                          Max   Skew    Kurt
+#&gt; Asia                          1.86843541e+09  10.41  126.86
+#&gt; Europe                                537796   2.36    9.34
+#&gt; Latin America                      78,124000   9.11   93.92
+#&gt; Middle East and North Africa          262505   2.92   13.02
+#&gt; North America                     1,766043.9   1.49    3.85
+#&gt; Sub-saharan Africa                  7,676500   8.67   88.74
+#&gt; 
+#&gt; Quant: 
+#&gt;     1%     5%     25%     50%       75%          95%         99%
+#&gt;   0.05  27.31  620.44  3718.1  52805.35  2,978846.99  108,499037
+#&gt; --------------------------------------------------------------------------------
+#&gt; PU (numeric): Utilities
+#&gt; Stats: 
+#&gt;                                  N         Mean           SD     Min
+#&gt; Asia                          1102  1,081364.11  4,793872.69     7.6
+#&gt; Europe                         782      7111.43     13622.47   10.81
+#&gt; Latin America                 1049    223292.44  1,609737.47       0
+#&gt; Middle East and North Africa   203      2529.68      4910.63    7.74
+#&gt; North America                  125     44068.95     71925.42  463.21
+#&gt; Sub-saharan Africa            1093     22020.25    122089.09       0
+#&gt;                                       Max  Skew    Kurt
+#&gt; Asia                          65,324543.8  7.48   74.61
+#&gt; Europe                          102773.96     3   14.93
+#&gt; Latin America                   20,679000  9.54  100.25
+#&gt; Middle East and North Africa        21237  2.15     6.7
+#&gt; North America                   270330.51  1.64    4.45
+#&gt; Sub-saharan Africa               1,825400  9.03   99.43
+#&gt; 
+#&gt; Quant: 
+#&gt;   1%    5%    25%     50%      75%        95%          99%
+#&gt;    0  2.16  25.74  167.95  4892.25  291356.48  11,866259.3
+#&gt; --------------------------------------------------------------------------------
+#&gt; CON (numeric): Construction
+#&gt; Stats: 
+#&gt;                                  N         Mean           SD      Min
+#&gt; Asia                          1103  6,600043.18  48,055878.8     43.1
+#&gt; Europe                         782     17622.97     28584.79   128.19
+#&gt; Latin America                 1049    436012.48   2,950538.7        0
+#&gt; Middle East and North Africa   203      6642.93     13037.94    26.83
+#&gt; North America                  125     106162.3    178402.17  3676.41
+#&gt; Sub-saharan Africa            1093      73497.7    550630.53     0.02
+#&gt;                                      Max   Skew    Kurt
+#&gt; Asia                          860,638677   13.2  197.66
+#&gt; Europe                         181205.76   2.09    7.57
+#&gt; Latin America                  42,701000  10.26  122.29
+#&gt; Middle East and North Africa       76747    2.9   11.81
+#&gt; North America                     692087   1.91    5.54
+#&gt; Sub-saharan Africa             10,588300  12.92  201.92
+#&gt; 
+#&gt; Quant: 
+#&gt;     1%     5%     25%      50%       75%        95%          99%
+#&gt;   0.02  15.03  215.57  1473.45  13514.84  829361.57  37,430603.6
+#&gt; --------------------------------------------------------------------------------
+#&gt; WRT (numeric): Trade, restaurants and hotels
+#&gt; Stats: 
+#&gt;                                  N         Mean           SD       Min
+#&gt; Asia                          1103  12,283373.8    72,524320     152.9
+#&gt; Europe                         782     40872.35     67182.39    344.71
+#&gt; Latin America                 1049    847999.29  5,294147.93         0
+#&gt; Middle East and North Africa   203     18578.82     37541.51     150.8
+#&gt; North America                  125    400759.76    642511.02  12579.48
+#&gt; Sub-saharan Africa            1093    230722.57  1,341125.15      0.01
+#&gt;                                          Max  Skew    Kurt
+#&gt; Asia                          1.15497404e+09  10.7  135.87
+#&gt; Europe                             402210.76  2.07    7.41
+#&gt; Latin America                      69,154000  8.99   92.21
+#&gt; Middle East and North Africa          236592  3.16   14.71
+#&gt; North America                    2,308153.02  1.73    4.73
+#&gt; Sub-saharan Africa                 19,486200  9.12   98.41
+#&gt; 
+#&gt; Quant: 
+#&gt;     1%     5%     25%      50%       75%          95%          99%
+#&gt;   0.03  25.07  650.38  3773.64  41648.17  2,646521.57  79,618054.2
+#&gt; --------------------------------------------------------------------------------
+#&gt; TRA (numeric): Transport, storage and communication
+#&gt; Stats: 
+#&gt;                                  N        Mean           SD      Min
+#&gt; Asia                          1103  5,245717.6  33,003641.5       79
+#&gt; Europe                         782    21148.54     36686.15   126.24
+#&gt; Latin America                 1049   466527.62  2,956458.95        0
+#&gt; Middle East and North Africa   203    10652.28     23253.57    71.99
+#&gt; North America                  125    134171.2    216436.13  4523.41
+#&gt; Sub-saharan Africa            1093     96252.2    634046.34     0.02
+#&gt;                                       Max   Skew    Kurt
+#&gt; Asia                           547,047040  11.55   155.7
+#&gt; Europe                          215350.33   2.36     9.1
+#&gt; Latin America                   38,249000   9.14   95.02
+#&gt; Middle East and North Africa       144115   3.43   16.24
+#&gt; North America                   788678.73   1.72    4.74
+#&gt; Sub-saharan Africa            9,773441.71  10.72  131.86
+#&gt; 
+#&gt; Quant: 
+#&gt;     1%     5%     25%     50%       75%          95%          99%
+#&gt;   0.05  12.28  205.79  1174.8  18927.21  1,059843.16  31,750009.1
+#&gt; --------------------------------------------------------------------------------
+#&gt; FIRE (numeric): Finance, insurance, real estate and business services
+#&gt; Stats: 
+#&gt;                                  N         Mean           SD       Min
+#&gt; Asia                          1103  5,592444.02  26,438065.9      23.1
+#&gt; Europe                         782     17666.27      42118.1     63.39
+#&gt; Latin America                 1049    797458.31  4,792126.14  -2848.81
+#&gt; Middle East and North Africa   203     14224.06        29896     12.45
+#&gt; North America                  125    683714.58   1,307383.3   4237.91
+#&gt; Sub-saharan Africa            1093    100245.92       723873      0.01
+#&gt;                                       Max   Skew   Kurt
+#&gt; Asia                           387,997506   8.59  96.57
+#&gt; Europe                             310690   3.62  17.44
+#&gt; Latin America                 61,965134.9   8.63  87.76
+#&gt; Middle East and North Africa       146593   2.54   9.01
+#&gt; North America                 6,235285.98   2.24    7.3
+#&gt; Sub-saharan Africa            11,650290.1  11.09  139.1
+#&gt; 
+#&gt; Quant: 
+#&gt;   1%    5%     25%     50%      75%          95%        99%
+#&gt;    0  3.87  128.18  960.13  13460.4  1,599086.92  55,536957
+#&gt; --------------------------------------------------------------------------------
+#&gt; GOV (numeric): Government services
+#&gt; Stats: 
+#&gt;                                  N         Mean         SD       Min
+#&gt; Asia                           868  6,551795.16  33,523686         0
+#&gt; Europe                         782     57514.37  103507.97    154.58
+#&gt; Latin America                  457    104151.17  376988.85         0
+#&gt; Middle East and North Africa   203     12613.11    25698.6    115.56
+#&gt; North America                  125    439395.77  747123.15  11825.64
+#&gt; Sub-saharan Africa            1047    119592.28  722111.59      0.02
+#&gt;                                       Max   Skew    Kurt
+#&gt; Asia                           485,535400   9.29  107.95
+#&gt; Europe                          649612.02   2.56   10.43
+#&gt; Latin America                 3,729607.87   5.78   43.44
+#&gt; Middle East and North Africa     174713.3   3.53   17.75
+#&gt; North America                 3,065984.37   1.96    5.88
+#&gt; Sub-saharan Africa            10,003050.2  11.06  154.29
+#&gt; 
+#&gt; Quant: 
+#&gt;     1%     5%     25%      50%       75%          95%          99%
+#&gt;   0.02  48.14  723.98  3928.51  37689.12  1,400263.37  56,340246.3
+#&gt; --------------------------------------------------------------------------------
+#&gt; OTH (numeric): Community, social and personal services
+#&gt; Stats: 
+#&gt;                                  N         Mean           SD      Min
+#&gt; Asia                          1102  5,482995.35    29,561814    78.01
+#&gt; Europe                         782     11692.75     20661.59    91.22
+#&gt; Latin America                 1049  1,023708.74  6,978936.81        0
+#&gt; Middle East and North Africa    97     20033.42     24498.46   111.81
+#&gt; North America                  125      83558.9    148752.62  2534.34
+#&gt; Sub-saharan Africa            1093     16659.52     86821.36        0
+#&gt;                                       Max   Skew    Kurt
+#&gt; Asia                           402,671182   7.99   77.77
+#&gt; Europe                          133230.69   2.43    9.68
+#&gt; Latin America                   92,333000   9.21   96.28
+#&gt; Middle East and North Africa        90814   1.38    3.85
+#&gt; North America                   559681.65      2    5.77
+#&gt; Sub-saharan Africa            1,411950.45  10.75  139.55
+#&gt; 
+#&gt; Quant: 
+#&gt;     1%     5%     25%      50%       75%        95%          99%
+#&gt;   0.02  15.92  310.09  1433.17  13321.29  605013.39  42,264477.4
+#&gt; --------------------------------------------------------------------------------
+#&gt; SUM (numeric): Summation of sector GDP
+#&gt; Stats: 
+#&gt;                                  N         Mean           SD      Min
+#&gt; Asia                          1103    78,158110   495,362238    650.9
+#&gt; Europe                         791    238302.84    400180.41   513.59
+#&gt; Latin America                 1049   5,788864.9  37,131918.6        0
+#&gt; Middle East and North Africa   203    129461.93     261686.6  1791.12
+#&gt; North America                  125  2,304748.18  3,896447.24  62539.2
+#&gt; Sub-saharan Africa            1093   1,218795.8  6,786969.12     0.13
+#&gt;                                          Max   Skew    Kurt
+#&gt; Asia                          8.06794210e+09  11.37   150.7
+#&gt; Europe                           2,539942.74   2.29    9.09
+#&gt; Latin America                     512,024135   9.32  100.02
+#&gt; Middle East and North Africa      1,650962.8   3.11   14.22
+#&gt; North America                    15,918306.8   1.91    5.57
+#&gt; Sub-saharan Africa               91,111865.3   8.63    87.7
+#&gt; 
+#&gt; Quant: 
+#&gt;     1%      5%      25%       50%        75%          95%         99%
+#&gt;   0.38  269.63  4803.94  23186.19  284646.08  15,030223.5  435,513356
+#&gt; --------------------------------------------------------------------------------</div><div class='input'>
+</div></pre>
   </div>
   <div class="col-md-3 hidden-xs hidden-sm" id="pkgdown-sidebar">
     <nav id="toc" data-toggle="toc" class="sticky-top">

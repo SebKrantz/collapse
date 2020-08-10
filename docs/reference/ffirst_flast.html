@@ -72,7 +72,7 @@
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">collapse</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">1.2.1</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">1.3.0</span>
       </span>
     </div>
 
@@ -87,13 +87,10 @@
 <li>
   <a href="../news/index.html">News</a>
 </li>
-<li>
-  <a href="../blog/index.html">Blog</a>
-</li>
       </ul>
       <ul class="nav navbar-nav navbar-right">
         <li>
-  <a href="https://twitter.com/collapse">
+  <a href="https://twitter.com/collapse_R">
     <span class="fa fa-twitter"></span>
      
   </a>
@@ -126,43 +123,43 @@
     <p><code>ffirst</code> and <code>flast</code> are S3 generic functions that (column-wise) returns the first and last values in <code>x</code>, (optionally) grouped by <code>g</code>. The <code><a href='TRA.html'>TRA</a></code> argument can further be used to transform <code>x</code> using its (groupwise) first and last values.</p>
     </div>
 
-    <pre class="usage">ffirst(x, ...)
-flast(x, ...)
-&lt;!-- %## Default S3 methods: --&gt;
-# S3 method for default
-ffirst(x, g = NULL, TRA = NULL, na.rm = TRUE,
-       use.g.names = TRUE, ...)
-# S3 method for default
-flast(x, g = NULL, TRA = NULL, na.rm = TRUE,
-      use.g.names = TRUE, ...)
-&lt;!-- %## S3 methods for class 'matrix' --&gt;
-# S3 method for matrix
-ffirst(x, g = NULL, TRA = NULL, na.rm = TRUE,
-       use.g.names = TRUE, drop = TRUE, ...)
-# S3 method for matrix
-flast(x, g = NULL, TRA = NULL, na.rm = TRUE,
-      use.g.names = TRUE, drop = TRUE, ...)
-&lt;!-- %## S3 methods for class 'data.frame' --&gt;
-# S3 method for data.frame
-ffirst(x, g = NULL, TRA = NULL, na.rm = TRUE,
-       use.g.names = TRUE, drop = TRUE, ...)
-# S3 method for data.frame
-flast(x, g = NULL, TRA = NULL, na.rm = TRUE,
-      use.g.names = TRUE, drop = TRUE, ...)
-&lt;!-- %## S3 methods for class 'grouped_df' --&gt;
-# S3 method for grouped_df
-ffirst(x, TRA = NULL, na.rm = TRUE,
-       use.g.names = FALSE, keep.group_vars = TRUE, ...)
-# S3 method for grouped_df
-flast(x, TRA = NULL, na.rm = TRUE,
-      use.g.names = FALSE, keep.group_vars = TRUE, ...)</pre>
+    <pre class="usage"><span class='fu'>ffirst</span>(<span class='no'>x</span>, <span class='no'>...</span>)
+<span class='fu'>flast</span>(<span class='no'>x</span>, <span class='no'>...</span>)
+
+<span class='co'># S3 method for default</span>
+<span class='fu'>ffirst</span>(<span class='no'>x</span>, <span class='kw'>g</span> <span class='kw'>=</span> <span class='kw'>NULL</span>, <span class='kw'>TRA</span> <span class='kw'>=</span> <span class='kw'>NULL</span>, <span class='kw'>na.rm</span> <span class='kw'>=</span> <span class='fl'>TRUE</span>,
+       <span class='kw'>use.g.names</span> <span class='kw'>=</span> <span class='fl'>TRUE</span>, <span class='no'>...</span>)
+<span class='co'># S3 method for default</span>
+<span class='fu'>flast</span>(<span class='no'>x</span>, <span class='kw'>g</span> <span class='kw'>=</span> <span class='kw'>NULL</span>, <span class='kw'>TRA</span> <span class='kw'>=</span> <span class='kw'>NULL</span>, <span class='kw'>na.rm</span> <span class='kw'>=</span> <span class='fl'>TRUE</span>,
+      <span class='kw'>use.g.names</span> <span class='kw'>=</span> <span class='fl'>TRUE</span>, <span class='no'>...</span>)
+
+<span class='co'># S3 method for matrix</span>
+<span class='fu'>ffirst</span>(<span class='no'>x</span>, <span class='kw'>g</span> <span class='kw'>=</span> <span class='kw'>NULL</span>, <span class='kw'>TRA</span> <span class='kw'>=</span> <span class='kw'>NULL</span>, <span class='kw'>na.rm</span> <span class='kw'>=</span> <span class='fl'>TRUE</span>,
+       <span class='kw'>use.g.names</span> <span class='kw'>=</span> <span class='fl'>TRUE</span>, <span class='kw'>drop</span> <span class='kw'>=</span> <span class='fl'>TRUE</span>, <span class='no'>...</span>)
+<span class='co'># S3 method for matrix</span>
+<span class='fu'>flast</span>(<span class='no'>x</span>, <span class='kw'>g</span> <span class='kw'>=</span> <span class='kw'>NULL</span>, <span class='kw'>TRA</span> <span class='kw'>=</span> <span class='kw'>NULL</span>, <span class='kw'>na.rm</span> <span class='kw'>=</span> <span class='fl'>TRUE</span>,
+      <span class='kw'>use.g.names</span> <span class='kw'>=</span> <span class='fl'>TRUE</span>, <span class='kw'>drop</span> <span class='kw'>=</span> <span class='fl'>TRUE</span>, <span class='no'>...</span>)
+
+<span class='co'># S3 method for data.frame</span>
+<span class='fu'>ffirst</span>(<span class='no'>x</span>, <span class='kw'>g</span> <span class='kw'>=</span> <span class='kw'>NULL</span>, <span class='kw'>TRA</span> <span class='kw'>=</span> <span class='kw'>NULL</span>, <span class='kw'>na.rm</span> <span class='kw'>=</span> <span class='fl'>TRUE</span>,
+       <span class='kw'>use.g.names</span> <span class='kw'>=</span> <span class='fl'>TRUE</span>, <span class='kw'>drop</span> <span class='kw'>=</span> <span class='fl'>TRUE</span>, <span class='no'>...</span>)
+<span class='co'># S3 method for data.frame</span>
+<span class='fu'>flast</span>(<span class='no'>x</span>, <span class='kw'>g</span> <span class='kw'>=</span> <span class='kw'>NULL</span>, <span class='kw'>TRA</span> <span class='kw'>=</span> <span class='kw'>NULL</span>, <span class='kw'>na.rm</span> <span class='kw'>=</span> <span class='fl'>TRUE</span>,
+      <span class='kw'>use.g.names</span> <span class='kw'>=</span> <span class='fl'>TRUE</span>, <span class='kw'>drop</span> <span class='kw'>=</span> <span class='fl'>TRUE</span>, <span class='no'>...</span>)
+
+<span class='co'># S3 method for grouped_df</span>
+<span class='fu'>ffirst</span>(<span class='no'>x</span>, <span class='kw'>TRA</span> <span class='kw'>=</span> <span class='kw'>NULL</span>, <span class='kw'>na.rm</span> <span class='kw'>=</span> <span class='fl'>TRUE</span>,
+       <span class='kw'>use.g.names</span> <span class='kw'>=</span> <span class='fl'>FALSE</span>, <span class='kw'>keep.group_vars</span> <span class='kw'>=</span> <span class='fl'>TRUE</span>, <span class='no'>...</span>)
+<span class='co'># S3 method for grouped_df</span>
+<span class='fu'>flast</span>(<span class='no'>x</span>, <span class='kw'>TRA</span> <span class='kw'>=</span> <span class='kw'>NULL</span>, <span class='kw'>na.rm</span> <span class='kw'>=</span> <span class='fl'>TRUE</span>,
+      <span class='kw'>use.g.names</span> <span class='kw'>=</span> <span class='fl'>FALSE</span>, <span class='kw'>keep.group_vars</span> <span class='kw'>=</span> <span class='fl'>TRUE</span>, <span class='no'>...</span>)</pre>
 
     <h2 class="hasAnchor" id="arguments"><a class="anchor" href="#arguments"></a>Arguments</h2>
     <table class="ref-arguments">
     <colgroup><col class="name" /><col class="desc" /></colgroup>
     <tr>
       <th>x</th>
-      <td><p>a vector, matrix, data.frame or grouped tibble (<code><a href='https://dplyr.tidyverse.org/reference/grouped_df.html'>dplyr::grouped_df</a></code>).</p></td>
+      <td><p>a vector, matrix, data frame or grouped tibble (<code><a href='https://dplyr.tidyverse.org/reference/grouped_df.html'>dplyr::grouped_df</a></code>).</p></td>
     </tr>
     <tr>
       <th>g</th>
@@ -175,15 +172,15 @@ flast(x, TRA = NULL, na.rm = TRUE,
     </tr>
     <tr>
       <th>na.rm</th>
-      <td><p>logical. Skip missing values and choose the first / last non-missing value i.e. if the first (1) / last (n) value is NA, take the second (2) / second-to-last (n-1) value etc...</p></td>
+      <td><p>logical. <code>TRUE</code> skips missing values and returns the first / last non-missing value i.e. if the first (1) / last (n) value is <code>NA</code>, take the second (2) / second-to-last (n-1) value etc..</p></td>
     </tr>
     <tr>
       <th>use.g.names</th>
-      <td><p>make group-names and add to the result as names (vector method) or row-names (matrix and data.frame method). No row-names are generated for data.tables and grouped tibbles.</p></td>
+      <td><p>logical. Make group-names and add to the result as names (default method) or row-names (matrix and data frame methods). No row-names are generated for <em>data.table</em>'s.</p></td>
     </tr>
     <tr>
       <th>drop</th>
-      <td><p><em>matrix and data.frame method:</em> drop dimensions and return an atomic vector if <code>g = NULL</code> and <code>TRA = NULL</code>.</p></td>
+      <td><p><em>matrix and data.frame method:</em> Logical. <code>TRUE</code> drops dimensions and returns an atomic vector if <code>g = NULL</code> and <code>TRA = NULL</code>.</p></td>
     </tr>
     <tr>
       <th>keep.group_vars</th>
@@ -200,31 +197,55 @@ flast(x, TRA = NULL, na.rm = TRUE,
     <p><code>ffirst</code> returns the first value in <code>x</code>, grouped by <code>g</code>, or (if <code><a href='TRA.html'>TRA</a></code> is used) <code>x</code> transformed by its first value, grouped by <code>g</code>. Similarly <code>flast</code> returns the last value in <code>x</code>, ...</p>
     <h2 class="hasAnchor" id="see-also"><a class="anchor" href="#see-also"></a>See also</h2>
 
-    <div class='dont-index'><p><a href='fast-statistical-functions.html'>Fast Statistical Functions</a>, <a href='collapse-documentation.html'>Collapse Overview</a></p></div>
+    <div class='dont-index'><p><a href='fast-statistical-functions.html'>Fast Statistical Functions</a>, <a href='index.html'>Collapse Overview</a></p></div>
 
     <h2 class="hasAnchor" id="examples"><a class="anchor" href="#examples"></a>Examples</h2>
-    <pre class="examples"><span class='co'>## default vector method</span>
-<span class='fu'>ffirst</span>(<span class='no'>airquality</span>$<span class='no'>Ozone</span>)                   <span class='co'># Simple first value</span>
-<span class='fu'>ffirst</span>(<span class='no'>airquality</span>$<span class='no'>Ozone</span>, <span class='no'>airquality</span>$<span class='no'>Month</span>) <span class='co'># Grouped first value</span>
-<span class='fu'>ffirst</span>(<span class='no'>airquality</span>$<span class='no'>Ozone</span>, <span class='no'>airquality</span>$<span class='no'>Month</span>,
-       <span class='kw'>na.rm</span> <span class='kw'>=</span> <span class='fl'>FALSE</span>)                      <span class='co'># Grouped first, but without skipping initial NA's</span>
-
+    <pre class="examples"><div class='input'><span class='co'>## default vector method</span>
+<span class='fu'>ffirst</span>(<span class='no'>airquality</span>$<span class='no'>Ozone</span>)                   <span class='co'># Simple first value</span></div><div class='output co'>#&gt; [1] 41</div><div class='input'><span class='fu'>ffirst</span>(<span class='no'>airquality</span>$<span class='no'>Ozone</span>, <span class='no'>airquality</span>$<span class='no'>Month</span>) <span class='co'># Grouped first value</span></div><div class='output co'>#&gt;   5   6   7   8   9 
+#&gt;  41  29 135  39  96 </div><div class='input'><span class='fu'>ffirst</span>(<span class='no'>airquality</span>$<span class='no'>Ozone</span>, <span class='no'>airquality</span>$<span class='no'>Month</span>,
+       <span class='kw'>na.rm</span> <span class='kw'>=</span> <span class='fl'>FALSE</span>)                      <span class='co'># Grouped first, but without skipping initial NA's</span></div><div class='output co'>#&gt;   5   6   7   8   9 
+#&gt;  41  NA 135  39  96 </div><div class='input'>
 <span class='co'>## data.frame method</span>
-<span class='fu'>ffirst</span>(<span class='no'>airquality</span>)
-<span class='fu'>ffirst</span>(<span class='no'>airquality</span>, <span class='no'>airquality</span>$<span class='no'>Month</span>)
-<span class='fu'>ffirst</span>(<span class='no'>airquality</span>, <span class='no'>airquality</span>$<span class='no'>Month</span>, <span class='kw'>na.rm</span> <span class='kw'>=</span> <span class='fl'>FALSE</span>) <span class='co'># Again first Ozone measurement in month 6 is NA</span>
-
+<span class='fu'>ffirst</span>(<span class='no'>airquality</span>)</div><div class='output co'>#&gt;   Ozone Solar.R    Wind    Temp   Month     Day 
+#&gt;    41.0   190.0     7.4    67.0     5.0     1.0 </div><div class='input'><span class='fu'>ffirst</span>(<span class='no'>airquality</span>, <span class='no'>airquality</span>$<span class='no'>Month</span>)</div><div class='output co'>#&gt;   Ozone Solar.R Wind Temp Month Day
+#&gt; 5    41     190  7.4   67     5   1
+#&gt; 6    29     286  8.6   78     6   1
+#&gt; 7   135     269  4.1   84     7   1
+#&gt; 8    39      83  6.9   81     8   1
+#&gt; 9    96     167  6.9   91     9   1</div><div class='input'><span class='fu'>ffirst</span>(<span class='no'>airquality</span>, <span class='no'>airquality</span>$<span class='no'>Month</span>, <span class='kw'>na.rm</span> <span class='kw'>=</span> <span class='fl'>FALSE</span>) <span class='co'># Again first Ozone measurement in month 6 is NA</span></div><div class='output co'>#&gt;   Ozone Solar.R Wind Temp Month Day
+#&gt; 5    41     190  7.4   67     5   1
+#&gt; 6    NA     286  8.6   78     6   1
+#&gt; 7   135     269  4.1   84     7   1
+#&gt; 8    39      83  6.9   81     8   1
+#&gt; 9    96     167  6.9   91     9   1</div><div class='input'>
 <span class='co'>## matrix method</span>
 <span class='no'>aqm</span> <span class='kw'>&lt;-</span> <span class='fu'><a href='quick-conversion.html'>qM</a></span>(<span class='no'>airquality</span>)
-<span class='fu'>ffirst</span>(<span class='no'>aqm</span>)
-<span class='fu'>ffirst</span>(<span class='no'>aqm</span>, <span class='no'>airquality</span>$<span class='no'>Month</span>) <span class='co'># etc...</span>
-
+<span class='fu'>ffirst</span>(<span class='no'>aqm</span>)</div><div class='output co'>#&gt;   Ozone Solar.R    Wind    Temp   Month     Day 
+#&gt;    41.0   190.0     7.4    67.0     5.0     1.0 </div><div class='input'><span class='fu'>ffirst</span>(<span class='no'>aqm</span>, <span class='no'>airquality</span>$<span class='no'>Month</span>) <span class='co'># etc..</span></div><div class='output co'>#&gt;   Ozone Solar.R Wind Temp Month Day
+#&gt; 5    41     190  7.4   67     5   1
+#&gt; 6    29     286  8.6   78     6   1
+#&gt; 7   135     269  4.1   84     7   1
+#&gt; 8    39      83  6.9   81     8   1
+#&gt; 9    96     167  6.9   91     9   1</div><div class='input'>
 <span class='co'>## method for grouped tibbles - for use with dplyr</span>
 <span class='fu'><a href='https://rdrr.io/r/base/library.html'>library</a></span>(<span class='no'>dplyr</span>)
-<span class='no'>airquality</span> <span class='kw'>%&gt;%</span> <span class='fu'><a href='https://dplyr.tidyverse.org/reference/group_by.html'>group_by</a></span>(<span class='no'>Month</span>) <span class='kw'>%&gt;%</span> <span class='no'>ffirst</span>
-<span class='no'>airquality</span> <span class='kw'>%&gt;%</span> <span class='fu'><a href='https://dplyr.tidyverse.org/reference/group_by.html'>group_by</a></span>(<span class='no'>Month</span>) <span class='kw'>%&gt;%</span> <span class='fu'><a href='https://dplyr.tidyverse.org/reference/select.html'>select</a></span>(<span class='no'>Ozone</span>) <span class='kw'>%&gt;%</span> <span class='fu'>ffirst</span>(<span class='kw'>na.rm</span> <span class='kw'>=</span> <span class='fl'>FALSE</span>)
-
-<span class='co'># Note: All examples generalize to flast!</span></pre>
+<span class='no'>airquality</span> <span class='kw'>%&gt;%</span> <span class='fu'><a href='https://dplyr.tidyverse.org/reference/group_by.html'>group_by</a></span>(<span class='no'>Month</span>) <span class='kw'>%&gt;%</span> <span class='no'>ffirst</span></div><div class='output co'>#&gt; <span style='color: #949494;'># A tibble: 5 x 6</span><span>
+#&gt;   Month Ozone Solar.R  Wind  Temp   Day
+#&gt;   </span><span style='color: #949494;font-style: italic;'>&lt;int&gt;</span><span> </span><span style='color: #949494;font-style: italic;'>&lt;int&gt;</span><span>   </span><span style='color: #949494;font-style: italic;'>&lt;int&gt;</span><span> </span><span style='color: #949494;font-style: italic;'>&lt;dbl&gt;</span><span> </span><span style='color: #949494;font-style: italic;'>&lt;int&gt;</span><span> </span><span style='color: #949494;font-style: italic;'>&lt;int&gt;</span><span>
+#&gt; </span><span style='color: #BCBCBC;'>1</span><span>     5    41     190   7.4    67     1
+#&gt; </span><span style='color: #BCBCBC;'>2</span><span>     6    29     286   8.6    78     1
+#&gt; </span><span style='color: #BCBCBC;'>3</span><span>     7   135     269   4.1    84     1
+#&gt; </span><span style='color: #BCBCBC;'>4</span><span>     8    39      83   6.9    81     1
+#&gt; </span><span style='color: #BCBCBC;'>5</span><span>     9    96     167   6.9    91     1</div><div class='input'><span class='no'>airquality</span> <span class='kw'>%&gt;%</span> <span class='fu'><a href='https://dplyr.tidyverse.org/reference/group_by.html'>group_by</a></span>(<span class='no'>Month</span>) <span class='kw'>%&gt;%</span> <span class='fu'><a href='https://dplyr.tidyverse.org/reference/select.html'>select</a></span>(<span class='no'>Ozone</span>) <span class='kw'>%&gt;%</span> <span class='fu'>ffirst</span>(<span class='kw'>na.rm</span> <span class='kw'>=</span> <span class='fl'>FALSE</span>)</div><div class='output co'>#&gt; <span class='message'>Adding missing grouping variables: `Month`</span></div><div class='output co'>#&gt; </span><span style='color: #949494;'># A tibble: 5 x 2</span><span>
+#&gt;   Month Ozone
+#&gt;   </span><span style='color: #949494;font-style: italic;'>&lt;int&gt;</span><span> </span><span style='color: #949494;font-style: italic;'>&lt;int&gt;</span><span>
+#&gt; </span><span style='color: #BCBCBC;'>1</span><span>     5    41
+#&gt; </span><span style='color: #BCBCBC;'>2</span><span>     6    </span><span style='color: #BB0000;'>NA</span><span>
+#&gt; </span><span style='color: #BCBCBC;'>3</span><span>     7   135
+#&gt; </span><span style='color: #BCBCBC;'>4</span><span>     8    39
+#&gt; </span><span style='color: #BCBCBC;'>5</span><span>     9    96</div><div class='input'>
+# Note: All examples generalize to flast.
+</div></span></pre>
   </div>
   <div class="col-md-3 hidden-xs hidden-sm" id="pkgdown-sidebar">
     <nav id="toc" data-toggle="toc" class="sticky-top">

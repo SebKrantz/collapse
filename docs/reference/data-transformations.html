@@ -41,8 +41,8 @@
 
 <meta property="og:title" content="Data Transformations — A6-data-transformations" />
 <meta property="og:description" content="collapse provides an ensemble of functions to perform common data transformations efficiently and user friendly:
-dapply applies functions to rows or columns of matrices and data.frame's.
-BY is an S3 generic for Split-Apply-Combine computing and can perform aggregation as well as grouped transformations. (for aggregation please also see collap and Fast Statistical Functions).
+dapply applies functions to rows or columns of matrices and data frames, preserving the data format.
+BY is an S3 generic for Split-Apply-Combine computing and can perform aggregation as well as grouped transformations (for aggregation please also see collap and the Fast Statistical Functions).
 TRA is an S3 generic to efficiently perform (groupwise) replacement and sweeping out of statistics. 
 Supported operations are:
  Integer-id  String-id  Description 
@@ -61,9 +61,8 @@ Supported operations are:
 All of collapse's Fast Statistical Functions have a built-in TRA argument for faster access (i.e. you can compute (groupwise) statistics and use them to transform your data with a single function call).
 fscale/STD is an S3 generic to perform (groupwise and / or weighted) scaling / standardizing of data and is orders of magnitude faster than base::scale.
 fwithin/W is an S3 generic to efficiently perform (groupwise and / or weighted) within-transformations / demeaning / centering of data. Similarly fbetween/B computes (groupwise and / or weighted) between-transformations / averages.
-fHDwithin/HDW, shorthand for 'higher-dimensional within transform', is an S3 generic to efficiently center data on multiple groups and partial-out linear models (possibly involving many levels of fixed effects and interactions). In other words, fHDwithin/HDW efficiently computes residuals from (potentially complex) linear models. Similarly fHDbetween/HDB, shorthand for 'higher-dimensional between transformation', computes the corresponding means or fitted values.
-fFtest is a fast implementation of the R-Squared based F-test, to test exclusion restrictions on linear models potentially involving multiple large factors (fixed effects). It internally utilizes fHDwithin to project out factors while counting the degrees of freedom.
-flag/L/F, fdiff/D/Dlog and fgrowth/G are S3 generics to compute sequences of lags / leads and suitably lagged and iterated (quasi-, log-) differences and growth rates on time-series and panel data. More in Time-Series and Panel-Series.
+fHDwithin/HDW, shorthand for 'higher-dimensional within transform', is an S3 generic to efficiently center data on multiple groups and partial-out linear models (possibly involving many levels of fixed effects). In other words, fHDwithin/HDW efficiently computes residuals from (potentially complex) linear models. Similarly fHDbetween/HDB, shorthand for 'higher-dimensional between transformation', computes the corresponding means or fitted values.
+flag/L/F, fdiff/D/Dlog and fgrowth/G are S3 generics to compute sequences of lags / leads and suitably lagged and iterated (quasi-, log-) differences and growth rates on time series and panel data. More in Time Series and Panel Series.
 STD, W, B, HDW, HDB, L, D, Dlog and G are parsimonious wrappers around the f- functions above representing the corresponding transformation 'operators'. They have additional capabilities when applied to data-frames (i.e. variable selection, formula input, auto-renaming and id-variable preservation), and are easier to employ in regression formulas, but are otherwise identical in functionality.
 
 " />
@@ -98,7 +97,7 @@ STD, W, B, HDW, HDB, L, D, Dlog and G are parsimonious wrappers around the f- fu
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">collapse</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">1.2.1</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">1.3.0</span>
       </span>
     </div>
 
@@ -113,13 +112,10 @@ STD, W, B, HDW, HDB, L, D, Dlog and G are parsimonious wrappers around the f- fu
 <li>
   <a href="../news/index.html">News</a>
 </li>
-<li>
-  <a href="../blog/index.html">Blog</a>
-</li>
       </ul>
       <ul class="nav navbar-nav navbar-right">
         <li>
-  <a href="https://twitter.com/collapse">
+  <a href="https://twitter.com/collapse_R">
     <span class="fa fa-twitter"></span>
      
   </a>
@@ -150,8 +146,8 @@ STD, W, B, HDW, HDB, L, D, Dlog and G are parsimonious wrappers around the f- fu
 
     <div class="ref-description">
     <p><em>collapse</em> provides an ensemble of functions to perform common data transformations efficiently and user friendly:</p><ul>
-<li><p><code><a href='dapply.html'>dapply</a></code> applies functions to <b>rows or columns</b> of matrices and data.frame's.</p></li>
-<li><p><code><a href='BY.html'>BY</a></code> is an S3 generic for <b>Split-Apply-Combine computing</b> and can perform aggregation as well as grouped transformations. (for aggregation please also see <code><a href='collap.html'>collap</a></code> and <a href='fast-statistical-functions.html'>Fast Statistical Functions</a>).</p></li>
+<li><p><code><a href='dapply.html'>dapply</a></code> applies functions to <b>rows or columns</b> of matrices and data frames, preserving the data format.</p></li>
+<li><p><code><a href='BY.html'>BY</a></code> is an S3 generic for <b>Split-Apply-Combine computing</b> and can perform aggregation as well as grouped transformations (for aggregation please also see <code><a href='collap.html'>collap</a></code> and the <a href='fast-statistical-functions.html'>Fast Statistical Functions</a>).</p></li>
 <li><p><code><a href='TRA.html'>TRA</a></code> is an S3 generic to efficiently perform (groupwise) <b>replacement and sweeping out of statistics</b>. <!-- %The basic syntax is \code{TRA(x, xag, g)} where \code{x} is data to be transformed, \code{xag} is some set of aggregate statistics to tranform \code{x} and \code{g} is an optional grouping vector for grouped transformations. -->
 Supported operations are:</p><table class='table'>
 <tr><td><em> Integer-id </em></td><td></td><td><em> String-id </em></td><td></td><td><em> Description </em></td></tr>
@@ -170,9 +166,8 @@ Supported operations are:</p><table class='table'>
 <p>All of <em>collapse</em>'s <a href='fast-statistical-functions.html'>Fast Statistical Functions</a> have a built-in <code>TRA</code> argument for faster access (i.e. you can compute (groupwise) statistics and use them to transform your data with a single function call).</p></li>
 <li><p><code><a href='fscale.html'>fscale/STD</a></code> is an S3 generic to perform (groupwise and / or weighted) <b>scaling / standardizing</b> of data and is orders of magnitude faster than <code><a href='https://rdrr.io/r/base/scale.html'>base::scale</a></code>.</p></li>
 <li><p><code><a href='fbetween_fwithin.html'>fwithin/W</a></code> is an S3 generic to efficiently perform (groupwise and / or weighted) <b>within-transformations / demeaning / centering</b> of data. Similarly <code><a href='fbetween_fwithin.html'>fbetween/B</a></code> computes (groupwise and / or weighted) <b>between-transformations / averages</b>.</p></li>
-<li><p><code><a href='fHDbetween_fHDwithin.html'>fHDwithin/HDW</a></code>, shorthand for 'higher-dimensional within transform', is an S3 generic to efficiently <b>center data on multiple groups</b> and partial-out linear models (possibly involving many levels of fixed effects and interactions). In other words, <code><a href='fHDbetween_fHDwithin.html'>fHDwithin/HDW</a></code> efficiently computes <b>residuals</b> from (potentially complex) linear models. Similarly <code><a href='fHDbetween_fHDwithin.html'>fHDbetween/HDB</a></code>, shorthand for 'higher-dimensional between transformation', computes the corresponding means or <b>fitted values</b>.</p></li>
-<li><p><code><a href='fFtest.html'>fFtest</a></code> is a fast implementation of the R-Squared based F-test, to test <b>exclusion restrictions</b> on linear models potentially involving multiple large factors (fixed effects). It internally utilizes <code><a href='fHDbetween_fHDwithin.html'>fHDwithin</a></code> to project out factors while counting the degrees of freedom.</p></li>
-<li><p><code><a href='flag.html'>flag/L/F</a></code>, <code><a href='fdiff.html'>fdiff/D/Dlog</a></code> and <code><a href='fgrowth.html'>fgrowth/G</a></code> are S3 generics to compute sequences of <b>lags / leads</b> and suitably lagged and iterated (quasi-, log-) <b>differences</b> and <b>growth rates</b> on time-series and panel data. More in <a href='time-series-panel-series.html'>Time-Series and Panel-Series</a>.</p></li>
+<li><p><code><a href='fHDbetween_fHDwithin.html'>fHDwithin/HDW</a></code>, shorthand for 'higher-dimensional within transform', is an S3 generic to efficiently <b>center data on multiple groups</b> and partial-out linear models (possibly involving many levels of fixed effects). In other words, <code><a href='fHDbetween_fHDwithin.html'>fHDwithin/HDW</a></code> efficiently computes <b>residuals</b> from (potentially complex) linear models. Similarly <code><a href='fHDbetween_fHDwithin.html'>fHDbetween/HDB</a></code>, shorthand for 'higher-dimensional between transformation', computes the corresponding means or <b>fitted values</b>.</p></li>
+<li><p><code><a href='flag.html'>flag/L/F</a></code>, <code><a href='fdiff.html'>fdiff/D/Dlog</a></code> and <code><a href='fgrowth.html'>fgrowth/G</a></code> are S3 generics to compute sequences of <b>lags / leads</b> and suitably lagged and iterated (quasi-, log-) <b>differences</b> and <b>growth rates</b> on time series and panel data. More in <a href='time-series-panel-series.html'>Time Series and Panel Series</a>.</p></li>
 <li><p><code>STD, W, B, HDW, HDB, L, D, Dlog</code> and <code>G</code> are parsimonious wrappers around the <code>f-</code> functions above representing the corresponding transformation 'operators'. They have additional capabilities when applied to data-frames (i.e. variable selection, formula input, auto-renaming and id-variable preservation), and are easier to employ in regression formulas, but are otherwise identical in functionality.</p></li>
 </ul>
 
@@ -185,24 +180,23 @@ Supported operations are:</p><table class='table'>
     <p></p><table class='table'>
 <tr><td><em> Function / S3 Generic </em></td><td></td><td><em> Methods </em></td><td></td><td><em> Description </em></td></tr>
 <tr><td><!-- % \Sexpr{"\u200B"} \Sexpr{"\u200B"} % \Sexpr{"\u200B"} \Sexpr{"\u200B"} -->
-  <code><a href='dapply.html'>dapply</a></code></td><td></td><td>No methods, works with matrices and data frames</td><td></td><td>apply functions to rows or columns</td></tr>
+  <code><a href='dapply.html'>dapply</a></code></td><td></td><td>No methods, works with matrices and data frames</td><td></td><td>Apply functions to rows or columns</td></tr>
 <tr><td><code><a href='BY.html'>BY</a></code></td><td></td><td><code>default, matrix, data.frame, grouped_df</code></td><td></td><td>Split-Apply-Combine computing</td></tr>
-<tr><td><code><a href='TRA.html'>TRA</a></code></td><td></td><td><code>default, matrix, data.frame, grouped_df</code></td><td></td><td>replace and sweep out statistics</td></tr>
-<tr><td><code><a href='fscale.html'>fscale/STD</a></code></td><td></td><td><code>default, matrix, data.frame, pseries, pdata.frame, grouped_df</code></td><td></td><td>scale / standardize data</td></tr>
-<tr><td><code><a href='fbetween_fwithin.html'>fwithin/W</a></code></td><td></td><td><code>default, matrix, data.frame, pseries, pdata.frame, grouped_df</code></td><td></td><td>demean / center data</td></tr>
-<tr><td><code><a href='fbetween_fwithin.html'>fbetween/B</a></code></td><td></td><td><code>default, matrix, data.frame, pseries, pdata.frame, grouped_df</code></td><td></td><td>compute means / average data</td></tr>
-<tr><td><code><a href='fHDbetween_fHDwithin.html'>fHDwithin/HDW</a></code></td><td></td><td><code>default, matrix, data.frame, pseries, pdata.frame</code></td><td></td><td>high-dimensional centering and lm residuals</td></tr>
-<tr><td><code><a href='fHDbetween_fHDwithin.html'>fHDbetween/HDB</a></code></td><td></td><td><code>default, matrix, data.frame, pseries, pdata.frame</code></td><td></td><td>high-dimensional averages and lm fitted values</td></tr>
-<tr><td><code><a href='fFtest.html'>fFtest</a></code></td><td></td><td>No methods, it's a standalone test to which data needs to be supplied.</td><td></td><td>fast F-test of exclusion restrictions on linear models (involving factors)</td></tr>
-<tr><td><code><a href='flag.html'>flag/L/F</a></code></td><td></td><td><code>default, matrix, data.frame, pseries, pdata.frame, grouped_df</code></td><td></td><td>(sequences of) lags / leads</td></tr>
-<tr><td><code><a href='fdiff.html'>fdiff/D/Dlog</a></code></td><td></td><td><code>default, matrix, data.frame, pseries, pdata.frame, grouped_df</code></td><td></td><td>(sequences of lagged/leaded and iterated) differences</td></tr>
-<tr><td><code><a href='fdiff.html'>fgrowth/G</a></code></td><td></td><td><code>default, matrix, data.frame, pseries, pdata.frame, grouped_df</code></td><td></td><td>(sequences of lagged/leaded and iterated) growth rates or log-differences</td></tr>
+<tr><td><code><a href='TRA.html'>TRA</a></code></td><td></td><td><code>default, matrix, data.frame, grouped_df</code></td><td></td><td>Replace and sweep out statistics</td></tr>
+<tr><td><code><a href='fscale.html'>fscale/STD</a></code></td><td></td><td><code>default, matrix, data.frame, pseries, pdata.frame, grouped_df</code></td><td></td><td>Scale / standardize data</td></tr>
+<tr><td><code><a href='fbetween_fwithin.html'>fwithin/W</a></code></td><td></td><td><code>default, matrix, data.frame, pseries, pdata.frame, grouped_df</code></td><td></td><td>Demean / center data</td></tr>
+<tr><td><code><a href='fbetween_fwithin.html'>fbetween/B</a></code></td><td></td><td><code>default, matrix, data.frame, pseries, pdata.frame, grouped_df</code></td><td></td><td>Compute means / average data</td></tr>
+<tr><td><code><a href='fHDbetween_fHDwithin.html'>fHDwithin/HDW</a></code></td><td></td><td><code>default, matrix, data.frame, pseries, pdata.frame</code></td><td></td><td>High-dimensional centering and lm residuals</td></tr>
+<tr><td><code><a href='fHDbetween_fHDwithin.html'>fHDbetween/HDB</a></code></td><td></td><td><code>default, matrix, data.frame, pseries, pdata.frame</code></td><td></td><td>High-dimensional averages and lm fitted values</td></tr>
+<tr><td><code><a href='flag.html'>flag/L/F</a></code></td><td></td><td><code>default, matrix, data.frame, pseries, pdata.frame, grouped_df</code></td><td></td><td>(Sequences of) lags / leads</td></tr>
+<tr><td><code><a href='fdiff.html'>fdiff/D/Dlog</a></code></td><td></td><td><code>default, matrix, data.frame, pseries, pdata.frame, grouped_df</code></td><td></td><td>(Sequences of lagged/leaded and iterated quasi- log-) differences</td></tr>
+<tr><td><code><a href='fdiff.html'>fgrowth/G</a></code></td><td></td><td><code>default, matrix, data.frame, pseries, pdata.frame, grouped_df</code></td><td></td><td>(Sequences of lagged/leaded and iterated) growth rates</td></tr>
 </table>
 
 
     <h2 class="hasAnchor" id="see-also"><a class="anchor" href="#see-also"></a>See also</h2>
 
-    <div class='dont-index'><p><a href='collapse-documentation.html'>Collapse Overview</a>, <a href='fast-statistical-functions.html'>Fast Statistical Functions</a>, <code><a href='collap.html'>collap</a></code>, <a href='time-series-panel-series.html'>Time-Series and Panel-Series</a></p></div>
+    <div class='dont-index'><p><a href='index.html'>Collapse Overview</a>, <a href='fast-statistical-functions.html'>Fast Statistical Functions</a>, <a href='time-series-panel-series.html'>Time Series and Panel Series</a></p></div>
 
   </div>
   <div class="col-md-3 hidden-xs hidden-sm" id="pkgdown-sidebar">

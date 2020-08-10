@@ -6,7 +6,7 @@
 <meta http-equiv="X-UA-Compatible" content="IE=edge">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-<title>Fast Data Frame Manipulation — A3-data-frame-manipulation • collapse</title>
+<title>Fast Data Manipulation — A3-fast-data-manipulation • collapse</title>
 
 
 <!-- jquery -->
@@ -39,13 +39,16 @@
 
 
 
-<meta property="og:title" content="Fast Data Frame Manipulation — A3-data-frame-manipulation" />
-<meta property="og:description" content="collapse provides the following functions for fast manipulation of (mostly) data.frames.
+<meta property="og:title" content="Fast Data Manipulation — A3-fast-data-manipulation" />
+<meta property="og:description" content="collapse provides the following functions for fast manipulation of (mostly) data frames.
 fselect is a much faster alternative to dplyr::select to select columns using expressions involving column names. get_vars is a more versatile and programmer friendly function to efficiently select and replace columns by names, indices, logical vectors, regular expressions or using functions to identify columns.
 The functions num_vars, cat_vars, char_vars, fact_vars, logi_vars and Date_vars are convenience functions to efficiently select and replace columns by data type.
-add_vars efficiently adds new columns at any position within a data.frame (default at the end). This can be done vie replacement (i.e. add_vars(data) &amp;lt;- newdata) or returning the appended data (i.e. add_vars(data, newdata1, newdata2, ...)). Because of the latter, add_vars is also a more efficient alternative to cbind.data.frame.
-fsubset is a much faster version of base::subset for efficiently subset vectors, matrices and data.frames. If the non-standard evaluation offered by fsubset is not needed, the function ss is a much faster and also more secure alternative to [.data.frame.
-ftransform is a much faster version of base::transform, to modify and delete existing columns or append a data frame with new computed columns. settransform does all of that by reference, i.e. it modifies the data frame in the global environment. fcompute is similar to ftransform but only returns modified and computed columns in a new data frame.
+add_vars efficiently adds new columns at any position within a data frame (default at the end). This can be done vie replacement (i.e. add_vars(data) &amp;lt;- newdata) or returning the appended data (i.e. add_vars(data, newdata1, newdata2, ...)). Because of the latter, add_vars is also a more efficient alternative to cbind.data.frame.
+fsubset is a much faster version of base::subset to efficiently subset vectors, matrices and data frames. If the non-standard evaluation offered by fsubset is not needed, the function ss is a much faster and also more secure alternative to [.data.frame.
+ftransform is a much faster version of base::transform, to modify and delete existing columns or append a data frame with new computed columns. settransform does all of that by reference, i.e. it modifies the data frame in the global environment. fcompute is similar to ftransform but only returns modified and computed columns in a new data frame. As a new feature, it is now possible to bulk-process columns with ftransform, i.e. ftransform(data, fscale(data[1:2])) is the same as ftransform(data, col1 = fscale(col1), col2 = fscale(col2)), and ftransform(data) &amp;lt;- fscale(data[1:2])) or settransform(data, fscale(data[1:2])) are both equivalent to data[1:2] &amp;lt;- fscale(data[1:2])). Non-matching columns are added to the data.frame.
+roworder is a fast substitute for dplyr::arrange, but the syntax is inspired by data.table::setorder.
+colorder efficiently reorders columns in a data frame, see also data.table::setcolorder.
+frename is a fast substitute for dplyr::rename, to efficiently rename various objects. setrename renames objects by reference.
 
 " />
 
@@ -79,7 +82,7 @@ ftransform is a much faster version of base::transform, to modify and delete exi
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">collapse</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">1.2.1</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">1.3.0</span>
       </span>
     </div>
 
@@ -94,13 +97,10 @@ ftransform is a much faster version of base::transform, to modify and delete exi
 <li>
   <a href="../news/index.html">News</a>
 </li>
-<li>
-  <a href="../blog/index.html">Blog</a>
-</li>
       </ul>
       <ul class="nav navbar-nav navbar-right">
         <li>
-  <a href="https://twitter.com/collapse">
+  <a href="https://twitter.com/collapse_R">
     <span class="fa fa-twitter"></span>
      
   </a>
@@ -124,18 +124,21 @@ ftransform is a much faster version of base::transform, to modify and delete exi
 <div class="row">
   <div class="col-md-9 contents">
     <div class="page-header">
-    <h1>Fast Data Frame Manipulation</h1>
+    <h1>Fast Data Manipulation</h1>
     
     <div class="hidden name"><code>fast-data-manipulation.Rd</code></div>
     </div>
 
     <div class="ref-description">
-    <p><em>collapse</em> provides the following functions for fast manipulation of (mostly) data.frames.</p><ul>
+    <p><em>collapse</em> provides the following functions for fast manipulation of (mostly) data frames.</p><ul>
 <li><p><code><a href='select_replace_vars.html'>fselect</a></code> is a much faster alternative to <code><a href='https://dplyr.tidyverse.org/reference/select.html'>dplyr::select</a></code> to select columns using expressions involving column names. <code><a href='select_replace_vars.html'>get_vars</a></code> is a more versatile and programmer friendly function to efficiently select and replace columns by names, indices, logical vectors, regular expressions or using functions to identify columns.</p></li>
 <li><p>The functions <code><a href='select_replace_vars.html'>num_vars</a></code>, <code><a href='select_replace_vars.html'>cat_vars</a></code>, <code><a href='select_replace_vars.html'>char_vars</a></code>, <code><a href='select_replace_vars.html'>fact_vars</a></code>, <code><a href='select_replace_vars.html'>logi_vars</a></code> and <code><a href='select_replace_vars.html'>Date_vars</a></code> are convenience functions to efficiently select and replace columns by data type.</p></li>
-<li><p><code><a href='select_replace_vars.html'>add_vars</a></code> efficiently adds new columns at any position within a data.frame (default at the end). This can be done vie replacement (i.e. <code>add_vars(data) &lt;- newdata</code>) or returning the appended data (i.e. <code><a href='select_replace_vars.html'>add_vars(data, newdata1, newdata2, ...)</a></code>). Because of the latter, <code>add_vars</code> is also a more efficient alternative to <code>cbind.data.frame</code>.</p></li>
-<li><p><code><a href='fsubset.html'>fsubset</a></code> is a much faster version of <code><a href='https://rdrr.io/r/base/subset.html'>base::subset</a></code> for efficiently subset vectors, matrices and data.frames. If the non-standard evaluation offered by <code><a href='fsubset.html'>fsubset</a></code> is not needed, the function <code><a href='fsubset.html'>ss</a></code> is a much faster and also more secure alternative to <code>[.data.frame</code>.</p></li>
-<li><p><code><a href='ftransform.html'>ftransform</a></code> is a much faster version of <code><a href='https://rdrr.io/r/base/transform.html'>base::transform</a></code>, to modify and delete existing columns or append a data frame with new computed columns. <code><a href='ftransform.html'>settransform</a></code> does all of that by reference, i.e. it modifies the data frame in the global environment. <code><a href='ftransform.html'>fcompute</a></code> is similar to <code><a href='ftransform.html'>ftransform</a></code> but only returns modified and computed columns in a new data frame.</p></li>
+<li><p><code><a href='select_replace_vars.html'>add_vars</a></code> efficiently adds new columns at any position within a data frame (default at the end). This can be done vie replacement (i.e. <code>add_vars(data) &lt;- newdata</code>) or returning the appended data (i.e. <code><a href='select_replace_vars.html'>add_vars(data, newdata1, newdata2, ...)</a></code>). Because of the latter, <code>add_vars</code> is also a more efficient alternative to <code>cbind.data.frame</code>.</p></li>
+<li><p><code><a href='fsubset.html'>fsubset</a></code> is a much faster version of <code><a href='https://rdrr.io/r/base/subset.html'>base::subset</a></code> to efficiently subset vectors, matrices and data frames. If the non-standard evaluation offered by <code><a href='fsubset.html'>fsubset</a></code> is not needed, the function <code><a href='fsubset.html'>ss</a></code> is a much faster and also more secure alternative to <code>[.data.frame</code>.</p></li>
+<li><p><code><a href='ftransform.html'>ftransform</a></code> is a much faster version of <code><a href='https://rdrr.io/r/base/transform.html'>base::transform</a></code>, to modify and delete existing columns or append a data frame with new computed columns. <code><a href='ftransform.html'>settransform</a></code> does all of that by reference, i.e. it modifies the data frame in the global environment. <code><a href='ftransform.html'>fcompute</a></code> is similar to <code><a href='ftransform.html'>ftransform</a></code> but only returns modified and computed columns in a new data frame. As a new feature, it is now possible to bulk-process columns with <code><a href='ftransform.html'>ftransform</a></code>, i.e. <code><a href='ftransform.html'>ftransform(data, fscale(data[1:2]))</a></code> is the same as <code><a href='ftransform.html'>ftransform(data, col1 = fscale(col1), col2 = fscale(col2))</a></code>, and <code>ftransform(data) &lt;- fscale(data[1:2]))</code> or <code><a href='ftransform.html'>settransform(data, fscale(data[1:2]))</a></code> are both equivalent to <code>data[1:2] &lt;- fscale(data[1:2]))</code>. Non-matching columns are added to the data.frame.</p></li>
+<li><p><code><a href='roworder.html'>roworder</a></code> is a fast substitute for <code><a href='https://dplyr.tidyverse.org/reference/arrange.html'>dplyr::arrange</a></code>, but the syntax is inspired by <code><a href='https://rdrr.io/pkg/data.table/man/setorder.html'>data.table::setorder</a></code>.</p></li>
+<li><p><code><a href='colorder.html'>colorder</a></code> efficiently reorders columns in a data frame, see also <code><a href='https://rdrr.io/pkg/data.table/man/setcolorder.html'>data.table::setcolorder</a></code>.</p></li>
+<li><p><code><a href='frename.html'>frename</a></code> is a fast substitute for <code><a href='https://dplyr.tidyverse.org/reference/rename.html'>dplyr::rename</a></code>, to efficiently rename various objects. <code><a href='frename.html'>setrename</a></code> renames objects by reference.</p></li>
 </ul>
 
     </div>
@@ -146,20 +149,23 @@ ftransform is a much faster version of base::transform, to modify and delete exi
 
     <p></p><table class='table'>
 <tr><td><em> Function / S3 Generic </em></td><td></td><td><em> Methods </em></td><td></td><td><em> Description </em></td></tr>
-<tr><td><code><a href='select_replace_vars.html'>fselect</a></code></td><td></td><td>No methods, for data.frame's</td><td></td><td>Fast select columns (non-standard evaluation)</td></tr>
-<tr><td><code><a href='select_replace_vars.html'>get_vars</a></code>, <code><a href='select_replace_vars.html'>num_vars</a></code>, <code><a href='select_replace_vars.html'>cat_vars</a></code>, <code><a href='select_replace_vars.html'>char_vars</a></code>, <code><a href='select_replace_vars.html'>fact_vars</a></code>, <code><a href='select_replace_vars.html'>logi_vars</a></code>, <code><a href='select_replace_vars.html'>Date_vars</a></code></td><td></td><td>No methods, for data.frame's</td><td></td><td>Fast select or replace columns</td></tr>
-<tr><td><code><a href='select_replace_vars.html'>add_vars</a></code></td><td></td><td>No methods, for data.frame's</td><td></td><td>Fast add columns</td></tr>
+<tr><td><code><a href='select_replace_vars.html'>fselect(&lt;-)</a></code></td><td></td><td>No methods, for data frames</td><td></td><td>Fast select or replace columns (non-standard evaluation)</td></tr>
+<tr><td><code><a href='select_replace_vars.html'>get_vars(&lt;-)</a></code>, <code><a href='select_replace_vars.html'>num_vars(&lt;-)</a></code>, <code><a href='select_replace_vars.html'>cat_vars(&lt;-)</a></code>, <code><a href='select_replace_vars.html'>char_vars(&lt;-)</a></code>, <code><a href='select_replace_vars.html'>fact_vars(&lt;-)</a></code>, <code><a href='select_replace_vars.html'>logi_vars(&lt;-)</a></code>, <code><a href='select_replace_vars.html'>Date_vars(&lt;-)</a></code></td><td></td><td>No methods, for data frames</td><td></td><td>Fast select or replace columns</td></tr>
+<tr><td><code><a href='select_replace_vars.html'>add_vars(&lt;-)</a></code></td><td></td><td>No methods, for data frames</td><td></td><td>Fast add columns</td></tr>
 <tr><td><code><a href='fsubset.html'>fsubset</a></code></td><td></td><td><code>default, matrix, data.frame</code></td><td></td><td>Fast subset data (non-standard evaluation)</td></tr>
-<tr><td><code><a href='fsubset.html'>ss</a></code></td><td></td><td>No methods, for data.frame's</td><td></td><td>Fast subset data.frames's</td></tr>
-<tr><td><code><a href='ftransform.html'>ftransform</a></code></td><td></td><td>No methods, for data.frame's</td><td></td><td>Compute, modify or delete columns (non-standard evaluation)</td></tr>
-<tr><td><code><a href='ftransform.html'>settransform</a></code></td><td></td><td>No methods, for data.frame's</td><td></td><td>Compute, modify or delete columns by reference (non-standard evaluation)</td></tr>
-<tr><td><code><a href='ftransform.html'>fcompute</a></code></td><td></td><td>No methods, for data.frame's</td><td></td><td>Compute or modify columns, returned in a new data.frame (non-standard evaluation)</td></tr>
+<tr><td><code><a href='fsubset.html'>ss</a></code></td><td></td><td>No methods, for data frames</td><td></td><td>Fast subset data frames</td></tr>
+<tr><td><code><a href='ftransform.html'>(f/set)ftransform(&lt;-)</a></code></td><td></td><td>No methods, for data frames</td><td></td><td>Compute, modify or delete columns (non-standard evaluation)</td></tr>
+<tr><td><!-- %\code{\link{settransform}} \tab\tab No methods, for data frames \tab\tab Compute, modify or delete columns by reference (non-standard evaluation) \cr -->
+                 <code><a href='ftransform.html'>fcompute</a></code></td><td></td><td>No methods, for data frames</td><td></td><td>Compute or modify columns, returned in a new data frame (non-standard evaluation)</td></tr>
+<tr><td><code><a href='roworder.html'>roworder(v)</a></code></td><td></td><td>No methods, for data frames</td><td></td><td>Reorder rows and return data frame (standard and non-standard evaluation)</td></tr>
+<tr><td><code><a href='colorder.html'>colorder(v)</a></code></td><td></td><td>No methods, for data frames</td><td></td><td>Reorder columns and return data frame (standard and non-standard evaluation)</td></tr>
+<tr><td><code><a href='frename.html'>(f/set)rename</a></code></td><td></td><td>No methods, for all objects with 'names' attribute</td><td></td><td>Rename and return object</td></tr>
 </table>
 
 
     <h2 class="hasAnchor" id="see-also"><a class="anchor" href="#see-also"></a>See also</h2>
 
-    <div class='dont-index'><p><a href='quick-conversion.html'>Quick Data Conversion</a>, <a href='collapse-documentation.html'>Collapse Overview</a></p></div>
+    <div class='dont-index'><p><a href='index.html'>Collapse Overview</a>, <a href='quick-conversion.html'>Quick Data Conversion</a>, <a href='recode-replace.html'>Recode and Replace Values</a></p></div>
 
   </div>
   <div class="col-md-3 hidden-xs hidden-sm" id="pkgdown-sidebar">

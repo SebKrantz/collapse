@@ -40,7 +40,7 @@
 
 
 <meta property="og:title" content="World Development Dataset — wlddev" />
-<meta property="og:description" content="This dataset contains 4 indicators from the World Bank's World Development Indicators (WDI) database: (1) GDP per capita, (2) Life expectancy at birth, (3) GINI index and (4) Net ODA received. The panel-data is balanced and covers 216 present and historic countries from 1960-2018 (World Bank aggregates and regional entities are excluded).
+<meta property="og:description" content="This dataset contains 4 indicators from the World Bank's World Development Indicators (WDI) database: (1) GDP per capita, (2) Life expectancy at birth, (3) GINI index and (4) Net ODA received. The panel data is balanced and covers 216 present and historic countries from 1960-2018 (World Bank aggregates and regional entities are excluded).
 Apart from the indicators the data contains a number of identifiers (character country name, factor ISO3 country code, World Bank region and income level, numeric year and decade) and 2 generated variables: A logical variable indicating whether the country is an OECD member, and a fictitious variable stating the date the data was recorded. These variables were added so that all common data-types are represented in this dataset, making it an ideal test-dataset for certain collapse functions." />
 
 
@@ -73,7 +73,7 @@ Apart from the indicators the data contains a number of identifiers (character c
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">collapse</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">1.2.1</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">1.3.0</span>
       </span>
     </div>
 
@@ -88,13 +88,10 @@ Apart from the indicators the data contains a number of identifiers (character c
 <li>
   <a href="../news/index.html">News</a>
 </li>
-<li>
-  <a href="../blog/index.html">Blog</a>
-</li>
       </ul>
       <ul class="nav navbar-nav navbar-right">
         <li>
-  <a href="https://twitter.com/collapse">
+  <a href="https://twitter.com/collapse_R">
     <span class="fa fa-twitter"></span>
      
   </a>
@@ -124,7 +121,7 @@ Apart from the indicators the data contains a number of identifiers (character c
     </div>
 
     <div class="ref-description">
-    <p>This dataset contains 4 indicators from the World Bank's World Development Indicators (WDI) database: (1) GDP per capita, (2) Life expectancy at birth, (3) GINI index and (4) Net ODA received. The panel-data is balanced and covers 216 present and historic countries from 1960-2018 (World Bank aggregates and regional entities are excluded).</p>
+    <p>This dataset contains 4 indicators from the World Bank's World Development Indicators (WDI) database: (1) GDP per capita, (2) Life expectancy at birth, (3) GINI index and (4) Net ODA received. The panel data is balanced and covers 216 present and historic countries from 1960-2018 (World Bank aggregates and regional entities are excluded).</p>
 <p>Apart from the indicators the data contains a number of identifiers (character country name, factor ISO3 country code, World Bank region and income level, numeric year and decade) and 2 generated variables: A logical variable indicating whether the country is an OECD member, and a fictitious variable stating the date the data was recorded. These variables were added so that all common data-types are represented in this dataset, making it an ideal test-dataset for certain <em>collapse</em> functions.</p>
     </div>
 
@@ -133,7 +130,7 @@ Apart from the indicators the data contains a number of identifiers (character c
 
     <h2 class="hasAnchor" id="format"><a class="anchor" href="#format"></a>Format</h2>
 
-    <p>A data frame with 12744 observations on the following 12 variables. All variables are labelled e.g. have a 'label' attribute.</p><dl'>
+    <p>A data frame with 12744 observations on the following 12 variables. All variables are labeled e.g. have a 'label' attribute.</p><dl'>
     <dt><code>country</code></dt><dd><p><em>chr</em> Country Name</p></dd>
     <dt><code>iso3c</code></dt><dd><p><em>fct</em> Country Code</p></dd>
     <dt><code>date</code></dt><dd><p><em>date</em> Date Recorded (Fictitious)</p></dd>
@@ -154,28 +151,293 @@ Apart from the indicators the data contains a number of identifiers (character c
     <p><a href='https://data.worldbank.org/'>https://data.worldbank.org/</a>. Search <code>vlabels(wlddev)[9:12]</code> to find the right series.</p>
     <h2 class="hasAnchor" id="see-also"><a class="anchor" href="#see-also"></a>See also</h2>
 
-    <div class='dont-index'><p><code><a href='GGDC10S.html'>GGDC10S</a></code>, <a href='collapse-documentation.html'>Collapse Overview</a></p></div>
+    <div class='dont-index'><p><code><a href='GGDC10S.html'>GGDC10S</a></code>, <a href='index.html'>Collapse Overview</a></p></div>
 
     <h2 class="hasAnchor" id="examples"><a class="anchor" href="#examples"></a>Examples</h2>
-    <pre class="examples"><span class='fu'><a href='https://rdrr.io/r/utils/data.html'>data</a></span>(<span class='no'>wlddev</span>)
+    <pre class="examples"><div class='input'><span class='fu'><a href='https://rdrr.io/r/utils/data.html'>data</a></span>(<span class='no'>wlddev</span>)
 
 <span class='co'># Panel-summarizing the 4 series</span>
-<span class='fu'><a href='qsu.html'>qsu</a></span>(<span class='no'>wlddev</span>, <span class='kw'>pid</span> <span class='kw'>=</span> ~<span class='no'>iso3c</span>, <span class='kw'>cols</span> <span class='kw'>=</span> <span class='fl'>9</span>:<span class='fl'>12</span>, <span class='kw'>vlabels</span> <span class='kw'>=</span> <span class='fl'>TRUE</span>)
-
+<span class='fu'><a href='qsu.html'>qsu</a></span>(<span class='no'>wlddev</span>, <span class='kw'>pid</span> <span class='kw'>=</span> ~<span class='no'>iso3c</span>, <span class='kw'>cols</span> <span class='kw'>=</span> <span class='fl'>9</span>:<span class='fl'>12</span>, <span class='kw'>vlabels</span> <span class='kw'>=</span> <span class='fl'>TRUE</span>)</div><div class='output co'>#&gt; , , PCGDP: GDP per capita (constant 2010 US$)
+#&gt; 
+#&gt;              N/T        Mean          SD          Min         Max
+#&gt; Overall     8995  11563.6529  18348.4052     131.6464   191586.64
+#&gt; Between      203  12488.8577  19628.3668     255.3999  141165.083
+#&gt; Within   44.3103  11563.6529   6334.9523  -30529.0928   75348.067
+#&gt; 
+#&gt; , , LIFEEX: Life expectancy at birth, total (years)
+#&gt; 
+#&gt;              N/T     Mean       SD      Min      Max
+#&gt; Overall    11068  63.8411  11.4497   18.907  85.4171
+#&gt; Between      207  64.5285  10.0235   39.349  85.4171
+#&gt; Within   53.4686  63.8411   5.8292  33.4671  83.8595
+#&gt; 
+#&gt; , , GINI: GINI index (World Bank estimate)
+#&gt; 
+#&gt;             N/T     Mean      SD      Min      Max
+#&gt; Overall    1356  39.3976  9.6764     16.2     65.8
+#&gt; Between     161  39.5799  8.3679  23.3667  61.7143
+#&gt; Within   8.4224  39.3976  3.0406  23.9576  54.7976
+#&gt; 
+#&gt; , , ODA: Net ODA received (constant 2015 US$)
+#&gt; 
+#&gt;              N/T        Mean          SD              Min             Max
+#&gt; Overall     8336  428,746468  819,868971  -1.08038000e+09  2.45521800e+10
+#&gt; Between      178  418,026522  548,293709       423846.154  3.53258914e+09
+#&gt; Within   46.8315  428,746468  607,024040  -2.47969577e+09  2.35093916e+10
+#&gt; </div><div class='input'>
 <span class='co'># By Region</span>
-<span class='fu'><a href='qsu.html'>qsu</a></span>(<span class='no'>wlddev</span>, <span class='kw'>by</span> <span class='kw'>=</span> ~<span class='no'>region</span>, <span class='kw'>cols</span> <span class='kw'>=</span> <span class='fl'>9</span>:<span class='fl'>12</span>, <span class='kw'>vlabels</span> <span class='kw'>=</span> <span class='fl'>TRUE</span>)
-
+<span class='fu'><a href='qsu.html'>qsu</a></span>(<span class='no'>wlddev</span>, <span class='kw'>by</span> <span class='kw'>=</span> ~<span class='no'>region</span>, <span class='kw'>cols</span> <span class='kw'>=</span> <span class='fl'>9</span>:<span class='fl'>12</span>, <span class='kw'>vlabels</span> <span class='kw'>=</span> <span class='fl'>TRUE</span>)</div><div class='output co'>#&gt; , , PCGDP: GDP per capita (constant 2010 US$)
+#&gt; 
+#&gt;                                N        Mean          SD         Min
+#&gt; East Asia &amp; Pacific         1391  10337.0463  14094.8338    131.9634
+#&gt; Europe &amp; Central Asia       2084  25664.8064   26181.671    367.0493
+#&gt; Latin America &amp; Caribbean   1896   6976.0649   6705.5377    662.2795
+#&gt; Middle East &amp; North Africa   805  13760.2761  18374.2208    570.5574
+#&gt; North America                170  43650.5193  18345.0419  17550.5732
+#&gt; South Asia                   366   1178.3447   1581.2678    267.0736
+#&gt; Sub-Saharan Africa          2283   1750.0069   2553.7889    131.6464
+#&gt;                                    Max
+#&gt; East Asia &amp; Pacific         72183.3033
+#&gt; Europe &amp; Central Asia        191586.64
+#&gt; Latin America &amp; Caribbean    42491.454
+#&gt; Middle East &amp; North Africa  113682.038
+#&gt; North America               94903.1915
+#&gt; South Asia                   8971.1285
+#&gt; Sub-Saharan Africa          20333.9404
+#&gt; 
+#&gt; , , LIFEEX: Life expectancy at birth, total (years)
+#&gt; 
+#&gt;                                N     Mean       SD      Min      Max
+#&gt; East Asia &amp; Pacific         1717  65.6493  10.1221   18.907   84.278
+#&gt; Europe &amp; Central Asia       2886  71.9323   5.4596   45.369  85.4171
+#&gt; Latin America &amp; Caribbean   1995  67.7473   7.2844   42.113  82.1902
+#&gt; Middle East &amp; North Africa  1163  65.7501   9.5211   34.361  82.4073
+#&gt; North America                135  75.9931   3.4825  68.8978  82.3005
+#&gt; South Asia                   456  56.7471  11.1073   32.292   77.339
+#&gt; Sub-Saharan Africa          2716  51.0007   8.5873    27.61  74.3949
+#&gt; 
+#&gt; , , GINI: GINI index (World Bank estimate)
+#&gt; 
+#&gt;                               N     Mean      SD   Min   Max
+#&gt; East Asia &amp; Pacific          92  38.5065  5.3684  27.8  55.4
+#&gt; Europe &amp; Central Asia       588   31.902  4.7383  16.2  48.4
+#&gt; Latin America &amp; Caribbean   363  50.5664  5.3238  34.4  63.3
+#&gt; Middle East &amp; North Africa   76  36.1947  5.1244  27.6  47.4
+#&gt; North America                22  36.1636  3.9282    31  41.1
+#&gt; South Asia                   39  34.1641  4.3411  25.9  43.8
+#&gt; Sub-Saharan Africa          176  44.8165  8.3376  28.9  65.8
+#&gt; 
+#&gt; , , ODA: Net ODA received (constant 2015 US$)
+#&gt; 
+#&gt;                                N            Mean              SD
+#&gt; East Asia &amp; Pacific         1491      346,977686      615,361973
+#&gt; Europe &amp; Central Asia        751      394,089867      566,834650
+#&gt; Latin America &amp; Caribbean   1918      173,728368      259,343122
+#&gt; Middle East &amp; North Africa  1079      663,574245  1.40635884e+09
+#&gt; North America                 39      423846.154     9,678883.86
+#&gt; South Asia                   450  1.25150376e+09  1.56736667e+09
+#&gt; Sub-Saharan Africa          2608      440,308474      596,033604
+#&gt;                                         Min             Max
+#&gt; East Asia &amp; Pacific         -1.08038000e+09  3.92003000e+09
+#&gt; Europe &amp; Central Asia           -343,480000  4.64666000e+09
+#&gt; Latin America &amp; Caribbean       -512,730000  2.95163000e+09
+#&gt; Middle East &amp; North Africa      -169,710000  2.45521800e+10
+#&gt; North America                    -14,520000       55,820000
+#&gt; South Asia                            80000  8.53900000e+09
+#&gt; Sub-Saharan Africa               -16,780000  1.12780600e+10
+#&gt; </div><div class='input'>
 <span class='co'># Panel-summary by region</span>
-<span class='fu'><a href='qsu.html'>qsu</a></span>(<span class='no'>wlddev</span>, <span class='kw'>by</span> <span class='kw'>=</span> ~<span class='no'>region</span>, <span class='kw'>pid</span> <span class='kw'>=</span> ~<span class='no'>iso3c</span>, <span class='kw'>cols</span> <span class='kw'>=</span> <span class='fl'>9</span>:<span class='fl'>12</span>, <span class='kw'>vlabels</span> <span class='kw'>=</span> <span class='fl'>TRUE</span>)
-
+<span class='fu'><a href='qsu.html'>qsu</a></span>(<span class='no'>wlddev</span>, <span class='kw'>by</span> <span class='kw'>=</span> ~<span class='no'>region</span>, <span class='kw'>pid</span> <span class='kw'>=</span> ~<span class='no'>iso3c</span>, <span class='kw'>cols</span> <span class='kw'>=</span> <span class='fl'>9</span>:<span class='fl'>12</span>, <span class='kw'>vlabels</span> <span class='kw'>=</span> <span class='fl'>TRUE</span>)</div><div class='output co'>#&gt; , , Overall, PCGDP: GDP per capita (constant 2010 US$)
+#&gt; 
+#&gt;                              N/T        Mean          SD         Min
+#&gt; East Asia &amp; Pacific         1391  10337.0463  14094.8338    131.9634
+#&gt; Europe &amp; Central Asia       2084  25664.8064   26181.671    367.0493
+#&gt; Latin America &amp; Caribbean   1896   6976.0649   6705.5377    662.2795
+#&gt; Middle East &amp; North Africa   805  13760.2761  18374.2208    570.5574
+#&gt; North America                170  43650.5193  18345.0419  17550.5732
+#&gt; South Asia                   366   1178.3447   1581.2678    267.0736
+#&gt; Sub-Saharan Africa          2283   1750.0069   2553.7889    131.6464
+#&gt;                                    Max
+#&gt; East Asia &amp; Pacific         72183.3033
+#&gt; Europe &amp; Central Asia        191586.64
+#&gt; Latin America &amp; Caribbean    42491.454
+#&gt; Middle East &amp; North Africa  113682.038
+#&gt; North America               94903.1915
+#&gt; South Asia                   8971.1285
+#&gt; Sub-Saharan Africa          20333.9404
+#&gt; 
+#&gt; , , Between, PCGDP: GDP per capita (constant 2010 US$)
+#&gt; 
+#&gt;                             N/T        Mean          SD         Min         Max
+#&gt; East Asia &amp; Pacific          34  10337.0463    12576.62    410.2004  40046.4089
+#&gt; Europe &amp; Central Asia        56  25664.8064  24008.1006    788.0229  141165.083
+#&gt; Latin America &amp; Caribbean    36   6976.0649   6294.8452    884.5499  36049.6948
+#&gt; Middle East &amp; North Africa   20  13760.2761  17291.0461   1084.5999  65963.2711
+#&gt; North America                 3  43650.5193  12062.9919  35346.4194  61278.2411
+#&gt; South Asia                    8   1178.3447   1470.7041    397.4451   6638.3501
+#&gt; Sub-Saharan Africa           46   1750.0069   2199.9901    255.3999    9916.656
+#&gt; 
+#&gt; , , Within, PCGDP: GDP per capita (constant 2010 US$)
+#&gt; 
+#&gt;                                 N/T        Mean          SD          Min
+#&gt; East Asia &amp; Pacific         40.9118  11563.6529   6363.4087  -11892.0702
+#&gt; Europe &amp; Central Asia       37.2143  11563.6529  10444.6637  -30529.0928
+#&gt; Latin America &amp; Caribbean   52.6667  11563.6529   2310.6622    -519.1743
+#&gt; Middle East &amp; North Africa    40.25  11563.6529   6215.4419  -18492.1455
+#&gt; North America               56.6667  11563.6529  13821.1717  -21876.1952
+#&gt; South Asia                    45.75  11563.6529    580.8934    9525.9724
+#&gt; Sub-Saharan Africa          49.6304  11563.6529   1296.8738    4528.6387
+#&gt;                                    Max
+#&gt; East Asia &amp; Pacific         50475.9873
+#&gt; Europe &amp; Central Asia        75348.067
+#&gt; Latin America &amp; Caribbean   21734.0427
+#&gt; Middle East &amp; North Africa       60152
+#&gt; North America               45188.6033
+#&gt; South Asia                  13896.4313
+#&gt; Sub-Saharan Africa          24375.5944
+#&gt; 
+#&gt; , , Overall, LIFEEX: Life expectancy at birth, total (years)
+#&gt; 
+#&gt;                              N/T     Mean       SD      Min      Max
+#&gt; East Asia &amp; Pacific         1717  65.6493  10.1221   18.907   84.278
+#&gt; Europe &amp; Central Asia       2886  71.9323   5.4596   45.369  85.4171
+#&gt; Latin America &amp; Caribbean   1995  67.7473   7.2844   42.113  82.1902
+#&gt; Middle East &amp; North Africa  1163  65.7501   9.5211   34.361  82.4073
+#&gt; North America                135  75.9931   3.4825  68.8978  82.3005
+#&gt; South Asia                   456  56.7471  11.1073   32.292   77.339
+#&gt; Sub-Saharan Africa          2716  51.0007   8.5873    27.61  74.3949
+#&gt; 
+#&gt; , , Between, LIFEEX: Life expectancy at birth, total (years)
+#&gt; 
+#&gt;                             N/T     Mean      SD      Min      Max
+#&gt; East Asia &amp; Pacific          32  65.6493  7.7148  48.8626  77.5681
+#&gt; Europe &amp; Central Asia        55  71.9323  4.2526  61.9424  85.4171
+#&gt; Latin America &amp; Caribbean    40  67.7473  4.9716  53.4959  82.1902
+#&gt; Middle East &amp; North Africa   21  65.7501  5.8655  53.0192   76.401
+#&gt; North America                 3  75.9931  1.2682  74.6066  77.9553
+#&gt; South Asia                    8  56.7471  5.8027  47.8822  68.6733
+#&gt; Sub-Saharan Africa           48  51.0007  5.9389   39.349   71.403
+#&gt; 
+#&gt; , , Within, LIFEEX: Life expectancy at birth, total (years)
+#&gt; 
+#&gt;                                 N/T     Mean      SD      Min      Max
+#&gt; East Asia &amp; Pacific         53.6562  63.8411  6.5528  33.4671  83.8595
+#&gt; Europe &amp; Central Asia       52.4727  63.8411  3.4239  46.6863  77.0723
+#&gt; Latin America &amp; Caribbean    49.875  63.8411  5.3241  47.1311  78.2611
+#&gt; Middle East &amp; North Africa   55.381  63.8411  7.4998  41.8394  78.4739
+#&gt; North America                    45  63.8411  3.2433  54.7836   69.485
+#&gt; South Asia                       57  63.8411  9.4711  42.0094  82.0276
+#&gt; Sub-Saharan Africa          56.5833  63.8411  6.2025  43.7422  83.2612
+#&gt; 
+#&gt; , , Overall, GINI: GINI index (World Bank estimate)
+#&gt; 
+#&gt;                             N/T     Mean      SD   Min   Max
+#&gt; East Asia &amp; Pacific          92  38.5065  5.3684  27.8  55.4
+#&gt; Europe &amp; Central Asia       588   31.902  4.7383  16.2  48.4
+#&gt; Latin America &amp; Caribbean   363  50.5664  5.3238  34.4  63.3
+#&gt; Middle East &amp; North Africa   76  36.1947  5.1244  27.6  47.4
+#&gt; North America                22  36.1636  3.9282    31  41.1
+#&gt; South Asia                   39  34.1641  4.3411  25.9  43.8
+#&gt; Sub-Saharan Africa          176  44.8165  8.3376  28.9  65.8
+#&gt; 
+#&gt; , , Between, GINI: GINI index (World Bank estimate)
+#&gt; 
+#&gt;                             N/T     Mean      SD      Min      Max
+#&gt; East Asia &amp; Pacific          21  38.5065  4.8352     30.8    48.65
+#&gt; Europe &amp; Central Asia        47   31.902   4.054  23.3667     40.8
+#&gt; Latin America &amp; Caribbean    25  50.5664  4.0186     41.1  57.7333
+#&gt; Middle East &amp; North Africa   14  36.1947  4.6346    29.05  43.0667
+#&gt; North America                 2  36.1636  3.5731  32.6727  39.6545
+#&gt; South Asia                    7  34.1641  3.4562  30.3556    39.85
+#&gt; Sub-Saharan Africa           45  44.8165  7.0733    31.45  61.7143
+#&gt; 
+#&gt; , , Within, GINI: GINI index (World Bank estimate)
+#&gt; 
+#&gt;                                 N/T     Mean      SD      Min      Max
+#&gt; East Asia &amp; Pacific           4.381  39.3976  2.3325  32.6476  46.1476
+#&gt; Europe &amp; Central Asia       12.5106  39.3976  2.4529   28.636  54.4976
+#&gt; Latin America &amp; Caribbean     14.52  39.3976  3.4921  26.3076  48.7365
+#&gt; Middle East &amp; North Africa   5.4286  39.3976  2.1863  32.6309  46.6404
+#&gt; North America                    11  39.3976  1.6323   34.343   40.843
+#&gt; South Asia                   5.5714  39.3976  2.6268  34.6726  45.9309
+#&gt; Sub-Saharan Africa           3.9111  39.3976  4.4142  23.9576  54.7976
+#&gt; 
+#&gt; , , Overall, ODA: Net ODA received (constant 2015 US$)
+#&gt; 
+#&gt;                              N/T            Mean              SD
+#&gt; East Asia &amp; Pacific         1491      346,977686      615,361973
+#&gt; Europe &amp; Central Asia        751      394,089867      566,834650
+#&gt; Latin America &amp; Caribbean   1918      173,728368      259,343122
+#&gt; Middle East &amp; North Africa  1079      663,574245  1.40635884e+09
+#&gt; North America                 39      423846.154     9,678883.86
+#&gt; South Asia                   450  1.25150376e+09  1.56736667e+09
+#&gt; Sub-Saharan Africa          2608      440,308474      596,033604
+#&gt;                                         Min             Max
+#&gt; East Asia &amp; Pacific         -1.08038000e+09  3.92003000e+09
+#&gt; Europe &amp; Central Asia           -343,480000  4.64666000e+09
+#&gt; Latin America &amp; Caribbean       -512,730000  2.95163000e+09
+#&gt; Middle East &amp; North Africa      -169,710000  2.45521800e+10
+#&gt; North America                    -14,520000       55,820000
+#&gt; South Asia                            80000  8.53900000e+09
+#&gt; Sub-Saharan Africa               -16,780000  1.12780600e+10
+#&gt; 
+#&gt; , , Between, ODA: Net ODA received (constant 2015 US$)
+#&gt; 
+#&gt;                             N/T            Mean              SD          Min
+#&gt; East Asia &amp; Pacific          31      346,977686      460,186340  1,550512.82
+#&gt; Europe &amp; Central Asia        32      394,089867      446,099453  12,115777.8
+#&gt; Latin America &amp; Caribbean    37      173,728368      169,248215  2,089677.42
+#&gt; Middle East &amp; North Africa   21      663,574245      725,711345  2,946923.08
+#&gt; North America                 1      423846.154               0   423846.154
+#&gt; South Asia                    8  1.25150376e+09  1.15946284e+09  25,663448.3
+#&gt; Sub-Saharan Africa           48      440,308474      357,457530  27,340689.7
+#&gt;                                        Max
+#&gt; East Asia &amp; Pacific         1.64164241e+09
+#&gt; Europe &amp; Central Asia       2.16970133e+09
+#&gt; Latin America &amp; Caribbean       560,007241
+#&gt; Middle East &amp; North Africa  2.73873224e+09
+#&gt; North America                   423846.154
+#&gt; South Asia                  3.53258914e+09
+#&gt; Sub-Saharan Africa          1.41753857e+09
+#&gt; 
+#&gt; , , Within, ODA: Net ODA received (constant 2015 US$)
+#&gt; 
+#&gt;                                 N/T        Mean              SD
+#&gt; East Asia &amp; Pacific         48.0968  428,746468      408,532605
+#&gt; Europe &amp; Central Asia       23.4688  428,746468      349,709591
+#&gt; Latin America &amp; Caribbean   51.8378  428,746468      196,504190
+#&gt; Middle East &amp; North Africa   51.381  428,746468  1.20465275e+09
+#&gt; North America                    39  428,746468     9,678883.86
+#&gt; South Asia                    56.25  428,746468  1.05464885e+09
+#&gt; Sub-Saharan Africa          54.3333  428,746468      476,948814
+#&gt;                                         Min             Max
+#&gt; East Asia &amp; Pacific         -2.18778866e+09  3.57867647e+09
+#&gt; Europe &amp; Central Asia       -1.14106420e+09  3.01475819e+09
+#&gt; Latin America &amp; Caribbean       -579,470773  2.97543078e+09
+#&gt; Middle East &amp; North Africa  -2.47969577e+09  2.35093916e+10
+#&gt; North America                    413,802622      484,142622
+#&gt; South Asia                  -2.37972267e+09  5.51177302e+09
+#&gt; Sub-Saharan Africa              -825,184566  1.07855444e+10
+#&gt; </div><div class='input'>
 <span class='co'># Pairwise correlations: Ovarall</span>
-<span class='fu'><a href='https://rdrr.io/r/base/print.html'>print</a></span>(<span class='fu'><a href='pwcor_pwcov_pwNobs.html'>pwcor</a></span>(<span class='fu'><a href='select_replace_vars.html'>get_vars</a></span>(<span class='no'>wlddev</span>, <span class='fl'>9</span>:<span class='fl'>12</span>), <span class='kw'>N</span> <span class='kw'>=</span> <span class='fl'>TRUE</span>, <span class='kw'>P</span> <span class='kw'>=</span> <span class='fl'>TRUE</span>), <span class='kw'>show</span> <span class='kw'>=</span> <span class='st'>"lower.tri"</span>)
-
+<span class='fu'><a href='https://rdrr.io/r/base/print.html'>print</a></span>(<span class='fu'><a href='pwcor_pwcov_pwNobs.html'>pwcor</a></span>(<span class='fu'><a href='select_replace_vars.html'>get_vars</a></span>(<span class='no'>wlddev</span>, <span class='fl'>9</span>:<span class='fl'>12</span>), <span class='kw'>N</span> <span class='kw'>=</span> <span class='fl'>TRUE</span>, <span class='kw'>P</span> <span class='kw'>=</span> <span class='fl'>TRUE</span>), <span class='kw'>show</span> <span class='kw'>=</span> <span class='st'>"lower.tri"</span>)</div><div class='output co'>#&gt;               PCGDP        LIFEEX         GINI          ODA
+#&gt; PCGDP    1   (8995)                                        
+#&gt; LIFEEX  .57* (8398)   1   (11068)                          
+#&gt; GINI   -.42* (1342)  -.34* (1353)   1   (1356)             
+#&gt; ODA    -.16* (6852)  -.02* (7746)  -.17* (951)   1   (8336)</div><div class='input'>
 <span class='co'># Pairwise correlations: Between Countries</span>
-<span class='fu'><a href='https://rdrr.io/r/base/print.html'>print</a></span>(<span class='fu'><a href='pwcor_pwcov_pwNobs.html'>pwcor</a></span>(<span class='fu'><a href='fmean.html'>fmean</a></span>(<span class='fu'><a href='select_replace_vars.html'>get_vars</a></span>(<span class='no'>wlddev</span>, <span class='fl'>9</span>:<span class='fl'>12</span>), <span class='no'>wlddev</span>$<span class='no'>iso3c</span>), <span class='kw'>N</span> <span class='kw'>=</span> <span class='fl'>TRUE</span>, <span class='kw'>P</span> <span class='kw'>=</span> <span class='fl'>TRUE</span>), <span class='kw'>show</span> <span class='kw'>=</span> <span class='st'>"lower.tri"</span>)
-
+<span class='fu'><a href='https://rdrr.io/r/base/print.html'>print</a></span>(<span class='fu'><a href='pwcor_pwcov_pwNobs.html'>pwcor</a></span>(<span class='fu'><a href='fmean.html'>fmean</a></span>(<span class='fu'><a href='select_replace_vars.html'>get_vars</a></span>(<span class='no'>wlddev</span>, <span class='fl'>9</span>:<span class='fl'>12</span>), <span class='no'>wlddev</span>$<span class='no'>iso3c</span>), <span class='kw'>N</span> <span class='kw'>=</span> <span class='fl'>TRUE</span>, <span class='kw'>P</span> <span class='kw'>=</span> <span class='fl'>TRUE</span>), <span class='kw'>show</span> <span class='kw'>=</span> <span class='st'>"lower.tri"</span>)</div><div class='output co'>#&gt;              PCGDP      LIFEEX        GINI         ODA
+#&gt; PCGDP    1   (203)                                    
+#&gt; LIFEEX  .60* (197)   1   (207)                        
+#&gt; GINI   -.41* (159) -.41* (160)   1   (161)            
+#&gt; ODA    -.24* (169) -.18* (172) -.17  (139)   1   (178)</div><div class='input'>
 <span class='co'># Pairwise correlations: Within Countries</span>
-<span class='fu'><a href='https://rdrr.io/r/base/print.html'>print</a></span>(<span class='fu'><a href='pwcor_pwcov_pwNobs.html'>pwcor</a></span>(<span class='fu'><a href='fbetween_fwithin.html'>fwithin</a></span>(<span class='fu'><a href='select_replace_vars.html'>get_vars</a></span>(<span class='no'>wlddev</span>, <span class='fl'>9</span>:<span class='fl'>12</span>), <span class='no'>wlddev</span>$<span class='no'>iso3c</span>), <span class='kw'>N</span> <span class='kw'>=</span> <span class='fl'>TRUE</span>, <span class='kw'>P</span> <span class='kw'>=</span> <span class='fl'>TRUE</span>), <span class='kw'>show</span> <span class='kw'>=</span> <span class='st'>"lower.tri"</span>)</pre>
+<span class='fu'><a href='https://rdrr.io/r/base/print.html'>print</a></span>(<span class='fu'><a href='pwcor_pwcov_pwNobs.html'>pwcor</a></span>(<span class='fu'><a href='fbetween_fwithin.html'>fwithin</a></span>(<span class='fu'><a href='select_replace_vars.html'>get_vars</a></span>(<span class='no'>wlddev</span>, <span class='fl'>9</span>:<span class='fl'>12</span>), <span class='no'>wlddev</span>$<span class='no'>iso3c</span>), <span class='kw'>N</span> <span class='kw'>=</span> <span class='fl'>TRUE</span>, <span class='kw'>P</span> <span class='kw'>=</span> <span class='fl'>TRUE</span>), <span class='kw'>show</span> <span class='kw'>=</span> <span class='st'>"lower.tri"</span>)</div><div class='output co'>#&gt;               PCGDP        LIFEEX         GINI          ODA
+#&gt; PCGDP    1   (8995)                                        
+#&gt; LIFEEX  .30* (8398)   1   (11068)                          
+#&gt; GINI   -.03  (1342)  -.15* (1353)   1   (1356)             
+#&gt; ODA    -.01  (6852)   .14* (7746)  -.02  (951)   1   (8336)</div><div class='input'>
+</div></pre>
   </div>
   <div class="col-md-3 hidden-xs hidden-sm" id="pkgdown-sidebar">
     <nav id="toc" data-toggle="toc" class="sticky-top">

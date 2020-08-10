@@ -72,7 +72,7 @@
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">collapse</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">1.2.1</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">1.3.0</span>
       </span>
     </div>
 
@@ -87,13 +87,10 @@
 <li>
   <a href="../news/index.html">News</a>
 </li>
-<li>
-  <a href="../blog/index.html">Blog</a>
-</li>
       </ul>
       <ul class="nav navbar-nav navbar-right">
         <li>
-  <a href="https://twitter.com/collapse">
+  <a href="https://twitter.com/collapse_R">
     <span class="fa fa-twitter"></span>
      
   </a>
@@ -134,6 +131,10 @@
 <span class='fu'>settransform</span>(<span class='no'>X</span>, <span class='no'>...</span>)
 <span class='fu'>settfm</span>(<span class='no'>X</span>, <span class='no'>...</span>)         <span class='co'># Shortcut for settransform</span>
 
+<span class='co'># Replace modified columns in a 'data.frame'</span>
+<span class='fu'>ftransform</span>(<span class='no'>X</span>) <span class='kw'>&lt;-</span> <span class='no'>value</span>
+<span class='fu'>tfm</span>(<span class='no'>X</span>) <span class='kw'>&lt;-</span> <span class='no'>value</span>        <span class='co'># Shortcut for ftransform&lt;-</span>
+
 <span class='co'># Compute and return new 'data.frame' from existing one</span>
 <span class='fu'>fcompute</span>(<span class='no'>X</span>, <span class='no'>...</span>)</pre>
 
@@ -142,11 +143,15 @@
     <colgroup><col class="name" /><col class="desc" /></colgroup>
     <tr>
       <th>X</th>
-      <td><p>a data.frame.</p></td>
+      <td><p>a data frame or named list of columns.</p></td>
     </tr>
     <tr>
       <th>...</th>
-      <td><p>further arguments of the form <code>column = value</code>. The <code>value</code> can be a combination of other columns, a scalar value, or <code>NULL</code>, which deletes <code>column</code>.</p></td>
+      <td><p>further arguments of the form <code>column = value</code>. The <code>value</code> can be a combination of other columns, a scalar value, or <code>NULL</code>, which deletes <code>column</code>. Alternatively it is also possible to place a single list here, which will be treated the same as a list of <code>column = value</code> arguments.</p></td>
+    </tr>
+    <tr>
+      <th>value</th>
+      <td><p>a named list of replacements, it will be treated like an evaluated list of <code>column = value</code> arguments.</p></td>
     </tr>
     </table>
 
@@ -155,34 +160,135 @@
     <p>The <code>...</code> arguments to <code>ftransform</code> are tagged
   vector expressions, which are evaluated in the data frame
   <code>X</code>.  The tags are matched against <code><a href='https://rdrr.io/r/base/names.html'>names(X)</a></code>, and for
-  those that match, the value replace the corresponding variable in
-  <code>X</code>, and the others are appended to <code>X</code>. It is also possible to delete columns by assigning <code>NULL</code> to them, i.e. <code>ftransform(data, column = NULL)</code> removes <code>column</code> from the data.</p>
+  those that match, the values replace the corresponding variable in
+  <code>X</code>, whereas the others are appended to <code>X</code>. It is also possible to delete columns by assigning <code>NULL</code> to them, i.e. <code>ftransform(data, colk = NULL)</code> removes <code>colk</code> from the data.</p>
+<p>Since <em>collapse</em> v1.3.0, is is also possible to pass a single list to <code>...</code>, i.e. <code>ftransform(data, newdata)</code> or <code>ftransform(data, fmean(list(col1mean = col1, col2mean = col2), drop = FALSE))</code> etc. This list will be treated the same as a list of tagged vector expressions. See Examples.</p>
 <p>The function <code>settransform</code> does all of that by reference, but uses base-R's copy-on modify semantics, which is equivalent to replacing the data with <code>&lt;-</code> (thus it is still memory efficient but the data will have a different memory address after each call of <code>settransform</code>).</p>
 <p>Finally, the function <code>fcompute</code> functions just like <code>ftransform</code>, but returns only the changed / computed columns without modifying or appending the data in <code>X</code>.</p>
     <h2 class="hasAnchor" id="value"><a class="anchor" href="#value"></a>Value</h2>
 
-    <p>The modified data.frame <code>X</code>, or, for <code>fcompute</code>, a new data.frame with the columns computed on <code>X</code>. All attributes of <code>X</code> are preserved.</p>
+    <p>The modified data frame <code>X</code>, or, for <code>fcompute</code>, a new data frame with the columns computed on <code>X</code>. All attributes of <code>X</code> are preserved.</p>
     <h2 class="hasAnchor" id="see-also"><a class="anchor" href="#see-also"></a>See also</h2>
 
-    <div class='dont-index'><p><code><a href='https://rdrr.io/r/base/with.html'>with</a></code>, <code><a href='https://rdrr.io/r/base/with.html'>within</a></code>, <a href='fast-data-manipulation.html'>Data Frame Manipulation</a>, <a href='collapse-documentation.html'>Collapse Overview</a></p></div>
+    <div class='dont-index'><p><code><a href='https://rdrr.io/r/base/with.html'>with</a></code>, <code><a href='https://rdrr.io/r/base/with.html'>within</a></code>, <a href='fast-data-manipulation.html'>Data Frame Manipulation</a>, <a href='index.html'>Collapse Overview</a></p></div>
 
     <h2 class="hasAnchor" id="examples"><a class="anchor" href="#examples"></a>Examples</h2>
-    <pre class="examples"><span class='co'>## ftransform modifies and returns a data.frame</span>
-<span class='fu'>ftransform</span>(<span class='no'>airquality</span>, <span class='kw'>Ozone</span> <span class='kw'>=</span> -<span class='no'>Ozone</span>)
-<span class='fu'>ftransform</span>(<span class='no'>airquality</span>, <span class='kw'>new</span> <span class='kw'>=</span> -<span class='no'>Ozone</span>, <span class='kw'>Temp</span> <span class='kw'>=</span> (<span class='no'>Temp</span>-<span class='fl'>32</span>)/<span class='fl'>1.8</span>)
-<span class='fu'>ftransform</span>(<span class='no'>airquality</span>, <span class='kw'>new</span> <span class='kw'>=</span> -<span class='no'>Ozone</span>, <span class='kw'>new2</span> <span class='kw'>=</span> <span class='fl'>1</span>, <span class='kw'>Temp</span> <span class='kw'>=</span> <span class='kw'>NULL</span>)  <span class='co'># Deleting Temp</span>
-<span class='fu'>ftransform</span>(<span class='no'>airquality</span>, <span class='kw'>Ozone</span> <span class='kw'>=</span> <span class='kw'>NULL</span>, <span class='kw'>Temp</span> <span class='kw'>=</span> <span class='kw'>NULL</span>)            <span class='co'># Deleting columns</span>
+    <pre class="examples"><div class='input'><span class='co'>## ftransform modifies and returns a data.frame</span>
+<span class='fu'><a href='https://rdrr.io/r/utils/head.html'>head</a></span>(<span class='fu'>ftransform</span>(<span class='no'>airquality</span>, <span class='kw'>Ozone</span> <span class='kw'>=</span> -<span class='no'>Ozone</span>))</div><div class='output co'>#&gt;   Ozone Solar.R Wind Temp Month Day
+#&gt; 1   -41     190  7.4   67     5   1
+#&gt; 2   -36     118  8.0   72     5   2
+#&gt; 3   -12     149 12.6   74     5   3
+#&gt; 4   -18     313 11.5   62     5   4
+#&gt; 5    NA      NA 14.3   56     5   5
+#&gt; 6   -28      NA 14.9   66     5   6</div><div class='input'><span class='fu'><a href='https://rdrr.io/r/utils/head.html'>head</a></span>(<span class='fu'>ftransform</span>(<span class='no'>airquality</span>, <span class='kw'>new</span> <span class='kw'>=</span> -<span class='no'>Ozone</span>, <span class='kw'>Temp</span> <span class='kw'>=</span> (<span class='no'>Temp</span>-<span class='fl'>32</span>)/<span class='fl'>1.8</span>))</div><div class='output co'>#&gt;   Ozone Solar.R Wind     Temp Month Day new
+#&gt; 1    41     190  7.4 19.44444     5   1 -41
+#&gt; 2    36     118  8.0 22.22222     5   2 -36
+#&gt; 3    12     149 12.6 23.33333     5   3 -12
+#&gt; 4    18     313 11.5 16.66667     5   4 -18
+#&gt; 5    NA      NA 14.3 13.33333     5   5  NA
+#&gt; 6    28      NA 14.9 18.88889     5   6 -28</div><div class='input'><span class='fu'><a href='https://rdrr.io/r/utils/head.html'>head</a></span>(<span class='fu'>ftransform</span>(<span class='no'>airquality</span>, <span class='kw'>new</span> <span class='kw'>=</span> -<span class='no'>Ozone</span>, <span class='kw'>new2</span> <span class='kw'>=</span> <span class='fl'>1</span>, <span class='kw'>Temp</span> <span class='kw'>=</span> <span class='kw'>NULL</span>))  <span class='co'># Deleting Temp</span></div><div class='output co'>#&gt;   Ozone Solar.R Wind Month Day new new2
+#&gt; 1    41     190  7.4     5   1 -41    1
+#&gt; 2    36     118  8.0     5   2 -36    1
+#&gt; 3    12     149 12.6     5   3 -12    1
+#&gt; 4    18     313 11.5     5   4 -18    1
+#&gt; 5    NA      NA 14.3     5   5  NA    1
+#&gt; 6    28      NA 14.9     5   6 -28    1</div><div class='input'><span class='fu'><a href='https://rdrr.io/r/utils/head.html'>head</a></span>(<span class='fu'>ftransform</span>(<span class='no'>airquality</span>, <span class='kw'>Ozone</span> <span class='kw'>=</span> <span class='kw'>NULL</span>, <span class='kw'>Temp</span> <span class='kw'>=</span> <span class='kw'>NULL</span>))            <span class='co'># Deleting columns</span></div><div class='output co'>#&gt;   Solar.R Wind Month Day
+#&gt; 1     190  7.4     5   1
+#&gt; 2     118  8.0     5   2
+#&gt; 3     149 12.6     5   3
+#&gt; 4     313 11.5     5   4
+#&gt; 5      NA 14.3     5   5
+#&gt; 6      NA 14.9     5   6</div><div class='input'>
+<span class='co'># This computes the median and standard-deviation of Ozone in each month</span>
+<span class='fu'><a href='https://rdrr.io/r/utils/head.html'>head</a></span>(<span class='fu'>ftransform</span>(<span class='no'>airquality</span>,
+                   <span class='kw'>Ozone_Month_median</span> <span class='kw'>=</span> <span class='fu'><a href='fmedian.html'>fmedian</a></span>(<span class='no'>Ozone</span>, <span class='no'>Month</span>, <span class='kw'>TRA</span> <span class='kw'>=</span> <span class='st'>"replace_fill"</span>),
+                   <span class='kw'>Ozone_Month_sd</span> <span class='kw'>=</span> <span class='fu'><a href='fvar_fsd.html'>fsd</a></span>(<span class='no'>Ozone</span>, <span class='no'>Month</span>, <span class='kw'>TRA</span> <span class='kw'>=</span> <span class='st'>"replace_fill"</span>)))</div><div class='output co'>#&gt;   Ozone Solar.R Wind Temp Month Day Ozone_Month_median Ozone_Month_sd
+#&gt; 1    41     190  7.4   67     5   1                 18             22
+#&gt; 2    36     118  8.0   72     5   2                 18             22
+#&gt; 3    12     149 12.6   74     5   3                 18             22
+#&gt; 4    18     313 11.5   62     5   4                 18             22
+#&gt; 5    NA      NA 14.3   56     5   5                 18             22
+#&gt; 6    28      NA 14.9   66     5   6                 18             22</div><div class='input'>
+<span class='co'># Grouping by month and above/below average temperature in each month</span>
+<span class='fu'><a href='https://rdrr.io/r/utils/head.html'>head</a></span>(<span class='fu'>ftransform</span>(<span class='no'>airquality</span>, <span class='kw'>Ozone_Month_high_median</span> <span class='kw'>=</span>
+     <span class='fu'><a href='fmedian.html'>fmedian</a></span>(<span class='no'>Ozone</span>, <span class='fu'><a href='https://rdrr.io/r/base/list.html'>list</a></span>(<span class='no'>Month</span>, <span class='no'>Temp</span> <span class='kw'>&gt;</span> <span class='fu'><a href='fbetween_fwithin.html'>fbetween</a></span>(<span class='no'>Temp</span>, <span class='no'>Month</span>)), <span class='kw'>TRA</span> <span class='kw'>=</span> <span class='st'>"replace_fill"</span>)))</div><div class='output co'>#&gt;   Ozone Solar.R Wind Temp Month Day Ozone_Month_high_median
+#&gt; 1    41     190  7.4   67     5   1                      28
+#&gt; 2    36     118  8.0   72     5   2                      28
+#&gt; 3    12     149 12.6   74     5   3                      28
+#&gt; 4    18     313 11.5   62     5   4                      14
+#&gt; 5    NA      NA 14.3   56     5   5                      14
+#&gt; 6    28      NA 14.9   66     5   6                      28</div><div class='input'>
+<span class='co'>## Since v1.3.0 one can pass a list of columns, and there is a replacement method</span>
+<span class='fu'><a href='https://rdrr.io/r/utils/head.html'>head</a></span>(<span class='fu'>ftransform</span>(<span class='no'>airquality</span>, <span class='fu'><a href='fscale.html'>STD</a></span>(<span class='no'>airquality</span>, <span class='kw'>cols</span> <span class='kw'>=</span> <span class='fl'>1</span>:<span class='fl'>3</span>)))  <span class='co'># Could use magrittr::`%&lt;&gt;%`</span></div><div class='output co'>#&gt;   Ozone Solar.R Wind Temp Month Day   STD.Ozone STD.Solar.R   STD.Wind
+#&gt; 1    41     190  7.4   67     5   1 -0.03423409  0.04517615 -0.7259482
+#&gt; 2    36     118  8.0   72     5   2 -0.18580489 -0.75430487 -0.5556388
+#&gt; 3    12     149 12.6   74     5   3 -0.91334473 -0.41008388  0.7500660
+#&gt; 4    18     313 11.5   62     5   4 -0.73145977  1.41095624  0.4378323
+#&gt; 5    NA      NA 14.3   56     5   5          NA          NA  1.2326091
+#&gt; 6    28      NA 14.9   66     5   6 -0.42831817          NA  1.4029185</div><div class='input'><span class='fu'>ftransform</span>(<span class='no'>airquality</span>) <span class='kw'>&lt;-</span> <span class='fu'><a href='fscale.html'>fscale</a></span>(<span class='fu'><a href='select_replace_vars.html'>get_vars</a></span>(<span class='no'>airquality</span>, <span class='fl'>1</span>:<span class='fl'>3</span>))
+<span class='fu'><a href='https://rdrr.io/r/base/rm.html'>rm</a></span>(<span class='no'>airquality</span>)
 
-<span class='co'>## settransform modifies a data.frame in the global environment</span>
+<span class='co'># This feature also allows to flexibly do grouped operations creating multiple new columns</span>
+<span class='fu'><a href='https://rdrr.io/r/utils/head.html'>head</a></span>(<span class='fu'>ftransform</span>(<span class='no'>airquality</span>,
+   <span class='fu'><a href='fmedian.html'>fmedian</a></span>(<span class='fu'><a href='https://rdrr.io/r/base/list.html'>list</a></span>(<span class='kw'>Wind_Month_median</span> <span class='kw'>=</span> <span class='no'>Wind</span>,
+                <span class='kw'>Ozone_Month_median</span> <span class='kw'>=</span> <span class='no'>Ozone</span>), <span class='no'>Month</span>, <span class='kw'>TRA</span> <span class='kw'>=</span> <span class='st'>"replace_fill"</span>)))</div><div class='output co'>#&gt;   Ozone Solar.R Wind Temp Month Day Wind_Month_median Ozone_Month_median
+#&gt; 1    41     190  7.4   67     5   1              11.5                 18
+#&gt; 2    36     118  8.0   72     5   2              11.5                 18
+#&gt; 3    12     149 12.6   74     5   3              11.5                 18
+#&gt; 4    18     313 11.5   62     5   4              11.5                 18
+#&gt; 5    NA      NA 14.3   56     5   5              11.5                 18
+#&gt; 6    28      NA 14.9   66     5   6              11.5                 18</div><div class='input'>
+<span class='co'># This performs 2 different multi-column grouped operations (need c() to make it one list)</span>
+<span class='fu'><a href='https://rdrr.io/r/utils/head.html'>head</a></span>(<span class='fu'>ftransform</span>(<span class='no'>airquality</span>, <span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span>(<span class='fu'><a href='fmedian.html'>fmedian</a></span>(<span class='fu'><a href='https://rdrr.io/r/base/list.html'>list</a></span>(<span class='kw'>Wind_Day_median</span> <span class='kw'>=</span> <span class='no'>Wind</span>,
+                                      <span class='kw'>Ozone_Day_median</span> <span class='kw'>=</span> <span class='no'>Ozone</span>), <span class='no'>Day</span>, <span class='kw'>TRA</span> <span class='kw'>=</span> <span class='st'>"replace_fill"</span>),
+                         <span class='fu'><a href='fvar_fsd.html'>fsd</a></span>(<span class='fu'><a href='https://rdrr.io/r/base/list.html'>list</a></span>(<span class='kw'>Wind_Month_sd</span> <span class='kw'>=</span> <span class='no'>Wind</span>,
+                                  <span class='kw'>Ozone_Month_sd</span> <span class='kw'>=</span> <span class='no'>Ozone</span>), <span class='no'>Month</span>, <span class='kw'>TRA</span> <span class='kw'>=</span> <span class='st'>"replace_fill"</span>))))</div><div class='output co'>#&gt;   Ozone Solar.R Wind Temp Month Day Wind_Day_median Ozone_Day_median
+#&gt; 1    41     190  7.4   67     5   1             6.9             68.5
+#&gt; 2    36     118  8.0   72     5   2             9.2             42.5
+#&gt; 3    12     149 12.6   74     5   3             9.2             24.0
+#&gt; 4    18     313 11.5   62     5   4             9.2             78.0
+#&gt; 5    NA      NA 14.3   56     5   5             7.4             47.0
+#&gt; 6    28      NA 14.9   66     5   6            14.3             36.0
+#&gt;   Wind_Month_sd Ozone_Month_sd
+#&gt; 1       3.53145       22.22445
+#&gt; 2       3.53145       22.22445
+#&gt; 3       3.53145       22.22445
+#&gt; 4       3.53145       22.22445
+#&gt; 5       3.53145       22.22445
+#&gt; 6       3.53145       22.22445</div><div class='input'>
+<span class='co'>## settransform works like ftransform but modifies a data frame in the global environment..</span>
 <span class='no'>airquality_c</span> <span class='kw'>&lt;-</span> <span class='no'>airquality</span>
 <span class='fu'>settransform</span>(<span class='no'>airquality_c</span>, <span class='kw'>Ratio</span> <span class='kw'>=</span> <span class='no'>Ozone</span> / <span class='no'>Temp</span>, <span class='kw'>Ozone</span> <span class='kw'>=</span> <span class='kw'>NULL</span>, <span class='kw'>Temp</span> <span class='kw'>=</span> <span class='kw'>NULL</span>)
-<span class='fu'><a href='https://rdrr.io/r/utils/head.html'>head</a></span>(<span class='no'>airquality_c</span>)
-<span class='fu'><a href='https://rdrr.io/r/base/rm.html'>rm</a></span>(<span class='no'>airquality_c</span>)
+<span class='fu'>settransform</span>(<span class='no'>airquality_c</span>, <span class='fu'><a href='fscale.html'>STD</a></span>(<span class='no'>airquality_c</span>, <span class='kw'>cols</span> <span class='kw'>=</span> <span class='fl'>1</span>:<span class='fl'>2</span>))    <span class='co'># This also works..</span>
+<span class='fu'><a href='https://rdrr.io/r/utils/head.html'>head</a></span>(<span class='no'>airquality_c</span>)</div><div class='output co'>#&gt;   Solar.R Wind Month Day     Ratio STD.Solar.R   STD.Wind
+#&gt; 1     190  7.4     5   1 0.6119403  0.04517615 -0.7259482
+#&gt; 2     118  8.0     5   2 0.5000000 -0.75430487 -0.5556388
+#&gt; 3     149 12.6     5   3 0.1621622 -0.41008388  0.7500660
+#&gt; 4     313 11.5     5   4 0.2903226  1.41095624  0.4378323
+#&gt; 5      NA 14.3     5   5        NA          NA  1.2326091
+#&gt; 6      NA 14.9     5   6 0.4242424          NA  1.4029185</div><div class='input'><span class='fu'><a href='https://rdrr.io/r/base/rm.html'>rm</a></span>(<span class='no'>airquality_c</span>)
 
-<span class='co'>## fcompute only returns the modified / computed data</span>
-<span class='fu'>fcompute</span>(<span class='no'>airquality</span>, <span class='kw'>Ozone</span> <span class='kw'>=</span> -<span class='no'>Ozone</span>)
-<span class='fu'>fcompute</span>(<span class='no'>airquality</span>, <span class='kw'>new</span> <span class='kw'>=</span> -<span class='no'>Ozone</span>, <span class='kw'>Temp</span> <span class='kw'>=</span> (<span class='no'>Temp</span>-<span class='fl'>32</span>)/<span class='fl'>1.8</span>)
-<span class='fu'>fcompute</span>(<span class='no'>airquality</span>, <span class='kw'>new</span> <span class='kw'>=</span> -<span class='no'>Ozone</span>, <span class='kw'>new2</span> <span class='kw'>=</span> <span class='fl'>1</span>)</pre>
+<span class='co'>## fcompute only returns the modified / computed columns</span>
+<span class='fu'><a href='https://rdrr.io/r/utils/head.html'>head</a></span>(<span class='fu'>fcompute</span>(<span class='no'>airquality</span>, <span class='kw'>Ozone</span> <span class='kw'>=</span> -<span class='no'>Ozone</span>))</div><div class='output co'>#&gt;   Ozone
+#&gt; 1   -41
+#&gt; 2   -36
+#&gt; 3   -12
+#&gt; 4   -18
+#&gt; 5    NA
+#&gt; 6   -28</div><div class='input'><span class='fu'><a href='https://rdrr.io/r/utils/head.html'>head</a></span>(<span class='fu'>fcompute</span>(<span class='no'>airquality</span>, <span class='kw'>new</span> <span class='kw'>=</span> -<span class='no'>Ozone</span>, <span class='kw'>Temp</span> <span class='kw'>=</span> (<span class='no'>Temp</span>-<span class='fl'>32</span>)/<span class='fl'>1.8</span>))</div><div class='output co'>#&gt;   new     Temp
+#&gt; 1 -41 19.44444
+#&gt; 2 -36 22.22222
+#&gt; 3 -12 23.33333
+#&gt; 4 -18 16.66667
+#&gt; 5  NA 13.33333
+#&gt; 6 -28 18.88889</div><div class='input'><span class='fu'><a href='https://rdrr.io/r/utils/head.html'>head</a></span>(<span class='fu'>fcompute</span>(<span class='no'>airquality</span>, <span class='kw'>new</span> <span class='kw'>=</span> -<span class='no'>Ozone</span>, <span class='kw'>new2</span> <span class='kw'>=</span> <span class='fl'>1</span>))</div><div class='output co'>#&gt;   new new2
+#&gt; 1 -41    1
+#&gt; 2 -36    1
+#&gt; 3 -12    1
+#&gt; 4 -18    1
+#&gt; 5  NA    1
+#&gt; 6 -28    1</div><div class='input'>
+</div></pre>
   </div>
   <div class="col-md-3 hidden-xs hidden-sm" id="pkgdown-sidebar">
     <nav id="toc" data-toggle="toc" class="sticky-top">

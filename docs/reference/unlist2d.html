@@ -40,7 +40,7 @@
 
 
 <meta property="og:title" content="Recursive Row-Binding / Unlisting in 2D - to Data Frame — unlist2d" />
-<meta property="og:description" content="unlist2d efficiently unlists lists of regular R objects (objects built up from atomic elements) and creates a data frame representation of the list. It is a full 2-dimensional generalization of base::unlist, but is best understood and used as a recursive generalization of do.call(rbind, l), for lists of vectors, data frames, arrays or heterogeneous objects (i.e. unlisting happens via recursive flattening and intelligent row-binding of objects, see Details and Examples)." />
+<meta property="og:description" content="unlist2d efficiently unlists lists of regular R objects (objects built up from atomic elements) and creates a data frame representation of the list through recursive flattening and intelligent row-binding operations. It is a full 2-dimensional generalization of unlist, but best understood as a recursive generalization of do.call(rbind, ...). This function is a powerful tool to create a tidy data frame representation from (nested) lists of vectors, data frames, matrices, arrays or heterogeneous objects. " />
 
 
 
@@ -72,7 +72,7 @@
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">collapse</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">1.2.1</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">1.3.0</span>
       </span>
     </div>
 
@@ -87,13 +87,10 @@
 <li>
   <a href="../news/index.html">News</a>
 </li>
-<li>
-  <a href="../blog/index.html">Blog</a>
-</li>
       </ul>
       <ul class="nav navbar-nav navbar-right">
         <li>
-  <a href="https://twitter.com/collapse">
+  <a href="https://twitter.com/collapse_R">
     <span class="fa fa-twitter"></span>
      
   </a>
@@ -123,7 +120,7 @@
     </div>
 
     <div class="ref-description">
-    <p><code>unlist2d</code> efficiently unlists lists of regular R objects (objects built up from atomic elements) and creates a data frame representation of the list. It is a full 2-dimensional generalization of <code><a href='https://rdrr.io/r/base/unlist.html'>base::unlist</a></code>, but is best understood and used as a recursive generalization of <code><a href='https://rdrr.io/r/base/do.call.html'>do.call(rbind, l)</a></code>, for lists of vectors, data frames, arrays or heterogeneous objects (i.e. unlisting happens via recursive flattening and intelligent row-binding of objects, see Details and Examples).</p>
+    <p><code>unlist2d</code> efficiently unlists lists of regular R objects (objects built up from atomic elements) and creates a data frame representation of the list through recursive flattening and intelligent row-binding operations. It is a full 2-dimensional generalization of <code><a href='https://rdrr.io/r/base/unlist.html'>unlist</a></code>, but best understood as a recursive generalization of <code><a href='https://rdrr.io/r/base/do.call.html'>do.call(rbind, ...)</a></code>. This function is a powerful tool to create a tidy data frame representation from (nested) lists of vectors, data frames, matrices, arrays or heterogeneous objects. <!-- % (i.e. unlisting happens via recursive flattening and intelligent row-binding of objects, see Details and Examples). --></p>
     </div>
 
     <pre class="usage"><span class='fu'>unlist2d</span>(<span class='no'>l</span>, <span class='kw'>idcols</span> <span class='kw'>=</span> <span class='st'>".id"</span>, <span class='kw'>row.names</span> <span class='kw'>=</span> <span class='fl'>FALSE</span>, <span class='kw'>recursive</span> <span class='kw'>=</span> <span class='fl'>TRUE</span>,
@@ -142,19 +139,19 @@
     </tr>
     <tr>
       <th>row.names</th>
-      <td><p><code>TRUE</code> extracts row names from all the objects in <code>l</code> (where available) and adds them to the output in a column named <code>"row.names"</code>. Alternatively, a column name i.e. <code>row.names = "file"</code> can be supplied.</p></td>
+      <td><p><code>TRUE</code> extracts row names from all the objects in <code>l</code> (where available) and adds them to the output in a column named <code>"row.names"</code>. Alternatively, a column name i.e. <code>row.names = "file"</code> can be supplied. For plain matrices in <code>l</code>, integer row names are generated.</p></td>
     </tr>
     <tr>
       <th>recursive</th>
-      <td><p>if <code>FALSE</code>, only process the lowest (deepest) level of <code>l</code>.</p></td>
+      <td><p>logical. if <code>FALSE</code>, only process the lowest (deepest) level of <code>l</code>.</p></td>
     </tr>
     <tr>
       <th>id.factor</th>
-      <td><p>if <code>TRUE</code> and <code>idcols != FALSE</code>, create id columns as ordered factors instead of character or integer vectors. This is useful if id's are used for further analysis e.g. as inputs to <code>ggplot2</code>.</p></td>
+      <td><p>if <code>TRUE</code> and <code>idcols != FALSE</code>, create id columns as factors instead of character or integer vectors. Alternatively it is possible to specify <code>id.factor = "ordered"</code> to generate ordered factor id's. This is useful if id's are used for further analysis e.g. as inputs to <code>ggplot2</code>.</p></td>
     </tr>
     <tr>
       <th>DT</th>
-      <td><p>if <code>TRUE</code>, return a <em>data.table</em>, not a data frame.</p></td>
+      <td><p>logical. <code>TRUE</code> returns a <em>data.table</em>, not a data.frame.</p></td>
     </tr>
     </table>
 
@@ -162,10 +159,10 @@
 
     <p>The data frame representation created by <code>unlist2d</code> is built as follows:</p><ul>
 <li><p>Recurse down to the lowest level of the list-tree, data frames are exempted and treated as a final elements.</p></li>
-<li><p>Check out the objects, if they are vectors, matrices or arrays convert them to data frame (in the case of atomic vectors each element becomes a column).</p></li>
-<li><p>Row-bind these data frame's using data.table's <code>rbindlist</code> function. Columns are matched by name. If the number of columns differ, fill empty spaces with NA's. If <code>idcols != FALSE</code>, create a id-columns on the left, filled with the object names or indices (if unnamed). If <code>row.names = TRUE</code>, store row-names of the objects (if available) in a separate column.</p></li>
-<li><p>Move up to the next higher level of the list-tree and repeat: Convert atomic objects to data frame and row-bind while matching all columns and filling unmatched ones with NA's. Create another id-column for each level of nesting passed through. If the list-tree is asymmetric, fill empty spaces in lower-level id columns with NA's.</p></li>
-</ul><p>The result of this iterative procedure is a single data frame containing on the left side id-columns for each level of nesting (from higher to lower level), followed by a column containing all the row.names of the objects if <code>row.names = TRUE</code>, followed by the object columns, matched at each level of recursion. Optimal results are of course obtained with symmetric lists of arrays, matrices or data frames, which <code>unlist2d</code> nicely converts to a beautiful data frame ready for plotting or further analysis. See examples below.</p>
+<li><p>Identify the objects, if they are vectors, matrices or arrays convert them to data frame (in the case of atomic vectors each element becomes a column).</p></li>
+<li><p>Row-bind these data frames using <em>data.table</em>'s <code>rbindlist</code> function. Columns are matched by name. If the number of columns differ, fill empty spaces with <code>NA</code>'s. If <code>idcols != FALSE</code>, create id-columns on the left, filled with the object names or indices (if the (sub-)list is unnamed). If <code>row.names != FALSE</code>, store row names of the objects (if available) in a separate column.</p></li>
+<li><p>Move up to the next higher level of the list-tree and repeat: Convert atomic objects to data frame and row-bind while matching all columns and filling unmatched ones with <code>NA</code>'s. Create another id-column for each level of nesting passed through. If the list-tree is asymmetric, fill empty spaces in lower-level id columns with <code>NA</code>'s.</p></li>
+</ul><p>The result of this iterative procedure is a single data frame containing on the left side id-columns for each level of nesting (from higher to lower level), followed by a column containing all the row.names of the objects (if <code>row.names != FALSE</code>), followed by the object columns, matched at each level of recursion. Optimal results are of course obtained with symmetric lists of arrays, matrices or data frames, which <code>unlist2d</code> efficiently binds into a beautiful data frame ready for plotting or further analysis. See examples below.</p>
     <h2 class="hasAnchor" id="value"><a class="anchor" href="#value"></a>Value</h2>
 
     <p>A data frame or (if <code>DT = TRUE</code>) a <em>data.table</em>.</p>
@@ -174,37 +171,201 @@
     <p>For lists of data frames <code>unlist2d</code> works just like <code><a href='https://rdrr.io/pkg/data.table/man/rbindlist.html'>data.table::rbindlist(l, use.names = TRUE, fill = TRUE, idcol = ".id")</a></code> (also the same speed), however for lists of lists <code>unlist2d</code> does not produce the same output as <code><a href='https://rdrr.io/pkg/data.table/man/rbindlist.html'>data.table::rbindlist</a></code>.</p>
     <h2 class="hasAnchor" id="see-also"><a class="anchor" href="#see-also"></a>See also</h2>
 
-    <div class='dont-index'><p><code><a href='rapply2d.html'>rapply2d</a></code>, <a href='list-processing.html'>List Processing</a>, <a href='collapse-documentation.html'>Collapse Overview</a></p></div>
+    <div class='dont-index'><p><code><a href='rapply2d.html'>rapply2d</a></code>, <a href='list-processing.html'>List Processing</a>, <a href='index.html'>Collapse Overview</a></p></div>
 
     <h2 class="hasAnchor" id="examples"><a class="anchor" href="#examples"></a>Examples</h2>
-    <pre class="examples"><span class='co'>## basic examples:</span>
+    <pre class="examples"><div class='input'><span class='co'>## Basic Examples:</span>
 <span class='no'>l</span> <span class='kw'>&lt;-</span> <span class='fu'><a href='https://rdrr.io/r/base/list.html'>list</a></span>(<span class='no'>mtcars</span>, <span class='fu'><a href='https://rdrr.io/r/base/list.html'>list</a></span>(<span class='no'>mtcars</span>, <span class='no'>mtcars</span>))
-<span class='fu'>unlist2d</span>(<span class='no'>l</span>)
-<span class='fu'>unlist2d</span>(<span class='fu'><a href='rapply2d.html'>rapply2d</a></span>(<span class='no'>l</span>, <span class='no'>fmean</span>))
-<span class='no'>l</span> <span class='kw'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/list.html'>list</a></span>(<span class='kw'>a</span> <span class='kw'>=</span> <span class='fu'><a href='quick-conversion.html'>qM</a></span>(<span class='no'>mtcars</span>[<span class='fl'>1</span>:<span class='fl'>8</span>]),
+<span class='fu'><a href='https://rdrr.io/r/utils/head.html'>tail</a></span>(<span class='fu'>unlist2d</span>(<span class='no'>l</span>))</div><div class='output co'>#&gt;    .id.1 .id.2  mpg cyl  disp  hp drat    wt qsec vs am gear carb
+#&gt; 91     2     2 26.0   4 120.3  91 4.43 2.140 16.7  0  1    5    2
+#&gt; 92     2     2 30.4   4  95.1 113 3.77 1.513 16.9  1  1    5    2
+#&gt; 93     2     2 15.8   8 351.0 264 4.22 3.170 14.5  0  1    5    4
+#&gt; 94     2     2 19.7   6 145.0 175 3.62 2.770 15.5  0  1    5    6
+#&gt; 95     2     2 15.0   8 301.0 335 3.54 3.570 14.6  0  1    5    8
+#&gt; 96     2     2 21.4   4 121.0 109 4.11 2.780 18.6  1  1    4    2</div><div class='input'><span class='fu'>unlist2d</span>(<span class='fu'><a href='rapply2d.html'>rapply2d</a></span>(<span class='no'>l</span>, <span class='no'>fmean</span>))</div><div class='output co'>#&gt;   .id.1 .id.2      mpg    cyl     disp       hp     drat      wt     qsec
+#&gt; 1     1    NA 20.09062 6.1875 230.7219 146.6875 3.596562 3.21725 17.84875
+#&gt; 2     2     1 20.09062 6.1875 230.7219 146.6875 3.596562 3.21725 17.84875
+#&gt; 3     2     2 20.09062 6.1875 230.7219 146.6875 3.596562 3.21725 17.84875
+#&gt;       vs      am   gear   carb
+#&gt; 1 0.4375 0.40625 3.6875 2.8125
+#&gt; 2 0.4375 0.40625 3.6875 2.8125
+#&gt; 3 0.4375 0.40625 3.6875 2.8125</div><div class='input'><span class='no'>l</span> <span class='kw'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/list.html'>list</a></span>(<span class='kw'>a</span> <span class='kw'>=</span> <span class='fu'><a href='quick-conversion.html'>qM</a></span>(<span class='no'>mtcars</span>[<span class='fl'>1</span>:<span class='fl'>8</span>]),
          <span class='kw'>b</span> <span class='kw'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/list.html'>list</a></span>(<span class='kw'>c</span> <span class='kw'>=</span> <span class='no'>mtcars</span>[<span class='fl'>4</span>:<span class='fl'>11</span>], <span class='kw'>d</span> <span class='kw'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/list.html'>list</a></span>(<span class='kw'>e</span> <span class='kw'>=</span> <span class='no'>mtcars</span>[<span class='fl'>2</span>:<span class='fl'>10</span>], <span class='kw'>f</span> <span class='kw'>=</span> <span class='no'>mtcars</span>)))
-<span class='fu'>unlist2d</span>(<span class='no'>l</span>, <span class='kw'>row.names</span> <span class='kw'>=</span> <span class='fl'>TRUE</span>)
-<span class='fu'>unlist2d</span>(<span class='fu'><a href='rapply2d.html'>rapply2d</a></span>(<span class='no'>l</span>, <span class='no'>fmean</span>))
-<span class='fu'>unlist2d</span>(<span class='fu'><a href='rapply2d.html'>rapply2d</a></span>(<span class='no'>l</span>, <span class='no'>fmean</span>), <span class='kw'>recursive</span> <span class='kw'>=</span> <span class='fl'>FALSE</span>)
-
+<span class='fu'><a href='https://rdrr.io/r/utils/head.html'>tail</a></span>(<span class='fu'>unlist2d</span>(<span class='no'>l</span>, <span class='kw'>row.names</span> <span class='kw'>=</span> <span class='fl'>TRUE</span>))</div><div class='output co'>#&gt;     .id.1 .id.2 .id.3      row.names  mpg cyl  disp  hp drat    wt qsec vs am
+#&gt; 123     b     d     f  Porsche 914-2 26.0   4 120.3  91 4.43 2.140 16.7  0  1
+#&gt; 124     b     d     f   Lotus Europa 30.4   4  95.1 113 3.77 1.513 16.9  1  1
+#&gt; 125     b     d     f Ford Pantera L 15.8   8 351.0 264 4.22 3.170 14.5  0  1
+#&gt; 126     b     d     f   Ferrari Dino 19.7   6 145.0 175 3.62 2.770 15.5  0  1
+#&gt; 127     b     d     f  Maserati Bora 15.0   8 301.0 335 3.54 3.570 14.6  0  1
+#&gt; 128     b     d     f     Volvo 142E 21.4   4 121.0 109 4.11 2.780 18.6  1  1
+#&gt;     gear carb
+#&gt; 123    5    2
+#&gt; 124    5    2
+#&gt; 125    5    4
+#&gt; 126    5    6
+#&gt; 127    5    8
+#&gt; 128    4    2</div><div class='input'><span class='fu'>unlist2d</span>(<span class='fu'><a href='rapply2d.html'>rapply2d</a></span>(<span class='no'>l</span>, <span class='no'>fmean</span>))</div><div class='output co'>#&gt;   .id.1 .id.2 .id.3      mpg    cyl     disp       hp     drat      wt     qsec
+#&gt; 1     a  &lt;NA&gt;  &lt;NA&gt; 20.09062 6.1875 230.7219 146.6875 3.596562 3.21725 17.84875
+#&gt; 2     b     c  &lt;NA&gt;       NA     NA       NA 146.6875 3.596562 3.21725 17.84875
+#&gt; 3     b     d     e       NA 6.1875 230.7219 146.6875 3.596562 3.21725 17.84875
+#&gt; 4     b     d     f 20.09062 6.1875 230.7219 146.6875 3.596562 3.21725 17.84875
+#&gt;       vs      am   gear   carb
+#&gt; 1 0.4375      NA     NA     NA
+#&gt; 2 0.4375 0.40625 3.6875 2.8125
+#&gt; 3 0.4375 0.40625 3.6875     NA
+#&gt; 4 0.4375 0.40625 3.6875 2.8125</div><div class='input'><span class='fu'>unlist2d</span>(<span class='fu'><a href='rapply2d.html'>rapply2d</a></span>(<span class='no'>l</span>, <span class='no'>fmean</span>), <span class='kw'>recursive</span> <span class='kw'>=</span> <span class='fl'>FALSE</span>)</div><div class='output co'>#&gt; $a
+#&gt;        mpg        cyl       disp         hp       drat         wt       qsec 
+#&gt;  20.090625   6.187500 230.721875 146.687500   3.596562   3.217250  17.848750 
+#&gt;         vs 
+#&gt;   0.437500 
+#&gt; 
+#&gt; $b
+#&gt; $b$c
+#&gt;         hp       drat         wt       qsec         vs         am       gear 
+#&gt; 146.687500   3.596562   3.217250  17.848750   0.437500   0.406250   3.687500 
+#&gt;       carb 
+#&gt;   2.812500 
+#&gt; 
+#&gt; $b$d
+#&gt;   .id    cyl     disp       hp     drat      wt     qsec     vs      am   gear
+#&gt; 1   e 6.1875 230.7219 146.6875 3.596562 3.21725 17.84875 0.4375 0.40625 3.6875
+#&gt; 2   f 6.1875 230.7219 146.6875 3.596562 3.21725 17.84875 0.4375 0.40625 3.6875
+#&gt;        mpg   carb
+#&gt; 1       NA     NA
+#&gt; 2 20.09062 2.8125
+#&gt; 
+#&gt; </div><div class='input'>
 <span class='co'>## Groningen Growth and Development Center 10-Sector Database</span>
-<span class='fu'><a href='https://rdrr.io/r/utils/head.html'>head</a></span>(<span class='no'>GGDC10S</span>) <span class='co'># See ?GGDC10S</span>
-<span class='fu'><a href='small-helper.html'>namlab</a></span>(<span class='no'>GGDC10S</span>, <span class='kw'>class</span> <span class='kw'>=</span> <span class='fl'>TRUE</span>)
-
+<span class='fu'><a href='https://rdrr.io/r/utils/head.html'>head</a></span>(<span class='no'>GGDC10S</span>) <span class='co'># See ?GGDC10S</span></div><div class='output co'>#&gt;   Country Regioncode             Region Variable Year      AGR      MIN
+#&gt; 1     BWA        SSA Sub-saharan Africa       VA 1960       NA       NA
+#&gt; 2     BWA        SSA Sub-saharan Africa       VA 1961       NA       NA
+#&gt; 3     BWA        SSA Sub-saharan Africa       VA 1962       NA       NA
+#&gt; 4     BWA        SSA Sub-saharan Africa       VA 1963       NA       NA
+#&gt; 5     BWA        SSA Sub-saharan Africa       VA 1964 16.30154 3.494075
+#&gt; 6     BWA        SSA Sub-saharan Africa       VA 1965 15.72700 2.495768
+#&gt;         MAN        PU       CON      WRT      TRA     FIRE      GOV      OTH
+#&gt; 1        NA        NA        NA       NA       NA       NA       NA       NA
+#&gt; 2        NA        NA        NA       NA       NA       NA       NA       NA
+#&gt; 3        NA        NA        NA       NA       NA       NA       NA       NA
+#&gt; 4        NA        NA        NA       NA       NA       NA       NA       NA
+#&gt; 5 0.7365696 0.1043936 0.6600454 6.243732 1.658928 1.119194 4.822485 2.341328
+#&gt; 6 1.0181992 0.1350976 1.3462312 7.064825 1.939007 1.246789 5.695848 2.678338
+#&gt;        SUM
+#&gt; 1       NA
+#&gt; 2       NA
+#&gt; 3       NA
+#&gt; 4       NA
+#&gt; 5 37.48229
+#&gt; 6 39.34710</div><div class='input'><span class='fu'><a href='small-helper.html'>namlab</a></span>(<span class='no'>GGDC10S</span>, <span class='kw'>class</span> <span class='kw'>=</span> <span class='fl'>TRUE</span>)</div><div class='output co'>#&gt;      Variable     Class                                                 Label
+#&gt; 1     Country character                                               Country
+#&gt; 2  Regioncode character                                           Region code
+#&gt; 3      Region character                                                Region
+#&gt; 4    Variable character                                              Variable
+#&gt; 5        Year   numeric                                                  Year
+#&gt; 6         AGR   numeric                                          Agriculture 
+#&gt; 7         MIN   numeric                                                Mining
+#&gt; 8         MAN   numeric                                         Manufacturing
+#&gt; 9          PU   numeric                                             Utilities
+#&gt; 10        CON   numeric                                          Construction
+#&gt; 11        WRT   numeric                         Trade, restaurants and hotels
+#&gt; 12        TRA   numeric                  Transport, storage and communication
+#&gt; 13       FIRE   numeric Finance, insurance, real estate and business services
+#&gt; 14        GOV   numeric                                   Government services
+#&gt; 15        OTH   numeric               Community, social and personal services
+#&gt; 16        SUM   numeric                               Summation of sector GDP</div><div class='input'>
 <span class='co'># Panel-Summarize this data by Variable (Emloyment and Value Added)</span>
 <span class='no'>l</span> <span class='kw'>&lt;-</span> <span class='fu'><a href='qsu.html'>qsu</a></span>(<span class='no'>GGDC10S</span>, <span class='kw'>by</span> <span class='kw'>=</span> ~ <span class='no'>Variable</span>,             <span class='co'># Output as list (instead of 4D array)</span>
          <span class='kw'>pid</span> <span class='kw'>=</span> ~ <span class='no'>Variable</span> + <span class='no'>Country</span>,
          <span class='kw'>cols</span> <span class='kw'>=</span> <span class='fl'>6</span>:<span class='fl'>16</span>, <span class='kw'>array</span> <span class='kw'>=</span> <span class='fl'>FALSE</span>)
-<span class='fu'><a href='https://rdrr.io/r/utils/str.html'>str</a></span>(<span class='no'>l</span>)                                         <span class='co'># A list of 2-levels with matrices of statistics</span>
-<span class='fu'><a href='https://rdrr.io/r/utils/head.html'>head</a></span>(<span class='fu'>unlist2d</span>(<span class='no'>l</span>))                              <span class='co'># Default output, missing the variables (row-names)</span>
-<span class='fu'><a href='https://rdrr.io/r/utils/head.html'>head</a></span>(<span class='fu'>unlist2d</span>(<span class='no'>l</span>, <span class='kw'>row.names</span> <span class='kw'>=</span> <span class='fl'>TRUE</span>))            <span class='co'># Here we go, but this is still not very nice</span>
-<span class='fu'><a href='https://rdrr.io/r/utils/head.html'>head</a></span>(<span class='fu'>unlist2d</span>(<span class='no'>l</span>, <span class='kw'>idcols</span> <span class='kw'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span>(<span class='st'>"Sector"</span>,<span class='st'>"Trans"</span>), <span class='co'># Now this is looking pretty good</span>
-              <span class='kw'>row.names</span> <span class='kw'>=</span> <span class='st'>"Variable"</span>))
-
-<span class='no'>dat</span> <span class='kw'>&lt;-</span> <span class='fu'>unlist2d</span>(<span class='no'>l</span>, <span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span>(<span class='st'>"Sector"</span>,<span class='st'>"Trans"</span>),        <span class='co'># Id-columns can also be generated as ordered factors</span>
+<span class='fu'><a href='https://rdrr.io/r/utils/str.html'>str</a></span>(<span class='no'>l</span>, <span class='kw'>give.attr</span> <span class='kw'>=</span> <span class='fl'>FALSE</span>)                      <span class='co'># A list of 2-levels with matrices of statistics</span></div><div class='output co'>#&gt; List of 11
+#&gt;  $ AGR :List of 3
+#&gt;   ..$ Overall: 'qsu' num [1:2, 1:5] 2225 2139 16746 5137561 55645 ...
+#&gt;   ..$ Between: 'qsu' num [1:2, 1:5] 42 43 16746 5137561 54119 ...
+#&gt;   ..$ Within : 'qsu' num [1:2, 1:5] 5.30e+01 4.97e+01 2.53e+06 2.53e+06 1.29e+04 ...
+#&gt;  $ MIN :List of 3
+#&gt;   ..$ Overall: 'qsu' num [1:2, 1:5] 2216 2139 360 3802687 1295 ...
+#&gt;   ..$ Between: 'qsu' num [1:2, 1:5] 42 43 360 3802687 1155 ...
+#&gt;   ..$ Within : 'qsu' num [1:2, 1:5] 5.28e+01 4.97e+01 1.87e+06 1.87e+06 5.86e+02 ...
+#&gt;  $ MAN :List of 3
+#&gt;   ..$ Overall: 'qsu' num [1:2, 1:5] 2216 2139 5204 11270966 13925 ...
+#&gt;   ..$ Between: 'qsu' num [1:2, 1:5] 42 43 5204 11270966 11862 ...
+#&gt;   ..$ Within : 'qsu' num [1:2, 1:5] 5.28e+01 4.97e+01 5.54e+06 5.54e+06 7.29e+03 ...
+#&gt;  $ PU  :List of 3
+#&gt;   ..$ Overall: 'qsu' num [1:2, 1:5] 2215 2139 153 683127 365 ...
+#&gt;   ..$ Between: 'qsu' num [1:2, 1:5] 42 43 153 683127 294 ...
+#&gt;   ..$ Within : 'qsu' num [1:2, 1:5] 52.7 49.7 335679.5 335679.5 216.3 ...
+#&gt;  $ CON :List of 3
+#&gt;   ..$ Overall: 'qsu' num [1:2, 1:5] 2216 2139 1794 3666191 5114 ...
+#&gt;   ..$ Between: 'qsu' num [1:2, 1:5] 42 43 1794 3666191 3712 ...
+#&gt;   ..$ Within : 'qsu' num [1:2, 1:5] 5.28e+01 4.97e+01 1.80e+06 1.80e+06 3.52e+03 ...
+#&gt;  $ WRT :List of 3
+#&gt;   ..$ Overall: 'qsu' num [1:2, 1:5] 2216 2139 4368 6903432 8617 ...
+#&gt;   ..$ Between: 'qsu' num [1:2, 1:5] 42 43 4368 6903432 6929 ...
+#&gt;   ..$ Within : 'qsu' num [1:2, 1:5] 5.28e+01 4.97e+01 3.39e+06 3.39e+06 5.12e+03 ...
+#&gt;  $ TRA :List of 3
+#&gt;   ..$ Overall: 'qsu' num [1:2, 1:5] 2216 2139 1442 2998080 3289 ...
+#&gt;   ..$ Between: 'qsu' num [1:2, 1:5] 42 43 1442 2998080 2738 ...
+#&gt;   ..$ Within : 'qsu' num [1:2, 1:5] 5.28e+01 4.97e+01 1.47e+06 1.47e+06 1.82e+03 ...
+#&gt;  $ FIRE:List of 3
+#&gt;   ..$ Overall: 'qsu' num [1:2, 1:5] 2216 2139 1331 3372504 3114 ...
+#&gt;   ..$ Between: 'qsu' num [1:2, 1:5] 42 43 1331 3372504 2598 ...
+#&gt;   ..$ Within : 'qsu' num [1:2, 1:5] 5.28e+01 4.97e+01 1.66e+06 1.66e+06 1.72e+03 ...
+#&gt;  $ GOV :List of 3
+#&gt;   ..$ Overall: 'qsu' num [1:2, 1:5] 1780 1702 4197 3498683 7278 ...
+#&gt;   ..$ Between: 'qsu' num [1:2, 1:5] 34 35 4197 3498683 6577 ...
+#&gt;   ..$ Within : 'qsu' num [1:2, 1:5] 5.24e+01 4.86e+01 1.71e+06 1.71e+06 3.12e+03 ...
+#&gt;  $ OTH :List of 3
+#&gt;   ..$ Overall: 'qsu' num [1:2, 1:5] 2109 2139 2268 3343192 8022 ...
+#&gt;   ..$ Between: 'qsu' num [1:2, 1:5] 40 43 2268 3343192 5268 ...
+#&gt;   ..$ Within : 'qsu' num [1:2, 1:5] 5.27e+01 4.97e+01 1.68e+06 1.68e+06 6.05e+03 ...
+#&gt;  $ SUM :List of 3
+#&gt;   ..$ Overall: 'qsu' num [1:2, 1:5] 2225 2139 36847 43961639 96319 ...
+#&gt;   ..$ Between: 'qsu' num [1:2, 1:5] 42 43 36847 43961639 89206 ...
+#&gt;   ..$ Within : 'qsu' num [1:2, 1:5] 5.30e+01 4.97e+01 2.16e+07 2.16e+07 3.63e+04 ...</div><div class='input'><span class='fu'><a href='https://rdrr.io/r/utils/head.html'>head</a></span>(<span class='fu'>unlist2d</span>(<span class='no'>l</span>))                              <span class='co'># Default output, missing the variables (row-names)</span></div><div class='output co'>#&gt;   .id.1   .id.2          N       Mean          SD           Min          Max
+#&gt; 1   AGR Overall 2225.00000   16746.43    55644.84  5.240734e+00     390980.0
+#&gt; 2   AGR Overall 2139.00000 5137560.88 52913681.79  5.887857e-07 1191877784.8
+#&gt; 3   AGR Between   42.00000   16746.43    54118.72  1.357596e+01     287744.2
+#&gt; 4   AGR Between   43.00000 5137560.88 27760188.51  1.674095e+02  189627688.7
+#&gt; 5   AGR  Within   52.97619 2526696.50    12942.66  2.394221e+06    2629932.3
+#&gt; 6   AGR  Within   49.74419 2526696.50 45046971.64 -1.869215e+08 1004776792.6</div><div class='input'><span class='fu'><a href='https://rdrr.io/r/utils/head.html'>head</a></span>(<span class='fu'>unlist2d</span>(<span class='no'>l</span>, <span class='kw'>row.names</span> <span class='kw'>=</span> <span class='fl'>TRUE</span>))            <span class='co'># Here we go, but this is still not very nice</span></div><div class='output co'>#&gt;   .id.1   .id.2 row.names          N       Mean          SD           Min
+#&gt; 1   AGR Overall       EMP 2225.00000   16746.43    55644.84  5.240734e+00
+#&gt; 2   AGR Overall        VA 2139.00000 5137560.88 52913681.79  5.887857e-07
+#&gt; 3   AGR Between       EMP   42.00000   16746.43    54118.72  1.357596e+01
+#&gt; 4   AGR Between        VA   43.00000 5137560.88 27760188.51  1.674095e+02
+#&gt; 5   AGR  Within       EMP   52.97619 2526696.50    12942.66  2.394221e+06
+#&gt; 6   AGR  Within        VA   49.74419 2526696.50 45046971.64 -1.869215e+08
+#&gt;            Max
+#&gt; 1     390980.0
+#&gt; 2 1191877784.8
+#&gt; 3     287744.2
+#&gt; 4  189627688.7
+#&gt; 5    2629932.3
+#&gt; 6 1004776792.6</div><div class='input'><span class='fu'><a href='https://rdrr.io/r/utils/head.html'>head</a></span>(<span class='fu'>unlist2d</span>(<span class='no'>l</span>, <span class='kw'>idcols</span> <span class='kw'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span>(<span class='st'>"Sector"</span>,<span class='st'>"Trans"</span>), <span class='co'># Now this is looking pretty good</span>
+              <span class='kw'>row.names</span> <span class='kw'>=</span> <span class='st'>"Variable"</span>))</div><div class='output co'>#&gt;   Sector   Trans Variable          N       Mean          SD           Min
+#&gt; 1    AGR Overall      EMP 2225.00000   16746.43    55644.84  5.240734e+00
+#&gt; 2    AGR Overall       VA 2139.00000 5137560.88 52913681.79  5.887857e-07
+#&gt; 3    AGR Between      EMP   42.00000   16746.43    54118.72  1.357596e+01
+#&gt; 4    AGR Between       VA   43.00000 5137560.88 27760188.51  1.674095e+02
+#&gt; 5    AGR  Within      EMP   52.97619 2526696.50    12942.66  2.394221e+06
+#&gt; 6    AGR  Within       VA   49.74419 2526696.50 45046971.64 -1.869215e+08
+#&gt;            Max
+#&gt; 1     390980.0
+#&gt; 2 1191877784.8
+#&gt; 3     287744.2
+#&gt; 4  189627688.7
+#&gt; 5    2629932.3
+#&gt; 6 1004776792.6</div><div class='input'>
+<span class='no'>dat</span> <span class='kw'>&lt;-</span> <span class='fu'>unlist2d</span>(<span class='no'>l</span>, <span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span>(<span class='st'>"Sector"</span>,<span class='st'>"Trans"</span>),        <span class='co'># Id-columns can also be generated as factors</span>
                 <span class='st'>"Variable"</span>, <span class='kw'>id.factor</span> <span class='kw'>=</span> <span class='fl'>TRUE</span>)
-<span class='fu'><a href='https://rdrr.io/r/utils/str.html'>str</a></span>(<span class='no'>dat</span>)
-
+<span class='fu'><a href='https://rdrr.io/r/utils/str.html'>str</a></span>(<span class='no'>dat</span>)</div><div class='output co'>#&gt; 'data.frame':	66 obs. of  8 variables:
+#&gt;  $ Sector  : Factor w/ 11 levels "AGR","MIN","MAN",..: 1 1 1 1 1 1 2 2 2 2 ...
+#&gt;  $ Trans   : Factor w/ 3 levels "Overall","Between",..: 1 1 2 2 3 3 1 1 2 2 ...
+#&gt;  $ Variable: chr  "EMP" "VA" "EMP" "VA" ...
+#&gt;  $ N       : num  2225 2139 42 43 53 ...
+#&gt;  $ Mean    : num  16746 5137561 16746 5137561 2526697 ...
+#&gt;  $ SD      : num  55645 52913682 54119 27760189 12943 ...
+#&gt;  $ Min     : num  5.24 5.89e-07 1.36e+01 1.67e+02 2.39e+06 ...
+#&gt;  $ Max     : num  3.91e+05 1.19e+09 2.88e+05 1.90e+08 2.63e+06 ...</div><div class='input'>
 <span class='co'># Split this sectoral data, first by Variable (Emloyment and Value Added), then by Country</span>
 <span class='no'>sdat</span> <span class='kw'>&lt;-</span> <span class='fu'><a href='rapply2d.html'>rapply2d</a></span>(<span class='fu'><a href='https://rdrr.io/r/base/split.html'>split</a></span>(<span class='no'>GGDC10S</span>[<span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span>(<span class='fl'>1</span>,<span class='fl'>6</span>:<span class='fl'>16</span>)], <span class='no'>GGDC10S</span>$<span class='no'>Variable</span>), <span class='kw'>function</span>(<span class='no'>x</span>) <span class='fu'><a href='https://rdrr.io/r/base/split.html'>split</a></span>(<span class='no'>x</span>[-<span class='fl'>1</span>],<span class='no'>x</span><span class='kw'>[[</span><span class='fl'>1</span>]]))
 
@@ -212,12 +373,61 @@
 <span class='no'>dat</span> <span class='kw'>&lt;-</span> <span class='fu'>unlist2d</span>(<span class='fu'><a href='rapply2d.html'>rapply2d</a></span>(<span class='no'>sdat</span>, <span class='no'>pwcor</span>),
                 <span class='kw'>idcols</span> <span class='kw'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span>(<span class='st'>"Variable"</span>,<span class='st'>"Country"</span>),
                 <span class='kw'>row.names</span> <span class='kw'>=</span> <span class='st'>"Sector"</span>)
-<span class='fu'><a href='https://rdrr.io/r/utils/head.html'>head</a></span>(<span class='no'>dat</span>)
-<span class='fu'><a href='https://rdrr.io/r/base/plot.html'>plot</a></span>(<span class='fu'><a href='https://rdrr.io/r/stats/hclust.html'>hclust</a></span>(<span class='fu'><a href='https://rdrr.io/r/stats/dist.html'>as.dist</a></span>(<span class='fl'>1</span>-<span class='fu'><a href='pwcor_pwcov_pwNobs.html'>pwcor</a></span>(<span class='no'>dat</span>[-(<span class='fl'>1</span>:<span class='fl'>3</span>)]))))    <span class='co'># Using corrs. as distance metric to cluster sectors</span>
-
+<span class='fu'><a href='https://rdrr.io/r/utils/head.html'>head</a></span>(<span class='no'>dat</span>)</div><div class='output co'>#&gt;   Variable Country Sector         AGR        MIN         MAN         PU
+#&gt; 1      EMP     ARG    AGR  1.00000000 -0.5432238 -0.06195285 -0.6039527
+#&gt; 2      EMP     ARG    MIN -0.54322382  1.0000000  0.27420132  0.5591395
+#&gt; 3      EMP     ARG    MAN -0.06195285  0.2742013  1.00000000  0.4387383
+#&gt; 4      EMP     ARG     PU -0.60395268  0.5591395  0.43873834  1.0000000
+#&gt; 5      EMP     ARG    CON -0.85244262  0.7670132  0.32534168  0.6119454
+#&gt; 6      EMP     ARG    WRT -0.88582197  0.7587235  0.05909901  0.5778457
+#&gt;          CON         WRT         TRA        FIRE         GOV         OTH
+#&gt; 1 -0.8524426 -0.88582197 -0.65710602 -0.77508301 -0.85797631 -0.86895334
+#&gt; 2  0.7670132  0.75872350  0.77160809  0.81346988  0.75874992  0.73533837
+#&gt; 3  0.3253417  0.05909901 -0.07476592 -0.08183532 -0.05793235 -0.03827729
+#&gt; 4  0.6119454  0.57784570  0.57586671  0.50156150  0.49865348  0.52565945
+#&gt; 5  1.0000000  0.87105470  0.65409838  0.79003514  0.81912978  0.82502726
+#&gt; 6  0.8710547  1.00000000  0.86259400  0.95274994  0.98270766  0.98862375
+#&gt;           SUM
+#&gt; 1 -0.84715229
+#&gt; 2  0.81170356
+#&gt; 3  0.05960032
+#&gt; 4  0.56998662
+#&gt; 5  0.86608973
+#&gt; 6  0.99180468</div><div class='input'><span class='fu'><a href='https://rdrr.io/r/base/plot.html'>plot</a></span>(<span class='fu'><a href='https://rdrr.io/r/stats/hclust.html'>hclust</a></span>(<span class='fu'><a href='https://rdrr.io/r/stats/dist.html'>as.dist</a></span>(<span class='fl'>1</span>-<span class='fu'><a href='pwcor_pwcov_pwNobs.html'>pwcor</a></span>(<span class='no'>dat</span>[-(<span class='fl'>1</span>:<span class='fl'>3</span>)]))))    <span class='co'># Using corrs. as distance metric to cluster sectors</span></div><div class='img'><img src='unlist2d-1.png' alt='' width='700' height='433' /></div><div class='input'>
 <span class='co'># Together with other functions like psmat, unlist2d can also effectively help reshape data:</span>
 <span class='fu'><a href='https://rdrr.io/r/utils/head.html'>head</a></span>(<span class='fu'>unlist2d</span>(<span class='fu'><a href='psmat.html'>psmat</a></span>(<span class='fu'><a href='https://rdrr.io/r/base/subset.html'>subset</a></span>(<span class='no'>GGDC10S</span>, <span class='no'>Variable</span> <span class='kw'>==</span> <span class='st'>"VA"</span>), ~<span class='no'>Country</span>, ~<span class='no'>Year</span>, <span class='kw'>cols</span> <span class='kw'>=</span> <span class='fl'>6</span>:<span class='fl'>16</span>, <span class='kw'>array</span> <span class='kw'>=</span> <span class='fl'>FALSE</span>),
-              <span class='kw'>idcols</span> <span class='kw'>=</span> <span class='st'>"Sector"</span>, <span class='kw'>row.names</span> <span class='kw'>=</span> <span class='st'>"Country"</span>))</pre>
+              <span class='kw'>idcols</span> <span class='kw'>=</span> <span class='st'>"Sector"</span>, <span class='kw'>row.names</span> <span class='kw'>=</span> <span class='st'>"Country"</span>), <span class='fl'>2</span>)</div><div class='output co'>#&gt;   Sector Country 1947 1948 1949         1950         1951         1952
+#&gt; 1    AGR     ARG   NA   NA   NA 5.887857e-07 9.165327e-07 9.964412e-07
+#&gt; 2    AGR     BOL   NA   NA   NA           NA           NA           NA
+#&gt;           1953         1954         1955         1956         1957         1958
+#&gt; 1 1.482589e-06 1.396692e-06 1.574796e-06 2.001253e-06 2.644127e-06 3.741081e-06
+#&gt; 2           NA           NA           NA           NA           NA 1.824902e-01
+#&gt;           1959         1960         1961         1962         1963         1964
+#&gt; 1 8.395798e-06 1.028314e-05 9.868339e-06 1.342763e-05 1.902081e-05 2.947121e-05
+#&gt; 2 1.982476e-01 2.358937e-01 2.649170e-01 2.704523e-01 2.875517e-01 3.012666e-01
+#&gt;           1965         1966         1967         1968         1969         1970
+#&gt; 1 3.549257e-05 3.856346e-05 4.832476e-05 5.232561e-05 6.292321e-05 0.0000761702
+#&gt; 2 3.247992e-01 3.456743e-01 3.558257e-01 3.999931e-01 3.887203e-01 0.4120399120
+#&gt;           1971         1972         1973         1974        1975        1976
+#&gt; 1 0.0001145865 0.0002086401 0.0004172802 0.0004868269 0.001043201 0.005841923
+#&gt; 2 0.4411801523 0.4819868219 0.7372467948 1.2903295209 1.431004641 1.603998658
+#&gt;         1977       1978      1979      1980      1981      1982      1983
+#&gt; 1 0.01613484 0.03672066 0.1052937 0.1730322 0.4325805  1.816838  8.219029
+#&gt; 2 1.80422238 2.03217554 2.3801321 3.5636496 3.7604925 17.360661 48.800156
+#&gt;        1984     1985      1986     1987     1988      1989     1990      1991
+#&gt; 1  57.10062 350.3902  673.7874 1633.943 8626.520  269.8437 4843.777 10511.533
+#&gt; 2 661.51794 711.0373 1773.3427 1401.706 1700.287 1937.4890 2371.077  2973.534
+#&gt;        1992      1993      1994      1995      1996     1997      1998
+#&gt; 1 11757.531 12148.850 13084.820 13808.478 15269.958 15293.02 15702.922
+#&gt; 2  3170.942  3582.741  4212.963  4789.906  5324.453  6212.54  5911.521
+#&gt;        1999      2000      2001      2002      2003      2004      2005
+#&gt; 1 12638.962 13300.482 12275.652 31903.936 38824.561 43148.468 46330.594
+#&gt; 2  6384.542  6732.951  7130.259  7343.263  8312.057  9275.858  9083.204
+#&gt;       2006     2007     2008     2009      2010      2011 2012 2013
+#&gt; 1 50759.94 70101.51 93178.70 79362.85 132365.85 178745.30   NA   NA
+#&gt; 2 10034.96 10312.41 12603.33 13575.46  14325.14  16246.64   NA   NA</div><div class='input'>
+
+</div></pre>
   </div>
   <div class="col-md-3 hidden-xs hidden-sm" id="pkgdown-sidebar">
     <nav id="toc" data-toggle="toc" class="sticky-top">

@@ -19,12 +19,12 @@ navbar:
       href: articles/index.html
     - text: "News"
       href: news/index.html
-    - text: "Blog"
-      href: blog/index.html
+    # - text: "Blog"
+    #   href: blog/index.html
 
   right:
    - icon: fa-twitter
-     href: https://twitter.com/collapse
+     href: https://twitter.com/collapse_R
    - icon: fa-github
      href: https://github.com/SebKrantz/collapse
 
@@ -47,7 +47,7 @@ articles:
 
 reference:
 - title: "Fast Statistical Functions"
-  desc: "Fast (grouped and weighted) statistical functions for vector, matrix, data.frame and grouped_df (dplyr compatible)."
+  desc: "Fast (grouped and weighted) statistical functions for vector, matrix, data frame and grouped tibble (class 'grouped_df', dplyr compatible)."
 - contents:
   - "A1-fast-statistical-functions"
   - fmean
@@ -57,26 +57,31 @@ reference:
   - fprod
   - "fvar, fsd"
   - "fmin, fmax"
+  - fnth
   - "ffirst, flast"
   - fNobs
   - fNdistinct
-- title: "Fast (Ordered) Grouping"
-  desc: "Fast (ordered or unordered) groupings from vectors, data.frames, lists. Fast ordering, factor generation and interactions, run-length type grouping and grouping of time-sequences."
+- title: "Fast Grouping and Ordering"
+  desc: "Fast (ordered) groupings from vectors, data.frames, lists. Fast ordering, unique values / rows, factor generation and interactions, run-length type grouping and grouping of time-sequences."
 - contents:
-  - "A2-fast-grouping"
+  - "A2-fast-grouping-ordering"
   - GRP
   - radixorder
+  - funique
   - qF
   - groupid
   - seqid
-- title: "Fast Data Frame Manipulation"
-  desc: "Fast and flexible select, subset and transform data, including modifying and computing columns by reference."
+- title: "Fast Data Manipulation"
+  desc: "Fast and flexible select, replace, add, subset, transform, sort / reorder and rename data / data frame columns."
 - contents:
-  - "A3-data-frame-manipulation"
-  - "select-replace-vars"
+  - "A3-fast-data-manipulation"
+  - "fselect, get_vars, add_vars"
   - fsubset
   - ftransform
-- title: "Quick Data Conversions"
+  - roworder
+  - colorder
+  - frename
+- title: "Quick Data Conversion"
   desc: "Quick conversions between data.frame's, data.table's, matrices, arrays, lists, vectors and factors - fast and flexible, without method dispatch or extensive checks."
 - contents:
   - "A4-quick-conversion"
@@ -87,7 +92,7 @@ reference:
   - "A5-advanced-aggregation"
   - collap
 - title: "Data Transformations"
-  desc: "Fast (grouped, weighted) replacing and sweeping out of statistics, scaling / standardizing, centering, higher-dimensional centering, linear prediction and partialling-out."
+  desc: "Efficient row- and column- apply to data objects and Split-Apply-Combine computing. Fast (grouped, weighted) replacing and sweeping out of statistics, scaling / standardizing, (quasi-)centering, higher-dimensional centering, linear prediction and partialling-out."
 - contents:
   - "A6-data-transformations"
   - dapply
@@ -96,9 +101,8 @@ reference:
   - fscale
   - "fbetween, fwithin"
   - "fHDbetween, fHDwithin"
-  - fFtest
-- title: "Time-Series and Panel-Series"
-  desc: "Fast (sequences of) lags / leads, and (lagged / leaded, iterated, quasi-, log-) differences and growth rates on (unordered) time-series and panel data. Auto, partial and cross-correlation functions for panel data. Panel data to (ts-)array conversion."
+- title: "Time Series and Panel Series"
+  desc: "Fast (sequences of) lags / leads, and (lagged / leaded, iterated, quasi-, log-) differences and growth rates on (unordered) time series and panel data. Auto-, partial- and cross-correlation functions for panel data. Panel data to (ts-)array conversion."
 - contents:
   - "A7-time-series-panel-series"
   - flag
@@ -112,19 +116,20 @@ reference:
   - "A8-list-processing"
   - "is.regular, is.unlistable"
   - ldepth
-  - "extract-list"
+  - "has_elem, get_elem"
   - rapply2d
   - unlist2d
 - title: "Summary Statistics"
-  desc: "Fast (grouped, weighted, panel-decomposed) summary statistics for complex multilevel / panel data."
+  desc: "Fast (grouped, weighted, panel-decomposed) summary statistics for cross-sectional and complex multilevel / panel data."
 - contents:
   - "A9-summary-statistics"
   - qsu
   - descr
   - "pwcor, pwcov, pwNobs"
   - varying
+  - fFtest
 - title: "Recode and Replace Values"
-  desc: "Efficiently Recode and Replace Values in Matrix-Like Objects."
+  desc: "Efficiently recode and replace values in matrix-like objects."
 - contents:
   - "AA1-recode-replace"
 - title: "Small (Helper) Functions"

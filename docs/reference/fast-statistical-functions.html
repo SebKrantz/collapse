@@ -40,8 +40,7 @@
 
 
 <meta property="og:title" content="Fast (Grouped, Weighted) Statistical Functions for Matrix-Like Objects — A1-fast-statistical-functions" />
-<meta property="og:description" content="With fsum, fprod, fmean, fmedian, fmode, fvar, fsd, fmin, fmax, ffirst, flast, fNobs and fNdistinct, collapse presents a coherent set of extremely fast and flexible statistical functions (S3 generics) to perform column-wise, grouped and weighted computations on atomic vectors, matrices and data.frames, with special support for dplyr grouped tibbles and data.table's.
-Notes: (1) Panel-decomposed (i.e. between and within) statistics as well as grouped and weighted skewness and kurtosis are implemented in qsu. (2) The vector-valued functions and operators fscale/STD, fbetween/B, fHDbetween/HDB, fwithin/W, fHDwithin/HDW, flag/L/F, fdiff/D/Dlog and fgrowth/G are documented under Data Transformations and Time-Series and Panel-Series. These functions also support plm::pseries and plm::pdata.frame's." />
+<meta property="og:description" content="With fsum, fprod, fmean, fmedian, fmode, fvar, fsd, fmin, fmax, fnth, ffirst, flast, fNobs and fNdistinct, collapse presents a coherent set of extremely fast and flexible statistical functions (S3 generics) to perform column-wise, grouped and weighted computations on atomic vectors, matrices and data frames, with special support for dplyr grouped tibbles and data.table's." />
 
 
 
@@ -73,7 +72,7 @@ Notes: (1) Panel-decomposed (i.e. between and within) statistics as well as grou
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">collapse</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">1.2.1</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">1.3.0</span>
       </span>
     </div>
 
@@ -88,13 +87,10 @@ Notes: (1) Panel-decomposed (i.e. between and within) statistics as well as grou
 <li>
   <a href="../news/index.html">News</a>
 </li>
-<li>
-  <a href="../blog/index.html">Blog</a>
-</li>
       </ul>
       <ul class="nav navbar-nav navbar-right">
         <li>
-  <a href="https://twitter.com/collapse">
+  <a href="https://twitter.com/collapse_R">
     <span class="fa fa-twitter"></span>
      
   </a>
@@ -124,8 +120,7 @@ Notes: (1) Panel-decomposed (i.e. between and within) statistics as well as grou
     </div>
 
     <div class="ref-description">
-    <p>With <code><a href='fsum.html'>fsum</a></code>, <code><a href='fprod.html'>fprod</a></code>, <code><a href='fmean.html'>fmean</a></code>, <code><a href='fmedian.html'>fmedian</a></code>, <code><a href='fmode.html'>fmode</a></code>, <code><a href='fvar_fsd.html'>fvar</a></code>, <code><a href='fvar_fsd.html'>fsd</a></code>, <code><a href='fmin_fmax.html'>fmin</a></code>, <code><a href='fmin_fmax.html'>fmax</a></code>, <code><a href='ffirst_flast.html'>ffirst</a></code>, <code><a href='ffirst_flast.html'>flast</a></code>, <code><a href='fNobs.html'>fNobs</a></code> and <code><a href='fNdistinct.html'>fNdistinct</a></code>, <em>collapse</em> presents a coherent set of extremely fast and flexible statistical functions (S3 generics) to perform column-wise, grouped and weighted computations on atomic vectors, matrices and data.frames, with special support for <em>dplyr</em> grouped tibbles and data.table's.</p>
-<p><em>Notes</em>: (1) Panel-decomposed (i.e. between and within) statistics as well as grouped and weighted skewness and kurtosis are implemented in <code><a href='qsu.html'>qsu</a></code>. (2) The vector-valued functions and operators <code><a href='fscale.html'>fscale/STD</a></code>, <code><a href='fbetween_fwithin.html'>fbetween/B</a></code>, <code><a href='fHDbetween_fHDwithin.html'>fHDbetween/HDB</a></code>, <code><a href='fbetween_fwithin.html'>fwithin/W</a></code>, <code><a href='fHDbetween_fHDwithin.html'>fHDwithin/HDW</a></code>, <code><a href='flag.html'>flag/L/F</a></code>, <code><a href='fdiff.html'>fdiff/D/Dlog</a></code> and <code><a href='fgrowth.html'>fgrowth/G</a></code> are documented under <a href='data-transformations.html'>Data Transformations</a> and <a href='time-series-panel-series.html'>Time-Series and Panel-Series</a>. These functions also support <code><a href='https://rdrr.io/pkg/plm/man/pseries.html'>plm::pseries</a></code> and <code><a href='https://rdrr.io/pkg/plm/man/pdata.frame.html'>plm::pdata.frame</a></code>'s.</p>
+    <p>With <code><a href='fsum.html'>fsum</a></code>, <code><a href='fprod.html'>fprod</a></code>, <code><a href='fmean.html'>fmean</a></code>, <code><a href='fmedian.html'>fmedian</a></code>, <code><a href='fmode.html'>fmode</a></code>, <code><a href='fvar_fsd.html'>fvar</a></code>, <code><a href='fvar_fsd.html'>fsd</a></code>, <code><a href='fmin_fmax.html'>fmin</a></code>, <code><a href='fmin_fmax.html'>fmax</a></code>, <code><a href='fnth.html'>fnth</a></code>, <code><a href='ffirst_flast.html'>ffirst</a></code>, <code><a href='ffirst_flast.html'>flast</a></code>, <code><a href='fNobs.html'>fNobs</a></code> and <code><a href='fNdistinct.html'>fNdistinct</a></code>, <em>collapse</em> presents a coherent set of extremely fast and flexible statistical functions (S3 generics) to perform column-wise, grouped and weighted computations on atomic vectors, matrices and data frames, with special support for <em>dplyr</em> grouped tibbles and data.table's.</p>
     </div>
 
 
@@ -157,22 +152,16 @@ FUN(x, [w = NULL,] TRA = NULL, [na.rm = TRUE,]
 
     
 <table class='table'>
-<tr><td><code>x</code></td><td></td><td>a vector, matrix, data.frame or grouped tibble (<code><a href='https://dplyr.tidyverse.org/reference/grouped_df.html'>dplyr::grouped_df</a></code>).</td></tr>
-<tr><td></td><td></td><td><code>g</code></td></tr>
-<tr><td></td><td>a factor, <code><a href='GRP.html'>GRP</a></code> object, atomic vector (internally converted to factor) or a list of vectors / factors (internally converted to a <code><a href='GRP.html'>GRP</a></code> object) used to group <code>x</code>.</td><td></td></tr>
-<tr><td></td><td><code>w</code></td><td></td></tr>
-<tr><td>a numeric vector of (non-negative) weights, may contain missing values. Supported by <code><a href='fsum.html'>fsum</a></code>, <code><a href='fprod.html'>fprod</a></code>, <code><a href='fmean.html'>fmean</a></code>, <code><a href='fvar_fsd.html'>fvar</a></code>, <code><a href='fvar_fsd.html'>fsd</a></code> and <code><a href='fmode.html'>fmode</a></code>.</td><td></td><td></td></tr>
+<tr><td><code>x</code></td><td></td><td>a vector, matrix, data frame or grouped tibble (<code><a href='https://dplyr.tidyverse.org/reference/grouped_df.html'>dplyr::grouped_df</a></code>).</td></tr>
+<tr><td><code>g</code></td><td></td><td>a factor, <code><a href='GRP.html'>GRP</a></code> object, atomic vector (internally converted to factor) or a list of vectors / factors (internally converted to a <code><a href='GRP.html'>GRP</a></code> object) used to group <code>x</code>.</td></tr>
+<tr><td><code>w</code></td><td></td><td>a numeric vector of (non-negative) weights, may contain missing values. Supported by <code><a href='fsum.html'>fsum</a></code>, <code><a href='fprod.html'>fprod</a></code>, <code><a href='fmean.html'>fmean</a></code>, <code><a href='fmedian.html'>fmedian</a></code>, <code><a href='fnth.html'>fnth</a></code>, <code><a href='fvar_fsd.html'>fvar</a></code>, <code><a href='fvar_fsd.html'>fsd</a></code> and <code><a href='fmode.html'>fmode</a></code>.</td></tr>
 <tr><td><code>TRA</code></td><td></td><td>an integer or quoted operator indicating the transformation to perform:
 1 - "replace_fill"     |     2 - "replace"     |     3 - "-"     |     4 - "-+"     |     5 - "/"     |     6 - "%"     |     7 - "+"     |     8 - "*"     |     9 - "%%"     |     10 - "-%%". See <code><a href='TRA.html'>TRA</a></code>.</td></tr>
-<tr><td></td><td></td><td><code>na.rm</code></td></tr>
-<tr><td></td><td>logical. Skip missing values in <code>x</code>. Defaults to <code>TRUE</code> in all functions and implemented at very little computational cost. Not available for <code><a href='fNobs.html'>fNobs</a></code>.</td><td></td></tr>
-<tr><td></td><td><code>use.g.names</code></td><td></td></tr>
-<tr><td>make group-names and add to the result as names (vector method) or row-names (matrix and data.frame method). No row-names are generated for data.tables and (default) grouped tibbles.</td><td></td><td></td></tr>
-<tr><td><code>drop</code></td><td></td><td><em>matrix and data.frame methods:</em> Drop dimensions and return an atomic vector if <code>g = NULL</code> and <code>TRA = NULL</code>.</td></tr>
-<tr><td></td><td></td><td><code>keep.group_vars</code></td></tr>
-<tr><td></td><td><em>grouped_df method:</em> Logical. <code>FALSE</code> removes grouping variables after computation. By default grouping variables are added, even if not present in the grouped_df.</td><td></td></tr>
-<tr><td></td><td><code>keep.w</code></td><td></td></tr>
-<tr><td><em>grouped_df method:</em> Logical. <code>TRUE</code> (default) also aggregates weights and saves them in a column, <code>FALSE</code> removes weighting variable after computation (if contained in <code>grouped_df</code>).</td><td></td><td></td></tr>
+<tr><td><code>na.rm</code></td><td></td><td>logical. Skip missing values in <code>x</code>. Defaults to <code>TRUE</code> in all functions and implemented at very little computational cost. Not available for <code><a href='fNobs.html'>fNobs</a></code>.</td></tr>
+<tr><td><code>use.g.names</code></td><td></td><td>logical. Make group-names and add to the result as names (default method) or row-names (matrix and data frame methods). No row-names are generated for <em>data.table</em>'s.</td></tr>
+<tr><td><code>drop</code></td><td></td><td><em>matrix and data.frame methods:</em> Logical. <code>TRUE</code> drops dimensions and returns an atomic vector if <code>g = NULL</code> and <code>TRA = NULL</code>.</td></tr>
+<tr><td><code>keep.group_vars</code></td><td></td><td><em>grouped_df method:</em> Logical. <code>FALSE</code> removes grouping variables after computation. By default grouping variables are added, even if not present in the grouped_df.</td></tr>
+<tr><td><code>keep.w</code></td><td></td><td><em>grouped_df method:</em> Logical. <code>TRUE</code> (default) also aggregates weights and saves them in a column, <code>FALSE</code> removes weighting variable after computation (if contained in <code>grouped_df</code>).</td></tr>
 <tr><td><code>...</code></td><td></td><td>arguments to be passed to or from other methods, and extra arguments to some functions, i.e. the algorithm used to compute variances etc.</td></tr>
 </table>
 
@@ -182,14 +171,23 @@ FUN(x, [w = NULL,] TRA = NULL, [na.rm = TRUE,]
     <p>Please see the documentation of individual functions.</p>
     <h2 class="hasAnchor" id="value"><a class="anchor" href="#value"></a>Value</h2>
 
-    <p><code>x</code> aggregated. data.frame column-attributes and overall attributes are preserved.</p>
+    <p><code>x</code> suitably aggregated or transformed. Data frame column-attributes and overall attributes are preserved.</p>
+    <h2 class="hasAnchor" id="notes"><a class="anchor" href="#notes"></a>Notes</h2>
+
+    
+<ul>
+<li><p>Panel-decomposed (i.e. between and within) statistics as well as grouped and weighted skewness and kurtosis are implemented in <code><a href='qsu.html'>qsu</a></code>.</p></li>
+<li><p>The vector-valued functions and operators <code><a href='fscale.html'>fscale/STD</a></code>, <code><a href='fbetween_fwithin.html'>fbetween/B</a></code>, <code><a href='fHDbetween_fHDwithin.html'>fHDbetween/HDB</a></code>, <code><a href='fbetween_fwithin.html'>fwithin/W</a></code>, <code><a href='fHDbetween_fHDwithin.html'>fHDwithin/HDW</a></code>, <code><a href='flag.html'>flag/L/F</a></code>, <code><a href='fdiff.html'>fdiff/D/Dlog</a></code> and <code><a href='fgrowth.html'>fgrowth/G</a></code> are documented under <a href='data-transformations.html'>Data Transformations</a> and <a href='time-series-panel-series.html'>Time Series and Panel Series</a>. These functions also support <code><a href='https://rdrr.io/pkg/plm/man/pseries.html'>plm::pseries</a></code> and <code><a href='https://rdrr.io/pkg/plm/man/pdata.frame.html'>plm::pdata.frame</a></code>'s.</p></li>
+</ul>
+
     <h2 class="hasAnchor" id="see-also"><a class="anchor" href="#see-also"></a>See also</h2>
 
-    <div class='dont-index'><p><a href='collapse-documentation.html'>Collapse Overview</a>, <a href='data-transformations.html'>Data Transformations</a>, <a href='time-series-panel-series.html'>Time-Series and Panel-Series</a></p></div>
-
+    <div class='dont-index'><p><a href='index.html'>Collapse Overview</a>, <a href='data-transformations.html'>Data Transformations</a>, <a href='time-series-panel-series.html'>Time Series and Panel Series</a></p></div>
     <h2 class="hasAnchor" id="examples"><a class="anchor" href="#examples"></a>Examples</h2>
-    <pre class="examples"><span class='co'>## default vector method</span>
-<span class='no'>mpg</span> <span class='kw'>&lt;-</span> <span class='no'>mtcars</span>$<span class='no'>mpg</span>
+
+    <pre>
+<span class='co'>## default vector method</span>
+<span class='no'>mpg</span> <span class='kw'>&amp;</span><span class='no'>lt</span>;- <span class='no'>mtcars</span>$<span class='no'>mpg</span>
 <span class='fu'><a href='fsum.html'>fsum</a></span>(<span class='no'>mpg</span>)                         <span class='co'># Simple sum</span>
 <span class='fu'><a href='fsum.html'>fsum</a></span>(<span class='no'>mpg</span>, <span class='kw'>TRA</span> <span class='kw'>=</span> <span class='st'>"/"</span>)              <span class='co'># Simple transformation: divide all values by the sum</span>
 <span class='fu'><a href='fsum.html'>fsum</a></span>(<span class='no'>mpg</span>, <span class='no'>mtcars</span>$<span class='no'>cyl</span>)             <span class='co'># Grouped sum</span>
@@ -202,30 +200,64 @@ FUN(x, [w = NULL,] TRA = NULL, [na.rm = TRUE,]
 
 <span class='co'>## data.frame method</span>
 <span class='fu'><a href='fsum.html'>fsum</a></span>(<span class='no'>mtcars</span>)
-<span class='fu'><a href='fsum.html'>fsum</a></span>(<span class='no'>mtcars</span>, <span class='kw'>TRA</span> <span class='kw'>=</span> <span class='st'>"%"</span>)                 <span class='co'># This computes percentages</span>
+<span class='fu'><a href='fsum.html'>fsum</a></span>(<span class='no'>mtcars</span>, <span class='kw'>TRA</span> <span class='kw'>=</span> <span class='st'>"%"</span>)                  <span class='co'># This computes percentages</span>
 <span class='fu'><a href='fsum.html'>fsum</a></span>(<span class='no'>mtcars</span>, <span class='no'>mtcars</span>[<span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span>(<span class='fl'>2</span>,<span class='fl'>8</span>:<span class='fl'>9</span>)])           <span class='co'># Grouped column sum</span>
-<span class='no'>g</span> <span class='kw'>&lt;-</span> <span class='fu'><a href='GRP.html'>GRP</a></span>(<span class='no'>mtcars</span>, ~ <span class='no'>cyl</span> + <span class='no'>vs</span> + <span class='no'>am</span>)        <span class='co'># Here precomputing the groups!</span>
+<span class='no'>g</span> <span class='kw'>&amp;</span><span class='no'>lt</span>;- <span class='fu'><a href='GRP.html'>GRP</a></span>(<span class='no'>mtcars</span>, ~ <span class='no'>cyl</span> + <span class='no'>vs</span> + <span class='no'>am</span>)        <span class='co'># Here precomputing the groups!</span>
 <span class='fu'><a href='fsum.html'>fsum</a></span>(<span class='no'>mtcars</span>, <span class='no'>g</span>)                          <span class='co'># Faster !!</span>
 <span class='fu'><a href='fmean.html'>fmean</a></span>(<span class='no'>mtcars</span>, <span class='no'>g</span>, <span class='no'>mtcars</span>$<span class='no'>hp</span>)
-<span class='fu'><a href='fmean.html'>fmean</a></span>(<span class='no'>mtcars</span>, <span class='no'>g</span>, <span class='no'>mtcars</span>$<span class='no'>hp</span>, <span class='st'>"-"</span>)         <span class='co'># demeaning by weighted group means...</span>
-<span class='fu'><a href='fmean.html'>fmean</a></span>(<span class='fu'><a href='GRP.html'>fgroup_by</a></span>(<span class='no'>mtcars</span>, <span class='no'>cyl</span>, <span class='no'>vs</span>, <span class='no'>am</span>), <span class='no'>hp</span>, <span class='st'>"-"</span>)  <span class='co'># another way of doing it...</span>
+<span class='fu'><a href='fmean.html'>fmean</a></span>(<span class='no'>mtcars</span>, <span class='no'>g</span>, <span class='no'>mtcars</span>$<span class='no'>hp</span>, <span class='st'>"-"</span>)         <span class='co'># Demeaning by weighted group means..</span>
+<span class='fu'><a href='fmean.html'>fmean</a></span>(<span class='fu'><a href='GRP.html'>fgroup_by</a></span>(<span class='no'>mtcars</span>, <span class='no'>cyl</span>, <span class='no'>vs</span>, <span class='no'>am</span>), <span class='no'>hp</span>, <span class='st'>"-"</span>)  <span class='co'># Another way of doing it..</span>
 
 
 <span class='fu'><a href='fmode.html'>fmode</a></span>(<span class='no'>wlddev</span>, <span class='kw'>drop</span> <span class='kw'>=</span> <span class='fl'>FALSE</span>)              <span class='co'># Compute statistical modes of variables in this data</span>
-<span class='fu'><a href='fmode.html'>fmode</a></span>(<span class='no'>wlddev</span>, <span class='no'>wlddev</span>$<span class='no'>income</span>)             <span class='co'># grouped statistical modes ..</span>
+<span class='fu'><a href='fmode.html'>fmode</a></span>(<span class='no'>wlddev</span>, <span class='no'>wlddev</span>$<span class='no'>income</span>)             <span class='co'># Grouped statistical modes ..</span>
 
 <span class='co'>## matrix method</span>
-<span class='no'>m</span> <span class='kw'>&lt;-</span> <span class='fu'><a href='quick-conversion.html'>qM</a></span>(<span class='no'>mtcars</span>)
+<span class='no'>m</span> <span class='kw'>&amp;</span><span class='no'>lt</span>;- <span class='fu'><a href='quick-conversion.html'>qM</a></span>(<span class='no'>mtcars</span>)
 <span class='fu'><a href='fsum.html'>fsum</a></span>(<span class='no'>m</span>)
-<span class='fu'><a href='fsum.html'>fsum</a></span>(<span class='no'>m</span>, <span class='no'>g</span>) <span class='co'># ...</span>
+<span class='fu'><a href='fsum.html'>fsum</a></span>(<span class='no'>m</span>, <span class='no'>g</span>) <span class='co'># ..</span>
 
 <span class='co'>## method for grouped tibbles - for use with dplyr</span>
 <span class='fu'><a href='https://rdrr.io/r/base/library.html'>library</a></span>(<span class='no'>dplyr</span>)
-<span class='no'>mtcars</span> <span class='kw'>%&gt;%</span> <span class='fu'><a href='https://dplyr.tidyverse.org/reference/group_by.html'>group_by</a></span>(<span class='no'>cyl</span>,<span class='no'>vs</span>,<span class='no'>am</span>) <span class='kw'>%&gt;%</span> <span class='fu'><a href='https://dplyr.tidyverse.org/reference/select.html'>select</a></span>(<span class='no'>mpg</span>,<span class='no'>carb</span>) <span class='kw'>%&gt;%</span> <span class='no'>fsum</span>
-<span class='no'>mtcars</span> <span class='kw'>%&gt;%</span> <span class='fu'><a href='GRP.html'>fgroup_by</a></span>(<span class='no'>cyl</span>,<span class='no'>vs</span>,<span class='no'>am</span>) <span class='kw'>%&gt;%</span> <span class='fu'><a href='select_replace_vars.html'>fselect</a></span>(<span class='no'>mpg</span>,<span class='no'>carb</span>) <span class='kw'>%&gt;%</span> <span class='no'>fsum</span> <span class='co'># equivalent and faster !!</span>
-<span class='no'>mtcars</span> <span class='kw'>%&gt;%</span> <span class='fu'><a href='GRP.html'>fgroup_by</a></span>(<span class='no'>cyl</span>,<span class='no'>vs</span>,<span class='no'>am</span>) <span class='kw'>%&gt;%</span> <span class='fu'><a href='fsum.html'>fsum</a></span>(<span class='kw'>TRA</span> <span class='kw'>=</span> <span class='st'>"%"</span>)
-<span class='no'>mtcars</span> <span class='kw'>%&gt;%</span> <span class='fu'><a href='GRP.html'>fgroup_by</a></span>(<span class='no'>cyl</span>,<span class='no'>vs</span>,<span class='no'>am</span>) <span class='kw'>%&gt;%</span> <span class='fu'><a href='fmean.html'>fmean</a></span>(<span class='no'>hp</span>)         <span class='co'># weighted grouped mean, save sum of weights</span>
-<span class='no'>mtcars</span> <span class='kw'>%&gt;%</span> <span class='fu'><a href='GRP.html'>fgroup_by</a></span>(<span class='no'>cyl</span>,<span class='no'>vs</span>,<span class='no'>am</span>) <span class='kw'>%&gt;%</span> <span class='fu'><a href='fmean.html'>fmean</a></span>(<span class='no'>hp</span>, <span class='kw'>keep.group_vars</span> <span class='kw'>=</span> <span class='fl'>FALSE</span>)</pre>
+<span class='no'>mtcars</span> <span class='kw'>%&amp;gt;%</span> <span class='fu'><a href='https://dplyr.tidyverse.org/reference/group_by.html'>group_by</a></span>(<span class='no'>cyl</span>,<span class='no'>vs</span>,<span class='no'>am</span>) <span class='kw'>%&amp;gt;%</span> <span class='fu'><a href='https://dplyr.tidyverse.org/reference/select.html'>select</a></span>(<span class='no'>mpg</span>,<span class='no'>carb</span>) <span class='kw'>%&amp;gt;%</span> <span class='no'>fsum</span>
+<span class='no'>mtcars</span> <span class='kw'>%&amp;gt;%</span> <span class='fu'><a href='GRP.html'>fgroup_by</a></span>(<span class='no'>cyl</span>,<span class='no'>vs</span>,<span class='no'>am</span>) <span class='kw'>%&amp;gt;%</span> <span class='fu'><a href='select_replace_vars.html'>fselect</a></span>(<span class='no'>mpg</span>,<span class='no'>carb</span>) <span class='kw'>%&amp;gt;%</span> <span class='no'>fsum</span> <span class='co'># equivalent and faster !!</span>
+<span class='no'>mtcars</span> <span class='kw'>%&amp;gt;%</span> <span class='fu'><a href='GRP.html'>fgroup_by</a></span>(<span class='no'>cyl</span>,<span class='no'>vs</span>,<span class='no'>am</span>) <span class='kw'>%&amp;gt;%</span> <span class='fu'><a href='fsum.html'>fsum</a></span>(<span class='kw'>TRA</span> <span class='kw'>=</span> <span class='st'>"%"</span>)
+<span class='no'>mtcars</span> <span class='kw'>%&amp;gt;%</span> <span class='fu'><a href='GRP.html'>fgroup_by</a></span>(<span class='no'>cyl</span>,<span class='no'>vs</span>,<span class='no'>am</span>) <span class='kw'>%&amp;gt;%</span> <span class='fu'><a href='fmean.html'>fmean</a></span>(<span class='no'>hp</span>)         <span class='co'># weighted grouped mean, save sum of weights</span>
+<span class='no'>mtcars</span> <span class='kw'>%&amp;gt;%</span> <span class='fu'><a href='GRP.html'>fgroup_by</a></span>(<span class='no'>cyl</span>,<span class='no'>vs</span>,<span class='no'>am</span>) <span class='kw'>%&amp;gt;%</span> <span class='fu'><a href='fmean.html'>fmean</a></span>(<span class='no'>hp</span>, <span class='kw'>keep.group_vars</span> <span class='kw'>=</span> <span class='fl'>FALSE</span>)</pre>
+
+    <h2 class="hasAnchor" id="benchmark"><a class="anchor" href="#benchmark"></a>Benchmark</h2>
+
+    <pre>
+## This compares fsum with data.table (2 threads) and base::rowsum
+# Starting with small data
+mtcDT &amp;lt;- qDT(mtcars)
+f &amp;lt;- qF(mtcars$cyl)
+
+library(microbenchmark)
+microbenchmark(mtcDT[, lapply(.SD, sum), by = f],
+               rowsum(mtcDT, f, reorder = FALSE),
+               fsum(mtcDT, f, na.rm = FALSE), unit = "relative")
+
+                              expr        min         lq      mean    median        uq       max neval cld
+ mtcDT[, lapply(.SD, sum), by = f] 145.436928 123.542134 88.681111 98.336378 71.880479 85.217726   100   c
+ rowsum(mtcDT, f, reorder = FALSE)   2.833333   2.798203  2.489064  2.937889  2.425724  2.181173   100  b
+     fsum(mtcDT, f, na.rm = FALSE)   1.000000   1.000000  1.000000  1.000000  1.000000  1.000000   100 a
+
+# Now larger data
+tdata &amp;lt;- qDT(replicate(100, rnorm(1e5), simplify = FALSE)) # 100 columns with 100.000 obs
+f &amp;lt;- qF(sample.int(1e4, 1e5, TRUE))                        # A factor with 10.000 groups
+
+microbenchmark(tdata[, lapply(.SD, sum), by = f],
+               rowsum(tdata, f, reorder = FALSE),
+               fsum(tdata, f, na.rm = FALSE), unit = "relative")
+
+                              expr      min       lq     mean   median       uq       max neval cld
+ tdata[, lapply(.SD, sum), by = f] 2.646992 2.975489 2.834771 3.081313 3.120070 1.2766475   100   c
+ rowsum(tdata, f, reorder = FALSE) 1.747567 1.753313 1.629036 1.758043 1.839348 0.2720937   100  b
+     fsum(tdata, f, na.rm = FALSE) 1.000000 1.000000 1.000000 1.000000 1.000000 1.0000000   100 a
+</pre>
+
+
   </div>
   <div class="col-md-3 hidden-xs hidden-sm" id="pkgdown-sidebar">
     <nav id="toc" data-toggle="toc" class="sticky-top">

@@ -71,7 +71,7 @@
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">collapse</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">1.2.1</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">1.3.0</span>
       </span>
     </div>
 
@@ -86,13 +86,10 @@
 <li>
   <a href="../news/index.html">News</a>
 </li>
-<li>
-  <a href="../blog/index.html">Blog</a>
-</li>
       </ul>
       <ul class="nav navbar-nav navbar-right">
         <li>
-  <a href="https://twitter.com/collapse">
+  <a href="https://twitter.com/collapse_R">
     <span class="fa fa-twitter"></span>
      
   </a>
@@ -116,7 +113,7 @@
 <div class="row">
   <div class="contents col-md-9">
     <div class="page-header">
-      <h1>Reference</h1>
+      <h1>Collapse Documentation & Overview</h1>
     </div>
 
     <table class="ref-index">
@@ -131,7 +128,7 @@
       <tr>
         <th colspan="2">
           <h2 id="section-fast-statistical-functions" class="hasAnchor"><a href="#section-fast-statistical-functions" class="anchor"></a>Fast Statistical Functions</h2>
-          <p class="section-desc"><p>Fast (grouped and weighted) statistical functions for vector, matrix, data.frame and grouped_df (dplyr compatible).</p></p>
+          <p class="section-desc"><p>Fast (grouped and weighted) statistical functions for vector, matrix, data frame and grouped tibble (class ‘grouped_df’, dplyr compatible).</p></p>
         </th>
       </tr>
       
@@ -156,7 +153,7 @@
         <td>
           <p><code><a href="fmedian.html">fmedian()</a></code> </p>
         </td>
-        <td><p>Fast (Grouped) Median Value for Matrix-Like Objects</p></td>
+        <td><p>Fast (Grouped, Weighted) Median Value for Matrix-Like Objects</p></td>
       </tr><tr>
         
         <td>
@@ -190,6 +187,12 @@
       </tr><tr>
         
         <td>
+          <p><code><a href="fnth.html">fnth()</a></code> </p>
+        </td>
+        <td><p>Fast (Grouped, Weighted) N'th Element/Quantile for Matrix-Like Objects</p></td>
+      </tr><tr>
+        
+        <td>
           <p><code><a href="ffirst_flast.html">ffirst()</a></code> <code><a href="ffirst_flast.html">flast()</a></code> </p>
         </td>
         <td><p>Fast (Grouped) First and Last Value for Matrix-Like Objects</p></td>
@@ -209,8 +212,8 @@
     </tbody><tbody>
       <tr>
         <th colspan="2">
-          <h2 id="section-fast-ordered-grouping" class="hasAnchor"><a href="#section-fast-ordered-grouping" class="anchor"></a>Fast (Ordered) Grouping</h2>
-          <p class="section-desc"><p>Fast (ordered or unordered) groupings from vectors, data.frames, lists. Fast ordering, factor generation and interactions, run-length type grouping and grouping of time-sequences.</p></p>
+          <h2 id="section-fast-grouping-and-ordering" class="hasAnchor"><a href="#section-fast-grouping-and-ordering" class="anchor"></a>Fast Grouping and Ordering</h2>
+          <p class="section-desc"><p>Fast (ordered) groupings from vectors, data.frames, lists. Fast ordering, unique values / rows, factor generation and interactions, run-length type grouping and grouping of time-sequences.</p></p>
         </th>
       </tr>
       
@@ -221,13 +224,13 @@
       <tr>
         
         <td>
-          <p><code><a href="fast-grouping.html">A2-fast-grouping</a></code> </p>
+          <p><code><a href="fast-grouping.html">A2-fast-grouping-ordering</a></code> </p>
         </td>
-        <td><p>Fast (Ordered) Grouping</p></td>
+        <td><p>Fast Grouping and Ordering</p></td>
       </tr><tr>
         
         <td>
-          <p><code><a href="GRP.html">GRP()</a></code> <code><a href="GRP.html">is.GRP()</a></code> <code><a href="GRP.html">group_names.GRP()</a></code> <code><a href="GRP.html">as.factor.GRP()</a></code> <code><a href="GRP.html">fgroup_by()</a></code> <code><a href="GRP.html">fgroup_vars()</a></code> <code><a href="GRP.html">print(<i>&lt;GRP&gt;</i>)</a></code> <code><a href="GRP.html">plot(<i>&lt;GRP&gt;</i>)</a></code> </p>
+          <p><code><a href="GRP.html">GRP()</a></code> <code><a href="GRP.html">is.GRP()</a></code> <code><a href="GRP.html">GRPnames()</a></code> <code><a href="GRP.html">as.factor_GRP()</a></code> <code><a href="GRP.html">fgroup_by()</a></code> <code><a href="GRP.html">fgroup_vars()</a></code> <code><a href="GRP.html">fungroup()</a></code> <code><a href="GRP.html">print(<i>&lt;GRP&gt;</i>)</a></code> <code><a href="GRP.html">plot(<i>&lt;GRP&gt;</i>)</a></code> </p>
         </td>
         <td><p>Fast Grouping / <em>collapse</em> Grouping Objects</p></td>
       </tr><tr>
@@ -239,9 +242,15 @@
       </tr><tr>
         
         <td>
-          <p><code><a href="qF.html">qF()</a></code> <code><a href="qF.html">qG()</a></code> <code><a href="qF.html">is.qG()</a></code> <code><a href="qF.html">finteraction()</a></code> </p>
+          <p><code><a href="funique.html">funique()</a></code> </p>
         </td>
-        <td><p>Fast Factor Generation and Vector Grouping</p></td>
+        <td><p>Fast Unique Elements / Rows</p></td>
+      </tr><tr>
+        
+        <td>
+          <p><code><a href="qF.html">qF()</a></code> <code><a href="qF.html">qG()</a></code> <code><a href="qF.html">is.qG()</a></code> <code><a href="qF.html">as.factor_qG()</a></code> <code><a href="qF.html">finteraction()</a></code> </p>
+        </td>
+        <td><p>Fast Factor Generation, Interactions and Vector Grouping</p></td>
       </tr><tr>
         
         <td>
@@ -258,8 +267,8 @@
     </tbody><tbody>
       <tr>
         <th colspan="2">
-          <h2 id="section-fast-data-frame-manipulation" class="hasAnchor"><a href="#section-fast-data-frame-manipulation" class="anchor"></a>Fast Data Frame Manipulation</h2>
-          <p class="section-desc"><p>Fast and flexible select, subset and transform data, including modifying and computing columns by reference.</p></p>
+          <h2 id="section-fast-data-manipulation" class="hasAnchor"><a href="#section-fast-data-manipulation" class="anchor"></a>Fast Data Manipulation</h2>
+          <p class="section-desc"><p>Fast and flexible select, replace, add, subset, transform, sort / reorder and rename data / data frame columns.</p></p>
         </th>
       </tr>
       
@@ -270,13 +279,13 @@
       <tr>
         
         <td>
-          <p><code><a href="fast-data-manipulation.html">A3-data-frame-manipulation</a></code> </p>
+          <p><code><a href="fast-data-manipulation.html">A3-fast-data-manipulation</a></code> </p>
         </td>
-        <td><p>Fast Data Frame Manipulation</p></td>
+        <td><p>Fast Data Manipulation</p></td>
       </tr><tr>
         
         <td>
-          <p><code><a href="select_replace_vars.html">fselect()</a></code> <code><a href="select_replace_vars.html">`fselect&lt;-`()</a></code> <code><a href="select_replace_vars.html">slt()</a></code> <code><a href="select_replace_vars.html">`slt&lt;-`()</a></code> <code><a href="select_replace_vars.html">get_vars()</a></code> <code><a href="select_replace_vars.html">`get_vars&lt;-`()</a></code> <code><a href="select_replace_vars.html">gv()</a></code> <code><a href="select_replace_vars.html">`gv&lt;-`()</a></code> <code><a href="select_replace_vars.html">add_vars()</a></code> <code><a href="select_replace_vars.html">`add_vars&lt;-`()</a></code> <code><a href="select_replace_vars.html">av()</a></code> <code><a href="select_replace_vars.html">`av&lt;-`()</a></code> <code><a href="select_replace_vars.html">num_vars()</a></code> <code><a href="select_replace_vars.html">`num_vars&lt;-`()</a></code> <code><a href="select_replace_vars.html">nv()</a></code> <code><a href="select_replace_vars.html">`nv&lt;-`()</a></code> <code><a href="select_replace_vars.html">cat_vars()</a></code> <code><a href="select_replace_vars.html">`cat_vars&lt;-`()</a></code> <code><a href="select_replace_vars.html">char_vars()</a></code> <code><a href="select_replace_vars.html">`char_vars&lt;-`()</a></code> <code><a href="select_replace_vars.html">fact_vars()</a></code> <code><a href="select_replace_vars.html">`fact_vars&lt;-`()</a></code> <code><a href="select_replace_vars.html">logi_vars()</a></code> <code><a href="select_replace_vars.html">`logi_vars&lt;-`()</a></code> <code><a href="select_replace_vars.html">Date_vars()</a></code> <code><a href="select_replace_vars.html">`Date_vars&lt;-`()</a></code> </p>
+          <p><code><a href="select_replace_vars.html">fselect()</a></code> <code><a href="select_replace_vars.html">`fselect&lt;-`()</a></code> <code><a href="select_replace_vars.html">slt()</a></code> <code><a href="select_replace_vars.html">`slt&lt;-`()</a></code> <code><a href="select_replace_vars.html">get_vars()</a></code> <code><a href="select_replace_vars.html">gv()</a></code> <code><a href="select_replace_vars.html">gvr()</a></code> <code><a href="select_replace_vars.html">`get_vars&lt;-`()</a></code> <code><a href="select_replace_vars.html">`gv&lt;-`()</a></code> <code><a href="select_replace_vars.html">`gvr&lt;-`()</a></code> <code><a href="select_replace_vars.html">add_vars()</a></code> <code><a href="select_replace_vars.html">`add_vars&lt;-`()</a></code> <code><a href="select_replace_vars.html">av()</a></code> <code><a href="select_replace_vars.html">`av&lt;-`()</a></code> <code><a href="select_replace_vars.html">num_vars()</a></code> <code><a href="select_replace_vars.html">`num_vars&lt;-`()</a></code> <code><a href="select_replace_vars.html">nv()</a></code> <code><a href="select_replace_vars.html">`nv&lt;-`()</a></code> <code><a href="select_replace_vars.html">cat_vars()</a></code> <code><a href="select_replace_vars.html">`cat_vars&lt;-`()</a></code> <code><a href="select_replace_vars.html">char_vars()</a></code> <code><a href="select_replace_vars.html">`char_vars&lt;-`()</a></code> <code><a href="select_replace_vars.html">fact_vars()</a></code> <code><a href="select_replace_vars.html">`fact_vars&lt;-`()</a></code> <code><a href="select_replace_vars.html">logi_vars()</a></code> <code><a href="select_replace_vars.html">`logi_vars&lt;-`()</a></code> <code><a href="select_replace_vars.html">Date_vars()</a></code> <code><a href="select_replace_vars.html">`Date_vars&lt;-`()</a></code> </p>
         </td>
         <td><p>Fast Select, Replace or Add Data Frame Columns</p></td>
       </tr><tr>
@@ -284,18 +293,36 @@
         <td>
           <p><code><a href="fsubset.html">fsubset()</a></code> <code><a href="fsubset.html">sbt()</a></code> <code><a href="fsubset.html">ss()</a></code> </p>
         </td>
-        <td><p>Fast Subsetting</p></td>
+        <td><p>Fast Subsetting Matrix-Like Objects</p></td>
       </tr><tr>
         
         <td>
-          <p><code><a href="ftransform.html">ftransform()</a></code> <code><a href="ftransform.html">tfm()</a></code> <code><a href="ftransform.html">settransform()</a></code> <code><a href="ftransform.html">settfm()</a></code> <code><a href="ftransform.html">fcompute()</a></code> </p>
+          <p><code><a href="ftransform.html">ftransform()</a></code> <code><a href="ftransform.html">tfm()</a></code> <code><a href="ftransform.html">settransform()</a></code> <code><a href="ftransform.html">settfm()</a></code> <code><a href="ftransform.html">`ftransform&lt;-`()</a></code> <code><a href="ftransform.html">`tfm&lt;-`()</a></code> <code><a href="ftransform.html">fcompute()</a></code> </p>
         </td>
         <td><p>Fast Transform and Compute Columns on a Data Frame</p></td>
+      </tr><tr>
+        
+        <td>
+          <p><code><a href="roworder.html">roworder()</a></code> <code><a href="roworder.html">roworderv()</a></code> </p>
+        </td>
+        <td><p>Fast Reordering of Data Frame Rows</p></td>
+      </tr><tr>
+        
+        <td>
+          <p><code><a href="colorder.html">colorder()</a></code> <code><a href="colorder.html">colorderv()</a></code> </p>
+        </td>
+        <td><p>Fast Reordering of Data Frame Columns</p></td>
+      </tr><tr>
+        
+        <td>
+          <p><code><a href="frename.html">frename()</a></code> <code><a href="frename.html">setrename()</a></code> </p>
+        </td>
+        <td><p>Fast Renaming Objects</p></td>
       </tr>
     </tbody><tbody>
       <tr>
         <th colspan="2">
-          <h2 id="section-quick-data-conversions" class="hasAnchor"><a href="#section-quick-data-conversions" class="anchor"></a>Quick Data Conversions</h2>
+          <h2 id="section-quick-data-conversion" class="hasAnchor"><a href="#section-quick-data-conversion" class="anchor"></a>Quick Data Conversion</h2>
           <p class="section-desc"><p>Quick conversions between data.frame’s, data.table’s, matrices, arrays, lists, vectors and factors - fast and flexible, without method dispatch or extensive checks.</p></p>
         </th>
       </tr>
@@ -313,9 +340,9 @@
       </tr><tr>
         
         <td>
-          <p><code><a href="qF.html">qF()</a></code> <code><a href="qF.html">qG()</a></code> <code><a href="qF.html">is.qG()</a></code> <code><a href="qF.html">finteraction()</a></code> </p>
+          <p><code><a href="qF.html">qF()</a></code> <code><a href="qF.html">qG()</a></code> <code><a href="qF.html">is.qG()</a></code> <code><a href="qF.html">as.factor_qG()</a></code> <code><a href="qF.html">finteraction()</a></code> </p>
         </td>
-        <td><p>Fast Factor Generation and Vector Grouping</p></td>
+        <td><p>Fast Factor Generation, Interactions and Vector Grouping</p></td>
       </tr>
     </tbody><tbody>
       <tr>
@@ -340,7 +367,7 @@
       <tr>
         <th colspan="2">
           <h2 id="section-data-transformations" class="hasAnchor"><a href="#section-data-transformations" class="anchor"></a>Data Transformations</h2>
-          <p class="section-desc"><p>Fast (grouped, weighted) replacing and sweeping out of statistics, scaling / standardizing, centering, higher-dimensional centering, linear prediction and partialling-out.</p></p>
+          <p class="section-desc"><p>Efficient row- and column- apply to data objects and Split-Apply-Combine computing. Fast (grouped, weighted) replacing and sweeping out of statistics, scaling / standardizing, (quasi-)centering, higher-dimensional centering, linear prediction and partialling-out.</p></p>
         </th>
       </tr>
       
@@ -383,25 +410,19 @@
         <td>
           <p><code><a href="fbetween_fwithin.html">fbetween()</a></code> <code><a href="fbetween_fwithin.html">fwithin()</a></code> <code><a href="fbetween_fwithin.html">B()</a></code> <code><a href="fbetween_fwithin.html">W()</a></code> </p>
         </td>
-        <td><p>Fast Between (Averaging) and Within (Centering) Transformations</p></td>
+        <td><p>Fast Between (Averaging) and (Quasi-)Within (Centering) Transformations</p></td>
       </tr><tr>
         
         <td>
           <p><code><a href="fHDbetween_fHDwithin.html">fHDbetween()</a></code> <code><a href="fHDbetween_fHDwithin.html">fHDwithin()</a></code> <code><a href="fHDbetween_fHDwithin.html">HDB()</a></code> <code><a href="fHDbetween_fHDwithin.html">HDW()</a></code> </p>
         </td>
         <td><p>Higher-Dimensional Centering and Linear Prediction</p></td>
-      </tr><tr>
-        
-        <td>
-          <p><code><a href="fFtest.html">fFtest()</a></code> </p>
-        </td>
-        <td><p>Fast F-test of Linear Models (with Factors)</p></td>
       </tr>
     </tbody><tbody>
       <tr>
         <th colspan="2">
-          <h2 id="section-time-series-and-panel-series" class="hasAnchor"><a href="#section-time-series-and-panel-series" class="anchor"></a>Time-Series and Panel-Series</h2>
-          <p class="section-desc"><p>Fast (sequences of) lags / leads, and (lagged / leaded, iterated, quasi-, log-) differences and growth rates on (unordered) time-series and panel data. Auto, partial and cross-correlation functions for panel data. Panel data to (ts-)array conversion.</p></p>
+          <h2 id="section-time-series-and-panel-series" class="hasAnchor"><a href="#section-time-series-and-panel-series" class="anchor"></a>Time Series and Panel Series</h2>
+          <p class="section-desc"><p>Fast (sequences of) lags / leads, and (lagged / leaded, iterated, quasi-, log-) differences and growth rates on (unordered) time series and panel data. Auto-, partial- and cross-correlation functions for panel data. Panel data to (ts-)array conversion.</p></p>
         </th>
       </tr>
       
@@ -414,39 +435,39 @@
         <td>
           <p><code><a href="time-series-panel-series.html">A7-time-series-panel-series</a></code> </p>
         </td>
-        <td><p>Time-Series and Panel-Series</p></td>
+        <td><p>Time Series and Panel Series</p></td>
       </tr><tr>
         
         <td>
           <p><code><a href="flag.html">flag()</a></code> <code><a href="flag.html">L()</a></code> <code><a href="flag.html">F()</a></code> </p>
         </td>
-        <td><p>Fast Lags and Leads for Time-Series and Panel Data</p></td>
+        <td><p>Fast Lags and Leads for Time Series and Panel Data</p></td>
       </tr><tr>
         
         <td>
           <p><code><a href="fdiff.html">fdiff()</a></code> <code><a href="fdiff.html">D()</a></code> <code><a href="fdiff.html">Dlog()</a></code> </p>
         </td>
         <td><p><!-- % Lagged and Iterated -->
-Fast (Quasi-, Log-) Differences for Time-Series and Panel Data</p></td>
+Fast (Quasi-, Log-) Differences for Time Series and Panel Data</p></td>
       </tr><tr>
         
         <td>
           <p><code><a href="fgrowth.html">fgrowth()</a></code> <code><a href="fgrowth.html">G()</a></code> </p>
         </td>
         <td><p><!-- % Lagged and Iterated -->
-Fast Growth Rates for Time-Series and Panel Data</p></td>
+Fast Growth Rates for Time Series and Panel Data</p></td>
       </tr><tr>
         
         <td>
           <p><code><a href="psacf.html">psacf()</a></code> <code><a href="psacf.html">pspacf()</a></code> <code><a href="psacf.html">psccf()</a></code> </p>
         </td>
-        <td><p>Auto- and Cross- Covariance and -Correlation Function Estimation for Panel-Series</p></td>
+        <td><p>Auto- and Cross- Covariance and Correlation Function Estimation for Panel Series</p></td>
       </tr><tr>
         
         <td>
           <p><code><a href="psmat.html">psmat()</a></code> <code><a href="psmat.html">plot(<i>&lt;psmat&gt;</i>)</a></code> </p>
         </td>
-        <td><p>Matrix / Array from Panel-Series</p></td>
+        <td><p>Matrix / Array from Panel Series</p></td>
       </tr>
     </tbody><tbody>
       <tr>
@@ -501,7 +522,7 @@ Fast Growth Rates for Time-Series and Panel Data</p></td>
       <tr>
         <th colspan="2">
           <h2 id="section-summary-statistics" class="hasAnchor"><a href="#section-summary-statistics" class="anchor"></a>Summary Statistics</h2>
-          <p class="section-desc"><p>Fast (grouped, weighted, panel-decomposed) summary statistics for complex multilevel / panel data.</p></p>
+          <p class="section-desc"><p>Fast (grouped, weighted, panel-decomposed) summary statistics for cross-sectional and complex multilevel / panel data.</p></p>
         </th>
       </tr>
       
@@ -518,9 +539,9 @@ Fast Growth Rates for Time-Series and Panel Data</p></td>
       </tr><tr>
         
         <td>
-          <p><code><a href="qsu.html">qsu(<i>&lt;default&gt;</i>)</a></code> <code><a href="qsu.html">qsu(<i>&lt;matrix&gt;</i>)</a></code> <code><a href="qsu.html">qsu(<i>&lt;data.frame&gt;</i>)</a></code> <code><a href="qsu.html">qsu(<i>&lt;pseries&gt;</i>)</a></code> <code><a href="qsu.html">qsu(<i>&lt;pdata.frame&gt;</i>)</a></code> <code><a href="qsu.html">print(<i>&lt;qsu&gt;</i>)</a></code> </p>
+          <p><code><a href="qsu.html">qsu()</a></code> <code><a href="qsu.html">print(<i>&lt;qsu&gt;</i>)</a></code> </p>
         </td>
-        <td><p>Fast (Grouped, Weighted) Summary Statistics for Cross-Sectional and Panel-Data</p></td>
+        <td><p>Fast (Grouped, Weighted) Summary Statistics for Cross-Sectional and Panel Data</p></td>
       </tr><tr>
         
         <td>
@@ -539,12 +560,18 @@ Fast Growth Rates for Time-Series and Panel Data</p></td>
           <p><code><a href="varying.html">varying()</a></code> </p>
         </td>
         <td><p>Fast Check of Variation in Data</p></td>
+      </tr><tr>
+        
+        <td>
+          <p><code><a href="fFtest.html">fFtest()</a></code> </p>
+        </td>
+        <td><p>Fast F-test for Linear Models (with Factors)</p></td>
       </tr>
     </tbody><tbody>
       <tr>
         <th colspan="2">
           <h2 id="section-recode-and-replace-values" class="hasAnchor"><a href="#section-recode-and-replace-values" class="anchor"></a>Recode and Replace Values</h2>
-          <p class="section-desc"><p>Efficiently Recode and Replace Values in Matrix-Like Objects.</p></p>
+          <p class="section-desc"><p>Efficiently recode and replace values in matrix-like objects.</p></p>
         </th>
       </tr>
       
@@ -574,7 +601,7 @@ Fast Growth Rates for Time-Series and Panel Data</p></td>
       <tr>
         
         <td>
-          <p><code><a href="small-helper.html">vlabels()</a></code> <code><a href="small-helper.html">`vlabels&lt;-`()</a></code> <code><a href="small-helper.html">vclasses()</a></code> <code><a href="small-helper.html">vtypes()</a></code> <code><a href="small-helper.html">namlab()</a></code> <code><a href="small-helper.html">add_stub()</a></code> <code><a href="small-helper.html">rm_stub()</a></code> <code><a href="small-helper.html">`%!in%`</a></code> <code><a href="small-helper.html">ckmatch()</a></code> <code><a href="small-helper.html">fnlevels()</a></code> <code><a href="small-helper.html">funique()</a></code> <code><a href="small-helper.html">fnrow()</a></code> <code><a href="small-helper.html">fncol()</a></code> <code><a href="small-helper.html">fdim()</a></code> <code><a href="small-helper.html">na_rm()</a></code> <code><a href="small-helper.html">na_omit()</a></code> <code><a href="small-helper.html">na_insert()</a></code> <code><a href="small-helper.html">all_identical()</a></code> <code><a href="small-helper.html">all_obj_equal()</a></code> <code><a href="small-helper.html">seq_row()</a></code> <code><a href="small-helper.html">seq_col()</a></code> <code><a href="small-helper.html">setRownames()</a></code> <code><a href="small-helper.html">setColnames()</a></code> <code><a href="small-helper.html">setDimnames()</a></code> <code><a href="small-helper.html">unattrib()</a></code> <code><a href="small-helper.html">is.categorical()</a></code> <code><a href="small-helper.html">is.Date()</a></code> </p>
+          <p><code><a href="small-helper.html">.c()</a></code> <code><a href="small-helper.html">vlabels()</a></code> <code><a href="small-helper.html">`vlabels&lt;-`()</a></code> <code><a href="small-helper.html">vclasses()</a></code> <code><a href="small-helper.html">vtypes()</a></code> <code><a href="small-helper.html">namlab()</a></code> <code><a href="small-helper.html">add_stub()</a></code> <code><a href="small-helper.html">rm_stub()</a></code> <code><a href="small-helper.html">`%!in%`</a></code> <code><a href="small-helper.html">ckmatch()</a></code> <code><a href="small-helper.html">fnlevels()</a></code> <code><a href="small-helper.html">fnrow()</a></code> <code><a href="small-helper.html">fncol()</a></code> <code><a href="small-helper.html">fdim()</a></code> <code><a href="small-helper.html">na_rm()</a></code> <code><a href="small-helper.html">na_omit()</a></code> <code><a href="small-helper.html">na_insert()</a></code> <code><a href="small-helper.html">all_identical()</a></code> <code><a href="small-helper.html">all_obj_equal()</a></code> <code><a href="small-helper.html">seq_row()</a></code> <code><a href="small-helper.html">seq_col()</a></code> <code><a href="small-helper.html">setRownames()</a></code> <code><a href="small-helper.html">setColnames()</a></code> <code><a href="small-helper.html">setDimnames()</a></code> <code><a href="small-helper.html">unattrib()</a></code> <code><a href="small-helper.html">is.categorical()</a></code> <code><a href="small-helper.html">is.Date()</a></code> </p>
         </td>
         <td><p>Small (Helper) Functions <!-- % \emph{collapse} --></p></td>
       </tr>
@@ -618,9 +645,9 @@ Fast Growth Rates for Time-Series and Panel Data</p></td>
       <tr>
         
         <td>
-          <p><code><a href="collapse-global-options.html">collapse-options</a></code> </p>
+          <p><code><a href="collapse-options.html">collapse-options</a></code> </p>
         </td>
-        <td><p><em>collapse</em> Global Options</p></td>
+        <td><p><em>collapse</em> Package Options</p></td>
       </tr>
     </tbody>
     </table>

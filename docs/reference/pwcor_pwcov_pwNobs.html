@@ -40,7 +40,7 @@
 
 
 <meta property="og:title" content="Pairwise Correlations, Covariances and Observation Count — pwcor, pwcov, pwNobs" />
-<meta property="og:description" content="Computes pairwise Pearsons correlations, covariances and observation counts. Pairwise correlations and covariances can be computed together with observation counts and p-values, and output as 3D array (default) or list of matrices. For an equivalent and faster implementation of pwcor see Hmisc::rcorr (written in Fortran). A major feature of pwcor and pwcov is their sophisticated print method." />
+<meta property="og:description" content="Computes (pairwise) Pearsons correlations, covariances and observation counts. Pairwise correlations and covariances can be computed together with observation counts and p-values, and output as 3D array (default) or list of matrices. pwcor and pwcov offer an elaborate print method. For an equivalent and faster implementation of pwcor see Hmisc::rcorr (written in Fortran), for weighted correlations see weights::wtd.cors (written in C)." />
 
 
 
@@ -72,7 +72,7 @@
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">collapse</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">1.2.1</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">1.3.0</span>
       </span>
     </div>
 
@@ -87,13 +87,10 @@
 <li>
   <a href="../news/index.html">News</a>
 </li>
-<li>
-  <a href="../blog/index.html">Blog</a>
-</li>
       </ul>
       <ul class="nav navbar-nav navbar-right">
         <li>
-  <a href="https://twitter.com/collapse">
+  <a href="https://twitter.com/collapse_R">
     <span class="fa fa-twitter"></span>
      
   </a>
@@ -123,7 +120,7 @@
     </div>
 
     <div class="ref-description">
-    <p>Computes pairwise Pearsons correlations, covariances and observation counts. Pairwise correlations and covariances can be computed together with observation counts and p-values, and output as 3D array (default) or list of matrices. For an equivalent and faster implementation of <code>pwcor</code> see <code><a href='https://rdrr.io/pkg/Hmisc/man/rcorr.html'>Hmisc::rcorr</a></code> (written in Fortran). A major feature of <code>pwcor</code> and <code>pwcov</code> is their sophisticated print method.</p>
+    <p>Computes (pairwise) Pearsons correlations, covariances and observation counts. Pairwise correlations and covariances can be computed together with observation counts and p-values, and output as 3D array (default) or list of matrices. <code>pwcor</code> and <code>pwcov</code> offer an elaborate print method. For an equivalent and faster implementation of <code>pwcor</code> see <code><a href='https://rdrr.io/pkg/Hmisc/man/rcorr.html'>Hmisc::rcorr</a></code> (written in Fortran), for weighted correlations see <code><a href='https://rdrr.io/pkg/weights/man/wtd.cors.html'>weights::wtd.cors</a></code> (written in C).</p>
     </div>
 
     <pre class="usage"><span class='fu'>pwcor</span>(<span class='no'>X</span>, <span class='no'>...</span>, <span class='kw'>N</span> <span class='kw'>=</span> <span class='fl'>FALSE</span>, <span class='kw'>P</span> <span class='kw'>=</span> <span class='fl'>FALSE</span>, <span class='kw'>array</span> <span class='kw'>=</span> <span class='fl'>TRUE</span>, <span class='kw'>use</span> <span class='kw'>=</span> <span class='st'>"pairwise.complete.obs"</span>)
@@ -145,7 +142,7 @@
     <colgroup><col class="name" /><col class="desc" /></colgroup>
     <tr>
       <th>X</th>
-      <td><p>a matrix or data.frame, for <code>pwcor</code> and <code>pwcov</code> all columns must be numeric.</p></td>
+      <td><p>a matrix or data.frame, for <code>pwcor</code> and <code>pwcov</code> all columns must be numeric. All functions are faster on matrices, so converting is advised for large data (see <code><a href='quick-conversion.html'>qM</a></code>).</p></td>
     </tr>
     <tr>
       <th>x</th>
@@ -157,7 +154,7 @@
     </tr>
     <tr>
       <th>P</th>
-      <td><p>logical. <code>TRUE</code> also computes pairwise p-values (same as <code><a href='https://rdrr.io/r/stats/cor.test.html'>cor.test</a></code>).</p></td>
+      <td><p>logical. <code>TRUE</code> also computes pairwise p-values (same as <code><a href='https://rdrr.io/r/stats/cor.test.html'>cor.test</a></code> and <code><a href='https://rdrr.io/pkg/Hmisc/man/rcorr.html'>Hmisc::rcorr</a></code>).</p></td>
     </tr>
     <tr>
       <th>array</th>
@@ -165,7 +162,7 @@
     </tr>
     <tr>
       <th>use</th>
-      <td><p>argument passed to <code><a href='https://rdrr.io/r/stats/cor.html'>cor</a></code> / <code><a href='https://rdrr.io/r/stats/cor.html'>cov</a></code>.</p></td>
+      <td><p>argument passed to <code><a href='https://rdrr.io/r/stats/cor.html'>cor</a></code> / <code><a href='https://rdrr.io/r/stats/cor.html'>cov</a></code>. If <code>use != "pairwise.complete.obs"</code>, <code><a href='https://rdrr.io/r/base/sum.html'>sum(complete.cases(X))</a></code> is used for <code>N</code>, and p-values are computed accordingly.</p></td>
     </tr>
     <tr>
       <th>digits</th>
@@ -191,23 +188,311 @@
 
     <h2 class="hasAnchor" id="value"><a class="anchor" href="#value"></a>Value</h2>
 
-    <p>a numeric matrix, 3D array or list of matrices of the computed statistics. For <code>pwcor</code> and <code>pwcov</code> the object has a class 'pwcor' and 'pwcov', respectively.</p>
+    <p>a numeric matrix, 3D array or list of matrices with the computed statistics. For <code>pwcor</code> and <code>pwcov</code> the object has a class 'pwcor' and 'pwcov', respectively.</p>
     <h2 class="hasAnchor" id="see-also"><a class="anchor" href="#see-also"></a>See also</h2>
 
-    <div class='dont-index'><p><code><a href='qsu.html'>qsu</a></code>, <a href='collapse-documentation.html'>Collapse Overview</a> <!-- %% ~~objects to See Also as --></p></div>
+    <div class='dont-index'><p><code><a href='qsu.html'>qsu</a></code>, <a href='summary-statistics.html'>Summary Statistics</a>, <a href='index.html'>Collapse Overview</a> <!-- %% ~~objects to See Also as --></p></div>
 
     <h2 class="hasAnchor" id="examples"><a class="anchor" href="#examples"></a>Examples</h2>
-    <pre class="examples"><span class='no'>mna</span> <span class='kw'>&lt;-</span> <span class='fu'><a href='small-helper.html'>na_insert</a></span>(<span class='no'>mtcars</span>)
-<span class='fu'>pwcor</span>(<span class='no'>mna</span>)
-<span class='fu'>pwcov</span>(<span class='no'>mna</span>)
-<span class='fu'>pwNobs</span>(<span class='no'>mna</span>)
-<span class='fu'>pwcor</span>(<span class='no'>mna</span>, <span class='kw'>N</span> <span class='kw'>=</span> <span class='fl'>TRUE</span>)
-<span class='fu'>pwcor</span>(<span class='no'>mna</span>, <span class='kw'>P</span> <span class='kw'>=</span> <span class='fl'>TRUE</span>)
-<span class='fu'>pwcor</span>(<span class='no'>mna</span>, <span class='kw'>N</span> <span class='kw'>=</span> <span class='fl'>TRUE</span>, <span class='kw'>P</span> <span class='kw'>=</span> <span class='fl'>TRUE</span>)
-<span class='fu'><a href='https://rdrr.io/r/base/aperm.html'>aperm</a></span>(<span class='fu'>pwcor</span>(<span class='no'>mna</span>, <span class='kw'>N</span> <span class='kw'>=</span> <span class='fl'>TRUE</span>, <span class='kw'>P</span> <span class='kw'>=</span> <span class='fl'>TRUE</span>))
-<span class='fu'><a href='https://rdrr.io/r/base/print.html'>print</a></span>(<span class='fu'>pwcor</span>(<span class='no'>mna</span>, <span class='kw'>N</span> <span class='kw'>=</span> <span class='fl'>TRUE</span>, <span class='kw'>P</span> <span class='kw'>=</span> <span class='fl'>TRUE</span>), <span class='kw'>digits</span> <span class='kw'>=</span> <span class='fl'>3</span>, <span class='kw'>sig.level</span> <span class='kw'>=</span> <span class='fl'>0.01</span>, <span class='kw'>show</span> <span class='kw'>=</span> <span class='st'>"lower.tri"</span>)
-<span class='fu'>pwcor</span>(<span class='no'>mna</span>, <span class='kw'>N</span> <span class='kw'>=</span> <span class='fl'>TRUE</span>, <span class='kw'>P</span> <span class='kw'>=</span> <span class='fl'>TRUE</span>, <span class='kw'>array</span> <span class='kw'>=</span> <span class='fl'>FALSE</span>)
-<span class='fu'><a href='https://rdrr.io/r/base/print.html'>print</a></span>(<span class='fu'>pwcor</span>(<span class='no'>mna</span>, <span class='kw'>N</span> <span class='kw'>=</span> <span class='fl'>TRUE</span>, <span class='kw'>P</span> <span class='kw'>=</span> <span class='fl'>TRUE</span>, <span class='kw'>array</span> <span class='kw'>=</span> <span class='fl'>FALSE</span>), <span class='kw'>show</span> <span class='kw'>=</span> <span class='st'>"lower.tri"</span>)</pre>
+    <pre class="examples"><div class='input'><span class='no'>mna</span> <span class='kw'>&lt;-</span> <span class='fu'><a href='small-helper.html'>na_insert</a></span>(<span class='no'>mtcars</span>)
+<span class='fu'>pwcor</span>(<span class='no'>mna</span>)</div><div class='output co'>#&gt;        mpg   cyl  disp    hp  drat    wt  qsec    vs    am  gear  carb
+#&gt; mpg     1   -.85  -.85  -.75   .70  -.89   .29   .63   .50   .49  -.51
+#&gt; cyl   -.85    1    .91   .81  -.70   .77  -.66  -.90  -.44  -.44   .58
+#&gt; disp  -.85   .91    1    .84  -.74   .89  -.42  -.75  -.59  -.63   .56
+#&gt; hp    -.75   .81   .84    1   -.48   .71  -.74  -.72  -.22  -.15   .77
+#&gt; drat   .70  -.70  -.74  -.48    1   -.72   .14   .59   .65   .72  -.20
+#&gt; wt    -.89   .77   .89   .71  -.72    1   -.09  -.57  -.71  -.66   .56
+#&gt; qsec   .29  -.66  -.42  -.74   .14  -.09    1    .76  -.28  -.22  -.66
+#&gt; vs     .63  -.90  -.75  -.72   .59  -.57   .76    1    .23   .28  -.53
+#&gt; am     .50  -.44  -.59  -.22   .65  -.71  -.28   .23    1    .77   .02
+#&gt; gear   .49  -.44  -.63  -.15   .72  -.66  -.22   .28   .77    1    .16
+#&gt; carb  -.51   .58   .56   .77  -.20   .56  -.66  -.53   .02   .16    1 </div><div class='input'><span class='fu'>pwcov</span>(<span class='no'>mna</span>)</div><div class='output co'>#&gt;            mpg       cyl      disp        hp      drat        wt      qsec
+#&gt; mpg      25.89     -7.29   -552.63   -261.54      1.95     -4.62      2.84
+#&gt; cyl      -7.29      3.24     20.36     98.62      -.64      1.29     -2.34
+#&gt; disp   -552.63     20.36  16207.06   6687.79    -51.67    115.39    -95.70
+#&gt; hp     -261.54     98.62   6687.79   4741.36    -18.34     44.06     -8.68
+#&gt; drat      1.95      -.64    -51.67    -18.34       .27      -.39       .15
+#&gt; wt       -4.62      1.29    115.39     44.06      -.39       .98      -.16
+#&gt; qsec      2.84     -2.34    -95.70     -8.68       .15      -.16      3.50
+#&gt; vs        1.67      -.83    -49.82    -24.99       .16      -.30       .62
+#&gt; am        1.26      -.40    -35.68     -8.03       .17      -.33      -.28
+#&gt; gear      1.86      -.58    -59.05     -8.00       .25      -.48      -.33
+#&gt; carb     -4.18      1.70     85.19     85.06      -.17       .63     -1.96
+#&gt;             vs        am      gear      carb
+#&gt; mpg       1.67      1.26      1.86     -4.18
+#&gt; cyl       -.83      -.40      -.58      1.70
+#&gt; disp    -49.82    -35.68    -59.05     85.19
+#&gt; hp      -24.99     -8.03     -8.00     85.06
+#&gt; drat       .16       .17       .25      -.17
+#&gt; wt        -.30      -.33      -.48       .63
+#&gt; qsec       .62      -.28      -.33     -1.96
+#&gt; vs         .25       .06       .11      -.43
+#&gt; am         .06       .26       .29       .02
+#&gt; gear       .11       .29       .56       .19
+#&gt; carb      -.43       .02       .19      2.44</div><div class='input'><span class='fu'>pwNobs</span>(<span class='no'>mna</span>)</div><div class='output co'>#&gt;      mpg cyl disp hp drat wt qsec vs am gear carb
+#&gt; mpg   29  26   26 27   26 27   26 26 26   26   26
+#&gt; cyl   26  29   26 26   26 26   26 27 26   26   26
+#&gt; disp  26  26   29 26   27 27   27 26 26   27   26
+#&gt; hp    27  26   26 29   26 27   26 27 26   26   26
+#&gt; drat  26  26   27 26   29 26   26 26 26   28   26
+#&gt; wt    27  26   27 27   26 29   26 26 26   26   26
+#&gt; qsec  26  26   27 26   26 26   29 26 26   26   27
+#&gt; vs    26  27   26 27   26 26   26 29 26   26   26
+#&gt; am    26  26   26 26   26 26   26 26 29   26   27
+#&gt; gear  26  26   27 26   28 26   26 26 26   29   26
+#&gt; carb  26  26   26 26   26 26   27 26 27   26   29</div><div class='input'><span class='fu'>pwcor</span>(<span class='no'>mna</span>, <span class='kw'>N</span> <span class='kw'>=</span> <span class='fl'>TRUE</span>)</div><div class='output co'>#&gt;            mpg       cyl      disp        hp      drat        wt      qsec
+#&gt; mpg    1  (29) -.85 (26) -.85 (26) -.75 (27)  .70 (26) -.89 (27)  .29 (26)
+#&gt; cyl  -.85 (26)   1  (29)  .91 (26)  .81 (26) -.70 (26)  .77 (26) -.66 (26)
+#&gt; disp -.85 (26)  .91 (26)   1  (29)  .84 (26) -.74 (27)  .89 (27) -.42 (27)
+#&gt; hp   -.75 (27)  .81 (26)  .84 (26)   1  (29) -.48 (26)  .71 (27) -.74 (26)
+#&gt; drat  .70 (26) -.70 (26) -.74 (27) -.48 (26)   1  (29) -.72 (26)  .14 (26)
+#&gt; wt   -.89 (27)  .77 (26)  .89 (27)  .71 (27) -.72 (26)   1  (29) -.09 (26)
+#&gt; qsec  .29 (26) -.66 (26) -.42 (27) -.74 (26)  .14 (26) -.09 (26)   1  (29)
+#&gt; vs    .63 (26) -.90 (27) -.75 (26) -.72 (27)  .59 (26) -.57 (26)  .76 (26)
+#&gt; am    .50 (26) -.44 (26) -.59 (26) -.22 (26)  .65 (26) -.71 (26) -.28 (26)
+#&gt; gear  .49 (26) -.44 (26) -.63 (27) -.15 (26)  .72 (28) -.66 (26) -.22 (26)
+#&gt; carb -.51 (26)  .58 (26)  .56 (26)  .77 (26) -.20 (26)  .56 (26) -.66 (27)
+#&gt;             vs        am      gear      carb
+#&gt; mpg   .63 (26)  .50 (26)  .49 (26) -.51 (26)
+#&gt; cyl  -.90 (27) -.44 (26) -.44 (26)  .58 (26)
+#&gt; disp -.75 (26) -.59 (26) -.63 (27)  .56 (26)
+#&gt; hp   -.72 (27) -.22 (26) -.15 (26)  .77 (26)
+#&gt; drat  .59 (26)  .65 (26)  .72 (28) -.20 (26)
+#&gt; wt   -.57 (26) -.71 (26) -.66 (26)  .56 (26)
+#&gt; qsec  .76 (26) -.28 (26) -.22 (26) -.66 (27)
+#&gt; vs     1  (29)  .23 (26)  .28 (26) -.53 (26)
+#&gt; am    .23 (26)   1  (29)  .77 (26)  .02 (27)
+#&gt; gear  .28 (26)  .77 (26)   1  (29)  .16 (26)
+#&gt; carb -.53 (26)  .02 (27)  .16 (26)   1  (29)</div><div class='input'><span class='fu'>pwcor</span>(<span class='no'>mna</span>, <span class='kw'>P</span> <span class='kw'>=</span> <span class='fl'>TRUE</span>)</div><div class='output co'>#&gt;         mpg    cyl   disp     hp   drat     wt   qsec     vs     am   gear
+#&gt; mpg     1    -.85*  -.85*  -.75*   .70*  -.89*   .29    .63*   .50*   .49*
+#&gt; cyl   -.85*    1     .91*   .81*  -.70*   .77*  -.66*  -.90*  -.44*  -.44*
+#&gt; disp  -.85*   .91*    1     .84*  -.74*   .89*  -.42*  -.75*  -.59*  -.63*
+#&gt; hp    -.75*   .81*   .84*    1    -.48*   .71*  -.74*  -.72*  -.22   -.15 
+#&gt; drat   .70*  -.70*  -.74*  -.48*    1    -.72*   .14    .59*   .65*   .72*
+#&gt; wt    -.89*   .77*   .89*   .71*  -.72*    1    -.09   -.57*  -.71*  -.66*
+#&gt; qsec   .29   -.66*  -.42*  -.74*   .14   -.09     1     .76*  -.28   -.22 
+#&gt; vs     .63*  -.90*  -.75*  -.72*   .59*  -.57*   .76*    1     .23    .28 
+#&gt; am     .50*  -.44*  -.59*  -.22    .65*  -.71*  -.28    .23     1     .77*
+#&gt; gear   .49*  -.44*  -.63*  -.15    .72*  -.66*  -.22    .28    .77*    1  
+#&gt; carb  -.51*   .58*   .56*   .77*  -.20    .56*  -.66*  -.53*   .02    .16 
+#&gt;        carb
+#&gt; mpg   -.51*
+#&gt; cyl    .58*
+#&gt; disp   .56*
+#&gt; hp     .77*
+#&gt; drat  -.20 
+#&gt; wt     .56*
+#&gt; qsec  -.66*
+#&gt; vs    -.53*
+#&gt; am     .02 
+#&gt; gear   .16 
+#&gt; carb    1  </div><div class='input'><span class='fu'>pwcor</span>(<span class='no'>mna</span>, <span class='kw'>N</span> <span class='kw'>=</span> <span class='fl'>TRUE</span>, <span class='kw'>P</span> <span class='kw'>=</span> <span class='fl'>TRUE</span>)</div><div class='output co'>#&gt;             mpg        cyl       disp         hp       drat         wt
+#&gt; mpg    1   (29) -.85* (26) -.85* (26) -.75* (27)  .70* (26) -.89* (27)
+#&gt; cyl  -.85* (26)   1   (29)  .91* (26)  .81* (26) -.70* (26)  .77* (26)
+#&gt; disp -.85* (26)  .91* (26)   1   (29)  .84* (26) -.74* (27)  .89* (27)
+#&gt; hp   -.75* (27)  .81* (26)  .84* (26)   1   (29) -.48* (26)  .71* (27)
+#&gt; drat  .70* (26) -.70* (26) -.74* (27) -.48* (26)   1   (29) -.72* (26)
+#&gt; wt   -.89* (27)  .77* (26)  .89* (27)  .71* (27) -.72* (26)   1   (29)
+#&gt; qsec  .29  (26) -.66* (26) -.42* (27) -.74* (26)  .14  (26) -.09  (26)
+#&gt; vs    .63* (26) -.90* (27) -.75* (26) -.72* (27)  .59* (26) -.57* (26)
+#&gt; am    .50* (26) -.44* (26) -.59* (26) -.22  (26)  .65* (26) -.71* (26)
+#&gt; gear  .49* (26) -.44* (26) -.63* (27) -.15  (26)  .72* (28) -.66* (26)
+#&gt; carb -.51* (26)  .58* (26)  .56* (26)  .77* (26) -.20  (26)  .56* (26)
+#&gt;            qsec         vs         am       gear       carb
+#&gt; mpg   .29  (26)  .63* (26)  .50* (26)  .49* (26) -.51* (26)
+#&gt; cyl  -.66* (26) -.90* (27) -.44* (26) -.44* (26)  .58* (26)
+#&gt; disp -.42* (27) -.75* (26) -.59* (26) -.63* (27)  .56* (26)
+#&gt; hp   -.74* (26) -.72* (27) -.22  (26) -.15  (26)  .77* (26)
+#&gt; drat  .14  (26)  .59* (26)  .65* (26)  .72* (28) -.20  (26)
+#&gt; wt   -.09  (26) -.57* (26) -.71* (26) -.66* (26)  .56* (26)
+#&gt; qsec   1   (29)  .76* (26) -.28  (26) -.22  (26) -.66* (27)
+#&gt; vs    .76* (26)   1   (29)  .23  (26)  .28  (26) -.53* (26)
+#&gt; am   -.28  (26)  .23  (26)   1   (29)  .77* (26)  .02  (27)
+#&gt; gear -.22  (26)  .28  (26)  .77* (26)   1   (29)  .16  (26)
+#&gt; carb -.66* (27) -.53* (26)  .02  (27)  .16  (26)   1   (29)</div><div class='input'><span class='fu'><a href='https://rdrr.io/r/base/aperm.html'>aperm</a></span>(<span class='fu'>pwcor</span>(<span class='no'>mna</span>, <span class='kw'>N</span> <span class='kw'>=</span> <span class='fl'>TRUE</span>, <span class='kw'>P</span> <span class='kw'>=</span> <span class='fl'>TRUE</span>))</div><div class='output co'>#&gt; , , mpg
+#&gt; 
+#&gt;   mpg   cyl  disp    hp  drat    wt  qsec    vs    am  gear  carb
+#&gt; r   1  -.85  -.85  -.75   .70  -.89   .29   .63   .50   .49  -.51
+#&gt; N  29    26    26    27    26    27    26    26    26    26    26
+#&gt; P       .00   .00   .00   .00   .00   .15   .00   .01   .01   .01
+#&gt; 
+#&gt; , , cyl
+#&gt; 
+#&gt;     mpg cyl  disp    hp  drat    wt  qsec    vs    am  gear  carb
+#&gt; r  -.85   1   .91   .81  -.70   .77  -.66  -.90  -.44  -.44   .58
+#&gt; N    26  29    26    26    26    26    26    27    26    26    26
+#&gt; P   .00       .00   .00   .00   .00   .00   .00   .02   .03   .00
+#&gt; 
+#&gt; , , disp
+#&gt; 
+#&gt;     mpg   cyl disp    hp  drat    wt  qsec    vs    am  gear  carb
+#&gt; r  -.85   .91    1   .84  -.74   .89  -.42  -.75  -.59  -.63   .56
+#&gt; N    26    26   29    26    27    27    27    26    26    27    26
+#&gt; P   .00   .00        .00   .00   .00   .03   .00   .00   .00   .00
+#&gt; 
+#&gt; , , hp
+#&gt; 
+#&gt;     mpg   cyl  disp  hp  drat    wt  qsec    vs    am  gear  carb
+#&gt; r  -.75   .81   .84   1  -.48   .71  -.74  -.72  -.22  -.15   .77
+#&gt; N    27    26    26  29    26    27    26    27    26    26    26
+#&gt; P   .00   .00   .00       .01   .00   .00   .00   .28   .47   .00
+#&gt; 
+#&gt; , , drat
+#&gt; 
+#&gt;     mpg   cyl  disp    hp drat    wt  qsec    vs    am  gear  carb
+#&gt; r   .70  -.70  -.74  -.48    1  -.72   .14   .59   .65   .72  -.20
+#&gt; N    26    26    27    26   29    26    26    26    26    28    26
+#&gt; P   .00   .00   .00   .01        .00   .49   .00   .00   .00   .34
+#&gt; 
+#&gt; , , wt
+#&gt; 
+#&gt;     mpg   cyl  disp    hp  drat  wt  qsec    vs    am  gear  carb
+#&gt; r  -.89   .77   .89   .71  -.72   1  -.09  -.57  -.71  -.66   .56
+#&gt; N    27    26    27    27    26  29    26    26    26    26    26
+#&gt; P   .00   .00   .00   .00   .00       .65   .00   .00   .00   .00
+#&gt; 
+#&gt; , , qsec
+#&gt; 
+#&gt;     mpg   cyl  disp    hp  drat    wt qsec    vs    am  gear  carb
+#&gt; r   .29  -.66  -.42  -.74   .14  -.09    1   .76  -.28  -.22  -.66
+#&gt; N    26    26    27    26    26    26   29    26    26    26    27
+#&gt; P   .15   .00   .03   .00   .49   .65        .00   .16   .28   .00
+#&gt; 
+#&gt; , , vs
+#&gt; 
+#&gt;     mpg   cyl  disp    hp  drat    wt  qsec  vs    am  gear  carb
+#&gt; r   .63  -.90  -.75  -.72   .59  -.57   .76   1   .23   .28  -.53
+#&gt; N    26    27    26    27    26    26    26  29    26    26    26
+#&gt; P   .00   .00   .00   .00   .00   .00   .00       .27   .17   .01
+#&gt; 
+#&gt; , , am
+#&gt; 
+#&gt;     mpg   cyl  disp    hp  drat    wt  qsec    vs  am  gear  carb
+#&gt; r   .50  -.44  -.59  -.22   .65  -.71  -.28   .23   1   .77   .02
+#&gt; N    26    26    26    26    26    26    26    26  29    26    27
+#&gt; P   .01   .02   .00   .28   .00   .00   .16   .27       .00   .92
+#&gt; 
+#&gt; , , gear
+#&gt; 
+#&gt;     mpg   cyl  disp    hp  drat    wt  qsec    vs    am gear  carb
+#&gt; r   .49  -.44  -.63  -.15   .72  -.66  -.22   .28   .77    1   .16
+#&gt; N    26    26    27    26    28    26    26    26    26   29    26
+#&gt; P   .01   .03   .00   .47   .00   .00   .28   .17   .00        .43
+#&gt; 
+#&gt; , , carb
+#&gt; 
+#&gt;     mpg   cyl  disp    hp  drat    wt  qsec    vs    am  gear carb
+#&gt; r  -.51   .58   .56   .77  -.20   .56  -.66  -.53   .02   .16    1
+#&gt; N    26    26    26    26    26    26    27    26    27    26   29
+#&gt; P   .01   .00   .00   .00   .34   .00   .00   .01   .92   .43     
+#&gt; </div><div class='input'><span class='fu'><a href='https://rdrr.io/r/base/print.html'>print</a></span>(<span class='fu'>pwcor</span>(<span class='no'>mna</span>, <span class='kw'>N</span> <span class='kw'>=</span> <span class='fl'>TRUE</span>, <span class='kw'>P</span> <span class='kw'>=</span> <span class='fl'>TRUE</span>), <span class='kw'>digits</span> <span class='kw'>=</span> <span class='fl'>3</span>, <span class='kw'>sig.level</span> <span class='kw'>=</span> <span class='fl'>0.01</span>, <span class='kw'>show</span> <span class='kw'>=</span> <span class='st'>"lower.tri"</span>)</div><div class='output co'>#&gt;              mpg         cyl        disp          hp        drat          wt
+#&gt; mpg    1    (29)                                                            
+#&gt; cyl  -.847* (26)   1    (29)                                                
+#&gt; disp -.847* (26)  .910* (26)   1    (29)                                    
+#&gt; hp   -.748* (27)  .811* (26)  .845* (26)   1    (29)                        
+#&gt; drat  .699* (26) -.705* (26) -.737* (27) -.476  (26)   1    (29)            
+#&gt; wt   -.886* (27)  .767* (26)  .895* (27)  .707* (27) -.716* (26)   1    (29)
+#&gt; qsec  .291  (26) -.662* (26) -.420  (27) -.741* (26)  .142  (26) -.095  (26)
+#&gt; vs    .633* (26) -.902* (27) -.746* (26) -.722* (27)  .594* (26) -.572* (26)
+#&gt; am    .502* (26) -.440  (26) -.589* (26) -.221  (26)  .650* (26) -.711* (26)
+#&gt; gear  .494  (26) -.437  (26) -.626* (27) -.149  (26)  .724* (28) -.662* (26)
+#&gt; carb -.507* (26)  .585* (26)  .565* (26)  .767* (26) -.195  (26)  .556* (26)
+#&gt;             qsec          vs          am        gear        carb
+#&gt; mpg                                                             
+#&gt; cyl                                                             
+#&gt; disp                                                            
+#&gt; hp                                                              
+#&gt; drat                                                            
+#&gt; wt                                                              
+#&gt; qsec   1    (29)                                                
+#&gt; vs    .759* (26)   1    (29)                                    
+#&gt; am   -.281  (26)  .226  (26)   1    (29)                        
+#&gt; gear -.220  (26)  .279  (26)  .767* (26)   1    (29)            
+#&gt; carb -.655* (27) -.533* (26)  .021  (27)  .161  (26)   1    (29)</div><div class='input'><span class='fu'>pwcor</span>(<span class='no'>mna</span>, <span class='kw'>N</span> <span class='kw'>=</span> <span class='fl'>TRUE</span>, <span class='kw'>P</span> <span class='kw'>=</span> <span class='fl'>TRUE</span>, <span class='kw'>array</span> <span class='kw'>=</span> <span class='fl'>FALSE</span>)</div><div class='output co'>#&gt; $r
+#&gt;        mpg   cyl  disp    hp  drat    wt  qsec    vs    am  gear  carb
+#&gt; mpg      1  -.85  -.85  -.75   .70  -.89   .29   .63   .50   .49  -.51
+#&gt; cyl   -.85     1   .91   .81  -.70   .77  -.66  -.90  -.44  -.44   .58
+#&gt; disp  -.85   .91     1   .84  -.74   .89  -.42  -.75  -.59  -.63   .56
+#&gt; hp    -.75   .81   .84     1  -.48   .71  -.74  -.72  -.22  -.15   .77
+#&gt; drat   .70  -.70  -.74  -.48     1  -.72   .14   .59   .65   .72  -.20
+#&gt; wt    -.89   .77   .89   .71  -.72     1  -.09  -.57  -.71  -.66   .56
+#&gt; qsec   .29  -.66  -.42  -.74   .14  -.09     1   .76  -.28  -.22  -.66
+#&gt; vs     .63  -.90  -.75  -.72   .59  -.57   .76     1   .23   .28  -.53
+#&gt; am     .50  -.44  -.59  -.22   .65  -.71  -.28   .23     1   .77   .02
+#&gt; gear   .49  -.44  -.63  -.15   .72  -.66  -.22   .28   .77     1   .16
+#&gt; carb  -.51   .58   .56   .77  -.20   .56  -.66  -.53   .02   .16     1
+#&gt; 
+#&gt; $N
+#&gt;      mpg cyl disp  hp drat  wt qsec  vs  am gear carb
+#&gt; mpg   29  26   26  27   26  27   26  26  26   26   26
+#&gt; cyl   26  29   26  26   26  26   26  27  26   26   26
+#&gt; disp  26  26   29  26   27  27   27  26  26   27   26
+#&gt; hp    27  26   26  29   26  27   26  27  26   26   26
+#&gt; drat  26  26   27  26   29  26   26  26  26   28   26
+#&gt; wt    27  26   27  27   26  29   26  26  26   26   26
+#&gt; qsec  26  26   27  26   26  26   29  26  26   26   27
+#&gt; vs    26  27   26  27   26  26   26  29  26   26   26
+#&gt; am    26  26   26  26   26  26   26  26  29   26   27
+#&gt; gear  26  26   27  26   28  26   26  26  26   29   26
+#&gt; carb  26  26   26  26   26  26   27  26  27   26   29
+#&gt; 
+#&gt; $P
+#&gt;       mpg  cyl disp   hp drat   wt qsec   vs   am gear carb
+#&gt; mpg        .00  .00  .00  .00  .00  .15  .00  .01  .01  .01
+#&gt; cyl   .00       .00  .00  .00  .00  .00  .00  .02  .03  .00
+#&gt; disp  .00  .00       .00  .00  .00  .03  .00  .00  .00  .00
+#&gt; hp    .00  .00  .00       .01  .00  .00  .00  .28  .47  .00
+#&gt; drat  .00  .00  .00  .01       .00  .49  .00  .00  .00  .34
+#&gt; wt    .00  .00  .00  .00  .00       .65  .00  .00  .00  .00
+#&gt; qsec  .15  .00  .03  .00  .49  .65       .00  .16  .28  .00
+#&gt; vs    .00  .00  .00  .00  .00  .00  .00       .27  .17  .01
+#&gt; am    .01  .02  .00  .28  .00  .00  .16  .27       .00  .92
+#&gt; gear  .01  .03  .00  .47  .00  .00  .28  .17  .00       .43
+#&gt; carb  .01  .00  .00  .00  .34  .00  .00  .01  .92  .43     
+#&gt; </div><div class='input'><span class='fu'><a href='https://rdrr.io/r/base/print.html'>print</a></span>(<span class='fu'>pwcor</span>(<span class='no'>mna</span>, <span class='kw'>N</span> <span class='kw'>=</span> <span class='fl'>TRUE</span>, <span class='kw'>P</span> <span class='kw'>=</span> <span class='fl'>TRUE</span>, <span class='kw'>array</span> <span class='kw'>=</span> <span class='fl'>FALSE</span>), <span class='kw'>show</span> <span class='kw'>=</span> <span class='st'>"lower.tri"</span>)</div><div class='output co'>#&gt; $r
+#&gt;        mpg   cyl  disp    hp  drat    wt  qsec    vs    am  gear carb
+#&gt; mpg      1                                                           
+#&gt; cyl   -.85     1                                                     
+#&gt; disp  -.85   .91     1                                               
+#&gt; hp    -.75   .81   .84     1                                         
+#&gt; drat   .70  -.70  -.74  -.48     1                                   
+#&gt; wt    -.89   .77   .89   .71  -.72     1                             
+#&gt; qsec   .29  -.66  -.42  -.74   .14  -.09     1                       
+#&gt; vs     .63  -.90  -.75  -.72   .59  -.57   .76     1                 
+#&gt; am     .50  -.44  -.59  -.22   .65  -.71  -.28   .23     1           
+#&gt; gear   .49  -.44  -.63  -.15   .72  -.66  -.22   .28   .77     1     
+#&gt; carb  -.51   .58   .56   .77  -.20   .56  -.66  -.53   .02   .16    1
+#&gt; 
+#&gt; $N
+#&gt;      mpg cyl disp  hp drat  wt qsec  vs  am gear carb
+#&gt; mpg   29                                             
+#&gt; cyl   26  29                                         
+#&gt; disp  26  26   29                                    
+#&gt; hp    27  26   26  29                                
+#&gt; drat  26  26   27  26   29                           
+#&gt; wt    27  26   27  27   26  29                       
+#&gt; qsec  26  26   27  26   26  26   29                  
+#&gt; vs    26  27   26  27   26  26   26  29              
+#&gt; am    26  26   26  26   26  26   26  26  29          
+#&gt; gear  26  26   27  26   28  26   26  26  26   29     
+#&gt; carb  26  26   26  26   26  26   27  26  27   26   29
+#&gt; 
+#&gt; $P
+#&gt;       mpg  cyl disp   hp drat   wt qsec   vs   am gear carb
+#&gt; mpg                                                        
+#&gt; cyl   .00                                                  
+#&gt; disp  .00  .00                                             
+#&gt; hp    .00  .00  .00                                        
+#&gt; drat  .00  .00  .00  .01                                   
+#&gt; wt    .00  .00  .00  .00  .00                              
+#&gt; qsec  .15  .00  .03  .00  .49  .65                         
+#&gt; vs    .00  .00  .00  .00  .00  .00  .00                    
+#&gt; am    .01  .02  .00  .28  .00  .00  .16  .27               
+#&gt; gear  .01  .03  .00  .47  .00  .00  .28  .17  .00          
+#&gt; carb  .01  .00  .00  .00  .34  .00  .00  .01  .92  .43     
+#&gt; </div><div class='input'>
+
+</div></pre>
   </div>
   <div class="col-md-3 hidden-xs hidden-sm" id="pkgdown-sidebar">
     <nav id="toc" data-toggle="toc" class="sticky-top">

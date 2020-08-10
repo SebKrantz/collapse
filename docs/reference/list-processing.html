@@ -42,7 +42,7 @@
 <meta property="og:title" content="List Processing — A8-list-processing" />
 <meta property="og:description" content="collapse provides the following set of functions to work with lists of R objects:
 Search and Identification
-is.regular checks whether an R object is either atomic or a list. A (nested) list composed of regular objects at each level of the list-tree is unlistable to an atomic vector, checked by is.unlistable.
+is.regular checks whether an R object is either atomic or a list. A (nested) list composed of regular objects at each level of the list-tree is unlistable to an atomic vector - checked by is.unlistable.
 ldepth determines the level of nesting of the list (i.e. the maximum number of nodes of the list-tree).
 has_elem searches elements in a list using element names, regular expressions applied to element names, or a function applied to the elements, and returns TRUE if any matches were found.
 
@@ -55,7 +55,7 @@ Apply Functions
 rapply2d is a recursive version of base::lapply with two key differences to base::rapply: (1) Data frames are considered as atomic objects, not as (sub-)lists, and (2) the result is not simplified.
 
 Unlisting / Row-Binding
-unlist2d efficiently unlists unlistable lists in 2-dimensions and creates a data.frame (or data.table) representation of the list (unlike base::unlist which returns an atomic vector). This is done by recursively flattening and row-binding R objects in the list (using data.table::rbindlist) while creating identifier columns for each level of the list-tree and (optionally) saving the row-names of the objects in a separate column. unlist2d can thus also be understood as a recursive generalization of do.call(rbind, l), for lists of vectors, data.frames, arrays or heterogeneous objects.
+unlist2d efficiently unlists unlistable lists in 2-dimensions and creates a data frame (or data.table) representation of the list (unlike base::unlist which returns an atomic vector). This is done by recursively flattening and row-binding R objects in the list (using data.table::rbindlist) while creating identifier columns for each level of the list-tree and (optionally) saving the row-names of the objects in a separate column. unlist2d can thus also be understood as a recursive generalization of do.call(rbind, l), for lists of vectors, data frames, arrays or heterogeneous objects.
 
 
 " />
@@ -90,7 +90,7 @@ unlist2d efficiently unlists unlistable lists in 2-dimensions and creates a data
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">collapse</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">1.2.1</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">1.3.0</span>
       </span>
     </div>
 
@@ -105,13 +105,10 @@ unlist2d efficiently unlists unlistable lists in 2-dimensions and creates a data
 <li>
   <a href="../news/index.html">News</a>
 </li>
-<li>
-  <a href="../blog/index.html">Blog</a>
-</li>
       </ul>
       <ul class="nav navbar-nav navbar-right">
         <li>
-  <a href="https://twitter.com/collapse">
+  <a href="https://twitter.com/collapse_R">
     <span class="fa fa-twitter"></span>
      
   </a>
@@ -143,7 +140,7 @@ unlist2d efficiently unlists unlistable lists in 2-dimensions and creates a data
     <div class="ref-description">
     <p><em>collapse</em> provides the following set of functions to work with lists of R objects:</p><ul>
 <li><p><b>Search and Identification</b></p><ul>
-<li><p><code><a href='is.unlistable.html'>is.regular</a></code> checks whether an R object is either atomic or a list. A (nested) list composed of regular objects at each level of the list-tree is unlistable to an atomic vector, checked by <code><a href='is.unlistable.html'>is.unlistable</a></code>.</p></li>
+<li><p><code><a href='is.unlistable.html'>is.regular</a></code> checks whether an R object is either atomic or a list. A (nested) list composed of regular objects at each level of the list-tree is unlistable to an atomic vector - checked by <code><a href='is.unlistable.html'>is.unlistable</a></code>.</p></li>
 <li><p><code><a href='ldepth.html'>ldepth</a></code> determines the level of nesting of the list (i.e. the maximum number of nodes of the list-tree).</p></li>
 <li><p><code><a href='extract_list.html'>has_elem</a></code> searches elements in a list using element names, regular expressions applied to element names, or a function applied to the elements, and returns <code>TRUE</code> if any matches were found.</p></li>
 </ul></li>
@@ -156,7 +153,7 @@ unlist2d efficiently unlists unlistable lists in 2-dimensions and creates a data
 <li><p><code><a href='rapply2d.html'>rapply2d</a></code> is a recursive version of <code><a href='https://rdrr.io/r/base/lapply.html'>base::lapply</a></code> with two key differences to <code><a href='https://rdrr.io/r/base/rapply.html'>base::rapply</a></code>: (1) Data frames are considered as atomic objects, not as (sub-)lists, and (2) the result is not simplified.</p></li>
 </ul></li>
 <li><p><b>Unlisting / Row-Binding</b></p><ul>
-<li><p><code><a href='unlist2d.html'>unlist2d</a></code> efficiently unlists unlistable lists in 2-dimensions and creates a <code>data.frame</code> (or <em>data.table</em>) representation of the list (unlike <code><a href='https://rdrr.io/r/base/unlist.html'>base::unlist</a></code> which returns an atomic vector). This is done by recursively flattening and row-binding R objects in the list (using <code><a href='https://rdrr.io/pkg/data.table/man/rbindlist.html'>data.table::rbindlist</a></code>) while creating identifier columns for each level of the list-tree and (optionally) saving the row-names of the objects in a separate column. <code><a href='unlist2d.html'>unlist2d</a></code> can thus also be understood as a recursive generalization of <code><a href='https://rdrr.io/r/base/do.call.html'>do.call(rbind, l)</a></code>, for lists of vectors, data.frames, arrays or heterogeneous objects.</p></li>
+<li><p><code><a href='unlist2d.html'>unlist2d</a></code> efficiently unlists unlistable lists in 2-dimensions and creates a data frame (or <em>data.table</em>) representation of the list (unlike <code><a href='https://rdrr.io/r/base/unlist.html'>base::unlist</a></code> which returns an atomic vector). This is done by recursively flattening and row-binding R objects in the list (using <code><a href='https://rdrr.io/pkg/data.table/man/rbindlist.html'>data.table::rbindlist</a></code>) while creating identifier columns for each level of the list-tree and (optionally) saving the row-names of the objects in a separate column. <code><a href='unlist2d.html'>unlist2d</a></code> can thus also be understood as a recursive generalization of <code><a href='https://rdrr.io/r/base/do.call.html'>do.call(rbind, l)</a></code>, for lists of vectors, data frames, arrays or heterogeneous objects.</p></li>
 </ul></li>
 </ul>
 
@@ -167,23 +164,24 @@ unlist2d efficiently unlists unlistable lists in 2-dimensions and creates a data
     <h2 class="hasAnchor" id="table-of-functions"><a class="anchor" href="#table-of-functions"></a>Table of Functions</h2>
 
     <p></p><table class='table'>
-<tr><td><em> Function</em></td><td></td><td><em> Description </em></td><td><!-- % \Sexpr{"\u200B"} \Sexpr{"\u200B"} -->
-  <code><a href='is.unlistable.html'>is.regular</a></code></td></tr>
-<tr><td></td><td><code>function(x) is.atomic(x) || is.list(x)</code></td><td><code><a href='is.unlistable.html'>is.unlistable</a></code></td><td></td></tr>
-<tr><td>checks if list is unlistable</td><td><code><a href='ldepth.html'>ldepth</a></code></td><td></td><td>level of nesting / maximum depth of list-tree</td></tr>
-<tr><td><code><a href='extract_list.html'>has_elem</a></code></td><td></td><td>checks if list contains a certain element</td><td><code><a href='extract_list.html'>get_elem</a></code></td></tr>
-<tr><td></td><td>subset list / extract certain elements</td><td><code><a href='extract_list.html'>get_elem</a></code></td><td></td></tr>
-<tr><td>subset list / extract certain elements</td><td><code><a href='extract_list.html'>reg_elem</a></code></td><td></td><td>subset / extract regular part of list</td></tr>
-<tr><td><code><a href='extract_list.html'>irreg_elem</a></code></td><td></td><td>subset / extract non-regular part of list</td><td><code><a href='extract_list.html'>atomic_elem</a></code></td></tr>
-<tr><td></td><td>top-level subset atomic elements</td><td><code><a href='extract_list.html'>list_elem</a></code></td><td></td></tr>
-<tr><td>top-level subset list/list-like elements</td><td><code><a href='rapply2d.html'>rapply2d</a></code></td><td></td><td>recursively apply functions to lists of data objects</td></tr>
-<tr><td><code><a href='unlist2d.html'>unlist2d</a></code></td><td></td><td>recursively unlist/row-bind lists of data objects in 2D, to <code>data.frame</code> or <em>data.table</em></td><td></td></tr>
+<tr><td><em> Function </em></td><td></td><td><em> Description </em></td></tr>
+<tr><td><code><a href='is.unlistable.html'>is.regular</a></code></td><td></td><td><code>function(x) is.atomic(x) || is.list(x)</code></td></tr>
+<tr><td><code><a href='is.unlistable.html'>is.unlistable</a></code></td><td></td><td>Checks if list is unlistable</td></tr>
+<tr><td><code><a href='ldepth.html'>ldepth</a></code></td><td></td><td>Level of nesting / maximum depth of list-tree</td></tr>
+<tr><td><code><a href='extract_list.html'>has_elem</a></code></td><td></td><td>Checks if list contains a certain element</td></tr>
+<tr><td><code><a href='extract_list.html'>get_elem</a></code></td><td></td><td>Subset list / extract certain elements</td></tr>
+<tr><td><code><a href='extract_list.html'>atomic_elem</a></code></td><td></td><td>Top-level subset atomic elements</td></tr>
+<tr><td><code><a href='extract_list.html'>list_elem</a></code></td><td></td><td>Top-level subset list/list-like elements</td></tr>
+<tr><td><code><a href='extract_list.html'>reg_elem</a></code></td><td></td><td>Recursive version of <code>atomic_elem</code>: Subset / extract regular part of list</td></tr>
+<tr><td><code><a href='extract_list.html'>irreg_elem</a></code></td><td></td><td>Subset / extract non-regular part of list</td></tr>
+<tr><td><code><a href='rapply2d.html'>rapply2d</a></code></td><td></td><td>Recursively apply functions to lists of data objects</td></tr>
+<tr><td><code><a href='unlist2d.html'>unlist2d</a></code></td><td></td><td>Recursively unlist/row-bind lists of data objects in 2D, to data frame or <em>data.table</em></td></tr>
 </table>
 
 
     <h2 class="hasAnchor" id="see-also"><a class="anchor" href="#see-also"></a>See also</h2>
 
-    <div class='dont-index'><p><a href='collapse-documentation.html'>Collapse Overview</a></p></div>
+    <div class='dont-index'><p><a href='index.html'>Collapse Overview</a></p></div>
 
   </div>
   <div class="col-md-3 hidden-xs hidden-sm" id="pkgdown-sidebar">
