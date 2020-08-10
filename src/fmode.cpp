@@ -406,8 +406,9 @@ Vector<RTYPE> fmodeImpl(const Vector<RTYPE>& x, int ng, const IntegerVector& g, 
         }
       }
       for(int i = 0; i != l; ++i) {
-        gmap[pg[i]][n[pg[i]]] = x[i];
-        wmap[pg[i]][n[pg[i]]++] = pwg[i];
+        int gi = pg[i];
+        gmap[gi][n[gi]] = x[i];
+        wmap[gi][n[gi]++] = pwg[i];
       }
       if(narm) {
         for(int gr = 0; gr != ng; ++gr) {
