@@ -15,11 +15,22 @@ auto nisnan = [](double x) { return x == x; };
 NumericVector fnthCpp(const NumericVector& x, double Q = 0.5, int ng = 0, const IntegerVector& g = 0,
                       const SEXP& gs = R_NilValue, const SEXP& w = R_NilValue, bool narm = true, int ret = 1) {
   int l = x.size();
-  if(Q <= 0 || Q == 1 || Q >= l) stop("n needs to be between 0 and 1, or between 1 and length(x).");
-  if(Q > 1) Q = Q/l;
-
-  bool tiesmean = ret == 1;
-  bool lower = ret != 3;
+  bool tiesmean, lower;
+  if(Q <= 0 || Q == 1) stop("n needs to be between 0 and 1, or between 1 and length(x). Use fmin and fmax for minima and maxima.");
+  if(Q > 1) {
+    tiesmean = false;
+    lower = true;
+    if(ng == 0) {
+      if(Q >= l) stop("n needs to be between 0 and 1, or between 1 and length(x). Use fmin and fmax for minima and maxima.");
+      Q = (Q-1)/(l-1);
+    } else {
+      if(Q >= l/ng) stop("n needs to be between 0 and 1, or between 1 and the length(x)/ng, with ng the number of groups. Use fmin and fmax for minima and maxima.");
+      Q = (Q-1)/(l/ng-1);
+    }
+  } else {
+    tiesmean = ret == 1;
+    lower = ret != 3;
+  }
 
   if(Rf_isNull(w)) {
     if(ng == 0) {
@@ -27,7 +38,7 @@ NumericVector fnthCpp(const NumericVector& x, double Q = 0.5, int ng = 0, const 
       if(narm) {
         NumericVector xd = no_init_vector(l);
         auto pend = std::remove_copy_if(x.begin(), x.end(), xd.begin(), isnan2);
-        int sz = pend - xd.begin(), nth = lower ? (sz-1)*Q : sz*Q;
+        int sz = pend - xd.begin(), nth = lower ? (sz-1)*Q : sz*Q; // return NumericVector::create(sz, (sz-1)*Q, sz*Q-1, sz*Q);
         if(sz == 0) return NumericVector::create(x[0]);
         std::nth_element(xd.begin(), xd.begin()+nth, pend);
         out = (tiesmean && sz%2 == 0) ? (xd[nth] + *(std::min_element(xd.begin()+nth+1, pend)))*0.5 : xd[nth];
@@ -137,7 +148,7 @@ NumericVector fnthCpp(const NumericVector& x, double Q = 0.5, int ng = 0, const 
       if(narm) {
         for(int i = 0; i != l; ++i) if(nisnan(x[i])) wsumQ[g[i]-1] += wg[i]; //  && nisnan(wg[i])
         for(int i = ng; i--; ) {
-          if(isnan2(wsumQ[i])) stop("");
+          if(isnan2(wsumQ[i])) stop("Missing weights in order statistics are currently only supported if x is also missing");
           wsumQ[i] *= Q;
         }
       } else {
@@ -206,11 +217,22 @@ SEXP fnthmCpp(const NumericMatrix& x, double Q = 0.5, int ng = 0, const IntegerV
               const SEXP& gs = R_NilValue, const SEXP& w = R_NilValue, bool narm = true,
               bool drop = true, int ret = 1) {
   int l = x.nrow(), col = x.ncol();
-  if(Q <= 0 || Q == 1 || Q >= l) stop("n needs to be between 0 and 1, or between 1 and nrow(x).");
-  if(Q > 1) Q = Q/l;
-
-  bool tiesmean = ret == 1;
-  bool lower = ret != 3;
+  bool tiesmean, lower;
+  if(Q <= 0 || Q == 1) stop("n needs to be between 0 and 1, or between 1 and nrow(x). Use fmin and fmax for minima and maxima.");
+  if(Q > 1) {
+    tiesmean = false;
+    lower = true;
+    if(ng == 0) {
+      if(Q >= l) stop("n needs to be between 0 and 1, or between 1 and nrow(x). Use fmin and fmax for minima and maxima.");
+      Q = (Q-1)/(l-1);
+    } else {
+      if(Q >= l/ng) stop("n needs to be between 0 and 1, or between 1 and the nrow(x)/ng, with ng the number of groups. Use fmin and fmax for minima and maxima.");
+      Q = (Q-1)/(l/ng-1);
+    }
+  } else {
+    tiesmean = ret == 1;
+    lower = ret != 3;
+  }
 
   if(Rf_isNull(w)) {
     if(ng == 0) {
@@ -463,11 +485,22 @@ SEXP fnthlCpp(const List& x, double Q = 0.5, int ng = 0, const IntegerVector& g 
               const SEXP& gs = R_NilValue, const SEXP& w = R_NilValue, bool narm = true,
               bool drop = true, int ret = 1) {
   int l = x.size(), lx1 = Rf_length(x[0]);
-  if(Q <= 0 || Q == 1 || Q >= lx1) stop("n needs to be between 0 and 1, or between 1 and nrow(x).");
-  if(Q > 1) Q = Q/lx1;
-
-  bool tiesmean = ret == 1;
-  bool lower = ret != 3;
+  bool tiesmean, lower;
+  if(Q <= 0 || Q == 1) stop("n needs to be between 0 and 1, or between 1 and nrow(x). Use fmin and fmax for minima and maxima.");
+  if(Q > 1) {
+    tiesmean = false;
+    lower = true;
+    if(ng == 0) {
+      if(Q >= lx1) stop("n needs to be between 0 and 1, or between 1 and nrow(x). Use fmin and fmax for minima and maxima.");
+      Q = (Q-1)/(lx1-1);
+    } else {
+      if(Q >= lx1/ng) stop("n needs to be between 0 and 1, or between 1 and the nrow(x)/ng, with ng the number of groups. Use fmin and fmax for minima and maxima.");
+      Q = (Q-1)/(lx1/ng-1);
+    }
+  } else {
+    tiesmean = ret == 1;
+    lower = ret != 3;
+  }
 
   if(Rf_isNull(w)) {
     if(ng == 0) {
