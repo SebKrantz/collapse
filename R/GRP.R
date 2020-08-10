@@ -17,7 +17,7 @@ radixorderv <- function(x, na.last = TRUE, decreasing = FALSE, starts = FALSE, g
 }
 
 # Added... could also do in GRP.default... but this is better, no match.call etc... match.call takes 4 microseconds. could do both ?? think about possible applications...
-GRP.GRP <- function(x) x
+GRP.GRP <- function(X, ...) X
 
 GRP.default <- function(X, by = NULL, sort = TRUE, decreasing = FALSE, na.last = TRUE,
                         return.groups = TRUE, return.order = FALSE, call = TRUE, ...) { # , gs = TRUE # o
@@ -239,12 +239,25 @@ GRP.pseries <- function(X, effect = 1L, ..., group.sizes = TRUE, return.groups =
                         order = NULL,
                         call = if(call) match.call() else NULL), "GRP"))
 }
-GRP.pdata.frame <- function(X, effect = 1L, ...) GRP.pseries(X, effect, ...)
+GRP.pdata.frame <- function(X, effect = 1L, ..., group.sizes = TRUE, return.groups = TRUE, call = TRUE)
+  GRP.pseries(X, effect, ..., group.sizes = group.sizes, return.groups = return.groups, call = call)
 
 fgroup_by <- function(X, ..., sort = TRUE, decreasing = FALSE, na.last = TRUE, return.order = FALSE) {      #   e <- substitute(list(...)) # faster but does not preserve attributes of unique groups !!
+  clx <- oldClass(X)
   attr(X, "groups") <- GRP.default(fselect(X, ...), NULL, sort, decreasing, na.last, TRUE, return.order, FALSE) # `names<-`(eval(e, X, parent.frame()), all.vars(e))
-  add_cl <- if(inherits(X, "data.table")) c("data.table", "tbl_df", "tbl", "grouped_df") else c("tbl_df", "tbl", "grouped_df")
-  oldClass(X) <- c(add_cl, fsetdiff(oldClass(X), add_cl)) # necesssary to avoid printing errors... (i.e. wrong group object etc...)
+  attr(X, "was.tibble") <- any(clx == "tbl_df")
+  add_cl <- if(any(clx == "data.table")) c("data.table", "tbl_df", "tbl", "grouped_df") else c("tbl_df", "tbl", "grouped_df")
+  oldClass(X) <- c(add_cl, fsetdiff(clx, add_cl)) # necesssary to avoid printing errors... (i.e. wrong group object etc...)
+  X
+}
+
+fungroup <- function(X, untibble = isFALSE(attr(X, "was.tibble"))) {
+  clx <- oldClass(X)
+  attr(X, "groups") <- NULL
+  if(untibble) {
+    oldClass(X) <- fsetdiff(clx, c("tbl_df", "tbl", "grouped_df"))
+    attr(X, "was.tibble") <- NULL
+  } else oldClass(X) <- clx[clx != "grouped_df"]
   X
 }
 
