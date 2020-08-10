@@ -3,12 +3,16 @@ context("dapply")
 test_that("All common uses of dapply can be performed, as per examples", {
   # data.frame
   expect_equal(dapply(mtcars, force), mtcars)
+  expect_equal(dapply(`attr<-`(mtcars, "bla", 1), force), `attr<-`(mtcars, "bla", 1))
+  expect_equal(dapply(`attr<-`(mtcars, "bla", 1), force, MARGIN = 1), `attr<-`(mtcars, "bla", 1))
   expect_visible(dapply(mtcars, log))
   expect_true(is.matrix(dapply(mtcars, log, return = "matrix")))
 
   # matrix
   m <- as.matrix(mtcars)
   expect_equal(dapply(m, force), m)
+  expect_equal(dapply(EuStockMarkets, force), EuStockMarkets)
+  expect_equal(dapply(EuStockMarkets, force, MARGIN = 1), EuStockMarkets)
   expect_visible(dapply(m, log))
   expect_true(is.data.frame(dapply(m, log, return = "data.frame")))
 
@@ -62,5 +66,5 @@ test_that("dapply produces errors for wrong input", {
   expect_error(dapply(mtcars, sum, MARGIN = 3))
   expect_error(dapply(mtcars, sum, MARGIN = 1:2))
   expect_error(dapply(mtcars, sum, MARGIN = "a"))
-  expect_error(dapply(mtcars, sum, return = "bla"))
+  expect_error(dapply(mtcars, sum, return = "bla", drop = FALSE))
 })

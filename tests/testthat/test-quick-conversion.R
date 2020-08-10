@@ -23,7 +23,7 @@ test_that("conversions to factor run smoothly", {
   expect_identical(ordered(as.factor(x)), qF(x, ordered = TRUE))
   expect_identical(ordered(as.factor(f)), qF(f, ordered = TRUE))
   expect_identical(as.integer(as.factor(xNA)), as.integer(qF(xNA, ordered = TRUE)))
-  # expect_identical(as.integer(as.factor(fNA)), as.integer(qF(fNA, ordered = TRUE))) # Problem here: For integers na.exclude = TRUE doesn't work !!
+  expect_identical(as.integer(as.factor(fNA)), as.integer(qF(fNA, ordered = TRUE)))
   expect_identical(as.integer(as.factor(x)), as.integer(qG(x, ordered = TRUE)))
   expect_identical(as.integer(as.factor(f)), as.integer(qF(f, ordered = TRUE)))
   expect_identical(as.integer(as.factor(xNA)), as.integer(qG(xNA, ordered = TRUE)))

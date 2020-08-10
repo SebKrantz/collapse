@@ -172,9 +172,9 @@ test_that("grouped_df method works as intended", {
                    unattrib(varying(gwlddev, any_group = FALSE, drop = FALSE, keep.group_vars = FALSE)))
 
   expect_identical(unclass(varying(fselect(wlddev, -iso3c), wlddev$iso3c, any_group = FALSE, use.g.names = FALSE)),
-                   unclass(varying(gwlddev, any_group = FALSE, use.g.names = FALSE, keep.group_vars = FALSE)))
+                   unclass(fungroup(varying(gwlddev, any_group = FALSE, use.g.names = FALSE, keep.group_vars = FALSE))))
 
   expect_identical(unclass(varying(fselect(wlddev, -iso3c), wlddev$iso3c, any_group = FALSE, drop = FALSE)),
-                   unclass(varying(gwlddev, any_group = FALSE, use.g.names = TRUE, drop = FALSE, keep.group_vars = FALSE)))
+                   unclass(fungroup(varying(gwlddev, any_group = FALSE, use.g.names = TRUE, drop = FALSE, keep.group_vars = FALSE))))
 
 })

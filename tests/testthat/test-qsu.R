@@ -1,4 +1,4 @@
-context("quick-summary (qsu)")
+context("qsu")
 
 # Make more tests!! See also collapse general TODO !
 test_that("qsu gives errors for wrong input", {

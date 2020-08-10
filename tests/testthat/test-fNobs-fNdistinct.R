@@ -4,7 +4,7 @@ x <- rnorm(100)
 xNA <- x
 xNA[sample.int(100,20)] <- NA
 f <- as.factor(sample.int(10, 100, TRUE))
-data <- wlddev[wlddev$iso3c %in% c("BLZ","IND","USA","SRB","GRL"), ]
+data <- fsubset(wlddev, iso3c %in% c("BLZ","IND","USA","SRB","GRL"))
 g <- GRP(droplevels(data$iso3c))
 dataNA <- na_insert(data)
 m <- as.matrix(data)
@@ -32,8 +32,8 @@ test_that("fNobs performs like Nobs (defined above)", {
   expect_equal(fNobs(xNA, f), BY(xNA, f, Nobs))
   expect_equal(fNobs(m, g), BY(m, g, Nobs))
   expect_equal(fNobs(mNA, g), BY(mNA, g, Nobs))
-  expect_equal(fNobs(data, g), BY(data, g, Nobs))
-  expect_equal(fNobs(dataNA, g), BY(dataNA, g, Nobs))
+  expect_equal(dapply(fNobs(data, g), unattrib), BY(data, g, Nobs))
+  expect_equal(dapply(fNobs(dataNA, g), unattrib), BY(dataNA, g, Nobs))
 })
 
 test_that("fNobs performs numerically stable", {
@@ -105,10 +105,10 @@ test_that("fNdistinct performs like Ndistinct (defined above)", {
   expect_equal(fNdistinct(m, g, na.rm = FALSE), BY(m, g, Ndistinct))
   expect_equal(fNdistinct(mNA, g, na.rm = FALSE), BY(mNA, g, Ndistinct))
   expect_equal(fNdistinct(mNA, g), BY(mNA, g, Ndistinct, na.rm = TRUE))
-  expect_equal(fNdistinct(data, g), BY(data, g, Ndistinct, na.rm = TRUE))
-  expect_equal(fNdistinct(data, g, na.rm = FALSE), BY(data, g, Ndistinct))
-  expect_equal(fNdistinct(dataNA, g, na.rm = FALSE), BY(dataNA, g, Ndistinct))
-  expect_equal(fNdistinct(dataNA, g), BY(dataNA, g, Ndistinct, na.rm = TRUE))
+  expect_equal(dapply(fNdistinct(data, g), unattrib), BY(data, g, Ndistinct, na.rm = TRUE))
+  expect_equal(dapply(fNdistinct(data, g, na.rm = FALSE), unattrib), BY(data, g, Ndistinct))
+  expect_equal(dapply(fNdistinct(dataNA, g, na.rm = FALSE), unattrib), BY(dataNA, g, Ndistinct))
+  expect_equal(dapply(fNdistinct(dataNA, g), unattrib), BY(dataNA, g, Ndistinct, na.rm = TRUE))
 })
 
 test_that("fNdistinct performs numerically stable", {
@@ -156,7 +156,7 @@ test_that("fNdistinct handles special values in the right way", {
   expect_equal(fNdistinct(c(NA,TRUE,FALSE,NA)), 2)
   expect_equal(fNdistinct(c(NA,FALSE,TRUE,NA)), 2)
   expect_equal(fNdistinct(c(NA,FALSE,FALSE,NA)), 1)
-  # expect_equal(max(fNdistinct(mNA > 10)), 1)
+  # expect_equal(max(fNdistinct(mNA > 10)), 1) # These tests are insecure to random number generation
   # expect_equal(max(fNdistinct(mNA > 10, g)), 1)
   expect_equal(fNdistinct(NA, na.rm = FALSE), 1)
   expect_equal(fNdistinct(NaN, na.rm = FALSE), 1)
