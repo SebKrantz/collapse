@@ -70,7 +70,6 @@ In addition, *collapse* provides 3 vignettes:
 ## Examples
 This provides a simple set of examples introducing some important features of *collapse*. It should be easy to follow for readers familiar with R. 
 
-***
 
 <details>
   <summary><b>Click to expand</b> </summary>
@@ -256,12 +255,13 @@ pwcor(airquality, N = TRUE, P = TRUE)       # Pairwise correlations with p-value
 pwcor(W(pdata, keep.ids = FALSE), P = TRUE) # Within- correlations
 
 ```
+
 </details>
-***
+<p> </p>
+
 Evaluated and more extensive sets of examples are provided on the [package page](<https://sebkrantz.github.io/collapse/reference/collapse-package.html>) (also accessible from R by calling `example('collapse-package')`), and further in the [vignettes](<https://sebkrantz.github.io/collapse/articles/index.html>) and  [documentation](<https://sebkrantz.github.io/collapse/reference/index.html>).
 
 ## Notes
-***
 ### Regarding Performance 
 Some simple benchmarks are provided in the [vignettes](<https://sebkrantz.github.io/collapse/articles/index.html>). In general:
 
