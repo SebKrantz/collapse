@@ -322,7 +322,7 @@ The corresponding operators HDB and HDW additionally allow to predict / partial 
 #&gt; 
 #&gt; Coefficients:
 #&gt; (Intercept)       HDW.hp  
-#&gt;  -8.890e-10   -2.366e-02  
+#&gt;   1.032e-09   -2.366e-02  
 #&gt; </div><div class='input'><span class='fu'><a href='https://rdrr.io/r/stats/lm.html'>lm</a></span>(<span class='no'>mpg</span> ~ <span class='no'>hp</span> + <span class='fu'><a href='https://rdrr.io/r/base/factor.html'>factor</a></span>(<span class='no'>cyl</span>)*<span class='no'>carb</span> + <span class='no'>vs</span> + <span class='no'>wt</span>:<span class='no'>gear</span> + <span class='no'>wt</span>:<span class='no'>gear</span>:<span class='no'>carb</span>, <span class='kw'>data</span> <span class='kw'>=</span> <span class='no'>mtcars</span>)</div><div class='output co'>#&gt; 
 #&gt; Call:
 #&gt; lm(formula = mpg ~ hp + factor(cyl) * carb + vs + wt:gear + wt:gear:carb, 
@@ -343,7 +343,7 @@ The corresponding operators HDB and HDW additionally allow to predict / partial 
 #&gt; 
 #&gt; Coefficients:
 #&gt; (Intercept)       HDW.hp  
-#&gt;  -1.142e-09   -2.740e-02  
+#&gt;   6.274e-09   -2.740e-02  
 #&gt; </div><div class='input'><span class='fu'><a href='https://rdrr.io/r/stats/lm.html'>lm</a></span>(<span class='no'>mpg</span> ~ <span class='no'>hp</span> + <span class='fu'><a href='https://rdrr.io/r/base/factor.html'>factor</a></span>(<span class='no'>cyl</span>)*<span class='no'>carb</span> + <span class='no'>vs</span> + <span class='no'>wt</span>:<span class='no'>gear</span>, <span class='kw'>data</span> <span class='kw'>=</span> <span class='no'>mtcars</span>)</div><div class='output co'>#&gt; 
 #&gt; Call:
 #&gt; lm(formula = mpg ~ hp + factor(cyl) * carb + vs + wt:gear, data = mtcars)

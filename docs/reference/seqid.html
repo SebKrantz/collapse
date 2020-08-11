@@ -182,99 +182,99 @@ There are potentially other more analytical applications for <code>seqid</code>.
     <p>An integer vector of class 'qG'. See <code><a href='qF.html'>qG</a></code>.</p>
     <h2 class="hasAnchor" id="see-also"><a class="anchor" href="#see-also"></a>See also</h2>
 
-    <div class='dont-index'><p><code><a href='groupid.html'>groupid</a></code>, <code><a href='qF.html'>qG</a></code>, <a href='fast-grouping.html'>Fast Grouping and Ordering</a>, <a href='index.html'>Collapse Overview</a></p></div>
+    <div class='dont-index'><p><code><a href='groupid.html'>groupid</a></code>, <code><a href='qF.html'>qG</a></code>, <a href='fast-grouping.html'>Fast Grouping and Ordering</a>, <a href='collapse-documentation.html'>Collapse Overview</a></p></div>
 
     <h2 class="hasAnchor" id="examples"><a class="anchor" href="#examples"></a>Examples</h2>
     <pre class="examples"><div class='input'><span class='co'>## This creates an irregularly spaced panel, with a gap in time for id = 2</span>
 <span class='no'>data</span> <span class='kw'>&lt;-</span> <span class='fu'><a href='https://rdrr.io/r/base/data.frame.html'>data.frame</a></span>(<span class='kw'>id</span> <span class='kw'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/rep.html'>rep</a></span>(<span class='fl'>1</span>:<span class='fl'>3</span>, <span class='kw'>each</span> <span class='kw'>=</span> <span class='fl'>4</span>),
                    <span class='kw'>time</span> <span class='kw'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span>(<span class='fl'>1</span>:<span class='fl'>4</span>, <span class='fl'>1</span>:<span class='fl'>2</span>, <span class='fl'>4</span>:<span class='fl'>5</span>, <span class='fl'>1</span>:<span class='fl'>4</span>),
                    <span class='kw'>value</span> <span class='kw'>=</span> <span class='fu'><a href='https://rdrr.io/r/stats/Normal.html'>rnorm</a></span>(<span class='fl'>12</span>))
-<span class='no'>data</span></div><div class='output co'>#&gt;    id time        value
-#&gt; 1   1    1 -0.002432069
-#&gt; 2   1    2 -1.150569649
-#&gt; 3   1    3  0.488512243
-#&gt; 4   1    4  1.049930592
-#&gt; 5   2    1 -1.440299512
-#&gt; 6   2    2 -0.278811344
-#&gt; 7   2    4  1.276778110
-#&gt; 8   2    5 -0.437390057
-#&gt; 9   3    1  0.192306609
-#&gt; 10  3    2 -0.311857500
-#&gt; 11  3    3  1.069276458
-#&gt; 12  3    4 -0.166538445</div><div class='input'><span class='kw'>if</span> (<span class='fl'>FALSE</span>) {
+<span class='no'>data</span></div><div class='output co'>#&gt;    id time      value
+#&gt; 1   1    1 -1.9362346
+#&gt; 2   1    2 -0.4487999
+#&gt; 3   1    3 -0.2909846
+#&gt; 4   1    4 -0.7077864
+#&gt; 5   2    1  0.3846110
+#&gt; 6   2    2  1.4453821
+#&gt; 7   2    4 -0.5372719
+#&gt; 8   2    5 -0.7199475
+#&gt; 9   3    1  0.2639391
+#&gt; 10  3    2  1.3115241
+#&gt; 11  3    3  0.6453655
+#&gt; 12  3    4  0.7020755</div><div class='input'><span class='kw'>if</span> (<span class='fl'>FALSE</span>) {
 <span class='co'>## Gaps in time error</span>
 <span class='fu'><a href='flag.html'>L</a></span>(<span class='no'>data</span>, <span class='fl'>1</span>, <span class='no'>value</span> ~ <span class='no'>id</span>, ~<span class='no'>time</span>)
 }
 <span class='co'>## Generating new id variable (here seqid(time) would suffice as data is sorted)</span>
 <span class='fu'><a href='ftransform.html'>settransform</a></span>(<span class='no'>data</span>, <span class='kw'>newid</span> <span class='kw'>=</span> <span class='fu'>seqid</span>(<span class='no'>time</span>, <span class='fu'><a href='https://rdrr.io/r/base/order.html'>order</a></span>(<span class='no'>id</span>, <span class='no'>time</span>)))
-<span class='no'>data</span></div><div class='output co'>#&gt;    id time        value newid
-#&gt; 1   1    1 -0.002432069     1
-#&gt; 2   1    2 -1.150569649     1
-#&gt; 3   1    3  0.488512243     1
-#&gt; 4   1    4  1.049930592     1
-#&gt; 5   2    1 -1.440299512     2
-#&gt; 6   2    2 -0.278811344     2
-#&gt; 7   2    4  1.276778110     3
-#&gt; 8   2    5 -0.437390057     3
-#&gt; 9   3    1  0.192306609     4
-#&gt; 10  3    2 -0.311857500     4
-#&gt; 11  3    3  1.069276458     4
-#&gt; 12  3    4 -0.166538445     4</div><div class='input'>
+<span class='no'>data</span></div><div class='output co'>#&gt;    id time      value newid
+#&gt; 1   1    1 -1.9362346     1
+#&gt; 2   1    2 -0.4487999     1
+#&gt; 3   1    3 -0.2909846     1
+#&gt; 4   1    4 -0.7077864     1
+#&gt; 5   2    1  0.3846110     2
+#&gt; 6   2    2  1.4453821     2
+#&gt; 7   2    4 -0.5372719     3
+#&gt; 8   2    5 -0.7199475     3
+#&gt; 9   3    1  0.2639391     4
+#&gt; 10  3    2  1.3115241     4
+#&gt; 11  3    3  0.6453655     4
+#&gt; 12  3    4  0.7020755     4</div><div class='input'>
 <span class='co'>## Lag the panel</span>
-<span class='fu'><a href='flag.html'>L</a></span>(<span class='no'>data</span>, <span class='fl'>1</span>, <span class='no'>value</span> ~ <span class='no'>newid</span>, ~<span class='no'>time</span>)</div><div class='output co'>#&gt;    newid time     L1.value
-#&gt; 1      1    1           NA
-#&gt; 2      1    2 -0.002432069
-#&gt; 3      1    3 -1.150569649
-#&gt; 4      1    4  0.488512243
-#&gt; 5      2    1           NA
-#&gt; 6      2    2 -1.440299512
-#&gt; 7      3    4           NA
-#&gt; 8      3    5  1.276778110
-#&gt; 9      4    1           NA
-#&gt; 10     4    2  0.192306609
-#&gt; 11     4    3 -0.311857500
-#&gt; 12     4    4  1.069276458</div><div class='input'>
+<span class='fu'><a href='flag.html'>L</a></span>(<span class='no'>data</span>, <span class='fl'>1</span>, <span class='no'>value</span> ~ <span class='no'>newid</span>, ~<span class='no'>time</span>)</div><div class='output co'>#&gt;    newid time   L1.value
+#&gt; 1      1    1         NA
+#&gt; 2      1    2 -1.9362346
+#&gt; 3      1    3 -0.4487999
+#&gt; 4      1    4 -0.2909846
+#&gt; 5      2    1         NA
+#&gt; 6      2    2  0.3846110
+#&gt; 7      3    4         NA
+#&gt; 8      3    5 -0.5372719
+#&gt; 9      4    1         NA
+#&gt; 10     4    2  0.2639391
+#&gt; 11     4    3  1.3115241
+#&gt; 12     4    4  0.6453655</div><div class='input'>
 <span class='co'>## A different possibility: Creating a consecutive time variable</span>
 <span class='fu'><a href='ftransform.html'>settransform</a></span>(<span class='no'>data</span>, <span class='kw'>newtime</span> <span class='kw'>=</span> <span class='kw pkg'>data.table</span><span class='kw ns'>::</span><span class='fu'><a href='https://rdrr.io/pkg/data.table/man/rowid.html'>rowid</a></span>(<span class='no'>id</span>))
-<span class='no'>data</span></div><div class='output co'>#&gt;    id time        value newid newtime
-#&gt; 1   1    1 -0.002432069     1       1
-#&gt; 2   1    2 -1.150569649     1       2
-#&gt; 3   1    3  0.488512243     1       3
-#&gt; 4   1    4  1.049930592     1       4
-#&gt; 5   2    1 -1.440299512     2       1
-#&gt; 6   2    2 -0.278811344     2       2
-#&gt; 7   2    4  1.276778110     3       3
-#&gt; 8   2    5 -0.437390057     3       4
-#&gt; 9   3    1  0.192306609     4       1
-#&gt; 10  3    2 -0.311857500     4       2
-#&gt; 11  3    3  1.069276458     4       3
-#&gt; 12  3    4 -0.166538445     4       4</div><div class='input'><span class='fu'><a href='flag.html'>L</a></span>(<span class='no'>data</span>, <span class='fl'>1</span>, <span class='no'>value</span> ~ <span class='no'>id</span>, ~<span class='no'>newtime</span>)</div><div class='output co'>#&gt;    id newtime     L1.value
-#&gt; 1   1       1           NA
-#&gt; 2   1       2 -0.002432069
-#&gt; 3   1       3 -1.150569649
-#&gt; 4   1       4  0.488512243
-#&gt; 5   2       1           NA
-#&gt; 6   2       2 -1.440299512
-#&gt; 7   2       3 -0.278811344
-#&gt; 8   2       4  1.276778110
-#&gt; 9   3       1           NA
-#&gt; 10  3       2  0.192306609
-#&gt; 11  3       3 -0.311857500
-#&gt; 12  3       4  1.069276458</div><div class='input'>
+<span class='no'>data</span></div><div class='output co'>#&gt;    id time      value newid newtime
+#&gt; 1   1    1 -1.9362346     1       1
+#&gt; 2   1    2 -0.4487999     1       2
+#&gt; 3   1    3 -0.2909846     1       3
+#&gt; 4   1    4 -0.7077864     1       4
+#&gt; 5   2    1  0.3846110     2       1
+#&gt; 6   2    2  1.4453821     2       2
+#&gt; 7   2    4 -0.5372719     3       3
+#&gt; 8   2    5 -0.7199475     3       4
+#&gt; 9   3    1  0.2639391     4       1
+#&gt; 10  3    2  1.3115241     4       2
+#&gt; 11  3    3  0.6453655     4       3
+#&gt; 12  3    4  0.7020755     4       4</div><div class='input'><span class='fu'><a href='flag.html'>L</a></span>(<span class='no'>data</span>, <span class='fl'>1</span>, <span class='no'>value</span> ~ <span class='no'>id</span>, ~<span class='no'>newtime</span>)</div><div class='output co'>#&gt;    id newtime   L1.value
+#&gt; 1   1       1         NA
+#&gt; 2   1       2 -1.9362346
+#&gt; 3   1       3 -0.4487999
+#&gt; 4   1       4 -0.2909846
+#&gt; 5   2       1         NA
+#&gt; 6   2       2  0.3846110
+#&gt; 7   2       3  1.4453821
+#&gt; 8   2       4 -0.5372719
+#&gt; 9   3       1         NA
+#&gt; 10  3       2  0.2639391
+#&gt; 11  3       3  1.3115241
+#&gt; 12  3       4  0.6453655</div><div class='input'>
 <span class='co'>## With sorted data, the time variable can also just be omitted..</span>
-<span class='fu'><a href='flag.html'>L</a></span>(<span class='no'>data</span>, <span class='fl'>1</span>, <span class='no'>value</span> ~ <span class='no'>id</span>)</div><div class='output co'>#&gt; <span class='message'>Panel-lag computed without timevar: Assuming ordered data</span></div><div class='output co'>#&gt;    id     L1.value
-#&gt; 1   1           NA
-#&gt; 2   1 -0.002432069
-#&gt; 3   1 -1.150569649
-#&gt; 4   1  0.488512243
-#&gt; 5   2           NA
-#&gt; 6   2 -1.440299512
-#&gt; 7   2 -0.278811344
-#&gt; 8   2  1.276778110
-#&gt; 9   3           NA
-#&gt; 10  3  0.192306609
-#&gt; 11  3 -0.311857500
-#&gt; 12  3  1.069276458</div><div class='input'>
+<span class='fu'><a href='flag.html'>L</a></span>(<span class='no'>data</span>, <span class='fl'>1</span>, <span class='no'>value</span> ~ <span class='no'>id</span>)</div><div class='output co'>#&gt; <span class='message'>Panel-lag computed without timevar: Assuming ordered data</span></div><div class='output co'>#&gt;    id   L1.value
+#&gt; 1   1         NA
+#&gt; 2   1 -1.9362346
+#&gt; 3   1 -0.4487999
+#&gt; 4   1 -0.2909846
+#&gt; 5   2         NA
+#&gt; 6   2  0.3846110
+#&gt; 7   2  1.4453821
+#&gt; 8   2 -0.5372719
+#&gt; 9   3         NA
+#&gt; 10  3  0.2639391
+#&gt; 11  3  1.3115241
+#&gt; 12  3  0.6453655</div><div class='input'>
 </div></pre>
   </div>
   <div class="col-md-3 hidden-xs hidden-sm" id="pkgdown-sidebar">

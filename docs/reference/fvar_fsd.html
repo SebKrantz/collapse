@@ -241,23 +241,33 @@
 #&gt; [22]  6.484139  6.358640  5.563810  8.031966  6.422226  6.116405  7.151489
 #&gt; [29]  6.609639 15.216009  6.274973  5.034272</div><div class='input'>
 <span class='co'>## data.frame method</span>
-<span class='fu'>fsd</span>(<span class='no'>iris</span>)                           <span class='co'># This works, although 'Species' is a factor variable</span></div><div class='output co'>#&gt; Sepal.Length  Sepal.Width Petal.Length  Petal.Width      Species 
-#&gt;    0.8280661    0.4358663    1.7652982    0.7622377    0.8192319 </div><div class='input'><span class='fu'>fsd</span>(<span class='no'>mtcars</span>, <span class='kw'>drop</span> <span class='kw'>=</span> <span class='fl'>FALSE</span>)           <span class='co'># This works, all columns are numeric variables</span></div><div class='output co'>#&gt;        mpg      cyl     disp       hp      drat        wt     qsec        vs
+<span class='fu'>fsd</span>(<span class='no'>iris</span>)                           <span class='co'># This works, although 'Species' is a factor variable</span></div><div class='output co'>#&gt; Sepal.Length  Sepal.Width Petal.Length  Petal.Width      Species           wt 
+#&gt;    0.8280661    0.4358663    1.7652982    0.7622377    0.8192319    0.5419926 
+#&gt;        AWMSL        AWMSW 
+#&gt;    0.5014966    0.4853099 </div><div class='input'><span class='fu'>fsd</span>(<span class='no'>mtcars</span>, <span class='kw'>drop</span> <span class='kw'>=</span> <span class='fl'>FALSE</span>)           <span class='co'># This works, all columns are numeric variables</span></div><div class='output co'>#&gt;        mpg      cyl     disp       hp      drat        wt     qsec        vs
 #&gt; 1 6.026948 1.785922 123.9387 68.56287 0.5346787 0.9784574 1.786943 0.5040161
 #&gt;          am      gear   carb
-#&gt; 1 0.4989909 0.7378041 1.6152</div><div class='input'><span class='fu'>fsd</span>(<span class='no'>iris</span>[-<span class='fl'>5</span>], <span class='no'>iris</span>[<span class='fl'>5</span>])              <span class='co'># By Species: iris[5] is still a list, and thus passed to GRP()</span></div><div class='output co'>#&gt;            Sepal.Length Sepal.Width Petal.Length Petal.Width
-#&gt; setosa        0.3524897   0.3790644    0.1736640   0.1053856
-#&gt; versicolor    0.5161711   0.3137983    0.4699110   0.1977527
-#&gt; virginica     0.6358796   0.3224966    0.5518947   0.2746501</div><div class='input'><span class='fu'>fsd</span>(<span class='no'>iris</span>[-<span class='fl'>5</span>], <span class='no'>iris</span><span class='kw'>[[</span><span class='fl'>5</span>]])            <span class='co'># Same thing much faster: fsd recognizes 'Species' is a factor</span></div><div class='output co'>#&gt;            Sepal.Length Sepal.Width Petal.Length Petal.Width
-#&gt; setosa        0.3524897   0.3790644    0.1736640   0.1053856
-#&gt; versicolor    0.5161711   0.3137983    0.4699110   0.1977527
-#&gt; virginica     0.6358796   0.3224966    0.5518947   0.2746501</div><div class='input'><span class='fu'><a href='https://rdrr.io/r/utils/head.html'>head</a></span>(<span class='fu'>fsd</span>(<span class='no'>iris</span>[-<span class='fl'>5</span>], <span class='no'>iris</span><span class='kw'>[[</span><span class='fl'>5</span>]], <span class='kw'>TRA</span> <span class='kw'>=</span> <span class='st'>"/"</span>)) <span class='co'># Data scaled by species (see also fscale)</span></div><div class='output co'>#&gt;   Sepal.Length Sepal.Width Petal.Length Petal.Width
-#&gt; 1     14.46851    9.233260     8.061544    1.897793
-#&gt; 2     13.90112    7.914223     8.061544    1.897793
-#&gt; 3     13.33372    8.441838     7.485720    1.897793
-#&gt; 4     13.05003    8.178031     8.637369    1.897793
-#&gt; 5     14.18481    9.497068     8.061544    1.897793
-#&gt; 6     15.31960   10.288490     9.789018    3.795585</div><div class='input'>
+#&gt; 1 0.4989909 0.7378041 1.6152</div><div class='input'><span class='fu'>fsd</span>(<span class='no'>iris</span>[-<span class='fl'>5</span>], <span class='no'>iris</span>[<span class='fl'>5</span>])              <span class='co'># By Species: iris[5] is still a list, and thus passed to GRP()</span></div><div class='output co'>#&gt;            Sepal.Length Sepal.Width Petal.Length Petal.Width        wt
+#&gt; setosa        0.3524897   0.3790644    0.1736640   0.1053856 0.5263817
+#&gt; versicolor    0.5161711   0.3137983    0.4699110   0.1977527 0.4569949
+#&gt; virginica     0.6358796   0.3224966    0.5518947   0.2746501 0.6236547
+#&gt;                AWMSL     AWMSW
+#&gt; setosa     0.1414214 0.4314191
+#&gt; versicolor 0.4985694 0.3030458
+#&gt; virginica  0.2398979 0.4430875</div><div class='input'><span class='fu'>fsd</span>(<span class='no'>iris</span>[-<span class='fl'>5</span>], <span class='no'>iris</span><span class='kw'>[[</span><span class='fl'>5</span>]])            <span class='co'># Same thing much faster: fsd recognizes 'Species' is a factor</span></div><div class='output co'>#&gt;            Sepal.Length Sepal.Width Petal.Length Petal.Width        wt
+#&gt; setosa        0.3524897   0.3790644    0.1736640   0.1053856 0.5263817
+#&gt; versicolor    0.5161711   0.3137983    0.4699110   0.1977527 0.4569949
+#&gt; virginica     0.6358796   0.3224966    0.5518947   0.2746501 0.6236547
+#&gt;                AWMSL     AWMSW
+#&gt; setosa     0.1414214 0.4314191
+#&gt; versicolor 0.4985694 0.3030458
+#&gt; virginica  0.2398979 0.4430875</div><div class='input'><span class='fu'><a href='https://rdrr.io/r/utils/head.html'>head</a></span>(<span class='fu'>fsd</span>(<span class='no'>iris</span>[-<span class='fl'>5</span>], <span class='no'>iris</span><span class='kw'>[[</span><span class='fl'>5</span>]], <span class='kw'>TRA</span> <span class='kw'>=</span> <span class='st'>"/"</span>)) <span class='co'># Data scaled by species (see also fscale)</span></div><div class='output co'>#&gt;   Sepal.Length Sepal.Width Petal.Length Petal.Width        wt AWMSL    AWMSW
+#&gt; 1     14.46851    9.233260     8.061544    1.897793 1.3007127     0 2.317932
+#&gt; 2     13.90112    7.914223     8.061544    1.897793 1.4191044     0 0.000000
+#&gt; 3     13.33372    8.441838     7.485720    1.897793 0.2636215     0 2.317932
+#&gt; 4     13.05003    8.178031     8.637369    1.897793 0.4433203     0 0.000000
+#&gt; 5     14.18481    9.497068     8.061544    1.897793 1.2444929     0 2.317932
+#&gt; 6     15.31960   10.288490     9.789018    3.795585 1.7227529     0 2.317932</div><div class='input'>
 <span class='co'>## matrix method</span>
 <span class='no'>m</span> <span class='kw'>&lt;-</span> <span class='fu'><a href='quick-conversion.html'>qM</a></span>(<span class='no'>mtcars</span>)
 <span class='fu'>fsd</span>(<span class='no'>m</span>)</div><div class='output co'>#&gt;         mpg         cyl        disp          hp        drat          wt 

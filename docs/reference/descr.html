@@ -208,7 +208,7 @@
 
     <h2 class="hasAnchor" id="examples"><a class="anchor" href="#examples"></a>Examples</h2>
     <pre class="examples"><div class='input'><span class='co'>## Standard Use</span>
-<span class='fu'>descr</span>(<span class='no'>iris</span>)</div><div class='output co'>#&gt; Dataset: iris, 5 Variables, N = 150
+<span class='fu'>descr</span>(<span class='no'>iris</span>)</div><div class='output co'>#&gt; Dataset: iris, 8 Variables, N = 150
 #&gt; --------------------------------------------------------------------------------
 #&gt; Sepal.Length (numeric): 
 #&gt; Stats: 
@@ -251,6 +251,32 @@
 #&gt; setosa        50  33.33
 #&gt; versicolor    50  33.33
 #&gt; virginica     50  33.33
+#&gt; --------------------------------------------------------------------------------
+#&gt; wt (numeric): 
+#&gt; Stats: 
+#&gt;     N  Ndist  Mean    SD   Min  Max  Skew  Kurt
+#&gt;   150    150  0.78  0.54  0.01  2.3  0.83  3.16
+#&gt; Quant: 
+#&gt;     1%   5%   25%   50%   75%   95%   99%
+#&gt;   0.01  0.1  0.35  0.67  1.13  1.83  2.24
+#&gt; --------------------------------------------------------------------------------
+#&gt; AWMSL (logical): 
+#&gt; Stats: 
+#&gt;     N  Ndist
+#&gt;   150      2
+#&gt; Table: 
+#&gt;        Freq   Perc
+#&gt; FALSE    73  48.67
+#&gt; TRUE     77  51.33
+#&gt; --------------------------------------------------------------------------------
+#&gt; AWMSW (logical): 
+#&gt; Stats: 
+#&gt;     N  Ndist
+#&gt;   150      2
+#&gt; Table: 
+#&gt;        Freq   Perc
+#&gt; FALSE    94  62.67
+#&gt; TRUE     56  37.33
 #&gt; --------------------------------------------------------------------------------</div><div class='input'><span class='fu'>descr</span>(<span class='no'>wlddev</span>)</div><div class='output co'>#&gt; Dataset: wlddev, 12 Variables, N = 12744
 #&gt; --------------------------------------------------------------------------------
 #&gt; country (character): Country Name
@@ -613,7 +639,7 @@
 #&gt; 11 5.720000e+01 6.084500e+01
 #&gt; 12 1.824005e+09 3.486977e+09</div><div class='input'>
 <span class='co'>## Passing Arguments down to qsu: For Panel Data Statistics</span>
-<span class='fu'>descr</span>(<span class='no'>iris</span>, <span class='kw'>pid</span> <span class='kw'>=</span> <span class='no'>iris</span>$<span class='no'>Species</span>)</div><div class='output co'>#&gt; Dataset: iris, 5 Variables, N = 150
+<span class='fu'>descr</span>(<span class='no'>iris</span>, <span class='kw'>pid</span> <span class='kw'>=</span> <span class='no'>iris</span>$<span class='no'>Species</span>)</div><div class='output co'>#&gt; Dataset: iris, 8 Variables, N = 150
 #&gt; --------------------------------------------------------------------------------
 #&gt; Sepal.Length (numeric): 
 #&gt; Stats: 
@@ -669,6 +695,37 @@
 #&gt; setosa        50  33.33
 #&gt; versicolor    50  33.33
 #&gt; virginica     50  33.33
+#&gt; --------------------------------------------------------------------------------
+#&gt; wt (numeric): 
+#&gt; Stats: 
+#&gt;          N/T  Mean    SD    Min   Max  Skew  Kurt
+#&gt; Overall  150  0.78  0.54   0.01   2.3  0.83  3.16
+#&gt; Between    3  0.78  0.09   0.69  0.88   0.1   1.5
+#&gt; Within    50  0.78  0.54  -0.07   2.3  0.82   3.2
+#&gt; 
+#&gt; Quant: 
+#&gt;     1%   5%   25%   50%   75%   95%   99%
+#&gt;   0.01  0.1  0.35  0.67  1.13  1.83  2.24
+#&gt; --------------------------------------------------------------------------------
+#&gt; AWMSL (logical): 
+#&gt; Stats: 
+#&gt;     N  Ndist
+#&gt;   150      2
+#&gt; 
+#&gt; Table: 
+#&gt;        Freq   Perc
+#&gt; FALSE    73  48.67
+#&gt; TRUE     77  51.33
+#&gt; --------------------------------------------------------------------------------
+#&gt; AWMSW (logical): 
+#&gt; Stats: 
+#&gt;     N  Ndist
+#&gt;   150      2
+#&gt; 
+#&gt; Table: 
+#&gt;        Freq   Perc
+#&gt; FALSE    94  62.67
+#&gt; TRUE     56  37.33
 #&gt; --------------------------------------------------------------------------------</div><div class='input'><span class='fu'>descr</span>(<span class='no'>wlddev</span>, <span class='kw'>pid</span> <span class='kw'>=</span> <span class='no'>wlddev</span>$<span class='no'>iso3c</span>)</div><div class='output co'>#&gt; Dataset: wlddev, 12 Variables, N = 12744
 #&gt; --------------------------------------------------------------------------------
 #&gt; country (character): Country Name
@@ -844,7 +901,7 @@
 #&gt;   3.48697750e+09
 #&gt; --------------------------------------------------------------------------------</div><div class='input'>
 <span class='co'>## Grouped Statistics</span>
-<span class='fu'>descr</span>(<span class='no'>iris</span>, <span class='kw'>g</span> <span class='kw'>=</span> <span class='no'>iris</span>$<span class='no'>Species</span>)</div><div class='output co'>#&gt; Dataset: iris, 5 Variables, N = 150
+<span class='fu'>descr</span>(<span class='no'>iris</span>, <span class='kw'>g</span> <span class='kw'>=</span> <span class='no'>iris</span>$<span class='no'>Species</span>)</div><div class='output co'>#&gt; Dataset: iris, 8 Variables, N = 150
 #&gt; --------------------------------------------------------------------------------
 #&gt; Sepal.Length (numeric): 
 #&gt; Stats: 
@@ -900,6 +957,37 @@
 #&gt; setosa        50  33.33
 #&gt; versicolor    50  33.33
 #&gt; virginica     50  33.33
+#&gt; --------------------------------------------------------------------------------
+#&gt; wt (numeric): 
+#&gt; Stats: 
+#&gt;              N  Mean    SD   Min   Max  Skew  Kurt
+#&gt; setosa      50  0.88  0.53  0.03  2.17  0.55  2.82
+#&gt; versicolor  50  0.69  0.46  0.01  1.83  0.86  2.91
+#&gt; virginica   50  0.78  0.62  0.01   2.3  0.93  3.13
+#&gt; 
+#&gt; Quant: 
+#&gt;     1%   5%   25%   50%   75%   95%   99%
+#&gt;   0.01  0.1  0.35  0.67  1.13  1.83  2.24
+#&gt; --------------------------------------------------------------------------------
+#&gt; AWMSL (logical): 
+#&gt; Stats: 
+#&gt;     N  Ndist
+#&gt;   150      2
+#&gt; 
+#&gt; Table: 
+#&gt;        Freq   Perc
+#&gt; FALSE    73  48.67
+#&gt; TRUE     77  51.33
+#&gt; --------------------------------------------------------------------------------
+#&gt; AWMSW (logical): 
+#&gt; Stats: 
+#&gt;     N  Ndist
+#&gt;   150      2
+#&gt; 
+#&gt; Table: 
+#&gt;        Freq   Perc
+#&gt; FALSE    94  62.67
+#&gt; TRUE     56  37.33
 #&gt; --------------------------------------------------------------------------------</div><div class='input'><span class='fu'>descr</span>(<span class='no'>GGDC10S</span>, <span class='kw'>g</span> <span class='kw'>=</span> <span class='no'>GGDC10S</span>$<span class='no'>Region</span>)</div><div class='output co'>#&gt; Dataset: GGDC10S, 16 Variables, N = 5027
 #&gt; --------------------------------------------------------------------------------
 #&gt; Country (character): Country

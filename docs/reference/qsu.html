@@ -1411,59 +1411,59 @@ It computes a set of 7 statistics (nobs, mean, sd, min, max, skewness and kurtos
 <span class='co'># Weighted Summaries -----------------------</span>
 <span class='no'>n</span> <span class='kw'>&lt;-</span> <span class='fu'><a href='https://rdrr.io/r/base/nrow.html'>nrow</a></span>(<span class='no'>wlddev</span>)
 <span class='no'>weights</span> <span class='kw'>&lt;-</span> <span class='fu'><a href='https://rdrr.io/r/base/MathFun.html'>abs</a></span>(<span class='fu'><a href='https://rdrr.io/r/stats/Normal.html'>rnorm</a></span>(<span class='no'>n</span>))                    <span class='co'># Generate random weights</span>
-<span class='fu'>qsu</span>(<span class='no'>wlddev</span>, <span class='kw'>w</span> <span class='kw'>=</span> <span class='no'>weights</span>, <span class='kw'>higher</span> <span class='kw'>=</span> <span class='fl'>TRUE</span>)     <span class='co'># Computed weighted mean, SD, skewness and kurtosis</span></div><div class='output co'>#&gt;              N        Mean              SD              Min             Max
-#&gt; country  12744           -               -                -               -
-#&gt; iso3c    12744           -               -                -               -
-#&gt; date     12744           -               -                -               -
-#&gt; year     12744   1988.9121         18.9136             1960            2018
-#&gt; decade   12744   1988.9175         19.5976             1960            2020
-#&gt; region   12744           -               -                -               -
-#&gt; income   12744           -               -                -               -
-#&gt; OECD     12744           -               -                -               -
-#&gt; PCGDP     8995  11739.1944      20579.8065         131.6464       191586.64
-#&gt; LIFEEX   11068     63.7976         12.9841           18.907         85.4171
-#&gt; GINI      1356     38.8618         10.3668             16.2            65.8
-#&gt; ODA       8336  427,343283  1.09460420e+09  -1.08038000e+09  2.45521800e+10
-#&gt;             Skew       Kurt
-#&gt; country        -          -
-#&gt; iso3c          -          -
-#&gt; date           -          -
-#&gt; year     -0.0266     4.0603
-#&gt; decade   -0.0194     4.4502
-#&gt; region         -          -
-#&gt; income         -          -
-#&gt; OECD           -          -
-#&gt; PCGDP     4.0128    31.5108
-#&gt; LIFEEX   -0.9199     6.3044
-#&gt; GINI      0.2765     4.0938
-#&gt; ODA      24.7654  1198.4354</div><div class='input'><span class='no'>weightsNA</span> <span class='kw'>&lt;-</span> <span class='no'>weights</span>                        <span class='co'># Weights may contain missing values.. inserting 1000</span>
+<span class='fu'>qsu</span>(<span class='no'>wlddev</span>, <span class='kw'>w</span> <span class='kw'>=</span> <span class='no'>weights</span>, <span class='kw'>higher</span> <span class='kw'>=</span> <span class='fl'>TRUE</span>)     <span class='co'># Computed weighted mean, SD, skewness and kurtosis</span></div><div class='output co'>#&gt;              N        Mean          SD              Min             Max
+#&gt; country  12744           -           -                -               -
+#&gt; iso3c    12744           -           -                -               -
+#&gt; date     12744           -           -                -               -
+#&gt; year     12744   1988.9161     19.1401             1960            2018
+#&gt; decade   12744   1988.8661     19.8068             1960            2020
+#&gt; region   12744           -           -                -               -
+#&gt; income   12744           -           -                -               -
+#&gt; OECD     12744           -           -                -               -
+#&gt; PCGDP     8995  11410.4061  20756.3317         131.6464       191586.64
+#&gt; LIFEEX   11068      63.727      12.846           18.907         85.4171
+#&gt; GINI      1356     39.3515     11.0485             16.2            65.8
+#&gt; ODA       8336  426,335581  866,667647  -1.08038000e+09  2.45521800e+10
+#&gt;             Skew      Kurt
+#&gt; country        -         -
+#&gt; iso3c          -         -
+#&gt; date           -         -
+#&gt; year     -0.0863    4.2373
+#&gt; decade   -0.1079    4.5915
+#&gt; region         -         -
+#&gt; income         -         -
+#&gt; OECD           -         -
+#&gt; PCGDP     4.5669   39.7381
+#&gt; LIFEEX   -0.9441    6.4804
+#&gt; GINI      0.8129    6.4521
+#&gt; ODA       9.3116  225.4538</div><div class='input'><span class='no'>weightsNA</span> <span class='kw'>&lt;-</span> <span class='no'>weights</span>                        <span class='co'># Weights may contain missing values.. inserting 1000</span>
 <span class='no'>weightsNA</span>[<span class='fu'><a href='https://rdrr.io/r/base/sample.html'>sample.int</a></span>(<span class='no'>n</span>, <span class='fl'>1000</span>)] <span class='kw'>&lt;-</span> <span class='fl'>NA</span>
-<span class='fu'>qsu</span>(<span class='no'>wlddev</span>, <span class='kw'>w</span> <span class='kw'>=</span> <span class='no'>weightsNA</span>, <span class='kw'>higher</span> <span class='kw'>=</span> <span class='fl'>TRUE</span>)   <span class='co'># But now these values are removed from all variables</span></div><div class='output co'>#&gt;              N        Mean              SD          Min             Max
-#&gt; country  12744           -               -            -               -
-#&gt; iso3c    12744           -               -            -               -
-#&gt; date     12744           -               -            -               -
-#&gt; year     11744     1988.93         19.0187         1960            2018
-#&gt; decade   11744   1988.9456         19.7036         1960            2020
-#&gt; region   12744           -               -            -               -
-#&gt; income   12744           -               -            -               -
-#&gt; OECD     12744           -               -            -               -
-#&gt; PCGDP     8299  11770.6292      20598.5326     131.9634       191586.64
-#&gt; LIFEEX   10201     63.8267         12.9843       18.907         85.4171
-#&gt; GINI      1267     38.7355         10.3376         16.2            65.8
-#&gt; ODA       7678  432,085682  1.12227658e+09  -955,400000  2.45521800e+10
-#&gt;             Skew       Kurt
-#&gt; country        -          -
-#&gt; iso3c          -          -
-#&gt; date           -          -
-#&gt; year     -0.0355     4.0786
-#&gt; decade   -0.0304     4.4701
-#&gt; region         -          -
-#&gt; income         -          -
-#&gt; OECD           -          -
-#&gt; PCGDP     4.0377    32.1154
-#&gt; LIFEEX   -0.9233     6.3843
-#&gt; GINI      0.2605     4.0983
-#&gt; ODA      24.8379  1177.1047</div><div class='input'>
+<span class='fu'>qsu</span>(<span class='no'>wlddev</span>, <span class='kw'>w</span> <span class='kw'>=</span> <span class='no'>weightsNA</span>, <span class='kw'>higher</span> <span class='kw'>=</span> <span class='fl'>TRUE</span>)   <span class='co'># But now these values are removed from all variables</span></div><div class='output co'>#&gt;              N        Mean          SD              Min             Max
+#&gt; country  12744           -           -                -               -
+#&gt; iso3c    12744           -           -                -               -
+#&gt; date     12744           -           -                -               -
+#&gt; year     11744   1988.9146     19.1877             1960            2018
+#&gt; decade   11744   1988.8567     19.8583             1960            2020
+#&gt; region   12744           -           -                -               -
+#&gt; income   12744           -           -                -               -
+#&gt; OECD     12744           -           -                -               -
+#&gt; PCGDP     8301  11386.7074  20468.8384         131.6464       191586.64
+#&gt; LIFEEX   10198     63.7173     12.8793           18.907         85.4171
+#&gt; GINI      1239      39.364     10.8913             16.2            65.8
+#&gt; ODA       7696  420,620402  857,246615  -1.08038000e+09  2.45521800e+10
+#&gt;             Skew      Kurt
+#&gt; country        -         -
+#&gt; iso3c          -         -
+#&gt; date           -         -
+#&gt; year     -0.0853    4.2647
+#&gt; decade   -0.1067    4.6235
+#&gt; region         -         -
+#&gt; income         -         -
+#&gt; OECD           -         -
+#&gt; PCGDP     4.3303   35.1007
+#&gt; LIFEEX   -0.9513    6.4546
+#&gt; GINI      0.9261    6.8178
+#&gt; ODA       9.7682  248.4506</div><div class='input'>
 # Grouped and panel-summaries can also be weighted in the same manor
 </div></pre>
   </div>
