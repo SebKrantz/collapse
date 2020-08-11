@@ -39,7 +39,7 @@ Description: A C/C++ based package for advanced data transformation and
         subsetting, data-apply, and generalized row-binding / unlisting in 2D.
     (6) Advanced data exploration: Fast (grouped, weighted, panel-decomposed) 
         summary statistics for complex multilevel / panel data.
-URL: https://sebkrantz.github.io/collapse, 
+URL: https://sebkrantz.github.io/collapse/, 
      https://github.com/SebKrantz/collapse,
      https://twitter.com/collapse_R
 BugReports: https://github.com/SebKrantz/collapse/issues

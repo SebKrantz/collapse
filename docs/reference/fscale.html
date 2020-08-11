@@ -397,18 +397,18 @@ Note: For centering without scaling see fwithin/W. For simple not mean-preservin
 <span class='co'>## Weighted Standardizing</span>
 <span class='no'>weights</span> <span class='kw'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/MathFun.html'>abs</a></span>(<span class='fu'><a href='https://rdrr.io/r/stats/Normal.html'>rnorm</a></span>(<span class='fu'><a href='https://rdrr.io/r/base/nrow.html'>nrow</a></span>(<span class='no'>wlddev</span>)))
 <span class='fu'><a href='https://rdrr.io/r/utils/head.html'>head</a></span>(<span class='fu'>fscale</span>(<span class='fu'><a href='select_replace_vars.html'>get_vars</a></span>(<span class='no'>wlddev</span>,<span class='fl'>9</span>:<span class='fl'>12</span>), <span class='no'>wlddev</span>$<span class='no'>iso3c</span>, <span class='no'>weights</span>))</div><div class='output co'>#&gt;   PCGDP    LIFEEX GINI        ODA
-#&gt; 1    NA -1.663336   NA -0.6485088
-#&gt; 2    NA -1.618356   NA -0.5908454
-#&gt; 3    NA -1.574076   NA -0.6482955
-#&gt; 4    NA -1.530196   NA -0.5893421
-#&gt; 5    NA -1.486616   NA -0.5573219
-#&gt; 6    NA -1.443135   NA -0.5244580</div><div class='input'><span class='fu'><a href='https://rdrr.io/r/utils/head.html'>head</a></span>(<span class='fu'>STD</span>(<span class='no'>wlddev</span>, ~<span class='no'>iso3c</span>, <span class='no'>weights</span>, <span class='fl'>9</span>:<span class='fl'>12</span>))</div><div class='output co'>#&gt;   iso3c STD.PCGDP STD.LIFEEX STD.GINI    STD.ODA
-#&gt; 1   AFG        NA  -1.663336       NA -0.6485088
-#&gt; 2   AFG        NA  -1.618356       NA -0.5908454
-#&gt; 3   AFG        NA  -1.574076       NA -0.6482955
-#&gt; 4   AFG        NA  -1.530196       NA -0.5893421
-#&gt; 5   AFG        NA  -1.486616       NA -0.5573219
-#&gt; 6   AFG        NA  -1.443135       NA -0.5244580</div><div class='input'>
+#&gt; 1    NA -1.528739   NA -0.6263773
+#&gt; 2    NA -1.484714   NA -0.5724359
+#&gt; 3    NA -1.441374   NA -0.6261777
+#&gt; 4    NA -1.398425   NA -0.5710297
+#&gt; 5    NA -1.355770   NA -0.5410763
+#&gt; 6    NA -1.313212   NA -0.5103337</div><div class='input'><span class='fu'><a href='https://rdrr.io/r/utils/head.html'>head</a></span>(<span class='fu'>STD</span>(<span class='no'>wlddev</span>, ~<span class='no'>iso3c</span>, <span class='no'>weights</span>, <span class='fl'>9</span>:<span class='fl'>12</span>))</div><div class='output co'>#&gt;   iso3c STD.PCGDP STD.LIFEEX STD.GINI    STD.ODA
+#&gt; 1   AFG        NA  -1.528739       NA -0.6263773
+#&gt; 2   AFG        NA  -1.484714       NA -0.5724359
+#&gt; 3   AFG        NA  -1.441374       NA -0.6261777
+#&gt; 4   AFG        NA  -1.398425       NA -0.5710297
+#&gt; 5   AFG        NA  -1.355770       NA -0.5410763
+#&gt; 6   AFG        NA  -1.313212       NA -0.5103337</div><div class='input'>
 <span class='co'># Using dplyr</span>
 <span class='fu'><a href='https://rdrr.io/r/base/library.html'>library</a></span>(<span class='no'>dplyr</span>)
 <span class='no'>wlddev</span> <span class='kw'>%&gt;%</span> <span class='fu'><a href='https://dplyr.tidyverse.org/reference/group_by.html'>group_by</a></span>(<span class='no'>iso3c</span>) <span class='kw'>%&gt;%</span> <span class='fu'><a href='https://dplyr.tidyverse.org/reference/select.html'>select</a></span>(<span class='no'>PCGDP</span>,<span class='no'>LIFEEX</span>) <span class='kw'>%&gt;%</span> <span class='no'>STD</span></div><div class='output co'>#&gt; <span class='message'>Adding missing grouping variables: `iso3c`</span></div><div class='output co'>#&gt; <span style='color: #949494;'># A tibble: 12,744 x 3</span><span>
@@ -429,16 +429,16 @@ Note: For centering without scaling see fwithin/W. For simple not mean-preservin
 #&gt; </span><span style='color: #949494;'># Groups:   iso3c [216]</span><span>
 #&gt;    iso3c STD.PCGDP STD.LIFEEX
 #&gt;  </span><span style='color: #BCBCBC;'>*</span><span> </span><span style='color: #949494;font-style: italic;'>&lt;fct&gt;</span><span>     </span><span style='color: #949494;font-style: italic;'>&lt;dbl&gt;</span><span>      </span><span style='color: #949494;font-style: italic;'>&lt;dbl&gt;</span><span>
-#&gt; </span><span style='color: #BCBCBC;'> 1</span><span> AFG          </span><span style='color: #BB0000;'>NA</span><span>      -</span><span style='color: #BB0000;'>1.66</span><span>
-#&gt; </span><span style='color: #BCBCBC;'> 2</span><span> AFG          </span><span style='color: #BB0000;'>NA</span><span>      -</span><span style='color: #BB0000;'>1.62</span><span>
-#&gt; </span><span style='color: #BCBCBC;'> 3</span><span> AFG          </span><span style='color: #BB0000;'>NA</span><span>      -</span><span style='color: #BB0000;'>1.57</span><span>
-#&gt; </span><span style='color: #BCBCBC;'> 4</span><span> AFG          </span><span style='color: #BB0000;'>NA</span><span>      -</span><span style='color: #BB0000;'>1.53</span><span>
-#&gt; </span><span style='color: #BCBCBC;'> 5</span><span> AFG          </span><span style='color: #BB0000;'>NA</span><span>      -</span><span style='color: #BB0000;'>1.49</span><span>
-#&gt; </span><span style='color: #BCBCBC;'> 6</span><span> AFG          </span><span style='color: #BB0000;'>NA</span><span>      -</span><span style='color: #BB0000;'>1.44</span><span>
-#&gt; </span><span style='color: #BCBCBC;'> 7</span><span> AFG          </span><span style='color: #BB0000;'>NA</span><span>      -</span><span style='color: #BB0000;'>1.40</span><span>
-#&gt; </span><span style='color: #BCBCBC;'> 8</span><span> AFG          </span><span style='color: #BB0000;'>NA</span><span>      -</span><span style='color: #BB0000;'>1.36</span><span>
-#&gt; </span><span style='color: #BCBCBC;'> 9</span><span> AFG          </span><span style='color: #BB0000;'>NA</span><span>      -</span><span style='color: #BB0000;'>1.31</span><span>
-#&gt; </span><span style='color: #BCBCBC;'>10</span><span> AFG          </span><span style='color: #BB0000;'>NA</span><span>      -</span><span style='color: #BB0000;'>1.27</span><span>
+#&gt; </span><span style='color: #BCBCBC;'> 1</span><span> AFG          </span><span style='color: #BB0000;'>NA</span><span>      -</span><span style='color: #BB0000;'>1.53</span><span>
+#&gt; </span><span style='color: #BCBCBC;'> 2</span><span> AFG          </span><span style='color: #BB0000;'>NA</span><span>      -</span><span style='color: #BB0000;'>1.48</span><span>
+#&gt; </span><span style='color: #BCBCBC;'> 3</span><span> AFG          </span><span style='color: #BB0000;'>NA</span><span>      -</span><span style='color: #BB0000;'>1.44</span><span>
+#&gt; </span><span style='color: #BCBCBC;'> 4</span><span> AFG          </span><span style='color: #BB0000;'>NA</span><span>      -</span><span style='color: #BB0000;'>1.40</span><span>
+#&gt; </span><span style='color: #BCBCBC;'> 5</span><span> AFG          </span><span style='color: #BB0000;'>NA</span><span>      -</span><span style='color: #BB0000;'>1.36</span><span>
+#&gt; </span><span style='color: #BCBCBC;'> 6</span><span> AFG          </span><span style='color: #BB0000;'>NA</span><span>      -</span><span style='color: #BB0000;'>1.31</span><span>
+#&gt; </span><span style='color: #BCBCBC;'> 7</span><span> AFG          </span><span style='color: #BB0000;'>NA</span><span>      -</span><span style='color: #BB0000;'>1.27</span><span>
+#&gt; </span><span style='color: #BCBCBC;'> 8</span><span> AFG          </span><span style='color: #BB0000;'>NA</span><span>      -</span><span style='color: #BB0000;'>1.23</span><span>
+#&gt; </span><span style='color: #BCBCBC;'> 9</span><span> AFG          </span><span style='color: #BB0000;'>NA</span><span>      -</span><span style='color: #BB0000;'>1.19</span><span>
+#&gt; </span><span style='color: #BCBCBC;'>10</span><span> AFG          </span><span style='color: #BB0000;'>NA</span><span>      -</span><span style='color: #BB0000;'>1.14</span><span>
 #&gt; </span><span style='color: #949494;'># ... with 12,734 more rows</span><span></div><div class='input'><span class='no'>wlddev</span> <span class='kw'>%&gt;%</span> <span class='fu'><a href='https://dplyr.tidyverse.org/reference/group_by.html'>group_by</a></span>(<span class='no'>iso3c</span>) <span class='kw'>%&gt;%</span> <span class='fu'><a href='https://dplyr.tidyverse.org/reference/select.html'>select</a></span>(<span class='no'>PCGDP</span>,<span class='no'>LIFEEX</span>,<span class='no'>ODA</span>) <span class='kw'>%&gt;%</span> <span class='fu'>STD</span>(<span class='no'>ODA</span>) <span class='co'># weighting by ODA -&gt;</span></div><div class='output co'>#&gt; <span class='message'>Adding missing grouping variables: `iso3c`</span></div><div class='output co'>#&gt; </span><span style='color: #949494;'># A tibble: 12,744 x 4</span><span>
 #&gt; </span><span style='color: #949494;'># Groups:   iso3c [216]</span><span>
 #&gt;    iso3c       ODA STD.PCGDP STD.LIFEEX

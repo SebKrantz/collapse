@@ -210,9 +210,9 @@ finteraction generates a factor by interacting multiple vectors or factors. In t
 <span class='co'># cf2 is faster in grouped operations because no missing value check is performed</span>
 <span class='fu'><a href='https://rdrr.io/r/base/library.html'>library</a></span>(<span class='no'>microbenchmark</span>)
 <span class='fu'><a href='https://rdrr.io/pkg/microbenchmark/man/microbenchmark.html'>microbenchmark</a></span>(<span class='fu'><a href='fmin_fmax.html'>fmax</a></span>(<span class='no'>dat</span>, <span class='no'>cf</span>), <span class='fu'><a href='fmin_fmax.html'>fmax</a></span>(<span class='no'>dat</span>, <span class='no'>cf2</span>))</div><div class='output co'>#&gt; Unit: microseconds
-#&gt;            expr     min       lq     mean  median       uq     max neval cld
-#&gt;   fmax(dat, cf) 203.043 207.5055 232.1475 215.761 239.4125 396.715   100   a
-#&gt;  fmax(dat, cf2) 196.796 200.3660 225.5341 210.183 231.8265 542.192   100   a</div><div class='input'>
+#&gt;            expr     min       lq     mean   median      uq     max neval cld
+#&gt;   fmax(dat, cf) 239.636 246.7750 296.2913 250.5685 284.930 532.375   100   a
+#&gt;  fmax(dat, cf2) 232.049 239.6355 290.1018 245.4365 298.094 601.989   100   a</div><div class='input'>
 <span class='fu'>finteraction</span>(<span class='no'>mtcars</span>$<span class='no'>cyl</span>, <span class='no'>mtcars</span>$<span class='no'>vs</span>)  <span class='co'># Interacting two variables (can be factors)</span></div><div class='output co'>#&gt;  [1] 6.0 6.0 4.1 6.1 8.0 6.1 8.0 4.1 4.1 6.1 6.1 8.0 8.0 8.0 8.0 8.0 8.0 4.1 4.1
 #&gt; [20] 4.1 4.1 8.0 8.0 8.0 8.0 4.1 4.0 4.1 8.0 6.0 8.0 4.1
 #&gt; Levels: 4.0 4.1 6.0 6.1 8.0</div><div class='input'><span class='fu'><a href='https://rdrr.io/r/utils/head.html'>head</a></span>(<span class='fu'>finteraction</span>(<span class='no'>mtcars</span>))           <span class='co'># A more crude example..</span></div><div class='output co'>#&gt; [1] 21.6.160.110.3.9.2.62.16.46.0.1.4.4    

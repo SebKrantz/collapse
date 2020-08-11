@@ -240,25 +240,48 @@ collap works with collapse's Fast Statistical Functions, providing extremely fas
 
     <h2 class="hasAnchor" id="examples"><a class="anchor" href="#examples"></a>Examples</h2>
     <pre class="examples"><div class='input'><span class='co'>## A Simple Introduction --------------------------------------</span>
-<span class='fu'><a href='https://rdrr.io/r/utils/head.html'>head</a></span>(<span class='no'>iris</span>)</div><div class='output co'>#&gt;   Sepal.Length Sepal.Width Petal.Length Petal.Width Species
-#&gt; 1          5.1         3.5          1.4         0.2  setosa
-#&gt; 2          4.9         3.0          1.4         0.2  setosa
-#&gt; 3          4.7         3.2          1.3         0.2  setosa
-#&gt; 4          4.6         3.1          1.5         0.2  setosa
-#&gt; 5          5.0         3.6          1.4         0.2  setosa
-#&gt; 6          5.4         3.9          1.7         0.4  setosa</div><div class='input'><span class='fu'>collap</span>(<span class='no'>iris</span>, ~ <span class='no'>Species</span>)                                        <span class='co'># Default: FUN = fmean for numeric</span></div><div class='output co'>#&gt;   Sepal.Length Sepal.Width Petal.Length Petal.Width    Species
-#&gt; 1        5.006       3.428        1.462       0.246     setosa
-#&gt; 2        5.936       2.770        4.260       1.326 versicolor
-#&gt; 3        6.588       2.974        5.552       2.026  virginica</div><div class='input'><span class='fu'>collapv</span>(<span class='no'>iris</span>, <span class='fl'>5</span>)                                               <span class='co'># Same using collapv</span></div><div class='output co'>#&gt;   Sepal.Length Sepal.Width Petal.Length Petal.Width    Species
-#&gt; 1        5.006       3.428        1.462       0.246     setosa
-#&gt; 2        5.936       2.770        4.260       1.326 versicolor
-#&gt; 3        6.588       2.974        5.552       2.026  virginica</div><div class='input'><span class='fu'>collap</span>(<span class='no'>iris</span>, ~ <span class='no'>Species</span>, <span class='no'>fmedian</span>)                               <span class='co'># Using the median</span></div><div class='output co'>#&gt;   Sepal.Length Sepal.Width Petal.Length Petal.Width    Species
-#&gt; 1          5.0         3.4         1.50         0.2     setosa
-#&gt; 2          5.9         2.8         4.35         1.3 versicolor
-#&gt; 3          6.5         3.0         5.55         2.0  virginica</div><div class='input'><span class='fu'>collap</span>(<span class='no'>iris</span>, ~ <span class='no'>Species</span>, <span class='no'>fmedian</span>, <span class='kw'>keep.col.order</span> <span class='kw'>=</span> <span class='fl'>FALSE</span>)       <span class='co'># Groups in-front</span></div><div class='output co'>#&gt;      Species Sepal.Length Sepal.Width Petal.Length Petal.Width
-#&gt; 1     setosa          5.0         3.4         1.50         0.2
-#&gt; 2 versicolor          5.9         2.8         4.35         1.3
-#&gt; 3  virginica          6.5         3.0         5.55         2.0</div><div class='input'><span class='fu'>collap</span>(<span class='no'>iris</span>, <span class='no'>Sepal.Width</span> + <span class='no'>Petal.Width</span> ~ <span class='no'>Species</span>, <span class='no'>fmedian</span>)     <span class='co'># Only '.Width' columns</span></div><div class='output co'>#&gt;   Sepal.Width Petal.Width    Species
+<span class='fu'><a href='https://rdrr.io/r/utils/head.html'>head</a></span>(<span class='no'>iris</span>)</div><div class='output co'>#&gt;   Sepal.Length Sepal.Width Petal.Length Petal.Width Species        wt AWMSL
+#&gt; 1          5.1         3.5          1.4         0.2  setosa 0.6846713 FALSE
+#&gt; 2          4.9         3.0          1.4         0.2  setosa 0.7469905 FALSE
+#&gt; 3          4.7         3.2          1.3         0.2  setosa 0.1387655 FALSE
+#&gt; 4          4.6         3.1          1.5         0.2  setosa 0.2333557 FALSE
+#&gt; 5          5.0         3.6          1.4         0.2  setosa 0.6550782 FALSE
+#&gt; 6          5.4         3.9          1.7         0.4  setosa 0.9068255 FALSE
+#&gt;   AWMSW
+#&gt; 1  TRUE
+#&gt; 2 FALSE
+#&gt; 3  TRUE
+#&gt; 4 FALSE
+#&gt; 5  TRUE
+#&gt; 6  TRUE</div><div class='input'><span class='fu'>collap</span>(<span class='no'>iris</span>, ~ <span class='no'>Species</span>)                                        <span class='co'># Default: FUN = fmean for numeric</span></div><div class='output co'>#&gt;   Sepal.Length Sepal.Width Petal.Length Petal.Width    Species        wt AWMSL
+#&gt; 1        5.006       3.428        1.462       0.246     setosa 0.8817075 FALSE
+#&gt; 2        5.936       2.770        4.260       1.326 versicolor 0.6920420  TRUE
+#&gt; 3        6.588       2.974        5.552       2.026  virginica 0.7794701  TRUE
+#&gt;   AWMSW
+#&gt; 1  TRUE
+#&gt; 2 FALSE
+#&gt; 3 FALSE</div><div class='input'><span class='fu'>collapv</span>(<span class='no'>iris</span>, <span class='fl'>5</span>)                                               <span class='co'># Same using collapv</span></div><div class='output co'>#&gt;   Sepal.Length Sepal.Width Petal.Length Petal.Width    Species        wt AWMSL
+#&gt; 1        5.006       3.428        1.462       0.246     setosa 0.8817075 FALSE
+#&gt; 2        5.936       2.770        4.260       1.326 versicolor 0.6920420  TRUE
+#&gt; 3        6.588       2.974        5.552       2.026  virginica 0.7794701  TRUE
+#&gt;   AWMSW
+#&gt; 1  TRUE
+#&gt; 2 FALSE
+#&gt; 3 FALSE</div><div class='input'><span class='fu'>collap</span>(<span class='no'>iris</span>, ~ <span class='no'>Species</span>, <span class='no'>fmedian</span>)                               <span class='co'># Using the median</span></div><div class='output co'>#&gt;   Sepal.Length Sepal.Width Petal.Length Petal.Width    Species        wt AWMSL
+#&gt; 1          5.0         3.4         1.50         0.2     setosa 0.7786559 FALSE
+#&gt; 2          5.9         2.8         4.35         1.3 versicolor 0.5669077  TRUE
+#&gt; 3          6.5         3.0         5.55         2.0  virginica 0.5852847  TRUE
+#&gt;   AWMSW
+#&gt; 1  TRUE
+#&gt; 2 FALSE
+#&gt; 3 FALSE</div><div class='input'><span class='fu'>collap</span>(<span class='no'>iris</span>, ~ <span class='no'>Species</span>, <span class='no'>fmedian</span>, <span class='kw'>keep.col.order</span> <span class='kw'>=</span> <span class='fl'>FALSE</span>)       <span class='co'># Groups in-front</span></div><div class='output co'>#&gt;      Species Sepal.Length Sepal.Width Petal.Length Petal.Width        wt AWMSL
+#&gt; 1     setosa          5.0         3.4         1.50         0.2 0.7786559 FALSE
+#&gt; 2 versicolor          5.9         2.8         4.35         1.3 0.5669077  TRUE
+#&gt; 3  virginica          6.5         3.0         5.55         2.0 0.5852847  TRUE
+#&gt;   AWMSW
+#&gt; 1  TRUE
+#&gt; 2 FALSE
+#&gt; 3 FALSE</div><div class='input'><span class='fu'>collap</span>(<span class='no'>iris</span>, <span class='no'>Sepal.Width</span> + <span class='no'>Petal.Width</span> ~ <span class='no'>Species</span>, <span class='no'>fmedian</span>)     <span class='co'># Only '.Width' columns</span></div><div class='output co'>#&gt;   Sepal.Width Petal.Width    Species
 #&gt; 1         3.4         0.2     setosa
 #&gt; 2         2.8         1.3 versicolor
 #&gt; 3         3.0         2.0  virginica</div><div class='input'><span class='fu'>collapv</span>(<span class='no'>iris</span>, <span class='fl'>5</span>, <span class='kw'>cols</span> <span class='kw'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span>(<span class='fl'>2</span>, <span class='fl'>4</span>))                               <span class='co'># Same using collapv</span></div><div class='output co'>#&gt;   Sepal.Width Petal.Width    Species
@@ -272,16 +295,29 @@ collap works with collapse's Fast Statistical Functions, providing extremely fas
 #&gt; 1              1.462                 1.50             0.246                 0.2
 #&gt; 2              4.260                 4.35             1.326                 1.3
 #&gt; 3              5.552                 5.55             2.026                 2.0
-#&gt;      Species
-#&gt; 1     setosa
-#&gt; 2 versicolor
-#&gt; 3  virginica</div><div class='input'><span class='fu'>collap</span>(<span class='no'>iris</span>, ~ <span class='no'>Species</span>, <span class='fu'><a href='https://rdrr.io/r/base/list.html'>list</a></span>(<span class='no'>fmean</span>, <span class='no'>fmedian</span>), <span class='kw'>return</span> <span class='kw'>=</span> <span class='st'>"long"</span>) <span class='co'># Long format</span></div><div class='output co'>#&gt;   Function Sepal.Length Sepal.Width Petal.Length Petal.Width    Species
+#&gt;      Species  fmean.wt fmedian.wt fmode.AWMSL fmode.AWMSW
+#&gt; 1     setosa 0.8817075  0.7786559       FALSE        TRUE
+#&gt; 2 versicolor 0.6920420  0.5669077        TRUE       FALSE
+#&gt; 3  virginica 0.7794701  0.5852847        TRUE       FALSE</div><div class='input'><span class='fu'>collap</span>(<span class='no'>iris</span>, ~ <span class='no'>Species</span>, <span class='fu'><a href='https://rdrr.io/r/base/list.html'>list</a></span>(<span class='no'>fmean</span>, <span class='no'>fmedian</span>), <span class='kw'>return</span> <span class='kw'>=</span> <span class='st'>"long"</span>) <span class='co'># Long format</span></div><div class='output co'>#&gt;   Function Sepal.Length Sepal.Width Petal.Length Petal.Width    Species
 #&gt; 1    fmean        5.006       3.428        1.462       0.246     setosa
 #&gt; 2    fmean        5.936       2.770        4.260       1.326 versicolor
 #&gt; 3    fmean        6.588       2.974        5.552       2.026  virginica
 #&gt; 4  fmedian        5.000       3.400        1.500       0.200     setosa
 #&gt; 5  fmedian        5.900       2.800        4.350       1.300 versicolor
-#&gt; 6  fmedian        6.500       3.000        5.550       2.000  virginica</div><div class='input'><span class='fu'>collapv</span>(<span class='no'>iris</span>, <span class='fl'>5</span>, <span class='kw'>custom</span> <span class='kw'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/list.html'>list</a></span>(<span class='kw'>fmean</span> <span class='kw'>=</span> <span class='fl'>1</span>:<span class='fl'>2</span>, <span class='kw'>fmedian</span> <span class='kw'>=</span> <span class='fl'>3</span>:<span class='fl'>4</span>))    <span class='co'># Custom aggregation</span></div><div class='output co'>#&gt;   fmean.Sepal.Length fmean.Sepal.Width fmedian.Petal.Length fmedian.Petal.Width
+#&gt; 6  fmedian        6.500       3.000        5.550       2.000  virginica
+#&gt; 7    fmode           NA          NA           NA          NA     setosa
+#&gt; 8    fmode           NA          NA           NA          NA versicolor
+#&gt; 9    fmode           NA          NA           NA          NA  virginica
+#&gt;          wt AWMSL AWMSW
+#&gt; 1 0.8817075    NA    NA
+#&gt; 2 0.6920420    NA    NA
+#&gt; 3 0.7794701    NA    NA
+#&gt; 4 0.7786559    NA    NA
+#&gt; 5 0.5669077    NA    NA
+#&gt; 6 0.5852847    NA    NA
+#&gt; 7        NA FALSE  TRUE
+#&gt; 8        NA  TRUE FALSE
+#&gt; 9        NA  TRUE FALSE</div><div class='input'><span class='fu'>collapv</span>(<span class='no'>iris</span>, <span class='fl'>5</span>, <span class='kw'>custom</span> <span class='kw'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/list.html'>list</a></span>(<span class='kw'>fmean</span> <span class='kw'>=</span> <span class='fl'>1</span>:<span class='fl'>2</span>, <span class='kw'>fmedian</span> <span class='kw'>=</span> <span class='fl'>3</span>:<span class='fl'>4</span>))    <span class='co'># Custom aggregation</span></div><div class='output co'>#&gt;   fmean.Sepal.Length fmean.Sepal.Width fmedian.Petal.Length fmedian.Petal.Width
 #&gt; 1              5.006             3.428                 1.50                 0.2
 #&gt; 2              5.936             2.770                 4.35                 1.3
 #&gt; 3              6.588             2.974                 5.55                 2.0
@@ -307,31 +343,43 @@ collap works with collapse's Fast Statistical Functions, providing extremely fas
 #&gt; 3    fmean        6.588       2.974           NA          NA  virginica
 #&gt; 4  fmedian           NA          NA         1.50         0.2     setosa
 #&gt; 5  fmedian           NA          NA         4.35         1.3 versicolor
-#&gt; 6  fmedian           NA          NA         5.55         2.0  virginica</div><div class='input'><span class='fu'>collap</span>(<span class='no'>iris</span>, ~ <span class='no'>Species</span>, <span class='kw'>w</span> <span class='kw'>=</span> ~ <span class='no'>Sepal.Length</span>)                    <span class='co'># Using Sepal.Length as weights, ..</span></div><div class='output co'>#&gt;   Sepal.Length Sepal.Width Petal.Length Petal.Width    Species
-#&gt; 1        250.3    3.447423     1.465202   0.2480224     setosa
-#&gt; 2        296.8    2.784063     4.290195   1.3352089 versicolor
-#&gt; 3        329.4    2.987948     5.597116   2.0333030  virginica</div><div class='input'><span class='no'>weights</span> <span class='kw'>&lt;-</span> <span class='fu'><a href='https://rdrr.io/r/base/MathFun.html'>abs</a></span>(<span class='fu'><a href='https://rdrr.io/r/stats/Normal.html'>rnorm</a></span>(<span class='fu'><a href='small-helper.html'>fnrow</a></span>(<span class='no'>iris</span>)))
+#&gt; 6  fmedian           NA          NA         5.55         2.0  virginica</div><div class='input'><span class='fu'>collap</span>(<span class='no'>iris</span>, ~ <span class='no'>Species</span>, <span class='kw'>w</span> <span class='kw'>=</span> ~ <span class='no'>Sepal.Length</span>)                    <span class='co'># Using Sepal.Length as weights, ..</span></div><div class='output co'>#&gt;   Sepal.Length Sepal.Width Petal.Length Petal.Width    Species        wt AWMSL
+#&gt; 1        250.3    3.447423     1.465202   0.2480224     setosa 0.8917024 FALSE
+#&gt; 2        296.8    2.784063     4.290195   1.3352089 versicolor 0.6893412  TRUE
+#&gt; 3        329.4    2.987948     5.597116   2.0333030  virginica 0.7919285  TRUE
+#&gt;   AWMSW
+#&gt; 1  TRUE
+#&gt; 2 FALSE
+#&gt; 3 FALSE</div><div class='input'><span class='no'>weights</span> <span class='kw'>&lt;-</span> <span class='fu'><a href='https://rdrr.io/r/base/MathFun.html'>abs</a></span>(<span class='fu'><a href='https://rdrr.io/r/stats/Normal.html'>rnorm</a></span>(<span class='fu'><a href='small-helper.html'>fnrow</a></span>(<span class='no'>iris</span>)))
 <span class='fu'>collap</span>(<span class='no'>iris</span>, ~ <span class='no'>Species</span>, <span class='kw'>w</span> <span class='kw'>=</span> <span class='no'>weights</span>)                           <span class='co'># Some random weights..</span></div><div class='output co'>#&gt;    weights Sepal.Length Sepal.Width Petal.Length Petal.Width    Species
 #&gt; 1 39.56057     4.987909    3.427702     1.444973   0.2415078     setosa
 #&gt; 2 39.64675     5.891207    2.785107     4.202130   1.3139783 versicolor
-#&gt; 3 39.72540     6.577970    2.999060     5.555977   2.0436818  virginica</div><div class='input'><span class='fu'>collap</span>(<span class='no'>iris</span>, <span class='no'>iris</span>$<span class='no'>Species</span>, <span class='kw'>w</span> <span class='kw'>=</span> <span class='no'>weights</span>)                        <span class='co'># Note this behavior..</span></div><div class='output co'>#&gt;      Species  weights Sepal.Length Sepal.Width Petal.Length Petal.Width
+#&gt; 3 39.72540     6.577970    2.999060     5.555977   2.0436818  virginica
+#&gt;          wt AWMSL AWMSW
+#&gt; 1 0.9812484 FALSE  TRUE
+#&gt; 2 0.7306248  TRUE FALSE
+#&gt; 3 0.7586074  TRUE FALSE</div><div class='input'><span class='fu'>collap</span>(<span class='no'>iris</span>, <span class='no'>iris</span>$<span class='no'>Species</span>, <span class='kw'>w</span> <span class='kw'>=</span> <span class='no'>weights</span>)                        <span class='co'># Note this behavior..</span></div><div class='output co'>#&gt;      Species  weights Sepal.Length Sepal.Width Petal.Length Petal.Width
 #&gt; 1     setosa 39.56057     4.987909    3.427702     1.444973   0.2415078
 #&gt; 2 versicolor 39.64675     5.891207    2.785107     4.202130   1.3139783
 #&gt; 3  virginica 39.72540     6.577970    2.999060     5.555977   2.0436818
-#&gt;      Species
-#&gt; 1     setosa
-#&gt; 2 versicolor
-#&gt; 3  virginica</div><div class='input'><span class='fu'>collap</span>(<span class='no'>iris</span>, <span class='no'>iris</span>$<span class='no'>Species</span>, <span class='kw'>w</span> <span class='kw'>=</span> <span class='no'>weights</span>,
-       <span class='kw'>keep.by</span> <span class='kw'>=</span> <span class='fl'>FALSE</span>, <span class='kw'>keep.w</span> <span class='kw'>=</span> <span class='fl'>FALSE</span>)</div><div class='output co'>#&gt;   Sepal.Length Sepal.Width Petal.Length Petal.Width    Species
-#&gt; 1     4.987909    3.427702     1.444973   0.2415078     setosa
-#&gt; 2     5.891207    2.785107     4.202130   1.3139783 versicolor
-#&gt; 3     6.577970    2.999060     5.555977   2.0436818  virginica</div><div class='input'><span class='fu'><a href='https://rdrr.io/r/base/library.html'>library</a></span>(<span class='no'>dplyr</span>) <span class='co'># Needed for "%&gt;%"</span>
-<span class='no'>iris</span> <span class='kw'>%&gt;%</span> <span class='fu'><a href='GRP.html'>fgroup_by</a></span>(<span class='no'>Species</span>) <span class='kw'>%&gt;%</span> <span class='no'>collapg</span>                        <span class='co'># dplyr style, but faster</span></div><div class='output co'>#&gt; <span style='color: #949494;'># A tibble: 3 x 5</span><span>
-#&gt;   Species    Sepal.Length Sepal.Width Petal.Length Petal.Width
-#&gt;   </span><span style='color: #949494;font-style: italic;'>&lt;fct&gt;</span><span>             </span><span style='color: #949494;font-style: italic;'>&lt;dbl&gt;</span><span>       </span><span style='color: #949494;font-style: italic;'>&lt;dbl&gt;</span><span>        </span><span style='color: #949494;font-style: italic;'>&lt;dbl&gt;</span><span>       </span><span style='color: #949494;font-style: italic;'>&lt;dbl&gt;</span><span>
-#&gt; </span><span style='color: #BCBCBC;'>1</span><span> setosa             5.01        3.43         1.46       0.246
-#&gt; </span><span style='color: #BCBCBC;'>2</span><span> versicolor         5.94        2.77         4.26       1.33 
-#&gt; </span><span style='color: #BCBCBC;'>3</span><span> virginica          6.59        2.97         5.55       2.03 </div><div class='input'>
+#&gt;      Species        wt AWMSL AWMSW
+#&gt; 1     setosa 0.9812484 FALSE  TRUE
+#&gt; 2 versicolor 0.7306248  TRUE FALSE
+#&gt; 3  virginica 0.7586074  TRUE FALSE</div><div class='input'><span class='fu'>collap</span>(<span class='no'>iris</span>, <span class='no'>iris</span>$<span class='no'>Species</span>, <span class='kw'>w</span> <span class='kw'>=</span> <span class='no'>weights</span>,
+       <span class='kw'>keep.by</span> <span class='kw'>=</span> <span class='fl'>FALSE</span>, <span class='kw'>keep.w</span> <span class='kw'>=</span> <span class='fl'>FALSE</span>)</div><div class='output co'>#&gt;   Sepal.Length Sepal.Width Petal.Length Petal.Width    Species        wt AWMSL
+#&gt; 1     4.987909    3.427702     1.444973   0.2415078     setosa 0.9812484 FALSE
+#&gt; 2     5.891207    2.785107     4.202130   1.3139783 versicolor 0.7306248  TRUE
+#&gt; 3     6.577970    2.999060     5.555977   2.0436818  virginica 0.7586074  TRUE
+#&gt;   AWMSW
+#&gt; 1  TRUE
+#&gt; 2 FALSE
+#&gt; 3 FALSE</div><div class='input'><span class='fu'><a href='https://rdrr.io/r/base/library.html'>library</a></span>(<span class='no'>dplyr</span>) <span class='co'># Needed for "%&gt;%"</span>
+<span class='no'>iris</span> <span class='kw'>%&gt;%</span> <span class='fu'><a href='GRP.html'>fgroup_by</a></span>(<span class='no'>Species</span>) <span class='kw'>%&gt;%</span> <span class='no'>collapg</span>                        <span class='co'># dplyr style, but faster</span></div><div class='output co'>#&gt; <span style='color: #949494;'># A tibble: 3 x 8</span><span>
+#&gt;   Species    Sepal.Length Sepal.Width Petal.Length Petal.Width    wt AWMSL AWMSW
+#&gt;   </span><span style='color: #949494;font-style: italic;'>&lt;fct&gt;</span><span>             </span><span style='color: #949494;font-style: italic;'>&lt;dbl&gt;</span><span>       </span><span style='color: #949494;font-style: italic;'>&lt;dbl&gt;</span><span>        </span><span style='color: #949494;font-style: italic;'>&lt;dbl&gt;</span><span>       </span><span style='color: #949494;font-style: italic;'>&lt;dbl&gt;</span><span> </span><span style='color: #949494;font-style: italic;'>&lt;dbl&gt;</span><span> </span><span style='color: #949494;font-style: italic;'>&lt;lgl&gt;</span><span> </span><span style='color: #949494;font-style: italic;'>&lt;lgl&gt;</span><span>
+#&gt; </span><span style='color: #BCBCBC;'>1</span><span> setosa             5.01        3.43         1.46       0.246 0.882 FALSE TRUE 
+#&gt; </span><span style='color: #BCBCBC;'>2</span><span> versicolor         5.94        2.77         4.26       1.33  0.692 TRUE  FALSE
+#&gt; </span><span style='color: #BCBCBC;'>3</span><span> virginica          6.59        2.97         5.55       2.03  0.779 TRUE  FALSE</div><div class='input'>
 <span class='co'>## Multi-Type Aggregation --------------------------------------</span>
 <span class='fu'><a href='https://rdrr.io/r/utils/head.html'>head</a></span>(<span class='no'>wlddev</span>)                                                    <span class='co'># World Development Panel Data</span></div><div class='output co'>#&gt;       country iso3c       date year decade     region     income  OECD PCGDP
 #&gt; 1 Afghanistan   AFG 1961-01-01 1960   1960 South Asia Low income FALSE    NA

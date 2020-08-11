@@ -170,35 +170,35 @@ head(fmedian(d, f, w, "-"), 3)     # subtracting the weighted group-median
 head(fmode(d, f, w, "replace"), 3) # replace with weighted statistical mode
 
 ## Some more advanced transformations...
-fbetween(d)                             # Averaging (same as fmean(d, TRA = "replace"), but faster)
-fwithin(d)                              # Centering (same as fmean(d, TRA = "-"))
-fwithin(d, f, w)                        # Grouped and weighted (same as fmean(d, f, w, "-"))
-fwithin(d, f, w, mean = 5)              # Setting a custom mean
-fwithin(d, f, w, theta = 0.76)          # Quasi-centering i.e. d - theta*fbetween(d, f, w)
-fwithin(d, f, w, mean = "overall.mean") # Preserving the overall mean of the data
-fscale(d)                               # Scaling and centering
-fscale(d, mean = 5, sd = 3)             # Custom scaling and centering
-fscale(d, mean = FALSE, sd = 3)         # Mean preserving scaling
-fscale(d, f, w)                         # Grouped and weighted scaling and centering
-fscale(d, f, w, mean = 5, sd = 3)       # Custom grouped and weighted scaling and centering
-fscale(d, f, w, mean = FALSE,           # Preserving group means
-       sd = "within.sd")                # and setting the group-sd to fsd(fwithin(d, f, w), w = w)
-fscale(d, f, w, mean = "overall.mean",  # Full harmonization of group means and variances,
-       sd = "within.sd")                # while preserving the level and scale of the data.
+head(fbetween(d))                             # Averaging (same as fmean(d, TRA = "replace"), but faster)
+head(fwithin(d))                              # Centering (same as fmean(d, TRA = "-"))
+head(fwithin(d, f, w))                        # Grouped and weighted (same as fmean(d, f, w, "-"))
+head(fwithin(d, f, w, mean = 5))              # Setting a custom mean
+head(fwithin(d, f, w, theta = 0.76))          # Quasi-centering i.e. d - theta*fbetween(d, f, w)
+head(fwithin(d, f, w, mean = "overall.mean")) # Preserving the overall mean of the data
+head(fscale(d))                               # Scaling and centering
+head(fscale(d, mean = 5, sd = 3))             # Custom scaling and centering
+head(fscale(d, mean = FALSE, sd = 3))         # Mean preserving scaling
+head(fscale(d, f, w))                         # Grouped and weighted scaling and centering
+head(fscale(d, f, w, mean = 5, sd = 3))       # Custom grouped and weighted scaling and centering
+head(fscale(d, f, w, mean = FALSE,            # Preserving group means
+            sd = "within.sd"))                # and setting the group-sd to fsd(fwithin(d, f, w), w = w)
+head(fscale(d, f, w, mean = "overall.mean",   # Full harmonization of group means and variances,
+            sd = "within.sd"))                # while preserving the level and scale of the data.
 
-get_vars(iris, 1:2)                      # Use get_vars for fast selecting columns, gv is shortcut
-fHDbetween(gv(iris, 1:2), gv(iris, 3:5)) # Linear prediction with factors and continuous covariates
-fHDwithin(gv(iris, 1:2), gv(iris, 3:5))  # Linear partialling out factors and continuous covariates
-ss(iris, 1:10, 1:2)                      # Similarly fsubset/ss for fast subsetting rows
+head(get_vars(iris, 1:2))                      # Use get_vars for fast selecting columns, gv is shortcut
+head(fHDbetween(gv(iris, 1:2), gv(iris, 3:5))) # Linear prediction with factors and continuous covariates
+head(fHDwithin(gv(iris, 1:2), gv(iris, 3:5)))  # Linear partialling out factors and continuous covariates
+ss(iris, 1:10, 1:2)                            # Similarly fsubset/ss for fast subsetting rows
 
 # Simple Time-Computations..
-flag(AirPassengers, -1:3)                # One lead and three lags
-fdiff(EuStockMarkets,                    # Suitably lagged first and second differences
-      c(1, frequency(EuStockMarkets)), diff = 1:2)
-fdiff(EuStockMarkets, rho = 0.87)        # Quasi-differences (x_t - rho*x_t-1)
-fdiff(EuStockMarkets, log = TRUE)        # Log-differences
-fgrowth(EuStockMarkets)                  # Exact growth rates (percentage change)
-fgrowth(EuStockMarkets, logdiff = TRUE)  # Log-difference growth rates (percentage change)
+head(flag(AirPassengers, -1:3))                # One lead and three lags
+head(fdiff(EuStockMarkets,                     # Suitably lagged first and second differences
+      c(1, frequency(EuStockMarkets)), diff = 1:2))
+head(fdiff(EuStockMarkets, rho = 0.87))        # Quasi-differences (x_t - rho*x_t-1)
+head(fdiff(EuStockMarkets, log = TRUE))        # Log-differences
+head(fgrowth(EuStockMarkets))                  # Exact growth rates (percentage change)
+head(fgrowth(EuStockMarkets, logdiff = TRUE))  # Log-difference growth rates (percentage change)
 \donttest{
 # Note that it is not necessary to use factors for grouping.
 fmean(gv(mtcars, -c(2,8:9)), mtcars$cyl) # Can also use vector (internally converted using qF())
@@ -230,18 +230,18 @@ BY(mtcars, f2, quantile)
 BY(mtcars, f2, quantile, expand.wide = TRUE)
 # For efficient (grouped) replacing and sweeping out computed statistics, use TRA()
 sds <- fsd(mtcars)
-TRA(mtcars, sds, "/")     # Simple scaling (if sd's are not needed, use fsd(mtcars, TRA = "/"))
+head(TRA(mtcars, sds, "/"))     # Simple scaling (if sd's are not needed, use fsd(mtcars, TRA = "/"))
 microbenchmark(TRA(mtcars, sds, "/"), sweep(mtcars, 2, sds, "/")) # A remarkable performance gain..
 sds <- fsd(mtcars, f2)
-TRA(mtcars, sds, "/", f2) # Groupd scaling (if sd's are not needed, use fsd(mtcars, f2, TRA = "/"))
+head(TRA(mtcars, sds, "/", f2)) # Groupd scaling (if sd's are not needed, use fsd(mtcars, f2, TRA = "/"))
 
 # All functions above perserve the structure of matrices / data frames
 # If conversions are required, use these efficient functions:
-mtcarsM <- qM(mtcars)                # Matrix from data.frame
-qDF(mtcarsM)                         # data.frame from matrix columns
-mrtl(mtcarsM, TRUE, "data.frame")    # data.frame from matrix rows, etc..
-qDT(mtcarsM, "cars")                 # Saving row.names when converting matrix to data.table
-qDT(mtcars, "cars")                  # Same use a data.frame
+mtcarsM <- qM(mtcars)                      # Matrix from data.frame
+head(qDF(mtcarsM))                         # data.frame from matrix columns
+head(mrtl(mtcarsM, TRUE, "data.frame"))    # data.frame from matrix rows, etc..
+head(qDT(mtcarsM, "cars"))                 # Saving row.names when converting matrix to data.table
+head(qDT(mtcars, "cars"))                  # Same use a data.frame
 
 
 ## Now let's get some real data and see how we can use this power for data manipulation
@@ -252,7 +252,7 @@ head(wlddev) # World Bank World Development Data: 216 countries, 59 years, 4 ser
 namlab(wlddev, class = TRUE)           # Show variable names, labels and classes
 fNobs(wlddev)                          # Observation count
 pwNobs(wlddev)                         # Pairwise observation count
-fNobs(wlddev, wlddev$country)          # Grouped observation count
+head(fNobs(wlddev, wlddev$country))    # Grouped observation count
 fNdistinct(wlddev)                     # Distinct values
 descr(wlddev)                          # Describe data
 varying(wlddev, ~ country)             # Show which variables vary within countries
@@ -261,8 +261,8 @@ qsu(wlddev, pid = ~ country,           # Panel-summarize columns 9 though 12 of 
 qsu(wlddev, ~ region, ~ country,       # Do all of that by region and also compute higher moments
     cols = 9:12, higher = TRUE)        # -> returns a 4D array
 qsu(wlddev, ~ region, ~ country, cols = 9:12,
-    higher = TRUE, array = FALSE) \%>\%                       # Return a list of statistics matrices..
-  unlist2d(c("Variable","Trans"), row.names = "Region")     # and turn this into a tidy data.frame
+    higher = TRUE, array = FALSE) \%>\%                           # Return a list of statistics matrices..
+unlist2d(c("Variable","Trans"), row.names = "Region") \%>\% head  # and turn this into a tidy data.frame
 pwcor(num_vars(wlddev), P = TRUE)                           # Pairwise correlations with p-value
 pwcor(fmean(num_vars(wlddev), wlddev$country), P = TRUE)    # Correlating country means
 pwcor(fwithin(num_vars(wlddev), wlddev$country), P = TRUE)  # Within-country correlations
@@ -286,19 +286,19 @@ ss(wlddev, 1:10, 1:10) # This is an order of magnitude faster than wlddev[1:10, 
 head(ftransform(wlddev, ODA_GDP = ODA / PCGDP, ODA_LIFEEX = sqrt(ODA) / LIFEEX))
 settransform(wlddev, ODA_GDP = ODA / PCGDP, ODA_LIFEEX = sqrt(ODA) / LIFEEX) # by reference
 head(ftransform(wlddev, PCGDP = NULL, ODA = NULL, GINI_sum = fsum(GINI)))
-ftransform(wlddev, fscale(gv(wlddev, 9:12)))   # Can also transform with lists of columns
+head(ftransform(wlddev, fscale(gv(wlddev, 9:12))))   # Can also transform with lists of columns
 settransform(wlddev, fscale(gv(wlddev, 9:12))) # Changing the data by reference
 ftransform(wlddev) <- fscale(gv(wlddev, 9:12)) # Same thing
 wlddev \%<>\% ftransform(fscale(gv(., 9:12)))    # Same thing, using magrittr
 
 # Fast reordering
-roworder(wlddev, -country, year)
-colorder(wlddev, country, year)
+head(roworder(wlddev, -country, year))
+head(colorder(wlddev, country, year))
 
 # Fast renaming
-frename(wlddev, country = Ctry, year = Yr)
-setrename(wlddev, country = Ctry, year = Yr)  # By reference
-frename(wlddev, tolower, cols = 9:12)
+head(frename(wlddev, country = Ctry, year = Yr))
+setrename(wlddev, country = Ctry, year = Yr)     # By reference
+head(frename(wlddev, tolower, cols = 9:12))
 
 # Fast grouping
 fgroup_by(wlddev, Ctry, decade) \%>\% fgroup_vars  # fgroup_by is a lot faster than dplyr::group_by
@@ -349,7 +349,7 @@ wlddev \%>\% fsubset(year > 1990, region, income, PCGDP:ODA) \%>\%
              fmedian(., keep.group_vars = FALSE) \%>\% add_stub("median_"),
              fmean(., keep.group_vars = FALSE) \%>\% add_stub("mean_"),
              fsd(., keep.group_vars = FALSE) \%>\% add_stub("sd_"))
-  }
+  } \%>\% head
 
 # Transformation with multiple functions
 wlddev \%>\% fselect(country, year, PCGDP:ODA) \%>\%

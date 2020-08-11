@@ -46,6 +46,7 @@ articles:
   - collapse_and_plm
 
 reference:
+- contents: "collapse-package"
 - title: "Fast Statistical Functions"
   desc: "Fast (grouped and weighted) statistical functions for vector, matrix, data frame and grouped tibble (class 'grouped_df', dplyr compatible)."
 - contents:
