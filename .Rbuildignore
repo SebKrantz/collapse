@@ -19,4 +19,5 @@ vignettes/collapse_and_data.table_cache
 ^_pkgdown\.yml$
 ^docs$
 ^pkgdown$
+man/figures
 ^misc$
