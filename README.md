@@ -67,12 +67,12 @@ In addition, *collapse* provides 3 vignettes:
 
 * [*collapse* and *plm*](<https://sebkrantz.github.io/collapse/articles/collapse_and_plm.html>): Demonstrates the integration of *collapse* with the *plm* package and provides examples of fast and easy programming with panel data. 
 
-## Examples
+## Example Usage
 This provides a simple set of examples introducing some important features of *collapse*. It should be easy to follow for readers familiar with R. 
 
 
 <details>
-  <summary><b>Click to expand</b> </summary>
+  <summary><b><a>Click here to expand </a></b> </summary>
   
 ``` r
 library(collapse)
@@ -261,7 +261,7 @@ pwcor(W(pdata, keep.ids = FALSE), P = TRUE) # Within- correlations
 
 Evaluated and more extensive sets of examples are provided on the [package page](<https://sebkrantz.github.io/collapse/reference/collapse-package.html>) (also accessible from R by calling `example('collapse-package')`), and further in the [vignettes](<https://sebkrantz.github.io/collapse/articles/index.html>) and  [documentation](<https://sebkrantz.github.io/collapse/reference/index.html>).
 
-## Notes
+## Additional Notes
 ### Regarding Performance 
 Some simple benchmarks are provided in the [vignettes](<https://sebkrantz.github.io/collapse/articles/index.html>). In general:
 
@@ -275,7 +275,7 @@ Some simple benchmarks are provided in the [vignettes](<https://sebkrantz.github
 
 ### Regarding the Integration with *dplyr*, *plm* and *data.table* 
 
-* ***collapse*** **and** ***dplyr***: The [Fast Statistical Functions](<https://sebkrantz.github.io/collapse/reference/fast-statistical-functions.html>) and [transformation functions and operators](<https://sebkrantz.github.io/collapse/reference/data-transformations.html>) provided by *collapse* have a *grouped_df* method, allowing them to be seamlessly integrated into *dplyr* / *tidyverse* workflows. Doing so facilitates advanced operations in *dplyr* and provides remarkable performance improvements. In addition, *collapse* provides some faster replacements for common base R / *dplyr* verbs (`fselect`/`get_vars`, `fgroup_by`, `fsubset`, `ftransform`/`TRA`, `roworder`, `colorder`, `funique`). See also [this vignette](<https://sebkrantz.github.io/collapse/articles/collapse_and_dplyr.html>). 
+* ***collapse*** **and** ***dplyr***: The [Fast Statistical Functions](<https://sebkrantz.github.io/collapse/reference/fast-statistical-functions.html>) and [transformation functions and operators](<https://sebkrantz.github.io/collapse/reference/data-transformations.html>) provided by *collapse* have a *grouped_df* method, allowing them to be seamlessly integrated into *dplyr* / *tidyverse* workflows. Doing so facilitates advanced operations in *dplyr* and provides remarkable performance improvements. In addition, *collapse* provides some faster replacements for common base R / *dplyr* verbs (`fselect`/`get_vars`, `fgroup_by`, `fsubset`, `ftransform`/`TRA`, `roworder`, `colorder`, `frename`, `funique`, etc.). See also [this vignette](<https://sebkrantz.github.io/collapse/articles/collapse_and_dplyr.html>). 
 
 <!-- 
 , providing further performance improvements for programming with piped expressions and non-standard evaluation
