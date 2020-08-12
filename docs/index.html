@@ -144,41 +144,41 @@ devtools::install_github("SebKrantz/collapse")
 <h2 class="hasAnchor">
 <a href="#example-usage" class="anchor"></a>Example Usage</h2>
 <p>This provides a simple set of examples introducing some important features of <em>collapse</em>. It should be easy to follow for readers familiar with R.</p>
-<details><p><summary><b><a>Click here to expand </a></b> </summary></p>
+<details><p><summary><b><a style="cursor: pointer;">Click here to expand </a></b> </summary></p>
 <div class="sourceCode" id="cb2"><pre class="r"><span class="fu"><a href="https://rdrr.io/r/base/library.html">library</a></span>(<span class="no">collapse</span>)
 <span class="fu"><a href="https://rdrr.io/r/utils/data.html">data</a></span>(<span class="st">"iris"</span>)            <span class="co"># iris dataset in base R</span>
 <span class="no">v</span> <span class="kw">&lt;-</span> <span class="no">iris</span>$<span class="no">Sepal.Length</span>  <span class="co"># Vector</span>
 <span class="no">d</span> <span class="kw">&lt;-</span> <span class="fu"><a href="reference/select_replace_vars.html">num_vars</a></span>(<span class="no">iris</span>)     <span class="co"># Saving numeric variables (could also be a matrix, statistical functions are S3 generic)</span>
 <span class="no">g</span> <span class="kw">&lt;-</span> <span class="no">iris</span>$<span class="no">Species</span>       <span class="co"># Grouping variable (could also be a list of variables)</span>
 
-<span class="co">## Advanced statistical programming -----------------------------------------------------------------------------</span>
+<span class="co">## Advanced Statistical Programming -----------------------------------------------------------------------------</span>
 
 <span class="co"># Simple (column-wise) statistics...</span>
-<span class="fu"><a href="reference/fmedian.html">fmedian</a></span>(<span class="no">v</span>)                       <span class="co"># vector</span>
-<span class="fu"><a href="reference/fvar_fsd.html">fsd</a></span>(<span class="fu"><a href="reference/quick-conversion.html">qM</a></span>(<span class="no">d</span>))                       <span class="co"># matrix (qM is a faster as.matrix)</span>
+<span class="fu"><a href="reference/fmedian.html">fmedian</a></span>(<span class="no">v</span>)                       <span class="co"># Vector</span>
+<span class="fu"><a href="reference/fvar_fsd.html">fsd</a></span>(<span class="fu"><a href="reference/quick-conversion.html">qM</a></span>(<span class="no">d</span>))                       <span class="co"># Matrix (qM is a faster as.matrix)</span>
 <span class="fu"><a href="reference/fmode.html">fmode</a></span>(<span class="no">d</span>)                         <span class="co"># data.frame</span>
-<span class="fu"><a href="reference/fmean.html">fmean</a></span>(<span class="fu"><a href="reference/quick-conversion.html">qM</a></span>(<span class="no">d</span>), <span class="kw">drop</span> <span class="kw">=</span> <span class="fl">FALSE</span>)       <span class="co"># still a matrix</span>
-<span class="fu"><a href="reference/fmin_fmax.html">fmax</a></span>(<span class="no">d</span>, <span class="kw">drop</span> <span class="kw">=</span> <span class="fl">FALSE</span>)            <span class="co"># still a data.frame</span>
+<span class="fu"><a href="reference/fmean.html">fmean</a></span>(<span class="fu"><a href="reference/quick-conversion.html">qM</a></span>(<span class="no">d</span>), <span class="kw">drop</span> <span class="kw">=</span> <span class="fl">FALSE</span>)       <span class="co"># Still a matrix</span>
+<span class="fu"><a href="reference/fmin_fmax.html">fmax</a></span>(<span class="no">d</span>, <span class="kw">drop</span> <span class="kw">=</span> <span class="fl">FALSE</span>)            <span class="co"># Still a data.frame</span>
 
 <span class="co"># Fast grouped and/or weighted statistics</span>
 <span class="no">wt</span> <span class="kw">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/MathFun.html">abs</a></span>(<span class="fu"><a href="https://rdrr.io/r/stats/Normal.html">rnorm</a></span>(<span class="fu"><a href="reference/small-helper.html">fnrow</a></span>(<span class="no">iris</span>)))
-<span class="fu"><a href="reference/fmedian.html">fmedian</a></span>(<span class="no">d</span>, <span class="kw">w</span> <span class="kw">=</span> <span class="no">wt</span>)                <span class="co"># simple weighted statistics</span>
+<span class="fu"><a href="reference/fmedian.html">fmedian</a></span>(<span class="no">d</span>, <span class="kw">w</span> <span class="kw">=</span> <span class="no">wt</span>)                <span class="co"># Simple weighted statistics</span>
 <span class="fu"><a href="reference/fnth.html">fnth</a></span>(<span class="no">d</span>, <span class="fl">0.75</span>, <span class="no">g</span>)                  <span class="co"># Grouped statistics (grouped third quartile)</span>
 <span class="fu"><a href="reference/fmedian.html">fmedian</a></span>(<span class="no">d</span>, <span class="no">g</span>, <span class="no">wt</span>)                 <span class="co"># Groupwise-weighted statistics</span>
 <span class="fu"><a href="reference/fvar_fsd.html">fsd</a></span>(<span class="no">v</span>, <span class="no">g</span>, <span class="no">wt</span>)                     <span class="co"># Similarly for vectors</span>
-<span class="fu"><a href="reference/fmode.html">fmode</a></span>(<span class="fu"><a href="reference/quick-conversion.html">qM</a></span>(<span class="no">d</span>), <span class="no">g</span>, <span class="no">wt</span>, <span class="kw">ties</span> <span class="kw">=</span> <span class="st">"max"</span>) <span class="co"># or matrices (grouped and weighted maximum mode) ...</span>
+<span class="fu"><a href="reference/fmode.html">fmode</a></span>(<span class="fu"><a href="reference/quick-conversion.html">qM</a></span>(<span class="no">d</span>), <span class="no">g</span>, <span class="no">wt</span>, <span class="kw">ties</span> <span class="kw">=</span> <span class="st">"max"</span>) <span class="co"># Or matrices (grouped and weighted maximum mode) ...</span>
 
 <span class="co"># A fast set of data manipulation functions allows complex piped programming at high speeds</span>
 <span class="fu"><a href="https://rdrr.io/r/base/library.html">library</a></span>(<span class="no">magrittr</span>)                            <span class="co"># Pipe operators</span>
 <span class="no">iris</span> <span class="kw">%&gt;%</span> <span class="fu"><a href="reference/GRP.html">fgroup_by</a></span>(<span class="no">Species</span>) <span class="kw">%&gt;%</span> <span class="no">fNdistinct</span>   <span class="co"># Grouped distinct value counts</span>
 <span class="no">iris</span> <span class="kw">%&gt;%</span> <span class="fu"><a href="reference/GRP.html">fgroup_by</a></span>(<span class="no">Species</span>) <span class="kw">%&gt;%</span> <span class="fu"><a href="reference/fmedian.html">fmedian</a></span>(<span class="no">wt</span>)  <span class="co"># Weighted group medians </span>
-<span class="no">iris</span> <span class="kw">%&gt;%</span> <span class="fu"><a href="reference/select_replace_vars.html">add_vars</a></span>(<span class="no">wt</span>) <span class="kw">%&gt;%</span>                    <span class="co"># adding weight vector to dataset</span>
-  <span class="fu"><a href="reference/fsubset.html">fsubset</a></span>(<span class="no">Sepal.Length</span> <span class="kw">&lt;</span> <span class="fu"><a href="reference/fmean.html">fmean</a></span>(<span class="no">Sepal.Length</span>), <span class="no">Species</span>, <span class="no">Sepal.Width</span>:<span class="no">wt</span>) <span class="kw">%&gt;%</span> <span class="co"># fast selecting and subsetting</span>
-  <span class="fu"><a href="reference/GRP.html">fgroup_by</a></span>(<span class="no">Species</span>) <span class="kw">%&gt;%</span>                     <span class="co"># grouping (efficiently creates a grouped tibble)</span>
-  <span class="fu"><a href="reference/fvar_fsd.html">fvar</a></span>(<span class="no">wt</span>) <span class="kw">%&gt;%</span>                               <span class="co"># frequency-weighted group-variance, default (keep.w = TRUE)  </span>
+<span class="no">iris</span> <span class="kw">%&gt;%</span> <span class="fu"><a href="reference/select_replace_vars.html">add_vars</a></span>(<span class="no">wt</span>) <span class="kw">%&gt;%</span>                    <span class="co"># Adding weight vector to dataset</span>
+  <span class="fu"><a href="reference/fsubset.html">fsubset</a></span>(<span class="no">Sepal.Length</span> <span class="kw">&lt;</span> <span class="fu"><a href="reference/fmean.html">fmean</a></span>(<span class="no">Sepal.Length</span>), <span class="no">Species</span>, <span class="no">Sepal.Width</span>:<span class="no">wt</span>) <span class="kw">%&gt;%</span> <span class="co"># Fast selecting and subsetting</span>
+  <span class="fu"><a href="reference/GRP.html">fgroup_by</a></span>(<span class="no">Species</span>) <span class="kw">%&gt;%</span>                     <span class="co"># Grouping (efficiently creates a grouped tibble)</span>
+  <span class="fu"><a href="reference/fvar_fsd.html">fvar</a></span>(<span class="no">wt</span>) <span class="kw">%&gt;%</span>                               <span class="co"># Frequency-weighted group-variance, default (keep.w = TRUE)  </span>
   <span class="fu"><a href="reference/roworder.html">roworder</a></span>(<span class="no">sum.wt</span>)                           <span class="co"># also saves group weights in a column called 'sum.wt'</span>
 
-<span class="co"># Can also use dplyr itself (but dplyr manipulation verbs are a lot slower)</span>
+<span class="co"># Can also use dplyr (but dplyr manipulation verbs are a lot slower)</span>
 <span class="fu"><a href="https://rdrr.io/r/base/library.html">library</a></span>(<span class="no">dplyr</span>)
 <span class="no">iris</span> <span class="kw">%&gt;%</span> <span class="fu"><a href="reference/select_replace_vars.html">add_vars</a></span>(<span class="no">wt</span>) <span class="kw">%&gt;%</span>
   <span class="fu"><a href="https://dplyr.tidyverse.org/reference/filter.html">filter</a></span>(<span class="no">Sepal.Length</span> <span class="kw">&lt;</span> <span class="fu"><a href="reference/fmean.html">fmean</a></span>(<span class="no">Sepal.Length</span>)) <span class="kw">%&gt;%</span>
@@ -186,7 +186,7 @@ devtools::install_github("SebKrantz/collapse")
   <span class="fu"><a href="https://dplyr.tidyverse.org/reference/group_by.html">group_by</a></span>(<span class="no">Species</span>) <span class="kw">%&gt;%</span>
   <span class="fu"><a href="reference/fvar_fsd.html">fvar</a></span>(<span class="no">wt</span>) <span class="kw">%&gt;%</span> <span class="fu"><a href="https://dplyr.tidyverse.org/reference/arrange.html">arrange</a></span>(<span class="no">sum.wt</span>)
 
-<span class="co">## Advanced aggregation -----------------------------------------------------------------------------------------</span>
+<span class="co">## Advanced Aggregation -----------------------------------------------------------------------------------------</span>
 
 <span class="fu"><a href="reference/collap.html">collap</a></span>(<span class="no">iris</span>, <span class="no">Sepal.Length</span> + <span class="no">Sepal.Width</span> ~ <span class="no">Species</span>, <span class="no">fmean</span>)  <span class="co"># Simple aggregation using the mean..</span>
 <span class="fu"><a href="reference/collap.html">collap</a></span>(<span class="no">iris</span>, ~ <span class="no">Species</span>, <span class="fu"><a href="https://rdrr.io/r/base/list.html">list</a></span>(<span class="no">fmean</span>, <span class="no">fmedian</span>, <span class="no">fmode</span>))       <span class="co"># Multiple functions applied to each column</span>
@@ -195,44 +195,44 @@ devtools::install_github("SebKrantz/collapse")
 
 <span class="co"># Generate some additional logical data</span>
 <span class="fu"><a href="reference/ftransform.html">settransform</a></span>(<span class="no">iris</span>, <span class="kw">AWMSL</span> <span class="kw">=</span> <span class="no">Sepal.Length</span> <span class="kw">&gt;</span> <span class="fu"><a href="reference/fmedian.html">fmedian</a></span>(<span class="no">Sepal.Length</span>, <span class="kw">w</span> <span class="kw">=</span> <span class="no">wt</span>),
-             <span class="kw">AWMSW</span> <span class="kw">=</span> <span class="no">Sepal.Width</span> <span class="kw">&gt;</span> <span class="fu"><a href="reference/fmedian.html">fmedian</a></span>(<span class="no">Sepal.Width</span>, <span class="kw">w</span> <span class="kw">=</span> <span class="no">wt</span>))
+                   <span class="kw">AWMSW</span> <span class="kw">=</span> <span class="no">Sepal.Width</span> <span class="kw">&gt;</span> <span class="fu"><a href="reference/fmedian.html">fmedian</a></span>(<span class="no">Sepal.Width</span>, <span class="kw">w</span> <span class="kw">=</span> <span class="no">wt</span>))
 
-<span class="co"># Same as before, catFUN applies to all categorical columns (here AMWSW)</span>
+<span class="co"># Multi-type data aggregation: catFUN applies to all categorical columns (here AMWSW)</span>
 <span class="fu"><a href="reference/collap.html">collap</a></span>(<span class="no">iris</span>, ~ <span class="no">Species</span> + <span class="no">AWMSL</span>, <span class="fu"><a href="https://rdrr.io/r/base/list.html">list</a></span>(<span class="no">fmean</span>, <span class="no">fmedian</span>, <span class="no">fmode</span>),
        <span class="kw">catFUN</span> <span class="kw">=</span> <span class="no">fmode</span>, <span class="kw">w</span> <span class="kw">=</span> ~ <span class="no">wt</span>, <span class="kw">return</span> <span class="kw">=</span> <span class="st">"long"</span>)
 
-<span class="co"># Custom aggregation gives the greatest possible flexibility: mapping functions to columns</span>
+<span class="co"># Custom aggregation gives the greatest possible flexibility: directly mapping functions to columns</span>
 <span class="fu"><a href="reference/collap.html">collap</a></span>(<span class="no">iris</span>, ~ <span class="no">Species</span> + <span class="no">AWMSL</span>,
        <span class="kw">custom</span> <span class="kw">=</span> <span class="fu"><a href="https://rdrr.io/r/base/list.html">list</a></span>(<span class="kw">fmean</span> <span class="kw">=</span> <span class="fl">2</span>:<span class="fl">3</span>, <span class="kw">fsd</span> <span class="kw">=</span> <span class="fl">3</span>:<span class="fl">4</span>, <span class="kw">fmode</span> <span class="kw">=</span> <span class="st">"AWMSL"</span>), <span class="kw">w</span> <span class="kw">=</span> ~ <span class="no">wt</span>,
        <span class="kw">wFUN</span> <span class="kw">=</span> <span class="fu"><a href="https://rdrr.io/r/base/list.html">list</a></span>(<span class="no">fsum</span>, <span class="no">fmin</span>, <span class="no">fmax</span>), <span class="co"># Here also aggregating the weight vector with 3 different functions</span>
-       <span class="kw">keep.col.order</span> <span class="kw">=</span> <span class="fl">FALSE</span>)        <span class="co"># And column order not maintained -&gt; grouping and weighting variables first</span>
+       <span class="kw">keep.col.order</span> <span class="kw">=</span> <span class="fl">FALSE</span>)        <span class="co"># Column order not maintained -&gt; grouping and weight variables first</span>
 
-<span class="co"># Can also use grouped tibble: Here weighted median for numeric, weighted mode for categorical columns</span>
+<span class="co"># Can also use grouped tibble: weighted median for numeric, weighted mode for categorical columns</span>
 <span class="no">iris</span> <span class="kw">%&gt;%</span> <span class="fu"><a href="reference/GRP.html">fgroup_by</a></span>(<span class="no">Species</span>, <span class="no">AWMSL</span>) <span class="kw">%&gt;%</span> <span class="fu"><a href="reference/collap.html">collapg</a></span>(<span class="no">fmedian</span>, <span class="no">fmode</span>, <span class="kw">w</span> <span class="kw">=</span> <span class="no">wt</span>)
 
 <span class="co">## Advanced Transformations -------------------------------------------------------------------------------------</span>
 
 <span class="co"># All Fast Statistical Functions have a TRA argument, supporting 10 different replacing and sweeping operations</span>
 <span class="fu"><a href="reference/fmode.html">fmode</a></span>(<span class="no">d</span>, <span class="kw">TRA</span> <span class="kw">=</span> <span class="st">"replace"</span>)     <span class="co"># Replacing values with the mode</span>
-<span class="fu"><a href="reference/fvar_fsd.html">fsd</a></span>(<span class="no">v</span>, <span class="kw">TRA</span> <span class="kw">=</span> <span class="st">"/"</span>)             <span class="co"># dividing by the overall standard-deviation (scaling)</span>
+<span class="fu"><a href="reference/fvar_fsd.html">fsd</a></span>(<span class="no">v</span>, <span class="kw">TRA</span> <span class="kw">=</span> <span class="st">"/"</span>)             <span class="co"># dividing by the overall standard deviation (scaling)</span>
 <span class="fu"><a href="reference/fsum.html">fsum</a></span>(<span class="no">d</span>, <span class="kw">TRA</span> <span class="kw">=</span> <span class="st">"%"</span>)            <span class="co"># Computing percentages</span>
 <span class="fu"><a href="reference/fvar_fsd.html">fsd</a></span>(<span class="no">d</span>, <span class="no">g</span>, <span class="kw">TRA</span> <span class="kw">=</span> <span class="st">"/"</span>)          <span class="co"># Grouped scaling</span>
 <span class="fu"><a href="reference/fmin_fmax.html">fmin</a></span>(<span class="no">d</span>, <span class="no">g</span>, <span class="kw">TRA</span> <span class="kw">=</span> <span class="st">"-"</span>)         <span class="co"># Setting the minimum value in each species to 0</span>
 <span class="fu"><a href="reference/ffirst_flast.html">ffirst</a></span>(<span class="no">d</span>, <span class="no">g</span>, <span class="kw">TRA</span> <span class="kw">=</span> <span class="st">"%%"</span>)      <span class="co"># Taking modulus of first value in each species</span>
 <span class="fu"><a href="reference/fmedian.html">fmedian</a></span>(<span class="no">d</span>, <span class="no">g</span>, <span class="no">wt</span>, <span class="st">"-"</span>)        <span class="co"># Groupwise centering by the weighted median</span>
 <span class="fu"><a href="reference/fnth.html">fnth</a></span>(<span class="no">d</span>, <span class="fl">0.95</span>, <span class="no">g</span>, <span class="no">wt</span>, <span class="st">"%"</span>)     <span class="co"># Expressing data in percentages of the weighted species-wise 95th percentile</span>
-<span class="fu"><a href="reference/fmode.html">fmode</a></span>(<span class="no">d</span>, <span class="no">g</span>, <span class="no">wt</span>, <span class="st">"replace"</span>,    <span class="co"># Replacing data by the Species-wise weighted minimum-mode</span>
+<span class="fu"><a href="reference/fmode.html">fmode</a></span>(<span class="no">d</span>, <span class="no">g</span>, <span class="no">wt</span>, <span class="st">"replace"</span>,    <span class="co"># Replacing data by the species-wise weighted minimum-mode</span>
       <span class="kw">ties</span> <span class="kw">=</span> <span class="st">"min"</span>)
 
-<span class="co"># If we already have a set of statistics for replacing or sweeping, cal also call TRA() directly</span>
+<span class="co"># TRA() can also be called directly to replace or sweep with a matching set of computed statistics</span>
 <span class="fu"><a href="reference/TRA.html">TRA</a></span>(<span class="no">v</span>, <span class="fu"><a href="https://rdrr.io/r/stats/sd.html">sd</a></span>(<span class="no">v</span>), <span class="st">"/"</span>)                       <span class="co"># Same as fsd(v, TRA = "/")</span>
 <span class="fu"><a href="reference/TRA.html">TRA</a></span>(<span class="no">d</span>, <span class="fu"><a href="reference/fmedian.html">fmedian</a></span>(<span class="no">d</span>, <span class="no">g</span>, <span class="no">wt</span>), <span class="st">"-"</span>, <span class="no">g</span>)        <span class="co"># Same as fmedian(d, g, wt, "-")</span>
 <span class="fu"><a href="reference/TRA.html">TRA</a></span>(<span class="no">d</span>, <span class="fu"><a href="reference/BY.html">BY</a></span>(<span class="no">d</span>, <span class="no">g</span>, <span class="no">quantile</span>, <span class="fl">0.95</span>), <span class="st">"%"</span>, <span class="no">g</span>) <span class="co"># Same as fnth(d, 0.95, g, TRA = "%") (apart from quantile algorithm)</span>
 
-<span class="co"># For common uses, there are some faster and more advanced functions..</span>
-<span class="fu"><a href="reference/fbetween_fwithin.html">fbetween</a></span>(<span class="no">d</span>, <span class="no">g</span>)                           <span class="co"># Grouped averaging (same as fmean(d, g, TRA = "replace") but faster)</span>
-<span class="fu"><a href="reference/fbetween_fwithin.html">fwithin</a></span>(<span class="no">d</span>, <span class="no">g</span>)                            <span class="co"># Grouped centering (same as fmean(d, g, TRA = "-") but faster)</span>
-<span class="fu"><a href="reference/fbetween_fwithin.html">fwithin</a></span>(<span class="no">d</span>, <span class="no">g</span>, <span class="no">wt</span>)                        <span class="co"># Grouped and weighted centering (same as fmean(d, g, wt, "-"))</span>
+<span class="co"># For common uses, there are some faster and more advanced functions</span>
+<span class="fu"><a href="reference/fbetween_fwithin.html">fbetween</a></span>(<span class="no">d</span>, <span class="no">g</span>)                           <span class="co"># Grouped averaging [same as fmean(d, g, TRA = "replace") but faster]</span>
+<span class="fu"><a href="reference/fbetween_fwithin.html">fwithin</a></span>(<span class="no">d</span>, <span class="no">g</span>)                            <span class="co"># Grouped centering [same as fmean(d, g, TRA = "-") but faster]</span>
+<span class="fu"><a href="reference/fbetween_fwithin.html">fwithin</a></span>(<span class="no">d</span>, <span class="no">g</span>, <span class="no">wt</span>)                        <span class="co"># Grouped and weighted centering [same as fmean(d, g, wt, "-")]</span>
 <span class="fu"><a href="reference/fbetween_fwithin.html">fwithin</a></span>(<span class="no">d</span>, <span class="no">g</span>, <span class="no">wt</span>, <span class="kw">theta</span> <span class="kw">=</span> <span class="fl">0.76</span>)          <span class="co"># Quasi-centering i.e. d - theta*fbetween(d, g, wt)</span>
 <span class="fu"><a href="reference/fbetween_fwithin.html">fwithin</a></span>(<span class="no">d</span>, <span class="no">g</span>, <span class="no">wt</span>, <span class="kw">mean</span> <span class="kw">=</span> <span class="st">"overall.mean"</span>) <span class="co"># Preserving the overall weighted mean of the data</span>
 
@@ -252,41 +252,42 @@ devtools::install_github("SebKrantz/collapse")
   <span class="fu"><a href="reference/ftransform.html">ftransform</a></span>(<span class="kw">ASWMSL</span> <span class="kw">=</span> <span class="no">Sepal.Length</span> <span class="kw">&gt;</span> <span class="fu"><a href="reference/fmedian.html">fmedian</a></span>(<span class="no">Sepal.Length</span>, <span class="no">Species</span>, <span class="no">wt</span>, <span class="st">"replace"</span>)) <span class="kw">%&gt;%</span>
   <span class="fu"><a href="reference/GRP.html">fgroup_by</a></span>(<span class="no">ASWMSL</span>) <span class="kw">%&gt;%</span> <span class="fu"><a href="reference/collap.html">collapg</a></span>(<span class="kw">w</span> <span class="kw">=</span> <span class="no">wt</span>, <span class="kw">keep.col.order</span> <span class="kw">=</span> <span class="fl">FALSE</span>)
 
-<span class="no">iris</span> <span class="kw">%&gt;%</span> <span class="fu"><a href="reference/GRP.html">fgroup_by</a></span>(<span class="no">Species</span>) <span class="kw">%&gt;%</span> <span class="no">num_vars</span> <span class="kw">%&gt;%</span> <span class="fu"><a href="reference/fbetween_fwithin.html">fwithin</a></span>(<span class="no">wt</span>)
+<span class="no">iris</span> <span class="kw">%&gt;%</span> <span class="fu"><a href="reference/GRP.html">fgroup_by</a></span>(<span class="no">Species</span>) <span class="kw">%&gt;%</span> <span class="no">num_vars</span> <span class="kw">%&gt;%</span> <span class="fu"><a href="reference/fbetween_fwithin.html">fwithin</a></span>(<span class="no">wt</span>)  <span class="co"># Weighted demeaning</span>
+
 
 <span class="co">## Time Series and Panel Series ---------------------------------------------------------------------------------</span>
 
 <span class="fu"><a href="reference/flag.html">flag</a></span>(<span class="no">AirPassengers</span>, -<span class="fl">1</span>:<span class="fl">3</span>)                      <span class="co"># A sequence of lags and leads</span>
 <span class="no">EuStockMarkets</span> <span class="kw">%&gt;%</span>                             <span class="co"># A sequence of first and second seasonal differences</span>
   <span class="fu"><a href="reference/fdiff.html">fdiff</a></span>(<span class="fl">0</span>:<span class="fl">1</span> * <span class="fu"><a href="https://rdrr.io/r/stats/time.html">frequency</a></span>(<span class="no">.</span>), <span class="fl">1</span>:<span class="fl">2</span>)
-<span class="fu"><a href="reference/fdiff.html">fdiff</a></span>(<span class="no">EuStockMarkets</span>, <span class="kw">rho</span> <span class="kw">=</span> <span class="fl">0.95</span>)              <span class="co"># Quasi-difference (x - rho*flag(x))</span>
-<span class="fu"><a href="reference/fdiff.html">fdiff</a></span>(<span class="no">EuStockMarkets</span>, <span class="kw">log</span> <span class="kw">=</span> <span class="fl">TRUE</span>)              <span class="co"># Log-difference (log(x/flag(x)))</span>
+<span class="fu"><a href="reference/fdiff.html">fdiff</a></span>(<span class="no">EuStockMarkets</span>, <span class="kw">rho</span> <span class="kw">=</span> <span class="fl">0.95</span>)              <span class="co"># Quasi-difference [x - rho*flag(x)]</span>
+<span class="fu"><a href="reference/fdiff.html">fdiff</a></span>(<span class="no">EuStockMarkets</span>, <span class="kw">log</span> <span class="kw">=</span> <span class="fl">TRUE</span>)              <span class="co"># Log-difference [log(x/flag(x))]</span>
 <span class="no">EuStockMarkets</span> <span class="kw">%&gt;%</span> <span class="fu"><a href="reference/fgrowth.html">fgrowth</a></span>(<span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span>(<span class="fl">1</span>, <span class="fu"><a href="https://rdrr.io/r/stats/time.html">frequency</a></span>(<span class="no">.</span>))) <span class="co"># Ordinary and seasonal growth rate</span>
-<span class="no">EuStockMarkets</span> <span class="kw">%&gt;%</span> <span class="fu"><a href="reference/fgrowth.html">fgrowth</a></span>(<span class="kw">logdiff</span> <span class="kw">=</span> <span class="fl">TRUE</span>)     <span class="co"># Log-difference growth rate (log(x/flag(x))*100)</span>
+<span class="no">EuStockMarkets</span> <span class="kw">%&gt;%</span> <span class="fu"><a href="reference/fgrowth.html">fgrowth</a></span>(<span class="kw">logdiff</span> <span class="kw">=</span> <span class="fl">TRUE</span>)     <span class="co"># Log-difference growth rate [log(x/flag(x))*100]</span>
 
 <span class="co"># Creating panel data</span>
 <span class="no">pdata</span> <span class="kw">&lt;-</span> <span class="no">EuStockMarkets</span> <span class="kw">%&gt;%</span> <span class="fu"><a href="https://rdrr.io/r/base/list.html">list</a></span>(<span class="kw">`A`</span> <span class="kw">=</span> <span class="no">.</span>, <span class="kw">`B`</span> <span class="kw">=</span> <span class="no">.</span>) <span class="kw">%&gt;%</span>
-  <span class="fu"><a href="reference/unlist2d.html">unlist2d</a></span>(<span class="kw">idcols</span> <span class="kw">=</span> <span class="st">"Id"</span>, <span class="kw">row.names</span> <span class="kw">=</span> <span class="st">"Time"</span>)
+         <span class="fu"><a href="reference/unlist2d.html">unlist2d</a></span>(<span class="kw">idcols</span> <span class="kw">=</span> <span class="st">"Id"</span>, <span class="kw">row.names</span> <span class="kw">=</span> <span class="st">"Time"</span>)
 
 <span class="fu"><a href="reference/flag.html">L</a></span>(<span class="no">pdata</span>, -<span class="fl">1</span>:<span class="fl">3</span>, ~<span class="no">Id</span>, ~<span class="no">Time</span>)                   <span class="co"># Sequence of fully identified panel-lags (L is operator for flag) </span>
-<span class="no">pdata</span> <span class="kw">%&gt;%</span> <span class="fu"><a href="reference/GRP.html">fgroup_by</a></span>(<span class="no">Id</span>) <span class="kw">%&gt;%</span> <span class="fu"><a href="reference/flag.html">flag</a></span>(-<span class="fl">1</span>:<span class="fl">3</span>, <span class="no">Time</span>) <span class="co"># Same thing...</span>
+<span class="no">pdata</span> <span class="kw">%&gt;%</span> <span class="fu"><a href="reference/GRP.html">fgroup_by</a></span>(<span class="no">Id</span>) <span class="kw">%&gt;%</span> <span class="fu"><a href="reference/flag.html">flag</a></span>(-<span class="fl">1</span>:<span class="fl">3</span>, <span class="no">Time</span>) <span class="co"># Same thing..</span>
 
-<span class="co"># collapse supports pseries and pdata.frame's</span>
+<span class="co"># collapse supports pseries and pdata.frame's, provided by the plm package</span>
 <span class="no">pdata</span> <span class="kw">&lt;-</span> <span class="kw pkg">plm</span><span class="kw ns">::</span><span class="fu"><a href="https://rdrr.io/pkg/plm/man/pdata.frame.html">pdata.frame</a></span>(<span class="no">pdata</span>, <span class="kw">index</span> <span class="kw">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span>(<span class="st">"Id"</span>, <span class="st">"Time"</span>))
-<span class="fu"><a href="reference/flag.html">L</a></span>(<span class="no">pdata</span>, -<span class="fl">1</span>:<span class="fl">3</span>)        <span class="co"># Same as above, ...</span>
-<span class="fu"><a href="reference/psacf.html">psacf</a></span>(<span class="no">pdata</span>)          <span class="co"># multivariate panel-ACF</span>
-<span class="fu"><a href="reference/psmat.html">psmat</a></span>(<span class="no">pdata</span>) <span class="kw">%&gt;%</span> <span class="no">plot</span> <span class="co"># 3D-array of time-series from panel data + plotting</span>
+<span class="fu"><a href="reference/flag.html">L</a></span>(<span class="no">pdata</span>, -<span class="fl">1</span>:<span class="fl">3</span>)          <span class="co"># Same as above, ...</span>
+<span class="fu"><a href="reference/psacf.html">psacf</a></span>(<span class="no">pdata</span>)            <span class="co"># Multivariate panel-ACF</span>
+<span class="fu"><a href="reference/psmat.html">psmat</a></span>(<span class="no">pdata</span>) <span class="kw">%&gt;%</span> <span class="no">plot</span>   <span class="co"># 3D-array of time series from panel data + plotting</span>
 
-<span class="fu"><a href="reference/fHDbetween_fHDwithin.html">HDW</a></span>(<span class="no">pdata</span>)              <span class="co"># This projects out id and time fixed-effects... (HDW is operator for fHDwithin)</span>
+<span class="fu"><a href="reference/fHDbetween_fHDwithin.html">HDW</a></span>(<span class="no">pdata</span>)              <span class="co"># This projects out id and time fixed effects.. (HDW is operator for fHDwithin)</span>
 <span class="fu"><a href="reference/fbetween_fwithin.html">W</a></span>(<span class="no">pdata</span>, <span class="kw">effect</span> <span class="kw">=</span> <span class="st">"Id"</span>) <span class="co"># Only Id effects.. (W is operator for fwithin)</span>
 
 <span class="co">## List Processing ----------------------------------------------------------------------------------------------</span>
 
 <span class="co"># Some nested list of heterogenous data objects..</span>
-<span class="no">l</span> <span class="kw">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/list.html">list</a></span>(<span class="kw">a</span> <span class="kw">=</span> <span class="fu"><a href="reference/quick-conversion.html">qM</a></span>(<span class="no">mtcars</span>[<span class="fl">1</span>:<span class="fl">8</span>]),                                   <span class="co"># matrix</span>
+<span class="no">l</span> <span class="kw">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/list.html">list</a></span>(<span class="kw">a</span> <span class="kw">=</span> <span class="fu"><a href="reference/quick-conversion.html">qM</a></span>(<span class="no">mtcars</span>[<span class="fl">1</span>:<span class="fl">8</span>]),                                   <span class="co"># Matrix</span>
           <span class="kw">b</span> <span class="kw">=</span> <span class="fu"><a href="https://rdrr.io/r/base/list.html">list</a></span>(<span class="kw">c</span> <span class="kw">=</span> <span class="no">mtcars</span>[<span class="fl">4</span>:<span class="fl">11</span>],                             <span class="co"># data.frame</span>
                    <span class="kw">d</span> <span class="kw">=</span> <span class="fu"><a href="https://rdrr.io/r/base/list.html">list</a></span>(<span class="kw">e</span> <span class="kw">=</span> <span class="no">mtcars</span>[<span class="fl">2</span>:<span class="fl">10</span>],
-                            <span class="kw">f</span> <span class="kw">=</span> <span class="fu"><a href="reference/fvar_fsd.html">fsd</a></span>(<span class="no">mtcars</span>))))                   <span class="co"># vector</span>
+                            <span class="kw">f</span> <span class="kw">=</span> <span class="fu"><a href="reference/fvar_fsd.html">fsd</a></span>(<span class="no">mtcars</span>))))                   <span class="co"># Vector</span>
 
 <span class="fu"><a href="reference/ldepth.html">ldepth</a></span>(<span class="no">l</span>)                       <span class="co"># List has 4 levels of nesting (considering that mtcars is a data.frame)</span>
 <span class="fu"><a href="reference/is.unlistable.html">is.unlistable</a></span>(<span class="no">l</span>)                <span class="co"># Can be unlisted</span>
@@ -299,7 +300,7 @@ devtools::install_github("SebKrantz/collapse")
 <span class="fu"><a href="reference/unlist2d.html">unlist2d</a></span>(<span class="no">l</span>, <span class="kw">row.names</span> <span class="kw">=</span> <span class="fl">TRUE</span>)   <span class="co"># Intelligent recursive row-binding to data.frame   </span>
 <span class="fu"><a href="reference/rapply2d.html">rapply2d</a></span>(<span class="no">l</span>, <span class="no">fmean</span>) <span class="kw">%&gt;%</span> <span class="no">unlist2d</span> <span class="co"># Taking the mean of all elements and repeating</span>
 
-<span class="co"># Application: Extracting and tidying results from (potentially nested) lists of model objects</span>
+<span class="co"># Application: extracting and tidying results from (potentially nested) lists of model objects</span>
 <span class="fu"><a href="https://rdrr.io/r/base/list.html">list</a></span>(<span class="kw">mod1</span> <span class="kw">=</span> <span class="fu"><a href="https://rdrr.io/r/stats/lm.html">lm</a></span>(<span class="no">mpg</span> ~ <span class="no">carb</span>, <span class="no">mtcars</span>),
      <span class="kw">mod2</span> <span class="kw">=</span> <span class="fu"><a href="https://rdrr.io/r/stats/lm.html">lm</a></span>(<span class="no">mpg</span> ~ <span class="no">carb</span> + <span class="no">hp</span>, <span class="no">mtcars</span>)) <span class="kw">%&gt;%</span>
   <span class="fu"><a href="https://rdrr.io/r/base/lapply.html">lapply</a></span>(<span class="no">summary</span>) <span class="kw">%&gt;%</span>
@@ -348,7 +349,7 @@ devtools::install_github("SebKrantz/collapse")
 </h3>
 <ul>
 <li>
-<strong><em>collapse</em></strong> <strong>and</strong> <strong><em>dplyr</em></strong>: The <a href="https://sebkrantz.github.io/collapse/reference/fast-statistical-functions.html">Fast Statistical Functions</a> and <a href="https://sebkrantz.github.io/collapse/reference/data-transformations.html">transformation functions and operators</a> provided by <em>collapse</em> have a <em>grouped_df</em> method, allowing them to be seamlessly integrated into <em>dplyr</em> / <em>tidyverse</em> workflows. Doing so facilitates advanced operations in <em>dplyr</em> and provides remarkable performance improvements. In addition, <em>collapse</em> provides some faster replacements for common base R / <em>dplyr</em> verbs (<code>fselect</code>/<code>get_vars</code>, <code>fgroup_by</code>, <code>fsubset</code>, <code>ftransform</code>/<code>TRA</code>, <code>roworder</code>, <code>colorder</code>, <code>frename</code>, <code>funique</code>, etc.). See also <a href="https://sebkrantz.github.io/collapse/articles/collapse_and_dplyr.html">this vignette</a>.</li>
+<strong><em>collapse</em></strong> <strong>and</strong> <strong><em>dplyr</em></strong>: The <a href="https://sebkrantz.github.io/collapse/reference/fast-statistical-functions.html">Fast Statistical Functions</a> and <a href="https://sebkrantz.github.io/collapse/reference/data-transformations.html">transformation functions and operators</a> provided by <em>collapse</em> have a <em>grouped_df</em> method, allowing them to be seamlessly integrated into <em>dplyr</em> / <em>tidyverse</em> workflows. Doing so facilitates advanced operations in <em>dplyr</em> and provides remarkable performance improvements. In addition, <em>collapse</em> provides some faster replacements for common base R / <em>dplyr</em> verbs (<code>fselect</code>/<code>get_vars</code>, <code>fgroup_by</code>, <code>fsubset</code>, <code>ftransform</code>/<code>TRA</code>, <code>roworder</code>, <code>colorder</code>, <code>frename</code>, <code>funique</code>, <code>na_omit</code>, etc.). See also <a href="https://sebkrantz.github.io/collapse/articles/collapse_and_dplyr.html">this vignette</a>.</li>
 </ul>
 <!--
 , providing further performance improvements for programming with piped expressions and non-standard evaluation

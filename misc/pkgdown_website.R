@@ -2,7 +2,7 @@
 # usethis::use_pkgdown() # overwrites _pkgdown.yml
 library(pkgdown)
 init_site()
-build_home(preview = TRUE)
+build_home(preview = FALSE)
 topics <- sort(setdiff(unlist(lapply(tools::Rd_db("collapse"),
                                     tools:::.Rd_get_metadata, "name"), use.names = FALSE),
                       c("collapse-documentation","A0-collapse-documentation","collapse-depreciated"))) # "collapse-package"
