@@ -132,7 +132,7 @@ devtools::install_github("SebKrantz/collapse")
 <div id="documentation" class="section level2">
 <h2 class="hasAnchor">
 <a href="#documentation" class="anchor"></a>Documentation</h2>
-<p><em>collapse</em> installs with a built-in structured <a href="https://sebkrantz.github.io/collapse/reference/index.html">documentation</a>, implemented via a set of separate help pages. Calling <code><a href="reference/index.html">help('collapse-documentation')</a></code> from the R console brings up the the top-level documentation page, which provides an overview of the entire functionality of the package and links to all other documentation pages.</p>
+<p><em>collapse</em> installs with a built-in structured <a href="https://sebkrantz.github.io/collapse/reference/index.html">documentation</a>, implemented via a set of separate help pages. Calling <code><a href="reference/collapse-documentation.html">help('collapse-documentation')</a></code> from the R console brings up the the top-level documentation page, which provides an overview of the entire functionality of the package and links to all other documentation pages.</p>
 <p>In addition, <em>collapse</em> provides 3 vignettes:</p>
 <ul>
 <li><p><a href="https://sebkrantz.github.io/collapse/articles/collapse_intro.html">Introduction to <em>collapse</em></a>: Introduces all main features of the package in a structured way.</p></li>
@@ -140,11 +140,11 @@ devtools::install_github("SebKrantz/collapse")
 <li><p><a href="https://sebkrantz.github.io/collapse/articles/collapse_and_plm.html"><em>collapse</em> and <em>plm</em></a>: Demonstrates the integration of <em>collapse</em> with the <em>plm</em> package and provides examples of fast and easy programming with panel data.</p></li>
 </ul>
 </div>
-<div id="examples" class="section level2">
+<div id="example-usage" class="section level2">
 <h2 class="hasAnchor">
-<a href="#examples" class="anchor"></a>Examples</h2>
+<a href="#example-usage" class="anchor"></a>Example Usage</h2>
 <p>This provides a simple set of examples introducing some important features of <em>collapse</em>. It should be easy to follow for readers familiar with R.</p>
-<details><p><summary><b>Click to expand</b> </summary></p>
+<details><p><summary><b><a>Click here to expand </a></b> </summary></p>
 <div class="sourceCode" id="cb2"><pre class="r"><span class="fu"><a href="https://rdrr.io/r/base/library.html">library</a></span>(<span class="no">collapse</span>)
 <span class="fu"><a href="https://rdrr.io/r/utils/data.html">data</a></span>(<span class="st">"iris"</span>)            <span class="co"># iris dataset in base R</span>
 <span class="no">v</span> <span class="kw">&lt;-</span> <span class="no">iris</span>$<span class="no">Sepal.Length</span>  <span class="co"># Vector</span>
@@ -335,7 +335,7 @@ devtools::install_github("SebKrantz/collapse")
 <a href="#regarding-performance" class="anchor"></a>Regarding Performance</h3>
 <p>Some simple benchmarks are provided in the <a href="https://sebkrantz.github.io/collapse/articles/index.html">vignettes</a>. In general:</p>
 <ul>
-<li><p>For simple aggregations of large data (~ 10 mio. obs) the performance is comparable to <em>data.table</em> (using functions that <em>data.table</em> also GeForce optimizes).</p></li>
+<li><p>For simple aggregations of large data (~ 10 mio. obs) the performance is comparable to <em>data.table</em> (using functions that <em>data.table</em> also GeForce optimizes), e.g. see <a href="https://sebkrantz.github.io/collapse/reference/fast-statistical-functions.html#benchmark">here</a>.</p></li>
 <li><p>For more complex categorical or weighed aggregations, and for nearly all transformations like grouped replacing and sweeping out statistics, scaling, centering, panel-lags or differences etc. <em>collapse</em> is ~10x faster than <em>data.table</em>.</p></li>
 <li><p>Due to its highly optimized R code, <em>collapse</em> is very efficient for programming. On smaller data a <em>collapse</em> implementation will execute within microseconds, whereas packages like <em>dplyr</em> or <em>data.table</em> will typically evaluate in the millisecond domain.</p></li>
 <li><p>This performance extends to grouped and weighted computations on vectors and matrices (no internal conversions, vector and matrix methods are also written in C++). With matrices <em>collapse</em> performs similar to fast packages like <em>Rfast</em> or <em>matrixStats</em>.</p></li>

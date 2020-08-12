@@ -67,12 +67,12 @@ In addition, *collapse* provides 3 vignettes:
 
 * [*collapse* and *plm*](<https://sebkrantz.github.io/collapse/articles/collapse_and_plm.html>): Demonstrates the integration of *collapse* with the *plm* package and provides examples of fast and easy programming with panel data. 
 
-## Examples
+## Example Usage
 This provides a simple set of examples introducing some important features of *collapse*. It should be easy to follow for readers familiar with R. 
 
 
 <details>
-  <summary><b>Click to expand</b> </summary>
+  <summary><b><a>Click here to expand </a></b> </summary>
   
 ``` r
 library(collapse)
