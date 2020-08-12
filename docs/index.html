@@ -327,9 +327,9 @@ devtools::install_github("SebKrantz/collapse")
 </p>
 <p>Evaluated and more extensive sets of examples are provided on the <a href="https://sebkrantz.github.io/collapse/reference/collapse-package.html">package page</a> (also accessible from R by calling <code><a href="https://rdrr.io/r/utils/example.html">example('collapse-package')</a></code>), and further in the <a href="https://sebkrantz.github.io/collapse/articles/index.html">vignettes</a> and <a href="https://sebkrantz.github.io/collapse/reference/index.html">documentation</a>.</p>
 </div>
-<div id="notes" class="section level2">
+<div id="additional-notes" class="section level2">
 <h2 class="hasAnchor">
-<a href="#notes" class="anchor"></a>Notes</h2>
+<a href="#additional-notes" class="anchor"></a>Additional Notes</h2>
 <div id="regarding-performance" class="section level3">
 <h3 class="hasAnchor">
 <a href="#regarding-performance" class="anchor"></a>Regarding Performance</h3>
@@ -347,7 +347,7 @@ devtools::install_github("SebKrantz/collapse")
 </h3>
 <ul>
 <li>
-<strong><em>collapse</em></strong> <strong>and</strong> <strong><em>dplyr</em></strong>: The <a href="https://sebkrantz.github.io/collapse/reference/fast-statistical-functions.html">Fast Statistical Functions</a> and <a href="https://sebkrantz.github.io/collapse/reference/data-transformations.html">transformation functions and operators</a> provided by <em>collapse</em> have a <em>grouped_df</em> method, allowing them to be seamlessly integrated into <em>dplyr</em> / <em>tidyverse</em> workflows. Doing so facilitates advanced operations in <em>dplyr</em> and provides remarkable performance improvements. In addition, <em>collapse</em> provides some faster replacements for common base R / <em>dplyr</em> verbs (<code>fselect</code>/<code>get_vars</code>, <code>fgroup_by</code>, <code>fsubset</code>, <code>ftransform</code>/<code>TRA</code>, <code>roworder</code>, <code>colorder</code>, <code>funique</code>). See also <a href="https://sebkrantz.github.io/collapse/articles/collapse_and_dplyr.html">this vignette</a>.</li>
+<strong><em>collapse</em></strong> <strong>and</strong> <strong><em>dplyr</em></strong>: The <a href="https://sebkrantz.github.io/collapse/reference/fast-statistical-functions.html">Fast Statistical Functions</a> and <a href="https://sebkrantz.github.io/collapse/reference/data-transformations.html">transformation functions and operators</a> provided by <em>collapse</em> have a <em>grouped_df</em> method, allowing them to be seamlessly integrated into <em>dplyr</em> / <em>tidyverse</em> workflows. Doing so facilitates advanced operations in <em>dplyr</em> and provides remarkable performance improvements. In addition, <em>collapse</em> provides some faster replacements for common base R / <em>dplyr</em> verbs (<code>fselect</code>/<code>get_vars</code>, <code>fgroup_by</code>, <code>fsubset</code>, <code>ftransform</code>/<code>TRA</code>, <code>roworder</code>, <code>colorder</code>, <code>frename</code>, <code>funique</code>, etc.). See also <a href="https://sebkrantz.github.io/collapse/articles/collapse_and_dplyr.html">this vignette</a>.</li>
 </ul>
 <!--
 , providing further performance improvements for programming with piped expressions and non-standard evaluation
