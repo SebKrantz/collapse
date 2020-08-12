@@ -198,7 +198,7 @@ replace_outliers replaces values falling outside a 1- or 2-sided numeric thresho
     <p>These functions are not generic and do not offer support for factors or date(-time) objects. see <code><a href='https://dplyr.tidyverse.org/reference/recode.html'>dplyr::recode_factor</a></code>, <em>forcats</em> and other appropriate packages for dealing with these classes.</p>
     <h2 class="hasAnchor" id="see-also"><a class="anchor" href="#see-also"></a>See also</h2>
 
-    <div class='dont-index'><p><a href='collapse-documentation.html'>Collapse Overview</a>, <a href='small-helper.html'>Small (Helper) Functions</a></p></div>
+    <div class='dont-index'><p><a href='index.html'>Collapse Overview</a>, <a href='small-helper.html'>Small (Helper) Functions</a></p></div>
 
     <h2 class="hasAnchor" id="examples"><a class="anchor" href="#examples"></a>Examples</h2>
     <pre class="examples"><div class='input'><span class='fu'>recode_char</span>(<span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span>(<span class='st'>"a"</span>,<span class='st'>"b"</span>,<span class='st'>"c"</span>), <span class='kw'>a</span> <span class='kw'>=</span> <span class='st'>"b"</span>, <span class='kw'>b</span> <span class='kw'>=</span> <span class='st'>"c"</span>)</div><div class='output co'>#&gt; [1] "b" "c" "c"</div><div class='input'><span class='fu'>recode_char</span>(<span class='no'>month.name</span>, <span class='kw'>ber</span> <span class='kw'>=</span> <span class='fl'>NA</span>, <span class='kw'>regex</span> <span class='kw'>=</span> <span class='fl'>TRUE</span>)</div><div class='output co'>#&gt;  [1] "January"  "February" "March"    "April"    "May"      "June"    
