@@ -196,7 +196,7 @@ EuStockMarkets %>% fgrowth(logdiff = TRUE)     # Log-difference growth rate (log
 
 # Creating panel data
 pdata <- EuStockMarkets %>% list(`A` = ., `B` = .) %>% 
-         unlist2d(idcols = "Id", row.names = "Time")  
+  unlist2d(idcols = "Id", row.names = "Time")  
 
 L(pdata, -1:3, ~Id, ~Time)                   # Sequence of fully identified panel-lags (L is operator for flag) 
 pdata %>% fgroup_by(Id) %>% flag(-1:3, Time) # Same thing...
@@ -215,7 +215,8 @@ W(pdata, effect = "Id") # Only Id effects.. (W is operator for fwithin)
 # Some nested list of heterogenous data objects..
 l <- list(a = qM(mtcars[1:8]),                                   # matrix
           b = list(c = mtcars[4:11],                             # data.frame
-                   d = list(e = mtcars[2:10], f = fsd(mtcars)))) # vector
+                   d = list(e = mtcars[2:10], 
+                            f = fsd(mtcars))))                   # vector
 
 ldepth(l)                       # List has 4 levels of nesting (considering that mtcars is a data.frame)
 is.unlistable(l)                # Can be unlisted
@@ -230,7 +231,7 @@ rapply2d(l, fmean) %>% unlist2d # Taking the mean of all elements and repeating
 
 # Application: Extracting and tidying results from (potentially nested) lists of model objects
 list(mod1 = lm(mpg ~ carb, mtcars), 
-     mod2 = lm(mpg ~ carb + wt, mtcars)) %>%
+     mod2 = lm(mpg ~ carb + hp, mtcars)) %>%
   lapply(summary) %>% 
   get_elem("coef", regex = TRUE) %>%   # Regular expression search and extraction
   unlist2d(idcols = "Model", row.names = "Predictor")
@@ -241,18 +242,18 @@ irisNA <- na_insert(iris, prop = 0.15)  # Randmonly set 15% missing
 fNobs(irisNA)                           # Observation count
 pwNobs(irisNA)                          # Pairwise observation count
 fNobs(irisNA, g)                        # Grouped observation count
-fNdistinct(irisNA)                      # Same with distinct values... (default na.rm = TRUE skips missing values)
+fNdistinct(irisNA)                      # Same with distinct values... (default na.rm = TRUE skips NA's)
 fNdistinct(irisNA, g)  
 
-descr(iris)                                 # Detailed statistical description of data
+descr(iris)                                   # Detailed statistical description of data
 
-varying(iris, ~ Species)                    # Show which variables vary within Species
-varying(pdata)                              # Which are time-varying ? 
-qsu(iris)                                   # Fast (one-pass) summary
-qsu(iris, ~ Species, higher = TRUE)         # Grouped summary + higher moments
-qsu(pdata, higher = TRUE)                   # Panel-data summary (between and within entities)
-pwcor(airquality, N = TRUE, P = TRUE)       # Pairwise correlations with p-value
-pwcor(W(pdata, keep.ids = FALSE), P = TRUE) # Within- correlations
+varying(iris, ~ Species)                      # Show which variables vary within Species
+varying(pdata)                                # Which are time-varying ? 
+qsu(iris, w = ~ wt)                           # Fast (one-pass) summary (with weights)
+qsu(iris, ~ Species, w = ~ wt, higher = TRUE) # Grouped summary + higher moments
+qsu(pdata, higher = TRUE)                     # Panel-data summary (between and within entities)
+pwcor(num_vars(irisNA), N = TRUE, P = TRUE)   # Pairwise correlations with p-value and observations
+pwcor(W(pdata, keep.ids = FALSE), P = TRUE)   # Within-correlations
 
 ```
 
