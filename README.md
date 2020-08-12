@@ -265,7 +265,7 @@ Evaluated and more extensive sets of examples are provided on the [package page]
 ### Regarding Performance 
 Some simple benchmarks are provided in the [vignettes](<https://sebkrantz.github.io/collapse/articles/index.html>). In general:
 
-* For simple aggregations of large data (~ 10 mio. obs) the performance is comparable to *data.table* (using functions that *data.table* also GeForce optimizes).
+* For simple aggregations of large data (~ 10 mio. obs) the performance is comparable to *data.table* (using functions that *data.table* also GeForce optimizes), e.g. see [here](<https://sebkrantz.github.io/collapse/reference/fast-statistical-functions.html#benchmark>).
 
 * For more complex categorical or weighed aggregations, and for nearly all transformations like grouped replacing and sweeping out statistics, scaling, centering, panel-lags or differences etc. *collapse* is ~10x faster than *data.table*. 
 
