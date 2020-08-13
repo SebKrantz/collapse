@@ -9,7 +9,7 @@ topics <- sort(setdiff(unlist(lapply(tools::Rd_db("collapse"),
 build_reference(examples = TRUE, topics = topics)
 # build_articles(lazy = FALSE) # Still do with NCRAN = TRUE
 # Replace all collapse-documentation.html with index.html !!
-# Replce all <h1>Reference</h1> with <h1>Collapse Documentation & Overview</h1>
+# Replce all <h1>Reference</h1> with <h1>Documentation & Overview</h1>
 # Replce all <h1>Articles</h1> with <h1>Vignettes / Articles</h1>
 build_news()
 # in index.html, remove misc/figures.
