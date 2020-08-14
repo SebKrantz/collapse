@@ -12,6 +12,8 @@ build_reference(examples = TRUE, topics = topics) # "collapse-package"
 # Replace all collapse-documentation.html with index.html !!
 # Replce all <h1>Reference</h1> with <h1>Documentation & Overview</h1>
 # Replce all <h1>Articles</h1> with <h1>Vignettes / Articles</h1>
+# Replace &amp;lt;- with &lt;- and %&amp;gt;% with %&gt;% and
+# <span class='kw'>&amp;</span><span class='no'>lt</span>;- with <span class='kw'>&lt;-</span>
 build_news()
 preview_site()
 
