@@ -204,14 +204,14 @@
 
     <pre>
 <span class='co'>## default vector method</span>
-<span class='no'>mpg</span> <span class='kw'>&amp;</span><span class='no'>lt</span>;- <span class='no'>mtcars</span>$<span class='no'>mpg</span>
+<span class='no'>mpg</span> <span class='kw'>&lt;-</span> <span class='no'>mtcars</span>$<span class='no'>mpg</span>
 <span class='fu'>fsum</span>(<span class='no'>mpg</span>)                         <span class='co'># Simple sum</span>
 <span class='fu'>fsum</span>(<span class='no'>mpg</span>, <span class='kw'>w</span> <span class='kw'>=</span> <span class='no'>mtcars</span>$<span class='no'>hp</span>)          <span class='co'># Weighted sum (total): Weighted by hp</span>
 <span class='fu'>fsum</span>(<span class='no'>mpg</span>, <span class='kw'>TRA</span> <span class='kw'>=</span> <span class='st'>"%"</span>)              <span class='co'># Simple transformation: obtain percentages of mpg</span>
 <span class='fu'>fsum</span>(<span class='no'>mpg</span>, <span class='no'>mtcars</span>$<span class='no'>cyl</span>)             <span class='co'># Grouped sum</span>
 <span class='fu'>fsum</span>(<span class='no'>mpg</span>, <span class='no'>mtcars</span>$<span class='no'>cyl</span>, <span class='no'>mtcars</span>$<span class='no'>hp</span>)  <span class='co'># Weighted grouped sum (total)</span>
 <span class='fu'>fsum</span>(<span class='no'>mpg</span>, <span class='no'>mtcars</span>[<span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span>(<span class='fl'>2</span>,<span class='fl'>8</span>:<span class='fl'>9</span>)])       <span class='co'># More groups..</span>
-<span class='no'>g</span> <span class='kw'>&amp;</span><span class='no'>lt</span>;- <span class='fu'><a href='GRP.html'>GRP</a></span>(<span class='no'>mtcars</span>, ~ <span class='no'>cyl</span> + <span class='no'>vs</span> + <span class='no'>am</span>) <span class='co'># Precomputing groups gives more speed !</span>
+<span class='no'>g</span> <span class='kw'>&lt;-</span> <span class='fu'><a href='GRP.html'>GRP</a></span>(<span class='no'>mtcars</span>, ~ <span class='no'>cyl</span> + <span class='no'>vs</span> + <span class='no'>am</span>) <span class='co'># Precomputing groups gives more speed !</span>
 <span class='fu'>fsum</span>(<span class='no'>mpg</span>, <span class='no'>g</span>)
 <span class='fu'><a href='fmean.html'>fmean</a></span>(<span class='no'>mpg</span>, <span class='no'>g</span>) <span class='kw'>==</span> <span class='fu'>fsum</span>(<span class='no'>mpg</span>, <span class='no'>g</span>) / <span class='fu'><a href='fNobs.html'>fNobs</a></span>(<span class='no'>mpg</span>, <span class='no'>g</span>)
 <span class='fu'>fsum</span>(<span class='no'>mpg</span>, <span class='no'>g</span>, <span class='kw'>TRA</span> <span class='kw'>=</span> <span class='st'>"%"</span>)           <span class='co'># Percentages by group</span>
@@ -223,7 +223,7 @@
 <span class='fu'>fsum</span>(<span class='no'>mtcars</span>, <span class='no'>g</span>, <span class='kw'>TRA</span> <span class='kw'>=</span> <span class='st'>"%"</span>)
 
 <span class='co'>## matrix method</span>
-<span class='no'>m</span> <span class='kw'>&amp;</span><span class='no'>lt</span>;- <span class='fu'><a href='quick-conversion.html'>qM</a></span>(<span class='no'>mtcars</span>)
+<span class='no'>m</span> <span class='kw'>&lt;-</span> <span class='fu'><a href='quick-conversion.html'>qM</a></span>(<span class='no'>mtcars</span>)
 <span class='fu'>fsum</span>(<span class='no'>m</span>)
 <span class='fu'>fsum</span>(<span class='no'>m</span>, <span class='kw'>TRA</span> <span class='kw'>=</span> <span class='st'>"%"</span>)
 <span class='fu'>fsum</span>(<span class='no'>m</span>, <span class='no'>g</span>)
@@ -231,17 +231,17 @@
 
 <span class='co'>## method for grouped tibbles - for use with dplyr</span>
 <span class='fu'><a href='https://rdrr.io/r/base/library.html'>library</a></span>(<span class='no'>dplyr</span>)
-<span class='no'>mtcars</span> <span class='kw'>%&amp;gt;%</span> <span class='fu'><a href='https://dplyr.tidyverse.org/reference/group_by.html'>group_by</a></span>(<span class='no'>cyl</span>,<span class='no'>vs</span>,<span class='no'>am</span>) <span class='kw'>%&amp;gt;%</span> <span class='fu'>fsum</span>(<span class='no'>hp</span>)  <span class='co'># Weighted grouped sum (total)</span>
-<span class='no'>mtcars</span> <span class='kw'>%&amp;gt;%</span> <span class='fu'><a href='GRP.html'>fgroup_by</a></span>(<span class='no'>cyl</span>,<span class='no'>vs</span>,<span class='no'>am</span>) <span class='kw'>%&amp;gt;%</span> <span class='fu'>fsum</span>(<span class='no'>hp</span>) <span class='co'># Equivalent and faster !!</span>
-<span class='no'>mtcars</span> <span class='kw'>%&amp;gt;%</span> <span class='fu'><a href='GRP.html'>fgroup_by</a></span>(<span class='no'>cyl</span>,<span class='no'>vs</span>,<span class='no'>am</span>) <span class='kw'>%&amp;gt;%</span> <span class='fu'>fsum</span>(<span class='kw'>TRA</span> <span class='kw'>=</span> <span class='st'>"%"</span>)
-<span class='no'>mtcars</span> <span class='kw'>%&amp;gt;%</span> <span class='fu'><a href='GRP.html'>fgroup_by</a></span>(<span class='no'>cyl</span>,<span class='no'>vs</span>,<span class='no'>am</span>) <span class='kw'>%&amp;gt;%</span> <span class='fu'><a href='select_replace_vars.html'>fselect</a></span>(<span class='no'>mpg</span>) <span class='kw'>%&amp;gt;%</span> <span class='no'>fsum</span></pre>
+<span class='no'>mtcars</span> <span class='kw'>%&gt;%</span> <span class='fu'><a href='https://dplyr.tidyverse.org/reference/group_by.html'>group_by</a></span>(<span class='no'>cyl</span>,<span class='no'>vs</span>,<span class='no'>am</span>) <span class='kw'>%&gt;%</span> <span class='fu'>fsum</span>(<span class='no'>hp</span>)  <span class='co'># Weighted grouped sum (total)</span>
+<span class='no'>mtcars</span> <span class='kw'>%&gt;%</span> <span class='fu'><a href='GRP.html'>fgroup_by</a></span>(<span class='no'>cyl</span>,<span class='no'>vs</span>,<span class='no'>am</span>) <span class='kw'>%&gt;%</span> <span class='fu'>fsum</span>(<span class='no'>hp</span>) <span class='co'># Equivalent and faster !!</span>
+<span class='no'>mtcars</span> <span class='kw'>%&gt;%</span> <span class='fu'><a href='GRP.html'>fgroup_by</a></span>(<span class='no'>cyl</span>,<span class='no'>vs</span>,<span class='no'>am</span>) <span class='kw'>%&gt;%</span> <span class='fu'>fsum</span>(<span class='kw'>TRA</span> <span class='kw'>=</span> <span class='st'>"%"</span>)
+<span class='no'>mtcars</span> <span class='kw'>%&gt;%</span> <span class='fu'><a href='GRP.html'>fgroup_by</a></span>(<span class='no'>cyl</span>,<span class='no'>vs</span>,<span class='no'>am</span>) <span class='kw'>%&gt;%</span> <span class='fu'><a href='select_replace_vars.html'>fselect</a></span>(<span class='no'>mpg</span>) <span class='kw'>%&gt;%</span> <span class='no'>fsum</span></pre>
     <h2 class="hasAnchor" id="benchmark"><a class="anchor" href="#benchmark"></a>Benchmark</h2>
 
     <pre>
 ## This compares fsum with data.table (2 threads) and base::rowsum
 # Starting with small data
-mtcDT &amp;lt;- qDT(mtcars)
-f &amp;lt;- qF(mtcars$cyl)
+mtcDT &lt;- qDT(mtcars)
+f &lt;- qF(mtcars$cyl)
 
 library(microbenchmark)
 microbenchmark(mtcDT[, lapply(.SD, sum), by = f],
@@ -254,8 +254,8 @@ microbenchmark(mtcDT[, lapply(.SD, sum), by = f],
      fsum(mtcDT, f, na.rm = FALSE)   1.000000   1.000000  1.000000  1.000000  1.000000  1.000000   100 a
 
 # Now larger data
-tdata &amp;lt;- qDT(replicate(100, rnorm(1e5), simplify = FALSE)) # 100 columns with 100.000 obs
-f &amp;lt;- qF(sample.int(1e4, 1e5, TRUE))                        # A factor with 10.000 groups
+tdata &lt;- qDT(replicate(100, rnorm(1e5), simplify = FALSE)) # 100 columns with 100.000 obs
+f &lt;- qF(sample.int(1e4, 1e5, TRUE))                        # A factor with 10.000 groups
 
 microbenchmark(tdata[, lapply(.SD, sum), by = f],
                rowsum(tdata, f, reorder = FALSE),
