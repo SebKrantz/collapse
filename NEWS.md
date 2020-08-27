@@ -1,3 +1,6 @@
+# collapse 1.3.1
+A patch for v1.3.0 that takes care of the failures of some unit tests on certain operating systems (mostly because of numeric precision issues). No changes to the code or functionality.
+
 # collapse 1.3.0
 collapse 1.3.0, released mid August 2020, is another major update:
 
