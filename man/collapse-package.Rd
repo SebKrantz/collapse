@@ -170,8 +170,8 @@ head(fmedian(d, f, w, "-"), 3)     # subtracting the weighted group-median
 head(fmode(d, f, w, "replace"), 3) # replace with weighted statistical mode
 
 ## Some more advanced transformations...
-head(fbetween(d))                             # Averaging (same as fmean(d, TRA = "replace"), but faster)
-head(fwithin(d))                              # Centering (same as fmean(d, TRA = "-"))
+head(fbetween(d))                             # Averaging (faster t.: fmean(d, TRA = "replace"))
+head(fwithin(d))                              # Centering (faster than: fmean(d, TRA = "-"))
 head(fwithin(d, f, w))                        # Grouped and weighted (same as fmean(d, f, w, "-"))
 head(fwithin(d, f, w, mean = 5))              # Setting a custom mean
 head(fwithin(d, f, w, theta = 0.76))          # Quasi-centering i.e. d - theta*fbetween(d, f, w)
@@ -182,13 +182,13 @@ head(fscale(d, mean = FALSE, sd = 3))         # Mean preserving scaling
 head(fscale(d, f, w))                         # Grouped and weighted scaling and centering
 head(fscale(d, f, w, mean = 5, sd = 3))       # Custom grouped and weighted scaling and centering
 head(fscale(d, f, w, mean = FALSE,            # Preserving group means
-            sd = "within.sd"))                # and setting the group-sd to fsd(fwithin(d, f, w), w = w)
+            sd = "within.sd"))                # and setting group-sd to fsd(fwithin(d, f, w), w = w)
 head(fscale(d, f, w, mean = "overall.mean",   # Full harmonization of group means and variances,
             sd = "within.sd"))                # while preserving the level and scale of the data.
 
-head(get_vars(iris, 1:2))                      # Use get_vars for fast selecting columns, gv is shortcut
-head(fHDbetween(gv(iris, 1:2), gv(iris, 3:5))) # Linear prediction with factors and continuous covariates
-head(fHDwithin(gv(iris, 1:2), gv(iris, 3:5)))  # Linear partialling out factors and continuous covariates
+head(get_vars(iris, 1:2))                      # Use get_vars for fast selecting, gv is shortcut
+head(fHDbetween(gv(iris, 1:2), gv(iris, 3:5))) # Linear prediction with factors and covariates
+head(fHDwithin(gv(iris, 1:2), gv(iris, 3:5)))  # Linear partialling out factors and covariates
 ss(iris, 1:10, 1:2)                            # Similarly fsubset/ss for fast subsetting rows
 
 # Simple Time-Computations..
@@ -230,10 +230,10 @@ BY(mtcars, f2, quantile)
 BY(mtcars, f2, quantile, expand.wide = TRUE)
 # For efficient (grouped) replacing and sweeping out computed statistics, use TRA()
 sds <- fsd(mtcars)
-head(TRA(mtcars, sds, "/"))     # Simple scaling (if sd's are not needed, use fsd(mtcars, TRA = "/"))
+head(TRA(mtcars, sds, "/"))     # Simple scaling (if sd's not needed, use fsd(mtcars, TRA = "/"))
 microbenchmark(TRA(mtcars, sds, "/"), sweep(mtcars, 2, sds, "/")) # A remarkable performance gain..
 sds <- fsd(mtcars, f2)
-head(TRA(mtcars, sds, "/", f2)) # Groupd scaling (if sd's are not needed, use fsd(mtcars, f2, TRA = "/"))
+head(TRA(mtcars, sds, "/", f2)) # Groupd scaling (if sd's not needed: fsd(mtcars, f2, TRA = "/"))
 
 # All functions above perserve the structure of matrices / data frames
 # If conversions are required, use these efficient functions:
@@ -261,8 +261,8 @@ qsu(wlddev, pid = ~ country,           # Panel-summarize columns 9 though 12 of 
 qsu(wlddev, ~ region, ~ country,       # Do all of that by region and also compute higher moments
     cols = 9:12, higher = TRUE)        # -> returns a 4D array
 qsu(wlddev, ~ region, ~ country, cols = 9:12,
-    higher = TRUE, array = FALSE) \%>\%                           # Return a list of statistics matrices..
-unlist2d(c("Variable","Trans"), row.names = "Region") \%>\% head  # and turn this into a tidy data.frame
+    higher = TRUE, array = FALSE) \%>\%                           # Return as a list of matrices..
+unlist2d(c("Variable","Trans"), row.names = "Region") \%>\% head  # and turn into a tidy data.frame
 pwcor(num_vars(wlddev), P = TRUE)                           # Pairwise correlations with p-value
 pwcor(fmean(num_vars(wlddev), wlddev$country), P = TRUE)    # Correlating country means
 pwcor(fwithin(num_vars(wlddev), wlddev$country), P = TRUE)  # Within-country correlations
