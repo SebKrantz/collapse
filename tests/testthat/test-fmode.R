@@ -192,18 +192,18 @@ test_that("fmode with weights performs as intended (unbiased)", {
 
 test_that("fmode performs like fmode with weights all equal", {
   for(t in c("first","min","max")) {
-  expect_equal(fmode(NA, ties = t), fmode(NA, w = 0.99999999, ties = t))
+  expect_equal(fmode(NA, ties = t), fmode(NA, w = 0.9, ties = t))
   expect_equal(fmode(NA, na.rm = FALSE, ties = t), fmode(NA, w = 2.946, na.rm = FALSE, ties = t))
   expect_equal(fmode(1, ties = t), fmode(1, w = 3, ties = t))
-  expect_equal(fmode(1:3, ties = t), fmode(1:3, w = rep(0.999,3), ties = t))
+  expect_equal(fmode(1:3, ties = t), fmode(1:3, w = rep(0.9,3), ties = t))
   expect_equal(fmode(-1:1, ties = t), fmode(-1:1, w = rep(4.2,3), ties = t))
   expect_equal(fmode(1, na.rm = FALSE, ties = t), fmode(1, w = 5, na.rm = FALSE, ties = t))
-  expect_equal(fmode(1:3, na.rm = FALSE, ties = t), fmode(1:3, w = rep(1.44565, 3), na.rm = FALSE, ties = t))
-  expect_equal(fmode(-1:1, na.rm = FALSE, ties = t), fmode(-1:1, w = rep(1.44565, 3), na.rm = FALSE, ties = t))
+  expect_equal(fmode(1:3, na.rm = FALSE, ties = t), fmode(1:3, w = rep(1.4, 3), na.rm = FALSE, ties = t))
+  expect_equal(fmode(-1:1, na.rm = FALSE, ties = t), fmode(-1:1, w = rep(1.4, 3), na.rm = FALSE, ties = t))
   expect_equal(fmode(x, ties = t), fmode(x, w = rep(1,100), ties = t))
-  expect_equal(fmode(x, na.rm = FALSE, ties = t), fmode(x, w = rep(1.44565, 100), na.rm = FALSE, ties = t))
-  expect_equal(fmode(xNA, na.rm = FALSE, ties = t), fmode(xNA, w = rep(4.676587, 100), na.rm = FALSE, ties = t))
-  expect_equal(fmode(xNA, ties = t), fmode(xNA, w = rep(4.676587, 100), ties = t))
+  expect_equal(fmode(x, na.rm = FALSE, ties = t), fmode(x, w = rep(1.4, 100), na.rm = FALSE, ties = t))
+  expect_equal(fmode(xNA, na.rm = FALSE, ties = t), fmode(xNA, w = rep(4.6, 100), na.rm = FALSE, ties = t))
+  expect_equal(fmode(xNA, ties = t), fmode(xNA, w = rep(4.6, 100), ties = t))
   expect_equal(fmode(m, ties = t), fmode(m, w = rep(6587, l), ties = t))
   expect_equal(fmode(m, na.rm = FALSE, ties = t), fmode(m, w = rep(6587, l), na.rm = FALSE, ties = t))
   expect_equal(fmode(mNA, na.rm = FALSE, ties = t), fmode(mNA, w = rep(6587, l), na.rm = FALSE, ties = t))
@@ -213,16 +213,16 @@ test_that("fmode performs like fmode with weights all equal", {
   expect_equal(fmode(dataNA, na.rm = FALSE, ties = t), fmode(dataNA, w = rep(6787, l), na.rm = FALSE, ties = t))
   expect_equal(fmode(dataNA, ties = t), fmode(dataNA, w = rep(6787, l), ties = t))
   expect_equal(fmode(x, f, ties = t), fmode(x, f, rep(546,100), ties = t))
-  expect_equal(fmode(x, f, na.rm = FALSE, ties = t), fmode(x, f, rep(5.88,100), na.rm = FALSE, ties = t))
+  expect_equal(fmode(x, f, na.rm = FALSE, ties = t), fmode(x, f, rep(5,100), na.rm = FALSE, ties = t))
   expect_equal(fmode(xNA, f, na.rm = FALSE, ties = t), fmode(xNA, f, rep(52.7,100), na.rm = FALSE, ties = t))
-  expect_equal(fmode(xNA, f, ties = t), fmode(xNA, f, rep(5997456,100), ties = t))
+  expect_equal(fmode(xNA, f, ties = t), fmode(xNA, f, rep(599,100), ties = t))
   expect_equal(fmode(m, g, ties = t), fmode(m, g, rep(546,l), ties = t))
-  expect_equal(fmode(m, g, na.rm = FALSE, ties = t), fmode(m, g, rep(0.0001,l), na.rm = FALSE, ties = t))
-  expect_equal(fmode(mNA, g, na.rm = FALSE, ties = t), fmode(mNA, g, rep(5.7,l), na.rm = FALSE, ties = t))
+  expect_equal(fmode(m, g, na.rm = FALSE, ties = t), fmode(m, g, rep(1,l), na.rm = FALSE, ties = t))
+  expect_equal(fmode(mNA, g, na.rm = FALSE, ties = t), fmode(mNA, g, rep(7,l), na.rm = FALSE, ties = t))
   expect_equal(fmode(mNA, g, ties = t), fmode(mNA, g, rep(1,l), ties = t))
   expect_equal(fmode(data, g, ties = t), fmode(data, g, rep(53,l), ties = t))
   expect_equal(fmode(data, g, na.rm = FALSE, ties = t), fmode(data, g, rep(546,l), na.rm = FALSE, ties = t))
-  expect_equal(fmode(dataNA, g, na.rm = FALSE, ties = t), fmode(dataNA, g, rep(0.9,l), na.rm = FALSE, ties = t)) # rep(0.999999,l) failed CRAN Arch i386
+  expect_equal(fmode(dataNA, g, na.rm = FALSE, ties = t), fmode(dataNA, g, rep(1,l), na.rm = FALSE, ties = t)) # rep(0.999999,l) failed CRAN Arch i386
   expect_equal(fmode(dataNA, g, ties = t), fmode(dataNA, g, rep(999,l), ties = t)) # rep(999.9999,l) failed CRAN Arch i386
   }
 })
