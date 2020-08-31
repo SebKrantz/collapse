@@ -9,9 +9,9 @@ LogicalVector ganyNACppImpl(Vector<RTYPE> x, int ng, IntegerVector g) {
   LogicalVector out(ng);
 
   if(RTYPE == REALSXP) { // numeric vector: all logical operations on NA/NaN evaluate to false, except != which is true.
-    for(int i = 0; i != l; ++i) if(x[i] != x[i]) out[g[i]-1] = true;
+    for(int i = 0; i < l; ++i) if(x[i] != x[i]) out[g[i]-1] = true;
   } else { // other vectors
-    for(int i = 0; i != l; ++i) if(x[i] == Vector<RTYPE>::get_na()) out[g[i]-1] = true;
+    for(int i = 0; i < l; ++i) if(x[i] == Vector<RTYPE>::get_na()) out[g[i]-1] = true;
   }
 
   return out;

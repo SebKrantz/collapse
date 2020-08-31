@@ -90,27 +90,30 @@ collap works with collapse's Fast Statistical Functions, providing extremely fas
 <li>
   <a href="../news/index.html">News</a>
 </li>
+<li>
+  <a href="https://sebkrantz.github.io/Rblog/" target="_blank">Blog</a>
+</li>
       </ul>
       <ul class="nav navbar-nav navbar-right">
         <li>
   <a href="https://twitter.com/collapse_R">
     <span class="fa fa-twitter"></span>
-     
+
   </a>
 </li>
 <li>
   <a href="https://github.com/SebKrantz/collapse">
     <span class="fa fa-github"></span>
-     
+
   </a>
 </li>
       </ul>
-      
+
     </div><!--/.nav-collapse -->
   </div><!--/.container -->
 </div><!--/.navbar -->
 
-      
+
 
       </header>
 
@@ -118,7 +121,7 @@ collap works with collapse's Fast Statistical Functions, providing extremely fas
   <div class="col-md-9 contents">
     <div class="page-header">
     <h1>Advanced Data Aggregation</h1>
-    
+
     <div class="hidden name"><code>collap.Rd</code></div>
     </div>
 
@@ -330,7 +333,7 @@ collap works with collapse's Fast Statistical Functions, providing extremely fas
 #&gt; 1     setosa        5.006       3.428
 #&gt; 2 versicolor        5.936       2.770
 #&gt; 3  virginica        6.588       2.974
-#&gt; 
+#&gt;
 #&gt; $fmedian
 #&gt;      Species Petal.Length Petal.Width
 #&gt; 1     setosa         1.50         0.2
@@ -377,7 +380,7 @@ collap works with collapse's Fast Statistical Functions, providing extremely fas
 <span class='no'>iris</span> <span class='kw'>%&gt;%</span> <span class='fu'><a href='GRP.html'>fgroup_by</a></span>(<span class='no'>Species</span>) <span class='kw'>%&gt;%</span> <span class='no'>collapg</span>                        <span class='co'># dplyr style, but faster</span></div><div class='output co'>#&gt; <span style='color: #949494;'># A tibble: 3 x 8</span><span>
 #&gt;   Species    Sepal.Length Sepal.Width Petal.Length Petal.Width    wt AWMSL AWMSW
 #&gt;   </span><span style='color: #949494;font-style: italic;'>&lt;fct&gt;</span><span>             </span><span style='color: #949494;font-style: italic;'>&lt;dbl&gt;</span><span>       </span><span style='color: #949494;font-style: italic;'>&lt;dbl&gt;</span><span>        </span><span style='color: #949494;font-style: italic;'>&lt;dbl&gt;</span><span>       </span><span style='color: #949494;font-style: italic;'>&lt;dbl&gt;</span><span> </span><span style='color: #949494;font-style: italic;'>&lt;dbl&gt;</span><span> </span><span style='color: #949494;font-style: italic;'>&lt;lgl&gt;</span><span> </span><span style='color: #949494;font-style: italic;'>&lt;lgl&gt;</span><span>
-#&gt; </span><span style='color: #BCBCBC;'>1</span><span> setosa             5.01        3.43         1.46       0.246 0.882 FALSE TRUE 
+#&gt; </span><span style='color: #BCBCBC;'>1</span><span> setosa             5.01        3.43         1.46       0.246 0.882 FALSE TRUE
 #&gt; </span><span style='color: #BCBCBC;'>2</span><span> versicolor         5.94        2.77         4.26       1.33  0.692 TRUE  FALSE
 #&gt; </span><span style='color: #BCBCBC;'>3</span><span> virginica          6.59        2.97         5.55       2.03  0.779 TRUE  FALSE</div><div class='input'>
 <span class='co'>## Multi-Type Aggregation --------------------------------------</span>
@@ -617,7 +620,7 @@ collap works with collapse's Fast Statistical Functions, providing extremely fas
 #&gt; 4 Afghanistan   1990       NA 49.69089   NA  249072222
 #&gt; 5 Afghanistan   2000 349.7596 55.61818   NA 1045170000
 #&gt; 6 Afghanistan   2010 506.9931 61.12978   NA 5298066667
-#&gt; 
+#&gt;
 #&gt; $fNobs
 #&gt;       country decade PCGDP LIFEEX GINI ODA
 #&gt; 1 Afghanistan   1960     0      6    0   6
@@ -820,16 +823,16 @@ collap works with collapse's Fast Statistical Functions, providing extremely fas
 #&gt; </span><span style='color: #949494;'># ... with 1,502 more rows, and 1 more variable: ODA </span><span style='color: #949494;font-style: italic;'>&lt;dbl&gt;</span><span></div><div class='input'><span class='no'>wlddev</span> <span class='kw'>%&gt;%</span> <span class='fu'><a href='GRP.html'>fgroup_by</a></span>(<span class='no'>country</span>, <span class='no'>decade</span>) <span class='kw'>%&gt;%</span> <span class='fu'>collapg</span>(<span class='kw'>w</span> <span class='kw'>=</span> <span class='no'>ODA</span>)</div><div class='output co'>#&gt; </span><span style='color: #949494;'># A tibble: 1,512 x 12</span><span>
 #&gt;    country decade      ODA iso3c date        year region income OECD  PCGDP
 #&gt;    </span><span style='color: #949494;font-style: italic;'>&lt;chr&gt;</span><span>    </span><span style='color: #949494;font-style: italic;'>&lt;dbl&gt;</span><span>    </span><span style='color: #949494;font-style: italic;'>&lt;dbl&gt;</span><span> </span><span style='color: #949494;font-style: italic;'>&lt;fct&gt;</span><span> </span><span style='color: #949494;font-style: italic;'>&lt;date&gt;</span><span>     </span><span style='color: #949494;font-style: italic;'>&lt;dbl&gt;</span><span> </span><span style='color: #949494;font-style: italic;'>&lt;fct&gt;</span><span>  </span><span style='color: #949494;font-style: italic;'>&lt;fct&gt;</span><span>  </span><span style='color: #949494;font-style: italic;'>&lt;lgl&gt;</span><span> </span><span style='color: #949494;font-style: italic;'>&lt;dbl&gt;</span><span>
-#&gt; </span><span style='color: #BCBCBC;'> 1</span><span> Afghan~   </span><span style='text-decoration: underline;'>1</span><span>960  1.37</span><span style='color: #949494;'>e</span><span> 9 AFG   1966-01-01 </span><span style='text-decoration: underline;'>1</span><span>963. South~ Low i~ FALSE   </span><span style='color: #BB0000;'>NA</span><span> 
-#&gt; </span><span style='color: #BCBCBC;'> 2</span><span> Afghan~   </span><span style='text-decoration: underline;'>1</span><span>970  2.02</span><span style='color: #949494;'>e</span><span> 9 AFG   1967-01-01 </span><span style='text-decoration: underline;'>1</span><span>970. South~ Low i~ FALSE   </span><span style='color: #BB0000;'>NA</span><span> 
-#&gt; </span><span style='color: #BCBCBC;'> 3</span><span> Afghan~   </span><span style='text-decoration: underline;'>1</span><span>980  1.46</span><span style='color: #949494;'>e</span><span> 9 AFG   1978-01-01 </span><span style='text-decoration: underline;'>1</span><span>978. South~ Low i~ FALSE   </span><span style='color: #BB0000;'>NA</span><span> 
-#&gt; </span><span style='color: #BCBCBC;'> 4</span><span> Afghan~   </span><span style='text-decoration: underline;'>1</span><span>990  2.24</span><span style='color: #949494;'>e</span><span> 9 AFG   1992-01-01 </span><span style='text-decoration: underline;'>1</span><span>991. South~ Low i~ FALSE   </span><span style='color: #BB0000;'>NA</span><span> 
+#&gt; </span><span style='color: #BCBCBC;'> 1</span><span> Afghan~   </span><span style='text-decoration: underline;'>1</span><span>960  1.37</span><span style='color: #949494;'>e</span><span> 9 AFG   1966-01-01 </span><span style='text-decoration: underline;'>1</span><span>963. South~ Low i~ FALSE   </span><span style='color: #BB0000;'>NA</span><span>
+#&gt; </span><span style='color: #BCBCBC;'> 2</span><span> Afghan~   </span><span style='text-decoration: underline;'>1</span><span>970  2.02</span><span style='color: #949494;'>e</span><span> 9 AFG   1967-01-01 </span><span style='text-decoration: underline;'>1</span><span>970. South~ Low i~ FALSE   </span><span style='color: #BB0000;'>NA</span><span>
+#&gt; </span><span style='color: #BCBCBC;'> 3</span><span> Afghan~   </span><span style='text-decoration: underline;'>1</span><span>980  1.46</span><span style='color: #949494;'>e</span><span> 9 AFG   1978-01-01 </span><span style='text-decoration: underline;'>1</span><span>978. South~ Low i~ FALSE   </span><span style='color: #BB0000;'>NA</span><span>
+#&gt; </span><span style='color: #BCBCBC;'> 4</span><span> Afghan~   </span><span style='text-decoration: underline;'>1</span><span>990  2.24</span><span style='color: #949494;'>e</span><span> 9 AFG   1992-01-01 </span><span style='text-decoration: underline;'>1</span><span>991. South~ Low i~ FALSE   </span><span style='color: #BB0000;'>NA</span><span>
 #&gt; </span><span style='color: #BCBCBC;'> 5</span><span> Afghan~   </span><span style='text-decoration: underline;'>2</span><span>000  1.15</span><span style='color: #949494;'>e</span><span>10 AFG   2006-01-01 </span><span style='text-decoration: underline;'>2</span><span>003. South~ Low i~ FALSE  351.
 #&gt; </span><span style='color: #BCBCBC;'> 6</span><span> Afghan~   </span><span style='text-decoration: underline;'>2</span><span>010  4.77</span><span style='color: #949494;'>e</span><span>10 AFG   2012-01-01 </span><span style='text-decoration: underline;'>2</span><span>010. South~ Low i~ FALSE  515.
 #&gt; </span><span style='color: #BCBCBC;'> 7</span><span> Afghan~   </span><span style='text-decoration: underline;'>2</span><span>020  1.21</span><span style='color: #949494;'>e</span><span>10 AFG   2016-01-01 </span><span style='text-decoration: underline;'>2</span><span>016. South~ Low i~ FALSE  584.
-#&gt; </span><span style='color: #BCBCBC;'> 8</span><span> Albania   </span><span style='text-decoration: underline;'>1</span><span>960 </span><span style='color: #BB0000;'>NA</span><span>   </span><span style='color: #949494;'> </span><span>   ALB   1966-01-01   </span><span style='color: #BB0000;'>NA</span><span>  Europ~ Upper~ </span><span style='color: #BB0000;'>NA</span><span>      </span><span style='color: #BB0000;'>NA</span><span> 
-#&gt; </span><span style='color: #BCBCBC;'> 9</span><span> Albania   </span><span style='text-decoration: underline;'>1</span><span>970 </span><span style='color: #BB0000;'>NA</span><span>   </span><span style='color: #949494;'> </span><span>   ALB   1975-01-01   </span><span style='color: #BB0000;'>NA</span><span>  Europ~ Upper~ </span><span style='color: #BB0000;'>NA</span><span>      </span><span style='color: #BB0000;'>NA</span><span> 
-#&gt; </span><span style='color: #BCBCBC;'>10</span><span> Albania   </span><span style='text-decoration: underline;'>1</span><span>980 </span><span style='color: #BB0000;'>NA</span><span>   </span><span style='color: #949494;'> </span><span>   ALB   1986-01-01   </span><span style='color: #BB0000;'>NA</span><span>  Europ~ Upper~ </span><span style='color: #BB0000;'>NA</span><span>      </span><span style='color: #BB0000;'>NA</span><span> 
+#&gt; </span><span style='color: #BCBCBC;'> 8</span><span> Albania   </span><span style='text-decoration: underline;'>1</span><span>960 </span><span style='color: #BB0000;'>NA</span><span>   </span><span style='color: #949494;'> </span><span>   ALB   1966-01-01   </span><span style='color: #BB0000;'>NA</span><span>  Europ~ Upper~ </span><span style='color: #BB0000;'>NA</span><span>      </span><span style='color: #BB0000;'>NA</span><span>
+#&gt; </span><span style='color: #BCBCBC;'> 9</span><span> Albania   </span><span style='text-decoration: underline;'>1</span><span>970 </span><span style='color: #BB0000;'>NA</span><span>   </span><span style='color: #949494;'> </span><span>   ALB   1975-01-01   </span><span style='color: #BB0000;'>NA</span><span>  Europ~ Upper~ </span><span style='color: #BB0000;'>NA</span><span>      </span><span style='color: #BB0000;'>NA</span><span>
+#&gt; </span><span style='color: #BCBCBC;'>10</span><span> Albania   </span><span style='text-decoration: underline;'>1</span><span>980 </span><span style='color: #BB0000;'>NA</span><span>   </span><span style='color: #949494;'> </span><span>   ALB   1986-01-01   </span><span style='color: #BB0000;'>NA</span><span>  Europ~ Upper~ </span><span style='color: #BB0000;'>NA</span><span>      </span><span style='color: #BB0000;'>NA</span><span>
 #&gt; </span><span style='color: #949494;'># ... with 1,502 more rows, and 2 more variables: LIFEEX </span><span style='color: #949494;font-style: italic;'>&lt;dbl&gt;</span><span style='color: #949494;'>, GINI </span><span style='color: #949494;font-style: italic;'>&lt;dbl&gt;</span><span></div><div class='input'><span class='no'>wlddev</span> <span class='kw'>%&gt;%</span> <span class='fu'><a href='GRP.html'>fgroup_by</a></span>(<span class='no'>country</span>, <span class='no'>decade</span>) <span class='kw'>%&gt;%</span> <span class='fu'>collapg</span>(<span class='no'>fmedian</span>, <span class='no'>flast</span>)</div><div class='output co'>#&gt; </span><span style='color: #949494;'># A tibble: 1,512 x 12</span><span>
 #&gt;    country decade iso3c date        year region income OECD  PCGDP LIFEEX  GINI
 #&gt;    </span><span style='color: #949494;font-style: italic;'>&lt;chr&gt;</span><span>    </span><span style='color: #949494;font-style: italic;'>&lt;dbl&gt;</span><span> </span><span style='color: #949494;font-style: italic;'>&lt;fct&gt;</span><span> </span><span style='color: #949494;font-style: italic;'>&lt;date&gt;</span><span>     </span><span style='color: #949494;font-style: italic;'>&lt;dbl&gt;</span><span> </span><span style='color: #949494;font-style: italic;'>&lt;fct&gt;</span><span>  </span><span style='color: #949494;font-style: italic;'>&lt;fct&gt;</span><span>  </span><span style='color: #949494;font-style: italic;'>&lt;lgl&gt;</span><span> </span><span style='color: #949494;font-style: italic;'>&lt;dbl&gt;</span><span>  </span><span style='color: #949494;font-style: italic;'>&lt;dbl&gt;</span><span> </span><span style='color: #949494;font-style: italic;'>&lt;dbl&gt;</span><span>
@@ -847,15 +850,15 @@ collap works with collapse's Fast Statistical Functions, providing extremely fas
   <span class='fu'>collapg</span>(<span class='kw'>custom</span> <span class='kw'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/list.html'>list</a></span>(<span class='kw'>fmean</span> <span class='kw'>=</span> <span class='fl'>9</span>:<span class='fl'>12</span>, <span class='kw'>fmode</span> <span class='kw'>=</span> <span class='fl'>5</span>:<span class='fl'>7</span>, <span class='kw'>flast</span> <span class='kw'>=</span> <span class='fl'>3</span>))</div><div class='output co'>#&gt; </span><span style='color: #949494;'># A tibble: 1,512 x 10</span><span>
 #&gt;    country decade flast.date fmode.decade fmode.region fmode.income fmean.PCGDP
 #&gt;    </span><span style='color: #949494;font-style: italic;'>&lt;chr&gt;</span><span>    </span><span style='color: #949494;font-style: italic;'>&lt;dbl&gt;</span><span> </span><span style='color: #949494;font-style: italic;'>&lt;date&gt;</span><span>            </span><span style='color: #949494;font-style: italic;'>&lt;dbl&gt;</span><span> </span><span style='color: #949494;font-style: italic;'>&lt;fct&gt;</span><span>        </span><span style='color: #949494;font-style: italic;'>&lt;fct&gt;</span><span>              </span><span style='color: #949494;font-style: italic;'>&lt;dbl&gt;</span><span>
-#&gt; </span><span style='color: #BCBCBC;'> 1</span><span> Afghan~   </span><span style='text-decoration: underline;'>1</span><span>960 1966-01-01         </span><span style='text-decoration: underline;'>1</span><span>960 South Asia   Low income           </span><span style='color: #BB0000;'>NA</span><span> 
-#&gt; </span><span style='color: #BCBCBC;'> 2</span><span> Afghan~   </span><span style='text-decoration: underline;'>1</span><span>970 1975-01-01         </span><span style='text-decoration: underline;'>1</span><span>970 South Asia   Low income           </span><span style='color: #BB0000;'>NA</span><span> 
-#&gt; </span><span style='color: #BCBCBC;'> 3</span><span> Afghan~   </span><span style='text-decoration: underline;'>1</span><span>980 1986-01-01         </span><span style='text-decoration: underline;'>1</span><span>980 South Asia   Low income           </span><span style='color: #BB0000;'>NA</span><span> 
-#&gt; </span><span style='color: #BCBCBC;'> 4</span><span> Afghan~   </span><span style='text-decoration: underline;'>1</span><span>990 1995-01-01         </span><span style='text-decoration: underline;'>1</span><span>990 South Asia   Low income           </span><span style='color: #BB0000;'>NA</span><span> 
+#&gt; </span><span style='color: #BCBCBC;'> 1</span><span> Afghan~   </span><span style='text-decoration: underline;'>1</span><span>960 1966-01-01         </span><span style='text-decoration: underline;'>1</span><span>960 South Asia   Low income           </span><span style='color: #BB0000;'>NA</span><span>
+#&gt; </span><span style='color: #BCBCBC;'> 2</span><span> Afghan~   </span><span style='text-decoration: underline;'>1</span><span>970 1975-01-01         </span><span style='text-decoration: underline;'>1</span><span>970 South Asia   Low income           </span><span style='color: #BB0000;'>NA</span><span>
+#&gt; </span><span style='color: #BCBCBC;'> 3</span><span> Afghan~   </span><span style='text-decoration: underline;'>1</span><span>980 1986-01-01         </span><span style='text-decoration: underline;'>1</span><span>980 South Asia   Low income           </span><span style='color: #BB0000;'>NA</span><span>
+#&gt; </span><span style='color: #BCBCBC;'> 4</span><span> Afghan~   </span><span style='text-decoration: underline;'>1</span><span>990 1995-01-01         </span><span style='text-decoration: underline;'>1</span><span>990 South Asia   Low income           </span><span style='color: #BB0000;'>NA</span><span>
 #&gt; </span><span style='color: #BCBCBC;'> 5</span><span> Afghan~   </span><span style='text-decoration: underline;'>2</span><span>000 2006-01-01         </span><span style='text-decoration: underline;'>2</span><span>000 South Asia   Low income          350.
 #&gt; </span><span style='color: #BCBCBC;'> 6</span><span> Afghan~   </span><span style='text-decoration: underline;'>2</span><span>010 2015-01-01         </span><span style='text-decoration: underline;'>2</span><span>010 South Asia   Low income          507.
 #&gt; </span><span style='color: #BCBCBC;'> 7</span><span> Afghan~   </span><span style='text-decoration: underline;'>2</span><span>020 2019-01-01         </span><span style='text-decoration: underline;'>2</span><span>020 South Asia   Low income          584.
-#&gt; </span><span style='color: #BCBCBC;'> 8</span><span> Albania   </span><span style='text-decoration: underline;'>1</span><span>960 1966-01-01         </span><span style='text-decoration: underline;'>1</span><span>960 Europe &amp; Ce~ Upper middl~         </span><span style='color: #BB0000;'>NA</span><span> 
-#&gt; </span><span style='color: #BCBCBC;'> 9</span><span> Albania   </span><span style='text-decoration: underline;'>1</span><span>970 1975-01-01         </span><span style='text-decoration: underline;'>1</span><span>970 Europe &amp; Ce~ Upper middl~         </span><span style='color: #BB0000;'>NA</span><span> 
+#&gt; </span><span style='color: #BCBCBC;'> 8</span><span> Albania   </span><span style='text-decoration: underline;'>1</span><span>960 1966-01-01         </span><span style='text-decoration: underline;'>1</span><span>960 Europe &amp; Ce~ Upper middl~         </span><span style='color: #BB0000;'>NA</span><span>
+#&gt; </span><span style='color: #BCBCBC;'> 9</span><span> Albania   </span><span style='text-decoration: underline;'>1</span><span>970 1975-01-01         </span><span style='text-decoration: underline;'>1</span><span>970 Europe &amp; Ce~ Upper middl~         </span><span style='color: #BB0000;'>NA</span><span>
 #&gt; </span><span style='color: #BCBCBC;'>10</span><span> Albania   </span><span style='text-decoration: underline;'>1</span><span>980 1986-01-01         </span><span style='text-decoration: underline;'>1</span><span>980 Europe &amp; Ce~ Upper middl~       </span><span style='text-decoration: underline;'>2</span><span>075.
 #&gt; </span><span style='color: #949494;'># ... with 1,502 more rows, and 3 more variables: fmean.LIFEEX </span><span style='color: #949494;font-style: italic;'>&lt;dbl&gt;</span><span style='color: #949494;'>,</span><span>
 #&gt; </span><span style='color: #949494;'>#   fmean.GINI </span><span style='color: #949494;font-style: italic;'>&lt;dbl&gt;</span><span style='color: #949494;'>, fmean.ODA </span><span style='color: #949494;font-style: italic;'>&lt;dbl&gt;</span><span></div><div class='input'>
@@ -881,7 +884,7 @@ collap works with collapse's Fast Statistical Functions, providing extremely fas
       </footer>
    </div>
 
-  
+
 
 
   </body>

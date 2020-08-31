@@ -87,27 +87,30 @@
 <li>
   <a href="../news/index.html">News</a>
 </li>
+<li>
+  <a href="https://sebkrantz.github.io/Rblog/" target="_blank">Blog</a>
+</li>
       </ul>
       <ul class="nav navbar-nav navbar-right">
         <li>
   <a href="https://twitter.com/collapse_R">
     <span class="fa fa-twitter"></span>
-     
+
   </a>
 </li>
 <li>
   <a href="https://github.com/SebKrantz/collapse">
     <span class="fa fa-github"></span>
-     
+
   </a>
 </li>
       </ul>
-      
+
     </div><!--/.nav-collapse -->
   </div><!--/.container -->
 </div><!--/.navbar -->
 
-      
+
 
       </header>
 
@@ -115,7 +118,7 @@
   <div class="col-md-9 contents">
     <div class="page-header">
     <h1>Transform Data by (Grouped) Replacing or Sweeping out Statistics</h1>
-    
+
     <div class="hidden name"><code>TRA.Rd</code></div>
     </div>
 
@@ -304,14 +307,14 @@
 #&gt; </span><span style='color: #949494;'># Groups:   Species [3]</span><span>
 #&gt;    Sepal.Length Sepal.Width Petal.Length Petal.Width Species    wt AWMSL AWMSW
 #&gt;           </span><span style='color: #949494;font-style: italic;'>&lt;dbl&gt;</span><span>       </span><span style='color: #949494;font-style: italic;'>&lt;dbl&gt;</span><span>        </span><span style='color: #949494;font-style: italic;'>&lt;dbl&gt;</span><span>       </span><span style='color: #949494;font-style: italic;'>&lt;dbl&gt;</span><span> </span><span style='color: #949494;font-style: italic;'>&lt;fct&gt;</span><span>   </span><span style='color: #949494;font-style: italic;'>&lt;dbl&gt;</span><span> </span><span style='color: #949494;font-style: italic;'>&lt;lgl&gt;</span><span> </span><span style='color: #949494;font-style: italic;'>&lt;lgl&gt;</span><span>
-#&gt; </span><span style='color: #BCBCBC;'> 1</span><span>       0.094</span><span style='text-decoration: underline;'>0</span><span>         3.5      -</span><span style='color: #BB0000;'>0.062</span><span>          0.2 setosa  0.685 FALSE TRUE 
+#&gt; </span><span style='color: #BCBCBC;'> 1</span><span>       0.094</span><span style='text-decoration: underline;'>0</span><span>         3.5      -</span><span style='color: #BB0000;'>0.062</span><span>          0.2 setosa  0.685 FALSE TRUE
 #&gt; </span><span style='color: #BCBCBC;'> 2</span><span>      -</span><span style='color: #BB0000;'>0.106</span><span>          3        -</span><span style='color: #BB0000;'>0.062</span><span>          0.2 setosa  0.747 FALSE FALSE
-#&gt; </span><span style='color: #BCBCBC;'> 3</span><span>      -</span><span style='color: #BB0000;'>0.306</span><span>          3.2      -</span><span style='color: #BB0000;'>0.162</span><span>          0.2 setosa  0.139 FALSE TRUE 
+#&gt; </span><span style='color: #BCBCBC;'> 3</span><span>      -</span><span style='color: #BB0000;'>0.306</span><span>          3.2      -</span><span style='color: #BB0000;'>0.162</span><span>          0.2 setosa  0.139 FALSE TRUE
 #&gt; </span><span style='color: #BCBCBC;'> 4</span><span>      -</span><span style='color: #BB0000;'>0.406</span><span>          3.1       0.038</span><span style='text-decoration: underline;'>0</span><span>         0.2 setosa  0.233 FALSE FALSE
-#&gt; </span><span style='color: #BCBCBC;'> 5</span><span>      -</span><span style='color: #BB0000;'>0.006</span><span>          3.6      -</span><span style='color: #BB0000;'>0.062</span><span>          0.2 setosa  0.655 FALSE TRUE 
-#&gt; </span><span style='color: #BCBCBC;'> 6</span><span>       0.394          3.9       0.238          0.4 setosa  0.907 FALSE TRUE 
-#&gt; </span><span style='color: #BCBCBC;'> 7</span><span>      -</span><span style='color: #BB0000;'>0.406</span><span>          3.4      -</span><span style='color: #BB0000;'>0.062</span><span>          0.3 setosa  0.500 FALSE TRUE 
-#&gt; </span><span style='color: #BCBCBC;'> 8</span><span>      -</span><span style='color: #BB0000;'>0.006</span><span>          3.4       0.038</span><span style='text-decoration: underline;'>0</span><span>         0.2 setosa  0.950 FALSE TRUE 
+#&gt; </span><span style='color: #BCBCBC;'> 5</span><span>      -</span><span style='color: #BB0000;'>0.006</span><span>          3.6      -</span><span style='color: #BB0000;'>0.062</span><span>          0.2 setosa  0.655 FALSE TRUE
+#&gt; </span><span style='color: #BCBCBC;'> 6</span><span>       0.394          3.9       0.238          0.4 setosa  0.907 FALSE TRUE
+#&gt; </span><span style='color: #BCBCBC;'> 7</span><span>      -</span><span style='color: #BB0000;'>0.406</span><span>          3.4      -</span><span style='color: #BB0000;'>0.062</span><span>          0.3 setosa  0.500 FALSE TRUE
+#&gt; </span><span style='color: #BCBCBC;'> 8</span><span>      -</span><span style='color: #BB0000;'>0.006</span><span>          3.4       0.038</span><span style='text-decoration: underline;'>0</span><span>         0.2 setosa  0.950 FALSE TRUE
 #&gt; </span><span style='color: #BCBCBC;'> 9</span><span>      -</span><span style='color: #BB0000;'>0.606</span><span>          2.9      -</span><span style='color: #BB0000;'>0.062</span><span>          0.2 setosa  0.390 FALSE FALSE
 #&gt; </span><span style='color: #BCBCBC;'>10</span><span>      -</span><span style='color: #BB0000;'>0.106</span><span>          3.1       0.038</span><span style='text-decoration: underline;'>0</span><span>         0.1 setosa  0.297 FALSE FALSE
 #&gt; </span><span style='color: #949494;'># ... with 140 more rows</span><span></div><div class='input'><span class='no'>iris</span> <span class='kw'>%&gt;%</span>  <span class='fu'><a href='https://dplyr.tidyverse.org/reference/group_by.html'>group_by</a></span>(<span class='no'>Species</span>) <span class='kw'>%&gt;%</span> <span class='fu'>TRA</span>(<span class='fu'><a href='fmean.html'>fmean</a></span>(<span class='no'>.</span>)[<span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span>(<span class='fl'>2</span>,<span class='fl'>4</span>)],   <span class='co'># Dropping species column</span>
@@ -319,14 +322,14 @@
 #&gt; </span><span style='color: #949494;'># Groups:   Species [3]</span><span>
 #&gt;    Sepal.Length Sepal.Width Petal.Length Petal.Width    wt AWMSL AWMSW
 #&gt;  </span><span style='color: #BCBCBC;'>*</span><span>        </span><span style='color: #949494;font-style: italic;'>&lt;dbl&gt;</span><span>       </span><span style='color: #949494;font-style: italic;'>&lt;dbl&gt;</span><span>        </span><span style='color: #949494;font-style: italic;'>&lt;dbl&gt;</span><span>       </span><span style='color: #949494;font-style: italic;'>&lt;dbl&gt;</span><span> </span><span style='color: #949494;font-style: italic;'>&lt;dbl&gt;</span><span> </span><span style='color: #949494;font-style: italic;'>&lt;lgl&gt;</span><span> </span><span style='color: #949494;font-style: italic;'>&lt;lgl&gt;</span><span>
-#&gt; </span><span style='color: #BCBCBC;'> 1</span><span>       0.094</span><span style='text-decoration: underline;'>0</span><span>         3.5      -</span><span style='color: #BB0000;'>0.062</span><span>          0.2 0.685 FALSE TRUE 
+#&gt; </span><span style='color: #BCBCBC;'> 1</span><span>       0.094</span><span style='text-decoration: underline;'>0</span><span>         3.5      -</span><span style='color: #BB0000;'>0.062</span><span>          0.2 0.685 FALSE TRUE
 #&gt; </span><span style='color: #BCBCBC;'> 2</span><span>      -</span><span style='color: #BB0000;'>0.106</span><span>          3        -</span><span style='color: #BB0000;'>0.062</span><span>          0.2 0.747 FALSE FALSE
-#&gt; </span><span style='color: #BCBCBC;'> 3</span><span>      -</span><span style='color: #BB0000;'>0.306</span><span>          3.2      -</span><span style='color: #BB0000;'>0.162</span><span>          0.2 0.139 FALSE TRUE 
+#&gt; </span><span style='color: #BCBCBC;'> 3</span><span>      -</span><span style='color: #BB0000;'>0.306</span><span>          3.2      -</span><span style='color: #BB0000;'>0.162</span><span>          0.2 0.139 FALSE TRUE
 #&gt; </span><span style='color: #BCBCBC;'> 4</span><span>      -</span><span style='color: #BB0000;'>0.406</span><span>          3.1       0.038</span><span style='text-decoration: underline;'>0</span><span>         0.2 0.233 FALSE FALSE
-#&gt; </span><span style='color: #BCBCBC;'> 5</span><span>      -</span><span style='color: #BB0000;'>0.006</span><span>          3.6      -</span><span style='color: #BB0000;'>0.062</span><span>          0.2 0.655 FALSE TRUE 
-#&gt; </span><span style='color: #BCBCBC;'> 6</span><span>       0.394          3.9       0.238          0.4 0.907 FALSE TRUE 
-#&gt; </span><span style='color: #BCBCBC;'> 7</span><span>      -</span><span style='color: #BB0000;'>0.406</span><span>          3.4      -</span><span style='color: #BB0000;'>0.062</span><span>          0.3 0.500 FALSE TRUE 
-#&gt; </span><span style='color: #BCBCBC;'> 8</span><span>      -</span><span style='color: #BB0000;'>0.006</span><span>          3.4       0.038</span><span style='text-decoration: underline;'>0</span><span>         0.2 0.950 FALSE TRUE 
+#&gt; </span><span style='color: #BCBCBC;'> 5</span><span>      -</span><span style='color: #BB0000;'>0.006</span><span>          3.6      -</span><span style='color: #BB0000;'>0.062</span><span>          0.2 0.655 FALSE TRUE
+#&gt; </span><span style='color: #BCBCBC;'> 6</span><span>       0.394          3.9       0.238          0.4 0.907 FALSE TRUE
+#&gt; </span><span style='color: #BCBCBC;'> 7</span><span>      -</span><span style='color: #BB0000;'>0.406</span><span>          3.4      -</span><span style='color: #BB0000;'>0.062</span><span>          0.3 0.500 FALSE TRUE
+#&gt; </span><span style='color: #BCBCBC;'> 8</span><span>      -</span><span style='color: #BB0000;'>0.006</span><span>          3.4       0.038</span><span style='text-decoration: underline;'>0</span><span>         0.2 0.950 FALSE TRUE
 #&gt; </span><span style='color: #BCBCBC;'> 9</span><span>      -</span><span style='color: #BB0000;'>0.606</span><span>          2.9      -</span><span style='color: #BB0000;'>0.062</span><span>          0.2 0.390 FALSE FALSE
 #&gt; </span><span style='color: #BCBCBC;'>10</span><span>      -</span><span style='color: #BB0000;'>0.106</span><span>          3.1       0.038</span><span style='text-decoration: underline;'>0</span><span>         0.1 0.297 FALSE FALSE
 #&gt; </span><span style='color: #949494;'># ... with 140 more rows</span><span></div></span></pre>
@@ -351,7 +354,7 @@
       </footer>
    </div>
 
-  
+
 
 
   </body>

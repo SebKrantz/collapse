@@ -87,27 +87,30 @@
 <li>
   <a href="../news/index.html">News</a>
 </li>
+<li>
+  <a href="https://sebkrantz.github.io/Rblog/" target="_blank">Blog</a>
+</li>
       </ul>
       <ul class="nav navbar-nav navbar-right">
         <li>
   <a href="https://twitter.com/collapse_R">
     <span class="fa fa-twitter"></span>
-     
+
   </a>
 </li>
 <li>
   <a href="https://github.com/SebKrantz/collapse">
     <span class="fa fa-github"></span>
-     
+
   </a>
 </li>
       </ul>
-      
+
     </div><!--/.nav-collapse -->
   </div><!--/.container -->
 </div><!--/.navbar -->
 
-      
+
 
       </header>
 
@@ -115,7 +118,7 @@
   <div class="col-md-9 contents">
     <div class="page-header">
     <h1>Recursive Row-Binding / Unlisting in 2D - to Data Frame</h1>
-    
+
     <div class="hidden name"><code>unlist2d.Rd</code></div>
     </div>
 
@@ -214,18 +217,18 @@
 #&gt; 2 0.4375 0.40625 3.6875 2.8125
 #&gt; 3 0.4375 0.40625 3.6875     NA
 #&gt; 4 0.4375 0.40625 3.6875 2.8125</div><div class='input'><span class='fu'>unlist2d</span>(<span class='fu'><a href='rapply2d.html'>rapply2d</a></span>(<span class='no'>l</span>, <span class='no'>fmean</span>), <span class='kw'>recursive</span> <span class='kw'>=</span> <span class='fl'>FALSE</span>)</div><div class='output co'>#&gt; $a
-#&gt;        mpg        cyl       disp         hp       drat         wt       qsec 
-#&gt;  20.090625   6.187500 230.721875 146.687500   3.596562   3.217250  17.848750 
-#&gt;         vs 
-#&gt;   0.437500 
-#&gt; 
+#&gt;        mpg        cyl       disp         hp       drat         wt       qsec
+#&gt;  20.090625   6.187500 230.721875 146.687500   3.596562   3.217250  17.848750
+#&gt;         vs
+#&gt;   0.437500
+#&gt;
 #&gt; $b
 #&gt; $b$c
-#&gt;         hp       drat         wt       qsec         vs         am       gear 
-#&gt; 146.687500   3.596562   3.217250  17.848750   0.437500   0.406250   3.687500 
-#&gt;       carb 
-#&gt;   2.812500 
-#&gt; 
+#&gt;         hp       drat         wt       qsec         vs         am       gear
+#&gt; 146.687500   3.596562   3.217250  17.848750   0.437500   0.406250   3.687500
+#&gt;       carb
+#&gt;   2.812500
+#&gt;
 #&gt; $b$d
 #&gt;   .id    cyl     disp       hp     drat      wt     qsec     vs      am   gear
 #&gt; 1   e 6.1875 230.7219 146.6875 3.596562 3.21725 17.84875 0.4375 0.40625 3.6875
@@ -233,7 +236,7 @@
 #&gt;        mpg   carb
 #&gt; 1       NA     NA
 #&gt; 2 20.09062 2.8125
-#&gt; 
+#&gt;
 #&gt; </div><div class='input'>
 <span class='co'>## Groningen Growth and Development Center 10-Sector Database</span>
 <span class='fu'><a href='https://rdrr.io/r/utils/head.html'>head</a></span>(<span class='no'>GGDC10S</span>) <span class='co'># See ?GGDC10S</span></div><div class='output co'>#&gt;   Country Regioncode             Region Variable Year      AGR      MIN
@@ -262,7 +265,7 @@
 #&gt; 3      Region character                                                Region
 #&gt; 4    Variable character                                              Variable
 #&gt; 5        Year   numeric                                                  Year
-#&gt; 6         AGR   numeric                                          Agriculture 
+#&gt; 6         AGR   numeric                                          Agriculture
 #&gt; 7         MIN   numeric                                                Mining
 #&gt; 8         MAN   numeric                                         Manufacturing
 #&gt; 9          PU   numeric                                             Utilities
@@ -449,7 +452,7 @@
       </footer>
    </div>
 
-  
+
 
 
   </body>

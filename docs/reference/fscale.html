@@ -88,27 +88,30 @@ Note: For centering without scaling see fwithin/W. For simple not mean-preservin
 <li>
   <a href="../news/index.html">News</a>
 </li>
+<li>
+  <a href="https://sebkrantz.github.io/Rblog/" target="_blank">Blog</a>
+</li>
       </ul>
       <ul class="nav navbar-nav navbar-right">
         <li>
   <a href="https://twitter.com/collapse_R">
     <span class="fa fa-twitter"></span>
-     
+
   </a>
 </li>
 <li>
   <a href="https://github.com/SebKrantz/collapse">
     <span class="fa fa-github"></span>
-     
+
   </a>
 </li>
       </ul>
-      
+
     </div><!--/.nav-collapse -->
   </div><!--/.container -->
 </div><!--/.navbar -->
 
-      
+
 
       </header>
 
@@ -116,7 +119,7 @@ Note: For centering without scaling see fwithin/W. For simple not mean-preservin
   <div class="col-md-9 contents">
     <div class="page-header">
     <h1>Fast (Grouped, Weighted) Scaling and Centering of Matrix-like Objects</h1>
-    
+
     <div class="hidden name"><code>fscale.Rd</code></div>
     </div>
 
@@ -333,13 +336,13 @@ Note: For centering without scaling see fwithin/W. For simple not mean-preservin
 #&gt; LIFEEX   .60     1   -.09   .30
 #&gt; GINI    -.21   -.09    1   -.03
 #&gt; ODA      .05    .30  -.03    1 </div><div class='input'>
-<span class='fu'><a href='fmean.html'>fmean</a></span>(<span class='fu'><a href='select_replace_vars.html'>get_vars</a></span>(<span class='no'>wlddev</span>, <span class='fl'>9</span>:<span class='fl'>12</span>))                       <span class='co'># This calculates the overall means</span></div><div class='output co'>#&gt;        PCGDP       LIFEEX         GINI          ODA 
-#&gt; 1.156365e+04 6.384109e+01 3.939757e+01 4.287465e+08 </div><div class='input'><span class='fu'><a href='fvar_fsd.html'>fsd</a></span>(<span class='fu'><a href='fbetween_fwithin.html'>fwithin</a></span>(<span class='fu'><a href='select_replace_vars.html'>get_vars</a></span>(<span class='no'>wlddev</span>, <span class='fl'>9</span>:<span class='fl'>12</span>), <span class='no'>wlddev</span>$<span class='no'>iso3c</span>))  <span class='co'># This calculates the within standard deviations</span></div><div class='output co'>#&gt;        PCGDP       LIFEEX         GINI          ODA 
+<span class='fu'><a href='fmean.html'>fmean</a></span>(<span class='fu'><a href='select_replace_vars.html'>get_vars</a></span>(<span class='no'>wlddev</span>, <span class='fl'>9</span>:<span class='fl'>12</span>))                       <span class='co'># This calculates the overall means</span></div><div class='output co'>#&gt;        PCGDP       LIFEEX         GINI          ODA
+#&gt; 1.156365e+04 6.384109e+01 3.939757e+01 4.287465e+08 </div><div class='input'><span class='fu'><a href='fvar_fsd.html'>fsd</a></span>(<span class='fu'><a href='fbetween_fwithin.html'>fwithin</a></span>(<span class='fu'><a href='select_replace_vars.html'>get_vars</a></span>(<span class='no'>wlddev</span>, <span class='fl'>9</span>:<span class='fl'>12</span>), <span class='no'>wlddev</span>$<span class='no'>iso3c</span>))  <span class='co'># This calculates the within standard deviations</span></div><div class='output co'>#&gt;        PCGDP       LIFEEX         GINI          ODA
 #&gt; 6.334952e+03 5.829248e+00 3.040647e+00 6.070240e+08 </div><div class='input'><span class='fu'><a href='https://rdrr.io/r/utils/head.html'>head</a></span>(<span class='fu'><a href='qsu.html'>qsu</a></span>(<span class='fu'>fscale</span>(<span class='fu'><a href='select_replace_vars.html'>get_vars</a></span>(<span class='no'>wlddev</span>, <span class='fl'>9</span>:<span class='fl'>12</span>),             <span class='co'># This group-centers on the overall mean and</span>
     <span class='no'>wlddev</span>$<span class='no'>iso3c</span>,                                   <span class='co'># group-scales to the within standard deviation</span>
     <span class='kw'>mean</span> <span class='kw'>=</span> <span class='st'>"overall.mean"</span>, <span class='kw'>sd</span> <span class='kw'>=</span> <span class='st'>"within.sd"</span>),       <span class='co'># -&gt; data harmonized in the first 2 moments</span>
     <span class='kw'>by</span> <span class='kw'>=</span> <span class='no'>wlddev</span>$<span class='no'>iso3c</span>))</div><div class='output co'>#&gt; , , PCGDP
-#&gt; 
+#&gt;
 #&gt;       N        Mean         SD          Min         Max
 #&gt; ABW  32  11563.6529  6334.9523  -11684.3802  19256.8244
 #&gt; AFG  16  11563.6529  6334.9523    3001.7971    18493.53
@@ -347,9 +350,9 @@ Note: For centering without scaling see fwithin/W. For simple not mean-preservin
 #&gt; ALB  38  11563.6529  6334.9523    3046.7453  23022.1251
 #&gt; AND  48  11563.6529  6334.9523     803.0491  25506.1511
 #&gt; ARE  43  11563.6529  6334.9523    3061.0074  25309.0701
-#&gt; 
+#&gt;
 #&gt; , , LIFEEX
-#&gt; 
+#&gt;
 #&gt;       N     Mean      SD      Min      Max
 #&gt; ABW  57  63.8411  5.8292   50.106  71.2163
 #&gt; AFG  57  63.8411  5.8292  54.7994  72.7759
@@ -357,9 +360,9 @@ Note: For centering without scaling see fwithin/W. For simple not mean-preservin
 #&gt; ALB  57  63.8411  5.8292  50.9166  73.5876
 #&gt; AND   0        0       -        0        0
 #&gt; ARE  57  63.8411  5.8292  50.0791  70.6117
-#&gt; 
+#&gt;
 #&gt; , , GINI
-#&gt; 
+#&gt;
 #&gt;      N     Mean      SD      Min      Max
 #&gt; ABW  0        0       -        0        0
 #&gt; AFG  0        0       -        0        0
@@ -367,9 +370,9 @@ Note: For centering without scaling see fwithin/W. For simple not mean-preservin
 #&gt; ALB  5  39.3976  3.0406  34.8534  42.8826
 #&gt; AND  0        0       -        0        0
 #&gt; ARE  0        0       -        0        0
-#&gt; 
+#&gt;
 #&gt; , , ODA
-#&gt; 
+#&gt;
 #&gt;       N        Mean          SD          Min             Max
 #&gt; ABW  20  428,746468  607,024040  -557,600788  1.82207583e+09
 #&gt; AFG  58  428,746468  607,024040  23,280279.7  1.95895363e+09
@@ -476,7 +479,7 @@ Note: For centering without scaling see fwithin/W. For simple not mean-preservin
       </footer>
    </div>
 
-  
+
 
 
   </body>

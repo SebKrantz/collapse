@@ -89,27 +89,30 @@ There are also several conversion methods to convert to and from 'GRP' objects. 
 <li>
   <a href="../news/index.html">News</a>
 </li>
+<li>
+  <a href="https://sebkrantz.github.io/Rblog/" target="_blank">Blog</a>
+</li>
       </ul>
       <ul class="nav navbar-nav navbar-right">
         <li>
   <a href="https://twitter.com/collapse_R">
     <span class="fa fa-twitter"></span>
-     
+
   </a>
 </li>
 <li>
   <a href="https://github.com/SebKrantz/collapse">
     <span class="fa fa-github"></span>
-     
+
   </a>
 </li>
       </ul>
-      
+
     </div><!--/.nav-collapse -->
   </div><!--/.container -->
 </div><!--/.navbar -->
 
-      
+
 
       </header>
 
@@ -117,7 +120,7 @@ There are also several conversion methods to convert to and from 'GRP' objects. 
   <div class="col-md-9 contents">
     <div class="page-header">
     <h1>Fast Grouping / <em>collapse</em> Grouping Objects</h1>
-    
+
     <div class="hidden name"><code>GRP.Rd</code></div>
     </div>
 
@@ -291,36 +294,36 @@ There are also several conversion methods to convert to and from 'GRP' objects. 
     <h2 class="hasAnchor" id="examples"><a class="anchor" href="#examples"></a>Examples</h2>
     <pre class="examples"><div class='input'><span class='co'>## default method</span>
 <span class='fu'>GRP</span>(<span class='no'>mtcars</span>$<span class='no'>cyl</span>)</div><div class='output co'>#&gt; collapse grouping object of length 32 with 3 ordered groups
-#&gt; 
+#&gt;
 #&gt; Call: GRP.default(X = mtcars$cyl), X is unordered
-#&gt; 
-#&gt; Distribution of group sizes: 
-#&gt;    Min. 1st Qu.  Median    Mean 3rd Qu.    Max. 
-#&gt;    7.00    9.00   11.00   10.67   12.50   14.00 
-#&gt; 
-#&gt; Groups with sizes: 
-#&gt;  4  6  8 
+#&gt;
+#&gt; Distribution of group sizes:
+#&gt;    Min. 1st Qu.  Median    Mean 3rd Qu.    Max.
+#&gt;    7.00    9.00   11.00   10.67   12.50   14.00
+#&gt;
+#&gt; Groups with sizes:
+#&gt;  4  6  8
 #&gt; 11  7 14 </div><div class='input'><span class='fu'>GRP</span>(<span class='no'>mtcars</span>, ~ <span class='no'>cyl</span> + <span class='no'>vs</span> + <span class='no'>am</span>)      <span class='co'># Or GRP(mtcars, c("cyl","vs","am")) or GRP(mtcars, c(2,8:9))</span></div><div class='output co'>#&gt; collapse grouping object of length 32 with 7 ordered groups
-#&gt; 
+#&gt;
 #&gt; Call: GRP.default(X = mtcars, by = ~cyl + vs + am), X is unordered
-#&gt; 
-#&gt; Distribution of group sizes: 
-#&gt;    Min. 1st Qu.  Median    Mean 3rd Qu.    Max. 
-#&gt;   1.000   2.500   3.000   4.571   5.500  12.000 
-#&gt; 
-#&gt; Groups with sizes: 
-#&gt; 4.0.1 4.1.0 4.1.1 6.0.1 6.1.0 8.0.0 8.0.1 
+#&gt;
+#&gt; Distribution of group sizes:
+#&gt;    Min. 1st Qu.  Median    Mean 3rd Qu.    Max.
+#&gt;   1.000   2.500   3.000   4.571   5.500  12.000
+#&gt;
+#&gt; Groups with sizes:
+#&gt; 4.0.1 4.1.0 4.1.1 6.0.1 6.1.0 8.0.0 8.0.1
 #&gt;     1     3     7     3     4    12     2 </div><div class='input'><span class='no'>g</span> <span class='kw'>&lt;-</span> <span class='fu'>GRP</span>(<span class='no'>mtcars</span>, ~ <span class='no'>cyl</span> + <span class='no'>vs</span> + <span class='no'>am</span>) <span class='co'># Saving the object</span>
 <span class='fu'><a href='https://rdrr.io/r/base/print.html'>print</a></span>(<span class='no'>g</span>)                          <span class='co'># Printing it</span></div><div class='output co'>#&gt; collapse grouping object of length 32 with 7 ordered groups
-#&gt; 
+#&gt;
 #&gt; Call: GRP.default(X = mtcars, by = ~cyl + vs + am), X is unordered
-#&gt; 
-#&gt; Distribution of group sizes: 
-#&gt;    Min. 1st Qu.  Median    Mean 3rd Qu.    Max. 
-#&gt;   1.000   2.500   3.000   4.571   5.500  12.000 
-#&gt; 
-#&gt; Groups with sizes: 
-#&gt; 4.0.1 4.1.0 4.1.1 6.0.1 6.1.0 8.0.0 8.0.1 
+#&gt;
+#&gt; Distribution of group sizes:
+#&gt;    Min. 1st Qu.  Median    Mean 3rd Qu.    Max.
+#&gt;   1.000   2.500   3.000   4.571   5.500  12.000
+#&gt;
+#&gt; Groups with sizes:
+#&gt; 4.0.1 4.1.0 4.1.1 6.0.1 6.1.0 8.0.0 8.0.1
 #&gt;     1     3     7     3     4    12     2 </div><div class='input'><span class='fu'><a href='https://rdrr.io/r/base/plot.html'>plot</a></span>(<span class='no'>g</span>)                           <span class='co'># Plotting it</span></div><div class='img'><img src='GRP-1.png' alt='' width='700' height='433' /></div><div class='input'><span class='fu'>GRPnames</span>(<span class='no'>g</span>)                       <span class='co'># Retain group names</span></div><div class='output co'>#&gt; [1] "4.0.1" "4.1.0" "4.1.1" "6.0.1" "6.1.0" "8.0.0" "8.0.1"</div><div class='input'><span class='fu'><a href='fsum.html'>fsum</a></span>(<span class='no'>mtcars</span>, <span class='no'>g</span>)                   <span class='co'># Compute the sum of mtcars, grouped by variables cyl, vs and am</span></div><div class='output co'>#&gt;         mpg cyl   disp   hp  drat     wt   qsec vs am gear carb
 #&gt; 4.0.1  26.0   4  120.3   91  4.43  2.140  16.70  0  1    5    2
 #&gt; 4.1.0  68.7  12  407.6  254 11.31  8.805  62.91  3  0   11    5
@@ -331,15 +334,15 @@ There are also several conversion methods to convert to and from 'GRP' objects. 
 #&gt; 8.0.1  30.8  16  652.0  599  7.76  6.740  29.10  0  2   10   12</div><div class='input'>
 <span class='co'>## Convert factor to GRP object and vice-versa</span>
 <span class='fu'>GRP</span>(<span class='no'>iris</span>$<span class='no'>Species</span>)</div><div class='output co'>#&gt; collapse grouping object of length 150 with 3 unordered groups
-#&gt; 
+#&gt;
 #&gt; Call: GRP.factor(X = iris$Species), X is unordered
-#&gt; 
-#&gt; Distribution of group sizes: 
-#&gt;    Min. 1st Qu.  Median    Mean 3rd Qu.    Max. 
-#&gt;      50      50      50      50      50      50 
-#&gt; 
-#&gt; Groups with sizes: 
-#&gt;     setosa versicolor  virginica 
+#&gt;
+#&gt; Distribution of group sizes:
+#&gt;    Min. 1st Qu.  Median    Mean 3rd Qu.    Max.
+#&gt;      50      50      50      50      50      50
+#&gt;
+#&gt; Groups with sizes:
+#&gt;     setosa versicolor  virginica
 #&gt;         50         50         50 </div><div class='input'><span class='fu'>as.factor_GRP</span>(<span class='no'>g</span>)</div><div class='output co'>#&gt;  [1] 6.0.1 6.0.1 4.1.1 6.1.0 8.0.0 6.1.0 8.0.0 4.1.0 4.1.0 6.1.0 6.1.0 8.0.0
 #&gt; [13] 8.0.0 8.0.0 8.0.0 8.0.0 8.0.0 4.1.1 4.1.1 4.1.1 4.1.0 8.0.0 8.0.0 8.0.0
 #&gt; [25] 8.0.0 4.1.1 4.0.1 4.1.1 8.0.1 6.0.1 8.0.1 4.1.1
@@ -347,32 +350,32 @@ There are also several conversion methods to convert to and from 'GRP' objects. 
 <span class='co'>## dplyr integration</span>
 <span class='fu'><a href='https://rdrr.io/r/base/library.html'>library</a></span>(<span class='no'>dplyr</span>)
 <span class='no'>mtcars</span> <span class='kw'>%&gt;%</span> <span class='fu'><a href='https://dplyr.tidyverse.org/reference/group_by.html'>group_by</a></span>(<span class='no'>cyl</span>,<span class='no'>vs</span>,<span class='no'>am</span>) <span class='kw'>%&gt;%</span> <span class='no'>GRP</span>    <span class='co'># Get GRP object from a dplyr grouped tibble</span></div><div class='output co'>#&gt; collapse grouping object of length 32 with 7 ordered groups
-#&gt; 
+#&gt;
 #&gt; Call: GRP.grouped_df(X = .), X is ordered
-#&gt; 
-#&gt; Distribution of group sizes: 
-#&gt;    Min. 1st Qu.  Median    Mean 3rd Qu.    Max. 
-#&gt;   1.000   2.500   3.000   4.571   5.500  12.000 
-#&gt; 
-#&gt; Groups with sizes: 
-#&gt; 4.0.1 4.1.0 4.1.1 6.0.1 6.1.0 8.0.0 8.0.1 
+#&gt;
+#&gt; Distribution of group sizes:
+#&gt;    Min. 1st Qu.  Median    Mean 3rd Qu.    Max.
+#&gt;   1.000   2.500   3.000   4.571   5.500  12.000
+#&gt;
+#&gt; Groups with sizes:
+#&gt; 4.0.1 4.1.0 4.1.1 6.0.1 6.1.0 8.0.0 8.0.1
 #&gt;     1     3     7     3     4    12     2 </div><div class='input'><span class='no'>mtcars</span> <span class='kw'>%&gt;%</span> <span class='fu'><a href='https://dplyr.tidyverse.org/reference/group_by.html'>group_by</a></span>(<span class='no'>cyl</span>,<span class='no'>vs</span>,<span class='no'>am</span>) <span class='kw'>%&gt;%</span> <span class='no'>fmean</span>  <span class='co'># Grouped mean using dplyr grouping</span></div><div class='output co'>#&gt; <span style='color: #949494;'># A tibble: 7 x 11</span><span>
 #&gt;     cyl    vs    am   mpg  disp    hp  drat    wt  qsec  gear  carb
 #&gt;   </span><span style='color: #949494;font-style: italic;'>&lt;dbl&gt;</span><span> </span><span style='color: #949494;font-style: italic;'>&lt;dbl&gt;</span><span> </span><span style='color: #949494;font-style: italic;'>&lt;dbl&gt;</span><span> </span><span style='color: #949494;font-style: italic;'>&lt;dbl&gt;</span><span> </span><span style='color: #949494;font-style: italic;'>&lt;dbl&gt;</span><span> </span><span style='color: #949494;font-style: italic;'>&lt;dbl&gt;</span><span> </span><span style='color: #949494;font-style: italic;'>&lt;dbl&gt;</span><span> </span><span style='color: #949494;font-style: italic;'>&lt;dbl&gt;</span><span> </span><span style='color: #949494;font-style: italic;'>&lt;dbl&gt;</span><span> </span><span style='color: #949494;font-style: italic;'>&lt;dbl&gt;</span><span> </span><span style='color: #949494;font-style: italic;'>&lt;dbl&gt;</span><span>
-#&gt; </span><span style='color: #BCBCBC;'>1</span><span>     4     0     1  26   120.   91    4.43  2.14  16.7  5     2   
+#&gt; </span><span style='color: #BCBCBC;'>1</span><span>     4     0     1  26   120.   91    4.43  2.14  16.7  5     2
 #&gt; </span><span style='color: #BCBCBC;'>2</span><span>     4     1     0  22.9 136.   84.7  3.77  2.94  21.0  3.67  1.67
 #&gt; </span><span style='color: #BCBCBC;'>3</span><span>     4     1     1  28.4  89.8  80.6  4.15  2.03  18.7  4.14  1.43
 #&gt; </span><span style='color: #BCBCBC;'>4</span><span>     6     0     1  20.6 155   132.   3.81  2.76  16.3  4.33  4.67
-#&gt; </span><span style='color: #BCBCBC;'>5</span><span>     6     1     0  19.1 205.  115.   3.42  3.39  19.2  3.5   2.5 
+#&gt; </span><span style='color: #BCBCBC;'>5</span><span>     6     1     0  19.1 205.  115.   3.42  3.39  19.2  3.5   2.5
 #&gt; </span><span style='color: #BCBCBC;'>6</span><span>     8     0     0  15.1 358.  194.   3.12  4.10  17.1  3     3.08
 #&gt; </span><span style='color: #BCBCBC;'>7</span><span>     8     0     1  15.4 326   300.   3.88  3.37  14.6  5     6   </div><div class='input'><span class='no'>mtcars</span> <span class='kw'>%&gt;%</span> <span class='fu'>fgroup_by</span>(<span class='no'>cyl</span>,<span class='no'>vs</span>,<span class='no'>am</span>) <span class='kw'>%&gt;%</span> <span class='no'>fmean</span> <span class='co'># Faster alternative with collapse grouping</span></div><div class='output co'>#&gt; </span><span style='color: #949494;'># A tibble: 7 x 11</span><span>
 #&gt;     cyl    vs    am   mpg  disp    hp  drat    wt  qsec  gear  carb
 #&gt;   </span><span style='color: #949494;font-style: italic;'>&lt;dbl&gt;</span><span> </span><span style='color: #949494;font-style: italic;'>&lt;dbl&gt;</span><span> </span><span style='color: #949494;font-style: italic;'>&lt;dbl&gt;</span><span> </span><span style='color: #949494;font-style: italic;'>&lt;dbl&gt;</span><span> </span><span style='color: #949494;font-style: italic;'>&lt;dbl&gt;</span><span> </span><span style='color: #949494;font-style: italic;'>&lt;dbl&gt;</span><span> </span><span style='color: #949494;font-style: italic;'>&lt;dbl&gt;</span><span> </span><span style='color: #949494;font-style: italic;'>&lt;dbl&gt;</span><span> </span><span style='color: #949494;font-style: italic;'>&lt;dbl&gt;</span><span> </span><span style='color: #949494;font-style: italic;'>&lt;dbl&gt;</span><span> </span><span style='color: #949494;font-style: italic;'>&lt;dbl&gt;</span><span>
-#&gt; </span><span style='color: #BCBCBC;'>1</span><span>     4     0     1  26   120.   91    4.43  2.14  16.7  5     2   
+#&gt; </span><span style='color: #BCBCBC;'>1</span><span>     4     0     1  26   120.   91    4.43  2.14  16.7  5     2
 #&gt; </span><span style='color: #BCBCBC;'>2</span><span>     4     1     0  22.9 136.   84.7  3.77  2.94  21.0  3.67  1.67
 #&gt; </span><span style='color: #BCBCBC;'>3</span><span>     4     1     1  28.4  89.8  80.6  4.15  2.03  18.7  4.14  1.43
 #&gt; </span><span style='color: #BCBCBC;'>4</span><span>     6     0     1  20.6 155   132.   3.81  2.76  16.3  4.33  4.67
-#&gt; </span><span style='color: #BCBCBC;'>5</span><span>     6     1     0  19.1 205.  115.   3.42  3.39  19.2  3.5   2.5 
+#&gt; </span><span style='color: #BCBCBC;'>5</span><span>     6     1     0  19.1 205.  115.   3.42  3.39  19.2  3.5   2.5
 #&gt; </span><span style='color: #BCBCBC;'>6</span><span>     8     0     0  15.1 358.  194.   3.12  4.10  17.1  3     3.08
 #&gt; </span><span style='color: #BCBCBC;'>7</span><span>     8     0     1  15.4 326   300.   3.88  3.37  14.6  5     6   </div><div class='input'>
 </div></span></pre>
@@ -397,7 +400,7 @@ There are also several conversion methods to convert to and from 'GRP' objects. 
       </footer>
    </div>
 
-  
+
 
 
   </body>

@@ -87,27 +87,30 @@
 <li>
   <a href="../news/index.html">News</a>
 </li>
+<li>
+  <a href="https://sebkrantz.github.io/Rblog/" target="_blank">Blog</a>
+</li>
       </ul>
       <ul class="nav navbar-nav navbar-right">
         <li>
   <a href="https://twitter.com/collapse_R">
     <span class="fa fa-twitter"></span>
-     
+
   </a>
 </li>
 <li>
   <a href="https://github.com/SebKrantz/collapse">
     <span class="fa fa-github"></span>
-     
+
   </a>
 </li>
       </ul>
-      
+
     </div><!--/.nav-collapse -->
   </div><!--/.container -->
 </div><!--/.navbar -->
 
-      
+
 
       </header>
 
@@ -115,7 +118,7 @@
   <div class="col-md-9 contents">
     <div class="page-header">
     <h1>Split-Apply-Combine Computing <!-- % (Efficient) --></h1>
-    
+
     <div class="hidden name"><code>BY.Rd</code></div>
     </div>
 
@@ -212,13 +215,13 @@
 <span class='no'>f</span> <span class='kw'>&lt;-</span> <span class='no'>iris</span>$<span class='no'>Species</span>        <span class='co'># A factor. Vectors/lists will internally be converted to factor</span>
 
 <span class='co'>## default vector method</span>
-<span class='fu'>BY</span>(<span class='no'>v</span>, <span class='no'>f</span>, <span class='no'>sum</span>)                                <span class='co'># Sum by species</span></div><div class='output co'>#&gt;     setosa versicolor  virginica 
-#&gt;      250.3      296.8      329.4 </div><div class='input'><span class='fu'><a href='https://rdrr.io/r/utils/head.html'>head</a></span>(<span class='fu'>BY</span>(<span class='no'>v</span>, <span class='no'>f</span>, <span class='no'>scale</span>))                        <span class='co'># Scale by species (please use fscale instead)</span></div><div class='output co'>#&gt;     setosa1     setosa2     setosa3     setosa4     setosa5     setosa6 
-#&gt;  0.26667447 -0.30071802 -0.86811050 -1.15180675 -0.01702177  1.11776320 </div><div class='input'><span class='fu'><a href='https://rdrr.io/r/utils/head.html'>head</a></span>(<span class='fu'>BY</span>(<span class='no'>v</span>, <span class='no'>f</span>, <span class='no'>scale</span>, <span class='kw'>use.g.names</span> <span class='kw'>=</span> <span class='fl'>FALSE</span>))   <span class='co'># Omitting auto-generated names</span></div><div class='output co'>#&gt; [1]  0.26667447 -0.30071802 -0.86811050 -1.15180675 -0.01702177  1.11776320</div><div class='input'><span class='fu'>BY</span>(<span class='no'>v</span>, <span class='no'>f</span>, <span class='no'>quantile</span>)                           <span class='co'># Species quantiles: by default stacked</span></div><div class='output co'>#&gt;       setosa.0%      setosa.25%      setosa.50%      setosa.75%     setosa.100% 
-#&gt;           4.300           4.800           5.000           5.200           5.800 
-#&gt;   versicolor.0%  versicolor.25%  versicolor.50%  versicolor.75% versicolor.100% 
-#&gt;           4.900           5.600           5.900           6.300           7.000 
-#&gt;    virginica.0%   virginica.25%   virginica.50%   virginica.75%  virginica.100% 
+<span class='fu'>BY</span>(<span class='no'>v</span>, <span class='no'>f</span>, <span class='no'>sum</span>)                                <span class='co'># Sum by species</span></div><div class='output co'>#&gt;     setosa versicolor  virginica
+#&gt;      250.3      296.8      329.4 </div><div class='input'><span class='fu'><a href='https://rdrr.io/r/utils/head.html'>head</a></span>(<span class='fu'>BY</span>(<span class='no'>v</span>, <span class='no'>f</span>, <span class='no'>scale</span>))                        <span class='co'># Scale by species (please use fscale instead)</span></div><div class='output co'>#&gt;     setosa1     setosa2     setosa3     setosa4     setosa5     setosa6
+#&gt;  0.26667447 -0.30071802 -0.86811050 -1.15180675 -0.01702177  1.11776320 </div><div class='input'><span class='fu'><a href='https://rdrr.io/r/utils/head.html'>head</a></span>(<span class='fu'>BY</span>(<span class='no'>v</span>, <span class='no'>f</span>, <span class='no'>scale</span>, <span class='kw'>use.g.names</span> <span class='kw'>=</span> <span class='fl'>FALSE</span>))   <span class='co'># Omitting auto-generated names</span></div><div class='output co'>#&gt; [1]  0.26667447 -0.30071802 -0.86811050 -1.15180675 -0.01702177  1.11776320</div><div class='input'><span class='fu'>BY</span>(<span class='no'>v</span>, <span class='no'>f</span>, <span class='no'>quantile</span>)                           <span class='co'># Species quantiles: by default stacked</span></div><div class='output co'>#&gt;       setosa.0%      setosa.25%      setosa.50%      setosa.75%     setosa.100%
+#&gt;           4.300           4.800           5.000           5.200           5.800
+#&gt;   versicolor.0%  versicolor.25%  versicolor.50%  versicolor.75% versicolor.100%
+#&gt;           4.900           5.600           5.900           6.300           7.000
+#&gt;    virginica.0%   virginica.25%   virginica.50%   virginica.75%  virginica.100%
 #&gt;           4.900           6.225           6.500           6.900           7.900 </div><div class='input'><span class='fu'>BY</span>(<span class='no'>v</span>, <span class='no'>f</span>, <span class='no'>quantile</span>, <span class='kw'>expand.wide</span> <span class='kw'>=</span> <span class='fl'>TRUE</span>)       <span class='co'># Wide format</span></div><div class='output co'>#&gt;             0%   25% 50% 75% 100%
 #&gt; setosa     4.3 4.800 5.0 5.2  5.8
 #&gt; versicolor 4.9 5.600 5.9 6.3  7.0
@@ -287,25 +290,25 @@
 #&gt; setosa     4.3 4.800 5.0 5.2  5.8
 #&gt; versicolor 4.9 5.600 5.9 6.3  7.0
 #&gt; virginica  4.9 6.225 6.5 6.9  7.9
-#&gt; 
+#&gt;
 #&gt; $Sepal.Width
 #&gt;             0%   25% 50%   75% 100%
 #&gt; setosa     2.3 3.200 3.4 3.675  4.4
 #&gt; versicolor 2.0 2.525 2.8 3.000  3.4
 #&gt; virginica  2.2 2.800 3.0 3.175  3.8
-#&gt; 
+#&gt;
 #&gt; $Petal.Length
 #&gt;             0% 25%  50%   75% 100%
 #&gt; setosa     1.0 1.4 1.50 1.575  1.9
 #&gt; versicolor 3.0 4.0 4.35 4.600  5.1
 #&gt; virginica  4.5 5.1 5.55 5.875  6.9
-#&gt; 
+#&gt;
 #&gt; $Petal.Width
 #&gt;             0% 25% 50% 75% 100%
 #&gt; setosa     0.1 0.2 0.2 0.3  0.6
 #&gt; versicolor 1.0 1.2 1.3 1.5  1.8
 #&gt; virginica  1.4 1.8 2.0 2.3  2.5
-#&gt; 
+#&gt;
 #&gt; $wt
 #&gt;                     0%       25%       50%       75%     100%
 #&gt; setosa     0.030032509 0.5249884 0.7786559 1.2162830 2.172851
@@ -375,25 +378,25 @@
 #&gt; setosa     4.3 4.800 5.0 5.2  5.8
 #&gt; versicolor 4.9 5.600 5.9 6.3  7.0
 #&gt; virginica  4.9 6.225 6.5 6.9  7.9
-#&gt; 
+#&gt;
 #&gt; $Sepal.Width
 #&gt;             0%   25% 50%   75% 100%
 #&gt; setosa     2.3 3.200 3.4 3.675  4.4
 #&gt; versicolor 2.0 2.525 2.8 3.000  3.4
 #&gt; virginica  2.2 2.800 3.0 3.175  3.8
-#&gt; 
+#&gt;
 #&gt; $Petal.Length
 #&gt;             0% 25%  50%   75% 100%
 #&gt; setosa     1.0 1.4 1.50 1.575  1.9
 #&gt; versicolor 3.0 4.0 4.35 4.600  5.1
 #&gt; virginica  4.5 5.1 5.55 5.875  6.9
-#&gt; 
+#&gt;
 #&gt; $Petal.Width
 #&gt;             0% 25% 50% 75% 100%
 #&gt; setosa     0.1 0.2 0.2 0.3  0.6
 #&gt; versicolor 1.0 1.2 1.3 1.5  1.8
 #&gt; virginica  1.4 1.8 2.0 2.3  2.5
-#&gt; 
+#&gt;
 #&gt; $wt
 #&gt;                     0%       25%       50%       75%     100%
 #&gt; setosa     0.030032509 0.5249884 0.7786559 1.2162830 2.172851
@@ -429,19 +432,19 @@
 #&gt; </span><span style='color: #949494;'># Groups:   Species [3]</span><span>
 #&gt;    Sepal.Length Sepal.Width Petal.Length Petal.Width      wt AWMSL AWMSW
 #&gt;           </span><span style='color: #949494;font-style: italic;'>&lt;dbl&gt;</span><span>       </span><span style='color: #949494;font-style: italic;'>&lt;dbl&gt;</span><span>        </span><span style='color: #949494;font-style: italic;'>&lt;dbl&gt;</span><span>       </span><span style='color: #949494;font-style: italic;'>&lt;dbl&gt;</span><span>   </span><span style='color: #949494;font-style: italic;'>&lt;dbl&gt;</span><span> </span><span style='color: #949494;font-style: italic;'>&lt;dbl&gt;</span><span> </span><span style='color: #949494;font-style: italic;'>&lt;dbl&gt;</span><span>
-#&gt; </span><span style='color: #BCBCBC;'> 1</span><span>         4.3         2.3          1            0.1 0.030</span><span style='text-decoration: underline;'>0</span><span>      0  0   
-#&gt; </span><span style='color: #BCBCBC;'> 2</span><span>         4.8         3.2          1.4          0.2 0.525       0  1   
-#&gt; </span><span style='color: #BCBCBC;'> 3</span><span>         5           3.4          1.5          0.2 0.779       0  1   
-#&gt; </span><span style='color: #BCBCBC;'> 4</span><span>         5.2         3.68         1.58         0.3 1.22        0  1   
-#&gt; </span><span style='color: #BCBCBC;'> 5</span><span>         5.8         4.4          1.9          0.6 2.17        1  1   
-#&gt; </span><span style='color: #BCBCBC;'> 6</span><span>         4.9         2            3            1   0.008</span><span style='text-decoration: underline;'>19</span><span>     0  0   
-#&gt; </span><span style='color: #BCBCBC;'> 7</span><span>         5.6         2.52         4            1.2 0.350       0  0   
-#&gt; </span><span style='color: #BCBCBC;'> 8</span><span>         5.9         2.8          4.35         1.3 0.567       1  0   
-#&gt; </span><span style='color: #BCBCBC;'> 9</span><span>         6.3         3            4.6          1.5 0.986       1  0   
-#&gt; </span><span style='color: #BCBCBC;'>10</span><span>         7           3.4          5.1          1.8 1.83        1  1   
-#&gt; </span><span style='color: #BCBCBC;'>11</span><span>         4.9         2.2          4.5          1.4 0.009</span><span style='text-decoration: underline;'>22</span><span>     0  0   
-#&gt; </span><span style='color: #BCBCBC;'>12</span><span>         6.22        2.8          5.1          1.8 0.291       1  0   
-#&gt; </span><span style='color: #BCBCBC;'>13</span><span>         6.5         3            5.55         2   0.585       1  0   
+#&gt; </span><span style='color: #BCBCBC;'> 1</span><span>         4.3         2.3          1            0.1 0.030</span><span style='text-decoration: underline;'>0</span><span>      0  0
+#&gt; </span><span style='color: #BCBCBC;'> 2</span><span>         4.8         3.2          1.4          0.2 0.525       0  1
+#&gt; </span><span style='color: #BCBCBC;'> 3</span><span>         5           3.4          1.5          0.2 0.779       0  1
+#&gt; </span><span style='color: #BCBCBC;'> 4</span><span>         5.2         3.68         1.58         0.3 1.22        0  1
+#&gt; </span><span style='color: #BCBCBC;'> 5</span><span>         5.8         4.4          1.9          0.6 2.17        1  1
+#&gt; </span><span style='color: #BCBCBC;'> 6</span><span>         4.9         2            3            1   0.008</span><span style='text-decoration: underline;'>19</span><span>     0  0
+#&gt; </span><span style='color: #BCBCBC;'> 7</span><span>         5.6         2.52         4            1.2 0.350       0  0
+#&gt; </span><span style='color: #BCBCBC;'> 8</span><span>         5.9         2.8          4.35         1.3 0.567       1  0
+#&gt; </span><span style='color: #BCBCBC;'> 9</span><span>         6.3         3            4.6          1.5 0.986       1  0
+#&gt; </span><span style='color: #BCBCBC;'>10</span><span>         7           3.4          5.1          1.8 1.83        1  1
+#&gt; </span><span style='color: #BCBCBC;'>11</span><span>         4.9         2.2          4.5          1.4 0.009</span><span style='text-decoration: underline;'>22</span><span>     0  0
+#&gt; </span><span style='color: #BCBCBC;'>12</span><span>         6.22        2.8          5.1          1.8 0.291       1  0
+#&gt; </span><span style='color: #BCBCBC;'>13</span><span>         6.5         3            5.55         2   0.585       1  0
 #&gt; </span><span style='color: #BCBCBC;'>14</span><span>         6.9         3.18         5.88         2.3 1.11        1  0.75
 #&gt; </span><span style='color: #BCBCBC;'>15</span><span>         7.9         3.8          6.9          2.5 2.30        1  1   </div><div class='input'><span class='no'>giris</span> <span class='kw'>%&gt;%</span> <span class='fu'>BY</span>(<span class='no'>quantile</span>,                 <span class='co'># Much better, also keeps 'Species'</span>
              <span class='kw'>expand.wide</span> <span class='kw'>=</span> <span class='fl'>TRUE</span>)</div><div class='output co'>#&gt; </span><span style='color: #949494;'># A tibble: 3 x 36</span><span>
@@ -482,7 +485,7 @@
       </footer>
    </div>
 
-  
+
 
 
   </body>
