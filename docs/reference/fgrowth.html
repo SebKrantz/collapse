@@ -89,27 +89,30 @@ Fast Growth Rates for Time Series and Panel Data — fgrowth" />
 <li>
   <a href="../news/index.html">News</a>
 </li>
+<li>
+  <a href="https://sebkrantz.github.io/Rblog/" target="_blank">Blog</a>
+</li>
       </ul>
       <ul class="nav navbar-nav navbar-right">
         <li>
   <a href="https://twitter.com/collapse_R">
     <span class="fa fa-twitter"></span>
-     
+
   </a>
 </li>
 <li>
   <a href="https://github.com/SebKrantz/collapse">
     <span class="fa fa-github"></span>
-     
+
   </a>
 </li>
       </ul>
-      
+
     </div><!--/.nav-collapse -->
   </div><!--/.container -->
 </div><!--/.navbar -->
 
-      
+
 
       </header>
 
@@ -118,7 +121,7 @@ Fast Growth Rates for Time Series and Panel Data — fgrowth" />
     <div class="page-header">
     <h1><!-- % Lagged and Iterated -->
 Fast Growth Rates for Time Series and Panel Data</h1>
-    
+
     <div class="hidden name"><code>fgrowth.Rd</code></div>
     </div>
 
@@ -375,26 +378,26 @@ Fast Growth Rates for Time Series and Panel Data</h1>
                 <span class='fl'>1950</span>), <span class='st'>"periodic"</span>))</div><div class='img'><img src='fgrowth-2.png' alt='' width='700' height='433' /></div><div class='input'>
 
 <span class='co'>## Time Series Matrix of 4 EU Stock Market Indicators, recorded 260 days per year</span>
-<span class='fu'><a href='https://rdrr.io/r/base/plot.html'>plot</a></span>(<span class='fu'>G</span>(<span class='no'>EuStockMarkets</span>,<span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span>(<span class='fl'>0</span>,<span class='fl'>260</span>)))                    <span class='co'># Plot series and annual growth rates</span></div><div class='img'><img src='fgrowth-3.png' alt='' width='700' height='433' /></div><div class='input'><span class='fu'><a href='https://rdrr.io/r/base/summary.html'>summary</a></span>(<span class='fu'><a href='https://rdrr.io/r/stats/lm.html'>lm</a></span>(<span class='no'>L260G1.DAX</span> ~<span class='no'>.</span>, <span class='fu'>G</span>(<span class='no'>EuStockMarkets</span>,<span class='fl'>260</span>)))   <span class='co'># Annual growth rate of DAX regressed on the</span></div><div class='output co'>#&gt; 
+<span class='fu'><a href='https://rdrr.io/r/base/plot.html'>plot</a></span>(<span class='fu'>G</span>(<span class='no'>EuStockMarkets</span>,<span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span>(<span class='fl'>0</span>,<span class='fl'>260</span>)))                    <span class='co'># Plot series and annual growth rates</span></div><div class='img'><img src='fgrowth-3.png' alt='' width='700' height='433' /></div><div class='input'><span class='fu'><a href='https://rdrr.io/r/base/summary.html'>summary</a></span>(<span class='fu'><a href='https://rdrr.io/r/stats/lm.html'>lm</a></span>(<span class='no'>L260G1.DAX</span> ~<span class='no'>.</span>, <span class='fu'>G</span>(<span class='no'>EuStockMarkets</span>,<span class='fl'>260</span>)))   <span class='co'># Annual growth rate of DAX regressed on the</span></div><div class='output co'>#&gt;
 #&gt; Call:
 #&gt; lm(formula = L260G1.DAX ~ ., data = G(EuStockMarkets, 260))
-#&gt; 
+#&gt;
 #&gt; Residuals:
-#&gt;      Min       1Q   Median       3Q      Max 
-#&gt; -19.5094  -4.7763   0.4586   5.0337  18.2316 
-#&gt; 
+#&gt;      Min       1Q   Median       3Q      Max
+#&gt; -19.5094  -4.7763   0.4586   5.0337  18.2316
+#&gt;
 #&gt; Coefficients:
-#&gt;             Estimate Std. Error t value Pr(&gt;|t|)    
+#&gt;             Estimate Std. Error t value Pr(&gt;|t|)
 #&gt; (Intercept)  4.48795    0.38357   11.70  &lt; 2e-16 ***
 #&gt; L260G1.SMI   0.37048    0.02635   14.06  &lt; 2e-16 ***
 #&gt; L260G1.CAC   0.82319    0.02092   39.34  &lt; 2e-16 ***
 #&gt; L260G1.FTSE -0.25008    0.03883   -6.44 1.58e-10 ***
 #&gt; ---
 #&gt; Signif. codes:  0 ‘***’ 0.001 ‘**’ 0.01 ‘*’ 0.05 ‘.’ 0.1 ‘ ’ 1
-#&gt; 
+#&gt;
 #&gt; Residual standard error: 7.817 on 1596 degrees of freedom
 #&gt;   (260 observations deleted due to missingness)
-#&gt; Multiple R-squared:  0.8585,	Adjusted R-squared:  0.8582 
+#&gt; Multiple R-squared:  0.8585,	Adjusted R-squared:  0.8582
 #&gt; F-statistic:  3226 on 3 and 1596 DF,  p-value: &lt; 2.2e-16
 #&gt; </div><div class='input'>                                                    <span class='co'># growth rates of the other indicators</span>
 
@@ -441,78 +444,78 @@ Fast Growth Rates for Time Series and Panel Data</h1>
 <span class='co'># Dynamic Panel Data Models:</span>
 <span class='fu'><a href='https://rdrr.io/r/base/summary.html'>summary</a></span>(<span class='fu'><a href='https://rdrr.io/r/stats/lm.html'>lm</a></span>(<span class='fu'>G</span>(<span class='no'>PCGDP</span>,<span class='fl'>1</span>,<span class='fl'>1</span>,<span class='no'>iso3c</span>,<span class='no'>year</span>) ~                    <span class='co'># GDP growth regressed on it's lagged level</span>
              <span class='fu'><a href='flag.html'>L</a></span>(<span class='no'>PCGDP</span>,<span class='fl'>1</span>,<span class='no'>iso3c</span>,<span class='no'>year</span>) +                    <span class='co'># and the growth rate of Life Expanctancy</span>
-             <span class='fu'>G</span>(<span class='no'>LIFEEX</span>,<span class='fl'>1</span>,<span class='fl'>1</span>,<span class='no'>iso3c</span>,<span class='no'>year</span>), <span class='kw'>data</span> <span class='kw'>=</span> <span class='no'>wlddev</span>))</div><div class='output co'>#&gt; 
+             <span class='fu'>G</span>(<span class='no'>LIFEEX</span>,<span class='fl'>1</span>,<span class='fl'>1</span>,<span class='no'>iso3c</span>,<span class='no'>year</span>), <span class='kw'>data</span> <span class='kw'>=</span> <span class='no'>wlddev</span>))</div><div class='output co'>#&gt;
 #&gt; Call:
-#&gt; lm(formula = G(PCGDP, 1, 1, iso3c, year) ~ L(PCGDP, 1, iso3c, 
+#&gt; lm(formula = G(PCGDP, 1, 1, iso3c, year) ~ L(PCGDP, 1, iso3c,
 #&gt;     year) + G(LIFEEX, 1, 1, iso3c, year), data = wlddev)
-#&gt; 
+#&gt;
 #&gt; Residuals:
-#&gt;     Min      1Q  Median      3Q     Max 
-#&gt; -67.426  -2.341   0.158   2.505 138.053 
-#&gt; 
+#&gt;     Min      1Q  Median      3Q     Max
+#&gt; -67.426  -2.341   0.158   2.505 138.053
+#&gt;
 #&gt; Coefficients:
-#&gt;                                Estimate Std. Error t value Pr(&gt;|t|)    
+#&gt;                                Estimate Std. Error t value Pr(&gt;|t|)
 #&gt; (Intercept)                   1.967e+00  1.016e-01  19.354  &lt; 2e-16 ***
-#&gt; L(PCGDP, 1, iso3c, year)     -1.398e-05  4.545e-06  -3.076   0.0021 ** 
+#&gt; L(PCGDP, 1, iso3c, year)     -1.398e-05  4.545e-06  -3.076   0.0021 **
 #&gt; G(LIFEEX, 1, 1, iso3c, year)  5.567e-01  9.659e-02   5.764 8.51e-09 ***
 #&gt; ---
 #&gt; Signif. codes:  0 ‘***’ 0.001 ‘**’ 0.01 ‘*’ 0.05 ‘.’ 0.1 ‘ ’ 1
-#&gt; 
+#&gt;
 #&gt; Residual standard error: 6.213 on 8181 degrees of freedom
 #&gt;   (4560 observations deleted due to missingness)
-#&gt; Multiple R-squared:  0.006138,	Adjusted R-squared:  0.005895 
+#&gt; Multiple R-squared:  0.006138,	Adjusted R-squared:  0.005895
 #&gt; F-statistic: 25.26 on 2 and 8181 DF,  p-value: 1.155e-11
 #&gt; </div><div class='input'>
 <span class='no'>g</span> <span class='kw'>=</span> <span class='fu'><a href='qF.html'>qF</a></span>(<span class='no'>wlddev</span>$<span class='no'>country</span>)                                  <span class='co'># Omitting t and precomputing g allows for a</span>
 <span class='fu'><a href='https://rdrr.io/r/base/summary.html'>summary</a></span>(<span class='fu'><a href='https://rdrr.io/r/stats/lm.html'>lm</a></span>(<span class='fu'>G</span>(<span class='no'>PCGDP</span>,<span class='fl'>1</span>,<span class='fl'>1</span>,<span class='no'>g</span>) ~ <span class='fu'><a href='flag.html'>L</a></span>(<span class='no'>PCGDP</span>,<span class='fl'>1</span>,<span class='no'>g</span>) +              <span class='co'># bit more parsimonious specification</span>
-                            <span class='fu'>G</span>(<span class='no'>LIFEEX</span>,<span class='fl'>1</span>,<span class='fl'>1</span>,<span class='no'>g</span>), <span class='no'>wlddev</span>))</div><div class='output co'>#&gt; <span class='message'>Panel-growth rate computed without timevar: Assuming ordered data</span></div><div class='output co'>#&gt; <span class='message'>Panel-lag computed without timevar: Assuming ordered data</span></div><div class='output co'>#&gt; <span class='message'>Panel-growth rate computed without timevar: Assuming ordered data</span></div><div class='output co'>#&gt; 
+                            <span class='fu'>G</span>(<span class='no'>LIFEEX</span>,<span class='fl'>1</span>,<span class='fl'>1</span>,<span class='no'>g</span>), <span class='no'>wlddev</span>))</div><div class='output co'>#&gt; <span class='message'>Panel-growth rate computed without timevar: Assuming ordered data</span></div><div class='output co'>#&gt; <span class='message'>Panel-lag computed without timevar: Assuming ordered data</span></div><div class='output co'>#&gt; <span class='message'>Panel-growth rate computed without timevar: Assuming ordered data</span></div><div class='output co'>#&gt;
 #&gt; Call:
-#&gt; lm(formula = G(PCGDP, 1, 1, g) ~ L(PCGDP, 1, g) + G(LIFEEX, 1, 
+#&gt; lm(formula = G(PCGDP, 1, 1, g) ~ L(PCGDP, 1, g) + G(LIFEEX, 1,
 #&gt;     1, g), data = wlddev)
-#&gt; 
+#&gt;
 #&gt; Residuals:
-#&gt;     Min      1Q  Median      3Q     Max 
-#&gt; -67.426  -2.341   0.158   2.505 138.053 
-#&gt; 
+#&gt;     Min      1Q  Median      3Q     Max
+#&gt; -67.426  -2.341   0.158   2.505 138.053
+#&gt;
 #&gt; Coefficients:
-#&gt;                      Estimate Std. Error t value Pr(&gt;|t|)    
+#&gt;                      Estimate Std. Error t value Pr(&gt;|t|)
 #&gt; (Intercept)         1.967e+00  1.016e-01  19.354  &lt; 2e-16 ***
-#&gt; L(PCGDP, 1, g)     -1.398e-05  4.545e-06  -3.076   0.0021 ** 
+#&gt; L(PCGDP, 1, g)     -1.398e-05  4.545e-06  -3.076   0.0021 **
 #&gt; G(LIFEEX, 1, 1, g)  5.567e-01  9.659e-02   5.764 8.51e-09 ***
 #&gt; ---
 #&gt; Signif. codes:  0 ‘***’ 0.001 ‘**’ 0.01 ‘*’ 0.05 ‘.’ 0.1 ‘ ’ 1
-#&gt; 
+#&gt;
 #&gt; Residual standard error: 6.213 on 8181 degrees of freedom
 #&gt;   (4560 observations deleted due to missingness)
-#&gt; Multiple R-squared:  0.006138,	Adjusted R-squared:  0.005895 
+#&gt; Multiple R-squared:  0.006138,	Adjusted R-squared:  0.005895
 #&gt; F-statistic: 25.26 on 2 and 8181 DF,  p-value: 1.155e-11
 #&gt; </div><div class='input'>
 <span class='fu'><a href='https://rdrr.io/r/base/summary.html'>summary</a></span>(<span class='fu'><a href='https://rdrr.io/r/stats/lm.html'>lm</a></span>(<span class='no'>G1.PCGDP</span> ~<span class='no'>.</span>,                                 <span class='co'># Now adding level and lagged level of</span>
 <span class='fu'><a href='flag.html'>L</a></span>(<span class='fu'>G</span>(<span class='no'>wlddev</span>,<span class='fl'>0</span>:<span class='fl'>1</span>,<span class='fl'>1</span>, ~ <span class='no'>country</span>, ~<span class='no'>year</span>,<span class='fl'>9</span>:<span class='fl'>10</span>),<span class='fl'>0</span>:<span class='fl'>1</span>,           <span class='co'># LIFEEX and lagged growth rates</span>
-  ~ <span class='no'>country</span>, ~<span class='no'>year</span>, <span class='kw'>keep.ids</span> <span class='kw'>=</span> <span class='fl'>FALSE</span>)[-<span class='fl'>1</span>]))</div><div class='output co'>#&gt; 
+  ~ <span class='no'>country</span>, ~<span class='no'>year</span>, <span class='kw'>keep.ids</span> <span class='kw'>=</span> <span class='fl'>FALSE</span>)[-<span class='fl'>1</span>]))</div><div class='output co'>#&gt;
 #&gt; Call:
-#&gt; lm(formula = G1.PCGDP ~ ., data = L(G(wlddev, 0:1, 1, ~country, 
+#&gt; lm(formula = G1.PCGDP ~ ., data = L(G(wlddev, 0:1, 1, ~country,
 #&gt;     ~year, 9:10), 0:1, ~country, ~year, keep.ids = FALSE)[-1])
-#&gt; 
+#&gt;
 #&gt; Residuals:
-#&gt;     Min      1Q  Median      3Q     Max 
-#&gt; -82.442  -2.134   0.139   2.136 138.642 
-#&gt; 
+#&gt;     Min      1Q  Median      3Q     Max
+#&gt; -82.442  -2.134   0.139   2.136 138.642
+#&gt;
 #&gt; Coefficients:
-#&gt;                Estimate Std. Error t value Pr(&gt;|t|)    
+#&gt;                Estimate Std. Error t value Pr(&gt;|t|)
 #&gt; (Intercept)  -2.573e+00  5.144e-01  -5.001 5.82e-07 ***
 #&gt; L1.PCGDP     -3.779e-05  5.258e-06  -7.189 7.14e-13 ***
 #&gt; L1.G1.PCGDP   2.793e-01  1.055e-02  26.478  &lt; 2e-16 ***
-#&gt; LIFEEX        9.109e-01  7.847e-01   1.161  0.24575    
-#&gt; L1.LIFEEX    -8.481e-01  7.880e-01  -1.076  0.28187    
-#&gt; G1.LIFEEX    -3.434e-01  4.840e-01  -0.709  0.47805    
-#&gt; L1.G1.LIFEEX  6.101e-01  1.904e-01   3.204  0.00136 ** 
+#&gt; LIFEEX        9.109e-01  7.847e-01   1.161  0.24575
+#&gt; L1.LIFEEX    -8.481e-01  7.880e-01  -1.076  0.28187
+#&gt; G1.LIFEEX    -3.434e-01  4.840e-01  -0.709  0.47805
+#&gt; L1.G1.LIFEEX  6.101e-01  1.904e-01   3.204  0.00136 **
 #&gt; ---
 #&gt; Signif. codes:  0 ‘***’ 0.001 ‘**’ 0.01 ‘*’ 0.05 ‘.’ 0.1 ‘ ’ 1
-#&gt; 
+#&gt;
 #&gt; Residual standard error: 5.866 on 7987 degrees of freedom
 #&gt;   (4750 observations deleted due to missingness)
-#&gt; Multiple R-squared:  0.103,	Adjusted R-squared:  0.1023 
+#&gt; Multiple R-squared:  0.103,	Adjusted R-squared:  0.1023
 #&gt; F-statistic: 152.8 on 6 and 7987 DF,  p-value: &lt; 2.2e-16
 #&gt; </div><div class='input'>
 <span class='co'>## Using plm can make things easier, but avoid attaching or 'with' calls:</span>
@@ -524,91 +527,91 @@ Fast Growth Rates for Time Series and Panel Data</h1>
 #&gt; Afghanistan-1963 Afghanistan 1963    NA       NA 33.624  1.322887
 #&gt; Afghanistan-1964 Afghanistan 1964    NA       NA 34.060  1.296693
 #&gt; Afghanistan-1965 Afghanistan 1965    NA       NA 34.495  1.277158</div><div class='input'><span class='no'>PCGDP</span> <span class='kw'>&lt;-</span> <span class='no'>pwlddev</span>$<span class='no'>PCGDP</span>                                  <span class='co'># A panel-Series of GDP per Capita</span>
-<span class='fu'><a href='https://rdrr.io/r/utils/head.html'>head</a></span>(<span class='fu'>G</span>(<span class='no'>PCGDP</span>))                                          <span class='co'># Growth rate of the panel series</span></div><div class='output co'>#&gt; Afghanistan-1960 Afghanistan-1961 Afghanistan-1962 Afghanistan-1963 
-#&gt;               NA               NA               NA               NA 
-#&gt; Afghanistan-1964 Afghanistan-1965 
+<span class='fu'><a href='https://rdrr.io/r/utils/head.html'>head</a></span>(<span class='fu'>G</span>(<span class='no'>PCGDP</span>))                                          <span class='co'># Growth rate of the panel series</span></div><div class='output co'>#&gt; Afghanistan-1960 Afghanistan-1961 Afghanistan-1962 Afghanistan-1963
+#&gt;               NA               NA               NA               NA
+#&gt; Afghanistan-1964 Afghanistan-1965
 #&gt;               NA               NA </div><div class='input'><span class='fu'><a href='https://rdrr.io/r/base/summary.html'>summary</a></span>(<span class='fu'><a href='https://rdrr.io/r/stats/lm.html'>lm</a></span>(<span class='no'>G1.PCGDP</span> ~<span class='no'>.</span>,                                 <span class='co'># Running the dynamic model again -&gt;</span>
            <span class='kw'>data</span> <span class='kw'>=</span> <span class='fu'><a href='flag.html'>L</a></span>(<span class='fu'>G</span>(<span class='no'>pwlddev</span>,<span class='fl'>0</span>:<span class='fl'>1</span>,<span class='fl'>1</span>,<span class='fl'>9</span>:<span class='fl'>10</span>),<span class='fl'>0</span>:<span class='fl'>1</span>,          <span class='co'># code becomes a bit simpler</span>
-                    <span class='kw'>keep.ids</span> <span class='kw'>=</span> <span class='fl'>FALSE</span>)[-<span class='fl'>1</span>]))</div><div class='output co'>#&gt; 
+                    <span class='kw'>keep.ids</span> <span class='kw'>=</span> <span class='fl'>FALSE</span>)[-<span class='fl'>1</span>]))</div><div class='output co'>#&gt;
 #&gt; Call:
-#&gt; lm(formula = G1.PCGDP ~ ., data = L(G(pwlddev, 0:1, 1, 9:10), 
+#&gt; lm(formula = G1.PCGDP ~ ., data = L(G(pwlddev, 0:1, 1, 9:10),
 #&gt;     0:1, keep.ids = FALSE)[-1])
-#&gt; 
+#&gt;
 #&gt; Residuals:
-#&gt;     Min      1Q  Median      3Q     Max 
-#&gt; -82.442  -2.134   0.139   2.136 138.642 
-#&gt; 
+#&gt;     Min      1Q  Median      3Q     Max
+#&gt; -82.442  -2.134   0.139   2.136 138.642
+#&gt;
 #&gt; Coefficients:
-#&gt;                Estimate Std. Error t value Pr(&gt;|t|)    
+#&gt;                Estimate Std. Error t value Pr(&gt;|t|)
 #&gt; (Intercept)  -2.573e+00  5.144e-01  -5.001 5.82e-07 ***
 #&gt; L1.PCGDP     -3.779e-05  5.258e-06  -7.189 7.14e-13 ***
 #&gt; L1.G1.PCGDP   2.793e-01  1.055e-02  26.478  &lt; 2e-16 ***
-#&gt; LIFEEX        9.109e-01  7.847e-01   1.161  0.24575    
-#&gt; L1.LIFEEX    -8.481e-01  7.880e-01  -1.076  0.28187    
-#&gt; G1.LIFEEX    -3.434e-01  4.840e-01  -0.709  0.47805    
-#&gt; L1.G1.LIFEEX  6.101e-01  1.904e-01   3.204  0.00136 ** 
+#&gt; LIFEEX        9.109e-01  7.847e-01   1.161  0.24575
+#&gt; L1.LIFEEX    -8.481e-01  7.880e-01  -1.076  0.28187
+#&gt; G1.LIFEEX    -3.434e-01  4.840e-01  -0.709  0.47805
+#&gt; L1.G1.LIFEEX  6.101e-01  1.904e-01   3.204  0.00136 **
 #&gt; ---
 #&gt; Signif. codes:  0 ‘***’ 0.001 ‘**’ 0.01 ‘*’ 0.05 ‘.’ 0.1 ‘ ’ 1
-#&gt; 
+#&gt;
 #&gt; Residual standard error: 5.866 on 7987 degrees of freedom
 #&gt;   (4750 observations deleted due to missingness)
-#&gt; Multiple R-squared:  0.103,	Adjusted R-squared:  0.1023 
+#&gt; Multiple R-squared:  0.103,	Adjusted R-squared:  0.1023
 #&gt; F-statistic: 152.8 on 6 and 7987 DF,  p-value: &lt; 2.2e-16
 #&gt; </div><div class='input'>
 <span class='co'># One could be tempted to also do something like this, but THIS DOES NOT WORK!!:</span>
 <span class='co'># -&gt; a pseries is only created when subsetting the pdata.frame using $ or [[</span>
-<span class='fu'><a href='https://rdrr.io/r/base/summary.html'>summary</a></span>(<span class='fu'><a href='https://rdrr.io/r/stats/lm.html'>lm</a></span>(<span class='fu'>G</span>(<span class='no'>PCGDP</span>) ~ <span class='fu'><a href='flag.html'>L</a></span>(<span class='fu'>G</span>(<span class='no'>PCGDP</span>,<span class='fl'>0</span>:<span class='fl'>1</span>)) + <span class='fu'><a href='flag.html'>L</a></span>(<span class='fu'>G</span>(<span class='no'>LIFEEX</span>,<span class='fl'>0</span>:<span class='fl'>1</span>),<span class='fl'>0</span>:<span class='fl'>1</span>), <span class='no'>pwlddev</span>))</div><div class='output co'>#&gt; 
+<span class='fu'><a href='https://rdrr.io/r/base/summary.html'>summary</a></span>(<span class='fu'><a href='https://rdrr.io/r/stats/lm.html'>lm</a></span>(<span class='fu'>G</span>(<span class='no'>PCGDP</span>) ~ <span class='fu'><a href='flag.html'>L</a></span>(<span class='fu'>G</span>(<span class='no'>PCGDP</span>,<span class='fl'>0</span>:<span class='fl'>1</span>)) + <span class='fu'><a href='flag.html'>L</a></span>(<span class='fu'>G</span>(<span class='no'>LIFEEX</span>,<span class='fl'>0</span>:<span class='fl'>1</span>),<span class='fl'>0</span>:<span class='fl'>1</span>), <span class='no'>pwlddev</span>))</div><div class='output co'>#&gt;
 #&gt; Call:
-#&gt; lm(formula = G(PCGDP) ~ L(G(PCGDP, 0:1)) + L(G(LIFEEX, 0:1), 
+#&gt; lm(formula = G(PCGDP) ~ L(G(PCGDP, 0:1)) + L(G(LIFEEX, 0:1),
 #&gt;     0:1), data = pwlddev)
-#&gt; 
+#&gt;
 #&gt; Residuals:
-#&gt;     Min      1Q  Median      3Q     Max 
-#&gt; -82.442  -2.134   0.139   2.136 138.642 
-#&gt; 
+#&gt;     Min      1Q  Median      3Q     Max
+#&gt; -82.442  -2.134   0.139   2.136 138.642
+#&gt;
 #&gt; Coefficients:
-#&gt;                               Estimate Std. Error t value Pr(&gt;|t|)    
+#&gt;                               Estimate Std. Error t value Pr(&gt;|t|)
 #&gt; (Intercept)                 -2.573e+00  5.144e-01  -5.001 5.82e-07 ***
 #&gt; L(G(PCGDP, 0:1))L1.--       -3.779e-05  5.258e-06  -7.189 7.14e-13 ***
 #&gt; L(G(PCGDP, 0:1))L1.G1        2.793e-01  1.055e-02  26.478  &lt; 2e-16 ***
-#&gt; L(G(LIFEEX, 0:1), 0:1)--     9.109e-01  7.847e-01   1.161  0.24575    
-#&gt; L(G(LIFEEX, 0:1), 0:1)L1.-- -8.481e-01  7.880e-01  -1.076  0.28187    
-#&gt; L(G(LIFEEX, 0:1), 0:1)G1    -3.434e-01  4.840e-01  -0.709  0.47805    
-#&gt; L(G(LIFEEX, 0:1), 0:1)L1.G1  6.101e-01  1.904e-01   3.204  0.00136 ** 
+#&gt; L(G(LIFEEX, 0:1), 0:1)--     9.109e-01  7.847e-01   1.161  0.24575
+#&gt; L(G(LIFEEX, 0:1), 0:1)L1.-- -8.481e-01  7.880e-01  -1.076  0.28187
+#&gt; L(G(LIFEEX, 0:1), 0:1)G1    -3.434e-01  4.840e-01  -0.709  0.47805
+#&gt; L(G(LIFEEX, 0:1), 0:1)L1.G1  6.101e-01  1.904e-01   3.204  0.00136 **
 #&gt; ---
 #&gt; Signif. codes:  0 ‘***’ 0.001 ‘**’ 0.01 ‘*’ 0.05 ‘.’ 0.1 ‘ ’ 1
-#&gt; 
+#&gt;
 #&gt; Residual standard error: 5.866 on 7987 degrees of freedom
 #&gt;   (4750 observations deleted due to missingness)
-#&gt; Multiple R-squared:  0.103,	Adjusted R-squared:  0.1023 
+#&gt; Multiple R-squared:  0.103,	Adjusted R-squared:  0.1023
 #&gt; F-statistic: 152.8 on 6 and 7987 DF,  p-value: &lt; 2.2e-16
 #&gt; </div><div class='input'>
 <span class='co'># To make it work, one needs to create pseries</span>
 <span class='no'>LIFEEX</span> <span class='kw'>&lt;-</span> <span class='no'>pwlddev</span>$<span class='no'>LIFEEX</span>
-<span class='fu'><a href='https://rdrr.io/r/base/summary.html'>summary</a></span>(<span class='fu'><a href='https://rdrr.io/r/stats/lm.html'>lm</a></span>(<span class='fu'>G</span>(<span class='no'>PCGDP</span>) ~ <span class='fu'><a href='flag.html'>L</a></span>(<span class='fu'>G</span>(<span class='no'>PCGDP</span>,<span class='fl'>0</span>:<span class='fl'>1</span>)) + <span class='fu'><a href='flag.html'>L</a></span>(<span class='fu'>G</span>(<span class='no'>LIFEEX</span>,<span class='fl'>0</span>:<span class='fl'>1</span>),<span class='fl'>0</span>:<span class='fl'>1</span>))) <span class='co'># THIS WORKS !</span></div><div class='output co'>#&gt; 
+<span class='fu'><a href='https://rdrr.io/r/base/summary.html'>summary</a></span>(<span class='fu'><a href='https://rdrr.io/r/stats/lm.html'>lm</a></span>(<span class='fu'>G</span>(<span class='no'>PCGDP</span>) ~ <span class='fu'><a href='flag.html'>L</a></span>(<span class='fu'>G</span>(<span class='no'>PCGDP</span>,<span class='fl'>0</span>:<span class='fl'>1</span>)) + <span class='fu'><a href='flag.html'>L</a></span>(<span class='fu'>G</span>(<span class='no'>LIFEEX</span>,<span class='fl'>0</span>:<span class='fl'>1</span>),<span class='fl'>0</span>:<span class='fl'>1</span>))) <span class='co'># THIS WORKS !</span></div><div class='output co'>#&gt;
 #&gt; Call:
-#&gt; lm(formula = G(PCGDP) ~ L(G(PCGDP, 0:1)) + L(G(LIFEEX, 0:1), 
+#&gt; lm(formula = G(PCGDP) ~ L(G(PCGDP, 0:1)) + L(G(LIFEEX, 0:1),
 #&gt;     0:1))
-#&gt; 
+#&gt;
 #&gt; Residuals:
-#&gt;     Min      1Q  Median      3Q     Max 
-#&gt; -82.442  -2.134   0.139   2.136 138.642 
-#&gt; 
+#&gt;     Min      1Q  Median      3Q     Max
+#&gt; -82.442  -2.134   0.139   2.136 138.642
+#&gt;
 #&gt; Coefficients:
-#&gt;                               Estimate Std. Error t value Pr(&gt;|t|)    
+#&gt;                               Estimate Std. Error t value Pr(&gt;|t|)
 #&gt; (Intercept)                 -2.573e+00  5.144e-01  -5.001 5.82e-07 ***
 #&gt; L(G(PCGDP, 0:1))L1.--       -3.779e-05  5.258e-06  -7.189 7.14e-13 ***
 #&gt; L(G(PCGDP, 0:1))L1.G1        2.793e-01  1.055e-02  26.478  &lt; 2e-16 ***
-#&gt; L(G(LIFEEX, 0:1), 0:1)--     9.109e-01  7.847e-01   1.161  0.24575    
-#&gt; L(G(LIFEEX, 0:1), 0:1)L1.-- -8.481e-01  7.880e-01  -1.076  0.28187    
-#&gt; L(G(LIFEEX, 0:1), 0:1)G1    -3.434e-01  4.840e-01  -0.709  0.47805    
-#&gt; L(G(LIFEEX, 0:1), 0:1)L1.G1  6.101e-01  1.904e-01   3.204  0.00136 ** 
+#&gt; L(G(LIFEEX, 0:1), 0:1)--     9.109e-01  7.847e-01   1.161  0.24575
+#&gt; L(G(LIFEEX, 0:1), 0:1)L1.-- -8.481e-01  7.880e-01  -1.076  0.28187
+#&gt; L(G(LIFEEX, 0:1), 0:1)G1    -3.434e-01  4.840e-01  -0.709  0.47805
+#&gt; L(G(LIFEEX, 0:1), 0:1)L1.G1  6.101e-01  1.904e-01   3.204  0.00136 **
 #&gt; ---
 #&gt; Signif. codes:  0 ‘***’ 0.001 ‘**’ 0.01 ‘*’ 0.05 ‘.’ 0.1 ‘ ’ 1
-#&gt; 
+#&gt;
 #&gt; Residual standard error: 5.866 on 7987 degrees of freedom
 #&gt;   (4750 observations deleted due to missingness)
-#&gt; Multiple R-squared:  0.103,	Adjusted R-squared:  0.1023 
+#&gt; Multiple R-squared:  0.103,	Adjusted R-squared:  0.1023
 #&gt; F-statistic: 152.8 on 6 and 7987 DF,  p-value: &lt; 2.2e-16
 #&gt; </div><div class='input'>
 <span class='co'>## Using dplyr:</span>
@@ -618,7 +621,7 @@ Fast Growth Rates for Time Series and Panel Data</h1>
 #&gt; </span><span style='color: #949494;'># Groups:   country [216]</span><span>
 #&gt;    country     PCGDP G1.PCGDP LIFEEX G1.LIFEEX
 #&gt;  </span><span style='color: #BCBCBC;'>*</span><span> </span><span style='color: #949494;font-style: italic;'>&lt;chr&gt;</span><span>       </span><span style='color: #949494;font-style: italic;'>&lt;dbl&gt;</span><span>    </span><span style='color: #949494;font-style: italic;'>&lt;dbl&gt;</span><span>  </span><span style='color: #949494;font-style: italic;'>&lt;dbl&gt;</span><span>     </span><span style='color: #949494;font-style: italic;'>&lt;dbl&gt;</span><span>
-#&gt; </span><span style='color: #BCBCBC;'> 1</span><span> Afghanistan    </span><span style='color: #BB0000;'>NA</span><span>       </span><span style='color: #BB0000;'>NA</span><span>   32.3     </span><span style='color: #BB0000;'>NA</span><span>   
+#&gt; </span><span style='color: #BCBCBC;'> 1</span><span> Afghanistan    </span><span style='color: #BB0000;'>NA</span><span>       </span><span style='color: #BB0000;'>NA</span><span>   32.3     </span><span style='color: #BB0000;'>NA</span><span>
 #&gt; </span><span style='color: #BCBCBC;'> 2</span><span> Afghanistan    </span><span style='color: #BB0000;'>NA</span><span>       </span><span style='color: #BB0000;'>NA</span><span>   32.7      1.39
 #&gt; </span><span style='color: #BCBCBC;'> 3</span><span> Afghanistan    </span><span style='color: #BB0000;'>NA</span><span>       </span><span style='color: #BB0000;'>NA</span><span>   33.2      1.35
 #&gt; </span><span style='color: #BCBCBC;'> 4</span><span> Afghanistan    </span><span style='color: #BB0000;'>NA</span><span>       </span><span style='color: #BB0000;'>NA</span><span>   33.6      1.32
@@ -634,7 +637,7 @@ Fast Growth Rates for Time Series and Panel Data</h1>
 #&gt; </span><span style='color: #949494;'># Groups:   country [216]</span><span>
 #&gt;    country      year PCGDP G1.PCGDP LIFEEX G1.LIFEEX
 #&gt;  </span><span style='color: #BCBCBC;'>*</span><span> </span><span style='color: #949494;font-style: italic;'>&lt;chr&gt;</span><span>       </span><span style='color: #949494;font-style: italic;'>&lt;int&gt;</span><span> </span><span style='color: #949494;font-style: italic;'>&lt;dbl&gt;</span><span>    </span><span style='color: #949494;font-style: italic;'>&lt;dbl&gt;</span><span>  </span><span style='color: #949494;font-style: italic;'>&lt;dbl&gt;</span><span>     </span><span style='color: #949494;font-style: italic;'>&lt;dbl&gt;</span><span>
-#&gt; </span><span style='color: #BCBCBC;'> 1</span><span> Afghanistan  </span><span style='text-decoration: underline;'>1</span><span>960    </span><span style='color: #BB0000;'>NA</span><span>       </span><span style='color: #BB0000;'>NA</span><span>   32.3     </span><span style='color: #BB0000;'>NA</span><span>   
+#&gt; </span><span style='color: #BCBCBC;'> 1</span><span> Afghanistan  </span><span style='text-decoration: underline;'>1</span><span>960    </span><span style='color: #BB0000;'>NA</span><span>       </span><span style='color: #BB0000;'>NA</span><span>   32.3     </span><span style='color: #BB0000;'>NA</span><span>
 #&gt; </span><span style='color: #BCBCBC;'> 2</span><span> Afghanistan  </span><span style='text-decoration: underline;'>1</span><span>961    </span><span style='color: #BB0000;'>NA</span><span>       </span><span style='color: #BB0000;'>NA</span><span>   32.7      1.39
 #&gt; </span><span style='color: #BCBCBC;'> 3</span><span> Afghanistan  </span><span style='text-decoration: underline;'>1</span><span>962    </span><span style='color: #BB0000;'>NA</span><span>       </span><span style='color: #BB0000;'>NA</span><span>   33.2      1.35
 #&gt; </span><span style='color: #BCBCBC;'> 4</span><span> Afghanistan  </span><span style='text-decoration: underline;'>1</span><span>963    </span><span style='color: #BB0000;'>NA</span><span>       </span><span style='color: #BB0000;'>NA</span><span>   33.6      1.32
@@ -667,7 +670,7 @@ Fast Growth Rates for Time Series and Panel Data</h1>
       </footer>
    </div>
 
-  
+
 
 
   </body>

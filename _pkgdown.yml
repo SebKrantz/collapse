@@ -19,7 +19,8 @@ navbar:
       href: articles/index.html
     - text: "News"
       href: news/index.html
-    # - text: "Blog"
+    - text: "Blog"
+      href: https://sebkrantz.github.io/Rblog/
     #   href: blog/index.html
 
   right:

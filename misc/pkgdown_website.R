@@ -1,7 +1,7 @@
 # Make package website:
 # usethis::use_pkgdown() # overwrites _pkgdown.yml
 library(pkgdown)
-init_site()
+# init_site()
 build_home(preview = FALSE)
 # in index.html, remove misc/figures.
 topics <- sort(setdiff(unlist(lapply(tools::Rd_db("collapse"),

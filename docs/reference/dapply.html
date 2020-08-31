@@ -87,27 +87,30 @@
 <li>
   <a href="../news/index.html">News</a>
 </li>
+<li>
+  <a href="https://sebkrantz.github.io/Rblog/" target="_blank">Blog</a>
+</li>
       </ul>
       <ul class="nav navbar-nav navbar-right">
         <li>
   <a href="https://twitter.com/collapse_R">
     <span class="fa fa-twitter"></span>
-     
+
   </a>
 </li>
 <li>
   <a href="https://github.com/SebKrantz/collapse">
     <span class="fa fa-github"></span>
-     
+
   </a>
 </li>
       </ul>
-      
+
     </div><!--/.nav-collapse -->
   </div><!--/.container -->
 </div><!--/.navbar -->
 
-      
+
 
       </header>
 
@@ -115,7 +118,7 @@
   <div class="col-md-9 contents">
     <div class="page-header">
     <h1>Data Apply</h1>
-    
+
     <div class="hidden name"><code>dapply.Rd</code></div>
     </div>
 
@@ -237,43 +240,43 @@
 #&gt; Datsun 710        2.923699    0    0 1.386294 0.0000000
 #&gt; Hornet 4 Drive    2.967333    0 -Inf 1.098612 0.0000000
 #&gt; Hornet Sportabout 2.834389 -Inf -Inf 1.098612 0.6931472
-#&gt; Valiant           3.006672    0 -Inf 1.098612 0.0000000</div><div class='input'><span class='fu'>dapply</span>(<span class='no'>mtcars</span>, <span class='no'>sum</span>); <span class='fu'>dapply</span>(<span class='no'>m</span>, <span class='no'>sum</span>)            <span class='co'># Computing sum of each column, return as vector</span></div><div class='output co'>#&gt;      mpg      cyl     disp       hp     drat       wt     qsec       vs 
-#&gt;  642.900  198.000 7383.100 4694.000  115.090  102.952  571.160   14.000 
-#&gt;       am     gear     carb 
-#&gt;   13.000  118.000   90.000 </div><div class='output co'>#&gt;      mpg      cyl     disp       hp     drat       wt     qsec       vs 
-#&gt;  642.900  198.000 7383.100 4694.000  115.090  102.952  571.160   14.000 
-#&gt;       am     gear     carb 
+#&gt; Valiant           3.006672    0 -Inf 1.098612 0.0000000</div><div class='input'><span class='fu'>dapply</span>(<span class='no'>mtcars</span>, <span class='no'>sum</span>); <span class='fu'>dapply</span>(<span class='no'>m</span>, <span class='no'>sum</span>)            <span class='co'># Computing sum of each column, return as vector</span></div><div class='output co'>#&gt;      mpg      cyl     disp       hp     drat       wt     qsec       vs
+#&gt;  642.900  198.000 7383.100 4694.000  115.090  102.952  571.160   14.000
+#&gt;       am     gear     carb
+#&gt;   13.000  118.000   90.000 </div><div class='output co'>#&gt;      mpg      cyl     disp       hp     drat       wt     qsec       vs
+#&gt;  642.900  198.000 7383.100 4694.000  115.090  102.952  571.160   14.000
+#&gt;       am     gear     carb
 #&gt;   13.000  118.000   90.000 </div><div class='input'><span class='fu'>dapply</span>(<span class='no'>mtcars</span>, <span class='no'>sum</span>, <span class='kw'>drop</span> <span class='kw'>=</span> <span class='fl'>FALSE</span>)              <span class='co'># This returns a data frame of 1 row</span></div><div class='output co'>#&gt;     mpg cyl   disp   hp   drat      wt   qsec vs am gear carb
-#&gt; 1 642.9 198 7383.1 4694 115.09 102.952 571.16 14 13  118   90</div><div class='input'><span class='fu'>dapply</span>(<span class='no'>mtcars</span>, <span class='no'>sum</span>, <span class='kw'>MARGIN</span> <span class='kw'>=</span> <span class='fl'>1</span>)                <span class='co'># Compute row-sum of each column, return as vector</span></div><div class='output co'>#&gt;           Mazda RX4       Mazda RX4 Wag          Datsun 710      Hornet 4 Drive 
-#&gt;             328.980             329.795             259.580             426.135 
-#&gt;   Hornet Sportabout             Valiant          Duster 360           Merc 240D 
-#&gt;             590.310             385.540             656.920             270.980 
-#&gt;            Merc 230            Merc 280           Merc 280C          Merc 450SE 
-#&gt;             299.570             350.460             349.660             510.740 
-#&gt;          Merc 450SL         Merc 450SLC  Cadillac Fleetwood Lincoln Continental 
-#&gt;             511.500             509.850             728.560             726.644 
-#&gt;   Chrysler Imperial            Fiat 128         Honda Civic      Toyota Corolla 
-#&gt;             725.695             213.850             195.165             206.955 
-#&gt;       Toyota Corona    Dodge Challenger         AMC Javelin          Camaro Z28 
-#&gt;             273.775             519.650             506.085             646.280 
-#&gt;    Pontiac Firebird           Fiat X1-9       Porsche 914-2        Lotus Europa 
-#&gt;             631.175             208.215             272.570             273.683 
-#&gt;      Ford Pantera L        Ferrari Dino       Maserati Bora          Volvo 142E 
-#&gt;             670.690             379.590             694.710             288.890 </div><div class='input'><span class='fu'>dapply</span>(<span class='no'>m</span>, <span class='no'>sum</span>, <span class='kw'>MARGIN</span> <span class='kw'>=</span> <span class='fl'>1</span>)                     <span class='co'># Same thing for matrices, faster t. apply(m, 1, sum)</span></div><div class='output co'>#&gt;           Mazda RX4       Mazda RX4 Wag          Datsun 710      Hornet 4 Drive 
-#&gt;             328.980             329.795             259.580             426.135 
-#&gt;   Hornet Sportabout             Valiant          Duster 360           Merc 240D 
-#&gt;             590.310             385.540             656.920             270.980 
-#&gt;            Merc 230            Merc 280           Merc 280C          Merc 450SE 
-#&gt;             299.570             350.460             349.660             510.740 
-#&gt;          Merc 450SL         Merc 450SLC  Cadillac Fleetwood Lincoln Continental 
-#&gt;             511.500             509.850             728.560             726.644 
-#&gt;   Chrysler Imperial            Fiat 128         Honda Civic      Toyota Corolla 
-#&gt;             725.695             213.850             195.165             206.955 
-#&gt;       Toyota Corona    Dodge Challenger         AMC Javelin          Camaro Z28 
-#&gt;             273.775             519.650             506.085             646.280 
-#&gt;    Pontiac Firebird           Fiat X1-9       Porsche 914-2        Lotus Europa 
-#&gt;             631.175             208.215             272.570             273.683 
-#&gt;      Ford Pantera L        Ferrari Dino       Maserati Bora          Volvo 142E 
+#&gt; 1 642.9 198 7383.1 4694 115.09 102.952 571.16 14 13  118   90</div><div class='input'><span class='fu'>dapply</span>(<span class='no'>mtcars</span>, <span class='no'>sum</span>, <span class='kw'>MARGIN</span> <span class='kw'>=</span> <span class='fl'>1</span>)                <span class='co'># Compute row-sum of each column, return as vector</span></div><div class='output co'>#&gt;           Mazda RX4       Mazda RX4 Wag          Datsun 710      Hornet 4 Drive
+#&gt;             328.980             329.795             259.580             426.135
+#&gt;   Hornet Sportabout             Valiant          Duster 360           Merc 240D
+#&gt;             590.310             385.540             656.920             270.980
+#&gt;            Merc 230            Merc 280           Merc 280C          Merc 450SE
+#&gt;             299.570             350.460             349.660             510.740
+#&gt;          Merc 450SL         Merc 450SLC  Cadillac Fleetwood Lincoln Continental
+#&gt;             511.500             509.850             728.560             726.644
+#&gt;   Chrysler Imperial            Fiat 128         Honda Civic      Toyota Corolla
+#&gt;             725.695             213.850             195.165             206.955
+#&gt;       Toyota Corona    Dodge Challenger         AMC Javelin          Camaro Z28
+#&gt;             273.775             519.650             506.085             646.280
+#&gt;    Pontiac Firebird           Fiat X1-9       Porsche 914-2        Lotus Europa
+#&gt;             631.175             208.215             272.570             273.683
+#&gt;      Ford Pantera L        Ferrari Dino       Maserati Bora          Volvo 142E
+#&gt;             670.690             379.590             694.710             288.890 </div><div class='input'><span class='fu'>dapply</span>(<span class='no'>m</span>, <span class='no'>sum</span>, <span class='kw'>MARGIN</span> <span class='kw'>=</span> <span class='fl'>1</span>)                     <span class='co'># Same thing for matrices, faster t. apply(m, 1, sum)</span></div><div class='output co'>#&gt;           Mazda RX4       Mazda RX4 Wag          Datsun 710      Hornet 4 Drive
+#&gt;             328.980             329.795             259.580             426.135
+#&gt;   Hornet Sportabout             Valiant          Duster 360           Merc 240D
+#&gt;             590.310             385.540             656.920             270.980
+#&gt;            Merc 230            Merc 280           Merc 280C          Merc 450SE
+#&gt;             299.570             350.460             349.660             510.740
+#&gt;          Merc 450SL         Merc 450SLC  Cadillac Fleetwood Lincoln Continental
+#&gt;             511.500             509.850             728.560             726.644
+#&gt;   Chrysler Imperial            Fiat 128         Honda Civic      Toyota Corolla
+#&gt;             725.695             213.850             195.165             206.955
+#&gt;       Toyota Corona    Dodge Challenger         AMC Javelin          Camaro Z28
+#&gt;             273.775             519.650             506.085             646.280
+#&gt;    Pontiac Firebird           Fiat X1-9       Porsche 914-2        Lotus Europa
+#&gt;             631.175             208.215             272.570             273.683
+#&gt;      Ford Pantera L        Ferrari Dino       Maserati Bora          Volvo 142E
 #&gt;             670.690             379.590             694.710             288.890 </div><div class='input'><span class='fu'><a href='https://rdrr.io/r/utils/head.html'>head</a></span>(<span class='fu'>dapply</span>(<span class='no'>m</span>, <span class='no'>sum</span>, <span class='kw'>MARGIN</span> <span class='kw'>=</span> <span class='fl'>1</span>, <span class='kw'>drop</span> <span class='kw'>=</span> <span class='fl'>FALSE</span>)) <span class='co'># Gives matrix with one column</span></div><div class='output co'>#&gt;                       sum
 #&gt; Mazda RX4         328.980
 #&gt; Mazda RX4 Wag     329.795
@@ -325,22 +328,22 @@
 #&gt; </span><span style='color: #949494;'># Groups:   cyl, vs, am [4]</span><span>
 #&gt;     mpg   cyl  disp    hp  drat    wt  qsec    vs    am  gear  carb
 #&gt;   </span><span style='color: #949494;font-style: italic;'>&lt;dbl&gt;</span><span> </span><span style='color: #949494;font-style: italic;'>&lt;dbl&gt;</span><span> </span><span style='color: #949494;font-style: italic;'>&lt;dbl&gt;</span><span> </span><span style='color: #949494;font-style: italic;'>&lt;dbl&gt;</span><span> </span><span style='color: #949494;font-style: italic;'>&lt;dbl&gt;</span><span> </span><span style='color: #949494;font-style: italic;'>&lt;dbl&gt;</span><span> </span><span style='color: #949494;font-style: italic;'>&lt;dbl&gt;</span><span> </span><span style='color: #949494;font-style: italic;'>&lt;dbl&gt;</span><span> </span><span style='color: #949494;font-style: italic;'>&lt;dbl&gt;</span><span> </span><span style='color: #949494;font-style: italic;'>&lt;dbl&gt;</span><span> </span><span style='color: #949494;font-style: italic;'>&lt;dbl&gt;</span><span>
-#&gt; </span><span style='color: #BCBCBC;'>1</span><span>  3.04  1.79  5.08  4.70  1.36 0.963  2.80  -</span><span style='color: #BB0000;'>Inf</span><span>     0  1.39 1.39 
-#&gt; </span><span style='color: #BCBCBC;'>2</span><span>  3.04  1.79  5.08  4.70  1.36 1.06   2.83  -</span><span style='color: #BB0000;'>Inf</span><span>     0  1.39 1.39 
-#&gt; </span><span style='color: #BCBCBC;'>3</span><span>  3.13  1.39  4.68  4.53  1.35 0.842  2.92     0     0  1.39 0    
-#&gt; </span><span style='color: #BCBCBC;'>4</span><span>  3.06  1.79  5.55  4.70  1.12 1.17   2.97     0  -</span><span style='color: #BB0000;'>Inf</span><span>  1.10 0    
+#&gt; </span><span style='color: #BCBCBC;'>1</span><span>  3.04  1.79  5.08  4.70  1.36 0.963  2.80  -</span><span style='color: #BB0000;'>Inf</span><span>     0  1.39 1.39
+#&gt; </span><span style='color: #BCBCBC;'>2</span><span>  3.04  1.79  5.08  4.70  1.36 1.06   2.83  -</span><span style='color: #BB0000;'>Inf</span><span>     0  1.39 1.39
+#&gt; </span><span style='color: #BCBCBC;'>3</span><span>  3.13  1.39  4.68  4.53  1.35 0.842  2.92     0     0  1.39 0
+#&gt; </span><span style='color: #BCBCBC;'>4</span><span>  3.06  1.79  5.55  4.70  1.12 1.17   2.97     0  -</span><span style='color: #BB0000;'>Inf</span><span>  1.10 0
 #&gt; </span><span style='color: #BCBCBC;'>5</span><span>  2.93  2.08  5.89  5.16  1.15 1.24   2.83  -</span><span style='color: #BB0000;'>Inf</span><span>  -</span><span style='color: #BB0000;'>Inf</span><span>  1.10 0.693
 #&gt; </span><span style='color: #BCBCBC;'>6</span><span>  2.90  1.79  5.42  4.65  1.02 1.24   3.01     0  -</span><span style='color: #BB0000;'>Inf</span><span>  1.10 0    </div><div class='input'><span class='fu'>dapply</span>(<span class='no'>gmtcars</span>, <span class='no'>quantile</span>, <span class='kw'>MARGIN</span> <span class='kw'>=</span> <span class='fl'>1</span>)    <span class='co'># Here it makes sense to keep the groups attribute</span></div><div class='output co'>#&gt; </span><span style='color: #949494;'># A tibble: 32 x 5</span><span>
 #&gt; </span><span style='color: #949494;'># Groups:   cyl, vs, am [7]</span><span>
 #&gt;     `0%` `25%` `50%` `75%` `100%`
 #&gt;  </span><span style='color: #BCBCBC;'>*</span><span> </span><span style='color: #949494;font-style: italic;'>&lt;dbl&gt;</span><span> </span><span style='color: #949494;font-style: italic;'>&lt;dbl&gt;</span><span> </span><span style='color: #949494;font-style: italic;'>&lt;dbl&gt;</span><span> </span><span style='color: #949494;font-style: italic;'>&lt;dbl&gt;</span><span>  </span><span style='color: #949494;font-style: italic;'>&lt;dbl&gt;</span><span>
-#&gt; </span><span style='color: #BCBCBC;'> 1</span><span>     0  3.26  4     18.7   160 
-#&gt; </span><span style='color: #BCBCBC;'> 2</span><span>     0  3.39  4     19.0   160 
-#&gt; </span><span style='color: #BCBCBC;'> 3</span><span>     1  1.66  4     20.7   108 
-#&gt; </span><span style='color: #BCBCBC;'> 4</span><span>     0  2     3.22  20.4   258 
-#&gt; </span><span style='color: #BCBCBC;'> 5</span><span>     0  2.5   3.44  17.9   360 
-#&gt; </span><span style='color: #BCBCBC;'> 6</span><span>     0  1.88  3.46  19.2   225 
-#&gt; </span><span style='color: #BCBCBC;'> 7</span><span>     0  3.10  4     15.1   360 
+#&gt; </span><span style='color: #BCBCBC;'> 1</span><span>     0  3.26  4     18.7   160
+#&gt; </span><span style='color: #BCBCBC;'> 2</span><span>     0  3.39  4     19.0   160
+#&gt; </span><span style='color: #BCBCBC;'> 3</span><span>     1  1.66  4     20.7   108
+#&gt; </span><span style='color: #BCBCBC;'> 4</span><span>     0  2     3.22  20.4   258
+#&gt; </span><span style='color: #BCBCBC;'> 5</span><span>     0  2.5   3.44  17.9   360
+#&gt; </span><span style='color: #BCBCBC;'> 6</span><span>     0  1.88  3.46  19.2   225
+#&gt; </span><span style='color: #BCBCBC;'> 7</span><span>     0  3.10  4     15.1   360
 #&gt; </span><span style='color: #BCBCBC;'> 8</span><span>     0  2.60  4     22.2   147.
 #&gt; </span><span style='color: #BCBCBC;'> 9</span><span>     0  2.58  4     22.8   141.
 #&gt; </span><span style='color: #BCBCBC;'>10</span><span>     0  3.68  4     18.8   168.
@@ -380,7 +383,7 @@
       </footer>
    </div>
 
-  
+
 
 
   </body>

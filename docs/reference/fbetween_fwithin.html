@@ -89,27 +89,30 @@
 <li>
   <a href="../news/index.html">News</a>
 </li>
+<li>
+  <a href="https://sebkrantz.github.io/Rblog/" target="_blank">Blog</a>
+</li>
       </ul>
       <ul class="nav navbar-nav navbar-right">
         <li>
   <a href="https://twitter.com/collapse_R">
     <span class="fa fa-twitter"></span>
-     
+
   </a>
 </li>
 <li>
   <a href="https://github.com/SebKrantz/collapse">
     <span class="fa fa-github"></span>
-     
+
   </a>
 </li>
       </ul>
-      
+
     </div><!--/.nav-collapse -->
   </div><!--/.container -->
 </div><!--/.navbar -->
 
-      
+
 
       </header>
 
@@ -117,7 +120,7 @@
   <div class="col-md-9 contents">
     <div class="page-header">
     <h1>Fast Between (Averaging) and (Quasi-)Within (Centering) Transformations</h1>
-    
+
     <div class="hidden name"><code>fbetween_fwithin.Rd</code></div>
     </div>
 
@@ -376,94 +379,94 @@
 <span class='co'>## Using B() and W() for fixed-effects regressions:</span>
 
 <span class='co'># Several ways of running the same regression with cyl-fixed effects</span>
-<span class='fu'><a href='https://rdrr.io/r/stats/lm.html'>lm</a></span>(<span class='fu'>W</span>(<span class='no'>mpg</span>,<span class='no'>cyl</span>) ~ <span class='fu'>W</span>(<span class='no'>carb</span>,<span class='no'>cyl</span>), <span class='kw'>data</span> <span class='kw'>=</span> <span class='no'>mtcars</span>)                     <span class='co'># Centering each individually</span></div><div class='output co'>#&gt; 
+<span class='fu'><a href='https://rdrr.io/r/stats/lm.html'>lm</a></span>(<span class='fu'>W</span>(<span class='no'>mpg</span>,<span class='no'>cyl</span>) ~ <span class='fu'>W</span>(<span class='no'>carb</span>,<span class='no'>cyl</span>), <span class='kw'>data</span> <span class='kw'>=</span> <span class='no'>mtcars</span>)                     <span class='co'># Centering each individually</span></div><div class='output co'>#&gt;
 #&gt; Call:
 #&gt; lm(formula = W(mpg, cyl) ~ W(carb, cyl), data = mtcars)
-#&gt; 
+#&gt;
 #&gt; Coefficients:
-#&gt;  (Intercept)  W(carb, cyl)  
-#&gt;   -2.592e-16    -4.655e-01  
-#&gt; </div><div class='input'><span class='fu'><a href='https://rdrr.io/r/stats/lm.html'>lm</a></span>(<span class='no'>mpg</span> ~ <span class='no'>carb</span>, <span class='kw'>data</span> <span class='kw'>=</span> <span class='fu'>W</span>(<span class='no'>mtcars</span>, ~ <span class='no'>cyl</span>, <span class='kw'>stub</span> <span class='kw'>=</span> <span class='fl'>FALSE</span>))           <span class='co'># Centering the entire data</span></div><div class='output co'>#&gt; 
+#&gt;  (Intercept)  W(carb, cyl)
+#&gt;   -2.592e-16    -4.655e-01
+#&gt; </div><div class='input'><span class='fu'><a href='https://rdrr.io/r/stats/lm.html'>lm</a></span>(<span class='no'>mpg</span> ~ <span class='no'>carb</span>, <span class='kw'>data</span> <span class='kw'>=</span> <span class='fu'>W</span>(<span class='no'>mtcars</span>, ~ <span class='no'>cyl</span>, <span class='kw'>stub</span> <span class='kw'>=</span> <span class='fl'>FALSE</span>))           <span class='co'># Centering the entire data</span></div><div class='output co'>#&gt;
 #&gt; Call:
 #&gt; lm(formula = mpg ~ carb, data = W(mtcars, ~cyl, stub = FALSE))
-#&gt; 
+#&gt;
 #&gt; Coefficients:
-#&gt; (Intercept)         carb  
-#&gt;  -2.592e-16   -4.655e-01  
+#&gt; (Intercept)         carb
+#&gt;  -2.592e-16   -4.655e-01
 #&gt; </div><div class='input'><span class='fu'><a href='https://rdrr.io/r/stats/lm.html'>lm</a></span>(<span class='no'>mpg</span> ~ <span class='no'>carb</span>, <span class='kw'>data</span> <span class='kw'>=</span> <span class='fu'>W</span>(<span class='no'>mtcars</span>, ~ <span class='no'>cyl</span>, <span class='kw'>stub</span> <span class='kw'>=</span> <span class='fl'>FALSE</span>,            <span class='co'># Here only the intercept changes</span>
-                        <span class='kw'>mean</span> <span class='kw'>=</span> <span class='st'>"overall.mean"</span>))</div><div class='output co'>#&gt; 
+                        <span class='kw'>mean</span> <span class='kw'>=</span> <span class='st'>"overall.mean"</span>))</div><div class='output co'>#&gt;
 #&gt; Call:
-#&gt; lm(formula = mpg ~ carb, data = W(mtcars, ~cyl, stub = FALSE, 
+#&gt; lm(formula = mpg ~ carb, data = W(mtcars, ~cyl, stub = FALSE,
 #&gt;     mean = "overall.mean"))
-#&gt; 
+#&gt;
 #&gt; Coefficients:
-#&gt; (Intercept)         carb  
-#&gt;     21.3999      -0.4655  
-#&gt; </div><div class='input'><span class='fu'><a href='https://rdrr.io/r/stats/lm.html'>lm</a></span>(<span class='no'>mpg</span> ~ <span class='no'>carb</span> + <span class='fu'>B</span>(<span class='no'>carb</span>,<span class='no'>cyl</span>), <span class='kw'>data</span> <span class='kw'>=</span> <span class='no'>mtcars</span>)                     <span class='co'># Procedure suggested by</span></div><div class='output co'>#&gt; 
+#&gt; (Intercept)         carb
+#&gt;     21.3999      -0.4655
+#&gt; </div><div class='input'><span class='fu'><a href='https://rdrr.io/r/stats/lm.html'>lm</a></span>(<span class='no'>mpg</span> ~ <span class='no'>carb</span> + <span class='fu'>B</span>(<span class='no'>carb</span>,<span class='no'>cyl</span>), <span class='kw'>data</span> <span class='kw'>=</span> <span class='no'>mtcars</span>)                     <span class='co'># Procedure suggested by</span></div><div class='output co'>#&gt;
 #&gt; Call:
 #&gt; lm(formula = mpg ~ carb + B(carb, cyl), data = mtcars)
-#&gt; 
+#&gt;
 #&gt; Coefficients:
-#&gt;  (Intercept)          carb  B(carb, cyl)  
-#&gt;      34.8297       -0.4655       -4.7750  
+#&gt;  (Intercept)          carb  B(carb, cyl)
+#&gt;      34.8297       -0.4655       -4.7750
 #&gt; </div><div class='input'><span class='co'># ..Mundlak (1978) - partialling out group averages amounts to the same as demeaning the data</span>
 
-<span class='kw pkg'>plm</span><span class='kw ns'>::</span><span class='fu'><a href='https://rdrr.io/pkg/plm/man/plm.html'>plm</a></span>(<span class='no'>mpg</span> ~ <span class='no'>carb</span>, <span class='no'>mtcars</span>, <span class='kw'>index</span> <span class='kw'>=</span> <span class='st'>"cyl"</span>, <span class='kw'>model</span> <span class='kw'>=</span> <span class='st'>"within"</span>)   <span class='co'># Proof..</span></div><div class='output co'>#&gt; 
+<span class='kw pkg'>plm</span><span class='kw ns'>::</span><span class='fu'><a href='https://rdrr.io/pkg/plm/man/plm.html'>plm</a></span>(<span class='no'>mpg</span> ~ <span class='no'>carb</span>, <span class='no'>mtcars</span>, <span class='kw'>index</span> <span class='kw'>=</span> <span class='st'>"cyl"</span>, <span class='kw'>model</span> <span class='kw'>=</span> <span class='st'>"within"</span>)   <span class='co'># Proof..</span></div><div class='output co'>#&gt;
 #&gt; Model Formula: mpg ~ carb
 #&gt; &lt;environment: 0x0000007e87d0fc38&gt;
-#&gt; 
+#&gt;
 #&gt; Coefficients:
-#&gt;     carb 
-#&gt; -0.46551 
+#&gt;     carb
+#&gt; -0.46551
 #&gt; </div><div class='input'>
 <span class='co'># This takes the interaction of cyl, vs and am as fixed effects</span>
-<span class='fu'><a href='https://rdrr.io/r/stats/lm.html'>lm</a></span>(<span class='fu'>W</span>(<span class='no'>mpg</span>,<span class='fu'><a href='https://rdrr.io/r/base/list.html'>list</a></span>(<span class='no'>cyl</span>,<span class='no'>vs</span>,<span class='no'>am</span>)) ~ <span class='fu'>W</span>(<span class='no'>carb</span>,<span class='fu'><a href='https://rdrr.io/r/base/list.html'>list</a></span>(<span class='no'>cyl</span>,<span class='no'>vs</span>,<span class='no'>am</span>)), <span class='kw'>data</span> <span class='kw'>=</span> <span class='no'>mtcars</span>)</div><div class='output co'>#&gt; 
+<span class='fu'><a href='https://rdrr.io/r/stats/lm.html'>lm</a></span>(<span class='fu'>W</span>(<span class='no'>mpg</span>,<span class='fu'><a href='https://rdrr.io/r/base/list.html'>list</a></span>(<span class='no'>cyl</span>,<span class='no'>vs</span>,<span class='no'>am</span>)) ~ <span class='fu'>W</span>(<span class='no'>carb</span>,<span class='fu'><a href='https://rdrr.io/r/base/list.html'>list</a></span>(<span class='no'>cyl</span>,<span class='no'>vs</span>,<span class='no'>am</span>)), <span class='kw'>data</span> <span class='kw'>=</span> <span class='no'>mtcars</span>)</div><div class='output co'>#&gt;
 #&gt; Call:
-#&gt; lm(formula = W(mpg, list(cyl, vs, am)) ~ W(carb, list(cyl, vs, 
+#&gt; lm(formula = W(mpg, list(cyl, vs, am)) ~ W(carb, list(cyl, vs,
 #&gt;     am)), data = mtcars)
-#&gt; 
+#&gt;
 #&gt; Coefficients:
-#&gt;                (Intercept)  W(carb, list(cyl, vs, am))  
-#&gt;                 -1.346e-15                  -9.413e-01  
-#&gt; </div><div class='input'><span class='fu'><a href='https://rdrr.io/r/stats/lm.html'>lm</a></span>(<span class='no'>mpg</span> ~ <span class='no'>carb</span>, <span class='kw'>data</span> <span class='kw'>=</span> <span class='fu'>W</span>(<span class='no'>mtcars</span>, ~ <span class='no'>cyl</span> + <span class='no'>vs</span> + <span class='no'>am</span>, <span class='kw'>stub</span> <span class='kw'>=</span> <span class='fl'>FALSE</span>))</div><div class='output co'>#&gt; 
+#&gt;                (Intercept)  W(carb, list(cyl, vs, am))
+#&gt;                 -1.346e-15                  -9.413e-01
+#&gt; </div><div class='input'><span class='fu'><a href='https://rdrr.io/r/stats/lm.html'>lm</a></span>(<span class='no'>mpg</span> ~ <span class='no'>carb</span>, <span class='kw'>data</span> <span class='kw'>=</span> <span class='fu'>W</span>(<span class='no'>mtcars</span>, ~ <span class='no'>cyl</span> + <span class='no'>vs</span> + <span class='no'>am</span>, <span class='kw'>stub</span> <span class='kw'>=</span> <span class='fl'>FALSE</span>))</div><div class='output co'>#&gt;
 #&gt; Call:
 #&gt; lm(formula = mpg ~ carb, data = W(mtcars, ~cyl + vs + am, stub = FALSE))
-#&gt; 
+#&gt;
 #&gt; Coefficients:
-#&gt; (Intercept)         carb  
-#&gt;  -1.346e-15   -9.413e-01  
-#&gt; </div><div class='input'><span class='fu'><a href='https://rdrr.io/r/stats/lm.html'>lm</a></span>(<span class='no'>mpg</span> ~ <span class='no'>carb</span> + <span class='fu'>B</span>(<span class='no'>carb</span>,<span class='fu'><a href='https://rdrr.io/r/base/list.html'>list</a></span>(<span class='no'>cyl</span>,<span class='no'>vs</span>,<span class='no'>am</span>)), <span class='kw'>data</span> <span class='kw'>=</span> <span class='no'>mtcars</span>)</div><div class='output co'>#&gt; 
+#&gt; (Intercept)         carb
+#&gt;  -1.346e-15   -9.413e-01
+#&gt; </div><div class='input'><span class='fu'><a href='https://rdrr.io/r/stats/lm.html'>lm</a></span>(<span class='no'>mpg</span> ~ <span class='no'>carb</span> + <span class='fu'>B</span>(<span class='no'>carb</span>,<span class='fu'><a href='https://rdrr.io/r/base/list.html'>list</a></span>(<span class='no'>cyl</span>,<span class='no'>vs</span>,<span class='no'>am</span>)), <span class='kw'>data</span> <span class='kw'>=</span> <span class='no'>mtcars</span>)</div><div class='output co'>#&gt;
 #&gt; Call:
 #&gt; lm(formula = mpg ~ carb + B(carb, list(cyl, vs, am)), data = mtcars)
-#&gt; 
+#&gt;
 #&gt; Coefficients:
-#&gt;                (Intercept)                        carb  
-#&gt;                    27.8168                     -0.9413  
-#&gt; B(carb, list(cyl, vs, am))  
-#&gt;                    -1.8057  
+#&gt;                (Intercept)                        carb
+#&gt;                    27.8168                     -0.9413
+#&gt; B(carb, list(cyl, vs, am))
+#&gt;                    -1.8057
 #&gt; </div><div class='input'>
 <span class='co'># Now with cyl fixed effects weighted by hp:</span>
-<span class='fu'><a href='https://rdrr.io/r/stats/lm.html'>lm</a></span>(<span class='fu'>W</span>(<span class='no'>mpg</span>,<span class='no'>cyl</span>,<span class='no'>hp</span>) ~ <span class='fu'>W</span>(<span class='no'>carb</span>,<span class='no'>cyl</span>,<span class='no'>hp</span>), <span class='kw'>data</span> <span class='kw'>=</span> <span class='no'>mtcars</span>)</div><div class='output co'>#&gt; 
+<span class='fu'><a href='https://rdrr.io/r/stats/lm.html'>lm</a></span>(<span class='fu'>W</span>(<span class='no'>mpg</span>,<span class='no'>cyl</span>,<span class='no'>hp</span>) ~ <span class='fu'>W</span>(<span class='no'>carb</span>,<span class='no'>cyl</span>,<span class='no'>hp</span>), <span class='kw'>data</span> <span class='kw'>=</span> <span class='no'>mtcars</span>)</div><div class='output co'>#&gt;
 #&gt; Call:
 #&gt; lm(formula = W(mpg, cyl, hp) ~ W(carb, cyl, hp), data = mtcars)
-#&gt; 
+#&gt;
 #&gt; Coefficients:
-#&gt;      (Intercept)  W(carb, cyl, hp)  
-#&gt;           0.1747           -0.4469  
-#&gt; </div><div class='input'><span class='fu'><a href='https://rdrr.io/r/stats/lm.html'>lm</a></span>(<span class='no'>mpg</span> ~ <span class='no'>carb</span>, <span class='kw'>data</span> <span class='kw'>=</span> <span class='fu'>W</span>(<span class='no'>mtcars</span>, ~ <span class='no'>cyl</span>, ~ <span class='no'>hp</span>, <span class='kw'>stub</span> <span class='kw'>=</span> <span class='fl'>FALSE</span>))</div><div class='output co'>#&gt; 
+#&gt;      (Intercept)  W(carb, cyl, hp)
+#&gt;           0.1747           -0.4469
+#&gt; </div><div class='input'><span class='fu'><a href='https://rdrr.io/r/stats/lm.html'>lm</a></span>(<span class='no'>mpg</span> ~ <span class='no'>carb</span>, <span class='kw'>data</span> <span class='kw'>=</span> <span class='fu'>W</span>(<span class='no'>mtcars</span>, ~ <span class='no'>cyl</span>, ~ <span class='no'>hp</span>, <span class='kw'>stub</span> <span class='kw'>=</span> <span class='fl'>FALSE</span>))</div><div class='output co'>#&gt;
 #&gt; Call:
 #&gt; lm(formula = mpg ~ carb, data = W(mtcars, ~cyl, ~hp, stub = FALSE))
-#&gt; 
+#&gt;
 #&gt; Coefficients:
-#&gt; (Intercept)         carb  
-#&gt;      0.1747      -0.4469  
-#&gt; </div><div class='input'><span class='fu'><a href='https://rdrr.io/r/stats/lm.html'>lm</a></span>(<span class='no'>mpg</span> ~ <span class='no'>carb</span> + <span class='fu'>B</span>(<span class='no'>carb</span>,<span class='no'>cyl</span>,<span class='no'>hp</span>), <span class='kw'>data</span> <span class='kw'>=</span> <span class='no'>mtcars</span>)       <span class='co'># WRONG ! Gives a different coefficient!!</span></div><div class='output co'>#&gt; 
+#&gt; (Intercept)         carb
+#&gt;      0.1747      -0.4469
+#&gt; </div><div class='input'><span class='fu'><a href='https://rdrr.io/r/stats/lm.html'>lm</a></span>(<span class='no'>mpg</span> ~ <span class='no'>carb</span> + <span class='fu'>B</span>(<span class='no'>carb</span>,<span class='no'>cyl</span>,<span class='no'>hp</span>), <span class='kw'>data</span> <span class='kw'>=</span> <span class='no'>mtcars</span>)       <span class='co'># WRONG ! Gives a different coefficient!!</span></div><div class='output co'>#&gt;
 #&gt; Call:
 #&gt; lm(formula = mpg ~ carb + B(carb, cyl, hp), data = mtcars)
-#&gt; 
+#&gt;
 #&gt; Coefficients:
-#&gt;      (Intercept)              carb  B(carb, cyl, hp)  
-#&gt;          34.1833           -0.4383           -4.2638  
+#&gt;      (Intercept)              carb  B(carb, cyl, hp)
+#&gt;          34.1833           -0.4383           -4.2638
 #&gt; </div><div class='input'>
 <span class='co'>## Manual variance components (random-effects) estimation</span>
 <span class='no'>res</span> <span class='kw'>&lt;-</span> <span class='fu'><a href='fHDbetween_fHDwithin.html'>HDW</a></span>(<span class='no'>mtcars</span>, <span class='no'>mpg</span> ~ <span class='no'>carb</span>)<span class='kw'>[[</span><span class='fl'>1</span>]]  <span class='co'># Get residuals from pooled OLS</span>
@@ -472,23 +475,23 @@
 <span class='no'>T</span> <span class='kw'>&lt;-</span> <span class='fu'><a href='https://rdrr.io/r/base/length.html'>length</a></span>(<span class='no'>res</span>) / <span class='fu'><a href='fNdistinct.html'>fNdistinct</a></span>(<span class='no'>mtcars</span>$<span class='no'>cyl</span>)
 <span class='no'>sig2_alpha</span> <span class='kw'>&lt;-</span> <span class='no'>sig2_u</span> - <span class='no'>sig2_e</span>
 <span class='no'>theta</span> <span class='kw'>&lt;-</span> <span class='fl'>1</span> - <span class='fu'><a href='https://rdrr.io/r/base/MathFun.html'>sqrt</a></span>(<span class='no'>sig2_alpha</span>) / <span class='fu'><a href='https://rdrr.io/r/base/MathFun.html'>sqrt</a></span>(<span class='no'>sig2_alpha</span> + <span class='no'>T</span> * <span class='no'>sig2_e</span>)
-<span class='fu'><a href='https://rdrr.io/r/stats/lm.html'>lm</a></span>(<span class='no'>mpg</span> ~ <span class='no'>carb</span>, <span class='kw'>data</span> <span class='kw'>=</span> <span class='fu'>W</span>(<span class='no'>mtcars</span>, ~ <span class='no'>cyl</span>, <span class='kw'>theta</span> <span class='kw'>=</span> <span class='no'>theta</span>, <span class='kw'>mean</span> <span class='kw'>=</span> <span class='st'>"overall.mean"</span>, <span class='kw'>stub</span> <span class='kw'>=</span> <span class='fl'>FALSE</span>))</div><div class='output co'>#&gt; 
+<span class='fu'><a href='https://rdrr.io/r/stats/lm.html'>lm</a></span>(<span class='no'>mpg</span> ~ <span class='no'>carb</span>, <span class='kw'>data</span> <span class='kw'>=</span> <span class='fu'>W</span>(<span class='no'>mtcars</span>, ~ <span class='no'>cyl</span>, <span class='kw'>theta</span> <span class='kw'>=</span> <span class='no'>theta</span>, <span class='kw'>mean</span> <span class='kw'>=</span> <span class='st'>"overall.mean"</span>, <span class='kw'>stub</span> <span class='kw'>=</span> <span class='fl'>FALSE</span>))</div><div class='output co'>#&gt;
 #&gt; Call:
-#&gt; lm(formula = mpg ~ carb, data = W(mtcars, ~cyl, theta = theta, 
+#&gt; lm(formula = mpg ~ carb, data = W(mtcars, ~cyl, theta = theta,
 #&gt;     mean = "overall.mean", stub = FALSE))
-#&gt; 
+#&gt;
 #&gt; Coefficients:
-#&gt; (Intercept)         carb  
-#&gt;     21.8727      -0.6336  
+#&gt; (Intercept)         carb
+#&gt;     21.8727      -0.6336
 #&gt; </div><div class='input'>
 <span class='co'># A slightly different method to obtain theta...</span>
-<span class='kw pkg'>plm</span><span class='kw ns'>::</span><span class='fu'><a href='https://rdrr.io/pkg/plm/man/plm.html'>plm</a></span>(<span class='no'>mpg</span> ~ <span class='no'>carb</span>, <span class='no'>mtcars</span>, <span class='kw'>index</span> <span class='kw'>=</span> <span class='st'>"cyl"</span>, <span class='kw'>model</span> <span class='kw'>=</span> <span class='st'>"random"</span>)</div><div class='output co'>#&gt; 
+<span class='kw pkg'>plm</span><span class='kw ns'>::</span><span class='fu'><a href='https://rdrr.io/pkg/plm/man/plm.html'>plm</a></span>(<span class='no'>mpg</span> ~ <span class='no'>carb</span>, <span class='no'>mtcars</span>, <span class='kw'>index</span> <span class='kw'>=</span> <span class='st'>"cyl"</span>, <span class='kw'>model</span> <span class='kw'>=</span> <span class='st'>"random"</span>)</div><div class='output co'>#&gt;
 #&gt; Model Formula: mpg ~ carb
 #&gt; &lt;environment: 0x0000007e87d0fc38&gt;
-#&gt; 
+#&gt;
 #&gt; Coefficients:
-#&gt; (Intercept)        carb 
-#&gt;    22.40631    -0.68522 
+#&gt; (Intercept)        carb
+#&gt;    22.40631    -0.68522
 #&gt; </div></pre>
   </div>
   <div class="col-md-3 hidden-xs hidden-sm" id="pkgdown-sidebar">
@@ -511,7 +514,7 @@
       </footer>
    </div>
 
-  
+
 
 
   </body>
