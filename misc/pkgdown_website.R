@@ -15,6 +15,8 @@ build_reference(examples = TRUE, topics = topics) # "collapse-package"
 # Replace &amp;lt;- with &lt;- and %&amp;gt;% with %&gt;% and
 # <span class='kw'>&amp;</span><span class='no'>lt</span>;- with <span class='kw'>&lt;-</span>
 build_news()
+# Add favicon:
+# replace <head> by <head><link rel="shortcut icon" href="https://sebkrantz.github.io/collapse/favicon.ico" type="image/x-icon">
 preview_site()
 
 # ?build_home
