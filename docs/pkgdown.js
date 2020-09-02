@@ -35,7 +35,7 @@
     if (pos >= 0) {
       var menu_anchor = $(links[pos]);
       menu_anchor.parent().addClass("active");
-      menu_anchor.closest("li.dropdown").addClass("active");
+      // menu_anchor.closest("li.dropdown").addClass("active");
     }
   });
 
