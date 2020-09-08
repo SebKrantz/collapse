@@ -145,15 +145,17 @@ IntegerVector fNdistinctImpl(const Vector<LGLSXP>& x, int ng, const IntegerVecto
     IntegerVector out(ng);
     if(narm) {
       LogicalVector which(ng);
-      int ngs = 0;
+      int ngs = 0, gi;
       for(int i = 0; i != l; ++i) {
-        if(x[i] == NA_LOGICAL) continue;
-        if(x[i] == which[g[i]-1]) {
-          out[g[i]-1] = 1;
+        gi = g[i]-1;
+        if(x[i] == NA_LOGICAL || which[gi] == NA_LOGICAL) continue;
+        if(x[i] == which[gi]) {
+          out[gi] = 1;
         } else {
-          which[g[i]-1] = x[i];
-          ++out[g[i]-1];
-          if(out[g[i]-1] == 2) {
+          which[gi] = x[i];
+          ++out[gi];
+          if(out[gi] == 2) {
+            which[gi] = NA_LOGICAL;
             ++ngs;
             if(ngs == ng) break;
           }
@@ -162,15 +164,16 @@ IntegerVector fNdistinctImpl(const Vector<LGLSXP>& x, int ng, const IntegerVecto
     } else {
       LogicalVector seen1(ng, true), seen2(ng, true), seen3(ng, true);
       for(int i = 0; i != l; ++i) { // better way?
-        if(seen1[g[i]-1] && x[i] == NA_LOGICAL) {
-          ++out[g[i]-1];
-          seen1[g[i]-1] = false;
-        } else if(seen2[g[i]-1] && x[i] == true) {
-          ++out[g[i]-1];
-          seen2[g[i]-1] = false;
-        } else if(seen3[g[i]-1] && x[i] == false) {
-          ++out[g[i]-1];
-          seen3[g[i]-1] = false;
+        int gi = g[i]-1;
+        if(seen1[gi] && x[i] == NA_LOGICAL) {
+          ++out[gi];
+          seen1[gi] = false;
+        } else if(seen2[gi] && x[i] == true) {
+          ++out[gi];
+          seen2[gi] = false;
+        } else if(seen3[gi] && x[i] == false) {
+          ++out[gi];
+          seen3[gi] = false;
         }
       }
     }
@@ -409,15 +412,17 @@ SEXP fNdistinctmImpl(const Matrix<LGLSXP>& x, int ng, const IntegerVector& g, co
         LogicalMatrix::ConstColumn column = x(_ , j);
         IntegerMatrix::Column outj = out(_, j);
         LogicalVector which(ng);
-        int ngs = 0;
+        int ngs = 0, gi;
         for(int i = 0; i != l; ++i) {
-          if(column[i] == NA_LOGICAL) continue;
-          if(column[i] == which[g[i]-1]) {
-            outj[g[i]-1] = 1;
+          gi = g[i]-1;
+          if(column[i] == NA_LOGICAL || which[gi] == NA_LOGICAL) continue;
+          if(column[i] == which[gi]) {
+            outj[gi] = 1;
           } else {
-            which[g[i]-1] = column[i];
-            ++outj[g[i]-1];
-            if(outj[g[i]-1] == 2) {
+            which[gi] = column[i];
+            ++outj[gi];
+            if(outj[gi] == 2) {
+              which[gi] = NA_LOGICAL;
               ++ngs;
               if(ngs == ng) break;
             }
@@ -430,15 +435,16 @@ SEXP fNdistinctmImpl(const Matrix<LGLSXP>& x, int ng, const IntegerVector& g, co
         IntegerMatrix::Column outj = out(_, j);
         LogicalVector seen1(ng, true), seen2(ng, true), seen3(ng, true);
         for(int i = 0; i != l; ++i) { // better way?
-          if(seen1[g[i]-1] && column[i] == NA_LOGICAL) {
-            ++outj[g[i]-1];
-            seen1[g[i]-1] = false;
-          } else if(seen2[g[i]-1] && column[i] == true) {
-            ++outj[g[i]-1];
-            seen2[g[i]-1] = false;
-          } else if(seen3[g[i]-1] && column[i] == false) {
-            ++outj[g[i]-1];
-            seen3[g[i]-1] = false;
+          int gi = g[i]-1;
+          if(seen1[gi] && column[i] == NA_LOGICAL) {
+            ++outj[gi];
+            seen1[gi] = false;
+          } else if(seen2[gi] && column[i] == true) {
+            ++outj[gi];
+            seen2[gi] = false;
+          } else if(seen3[gi] && column[i] == false) {
+            ++outj[gi];
+            seen3[gi] = false;
           }
         }
       }
