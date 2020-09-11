@@ -1,3 +1,27 @@
 # R for travis: https://docs.travis-ci.com/user/languages/r
-language: R
+language: r
+cache: packages
 warnings_are_errors: false
+
+r:
+  - release
+
+# do not build vignettes
+r_build_args: --no-build-vignettes --no-manual
+r_check_args: --no-build-vignettes --no-manual
+
+# for codecov
+r_packages:
+  - covr
+
+# only report coverage after build is successful
+after_success:
+  - Rscript -e 'covr::codecov()'
+
+
+notifications:
+  email:
+    on_success: change
+    on_failure: change
+
+
