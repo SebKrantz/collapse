@@ -49,6 +49,19 @@ LazyData: true
 Depends: R (>= 3.5.0)
 Imports: Rcpp (>= 1.0.1), lfe (>= 2.7)
 LinkingTo: Rcpp
-Suggests: dplyr, plm, data.table, matrixStats, magrittr, ggplot2, scales, vars, knitr, rmarkdown, testthat, microbenchmark
+Suggests: 
+    dplyr,
+    plm,
+    data.table,
+    matrixStats,
+    magrittr,
+    ggplot2,
+    scales,
+    vars,
+    knitr,
+    rmarkdown,
+    testthat,
+    microbenchmark,
+    covr
 SystemRequirements: C++11
 VignetteBuilder: knitr
