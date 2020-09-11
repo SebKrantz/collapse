@@ -1,4 +1,5 @@
-Sys.setenv("R_TESTS" = "")
+rm(list = ls())
+# Sys.setenv("R_TESTS" = "")
 library(testthat)
 library(collapse)
 
