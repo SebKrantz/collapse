@@ -1,5 +1,7 @@
 context("fmedian and fnth")
 
+rm(list = ls())
+
 x <- rnorm(100)
 w <- as.integer(round(10*abs(rnorm(100))))  # -> Numeric precision issues in R
 wdat <- as.integer(round(10*abs(rnorm(32))))

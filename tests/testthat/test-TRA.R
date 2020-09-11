@@ -1,5 +1,7 @@
 context("TRA")
 
+rm(list = ls())
+
 d <- na_insert(iris[1:4])
 v <- d$Sepal.Length
 m <- as.matrix(d)

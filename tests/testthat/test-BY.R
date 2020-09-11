@@ -1,5 +1,6 @@
 context("BY")
 
+rm(list = ls())
 x <- rnorm(100)
 xNA <- x
 xNA[sample.int(100,20)] <- NA
@@ -29,7 +30,7 @@ test_that("BY.default works as intended", {
   expect_equal(BY(x, f, sum, return = "list"), as.list(fsum(x, f)))
   expect_equal(BY(x, f, mean), fmean(x, f))
   expect_equal(BY(x, f, mean, return = "list"), as.list(fmean(x, f)))
-  BY(x, f, scale)
+  # BY(x, f, scale)
   expect_equal(BY(x, f, scale, use.g.names = FALSE),   fscale(x, f))
   expect_equal(BY(x, f, log, use.g.names = FALSE),   log(x))
   expect_equal(BY(x, f, quantile), unlist(lapply(split(x, f), quantile)))
@@ -68,7 +69,7 @@ test_that("BY.matrix works as intended", {
   expect_equal(BY(m, g, sum, return = "data.frame"), qDF(fsum(m, g)))
   expect_equal(BY(m, g, mean), fmean(m, g))
   expect_equal(BY(m, g, mean, return = "data.frame"), qDF(fmean(m, g)))
-  BY(m, g, scale)
+  # BY(m, g, scale)
   expect_equal(BY(m, f2, scale, use.g.names = FALSE),   fscale(m, f2))
   expect_equal(BY(m, f2, log, use.g.names = FALSE),   log(m))
   expect_equal(BY(m, f2, quantile), qM(lapply(mctl(m, names = TRUE), function(x) unlist(lapply(split(x, f2), quantile)))))
@@ -107,7 +108,7 @@ test_that("BY.data.frame works as intended", {
   expect_equal(BY(mtcars, g, sum, return = "matrix"), qM(fsum(mtcars, g)))
   expect_equal(BY(mtcars, g, mean), fmean(mtcars, g))
   expect_equal(BY(mtcars, g, mean, return = "matrix"), qM(fmean(mtcars, g)))
-  BY(mtcars, g, scale)
+  # BY(mtcars, g, scale)
   expect_equal(BY(mtcars, f2, scale, use.g.names = FALSE),   fscale(mtcars, f2))
   expect_equal(BY(mtcars, f2, log, use.g.names = FALSE),   log(mtcars))
   expect_equal(BY(mtcars, f2, quantile), qDF(qM(lapply(mtcars, function(x) unlist(lapply(split(x, f2), quantile))))))
@@ -145,7 +146,7 @@ test_that("Output type is as expected", {
   expect_true(is.atomic(BY(xNA, f, sum, na.rm = TRUE)))
   expect_true(is.matrix(BY(mtcars, g, sum, return = "matrix")))
   expect_true(is.data.frame(BY(m, g, sum, return = "data.frame")))
-  BY(mtcars, g, quantile, expand.wide = TRUE, return = "list")
+  # BY(mtcars, g, quantile, expand.wide = TRUE, return = "list")
   expect_equal(BY(mtcars, g, quantile, return = "list", expand.wide = TRUE), BY(m, g, quantile, return = "list", expand.wide = TRUE))
 
 })
