@@ -21,3 +21,4 @@ vignettes/collapse_and_data.table_cache
 ^pkgdown$
 man/figures
 ^misc$
+^codecov\.yml$
