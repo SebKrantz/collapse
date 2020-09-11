@@ -17,7 +17,7 @@ setrename(x, \dots, cols = NULL)
 \arguments{
   \item{x}{an R object with a 'names' attribute.
 }
-  \item{\dots}{either tagged vector expressions of the form \code{name = newname}, or a single function applied to all names (of columns/elements selected in \code{cols}).
+  \item{\dots}{either tagged vector expressions of the form \code{name = newname}, or a single function (+ optional arguments to the function) applied to all names (of columns/elements selected in \code{cols}).
 }
   \item{cols}{If \code{\dots} is a function, select a subset of columns/elements to rename using names, indices, a logical vector or a function applied to the columns if \code{x} is a data frame (i.e. \code{is.numeric}).}
 }
@@ -38,6 +38,7 @@ head(frename(iris, Sepal.Length = "S L", Sepal.Width = "S W",
 head(frename(iris, tolower))
 head(frename(iris, tolower, cols = 1:2))
 head(frename(iris, tolower, cols = is.numeric))
+head(frename(iris, paste, "new", sep = "_", cols = 1:2))
 
 ## Renaming by reference
 setrename(iris, tolower)

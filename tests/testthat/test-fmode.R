@@ -1,5 +1,7 @@
 context("fmode")
 
+rm(list = ls())
+
 x <- round(abs(10*rnorm(100)))
 w <- as.integer(round(abs(10*rnorm(100)))) # round(abs(rnorm(100)), 1) -> Numeric precision issues in R
 xNA <- x

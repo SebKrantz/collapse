@@ -1,5 +1,7 @@
 context("flag / L / F")
 
+rm(list = ls())
+
 x <- abs(10*rnorm(100))
 xNA <- x
 xNA[sample.int(100, 20)] <- NA

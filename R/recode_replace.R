@@ -249,7 +249,7 @@ replace_outliers <- function(X, limits, value = NA, single.limit = c("SDs", "min
               clx <- oldClass(X)
               STDXnum <- fscale(fcolsubset(X, num))
               oldClass(X) <- NULL
-              X[num] <- mapply(function(x, y) `[<-`(x, abs(y) > limits, value = value), unattrib(X)[num], unattrib(STDXnum), SIMPLIFY = FALSE)
+              X[num] <- mapply(function(x, y) `[<-`(x, abs(y) > limits, value = value), unattrib(X[num]), unattrib(STDXnum), SIMPLIFY = FALSE)
               `oldClass<-`(X, clx)
              } else duplAttributes(lapply(unattrib(X), function(x) if(is.numeric(x)) `[<-`(x, abs(fscaleCpp(x)) > limits, value = value) else x), X)
            },

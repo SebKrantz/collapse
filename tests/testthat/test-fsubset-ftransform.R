@@ -1,5 +1,7 @@
 context("fsubset and ftransform")
 
+rm(list = ls())
+
 v <- na_insert(mtcars$mpg)
 m <- na_insert(as.matrix(mtcars))
 

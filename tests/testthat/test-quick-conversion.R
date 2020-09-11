@@ -1,5 +1,7 @@
 context("quick-conversion")
 
+rm(list = ls())
+
 x <- rnorm(10)
 xNA <- x
 xNA[c(3,10)] <- NA

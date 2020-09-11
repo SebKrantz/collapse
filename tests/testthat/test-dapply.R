@@ -1,5 +1,8 @@
 context("dapply")
 
+rm(list = ls())
+
+
 test_that("All common uses of dapply can be performed, as per examples", {
   # data.frame
   expect_equal(dapply(mtcars, force), mtcars)

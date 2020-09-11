@@ -1,5 +1,7 @@
 context("psmat and psacf")
 
+rm(list = ls())
+
 options(warn = -1)
 
 test_that("psmat works as intended", {

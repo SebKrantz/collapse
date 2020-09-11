@@ -1,5 +1,7 @@
 context("collap")
 
+rm(list = ls())
+
 options(warn = -1)
 
 g <- GRP(wlddev, ~ country + decade)

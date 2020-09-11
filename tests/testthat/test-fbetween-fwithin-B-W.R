@@ -1,5 +1,7 @@
 context("fbetween / B and fwithin / W")
 
+rm(list = ls())
+
 x <- rnorm(100)
 w <- abs(100*rnorm(100))
 wdat <- abs(100*rnorm(32))

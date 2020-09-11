@@ -1,5 +1,7 @@
 context("seqid, groupid")
 
+rm(list = ls())
+
 x <- c(1:10, 1:10)
 
 test_that("seqid performas as expected", {

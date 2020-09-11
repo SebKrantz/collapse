@@ -1,5 +1,7 @@
 context("select, replace or add vars")
 
+rm(list = ls())
+
 test_that("selecting vars works well", {
   expect_identical(get_vars(wlddev, 4:8), wlddev[4:8])
   expect_identical(get_vars(wlddev, -(4:8)), wlddev[-(4:8)])
