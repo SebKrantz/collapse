@@ -187,15 +187,15 @@ class(fgroup_by(GGDC10S, Variable, Country))
 Also note that `fselect` and `get_vars` are not full drop-in replacements for `select` because they do not have a grouped_df method:
 
 ```{r}
-GGDC10S %>% group_by(Variable, Country) %>% select_at(6:16) %>% head(3)
-GGDC10S %>% group_by(Variable, Country) %>% get_vars(6:16) %>% head(3)
+GGDC10S %>% group_by(Variable, Country) %>% select_at(6:16) %>% tail(3)
+GGDC10S %>% group_by(Variable, Country) %>% get_vars(6:16) %>% tail(3)
 ```
 
 Since by default `keep.group_vars = TRUE` in the *Fast Statistical Functions*, the end result is nevertheless the same:
 
 ```{r}
-GGDC10S %>% group_by(Variable, Country) %>% select_at(6:16) %>% fmean %>% head(3)
-GGDC10S %>% group_by(Variable, Country) %>% get_vars(6:16) %>% fmean %>% head(3)
+GGDC10S %>% group_by(Variable, Country) %>% select_at(6:16) %>% fmean %>% tail(3)
+GGDC10S %>% group_by(Variable, Country) %>% get_vars(6:16) %>% fmean %>% tail(3)
 ```
 
 Another useful verb introduced by *collapse* is `fgroup_vars`, which can be used to efficiently obtain the grouping columns or grouping variables from a grouped tibble:
@@ -603,13 +603,13 @@ The functions `fbetween` and `fwithin` are slightly more memory efficient implem
 
 ```{r}
 GGDC10S %>% # Same as ... %>% fmean(TRA = "replace")
-  fgroup_by(Variable, Country) %>% get_vars(6:16) %>% fbetween %>% head(2)
+  fgroup_by(Variable, Country) %>% get_vars(6:16) %>% fbetween %>% tail(2)
 
 GGDC10S %>% # Same as ... %>% fmean(TRA = "replace_fill")
-  fgroup_by(Variable, Country) %>% get_vars(6:16) %>% fbetween(fill = TRUE) %>% head(2)
+  fgroup_by(Variable, Country) %>% get_vars(6:16) %>% fbetween(fill = TRUE) %>% tail(2)
 
 GGDC10S %>% # Same as ... %>% fmean(TRA = "-")
-  fgroup_by(Variable, Country) %>% get_vars(6:16) %>% fwithin %>% head(2)
+  fgroup_by(Variable, Country) %>% get_vars(6:16) %>% fwithin %>% tail(2)
 ```
 
 Apart from higher speed, `fwithin` has a `mean` argument to assign an arbitrary mean to centered data, the default being `mean = 0`. A very common choice for such an added mean is just the overall mean of the data, which can be added in by invoking `mean = "overall.mean"`: 
@@ -617,7 +617,7 @@ Apart from higher speed, `fwithin` has a `mean` argument to assign an arbitrary 
 ```{r}
 GGDC10S %>% 
   fgroup_by(Variable, Country) %>% 
-    fselect(Country, Variable, AGR:SUM) %>% fwithin(mean = "overall.mean") %>% head(3)
+    fselect(Country, Variable, AGR:SUM) %>% fwithin(mean = "overall.mean") %>% tail(3)
 ```
 <!-- in particular, which regards the joint use of weights and the `mean = "overall.mean"` option: `... %>% fmean(w = SUM, TRA = "-+")` will not properly group-center the data on the overall weighted mean. Instead, it will group-center data on a frequency weighted average of the weighted group-means, thus not taking into account different aggregated weights attached to those weighted group-means themselves. The reason for this shortcoming is simply that `TRA` was not designed to take a separate weight vector as input. `fwithin(w = SUM, mean = "overall.mean")` does a better job and properly centers data on the weighted overall mean after subtracting out weighted group means: -->
 
@@ -634,7 +634,7 @@ This can also be done using weights. The code below uses the `SUM` column as wei
 ```{r}
 GGDC10S %>% 
   fgroup_by(Variable, Country) %>% 
-    fselect(Country, Variable, AGR:SUM) %>% fwithin(SUM, mean = "overall.mean") %>% head(3)
+    fselect(Country, Variable, AGR:SUM) %>% fwithin(SUM, mean = "overall.mean") %>% tail(3)
 ```
 Another argument to `fwithin` is the `theta` parameter, allowing partial- or quasi-demeaning operations, e.g. `fwithin(gdata, theta = theta)` is equal to `gdata - theta * fbetween(gdata)`. This is particularly useful to prepare data for variance components (also known as 'random-effects') estimation.
 
