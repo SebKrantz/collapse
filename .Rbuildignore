@@ -7,6 +7,10 @@
 ^experimental$
 ^testing$
 ^\.travis\.yml$
+^\.build\.timestamp$
+collapse_intro_files
+collapse_and_dplyr_files
+collapse_and_plm_files
 vignettes/collapse_intro_cache
 vignettes/collapse_and_plm_cache
 vignettes/collapse_and_dplyr_cache
@@ -22,3 +26,4 @@ vignettes/collapse_and_data.table_cache
 man/figures
 ^misc$
 ^codecov\.yml$
+^\.covignore$

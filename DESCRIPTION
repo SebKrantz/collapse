@@ -1,7 +1,7 @@
 Package: collapse
 Title: Advanced and Fast Data Transformation
-Version: 1.3.1
-Date: 2020-08-10
+Version: 1.3.2
+Date: 2020-09-13
 Authors@R: c(
            person("Sebastian", "Krantz", role = c("aut", "cre"), 
                   email = "sebastian.krantz@graduateinstitute.ch"),
@@ -49,19 +49,7 @@ LazyData: true
 Depends: R (>= 3.5.0)
 Imports: Rcpp (>= 1.0.1), lfe (>= 2.7)
 LinkingTo: Rcpp
-Suggests: 
-    dplyr,
-    plm,
-    data.table,
-    matrixStats,
-    magrittr,
-    ggplot2,
-    scales,
-    vars,
-    knitr,
-    rmarkdown,
-    testthat,
-    microbenchmark,
-    covr
+Suggests: dplyr, plm, data.table, matrixStats, magrittr, ggplot2, scales, vars, 
+          knitr, rmarkdown, testthat, microbenchmark, covr
 SystemRequirements: C++11
 VignetteBuilder: knitr
