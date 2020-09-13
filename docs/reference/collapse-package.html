@@ -44,7 +44,7 @@ Advanced and Fast Data Transformation — collapse-package • collapse</title>
 Advanced and Fast Data Transformation — collapse-package" />
 <meta property="og:description" content="collapse is a C/C++ based package for data transformation and statistical computing in R. It's aims are:
 To facilitate complex data transformation, exploration and computing tasks in R.
-To help make R code fast, flexible, parsimonious and programmer friendly.
+To help make R code fast, flexible, parsimonious and programmer friendly. 
 
 It is made compatible with dplyr, data.table and the plm approach to panel data." />
 
@@ -78,7 +78,7 @@ It is made compatible with dplyr, data.table and the plm approach to panel data.
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">collapse</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">1.3.1</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">1.3.2</span>
       </span>
     </div>
 
@@ -101,22 +101,22 @@ It is made compatible with dplyr, data.table and the plm approach to panel data.
         <li>
   <a href="https://twitter.com/collapse_R" target="_blank">
     <span class="fa fa-twitter"></span>
-
+     
   </a>
 </li>
 <li>
   <a href="https://github.com/SebKrantz/collapse" target="_blank">
     <span class="fa fa-github"></span>
-
+     
   </a>
 </li>
       </ul>
-
+      
     </div><!--/.nav-collapse -->
   </div><!--/.container -->
 </div><!--/.navbar -->
 
-
+      
 
       </header>
 
@@ -125,7 +125,7 @@ It is made compatible with dplyr, data.table and the plm approach to panel data.
     <div class="page-header">
     <h1><!-- %   \code{collapse:} -->
 Advanced and Fast Data Transformation</h1>
-
+    
     <div class="hidden name"><code>collapse-package.Rd</code></div>
     </div>
 
@@ -184,7 +184,7 @@ Core S3 methods and efficient grouping and ordering functionality can be accesse
 </ul><p>I thank Ralf Stubner, Joseph Wood and Dirk Eddelbuettel for helpful answers on Stackoverflow, Joris Meys for encouraging me and helping to set up the <a href='https://github.com/SebKrantz/collapse'>Github repository</a> for <em>collapse</em>, Matthieu Stigler, Patrice Kiener, Zhiyi Xu and Kevin Tappe for feature requests and helpful suggestions.</p>
     <h2 class="hasAnchor" id="developing-feature-requests-bug-reporting"><a class="anchor" href="#developing-feature-requests-bug-reporting"></a>Developing / Feature Requests / Bug Reporting</h2>
 
-
+    
 <ul>
 <li><p>If you are interested in extending or optimizing this package, see the source code at <a href='https://github.com/SebKrantz/collapse/tree/master'>https://github.com/SebKrantz/collapse/tree/master</a>, fork and send pull-requests, or e-mail me.</p></li>
 <li><p>Please send feature requests via e-mail.</p></li>
@@ -199,8 +199,8 @@ Core S3 methods and efficient grouping and ordering functionality can be accesse
 <span class='no'>f</span> <span class='kw'>&lt;-</span> <span class='no'>iris</span>$<span class='no'>Species</span>      <span class='co'># Factor</span>
 
 <span class='co'># Simple statistics</span>
-<span class='fu'><a href='fmean.html'>fmean</a></span>(<span class='no'>v</span>)               <span class='co'># vector</span></div><div class='output co'>#&gt; [1] 5.843333</div><div class='input'><span class='fu'><a href='fmean.html'>fmean</a></span>(<span class='fu'><a href='quick-conversion.html'>qM</a></span>(<span class='no'>d</span>))           <span class='co'># matrix (qM is a faster as.matrix)</span></div><div class='output co'>#&gt; Sepal.Length  Sepal.Width Petal.Length  Petal.Width
-#&gt;     5.843333     3.057333     3.758000     1.199333 </div><div class='input'><span class='fu'><a href='fmean.html'>fmean</a></span>(<span class='no'>d</span>)               <span class='co'># data.frame</span></div><div class='output co'>#&gt; Sepal.Length  Sepal.Width Petal.Length  Petal.Width
+<span class='fu'><a href='fmean.html'>fmean</a></span>(<span class='no'>v</span>)               <span class='co'># vector</span></div><div class='output co'>#&gt; [1] 5.843333</div><div class='input'><span class='fu'><a href='fmean.html'>fmean</a></span>(<span class='fu'><a href='quick-conversion.html'>qM</a></span>(<span class='no'>d</span>))           <span class='co'># matrix (qM is a faster as.matrix)</span></div><div class='output co'>#&gt; Sepal.Length  Sepal.Width Petal.Length  Petal.Width 
+#&gt;     5.843333     3.057333     3.758000     1.199333 </div><div class='input'><span class='fu'><a href='fmean.html'>fmean</a></span>(<span class='no'>d</span>)               <span class='co'># data.frame</span></div><div class='output co'>#&gt; Sepal.Length  Sepal.Width Petal.Length  Petal.Width 
 #&gt;     5.843333     3.057333     3.758000     1.199333 </div><div class='input'>
 <span class='co'># Preserving data structure</span>
 <span class='fu'><a href='fmean.html'>fmean</a></span>(<span class='fu'><a href='quick-conversion.html'>qM</a></span>(<span class='no'>d</span>), <span class='kw'>drop</span> <span class='kw'>=</span> <span class='fl'>FALSE</span>)     <span class='co'># Still a matrix</span></div><div class='output co'>#&gt;      Sepal.Length Sepal.Width Petal.Length Petal.Width
@@ -208,8 +208,8 @@ Core S3 methods and efficient grouping and ordering functionality can be accesse
 #&gt; 1     5.843333    3.057333        3.758    1.199333</div><div class='input'>
 <span class='co'># Weighted statistics, supported by most functions...</span>
 <span class='no'>w</span> <span class='kw'>&lt;-</span> <span class='fu'><a href='https://rdrr.io/r/base/MathFun.html'>abs</a></span>(<span class='fu'><a href='https://rdrr.io/r/stats/Normal.html'>rnorm</a></span>(<span class='fu'><a href='small-helper.html'>fnrow</a></span>(<span class='no'>iris</span>)))
-<span class='fu'><a href='fmean.html'>fmean</a></span>(<span class='no'>d</span>, <span class='kw'>w</span> <span class='kw'>=</span> <span class='no'>w</span>)</div><div class='output co'>#&gt; Sepal.Length  Sepal.Width Petal.Length  Petal.Width
-#&gt;     5.820133     3.070317     3.737224     1.200975 </div><div class='input'>
+<span class='fu'><a href='fmean.html'>fmean</a></span>(<span class='no'>d</span>, <span class='kw'>w</span> <span class='kw'>=</span> <span class='no'>w</span>)</div><div class='output co'>#&gt; Sepal.Length  Sepal.Width Petal.Length  Petal.Width 
+#&gt;     5.877386     3.073472     3.809625     1.205031 </div><div class='input'>
 <span class='co'># Grouped statistics...</span>
 <span class='fu'><a href='fmean.html'>fmean</a></span>(<span class='no'>d</span>, <span class='no'>f</span>)</div><div class='output co'>#&gt;            Sepal.Length Sepal.Width Petal.Length Petal.Width
 #&gt; setosa            5.006       3.428        1.462       0.246
@@ -217,9 +217,9 @@ Core S3 methods and efficient grouping and ordering functionality can be accesse
 #&gt; virginica         6.588       2.974        5.552       2.026</div><div class='input'>
 <span class='co'># Groupwise-weighted statistics...</span>
 <span class='fu'><a href='fmean.html'>fmean</a></span>(<span class='no'>d</span>, <span class='no'>f</span>, <span class='no'>w</span>)</div><div class='output co'>#&gt;            Sepal.Length Sepal.Width Petal.Length Petal.Width
-#&gt; setosa         4.987909    3.427702     1.444973   0.2415078
-#&gt; versicolor     5.891207    2.785107     4.202130   1.3139783
-#&gt; virginica      6.577970    2.999060     5.555977   2.0436818</div><div class='input'>
+#&gt; setosa         5.035577    3.490255     1.474480    0.233055
+#&gt; versicolor     5.981707    2.733746     4.305737    1.320131
+#&gt; virginica      6.594051    3.009243     5.589086    2.037909</div><div class='input'>
 <span class='co'># Simple Transformations...</span>
 <span class='fu'><a href='https://rdrr.io/r/utils/head.html'>head</a></span>(<span class='fu'><a href='fmode.html'>fmode</a></span>(<span class='no'>d</span>, <span class='kw'>TRA</span> <span class='kw'>=</span> <span class='st'>"replace"</span>))    <span class='co'># Replacing values with the mode</span></div><div class='output co'>#&gt;   Sepal.Length Sepal.Width Petal.Length Petal.Width
 #&gt; 1            5           3          1.5         0.2
@@ -294,53 +294,53 @@ Core S3 methods and efficient grouping and ordering functionality can be accesse
 #&gt; 6          0.3         0.4          0.3           0</div><div class='input'>
 <span class='co'># Grouped and weighted transformations...</span>
 <span class='fu'><a href='https://rdrr.io/r/utils/head.html'>head</a></span>(<span class='fu'><a href='fvar_fsd.html'>fsd</a></span>(<span class='no'>d</span>, <span class='no'>f</span>, <span class='no'>w</span>, <span class='st'>"/"</span>), <span class='fl'>3</span>)         <span class='co'># weighted scaling</span></div><div class='output co'>#&gt;   Sepal.Length Sepal.Width Petal.Length Petal.Width
-#&gt; 1     13.60974    8.569937     7.242618    2.042857
-#&gt; 2     13.07602    7.345660     7.242618    2.042857
-#&gt; 3     12.54231    7.835371     6.725289    2.042857</div><div class='input'><span class='fu'><a href='https://rdrr.io/r/utils/head.html'>head</a></span>(<span class='fu'><a href='fmedian.html'>fmedian</a></span>(<span class='no'>d</span>, <span class='no'>f</span>, <span class='no'>w</span>, <span class='st'>"-"</span>), <span class='fl'>3</span>)     <span class='co'># subtracting the weighted group-median</span></div><div class='output co'>#&gt;   Sepal.Length Sepal.Width Petal.Length Petal.Width
-#&gt; 1          0.1         0.1          0.0           0
-#&gt; 2         -0.1        -0.4          0.0           0
-#&gt; 3         -0.3        -0.2         -0.1           0</div><div class='input'><span class='fu'><a href='https://rdrr.io/r/utils/head.html'>head</a></span>(<span class='fu'><a href='fmode.html'>fmode</a></span>(<span class='no'>d</span>, <span class='no'>f</span>, <span class='no'>w</span>, <span class='st'>"replace"</span>), <span class='fl'>3</span>) <span class='co'># replace with weighted statistical mode</span></div><div class='output co'>#&gt;   Sepal.Length Sepal.Width Petal.Length Petal.Width
-#&gt; 1          4.8         3.4          1.4         0.2
-#&gt; 2          4.8         3.4          1.4         0.2
-#&gt; 3          4.8         3.4          1.4         0.2</div><div class='input'>
+#&gt; 1     15.23177    8.894492     8.430091    1.961157
+#&gt; 2     14.63444    7.623850     8.430091    1.961157
+#&gt; 3     14.03712    8.132107     7.827942    1.961157</div><div class='input'><span class='fu'><a href='https://rdrr.io/r/utils/head.html'>head</a></span>(<span class='fu'><a href='fmedian.html'>fmedian</a></span>(<span class='no'>d</span>, <span class='no'>f</span>, <span class='no'>w</span>, <span class='st'>"-"</span>), <span class='fl'>3</span>)     <span class='co'># subtracting the weighted group-median</span></div><div class='output co'>#&gt;   Sepal.Length Sepal.Width Petal.Length Petal.Width
+#&gt; 1          0.0         0.1         -0.1           0
+#&gt; 2         -0.2        -0.4         -0.1           0
+#&gt; 3         -0.4        -0.2         -0.2           0</div><div class='input'><span class='fu'><a href='https://rdrr.io/r/utils/head.html'>head</a></span>(<span class='fu'><a href='fmode.html'>fmode</a></span>(<span class='no'>d</span>, <span class='no'>f</span>, <span class='no'>w</span>, <span class='st'>"replace"</span>), <span class='fl'>3</span>) <span class='co'># replace with weighted statistical mode</span></div><div class='output co'>#&gt;   Sepal.Length Sepal.Width Petal.Length Petal.Width
+#&gt; 1          5.1         3.4          1.4         0.2
+#&gt; 2          5.1         3.4          1.4         0.2
+#&gt; 3          5.1         3.4          1.4         0.2</div><div class='input'>
 <span class='co'>## Some more advanced transformations...</span>
-<span class='fu'><a href='https://rdrr.io/r/utils/head.html'>head</a></span>(<span class='fu'><a href='fbetween_fwithin.html'>fbetween</a></span>(<span class='no'>d</span>))                             <span class='co'># Averaging (same as fmean(d, TRA = "replace"), but faster)</span></div><div class='output co'>#&gt;   Sepal.Length Sepal.Width Petal.Length Petal.Width
+<span class='fu'><a href='https://rdrr.io/r/utils/head.html'>head</a></span>(<span class='fu'><a href='fbetween_fwithin.html'>fbetween</a></span>(<span class='no'>d</span>))                             <span class='co'># Averaging (faster t.: fmean(d, TRA = "replace"))</span></div><div class='output co'>#&gt;   Sepal.Length Sepal.Width Petal.Length Petal.Width
 #&gt; 1     5.843333    3.057333        3.758    1.199333
 #&gt; 2     5.843333    3.057333        3.758    1.199333
 #&gt; 3     5.843333    3.057333        3.758    1.199333
 #&gt; 4     5.843333    3.057333        3.758    1.199333
 #&gt; 5     5.843333    3.057333        3.758    1.199333
-#&gt; 6     5.843333    3.057333        3.758    1.199333</div><div class='input'><span class='fu'><a href='https://rdrr.io/r/utils/head.html'>head</a></span>(<span class='fu'><a href='fbetween_fwithin.html'>fwithin</a></span>(<span class='no'>d</span>))                              <span class='co'># Centering (same as fmean(d, TRA = "-"))</span></div><div class='output co'>#&gt;   Sepal.Length Sepal.Width Petal.Length Petal.Width
+#&gt; 6     5.843333    3.057333        3.758    1.199333</div><div class='input'><span class='fu'><a href='https://rdrr.io/r/utils/head.html'>head</a></span>(<span class='fu'><a href='fbetween_fwithin.html'>fwithin</a></span>(<span class='no'>d</span>))                              <span class='co'># Centering (faster than: fmean(d, TRA = "-"))</span></div><div class='output co'>#&gt;   Sepal.Length Sepal.Width Petal.Length Petal.Width
 #&gt; 1   -0.7433333  0.44266667       -2.358  -0.9993333
 #&gt; 2   -0.9433333 -0.05733333       -2.358  -0.9993333
 #&gt; 3   -1.1433333  0.14266667       -2.458  -0.9993333
 #&gt; 4   -1.2433333  0.04266667       -2.258  -0.9993333
 #&gt; 5   -0.8433333  0.54266667       -2.358  -0.9993333
-#&gt; 6   -0.4433333  0.84266667       -2.058  -0.7993333</div><div class='input'><span class='fu'><a href='https://rdrr.io/r/utils/head.html'>head</a></span>(<span class='fu'><a href='fbetween_fwithin.html'>fwithin</a></span>(<span class='no'>d</span>, <span class='no'>f</span>, <span class='no'>w</span>))                        <span class='co'># Grouped and weighted (same as fmean(d, f, w, "-"))</span></div><div class='output co'>#&gt;   Sepal.Length Sepal.Width Petal.Length Petal.Width
-#&gt; 1   0.11209135  0.07229848  -0.04497335 -0.04150782
-#&gt; 2  -0.08790865 -0.42770152  -0.04497335 -0.04150782
-#&gt; 3  -0.28790865 -0.22770152  -0.14497335 -0.04150782
-#&gt; 4  -0.38790865 -0.32770152   0.05502665 -0.04150782
-#&gt; 5   0.01209135  0.17229848  -0.04497335 -0.04150782
-#&gt; 6   0.41209135  0.47229848   0.25502665  0.15849218</div><div class='input'><span class='fu'><a href='https://rdrr.io/r/utils/head.html'>head</a></span>(<span class='fu'><a href='fbetween_fwithin.html'>fwithin</a></span>(<span class='no'>d</span>, <span class='no'>f</span>, <span class='no'>w</span>, <span class='kw'>mean</span> <span class='kw'>=</span> <span class='fl'>5</span>))              <span class='co'># Setting a custom mean</span></div><div class='output co'>#&gt;   Sepal.Length Sepal.Width Petal.Length Petal.Width
-#&gt; 1     5.112091    5.072298     4.955027    4.958492
-#&gt; 2     4.912091    4.572298     4.955027    4.958492
-#&gt; 3     4.712091    4.772298     4.855027    4.958492
-#&gt; 4     4.612091    4.672298     5.055027    4.958492
-#&gt; 5     5.012091    5.172298     4.955027    4.958492
-#&gt; 6     5.412091    5.472298     5.255027    5.158492</div><div class='input'><span class='fu'><a href='https://rdrr.io/r/utils/head.html'>head</a></span>(<span class='fu'><a href='fbetween_fwithin.html'>fwithin</a></span>(<span class='no'>d</span>, <span class='no'>f</span>, <span class='no'>w</span>, <span class='kw'>theta</span> <span class='kw'>=</span> <span class='fl'>0.76</span>))          <span class='co'># Quasi-centering i.e. d - theta*fbetween(d, f, w)</span></div><div class='output co'>#&gt;   Sepal.Length Sepal.Width Petal.Length Petal.Width
-#&gt; 1    1.3091894   0.8949468    0.3018203  0.01645406
-#&gt; 2    1.1091894   0.3949468    0.3018203  0.01645406
-#&gt; 3    0.9091894   0.5949468    0.2018203  0.01645406
-#&gt; 4    0.8091894   0.4949468    0.4018203  0.01645406
-#&gt; 5    1.2091894   0.9949468    0.3018203  0.01645406
-#&gt; 6    1.6091894   1.2949468    0.6018203  0.21645406</div><div class='input'><span class='fu'><a href='https://rdrr.io/r/utils/head.html'>head</a></span>(<span class='fu'><a href='fbetween_fwithin.html'>fwithin</a></span>(<span class='no'>d</span>, <span class='no'>f</span>, <span class='no'>w</span>, <span class='kw'>mean</span> <span class='kw'>=</span> <span class='st'>"overall.mean"</span>)) <span class='co'># Preserving the overall mean of the data</span></div><div class='output co'>#&gt;   Sepal.Length Sepal.Width Petal.Length Petal.Width
-#&gt; 1     5.932224    3.142615      3.69225    1.159467
-#&gt; 2     5.732224    2.642615      3.69225    1.159467
-#&gt; 3     5.532224    2.842615      3.59225    1.159467
-#&gt; 4     5.432224    2.742615      3.79225    1.159467
-#&gt; 5     5.832224    3.242615      3.69225    1.159467
-#&gt; 6     6.232224    3.542615      3.99225    1.359467</div><div class='input'><span class='fu'><a href='https://rdrr.io/r/utils/head.html'>head</a></span>(<span class='fu'><a href='fscale.html'>fscale</a></span>(<span class='no'>d</span>))                               <span class='co'># Scaling and centering</span></div><div class='output co'>#&gt;   Sepal.Length Sepal.Width Petal.Length Petal.Width
+#&gt; 6   -0.4433333  0.84266667       -2.058  -0.7993333</div><div class='input'><span class='fu'><a href='https://rdrr.io/r/utils/head.html'>head</a></span>(<span class='fu'><a href='fbetween_fwithin.html'>fwithin</a></span>(<span class='no'>d</span>, <span class='no'>f</span>, <span class='no'>w</span>))                        <span class='co'># Grouped and weighted (same as fmean(d, f, w, "-"))</span></div><div class='output co'>#&gt;   Sepal.Length  Sepal.Width Petal.Length Petal.Width
+#&gt; 1   0.06442335  0.009745289  -0.07448016 -0.03305496
+#&gt; 2  -0.13557665 -0.490254711  -0.07448016 -0.03305496
+#&gt; 3  -0.33557665 -0.290254711  -0.17448016 -0.03305496
+#&gt; 4  -0.43557665 -0.390254711   0.02551984 -0.03305496
+#&gt; 5  -0.03557665  0.109745289  -0.07448016 -0.03305496
+#&gt; 6   0.36442335  0.409745289   0.22551984  0.16694504</div><div class='input'><span class='fu'><a href='https://rdrr.io/r/utils/head.html'>head</a></span>(<span class='fu'><a href='fbetween_fwithin.html'>fwithin</a></span>(<span class='no'>d</span>, <span class='no'>f</span>, <span class='no'>w</span>, <span class='kw'>mean</span> <span class='kw'>=</span> <span class='fl'>5</span>))              <span class='co'># Setting a custom mean</span></div><div class='output co'>#&gt;   Sepal.Length Sepal.Width Petal.Length Petal.Width
+#&gt; 1     5.064423    5.009745      4.92552    4.966945
+#&gt; 2     4.864423    4.509745      4.92552    4.966945
+#&gt; 3     4.664423    4.709745      4.82552    4.966945
+#&gt; 4     4.564423    4.609745      5.02552    4.966945
+#&gt; 5     4.964423    5.109745      4.92552    4.966945
+#&gt; 6     5.364423    5.409745      5.22552    5.166945</div><div class='input'><span class='fu'><a href='https://rdrr.io/r/utils/head.html'>head</a></span>(<span class='fu'><a href='fbetween_fwithin.html'>fwithin</a></span>(<span class='no'>d</span>, <span class='no'>f</span>, <span class='no'>w</span>, <span class='kw'>theta</span> <span class='kw'>=</span> <span class='fl'>0.76</span>))          <span class='co'># Quasi-centering i.e. d - theta*fbetween(d, f, w)</span></div><div class='output co'>#&gt;   Sepal.Length Sepal.Width Petal.Length Petal.Width
+#&gt; 1    1.2729617   0.8474064    0.2793951  0.02287823
+#&gt; 2    1.0729617   0.3474064    0.2793951  0.02287823
+#&gt; 3    0.8729617   0.5474064    0.1793951  0.02287823
+#&gt; 4    0.7729617   0.4474064    0.3793951  0.02287823
+#&gt; 5    1.1729617   0.9474064    0.2793951  0.02287823
+#&gt; 6    1.5729617   1.2474064    0.5793951  0.22287823</div><div class='input'><span class='fu'><a href='https://rdrr.io/r/utils/head.html'>head</a></span>(<span class='fu'><a href='fbetween_fwithin.html'>fwithin</a></span>(<span class='no'>d</span>, <span class='no'>f</span>, <span class='no'>w</span>, <span class='kw'>mean</span> <span class='kw'>=</span> <span class='st'>"overall.mean"</span>)) <span class='co'># Preserving the overall mean of the data</span></div><div class='output co'>#&gt;   Sepal.Length Sepal.Width Petal.Length Petal.Width
+#&gt; 1      5.94181    3.083218     3.735145    1.171976
+#&gt; 2      5.74181    2.583218     3.735145    1.171976
+#&gt; 3      5.54181    2.783218     3.635145    1.171976
+#&gt; 4      5.44181    2.683218     3.835145    1.171976
+#&gt; 5      5.84181    3.183218     3.735145    1.171976
+#&gt; 6      6.24181    3.483218     4.035145    1.371976</div><div class='input'><span class='fu'><a href='https://rdrr.io/r/utils/head.html'>head</a></span>(<span class='fu'><a href='fscale.html'>fscale</a></span>(<span class='no'>d</span>))                               <span class='co'># Scaling and centering</span></div><div class='output co'>#&gt;   Sepal.Length Sepal.Width Petal.Length Petal.Width
 #&gt; 1   -0.8976739  1.01560199    -1.335752   -1.311052
 #&gt; 2   -1.1392005 -0.13153881    -1.335752   -1.311052
 #&gt; 3   -1.3807271  0.32731751    -1.392399   -1.311052
@@ -359,45 +359,45 @@ Core S3 methods and efficient grouping and ordering functionality can be accesse
 #&gt; 4     1.338862    3.351001  -0.07931195   -2.733823
 #&gt; 5     2.788022    6.792424  -0.24925490   -2.733823
 #&gt; 6     4.237181    8.857277   0.26057397   -1.946667</div><div class='input'><span class='fu'><a href='https://rdrr.io/r/utils/head.html'>head</a></span>(<span class='fu'><a href='fscale.html'>fscale</a></span>(<span class='no'>d</span>, <span class='no'>f</span>, <span class='no'>w</span>))                         <span class='co'># Grouped and weighted scaling and centering</span></div><div class='output co'>#&gt;   Sepal.Length Sepal.Width Petal.Length Petal.Width
-#&gt; 1    0.2991243   0.1770267   -0.2326606  -0.4239726
-#&gt; 2   -0.2345909  -1.0472500   -0.2326606  -0.4239726
-#&gt; 3   -0.7683061  -0.5575393   -0.7499905  -0.4239726
-#&gt; 4   -1.0351637  -0.8023947    0.2846693  -0.4239726
-#&gt; 5    0.0322667   0.4218821   -0.2326606  -0.4239726
-#&gt; 6    1.0996971   1.1564481    1.3193291   1.6188841</div><div class='input'><span class='fu'><a href='https://rdrr.io/r/utils/head.html'>head</a></span>(<span class='fu'><a href='fscale.html'>fscale</a></span>(<span class='no'>d</span>, <span class='no'>f</span>, <span class='no'>w</span>, <span class='kw'>mean</span> <span class='kw'>=</span> <span class='fl'>5</span>, <span class='kw'>sd</span> <span class='kw'>=</span> <span class='fl'>3</span>))       <span class='co'># Custom grouped and weighted scaling and centering</span></div><div class='output co'>#&gt;   Sepal.Length Sepal.Width Petal.Length Petal.Width
-#&gt; 1     5.897373    5.531080     4.302018    3.728082
-#&gt; 2     4.296227    1.858250     4.302018    3.728082
-#&gt; 3     2.695082    3.327382     2.750029    3.728082
-#&gt; 4     1.894509    2.592816     5.854008    3.728082
-#&gt; 5     5.096800    6.265646     4.302018    3.728082
-#&gt; 6     8.299091    8.469344     8.957987    9.856652</div><div class='input'><span class='fu'><a href='https://rdrr.io/r/utils/head.html'>head</a></span>(<span class='fu'><a href='fscale.html'>fscale</a></span>(<span class='no'>d</span>, <span class='no'>f</span>, <span class='no'>w</span>, <span class='kw'>mean</span> <span class='kw'>=</span> <span class='fl'>FALSE</span>,            <span class='co'># Preserving group means</span>
-            <span class='kw'>sd</span> <span class='kw'>=</span> <span class='st'>"within.sd"</span>))                <span class='co'># and setting the group-sd to fsd(fwithin(d, f, w), w = w)</span></div><div class='output co'>#&gt;   Sepal.Length Sepal.Width Petal.Length Petal.Width
-#&gt; 1     5.146169    3.492976     1.340054   0.1512274
-#&gt; 2     4.863791    3.041553     1.340054   0.1512274
-#&gt; 3     4.581414    3.222122     1.106762   0.1512274
-#&gt; 4     4.440225    3.131837     1.573346   0.1512274
-#&gt; 5     5.004980    3.583261     1.340054   0.1512274
-#&gt; 6     5.569735    3.854115     2.039930   0.5862317</div><div class='input'><span class='fu'><a href='https://rdrr.io/r/utils/head.html'>head</a></span>(<span class='fu'><a href='fscale.html'>fscale</a></span>(<span class='no'>d</span>, <span class='no'>f</span>, <span class='no'>w</span>, <span class='kw'>mean</span> <span class='kw'>=</span> <span class='st'>"overall.mean"</span>,   <span class='co'># Full harmonization of group means and variances,</span>
+#&gt; 1    0.1924081  0.02476554   -0.4484818  -0.3241298
+#&gt; 2   -0.4049161 -1.24587610   -0.4484818  -0.3241298
+#&gt; 3   -1.0022403 -0.73761945   -1.0506312  -0.3241298
+#&gt; 4   -1.3009024 -0.99174778    0.1536675  -0.3241298
+#&gt; 5   -0.1062540  0.27889387   -0.4484818  -0.3241298
+#&gt; 6    1.0883944  1.04127886    1.3579663   1.6370273</div><div class='input'><span class='fu'><a href='https://rdrr.io/r/utils/head.html'>head</a></span>(<span class='fu'><a href='fscale.html'>fscale</a></span>(<span class='no'>d</span>, <span class='no'>f</span>, <span class='no'>w</span>, <span class='kw'>mean</span> <span class='kw'>=</span> <span class='fl'>5</span>, <span class='kw'>sd</span> <span class='kw'>=</span> <span class='fl'>3</span>))       <span class='co'># Custom grouped and weighted scaling and centering</span></div><div class='output co'>#&gt;   Sepal.Length Sepal.Width Petal.Length Petal.Width
+#&gt; 1     5.577224    5.074297     3.654554    4.027611
+#&gt; 2     3.785252    1.262372     3.654554    4.027611
+#&gt; 3     1.993279    2.787142     1.848106    4.027611
+#&gt; 4     1.097293    2.024757     5.461003    4.027611
+#&gt; 5     4.681238    5.836682     3.654554    4.027611
+#&gt; 6     8.265183    8.123837     9.073899    9.911082</div><div class='input'><span class='fu'><a href='https://rdrr.io/r/utils/head.html'>head</a></span>(<span class='fu'><a href='fscale.html'>fscale</a></span>(<span class='no'>d</span>, <span class='no'>f</span>, <span class='no'>w</span>, <span class='kw'>mean</span> <span class='kw'>=</span> <span class='fl'>FALSE</span>,            <span class='co'># Preserving group means</span>
+            <span class='kw'>sd</span> <span class='kw'>=</span> <span class='st'>"within.sd"</span>))                <span class='co'># and setting group-sd to fsd(fwithin(d, f, w), w = w)</span></div><div class='output co'>#&gt;   Sepal.Length Sepal.Width Petal.Length Petal.Width
+#&gt; 1     5.137859    3.499121     1.280266   0.1688547
+#&gt; 2     4.820327    3.044220     1.280266   0.1688547
+#&gt; 3     4.502795    3.226180     1.019507   0.1688547
+#&gt; 4     4.344028    3.135200     1.541025   0.1688547
+#&gt; 5     4.979093    3.590101     1.280266   0.1688547
+#&gt; 6     5.614158    3.863042     2.062544   0.5573004</div><div class='input'><span class='fu'><a href='https://rdrr.io/r/utils/head.html'>head</a></span>(<span class='fu'><a href='fscale.html'>fscale</a></span>(<span class='no'>d</span>, <span class='no'>f</span>, <span class='no'>w</span>, <span class='kw'>mean</span> <span class='kw'>=</span> <span class='st'>"overall.mean"</span>,   <span class='co'># Full harmonization of group means and variances,</span>
             <span class='kw'>sd</span> <span class='kw'>=</span> <span class='st'>"within.sd"</span>))                <span class='co'># while preserving the level and scale of the data.</span></div><div class='output co'>#&gt;   Sepal.Length Sepal.Width Petal.Length Petal.Width
-#&gt; 1     5.978393    3.135591     3.632305    1.110695
-#&gt; 2     5.696015    2.684168     3.632305    1.110695
-#&gt; 3     5.413638    2.864737     3.399013    1.110695
-#&gt; 4     5.272449    2.774452     3.865596    1.110695
-#&gt; 5     5.837204    3.225876     3.632305    1.110695
-#&gt; 6     6.401959    3.496730     4.332180    1.545699</div><div class='input'>
-<span class='fu'><a href='https://rdrr.io/r/utils/head.html'>head</a></span>(<span class='fu'><a href='select_replace_vars.html'>get_vars</a></span>(<span class='no'>iris</span>, <span class='fl'>1</span>:<span class='fl'>2</span>))                      <span class='co'># Use get_vars for fast selecting columns, gv is shortcut</span></div><div class='output co'>#&gt;   Sepal.Length Sepal.Width
+#&gt; 1     5.979669    3.082339     3.615411    1.140830
+#&gt; 2     5.662137    2.627437     3.615411    1.140830
+#&gt; 3     5.344604    2.809398     3.354652    1.140830
+#&gt; 4     5.185838    2.718418     3.876170    1.140830
+#&gt; 5     5.820903    3.173319     3.615411    1.140830
+#&gt; 6     6.455967    3.446260     4.397688    1.529276</div><div class='input'>
+<span class='fu'><a href='https://rdrr.io/r/utils/head.html'>head</a></span>(<span class='fu'><a href='select_replace_vars.html'>get_vars</a></span>(<span class='no'>iris</span>, <span class='fl'>1</span>:<span class='fl'>2</span>))                      <span class='co'># Use get_vars for fast selecting, gv is shortcut</span></div><div class='output co'>#&gt;   Sepal.Length Sepal.Width
 #&gt; 1          5.1         3.5
 #&gt; 2          4.9         3.0
 #&gt; 3          4.7         3.2
 #&gt; 4          4.6         3.1
 #&gt; 5          5.0         3.6
-#&gt; 6          5.4         3.9</div><div class='input'><span class='fu'><a href='https://rdrr.io/r/utils/head.html'>head</a></span>(<span class='fu'><a href='fHDbetween_fHDwithin.html'>fHDbetween</a></span>(<span class='fu'><a href='select_replace_vars.html'>gv</a></span>(<span class='no'>iris</span>, <span class='fl'>1</span>:<span class='fl'>2</span>), <span class='fu'><a href='select_replace_vars.html'>gv</a></span>(<span class='no'>iris</span>, <span class='fl'>3</span>:<span class='fl'>5</span>))) <span class='co'># Linear prediction with factors and continuous covariates</span></div><div class='output co'>#&gt;   Sepal.Length Sepal.Width
+#&gt; 6          5.4         3.9</div><div class='input'><span class='fu'><a href='https://rdrr.io/r/utils/head.html'>head</a></span>(<span class='fu'><a href='fHDbetween_fHDwithin.html'>fHDbetween</a></span>(<span class='fu'><a href='select_replace_vars.html'>gv</a></span>(<span class='no'>iris</span>, <span class='fl'>1</span>:<span class='fl'>2</span>), <span class='fu'><a href='select_replace_vars.html'>gv</a></span>(<span class='no'>iris</span>, <span class='fl'>3</span>:<span class='fl'>5</span>))) <span class='co'># Linear prediction with factors and covariates</span></div><div class='output co'>#&gt;   Sepal.Length Sepal.Width
 #&gt; 1     4.950107    3.389732
 #&gt; 2     4.950107    3.389732
 #&gt; 3     4.859513    3.374264
 #&gt; 4     5.040702    3.405199
 #&gt; 5     4.950107    3.389732
-#&gt; 6     5.220692    3.560823</div><div class='input'><span class='fu'><a href='https://rdrr.io/r/utils/head.html'>head</a></span>(<span class='fu'><a href='fHDbetween_fHDwithin.html'>fHDwithin</a></span>(<span class='fu'><a href='select_replace_vars.html'>gv</a></span>(<span class='no'>iris</span>, <span class='fl'>1</span>:<span class='fl'>2</span>), <span class='fu'><a href='select_replace_vars.html'>gv</a></span>(<span class='no'>iris</span>, <span class='fl'>3</span>:<span class='fl'>5</span>)))  <span class='co'># Linear partialling out factors and continuous covariates</span></div><div class='output co'>#&gt;   Sepal.Length Sepal.Width
+#&gt; 6     5.220692    3.560823</div><div class='input'><span class='fu'><a href='https://rdrr.io/r/utils/head.html'>head</a></span>(<span class='fu'><a href='fHDbetween_fHDwithin.html'>fHDwithin</a></span>(<span class='fu'><a href='select_replace_vars.html'>gv</a></span>(<span class='no'>iris</span>, <span class='fl'>1</span>:<span class='fl'>2</span>), <span class='fu'><a href='select_replace_vars.html'>gv</a></span>(<span class='no'>iris</span>, <span class='fl'>3</span>:<span class='fl'>5</span>)))  <span class='co'># Linear partialling out factors and covariates</span></div><div class='output co'>#&gt;   Sepal.Length Sepal.Width
 #&gt; 1   0.14989286   0.1102684
 #&gt; 2  -0.05010714  -0.3897316
 #&gt; 3  -0.15951256  -0.1742640
@@ -481,16 +481,16 @@ Core S3 methods and efficient grouping and ordering functionality can be accesse
 #&gt; 8.0.0 15.05000 357.6167 194.16667 3.120833 4.104083 17.14250 3.000000 3.083333
 #&gt; 8.0.1 15.40000 326.0000 299.50000 3.880000 3.370000 14.55000 5.000000 6.000000</div><div class='input'><span class='no'>g</span> <span class='kw'>&lt;-</span> <span class='fu'><a href='GRP.html'>GRP</a></span>(<span class='no'>mtcars</span>, ~ <span class='no'>cyl</span> + <span class='no'>vs</span> + <span class='no'>am</span>)        <span class='co'># It is also possible to create grouping objects</span>
 <span class='fu'><a href='https://rdrr.io/r/base/print.html'>print</a></span>(<span class='no'>g</span>)                                 <span class='co'># These are instructive to learn about the grouping,</span></div><div class='output co'>#&gt; collapse grouping object of length 32 with 7 ordered groups
-#&gt;
+#&gt; 
 #&gt; Call: GRP.default(X = mtcars, by = ~cyl + vs + am), X is unordered
-#&gt;
-#&gt; Distribution of group sizes:
-#&gt;    Min. 1st Qu.  Median    Mean 3rd Qu.    Max.
-#&gt;   1.000   2.500   3.000   4.571   5.500  12.000
-#&gt;
-#&gt; Groups with sizes:
-#&gt; 4.0.1 4.1.0 4.1.1 6.0.1 6.1.0 8.0.0 8.0.1
-#&gt;     1     3     7     3     4    12     2 </div><div class='input'><span class='fu'><a href='https://rdrr.io/r/base/plot.html'>plot</a></span>(<span class='no'>g</span>)                                  <span class='co'># and are directly handed down to C++ code</span></div><div class='img'><img src='collapse-package-1.png' alt='' width='700' height='433' /></div><div class='input'><span class='fu'><a href='fmean.html'>fmean</a></span>(<span class='fu'><a href='select_replace_vars.html'>gv</a></span>(<span class='no'>mtcars</span>, -<span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span>(<span class='fl'>2</span>,<span class='fl'>8</span>:<span class='fl'>9</span>)), <span class='no'>g</span>)          <span class='co'># This can speed up multiple computations over same groups</span></div><div class='output co'>#&gt;            mpg     disp        hp     drat       wt     qsec     gear     carb
+#&gt; 
+#&gt; Distribution of group sizes: 
+#&gt;    Min. 1st Qu.  Median    Mean 3rd Qu.    Max. 
+#&gt;   1.000   2.500   3.000   4.571   5.500  12.000 
+#&gt; 
+#&gt; Groups with sizes: 
+#&gt; 4.0.1 4.1.0 4.1.1 6.0.1 6.1.0 8.0.0 8.0.1 
+#&gt;     1     3     7     3     4    12     2 </div><div class='input'><span class='fu'><a href='https://rdrr.io/r/base/plot.html'>plot</a></span>(<span class='no'>g</span>)                                  <span class='co'># and are directly handed down to C++ code</span></div><div class='output co'>#&gt; <span class='error'>Error in plot.new(): figure margins too large</span></div><div class='input'><span class='fu'><a href='fmean.html'>fmean</a></span>(<span class='fu'><a href='select_replace_vars.html'>gv</a></span>(<span class='no'>mtcars</span>, -<span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span>(<span class='fl'>2</span>,<span class='fl'>8</span>:<span class='fl'>9</span>)), <span class='no'>g</span>)          <span class='co'># This can speed up multiple computations over same groups</span></div><div class='output co'>#&gt;            mpg     disp        hp     drat       wt     qsec     gear     carb
 #&gt; 4.0.1 26.00000 120.3000  91.00000 4.430000 2.140000 16.70000 5.000000 2.000000
 #&gt; 4.1.0 22.90000 135.8667  84.66667 3.770000 2.935000 20.97000 3.666667 1.666667
 #&gt; 4.1.1 28.37143  89.8000  80.57143 4.148571 2.028286 18.70000 4.142857 1.428571
@@ -519,8 +519,8 @@ Core S3 methods and efficient grouping and ordering functionality can be accesse
 <span class='fu'><a href='https://rdrr.io/r/base/class.html'>class</a></span>(<span class='no'>f2</span>)                                <span class='co'># Note the added class</span></div><div class='output co'>#&gt; [1] "factor"      "na.included"</div><div class='input'><span class='fu'><a href='https://rdrr.io/r/base/library.html'>library</a></span>(<span class='no'>microbenchmark</span>)
 <span class='fu'><a href='https://rdrr.io/pkg/microbenchmark/man/microbenchmark.html'>microbenchmark</a></span>(<span class='fu'><a href='fmean.html'>fmean</a></span>(<span class='no'>mtcars</span>, <span class='no'>f1</span>), <span class='fu'><a href='fmean.html'>fmean</a></span>(<span class='no'>mtcars</span>, <span class='no'>f2</span>)) <span class='co'># A minor difference, larger on larger data</span></div><div class='output co'>#&gt; Unit: microseconds
 #&gt;               expr    min     lq     mean median     uq     max neval cld
-#&gt;  fmean(mtcars, f1) 16.958 17.851 26.02101 18.297 27.667  87.019   100   a
-#&gt;  fmean(mtcars, f2) 16.511 17.403 23.90580 17.850 24.321 118.702   100   a</div><div class='input'>
+#&gt;  fmean(mtcars, f1) 17.850 18.296 23.66034 18.743 22.313  85.680   100   a
+#&gt;  fmean(mtcars, f2) 16.511 17.404 24.89640 18.520 21.197 172.698   100   a</div><div class='input'>
 <span class='fu'><a href='https://rdrr.io/r/base/with.html'>with</a></span>(<span class='no'>mtcars</span>, <span class='fu'><a href='qF.html'>finteraction</a></span>(<span class='no'>cyl</span>, <span class='no'>vs</span>, <span class='no'>am</span>))  <span class='co'># Efficient interactions of vectors and/or factors</span></div><div class='output co'>#&gt;  [1] 6.0.1 6.0.1 4.1.1 6.1.0 8.0.0 6.1.0 8.0.0 4.1.0 4.1.0 6.1.0 6.1.0 8.0.0
 #&gt; [13] 8.0.0 8.0.0 8.0.0 8.0.0 8.0.0 4.1.1 4.1.1 4.1.1 4.1.0 8.0.0 8.0.0 8.0.0
 #&gt; [25] 8.0.0 4.1.1 4.0.1 4.1.1 8.0.1 6.0.1 8.0.1 4.1.1
@@ -613,7 +613,7 @@ Core S3 methods and efficient grouping and ordering functionality can be accesse
 #&gt; 6         6
 #&gt; 8         8</div><div class='input'><span class='co'># For efficient (grouped) replacing and sweeping out computed statistics, use TRA()</span>
 <span class='no'>sds</span> <span class='kw'>&lt;-</span> <span class='fu'><a href='fvar_fsd.html'>fsd</a></span>(<span class='no'>mtcars</span>)
-<span class='fu'><a href='https://rdrr.io/r/utils/head.html'>head</a></span>(<span class='fu'><a href='TRA.html'>TRA</a></span>(<span class='no'>mtcars</span>, <span class='no'>sds</span>, <span class='st'>"/"</span>))     <span class='co'># Simple scaling (if sd's are not needed, use fsd(mtcars, TRA = "/"))</span></div><div class='output co'>#&gt;                        mpg     cyl      disp       hp     drat       wt
+<span class='fu'><a href='https://rdrr.io/r/utils/head.html'>head</a></span>(<span class='fu'><a href='TRA.html'>TRA</a></span>(<span class='no'>mtcars</span>, <span class='no'>sds</span>, <span class='st'>"/"</span>))     <span class='co'># Simple scaling (if sd's not needed, use fsd(mtcars, TRA = "/"))</span></div><div class='output co'>#&gt;                        mpg     cyl      disp       hp     drat       wt
 #&gt; Mazda RX4         3.484351 3.35961 1.2909608 1.604367 7.294100 2.677684
 #&gt; Mazda RX4 Wag     3.484351 3.35961 1.2909608 1.604367 7.294100 2.938298
 #&gt; Datsun 710        3.783009 2.23974 0.8713986 1.356419 7.200586 2.371079
@@ -627,13 +627,13 @@ Core S3 methods and efficient grouping and ordering functionality can be accesse
 #&gt; Hornet 4 Drive    10.878913 1.984063 0.000000 4.066120 0.6191184
 #&gt; Hornet Sportabout  9.524645 0.000000 0.000000 4.066120 1.2382368
 #&gt; Valiant           11.315413 1.984063 0.000000 4.066120 0.6191184</div><div class='input'><span class='fu'><a href='https://rdrr.io/pkg/microbenchmark/man/microbenchmark.html'>microbenchmark</a></span>(<span class='fu'><a href='TRA.html'>TRA</a></span>(<span class='no'>mtcars</span>, <span class='no'>sds</span>, <span class='st'>"/"</span>), <span class='fu'><a href='https://rdrr.io/r/base/sweep.html'>sweep</a></span>(<span class='no'>mtcars</span>, <span class='fl'>2</span>, <span class='no'>sds</span>, <span class='st'>"/"</span>)) <span class='co'># A remarkable performance gain..</span></div><div class='output co'>#&gt; Unit: microseconds
-#&gt;                        expr      min       lq       mean    median       uq
-#&gt;       TRA(mtcars, sds, "/")   12.941   16.065   26.95365   27.2215   33.022
-#&gt;  sweep(mtcars, 2, sds, "/") 1151.321 1188.805 1272.27637 1231.6460 1317.548
+#&gt;                        expr      min       lq       mean   median       uq
+#&gt;       TRA(mtcars, sds, "/")   12.941   16.511   28.15841   25.883   32.799
+#&gt;  sweep(mtcars, 2, sds, "/") 1153.103 1169.615 1284.39367 1209.553 1293.894
 #&gt;       max neval cld
-#&gt;    85.234   100  a
-#&gt;  1756.880   100   b</div><div class='input'><span class='no'>sds</span> <span class='kw'>&lt;-</span> <span class='fu'><a href='fvar_fsd.html'>fsd</a></span>(<span class='no'>mtcars</span>, <span class='no'>f2</span>)
-<span class='fu'><a href='https://rdrr.io/r/utils/head.html'>head</a></span>(<span class='fu'><a href='TRA.html'>TRA</a></span>(<span class='no'>mtcars</span>, <span class='no'>sds</span>, <span class='st'>"/"</span>, <span class='no'>f2</span>)) <span class='co'># Groupd scaling (if sd's are not needed, use fsd(mtcars, f2, TRA = "/"))</span></div><div class='output co'>#&gt;                         mpg cyl     disp       hp      drat       wt      qsec
+#&gt;   140.122   100  a 
+#&gt;  3250.465   100   b</div><div class='input'><span class='no'>sds</span> <span class='kw'>&lt;-</span> <span class='fu'><a href='fvar_fsd.html'>fsd</a></span>(<span class='no'>mtcars</span>, <span class='no'>f2</span>)
+<span class='fu'><a href='https://rdrr.io/r/utils/head.html'>head</a></span>(<span class='fu'><a href='TRA.html'>TRA</a></span>(<span class='no'>mtcars</span>, <span class='no'>sds</span>, <span class='st'>"/"</span>, <span class='no'>f2</span>)) <span class='co'># Groupd scaling (if sd's not needed: fsd(mtcars, f2, TRA = "/"))</span></div><div class='output co'>#&gt;                         mpg cyl     disp       hp      drat       wt      qsec
 #&gt; Mazda RX4         14.447218 Inf 3.849628 4.534121  8.192327 7.352414  9.643407
 #&gt; Mazda RX4 Wag     14.447218 Inf 3.849628 4.534121  8.192327 8.068012  9.971493
 #&gt; Datsun 710         5.055626 Inf 4.019114 4.442421 10.534350 4.073293 11.061282
@@ -749,9 +749,9 @@ Core S3 methods and efficient grouping and ordering functionality can be accesse
 #&gt; 9     PCGDP   numeric      GDP per capita (constant 2010 US$)
 #&gt; 10   LIFEEX   numeric Life expectancy at birth, total (years)
 #&gt; 11     GINI   numeric        GINI index (World Bank estimate)
-#&gt; 12      ODA   numeric    Net ODA received (constant 2015 US$)</div><div class='input'><span class='fu'><a href='fNobs.html'>fNobs</a></span>(<span class='no'>wlddev</span>)                          <span class='co'># Observation count</span></div><div class='output co'>#&gt; country   iso3c    date    year  decade  region  income    OECD   PCGDP  LIFEEX
-#&gt;   12744   12744   12744   12744   12744   12744   12744   12744    8995   11068
-#&gt;    GINI     ODA
+#&gt; 12      ODA   numeric    Net ODA received (constant 2015 US$)</div><div class='input'><span class='fu'><a href='fNobs.html'>fNobs</a></span>(<span class='no'>wlddev</span>)                          <span class='co'># Observation count</span></div><div class='output co'>#&gt; country   iso3c    date    year  decade  region  income    OECD   PCGDP  LIFEEX 
+#&gt;   12744   12744   12744   12744   12744   12744   12744   12744    8995   11068 
+#&gt;    GINI     ODA 
 #&gt;    1356    8336 </div><div class='input'><span class='fu'><a href='pwcor_pwcov_pwNobs.html'>pwNobs</a></span>(<span class='no'>wlddev</span>)                         <span class='co'># Pairwise observation count</span></div><div class='output co'>#&gt;         country iso3c  date  year decade region income  OECD PCGDP LIFEEX GINI
 #&gt; country   12744 12744 12744 12744  12744  12744  12744 12744  8995  11068 1356
 #&gt; iso3c     12744 12744 12744 12744  12744  12744  12744 12744  8995  11068 1356
@@ -790,16 +790,16 @@ Core S3 methods and efficient grouping and ordering functionality can be accesse
 #&gt; Algeria           3  58
 #&gt; American Samoa    0   0
 #&gt; Andorra           0   0
-#&gt; Angola            2  56</div><div class='input'><span class='fu'><a href='fNdistinct.html'>fNdistinct</a></span>(<span class='no'>wlddev</span>)                     <span class='co'># Distinct values</span></div><div class='output co'>#&gt; country   iso3c    date    year  decade  region  income    OECD   PCGDP  LIFEEX
-#&gt;     216     216      59      59       7       7       4       2    8995   10048
-#&gt;    GINI     ODA
+#&gt; Angola            2  56</div><div class='input'><span class='fu'><a href='fNdistinct.html'>fNdistinct</a></span>(<span class='no'>wlddev</span>)                     <span class='co'># Distinct values</span></div><div class='output co'>#&gt; country   iso3c    date    year  decade  region  income    OECD   PCGDP  LIFEEX 
+#&gt;     216     216      59      59       7       7       4       2    8995   10048 
+#&gt;    GINI     ODA 
 #&gt;     363    7564 </div><div class='input'><span class='fu'><a href='descr.html'>descr</a></span>(<span class='no'>wlddev</span>)                          <span class='co'># Describe data</span></div><div class='output co'>#&gt; Dataset: wlddev, 12 Variables, N = 12744
 #&gt; --------------------------------------------------------------------------------
 #&gt; country (character): Country Name
-#&gt; Stats:
+#&gt; Stats: 
 #&gt;       N  Ndist
 #&gt;   12744    216
-#&gt; Table:
+#&gt; Table: 
 #&gt;                      Freq  Perc
 #&gt; Afghanistan            59  0.46
 #&gt; Albania                59  0.46
@@ -818,16 +818,16 @@ Core S3 methods and efficient grouping and ordering functionality can be accesse
 #&gt; Yemen, Rep.              59  0.46
 #&gt; Zambia                   59  0.46
 #&gt; Zimbabwe                 59  0.46
-#&gt;
-#&gt; Summary of Table:
-#&gt;    Min. 1st Qu.  Median    Mean 3rd Qu.    Max.
-#&gt;      59      59      59      59      59      59
+#&gt; 
+#&gt; Summary of Table: 
+#&gt;    Min. 1st Qu.  Median    Mean 3rd Qu.    Max. 
+#&gt;      59      59      59      59      59      59 
 #&gt; --------------------------------------------------------------------------------
 #&gt; iso3c (factor): Country Code
-#&gt; Stats:
+#&gt; Stats: 
 #&gt;       N  Ndist
 #&gt;   12744    216
-#&gt; Table:
+#&gt; Table: 
 #&gt;      Freq  Perc
 #&gt; ABW    59  0.46
 #&gt; AFG    59  0.46
@@ -846,37 +846,37 @@ Core S3 methods and efficient grouping and ordering functionality can be accesse
 #&gt; ZAF    59  0.46
 #&gt; ZMB    59  0.46
 #&gt; ZWE    59  0.46
-#&gt;
-#&gt; Summary of Table:
-#&gt;    Min. 1st Qu.  Median    Mean 3rd Qu.    Max.
-#&gt;      59      59      59      59      59      59
+#&gt; 
+#&gt; Summary of Table: 
+#&gt;    Min. 1st Qu.  Median    Mean 3rd Qu.    Max. 
+#&gt;      59      59      59      59      59      59 
 #&gt; --------------------------------------------------------------------------------
 #&gt; date (Date): Date Recorded (Fictitious)
-#&gt; Stats:
+#&gt; Stats: 
 #&gt;       N  Ndist
 #&gt;   12744     59
 #&gt; --------------------------------------------------------------------------------
 #&gt; year (integer): Year
-#&gt; Stats:
+#&gt; Stats: 
 #&gt;       N  Ndist  Mean     SD   Min   Max  Skew  Kurt
 #&gt;   12744     59  1989  17.03  1960  2018    -0   1.8
-#&gt; Quant:
+#&gt; Quant: 
 #&gt;     1%    5%   25%   50%   75%   95%   99%
 #&gt;   1960  1962  1974  1989  2004  2016  2018
 #&gt; --------------------------------------------------------------------------------
 #&gt; decade (numeric): Decade
-#&gt; Stats:
+#&gt; Stats: 
 #&gt;       N  Ndist     Mean     SD   Min   Max  Skew  Kurt
 #&gt;   12744      7  1988.98  17.63  1960  2020  0.01  1.95
-#&gt; Quant:
+#&gt; Quant: 
 #&gt;     1%    5%   25%   50%   75%   95%   99%
 #&gt;   1960  1960  1970  1990  2000  2020  2020
 #&gt; --------------------------------------------------------------------------------
 #&gt; region (factor): Region
-#&gt; Stats:
+#&gt; Stats: 
 #&gt;       N  Ndist
 #&gt;   12744      7
-#&gt; Table:
+#&gt; Table: 
 #&gt;                             Freq   Perc
 #&gt; East Asia &amp; Pacific         2124  16.67
 #&gt; Europe &amp; Central Asia       3422  26.85
@@ -887,10 +887,10 @@ Core S3 methods and efficient grouping and ordering functionality can be accesse
 #&gt; Sub-Saharan Africa          2832  22.22
 #&gt; --------------------------------------------------------------------------------
 #&gt; income (factor): Income Level
-#&gt; Stats:
+#&gt; Stats: 
 #&gt;       N  Ndist
 #&gt;   12744      4
-#&gt; Table:
+#&gt; Table: 
 #&gt;                      Freq   Perc
 #&gt; High income          4720  37.04
 #&gt; Low income           1947  15.28
@@ -898,81 +898,81 @@ Core S3 methods and efficient grouping and ordering functionality can be accesse
 #&gt; Upper middle income  3304  25.93
 #&gt; --------------------------------------------------------------------------------
 #&gt; OECD (logical): Is OECD Member Country?
-#&gt; Stats:
+#&gt; Stats: 
 #&gt;       N  Ndist
 #&gt;   12744      2
-#&gt; Table:
+#&gt; Table: 
 #&gt;         Freq   Perc
 #&gt; FALSE  10620  83.33
 #&gt; TRUE    2124  16.67
 #&gt; --------------------------------------------------------------------------------
 #&gt; PCGDP (numeric): GDP per capita (constant 2010 US$)
-#&gt; Stats:
+#&gt; Stats: 
 #&gt;      N  Ndist      Mean        SD     Min        Max  Skew   Kurt
 #&gt;   8995   8995  11563.65  18348.41  131.65  191586.64  3.11  16.96
-#&gt; Quant:
+#&gt; Quant: 
 #&gt;       1%      5%      25%      50%       75%       95%       99%
 #&gt;   223.54  374.38  1215.59  3619.61  14084.71  46591.94  87780.62
 #&gt; --------------------------------------------------------------------------------
 #&gt; LIFEEX (numeric): Life expectancy at birth, total (years)
-#&gt; Stats:
+#&gt; Stats: 
 #&gt;       N  Ndist   Mean     SD    Min    Max   Skew  Kurt
 #&gt;   11068  10048  63.84  11.45  18.91  85.42  -0.67  2.65
-#&gt; Quant:
+#&gt; Quant: 
 #&gt;      1%     5%    25%    50%   75%    95%    99%
 #&gt;   35.49  42.23  55.84  66.97  72.5  78.82  81.83
 #&gt; --------------------------------------------------------------------------------
 #&gt; GINI (numeric): GINI index (World Bank estimate)
-#&gt; Stats:
+#&gt; Stats: 
 #&gt;      N  Ndist  Mean    SD   Min   Max  Skew  Kurt
 #&gt;   1356    363  39.4  9.68  16.2  65.8  0.46  2.29
-#&gt; Quant:
+#&gt; Quant: 
 #&gt;      1%    5%   25%   50%   75%   95%    99%
 #&gt;   24.66  26.5  31.7  37.4  46.8  57.2  60.84
 #&gt; --------------------------------------------------------------------------------
 #&gt; ODA (numeric): Net ODA received (constant 2015 US$)
-#&gt; Stats:
+#&gt; Stats: 
 #&gt;      N  Ndist        Mean          SD              Min             Max  Skew
 #&gt;   8336   7564  428,746468  819,868971  -1.08038000e+09  2.45521800e+10  7.19
 #&gt;    Kurt
 #&gt;   122.9
-#&gt; Quant:
+#&gt; Quant: 
 #&gt;           1%        5%        25%         50%         75%             95%
 #&gt;   -11,731500  1,097500  41,020000  157,360000  463,057500  1.82400500e+09
 #&gt;              99%
 #&gt;   3.48697750e+09
-#&gt; --------------------------------------------------------------------------------</div><div class='input'><span class='fu'><a href='varying.html'>varying</a></span>(<span class='no'>wlddev</span>, ~ <span class='no'>country</span>)             <span class='co'># Show which variables vary within countries</span></div><div class='output co'>#&gt;  iso3c   date   year decade region income   OECD  PCGDP LIFEEX   GINI    ODA
+#&gt; --------------------------------------------------------------------------------</div><div class='input'><span class='fu'><a href='varying.html'>varying</a></span>(<span class='no'>wlddev</span>, ~ <span class='no'>country</span>)             <span class='co'># Show which variables vary within countries</span></div><div class='output co'>#&gt;  iso3c   date   year decade region income   OECD  PCGDP LIFEEX   GINI    ODA 
 #&gt;  FALSE   TRUE   TRUE   TRUE  FALSE  FALSE  FALSE   TRUE   TRUE   TRUE   TRUE </div><div class='input'><span class='fu'><a href='qsu.html'>qsu</a></span>(<span class='no'>wlddev</span>, <span class='kw'>pid</span> <span class='kw'>=</span> ~ <span class='no'>country</span>,           <span class='co'># Panel-summarize columns 9 though 12 of this data</span>
     <span class='kw'>cols</span> <span class='kw'>=</span> <span class='fl'>9</span>:<span class='fl'>12</span>, <span class='kw'>vlabels</span> <span class='kw'>=</span> <span class='fl'>TRUE</span>)       <span class='co'># (between and within countries)</span></div><div class='output co'>#&gt; , , PCGDP: GDP per capita (constant 2010 US$)
-#&gt;
+#&gt; 
 #&gt;              N/T        Mean          SD          Min         Max
 #&gt; Overall     8995  11563.6529  18348.4052     131.6464   191586.64
 #&gt; Between      203  12488.8577  19628.3668     255.3999  141165.083
 #&gt; Within   44.3103  11563.6529   6334.9523  -30529.0928   75348.067
-#&gt;
+#&gt; 
 #&gt; , , LIFEEX: Life expectancy at birth, total (years)
-#&gt;
+#&gt; 
 #&gt;              N/T     Mean       SD      Min      Max
 #&gt; Overall    11068  63.8411  11.4497   18.907  85.4171
 #&gt; Between      207  64.5285  10.0235   39.349  85.4171
 #&gt; Within   53.4686  63.8411   5.8292  33.4671  83.8595
-#&gt;
+#&gt; 
 #&gt; , , GINI: GINI index (World Bank estimate)
-#&gt;
+#&gt; 
 #&gt;             N/T     Mean      SD      Min      Max
 #&gt; Overall    1356  39.3976  9.6764     16.2     65.8
 #&gt; Between     161  39.5799  8.3679  23.3667  61.7143
 #&gt; Within   8.4224  39.3976  3.0406  23.9576  54.7976
-#&gt;
+#&gt; 
 #&gt; , , ODA: Net ODA received (constant 2015 US$)
-#&gt;
+#&gt; 
 #&gt;              N/T        Mean          SD              Min             Max
 #&gt; Overall     8336  428,746468  819,868971  -1.08038000e+09  2.45521800e+10
 #&gt; Between      178  418,026522  548,293709       423846.154  3.53258914e+09
 #&gt; Within   46.8315  428,746468  607,024040  -2.47969577e+09  2.35093916e+10
 #&gt; </div><div class='input'><span class='fu'><a href='qsu.html'>qsu</a></span>(<span class='no'>wlddev</span>, ~ <span class='no'>region</span>, ~ <span class='no'>country</span>,       <span class='co'># Do all of that by region and also compute higher moments</span>
     <span class='kw'>cols</span> <span class='kw'>=</span> <span class='fl'>9</span>:<span class='fl'>12</span>, <span class='kw'>higher</span> <span class='kw'>=</span> <span class='fl'>TRUE</span>)        <span class='co'># -&gt; returns a 4D array</span></div><div class='output co'>#&gt; , , Overall, PCGDP
-#&gt;
+#&gt; 
 #&gt;                              N/T        Mean          SD         Min
 #&gt; East Asia &amp; Pacific         1391  10337.0463  14094.8338    131.9634
 #&gt; Europe &amp; Central Asia       2084  25664.8064   26181.671    367.0493
@@ -989,9 +989,9 @@ Core S3 methods and efficient grouping and ordering functionality can be accesse
 #&gt; North America               94903.1915  0.9047   3.3501
 #&gt; South Asia                   8971.1285  3.0144  11.8985
 #&gt; Sub-Saharan Africa          20333.9404   3.209  15.1549
-#&gt;
+#&gt; 
 #&gt; , , Between, PCGDP
-#&gt;
+#&gt; 
 #&gt;                             N/T        Mean          SD         Min         Max
 #&gt; East Asia &amp; Pacific          34  10337.0463    12576.62    410.2004  40046.4089
 #&gt; Europe &amp; Central Asia        56  25664.8064  24008.1006    788.0229  141165.083
@@ -1008,9 +1008,9 @@ Core S3 methods and efficient grouping and ordering functionality can be accesse
 #&gt; North America               0.7832   1.6136
 #&gt; South Asia                  3.1759  12.0293
 #&gt; Sub-Saharan Africa          2.2221   7.2472
-#&gt;
+#&gt; 
 #&gt; , , Within, PCGDP
-#&gt;
+#&gt; 
 #&gt;                                 N/T        Mean          SD          Min
 #&gt; East Asia &amp; Pacific         40.9118  11563.6529   6363.4087  -11892.0702
 #&gt; Europe &amp; Central Asia       37.2143  11563.6529  10444.6637  -30529.0928
@@ -1027,9 +1027,9 @@ Core S3 methods and efficient grouping and ordering functionality can be accesse
 #&gt; North America               45188.6033  -0.0258   2.8074
 #&gt; South Asia                  13896.4313   1.0243   6.3765
 #&gt; Sub-Saharan Africa          24375.5944   1.5433  29.8043
-#&gt;
+#&gt; 
 #&gt; , , Overall, LIFEEX
-#&gt;
+#&gt; 
 #&gt;                              N/T     Mean       SD      Min      Max     Skew
 #&gt; East Asia &amp; Pacific         1717  65.6493  10.1221   18.907   84.278  -0.8473
 #&gt; Europe &amp; Central Asia       2886  71.9323   5.4596   45.369  85.4171  -0.4758
@@ -1046,9 +1046,9 @@ Core S3 methods and efficient grouping and ordering functionality can be accesse
 #&gt; North America               1.9842
 #&gt; South Asia                  2.1147
 #&gt; Sub-Saharan Africa          2.8059
-#&gt;
+#&gt; 
 #&gt; , , Between, LIFEEX
-#&gt;
+#&gt; 
 #&gt;                             N/T     Mean      SD      Min      Max     Skew
 #&gt; East Asia &amp; Pacific          32  65.6493  7.7148  48.8626  77.5681  -0.3937
 #&gt; Europe &amp; Central Asia        55  71.9323  4.2526  61.9424  85.4171  -0.5323
@@ -1065,9 +1065,9 @@ Core S3 methods and efficient grouping and ordering functionality can be accesse
 #&gt; North America               1.5491
 #&gt; South Asia                   3.008
 #&gt; Sub-Saharan Africa          4.5846
-#&gt;
+#&gt; 
 #&gt; , , Within, LIFEEX
-#&gt;
+#&gt; 
 #&gt;                                 N/T     Mean      SD      Min      Max     Skew
 #&gt; East Asia &amp; Pacific         53.6562  63.8411  6.5528  33.4671  83.8595  -0.3476
 #&gt; Europe &amp; Central Asia       52.4727  63.8411  3.4239  46.6863  77.0723  -0.0902
@@ -1084,9 +1084,9 @@ Core S3 methods and efficient grouping and ordering functionality can be accesse
 #&gt; North America               2.2514
 #&gt; South Asia                  2.1366
 #&gt; Sub-Saharan Africa          2.8488
-#&gt;
+#&gt; 
 #&gt; , , Overall, GINI
-#&gt;
+#&gt; 
 #&gt;                             N/T     Mean      SD   Min   Max     Skew    Kurt
 #&gt; East Asia &amp; Pacific          92  38.5065  5.3684  27.8  55.4   0.4917    2.85
 #&gt; Europe &amp; Central Asia       588   31.902  4.7383  16.2  48.4   0.2524  3.0724
@@ -1095,9 +1095,9 @@ Core S3 methods and efficient grouping and ordering functionality can be accesse
 #&gt; North America                22  36.1636  3.9282    31  41.1   0.1481  1.3322
 #&gt; South Asia                   39  34.1641  4.3411  25.9  43.8   0.2892  2.4065
 #&gt; Sub-Saharan Africa          176  44.8165  8.3376  28.9  65.8    0.634  2.8286
-#&gt;
+#&gt; 
 #&gt; , , Between, GINI
-#&gt;
+#&gt; 
 #&gt;                             N/T     Mean      SD      Min      Max     Skew
 #&gt; East Asia &amp; Pacific          21  38.5065  4.8352     30.8    48.65   0.1913
 #&gt; Europe &amp; Central Asia        47   31.902   4.054  23.3667     40.8   0.3926
@@ -1114,9 +1114,9 @@ Core S3 methods and efficient grouping and ordering functionality can be accesse
 #&gt; North America                    1
 #&gt; South Asia                  1.3567
 #&gt; Sub-Saharan Africa          3.1577
-#&gt;
+#&gt; 
 #&gt; , , Within, GINI
-#&gt;
+#&gt; 
 #&gt;                                 N/T     Mean      SD      Min      Max     Skew
 #&gt; East Asia &amp; Pacific           4.381  39.3976  2.3325  32.6476  46.1476   0.0321
 #&gt; Europe &amp; Central Asia       12.5106  39.3976  2.4529   28.636  54.4976   0.8011
@@ -1133,9 +1133,9 @@ Core S3 methods and efficient grouping and ordering functionality can be accesse
 #&gt; North America               5.0766
 #&gt; South Asia                  2.5971
 #&gt; Sub-Saharan Africa          4.1458
-#&gt;
+#&gt; 
 #&gt; , , Overall, ODA
-#&gt;
+#&gt; 
 #&gt;                              N/T            Mean              SD
 #&gt; East Asia &amp; Pacific         1491      346,977686      615,361973
 #&gt; Europe &amp; Central Asia        751      394,089867      566,834650
@@ -1152,9 +1152,9 @@ Core S3 methods and efficient grouping and ordering functionality can be accesse
 #&gt; North America                    -14,520000       55,820000  4.8406  29.1877
 #&gt; South Asia                            80000  8.53900000e+09  1.8057   6.6894
 #&gt; Sub-Saharan Africa               -16,780000  1.12780600e+10  4.8992  57.6191
-#&gt;
+#&gt; 
 #&gt; , , Between, ODA
-#&gt;
+#&gt; 
 #&gt;                             N/T            Mean              SD          Min
 #&gt; East Asia &amp; Pacific          31      346,977686      460,186340  1,550512.82
 #&gt; Europe &amp; Central Asia        32      394,089867      446,099453  12,115777.8
@@ -1171,9 +1171,9 @@ Core S3 methods and efficient grouping and ordering functionality can be accesse
 #&gt; North America                   423846.154       -       -
 #&gt; South Asia                  3.53258914e+09  0.7083  2.3441
 #&gt; Sub-Saharan Africa          1.41753857e+09  0.9724  3.1001
-#&gt;
+#&gt; 
 #&gt; , , Within, ODA
-#&gt;
+#&gt; 
 #&gt;                                 N/T        Mean              SD
 #&gt; East Asia &amp; Pacific         48.0968  428,746468      408,532605
 #&gt; Europe &amp; Central Asia       23.4688  428,746468      349,709591
@@ -1191,8 +1191,8 @@ Core S3 methods and efficient grouping and ordering functionality can be accesse
 #&gt; South Asia                  -2.37972267e+09  5.51177302e+09  2.0067   10.5477
 #&gt; Sub-Saharan Africa              -825,184566  1.07855444e+10  5.9273  104.1212
 #&gt; </div><div class='input'><span class='fu'><a href='qsu.html'>qsu</a></span>(<span class='no'>wlddev</span>, ~ <span class='no'>region</span>, ~ <span class='no'>country</span>, <span class='kw'>cols</span> <span class='kw'>=</span> <span class='fl'>9</span>:<span class='fl'>12</span>,
-    <span class='kw'>higher</span> <span class='kw'>=</span> <span class='fl'>TRUE</span>, <span class='kw'>array</span> <span class='kw'>=</span> <span class='fl'>FALSE</span>) <span class='kw'>%&gt;%</span>                           <span class='co'># Return a list of statistics matrices..</span>
-<span class='fu'><a href='unlist2d.html'>unlist2d</a></span>(<span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span>(<span class='st'>"Variable"</span>,<span class='st'>"Trans"</span>), <span class='kw'>row.names</span> <span class='kw'>=</span> <span class='st'>"Region"</span>) <span class='kw'>%&gt;%</span> <span class='no'>head</span>  <span class='co'># and turn this into a tidy data.frame</span></div><div class='output co'>#&gt;   Variable   Trans                     Region    N      Mean        SD
+    <span class='kw'>higher</span> <span class='kw'>=</span> <span class='fl'>TRUE</span>, <span class='kw'>array</span> <span class='kw'>=</span> <span class='fl'>FALSE</span>) <span class='kw'>%&gt;%</span>                           <span class='co'># Return as a list of matrices..</span>
+<span class='fu'><a href='unlist2d.html'>unlist2d</a></span>(<span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span>(<span class='st'>"Variable"</span>,<span class='st'>"Trans"</span>), <span class='kw'>row.names</span> <span class='kw'>=</span> <span class='st'>"Region"</span>) <span class='kw'>%&gt;%</span> <span class='no'>head</span>  <span class='co'># and turn into a tidy data.frame</span></div><div class='output co'>#&gt;   Variable   Trans                     Region    N      Mean        SD
 #&gt; 1    PCGDP Overall        East Asia &amp; Pacific 1391 10337.046 14094.834
 #&gt; 2    PCGDP Overall      Europe &amp; Central Asia 2084 25664.806 26181.671
 #&gt; 3    PCGDP Overall Latin America &amp; Caribbean  1896  6976.065  6705.538
@@ -1212,18 +1212,18 @@ Core S3 methods and efficient grouping and ordering functionality can be accesse
 #&gt; LIFEEX   .45*   .44*   .57*    1    -.34*  -.02*
 #&gt; GINI    -.30*  -.27*  -.42*  -.34*    1    -.17*
 #&gt; ODA      .12*   .12*  -.16*  -.02*  -.17*    1  </div><div class='input'><span class='fu'><a href='pwcor_pwcov_pwNobs.html'>pwcor</a></span>(<span class='fu'><a href='fmean.html'>fmean</a></span>(<span class='fu'><a href='select_replace_vars.html'>num_vars</a></span>(<span class='no'>wlddev</span>), <span class='no'>wlddev</span>$<span class='no'>country</span>), <span class='kw'>P</span> <span class='kw'>=</span> <span class='fl'>TRUE</span>)    <span class='co'># Correlating country means</span></div><div class='output co'>#&gt; <span class='warning'>Warning: Standardabweichung ist Null</span></div><div class='output co'>#&gt;           year  decade   PCGDP  LIFEEX    GINI     ODA
-#&gt; year       1       NA      NA      NA      NA      NA
-#&gt; decade     NA      1       NA      NA      NA      NA
+#&gt; year       1       NA      NA      NA      NA      NA 
+#&gt; decade     NA      1       NA      NA      NA      NA 
 #&gt; PCGDP      NA      NA      1      .60*   -.41*   -.24*
 #&gt; LIFEEX     NA      NA     .60*     1     -.41*   -.18*
-#&gt; GINI       NA      NA    -.41*   -.41*     1     -.17
+#&gt; GINI       NA      NA    -.41*   -.41*     1     -.17 
 #&gt; ODA        NA      NA    -.24*   -.18*   -.17      1  </div><div class='input'><span class='fu'><a href='pwcor_pwcov_pwNobs.html'>pwcor</a></span>(<span class='fu'><a href='fbetween_fwithin.html'>fwithin</a></span>(<span class='fu'><a href='select_replace_vars.html'>num_vars</a></span>(<span class='no'>wlddev</span>), <span class='no'>wlddev</span>$<span class='no'>country</span>), <span class='kw'>P</span> <span class='kw'>=</span> <span class='fl'>TRUE</span>)  <span class='co'># Within-country correlations</span></div><div class='output co'>#&gt;          year decade  PCGDP LIFEEX   GINI    ODA
 #&gt; year      1     .99*   .43*   .84*  -.20*   .17*
 #&gt; decade   .99*    1     .43*   .83*  -.19*   .16*
-#&gt; PCGDP    .43*   .43*    1     .30*  -.03   -.01
+#&gt; PCGDP    .43*   .43*    1     .30*  -.03   -.01 
 #&gt; LIFEEX   .84*   .83*   .30*    1    -.15*   .14*
-#&gt; GINI    -.20*  -.19*  -.03   -.15*    1    -.02
-#&gt; ODA      .17*   .16*  -.01    .14*  -.02     1  </div><div class='input'><span class='fu'><a href='psacf.html'>psacf</a></span>(<span class='no'>wlddev</span>, ~<span class='no'>country</span>, ~<span class='no'>year</span>, <span class='kw'>cols</span> <span class='kw'>=</span> <span class='fl'>9</span>:<span class='fl'>12</span>)                 <span class='co'># Panel-data Autocorrelation function</span></div><div class='img'><img src='collapse-package-2.png' alt='' width='700' height='433' /></div><div class='input'><span class='fu'><a href='psacf.html'>pspacf</a></span>(<span class='no'>wlddev</span>, ~<span class='no'>country</span>, ~<span class='no'>year</span>, <span class='kw'>cols</span> <span class='kw'>=</span> <span class='fl'>9</span>:<span class='fl'>12</span>)                <span class='co'># Partial panel-autocorrelations</span></div><div class='img'><img src='collapse-package-3.png' alt='' width='700' height='433' /></div><div class='input'><span class='fu'><a href='psmat.html'>psmat</a></span>(<span class='no'>wlddev</span>, ~<span class='no'>iso3c</span>, ~<span class='no'>year</span>, <span class='kw'>cols</span> <span class='kw'>=</span> <span class='fl'>9</span>:<span class='fl'>12</span>) <span class='kw'>%&gt;%</span> <span class='no'>plot</span>          <span class='co'># Convert panel to 3D array and plot</span></div><div class='img'><img src='collapse-package-4.png' alt='' width='700' height='433' /></div><div class='input'>
+#&gt; GINI    -.20*  -.19*  -.03   -.15*    1    -.02 
+#&gt; ODA      .17*   .16*  -.01    .14*  -.02     1  </div><div class='input'><span class='fu'><a href='psacf.html'>psacf</a></span>(<span class='no'>wlddev</span>, ~<span class='no'>country</span>, ~<span class='no'>year</span>, <span class='kw'>cols</span> <span class='kw'>=</span> <span class='fl'>9</span>:<span class='fl'>12</span>)                 <span class='co'># Panel-data Autocorrelation function</span></div><div class='output co'>#&gt; <span class='error'>Error in plot.new(): figure margins too large</span></div><div class='input'><span class='fu'><a href='psacf.html'>pspacf</a></span>(<span class='no'>wlddev</span>, ~<span class='no'>country</span>, ~<span class='no'>year</span>, <span class='kw'>cols</span> <span class='kw'>=</span> <span class='fl'>9</span>:<span class='fl'>12</span>)                <span class='co'># Partial panel-autocorrelations</span></div><div class='output co'>#&gt; <span class='error'>Error in plot.new(): figure margins too large</span></div><div class='input'><span class='fu'><a href='psmat.html'>psmat</a></span>(<span class='no'>wlddev</span>, ~<span class='no'>iso3c</span>, ~<span class='no'>year</span>, <span class='kw'>cols</span> <span class='kw'>=</span> <span class='fl'>9</span>:<span class='fl'>12</span>) <span class='kw'>%&gt;%</span> <span class='no'>plot</span>          <span class='co'># Convert panel to 3D array and plot</span></div><div class='img'><img src='collapse-package-1.png' alt='' width='700' height='433' /></div><div class='input'>
 <span class='co'>## collapse offers a few very efficent functions for data manipulation:</span>
 <span class='co'># Fast selecting and replacing columns</span>
 <span class='no'>series</span> <span class='kw'>&lt;-</span> <span class='fu'><a href='select_replace_vars.html'>get_vars</a></span>(<span class='no'>wlddev</span>, <span class='fl'>9</span>:<span class='fl'>12</span>)     <span class='co'># Same as wlddev[9:12] but 2x faster</span>
@@ -1300,7 +1300,20 @@ Core S3 methods and efficient grouping and ordering functionality can be accesse
 #&gt; 3   NA      NA   322.9835  53423.1
 #&gt; 4   NA      NA   457.3201  53423.1
 #&gt; 5   NA      NA   510.6269  53423.1
-#&gt; 6   NA      NA   557.8165  53423.1</div><div class='input'><span class='fu'><a href='https://rdrr.io/r/utils/head.html'>head</a></span>(<span class='fu'><a href='ftransform.html'>ftransform</a></span>(<span class='no'>wlddev</span>, <span class='fu'><a href='fscale.html'>fscale</a></span>(<span class='fu'><a href='select_replace_vars.html'>gv</a></span>(<span class='no'>wlddev</span>, <span class='fl'>9</span>:<span class='fl'>12</span>))))   <span class='co'># Can also transform with lists of columns</span></div><div class='output co'>#&gt;       country iso3c       date year decade     region     income  OECD PCGDP
+#&gt; 6   NA      NA   557.8165  53423.1</div><div class='input'><span class='fu'><a href='https://rdrr.io/r/utils/head.html'>head</a></span>(<span class='fu'><a href='ftransform.html'>ftransformv</a></span>(<span class='no'>wlddev</span>, <span class='fl'>9</span>:<span class='fl'>12</span>, <span class='no'>log</span>))           <span class='co'># Can also transform with lists of columns</span></div><div class='output co'>#&gt; <span class='warning'>Warning: NaNs wurden erzeugt</span></div><div class='output co'>#&gt;       country iso3c       date year decade     region     income  OECD PCGDP
+#&gt; 1 Afghanistan   AFG 1961-01-01 1960   1960 South Asia Low income FALSE    NA
+#&gt; 2 Afghanistan   AFG 1962-01-01 1961   1960 South Asia Low income FALSE    NA
+#&gt; 3 Afghanistan   AFG 1963-01-01 1962   1960 South Asia Low income FALSE    NA
+#&gt; 4 Afghanistan   AFG 1964-01-01 1963   1960 South Asia Low income FALSE    NA
+#&gt; 5 Afghanistan   AFG 1965-01-01 1964   1960 South Asia Low income FALSE    NA
+#&gt; 6 Afghanistan   AFG 1966-01-01 1965   1960 South Asia Low income FALSE    NA
+#&gt;     LIFEEX GINI      ODA ODA_GDP ODA_LIFEEX
+#&gt; 1 3.474820   NA 18.55556      NA   331.2791
+#&gt; 2 3.488659   NA 19.26805      NA   466.5505
+#&gt; 3 3.502098   NA 18.55940      NA   322.9835
+#&gt; 4 3.515240   NA 19.28125      NA   457.3201
+#&gt; 5 3.528124   NA 19.52753      NA   510.6269
+#&gt; 6 3.540814   NA 19.72969      NA   557.8165</div><div class='input'><span class='fu'><a href='https://rdrr.io/r/utils/head.html'>head</a></span>(<span class='fu'><a href='ftransform.html'>ftransformv</a></span>(<span class='no'>wlddev</span>, <span class='fl'>9</span>:<span class='fl'>12</span>, <span class='no'>fscale</span>, <span class='kw'>apply</span> <span class='kw'>=</span> <span class='fl'>FALSE</span>)) <span class='co'># apply = FALSE invokes fscale.data.frame</span></div><div class='output co'>#&gt;       country iso3c       date year decade     region     income  OECD PCGDP
 #&gt; 1 Afghanistan   AFG 1961-01-01 1960   1960 South Asia Low income FALSE    NA
 #&gt; 2 Afghanistan   AFG 1962-01-01 1961   1960 South Asia Low income FALSE    NA
 #&gt; 3 Afghanistan   AFG 1963-01-01 1962   1960 South Asia Low income FALSE    NA
@@ -1313,10 +1326,31 @@ Core S3 methods and efficient grouping and ordering functionality can be accesse
 #&gt; 3 -2.677455   NA -0.38282516      NA   322.9835
 #&gt; 4 -2.639113   NA -0.23454537      NA   457.3201
 #&gt; 5 -2.601033   NA -0.15400811      NA   510.6269
-#&gt; 6 -2.563041   NA -0.07134856      NA   557.8165</div><div class='input'><span class='fu'><a href='ftransform.html'>settransform</a></span>(<span class='no'>wlddev</span>, <span class='fu'><a href='fscale.html'>fscale</a></span>(<span class='fu'><a href='select_replace_vars.html'>gv</a></span>(<span class='no'>wlddev</span>, <span class='fl'>9</span>:<span class='fl'>12</span>))) <span class='co'># Changing the data by reference</span>
-<span class='fu'><a href='ftransform.html'>ftransform</a></span>(<span class='no'>wlddev</span>) <span class='kw'>&lt;-</span> <span class='fu'><a href='fscale.html'>fscale</a></span>(<span class='fu'><a href='select_replace_vars.html'>gv</a></span>(<span class='no'>wlddev</span>, <span class='fl'>9</span>:<span class='fl'>12</span>)) <span class='co'># Same thing</span>
-<span class='no'>wlddev</span> <span class='kw'>%&lt;&gt;%</span> <span class='fu'><a href='ftransform.html'>ftransform</a></span>(<span class='fu'><a href='fscale.html'>fscale</a></span>(<span class='fu'><a href='select_replace_vars.html'>gv</a></span>(<span class='no'>.</span>, <span class='fl'>9</span>:<span class='fl'>12</span>)))    <span class='co'># Same thing, using magrittr</span>
-
+#&gt; 6 -2.563041   NA -0.07134856      NA   557.8165</div><div class='input'><span class='fu'><a href='ftransform.html'>settransformv</a></span>(<span class='no'>wlddev</span>, <span class='fl'>9</span>:<span class='fl'>12</span>, <span class='no'>fscale</span>, <span class='kw'>apply</span> <span class='kw'>=</span> <span class='fl'>FALSE</span>)     <span class='co'># Changing the data by reference</span>
+<span class='fu'><a href='ftransform.html'>ftransform</a></span>(<span class='no'>wlddev</span>) <span class='kw'>&lt;-</span> <span class='fu'><a href='fscale.html'>fscale</a></span>(<span class='fu'><a href='select_replace_vars.html'>gv</a></span>(<span class='no'>wlddev</span>, <span class='fl'>9</span>:<span class='fl'>12</span>))         <span class='co'># Same thing (using replacement method)</span>
+<span class='no'>wlddev</span> <span class='kw'>%&lt;&gt;%</span> <span class='fu'><a href='ftransform.html'>ftransformv</a></span>(<span class='fl'>9</span>:<span class='fl'>12</span>, <span class='no'>fscale</span>, <span class='kw'>apply</span> <span class='kw'>=</span> <span class='fl'>FALSE</span>) <span class='co'># Same thing, using magrittr</span>
+<span class='no'>wlddev</span> <span class='kw'>%&gt;%</span> <span class='fu'><a href='ftransform.html'>ftransform</a></span>(<span class='fu'><a href='select_replace_vars.html'>gv</a></span>(<span class='no'>.</span>, <span class='fl'>9</span>:<span class='fl'>12</span>) <span class='kw'>%&gt;%</span>              <span class='co'># With compound pipes: Scaling and lagging</span>
+                        <span class='no'>fscale</span> <span class='kw'>%&gt;%</span> <span class='fu'><a href='flag.html'>flag</a></span>(<span class='fl'>0</span>:<span class='fl'>2</span>, <span class='no'>iso3c</span>, <span class='no'>year</span>)) <span class='kw'>%&gt;%</span> <span class='no'>head</span></div><div class='output co'>#&gt;       country iso3c       date year decade     region     income  OECD PCGDP
+#&gt; 1 Afghanistan   AFG 1961-01-01 1960   1960 South Asia Low income FALSE    NA
+#&gt; 2 Afghanistan   AFG 1962-01-01 1961   1960 South Asia Low income FALSE    NA
+#&gt; 3 Afghanistan   AFG 1963-01-01 1962   1960 South Asia Low income FALSE    NA
+#&gt; 4 Afghanistan   AFG 1964-01-01 1963   1960 South Asia Low income FALSE    NA
+#&gt; 5 Afghanistan   AFG 1965-01-01 1964   1960 South Asia Low income FALSE    NA
+#&gt; 6 Afghanistan   AFG 1966-01-01 1965   1960 South Asia Low income FALSE    NA
+#&gt;      LIFEEX GINI         ODA ODA_GDP ODA_LIFEEX L1.PCGDP L2.PCGDP L1.LIFEEX
+#&gt; 1 -2.755448   NA -0.38336183      NA   331.2791       NA       NA        NA
+#&gt; 2 -2.716145   NA -0.23832646      NA   466.5505       NA       NA -2.755448
+#&gt; 3 -2.677455   NA -0.38282516      NA   322.9835       NA       NA -2.716145
+#&gt; 4 -2.639113   NA -0.23454537      NA   457.3201       NA       NA -2.677455
+#&gt; 5 -2.601033   NA -0.15400811      NA   510.6269       NA       NA -2.639113
+#&gt; 6 -2.563041   NA -0.07134856      NA   557.8165       NA       NA -2.601033
+#&gt;   L2.LIFEEX L1.GINI L2.GINI     L1.ODA     L2.ODA
+#&gt; 1        NA      NA      NA         NA         NA
+#&gt; 2        NA      NA      NA -0.3833618         NA
+#&gt; 3 -2.755448      NA      NA -0.2383265 -0.3833618
+#&gt; 4 -2.716145      NA      NA -0.3828252 -0.2383265
+#&gt; 5 -2.677455      NA      NA -0.2345454 -0.3828252
+#&gt; 6 -2.639113      NA      NA -0.1540081 -0.2345454</div><div class='input'>
 <span class='co'># Fast reordering</span>
 <span class='fu'><a href='https://rdrr.io/r/utils/head.html'>head</a></span>(<span class='fu'><a href='roworder.html'>roworder</a></span>(<span class='no'>wlddev</span>, -<span class='no'>country</span>, <span class='no'>year</span>))</div><div class='output co'>#&gt;    country iso3c       date year decade              region     income  OECD
 #&gt; 1 Zimbabwe   ZWE 1961-01-01 1960   1960 Sub-Saharan Africa  Low income FALSE
@@ -1409,14 +1443,8 @@ Core S3 methods and efficient grouping and ordering functionality can be accesse
 #&gt; </span><span style='color: #BCBCBC;'>10</span><span> </span><span style='color: #949494;'>"</span><span>Latin America &amp; Caribbean~ Lower middle income  </span><span style='text-decoration: underline;'>1</span><span>966.   68.6  51.5    5.82</span><span style='color: #949494;'>e</span><span>8
 #&gt; </span><span style='color: #949494;'># ... with 13 more rows</span><span></div><div class='input'>
 <span class='co'># Same thing using dplyr manipulation verbs</span>
-<span class='fu'><a href='https://rdrr.io/r/base/library.html'>library</a></span>(<span class='no'>dplyr</span>)</div><div class='output co'>#&gt; <span class='message'></span>
-#&gt; <span class='message'>Attaching package: ‘dplyr’</span></div><div class='output co'>#&gt; <span class='message'>The following object is masked from ‘package:testthat’:</span>
-#&gt; <span class='message'></span>
-#&gt; <span class='message'>    matches</span></div><div class='output co'>#&gt; <span class='message'>The following objects are masked from ‘package:stats’:</span>
-#&gt; <span class='message'></span>
-#&gt; <span class='message'>    filter, lag</span></div><div class='output co'>#&gt; <span class='message'>The following objects are masked from ‘package:base’:</span>
-#&gt; <span class='message'></span>
-#&gt; <span class='message'>    intersect, setdiff, setequal, union</span></div><div class='input'><span class='no'>wlddev</span> <span class='kw'>%&gt;%</span> <span class='fu'><a href='https://dplyr.tidyverse.org/reference/filter.html'>filter</a></span>(<span class='no'>year</span> <span class='kw'>&gt;</span> <span class='fl'>1990</span>) <span class='kw'>%&gt;%</span> <span class='fu'><a href='https://dplyr.tidyverse.org/reference/select.html'>select</a></span>(<span class='no'>region</span>, <span class='no'>income</span>, <span class='no'>PCGDP</span>:<span class='no'>ODA</span>) <span class='kw'>%&gt;%</span>
+<span class='fu'><a href='https://rdrr.io/r/base/library.html'>library</a></span>(<span class='no'>dplyr</span>)
+<span class='no'>wlddev</span> <span class='kw'>%&gt;%</span> <span class='fu'><a href='https://dplyr.tidyverse.org/reference/filter.html'>filter</a></span>(<span class='no'>year</span> <span class='kw'>&gt;</span> <span class='fl'>1990</span>) <span class='kw'>%&gt;%</span> <span class='fu'><a href='https://dplyr.tidyverse.org/reference/select.html'>select</a></span>(<span class='no'>region</span>, <span class='no'>income</span>, <span class='no'>PCGDP</span>:<span class='no'>ODA</span>) <span class='kw'>%&gt;%</span>
   <span class='fu'><a href='https://dplyr.tidyverse.org/reference/group_by.html'>group_by</a></span>(<span class='no'>region</span>,<span class='no'>income</span>) <span class='kw'>%&gt;%</span> <span class='no'>fmean</span>       <span class='co'># This is already a lot faster than summarize_all(mean)</span></div><div class='output co'>#&gt; </span><span style='color: #949494;'># A tibble: 23 x 6</span><span>
 #&gt;    region                      income               PCGDP LIFEEX  GINI       ODA
 #&gt;    </span><span style='color: #949494;font-style: italic;'>&lt;fct&gt;</span><span>                       </span><span style='color: #949494;font-style: italic;'>&lt;fct&gt;</span><span>                </span><span style='color: #949494;font-style: italic;'>&lt;dbl&gt;</span><span>  </span><span style='color: #949494;font-style: italic;'>&lt;dbl&gt;</span><span> </span><span style='color: #949494;font-style: italic;'>&lt;dbl&gt;</span><span>     </span><span style='color: #949494;font-style: italic;'>&lt;dbl&gt;</span><span>
@@ -1435,46 +1463,46 @@ Core S3 methods and efficient grouping and ordering functionality can be accesse
   <span class='fu'><a href='GRP.html'>fgroup_by</a></span>(<span class='no'>region</span>, <span class='no'>income</span>) <span class='kw'>%&gt;%</span> <span class='fu'><a href='fmean.html'>fmean</a></span>(<span class='no'>weights</span>)   <span class='co'># Weighted group means</span></div><div class='output co'>#&gt; </span><span style='color: #949494;'># A tibble: 23 x 7</span><span>
 #&gt;    region                income         sum.weights  PCGDP LIFEEX  GINI      ODA
 #&gt;    </span><span style='color: #949494;font-style: italic;'>&lt;fct&gt;</span><span>                 </span><span style='color: #949494;font-style: italic;'>&lt;fct&gt;</span><span>                </span><span style='color: #949494;font-style: italic;'>&lt;dbl&gt;</span><span>  </span><span style='color: #949494;font-style: italic;'>&lt;dbl&gt;</span><span>  </span><span style='color: #949494;font-style: italic;'>&lt;dbl&gt;</span><span> </span><span style='color: #949494;font-style: italic;'>&lt;dbl&gt;</span><span>    </span><span style='color: #949494;font-style: italic;'>&lt;dbl&gt;</span><span>
-#&gt; </span><span style='color: #BCBCBC;'> 1</span><span> </span><span style='color: #949494;'>"</span><span>East Asia &amp; Pacific</span><span style='color: #949494;'>"</span><span> High income          301.  </span><span style='text-decoration: underline;'>32</span><span>535.   78.4  33.8   9.00</span><span style='color: #949494;'>e</span><span>7
-#&gt; </span><span style='color: #BCBCBC;'> 2</span><span> </span><span style='color: #949494;'>"</span><span>East Asia &amp; Pacific</span><span style='color: #949494;'>"</span><span> Lower middle ~       279.   </span><span style='text-decoration: underline;'>1</span><span>772.   65.0  36.2   4.60</span><span style='color: #949494;'>e</span><span>8
-#&gt; </span><span style='color: #BCBCBC;'> 3</span><span> </span><span style='color: #949494;'>"</span><span>East Asia &amp; Pacific</span><span style='color: #949494;'>"</span><span> Upper middle ~       225.   </span><span style='text-decoration: underline;'>4</span><span>592.   71.4  42.4   1.93</span><span style='color: #949494;'>e</span><span>8
-#&gt; </span><span style='color: #BCBCBC;'> 4</span><span> </span><span style='color: #949494;'>"</span><span>Europe &amp; Central As~ High income          810.  </span><span style='text-decoration: underline;'>40</span><span>485.   77.3  31.0   3.73</span><span style='color: #949494;'>e</span><span>8
-#&gt; </span><span style='color: #BCBCBC;'> 5</span><span> </span><span style='color: #949494;'>"</span><span>Europe &amp; Central As~ Low income            24.5   668.   66.2  31.6   2.10</span><span style='color: #949494;'>e</span><span>8
-#&gt; </span><span style='color: #BCBCBC;'> 6</span><span> </span><span style='color: #949494;'>"</span><span>Europe &amp; Central As~ Lower middle ~       140.   </span><span style='text-decoration: underline;'>1</span><span>805.   69.2  33.2   3.72</span><span style='color: #949494;'>e</span><span>8
-#&gt; </span><span style='color: #BCBCBC;'> 7</span><span> </span><span style='color: #949494;'>"</span><span>Europe &amp; Central As~ Upper middle ~       313.   </span><span style='text-decoration: underline;'>5</span><span>362.   71.2  33.4   4.70</span><span style='color: #949494;'>e</span><span>8
-#&gt; </span><span style='color: #BCBCBC;'> 8</span><span> </span><span style='color: #949494;'>"</span><span>Latin America &amp; Car~ High income          419.  </span><span style='text-decoration: underline;'>16</span><span>331.   75.0  48.8   3.78</span><span style='color: #949494;'>e</span><span>7
-#&gt; </span><span style='color: #BCBCBC;'> 9</span><span> </span><span style='color: #949494;'>"</span><span>Latin America &amp; Car~ Low income            18.5   740.   58.5  41.1   6.11</span><span style='color: #949494;'>e</span><span>8
-#&gt; </span><span style='color: #BCBCBC;'>10</span><span> </span><span style='color: #949494;'>"</span><span>Latin America &amp; Car~ Lower middle ~        83.3  </span><span style='text-decoration: underline;'>1</span><span>985.   68.5  50.9   5.75</span><span style='color: #949494;'>e</span><span>8
+#&gt; </span><span style='color: #BCBCBC;'> 1</span><span> </span><span style='color: #949494;'>"</span><span>East Asia &amp; Pacific</span><span style='color: #949494;'>"</span><span> High income          288.  </span><span style='text-decoration: underline;'>32</span><span>743.   78.3  33.0   1.07</span><span style='color: #949494;'>e</span><span>8
+#&gt; </span><span style='color: #BCBCBC;'> 2</span><span> </span><span style='color: #949494;'>"</span><span>East Asia &amp; Pacific</span><span style='color: #949494;'>"</span><span> Lower middle ~       295.   </span><span style='text-decoration: underline;'>1</span><span>797.   65.5  35.9   5.12</span><span style='color: #949494;'>e</span><span>8
+#&gt; </span><span style='color: #BCBCBC;'> 3</span><span> </span><span style='color: #949494;'>"</span><span>East Asia &amp; Pacific</span><span style='color: #949494;'>"</span><span> Upper middle ~       217.   </span><span style='text-decoration: underline;'>4</span><span>532.   71.5  41.5   2.47</span><span style='color: #949494;'>e</span><span>8
+#&gt; </span><span style='color: #BCBCBC;'> 4</span><span> </span><span style='color: #949494;'>"</span><span>Europe &amp; Central As~ High income          840.  </span><span style='text-decoration: underline;'>40</span><span>259.   77.2  30.9   3.30</span><span style='color: #949494;'>e</span><span>8
+#&gt; </span><span style='color: #BCBCBC;'> 5</span><span> </span><span style='color: #949494;'>"</span><span>Europe &amp; Central As~ Low income            22.5   626.   66.8  32.4   2.38</span><span style='color: #949494;'>e</span><span>8
+#&gt; </span><span style='color: #BCBCBC;'> 6</span><span> </span><span style='color: #949494;'>"</span><span>Europe &amp; Central As~ Lower middle ~       142.   </span><span style='text-decoration: underline;'>1</span><span>841.   69.2  32.7   3.63</span><span style='color: #949494;'>e</span><span>8
+#&gt; </span><span style='color: #BCBCBC;'> 7</span><span> </span><span style='color: #949494;'>"</span><span>Europe &amp; Central As~ Upper middle ~       321.   </span><span style='text-decoration: underline;'>5</span><span>260.   71.0  33.7   4.49</span><span style='color: #949494;'>e</span><span>8
+#&gt; </span><span style='color: #BCBCBC;'> 8</span><span> </span><span style='color: #949494;'>"</span><span>Latin America &amp; Car~ High income          380.  </span><span style='text-decoration: underline;'>16</span><span>178.   74.8  49.0   4.17</span><span style='color: #949494;'>e</span><span>7
+#&gt; </span><span style='color: #BCBCBC;'> 9</span><span> </span><span style='color: #949494;'>"</span><span>Latin America &amp; Car~ Low income            24.2   728.   59.7  41.1   8.20</span><span style='color: #949494;'>e</span><span>8
+#&gt; </span><span style='color: #BCBCBC;'>10</span><span> </span><span style='color: #949494;'>"</span><span>Latin America &amp; Car~ Lower middle ~        93.7  </span><span style='text-decoration: underline;'>1</span><span>977.   68.2  51.4   5.97</span><span style='color: #949494;'>e</span><span>8
 #&gt; </span><span style='color: #949494;'># ... with 13 more rows</span><span></div><div class='input'>
 <span class='no'>wlddev</span> <span class='kw'>%&gt;%</span> <span class='fu'><a href='fsubset.html'>fsubset</a></span>(<span class='no'>year</span> <span class='kw'>&gt;</span> <span class='fl'>1990</span>, <span class='no'>region</span>, <span class='no'>income</span>, <span class='no'>PCGDP</span>:<span class='no'>weights</span>) <span class='kw'>%&gt;%</span>
   <span class='fu'><a href='GRP.html'>fgroup_by</a></span>(<span class='no'>region</span>, <span class='no'>income</span>) <span class='kw'>%&gt;%</span> <span class='fu'><a href='fvar_fsd.html'>fsd</a></span>(<span class='no'>weights</span>)     <span class='co'># Weighted group standard deviations</span></div><div class='output co'>#&gt; </span><span style='color: #949494;'># A tibble: 23 x 7</span><span>
 #&gt;    region               income          sum.weights  PCGDP LIFEEX  GINI      ODA
 #&gt;    </span><span style='color: #949494;font-style: italic;'>&lt;fct&gt;</span><span>                </span><span style='color: #949494;font-style: italic;'>&lt;fct&gt;</span><span>                 </span><span style='color: #949494;font-style: italic;'>&lt;dbl&gt;</span><span>  </span><span style='color: #949494;font-style: italic;'>&lt;dbl&gt;</span><span>  </span><span style='color: #949494;font-style: italic;'>&lt;dbl&gt;</span><span> </span><span style='color: #949494;font-style: italic;'>&lt;dbl&gt;</span><span>    </span><span style='color: #949494;font-style: italic;'>&lt;dbl&gt;</span><span>
-#&gt; </span><span style='color: #BCBCBC;'> 1</span><span> </span><span style='color: #949494;'>"</span><span>East Asia &amp; Pacifi~ High income           301.  1.26</span><span style='color: #949494;'>e</span><span>4   3.45  1.38   1.96</span><span style='color: #949494;'>e</span><span>8
-#&gt; </span><span style='color: #BCBCBC;'> 2</span><span> </span><span style='color: #949494;'>"</span><span>East Asia &amp; Pacifi~ Lower middle i~       279.  9.32</span><span style='color: #949494;'>e</span><span>2   4.68  3.55   6.02</span><span style='color: #949494;'>e</span><span>8
-#&gt; </span><span style='color: #BCBCBC;'> 3</span><span> </span><span style='color: #949494;'>"</span><span>East Asia &amp; Pacifi~ Upper middle i~       225.  2.54</span><span style='color: #949494;'>e</span><span>3   2.57  3.35   5.96</span><span style='color: #949494;'>e</span><span>8
-#&gt; </span><span style='color: #BCBCBC;'> 4</span><span> </span><span style='color: #949494;'>"</span><span>Europe &amp; Central A~ High income           810.  2.96</span><span style='color: #949494;'>e</span><span>4   3.69  3.64   6.94</span><span style='color: #949494;'>e</span><span>8
-#&gt; </span><span style='color: #BCBCBC;'> 5</span><span> </span><span style='color: #949494;'>"</span><span>Europe &amp; Central A~ Low income             24.5 2.51</span><span style='color: #949494;'>e</span><span>2   2.93  1.61   1.07</span><span style='color: #949494;'>e</span><span>8
-#&gt; </span><span style='color: #BCBCBC;'> 6</span><span> </span><span style='color: #949494;'>"</span><span>Europe &amp; Central A~ Lower middle i~       140.  1.02</span><span style='color: #949494;'>e</span><span>3   1.90  5.58   2.45</span><span style='color: #949494;'>e</span><span>8
-#&gt; </span><span style='color: #BCBCBC;'> 7</span><span> </span><span style='color: #949494;'>"</span><span>Europe &amp; Central A~ Upper middle i~       313.  2.76</span><span style='color: #949494;'>e</span><span>3   3.54  5.53   6.55</span><span style='color: #949494;'>e</span><span>8
-#&gt; </span><span style='color: #BCBCBC;'> 8</span><span> </span><span style='color: #949494;'>"</span><span>Latin America &amp; Ca~ High income           419.  8.53</span><span style='color: #949494;'>e</span><span>3   2.73  5.69   5.99</span><span style='color: #949494;'>e</span><span>7
-#&gt; </span><span style='color: #BCBCBC;'> 9</span><span> </span><span style='color: #949494;'>"</span><span>Latin America &amp; Ca~ Low income             18.5 4.88</span><span style='color: #949494;'>e</span><span>1   2.10  0      5.45</span><span style='color: #949494;'>e</span><span>8
-#&gt; </span><span style='color: #BCBCBC;'>10</span><span> </span><span style='color: #949494;'>"</span><span>Latin America &amp; Ca~ Lower middle i~        83.3 6.22</span><span style='color: #949494;'>e</span><span>2   4.67  5.55   2.85</span><span style='color: #949494;'>e</span><span>8
+#&gt; </span><span style='color: #BCBCBC;'> 1</span><span> </span><span style='color: #949494;'>"</span><span>East Asia &amp; Pacifi~ High income           288.  1.25</span><span style='color: #949494;'>e</span><span>4   3.55  1.18   2.01</span><span style='color: #949494;'>e</span><span>8
+#&gt; </span><span style='color: #BCBCBC;'> 2</span><span> </span><span style='color: #949494;'>"</span><span>East Asia &amp; Pacifi~ Lower middle i~       295.  8.88</span><span style='color: #949494;'>e</span><span>2   4.97  4.00   7.42</span><span style='color: #949494;'>e</span><span>8
+#&gt; </span><span style='color: #BCBCBC;'> 3</span><span> </span><span style='color: #949494;'>"</span><span>East Asia &amp; Pacifi~ Upper middle i~       217.  2.52</span><span style='color: #949494;'>e</span><span>3   2.77  3.35   6.65</span><span style='color: #949494;'>e</span><span>8
+#&gt; </span><span style='color: #BCBCBC;'> 4</span><span> </span><span style='color: #949494;'>"</span><span>Europe &amp; Central A~ High income           840.  2.95</span><span style='color: #949494;'>e</span><span>4   3.71  3.54   6.54</span><span style='color: #949494;'>e</span><span>8
+#&gt; </span><span style='color: #BCBCBC;'> 5</span><span> </span><span style='color: #949494;'>"</span><span>Europe &amp; Central A~ Low income             22.5 2.02</span><span style='color: #949494;'>e</span><span>2   2.77  1.39   1.12</span><span style='color: #949494;'>e</span><span>8
+#&gt; </span><span style='color: #BCBCBC;'> 6</span><span> </span><span style='color: #949494;'>"</span><span>Europe &amp; Central A~ Lower middle i~       142.  1.01</span><span style='color: #949494;'>e</span><span>3   1.93  5.13   2.39</span><span style='color: #949494;'>e</span><span>8
+#&gt; </span><span style='color: #BCBCBC;'> 7</span><span> </span><span style='color: #949494;'>"</span><span>Europe &amp; Central A~ Upper middle i~       321.  2.75</span><span style='color: #949494;'>e</span><span>3   3.64  5.25   6.48</span><span style='color: #949494;'>e</span><span>8
+#&gt; </span><span style='color: #BCBCBC;'> 8</span><span> </span><span style='color: #949494;'>"</span><span>Latin America &amp; Ca~ High income           380.  8.23</span><span style='color: #949494;'>e</span><span>3   2.64  5.58   7.33</span><span style='color: #949494;'>e</span><span>7
+#&gt; </span><span style='color: #BCBCBC;'> 9</span><span> </span><span style='color: #949494;'>"</span><span>Latin America &amp; Ca~ Low income             24.2 4.61</span><span style='color: #949494;'>e</span><span>1   2.51  0      5.54</span><span style='color: #949494;'>e</span><span>8
+#&gt; </span><span style='color: #BCBCBC;'>10</span><span> </span><span style='color: #949494;'>"</span><span>Latin America &amp; Ca~ Lower middle i~        93.7 5.75</span><span style='color: #949494;'>e</span><span>2   4.87  5.41   2.59</span><span style='color: #949494;'>e</span><span>8
 #&gt; </span><span style='color: #949494;'># ... with 13 more rows</span><span></div><div class='input'>
 <span class='no'>wlddev</span> <span class='kw'>%&gt;%</span> <span class='fu'><a href='GRP.html'>fgroup_by</a></span>(<span class='no'>region</span>, <span class='no'>income</span>) <span class='kw'>%&gt;%</span> <span class='fu'><a href='select_replace_vars.html'>fselect</a></span>(<span class='no'>PCGDP</span>:<span class='no'>weights</span>) <span class='kw'>%&gt;%</span>
    <span class='fu'><a href='fnth.html'>fnth</a></span>(<span class='fl'>0.75</span>, <span class='no'>weights</span>)                           <span class='co'># Weighted group third quartile</span></div><div class='output co'>#&gt; </span><span style='color: #949494;'># A tibble: 23 x 7</span><span>
 #&gt;    region                income          sum.weights  PCGDP LIFEEX  GINI     ODA
 #&gt;    </span><span style='color: #949494;font-style: italic;'>&lt;fct&gt;</span><span>                 </span><span style='color: #949494;font-style: italic;'>&lt;fct&gt;</span><span>                 </span><span style='color: #949494;font-style: italic;'>&lt;dbl&gt;</span><span>  </span><span style='color: #949494;font-style: italic;'>&lt;dbl&gt;</span><span>  </span><span style='color: #949494;font-style: italic;'>&lt;dbl&gt;</span><span> </span><span style='color: #949494;font-style: italic;'>&lt;dbl&gt;</span><span>   </span><span style='color: #949494;font-style: italic;'>&lt;dbl&gt;</span><span>
-#&gt; </span><span style='color: #BCBCBC;'> 1</span><span> </span><span style='color: #949494;'>"</span><span>East Asia &amp; Pacific</span><span style='color: #949494;'>"</span><span> High income           632.  </span><span style='text-decoration: underline;'>36</span><span>400.   78.5  34.7  2.21</span><span style='color: #949494;'>e</span><span>8
-#&gt; </span><span style='color: #BCBCBC;'> 2</span><span> </span><span style='color: #949494;'>"</span><span>East Asia &amp; Pacific</span><span style='color: #949494;'>"</span><span> Lower middle i~       601.   </span><span style='text-decoration: underline;'>2</span><span>294.   65.6  38.1  6.55</span><span style='color: #949494;'>e</span><span>8
-#&gt; </span><span style='color: #BCBCBC;'> 3</span><span> </span><span style='color: #949494;'>"</span><span>East Asia &amp; Pacific</span><span style='color: #949494;'>"</span><span> Upper middle i~       458.   </span><span style='text-decoration: underline;'>3</span><span>787.   71.2  45.5  1.56</span><span style='color: #949494;'>e</span><span>8
-#&gt; </span><span style='color: #BCBCBC;'> 4</span><span> </span><span style='color: #949494;'>"</span><span>Europe &amp; Central As~ High income          </span><span style='text-decoration: underline;'>1</span><span>752.  </span><span style='text-decoration: underline;'>43</span><span>355.   77.6  33.8  2.02</span><span style='color: #949494;'>e</span><span>8
-#&gt; </span><span style='color: #BCBCBC;'> 5</span><span> </span><span style='color: #949494;'>"</span><span>Europe &amp; Central As~ Low income             47.2  </span><span style='text-decoration: underline;'>1</span><span>167.   65.9  32.7  2.97</span><span style='color: #949494;'>e</span><span>8
-#&gt; </span><span style='color: #BCBCBC;'> 6</span><span> </span><span style='color: #949494;'>"</span><span>Europe &amp; Central As~ Lower middle i~       271.   </span><span style='text-decoration: underline;'>2</span><span>906.   69.8  37.4  4.79</span><span style='color: #949494;'>e</span><span>8
-#&gt; </span><span style='color: #BCBCBC;'> 7</span><span> </span><span style='color: #949494;'>"</span><span>Europe &amp; Central As~ Upper middle i~       662.   </span><span style='text-decoration: underline;'>6</span><span>526.   71.7  37.5  5.58</span><span style='color: #949494;'>e</span><span>8
-#&gt; </span><span style='color: #BCBCBC;'> 8</span><span> </span><span style='color: #949494;'>"</span><span>Latin America &amp; Car~ High income           842.  </span><span style='text-decoration: underline;'>16</span><span>250.   75.1  53.4  6.74</span><span style='color: #949494;'>e</span><span>7
-#&gt; </span><span style='color: #BCBCBC;'> 9</span><span> </span><span style='color: #949494;'>"</span><span>Latin America &amp; Car~ Low income             40.1   986.   57.7  41.1  4.59</span><span style='color: #949494;'>e</span><span>8
-#&gt; </span><span style='color: #BCBCBC;'>10</span><span> </span><span style='color: #949494;'>"</span><span>Latin America &amp; Car~ Lower middle i~       185.   </span><span style='text-decoration: underline;'>2</span><span>174.   68.8  55.5  5.97</span><span style='color: #949494;'>e</span><span>8
+#&gt; </span><span style='color: #BCBCBC;'> 1</span><span> </span><span style='color: #949494;'>"</span><span>East Asia &amp; Pacific</span><span style='color: #949494;'>"</span><span> High income           595.  </span><span style='text-decoration: underline;'>36</span><span>832.   78.2  33.5  2.22</span><span style='color: #949494;'>e</span><span>8
+#&gt; </span><span style='color: #BCBCBC;'> 2</span><span> </span><span style='color: #949494;'>"</span><span>East Asia &amp; Pacific</span><span style='color: #949494;'>"</span><span> Lower middle i~       610.   </span><span style='text-decoration: underline;'>2</span><span>294.   65.8  37    5.99</span><span style='color: #949494;'>e</span><span>8
+#&gt; </span><span style='color: #BCBCBC;'> 3</span><span> </span><span style='color: #949494;'>"</span><span>East Asia &amp; Pacific</span><span style='color: #949494;'>"</span><span> Upper middle i~       475.   </span><span style='text-decoration: underline;'>3</span><span>708.   70.8  43.5  1.69</span><span style='color: #949494;'>e</span><span>8
+#&gt; </span><span style='color: #BCBCBC;'> 4</span><span> </span><span style='color: #949494;'>"</span><span>Europe &amp; Central As~ High income          </span><span style='text-decoration: underline;'>1</span><span>755.  </span><span style='text-decoration: underline;'>42</span><span>859.   77.6  33.6  2.04</span><span style='color: #949494;'>e</span><span>8
+#&gt; </span><span style='color: #BCBCBC;'> 5</span><span> </span><span style='color: #949494;'>"</span><span>Europe &amp; Central As~ Low income             48.9  </span><span style='text-decoration: underline;'>1</span><span>167.   66.7  33.6  3.06</span><span style='color: #949494;'>e</span><span>8
+#&gt; </span><span style='color: #BCBCBC;'> 6</span><span> </span><span style='color: #949494;'>"</span><span>Europe &amp; Central As~ Lower middle i~       293.   </span><span style='text-decoration: underline;'>2</span><span>975.   69.9  36.9  4.54</span><span style='color: #949494;'>e</span><span>8
+#&gt; </span><span style='color: #BCBCBC;'> 7</span><span> </span><span style='color: #949494;'>"</span><span>Europe &amp; Central As~ Upper middle i~       678.   </span><span style='text-decoration: underline;'>6</span><span>404.   71.8  37.4  5.58</span><span style='color: #949494;'>e</span><span>8
+#&gt; </span><span style='color: #BCBCBC;'> 8</span><span> </span><span style='color: #949494;'>"</span><span>Latin America &amp; Car~ High income           814.  </span><span style='text-decoration: underline;'>16</span><span>534.   74.9  54.7  6.96</span><span style='color: #949494;'>e</span><span>7
+#&gt; </span><span style='color: #BCBCBC;'> 9</span><span> </span><span style='color: #949494;'>"</span><span>Latin America &amp; Car~ Low income             44.2   969.   60.4  41.1  9.01</span><span style='color: #949494;'>e</span><span>8
+#&gt; </span><span style='color: #BCBCBC;'>10</span><span> </span><span style='color: #949494;'>"</span><span>Latin America &amp; Car~ Lower middle i~       196.   </span><span style='text-decoration: underline;'>2</span><span>211.   68.5  56.1  6.48</span><span style='color: #949494;'>e</span><span>8
 #&gt; </span><span style='color: #949494;'># ... with 13 more rows</span><span></div><div class='input'>
 <span class='no'>wlddev</span> <span class='kw'>%&gt;%</span> <span class='fu'><a href='GRP.html'>fgroup_by</a></span>(<span class='no'>country</span>) <span class='kw'>%&gt;%</span> <span class='fu'><a href='select_replace_vars.html'>fselect</a></span>(<span class='no'>PCGDP</span>:<span class='no'>ODA</span>) <span class='kw'>%&gt;%</span>
 <span class='no'>fwithin</span>                                          <span class='co'># Within transformation</span></div><div class='output co'>#&gt; </span><span style='color: #949494;'># A tibble: 12,744 x 4</span><span>
@@ -1506,19 +1534,19 @@ Core S3 methods and efficient grouping and ordering functionality can be accesse
 #&gt; </span><span style='color: #BCBCBC;'>10</span><span>    </span><span style='color: #BB0000;'>NA</span><span>  -</span><span style='color: #BB0000;'>11.9</span><span>    </span><span style='color: #BB0000;'>NA</span><span>  -</span><span style='color: #BB0000;'>90</span><span style='color: #BB0000;text-decoration: underline;'>110</span><span style='color: #BB0000;'>000</span><span>
 #&gt; </span><span style='color: #949494;'># ... with 12,734 more rows</span><span></div><div class='input'><span class='co'># Replacing data points by the weighted first quartile:</span>
 <span class='no'>wlddev</span> <span class='kw'>%&gt;%</span> <span class='fu'><a href='GRP.html'>fgroup_by</a></span>(<span class='no'>country</span>) <span class='kw'>%&gt;%</span> <span class='fu'><a href='select_replace_vars.html'>fselect</a></span>(<span class='no'>country</span>, <span class='no'>year</span>, <span class='no'>PCGDP</span>:<span class='no'>weights</span>) <span class='kw'>%&gt;%</span>
-  <span class='fu'><a href='ftransform.html'>ftransform</a></span>(<span class='no'>.</span>, <span class='fu'><a href='select_replace_vars.html'>fselect</a></span>(<span class='no'>.</span>, -<span class='no'>country</span>, -<span class='no'>year</span>) <span class='kw'>%&gt;%</span> <span class='fu'><a href='fnth.html'>fnth</a></span>(<span class='fl'>0.25</span>, <span class='no'>weights</span>, <span class='st'>"replace_fill"</span>))</div><div class='output co'>#&gt; </span><span style='color: #949494;'># A tibble: 12,744 x 7</span><span>
+  <span class='fu'><a href='ftransform.html'>ftransform</a></span>(<span class='fu'><a href='select_replace_vars.html'>fselect</a></span>(<span class='no'>.</span>, -<span class='no'>country</span>, -<span class='no'>year</span>) <span class='kw'>%&gt;%</span> <span class='fu'><a href='fnth.html'>fnth</a></span>(<span class='fl'>0.25</span>, <span class='no'>weights</span>, <span class='st'>"replace_fill"</span>))</div><div class='output co'>#&gt; </span><span style='color: #949494;'># A tibble: 12,744 x 7</span><span>
 #&gt;    country      year PCGDP LIFEEX  GINI       ODA weights
 #&gt;  </span><span style='color: #BCBCBC;'>*</span><span> </span><span style='color: #949494;font-style: italic;'>&lt;chr&gt;</span><span>       </span><span style='color: #949494;font-style: italic;'>&lt;int&gt;</span><span> </span><span style='color: #949494;font-style: italic;'>&lt;dbl&gt;</span><span>  </span><span style='color: #949494;font-style: italic;'>&lt;dbl&gt;</span><span> </span><span style='color: #949494;font-style: italic;'>&lt;dbl&gt;</span><span>     </span><span style='color: #949494;font-style: italic;'>&lt;dbl&gt;</span><span>   </span><span style='color: #949494;font-style: italic;'>&lt;dbl&gt;</span><span>
-#&gt; </span><span style='color: #BCBCBC;'> 1</span><span> Afghanistan  </span><span style='text-decoration: underline;'>1</span><span>960  366.   38.1    </span><span style='color: #BB0000;'>NA</span><span> 182</span><span style='text-decoration: underline;'>000</span><span>000   0.542
-#&gt; </span><span style='color: #BCBCBC;'> 2</span><span> Afghanistan  </span><span style='text-decoration: underline;'>1</span><span>961  366.   38.1    </span><span style='color: #BB0000;'>NA</span><span> 182</span><span style='text-decoration: underline;'>000</span><span>000   1.45
-#&gt; </span><span style='color: #BCBCBC;'> 3</span><span> Afghanistan  </span><span style='text-decoration: underline;'>1</span><span>962  366.   38.1    </span><span style='color: #BB0000;'>NA</span><span> 182</span><span style='text-decoration: underline;'>000</span><span>000   0.180
-#&gt; </span><span style='color: #BCBCBC;'> 4</span><span> Afghanistan  </span><span style='text-decoration: underline;'>1</span><span>963  366.   38.1    </span><span style='color: #BB0000;'>NA</span><span> 182</span><span style='text-decoration: underline;'>000</span><span>000   0.498
-#&gt; </span><span style='color: #BCBCBC;'> 5</span><span> Afghanistan  </span><span style='text-decoration: underline;'>1</span><span>964  366.   38.1    </span><span style='color: #BB0000;'>NA</span><span> 182</span><span style='text-decoration: underline;'>000</span><span>000   1.29
-#&gt; </span><span style='color: #BCBCBC;'> 6</span><span> Afghanistan  </span><span style='text-decoration: underline;'>1</span><span>965  366.   38.1    </span><span style='color: #BB0000;'>NA</span><span> 182</span><span style='text-decoration: underline;'>000</span><span>000   0.755
-#&gt; </span><span style='color: #BCBCBC;'> 7</span><span> Afghanistan  </span><span style='text-decoration: underline;'>1</span><span>966  366.   38.1    </span><span style='color: #BB0000;'>NA</span><span> 182</span><span style='text-decoration: underline;'>000</span><span>000   0.267
-#&gt; </span><span style='color: #BCBCBC;'> 8</span><span> Afghanistan  </span><span style='text-decoration: underline;'>1</span><span>967  366.   38.1    </span><span style='color: #BB0000;'>NA</span><span> 182</span><span style='text-decoration: underline;'>000</span><span>000   0.642
-#&gt; </span><span style='color: #BCBCBC;'> 9</span><span> Afghanistan  </span><span style='text-decoration: underline;'>1</span><span>968  366.   38.1    </span><span style='color: #BB0000;'>NA</span><span> 182</span><span style='text-decoration: underline;'>000</span><span>000   0.417
-#&gt; </span><span style='color: #BCBCBC;'>10</span><span> Afghanistan  </span><span style='text-decoration: underline;'>1</span><span>969  366.   38.1    </span><span style='color: #BB0000;'>NA</span><span> 182</span><span style='text-decoration: underline;'>000</span><span>000   1.22
+#&gt; </span><span style='color: #BCBCBC;'> 1</span><span> Afghanistan  </span><span style='text-decoration: underline;'>1</span><span>960  373.   39.0    </span><span style='color: #BB0000;'>NA</span><span> 155</span><span style='text-decoration: underline;'>750</span><span>000   0.650
+#&gt; </span><span style='color: #BCBCBC;'> 2</span><span> Afghanistan  </span><span style='text-decoration: underline;'>1</span><span>961  373.   39.0    </span><span style='color: #BB0000;'>NA</span><span> 155</span><span style='text-decoration: underline;'>750</span><span>000   0.757
+#&gt; </span><span style='color: #BCBCBC;'> 3</span><span> Afghanistan  </span><span style='text-decoration: underline;'>1</span><span>962  373.   39.0    </span><span style='color: #BB0000;'>NA</span><span> 155</span><span style='text-decoration: underline;'>750</span><span>000   0.757
+#&gt; </span><span style='color: #BCBCBC;'> 4</span><span> Afghanistan  </span><span style='text-decoration: underline;'>1</span><span>963  373.   39.0    </span><span style='color: #BB0000;'>NA</span><span> 155</span><span style='text-decoration: underline;'>750</span><span>000   0.763
+#&gt; </span><span style='color: #BCBCBC;'> 5</span><span> Afghanistan  </span><span style='text-decoration: underline;'>1</span><span>964  373.   39.0    </span><span style='color: #BB0000;'>NA</span><span> 155</span><span style='text-decoration: underline;'>750</span><span>000   1.12 
+#&gt; </span><span style='color: #BCBCBC;'> 6</span><span> Afghanistan  </span><span style='text-decoration: underline;'>1</span><span>965  373.   39.0    </span><span style='color: #BB0000;'>NA</span><span> 155</span><span style='text-decoration: underline;'>750</span><span>000   0.636
+#&gt; </span><span style='color: #BCBCBC;'> 7</span><span> Afghanistan  </span><span style='text-decoration: underline;'>1</span><span>966  373.   39.0    </span><span style='color: #BB0000;'>NA</span><span> 155</span><span style='text-decoration: underline;'>750</span><span>000   0.397
+#&gt; </span><span style='color: #BCBCBC;'> 8</span><span> Afghanistan  </span><span style='text-decoration: underline;'>1</span><span>967  373.   39.0    </span><span style='color: #BB0000;'>NA</span><span> 155</span><span style='text-decoration: underline;'>750</span><span>000   1.10 
+#&gt; </span><span style='color: #BCBCBC;'> 9</span><span> Afghanistan  </span><span style='text-decoration: underline;'>1</span><span>968  373.   39.0    </span><span style='color: #BB0000;'>NA</span><span> 155</span><span style='text-decoration: underline;'>750</span><span>000   1.01 
+#&gt; </span><span style='color: #BCBCBC;'>10</span><span> Afghanistan  </span><span style='text-decoration: underline;'>1</span><span>969  373.   39.0    </span><span style='color: #BB0000;'>NA</span><span> 155</span><span style='text-decoration: underline;'>750</span><span>000   0.199
 #&gt; </span><span style='color: #949494;'># ... with 12,734 more rows</span><span></div><div class='input'>
 <span class='no'>wlddev</span> <span class='kw'>%&gt;%</span> <span class='fu'><a href='GRP.html'>fgroup_by</a></span>(<span class='no'>country</span>) <span class='kw'>%&gt;%</span> <span class='fu'><a href='select_replace_vars.html'>fselect</a></span>(<span class='no'>PCGDP</span>:<span class='no'>ODA</span>) <span class='kw'>%&gt;%</span> <span class='no'>fscale</span>               <span class='co'># Standardizing</span></div><div class='output co'>#&gt; </span><span style='color: #949494;'># A tibble: 12,744 x 4</span><span>
 #&gt;    PCGDP LIFEEX  GINI    ODA
@@ -1536,22 +1564,22 @@ Core S3 methods and efficient grouping and ordering functionality can be accesse
 #&gt; </span><span style='color: #949494;'># ... with 12,734 more rows</span><span></div><div class='input'><span class='no'>wlddev</span> <span class='kw'>%&gt;%</span> <span class='fu'><a href='GRP.html'>fgroup_by</a></span>(<span class='no'>country</span>) <span class='kw'>%&gt;%</span> <span class='fu'><a href='select_replace_vars.html'>fselect</a></span>(<span class='no'>PCGDP</span>:<span class='no'>weights</span>) <span class='kw'>%&gt;%</span> <span class='fu'><a href='fscale.html'>fscale</a></span>(<span class='no'>weights</span>)  <span class='co'># Weigted..</span></div><div class='output co'>#&gt; </span><span style='color: #949494;'># A tibble: 12,744 x 5</span><span>
 #&gt;    weights PCGDP LIFEEX  GINI    ODA
 #&gt;  </span><span style='color: #BCBCBC;'>*</span><span>   </span><span style='color: #949494;font-style: italic;'>&lt;dbl&gt;</span><span> </span><span style='color: #949494;font-style: italic;'>&lt;dbl&gt;</span><span>  </span><span style='color: #949494;font-style: italic;'>&lt;dbl&gt;</span><span> </span><span style='color: #949494;font-style: italic;'>&lt;dbl&gt;</span><span>  </span><span style='color: #949494;font-style: italic;'>&lt;dbl&gt;</span><span>
-#&gt; </span><span style='color: #BCBCBC;'> 1</span><span>   0.542    </span><span style='color: #BB0000;'>NA</span><span>  -</span><span style='color: #BB0000;'>1.53</span><span>    </span><span style='color: #BB0000;'>NA</span><span> -</span><span style='color: #BB0000;'>0.575</span><span>
-#&gt; </span><span style='color: #BCBCBC;'> 2</span><span>   1.45     </span><span style='color: #BB0000;'>NA</span><span>  -</span><span style='color: #BB0000;'>1.48</span><span>    </span><span style='color: #BB0000;'>NA</span><span> -</span><span style='color: #BB0000;'>0.508</span><span>
-#&gt; </span><span style='color: #BCBCBC;'> 3</span><span>   0.180    </span><span style='color: #BB0000;'>NA</span><span>  -</span><span style='color: #BB0000;'>1.44</span><span>    </span><span style='color: #BB0000;'>NA</span><span> -</span><span style='color: #BB0000;'>0.574</span><span>
-#&gt; </span><span style='color: #BCBCBC;'> 4</span><span>   0.498    </span><span style='color: #BB0000;'>NA</span><span>  -</span><span style='color: #BB0000;'>1.40</span><span>    </span><span style='color: #BB0000;'>NA</span><span> -</span><span style='color: #BB0000;'>0.506</span><span>
-#&gt; </span><span style='color: #BCBCBC;'> 5</span><span>   1.29     </span><span style='color: #BB0000;'>NA</span><span>  -</span><span style='color: #BB0000;'>1.35</span><span>    </span><span style='color: #BB0000;'>NA</span><span> -</span><span style='color: #BB0000;'>0.469</span><span>
-#&gt; </span><span style='color: #BCBCBC;'> 6</span><span>   0.755    </span><span style='color: #BB0000;'>NA</span><span>  -</span><span style='color: #BB0000;'>1.31</span><span>    </span><span style='color: #BB0000;'>NA</span><span> -</span><span style='color: #BB0000;'>0.431</span><span>
-#&gt; </span><span style='color: #BCBCBC;'> 7</span><span>   0.267    </span><span style='color: #BB0000;'>NA</span><span>  -</span><span style='color: #BB0000;'>1.26</span><span>    </span><span style='color: #BB0000;'>NA</span><span> -</span><span style='color: #BB0000;'>0.449</span><span>
-#&gt; </span><span style='color: #BCBCBC;'> 8</span><span>   0.642    </span><span style='color: #BB0000;'>NA</span><span>  -</span><span style='color: #BB0000;'>1.22</span><span>    </span><span style='color: #BB0000;'>NA</span><span> -</span><span style='color: #BB0000;'>0.493</span><span>
-#&gt; </span><span style='color: #BCBCBC;'> 9</span><span>   0.417    </span><span style='color: #BB0000;'>NA</span><span>  -</span><span style='color: #BB0000;'>1.18</span><span>    </span><span style='color: #BB0000;'>NA</span><span> -</span><span style='color: #BB0000;'>0.537</span><span>
-#&gt; </span><span style='color: #BCBCBC;'>10</span><span>   1.22     </span><span style='color: #BB0000;'>NA</span><span>  -</span><span style='color: #BB0000;'>1.13</span><span>    </span><span style='color: #BB0000;'>NA</span><span> -</span><span style='color: #BB0000;'>0.548</span><span>
+#&gt; </span><span style='color: #BCBCBC;'> 1</span><span>   0.650    </span><span style='color: #BB0000;'>NA</span><span>  -</span><span style='color: #BB0000;'>1.57</span><span>    </span><span style='color: #BB0000;'>NA</span><span> -</span><span style='color: #BB0000;'>0.560</span><span>
+#&gt; </span><span style='color: #BCBCBC;'> 2</span><span>   0.757    </span><span style='color: #BB0000;'>NA</span><span>  -</span><span style='color: #BB0000;'>1.52</span><span>    </span><span style='color: #BB0000;'>NA</span><span> -</span><span style='color: #BB0000;'>0.500</span><span>
+#&gt; </span><span style='color: #BCBCBC;'> 3</span><span>   0.757    </span><span style='color: #BB0000;'>NA</span><span>  -</span><span style='color: #BB0000;'>1.47</span><span>    </span><span style='color: #BB0000;'>NA</span><span> -</span><span style='color: #BB0000;'>0.560</span><span>
+#&gt; </span><span style='color: #BCBCBC;'> 4</span><span>   0.763    </span><span style='color: #BB0000;'>NA</span><span>  -</span><span style='color: #BB0000;'>1.43</span><span>    </span><span style='color: #BB0000;'>NA</span><span> -</span><span style='color: #BB0000;'>0.499</span><span>
+#&gt; </span><span style='color: #BCBCBC;'> 5</span><span>   1.12     </span><span style='color: #BB0000;'>NA</span><span>  -</span><span style='color: #BB0000;'>1.38</span><span>    </span><span style='color: #BB0000;'>NA</span><span> -</span><span style='color: #BB0000;'>0.466</span><span>
+#&gt; </span><span style='color: #BCBCBC;'> 6</span><span>   0.636    </span><span style='color: #BB0000;'>NA</span><span>  -</span><span style='color: #BB0000;'>1.33</span><span>    </span><span style='color: #BB0000;'>NA</span><span> -</span><span style='color: #BB0000;'>0.432</span><span>
+#&gt; </span><span style='color: #BCBCBC;'> 7</span><span>   0.397    </span><span style='color: #BB0000;'>NA</span><span>  -</span><span style='color: #BB0000;'>1.29</span><span>    </span><span style='color: #BB0000;'>NA</span><span> -</span><span style='color: #BB0000;'>0.448</span><span>
+#&gt; </span><span style='color: #BCBCBC;'> 8</span><span>   1.10     </span><span style='color: #BB0000;'>NA</span><span>  -</span><span style='color: #BB0000;'>1.24</span><span>    </span><span style='color: #BB0000;'>NA</span><span> -</span><span style='color: #BB0000;'>0.487</span><span>
+#&gt; </span><span style='color: #BCBCBC;'> 9</span><span>   1.01     </span><span style='color: #BB0000;'>NA</span><span>  -</span><span style='color: #BB0000;'>1.19</span><span>    </span><span style='color: #BB0000;'>NA</span><span> -</span><span style='color: #BB0000;'>0.526</span><span>
+#&gt; </span><span style='color: #BCBCBC;'>10</span><span>   0.199    </span><span style='color: #BB0000;'>NA</span><span>  -</span><span style='color: #BB0000;'>1.15</span><span>    </span><span style='color: #BB0000;'>NA</span><span> -</span><span style='color: #BB0000;'>0.536</span><span>
 #&gt; </span><span style='color: #949494;'># ... with 12,734 more rows</span><span></div><div class='input'>
 <span class='no'>wlddev</span> <span class='kw'>%&gt;%</span> <span class='fu'><a href='select_replace_vars.html'>fselect</a></span>(<span class='no'>country</span>, <span class='no'>year</span>, <span class='no'>PCGDP</span>:<span class='no'>ODA</span>) <span class='kw'>%&gt;%</span>  <span class='co'># Adding 1 lead and 2 lags of each variable</span>
   <span class='fu'><a href='GRP.html'>fgroup_by</a></span>(<span class='no'>country</span>) <span class='kw'>%&gt;%</span> <span class='fu'><a href='flag.html'>flag</a></span>(-<span class='fl'>1</span>:<span class='fl'>2</span>, <span class='no'>year</span>)</div><div class='output co'>#&gt; </span><span style='color: #949494;'># A tibble: 12,744 x 18</span><span>
 #&gt;    country  year F1.PCGDP PCGDP L1.PCGDP L2.PCGDP F1.LIFEEX LIFEEX L1.LIFEEX
 #&gt;  </span><span style='color: #BCBCBC;'>*</span><span> </span><span style='color: #949494;font-style: italic;'>&lt;chr&gt;</span><span>   </span><span style='color: #949494;font-style: italic;'>&lt;int&gt;</span><span>    </span><span style='color: #949494;font-style: italic;'>&lt;dbl&gt;</span><span> </span><span style='color: #949494;font-style: italic;'>&lt;dbl&gt;</span><span>    </span><span style='color: #949494;font-style: italic;'>&lt;dbl&gt;</span><span>    </span><span style='color: #949494;font-style: italic;'>&lt;dbl&gt;</span><span>     </span><span style='color: #949494;font-style: italic;'>&lt;dbl&gt;</span><span>  </span><span style='color: #949494;font-style: italic;'>&lt;dbl&gt;</span><span>     </span><span style='color: #949494;font-style: italic;'>&lt;dbl&gt;</span><span>
-#&gt; </span><span style='color: #BCBCBC;'> 1</span><span> Afghan~  </span><span style='text-decoration: underline;'>1</span><span>960       </span><span style='color: #BB0000;'>NA</span><span>    </span><span style='color: #BB0000;'>NA</span><span>       </span><span style='color: #BB0000;'>NA</span><span>       </span><span style='color: #BB0000;'>NA</span><span>      32.7   32.3      </span><span style='color: #BB0000;'>NA</span><span>
+#&gt; </span><span style='color: #BCBCBC;'> 1</span><span> Afghan~  </span><span style='text-decoration: underline;'>1</span><span>960       </span><span style='color: #BB0000;'>NA</span><span>    </span><span style='color: #BB0000;'>NA</span><span>       </span><span style='color: #BB0000;'>NA</span><span>       </span><span style='color: #BB0000;'>NA</span><span>      32.7   32.3      </span><span style='color: #BB0000;'>NA</span><span>  
 #&gt; </span><span style='color: #BCBCBC;'> 2</span><span> Afghan~  </span><span style='text-decoration: underline;'>1</span><span>961       </span><span style='color: #BB0000;'>NA</span><span>    </span><span style='color: #BB0000;'>NA</span><span>       </span><span style='color: #BB0000;'>NA</span><span>       </span><span style='color: #BB0000;'>NA</span><span>      33.2   32.7      32.3
 #&gt; </span><span style='color: #BCBCBC;'> 3</span><span> Afghan~  </span><span style='text-decoration: underline;'>1</span><span>962       </span><span style='color: #BB0000;'>NA</span><span>    </span><span style='color: #BB0000;'>NA</span><span>       </span><span style='color: #BB0000;'>NA</span><span>       </span><span style='color: #BB0000;'>NA</span><span>      33.6   33.2      32.7
 #&gt; </span><span style='color: #BCBCBC;'> 4</span><span> Afghan~  </span><span style='text-decoration: underline;'>1</span><span>963       </span><span style='color: #BB0000;'>NA</span><span>    </span><span style='color: #BB0000;'>NA</span><span>       </span><span style='color: #BB0000;'>NA</span><span>       </span><span style='color: #BB0000;'>NA</span><span>      34.1   33.6      33.2
@@ -1669,19 +1697,19 @@ Core S3 methods and efficient grouping and ordering functionality can be accesse
 <span class='no'>wlddev</span><span class='kw'>[[</span><span class='st'>"weights"</span>]] <span class='kw'>&lt;-</span> <span class='fu'><a href='https://rdrr.io/r/base/MathFun.html'>abs</a></span>(<span class='fu'><a href='https://rdrr.io/r/stats/Normal.html'>rnorm</a></span>(<span class='fu'><a href='small-helper.html'>fnrow</a></span>(<span class='no'>wlddev</span>))) <span class='co'># Adding some weights</span>
 <span class='co'># taking weighted mean and weighted mode:</span>
 <span class='fu'><a href='https://rdrr.io/r/utils/head.html'>head</a></span>(<span class='fu'><a href='collap.html'>collap</a></span>(<span class='no'>wlddev</span>, ~ <span class='no'>country</span> + <span class='no'>decade</span>, <span class='no'>fmean</span>, <span class='no'>fmode</span>, <span class='kw'>w</span> <span class='kw'>=</span> ~ <span class='no'>weights</span>, <span class='kw'>wFUN</span> <span class='kw'>=</span> <span class='no'>fsum</span>))</div><div class='output co'>#&gt;       country iso3c       date     year decade     region     income  OECD
-#&gt; 1 Afghanistan   AFG 1964-01-01 1962.488   1960 South Asia Low income FALSE
-#&gt; 2 Afghanistan   AFG 1972-01-01 1970.331   1970 South Asia Low income FALSE
-#&gt; 3 Afghanistan   AFG 1982-01-01 1980.560   1980 South Asia Low income FALSE
-#&gt; 4 Afghanistan   AFG 1993-01-01 1989.638   1990 South Asia Low income FALSE
-#&gt; 5 Afghanistan   AFG 2005-01-01 2000.137   2000 South Asia Low income FALSE
-#&gt; 6 Afghanistan   AFG 2009-01-01 2010.032   2010 South Asia Low income FALSE
+#&gt; 1 Afghanistan   AFG 1963-01-01 1962.455   1960 South Asia Low income FALSE
+#&gt; 2 Afghanistan   AFG 1969-01-01 1969.976   1970 South Asia Low income FALSE
+#&gt; 3 Afghanistan   AFG 1976-01-01 1979.595   1980 South Asia Low income FALSE
+#&gt; 4 Afghanistan   AFG 1987-01-01 1990.179   1990 South Asia Low income FALSE
+#&gt; 5 Afghanistan   AFG 1998-01-01 1998.958   2000 South Asia Low income FALSE
+#&gt; 6 Afghanistan   AFG 2015-01-01 2011.331   2010 South Asia Low income FALSE
 #&gt;      PCGDP   LIFEEX GINI        ODA   weights
-#&gt; 1       NA 33.39369   NA  233032109  5.901153
-#&gt; 2       NA 36.84552   NA  209806593  4.818366
-#&gt; 3       NA 42.38547   NA  114286811 10.252101
-#&gt; 4       NA 49.43187   NA  257716014  8.172353
-#&gt; 5 346.2446 55.69122   NA 1092660439 11.514668
-#&gt; 6 499.9116 61.16738   NA 5338176114  5.294708</div><div class='input'>
+#&gt; 1       NA 33.38129   NA  205388862  5.534996
+#&gt; 2       NA 36.68732   NA  209241929  7.354317
+#&gt; 3       NA 41.78646   NA  139785802 10.232137
+#&gt; 4       NA 49.78825   NA  203706137  6.922489
+#&gt; 5 345.1363 55.03691   NA  709400102 12.194869
+#&gt; 6 543.4275 61.73440   NA 5172607345  7.910630</div><div class='input'>
 <span class='co'># Multi-function aggregation of certain columns</span>
 <span class='fu'><a href='https://rdrr.io/r/utils/head.html'>head</a></span>(<span class='fu'><a href='collap.html'>collap</a></span>(<span class='no'>wlddev</span>, ~ <span class='no'>country</span> + <span class='no'>decade</span>,
             <span class='fu'><a href='https://rdrr.io/r/base/list.html'>list</a></span>(<span class='no'>fmean</span>, <span class='no'>fmedian</span>, <span class='no'>fsd</span>),
@@ -1729,15 +1757,15 @@ Core S3 methods and efficient grouping and ordering functionality can be accesse
              <span class='kw'>AMODA</span> <span class='kw'>=</span> <span class='no'>ODA</span> <span class='kw'>&gt;</span> <span class='fu'><a href='fmedian.html'>fmedian</a></span>(<span class='no'>ODA</span>, <span class='no'>income</span>, <span class='kw'>TRA</span> <span class='kw'>=</span> <span class='st'>"replace_fill"</span>))</div><div class='output co'>#&gt; </span><span style='color: #949494;'># A tibble: 216 x 9</span><span>
 #&gt;    country     region        income      PCGDP LIFEEX  GINI      ODA AMGDP AMODA
 #&gt;  </span><span style='color: #BCBCBC;'>*</span><span> </span><span style='color: #949494;font-style: italic;'>&lt;chr&gt;</span><span>       </span><span style='color: #949494;font-style: italic;'>&lt;fct&gt;</span><span>         </span><span style='color: #949494;font-style: italic;'>&lt;fct&gt;</span><span>       </span><span style='color: #949494;font-style: italic;'>&lt;dbl&gt;</span><span>  </span><span style='color: #949494;font-style: italic;'>&lt;dbl&gt;</span><span> </span><span style='color: #949494;font-style: italic;'>&lt;dbl&gt;</span><span>    </span><span style='color: #949494;font-style: italic;'>&lt;dbl&gt;</span><span> </span><span style='color: #949494;font-style: italic;'>&lt;lgl&gt;</span><span> </span><span style='color: #949494;font-style: italic;'>&lt;lgl&gt;</span><span>
-#&gt; </span><span style='color: #BCBCBC;'> 1</span><span> Afghanistan </span><span style='color: #949494;'>"</span><span>South Asia</span><span style='color: #949494;'>"</span><span>  Low income   482.   57.5  </span><span style='color: #BB0000;'>NA</span><span>     2.70</span><span style='color: #949494;'>e</span><span>9 FALSE TRUE
-#&gt; </span><span style='color: #BCBCBC;'> 2</span><span> Albania     </span><span style='color: #949494;'>"</span><span>Europe &amp; Ce~ Upper mid~  </span><span style='text-decoration: underline;'>2</span><span>978.   74.9  29.7   3.32</span><span style='color: #949494;'>e</span><span>8 FALSE TRUE
-#&gt; </span><span style='color: #BCBCBC;'> 3</span><span> Algeria     </span><span style='color: #949494;'>"</span><span>Middle East~ Upper mid~  </span><span style='text-decoration: underline;'>3</span><span>992.   71.8  31.4   2.77</span><span style='color: #949494;'>e</span><span>8 FALSE TRUE
-#&gt; </span><span style='color: #BCBCBC;'> 4</span><span> American S~ </span><span style='color: #949494;'>"</span><span>East Asia &amp;~ Upper mid~ </span><span style='text-decoration: underline;'>10</span><span>189.   </span><span style='color: #BB0000;'>NA</span><span>    </span><span style='color: #BB0000;'>NA</span><span>    </span><span style='color: #BB0000;'>NA</span><span>   </span><span style='color: #949494;'> </span><span>  TRUE  </span><span style='color: #BB0000;'>NA</span><span>
-#&gt; </span><span style='color: #BCBCBC;'> 5</span><span> Andorra     </span><span style='color: #949494;'>"</span><span>Europe &amp; Ce~ High inco~ </span><span style='text-decoration: underline;'>40</span><span>481.   </span><span style='color: #BB0000;'>NA</span><span>    </span><span style='color: #BB0000;'>NA</span><span>    </span><span style='color: #BB0000;'>NA</span><span>   </span><span style='color: #949494;'> </span><span>  TRUE  </span><span style='color: #BB0000;'>NA</span><span>
+#&gt; </span><span style='color: #BCBCBC;'> 1</span><span> Afghanistan </span><span style='color: #949494;'>"</span><span>South Asia</span><span style='color: #949494;'>"</span><span>  Low income   482.   57.5  </span><span style='color: #BB0000;'>NA</span><span>     2.70</span><span style='color: #949494;'>e</span><span>9 FALSE TRUE 
+#&gt; </span><span style='color: #BCBCBC;'> 2</span><span> Albania     </span><span style='color: #949494;'>"</span><span>Europe &amp; Ce~ Upper mid~  </span><span style='text-decoration: underline;'>2</span><span>978.   74.9  29.7   3.32</span><span style='color: #949494;'>e</span><span>8 FALSE TRUE 
+#&gt; </span><span style='color: #BCBCBC;'> 3</span><span> Algeria     </span><span style='color: #949494;'>"</span><span>Middle East~ Upper mid~  </span><span style='text-decoration: underline;'>3</span><span>992.   71.8  31.4   2.77</span><span style='color: #949494;'>e</span><span>8 FALSE TRUE 
+#&gt; </span><span style='color: #BCBCBC;'> 4</span><span> American S~ </span><span style='color: #949494;'>"</span><span>East Asia &amp;~ Upper mid~ </span><span style='text-decoration: underline;'>10</span><span>189.   </span><span style='color: #BB0000;'>NA</span><span>    </span><span style='color: #BB0000;'>NA</span><span>    </span><span style='color: #BB0000;'>NA</span><span>   </span><span style='color: #949494;'> </span><span>  TRUE  </span><span style='color: #BB0000;'>NA</span><span>   
+#&gt; </span><span style='color: #BCBCBC;'> 5</span><span> Andorra     </span><span style='color: #949494;'>"</span><span>Europe &amp; Ce~ High inco~ </span><span style='text-decoration: underline;'>40</span><span>481.   </span><span style='color: #BB0000;'>NA</span><span>    </span><span style='color: #BB0000;'>NA</span><span>    </span><span style='color: #BB0000;'>NA</span><span>   </span><span style='color: #949494;'> </span><span>  TRUE  </span><span style='color: #BB0000;'>NA</span><span>   
 #&gt; </span><span style='color: #BCBCBC;'> 6</span><span> Angola      </span><span style='color: #949494;'>"</span><span>Sub-Saharan~ Lower mid~  </span><span style='text-decoration: underline;'>2</span><span>830.   51.3  47.4   4.07</span><span style='color: #949494;'>e</span><span>8 TRUE  FALSE
 #&gt; </span><span style='color: #BCBCBC;'> 7</span><span> Antigua an~ </span><span style='color: #949494;'>"</span><span>Latin Ameri~ High inco~ </span><span style='text-decoration: underline;'>12</span><span>127.   74.1  </span><span style='color: #BB0000;'>NA</span><span>     6.66</span><span style='color: #949494;'>e</span><span>6 FALSE FALSE
-#&gt; </span><span style='color: #BCBCBC;'> 8</span><span> Argentina   </span><span style='color: #949494;'>"</span><span>Latin Ameri~ High inco~  </span><span style='text-decoration: underline;'>8</span><span>863.   74.4  46.7   1.24</span><span style='color: #949494;'>e</span><span>8 FALSE TRUE
-#&gt; </span><span style='color: #BCBCBC;'> 9</span><span> Armenia     </span><span style='color: #949494;'>"</span><span>Europe &amp; Ce~ Upper mid~  </span><span style='text-decoration: underline;'>2</span><span>398.   71.7  32.2   2.72</span><span style='color: #949494;'>e</span><span>8 FALSE TRUE
+#&gt; </span><span style='color: #BCBCBC;'> 8</span><span> Argentina   </span><span style='color: #949494;'>"</span><span>Latin Ameri~ High inco~  </span><span style='text-decoration: underline;'>8</span><span>863.   74.4  46.7   1.24</span><span style='color: #949494;'>e</span><span>8 FALSE TRUE 
+#&gt; </span><span style='color: #BCBCBC;'> 9</span><span> Armenia     </span><span style='color: #949494;'>"</span><span>Europe &amp; Ce~ Upper mid~  </span><span style='text-decoration: underline;'>2</span><span>398.   71.7  32.2   2.72</span><span style='color: #949494;'>e</span><span>8 FALSE TRUE 
 #&gt; </span><span style='color: #BCBCBC;'>10</span><span> Aruba       </span><span style='color: #949494;'>"</span><span>Latin Ameri~ High inco~ </span><span style='text-decoration: underline;'>25</span><span>982.   74.4  </span><span style='color: #BB0000;'>NA</span><span>     2.39</span><span style='color: #949494;'>e</span><span>7 TRUE  FALSE
 #&gt; </span><span style='color: #949494;'># ... with 206 more rows</span><span></div><div class='input'>
 <span class='co'>## Additional flexibility for data transformation tasks is offerend by tidy transformation operators</span>
@@ -1845,67 +1873,67 @@ Core S3 methods and efficient grouping and ordering functionality can be accesse
 <span class='co'># These operators can conveniently be used in regression formulas:</span>
 <span class='co'># Using a Mundlak (1978) procedure to estimate the effect of OECD on LIFEEX, controlling for PCGDP</span>
 <span class='fu'><a href='https://rdrr.io/r/stats/lm.html'>lm</a></span>(<span class='no'>LIFEEX</span> ~ <span class='fu'><a href='https://rdrr.io/r/base/Log.html'>log</a></span>(<span class='no'>PCGDP</span>) + <span class='no'>OECD</span> + <span class='fu'><a href='fbetween_fwithin.html'>B</a></span>(<span class='fu'><a href='https://rdrr.io/r/base/Log.html'>log</a></span>(<span class='no'>PCGDP</span>), <span class='no'>country</span>),
-   <span class='no'>wlddev</span> <span class='kw'>%&gt;%</span> <span class='fu'><a href='select_replace_vars.html'>fselect</a></span>(<span class='no'>country</span>, <span class='no'>OECD</span>, <span class='no'>PCGDP</span>, <span class='no'>LIFEEX</span>) <span class='kw'>%&gt;%</span> <span class='no'>na_omit</span>)</div><div class='output co'>#&gt;
+   <span class='no'>wlddev</span> <span class='kw'>%&gt;%</span> <span class='fu'><a href='select_replace_vars.html'>fselect</a></span>(<span class='no'>country</span>, <span class='no'>OECD</span>, <span class='no'>PCGDP</span>, <span class='no'>LIFEEX</span>) <span class='kw'>%&gt;%</span> <span class='no'>na_omit</span>)</div><div class='output co'>#&gt; 
 #&gt; Call:
-#&gt; lm(formula = LIFEEX ~ log(PCGDP) + OECD + B(log(PCGDP), country),
-#&gt;     data = wlddev %&gt;% fselect(country, OECD, PCGDP, LIFEEX) %&gt;%
+#&gt; lm(formula = LIFEEX ~ log(PCGDP) + OECD + B(log(PCGDP), country), 
+#&gt;     data = wlddev %&gt;% fselect(country, OECD, PCGDP, LIFEEX) %&gt;% 
 #&gt;         na_omit)
-#&gt;
+#&gt; 
 #&gt; Coefficients:
-#&gt;            (Intercept)              log(PCGDP)                OECDTRUE
-#&gt;              19.138156                7.984832               -0.003428
-#&gt; B(log(PCGDP), country)
-#&gt;              -2.432400
+#&gt;            (Intercept)              log(PCGDP)                OECDTRUE  
+#&gt;              19.138156                7.984832               -0.003428  
+#&gt; B(log(PCGDP), country)  
+#&gt;              -2.432400  
 #&gt; </div><div class='input'>
 <span class='co'># Adding 10-year lagged life-expectancy to allow for some convergence effects (dynamic panel model)</span>
 <span class='fu'><a href='https://rdrr.io/r/stats/lm.html'>lm</a></span>(<span class='no'>LIFEEX</span> ~ <span class='fu'><a href='flag.html'>L</a></span>(<span class='no'>LIFEEX</span>, <span class='fl'>10</span>, <span class='no'>country</span>) + <span class='fu'><a href='https://rdrr.io/r/base/Log.html'>log</a></span>(<span class='no'>PCGDP</span>) + <span class='no'>OECD</span> + <span class='fu'><a href='fbetween_fwithin.html'>B</a></span>(<span class='fu'><a href='https://rdrr.io/r/base/Log.html'>log</a></span>(<span class='no'>PCGDP</span>), <span class='no'>country</span>),
-   <span class='no'>wlddev</span> <span class='kw'>%&gt;%</span> <span class='fu'><a href='select_replace_vars.html'>fselect</a></span>(<span class='no'>country</span>, <span class='no'>OECD</span>, <span class='no'>PCGDP</span>, <span class='no'>LIFEEX</span>) <span class='kw'>%&gt;%</span> <span class='no'>na_omit</span>)</div><div class='output co'>#&gt; <span class='message'>Panel-lag computed without timevar: Assuming ordered data</span></div><div class='output co'>#&gt;
+   <span class='no'>wlddev</span> <span class='kw'>%&gt;%</span> <span class='fu'><a href='select_replace_vars.html'>fselect</a></span>(<span class='no'>country</span>, <span class='no'>OECD</span>, <span class='no'>PCGDP</span>, <span class='no'>LIFEEX</span>) <span class='kw'>%&gt;%</span> <span class='no'>na_omit</span>)</div><div class='output co'>#&gt; <span class='message'>Panel-lag computed without timevar: Assuming ordered data</span></div><div class='output co'>#&gt; 
 #&gt; Call:
-#&gt; lm(formula = LIFEEX ~ L(LIFEEX, 10, country) + log(PCGDP) + OECD +
-#&gt;     B(log(PCGDP), country), data = wlddev %&gt;% fselect(country,
+#&gt; lm(formula = LIFEEX ~ L(LIFEEX, 10, country) + log(PCGDP) + OECD + 
+#&gt;     B(log(PCGDP), country), data = wlddev %&gt;% fselect(country, 
 #&gt;     OECD, PCGDP, LIFEEX) %&gt;% na_omit)
-#&gt;
+#&gt; 
 #&gt; Coefficients:
-#&gt;            (Intercept)  L(LIFEEX, 10, country)              log(PCGDP)
-#&gt;                 8.9683                  0.8693                  0.6945
-#&gt;               OECDTRUE  B(log(PCGDP), country)
-#&gt;                 0.4224                 -0.4215
+#&gt;            (Intercept)  L(LIFEEX, 10, country)              log(PCGDP)  
+#&gt;                 8.9683                  0.8693                  0.6945  
+#&gt;               OECDTRUE  B(log(PCGDP), country)  
+#&gt;                 0.4224                 -0.4215  
 #&gt; </div><div class='input'>
 <span class='co'># Tranformation functions and operators also support plm panel data classes:</span>
 <span class='fu'><a href='https://rdrr.io/r/base/library.html'>library</a></span>(<span class='no'>plm</span>)</div><div class='output co'>#&gt; <span class='message'></span>
 #&gt; <span class='message'>Attaching package: ‘plm’</span></div><div class='output co'>#&gt; <span class='message'>The following objects are masked from ‘package:dplyr’:</span>
 #&gt; <span class='message'></span>
 #&gt; <span class='message'>    between, lag, lead</span></div><div class='input'><span class='no'>pwlddev</span> <span class='kw'>&lt;-</span> <span class='fu'><a href='https://rdrr.io/pkg/plm/man/pdata.frame.html'>pdata.frame</a></span>(<span class='no'>wlddev</span>, <span class='kw'>index</span> <span class='kw'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span>(<span class='st'>"country"</span>,<span class='st'>"year"</span>))
-<span class='fu'><a href='https://rdrr.io/r/utils/head.html'>head</a></span>(<span class='fu'><a href='fbetween_fwithin.html'>W</a></span>(<span class='no'>pwlddev</span>$<span class='no'>PCGDP</span>))                      <span class='co'># Country-demeaning</span></div><div class='output co'>#&gt; Afghanistan-1960 Afghanistan-1961 Afghanistan-1962 Afghanistan-1963
-#&gt;               NA               NA               NA               NA
-#&gt; Afghanistan-1964 Afghanistan-1965
+<span class='fu'><a href='https://rdrr.io/r/utils/head.html'>head</a></span>(<span class='fu'><a href='fbetween_fwithin.html'>W</a></span>(<span class='no'>pwlddev</span>$<span class='no'>PCGDP</span>))                      <span class='co'># Country-demeaning</span></div><div class='output co'>#&gt; Afghanistan-1960 Afghanistan-1961 Afghanistan-1962 Afghanistan-1963 
+#&gt;               NA               NA               NA               NA 
+#&gt; Afghanistan-1964 Afghanistan-1965 
 #&gt;               NA               NA </div><div class='input'><span class='fu'><a href='https://rdrr.io/r/utils/head.html'>head</a></span>(<span class='fu'><a href='fbetween_fwithin.html'>W</a></span>(<span class='no'>pwlddev</span>, <span class='kw'>cols</span> <span class='kw'>=</span> <span class='fl'>9</span>:<span class='fl'>12</span>))</div><div class='output co'>#&gt;                      country year W.PCGDP  W.LIFEEX W.GINI       W.ODA
 #&gt; Afghanistan-1960 Afghanistan 1960      NA -15.59016     NA -1236633448
 #&gt; Afghanistan-1961 Afghanistan 1961      NA -15.14016     NA -1117723448
 #&gt; Afghanistan-1962 Afghanistan 1962      NA -14.69716     NA -1236193448
 #&gt; Afghanistan-1963 Afghanistan 1963      NA -14.25816     NA -1114623448
 #&gt; Afghanistan-1964 Afghanistan 1964      NA -13.82216     NA -1048593448
-#&gt; Afghanistan-1965 Afghanistan 1965      NA -13.38716     NA  -980823448</div><div class='input'><span class='fu'><a href='https://rdrr.io/r/utils/head.html'>head</a></span>(<span class='fu'><a href='fbetween_fwithin.html'>W</a></span>(<span class='no'>pwlddev</span>$<span class='no'>PCGDP</span>, <span class='kw'>effect</span> <span class='kw'>=</span> <span class='fl'>2</span>))          <span class='co'># Time-demeaning</span></div><div class='output co'>#&gt; Afghanistan-1960 Afghanistan-1961 Afghanistan-1962 Afghanistan-1963
-#&gt;               NA               NA               NA               NA
-#&gt; Afghanistan-1964 Afghanistan-1965
+#&gt; Afghanistan-1965 Afghanistan 1965      NA -13.38716     NA  -980823448</div><div class='input'><span class='fu'><a href='https://rdrr.io/r/utils/head.html'>head</a></span>(<span class='fu'><a href='fbetween_fwithin.html'>W</a></span>(<span class='no'>pwlddev</span>$<span class='no'>PCGDP</span>, <span class='kw'>effect</span> <span class='kw'>=</span> <span class='fl'>2</span>))          <span class='co'># Time-demeaning</span></div><div class='output co'>#&gt; Afghanistan-1960 Afghanistan-1961 Afghanistan-1962 Afghanistan-1963 
+#&gt;               NA               NA               NA               NA 
+#&gt; Afghanistan-1964 Afghanistan-1965 
 #&gt;               NA               NA </div><div class='input'><span class='fu'><a href='https://rdrr.io/r/utils/head.html'>head</a></span>(<span class='fu'><a href='fbetween_fwithin.html'>W</a></span>(<span class='no'>pwlddev</span>, <span class='kw'>effect</span> <span class='kw'>=</span> <span class='fl'>2</span>, <span class='kw'>cols</span> <span class='kw'>=</span> <span class='fl'>9</span>:<span class='fl'>12</span>))</div><div class='output co'>#&gt;                      country year W.PCGDP  W.LIFEEX W.GINI      W.ODA
 #&gt; Afghanistan-1960 Afghanistan 1960      NA -21.61149     NA -115000091
 #&gt; Afghanistan-1961 Afghanistan 1961      NA -21.72388     NA  -24104615
 #&gt; Afghanistan-1962 Afghanistan 1962      NA -21.66532     NA -171946606
 #&gt; Afghanistan-1963 Afghanistan 1963      NA -21.57444     NA  -56127931
 #&gt; Afghanistan-1964 Afghanistan 1964      NA -21.60677     NA   -3817080
-#&gt; Afghanistan-1965 Afghanistan 1965      NA -21.63645     NA   39903717</div><div class='input'><span class='fu'><a href='https://rdrr.io/r/utils/head.html'>head</a></span>(<span class='fu'><a href='fHDbetween_fHDwithin.html'>HDW</a></span>(<span class='no'>pwlddev</span>$<span class='no'>PCGDP</span>))                    <span class='co'># Country- and time-demeaning</span></div><div class='output co'>#&gt; Afghanistan-1960 Afghanistan-1961 Afghanistan-1962 Afghanistan-1963
-#&gt;               NA               NA               NA               NA
-#&gt; Afghanistan-1964 Afghanistan-1965
+#&gt; Afghanistan-1965 Afghanistan 1965      NA -21.63645     NA   39903717</div><div class='input'><span class='fu'><a href='https://rdrr.io/r/utils/head.html'>head</a></span>(<span class='fu'><a href='fHDbetween_fHDwithin.html'>HDW</a></span>(<span class='no'>pwlddev</span>$<span class='no'>PCGDP</span>))                    <span class='co'># Country- and time-demeaning</span></div><div class='output co'>#&gt; Afghanistan-1960 Afghanistan-1961 Afghanistan-1962 Afghanistan-1963 
+#&gt;               NA               NA               NA               NA 
+#&gt; Afghanistan-1964 Afghanistan-1965 
 #&gt;               NA               NA </div><div class='input'><span class='fu'><a href='https://rdrr.io/r/utils/head.html'>head</a></span>(<span class='fu'><a href='fHDbetween_fHDwithin.html'>HDW</a></span>(<span class='no'>pwlddev</span>, <span class='kw'>cols</span> <span class='kw'>=</span> <span class='fl'>9</span>:<span class='fl'>12</span>))</div><div class='output co'>#&gt;                  HDW.PCGDP HDW.LIFEEX HDW.GINI     HDW.ODA
 #&gt; Afghanistan-1960        NA  -5.979000       NA  -982621508
 #&gt; Afghanistan-1961        NA  -6.026522       NA  -913532600
 #&gt; Afghanistan-1962        NA  -5.967962       NA -1041389798
 #&gt; Afghanistan-1963        NA  -5.941946       NA  -942471963
 #&gt; Afghanistan-1964        NA  -5.974282       NA  -885902071
-#&gt; Afghanistan-1965        NA  -5.949030       NA  -843600211</div><div class='input'><span class='fu'><a href='https://rdrr.io/r/utils/head.html'>head</a></span>(<span class='fu'><a href='fscale.html'>STD</a></span>(<span class='no'>pwlddev</span>$<span class='no'>PCGDP</span>))                    <span class='co'># Standardizing by country</span></div><div class='output co'>#&gt; Afghanistan-1960 Afghanistan-1961 Afghanistan-1962 Afghanistan-1963
-#&gt;               NA               NA               NA               NA
-#&gt; Afghanistan-1964 Afghanistan-1965
+#&gt; Afghanistan-1965        NA  -5.949030       NA  -843600211</div><div class='input'><span class='fu'><a href='https://rdrr.io/r/utils/head.html'>head</a></span>(<span class='fu'><a href='fscale.html'>STD</a></span>(<span class='no'>pwlddev</span>$<span class='no'>PCGDP</span>))                    <span class='co'># Standardizing by country</span></div><div class='output co'>#&gt; Afghanistan-1960 Afghanistan-1961 Afghanistan-1962 Afghanistan-1963 
+#&gt;               NA               NA               NA               NA 
+#&gt; Afghanistan-1964 Afghanistan-1965 
 #&gt;               NA               NA </div><div class='input'><span class='fu'><a href='https://rdrr.io/r/utils/head.html'>head</a></span>(<span class='fu'><a href='fscale.html'>STD</a></span>(<span class='no'>pwlddev</span>, <span class='kw'>cols</span> <span class='kw'>=</span> <span class='fl'>9</span>:<span class='fl'>12</span>))</div><div class='output co'>#&gt;                      country year STD.PCGDP STD.LIFEEX STD.GINI    STD.ODA
 #&gt; Afghanistan-1960 Afghanistan 1960        NA  -1.551093       NA -0.6132859
 #&gt; Afghanistan-1961 Afghanistan 1961        NA  -1.506322       NA -0.5543146
@@ -1945,9 +1973,9 @@ Core S3 methods and efficient grouping and ordering functionality can be accesse
 #&gt; Afghanistan-1962 114440000        NA
 #&gt; Afghanistan-1963 233350000 114440000
 #&gt; Afghanistan-1964 114880000 233350000
-#&gt; Afghanistan-1965 236450000 114880000</div><div class='input'><span class='fu'><a href='https://rdrr.io/r/utils/head.html'>head</a></span>(<span class='fu'><a href='fgrowth.html'>G</a></span>(<span class='no'>pwlddev</span>$<span class='no'>PCGDP</span>))                      <span class='co'># Panel-Growth rates</span></div><div class='output co'>#&gt; Afghanistan-1960 Afghanistan-1961 Afghanistan-1962 Afghanistan-1963
-#&gt;               NA               NA               NA               NA
-#&gt; Afghanistan-1964 Afghanistan-1965
+#&gt; Afghanistan-1965 236450000 114880000</div><div class='input'><span class='fu'><a href='https://rdrr.io/r/utils/head.html'>head</a></span>(<span class='fu'><a href='fgrowth.html'>G</a></span>(<span class='no'>pwlddev</span>$<span class='no'>PCGDP</span>))                      <span class='co'># Panel-Growth rates</span></div><div class='output co'>#&gt; Afghanistan-1960 Afghanistan-1961 Afghanistan-1962 Afghanistan-1963 
+#&gt;               NA               NA               NA               NA 
+#&gt; Afghanistan-1964 Afghanistan-1965 
 #&gt;               NA               NA </div><div class='input'><span class='fu'><a href='https://rdrr.io/r/utils/head.html'>head</a></span>(<span class='fu'><a href='fgrowth.html'>G</a></span>(<span class='no'>pwlddev</span>, <span class='fl'>1</span>, <span class='fl'>1</span>, <span class='fl'>9</span>:<span class='fl'>12</span>))</div><div class='output co'>#&gt;                      country year G1.PCGDP G1.LIFEEX G1.GINI    G1.ODA
 #&gt; Afghanistan-1960 Afghanistan 1960       NA        NA      NA        NA
 #&gt; Afghanistan-1961 Afghanistan 1961       NA  1.393534      NA 103.90598
@@ -1979,7 +2007,7 @@ Core S3 methods and efficient grouping and ordering functionality can be accesse
       </footer>
    </div>
 
-
+  
 
 
   </body>

@@ -72,7 +72,7 @@
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">collapse</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">1.3.1</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">1.3.2</span>
       </span>
     </div>
 
@@ -95,22 +95,22 @@
         <li>
   <a href="https://twitter.com/collapse_R" target="_blank">
     <span class="fa fa-twitter"></span>
-
+     
   </a>
 </li>
 <li>
   <a href="https://github.com/SebKrantz/collapse" target="_blank">
     <span class="fa fa-github"></span>
-
+     
   </a>
 </li>
       </ul>
-
+      
     </div><!--/.nav-collapse -->
   </div><!--/.container -->
 </div><!--/.navbar -->
 
-
+      
 
       </header>
 
@@ -118,7 +118,7 @@
   <div class="col-md-9 contents">
     <div class="page-header">
     <h1>Fast F-test for Linear Models (with Factors)</h1>
-
+    
     <div class="hidden name"><code>fFtest.Rd</code></div>
     </div>
 
@@ -180,12 +180,12 @@
 
     <h2 class="hasAnchor" id="examples"><a class="anchor" href="#examples"></a>Examples</h2>
     <pre class="examples"><div class='input'><span class='co'>## We could use fFtest as a seasonality test:</span>
-<span class='fu'>fFtest</span>(<span class='no'>AirPassengers</span>, <span class='fu'><a href='qF.html'>qF</a></span>(<span class='fu'><a href='https://rdrr.io/r/stats/time.html'>cycle</a></span>(<span class='no'>AirPassengers</span>)))         <span class='co'># Testing for level-seasonality</span></div><div class='output co'>#&gt;   R-Sq.     DF1     DF2 F-Stat. P-value
+<span class='fu'>fFtest</span>(<span class='no'>AirPassengers</span>, <span class='fu'><a href='qF.html'>qF</a></span>(<span class='fu'><a href='https://rdrr.io/r/stats/time.html'>cycle</a></span>(<span class='no'>AirPassengers</span>)))         <span class='co'># Testing for level-seasonality</span></div><div class='output co'>#&gt;   R-Sq.     DF1     DF2 F-Stat. P-value 
 #&gt;   0.106      11     132   1.424   0.169 </div><div class='input'><span class='fu'>fFtest</span>(<span class='no'>AirPassengers</span>, <span class='fu'><a href='qF.html'>qF</a></span>(<span class='fu'><a href='https://rdrr.io/r/stats/time.html'>cycle</a></span>(<span class='no'>AirPassengers</span>)),         <span class='co'># Seasonality test around a cubic trend</span>
         <span class='fu'><a href='https://rdrr.io/r/stats/poly.html'>poly</a></span>(<span class='fu'><a href='https://rdrr.io/r/base/seq.html'>seq_along</a></span>(<span class='no'>AirPassengers</span>), <span class='fl'>3</span>))</div><div class='output co'>#&gt;                    R-Sq. DF1 DF2 F-Stat. P-Value
 #&gt; Full Model         0.965  14 129 250.585   0.000
 #&gt; Restricted Model   0.862   3 140 291.593   0.000
-#&gt; Exclusion Rest.    0.102  11 129  33.890   0.000</div><div class='input'><span class='fu'>fFtest</span>(<span class='fu'><a href='fdiff.html'>fdiff</a></span>(<span class='no'>AirPassengers</span>), <span class='fu'><a href='qF.html'>qF</a></span>(<span class='fu'><a href='https://rdrr.io/r/stats/time.html'>cycle</a></span>(<span class='no'>AirPassengers</span>)))  <span class='co'># Seasonality in first-difference</span></div><div class='output co'>#&gt;   R-Sq.     DF1     DF2 F-Stat. P-value
+#&gt; Exclusion Rest.    0.102  11 129  33.890   0.000</div><div class='input'><span class='fu'>fFtest</span>(<span class='fu'><a href='fdiff.html'>fdiff</a></span>(<span class='no'>AirPassengers</span>), <span class='fu'><a href='qF.html'>qF</a></span>(<span class='fu'><a href='https://rdrr.io/r/stats/time.html'>cycle</a></span>(<span class='no'>AirPassengers</span>)))  <span class='co'># Seasonality in first-difference</span></div><div class='output co'>#&gt;   R-Sq.     DF1     DF2 F-Stat. P-value 
 #&gt;   0.749      11     131  35.487   0.000 </div><div class='input'>
 <span class='co'>## A more classical example with only continuous variables</span>
 <span class='fu'>fFtest</span>(<span class='no'>mtcars</span>$<span class='no'>mpg</span>, <span class='no'>mtcars</span>[<span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span>(<span class='st'>"cyl"</span>,<span class='st'>"vs"</span>)], <span class='no'>mtcars</span>[<span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span>(<span class='st'>"hp"</span>,<span class='st'>"carb"</span>)])</div><div class='output co'>#&gt;                   R-Sq. DF1 DF2 F-Stat. P-Value
@@ -217,11 +217,11 @@
 <span class='no'>full</span> <span class='kw'>&lt;-</span> <span class='fu'><a href='https://rdrr.io/r/stats/lm.html'>lm</a></span>(<span class='no'>PCGDP</span> ~ <span class='no'>LIFEEX</span> + <span class='no'>iso3c</span> + <span class='fu'><a href='qF.html'>qF</a></span>(<span class='no'>year</span>), <span class='no'>data</span>)
 <span class='no'>rest</span> <span class='kw'>&lt;-</span> <span class='fu'><a href='https://rdrr.io/r/stats/lm.html'>lm</a></span>(<span class='no'>PCGDP</span> ~ <span class='no'>LIFEEX</span> + <span class='no'>iso3c</span>, <span class='no'>data</span>)
 <span class='fu'><a href='https://rdrr.io/r/stats/anova.html'>anova</a></span>(<span class='no'>rest</span>, <span class='no'>full</span>)</div><div class='output co'>#&gt; Analysis of Variance Table
-#&gt;
+#&gt; 
 #&gt; Model 1: PCGDP ~ LIFEEX + iso3c
 #&gt; Model 2: PCGDP ~ LIFEEX + iso3c + qF(year)
-#&gt;   Res.Df        RSS Df  Sum of Sq      F    Pr(&gt;F)
-#&gt; 1   8200 2.5036e+11
+#&gt;   Res.Df        RSS Df  Sum of Sq      F    Pr(&gt;F)    
+#&gt; 1   8200 2.5036e+11                                   
 #&gt; 2   8144 2.1138e+11 56 3.8979e+10 26.817 &lt; 2.2e-16 ***
 #&gt; ---
 #&gt; Signif. codes:  0 ‘***’ 0.001 ‘**’ 0.01 ‘*’ 0.05 ‘.’ 0.1 ‘ ’ 1</div><div class='input'>
@@ -247,7 +247,7 @@
       </footer>
    </div>
 
-
+  
 
 
   </body>

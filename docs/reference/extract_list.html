@@ -78,7 +78,7 @@ get_elem returns the part of the list responding to either an identifier functio
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">collapse</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">1.3.1</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">1.3.2</span>
       </span>
     </div>
 
@@ -101,22 +101,22 @@ get_elem returns the part of the list responding to either an identifier functio
         <li>
   <a href="https://twitter.com/collapse_R" target="_blank">
     <span class="fa fa-twitter"></span>
-
+     
   </a>
 </li>
 <li>
   <a href="https://github.com/SebKrantz/collapse" target="_blank">
     <span class="fa fa-github"></span>
-
+     
   </a>
 </li>
       </ul>
-
+      
     </div><!--/.nav-collapse -->
   </div><!--/.container -->
 </div><!--/.navbar -->
 
-
+      
 
       </header>
 
@@ -124,7 +124,7 @@ get_elem returns the part of the list responding to either an identifier functio
   <div class="col-md-9 contents">
     <div class="page-header">
     <h1>Find and Extract / Subset List Elements</h1>
-
+    
     <div class="hidden name"><code>extract_list.Rd</code></div>
     </div>
 
@@ -287,28 +287,28 @@ get_elem returns the part of the list responding to either an identifier functio
 #&gt; Ferrari Dino        19.7   6 145.0 175 3.62 2.770 15.50  0  1    5    6
 #&gt; Maserati Bora       15.0   8 301.0 335 3.54 3.570 14.60  0  1    5    8
 #&gt; Volvo 142E          21.4   4 121.0 109 4.11 2.780 18.60  1  1    4    2
-#&gt;
-#&gt;
+#&gt; 
+#&gt; 
 #&gt; </div><div class='input'>
 <span class='no'>l</span> <span class='kw'>&lt;-</span> <span class='fu'><a href='https://rdrr.io/r/base/list.html'>list</a></span>(<span class='fu'><a href='https://rdrr.io/r/base/list.html'>list</a></span>(<span class='fl'>2</span>,<span class='fu'><a href='https://rdrr.io/r/base/list.html'>list</a></span>(<span class='st'>"a"</span>,<span class='fl'>1</span>)),<span class='fu'><a href='https://rdrr.io/r/base/list.html'>list</a></span>(<span class='fl'>1</span>,<span class='fu'><a href='https://rdrr.io/r/base/list.html'>list</a></span>(<span class='st'>"b"</span>,<span class='fl'>2</span>)))
 <span class='fu'>has_elem</span>(<span class='no'>l</span>, <span class='no'>is.logical</span>)</div><div class='output co'>#&gt; [1] FALSE</div><div class='input'><span class='fu'>has_elem</span>(<span class='no'>l</span>, <span class='no'>is.numeric</span>)</div><div class='output co'>#&gt; [1] TRUE</div><div class='input'><span class='fu'>get_elem</span>(<span class='no'>l</span>, <span class='no'>is.character</span>)</div><div class='output co'>#&gt; [[1]]
 #&gt; [1] "a"
-#&gt;
+#&gt; 
 #&gt; [[2]]
 #&gt; [1] "b"
 #&gt; </div><div class='input'><span class='fu'>get_elem</span>(<span class='no'>l</span>, <span class='no'>is.character</span>, <span class='kw'>keep.tree</span> <span class='kw'>=</span> <span class='fl'>TRUE</span>)</div><div class='output co'>#&gt; [[1]]
 #&gt; [[1]][[1]]
 #&gt; [[1]][[1]][[1]]
 #&gt; [1] "a"
-#&gt;
-#&gt;
-#&gt;
+#&gt; 
+#&gt; 
+#&gt; 
 #&gt; [[2]]
 #&gt; [[2]][[1]]
 #&gt; [[2]][[1]][[1]]
 #&gt; [1] "b"
-#&gt;
-#&gt;
+#&gt; 
+#&gt; 
 #&gt; </div><div class='input'>
 <span class='no'>l</span> <span class='kw'>&lt;-</span> <span class='fu'><a href='https://rdrr.io/r/stats/lm.html'>lm</a></span>(<span class='no'>mpg</span> ~ <span class='no'>cyl</span> + <span class='no'>vs</span>, <span class='kw'>data</span> <span class='kw'>=</span> <span class='no'>mtcars</span>)
 <span class='fu'><a href='https://rdrr.io/r/utils/str.html'>str</a></span>(<span class='fu'>reg_elem</span>(<span class='no'>l</span>))</div><div class='output co'>#&gt; List of 9
@@ -347,7 +347,7 @@ get_elem returns the part of the list responding to either an identifier functio
 #&gt;   .. .. ..- attr(*, "order")= int [1:2] 1 1
 #&gt;   .. .. ..- attr(*, "intercept")= int 1
 #&gt;   .. .. ..- attr(*, "response")= int 1
-#&gt;   .. .. ..- attr(*, ".Environment")=&lt;environment: 0x0000007efbf8fee0&gt;
+#&gt;   .. .. ..- attr(*, ".Environment")=&lt;environment: 0x0000004d32ff3070&gt; 
 #&gt;   .. .. ..- attr(*, "predvars")= language list(mpg, cyl, vs)
 #&gt;   .. .. ..- attr(*, "dataClasses")= Named chr [1:3] "numeric" "numeric" "numeric"
 #&gt;   .. .. .. ..- attr(*, "names")= chr [1:3] "mpg" "cyl" "vs"</div><div class='input'><span class='fu'><a href='https://rdrr.io/r/utils/str.html'>str</a></span>(<span class='fu'>irreg_elem</span>(<span class='no'>l</span>))</div><div class='output co'>#&gt; List of 2
@@ -362,7 +362,7 @@ get_elem returns the part of the list responding to either an identifier functio
 #&gt;   .. ..- attr(*, "order")= int [1:2] 1 1
 #&gt;   .. ..- attr(*, "intercept")= int 1
 #&gt;   .. ..- attr(*, "response")= int 1
-#&gt;   .. ..- attr(*, ".Environment")=&lt;environment: 0x0000007efbf8fee0&gt;
+#&gt;   .. ..- attr(*, ".Environment")=&lt;environment: 0x0000004d32ff3070&gt; 
 #&gt;   .. ..- attr(*, "predvars")= language list(mpg, cyl, vs)
 #&gt;   .. ..- attr(*, "dataClasses")= Named chr [1:3] "numeric" "numeric" "numeric"
 #&gt;   .. .. ..- attr(*, "names")= chr [1:3] "mpg" "cyl" "vs"</div><div class='input'><span class='fu'>get_elem</span>(<span class='no'>l</span>, <span class='no'>is.matrix</span>)</div><div class='output co'>#&gt;                     (Intercept)          cyl          vs
@@ -399,36 +399,36 @@ get_elem returns the part of the list responding to either an identifier functio
 #&gt; Maserati Bora         0.1767767  -0.18511084 -0.01520019
 #&gt; Volvo 142E            0.1767767   0.21715832  0.13477385
 #&gt; attr(,"assign")
-#&gt; [1] 0 1 2</div><div class='input'><span class='fu'>get_elem</span>(<span class='no'>l</span>, <span class='st'>"residuals"</span>)</div><div class='output co'>#&gt;           Mazda RX4       Mazda RX4 Wag          Datsun 710      Hornet 4 Drive
-#&gt;          -0.0809747          -0.0809747          -3.5232427           1.2581068
-#&gt;   Hornet Sportabout             Valiant          Duster 360           Merc 240D
-#&gt;           3.8003749          -2.0418932          -0.5996251          -1.9232427
-#&gt;            Merc 230            Merc 280           Merc 280C          Merc 450SE
-#&gt;          -3.5232427          -0.9418932          -2.3418932           1.5003749
-#&gt;          Merc 450SL         Merc 450SLC  Cadillac Fleetwood Lincoln Continental
-#&gt;           2.4003749           0.3003749          -4.4996251          -4.4996251
-#&gt;   Chrysler Imperial            Fiat 128         Honda Civic      Toyota Corolla
-#&gt;          -0.1996251           6.0767573           4.0767573           7.5767573
-#&gt;       Toyota Corona    Dodge Challenger         AMC Javelin          Camaro Z28
-#&gt;          -4.8232427           0.6003749           0.3003749          -1.5996251
-#&gt;    Pontiac Firebird           Fiat X1-9       Porsche 914-2        Lotus Europa
-#&gt;           4.3003749           0.9767573          -1.2623243           4.0767573
-#&gt;      Ford Pantera L        Ferrari Dino       Maserati Bora          Volvo 142E
-#&gt;           0.9003749          -1.3809747           0.1003749          -4.9232427 </div><div class='input'><span class='fu'>get_elem</span>(<span class='no'>l</span>, <span class='st'>"fit"</span>, <span class='kw'>regex</span> <span class='kw'>=</span> <span class='fl'>TRUE</span>)</div><div class='output co'>#&gt;           Mazda RX4       Mazda RX4 Wag          Datsun 710      Hornet 4 Drive
-#&gt;            21.08097            21.08097            26.32324            20.14189
-#&gt;   Hornet Sportabout             Valiant          Duster 360           Merc 240D
-#&gt;            14.89963            20.14189            14.89963            26.32324
-#&gt;            Merc 230            Merc 280           Merc 280C          Merc 450SE
-#&gt;            26.32324            20.14189            20.14189            14.89963
-#&gt;          Merc 450SL         Merc 450SLC  Cadillac Fleetwood Lincoln Continental
-#&gt;            14.89963            14.89963            14.89963            14.89963
-#&gt;   Chrysler Imperial            Fiat 128         Honda Civic      Toyota Corolla
-#&gt;            14.89963            26.32324            26.32324            26.32324
-#&gt;       Toyota Corona    Dodge Challenger         AMC Javelin          Camaro Z28
-#&gt;            26.32324            14.89963            14.89963            14.89963
-#&gt;    Pontiac Firebird           Fiat X1-9       Porsche 914-2        Lotus Europa
-#&gt;            14.89963            26.32324            27.26232            26.32324
-#&gt;      Ford Pantera L        Ferrari Dino       Maserati Bora          Volvo 142E
+#&gt; [1] 0 1 2</div><div class='input'><span class='fu'>get_elem</span>(<span class='no'>l</span>, <span class='st'>"residuals"</span>)</div><div class='output co'>#&gt;           Mazda RX4       Mazda RX4 Wag          Datsun 710      Hornet 4 Drive 
+#&gt;          -0.0809747          -0.0809747          -3.5232427           1.2581068 
+#&gt;   Hornet Sportabout             Valiant          Duster 360           Merc 240D 
+#&gt;           3.8003749          -2.0418932          -0.5996251          -1.9232427 
+#&gt;            Merc 230            Merc 280           Merc 280C          Merc 450SE 
+#&gt;          -3.5232427          -0.9418932          -2.3418932           1.5003749 
+#&gt;          Merc 450SL         Merc 450SLC  Cadillac Fleetwood Lincoln Continental 
+#&gt;           2.4003749           0.3003749          -4.4996251          -4.4996251 
+#&gt;   Chrysler Imperial            Fiat 128         Honda Civic      Toyota Corolla 
+#&gt;          -0.1996251           6.0767573           4.0767573           7.5767573 
+#&gt;       Toyota Corona    Dodge Challenger         AMC Javelin          Camaro Z28 
+#&gt;          -4.8232427           0.6003749           0.3003749          -1.5996251 
+#&gt;    Pontiac Firebird           Fiat X1-9       Porsche 914-2        Lotus Europa 
+#&gt;           4.3003749           0.9767573          -1.2623243           4.0767573 
+#&gt;      Ford Pantera L        Ferrari Dino       Maserati Bora          Volvo 142E 
+#&gt;           0.9003749          -1.3809747           0.1003749          -4.9232427 </div><div class='input'><span class='fu'>get_elem</span>(<span class='no'>l</span>, <span class='st'>"fit"</span>, <span class='kw'>regex</span> <span class='kw'>=</span> <span class='fl'>TRUE</span>)</div><div class='output co'>#&gt;           Mazda RX4       Mazda RX4 Wag          Datsun 710      Hornet 4 Drive 
+#&gt;            21.08097            21.08097            26.32324            20.14189 
+#&gt;   Hornet Sportabout             Valiant          Duster 360           Merc 240D 
+#&gt;            14.89963            20.14189            14.89963            26.32324 
+#&gt;            Merc 230            Merc 280           Merc 280C          Merc 450SE 
+#&gt;            26.32324            20.14189            20.14189            14.89963 
+#&gt;          Merc 450SL         Merc 450SLC  Cadillac Fleetwood Lincoln Continental 
+#&gt;            14.89963            14.89963            14.89963            14.89963 
+#&gt;   Chrysler Imperial            Fiat 128         Honda Civic      Toyota Corolla 
+#&gt;            14.89963            26.32324            26.32324            26.32324 
+#&gt;       Toyota Corona    Dodge Challenger         AMC Javelin          Camaro Z28 
+#&gt;            26.32324            14.89963            14.89963            14.89963 
+#&gt;    Pontiac Firebird           Fiat X1-9       Porsche 914-2        Lotus Europa 
+#&gt;            14.89963            26.32324            27.26232            26.32324 
+#&gt;      Ford Pantera L        Ferrari Dino       Maserati Bora          Volvo 142E 
 #&gt;            14.89963            21.08097            14.89963            26.32324 </div><div class='input'><span class='fu'>has_elem</span>(<span class='no'>l</span>, <span class='st'>"tol"</span>)</div><div class='output co'>#&gt; [1] TRUE</div><div class='input'><span class='fu'>get_elem</span>(<span class='no'>l</span>, <span class='st'>"tol"</span>)</div><div class='output co'>#&gt; [1] 1e-07</div><div class='input'>
 </div></pre>
   </div>
@@ -452,7 +452,7 @@ get_elem returns the part of the list responding to either an identifier functio
       </footer>
    </div>
 
-
+  
 
 
   </body>

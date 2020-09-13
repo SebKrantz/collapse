@@ -333,7 +333,7 @@ wlddev \%>\% fgroup_by(country) \%>\% fselect(PCGDP:ODA) \%>\%
 fmedian(TRA = "-")                               # Grouped centering using the median
 # Replacing data points by the weighted first quartile:
 wlddev \%>\% fgroup_by(country) \%>\% fselect(country, year, PCGDP:weights) \%>\%
-  ftransformv(fselect(., -country, -year) \%>\% fnth(0.25, weights, "replace_fill"))
+  ftransform(fselect(., -country, -year) \%>\% fnth(0.25, weights, "replace_fill"))
 
 wlddev \%>\% fgroup_by(country) \%>\% fselect(PCGDP:ODA) \%>\% fscale               # Standardizing
 wlddev \%>\% fgroup_by(country) \%>\% fselect(PCGDP:weights) \%>\% fscale(weights)  # Weigted..

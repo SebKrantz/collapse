@@ -41,7 +41,7 @@
 
 <meta property="og:title" content="Fast Grouping and Ordering — A2-fast-grouping-ordering" />
 <meta property="og:description" content="collapse provides the following functions to efficiently group and order data:
-radixorder, provides fast radix-ordering through direct access to the method base::order(..., method = &quot;radix&quot;), as well as the possibility to return some attributes very useful for grouping data and finding unique elements. radixorderv exists as a programmers alternative. The function roworder(v) efficiently reorders a data frame based on an ordering computed by radixorderv.
+radixorder, provides fast radix-ordering through direct access to the method base::order(..., method = &quot;radix&quot;), as well as the possibility to return some attributes very useful for grouping data and finding unique elements. radixorderv exists as a programmers alternative. The function roworder(v) efficiently reorders a data frame based on an ordering computed by radixorderv. 
 
 GRP creates collapse grouping objects of class 'GRP' based on radixorderv. 'GRP' objects form the central building block for grouped operations and programming in collapse and are very efficient inputs to all collapse functions supporting grouped operations. A 'GRP' object provides information about (1) the number of groups, (2) which rows belong to which group, (3) the group sizes, (4) the unique groups, (5) the variables used for grouping, (6) whether the grouping and initial inputs were ordered and (7) (optionally) the output from radixorder containing the ordering vector with group starts and maximum group size attributes.
 fgroup_by provides a fast replacement for dplyr::group_by, creating a grouped tibble with a 'GRP' object attached. This grouped tibble can however only be used for grouped operations using collapse fast functions. dplyr functions will treat this tibble like an ordinary (non-grouped) one.
@@ -84,7 +84,7 @@ seqid is a specialized function which creates a group-id from sequences of integ
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">collapse</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">1.3.1</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">1.3.2</span>
       </span>
     </div>
 
@@ -107,22 +107,22 @@ seqid is a specialized function which creates a group-id from sequences of integ
         <li>
   <a href="https://twitter.com/collapse_R" target="_blank">
     <span class="fa fa-twitter"></span>
-
+     
   </a>
 </li>
 <li>
   <a href="https://github.com/SebKrantz/collapse" target="_blank">
     <span class="fa fa-github"></span>
-
+     
   </a>
 </li>
       </ul>
-
+      
     </div><!--/.nav-collapse -->
   </div><!--/.container -->
 </div><!--/.navbar -->
 
-
+      
 
       </header>
 
@@ -130,7 +130,7 @@ seqid is a specialized function which creates a group-id from sequences of integ
   <div class="col-md-9 contents">
     <div class="page-header">
     <h1>Fast Grouping and Ordering</h1>
-
+    
     <div class="hidden name"><code>fast-grouping.Rd</code></div>
     </div>
 
@@ -194,7 +194,7 @@ seqid is a specialized function which creates a group-id from sequences of integ
       </footer>
    </div>
 
-
+  
 
 
   </body>

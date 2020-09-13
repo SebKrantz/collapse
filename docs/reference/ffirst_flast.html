@@ -72,7 +72,7 @@
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">collapse</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">1.3.1</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">1.3.2</span>
       </span>
     </div>
 
@@ -95,22 +95,22 @@
         <li>
   <a href="https://twitter.com/collapse_R" target="_blank">
     <span class="fa fa-twitter"></span>
-
+     
   </a>
 </li>
 <li>
   <a href="https://github.com/SebKrantz/collapse" target="_blank">
     <span class="fa fa-github"></span>
-
+     
   </a>
 </li>
       </ul>
-
+      
     </div><!--/.nav-collapse -->
   </div><!--/.container -->
 </div><!--/.navbar -->
 
-
+      
 
       </header>
 
@@ -118,7 +118,7 @@
   <div class="col-md-9 contents">
     <div class="page-header">
     <h1>Fast (Grouped) First and Last Value for Matrix-Like Objects</h1>
-
+    
     <div class="hidden name"><code>ffirst_flast.Rd</code></div>
     </div>
 
@@ -204,12 +204,12 @@
 
     <h2 class="hasAnchor" id="examples"><a class="anchor" href="#examples"></a>Examples</h2>
     <pre class="examples"><div class='input'><span class='co'>## default vector method</span>
-<span class='fu'>ffirst</span>(<span class='no'>airquality</span>$<span class='no'>Ozone</span>)                   <span class='co'># Simple first value</span></div><div class='output co'>#&gt; [1] 41</div><div class='input'><span class='fu'>ffirst</span>(<span class='no'>airquality</span>$<span class='no'>Ozone</span>, <span class='no'>airquality</span>$<span class='no'>Month</span>) <span class='co'># Grouped first value</span></div><div class='output co'>#&gt;   5   6   7   8   9
+<span class='fu'>ffirst</span>(<span class='no'>airquality</span>$<span class='no'>Ozone</span>)                   <span class='co'># Simple first value</span></div><div class='output co'>#&gt; [1] 41</div><div class='input'><span class='fu'>ffirst</span>(<span class='no'>airquality</span>$<span class='no'>Ozone</span>, <span class='no'>airquality</span>$<span class='no'>Month</span>) <span class='co'># Grouped first value</span></div><div class='output co'>#&gt;   5   6   7   8   9 
 #&gt;  41  29 135  39  96 </div><div class='input'><span class='fu'>ffirst</span>(<span class='no'>airquality</span>$<span class='no'>Ozone</span>, <span class='no'>airquality</span>$<span class='no'>Month</span>,
-       <span class='kw'>na.rm</span> <span class='kw'>=</span> <span class='fl'>FALSE</span>)                      <span class='co'># Grouped first, but without skipping initial NA's</span></div><div class='output co'>#&gt;   5   6   7   8   9
+       <span class='kw'>na.rm</span> <span class='kw'>=</span> <span class='fl'>FALSE</span>)                      <span class='co'># Grouped first, but without skipping initial NA's</span></div><div class='output co'>#&gt;   5   6   7   8   9 
 #&gt;  41  NA 135  39  96 </div><div class='input'>
 <span class='co'>## data.frame method</span>
-<span class='fu'>ffirst</span>(<span class='no'>airquality</span>)</div><div class='output co'>#&gt;   Ozone Solar.R    Wind    Temp   Month     Day
+<span class='fu'>ffirst</span>(<span class='no'>airquality</span>)</div><div class='output co'>#&gt;   Ozone Solar.R    Wind    Temp   Month     Day 
 #&gt;    41.0   190.0     7.4    67.0     5.0     1.0 </div><div class='input'><span class='fu'>ffirst</span>(<span class='no'>airquality</span>, <span class='no'>airquality</span>$<span class='no'>Month</span>)</div><div class='output co'>#&gt;   Ozone Solar.R Wind Temp Month Day
 #&gt; 5    41     190  7.4   67     5   1
 #&gt; 6    29     286  8.6   78     6   1
@@ -223,7 +223,7 @@
 #&gt; 9    96     167  6.9   91     9   1</div><div class='input'>
 <span class='co'>## matrix method</span>
 <span class='no'>aqm</span> <span class='kw'>&lt;-</span> <span class='fu'><a href='quick-conversion.html'>qM</a></span>(<span class='no'>airquality</span>)
-<span class='fu'>ffirst</span>(<span class='no'>aqm</span>)</div><div class='output co'>#&gt;   Ozone Solar.R    Wind    Temp   Month     Day
+<span class='fu'>ffirst</span>(<span class='no'>aqm</span>)</div><div class='output co'>#&gt;   Ozone Solar.R    Wind    Temp   Month     Day 
 #&gt;    41.0   190.0     7.4    67.0     5.0     1.0 </div><div class='input'><span class='fu'>ffirst</span>(<span class='no'>aqm</span>, <span class='no'>airquality</span>$<span class='no'>Month</span>) <span class='co'># etc..</span></div><div class='output co'>#&gt;   Ozone Solar.R Wind Temp Month Day
 #&gt; 5    41     190  7.4   67     5   1
 #&gt; 6    29     286  8.6   78     6   1
@@ -270,7 +270,7 @@
       </footer>
    </div>
 
-
+  
 
 
   </body>
