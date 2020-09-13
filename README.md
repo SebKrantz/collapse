@@ -2,14 +2,15 @@
 
 
 <!-- badges: start -->
-[![CRAN status](https://www.r-pkg.org/badges/version/collapse)](https://cran.r-project.org/package=collapse)
-[![Travis build status](https://travis-ci.com/SebKrantz/collapse.svg?branch=master)](https://travis-ci.com/SebKrantz/collapse)
+[![CRAN status](https://www.r-pkg.org/badges/version/collapse)](https://cran.r-project.org/package=collapse) 
 [![cran checks](https://cranchecks.info/badges/worst/collapse)](https://cran.r-project.org/web/checks/check_results_collapse.html)
+[![Travis build status](https://travis-ci.com/SebKrantz/collapse.svg?branch=master)](https://travis-ci.com/SebKrantz/collapse)
 [![Codecov test coverage](https://codecov.io/gh/SebKrantz/collapse/branch/master/graph/badge.svg)](https://codecov.io/gh/SebKrantz/collapse?branch=master)
 [![minimal R version](https://img.shields.io/badge/R%3E%3D-3.5.0-6666ff.svg)](https://cran.r-project.org/)
 [![status](https://tinyverse.netlify.com/badge/collapse)](https://CRAN.R-project.org/package=collapse)
-![](http://cranlogs.r-pkg.org/badges/collapse?color=blue)
-![](http://cranlogs.r-pkg.org/badges/grand-total/collapse?color=blue)
+[![lifecycle](https://img.shields.io/badge/lifecycle-maturing-blue.svg)](https://www.tidyverse.org/lifecycle/#maturing)
+![downloads per month](http://cranlogs.r-pkg.org/badges/collapse?color=blue)
+![downloads](http://cranlogs.r-pkg.org/badges/grand-total/collapse?color=blue)
 <!-- badges: end -->
 
 *collapse* is a C/C++ based package for data transformation and statistical computing in R. It's aims are:

@@ -362,14 +362,21 @@ GGDC10S %>% fsubset(Variable == "VA", Country, Year, AGR, SUM) %>%
              head
 ```
 
-Instead of `column = value` type arguments, it is also possible to pass a single list of transformed variables to `ftransform`, which will be regarded in the same way as an evaluated list of `column = value` arguments:
+The modification brought by `ftransformv` enables transformations of groups of columns like `dplyr::mutate_at` and `dplyr::mutate_if`:
 
 ```{r}
-# This replaces variables mpg, carb and wt by their log
-mtcars %>% ftransform(fselect(., mpg, carb, wt) %>% lapply(log)) %>% head
+# This replaces variables mpg, carb and wt by their log (.c turns expressions into character vectors)
+mtcars %>% ftransformv(.c(mpg, carb, wt), log) %>% head
 
-# This adds the log of mpg, carb and wt
-mtcars %>% ftransform(fselect(., mpg, carb, wt) %>% lapply(log) %>% add_stub("log.")) %>% head
+# Logging numeric variables
+iris %>% ftransformv(is.numeric, log) %>% head
+```
+
+Instead of `column = value` type arguments, it is also possible to pass a single list of transformed variables to `ftransform`, which will be regarded in the same way as an evaluated list of `column = value` arguments. It can be used for more complex transformations:
+
+```{r}
+# Logging values and replacing generated Inf values
+mtcars %>% ftransform(fselect(., mpg, cyl, vs:gear) %>% lapply(log) %>% replace_Inf) %>% head
 ```
 
 If only the computed columns need to be returned, `fcompute` provides an efficient alternative:
@@ -449,6 +456,10 @@ The benchmarks below will demonstrate that these internal sweeping and replaceme
 # AGR_gmed = TRUE if AGR is greater than it's median value, grouped by Variable and Country
 # Note: This calls fmedian.default
 settransform(GGDC10S, AGR_gmed = AGR > fmedian(AGR, list(Variable, Country), TRA = "replace"))
+tail(GGDC10S, 3)
+
+# Dividing (scaling) the sectoral data (columns 6 through 16) by their grouped standard deviation
+settransformv(GGDC10S, 6:16, fsd, list(Variable, Country), TRA = "/", apply = FALSE)
 tail(GGDC10S, 3)
 
 ```

@@ -471,13 +471,28 @@ ftransform(GGDC10S, AGR_perc = AGR / SUM * 100, # Computing Agricultural percent
 ftransform(GGDC10S, MIN_mean = fmean(MIN), Intercept = 1) %>% tail(2)
 ```
 
-Instead of passing comma-separated `column = value` expressions, it is also possible to bulk-process data with `fransform` by passing a single list of already evaluated expressions (such as a data frame):
+The modification `ftransformv` exists to transform specific columns using a function:
+
 ```{r}
-GGDC10S %>% ftransform(num_vars(.) %>% lapply(log)) %>% tail(2)
-GGDC10S %>% ftransform(num_vars(.) %>% lapply(sum, na.rm = TRUE)) %>% tail(2)
+# Apply the log to columns 6-16
+GGDC10S %>% ftransformv(6:16, log) %>% tail(2)
+
+# Convert data to percentage terms 
+GGDC10S %>% ftransformv(6:16, `*`, 100/SUM) %>% tail(2)
+
+# Same thing using fselect to get the right indices
+# GGDC10S %>% ftransformv(fselect(., AGR:SUM, return = "indices"), `*`, 100/SUM) %>% tail(2)
+
+# Apply log to numeric columns
+GGDC10S %>% ftransformv(is.numeric, log) %>% tail(2)
+```
+Instead of passing comma-separated `column = value` expressions, it is also possible to bulk-process data with `fransform` by passing a single list of expressions (such as a data frame). This is useful for more complex transformations involving multiple steps:
+```{r}
+# Same as above, but also replacing any generated infinite values with NA
+GGDC10S %>% ftransform(num_vars(.) %>% lapply(log) %>% replace_Inf) %>% tail(2)
 rm(GGDC10S)
 ```
-Both modes of usage toggle automatic column matching and replacement of matching columns. Non-matching columns are added to the data frame. Apart from to `ftransform`, the function `settransform` can be used to change the input data frame by reference: 
+This mode of usage toggles automatic column matching and replacement. Non-matching columns are added to the data frame. Apart from to `ftransform`, the function `settransform(v)` can be used to change the input data frame by reference: 
 <!-- and is a simple wrapper around `X <- ftransform(X, ...)`: -->
 
 ```{r}
@@ -485,15 +500,16 @@ Both modes of usage toggle automatic column matching and replacement of matching
 settransform(GGDC10S, FIRE_MAN = FIRE / MAN,
                       Regioncode = NULL, Region = NULL)
 tail(GGDC10S, 2)
+rm(GGDC10S)
 
 # Bulk-processing the data into percentage terms
-settransform(GGDC10S, fselect(GGDC10S, AGR:SUM) %>% lapply(`*`, 100/.$SUM))
+settransformv(GGDC10S, 6:16, `*`, 100/SUM)
 tail(GGDC10S, 2)
 
 # Same thing via replacement 
 ftransform(GGDC10S) <- fselect(GGDC10S, AGR:SUM) %>% lapply(`*`, 100/.$SUM)
 # Or using double pipes
-GGDC10S %<>% ftransform(fselect(., AGR:SUM) %>% lapply(`*`, 100/.$SUM))
+GGDC10S %<>% ftransformv(6:16, `*`, 100/SUM)
 rm(GGDC10S)
 ```
 
@@ -501,6 +517,8 @@ Another convenient addition is provided by the function `fcompute`, which can be
 ```{r}
 fcompute(GGDC10S, AGR_perc = AGR / SUM * 100, FIRE_MAN = FIRE / MAN) %>% tail(2)
 ```
+
+For more complex tasks see `?ftransform`. 
 
 ### 2.5 Adding and Binding Columns
 For cases where multiple columns are computed and need to be added to a data frame (regardless of whether names are duplicated or not), *collapse* introduces the predicate `add_vars`. Together with `add_vars`, the function `add_stub` is useful to add a prefix (default) or postfix to computed variables keeping the variable names unique:
@@ -555,7 +573,7 @@ rm(GGDC10S)
 ```
 
 ### 2.7 Using Shortcuts
-The most frequently required among the functions introduced above can be abbreviated as follows: `fselect -> slt`, `fsubset -> sbt`, `ftransform -> tfm`, `settransform -> settfm`, `get_vars -> gv`, `num_vars -> nv`, `add_vars -> av`. This was done to make it possible to write faster and more parsimonious code, and to facilitate the avoidance of piped `%>%` expressions. Needless to say pipes `%>%` have become a very convenient feature of the R language and do a great job avoiding complex nested calls. They do however require reconstructing the entire call before evaluating it, and thus take out a lot of speed:
+The most frequently required among the functions introduced above can be abbreviated as follows: `fselect -> slt`, `fsubset -> sbt`, `ftransform(v) -> tfm(v)`, `settransform(v) -> settfm(v)`, `get_vars -> gv`, `num_vars -> nv`, `add_vars -> av`. This was done to make it possible to write faster and more parsimonious code, and to facilitate the avoidance of piped `%>%` expressions. Needless to say pipes `%>%` have become a very convenient feature of the R language and do a great job avoiding complex nested calls. They do however require reconstructing the entire call before evaluating it, and thus take out a lot of speed:
 
 ```{r}
 microbenchmark(standard = tfm(gv(wlddev, 9:12), ODA_GDP = ODA/PCGDP),
