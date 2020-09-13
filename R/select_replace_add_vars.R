@@ -352,7 +352,7 @@ gvr <- function(x, vars, return = "data", ...) {
       return(setAttributes(c(list(value), x), ax))
     }
     if(!is.numeric(pos) || length(pos) > 1L || pos > lx+1L) stop("pos needs to be 'end', 'front' or a suitable numeric / integer vector of positions!")
-    o <- forder.int(c(1:lx, pos-1))
+    o <- forder.int(c(1:lx, pos-1L))
     ax[["names"]] <- c(ax[["names"]], nam)[o]
     return(setAttributes(c(x, list(value))[o], ax))
   }

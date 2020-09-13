@@ -201,7 +201,7 @@ seq_col <- function(X) if(is.list(X)) seq_along(unclass(X)) else seq_len(ncol(X)
 
 # na.last is false !!
 forder.int <- function(x) .Call(C_radixsort, FALSE, FALSE, FALSE, FALSE, TRUE, pairlist(x)) # if(is.unsorted(x)) .Call(C_forder, x, NULL, FALSE, TRUE, 1L, TRUE) else seq_along(x) # since forder gives integer(0) if sorted !
-forder.vec <- function(x) if(length(x) < 1000L) .Call(C_radixsort, TRUE, FALSE, FALSE, FALSE, TRUE, pairlist(x)) else order(x, method = "radix")
+# forder.vec <- function(x) if(length(x) < 1000L) .Call(C_radixsort, TRUE, FALSE, FALSE, FALSE, TRUE, pairlist(x)) else order(x, method = "radix")
 
 fsetdiff <- function(x, y) x[match(x, y, 0L) == 0L] # not unique !
 
@@ -361,6 +361,8 @@ G_t <- function(x, wm = 1L) {
 
 rgrep <- function(exp, nam, ..., sort = TRUE) if(length(exp) == 1L) grep(exp, nam, ...) else .Call(Cpp_funique, unlist(lapply(exp, grep, nam, ...), use.names = FALSE), sort)
 rgrepl <- function(exp, nam, ...) if(length(exp) == 1L) grepl(exp, nam, ...) else Reduce(`|`, lapply(exp, grepl, nam, ...))
+
+fanyDuplicated <- function(x) if(length(x) < 100L) anyDuplicated.default(x) > 0L else .Call(Cpp_fNdistinct,x,0L,0L,NULL,FALSE) != length(x)
 
 # NROW2 <- function(x, d) if(length(d)) d[1L] else length(x)
 # NCOL2 <- function(d, ilv) if(ilv) d[2L] else 1L
