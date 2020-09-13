@@ -490,7 +490,6 @@ Instead of passing comma-separated `column = value` expressions, it is also poss
 ```{r}
 # Same as above, but also replacing any generated infinite values with NA
 GGDC10S %>% ftransform(num_vars(.) %>% lapply(log) %>% replace_Inf) %>% tail(2)
-rm(GGDC10S)
 ```
 This mode of usage toggles automatic column matching and replacement. Non-matching columns are added to the data frame. Apart from to `ftransform`, the function `settransform(v)` can be used to change the input data frame by reference: 
 <!-- and is a simple wrapper around `X <- ftransform(X, ...)`: -->

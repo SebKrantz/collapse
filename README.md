@@ -271,15 +271,17 @@ Evaluated and more extensive sets of examples are provided on the [package page]
 
 ## Additional Notes
 ### Regarding Performance 
-Some simple benchmarks are provided in the [vignettes](<https://sebkrantz.github.io/collapse/articles/index.html>). In general:
+Some simple benchmarks against *dplyr*, *data.table* and *plm* are provided in [this](<https://sebkrantz.github.io/Rblog/2020/08/31/welcome-to-collapse/>) blog post and in the [vignettes](<https://sebkrantz.github.io/collapse/articles/index.html>). In general:
 
-* For simple aggregations of large data (~ 10 mio. obs) the performance is comparable to *data.table* (using functions that *data.table* also GeForce optimizes), e.g. see [here](<https://sebkrantz.github.io/collapse/reference/fast-statistical-functions.html#benchmark>).
+<!-- using functions that *data.table* also GeForce optimizes, -->
 
-* For more complex categorical or weighed aggregations, and for nearly all transformations like grouped replacing and sweeping out statistics, scaling, centering, panel-lags or differences etc. *collapse* is ~10x faster than *data.table*. 
+* For simple aggregations of large data (~ 10 mio. obs) the performance is comparable to *data.table* (e.g. see [here](<https://sebkrantz.github.io/collapse/reference/fast-statistical-functions.html#benchmark>) and [here](<https://sebkrantz.github.io/Rblog/2020/08/31/welcome-to-collapse/>))^[Huge aggregations with simple functions like `mean` or `sum` and meaningful parallel processing power are faster on *data.table*, whereas *collapse* is typically faster on 2-core machines / laptops.].
 
-* Due to its highly optimized R code, *collapse* is very efficient for programming. On smaller data a *collapse* implementation will execute within microseconds, whereas packages like *dplyr* or *data.table* will typically evaluate in the millisecond domain.
+* For more complex categorical or weighed aggregations and for transformations like grouped replacing and sweeping out statistics (`data.table::':='` or `dplyr::mutate` operations), *collapse* is ~10x faster than *data.table*. Notable are very fast algorithms for (grouped) statistical mode and distinct value counts, variance, various weighted statistics, scaling, centering, panel-lags, differences and growth rates.
 
-* This performance extends to grouped and weighted computations on vectors and matrices (no internal conversions, vector and matrix methods are also written in C++). With matrices *collapse* performs similar to fast packages like *Rfast* or *matrixStats*.
+* Due to its highly optimized R code, *collapse* is very efficient for programming. On smaller data a *collapse* implementation will execute within microseconds, whereas packages like *dplyr* or *data.table* will typically evaluate in the millisecond domain (up to ~100x slower).
+
+* This performance extends to grouped and weighted computations on vectors and matrices (*collapse* provides separate vector, matrix and data.frame methods written in C++, the performance in matrix computations is comparable to *Rfast* and *matrixStats*).
 
 ### Regarding the Integration with *dplyr*, *plm* and *data.table* 
 
