@@ -48,90 +48,66 @@ fsubset.data.frame <- function(x, subset, ...) {
   if(!is.integer(r)) r <- if(is.logical(r)) which(r) else as.integer(r) # which(r & !is.na(r)) not needed !
   rn <- attr(x, "row.names") # || is.integer(rn) # maybe many have character converted integers ?
   if(is.numeric(rn) || is.null(rn) || rn[1L] == "1") return(.Call(C_subsetDT, x, r, vars))
-  return(`attr<-`(.Call(C_subsetDT, x, r, vars), "row.names", rn[r])) # fast ?? scalable ??
+  return(`attr<-`(.Call(C_subsetDT, x, r, vars), "row.names", rn[r]))
 }
 
 # Example:
 # fsubset(GGDC10S, Variable == "VA" & Year > 1990, Country, Year, AGR:SUM)
 
-ftransform <- function(X, ...) { # `_data` ?
-  if(!is.list(X)) stop("X needs to be a list of equal length columns or a data.frame")
+ftransform_core <- function(X, value) { # value is unclassed, X has all attributes
   ax <- attributes(X) # keep like this ?
   oldClass(X) <- NULL
-  e <- eval(substitute(list(...)), X, parent.frame()) # a list of computed values. What about attributes ?
-  if(length(e) == 1L && is.list(e[[1L]]) && is.null(names(e))) e <- unclass(e[[1L]]) # support list input -> added in v1.3.0
-  nam <- names(e)
-  if(is.null(nam) || any(nam == "")) stop("all expressions have to be named")
-  le <- lengths(e, FALSE)
-  nr <- length(X[[1L]])
-  rl <- le == nr # checking if computed values have the right length
-  inx <- match(nam, names(X)) # calling names on a plain list is really fast -> no need to save objects..
-  matched <- !is.na(inx)
-  if(all(rl)) { # All computed vectors have the right length
-    if(any(matched)) X[inx[matched]] <- e[matched]
-  } else { # Some do not
-    if(any(1L < le & !rl)) stop("Lengths of replacements must be equal to nrow(X) or 1, or NULL to delete columns")
-    if(any(le1 <- le == 1L)) e[le1] <- lapply(e[le1], rep, nr) # Length 1 arguments. can use TRA ?, or rep_len, but what about date variables ?
-    if(any(le0 <- le == 0L)) { # best order -> yes, ftransform(mtcars, bla = NULL) just returns mtcars, but could also put this error message:
-      if(any(le0 & !matched)) stop(paste("Can only delete existing columns, columns",paste(names(e)[le0 & !matched], collapse = ", "),"not found in X"))
-      if(all(le0)) {
-        X[inx[le0]] <- NULL
-        return(`oldClass<-`(X, ax[["class"]]))
-      }
-      matched <- matched[!le0]
-      e <- e[!le0] # e[le0] <- NULL
-      if(any(matched)) X[inx[!le0][matched]] <- e[matched] # index is wrong after first deleting, thus we delete after !
-      X[inx[le0]] <- NULL
-    } else if(any(matched)) X[inx[matched]] <- e[matched] # NULL assignment ... -> Nope !
-  }
-  if(all(matched)) return(`oldClass<-`(X, ax[["class"]]))
-  ax[["names"]] <- c(names(X), names(e)[!matched])
-  setAttributes(c(X, e[!matched]), ax)
-}
-tfm <- ftransform # of trfm ? trf is easiest to type... Lets go with consistency and take first, middle and end consonant
-
-# Note: Only edit the code for ftransform, not this one...
-# About 4 microseconds faster than above... and more secure because standard eval..
-`ftransform<-` <- function(X, value) {
-  if(!is.list(X)) stop("X needs to be a list of equal length columns or a data.frame")
-  if(!is.list(value)) stop("value needs to be a named list")
-  ax <- attributes(X)
-  oldClass(X) <- NULL
-  oldClass(value) <- NULL
   nam <- names(value)
-  if(is.null(nam) || any(nam == "")) stop("all list-elements have to be named")
+  # if(is.null(nam) || any(nam == "")) stop("all expressions have to be named") # any(nam == "") is also not very fast for large data frames
+  if(!length(nam) || fanyDuplicated(nam)) stop("all replacement expressions have to be uniquely named")
+  namX <- names(X) # !length also detects character(0)
+  if(!length(namX) || fanyDuplicated(namX)) stop("all columns of X have to be uniquely named")
   le <- lengths(value, FALSE)
   nr <- length(X[[1L]])
-  rl <- le == nr
-  inx <- match(nam, names(X))
+  rl <- le == nr # checking if computed values have the right length
+  inx <- match(nam, namX) # calling names on a plain list is really fast -> no need to save objects..
   matched <- !is.na(inx)
-  if(all(rl)) {
+  if(all(rl)) { # All computed vectors have the right length
     if(any(matched)) X[inx[matched]] <- value[matched]
-  } else {
+  } else { # Some do not
     if(any(1L < le & !rl)) stop("Lengths of replacements must be equal to nrow(X) or 1, or NULL to delete columns")
-    if(any(le1 <- le == 1L)) value[le1] <- lapply(value[le1], rep, nr)
-    if(any(le0 <- le == 0L)) {
-      if(any(le0 & !matched)) stop(paste("Can only delete existing columns, columns",paste(names(value)[le0 & !matched], collapse = ", "),"not found in X"))
+    if(any(le1 <- le == 1L)) value[le1] <- lapply(value[le1], rep, nr) # Length 1 arguments. can use TRA ?, or rep_len, but what about date variables ?
+    if(any(le0 <- le == 0L)) { # best order -> yes, ftransform(mtcars, bla = NULL) just returns mtcars, but could also put this error message:
+      if(any(le0 & !matched)) stop(paste("Can only delete existing columns, unknown columns:", paste(nam[le0 & !matched], collapse = ", ")))
       if(all(le0)) {
         X[inx[le0]] <- NULL
         return(`oldClass<-`(X, ax[["class"]]))
       }
       matched <- matched[!le0]
-      value <- value[!le0]
-      if(any(matched)) X[inx[!le0][matched]] <- value[matched]
+      value <- value[!le0] # value[le0] <- NULL
+      if(any(matched)) X[inx[!le0][matched]] <- value[matched] # index is wrong after first deleting, thus we delete after !
       X[inx[le0]] <- NULL
-    } else if(any(matched)) X[inx[matched]] <- value[matched]
+    } else if(any(matched)) X[inx[matched]] <- value[matched] # NULL assignment ... -> Nope !
   }
   if(all(matched)) return(`oldClass<-`(X, ax[["class"]]))
   ax[["names"]] <- c(names(X), names(value)[!matched])
   setAttributes(c(X, value[!matched]), ax)
+}
+
+ftransform <- function(X, ...) { # `_data` ?
+  if(!is.list(X)) stop("X needs to be a list of equal length columns or a data.frame")
+  e <- eval(substitute(list(...)), X, parent.frame())
+  if(is.null(names(e)) && length(e) == 1L && is.list(e[[1L]])) e <- unclass(e[[1L]]) # support list input -> added in v1.3.0
+  ftransform_core(X, e)
+}
+
+tfm <- ftransform
+
+`ftransform<-` <- function(X, value) {
+  if(!is.list(X)) stop("X needs to be a list of equal length columns or a data.frame")
+  if(!is.list(value)) stop("value needs to be a named list")
+  ftransform_core(X, unclass(value))
 }
 `tfm<-` <- `ftransform<-`
 
 # Example:
 # ftransform(mtcars, cyl = cyl + 10, vs2 = 1, mpg = NULL)
 
-# To do : evaluate .. inside df -> grouping and wight vectors etc...
 ftransformv <- function(X, vars, FUN, ..., apply = TRUE) {
   if(!is.list(X)) stop("X needs to be a list of equal length columns or a data.frame")
   if(!is.function(FUN)) stop("FUN needs to be a function")
@@ -139,25 +115,32 @@ ftransformv <- function(X, vars, FUN, ..., apply = TRUE) {
     clx <- oldClass(X)
     oldClass(X) <- NULL
     vars <- cols2int(vars, X, names(X))
-    value <- if(missing(...)) lapply(unattrib(X[vars]), FUN) else
-      eval(substitute(lapply(unattrib(X[vars]), FUN, ...)), X, parent.frame())
-    le <- lengths(value, FALSE)
-    nr <- length(X[[1L]])
-    if(all(le == nr)) X[vars] <- value else {
-      if(all(le == 1L)) X[vars] <- lapply(value, rep, nr) else
-        stop("lengths of result must be nrow(X) or 1")
-    }
-    return(`oldClass<-`(X, clx))
+    value <- unattrib(X[vars])
+    value <- if(missing(...)) lapply(value, FUN) else
+      eval(substitute(lapply(value, FUN, ...)), X, parent.frame())
+  } else {
+    nam <- attr(X, "names")
+    vars <- cols2int(vars, X, nam)
+    value <- fcolsubset(X, vars)
+    value <- if(missing(...)) unclass(FUN(value)) else # unclass needed here ? -> yes for lengths...
+      unclass(eval(substitute(FUN(value, ...)), X, parent.frame()))
+    if(!identical(names(value), nam[vars])) return(ftransform_core(X, value))
+    clx <- oldClass(X)
+    oldClass(X) <- NULL
   }
-  if(missing(...)) return(`ftransform<-`(X, FUN(colsubset(X, vars))))
-  Y <- colsubset(X, vars)
-  return(`ftransform<-`(X, eval(substitute(FUN(Y, ...)), X, parent.frame())))
+  le <- lengths(value, FALSE)
+  nr <- length(X[[1L]])
+  if(all(le == nr)) X[vars] <- value else {
+    if(all(le == 1L)) X[vars] <- lapply(value, rep, nr) else
+      return(ftransform_core(X, value)) # stop("lengths of result must be nrow(X) or 1")
+  }
+  return(`oldClass<-`(X, clx))
 }
 
 tfmv <- ftransformv
 
 settransform <- function(X, ...) eval.parent(substitute(X <- ftransform(X, ...))) # can use `<-`(X, ftransform(X,...)) but not faster ..
-# settrans settrfm -> settrf is easiest to type
+
 settfm <- settransform
 
 settransformv <- function(X, vars, FUN, ..., apply = TRUE)
@@ -166,11 +149,11 @@ settransformv <- function(X, vars, FUN, ..., apply = TRUE)
 settfmv <- settransformv
 
 
-# compute_vars
 fcompute <- function(X, ...) { # within ?
   ax <- attributes(X)
+  if(!length(ax[["names"]]) || fanyDuplicated(ax[["names"]])) stop("all columns of X have to be uniquely named")
   e <- eval(substitute(list(...)), X, parent.frame())
-  if(length(e) == 1L && is.list(e[[1L]]) && is.null(names(e))) e <- unclass(e[[1L]]) # support list input -> added in v1.3.0 # sensible ??? what application ??
+  if(is.null(names(e)) && length(e) == 1L && is.list(e[[1L]])) e <- unclass(e[[1L]]) # support list input -> added in v1.3.0 # sensible ??? what application ??
   ax[["names"]] <- names(e)
   le <- lengths(e, FALSE)
   nr <- fnrow2(X)
@@ -180,6 +163,10 @@ fcompute <- function(X, ...) { # within ?
   e[!rl] <- lapply(e[!rl], rep, nr)
   setAttributes(e, ax)
 }
+
+
+
+
 
 
 
