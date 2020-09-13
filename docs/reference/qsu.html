@@ -73,7 +73,7 @@ It computes a set of 7 statistics (nobs, mean, sd, min, max, skewness and kurtos
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">collapse</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">1.3.1</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">1.3.2</span>
       </span>
     </div>
 
@@ -96,22 +96,22 @@ It computes a set of 7 statistics (nobs, mean, sd, min, max, skewness and kurtos
         <li>
   <a href="https://twitter.com/collapse_R" target="_blank">
     <span class="fa fa-twitter"></span>
-
+     
   </a>
 </li>
 <li>
-  <a href="https://github.com/SebKrantz/collapse">
+  <a href="https://github.com/SebKrantz/collapse" target="_blank">
     <span class="fa fa-github"></span>
-
+     
   </a>
 </li>
       </ul>
-
+      
     </div><!--/.nav-collapse -->
   </div><!--/.container -->
 </div><!--/.navbar -->
 
-
+      
 
       </header>
 
@@ -119,7 +119,7 @@ It computes a set of 7 statistics (nobs, mean, sd, min, max, skewness and kurtos
   <div class="col-md-9 contents">
     <div class="page-header">
     <h1>Fast (Grouped, Weighted) Summary Statistics for Cross-Sectional and Panel Data</h1>
-
+    
     <div class="hidden name"><code>qsu.Rd</code></div>
     </div>
 
@@ -327,7 +327,7 @@ It computes a set of 7 statistics (nobs, mean, sd, min, max, skewness and kurtos
 #&gt; ODA       7.1918  122.9003</div><div class='input'>
 <span class='co'># Grouped Summaries ------------------------</span>
 <span class='fu'>qsu</span>(<span class='no'>wlddev</span>, ~ <span class='no'>region</span>, <span class='kw'>vlabels</span> <span class='kw'>=</span> <span class='fl'>TRUE</span>)       <span class='co'># Statistics by World Bank Region</span></div><div class='output co'>#&gt; , , country: Country Name
-#&gt;
+#&gt; 
 #&gt;                                N  Mean  SD  Min  Max
 #&gt; East Asia &amp; Pacific         2124     -   -    -    -
 #&gt; Europe &amp; Central Asia       3422     -   -    -    -
@@ -336,9 +336,9 @@ It computes a set of 7 statistics (nobs, mean, sd, min, max, skewness and kurtos
 #&gt; North America                177     -   -    -    -
 #&gt; South Asia                   472     -   -    -    -
 #&gt; Sub-Saharan Africa          2832     -   -    -    -
-#&gt;
+#&gt; 
 #&gt; , , iso3c: Country Code
-#&gt;
+#&gt; 
 #&gt;                                N  Mean  SD  Min  Max
 #&gt; East Asia &amp; Pacific         2124     -   -    -    -
 #&gt; Europe &amp; Central Asia       3422     -   -    -    -
@@ -347,9 +347,9 @@ It computes a set of 7 statistics (nobs, mean, sd, min, max, skewness and kurtos
 #&gt; North America                177     -   -    -    -
 #&gt; South Asia                   472     -   -    -    -
 #&gt; Sub-Saharan Africa          2832     -   -    -    -
-#&gt;
+#&gt; 
 #&gt; , , date: Date Recorded (Fictitious)
-#&gt;
+#&gt; 
 #&gt;                                N  Mean  SD  Min  Max
 #&gt; East Asia &amp; Pacific         2124     -   -    -    -
 #&gt; Europe &amp; Central Asia       3422     -   -    -    -
@@ -358,9 +358,9 @@ It computes a set of 7 statistics (nobs, mean, sd, min, max, skewness and kurtos
 #&gt; North America                177     -   -    -    -
 #&gt; South Asia                   472     -   -    -    -
 #&gt; Sub-Saharan Africa          2832     -   -    -    -
-#&gt;
+#&gt; 
 #&gt; , , year: Year
-#&gt;
+#&gt; 
 #&gt;                                N  Mean       SD   Min   Max
 #&gt; East Asia &amp; Pacific         2124  1989  17.0334  1960  2018
 #&gt; Europe &amp; Central Asia       3422  1989  17.0319  1960  2018
@@ -369,9 +369,9 @@ It computes a set of 7 statistics (nobs, mean, sd, min, max, skewness and kurtos
 #&gt; North America                177  1989  17.0777  1960  2018
 #&gt; South Asia                   472  1989  17.0475  1960  2018
 #&gt; Sub-Saharan Africa          2832  1989  17.0324  1960  2018
-#&gt;
+#&gt; 
 #&gt; , , decade: Decade
-#&gt;
+#&gt; 
 #&gt;                                N       Mean       SD   Min   Max
 #&gt; East Asia &amp; Pacific         2124  1988.9831  17.6345  1960  2020
 #&gt; Europe &amp; Central Asia       3422  1988.9831   17.633  1960  2020
@@ -380,9 +380,9 @@ It computes a set of 7 statistics (nobs, mean, sd, min, max, skewness and kurtos
 #&gt; North America                177  1988.9831  17.6804  1960  2020
 #&gt; South Asia                   472  1988.9831  17.6491  1960  2020
 #&gt; Sub-Saharan Africa          2832  1988.9831  17.6335  1960  2020
-#&gt;
+#&gt; 
 #&gt; , , income: Income Level
-#&gt;
+#&gt; 
 #&gt;                                N  Mean  SD  Min  Max
 #&gt; East Asia &amp; Pacific         2124     -   -    -    -
 #&gt; Europe &amp; Central Asia       3422     -   -    -    -
@@ -391,9 +391,9 @@ It computes a set of 7 statistics (nobs, mean, sd, min, max, skewness and kurtos
 #&gt; North America                177     -   -    -    -
 #&gt; South Asia                   472     -   -    -    -
 #&gt; Sub-Saharan Africa          2832     -   -    -    -
-#&gt;
+#&gt; 
 #&gt; , , OECD: Is OECD Member Country?
-#&gt;
+#&gt; 
 #&gt;                                N  Mean  SD  Min  Max
 #&gt; East Asia &amp; Pacific         2124     -   -    -    -
 #&gt; Europe &amp; Central Asia       3422     -   -    -    -
@@ -402,9 +402,9 @@ It computes a set of 7 statistics (nobs, mean, sd, min, max, skewness and kurtos
 #&gt; North America                177     -   -    -    -
 #&gt; South Asia                   472     -   -    -    -
 #&gt; Sub-Saharan Africa          2832     -   -    -    -
-#&gt;
+#&gt; 
 #&gt; , , PCGDP: GDP per capita (constant 2010 US$)
-#&gt;
+#&gt; 
 #&gt;                                N        Mean          SD         Min
 #&gt; East Asia &amp; Pacific         1391  10337.0463  14094.8338    131.9634
 #&gt; Europe &amp; Central Asia       2084  25664.8064   26181.671    367.0493
@@ -421,9 +421,9 @@ It computes a set of 7 statistics (nobs, mean, sd, min, max, skewness and kurtos
 #&gt; North America               94903.1915
 #&gt; South Asia                   8971.1285
 #&gt; Sub-Saharan Africa          20333.9404
-#&gt;
+#&gt; 
 #&gt; , , LIFEEX: Life expectancy at birth, total (years)
-#&gt;
+#&gt; 
 #&gt;                                N     Mean       SD      Min      Max
 #&gt; East Asia &amp; Pacific         1717  65.6493  10.1221   18.907   84.278
 #&gt; Europe &amp; Central Asia       2886  71.9323   5.4596   45.369  85.4171
@@ -432,9 +432,9 @@ It computes a set of 7 statistics (nobs, mean, sd, min, max, skewness and kurtos
 #&gt; North America                135  75.9931   3.4825  68.8978  82.3005
 #&gt; South Asia                   456  56.7471  11.1073   32.292   77.339
 #&gt; Sub-Saharan Africa          2716  51.0007   8.5873    27.61  74.3949
-#&gt;
+#&gt; 
 #&gt; , , GINI: GINI index (World Bank estimate)
-#&gt;
+#&gt; 
 #&gt;                               N     Mean      SD   Min   Max
 #&gt; East Asia &amp; Pacific          92  38.5065  5.3684  27.8  55.4
 #&gt; Europe &amp; Central Asia       588   31.902  4.7383  16.2  48.4
@@ -443,9 +443,9 @@ It computes a set of 7 statistics (nobs, mean, sd, min, max, skewness and kurtos
 #&gt; North America                22  36.1636  3.9282    31  41.1
 #&gt; South Asia                   39  34.1641  4.3411  25.9  43.8
 #&gt; Sub-Saharan Africa          176  44.8165  8.3376  28.9  65.8
-#&gt;
+#&gt; 
 #&gt; , , ODA: Net ODA received (constant 2015 US$)
-#&gt;
+#&gt; 
 #&gt;                                N            Mean              SD
 #&gt; East Asia &amp; Pacific         1491      346,977686      615,361973
 #&gt; Europe &amp; Central Asia        751      394,089867      566,834650
@@ -463,15 +463,15 @@ It computes a set of 7 statistics (nobs, mean, sd, min, max, skewness and kurtos
 #&gt; South Asia                            80000  8.53900000e+09
 #&gt; Sub-Saharan Africa               -16,780000  1.12780600e+10
 #&gt; </div><div class='input'><span class='fu'>qsu</span>(<span class='no'>wlddev</span>, <span class='no'>PCGDP</span> + <span class='no'>LIFEEX</span> ~ <span class='no'>income</span>)        <span class='co'># Summarize GDP per Capita and Life Expectancy by</span></div><div class='output co'>#&gt; , , PCGDP
-#&gt;
+#&gt; 
 #&gt;                         N        Mean          SD       Min         Max
 #&gt; High income          3038  28974.7264  22910.7155  944.2924   191586.64
 #&gt; Low income           1405    596.7977    308.2129  131.6464   1506.3002
 #&gt; Lower middle income  2120    1583.371    890.7439  150.2214   4662.8838
 #&gt; Upper middle income  2432   4849.7499   2959.2271  131.9634  20333.9404
-#&gt;
+#&gt; 
 #&gt; , , LIFEEX
-#&gt;
+#&gt; 
 #&gt;                         N     Mean      SD     Min      Max
 #&gt; High income          3682  73.2157  5.5133  42.672  85.4171
 #&gt; Low income           1881  49.6189  8.8925   27.61    74.43
@@ -480,216 +480,216 @@ It computes a set of 7 statistics (nobs, mean, sd, min, max, skewness and kurtos
 #&gt; </div><div class='input'><span class='no'>stats</span> <span class='kw'>&lt;-</span> <span class='fu'>qsu</span>(<span class='no'>wlddev</span>, ~ <span class='no'>region</span> + <span class='no'>income</span>,     <span class='co'># World Bank Income Level</span>
              <span class='kw'>cols</span> <span class='kw'>=</span> <span class='fl'>9</span>:<span class='fl'>10</span>, <span class='kw'>higher</span> <span class='kw'>=</span> <span class='fl'>TRUE</span>)    <span class='co'># Same variables, by both region and income</span>
 <span class='fu'><a href='https://rdrr.io/r/base/aperm.html'>aperm</a></span>(<span class='no'>stats</span>)                                <span class='co'># A different perspective on the same stats</span></div><div class='output co'>#&gt; , , East Asia &amp; Pacific.High income
-#&gt;
+#&gt; 
 #&gt;           N        Mean          SD       Min         Max     Skew    Kurt
 #&gt; PCGDP   467  26042.2796  14593.6195  944.2924  72183.3033   0.2886  2.5833
 #&gt; LIFEEX  631      73.228      6.3633   53.0018      84.278  -0.5398  2.8883
-#&gt;
+#&gt; 
 #&gt; , , East Asia &amp; Pacific.Lower middle income
-#&gt;
+#&gt; 
 #&gt;           N       Mean        SD       Min        Max     Skew    Kurt
 #&gt; PCGDP   527  1621.1783  908.9503  150.2214  4498.6561   0.4401  2.8782
 #&gt; LIFEEX  741     58.838     9.384    18.907     76.052  -1.0707   4.517
-#&gt;
+#&gt; 
 #&gt; , , East Asia &amp; Pacific.Upper middle income
-#&gt;
+#&gt; 
 #&gt;           N      Mean         SD       Min         Max     Skew    Kurt
 #&gt; PCGDP   397  3432.559  2418.0954  131.9634  11528.2969   1.4942  5.0692
 #&gt; LIFEEX  345   66.4175     6.4518    43.725      76.252  -0.9503  3.7035
-#&gt;
+#&gt; 
 #&gt; , , Europe &amp; Central Asia.High income
-#&gt;
+#&gt; 
 #&gt;            N        Mean          SD        Min        Max    Skew    Kurt
 #&gt; PCGDP   1433  35516.4191  26131.2384  4506.0504  191586.64  2.1574  9.2428
 #&gt; LIFEEX  1748     74.4894       4.212    62.8089    85.4171  0.0397  2.2671
-#&gt;
+#&gt; 
 #&gt; , , Europe &amp; Central Asia.Low income
-#&gt;
+#&gt; 
 #&gt;          N      Mean        SD       Min        Max    Skew    Kurt
 #&gt; PCGDP   33  788.0229  338.9391  367.0493  1459.0104  0.5918  2.1621
 #&gt; LIFEEX  57   63.6855    3.9541    56.152     70.879  0.1809  2.3413
-#&gt;
+#&gt; 
 #&gt; , , Europe &amp; Central Asia.Lower middle income
-#&gt;
+#&gt; 
 #&gt;           N       Mean         SD      Min        Max     Skew    Kurt
 #&gt; PCGDP   188  2056.5151  1148.7397  535.044  4662.8838   0.5182  2.0046
 #&gt; LIFEEX  321    67.3641     3.3672  56.1281     73.261  -0.8949  3.6862
-#&gt;
+#&gt; 
 #&gt; , , Europe &amp; Central Asia.Upper middle income
-#&gt;
+#&gt; 
 #&gt;           N       Mean         SD       Min         Max     Skew    Kurt
 #&gt; PCGDP   430  5064.6473  2650.7359  698.5643  14936.4018   0.9523  3.7693
 #&gt; LIFEEX  760    68.5988     5.1392    45.369      78.345  -1.1915  5.3463
-#&gt;
+#&gt; 
 #&gt; , , Latin America &amp; Caribbean .High income
-#&gt;
+#&gt; 
 #&gt;           N       Mean         SD        Min        Max    Skew    Kurt
 #&gt; PCGDP   579  13198.647  8495.8391  2139.5473  42491.454  1.0555  3.2954
 #&gt; LIFEEX  679    71.5427     4.5417     57.285    82.1902   -0.41   2.633
-#&gt;
+#&gt; 
 #&gt; , , Latin America &amp; Caribbean .Low income
-#&gt;
+#&gt; 
 #&gt;          N      Mean        SD       Min        Max     Skew    Kurt
 #&gt; PCGDP   58  884.5499  158.3409  662.2795  1245.7079   0.2953  1.9501
 #&gt; LIFEEX  57   53.4959    6.0085    42.113     63.055  -0.1348  1.9273
-#&gt;
+#&gt; 
 #&gt; , , Latin America &amp; Caribbean .Lower middle income
-#&gt;
+#&gt; 
 #&gt;           N       Mean       SD      Min        Max     Skew    Kurt
 #&gt; PCGDP   227  1853.4711  573.985  995.479  3463.5436    0.778  2.7763
 #&gt; LIFEEX  228    60.6888   8.9867   42.138     75.149  -0.1644  1.8525
-#&gt;
+#&gt; 
 #&gt; , , Latin America &amp; Caribbean .Upper middle income
-#&gt;
+#&gt; 
 #&gt;            N       Mean         SD        Min        Max     Skew    Kurt
 #&gt; PCGDP   1032  4954.0316  2898.9104  1072.0096  15557.332   1.3419  4.6926
 #&gt; LIFEEX  1031    67.5965     6.1318     46.702     79.831  -0.6464  3.3037
-#&gt;
+#&gt; 
 #&gt; , , Middle East &amp; North Africa.High income
-#&gt;
+#&gt; 
 #&gt;           N       Mean          SD        Min         Max     Skew    Kurt
 #&gt; PCGDP   331  28654.266  20919.8468  2350.4623  113682.038   1.6976  5.7821
 #&gt; LIFEEX  452    70.1049      8.0708     42.672     82.4073  -1.2998  4.3623
-#&gt;
+#&gt; 
 #&gt; , , Middle East &amp; North Africa.Low income
-#&gt;
+#&gt; 
 #&gt;           N       Mean        SD       Min       Max     Skew    Kurt
 #&gt; PCGDP    28  1084.5999  140.4327  754.0579  1309.232  -1.0608  4.1727
 #&gt; LIFEEX  114    59.8538   10.8992    34.361     74.43  -0.7235  2.7446
-#&gt;
+#&gt; 
 #&gt; , , Middle East &amp; North Africa.Lower middle income
-#&gt;
+#&gt; 
 #&gt;           N       Mean        SD       Min        Max     Skew    Kurt
 #&gt; PCGDP   188  1999.6767  878.5357  570.5574  4303.9636   0.6303  3.1072
 #&gt; LIFEEX  255    61.7893    9.1703    42.021     75.821  -0.2014  1.8081
-#&gt;
+#&gt; 
 #&gt; , , Middle East &amp; North Africa.Upper middle income
-#&gt;
+#&gt; 
 #&gt;           N       Mean         SD        Min         Max     Skew    Kurt
 #&gt; PCGDP   258  4597.4892  2236.6643  1427.9212  12120.5622   1.1456   3.984
 #&gt; LIFEEX  342    64.9134      8.459     42.609      79.584  -0.6719  2.5216
-#&gt;
+#&gt; 
 #&gt; , , North America.High income
-#&gt;
+#&gt; 
 #&gt;           N        Mean          SD         Min         Max    Skew    Kurt
 #&gt; PCGDP   170  43650.5193  18345.0419  17550.5732  94903.1915  0.9047  3.3501
 #&gt; LIFEEX  135     75.9931      3.4825     68.8978     82.3005  -0.144  1.9842
-#&gt;
+#&gt; 
 #&gt; , , South Asia.Low income
-#&gt;
+#&gt; 
 #&gt;           N      Mean        SD       Min      Max    Skew    Kurt
 #&gt; PCGDP    74  415.7625  132.7529  267.0736  690.075  0.6292  2.1476
 #&gt; LIFEEX  114     50.43   10.9819    32.292   69.887  0.0899  1.7696
-#&gt;
+#&gt; 
 #&gt; , , South Asia.Lower middle income
-#&gt;
+#&gt; 
 #&gt;           N      Mean        SD       Min        Max     Skew    Kurt
 #&gt; PCGDP   269  921.2851  698.8565  304.2319  3768.5168   1.9652  6.9579
 #&gt; LIFEEX  285   58.7775    9.7167    34.526     75.088  -0.4424  2.3804
-#&gt;
+#&gt; 
 #&gt; , , South Asia.Upper middle income
-#&gt;
+#&gt; 
 #&gt;          N       Mean        SD        Min        Max     Skew    Kurt
 #&gt; PCGDP   23  6638.3501  1243.055  4600.6696  8559.3509   0.1317  1.9273
 #&gt; LIFEEX  57    59.2287   13.1054     37.397     77.042  -0.1248  1.6532
-#&gt;
+#&gt; 
 #&gt; , , Sub-Saharan Africa .High income
-#&gt;
+#&gt; 
 #&gt;          N       Mean         SD        Min         Max     Skew    Kurt
 #&gt; PCGDP   58  7263.4247  3246.7659  2616.8743  13598.3363   0.3107  2.0355
 #&gt; LIFEEX  37     71.403     1.8648    67.9707     74.2951  -0.2738  1.9513
-#&gt;
+#&gt; 
 #&gt; , , Sub-Saharan Africa .Low income
-#&gt;
+#&gt; 
 #&gt;            N      Mean        SD       Min        Max    Skew    Kurt
 #&gt; PCGDP   1212  577.6047  302.6247  131.6464  1506.3002  1.3404  4.1921
 #&gt; LIFEEX  1539   48.1361    7.6996     27.61     67.146  0.0454  2.5365
-#&gt;
+#&gt; 
 #&gt; , , Sub-Saharan Africa .Lower middle income
-#&gt;
+#&gt; 
 #&gt;           N       Mean        SD       Min        Max    Skew    Kurt
 #&gt; PCGDP   721  1485.7945  775.9211  254.5931  3980.7744  1.2385  3.9967
 #&gt; LIFEEX  798    53.0262    7.3473    33.251     72.798  0.0984  2.9692
-#&gt;
+#&gt; 
 #&gt; , , Sub-Saharan Africa .Upper middle income
-#&gt;
+#&gt; 
 #&gt;           N       Mean         SD       Min         Max     Skew    Kurt
 #&gt; PCGDP   292  6173.5362  3951.8202  390.8297  20333.9404   1.0227  4.3495
 #&gt; LIFEEX  342     56.958     8.1124     36.74     74.3949  -0.2548  3.0184
 #&gt; </div><div class='input'>
 <span class='co'># Panel Data Summaries ---------------------</span>
 <span class='fu'>qsu</span>(<span class='no'>wlddev</span>, <span class='kw'>pid</span> <span class='kw'>=</span> ~ <span class='no'>iso3c</span>, <span class='kw'>vlabels</span> <span class='kw'>=</span> <span class='fl'>TRUE</span>)   <span class='co'># Adding between and within countries statistics</span></div><div class='output co'>#&gt; , , country: Country Name
-#&gt;
+#&gt; 
 #&gt;            N/T  Mean  SD  Min  Max
 #&gt; Overall  12744     -   -    -    -
 #&gt; Between    216     -   -    -    -
 #&gt; Within      59     -   -    -    -
-#&gt;
+#&gt; 
 #&gt; , , date: Date Recorded (Fictitious)
-#&gt;
+#&gt; 
 #&gt;            N/T  Mean  SD  Min  Max
 #&gt; Overall  12744     -   -    -    -
 #&gt; Between    216     -   -    -    -
 #&gt; Within      59     -   -    -    -
-#&gt;
+#&gt; 
 #&gt; , , year: Year
-#&gt;
+#&gt; 
 #&gt;            N/T  Mean       SD   Min   Max
 #&gt; Overall  12744  1989  17.0301  1960  2018
 #&gt; Between    216  1989        0  1989  1989
 #&gt; Within      59  1989  17.0301  1960  2018
-#&gt;
+#&gt; 
 #&gt; , , decade: Decade
-#&gt;
+#&gt; 
 #&gt;            N/T       Mean       SD        Min        Max
 #&gt; Overall  12744  1988.9831  17.6311       1960       2020
 #&gt; Between    216  1988.9831        0  1988.9831  1988.9831
 #&gt; Within      59  1988.9831  17.6311       1960       2020
-#&gt;
+#&gt; 
 #&gt; , , region: Region
-#&gt;
+#&gt; 
 #&gt;            N/T  Mean  SD  Min  Max
 #&gt; Overall  12744     -   -    -    -
 #&gt; Between    216     -   -    -    -
 #&gt; Within      59     -   -    -    -
-#&gt;
+#&gt; 
 #&gt; , , income: Income Level
-#&gt;
+#&gt; 
 #&gt;            N/T  Mean  SD  Min  Max
 #&gt; Overall  12744     -   -    -    -
 #&gt; Between    216     -   -    -    -
 #&gt; Within      59     -   -    -    -
-#&gt;
+#&gt; 
 #&gt; , , OECD: Is OECD Member Country?
-#&gt;
+#&gt; 
 #&gt;            N/T  Mean  SD  Min  Max
 #&gt; Overall  12744     -   -    -    -
 #&gt; Between    216     -   -    -    -
 #&gt; Within      59     -   -    -    -
-#&gt;
+#&gt; 
 #&gt; , , PCGDP: GDP per capita (constant 2010 US$)
-#&gt;
+#&gt; 
 #&gt;              N/T        Mean          SD          Min         Max
 #&gt; Overall     8995  11563.6529  18348.4052     131.6464   191586.64
 #&gt; Between      203  12488.8577  19628.3668     255.3999  141165.083
 #&gt; Within   44.3103  11563.6529   6334.9523  -30529.0928   75348.067
-#&gt;
+#&gt; 
 #&gt; , , LIFEEX: Life expectancy at birth, total (years)
-#&gt;
+#&gt; 
 #&gt;              N/T     Mean       SD      Min      Max
 #&gt; Overall    11068  63.8411  11.4497   18.907  85.4171
 #&gt; Between      207  64.5285  10.0235   39.349  85.4171
 #&gt; Within   53.4686  63.8411   5.8292  33.4671  83.8595
-#&gt;
+#&gt; 
 #&gt; , , GINI: GINI index (World Bank estimate)
-#&gt;
+#&gt; 
 #&gt;             N/T     Mean      SD      Min      Max
 #&gt; Overall    1356  39.3976  9.6764     16.2     65.8
 #&gt; Between     161  39.5799  8.3679  23.3667  61.7143
 #&gt; Within   8.4224  39.3976  3.0406  23.9576  54.7976
-#&gt;
+#&gt; 
 #&gt; , , ODA: Net ODA received (constant 2015 US$)
-#&gt;
+#&gt; 
 #&gt;              N/T        Mean          SD              Min             Max
 #&gt; Overall     8336  428,746468  819,868971  -1.08038000e+09  2.45521800e+10
 #&gt; Between      178  418,026522  548,293709       423846.154  3.53258914e+09
@@ -703,84 +703,84 @@ It computes a set of 7 statistics (nobs, mean, sd, min, max, skewness and kurtos
 <span class='no'>pwlddev</span> <span class='kw'>&lt;-</span> <span class='kw pkg'>plm</span><span class='kw ns'>::</span><span class='fu'><a href='https://rdrr.io/pkg/plm/man/pdata.frame.html'>pdata.frame</a></span>(<span class='no'>wlddev</span>,         <span class='co'># Creating a Panel Data Frame frame from this data</span>
                   <span class='kw'>index</span> <span class='kw'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span>(<span class='st'>"iso3c"</span>,<span class='st'>"year"</span>))
 <span class='fu'>qsu</span>(<span class='no'>pwlddev</span>)                                <span class='co'># Summary for pdata.frame -&gt; qsu(wlddev, pid = ~ iso3c)</span></div><div class='output co'>#&gt; , , country
-#&gt;
+#&gt; 
 #&gt;            N/T  Mean  SD  Min  Max
 #&gt; Overall  12744     -   -    -    -
 #&gt; Between    216     -   -    -    -
 #&gt; Within      59     -   -    -    -
-#&gt;
+#&gt; 
 #&gt; , , iso3c
-#&gt;
+#&gt; 
 #&gt;            N/T  Mean  SD  Min  Max
 #&gt; Overall  12744     -   -    -    -
 #&gt; Between    216     -   -    -    -
 #&gt; Within      59     -   -    -    -
-#&gt;
+#&gt; 
 #&gt; , , date
-#&gt;
+#&gt; 
 #&gt;            N/T  Mean  SD  Min  Max
 #&gt; Overall  12744     -   -    -    -
 #&gt; Between    216     -   -    -    -
 #&gt; Within      59     -   -    -    -
-#&gt;
+#&gt; 
 #&gt; , , year
-#&gt;
+#&gt; 
 #&gt;            N/T  Mean  SD  Min  Max
 #&gt; Overall  12744     -   -    -    -
 #&gt; Between    216     -   -    -    -
 #&gt; Within      59     -   -    -    -
-#&gt;
+#&gt; 
 #&gt; , , decade
-#&gt;
+#&gt; 
 #&gt;            N/T       Mean       SD        Min        Max
 #&gt; Overall  12744  1988.9831  17.6311       1960       2020
 #&gt; Between    216  1988.9831        0  1988.9831  1988.9831
 #&gt; Within      59  1988.9831  17.6311       1960       2020
-#&gt;
+#&gt; 
 #&gt; , , region
-#&gt;
+#&gt; 
 #&gt;            N/T  Mean  SD  Min  Max
 #&gt; Overall  12744     -   -    -    -
 #&gt; Between    216     -   -    -    -
 #&gt; Within      59     -   -    -    -
-#&gt;
+#&gt; 
 #&gt; , , income
-#&gt;
+#&gt; 
 #&gt;            N/T  Mean  SD  Min  Max
 #&gt; Overall  12744     -   -    -    -
 #&gt; Between    216     -   -    -    -
 #&gt; Within      59     -   -    -    -
-#&gt;
+#&gt; 
 #&gt; , , OECD
-#&gt;
+#&gt; 
 #&gt;            N/T  Mean  SD  Min  Max
 #&gt; Overall  12744     -   -    -    -
 #&gt; Between    216     -   -    -    -
 #&gt; Within      59     -   -    -    -
-#&gt;
+#&gt; 
 #&gt; , , PCGDP
-#&gt;
+#&gt; 
 #&gt;              N/T        Mean          SD          Min         Max
 #&gt; Overall     8995  11563.6529  18348.4052     131.6464   191586.64
 #&gt; Between      203  12488.8577  19628.3668     255.3999  141165.083
 #&gt; Within   44.3103  11563.6529   6334.9523  -30529.0928   75348.067
-#&gt;
+#&gt; 
 #&gt; , , LIFEEX
-#&gt;
+#&gt; 
 #&gt;              N/T     Mean       SD      Min      Max
 #&gt; Overall    11068  63.8411  11.4497   18.907  85.4171
 #&gt; Between      207  64.5285  10.0235   39.349  85.4171
 #&gt; Within   53.4686  63.8411   5.8292  33.4671  83.8595
-#&gt;
+#&gt; 
 #&gt; , , GINI
-#&gt;
+#&gt; 
 #&gt;             N/T     Mean      SD      Min      Max
 #&gt; Overall    1356  39.3976  9.6764     16.2     65.8
 #&gt; Between     161  39.5799  8.3679  23.3667  61.7143
 #&gt; Within   8.4224  39.3976  3.0406  23.9576  54.7976
-#&gt;
+#&gt; 
 #&gt; , , ODA
-#&gt;
+#&gt; 
 #&gt;              N/T        Mean          SD              Min             Max
 #&gt; Overall     8336  428,746468  819,868971  -1.08038000e+09  2.45521800e+10
 #&gt; Between      178  418,026522  548,293709       423846.154  3.53258914e+09
@@ -794,7 +794,7 @@ It computes a set of 7 statistics (nobs, mean, sd, min, max, skewness and kurtos
 #&gt; Within   43.96  2.1275  5.9311   -67.432  132.1934</div><div class='input'>
 <span class='co'># Grouped Panel Data Summaries -------------</span>
 <span class='fu'>qsu</span>(<span class='no'>wlddev</span>, ~ <span class='no'>region</span>, ~ <span class='no'>iso3c</span>, <span class='kw'>cols</span> <span class='kw'>=</span> <span class='fl'>9</span>:<span class='fl'>12</span>) <span class='co'># Panel-Statistics by region</span></div><div class='output co'>#&gt; , , Overall, PCGDP
-#&gt;
+#&gt; 
 #&gt;                              N/T        Mean          SD         Min
 #&gt; East Asia &amp; Pacific         1391  10337.0463  14094.8338    131.9634
 #&gt; Europe &amp; Central Asia       2084  25664.8064   26181.671    367.0493
@@ -811,9 +811,9 @@ It computes a set of 7 statistics (nobs, mean, sd, min, max, skewness and kurtos
 #&gt; North America               94903.1915
 #&gt; South Asia                   8971.1285
 #&gt; Sub-Saharan Africa          20333.9404
-#&gt;
+#&gt; 
 #&gt; , , Between, PCGDP
-#&gt;
+#&gt; 
 #&gt;                             N/T        Mean          SD         Min         Max
 #&gt; East Asia &amp; Pacific          34  10337.0463    12576.62    410.2004  40046.4089
 #&gt; Europe &amp; Central Asia        56  25664.8064  24008.1006    788.0229  141165.083
@@ -822,9 +822,9 @@ It computes a set of 7 statistics (nobs, mean, sd, min, max, skewness and kurtos
 #&gt; North America                 3  43650.5193  12062.9919  35346.4194  61278.2411
 #&gt; South Asia                    8   1178.3447   1470.7041    397.4451   6638.3501
 #&gt; Sub-Saharan Africa           46   1750.0069   2199.9901    255.3999    9916.656
-#&gt;
+#&gt; 
 #&gt; , , Within, PCGDP
-#&gt;
+#&gt; 
 #&gt;                                 N/T        Mean          SD          Min
 #&gt; East Asia &amp; Pacific         40.9118  11563.6529   6363.4087  -11892.0702
 #&gt; Europe &amp; Central Asia       37.2143  11563.6529  10444.6637  -30529.0928
@@ -841,9 +841,9 @@ It computes a set of 7 statistics (nobs, mean, sd, min, max, skewness and kurtos
 #&gt; North America               45188.6033
 #&gt; South Asia                  13896.4313
 #&gt; Sub-Saharan Africa          24375.5944
-#&gt;
+#&gt; 
 #&gt; , , Overall, LIFEEX
-#&gt;
+#&gt; 
 #&gt;                              N/T     Mean       SD      Min      Max
 #&gt; East Asia &amp; Pacific         1717  65.6493  10.1221   18.907   84.278
 #&gt; Europe &amp; Central Asia       2886  71.9323   5.4596   45.369  85.4171
@@ -852,9 +852,9 @@ It computes a set of 7 statistics (nobs, mean, sd, min, max, skewness and kurtos
 #&gt; North America                135  75.9931   3.4825  68.8978  82.3005
 #&gt; South Asia                   456  56.7471  11.1073   32.292   77.339
 #&gt; Sub-Saharan Africa          2716  51.0007   8.5873    27.61  74.3949
-#&gt;
+#&gt; 
 #&gt; , , Between, LIFEEX
-#&gt;
+#&gt; 
 #&gt;                             N/T     Mean      SD      Min      Max
 #&gt; East Asia &amp; Pacific          32  65.6493  7.7148  48.8626  77.5681
 #&gt; Europe &amp; Central Asia        55  71.9323  4.2526  61.9424  85.4171
@@ -863,9 +863,9 @@ It computes a set of 7 statistics (nobs, mean, sd, min, max, skewness and kurtos
 #&gt; North America                 3  75.9931  1.2682  74.6066  77.9553
 #&gt; South Asia                    8  56.7471  5.8027  47.8822  68.6733
 #&gt; Sub-Saharan Africa           48  51.0007  5.9389   39.349   71.403
-#&gt;
+#&gt; 
 #&gt; , , Within, LIFEEX
-#&gt;
+#&gt; 
 #&gt;                                 N/T     Mean      SD      Min      Max
 #&gt; East Asia &amp; Pacific         53.6562  63.8411  6.5528  33.4671  83.8595
 #&gt; Europe &amp; Central Asia       52.4727  63.8411  3.4239  46.6863  77.0723
@@ -874,9 +874,9 @@ It computes a set of 7 statistics (nobs, mean, sd, min, max, skewness and kurtos
 #&gt; North America                    45  63.8411  3.2433  54.7836   69.485
 #&gt; South Asia                       57  63.8411  9.4711  42.0094  82.0276
 #&gt; Sub-Saharan Africa          56.5833  63.8411  6.2025  43.7422  83.2612
-#&gt;
+#&gt; 
 #&gt; , , Overall, GINI
-#&gt;
+#&gt; 
 #&gt;                             N/T     Mean      SD   Min   Max
 #&gt; East Asia &amp; Pacific          92  38.5065  5.3684  27.8  55.4
 #&gt; Europe &amp; Central Asia       588   31.902  4.7383  16.2  48.4
@@ -885,9 +885,9 @@ It computes a set of 7 statistics (nobs, mean, sd, min, max, skewness and kurtos
 #&gt; North America                22  36.1636  3.9282    31  41.1
 #&gt; South Asia                   39  34.1641  4.3411  25.9  43.8
 #&gt; Sub-Saharan Africa          176  44.8165  8.3376  28.9  65.8
-#&gt;
+#&gt; 
 #&gt; , , Between, GINI
-#&gt;
+#&gt; 
 #&gt;                             N/T     Mean      SD      Min      Max
 #&gt; East Asia &amp; Pacific          21  38.5065  4.8352     30.8    48.65
 #&gt; Europe &amp; Central Asia        47   31.902   4.054  23.3667     40.8
@@ -896,9 +896,9 @@ It computes a set of 7 statistics (nobs, mean, sd, min, max, skewness and kurtos
 #&gt; North America                 2  36.1636  3.5731  32.6727  39.6545
 #&gt; South Asia                    7  34.1641  3.4562  30.3556    39.85
 #&gt; Sub-Saharan Africa           45  44.8165  7.0733    31.45  61.7143
-#&gt;
+#&gt; 
 #&gt; , , Within, GINI
-#&gt;
+#&gt; 
 #&gt;                                 N/T     Mean      SD      Min      Max
 #&gt; East Asia &amp; Pacific           4.381  39.3976  2.3325  32.6476  46.1476
 #&gt; Europe &amp; Central Asia       12.5106  39.3976  2.4529   28.636  54.4976
@@ -907,9 +907,9 @@ It computes a set of 7 statistics (nobs, mean, sd, min, max, skewness and kurtos
 #&gt; North America                    11  39.3976  1.6323   34.343   40.843
 #&gt; South Asia                   5.5714  39.3976  2.6268  34.6726  45.9309
 #&gt; Sub-Saharan Africa           3.9111  39.3976  4.4142  23.9576  54.7976
-#&gt;
+#&gt; 
 #&gt; , , Overall, ODA
-#&gt;
+#&gt; 
 #&gt;                              N/T            Mean              SD
 #&gt; East Asia &amp; Pacific         1491      346,977686      615,361973
 #&gt; Europe &amp; Central Asia        751      394,089867      566,834650
@@ -926,9 +926,9 @@ It computes a set of 7 statistics (nobs, mean, sd, min, max, skewness and kurtos
 #&gt; North America                    -14,520000       55,820000
 #&gt; South Asia                            80000  8.53900000e+09
 #&gt; Sub-Saharan Africa               -16,780000  1.12780600e+10
-#&gt;
+#&gt; 
 #&gt; , , Between, ODA
-#&gt;
+#&gt; 
 #&gt;                             N/T            Mean              SD          Min
 #&gt; East Asia &amp; Pacific          31      346,977686      460,186340  1,550512.82
 #&gt; Europe &amp; Central Asia        32      394,089867      446,099453  12,115777.8
@@ -945,9 +945,9 @@ It computes a set of 7 statistics (nobs, mean, sd, min, max, skewness and kurtos
 #&gt; North America                   423846.154
 #&gt; South Asia                  3.53258914e+09
 #&gt; Sub-Saharan Africa          1.41753857e+09
-#&gt;
+#&gt; 
 #&gt; , , Within, ODA
-#&gt;
+#&gt; 
 #&gt;                                 N/T        Mean              SD
 #&gt; East Asia &amp; Pacific         48.0968  428,746468      408,532605
 #&gt; Europe &amp; Central Asia       23.4688  428,746468      349,709591
@@ -966,7 +966,7 @@ It computes a set of 7 statistics (nobs, mean, sd, min, max, skewness and kurtos
 #&gt; Sub-Saharan Africa              -825,184566  1.07855444e+10
 #&gt; </div><div class='input'><span class='no'>psr</span> <span class='kw'>&lt;-</span> <span class='fu'>qsu</span>(<span class='no'>pwlddev</span>, ~ <span class='no'>region</span>, <span class='kw'>cols</span> <span class='kw'>=</span> <span class='fl'>9</span>:<span class='fl'>12</span>)  <span class='co'># Same on plm pdata.frame</span>
 <span class='no'>psr</span>                                         <span class='co'># -&gt; Gives a 4D array</span></div><div class='output co'>#&gt; , , Overall, PCGDP
-#&gt;
+#&gt; 
 #&gt;                              N/T        Mean          SD         Min
 #&gt; East Asia &amp; Pacific         1391  10337.0463  14094.8338    131.9634
 #&gt; Europe &amp; Central Asia       2084  25664.8064   26181.671    367.0493
@@ -983,9 +983,9 @@ It computes a set of 7 statistics (nobs, mean, sd, min, max, skewness and kurtos
 #&gt; North America               94903.1915
 #&gt; South Asia                   8971.1285
 #&gt; Sub-Saharan Africa          20333.9404
-#&gt;
+#&gt; 
 #&gt; , , Between, PCGDP
-#&gt;
+#&gt; 
 #&gt;                             N/T        Mean          SD         Min         Max
 #&gt; East Asia &amp; Pacific          34  10337.0463    12576.62    410.2004  40046.4089
 #&gt; Europe &amp; Central Asia        56  25664.8064  24008.1006    788.0229  141165.083
@@ -994,9 +994,9 @@ It computes a set of 7 statistics (nobs, mean, sd, min, max, skewness and kurtos
 #&gt; North America                 3  43650.5193  12062.9919  35346.4194  61278.2411
 #&gt; South Asia                    8   1178.3447   1470.7041    397.4451   6638.3501
 #&gt; Sub-Saharan Africa           46   1750.0069   2199.9901    255.3999    9916.656
-#&gt;
+#&gt; 
 #&gt; , , Within, PCGDP
-#&gt;
+#&gt; 
 #&gt;                                 N/T        Mean          SD          Min
 #&gt; East Asia &amp; Pacific         40.9118  11563.6529   6363.4087  -11892.0702
 #&gt; Europe &amp; Central Asia       37.2143  11563.6529  10444.6637  -30529.0928
@@ -1013,9 +1013,9 @@ It computes a set of 7 statistics (nobs, mean, sd, min, max, skewness and kurtos
 #&gt; North America               45188.6033
 #&gt; South Asia                  13896.4313
 #&gt; Sub-Saharan Africa          24375.5944
-#&gt;
+#&gt; 
 #&gt; , , Overall, LIFEEX
-#&gt;
+#&gt; 
 #&gt;                              N/T     Mean       SD      Min      Max
 #&gt; East Asia &amp; Pacific         1717  65.6493  10.1221   18.907   84.278
 #&gt; Europe &amp; Central Asia       2886  71.9323   5.4596   45.369  85.4171
@@ -1024,9 +1024,9 @@ It computes a set of 7 statistics (nobs, mean, sd, min, max, skewness and kurtos
 #&gt; North America                135  75.9931   3.4825  68.8978  82.3005
 #&gt; South Asia                   456  56.7471  11.1073   32.292   77.339
 #&gt; Sub-Saharan Africa          2716  51.0007   8.5873    27.61  74.3949
-#&gt;
+#&gt; 
 #&gt; , , Between, LIFEEX
-#&gt;
+#&gt; 
 #&gt;                             N/T     Mean      SD      Min      Max
 #&gt; East Asia &amp; Pacific          32  65.6493  7.7148  48.8626  77.5681
 #&gt; Europe &amp; Central Asia        55  71.9323  4.2526  61.9424  85.4171
@@ -1035,9 +1035,9 @@ It computes a set of 7 statistics (nobs, mean, sd, min, max, skewness and kurtos
 #&gt; North America                 3  75.9931  1.2682  74.6066  77.9553
 #&gt; South Asia                    8  56.7471  5.8027  47.8822  68.6733
 #&gt; Sub-Saharan Africa           48  51.0007  5.9389   39.349   71.403
-#&gt;
+#&gt; 
 #&gt; , , Within, LIFEEX
-#&gt;
+#&gt; 
 #&gt;                                 N/T     Mean      SD      Min      Max
 #&gt; East Asia &amp; Pacific         53.6562  63.8411  6.5528  33.4671  83.8595
 #&gt; Europe &amp; Central Asia       52.4727  63.8411  3.4239  46.6863  77.0723
@@ -1046,9 +1046,9 @@ It computes a set of 7 statistics (nobs, mean, sd, min, max, skewness and kurtos
 #&gt; North America                    45  63.8411  3.2433  54.7836   69.485
 #&gt; South Asia                       57  63.8411  9.4711  42.0094  82.0276
 #&gt; Sub-Saharan Africa          56.5833  63.8411  6.2025  43.7422  83.2612
-#&gt;
+#&gt; 
 #&gt; , , Overall, GINI
-#&gt;
+#&gt; 
 #&gt;                             N/T     Mean      SD   Min   Max
 #&gt; East Asia &amp; Pacific          92  38.5065  5.3684  27.8  55.4
 #&gt; Europe &amp; Central Asia       588   31.902  4.7383  16.2  48.4
@@ -1057,9 +1057,9 @@ It computes a set of 7 statistics (nobs, mean, sd, min, max, skewness and kurtos
 #&gt; North America                22  36.1636  3.9282    31  41.1
 #&gt; South Asia                   39  34.1641  4.3411  25.9  43.8
 #&gt; Sub-Saharan Africa          176  44.8165  8.3376  28.9  65.8
-#&gt;
+#&gt; 
 #&gt; , , Between, GINI
-#&gt;
+#&gt; 
 #&gt;                             N/T     Mean      SD      Min      Max
 #&gt; East Asia &amp; Pacific          21  38.5065  4.8352     30.8    48.65
 #&gt; Europe &amp; Central Asia        47   31.902   4.054  23.3667     40.8
@@ -1068,9 +1068,9 @@ It computes a set of 7 statistics (nobs, mean, sd, min, max, skewness and kurtos
 #&gt; North America                 2  36.1636  3.5731  32.6727  39.6545
 #&gt; South Asia                    7  34.1641  3.4562  30.3556    39.85
 #&gt; Sub-Saharan Africa           45  44.8165  7.0733    31.45  61.7143
-#&gt;
+#&gt; 
 #&gt; , , Within, GINI
-#&gt;
+#&gt; 
 #&gt;                                 N/T     Mean      SD      Min      Max
 #&gt; East Asia &amp; Pacific           4.381  39.3976  2.3325  32.6476  46.1476
 #&gt; Europe &amp; Central Asia       12.5106  39.3976  2.4529   28.636  54.4976
@@ -1079,9 +1079,9 @@ It computes a set of 7 statistics (nobs, mean, sd, min, max, skewness and kurtos
 #&gt; North America                    11  39.3976  1.6323   34.343   40.843
 #&gt; South Asia                   5.5714  39.3976  2.6268  34.6726  45.9309
 #&gt; Sub-Saharan Africa           3.9111  39.3976  4.4142  23.9576  54.7976
-#&gt;
+#&gt; 
 #&gt; , , Overall, ODA
-#&gt;
+#&gt; 
 #&gt;                              N/T            Mean              SD
 #&gt; East Asia &amp; Pacific         1491      346,977686      615,361973
 #&gt; Europe &amp; Central Asia        751      394,089867      566,834650
@@ -1098,9 +1098,9 @@ It computes a set of 7 statistics (nobs, mean, sd, min, max, skewness and kurtos
 #&gt; North America                    -14,520000       55,820000
 #&gt; South Asia                            80000  8.53900000e+09
 #&gt; Sub-Saharan Africa               -16,780000  1.12780600e+10
-#&gt;
+#&gt; 
 #&gt; , , Between, ODA
-#&gt;
+#&gt; 
 #&gt;                             N/T            Mean              SD          Min
 #&gt; East Asia &amp; Pacific          31      346,977686      460,186340  1,550512.82
 #&gt; Europe &amp; Central Asia        32      394,089867      446,099453  12,115777.8
@@ -1117,9 +1117,9 @@ It computes a set of 7 statistics (nobs, mean, sd, min, max, skewness and kurtos
 #&gt; North America                   423846.154
 #&gt; South Asia                  3.53258914e+09
 #&gt; Sub-Saharan Africa          1.41753857e+09
-#&gt;
+#&gt; 
 #&gt; , , Within, ODA
-#&gt;
+#&gt; 
 #&gt;                                 N/T        Mean              SD
 #&gt; East Asia &amp; Pacific         48.0968  428,746468      408,532605
 #&gt; Europe &amp; Central Asia       23.4688  428,746468      349,709591
@@ -1137,7 +1137,7 @@ It computes a set of 7 statistics (nobs, mean, sd, min, max, skewness and kurtos
 #&gt; South Asia                  -2.37972267e+09  5.51177302e+09
 #&gt; Sub-Saharan Africa              -825,184566  1.07855444e+10
 #&gt; </div><div class='input'><span class='fu'>print.qsu</span>(<span class='no'>psr</span>[,<span class='st'>"N/T"</span>,,])                    <span class='co'># Checking out the number of observations:</span></div><div class='output co'>#&gt; , , PCGDP
-#&gt;
+#&gt; 
 #&gt;                             Overall  Between   Within
 #&gt; East Asia &amp; Pacific            1391       34  40.9118
 #&gt; Europe &amp; Central Asia          2084       56  37.2143
@@ -1146,9 +1146,9 @@ It computes a set of 7 statistics (nobs, mean, sd, min, max, skewness and kurtos
 #&gt; North America                   170        3  56.6667
 #&gt; South Asia                      366        8    45.75
 #&gt; Sub-Saharan Africa             2283       46  49.6304
-#&gt;
+#&gt; 
 #&gt; , , LIFEEX
-#&gt;
+#&gt; 
 #&gt;                             Overall  Between   Within
 #&gt; East Asia &amp; Pacific            1717       32  53.6562
 #&gt; Europe &amp; Central Asia          2886       55  52.4727
@@ -1157,9 +1157,9 @@ It computes a set of 7 statistics (nobs, mean, sd, min, max, skewness and kurtos
 #&gt; North America                   135        3       45
 #&gt; South Asia                      456        8       57
 #&gt; Sub-Saharan Africa             2716       48  56.5833
-#&gt;
+#&gt; 
 #&gt; , , GINI
-#&gt;
+#&gt; 
 #&gt;                             Overall  Between   Within
 #&gt; East Asia &amp; Pacific              92       21    4.381
 #&gt; Europe &amp; Central Asia           588       47  12.5106
@@ -1168,9 +1168,9 @@ It computes a set of 7 statistics (nobs, mean, sd, min, max, skewness and kurtos
 #&gt; North America                    22        2       11
 #&gt; South Asia                       39        7   5.5714
 #&gt; Sub-Saharan Africa              176       45   3.9111
-#&gt;
+#&gt; 
 #&gt; , , ODA
-#&gt;
+#&gt; 
 #&gt;                             Overall  Between   Within
 #&gt; East Asia &amp; Pacific            1491       31  48.0968
 #&gt; Europe &amp; Central Asia           751       32  23.4688
@@ -1182,7 +1182,7 @@ It computes a set of 7 statistics (nobs, mean, sd, min, max, skewness and kurtos
 #&gt; </div><div class='input'><span class='co'># In North america we only have 3 countries, for the GINI we only have 3.91 observations on average</span>
 <span class='co'># for 45 Sub-Saharan-African countries, etc..</span>
 <span class='fu'>print.qsu</span>(<span class='no'>psr</span>[,<span class='st'>"SD"</span>,,])                     <span class='co'># Considering only standard deviations</span></div><div class='output co'>#&gt; , , PCGDP
-#&gt;
+#&gt; 
 #&gt;                                Overall     Between      Within
 #&gt; East Asia &amp; Pacific         14094.8338    12576.62   6363.4087
 #&gt; Europe &amp; Central Asia        26181.671  24008.1006  10444.6637
@@ -1191,9 +1191,9 @@ It computes a set of 7 statistics (nobs, mean, sd, min, max, skewness and kurtos
 #&gt; North America               18345.0419  12062.9919  13821.1717
 #&gt; South Asia                   1581.2678   1470.7041    580.8934
 #&gt; Sub-Saharan Africa           2553.7889   2199.9901   1296.8738
-#&gt;
+#&gt; 
 #&gt; , , LIFEEX
-#&gt;
+#&gt; 
 #&gt;                             Overall  Between  Within
 #&gt; East Asia &amp; Pacific         10.1221   7.7148  6.5528
 #&gt; Europe &amp; Central Asia        5.4596   4.2526  3.4239
@@ -1202,9 +1202,9 @@ It computes a set of 7 statistics (nobs, mean, sd, min, max, skewness and kurtos
 #&gt; North America                3.4825   1.2682  3.2433
 #&gt; South Asia                  11.1073   5.8027  9.4711
 #&gt; Sub-Saharan Africa           8.5873   5.9389  6.2025
-#&gt;
+#&gt; 
 #&gt; , , GINI
-#&gt;
+#&gt; 
 #&gt;                             Overall  Between  Within
 #&gt; East Asia &amp; Pacific          5.3684   4.8352  2.3325
 #&gt; Europe &amp; Central Asia        4.7383    4.054  2.4529
@@ -1213,9 +1213,9 @@ It computes a set of 7 statistics (nobs, mean, sd, min, max, skewness and kurtos
 #&gt; North America                3.9282   3.5731  1.6323
 #&gt; South Asia                   4.3411   3.4562  2.6268
 #&gt; Sub-Saharan Africa           8.3376   7.0733  4.4142
-#&gt;
+#&gt; 
 #&gt; , , ODA
-#&gt;
+#&gt; 
 #&gt;                                    Overall         Between          Within
 #&gt; East Asia &amp; Pacific             615,361973      460,186340      408,532605
 #&gt; Europe &amp; Central Asia           566,834650      446,099453      349,709591
@@ -1247,7 +1247,7 @@ It computes a set of 7 statistics (nobs, mean, sd, min, max, skewness and kurtos
 #&gt; North America               94903.1915
 #&gt; South Asia                   8971.1285
 #&gt; Sub-Saharan Africa          20333.9404
-#&gt;
+#&gt; 
 #&gt; $PCGDP$Between
 #&gt;                              N        Mean          SD         Min         Max
 #&gt; East Asia &amp; Pacific         34  10337.0463    12576.62    410.2004  40046.4089
@@ -1257,7 +1257,7 @@ It computes a set of 7 statistics (nobs, mean, sd, min, max, skewness and kurtos
 #&gt; North America                3  43650.5193  12062.9919  35346.4194  61278.2411
 #&gt; South Asia                   8   1178.3447   1470.7041    397.4451   6638.3501
 #&gt; Sub-Saharan Africa          46   1750.0069   2199.9901    255.3999    9916.656
-#&gt;
+#&gt; 
 #&gt; $PCGDP$Within
 #&gt;                                   N        Mean          SD          Min
 #&gt; East Asia &amp; Pacific         40.9118  11563.6529   6363.4087  -11892.0702
@@ -1275,8 +1275,8 @@ It computes a set of 7 statistics (nobs, mean, sd, min, max, skewness and kurtos
 #&gt; North America               45188.6033
 #&gt; South Asia                  13896.4313
 #&gt; Sub-Saharan Africa          24375.5944
-#&gt;
-#&gt;
+#&gt; 
+#&gt; 
 #&gt; $LIFEEX
 #&gt; $LIFEEX$Overall
 #&gt;                                N     Mean       SD      Min      Max
@@ -1287,7 +1287,7 @@ It computes a set of 7 statistics (nobs, mean, sd, min, max, skewness and kurtos
 #&gt; North America                135  75.9931   3.4825  68.8978  82.3005
 #&gt; South Asia                   456  56.7471  11.1073   32.292   77.339
 #&gt; Sub-Saharan Africa          2716  51.0007   8.5873    27.61  74.3949
-#&gt;
+#&gt; 
 #&gt; $LIFEEX$Between
 #&gt;                              N     Mean      SD      Min      Max
 #&gt; East Asia &amp; Pacific         32  65.6493  7.7148  48.8626  77.5681
@@ -1297,7 +1297,7 @@ It computes a set of 7 statistics (nobs, mean, sd, min, max, skewness and kurtos
 #&gt; North America                3  75.9931  1.2682  74.6066  77.9553
 #&gt; South Asia                   8  56.7471  5.8027  47.8822  68.6733
 #&gt; Sub-Saharan Africa          48  51.0007  5.9389   39.349   71.403
-#&gt;
+#&gt; 
 #&gt; $LIFEEX$Within
 #&gt;                                   N     Mean      SD      Min      Max
 #&gt; East Asia &amp; Pacific         53.6562  63.8411  6.5528  33.4671  83.8595
@@ -1307,8 +1307,8 @@ It computes a set of 7 statistics (nobs, mean, sd, min, max, skewness and kurtos
 #&gt; North America                    45  63.8411  3.2433  54.7836   69.485
 #&gt; South Asia                       57  63.8411  9.4711  42.0094  82.0276
 #&gt; Sub-Saharan Africa          56.5833  63.8411  6.2025  43.7422  83.2612
-#&gt;
-#&gt;
+#&gt; 
+#&gt; 
 #&gt; $GINI
 #&gt; $GINI$Overall
 #&gt;                               N     Mean      SD   Min   Max
@@ -1319,7 +1319,7 @@ It computes a set of 7 statistics (nobs, mean, sd, min, max, skewness and kurtos
 #&gt; North America                22  36.1636  3.9282    31  41.1
 #&gt; South Asia                   39  34.1641  4.3411  25.9  43.8
 #&gt; Sub-Saharan Africa          176  44.8165  8.3376  28.9  65.8
-#&gt;
+#&gt; 
 #&gt; $GINI$Between
 #&gt;                              N     Mean      SD      Min      Max
 #&gt; East Asia &amp; Pacific         21  38.5065  4.8352     30.8    48.65
@@ -1329,7 +1329,7 @@ It computes a set of 7 statistics (nobs, mean, sd, min, max, skewness and kurtos
 #&gt; North America                2  36.1636  3.5731  32.6727  39.6545
 #&gt; South Asia                   7  34.1641  3.4562  30.3556    39.85
 #&gt; Sub-Saharan Africa          45  44.8165  7.0733    31.45  61.7143
-#&gt;
+#&gt; 
 #&gt; $GINI$Within
 #&gt;                                   N     Mean      SD      Min      Max
 #&gt; East Asia &amp; Pacific           4.381  39.3976  2.3325  32.6476  46.1476
@@ -1339,8 +1339,8 @@ It computes a set of 7 statistics (nobs, mean, sd, min, max, skewness and kurtos
 #&gt; North America                    11  39.3976  1.6323   34.343   40.843
 #&gt; South Asia                   5.5714  39.3976  2.6268  34.6726  45.9309
 #&gt; Sub-Saharan Africa           3.9111  39.3976  4.4142  23.9576  54.7976
-#&gt;
-#&gt;
+#&gt; 
+#&gt; 
 #&gt; $ODA
 #&gt; $ODA$Overall
 #&gt;                                N            Mean              SD
@@ -1359,7 +1359,7 @@ It computes a set of 7 statistics (nobs, mean, sd, min, max, skewness and kurtos
 #&gt; North America                    -14,520000       55,820000
 #&gt; South Asia                            80000  8.53900000e+09
 #&gt; Sub-Saharan Africa               -16,780000  1.12780600e+10
-#&gt;
+#&gt; 
 #&gt; $ODA$Between
 #&gt;                              N            Mean              SD          Min
 #&gt; East Asia &amp; Pacific         31      346,977686      460,186340  1,550512.82
@@ -1377,7 +1377,7 @@ It computes a set of 7 statistics (nobs, mean, sd, min, max, skewness and kurtos
 #&gt; North America                   423846.154
 #&gt; South Asia                  3.53258914e+09
 #&gt; Sub-Saharan Africa          1.41753857e+09
-#&gt;
+#&gt; 
 #&gt; $ODA$Within
 #&gt;                                   N        Mean              SD
 #&gt; East Asia &amp; Pacific         48.0968  428,746468      408,532605
@@ -1395,7 +1395,7 @@ It computes a set of 7 statistics (nobs, mean, sd, min, max, skewness and kurtos
 #&gt; North America                    413,802622      484,142622
 #&gt; South Asia                  -2.37972267e+09  5.51177302e+09
 #&gt; Sub-Saharan Africa              -825,184566  1.07855444e+10
-#&gt;
+#&gt; 
 #&gt; </div><div class='input'><span class='fu'><a href='https://rdrr.io/r/utils/head.html'>head</a></span>(<span class='fu'><a href='unlist2d.html'>unlist2d</a></span>(<span class='no'>psrl</span>, <span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span>(<span class='st'>"Variable"</span>,<span class='st'>"Trans"</span>),
                     <span class='kw'>row.names</span> <span class='kw'>=</span> <span class='st'>"Region"</span>))</div><div class='output co'>#&gt;   Variable   Trans                     Region    N      Mean        SD
 #&gt; 1    PCGDP Overall        East Asia &amp; Pacific 1391 10337.046 14094.834
@@ -1490,7 +1490,7 @@ It computes a set of 7 statistics (nobs, mean, sd, min, max, skewness and kurtos
       </footer>
    </div>
 
-
+  
 
 
   </body>

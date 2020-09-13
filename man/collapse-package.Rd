@@ -286,10 +286,13 @@ ss(wlddev, 1:10, 1:10) # This is an order of magnitude faster than wlddev[1:10, 
 head(ftransform(wlddev, ODA_GDP = ODA / PCGDP, ODA_LIFEEX = sqrt(ODA) / LIFEEX))
 settransform(wlddev, ODA_GDP = ODA / PCGDP, ODA_LIFEEX = sqrt(ODA) / LIFEEX) # by reference
 head(ftransform(wlddev, PCGDP = NULL, ODA = NULL, GINI_sum = fsum(GINI)))
-head(ftransform(wlddev, fscale(gv(wlddev, 9:12))))   # Can also transform with lists of columns
-settransform(wlddev, fscale(gv(wlddev, 9:12))) # Changing the data by reference
-ftransform(wlddev) <- fscale(gv(wlddev, 9:12)) # Same thing
-wlddev \%<>\% ftransform(fscale(gv(., 9:12)))    # Same thing, using magrittr
+head(ftransformv(wlddev, 9:12, log))           # Can also transform with lists of columns
+head(ftransformv(wlddev, 9:12, fscale, apply = FALSE)) # apply = FALSE invokes fscale.data.frame
+settransformv(wlddev, 9:12, fscale, apply = FALSE)     # Changing the data by reference
+ftransform(wlddev) <- fscale(gv(wlddev, 9:12))         # Same thing (using replacement method)
+wlddev \%<>\% ftransformv(9:12, fscale, apply = FALSE) # Same thing, using magrittr
+wlddev \%>\% ftransform(gv(., 9:12) \%>\%              # With compound pipes: Scaling and lagging
+                        fscale \%>\% flag(0:2, iso3c, year)) \%>\% head
 
 # Fast reordering
 head(roworder(wlddev, -country, year))
@@ -330,7 +333,7 @@ wlddev \%>\% fgroup_by(country) \%>\% fselect(PCGDP:ODA) \%>\%
 fmedian(TRA = "-")                               # Grouped centering using the median
 # Replacing data points by the weighted first quartile:
 wlddev \%>\% fgroup_by(country) \%>\% fselect(country, year, PCGDP:weights) \%>\%
-  ftransform(., fselect(., -country, -year) \%>\% fnth(0.25, weights, "replace_fill"))
+  ftransform(fselect(., -country, -year) \%>\% fnth(0.25, weights, "replace_fill"))
 
 wlddev \%>\% fgroup_by(country) \%>\% fselect(PCGDP:ODA) \%>\% fscale               # Standardizing
 wlddev \%>\% fgroup_by(country) \%>\% fselect(PCGDP:weights) \%>\% fscale(weights)  # Weigted..

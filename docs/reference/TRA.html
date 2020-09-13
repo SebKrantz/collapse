@@ -72,7 +72,7 @@
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">collapse</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">1.3.1</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">1.3.2</span>
       </span>
     </div>
 
@@ -88,29 +88,29 @@
   <a href="../news/index.html">News</a>
 </li>
 <li>
-  <a href="https://sebkrantz.github.io/Rblog/" target="_blank">Blog</a>
+  <a href="https://sebkrantz.github.io/Rblog/">Blog</a>
 </li>
       </ul>
       <ul class="nav navbar-nav navbar-right">
         <li>
-  <a href="https://twitter.com/collapse_R">
+  <a href="https://twitter.com/collapse_R" target="_blank">
     <span class="fa fa-twitter"></span>
-
+     
   </a>
 </li>
 <li>
-  <a href="https://github.com/SebKrantz/collapse">
+  <a href="https://github.com/SebKrantz/collapse" target="_blank">
     <span class="fa fa-github"></span>
-
+     
   </a>
 </li>
       </ul>
-
+      
     </div><!--/.nav-collapse -->
   </div><!--/.container -->
 </div><!--/.navbar -->
 
-
+      
 
       </header>
 
@@ -118,7 +118,7 @@
   <div class="col-md-9 contents">
     <div class="page-header">
     <h1>Transform Data by (Grouped) Replacing or Sweeping out Statistics</h1>
-
+    
     <div class="hidden name"><code>TRA.Rd</code></div>
     </div>
 
@@ -206,132 +206,132 @@
 <span class='no'>dat</span> <span class='kw'>&lt;-</span> <span class='fu'><a href='select_replace_vars.html'>num_vars</a></span>(<span class='no'>iris</span>)           <span class='co'># Numeric columns</span>
 <span class='no'>m</span> <span class='kw'>&lt;-</span> <span class='fu'><a href='quick-conversion.html'>qM</a></span>(<span class='no'>dat</span>)                    <span class='co'># Matrix of numeric data</span>
 
-<span class='fu'><a href='https://rdrr.io/r/utils/head.html'>head</a></span>(<span class='fu'>TRA</span>(<span class='no'>v</span>, <span class='fu'><a href='fmean.html'>fmean</a></span>(<span class='no'>v</span>)))                <span class='co'># Simple centering [same as fmean(v, TRA = "-") or W(v)]</span></div><div class='output co'>#&gt; [1] -0.7433333 -0.9433333 -1.1433333 -1.2433333 -0.8433333 -0.4433333</div><div class='input'><span class='fu'><a href='https://rdrr.io/r/utils/head.html'>head</a></span>(<span class='fu'>TRA</span>(<span class='no'>m</span>, <span class='fu'><a href='fmean.html'>fmean</a></span>(<span class='no'>m</span>)))                <span class='co'># [same as sweep(m, 2, fmean(m)), fmean(m, TRA = "-") or W(m)]</span></div><div class='output co'>#&gt;      Sepal.Length Sepal.Width Petal.Length Petal.Width          wt
-#&gt; [1,]   -0.7433333  0.44266667       -2.358  -0.9993333 -0.09973522
-#&gt; [2,]   -0.9433333 -0.05733333       -2.358  -0.9993333 -0.03741603
-#&gt; [3,]   -1.1433333  0.14266667       -2.458  -0.9993333 -0.64564101
-#&gt; [4,]   -1.2433333  0.04266667       -2.258  -0.9993333 -0.55105086
-#&gt; [5,]   -0.8433333  0.54266667       -2.358  -0.9993333 -0.12932832
-#&gt; [6,]   -0.4433333  0.84266667       -2.058  -0.7993333  0.12241901</div><div class='input'><span class='fu'><a href='https://rdrr.io/r/utils/head.html'>head</a></span>(<span class='fu'>TRA</span>(<span class='no'>dat</span>, <span class='fu'><a href='fmean.html'>fmean</a></span>(<span class='no'>dat</span>)))            <span class='co'># [same as fmean(dat, TRA = "-") or W(dat)]</span></div><div class='output co'>#&gt;   Sepal.Length Sepal.Width Petal.Length Petal.Width          wt
-#&gt; 1   -0.7433333  0.44266667       -2.358  -0.9993333 -0.09973522
-#&gt; 2   -0.9433333 -0.05733333       -2.358  -0.9993333 -0.03741603
-#&gt; 3   -1.1433333  0.14266667       -2.458  -0.9993333 -0.64564101
-#&gt; 4   -1.2433333  0.04266667       -2.258  -0.9993333 -0.55105086
-#&gt; 5   -0.8433333  0.54266667       -2.358  -0.9993333 -0.12932832
-#&gt; 6   -0.4433333  0.84266667       -2.058  -0.7993333  0.12241901</div><div class='input'><span class='fu'><a href='https://rdrr.io/r/utils/head.html'>head</a></span>(<span class='fu'>TRA</span>(<span class='no'>v</span>, <span class='fu'><a href='fmean.html'>fmean</a></span>(<span class='no'>v</span>), <span class='st'>"replace"</span>))     <span class='co'># Simple replacing [same as fmean(v, TRA = "replace") or B(v)]</span></div><div class='output co'>#&gt; [1] 5.843333 5.843333 5.843333 5.843333 5.843333 5.843333</div><div class='input'><span class='fu'><a href='https://rdrr.io/r/utils/head.html'>head</a></span>(<span class='fu'>TRA</span>(<span class='no'>m</span>, <span class='fu'><a href='fmean.html'>fmean</a></span>(<span class='no'>m</span>), <span class='st'>"replace"</span>))     <span class='co'># [same as sweep(m, 2, fmean(m)), fmean(m, TRA = 1L) or B(m)]</span></div><div class='output co'>#&gt;      Sepal.Length Sepal.Width Petal.Length Petal.Width        wt
-#&gt; [1,]     5.843333    3.057333        3.758    1.199333 0.7844065
-#&gt; [2,]     5.843333    3.057333        3.758    1.199333 0.7844065
-#&gt; [3,]     5.843333    3.057333        3.758    1.199333 0.7844065
-#&gt; [4,]     5.843333    3.057333        3.758    1.199333 0.7844065
-#&gt; [5,]     5.843333    3.057333        3.758    1.199333 0.7844065
-#&gt; [6,]     5.843333    3.057333        3.758    1.199333 0.7844065</div><div class='input'><span class='fu'><a href='https://rdrr.io/r/utils/head.html'>head</a></span>(<span class='fu'>TRA</span>(<span class='no'>dat</span>, <span class='fu'><a href='fmean.html'>fmean</a></span>(<span class='no'>dat</span>), <span class='st'>"replace"</span>)) <span class='co'># [same as fmean(dat, TRA = "replace") or B(dat)]</span></div><div class='output co'>#&gt;   Sepal.Length Sepal.Width Petal.Length Petal.Width        wt
-#&gt; 1     5.843333    3.057333        3.758    1.199333 0.7844065
-#&gt; 2     5.843333    3.057333        3.758    1.199333 0.7844065
-#&gt; 3     5.843333    3.057333        3.758    1.199333 0.7844065
-#&gt; 4     5.843333    3.057333        3.758    1.199333 0.7844065
-#&gt; 5     5.843333    3.057333        3.758    1.199333 0.7844065
-#&gt; 6     5.843333    3.057333        3.758    1.199333 0.7844065</div><div class='input'><span class='fu'><a href='https://rdrr.io/r/utils/head.html'>head</a></span>(<span class='fu'>TRA</span>(<span class='no'>m</span>, <span class='fu'><a href='fvar_fsd.html'>fsd</a></span>(<span class='no'>m</span>), <span class='st'>"/"</span>))             <span class='co'># Simple scaling... [same as fsd(m, TRA = "/")]...</span></div><div class='output co'>#&gt;      Sepal.Length Sepal.Width Petal.Length Petal.Width        wt
-#&gt; [1,]     6.158928    8.029986    0.7930671   0.2623854 1.2632484
-#&gt; [2,]     5.917402    6.882845    0.7930671   0.2623854 1.3782300
-#&gt; [3,]     5.675875    7.341701    0.7364195   0.2623854 0.2560284
-#&gt; [4,]     5.555112    7.112273    0.8497148   0.2623854 0.4305514
-#&gt; [5,]     6.038165    8.259414    0.7930671   0.2623854 1.2086478
-#&gt; [6,]     6.521218    8.947698    0.9630101   0.5247707 1.6731326</div><div class='input'>
+<span class='fu'><a href='https://rdrr.io/r/utils/head.html'>head</a></span>(<span class='fu'>TRA</span>(<span class='no'>v</span>, <span class='fu'><a href='fmean.html'>fmean</a></span>(<span class='no'>v</span>)))                <span class='co'># Simple centering [same as fmean(v, TRA = "-") or W(v)]</span></div><div class='output co'>#&gt; [1] -0.7433333 -0.9433333 -1.1433333 -1.2433333 -0.8433333 -0.4433333</div><div class='input'><span class='fu'><a href='https://rdrr.io/r/utils/head.html'>head</a></span>(<span class='fu'>TRA</span>(<span class='no'>m</span>, <span class='fu'><a href='fmean.html'>fmean</a></span>(<span class='no'>m</span>)))                <span class='co'># [same as sweep(m, 2, fmean(m)), fmean(m, TRA = "-") or W(m)]</span></div><div class='output co'>#&gt;      Sepal.Length Sepal.Width Petal.Length Petal.Width
+#&gt; [1,]   -0.7433333  0.44266667       -2.358  -0.9993333
+#&gt; [2,]   -0.9433333 -0.05733333       -2.358  -0.9993333
+#&gt; [3,]   -1.1433333  0.14266667       -2.458  -0.9993333
+#&gt; [4,]   -1.2433333  0.04266667       -2.258  -0.9993333
+#&gt; [5,]   -0.8433333  0.54266667       -2.358  -0.9993333
+#&gt; [6,]   -0.4433333  0.84266667       -2.058  -0.7993333</div><div class='input'><span class='fu'><a href='https://rdrr.io/r/utils/head.html'>head</a></span>(<span class='fu'>TRA</span>(<span class='no'>dat</span>, <span class='fu'><a href='fmean.html'>fmean</a></span>(<span class='no'>dat</span>)))            <span class='co'># [same as fmean(dat, TRA = "-") or W(dat)]</span></div><div class='output co'>#&gt;   Sepal.Length Sepal.Width Petal.Length Petal.Width
+#&gt; 1   -0.7433333  0.44266667       -2.358  -0.9993333
+#&gt; 2   -0.9433333 -0.05733333       -2.358  -0.9993333
+#&gt; 3   -1.1433333  0.14266667       -2.458  -0.9993333
+#&gt; 4   -1.2433333  0.04266667       -2.258  -0.9993333
+#&gt; 5   -0.8433333  0.54266667       -2.358  -0.9993333
+#&gt; 6   -0.4433333  0.84266667       -2.058  -0.7993333</div><div class='input'><span class='fu'><a href='https://rdrr.io/r/utils/head.html'>head</a></span>(<span class='fu'>TRA</span>(<span class='no'>v</span>, <span class='fu'><a href='fmean.html'>fmean</a></span>(<span class='no'>v</span>), <span class='st'>"replace"</span>))     <span class='co'># Simple replacing [same as fmean(v, TRA = "replace") or B(v)]</span></div><div class='output co'>#&gt; [1] 5.843333 5.843333 5.843333 5.843333 5.843333 5.843333</div><div class='input'><span class='fu'><a href='https://rdrr.io/r/utils/head.html'>head</a></span>(<span class='fu'>TRA</span>(<span class='no'>m</span>, <span class='fu'><a href='fmean.html'>fmean</a></span>(<span class='no'>m</span>), <span class='st'>"replace"</span>))     <span class='co'># [same as sweep(m, 2, fmean(m)), fmean(m, TRA = 1L) or B(m)]</span></div><div class='output co'>#&gt;      Sepal.Length Sepal.Width Petal.Length Petal.Width
+#&gt; [1,]     5.843333    3.057333        3.758    1.199333
+#&gt; [2,]     5.843333    3.057333        3.758    1.199333
+#&gt; [3,]     5.843333    3.057333        3.758    1.199333
+#&gt; [4,]     5.843333    3.057333        3.758    1.199333
+#&gt; [5,]     5.843333    3.057333        3.758    1.199333
+#&gt; [6,]     5.843333    3.057333        3.758    1.199333</div><div class='input'><span class='fu'><a href='https://rdrr.io/r/utils/head.html'>head</a></span>(<span class='fu'>TRA</span>(<span class='no'>dat</span>, <span class='fu'><a href='fmean.html'>fmean</a></span>(<span class='no'>dat</span>), <span class='st'>"replace"</span>)) <span class='co'># [same as fmean(dat, TRA = "replace") or B(dat)]</span></div><div class='output co'>#&gt;   Sepal.Length Sepal.Width Petal.Length Petal.Width
+#&gt; 1     5.843333    3.057333        3.758    1.199333
+#&gt; 2     5.843333    3.057333        3.758    1.199333
+#&gt; 3     5.843333    3.057333        3.758    1.199333
+#&gt; 4     5.843333    3.057333        3.758    1.199333
+#&gt; 5     5.843333    3.057333        3.758    1.199333
+#&gt; 6     5.843333    3.057333        3.758    1.199333</div><div class='input'><span class='fu'><a href='https://rdrr.io/r/utils/head.html'>head</a></span>(<span class='fu'>TRA</span>(<span class='no'>m</span>, <span class='fu'><a href='fvar_fsd.html'>fsd</a></span>(<span class='no'>m</span>), <span class='st'>"/"</span>))             <span class='co'># Simple scaling... [same as fsd(m, TRA = "/")]...</span></div><div class='output co'>#&gt;      Sepal.Length Sepal.Width Petal.Length Petal.Width
+#&gt; [1,]     6.158928    8.029986    0.7930671   0.2623854
+#&gt; [2,]     5.917402    6.882845    0.7930671   0.2623854
+#&gt; [3,]     5.675875    7.341701    0.7364195   0.2623854
+#&gt; [4,]     5.555112    7.112273    0.8497148   0.2623854
+#&gt; [5,]     6.038165    8.259414    0.7930671   0.2623854
+#&gt; [6,]     6.521218    8.947698    0.9630101   0.5247707</div><div class='input'>
 <span class='co'># Note: All grouped examples also apply for v and dat...</span>
-<span class='fu'><a href='https://rdrr.io/r/utils/head.html'>head</a></span>(<span class='fu'>TRA</span>(<span class='no'>m</span>, <span class='fu'><a href='fmean.html'>fmean</a></span>(<span class='no'>m</span>, <span class='no'>f</span>), <span class='st'>"-"</span>, <span class='no'>f</span>))       <span class='co'># Centering [same as fmean(m, f, TRA = "-") or W(m, f)]</span></div><div class='output co'>#&gt;      Sepal.Length Sepal.Width Petal.Length Petal.Width          wt
-#&gt; [1,]        0.094       0.072       -0.062      -0.046 -0.19703618
-#&gt; [2,]       -0.106      -0.428       -0.062      -0.046 -0.13471699
-#&gt; [3,]       -0.306      -0.228       -0.162      -0.046 -0.74294197
-#&gt; [4,]       -0.406      -0.328        0.038      -0.046 -0.64835183
-#&gt; [5,]       -0.006       0.172       -0.062      -0.046 -0.22662929
-#&gt; [6,]        0.394       0.472        0.238       0.154  0.02511804</div><div class='input'><span class='fu'><a href='https://rdrr.io/r/utils/head.html'>head</a></span>(<span class='fu'>TRA</span>(<span class='no'>m</span>, <span class='fu'><a href='fmean.html'>fmean</a></span>(<span class='no'>m</span>, <span class='no'>f</span>), <span class='st'>"replace"</span>, <span class='no'>f</span>)) <span class='co'># Replacing [same fmean(m, f, TRA = "replace") or B(m, f)]</span></div><div class='output co'>#&gt;      Sepal.Length Sepal.Width Petal.Length Petal.Width        wt
-#&gt; [1,]        5.006       3.428        1.462       0.246 0.8817075
-#&gt; [2,]        5.006       3.428        1.462       0.246 0.8817075
-#&gt; [3,]        5.006       3.428        1.462       0.246 0.8817075
-#&gt; [4,]        5.006       3.428        1.462       0.246 0.8817075
-#&gt; [5,]        5.006       3.428        1.462       0.246 0.8817075
-#&gt; [6,]        5.006       3.428        1.462       0.246 0.8817075</div><div class='input'><span class='fu'><a href='https://rdrr.io/r/utils/head.html'>head</a></span>(<span class='fu'>TRA</span>(<span class='no'>m</span>, <span class='fu'><a href='fvar_fsd.html'>fsd</a></span>(<span class='no'>m</span>, <span class='no'>f</span>), <span class='st'>"/"</span>, <span class='no'>f</span>))         <span class='co'># Scaling [same as fsd(m, f, TRA = "/")]</span></div><div class='output co'>#&gt;      Sepal.Length Sepal.Width Petal.Length Petal.Width        wt
-#&gt; [1,]     14.46851    9.233260     8.061544    1.897793 1.3007127
-#&gt; [2,]     13.90112    7.914223     8.061544    1.897793 1.4191044
-#&gt; [3,]     13.33372    8.441838     7.485720    1.897793 0.2636215
-#&gt; [4,]     13.05003    8.178031     8.637369    1.897793 0.4433203
-#&gt; [5,]     14.18481    9.497068     8.061544    1.897793 1.2444929
-#&gt; [6,]     15.31960   10.288490     9.789018    3.795585 1.7227529</div><div class='input'>
-<span class='fu'><a href='https://rdrr.io/r/utils/head.html'>head</a></span>(<span class='fu'>TRA</span>(<span class='no'>m</span>, <span class='fu'><a href='fmean.html'>fmean</a></span>(<span class='no'>m</span>, <span class='no'>f</span>), <span class='st'>"-+"</span>, <span class='no'>f</span>))      <span class='co'># Centering on the overall mean ...</span></div><div class='output co'>#&gt;      Sepal.Length Sepal.Width Petal.Length Petal.Width         wt
-#&gt; [1,]     5.937333    3.129333        3.696    1.153333 0.58737035
-#&gt; [2,]     5.737333    2.629333        3.696    1.153333 0.64968954
-#&gt; [3,]     5.537333    2.829333        3.596    1.153333 0.04146456
-#&gt; [4,]     5.437333    2.729333        3.796    1.153333 0.13605471
-#&gt; [5,]     5.837333    3.229333        3.696    1.153333 0.55777724
-#&gt; [6,]     6.237333    3.529333        3.996    1.353333 0.80952457</div><div class='input'>                                        <span class='co'># [same as fmean(m, f, TRA = "-+") or</span>
+<span class='fu'><a href='https://rdrr.io/r/utils/head.html'>head</a></span>(<span class='fu'>TRA</span>(<span class='no'>m</span>, <span class='fu'><a href='fmean.html'>fmean</a></span>(<span class='no'>m</span>, <span class='no'>f</span>), <span class='st'>"-"</span>, <span class='no'>f</span>))       <span class='co'># Centering [same as fmean(m, f, TRA = "-") or W(m, f)]</span></div><div class='output co'>#&gt;      Sepal.Length Sepal.Width Petal.Length Petal.Width
+#&gt; [1,]        0.094       0.072       -0.062      -0.046
+#&gt; [2,]       -0.106      -0.428       -0.062      -0.046
+#&gt; [3,]       -0.306      -0.228       -0.162      -0.046
+#&gt; [4,]       -0.406      -0.328        0.038      -0.046
+#&gt; [5,]       -0.006       0.172       -0.062      -0.046
+#&gt; [6,]        0.394       0.472        0.238       0.154</div><div class='input'><span class='fu'><a href='https://rdrr.io/r/utils/head.html'>head</a></span>(<span class='fu'>TRA</span>(<span class='no'>m</span>, <span class='fu'><a href='fmean.html'>fmean</a></span>(<span class='no'>m</span>, <span class='no'>f</span>), <span class='st'>"replace"</span>, <span class='no'>f</span>)) <span class='co'># Replacing [same fmean(m, f, TRA = "replace") or B(m, f)]</span></div><div class='output co'>#&gt;      Sepal.Length Sepal.Width Petal.Length Petal.Width
+#&gt; [1,]        5.006       3.428        1.462       0.246
+#&gt; [2,]        5.006       3.428        1.462       0.246
+#&gt; [3,]        5.006       3.428        1.462       0.246
+#&gt; [4,]        5.006       3.428        1.462       0.246
+#&gt; [5,]        5.006       3.428        1.462       0.246
+#&gt; [6,]        5.006       3.428        1.462       0.246</div><div class='input'><span class='fu'><a href='https://rdrr.io/r/utils/head.html'>head</a></span>(<span class='fu'>TRA</span>(<span class='no'>m</span>, <span class='fu'><a href='fvar_fsd.html'>fsd</a></span>(<span class='no'>m</span>, <span class='no'>f</span>), <span class='st'>"/"</span>, <span class='no'>f</span>))         <span class='co'># Scaling [same as fsd(m, f, TRA = "/")]</span></div><div class='output co'>#&gt;      Sepal.Length Sepal.Width Petal.Length Petal.Width
+#&gt; [1,]     14.46851    9.233260     8.061544    1.897793
+#&gt; [2,]     13.90112    7.914223     8.061544    1.897793
+#&gt; [3,]     13.33372    8.441838     7.485720    1.897793
+#&gt; [4,]     13.05003    8.178031     8.637369    1.897793
+#&gt; [5,]     14.18481    9.497068     8.061544    1.897793
+#&gt; [6,]     15.31960   10.288490     9.789018    3.795585</div><div class='input'>
+<span class='fu'><a href='https://rdrr.io/r/utils/head.html'>head</a></span>(<span class='fu'>TRA</span>(<span class='no'>m</span>, <span class='fu'><a href='fmean.html'>fmean</a></span>(<span class='no'>m</span>, <span class='no'>f</span>), <span class='st'>"-+"</span>, <span class='no'>f</span>))      <span class='co'># Centering on the overall mean ...</span></div><div class='output co'>#&gt;      Sepal.Length Sepal.Width Petal.Length Petal.Width
+#&gt; [1,]     5.937333    3.129333        3.696    1.153333
+#&gt; [2,]     5.737333    2.629333        3.696    1.153333
+#&gt; [3,]     5.537333    2.829333        3.596    1.153333
+#&gt; [4,]     5.437333    2.729333        3.796    1.153333
+#&gt; [5,]     5.837333    3.229333        3.696    1.153333
+#&gt; [6,]     6.237333    3.529333        3.996    1.353333</div><div class='input'>                                        <span class='co'># [same as fmean(m, f, TRA = "-+") or</span>
                                         <span class='co'>#           W(m, f, mean = "overall.mean")]</span>
 <span class='fu'><a href='https://rdrr.io/r/utils/head.html'>head</a></span>(<span class='fu'>TRA</span>(<span class='fu'>TRA</span>(<span class='no'>m</span>, <span class='fu'><a href='fmean.html'>fmean</a></span>(<span class='no'>m</span>, <span class='no'>f</span>), <span class='st'>"-"</span>, <span class='no'>f</span>),   <span class='co'># Also the same thing done manually !!</span>
-     <span class='fu'><a href='fmean.html'>fmean</a></span>(<span class='no'>m</span>), <span class='st'>"+"</span>))</div><div class='output co'>#&gt;      Sepal.Length Sepal.Width Petal.Length Petal.Width         wt
-#&gt; [1,]     5.937333    3.129333        3.696    1.153333 0.58737035
-#&gt; [2,]     5.737333    2.629333        3.696    1.153333 0.64968954
-#&gt; [3,]     5.537333    2.829333        3.596    1.153333 0.04146456
-#&gt; [4,]     5.437333    2.729333        3.796    1.153333 0.13605471
-#&gt; [5,]     5.837333    3.229333        3.696    1.153333 0.55777724
-#&gt; [6,]     6.237333    3.529333        3.996    1.353333 0.80952457</div><div class='input'>
+     <span class='fu'><a href='fmean.html'>fmean</a></span>(<span class='no'>m</span>), <span class='st'>"+"</span>))</div><div class='output co'>#&gt;      Sepal.Length Sepal.Width Petal.Length Petal.Width
+#&gt; [1,]     5.937333    3.129333        3.696    1.153333
+#&gt; [2,]     5.737333    2.629333        3.696    1.153333
+#&gt; [3,]     5.537333    2.829333        3.596    1.153333
+#&gt; [4,]     5.437333    2.729333        3.796    1.153333
+#&gt; [5,]     5.837333    3.229333        3.696    1.153333
+#&gt; [6,]     6.237333    3.529333        3.996    1.353333</div><div class='input'>
 <span class='co'># grouped tibble method</span>
 <span class='fu'><a href='https://rdrr.io/r/base/library.html'>library</a></span>(<span class='no'>dplyr</span>)
-<span class='no'>iris</span> <span class='kw'>%&gt;%</span>  <span class='fu'><a href='https://dplyr.tidyverse.org/reference/group_by.html'>group_by</a></span>(<span class='no'>Species</span>) <span class='kw'>%&gt;%</span> <span class='fu'>TRA</span>(<span class='fu'><a href='fmean.html'>fmean</a></span>(<span class='no'>.</span>))</div><div class='output co'>#&gt; <span style='color: #949494;'># A tibble: 150 x 8</span><span>
+<span class='no'>iris</span> <span class='kw'>%&gt;%</span>  <span class='fu'><a href='https://dplyr.tidyverse.org/reference/group_by.html'>group_by</a></span>(<span class='no'>Species</span>) <span class='kw'>%&gt;%</span> <span class='fu'>TRA</span>(<span class='fu'><a href='fmean.html'>fmean</a></span>(<span class='no'>.</span>))</div><div class='output co'>#&gt; <span style='color: #949494;'># A tibble: 150 x 5</span><span>
 #&gt; </span><span style='color: #949494;'># Groups:   Species [3]</span><span>
-#&gt;    Sepal.Length Sepal.Width Petal.Length Petal.Width Species      wt AWMSL AWMSW
-#&gt;           </span><span style='color: #949494;font-style: italic;'>&lt;dbl&gt;</span><span>       </span><span style='color: #949494;font-style: italic;'>&lt;dbl&gt;</span><span>        </span><span style='color: #949494;font-style: italic;'>&lt;dbl&gt;</span><span>       </span><span style='color: #949494;font-style: italic;'>&lt;dbl&gt;</span><span> </span><span style='color: #949494;font-style: italic;'>&lt;fct&gt;</span><span>     </span><span style='color: #949494;font-style: italic;'>&lt;dbl&gt;</span><span> </span><span style='color: #949494;font-style: italic;'>&lt;dbl&gt;</span><span> </span><span style='color: #949494;font-style: italic;'>&lt;dbl&gt;</span><span>
-#&gt; </span><span style='color: #BCBCBC;'> 1</span><span>       0.094</span><span style='text-decoration: underline;'>0</span><span>      0.072</span><span style='text-decoration: underline;'>0</span><span>      -</span><span style='color: #BB0000;'>0.062</span><span>      -</span><span style='color: #BB0000;'>0.046</span><span style='color: #BB0000;text-decoration: underline;'>0</span><span> setosa  -</span><span style='color: #BB0000;'>0.197</span><span>  -</span><span style='color: #BB0000;'>0.02</span><span>  0.24
-#&gt; </span><span style='color: #BCBCBC;'> 2</span><span>      -</span><span style='color: #BB0000;'>0.106</span><span>      -</span><span style='color: #BB0000;'>0.428</span><span>       -</span><span style='color: #BB0000;'>0.062</span><span>      -</span><span style='color: #BB0000;'>0.046</span><span style='color: #BB0000;text-decoration: underline;'>0</span><span> setosa  -</span><span style='color: #BB0000;'>0.135</span><span>  -</span><span style='color: #BB0000;'>0.02</span><span> -</span><span style='color: #BB0000;'>0.76</span><span>
-#&gt; </span><span style='color: #BCBCBC;'> 3</span><span>      -</span><span style='color: #BB0000;'>0.306</span><span>      -</span><span style='color: #BB0000;'>0.228</span><span>       -</span><span style='color: #BB0000;'>0.162</span><span>      -</span><span style='color: #BB0000;'>0.046</span><span style='color: #BB0000;text-decoration: underline;'>0</span><span> setosa  -</span><span style='color: #BB0000;'>0.743</span><span>  -</span><span style='color: #BB0000;'>0.02</span><span>  0.24
-#&gt; </span><span style='color: #BCBCBC;'> 4</span><span>      -</span><span style='color: #BB0000;'>0.406</span><span>      -</span><span style='color: #BB0000;'>0.328</span><span>        0.038</span><span style='text-decoration: underline;'>0</span><span>     -</span><span style='color: #BB0000;'>0.046</span><span style='color: #BB0000;text-decoration: underline;'>0</span><span> setosa  -</span><span style='color: #BB0000;'>0.648</span><span>  -</span><span style='color: #BB0000;'>0.02</span><span> -</span><span style='color: #BB0000;'>0.76</span><span>
-#&gt; </span><span style='color: #BCBCBC;'> 5</span><span>      -</span><span style='color: #BB0000;'>0.006</span><span>       0.172       -</span><span style='color: #BB0000;'>0.062</span><span>      -</span><span style='color: #BB0000;'>0.046</span><span style='color: #BB0000;text-decoration: underline;'>0</span><span> setosa  -</span><span style='color: #BB0000;'>0.227</span><span>  -</span><span style='color: #BB0000;'>0.02</span><span>  0.24
-#&gt; </span><span style='color: #BCBCBC;'> 6</span><span>       0.394       0.472        0.238       0.154  setosa   0.025</span><span style='text-decoration: underline;'>1</span><span> -</span><span style='color: #BB0000;'>0.02</span><span>  0.24
-#&gt; </span><span style='color: #BCBCBC;'> 7</span><span>      -</span><span style='color: #BB0000;'>0.406</span><span>      -</span><span style='color: #BB0000;'>0.028</span><span>       -</span><span style='color: #BB0000;'>0.062</span><span>       0.054  setosa  -</span><span style='color: #BB0000;'>0.382</span><span>  -</span><span style='color: #BB0000;'>0.02</span><span>  0.24
-#&gt; </span><span style='color: #BCBCBC;'> 8</span><span>      -</span><span style='color: #BB0000;'>0.006</span><span>      -</span><span style='color: #BB0000;'>0.028</span><span>        0.038</span><span style='text-decoration: underline;'>0</span><span>     -</span><span style='color: #BB0000;'>0.046</span><span style='color: #BB0000;text-decoration: underline;'>0</span><span> setosa   0.068</span><span style='text-decoration: underline;'>7</span><span> -</span><span style='color: #BB0000;'>0.02</span><span>  0.24
-#&gt; </span><span style='color: #BCBCBC;'> 9</span><span>      -</span><span style='color: #BB0000;'>0.606</span><span>      -</span><span style='color: #BB0000;'>0.528</span><span>       -</span><span style='color: #BB0000;'>0.062</span><span>      -</span><span style='color: #BB0000;'>0.046</span><span style='color: #BB0000;text-decoration: underline;'>0</span><span> setosa  -</span><span style='color: #BB0000;'>0.492</span><span>  -</span><span style='color: #BB0000;'>0.02</span><span> -</span><span style='color: #BB0000;'>0.76</span><span>
-#&gt; </span><span style='color: #BCBCBC;'>10</span><span>      -</span><span style='color: #BB0000;'>0.106</span><span>      -</span><span style='color: #BB0000;'>0.328</span><span>        0.038</span><span style='text-decoration: underline;'>0</span><span>     -</span><span style='color: #BB0000;'>0.146</span><span>  setosa  -</span><span style='color: #BB0000;'>0.584</span><span>  -</span><span style='color: #BB0000;'>0.02</span><span> -</span><span style='color: #BB0000;'>0.76</span><span>
-#&gt; </span><span style='color: #949494;'># ... with 140 more rows</span><span></div><div class='input'><span class='no'>iris</span> <span class='kw'>%&gt;%</span>  <span class='fu'><a href='https://dplyr.tidyverse.org/reference/group_by.html'>group_by</a></span>(<span class='no'>Species</span>) <span class='kw'>%&gt;%</span> <span class='fu'><a href='fmean.html'>fmean</a></span>(<span class='kw'>TRA</span> <span class='kw'>=</span> <span class='st'>"-"</span>)        <span class='co'># Same thing</span></div><div class='output co'>#&gt; </span><span style='color: #949494;'># A tibble: 150 x 8</span><span>
+#&gt;    Sepal.Length Sepal.Width Petal.Length Petal.Width Species
+#&gt;           </span><span style='color: #949494;font-style: italic;'>&lt;dbl&gt;</span><span>       </span><span style='color: #949494;font-style: italic;'>&lt;dbl&gt;</span><span>        </span><span style='color: #949494;font-style: italic;'>&lt;dbl&gt;</span><span>       </span><span style='color: #949494;font-style: italic;'>&lt;dbl&gt;</span><span> </span><span style='color: #949494;font-style: italic;'>&lt;fct&gt;</span><span>  
+#&gt; </span><span style='color: #BCBCBC;'> 1</span><span>       0.094</span><span style='text-decoration: underline;'>0</span><span>      0.072</span><span style='text-decoration: underline;'>0</span><span>      -</span><span style='color: #BB0000;'>0.062</span><span>      -</span><span style='color: #BB0000;'>0.046</span><span style='color: #BB0000;text-decoration: underline;'>0</span><span> setosa 
+#&gt; </span><span style='color: #BCBCBC;'> 2</span><span>      -</span><span style='color: #BB0000;'>0.106</span><span>      -</span><span style='color: #BB0000;'>0.428</span><span>       -</span><span style='color: #BB0000;'>0.062</span><span>      -</span><span style='color: #BB0000;'>0.046</span><span style='color: #BB0000;text-decoration: underline;'>0</span><span> setosa 
+#&gt; </span><span style='color: #BCBCBC;'> 3</span><span>      -</span><span style='color: #BB0000;'>0.306</span><span>      -</span><span style='color: #BB0000;'>0.228</span><span>       -</span><span style='color: #BB0000;'>0.162</span><span>      -</span><span style='color: #BB0000;'>0.046</span><span style='color: #BB0000;text-decoration: underline;'>0</span><span> setosa 
+#&gt; </span><span style='color: #BCBCBC;'> 4</span><span>      -</span><span style='color: #BB0000;'>0.406</span><span>      -</span><span style='color: #BB0000;'>0.328</span><span>        0.038</span><span style='text-decoration: underline;'>0</span><span>     -</span><span style='color: #BB0000;'>0.046</span><span style='color: #BB0000;text-decoration: underline;'>0</span><span> setosa 
+#&gt; </span><span style='color: #BCBCBC;'> 5</span><span>      -</span><span style='color: #BB0000;'>0.006</span><span>       0.172       -</span><span style='color: #BB0000;'>0.062</span><span>      -</span><span style='color: #BB0000;'>0.046</span><span style='color: #BB0000;text-decoration: underline;'>0</span><span> setosa 
+#&gt; </span><span style='color: #BCBCBC;'> 6</span><span>       0.394       0.472        0.238       0.154  setosa 
+#&gt; </span><span style='color: #BCBCBC;'> 7</span><span>      -</span><span style='color: #BB0000;'>0.406</span><span>      -</span><span style='color: #BB0000;'>0.028</span><span>       -</span><span style='color: #BB0000;'>0.062</span><span>       0.054  setosa 
+#&gt; </span><span style='color: #BCBCBC;'> 8</span><span>      -</span><span style='color: #BB0000;'>0.006</span><span>      -</span><span style='color: #BB0000;'>0.028</span><span>        0.038</span><span style='text-decoration: underline;'>0</span><span>     -</span><span style='color: #BB0000;'>0.046</span><span style='color: #BB0000;text-decoration: underline;'>0</span><span> setosa 
+#&gt; </span><span style='color: #BCBCBC;'> 9</span><span>      -</span><span style='color: #BB0000;'>0.606</span><span>      -</span><span style='color: #BB0000;'>0.528</span><span>       -</span><span style='color: #BB0000;'>0.062</span><span>      -</span><span style='color: #BB0000;'>0.046</span><span style='color: #BB0000;text-decoration: underline;'>0</span><span> setosa 
+#&gt; </span><span style='color: #BCBCBC;'>10</span><span>      -</span><span style='color: #BB0000;'>0.106</span><span>      -</span><span style='color: #BB0000;'>0.328</span><span>        0.038</span><span style='text-decoration: underline;'>0</span><span>     -</span><span style='color: #BB0000;'>0.146</span><span>  setosa 
+#&gt; </span><span style='color: #949494;'># ... with 140 more rows</span><span></div><div class='input'><span class='no'>iris</span> <span class='kw'>%&gt;%</span>  <span class='fu'><a href='https://dplyr.tidyverse.org/reference/group_by.html'>group_by</a></span>(<span class='no'>Species</span>) <span class='kw'>%&gt;%</span> <span class='fu'><a href='fmean.html'>fmean</a></span>(<span class='kw'>TRA</span> <span class='kw'>=</span> <span class='st'>"-"</span>)        <span class='co'># Same thing</span></div><div class='output co'>#&gt; </span><span style='color: #949494;'># A tibble: 150 x 5</span><span>
 #&gt; </span><span style='color: #949494;'># Groups:   Species [3]</span><span>
-#&gt;    Species Sepal.Length Sepal.Width Petal.Length Petal.Width      wt AWMSL AWMSW
-#&gt;  </span><span style='color: #BCBCBC;'>*</span><span> </span><span style='color: #949494;font-style: italic;'>&lt;fct&gt;</span><span>          </span><span style='color: #949494;font-style: italic;'>&lt;dbl&gt;</span><span>       </span><span style='color: #949494;font-style: italic;'>&lt;dbl&gt;</span><span>        </span><span style='color: #949494;font-style: italic;'>&lt;dbl&gt;</span><span>       </span><span style='color: #949494;font-style: italic;'>&lt;dbl&gt;</span><span>   </span><span style='color: #949494;font-style: italic;'>&lt;dbl&gt;</span><span> </span><span style='color: #949494;font-style: italic;'>&lt;dbl&gt;</span><span> </span><span style='color: #949494;font-style: italic;'>&lt;dbl&gt;</span><span>
-#&gt; </span><span style='color: #BCBCBC;'> 1</span><span> setosa        0.094</span><span style='text-decoration: underline;'>0</span><span>      0.072</span><span style='text-decoration: underline;'>0</span><span>      -</span><span style='color: #BB0000;'>0.062</span><span>      -</span><span style='color: #BB0000;'>0.046</span><span style='color: #BB0000;text-decoration: underline;'>0</span><span> -</span><span style='color: #BB0000;'>0.197</span><span>  -</span><span style='color: #BB0000;'>0.02</span><span>  0.24
-#&gt; </span><span style='color: #BCBCBC;'> 2</span><span> setosa       -</span><span style='color: #BB0000;'>0.106</span><span>      -</span><span style='color: #BB0000;'>0.428</span><span>       -</span><span style='color: #BB0000;'>0.062</span><span>      -</span><span style='color: #BB0000;'>0.046</span><span style='color: #BB0000;text-decoration: underline;'>0</span><span> -</span><span style='color: #BB0000;'>0.135</span><span>  -</span><span style='color: #BB0000;'>0.02</span><span> -</span><span style='color: #BB0000;'>0.76</span><span>
-#&gt; </span><span style='color: #BCBCBC;'> 3</span><span> setosa       -</span><span style='color: #BB0000;'>0.306</span><span>      -</span><span style='color: #BB0000;'>0.228</span><span>       -</span><span style='color: #BB0000;'>0.162</span><span>      -</span><span style='color: #BB0000;'>0.046</span><span style='color: #BB0000;text-decoration: underline;'>0</span><span> -</span><span style='color: #BB0000;'>0.743</span><span>  -</span><span style='color: #BB0000;'>0.02</span><span>  0.24
-#&gt; </span><span style='color: #BCBCBC;'> 4</span><span> setosa       -</span><span style='color: #BB0000;'>0.406</span><span>      -</span><span style='color: #BB0000;'>0.328</span><span>        0.038</span><span style='text-decoration: underline;'>0</span><span>     -</span><span style='color: #BB0000;'>0.046</span><span style='color: #BB0000;text-decoration: underline;'>0</span><span> -</span><span style='color: #BB0000;'>0.648</span><span>  -</span><span style='color: #BB0000;'>0.02</span><span> -</span><span style='color: #BB0000;'>0.76</span><span>
-#&gt; </span><span style='color: #BCBCBC;'> 5</span><span> setosa       -</span><span style='color: #BB0000;'>0.006</span><span>       0.172       -</span><span style='color: #BB0000;'>0.062</span><span>      -</span><span style='color: #BB0000;'>0.046</span><span style='color: #BB0000;text-decoration: underline;'>0</span><span> -</span><span style='color: #BB0000;'>0.227</span><span>  -</span><span style='color: #BB0000;'>0.02</span><span>  0.24
-#&gt; </span><span style='color: #BCBCBC;'> 6</span><span> setosa        0.394       0.472        0.238       0.154   0.025</span><span style='text-decoration: underline;'>1</span><span> -</span><span style='color: #BB0000;'>0.02</span><span>  0.24
-#&gt; </span><span style='color: #BCBCBC;'> 7</span><span> setosa       -</span><span style='color: #BB0000;'>0.406</span><span>      -</span><span style='color: #BB0000;'>0.028</span><span>       -</span><span style='color: #BB0000;'>0.062</span><span>       0.054  -</span><span style='color: #BB0000;'>0.382</span><span>  -</span><span style='color: #BB0000;'>0.02</span><span>  0.24
-#&gt; </span><span style='color: #BCBCBC;'> 8</span><span> setosa       -</span><span style='color: #BB0000;'>0.006</span><span>      -</span><span style='color: #BB0000;'>0.028</span><span>        0.038</span><span style='text-decoration: underline;'>0</span><span>     -</span><span style='color: #BB0000;'>0.046</span><span style='color: #BB0000;text-decoration: underline;'>0</span><span>  0.068</span><span style='text-decoration: underline;'>7</span><span> -</span><span style='color: #BB0000;'>0.02</span><span>  0.24
-#&gt; </span><span style='color: #BCBCBC;'> 9</span><span> setosa       -</span><span style='color: #BB0000;'>0.606</span><span>      -</span><span style='color: #BB0000;'>0.528</span><span>       -</span><span style='color: #BB0000;'>0.062</span><span>      -</span><span style='color: #BB0000;'>0.046</span><span style='color: #BB0000;text-decoration: underline;'>0</span><span> -</span><span style='color: #BB0000;'>0.492</span><span>  -</span><span style='color: #BB0000;'>0.02</span><span> -</span><span style='color: #BB0000;'>0.76</span><span>
-#&gt; </span><span style='color: #BCBCBC;'>10</span><span> setosa       -</span><span style='color: #BB0000;'>0.106</span><span>      -</span><span style='color: #BB0000;'>0.328</span><span>        0.038</span><span style='text-decoration: underline;'>0</span><span>     -</span><span style='color: #BB0000;'>0.146</span><span>  -</span><span style='color: #BB0000;'>0.584</span><span>  -</span><span style='color: #BB0000;'>0.02</span><span> -</span><span style='color: #BB0000;'>0.76</span><span>
-#&gt; </span><span style='color: #949494;'># ... with 140 more rows</span><span></div><div class='input'><span class='no'>iris</span> <span class='kw'>%&gt;%</span>  <span class='fu'><a href='https://dplyr.tidyverse.org/reference/group_by.html'>group_by</a></span>(<span class='no'>Species</span>) <span class='kw'>%&gt;%</span> <span class='fu'>TRA</span>(<span class='fu'><a href='fmean.html'>fmean</a></span>(<span class='no'>.</span>)[<span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span>(<span class='fl'>2</span>,<span class='fl'>4</span>)])   <span class='co'># Only transforming 2 columns</span></div><div class='output co'>#&gt; </span><span style='color: #949494;'># A tibble: 150 x 8</span><span>
+#&gt;    Species Sepal.Length Sepal.Width Petal.Length Petal.Width
+#&gt;  </span><span style='color: #BCBCBC;'>*</span><span> </span><span style='color: #949494;font-style: italic;'>&lt;fct&gt;</span><span>          </span><span style='color: #949494;font-style: italic;'>&lt;dbl&gt;</span><span>       </span><span style='color: #949494;font-style: italic;'>&lt;dbl&gt;</span><span>        </span><span style='color: #949494;font-style: italic;'>&lt;dbl&gt;</span><span>       </span><span style='color: #949494;font-style: italic;'>&lt;dbl&gt;</span><span>
+#&gt; </span><span style='color: #BCBCBC;'> 1</span><span> setosa        0.094</span><span style='text-decoration: underline;'>0</span><span>      0.072</span><span style='text-decoration: underline;'>0</span><span>      -</span><span style='color: #BB0000;'>0.062</span><span>      -</span><span style='color: #BB0000;'>0.046</span><span style='color: #BB0000;text-decoration: underline;'>0</span><span>
+#&gt; </span><span style='color: #BCBCBC;'> 2</span><span> setosa       -</span><span style='color: #BB0000;'>0.106</span><span>      -</span><span style='color: #BB0000;'>0.428</span><span>       -</span><span style='color: #BB0000;'>0.062</span><span>      -</span><span style='color: #BB0000;'>0.046</span><span style='color: #BB0000;text-decoration: underline;'>0</span><span>
+#&gt; </span><span style='color: #BCBCBC;'> 3</span><span> setosa       -</span><span style='color: #BB0000;'>0.306</span><span>      -</span><span style='color: #BB0000;'>0.228</span><span>       -</span><span style='color: #BB0000;'>0.162</span><span>      -</span><span style='color: #BB0000;'>0.046</span><span style='color: #BB0000;text-decoration: underline;'>0</span><span>
+#&gt; </span><span style='color: #BCBCBC;'> 4</span><span> setosa       -</span><span style='color: #BB0000;'>0.406</span><span>      -</span><span style='color: #BB0000;'>0.328</span><span>        0.038</span><span style='text-decoration: underline;'>0</span><span>     -</span><span style='color: #BB0000;'>0.046</span><span style='color: #BB0000;text-decoration: underline;'>0</span><span>
+#&gt; </span><span style='color: #BCBCBC;'> 5</span><span> setosa       -</span><span style='color: #BB0000;'>0.006</span><span>       0.172       -</span><span style='color: #BB0000;'>0.062</span><span>      -</span><span style='color: #BB0000;'>0.046</span><span style='color: #BB0000;text-decoration: underline;'>0</span><span>
+#&gt; </span><span style='color: #BCBCBC;'> 6</span><span> setosa        0.394       0.472        0.238       0.154 
+#&gt; </span><span style='color: #BCBCBC;'> 7</span><span> setosa       -</span><span style='color: #BB0000;'>0.406</span><span>      -</span><span style='color: #BB0000;'>0.028</span><span>       -</span><span style='color: #BB0000;'>0.062</span><span>       0.054 
+#&gt; </span><span style='color: #BCBCBC;'> 8</span><span> setosa       -</span><span style='color: #BB0000;'>0.006</span><span>      -</span><span style='color: #BB0000;'>0.028</span><span>        0.038</span><span style='text-decoration: underline;'>0</span><span>     -</span><span style='color: #BB0000;'>0.046</span><span style='color: #BB0000;text-decoration: underline;'>0</span><span>
+#&gt; </span><span style='color: #BCBCBC;'> 9</span><span> setosa       -</span><span style='color: #BB0000;'>0.606</span><span>      -</span><span style='color: #BB0000;'>0.528</span><span>       -</span><span style='color: #BB0000;'>0.062</span><span>      -</span><span style='color: #BB0000;'>0.046</span><span style='color: #BB0000;text-decoration: underline;'>0</span><span>
+#&gt; </span><span style='color: #BCBCBC;'>10</span><span> setosa       -</span><span style='color: #BB0000;'>0.106</span><span>      -</span><span style='color: #BB0000;'>0.328</span><span>        0.038</span><span style='text-decoration: underline;'>0</span><span>     -</span><span style='color: #BB0000;'>0.146</span><span> 
+#&gt; </span><span style='color: #949494;'># ... with 140 more rows</span><span></div><div class='input'><span class='no'>iris</span> <span class='kw'>%&gt;%</span>  <span class='fu'><a href='https://dplyr.tidyverse.org/reference/group_by.html'>group_by</a></span>(<span class='no'>Species</span>) <span class='kw'>%&gt;%</span> <span class='fu'>TRA</span>(<span class='fu'><a href='fmean.html'>fmean</a></span>(<span class='no'>.</span>)[<span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span>(<span class='fl'>2</span>,<span class='fl'>4</span>)])   <span class='co'># Only transforming 2 columns</span></div><div class='output co'>#&gt; </span><span style='color: #949494;'># A tibble: 150 x 5</span><span>
 #&gt; </span><span style='color: #949494;'># Groups:   Species [3]</span><span>
-#&gt;    Sepal.Length Sepal.Width Petal.Length Petal.Width Species    wt AWMSL AWMSW
-#&gt;           </span><span style='color: #949494;font-style: italic;'>&lt;dbl&gt;</span><span>       </span><span style='color: #949494;font-style: italic;'>&lt;dbl&gt;</span><span>        </span><span style='color: #949494;font-style: italic;'>&lt;dbl&gt;</span><span>       </span><span style='color: #949494;font-style: italic;'>&lt;dbl&gt;</span><span> </span><span style='color: #949494;font-style: italic;'>&lt;fct&gt;</span><span>   </span><span style='color: #949494;font-style: italic;'>&lt;dbl&gt;</span><span> </span><span style='color: #949494;font-style: italic;'>&lt;lgl&gt;</span><span> </span><span style='color: #949494;font-style: italic;'>&lt;lgl&gt;</span><span>
-#&gt; </span><span style='color: #BCBCBC;'> 1</span><span>       0.094</span><span style='text-decoration: underline;'>0</span><span>         3.5      -</span><span style='color: #BB0000;'>0.062</span><span>          0.2 setosa  0.685 FALSE TRUE
-#&gt; </span><span style='color: #BCBCBC;'> 2</span><span>      -</span><span style='color: #BB0000;'>0.106</span><span>          3        -</span><span style='color: #BB0000;'>0.062</span><span>          0.2 setosa  0.747 FALSE FALSE
-#&gt; </span><span style='color: #BCBCBC;'> 3</span><span>      -</span><span style='color: #BB0000;'>0.306</span><span>          3.2      -</span><span style='color: #BB0000;'>0.162</span><span>          0.2 setosa  0.139 FALSE TRUE
-#&gt; </span><span style='color: #BCBCBC;'> 4</span><span>      -</span><span style='color: #BB0000;'>0.406</span><span>          3.1       0.038</span><span style='text-decoration: underline;'>0</span><span>         0.2 setosa  0.233 FALSE FALSE
-#&gt; </span><span style='color: #BCBCBC;'> 5</span><span>      -</span><span style='color: #BB0000;'>0.006</span><span>          3.6      -</span><span style='color: #BB0000;'>0.062</span><span>          0.2 setosa  0.655 FALSE TRUE
-#&gt; </span><span style='color: #BCBCBC;'> 6</span><span>       0.394          3.9       0.238          0.4 setosa  0.907 FALSE TRUE
-#&gt; </span><span style='color: #BCBCBC;'> 7</span><span>      -</span><span style='color: #BB0000;'>0.406</span><span>          3.4      -</span><span style='color: #BB0000;'>0.062</span><span>          0.3 setosa  0.500 FALSE TRUE
-#&gt; </span><span style='color: #BCBCBC;'> 8</span><span>      -</span><span style='color: #BB0000;'>0.006</span><span>          3.4       0.038</span><span style='text-decoration: underline;'>0</span><span>         0.2 setosa  0.950 FALSE TRUE
-#&gt; </span><span style='color: #BCBCBC;'> 9</span><span>      -</span><span style='color: #BB0000;'>0.606</span><span>          2.9      -</span><span style='color: #BB0000;'>0.062</span><span>          0.2 setosa  0.390 FALSE FALSE
-#&gt; </span><span style='color: #BCBCBC;'>10</span><span>      -</span><span style='color: #BB0000;'>0.106</span><span>          3.1       0.038</span><span style='text-decoration: underline;'>0</span><span>         0.1 setosa  0.297 FALSE FALSE
+#&gt;    Sepal.Length Sepal.Width Petal.Length Petal.Width Species
+#&gt;           </span><span style='color: #949494;font-style: italic;'>&lt;dbl&gt;</span><span>       </span><span style='color: #949494;font-style: italic;'>&lt;dbl&gt;</span><span>        </span><span style='color: #949494;font-style: italic;'>&lt;dbl&gt;</span><span>       </span><span style='color: #949494;font-style: italic;'>&lt;dbl&gt;</span><span> </span><span style='color: #949494;font-style: italic;'>&lt;fct&gt;</span><span>  
+#&gt; </span><span style='color: #BCBCBC;'> 1</span><span>       0.094</span><span style='text-decoration: underline;'>0</span><span>         3.5      -</span><span style='color: #BB0000;'>0.062</span><span>          0.2 setosa 
+#&gt; </span><span style='color: #BCBCBC;'> 2</span><span>      -</span><span style='color: #BB0000;'>0.106</span><span>          3        -</span><span style='color: #BB0000;'>0.062</span><span>          0.2 setosa 
+#&gt; </span><span style='color: #BCBCBC;'> 3</span><span>      -</span><span style='color: #BB0000;'>0.306</span><span>          3.2      -</span><span style='color: #BB0000;'>0.162</span><span>          0.2 setosa 
+#&gt; </span><span style='color: #BCBCBC;'> 4</span><span>      -</span><span style='color: #BB0000;'>0.406</span><span>          3.1       0.038</span><span style='text-decoration: underline;'>0</span><span>         0.2 setosa 
+#&gt; </span><span style='color: #BCBCBC;'> 5</span><span>      -</span><span style='color: #BB0000;'>0.006</span><span>          3.6      -</span><span style='color: #BB0000;'>0.062</span><span>          0.2 setosa 
+#&gt; </span><span style='color: #BCBCBC;'> 6</span><span>       0.394          3.9       0.238          0.4 setosa 
+#&gt; </span><span style='color: #BCBCBC;'> 7</span><span>      -</span><span style='color: #BB0000;'>0.406</span><span>          3.4      -</span><span style='color: #BB0000;'>0.062</span><span>          0.3 setosa 
+#&gt; </span><span style='color: #BCBCBC;'> 8</span><span>      -</span><span style='color: #BB0000;'>0.006</span><span>          3.4       0.038</span><span style='text-decoration: underline;'>0</span><span>         0.2 setosa 
+#&gt; </span><span style='color: #BCBCBC;'> 9</span><span>      -</span><span style='color: #BB0000;'>0.606</span><span>          2.9      -</span><span style='color: #BB0000;'>0.062</span><span>          0.2 setosa 
+#&gt; </span><span style='color: #BCBCBC;'>10</span><span>      -</span><span style='color: #BB0000;'>0.106</span><span>          3.1       0.038</span><span style='text-decoration: underline;'>0</span><span>         0.1 setosa 
 #&gt; </span><span style='color: #949494;'># ... with 140 more rows</span><span></div><div class='input'><span class='no'>iris</span> <span class='kw'>%&gt;%</span>  <span class='fu'><a href='https://dplyr.tidyverse.org/reference/group_by.html'>group_by</a></span>(<span class='no'>Species</span>) <span class='kw'>%&gt;%</span> <span class='fu'>TRA</span>(<span class='fu'><a href='fmean.html'>fmean</a></span>(<span class='no'>.</span>)[<span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span>(<span class='fl'>2</span>,<span class='fl'>4</span>)],   <span class='co'># Dropping species column</span>
-                            <span class='kw'>keep.group_vars</span> <span class='kw'>=</span> <span class='fl'>FALSE</span>)</div><div class='output co'>#&gt; </span><span style='color: #949494;'># A tibble: 150 x 7</span><span>
+                            <span class='kw'>keep.group_vars</span> <span class='kw'>=</span> <span class='fl'>FALSE</span>)</div><div class='output co'>#&gt; </span><span style='color: #949494;'># A tibble: 150 x 4</span><span>
 #&gt; </span><span style='color: #949494;'># Groups:   Species [3]</span><span>
-#&gt;    Sepal.Length Sepal.Width Petal.Length Petal.Width    wt AWMSL AWMSW
-#&gt;  </span><span style='color: #BCBCBC;'>*</span><span>        </span><span style='color: #949494;font-style: italic;'>&lt;dbl&gt;</span><span>       </span><span style='color: #949494;font-style: italic;'>&lt;dbl&gt;</span><span>        </span><span style='color: #949494;font-style: italic;'>&lt;dbl&gt;</span><span>       </span><span style='color: #949494;font-style: italic;'>&lt;dbl&gt;</span><span> </span><span style='color: #949494;font-style: italic;'>&lt;dbl&gt;</span><span> </span><span style='color: #949494;font-style: italic;'>&lt;lgl&gt;</span><span> </span><span style='color: #949494;font-style: italic;'>&lt;lgl&gt;</span><span>
-#&gt; </span><span style='color: #BCBCBC;'> 1</span><span>       0.094</span><span style='text-decoration: underline;'>0</span><span>         3.5      -</span><span style='color: #BB0000;'>0.062</span><span>          0.2 0.685 FALSE TRUE
-#&gt; </span><span style='color: #BCBCBC;'> 2</span><span>      -</span><span style='color: #BB0000;'>0.106</span><span>          3        -</span><span style='color: #BB0000;'>0.062</span><span>          0.2 0.747 FALSE FALSE
-#&gt; </span><span style='color: #BCBCBC;'> 3</span><span>      -</span><span style='color: #BB0000;'>0.306</span><span>          3.2      -</span><span style='color: #BB0000;'>0.162</span><span>          0.2 0.139 FALSE TRUE
-#&gt; </span><span style='color: #BCBCBC;'> 4</span><span>      -</span><span style='color: #BB0000;'>0.406</span><span>          3.1       0.038</span><span style='text-decoration: underline;'>0</span><span>         0.2 0.233 FALSE FALSE
-#&gt; </span><span style='color: #BCBCBC;'> 5</span><span>      -</span><span style='color: #BB0000;'>0.006</span><span>          3.6      -</span><span style='color: #BB0000;'>0.062</span><span>          0.2 0.655 FALSE TRUE
-#&gt; </span><span style='color: #BCBCBC;'> 6</span><span>       0.394          3.9       0.238          0.4 0.907 FALSE TRUE
-#&gt; </span><span style='color: #BCBCBC;'> 7</span><span>      -</span><span style='color: #BB0000;'>0.406</span><span>          3.4      -</span><span style='color: #BB0000;'>0.062</span><span>          0.3 0.500 FALSE TRUE
-#&gt; </span><span style='color: #BCBCBC;'> 8</span><span>      -</span><span style='color: #BB0000;'>0.006</span><span>          3.4       0.038</span><span style='text-decoration: underline;'>0</span><span>         0.2 0.950 FALSE TRUE
-#&gt; </span><span style='color: #BCBCBC;'> 9</span><span>      -</span><span style='color: #BB0000;'>0.606</span><span>          2.9      -</span><span style='color: #BB0000;'>0.062</span><span>          0.2 0.390 FALSE FALSE
-#&gt; </span><span style='color: #BCBCBC;'>10</span><span>      -</span><span style='color: #BB0000;'>0.106</span><span>          3.1       0.038</span><span style='text-decoration: underline;'>0</span><span>         0.1 0.297 FALSE FALSE
+#&gt;    Sepal.Length Sepal.Width Petal.Length Petal.Width
+#&gt;  </span><span style='color: #BCBCBC;'>*</span><span>        </span><span style='color: #949494;font-style: italic;'>&lt;dbl&gt;</span><span>       </span><span style='color: #949494;font-style: italic;'>&lt;dbl&gt;</span><span>        </span><span style='color: #949494;font-style: italic;'>&lt;dbl&gt;</span><span>       </span><span style='color: #949494;font-style: italic;'>&lt;dbl&gt;</span><span>
+#&gt; </span><span style='color: #BCBCBC;'> 1</span><span>       0.094</span><span style='text-decoration: underline;'>0</span><span>         3.5      -</span><span style='color: #BB0000;'>0.062</span><span>          0.2
+#&gt; </span><span style='color: #BCBCBC;'> 2</span><span>      -</span><span style='color: #BB0000;'>0.106</span><span>          3        -</span><span style='color: #BB0000;'>0.062</span><span>          0.2
+#&gt; </span><span style='color: #BCBCBC;'> 3</span><span>      -</span><span style='color: #BB0000;'>0.306</span><span>          3.2      -</span><span style='color: #BB0000;'>0.162</span><span>          0.2
+#&gt; </span><span style='color: #BCBCBC;'> 4</span><span>      -</span><span style='color: #BB0000;'>0.406</span><span>          3.1       0.038</span><span style='text-decoration: underline;'>0</span><span>         0.2
+#&gt; </span><span style='color: #BCBCBC;'> 5</span><span>      -</span><span style='color: #BB0000;'>0.006</span><span>          3.6      -</span><span style='color: #BB0000;'>0.062</span><span>          0.2
+#&gt; </span><span style='color: #BCBCBC;'> 6</span><span>       0.394          3.9       0.238          0.4
+#&gt; </span><span style='color: #BCBCBC;'> 7</span><span>      -</span><span style='color: #BB0000;'>0.406</span><span>          3.4      -</span><span style='color: #BB0000;'>0.062</span><span>          0.3
+#&gt; </span><span style='color: #BCBCBC;'> 8</span><span>      -</span><span style='color: #BB0000;'>0.006</span><span>          3.4       0.038</span><span style='text-decoration: underline;'>0</span><span>         0.2
+#&gt; </span><span style='color: #BCBCBC;'> 9</span><span>      -</span><span style='color: #BB0000;'>0.606</span><span>          2.9      -</span><span style='color: #BB0000;'>0.062</span><span>          0.2
+#&gt; </span><span style='color: #BCBCBC;'>10</span><span>      -</span><span style='color: #BB0000;'>0.106</span><span>          3.1       0.038</span><span style='text-decoration: underline;'>0</span><span>         0.1
 #&gt; </span><span style='color: #949494;'># ... with 140 more rows</span><span></div></span></pre>
   </div>
   <div class="col-md-3 hidden-xs hidden-sm" id="pkgdown-sidebar">
@@ -354,7 +354,7 @@
       </footer>
    </div>
 
-
+  
 
 
   </body>

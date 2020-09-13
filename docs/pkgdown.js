@@ -32,7 +32,7 @@
     }
 
     // Add class to parent <li>, and enclosing <li> if in dropdown
-    if (pos >= 0) { // >=
+    if (pos >= 0) {
       var menu_anchor = $(links[pos]);
       menu_anchor.parent().addClass("active");
       menu_anchor.closest("li.dropdown").addClass("active");

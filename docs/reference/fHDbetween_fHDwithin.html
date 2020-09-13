@@ -73,7 +73,7 @@ The corresponding operators HDB and HDW additionally allow to predict / partial 
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">collapse</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">1.3.1</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">1.3.2</span>
       </span>
     </div>
 
@@ -96,22 +96,22 @@ The corresponding operators HDB and HDW additionally allow to predict / partial 
         <li>
   <a href="https://twitter.com/collapse_R" target="_blank">
     <span class="fa fa-twitter"></span>
-
+     
   </a>
 </li>
 <li>
   <a href="https://github.com/SebKrantz/collapse" target="_blank">
     <span class="fa fa-github"></span>
-
+     
   </a>
 </li>
       </ul>
-
+      
     </div><!--/.nav-collapse -->
   </div><!--/.container -->
 </div><!--/.navbar -->
 
-
+      
 
       </header>
 
@@ -119,7 +119,7 @@ The corresponding operators HDB and HDW additionally allow to predict / partial 
   <div class="col-md-9 contents">
     <div class="page-header">
     <h1>Higher-Dimensional Centering and Linear Prediction</h1>
-
+    
     <div class="hidden name"><code>fHDbetween_fHDwithin.Rd</code></div>
     </div>
 
@@ -318,93 +318,93 @@ The corresponding operators HDB and HDW additionally allow to predict / partial 
 #&gt; 47  102.56605 -0.4047093
 #&gt; 48   64.81635 -0.2036750</div><div class='input'>
 <span class='co'># More complex examples (Currently only recommended for smaller data)</span>
-<span class='fu'><a href='https://rdrr.io/r/stats/lm.html'>lm</a></span>(<span class='no'>HDW.mpg</span> ~ <span class='no'>HDW.hp</span>, <span class='kw'>data</span> <span class='kw'>=</span> <span class='fu'>HDW</span>(<span class='no'>mtcars</span>, ~ <span class='fu'><a href='https://rdrr.io/r/base/factor.html'>factor</a></span>(<span class='no'>cyl</span>)*<span class='no'>carb</span> + <span class='no'>vs</span> + <span class='no'>wt</span>:<span class='no'>gear</span> + <span class='no'>wt</span>:<span class='no'>gear</span>:<span class='no'>carb</span>))</div><div class='output co'>#&gt;
+<span class='fu'><a href='https://rdrr.io/r/stats/lm.html'>lm</a></span>(<span class='no'>HDW.mpg</span> ~ <span class='no'>HDW.hp</span>, <span class='kw'>data</span> <span class='kw'>=</span> <span class='fu'>HDW</span>(<span class='no'>mtcars</span>, ~ <span class='fu'><a href='https://rdrr.io/r/base/factor.html'>factor</a></span>(<span class='no'>cyl</span>)*<span class='no'>carb</span> + <span class='no'>vs</span> + <span class='no'>wt</span>:<span class='no'>gear</span> + <span class='no'>wt</span>:<span class='no'>gear</span>:<span class='no'>carb</span>))</div><div class='output co'>#&gt; 
 #&gt; Call:
-#&gt; lm(formula = HDW.mpg ~ HDW.hp, data = HDW(mtcars, ~factor(cyl) *
+#&gt; lm(formula = HDW.mpg ~ HDW.hp, data = HDW(mtcars, ~factor(cyl) * 
 #&gt;     carb + vs + wt:gear + wt:gear:carb))
-#&gt;
+#&gt; 
 #&gt; Coefficients:
-#&gt; (Intercept)       HDW.hp
-#&gt;   1.032e-09   -2.366e-02
-#&gt; </div><div class='input'><span class='fu'><a href='https://rdrr.io/r/stats/lm.html'>lm</a></span>(<span class='no'>mpg</span> ~ <span class='no'>hp</span> + <span class='fu'><a href='https://rdrr.io/r/base/factor.html'>factor</a></span>(<span class='no'>cyl</span>)*<span class='no'>carb</span> + <span class='no'>vs</span> + <span class='no'>wt</span>:<span class='no'>gear</span> + <span class='no'>wt</span>:<span class='no'>gear</span>:<span class='no'>carb</span>, <span class='kw'>data</span> <span class='kw'>=</span> <span class='no'>mtcars</span>)</div><div class='output co'>#&gt;
+#&gt; (Intercept)       HDW.hp  
+#&gt;   1.032e-09   -2.366e-02  
+#&gt; </div><div class='input'><span class='fu'><a href='https://rdrr.io/r/stats/lm.html'>lm</a></span>(<span class='no'>mpg</span> ~ <span class='no'>hp</span> + <span class='fu'><a href='https://rdrr.io/r/base/factor.html'>factor</a></span>(<span class='no'>cyl</span>)*<span class='no'>carb</span> + <span class='no'>vs</span> + <span class='no'>wt</span>:<span class='no'>gear</span> + <span class='no'>wt</span>:<span class='no'>gear</span>:<span class='no'>carb</span>, <span class='kw'>data</span> <span class='kw'>=</span> <span class='no'>mtcars</span>)</div><div class='output co'>#&gt; 
 #&gt; Call:
-#&gt; lm(formula = mpg ~ hp + factor(cyl) * carb + vs + wt:gear + wt:gear:carb,
+#&gt; lm(formula = mpg ~ hp + factor(cyl) * carb + vs + wt:gear + wt:gear:carb, 
 #&gt;     data = mtcars)
-#&gt;
+#&gt; 
 #&gt; Coefficients:
-#&gt;       (Intercept)                 hp       factor(cyl)6       factor(cyl)8
-#&gt;          42.11872           -0.02366           -3.70912           -3.80071
-#&gt;              carb                 vs  factor(cyl)6:carb  factor(cyl)8:carb
-#&gt;          -1.64558           -0.81529           -0.82919           -1.56964
-#&gt;           wt:gear       carb:wt:gear
-#&gt;          -1.52766            0.26438
+#&gt;       (Intercept)                 hp       factor(cyl)6       factor(cyl)8  
+#&gt;          42.11872           -0.02366           -3.70912           -3.80071  
+#&gt;              carb                 vs  factor(cyl)6:carb  factor(cyl)8:carb  
+#&gt;          -1.64558           -0.81529           -0.82919           -1.56964  
+#&gt;           wt:gear       carb:wt:gear  
+#&gt;          -1.52766            0.26438  
 #&gt; </div><div class='input'>
-<span class='fu'><a href='https://rdrr.io/r/stats/lm.html'>lm</a></span>(<span class='no'>HDW.mpg</span> ~ <span class='no'>HDW.hp</span>, <span class='kw'>data</span> <span class='kw'>=</span> <span class='fu'>HDW</span>(<span class='no'>mtcars</span>, ~ <span class='fu'><a href='https://rdrr.io/r/base/factor.html'>factor</a></span>(<span class='no'>cyl</span>)*<span class='no'>carb</span> + <span class='no'>vs</span> + <span class='no'>wt</span>:<span class='no'>gear</span>))</div><div class='output co'>#&gt;
+<span class='fu'><a href='https://rdrr.io/r/stats/lm.html'>lm</a></span>(<span class='no'>HDW.mpg</span> ~ <span class='no'>HDW.hp</span>, <span class='kw'>data</span> <span class='kw'>=</span> <span class='fu'>HDW</span>(<span class='no'>mtcars</span>, ~ <span class='fu'><a href='https://rdrr.io/r/base/factor.html'>factor</a></span>(<span class='no'>cyl</span>)*<span class='no'>carb</span> + <span class='no'>vs</span> + <span class='no'>wt</span>:<span class='no'>gear</span>))</div><div class='output co'>#&gt; 
 #&gt; Call:
-#&gt; lm(formula = HDW.mpg ~ HDW.hp, data = HDW(mtcars, ~factor(cyl) *
+#&gt; lm(formula = HDW.mpg ~ HDW.hp, data = HDW(mtcars, ~factor(cyl) * 
 #&gt;     carb + vs + wt:gear))
-#&gt;
+#&gt; 
 #&gt; Coefficients:
-#&gt; (Intercept)       HDW.hp
-#&gt;   6.274e-09   -2.740e-02
-#&gt; </div><div class='input'><span class='fu'><a href='https://rdrr.io/r/stats/lm.html'>lm</a></span>(<span class='no'>mpg</span> ~ <span class='no'>hp</span> + <span class='fu'><a href='https://rdrr.io/r/base/factor.html'>factor</a></span>(<span class='no'>cyl</span>)*<span class='no'>carb</span> + <span class='no'>vs</span> + <span class='no'>wt</span>:<span class='no'>gear</span>, <span class='kw'>data</span> <span class='kw'>=</span> <span class='no'>mtcars</span>)</div><div class='output co'>#&gt;
+#&gt; (Intercept)       HDW.hp  
+#&gt;   6.274e-09   -2.740e-02  
+#&gt; </div><div class='input'><span class='fu'><a href='https://rdrr.io/r/stats/lm.html'>lm</a></span>(<span class='no'>mpg</span> ~ <span class='no'>hp</span> + <span class='fu'><a href='https://rdrr.io/r/base/factor.html'>factor</a></span>(<span class='no'>cyl</span>)*<span class='no'>carb</span> + <span class='no'>vs</span> + <span class='no'>wt</span>:<span class='no'>gear</span>, <span class='kw'>data</span> <span class='kw'>=</span> <span class='no'>mtcars</span>)</div><div class='output co'>#&gt; 
 #&gt; Call:
 #&gt; lm(formula = mpg ~ hp + factor(cyl) * carb + vs + wt:gear, data = mtcars)
-#&gt;
+#&gt; 
 #&gt; Coefficients:
-#&gt;       (Intercept)                 hp       factor(cyl)6       factor(cyl)8
-#&gt;           36.4543            -0.0274            -6.2463            -9.4541
-#&gt;              carb                 vs  factor(cyl)6:carb  factor(cyl)8:carb
-#&gt;            0.2508            -0.3227             0.5897             1.0374
-#&gt;           wt:gear
-#&gt;           -0.8238
+#&gt;       (Intercept)                 hp       factor(cyl)6       factor(cyl)8  
+#&gt;           36.4543            -0.0274            -6.2463            -9.4541  
+#&gt;              carb                 vs  factor(cyl)6:carb  factor(cyl)8:carb  
+#&gt;            0.2508            -0.3227             0.5897             1.0374  
+#&gt;           wt:gear  
+#&gt;           -0.8238  
 #&gt; </div><div class='input'>
-<span class='fu'><a href='https://rdrr.io/r/stats/lm.html'>lm</a></span>(<span class='no'>HDW.mpg</span> ~ <span class='no'>HDW.hp</span>, <span class='kw'>data</span> <span class='kw'>=</span> <span class='fu'>HDW</span>(<span class='no'>mtcars</span>, ~ <span class='no'>cyl</span>*<span class='no'>carb</span> + <span class='no'>vs</span> + <span class='no'>wt</span>:<span class='no'>gear</span>))</div><div class='output co'>#&gt;
+<span class='fu'><a href='https://rdrr.io/r/stats/lm.html'>lm</a></span>(<span class='no'>HDW.mpg</span> ~ <span class='no'>HDW.hp</span>, <span class='kw'>data</span> <span class='kw'>=</span> <span class='fu'>HDW</span>(<span class='no'>mtcars</span>, ~ <span class='no'>cyl</span>*<span class='no'>carb</span> + <span class='no'>vs</span> + <span class='no'>wt</span>:<span class='no'>gear</span>))</div><div class='output co'>#&gt; 
 #&gt; Call:
-#&gt; lm(formula = HDW.mpg ~ HDW.hp, data = HDW(mtcars, ~cyl * carb +
+#&gt; lm(formula = HDW.mpg ~ HDW.hp, data = HDW(mtcars, ~cyl * carb + 
 #&gt;     vs + wt:gear))
-#&gt;
+#&gt; 
 #&gt; Coefficients:
-#&gt; (Intercept)       HDW.hp
-#&gt;   1.914e-16   -2.151e-02
-#&gt; </div><div class='input'><span class='fu'><a href='https://rdrr.io/r/stats/lm.html'>lm</a></span>(<span class='no'>mpg</span> ~ <span class='no'>hp</span> + <span class='no'>cyl</span>*<span class='no'>carb</span> + <span class='no'>vs</span> + <span class='no'>wt</span>:<span class='no'>gear</span>, <span class='kw'>data</span> <span class='kw'>=</span> <span class='no'>mtcars</span>)</div><div class='output co'>#&gt;
+#&gt; (Intercept)       HDW.hp  
+#&gt;   1.914e-16   -2.151e-02  
+#&gt; </div><div class='input'><span class='fu'><a href='https://rdrr.io/r/stats/lm.html'>lm</a></span>(<span class='no'>mpg</span> ~ <span class='no'>hp</span> + <span class='no'>cyl</span>*<span class='no'>carb</span> + <span class='no'>vs</span> + <span class='no'>wt</span>:<span class='no'>gear</span>, <span class='kw'>data</span> <span class='kw'>=</span> <span class='no'>mtcars</span>)</div><div class='output co'>#&gt; 
 #&gt; Call:
 #&gt; lm(formula = mpg ~ hp + cyl * carb + vs + wt:gear, data = mtcars)
-#&gt;
+#&gt; 
 #&gt; Coefficients:
-#&gt; (Intercept)           hp          cyl         carb           vs     cyl:carb
-#&gt;    48.42617     -0.02151     -2.80751     -1.72418     -1.03254      0.36051
-#&gt;     wt:gear
-#&gt;    -0.81296
+#&gt; (Intercept)           hp          cyl         carb           vs     cyl:carb  
+#&gt;    48.42617     -0.02151     -2.80751     -1.72418     -1.03254      0.36051  
+#&gt;     wt:gear  
+#&gt;    -0.81296  
 #&gt; </div><div class='input'>
-<span class='fu'><a href='https://rdrr.io/r/stats/lm.html'>lm</a></span>(<span class='no'>HDW.mpg</span> ~ <span class='no'>HDW.hp</span>, <span class='kw'>data</span> <span class='kw'>=</span> <span class='fu'>HDW</span>(<span class='no'>mtcars</span>, <span class='no'>mpg</span> + <span class='no'>hp</span> ~ <span class='no'>cyl</span>*<span class='no'>carb</span> + <span class='fu'><a href='https://rdrr.io/r/base/factor.html'>factor</a></span>(<span class='no'>cyl</span>)*<span class='fu'><a href='https://rdrr.io/r/stats/poly.html'>poly</a></span>(<span class='no'>drat</span>,<span class='fl'>2</span>)))</div><div class='output co'>#&gt;
+<span class='fu'><a href='https://rdrr.io/r/stats/lm.html'>lm</a></span>(<span class='no'>HDW.mpg</span> ~ <span class='no'>HDW.hp</span>, <span class='kw'>data</span> <span class='kw'>=</span> <span class='fu'>HDW</span>(<span class='no'>mtcars</span>, <span class='no'>mpg</span> + <span class='no'>hp</span> ~ <span class='no'>cyl</span>*<span class='no'>carb</span> + <span class='fu'><a href='https://rdrr.io/r/base/factor.html'>factor</a></span>(<span class='no'>cyl</span>)*<span class='fu'><a href='https://rdrr.io/r/stats/poly.html'>poly</a></span>(<span class='no'>drat</span>,<span class='fl'>2</span>)))</div><div class='output co'>#&gt; 
 #&gt; Call:
-#&gt; lm(formula = HDW.mpg ~ HDW.hp, data = HDW(mtcars, mpg + hp ~
+#&gt; lm(formula = HDW.mpg ~ HDW.hp, data = HDW(mtcars, mpg + hp ~ 
 #&gt;     cyl * carb + factor(cyl) * poly(drat, 2)))
-#&gt;
+#&gt; 
 #&gt; Coefficients:
-#&gt; (Intercept)       HDW.hp
-#&gt;   5.881e-17   -6.227e-02
-#&gt; </div><div class='input'><span class='fu'><a href='https://rdrr.io/r/stats/lm.html'>lm</a></span>(<span class='no'>mpg</span> ~ <span class='no'>hp</span> + <span class='no'>cyl</span>*<span class='no'>carb</span> + <span class='fu'><a href='https://rdrr.io/r/base/factor.html'>factor</a></span>(<span class='no'>cyl</span>)*<span class='fu'><a href='https://rdrr.io/r/stats/poly.html'>poly</a></span>(<span class='no'>drat</span>,<span class='fl'>2</span>), <span class='kw'>data</span> <span class='kw'>=</span> <span class='no'>mtcars</span>)</div><div class='output co'>#&gt;
+#&gt; (Intercept)       HDW.hp  
+#&gt;   5.881e-17   -6.227e-02  
+#&gt; </div><div class='input'><span class='fu'><a href='https://rdrr.io/r/stats/lm.html'>lm</a></span>(<span class='no'>mpg</span> ~ <span class='no'>hp</span> + <span class='no'>cyl</span>*<span class='no'>carb</span> + <span class='fu'><a href='https://rdrr.io/r/base/factor.html'>factor</a></span>(<span class='no'>cyl</span>)*<span class='fu'><a href='https://rdrr.io/r/stats/poly.html'>poly</a></span>(<span class='no'>drat</span>,<span class='fl'>2</span>), <span class='kw'>data</span> <span class='kw'>=</span> <span class='no'>mtcars</span>)</div><div class='output co'>#&gt; 
 #&gt; Call:
-#&gt; lm(formula = mpg ~ hp + cyl * carb + factor(cyl) * poly(drat,
+#&gt; lm(formula = mpg ~ hp + cyl * carb + factor(cyl) * poly(drat, 
 #&gt;     2), data = mtcars)
-#&gt;
+#&gt; 
 #&gt; Coefficients:
-#&gt;                 (Intercept)                           hp
-#&gt;                    29.87184                     -0.06227
-#&gt;                         cyl                         carb
-#&gt;                    -0.32237                     -2.19559
-#&gt;                factor(cyl)6                 factor(cyl)8
-#&gt;                    -1.60109                           NA
-#&gt;              poly(drat, 2)1               poly(drat, 2)2
-#&gt;                    27.84148                     -8.41291
-#&gt;                    cyl:carb  factor(cyl)6:poly(drat, 2)1
-#&gt;                     0.35323                    -49.59226
-#&gt; factor(cyl)8:poly(drat, 2)1  factor(cyl)6:poly(drat, 2)2
-#&gt;                   -18.35266                    -18.70972
-#&gt; factor(cyl)8:poly(drat, 2)2
-#&gt;                    -0.56842
+#&gt;                 (Intercept)                           hp  
+#&gt;                    29.87184                     -0.06227  
+#&gt;                         cyl                         carb  
+#&gt;                    -0.32237                     -2.19559  
+#&gt;                factor(cyl)6                 factor(cyl)8  
+#&gt;                    -1.60109                           NA  
+#&gt;              poly(drat, 2)1               poly(drat, 2)2  
+#&gt;                    27.84148                     -8.41291  
+#&gt;                    cyl:carb  factor(cyl)6:poly(drat, 2)1  
+#&gt;                     0.35323                    -49.59226  
+#&gt; factor(cyl)8:poly(drat, 2)1  factor(cyl)6:poly(drat, 2)2  
+#&gt;                   -18.35266                    -18.70972  
+#&gt; factor(cyl)8:poly(drat, 2)2  
+#&gt;                    -0.56842  
 #&gt; </div></pre>
   </div>
   <div class="col-md-3 hidden-xs hidden-sm" id="pkgdown-sidebar">
@@ -427,7 +427,7 @@ The corresponding operators HDB and HDW additionally allow to predict / partial 
       </footer>
    </div>
 
-
+  
 
 
   </body>

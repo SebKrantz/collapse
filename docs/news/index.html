@@ -71,7 +71,7 @@
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">collapse</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">1.3.1</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">1.3.2</span>
       </span>
     </div>
 
@@ -94,22 +94,22 @@
         <li>
   <a href="https://twitter.com/collapse_R" target="_blank">
     <span class="fa fa-twitter"></span>
-
+     
   </a>
 </li>
 <li>
   <a href="https://github.com/SebKrantz/collapse" target="_blank">
     <span class="fa fa-github"></span>
-
+     
   </a>
 </li>
       </ul>
-
+      
     </div><!--/.nav-collapse -->
   </div><!--/.container -->
 </div><!--/.navbar -->
 
-
+      
 
       </header>
 
@@ -120,6 +120,18 @@
       <small>Source: <a href='https://github.com/SebKrantz/collapse/blob/master/NEWS.md'><code>NEWS.md</code></a></small>
     </div>
 
+    <div id="collapse-132" class="section level1">
+<h1 class="page-header" data-toc-text="1.3.2">
+<a href="#collapse-132" class="anchor"></a>collapse 1.3.2<small> Unreleased </small>
+</h1>
+<p>collapse 1.3.2, released mid September 2020, is a minor update:</p>
+<ul>
+<li><p>Fixed a small bug in <code>fNdistinct</code> for grouped distinct value counts on logical vectors.</p></li>
+<li><p>Additional security for <code>ftransform</code>, which now efficiently checks the names of the data and replacement arguments for uniqueness, and also allows computing and transforming list-columns.</p></li>
+<li><p>Added function <code>ftransformv</code> to facilitate transforming selected columns with function - a very efficient replacement for <code><a href="https://dplyr.tidyverse.org/reference/mutate_all.html">dplyr::mutate_if</a></code> and <code><a href="https://dplyr.tidyverse.org/reference/mutate_all.html">dplyr::mutate_at</a></code>.</p></li>
+<li><p><code>frename</code> now allows additional arguments to be passed to a renaming function.</p></li>
+</ul>
+</div>
     <div id="collapse-131" class="section level1">
 <h1 class="page-header" data-toc-text="1.3.1">
 <a href="#collapse-131" class="anchor"></a>collapse 1.3.1<small> 2020-08-27 </small>
@@ -298,7 +310,7 @@
       </footer>
    </div>
 
-
+  
 
 
   </body>

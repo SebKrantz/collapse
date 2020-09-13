@@ -72,7 +72,7 @@
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">collapse</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">1.3.1</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">1.3.2</span>
       </span>
     </div>
 
@@ -95,22 +95,22 @@
         <li>
   <a href="https://twitter.com/collapse_R" target="_blank">
     <span class="fa fa-twitter"></span>
-
+     
   </a>
 </li>
 <li>
   <a href="https://github.com/SebKrantz/collapse" target="_blank">
     <span class="fa fa-github"></span>
-
+     
   </a>
 </li>
       </ul>
-
+      
     </div><!--/.nav-collapse -->
   </div><!--/.container -->
 </div><!--/.navbar -->
 
-
+      
 
       </header>
 
@@ -118,7 +118,7 @@
   <div class="col-md-9 contents">
     <div class="page-header">
     <h1>Fast (Grouped, Weighted) Median Value for Matrix-Like Objects</h1>
-
+    
     <div class="hidden name"><code>fmedian.Rd</code></div>
     </div>
 
@@ -213,20 +213,20 @@
 <span class='no'>mpg</span> <span class='kw'>&lt;-</span> <span class='no'>mtcars</span>$<span class='no'>mpg</span>
 <span class='fu'>fmedian</span>(<span class='no'>mpg</span>)                         <span class='co'># Simple median value</span></div><div class='output co'>#&gt; [1] 19.2</div><div class='input'><span class='fu'>fmedian</span>(<span class='no'>mpg</span>, <span class='kw'>w</span> <span class='kw'>=</span> <span class='no'>mtcars</span>$<span class='no'>hp</span>)          <span class='co'># Weighted median: Weighted by hp</span></div><div class='output co'>#&gt; [1] 16.4</div><div class='input'><span class='fu'>fmedian</span>(<span class='no'>mpg</span>, <span class='kw'>TRA</span> <span class='kw'>=</span> <span class='st'>"-"</span>)              <span class='co'># Simple transformation: Subtract median value</span></div><div class='output co'>#&gt;  [1]  1.8  1.8  3.6  2.2 -0.5 -1.1 -4.9  5.2  3.6  0.0 -1.4 -2.8 -1.9 -4.0 -8.8
 #&gt; [16] -8.8 -4.5 13.2 11.2 14.7  2.3 -3.7 -4.0 -5.9  0.0  8.1  6.8 11.2 -3.4  0.5
-#&gt; [31] -4.2  2.2</div><div class='input'><span class='fu'>fmedian</span>(<span class='no'>mpg</span>, <span class='no'>mtcars</span>$<span class='no'>cyl</span>)             <span class='co'># Grouped median value</span></div><div class='output co'>#&gt;    4    6    8
-#&gt; 26.0 19.7 15.2 </div><div class='input'><span class='fu'>fmedian</span>(<span class='no'>mpg</span>, <span class='no'>mtcars</span>[<span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span>(<span class='fl'>2</span>,<span class='fl'>8</span>:<span class='fl'>9</span>)])       <span class='co'># More groups..</span></div><div class='output co'>#&gt; 4.0.1 4.1.0 4.1.1 6.0.1 6.1.0 8.0.0 8.0.1
+#&gt; [31] -4.2  2.2</div><div class='input'><span class='fu'>fmedian</span>(<span class='no'>mpg</span>, <span class='no'>mtcars</span>$<span class='no'>cyl</span>)             <span class='co'># Grouped median value</span></div><div class='output co'>#&gt;    4    6    8 
+#&gt; 26.0 19.7 15.2 </div><div class='input'><span class='fu'>fmedian</span>(<span class='no'>mpg</span>, <span class='no'>mtcars</span>[<span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span>(<span class='fl'>2</span>,<span class='fl'>8</span>:<span class='fl'>9</span>)])       <span class='co'># More groups..</span></div><div class='output co'>#&gt; 4.0.1 4.1.0 4.1.1 6.0.1 6.1.0 8.0.0 8.0.1 
 #&gt; 26.00 22.80 30.40 21.00 18.65 15.20 15.40 </div><div class='input'><span class='no'>g</span> <span class='kw'>&lt;-</span> <span class='fu'><a href='GRP.html'>GRP</a></span>(<span class='no'>mtcars</span>, ~ <span class='no'>cyl</span> + <span class='no'>vs</span> + <span class='no'>am</span>)    <span class='co'># Precomputing groups gives more speed !</span>
-<span class='fu'>fmedian</span>(<span class='no'>mpg</span>, <span class='no'>g</span>)</div><div class='output co'>#&gt; 4.0.1 4.1.0 4.1.1 6.0.1 6.1.0 8.0.0 8.0.1
-#&gt; 26.00 22.80 30.40 21.00 18.65 15.20 15.40 </div><div class='input'><span class='fu'>fmedian</span>(<span class='no'>mpg</span>, <span class='no'>g</span>, <span class='no'>mtcars</span>$<span class='no'>hp</span>)           <span class='co'># Grouped weighted median</span></div><div class='output co'>#&gt; 4.0.1 4.1.0 4.1.1 6.0.1 6.1.0 8.0.0 8.0.1
+<span class='fu'>fmedian</span>(<span class='no'>mpg</span>, <span class='no'>g</span>)</div><div class='output co'>#&gt; 4.0.1 4.1.0 4.1.1 6.0.1 6.1.0 8.0.0 8.0.1 
+#&gt; 26.00 22.80 30.40 21.00 18.65 15.20 15.40 </div><div class='input'><span class='fu'>fmedian</span>(<span class='no'>mpg</span>, <span class='no'>g</span>, <span class='no'>mtcars</span>$<span class='no'>hp</span>)           <span class='co'># Grouped weighted median</span></div><div class='output co'>#&gt; 4.0.1 4.1.0 4.1.1 6.0.1 6.1.0 8.0.0 8.0.1 
 #&gt;  26.0  22.8  30.4  21.0  19.2  15.2  15.0 </div><div class='input'><span class='fu'>fmedian</span>(<span class='no'>mpg</span>, <span class='no'>g</span>, <span class='kw'>TRA</span> <span class='kw'>=</span> <span class='st'>"-"</span>)           <span class='co'># Groupwise subtract median value</span></div><div class='output co'>#&gt;  [1]  0.00  0.00 -7.60  2.75  3.50 -0.55 -0.90  1.60  0.00  0.55 -0.85  1.20
 #&gt; [13]  2.10  0.00 -4.80 -4.80 -0.50  2.00  0.00  3.50 -1.30  0.30  0.00 -1.90
 #&gt; [25]  4.00 -3.10  0.00  0.00  0.40 -1.30 -0.40 -9.00</div><div class='input'><span class='fu'>fmedian</span>(<span class='no'>mpg</span>, <span class='no'>g</span>, <span class='no'>mtcars</span>$<span class='no'>hp</span>, <span class='st'>"-"</span>)      <span class='co'># Groupwise subtract weighted median value</span></div><div class='output co'>#&gt;  [1]  0.0  0.0 -7.6  2.2  3.5 -1.1 -0.9  1.6  0.0  0.0 -1.4  1.2  2.1  0.0 -4.8
 #&gt; [16] -4.8 -0.5  2.0  0.0  3.5 -1.3  0.3  0.0 -1.9  4.0 -3.1  0.0  0.0  0.8 -1.3
 #&gt; [31]  0.0 -9.0</div><div class='input'>
 <span class='co'>## data.frame method</span>
-<span class='fu'>fmedian</span>(<span class='no'>mtcars</span>)</div><div class='output co'>#&gt;     mpg     cyl    disp      hp    drat      wt    qsec      vs      am    gear
-#&gt;  19.200   6.000 196.300 123.000   3.695   3.325  17.710   0.000   0.000   4.000
-#&gt;    carb
+<span class='fu'>fmedian</span>(<span class='no'>mtcars</span>)</div><div class='output co'>#&gt;     mpg     cyl    disp      hp    drat      wt    qsec      vs      am    gear 
+#&gt;  19.200   6.000 196.300 123.000   3.695   3.325  17.710   0.000   0.000   4.000 
+#&gt;    carb 
 #&gt;   2.000 </div><div class='input'><span class='fu'><a href='https://rdrr.io/r/utils/head.html'>head</a></span>(<span class='fu'>fmedian</span>(<span class='no'>mtcars</span>, <span class='kw'>TRA</span> <span class='kw'>=</span> <span class='st'>"-"</span>))</div><div class='output co'>#&gt;                    mpg cyl  disp  hp   drat     wt  qsec vs am gear carb
 #&gt; Mazda RX4          1.8   0 -36.3 -13  0.205 -0.705 -1.25  0  1    0    2
 #&gt; Mazda RX4 Wag      1.8   0 -36.3 -13  0.205 -0.450 -0.69  0  1    0    2
@@ -243,12 +243,12 @@
 #&gt; 8.0.1 15.40   8 326.0 299.5 3.880 3.370 14.55  0  1  5.0  6.0</div><div class='input'><span class='fu'>fmedian</span>(<span class='fu'><a href='GRP.html'>fgroup_by</a></span>(<span class='no'>mtcars</span>, <span class='no'>cyl</span>, <span class='no'>vs</span>, <span class='no'>am</span>))   <span class='co'># Another way of doing it..</span></div><div class='output co'>#&gt; <span style='color: #949494;'># A tibble: 7 x 11</span><span>
 #&gt;     cyl    vs    am   mpg  disp    hp  drat    wt  qsec  gear  carb
 #&gt;   </span><span style='color: #949494;font-style: italic;'>&lt;dbl&gt;</span><span> </span><span style='color: #949494;font-style: italic;'>&lt;dbl&gt;</span><span> </span><span style='color: #949494;font-style: italic;'>&lt;dbl&gt;</span><span> </span><span style='color: #949494;font-style: italic;'>&lt;dbl&gt;</span><span> </span><span style='color: #949494;font-style: italic;'>&lt;dbl&gt;</span><span> </span><span style='color: #949494;font-style: italic;'>&lt;dbl&gt;</span><span> </span><span style='color: #949494;font-style: italic;'>&lt;dbl&gt;</span><span> </span><span style='color: #949494;font-style: italic;'>&lt;dbl&gt;</span><span> </span><span style='color: #949494;font-style: italic;'>&lt;dbl&gt;</span><span> </span><span style='color: #949494;font-style: italic;'>&lt;dbl&gt;</span><span> </span><span style='color: #949494;font-style: italic;'>&lt;dbl&gt;</span><span>
-#&gt; </span><span style='color: #BCBCBC;'>1</span><span>     4     0     1  26    120.   91   4.43  2.14  16.7   5     2
-#&gt; </span><span style='color: #BCBCBC;'>2</span><span>     4     1     0  22.8  141.   95   3.7   3.15  20.0   4     2
-#&gt; </span><span style='color: #BCBCBC;'>3</span><span>     4     1     1  30.4   79    66   4.08  1.94  18.6   4     1
-#&gt; </span><span style='color: #BCBCBC;'>4</span><span>     6     0     1  21    160   110   3.9   2.77  16.5   4     4
+#&gt; </span><span style='color: #BCBCBC;'>1</span><span>     4     0     1  26    120.   91   4.43  2.14  16.7   5     2  
+#&gt; </span><span style='color: #BCBCBC;'>2</span><span>     4     1     0  22.8  141.   95   3.7   3.15  20.0   4     2  
+#&gt; </span><span style='color: #BCBCBC;'>3</span><span>     4     1     1  30.4   79    66   4.08  1.94  18.6   4     1  
+#&gt; </span><span style='color: #BCBCBC;'>4</span><span>     6     0     1  21    160   110   3.9   2.77  16.5   4     4  
 #&gt; </span><span style='color: #BCBCBC;'>5</span><span>     6     1     0  18.6  196.  116.  3.5   3.44  19.2   3.5   2.5
-#&gt; </span><span style='color: #BCBCBC;'>6</span><span>     8     0     0  15.2  355   180   3.08  3.81  17.4   3     3
+#&gt; </span><span style='color: #BCBCBC;'>6</span><span>     8     0     0  15.2  355   180   3.08  3.81  17.4   3     3  
 #&gt; </span><span style='color: #BCBCBC;'>7</span><span>     8     0     1  15.4  326   300.  3.88  3.37  14.6   5     6  </div><div class='input'><span class='fu'>fmedian</span>(<span class='no'>mtcars</span>, <span class='no'>g</span>, <span class='kw'>use.g.names</span> <span class='kw'>=</span> <span class='fl'>FALSE</span>)   <span class='co'># No row-names generated</span></div><div class='output co'>#&gt;     mpg cyl  disp    hp  drat    wt  qsec vs am gear carb
 #&gt; 1 26.00   4 120.3  91.0 4.430 2.140 16.70  0  1  5.0  2.0
 #&gt; 2 22.80   4 140.8  95.0 3.700 3.150 20.01  1  0  4.0  2.0
@@ -259,9 +259,9 @@
 #&gt; 7 15.40   8 326.0 299.5 3.880 3.370 14.55  0  1  5.0  6.0</div><div class='input'>
 <span class='co'>## matrix method</span>
 <span class='no'>m</span> <span class='kw'>&lt;-</span> <span class='fu'><a href='quick-conversion.html'>qM</a></span>(<span class='no'>mtcars</span>)
-<span class='fu'>fmedian</span>(<span class='no'>m</span>)</div><div class='output co'>#&gt;     mpg     cyl    disp      hp    drat      wt    qsec      vs      am    gear
-#&gt;  19.200   6.000 196.300 123.000   3.695   3.325  17.710   0.000   0.000   4.000
-#&gt;    carb
+<span class='fu'>fmedian</span>(<span class='no'>m</span>)</div><div class='output co'>#&gt;     mpg     cyl    disp      hp    drat      wt    qsec      vs      am    gear 
+#&gt;  19.200   6.000 196.300 123.000   3.695   3.325  17.710   0.000   0.000   4.000 
+#&gt;    carb 
 #&gt;   2.000 </div><div class='input'><span class='fu'><a href='https://rdrr.io/r/utils/head.html'>head</a></span>(<span class='fu'>fmedian</span>(<span class='no'>m</span>, <span class='kw'>TRA</span> <span class='kw'>=</span> <span class='st'>"-"</span>))</div><div class='output co'>#&gt;                    mpg cyl  disp  hp   drat     wt  qsec vs am gear carb
 #&gt; Mazda RX4          1.8   0 -36.3 -13  0.205 -0.705 -1.25  0  1    0    2
 #&gt; Mazda RX4 Wag      1.8   0 -36.3 -13  0.205 -0.450 -0.69  0  1    0    2
@@ -281,12 +281,12 @@
 <span class='no'>mtcars</span> <span class='kw'>%&gt;%</span> <span class='fu'><a href='https://dplyr.tidyverse.org/reference/group_by.html'>group_by</a></span>(<span class='no'>cyl</span>,<span class='no'>vs</span>,<span class='no'>am</span>) <span class='kw'>%&gt;%</span> <span class='no'>fmedian</span></div><div class='output co'>#&gt; </span><span style='color: #949494;'># A tibble: 7 x 11</span><span>
 #&gt;     cyl    vs    am   mpg  disp    hp  drat    wt  qsec  gear  carb
 #&gt;   </span><span style='color: #949494;font-style: italic;'>&lt;dbl&gt;</span><span> </span><span style='color: #949494;font-style: italic;'>&lt;dbl&gt;</span><span> </span><span style='color: #949494;font-style: italic;'>&lt;dbl&gt;</span><span> </span><span style='color: #949494;font-style: italic;'>&lt;dbl&gt;</span><span> </span><span style='color: #949494;font-style: italic;'>&lt;dbl&gt;</span><span> </span><span style='color: #949494;font-style: italic;'>&lt;dbl&gt;</span><span> </span><span style='color: #949494;font-style: italic;'>&lt;dbl&gt;</span><span> </span><span style='color: #949494;font-style: italic;'>&lt;dbl&gt;</span><span> </span><span style='color: #949494;font-style: italic;'>&lt;dbl&gt;</span><span> </span><span style='color: #949494;font-style: italic;'>&lt;dbl&gt;</span><span> </span><span style='color: #949494;font-style: italic;'>&lt;dbl&gt;</span><span>
-#&gt; </span><span style='color: #BCBCBC;'>1</span><span>     4     0     1  26    120.   91   4.43  2.14  16.7   5     2
-#&gt; </span><span style='color: #BCBCBC;'>2</span><span>     4     1     0  22.8  141.   95   3.7   3.15  20.0   4     2
-#&gt; </span><span style='color: #BCBCBC;'>3</span><span>     4     1     1  30.4   79    66   4.08  1.94  18.6   4     1
-#&gt; </span><span style='color: #BCBCBC;'>4</span><span>     6     0     1  21    160   110   3.9   2.77  16.5   4     4
+#&gt; </span><span style='color: #BCBCBC;'>1</span><span>     4     0     1  26    120.   91   4.43  2.14  16.7   5     2  
+#&gt; </span><span style='color: #BCBCBC;'>2</span><span>     4     1     0  22.8  141.   95   3.7   3.15  20.0   4     2  
+#&gt; </span><span style='color: #BCBCBC;'>3</span><span>     4     1     1  30.4   79    66   4.08  1.94  18.6   4     1  
+#&gt; </span><span style='color: #BCBCBC;'>4</span><span>     6     0     1  21    160   110   3.9   2.77  16.5   4     4  
 #&gt; </span><span style='color: #BCBCBC;'>5</span><span>     6     1     0  18.6  196.  116.  3.5   3.44  19.2   3.5   2.5
-#&gt; </span><span style='color: #BCBCBC;'>6</span><span>     8     0     0  15.2  355   180   3.08  3.81  17.4   3     3
+#&gt; </span><span style='color: #BCBCBC;'>6</span><span>     8     0     0  15.2  355   180   3.08  3.81  17.4   3     3  
 #&gt; </span><span style='color: #BCBCBC;'>7</span><span>     8     0     1  15.4  326   300.  3.88  3.37  14.6   5     6  </div><div class='input'><span class='no'>mtcars</span> <span class='kw'>%&gt;%</span> <span class='fu'><a href='https://dplyr.tidyverse.org/reference/group_by.html'>group_by</a></span>(<span class='no'>cyl</span>,<span class='no'>vs</span>,<span class='no'>am</span>) <span class='kw'>%&gt;%</span> <span class='fu'>fmedian</span>(<span class='no'>hp</span>)             <span class='co'># Weighted</span></div><div class='output co'>#&gt; </span><span style='color: #949494;'># A tibble: 7 x 11</span><span>
 #&gt;     cyl    vs    am sum.hp   mpg  disp  drat    wt  qsec  gear  carb
 #&gt;   </span><span style='color: #949494;font-style: italic;'>&lt;dbl&gt;</span><span> </span><span style='color: #949494;font-style: italic;'>&lt;dbl&gt;</span><span> </span><span style='color: #949494;font-style: italic;'>&lt;dbl&gt;</span><span>  </span><span style='color: #949494;font-style: italic;'>&lt;dbl&gt;</span><span> </span><span style='color: #949494;font-style: italic;'>&lt;dbl&gt;</span><span> </span><span style='color: #949494;font-style: italic;'>&lt;dbl&gt;</span><span> </span><span style='color: #949494;font-style: italic;'>&lt;dbl&gt;</span><span> </span><span style='color: #949494;font-style: italic;'>&lt;dbl&gt;</span><span> </span><span style='color: #949494;font-style: italic;'>&lt;dbl&gt;</span><span> </span><span style='color: #949494;font-style: italic;'>&lt;dbl&gt;</span><span> </span><span style='color: #949494;font-style: italic;'>&lt;dbl&gt;</span><span>
@@ -299,39 +299,39 @@
 #&gt; </span><span style='color: #BCBCBC;'>7</span><span>     8     0     1    599  15   301    3.54  3.57  14.6     5     8</div><div class='input'><span class='no'>mtcars</span> <span class='kw'>%&gt;%</span> <span class='fu'><a href='GRP.html'>fgroup_by</a></span>(<span class='no'>cyl</span>,<span class='no'>vs</span>,<span class='no'>am</span>) <span class='kw'>%&gt;%</span> <span class='no'>fmedian</span>                <span class='co'># Faster grouping!</span></div><div class='output co'>#&gt; </span><span style='color: #949494;'># A tibble: 7 x 11</span><span>
 #&gt;     cyl    vs    am   mpg  disp    hp  drat    wt  qsec  gear  carb
 #&gt;   </span><span style='color: #949494;font-style: italic;'>&lt;dbl&gt;</span><span> </span><span style='color: #949494;font-style: italic;'>&lt;dbl&gt;</span><span> </span><span style='color: #949494;font-style: italic;'>&lt;dbl&gt;</span><span> </span><span style='color: #949494;font-style: italic;'>&lt;dbl&gt;</span><span> </span><span style='color: #949494;font-style: italic;'>&lt;dbl&gt;</span><span> </span><span style='color: #949494;font-style: italic;'>&lt;dbl&gt;</span><span> </span><span style='color: #949494;font-style: italic;'>&lt;dbl&gt;</span><span> </span><span style='color: #949494;font-style: italic;'>&lt;dbl&gt;</span><span> </span><span style='color: #949494;font-style: italic;'>&lt;dbl&gt;</span><span> </span><span style='color: #949494;font-style: italic;'>&lt;dbl&gt;</span><span> </span><span style='color: #949494;font-style: italic;'>&lt;dbl&gt;</span><span>
-#&gt; </span><span style='color: #BCBCBC;'>1</span><span>     4     0     1  26    120.   91   4.43  2.14  16.7   5     2
-#&gt; </span><span style='color: #BCBCBC;'>2</span><span>     4     1     0  22.8  141.   95   3.7   3.15  20.0   4     2
-#&gt; </span><span style='color: #BCBCBC;'>3</span><span>     4     1     1  30.4   79    66   4.08  1.94  18.6   4     1
-#&gt; </span><span style='color: #BCBCBC;'>4</span><span>     6     0     1  21    160   110   3.9   2.77  16.5   4     4
+#&gt; </span><span style='color: #BCBCBC;'>1</span><span>     4     0     1  26    120.   91   4.43  2.14  16.7   5     2  
+#&gt; </span><span style='color: #BCBCBC;'>2</span><span>     4     1     0  22.8  141.   95   3.7   3.15  20.0   4     2  
+#&gt; </span><span style='color: #BCBCBC;'>3</span><span>     4     1     1  30.4   79    66   4.08  1.94  18.6   4     1  
+#&gt; </span><span style='color: #BCBCBC;'>4</span><span>     6     0     1  21    160   110   3.9   2.77  16.5   4     4  
 #&gt; </span><span style='color: #BCBCBC;'>5</span><span>     6     1     0  18.6  196.  116.  3.5   3.44  19.2   3.5   2.5
-#&gt; </span><span style='color: #BCBCBC;'>6</span><span>     8     0     0  15.2  355   180   3.08  3.81  17.4   3     3
+#&gt; </span><span style='color: #BCBCBC;'>6</span><span>     8     0     0  15.2  355   180   3.08  3.81  17.4   3     3  
 #&gt; </span><span style='color: #BCBCBC;'>7</span><span>     8     0     1  15.4  326   300.  3.88  3.37  14.6   5     6  </div><div class='input'><span class='no'>mtcars</span> <span class='kw'>%&gt;%</span> <span class='fu'><a href='GRP.html'>fgroup_by</a></span>(<span class='no'>cyl</span>,<span class='no'>vs</span>,<span class='no'>am</span>) <span class='kw'>%&gt;%</span> <span class='fu'>fmedian</span>(<span class='kw'>TRA</span> <span class='kw'>=</span> <span class='st'>"-"</span>)     <span class='co'># De-median</span></div><div class='output co'>#&gt; </span><span style='color: #949494;'># A tibble: 32 x 11</span><span>
 #&gt;      cyl    vs    am    mpg   disp    hp    drat     wt   qsec  gear  carb
 #&gt;  </span><span style='color: #BCBCBC;'>*</span><span> </span><span style='color: #949494;font-style: italic;'>&lt;dbl&gt;</span><span> </span><span style='color: #949494;font-style: italic;'>&lt;dbl&gt;</span><span> </span><span style='color: #949494;font-style: italic;'>&lt;dbl&gt;</span><span>  </span><span style='color: #949494;font-style: italic;'>&lt;dbl&gt;</span><span>  </span><span style='color: #949494;font-style: italic;'>&lt;dbl&gt;</span><span> </span><span style='color: #949494;font-style: italic;'>&lt;dbl&gt;</span><span>   </span><span style='color: #949494;font-style: italic;'>&lt;dbl&gt;</span><span>  </span><span style='color: #949494;font-style: italic;'>&lt;dbl&gt;</span><span>  </span><span style='color: #949494;font-style: italic;'>&lt;dbl&gt;</span><span> </span><span style='color: #949494;font-style: italic;'>&lt;dbl&gt;</span><span> </span><span style='color: #949494;font-style: italic;'>&lt;dbl&gt;</span><span>
-#&gt; </span><span style='color: #BCBCBC;'> 1</span><span>     6     0     1  0       0      0    0      -</span><span style='color: #BB0000;'>0.150</span><span>  0       0     0
-#&gt; </span><span style='color: #BCBCBC;'> 2</span><span>     6     0     1  0       0      0    0       0.105  0.560   0     0
-#&gt; </span><span style='color: #BCBCBC;'> 3</span><span>     4     1     1 -</span><span style='color: #BB0000;'>7.60</span><span>   29     27   -</span><span style='color: #BB0000;'>0.23</span><span>    0.385  0       0     0
+#&gt; </span><span style='color: #BCBCBC;'> 1</span><span>     6     0     1  0       0      0    0      -</span><span style='color: #BB0000;'>0.150</span><span>  0       0     0  
+#&gt; </span><span style='color: #BCBCBC;'> 2</span><span>     6     0     1  0       0      0    0       0.105  0.560   0     0  
+#&gt; </span><span style='color: #BCBCBC;'> 3</span><span>     4     1     1 -</span><span style='color: #BB0000;'>7.60</span><span>   29     27   -</span><span style='color: #BB0000;'>0.23</span><span>    0.385  0       0     0  
 #&gt; </span><span style='color: #BCBCBC;'> 4</span><span>     6     1     0  2.75   61.7   -</span><span style='color: #BB0000;'>6.5</span><span> -</span><span style='color: #BB0000;'>0.420</span><span>  -</span><span style='color: #BB0000;'>0.225</span><span>  0.270  -</span><span style='color: #BB0000;'>0.5</span><span>  -</span><span style='color: #BB0000;'>1.5</span><span>
-#&gt; </span><span style='color: #BCBCBC;'> 5</span><span>     8     0     0  3.5     5     -</span><span style='color: #BB0000;'>5</span><span>    0.075</span><span style='text-decoration: underline;'>0</span><span> -</span><span style='color: #BB0000;'>0.370</span><span> -</span><span style='color: #BB0000;'>0.33</span><span>    0    -</span><span style='color: #BB0000;'>1</span><span>
+#&gt; </span><span style='color: #BCBCBC;'> 5</span><span>     8     0     0  3.5     5     -</span><span style='color: #BB0000;'>5</span><span>    0.075</span><span style='text-decoration: underline;'>0</span><span> -</span><span style='color: #BB0000;'>0.370</span><span> -</span><span style='color: #BB0000;'>0.33</span><span>    0    -</span><span style='color: #BB0000;'>1</span><span>  
 #&gt; </span><span style='color: #BCBCBC;'> 6</span><span>     6     1     0 -</span><span style='color: #BB0000;'>0.550</span><span>  28.7  -</span><span style='color: #BB0000;'>11.5</span><span> -</span><span style='color: #BB0000;'>0.74</span><span>    0.02   1.05   -</span><span style='color: #BB0000;'>0.5</span><span>  -</span><span style='color: #BB0000;'>1.5</span><span>
-#&gt; </span><span style='color: #BCBCBC;'> 7</span><span>     8     0     0 -</span><span style='color: #BB0000;'>0.900</span><span>   5     65    0.135  -</span><span style='color: #BB0000;'>0.240</span><span> -</span><span style='color: #BB0000;'>1.51</span><span>    0     1
-#&gt; </span><span style='color: #BCBCBC;'> 8</span><span>     4     1     0  1.60    5.90 -</span><span style='color: #BB0000;'>33</span><span>   -</span><span style='color: #BB0000;'>0.01</span><span>    0.04  -</span><span style='color: #BB0000;'>0.01</span><span>    0     0
-#&gt; </span><span style='color: #BCBCBC;'> 9</span><span>     4     1     0  0       0      0    0.220   0      2.89    0     0
+#&gt; </span><span style='color: #BCBCBC;'> 7</span><span>     8     0     0 -</span><span style='color: #BB0000;'>0.900</span><span>   5     65    0.135  -</span><span style='color: #BB0000;'>0.240</span><span> -</span><span style='color: #BB0000;'>1.51</span><span>    0     1  
+#&gt; </span><span style='color: #BCBCBC;'> 8</span><span>     4     1     0  1.60    5.90 -</span><span style='color: #BB0000;'>33</span><span>   -</span><span style='color: #BB0000;'>0.01</span><span>    0.04  -</span><span style='color: #BB0000;'>0.01</span><span>    0     0  
+#&gt; </span><span style='color: #BCBCBC;'> 9</span><span>     4     1     0  0       0      0    0.220   0      2.89    0     0  
 #&gt; </span><span style='color: #BCBCBC;'>10</span><span>     6     1     0  0.55  -</span><span style='color: #BB0000;'>28.7</span><span>    6.5  0.420   0     -</span><span style='color: #BB0000;'>0.87</span><span>    0.5   1.5
 #&gt; </span><span style='color: #949494;'># ... with 22 more rows</span><span></div><div class='input'><span class='no'>mtcars</span> <span class='kw'>%&gt;%</span> <span class='fu'><a href='GRP.html'>fgroup_by</a></span>(<span class='no'>cyl</span>,<span class='no'>vs</span>,<span class='no'>am</span>) <span class='kw'>%&gt;%</span> <span class='fu'><a href='select_replace_vars.html'>fselect</a></span>(<span class='no'>mpg</span>, <span class='no'>hp</span>) <span class='kw'>%&gt;%</span>   <span class='co'># Faster selecting</span>
       <span class='fu'>fmedian</span>(<span class='no'>hp</span>, <span class='st'>"-"</span>)  <span class='co'># Weighted de-median mpg, using hp as weights</span></div><div class='output co'>#&gt; </span><span style='color: #949494;'># A tibble: 32 x 2</span><span>
 #&gt;       hp    mpg
 #&gt;  </span><span style='color: #BCBCBC;'>*</span><span> </span><span style='color: #949494;font-style: italic;'>&lt;dbl&gt;</span><span>  </span><span style='color: #949494;font-style: italic;'>&lt;dbl&gt;</span><span>
-#&gt; </span><span style='color: #BCBCBC;'> 1</span><span>   110  0
-#&gt; </span><span style='color: #BCBCBC;'> 2</span><span>   110  0
-#&gt; </span><span style='color: #BCBCBC;'> 3</span><span>    93 -</span><span style='color: #BB0000;'>7.60</span><span>
-#&gt; </span><span style='color: #BCBCBC;'> 4</span><span>   110  2.20
-#&gt; </span><span style='color: #BCBCBC;'> 5</span><span>   175  3.5
-#&gt; </span><span style='color: #BCBCBC;'> 6</span><span>   105 -</span><span style='color: #BB0000;'>1.10</span><span>
+#&gt; </span><span style='color: #BCBCBC;'> 1</span><span>   110  0    
+#&gt; </span><span style='color: #BCBCBC;'> 2</span><span>   110  0    
+#&gt; </span><span style='color: #BCBCBC;'> 3</span><span>    93 -</span><span style='color: #BB0000;'>7.60</span><span> 
+#&gt; </span><span style='color: #BCBCBC;'> 4</span><span>   110  2.20 
+#&gt; </span><span style='color: #BCBCBC;'> 5</span><span>   175  3.5  
+#&gt; </span><span style='color: #BCBCBC;'> 6</span><span>   105 -</span><span style='color: #BB0000;'>1.10</span><span> 
 #&gt; </span><span style='color: #BCBCBC;'> 7</span><span>   245 -</span><span style='color: #BB0000;'>0.900</span><span>
-#&gt; </span><span style='color: #BCBCBC;'> 8</span><span>    62  1.60
-#&gt; </span><span style='color: #BCBCBC;'> 9</span><span>    95  0
-#&gt; </span><span style='color: #BCBCBC;'>10</span><span>   123  0
+#&gt; </span><span style='color: #BCBCBC;'> 8</span><span>    62  1.60 
+#&gt; </span><span style='color: #BCBCBC;'> 9</span><span>    95  0    
+#&gt; </span><span style='color: #BCBCBC;'>10</span><span>   123  0    
 #&gt; </span><span style='color: #949494;'># ... with 22 more rows</span><span></div></span></pre>
   </div>
   <div class="col-md-3 hidden-xs hidden-sm" id="pkgdown-sidebar">
@@ -354,7 +354,7 @@
       </footer>
    </div>
 
-
+  
 
 
   </body>
