@@ -17,6 +17,18 @@ build_reference(examples = TRUE, topics = topics) # "collapse-package"
 build_news()
 # Add favicon:
 # replace <head> by <head><link rel="shortcut icon" href="https://sebkrantz.github.io/collapse/favicon.ico" type="image/x-icon">
+
+# replace "https://twitter.com/collapse_R" target="_blank",
+# href="https://github.com/SebKrantz/collapse" target="_blank" and
+# href="https://sebkrantz.github.io/Rblog/" target="_blank"  (target = "_blank")
+
+# in index.html, replace with
+# <li id="bloglink">
+#  <a href="https://sebkrantz.github.io/Rblog/" target="_blank">Blog</a>
+# </li>
+
+# in pkgdown.js, add line
+# $("#bloglink").removeClass("active");   below     menu_anchor.closest("li.dropdown").addClass("active");
 preview_site()
 
 # ?build_home
