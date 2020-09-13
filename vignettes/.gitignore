@@ -1,6 +1,12 @@
 *.html
 *.R
+.build.timestamp
+collapse_intro_files
+collapse_and_dplyr_files
+collapse_and_plm_files
+collapse_intro_cache
 collapse_intro_cache
 collapse_and_dplyr_cache
 collapse_and_plm_cache
 collapse_and_data.table_cache
+

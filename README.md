@@ -2,7 +2,7 @@
 
 
 <!-- badges: start -->
-[![CRAN status](https://www.r-pkg.org/badges/version/collapse)](https://cran.r-project.org/package=collapse)
+[![CRAN status](https://www.r-pkg.org/badges/version/collapse)](https://cran.r-project.org/package=collapse) 
 [![cran checks](https://cranchecks.info/badges/worst/collapse)](https://cran.r-project.org/web/checks/check_results_collapse.html)
 [![Travis build status](https://travis-ci.com/SebKrantz/collapse.svg?branch=master)](https://travis-ci.com/SebKrantz/collapse)
 [![Codecov test coverage](https://codecov.io/gh/SebKrantz/collapse/branch/master/graph/badge.svg)](https://codecov.io/gh/SebKrantz/collapse?branch=master)
