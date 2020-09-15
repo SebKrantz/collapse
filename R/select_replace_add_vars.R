@@ -6,7 +6,7 @@ fselect <- function(x, ..., return = "data") { # This also takes names and indic
   nam <- names(x)
   nl <- `names<-`(as.vector(seq_along(x), "list"), nam)
   vars <- eval(substitute(c(...)), nl, parent.frame())
-  if(!is.integer(vars)) stop("Unknown columns")
+  if(!is.integer(vars)) stop(paste0("Unknown columns: ", .c(...))) # if(!is.integer(vars) || max(vars) > length(nam)) # nah, a bit redundant..
   switch(return,
          data = setAttributes(x[vars], `[[<-`(ax, "names", nam[vars])), # Also Improvements in code below ?
          names = nam[vars],
@@ -29,7 +29,7 @@ slt <- fselect # good, consistent
   oldClass(x) <- NULL
   nl <- `names<-`(as.vector(seq_along(x), "list"), names(x))
   vars <- eval(substitute(c(...)), nl, parent.frame())
-  if(!is.integer(vars)) stop("Unknown columns")
+  if(!is.integer(vars)) stop(paste0("Unknown columns: ", .c(...)))
   if(is.null(value)) {
     if(!length(vars)) return(`oldClass<-`(x, clx))
     ax <- attributes(x)

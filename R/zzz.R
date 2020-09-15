@@ -10,7 +10,7 @@
 }
 
 .onAttach <- function(libname, pkgname) {
-  packageStartupMessage(paste0("collapse ",packageVersion("collapse"),", see ?`collapse-package` or ?`collapse-documentation`\nNote: stats::D  ->  D.expression, D.call"))
+  packageStartupMessage(paste0("collapse ",packageVersion("collapse"),", see ?`collapse-package` or ?`collapse-documentation`\nNote: stats::D  ->  D.expression, D.call, D.name"))
 }
 
 .onUnload <- function (libpath) {

@@ -23,10 +23,17 @@ ss <- function(data, i, j) {
   if(missing(j)) j <- seq_along(unclass(data)) else if(is.integer(j)) {
     if(any(j < 0L)) j <- seq_along(unclass(data))[j]
   } else {
-    j <- if(is.character(j)) ckmatch(j, attr(data, "names")) else if(is.logical(j))
-         which(j) else if(any(j < 0)) seq_along(unclass(data))[j] else as.integer(j)
+    if(is.character(j)) {
+      j <- ckmatch(j, attr(data, "names"))
+    } else if(is.logical(j)) {
+      if(length(j) != length(unclass(data))) stop("if j is logical, it needs to be of length ncol(data)")
+         j <- which(j)
+    } else if(is.numeric(j)) {
+     j <- if(any(j < 0)) seq_along(unclass(data))[j] else as.integer(j)
+    } else stop("j needs to be suppied integer indices, character column names, or a suitable logical vector")
   }
-  if(!is.integer(i)) i <- if(is.logical(i)) which(i) else as.integer(i)
+  if(!is.integer(i)) i <- if(is.logical(i)) which(i) else if(is.numeric(i)) as.integer(i) else
+                       stop("i needs to be integer or logical")
   rn <- attr(data, "row.names")
   if(is.numeric(rn) || is.null(rn) || rn[1L] == "1") return(.Call(C_subsetDT, data, i, j))
   return(`attr<-`(.Call(C_subsetDT, data, i, j), "row.names", rn[i]))
@@ -40,12 +47,16 @@ fsubset.data.frame <- function(x, subset, ...) {
     if(is.integer(vars)) {
       if(any(vars < 0L)) vars <- ix[vars]
     } else {
-      vars <- if(is.character(vars)) ckmatch(vars, names(nl)) else if(is.logical(vars))
-               which(vars) else if(any(vars < 0)) ix[vars] else as.integer(vars)
+      if(is.character(vars)) vars <- ckmatch(vars, names(nl)) else if(is.numeric(vars)) {
+        vars <- if(any(vars < 0)) ix[vars] else as.integer(vars)
+      } else stop("... needs to be comma separated column names, or column indices")
+      # vars <- if(is.character(vars)) ckmatch(vars, names(nl)) else if(is.logical(vars))
+      #          which(vars) else if(any(vars < 0)) ix[vars] else as.integer(vars)
     }
   }
   r <- eval(substitute(subset), x, parent.frame()) # e <- substitute(subset) # if(e[[1L]] == ":") ... but what about objects? -> just keep this
-  if(!is.integer(r)) r <- if(is.logical(r)) which(r) else as.integer(r) # which(r & !is.na(r)) not needed !
+  if(!is.integer(r)) r <- if(is.logical(r)) which(r) else if(is.numeric(r)) as.integer(r) else
+     stop("subset needs to be an expression evaluating to logical or integer") # which(r & !is.na(r)) not needed !
   rn <- attr(x, "row.names") # || is.integer(rn) # maybe many have character converted integers ?
   if(is.numeric(rn) || is.null(rn) || rn[1L] == "1") return(.Call(C_subsetDT, x, r, vars))
   return(`attr<-`(.Call(C_subsetDT, x, r, vars), "row.names", rn[r]))
