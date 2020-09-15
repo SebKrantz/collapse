@@ -298,8 +298,8 @@ DG_pdata_frame_template <- function(x, n = 1, diff = 1, cols = is.numeric, fill 
 D <- function(x, n = 1, diff = 1, ...) UseMethod("D") # , x
 
 D.expression <- function(x, ...) if(missing(x)) stats::D(...) else stats::D(x, ...)
-
 D.call <- function(x, ...) if(missing(x)) stats::D(...) else stats::D(x, ...)
+D.name <- function(x, ...) if(missing(x)) stats::D(...) else stats::D(x, ...)
 
 D.default <- function(x, n = 1, diff = 1, g = NULL, t = NULL, fill = NA, rho = 1, stubs = TRUE, ...)
   fdiff.default(x, n, diff, g, t, fill, FALSE, rho, stubs, ...)
