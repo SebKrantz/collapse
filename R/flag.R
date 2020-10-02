@@ -2,6 +2,7 @@
 flag <- function(x, n = 1, ...) UseMethod("flag") # , x
 
 flag.default <- function(x, n = 1, g = NULL, t = NULL, fill = NA, stubs = TRUE, ...) {
+  if(is.matrix(x) && !inherits(x, "matrix")) return(UseMethod("flag", unclass(x)))
   if(!missing(...)) unused_arg_action(match.call(), ...)
   if(is.null(g)) return(.Call(Cpp_flaglead,x,n,fill,0L,0L,NULL,G_t(t,0L),stubs))
   if(is.atomic(g)) {
@@ -44,7 +45,7 @@ flag.grouped_df <- function(x, n = 1, t = NULL, fill = NA, stubs = length(n) > 1
   tsym <- l1orn(as.character(substitute(t)), NULL)
   nam <- attr(x, "names")
   gn <- which(nam %in% g[[5L]])
-  if(!is.null(tsym) && !is.na(tn <- match(tsym, nam))) {
+  if(length(tsym) && !is.na(tn <- match(tsym, nam))) {
     if(any(gn == tn)) stop("timevar coincides with grouping variables!")
     t <- .subset2(x, tn)
     gn <- c(gn, tn)
@@ -85,8 +86,10 @@ flag.pdata.frame <- function(x, n = 1, fill = NA, stubs = length(n) > 1L, ...) {
 # Lag Operator   # use xt instead of by ?
 L <- function(x, n = 1, ...) UseMethod("L") # , x
 
-L.default <- function(x, n = 1, g = NULL, t = NULL, fill = NA, stubs = TRUE, ...)
+L.default <- function(x, n = 1, g = NULL, t = NULL, fill = NA, stubs = TRUE, ...) {
+  if(is.matrix(x) && !inherits(x, "matrix")) return(flag.matrix(x, n, g, t, fill, stubs, ...))
   flag.default(x, n, g, t, fill, stubs, ...)
+}
 
 L.pseries <- function(x, n = 1, fill = NA, stubs = TRUE, ...)
   flag.pseries(x, n, fill, stubs, ...)
@@ -119,7 +122,7 @@ L.data.frame <- function(x, n = 1, by = NULL, t = NULL, cols = is.numeric,
       if(!keep.ids) gn <- NULL
     } else {
       gn <- NULL
-      if(!is.null(cols)) cols <- cols2int(cols, x, nam)
+      if(length(cols)) cols <- cols2int(cols, x, nam)
       if(!is.GRP(by)) by <- if(is.null(by)) list(0L, 0L, NULL) else if(is.atomic(by)) # Necessary for if by is passed externally !
         at2GRP(by) else GRP.default(by, return.groups = FALSE, call = FALSE)
     }
@@ -137,7 +140,7 @@ L.data.frame <- function(x, n = 1, by = NULL, t = NULL, cols = is.numeric,
     .Call(Cpp_flagleadl,x[cols],n,fill,by[[1L]],by[[2L]],by[[3L]],G_t(t),stubs)
     ax[["names"]] <- names(res)
     return(setAttributes(res, ax))
-  } else if(!is.null(cols)) { # Needs to be like this, otherwise subsetting dropps the attributes !
+  } else if(length(cols)) { # Needs to be like this, otherwise subsetting dropps the attributes !
     ax <- attributes(x)
     class(x) <- NULL
     x <- x[cols2int(cols, x, names(x))]
@@ -173,9 +176,9 @@ L.pdata.frame <- function(x, n = 1, cols = is.numeric, fill = NA, stubs = TRUE, 
 
   if(length(index) > 2L) index <- c(finteraction(index[-length(index)]), index[length(index)])
 
-  if(!is.null(cols)) cols <- cols2int(cols, x, nam)
+  if(length(cols)) cols <- cols2int(cols, x, nam)
 
-  if(length(gn) && !is.null(cols)) {
+  if(length(gn) && length(cols)) {
     class(x) <- NULL # Works for multiple lags !
     res <- c(x[gn], .Call(Cpp_flagleadl,x[cols],n,fill,fnlevels(index[[1L]]),index[[1L]],NULL,index[[2L]],stubs))
     ax[["names"]] <- names(res)
@@ -189,8 +192,10 @@ L.pdata.frame <- function(x, n = 1, cols = is.numeric, fill = NA, stubs = TRUE, 
 # Lead Operator
 F <- function(x, n = 1, ...) UseMethod("F") # , x
 
-F.default <- function(x, n = 1, g = NULL, t = NULL, fill = NA, stubs = TRUE, ...)
+F.default <- function(x, n = 1, g = NULL, t = NULL, fill = NA, stubs = TRUE, ...) {
+  if(is.matrix(x) && !inherits(x, "matrix")) return(flag.matrix(x, -n, g, t, fill, stubs, ...))
   flag.default(x, -n, g, t, fill, stubs, ...)
+}
 
 F.pseries <- function(x, n = 1, fill = NA, stubs = TRUE, ...)
   flag.pseries(x, -n, fill, stubs, ...)

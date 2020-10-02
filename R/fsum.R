@@ -3,6 +3,7 @@
 fsum <- function(x, ...) UseMethod("fsum") # , x
 
 fsum.default <- function(x, g = NULL, w = NULL, TRA = NULL, na.rm = TRUE, use.g.names = TRUE, ...) {
+  if(is.matrix(x) && !inherits(x, "matrix")) return(fsum.matrix(x, g, w, TRA, na.rm, use.g.names, ...))
   if(!missing(...)) unused_arg_action(match.call(), ...)
   if(is.null(TRA)) {
     if(is.null(g)) return(.Call(Cpp_fsum,x,0L,0L,w,na.rm))
@@ -73,7 +74,7 @@ fsum.data.frame <- function(x, g = NULL, w = NULL, TRA = NULL, na.rm = TRUE, use
       return(.Call(Cpp_fsuml,x,attr(g,"N.groups"),g,w,na.rm,FALSE))
     }
     if(!is.GRP(g)) g <- GRP.default(g, return.groups = use.g.names, call = FALSE)
-    if(use.g.names && !inherits(x, "data.table") && !is.null(groups <- GRPnames(g)))
+    if(use.g.names && !inherits(x, "data.table") && length(groups <- GRPnames(g)))
       return(setRnDF(.Call(Cpp_fsuml,x,g[[1L]],g[[2L]],w,na.rm,FALSE), groups))
     return(.Call(Cpp_fsuml,x,g[[1L]],g[[2L]],w,na.rm,FALSE))
   }
@@ -100,7 +101,7 @@ fsum.grouped_df <- function(x, w = NULL, TRA = NULL, na.rm = TRUE, use.g.names =
   nTRAl <- is.null(TRA)
   sumw <- NULL
 
-  if(!is.null(wsym) && !is.na(wn <- match(wsym, nam))) {
+  if(length(wsym) && !is.na(wn <- match(wsym, nam))) {
     w <- .subset2(x, wn) # faster using unclass?
     if(any(gn == wn)) stop("Weights coincide with grouping variables!")
     gn <- c(gn, wn)

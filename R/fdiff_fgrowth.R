@@ -14,6 +14,7 @@ baselog <- base::log
 fdiff <- function(x, n = 1, diff = 1, ...) UseMethod("fdiff") # , x
 
 fdiff.default <- function(x, n = 1, diff = 1, g = NULL, t = NULL, fill = NA, log = FALSE, rho = 1, stubs = TRUE, ...) {
+  if(is.matrix(x) && !inherits(x, "matrix")) return(UseMethod("fdiff", unclass(x)))
   if(!missing(...)) if(checkld(...)) log <- list(...)[["logdiff"]] else unused_arg_action(match.call(), ...)
   if(log) x <- baselog(x)
   if(is.null(g)) return(.Call(Cpp_fdiffgrowth,x,n,diff,fill,0L,0L,NULL,G_t(t,0L),1L+log,rho,stubs))
@@ -59,7 +60,7 @@ fdiff.grouped_df <- function(x, n = 1, diff = 1, t = NULL, fill = NA, log = FALS
   tsym <- l1orn(as.character(substitute(t)), NULL)
   nam <- attr(x, "names")
   gn <- which(nam %in% g[[5L]])
-  if(!is.null(tsym) && !is.na(tn <- match(tsym, nam))) {
+  if(length(tsym) && !is.na(tn <- match(tsym, nam))) {
     if(any(gn == tn)) stop("timevar coincides with grouping variables!")
     t <- .subset2(x, tn)
     gn <- c(gn, tn)
@@ -109,6 +110,7 @@ fdiff.pdata.frame <- function(x, n = 1, diff = 1, fill = NA, log = FALSE, rho = 
 fgrowth <- function(x, n = 1, diff = 1, ...) UseMethod("fgrowth") # , x
 
 fgrowth.default <- function(x, n = 1, diff = 1, g = NULL, t = NULL, fill = NA, logdiff = FALSE, scale = 100, stubs = TRUE, ...) {
+  if(is.matrix(x) && !inherits(x, "matrix")) return(UseMethod("fgrowth", unclass(x)))
   if(!missing(...)) unused_arg_action(match.call(), ...)
   if(logdiff) x <- if(scale == 1) baselog(x) else scale * baselog(x)
   if(is.null(g)) return(.Call(Cpp_fdiffgrowth,x,n,diff,fill,0L,0L,NULL,G_t(t,0L),4L-logdiff,scale,stubs))
@@ -154,7 +156,7 @@ fgrowth.grouped_df <- function(x, n = 1, diff = 1, t = NULL, fill = NA, logdiff 
   tsym <- l1orn(as.character(substitute(t)), NULL)
   nam <- attr(x, "names")
   gn <- which(nam %in% g[[5L]])
-  if(!is.null(tsym) && !is.na(tn <- match(tsym, nam))) {
+  if(length(tsym) && !is.na(tn <- match(tsym, nam))) {
     if(any(gn == tn)) stop("timevar coincides with grouping variables!")
     t <- .subset2(x, tn)
     gn <- c(gn, tn)
@@ -224,7 +226,7 @@ DG_data_frame_template <- function(x, n = 1, diff = 1, by = NULL, t = NULL, cols
       if(!keep.ids) gn <- NULL
     } else {
       gn <- NULL
-      if(!is.null(cols)) cols <- cols2int(cols, x, nam)
+      if(length(cols)) cols <- cols2int(cols, x, nam)
       if(!is.GRP(by)) by <- if(is.null(by)) list(0L, 0L, NULL) else if(is.atomic(by)) # Necessary if by is passed externally !
         at2GRP(by) else GRP.default(by, return.groups = FALSE, call = FALSE)
     }
@@ -242,7 +244,7 @@ DG_data_frame_template <- function(x, n = 1, diff = 1, by = NULL, t = NULL, cols
         .Call(Cpp_fdiffgrowthl,cld(x[cols]),n,diff,fill,by[[1L]],by[[2L]],by[[3L]],G_t(t,message),return,rho,stubs)
     ax[["names"]] <- names(res)
     return(setAttributes(res, ax))
-  } else if(!is.null(cols)) { # Needs to be done like this, otherwise list-subsetting drops attributes !
+  } else if(length(cols)) { # Needs to be done like this, otherwise list-subsetting drops attributes !
     ax <- attributes(x)
     class(x) <- NULL
     x <- x[cols2int(cols, x, names(x))]
@@ -279,9 +281,9 @@ DG_pdata_frame_template <- function(x, n = 1, diff = 1, cols = is.numeric, fill 
 
   cld <- function(y) switch(return, y, fdapply(y, baselog), if(rho == 1) fdapply(y, baselog) else fdapply(y, function(k) rho * baselog(k)), y)
 
-  if(!is.null(cols)) cols <- cols2int(cols, x, nam)
+  if(length(cols)) cols <- cols2int(cols, x, nam)
 
-  if(length(gn) && !is.null(cols)) {
+  if(length(gn) && length(cols)) {
     class(x) <- NULL # Works for multiple lags !
     res <- c(x[gn], .Call(Cpp_fdiffgrowthl,cld(x[cols]),n,diff,fill,fnlevels(index[[1L]]),index[[1L]],NULL,index[[2L]],return,rho,stubs))
     ax[["names"]] <- names(res)
@@ -301,8 +303,10 @@ D.expression <- function(x, ...) if(missing(x)) stats::D(...) else stats::D(x, .
 D.call <- function(x, ...) if(missing(x)) stats::D(...) else stats::D(x, ...)
 D.name <- function(x, ...) if(missing(x)) stats::D(...) else stats::D(x, ...)
 
-D.default <- function(x, n = 1, diff = 1, g = NULL, t = NULL, fill = NA, rho = 1, stubs = TRUE, ...)
+D.default <- function(x, n = 1, diff = 1, g = NULL, t = NULL, fill = NA, rho = 1, stubs = TRUE, ...) {
+  if(is.matrix(x) && !inherits(x, "matrix")) return(fdiff.matrix(x, n, diff, g, t, fill, FALSE, rho, stubs, ...))
   fdiff.default(x, n, diff, g, t, fill, FALSE, rho, stubs, ...)
+}
 
 D.pseries <- function(x, n = 1, diff = 1, fill = NA, rho = 1, stubs = TRUE, ...)
   fdiff.pseries(x, n, diff, fill, FALSE, rho, stubs, ...)
@@ -334,8 +338,10 @@ D.pdata.frame <- function(x, n = 1, diff = 1, cols = is.numeric, fill = NA, rho 
 
 Dlog <- function(x, n = 1, diff = 1, ...) UseMethod("Dlog") # , x
 
-Dlog.default <- function(x, n = 1, diff = 1, g = NULL, t = NULL, fill = NA, rho = 1, stubs = TRUE, ...)
+Dlog.default <- function(x, n = 1, diff = 1, g = NULL, t = NULL, fill = NA, rho = 1, stubs = TRUE, ...) {
+  if(is.matrix(x) && !inherits(x, "matrix")) return(fdiff.matrix(x, n, diff, g, t, fill, TRUE, rho, stubs, ...))
   fdiff.default(x, n, diff, g, t, fill, TRUE, rho, stubs, ...)
+}
 
 Dlog.pseries <- function(x, n = 1, diff = 1, fill = NA, rho = 1, stubs = TRUE, ...)
   fdiff.pseries(x, n, diff, fill, TRUE, rho, stubs, ...)
@@ -363,8 +369,10 @@ Dlog.pdata.frame <- function(x, n = 1, diff = 1, cols = is.numeric, fill = NA, r
 
 G <- function(x, n = 1, diff = 1, ...) UseMethod("G") # , x
 
-G.default <- function(x, n = 1, diff = 1, g = NULL, t = NULL, fill = NA, logdiff = FALSE, scale = 100, stubs = TRUE, ...)
+G.default <- function(x, n = 1, diff = 1, g = NULL, t = NULL, fill = NA, logdiff = FALSE, scale = 100, stubs = TRUE, ...) {
+  if(is.matrix(x) && !inherits(x, "matrix")) return(fgrowth.matrix(x, n, diff, g, t, fill, logdiff, scale, stubs, ...))
   fgrowth.default(x, n, diff, g, t, fill, logdiff, scale, stubs, ...)
+}
 
 G.pseries <- function(x, n = 1, diff = 1, fill = NA, logdiff = FALSE, scale = 100, stubs = TRUE, ...)
   fgrowth.pseries(x, n, diff, fill, logdiff, scale, stubs, ...)

@@ -6,6 +6,7 @@ BY.default <- function(X, g, FUN, ..., use.g.names = TRUE, sort = TRUE,
                        expand.wide = FALSE, parallel = FALSE, mc.cores = 1L,
                        return = c("same", "vector", "list")) { # what about ... in those other internal calls ?
   if(!is.atomic(X)) stop("X needs to be an atomic vector") # redundant ?
+  if(is.matrix(X) && !inherits(X, "matrix")) return(UseMethod("BY", unclass(x)))
   if(!(is.function(FUN) || is.character(FUN))) stop("FUN needs to be a function")
   aplyfun <- if(parallel) function(...) mclapply(..., mc.cores = mc.cores) else lapply
   simplify <- switch(return[1L], same = 1L, vector = 2L, list = 3L, stop("BY.default only supports same, vector and list output!"))
@@ -22,7 +23,7 @@ BY.default <- function(X, g, FUN, ..., use.g.names = TRUE, sort = TRUE,
           res <- unlist(res, recursive = FALSE)
           if(simplify == 1L) { #  && typeof(res) == typeof(X)   # length(res) == length(X) && # manually control it...
             ax <- attributes(X)
-            if(!is.null(ax)) {
+            if(length(ax)) {
               ax[["names"]] <- names(res)
               setattributes(res, ax) # attributes(res) <- ax
             }
@@ -33,7 +34,7 @@ BY.default <- function(X, g, FUN, ..., use.g.names = TRUE, sort = TRUE,
           nr1 <- names(res[[1L]]) # good solution ?
           res <- unlist(res, recursive = FALSE, use.names = FALSE)
           if(length(res) != ll) { # attributes(res) <- attributes(X)
-            if(!is.null(nr1) && length(res) == length(nr1)*ll) # additional check..
+            if(length(nr1) && length(res) == length(nr1)*ll) # additional check..
             names(res) <- rep(nr1, ll)
           }
         }
@@ -164,7 +165,7 @@ BY.matrix <- function(X, g, FUN, ..., use.g.names = TRUE, sort = TRUE,
         lr1 <- length(res[[1L]])
         if(return > 1L) {
           if(lr1 != nrow(X)) {
-            if(!is.null(dimnames(X))) ax[["dimnames"]][1L] <- list(NULL) # character(0) doesn't work !, the if check guards for error if no dimnames
+            if(length(dimnames(X))) ax[["dimnames"]][1L] <- list(NULL) # character(0) doesn't work !, the if check guards for error if no dimnames
             ax[["dim"]][1L] <- lr1
           }
           res <- do.call(cbind, res)
