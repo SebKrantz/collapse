@@ -5,6 +5,7 @@ sbt <- fsubset
 
 # Also not really faster than default for numeric (but a bit faster for factors ...)
 fsubset.default <- function(x, subset, ...) {
+  if(is.matrix(x) && !inherits(x, "matrix")) return(fsubset.matrix(x, subset, ...))
   if(!missing(...)) unused_arg_action(match.call(), ...)
   if(is.logical(subset)) return(.Call(C_subsetVector, x, which(subset)))
   .Call(C_subsetVector, x, subset)
@@ -13,30 +14,31 @@ fsubset.default <- function(x, subset, ...) {
 fsubset.matrix <- function(x, subset, ..., drop = FALSE) {
   if(missing(...)) return(x[subset, , drop = drop])  # better row subsetting ? (like df, method? use mctl ?)
   nl <- `names<-`(as.vector(1L:ncol(x), "list"), dimnames(x)[[2L]])
-  vars <- eval(substitute(c(...)), nl, parent.frame()) # better than list(...) ? -> Yes, great !
+  vars <- eval(substitute(c(...)), nl, parent.frame())
   if(missing(subset)) return(x[, vars, drop = drop])
   x[subset, vars, drop = drop]
 }
 
-# Just indices, no lazy eval
-ss <- function(data, i, j) {
-  if(missing(j)) j <- seq_along(unclass(data)) else if(is.integer(j)) {
-    if(any(j < 0L)) j <- seq_along(unclass(data))[j]
+# No lazy eval
+ss <- function(x, i, j) {
+  if(is.atomic(x)) if(is.array(x)) return(x[i, j, drop = FALSE]) else return(x[i])
+  if(missing(j)) j <- seq_along(unclass(x)) else if(is.integer(j)) {
+    if(any(j < 0L)) j <- seq_along(unclass(x))[j]
   } else {
     if(is.character(j)) {
-      j <- ckmatch(j, attr(data, "names"))
+      j <- ckmatch(j, attr(x, "names"))
     } else if(is.logical(j)) {
-      if(length(j) != length(unclass(data))) stop("if j is logical, it needs to be of length ncol(data)")
+      if(length(j) != length(unclass(x))) stop("If j is logical, it needs to be of length ncol(x)")
          j <- which(j)
     } else if(is.numeric(j)) {
-     j <- if(any(j < 0)) seq_along(unclass(data))[j] else as.integer(j)
-    } else stop("j needs to be suppied integer indices, character column names, or a suitable logical vector")
+     j <- if(any(j < 0)) seq_along(unclass(x))[j] else as.integer(j)
+    } else stop("j needs to be supplied integer indices, character column names, or a suitable logical vector")
   }
-  if(!is.integer(i)) i <- if(is.logical(i)) which(i) else if(is.numeric(i)) as.integer(i) else
-                       stop("i needs to be integer or logical")
-  rn <- attr(data, "row.names")
-  if(is.numeric(rn) || is.null(rn) || rn[1L] == "1") return(.Call(C_subsetDT, data, i, j))
-  return(`attr<-`(.Call(C_subsetDT, data, i, j), "row.names", rn[i]))
+  if(!is.integer(i)) i <- if(is.numeric(i)) as.integer(i) else if(is.logical(i) && length(i) == fnrow2(x)) which(i) else
+      stop("i needs to be integer or logical(nrow(x))")
+  rn <- attr(x, "row.names")
+  if(is.numeric(rn) || is.null(rn) || rn[1L] == "1") return(.Call(C_subsetDT, x, i, j))
+  return(`attr<-`(.Call(C_subsetDT, x, i, j), "row.names", rn[i]))
 }
 
 fsubset.data.frame <- function(x, subset, ...) {
@@ -50,14 +52,12 @@ fsubset.data.frame <- function(x, subset, ...) {
       if(is.character(vars)) vars <- ckmatch(vars, names(nl)) else if(is.numeric(vars)) {
         vars <- if(any(vars < 0)) ix[vars] else as.integer(vars)
       } else stop("... needs to be comma separated column names, or column indices")
-      # vars <- if(is.character(vars)) ckmatch(vars, names(nl)) else if(is.logical(vars))
-      #          which(vars) else if(any(vars < 0)) ix[vars] else as.integer(vars)
     }
   }
-  r <- eval(substitute(subset), x, parent.frame()) # e <- substitute(subset) # if(e[[1L]] == ":") ... but what about objects? -> just keep this
-  if(!is.integer(r)) r <- if(is.logical(r)) which(r) else if(is.numeric(r)) as.integer(r) else
-     stop("subset needs to be an expression evaluating to logical or integer") # which(r & !is.na(r)) not needed !
-  rn <- attr(x, "row.names") # || is.integer(rn) # maybe many have character converted integers ?
+  r <- eval(substitute(subset), x, parent.frame())
+  if(is.logical(r) && length(r) == fnrow2(x)) r <- which(r) else if(is.numeric(r))
+    r <- as.integer(r) else stop("subset needs to be an expression evaluating to logical(nrow(x)) or integer") # which(r & !is.na(r)) not needed !
+  rn <- attr(x, "row.names")
   if(is.numeric(rn) || is.null(rn) || rn[1L] == "1") return(.Call(C_subsetDT, x, r, vars))
   return(`attr<-`(.Call(C_subsetDT, x, r, vars), "row.names", rn[r]))
 }
@@ -70,9 +70,9 @@ ftransform_core <- function(X, value) { # value is unclassed, X has all attribut
   oldClass(X) <- NULL
   nam <- names(value)
   # if(is.null(nam) || any(nam == "")) stop("all expressions have to be named") # any(nam == "") is also not very fast for large data frames
-  if(!length(nam) || fanyDuplicated(nam)) stop("all replacement expressions have to be uniquely named")
+  if(!length(nam) || fanyDuplicated(nam)) stop("All replacement expressions have to be uniquely named")
   namX <- names(X) # !length also detects character(0)
-  if(!length(namX) || fanyDuplicated(namX)) stop("all columns of X have to be uniquely named")
+  if(!length(namX) || fanyDuplicated(namX)) stop("All columns of X have to be uniquely named")
   le <- lengths(value, FALSE)
   nr <- length(X[[1L]])
   rl <- le == nr # checking if computed values have the right length
@@ -141,8 +141,9 @@ ftransformv <- function(X, vars, FUN, ..., apply = TRUE) {
   }
   le <- lengths(value, FALSE)
   nr <- length(X[[1L]])
-  if(all(le == nr)) X[vars] <- value else {
-    if(all(le == 1L)) X[vars] <- lapply(value, rep, nr) else
+  if(all(le == nr)) X[vars] <- value else if(all(le == 1L))
+    X[vars] <- lapply(value, rep, nr) else {
+      if(apply) names(value) <- names(X)[vars]
       return(ftransform_core(X, value)) # stop("lengths of result must be nrow(X) or 1")
   }
   return(`oldClass<-`(X, clx))
@@ -162,7 +163,7 @@ settfmv <- settransformv
 
 fcompute <- function(X, ...) { # within ?
   ax <- attributes(X)
-  if(!length(ax[["names"]]) || fanyDuplicated(ax[["names"]])) stop("all columns of X have to be uniquely named")
+  if(!length(ax[["names"]]) || fanyDuplicated(ax[["names"]])) stop("All columns of X have to be uniquely named")
   e <- eval(substitute(list(...)), X, parent.frame())
   if(is.null(names(e)) && length(e) == 1L && is.list(e[[1L]])) e <- unclass(e[[1L]]) # support list input -> added in v1.3.0 # sensible ??? what application ??
   ax[["names"]] <- names(e)
