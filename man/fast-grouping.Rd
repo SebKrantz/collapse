@@ -18,6 +18,8 @@
 
 \item \code{\link{qG}}, shorthand for 'quick-group', generates a kind of factor-light without the levels attribute but instead an attribute providing the number of levels. Optionally the levels / groups can be attached, but without converting them to character. Objects have a class 'qG', which is also recognized in the \emph{collapse} ecosystem.
 
+\item \code{\link{fdroplevels}} is a substantially faster replacement for \code{base::droplevels}.
+
 \item \code{\link{finteraction}} is a fast alternative to \code{base::interaction} implemented as a wrapper around \code{as.factor_GRP(GRP(\dots))}. It can be used to generate a factor from multiple vectors, factors or a list of vectors / factors. Unused factor levels are always dropped.
 
 \item \code{\link{groupid}} is a generalization of \code{data.table::rleid} providing a run-length type group-id from atomic vectors. It is generalization as it also supports passing an ordering vector and skipping missing values. For example \code{\link{qF}} and \code{\link{qG}} with \code{method = "radix"} are essentially implemented using \code{groupid(x, radixorder(x))}.
@@ -34,6 +36,7 @@
                  \code{\link{funique}} \tab\tab \code{default, data.frame}  \tab\tab Fast unique values/rows \cr
                  \code{\link{qF}} \tab\tab No methods, for vectors \tab\tab Quick factor generation \cr
                  \code{\link{qG}} \tab\tab No methods, for vectors \tab\tab Quick grouping of vectors and a 'factor-light' class \cr
+                 \code{\link{fdroplevels}} \tab\tab \code{factor, data.frame, list} \tab\tab Fast removal of unused factor levels \cr
                  \code{\link{finteraction}} \tab\tab No methods, for data frames and vectors \tab\tab Fast interactions \cr
                  \code{\link{groupid}} \tab\tab No methods, for vectors \tab\tab Run-length type group-id \cr
                  \code{\link{seqid}} \tab\tab No methods, for vectors \tab\tab Run-length type integer sequence-id \cr

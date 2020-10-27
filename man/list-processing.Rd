@@ -17,6 +17,10 @@
 \item \code{\link{get_elem}} extracts elements from a list using element names, regular expressions applied to element names, a function applied to the elements, or element-indices used to subset the lowest-level sub-lists. by default the result is presented as a simplified list containing all matching elements. With the \code{keep.tree} option however \code{\link{get_elem}} can also be used to subset lists i.e. maintain the full tree but cut off non-matching branches.
 }
 
+\item \bold{Splitting} \itemize{
+\item \code{rsplit} recursively splits a vector or data frame into subsets according to combinations of (multiple) vectors / factors - by default returning a (nested) list. If \code{flatten = TRUE}, the list is flattened yielding the same result as \code{\link{split}}. \code{rsplit} is also faster than \code{\link{split}}, particularly for data frames.
+}
+
 \item \bold{Apply Functions} \itemize{
 \item \code{\link{rapply2d}} is a recursive version of \code{base::lapply} with two key differences to \code{base::rapply}: (1) Data frames are considered as atomic objects, not as (sub-)lists, and (2) the result is not simplified.
 }
@@ -38,6 +42,7 @@
   \code{\link{list_elem}} \tab\tab Top-level subset list/list-like elements \cr
   \code{\link{reg_elem}} \tab\tab Recursive version of \code{atomic_elem}: Subset / extract regular part of list \cr
   \code{\link{irreg_elem}} \tab\tab Subset / extract non-regular part of list \cr
+  \code{\link{rsplit}} \tab\tab Recursively split vectors or data frames / lists \cr
   \code{\link{rapply2d}} \tab\tab Recursively apply functions to lists of data objects \cr
   \code{\link{unlist2d}} \tab\tab Recursively unlist/row-bind lists of data objects in 2D, to data frame or \emph{data.table} \cr
 }
