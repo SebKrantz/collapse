@@ -87,16 +87,16 @@ ffirstlCpp <- function(x, ng = 0L, g = 0L, narm = TRUE) {
     .Call(Cpp_ffirstl, x, ng, g, narm)
 }
 
-fdiffgrowthCpp <- function(x, n = 1L, diff = 1L, fill = NA_real_, ng = 0L, g = 0L, gs = NULL, t = NULL, ret = 1L, rho = 1, names = TRUE) {
-    .Call(Cpp_fdiffgrowth, x, n, diff, fill, ng, g, gs, t, ret, rho, names)
+fdiffgrowthCpp <- function(x, n = 1L, diff = 1L, fill = NA_real_, ng = 0L, g = 0L, gs = NULL, t = NULL, ret = 1L, rho = 1, names = TRUE, power = 1) {
+    .Call(Cpp_fdiffgrowth, x, n, diff, fill, ng, g, gs, t, ret, rho, names, power)
 }
 
-fdiffgrowthmCpp <- function(x, n = 1L, diff = 1L, fill = NA_real_, ng = 0L, g = 0L, gs = NULL, t = NULL, ret = 1L, rho = 1, names = TRUE) {
-    .Call(Cpp_fdiffgrowthm, x, n, diff, fill, ng, g, gs, t, ret, rho, names)
+fdiffgrowthmCpp <- function(x, n = 1L, diff = 1L, fill = NA_real_, ng = 0L, g = 0L, gs = NULL, t = NULL, ret = 1L, rho = 1, names = TRUE, power = 1) {
+    .Call(Cpp_fdiffgrowthm, x, n, diff, fill, ng, g, gs, t, ret, rho, names, power)
 }
 
-fdiffgrowthlCpp <- function(x, n = 1L, diff = 1L, fill = NA_real_, ng = 0L, g = 0L, gs = NULL, t = NULL, ret = 1L, rho = 1, names = TRUE) {
-    .Call(Cpp_fdiffgrowthl, x, n, diff, fill, ng, g, gs, t, ret, rho, names)
+fdiffgrowthlCpp <- function(x, n = 1L, diff = 1L, fill = NA_real_, ng = 0L, g = 0L, gs = NULL, t = NULL, ret = 1L, rho = 1, names = TRUE, power = 1) {
+    .Call(Cpp_fdiffgrowthl, x, n, diff, fill, ng, g, gs, t, ret, rho, names, power)
 }
 
 flagleadCpp <- function(x, n = 1L, fill = NULL, ng = 0L, g = 0L, gs = NULL, t = NULL, names = TRUE) {
@@ -243,8 +243,8 @@ psmatCpp <- function(x, g, t = NULL, transpose = FALSE) {
     .Call(Cpp_psmat, x, g, t, transpose)
 }
 
-qFCpp <- function(x, sort = TRUE, ordered = FALSE, na.exclude = TRUE, ret = 1L) {
-    .Call(Cpp_qF, x, sort, ordered, na.exclude, ret)
+qFCpp <- function(x, sort = TRUE, ordered = FALSE, na.exclude = TRUE, keep.attr = TRUE, ret = 1L) {
+    .Call(Cpp_qF, x, sort, ordered, na.exclude, keep.attr, ret)
 }
 
 # qGCpp <- function(x, sort = TRUE, ordered = TRUE, na.exclude = TRUE, retgrp = FALSE) {
@@ -255,6 +255,11 @@ funiqueCpp <- function(x, sort = TRUE) {
     .Call(Cpp_funique, x, sort)
 }
 
+fdroplevelsCpp <- function(x, check_NA = TRUE) {
+  .Call(Cpp_fdroplevels, x, check_NA)
+}
+
+
 setAttributes <- function(x, a) {
     .Call(C_setAttributes, x, a)
 }
@@ -263,9 +268,7 @@ setattributes <- function(x, a) {
     invisible(.Call(C_setattributes, x, a))
 }
 
-# setAttr <- function(x, a, v) {
-#     .Call(C_setAttr, x, a, v)
-# }
+
 
 setattr <- function(x, a, v) {
     invisible(.Call(C_setattr, x, a, v))
