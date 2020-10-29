@@ -58,7 +58,7 @@ varying.data.frame <- function(x, by = NULL, cols = NULL, any_group = TRUE, use.
       gn <- ckmatch(all.vars(by[[3L]]), nam)
     } else {
       gn <- ckmatch(all.vars(by), nam)
-      cols <- if(is.null(cols)) seq_along(unclass(x))[-gn] else cols2int(cols, x, nam)
+      cols <- if(is.null(cols)) seq_along(unclass(x))[-gn] else cols2int(cols, x, nam, FALSE)
     }
     by <- if(length(gn) == 1L) .subset2(x, gn) else GRP.default(x, gn, return.groups = use.g.names && !any_group, call = FALSE)
     x <- fcolsubset(x, cols)
@@ -107,7 +107,7 @@ varying.grouped_df <- function(x, any_group = TRUE, use.g.names = FALSE, drop = 
   }
   ax <- attributes(x)
   ax[["groups"]] <- NULL
-  ax[["class"]] <- ax[["class"]][ax[["class"]] != "grouped_df"]
+  ax[["class"]] <- fsetdiff(ax[["class"]], c("GRP_df", "grouped_df"))
   ax[["row.names"]] <- if(use.g.names) GRPnames(g) else .set_row_names(g[[1L]])
   if(!all(ngn)) {
     if(keep.group_vars) {
@@ -243,7 +243,7 @@ varying.grouped_df <- function(x, any_group = TRUE, use.g.names = FALSE, drop = 
 #     attributes(x) <- NULL
 #     if(nTRAl) {
 #       ax[["groups"]] <- NULL
-#       ax[["class"]] <- ax[["class"]][ax[["class"]] != "grouped_df"]
+#       ax[["class"]] <- fsetdiff(ax[["class"]], c("GRP_df", "grouped_df"))
 #       ax[["row.names"]] <- if(use.g.names && !any_group) GRPnames(g) else if(!any_group) .set_row_names(g[[1L]]) else 1L
 #       if(gl) {
 #         if(keep.group_vars) {

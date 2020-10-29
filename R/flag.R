@@ -42,20 +42,24 @@ flag.matrix <- function(x, n = 1, g = NULL, t = NULL, fill = NA, stubs = length(
 flag.grouped_df <- function(x, n = 1, t = NULL, fill = NA, stubs = length(n) > 1L, keep.ids = TRUE, ...) {
   if(!missing(...)) unused_arg_action(match.call(), ...)
   g <- GRP.grouped_df(x, call = FALSE)
-  tsym <- l1orn(as.character(substitute(t)), NULL)
+  tsym <- all.vars(substitute(t))
   nam <- attr(x, "names")
   gn <- which(nam %in% g[[5L]])
-  if(length(tsym) && !is.na(tn <- match(tsym, nam))) {
-    if(any(gn == tn)) stop("timevar coincides with grouping variables!")
-    t <- .subset2(x, tn)
+  if(length(tsym) && !anyNA(tn <- match(tsym, nam))) {
+    if(length(tn) == 1L) {
+      if(any(gn == tn)) stop("timevar coincides with grouping variables!")
+      t <- .subset2(x, tn)
+    } else {
+      if(any(gn %in% tn)) stop("timevar coincides with grouping variables!")
+      t <- .subset(x, tn)
+    }
     gn <- c(gn, tn)
   }
   if(length(gn)) {
-    if(!keep.ids) return(.Call(Cpp_flagleadl,x[-gn],n,fill,g[[1L]],g[[2L]],g[[3L]],G_t(t),stubs))
     ax <- attributes(x)
-    class(x) <- NULL # Works for multiple lags !
-    res <- c(x[gn],.Call(Cpp_flagleadl,x[-gn],n,fill,g[[1L]],g[[2L]],g[[3L]],G_t(t),stubs))
-    ax[["names"]] <- names(res)
+    res <- .Call(Cpp_flagleadl, .subset(x, -gn), n,fill,g[[1L]],g[[2L]],g[[3L]],G_t(t),stubs)
+    if(keep.ids) res <- c(.subset(x, gn), res)
+    ax[["names"]] <- names(res)  # Works for multiple lags !
     return(setAttributes(res, ax))
   }
   .Call(Cpp_flagleadl,x,n,fill,g[[1L]],g[[2L]],g[[3L]],G_t(t),stubs)
@@ -143,7 +147,7 @@ L.data.frame <- function(x, n = 1, by = NULL, t = NULL, cols = is.numeric,
   } else if(length(cols)) { # Needs to be like this, otherwise subsetting dropps the attributes !
     ax <- attributes(x)
     class(x) <- NULL
-    x <- x[cols2int(cols, x, names(x))]
+    x <- x[cols2int(cols, x, names(x), FALSE)]
     ax[["names"]] <- names(x)
     setattributes(x, ax)
   }
@@ -176,7 +180,7 @@ L.pdata.frame <- function(x, n = 1, cols = is.numeric, fill = NA, stubs = TRUE, 
 
   if(length(index) > 2L) index <- c(finteraction(index[-length(index)]), index[length(index)])
 
-  if(length(cols)) cols <- cols2int(cols, x, nam)
+  if(length(cols)) cols <- cols2int(cols, x, nam, FALSE)
 
   if(length(gn) && length(cols)) {
     class(x) <- NULL # Works for multiple lags !

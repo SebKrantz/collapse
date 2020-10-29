@@ -105,7 +105,7 @@ fnth.grouped_df <- function(x, n = 0.5, w = NULL, TRA = NULL, na.rm = TRUE, use.
   nTRAl <- is.null(TRA)
   sumw <- NULL
 
-  if(length(wsym) && !is.na(wn <- match(wsym, nam))) {
+  if(length(wsym) && length(wn <- which(wsym == nam))) {
     w <- .subset2(x, wn) # faster using unclass?
     if(any(gn == wn)) stop("Weights coincide with grouping variables!")
     gn <- c(gn, wn)
@@ -122,7 +122,7 @@ fnth.grouped_df <- function(x, n = 0.5, w = NULL, TRA = NULL, na.rm = TRUE, use.
     attributes(x) <- NULL
     if(nTRAl) {
       ax[["groups"]] <- NULL
-      ax[["class"]] <- ax[["class"]][ax[["class"]] != "grouped_df"]
+      ax[["class"]] <- fsetdiff(ax[["class"]], c("GRP_df", "grouped_df"))
       ax[["row.names"]] <- if(use.g.names) GRPnames(g) else .set_row_names(g[[1L]])
       if(gl) {
         if(keep.group_vars) {
@@ -248,7 +248,7 @@ fmedian.grouped_df <- function(x, w = NULL, TRA = NULL, na.rm = TRUE, use.g.name
   nTRAl <- is.null(TRA)
   sumw <- NULL
 
-  if(length(wsym) && !is.na(wn <- match(wsym, nam))) {
+  if(length(wsym) && length(wn <- which(wsym == nam))) {
     w <- .subset2(x, wn) # faster using unclass?
     if(any(gn == wn)) stop("Weights coincide with grouping variables!")
     gn <- c(gn, wn)
@@ -265,7 +265,7 @@ fmedian.grouped_df <- function(x, w = NULL, TRA = NULL, na.rm = TRUE, use.g.name
     attributes(x) <- NULL
     if(nTRAl) {
       ax[["groups"]] <- NULL
-      ax[["class"]] <- ax[["class"]][ax[["class"]] != "grouped_df"]
+      ax[["class"]] <- fsetdiff(ax[["class"]], c("GRP_df", "grouped_df"))
       ax[["row.names"]] <- if(use.g.names) GRPnames(g) else .set_row_names(g[[1L]])
       if(gl) {
         if(keep.group_vars) {

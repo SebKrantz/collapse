@@ -4,7 +4,7 @@
 fNobs <- function(x, ...) UseMethod("fNobs") # , x
 
 fNobs.default <- function(x, g = NULL, TRA = NULL, use.g.names = TRUE, ...) {
-  if(is.matrix(x) && !inherits(x, "matrix")) return(fNobs.matrix(x, g, TRA, na.rm, use.g.names, ...))
+  if(is.matrix(x) && !inherits(x, "matrix")) return(fNobs.matrix(x, g, TRA, use.g.names, ...))
   if(!missing(...)) unused_arg_action(match.call(), ...)
   if(is.null(TRA)) {
     if(is.null(g)) return(.Call(Cpp_fNobs,x,0L,0L))
@@ -104,7 +104,7 @@ fNobs.grouped_df <- function(x, TRA = NULL, use.g.names = FALSE, keep.group_vars
     attributes(x) <- NULL
     if(nTRAl) {
       ax[["groups"]] <- NULL
-      ax[["class"]] <- ax[["class"]][ax[["class"]] != "grouped_df"]
+      ax[["class"]] <- fsetdiff(ax[["class"]], c("GRP_df", "grouped_df"))
       ax[["row.names"]] <- if(use.g.names) GRPnames(g) else .set_row_names(g[[1L]])
       if(gl) {
         if(keep.group_vars) {
