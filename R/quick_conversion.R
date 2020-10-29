@@ -18,7 +18,7 @@ qDF <- function(X, row.names.col = FALSE, keep.attr = FALSE, class = "data.frame
         names(res) <- c(if(is.character(row.names.col)) row.names.col[1L] else "row.names", dn[[2L]])
         attr(res, "row.names") <- .set_row_names(length(dn[[1L]]))
       } else res <- .Call(Cpp_mctl, X, TRUE, 1L)
-      oldClass(res) <- class
+      oldClass(res) <- if(length(class)) class else "data.frame"
       if(!keep.attr) return(res)
       ax <- attributes(X)
       axoth <- names(ax) %!in% c("dim", "dimnames", "class")
@@ -38,10 +38,10 @@ qDF <- function(X, row.names.col = FALSE, keep.attr = FALSE, class = "data.frame
       names(res) <- c(if(is.character(row.names.col)) row.names.col[1L] else "row.names", l1orlst(as.character(substitute(X))))
       attr(res, "row.names") <- .set_row_names(length(X))
     }
-    return(`oldClass<-`(res, class))
+    return(`oldClass<-`(res, if(length(class)) class else "data.frame"))
   }
   if(keep.attr) {
-    # if(all(class(X) == class)) return(X) # better adjust rows ??
+    # if(all(class(X) == class)) return(X) # better adjust rows ? -> yes, row.names.col should always work !
     if(is.null(attr(X, "names"))) attr(X, "names") <- paste0("V", seq_along(unclass(X)))
     if(is.null(attr(X, "row.names"))) {
       attr(X, "row.names") <- .set_row_names(length(.subset2(X, 1L)))
@@ -52,22 +52,26 @@ qDF <- function(X, row.names.col = FALSE, keep.attr = FALSE, class = "data.frame
       ax[["names"]] <- c(if(is.character(row.names.col)) row.names.col[1L] else "row.names", ax[["names"]])
       setattributes(X, ax)
     }
-    return(`oldClass<-`(X, class))
+    if(length(class)) return(`oldClass<-`(X, class))
+    if(inherits(X, "data.frame")) return(X)
+    return(`oldClass<-`(X, "data.frame"))
   }
   nam <- attr(X, "names")
   rn <- attr(X, "row.names")
   attributes(X) <- NULL
   if(is.null(nam)) nam <- paste0("V", seq_along(X))
-  if(is.null(rn)) {
+  if(is.null(rn) || is.numeric(rn)) {
     rn <- .set_row_names(length(X[[1L]]))
   } else if(!isFALSE(row.names.col)) {
     X <- c(list(rn), X)
     rn <- .set_row_names(length(X[[1L]]))
     nam <- c(if(is.character(row.names.col)) row.names.col[1L] else "row.names", nam)
   }
+  # slower: !!
+  # setAttributes(X, pairlist(names = nam, row.names = rn, class = if(length(class)) class else "data.frame"))
   names(X) <- nam
-  attr(X, "row.names") <- rn
-  oldClass(X) <- class
+  attr(X, "row.names") <- rn # This can be inefficient for large data.frames if character rn !!
+  oldClass(X) <- if(length(class)) class else "data.frame"
   X
 }
 
@@ -90,7 +94,7 @@ qDT <- function(X, row.names.col = FALSE, keep.attr = FALSE, class = c("data.tab
         names(res) <- c(if(is.character(row.names.col)) row.names.col[1L] else "row.names", dn[[2L]])
         attr(res, "row.names") <- .set_row_names(length(dn[[1L]]))
       } else res <- .Call(Cpp_mctl, X, TRUE, 2L)
-      oldClass(res) <- class
+      oldClass(res) <- if(length(class)) class else c("data.table", "data.frame")
       if(!keep.attr) return(res)
       ax <- attributes(X)
       axoth <- names(ax) %!in% c("dim", "dimnames", "class")
@@ -103,10 +107,10 @@ qDT <- function(X, row.names.col = FALSE, keep.attr = FALSE, class = c("data.tab
       names(res) <- c(if(is.character(row.names.col)) row.names.col[1L] else "row.names", l1orlst(as.character(substitute(X))))
     }
     attr(res, "row.names") <- .set_row_names(length(X))
-    return(`oldClass<-`(res, class))
+    return(`oldClass<-`(res, if(length(class)) class else c("data.table", "data.frame")))
   }
   if(keep.attr) {
-    # if(all(class(X) == class)) return(X) # better adjust rows ??
+    # if(all(class(X) == class)) return(X) # better adjust rows ? -> yes, row.names.col should always work !
     if(is.null(attr(X, "names"))) attr(X, "names") <- paste0("V", seq_along(unclass(X)))
     if(!isFALSE(row.names.col) && length(rn <- attr(X, "row.names"))) {
       ax <- attributes(X)
@@ -114,6 +118,7 @@ qDT <- function(X, row.names.col = FALSE, keep.attr = FALSE, class = c("data.tab
       ax[["names"]] <- c(if(is.character(row.names.col)) row.names.col[1L] else "row.names", ax[["names"]])
       setattributes(X, ax)
     }
+    if(!length(class) && inherits(X, c("data.table", "data.frame"))) return(X)
     attr(X, "row.names") <- .set_row_names(length(.subset2(X, 1L)))
   } else {
     nam <- attr(X, "names")
@@ -127,9 +132,12 @@ qDT <- function(X, row.names.col = FALSE, keep.attr = FALSE, class = c("data.tab
     names(X) <- nam
     attr(X, "row.names") <- .set_row_names(length(X[[1L]]))
   }
-  oldClass(X) <- class
+  oldClass(X) <- if(length(class)) class else c("data.table", "data.frame")
   X
 }
+
+qTBL <- function(X, row.names.col = FALSE, keep.attr = FALSE)
+  qDT(X, row.names.col, keep.attr, c("tbl_df", "tbl", "data.frame"))
 
 
 qM <- function(X, keep.attr = FALSE, class = NULL) {
