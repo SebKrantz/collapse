@@ -72,7 +72,7 @@ setColnames(object, nm)       # Set colnames of object and return object
 setDimnames(object, dn,
             which = NULL)     # Set dimension names of object and return object
 unattrib(object)              # Remove all attributes from object
-setAttrib(object, a)          # Replace all attributes from object with list of attributes 'a'
+setAttrib(object, a)          # Replace all attributes with list of attributes 'a'
 copyAttrib(to, from)          # Copy all attributes from object 'from' to object 'to'
 copyMostAttrib(to, from)      # Copy most attributes from object 'from' to object 'to'
 is.categorical(x)             # The opposite of is.numeric
@@ -82,8 +82,9 @@ is.Date(x)                    # Check if object is of class "Date", "POSIXlt" or
 %- maybe also 'usage' for other objects documented here.
 \arguments{
   \item{X}{a matrix or data frame (some functions also support vectors and arrays although that is less common).}
-  \item{object}{a suitable R object.}
   \item{x, table}{a atomic vector.}
+  \item{object, to, from}{a suitable R object.}
+  \item{a}{a suitable list of attributes.}
   \item{attrn}{character. Name of attribute to store labels or retrieve labels from.}
   \item{value}{a matching character vector of variable labels.}
   \item{class}{logical. Also show the classes of variables in X in a column?}

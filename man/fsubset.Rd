@@ -20,18 +20,17 @@ sbt(x, \dots)     # Shortcut for fsubset
 \method{fsubset}{data.frame}(x, subset, \dots)
 
 # Fast subsetting data frames (replaces `[`)
-ss(data, i, j)
+ss(x, i, j)
 }
 
 \arguments{
   \item{x}{object to be subsetted.}
-  \item{data}{a data.frame.}
   \item{subset}{logical expression indicating elements or rows to keep:
     missing values are taken as \code{FALSE}. The default and matrix methods only support logical vectors or row-indices (or a character vector of rownames if the matrix has rownames; the data frame method also supports logical vectors or row-indices). }
   \item{\dots}{For the matrix or data frame method: multiple comma-separated expressions indicating columns to select. Otherwise: further arguments to be passed to or from other methods.}
   \item{drop}{passed on to \code{[} indexing operator. Only available for the matrix method.}
-  \item{i}{positive or negative row-indices or a logical vector to subset the rows of \code{data}.}
-  \item{j}{a vector of column names, positive or negative indices or a suitable logical vector to subset the columns of \code{data}. \emph{Note:} Negative indices are converted to positive ones using \code{j <- seq_along(data)[j]}.}
+  \item{i}{positive or negative row-indices or a logical vector to subset the rows of \code{x}.}
+  \item{j}{a vector of column names, positive or negative indices or a suitable logical vector to subset the columns of \code{x}. \emph{Note:} Negative indices are converted to positive ones using \code{j <- seq_along(x)[j]}.}
 }
 \details{
   \code{fsubset} is a generic function, with methods supplied for vectors, matrices, and data

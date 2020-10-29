@@ -15,7 +15,6 @@
 \alias{G.pseries}
 \alias{G.pdata.frame}
 \alias{G.grouped_df}
-%- Also NEED an '\alias' for EACH other topic documented here.
 \title{ % Lagged and Iterated
 Fast Growth Rates for Time Series and Panel Data
 }
@@ -25,41 +24,49 @@ Fast Growth Rates for Time Series and Panel Data
 }
 \usage{
 fgrowth(x, n = 1, diff = 1, \dots)
-      G(x, n = 1, diff = 1, \dots)
+
+G(x, n = 1, diff = 1, \dots)
 
 \method{fgrowth}{default}(x, n = 1, diff = 1, g = NULL, t = NULL, fill = NA,
-        logdiff = FALSE, scale = 100, stubs = TRUE, \dots)
-\method{G}{default}(x, n = 1, diff = 1, g = NULL, t = NULL, fill = NA,
-  logdiff = FALSE, scale = 100, stubs = TRUE, \dots)
+        logdiff = FALSE, scale = 100, power = 1, stubs = TRUE, \dots)
+
+\method{G}{default}(x, n = 1, diff = 1, g = NULL, t = NULL, fill = NA, logdiff = FALSE,
+  scale = 100, power = 1, stubs = TRUE, \dots)
 
 \method{fgrowth}{matrix}(x, n = 1, diff = 1, g = NULL, t = NULL, fill = NA,
-        logdiff = FALSE, scale = 100, stubs = length(n) + length(diff) > 2L, \dots)
-\method{G}{matrix}(x, n = 1, diff = 1, g = NULL, t = NULL, fill = NA,
-  logdiff = FALSE, scale = 100, stubs = TRUE, \dots)
+        logdiff = FALSE, scale = 100, power = 1,
+        stubs = length(n) + length(diff) > 2L, \dots)
+
+\method{G}{matrix}(x, n = 1, diff = 1, g = NULL, t = NULL, fill = NA, logdiff = FALSE,
+  scale = 100, power = 1, stubs = TRUE, \dots)
 
 \method{fgrowth}{data.frame}(x, n = 1, diff = 1, g = NULL, t = NULL, fill = NA,
-        logdiff = FALSE, scale = 100, stubs = length(n) + length(diff) > 2L, \dots)
+        logdiff = FALSE, scale = 100, power = 1,
+        stubs = length(n) + length(diff) > 2L, \dots)
+
 \method{G}{data.frame}(x, n = 1, diff = 1, by = NULL, t = NULL, cols = is.numeric,
-  fill = NA, logdiff = FALSE, scale = 100, stubs = TRUE, keep.ids = TRUE, \dots)
+  fill = NA, logdiff = FALSE, scale = 100, power = 1, stubs = TRUE,
+  keep.ids = TRUE, \dots)
 
-# Methods for compatibility with plm:
+\method{fgrowth}{pseries}(x, n = 1, diff = 1, fill = NA, logdiff = FALSE, scale = 100,
+        power = 1, stubs = TRUE, \dots)
 
-\method{fgrowth}{pseries}(x, n = 1, diff = 1, fill = NA, logdiff = FALSE, scale = 100, stubs = TRUE, \dots)
-\method{G}{pseries}(x, n = 1, diff = 1, fill = NA, logdiff = FALSE, scale = 100, stubs = TRUE, \dots)
+\method{G}{pseries}(x, n = 1, diff = 1, fill = NA, logdiff = FALSE, scale = 100,
+  power = 1, stubs = TRUE, \dots)
 
 \method{fgrowth}{pdata.frame}(x, n = 1, diff = 1, fill = NA, logdiff = FALSE, scale = 100,
-        stubs = length(n) + length(diff) > 2L, \dots)
-\method{G}{pdata.frame}(x, n = 1, diff = 1, cols = is.numeric, fill = NA,
-  logdiff = FALSE, scale = 100, stubs = TRUE, keep.ids = TRUE, \dots)
+        power = 1, stubs = length(n) + length(diff) > 2L, \dots)
 
-# Methods for compatibility with dplyr:
+\method{G}{pdata.frame}(x, n = 1, diff = 1, cols = is.numeric, fill = NA, logdiff = FALSE,
+  scale = 100, power = 1, stubs = TRUE, keep.ids = TRUE, \dots)
 
-\method{fgrowth}{grouped_df}(x, n = 1, diff = 1, t = NULL, fill = NA, logdiff = FALSE, scale = 100,
-        stubs = length(n) + length(diff) > 2L, keep.ids = TRUE, \dots)
-\method{G}{grouped_df}(x, n = 1, diff = 1, t = NULL, fill = NA, logdiff = FALSE, scale = 100,
-  stubs = TRUE, keep.ids = TRUE, \dots)
+\method{fgrowth}{grouped_df}(x, n = 1, diff = 1, t = NULL, fill = NA, logdiff = FALSE,
+        scale = 100, power = 1, stubs = length(n) + length(diff) > 2L,
+        keep.ids = TRUE, \dots)
+
+\method{G}{grouped_df}(x, n = 1, diff = 1, t = NULL, fill = NA, logdiff = FALSE,
+  scale = 100, power = 1, stubs = TRUE, keep.ids = TRUE, \dots)
 }
-%- maybe also 'usage' for other objects documented here.
 \arguments{
   \item{x}{a numeric vector, matrix, data frame, panel series (\code{plm::pseries}), panel data frame (\code{plm::pdata.frame}) or grouped tibble (\code{dplyr::grouped_df}).}
   \item{n}{integer. A vector indicating the number of lags or leads.}
@@ -71,29 +78,18 @@ fgrowth(x, n = 1, diff = 1, \dots)
   \item{fill}{value to insert when vectors are shifted. Default is \code{NA}. }
   \item{logdiff}{logical. Compute log-difference growth rates instead of exact growth rates. See Details.}
   \item{scale}{logical. Scale factor post-applied to growth rates, default is 100 which gives growth rates in percentage terms. See Details.}
+  \item{power}{numeric. Apply a power to annualize or compound growth rates e.g. \code{fgrowth(AirPassengers, 12, power = 1/12)} is equivalent to \code{((AirPassengers/flag(AirPassengers, 12))^(1/12)-1)*100}.}
   \item{stubs}{logical. \code{TRUE} will rename all computed columns by adding a prefix "L\code{n}G\code{diff}." / "F\code{n}G\code{diff}.", or "L\code{n}Dlog\code{diff}." / "F\code{n}Dlog\code{diff}." if \code{logdiff = TRUE}.}
   \item{keep.ids}{\emph{data.frame / pdata.frame / grouped_df methods}: Logical. Drop all panel-identifiers from the output (which includes all variables passed to \code{by} or \code{t}). \emph{Note}: For panel data frames and grouped tibbles identifiers are dropped, but the 'index' / 'groups' attributes are kept.}
   \item{\dots}{arguments to be passed to or from other methods.}
 }
 \details{
-\code{fgrowth/G} by default computes exact growth rates using \code{repeat(diff) (x[i] - x[i-n])/x[i-n]*scale}, and, if \code{logdiff = TRUE} approximate growth rates using \code{repeat(diff) (log(x[i]) - log(x[i-n]))*scale}. So for \code{diff > 1} it computes growth rate of growth rates etc.. For further details see the help pages for \code{\link{fdiff}} and \code{\link{flag}}.
+\code{fgrowth/G} by default computes exact growth rates using \code{repeat(diff) ((x[i]/x[i-n])^power - 1)*scale}, and, if \code{logdiff = TRUE} approximate growth rates using \code{repeat(diff) log(x[i]/x[i-n])*scale}. So for \code{diff > 1} it computes growth rate of growth rates etc.. For further details see the help pages for \code{\link{fdiff}} and \code{\link{flag}}.
 
 }
 \value{
 \code{x} where the growth rate was taken \code{diff} times using lags \code{n} of itself, scaled by \code{scale}. Computations can be grouped by \code{g/by} and/or ordered by \code{t}. See Details and Examples.
 }
-% \references{
-%% ~put references to the literature/web site here ~
-% }
-% \author{
-%%  ~~who you are~~
-% }
-% \note{
-%%  ~~further notes~~
-% }
-
-%% ~Make other sections like Warning with \section{Warning }{\dots.} ~
-
 \seealso{
 \code{\link[=flag]{flag/L/F}}, \code{\link[=fdiff]{fdiff/D/Dlog}}, \link[=A7-time-series-panel-series]{Time Series and Panel Series}, \link[=collapse-documentation]{Collapse Overview}
 }
@@ -166,7 +162,5 @@ wlddev \%>\% group_by(country) \%>\%
              fgrowth(0:1, t = year)                        # Also using t (safer)
 
 }
-% Add one or more standard keywords, see file 'KEYWORDS' in the
-% R documentation directory.
-\keyword{manip} % __ONLY ONE__ keyword per line % use one of  RShowDoc("KEYWORDS")
+\keyword{manip}
 \keyword{ts}

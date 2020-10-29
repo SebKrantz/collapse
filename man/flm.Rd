@@ -2,32 +2,31 @@
 \alias{flm}
 
 \title{
-Fast (Sparse, Weighted) Linear Model Fitting
+Fast (Weighted) Linear Model Fitting % Sparse,
 }
 \description{
 \code{flm} is a fast linear model command that takes matrices as input and (by default) only returns a coefficient matrix. 6 different efficient fitting methods are implemented: 4 using base R linear algebra, and 2 utilizing the \emph{RcppArmadillo} and \emph{RcppEigen} packages. The function itself only has an overhead of 5-10 microseconds, and is thus well suited as a bootstrap workhorse.
 }
 \usage{
-flm(y, x, w = NULL, add.icpt = FALSE,
-    sparse = FALSE, return.raw = FALSE,
+flm(y, X, w = NULL, add.icpt = FALSE, return.raw = FALSE, % sparse = FALSE
     method = c("lm", "solve", "qr", "arma", "chol", "eigen"),
     eigen.method = 3L, tol = 1e-07)
 }
 %- maybe also 'usage' for other objects documented here.
 \arguments{
   \item{y}{a response vector or matrix. Multiple dependent variables are only supported by methods "lm", "solve", "qr" and "chol".}
-  \item{x}{a matrix or regressors.}
+  \item{X}{a matrix of regressors.}
   \item{w}{a weight vector.}
-  \item{add.icpt}{logical. \code{TRUE} adds an intercept column named '(Intercept)' to \code{x}.}
-  \item{sparse}{logical. \code{TRUE} coerces \code{x} to a sparse matrix using \code{as(x, "dgCMatrix")}.}
+  \item{add.icpt}{logical. \code{TRUE} adds an intercept column named '(Intercept)' to \code{X}.}
+  % \item{sparse}{logical. \code{TRUE} coerces \code{X} to a sparse matrix using \code{as(X, "dgCMatrix")}.}
   \item{return.raw}{logical. \code{TRUE} returns the original output from the different methods. For 'lm', 'arma' and 'eigen', this includes additional statistics such as residuals, fitted values or standard errors. The other methods just return coefficients but in different formats. }
   \item{method}{an integer or character string specifying the method of computation:
         \tabular{lllll}{\emph{ Int. }   \tab\tab \emph{ String }   \tab\tab \emph{ Description }  \cr
                  1 \tab\tab "lm"   \tab\tab uses \code{\link{.lm.fit}}. \cr
-                 2 \tab\tab "solve" \tab\tab \code{solve(crossprod(x), crossprod(x, y))}. \cr
-                 3 \tab\tab "qr"   \tab\tab \code{qr.coef(qr(x, LAPACK = TRUE), y)}. \cr
+                 2 \tab\tab "solve" \tab\tab \code{solve(crossprod(X), crossprod(X, y))}. \cr
+                 3 \tab\tab "qr"   \tab\tab \code{qr.coef(qr(X, LAPACK = TRUE), y)}. \cr
                  4 \tab\tab "arma"   \tab\tab uses \code{RcppArmadillo::fastLmPure} (directly called from C). \cr
-                 5 \tab\tab "chol"   \tab\tab \code{chol2inv(chol(crossprod(x))) \%*\% crossprod(x, y)} (quite fast but requires \code{crossprod(x)} to be positive definite).  \cr
+                 5 \tab\tab "chol"   \tab\tab \code{chol2inv(chol(crossprod(X))) \%*\% crossprod(X, y)} (quite fast but requires \code{crossprod(X)} to be positive definite).  \cr
                  6 \tab\tab "eigen"   \tab\tab uses \code{RcppEigen::fastLmPure} (directly called from C, very fast but potentially unstable, depending on the method). \cr
   }
 }
@@ -49,7 +48,7 @@ flm(y, x, w = NULL, add.icpt = FALSE,
 %%  ~~ If necessary, more details than the description above ~~
 % }
 \value{
-If \code{return.raw = FALSE}, a matrix of coefficients with the rows corresponding to the columns of \code{x}, otherwise the raw results from the various methods are returned.
+If \code{return.raw = FALSE}, a matrix of coefficients with the rows corresponding to the columns of \code{X}, otherwise the raw results from the various methods are returned.
 }
 % \references{
 %% ~put references to the literature/web site here ~
@@ -57,9 +56,9 @@ If \code{return.raw = FALSE}, a matrix of coefficients with the rows correspondi
 % \author{
 %%  ~~who you are~~
 % }
-% \note{
-%%  ~~further notes~~
-% }
+\note{
+Method "qr" supports sparse matrices, so for an \code{X} matrix with many dummy variables consider method "qr" passing \code{as(X, "dgCMatrix")} instead of just \code{X}.
+}
 
 %% ~Make other sections like Warning with \section{Warning }{....} ~
 
@@ -77,9 +76,12 @@ lmcoef
 all.equal(drop(coef), lmcoef)
 
 all_obj_equal(lapply(1:6, function(i)
- flm(mtcars$mpg, qM(mtcars[c("hp","carb")]),
-     mtcars$wt, add.icpt = TRUE, method = i)))
+  flm(mtcars$mpg, qM(mtcars[c("hp","carb")]),
+      mtcars$wt, add.icpt = TRUE, method = i)))
+
 }
+
+
 % Add one or more standard keywords, see file 'KEYWORDS' in the
 % R documentation directory (show via RShowDoc("KEYWORDS")):
 % \keyword{ ~kwd1 }

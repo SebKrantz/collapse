@@ -10,15 +10,16 @@ In \emph{collapse} a regular R object is defined as an R object that is either a
 }
 \usage{
 is.regular(x)
-is.unlistable(l)
+is.unlistable(l, DF.as.list = TRUE)
 }
 %- maybe also 'usage' for other objects documented here.
 \arguments{
   \item{x}{an R object.}
   \item{l}{a list.}
+    \item{DF.as.list}{logical. \code{TRUE} treats data frames like (sub-)lists; \code{FALSE} like atomic elements.}
 }
 \details{
-\code{is.regular} is simply defined as \code{is.atomic(x) || is.list(x)}. \code{is.unlistable} is defined as \code{all(unlist(rapply2d(l, is.regular), use.names = FALSE))}. It could of course also be defined as \code{all(rapply(l, is.atomic))}, but the above is a lot more efficient if \code{l} contains data frames.
+\code{is.regular} is simply defined as \code{is.atomic(x) || is.list(x)}. \code{is.unlistable} is defined as \code{all(rapply(l, is.atomic))}. If \code{l} contains data frames, setting \code{DF.as.list = FALSE} yields checking using \code{all(unlist(rapply2d(l, is.regular)))}, which can be a lot faster than applying \code{is.atomic} to every data frame column.
 }
 \value{
 \code{logical(1)} - \code{TRUE} or \code{FALSE}.
