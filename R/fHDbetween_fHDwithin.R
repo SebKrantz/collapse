@@ -1,11 +1,20 @@
 
+demean <- function(x, fl, weights, ..., means = FALSE) {
+  if(length(fl) == 1L && is.null(attr(fl[[1L]], "x", exact = TRUE))) { # What about attached interactions ?
+    clx <- oldClass(x) # Need to do this because could call fbetween.grouped_df of fbetween.pseries / pdata.frame
+    if(means) return(`oldClass<-`(fbetween(unclass(x), fl[[1L]], weights, na.rm = FALSE), clx)) else
+      return(`oldClass<-`(fwithin(unclass(x), fl[[1L]], weights, na.rm = FALSE), clx))
+  }
+  msg <- "For higher-dimensional centering and projecting out interactions need to install.packages('%s'), then unload [detach('package:collapse', unload = TRUE)] and reload [library(collapse)]."
+  getenvFUN("lfe_demeanlist", msg)(x, fl, weights = weights, means = means, ...)
+}
 
 myModFrame <- function(f, data) {
   t <- terms.formula(f)
   v <- attr(t, "variables")
   # res <- eval(substitute(with(data, e), list(e = v)))
   res <- eval(v, data, parent.frame()) # faster !
-  attributes(res) <- list(names = as.character(v[-1]),
+  attributes(res) <- list(names = as.character(v[-1L]),
                           row.names = .set_row_names(fnrow2(data)),
                           class = "data.frame",
                           terms = t)
@@ -92,6 +101,7 @@ subsetfl <- function(fl, cc) {
 fHDwithin <- function(x, ...) UseMethod("fHDwithin") # , x
 
 fHDwithin.default <- function(x, fl, w = NULL, na.rm = TRUE, fill = FALSE, ...) {
+  if(is.matrix(x) && !inherits(x, "matrix")) return(fHDwithin.matrix(x, fl, w, na.rm, fill, ...))
   ax <- attributes(x)
   if(na.rm) {
     cc <- complete.cases(x, fl) # gives error if lengths don't match, otherwise demeanlist and qr.resid give errors !!
@@ -99,7 +109,7 @@ fHDwithin.default <- function(x, fl, w = NULL, na.rm = TRUE, fill = FALSE, ...) 
       ax[["na.rm"]] <- which(!cc)
       cc <- which(cc)
       if(!fill) {
-        if(!is.null(names(x))) ax[["names"]] <- names(x)[cc] # best ??
+        if(length(names(x))) ax[["names"]] <- names(x)[cc] # best ??
         x <- x[cc]
       }
     } else na.rm <- FALSE
@@ -113,7 +123,7 @@ fHDwithin.default <- function(x, fl, w = NULL, na.rm = TRUE, fill = FALSE, ...) 
     if(na.rm) fl <- if(inherits(fl, "data.frame")) .Call(C_subsetDT, fl, cc, seq_along(unclass(fl))) else subsetfl(fl, cc)
     attributes(fl) <- NULL # good here ??
     if(nallfc) {
-      xmat <- demeanlist(do.call(cbind, fl[!fc]), fl[fc], weights = w, ...)
+      xmat <- demean(do.call(cbind, fl[!fc]), fl[fc], weights = w, ...)
       fl <- fl[fc]
     } else if(!fcl) xmat <- do.call(cbind, c(list(rep(1L, length(fl[[1L]]))), fl))
   } else if(is.matrix(fl)) {
@@ -135,28 +145,28 @@ fHDwithin.default <- function(x, fl, w = NULL, na.rm = TRUE, fill = FALSE, ...) 
     xmat <- qr.default(xmat)
     if(na.rm && fill) {
       x[-cc] <- NA
-      x[cc] <- if(nallfc) qr.resid(xmat, demeanlist(x[cc], fl, weights = w, ...)) else qr.resid(xmat, x[cc])
+      x[cc] <- if(nallfc) qr.resid(xmat, demean(x[cc], fl, weights = w, ...)) else qr.resid(xmat, x[cc])
       return(setAttributes(x, ax))
     } else if(nallfc)
-      return(setAttributes(qr.resid(xmat, demeanlist(x, fl, weights = w, ...)), ax)) else
+      return(setAttributes(qr.resid(xmat, demean(x, fl, weights = w, ...)), ax)) else
         return(setAttributes(qr.resid(xmat, x), ax))
   } else if(na.rm && fill) {
     x[-cc] <- NA
-    x[cc] <- demeanlist(x[cc], fl, weights = w, ...)
+    x[cc] <- demean(x[cc], fl, weights = w, ...)
     return(setAttributes(x, ax))
-  } else return(setAttributes(demeanlist(x, fl, weights = w, ...), ax))
+  } else return(setAttributes(demean(x, fl, weights = w, ...), ax))
 }
 fHDwithin.pseries <- function(x, w = NULL, na.rm = TRUE, fill = TRUE, ...) {
   if(na.rm && !all(xcc <- !is.na(x))) {
      g <- lapply(attr(x, "index"), function(y) y[xcc]) # good ! faster than subsetDT
     if(fill) {
-      x[xcc] <- demeanlist(x[xcc], g, weights = w[xcc], ...) # keeps attributes ?? -> Yes !!
+      x[xcc] <- demean(x[xcc], g, weights = w[xcc], ...) # keeps attributes ?? -> Yes !!
       return(x)
-    } else return(addAttributes(demeanlist(x[xcc], g, weights = w[xcc], ...),
+    } else return(addAttributes(demean(x[xcc], g, weights = w[xcc], ...),
                                 list(index = g, na.rm = which(!xcc)))) # keeps attributes ?? -> Nope !!
   }
   g <- attr(x, "index") # what about cases ?? -> nah, named !!
-  `attr<-`(demeanlist(x, g, weights = w, ...), "index", g) # keeps attributes ?? -> Nope !!
+  `attr<-`(demean(x, g, weights = w, ...), "index", g) # keeps attributes ?? -> Nope !!
 }
 fHDwithin.matrix <- function(x, fl, w = NULL, na.rm = TRUE, fill = FALSE, ...) {
   ax <- attributes(x)
@@ -181,7 +191,7 @@ fHDwithin.matrix <- function(x, fl, w = NULL, na.rm = TRUE, fill = FALSE, ...) {
     if(na.rm) fl <- if(inherits(fl, "data.frame")) .Call(C_subsetDT, fl, cc, seq_along(unclass(fl))) else subsetfl(fl, cc)
     attributes(fl) <- NULL # good here ??
     if(nallfc) {
-      xmat <- demeanlist(do.call(cbind, fl[!fc]), fl[fc], weights = w, ...)
+      xmat <- demean(do.call(cbind, fl[!fc]), fl[fc], weights = w, ...)
       fl <- fl[fc]
     } else if(!fcl) xmat <- do.call(cbind, c(list(rep(1L, length(fl[[1L]]))), fl))
   } else if(is.matrix(fl)) {
@@ -203,16 +213,16 @@ fHDwithin.matrix <- function(x, fl, w = NULL, na.rm = TRUE, fill = FALSE, ...) {
     xmat <- qr.default(xmat)
     if(na.rm && fill) {
       x[-cc, ] <- NA
-      x[cc, ] <- if(nallfc) qr.resid(xmat, demeanlist(x[cc, ], fl, weights = w, ...)) else qr.resid(xmat, x[cc, ])
+      x[cc, ] <- if(nallfc) qr.resid(xmat, demean(x[cc, ], fl, weights = w, ...)) else qr.resid(xmat, x[cc, ])
       return(setAttributes(x, ax))
     } else if(nallfc)
-      return(setAttributes(qr.resid(xmat, demeanlist(x, fl, weights = w, ...)), ax)) else
+      return(setAttributes(qr.resid(xmat, demean(x, fl, weights = w, ...)), ax)) else
         return(setAttributes(qr.resid(xmat, x), ax))
   } else if(na.rm && fill) {
     x[-cc, ] <- NA
-    x[cc, ] <- demeanlist(x[cc, ], fl, weights = w, ...)
+    x[cc, ] <- demean(x[cc, ], fl, weights = w, ...)
     return(setAttributes(x, ax))
-  } else return(setAttributes(demeanlist(x, fl, weights = w, ...), ax))
+  } else return(setAttributes(demean(x, fl, weights = w, ...), ax))
 }
 fHDwithin.pdata.frame <- function(x, w = NULL, na.rm = TRUE, fill = TRUE, variable.wise = TRUE, ...) {
   ax <- attributes(x)
@@ -220,21 +230,21 @@ fHDwithin.pdata.frame <- function(x, w = NULL, na.rm = TRUE, fill = TRUE, variab
     attributes(x) <- NULL
     varwisecomp <- function(x, fl, w, ...) lapply(x, function(y) {
       ycc <- which(!is.na(y))
-      y[ycc] <- demeanlist(y[ycc], subsetfl(fl, ycc), weights = w[ycc], ...)
+      y[ycc] <- demean(y[ycc], subsetfl(fl, ycc), weights = w[ycc], ...)
       return(y)
     })
     return(setAttributes(varwisecomp(x, ax[["index"]], w, ...), ax))
   } else if(na.rm && any(miss <- .Call(C_dt_na, x, seq_along(unclass(x))))) {
       ax[["na.rm"]] <- which(miss)
       cc <- which(!miss)
-      Y <- demeanlist(.Call(C_subsetDT, x, cc, seq_along(unclass(x))),
+      Y <- demean(.Call(C_subsetDT, x, cc, seq_along(unclass(x))),
                             lapply(ax[["index"]], function(y) y[cc]),
                             weights = w[cc], ...)
     if(fill) return(setAttributes(.Call(Cpp_lassign, Y, fnrow2(x), cc, NA), ax)) else {
       ax[["row.names"]] <- ax[["row.names"]][cc]
       return(setAttributes(Y, ax))
     }
-  } else return(setAttributes(demeanlist(x, ax[["index"]], weights = w, ...), ax))
+  } else return(setAttributes(demean(x, ax[["index"]], weights = w, ...), ax))
 }
 fHDwithin.data.frame <- function(x, fl, w = NULL, na.rm = TRUE, fill = FALSE, variable.wise = FALSE, ...) {
   ax <- attributes(x)
@@ -244,7 +254,7 @@ fHDwithin.data.frame <- function(x, fl, w = NULL, na.rm = TRUE, fill = FALSE, va
     if(!all(cc)) {
       ax[["na.rm"]] <- which(!cc)
       cc <- which(cc)
-      if(!is.null(w)) w <- w[cc]
+      if(length(w)) w <- w[cc]
       if(!variable.wise) {
         if(fill) nrx <- fnrow2(x) else ax[["row.names"]] <- ax[["row.names"]][cc] # best ??
         x <- .Call(C_subsetDT, x, cc, seq_along(unclass(x)))
@@ -260,7 +270,7 @@ fHDwithin.data.frame <- function(x, fl, w = NULL, na.rm = TRUE, fill = FALSE, va
     if(na.rm) fl <- if(inherits(fl, "data.frame")) .Call(C_subsetDT, fl, cc, seq_along(unclass(fl))) else subsetfl(fl, cc)
     attributes(fl) <- NULL # good here ??
     if(nallfc) {
-      xmat <- demeanlist(do.call(cbind, fl[!fc]), fl[fc], weights = w, ...)
+      xmat <- demean(do.call(cbind, fl[!fc]), fl[fc], weights = w, ...)
       fl <- fl[fc]
     } else if(!fcl) xmat <- do.call(cbind, c(list(rep(1L, length(fl[[1L]]))), fl))
   } else if(is.matrix(fl)) {
@@ -284,23 +294,23 @@ fHDwithin.data.frame <- function(x, fl, w = NULL, na.rm = TRUE, fill = FALSE, va
         y[-cc] <- NA # which is not faster !!
         ycc <- !is.na(y)
         YC <- which(ycc[cc])
-        y[ycc] <- if(nallfc) qr.resid(qr.default(xmat[YC, , drop = FALSE]), demeanlist(y[ycc], subsetfl(fl, YC), weights = w[YC], ...)) else if(fcl)
-          demeanlist(y[ycc], subsetfl(fl, YC), weights = w[YC], ...) else  qr.resid(qr.default(xmat[YC, , drop = FALSE]), y[ycc])
+        y[ycc] <- if(nallfc) qr.resid(qr.default(xmat[YC, , drop = FALSE]), demean(y[ycc], subsetfl(fl, YC), weights = w[YC], ...)) else if(fcl)
+          demean(y[ycc], subsetfl(fl, YC), weights = w[YC], ...) else  qr.resid(qr.default(xmat[YC, , drop = FALSE]), y[ycc])
         return(y)
       }), ax)) # Rfast fastlm??
     }
     return(setAttributes(lapply(unattrib(x), function(y) {
       ycc <- which(!is.na(y))
-      y[ycc] <- if(nallfc) qr.resid(qr.default(xmat[ycc, , drop = FALSE]), demeanlist(y[ycc], subsetfl(fl, ycc), weights = w[ycc], ...)) else if(fcl)
-        demeanlist(y[ycc], subsetfl(fl, ycc), weights = w[ycc], ...) else qr.resid(qr.default(xmat[ycc, , drop = FALSE]), y[ycc])
+      y[ycc] <- if(nallfc) qr.resid(qr.default(xmat[ycc, , drop = FALSE]), demean(y[ycc], subsetfl(fl, ycc), weights = w[ycc], ...)) else if(fcl)
+        demean(y[ycc], subsetfl(fl, ycc), weights = w[ycc], ...) else qr.resid(qr.default(xmat[ycc, , drop = FALSE]), y[ycc])
       return(y)
     }), ax)) # Rfast fastlm??
   } else { # at this point missing values are already removed from x and fl !!
     if(nallfc || !fcl) {
       xmat <- qr.default(xmat)
-      Y <- if(nallfc) lapply(demeanlist(x, fl, weights = w, ...), function(y) qr.resid(xmat, y)) else
+      Y <- if(nallfc) lapply(demean(x, fl, weights = w, ...), function(y) qr.resid(xmat, y)) else
            lapply(x, function(y) qr.resid(xmat, y))
-    } else Y <- demeanlist(x, fl, weights = w, ...)
+    } else Y <- demean(x, fl, weights = w, ...)
     if(na.rm && fill) { # x[cc, ] <- Y; x[-cc, ] <- NA
       return(setAttributes(.Call(Cpp_lassign, Y, nrx, cc, NA), ax))
     } else return(setAttributes(Y, ax))
@@ -311,8 +321,10 @@ fHDwithin.data.frame <- function(x, fl, w = NULL, na.rm = TRUE, fill = FALSE, va
 # Note: could also do Mudlack and add means to second regression -> better than two-times centering ??
 HDW <- function(x, ...) UseMethod("HDW") # , x
 
-HDW.default <- function(x, fl, w = NULL, na.rm = TRUE, fill = FALSE, ...)
+HDW.default <- function(x, fl, w = NULL, na.rm = TRUE, fill = FALSE, ...) {
+  if(is.matrix(x) && !inherits(x, "matrix")) return(HDW.matrix(x, fl, w, na.rm, fill, ...))
   fHDwithin.default(x, fl, w, na.rm, fill, ...)
+}
 
 HDW.pseries <- function(x, w = NULL, na.rm = TRUE, fill = TRUE, ...)
   fHDwithin.pseries(x, w, na.rm, fill, ...)
@@ -332,7 +344,7 @@ HDW.data.frame <- function(x, fl, w = NULL, cols = is.numeric, na.rm = TRUE, fil
       fl[[2L]] <- NULL
     } else {
       fvars <- ckmatch(all.vars(fl), nam)
-      Xvars <- if(!is.null(cols)) fsetdiff(cols2int(cols, x, nam), fvars) else seq_along(unclass(x))[-fvars]
+      Xvars <- if(length(cols)) fsetdiff(cols2int(cols, x, nam), fvars) else seq_along(unclass(x))[-fvars]
     }
     ax[["names"]] <- if(is.character(stub)) paste0(stub, nam[Xvars]) else nam[Xvars]
 
@@ -341,7 +353,7 @@ HDW.data.frame <- function(x, fl, w = NULL, cols = is.numeric, na.rm = TRUE, fil
       if(any(miss)) {
         ax[["na.rm"]] <- which(miss)
         cc <- which(!miss)
-        if(!is.null(w)) w <- w[cc]
+        if(length(w)) w <- w[cc]
         if(!variable.wise) if(fill) nrx <- fnrow2(x) else ax[["row.names"]] <- ax[["row.names"]][cc] # best ??
       } else na.rm <- FALSE
     }
@@ -349,8 +361,8 @@ HDW.data.frame <- function(x, fl, w = NULL, cols = is.numeric, na.rm = TRUE, fil
     xmat <- NULL
     list2env(getfl(myModFrame(fl, if(na.rm) .Call(C_subsetDT, x, cc, fvars) else .subset(x, fvars))), envir = environment())
     fcl <- !is.null(fl)
-    nallfc <- fcl && !is.null(xmat)
-    if(nallfc) xmat <- demeanlist(xmat[, -1L, drop = FALSE], fl, weights = w, ...)
+    nallfc <- fcl && length(xmat)
+    if(nallfc) xmat <- demean(xmat[, -1L, drop = FALSE], fl, weights = w, ...)
 
     if(variable.wise) {
       if(na.rm) {
@@ -358,24 +370,24 @@ HDW.data.frame <- function(x, fl, w = NULL, cols = is.numeric, na.rm = TRUE, fil
           y[-cc] <- NA
           ycc <- !is.na(y)
           YC <- which(ycc[cc])
-          y[ycc] <- if(nallfc) qr.resid(qr.default(xmat[YC, , drop = FALSE]), demeanlist(y[ycc], subsetfl(fl, YC), weights = w[YC], ...)) else if(fcl)
-            demeanlist(y[ycc], subsetfl(fl, YC), weights = w[YC], ...) else  qr.resid(qr.default(xmat[YC, , drop = FALSE]), y[ycc])
+          y[ycc] <- if(nallfc) qr.resid(qr.default(xmat[YC, , drop = FALSE]), demean(y[ycc], subsetfl(fl, YC), weights = w[YC], ...)) else if(fcl)
+            demean(y[ycc], subsetfl(fl, YC), weights = w[YC], ...) else  qr.resid(qr.default(xmat[YC, , drop = FALSE]), y[ycc])
           return(y)
         }), ax)) # Rfast fastlm??
       }
       return(setAttributes(lapply(.subset(x, Xvars), function(y) {
         ycc <- which(!is.na(y))
-        y[ycc] <- if(nallfc) qr.resid(qr.default(xmat[ycc, , drop = FALSE]), demeanlist(y[ycc], subsetfl(fl, ycc), weights = w[ycc], ...)) else if(fcl)
-          demeanlist(y[ycc], subsetfl(fl, ycc), weights = w[ycc], ...) else qr.resid(qr.default(xmat[ycc, , drop = FALSE]), y[ycc])
+        y[ycc] <- if(nallfc) qr.resid(qr.default(xmat[ycc, , drop = FALSE]), demean(y[ycc], subsetfl(fl, ycc), weights = w[ycc], ...)) else if(fcl)
+          demean(y[ycc], subsetfl(fl, ycc), weights = w[ycc], ...) else qr.resid(qr.default(xmat[ycc, , drop = FALSE]), y[ycc])
         return(y)
       }), ax)) # Rfast fastlm??
     } else { # at this point missing values are already removed from  fl !!
       # x <- if(na.rm) .Call(C_subsetDT, x, cc, Xvars) else .subset(x, Xvars) # incorporated below -> more memory efficient
       if(nallfc || !fcl) {
         xmat <- qr.default(xmat)
-        Y <- if(nallfc) lapply(demeanlist(if(na.rm) .Call(C_subsetDT, x, cc, Xvars) else .subset(x, Xvars), fl, weights = w, ...), function(y) qr.resid(xmat, y)) else
+        Y <- if(nallfc) lapply(demean(if(na.rm) .Call(C_subsetDT, x, cc, Xvars) else .subset(x, Xvars), fl, weights = w, ...), function(y) qr.resid(xmat, y)) else
           lapply(if(na.rm) .Call(C_subsetDT, x, cc, Xvars) else .subset(x, Xvars), function(y) qr.resid(xmat, y))
-      } else Y <- demeanlist(if(na.rm) .Call(C_subsetDT, x, cc, Xvars) else .subset(x, Xvars), fl, weights = w, ...)
+      } else Y <- demean(if(na.rm) .Call(C_subsetDT, x, cc, Xvars) else .subset(x, Xvars), fl, weights = w, ...)
       if(na.rm && fill) { # x[cc, ] <- Y; x[-cc, ] <- NA
         return(setAttributes(.Call(Cpp_lassign, Y, nrx, cc, NA), ax))
       } else return(setAttributes(Y, ax))
@@ -404,6 +416,7 @@ add_stub(fHDwithin.pdata.frame(if(is.null(cols)) x else colsubset(x, cols), w, n
 fHDbetween <- function(x, ...) UseMethod("fHDbetween") # , x
 
 fHDbetween.default <- function(x, fl, w = NULL, na.rm = TRUE, fill = FALSE, ...) {
+  if(is.matrix(x) && !inherits(x, "matrix")) return(fHDbetween.matrix(x, fl, w, na.rm, fill, ...))
   ax <- attributes(x)
   if(na.rm) {
     cc <- complete.cases(x, fl) # gives error if lengths don't match, otherwise demeanlist and qr.resid give errors !!
@@ -411,7 +424,7 @@ fHDbetween.default <- function(x, fl, w = NULL, na.rm = TRUE, fill = FALSE, ...)
       ax[["na.rm"]] <- which(!cc)
       cc <- which(cc)
       if(!fill) {
-        if(!is.null(names(x))) ax[["names"]] <- names(x)[cc] # best ??
+        if(length(names(x))) ax[["names"]] <- names(x)[cc] # best ??
         x <- x[cc]
       }
     } else na.rm <- FALSE
@@ -425,7 +438,7 @@ fHDbetween.default <- function(x, fl, w = NULL, na.rm = TRUE, fill = FALSE, ...)
     if(na.rm) fl <- if(inherits(fl, "data.frame")) .Call(C_subsetDT, fl, cc, seq_along(unclass(fl))) else subsetfl(fl, cc)
     attributes(fl) <- NULL # good here ??
     if(nallfc) {
-      xmat <- demeanlist(do.call(cbind, fl[!fc]), fl[fc], weights = w, ...)
+      xmat <- demean(do.call(cbind, fl[!fc]), fl[fc], weights = w, ...)
       fl <- fl[fc]
     } else if(!fcl) xmat <- do.call(cbind, c(list(rep(1L, length(fl[[1L]]))), fl))
   } else if(is.matrix(fl)) {
@@ -447,28 +460,28 @@ fHDbetween.default <- function(x, fl, w = NULL, na.rm = TRUE, fill = FALSE, ...)
     xmat <- qr.default(xmat)
     if(na.rm && fill) {
       x[-cc] <- NA
-      x[cc] <- if(nallfc) x[cc] - qr.resid(xmat, demeanlist(x[cc], fl, weights = w, ...)) else qr.fitted(xmat, x[cc])
+      x[cc] <- if(nallfc) x[cc] - qr.resid(xmat, demean(x[cc], fl, weights = w, ...)) else qr.fitted(xmat, x[cc])
       return(setAttributes(x, ax))
     } else if(nallfc)
-      return(setAttributes(x - qr.resid(xmat, demeanlist(x, fl, weights = w, ...)), ax)) else
+      return(setAttributes(x - qr.resid(xmat, demean(x, fl, weights = w, ...)), ax)) else
       return(setAttributes(qr.fitted(xmat, x), ax))
   } else if(na.rm && fill) {
     x[-cc] <- NA
-    x[cc] <- demeanlist(x[cc], fl, weights = w, means = TRUE, ...)
+    x[cc] <- demean(x[cc], fl, weights = w, means = TRUE, ...)
     return(setAttributes(x, ax))
-  } else return(setAttributes(demeanlist(x, fl, weights = w, means = TRUE, ...), ax))
+  } else return(setAttributes(demean(x, fl, weights = w, means = TRUE, ...), ax))
 }
 fHDbetween.pseries <- function(x, w = NULL, na.rm = TRUE, fill = TRUE, ...) {
   if(na.rm && !all(xcc <- !is.na(x))) {
     g <- lapply(attr(x, "index"), function(y) y[xcc]) # good ! faster than subsetDT
     if(fill) {
-      x[xcc] <- demeanlist(x[xcc], g, weights = w[xcc], means = TRUE, ...) # keeps attributes ?? -> Yes !!
+      x[xcc] <- demean(x[xcc], g, weights = w[xcc], means = TRUE, ...) # keeps attributes ?? -> Yes !!
       return(x)
-    } else return(addAttributes(demeanlist(x[xcc], g, weights = w[xcc], means = TRUE, ...),
+    } else return(addAttributes(demean(x[xcc], g, weights = w[xcc], means = TRUE, ...),
                                 list(index = g, na.rm = which(!xcc)))) # keeps attributes ?? -> Nope !!
   }
   g <- attr(x, "index") # what about cases ?? -> nah, named !!
-  `attr<-`(demeanlist(x, g, weights = w, means = TRUE, ...), "index", g) # keeps attributes ?? -> Nope !!
+  `attr<-`(demean(x, g, weights = w, means = TRUE, ...), "index", g) # keeps attributes ?? -> Nope !!
 }
 fHDbetween.matrix <- function(x, fl, w = NULL, na.rm = TRUE, fill = FALSE, ...) {
   ax <- attributes(x)
@@ -493,7 +506,7 @@ fHDbetween.matrix <- function(x, fl, w = NULL, na.rm = TRUE, fill = FALSE, ...) 
     if(na.rm) fl <- if(inherits(fl, "data.frame")) .Call(C_subsetDT, fl, cc, seq_along(unclass(fl))) else subsetfl(fl, cc)
     attributes(fl) <- NULL # good here ??
     if(nallfc) {
-      xmat <- demeanlist(do.call(cbind, fl[!fc]), fl[fc], weights = w, ...)
+      xmat <- demean(do.call(cbind, fl[!fc]), fl[fc], weights = w, ...)
       fl <- fl[fc]
     } else if(!fcl) xmat <- do.call(cbind, c(list(rep(1L, length(fl[[1L]]))), fl))
   } else if(is.matrix(fl)) {
@@ -515,16 +528,16 @@ fHDbetween.matrix <- function(x, fl, w = NULL, na.rm = TRUE, fill = FALSE, ...) 
     xmat <- qr.default(xmat)
     if(na.rm && fill) {
       x[-cc, ] <- NA
-      x[cc, ] <- if(nallfc) x[cc, ] - qr.resid(xmat, demeanlist(x[cc, ], fl, weights = w, ...)) else qr.fitted(xmat, x[cc, ])
+      x[cc, ] <- if(nallfc) x[cc, ] - qr.resid(xmat, demean(x[cc, ], fl, weights = w, ...)) else qr.fitted(xmat, x[cc, ])
       return(setAttributes(x, ax))
     } else if(nallfc)
-      return(setAttributes(x - qr.resid(xmat, demeanlist(x, fl, weights = w, ...)), ax)) else
+      return(setAttributes(x - qr.resid(xmat, demean(x, fl, weights = w, ...)), ax)) else
         return(setAttributes(qr.fitted(xmat, x), ax))
   } else if(na.rm && fill) {
     x[-cc, ] <- NA
-    x[cc, ] <- demeanlist(x[cc, ], fl, weights = w, means = TRUE, ...)
+    x[cc, ] <- demean(x[cc, ], fl, weights = w, means = TRUE, ...)
     return(setAttributes(x, ax))
-  } else return(setAttributes(demeanlist(x, fl, weights = w, means = TRUE, ...), ax))
+  } else return(setAttributes(demean(x, fl, weights = w, means = TRUE, ...), ax))
 }
 fHDbetween.pdata.frame <- function(x, w = NULL, na.rm = TRUE, fill = TRUE, variable.wise = TRUE, ...) {
   ax <- attributes(x)
@@ -532,21 +545,21 @@ fHDbetween.pdata.frame <- function(x, w = NULL, na.rm = TRUE, fill = TRUE, varia
     attributes(x) <- NULL
     varwisecomp <- function(x, fl, w, ...) lapply(x, function(y) {
       ycc <- which(!is.na(y))
-      y[ycc] <- demeanlist(y[ycc], subsetfl(fl, ycc), weights = w[ycc], means = TRUE, ...)
+      y[ycc] <- demean(y[ycc], subsetfl(fl, ycc), weights = w[ycc], means = TRUE, ...)
       return(y)
     })
     return(setAttributes(varwisecomp(x, ax[["index"]], w, ...), ax))
   } else if(na.rm && any(miss <- .Call(C_dt_na, x, seq_along(unclass(x))))) {
     ax[["na.rm"]] <- which(miss)
     cc <- which(!miss)
-    Y <- demeanlist(.Call(C_subsetDT, x, cc, seq_along(unclass(x))),
+    Y <- demean(.Call(C_subsetDT, x, cc, seq_along(unclass(x))),
                     lapply(ax[["index"]], function(y) y[cc]),
                     weights = w[cc], means = TRUE, ...)
     if(fill) return(setAttributes(.Call(Cpp_lassign, Y, fnrow2(x), cc, NA), ax)) else {
       ax[["row.names"]] <- ax[["row.names"]][cc]
       return(setAttributes(Y, ax))
     }
-  } else return(setAttributes(demeanlist(x, ax[["index"]], weights = w, means = TRUE, ...), ax))
+  } else return(setAttributes(demean(x, ax[["index"]], weights = w, means = TRUE, ...), ax))
 }
 fHDbetween.data.frame <- function(x, fl, w = NULL, na.rm = TRUE, fill = FALSE, variable.wise = FALSE, ...) {
   ax <- attributes(x)
@@ -556,7 +569,7 @@ fHDbetween.data.frame <- function(x, fl, w = NULL, na.rm = TRUE, fill = FALSE, v
     if(!all(cc)) {
       ax[["na.rm"]] <- which(!cc)
       cc <- which(cc)
-      if(!is.null(w)) w <- w[cc]
+      if(length(w)) w <- w[cc]
       if(!variable.wise) {
         if(fill) nrx <- fnrow2(x) else ax[["row.names"]] <- ax[["row.names"]][cc] # best ??
         x <- .Call(C_subsetDT, x, cc, seq_along(unclass(x)))
@@ -572,7 +585,7 @@ fHDbetween.data.frame <- function(x, fl, w = NULL, na.rm = TRUE, fill = FALSE, v
     if(na.rm) fl <- if(inherits(fl, "data.frame")) .Call(C_subsetDT, fl, cc, seq_along(unclass(fl))) else subsetfl(fl, cc)
     attributes(fl) <- NULL # good here ??
     if(nallfc) {
-      xmat <- demeanlist(do.call(cbind, fl[!fc]), fl[fc], weights = w, ...)
+      xmat <- demean(do.call(cbind, fl[!fc]), fl[fc], weights = w, ...)
       fl <- fl[fc]
     } else if(!fcl) xmat <- do.call(cbind, c(list(rep(1L, length(fl[[1L]]))), fl))
   } else if(is.matrix(fl)) {
@@ -596,23 +609,23 @@ fHDbetween.data.frame <- function(x, fl, w = NULL, na.rm = TRUE, fill = FALSE, v
         y[-cc] <- NA # which is not faster !!
         ycc <- !is.na(y)
         YC <- which(ycc[cc])
-        y[ycc] <- if(nallfc) y[ycc] - qr.resid(qr.default(xmat[YC, , drop = FALSE]), demeanlist(y[ycc], subsetfl(fl, YC), weights = w[YC], ...)) else if(fcl)
-          demeanlist(y[ycc], subsetfl(fl, YC), weights = w[YC], means = TRUE, ...) else  qr.fitted(qr.default(xmat[YC, , drop = FALSE]), y[ycc])
+        y[ycc] <- if(nallfc) y[ycc] - qr.resid(qr.default(xmat[YC, , drop = FALSE]), demean(y[ycc], subsetfl(fl, YC), weights = w[YC], ...)) else if(fcl)
+          demean(y[ycc], subsetfl(fl, YC), weights = w[YC], means = TRUE, ...) else  qr.fitted(qr.default(xmat[YC, , drop = FALSE]), y[ycc])
         return(y)
       }), ax)) # Rfast fastlm??
     }
     return(setAttributes(lapply(unattrib(x), function(y) {
       ycc <- which(!is.na(y))
-      y[ycc] <- if(nallfc) y[ycc] - qr.resid(qr.default(xmat[ycc, , drop = FALSE]), demeanlist(y[ycc], subsetfl(fl, ycc), weights = w[ycc], ...)) else if(fcl)
-        demeanlist(y[ycc], subsetfl(fl, ycc), weights = w[ycc], means = TRUE, ...) else qr.fitted(qr.default(xmat[ycc, , drop = FALSE]), y[ycc])
+      y[ycc] <- if(nallfc) y[ycc] - qr.resid(qr.default(xmat[ycc, , drop = FALSE]), demean(y[ycc], subsetfl(fl, ycc), weights = w[ycc], ...)) else if(fcl)
+        demean(y[ycc], subsetfl(fl, ycc), weights = w[ycc], means = TRUE, ...) else qr.fitted(qr.default(xmat[ycc, , drop = FALSE]), y[ycc])
       return(y)
     }), ax)) # Rfast fastlm??
   } else { # at this point missing values are already removed from x and fl !!
     if(nallfc || !fcl) {
       xmat <- qr.default(xmat)
-      Y <- if(nallfc) lapply(x, function(y) y - qr.resid(xmat, demeanlist(y, fl, weights = w, ...))) else
+      Y <- if(nallfc) lapply(x, function(y) y - qr.resid(xmat, demean(y, fl, weights = w, ...))) else
            lapply(x, function(y) qr.fitted(xmat, y))
-    } else Y <- demeanlist(x, fl, weights = w, means = TRUE, ...)
+    } else Y <- demean(x, fl, weights = w, means = TRUE, ...)
     if(na.rm && fill) { # x[cc, ] <- Y; x[-cc, ] <- NA
       return(setAttributes(.Call(Cpp_lassign, Y, nrx, cc, NA), ax))
     } else return(setAttributes(Y, ax))
@@ -622,8 +635,10 @@ fHDbetween.data.frame <- function(x, fl, w = NULL, na.rm = TRUE, fill = FALSE, v
 
 HDB <- function(x, ...) UseMethod("HDB") # , x
 
-HDB.default <- function(x, fl, w = NULL, na.rm = TRUE, fill = FALSE, ...)
+HDB.default <- function(x, fl, w = NULL, na.rm = TRUE, fill = FALSE, ...) {
+  if(is.matrix(x) && !inherits(x, "matrix")) return(HDB.matrix(x, fl, w, na.rm, fill, ...))
   fHDbetween.default(x, fl, w, na.rm, fill, ...)
+}
 
 HDB.pseries <- function(x, w = NULL, na.rm = TRUE, fill = TRUE, ...)
   fHDbetween.pseries(x, w, na.rm, fill, ...)
@@ -641,7 +656,7 @@ HDB.data.frame <- function(x, fl, w = NULL, cols = is.numeric, na.rm = TRUE, fil
       fl[[2L]] <- NULL
     } else {
       fvars <- ckmatch(all.vars(fl), nam)
-      Xvars <- if(!is.null(cols)) fsetdiff(cols2int(cols, x, nam), fvars) else seq_along(unclass(x))[-fvars]
+      Xvars <- if(length(cols)) fsetdiff(cols2int(cols, x, nam), fvars) else seq_along(unclass(x))[-fvars]
     }
     ax[["names"]] <- if(is.character(stub)) paste0(stub, nam[Xvars]) else nam[Xvars]
 
@@ -650,7 +665,7 @@ HDB.data.frame <- function(x, fl, w = NULL, cols = is.numeric, na.rm = TRUE, fil
       if(any(miss)) {
         ax[["na.rm"]] <- which(miss)
         cc <- which(!miss)
-        if(!is.null(w)) w <- w[cc]
+        if(length(w)) w <- w[cc]
         if(!variable.wise) if(fill) nrx <- fnrow2(x) else ax[["row.names"]] <- ax[["row.names"]][cc] # best ??
       } else na.rm <- FALSE
     }
@@ -658,8 +673,8 @@ HDB.data.frame <- function(x, fl, w = NULL, cols = is.numeric, na.rm = TRUE, fil
     xmat <- NULL
     list2env(getfl(myModFrame(fl, if(na.rm) .Call(C_subsetDT, x, cc, fvars) else .subset(x, fvars))), envir = environment())
     fcl <- !is.null(fl)
-    nallfc <- fcl && !is.null(xmat)
-    if(nallfc) xmat <- demeanlist(xmat[, -1L, drop = FALSE], fl, weights = w, ...)
+    nallfc <- fcl && length(xmat)
+    if(nallfc) xmat <- demean(xmat[, -1L, drop = FALSE], fl, weights = w, ...)
 
     if(variable.wise) {
       if(na.rm) {
@@ -667,24 +682,24 @@ HDB.data.frame <- function(x, fl, w = NULL, cols = is.numeric, na.rm = TRUE, fil
           y[-cc] <- NA
           ycc <- !is.na(y)
           YC <- which(ycc[cc])
-          y[ycc] <- if(nallfc) y[ycc] - qr.resid(qr.default(xmat[YC, , drop = FALSE]), demeanlist(y[ycc], subsetfl(fl, YC), weights = w[YC], ...)) else if(fcl)
-            demeanlist(y[ycc], subsetfl(fl, YC), weights = w[YC], means = TRUE, ...) else  qr.fitted(qr.default(xmat[YC, , drop = FALSE]), y[ycc])
+          y[ycc] <- if(nallfc) y[ycc] - qr.resid(qr.default(xmat[YC, , drop = FALSE]), demean(y[ycc], subsetfl(fl, YC), weights = w[YC], ...)) else if(fcl)
+            demean(y[ycc], subsetfl(fl, YC), weights = w[YC], means = TRUE, ...) else  qr.fitted(qr.default(xmat[YC, , drop = FALSE]), y[ycc])
           return(y)
         }), ax)) # Rfast fastlm??
       }
       return(setAttributes(lapply(.subset(x, Xvars), function(y) {
         ycc <- which(!is.na(y))
-        y[ycc] <- if(nallfc) y[ycc] - qr.resid(qr.default(xmat[ycc, , drop = FALSE]), demeanlist(y[ycc], subsetfl(fl, ycc), weights = w[ycc], ...)) else if(fcl)
-          demeanlist(y[ycc], subsetfl(fl, ycc), weights = w[ycc], means = TRUE, ...) else qr.fitted(qr.default(xmat[ycc, , drop = FALSE]), y[ycc])
+        y[ycc] <- if(nallfc) y[ycc] - qr.resid(qr.default(xmat[ycc, , drop = FALSE]), demean(y[ycc], subsetfl(fl, ycc), weights = w[ycc], ...)) else if(fcl)
+          demean(y[ycc], subsetfl(fl, ycc), weights = w[ycc], means = TRUE, ...) else qr.fitted(qr.default(xmat[ycc, , drop = FALSE]), y[ycc])
         return(y)
       }), ax)) # Rfast fastlm??
     } else { # at this point missing values are already removed from  fl !!
       # x <- if(na.rm) .Call(C_subsetDT, x, cc, Xvars) else .subset(x, Xvars) # incorporated below -> more memory efficient
       if(nallfc || !fcl) {
         xmat <- qr.default(xmat)
-        Y <- if(nallfc) lapply(if(na.rm) .Call(C_subsetDT, x, cc, Xvars) else .subset(x, Xvars), function(y) y - qr.resid(xmat, demeanlist(y, fl, weights = w, ...))) else
+        Y <- if(nallfc) lapply(if(na.rm) .Call(C_subsetDT, x, cc, Xvars) else .subset(x, Xvars), function(y) y - qr.resid(xmat, demean(y, fl, weights = w, ...))) else
           lapply(if(na.rm) .Call(C_subsetDT, x, cc, Xvars) else .subset(x, Xvars), function(y) qr.fitted(xmat, y))
-      } else Y <- demeanlist(if(na.rm) .Call(C_subsetDT, x, cc, Xvars) else .subset(x, Xvars), fl, weights = w, means = TRUE, ...)
+      } else Y <- demean(if(na.rm) .Call(C_subsetDT, x, cc, Xvars) else .subset(x, Xvars), fl, weights = w, means = TRUE, ...)
       if(na.rm && fill) { # x[cc, ] <- Y; x[-cc, ] <- NA
         return(setAttributes(.Call(Cpp_lassign, Y, nrx, cc, NA), ax))
       } else return(setAttributes(Y, ax))
