@@ -1,6 +1,6 @@
 context("fHDbetween / HDB and fHDwithin / HDW")
 
-rm(list = ls())
+# rm(list = ls())
 
 options(warn = -1)
 

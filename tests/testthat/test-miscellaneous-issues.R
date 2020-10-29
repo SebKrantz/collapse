@@ -1,6 +1,6 @@
 context("miscellaneous issues")
 
-rm(list = ls())
+# rm(list = ls())
 
 options(warn = -1)
 

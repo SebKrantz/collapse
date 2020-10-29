@@ -1,6 +1,6 @@
 context("fmin and fmax")
 
-rm(list = ls())
+# rm(list = ls())
 
 x <- rnorm(100)
 xNA <- x

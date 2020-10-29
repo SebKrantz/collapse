@@ -1,6 +1,6 @@
 context("varying")
 
-rm(list = ls())
+# rm(list = ls())
 
 pwlddev <- plm::pdata.frame(wlddev, index = c("iso3c", "year"))
 gwlddev <- fgroup_by(wlddev, iso3c)

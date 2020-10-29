@@ -1,6 +1,6 @@
 context("collap")
 
-rm(list = ls())
+# rm(list = ls())
 
 options(warn = -1)
 

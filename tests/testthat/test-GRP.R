@@ -1,6 +1,6 @@
 context("radixorder, GRP, qF, qG")
 
-rm(list = ls())
+# rm(list = ls())
 
 mtcNA <- na_insert(mtcars)
 wlddev2 <- slt(wlddev, -date)

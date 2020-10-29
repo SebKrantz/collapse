@@ -1,6 +1,6 @@
 context("fdiff / D and fgrowth / G")
 
-rm(list = ls())
+# rm(list = ls())
 
 x <- abs(10*rnorm(100))
 xNA <- x
