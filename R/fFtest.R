@@ -14,7 +14,7 @@ fFtest <- function(y, exc, X = NULL, full.df = TRUE, ...) {
     if(full.df && !atl && any(fc <- vapply(unattrib(data), is.factor, TRUE))) {
       cld <- oldClass(data)
       oldClass(data) <- NULL
-      data[fc] <- lapply(data[fc], droplevels.factor)
+      data[fc] <- lapply(data[fc], fdroplevels.factor)
       df <- vapply(unattrib(data), function(i) if(is.factor(i)) fnlevels(i)-1L else 1L, 1L) # getdf(data)
       k <- sum(df) # 1 for intercept added with y
       p <- sum(df[(Xn+2L):length(df)])
@@ -59,11 +59,11 @@ fFtest <- function(y, exc, X = NULL, full.df = TRUE, ...) {
   } else {
     u <- fHDwithin.default(y, exc, na.rm = TRUE) # Residuals
     miss <- attr(u, "na.rm")
-    if(full.df && !is.null(miss) && !is.atomic(exc) && !is.numeric(exc)) {
+    if(full.df && length(miss) && !is.atomic(exc) && !is.numeric(exc)) {
       p <- if(is.factor(exc)) fnlevels(exc[-miss, drop = TRUE])-1L else if(any(vapply(unattrib(exc), is.factor, TRUE)))
-        getdf(droplevels.data.frame(ss(exc, -miss))) else length(unclass(exc))
+        getdf(fdroplevels.data.frame(ss(exc, -miss))) else length(unclass(exc))
     } else if(full.df) {
-      p <- if(is.factor(exc) || (is.list(exc) && any(vapply(unattrib(exc), is.factor, TRUE)))) getdf(droplevels(exc)) else fNCOL(exc)
+      p <- if(is.factor(exc) || (is.list(exc) && any(vapply(unattrib(exc), is.factor, TRUE)))) getdf(fdroplevels(exc)) else fNCOL(exc)
     } else p <- fNCOL(exc)
     n <- length(u)
     r2 <- 1 - fvar.default(u)/fvar.default(if(is.null(miss)) y else y[-miss]) # R-Squared
