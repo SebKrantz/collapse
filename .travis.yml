@@ -13,10 +13,11 @@ r_check_args: --no-build-vignettes --no-manual
 # for codecov
 r_packages:
   - covr
+  - Rscript -e 'library(covr); options(covr.flags = c(CXXFLAGS = "-O2", LDFLAGS=""))'
 
 # only report coverage after build is successful
 after_success:
-  - Rscript -e 'covr::codecov()'
+  - Rscript -e 'library(covr); options(covr.flags = c(CXXFLAGS = "-O2", LDFLAGS="")); codecov()' # covr::codecov
 
 
 notifications:
