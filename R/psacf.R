@@ -66,7 +66,7 @@ psacf.data.frame <- function(x, by, t = NULL, cols = is.numeric, lag.max = NULL,
       t <- if(length(t) == 1L) x[[t]] else GRP.default(x, t, return.groups = FALSE, call = FALSE)
     }
     x <- x[v]
-  } else if(!is.null(cols)) x <- x[cols2int(cols, x, names(x))]
+  } else if(length(cols)) x <- x[cols2int(cols, x, names(x), FALSE)]
   lx <- length(x)
   nrx <- length(x[[1L]])
   snames <- names(x)
@@ -152,7 +152,7 @@ psacf.pdata.frame <- function(x, cols = is.numeric, lag.max = NULL, type = c("co
   index <- unclass(attr(x, "index"))
   oldClass(x) <- NULL
   nrx <- length(x[[1L]])
-  if(!is.null(cols)) x <- x[cols2int(cols, x, names(x))]
+  if(length(cols)) x <- x[cols2int(cols, x, names(x), FALSE)]
   lx <- length(x)
   snames <- names(x)
   if(length(index) > 2L) index <- c(finteraction(index[-length(index)]), index[length(index)])

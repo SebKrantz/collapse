@@ -4,7 +4,6 @@
 \alias{is.qG}
 \alias{as.factor_qG}
 \alias{finteraction}
-%- Also NEED an '\alias' for EACH other topic documented here.
 \title{
 Fast Factor Generation, Interactions and Vector Grouping
 }
@@ -16,23 +15,25 @@ Fast Factor Generation, Interactions and Vector Grouping
 \code{finteraction} generates a factor by interacting multiple vectors or factors. In that process missing values are always replaced with a level and unused levels are always dropped.
 }
 \usage{
-qF(x, ordered = FALSE, na.exclude = TRUE, sort = TRUE,
-   method = c("auto", "radix", "hash"))
+qF(x, ordered = FALSE, na.exclude = TRUE, sort = TRUE, drop = FALSE,
+   keep.attr = TRUE, method = c("auto", "radix", "hash"))
 
 qG(x, ordered = FALSE, na.exclude = TRUE, sort = TRUE,
    return.groups = FALSE, method = c("auto", "radix", "hash"))
 
 is.qG(x)
+
 as.factor_qG(x, ordered = FALSE, na.exclude = TRUE)
 
 finteraction(\dots, ordered = FALSE, sort = TRUE)
 }
-%- maybe also 'usage' for other objects documented here.
 \arguments{
   \item{x}{a atomic vector, factor or quick-group.}
   \item{ordered}{logical. Adds a class 'ordered'.}
   \item{na.exclude}{logical. \code{TRUE} preserves missing values (i.e. no level is generated for \code{NA}).}
   \item{sort}{logical. \code{TRUE} sorts the levels in ascending order (like \code{\link{factor}}); \code{FALSE} provides the levels in an arbitrary order (determined by the hash map if \code{method = "hash"}), which can be slightly faster.}
+  \item{drop}{logical. If \code{x} is a factor, \code{TRUE} efficiently drops unused factor levels beforehand using \code{\link{fdroplevels}}.}
+  \item{keep.attr}{logical. If \code{TRUE} and \code{x} has additional attributes apart from 'levels' and 'class', these are preseved in the conversion to factor.}
   \item{method}{an integer or character string specifying the method of computation:
         \tabular{lllll}{\emph{ Int. }   \tab\tab \emph{ String }   \tab\tab \emph{ Description }  \cr
                  1 \tab\tab "auto"   \tab\tab automatic selection: hash for character, logical or if \code{length(x) < 500}, else radix. \cr
@@ -60,9 +61,6 @@ There are two methods of computation: radix ordering and index hashing. Radix or
 \note{
 Neither \code{qF} nor \code{qG} can reorder groups / factor levels. These objects can however be converted into one another using \code{qF/qG} or the direct method \code{as.factor_qG}, and it is also possible to add a class 'ordered' (\code{ordered = TRUE}) and to create am extra level / integer for missing values (\code{na.exclude = FALSE}). % Apart from that \code{qF} and \code{qG} don't do much to each others objects.
 }
-
-%% ~Make other sections like Warning with \section{Warning }{\dots.} ~
-
 \seealso{
 \code{\link{groupid}}, \code{\link{GRP}}, \link[=A2-fast-grouping-ordering]{Fast Grouping and Ordering}, \link[=collapse-documentation]{Collapse Overview}
 }

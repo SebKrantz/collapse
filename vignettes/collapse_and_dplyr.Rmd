@@ -30,9 +30,9 @@ pre[class] {
 ```{r, echo = FALSE, message = FALSE, warning=FALSE}
 library(dplyr)
 library(microbenchmark)
-library(collapse)
+library(collapsedev2)
 knitr::opts_chunk$set(error = FALSE, message = FALSE, warning = FALSE, 
-                      comment = "#", tidy = FALSE, cache = TRUE, collapse = TRUE,
+                      comment = "#", tidy = FALSE, cache = FALSE, collapse = TRUE,
                       fig.width = 8, fig.height = 5, 
                       out.width = '100%')
 
@@ -90,12 +90,15 @@ With that in mind, let's consider some straightforward applications.
 Consider the Groningen Growth and Development Center 10-Sector Database included in *collapse* and introduced in the main vignette:
 
 ```{r}
-library(collapse)
+library(collapsedev2)
 head(GGDC10S)
 
 # Summarize the Data: 
 # descr(GGDC10S, cols = is.categorical)
 # aperm(qsu(GGDC10S, ~Variable, cols = is.numeric))
+
+# Efficiently converting to tibble (no deep copy)
+GGDC10S <- qTBL(GGDC10S)
 ```
 
 Simple column-wise computations using the fast functions and pipe operators are performed as follows:
@@ -165,9 +168,9 @@ It is obvious that *collapse* is faster than *dplyr* since it's method of comput
 ***
 
 ### 1.2 More Speed using *collapse* Verbs
-*collapse* fast functions do not develop their maximal performance on a grouped tibble created with `group_by` because of the additional conversion cost of the grouping object incurred by `GRP.grouped_df`. This cost is already minimized through the use of C++, but we can do even better replacing `group_by` with `collapse::fgroup_by`. `fgroup_by` works like `group_by` but does the grouping with `collapse::GRP` (up to 10x faster than `group_by`) and simply attaches a *collapse* grouping object to the grouped_df. Thus the speed gain is 2-fold: Faster grouping and no conversion cost when calling *collapse* functions.
+*collapse* fast functions do not develop their maximal performance on a grouped tibble created with `group_by` because of the additional conversion cost of the grouping object incurred by `GRP.grouped_df`. This cost is already minimized through the use of C++, but we can do even better replacing `group_by` with `collapsedev2::fgroup_by`. `fgroup_by` works like `group_by` but does the grouping with `collapsedev2::GRP` (up to 10x faster than `group_by`) and simply attaches a *collapse* grouping object to the grouped_df. Thus the speed gain is 2-fold: Faster grouping and no conversion cost when calling *collapse* functions.
 
-Another improvement comes from replacing the *dplyr* verb `select` with `collapse::fselect`, and, for selection using column names, indices or functions use `collapse::get_vars` instead of `select_at` or `select_if`. Next to `get_vars`, *collapse* also introduces the predicates `num_vars`, `cat_vars`, `char_vars`, `fact_vars`, `logi_vars` and `Date_vars` to efficiently select columns by type.
+Another improvement comes from replacing the *dplyr* verb `select` with `collapsedev2::fselect`, and, for selection using column names, indices or functions use `collapsedev2::get_vars` instead of `select_at` or `select_if`. Next to `get_vars`, *collapse* also introduces the predicates `num_vars`, `cat_vars`, `char_vars`, `fact_vars`, `logi_vars` and `Date_vars` to efficiently select columns by type.
 
 ```{r}
 GGDC10S %>% fgroup_by(Variable, Country) %>% get_vars(6:16) %>% fmedian
@@ -465,6 +468,10 @@ rm(GGDC10S)
 
 ```
 
+```{r, echo=FALSE}
+GGDC10S <- qTBL(GGDC10S)
+```
+
 Weights are easily added to any grouped transformation:
 
 ```{r}
@@ -523,6 +530,9 @@ head(GGDC10S)
 rm(GGDC10S)
 ```
 
+```{r, echo=FALSE}
+GGDC10S <- qTBL(GGDC10S)
+```
 There are lots of other examples one could construct using the 10 operations and 14 functions listed above, the examples provided just outline the suggested programming basics. Performance considerations make it very much worthwhile to spend some time and think how complex operations can be implemented in this programming framework, before defining some function in R and applying it to data using `dplyr::mutate`. 
 
 <!-- ***could add add_vars example again*** -->

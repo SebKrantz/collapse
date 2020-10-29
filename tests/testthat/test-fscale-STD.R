@@ -2,7 +2,7 @@ context("fscale / STD")
 
 # TODO: Still a few uneccessary infinity values generated with weights when the sd is null. search replace_Inf to find them.
 
-rm(list = ls())
+# rm(list = ls())
 
 x <- rnorm(100)
 w <- abs(100*rnorm(100))

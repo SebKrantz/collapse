@@ -24,7 +24,7 @@ descr <- function(X, Ndistinct = TRUE, higher = TRUE, table = TRUE,
                                                            Stats = if(Ndistinct) c(N = fNobsCpp(x), Ndist = fNdistinctCpp(x)) else `names<-`(fNobsCpp(x), 'Nobs'))
 
   if(is.list(X)) class(X) <- NULL else X <- unclass(qDF(X))
-  if(!is.null(cols)) X <- X[cols2int(cols, X, names(X))]
+  if(length(cols)) X <- X[cols2int(cols, X, names(X), FALSE)]
   res <- vector('list', length(X))
   num <- vapply(unattrib(X), is.numeric, TRUE)
   res[num] <- lapply(X[num], descrnum, ...)

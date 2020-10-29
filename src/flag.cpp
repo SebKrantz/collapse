@@ -188,26 +188,26 @@ Vector<RTYPE> flagleadCppImpl(const Vector<RTYPE>& x, const IntegerVector& n, co
   }
   DUPLICATE_ATTRIB(out, x);
   if(ns != 1) {
-    Rf_setAttrib(out, R_NamesSymbol, R_NilValue); // if(x.hasAttribute("names")) out.attr("names") = R_NilValue; // fastest ?? Rf_setAttrib(x, R_NamesSymbol, R_NilValue);
-    out.attr("dim") = Dimension(l, ns); // Rf_dimgets(Dimension(l, ns));
-    if(Rf_isObject(x)) { // out.attr("class") = CharacterVector::create(out.attr("class"),"matrix"); // Rf_dimgets(Dimension(l, ns));
-      CharacterVector classes = out.attr("class");
+    Rf_setAttrib(out, R_NamesSymbol, R_NilValue);
+    Rf_dimgets(out, Dimension(l, ns));
+    if(Rf_isObject(x)) {
+      CharacterVector classes = Rf_getAttrib(out, R_ClassSymbol);
       classes.push_back("matrix");
-      out.attr("class") = classes;
+      Rf_classgets(out, classes);
     } else {
-      out.attr("class") = "matrix"; // Rf_classgets(Rf_installChar("matrix"));
+      Rf_classgets(out, Rf_mkString("matrix"));
     }
-    if(names) out.attr("dimnames") = List::create(x.attr("names"), colnam); // Rf_dimnamesgets(List::create(x.attr("names"), colnam));
+    if(names) Rf_dimnamesgets(out, List::create(Rf_getAttrib(x, R_NamesSymbol), colnam));
     // out.attr("class") = CharacterVector::create(x.attr("class"),"matrix");
   }
   return out;
 }
 
-// template <>
-// Vector<CPLXSXP> flagleadCppImpl(Vector<CPLXSXP> x, IntegerVector n, SEXP fill,
-//                               int ng, IntegerVector g, SEXP gs, SEXP t) {
-//   stop("Not supported SEXP type!");
-// }
+template <>
+Vector<CPLXSXP> flagleadCppImpl(const Vector<CPLXSXP>& x, const IntegerVector& n, const SEXP& fill,
+                               int ng, const IntegerVector& g, const SEXP& gs, const SEXP& t, bool names) {
+  stop("Not supported SEXP type!");
+}
 
 template <>
 Vector<VECSXP> flagleadCppImpl(const Vector<VECSXP>& x, const IntegerVector& n, const SEXP& fill,
@@ -441,21 +441,22 @@ Matrix<RTYPE> flagleadmCppImpl(const Matrix<RTYPE>& x, const IntegerVector& n, c
     }
   }
   DUPLICATE_ATTRIB(out, x);
-  if(ns != 1) out.attr("dim") = Dimension(l, col*ns);
+  if(ns != 1) Rf_dimgets(out, Dimension(l, col*ns));
   if(names) {
-    out.attr("dimnames") = List::create(rownames(x), colnam); // colnames(out) = colnam deletes row names !!!
+    Rf_dimnamesgets(out, List::create(rownames(x), colnam)); // colnames(out) = colnam deletes row names !
   } else if(ns != 1) {
-    out.attr("dimnames") = R_NilValue;
+    Rf_setAttrib(out, R_DimNamesSymbol, R_NilValue);
   }
   return out;
 }
 
 
-// template <>
-// Vector<CPLXSXP> flagleadCppImpl(Vector<CPLXSXP> x, IntegerVector n, SEXP fill,
-//                               int ng, IntegerVector g, SEXP gs, SEXP t) {
-//   stop("Not supported SEXP type!");
-// }
+
+template <>
+Matrix<CPLXSXP> flagleadmCppImpl(const Matrix<CPLXSXP>& x, const IntegerVector& n, const SEXP& fill,
+                                int ng, const IntegerVector& g, const SEXP& gs, const SEXP& t, bool names) {
+  stop("Not supported SEXP type!");
+}
 
 template <>
 Matrix<VECSXP> flagleadmCppImpl(const Matrix<VECSXP>& x, const IntegerVector& n, const SEXP& fill,
@@ -483,8 +484,6 @@ SEXP flagleadmCpp(SEXP x, IntegerVector n = 1, SEXP fill = R_NilValue,
 
 
 
-
-
 // [[Rcpp::export]]
 List flagleadlCpp(const List& x, const IntegerVector& n = 1, const SEXP& fill = R_NilValue,
                   int ng = 0, const IntegerVector& g = 0, const SEXP& gs = R_NilValue,
@@ -509,7 +508,7 @@ List flagleadlCpp(const List& x, const IntegerVector& n = 1, const SEXP& fill = 
   pos = 0;
   CharacterVector nc = names ? Rf_coerceVector(absn, STRSXP) : NA_STRING; // NumericVector(abs(n))
   CharacterVector nam = names ? no_init_vector(l*ns) : no_init_vector(1); // what if no names ??
-  CharacterVector na = names ? coln_check(x.attr("names")) : NA_STRING;
+  CharacterVector na = names ? coln_check(Rf_getAttrib(x, R_NamesSymbol)) : NA_STRING;
   if(names && na[0] == NA_STRING) names = false;
 
   if(ng == 0) { // No groups
@@ -1167,9 +1166,9 @@ List flagleadlCpp(const List& x, const IntegerVector& n = 1, const SEXP& fill = 
   }
   DUPLICATE_ATTRIB(out, x);
   if(names) { // best way to code this ??
-    out.attr("names") = nam;
+    Rf_namesgets(out, nam);
   } else {
-    if(ns != 1) out.attr("names") = R_NilValue;
+    if(ns != 1) Rf_setAttrib(out, R_NamesSymbol, R_NilValue);
   }
   return out;
 }

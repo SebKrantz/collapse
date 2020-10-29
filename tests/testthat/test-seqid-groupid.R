@@ -1,6 +1,6 @@
 context("seqid, groupid")
 
-rm(list = ls())
+# rm(list = ls())
 
 x <- c(1:10, 1:10)
 

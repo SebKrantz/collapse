@@ -45,7 +45,8 @@ atomic_elem <- function(l, return = "sublist", keep.class = FALSE)
 
 is.regular <- function(x) is.list(x) || is.atomic(x) # fastest way?
 
-is.unlistable <- function(l) all(unlist(rapply2d(l, is.regular), use.names = FALSE)) # fastest way?
+is.unlistable <- function(l, DF.as.list = TRUE) if(DF.as.list) all(unlist(rapply(l, is.atomic, how = "list"), use.names = FALSE)) else
+  all(unlist(rapply2d(l, is.regular), use.names = FALSE)) # fastest way?
 
 # If data.frame, search all, otherwise, make optional counting df or not, but don't search them.
 ldepth <- function(l, DF.as.list = TRUE) {

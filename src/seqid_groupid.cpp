@@ -6,9 +6,9 @@ using namespace Rcpp;
 // TODO: can do something about doubles using == ?
 // TODO: Option na_fill ?
 
-// Note: For x[i] = NA_INTEGER, which is equal to INT_MIN, cannot calculate x[i]-prev !! -> fixed in 1.2.1
-
+// Note: For x[i] == NA_INTEGER, which is equal to INT_MIN, cannot calculate x[i]-prev ! -> fixed in 1.2.1
 // https://stackoverflow.com/questions/776624/whats-faster-iterating-an-stl-vector-with-vectoriterator-or-with-at
+
 
 // [[Rcpp::export]]
 IntegerVector seqid(const IntegerVector& x, const SEXP& o = R_NilValue, int del = 1, int start = 1,
@@ -24,10 +24,10 @@ IntegerVector seqid(const IntegerVector& x, const SEXP& o = R_NilValue, int del 
         out[j] = id;
         for(int i = j+1; i != l; ++i) {
           if(x[i] != NA_INTEGER) {
-            if(x[i] - prev != del) ++id; // x[i]-x[i-1]??
+            if(x[i] - prev != del) ++id; // x[i]-x[i-1]?
             prev = x[i];
             out[i] = id;
-          } else { // Faster way ??
+          } else { // Faster way ?
             out[i] = NA_INTEGER;
             if(skip_seq) prev += del;
           }
@@ -69,7 +69,7 @@ IntegerVector seqid(const IntegerVector& x, const SEXP& o = R_NilValue, int del 
             val = oo[i]-1;
             if(val < 0 || val >= l) stop("o out of allowed range [1, length(x)]");
             if(x[val] != NA_INTEGER) {
-              if(x[val] - prev != del) ++id; // x[i]-x[i-1]??
+              if(x[val] - prev != del) ++id; // x[i]-x[i-1]?
               prev = x[val];
               out[val] = id;
             } else {
@@ -89,7 +89,7 @@ IntegerVector seqid(const IntegerVector& x, const SEXP& o = R_NilValue, int del 
           for(int i = j+1; i != l; ++i) {
             val = oo[i]-1;
             if(x[val] != NA_INTEGER) {
-              if(x[val] - prev != del) ++id; // x[i]-x[i-1]??
+              if(x[val] - prev != del) ++id; // x[i]-x[i-1]?
               prev = x[val];
               out[val] = id;
             } else {
@@ -103,7 +103,7 @@ IntegerVector seqid(const IntegerVector& x, const SEXP& o = R_NilValue, int del 
       int nafill = INT_MAX - 1e7;
       prev = x[val];
       if(prev == NA_INTEGER) prev = nafill;
-      out[val] = id; // faster than iterator ??
+      out[val] = id; // faster than iterator ?
       if(check_o) {
         for(int i = 1; i != l; ++i) { //   for(IntegerVector::iterator it = oo.begin()+1, end = oo.end(); it != end; ++it) { val = *it-1;
           val = oo[i]-1;
@@ -133,7 +133,7 @@ IntegerVector seqid(const IntegerVector& x, const SEXP& o = R_NilValue, int del 
     }
   }
   out.attr("N.groups") = id - start + 1;
-  if(start == 1) out.attr("class") = na_skip ? "qG" : CharacterVector::create("qG", "na.included");
+  if(start == 1) Rf_classgets(out, na_skip ? CharacterVector::create("qG") : CharacterVector::create("qG", "na.included"));
   return out;
 }
 
@@ -240,7 +240,7 @@ IntegerVector groupidImpl(Vector<RTYPE> x, SEXP o, int start, bool na_skip, bool
         }
       } else {
         prev = x[val];
-        out[val] = id; // faster than iterator ??
+        out[val] = id; // faster than iterator ?
         if(RTYPE == REALSXP) {
           if(check_o) {
             for(int i = 1; i != l; ++i) { //   for(IntegerVector::iterator it = oo.begin()+1, end = oo.end(); it != end; ++it) { val = *it-1;
@@ -287,7 +287,7 @@ IntegerVector groupidImpl(Vector<RTYPE> x, SEXP o, int start, bool na_skip, bool
       }
     }
     out.attr("N.groups") = id - start + 1;
-    if(start == 1) out.attr("class") = na_skip ? "qG" : CharacterVector::create("qG", "na.included");
+    if(start == 1) Rf_classgets(out, na_skip ? CharacterVector::create("qG") : CharacterVector::create("qG", "na.included"));
     return out;
 }
 
@@ -317,6 +317,7 @@ IntegerVector groupid(const SEXP& x, const SEXP& o = R_NilValue, int start = 1,
                       bool na_skip = false, bool check_o = true) {
   RCPP_RETURN_VECTOR(groupidImpl, x, o, start, na_skip, check_o);
 }
+
 
 
 // Integer Version

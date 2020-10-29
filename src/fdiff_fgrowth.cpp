@@ -499,15 +499,15 @@ NumericVector fdiffgrowthCppImpl(const NumericVector& x, const IntegerVector& n 
   DUPLICATE_ATTRIB(out, x);
   if(ncol != 1) {
     Rf_setAttrib(out, R_NamesSymbol, R_NilValue); // if(x.hasAttribute("names")) out.attr("names") = R_NilValue;
-    out.attr("dim") = Dimension(l, ncol);
+    Rf_dimgets(out, Dimension(l, ncol));
     if(Rf_isObject(x)) {
-      CharacterVector classes = out.attr("class");
+      CharacterVector classes = Rf_getAttrib(out, R_ClassSymbol);
       classes.push_back("matrix");
-      out.attr("class") = classes;
+      Rf_classgets(out, classes);
     } else {
-      out.attr("class") = "matrix";
+      Rf_classgets(out, Rf_mkString("matrix"));
     }
-    if(names) out.attr("dimnames") = List::create(x.attr("names"), colnam);
+    if(names) Rf_dimnamesgets(out, List::create(Rf_getAttrib(x, R_NamesSymbol), colnam));
   }
 
   return out;
@@ -518,13 +518,14 @@ NumericVector fdiffgrowthCppImpl(const NumericVector& x, const IntegerVector& n 
 NumericVector fdiffgrowthCpp(const NumericVector& x, const IntegerVector& n = 1, const IntegerVector& diff = 1,
                          double fill = NA_REAL, int ng = 0, const IntegerVector& g = 0,
                          const SEXP& gs = R_NilValue, const SEXP& t = R_NilValue,
-                         int ret = 1, double rho = 1, bool names = true) {
+                         int ret = 1, double rho = 1, bool names = true, double power = 1) {
 
   std::string stub;
   if(ret < 4) {
     double rho2;
     if(ret == 3) {
       rho2 = 1;
+      if(power != 1) stop("High-powered log-difference growth rates are currently not supported");
       if(names) stub = "Dlog";
     } else {
       rho2 = rho;
@@ -532,8 +533,9 @@ NumericVector fdiffgrowthCpp(const NumericVector& x, const IntegerVector& n = 1,
     }
     return fdiffgrowthCppImpl(x, n, diff, fill, ng, g, gs, t, stub, names, [rho2](double y, double x) { return y-rho2*x; }); // return y-x; same efficiency as return y-rho*x; when rho = 1 -> smart compiler !, and reduced file size !!
   } else if (ret == 4) {
-    if(names) stub = "G";
-    return fdiffgrowthCppImpl(x, n, diff, fill, ng, g, gs, t, stub, names, [rho](double y, double x) { return (y-x)*(rho/x); }); // same speed as fixing 100 ! Faster using (y/x-1)*rho or (x*(1/x)-1)*rho ?
+    if(names) stub = "G";                   // same speed as fixing 100 ! Faster using (y/x-1)*rho or (x*(1/x)-1)*rho ?
+    if(power == 1) return fdiffgrowthCppImpl(x, n, diff, fill, ng, g, gs, t, stub, names, [rho](double y, double x) { return (y-x)*(rho/x); }); // definitely much faster !!
+    return fdiffgrowthCppImpl(x, n, diff, fill, ng, g, gs, t, stub, names, [rho, power](double y, double x) { return (pow(y/x, power)-1)*rho; }); // without: 375 kb
   } else stop("Unknown return option!");
 }
 
@@ -1047,11 +1049,11 @@ NumericMatrix fdiffgrowthmCppImpl(const NumericMatrix& x, const IntegerVector& n
   // }
 
   DUPLICATE_ATTRIB(out, x);
-  if(ncol != col) out.attr("dim") = Dimension(l, ncol);
+  if(ncol != col) Rf_dimgets(out, Dimension(l, ncol));
   if(names) {
-    out.attr("dimnames") = List::create(rownames(x), colnam); // colnames(out) = colnam; also deletes rownames !
+    Rf_dimnamesgets(out, List::create(rownames(x), colnam)); // colnames(out) = colnam; also deletes rownames !
   } else if(ncol != col) {
-    out.attr("dimnames") = R_NilValue;
+    Rf_setAttrib(out, R_DimNamesSymbol, R_NilValue);
   }
 
   return out;
@@ -1061,12 +1063,13 @@ NumericMatrix fdiffgrowthmCppImpl(const NumericMatrix& x, const IntegerVector& n
 NumericMatrix fdiffgrowthmCpp(const NumericMatrix& x, const IntegerVector& n = 1, const IntegerVector& diff = 1,
                               double fill = NA_REAL, int ng = 0, const IntegerVector& g = 0,
                               const SEXP& gs = R_NilValue, const SEXP& t = R_NilValue,
-                              int ret = 1, double rho = 1, bool names = true) {
+                              int ret = 1, double rho = 1, bool names = true, double power = 1) {
   std::string stub;
   if(ret < 4) {
     double rho2;
     if(ret == 3) {
       rho2 = 1;
+      if(power != 1) stop("High-powered log-difference growth rates are currently not supported");
       if(names) stub = "Dlog";
     } else {
       rho2 = rho;
@@ -1075,7 +1078,8 @@ NumericMatrix fdiffgrowthmCpp(const NumericMatrix& x, const IntegerVector& n = 1
     return fdiffgrowthmCppImpl(x, n, diff, fill, ng, g, gs, t, stub, names, [rho2](double y, double x) { return y-rho2*x; }); // return y-x; same efficiency as return y-rho*x; when rho = 1 -> smart compiler !, and reduced file size !!
   } else if (ret == 4) {
     if(names) stub = "G";
-    return fdiffgrowthmCppImpl(x, n, diff, fill, ng, g, gs, t, stub, names, [rho](double y, double x) { return (y-x)*(rho/x); }); // same speed as fixing 100 ! Faster using (y/x-1)*rho or (x*(1/x)-1)*rho ?
+    if(power == 1) return fdiffgrowthmCppImpl(x, n, diff, fill, ng, g, gs, t, stub, names, [rho](double y, double x) { return (y-x)*(rho/x); }); // same speed as fixing 100 ! Faster using (y/x-1)*rho or (x*(1/x)-1)*rho ?
+    return fdiffgrowthmCppImpl(x, n, diff, fill, ng, g, gs, t, stub, names, [rho, power](double y, double x) { return (pow(y/x, power)-1)*rho; });
   } else stop("Unknown return option!");
 }
 
@@ -1105,7 +1109,7 @@ List fdiffgrowthlCppImpl(const List& x, const IntegerVector& n = 1, const Intege
   CharacterVector nam = names ? no_init_vector(ncol) : no_init_vector(1);
   CharacterVector nc = names ? Rf_coerceVector(absn, STRSXP) : NA_STRING;
   CharacterVector diffc = names ? Rf_coerceVector(diff, STRSXP) : NA_STRING;
-  CharacterVector na = names ? coln_check(x.attr("names")) : NA_STRING;
+  CharacterVector na = names ? coln_check(Rf_getAttrib(x, R_NamesSymbol)) : NA_STRING;
   if(names && na[0] == NA_STRING) names = false;
 
   if(ng == 0) { // No groups
@@ -1577,9 +1581,9 @@ List fdiffgrowthlCppImpl(const List& x, const IntegerVector& n = 1, const Intege
   }
   DUPLICATE_ATTRIB(out, x);
   if(names) { // best way to code this ?
-    out.attr("names") = nam;
+    Rf_namesgets(out, nam);
   } else if(ncol != l) {
-    out.attr("names") = R_NilValue;
+    Rf_setAttrib(out, R_NamesSymbol, R_NilValue);
   }
   return out;
 }
@@ -1588,13 +1592,14 @@ List fdiffgrowthlCppImpl(const List& x, const IntegerVector& n = 1, const Intege
 List fdiffgrowthlCpp(const List& x, const IntegerVector& n = 1, const IntegerVector& diff = 1,
                      double fill = NA_REAL, int ng = 0, const IntegerVector& g = 0,
                      const SEXP& gs = R_NilValue, const SEXP& t = R_NilValue,
-                     int ret = 1, double rho = 1, bool names = true) {
+                     int ret = 1, double rho = 1, bool names = true, double power = 1) {
 
   std::string stub;
   if(ret < 4) {
     double rho2;
     if(ret == 3) {
       rho2 = 1;
+      if(power != 1) stop("High-powered log-difference growth rates are currently not supported");
       if(names) stub = "Dlog";
     } else {
       rho2 = rho;
@@ -1603,7 +1608,8 @@ List fdiffgrowthlCpp(const List& x, const IntegerVector& n = 1, const IntegerVec
     return fdiffgrowthlCppImpl(x, n, diff, fill, ng, g, gs, t, stub, names, [rho2](double y, double x) { return y-rho2*x; }); // return y-x; same efficiency as return y-rho*x; when rho = 1 -> smart compiler !, and reduced file size !!
   } else if (ret == 4) {
     if(names) stub = "G";
-    return fdiffgrowthlCppImpl(x, n, diff, fill, ng, g, gs, t, stub, names, [rho](double y, double x) { return (y-x)*(rho/x); }); // same speed as fixing 100 ! Faster using (y/x-1)*rho or (x*(1/x)-1)*rho ?
+    if(power == 1) return fdiffgrowthlCppImpl(x, n, diff, fill, ng, g, gs, t, stub, names, [rho](double y, double x) { return (y-x)*(rho/x); }); // same speed as fixing 100 ! Faster using (y/x-1)*rho or (x*(1/x)-1)*rho ?
+    return fdiffgrowthlCppImpl(x, n, diff, fill, ng, g, gs, t, stub, names, [rho, power](double y, double x) { return (pow(y/x, power)-1)*rho; });
   } else stop("Unknown return option!");
 }
 

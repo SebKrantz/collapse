@@ -2,7 +2,6 @@
 #include <Rcpp.h>
 using namespace Rcpp;
 
-// const Vector & implementation ? na_option ?
 template <int RTYPE>
 LogicalVector varyingCppImpl(Vector<RTYPE> x, int ng, IntegerVector g, bool any_group) {
 
@@ -15,33 +14,33 @@ LogicalVector varyingCppImpl(Vector<RTYPE> x, int ng, IntegerVector g, bool any_
       int j = l-1;
       storage_t vi = x[j];
       while(isnanT(vi) && j!=0) vi = x[--j];
-      if(j != 0) for(int i = j; i--; ) if(!isnanT(x[i]) && x[i] != vi) return LogicalVector(1, true);
-      return LogicalVector(1);
+      if(j != 0) for(int i = j; i--; ) if(!isnanT(x[i]) && x[i] != vi) return Rf_ScalarLogical(true);
+      return Rf_ScalarLogical(false);
     } else { // with groups
       if(g.size() != l) stop("length(g) must match length(x)");
       Vector<RTYPE> valg(ng, Vector<RTYPE>::get_na());
       if(any_group) {
         for(int i = 0; i != l; ++i) {
-          if(isnanT(x[i])) continue; // Fastest ?
+          if(isnanT(x[i])) continue;
           if(isnanT(valg[g[i]-1])) {
             valg[g[i]-1] = x[i];
-          } else { // slightly better than else if without brackets
-            if(x[i] != valg[g[i]-1]) return LogicalVector(1, true);
+          } else {
+            if(x[i] != valg[g[i]-1]) return Rf_ScalarLogical(true);
           }
         }
-        return LogicalVector(1);
+        return Rf_ScalarLogical(false);
       } else {
-        LogicalVector varyg(ng, NA_LOGICAL);  // make optional .... varyg(ng);
-        // int ngs = 0;
+        LogicalVector varyg(ng, NA_LOGICAL);
+        int *pvaryg = LOGICAL(varyg), gi; // seems to bring a tiny gain..
         for(int i = 0; i != l; ++i) {
-          if(isnanT(x[i])) continue; // Fastest ?
-          int gi = g[i]-1; // slightly faster
+          if(isnanT(x[i])) continue;
+          gi = g[i]-1; // slightly faster
           if(isnanT(valg[gi])) {
             valg[gi] = x[i];
-            varyg[gi] = false;
+            pvaryg[gi] = false;
           } else {
-            if(!varyg[gi] && x[i] != valg[gi]) { // best ?
-              varyg[gi] = true; // fastest ?
+            if(!pvaryg[gi] && x[i] != valg[gi]) {
+              pvaryg[gi] = true;
               // ++ngs; // Omitting this is faster for most datasets -> most are ordered ! (i.e. PRIO Grid 1.27 vs. 1.14 seconds)
               // if(ngs == ng) break;
             }
@@ -86,7 +85,8 @@ SEXP varyingmCppImpl(Matrix<RTYPE> x, int ng, IntegerVector g, bool any_group, b
   LogicalMatrix out = (ng == 0 || any_group) ? no_init_matrix(1, col) : no_init_matrix(ng, col);
   for(int j = col; j--; ) out(_, j) = varyingCppImpl<RTYPE>(x(_, j), ng, g, any_group);
   if(drop && any_group) {
-    Rf_setAttrib(out, R_DimSymbol, R_NilValue);
+    Rf_setAttrib(out, R_DimSymbol, R_NilValue); // Rf_dimgets(out, R_NilValue); -> Doesn't work !
+    // Rf_setAttrib(out, R_NamesSymbol, colnames(x));
     Rf_setAttrib(out, R_NamesSymbol, colnames(x));
   } else {
     colnames(out) = colnames(x);
@@ -148,8 +148,8 @@ SEXP varyinglCpp(const List& x, int ng = 0, const IntegerVector& g = 0, bool any
     return outl;
   } else {
     DUPLICATE_ATTRIB(out, x);
-    if(ng == 0 || any_group) out.attr("row.names") = 1;
-    else out.attr("row.names") = IntegerVector::create(NA_INTEGER, -ng);
+    if(ng == 0 || any_group) Rf_setAttrib(out, R_RowNamesSymbol, Rf_ScalarInteger(1));
+    else Rf_setAttrib(out, R_RowNamesSymbol, IntegerVector::create(NA_INTEGER, -ng));
     return out;
   }
 }

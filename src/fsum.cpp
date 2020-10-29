@@ -17,7 +17,7 @@ NumericVector fsumCpp(const NumericVector& x, int ng = 0, const IntegerVector& g
       if(j != 0) for(int i = j; i--; ) {
         if(!std::isnan(x[i])) sum += x[i]; // Fastest ?
       }
-      return NumericVector::create(sum); // create((double)sum) // Converting long double directly to numeric vector is slow !
+      return Rf_ScalarReal(sum); // (double)sum // Converting long double directly to numeric vector is slow !
     } else {
       // long double sum = 0;
       double sum = 0;
@@ -29,7 +29,7 @@ NumericVector fsumCpp(const NumericVector& x, int ng = 0, const IntegerVector& g
           sum += x[i];
         }
       }
-      return NumericVector::create(sum); // ::create((double)sum)
+      return Rf_ScalarReal(sum); // (double)sum
     }
   } else { // with groups
     if(g.size() != l) stop("length(g) must match nrow(X)");
@@ -41,7 +41,7 @@ NumericVector fsumCpp(const NumericVector& x, int ng = 0, const IntegerVector& g
           else sum[g[i]-1] += x[i];
         }
       }
-      DUPLICATE_ATTRIB(sum, x);
+      if(!Rf_isObject(x)) Rf_copyMostAttrib(x, sum);
       return sum;
     } else {
       NumericVector sum(ng); // good? -> yes ! // Not initializing numerically unstable
@@ -57,7 +57,7 @@ NumericVector fsumCpp(const NumericVector& x, int ng = 0, const IntegerVector& g
           sum[g[i]-1] += x[i];
         }
       }
-      DUPLICATE_ATTRIB(sum, x);
+      if(!Rf_isObject(x)) Rf_copyMostAttrib(x, sum);
       return sum;
     }
   }
@@ -73,7 +73,7 @@ NumericVector fsumCpp(const NumericVector& x, int ng = 0, const IntegerVector& g
          if(std::isnan(x[i]) || std::isnan(wg[i])) continue;
          sum += x[i]*wg[i];
        }
-       return NumericVector::create(sum);
+       return Rf_ScalarReal(sum);
      } else {
        double sum = 0;
        for(int i = 0; i != l; ++i) {
@@ -84,7 +84,7 @@ NumericVector fsumCpp(const NumericVector& x, int ng = 0, const IntegerVector& g
            sum += x[i]*wg[i];
          }
        }
-       return NumericVector::create(sum);
+       return Rf_ScalarReal(sum);
      }
    } else { // with groups
      if(g.size() != l) stop("length(g) must match nrow(X)");
@@ -95,7 +95,7 @@ NumericVector fsumCpp(const NumericVector& x, int ng = 0, const IntegerVector& g
          if(std::isnan(sum[g[i]-1])) sum[g[i]-1] = x[i]*wg[i];
          else sum[g[i]-1] += x[i]*wg[i];
        }
-       DUPLICATE_ATTRIB(sum, x);
+       if(!Rf_isObject(x)) Rf_copyMostAttrib(x, sum);
        return sum;
      } else {
        NumericVector sum(ng);
@@ -111,7 +111,7 @@ NumericVector fsumCpp(const NumericVector& x, int ng = 0, const IntegerVector& g
            sum[g[i]-1] += x[i]*wg[i];
          }
        }
-       DUPLICATE_ATTRIB(sum, x);
+       if(!Rf_isObject(x)) Rf_copyMostAttrib(x, sum);
        return sum;
      }
    }
@@ -156,11 +156,11 @@ SEXP fsummCpp(const NumericMatrix& x, int ng = 0, const IntegerVector& g = 0, //
         sum[j] = sumj; // (double)sumj;
       }
     }
-    if(drop) sum.attr("names") = colnames(x); // Slight speed loss 31 to 34 milliseconds on WDIM, but doing it in R not faster
+    if(drop) Rf_setAttrib(sum, R_NamesSymbol, colnames(x));
     else {
-      // SHALLOW_DUPLICATE_ATTRIB(sum, x);
-      sum.attr("dim") = Dimension(1, col);
+      Rf_dimgets(sum, Dimension(1, col));
       colnames(sum) = colnames(x);
+      if(!Rf_isObject(x)) Rf_copyMostAttrib(x, sum);
     }
     return sum;
   } else { // with groups
@@ -179,6 +179,7 @@ SEXP fsummCpp(const NumericMatrix& x, int ng = 0, const IntegerVector& g = 0, //
         }
       }
       colnames(sum) = colnames(x);  // quite efficient
+      if(!Rf_isObject(x)) Rf_copyMostAttrib(x, sum);
       return sum;
     } else {
       NumericMatrix sum(ng, col); // no init numerically unstable
@@ -199,6 +200,7 @@ SEXP fsummCpp(const NumericMatrix& x, int ng = 0, const IntegerVector& g = 0, //
         }
       }
       colnames(sum) = colnames(x);
+      if(!Rf_isObject(x)) Rf_copyMostAttrib(x, sum);
       return sum;
     }
     // sum.attr("dimnames") = List::create(R_NilValue,colnames(x));
@@ -236,10 +238,11 @@ SEXP fsummCpp(const NumericMatrix& x, int ng = 0, const IntegerVector& g = 0, //
          sum[j] = sumj;
        }
      }
-     if(drop) sum.attr("names") = colnames(x);
+     if(drop) Rf_setAttrib(sum, R_NamesSymbol, colnames(x));
      else {
-       sum.attr("dim") = Dimension(1, col);
+       Rf_dimgets(sum, Dimension(1, col));
        colnames(sum) = colnames(x);
+       if(!Rf_isObject(x)) Rf_copyMostAttrib(x, sum);
      }
      return sum;
    } else { // with groups
@@ -260,6 +263,7 @@ SEXP fsummCpp(const NumericMatrix& x, int ng = 0, const IntegerVector& g = 0, //
          }
        }
        colnames(sum) = colnames(x);
+       if(!Rf_isObject(x)) Rf_copyMostAttrib(x, sum);
        return sum;
      } else {
        NumericMatrix sum(ng, col);
@@ -280,6 +284,7 @@ SEXP fsummCpp(const NumericMatrix& x, int ng = 0, const IntegerVector& g = 0, //
          }
        }
        colnames(sum) = colnames(x);
+       if(!Rf_isObject(x)) Rf_copyMostAttrib(x, sum);
        return sum;
      }
    }
@@ -327,7 +332,7 @@ SEXP fsumlCpp(const List& x, int ng = 0, const IntegerVector& g = 0, const SEXP&
       }
     }
     if(drop) {
-      sum.attr("names") = x.attr("names");
+      Rf_setAttrib(sum, R_NamesSymbol, Rf_getAttrib(x, R_NamesSymbol));
       return sum;
     } else {
       List out(l);
@@ -336,7 +341,7 @@ SEXP fsumlCpp(const List& x, int ng = 0, const IntegerVector& g = 0, const SEXP&
         SHALLOW_DUPLICATE_ATTRIB(out[j], x[j]);
       }
       DUPLICATE_ATTRIB(out, x);
-      out.attr("row.names") = 1;
+      Rf_setAttrib(out, R_RowNamesSymbol, Rf_ScalarInteger(1));
       return out;
     }
   } else { // With groups
@@ -378,7 +383,7 @@ SEXP fsumlCpp(const List& x, int ng = 0, const IntegerVector& g = 0, const SEXP&
       }
     }
     DUPLICATE_ATTRIB(sum, x);
-    sum.attr("row.names") = IntegerVector::create(NA_INTEGER, -ng);
+    Rf_setAttrib(sum, R_RowNamesSymbol, IntegerVector::create(NA_INTEGER, -ng));
     return sum;
   }
  } else { // With weights
@@ -416,7 +421,7 @@ SEXP fsumlCpp(const List& x, int ng = 0, const IntegerVector& g = 0, const SEXP&
        }
      }
      if(drop) {
-       sum.attr("names") = x.attr("names");
+       Rf_setAttrib(sum, R_NamesSymbol, Rf_getAttrib(x, R_NamesSymbol));
        return sum;
      } else {
        List out(l);
@@ -425,7 +430,7 @@ SEXP fsumlCpp(const List& x, int ng = 0, const IntegerVector& g = 0, const SEXP&
          SHALLOW_DUPLICATE_ATTRIB(out[j], x[j]);
        }
        DUPLICATE_ATTRIB(out, x);
-       out.attr("row.names") = 1;
+       Rf_setAttrib(out, R_RowNamesSymbol, Rf_ScalarInteger(1));
        return out;
      }
    } else { // With groups
@@ -470,7 +475,7 @@ SEXP fsumlCpp(const List& x, int ng = 0, const IntegerVector& g = 0, const SEXP&
        }
      }
      DUPLICATE_ATTRIB(sum, x);
-     sum.attr("row.names") = IntegerVector::create(NA_INTEGER, -ng);
+     Rf_setAttrib(sum, R_RowNamesSymbol, IntegerVector::create(NA_INTEGER, -ng));
      return sum;
    }
  }

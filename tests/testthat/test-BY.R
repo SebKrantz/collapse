@@ -1,6 +1,6 @@
 context("BY")
 
-rm(list = ls())
+# rm(list = ls())
 x <- rnorm(100)
 xNA <- x
 xNA[sample.int(100,20)] <- NA

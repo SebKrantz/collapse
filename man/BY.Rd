@@ -4,7 +4,6 @@
 \alias{BY.matrix}
 \alias{BY.data.frame}
 \alias{BY.grouped_df}
-%- Also NEED an '\alias' for EACH other topic documented here.
 \title{
 Split-Apply-Combine Computing % (Efficient)
 }
@@ -12,28 +11,26 @@ Split-Apply-Combine Computing % (Efficient)
 \code{BY} is an S3 generic that efficiently applies functions over vectors or matrix- and data frame columns by groups. Similar to \code{\link{dapply}} it seeks to retain the structure and attributes of the data, but can also output to various standard formats. A simple parallelism is also available.
 }
 \usage{
-BY(X, \dots)
+BY(x, \dots)
 
-\method{BY}{default}(X, g, FUN, \dots, use.g.names = TRUE, sort = TRUE,
+\method{BY}{default}(x, g, FUN, \dots, use.g.names = TRUE, sort = TRUE,
    expand.wide = FALSE, parallel = FALSE, mc.cores = 1L,
    return = c("same", "vector", "list"))
 
-\method{BY}{matrix}(X, g, FUN, \dots, use.g.names = TRUE, sort = TRUE,
+\method{BY}{matrix}(x, g, FUN, \dots, use.g.names = TRUE, sort = TRUE,
    expand.wide = FALSE, parallel = FALSE, mc.cores = 1L,
    return = c("same", "matrix", "data.frame", "list"))
 
-\method{BY}{data.frame}(X, g, FUN, \dots, use.g.names = TRUE, sort = TRUE,
+\method{BY}{data.frame}(x, g, FUN, \dots, use.g.names = TRUE, sort = TRUE,
    expand.wide = FALSE, parallel = FALSE, mc.cores = 1L,
    return = c("same", "matrix", "data.frame", "list"))
 
-\method{BY}{grouped_df}(X, FUN, \dots, use.g.names = FALSE, keep.group_vars = TRUE,
+\method{BY}{grouped_df}(x, FUN, \dots, use.g.names = FALSE, keep.group_vars = TRUE,
    expand.wide = FALSE, parallel = FALSE, mc.cores = 1L,
    return = c("same", "matrix", "data.frame", "list"))
-
 }
-%- maybe also 'usage' for other objects documented here.
 \arguments{
-  \item{X}{a atomic vector, matrix, data frame or alike object.}
+  \item{x}{a atomic vector, matrix, data frame or alike object.}
   \item{g}{a factor, \code{\link{GRP}} object, atomic vector (internally converted to factor) or a list of vectors / factors (internally converted to a \code{\link{GRP}} object) used to group \code{x}.}
   \item{FUN}{a function, can be scalar- or vector-valued.}
   \item{\dots}{further arguments to \code{FUN}.}
@@ -58,18 +55,6 @@ It is however principally a wrapper around \code{lapply(split(x, g), FUN, \dots)
 \value{
 \code{X} where \code{FUN} was applied to every column split by \code{g}.
 }
-% \references{
-%% ~put references to the literature/web site here ~
-% }
-% \author{
-%%  ~~who you are~~
-% }
-% \note{
-%  ~~further notes~~
-% }
-
-%% ~Make other sections like Warning with \section{Warning }{\dots.} ~
-
 \seealso{
 \code{\link{dapply}}, \code{\link{collap}}, \link[=A1-fast-statistical-functions]{Fast Statistical Functions}, \link[=A6-data-transformations]{Data Transformations}, \link[=collapse-documentation]{Collapse Overview}
 }
@@ -118,7 +103,4 @@ giris \%>\% BY(quantile)                 # Compute quantiles (output is stacked)
 giris \%>\% BY(quantile,                 # Much better, also keeps 'Species'
              expand.wide = TRUE)
 }
-% Add one or more standard keywords, see file 'KEYWORDS' in the
-% R documentation directory.
-\keyword{manip} % __ONLY ONE__ keyword per line
-% \keyword{programming}% use one of  RShowDoc("KEYWORDS")
+\keyword{manip}

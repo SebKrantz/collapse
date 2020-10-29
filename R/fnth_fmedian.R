@@ -3,6 +3,7 @@
 fnth <- function(x, n = 0.5, ...) UseMethod("fnth") # , x
 
 fnth.default <- function(x, n = 0.5, g = NULL, w = NULL, TRA = NULL, na.rm = TRUE, use.g.names = TRUE, ties = "mean", ...) {
+  if(is.matrix(x) && !inherits(x, "matrix")) return(fnth.matrix(x, n, g, w, TRA, na.rm, use.g.names, ties = ties, ...))
   ret <- switch(ties, mean = 1L, min = 2L, max = 3L, stop("ties must be 'mean', 'min' or 'max'"))
   if(!missing(...)) unused_arg_action(match.call(), ...)
   if(is.null(TRA)) {
@@ -76,7 +77,7 @@ fnth.data.frame <- function(x, n = 0.5, g = NULL, w = NULL, TRA = NULL, na.rm = 
       return(.Call(Cpp_fnthl,x,n,attr(g,"N.groups"),g,NULL,w,na.rm,FALSE,ret))
     }
     if(!is.GRP(g)) g <- GRP.default(g, return.groups = use.g.names, call = FALSE)
-    if(use.g.names && !inherits(x, "data.table") && !is.null(groups <- GRPnames(g)))
+    if(use.g.names && !inherits(x, "data.table") && length(groups <- GRPnames(g)))
       return(setRnDF(.Call(Cpp_fnthl,x,n,g[[1L]],g[[2L]],g[[3L]],w,na.rm,FALSE,ret), groups))
     return(.Call(Cpp_fnthl,x,n,g[[1L]],g[[2L]],g[[3L]],w,na.rm,FALSE,ret))
   }
@@ -104,7 +105,7 @@ fnth.grouped_df <- function(x, n = 0.5, w = NULL, TRA = NULL, na.rm = TRUE, use.
   nTRAl <- is.null(TRA)
   sumw <- NULL
 
-  if(!is.null(wsym) && !is.na(wn <- match(wsym, nam))) {
+  if(length(wsym) && length(wn <- which(wsym == nam))) {
     w <- .subset2(x, wn) # faster using unclass?
     if(any(gn == wn)) stop("Weights coincide with grouping variables!")
     gn <- c(gn, wn)
@@ -121,7 +122,7 @@ fnth.grouped_df <- function(x, n = 0.5, w = NULL, TRA = NULL, na.rm = TRUE, use.
     attributes(x) <- NULL
     if(nTRAl) {
       ax[["groups"]] <- NULL
-      ax[["class"]] <- ax[["class"]][ax[["class"]] != "grouped_df"]
+      ax[["class"]] <- fsetdiff(ax[["class"]], c("GRP_df", "grouped_df"))
       ax[["row.names"]] <- if(use.g.names) GRPnames(g) else .set_row_names(g[[1L]])
       if(gl) {
         if(keep.group_vars) {
@@ -149,6 +150,7 @@ fnth.grouped_df <- function(x, n = 0.5, w = NULL, TRA = NULL, na.rm = TRUE, use.
 fmedian <- function(x, ...) UseMethod("fmedian") # , x
 
 fmedian.default <- function(x, g = NULL, w = NULL, TRA = NULL, na.rm = TRUE, use.g.names = TRUE, ...) {
+  if(is.matrix(x) && !inherits(x, "matrix")) return(fmedian.matrix(x, g, w, TRA, na.rm, use.g.names, ...))
   if(!missing(...)) unused_arg_action(match.call(), ...)
   if(is.null(TRA)) {
     if(is.null(g)) return(.Call(Cpp_fnth,x,0.5,0L,0L,NULL,w,na.rm,1L))
@@ -219,7 +221,7 @@ fmedian.data.frame <- function(x, g = NULL, w = NULL, TRA = NULL, na.rm = TRUE, 
       return(.Call(Cpp_fnthl,x,0.5,attr(g,"N.groups"),g,NULL,w,na.rm,FALSE,1L))
     }
     if(!is.GRP(g)) g <- GRP.default(g, return.groups = use.g.names, call = FALSE)
-    if(use.g.names && !inherits(x, "data.table") && !is.null(groups <- GRPnames(g)))
+    if(use.g.names && !inherits(x, "data.table") && length(groups <- GRPnames(g)))
       return(setRnDF(.Call(Cpp_fnthl,x,0.5,g[[1L]],g[[2L]],g[[3L]],w,na.rm,FALSE,1L), groups))
     return(.Call(Cpp_fnthl,x,0.5,g[[1L]],g[[2L]],g[[3L]],w,na.rm,FALSE,1L))
   }
@@ -246,7 +248,7 @@ fmedian.grouped_df <- function(x, w = NULL, TRA = NULL, na.rm = TRUE, use.g.name
   nTRAl <- is.null(TRA)
   sumw <- NULL
 
-  if(!is.null(wsym) && !is.na(wn <- match(wsym, nam))) {
+  if(length(wsym) && length(wn <- which(wsym == nam))) {
     w <- .subset2(x, wn) # faster using unclass?
     if(any(gn == wn)) stop("Weights coincide with grouping variables!")
     gn <- c(gn, wn)
@@ -263,7 +265,7 @@ fmedian.grouped_df <- function(x, w = NULL, TRA = NULL, na.rm = TRUE, use.g.name
     attributes(x) <- NULL
     if(nTRAl) {
       ax[["groups"]] <- NULL
-      ax[["class"]] <- ax[["class"]][ax[["class"]] != "grouped_df"]
+      ax[["class"]] <- fsetdiff(ax[["class"]], c("GRP_df", "grouped_df"))
       ax[["row.names"]] <- if(use.g.names) GRPnames(g) else .set_row_names(g[[1L]])
       if(gl) {
         if(keep.group_vars) {

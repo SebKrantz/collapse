@@ -1,6 +1,6 @@
 context("fNobs and fNdistinct")
 
-rm(list = ls())
+# rm(list = ls())
 
 x <- rnorm(100)
 xNA <- x

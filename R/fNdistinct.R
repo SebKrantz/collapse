@@ -6,6 +6,7 @@
 fNdistinct <- function(x, ...) UseMethod("fNdistinct") # , x
 
 fNdistinct.default <- function(x, g = NULL, TRA = NULL, na.rm = TRUE, use.g.names = TRUE, ...) {
+  if(is.matrix(x) && !inherits(x, "matrix")) return(fNdistinct.matrix(x, g, TRA, na.rm, use.g.names, ...))
   if(!missing(...)) unused_arg_action(match.call(), ...)
   if(is.null(TRA)) {
     if(is.null(g)) return(.Call(Cpp_fNdistinct,x,0L,0L,NULL,na.rm))
@@ -76,7 +77,7 @@ fNdistinct.data.frame <- function(x, g = NULL, TRA = NULL, na.rm = TRUE, use.g.n
       return(.Call(Cpp_fNdistinctl,x,attr(g,"N.groups"),g,NULL,na.rm,FALSE))
     }
     if(!is.GRP(g)) g <- GRP.default(g, return.groups = use.g.names, call = FALSE)
-    if(use.g.names && !inherits(x, "data.table") && !is.null(groups <- GRPnames(g)))
+    if(use.g.names && !inherits(x, "data.table") && length(groups <- GRPnames(g)))
       return(setRnDF(.Call(Cpp_fNdistinctl,x,g[[1L]],g[[2L]],g[[3L]],na.rm,FALSE), groups))
     return(.Call(Cpp_fNdistinctl,x,g[[1L]],g[[2L]],g[[3L]],na.rm,FALSE))
   }
@@ -105,7 +106,7 @@ fNdistinct.grouped_df <- function(x, TRA = NULL, na.rm = TRUE, use.g.names = FAL
     attributes(x) <- NULL
     if(nTRAl) {
       ax[["groups"]] <- NULL
-      ax[["class"]] <- ax[["class"]][ax[["class"]] != "grouped_df"]
+      ax[["class"]] <- fsetdiff(ax[["class"]], c("GRP_df", "grouped_df"))
       ax[["row.names"]] <- if(use.g.names) GRPnames(g) else .set_row_names(g[[1L]])
       if(gl) {
         if(keep.group_vars) {

@@ -1,6 +1,6 @@
 context("psmat and psacf")
 
-rm(list = ls())
+# rm(list = ls())
 
 options(warn = -1)
 

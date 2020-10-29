@@ -1,12 +1,10 @@
 // [[Rcpp::plugins(cpp11)]]
 #include <Rcpp.h>
-// #include <Rcpp/hash/IndexHash.h>
-using namespace Rcpp ;
+using namespace Rcpp;
 
 // TODO: Perhaps redo everything with data pointers and 2d group indices (instead of filling the 2d structure every time !): http://www.cplusplus.com/reference/vector/vector/data/
 // https://stackoverflow.com/questions/1733143/converting-between-c-stdvector-and-c-array-without-copying?rq=1
 
-// improve logical method ?
 
 template <int RTYPE>
 IntegerVector fNdistinctImpl(const Vector<RTYPE>& x, int ng, const IntegerVector& g,
@@ -45,7 +43,7 @@ IntegerVector fNdistinctImpl(const Vector<RTYPE>& x, int ng, const IntegerVector
     } else {
      hash.fill();
     }
-    return IntegerVector::create(hash.size_);
+    return Rf_ScalarInteger(hash.size_);
   } else {
     // unsigned int addr;
     if(l != g.size()) stop("length(g) must match length(x)");
@@ -55,7 +53,7 @@ IntegerVector fNdistinctImpl(const Vector<RTYPE>& x, int ng, const IntegerVector
     if(Rf_isNull(gs)) {
       for(int i = 0; i != l; ++i) ++outm1[g[i]];
       for(int i = 0; i != ng; ++i) {
-        if(out[i] == 0) stop("group size of 0 encountered");
+        if(out[i] == 0) stop("Group size of 0 encountered. This is probably due to unused factor levels. Use fdroplevels(f) to drop them.");
         gmap[i+1] = std::vector<storage_t> (out[i]);
         out[i] = 0;
       }
@@ -64,7 +62,7 @@ IntegerVector fNdistinctImpl(const Vector<RTYPE>& x, int ng, const IntegerVector
       IntegerVector gsv = gs;
       if(ng != gsv.size()) stop("ng must match length(gs)");
       for(int i = 0; i != ng; ++i) {
-        if(gsv[i] == 0) stop("group size of 0 encountered");
+        if(gsv[i] == 0) stop("Group size of 0 encountered. This is probably due to unused factor levels. Use fdroplevels(f) to drop them.");
         gmap[i+1] = std::vector<storage_t> (gsv[i]);
       }
     }
@@ -95,17 +93,106 @@ IntegerVector fNdistinctImpl(const Vector<RTYPE>& x, int ng, const IntegerVector
         out[gr] = hash.size_;
       }
     }
-    if(Rf_getAttrib(x, R_ClassSymbol) == R_NilValue) {
-      SHALLOW_DUPLICATE_ATTRIB(out, x);
+    if(!Rf_isObject(x)) {
+      Rf_copyMostAttrib(x, out); // SHALLOW_DUPLICATE_ATTRIB(out, x);
     } else {
-      out.attr("label") = x.attr("label");
+      SEXP sym_label = Rf_install("label");
+      Rf_setAttrib(out, sym_label, Rf_getAttrib(x, sym_label));
     }
     return out;
   }
 }
 
-template <> // No logical vector with sugar::IndexHash<RTYPE> !
-IntegerVector fNdistinctImpl(const Vector<LGLSXP>& x, int ng, const IntegerVector& g,
+
+IntegerVector fNdistinctFACT(const IntegerVector& x, int ng, const IntegerVector& g,
+                             const SEXP& gs, bool narm) {
+  int l = x.size(), nlevp = Rf_nlevels(x)+1, n = 1;
+    if(ng == 0) {
+      std::vector<bool> uxp(nlevp, true);
+      if(narm) {
+        for(int i = 0; i != l; ++i) {
+          if(x[i] != NA_INTEGER && uxp[x[i]]) { // save xi = x[i] ? Faster ?
+            uxp[x[i]] = false;
+            if(++n == nlevp) break;
+          }
+        }
+      } else {
+        bool anyNA = false;
+        for(int i = 0; i != l; ++i) {
+          if(x[i] == NA_INTEGER) {
+            anyNA = true;
+            continue;
+          }
+          if(uxp[x[i]]) { // save xi = x[i] ? Faster ?
+            uxp[x[i]] = false;
+            if(++n == nlevp && anyNA) break;
+          }
+        }
+        n += anyNA;
+      }
+      return Rf_ScalarInteger(n-1);
+    } else {
+      // unsigned int addr;
+      if(l != g.size()) stop("length(g) must match length(x)");
+      std::vector<std::vector<int> > gmap(ng+1);
+      IntegerVector out(ng);
+      int *outm1 = out.begin()-1;
+      if(Rf_isNull(gs)) {
+        for(int i = 0; i != l; ++i) ++outm1[g[i]];
+        for(int i = 0; i != ng; ++i) {
+          if(out[i] == 0) stop("Group size of 0 encountered. This is probably due to unused factor levels. Use fdroplevels(f) to drop them.");
+          gmap[i+1] = std::vector<int> (out[i]);
+          out[i] = 0;
+        }
+      } else {
+        IntegerVector gsv = gs;
+        if(ng != gsv.size()) stop("ng must match length(gs)");
+        for(int i = 0; i != ng; ++i) {
+          if(gsv[i] == 0) stop("Group size of 0 encountered. This is probably due to unused factor levels. Use fdroplevels(f) to drop them.");
+          gmap[i+1] = std::vector<int> (gsv[i]);
+        }
+      }
+      for(int i = 0; i != l; ++i) gmap[g[i]][outm1[g[i]]++] = x[i];
+      if(narm) {
+        for(int gr = 0; gr != ng; ++gr) {
+          const std::vector<int>& temp = gmap[gr+1];
+          n = 1;
+          std::vector<bool> uxp(nlevp, true);
+          for(int i = temp.size(); i--; ) {
+            if(temp[i] != NA_INTEGER && uxp[temp[i]]) { // save xi = x[i] ? Faster ?
+              uxp[temp[i]] = false;
+              if(++n == nlevp) break;
+            }
+          }
+          out[gr] = n - 1;
+        }
+      } else {
+        for(int gr = 0; gr != ng; ++gr) {
+          const std::vector<int>& temp = gmap[gr+1];
+          bool anyNA = false;
+          n = 1;
+          std::vector<bool> uxp(nlevp, true);
+          for(int i = temp.size(); i--; ) {
+            if(temp[i] == NA_INTEGER) {
+              anyNA = true;
+              continue;
+            }
+            if(uxp[temp[i]]) { // save xi = x[i] ? Faster ?
+              uxp[temp[i]] = false;
+              if(++n == nlevp && anyNA) break;
+            }
+          }
+          out[gr] = n + anyNA - 1;
+        }
+      }
+      SEXP sym_label = Rf_install("label");
+      Rf_setAttrib(out, sym_label, Rf_getAttrib(x, sym_label));
+      return out;
+    }
+}
+
+// No logical vector with sugar::IndexHash<RTYPE> !
+IntegerVector fNdistinctLOGI(const LogicalVector& x, int ng, const IntegerVector& g,
                               const SEXP& gs, bool narm) {
   int l = x.size();
 
@@ -139,7 +226,7 @@ IntegerVector fNdistinctImpl(const Vector<LGLSXP>& x, int ng, const IntegerVecto
         if(Nunique == 3) break;
       }
     }
-    return IntegerVector::create(Nunique);
+    return Rf_ScalarInteger(Nunique);
   } else {
     if(l != g.size()) stop("length(g) must match length(x)");
     IntegerVector out(ng);
@@ -177,39 +264,32 @@ IntegerVector fNdistinctImpl(const Vector<LGLSXP>& x, int ng, const IntegerVecto
         }
       }
     }
-    SHALLOW_DUPLICATE_ATTRIB(out, x);
+    if(!Rf_isObject(x)) Rf_copyMostAttrib(x, out); // SHALLOW_DUPLICATE_ATTRIB(out, x);
     return out;
   }
 }
 
-template <>
-IntegerVector fNdistinctImpl(const Vector<CPLXSXP>& x, int ng, const IntegerVector& g, const SEXP& gs, bool narm) {
-  stop("Not supported SEXP type!");
-}
 
-template <>
-IntegerVector fNdistinctImpl(const Vector<VECSXP>& x, int ng, const IntegerVector& g, const SEXP& gs, bool narm) {
-  stop("Not supported SEXP type!");
-}
-
-template <>
-IntegerVector fNdistinctImpl(const Vector<RAWSXP>& x, int ng, const IntegerVector& g, const SEXP& gs, bool narm) {
-  stop("Not supported SEXP type!");
-}
-
-template <>
-IntegerVector fNdistinctImpl(const Vector<EXPRSXP>& x, int ng, const IntegerVector& g, const SEXP& gs, bool narm) {
-  stop("Not supported SEXP type!");
+// [[Rcpp::export]]
+SEXP fNdistinctCpp(const SEXP& x, int ng = 0, const IntegerVector& g = 0, const SEXP& gs = R_NilValue, bool narm = true) {
+  switch(TYPEOF(x)) {
+  case REALSXP:
+    return fNdistinctImpl<REALSXP>(x, ng, g, gs, narm);
+  case INTSXP:
+    if(Rf_isFactor(x) && (ng == 0 || Rf_nlevels(x) < Rf_length(x) / ng * 3))
+      return fNdistinctFACT(x, ng, g, gs, narm);
+    return fNdistinctImpl<INTSXP>(x, ng, g, gs, narm);
+  case STRSXP:
+    return fNdistinctImpl<STRSXP>(x, ng, g, gs, narm);
+  case LGLSXP:
+    return fNdistinctLOGI(x, ng, g, gs, narm);
+  default: stop("Not supported SEXP type !");
+  }
+  return R_NilValue;
 }
 
 
 // [[Rcpp::export]]
-SEXP fNdistinctCpp(SEXP x, int ng = 0, IntegerVector g = 0, SEXP gs = R_NilValue, bool narm = true) {
-  RCPP_RETURN_VECTOR(fNdistinctImpl, x, ng, g, gs, narm);
-}
-
-
-// [[Rcpp::export]] // Better Solution ? // What about string ?
 SEXP fNdistinctlCpp(const List& x, int ng = 0, const IntegerVector& g = 0,
                     const SEXP& gs = R_NilValue, bool narm = true, bool drop = true) {
   int l = x.size();
@@ -221,13 +301,15 @@ SEXP fNdistinctlCpp(const List& x, int ng = 0, const IntegerVector& g = 0,
       out[j] = fNdistinctImpl<REALSXP>(x[j], ng, g, gs, narm);
       break;
     case INTSXP:
-      out[j] = fNdistinctImpl<INTSXP>(x[j], ng, g, gs, narm);
+      if(Rf_isFactor(x[j]) && (ng == 0 || Rf_nlevels(x[j]) < Rf_length(x[j]) / ng * 3))
+        out[j] = fNdistinctFACT(x[j], ng, g, gs, narm);
+      else out[j] = fNdistinctImpl<INTSXP>(x[j], ng, g, gs, narm);
       break;
     case STRSXP:
       out[j] = fNdistinctImpl<STRSXP>(x[j], ng, g, gs, narm);
       break;
     case LGLSXP:
-      out[j] = fNdistinctImpl<LGLSXP>(x[j], ng, g, gs, narm);
+      out[j] = fNdistinctLOGI(x[j], ng, g, gs, narm);
       break;
     default: stop("Not supported SEXP type !");
     }
@@ -235,16 +317,15 @@ SEXP fNdistinctlCpp(const List& x, int ng = 0, const IntegerVector& g = 0,
   if(drop && ng == 0) {
     IntegerVector res = no_init_vector(l);
     for(int i = l; i--; ) res[i] = out[i]; // Rf_coerceVector(out, INTSXP); // doesn't work
-    res.attr("names") = x.attr("names");
+    Rf_setAttrib(res, R_NamesSymbol, Rf_getAttrib(x, R_NamesSymbol));
     return res;
   } else {
     DUPLICATE_ATTRIB(out, x);
-    if(ng == 0) out.attr("row.names") = 1;
-    else out.attr("row.names") = IntegerVector::create(NA_INTEGER, -ng);
+    if(ng == 0) Rf_setAttrib(out, R_RowNamesSymbol, Rf_ScalarInteger(1));
+    else Rf_setAttrib(out, R_RowNamesSymbol, IntegerVector::create(NA_INTEGER, -ng));
     return out;
   }
 }
-
 
 
 
@@ -288,10 +369,11 @@ SEXP fNdistinctmImpl(const Matrix<RTYPE>& x, int ng, const IntegerVector& g,
         out[j] = hash.size_;
       }
     }
-    if(drop) out.attr("names") = colnames(x);
+    if(drop) Rf_setAttrib(out, R_NamesSymbol, colnames(x));
     else {
-      out.attr("dim") = Dimension(1, col);
+      Rf_dimgets(out, Dimension(1, col));
       colnames(out) = colnames(x);
+      if(!Rf_isObject(x)) Rf_copyMostAttrib(x, out);
     }
     return out;
   } else {
@@ -304,14 +386,14 @@ SEXP fNdistinctmImpl(const Matrix<RTYPE>& x, int ng, const IntegerVector& g,
       // memset(n, 0, sizeof(int)*ng);
       for(int i = 0; i != l; ++i) ++n[g[i]];
       for(int i = 1; i != ngp; ++i) {
-        if(n[i] == 0) stop("group size of 0 encountered");
+        if(n[i] == 0) stop("Group size of 0 encountered. This is probably because of unused factor levels. Use fdroplevels(f) to drop them.");
         gmap[i] = std::vector<storage_t> (n[i]);
       }
     } else {
       IntegerVector gsv = gs;
       if(ng != gsv.size()) stop("ng must match length(gs)");
       for(int i = 0; i != ng; ++i) {
-        if(gsv[i] == 0) stop("group size of 0 encountered");
+        if(gsv[i] == 0) stop("Group size of 0 encountered. This is probably because of unused factor levels. Use fdroplevels(f) to drop them.");
         gmap[i+1] = std::vector<storage_t> (gsv[i]);
       }
     }
@@ -354,6 +436,7 @@ SEXP fNdistinctmImpl(const Matrix<RTYPE>& x, int ng, const IntegerVector& g,
       }
     }
     colnames(out) = colnames(x);
+    if(!Rf_isObject(x)) Rf_copyMostAttrib(x, out);
     return out;
   }
 }
@@ -398,10 +481,11 @@ SEXP fNdistinctmImpl(const Matrix<LGLSXP>& x, int ng, const IntegerVector& g, co
         }
       }
     }
-    if(drop) out.attr("names") = colnames(x);
+    if(drop) Rf_setAttrib(out, R_NamesSymbol, colnames(x));
     else {
-      out.attr("dim") = Dimension(1, col);
+      Rf_dimgets(out, Dimension(1, col));
       colnames(out) = colnames(x);
+      if(!Rf_isObject(x)) Rf_copyMostAttrib(x, out);
     }
     return out;
   } else {
@@ -450,6 +534,7 @@ SEXP fNdistinctmImpl(const Matrix<LGLSXP>& x, int ng, const IntegerVector& g, co
       }
     }
     colnames(out) = colnames(x);
+    if(!Rf_isObject(x)) Rf_copyMostAttrib(x, out);
     return out;
   }
 }

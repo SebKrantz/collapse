@@ -56,8 +56,8 @@ NumericVector fbstatstemp(NumericVector x, bool ext = false, int ng = 0, Integer
       if(std::isnan(M2)) M2 = NA_REAL;
       NumericVector result = NumericVector::create(n,mean,M2,min,max); // NumericVector::create(n,(double)mean,(double)M2,min,max);
       if(setn) {
-        result.attr("names") = CharacterVector::create("N","Mean","SD","Min","Max");
-        result.attr("class") = CharacterVector::create("qsu","table");
+        Rf_namesgets(result, CharacterVector::create("N","Mean","SD","Min","Max"));
+        Rf_classgets(result, CharacterVector::create("qsu","table"));
       }
       return result;
 
@@ -119,8 +119,8 @@ NumericVector fbstatstemp(NumericVector x, bool ext = false, int ng = 0, Integer
         for(int i = ng; i--; ) if(!std::isnan(M2[i])) M2[i] = sqrt(M2[i]/(sumw[i]-1));
       }
       if(setn) {
-        result.attr("dimnames") = List::create(gn, CharacterVector::create("N","Mean","SD","Min","Max"));
-        result.attr("class") = CharacterVector::create("qsu","matrix","table");
+        Rf_dimnamesgets(result, List::create(gn, CharacterVector::create("N","Mean","SD","Min","Max")));
+        Rf_classgets(result, CharacterVector::create("qsu","matrix","table"));
       }
       return result;
     }
@@ -179,8 +179,8 @@ NumericVector fbstatstemp(NumericVector x, bool ext = false, int ng = 0, Integer
        }
        NumericVector result = NumericVector::create(n,mean,M2,min,max,M3,M4); // NumericVector::create(n,(double)mean,(double)M2,min,max,(double)M3,(double)M4);
        if(setn) {
-         result.attr("names") = CharacterVector::create("N","Mean","SD","Min","Max","Skew","Kurt");
-         result.attr("class") = CharacterVector::create("qsu","table");
+         Rf_namesgets(result, CharacterVector::create("N","Mean","SD","Min","Max","Skew","Kurt"));
+         Rf_classgets(result, CharacterVector::create("qsu","table"));
        }
        return result;
 
@@ -261,8 +261,8 @@ NumericVector fbstatstemp(NumericVector x, bool ext = false, int ng = 0, Integer
          }
        }
        if(setn) {
-         result.attr("dimnames") = List::create(gn, CharacterVector::create("N","Mean","SD","Min","Max","Skew","Kurt"));
-         result.attr("class") = CharacterVector::create("qsu","matrix","table");
+         Rf_dimnamesgets(result, List::create(gn, CharacterVector::create("N","Mean","SD","Min","Max","Skew","Kurt")));
+         Rf_classgets(result, CharacterVector::create("qsu","matrix","table"));
        }
        return result;
      }
@@ -359,10 +359,10 @@ SEXP fbstatsCpp(const NumericVector& x, bool ext = false, int ng = 0, const Inte
       result(2, _) = fbstatstemp(within, ext, 0L, 0L, w, false);
       result[2] /= result[1];
       if(setn) {
-        result.attr("dimnames") = List::create(CharacterVector::create("Overall","Between","Within"),
-                                                      (ext) ? CharacterVector::create("N/T","Mean","SD","Min","Max","Skew","Kurt") :
-                                                              CharacterVector::create("N/T","Mean","SD","Min","Max"));
-        result.attr("class") = CharacterVector::create("qsu","matrix","table");
+        Rf_dimnamesgets(result, List::create(CharacterVector::create("Overall","Between","Within"),
+                                (ext) ? CharacterVector::create("N/T","Mean","SD","Min","Max","Skew","Kurt") :
+                                CharacterVector::create("N/T","Mean","SD","Min","Max")));
+        Rf_classgets(result, CharacterVector::create("qsu","matrix","table"));
       }
       return(result);
     } else {
@@ -391,11 +391,11 @@ SEXP fbstatsCpp(const NumericVector& x, bool ext = false, int ng = 0, const Inte
         result(_,1) = replaceC1(as<NumericMatrix>(fbstatstemp(between, ext, ng, g, w, false)), gnpids); // how to do this ? -> above best approach ?
         result(_,2) = replaceC1(as<NumericMatrix>(fbstatstemp(within, ext, ng, g, w, false)), gnpids, true);
         if(setn) {
-          result.attr("dim") = Dimension(ng, d, 3);
-          result.attr("dimnames") = List::create(gn, (ext) ? CharacterVector::create("N/T","Mean","SD","Min","Max","Skew","Kurt") :
-                                                          CharacterVector::create("N/T","Mean","SD","Min","Max"),
-                                                        CharacterVector::create("Overall","Between","Within"));
-          result.attr("class") = CharacterVector::create("qsu","array","table");
+          Rf_dimgets(result, Dimension(ng, d, 3));
+          Rf_dimnamesgets(result, List::create(gn, (ext) ? CharacterVector::create("N/T","Mean","SD","Min","Max","Skew","Kurt") :
+                                                    CharacterVector::create("N/T","Mean","SD","Min","Max"),
+                                                    CharacterVector::create("Overall","Between","Within")));
+          Rf_classgets(result, CharacterVector::create("qsu","array","table"));
         }
         return(result);
       } else {
@@ -403,7 +403,7 @@ SEXP fbstatsCpp(const NumericVector& x, bool ext = false, int ng = 0, const Inte
         result[0] = fbstatstemp(x, ext, ng, g, w, true, gn);
         result[1] = replaceC1(as<NumericMatrix>(fbstatstemp(between, ext, ng, g, w, true, gn)), gnpids); // how to do this ? -> above best approach ?
         result[2] = replaceC1(as<NumericMatrix>(fbstatstemp(within, ext, ng, g, w, true, gn)), gnpids, true);
-        result.attr("names") = CharacterVector::create("Overall","Between","Within");
+        Rf_namesgets(result, CharacterVector::create("Overall","Between","Within"));
         return(result);
       }
     }
@@ -421,24 +421,24 @@ SEXP fbstatsmCpp(const NumericMatrix& x, bool ext = false, int ng = 0, const Int
     if(ng == 0) { // No groups
       NumericMatrix out = no_init_matrix(col, d);
       for(int j = col; j--; ) out(j, _) = fbstatstemp(x(_, j), ext, 0L, 0L, w, false);
-      out.attr("dimnames") = List::create(colnames(x), (ext) ? CharacterVector::create("N","Mean","SD","Min","Max","Skew","Kurt") :
-                                            CharacterVector::create("N","Mean","SD","Min","Max"));
-      out.attr("class") = CharacterVector::create("qsu","matrix","table");
+      Rf_dimnamesgets(out, List::create(colnames(x), (ext) ? CharacterVector::create("N","Mean","SD","Min","Max","Skew","Kurt") :
+                                            CharacterVector::create("N","Mean","SD","Min","Max")));
+      Rf_classgets(out, CharacterVector::create("qsu","matrix","table"));
       return out;
     } else {
       // if(g.size() != l) stop("length(g) must match nrow(X)"); // checked in fbstatstemp
       if(array) {
         NumericMatrix out = no_init_matrix(d*ng, col);
         for(int j = col; j--; ) out(_, j) = fbstatstemp(x(_, j), ext, ng, g, w, false);
-        out.attr("dim") = Dimension(ng, d, col);
-        out.attr("dimnames") = List::create(gn, (ext) ? CharacterVector::create("N","Mean","SD","Min","Max","Skew","Kurt") :
-                                              CharacterVector::create("N","Mean","SD","Min","Max"), colnames(x));
-        out.attr("class") = CharacterVector::create("qsu","array","table");
+        Rf_dimgets(out, Dimension(ng, d, col));
+        Rf_dimnamesgets(out, List::create(gn, (ext) ? CharacterVector::create("N","Mean","SD","Min","Max","Skew","Kurt") :
+                                              CharacterVector::create("N","Mean","SD","Min","Max"), colnames(x)));
+        Rf_classgets(out, CharacterVector::create("qsu","array","table"));
         return out;
       } else {
         List out(col);
         for(int j = col; j--; ) out[j] = fbstatstemp(x(_, j), ext, ng, g, w, true, gn);
-        out.attr("names") = colnames(x);
+        Rf_setAttrib(out, R_NamesSymbol, colnames(x));
         return out;
       }
     }
@@ -447,32 +447,32 @@ SEXP fbstatsmCpp(const NumericMatrix& x, bool ext = false, int ng = 0, const Int
       if(array) {
         NumericMatrix out = no_init_matrix(d*3, col);
         for(int j = col; j--; ) out(_, j) = as<NumericVector>(fbstatsCpp(x(_, j), ext, 0L, 0L, npg, pg, w, true, false)); // or Rf_coerce ?
-        out.attr("dim") = Dimension(3, d, col);
-        out.attr("dimnames") = List::create(CharacterVector::create("Overall","Between","Within"),
+        Rf_dimgets(out, Dimension(3, d, col));
+        Rf_dimnamesgets(out, List::create(CharacterVector::create("Overall","Between","Within"),
                  (ext) ? CharacterVector::create("N/T","Mean","SD","Min","Max","Skew","Kurt") :
-                  CharacterVector::create("N/T","Mean","SD","Min","Max"), colnames(x));
-        out.attr("class") = CharacterVector::create("qsu","array","table");
+                  CharacterVector::create("N/T","Mean","SD","Min","Max"), colnames(x)));
+        Rf_classgets(out, CharacterVector::create("qsu","array","table"));
         return out;
       } else {
         List out(col);
         for(int j = col; j--; ) out[j] = fbstatsCpp(x(_, j), ext, 0L, 0L, npg, pg, w, false, true, gn);
-        out.attr("names") = colnames(x);
+        Rf_setAttrib(out, R_NamesSymbol, colnames(x));
         return out;
       }
     } else {
       if(array) {
         NumericMatrix out = no_init_matrix(d*3*ng, col);
         for(int j = col; j--; ) out(_, j) = as<NumericVector>(fbstatsCpp(x(_, j), ext, ng, g, npg, pg, w, true, false)); // or Rf_coerce ?
-        out.attr("dim") = IntegerVector::create(ng, d, 3, col); // works ?
-        out.attr("dimnames") = List::create(gn, (ext) ? CharacterVector::create("N/T","Mean","SD","Min","Max","Skew","Kurt") :
+        Rf_dimgets(out, IntegerVector::create(ng, d, 3, col));
+        Rf_dimnamesgets(out, List::create(gn, (ext) ? CharacterVector::create("N/T","Mean","SD","Min","Max","Skew","Kurt") :
                                               CharacterVector::create("N/T","Mean","SD","Min","Max"),
-                               CharacterVector::create("Overall","Between","Within"), colnames(x));
-        out.attr("class") = CharacterVector::create("qsu","array","table");
+                               CharacterVector::create("Overall","Between","Within"), colnames(x)));
+        Rf_classgets(out, CharacterVector::create("qsu","array","table"));
         return out;
       } else {
         List out(col);
         for(int j = col; j--; ) out[j] = fbstatsCpp(x(_, j), ext, ng, g, npg, pg, w, false, true, gn);
-        out.attr("names") = colnames(x);
+        Rf_setAttrib(out, R_NamesSymbol, colnames(x));
         return out;
       }
     }
@@ -494,9 +494,9 @@ NumericVector fnobs5Impl(Vector<RTYPE> x, bool ext = false, int ng = 0, IntegerV
     }
     NumericVector out(d, NA_REAL);
     if(setn) {
-      out.attr("names") = (ext) ? CharacterVector::create("N","Mean","SD","Min","Max","Skew","Kurt") :
-                                         CharacterVector::create("N","Mean","SD","Min","Max");
-      out.attr("class") = CharacterVector::create("qsu","table");
+      Rf_namesgets(out, (ext) ? CharacterVector::create("N","Mean","SD","Min","Max","Skew","Kurt") :
+                                         CharacterVector::create("N","Mean","SD","Min","Max"));
+      Rf_classgets(out, CharacterVector::create("qsu","table"));
     }
     out[0] = (double)n;
     return out;
@@ -512,9 +512,9 @@ NumericVector fnobs5Impl(Vector<RTYPE> x, bool ext = false, int ng = 0, IntegerV
       for(int i = 0; i != l; ++i) if(x[i] != Vector<RTYPE>::get_na()) ++n[g[i]-1];
     }
     if(setn) {
-      out.attr("dimnames") = List::create(gn, (ext) ? CharacterVector::create("N","Mean","SD","Min","Max","Skew","Kurt") :
-                                                   CharacterVector::create("N","Mean","SD","Min","Max"));
-      out.attr("class") = CharacterVector::create("qsu","matrix","table");
+      Rf_dimnamesgets(out, List::create(gn, (ext) ? CharacterVector::create("N","Mean","SD","Min","Max","Skew","Kurt") :
+                                                   CharacterVector::create("N","Mean","SD","Min","Max")));
+      Rf_classgets(out, CharacterVector::create("qsu","matrix","table"));
     }
     return out;
   }
@@ -554,10 +554,10 @@ NumericMatrix fnobs5pImpl(Vector<RTYPE> x, bool ext = false, int ng = 0, Integer
     out[2] = out[0]/out[1];
     std::fill(out.begin()+3, out.end(), NA_REAL);
     if(!array) {
-      out.attr("dimnames") = List::create(CharacterVector::create("Overall","Between","Within"),
+      Rf_dimnamesgets(out, List::create(CharacterVector::create("Overall","Between","Within"),
                              (ext) ? CharacterVector::create("N/T","Mean","SD","Min","Max","Skew","Kurt") :
-                                            CharacterVector::create("N/T","Mean","SD","Min","Max"));
-      out.attr("class") = CharacterVector::create("qsu","matrix","table");
+                                            CharacterVector::create("N/T","Mean","SD","Min","Max")));
+      Rf_classgets(out, CharacterVector::create("qsu","matrix","table"));
     }
     return out;
   } else { // with groups
@@ -596,11 +596,11 @@ NumericMatrix fnobs5pImpl(Vector<RTYPE> x, bool ext = false, int ng = 0, Integer
     NumericMatrix::Column nt = out(_, 2);
     for(int i = 0; i != ng; ++i) nt[i] = n[i] / gnpids[i];
     if(!array) {
-      out.attr("dim") = Dimension(ng, d, 3);
-      out.attr("dimnames") = List::create(gn, (ext) ? CharacterVector::create("N/T","Mean","SD","Min","Max","Skew","Kurt") :
+      Rf_dimgets(out, Dimension(ng, d, 3));
+      Rf_dimnamesgets(out, List::create(gn, (ext) ? CharacterVector::create("N/T","Mean","SD","Min","Max","Skew","Kurt") :
                                        CharacterVector::create("N/T","Mean","SD","Min","Max"),
-                                      CharacterVector::create("Overall","Between","Within"));
-      out.attr("class") = CharacterVector::create("qsu","array","table");
+                                      CharacterVector::create("Overall","Between","Within")));
+      Rf_classgets(out, CharacterVector::create("qsu","array","table"));
     }
     return out;
   }
@@ -620,13 +620,13 @@ SEXP fbstatslCpp(const List& x, bool ext = false, int ng = 0, const IntegerVecto
        switch(TYPEOF(x[j])) {
        case REALSXP:{
          NumericVector column = x[j];
-         if(column.hasAttribute("class")) out(j, _) = fnobs5Impl<REALSXP>(column, ext, 0L, 0L, true);
+         if(Rf_isObject(column)) out(j, _) = fnobs5Impl<REALSXP>(column, ext, 0L, 0L, true);
          else out(j, _) = fbstatstemp(column, ext, 0L, 0L, w, false);
          break;
        }
        case INTSXP: {
          IntegerVector column = x[j];
-         if(column.hasAttribute("class")) out(j, _) = fnobs5Impl<INTSXP>(column, ext);
+         if(Rf_isObject(column)) out(j, _) = fnobs5Impl<INTSXP>(column, ext);
          else out(j, _) = fbstatstemp(x[j], ext, 0L, 0L, w, false);
          break;
        }
@@ -637,9 +637,9 @@ SEXP fbstatslCpp(const List& x, bool ext = false, int ng = 0, const IntegerVecto
        default: stop("Not supported SEXP type!");
        }
       }
-      out.attr("dimnames") = List::create(x.attr("names"), (ext) ? CharacterVector::create("N","Mean","SD","Min","Max","Skew","Kurt") :
-                                            CharacterVector::create("N","Mean","SD","Min","Max"));
-      out.attr("class") = CharacterVector::create("qsu","matrix","table");
+      Rf_dimnamesgets(out, List::create(Rf_getAttrib(x, R_NamesSymbol), (ext) ? CharacterVector::create("N","Mean","SD","Min","Max","Skew","Kurt") :
+                                            CharacterVector::create("N","Mean","SD","Min","Max")));
+      Rf_classgets(out, CharacterVector::create("qsu","matrix","table"));
       return out;
     } else {
       if(array) {
@@ -648,13 +648,13 @@ SEXP fbstatslCpp(const List& x, bool ext = false, int ng = 0, const IntegerVecto
           switch(TYPEOF(x[j])) {
           case REALSXP:{
             NumericVector column = x[j];
-            if(column.hasAttribute("class")) out(_, j) = fnobs5Impl<REALSXP>(column, ext, ng, g, true);
+            if(Rf_isObject(column)) out(_, j) = fnobs5Impl<REALSXP>(column, ext, ng, g, true);
             else out(_, j) = fbstatstemp(column, ext, ng, g, w, false);
             break;
           }
           case INTSXP: {
             IntegerVector column = x[j];
-            if(column.hasAttribute("class")) out(_, j) = fnobs5Impl<INTSXP>(column, ext, ng, g);
+            if(Rf_isObject(column)) out(_, j) = fnobs5Impl<INTSXP>(column, ext, ng, g);
             else out(_, j) = fbstatstemp(x[j], ext, ng, g, w, false);
             break;
           }
@@ -665,10 +665,10 @@ SEXP fbstatslCpp(const List& x, bool ext = false, int ng = 0, const IntegerVecto
           default: stop("Not supported SEXP type!");
           }
         }
-        out.attr("dim") = Dimension(ng, d, col);
-        out.attr("dimnames") = List::create(gn, (ext) ? CharacterVector::create("N","Mean","SD","Min","Max","Skew","Kurt") :
-                                              CharacterVector::create("N","Mean","SD","Min","Max"), x.attr("names"));
-        out.attr("class") = CharacterVector::create("qsu","array","table");
+        Rf_dimgets(out, Dimension(ng, d, col));
+        Rf_dimnamesgets(out, List::create(gn, (ext) ? CharacterVector::create("N","Mean","SD","Min","Max","Skew","Kurt") :
+                                              CharacterVector::create("N","Mean","SD","Min","Max"), Rf_getAttrib(x, R_NamesSymbol)));
+        Rf_classgets(out,  CharacterVector::create("qsu","array","table"));
         return out;
       } else {
         List out(col);
@@ -676,13 +676,13 @@ SEXP fbstatslCpp(const List& x, bool ext = false, int ng = 0, const IntegerVecto
           switch(TYPEOF(x[j])) {
           case REALSXP:{
             NumericVector column = x[j];
-            if(column.hasAttribute("class")) out[j] = fnobs5Impl<REALSXP>(column, ext, ng, g, true, true, gn);
+            if(Rf_isObject(column)) out[j] = fnobs5Impl<REALSXP>(column, ext, ng, g, true, true, gn);
             else out[j] = fbstatstemp(column, ext, ng, g, w, true, gn);
             break;
           }
           case INTSXP: {
             IntegerVector column = x[j];
-            if(column.hasAttribute("class")) out[j] = fnobs5Impl<INTSXP>(column, ext, ng, g, false, true, gn);
+            if(Rf_isObject(column)) out[j] = fnobs5Impl<INTSXP>(column, ext, ng, g, false, true, gn);
             else out[j] = fbstatstemp(x[j], ext, ng, g, w, true, gn);
             break;
           }
@@ -693,7 +693,7 @@ SEXP fbstatslCpp(const List& x, bool ext = false, int ng = 0, const IntegerVecto
           default: stop("Not supported SEXP type!");
           }
         }
-        out.attr("names") = x.attr("names");
+        Rf_setAttrib(out, R_NamesSymbol, Rf_getAttrib(x, R_NamesSymbol));
         return out;
       }
     }
@@ -705,13 +705,13 @@ SEXP fbstatslCpp(const List& x, bool ext = false, int ng = 0, const IntegerVecto
           switch(TYPEOF(x[j])) {
           case REALSXP:{
             NumericVector column = x[j];
-            if(column.hasAttribute("class")) out(_, j) = fnobs5pImpl<REALSXP>(column, ext, 0L, 0L, npg, pg, true);
+            if(Rf_isObject(column)) out(_, j) = fnobs5pImpl<REALSXP>(column, ext, 0L, 0L, npg, pg, true);
             else out(_, j) = as<NumericVector>(fbstatsCpp(column, ext, 0L, 0L, npg, pg, w, true, false)); // or Rf_coerce ?
             break;
           }
           case INTSXP: {
             IntegerVector column = x[j];
-            if(column.hasAttribute("class")) out(_, j) = fnobs5pImpl<INTSXP>(column, ext, 0L, 0L, npg, pg);
+            if(Rf_isObject(column)) out(_, j) = fnobs5pImpl<INTSXP>(column, ext, 0L, 0L, npg, pg);
             else out(_, j) = as<NumericVector>(fbstatsCpp(x[j], ext, 0L, 0L, npg, pg, w, true, false));
             break;
           }
@@ -722,11 +722,11 @@ SEXP fbstatslCpp(const List& x, bool ext = false, int ng = 0, const IntegerVecto
           default: stop("Not supported SEXP type!");
           }
         }
-        out.attr("dim") = Dimension(3, d, col);
-        out.attr("dimnames") = List::create(CharacterVector::create("Overall","Between","Within"),
+        Rf_dimgets(out, Dimension(3, d, col));
+        Rf_dimnamesgets(out, List::create(CharacterVector::create("Overall","Between","Within"),
                  (ext) ? CharacterVector::create("N/T","Mean","SD","Min","Max","Skew","Kurt") :
-                        CharacterVector::create("N/T","Mean","SD","Min","Max"), x.attr("names"));
-        out.attr("class") = CharacterVector::create("qsu","array","table");
+                        CharacterVector::create("N/T","Mean","SD","Min","Max"), Rf_getAttrib(x, R_NamesSymbol)));
+        Rf_classgets(out, CharacterVector::create("qsu","array","table"));
         return out;
       } else {
         List out(col);
@@ -734,13 +734,13 @@ SEXP fbstatslCpp(const List& x, bool ext = false, int ng = 0, const IntegerVecto
           switch(TYPEOF(x[j])) {
           case REALSXP:{
             NumericVector column = x[j];
-            if(column.hasAttribute("class")) out[j] = fnobs5pImpl<REALSXP>(column, ext, 0L, 0L, npg, pg, true, false, gn);
+            if(Rf_isObject(column)) out[j] = fnobs5pImpl<REALSXP>(column, ext, 0L, 0L, npg, pg, true, false, gn);
             else out[j] = fbstatsCpp(column, ext, 0L, 0L, npg, pg, w, false, true, gn);
             break;
           }
           case INTSXP: {
             IntegerVector column = x[j];
-            if(column.hasAttribute("class")) out[j] = fnobs5pImpl<INTSXP>(column, ext, 0L, 0L, npg, pg, false, false, gn);
+            if(Rf_isObject(column)) out[j] = fnobs5pImpl<INTSXP>(column, ext, 0L, 0L, npg, pg, false, false, gn);
             else out[j] = fbstatsCpp(x[j], ext, 0L, 0L, npg, pg, w, false, true, gn);
             break;
           }
@@ -751,7 +751,7 @@ SEXP fbstatslCpp(const List& x, bool ext = false, int ng = 0, const IntegerVecto
           default: stop("Not supported SEXP type!");
           }
         }
-        out.attr("names") = x.attr("names");
+        Rf_setAttrib(out, R_NamesSymbol, Rf_getAttrib(x, R_NamesSymbol));
         return out;
       }
     } else {
@@ -761,13 +761,13 @@ SEXP fbstatslCpp(const List& x, bool ext = false, int ng = 0, const IntegerVecto
           switch(TYPEOF(x[j])) {
           case REALSXP:{
             NumericVector column = x[j];
-            if(column.hasAttribute("class")) out(_, j) = fnobs5pImpl<REALSXP>(column, ext, ng, g, npg, pg, true);
+            if(Rf_isObject(column)) out(_, j) = fnobs5pImpl<REALSXP>(column, ext, ng, g, npg, pg, true);
             else out(_, j) = as<NumericVector>(fbstatsCpp(column, ext, ng, g, npg, pg, w, true, false)); // or Rf_coerce ?
             break;
           }
           case INTSXP: {
             IntegerVector column = x[j];
-            if(column.hasAttribute("class")) out(_, j) = fnobs5pImpl<INTSXP>(column, ext, ng, g, npg, pg);
+            if(Rf_isObject(column)) out(_, j) = fnobs5pImpl<INTSXP>(column, ext, ng, g, npg, pg);
             else out(_, j) = as<NumericVector>(fbstatsCpp(x[j], ext, ng, g, npg, pg, w, true, false));
             break;
           }
@@ -778,11 +778,11 @@ SEXP fbstatslCpp(const List& x, bool ext = false, int ng = 0, const IntegerVecto
           default: stop("Not supported SEXP type!");
           }
         }
-        out.attr("dim") = IntegerVector::create(ng, d, 3, col); // works ?
-        out.attr("dimnames") = List::create(gn, (ext) ? CharacterVector::create("N/T","Mean","SD","Min","Max","Skew","Kurt") :
+        Rf_dimgets(out, IntegerVector::create(ng, d, 3, col));
+        Rf_dimnamesgets(out, List::create(gn, (ext) ? CharacterVector::create("N/T","Mean","SD","Min","Max","Skew","Kurt") :
                                               CharacterVector::create("N/T","Mean","SD","Min","Max"),
-                 CharacterVector::create("Overall","Between","Within"), x.attr("names"));
-        out.attr("class") = CharacterVector::create("qsu","array","table");
+                 CharacterVector::create("Overall","Between","Within"), Rf_getAttrib(x, R_NamesSymbol)));
+        Rf_classgets(out, CharacterVector::create("qsu","array","table"));
         return out;
       } else {
         List out(col);
@@ -790,13 +790,13 @@ SEXP fbstatslCpp(const List& x, bool ext = false, int ng = 0, const IntegerVecto
           switch(TYPEOF(x[j])) {
           case REALSXP:{
             NumericVector column = x[j];
-            if(column.hasAttribute("class")) out[j] = fnobs5pImpl<REALSXP>(column, ext, ng, g, npg, pg, true, false, gn);
+            if(Rf_isObject(column)) out[j] = fnobs5pImpl<REALSXP>(column, ext, ng, g, npg, pg, true, false, gn);
             else out[j] = fbstatsCpp(column, ext, ng, g, npg, pg, w, false, true, gn);
             break;
           }
           case INTSXP: {
             IntegerVector column = x[j];
-            if(column.hasAttribute("class")) out[j] = fnobs5pImpl<INTSXP>(column, ext, ng, g, npg, pg, false, false, gn);
+            if(Rf_isObject(column)) out[j] = fnobs5pImpl<INTSXP>(column, ext, ng, g, npg, pg, false, false, gn);
             else out[j] = fbstatsCpp(x[j], ext, ng, g, npg, pg, w, false, true, gn);
             break;
           }
@@ -807,7 +807,7 @@ SEXP fbstatslCpp(const List& x, bool ext = false, int ng = 0, const IntegerVecto
           default: stop("Not supported SEXP type!");
           }
         }
-        out.attr("names") = x.attr("names");
+        Rf_setAttrib(out, R_NamesSymbol, Rf_getAttrib(x, R_NamesSymbol));
         return out;
       }
     }

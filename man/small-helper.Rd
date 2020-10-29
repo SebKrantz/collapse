@@ -1,6 +1,7 @@
 \name{AA2-small-helpers}
 \alias{AA2-small-helpers}
 \alias{.c}
+\alias{cinv}
 \alias{vlabels}
 \alias{vlabels<-}
 \alias{vclasses}
@@ -25,6 +26,9 @@
 \alias{setColnames}
 \alias{setDimnames}
 \alias{unattrib}
+\alias{setAttrib}
+\alias{copyAttrib}
+\alias{copyMostAttrib}
 \alias{is.categorical}
 \alias{is.Date}
 
@@ -33,7 +37,7 @@
 Small (Helper) Functions % \emph{collapse}
 }
 \description{
-Convenience functions in the \emph{collapse} package that help to deal with variable names, labels, missing values, matching and object checking etc.. Some functions are performance improved replacements for base R functions. % For recoding and replacing values see \code{\link{Recode}}. % for pairwise correlations and covariances see \code{\link{pwcor}}, for summary statistics see \code{\link{qsu}}.
+Convenience functions in the \emph{collapse} package that help to deal with attributes such as variable names and labels, missing values, matching and object checking etc.. Some functions are performance improved replacements for base R functions. % For recoding and replacing values see \code{\link{Recode}}. % for pairwise correlations and covariances see \code{\link{pwcor}}, for summary statistics see \code{\link{qsu}}.
 }
 \usage{
 .c(\dots)                       # Non-standard concatenation i.e. .c(a, b) == c("a", "b")
@@ -56,6 +60,7 @@ na_rm(x)                      # Remove missing values from vector and return vec
 na_omit(X, cols = NULL,       # Faster na.omit for matrices and data frames
         na.attr = FALSE)
 na_insert(X, prop = 0.1)      # Insert missing values at random in vectors, matrices DF's
+cinv(X)                       # Choleski (fast) inverse of symmetric, positive def. matrix
 all_identical(\dots)            # Check exact equality of multiple objects or list-elements
 all_obj_equal(\dots)            # Check near equality of multiple objects or list-elements
 seq_row(X)                    # Fast integer sequences along rows of X
@@ -67,6 +72,9 @@ setColnames(object, nm)       # Set colnames of object and return object
 setDimnames(object, dn,
             which = NULL)     # Set dimension names of object and return object
 unattrib(object)              # Remove all attributes from object
+setAttrib(object, a)          # Replace all attributes with list of attributes 'a'
+copyAttrib(to, from)          # Copy all attributes from object 'from' to object 'to'
+copyMostAttrib(to, from)      # Copy most attributes from object 'from' to object 'to'
 is.categorical(x)             # The opposite of is.numeric
 is.Date(x)                    # Check if object is of class "Date", "POSIXlt" or "POSIXct"
 
@@ -74,8 +82,9 @@ is.Date(x)                    # Check if object is of class "Date", "POSIXlt" or
 %- maybe also 'usage' for other objects documented here.
 \arguments{
   \item{X}{a matrix or data frame (some functions also support vectors and arrays although that is less common).}
-  \item{object}{a suitable R object.}
   \item{x, table}{a atomic vector.}
+  \item{object, to, from}{a suitable R object.}
+  \item{a}{a suitable list of attributes.}
   \item{attrn}{character. Name of attribute to store labels or retrieve labels from.}
   \item{value}{a matching character vector of variable labels.}
   \item{class}{logical. Also show the classes of variables in X in a column?}

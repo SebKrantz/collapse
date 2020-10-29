@@ -14,7 +14,7 @@ collap <- function(X, by, FUN = fmean, catFUN = fmode, cols = NULL, w = NULL, wF
   nwl <- is.null(w)
   if(!inherits(X, "data.frame")) X <- qDF(X)
   ax <- attributes(X)
-  class(X) <- NULL
+  oldClass(X) <- NULL
   nam <- names(X)
   # attributes(X) <- NULL
   # attr(X, "class") <- "data.frame" # class needed for method dispatch of fast functions, not for BY !
@@ -68,11 +68,11 @@ collap <- function(X, by, FUN = fmean, catFUN = fmode, cols = NULL, w = NULL, wF
       if(!all(namwFUN %in% .FAST_STAT_FUN)) stop("wFUN needs to be fast statistical functions, see print(.FAST_STAT_FUN)")
       if(is.list(wFUN)) {
         namw <- paste(namwFUN, namw, sep = ".")
-        by[[4L]] <- c(if(keep.by) by[[4L]], `names<-`(lapply(wFUN, function(f) f(w, by, ..., use.g.names = FALSE)), namw))
+        by[[4L]] <- c(if(keep.by) by[[4L]], `names<-`(lapply(wFUN, function(f) f(w, g = by, ..., use.g.names = FALSE)), namw))
         if(keep.col.order) numby <- c(if(keep.by) numby, rep_len(numw, length(wFUN)))
       } else {
         if(isTRUE(give.names)) namw <- paste(namwFUN, namw, sep = ".")
-        by[[4L]] <- c(if(keep.by) by[[4L]], `names<-`(list(wFUN(w, by, ..., use.g.names = FALSE)), namw))
+        by[[4L]] <- c(if(keep.by) by[[4L]], `names<-`(list(wFUN(w, g = by, ..., use.g.names = FALSE)), namw))
         if(keep.col.order) numby <- c(if(keep.by) numby, numw)  # need to accommodate any option of keep.by, keep.w and keep.col.order
       }
       keep.by <- TRUE
@@ -132,18 +132,18 @@ collap <- function(X, by, FUN = fmean, catFUN = fmode, cols = NULL, w = NULL, wF
         fFUN <- namFUN %in% .FAST_STAT_FUN
         if(is.list(FUN))
           res[[ind]] <- condsetn(aplyfun(seq_along(namFUN), function(i)
-            if(fFUN[i]) FUN[[i]](xnu, by, ..., use.g.names = FALSE) else
+            if(fFUN[i]) FUN[[i]](xnu, g = by, ..., use.g.names = FALSE) else
               BY.data.frame(xnu, by, FUN[[i]], ..., use.g.names = FALSE)), namFUN, give.names) else
-                res[[ind]] <- if(fFUN) condsetn(list(FUN(xnu, by, ..., use.g.names = FALSE)), namFUN, give.names) else # give.names || !widel
+                res[[ind]] <- if(fFUN) condsetn(list(FUN(xnu, g = by, ..., use.g.names = FALSE)), namFUN, give.names) else # give.names || !widel
                   condsetn(list(BY.data.frame(xnu, by, FUN, ..., use.g.names = FALSE, parallel = parallel, mc.cores = mc.cores)), namFUN, give.names) # give.names || !widel
       }
       if(nnul) {
         fcatFUN <- namcatFUN %in% .FAST_STAT_FUN
         if(is.list(catFUN))
           res[[lr]] <- condsetn(aplyfun(seq_along(namcatFUN), function(i)
-            if(fcatFUN[i]) catFUN[[i]](xnnu, by, ..., use.g.names = FALSE) else
+            if(fcatFUN[i]) catFUN[[i]](xnnu, g = by, ..., use.g.names = FALSE) else
               BY.data.frame(xnnu, by, catFUN[[i]], ..., use.g.names = FALSE)), namcatFUN, give.names) else
-                res[[lr]] <- if(fcatFUN) condsetn(list(catFUN(xnnu, by, ..., use.g.names = FALSE)), namcatFUN, give.names) else # give.names || !widel
+                res[[lr]] <- if(fcatFUN) condsetn(list(catFUN(xnnu, g = by, ..., use.g.names = FALSE)), namcatFUN, give.names) else # give.names || !widel
                   condsetn(list(BY.data.frame(xnnu, by, catFUN, ..., use.g.names = FALSE, parallel = parallel, mc.cores = mc.cores)), namcatFUN, give.names) # give.names || !widel
       }
       return(res)
@@ -182,12 +182,12 @@ collap <- function(X, by, FUN = fmean, catFUN = fmode, cols = NULL, w = NULL, wF
 
     if(nwl) {
       res[[ind]] <- condsetn(aplyfun(seq_along(namFUN), function(i)
-        if(fFUN[i]) match.fun(namFUN[i])(`oldClass<-`(X[custom[[i]]], "data.frame"), by, ..., use.g.names = FALSE) else
+        if(fFUN[i]) match.fun(namFUN[i])(`oldClass<-`(X[custom[[i]]], "data.frame"), g = by, ..., use.g.names = FALSE) else
           BY.data.frame(X[custom[[i]]], by, namFUN[i], ..., use.g.names = FALSE)), namFUN, give.names)
     } else {
       if(!all(fFUN)) warning("collap can only perform weighted aggregations with the fast statistical functions (see .FAST_STAT_FUN): Ignoring weights argument to other functions")
       res[[ind]] <- condsetn(aplyfun(seq_along(namFUN), function(i)
-        if(fFUN[i]) match.fun(namFUN[i])(`oldClass<-`(X[custom[[i]]], "data.frame"), by, w = w, ..., use.g.names = FALSE) else
+        if(fFUN[i]) match.fun(namFUN[i])(`oldClass<-`(X[custom[[i]]], "data.frame"), g = by, w = w, ..., use.g.names = FALSE) else
           BY.data.frame(X[custom[[i]]], by, namFUN[i], ..., use.g.names = FALSE)), namFUN, give.names)
     }
 
@@ -252,7 +252,7 @@ collapv <- function(X, by, FUN = fmean, catFUN = fmode, cols = NULL, w = NULL, w
   nwl <- is.null(w)
   if(!inherits(X, "data.frame")) X <- qDF(X)
   ax <- attributes(X)
-  class(X) <- NULL
+  oldClass(X) <- NULL
   nam <- names(X)
 
   aplyfun <- if(parallel) function(...) mclapply(..., mc.cores = mc.cores) else lapply
@@ -286,11 +286,11 @@ collapv <- function(X, by, FUN = fmean, catFUN = fmode, cols = NULL, w = NULL, w
       if(!all(namwFUN %in% .FAST_STAT_FUN)) stop("wFUN needs to be fast statistical functions, see print(.FAST_STAT_FUN)")
       if(is.list(wFUN)) {
         namw <- paste(namwFUN, namw, sep = ".")
-        by[[4L]] <- c(if(keep.by) by[[4L]], `names<-`(lapply(wFUN, function(f) f(w, by, ..., use.g.names = FALSE)), namw))
+        by[[4L]] <- c(if(keep.by) by[[4L]], `names<-`(lapply(wFUN, function(f) f(w, g = by, ..., use.g.names = FALSE)), namw))
         if(keep.col.order) numby <- c(if(keep.by) numby, rep_len(numw, length(wFUN)))
       } else {
         if(isTRUE(give.names)) namw <- paste(namwFUN, namw, sep = ".")
-        by[[4L]] <- c(if(keep.by) by[[4L]], `names<-`(list(wFUN(w, by, ..., use.g.names = FALSE)), namw))
+        by[[4L]] <- c(if(keep.by) by[[4L]], `names<-`(list(wFUN(w, g = by, ..., use.g.names = FALSE)), namw))
         if(keep.col.order) numby <- c(if(keep.by) numby, numw)
       }
       keep.by <- TRUE
@@ -345,18 +345,18 @@ collapv <- function(X, by, FUN = fmean, catFUN = fmode, cols = NULL, w = NULL, w
         fFUN <- namFUN %in% .FAST_STAT_FUN
         if(is.list(FUN))
           res[[ind]] <- condsetn(aplyfun(seq_along(namFUN), function(i)
-            if(fFUN[i]) FUN[[i]](xnu, by, ..., use.g.names = FALSE) else
+            if(fFUN[i]) FUN[[i]](xnu, g = by, ..., use.g.names = FALSE) else
               BY.data.frame(xnu, by, FUN[[i]], ..., use.g.names = FALSE)), namFUN, give.names) else
-                res[[ind]] <- if(fFUN) condsetn(list(FUN(xnu, by, ..., use.g.names = FALSE)), namFUN, give.names) else # give.names || !widel
+                res[[ind]] <- if(fFUN) condsetn(list(FUN(xnu, g = by, ..., use.g.names = FALSE)), namFUN, give.names) else # give.names || !widel
                   condsetn(list(BY.data.frame(xnu, by, FUN, ..., use.g.names = FALSE, parallel = parallel, mc.cores = mc.cores)), namFUN, give.names) # give.names || !widel
       }
       if(nnul) {
         fcatFUN <- namcatFUN %in% .FAST_STAT_FUN
         if(is.list(catFUN))
           res[[lr]] <- condsetn(aplyfun(seq_along(namcatFUN), function(i)
-            if(fcatFUN[i]) catFUN[[i]](xnnu, by, ..., use.g.names = FALSE) else
+            if(fcatFUN[i]) catFUN[[i]](xnnu, g = by, ..., use.g.names = FALSE) else
               BY.data.frame(xnnu, by, catFUN[[i]], ..., use.g.names = FALSE)), namcatFUN, give.names) else
-                res[[lr]] <- if(fcatFUN) condsetn(list(catFUN(xnnu, by, ..., use.g.names = FALSE)), namcatFUN, give.names) else # give.names || !widel
+                res[[lr]] <- if(fcatFUN) condsetn(list(catFUN(xnnu, g = by, ..., use.g.names = FALSE)), namcatFUN, give.names) else # give.names || !widel
                   condsetn(list(BY.data.frame(xnnu, by, catFUN, ..., use.g.names = FALSE, parallel = parallel, mc.cores = mc.cores)), namcatFUN, give.names) # give.names || !widel
       }
       return(res)
@@ -391,12 +391,12 @@ collapv <- function(X, by, FUN = fmean, catFUN = fmode, cols = NULL, w = NULL, w
 
     if(nwl) {
       res[[ind]] <- condsetn(aplyfun(seq_along(namFUN), function(i)
-        if(fFUN[i]) match.fun(namFUN[i])(`oldClass<-`(X[custom[[i]]], "data.frame"), by, ..., use.g.names = FALSE) else
+        if(fFUN[i]) match.fun(namFUN[i])(`oldClass<-`(X[custom[[i]]], "data.frame"), g = by, ..., use.g.names = FALSE) else
           BY.data.frame(X[custom[[i]]], by, namFUN[i], ..., use.g.names = FALSE)), namFUN, give.names)
     } else {
       if(!all(fFUN)) warning("collapv can only perform weighted aggregations with the fast statistical functions (see .FAST_STAT_FUN): Ignoring weights argument to other functions")
       res[[ind]] <- condsetn(aplyfun(seq_along(namFUN), function(i)
-        if(fFUN[i]) match.fun(namFUN[i])(`oldClass<-`(X[custom[[i]]], "data.frame"), by, w = w, ..., use.g.names = FALSE) else
+        if(fFUN[i]) match.fun(namFUN[i])(`oldClass<-`(X[custom[[i]]], "data.frame"), g = by, w = w, ..., use.g.names = FALSE) else
           BY.data.frame(X[custom[[i]]], by, namFUN[i], ..., use.g.names = FALSE)), namFUN, give.names)
     }
 
@@ -451,16 +451,18 @@ collapg <- function(X, FUN = fmean, catFUN = fmode, cols = NULL, w = NULL, wFUN 
                     return = c("wide","list","long","long_dupl"), give.names = "auto", sort.row, ...) {
   by <- GRP.grouped_df(X, return.groups = keep.group_vars, call = FALSE)
   if(is.null(custom)) ngn <- attr(X, "names") %!in% by[[5L]] # Note: this always leaves grouping columns on the left still !
-  clx <- class(X)
+  # clx <- oldClass(X)
   attr(X, "groups") <- NULL
-  oldClass(X) <- clx[clx != "grouped_df"]
+  oldClass(X) <- fsetdiff(oldClass(X), c("GRP_df", "grouped_df"))  # clx[clx != "grouped_df"]
   if(length(wsym <- as.character(substitute(w))) == 1L) { # Non-standard evaluation of w argument
     if(any(windl <- wsym == attr(X, "names"))) {
-      assign(wsym, .subset2(X, wsym))
+      assign(wsym, .subset2(X, wsym)) # needs to be here !! (before subsetting!!)
       if(is.null(custom)) X <- fcolsubset(X, ngn & !windl) # else X <- X # Needed ?? -> nope !!
-      return(eval(substitute(collap(X, by, FUN, catFUN, cols, w, wFUN, custom,
-                                    keep.group_vars, keep.w, keep.col.order, TRUE, FALSE, TRUE, parallel,
-                                    mc.cores, return, give.names, sort.row, ...)), list(w = wsym)))
+      expr <- substitute(collap(X, by, FUN, catFUN, cols, NULL, wFUN, custom,
+                                keep.group_vars, keep.w, keep.col.order, TRUE, FALSE, TRUE, parallel,
+                                mc.cores, return, give.names, sort.row, ...))
+      expr[[7L]] <- as.symbol(wsym) # best solution !!
+      return(eval(expr))
     }
   }
   if(is.null(custom)) X <- fcolsubset(X, ngn) # else X <- X # because of non-standard eval.. X is "."

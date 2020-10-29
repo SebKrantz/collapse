@@ -3,6 +3,7 @@
 TRA <- function(x, STATS, FUN = "-", ...) UseMethod("TRA") # , x
 
 TRA.default <- function(x, STATS, FUN = "-", g = NULL, ...) {
+  if(is.matrix(x) && !inherits(x, "matrix")) return(TRA.matrix(x, STATS, FUN, g, ...))
   if(!missing(...)) unused_arg_action(match.call(), ...)
   if(is.null(g)) return(.Call(Cpp_TRA,x,STATS,0L,TtI(FUN)))
   if(is.atomic(g)) {

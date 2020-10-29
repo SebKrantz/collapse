@@ -2,6 +2,7 @@
 qsu <- function(x, ...) UseMethod("qsu") # , x
 
 qsu.default <- function(x, g = NULL, pid = NULL, w = NULL, higher = FALSE, array = TRUE, ...) {
+  if(is.matrix(x) && !inherits(x, "matrix")) return(qsu.matrix(x, g, pid, w, higher, array, ...))
   if(!missing(...)) unused_arg_action(match.call(), ...)
   if(is.null(g)) {
     if(is.null(pid)) return(fbstatsCpp(x,higher, w = w))
@@ -126,9 +127,9 @@ qsu.data.frame <- function(x, by = NULL, pid = NULL, w = NULL, cols = NULL, high
       w <- x[[widn]]
     } else widn <- NULL
     if(is.null(v)) {
-      x <- if(is.null(cols)) x[-c(byn, pidn, widn)] else x[cols2int(cols, x, nam)]
+      x <- if(is.null(cols)) x[-c(byn, pidn, widn)] else x[cols2int(cols, x, nam, FALSE)]
     } else x <- x[v]
-  } else if(!is.null(cols)) x <- .subset(x, cols2int(cols, x, attr(x, "names")))
+  } else if(length(cols)) x <- .subset(x, cols2int(cols, x, attr(x, "names"), FALSE))
 
   # Get vlabels
   if(vlabels) attr(x, "names") <- paste(attr(x, "names"), vlabels(x), sep = ": ")
@@ -200,9 +201,9 @@ qsu.pdata.frame <- function(x, by = NULL, w = NULL, cols = NULL, effect = 1L, hi
       w <- x[[widn]]
     } else widn <- NULL
     if(is.null(v)) {
-      x <- if(is.null(cols)) x[-c(byn, widn)] else x[cols2int(cols, x, nam)]
+      x <- if(is.null(cols)) x[-c(byn, widn)] else x[cols2int(cols, x, nam, FALSE)]
     } else x <- x[v]
-  } else if(!is.null(cols)) x <- .subset(x, cols2int(cols, x, attr(x, "names")))
+  } else if(length(cols)) x <- .subset(x, cols2int(cols, x, attr(x, "names"), FALSE))
 
   if(vlabels) attr(x, "names") <- paste(attr(x, "names"), vlabels(x), sep = ": ")
 
@@ -278,7 +279,7 @@ aperm.qsu <- function(a, perm = NULL, resize = TRUE, keep.class = TRUE, ...) {
 #       x <- if(is.null(cols)) x[-match(c(namby,namxt), names(x))] else if(is.function(cols))
 #             x[vapply(x, cols, TRUE)] else x[cols]
 #     } else x <- x[v]
-#   } else if(!is.null(cols)) {
+#   } else if(length(cols)) {
 #     # class(x) <- NULL # but unclass is faster !!
 #     x <- if(is.function(cols)) unclass(x)[vapply(x, cols, TRUE)] else .subset(x, cols)
 #   }
@@ -310,7 +311,7 @@ aperm.qsu <- function(a, perm = NULL, resize = TRUE, keep.class = TRUE, ...) {
 #       x <- if(is.null(cols)) unclass(x)[-match(c(namby,namxt), names(x))] else if(is.function(cols))
 #         unclass(x)[vapply(x, cols, TRUE)] else .subset(x, cols)
 #     } else x <- unclass(x)[v]
-#   } else if(!is.null(cols)) {
+#   } else if(length(cols)) {
 #     x <- if(is.function(cols)) unclass(x)[vapply(x, cols, TRUE)] else .subset(x, cols)
 #   }
 #   return(list(x, by, xt))
@@ -342,7 +343,7 @@ aperm.qsu <- function(a, perm = NULL, resize = TRUE, keep.class = TRUE, ...) {
 #       if(is.null(cols)) x[match(c(namby,namxt), names(x))] <- NULL else if(is.function(cols))
 #         x[!vapply(x, cols, TRUE)] <- NULL else x[-cols] <- NULL
 #     } else x[-v] <- NULL
-#   } else if(!is.null(cols)) {
+#   } else if(length(cols)) {
 #     if(is.function(cols)) x[!vapply(x, cols, TRUE)] <- NULL else x[-cols] <- NULL
 #   }
 #   return(list(x, by, xt))

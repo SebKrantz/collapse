@@ -63,7 +63,7 @@ frename <- function(x, ..., cols = NULL) {
     FUN <- if(...length() == 1L) ..1 else # could do special case if ...length() == 2L
       function(x) do.call(..1, c(list(x), list(...)[-1L]))
     if(is.null(cols)) return(`attr<-`(x, "names", FUN(nam)))
-    ind <- cols2int(cols, x, nam)
+    ind <- cols2int(cols, x, nam, FALSE)
     nam[ind] <- FUN(nam[ind])
   } else nam[ckmatch(namarg, nam)] <- as.character(args)
   return(`attr<-`(x, "names", nam))
@@ -79,7 +79,7 @@ setrename <- function(x, ..., cols = NULL) {
     FUN <- if(...length() == 1L) ..1 else # could do special case if ...length() == 2L
       function(x) do.call(..1, c(list(x), list(...)[-1L]))
     if(is.null(cols)) nam <- FUN(nam) else {
-      ind <- cols2int(cols, x, nam)
+      ind <- cols2int(cols, x, nam, FALSE)
       nam[ind] <- FUN(nam[ind])
     }
   } else nam[ckmatch(namarg, nam)] <- as.character(args)

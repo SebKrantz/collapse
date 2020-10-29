@@ -29,7 +29,7 @@ psmat.data.frame <- function(x, by, t = NULL, cols = NULL, transpose = FALSE, ar
   if(is.atomic(by) && length(by) == 1L) {
     nr <- length(x[[1L]])
     n <- round(by)
-    if(!is.null(cols)) x <- x[cols2int(cols, x, names(x))]
+    if(length(cols)) x <- x[cols2int(cols, x, names(x), FALSE)]
     if(transpose) {
       dn <- list(seq_len(nr/n), paste0("GRP.",seq_len(by)))
       res <- lapply(x, matrix, ncol = n, dimnames = dn)
@@ -54,7 +54,7 @@ psmat.data.frame <- function(x, by, t = NULL, cols = NULL, transpose = FALSE, ar
         t <- if(length(t) == 1L) x[[t]] else GRP.default(x, t, call = FALSE)
       }
       x <- x[v]
-    } else if(!is.null(cols)) x <- x[cols2int(cols, x, names(x))]
+    } else if(length(cols)) x <- x[cols2int(cols, x, names(x), FALSE)]
 
     if(!is.nmfactor(by)) if(is.atomic(by)) by <- qF(by, na.exclude = FALSE) else if(is.GRP(by))
                          by <- as.factor_GRP(by) else by <- as.factor_GRP(GRP.default(by, call = FALSE))
@@ -86,7 +86,7 @@ psmat.pdata.frame <- function(x, cols = NULL, transpose = FALSE, array = TRUE, .
   oldClass(x) <- NULL
   index <- unclass(attr(x, "index"))
   if(length(index) > 2L) index <- c(finteraction(index[-length(index)]), index[length(index)])
-  res <- lapply(if(is.null(cols)) x else x[cols2int(cols, x, names(x))], psmatCpp, index[[1L]], index[[2L]], transpose)
+  res <- lapply(if(is.null(cols)) x else x[cols2int(cols, x, names(x), FALSE)], psmatCpp, index[[1L]], index[[2L]], transpose)
   if(array) {
     if(length(res) == 1L) return(res[[1L]]) else
     return(addAttributes(fsimplify2array(res), list(transpose = transpose, class = c("psmat","array"))))

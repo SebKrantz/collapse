@@ -1,4 +1,4 @@
-Package: collapse
+Package: collapsedev2
 Title: Advanced and Fast Data Transformation
 Version: 1.3.2
 Date: 2020-09-13
@@ -15,8 +15,8 @@ Authors@R: c(
            )
 Description: A C/C++ based package for advanced data transformation and 
     statistical computing in R that is extremely fast, flexible and 
-    parsimonious to code with and programmer friendly. 
-    It is well integrated with 'dplyr', 'plm' and 'data.table'.
+    parsimonious to code with, class-agnostic and programmer friendly. 
+    It is well integrated with 'dplyr', 'plm', 'data.table' and 'xts' / 'zoo'.
     --- Key Features: ---
     (1) Advanced statistical programming: A full set of fast statistical functions 
         supporting grouped and weighted computations on vectors, matrices and 
@@ -29,14 +29,15 @@ Description: A C/C++ based package for advanced data transformation and
         statistics, and (grouped, weighted) scaling / standardizing, between 
         (averaging) and (quasi-)within (centering / demeaning) transformations, 
         higher-dimensional centering (i.e. multiple fixed effects transformations), 
-        linear prediction and partialling-out.
+        linear prediction / partialling-out and linear model fitting.
     (4) Advanced time-computations: Fast (sequences of) lags / leads, and 
-        (lagged / leaded, iterated, quasi-, log-) differences and growth 
+        (lagged / leaded, iterated, quasi-, log-) differences and (compound) growth 
         rates on (unordered) time series and panel data. Multivariate auto-, 
         partial- and cross-correlation functions for panel data. 
         Panel data to (ts-)array conversions.
-    (5) List processing: (Recursive) list search / identification, extraction / 
-        subsetting, data-apply, and generalized row-binding / unlisting in 2D.
+    (5) List processing: (Recursive) list search / identification, splitting, 
+        extraction / subsetting, data-apply, and generalized recursive 
+        row-binding / unlisting in 2D.
     (6) Advanced data exploration: Fast (grouped, weighted, panel-decomposed) 
         summary statistics for complex multilevel / panel data.
 URL: https://sebkrantz.github.io/collapse/,  
@@ -47,9 +48,9 @@ License: GPL (>= 2) | file LICENSE
 Encoding: UTF-8
 LazyData: true
 Depends: R (>= 3.5.0)
-Imports: Rcpp (>= 1.0.1), lfe (>= 2.7)
+Imports: Rcpp (>= 1.0.1)
 LinkingTo: Rcpp
-Suggests: dplyr, plm, data.table, matrixStats, magrittr, ggplot2, scales, vars, 
-          knitr, rmarkdown, testthat, microbenchmark, covr
+Suggests: lfe, dplyr, plm, data.table, matrixStats, magrittr, RcppArmadillo, RcppEigen, 
+          ggplot2, scales, vars, knitr, rmarkdown, testthat, microbenchmark, covr
 SystemRequirements: C++11
 VignetteBuilder: knitr

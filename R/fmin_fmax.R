@@ -4,6 +4,7 @@
 fmin <- function(x, ...) UseMethod("fmin") # , x
 
 fmin.default <- function(x, g = NULL, TRA = NULL, na.rm = TRUE, use.g.names = TRUE, ...) {
+  if(is.matrix(x) && !inherits(x, "matrix")) return(fmin.matrix(x, g, TRA, na.rm, use.g.names, ...))
   if(!missing(...)) unused_arg_action(match.call(), ...)
   if(is.null(TRA)) {
     if(is.null(g)) return(.Call(Cpp_fminmax,x,0L,0L,na.rm,1L))
@@ -74,7 +75,7 @@ fmin.data.frame <- function(x, g = NULL, TRA = NULL, na.rm = TRUE, use.g.names =
       return(.Call(Cpp_fminmaxl,x,attr(g,"N.groups"),g,na.rm,FALSE,1L))
     }
     if(!is.GRP(g)) g <- GRP.default(g, return.groups = use.g.names, call = FALSE)
-    if(use.g.names && !inherits(x, "data.table") && !is.null(groups <- GRPnames(g)))
+    if(use.g.names && !inherits(x, "data.table") && length(groups <- GRPnames(g)))
       return(setRnDF(.Call(Cpp_fminmaxl,x,g[[1L]],g[[2L]],na.rm,FALSE,1L), groups))
     return(.Call(Cpp_fminmaxl,x,g[[1L]],g[[2L]],na.rm,FALSE,1L))
   }
@@ -103,7 +104,7 @@ fmin.grouped_df <- function(x, TRA = NULL, na.rm = TRUE, use.g.names = FALSE, ke
     attributes(x) <- NULL
     if(nTRAl) {
       ax[["groups"]] <- NULL
-      ax[["class"]] <- ax[["class"]][ax[["class"]] != "grouped_df"]
+      ax[["class"]] <- fsetdiff(ax[["class"]], c("GRP_df", "grouped_df"))
       ax[["row.names"]] <- if(use.g.names) GRPnames(g) else .set_row_names(g[[1L]])
       if(gl) {
         if(keep.group_vars) {
@@ -129,6 +130,7 @@ fmin.grouped_df <- function(x, TRA = NULL, na.rm = TRUE, use.g.names = FALSE, ke
 fmax <- function(x, ...) UseMethod("fmax") # , x
 
 fmax.default <- function(x, g = NULL, TRA = NULL, na.rm = TRUE, use.g.names = TRUE, ...) {
+  if(is.matrix(x) && !inherits(x, "matrix")) return(fmax.matrix(x, g, TRA, na.rm, use.g.names, ...))
   if(!missing(...)) unused_arg_action(match.call(), ...)
   if(is.null(TRA)) {
     if(is.null(g)) return(.Call(Cpp_fminmax,x,0L,0L,na.rm,2L))
@@ -199,7 +201,7 @@ fmax.data.frame <- function(x, g = NULL, TRA = NULL, na.rm = TRUE, use.g.names =
       return(.Call(Cpp_fminmaxl,x,attr(g,"N.groups"),g,na.rm,FALSE,2L))
     }
     if(!is.GRP(g)) g <- GRP.default(g, return.groups = use.g.names, call = FALSE)
-    if(use.g.names && !inherits(x, "data.table") && !is.null(groups <- GRPnames(g)))
+    if(use.g.names && !inherits(x, "data.table") && length(groups <- GRPnames(g)))
       return(setRnDF(.Call(Cpp_fminmaxl,x,g[[1L]],g[[2L]],na.rm,FALSE,2L), groups))
     return(.Call(Cpp_fminmaxl,x,g[[1L]],g[[2L]],na.rm,FALSE,2L))
   }
@@ -228,7 +230,7 @@ fmax.grouped_df <- function(x, TRA = NULL, na.rm = TRUE, use.g.names = FALSE, ke
     attributes(x) <- NULL
     if(nTRAl) {
       ax[["groups"]] <- NULL
-      ax[["class"]] <- ax[["class"]][ax[["class"]] != "grouped_df"]
+      ax[["class"]] <- fsetdiff(ax[["class"]], c("GRP_df", "grouped_df"))
       ax[["row.names"]] <- if(use.g.names) GRPnames(g) else .set_row_names(g[[1L]])
       if(gl) {
         if(keep.group_vars) {

@@ -23,7 +23,7 @@ unlist2d <- function(l, idcols = ".id", row.names = FALSE, recursive = TRUE, id.
       if (length(d) > 2L) { # breaking down HDA
         dn <- dimnames(x)
         dim(x) <- c(d[1L], prod(d[-1L]))
-        if (!is.null(dn)) {
+        if (length(dn)) {
           for (i in 2L:length(d)) if(is.null(dn[[i]])) dn[[i]] <- seq_len(d[i])
           dimnames(x) <- list(dn[[1L]], interact_names(dn[-1L])) # Good ?
         }
@@ -139,13 +139,13 @@ unlist2d <- function(l, idcols = ".id", row.names = FALSE, recursive = TRUE, id.
 #       if (length(d) > 2L) { # breaking down HDA
 #         dn <- dimnames(x)
 #         dim(x) <- c(d[1L], prod(d[-1L]))
-#         if (!is.null(dn)) {
+#         if (length(dn)) {
 #           for (i in 2L:length(d)) if(is.null(dn[[i]])) dn[[i]] <- seq_len(d[i])
 #           dimnames(x) <- list(dn[[1L]], interact_names(dn[-1L])) # Good ?
 #         }
 #       }
 #       dn <- dimnames(x)
-#       if(keep.row.names && !is.null(dn[[1L]]))
+#       if(keep.row.names && length(dn[[1L]]))
 #         x <- `names<-`(c(list(dn[[1L]]),  .Call(Cpp_mctl, x, FALSE, 0L)), c(row.names, dn[[2L]])) else
 #           x <- `names<-`(.Call(Cpp_mctl, x, FALSE, 0L), dn[[2L]])
 #     } else x <- as.vector(x, "list")

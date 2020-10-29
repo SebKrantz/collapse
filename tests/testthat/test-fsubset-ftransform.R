@@ -1,6 +1,6 @@
 context("fsubset and ftransform")
 
-rm(list = ls())
+# rm(list = ls())
 
 v <- na_insert(mtcars$mpg)
 m <- na_insert(as.matrix(mtcars))
@@ -69,3 +69,14 @@ test_that("ftransform works like base::transform", {
 
 
 # Still do wrong input...
+
+test_that("fsubset error for wrong input", {
+  # expect_error(fsubset(mtcars, mpg))
+  # expect_error(fsubset(mtcars, mpg:cyl))
+  expect_error(fsubset(mtcars, "mpg"))
+  expect_error(fsubset(mtcars, TRUE))
+  expect_error(fsubset(mtcars, mpg > 15, cyl < 4))
+  expect_error(fsubset(mtcars, mpg > 15, TRUE))
+  expect_error(fsubset(mtcars, mpg > 15, 35))
+  expect_error(fsubset(mtcars, mpg > 15, ~mpg))
+})

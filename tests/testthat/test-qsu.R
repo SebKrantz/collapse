@@ -1,6 +1,6 @@
 context("qsu")
 
-rm(list = ls())
+# rm(list = ls())
 
 # Make more tests!! See also collapse general TODO !
 test_that("qsu gives errors for wrong input", {

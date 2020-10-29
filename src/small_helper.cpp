@@ -4,17 +4,17 @@ using namespace Rcpp;
 // [[Rcpp::export]]
 IntegerVector groups2GRPCpp(const List& x, int lx, const IntegerVector& gs) {
   int l = x.size(); // , sum = 0;
-  // for(int i = 0; i != l; ++i) sum += gs[i]; // could also input, just length of data...
+  // for(int i = 0; i != l; ++i) sum += gs[i]; // could also use input, just length of data...
   IntegerVector out = no_init_vector(lx); // no_init_vector(sum);
   for(int j = l; j--; ) { // This can go in any direction..
     IntegerVector column = x[j]; // const ??
     int jp = j+1;
-    for(int i = gs[j]; i--; ) out[column[i]-1] = jp; // This can goin any direction...
+    for(int i = gs[j]; i--; ) out[column[i]-1] = jp; // This can go in any direction...
   }
   return out;
 }
 
-// [[Rcpp::export]] // not faster than base method on large data (PRIO)!
+// [[Rcpp::export]] // not faster than base method on large data (PRIO)
 List lassignCpp(const List& x, int s, const SEXP& rows = R_NilValue, double fill = NA_REAL) {
   int l = x.size(), tr = TYPEOF(rows);
   List out(l);

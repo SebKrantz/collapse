@@ -5,6 +5,7 @@ fmode <- function(x, ...) UseMethod("fmode") # , x
 
 
 fmode.default <- function(x, g = NULL, w = NULL, TRA = NULL, na.rm = TRUE, use.g.names = TRUE, ties = "first", ...) {
+  if(is.matrix(x) && !inherits(x, "matrix")) return(fmode.matrix(x, g, w, TRA, na.rm, use.g.names, ties = ties, ...))
   if(!missing(...)) unused_arg_action(match.call(), ...)
   ret <- switch(ties, first = 0L, min = 1L, max = 2L, stop("Unknown ties option!"))
   if(is.null(TRA)) {
@@ -78,7 +79,7 @@ fmode.data.frame <- function(x, g = NULL, w = NULL, TRA = NULL, na.rm = TRUE, us
       return(.Call(Cpp_fmodel,x,attr(g,"N.groups"),g,NULL,w,na.rm,ret))
     }
     if(!is.GRP(g)) g <- GRP.default(g, return.groups = use.g.names, call = FALSE)
-    if(use.g.names && !inherits(x, "data.table") && !is.null(groups <- GRPnames(g)))
+    if(use.g.names && !inherits(x, "data.table") && length(groups <- GRPnames(g)))
       return(setRnDF(.Call(Cpp_fmodel,x,g[[1L]],g[[2L]],g[[3L]],w,na.rm,ret), groups))
     return(.Call(Cpp_fmodel,x,g[[1L]],g[[2L]],g[[3L]],w,na.rm,ret))
   }
@@ -106,7 +107,7 @@ fmode.grouped_df <- function(x, w = NULL, TRA = NULL, na.rm = TRUE, use.g.names 
   nTRAl <- is.null(TRA)
   sumw <- NULL
 
-  if(!is.null(wsym) && !is.na(wn <- match(wsym, nam))) {
+  if(length(wsym) && length(wn <- which(wsym == nam))) {
     w <- .subset2(x, wn)
     if(any(gn == wn)) stop("Weights coincide with grouping variables!")
     gn <- c(gn, wn)
@@ -123,7 +124,7 @@ fmode.grouped_df <- function(x, w = NULL, TRA = NULL, na.rm = TRUE, use.g.names 
     attributes(x) <- NULL
     if(nTRAl) {
       ax[["groups"]] <- NULL
-      ax[["class"]] <- ax[["class"]][ax[["class"]] != "grouped_df"]
+      ax[["class"]] <- fsetdiff(ax[["class"]], c("GRP_df", "grouped_df"))
       ax[["row.names"]] <- if(use.g.names) GRPnames(g) else .set_row_names(g[[1L]])
       if(gl) {
         if(keep.group_vars) {

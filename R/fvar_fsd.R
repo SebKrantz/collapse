@@ -5,6 +5,7 @@
 fsd <- function(x, ...) UseMethod("fsd") # , x
 
 fsd.default <- function(x, g = NULL, w = NULL, TRA = NULL, na.rm = TRUE, use.g.names = TRUE, stable.algo = TRUE, ...) {
+  if(is.matrix(x) && !inherits(x, "matrix")) return(fsd.matrix(x, g, w, TRA, na.rm, use.g.names, stable.algo = stable.algo, ...))
   if(!missing(...)) unused_arg_action(match.call(), ...)
   if(is.null(TRA)) {
     if(is.null(g)) return(.Call(Cpp_fvarsd,x,0L,0L,NULL,w,na.rm,stable.algo,TRUE))
@@ -75,7 +76,7 @@ fsd.data.frame <- function(x, g = NULL, w = NULL, TRA = NULL, na.rm = TRUE, use.
       return(.Call(Cpp_fvarsdl,x,attr(g,"N.groups"),g,NULL,w,na.rm,stable.algo,TRUE,FALSE))
     }
     if(!is.GRP(g)) g <- GRP.default(g, return.groups = use.g.names, call = FALSE)
-    if(use.g.names && !inherits(x, "data.table") && !is.null(groups <- GRPnames(g)))
+    if(use.g.names && !inherits(x, "data.table") && length(groups <- GRPnames(g)))
       return(setRnDF(.Call(Cpp_fvarsdl,x,g[[1L]],g[[2L]],g[[3L]],w,na.rm,stable.algo,TRUE,FALSE), groups))
     return(.Call(Cpp_fvarsdl,x,g[[1L]],g[[2L]],g[[3L]],w,na.rm,stable.algo,TRUE,FALSE))
   }
@@ -102,7 +103,7 @@ fsd.grouped_df <- function(x, w = NULL, TRA = NULL, na.rm = TRUE, use.g.names = 
   nTRAl <- is.null(TRA)
   sumw <- NULL
 
-  if(!is.null(wsym) && !is.na(wn <- match(wsym, nam))) {
+  if(length(wsym) && length(wn <- which(wsym == nam))) {
     w <- .subset2(x, wn)
     if(any(gn == wn)) stop("Weights coincide with grouping variables!")
     gn <- c(gn, wn)
@@ -119,7 +120,7 @@ fsd.grouped_df <- function(x, w = NULL, TRA = NULL, na.rm = TRUE, use.g.names = 
     attributes(x) <- NULL
     if(nTRAl) {
       ax[["groups"]] <- NULL
-      ax[["class"]] <- ax[["class"]][ax[["class"]] != "grouped_df"]
+      ax[["class"]] <- fsetdiff(ax[["class"]], c("GRP_df", "grouped_df"))
       ax[["row.names"]] <- if(use.g.names) GRPnames(g) else .set_row_names(g[[1L]])
       if(gl) {
         if(keep.group_vars) {
@@ -146,6 +147,7 @@ fsd.grouped_df <- function(x, w = NULL, TRA = NULL, na.rm = TRUE, use.g.names = 
 fvar <- function(x, ...) UseMethod("fvar") # , x
 
 fvar.default <- function(x, g = NULL, w = NULL, TRA = NULL, na.rm = TRUE, use.g.names = TRUE, stable.algo = TRUE, ...) {
+  if(is.matrix(x) && !inherits(x, "matrix")) return(fvar.matrix(x, g, w, TRA, na.rm, use.g.names, stable.algo = stable.algo, ...))
   if(!missing(...)) unused_arg_action(match.call(), ...)
   if(is.null(TRA)) {
     if(is.null(g)) return(.Call(Cpp_fvarsd,x,0L,0L,NULL,w,na.rm,stable.algo,FALSE))
@@ -216,7 +218,7 @@ fvar.data.frame <- function(x, g = NULL, w = NULL, TRA = NULL, na.rm = TRUE, use
       return(.Call(Cpp_fvarsdl,x,attr(g,"N.groups"),g,NULL,w,na.rm,stable.algo,FALSE,FALSE))
     }
     if(!is.GRP(g)) g <- GRP.default(g, return.groups = use.g.names, call = FALSE)
-    if(use.g.names && !inherits(x, "data.table") && !is.null(groups <- GRPnames(g)))
+    if(use.g.names && !inherits(x, "data.table") && length(groups <- GRPnames(g)))
       return(setRnDF(.Call(Cpp_fvarsdl,x,g[[1L]],g[[2L]],g[[3L]],w,na.rm,stable.algo,FALSE,FALSE), groups))
     return(.Call(Cpp_fvarsdl,x,g[[1L]],g[[2L]],g[[3L]],w,na.rm,stable.algo,FALSE,FALSE))
   }
@@ -243,7 +245,7 @@ fvar.grouped_df <- function(x, w = NULL, TRA = NULL, na.rm = TRUE, use.g.names =
   nTRAl <- is.null(TRA)
   sumw <- NULL
 
-  if(!is.null(wsym) && !is.na(wn <- match(wsym, nam))) {
+  if(length(wsym) && length(wn <- which(wsym == nam))) {
     w <- .subset2(x, wn)
     if(any(gn == wn)) stop("Weights coincide with grouping variables!")
     gn <- c(gn, wn)
@@ -260,7 +262,7 @@ fvar.grouped_df <- function(x, w = NULL, TRA = NULL, na.rm = TRUE, use.g.names =
     attributes(x) <- NULL
     if(nTRAl) {
       ax[["groups"]] <- NULL
-      ax[["class"]] <- ax[["class"]][ax[["class"]] != "grouped_df"]
+      ax[["class"]] <- fsetdiff(ax[["class"]], c("GRP_df", "grouped_df"))
       ax[["row.names"]] <- if(use.g.names) GRPnames(g) else .set_row_names(g[[1L]])
       if(gl) {
         if(keep.group_vars) {

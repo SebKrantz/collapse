@@ -6,6 +6,7 @@ ckm <- function(x) if(is.double(x)) x else if(is.character(x) && x == "overall.m
 fwithin <- function(x, ...) UseMethod("fwithin") # , x
 
 fwithin.default <- function(x, g = NULL, w = NULL, na.rm = TRUE, mean = 0, theta = 1, ...) {
+  if(is.matrix(x) && !inherits(x, "matrix")) return(fwithin.matrix(x, g, w, na.rm, mean, theta, ...))
   if(!missing(...)) unused_arg_action(match.call(), ...)
   if(is.null(g)) return(.Call(Cpp_BW,x,0L,0L,NULL,w,na.rm,theta,ckm(mean),FALSE,FALSE))
   if(is.atomic(g)) {
@@ -64,18 +65,17 @@ fwithin.grouped_df <- function(x, w = NULL, na.rm = TRUE, mean = 0, theta = 1,
   nam <- attr(x, "names")
   gn2 <- which(nam %in% g[[5L]])
   gn <- if(keep.group_vars) gn2 else NULL
-  if(!is.null(wsym) && !is.na(wn <- match(wsym, nam))) {
+  if(length(wsym) && length(wn <- which(wsym == nam))) {
     w <- .subset2(x, wn)
     if(any(gn2 == wn)) stop("Weights coincide with grouping variables!")
     gn2 <- c(gn2,wn)
     if(keep.w) gn <- c(gn,wn)
   }
   if(length(gn2)) {
-    if(!length(gn)) return(.Call(Cpp_BWl,x[-gn2],g[[1L]],g[[2L]],g[[3L]],w,na.rm,theta,ckm(mean),FALSE,FALSE))
     ax <- attributes(x)
-    attributes(x) <- NULL
-    ax[["names"]] <- c(nam[gn], nam[-gn2])
-    return(setAttributes(c(x[gn],.Call(Cpp_BWl,x[-gn2],g[[1L]],g[[2L]],g[[3L]],w,na.rm,theta,ckm(mean),FALSE,FALSE)), ax))
+    ax[["names"]] <- c(nam[gn], nam[-gn2]) # first term is removed if !length(gn)
+    res <- .Call(Cpp_BWl, .subset(x, -gn2), g[[1L]],g[[2L]],g[[3L]],w,na.rm,theta,ckm(mean),FALSE,FALSE)
+    if(length(gn)) return(setAttributes(c(.subset(x, gn), res), ax)) else return(setAttributes(res, ax))
   }
   .Call(Cpp_BWl,x,g[[1L]],g[[2L]],g[[3L]],w,na.rm,theta,ckm(mean),FALSE,FALSE)
 }
@@ -84,8 +84,10 @@ fwithin.grouped_df <- function(x, w = NULL, na.rm = TRUE, mean = 0, theta = 1,
 
 W <- function(x, ...) UseMethod("W") # , x
 
-W.default <- function(x, g = NULL, w = NULL, na.rm = TRUE, mean = 0, theta = 1, ...)
+W.default <- function(x, g = NULL, w = NULL, na.rm = TRUE, mean = 0, theta = 1, ...) {
+  if(is.matrix(x) && !inherits(x, "matrix")) return(W.matrix(x, g, w, na.rm, mean, theta, ...))
   fwithin.default(x, g, w, na.rm, mean, theta, ...)
+}
 
 W.pseries <- function(x, effect = 1L, w = NULL, na.rm = TRUE, mean = 0, theta = 1, ...)
   fwithin.pseries(x, effect, w, na.rm, mean, theta, ...)
@@ -101,18 +103,17 @@ W.grouped_df <- function(x, w = NULL, na.rm = TRUE, mean = 0, theta = 1,
   nam <- attr(x, "names")
   gn2 <- which(nam %in% g[[5L]])
   gn <- if(keep.group_vars) gn2 else NULL
-  if(!is.null(wsym) && !is.na(wn <- match(wsym, nam))) {
+  if(length(wsym) && length(wn <- which(wsym == nam))) {
     w <- .subset2(x, wn)
     if(any(gn2 == wn)) stop("Weights coincide with grouping variables!")
     gn2 <- c(gn2,wn)
     if(keep.w) gn <- c(gn, wn)
   }
   if(length(gn2)) {
-    if(!length(gn)) return(add_stub(.Call(Cpp_BWl,x[-gn2],g[[1L]],g[[2L]],g[[3L]],w,na.rm,theta,ckm(mean),FALSE,FALSE), stub))
     ax <- attributes(x)
-    attributes(x) <- NULL
     ax[["names"]] <- c(nam[gn], if(is.character(stub)) paste0(stub, nam[-gn2]) else nam[-gn2])
-    return(setAttributes(c(x[gn],.Call(Cpp_BWl,x[-gn2],g[[1L]],g[[2L]],g[[3L]],w,na.rm,theta,ckm(mean),FALSE,FALSE)), ax))
+    res <- .Call(Cpp_BWl, .subset(x, -gn2), g[[1L]],g[[2L]],g[[3L]],w,na.rm,theta,ckm(mean),FALSE,FALSE)
+    if(length(gn)) return(setAttributes(c(.subset(x, gn), res), ax)) else return(setAttributes(res, ax))
   }
   add_stub(.Call(Cpp_BWl,x,g[[1L]],g[[2L]],g[[3L]],w,na.rm,theta,ckm(mean),FALSE,FALSE), stub)
 }
@@ -132,7 +133,7 @@ W.pdata.frame <- function(x, effect = 1L, w = NULL, cols = is.numeric, na.rm = T
     if(length(gn) && is.null(cols)) cols <- seq_along(x)[-gn]
   } else gn <- NULL
 
-  if(!is.null(cols)) cols <- cols2int(cols, x, nam)
+  if(length(cols)) cols <- cols2int(cols, x, nam)
 
   if(is.call(w)) {
     wn <- ckmatch(all.vars(w), nam)
@@ -141,7 +142,7 @@ W.pdata.frame <- function(x, effect = 1L, w = NULL, cols = is.numeric, na.rm = T
     if(keep.w) gn <- c(gn, wn)
   }
 
-  if(length(gn) && !is.null(cols)) {
+  if(length(gn) && length(cols)) {
     ax[["names"]] <- c(nam[gn], if(is.character(stub)) paste0(stub, nam[cols]) else nam[cols])
     return(setAttributes(c(x[gn], .Call(Cpp_BWl,x[cols],fnlevels(g),g,NULL,w,na.rm,theta,ckm(mean),FALSE,FALSE)), ax))
   } else if(!length(gn)) {
@@ -174,7 +175,7 @@ W.data.frame <- function(x, by = NULL, w = NULL, cols = is.numeric, na.rm = TRUE
       if(!keep.by) gn <- NULL
     } else {
       gn <- NULL
-      if(!is.null(cols)) cols <- cols2int(cols, x, nam)
+      if(length(cols)) cols <- cols2int(cols, x, nam)
       if(!is.GRP(by)) by <- if(is.null(by)) list(0L, 0L, NULL) else if(is.atomic(by)) # Necessary if by is passed externally !
         at2GRP(by) else GRP.default(by, return.groups = FALSE, call = FALSE)
     }
@@ -192,10 +193,10 @@ W.data.frame <- function(x, by = NULL, w = NULL, cols = is.numeric, na.rm = TRUE
     }
     ax[["names"]] <- if(is.character(stub)) paste0(stub, nam[cols]) else nam[cols]
     return(setAttributes(.Call(Cpp_BWl,x[cols],by[[1L]],by[[2L]],by[[3L]],w,na.rm,theta,ckm(mean),FALSE,FALSE), ax))
-  } else if(!is.null(cols)) { # Need to do like this, otherwise list-subsetting drops attributes !
+  } else if(length(cols)) { # Need to do like this, otherwise list-subsetting drops attributes !
     ax <- attributes(x)
     class(x) <- NULL
-    x <- x[cols2int(cols, x, names(x))]
+    x <- x[cols2int(cols, x, names(x), FALSE)]
     ax[["names"]] <- names(x)
     setattributes(x, ax)
   }
@@ -221,6 +222,7 @@ W.list <- function(x, by = NULL, w = NULL, cols = is.numeric, na.rm = TRUE,
 fbetween <- function(x, ...) UseMethod("fbetween") # , x
 
 fbetween.default <- function(x, g = NULL, w = NULL, na.rm = TRUE, fill = FALSE, ...) {
+  if(is.matrix(x) && !inherits(x, "matrix")) return(fbetween.matrix(x, g, w, na.rm, fill, ...))
   if(!missing(...)) unused_arg_action(match.call(), ...)
   if(is.null(g)) return(.Call(Cpp_BW,x,0L,0L,NULL,w,na.rm,1,0,TRUE,fill))
   if(is.atomic(g)) {
@@ -279,18 +281,17 @@ fbetween.grouped_df <- function(x, w = NULL, na.rm = TRUE, fill = FALSE,
   nam <- attr(x, "names")
   gn2 <- which(nam %in% g[[5L]])
   gn <- if(keep.group_vars) gn2 else NULL
-  if(!is.null(wsym) && !is.na(wn <- match(wsym, nam))) {
+  if(length(wsym) && length(wn <- which(wsym == nam))) {
     w <- .subset2(x, wn)
     if(any(gn2 == wn)) stop("Weights coincide with grouping variables!")
     gn2 <- c(gn2,wn)
     if(keep.w) gn <- c(gn,wn)
   }
   if(length(gn2)) {
-    if(!length(gn)) return(.Call(Cpp_BWl,x[-gn2],g[[1L]],g[[2L]],g[[3L]],w,na.rm,1,0,TRUE,fill))
     ax <- attributes(x)
-    attributes(x) <- NULL
-    ax[["names"]] <- c(nam[gn], nam[-gn2])
-    return(setAttributes(c(x[gn],.Call(Cpp_BWl,x[-gn2],g[[1L]],g[[2L]],g[[3L]],w,na.rm,1,0,TRUE,fill)), ax))
+    ax[["names"]] <- c(nam[gn], nam[-gn2]) # first term is removed if !length(gn)
+    res <- .Call(Cpp_BWl, .subset(x, -gn2), g[[1L]],g[[2L]],g[[3L]],w,na.rm,1,0,TRUE,fill)
+    if(length(gn)) return(setAttributes(c(.subset(x, gn), res), ax)) else return(setAttributes(res, ax))
   }
   .Call(Cpp_BWl,x,g[[1L]],g[[2L]],g[[3L]],w,na.rm,1,0,TRUE,fill)
 }
@@ -300,8 +301,10 @@ fbetween.grouped_df <- function(x, w = NULL, na.rm = TRUE, fill = FALSE,
 
 B <- function(x, ...) UseMethod("B") # , x
 
-B.default <- function(x, g = NULL, w = NULL, na.rm = TRUE, fill = FALSE, ...)
+B.default <- function(x, g = NULL, w = NULL, na.rm = TRUE, fill = FALSE, ...) {
+  if(is.matrix(x) && !inherits(x, "matrix")) return(B.matrix(x, g, w, na.rm, fill, ...))
   fbetween.default(x, g, w, na.rm, fill, ...)
+}
 
 B.pseries <- function(x, effect = 1L, w = NULL, na.rm = TRUE, fill = FALSE, ...)
   fbetween.pseries(x, effect, w, na.rm, fill, ...)
@@ -317,18 +320,17 @@ B.grouped_df <- function(x, w = NULL, na.rm = TRUE, fill = FALSE,
   nam <- attr(x, "names")
   gn2 <- which(nam %in% g[[5L]])
   gn <- if(keep.group_vars) gn2 else NULL
-  if(!is.null(wsym) && !is.na(wn <- match(wsym, nam))) {
+  if(length(wsym) && length(wn <- which(wsym == nam))) {
     w <- .subset2(x, wn)
     if(any(gn2 == wn)) stop("Weights coincide with grouping variables!")
     gn2 <- c(gn2,wn)
     if(keep.w) gn <- c(gn, wn)
   }
   if(length(gn2)) {
-    if(!length(gn)) return(add_stub(.Call(Cpp_BWl,x[-gn2],g[[1L]],g[[2L]],g[[3L]],w,na.rm,1,0,TRUE,fill), stub))
     ax <- attributes(x)
-    attributes(x) <- NULL
     ax[["names"]] <- c(nam[gn], if(is.character(stub)) paste0(stub, nam[-gn2]) else nam[-gn2])
-    return(setAttributes(c(x[gn],.Call(Cpp_BWl,x[-gn2],g[[1L]],g[[2L]],g[[3L]],w,na.rm,1,0,TRUE,fill)), ax))
+    res <- .Call(Cpp_BWl, .subset(x, -gn2), g[[1L]],g[[2L]],g[[3L]],w,na.rm,1,0,TRUE,fill)
+    if(length(gn)) return(setAttributes(c(.subset(x, gn), res), ax)) else return(setAttributes(res, ax))
   }
   add_stub(.Call(Cpp_BWl,x,g[[1L]],g[[2L]],g[[3L]],w,na.rm,1,0,TRUE,fill), stub)
 }
@@ -347,7 +349,7 @@ B.pdata.frame <- function(x, effect = 1L, w = NULL, cols = is.numeric, na.rm = T
     if(length(gn) && is.null(cols)) cols <- seq_along(x)[-gn]
   } else gn <- NULL
 
-  if(!is.null(cols)) cols <- cols2int(cols, x, nam)
+  if(length(cols)) cols <- cols2int(cols, x, nam)
 
   if(is.call(w)) {
     wn <- ckmatch(all.vars(w), nam)
@@ -356,7 +358,7 @@ B.pdata.frame <- function(x, effect = 1L, w = NULL, cols = is.numeric, na.rm = T
     if(keep.w) gn <- c(gn, wn)
   }
 
-  if(length(gn) && !is.null(cols)) {
+  if(length(gn) && length(cols)) {
     ax[["names"]] <- c(nam[gn], if(is.character(stub)) paste0(stub, nam[cols]) else nam[cols])
     return(setAttributes(c(x[gn], .Call(Cpp_BWl,x[cols],fnlevels(g),g,NULL,w,na.rm,1,0,TRUE,fill)), ax))
   } else if(!length(gn)) {
@@ -388,7 +390,7 @@ B.data.frame <- function(x, by = NULL, w = NULL, cols = is.numeric, na.rm = TRUE
       if(!keep.by) gn <- NULL
     } else {
       gn <- NULL
-      if(!is.null(cols)) cols <- cols2int(cols, x, nam)
+      if(length(cols)) cols <- cols2int(cols, x, nam)
       if(!is.GRP(by)) by <- if(is.null(by)) list(0L, 0L, NULL) else if(is.atomic(by)) # Necessary if by is passed externally !
         at2GRP(by) else GRP.default(by, return.groups = FALSE, call = FALSE)
     }
@@ -406,10 +408,10 @@ B.data.frame <- function(x, by = NULL, w = NULL, cols = is.numeric, na.rm = TRUE
     }
     ax[["names"]] <- if(is.character(stub)) paste0(stub, nam[cols]) else nam[cols]
     return(setAttributes(.Call(Cpp_BWl,x[cols],by[[1L]],by[[2L]],by[[3L]],w,na.rm,1,0,TRUE,fill), ax))
-  } else if(!is.null(cols)) { # Necessary, else attributes are dropped by list-subsetting !
+  } else if(length(cols)) { # Necessary, else attributes are dropped by list-subsetting !
     ax <- attributes(x)
     class(x) <- NULL
-    x <- x[cols2int(cols, x, names(x))]
+    x <- x[cols2int(cols, x, names(x), FALSE)]
     ax[["names"]] <- names(x)
     setattributes(x, ax)
   }

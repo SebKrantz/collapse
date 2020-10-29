@@ -1,6 +1,6 @@
 context("select, replace or add vars")
 
-rm(list = ls())
+# rm(list = ls())
 
 test_that("selecting vars works well", {
   expect_identical(get_vars(wlddev, 4:8), wlddev[4:8])
@@ -164,5 +164,14 @@ test_that("add_vars errors for wrong input", {
 
   expect_error(add_vars(wlddev, 12) <- wlddev[9:12])
   expect_error(add_vars(wlddev, 9:12) <- wlddev[9:10])
+})
+
+test_that("fselect errors for wrong input", {
+  expect_error(fselect(mtcars, 1))
+  expect_error(fselect(mtcars, "bla"))
+  expect_error(fselect(mtcars, "mpg"))
+  expect_error(fselect(mtcars, mpg:bla))
+  expect_error(fselect(mtcars, mpg > cyl))
+  expect_error(fselect(mtcars, ~mpg))
 })
 

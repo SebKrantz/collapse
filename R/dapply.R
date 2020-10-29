@@ -43,25 +43,25 @@ dapply <- function(X, FUN, ..., MARGIN = 2, parallel = FALSE,
     if(rowwl) {
       if(lx1 != dX[2L]) {
         ax[["dim"]][2L] <- lx1
-        ax[["dimnames"]] <- list(ax[["dimnames"]][[1L]], if(!is.null(nx1 <- names(res[[1L]]))) nx1 else if(lx1 == 1L)
+        ax[["dimnames"]] <- list(ax[["dimnames"]][[1L]], if(length(nx1 <- names(res[[1L]]))) nx1 else if(lx1 == 1L)
           deparse(substitute(FUN)) else paste0(deparse(substitute(FUN)), seq_len(lx1)))
       }
       res <- matrix(unlist(res, use.names = FALSE), ncol = lx1, byrow = TRUE)
     } else {
       if(lx1 != dX[1L]) {
         ax[["dim"]][1L] <- lx1
-        ax[["dimnames"]] <- list(if(!is.null(nx1 <- names(res[[1L]]))) nx1 else if(lx1 == 1L)
+        ax[["dimnames"]] <- list(if(length(nx1 <- names(res[[1L]]))) nx1 else if(lx1 == 1L)
           deparse(substitute(FUN)) else paste0(deparse(substitute(FUN)), seq_len(lx1)), ax[["dimnames"]][[2L]])
       }
       res <- do.call(cbind, res)
     }
   } else {
     if(rowwl) {
-      if(lx1 != dX[2L]) ax[["names"]] <- if(!is.null(nx1 <- names(res[[1L]]))) nx1 else if(lx1 == 1L)
+      if(lx1 != dX[2L]) ax[["names"]] <- if(length(nx1 <- names(res[[1L]]))) nx1 else if(lx1 == 1L)
         deparse(substitute(FUN)) else paste0(deparse(substitute(FUN)), seq_len(lx1))
       res <- .Call(Cpp_mctl, matrix(unlist(res, use.names = FALSE), ncol = lx1, byrow = TRUE), FALSE, 0L) # definitely faster than do.call(rbind, X)
     } else if(lx1 != dX[1L])
-      ax[["row.names"]] <- if(!is.null(nx1 <- names(res[[1L]]))) nx1 else .set_row_names(lx1) # could also make deparse(substitute(FUN)), but that is not so typical for data.frames !
+      ax[["row.names"]] <- if(length(nx1 <- names(res[[1L]]))) nx1 else .set_row_names(lx1) # could also make deparse(substitute(FUN)), but that is not so typical for data.frames !
   }
   setAttributes(res, ax)
 }
@@ -99,25 +99,25 @@ dapply <- function(X, FUN, ..., MARGIN = 2, parallel = FALSE,
 #     if(rowwl) {
 #       if(lx1 != dX[2L]) {
 #         ax[["dim"]][2L] <- lx1
-#         ax[["dimnames"]] <- list(ax[["dimnames"]][[1L]], if(!is.null(nx1 <- names(res[[1L]]))) nx1 else if(lx1 == 1L)
+#         ax[["dimnames"]] <- list(ax[["dimnames"]][[1L]], if(length(nx1 <- names(res[[1L]]))) nx1 else if(lx1 == 1L)
 #           deparse(substitute(FUN)) else paste0(deparse(substitute(FUN)), seq_len(lx1)))
 #       }
 #       res <- matrix(unlist(res, use.names = FALSE), ncol = lx1, byrow = TRUE)
 #     } else {
 #       if(lx1 != dX[1L]) {
 #         ax[["dim"]][1L] <- lx1
-#         ax[["dimnames"]] <- list(if(!is.null(nx1 <- names(res[[1L]]))) nx1 else if(lx1 == 1L)
+#         ax[["dimnames"]] <- list(if(length(nx1 <- names(res[[1L]]))) nx1 else if(lx1 == 1L)
 #           deparse(substitute(FUN)) else paste0(deparse(substitute(FUN)), seq_len(lx1)), ax[["dimnames"]][[2L]])
 #       }
 #       res <- do.call(cbind, res)
 #     }
 #   } else {
 #     if(rowwl) {
-#       if(lx1 != dX[2L]) ax[["names"]] <- if(!is.null(nx1 <- names(res[[1L]]))) nx1 else if(lx1 == 1L)
+#       if(lx1 != dX[2L]) ax[["names"]] <- if(length(nx1 <- names(res[[1L]]))) nx1 else if(lx1 == 1L)
 #         deparse(substitute(FUN)) else paste0(deparse(substitute(FUN)), seq_len(lx1))
 #       res <- .Call(Cpp_mctl, matrix(unlist(res, use.names = FALSE), ncol = lx1, byrow = TRUE), FALSE, 0L) # definitely faster than do.call(rbind, X)
 #     } else if(lx1 != dX[1L])
-#       ax[["row.names"]] <- if(!is.null(nx1 <- names(res[[1L]]))) nx1 else .set_row_names(lx1) # could also make deparse(substitute(FUN)), but that is not so typical for data.frames !
+#       ax[["row.names"]] <- if(length(nx1 <- names(res[[1L]]))) nx1 else .set_row_names(lx1) # could also make deparse(substitute(FUN)), but that is not so typical for data.frames !
 #   }
 #   setAttributes(res, ax)
 # }
