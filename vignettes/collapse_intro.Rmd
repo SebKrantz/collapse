@@ -29,9 +29,9 @@ library(vars)
 library(dplyr)  # Needed because otherwise dplyr is loaded in benchmark chunk not run on CRAN !!
 library(magrittr)
 library(microbenchmark) # Same thing
-library(collapse)
+library(collapsedev2)
 library(data.table)
-B <- collapse::B # making sure it masks vars::B by loading into GE
+B <- collapsedev2::B # making sure it masks vars::B by loading into GE
 knitr::opts_chunk$set(error = FALSE, message = FALSE, warning = FALSE, 
                       comment = "#", tidy = FALSE, cache = FALSE, collapse = TRUE,
                       fig.width = 8, fig.height = 5, 
@@ -119,7 +119,7 @@ We begin by introducing some powerful summary tools along with the 2 panel datas
 ### 1.1 `wlddev` - World Bank Development Data
 This dataset contains 4 key World Bank Development Indicators covering 216 countries over 59 years. It is a balanced panel with $216 \times 59 = 12744$ observations.
 ```{R}
-library(collapse)
+library(collapsedev2)
 head(wlddev)
 
 # The variables have "label" attributes. Use vlabels() to get and set labels
@@ -317,7 +317,7 @@ fselect(wlddev, country, year, PCGDP:ODA) %>% head(2)
 fselect(wlddev, -country, -year, -(PCGDP:ODA)) %>% head(2)
 
 library(microbenchmark)
-microbenchmark(fselect = collapse::fselect(wlddev, country, year, PCGDP:ODA),
+microbenchmark(fselect = collapsedev2::fselect(wlddev, country, year, PCGDP:ODA),
                select = dplyr::select(wlddev, country, year, PCGDP:ODA))
 ```
 
@@ -432,7 +432,7 @@ like `base::subset`, `fsubset` is S3 generic with methods for vectors, matrices 
 ```{r}
 roworder(GGDC10S, -Variable, Country) %>% ss(1:2, 1:8)
 
-microbenchmark(collapse = collapse::roworder(GGDC10S, -Variable, Country), 
+microbenchmark(collapse = collapsedev2::roworder(GGDC10S, -Variable, Country), 
                dplyr = dplyr::arrange(GGDC10S, desc(Variable), Country))
 ```
 In contrast to `data.table::setorder`, `roworder` creates a copy of the data frame (unless data are already sorted). If this copy is not required, `data.table::setorder` is faster. The function `roworderv` is a standard evaluation analogue to `roworder`:
@@ -556,7 +556,7 @@ microbenchmark(cbind(wlddev, wlddev), add_vars(wlddev, wlddev))
 ```
 
 ### 2.6 Renaming Columns
-`frename` is a faster version or `dplyr::rename`:
+`frename` is a fast substitute for `dplyr::rename`:
 
 ```{r}
 frename(GGDC10S, AGR = Agriculture, MIN = Mining) %>% head(2)
@@ -570,6 +570,7 @@ setrename(GGDC10S, AGR = Agriculture, MIN = Mining)
 head(GGDC10S, 2)
 rm(GGDC10S)
 ```
+Both functions are not limited to data frames but can be applied to any R object with a 'names' attribute. 
 
 ### 2.7 Using Shortcuts
 The most frequently required among the functions introduced above can be abbreviated as follows: `fselect -> slt`, `fsubset -> sbt`, `ftransform(v) -> tfm(v)`, `settransform(v) -> settfm(v)`, `get_vars -> gv`, `num_vars -> nv`, `add_vars -> av`. This was done to make it possible to write faster and more parsimonious code, and to facilitate the avoidance of piped `%>%` expressions. Needless to say pipes `%>%` have become a very convenient feature of the R language and do a great job avoiding complex nested calls. They do however require reconstructing the entire call before evaluating it, and thus take out a lot of speed:
@@ -1238,12 +1239,12 @@ In general it is recommended calling the long names (i.e. `fwithin` or `fscale` 
 <!-- # Now with cyl, vs and am fixed effects -->
 <!-- lm(W(mpg,list(cyl,vs,am)) ~ W(carb,list(cyl,vs,am)), data = mtcars) -->
 <!-- lm(mpg ~ carb, data = W(mtcars, ~ cyl + vs + am, stub = FALSE)) -->
-<!-- lm(mpg ~ carb + collapse::B(carb,list(cyl,vs,am)), data = mtcars) -->
+<!-- lm(mpg ~ carb + collapsedev2::B(carb,list(cyl,vs,am)), data = mtcars) -->
 
 <!-- # Now with cyl, vs and am fixed effects weighted by hp: -->
 <!-- lm(W(mpg,list(cyl,vs,am),hp) ~ W(carb,list(cyl,vs,am),hp), data = mtcars) -->
 <!-- lm(mpg ~ carb, data = W(mtcars, ~ cyl + vs + am, ~ hp, stub = FALSE)) -->
-<!-- lm(mpg ~ carb + collapse::B(carb,list(cyl,vs,am),hp), data = mtcars)       # This gives a slightly different coefficient!! -->
+<!-- lm(mpg ~ carb + collapsedev2::B(carb,list(cyl,vs,am),hp), data = mtcars)       # This gives a slightly different coefficient!! -->
 
 ### 6.6 HD Centering and Linear Prediction
 Sometimes simple centering is not enough, for example if a linear model with multiple levels of fixed-effects needs to be estimated, potentially involving interactions with continuous covariates. For these purposes `fHDwithin / HDW` and `fHDbetween / HDB` were created as efficient multi-purpose functions for linear prediction and partialling out. They operate by splitting complex regression problems in 2 parts: Factors and factor-interactions are projected out using `lfe::demeanlist`, an efficient `C` routine for centering vectors on multiple factors, whereas continuous variables are dealt with using a standard `qr` decomposition in base R. The examples below show the use of the `HDW` operator in manually solving a regression problem with country and time fixed effects.
