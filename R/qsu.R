@@ -127,9 +127,9 @@ qsu.data.frame <- function(x, by = NULL, pid = NULL, w = NULL, cols = NULL, high
       w <- x[[widn]]
     } else widn <- NULL
     if(is.null(v)) {
-      x <- if(is.null(cols)) x[-c(byn, pidn, widn)] else x[cols2int(cols, x, nam)]
+      x <- if(is.null(cols)) x[-c(byn, pidn, widn)] else x[cols2int(cols, x, nam, FALSE)]
     } else x <- x[v]
-  } else if(length(cols)) x <- .subset(x, cols2int(cols, x, attr(x, "names")))
+  } else if(length(cols)) x <- .subset(x, cols2int(cols, x, attr(x, "names"), FALSE))
 
   # Get vlabels
   if(vlabels) attr(x, "names") <- paste(attr(x, "names"), vlabels(x), sep = ": ")
@@ -201,9 +201,9 @@ qsu.pdata.frame <- function(x, by = NULL, w = NULL, cols = NULL, effect = 1L, hi
       w <- x[[widn]]
     } else widn <- NULL
     if(is.null(v)) {
-      x <- if(is.null(cols)) x[-c(byn, widn)] else x[cols2int(cols, x, nam)]
+      x <- if(is.null(cols)) x[-c(byn, widn)] else x[cols2int(cols, x, nam, FALSE)]
     } else x <- x[v]
-  } else if(length(cols)) x <- .subset(x, cols2int(cols, x, attr(x, "names")))
+  } else if(length(cols)) x <- .subset(x, cols2int(cols, x, attr(x, "names"), FALSE))
 
   if(vlabels) attr(x, "names") <- paste(attr(x, "names"), vlabels(x), sep = ": ")
 
