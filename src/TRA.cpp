@@ -1,4 +1,4 @@
-// [[Rcpp::plugins(cpp11)]]
+// // [[Rcpp::plugins(cpp11)]]
 #include <Rcpp.h>
 using namespace Rcpp;
 
@@ -27,1216 +27,1116 @@ inline double mymod(double x, double y) {
 // }
 
 inline double myremain(double x, double y) {
-  return (int)(x * (1/y)) * y;
+  return x - (x - (int)(x * (1/y)) * y); //   (int)(x * (1/y)) * y; <- This would be enough, but doesn't keep missing values in x!
+}
+
+
+SEXP ret1(const SEXP& x, const SEXP& xAG, const SEXP& g) {
+  int tx = TYPEOF(x), txAG = TYPEOF(xAG), l = Rf_length(x), gs = Rf_length(g);
+  int *pg;
+  bool nog = gs == 1;
+  if(nog) {
+    if(Rf_length(xAG) != 1) stop("If g = NULL, NROW(STATS) needs to be 1");
+  } else {
+    if(gs != l) stop("length(g) must match NROW(x)");
+    pg = INTEGER(g);
+  }
+  SEXP out = PROTECT(Rf_allocVector(txAG, l));
+
+  switch(txAG) {
+    case REALSXP:
+    {
+      double *pout = REAL(out);
+      if(nog) { // memset(pout, Rf_asReal(xAG), l * sizeof(double)); memset only works with 0 !!
+        double AG = Rf_asReal(xAG);
+        for(int i = l; i--; ) pout[i] = AG;
+      } else {
+        double *AG = REAL(xAG)-1;
+        for(int i = l; i--; ) pout[i] = AG[pg[i]];
+      }
+      break;
+    }
+    case INTSXP:
+    {
+      int *pout = INTEGER(out);
+      if(nog) {
+        int AG = Rf_asInteger(xAG);
+        for(int i = l; i--; ) pout[i] = AG;
+      } else {
+        int *AG = INTEGER(xAG)-1;
+        for(int i = l; i--; ) pout[i] = AG[pg[i]];
+      }
+      break;
+    }
+    case STRSXP:
+    {
+      // CharacterVector AG = xAG;
+      // if(nog) out = CharacterVector(l, String(AG[0]));
+      // else {
+      //   CharacterVector pout = out;
+      //   for(int i = l; i--; ) pout[i] = AG[pg[i]-1];
+      // }
+      // break;
+      SEXP *pout = STRING_PTR(out);
+      if(nog) {
+        SEXP AG = Rf_asChar(xAG);
+        for(int i = l; i--; ) pout[i] = AG; // SET_STRING_ELT(out, i, AG); // Without pointer -> much slower!
+      } else {
+        SEXP *AG = STRING_PTR(xAG)-1;
+        for(int i = l; i--; ) pout[i] = AG[pg[i]]; // SET_STRING_ELT(out, i, AG[pg[i]]); // Without pointer -> much slower!
+      }
+      break;
+    }
+    case LGLSXP:
+    {
+      int *pout = LOGICAL(out);
+      if(nog) {
+        int AG = Rf_asLogical(xAG);
+        for(int i = l; i--; ) pout[i] = AG;
+      } else {
+        int *AG = LOGICAL(xAG)-1;
+        for(int i = l; i--; ) pout[i] = AG[pg[i]];
+      }
+      break;
+    }
+    default:
+      stop("Not supported SEXP type!");
+  }
+
+  // Attribute Handling - 4 Situations:
+  // 1 - x is classed (factor, date, time series), xAG is not classed. i.e. vector of fNobs, fmean etc.
+  //    -> Sallow replacing, removing class and levels attributes from x, discard attributes of xAG (if any)
+  //    -> or (if type matches i.e. double for date or time series), copy attributes of x unless x is a factor
+  // 2 - x is not classed, xAG is classed (factor, date, time series). - an unusual situation should not occurr - copy attributes of xAG, discard attributes of x
+  // 3 - xAG and x are classed - same as above, keep attributes of xAG, discard attributes of x
+  // 4 - neither x nor xAG are classed - preserve attributes of x, discard attributes of xAG (if any)
+  //
+
+  if(Rf_isObject(xAG)) DUPLICATE_ATTRIB(out, xAG);
+  else if(!Rf_isObject(x) || (tx == txAG && !Rf_isFactor(x))) DUPLICATE_ATTRIB(out, x);
+  else {
+    SHALLOW_DUPLICATE_ATTRIB(out, x);
+    Rf_classgets(out, R_NilValue); // OK !
+    Rf_setAttrib(out, R_LevelsSymbol, R_NilValue); // if(Rf_isFactor(x)) ? faster ?
+  }
+
+  UNPROTECT(1);
+  return out;
+}
+
+SEXP ret2(const SEXP& x, const SEXP& xAG, const SEXP& g) {
+  int l = Rf_length(x), gs = Rf_length(g), tx = TYPEOF(x), txAG = TYPEOF(xAG);
+  int *pg;
+  bool nog = gs == 1;
+  if(nog) {
+    if(Rf_length(xAG) != 1) stop("If g = NULL, NROW(STATS) needs to be 1");
+  } else {
+    if(gs != l) stop("length(g) must match NROW(x)");
+    pg = INTEGER(g);
+  }
+
+  SEXP out = PROTECT(Rf_allocVector(txAG, l));
+
+  switch(tx) {
+  case REALSXP:
+  {
+    double *px = REAL(x);
+    switch(txAG) {
+      case REALSXP: {
+        double *pout = REAL(out);
+        if(nog) {
+          double AG = Rf_asReal(xAG);
+          for(int i = l; i--; ) pout[i] = (std::isnan(px[i])) ? NA_REAL : AG;
+        } else {
+          double *AG = REAL(xAG)-1;
+          for(int i = l; i--; ) pout[i] = (std::isnan(px[i])) ? NA_REAL : AG[pg[i]];
+        }
+        break;
+      }
+      case INTSXP: {
+        int *pout = INTEGER(out);
+        if(nog) {
+          int AG = Rf_asInteger(xAG);
+          for(int i = l; i--; ) pout[i] = (std::isnan(px[i])) ? NA_INTEGER : AG;
+        } else {
+          int *AG = INTEGER(xAG)-1;
+          for(int i = l; i--; ) pout[i] = (std::isnan(px[i])) ? NA_INTEGER : AG[pg[i]];
+        }
+        break;
+      }
+      case STRSXP: {
+        SEXP *pout = STRING_PTR(out);
+        if(nog) {
+          SEXP AG = Rf_asChar(xAG);
+          for(int i = l; i--; ) pout[i] = (std::isnan(px[i])) ? NA_STRING : AG;
+        } else {
+          SEXP *AG = STRING_PTR(xAG)-1;
+          for(int i = l; i--; ) pout[i] = (std::isnan(px[i])) ? NA_STRING : AG[pg[i]];
+        }
+        break;
+      }
+      case LGLSXP: {
+        int *pout = LOGICAL(out);
+        if(nog) {
+          int AG = Rf_asLogical(xAG);
+          for(int i = l; i--; ) pout[i] = (std::isnan(px[i])) ? NA_LOGICAL : AG;
+        } else {
+          int *AG = LOGICAL(xAG)-1;
+          for(int i = l; i--; ) pout[i] = (std::isnan(px[i])) ? NA_LOGICAL : AG[pg[i]];
+        }
+        break;
+      }
+      default:
+        stop("Not supported SEXP type!");
+    }
+    break;
+  }
+  case INTSXP:
+  {
+    int *px = INTEGER(x);
+    switch(txAG) {
+      case REALSXP: {
+        double *pout = REAL(out);
+        if(nog) {
+          double AG = Rf_asReal(xAG);
+          for(int i = l; i--; ) pout[i] = (px[i] == NA_INTEGER) ? NA_REAL : AG;
+        } else {
+          double *AG = REAL(xAG)-1;
+          for(int i = l; i--; ) pout[i] = (px[i] == NA_INTEGER) ? NA_REAL : AG[pg[i]];
+        }
+        break;
+      }
+      case INTSXP: {
+        int *pout = INTEGER(out);
+        if(nog) {
+          int AG = Rf_asInteger(xAG);
+          for(int i = l; i--; ) pout[i] = (px[i] == NA_INTEGER) ? NA_INTEGER : AG;
+        } else {
+          int *AG = INTEGER(xAG)-1;
+          for(int i = l; i--; ) pout[i] = (px[i] == NA_INTEGER) ? NA_INTEGER : AG[pg[i]];
+        }
+        break;
+      }
+      case STRSXP: {
+        SEXP *pout = STRING_PTR(out);
+        if(nog) {
+          SEXP AG = Rf_asChar(xAG);
+          for(int i = l; i--; ) pout[i] = (px[i] == NA_INTEGER) ? NA_STRING : AG;
+        } else {
+          SEXP *AG = STRING_PTR(xAG)-1;
+          for(int i = l; i--; ) pout[i] = (px[i] == NA_INTEGER) ? NA_STRING : AG[pg[i]];
+        }
+        break;
+      }
+      case LGLSXP: {
+        int *pout = LOGICAL(out);
+        if(nog) {
+          int AG = Rf_asLogical(xAG);
+          for(int i = l; i--; ) pout[i] = (px[i] == NA_INTEGER) ? NA_LOGICAL : AG;
+        } else {
+          int *AG = LOGICAL(xAG)-1;
+          for(int i = l; i--; ) pout[i] = (px[i] == NA_INTEGER) ? NA_LOGICAL : AG[pg[i]];
+        }
+        break;
+      }
+      default:
+        stop("Not supported SEXP type!");
+    }
+    break;
+  }
+  case STRSXP:
+  {
+    SEXP *px = STRING_PTR(x);
+    switch(txAG) {
+      case REALSXP: {
+        double *pout = REAL(out);
+        if(nog) {
+          double AG = Rf_asReal(xAG);
+          for(int i = l; i--; ) pout[i] = (px[i] == NA_STRING) ? NA_REAL : AG;
+        } else {
+          double *AG = REAL(xAG)-1;
+          for(int i = l; i--; ) pout[i] = (px[i] == NA_STRING) ? NA_REAL : AG[pg[i]];
+        }
+        break;
+      }
+      case INTSXP: {
+        int *pout = INTEGER(out);
+        if(nog) {
+          int AG = Rf_asInteger(xAG);
+          for(int i = l; i--; ) pout[i] = (px[i] == NA_STRING) ? NA_INTEGER : AG;
+        } else {
+          int *AG = INTEGER(xAG)-1;
+          for(int i = l; i--; ) pout[i] = (px[i] == NA_STRING) ? NA_INTEGER : AG[pg[i]];
+        }
+        break;
+      }
+      case STRSXP: {
+        SEXP *pout = STRING_PTR(out);
+        if(nog) {
+          SEXP AG = Rf_asChar(xAG);
+          for(int i = l; i--; ) pout[i] = (px[i] == NA_STRING) ? NA_STRING : AG;
+        } else {
+          SEXP *AG = STRING_PTR(xAG)-1;
+          for(int i = l; i--; ) pout[i] = (px[i] == NA_STRING) ? NA_STRING : AG[pg[i]];
+        }
+        break;
+      }
+      case LGLSXP: {
+        int *pout = LOGICAL(out);
+        if(nog) {
+          int AG = Rf_asLogical(xAG);
+          for(int i = l; i--; ) pout[i] = (px[i] == NA_STRING) ? NA_LOGICAL : AG;
+        } else {
+          int *AG = LOGICAL(xAG)-1;
+          for(int i = l; i--; ) pout[i] = (px[i] == NA_STRING) ? NA_LOGICAL : AG[pg[i]];
+        }
+        break;
+      }
+      default:
+        stop("Not supported SEXP type!");
+    }
+    break;
+  }
+  case LGLSXP:
+  {
+    int *px = LOGICAL(x);
+    switch(txAG) {
+      case REALSXP: {
+        double *pout = REAL(out);
+        if(nog) {
+          double AG = Rf_asReal(xAG);
+          for(int i = l; i--; ) pout[i] = (px[i] == NA_LOGICAL) ? NA_REAL : AG;
+        } else {
+          double *AG = REAL(xAG)-1;
+          for(int i = l; i--; ) pout[i] = (px[i] == NA_LOGICAL) ? NA_REAL : AG[pg[i]];
+        }
+        break;
+      }
+      case INTSXP: {
+        int *pout = INTEGER(out);
+        if(nog) {
+          int AG = Rf_asInteger(xAG);
+          for(int i = l; i--; ) pout[i] = (px[i] == NA_LOGICAL) ? NA_INTEGER : AG;
+        } else {
+          int *AG = INTEGER(xAG)-1;
+          for(int i = l; i--; ) pout[i] = (px[i] == NA_LOGICAL) ? NA_INTEGER : AG[pg[i]];
+        }
+        break;
+      }
+      case STRSXP: {
+        SEXP *pout = STRING_PTR(out);
+        if(nog) {
+          SEXP AG = Rf_asChar(xAG);
+          for(int i = l; i--; ) pout[i] = (px[i] == NA_LOGICAL) ? NA_STRING : AG;
+        } else {
+          SEXP *AG = STRING_PTR(xAG)-1;
+          for(int i = l; i--; ) pout[i] = (px[i] == NA_LOGICAL) ? NA_STRING : AG[pg[i]];
+        }
+        break;
+      }
+      case LGLSXP: {
+        int *pout = LOGICAL(out);
+        if(nog) {
+          int AG = Rf_asLogical(xAG);
+          for(int i = l; i--; ) pout[i] = (px[i] == NA_LOGICAL) ? NA_LOGICAL : AG;
+        } else {
+          int *AG = LOGICAL(xAG)-1;
+          for(int i = l; i--; ) pout[i] = (px[i] == NA_LOGICAL) ? NA_LOGICAL : AG[pg[i]];
+        }
+        break;
+      }
+      default:
+        stop("Not supported SEXP type!");
+    }
+    break;
+  }
+  default:
+    stop("Not supported SEXP type!");
+  }
+
+  if(Rf_isObject(xAG)) DUPLICATE_ATTRIB(out, xAG);
+  else if(!Rf_isObject(x) || (tx == txAG && !Rf_isFactor(x))) DUPLICATE_ATTRIB(out, x);
+  else {
+    SHALLOW_DUPLICATE_ATTRIB(out, x);
+    Rf_classgets(out, R_NilValue); // OK !
+    Rf_setAttrib(out, R_LevelsSymbol, R_NilValue);
+  }
+
+  UNPROTECT(1);
+  return out;
+}
+
+SEXP retoth(const SEXP& x, const SEXP& xAG, const SEXP& g, int ret = 3) {
+  int gs = Rf_length(g);
+  switch(TYPEOF(x)) {
+  case REALSXP:
+  case INTSXP:
+  {
+    NumericVector xx = x; // Change this line to allow integer input ?
+    NumericVector AG = xAG;
+    int l = xx.size();
+    NumericVector out = no_init_vector(l);
+    if(gs == 1) {
+      if(AG.size() != 1) stop("If g = NULL, STATS needs to be an atomic element!");
+      double AGx = AG[0];
+      switch(ret) {
+      case 3:
+        out = xx - AGx;
+        break;
+      case 4: stop("This transformation can only be performed with groups!");
+      case 5:
+        out = xx * (1/AGx);
+        break;
+      case 6:
+        out = xx * (100 / AGx);
+        break;
+      case 7:
+        out = xx + AGx;
+        break;
+      case 8:
+        out = xx * AGx;
+        break;
+      case 9:
+        for(int i = 0; i != l; ++i) out[i] = mymod(xx[i], AGx);
+        break;
+      case 10:
+        for(int i = 0; i != l; ++i) out[i] = myremain(xx[i], AGx);
+        break;
+      default: stop("Unknown Transformation");
+      }
+    } else {
+      if(gs != l) stop("length(g) must match nrow(x)");
+      double *px = REAL(xx), *pout = REAL(out), *pAG = REAL(AG)-1;
+      int *pg = INTEGER(g);
+      switch(ret) {
+      case 3:
+        for(int i = l; i--; ) pout[i] = px[i] - pAG[pg[i]];
+        break;
+      case 4:
+        {
+          long double OM = 0; // better precision
+          int n = 0;
+          for(int i = l; i--; ) {
+            if(std::isnan(px[i])) pout[i] = px[i];
+            else {
+              pout[i] = px[i] - pAG[pg[i]];
+              if(std::isnan(pAG[pg[i]])) continue; // If one AG remained NA, OM becomes NA
+              OM += pAG[pg[i]];
+              ++n;
+            }
+          }
+          OM = OM / n;
+          out = out + (double)OM; // Fastest ?
+          break;
+        }
+      case 5:
+        for(int i = l; i--; ) pout[i] = px[i] / pAG[pg[i]]; // Fastest ?
+        break;
+      case 6:
+        for(int i = l; i--; ) pout[i] = px[i] * (100 / pAG[pg[i]]);
+        break;
+      case 7:
+        for(int i = l; i--; ) pout[i] = px[i] + pAG[pg[i]];
+        break;
+      case 8:
+        for(int i = l; i--; ) pout[i] = px[i] * pAG[pg[i]];
+        break;
+      case 9:
+        for(int i = l; i--; ) pout[i] = mymod(px[i], pAG[pg[i]]);
+        break;
+      case 10:
+        for(int i = l; i--; ) pout[i] = myremain(px[i], pAG[pg[i]]);
+        break;
+      default: stop("Unknown Transformation");
+      }
+    }
+    DUPLICATE_ATTRIB(out, x);
+    return out;
+  }
+  case STRSXP: stop("The requested transformation is not possible with strings");
+  case LGLSXP: stop("The requested transformation is not possible with logical data");
+  default:
+    stop("Not supported SEXP type!");
+  }
 }
 
 // [[Rcpp::export]]
 SEXP TRACpp(const SEXP& x, const SEXP& xAG, const IntegerVector& g = 0, int ret = 1) {
-  int gs = g.size();
   if(ret <= 2) {
-    switch(TYPEOF(x)) {
-    case REALSXP:
-    {
-      NumericVector xx = x;
-      NumericVector AG = xAG;
-      int l = xx.size();
-      NumericVector out = no_init_vector(l);
-      if(gs == 1) {
-        if(AG.size() != 1) stop("If g = NULL, STATS needs to be an atomic element!");
-        double AGx = AG[0];
-        switch(ret) {
-        case 1:
-          std::fill(out.begin(), out.end(), AGx);
-          break;
-        case 2:
-          for(int i = l; i--; ) {
-            if(std::isnan(xx[i])) out[i] = xx[i];
-            else out[i] = AGx;
-          }
-          break;
-        default: stop("Unknown Transformation");
-        }
-      } else {
-        if(gs != l) stop("length(g) must match nrow(x)");
-        switch(ret) {
-        case 1:
-          for(int i = l; i--; ) out[i] = AG[g[i]-1];
-          break;
-        case 2:
-          for(int i = l; i--; ) {
-            if(std::isnan(xx[i])) out[i] = xx[i];
-            else out[i] = AG[g[i]-1];
-          }
-          break;
-        default: stop("Unknown Transformation");
-        }
-      }
-      DUPLICATE_ATTRIB(out, xx); // or x ?? which is faster ?
-      return out;
-    }
-    case INTSXP:
-    {
-      IntegerVector xx = x;
-      IntegerVector AG = xAG;
-      int l = xx.size();
-      IntegerVector out = no_init_vector(l);
-      if(gs == 1) {
-        if(AG.size() != 1) stop("If g = NULL, STATS needs to be an atomic element!");
-        int AGx = AG[0];
-        switch(ret) {
-        case 1:
-          std::fill(out.begin(), out.end(), AGx);
-          break;
-        case 2:
-          for(int i = l; i--; ) {
-            if(xx[i] == NA_INTEGER) out[i] = xx[i];
-            else out[i] = AGx;
-          }
-          break;
-        default: stop("Unknown Transformation");
-        }
-      } else {
-        if(gs != l) stop("length(g) must match nrow(x)");
-        switch(ret) {
-        case 1:
-          for(int i = l; i--; ) out[i] = AG[g[i]-1];
-          break;
-        case 2:
-          for(int i = l; i--; ) {
-            if(xx[i] == NA_INTEGER) out[i] = xx[i];
-            else out[i] = AG[g[i]-1];
-          }
-          break;
-        default: stop("Unknown Transformation");
-        }
-      }
-      DUPLICATE_ATTRIB(out, xx); // or x ? which is faster ?
-      return out;
-    }
-    case STRSXP:
-    {
-      CharacterVector xx = x;
-      CharacterVector AG = xAG;
-      int l = xx.size();
-      CharacterVector out = no_init_vector(l);
-      // if(ret > 2) stop("The requested transformation is not possible with strings");
-      if(gs == 1) {
-        if(AG.size() != 1) stop("If g = NULL, STATS needs to be an atomic element!");
-        String AGx = AG[0];
-        switch(ret) {
-        case 1:
-          std::fill(out.begin(), out.end(), AGx);
-          break;
-        case 2:
-          for(int i = l; i--; ) {
-            if(xx[i] == NA_STRING) out[i] = xx[i];
-            else out[i] = AGx;
-          }
-          break;
-        default: stop("Unknown Transformation");
-        }
-      } else {
-        if(gs != l) stop("length(g) must match nrow(x)");
-        switch(ret) {
-        case 1:
-          for(int i = l; i--; ) out[i] = AG[g[i]-1];
-          break;
-        case 2:
-          for(int i = l; i--; ) {
-            if(xx[i] == NA_STRING) out[i] = xx[i];
-            else out[i] = AG[g[i]-1];
-          }
-          break;
-        default: stop("Unknown Transformation");
-        }
-      }
-      DUPLICATE_ATTRIB(out, xx); // or x ? which is faster ?
-      return out;
-    }
-    case LGLSXP:
-    {
-      LogicalVector xx = x;
-      LogicalVector AG = xAG;
-      int l = xx.size();
-      LogicalVector out = no_init_vector(l);
-      // if(ret > 2) stop("The requested transformation is not possible with strings");
-      if(gs == 1) {
-        if(AG.size() != 1) stop("If g = NULL, STATS needs to be an atomic element!");
-        bool AGx = AG[0];
-        switch(ret) {
-        case 1:
-          std::fill(out.begin(), out.end(), AGx);
-          break;
-        case 2:
-          for(int i = l; i--; ) {
-            if(xx[i] == NA_LOGICAL) out[i] = xx[i];
-            else out[i] = AGx;
-          }
-          break;
-        default: stop("Unknown Transformation");
-        }
-      } else {
-        if(gs != l) stop("length(g) must match nrow(x)");
-        switch(ret) {
-        case 1:
-          for(int i = l; i--; ) out[i] = AG[g[i]-1];
-          break;
-        case 2:
-          for(int i = l; i--; ) {
-            if(xx[i] == NA_LOGICAL) out[i] = xx[i];
-            else out[i] = AG[g[i]-1];
-          }
-          break;
-        default: stop("Unknown Transformation");
-        }
-      }
-      DUPLICATE_ATTRIB(out, xx); // or x ? which is faster ?
-      return out;
-    }
-    default:
-      stop("Not supported SEXP type!");
-    }
-  } else {
-    switch(TYPEOF(x)) {
-    case REALSXP:
-    case INTSXP:
-    {
-      NumericVector xx = x;
-      NumericVector AG = xAG;
-      int l = xx.size();
-      NumericVector out = no_init_vector(l);
-      if(gs == 1) {
-        if(AG.size() != 1) stop("If g = NULL, STATS needs to be an atomic element!");
-        double AGx = AG[0];
-        switch(ret) {
-        case 3:
-          out = xx - AGx;
-          break;
-        case 4: stop("This transformation can only be performed with groups!");
-        case 5:
-          out = xx * (1/AGx);
-          break;
-        case 6:
-          out = xx * (100 / AGx);
-          break;
-        case 7:
-          out = xx + AGx;
-          break;
-        case 8:
-          out = xx * AGx;
-          break;
-        case 9:
-          for(int i = 0; i != l; ++i) out[i] = mymod(xx[i], AGx);
-          break;
-        case 10:
-          for(int i = 0; i != l; ++i) out[i] = myremain(xx[i], AGx);
-          break;
-        default: stop("Unknown Transformation");
-        }
-      } else {
-        if(gs != l) stop("length(g) must match nrow(x)");
-        switch(ret) {
-        case 3:
-          for(int i = l; i--; ) out[i] = xx[i] - AG[g[i]-1];
-          break;
-        case 4:
-          {
-            long double OM = 0; // better precision !
-            int n = 0;
-            for(int i = l; i--; ) { // Faster way ?
-              if(std::isnan(xx[i])) out[i] = xx[i];
-              else { // Problem: if one AG remained NA, oM becomes NA !
-                out[i] = xx[i] - AG[g[i]-1];
-                if(std::isnan(AG[g[i]-1])) continue; // solves the issue !
-                OM += AG[g[i]-1]; // x[i]; // we want the overall average stat, not x
-                ++n;
-              }
-            }
-            OM = OM / n;
-            out = out + (double)OM; // Fastest ?
-            break;
-          }
-        case 5:
-          for(int i = l; i--; ) out[i] = xx[i] / AG[g[i]-1]; // fastest ?
-          break;
-        case 6:
-          for(int i = l; i--; ) out[i] = xx[i] * (100/AG[g[i]-1]);
-          break;
-        case 7:
-          for(int i = l; i--; ) out[i] = xx[i] + AG[g[i]-1];
-          break;
-        case 8:
-          for(int i = l; i--; ) out[i] = xx[i] * AG[g[i]-1];
-          break;
-        case 9:
-          for(int i = l; i--; ) out[i] = mymod(xx[i], AG[g[i]-1]);
-          break;
-        case 10:
-          for(int i = l; i--; ) out[i] = myremain(xx[i], AG[g[i]-1]);
-          break;
-        default: stop("Unknown Transformation");
-        }
-      }
-      DUPLICATE_ATTRIB(out, xx); // or x ? which is faster ?
-      return out;
-    }
-    case STRSXP: stop("The requested transformation is not possible with strings");
-    case LGLSXP: stop("The requested transformation is not possible with logical data");
-    default:
-      stop("Not supported SEXP type!");
-    }
+    if(ret == 1) return ret1(x, xAG, g);
+    return ret2(x, xAG, g);
   }
+  return retoth(x, xAG, g, ret);
 }
-
-
-
-// [[Rcpp::export]]
-SEXP TRAmCpp(const SEXP& x, const SEXP& xAG, const IntegerVector& g = 0, int ret = 1) {
-  int gs = g.size();
-
-  if(ret <= 2) {
-    switch(TYPEOF(x)) {
-    case REALSXP:
-    {
-      NumericMatrix xx = x;
-      int l = xx.nrow(), col = xx.ncol();
-      NumericMatrix out = no_init_matrix(l, col);
-      if(gs == 1) {
-        NumericVector AG = xAG;
-        if(AG.size() != col) stop("If g = NULL, length(STATS) must match ncol(x)");
-        switch(ret) {
-        case 1:
-          for(int j = col; j--; ) out(_,j) = rep(AG[j], l);
-          break;
-        case 2:
-          for(int j = col; j--; ) {
-            NumericMatrix::Column colo = out( _ , j);
-            NumericMatrix::Column column = xx( _ , j);
-            double sumj = AG[j];
-            for(int i = l; i--; ) {
-              if(std::isnan(column[i])) colo[i] = column[i];
-              else colo[i] = sumj;
-            }
-          }
-          break;
-        default: stop("Unknown Transformation");
-        }
-      } else {
-        NumericMatrix AG = xAG;
-        if(AG.ncol() != col) stop("ncol(STATS) must match ncol(x)");
-        if(gs != l) stop("length(g) must match nrow(x)");
-        switch(ret) {
-        case 1:
-          for(int j = col; j--; ) {
-            NumericMatrix::Column colo = out( _ , j);
-            NumericMatrix::Column sumj = AG( _ , j);
-            for(int i = l; i--; ) colo[i] = sumj[g[i]-1];
-          }
-          break;
-        case 2:
-          for(int j = col; j--; ) {
-            NumericMatrix::Column colo = out( _ , j);
-            NumericMatrix::Column column = xx( _ , j);
-            NumericMatrix::Column sumj = AG( _ , j);
-            for(int i = l; i--; ) {
-              if(std::isnan(column[i])) colo[i] = column[i];
-              else colo[i] = sumj[g[i]-1];
-            }
-          }
-          break;
-        default: stop("Unknown Transformation");
-        }
-      }
-      DUPLICATE_ATTRIB(out, xx); // or x ? which is faster ?
-      return out;
-    }
-    case INTSXP:
-    {
-      IntegerMatrix xx = x;
-      int l = xx.nrow(), col = xx.ncol();
-      IntegerMatrix out = no_init_matrix(l, col);
-      if(gs == 1) {
-        IntegerVector AG = xAG;
-        if(AG.size() != col) stop("If g = NULL, length(STATS) must match ncol(x)");
-        switch(ret) {
-        case 1:
-          for(int j = col; j--; ) out(_,j) = rep(AG[j], l);
-          break;
-        case 2:
-          for(int j = col; j--; ) {
-            IntegerMatrix::Column colo = out( _ , j);
-            IntegerMatrix::Column column = xx( _ , j);
-            int sumj = AG[j];
-            for(int i = l; i--; ) {
-              if(column[i] == NA_INTEGER) colo[i] = NA_INTEGER;
-              else colo[i] = sumj;
-            }
-          }
-          break;
-        default: stop("Unknown Transformation");
-        }
-      } else {
-        IntegerMatrix AG = xAG;
-        if(AG.ncol() != col) stop("ncol(STATS) must match ncol(x)");
-        if(gs != l) stop("length(g) must match nrow(x)");
-        switch(ret) {
-        case 1:
-          for(int j = col; j--; ) {
-            IntegerMatrix::Column colo = out( _ , j);
-            IntegerMatrix::Column sumj = AG( _ , j);
-            for(int i = l; i--; ) colo[i] = sumj[g[i]-1];
-          }
-          break;
-        case 2:
-          for(int j = col; j--; ) {
-            IntegerMatrix::Column colo = out( _ , j);
-            IntegerMatrix::Column column = xx( _ , j);
-            IntegerMatrix::Column sumj = AG( _ , j);
-            for(int i = l; i--; ) {
-              if(column[i] == NA_INTEGER) colo[i] = NA_INTEGER;
-              else colo[i] = sumj[g[i]-1];
-            }
-          }
-          break;
-        default: stop("Unknown Transformation");
-        }
-      }
-      DUPLICATE_ATTRIB(out, xx); // or x ? which is faster ?
-      return out;
-    }
-    case STRSXP:
-    {
-      CharacterMatrix xx = x;
-      int l = xx.nrow(), col = xx.ncol();
-      CharacterMatrix out = no_init_matrix(l, col);
-      if(gs == 1) {
-        CharacterVector AG = xAG;
-        if(AG.size() != col) stop("If g = NULL, length(STATS) must match ncol(x)");
-        switch(ret) {
-        case 1:
-          for(int j = col; j--; ) {
-            CharacterMatrix::Column outj = out(_,j);
-            std::fill(outj.begin(), outj.end(), AG[j]);
-          }
-          break;
-        case 2:
-          for(int j = col; j--; ) {
-            CharacterMatrix::Column colo = out( _ , j);
-            CharacterMatrix::Column column = xx( _ , j);
-            String sumj = AG[j];
-            for(int i = l; i--; ) {
-              if(column[i] == NA_STRING) colo[i] = NA_STRING;
-              else colo[i] = sumj;
-            }
-          }
-          break;
-        default: stop("Unknown Transformation");
-        }
-      } else {
-        CharacterMatrix AG = xAG;
-        if(AG.ncol() != col) stop("ncol(STATS) must match ncol(x)");
-        if(gs != l) stop("length(g) must match nrow(x)");
-        switch(ret) {
-        case 1:
-          for(int j = col; j--; ) {
-            CharacterMatrix::Column colo = out( _ , j);
-            CharacterMatrix::Column sumj = AG( _ , j);
-            for(int i = l; i--; ) colo[i] = sumj[g[i]-1];
-          }
-          break;
-        case 2:
-          for(int j = col; j--; ) {
-            CharacterMatrix::Column colo = out( _ , j);
-            CharacterMatrix::Column column = xx( _ , j);
-            CharacterMatrix::Column sumj = AG( _ , j);
-            for(int i = l; i--; ) {
-              if(column[i] == NA_STRING) colo[i] = NA_STRING;
-              else colo[i] = sumj[g[i]-1];
-            }
-          }
-          break;
-        default: stop("Unknown Transformation");
-        }
-      }
-      DUPLICATE_ATTRIB(out, xx); // or x ? which is faster ?
-      return out;
-    }
-    case LGLSXP:
-    {
-      LogicalMatrix xx = x;
-      int l = xx.nrow(), col = xx.ncol();
-      LogicalMatrix out = no_init_matrix(l, col);
-      if(gs == 1) {
-        LogicalVector AG = xAG;
-        if(AG.size() != col) stop("length(STATS) must match ncol(x)");
-        switch(ret) {
-        case 1:
-          for(int j = col; j--; ) {
-            LogicalMatrix::Column outj = out(_,j);
-            std::fill(outj.begin(), outj.end(), AG[j]);
-          }
-          break;
-        case 2:
-          for(int j = col; j--; ) {
-            LogicalMatrix::Column colo = out( _ , j);
-            LogicalMatrix::Column column = xx( _ , j);
-            bool sumj = AG[j];
-            for(int i = l; i--; ) {
-              if(column[i] == NA_LOGICAL) colo[i] = NA_LOGICAL;
-              else colo[i] = sumj;
-            }
-          }
-          break;
-        default: stop("Unknown Transformation");
-        }
-      } else {
-        LogicalMatrix AG = xAG;
-        if(AG.ncol() != col) stop("ncol(STATS) must match ncol(x)");
-        if(gs != l) stop("length(g) must match nrow(x)");
-        switch(ret) {
-        case 1:
-          for(int j = col; j--; ) {
-            LogicalMatrix::Column colo = out( _ , j);
-            LogicalMatrix::Column sumj = AG( _ , j);
-            for(int i = l; i--; ) colo[i] = sumj[g[i]-1];
-          }
-          break;
-        case 2:
-          for(int j = col; j--; ) {
-            LogicalMatrix::Column colo = out( _ , j);
-            LogicalMatrix::Column column = xx( _ , j);
-            LogicalMatrix::Column sumj = AG( _ , j);
-            for(int i = l; i--; ) {
-              if(column[i] == NA_LOGICAL) colo[i] = NA_LOGICAL;
-              else colo[i] = sumj[g[i]-1];
-            }
-          }
-          break;
-        default: stop("Unknown Transformation");
-        }
-      }
-      DUPLICATE_ATTRIB(out, xx); // or x ? which is faster ?
-      return out;
-    }
-    default:
-      stop("Not supported SEXP type!");
-    }
-  } else {
-    switch(TYPEOF(x)) {
-    case REALSXP:
-    case INTSXP:
-    {
-      NumericMatrix xx = x;
-      int l = xx.nrow(), col = xx.ncol();
-      NumericMatrix out = no_init_matrix(l, col);
-      if(gs == 1) {
-        NumericVector AG = xAG;
-        if(AG.size() != col) stop("length(STATS) must match ncol(x)");
-        switch(ret) {
-        case 3:
-          for(int j = col; j--; ) {
-            NumericMatrix::Column colo = out( _ , j);
-            NumericMatrix::Column column = xx( _ , j);
-            colo = column - AG[j];
-          }
-          break;
-        case 4: stop("This transformation can only be computed with groups!");
-        case 5:
-          for(int j = col; j--; ) {
-            NumericMatrix::Column colo = out( _ , j);
-            NumericMatrix::Column column = xx( _ , j);
-            colo = column * (1/AG[j]); // faster ?
-          }
-          break;
-        case 6:
-          for(int j = col; j--; ) {
-            NumericMatrix::Column colo = out( _ , j);
-            NumericMatrix::Column column = xx( _ , j);
-            colo = column * (100/AG[j]);
-          }
-          break;
-        case 7:
-          for(int j = col; j--; ) {
-            NumericMatrix::Column colo = out( _ , j);
-            NumericMatrix::Column column = xx( _ , j);
-            colo = column + AG[j];
-          }
-          break;
-        case 8:
-          for(int j = col; j--; ) {
-            NumericMatrix::Column colo = out( _ , j);
-            NumericMatrix::Column column = xx( _ , j);
-            colo = column * AG[j];
-          }
-          break;
-        case 9:
-          for(int j = col; j--; ) {
-            NumericMatrix::Column colo = out( _ , j);
-            NumericMatrix::Column column = xx( _ , j);
-            double AGj = AG[j];
-            for(int i = 0; i != l; ++i) colo[i] = mymod(column[i], AGj);
-          }
-          break;
-        case 10:
-          for(int j = col; j--; ) {
-            NumericMatrix::Column colo = out( _ , j);
-            NumericMatrix::Column column = xx( _ , j);
-            double AGj = AG[j];
-            for(int i = 0; i != l; ++i) colo[i] = myremain(column[i], AGj);
-          }
-          break;
-        default: stop("Unknown Transformation");
-        }
-      } else {
-        NumericMatrix AG = xAG;
-        if(AG.ncol() != col) stop("ncol(STATS) must match ncol(x)");
-        if(gs != l) stop("length(g) must match nrow(x)");
-        switch(ret) {
-        case 3:
-          for(int j = col; j--; ) {
-            NumericMatrix::Column colo = out( _ , j);
-            NumericMatrix::Column column = xx( _ , j);
-            NumericMatrix::Column sumj = AG( _ , j);
-            for(int i = l; i--; ) colo[i] = column[i] - sumj[g[i]-1];
-          }
-          break;
-        case 4:
-          { // Needed ?
-            for(int j = col; j--; ) {
-            NumericMatrix::Column column = xx( _ , j);
-            NumericMatrix::Column colo = out( _ , j);
-            NumericMatrix::Column sumj = AG( _ , j);
-            long double OM = 0; // gives better numeric precision ! (closer to W)
-            int n = 0;
-            for(int i = l; i--; ) { // Faster way ?
-              if(std::isnan(column[i])) colo[i] = column[i];
-              else { // Problem: if one sumj remained NA, oM becomes NA !
-                colo[i] = column[i] - sumj[g[i]-1];
-                if(std::isnan(sumj[g[i]-1])) continue; // solves the issue
-                OM += sumj[g[i]-1]; // column[i]; good ?
-                ++n;
-              }
-            }
-            OM = OM / n;
-            colo = colo + (double)OM; // Fastest ?
-          }
-            break;
-          }
-        case 5:
-          for(int j = col; j--; ) {
-            NumericMatrix::Column colo = out( _ , j);
-            NumericMatrix::Column column = xx( _ , j);
-            NumericMatrix::Column sumj = AG( _ , j);
-            for(int i = l; i--; ) colo[i] = column[i] / sumj[g[i]-1]; // fastest ?
-          }
-          break;
-        case 6:
-          for(int j = col; j--; ) {
-            NumericMatrix::Column colo = out( _ , j);
-            NumericMatrix::Column column = xx( _ , j);
-            NumericMatrix::Column sumj = AG( _ , j);
-            for(int i = l; i--; ) colo[i] = column[i] * (100/sumj[g[i]-1]);
-          }
-          break;
-        case 7:
-          for(int j = col; j--; ) {
-            NumericMatrix::Column colo = out( _ , j);
-            NumericMatrix::Column column = xx( _ , j);
-            NumericMatrix::Column sumj = AG( _ , j);
-            for(int i = l; i--; ) colo[i] = column[i] + sumj[g[i]-1];
-          }
-          break;
-        case 8:
-          for(int j = col; j--; ) {
-            NumericMatrix::Column colo = out( _ , j);
-            NumericMatrix::Column column = xx( _ , j);
-            NumericMatrix::Column sumj = AG( _ , j);
-            for(int i = l; i--; ) colo[i] = column[i] * sumj[g[i]-1];
-          }
-          break;
-        case 9:
-          for(int j = col; j--; ) {
-            NumericMatrix::Column colo = out( _ , j);
-            NumericMatrix::Column column = xx( _ , j);
-            NumericMatrix::Column sumj = AG( _ , j);
-            for(int i = l; i--; ) colo[i] = mymod(column[i], sumj[g[i]-1]);
-          }
-          break;
-        case 10:
-          for(int j = col; j--; ) {
-            NumericMatrix::Column colo = out( _ , j);
-            NumericMatrix::Column column = xx( _ , j);
-            NumericMatrix::Column sumj = AG( _ , j);
-            for(int i = l; i--; ) colo[i] = myremain(column[i], sumj[g[i]-1]);
-          }
-          break;
-        default: stop("Unknown Transformation");
-        }
-      }
-      DUPLICATE_ATTRIB(out, xx); // or x ? which is faster ?
-      return out;
-    }
-    case STRSXP: stop("The requested transformation is not possible with strings");
-    case LGLSXP: stop("The requested transformation is not possible with logical data");
-    default:
-      stop("Not supported SEXP type!");
-    }
-  }
-}
-
 
 
 // [[Rcpp::export]]
 List TRAlCpp(const List& x, const SEXP& xAG, const IntegerVector& g = 0, int ret = 1) {
-  int l = x.size(), gs = g.size();
+  int l = x.size();
+  if(Rf_length(xAG) != l) stop("NCOL(x) must match NCOL(STATS)");
   List out(l);
 
-  if(gs == 1) { // ng redundant ! -> still do speed check!
-    if(ret <= 2) {
-      switch(TYPEOF(xAG)) {
-      case VECSXP: {
-        List AG = xAG;
-        if(AG.size() != l) stop("length(STATS) must match length(x)");
-        switch(ret) {
-        case 1: {
-          for(int j = l; j--; ) {
-          switch(TYPEOF(x[j])) {
-          case REALSXP: {
-            NumericVector column = x[j];
-            NumericVector outj(column.size(), AG[j]);
-            SHALLOW_DUPLICATE_ATTRIB(outj, column); // Here or before filling ?
-            out[j] = outj;
-            break;
-          }
-          case INTSXP: {
-            IntegerVector column = x[j];
-            IntegerVector outj(column.size(), AG[j]);
-            SHALLOW_DUPLICATE_ATTRIB(outj, column); // Here or before filling ?
-            out[j] = outj;
-            break;
-          }
-          case STRSXP: {
-            CharacterVector column = x[j];
-            CharacterVector outj(column.size(), wrap(AG[j]));
-            SHALLOW_DUPLICATE_ATTRIB(outj, column); // Here or before filling ?
-            out[j] = outj;
-            break;
-          }
-          case LGLSXP: {
-            LogicalVector column = x[j];
-            LogicalVector outj(column.size(), AG[j]);
-            SHALLOW_DUPLICATE_ATTRIB(outj, column); // Here or before filling ?
-            out[j] = outj;
-            break;
-          }
-          default: stop("list x element of unsupported type");
-          }
-        }
-          break;
-        }
-        case 2: {
-          for(int j = l; j--; ) {
-          switch(TYPEOF(x[j])) {
-          case REALSXP: {
-            NumericVector column = x[j];
-            int row = column.size();
-            NumericVector sgj = no_init_vector(row);
-            double sumj = AG[j];
-            for(int i = row; i--; ) {
-              if(std::isnan(column[i])) sgj[i] = column[i];
-              else sgj[i] = sumj;
-            }
-            SHALLOW_DUPLICATE_ATTRIB(sgj, column); // Here or before filling ?
-            out[j] = sgj;
-            break;
-          }
-          case INTSXP: {
-            IntegerVector column = x[j];
-            int row = column.size();
-            IntegerVector sgj = no_init_vector(row);
-            int sumj = AG[j];
-            for(int i = row; i--; ) {
-              if(column[i] == NA_INTEGER) sgj[i] = NA_INTEGER;
-              else sgj[i] = sumj;
-            }
-            SHALLOW_DUPLICATE_ATTRIB(sgj, column); // Here or before filling ?
-            out[j] = sgj;
-            break;
-          }
-          case STRSXP: {
-            CharacterVector column = x[j];
-            int row = column.size();
-            CharacterVector sgj = no_init_vector(row);
-            String sumj = AG[j];
-            for(int i = row; i--; ) {
-              if(column[i] == NA_STRING) sgj[i] = NA_STRING;
-              else sgj[i] = sumj;
-            }
-            SHALLOW_DUPLICATE_ATTRIB(sgj, column); // Here or before filling ?
-            out[j] = sgj;
-            break;
-          }
-          case LGLSXP: {
-            LogicalVector column = x[j];
-            int row = column.size();
-            LogicalVector sgj = no_init_vector(row);
-            bool sumj = AG[j];
-            for(int i = row; i--; ) {
-              if(column[i] == NA_LOGICAL) sgj[i] = NA_LOGICAL;
-              else sgj[i] = sumj;
-            }
-            SHALLOW_DUPLICATE_ATTRIB(sgj, column); // Here or before filling ?
-            out[j] = sgj;
-            break;
-          }
-          default: stop("list x element of unsupported type");
-          }
-        }
-          break;
-        }
-        }
-        break;
-      }
-      case REALSXP: {
-        NumericVector AG = xAG;
-        if(AG.size() != l) stop("length(STATS) must match length(x)");
-        switch(ret) {
-        case 1: {
-          for(int j = l; j--; ) {
-          NumericVector column = x[j];
-          NumericVector outj(column.size(), AG[j]);
-          SHALLOW_DUPLICATE_ATTRIB(outj, column); // Here or before filling ?
-          out[j] = outj;
-        }
-          break;
-        }
-        case 2: {
-          for(int j = l; j--; ) {
-          NumericVector column = x[j];
-          int row = column.size();
-          NumericVector sgj = no_init_vector(row);
-          double sumj = AG[j];
-          for(int i = row; i--; ) {
-            if(std::isnan(column[i])) sgj[i] = column[i];
-            else sgj[i] = sumj;
-          }
-          SHALLOW_DUPLICATE_ATTRIB(sgj, column); // Here or before filling ?
-          out[j] = sgj;
-        }
-          break;
-        }
-        }
-        break;
-      }
-      case INTSXP: {
-        IntegerVector AG = xAG;
-        if(AG.size() != l) stop("length(STATS) must match length(x)");
-        switch(ret) {
-        case 1: {
-          for(int j = l; j--; ) {
-          IntegerVector column = x[j];
-          IntegerVector outj(column.size(), AG[j]);
-          SHALLOW_DUPLICATE_ATTRIB(outj, column); // Here or before filling ?
-          out[j] = outj;
-        }
-          break;
-        }
-        case 2: {
-          for(int j = l; j--; ) {
-          IntegerVector column = x[j];
-          int row = column.size();
-          IntegerVector sgj = no_init_vector(row);
-          int sumj = AG[j];
-          for(int i = row; i--; ) {
-            if(column[i] == NA_INTEGER) sgj[i] = NA_INTEGER;
-            else sgj[i] = sumj;
-          }
-          SHALLOW_DUPLICATE_ATTRIB(sgj, column); // Here or before filling ?
-          out[j] = sgj;
-        }
-          break;
-        }
-        }
-        break;
-      }
-      case STRSXP: {
-        CharacterVector AG = xAG;
-        if(AG.size() != l) stop("length(STATS) must match length(x)");
-        switch(ret) {
-        case 1: {
-          for(int j = l; j--; ) {
-          CharacterVector column = x[j];
-          CharacterVector outj(column.size(), AG[j]);
-          SHALLOW_DUPLICATE_ATTRIB(outj, column); // Here or before filling ?
-          out[j] = outj;
-        }
-          break;
-        }
-        case 2: {
-          for(int j = l; j--; ) {
-          CharacterVector column = x[j];
-          int row = column.size();
-          CharacterVector sgj = no_init_vector(row);
-          String sumj = AG[j];
-          for(int i = row; i--; ) {
-            if(column[i] == NA_STRING) sgj[i] = NA_STRING;
-            else sgj[i] = sumj;
-          }
-          SHALLOW_DUPLICATE_ATTRIB(sgj, column); // Here or before filling ?
-          out[j] = sgj;
-        }
-          break;
-        }
-        }
-        break;
-      }
-      case LGLSXP: {
-        LogicalVector AG = xAG;
-        if(AG.size() != l) stop("length(STATS) must match length(x)");
-        switch(ret) {
-        case 1: {
-          for(int j = l; j--; ) {
-          LogicalVector column = x[j];
-          LogicalVector outj(column.size(), AG[j]);
-          SHALLOW_DUPLICATE_ATTRIB(outj, column);
-          out[j] = outj;
-        }
-          break;
-        }
-        case 2: {
-          for(int j = l; j--; ) {
-          LogicalVector column = x[j];
-          int row = column.size();
-          LogicalVector sgj = no_init_vector(row);
-          bool sumj = AG[j];
-          for(int i = row; i--; ) {
-            if(column[i] == NA_LOGICAL) sgj[i] = NA_LOGICAL;
-            else sgj[i] = sumj;
-          }
-          SHALLOW_DUPLICATE_ATTRIB(sgj, column); // Here or before filling ?
-          out[j] = sgj;
-        }
-          break;
-        }
-        }
-        break;
-      }
-      default: stop("Not supported SEXP type!");
-      } // Faster way ? Switch statements other way around ?
-    } else {
-      NumericVector AG = no_init_vector(l); // NULL; // gives compile warning !
-      if(TYPEOF(xAG) == VECSXP) {
-        // AG = NumericVector(l); // stable now ?
-        List temp = xAG;
-        if(temp.size() != l) stop("length(STATS) must match length(x)");
-        for(int i = l; i--; ) AG[i] = temp[i];
-      } else {
-        AG = xAG;
-        if(AG.size() != l) stop("length(STATS) must match length(x)");
-      }
-      // Works for Lists ?
-      switch(ret) {
-      case 3: {
-        for(int j = l; j--; ) {
-        NumericVector column = x[j];
-        NumericVector outj = column - AG[j];
-        SHALLOW_DUPLICATE_ATTRIB(outj, column);
-        out[j] = outj;
-      }
-        break;
-      }
-      case 4: stop("This transformation can only be performed with groups!");
-      case 5: {
-        for(int j = l; j--; ) {
-        NumericVector column = x[j];
-        NumericVector outj = column * (1/AG[j]); // faster on WDI !
-        SHALLOW_DUPLICATE_ATTRIB(outj, column);
-        out[j] = outj;
-      }
-        break;
-      }
-      case 6: {
-        for(int j = l; j--; ) {
-        NumericVector column = x[j];
-        NumericVector outj = column * (100/AG[j]);
-        SHALLOW_DUPLICATE_ATTRIB(outj, column);
-        out[j] = outj;
-      }
-        break;
-      }
-      case 7: {
-        for(int j = l; j--; ) {
-        NumericVector column = x[j];
-        NumericVector outj = column + AG[j];
-        SHALLOW_DUPLICATE_ATTRIB(outj, column);
-        out[j] = outj;
-      }
-        break;
-      }
-      case 8: {
-        for(int j = l; j--; ) {
-        NumericVector column = x[j];
-        NumericVector outj = column * AG[j];
-        SHALLOW_DUPLICATE_ATTRIB(outj, column);
-        out[j] = outj;
-      }
-        break;
-      }
-      case 9: {
-        for(int j = l; j--; ) {
-        NumericVector column = x[j];
-        int row = column.size();
-        double AGj = AG[j];
-        NumericVector outj = no_init_vector(row);
-        for(int i = 0; i != row; ++i) outj[i] = mymod(column[i], AGj);
-        SHALLOW_DUPLICATE_ATTRIB(outj, column);
-        out[j] = outj;
-      }
-        break;
-      }
-      case 10: {
-        for(int j = l; j--; ) {
-        NumericVector column = x[j];
-        int row = column.size();
-        double AGj = AG[j];
-        NumericVector outj = no_init_vector(row);
-        for(int i = 0; i != row; ++i) outj[i] = myremain(column[i], AGj);
-        SHALLOW_DUPLICATE_ATTRIB(outj, column);
-        out[j] = outj;
-      }
-        break;
-      }
-      default: stop("Unknown Transformation");
-      }
-    }
-  } else {
-    List AG = xAG; // initialize better ?
-    if(AG.size() != l) stop("length(STATS) must match length(x)");
-    if(ret <= 2) {
-      switch(ret) {
-      case 1: {
-      for(int j = l; j--; ) {
-      switch(TYPEOF(AG[j])) {
-      case REALSXP: {
-        NumericVector column = x[j];
-        if(column.size() != gs) stop("length(g) must match nrow(x)");
-        NumericVector sgj = no_init_vector(gs);
-        NumericVector sumj = AG[j];
-        for(int i = gs; i--; ) sgj[i] = sumj[g[i]-1];
-        SHALLOW_DUPLICATE_ATTRIB(sgj, column); // here or before filling?
-        out[j] = sgj;
-        break;
-      }
-      case INTSXP: {
-        IntegerVector column = x[j];
-        if(column.size() != gs) stop("length(g) must match nrow(x)");
-        IntegerVector sgj = no_init_vector(gs);
-        IntegerVector sumj = AG[j];
-        for(int i = gs; i--; ) sgj[i] = sumj[g[i]-1];
-        SHALLOW_DUPLICATE_ATTRIB(sgj, column); // here or before filling?
-        out[j] = sgj;
-        break;
-      }
-      case STRSXP: {
-        CharacterVector column = x[j];
-        if(column.size() != gs) stop("length(g) must match nrow(x)");
-        CharacterVector sgj = no_init_vector(gs);
-        CharacterVector sumj = AG[j];
-        for(int i = gs; i--; ) sgj[i] = sumj[g[i]-1];
-        SHALLOW_DUPLICATE_ATTRIB(sgj, column); // here or before filling?
-        out[j] = sgj;
-        break;
-      }
-      case LGLSXP: {
-        LogicalVector column = x[j];
-        if(column.size() != gs) stop("length(g) must match nrow(x)");
-        LogicalVector sgj = no_init_vector(gs);
-        LogicalVector sumj = AG[j];
-        for(int i = gs; i--; ) sgj[i] = sumj[g[i]-1];
-        SHALLOW_DUPLICATE_ATTRIB(sgj, column); // here or before filling?
-        out[j] = sgj;
-        break;
-      }
-      default: stop("list x element of unsupported type");
-      }
-    }
-      break;
-    }
-      case 2: {
-        for(int j = l; j--; ) {
-        switch(TYPEOF(AG[j])) {
-        case REALSXP: {
-          NumericVector column = x[j];
-          if(column.size() != gs) stop("length(g) must match nrow(x)");
-          NumericVector sgj = no_init_vector(gs);
-          NumericVector sumj = AG[j];
-          for(int i = gs; i--; ) {
-            if(std::isnan(column[i])) sgj[i] = column[i];
-            else sgj[i] = sumj[g[i]-1];
-          }
-          SHALLOW_DUPLICATE_ATTRIB(sgj, column); // here or before filling?
-          out[j] = sgj;
-          break;
-        }
-        case INTSXP: {
-          IntegerVector column = x[j];
-          if(column.size() != gs) stop("length(g) must match nrow(x)");
-          IntegerVector sgj = no_init_vector(gs);
-          IntegerVector sumj = AG[j];
-          for(int i = gs; i--; ) {
-            if(column[i] == NA_INTEGER) sgj[i] = NA_INTEGER;
-            else sgj[i] = sumj[g[i]-1];
-          }
-          SHALLOW_DUPLICATE_ATTRIB(sgj, column); // here or before filling?
-          out[j] = sgj;
-          break;
-        }
-        case STRSXP: {
-          CharacterVector column = x[j];
-          if(column.size() != gs) stop("length(g) must match nrow(x)");
-          CharacterVector sgj = no_init_vector(gs);
-          CharacterVector sumj = AG[j];
-          for(int i = gs; i--; ) {
-            if(column[i] == NA_STRING) sgj[i] = NA_STRING;
-            else sgj[i] = sumj[g[i]-1];
-          }
-          SHALLOW_DUPLICATE_ATTRIB(sgj, column); // here or before filling?
-          out[j] = sgj;
-          break;
-        }
-        case LGLSXP: {
-          LogicalVector column = x[j];
-          if(column.size() != gs) stop("length(g) must match nrow(x)");
-          LogicalVector sgj = no_init_vector(gs);
-          LogicalVector sumj = AG[j];
-          for(int i = gs; i--; ) {
-            if(column[i] == NA_LOGICAL) sgj[i] = NA_LOGICAL;
-            else sgj[i] = sumj[g[i]-1];
-          }
-          SHALLOW_DUPLICATE_ATTRIB(sgj, column); // here or before filling?
-          out[j] = sgj;
-          break;
-        }
-        default: stop("list x element of unsupported type");
-        }
-      }
-        break;
-      }
-      }
-    } else {
-      switch(ret) {
-      case 3: {
-      for(int j = l; j--; ) {
-      NumericVector column = x[j];
-      if(column.size() != gs) stop("length(g) must match nrow(x)");
-      NumericVector sgj = no_init_vector(gs);
-      NumericVector sumj = AG[j];
-      for(int i = gs; i--; ) sgj[i] = column[i] - sumj[g[i]-1];
-      SHALLOW_DUPLICATE_ATTRIB(sgj, column); // here or before filling?
-      out[j] = sgj;
-    }
-      break;
-    }
-      case 4: {
-        for(int j = l; j--; ) {
-        NumericVector column = x[j];
-        if(column.size() != gs) stop("length(g) must match nrow(x)");
-        NumericVector sgj = no_init_vector(gs);
-        NumericVector sumj = AG[j];
-        long double OM = 0;
-        int n = 0;
-        for(int i = gs; i--; ) { // Faster way ?
-          if(std::isnan(column[i])) sgj[i] = column[i];
-          else {
-            sgj[i] = column[i] - sumj[g[i]-1];
-            if(std::isnan(sumj[g[i]-1])) continue;
-            OM += sumj[g[i]-1]; // column[i]; // good?
-            ++n;
-          }
-        }
-        OM = OM / n;
-        sgj = sgj + (double)OM; // Fastest !
-        SHALLOW_DUPLICATE_ATTRIB(sgj, column); // here or before filling?
-        out[j] = sgj;
-      }
-        break;
-      }
-      case 5: {
-        for(int j = l; j--; ) {
-        NumericVector column = x[j];
-        if(column.size() != gs) stop("length(g) must match nrow(x)");
-        NumericVector sgj = no_init_vector(gs);
-        NumericVector sumj = AG[j];
-        for(int i = gs; i--; ) sgj[i] = column[i] / sumj[g[i]-1]; // Faster than *(1/) on WDI ! (missing values)
-        SHALLOW_DUPLICATE_ATTRIB(sgj, column); // here or before filling?
-        out[j] = sgj;
-      }
-        break;
-      }
-      case 6: {
-        for(int j = l; j--; ) {
-        NumericVector column = x[j];
-        if(column.size() != gs) stop("length(g) must match nrow(x)");
-        NumericVector sgj = no_init_vector(gs);
-        NumericVector sumj = AG[j];
-        for(int i = gs; i--; ) sgj[i] = column[i] * (100 / sumj[g[i]-1]);
-        SHALLOW_DUPLICATE_ATTRIB(sgj, column); // here or before filling?
-        out[j] = sgj;
-      }
-        break;
-      }
-      case 7: {
-        for(int j = l; j--; ) {
-        NumericVector column = x[j];
-        if(column.size() != gs) stop("length(g) must match nrow(x)");
-        NumericVector sgj = no_init_vector(gs);
-        NumericVector sumj = AG[j];
-        for(int i = gs; i--; ) sgj[i] = column[i] + sumj[g[i]-1];
-        SHALLOW_DUPLICATE_ATTRIB(sgj, column); // here or before filling?
-        out[j] = sgj;
-      }
-        break;
-      }
-      case 8: {
-        for(int j = l; j--; ) {
-        NumericVector column = x[j];
-        if(column.size() != gs) stop("length(g) must match nrow(x)");
-        NumericVector sgj = no_init_vector(gs);
-        NumericVector sumj = AG[j];
-        for(int i = gs; i--; ) sgj[i] = column[i] * sumj[g[i]-1];
-        SHALLOW_DUPLICATE_ATTRIB(sgj, column); // here or before filling?
-        out[j] = sgj;
-      }
-        break;
-      }
-      case 9: {
-        for(int j = l; j--; ) {
-        NumericVector column = x[j];
-        if(column.size() != gs) stop("length(g) must match nrow(x)");
-        NumericVector sgj = no_init_vector(gs);
-        NumericVector sumj = AG[j];
-        for(int i = gs; i--; ) sgj[i] = mymod(column[i], sumj[g[i]-1]);
-        SHALLOW_DUPLICATE_ATTRIB(sgj, column); // here or before filling?
-        out[j] = sgj;
-      }
-        break;
-      }
-      case 10: {
-        for(int j = l; j--; ) {
-        NumericVector column = x[j];
-        if(column.size() != gs) stop("length(g) must match nrow(x)");
-        NumericVector sgj = no_init_vector(gs);
-        NumericVector sumj = AG[j];
-        for(int i = gs; i--; ) sgj[i] = myremain(column[i], sumj[g[i]-1]);
-        SHALLOW_DUPLICATE_ATTRIB(sgj, column); // here or before filling?
-        out[j] = sgj;
-      }
-        break;
-      }
-      default: stop("Unknown transformation!");
-      }
-    }
+  switch(TYPEOF(xAG)) {
+  case VECSXP: {
+    List AG = xAG;
+    if(ret == 1)      for(int j = l; j--; ) out[j] = ret1(x[j], AG[j], g);
+    else if(ret == 2) for(int j = l; j--; ) out[j] = ret2(x[j], AG[j], g);
+    else              for(int j = l; j--; ) out[j] = retoth(x[j], AG[j], g, ret);
+    break;
+  }
+  case REALSXP: {
+    NumericVector AG = xAG;
+    if(ret == 1)      for(int j = l; j--; ) out[j] = ret1(x[j], Rf_ScalarReal(AG[j]), g);
+    else if(ret == 2) for(int j = l; j--; ) out[j] = ret2(x[j], Rf_ScalarReal(AG[j]), g);
+    else              for(int j = l; j--; ) out[j] = retoth(x[j], Rf_ScalarReal(AG[j]), g, ret);
+    break;
+  }
+  case INTSXP: {
+    IntegerVector AG = xAG;
+    if(ret == 1)      for(int j = l; j--; ) out[j] = ret1(x[j], Rf_ScalarInteger(AG[j]), g);
+    else if(ret == 2) for(int j = l; j--; ) out[j] = ret2(x[j], Rf_ScalarInteger(AG[j]), g);
+    else              for(int j = l; j--; ) out[j] = retoth(x[j], Rf_ScalarInteger(AG[j]), g, ret);
+    break;
+  }
+  case STRSXP: {
+    CharacterVector AG = xAG;
+    if(ret == 1)      for(int j = l; j--; ) out[j] = ret1(x[j], Rf_ScalarString(AG[j]), g); // Rf_ScalarString ? -> Not really necessary, a scalar string is still a SEXP ...
+    else if(ret == 2) for(int j = l; j--; ) out[j] = ret2(x[j], Rf_ScalarString(AG[j]), g);
+    else              for(int j = l; j--; ) out[j] = retoth(x[j], Rf_ScalarString(AG[j]), g, ret);
+    break;
+  }
+  case LGLSXP: {
+    LogicalVector AG = xAG;
+    if(ret == 1)      for(int j = l; j--; ) out[j] = ret1(x[j], Rf_ScalarLogical(AG[j]), g);
+    else if(ret == 2) for(int j = l; j--; ) out[j] = ret2(x[j], Rf_ScalarLogical(AG[j]), g);
+    else              for(int j = l; j--; ) out[j] = retoth(x[j], Rf_ScalarLogical(AG[j]), g, ret);
+    break;
+  }
+  default: stop("Not supported SEXP type!");
   }
   DUPLICATE_ATTRIB(out, x);
   return out;
 }
+
+// TODO: "replace" method for matrices is a bit slower than before, but overall pretty good!
+
+// [[Rcpp::export]]
+SEXP TRAmCpp(const SEXP& x, const SEXP& xAG, const IntegerVector& g = 0, int ret = 1) {
+  SEXP dim = Rf_getAttrib(x, R_DimSymbol);
+  if(Rf_isNull(dim)) stop("x is not a matrix");
+  int tx = TYPEOF(x), txAG = TYPEOF(xAG), gs = g.size(),
+    row = INTEGER(dim)[0], col = INTEGER(dim)[1], *pg = INTEGER(g), ng = 0;
+  bool nog = gs == 1;
+  if(nog) {
+    if(Rf_length(xAG) != col) stop("If g = NULL, NROW(STATS) needs to be 1");
+  } else {
+    if(gs != row) stop("length(g) must match ncol(x)");
+    if(Rf_ncols(xAG) != col) stop("ncol(STATS) must match ncol(x)");
+    ng = Rf_nrows(xAG);
+  }
+
+  if(ret <= 2) {
+
+    SEXP out = PROTECT(Rf_allocVector(txAG, row * col));
+
+    if(ret == 1) {
+
+      switch(txAG) {
+        case REALSXP:
+        {
+          double *pout = REAL(out);
+          if(nog) {
+            double *pAG = REAL(xAG);
+            for(int j = 0; j != col; ++j) {
+              int s = j * row, e = s + row;
+              double AGj = pAG[j];
+              for(int i = s; i != e; ++i) pout[i] = AGj;
+            }
+          } else {
+            for(int j = 0; j != col; ++j) {
+              int s = j * row;
+              double *AG = REAL(xAG) + j * ng - 1;
+              for(int i = 0; i != row; ++i) pout[i + s] = AG[pg[i]];
+            }
+          }
+          break;
+        }
+        case INTSXP:
+        {
+          int *pout = INTEGER(out);
+          if(nog) {
+            int *pAG = INTEGER(xAG);
+            for(int j = 0; j != col; ++j) {
+              int s = j * row, e = s + row, AGj = pAG[j];
+              for(int i = s; i != e; ++i) pout[i] = AGj;
+            }
+          } else {
+            for(int j = 0; j != col; ++j) {
+              int s = j * row, *AG = INTEGER(xAG) + j * ng - 1;
+              for(int i = 0; i != row; ++i) pout[i + s] = AG[pg[i]];
+            }
+          }
+          break;
+        }
+        case STRSXP:
+        {
+          SEXP *pout = STRING_PTR(out);
+          if(nog) {
+            SEXP *pAG = STRING_PTR(xAG);
+            for(int j = 0; j != col; ++j) {
+              int s = j * row, e = s + row;
+              SEXP AGj = pAG[j];
+              for(int i = s; i != e; ++i) pout[i] = AGj;
+            }
+          } else {
+            for(int j = 0; j != col; ++j) {
+              int s = j * row;
+              SEXP *AG = STRING_PTR(xAG) + j * ng - 1;
+              for(int i = 0; i != row; ++i) pout[i + s] = AG[pg[i]];
+            }
+          }
+          break;
+        }
+        case LGLSXP:
+        {
+          int *pout = LOGICAL(out);
+          if(nog) {
+            int *pAG = LOGICAL(xAG);
+            for(int j = 0; j != col; ++j) {
+              int s = j * row, e = s + row, AGj = pAG[j];
+              for(int i = s; i != e; ++i) pout[i] = AGj;
+            }
+          } else {
+            for(int j = 0; j != col; ++j) {
+              int s = j * row, *AG = LOGICAL(xAG) + j * ng - 1;
+              for(int i = 0; i != row; ++i) pout[i + s] = AG[pg[i]];
+            }
+          }
+          break;
+        }
+        default:
+          stop("Not supported SEXP type!");
+      }
+
+    } else { // ret == 2
+
+      switch(tx) {
+      case REALSXP:
+      {
+        double *px = REAL(x);
+        switch(txAG) {
+        case REALSXP:
+        {
+          double *pout = REAL(out);
+          if(nog) {
+            double *pAG = REAL(xAG);
+            for(int j = 0; j != col; ++j) {
+              int s = j * row, e = s + row;
+              double AGj = pAG[j];
+              for(int i = s; i != e; ++i) pout[i] = (std::isnan(px[i])) ? NA_REAL : AGj;
+            }
+          } else {
+            for(int j = 0; j != col; ++j) {
+              int s = j * row;
+              double *AG = REAL(xAG) + j * ng - 1;
+              for(int i = 0; i != row; ++i) pout[i + s] = (std::isnan(px[i + s])) ? NA_REAL : AG[pg[i]];
+            }
+          }
+          break;
+        }
+        case INTSXP:
+        {
+          int *pout = INTEGER(out);
+          if(nog) {
+            int *pAG = INTEGER(xAG);
+            for(int j = 0; j != col; ++j) {
+              int s = j * row, e = s + row, AGj = pAG[j];
+              for(int i = s; i != e; ++i) pout[i] = (std::isnan(px[i])) ? NA_INTEGER : AGj;
+            }
+          } else {
+            for(int j = 0; j != col; ++j) {
+              int s = j * row, *AG = INTEGER(xAG) + j * ng - 1;
+              for(int i = 0; i != row; ++i) pout[i + s] = (std::isnan(px[i + s])) ? NA_INTEGER : AG[pg[i]];
+            }
+          }
+          break;
+        }
+        case STRSXP:
+        {
+          SEXP *pout = STRING_PTR(out);
+          if(nog) {
+            SEXP *pAG = STRING_PTR(xAG);
+            for(int j = 0; j != col; ++j) {
+              int s = j * row, e = s + row;
+              SEXP AGj = pAG[j];
+              for(int i = s; i != e; ++i) pout[i] = (std::isnan(px[i])) ? NA_STRING : AGj;
+            }
+          } else {
+            for(int j = 0; j != col; ++j) {
+              int s = j * row;
+              SEXP *AG = STRING_PTR(xAG) + j * ng - 1;
+              for(int i = 0; i != row; ++i) pout[i + s] = (std::isnan(px[i + s])) ? NA_STRING : AG[pg[i]];
+            }
+          }
+          break;
+        }
+        case LGLSXP:
+        {
+          int *pout = LOGICAL(out);
+          if(nog) {
+            int *pAG = LOGICAL(xAG);
+            for(int j = 0; j != col; ++j) {
+              int s = j * row, e = s + row, AGj = pAG[j];
+              for(int i = s; i != e; ++i) pout[i] = (std::isnan(px[i])) ? NA_LOGICAL : AGj;
+            }
+          } else {
+            for(int j = 0; j != col; ++j) {
+              int s = j * row, *AG = LOGICAL(xAG) + j * ng - 1;
+              for(int i = 0; i != row; ++i) pout[i + s] = (std::isnan(px[i + s])) ? NA_LOGICAL : AG[pg[i]];
+            }
+          }
+          break;
+        }
+        default:
+          stop("Not supported SEXP type!");
+        }
+        break;
+      }
+      case INTSXP:
+      {
+        int *px = INTEGER(x);
+        switch(txAG) {
+        case REALSXP:
+        {
+          double *pout = REAL(out);
+          if(nog) {
+            double *pAG = REAL(xAG);
+            for(int j = 0; j != col; ++j) {
+              int s = j * row, e = s + row;
+              double AGj = pAG[j];
+              for(int i = s; i != e; ++i) pout[i] = (px[i] == NA_INTEGER) ? NA_REAL : AGj;
+            }
+          } else {
+            for(int j = 0; j != col; ++j) {
+              int s = j * row;
+              double *AG = REAL(xAG) + j * ng - 1;
+              for(int i = 0; i != row; ++i) pout[i + s] = (px[i + s] == NA_INTEGER) ? NA_REAL : AG[pg[i]];
+            }
+          }
+          break;
+        }
+        case INTSXP:
+        {
+          int *pout = INTEGER(out);
+          if(nog) {
+            int *pAG = INTEGER(xAG);
+            for(int j = 0; j != col; ++j) {
+              int s = j * row, e = s + row, AGj = pAG[j];
+              for(int i = s; i != e; ++i) pout[i] = (px[i] == NA_INTEGER) ? NA_INTEGER : AGj;
+            }
+          } else {
+            for(int j = 0; j != col; ++j) {
+              int s = j * row, *AG = INTEGER(xAG) + j * ng - 1;
+              for(int i = 0; i != row; ++i) pout[i + s] = (px[i + s] == NA_INTEGER) ? NA_INTEGER : AG[pg[i]];
+            }
+          }
+          break;
+        }
+        case STRSXP:
+        {
+          SEXP *pout = STRING_PTR(out);
+          if(nog) {
+            SEXP *pAG = STRING_PTR(xAG);
+            for(int j = 0; j != col; ++j) {
+              int s = j * row, e = s + row;
+              SEXP AGj = pAG[j];
+              for(int i = s; i != e; ++i) pout[i] = (px[i] == NA_INTEGER) ? NA_STRING : AGj;
+            }
+          } else {
+            for(int j = 0; j != col; ++j) {
+              int s = j * row;
+              SEXP *AG = STRING_PTR(xAG) + j * ng - 1;
+              for(int i = 0; i != row; ++i) pout[i + s] = (px[i + s] == NA_INTEGER) ? NA_STRING : AG[pg[i]];
+            }
+          }
+          break;
+        }
+        case LGLSXP:
+        {
+          int *pout = LOGICAL(out);
+          if(nog) {
+            int *pAG = LOGICAL(xAG);
+            for(int j = 0; j != col; ++j) {
+              int s = j * row, e = s + row, AGj = pAG[j];
+              for(int i = s; i != e; ++i) pout[i] = (px[i] == NA_INTEGER) ? NA_LOGICAL : AGj;
+            }
+          } else {
+            for(int j = 0; j != col; ++j) {
+              int s = j * row, *AG = LOGICAL(xAG) + j * ng - 1;
+              for(int i = 0; i != row; ++i) pout[i + s] = (px[i + s] == NA_INTEGER) ? NA_LOGICAL : AG[pg[i]];
+            }
+          }
+          break;
+        }
+        default:
+          stop("Not supported SEXP type!");
+        }
+        break;
+      }
+      case STRSXP:
+      {
+        SEXP *px = STRING_PTR(x);
+        switch(txAG) {
+        case REALSXP:
+        {
+          double *pout = REAL(out);
+          if(nog) {
+            double *pAG = REAL(xAG);
+            for(int j = 0; j != col; ++j) {
+              int s = j * row, e = s + row;
+              double AGj = pAG[j];
+              for(int i = s; i != e; ++i) pout[i] = (px[i] == NA_STRING) ? NA_REAL : AGj;
+            }
+          } else {
+            for(int j = 0; j != col; ++j) {
+              int s = j * row;
+              double *AG = REAL(xAG) + j * ng - 1;
+              for(int i = 0; i != row; ++i) pout[i + s] = (px[i + s] == NA_STRING) ? NA_REAL : AG[pg[i]];
+            }
+          }
+          break;
+        }
+        case INTSXP:
+        {
+          int *pout = INTEGER(out);
+          if(nog) {
+            int *pAG = INTEGER(xAG);
+            for(int j = 0; j != col; ++j) {
+              int s = j * row, e = s + row, AGj = pAG[j];
+              for(int i = s; i != e; ++i) pout[i] = (px[i] == NA_STRING) ? NA_INTEGER : AGj;
+            }
+          } else {
+            for(int j = 0; j != col; ++j) {
+              int s = j * row, *AG = INTEGER(xAG) + j * ng - 1;
+              for(int i = 0; i != row; ++i) pout[i + s] = (px[i + s] == NA_STRING) ? NA_INTEGER : AG[pg[i]];
+            }
+          }
+          break;
+        }
+        case STRSXP:
+        {
+          SEXP *pout = STRING_PTR(out);
+          if(nog) {
+            SEXP *pAG = STRING_PTR(xAG);
+            for(int j = 0; j != col; ++j) {
+              int s = j * row, e = s + row;
+              SEXP AGj = pAG[j];
+              for(int i = s; i != e; ++i) pout[i] = (px[i] == NA_STRING) ? NA_STRING : AGj;
+            }
+          } else {
+            for(int j = 0; j != col; ++j) {
+              int s = j * row;
+              SEXP *AG = STRING_PTR(xAG) + j * ng - 1;
+              for(int i = 0; i != row; ++i) pout[i + s] = (px[i + s] == NA_STRING) ? NA_STRING : AG[pg[i]];
+            }
+          }
+          break;
+        }
+        case LGLSXP:
+        {
+          int *pout = LOGICAL(out);
+          if(nog) {
+            int *pAG = LOGICAL(xAG);
+            for(int j = 0; j != col; ++j) {
+              int s = j * row, e = s + row, AGj = pAG[j];
+              for(int i = s; i != e; ++i) pout[i] = (px[i] == NA_STRING) ? NA_LOGICAL : AGj;
+            }
+          } else {
+            for(int j = 0; j != col; ++j) {
+              int s = j * row, *AG = LOGICAL(xAG) + j * ng - 1;
+              for(int i = 0; i != row; ++i) pout[i + s] = (px[i + s] == NA_STRING) ? NA_LOGICAL : AG[pg[i]];
+            }
+          }
+          break;
+        }
+        default:
+          stop("Not supported SEXP type!");
+        }
+        break;
+      }
+      case LGLSXP:
+      {
+        int *px = LOGICAL(x);
+        switch(txAG) {
+        case REALSXP:
+        {
+          double *pout = REAL(out);
+          if(nog) {
+            double *pAG = REAL(xAG);
+            for(int j = 0; j != col; ++j) {
+              int s = j * row, e = s + row;
+              double AGj = pAG[j];
+              for(int i = s; i != e; ++i) pout[i] = (px[i] == NA_LOGICAL) ? NA_REAL : AGj;
+            }
+          } else {
+            for(int j = 0; j != col; ++j) {
+              int s = j * row;
+              double *AG = REAL(xAG) + j * ng - 1;
+              for(int i = 0; i != row; ++i) pout[i + s] = (px[i + s] == NA_LOGICAL) ? NA_REAL : AG[pg[i]];
+            }
+          }
+          break;
+        }
+        case INTSXP:
+        {
+          int *pout = INTEGER(out);
+          if(nog) {
+            int *pAG = INTEGER(xAG);
+            for(int j = 0; j != col; ++j) {
+              int s = j * row, e = s + row, AGj = pAG[j];
+              for(int i = s; i != e; ++i) pout[i] = (px[i] == NA_LOGICAL) ? NA_INTEGER : AGj;
+            }
+          } else {
+            for(int j = 0; j != col; ++j) {
+              int s = j * row, *AG = INTEGER(xAG) + j * ng - 1;
+              for(int i = 0; i != row; ++i) pout[i + s] = (px[i + s] == NA_LOGICAL) ? NA_INTEGER : AG[pg[i]];
+            }
+          }
+          break;
+        }
+        case STRSXP:
+        {
+          SEXP *pout = STRING_PTR(out);
+          if(nog) {
+            SEXP *pAG = STRING_PTR(xAG);
+            for(int j = 0; j != col; ++j) {
+              int s = j * row, e = s + row;
+              SEXP AGj = pAG[j];
+              for(int i = s; i != e; ++i) pout[i] = (px[i] == NA_LOGICAL) ? NA_STRING : AGj;
+            }
+          } else {
+            for(int j = 0; j != col; ++j) {
+              int s = j * row;
+              SEXP *AG = STRING_PTR(xAG) + j * ng - 1;
+              for(int i = 0; i != row; ++i) pout[i + s] = (px[i + s] == NA_LOGICAL) ? NA_STRING : AG[pg[i]];
+            }
+          }
+          break;
+        }
+        case LGLSXP:
+        {
+          int *pout = LOGICAL(out);
+          if(nog) {
+            int *pAG = LOGICAL(xAG);
+            for(int j = 0; j != col; ++j) {
+              int s = j * row, e = s + row, AGj = pAG[j];
+              for(int i = s; i != e; ++i) pout[i] = (px[i] == NA_LOGICAL) ? NA_LOGICAL : AGj;
+            }
+          } else {
+            for(int j = 0; j != col; ++j) {
+              int s = j * row, *AG = LOGICAL(xAG) + j * ng - 1;
+              for(int i = 0; i != row; ++i) pout[i + s] = (px[i + s] == NA_LOGICAL) ? NA_LOGICAL : AG[pg[i]];
+            }
+          }
+          break;
+        }
+        default:
+          stop("Not supported SEXP type!");
+        }
+        break;
+      }
+      default:
+        stop("Not supported SEXP type!");
+      }
+
+    }
+
+    if(Rf_isObject(xAG)) DUPLICATE_ATTRIB(out, xAG);
+    else if(!Rf_isObject(x) || (tx == txAG && !Rf_isFactor(x))) DUPLICATE_ATTRIB(out, x);
+    else {
+      SHALLOW_DUPLICATE_ATTRIB(out, x);
+      Rf_classgets(out, R_NilValue); // OK !
+      Rf_setAttrib(out, R_LevelsSymbol, R_NilValue);
+    }
+
+    UNPROTECT(1);
+    return out;
+
+  } else { // ret > 2
+
+    SEXP out = PROTECT(Rf_allocVector(REALSXP, row * col));
+    double *pout = REAL(out), *px;
+    NumericVector xxAG = xAG;
+
+    switch(tx) {
+    case REALSXP:
+    case INTSXP:
+    {
+      if(tx == INTSXP) { // TODO: Better solution !
+        NumericVector xx = x; // Rf_coerceVector(x, REALSXP);
+        px = REAL(xx);
+      } else {
+        px = REAL(x);
+      }
+
+      switch(ret) {
+        case 3: {
+          if(nog) {
+            double *pAG = REAL(xxAG);
+            for(int j = 0; j != col; ++j) {
+              int s = j * row, e = s + row;
+              double AGj = pAG[j];
+              for(int i = s; i != e; ++i) pout[i] = px[i] - AGj;
+            }
+          } else {
+            for(int j = 0; j != col; ++j) {
+              int s = j * row;
+              double *AG = REAL(xxAG) + j * ng - 1;
+              for(int i = 0; i != row; ++i) pout[i + s] = px[i + s] - AG[pg[i]];
+            }
+          }
+          break;
+        }
+        case 4: {
+          if(nog) stop("This transformation can only be computed with groups!");
+          for(int j = 0; j != col; ++j) {
+            int s = j * row, n = 0;
+            long double OM = 0;
+            double *AG = REAL(xxAG) + j * ng - 1;
+            for(int i = 0; i != row; ++i) {
+              if(std::isnan(px[i + s])) pout[i + s] = px[i + s];
+              else {
+                pout[i + s] = px[i + s] - AG[pg[i]];
+                if(std::isnan(AG[pg[i]])) continue;
+                OM += AG[pg[i]];
+                ++n;
+              }
+            }
+            double OMD = double(OM / n);
+            for(int i = row; i--; ) pout[i + s] += OMD;
+          }
+          break;
+        }
+        case 5: {
+          if(nog) {
+            double *pAG = REAL(xxAG);
+            for(int j = 0; j != col; ++j) {
+              int s = j * row, e = s + row;
+              double AGj = 1 / pAG[j];
+              for(int i = s; i != e; ++i) pout[i] = px[i] * AGj;
+            }
+          } else {
+            for(int j = 0; j != col; ++j) {
+              int s = j * row;
+              double *AG = REAL(xxAG) + j * ng - 1;
+              for(int i = 0; i != row; ++i) pout[i + s] = px[i + s] * (1 / AG[pg[i]]);
+            }
+          }
+          break;
+        }
+        case 6: {
+          if(nog) {
+            double *pAG = REAL(xxAG);
+            for(int j = 0; j != col; ++j) {
+              int s = j * row, e = s + row;
+              double AGj = 100 / pAG[j];
+              for(int i = s; i != e; ++i) pout[i] = px[i] * AGj;
+            }
+          } else {
+            for(int j = 0; j != col; ++j) {
+              int s = j * row;
+              double *AG = REAL(xxAG) + j * ng - 1;
+              for(int i = 0; i != row; ++i) pout[i + s] = px[i + s] * (100 / AG[pg[i]]);
+            }
+          }
+          break;
+        }
+        case 7: {
+          if(nog) {
+            double *pAG = REAL(xxAG);
+            for(int j = 0; j != col; ++j) {
+              int s = j * row, e = s + row;
+              double AGj = pAG[j];
+              for(int i = s; i != e; ++i) pout[i] = px[i] + AGj;
+            }
+          } else {
+            for(int j = 0; j != col; ++j) {
+              int s = j * row;
+              double *AG = REAL(xxAG) + j * ng - 1;
+              for(int i = 0; i != row; ++i) pout[i + s] = px[i + s] + AG[pg[i]];
+            }
+          }
+          break;
+        }
+        case 8: {
+          if(nog) {
+            double *pAG = REAL(xxAG);
+            for(int j = 0; j != col; ++j) {
+              int s = j * row, e = s + row;
+              double AGj = pAG[j];
+              for(int i = s; i != e; ++i) pout[i] = px[i] * AGj;
+            }
+          } else {
+            for(int j = 0; j != col; ++j) {
+              int s = j * row;
+              double *AG = REAL(xxAG) + j * ng - 1;
+              for(int i = 0; i != row; ++i) pout[i + s] = px[i + s] * AG[pg[i]];
+            }
+          }
+          break;
+        }
+        case 9: {
+          if(nog) {
+            double *pAG = REAL(xxAG);
+            for(int j = 0; j != col; ++j) {
+              int s = j * row, e = s + row;
+              double AGj = pAG[j];
+              for(int i = s; i != e; ++i) pout[i] = mymod(px[i], AGj);
+            }
+          } else {
+            for(int j = 0; j != col; ++j) {
+              int s = j * row;
+              double *AG = REAL(xxAG) + j * ng - 1;
+              for(int i = 0; i != row; ++i) pout[i + s] = mymod(px[i + s], AG[pg[i]]);
+            }
+          }
+          break;
+        }
+        case 10: {
+          if(nog) {
+            double *pAG = REAL(xxAG);
+            for(int j = 0; j != col; ++j) {
+              int s = j * row, e = s + row;
+              double AGj = pAG[j];
+              for(int i = s; i != e; ++i) pout[i] = myremain(px[i], AGj);
+            }
+          } else {
+            for(int j = 0; j != col; ++j) {
+              int s = j * row;
+              double *AG = REAL(xxAG) + j * ng - 1;
+              for(int i = 0; i != row; ++i) pout[i + s] = myremain(px[i + s], AG[pg[i]]);
+            }
+          }
+          break;
+        }
+        default: stop("Unknown Transformation");
+      }
+      break;
+    }
+    case STRSXP: stop("The requested transformation is not possible with strings");
+    case LGLSXP: stop("The requested transformation is not possible with logical data");
+    default: stop("Not supported SEXP type!");
+    }
+
+    DUPLICATE_ATTRIB(out, x);
+
+    UNPROTECT(1);
+    return out;
+
+  }
+}
+
+
+
+
+
