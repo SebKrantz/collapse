@@ -209,7 +209,7 @@ recode_char <- function(X, ..., default = NULL, missing = NULL, regex = FALSE) {
 
 replace_NA <- function(X, value) {
   if(is.list(X))
-    duplAttributes(lapply(unattrib(X), function(x) `[<-`(x, is.na(x), value = value)), X) else
+    duplAttributes(lapply(unattrib(X), function(y) `[<-`(y, is.na(y), value = value)), X) else
     `[<-`(X, is.na(X), value = value)
 }
 
@@ -217,8 +217,8 @@ replace_NA <- function(X, value) {
 replace_Inf <- function(X, value = NA, replace.nan = FALSE) {
   if(is.list(X)) {
     # if(!inherits(X, "data.frame")) stop("replace_non_finite only works with atomic objects or data.frames")
-    if(replace.nan) return(duplAttributes(lapply(unattrib(X), function(x) if(is.numeric(x)) `[<-`(x, is.infinite(x) | is.nan(x), value = value) else x), X))
-    return(duplAttributes(lapply(unattrib(X), function(x) if(is.numeric(x)) `[<-`(x, is.infinite(x), value = value) else x), X))
+    if(replace.nan) return(duplAttributes(lapply(unattrib(X), function(y) if(is.numeric(y)) `[<-`(y, is.infinite(y) | is.nan(y), value = value) else y), X))
+    return(duplAttributes(lapply(unattrib(X), function(y) if(is.numeric(y)) `[<-`(y, is.infinite(y), value = value) else y), X))
   }
   if(!is.numeric(X)) stop("Infinite values can only be replaced in numeric objects!")
   if(replace.nan) return(`[<-`(X, is.infinite(X) | is.nan(X), value = value)) #  !is.finite(X) also replaces NA
@@ -239,7 +239,7 @@ replace_outliers <- function(X, limits, value = NA, single.limit = c("SDs", "min
   }
   if(is.list(X)) {
     # if(!inherits(X, "data.frame")) stop("replace_outliers only works with atomic objects or data.frames")
-    if(lg1) return(duplAttributes(lapply(unattrib(X), function(x) if(is.numeric(x)) `[<-`(x, x < l1 | x > l2, value = value) else x), X)) # could use data.table::between -> but it seems not faster !
+    if(lg1) return(duplAttributes(lapply(unattrib(X), function(y) if(is.numeric(y)) `[<-`(y, y < l1 | y > l2, value = value) else y), X)) # could use data.table::between -> but it seems not faster !
     return(switch(single.limit[1L], # Allows grouped scaling if X is a grouped_df, but requires extra memory equal to X ... extra argument gSDs ?
            SDs = {
              if(inherits(X, c("grouped_df", "pdata.frame"))) {
@@ -249,13 +249,13 @@ replace_outliers <- function(X, limits, value = NA, single.limit = c("SDs", "min
               clx <- oldClass(X)
               STDXnum <- fscale(fcolsubset(X, num))
               oldClass(X) <- NULL
-              X[num] <- mapply(function(x, y) `[<-`(x, abs(y) > limits, value = value), unattrib(X[num]), unattrib(STDXnum), SIMPLIFY = FALSE)
+              X[num] <- mapply(function(z, y) `[<-`(z, abs(y) > limits, value = value), unattrib(X[num]), unattrib(STDXnum), SIMPLIFY = FALSE)
               `oldClass<-`(X, clx)
-             } else duplAttributes(lapply(unattrib(X), function(x) if(is.numeric(x)) `[<-`(x, abs(fscaleCpp(x)) > limits, value = value) else x), X)
+             } else duplAttributes(lapply(unattrib(X), function(y) if(is.numeric(y)) `[<-`(y, abs(fscaleCpp(y)) > limits, value = value) else y), X)
            },
-           min = duplAttributes(lapply(unattrib(X), function(x) if(is.numeric(x)) `[<-`(x, x < limits, value = value) else x), X),
-           max = duplAttributes(lapply(unattrib(X), function(x) if(is.numeric(x)) `[<-`(x, x > limits, value = value) else x), X),
-           overall_SDs = duplAttributes(lapply(unattrib(X), function(x) if(is.numeric(x)) `[<-`(x, abs(fscaleCpp(x)) > limits, value = value) else x), X),
+           min = duplAttributes(lapply(unattrib(X), function(y) if(is.numeric(y)) `[<-`(y, y < limits, value = value) else y), X),
+           max = duplAttributes(lapply(unattrib(X), function(y) if(is.numeric(y)) `[<-`(y, y > limits, value = value) else y), X),
+           overall_SDs = duplAttributes(lapply(unattrib(X), function(y) if(is.numeric(y)) `[<-`(y, abs(fscaleCpp(y)) > limits, value = value) else y), X),
            stop("Unknown single.limit option")))
   }
   if(!is.numeric(X)) stop("Outliers can only be replaced in numeric objects!")
