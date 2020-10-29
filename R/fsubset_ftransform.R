@@ -21,7 +21,7 @@ fsubset.matrix <- function(x, subset, ..., drop = FALSE) {
 
 # No lazy eval
 ss <- function(x, i, j) {
-  if(is.atomic(x)) if(is.array(x)) return(x[i, j, drop = FALSE]) else return(x[i])
+  if(is.atomic(x)) if(is.array(x)) return(if(missing(j)) x[i, , drop = FALSE] else x[i, j, drop = FALSE]) else return(x[i])
   if(missing(j)) j <- seq_along(unclass(x)) else if(is.integer(j)) {
     if(any(j < 0L)) j <- seq_along(unclass(x))[j]
   } else {
@@ -125,13 +125,13 @@ ftransformv <- function(X, vars, FUN, ..., apply = TRUE) {
   if(apply) {
     clx <- oldClass(X)
     oldClass(X) <- NULL
-    vars <- cols2int(vars, X, names(X))
+    vars <- cols2int(vars, X, names(X), FALSE)
     value <- unattrib(X[vars])
     value <- if(missing(...)) lapply(value, FUN) else
       eval(substitute(lapply(value, FUN, ...)), X, parent.frame())
   } else {
     nam <- attr(X, "names")
-    vars <- cols2int(vars, X, nam)
+    vars <- cols2int(vars, X, nam, FALSE)
     value <- fcolsubset(X, vars)
     value <- if(missing(...)) unclass(FUN(value)) else # unclass needed here ? -> yes for lengths...
       unclass(eval(substitute(FUN(value, ...)), X, parent.frame()))
