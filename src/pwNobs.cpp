@@ -19,7 +19,7 @@ IntegerMatrix pwNobsmCppImpl(const Matrix<RTYPE>& x) {
         out(j, k) = out(k, j) = njk;
       }
     }
-    out.attr("dimnames") = List::create(colnames(x), colnames(x));
+    Rf_dimnamesgets(out, List::create(colnames(x), colnames(x)));
     return out;
 }
 

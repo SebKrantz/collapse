@@ -14,7 +14,7 @@ NumericVector fminmaxCppImpl(NumericVector x, int ng = 0, IntegerVector g = 0,
       if(j != 0) for(int i = j; i--; ) {
         if(FUN(min, x[i])) min = x[i];
       }
-      return NumericVector::create(min);
+      return Rf_ScalarReal(min);
     } else {
       double min = x[0];
       for(int i = 0; i != l; ++i) {
@@ -25,7 +25,7 @@ NumericVector fminmaxCppImpl(NumericVector x, int ng = 0, IntegerVector g = 0,
           if(FUN(min, x[i])) min = x[i];
         }
       }
-      return NumericVector::create(min);
+      return Rf_ScalarReal(min);
     }
   } else { // with groups
     if(g.size() != l) stop("length(g) must match nrow(X)");
@@ -34,10 +34,10 @@ NumericVector fminmaxCppImpl(NumericVector x, int ng = 0, IntegerVector g = 0,
       for(int i = l; i--; ) { // adding if isnan(x[i]) before is not faster
         if(FUN(min[g[i]-1], x[i]) || std::isnan(min[g[i]-1])) min[g[i]-1] = x[i];  // fastest
       }
-      DUPLICATE_ATTRIB(min, x);
+      if(!Rf_isObject(x)) Rf_copyMostAttrib(x, min);
       return min;
     } else {
-      NumericVector min(ng, init); // INFINITY // DBL_MAX // good?? -> yes, same value bu better output !!
+      NumericVector min(ng, init); // INFINITY // DBL_MAX // good? -> yes, same value but better output !
       int ngs = 0;
       for(int i = 0; i != l; ++i) {
         if(std::isnan(x[i])) {
@@ -50,7 +50,7 @@ NumericVector fminmaxCppImpl(NumericVector x, int ng = 0, IntegerVector g = 0,
           if(FUN(min[g[i]-1], x[i])) min[g[i]-1] = x[i];
         }
       }
-      DUPLICATE_ATTRIB(min, x);
+      if(!Rf_isObject(x)) Rf_copyMostAttrib(x, min);
       return min;
     }
   }
@@ -98,10 +98,11 @@ SEXP fminmaxmCppImpl(const NumericMatrix& x, int ng = 0, const IntegerVector& g 
         min[j] = minj;
       }
     }
-    if(drop) min.attr("names") = colnames(x);
+    if(drop) Rf_setAttrib(min, R_NamesSymbol, colnames(x));
     else {
-      min.attr("dim") = Dimension(1, col);
+      Rf_dimgets(min, Dimension(1, col));
       colnames(min) = colnames(x);
+      if(!Rf_isObject(x)) Rf_copyMostAttrib(x, min);
     }
     return min;
   } else { // with groups
@@ -138,6 +139,7 @@ SEXP fminmaxmCppImpl(const NumericMatrix& x, int ng = 0, const IntegerVector& g 
       }
     }
     colnames(min) = colnames(x);
+    if(!Rf_isObject(x)) Rf_copyMostAttrib(x, min);
     return min;
   }
 }
@@ -185,7 +187,7 @@ SEXP fminmaxlCppImpl(const List& x, int ng = 0, const IntegerVector& g = 0,
       }
     }
     if(drop) {
-      min.attr("names") = x.attr("names");
+      Rf_setAttrib(min, R_NamesSymbol, Rf_getAttrib(x, R_NamesSymbol));
       return min;
     } else {
       List out(l);
@@ -194,7 +196,7 @@ SEXP fminmaxlCppImpl(const List& x, int ng = 0, const IntegerVector& g = 0,
         SHALLOW_DUPLICATE_ATTRIB(out[j], x[j]);
       }
       DUPLICATE_ATTRIB(out, x);
-      out.attr("row.names") = 1;
+      Rf_setAttrib(out, R_RowNamesSymbol, Rf_ScalarInteger(1));
       return out;
     }
   } else { // With groups
@@ -235,7 +237,7 @@ SEXP fminmaxlCppImpl(const List& x, int ng = 0, const IntegerVector& g = 0,
       }
     }
     DUPLICATE_ATTRIB(min, x);
-    min.attr("row.names") = IntegerVector::create(NA_INTEGER, -ng);
+    Rf_setAttrib(min, R_RowNamesSymbol, IntegerVector::create(NA_INTEGER, -ng));
     return min;
   }
 }

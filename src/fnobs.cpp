@@ -2,6 +2,8 @@
 #include <Rcpp.h>
 using namespace Rcpp;
 
+SEXP sym_label = Rf_install("label");
+
 template <int RTYPE>
 IntegerVector fNobsCppImpl(Vector<RTYPE> x, int ng, IntegerVector g) {
 
@@ -14,7 +16,7 @@ IntegerVector fNobsCppImpl(Vector<RTYPE> x, int ng, IntegerVector g) {
       } else {
         for(int i = 0; i != l; ++i) if(x[i] != Vector<RTYPE>::get_na()) ++n;
       }
-     return IntegerVector::create(n);
+     return Rf_ScalarInteger(n);
   } else { // with groups
     if(g.size() != l) stop("length(g) must match nrow(X)");
     IntegerVector n(ng);
@@ -23,10 +25,10 @@ IntegerVector fNobsCppImpl(Vector<RTYPE> x, int ng, IntegerVector g) {
       } else {
         for(int i = 0; i != l; ++i) if(x[i] != Vector<RTYPE>::get_na()) ++n[g[i]-1];
       }
-    if(Rf_getAttrib(x, R_ClassSymbol) == R_NilValue) {
-      SHALLOW_DUPLICATE_ATTRIB(n, x);
+    if(!Rf_isObject(x)) {
+      Rf_copyMostAttrib(x, n); // SHALLOW_DUPLICATE_ATTRIB(n, x);
     } else {
-      n.attr("label") = x.attr("label");
+      Rf_setAttrib(n, sym_label, Rf_getAttrib(x, sym_label));
     }
     return n;
   }
@@ -81,10 +83,11 @@ SEXP fNobsmCppImpl(Matrix<RTYPE> x, int ng, IntegerVector g, bool drop) {
         nobs[j] = ni;
       }
     }
-    if(drop) nobs.attr("names") = colnames(x);
+    if(drop) Rf_setAttrib(nobs, R_NamesSymbol, colnames(x));
     else {
-      nobs.attr("dim") = Dimension(1, col);
+      Rf_dimgets(nobs, Dimension(1, col));
       colnames(nobs) = colnames(x);
+      if(!Rf_isObject(x)) Rf_copyMostAttrib(x, nobs);
     }
     return nobs;
   } else { // with groups
@@ -104,6 +107,7 @@ SEXP fNobsmCppImpl(Matrix<RTYPE> x, int ng, IntegerVector g, bool drop) {
       }
     }
     colnames(nobs) = colnames(x);
+    if(!Rf_isObject(x)) Rf_copyMostAttrib(x, nobs);
     return nobs;
   }
 }
@@ -178,20 +182,20 @@ SEXP fNobslCpp(const List& x, int ng = 0, const IntegerVector& g = 0, bool drop 
       nobs[j] = ni;
     }
     if(drop) {
-      nobs.attr("names") = x.attr("names");
+      Rf_setAttrib(nobs, R_NamesSymbol, Rf_getAttrib(x, R_NamesSymbol));
       return nobs;
     } else {
       List out(l);
       for(int j = l; j--; ) {
         out[j] = nobs[j];
-        if(Rf_getAttrib(x[j], R_ClassSymbol) == R_NilValue) {
+        if(!Rf_isObject(x[j])) {
           SHALLOW_DUPLICATE_ATTRIB(out[j], x[j]);
         } else {
-          Rf_setAttrib(out[j], wrap("label"), Rf_getAttrib(x[j], wrap("label")));
+          Rf_setAttrib(out[j], sym_label, Rf_getAttrib(x[j], sym_label));
         }
       }
       DUPLICATE_ATTRIB(out, x);
-      out.attr("row.names") = 1;
+      Rf_setAttrib(out, R_RowNamesSymbol, Rf_ScalarInteger(1));
       return out;
     }
   } else { // With groups
@@ -229,15 +233,15 @@ SEXP fNobslCpp(const List& x, int ng = 0, const IntegerVector& g = 0, bool drop 
         break;
       }
       }
-      if(Rf_getAttrib(x[j], R_ClassSymbol) == R_NilValue) {
+      if(!Rf_isObject(x[j])) {
         SHALLOW_DUPLICATE_ATTRIB(ni, x[j]);
       } else {
-        Rf_setAttrib(ni, wrap("label"), Rf_getAttrib(x[j], wrap("label")));
+        Rf_setAttrib(ni, sym_label, Rf_getAttrib(x[j], sym_label));
       }
       nobs[j] = ni;
     }
     DUPLICATE_ATTRIB(nobs, x);
-    nobs.attr("row.names") = IntegerVector::create(NA_INTEGER, -ng);
+    Rf_setAttrib(nobs, R_RowNamesSymbol, IntegerVector::create(NA_INTEGER, -ng));
     return nobs;
   }
 }

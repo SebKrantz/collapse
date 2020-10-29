@@ -39,11 +39,11 @@ NumericVector fnthCpp(const NumericVector& x, double Q = 0.5, int ng = 0, const 
         NumericVector xd = no_init_vector(l);
         auto pend = std::remove_copy_if(x.begin(), x.end(), xd.begin(), isnan2);
         int sz = pend - xd.begin(), nth = lower ? (sz-1)*Q : sz*Q; // return NumericVector::create(sz, (sz-1)*Q, sz*Q-1, sz*Q);
-        if(sz == 0) return NumericVector::create(x[0]);
+        if(sz == 0) return Rf_ScalarReal(x[0]);
         std::nth_element(xd.begin(), xd.begin()+nth, pend);
         out = (tiesmean && sz%2 == 0) ? (xd[nth] + *(std::min_element(xd.begin()+nth+1, pend)))*0.5 : xd[nth];
       } else {
-        for(int i = 0; i != l; ++i) if(isnan2(x[i])) return NumericVector::create(x[i]);
+        for(int i = 0; i != l; ++i) if(isnan2(x[i])) return Rf_ScalarReal(x[i]);
         NumericVector xd = Rf_duplicate(x);
         int nth = lower ? (l-1)*Q : l*Q;
         std::nth_element(xd.begin(), xd.begin()+nth, xd.end());
@@ -58,7 +58,7 @@ NumericVector fnthCpp(const NumericVector& x, double Q = 0.5, int ng = 0, const 
       if(Rf_isNull(gs)) {
         for(int i = 0; i != l; ++i) ++gcount[g[i]];
         for(int i = 1; i != ngp; ++i) {
-          if(gcount[i] == 0) stop("group size of 0 encountered");
+          if(gcount[i] == 0) stop("Group size of 0 encountered. This is probably because of unused factor levels. Use fdroplevels(f) to drop them.");
           gmap[i] = std::vector<double> (gcount[i]);
           gcount[i] = 0;
         }
@@ -66,7 +66,7 @@ NumericVector fnthCpp(const NumericVector& x, double Q = 0.5, int ng = 0, const 
         IntegerVector gsv = gs;
         if(ng != gsv.size()) stop("ng must match length(gs)");
         for(int i = 0; i != ng; ++i) {
-          if(gsv[i] == 0) stop("group size of 0 encountered");
+          if(gsv[i] == 0) stop("Group size of 0 encountered. This is probably because of unused factor levels. Use fdroplevels(f) to drop them.");
           gmap[i+1] = std::vector<double> (gsv[i]);
         }
       }
@@ -82,7 +82,7 @@ NumericVector fnthCpp(const NumericVector& x, double Q = 0.5, int ng = 0, const 
             out[i-1] = (tiesmean && n%2 == 0) ? (*(mid) + *(std::min_element(mid+1, end)))*0.5 : *(mid);
           }
         }
-        DUPLICATE_ATTRIB(out, x);
+        if(!Rf_isObject(x)) Rf_copyMostAttrib(x, out);
         return out;
       } else {
         NumericVector out(ng);
@@ -105,7 +105,7 @@ NumericVector fnthCpp(const NumericVector& x, double Q = 0.5, int ng = 0, const 
           std::nth_element(begin, mid, end);
           out[i] = (tiesmean && n%2 == 0) ? (*(mid) + *(std::min_element(mid+1, end)))*0.5 : *(mid);
         }
-        DUPLICATE_ATTRIB(out, x);
+        if(!Rf_isObject(x)) Rf_copyMostAttrib(x, out);
         return out;
       }
     }
@@ -121,13 +121,13 @@ NumericVector fnthCpp(const NumericVector& x, double Q = 0.5, int ng = 0, const 
       int k = 1;
       if(narm) {
         for(int i = 0; i != l; ++i) if(nisnan(x[i])) wsumQ += wg[i]; //  && nisnan(wg[i])
-        if(wsumQ == 0) return NumericVector::create(NA_REAL);
+        if(wsumQ == 0) return Rf_ScalarReal(NA_REAL);
         wsumQ *= Q;
       } else {
-        if(isnan2(x[o[l-1]-1])) return NumericVector::create(NA_REAL);
+        if(isnan2(x[o[l-1]-1])) return Rf_ScalarReal(NA_REAL);
         wsumQ = std::accumulate(wg.begin(), wg.end(), 0.0) * Q;
       }
-      if(isnan2(wsumQ)) stop("Missing weights in order statistics are currently only supported if x is also missing"); // return NumericVector::create(NA_REAL);
+      if(isnan2(wsumQ)) stop("Missing weights in order statistics are currently only supported if x is also missing"); // return Rf_ScalarReal(NA_REAL);
       if(lower) {
         while(wsum < wsumQ) wsum += wg[o[k++]-1];
         if(tiesmean && wsum == wsumQ) {
@@ -136,12 +136,12 @@ NumericVector fnthCpp(const NumericVector& x, double Q = 0.5, int ng = 0, const 
             out += x[o[k++]-1];
             ++n;
           }
-          return NumericVector::create((out + x[o[k]-1]) / n);
+          return Rf_ScalarReal((out + x[o[k]-1]) / n);
         }
       } else {
         while(wsum <= wsumQ) wsum += wg[o[k++]-1];
       }
-      return NumericVector::create(x[o[k-1]-1]);
+      return Rf_ScalarReal(x[o[k-1]-1]);
     } else { // with groups and weights
       if(l != g.size()) stop("length(g) must match length(x)");
       NumericVector wsumQ(ng), wsum(ng), out(ng, NA_REAL);
@@ -202,7 +202,7 @@ NumericVector fnthCpp(const NumericVector& x, double Q = 0.5, int ng = 0, const 
           }
         }
       }
-      DUPLICATE_ATTRIB(out, x);
+      if(!Rf_isObject(x)) Rf_copyMostAttrib(x, out);
       return out;
     }
   }
@@ -270,10 +270,11 @@ SEXP fnthmCpp(const NumericMatrix& x, double Q = 0.5, int ng = 0, const IntegerV
           endloop:;
         }
       }
-      if(drop) out.attr("names") = colnames(x);
+      if(drop) Rf_setAttrib(out, R_NamesSymbol, colnames(x));
       else {
-        out.attr("dim") = Dimension(1, col);
+        Rf_dimgets(out, Dimension(1, col));
         colnames(out) = colnames(x);
+        if(!Rf_isObject(x)) Rf_copyMostAttrib(x, out);
       }
       return out;
     } else { // with groups
@@ -284,14 +285,14 @@ SEXP fnthmCpp(const NumericMatrix& x, double Q = 0.5, int ng = 0, const IntegerV
       if(Rf_isNull(gs)) {
         for(int i = 0; i != l; ++i) ++gcount[g[i]];
         for(int i = 1; i != ngp; ++i) {
-          if(gcount[i] == 0) stop("group size of 0 encountered");
+          if(gcount[i] == 0) stop("Group size of 0 encountered. This is probably because of unused factor levels. Use fdroplevels(f) to drop them.");
           gmap[i] = std::vector<double> (gcount[i]);
         }
       } else {
         IntegerVector gsv = gs;
         if(ng != gsv.size()) stop("ng must match length(gs)");
         for(int i = 0; i != ng; ++i) {
-          if(gsv[i] == 0) stop("group size of 0 encountered");
+          if(gsv[i] == 0) stop("Group size of 0 encountered. This is probably because of unused factor levels. Use fdroplevels(f) to drop them.");
           gmap[i+1] = std::vector<double> (gsv[i]);
         }
       }
@@ -314,6 +315,7 @@ SEXP fnthmCpp(const NumericMatrix& x, double Q = 0.5, int ng = 0, const IntegerV
           }
         }
         colnames(out) = colnames(x);
+        if(!Rf_isObject(x)) Rf_copyMostAttrib(x, out);
         return out;
       } else {
         NumericMatrix out(ng, col); // no init numerically unstable
@@ -342,6 +344,7 @@ SEXP fnthmCpp(const NumericMatrix& x, double Q = 0.5, int ng = 0, const IntegerV
           }
         }
         colnames(out) = colnames(x);
+        if(!Rf_isObject(x)) Rf_copyMostAttrib(x, out);
         return out;
       }
     }
@@ -400,10 +403,11 @@ SEXP fnthmCpp(const NumericMatrix& x, double Q = 0.5, int ng = 0, const IntegerV
         out[j] = column[o[k-1]-1];
       }
       // outnth:
-        if(drop) out.attr("names") = colnames(x);
+        if(drop) Rf_setAttrib(out, R_NamesSymbol, colnames(x));
         else {
-          out.attr("dim") = Dimension(1, col);
+          Rf_dimgets(out, Dimension(1, col));
           colnames(out) = colnames(x);
+          if(!Rf_isObject(x)) Rf_copyMostAttrib(x, out);
         }
         return out;
     } else { // with groups and weights
@@ -471,6 +475,7 @@ SEXP fnthmCpp(const NumericMatrix& x, double Q = 0.5, int ng = 0, const IntegerV
         }
       }
       colnames(out) = colnames(x);
+      if(!Rf_isObject(x)) Rf_copyMostAttrib(x, out);
       return out;
     }
   }
@@ -539,7 +544,7 @@ SEXP fnthlCpp(const List& x, double Q = 0.5, int ng = 0, const IntegerVector& g 
         }
       }
       if(drop) {
-        out.attr("names") = x.attr("names");
+        Rf_setAttrib(out, R_NamesSymbol, Rf_getAttrib(x, R_NamesSymbol));
         return out;
       } else {
         List out(l);
@@ -548,7 +553,7 @@ SEXP fnthlCpp(const List& x, double Q = 0.5, int ng = 0, const IntegerVector& g 
           SHALLOW_DUPLICATE_ATTRIB(out[j], x[j]);
         }
         DUPLICATE_ATTRIB(out, x);
-        out.attr("row.names") = 1;
+        Rf_setAttrib(out, R_RowNamesSymbol, Rf_ScalarInteger(1));
         return out;
       }
 
@@ -561,14 +566,14 @@ SEXP fnthlCpp(const List& x, double Q = 0.5, int ng = 0, const IntegerVector& g 
       if(Rf_isNull(gs)) {
         for(int i = 0; i != lx1; ++i) ++gcount[g[i]];
         for(int i = 1; i != ngp; ++i) {
-          if(gcount[i] == 0) stop("group size of 0 encountered");
+          if(gcount[i] == 0) stop("Group size of 0 encountered. This is probably because of unused factor levels. Use fdroplevels(f) to drop them.");
           gmap[i] = std::vector<double> (gcount[i]);
         }
       } else {
         IntegerVector gsv = gs;
         if(ng != gsv.size()) stop("ng must match length(gs)");
         for(int i = 0; i != ng; ++i) {
-          if(gsv[i] == 0) stop("group size of 0 encountered");
+          if(gsv[i] == 0) stop("Group size of 0 encountered. This is probably because of unused factor levels. Use fdroplevels(f) to drop them.");
           gmap[i+1] = std::vector<double> (gsv[i]);
         }
       }
@@ -620,7 +625,7 @@ SEXP fnthlCpp(const List& x, double Q = 0.5, int ng = 0, const IntegerVector& g 
         }
       }
       DUPLICATE_ATTRIB(out, x);
-      out.attr("row.names") = IntegerVector::create(NA_INTEGER, -ng);
+      Rf_setAttrib(out, R_RowNamesSymbol, IntegerVector::create(NA_INTEGER, -ng));
       return out;
     }
   } else { // with weights
@@ -680,7 +685,7 @@ SEXP fnthlCpp(const List& x, double Q = 0.5, int ng = 0, const IntegerVector& g 
       }
       // outnth:
         if(drop) {
-          out.attr("names") = x.attr("names");
+          Rf_setAttrib(out, R_NamesSymbol, Rf_getAttrib(x, R_NamesSymbol));
           return out;
         } else {
           List out(l);
@@ -689,7 +694,7 @@ SEXP fnthlCpp(const List& x, double Q = 0.5, int ng = 0, const IntegerVector& g 
             SHALLOW_DUPLICATE_ATTRIB(out[j], x[j]);
           }
           DUPLICATE_ATTRIB(out, x);
-          out.attr("row.names") = 1;
+          Rf_setAttrib(out, R_RowNamesSymbol, Rf_ScalarInteger(1));
           return out;
         }
     } else { // with groups and weights
@@ -758,7 +763,7 @@ SEXP fnthlCpp(const List& x, double Q = 0.5, int ng = 0, const IntegerVector& g 
         out[j] = nthj;
       }
       DUPLICATE_ATTRIB(out, x);
-      out.attr("row.names") = IntegerVector::create(NA_INTEGER, -ng);
+      Rf_setAttrib(out, R_RowNamesSymbol, IntegerVector::create(NA_INTEGER, -ng));
       return out;
     }
   }

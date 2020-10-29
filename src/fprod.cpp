@@ -17,7 +17,7 @@ NumericVector fprodCpp(const NumericVector& x, int ng = 0, const IntegerVector& 
       if(j != 0) for(int i = j; i--; ) {
         if(!std::isnan(x[i])) prod *= x[i]; // Fastest ?
       }
-      return NumericVector::create((double)prod);
+      return Rf_ScalarReal((double)prod);
     } else {
       long double prod = 1;
       for(int i = 0; i != l; ++i) {
@@ -28,7 +28,7 @@ NumericVector fprodCpp(const NumericVector& x, int ng = 0, const IntegerVector& 
           prod *= x[i];
         }
       }
-      return NumericVector::create((double)prod);
+      return Rf_ScalarReal((double)prod);
     }
   } else { // with groups
     if(g.size() != l) stop("length(g) must match nrow(X)");
@@ -40,7 +40,7 @@ NumericVector fprodCpp(const NumericVector& x, int ng = 0, const IntegerVector& 
           else prod[g[i]-1] *= x[i];
         }
       }
-      DUPLICATE_ATTRIB(prod, x);
+      if(!Rf_isObject(x)) Rf_copyMostAttrib(x, prod);
       return prod;
     } else {
       NumericVector prod(ng, 1.0); // good? -> yes
@@ -56,7 +56,7 @@ NumericVector fprodCpp(const NumericVector& x, int ng = 0, const IntegerVector& 
           prod[g[i]-1] *= x[i];
         }
       }
-      DUPLICATE_ATTRIB(prod, x);
+      if(!Rf_isObject(x)) Rf_copyMostAttrib(x, prod);
       return prod;
     }
   }
@@ -72,7 +72,7 @@ NumericVector fprodCpp(const NumericVector& x, int ng = 0, const IntegerVector& 
          if(std::isnan(x[i]) || std::isnan(wg[i])) continue;
          prod *= x[i]*wg[i];
        }
-       return NumericVector::create((double)prod);
+       return Rf_ScalarReal((double)prod);
      } else {
        long double prod = 1;
        for(int i = 0; i != l; ++i) {
@@ -83,7 +83,7 @@ NumericVector fprodCpp(const NumericVector& x, int ng = 0, const IntegerVector& 
            prod *= x[i]*wg[i];
          }
        }
-       return NumericVector::create((double)prod);
+       return Rf_ScalarReal((double)prod);
      }
    } else { // with groups
      if(g.size() != l) stop("length(g) must match nrow(X)");
@@ -94,7 +94,7 @@ NumericVector fprodCpp(const NumericVector& x, int ng = 0, const IntegerVector& 
          if(std::isnan(prod[g[i]-1])) prod[g[i]-1] = x[i]*wg[i];
          else prod[g[i]-1] *= x[i]*wg[i];
        }
-       DUPLICATE_ATTRIB(prod, x);
+       if(!Rf_isObject(x)) Rf_copyMostAttrib(x, prod);
        return prod;
      } else {
        NumericVector prod(ng, 1.0);
@@ -110,7 +110,7 @@ NumericVector fprodCpp(const NumericVector& x, int ng = 0, const IntegerVector& 
            prod[g[i]-1] *= x[i]*wg[i];
          }
        }
-       DUPLICATE_ATTRIB(prod, x);
+       if(!Rf_isObject(x)) Rf_copyMostAttrib(x, prod);
        return prod;
      }
    }
@@ -154,10 +154,11 @@ SEXP fprodmCpp(const NumericMatrix& x, int ng = 0, const IntegerVector& g = 0,
         prod[j] = (double)prodj;
       }
     }
-    if(drop) prod.attr("names") = colnames(x);
+    if(drop) Rf_setAttrib(prod, R_NamesSymbol, colnames(x));
     else {
-      prod.attr("dim") = Dimension(1, col);
+      Rf_dimgets(prod, Dimension(1, col));
       colnames(prod) = colnames(x);
+      if(!Rf_isObject(x)) Rf_copyMostAttrib(x, prod);
     }
     return prod;
   } else { // with groups
@@ -176,6 +177,7 @@ SEXP fprodmCpp(const NumericMatrix& x, int ng = 0, const IntegerVector& g = 0,
         }
       }
       colnames(prod) = colnames(x);
+      if(!Rf_isObject(x)) Rf_copyMostAttrib(x, prod);
       return prod;
     } else {
       NumericMatrix prod = no_init_matrix(ng, col); // no init numerically unstable
@@ -197,6 +199,7 @@ SEXP fprodmCpp(const NumericMatrix& x, int ng = 0, const IntegerVector& g = 0,
         }
       }
       colnames(prod) = colnames(x);
+      if(!Rf_isObject(x)) Rf_copyMostAttrib(x, prod);
       return prod;
     }
   }
@@ -232,10 +235,11 @@ SEXP fprodmCpp(const NumericMatrix& x, int ng = 0, const IntegerVector& g = 0,
          prod[j] = (double)prodj;
        }
      }
-     if(drop) prod.attr("names") = colnames(x);
+     if(drop) Rf_setAttrib(prod, R_NamesSymbol, colnames(x));
      else {
-       prod.attr("dim") = Dimension(1, col);
+       Rf_dimgets(prod, Dimension(1, col));
        colnames(prod) = colnames(x);
+       if(!Rf_isObject(x)) Rf_copyMostAttrib(x, prod);
      }
      return prod;
    } else { // with groups
@@ -256,6 +260,7 @@ SEXP fprodmCpp(const NumericMatrix& x, int ng = 0, const IntegerVector& g = 0,
          }
        }
        colnames(prod) = colnames(x);
+       if(!Rf_isObject(x)) Rf_copyMostAttrib(x, prod);
        return prod;
      } else {
        NumericMatrix prod = no_init_matrix(ng, col);
@@ -277,6 +282,7 @@ SEXP fprodmCpp(const NumericMatrix& x, int ng = 0, const IntegerVector& g = 0,
          }
        }
        colnames(prod) = colnames(x);
+       if(!Rf_isObject(x)) Rf_copyMostAttrib(x, prod);
        return prod;
      }
    }
@@ -322,7 +328,7 @@ SEXP fprodlCpp(const List& x, int ng = 0, const IntegerVector& g = 0,
       }
     }
     if(drop) {
-      prod.attr("names") = x.attr("names");
+      Rf_setAttrib(prod, R_NamesSymbol, Rf_getAttrib(x, R_NamesSymbol));
       return prod;
     } else {
       List out(l);
@@ -331,7 +337,7 @@ SEXP fprodlCpp(const List& x, int ng = 0, const IntegerVector& g = 0,
         SHALLOW_DUPLICATE_ATTRIB(out[j], x[j]);
       }
       DUPLICATE_ATTRIB(out, x);
-      out.attr("row.names") = 1;
+      Rf_setAttrib(out, R_RowNamesSymbol, Rf_ScalarInteger(1));
       return out;
     }
   } else { // With groups
@@ -373,7 +379,7 @@ SEXP fprodlCpp(const List& x, int ng = 0, const IntegerVector& g = 0,
       }
     }
     DUPLICATE_ATTRIB(prod, x);
-    prod.attr("row.names") = IntegerVector::create(NA_INTEGER, -ng);
+    Rf_setAttrib(prod, R_RowNamesSymbol, IntegerVector::create(NA_INTEGER, -ng));
     return prod;
   }
  } else { // With weights
@@ -411,7 +417,7 @@ SEXP fprodlCpp(const List& x, int ng = 0, const IntegerVector& g = 0,
        }
      }
      if(drop) {
-       prod.attr("names") = x.attr("names");
+       Rf_setAttrib(prod, R_NamesSymbol, Rf_getAttrib(x, R_NamesSymbol));
        return prod;
      } else {
        List out(l);
@@ -420,7 +426,7 @@ SEXP fprodlCpp(const List& x, int ng = 0, const IntegerVector& g = 0,
          SHALLOW_DUPLICATE_ATTRIB(out[j], x[j]);
        }
        DUPLICATE_ATTRIB(out, x);
-       out.attr("row.names") = 1;
+       Rf_setAttrib(out, R_RowNamesSymbol, Rf_ScalarInteger(1));
        return out;
      }
    } else { // With groups
@@ -465,7 +471,7 @@ SEXP fprodlCpp(const List& x, int ng = 0, const IntegerVector& g = 0,
        }
      }
      DUPLICATE_ATTRIB(prod, x);
-     prod.attr("row.names") = IntegerVector::create(NA_INTEGER, -ng);
+     Rf_setAttrib(prod, R_RowNamesSymbol, IntegerVector::create(NA_INTEGER, -ng));
      return prod;
    }
  }

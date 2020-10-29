@@ -27,7 +27,7 @@ Vector<RTYPE> flastCppImpl(const Vector<RTYPE>& x, int ng, const IntegerVector& 
       DUPLICATE_ATTRIB(out, x);
       if(Rf_getAttrib(x, R_NamesSymbol) != R_NilValue) {
         CharacterVector names = Rf_getAttrib(x, R_NamesSymbol);
-        out.attr("names") = CharacterVector::create(names[j]);
+        Rf_namesgets(out, Rf_ScalarString(names[j]));
       }
       return out;
     } else {
@@ -35,7 +35,7 @@ Vector<RTYPE> flastCppImpl(const Vector<RTYPE>& x, int ng, const IntegerVector& 
       DUPLICATE_ATTRIB(out, x);
       if(Rf_getAttrib(x, R_NamesSymbol) != R_NilValue) {
         CharacterVector names = Rf_getAttrib(x, R_NamesSymbol);
-        out.attr("names") = CharacterVector::create(names[l-1]);
+        Rf_namesgets(out, Rf_ScalarString(names[l-1]));
       }
       return out;
     }
@@ -70,7 +70,7 @@ Vector<RTYPE> flastCppImpl(const Vector<RTYPE>& x, int ng, const IntegerVector& 
             }
           }
         }
-        last.attr("names") = newnames;
+        Rf_namesgets(last, newnames);
       }
     } else {
       LogicalVector gl(ng, true); // std::vector<bool> glj(ng, true);? -> Nope, not faster (see matrix method)
@@ -96,7 +96,7 @@ Vector<RTYPE> flastCppImpl(const Vector<RTYPE>& x, int ng, const IntegerVector& 
             if(ngs == ng) break;
           }
         }
-        last.attr("names") = newnames;
+        Rf_namesgets(last, newnames);
       }
     }
     return last;
@@ -150,10 +150,11 @@ SEXP flastmCppImpl(const Matrix<RTYPE>& x, int ng, const IntegerVector& g, bool 
     } else {
       last = x(l-1, _);
     }
-    if(drop) last.attr("names") = colnames(x);
+    if(drop) Rf_setAttrib(last, R_NamesSymbol, colnames(x));
     else {
-      last.attr("dim") = Dimension(1, col);
+      Rf_dimgets(last, Dimension(1, col));
       colnames(last) = colnames(x);
+      if(!Rf_isObject(x)) Rf_copyMostAttrib(x, last);
     }
     return last;
   } else { // with groups
@@ -177,7 +178,7 @@ SEXP flastmCppImpl(const Matrix<RTYPE>& x, int ng, const IntegerVector& g, bool 
       }
       colnames(last) = colnames(x);
     } else {
-      List dn = x.attr("dimnames");
+      List dn = Rf_getAttrib(x, R_DimNamesSymbol);
       if(dn[0] != R_NilValue) {
         CharacterVector rn = dn[0];
         CharacterVector newrn = no_init_vector(ng);
@@ -192,7 +193,7 @@ SEXP flastmCppImpl(const Matrix<RTYPE>& x, int ng, const IntegerVector& g, bool 
             if(ngs == ng) break;
           }
         }
-        last.attr("dimnames") = List::create(newrn, dn[1]); // best way
+        Rf_dimnamesgets(last, List::create(newrn, dn[1])); // best way
       } else {
         LogicalVector glj(ng, true); // using std::vector<bool> here is more memory efficient but not faster
         int ngs = 0;
@@ -207,6 +208,7 @@ SEXP flastmCppImpl(const Matrix<RTYPE>& x, int ng, const IntegerVector& g, bool 
         colnames(last) = colnames(x);
       }
     }
+    if(!Rf_isObject(x)) Rf_copyMostAttrib(x, last);
     return last;
   }
 }
@@ -271,7 +273,7 @@ SEXP flastlCpp(const List& x, int ng = 0, const IntegerVector& g = 0, bool narm 
           CharacterVector column = x[j];
           int k = column.size()-1;
           while(column[k] == NA_STRING && k!=0) --k;
-          CharacterVector out(1, column[k]);
+          SEXP out = Rf_ScalarString(column[k]); // CharacterVector out(1, column[k]);
           SHALLOW_DUPLICATE_ATTRIB(out, column);
           last[j] = out;
           break;
@@ -309,7 +311,7 @@ SEXP flastlCpp(const List& x, int ng = 0, const IntegerVector& g = 0, bool narm 
         }
         case STRSXP: {
           CharacterVector column = x[j];
-          CharacterVector out(1, String(*(column.end()-1)));
+          SEXP out = Rf_ScalarString(*(column.end()-1)); // CharacterVector out(1, String(*(column.end()-1)));
           SHALLOW_DUPLICATE_ATTRIB(out, column);
           last[j] = out;
           break;
@@ -328,7 +330,7 @@ SEXP flastlCpp(const List& x, int ng = 0, const IntegerVector& g = 0, bool narm 
       }
     }
     DUPLICATE_ATTRIB(last, x);
-    last.attr("row.names") = 1;
+    Rf_setAttrib(last, R_RowNamesSymbol, Rf_ScalarInteger(1));
     return last;
   } else { // With groups
     int gss = g.size();
@@ -410,7 +412,7 @@ SEXP flastlCpp(const List& x, int ng = 0, const IntegerVector& g = 0, bool narm 
         }
       }
       DUPLICATE_ATTRIB(last, x);
-      last.attr("row.names") = NumericVector::create(NA_REAL, -ng);
+      Rf_setAttrib(last, R_RowNamesSymbol, IntegerVector::create(NA_INTEGER, -ng));
     } else {
       LogicalVector glj(ng, true); //  Much faster method (precomputing indices and then going through data)
       IntegerVector lastindex = no_init_vector(ng);
@@ -461,9 +463,9 @@ SEXP flastlCpp(const List& x, int ng = 0, const IntegerVector& g = 0, bool narm 
       DUPLICATE_ATTRIB(last, x);
       if(Rf_getAttrib(x, R_RowNamesSymbol) != R_NilValue) {
         const CharacterVector& rn = Rf_getAttrib(x, R_RowNamesSymbol); // const doesn't really make a difference
-        Rf_setAttrib(last, R_RowNamesSymbol, rn[lastindex]); //  last.attr("row.names") = rn[lastindex]; // Other sloghtly faster, but no big deal
+        Rf_setAttrib(last, R_RowNamesSymbol, rn[lastindex]); //  last.attr("row.names") = rn[lastindex]; // Other slightly faster, but no big deal
       } else {
-        last.attr("row.names") = NumericVector::create(NA_REAL, -ng);
+        Rf_setAttrib(last, R_RowNamesSymbol, IntegerVector::create(NA_INTEGER, -ng));
       }
     }
     return last;

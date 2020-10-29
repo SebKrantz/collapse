@@ -1,101 +1,123 @@
-// [[Rcpp::plugins(cpp11)]]
+// // [[Rcpp::plugins(cpp11)]]
 #include <Rcpp.h>
 using namespace Rcpp;
 
 template <int RTYPE>
-  List mrtlImpl(Matrix<RTYPE> X, bool names, int ret) {
-    int l = X.nrow();
-    List out(l);
-    for(int i = l; i--; ) {
-      out[i] = X(i,_);
-    }
-    if(names && X.hasAttribute("dimnames")) {
-      List dn(2);
-      dn = X.attr("dimnames");
-      if (Rf_isNull(dn[0])) {
+List mrtlImpl(Matrix<RTYPE> X, bool names, int ret) {
+  int l = X.nrow();
+  List out(l);
+
+  for(int i = l; i--; ) out[i] = X(i, _);
+
+  if(names) {
+    SEXP dn = Rf_getAttrib(X, R_DimNamesSymbol);
+    if(dn == R_NilValue) dn = List::create(R_NilValue, R_NilValue); // should also work for plain matrices !
+      if(Rf_isNull(VECTOR_ELT(dn, 0))) {
         CharacterVector rn(l);
-        for (int i = l; i--; ) {
-          rn[i] = std::string("V") + std::to_string(i+1);
-        }
-        out.attr("names") = rn;
-      } else out.attr("names") = dn[0];
-      if (ret != 0) {
-        if (Rf_isNull(dn[1]) || ret == 2) {
-          out.attr("row.names") = IntegerVector::create(NA_INTEGER, -X.ncol());
-        } else out.attr("row.names") = dn[1];
+        std::string VS = std::string("V"); // faster !
+        for (int i = l; i--; ) rn[i] = VS + std::to_string(i+1);
+        Rf_namesgets(out, rn);
+      } else Rf_namesgets(out, VECTOR_ELT(dn, 0));
+      if(ret != 0) {
+        if(Rf_isNull(VECTOR_ELT(dn, 1)) || ret == 2) {
+          Rf_setAttrib(out, R_RowNamesSymbol, IntegerVector::create(NA_INTEGER, -X.ncol()));
+        } else Rf_setAttrib(out, R_RowNamesSymbol, VECTOR_ELT(dn, 1));
         if(ret == 1) {
-          out.attr("class") = "data.frame";
+          Rf_classgets(out, Rf_mkString("data.frame"));
         } else {
-          out.attr("class") = CharacterVector::create("data.table","data.frame");
+          Rf_classgets(out, CharacterVector::create("data.table","data.frame"));
         }
       }
-    } else if (ret != 0) {
-      CharacterVector rn(l);
-      for (int i = l; i--; ) {
-        rn[i] = std::string("V") + std::to_string(i+1);
-      }
-      out.attr("names") = rn;
-      out.attr("row.names") = IntegerVector::create(NA_INTEGER, -X.ncol());
-      if (ret == 1) {
-        out.attr("class") = "data.frame";
-      } else {
-        out.attr("class") = CharacterVector::create("data.table","data.frame");
-      }
+  } else if (ret != 0) {
+    CharacterVector rn(l);
+    std::string VS = std::string("V"); // faster !
+    for (int i = l; i--; ) rn[i] = VS + std::to_string(i+1);
+    Rf_namesgets(out, rn);
+    Rf_setAttrib(out, R_RowNamesSymbol, IntegerVector::create(NA_INTEGER, -X.ncol()));
+    if(ret == 1) {
+      Rf_classgets(out, Rf_mkString("data.frame"));
+    } else {
+      Rf_classgets(out, CharacterVector::create("data.table","data.frame"));
     }
-    return out;
+  }
+  return out;
 }
 
+
+template <>
+List mrtlImpl(Matrix<RAWSXP> X, bool names, int ret) {
+  stop("Not supported SEXP type!");
+}
+
+template <>
+List mrtlImpl(Matrix<EXPRSXP> X, bool names, int ret) {
+  stop("Not supported SEXP type!");
+}
+
+
 // [[Rcpp::export]]
-SEXP mrtl(SEXP X, bool names = false, int ret = 0){
+SEXP mrtl(const SEXP& X, bool names = false, int ret = 0){
   RCPP_RETURN_MATRIX(mrtlImpl, X, names, ret);
 }
 
 
 template <int RTYPE>
- List mctlImpl(Matrix<RTYPE> X, bool names, int ret) {
+List mctlImpl(Matrix<RTYPE> X, bool names, int ret) {
     int l = X.ncol();
     List out(l);
-    for(int i = l; i--; ) {
-      out[i] = X(_,i);
-    }
-    if(names && X.hasAttribute("dimnames")) {
-      List dn(2);
-      dn = X.attr("dimnames");
-      if (Rf_isNull(dn[1])) {
-        CharacterVector cn(l);
-        for (int i = l; i--; ) {
-          cn[i] = std::string("V") + std::to_string(i+1);
+
+    for(int i = l; i--; ) out[i] = X(_, i);
+
+    if(names) {
+      SEXP dn = Rf_getAttrib(X, R_DimNamesSymbol);
+      if(dn == R_NilValue) dn = List::create(R_NilValue, R_NilValue); // should also work for plain matrices !
+        if(Rf_isNull(VECTOR_ELT(dn, 1))) {
+          CharacterVector rn(l);
+          std::string VS = std::string("V"); // faster !
+          for (int i = l; i--; ) rn[i] = VS + std::to_string(i+1);
+          Rf_namesgets(out, rn);
+        } else Rf_namesgets(out, VECTOR_ELT(dn, 1));
+        if(ret != 0) {
+          if(Rf_isNull(VECTOR_ELT(dn, 0)) || ret == 2) {
+            Rf_setAttrib(out, R_RowNamesSymbol, IntegerVector::create(NA_INTEGER, -X.nrow()));
+          } else Rf_setAttrib(out, R_RowNamesSymbol, VECTOR_ELT(dn, 0));
+          if(ret == 1) {
+            Rf_classgets(out, Rf_mkString("data.frame"));
+          } else {
+            Rf_classgets(out, CharacterVector::create("data.table","data.frame"));
+          }
         }
-        out.attr("names") = cn;
-      } else out.attr("names") = dn[1];
-      if (ret != 0) {
-        if (Rf_isNull(dn[0]) || ret == 2) {
-          out.attr("row.names") = IntegerVector::create(NA_INTEGER, -X.nrow());
-        } else out.attr("row.names") = dn[0];
-        if(ret == 1) {
-          out.attr("class") =  "data.frame";
-        } else {
-          out.attr("class") = CharacterVector::create("data.table","data.frame");
-        }
-      }
     } else if (ret != 0) {
-      CharacterVector cn(l);
-      for (int i = l; i--; ) {
-        cn[i] = std::string("V") + std::to_string(i+1);
-      }
-      out.attr("names") = cn;
-      out.attr("row.names") = IntegerVector::create(NA_INTEGER, -X.nrow());
-      if (ret == 1) {
-        out.attr("class") = "data.frame";
+      CharacterVector rn(l);
+      std::string VS = std::string("V"); // faster !
+      for (int i = l; i--; ) rn[i] = VS + std::to_string(i+1);
+      Rf_namesgets(out, rn);
+      Rf_setAttrib(out, R_RowNamesSymbol, IntegerVector::create(NA_INTEGER, -X.nrow()));
+      if(ret == 1) {
+        Rf_classgets(out, Rf_mkString("data.frame"));
       } else {
-        out.attr("class") = CharacterVector::create("data.table","data.frame");
+        Rf_classgets(out, CharacterVector::create("data.table","data.frame"));
       }
     }
     return out;
 }
 
+
+
+template <>
+List mctlImpl(Matrix<RAWSXP> X, bool names, int ret) {
+  stop("Not supported SEXP type!");
+}
+
+template <>
+List mctlImpl(Matrix<EXPRSXP> X, bool names, int ret) {
+  stop("Not supported SEXP type!");
+}
+
+
+
 // [[Rcpp::export]]
-SEXP mctl(SEXP X, bool names = false, int ret = 0){
+SEXP mctl(const SEXP& X, bool names = false, int ret = 0){
   RCPP_RETURN_MATRIX(mctlImpl, X, names, ret);
 }
 

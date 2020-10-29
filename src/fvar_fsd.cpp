@@ -7,7 +7,7 @@ using namespace Rcpp;
 NumericVector fvarsdCpp(const NumericVector& x, int ng = 0, const IntegerVector& g = 0, const SEXP& gs = R_NilValue,
                         const SEXP& w = R_NilValue, bool narm = true, bool stable_algo = true, bool sd = true) {
   int l = x.size();
-  if(l == 1) return NumericVector::create(NA_REAL);
+  if(l == 1) return Rf_ScalarReal(NA_REAL);
 
   if(stable_algo) { // WELFORDS ONLINE METHOD ---------------------------------------------------------
     if(Rf_isNull(w)) { // No weights
@@ -28,15 +28,15 @@ NumericVector fvarsdCpp(const NumericVector& x, int ng = 0, const IntegerVector&
             M2 = M2/(n-1);
             if(sd) M2 = sqrt(M2);
             if(std::isnan(M2)) M2 = NA_REAL;
-            return NumericVector::create(M2); // ::create((double)M2)
-          } else return NumericVector::create(NA_REAL);
+            return Rf_ScalarReal(M2); // (double)M2
+          } else return Rf_ScalarReal(NA_REAL);
         } else {
           // double n = 0;
           // long double mean = 0, d1 = 0, M2 = 0;
           double n = 0, mean = 0, d1 = 0, M2 = 0;
           for(int i = 0; i != l; ++i) {
             if(std::isnan(x[i])) {
-              return NumericVector::create(NA_REAL);
+              return Rf_ScalarReal(NA_REAL);
             } else {
               d1 = x[i]-mean;
               mean += d1*(1 / ++n);
@@ -46,7 +46,7 @@ NumericVector fvarsdCpp(const NumericVector& x, int ng = 0, const IntegerVector&
           M2 = M2/(l-1);
           if(sd) M2 = sqrt(M2);
           if(std::isnan(M2)) M2 = NA_REAL;
-          return NumericVector::create(M2); // ::create((double)M2)
+          return Rf_ScalarReal(M2); // (double)M2
         }
       } else { // with groups
         if(g.size() != l) stop("length(g) must match nrow(X)");
@@ -83,7 +83,7 @@ NumericVector fvarsdCpp(const NumericVector& x, int ng = 0, const IntegerVector&
               }
             }
           }
-          DUPLICATE_ATTRIB(M2, x);
+          if(!Rf_isObject(x)) Rf_copyMostAttrib(x, M2);
           return M2;
         } else {
           NumericVector M2(ng), mean(ng), n(ng);
@@ -117,7 +117,7 @@ NumericVector fvarsdCpp(const NumericVector& x, int ng = 0, const IntegerVector&
               }
             }
           }
-          DUPLICATE_ATTRIB(M2, x);
+          if(!Rf_isObject(x)) Rf_copyMostAttrib(x, M2);
           return M2;
         }
       }
@@ -141,8 +141,8 @@ NumericVector fvarsdCpp(const NumericVector& x, int ng = 0, const IntegerVector&
             M2 /= sumw-1;
             if(sd) M2 = sqrt(M2);
             if(std::isnan(M2)) M2 = NA_REAL;
-            return NumericVector::create(M2); // create((double)M2)
-          } else return NumericVector::create(NA_REAL);
+            return Rf_ScalarReal(M2); // (double)M2
+          } else return Rf_ScalarReal(NA_REAL);
         } else {
           // long double sumw = 0, mean = 0, M2 = 0, d1 = 0;
           double sumw = 0, mean = 0, M2 = 0, d1 = 0;
@@ -159,7 +159,7 @@ NumericVector fvarsdCpp(const NumericVector& x, int ng = 0, const IntegerVector&
           M2 /= sumw-1;
           if(sd) M2 = sqrt(M2);
           if(std::isnan(M2)) M2 = NA_REAL;
-          return NumericVector::create(M2); // create((double)M2)
+          return Rf_ScalarReal(M2); // (double)M2
         }
       } else { // with groups
         if(g.size() != l) stop("length(g) must match nrow(X)");
@@ -198,7 +198,7 @@ NumericVector fvarsdCpp(const NumericVector& x, int ng = 0, const IntegerVector&
               }
             }
           }
-          DUPLICATE_ATTRIB(M2, x);
+          if(!Rf_isObject(x)) Rf_copyMostAttrib(x, M2);
           return M2;
         } else {
           NumericVector M2(ng), sumw(ng), mean(ng);
@@ -233,7 +233,7 @@ NumericVector fvarsdCpp(const NumericVector& x, int ng = 0, const IntegerVector&
               }
             }
           }
-          DUPLICATE_ATTRIB(M2, x);
+          if(!Rf_isObject(x)) Rf_copyMostAttrib(x, M2);
           return M2;
         }
       }
@@ -257,13 +257,13 @@ NumericVector fvarsdCpp(const NumericVector& x, int ng = 0, const IntegerVector&
             sq_sum = (sq_sum - pow(sum/n,2)*n)/(n-1);
             if(sd) sq_sum = sqrt(sq_sum);
             if(std::isnan(sq_sum)) sq_sum = NA_REAL;
-            return NumericVector::create((double)sq_sum);
-          } else return NumericVector::create(NA_REAL);
+            return Rf_ScalarReal((double)sq_sum);
+          } else return Rf_ScalarReal(NA_REAL);
         } else {
           long double sum = 0, sq_sum = 0;
           for(int i = 0; i != l; ++i) {
             if(std::isnan(x[i])) {
-              return NumericVector::create(x[i]);
+              return Rf_ScalarReal(x[i]);
             } else {
               sum += x[i];
               sq_sum += pow(x[i],2);
@@ -272,7 +272,7 @@ NumericVector fvarsdCpp(const NumericVector& x, int ng = 0, const IntegerVector&
           sq_sum = (sq_sum - pow(sum/l,2)*l)/(l-1);
           if(sd) sq_sum = sqrt(sq_sum);
           if(std::isnan(sq_sum)) sq_sum = NA_REAL;
-          return NumericVector::create((double)sq_sum);
+          return Rf_ScalarReal((double)sq_sum);
         }
       } else { // with groups
         if(g.size() != l) stop("length(g) must match nrow(X)");
@@ -304,7 +304,7 @@ NumericVector fvarsdCpp(const NumericVector& x, int ng = 0, const IntegerVector&
               if(std::isnan(sq_sum[i])) sq_sum[i] = NA_REAL;
             }
           }
-          DUPLICATE_ATTRIB(sq_sum, x);
+          if(!Rf_isObject(x)) Rf_copyMostAttrib(x, sq_sum);
           return sq_sum;
         } else {
           NumericVector sq_sum(ng), sum(ng);
@@ -355,7 +355,7 @@ NumericVector fvarsdCpp(const NumericVector& x, int ng = 0, const IntegerVector&
               if(std::isnan(sq_sum[i])) sq_sum[i] = NA_REAL;
             }
           }
-          DUPLICATE_ATTRIB(sq_sum, x);
+          if(!Rf_isObject(x)) Rf_copyMostAttrib(x, sq_sum);
           return sq_sum;
         }
       }
@@ -377,13 +377,13 @@ NumericVector fvarsdCpp(const NumericVector& x, int ng = 0, const IntegerVector&
             sq_sum = (sq_sum - pow(sum/sumw,2)*sumw)/(sumw-1);
             if(sd) sq_sum = sqrt(sq_sum);
             if(std::isnan(sq_sum)) sq_sum = NA_REAL;
-            return NumericVector::create((double)sq_sum);
-          } else return NumericVector::create(NA_REAL);
+            return Rf_ScalarReal((double)sq_sum);
+          } else return Rf_ScalarReal(NA_REAL);
         } else {
           long double sum = 0, sumw = 0, sq_sum = 0;
           for(int i = 0; i != l; ++i) {
             if(std::isnan(x[i]) || std::isnan(wg[i])) {
-              return NumericVector::create(NA_REAL);
+              return Rf_ScalarReal(NA_REAL);
             } else {
               sum += x[i]*wg[i];
               sumw += wg[i];
@@ -393,7 +393,7 @@ NumericVector fvarsdCpp(const NumericVector& x, int ng = 0, const IntegerVector&
           sq_sum = (sq_sum - pow(sum/sumw,2)*sumw)/(sumw-1);
           if(sd) sq_sum = sqrt(sq_sum);
           if(std::isnan(sq_sum)) sq_sum = NA_REAL;
-          return NumericVector::create((double)sq_sum);
+          return Rf_ScalarReal((double)sq_sum);
         }
       } else { // with groups
         if(g.size() != l) stop("length(g) must match nrow(X)");
@@ -425,7 +425,7 @@ NumericVector fvarsdCpp(const NumericVector& x, int ng = 0, const IntegerVector&
               if(std::isnan(sq_sum[i])) sq_sum[i] = NA_REAL;
             }
           }
-          DUPLICATE_ATTRIB(sq_sum, x);
+          if(!Rf_isObject(x)) Rf_copyMostAttrib(x, sq_sum);
           return sq_sum;
         } else {
           NumericVector sq_sum(ng), sumw(ng), sum(ng);
@@ -455,7 +455,7 @@ NumericVector fvarsdCpp(const NumericVector& x, int ng = 0, const IntegerVector&
               if(std::isnan(sq_sum[i])) sq_sum[i] = NA_REAL;
             }
           }
-          DUPLICATE_ATTRIB(sq_sum, x);
+          if(!Rf_isObject(x)) Rf_copyMostAttrib(x, sq_sum);
           return sq_sum;
         }
       }
@@ -521,10 +521,11 @@ SEXP fvarsdmCpp(const NumericMatrix& x, int ng = 0, const IntegerVector& g = 0,
             out[j] = M2i; // (double)M2i;
           }
         }
-        if(drop) out.attr("names") = colnames(x);
+        if(drop) Rf_setAttrib(out, R_NamesSymbol, colnames(x));
         else {
-          out.attr("dim") = Dimension(1, col);
+          Rf_dimgets(out, Dimension(1, col));
           colnames(out) = colnames(x);
+          if(!Rf_isObject(x)) Rf_copyMostAttrib(x, out);
         }
         return out;
       } else { // with groups
@@ -569,6 +570,7 @@ SEXP fvarsdmCpp(const NumericMatrix& x, int ng = 0, const IntegerVector& g = 0,
             }
           }
           colnames(M2) = colnames(x);
+          if(!Rf_isObject(x)) Rf_copyMostAttrib(x, M2);
           return M2;
         } else {
           NumericMatrix M2(ng, col);
@@ -609,6 +611,7 @@ SEXP fvarsdmCpp(const NumericMatrix& x, int ng = 0, const IntegerVector& g = 0,
             }
           }
           colnames(M2) = colnames(x);
+          if(!Rf_isObject(x)) Rf_copyMostAttrib(x, M2);
           return M2;
         }
       }
@@ -660,10 +663,11 @@ SEXP fvarsdmCpp(const NumericMatrix& x, int ng = 0, const IntegerVector& g = 0,
             out[j] = M2i; // (double)M2i;
           }
         }
-        if(drop) out.attr("names") = colnames(x);
+        if(drop) Rf_setAttrib(out, R_NamesSymbol, colnames(x));
         else {
-          out.attr("dim") = Dimension(1, col);
+          Rf_dimgets(out, Dimension(1, col));
           colnames(out) = colnames(x);
+          if(!Rf_isObject(x)) Rf_copyMostAttrib(x, out);
         }
         return out;
       } else { // with groups and weights
@@ -709,6 +713,7 @@ SEXP fvarsdmCpp(const NumericMatrix& x, int ng = 0, const IntegerVector& g = 0,
             }
           }
           colnames(M2) = colnames(x);
+          if(!Rf_isObject(x)) Rf_copyMostAttrib(x, M2);
           return M2;
         } else {
           NumericMatrix M2(ng, col);
@@ -750,6 +755,7 @@ SEXP fvarsdmCpp(const NumericMatrix& x, int ng = 0, const IntegerVector& g = 0,
             }
           }
           colnames(M2) = colnames(x);
+          if(!Rf_isObject(x)) Rf_copyMostAttrib(x, M2);
           return M2;
         }
       }
@@ -801,10 +807,11 @@ SEXP fvarsdmCpp(const NumericMatrix& x, int ng = 0, const IntegerVector& g = 0,
             out[j] = (double)sq_sumj;
           }
         }
-        if(drop) out.attr("names") = colnames(x);
+        if(drop) Rf_setAttrib(out, R_NamesSymbol, colnames(x));
         else {
-          out.attr("dim") = Dimension(1, col);
+          Rf_dimgets(out, Dimension(1, col));
           colnames(out) = colnames(x);
+          if(!Rf_isObject(x)) Rf_copyMostAttrib(x, out);
         }
         return out;
       } else { // with groups
@@ -838,6 +845,7 @@ SEXP fvarsdmCpp(const NumericMatrix& x, int ng = 0, const IntegerVector& g = 0,
             }
           }
           colnames(sq_sum) = colnames(x);
+          if(!Rf_isObject(x)) Rf_copyMostAttrib(x, sq_sum);
           return sq_sum;
         } else {
           NumericMatrix sq_sum(ng, col);
@@ -896,6 +904,7 @@ SEXP fvarsdmCpp(const NumericMatrix& x, int ng = 0, const IntegerVector& g = 0,
             }
           }
           colnames(sq_sum) = colnames(x);
+          if(!Rf_isObject(x)) Rf_copyMostAttrib(x, sq_sum);
           return sq_sum;
         }
       }
@@ -945,10 +954,11 @@ SEXP fvarsdmCpp(const NumericMatrix& x, int ng = 0, const IntegerVector& g = 0,
             out[j] = (double)sq_sumj;
           }
         }
-        if(drop) out.attr("names") = colnames(x);
+        if(drop) Rf_setAttrib(out, R_NamesSymbol, colnames(x));
         else {
-          out.attr("dim") = Dimension(1, col);
+          Rf_dimgets(out, Dimension(1, col));
           colnames(out) = colnames(x);
+          if(!Rf_isObject(x)) Rf_copyMostAttrib(x, out);
         }
         return out;
       } else { // with groups and weights
@@ -982,6 +992,7 @@ SEXP fvarsdmCpp(const NumericMatrix& x, int ng = 0, const IntegerVector& g = 0,
             }
           }
           colnames(sq_sum) = colnames(x);
+          if(!Rf_isObject(x)) Rf_copyMostAttrib(x, sq_sum);
           return sq_sum;
         } else {
           NumericMatrix sq_sum(ng, col);
@@ -1010,6 +1021,7 @@ SEXP fvarsdmCpp(const NumericMatrix& x, int ng = 0, const IntegerVector& g = 0,
             }
           }
           colnames(sq_sum) = colnames(x);
+          if(!Rf_isObject(x)) Rf_copyMostAttrib(x, sq_sum);
           return sq_sum;
         }
       }
@@ -1077,7 +1089,7 @@ SEXP fvarsdlCpp(const List& x, int ng = 0, const IntegerVector& g = 0,
           }
         }
         if(drop) {
-          out.attr("names") = x.attr("names");
+          Rf_setAttrib(out, R_NamesSymbol, Rf_getAttrib(x, R_NamesSymbol));
           return out;
         } else {
           List res(l);
@@ -1086,7 +1098,7 @@ SEXP fvarsdlCpp(const List& x, int ng = 0, const IntegerVector& g = 0,
             SHALLOW_DUPLICATE_ATTRIB(res[j], x[j]);
           }
           DUPLICATE_ATTRIB(res, x);
-          res.attr("row.names") = 1;
+          Rf_setAttrib(res, R_RowNamesSymbol, Rf_ScalarInteger(1));
           return res;
         }
       } else { // With groups
@@ -1172,7 +1184,7 @@ SEXP fvarsdlCpp(const List& x, int ng = 0, const IntegerVector& g = 0,
           }
         }
         DUPLICATE_ATTRIB(out, x);
-        out.attr("row.names") = IntegerVector::create(NA_INTEGER, -ng);
+        Rf_setAttrib(out, R_RowNamesSymbol, IntegerVector::create(NA_INTEGER, -ng));
         return out;
       }
     } else { // With weights
@@ -1226,7 +1238,7 @@ SEXP fvarsdlCpp(const List& x, int ng = 0, const IntegerVector& g = 0,
           }
         }
         if(drop) {
-          out.attr("names") = x.attr("names");
+          Rf_setAttrib(out, R_NamesSymbol, Rf_getAttrib(x, R_NamesSymbol));
           return out;
         } else {
           List res(l);
@@ -1235,7 +1247,7 @@ SEXP fvarsdlCpp(const List& x, int ng = 0, const IntegerVector& g = 0,
             SHALLOW_DUPLICATE_ATTRIB(res[j], x[j]);
           }
           DUPLICATE_ATTRIB(res, x);
-          res.attr("row.names") = 1;
+          Rf_setAttrib(res, R_RowNamesSymbol, Rf_ScalarInteger(1));
           return res;
         }
       } else {
@@ -1324,7 +1336,7 @@ SEXP fvarsdlCpp(const List& x, int ng = 0, const IntegerVector& g = 0,
           }
         }
         DUPLICATE_ATTRIB(out, x);
-        out.attr("row.names") = IntegerVector::create(NA_INTEGER, -ng);
+        Rf_setAttrib(out, R_RowNamesSymbol, IntegerVector::create(NA_INTEGER, -ng));
         return out;
       }
     }
@@ -1378,7 +1390,7 @@ SEXP fvarsdlCpp(const List& x, int ng = 0, const IntegerVector& g = 0,
           }
         }
         if(drop) {
-          out.attr("names") = x.attr("names");
+          Rf_setAttrib(out, R_NamesSymbol, Rf_getAttrib(x, R_NamesSymbol));
           return out;
         } else {
           List res(l);
@@ -1387,7 +1399,7 @@ SEXP fvarsdlCpp(const List& x, int ng = 0, const IntegerVector& g = 0,
             SHALLOW_DUPLICATE_ATTRIB(res[j], x[j]);
           }
           DUPLICATE_ATTRIB(res, x);
-          res.attr("row.names") = 1;
+          Rf_setAttrib(res, R_RowNamesSymbol, Rf_ScalarInteger(1));
           return res;
         }
       } else { // With groups
@@ -1503,7 +1515,7 @@ SEXP fvarsdlCpp(const List& x, int ng = 0, const IntegerVector& g = 0,
           }
         }
         DUPLICATE_ATTRIB(out, x);
-        out.attr("row.names") = IntegerVector::create(NA_INTEGER, -ng);
+        Rf_setAttrib(out, R_RowNamesSymbol, IntegerVector::create(NA_INTEGER, -ng));
         return out;
       }
     } else { // With weights
@@ -1555,7 +1567,7 @@ SEXP fvarsdlCpp(const List& x, int ng = 0, const IntegerVector& g = 0,
           }
         }
         if(drop) {
-          out.attr("names") = x.attr("names");
+          Rf_setAttrib(out, R_NamesSymbol, Rf_getAttrib(x, R_NamesSymbol));
           return out;
         } else {
           List res(l);
@@ -1564,7 +1576,7 @@ SEXP fvarsdlCpp(const List& x, int ng = 0, const IntegerVector& g = 0,
             SHALLOW_DUPLICATE_ATTRIB(res[j], x[j]);
           }
           DUPLICATE_ATTRIB(res, x);
-          res.attr("row.names") = 1;
+          Rf_setAttrib(res, R_RowNamesSymbol, Rf_ScalarInteger(1));
           return res;
         }
       } else { // With groups and weights
@@ -1642,7 +1654,7 @@ SEXP fvarsdlCpp(const List& x, int ng = 0, const IntegerVector& g = 0,
           }
         }
         DUPLICATE_ATTRIB(out, x);
-        out.attr("row.names") = IntegerVector::create(NA_INTEGER, -ng);
+        Rf_setAttrib(out, R_RowNamesSymbol, IntegerVector::create(NA_INTEGER, -ng));
         return out;
       }
     }
