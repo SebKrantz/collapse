@@ -245,12 +245,12 @@ GRP.pdata.frame <- function(X, effect = 1L, ..., group.sizes = TRUE, return.grou
 
 fgroup_by <- function(X, ..., sort = TRUE, decreasing = FALSE, na.last = TRUE, return.order = FALSE) {          #   e <- substitute(list(...)) # faster but does not preserve attributes of unique groups !
   clx <- oldClass(X)
-  m <- match(c("grouped_df", "data.frame"), clx, nomatch = 0L)
-  g <- GRP.default(fselect(X, ...), NULL, sort, decreasing, na.last, TRUE, return.order, FALSE)
+  m <- match(c("GRP_df", "grouped_df", "data.frame"), clx, nomatch = 0L)
+  g <- GRP.default(fselect(if(m[2L]) fungroup(X) else X, ...), NULL, sort, decreasing, na.last, TRUE, return.order, FALSE)
   # Needed: wlddev %>% fgroup_by(country) gives error if dplyr is loaded. Also sf objects etc..
   # .rows needs to be list(), NULL won't work !! Note: attaching a data.frame class calls data frame methods, even if "list" in front! -> Need GRP.grouped_df to restore object !
   attr(X, "groups") <- `oldClass<-`(c(g, list(.rows = list())), c("GRP", "data.frame")) # `names<-`(eval(e, X, parent.frame()), all.vars(e))
-  oldClass(X) <- c("GRP_df", clx[-m], "grouped_df", if(m[2L]) "data.frame")
+  oldClass(X) <- c("GRP_df",  if(length(mp <- m[m != 0L])) clx[-mp] else clx, "grouped_df", if(m[3L]) "data.frame") # clx[-m] doesn't work if clx is only "data.table" for example
   # simplest, but X is coerced to data.frame. Through the above solution it can be a list and only receive the 'grouped_df' class
   # add_cl <- c("grouped_df", "data.frame")
   # oldClass(X) <- c(fsetdiff(oldClass(X), add_cl), add_cl)
@@ -262,7 +262,7 @@ gby <- fgroup_by
 print.GRP_df <- function(x, ...) {
   NextMethod()
   g <- unclass(attr(x, "groups"))
-  cat("\nGrouped by: ", paste(g[[5L]], collapse = ", "),
+  cat("\nGroups: ", paste(g[[5L]], collapse = ", "), # Grouped by:
       # if(any(g[[6L]])) "ordered groups" else "unordered groups", -> ordered 99% of times...
       paste0(" [", g[[1L]], " | ", round(length(g[[2L]]) / g[[1L]]), " (", round(fsd.default(g[[3L]]), 1), ")]"))
   if(inherits(x, "pdata.frame"))
@@ -294,7 +294,7 @@ print.GRP_df <- function(x, ...) {
 # "[117 ordered groups | Avg. N: 64 (SD: 29.7)]"
 
 fungroup <- function(X, ...) {
-  if(!missing(...)) unused_arg_action(match.call(), ...)
+  # if(!missing(...)) unused_arg_action(match.call(), ...)
   # clx <- oldClass(X)
   attr(X, "groups") <- NULL
   oldClass(X) <- fsetdiff(oldClass(X), c("GRP_df", "grouped_df"))  # clx[clx != "grouped_df"]
