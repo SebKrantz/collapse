@@ -10,7 +10,7 @@
 
 \item \code{\link{GRP}} creates \emph{collapse} grouping objects of class 'GRP' based on \code{\link{radixorderv}}. 'GRP' objects form the central building block for grouped operations and programming in \emph{collapse} and are very efficient inputs to all \emph{collapse} functions supporting grouped operations. A 'GRP' object provides information about (1) the number of groups, (2) which rows belong to which group, (3) the group sizes, (4) the unique groups, (5) the variables used for grouping, (6) whether the grouping and initial inputs were ordered and (7) (optionally) the output from \code{\link{radixorder}} containing the ordering vector with group starts and maximum group size attributes.
 
-\item \code{\link{fgroup_by}} provides a fast replacement for \code{dplyr::group_by}, creating a grouped tibble with a 'GRP' object attached. This grouped tibble can however only be used for grouped operations using \emph{collapse} fast functions. \emph{dplyr} functions will treat this tibble like an ordinary (non-grouped) one.
+\item \code{\link{fgroup_by}} provides a fast replacement for \code{dplyr::group_by}, creating a grouped data frame with a 'GRP' object attached. This grouped data frame can however only be used for grouped operations using \emph{collapse} fast functions. % \emph{dplyr} functions will treat this tibble like an ordinary (non-grouped) one.
 
 \item \code{\link{funique}} is a faster version of \code{\link{unique}}. The data frame method also allows selecting unique rows according to a subset of the columns.
 
