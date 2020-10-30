@@ -30,9 +30,9 @@ setrename(x, \dots, cols = NULL)
 \examples{
 ## Using tagged expressions
 head(frename(iris, Sepal.Length = SL, Sepal.Width = SW,
-                   Petal.Length = PW, Petal.Width = PW))
+                   Petal.Length = PL, Petal.Width = PW))
 head(frename(iris, Sepal.Length = "S L", Sepal.Width = "S W",
-                   Petal.Length = "P W", Petal.Width = "P W"))
+                   Petal.Length = "P L", Petal.Width = "P W"))
 
 ## Using a function
 head(frename(iris, tolower))
