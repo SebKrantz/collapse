@@ -47,7 +47,7 @@ BugReports: https://github.com/SebKrantz/collapse/issues
 License: GPL (>= 2) | file LICENSE
 Encoding: UTF-8
 LazyData: true
-Depends: R (>= 2.10)
+Depends: R (>= 2.1.0)
 Imports: Rcpp (>= 1.0.1)
 LinkingTo: Rcpp
 Suggests: lfe, dplyr, plm, data.table, matrixStats, magrittr, RcppArmadillo, RcppEigen, 
