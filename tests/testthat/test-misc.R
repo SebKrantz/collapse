@@ -5,6 +5,7 @@ context("Misc")
 m <- na_insert(qM(mtcars))
 
 test_that("descr, pwcor, pwcov, pwNobs", {
+
   expect_visible(descr(wlddev))
   expect_visible(as.data.frame(descr(wlddev)))
   expect_output(print(descr(wlddev)))
@@ -33,6 +34,7 @@ test_that("descr, pwcor, pwcov, pwNobs", {
 })
 
 test_that("deep matrix dispatch works well", {
+
   tsm <- EuStockMarkets
   class(tsm) <- setdiff(class(tsm), "matrix")
   f <- qF(sample.int(5, nrow(tsm), TRUE))
@@ -47,5 +49,50 @@ test_that("deep matrix dispatch works well", {
 
   for(i in c("flag", "L", "fdiff", "D", "Dlog", "fgrowth", "G"))
       expect_true(all(is.na(match.fun(i)(tsm)[1L, ])))
+
+})
+
+m <- qM(mtcars)
+v <- mtcars$mpg
+f <- qF(mtcars$cyl)
+fcc <- qF(mtcars$cyl, na.exclude = FALSE)
+g <- GRP(mtcars, ~ cyl)
+gl <- mtcars["cyl"]
+gmtc <- fgroup_by(mtcars, cyl)
+
+test_that("fast functions give same result using different grouping mechanisms", {
+
+ for(i in .FAST_STAT_FUN) {
+
+   FUN <- match.fun(i)
+   expect_true(all_obj_equal(FUN(v, g = mtcars$cyl), FUN(v, g = f), FUN(v, g = fcc), FUN(v, g = g), FUN(v, g = gl)))
+   expect_true(all_obj_equal(FUN(m, g = mtcars$cyl), FUN(m, g = f), FUN(m, g = fcc), FUN(m, g = g), FUN(m, g = gl)))
+   expect_true(all_obj_equal(FUN(mtcars, g = mtcars$cyl), FUN(mtcars, g = f), FUN(mtcars, g = fcc), FUN(mtcars, g = g), FUN(mtcars, g = gl)))
+   expect_true(all_obj_equal(gv(FUN(mtcars, g = mtcars$cyl, use.g.names = FALSE), -2), gv(FUN(gmtc), -1), FUN(gmtc, keep.group_vars = FALSE)))
+
+   expect_true(all_obj_equal(FUN(v, g = mtcars$cyl, TRA = 1L), TRA(v, FUN(v, g = mtcars$cyl), 1L, mtcars$cyl),
+                             FUN(v, g = f, TRA = 1L), TRA(v, FUN(v, g = f), 1L, f),
+                             FUN(v, g = fcc, TRA = 1L), TRA(v, FUN(v, g = fcc), 1L, fcc),
+                             FUN(v, g = g, TRA = 1L), TRA(v, FUN(v, g = g), 1L, g),
+                             FUN(v, g = gl, TRA = 1L), TRA(v, FUN(v, g = gl), 1L, gl)))
+ }
+
+  for(i in setdiff(.FAST_FUN, c(.FAST_STAT_FUN, "fHDbetween", "fHDwithin"))) {
+
+    FUN <- match.fun(i)
+    expect_true(all_obj_equal(FUN(v, g = mtcars$cyl), FUN(v, g = f), FUN(v, g = fcc), FUN(v, g = g), FUN(v, g = gl)))
+    expect_true(all_obj_equal(FUN(m, g = mtcars$cyl), FUN(m, g = f), FUN(m, g = fcc), FUN(m, g = g), FUN(m, g = gl)))
+    expect_true(all_obj_equal(FUN(mtcars, g = mtcars$cyl), FUN(mtcars, g = f), FUN(mtcars, g = fcc), FUN(mtcars, g = g), FUN(mtcars, g = gl)))
+
+  }
+
+  for(i in c("STD", "B", "W", "L", "D", "Dlog", "G")) {
+
+    FUN <- match.fun(i)
+    expect_true(all_obj_equal(FUN(v, g = mtcars$cyl), FUN(v, g = f), FUN(v, g = fcc), FUN(v, g = g), FUN(v, g = gl)))
+    expect_true(all_obj_equal(FUN(m, g = mtcars$cyl), FUN(m, g = f), FUN(m, g = fcc), FUN(m, g = g), FUN(m, g = gl)))
+    expect_true(all_obj_equal(FUN(mtcars, by = mtcars$cyl), FUN(mtcars, by = f), FUN(mtcars, by = fcc), FUN(mtcars, by = g), FUN(mtcars, by = gl)))
+
+  }
 
 })
