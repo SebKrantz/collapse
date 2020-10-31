@@ -82,7 +82,7 @@ recode_char <- function(X, ..., default = NULL, missing = NULL, regex = FALSE) {
   arglen <- length(args)
   missingl <- !is.null(missing)
   if(missingl && any(nam == missing))  warning(paste0("To improve performance missing values are replaced prior to recode, so this replaces all missing values with ",
-                                                      missing, " and those are then again replaced with ", nam[nam == missing], ". If this is not desired, call replace_NA after recode with missing = NULL."))
+                                                      missing, " and those are then again replaced with ", args[[which(nam == missing)]], ". If this is not desired, call replace_NA after recode with missing = NULL."))
   if(regex) {
     if(arglen == 1L) {
       args <- args[[1L]]
@@ -261,10 +261,9 @@ replace_outliers <- function(X, limits, value = NA, single.limit = c("SDs", "min
   if(!is.numeric(X)) stop("Outliers can only be replaced in numeric objects!")
   if(lg1) return(`[<-`(X, X < l1 | X > l2, value = value))
   switch(single.limit[1L],
-    SDs = `[<-`(X, abs(fscale(X)) > limits, value = value),
+    SDs =, overall_SDs = `[<-`(X, abs(fscale(X)) > limits, value = value),
     min = `[<-`(X, X < limits, value = value),
     max = `[<-`(X, X > limits, value = value),
-    overall_SDs = `[<-`(X, abs(fscaleCpp(X)) > limits, value = value),
     stop("Unknown single.limit option"))
 }
 
