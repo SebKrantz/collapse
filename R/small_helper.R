@@ -19,8 +19,12 @@ vlabels <- function(X, attrn = "label") {
   if(is.atomic(X)) return(`attr<-`(X, attrn, value))
   clx <- oldClass(X)
   oldClass(X) <- NULL
-  if(length(X) != length(value)) stop("length(X) must match length(value)")
-  for (i in seq_along(value)) attr(X[[i]], attrn) <- value[i]
+  if(is.null(value)) {
+    for (i in seq_along(X)) attr(X[[i]], attrn) <- NULL
+  } else {
+    if(length(X) != length(value)) stop("length(X) must match length(value)")
+    for (i in seq_along(value)) attr(X[[i]], attrn) <- value[i]
+  }
   `oldClass<-`(X, clx)
 }
 
