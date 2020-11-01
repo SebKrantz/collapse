@@ -10,7 +10,7 @@ Fast (Weighted) Linear Model Fitting % Sparse,
 \usage{
 flm(y, X, w = NULL, add.icpt = FALSE, return.raw = FALSE, % sparse = FALSE
     method = c("lm", "solve", "qr", "arma", "chol", "eigen"),
-    eigen.method = 3L, tol = 1e-07)
+    eigen.method = 3L, ...)
 }
 %- maybe also 'usage' for other objects documented here.
 \arguments{
@@ -30,7 +30,7 @@ flm(y, X, w = NULL, add.icpt = FALSE, return.raw = FALSE, % sparse = FALSE
                  6 \tab\tab "eigen"   \tab\tab uses \code{RcppEigen::fastLmPure} (very fast but potentially unstable, depending on the method). \cr
   }
 }
-\item{eigen.method}{integer. Select the method of computated used by \code{RcppEigen::fastLmPure}:
+\item{eigen.method}{integer. Select the method of computation used by \code{RcppEigen::fastLmPure}:
         \tabular{lll}{\emph{ Int. } \tab\tab \emph{ Description }  \cr
                  0 \tab\tab column-pivoted QR decomposition. \cr
                  1 \tab\tab unpivoted QR decomposition. \cr
@@ -41,7 +41,7 @@ flm(y, X, w = NULL, add.icpt = FALSE, return.raw = FALSE, % sparse = FALSE
   }
   See \code{vignette("RcppEigen-Introduction", package = "RcppEigen")} for details on these methods and benchmark results. Run \code{source(system.file("examples", "lmBenchmark.R", package = "RcppEigen"))} to re-run the benchmark on your machine.
 }
-\item{tol}{numeric. A numerical tolerance for the solution - only applicable with methods "lm", "solve" and "qr".}
+\item{...}{further arguments passed to other methods. Sensible choices are \code{tol = value} - a numerical tolerance for the solution - applicable with methods "lm", "solve" and "qr" (default is \code{1e-7}), or \code{LAPACK = TRUE} with method "qr" to use LAPACK routines to for the qr decomposition (typically faster than LINPACK (the default)).}
 }
 
 % \details{

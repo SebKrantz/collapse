@@ -32,7 +32,7 @@ All of \emph{collapse}'s \link[=A1-fast-statistical-functions]{Fast Statistical 
 
 \item \code{\link[=HDW]{fHDwithin/HDW}}, shorthand for 'higher-dimensional within transform', is an S3 generic to efficiently \bold{center data on multiple groups} and partial-out linear models (possibly involving many levels of fixed effects). In other words, \code{\link[=HDW]{fHDwithin/HDW}} efficiently computes \bold{residuals} from (potentially complex) linear models. Similarly \code{\link[=HDB]{fHDbetween/HDB}}, shorthand for 'higher-dimensional between transformation', computes the corresponding means or \bold{fitted values}.
 
-\item \code{flm} is an efficient function for barebones (weighted) \bold{linear model fitting}. It supports 6 different fitting methods, 4 from base R, and 2 utilizing the \emph{RcppArmadillo} or \emph{RcppEigen} packages.
+\item \code{flm} is an efficient function for bare-bones (weighted) \bold{linear model fitting}. It supports 6 different fitting methods, 4 from base R, and 2 utilizing the \emph{RcppArmadillo} or \emph{RcppEigen} packages.
 
 \item \code{\link[=flag]{flag/L/F}}, \code{\link[=fdiff]{fdiff/D/Dlog}} and \code{\link[=fgrowth]{fgrowth/G}} are S3 generics to compute sequences of \bold{lags / leads} and suitably lagged and iterated (quasi-, log-) \bold{differences} and \bold{growth rates} on time series and panel data. More in \link[=A7-time-series-panel-series]{Time Series and Panel Series}.
 
