@@ -74,40 +74,27 @@ test_that("recode_char works well", {
 
 })
 
-# test_that("recode_num works well", {
-#
-#   expect_equal(recode_char(lmiss, a = "b"), replace(lmiss, lmiss == "a", "b"))
-#   expect_visible(recode_char(lmiss, a = "b", missing = "a"))  # continue here to write proper tests!!..
-#   expect_visible(recode_char(lmiss, a = "b", missing = "c"))
-#   expect_visible(recode_char(lmiss, a = "b", default = "n"))
-#   expect_visible(recode_char(lmiss, a = "b", default = "n", missing = "c"))
-#
-#   expect_visible(recode_char(month.miss, ber = NA, regex = TRUE))
-#   expect_visible(recode_char(month.miss, ber = NA, missing = "c", regex = TRUE))
-#   expect_visible(recode_char(lmiss, ber = NA, default = "n", regex = TRUE))
-#   expect_visible(recode_char(lmiss, ber = NA, default = "n", missing = "c", regex = TRUE))
-#
-#   expect_visible(recode_char(lmiss, a = "b", e = "f"))
-#   expect_visible(recode_char(lmiss, a = "b", e = "f", missing = "a"))
-#   expect_visible(recode_char(lmiss, a = "b", e = "f", missing = "c"))
-#   expect_visible(recode_char(lmiss, a = "b", e = "f", default = "n"))
-#   expect_visible(recode_char(lmiss, a = "b", e = "f", default = "n", missing = "c"))
-#
-#   expect_visible(recode_char(month.miss, ber = NA, May = "a", regex = TRUE))
-#   expect_visible(recode_char(month.miss, ber = NA, May = "a", missing = "c", regex = TRUE))
-#   expect_visible(recode_char(lmiss, ber = NA, May = "a", default = "n", regex = TRUE))
-#   expect_visible(recode_char(lmiss, ber = NA, May = "a", default = "n", missing = "c", regex = TRUE))
-#
-#   expect_visible(recode_char(char_dat, SGP = "SINGAPORE", VA = "Value Added"))
-#   expect_visible(recode_char(char_dat, SGP = "SINGAPORE", VA = "Value Added", missing = "c"))
-#   expect_visible(recode_char(char_dat, SGP = "SINGAPORE", VA = "Value Added", default = "n"))
-#   expect_visible(recode_char(char_dat, SGP = "SINGAPORE", VA = "Value Added", default = "n", missing = "c"))
-#
-#   expect_visible(recode_char(char_dat, saharan = "SSA", regex = TRUE))
-#   expect_visible(recode_char(char_dat, saharan = "SSA", regex = TRUE, missing = "c"))
-#   expect_visible(recode_char(char_dat, saharan = "SSA", regex = TRUE, default = "n"))
-#   expect_visible(recode_char(char_dat, saharan = "SSA", regex = TRUE, default = "n", missing = "c"))
-#
-# })
+vmiss <- na_insert(mtcars$cyl)
+mtcNA <- na_insert(mtcars)
+test_that("recode_num works well", {
+
+  expect_equal(recode_num(vmiss, `4` = 5), replace(vmiss, vmiss == 4, 5))
+  expect_visible(recode_num(vmiss, `4` = 5, missing = 4))  # continue here to write proper tests!!..
+  expect_visible(recode_num(vmiss, `4` = 5, missing = 7))
+  expect_visible(recode_num(vmiss, `4` = 5, default = 8))
+  expect_visible(recode_num(vmiss, `4` = 5, default = 8, missing = 7))
+
+  expect_visible(recode_num(vmiss, `4` = 5, `6` = 10))
+  expect_visible(recode_num(vmiss, `4` = 5, `6` = 10, missing = 6))
+  expect_visible(recode_num(vmiss, `4` = 5, `6` = 10, missing = 7))
+  expect_visible(recode_num(vmiss, `4` = 5, `6` = 10, default = 8))
+  expect_visible(recode_num(vmiss, `4` = 5, `6` = 10, default = 8, missing = 7))
+
+  expect_visible(recode_num(mtcNA, `4` = 5, `1` = 2))
+  expect_visible(recode_num(mtcNA, `4` = 5, `1` = 2, missing = 6))
+  expect_visible(recode_num(mtcNA, `4` = 5, `1` = 2, default = 8))
+  expect_visible(recode_num(mtcNA, `4` = 5, `1` = 2, default = 8, missing = 7))
+
+})
 
 options(warn = 1)
