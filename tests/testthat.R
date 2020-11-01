@@ -1,7 +1,7 @@
 # rm(list = ls())
 # Sys.setenv("R_TESTS" = "")
 library(testthat)
-library(collapsedev2)
+library(collapse)
 
-test_check("collapsedev2")
+test_check("collapse")
 

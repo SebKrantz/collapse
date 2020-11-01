@@ -21,6 +21,10 @@ test_that("flm works as intended", {
   ym <- cbind(y, y)
   for(i in c(1:3, 5L)) expect_visible(flm(ym, x, w, method = i))
 
+  expect_error(flm(y[-1L], x, w))
+  expect_error(flm(y, x, w[-1L]))
+  expect_error(flm(y, x[-1L, ], w))
+
 })
 
 
