@@ -1,5 +1,5 @@
 # collapse 1.4.0
-collapse 1.4.0, released end of October 2020, presents some important refinements, particularly in the domain of attribute handling, as well as some additional functionality. The changes make *collapse* smarter, more broadly compatible and more secure, and should not break existing code.  <!-- , is a major update: -->
+collapse 1.4.0, released early November 2020, presents some important refinements, particularly in the domain of attribute handling, as well as some additional functionality. The changes make *collapse* smarter, more broadly compatible and more secure, and should not break existing code.  <!-- , is a major update: -->
 
 ### Changes to Functionality
 
@@ -16,7 +16,7 @@ This may be useful in some cases, for examples it is now possible to write somet
  
  (ensuring that `qDF`, `qDT` and `qM` now truly behave like `as.data.frame`, `as.data.table` and `as.matrix`) -->
 
-* *Smarter Attribute Handling:* Following the guidance given in the R Internals manual, the following standards for optimal non-destructive attribute handling are formalized and communicated to the user: 
+* *Smarter Attribute Handling:* Drawing on the guidance given in the R Internals manual, the following standards for optimal non-destructive attribute handling are formalized and communicated to the user: 
 
   + The default and matrix methods of the *Fast Statistical Functions* preserve attributes of the input in grouped aggregations ('names', 'dim' and 'dimnames' are suitably modified). If inputs are classed objects (e.g. factors, time series, checked by `is.object`), the class and other attributes are dropped. Simple (non-grouped) aggregations of vectors and matrices do not preserve attributes, unless `drop = FALSE` in the matrix method. An exemption is made in the default methods of functions `ffirst`, `flast` and `fmode`, which always preserve the attributes (as the input could well be a factor or date variable). 
   
@@ -38,23 +38,23 @@ This may be useful in some cases, for examples it is now possible to write somet
 * All S3 generic functions with a `default` method for atomic vectors and a `matrix` method now have an additional internal dispatch from the `default` to the `matrix` method if a classed matrix object missing a 'matrix' class is passed to the generic. For example consider a matrix time series `x <- structure(matrix(1:9, ncol = 3), class = "ts", tsp = c(1, 3, 1))` inheriting only a 'ts' but not a 'matrix' class. In collapse 1.3.2 `fsum(x)` would invoke the default method and return a scalar value. Now `fsum(x)` returns the sum for each column in the matrix. The `matrix` method is only called from the `default` method if `is.matrix(x) && !inherits(x, "matrix")` evaluates to `TRUE`, thus it is still possible to manually invoke the default method on a matrix. As the example indicates, this change is warranted to improve the inherent compatibility of *collapse* with various time series and matrix based classes (such as *xts* / *zoo*). -->
 
 
-* *Reduced Dependency Burden:* The dependency on the *lfe* package was made optional. Functions `fHDwithin` / `fHDbetween` can only perform higher-dimensional centering if *lfe* is available. Linear prediction and centering with a single factor (among a list of covariates) is still possible without installing *lfe*. This change means that *collapse* now only depends on base R and *Rcpp* and is supported down to R version 2.1.0. 
+* *Reduced Dependency Burden:* The dependency on the *lfe* package was made optional. Functions `fHDwithin` / `fHDbetween` can only perform higher-dimensional centering if *lfe* is available. Linear prediction and centering with a single factor (among a list of covariates) is still possible without installing *lfe*. This change means that *collapse* now only depends on base R and *Rcpp* and is supported down to R version 2.10. 
 
 ### Additions
 
 * Added function `rsplit` for efficient (recursive) splitting of vectors and data frames. 
 
-* Added function `fdroplevels` for lightning fast missing level removal + added argument `drop` to `qF` and `GRP.factor`, the default is `drop = FALSE`. The addition of `fdroplevels` also enhances the speed of the `fFtest` function.
+* Added function `fdroplevels` for very fast missing level removal + added argument `drop` to `qF` and `GRP.factor`, the default is `drop = FALSE`. The addition of `fdroplevels` also enhances the speed of the `fFtest` function.
 
 * `fgrowth` supports annualizing / compounding growth rates through added `power` argument.
 
 * A function `flm` was added for barebones (sparse, weighted) linear regression fitting using different efficient methods: 4 from base R (`.lm.fit`, `solve`, `qr`, `chol`), using `fastLm` from *RcppArmadillo* (if installed), or `fastLm` from *RcppEigen* (if installed). 
 
-* helper `cinv` added wrapping the expression `chol2inv(chol(x))` (efficient inverse of a symmetric, positive definite matrix via Choleski factorization). 
-
 * Added function `qTBL` to quickly convert R objects to tibble.
 
 * helpers `setAttrib`, `copyAttrib` and `copyMostAttrib` exported for fast attribute handling in R (similar to `attributes<-()`, these functions return a shallow copy of the first argument with the set of attributes replaced, but do not perform checks for attribute validity like `attributes<-()`. This can yield large performance gains with big objects).  
+
+* helper `cinv` added wrapping the expression `chol2inv(chol(x))` (efficient inverse of a symmetric, positive definite matrix via Choleski factorization). 
 
 * A shortcut `gby` is now available to abbreviate the frequently used `fgroup_by` function. 
 

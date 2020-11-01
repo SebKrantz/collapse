@@ -133,6 +133,7 @@ test_that("list and df methods give same results", {
 
 w <- mtcars$wt
 wFUNs <- c("fmean","fmedian","fsum","fprod","fmode","fvar","fsd","fscale","STD","fbetween","B","fwithin","W")
+
 test_that("fast functions give appropriate warnings", {
 
   for (i in setdiff(c(.FAST_FUN, .OPERATOR_FUN, "qsu"), c("fHDbetween", "fHDwithin", "HDB", "HDW"))) {
