@@ -18,7 +18,7 @@
 * To facilitate complex data transformation, exploration and computing tasks in R.
 * To help make R code fast, flexible, parsimonious and programmer friendly.
 
-It is made compatible with base R, *dplyr*, *data.table* and the *plm* approach to panel data, and also non-destructively handles other matrix or data frame based classes (such as 'ts', 'xts' / 'zoo', 'timeSeries', 'tsibble', 'tibbletime', 'sf' data frames etc.). 
+It is made compatible with base R, *dplyr*, *data.table* and the *plm* approach to panel data, and non-destructively handles other matrix or data frame based classes (such as 'ts', 'xts' / 'zoo', 'timeSeries', 'tsibble', 'tibbletime', 'sf' data frames etc.). 
 
 <!-- *collapse* thus provides a robust, flexible, class-agnostic and computationally advanced toolkit for data manipulation in R. -->
 
