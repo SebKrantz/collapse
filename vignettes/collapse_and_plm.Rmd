@@ -29,7 +29,7 @@ pre[class] {
 library(data.table)    # Keep here becasue of not run options on CRAN
 library(microbenchmark)
 library(plm)
-library(collapsedev2)
+library(collapse)
 knitr::opts_chunk$set(error = FALSE, message = FALSE, warning = FALSE, 
                       comment = "#", tidy = FALSE, cache = FALSE, collapse = TRUE,
                       fig.width = 8, fig.height = 5, 
@@ -81,7 +81,7 @@ The vignette is structured as follows:
 For this vignette we will use a dataset (`wlddev`) supplied with *collapse* containing a panel of 4 key development indicators taken from the World Bank Development Indicators Database:
 
 ```{r}
-library(collapsedev2)
+library(collapse)
 
 head(wlddev)
 
@@ -302,7 +302,7 @@ More customized scaling can be done with the help of the `mean` and `sd` argumen
 # This will scale the data such that mean mean within each country is 5 and the standard deviation is 3
 qsu(fscale(pwlddev$PCGDP, mean = 5, sd = 3))
 ```
-Even further customization (i.e. setting means and standard deviations for each group and / or each column) can of course be achieved by calling `collapsedev2::TRA` on the result of `fscale` to sweep out an appropriate set of means and standard deviations. 
+Even further customization (i.e. setting means and standard deviations for each group and / or each column) can of course be achieved by calling `collapse::TRA` on the result of `fscale` to sweep out an appropriate set of means and standard deviations. 
 
 Scaling without centering can be done with the option `mean = FALSE`. This will also preserve the mean of the data overall and within each group:
 ```{r}

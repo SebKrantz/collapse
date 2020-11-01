@@ -12,7 +12,7 @@ Advanced and Fast Data Transformation
 \item To help make R code fast, flexible, parsimonious and programmer friendly. % \emph{collapse} is a fast  %to facilitate (advanced) data manipulation in R   % To achieve the latter,
 % collapse provides a broad set.. -> Nah, it's not a misc package
 }
-It is made compatible with \emph{dplyr}, \emph{data.table} and the \emph{plm} approach to panel data.
+It is made compatible with \emph{dplyr}, \emph{data.table} and the \emph{plm} approach to panel data, and non-destructively handles other classes.
 
 }
 \section{Getting Started}{

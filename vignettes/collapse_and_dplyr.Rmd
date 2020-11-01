@@ -30,7 +30,7 @@ pre[class] {
 ```{r, echo = FALSE, message = FALSE, warning=FALSE}
 library(dplyr)
 library(microbenchmark)
-library(collapsedev2)
+library(collapse)
 knitr::opts_chunk$set(error = FALSE, message = FALSE, warning = FALSE, 
                       comment = "#", tidy = FALSE, cache = FALSE, collapse = TRUE,
                       fig.width = 8, fig.height = 5, 
@@ -90,7 +90,7 @@ With that in mind, let's consider some straightforward applications.
 Consider the Groningen Growth and Development Center 10-Sector Database included in *collapse* and introduced in the main vignette:
 
 ```{r}
-library(collapsedev2)
+library(collapse)
 head(GGDC10S)
 
 # Summarize the Data: 
@@ -168,9 +168,9 @@ It is obvious that *collapse* is faster than *dplyr* since it's method of comput
 ***
 
 ### 1.2 More Speed using *collapse* Verbs
-*collapse* fast functions do not develop their maximal performance on a grouped tibble created with `group_by` because of the additional conversion cost of the grouping object incurred by `GRP.grouped_df`. This cost is already minimized through the use of C++, but we can do even better replacing `group_by` with `collapsedev2::fgroup_by`. `fgroup_by` works like `group_by` but does the grouping with `collapsedev2::GRP` (up to 10x faster than `group_by`) and simply attaches a *collapse* grouping object to the grouped_df. Thus the speed gain is 2-fold: Faster grouping and no conversion cost when calling *collapse* functions.
+*collapse* fast functions do not develop their maximal performance on a grouped tibble created with `group_by` because of the additional conversion cost of the grouping object incurred by `GRP.grouped_df`. This cost is already minimized through the use of C++, but we can do even better replacing `group_by` with `collapse::fgroup_by`. `fgroup_by` works like `group_by` but does the grouping with `collapse::GRP` (up to 10x faster than `group_by`) and simply attaches a *collapse* grouping object to the grouped_df. Thus the speed gain is 2-fold: Faster grouping and no conversion cost when calling *collapse* functions.
 
-Another improvement comes from replacing the *dplyr* verb `select` with `collapsedev2::fselect`, and, for selection using column names, indices or functions use `collapsedev2::get_vars` instead of `select_at` or `select_if`. Next to `get_vars`, *collapse* also introduces the predicates `num_vars`, `cat_vars`, `char_vars`, `fact_vars`, `logi_vars` and `Date_vars` to efficiently select columns by type.
+Another improvement comes from replacing the *dplyr* verb `select` with `collapse::fselect`, and, for selection using column names, indices or functions use `collapse::get_vars` instead of `select_at` or `select_if`. Next to `get_vars`, *collapse* also introduces the predicates `num_vars`, `cat_vars`, `char_vars`, `fact_vars`, `logi_vars` and `Date_vars` to efficiently select columns by type.
 
 ```{r}
 GGDC10S %>% fgroup_by(Variable, Country) %>% get_vars(6:16) %>% fmedian
@@ -187,7 +187,15 @@ class(group_by(GGDC10S, Variable, Country))
 class(fgroup_by(GGDC10S, Variable, Country))
 ```
 
-Also note that `fselect` and `get_vars` are not full drop-in replacements for `select` because they do not have a grouped_df method:
+In general `fgroup_by` first assigns the class *GDP_df* which is for printing grouping information, then the object classes (*tbl_df*, *data.table* or whatever else), followed by classes *grouped_df* and *data.frame*, and adds the grouping object in a 'groups' attribute. The function `fungroup` removes classes 'GDP_df' and 'grouped_df' and the 'groups' attribute (and can thus also be used for grouped tibbles created with `dplyr::group_by`). Thus any kind of data frame based class can be grouped with `fgroup_by`, and still retain full responsiveness to all methods defined for that class. Functions performing aggregation on the grouped data frame remove the grouping object and classes afterwards, yielding an object with the same class and attributes as the input. 
+
+The print method shown below reports the grouping variables, and then in square brackets the information `[number of groups | average group size (standard-deviation of group sizes)]`:
+
+```{r}
+head(fgroup_by(GGDC10S, Variable, Country))
+```
+
+Note further that `fselect` and `get_vars` are not full drop-in replacements for `select` because they do not have a grouped_df method:
 
 ```{r}
 GGDC10S %>% group_by(Variable, Country) %>% select_at(6:16) %>% tail(3)
@@ -226,7 +234,7 @@ GGDC10S %>% fsubset(Variable == "VA" & Year > 1990, Country, Year, AGR:GOV) %>% 
 GGDC10S %>% filter(Variable == "VA" & Year > 1990) %>% select(Country, Year, AGR:GOV) %>% head(3)
 ```
 
-*collapse* also offers `roworder`, `frename`, `colorder`, `ftransform`/`TRA` and `fungroup` as fast replacements for `dplyr::arrange`, `dplyr::rename`, `dplyr::relocate`, `dplyr::mutate`, and `dplyr::ungroup`. 
+*collapse* also offers `roworder`, `frename`, `colorder` and `ftransform`/`TRA` as fast replacements for `dplyr::arrange`, `dplyr::rename`, `dplyr::relocate` and `dplyr::mutate`. 
 
 ### 1.3 Multi-Function Aggregations
 

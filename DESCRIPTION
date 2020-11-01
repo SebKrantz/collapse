@@ -1,7 +1,7 @@
-Package: collapsedev2
+Package: collapse
 Title: Advanced and Fast Data Transformation
 Version: 1.4.0
-Date: 2020-10-30
+Date: 2020-11-01
 Authors@R: c(
            person("Sebastian", "Krantz", role = c("aut", "cre"), 
                   email = "sebastian.krantz@graduateinstitute.ch"),
@@ -16,7 +16,10 @@ Authors@R: c(
 Description: A C/C++ based package for advanced data transformation and 
     statistical computing in R that is extremely fast, flexible and 
     parsimonious to code with, class-agnostic and programmer friendly. 
-    It is well integrated with 'dplyr', 'plm', 'data.table' and 'xts' / 'zoo'.
+    It is well integrated with base R, 'dplyr' ((grouped) tibbles), 
+    'data.table' and 'plm' (panel-series and data frames), and also non-
+    destructively handles other matrix or data frame based classes (such as 
+    'ts', 'xts' / 'zoo', 'timeSeries', 'tsibble', 'sf' data frames etc.)
     --- Key Features: ---
     (1) Advanced statistical programming: A full set of fast statistical functions 
         supporting grouped and weighted computations on vectors, matrices and 
@@ -29,10 +32,10 @@ Description: A C/C++ based package for advanced data transformation and
         statistics, and (grouped, weighted) scaling / standardizing, between 
         (averaging) and (quasi-)within (centering / demeaning) transformations, 
         higher-dimensional centering (i.e. multiple fixed effects transformations), 
-        linear prediction / partialling-out and linear model fitting.
+        linear prediction / partialling-out, linear model fitting and testing.
     (4) Advanced time-computations: Fast (sequences of) lags / leads, and 
-        (lagged / leaded, iterated, quasi-, log-) differences and (compound) growth 
-        rates on (unordered) time series and panel data. Multivariate auto-, 
+        (lagged / leaded, iterated, quasi-, log-) differences and (compounded) 
+        growth rates on (unordered) time series and panel data. Multivariate auto-, 
         partial- and cross-correlation functions for panel data. 
         Panel data to (ts-)array conversions.
     (5) List processing: (Recursive) list search / identification, splitting, 
@@ -47,7 +50,7 @@ BugReports: https://github.com/SebKrantz/collapse/issues
 License: GPL (>= 2) | file LICENSE
 Encoding: UTF-8
 LazyData: true
-Depends: R (>= 2.1.0)
+Depends: R (>= 2.10)
 Imports: Rcpp (>= 1.0.1)
 LinkingTo: Rcpp
 Suggests: lfe, dplyr, plm, data.table, matrixStats, magrittr, RcppArmadillo, RcppEigen, 

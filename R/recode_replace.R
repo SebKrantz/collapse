@@ -11,7 +11,7 @@ recode_num <- function(X, ..., default = NULL, missing = NULL) {
   arglen <- length(args)
   missingl <- !is.null(missing)
   if(missingl && any(nam == missing))  warning(paste0("To improve performance missing values are replaced prior to recode, so this replaces all missing values with ",
-                                               missing, " and those are then again replaced with ", nam[nam == missing], ". If this is not desired, call replace_NA after recode with missing = NULL."))
+                                               missing, " and those are then again replaced with ", args[[which(nam == missing)]], ". If this is not desired, call replace_NA after recode with missing = NULL."))
   if(arglen == 1L) {
     args <- args[[1L]]
     if(is.null(default)) {
