@@ -29,41 +29,39 @@ G(x, n = 1, diff = 1, \dots)
 
 \method{fgrowth}{default}(x, n = 1, diff = 1, g = NULL, t = NULL, fill = NA,
         logdiff = FALSE, scale = 100, power = 1, stubs = TRUE, \dots)
-
 \method{G}{default}(x, n = 1, diff = 1, g = NULL, t = NULL, fill = NA, logdiff = FALSE,
   scale = 100, power = 1, stubs = TRUE, \dots)
 
 \method{fgrowth}{matrix}(x, n = 1, diff = 1, g = NULL, t = NULL, fill = NA,
         logdiff = FALSE, scale = 100, power = 1,
         stubs = length(n) + length(diff) > 2L, \dots)
-
 \method{G}{matrix}(x, n = 1, diff = 1, g = NULL, t = NULL, fill = NA, logdiff = FALSE,
   scale = 100, power = 1, stubs = TRUE, \dots)
 
 \method{fgrowth}{data.frame}(x, n = 1, diff = 1, g = NULL, t = NULL, fill = NA,
         logdiff = FALSE, scale = 100, power = 1,
         stubs = length(n) + length(diff) > 2L, \dots)
-
 \method{G}{data.frame}(x, n = 1, diff = 1, by = NULL, t = NULL, cols = is.numeric,
   fill = NA, logdiff = FALSE, scale = 100, power = 1, stubs = TRUE,
   keep.ids = TRUE, \dots)
 
+# Methods for compatibility with plm:
+
 \method{fgrowth}{pseries}(x, n = 1, diff = 1, fill = NA, logdiff = FALSE, scale = 100,
         power = 1, stubs = TRUE, \dots)
-
 \method{G}{pseries}(x, n = 1, diff = 1, fill = NA, logdiff = FALSE, scale = 100,
   power = 1, stubs = TRUE, \dots)
 
 \method{fgrowth}{pdata.frame}(x, n = 1, diff = 1, fill = NA, logdiff = FALSE, scale = 100,
         power = 1, stubs = length(n) + length(diff) > 2L, \dots)
-
 \method{G}{pdata.frame}(x, n = 1, diff = 1, cols = is.numeric, fill = NA, logdiff = FALSE,
   scale = 100, power = 1, stubs = TRUE, keep.ids = TRUE, \dots)
+
+# Methods for compatibility with dplyr:
 
 \method{fgrowth}{grouped_df}(x, n = 1, diff = 1, t = NULL, fill = NA, logdiff = FALSE,
         scale = 100, power = 1, stubs = length(n) + length(diff) > 2L,
         keep.ids = TRUE, \dots)
-
 \method{G}{grouped_df}(x, n = 1, diff = 1, t = NULL, fill = NA, logdiff = FALSE,
   scale = 100, power = 1, stubs = TRUE, keep.ids = TRUE, \dots)
 }

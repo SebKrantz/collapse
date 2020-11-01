@@ -6,19 +6,23 @@
 [![cran checks](https://cranchecks.info/badges/worst/collapse)](https://cran.r-project.org/web/checks/check_results_collapse.html)
 [![Travis build status](https://travis-ci.com/SebKrantz/collapse.svg?branch=master)](https://travis-ci.com/SebKrantz/collapse)
 [![Codecov test coverage](https://codecov.io/gh/SebKrantz/collapse/branch/master/graph/badge.svg)](https://codecov.io/gh/SebKrantz/collapse?branch=master)
-[![minimal R version](https://img.shields.io/badge/R%3E%3D-3.5.0-6666ff.svg)](https://cran.r-project.org/)
+[![minimal R version](https://img.shields.io/badge/R%3E%3D-2.10-6666ff.svg)](https://cran.r-project.org/)
 [![status](https://tinyverse.netlify.com/badge/collapse)](https://CRAN.R-project.org/package=collapse)
 [![lifecycle](https://img.shields.io/badge/lifecycle-maturing-blue.svg)](https://www.tidyverse.org/lifecycle/#maturing)
 ![downloads per month](http://cranlogs.r-pkg.org/badges/collapse?color=blue)
 ![downloads](http://cranlogs.r-pkg.org/badges/grand-total/collapse?color=blue)
 <!-- badges: end -->
 
-*collapse* is a C/C++ based package for data transformation and statistical computing in R. It's aims are:
+*collapse* is a C/C++ based package for data transformation and statistical computing in R. It's core aims are:
 
 * To facilitate complex data transformation, exploration and computing tasks in R.
 * To help make R code fast, flexible, parsimonious and programmer friendly.
 
-It is made compatible with *dplyr*, *data.table* and the *plm* approach to panel data.
+It is made compatible with base R, *dplyr*, *data.table* and the *plm* approach to panel data, and also non-destructively handles other matrix or data frame based classes (such as 'ts', 'xts' / 'zoo', 'timeSeries', 'tsibble', 'tibbletime', 'sf' data frames etc.). 
+
+<!-- *collapse* thus provides a robust, flexible, class-agnostic and computationally advanced toolkit for data manipulation in R. -->
+
+<!-- Core functions are implicit-type generic and attribute preserving, supporting other matrix or data frame based classes e.g. time series (*ts*, *xts* / *zoo*, *timeSeries* etc.), *sf* data frames etc. -->
 
 **Key Features:**
 
@@ -35,16 +39,17 @@ It is made compatible with *dplyr*, *data.table* and the *plm* approach to panel
         statistics, and (grouped, weighted) scaling / standardizing, between 
         (averaging) and (quasi-)within (centering / demeaning) transformations, 
         higher-dimensional centering (i.e. multiple fixed effects transformations), 
-        linear prediction and partialling-out. 
+        linear prediction / partialling-out, linear model fitting and testing.
 
 *  **Advanced time-computations**: Fast (sequences of) lags / leads, and 
-        (lagged / leaded, iterated, quasi-, log-) differences and growth 
-        rates on (unordered) time series and panel data. Multivariate auto-, 
+        (lagged / leaded, iterated, quasi-, log-) differences and (compounded) 
+        growth rates on (unordered) time series and panel data. Multivariate auto-, 
         partial- and cross-correlation functions for panel data. 
         Panel data to (ts-)array conversions. 
 
-*  **List processing**: (Recursive) list search / identification, extraction / 
-        subsetting, data-apply, and generalized row-binding / unlisting in 2D.
+*  **List processing**: (Recursive) list search / identification, splitting, 
+        extraction / subsetting, data-apply, and generalized recursive 
+        row-binding / unlisting in 2D.
 
 * **Advanced data exploration**: Fast (grouped, weighted, panel-decomposed) 
         summary statistics for complex multilevel / panel data.
@@ -97,54 +102,54 @@ fmean(qM(d), drop = FALSE)       # Still a matrix
 fmax(d, drop = FALSE)            # Still a data.frame
 
 # Fast grouped and/or weighted statistics
-wt <- abs(rnorm(fnrow(iris)))
-fmedian(d, w = wt)                # Simple weighted statistics
+w <- abs(rnorm(fnrow(iris)))
+fmedian(d, w = w)                 # Simple weighted statistics
 fnth(d, 0.75, g)                  # Grouped statistics (grouped third quartile)
-fmedian(d, g, wt)                 # Groupwise-weighted statistics
-fsd(v, g, wt)                     # Similarly for vectors
-fmode(qM(d), g, wt, ties = "max") # Or matrices (grouped and weighted maximum mode) ...
+fmedian(d, g, w)                  # Groupwise-weighted statistics
+fsd(v, g, w)                      # Similarly for vectors
+fmode(qM(d), g, w, ties = "max")  # Or matrices (grouped and weighted maximum mode) ...
 
 # A fast set of data manipulation functions allows complex piped programming at high speeds
 library(magrittr)                            # Pipe operators
 iris %>% fgroup_by(Species) %>% fNdistinct   # Grouped distinct value counts
-iris %>% fgroup_by(Species) %>% fmedian(wt)  # Weighted group medians 
-iris %>% add_vars(wt) %>%                    # Adding weight vector to dataset
-  fsubset(Sepal.Length < fmean(Sepal.Length), Species, Sepal.Width:wt) %>% # Fast selecting and subsetting
+iris %>% fgroup_by(Species) %>% fmedian(w)   # Weighted group medians 
+iris %>% add_vars(w) %>%                     # Adding weight vector to dataset
+  fsubset(Sepal.Length < fmean(Sepal.Length), Species, Sepal.Width:w) %>% # Fast selecting and subsetting
   fgroup_by(Species) %>%                     # Grouping (efficiently creates a grouped tibble)
-  fvar(wt) %>%                               # Frequency-weighted group-variance, default (keep.w = TRUE)  
-  roworder(sum.wt)                           # also saves group weights in a column called 'sum.wt'
+  fvar(w) %>%                                # Frequency-weighted group-variance, default (keep.w = TRUE)  
+  roworder(sum.w)                            # also saves group weights in a column called 'sum.w'
 
 # Can also use dplyr (but dplyr manipulation verbs are a lot slower)
 library(dplyr)
-iris %>% add_vars(wt) %>% 
+iris %>% add_vars(w) %>% 
   filter(Sepal.Length < fmean(Sepal.Length)) %>% 
-  select(Species, Sepal.Width:wt) %>% 
+  select(Species, Sepal.Width:w) %>% 
   group_by(Species) %>% 
-  fvar(wt) %>% arrange(sum.wt)
+  fvar(w) %>% arrange(sum.w)
 
 ## Advanced Aggregation -----------------------------------------------------------------------------------------
 
 collap(iris, Sepal.Length + Sepal.Width ~ Species, fmean)  # Simple aggregation using the mean..
 collap(iris, ~ Species, list(fmean, fmedian, fmode))       # Multiple functions applied to each column
-add_vars(iris) <- wt                                       # Adding weights, return in long format..
-collap(iris, ~ Species, list(fmean, fmedian, fmode), w = ~ wt, return = "long")
+add_vars(iris) <- w                                        # Adding weights, return in long format..
+collap(iris, ~ Species, list(fmean, fmedian, fmode), w = ~ w, return = "long")
 
 # Generate some additional logical data
-settransform(iris, AWMSL = Sepal.Length > fmedian(Sepal.Length, w = wt), 
-                   AWMSW = Sepal.Width > fmedian(Sepal.Width, w = wt))
+settransform(iris, AWMSL = Sepal.Length > fmedian(Sepal.Length, w = w), 
+                   AWMSW = Sepal.Width > fmedian(Sepal.Width, w = w))
 
 # Multi-type data aggregation: catFUN applies to all categorical columns (here AMWSW)
 collap(iris, ~ Species + AWMSL, list(fmean, fmedian, fmode), 
-       catFUN = fmode, w = ~ wt, return = "long")
+       catFUN = fmode, w = ~ w, return = "long")
 
 # Custom aggregation gives the greatest possible flexibility: directly mapping functions to columns
 collap(iris, ~ Species + AWMSL, 
-       custom = list(fmean = 2:3, fsd = 3:4, fmode = "AWMSL"), w = ~ wt, 
+       custom = list(fmean = 2:3, fsd = 3:4, fmode = "AWMSL"), w = ~ w, 
        wFUN = list(fsum, fmin, fmax), # Here also aggregating the weight vector with 3 different functions
        keep.col.order = FALSE)        # Column order not maintained -> grouping and weight variables first
 
 # Can also use grouped tibble: weighted median for numeric, weighted mode for categorical columns
-iris %>% fgroup_by(Species, AWMSL) %>% collapg(fmedian, fmode, w = wt)
+iris %>% fgroup_by(Species, AWMSL) %>% collapg(fmedian, fmode, w = w)
 
 ## Advanced Transformations -------------------------------------------------------------------------------------
 
@@ -155,29 +160,29 @@ fsum(d, TRA = "%")            # Computing percentages
 fsd(d, g, TRA = "/")          # Grouped scaling
 fmin(d, g, TRA = "-")         # Setting the minimum value in each species to 0
 ffirst(d, g, TRA = "%%")      # Taking modulus of first value in each species
-fmedian(d, g, wt, "-")        # Groupwise centering by the weighted median
-fnth(d, 0.95, g, wt, "%")     # Expressing data in percentages of the weighted species-wise 95th percentile
-fmode(d, g, wt, "replace",    # Replacing data by the species-wise weighted minimum-mode
+fmedian(d, g, w, "-")         # Groupwise centering by the weighted median
+fnth(d, 0.95, g, w, "%")      # Expressing data in percentages of the weighted species-wise 95th percentile
+fmode(d, g, w, "replace",     # Replacing data by the species-wise weighted minimum-mode
       ties = "min")
 
 # TRA() can also be called directly to replace or sweep with a matching set of computed statistics
 TRA(v, sd(v), "/")                       # Same as fsd(v, TRA = "/")
-TRA(d, fmedian(d, g, wt), "-", g)        # Same as fmedian(d, g, wt, "-")
+TRA(d, fmedian(d, g, w), "-", g)         # Same as fmedian(d, g, w, "-")
 TRA(d, BY(d, g, quantile, 0.95), "%", g) # Same as fnth(d, 0.95, g, TRA = "%") (apart from quantile algorithm)
 
 # For common uses, there are some faster and more advanced functions
 fbetween(d, g)                           # Grouped averaging [same as fmean(d, g, TRA = "replace") but faster]
 fwithin(d, g)                            # Grouped centering [same as fmean(d, g, TRA = "-") but faster]
-fwithin(d, g, wt)                        # Grouped and weighted centering [same as fmean(d, g, wt, "-")]
-fwithin(d, g, wt, theta = 0.76)          # Quasi-centering i.e. d - theta*fbetween(d, g, wt)
-fwithin(d, g, wt, mean = "overall.mean") # Preserving the overall weighted mean of the data
+fwithin(d, g, w)                         # Grouped and weighted centering [same as fmean(d, g, w, "-")]
+fwithin(d, g, w, theta = 0.76)           # Quasi-centering i.e. d - theta*fbetween(d, g, w)
+fwithin(d, g, w, mean = "overall.mean")  # Preserving the overall weighted mean of the data
 
 fscale(d)                                # Scaling and centering (default mean = 0, sd = 1)
 fscale(d, mean = 5, sd = 3)              # Custom scaling and centering
 fscale(d, mean = FALSE, sd = 3)          # Mean preserving scaling
-fscale(d, g, wt)                         # Grouped and weighted scaling and centering
-fscale(d, g, wt, mean = "overall.mean",  # Setting group means to overall weighted mean,
-       sd = "within.sd")                 # and group sd's to fsd(fwithin(d, g, wt), w = wt)
+fscale(d, g, w)                          # Grouped and weighted scaling and centering
+fscale(d, g, w, mean = "overall.mean",   # Setting group means to overall weighted mean,
+       sd = "within.sd")                 # and group sd's to fsd(fwithin(d, g, w), w = w)
 
 get_vars(iris, 1:2)                      # Use get_vars for fast selecting data.frame columns, gv is shortcut
 fHDbetween(gv(iris, 1:2), gv(iris, 3:5)) # Linear prediction with factors and continuous covariates
@@ -185,10 +190,10 @@ fHDwithin(gv(iris, 1:2), gv(iris, 3:5))  # Linear partialling out factors and co
 
 # This again opens up new possibilities for data manipulation...
 iris %>%  
-  ftransform(ASWMSL = Sepal.Length > fmedian(Sepal.Length, Species, wt, "replace")) %>%
-  fgroup_by(ASWMSL) %>% collapg(w = wt, keep.col.order = FALSE)
+  ftransform(ASWMSL = Sepal.Length > fmedian(Sepal.Length, Species, w, "replace")) %>%
+  fgroup_by(ASWMSL) %>% collapg(w = w, keep.col.order = FALSE)
 
-iris %>% fgroup_by(Species) %>% num_vars %>% fwithin(wt)  # Weighted demeaning
+iris %>% fgroup_by(Species) %>% num_vars %>% fwithin(w)  # Weighted demeaning
 
 
 ## Time Series and Panel Series ---------------------------------------------------------------------------------
@@ -256,8 +261,8 @@ descr(iris)                                   # Detailed statistical description
 
 varying(iris, ~ Species)                      # Show which variables vary within Species
 varying(pdata)                                # Which are time-varying ? 
-qsu(iris, w = ~ wt)                           # Fast (one-pass) summary (with weights)
-qsu(iris, ~ Species, w = ~ wt, higher = TRUE) # Grouped summary + higher moments
+qsu(iris, w = ~ w)                            # Fast (one-pass) summary (with weights)
+qsu(iris, ~ Species, w = ~ w, higher = TRUE)  # Grouped summary + higher moments
 qsu(pdata, higher = TRUE)                     # Panel-data summary (between and within entities)
 pwcor(num_vars(irisNA), N = TRUE, P = TRUE)   # Pairwise correlations with p-value and observations
 pwcor(W(pdata, keep.ids = FALSE), P = TRUE)   # Within-correlations
@@ -283,7 +288,7 @@ Some simple benchmarks against *dplyr*, *data.table* and *plm* are provided in [
 
 * This performance extends to grouped and weighted computations on vectors and matrices (*collapse* provides separate vector, matrix and data.frame methods written in C++, the performance in matrix computations is comparable to *Rfast* and *matrixStats*).
 
-### Regarding the Integration with *dplyr*, *plm* and *data.table* 
+### Regarding the Integration with *dplyr*, *plm* and *data.table* and Class-Agnostic data Manipulation
 
 * ***collapse*** **and** ***dplyr***: The [Fast Statistical Functions](<https://sebkrantz.github.io/collapse/reference/fast-statistical-functions.html>) and [transformation functions and operators](<https://sebkrantz.github.io/collapse/reference/data-transformations.html>) provided by *collapse* have a *grouped_df* method, allowing them to be seamlessly integrated into *dplyr* / *tidyverse* workflows. Doing so facilitates advanced operations in *dplyr* and provides remarkable performance improvements. In addition, *collapse* provides some faster replacements for common base R / *dplyr* verbs (`fselect`/`get_vars`, `fgroup_by`, `fsubset`, `ftransform`/`TRA`, `roworder`, `colorder`, `frename`, `funique`, `na_omit`, etc.). See also [this vignette](<https://sebkrantz.github.io/collapse/articles/collapse_and_dplyr.html>). 
 
@@ -296,6 +301,8 @@ Some simple benchmarks against *dplyr*, *data.table* and *plm* are provided in [
 <!-- (e.g. for applying transformations to multiple variables in a *pdata.frame*) -->
 
 * ***collapse*** **and** ***data.table***: All collapse functions can be applied to *data.table*'s and they will also return a *data.table* again. The C/C++ programming of *collapse* was inspired by *data.table* and directly relies on some *data.table* C source code (e.g. for grouping and row-binding). The function `qDT` efficiently converts various R objects to *data.table*, and several functions (`mrtl`, `mctl`, `unlist2d`, ...) have an option to return a *data.table*. 
+
+* **Time Series and other classes**: Besides explicit support for *dplyr* / *tibble*, *data.table* and *plm* panel data classes, *collapse*'s statistical and transformation functions are S3 generic, with 'default', 'matrix' and 'data.frame' methods which dispatch on the implicit data type (such that matrix-based classed objects are always handed to the matrix method, even if they don't inherit from 'matrix'). Furthermore, these methods intelligently preserve the attributes of the objects passed. Therefore *collapse* can handle many other matrix or data frame based classes, including *ts*, *xts* / *zoo*, *timeSeries*, *sf* data frames etc. Compatibility is of course limited if manipulating a classed object requires further actions besides preservation of the attributes under modification of 'names', 'dim', 'dimnames' and 'row.names'. For example, selecting columns from an *sf* data frame with `fselect` requires the user to also select the 'geometry' column to not break the class. 
 
 <!--
 

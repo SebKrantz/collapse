@@ -1,4 +1,4 @@
-useDynLib(collapsedev2, .registration=TRUE) # , .fixes = "C_"
+useDynLib(collapse, .registration=TRUE) # , .fixes = "C_"
 importFrom(Rcpp, evalCpp)
 importFrom("graphics", "hist", "par", "plot")
 importFrom("grDevices", "rainbow")
@@ -328,6 +328,7 @@ importFrom("stats", "as.formula", "complete.cases", "cor", "cov", "var", "pt",
  S3method(D, default)
  S3method(D, expression)
  S3method(D, call)
+ S3method(D, name)
  S3method(D, grouped_df)
  S3method(D, matrix)
  S3method(D, pdata.frame)

@@ -262,7 +262,7 @@ gby <- fgroup_by
 print.GRP_df <- function(x, ...) {
   NextMethod()
   g <- unclass(attr(x, "groups"))
-  cat("\nGroups: ", paste(g[[5L]], collapse = ", "), # Grouped by:
+  cat("\nGrouped by: ", paste(g[[5L]], collapse = ", "), # Groups:
       # if(any(g[[6L]])) "ordered groups" else "unordered groups", -> ordered 99% of times...
       paste0(" [", g[[1L]], " | ", round(length(g[[2L]]) / g[[1L]]), " (", round(fsd.default(g[[3L]]), 1), ")]"))
   if(inherits(x, "pdata.frame"))

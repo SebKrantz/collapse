@@ -43,20 +43,21 @@ GRP(X, \dots)
 
 \method{GRP}{grouped_df}(X, \dots, return.groups = TRUE, call = TRUE)
 
+# Identify, get group names, and convert GRP object to factor
 is.GRP(x)
-
 GRPnames(x, force.char = TRUE)
-
 as.factor_GRP(x, ordered = FALSE)
 
+# Fast, class-agnostic version of dplyr::group_by for use with fast functions, see details
 fgroup_by(X, \dots, sort = TRUE, decreasing = FALSE, na.last = TRUE,
           return.order = FALSE)
+      gby(X, \dots, sort = TRUE, decreasing = FALSE, na.last = TRUE,
+          return.order = FALSE)
 
-gby(X, \dots, sort = TRUE, decreasing = FALSE, na.last = TRUE,
-    return.order = FALSE)
-
+# Get grouping columns from a grouped data frame created with dplyr::group_by or fgroup_by
 fgroup_vars(X, return = "data")
 
+# Ungroup grouped data frame created with dplyr::group_by or fgroup_by
 fungroup(X, \dots)
 
 \method{print}{GRP}(x, n = 6, \dots)
@@ -123,7 +124,7 @@ The sorting and ordering functionality for \code{GRP} only affects (2), that is 
 
 %This in-turn changes the order of values/rows in the output of \emph{collapse} functions (the row/value corresponding to group 1 always comes out on top). The default setting with \code{sort = TRUE} and \code{decreasing = FALSE} results in groups being sorted in ascending order. This is equivalent to performing grouped operations in \emph{data.table} using \code{keyby}, whereas \code{sort = FALSE} is equivalent to \emph{data.table} grouping with \code{by}, however this only works if the \code{by} columns are character, numeric grouping columns are always ordered.
 
-Next to \code{GRP}, there is the function \code{fgroup_by} as a significantly faster alternative to \code{dplyr::group_by}. It creates a grouped data frame by attaching a 'GRP' object to a data frame. \emph{collapse} functions with a grouped_df method applied to that data frame will yield grouped computations. Note that \code{fgroup_by} can only be used in combination with \emph{collapse} functions, not with \emph{dplyr} verbs such as \code{summarize} or \code{mutate}. The converse is not true, you can group data with \code{dplyr::group_by} and then apply \emph{collapse} functions. Note also the \code{fgroup_by} is class-agnostic, i.e. the classes of the data frame or list passed are preserved, and all standard methods (like subsetting with \code{`[`} or \code{print} mehods) apply to the grouped object. Apart from the class 'grouped_df' which is added behind any classes the object might inherit (apart from 'data.frame'), a class 'GRP_df' is added in front. This class only reponds to a print method: \code{print.GRP_df} first calls the print method for the object, and then prints below one line indicating the grouping variables, followed, in square brackets, by the following information: \code{[number of groups | average group size (standard-deviation of group sizes)]}.
+Next to \code{GRP}, there is the function \code{fgroup_by} as a significantly faster alternative to \code{dplyr::group_by}. It creates a grouped data frame by attaching a 'GRP' object to a data frame. \emph{collapse} functions with a grouped_df method applied to that data frame will yield grouped computations. Note that \code{fgroup_by} can only be used in combination with \emph{collapse} functions, not with \emph{dplyr} verbs such as \code{summarize} or \code{mutate}. The converse is not true, you can group data with \code{dplyr::group_by} and then apply \emph{collapse} functions. Note also the \code{fgroup_by} is class-agnostic, i.e. the classes of the data frame or list passed are preserved, and all standard methods (like subsetting with \code{`[`} or \code{print} methods) apply to the grouped object. Apart from the class 'grouped_df' which is added behind any classes the object might inherit (apart from 'data.frame'), a class 'GRP_df' is added in front. This class only responds to a print method: \code{print.GRP_df} first calls the print method for the object, and then prints below one line indicating the grouping variables, followed, in square brackets, by the following information: \code{[number of groups | average group size (standard-deviation of group sizes)]}.
 
 \code{GRP} is an S3 generic function with one default method supporting vector and list input and several conversion methods:
 
@@ -175,6 +176,9 @@ library(dplyr)
 mtcars \%>\% group_by(cyl,vs,am) \%>\% GRP    # Get GRP object from a dplyr grouped tibble
 mtcars \%>\% group_by(cyl,vs,am) \%>\% fmean  # Grouped mean using dplyr grouping
 mtcars \%>\% fgroup_by(cyl,vs,am) \%>\% fmean # Faster alternative with collapse grouping
+
+mtcars \%>\% fgroup_by(cyl,vs,am)             # Print method
+
 
 }
 \keyword{manip}

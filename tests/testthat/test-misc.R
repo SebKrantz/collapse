@@ -75,6 +75,21 @@ test_that("fast functions give same result using different grouping mechanisms",
                              FUN(v, g = fcc, TRA = 1L), TRA(v, FUN(v, g = fcc), 1L, fcc),
                              FUN(v, g = g, TRA = 1L), TRA(v, FUN(v, g = g), 1L, g),
                              FUN(v, g = gl, TRA = 1L), TRA(v, FUN(v, g = gl), 1L, gl)))
+
+   expect_true(all_obj_equal(FUN(m, g = mtcars$cyl, TRA = 1L), TRA(m, FUN(m, g = mtcars$cyl), 1L, mtcars$cyl),
+                             FUN(m, g = f, TRA = 1L), TRA(m, FUN(m, g = f), 1L, f),
+                             FUN(m, g = fcc, TRA = 1L), TRA(m, FUN(m, g = fcc), 1L, fcc),
+                             FUN(m, g = g, TRA = 1L), TRA(m, FUN(m, g = g), 1L, g),
+                             FUN(m, g = gl, TRA = 1L), TRA(m, FUN(m, g = gl), 1L, gl)))
+
+   expect_true(all_obj_equal(FUN(mtcars, g = mtcars$cyl, TRA = 1L), TRA(mtcars, FUN(mtcars, g = mtcars$cyl), 1L, mtcars$cyl),
+                             FUN(mtcars, g = f, TRA = 1L), TRA(mtcars, FUN(mtcars, g = f), 1L, f),
+                             FUN(mtcars, g = fcc, TRA = 1L), TRA(mtcars, FUN(mtcars, g = fcc), 1L, fcc),
+                             FUN(mtcars, g = g, TRA = 1L), TRA(mtcars, FUN(mtcars, g = g), 1L, g),
+                             FUN(mtcars, g = gl, TRA = 1L), TRA(mtcars, FUN(mtcars, g = gl), 1L, gl)))
+
+   expect_equal(colorder(FUN(gmtc, TRA = 1L), mpg, cyl), TRA(gmtc, FUN(gmtc), 1L))
+   expect_equal(FUN(fselect(gmtc, -cyl), TRA = 1L), TRA(fselect(gmtc, -cyl), FUN(gmtc, keep.group_vars = FALSE), 1L))
  }
 
   for(i in setdiff(.FAST_FUN, c(.FAST_STAT_FUN, "fHDbetween", "fHDwithin"))) {

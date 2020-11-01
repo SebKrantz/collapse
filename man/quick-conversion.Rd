@@ -52,9 +52,9 @@ mrtl(X, names = FALSE, return = "list")
 \details{
 Object conversions using these functions are maximally efficient and involve 3 consecutive steps: (1) Converting the storage mode / dimensions / data of the object, (2) converting / modifying the attributes and (3) modifying the class of the object:
 
-(1) is determined by the choice of function and the optional \code{row.names.col} arument to \code{qDF} and \code{qDT}. Higher-dimensional arrays are converted by expanding the second dimension (adding columns, same as \code{as.matrix, as.data.frame, as.data.table}).
+(1) is determined by the choice of function and the optional \code{row.names.col} argument to \code{qDF} and \code{qDT}. Higher-dimensional arrays are converted by expanding the second dimension (adding columns, same as \code{as.matrix, as.data.frame, as.data.table}).
 
-(2) is determined by the \code{keep.attr} argument: \code{keep.attr = TRUE} seeks to preserve the attributes of the object. It's effect is like copying \code{attributes(converted) <- attributes(original)}, and then modifying the \code{"dim", "dimnames", "names", "row.names"} and \code{"levels"} attributes as necesitated by the conversion task. \code{keep.attr = FALSE} only converts / assigns / removes these attributes and drops all others.
+(2) is determined by the \code{keep.attr} argument: \code{keep.attr = TRUE} seeks to preserve the attributes of the object. It's effect is like copying \code{attributes(converted) <- attributes(original)}, and then modifying the \code{"dim", "dimnames", "names", "row.names"} and \code{"levels"} attributes as necessitated by the conversion task. \code{keep.attr = FALSE} only converts / assigns / removes these attributes and drops all others.
 
 (3) is determined by the \code{class} argument: Setting \code{class = "myclass"} will yield a converted object of class \code{"myclass"}, with any other / prior classes being removed by this replacement. Setting \code{class = NULL} does NOT mean that a class \code{NULL} is assigned (which would remove the class attribute), but rather that the default classes are assigned: \code{qM} assigns no class, \code{qDF} a class \code{"data.frame"}, and \code{qDT} a class \code{c("data.table", "data.frame")}. At this point there is an interaction with \code{keep.attr}: If \code{keep.attr = TRUE} and \code{class = NULL} and the object converted already inherits the respective default classes, then any other inherited classes will also be preserved (with \code{qM(x, keep.attr = TRUE, class = NULL)} any class will be preserved if \code{is.matrix(x)} evaluated to \code{TRUE}.)
 
@@ -72,7 +72,7 @@ The default \code{keep.attr = FALSE} ensures \emph{hard} conversions so that all
 \code{as.character_factor} - returns X with factors converted to character variables
 }
 \note{
-\code{qTBL} is a simple wrapper around \code{qDT} assigning different classes, i.e. \code{qTBL(x)} is equivalent to \code{qDT(x, class = c("tbl_df", "tbl", "data.frame"))}. Similar converters for other data frame based classes are easily created from \code{qDF} and \code{qDT}. The principle difference between them is that \code{qDF} preserves rownames whereas \code{qDT} always assigns interger rownames.
+\code{qTBL} is a simple wrapper around \code{qDT} assigning different classes, i.e. \code{qTBL(x)} is equivalent to \code{qDT(x, class = c("tbl_df", "tbl", "data.frame"))}. Similar converters for other data frame based classes are easily created from \code{qDF} and \code{qDT}. The principle difference between them is that \code{qDF} preserves rownames whereas \code{qDT} always assigns integer rownames.
 }
 \seealso{
 \code{\link{qF}}, \link[=collapse-documentation]{Collapse Overview}
