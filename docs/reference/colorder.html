@@ -72,7 +72,7 @@
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">collapse</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">1.3.2</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">1.4.0</span>
       </span>
     </div>
 
@@ -126,10 +126,10 @@
     <p>Efficiently reorder columns in a data frame (no copies). To do this by reference see also <code><a href='https://rdrr.io/pkg/data.table/man/setcolorder.html'>data.table::setcolorder</a></code>.</p>
     </div>
 
-    <pre class="usage"><span class='fu'>colorder</span>(<span class='no'>X</span>, <span class='no'>...</span>, <span class='kw'>pos</span> <span class='kw'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span>(<span class='st'>"front"</span>, <span class='st'>"end"</span>, <span class='st'>"exchange"</span>))
+    <pre class="usage"><span class='fu'>colorder</span><span class='op'>(</span><span class='va'>X</span>, <span class='va'>...</span>, pos <span class='op'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span><span class='op'>(</span><span class='st'>"front"</span>, <span class='st'>"end"</span>, <span class='st'>"exchange"</span><span class='op'>)</span><span class='op'>)</span>
 
-<span class='fu'>colorderv</span>(<span class='no'>X</span>, <span class='kw'>neworder</span> <span class='kw'>=</span> <span class='fu'><a href='radixorder.html'>radixorder</a></span>(<span class='fu'><a href='https://rdrr.io/r/base/names.html'>names</a></span>(<span class='no'>X</span>)), <span class='kw'>pos</span> <span class='kw'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span>(<span class='st'>"front"</span>,<span class='st'>"end"</span>,<span class='st'>"exchange"</span>),
-          <span class='kw'>regex</span> <span class='kw'>=</span> <span class='fl'>FALSE</span>, <span class='no'>...</span>)</pre>
+<span class='fu'>colorderv</span><span class='op'>(</span><span class='va'>X</span>, neworder <span class='op'>=</span> <span class='fu'><a href='radixorder.html'>radixorder</a></span><span class='op'>(</span><span class='fu'><a href='https://rdrr.io/r/base/names.html'>names</a></span><span class='op'>(</span><span class='va'>X</span><span class='op'>)</span><span class='op'>)</span>, pos <span class='op'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span><span class='op'>(</span><span class='st'>"front"</span>,<span class='st'>"end"</span>,<span class='st'>"exchange"</span><span class='op'>)</span>,
+          regex <span class='op'>=</span> <span class='cn'>FALSE</span>, <span class='va'>...</span><span class='op'>)</span></pre>
 
     <h2 class="hasAnchor" id="arguments"><a class="anchor" href="#arguments"></a>Arguments</h2>
     <table class="ref-arguments">
@@ -168,22 +168,25 @@
     <p><code>X</code> with columns re-ordered (no deep copy).</p>
     <h2 class="hasAnchor" id="see-also"><a class="anchor" href="#see-also"></a>See also</h2>
 
-    <div class='dont-index'><p><code><a href='roworder.html'>roworder</a></code>, <a href='fast-data-manipulation.html'>Data Frame Manipulation</a>, <a href='index.html'>Collapse Overview</a></p></div>
+    <div class='dont-index'><p><code><a href='roworder.html'>roworder</a></code>, <a href='A3-fast-data-manipulation.html'>Data Frame Manipulation</a>, <a href='index.html'>Collapse Overview</a></p></div>
 
     <h2 class="hasAnchor" id="examples"><a class="anchor" href="#examples"></a>Examples</h2>
-    <pre class="examples"><div class='input'><span class='fu'><a href='https://rdrr.io/r/utils/head.html'>head</a></span>(<span class='fu'>colorder</span>(<span class='no'>mtcars</span>, <span class='no'>vs</span>, <span class='no'>cyl</span>:<span class='no'>hp</span>, <span class='no'>am</span>))</div><div class='output co'>#&gt;                   vs cyl disp  hp am  mpg drat    wt  qsec gear carb
+    <pre class="examples"><div class='input'><span class='fu'><a href='https://rdrr.io/r/utils/head.html'>head</a></span><span class='op'>(</span><span class='fu'>colorder</span><span class='op'>(</span><span class='va'>mtcars</span>, <span class='va'>vs</span>, <span class='va'>cyl</span><span class='op'>:</span><span class='va'>hp</span>, <span class='va'>am</span><span class='op'>)</span><span class='op'>)</span>
+</div><div class='output co'>#&gt;                   vs cyl disp  hp am  mpg drat    wt  qsec gear carb
 #&gt; Mazda RX4          0   6  160 110  1 21.0 3.90 2.620 16.46    4    4
 #&gt; Mazda RX4 Wag      0   6  160 110  1 21.0 3.90 2.875 17.02    4    4
 #&gt; Datsun 710         1   4  108  93  1 22.8 3.85 2.320 18.61    4    1
 #&gt; Hornet 4 Drive     1   6  258 110  0 21.4 3.08 3.215 19.44    3    1
 #&gt; Hornet Sportabout  0   8  360 175  0 18.7 3.15 3.440 17.02    3    2
-#&gt; Valiant            1   6  225 105  0 18.1 2.76 3.460 20.22    3    1</div><div class='input'><span class='fu'><a href='https://rdrr.io/r/utils/head.html'>head</a></span>(<span class='fu'>colorder</span>(<span class='no'>mtcars</span>, <span class='no'>vs</span>, <span class='no'>cyl</span>:<span class='no'>hp</span>, <span class='no'>am</span>, <span class='kw'>pos</span> <span class='kw'>=</span> <span class='st'>"end"</span>))</div><div class='output co'>#&gt;                    mpg drat    wt  qsec gear carb vs cyl disp  hp am
+#&gt; Valiant            1   6  225 105  0 18.1 2.76 3.460 20.22    3    1</div><div class='input'><span class='fu'><a href='https://rdrr.io/r/utils/head.html'>head</a></span><span class='op'>(</span><span class='fu'>colorder</span><span class='op'>(</span><span class='va'>mtcars</span>, <span class='va'>vs</span>, <span class='va'>cyl</span><span class='op'>:</span><span class='va'>hp</span>, <span class='va'>am</span>, pos <span class='op'>=</span> <span class='st'>"end"</span><span class='op'>)</span><span class='op'>)</span>
+</div><div class='output co'>#&gt;                    mpg drat    wt  qsec gear carb vs cyl disp  hp am
 #&gt; Mazda RX4         21.0 3.90 2.620 16.46    4    4  0   6  160 110  1
 #&gt; Mazda RX4 Wag     21.0 3.90 2.875 17.02    4    4  0   6  160 110  1
 #&gt; Datsun 710        22.8 3.85 2.320 18.61    4    1  1   4  108  93  1
 #&gt; Hornet 4 Drive    21.4 3.08 3.215 19.44    3    1  1   6  258 110  0
 #&gt; Hornet Sportabout 18.7 3.15 3.440 17.02    3    2  0   8  360 175  0
-#&gt; Valiant           18.1 2.76 3.460 20.22    3    1  1   6  225 105  0</div><div class='input'><span class='fu'><a href='https://rdrr.io/r/utils/head.html'>head</a></span>(<span class='fu'>colorder</span>(<span class='no'>mtcars</span>, <span class='no'>vs</span>, <span class='no'>cyl</span>, <span class='kw'>pos</span> <span class='kw'>=</span> <span class='st'>"exchange"</span>))</div><div class='output co'>#&gt;                    mpg vs disp  hp drat    wt  qsec cyl am gear carb
+#&gt; Valiant           18.1 2.76 3.460 20.22    3    1  1   6  225 105  0</div><div class='input'><span class='fu'><a href='https://rdrr.io/r/utils/head.html'>head</a></span><span class='op'>(</span><span class='fu'>colorder</span><span class='op'>(</span><span class='va'>mtcars</span>, <span class='va'>vs</span>, <span class='va'>cyl</span>, pos <span class='op'>=</span> <span class='st'>"exchange"</span><span class='op'>)</span><span class='op'>)</span>
+</div><div class='output co'>#&gt;                    mpg vs disp  hp drat    wt  qsec cyl am gear carb
 #&gt; Mazda RX4         21.0  0  160 110 3.90 2.620 16.46   6  1    4    4
 #&gt; Mazda RX4 Wag     21.0  0  160 110 3.90 2.875 17.02   6  1    4    4
 #&gt; Datsun 710        22.8  1  108  93 3.85 2.320 18.61   4  1    4    1
@@ -191,19 +194,22 @@
 #&gt; Hornet Sportabout 18.7  0  360 175 3.15 3.440 17.02   8  0    3    2
 #&gt; Valiant           18.1  1  225 105 2.76 3.460 20.22   6  0    3    1</div><div class='input'>
 <span class='co'>## Same in standard evaluation</span>
-<span class='fu'><a href='https://rdrr.io/r/utils/head.html'>head</a></span>(<span class='fu'>colorderv</span>(<span class='no'>mtcars</span>, <span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span>(<span class='fl'>8</span>, <span class='fl'>2</span>:<span class='fl'>4</span>, <span class='fl'>9</span>)))</div><div class='output co'>#&gt;                   vs cyl disp  hp am  mpg drat    wt  qsec gear carb
+<span class='fu'><a href='https://rdrr.io/r/utils/head.html'>head</a></span><span class='op'>(</span><span class='fu'>colorderv</span><span class='op'>(</span><span class='va'>mtcars</span>, <span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span><span class='op'>(</span><span class='fl'>8</span>, <span class='fl'>2</span><span class='op'>:</span><span class='fl'>4</span>, <span class='fl'>9</span><span class='op'>)</span><span class='op'>)</span><span class='op'>)</span>
+</div><div class='output co'>#&gt;                   vs cyl disp  hp am  mpg drat    wt  qsec gear carb
 #&gt; Mazda RX4          0   6  160 110  1 21.0 3.90 2.620 16.46    4    4
 #&gt; Mazda RX4 Wag      0   6  160 110  1 21.0 3.90 2.875 17.02    4    4
 #&gt; Datsun 710         1   4  108  93  1 22.8 3.85 2.320 18.61    4    1
 #&gt; Hornet 4 Drive     1   6  258 110  0 21.4 3.08 3.215 19.44    3    1
 #&gt; Hornet Sportabout  0   8  360 175  0 18.7 3.15 3.440 17.02    3    2
-#&gt; Valiant            1   6  225 105  0 18.1 2.76 3.460 20.22    3    1</div><div class='input'><span class='fu'><a href='https://rdrr.io/r/utils/head.html'>head</a></span>(<span class='fu'>colorderv</span>(<span class='no'>mtcars</span>, <span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span>(<span class='fl'>8</span>, <span class='fl'>2</span>:<span class='fl'>4</span>, <span class='fl'>9</span>), <span class='kw'>pos</span> <span class='kw'>=</span> <span class='st'>"end"</span>))</div><div class='output co'>#&gt;                    mpg drat    wt  qsec gear carb vs cyl disp  hp am
+#&gt; Valiant            1   6  225 105  0 18.1 2.76 3.460 20.22    3    1</div><div class='input'><span class='fu'><a href='https://rdrr.io/r/utils/head.html'>head</a></span><span class='op'>(</span><span class='fu'>colorderv</span><span class='op'>(</span><span class='va'>mtcars</span>, <span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span><span class='op'>(</span><span class='fl'>8</span>, <span class='fl'>2</span><span class='op'>:</span><span class='fl'>4</span>, <span class='fl'>9</span><span class='op'>)</span>, pos <span class='op'>=</span> <span class='st'>"end"</span><span class='op'>)</span><span class='op'>)</span>
+</div><div class='output co'>#&gt;                    mpg drat    wt  qsec gear carb vs cyl disp  hp am
 #&gt; Mazda RX4         21.0 3.90 2.620 16.46    4    4  0   6  160 110  1
 #&gt; Mazda RX4 Wag     21.0 3.90 2.875 17.02    4    4  0   6  160 110  1
 #&gt; Datsun 710        22.8 3.85 2.320 18.61    4    1  1   4  108  93  1
 #&gt; Hornet 4 Drive    21.4 3.08 3.215 19.44    3    1  1   6  258 110  0
 #&gt; Hornet Sportabout 18.7 3.15 3.440 17.02    3    2  0   8  360 175  0
-#&gt; Valiant           18.1 2.76 3.460 20.22    3    1  1   6  225 105  0</div><div class='input'><span class='fu'><a href='https://rdrr.io/r/utils/head.html'>head</a></span>(<span class='fu'>colorderv</span>(<span class='no'>mtcars</span>, <span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span>(<span class='fl'>8</span>, <span class='fl'>2</span>), <span class='kw'>pos</span> <span class='kw'>=</span> <span class='st'>"exchange"</span>))</div><div class='output co'>#&gt;                    mpg vs disp  hp drat    wt  qsec cyl am gear carb
+#&gt; Valiant           18.1 2.76 3.460 20.22    3    1  1   6  225 105  0</div><div class='input'><span class='fu'><a href='https://rdrr.io/r/utils/head.html'>head</a></span><span class='op'>(</span><span class='fu'>colorderv</span><span class='op'>(</span><span class='va'>mtcars</span>, <span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span><span class='op'>(</span><span class='fl'>8</span>, <span class='fl'>2</span><span class='op'>)</span>, pos <span class='op'>=</span> <span class='st'>"exchange"</span><span class='op'>)</span><span class='op'>)</span>
+</div><div class='output co'>#&gt;                    mpg vs disp  hp drat    wt  qsec cyl am gear carb
 #&gt; Mazda RX4         21.0  0  160 110 3.90 2.620 16.46   6  1    4    4
 #&gt; Mazda RX4 Wag     21.0  0  160 110 3.90 2.875 17.02   6  1    4    4
 #&gt; Datsun 710        22.8  1  108  93 3.85 2.320 18.61   4  1    4    1
@@ -225,7 +231,7 @@
 </div>
 
 <div class="pkgdown">
-  <p>Site built with <a href="https://pkgdown.r-lib.org/">pkgdown</a> 1.5.1.</p>
+  <p>Site built with <a href="https://pkgdown.r-lib.org/">pkgdown</a> 1.6.1.</p>
 </div>
 
       </footer>

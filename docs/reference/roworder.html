@@ -72,7 +72,7 @@
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">collapse</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">1.3.2</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">1.4.0</span>
       </span>
     </div>
 
@@ -126,10 +126,10 @@
     <p>A fast substitute for <code><a href='https://dplyr.tidyverse.org/reference/arrange.html'>dplyr::arrange</a></code>. It returns a sorted copy of the data frame, unless the data is already sorted in which case no copy is made. In addition, rows can be manually re-ordered. Use <code><a href='https://rdrr.io/pkg/data.table/man/setorder.html'>data.table::setorder</a></code> to sort a data frame without creating a copy. <!-- %\code{roworder} also does not support grouped tibbles or pdata.frame's, i.e. every data frame is treated the same. --></p>
     </div>
 
-    <pre class="usage"><span class='fu'>roworder</span>(<span class='no'>X</span>, <span class='no'>...</span>, <span class='kw'>na.last</span> <span class='kw'>=</span> <span class='fl'>TRUE</span>)
+    <pre class="usage"><span class='fu'>roworder</span><span class='op'>(</span><span class='va'>X</span>, <span class='va'>...</span>, na.last <span class='op'>=</span> <span class='cn'>TRUE</span><span class='op'>)</span>
 
-<span class='fu'>roworderv</span>(<span class='no'>X</span>, <span class='kw'>cols</span> <span class='kw'>=</span> <span class='kw'>NULL</span>, <span class='kw'>neworder</span> <span class='kw'>=</span> <span class='kw'>NULL</span>, <span class='kw'>decreasing</span> <span class='kw'>=</span> <span class='fl'>FALSE</span>,
-          <span class='kw'>na.last</span> <span class='kw'>=</span> <span class='fl'>TRUE</span>, <span class='kw'>pos</span> <span class='kw'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span>(<span class='st'>"front"</span>,<span class='st'>"end"</span>,<span class='st'>"exchange"</span>))</pre>
+<span class='fu'>roworderv</span><span class='op'>(</span><span class='va'>X</span>, cols <span class='op'>=</span> <span class='cn'>NULL</span>, neworder <span class='op'>=</span> <span class='cn'>NULL</span>, decreasing <span class='op'>=</span> <span class='cn'>FALSE</span>,
+          na.last <span class='op'>=</span> <span class='cn'>TRUE</span>, pos <span class='op'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span><span class='op'>(</span><span class='st'>"front"</span>,<span class='st'>"end"</span>,<span class='st'>"exchange"</span><span class='op'>)</span><span class='op'>)</span></pre>
 
     <h2 class="hasAnchor" id="arguments"><a class="anchor" href="#arguments"></a>Arguments</h2>
     <table class="ref-arguments">
@@ -178,16 +178,18 @@
     <p>If you don't require a copy of the data, use <code><a href='https://rdrr.io/pkg/data.table/man/setorder.html'>data.table::setorder</a></code> (you can also use it in a piped call as it invisibly returns the data).</p>
     <h2 class="hasAnchor" id="see-also"><a class="anchor" href="#see-also"></a>See also</h2>
 
-    <div class='dont-index'><p><code><a href='colorder.html'>colorder</a></code>, <code><a href='fsubset.html'>fsubset</a></code>, <a href='fast-grouping.html'>Fast Grouping and Ordering</a>, <a href='index.html'>Collapse Overview</a>.</p></div>
+    <div class='dont-index'><p><code><a href='colorder.html'>colorder</a></code>, <code><a href='fsubset.html'>fsubset</a></code>, <a href='A2-fast-grouping-ordering.html'>Fast Grouping and Ordering</a>, <a href='index.html'>Collapse Overview</a>.</p></div>
 
     <h2 class="hasAnchor" id="examples"><a class="anchor" href="#examples"></a>Examples</h2>
-    <pre class="examples"><div class='input'><span class='fu'><a href='https://rdrr.io/r/utils/head.html'>head</a></span>(<span class='fu'>roworder</span>(<span class='no'>airquality</span>, <span class='no'>Month</span>, -<span class='no'>Ozone</span>))</div><div class='output co'>#&gt;   Ozone Solar.R Wind Temp Month Day
+    <pre class="examples"><div class='input'><span class='fu'><a href='https://rdrr.io/r/utils/head.html'>head</a></span><span class='op'>(</span><span class='fu'>roworder</span><span class='op'>(</span><span class='va'>airquality</span>, <span class='va'>Month</span>, <span class='op'>-</span><span class='va'>Ozone</span><span class='op'>)</span><span class='op'>)</span>
+</div><div class='output co'>#&gt;   Ozone Solar.R Wind Temp Month Day
 #&gt; 1   115     223  5.7   79     5  30
 #&gt; 2    45     252 14.9   81     5  29
 #&gt; 3    41     190  7.4   67     5   1
 #&gt; 4    37     279  7.4   76     5  31
 #&gt; 5    36     118  8.0   72     5   2
-#&gt; 6    34     307 12.0   66     5  17</div><div class='input'><span class='fu'><a href='https://rdrr.io/r/utils/head.html'>head</a></span>(<span class='fu'>roworder</span>(<span class='no'>airquality</span>, <span class='no'>Month</span>, -<span class='no'>Ozone</span>, <span class='kw'>na.last</span> <span class='kw'>=</span> <span class='fl'>NA</span>))  <span class='co'># Removes the missing values in Ozone</span></div><div class='output co'>#&gt;   Ozone Solar.R Wind Temp Month Day
+#&gt; 6    34     307 12.0   66     5  17</div><div class='input'><span class='fu'><a href='https://rdrr.io/r/utils/head.html'>head</a></span><span class='op'>(</span><span class='fu'>roworder</span><span class='op'>(</span><span class='va'>airquality</span>, <span class='va'>Month</span>, <span class='op'>-</span><span class='va'>Ozone</span>, na.last <span class='op'>=</span> <span class='cn'>NA</span><span class='op'>)</span><span class='op'>)</span>  <span class='co'># Removes the missing values in Ozone</span>
+</div><div class='output co'>#&gt;   Ozone Solar.R Wind Temp Month Day
 #&gt; 1   115     223  5.7   79     5  30
 #&gt; 2    45     252 14.9   81     5  29
 #&gt; 3    41     190  7.4   67     5   1
@@ -195,13 +197,15 @@
 #&gt; 5    36     118  8.0   72     5   2
 #&gt; 6    34     307 12.0   66     5  17</div><div class='input'>
 <span class='co'>## Same in standard evaluation</span>
-<span class='fu'><a href='https://rdrr.io/r/utils/head.html'>head</a></span>(<span class='fu'>roworderv</span>(<span class='no'>airquality</span>, <span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span>(<span class='st'>"Month"</span>, <span class='st'>"Ozone"</span>), <span class='kw'>decreasing</span> <span class='kw'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span>(<span class='fl'>FALSE</span>, <span class='fl'>TRUE</span>)))</div><div class='output co'>#&gt;   Ozone Solar.R Wind Temp Month Day
+<span class='fu'><a href='https://rdrr.io/r/utils/head.html'>head</a></span><span class='op'>(</span><span class='fu'>roworderv</span><span class='op'>(</span><span class='va'>airquality</span>, <span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span><span class='op'>(</span><span class='st'>"Month"</span>, <span class='st'>"Ozone"</span><span class='op'>)</span>, decreasing <span class='op'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span><span class='op'>(</span><span class='cn'>FALSE</span>, <span class='cn'>TRUE</span><span class='op'>)</span><span class='op'>)</span><span class='op'>)</span>
+</div><div class='output co'>#&gt;   Ozone Solar.R Wind Temp Month Day
 #&gt; 1   115     223  5.7   79     5  30
 #&gt; 2    45     252 14.9   81     5  29
 #&gt; 3    41     190  7.4   67     5   1
 #&gt; 4    37     279  7.4   76     5  31
 #&gt; 5    36     118  8.0   72     5   2
-#&gt; 6    34     307 12.0   66     5  17</div><div class='input'><span class='fu'><a href='https://rdrr.io/r/utils/head.html'>head</a></span>(<span class='fu'>roworderv</span>(<span class='no'>airquality</span>, <span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span>(<span class='st'>"Month"</span>, <span class='st'>"Ozone"</span>), <span class='kw'>decreasing</span> <span class='kw'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span>(<span class='fl'>FALSE</span>, <span class='fl'>TRUE</span>), <span class='kw'>na.last</span> <span class='kw'>=</span> <span class='fl'>NA</span>))</div><div class='output co'>#&gt;   Ozone Solar.R Wind Temp Month Day
+#&gt; 6    34     307 12.0   66     5  17</div><div class='input'><span class='fu'><a href='https://rdrr.io/r/utils/head.html'>head</a></span><span class='op'>(</span><span class='fu'>roworderv</span><span class='op'>(</span><span class='va'>airquality</span>, <span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span><span class='op'>(</span><span class='st'>"Month"</span>, <span class='st'>"Ozone"</span><span class='op'>)</span>, decreasing <span class='op'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span><span class='op'>(</span><span class='cn'>FALSE</span>, <span class='cn'>TRUE</span><span class='op'>)</span>, na.last <span class='op'>=</span> <span class='cn'>NA</span><span class='op'>)</span><span class='op'>)</span>
+</div><div class='output co'>#&gt;   Ozone Solar.R Wind Temp Month Day
 #&gt; 1   115     223  5.7   79     5  30
 #&gt; 2    45     252 14.9   81     5  29
 #&gt; 3    41     190  7.4   67     5   1
@@ -209,19 +213,22 @@
 #&gt; 5    36     118  8.0   72     5   2
 #&gt; 6    34     307 12.0   66     5  17</div><div class='input'>
 <span class='co'>## Custom reordering</span>
-<span class='fu'><a href='https://rdrr.io/r/utils/head.html'>head</a></span>(<span class='fu'>roworderv</span>(<span class='no'>mtcars</span>, <span class='kw'>neworder</span> <span class='kw'>=</span> <span class='fl'>3</span>:<span class='fl'>4</span>))               <span class='co'># Bring rows 3 and 4 to the front</span></div><div class='output co'>#&gt;                    mpg cyl disp  hp drat    wt  qsec vs am gear carb
+<span class='fu'><a href='https://rdrr.io/r/utils/head.html'>head</a></span><span class='op'>(</span><span class='fu'>roworderv</span><span class='op'>(</span><span class='va'>mtcars</span>, neworder <span class='op'>=</span> <span class='fl'>3</span><span class='op'>:</span><span class='fl'>4</span><span class='op'>)</span><span class='op'>)</span>               <span class='co'># Bring rows 3 and 4 to the front</span>
+</div><div class='output co'>#&gt;                    mpg cyl disp  hp drat    wt  qsec vs am gear carb
 #&gt; Datsun 710        22.8   4  108  93 3.85 2.320 18.61  1  1    4    1
 #&gt; Hornet 4 Drive    21.4   6  258 110 3.08 3.215 19.44  1  0    3    1
 #&gt; Mazda RX4         21.0   6  160 110 3.90 2.620 16.46  0  1    4    4
 #&gt; Mazda RX4 Wag     21.0   6  160 110 3.90 2.875 17.02  0  1    4    4
 #&gt; Hornet Sportabout 18.7   8  360 175 3.15 3.440 17.02  0  0    3    2
-#&gt; Valiant           18.1   6  225 105 2.76 3.460 20.22  1  0    3    1</div><div class='input'><span class='fu'><a href='https://rdrr.io/r/utils/head.html'>head</a></span>(<span class='fu'>roworderv</span>(<span class='no'>mtcars</span>, <span class='kw'>neworder</span> <span class='kw'>=</span> <span class='fl'>3</span>:<span class='fl'>4</span>, <span class='kw'>pos</span> <span class='kw'>=</span> <span class='st'>"end"</span>))  <span class='co'># Bring them to the end</span></div><div class='output co'>#&gt;                    mpg cyl  disp  hp drat    wt  qsec vs am gear carb
+#&gt; Valiant           18.1   6  225 105 2.76 3.460 20.22  1  0    3    1</div><div class='input'><span class='fu'><a href='https://rdrr.io/r/utils/head.html'>head</a></span><span class='op'>(</span><span class='fu'>roworderv</span><span class='op'>(</span><span class='va'>mtcars</span>, neworder <span class='op'>=</span> <span class='fl'>3</span><span class='op'>:</span><span class='fl'>4</span>, pos <span class='op'>=</span> <span class='st'>"end"</span><span class='op'>)</span><span class='op'>)</span>  <span class='co'># Bring them to the end</span>
+</div><div class='output co'>#&gt;                    mpg cyl  disp  hp drat    wt  qsec vs am gear carb
 #&gt; Mazda RX4         21.0   6 160.0 110 3.90 2.620 16.46  0  1    4    4
 #&gt; Mazda RX4 Wag     21.0   6 160.0 110 3.90 2.875 17.02  0  1    4    4
 #&gt; Hornet Sportabout 18.7   8 360.0 175 3.15 3.440 17.02  0  0    3    2
 #&gt; Valiant           18.1   6 225.0 105 2.76 3.460 20.22  1  0    3    1
 #&gt; Duster 360        14.3   8 360.0 245 3.21 3.570 15.84  0  0    3    4
-#&gt; Merc 240D         24.4   4 146.7  62 3.69 3.190 20.00  1  0    4    2</div><div class='input'><span class='fu'><a href='https://rdrr.io/r/utils/head.html'>head</a></span>(<span class='fu'>roworderv</span>(<span class='no'>mtcars</span>, <span class='kw'>neworder</span> <span class='kw'>=</span> <span class='no'>mtcars</span>$<span class='no'>vs</span> <span class='kw'>==</span> <span class='fl'>1</span>))    <span class='co'># Bring rows with vs == 1 to the top</span></div><div class='output co'>#&gt;                 mpg cyl  disp  hp drat    wt  qsec vs am gear carb
+#&gt; Merc 240D         24.4   4 146.7  62 3.69 3.190 20.00  1  0    4    2</div><div class='input'><span class='fu'><a href='https://rdrr.io/r/utils/head.html'>head</a></span><span class='op'>(</span><span class='fu'>roworderv</span><span class='op'>(</span><span class='va'>mtcars</span>, neworder <span class='op'>=</span> <span class='va'>mtcars</span><span class='op'>$</span><span class='va'>vs</span> <span class='op'>==</span> <span class='fl'>1</span><span class='op'>)</span><span class='op'>)</span>    <span class='co'># Bring rows with vs == 1 to the top</span>
+</div><div class='output co'>#&gt;                 mpg cyl  disp  hp drat    wt  qsec vs am gear carb
 #&gt; Datsun 710     22.8   4 108.0  93 3.85 2.320 18.61  1  1    4    1
 #&gt; Hornet 4 Drive 21.4   6 258.0 110 3.08 3.215 19.44  1  0    3    1
 #&gt; Valiant        18.1   6 225.0 105 2.76 3.460 20.22  1  0    3    1
@@ -243,7 +250,7 @@
 </div>
 
 <div class="pkgdown">
-  <p>Site built with <a href="https://pkgdown.r-lib.org/">pkgdown</a> 1.5.1.</p>
+  <p>Site built with <a href="https://pkgdown.r-lib.org/">pkgdown</a> 1.6.1.</p>
 </div>
 
       </footer>

@@ -73,7 +73,7 @@ It computes a set of 7 statistics (nobs, mean, sd, min, max, skewness and kurtos
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">collapse</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">1.3.2</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">1.4.0</span>
       </span>
     </div>
 
@@ -128,31 +128,31 @@ It computes a set of 7 statistics (nobs, mean, sd, min, max, skewness and kurtos
 <p>It computes a set of 7 statistics (nobs, mean, sd, min, max, skewness and kurtosis) using a numerically stable one-pass method generalized from Welford's Algorithm. Statistics can be computed weighted, by groups, and also within-and between entities (for panel data, see Details).</p>
     </div>
 
-    <pre class="usage"><span class='fu'>qsu</span>(<span class='no'>x</span>, <span class='no'>...</span>)
+    <pre class="usage"><span class='fu'>qsu</span><span class='op'>(</span><span class='va'>x</span>, <span class='va'>...</span><span class='op'>)</span>
 
 <span class='co'># S3 method for default</span>
-<span class='fu'>qsu</span>(<span class='no'>x</span>, <span class='kw'>g</span> <span class='kw'>=</span> <span class='kw'>NULL</span>, <span class='kw'>pid</span> <span class='kw'>=</span> <span class='kw'>NULL</span>, <span class='kw'>w</span> <span class='kw'>=</span> <span class='kw'>NULL</span>, <span class='kw'>higher</span> <span class='kw'>=</span> <span class='fl'>FALSE</span>, <span class='kw'>array</span> <span class='kw'>=</span> <span class='fl'>TRUE</span>, <span class='no'>...</span>)
+<span class='fu'>qsu</span><span class='op'>(</span><span class='va'>x</span>, g <span class='op'>=</span> <span class='cn'>NULL</span>, pid <span class='op'>=</span> <span class='cn'>NULL</span>, w <span class='op'>=</span> <span class='cn'>NULL</span>, higher <span class='op'>=</span> <span class='cn'>FALSE</span>, array <span class='op'>=</span> <span class='cn'>TRUE</span>, <span class='va'>...</span><span class='op'>)</span>
 
 <span class='co'># S3 method for matrix</span>
-<span class='fu'>qsu</span>(<span class='no'>x</span>, <span class='kw'>g</span> <span class='kw'>=</span> <span class='kw'>NULL</span>, <span class='kw'>pid</span> <span class='kw'>=</span> <span class='kw'>NULL</span>, <span class='kw'>w</span> <span class='kw'>=</span> <span class='kw'>NULL</span>, <span class='kw'>higher</span> <span class='kw'>=</span> <span class='fl'>FALSE</span>, <span class='kw'>array</span> <span class='kw'>=</span> <span class='fl'>TRUE</span>, <span class='no'>...</span>)
+<span class='fu'>qsu</span><span class='op'>(</span><span class='va'>x</span>, g <span class='op'>=</span> <span class='cn'>NULL</span>, pid <span class='op'>=</span> <span class='cn'>NULL</span>, w <span class='op'>=</span> <span class='cn'>NULL</span>, higher <span class='op'>=</span> <span class='cn'>FALSE</span>, array <span class='op'>=</span> <span class='cn'>TRUE</span>, <span class='va'>...</span><span class='op'>)</span>
 
 <span class='co'># S3 method for data.frame</span>
-<span class='fu'>qsu</span>(<span class='no'>x</span>, <span class='kw'>by</span> <span class='kw'>=</span> <span class='kw'>NULL</span>, <span class='kw'>pid</span> <span class='kw'>=</span> <span class='kw'>NULL</span>, <span class='kw'>w</span> <span class='kw'>=</span> <span class='kw'>NULL</span>, <span class='kw'>cols</span> <span class='kw'>=</span> <span class='kw'>NULL</span>,
-    <span class='kw'>higher</span> <span class='kw'>=</span> <span class='fl'>FALSE</span>, <span class='kw'>array</span> <span class='kw'>=</span> <span class='fl'>TRUE</span>, <span class='kw'>vlabels</span> <span class='kw'>=</span> <span class='fl'>FALSE</span>, <span class='no'>...</span>)
+<span class='fu'>qsu</span><span class='op'>(</span><span class='va'>x</span>, by <span class='op'>=</span> <span class='cn'>NULL</span>, pid <span class='op'>=</span> <span class='cn'>NULL</span>, w <span class='op'>=</span> <span class='cn'>NULL</span>, cols <span class='op'>=</span> <span class='cn'>NULL</span>,
+    higher <span class='op'>=</span> <span class='cn'>FALSE</span>, array <span class='op'>=</span> <span class='cn'>TRUE</span>, vlabels <span class='op'>=</span> <span class='cn'>FALSE</span>, <span class='va'>...</span><span class='op'>)</span>
 
 <span class='co'># Methods for compatibility with plm:</span>
 
 <span class='co'># S3 method for pseries</span>
-<span class='fu'>qsu</span>(<span class='no'>x</span>, <span class='kw'>g</span> <span class='kw'>=</span> <span class='kw'>NULL</span>, <span class='kw'>w</span> <span class='kw'>=</span> <span class='kw'>NULL</span>, <span class='kw'>effect</span> <span class='kw'>=</span> <span class='fl'>1L</span>, <span class='kw'>higher</span> <span class='kw'>=</span> <span class='fl'>FALSE</span>, <span class='kw'>array</span> <span class='kw'>=</span> <span class='fl'>TRUE</span>, <span class='no'>...</span>)
+<span class='fu'>qsu</span><span class='op'>(</span><span class='va'>x</span>, g <span class='op'>=</span> <span class='cn'>NULL</span>, w <span class='op'>=</span> <span class='cn'>NULL</span>, effect <span class='op'>=</span> <span class='fl'>1L</span>, higher <span class='op'>=</span> <span class='cn'>FALSE</span>, array <span class='op'>=</span> <span class='cn'>TRUE</span>, <span class='va'>...</span><span class='op'>)</span>
 
 <span class='co'># S3 method for pdata.frame</span>
-<span class='fu'>qsu</span>(<span class='no'>x</span>, <span class='kw'>by</span> <span class='kw'>=</span> <span class='kw'>NULL</span>, <span class='kw'>w</span> <span class='kw'>=</span> <span class='kw'>NULL</span>, <span class='kw'>cols</span> <span class='kw'>=</span> <span class='kw'>NULL</span>, <span class='kw'>effect</span> <span class='kw'>=</span> <span class='fl'>1L</span>,
-    <span class='kw'>higher</span> <span class='kw'>=</span> <span class='fl'>FALSE</span>, <span class='kw'>array</span> <span class='kw'>=</span> <span class='fl'>TRUE</span>, <span class='kw'>vlabels</span> <span class='kw'>=</span> <span class='fl'>FALSE</span>, <span class='no'>...</span>)
+<span class='fu'>qsu</span><span class='op'>(</span><span class='va'>x</span>, by <span class='op'>=</span> <span class='cn'>NULL</span>, w <span class='op'>=</span> <span class='cn'>NULL</span>, cols <span class='op'>=</span> <span class='cn'>NULL</span>, effect <span class='op'>=</span> <span class='fl'>1L</span>,
+    higher <span class='op'>=</span> <span class='cn'>FALSE</span>, array <span class='op'>=</span> <span class='cn'>TRUE</span>, vlabels <span class='op'>=</span> <span class='cn'>FALSE</span>, <span class='va'>...</span><span class='op'>)</span>
 
 
 <span class='co'># S3 method for qsu</span>
-<span class='fu'><a href='https://rdrr.io/r/base/print.html'>print</a></span>(<span class='no'>x</span>, <span class='kw'>digits</span> <span class='kw'>=</span> <span class='fl'>4</span>, <span class='kw'>nonsci.digits</span> <span class='kw'>=</span> <span class='fl'>9</span>, <span class='kw'>na.print</span> <span class='kw'>=</span> <span class='st'>"-"</span>,
-      <span class='kw'>return</span> <span class='kw'>=</span> <span class='fl'>FALSE</span>, <span class='kw'>print.gap</span> <span class='kw'>=</span> <span class='fl'>2</span>, <span class='no'>...</span>)</pre>
+<span class='fu'><a href='https://rdrr.io/r/base/print.html'>print</a></span><span class='op'>(</span><span class='va'>x</span>, digits <span class='op'>=</span> <span class='fl'>4</span>, nonsci.digits <span class='op'>=</span> <span class='fl'>9</span>, na.print <span class='op'>=</span> <span class='st'>"-"</span>,
+      return <span class='op'>=</span> <span class='cn'>FALSE</span>, print.gap <span class='op'>=</span> <span class='fl'>2</span>, <span class='va'>...</span><span class='op'>)</span></pre>
 
     <h2 class="hasAnchor" id="arguments"><a class="anchor" href="#arguments"></a>Arguments</h2>
     <table class="ref-arguments">
@@ -163,7 +163,7 @@ It computes a set of 7 statistics (nobs, mean, sd, min, max, skewness and kurtos
     </tr>
     <tr>
       <th>g</th>
-      <td><p>a factor, <code><a href='GRP.html'>GRP</a></code> object, atomic vector (internally converted to factor) or a list of vectors / factors (internally converted to a <code><a href='GRP.html'>GRP</a></code> object) used to group <code>x</code>.</p></td>
+      <td><p>a factor, <code><a href='GRP, fgroup_by.html'>GRP</a></code> object, atomic vector (internally converted to factor) or a list of vectors / factors (internally converted to a <code><a href='GRP, fgroup_by.html'>GRP</a></code> object) used to group <code>x</code>.</p></td>
     </tr>
     <tr>
       <th>by</th>
@@ -191,7 +191,7 @@ It computes a set of 7 statistics (nobs, mean, sd, min, max, skewness and kurtos
     </tr>
     <tr>
       <th>vlabels</th>
-      <td><p>logical. Use variable labels in the summary. See <code><a href='small-helper.html'>vlabels</a></code>.</p></td>
+      <td><p>logical. Use variable labels in the summary. See <code><a href='AA2-small-helpers.html'>vlabels</a></code>.</p></td>
     </tr>
     <tr>
       <th>effect</th>
@@ -243,13 +243,14 @@ It computes a set of 7 statistics (nobs, mean, sd, min, max, skewness and kurtos
     <p>If weights <code>w</code> are used together with <code>pid</code>, transformed data is computed using weighted individual means i.e. weighted <b><code>xi.</code></b> and weighted <b><code>x..</code></b>. Weighted statistics are subsequently computed on this weighted-transformed data.</p>
     <h2 class="hasAnchor" id="see-also"><a class="anchor" href="#see-also"></a>See also</h2>
 
-    <div class='dont-index'><p><code><a href='descr.html'>descr</a></code>, <code><a href='pwcor_pwcov_pwNobs.html'>pwcor</a></code>, <a href='fast-statistical-functions.html'>Fast Statistical Functions</a>, <a href='index.html'>Collapse Overview</a>  <!-- %% ~~objects to See Also as \code{\link{help}}, ~~~ --></p></div>
+    <div class='dont-index'><p><code><a href='descr.html'>descr</a></code>, <code><a href='pwcor, pwcov, pwNobs.html'>pwcor</a></code>, <a href='A1-fast-statistical-functions.html'>Fast Statistical Functions</a>, <a href='index.html'>Collapse Overview</a>  <!-- %% ~~objects to See Also as \code{\link{help}}, ~~~ --></p></div>
 
     <h2 class="hasAnchor" id="examples"><a class="anchor" href="#examples"></a>Examples</h2>
     <pre class="examples"><div class='input'>
 <span class='co'>## World Development Panel Data</span>
 <span class='co'># Simple Summaries -------------------------</span>
-<span class='fu'>qsu</span>(<span class='no'>wlddev</span>)                                 <span class='co'># Simple summary</span></div><div class='output co'>#&gt;              N        Mean          SD              Min             Max
+<span class='fu'>qsu</span><span class='op'>(</span><span class='va'>wlddev</span><span class='op'>)</span>                                 <span class='co'># Simple summary</span>
+</div><div class='output co'>#&gt;              N        Mean          SD              Min             Max
 #&gt; country  12744           -           -                -               -
 #&gt; iso3c    12744           -           -                -               -
 #&gt; date     12744           -           -                -               -
@@ -261,7 +262,8 @@ It computes a set of 7 statistics (nobs, mean, sd, min, max, skewness and kurtos
 #&gt; PCGDP     8995  11563.6529  18348.4052         131.6464       191586.64
 #&gt; LIFEEX   11068     63.8411     11.4497           18.907         85.4171
 #&gt; GINI      1356     39.3976      9.6764             16.2            65.8
-#&gt; ODA       8336  428,746468  819,868971  -1.08038000e+09  2.45521800e+10</div><div class='input'><span class='fu'>qsu</span>(<span class='no'>wlddev</span>, <span class='kw'>vlabels</span> <span class='kw'>=</span> <span class='fl'>TRUE</span>)                 <span class='co'># Display variable labels</span></div><div class='output co'>#&gt;                                                      N        Mean          SD
+#&gt; ODA       8336  428,746468  819,868971  -1.08038000e+09  2.45521800e+10</div><div class='input'><span class='fu'>qsu</span><span class='op'>(</span><span class='va'>wlddev</span>, vlabels <span class='op'>=</span> <span class='cn'>TRUE</span><span class='op'>)</span>                 <span class='co'># Display variable labels</span>
+</div><div class='output co'>#&gt;                                                      N        Mean          SD
 #&gt; country: Country Name                            12744           -           -
 #&gt; iso3c: Country Code                              12744           -           -
 #&gt; date: Date Recorded (Fictitious)                 12744           -           -
@@ -299,7 +301,8 @@ It computes a set of 7 statistics (nobs, mean, sd, min, max, skewness and kurtos
 #&gt; PCGDP: GDP per capita (constant 2010 US$)             191586.64
 #&gt; LIFEEX: Life expectancy at birth, total (years)         85.4171
 #&gt; GINI: GINI index (World Bank estimate)                     65.8
-#&gt; ODA: Net ODA received (constant 2015 US$)        2.45521800e+10</div><div class='input'><span class='fu'>qsu</span>(<span class='no'>wlddev</span>, <span class='kw'>higher</span> <span class='kw'>=</span> <span class='fl'>TRUE</span>)                  <span class='co'># Add skewness and kurtosis</span></div><div class='output co'>#&gt;              N        Mean          SD              Min             Max
+#&gt; ODA: Net ODA received (constant 2015 US$)        2.45521800e+10</div><div class='input'><span class='fu'>qsu</span><span class='op'>(</span><span class='va'>wlddev</span>, higher <span class='op'>=</span> <span class='cn'>TRUE</span><span class='op'>)</span>                  <span class='co'># Add skewness and kurtosis</span>
+</div><div class='output co'>#&gt;              N        Mean          SD              Min             Max
 #&gt; country  12744           -           -                -               -
 #&gt; iso3c    12744           -           -                -               -
 #&gt; date     12744           -           -                -               -
@@ -326,7 +329,8 @@ It computes a set of 7 statistics (nobs, mean, sd, min, max, skewness and kurtos
 #&gt; GINI      0.4613    2.2932
 #&gt; ODA       7.1918  122.9003</div><div class='input'>
 <span class='co'># Grouped Summaries ------------------------</span>
-<span class='fu'>qsu</span>(<span class='no'>wlddev</span>, ~ <span class='no'>region</span>, <span class='kw'>vlabels</span> <span class='kw'>=</span> <span class='fl'>TRUE</span>)       <span class='co'># Statistics by World Bank Region</span></div><div class='output co'>#&gt; , , country: Country Name
+<span class='fu'>qsu</span><span class='op'>(</span><span class='va'>wlddev</span>, <span class='op'>~</span> <span class='va'>region</span>, vlabels <span class='op'>=</span> <span class='cn'>TRUE</span><span class='op'>)</span>       <span class='co'># Statistics by World Bank Region</span>
+</div><div class='output co'>#&gt; , , country: Country Name
 #&gt; 
 #&gt;                                N  Mean  SD  Min  Max
 #&gt; East Asia &amp; Pacific         2124     -   -    -    -
@@ -462,7 +466,8 @@ It computes a set of 7 statistics (nobs, mean, sd, min, max, skewness and kurtos
 #&gt; North America                    -14,520000       55,820000
 #&gt; South Asia                            80000  8.53900000e+09
 #&gt; Sub-Saharan Africa               -16,780000  1.12780600e+10
-#&gt; </div><div class='input'><span class='fu'>qsu</span>(<span class='no'>wlddev</span>, <span class='no'>PCGDP</span> + <span class='no'>LIFEEX</span> ~ <span class='no'>income</span>)        <span class='co'># Summarize GDP per Capita and Life Expectancy by</span></div><div class='output co'>#&gt; , , PCGDP
+#&gt; </div><div class='input'><span class='fu'>qsu</span><span class='op'>(</span><span class='va'>wlddev</span>, <span class='va'>PCGDP</span> <span class='op'>+</span> <span class='va'>LIFEEX</span> <span class='op'>~</span> <span class='va'>income</span><span class='op'>)</span>        <span class='co'># Summarize GDP per Capita and Life Expectancy by</span>
+</div><div class='output co'>#&gt; , , PCGDP
 #&gt; 
 #&gt;                         N        Mean          SD       Min         Max
 #&gt; High income          3038  28974.7264  22910.7155  944.2924   191586.64
@@ -477,9 +482,10 @@ It computes a set of 7 statistics (nobs, mean, sd, min, max, skewness and kurtos
 #&gt; Low income           1881  49.6189  8.8925   27.61    74.43
 #&gt; Lower middle income  2628   58.555  9.3854  18.907   76.253
 #&gt; Upper middle income  2877  65.9705  7.6509   36.74   79.831
-#&gt; </div><div class='input'><span class='no'>stats</span> <span class='kw'>&lt;-</span> <span class='fu'>qsu</span>(<span class='no'>wlddev</span>, ~ <span class='no'>region</span> + <span class='no'>income</span>,     <span class='co'># World Bank Income Level</span>
-             <span class='kw'>cols</span> <span class='kw'>=</span> <span class='fl'>9</span>:<span class='fl'>10</span>, <span class='kw'>higher</span> <span class='kw'>=</span> <span class='fl'>TRUE</span>)    <span class='co'># Same variables, by both region and income</span>
-<span class='fu'><a href='https://rdrr.io/r/base/aperm.html'>aperm</a></span>(<span class='no'>stats</span>)                                <span class='co'># A different perspective on the same stats</span></div><div class='output co'>#&gt; , , East Asia &amp; Pacific.High income
+#&gt; </div><div class='input'><span class='va'>stats</span> <span class='op'>&lt;-</span> <span class='fu'>qsu</span><span class='op'>(</span><span class='va'>wlddev</span>, <span class='op'>~</span> <span class='va'>region</span> <span class='op'>+</span> <span class='va'>income</span>,     <span class='co'># World Bank Income Level</span>
+             cols <span class='op'>=</span> <span class='fl'>9</span><span class='op'>:</span><span class='fl'>10</span>, higher <span class='op'>=</span> <span class='cn'>TRUE</span><span class='op'>)</span>    <span class='co'># Same variables, by both region and income</span>
+<span class='fu'><a href='https://rdrr.io/r/base/aperm.html'>aperm</a></span><span class='op'>(</span><span class='va'>stats</span><span class='op'>)</span>                                <span class='co'># A different perspective on the same stats</span>
+</div><div class='output co'>#&gt; , , East Asia &amp; Pacific.High income
 #&gt; 
 #&gt;           N        Mean          SD       Min         Max     Skew    Kurt
 #&gt; PCGDP   467  26042.2796  14593.6195  944.2924  72183.3033   0.2886  2.5833
@@ -618,7 +624,8 @@ It computes a set of 7 statistics (nobs, mean, sd, min, max, skewness and kurtos
 #&gt; LIFEEX  342     56.958     8.1124     36.74     74.3949  -0.2548  3.0184
 #&gt; </div><div class='input'>
 <span class='co'># Panel Data Summaries ---------------------</span>
-<span class='fu'>qsu</span>(<span class='no'>wlddev</span>, <span class='kw'>pid</span> <span class='kw'>=</span> ~ <span class='no'>iso3c</span>, <span class='kw'>vlabels</span> <span class='kw'>=</span> <span class='fl'>TRUE</span>)   <span class='co'># Adding between and within countries statistics</span></div><div class='output co'>#&gt; , , country: Country Name
+<span class='fu'>qsu</span><span class='op'>(</span><span class='va'>wlddev</span>, pid <span class='op'>=</span> <span class='op'>~</span> <span class='va'>iso3c</span>, vlabels <span class='op'>=</span> <span class='cn'>TRUE</span><span class='op'>)</span>   <span class='co'># Adding between and within countries statistics</span>
+</div><div class='output co'>#&gt; , , country: Country Name
 #&gt; 
 #&gt;            N/T  Mean  SD  Min  Max
 #&gt; Overall  12744     -   -    -    -
@@ -700,9 +707,10 @@ It computes a set of 7 statistics (nobs, mean, sd, min, max, skewness and kurtos
 <span class='co'># countries over time.</span>
 
 <span class='co'># Using plm:</span>
-<span class='no'>pwlddev</span> <span class='kw'>&lt;-</span> <span class='kw pkg'>plm</span><span class='kw ns'>::</span><span class='fu'><a href='https://rdrr.io/pkg/plm/man/pdata.frame.html'>pdata.frame</a></span>(<span class='no'>wlddev</span>,         <span class='co'># Creating a Panel Data Frame frame from this data</span>
-                  <span class='kw'>index</span> <span class='kw'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span>(<span class='st'>"iso3c"</span>,<span class='st'>"year"</span>))
-<span class='fu'>qsu</span>(<span class='no'>pwlddev</span>)                                <span class='co'># Summary for pdata.frame -&gt; qsu(wlddev, pid = ~ iso3c)</span></div><div class='output co'>#&gt; , , country
+<span class='va'>pwlddev</span> <span class='op'>&lt;-</span> <span class='fu'>plm</span><span class='fu'>::</span><span class='fu'><a href='https://rdrr.io/pkg/plm/man/pdata.frame.html'>pdata.frame</a></span><span class='op'>(</span><span class='va'>wlddev</span>,         <span class='co'># Creating a Panel Data Frame frame from this data</span>
+                  index <span class='op'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span><span class='op'>(</span><span class='st'>"iso3c"</span>,<span class='st'>"year"</span><span class='op'>)</span><span class='op'>)</span>
+<span class='fu'>qsu</span><span class='op'>(</span><span class='va'>pwlddev</span><span class='op'>)</span>                                <span class='co'># Summary for pdata.frame -&gt; qsu(wlddev, pid = ~ iso3c)</span>
+</div><div class='output co'>#&gt; , , country
 #&gt; 
 #&gt;            N/T  Mean  SD  Min  Max
 #&gt; Overall  12744     -   -    -    -
@@ -785,15 +793,18 @@ It computes a set of 7 statistics (nobs, mean, sd, min, max, skewness and kurtos
 #&gt; Overall     8336  428,746468  819,868971  -1.08038000e+09  2.45521800e+10
 #&gt; Between      178  418,026522  548,293709       423846.154  3.53258914e+09
 #&gt; Within   46.8315  428,746468  607,024040  -2.47969577e+09  2.35093916e+10
-#&gt; </div><div class='input'><span class='fu'>qsu</span>(<span class='no'>pwlddev</span>$<span class='no'>PCGDP</span>)                          <span class='co'># Default summary for Panel Series  (class pseries)</span></div><div class='output co'>#&gt;              N/T        Mean          SD          Min         Max
+#&gt; </div><div class='input'><span class='fu'>qsu</span><span class='op'>(</span><span class='va'>pwlddev</span><span class='op'>$</span><span class='va'>PCGDP</span><span class='op'>)</span>                          <span class='co'># Default summary for Panel Series  (class pseries)</span>
+</div><div class='output co'>#&gt;              N/T        Mean          SD          Min         Max
 #&gt; Overall     8995  11563.6529  18348.4052     131.6464   191586.64
 #&gt; Between      203  12488.8577  19628.3668     255.3999  141165.083
-#&gt; Within   44.3103  11563.6529   6334.9523  -30529.0928   75348.067</div><div class='input'><span class='fu'>qsu</span>(<span class='fu'><a href='fgrowth.html'>G</a></span>(<span class='no'>pwlddev</span>$<span class='no'>PCGDP</span>))                       <span class='co'># Summarizing GDP growth, see also ?G</span></div><div class='output co'>#&gt;            N/T    Mean      SD       Min       Max
+#&gt; Within   44.3103  11563.6529   6334.9523  -30529.0928   75348.067</div><div class='input'><span class='fu'>qsu</span><span class='op'>(</span><span class='fu'><a href='fgrowth.html'>G</a></span><span class='op'>(</span><span class='va'>pwlddev</span><span class='op'>$</span><span class='va'>PCGDP</span><span class='op'>)</span><span class='op'>)</span>                       <span class='co'># Summarizing GDP growth, see also ?G</span>
+</div><div class='output co'>#&gt;            N/T    Mean      SD       Min       Max
 #&gt; Overall   8792  2.1275  6.1625  -64.9963  140.5011
 #&gt; Between    200  2.2322  1.9197   -1.9044   13.0459
 #&gt; Within   43.96  2.1275  5.9311   -67.432  132.1934</div><div class='input'>
 <span class='co'># Grouped Panel Data Summaries -------------</span>
-<span class='fu'>qsu</span>(<span class='no'>wlddev</span>, ~ <span class='no'>region</span>, ~ <span class='no'>iso3c</span>, <span class='kw'>cols</span> <span class='kw'>=</span> <span class='fl'>9</span>:<span class='fl'>12</span>) <span class='co'># Panel-Statistics by region</span></div><div class='output co'>#&gt; , , Overall, PCGDP
+<span class='fu'>qsu</span><span class='op'>(</span><span class='va'>wlddev</span>, <span class='op'>~</span> <span class='va'>region</span>, <span class='op'>~</span> <span class='va'>iso3c</span>, cols <span class='op'>=</span> <span class='fl'>9</span><span class='op'>:</span><span class='fl'>12</span><span class='op'>)</span> <span class='co'># Panel-Statistics by region</span>
+</div><div class='output co'>#&gt; , , Overall, PCGDP
 #&gt; 
 #&gt;                              N/T        Mean          SD         Min
 #&gt; East Asia &amp; Pacific         1391  10337.0463  14094.8338    131.9634
@@ -964,8 +975,9 @@ It computes a set of 7 statistics (nobs, mean, sd, min, max, skewness and kurtos
 #&gt; North America                    413,802622      484,142622
 #&gt; South Asia                  -2.37972267e+09  5.51177302e+09
 #&gt; Sub-Saharan Africa              -825,184566  1.07855444e+10
-#&gt; </div><div class='input'><span class='no'>psr</span> <span class='kw'>&lt;-</span> <span class='fu'>qsu</span>(<span class='no'>pwlddev</span>, ~ <span class='no'>region</span>, <span class='kw'>cols</span> <span class='kw'>=</span> <span class='fl'>9</span>:<span class='fl'>12</span>)  <span class='co'># Same on plm pdata.frame</span>
-<span class='no'>psr</span>                                         <span class='co'># -&gt; Gives a 4D array</span></div><div class='output co'>#&gt; , , Overall, PCGDP
+#&gt; </div><div class='input'><span class='va'>psr</span> <span class='op'>&lt;-</span> <span class='fu'>qsu</span><span class='op'>(</span><span class='va'>pwlddev</span>, <span class='op'>~</span> <span class='va'>region</span>, cols <span class='op'>=</span> <span class='fl'>9</span><span class='op'>:</span><span class='fl'>12</span><span class='op'>)</span>  <span class='co'># Same on plm pdata.frame</span>
+<span class='va'>psr</span>                                         <span class='co'># -&gt; Gives a 4D array</span>
+</div><div class='output co'>#&gt; , , Overall, PCGDP
 #&gt; 
 #&gt;                              N/T        Mean          SD         Min
 #&gt; East Asia &amp; Pacific         1391  10337.0463  14094.8338    131.9634
@@ -1136,7 +1148,8 @@ It computes a set of 7 statistics (nobs, mean, sd, min, max, skewness and kurtos
 #&gt; North America                    413,802622      484,142622
 #&gt; South Asia                  -2.37972267e+09  5.51177302e+09
 #&gt; Sub-Saharan Africa              -825,184566  1.07855444e+10
-#&gt; </div><div class='input'><span class='fu'>print.qsu</span>(<span class='no'>psr</span>[,<span class='st'>"N/T"</span>,,])                    <span class='co'># Checking out the number of observations:</span></div><div class='output co'>#&gt; , , PCGDP
+#&gt; </div><div class='input'><span class='fu'>print.qsu</span><span class='op'>(</span><span class='va'>psr</span><span class='op'>[</span>,<span class='st'>"N/T"</span>,,<span class='op'>]</span><span class='op'>)</span>                    <span class='co'># Checking out the number of observations:</span>
+</div><div class='output co'>#&gt; , , PCGDP
 #&gt; 
 #&gt;                             Overall  Between   Within
 #&gt; East Asia &amp; Pacific            1391       34  40.9118
@@ -1181,7 +1194,8 @@ It computes a set of 7 statistics (nobs, mean, sd, min, max, skewness and kurtos
 #&gt; Sub-Saharan Africa             2608       48  54.3333
 #&gt; </div><div class='input'><span class='co'># In North america we only have 3 countries, for the GINI we only have 3.91 observations on average</span>
 <span class='co'># for 45 Sub-Saharan-African countries, etc..</span>
-<span class='fu'>print.qsu</span>(<span class='no'>psr</span>[,<span class='st'>"SD"</span>,,])                     <span class='co'># Considering only standard deviations</span></div><div class='output co'>#&gt; , , PCGDP
+<span class='fu'>print.qsu</span><span class='op'>(</span><span class='va'>psr</span><span class='op'>[</span>,<span class='st'>"SD"</span>,,<span class='op'>]</span><span class='op'>)</span>                     <span class='co'># Considering only standard deviations</span>
+</div><div class='output co'>#&gt; , , PCGDP
 #&gt; 
 #&gt;                                Overall     Between      Within
 #&gt; East Asia &amp; Pacific         14094.8338    12576.62   6363.4087
@@ -1227,9 +1241,10 @@ It computes a set of 7 statistics (nobs, mean, sd, min, max, skewness and kurtos
 #&gt; </div><div class='input'><span class='co'># -&gt; In all regions variations in inequality (GINI) between countries are greater than variations</span>
 <span class='co'># in inequality within countries. The opposite is true for Life-Expectancy in all regions apart</span>
 <span class='co'># from Europe, etc..</span>
-<span class='no'>psrl</span> <span class='kw'>&lt;-</span> <span class='fu'>qsu</span>(<span class='no'>wlddev</span>, ~ <span class='no'>region</span>, ~ <span class='no'>iso3c</span>,      <span class='co'># Same, but output as nested list</span>
-            <span class='kw'>cols</span> <span class='kw'>=</span> <span class='fl'>9</span>:<span class='fl'>12</span>, <span class='kw'>array</span> <span class='kw'>=</span> <span class='fl'>FALSE</span>)
-<span class='no'>psrl</span>                                        <span class='co'># We can use unlist2d to create a tidy data.frame</span></div><div class='output co'>#&gt; $PCGDP
+<span class='va'>psrl</span> <span class='op'>&lt;-</span> <span class='fu'>qsu</span><span class='op'>(</span><span class='va'>wlddev</span>, <span class='op'>~</span> <span class='va'>region</span>, <span class='op'>~</span> <span class='va'>iso3c</span>,      <span class='co'># Same, but output as nested list</span>
+            cols <span class='op'>=</span> <span class='fl'>9</span><span class='op'>:</span><span class='fl'>12</span>, array <span class='op'>=</span> <span class='cn'>FALSE</span><span class='op'>)</span>
+<span class='va'>psrl</span>                                        <span class='co'># We can use unlist2d to create a tidy data.frame</span>
+</div><div class='output co'>#&gt; $PCGDP
 #&gt; $PCGDP$Overall
 #&gt;                                N        Mean          SD         Min
 #&gt; East Asia &amp; Pacific         1391  10337.0463  14094.8338    131.9634
@@ -1396,8 +1411,9 @@ It computes a set of 7 statistics (nobs, mean, sd, min, max, skewness and kurtos
 #&gt; South Asia                  -2.37972267e+09  5.51177302e+09
 #&gt; Sub-Saharan Africa              -825,184566  1.07855444e+10
 #&gt; 
-#&gt; </div><div class='input'><span class='fu'><a href='https://rdrr.io/r/utils/head.html'>head</a></span>(<span class='fu'><a href='unlist2d.html'>unlist2d</a></span>(<span class='no'>psrl</span>, <span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span>(<span class='st'>"Variable"</span>,<span class='st'>"Trans"</span>),
-                    <span class='kw'>row.names</span> <span class='kw'>=</span> <span class='st'>"Region"</span>))</div><div class='output co'>#&gt;   Variable   Trans                     Region    N      Mean        SD
+#&gt; </div><div class='input'><span class='fu'><a href='https://rdrr.io/r/utils/head.html'>head</a></span><span class='op'>(</span><span class='fu'><a href='unlist2d.html'>unlist2d</a></span><span class='op'>(</span><span class='va'>psrl</span>, <span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span><span class='op'>(</span><span class='st'>"Variable"</span>,<span class='st'>"Trans"</span><span class='op'>)</span>,
+                    row.names <span class='op'>=</span> <span class='st'>"Region"</span><span class='op'>)</span><span class='op'>)</span>
+</div><div class='output co'>#&gt;   Variable   Trans                     Region    N      Mean        SD
 #&gt; 1    PCGDP Overall        East Asia &amp; Pacific 1391 10337.046 14094.834
 #&gt; 2    PCGDP Overall      Europe &amp; Central Asia 2084 25664.806 26181.671
 #&gt; 3    PCGDP Overall Latin America &amp; Caribbean  1896  6976.065  6705.538
@@ -1412,62 +1428,64 @@ It computes a set of 7 statistics (nobs, mean, sd, min, max, skewness and kurtos
 #&gt; 5 17550.5732  94903.192
 #&gt; 6   267.0736   8971.128</div><div class='input'>
 <span class='co'># Weighted Summaries -----------------------</span>
-<span class='no'>n</span> <span class='kw'>&lt;-</span> <span class='fu'><a href='https://rdrr.io/r/base/nrow.html'>nrow</a></span>(<span class='no'>wlddev</span>)
-<span class='no'>weights</span> <span class='kw'>&lt;-</span> <span class='fu'><a href='https://rdrr.io/r/base/MathFun.html'>abs</a></span>(<span class='fu'><a href='https://rdrr.io/r/stats/Normal.html'>rnorm</a></span>(<span class='no'>n</span>))                    <span class='co'># Generate random weights</span>
-<span class='fu'>qsu</span>(<span class='no'>wlddev</span>, <span class='kw'>w</span> <span class='kw'>=</span> <span class='no'>weights</span>, <span class='kw'>higher</span> <span class='kw'>=</span> <span class='fl'>TRUE</span>)     <span class='co'># Computed weighted mean, SD, skewness and kurtosis</span></div><div class='output co'>#&gt;              N        Mean          SD              Min             Max
+<span class='va'>n</span> <span class='op'>&lt;-</span> <span class='fu'><a href='https://rdrr.io/r/base/nrow.html'>nrow</a></span><span class='op'>(</span><span class='va'>wlddev</span><span class='op'>)</span>
+<span class='va'>weights</span> <span class='op'>&lt;-</span> <span class='fu'><a href='https://rdrr.io/r/base/MathFun.html'>abs</a></span><span class='op'>(</span><span class='fu'><a href='https://rdrr.io/r/stats/Normal.html'>rnorm</a></span><span class='op'>(</span><span class='va'>n</span><span class='op'>)</span><span class='op'>)</span>                    <span class='co'># Generate random weights</span>
+<span class='fu'>qsu</span><span class='op'>(</span><span class='va'>wlddev</span>, w <span class='op'>=</span> <span class='va'>weights</span>, higher <span class='op'>=</span> <span class='cn'>TRUE</span><span class='op'>)</span>     <span class='co'># Computed weighted mean, SD, skewness and kurtosis</span>
+</div><div class='output co'>#&gt;              N        Mean          SD              Min             Max
 #&gt; country  12744           -           -                -               -
 #&gt; iso3c    12744           -           -                -               -
 #&gt; date     12744           -           -                -               -
-#&gt; year     12744   1988.9161     19.1401             1960            2018
-#&gt; decade   12744   1988.8661     19.8068             1960            2020
+#&gt; year     12744   1989.1456     19.1608             1960            2018
+#&gt; decade   12744   1989.1015     19.8133             1960            2020
 #&gt; region   12744           -           -                -               -
 #&gt; income   12744           -           -                -               -
 #&gt; OECD     12744           -           -                -               -
-#&gt; PCGDP     8995  11410.4061  20756.3317         131.6464       191586.64
-#&gt; LIFEEX   11068      63.727      12.846           18.907         85.4171
-#&gt; GINI      1356     39.3515     11.0485             16.2            65.8
-#&gt; ODA       8336  426,335581  866,667647  -1.08038000e+09  2.45521800e+10
-#&gt;             Skew      Kurt
-#&gt; country        -         -
-#&gt; iso3c          -         -
-#&gt; date           -         -
-#&gt; year     -0.0863    4.2373
-#&gt; decade   -0.1079    4.5915
-#&gt; region         -         -
-#&gt; income         -         -
-#&gt; OECD           -         -
-#&gt; PCGDP     4.5669   39.7381
-#&gt; LIFEEX   -0.9441    6.4804
-#&gt; GINI      0.8129    6.4521
-#&gt; ODA       9.3116  225.4538</div><div class='input'><span class='no'>weightsNA</span> <span class='kw'>&lt;-</span> <span class='no'>weights</span>                        <span class='co'># Weights may contain missing values.. inserting 1000</span>
-<span class='no'>weightsNA</span>[<span class='fu'><a href='https://rdrr.io/r/base/sample.html'>sample.int</a></span>(<span class='no'>n</span>, <span class='fl'>1000</span>)] <span class='kw'>&lt;-</span> <span class='fl'>NA</span>
-<span class='fu'>qsu</span>(<span class='no'>wlddev</span>, <span class='kw'>w</span> <span class='kw'>=</span> <span class='no'>weightsNA</span>, <span class='kw'>higher</span> <span class='kw'>=</span> <span class='fl'>TRUE</span>)   <span class='co'># But now these values are removed from all variables</span></div><div class='output co'>#&gt;              N        Mean          SD              Min             Max
+#&gt; PCGDP     8995  11412.1622  20065.1456         131.6464       191586.64
+#&gt; LIFEEX   11068     63.7371     12.8759           18.907         85.4171
+#&gt; GINI      1356     39.3113     10.5657             16.2            65.8
+#&gt; ODA       8336  427,272977  829,280065  -1.08038000e+09  2.45521800e+10
+#&gt;             Skew     Kurt
+#&gt; country        -        -
+#&gt; iso3c          -        -
+#&gt; date           -        -
+#&gt; year      0.0089    4.362
+#&gt; decade    0.0233   4.6417
+#&gt; region         -        -
+#&gt; income         -        -
+#&gt; OECD           -        -
+#&gt; PCGDP     4.0529  31.9747
+#&gt; LIFEEX   -0.9469   6.5374
+#&gt; GINI      0.5259     4.56
+#&gt; ODA       5.5722  57.4694</div><div class='input'><span class='va'>weightsNA</span> <span class='op'>&lt;-</span> <span class='va'>weights</span>                        <span class='co'># Weights may contain missing values.. inserting 1000</span>
+<span class='va'>weightsNA</span><span class='op'>[</span><span class='fu'><a href='https://rdrr.io/r/base/sample.html'>sample.int</a></span><span class='op'>(</span><span class='va'>n</span>, <span class='fl'>1000</span><span class='op'>)</span><span class='op'>]</span> <span class='op'>&lt;-</span> <span class='cn'>NA</span>
+<span class='fu'>qsu</span><span class='op'>(</span><span class='va'>wlddev</span>, w <span class='op'>=</span> <span class='va'>weightsNA</span>, higher <span class='op'>=</span> <span class='cn'>TRUE</span><span class='op'>)</span>   <span class='co'># But now these values are removed from all variables</span>
+</div><div class='output co'>#&gt;              N        Mean          SD              Min             Max
 #&gt; country  12744           -           -                -               -
 #&gt; iso3c    12744           -           -                -               -
 #&gt; date     12744           -           -                -               -
-#&gt; year     11744   1988.9146     19.1877             1960            2018
-#&gt; decade   11744   1988.8567     19.8583             1960            2020
+#&gt; year     11744   1989.1667     19.1492             1960            2018
+#&gt; decade   11744   1989.1237     19.8038             1960            2020
 #&gt; region   12744           -           -                -               -
 #&gt; income   12744           -           -                -               -
 #&gt; OECD     12744           -           -                -               -
-#&gt; PCGDP     8301  11386.7074  20468.8384         131.6464       191586.64
-#&gt; LIFEEX   10198     63.7173     12.8793           18.907         85.4171
-#&gt; GINI      1239      39.364     10.8913             16.2            65.8
-#&gt; ODA       7696  420,620402  857,246615  -1.08038000e+09  2.45521800e+10
-#&gt;             Skew      Kurt
-#&gt; country        -         -
-#&gt; iso3c          -         -
-#&gt; date           -         -
-#&gt; year     -0.0853    4.2647
-#&gt; decade   -0.1067    4.6235
-#&gt; region         -         -
-#&gt; income         -         -
-#&gt; OECD           -         -
-#&gt; PCGDP     4.3303   35.1007
-#&gt; LIFEEX   -0.9513    6.4546
-#&gt; GINI      0.9261    6.8178
-#&gt; ODA       9.7682  248.4506</div><div class='input'>
-# Grouped and panel-summaries can also be weighted in the same manor
+#&gt; PCGDP     8299  11385.9013   20129.132         131.6464       191586.64
+#&gt; LIFEEX   10194     63.6918     12.8464           18.907         85.4171
+#&gt; GINI      1237     39.2628     10.3822             16.2            65.8
+#&gt; ODA       7694  422,592220  821,391413  -1.08038000e+09  2.45521800e+10
+#&gt;             Skew     Kurt
+#&gt; country        -        -
+#&gt; iso3c          -        -
+#&gt; date           -        -
+#&gt; year      0.0091   4.3878
+#&gt; decade    0.0203   4.6529
+#&gt; region         -        -
+#&gt; income         -        -
+#&gt; OECD           -        -
+#&gt; PCGDP     4.1401  33.1765
+#&gt; LIFEEX   -0.9384   6.2907
+#&gt; GINI      0.4852   4.4792
+#&gt; ODA       5.7247  61.2442</div><div class='input'>
+<span class='co'># Grouped and panel-summaries can also be weighted in the same manor</span>
 </div></pre>
   </div>
   <div class="col-md-3 hidden-xs hidden-sm" id="pkgdown-sidebar">
@@ -1484,7 +1502,7 @@ It computes a set of 7 statistics (nobs, mean, sd, min, max, skewness and kurtos
 </div>
 
 <div class="pkgdown">
-  <p>Site built with <a href="https://pkgdown.r-lib.org/">pkgdown</a> 1.5.1.</p>
+  <p>Site built with <a href="https://pkgdown.r-lib.org/">pkgdown</a> 1.6.1.</p>
 </div>
 
       </footer>

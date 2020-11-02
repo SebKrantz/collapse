@@ -48,7 +48,7 @@ This may be useful in some cases, for examples it is now possible to write somet
 
 * `fgrowth` supports annualizing / compounding growth rates through added `power` argument.
 
-* A function `flm` was added for barebones (sparse, weighted) linear regression fitting using different efficient methods: 4 from base R (`.lm.fit`, `solve`, `qr`, `chol`), using `fastLm` from *RcppArmadillo* (if installed), or `fastLm` from *RcppEigen* (if installed). 
+* A function `flm` was added for barebones (weighted) linear regression fitting using different efficient methods: 4 from base R (`.lm.fit`, `solve`, `qr`, `chol`), using `fastLm` from *RcppArmadillo* (if installed), or `fastLm` from *RcppEigen* (if installed). 
 
 * Added function `qTBL` to quickly convert R objects to tibble.
 

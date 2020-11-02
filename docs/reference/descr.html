@@ -72,7 +72,7 @@
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">collapse</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">1.3.2</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">1.4.0</span>
       </span>
     </div>
 
@@ -126,22 +126,22 @@
     <p><code>descr</code> offers a concise description of each variable in a data frame. It is built as a wrapper around <code><a href='qsu.html'>qsu</a></code>, but by default also computes frequency tables with percentages for categorical variables, and quantiles and the number of distinct values for numeric variables (next to the mean, sd, min, max, skewness and kurtosis computed by <code>qsu</code>).</p>
     </div>
 
-    <pre class="usage"><span class='fu'>descr</span>(<span class='no'>X</span>, <span class='kw'>Ndistinct</span> <span class='kw'>=</span> <span class='fl'>TRUE</span>, <span class='kw'>higher</span> <span class='kw'>=</span> <span class='fl'>TRUE</span>, <span class='kw'>table</span> <span class='kw'>=</span> <span class='fl'>TRUE</span>,
-      <span class='kw'>Qprobs</span> <span class='kw'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span>(<span class='fl'>0.01</span>, <span class='fl'>0.05</span>, <span class='fl'>0.25</span>, <span class='fl'>0.5</span>, <span class='fl'>0.75</span>, <span class='fl'>0.95</span>, <span class='fl'>0.99</span>),
-      <span class='kw'>cols</span> <span class='kw'>=</span> <span class='kw'>NULL</span>, <span class='kw'>label.attr</span> <span class='kw'>=</span> <span class='st'>"label"</span>, <span class='no'>...</span>)
+    <pre class="usage"><span class='fu'>descr</span><span class='op'>(</span><span class='va'>X</span>, Ndistinct <span class='op'>=</span> <span class='cn'>TRUE</span>, higher <span class='op'>=</span> <span class='cn'>TRUE</span>, table <span class='op'>=</span> <span class='cn'>TRUE</span>,
+      Qprobs <span class='op'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span><span class='op'>(</span><span class='fl'>0.01</span>, <span class='fl'>0.05</span>, <span class='fl'>0.25</span>, <span class='fl'>0.5</span>, <span class='fl'>0.75</span>, <span class='fl'>0.95</span>, <span class='fl'>0.99</span><span class='op'>)</span>,
+      cols <span class='op'>=</span> <span class='cn'>NULL</span>, label.attr <span class='op'>=</span> <span class='st'>"label"</span>, <span class='va'>...</span><span class='op'>)</span>
 
 <span class='co'># S3 method for descr</span>
-<span class='fu'><a href='https://rdrr.io/r/base/print.html'>print</a></span>(<span class='no'>x</span>, <span class='kw'>n</span> <span class='kw'>=</span> <span class='fl'>7</span>, <span class='kw'>perc</span> <span class='kw'>=</span> <span class='fl'>TRUE</span>, <span class='kw'>digits</span> <span class='kw'>=</span> <span class='fl'>2</span>, <span class='kw'>t.table</span> <span class='kw'>=</span> <span class='fl'>TRUE</span>, <span class='kw'>summary</span> <span class='kw'>=</span> <span class='fl'>TRUE</span>, <span class='no'>...</span>)
+<span class='fu'><a href='https://rdrr.io/r/base/print.html'>print</a></span><span class='op'>(</span><span class='va'>x</span>, n <span class='op'>=</span> <span class='fl'>7</span>, perc <span class='op'>=</span> <span class='cn'>TRUE</span>, digits <span class='op'>=</span> <span class='fl'>2</span>, t.table <span class='op'>=</span> <span class='cn'>TRUE</span>, summary <span class='op'>=</span> <span class='cn'>TRUE</span>, <span class='va'>...</span><span class='op'>)</span>
 
 <span class='co'># S3 method for descr</span>
-<span class='fu'><a href='https://rdrr.io/r/base/as.data.frame.html'>as.data.frame</a></span>(<span class='no'>x</span>, <span class='no'>...</span>)</pre>
+<span class='fu'><a href='https://rdrr.io/r/base/as.data.frame.html'>as.data.frame</a></span><span class='op'>(</span><span class='va'>x</span>, <span class='va'>...</span><span class='op'>)</span></pre>
 
     <h2 class="hasAnchor" id="arguments"><a class="anchor" href="#arguments"></a>Arguments</h2>
     <table class="ref-arguments">
     <colgroup><col class="name" /><col class="desc" /></colgroup>
     <tr>
       <th>X</th>
-      <td><p>a data frame or list of atomic vectors. Atomic vectors, matrices or arrays can be passed but will first be coerced to data frame using <code><a href='quick-conversion.html'>qDF</a></code>.</p></td>
+      <td><p>a data frame or list of atomic vectors. Atomic vectors, matrices or arrays can be passed but will first be coerced to data frame using <code><a href='A4-quick-conversion.html'>qDF</a></code>.</p></td>
     </tr>
     <tr>
       <th>Ndistinct</th>
@@ -153,7 +153,7 @@
     </tr>
     <tr>
       <th>table</th>
-      <td><p>logical. <code>TRUE</code> (default) calls <code><a href='https://rdrr.io/r/base/table.html'>table</a></code> on all categorical variables (excluding <a href='small-helper.html'>Date</a> variables).</p></td>
+      <td><p>logical. <code>TRUE</code> (default) calls <code><a href='https://rdrr.io/r/base/table.html'>table</a></code> on all categorical variables (excluding <a href='AA2-small-helpers.html'>Date</a> variables).</p></td>
     </tr>
     <tr>
       <th>Qprobs</th>
@@ -207,11 +207,12 @@
     <p>A 2-level nested list, the top-level containing the statistics computed for each variable, which are themselves stored in a list containing the class, the label, the basic statistics and quantiles / tables computed for the variable. The object is given a class 'descr' and also has the number of observations in the dataset attached as an 'N' attribute, as well as an attribute 'arstat' indicating whether the object contains arrays of statistics, and an attribute 'table' indicating whether <code>table = TRUE</code> (i.e. the object could contain tables for categorical variables).</p>
     <h2 class="hasAnchor" id="see-also"><a class="anchor" href="#see-also"></a>See also</h2>
 
-    <div class='dont-index'><p><code><a href='qsu.html'>qsu</a></code>, <code><a href='pwcor_pwcov_pwNobs.html'>pwcor</a></code>, <a href='summary-statistics.html'>Summary Statistics</a>, <a href='fast-statistical-functions.html'>Fast Statistical Functions</a>, <a href='index.html'>Collapse Overview</a></p></div>
+    <div class='dont-index'><p><code><a href='qsu.html'>qsu</a></code>, <code><a href='pwcor, pwcov, pwNobs.html'>pwcor</a></code>, <a href='A9-summary-statistics.html'>Summary Statistics</a>, <a href='A1-fast-statistical-functions.html'>Fast Statistical Functions</a>, <a href='index.html'>Collapse Overview</a></p></div>
 
     <h2 class="hasAnchor" id="examples"><a class="anchor" href="#examples"></a>Examples</h2>
     <pre class="examples"><div class='input'><span class='co'>## Standard Use</span>
-<span class='fu'>descr</span>(<span class='no'>iris</span>)</div><div class='output co'>#&gt; Dataset: iris, 5 Variables, N = 150
+<span class='fu'>descr</span><span class='op'>(</span><span class='va'>iris</span><span class='op'>)</span>
+</div><div class='output co'>#&gt; Dataset: iris, 5 Variables, N = 150
 #&gt; --------------------------------------------------------------------------------
 #&gt; Sepal.Length (numeric): 
 #&gt; Stats: 
@@ -254,7 +255,8 @@
 #&gt; setosa        50  33.33
 #&gt; versicolor    50  33.33
 #&gt; virginica     50  33.33
-#&gt; --------------------------------------------------------------------------------</div><div class='input'><span class='fu'>descr</span>(<span class='no'>wlddev</span>)</div><div class='output co'>#&gt; Dataset: wlddev, 12 Variables, N = 12744
+#&gt; --------------------------------------------------------------------------------</div><div class='input'><span class='fu'>descr</span><span class='op'>(</span><span class='va'>wlddev</span><span class='op'>)</span>
+</div><div class='output co'>#&gt; Dataset: wlddev, 12 Variables, N = 12744
 #&gt; --------------------------------------------------------------------------------
 #&gt; country (character): Country Name
 #&gt; Stats: 
@@ -402,7 +404,8 @@
 #&gt;   -11,731500  1,097500  41,020000  157,360000  463,057500  1.82400500e+09
 #&gt;              99%
 #&gt;   3.48697750e+09
-#&gt; --------------------------------------------------------------------------------</div><div class='input'><span class='fu'>descr</span>(<span class='no'>GGDC10S</span>)</div><div class='output co'>#&gt; Dataset: GGDC10S, 16 Variables, N = 5027
+#&gt; --------------------------------------------------------------------------------</div><div class='input'><span class='fu'>descr</span><span class='op'>(</span><span class='va'>GGDC10S</span><span class='op'>)</span>
+</div><div class='output co'>#&gt; Dataset: GGDC10S, 16 Variables, N = 5027
 #&gt; --------------------------------------------------------------------------------
 #&gt; Country (character): Country
 #&gt; Stats: 
@@ -563,7 +566,8 @@
 #&gt;     1%      5%      25%       50%        75%          95%         99%
 #&gt;   0.38  269.63  4803.94  23186.19  284646.08  15,030223.5  435,513356
 #&gt; --------------------------------------------------------------------------------</div><div class='input'>
-<span class='fu'><a href='https://rdrr.io/r/base/as.data.frame.html'>as.data.frame</a></span>(<span class='fu'>descr</span>(<span class='no'>wlddev</span>))</div><div class='output co'>#&gt;    Variable     Class                                   Label     N Ndist
+<span class='fu'><a href='https://rdrr.io/r/base/as.data.frame.html'>as.data.frame</a></span><span class='op'>(</span><span class='fu'>descr</span><span class='op'>(</span><span class='va'>wlddev</span><span class='op'>)</span><span class='op'>)</span>
+</div><div class='output co'>#&gt;    Variable     Class                                   Label     N Ndist
 #&gt; 1   country character                            Country Name 12744   216
 #&gt; 2     iso3c    factor                            Country Code 12744   216
 #&gt; 3      date      Date              Date Recorded (Fictitious) 12744    59
@@ -616,7 +620,8 @@
 #&gt; 11 5.720000e+01 6.084500e+01
 #&gt; 12 1.824005e+09 3.486977e+09</div><div class='input'>
 <span class='co'>## Passing Arguments down to qsu: For Panel Data Statistics</span>
-<span class='fu'>descr</span>(<span class='no'>iris</span>, <span class='kw'>pid</span> <span class='kw'>=</span> <span class='no'>iris</span>$<span class='no'>Species</span>)</div><div class='output co'>#&gt; Dataset: iris, 5 Variables, N = 150
+<span class='fu'>descr</span><span class='op'>(</span><span class='va'>iris</span>, pid <span class='op'>=</span> <span class='va'>iris</span><span class='op'>$</span><span class='va'>Species</span><span class='op'>)</span>
+</div><div class='output co'>#&gt; Dataset: iris, 5 Variables, N = 150
 #&gt; --------------------------------------------------------------------------------
 #&gt; Sepal.Length (numeric): 
 #&gt; Stats: 
@@ -672,7 +677,8 @@
 #&gt; setosa        50  33.33
 #&gt; versicolor    50  33.33
 #&gt; virginica     50  33.33
-#&gt; --------------------------------------------------------------------------------</div><div class='input'><span class='fu'>descr</span>(<span class='no'>wlddev</span>, <span class='kw'>pid</span> <span class='kw'>=</span> <span class='no'>wlddev</span>$<span class='no'>iso3c</span>)</div><div class='output co'>#&gt; Dataset: wlddev, 12 Variables, N = 12744
+#&gt; --------------------------------------------------------------------------------</div><div class='input'><span class='fu'>descr</span><span class='op'>(</span><span class='va'>wlddev</span>, pid <span class='op'>=</span> <span class='va'>wlddev</span><span class='op'>$</span><span class='va'>iso3c</span><span class='op'>)</span>
+</div><div class='output co'>#&gt; Dataset: wlddev, 12 Variables, N = 12744
 #&gt; --------------------------------------------------------------------------------
 #&gt; country (character): Country Name
 #&gt; Stats: 
@@ -847,7 +853,8 @@
 #&gt;   3.48697750e+09
 #&gt; --------------------------------------------------------------------------------</div><div class='input'>
 <span class='co'>## Grouped Statistics</span>
-<span class='fu'>descr</span>(<span class='no'>iris</span>, <span class='kw'>g</span> <span class='kw'>=</span> <span class='no'>iris</span>$<span class='no'>Species</span>)</div><div class='output co'>#&gt; Dataset: iris, 5 Variables, N = 150
+<span class='fu'>descr</span><span class='op'>(</span><span class='va'>iris</span>, g <span class='op'>=</span> <span class='va'>iris</span><span class='op'>$</span><span class='va'>Species</span><span class='op'>)</span>
+</div><div class='output co'>#&gt; Dataset: iris, 5 Variables, N = 150
 #&gt; --------------------------------------------------------------------------------
 #&gt; Sepal.Length (numeric): 
 #&gt; Stats: 
@@ -903,7 +910,8 @@
 #&gt; setosa        50  33.33
 #&gt; versicolor    50  33.33
 #&gt; virginica     50  33.33
-#&gt; --------------------------------------------------------------------------------</div><div class='input'><span class='fu'>descr</span>(<span class='no'>GGDC10S</span>, <span class='kw'>g</span> <span class='kw'>=</span> <span class='no'>GGDC10S</span>$<span class='no'>Region</span>)</div><div class='output co'>#&gt; Dataset: GGDC10S, 16 Variables, N = 5027
+#&gt; --------------------------------------------------------------------------------</div><div class='input'><span class='fu'>descr</span><span class='op'>(</span><span class='va'>GGDC10S</span>, g <span class='op'>=</span> <span class='va'>GGDC10S</span><span class='op'>$</span><span class='va'>Region</span><span class='op'>)</span>
+</div><div class='output co'>#&gt; Dataset: GGDC10S, 16 Variables, N = 5027
 #&gt; --------------------------------------------------------------------------------
 #&gt; Country (character): Country
 #&gt; Stats: 
@@ -1233,7 +1241,7 @@
 </div>
 
 <div class="pkgdown">
-  <p>Site built with <a href="https://pkgdown.r-lib.org/">pkgdown</a> 1.5.1.</p>
+  <p>Site built with <a href="https://pkgdown.r-lib.org/">pkgdown</a> 1.6.1.</p>
 </div>
 
       </footer>

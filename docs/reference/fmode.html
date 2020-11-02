@@ -73,7 +73,7 @@ The TRA argument can further be used to transform x using its (grouped, weighted
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">collapse</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">1.3.2</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">1.4.0</span>
       </span>
     </div>
 
@@ -128,24 +128,24 @@ The TRA argument can further be used to transform x using its (grouped, weighted
 The <code><a href='TRA.html'>TRA</a></code> argument can further be used to transform <code>x</code> using its (grouped, weighted) mode. Ties between multiple possible modes can be resolved by taking the minimum, maximum or (default) first occurring mode.</p>
     </div>
 
-    <pre class="usage"><span class='fu'>fmode</span>(<span class='no'>x</span>, <span class='no'>...</span>)
+    <pre class="usage"><span class='fu'>fmode</span><span class='op'>(</span><span class='va'>x</span>, <span class='va'>...</span><span class='op'>)</span>
 
 <span class='co'># S3 method for default</span>
-<span class='fu'>fmode</span>(<span class='no'>x</span>, <span class='kw'>g</span> <span class='kw'>=</span> <span class='kw'>NULL</span>, <span class='kw'>w</span> <span class='kw'>=</span> <span class='kw'>NULL</span>, <span class='kw'>TRA</span> <span class='kw'>=</span> <span class='kw'>NULL</span>, <span class='kw'>na.rm</span> <span class='kw'>=</span> <span class='fl'>TRUE</span>,
-      <span class='kw'>use.g.names</span> <span class='kw'>=</span> <span class='fl'>TRUE</span>, <span class='kw'>ties</span> <span class='kw'>=</span> <span class='st'>"first"</span>, <span class='no'>...</span>)
+<span class='fu'>fmode</span><span class='op'>(</span><span class='va'>x</span>, g <span class='op'>=</span> <span class='cn'>NULL</span>, w <span class='op'>=</span> <span class='cn'>NULL</span>, TRA <span class='op'>=</span> <span class='cn'>NULL</span>, na.rm <span class='op'>=</span> <span class='cn'>TRUE</span>,
+      use.g.names <span class='op'>=</span> <span class='cn'>TRUE</span>, ties <span class='op'>=</span> <span class='st'>"first"</span>, <span class='va'>...</span><span class='op'>)</span>
 
 <span class='co'># S3 method for matrix</span>
-<span class='fu'>fmode</span>(<span class='no'>x</span>, <span class='kw'>g</span> <span class='kw'>=</span> <span class='kw'>NULL</span>, <span class='kw'>w</span> <span class='kw'>=</span> <span class='kw'>NULL</span>, <span class='kw'>TRA</span> <span class='kw'>=</span> <span class='kw'>NULL</span>, <span class='kw'>na.rm</span> <span class='kw'>=</span> <span class='fl'>TRUE</span>,
-      <span class='kw'>use.g.names</span> <span class='kw'>=</span> <span class='fl'>TRUE</span>, <span class='kw'>drop</span> <span class='kw'>=</span> <span class='fl'>TRUE</span>, <span class='kw'>ties</span> <span class='kw'>=</span> <span class='st'>"first"</span>, <span class='no'>...</span>)
+<span class='fu'>fmode</span><span class='op'>(</span><span class='va'>x</span>, g <span class='op'>=</span> <span class='cn'>NULL</span>, w <span class='op'>=</span> <span class='cn'>NULL</span>, TRA <span class='op'>=</span> <span class='cn'>NULL</span>, na.rm <span class='op'>=</span> <span class='cn'>TRUE</span>,
+      use.g.names <span class='op'>=</span> <span class='cn'>TRUE</span>, drop <span class='op'>=</span> <span class='cn'>TRUE</span>, ties <span class='op'>=</span> <span class='st'>"first"</span>, <span class='va'>...</span><span class='op'>)</span>
 
 <span class='co'># S3 method for data.frame</span>
-<span class='fu'>fmode</span>(<span class='no'>x</span>, <span class='kw'>g</span> <span class='kw'>=</span> <span class='kw'>NULL</span>, <span class='kw'>w</span> <span class='kw'>=</span> <span class='kw'>NULL</span>, <span class='kw'>TRA</span> <span class='kw'>=</span> <span class='kw'>NULL</span>, <span class='kw'>na.rm</span> <span class='kw'>=</span> <span class='fl'>TRUE</span>,
-      <span class='kw'>use.g.names</span> <span class='kw'>=</span> <span class='fl'>TRUE</span>, <span class='kw'>drop</span> <span class='kw'>=</span> <span class='fl'>TRUE</span>, <span class='kw'>ties</span> <span class='kw'>=</span> <span class='st'>"first"</span>, <span class='no'>...</span>)
+<span class='fu'>fmode</span><span class='op'>(</span><span class='va'>x</span>, g <span class='op'>=</span> <span class='cn'>NULL</span>, w <span class='op'>=</span> <span class='cn'>NULL</span>, TRA <span class='op'>=</span> <span class='cn'>NULL</span>, na.rm <span class='op'>=</span> <span class='cn'>TRUE</span>,
+      use.g.names <span class='op'>=</span> <span class='cn'>TRUE</span>, drop <span class='op'>=</span> <span class='cn'>TRUE</span>, ties <span class='op'>=</span> <span class='st'>"first"</span>, <span class='va'>...</span><span class='op'>)</span>
 
 <span class='co'># S3 method for grouped_df</span>
-<span class='fu'>fmode</span>(<span class='no'>x</span>, <span class='kw'>w</span> <span class='kw'>=</span> <span class='kw'>NULL</span>, <span class='kw'>TRA</span> <span class='kw'>=</span> <span class='kw'>NULL</span>, <span class='kw'>na.rm</span> <span class='kw'>=</span> <span class='fl'>TRUE</span>,
-      <span class='kw'>use.g.names</span> <span class='kw'>=</span> <span class='fl'>FALSE</span>, <span class='kw'>keep.group_vars</span> <span class='kw'>=</span> <span class='fl'>TRUE</span>, <span class='kw'>keep.w</span> <span class='kw'>=</span> <span class='fl'>TRUE</span>,
-      <span class='kw'>ties</span> <span class='kw'>=</span> <span class='st'>"first"</span>, <span class='no'>...</span>)</pre>
+<span class='fu'>fmode</span><span class='op'>(</span><span class='va'>x</span>, w <span class='op'>=</span> <span class='cn'>NULL</span>, TRA <span class='op'>=</span> <span class='cn'>NULL</span>, na.rm <span class='op'>=</span> <span class='cn'>TRUE</span>,
+      use.g.names <span class='op'>=</span> <span class='cn'>FALSE</span>, keep.group_vars <span class='op'>=</span> <span class='cn'>TRUE</span>, keep.w <span class='op'>=</span> <span class='cn'>TRUE</span>,
+      ties <span class='op'>=</span> <span class='st'>"first"</span>, <span class='va'>...</span><span class='op'>)</span></pre>
 
     <h2 class="hasAnchor" id="arguments"><a class="anchor" href="#arguments"></a>Arguments</h2>
     <table class="ref-arguments">
@@ -156,7 +156,7 @@ The <code><a href='TRA.html'>TRA</a></code> argument can further be used to tran
     </tr>
     <tr>
       <th>g</th>
-      <td><p>a factor, <code><a href='GRP.html'>GRP</a></code> object, atomic vector (internally converted to factor) or a list of vectors / factors (internally converted to a <code><a href='GRP.html'>GRP</a></code> object) used to group <code>x</code>.</p></td>
+      <td><p>a factor, <code><a href='GRP, fgroup_by.html'>GRP</a></code> object, atomic vector (internally converted to factor) or a list of vectors / factors (internally converted to a <code><a href='GRP, fgroup_by.html'>GRP</a></code> object) used to group <code>x</code>.</p></td>
     </tr>
     <tr>
       <th>w</th>
@@ -217,93 +217,103 @@ If <code>na.rm = FALSE</code>, <code>NA</code> is not removed but treated as any
     <p>The (<code>w</code> weighted) statistical mode of <code>x</code>, grouped by <code>g</code>, or (if <code><a href='TRA.html'>TRA</a></code> is used) <code>x</code> transformed by its mode, grouped by <code>g</code>. See also Details.</p>
     <h2 class="hasAnchor" id="see-also"><a class="anchor" href="#see-also"></a>See also</h2>
 
-    <div class='dont-index'><p><code><a href='fmean.html'>fmean</a></code>, <code><a href='fmedian.html'>fmedian</a></code>, <a href='fast-statistical-functions.html'>Fast Statistical Functions</a>, <a href='index.html'>Collapse Overview</a></p></div>
+    <div class='dont-index'><p><code><a href='fmean.html'>fmean</a></code>, <code><a href='fmedian.html'>fmedian</a></code>, <a href='A1-fast-statistical-functions.html'>Fast Statistical Functions</a>, <a href='index.html'>Collapse Overview</a></p></div>
 
     <h2 class="hasAnchor" id="examples"><a class="anchor" href="#examples"></a>Examples</h2>
-    <pre class="examples"><div class='input'><span class='no'>x</span> <span class='kw'>&lt;-</span> <span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span>(<span class='fl'>1</span>, <span class='fl'>3</span>, <span class='fl'>2</span>, <span class='fl'>2</span>, <span class='fl'>4</span>, <span class='fl'>4</span>, <span class='fl'>1</span>, <span class='fl'>7</span>, <span class='fl'>NA</span>, <span class='fl'>NA</span>, <span class='fl'>NA</span>)
-<span class='fu'>fmode</span>(<span class='no'>x</span>)                            <span class='co'># Default is ties = "first"</span></div><div class='output co'>#&gt; [1] 2</div><div class='input'><span class='fu'>fmode</span>(<span class='no'>x</span>, <span class='kw'>ties</span> <span class='kw'>=</span> <span class='st'>"min"</span>)</div><div class='output co'>#&gt; [1] 1</div><div class='input'><span class='fu'>fmode</span>(<span class='no'>x</span>, <span class='kw'>ties</span> <span class='kw'>=</span> <span class='st'>"max"</span>)</div><div class='output co'>#&gt; [1] 4</div><div class='input'><span class='fu'>fmode</span>(<span class='no'>x</span>, <span class='kw'>na.rm</span> <span class='kw'>=</span> <span class='fl'>FALSE</span>)             <span class='co'># Here NA is the mode, regardless of ties option</span></div><div class='output co'>#&gt; [1] NA</div><div class='input'><span class='fu'>fmode</span>(<span class='no'>x</span>[-<span class='fu'><a href='https://rdrr.io/r/base/length.html'>length</a></span>(<span class='no'>x</span>)], <span class='kw'>na.rm</span> <span class='kw'>=</span> <span class='fl'>FALSE</span>) <span class='co'># Not anymore..</span></div><div class='output co'>#&gt; [1] 2</div><div class='input'>
+    <pre class="examples"><div class='input'><span class='va'>x</span> <span class='op'>&lt;-</span> <span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span><span class='op'>(</span><span class='fl'>1</span>, <span class='fl'>3</span>, <span class='fl'>2</span>, <span class='fl'>2</span>, <span class='fl'>4</span>, <span class='fl'>4</span>, <span class='fl'>1</span>, <span class='fl'>7</span>, <span class='cn'>NA</span>, <span class='cn'>NA</span>, <span class='cn'>NA</span><span class='op'>)</span>
+<span class='fu'>fmode</span><span class='op'>(</span><span class='va'>x</span><span class='op'>)</span>                            <span class='co'># Default is ties = "first"</span>
+</div><div class='output co'>#&gt; [1] 2</div><div class='input'><span class='fu'>fmode</span><span class='op'>(</span><span class='va'>x</span>, ties <span class='op'>=</span> <span class='st'>"min"</span><span class='op'>)</span>
+</div><div class='output co'>#&gt; [1] 1</div><div class='input'><span class='fu'>fmode</span><span class='op'>(</span><span class='va'>x</span>, ties <span class='op'>=</span> <span class='st'>"max"</span><span class='op'>)</span>
+</div><div class='output co'>#&gt; [1] 4</div><div class='input'><span class='fu'>fmode</span><span class='op'>(</span><span class='va'>x</span>, na.rm <span class='op'>=</span> <span class='cn'>FALSE</span><span class='op'>)</span>             <span class='co'># Here NA is the mode, regardless of ties option</span>
+</div><div class='output co'>#&gt; [1] NA</div><div class='input'><span class='fu'>fmode</span><span class='op'>(</span><span class='va'>x</span><span class='op'>[</span><span class='op'>-</span><span class='fu'><a href='https://rdrr.io/r/base/length.html'>length</a></span><span class='op'>(</span><span class='va'>x</span><span class='op'>)</span><span class='op'>]</span>, na.rm <span class='op'>=</span> <span class='cn'>FALSE</span><span class='op'>)</span> <span class='co'># Not anymore..</span>
+</div><div class='output co'>#&gt; [1] 2</div><div class='input'>
 <span class='co'>## World Development Data</span>
-<span class='fu'><a href='https://rdrr.io/r/base/attach.html'>attach</a></span>(<span class='no'>wlddev</span>)
-<span class='co'>## default vector method</span>
-<span class='fu'>fmode</span>(<span class='no'>PCGDP</span>)                      <span class='co'># Numeric mode</span></div><div class='output co'>#&gt; [1] 339.6333
+<span class='kw'><a href='https://rdrr.io/r/base/attach.html'>attach</a></span><span class='op'>(</span><span class='va'>wlddev</span><span class='op'>)</span>
+</div><div class='output co'>#&gt; <span class='message'>The following objects are masked _by_ .GlobalEnv:</span>
+#&gt; <span class='message'></span>
+#&gt; <span class='message'>    iso3c, year</span></div><div class='input'><span class='co'>## default vector method</span>
+<span class='fu'>fmode</span><span class='op'>(</span><span class='va'>PCGDP</span><span class='op'>)</span>                      <span class='co'># Numeric mode</span>
+</div><div class='output co'>#&gt; [1] 339.6333
 #&gt; attr(,"label")
-#&gt; [1] "GDP per capita (constant 2010 US$)"</div><div class='input'><span class='fu'><a href='https://rdrr.io/r/utils/head.html'>head</a></span>(<span class='fu'>fmode</span>(<span class='no'>PCGDP</span>, <span class='no'>iso3c</span>))         <span class='co'># Grouped numeric mode</span></div><div class='output co'>#&gt;         ABW         AFG         AGO         ALB         AND         ARE 
-#&gt;  15669.6160    339.6333   2969.9604   2037.1227  42137.5190 102479.1890 </div><div class='input'><span class='fu'><a href='https://rdrr.io/r/utils/head.html'>head</a></span>(<span class='fu'>fmode</span>(<span class='no'>PCGDP</span>, <span class='no'>iso3c</span>, <span class='no'>LIFEEX</span>)) <span class='co'># Grouped and weighted numeric mode</span></div><div class='output co'>#&gt;        ABW        AFG        AGO        ALB        AND        ARE 
-#&gt; 24288.9871   583.0551  3533.8652  4683.5192         NA 41449.6814 </div><div class='input'><span class='fu'>fmode</span>(<span class='no'>region</span>)                     <span class='co'># Factor mode</span></div><div class='output co'>#&gt; [1] Europe &amp; Central Asia
+#&gt; [1] "GDP per capita (constant 2010 US$)"</div><div class='input'><span class='fu'><a href='https://rdrr.io/r/utils/head.html'>head</a></span><span class='op'>(</span><span class='fu'>fmode</span><span class='op'>(</span><span class='va'>PCGDP</span>, <span class='va'>iso3c</span><span class='op'>)</span><span class='op'>)</span>         <span class='co'># Grouped numeric mode</span>
+</div><div class='output co'>#&gt;        ABW        AFG        AGO        ALB        AND        ARE 
+#&gt;   339.6333  2037.1227  2466.0382 10613.9115 42137.5190  2969.9604 </div><div class='input'><span class='fu'><a href='https://rdrr.io/r/utils/head.html'>head</a></span><span class='op'>(</span><span class='fu'>fmode</span><span class='op'>(</span><span class='va'>PCGDP</span>, <span class='va'>iso3c</span>, <span class='va'>LIFEEX</span><span class='op'>)</span><span class='op'>)</span> <span class='co'># Grouped and weighted numeric mode</span>
+</div><div class='output co'>#&gt;       ABW       AFG       AGO       ALB       AND       ARE 
+#&gt;  583.0551 4683.5192 4827.7243        NA        NA 3533.8652 </div><div class='input'><span class='fu'>fmode</span><span class='op'>(</span><span class='va'>region</span><span class='op'>)</span>                     <span class='co'># Factor mode</span>
+</div><div class='output co'>#&gt; [1] Europe &amp; Central Asia
 #&gt; attr(,"label")
 #&gt; [1] Region
-#&gt; 7 Levels: East Asia &amp; Pacific ... Sub-Saharan Africa </div><div class='input'><span class='fu'>fmode</span>(<span class='no'>date</span>)                       <span class='co'># Date mode (defaults to first value since panel is balanced)</span></div><div class='output co'>#&gt; [1] "1961-01-01"</div><div class='input'><span class='fu'>fmode</span>(<span class='no'>country</span>)                    <span class='co'># Character mode (also defaults to first value)</span></div><div class='output co'>#&gt; [1] "Afghanistan"
+#&gt; 7 Levels: East Asia &amp; Pacific ... Sub-Saharan Africa </div><div class='input'><span class='fu'>fmode</span><span class='op'>(</span><span class='va'>date</span><span class='op'>)</span>                       <span class='co'># Date mode (defaults to first value since panel is balanced)</span>
+</div><div class='output co'>#&gt; [1] "1961-01-01"</div><div class='input'><span class='fu'>fmode</span><span class='op'>(</span><span class='va'>country</span><span class='op'>)</span>                    <span class='co'># Character mode (also defaults to first value)</span>
+</div><div class='output co'>#&gt; [1] "Afghanistan"
 #&gt; attr(,"label")
-#&gt; [1] "Country Name"</div><div class='input'><span class='fu'>fmode</span>(<span class='no'>OECD</span>)                       <span class='co'># Logical mode</span></div><div class='output co'>#&gt; [1] FALSE
+#&gt; [1] "Country Name"</div><div class='input'><span class='fu'>fmode</span><span class='op'>(</span><span class='va'>OECD</span><span class='op'>)</span>                       <span class='co'># Logical mode</span>
+</div><div class='output co'>#&gt; [1] FALSE
 #&gt; attr(,"label")
 #&gt; [1] "Is OECD Member Country?"</div><div class='input'>                                  <span class='co'># ..all the above can also be performed grouped and weighted</span>
 <span class='co'>## matrix method</span>
-<span class='no'>m</span> <span class='kw'>&lt;-</span> <span class='fu'><a href='quick-conversion.html'>qM</a></span>(<span class='no'>airquality</span>)
-<span class='fu'>fmode</span>(<span class='no'>m</span>)</div><div class='output co'>#&gt;   Ozone Solar.R    Wind    Temp   Month     Day 
-#&gt;    23.0   259.0    11.5    81.0     5.0     1.0 </div><div class='input'><span class='fu'>fmode</span>(<span class='no'>m</span>, <span class='kw'>na.rm</span> <span class='kw'>=</span> <span class='fl'>FALSE</span>)         <span class='co'># NA frequency is also counted</span></div><div class='output co'>#&gt;   Ozone Solar.R    Wind    Temp   Month     Day 
-#&gt;      NA      NA    11.5    81.0     5.0     1.0 </div><div class='input'><span class='fu'>fmode</span>(<span class='no'>m</span>, <span class='no'>airquality</span>$<span class='no'>Month</span>)      <span class='co'># Groupwise</span></div><div class='output co'>#&gt;   Ozone Solar.R Wind Temp Month Day
+<span class='va'>m</span> <span class='op'>&lt;-</span> <span class='fu'><a href='A4-quick-conversion.html'>qM</a></span><span class='op'>(</span><span class='va'>airquality</span><span class='op'>)</span>
+<span class='fu'>fmode</span><span class='op'>(</span><span class='va'>m</span><span class='op'>)</span>
+</div><div class='output co'>#&gt;   Ozone Solar.R    Wind    Temp   Month     Day 
+#&gt;    23.0   259.0    11.5    81.0     5.0     1.0 </div><div class='input'><span class='fu'>fmode</span><span class='op'>(</span><span class='va'>m</span>, na.rm <span class='op'>=</span> <span class='cn'>FALSE</span><span class='op'>)</span>         <span class='co'># NA frequency is also counted</span>
+</div><div class='output co'>#&gt;   Ozone Solar.R    Wind    Temp   Month     Day 
+#&gt;      NA      NA    11.5    81.0     5.0     1.0 </div><div class='input'><span class='fu'>fmode</span><span class='op'>(</span><span class='va'>m</span>, <span class='va'>airquality</span><span class='op'>$</span><span class='va'>Month</span><span class='op'>)</span>      <span class='co'># Groupwise</span>
+</div><div class='output co'>#&gt;   Ozone Solar.R Wind Temp Month Day
 #&gt; 5    11     190  9.7   66     5   1
 #&gt; 6    29     250 11.5   76     6   1
 #&gt; 7    97     175  7.4   81     7   1
 #&gt; 8    44     255 11.5   86     8   1
-#&gt; 9    13     238 10.3   71     9   1</div><div class='input'><span class='fu'>fmode</span>(<span class='no'>m</span>, <span class='kw'>w</span> <span class='kw'>=</span> <span class='no'>airquality</span>$<span class='no'>Day</span>)    <span class='co'># Weighted: Later days in the month are given more weight</span></div><div class='output co'>#&gt;   Ozone Solar.R    Wind    Temp   Month     Day 
-#&gt;    23.0   223.0    11.5    76.0     5.0    30.0 </div><div class='input'><span class='fu'>fmode</span>(<span class='no'>m</span><span class='kw'>&gt;</span><span class='fl'>50</span>, <span class='no'>airquality</span>$<span class='no'>Month</span>)   <span class='co'># Groupwise logical mode</span></div><div class='output co'>#&gt;   Ozone Solar.R  Wind Temp Month   Day
+#&gt; 9    13     238 10.3   71     9   1</div><div class='input'><span class='fu'>fmode</span><span class='op'>(</span><span class='va'>m</span>, w <span class='op'>=</span> <span class='va'>airquality</span><span class='op'>$</span><span class='va'>Day</span><span class='op'>)</span>    <span class='co'># Weighted: Later days in the month are given more weight</span>
+</div><div class='output co'>#&gt;   Ozone Solar.R    Wind    Temp   Month     Day 
+#&gt;    23.0   223.0    11.5    76.0     5.0    30.0 </div><div class='input'><span class='fu'>fmode</span><span class='op'>(</span><span class='va'>m</span><span class='op'>&gt;</span><span class='fl'>50</span>, <span class='va'>airquality</span><span class='op'>$</span><span class='va'>Month</span><span class='op'>)</span>   <span class='co'># Groupwise logical mode</span>
+</div><div class='output co'>#&gt;   Ozone Solar.R  Wind Temp Month   Day
 #&gt; 5 FALSE    TRUE FALSE TRUE FALSE FALSE
 #&gt; 6 FALSE    TRUE FALSE TRUE FALSE FALSE
 #&gt; 7  TRUE    TRUE FALSE TRUE FALSE FALSE
 #&gt; 8  TRUE    TRUE FALSE TRUE FALSE FALSE
 #&gt; 9 FALSE    TRUE FALSE TRUE FALSE FALSE</div><div class='input'>                                <span class='co'># etc..</span>
 <span class='co'>## data.frame method</span>
-<span class='fu'>fmode</span>(<span class='no'>wlddev</span>)                      <span class='co'># Calling unlist -&gt; coerce to character vector</span></div><div class='output co'>#&gt;            country              iso3c               date               year 
+<span class='fu'>fmode</span><span class='op'>(</span><span class='va'>wlddev</span><span class='op'>)</span>                      <span class='co'># Calling unlist -&gt; coerce to character vector</span>
+</div><div class='output co'>#&gt;            country              iso3c               date               year 
 #&gt;      "Afghanistan"                "2"            "-3287"             "1960" 
 #&gt;             decade             region             income               OECD 
 #&gt;             "1980"                "2"                "1"            "FALSE" 
 #&gt;              PCGDP             LIFEEX               GINI                ODA 
-#&gt; "339.633338545264"           "62.869"               "29"            "80000" </div><div class='input'><span class='fu'>fmode</span>(<span class='no'>wlddev</span>, <span class='kw'>drop</span> <span class='kw'>=</span> <span class='fl'>FALSE</span>)        <span class='co'># Gives one row</span></div><div class='output co'>#&gt;       country iso3c       date year decade                region      income
+#&gt; "339.633338545264"           "62.869"               "29"            "80000" </div><div class='input'><span class='fu'>fmode</span><span class='op'>(</span><span class='va'>wlddev</span>, drop <span class='op'>=</span> <span class='cn'>FALSE</span><span class='op'>)</span>        <span class='co'># Gives one row</span>
+</div><div class='output co'>#&gt;       country iso3c       date year decade                region      income
 #&gt; 1 Afghanistan   AFG 1961-01-01 1960   1980 Europe &amp; Central Asia High income
 #&gt;    OECD    PCGDP LIFEEX GINI   ODA
-#&gt; 1 FALSE 339.6333 62.869   29 80000</div><div class='input'><span class='fu'><a href='https://rdrr.io/r/utils/head.html'>head</a></span>(<span class='fu'>fmode</span>(<span class='no'>wlddev</span>, <span class='no'>iso3c</span>))         <span class='co'># Grouped mode</span></div><div class='output co'>#&gt;                  country iso3c       date year decade
-#&gt; ABW                Aruba   ABW 1961-01-01 1960   1980
-#&gt; AFG          Afghanistan   AFG 1961-01-01 1960   1980
-#&gt; AGO               Angola   AGO 1961-01-01 1960   1980
-#&gt; ALB              Albania   ALB 1961-01-01 1960   1980
-#&gt; AND              Andorra   AND 1961-01-01 1960   1980
-#&gt; ARE United Arab Emirates   ARE 1961-01-01 1960   1980
-#&gt;                         region              income  OECD       PCGDP LIFEEX
-#&gt; ABW Latin America &amp; Caribbean          High income FALSE  15669.6160 65.662
-#&gt; AFG                 South Asia          Low income FALSE    339.6333 32.292
-#&gt; AGO        Sub-Saharan Africa  Lower middle income FALSE   2969.9604 33.251
-#&gt; ALB      Europe &amp; Central Asia Upper middle income FALSE   2037.1227 71.860
-#&gt; AND      Europe &amp; Central Asia         High income FALSE  42137.5190     NA
-#&gt; ARE Middle East &amp; North Africa         High income FALSE 102479.1890 52.265
-#&gt;     GINI       ODA
-#&gt; ABW   NA  33630000
-#&gt; AFG   NA 114440000
-#&gt; AGO   52   -380000
-#&gt; ALB   27   8550000
-#&gt; AND   NA        NA
-#&gt; ARE   NA    120000</div><div class='input'><span class='fu'><a href='https://rdrr.io/r/utils/head.html'>head</a></span>(<span class='fu'>fmode</span>(<span class='no'>wlddev</span>, <span class='no'>iso3c</span>, <span class='no'>LIFEEX</span>)) <span class='co'># Grouped and weighted mode</span></div><div class='output co'>#&gt;                  country iso3c       date year decade
-#&gt; ABW                Aruba   ABW 2017-01-01 2016   2000
-#&gt; AFG          Afghanistan   AFG 2017-01-01 2016   2000
-#&gt; AGO               Angola   AGO 2017-01-01 2016   2000
-#&gt; ALB              Albania   ALB 2017-01-01 2016   2000
-#&gt; AND              Andorra   AND 2019-01-01 2018   2020
-#&gt; ARE United Arab Emirates   ARE 2017-01-01 2016   2000
-#&gt;                         region              income  OECD      PCGDP LIFEEX GINI
-#&gt; ABW Latin America &amp; Caribbean          High income FALSE 24288.9871 75.867   NA
-#&gt; AFG                 South Asia          Low income FALSE   583.0551 63.673   NA
-#&gt; AGO        Sub-Saharan Africa  Lower middle income FALSE  3533.8652 61.547 42.7
-#&gt; ALB      Europe &amp; Central Asia Upper middle income FALSE  4683.5192 71.860 29.0
-#&gt; AND      Europe &amp; Central Asia         High income    NA         NA     NA   NA
-#&gt; ARE Middle East &amp; North Africa         High income FALSE 41449.6814 77.256   NA
-#&gt;            ODA
-#&gt; ABW  -11660000
-#&gt; AFG 4069210000
-#&gt; AGO    -380000
-#&gt; ALB  168600000
-#&gt; AND         NA
-#&gt; ARE    4270000</div><div class='input'>
-<span class='fu'><a href='https://rdrr.io/r/base/detach.html'>detach</a></span>(<span class='no'>wlddev</span>)</div></pre>
+#&gt; 1 FALSE 339.6333 62.869   29 80000</div><div class='input'><span class='fu'><a href='https://rdrr.io/r/utils/head.html'>head</a></span><span class='op'>(</span><span class='fu'>fmode</span><span class='op'>(</span><span class='va'>wlddev</span>, <span class='va'>iso3c</span><span class='op'>)</span><span class='op'>)</span>         <span class='co'># Grouped mode</span>
+</div><div class='output co'>#&gt;            country iso3c       date year decade                     region
+#&gt; ABW    Afghanistan   AFG 1961-01-01 1960   1980                 South Asia
+#&gt; AFG        Albania   ALB 1961-01-01 1960   1980      Europe &amp; Central Asia
+#&gt; AGO        Algeria   DZA 1961-01-01 1960   1980 Middle East &amp; North Africa
+#&gt; ALB American Samoa   ASM 1961-01-01 1960   1980        East Asia &amp; Pacific
+#&gt; AND        Andorra   AND 1961-01-01 1960   1980      Europe &amp; Central Asia
+#&gt; ARE         Angola   AGO 1961-01-01 1960   1980        Sub-Saharan Africa 
+#&gt;                  income  OECD      PCGDP LIFEEX GINI        ODA
+#&gt; ABW          Low income FALSE   339.6333 32.292   NA  114440000
+#&gt; AFG Upper middle income FALSE  2037.1227 71.860 27.0    8550000
+#&gt; AGO Upper middle income FALSE  2466.0382 46.138 40.2 2965070000
+#&gt; ALB Upper middle income FALSE 10613.9115     NA   NA         NA
+#&gt; AND         High income FALSE 42137.5190     NA   NA         NA
+#&gt; ARE Lower middle income FALSE  2969.9604 33.251 52.0    -380000</div><div class='input'><span class='fu'><a href='https://rdrr.io/r/utils/head.html'>head</a></span><span class='op'>(</span><span class='fu'>fmode</span><span class='op'>(</span><span class='va'>wlddev</span>, <span class='va'>iso3c</span>, <span class='va'>LIFEEX</span><span class='op'>)</span><span class='op'>)</span> <span class='co'># Grouped and weighted mode</span>
+</div><div class='output co'>#&gt;            country iso3c       date year decade                     region
+#&gt; ABW    Afghanistan   AFG 2017-01-01 2016   2000                 South Asia
+#&gt; AFG        Albania   ALB 2017-01-01 2016   2000      Europe &amp; Central Asia
+#&gt; AGO        Algeria   DZA 2017-01-01 2016   2000 Middle East &amp; North Africa
+#&gt; ALB American Samoa   ASM 2019-01-01 2018   2020        East Asia &amp; Pacific
+#&gt; AND        Andorra   AND 2019-01-01 2018   2020      Europe &amp; Central Asia
+#&gt; ARE         Angola   AGO 2017-01-01 2016   2000        Sub-Saharan Africa 
+#&gt;                  income  OECD     PCGDP LIFEEX GINI        ODA
+#&gt; ABW          Low income FALSE  583.0551 63.673   NA 4069210000
+#&gt; AFG Upper middle income FALSE 4683.5192 71.860 29.0  168600000
+#&gt; AGO Upper middle income FALSE 4827.7243 76.078 27.6  157930000
+#&gt; ALB Upper middle income    NA        NA     NA   NA         NA
+#&gt; AND         High income    NA        NA     NA   NA         NA
+#&gt; ARE Lower middle income FALSE 3533.8652 61.547 42.7    -380000</div><div class='input'>
+<span class='kw'><a href='https://rdrr.io/r/base/detach.html'>detach</a></span><span class='op'>(</span><span class='va'>wlddev</span><span class='op'>)</span>
+</div></pre>
   </div>
   <div class="col-md-3 hidden-xs hidden-sm" id="pkgdown-sidebar">
     <nav id="toc" data-toggle="toc" class="sticky-top">
@@ -319,7 +329,7 @@ If <code>na.rm = FALSE</code>, <code>NA</code> is not removed but treated as any
 </div>
 
 <div class="pkgdown">
-  <p>Site built with <a href="https://pkgdown.r-lib.org/">pkgdown</a> 1.5.1.</p>
+  <p>Site built with <a href="https://pkgdown.r-lib.org/">pkgdown</a> 1.6.1.</p>
 </div>
 
       </footer>

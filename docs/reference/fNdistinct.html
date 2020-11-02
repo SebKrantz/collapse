@@ -72,7 +72,7 @@
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">collapse</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">1.3.2</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">1.4.0</span>
       </span>
     </div>
 
@@ -126,23 +126,23 @@
     <p><code>fNdistinct</code> is a generic function that (column-wise) computes the number of distinct values in <code>x</code>, (optionally) grouped by <code>g</code>. It is significantly faster than <code><a href='https://rdrr.io/r/base/length.html'>length(unique(x))</a></code>. The <code><a href='TRA.html'>TRA</a></code> argument can further be used to transform <code>x</code> using its (grouped) distinct value count.</p>
     </div>
 
-    <pre class="usage"><span class='fu'>fNdistinct</span>(<span class='no'>x</span>, <span class='no'>...</span>)
+    <pre class="usage"><span class='fu'>fNdistinct</span><span class='op'>(</span><span class='va'>x</span>, <span class='va'>...</span><span class='op'>)</span>
 
 <span class='co'># S3 method for default</span>
-<span class='fu'>fNdistinct</span>(<span class='no'>x</span>, <span class='kw'>g</span> <span class='kw'>=</span> <span class='kw'>NULL</span>, <span class='kw'>TRA</span> <span class='kw'>=</span> <span class='kw'>NULL</span>, <span class='kw'>na.rm</span> <span class='kw'>=</span> <span class='fl'>TRUE</span>,
-           <span class='kw'>use.g.names</span> <span class='kw'>=</span> <span class='fl'>TRUE</span>, <span class='no'>...</span>)
+<span class='fu'>fNdistinct</span><span class='op'>(</span><span class='va'>x</span>, g <span class='op'>=</span> <span class='cn'>NULL</span>, TRA <span class='op'>=</span> <span class='cn'>NULL</span>, na.rm <span class='op'>=</span> <span class='cn'>TRUE</span>,
+           use.g.names <span class='op'>=</span> <span class='cn'>TRUE</span>, <span class='va'>...</span><span class='op'>)</span>
 
 <span class='co'># S3 method for matrix</span>
-<span class='fu'>fNdistinct</span>(<span class='no'>x</span>, <span class='kw'>g</span> <span class='kw'>=</span> <span class='kw'>NULL</span>, <span class='kw'>TRA</span> <span class='kw'>=</span> <span class='kw'>NULL</span>, <span class='kw'>na.rm</span> <span class='kw'>=</span> <span class='fl'>TRUE</span>,
-           <span class='kw'>use.g.names</span> <span class='kw'>=</span> <span class='fl'>TRUE</span>, <span class='kw'>drop</span> <span class='kw'>=</span> <span class='fl'>TRUE</span>, <span class='no'>...</span>)
+<span class='fu'>fNdistinct</span><span class='op'>(</span><span class='va'>x</span>, g <span class='op'>=</span> <span class='cn'>NULL</span>, TRA <span class='op'>=</span> <span class='cn'>NULL</span>, na.rm <span class='op'>=</span> <span class='cn'>TRUE</span>,
+           use.g.names <span class='op'>=</span> <span class='cn'>TRUE</span>, drop <span class='op'>=</span> <span class='cn'>TRUE</span>, <span class='va'>...</span><span class='op'>)</span>
 
 <span class='co'># S3 method for data.frame</span>
-<span class='fu'>fNdistinct</span>(<span class='no'>x</span>, <span class='kw'>g</span> <span class='kw'>=</span> <span class='kw'>NULL</span>, <span class='kw'>TRA</span> <span class='kw'>=</span> <span class='kw'>NULL</span>, <span class='kw'>na.rm</span> <span class='kw'>=</span> <span class='fl'>TRUE</span>,
-           <span class='kw'>use.g.names</span> <span class='kw'>=</span> <span class='fl'>TRUE</span>, <span class='kw'>drop</span> <span class='kw'>=</span> <span class='fl'>TRUE</span>, <span class='no'>...</span>)
+<span class='fu'>fNdistinct</span><span class='op'>(</span><span class='va'>x</span>, g <span class='op'>=</span> <span class='cn'>NULL</span>, TRA <span class='op'>=</span> <span class='cn'>NULL</span>, na.rm <span class='op'>=</span> <span class='cn'>TRUE</span>,
+           use.g.names <span class='op'>=</span> <span class='cn'>TRUE</span>, drop <span class='op'>=</span> <span class='cn'>TRUE</span>, <span class='va'>...</span><span class='op'>)</span>
 
 <span class='co'># S3 method for grouped_df</span>
-<span class='fu'>fNdistinct</span>(<span class='no'>x</span>, <span class='kw'>TRA</span> <span class='kw'>=</span> <span class='kw'>NULL</span>, <span class='kw'>na.rm</span> <span class='kw'>=</span> <span class='fl'>TRUE</span>,
-           <span class='kw'>use.g.names</span> <span class='kw'>=</span> <span class='fl'>FALSE</span>, <span class='kw'>keep.group_vars</span> <span class='kw'>=</span> <span class='fl'>TRUE</span>, <span class='no'>...</span>)</pre>
+<span class='fu'>fNdistinct</span><span class='op'>(</span><span class='va'>x</span>, TRA <span class='op'>=</span> <span class='cn'>NULL</span>, na.rm <span class='op'>=</span> <span class='cn'>TRUE</span>,
+           use.g.names <span class='op'>=</span> <span class='cn'>FALSE</span>, keep.group_vars <span class='op'>=</span> <span class='cn'>TRUE</span>, <span class='va'>...</span><span class='op'>)</span></pre>
 
     <h2 class="hasAnchor" id="arguments"><a class="anchor" href="#arguments"></a>Arguments</h2>
     <table class="ref-arguments">
@@ -153,7 +153,7 @@
     </tr>
     <tr>
       <th>g</th>
-      <td><p>a factor, <code><a href='GRP.html'>GRP</a></code> object, atomic vector (internally converted to factor) or a list of vectors / factors (internally converted to a <code><a href='GRP.html'>GRP</a></code> object) used to group <code>x</code>.</p></td>
+      <td><p>a factor, <code><a href='GRP, fgroup_by.html'>GRP</a></code> object, atomic vector (internally converted to factor) or a list of vectors / factors (internally converted to a <code><a href='GRP, fgroup_by.html'>GRP</a></code> object) used to group <code>x</code>.</p></td>
     </tr>
     <tr>
       <th>TRA</th>
@@ -193,23 +193,29 @@
     <p>Integer. The number of distinct values in <code>x</code>, grouped by <code>g</code>, or (if <code><a href='TRA.html'>TRA</a></code> is used) <code>x</code> transformed by its distinct value count, grouped by <code>g</code>.</p>
     <h2 class="hasAnchor" id="see-also"><a class="anchor" href="#see-also"></a>See also</h2>
 
-    <div class='dont-index'><p><code><a href='fNobs.html'>fNobs</a></code>, <a href='fast-statistical-functions.html'>Fast Statistical Functions</a>, <a href='index.html'>Collapse Overview</a></p></div>
+    <div class='dont-index'><p><code><a href='fNobs.html'>fNobs</a></code>, <a href='A1-fast-statistical-functions.html'>Fast Statistical Functions</a>, <a href='index.html'>Collapse Overview</a></p></div>
 
     <h2 class="hasAnchor" id="examples"><a class="anchor" href="#examples"></a>Examples</h2>
     <pre class="examples"><div class='input'><span class='co'>## default vector method</span>
-<span class='fu'>fNdistinct</span>(<span class='no'>airquality</span>$<span class='no'>Solar.R</span>)                   <span class='co'># Simple distinct value count</span></div><div class='output co'>#&gt; [1] 117</div><div class='input'><span class='fu'>fNdistinct</span>(<span class='no'>airquality</span>$<span class='no'>Solar.R</span>, <span class='no'>airquality</span>$<span class='no'>Month</span>) <span class='co'># Grouped distinct value count</span></div><div class='output co'>#&gt;  5  6  7  8  9 
+<span class='fu'>fNdistinct</span><span class='op'>(</span><span class='va'>airquality</span><span class='op'>$</span><span class='va'>Solar.R</span><span class='op'>)</span>                   <span class='co'># Simple distinct value count</span>
+</div><div class='output co'>#&gt; [1] 117</div><div class='input'><span class='fu'>fNdistinct</span><span class='op'>(</span><span class='va'>airquality</span><span class='op'>$</span><span class='va'>Solar.R</span>, <span class='va'>airquality</span><span class='op'>$</span><span class='va'>Month</span><span class='op'>)</span> <span class='co'># Grouped distinct value count</span>
+</div><div class='output co'>#&gt;  5  6  7  8  9 
 #&gt; 27 28 29 27 27 </div><div class='input'>
 <span class='co'>## data.frame method</span>
-<span class='fu'>fNdistinct</span>(<span class='no'>airquality</span>)</div><div class='output co'>#&gt;   Ozone Solar.R    Wind    Temp   Month     Day 
-#&gt;      67     117      31      40       5      31 </div><div class='input'><span class='fu'>fNdistinct</span>(<span class='no'>airquality</span>, <span class='no'>airquality</span>$<span class='no'>Month</span>)</div><div class='output co'>#&gt;   Ozone Solar.R Wind Temp Month Day
+<span class='fu'>fNdistinct</span><span class='op'>(</span><span class='va'>airquality</span><span class='op'>)</span>
+</div><div class='output co'>#&gt;   Ozone Solar.R    Wind    Temp   Month     Day 
+#&gt;      67     117      31      40       5      31 </div><div class='input'><span class='fu'>fNdistinct</span><span class='op'>(</span><span class='va'>airquality</span>, <span class='va'>airquality</span><span class='op'>$</span><span class='va'>Month</span><span class='op'>)</span>
+</div><div class='output co'>#&gt;   Ozone Solar.R Wind Temp Month Day
 #&gt; 5    21      27   18   18     1  31
 #&gt; 6     9      28   16   19     1  30
 #&gt; 7    24      29   17   14     1  31
 #&gt; 8    24      27   18   19     1  31
-#&gt; 9    21      27   19   20     1  30</div><div class='input'><span class='fu'>fNdistinct</span>(<span class='no'>wlddev</span>)                               <span class='co'># Works with data of all types!</span></div><div class='output co'>#&gt; country   iso3c    date    year  decade  region  income    OECD   PCGDP  LIFEEX 
+#&gt; 9    21      27   19   20     1  30</div><div class='input'><span class='fu'>fNdistinct</span><span class='op'>(</span><span class='va'>wlddev</span><span class='op'>)</span>                               <span class='co'># Works with data of all types!</span>
+</div><div class='output co'>#&gt; country   iso3c    date    year  decade  region  income    OECD   PCGDP  LIFEEX 
 #&gt;     216     216      59      59       7       7       4       2    8995   10048 
 #&gt;    GINI     ODA 
-#&gt;     363    7564 </div><div class='input'><span class='fu'><a href='https://rdrr.io/r/utils/head.html'>head</a></span>(<span class='fu'>fNdistinct</span>(<span class='no'>wlddev</span>, <span class='no'>wlddev</span>$<span class='no'>iso3c</span>))</div><div class='output co'>#&gt;     country iso3c date year decade region income OECD PCGDP LIFEEX GINI ODA
+#&gt;     363    7564 </div><div class='input'><span class='fu'><a href='https://rdrr.io/r/utils/head.html'>head</a></span><span class='op'>(</span><span class='fu'>fNdistinct</span><span class='op'>(</span><span class='va'>wlddev</span>, <span class='va'>wlddev</span><span class='op'>$</span><span class='va'>iso3c</span><span class='op'>)</span><span class='op'>)</span>
+</div><div class='output co'>#&gt;     country iso3c date year decade region income OECD PCGDP LIFEEX GINI ODA
 #&gt; ABW       1     1   59   59      7      1      1    1    32     57    0  20
 #&gt; AFG       1     1   59   59      7      1      1    1    16     57    0  58
 #&gt; AGO       1     1   59   59      7      1      1    1    38     57    2  55
@@ -217,25 +223,29 @@
 #&gt; AND       1     1   59   59      7      1      1    1    48      0    0   0
 #&gt; ARE       1     1   59   59      7      1      1    1    43     57    0  43</div><div class='input'>
 <span class='co'>## matrix method</span>
-<span class='no'>aqm</span> <span class='kw'>&lt;-</span> <span class='fu'><a href='quick-conversion.html'>qM</a></span>(<span class='no'>airquality</span>)
-<span class='fu'>fNdistinct</span>(<span class='no'>aqm</span>)                                  <span class='co'># Also works for character or logical matrices</span></div><div class='output co'>#&gt;   Ozone Solar.R    Wind    Temp   Month     Day 
-#&gt;      67     117      31      40       5      31 </div><div class='input'><span class='fu'>fNdistinct</span>(<span class='no'>aqm</span>, <span class='no'>airquality</span>$<span class='no'>Month</span>)</div><div class='output co'>#&gt;   Ozone Solar.R Wind Temp Month Day
+<span class='va'>aqm</span> <span class='op'>&lt;-</span> <span class='fu'><a href='A4-quick-conversion.html'>qM</a></span><span class='op'>(</span><span class='va'>airquality</span><span class='op'>)</span>
+<span class='fu'>fNdistinct</span><span class='op'>(</span><span class='va'>aqm</span><span class='op'>)</span>                                  <span class='co'># Also works for character or logical matrices</span>
+</div><div class='output co'>#&gt;   Ozone Solar.R    Wind    Temp   Month     Day 
+#&gt;      67     117      31      40       5      31 </div><div class='input'><span class='fu'>fNdistinct</span><span class='op'>(</span><span class='va'>aqm</span>, <span class='va'>airquality</span><span class='op'>$</span><span class='va'>Month</span><span class='op'>)</span>
+</div><div class='output co'>#&gt;   Ozone Solar.R Wind Temp Month Day
 #&gt; 5    21      27   18   18     1  31
 #&gt; 6     9      28   16   19     1  30
 #&gt; 7    24      29   17   14     1  31
 #&gt; 8    24      27   18   19     1  31
 #&gt; 9    21      27   19   20     1  30</div><div class='input'>
 <span class='co'>## method for grouped tibbles - for use with dplyr:</span>
-<span class='fu'><a href='https://rdrr.io/r/base/library.html'>library</a></span>(<span class='no'>dplyr</span>)
-<span class='no'>airquality</span> <span class='kw'>%&gt;%</span> <span class='fu'><a href='https://dplyr.tidyverse.org/reference/group_by.html'>group_by</a></span>(<span class='no'>Month</span>) <span class='kw'>%&gt;%</span> <span class='no'>fNdistinct</span></div><div class='output co'>#&gt; <span style='color: #949494;'># A tibble: 5 x 6</span><span>
+<span class='kw'><a href='https://rdrr.io/r/base/library.html'>library</a></span><span class='op'>(</span><span class='va'><a href='https://dplyr.tidyverse.org'>dplyr</a></span><span class='op'>)</span>
+<span class='va'>airquality</span> <span class='op'>%&gt;%</span> <span class='fu'><a href='https://dplyr.tidyverse.org/reference/group_by.html'>group_by</a></span><span class='op'>(</span><span class='va'>Month</span><span class='op'>)</span> <span class='op'>%&gt;%</span> <span class='va'>fNdistinct</span>
+</div><div class='output co'>#&gt; <span style='color: #949494;'># A tibble: 5 x 6</span><span>
 #&gt;   Month Ozone Solar.R  Wind  Temp   Day
 #&gt;   </span><span style='color: #949494;font-style: italic;'>&lt;int&gt;</span><span> </span><span style='color: #949494;font-style: italic;'>&lt;int&gt;</span><span>   </span><span style='color: #949494;font-style: italic;'>&lt;int&gt;</span><span> </span><span style='color: #949494;font-style: italic;'>&lt;int&gt;</span><span> </span><span style='color: #949494;font-style: italic;'>&lt;int&gt;</span><span> </span><span style='color: #949494;font-style: italic;'>&lt;int&gt;</span><span>
 #&gt; </span><span style='color: #BCBCBC;'>1</span><span>     5    21      27    18    18    31
 #&gt; </span><span style='color: #BCBCBC;'>2</span><span>     6     9      28    16    19    30
 #&gt; </span><span style='color: #BCBCBC;'>3</span><span>     7    24      29    17    14    31
 #&gt; </span><span style='color: #BCBCBC;'>4</span><span>     8    24      27    18    19    31
-#&gt; </span><span style='color: #BCBCBC;'>5</span><span>     9    21      27    19    20    30</div><div class='input'><span class='no'>wlddev</span> <span class='kw'>%&gt;%</span> <span class='fu'><a href='https://dplyr.tidyverse.org/reference/group_by.html'>group_by</a></span>(<span class='no'>country</span>) <span class='kw'>%&gt;%</span>
-             <span class='fu'><a href='https://dplyr.tidyverse.org/reference/select.html'>select</a></span>(<span class='no'>PCGDP</span>,<span class='no'>LIFEEX</span>,<span class='no'>GINI</span>,<span class='no'>ODA</span>) <span class='kw'>%&gt;%</span> <span class='no'>fNdistinct</span></div><div class='output co'>#&gt; <span class='message'>Adding missing grouping variables: `country`</span></div><div class='output co'>#&gt; </span><span style='color: #949494;'># A tibble: 216 x 5</span><span>
+#&gt; </span><span style='color: #BCBCBC;'>5</span><span>     9    21      27    19    20    30</div><div class='input'><span class='va'>wlddev</span> <span class='op'>%&gt;%</span> <span class='fu'><a href='https://dplyr.tidyverse.org/reference/group_by.html'>group_by</a></span><span class='op'>(</span><span class='va'>country</span><span class='op'>)</span> <span class='op'>%&gt;%</span>
+             <span class='fu'><a href='https://dplyr.tidyverse.org/reference/select.html'>select</a></span><span class='op'>(</span><span class='va'>PCGDP</span>,<span class='va'>LIFEEX</span>,<span class='va'>GINI</span>,<span class='va'>ODA</span><span class='op'>)</span> <span class='op'>%&gt;%</span> <span class='va'>fNdistinct</span>
+</div><div class='output co'>#&gt; <span class='message'>Adding missing grouping variables: `country`</span></div><div class='output co'>#&gt; </span><span style='color: #949494;'># A tibble: 216 x 5</span><span>
 #&gt;    country             PCGDP LIFEEX  GINI   ODA
 #&gt;    </span><span style='color: #949494;font-style: italic;'>&lt;chr&gt;</span><span>               </span><span style='color: #949494;font-style: italic;'>&lt;int&gt;</span><span>  </span><span style='color: #949494;font-style: italic;'>&lt;int&gt;</span><span> </span><span style='color: #949494;font-style: italic;'>&lt;int&gt;</span><span> </span><span style='color: #949494;font-style: italic;'>&lt;int&gt;</span><span>
 #&gt; </span><span style='color: #BCBCBC;'> 1</span><span> Afghanistan            16     57     0    58
@@ -265,7 +275,7 @@
 </div>
 
 <div class="pkgdown">
-  <p>Site built with <a href="https://pkgdown.r-lib.org/">pkgdown</a> 1.5.1.</p>
+  <p>Site built with <a href="https://pkgdown.r-lib.org/">pkgdown</a> 1.6.1.</p>
 </div>
 
       </footer>
