@@ -6,7 +6,7 @@
 <meta http-equiv="X-UA-Compatible" content="IE=edge">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-<title>Fast Grouping / <em>collapse</em> Grouping Objects — GRP, fgroup_by • collapse</title>
+<title>Fast Grouping / collapse Grouping Objects — GRP, fgroup_by • collapse</title>
 
 
 <!-- jquery -->
@@ -39,10 +39,10 @@
 
 
 
-<meta property="og:title" content="Fast Grouping / <em>collapse</em> Grouping Objects — GRP, fgroup_by" />
+<meta property="og:title" content="Fast Grouping / collapse Grouping Objects — GRP, fgroup_by" />
 <meta property="og:description" content="GRP performs fast, ordered and unordered, groupings of vectors and data frames (or lists of vectors) using radixorderv. The output is a list-like object of class 'GRP' which can be printed, plotted and used as an efficient input to all of collapse's fast statistical and transformation functions / operators, as well as to collap, BY and TRA.
-fgroup_by is similar to dplyr::group_by but faster. It creates a grouped tibble with a 'GRP' object attached - for faster dplyr-like programming with collapse's fast functions.
-There are also several conversion methods to convert to and from 'GRP' objects. Notable among these is GRP.grouped_df, which returns a 'GRP' object from a grouped tibble created with dplyr::group_by (or fgroup_by), and the duo GRP.factor and as.factor_GRP." />
+fgroup_by is similar to dplyr::group_by but faster. It creates a grouped data frame with a 'GRP' object attached - for faster dplyr-like programming with collapse's fast functions.
+There are also several conversion methods to convert to and from 'GRP' objects. Notable among these is GRP.grouped_df, which returns a 'GRP' object from a grouped data frame created with dplyr::group_by (or fgroup_by), and the duo GRP.factor and as.factor_GRP." />
 
 
 
@@ -74,7 +74,7 @@ There are also several conversion methods to convert to and from 'GRP' objects. 
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">collapse</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">1.3.2</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">1.4.0</span>
       </span>
     </div>
 
@@ -126,46 +126,56 @@ There are also several conversion methods to convert to and from 'GRP' objects. 
 
     <div class="ref-description">
     <p><code>GRP</code> performs fast, ordered and unordered, groupings of vectors and data frames (or lists of vectors) using <code><a href='radixorder.html'>radixorderv</a></code>. The output is a list-like object of class 'GRP' which can be printed, plotted and used as an efficient input to all of <em>collapse</em>'s fast statistical and transformation functions / operators, as well as to <code><a href='collap.html'>collap</a></code>, <code><a href='BY.html'>BY</a></code> and <code><a href='TRA.html'>TRA</a></code>.</p>
-<p><code>fgroup_by</code> is similar to <code><a href='https://dplyr.tidyverse.org/reference/group_by.html'>dplyr::group_by</a></code> but faster. It creates a grouped tibble with a 'GRP' object attached - for faster dplyr-like programming with <em>collapse</em>'s fast functions.</p>
-<p>There are also several conversion methods to convert to and from 'GRP' objects. Notable among these is <code>GRP.grouped_df</code>, which returns a 'GRP' object from a grouped tibble created with <code><a href='https://dplyr.tidyverse.org/reference/group_by.html'>dplyr::group_by</a></code> (or <code>fgroup_by</code>), and the duo <code>GRP.factor</code> and <code>as.factor_GRP</code>.</p>
+<p><code>fgroup_by</code> is similar to <code><a href='https://dplyr.tidyverse.org/reference/group_by.html'>dplyr::group_by</a></code> but faster. It creates a grouped data frame with a 'GRP' object attached - for faster dplyr-like programming with <em>collapse</em>'s fast functions.</p>
+<p>There are also several conversion methods to convert to and from 'GRP' objects. Notable among these is <code>GRP.grouped_df</code>, which returns a 'GRP' object from a grouped data frame created with <code><a href='https://dplyr.tidyverse.org/reference/group_by.html'>dplyr::group_by</a></code> (or <code>fgroup_by</code>), and the duo <code>GRP.factor</code> and <code>as.factor_GRP</code>.</p>
     </div>
 
-    <pre class="usage"><span class='fu'>GRP</span>(<span class='no'>X</span>, <span class='no'>...</span>)
+    <pre class="usage"><span class='fu'>GRP</span><span class='op'>(</span><span class='va'>X</span>, <span class='va'>...</span><span class='op'>)</span>
 
 <span class='co'># S3 method for default</span>
-<span class='fu'>GRP</span>(<span class='no'>X</span>, <span class='kw'>by</span> <span class='kw'>=</span> <span class='kw'>NULL</span>, <span class='kw'>sort</span> <span class='kw'>=</span> <span class='fl'>TRUE</span>, <span class='kw'>decreasing</span> <span class='kw'>=</span> <span class='fl'>FALSE</span>, <span class='kw'>na.last</span> <span class='kw'>=</span> <span class='fl'>TRUE</span>,
-    <span class='kw'>return.groups</span> <span class='kw'>=</span> <span class='fl'>TRUE</span>, <span class='kw'>return.order</span> <span class='kw'>=</span> <span class='fl'>FALSE</span>, <span class='kw'>call</span> <span class='kw'>=</span> <span class='fl'>TRUE</span>, <span class='no'>...</span>)
+<span class='fu'>GRP</span><span class='op'>(</span><span class='va'>X</span>, by <span class='op'>=</span> <span class='cn'>NULL</span>, sort <span class='op'>=</span> <span class='cn'>TRUE</span>, decreasing <span class='op'>=</span> <span class='cn'>FALSE</span>, na.last <span class='op'>=</span> <span class='cn'>TRUE</span>,
+    return.groups <span class='op'>=</span> <span class='cn'>TRUE</span>, return.order <span class='op'>=</span> <span class='cn'>FALSE</span>, call <span class='op'>=</span> <span class='cn'>TRUE</span>, <span class='va'>...</span><span class='op'>)</span>
 
 <span class='co'># S3 method for factor</span>
-<span class='fu'>GRP</span>(<span class='no'>X</span>, <span class='no'>...</span>, <span class='kw'>group.sizes</span> <span class='kw'>=</span> <span class='fl'>TRUE</span>, <span class='kw'>return.groups</span> <span class='kw'>=</span> <span class='fl'>TRUE</span>, <span class='kw'>call</span> <span class='kw'>=</span> <span class='fl'>TRUE</span>)
+<span class='fu'>GRP</span><span class='op'>(</span><span class='va'>X</span>, <span class='va'>...</span>, group.sizes <span class='op'>=</span> <span class='cn'>TRUE</span>, drop <span class='op'>=</span> <span class='cn'>FALSE</span>, return.groups <span class='op'>=</span> <span class='cn'>TRUE</span>,
+    call <span class='op'>=</span> <span class='cn'>TRUE</span><span class='op'>)</span>
+
 <span class='co'># S3 method for qG</span>
-<span class='fu'>GRP</span>(<span class='no'>X</span>, <span class='no'>...</span>, <span class='kw'>group.sizes</span> <span class='kw'>=</span> <span class='fl'>TRUE</span>, <span class='kw'>return.groups</span> <span class='kw'>=</span> <span class='fl'>TRUE</span>, <span class='kw'>call</span> <span class='kw'>=</span> <span class='fl'>TRUE</span>)
+<span class='fu'>GRP</span><span class='op'>(</span><span class='va'>X</span>, <span class='va'>...</span>, group.sizes <span class='op'>=</span> <span class='cn'>TRUE</span>, return.groups <span class='op'>=</span> <span class='cn'>TRUE</span>, call <span class='op'>=</span> <span class='cn'>TRUE</span><span class='op'>)</span>
+
 <span class='co'># S3 method for pseries</span>
-<span class='fu'>GRP</span>(<span class='no'>X</span>, <span class='kw'>effect</span> <span class='kw'>=</span> <span class='fl'>1L</span>, <span class='no'>...</span>, <span class='kw'>group.sizes</span> <span class='kw'>=</span> <span class='fl'>TRUE</span>, <span class='kw'>return.groups</span> <span class='kw'>=</span> <span class='fl'>TRUE</span>, <span class='kw'>call</span> <span class='kw'>=</span> <span class='fl'>TRUE</span>)
+<span class='fu'>GRP</span><span class='op'>(</span><span class='va'>X</span>, effect <span class='op'>=</span> <span class='fl'>1L</span>, <span class='va'>...</span>, group.sizes <span class='op'>=</span> <span class='cn'>TRUE</span>, return.groups <span class='op'>=</span> <span class='cn'>TRUE</span>,
+    call <span class='op'>=</span> <span class='cn'>TRUE</span><span class='op'>)</span>
+
 <span class='co'># S3 method for pdata.frame</span>
-<span class='fu'>GRP</span>(<span class='no'>X</span>, <span class='kw'>effect</span> <span class='kw'>=</span> <span class='fl'>1L</span>, <span class='no'>...</span>, <span class='kw'>group.sizes</span> <span class='kw'>=</span> <span class='fl'>TRUE</span>, <span class='kw'>return.groups</span> <span class='kw'>=</span> <span class='fl'>TRUE</span>, <span class='kw'>call</span> <span class='kw'>=</span> <span class='fl'>TRUE</span>)
+<span class='fu'>GRP</span><span class='op'>(</span><span class='va'>X</span>, effect <span class='op'>=</span> <span class='fl'>1L</span>, <span class='va'>...</span>, group.sizes <span class='op'>=</span> <span class='cn'>TRUE</span>, return.groups <span class='op'>=</span> <span class='cn'>TRUE</span>,
+    call <span class='op'>=</span> <span class='cn'>TRUE</span><span class='op'>)</span>
+
 <span class='co'># S3 method for grouped_df</span>
-<span class='fu'>GRP</span>(<span class='no'>X</span>, <span class='no'>...</span>, <span class='kw'>return.groups</span> <span class='kw'>=</span> <span class='fl'>TRUE</span>, <span class='kw'>call</span> <span class='kw'>=</span> <span class='fl'>TRUE</span>)
+<span class='fu'>GRP</span><span class='op'>(</span><span class='va'>X</span>, <span class='va'>...</span>, return.groups <span class='op'>=</span> <span class='cn'>TRUE</span>, call <span class='op'>=</span> <span class='cn'>TRUE</span><span class='op'>)</span>
 
 <span class='co'># Identify, get group names, and convert GRP object to factor</span>
-<span class='fu'>is.GRP</span>(<span class='no'>x</span>)
-<span class='fu'>GRPnames</span>(<span class='no'>x</span>, <span class='kw'>force.char</span> <span class='kw'>=</span> <span class='fl'>TRUE</span>)
-<span class='fu'>as.factor_GRP</span>(<span class='no'>x</span>, <span class='kw'>ordered</span> <span class='kw'>=</span> <span class='fl'>FALSE</span>)
+<span class='fu'>is.GRP</span><span class='op'>(</span><span class='va'>x</span><span class='op'>)</span>
+<span class='fu'>GRPnames</span><span class='op'>(</span><span class='va'>x</span>, force.char <span class='op'>=</span> <span class='cn'>TRUE</span><span class='op'>)</span>
+<span class='fu'>as.factor_GRP</span><span class='op'>(</span><span class='va'>x</span>, ordered <span class='op'>=</span> <span class='cn'>FALSE</span><span class='op'>)</span>
 
-<span class='co'># Fast version of dplyr::group_by for use with fast functions, see details</span>
-<span class='fu'>fgroup_by</span>(<span class='no'>X</span>, <span class='no'>...</span>, <span class='kw'>sort</span> <span class='kw'>=</span> <span class='fl'>TRUE</span>, <span class='kw'>decreasing</span> <span class='kw'>=</span> <span class='fl'>FALSE</span>, <span class='kw'>na.last</span> <span class='kw'>=</span> <span class='fl'>TRUE</span>, <span class='kw'>return.order</span> <span class='kw'>=</span> <span class='fl'>FALSE</span>)
+<span class='co'># Fast, class-agnostic version of dplyr::group_by for use with fast functions, see details</span>
+<span class='fu'>fgroup_by</span><span class='op'>(</span><span class='va'>X</span>, <span class='va'>...</span>, sort <span class='op'>=</span> <span class='cn'>TRUE</span>, decreasing <span class='op'>=</span> <span class='cn'>FALSE</span>, na.last <span class='op'>=</span> <span class='cn'>TRUE</span>,
+          return.order <span class='op'>=</span> <span class='cn'>FALSE</span><span class='op'>)</span>
+      <span class='fu'>gby</span><span class='op'>(</span><span class='va'>X</span>, <span class='va'>...</span>, sort <span class='op'>=</span> <span class='cn'>TRUE</span>, decreasing <span class='op'>=</span> <span class='cn'>FALSE</span>, na.last <span class='op'>=</span> <span class='cn'>TRUE</span>,
+          return.order <span class='op'>=</span> <span class='cn'>FALSE</span><span class='op'>)</span>
 
-<span class='co'># Get grouping columns from a grouped tibble created with dplyr::group_by or fgroup_by</span>
-<span class='fu'>fgroup_vars</span>(<span class='no'>X</span>, <span class='kw'>return</span> <span class='kw'>=</span> <span class='st'>"data"</span>)
+<span class='co'># Get grouping columns from a grouped data frame created with dplyr::group_by or fgroup_by</span>
+<span class='fu'>fgroup_vars</span><span class='op'>(</span><span class='va'>X</span>, return <span class='op'>=</span> <span class='st'>"data"</span><span class='op'>)</span>
 
-<span class='co'># Remove the 'groups' attribute and return a normal data frame or tibble</span>
-<span class='fu'>fungroup</span>(<span class='no'>X</span>, <span class='kw'>untibble</span> <span class='kw'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/Logic.html'>isFALSE</a></span>(<span class='fu'><a href='https://rdrr.io/r/base/attr.html'>attr</a></span>(<span class='no'>X</span>, <span class='st'>"was.tibble"</span>)))
+<span class='co'># Ungroup grouped data frame created with dplyr::group_by or fgroup_by</span>
+<span class='fu'>fungroup</span><span class='op'>(</span><span class='va'>X</span>, <span class='va'>...</span><span class='op'>)</span>
 
 <span class='co'># S3 method for GRP</span>
-<span class='fu'><a href='https://rdrr.io/r/base/print.html'>print</a></span>(<span class='no'>x</span>, <span class='kw'>n</span> <span class='kw'>=</span> <span class='fl'>6</span>, <span class='no'>...</span>)
+<span class='fu'><a href='https://rdrr.io/r/base/print.html'>print</a></span><span class='op'>(</span><span class='va'>x</span>, n <span class='op'>=</span> <span class='fl'>6</span>, <span class='va'>...</span><span class='op'>)</span>
 
 <span class='co'># S3 method for GRP</span>
-<span class='fu'><a href='https://rdrr.io/r/base/plot.html'>plot</a></span>(<span class='no'>x</span>, <span class='kw'>breaks</span> <span class='kw'>=</span> <span class='st'>"auto"</span>, <span class='kw'>type</span> <span class='kw'>=</span> <span class='st'>"s"</span>, <span class='kw'>horizontal</span> <span class='kw'>=</span> <span class='fl'>FALSE</span>, <span class='no'>...</span>)</pre>
+<span class='fu'><a href='https://rdrr.io/r/graphics/plot.default.html'>plot</a></span><span class='op'>(</span><span class='va'>x</span>, breaks <span class='op'>=</span> <span class='st'>"auto"</span>, type <span class='op'>=</span> <span class='st'>"s"</span>, horizontal <span class='op'>=</span> <span class='cn'>FALSE</span>, <span class='va'>...</span><span class='op'>)</span></pre>
 
     <h2 class="hasAnchor" id="arguments"><a class="anchor" href="#arguments"></a>Arguments</h2>
     <table class="ref-arguments">
@@ -211,6 +221,10 @@ There are also several conversion methods to convert to and from 'GRP' objects. 
       <td><p>logical. <code>TRUE</code> tabulates factor levels using <code><a href='https://rdrr.io/r/base/tabulate.html'>tabulate</a></code> to create a vector of group sizes; <code>FALSE</code> leaves that slot empty when converting from factors.</p></td>
     </tr>
     <tr>
+      <th>drop</th>
+      <td><p>logical. <code>TRUE</code> efficiently drops unused factor levels beforehand using <code><a href='fdroplevels.html'>fdroplevels</a></code>.</p></td>
+    </tr>
+    <tr>
       <th>call</th>
       <td><p>logical. <code>TRUE</code> calls <code><a href='https://rdrr.io/r/base/match.call.html'>match.call</a></code> and saves it in the final slot of the GRP object.</p></td>
     </tr>
@@ -237,10 +251,6 @@ There are also several conversion methods to convert to and from 'GRP' objects. 
 <p></p></td>
     </tr>
     <tr>
-      <th>untibble</th>
-      <td><p>logical. <code>TRUE</code> also removes classes <code><a href='https://rdrr.io/r/base/c.html'>c("tbl_df", "tbl")</a></code> from <code>X</code>. <code>fgroup_by</code> attaches an attribute <code>"was.tibble"</code> indicating if <code>X</code> was a tibble prior to grouping. The argument thus defaults to <code>TRUE</code> if this attribute is attached and equal to <code>FALSE</code>, so that <code><a href='https://rdrr.io/r/base/identical.html'>identical(X, X %&gt;% fgroup_by(...) %&gt;% fungroup)</a></code>, regardless of the nature of <code>X</code>.</p></td>
-    </tr>
-    <tr>
       <th>n</th>
       <td><p>integer. Number of groups to print out.</p></td>
     </tr>
@@ -264,14 +274,14 @@ There are also several conversion methods to convert to and from 'GRP' objects. 
 
     <h2 class="hasAnchor" id="details"><a class="anchor" href="#details"></a>Details</h2>
 
-    <p><code>GRP</code> is a central function in the <em>collapse</em> package because it provides the key inputs to facilitate easy and efficient groupwise-programming at the <code>C/C++</code> level: Information about (1) the number of groups (2) an integer group-id indicating which values / rows belong to which group and (3) information about the size of each group. Provided with these informations, <em>collapse</em>'s <a href='fast-statistical-functions.html'>Fast Statistical Functions</a> pre-allocate intermediate and result vectors of the right sizes and (in most cases) perform grouped statistical computations in a single pass through the data.</p>
+    <p><code>GRP</code> is a central function in the <em>collapse</em> package because it provides the key inputs to facilitate easy and efficient groupwise-programming at the <code>C/C++</code> level: Information about (1) the number of groups (2) an integer group-id indicating which values / rows belong to which group and (3) information about the size of each group. Provided with these informations, <em>collapse</em>'s <a href='A1-fast-statistical-functions.html'>Fast Statistical Functions</a> pre-allocate intermediate and result vectors of the right sizes and (in most cases) perform grouped statistical computations in a single pass through the data.</p>
 <p>The sorting and ordering functionality for <code>GRP</code> only affects (2), that is groups receive different integer-id's depending on whether the groups are sorted <code>sort = TRUE</code>, and in which order (argument <code>decreasing</code>). This in-turn changes the order of values/rows in the output of <em>collapse</em> functions. <em>Note</em> that <code>sort = FALSE</code> is only effective on character vectors, numeric grouping vectors will always produce ordered groupings.</p>
 <p><!-- %This in-turn changes the order of values/rows in the output of \emph{collapse} functions (the row/value corresponding to group 1 always comes out on top). The default setting with \code{sort = TRUE} and \code{decreasing = FALSE} results in groups being sorted in ascending order. This is equivalent to performing grouped operations in \emph{data.table} using \code{keyby}, whereas \code{sort = FALSE} is equivalent to \emph{data.table} grouping with \code{by}, however this only works if the \code{by} columns are character, numeric grouping columns are always ordered. --></p>
-<p>Next to <code>GRP</code>, there is the function <code>fgroup_by</code> as a significantly faster alternative to <code><a href='https://dplyr.tidyverse.org/reference/group_by.html'>dplyr::group_by</a></code>. It creates a grouped tibble by attaching a 'GRP' object to a data frame. <em>collapse</em> functions with a grouped_df method applied to that data frame will yield grouped computations. Note that <code>fgroup_by</code> can only be used in combination with <em>collapse</em> functions, not with <em>dplyr</em> verbs such as <code>summarize</code> or <code>mutate</code>.</p>
+<p>Next to <code>GRP</code>, there is the function <code>fgroup_by</code> as a significantly faster alternative to <code><a href='https://dplyr.tidyverse.org/reference/group_by.html'>dplyr::group_by</a></code>. It creates a grouped data frame by attaching a 'GRP' object to a data frame. <em>collapse</em> functions with a grouped_df method applied to that data frame will yield grouped computations. Note that <code>fgroup_by</code> can only be used in combination with <em>collapse</em> functions, not with <em>dplyr</em> verbs such as <code>summarize</code> or <code>mutate</code>. The converse is not true, you can group data with <code><a href='https://dplyr.tidyverse.org/reference/group_by.html'>dplyr::group_by</a></code> and then apply <em>collapse</em> functions. Note also the <code>fgroup_by</code> is class-agnostic, i.e. the classes of the data frame or list passed are preserved, and all standard methods (like subsetting with <code><a href='https://rdrr.io/r/base/Extract.html'>`[`</a></code> or <code>print</code> methods) apply to the grouped object. Apart from the class 'grouped_df' which is added behind any classes the object might inherit (apart from 'data.frame'), a class 'GRP_df' is added in front. This class only responds to a print method: <code>print.GRP_df</code> first calls the print method for the object, and then prints below one line indicating the grouping variables, followed, in square brackets, by the following information: <code>[number of groups | average group size (standard-deviation of group sizes)]</code>.</p>
 <p><code>GRP</code> is an S3 generic function with one default method supporting vector and list input and several conversion methods:</p>
 <p>The conversion of factors to 'GRP' objects by <code>GRP.factor</code> involves obtaining the number of groups calling <code>ng &lt;- fnlevels(f)</code> and then computing the count of each level using <code><a href='https://rdrr.io/r/base/tabulate.html'>tabulate(f, ng)</a></code>. The integer group-id (2) is already given by the factor itself after removing the levels and class attributes and replacing any missing values with <code>ng + 1L</code>. The levels are put in a list and moved to position (4) in the 'GRP' object, which is reserved for the unique groups. Going from factor to 'GRP' object thus only requires a tabulation of the levels, whereas creating a factor from a 'GRP' object using <code>as.factor_GRP</code> does not involve any computations, but may involve interactions if multiple grouping columns were used (which are then interacted to produce unique factor levels) or <code><a href='https://rdrr.io/r/base/character.html'>as.character</a></code> conversions if the grouping column(s) were numeric (which are potentially expensive).</p>
-<p>The method <code>GRP.grouped_df</code> takes the 'groups' attribute from a grouped tibble and converts it to a 'GRP' object. If the grouped tibble was generated using <code>fgroup_by</code>, all work is done already. If it was created using <code><a href='https://dplyr.tidyverse.org/reference/group_by.html'>dplyr::group_by</a></code>, a C++ routine is called to efficiently convert the grouping object.</p>
-<p><em>Note</em>: For faster factor generation and a factor-light class 'qG' which avoids the coercion of factor levels to character also see <code><a href='qF.html'>qF</a></code> and <code><a href='qF.html'>qG</a></code>.</p>
+<p>The method <code>GRP.grouped_df</code> takes the 'groups' attribute from a grouped data frame and converts it to a 'GRP' object. If the grouped data frame was generated using <code>fgroup_by</code>, all work is done already. If it was created using <code><a href='https://dplyr.tidyverse.org/reference/group_by.html'>dplyr::group_by</a></code>, a C++ routine is called to efficiently convert the grouping object.</p>
+<p><em>Note</em>: For faster factor generation and a factor-light class 'qG' which avoids the coercion of factor levels to character also see <code><a href='qF, qG, finteraction.html'>qF</a></code> and <code><a href='qF, qG, finteraction.html'>qG</a></code>.</p>
     <h2 class="hasAnchor" id="value"><a class="anchor" href="#value"></a>Value</h2>
 
     <p>A list-like object of class `GRP' containing information about the number of groups, the observations (rows) belonging to each group, the size of each group, the unique group names / definitions, whether the groups are ordered or not and (optionally) the ordering vector used to perform the ordering. The object is structured as follows:</p><table class='table'>
@@ -279,7 +289,7 @@ There are also several conversion methods to convert to and from 'GRP' objects. 
 <tr><td>[[1]]</td><td></td><td>N.groups</td><td></td><td><code><a href='https://rdrr.io/r/base/integer.html'>integer(1)</a></code></td><td></td><td>Number of Groups</td></tr>
 <tr><td>[[2]]</td><td></td><td>group.id</td><td></td><td><code><a href='https://rdrr.io/r/base/integer.html'>integer(NROW(X))</a></code></td><td></td><td>An integer group-identifier</td></tr>
 <tr><td>[[3]]</td><td></td><td>group.sizes</td><td></td><td><code><a href='https://rdrr.io/r/base/integer.html'>integer(N.groups)</a></code></td><td></td><td>Vector of group sizes</td></tr>
-<tr><td>[[4]]</td><td></td><td>groups</td><td></td><td><code><a href='https://rdrr.io/r/base/unique.html'>unique(X)</a></code> or <code>NULL</code></td><td></td><td>Unique groups (same format as input, sorted if <code>sort = TRUE</code>), or <code>NULL</code> if <code>return.groups = FALSE</code></td></tr>
+<tr><td>[[4]]</td><td></td><td>groups</td><td></td><td><code><a href='https://rdrr.io/pkg/data.table/man/duplicated.html'>unique(X)</a></code> or <code>NULL</code></td><td></td><td>Unique groups (same format as input, sorted if <code>sort = TRUE</code>), or <code>NULL</code> if <code>return.groups = FALSE</code></td></tr>
 <tr><td>[[5]]</td><td></td><td>group.vars</td><td></td><td><code>character</code></td><td></td><td>The names of the grouping variables</td></tr>
 <tr><td>[[6]]</td><td></td><td>ordered</td><td></td><td><code><a href='https://rdrr.io/r/base/logical.html'>logical(2)</a></code></td><td></td><td><code>[1]- TRUE</code> if <code>sort = TRUE</code>, <code>[2]- TRUE</code> if <code>X</code> already sorted</td></tr>
 <tr><td>[[7]]</td><td></td><td>order</td><td></td><td><code><a href='https://rdrr.io/r/base/integer.html'>integer(NROW(X))</a></code> or <code>NULL</code></td><td></td><td>Ordering vector from <code>radixorderv</code> or <code>NULL</code> if <code>return.order = FALSE</code> (the default)</td></tr>
@@ -289,11 +299,12 @@ There are also several conversion methods to convert to and from 'GRP' objects. 
 
     <h2 class="hasAnchor" id="see-also"><a class="anchor" href="#see-also"></a>See also</h2>
 
-    <div class='dont-index'><p><code><a href='radixorder.html'>radixorder</a></code>, <code><a href='qF.html'>qF</a></code>, <a href='fast-grouping.html'>Fast Grouping and Ordering</a>, <a href='index.html'>Collapse Overview</a></p></div>
+    <div class='dont-index'><p><code><a href='radixorder.html'>radixorder</a></code>, <code><a href='qF, qG, finteraction.html'>qF</a></code>, <a href='A2-fast-grouping-ordering.html'>Fast Grouping and Ordering</a>, <a href='index.html'>Collapse Overview</a></p></div>
 
     <h2 class="hasAnchor" id="examples"><a class="anchor" href="#examples"></a>Examples</h2>
     <pre class="examples"><div class='input'><span class='co'>## default method</span>
-<span class='fu'>GRP</span>(<span class='no'>mtcars</span>$<span class='no'>cyl</span>)</div><div class='output co'>#&gt; collapse grouping object of length 32 with 3 ordered groups
+<span class='fu'>GRP</span><span class='op'>(</span><span class='va'>mtcars</span><span class='op'>$</span><span class='va'>cyl</span><span class='op'>)</span>
+</div><div class='output co'>#&gt; collapse grouping object of length 32 with 3 ordered groups
 #&gt; 
 #&gt; Call: GRP.default(X = mtcars$cyl), X is unordered
 #&gt; 
@@ -303,7 +314,8 @@ There are also several conversion methods to convert to and from 'GRP' objects. 
 #&gt; 
 #&gt; Groups with sizes: 
 #&gt;  4  6  8 
-#&gt; 11  7 14 </div><div class='input'><span class='fu'>GRP</span>(<span class='no'>mtcars</span>, ~ <span class='no'>cyl</span> + <span class='no'>vs</span> + <span class='no'>am</span>)      <span class='co'># Or GRP(mtcars, c("cyl","vs","am")) or GRP(mtcars, c(2,8:9))</span></div><div class='output co'>#&gt; collapse grouping object of length 32 with 7 ordered groups
+#&gt; 11  7 14 </div><div class='input'><span class='fu'>GRP</span><span class='op'>(</span><span class='va'>mtcars</span>, <span class='op'>~</span> <span class='va'>cyl</span> <span class='op'>+</span> <span class='va'>vs</span> <span class='op'>+</span> <span class='va'>am</span><span class='op'>)</span>      <span class='co'># Or GRP(mtcars, c("cyl","vs","am")) or GRP(mtcars, c(2,8:9))</span>
+</div><div class='output co'>#&gt; collapse grouping object of length 32 with 7 ordered groups
 #&gt; 
 #&gt; Call: GRP.default(X = mtcars, by = ~cyl + vs + am), X is unordered
 #&gt; 
@@ -313,8 +325,9 @@ There are also several conversion methods to convert to and from 'GRP' objects. 
 #&gt; 
 #&gt; Groups with sizes: 
 #&gt; 4.0.1 4.1.0 4.1.1 6.0.1 6.1.0 8.0.0 8.0.1 
-#&gt;     1     3     7     3     4    12     2 </div><div class='input'><span class='no'>g</span> <span class='kw'>&lt;-</span> <span class='fu'>GRP</span>(<span class='no'>mtcars</span>, ~ <span class='no'>cyl</span> + <span class='no'>vs</span> + <span class='no'>am</span>) <span class='co'># Saving the object</span>
-<span class='fu'><a href='https://rdrr.io/r/base/print.html'>print</a></span>(<span class='no'>g</span>)                          <span class='co'># Printing it</span></div><div class='output co'>#&gt; collapse grouping object of length 32 with 7 ordered groups
+#&gt;     1     3     7     3     4    12     2 </div><div class='input'><span class='va'>g</span> <span class='op'>&lt;-</span> <span class='fu'>GRP</span><span class='op'>(</span><span class='va'>mtcars</span>, <span class='op'>~</span> <span class='va'>cyl</span> <span class='op'>+</span> <span class='va'>vs</span> <span class='op'>+</span> <span class='va'>am</span><span class='op'>)</span> <span class='co'># Saving the object</span>
+<span class='fu'><a href='https://rdrr.io/r/base/print.html'>print</a></span><span class='op'>(</span><span class='va'>g</span><span class='op'>)</span>                          <span class='co'># Printing it</span>
+</div><div class='output co'>#&gt; collapse grouping object of length 32 with 7 ordered groups
 #&gt; 
 #&gt; Call: GRP.default(X = mtcars, by = ~cyl + vs + am), X is unordered
 #&gt; 
@@ -324,7 +337,10 @@ There are also several conversion methods to convert to and from 'GRP' objects. 
 #&gt; 
 #&gt; Groups with sizes: 
 #&gt; 4.0.1 4.1.0 4.1.1 6.0.1 6.1.0 8.0.0 8.0.1 
-#&gt;     1     3     7     3     4    12     2 </div><div class='input'><span class='fu'><a href='https://rdrr.io/r/base/plot.html'>plot</a></span>(<span class='no'>g</span>)                           <span class='co'># Plotting it</span></div><div class='output co'>#&gt; <span class='error'>Error in plot.new(): figure margins too large</span></div><div class='input'><span class='fu'>GRPnames</span>(<span class='no'>g</span>)                       <span class='co'># Retain group names</span></div><div class='output co'>#&gt; [1] "4.0.1" "4.1.0" "4.1.1" "6.0.1" "6.1.0" "8.0.0" "8.0.1"</div><div class='input'><span class='fu'><a href='fsum.html'>fsum</a></span>(<span class='no'>mtcars</span>, <span class='no'>g</span>)                   <span class='co'># Compute the sum of mtcars, grouped by variables cyl, vs and am</span></div><div class='output co'>#&gt;         mpg cyl   disp   hp  drat     wt   qsec vs am gear carb
+#&gt;     1     3     7     3     4    12     2 </div><div class='input'><span class='fu'><a href='https://rdrr.io/r/graphics/plot.default.html'>plot</a></span><span class='op'>(</span><span class='va'>g</span><span class='op'>)</span>                           <span class='co'># Plotting it</span>
+</div><div class='img'><img src='GRP-1.png' alt='' width='700' height='433' /></div><div class='input'><span class='fu'>GRPnames</span><span class='op'>(</span><span class='va'>g</span><span class='op'>)</span>                       <span class='co'># Retain group names</span>
+</div><div class='output co'>#&gt; [1] "4.0.1" "4.1.0" "4.1.1" "6.0.1" "6.1.0" "8.0.0" "8.0.1"</div><div class='input'><span class='fu'><a href='fsum.html'>fsum</a></span><span class='op'>(</span><span class='va'>mtcars</span>, <span class='va'>g</span><span class='op'>)</span>                   <span class='co'># Compute the sum of mtcars, grouped by variables cyl, vs and am</span>
+</div><div class='output co'>#&gt;         mpg cyl   disp   hp  drat     wt   qsec vs am gear carb
 #&gt; 4.0.1  26.0   4  120.3   91  4.43  2.140  16.70  0  1    5    2
 #&gt; 4.1.0  68.7  12  407.6  254 11.31  8.805  62.91  3  0   11    5
 #&gt; 4.1.1 198.6  28  628.6  564 29.04 14.198 130.90  7  7   29   10
@@ -333,7 +349,8 @@ There are also several conversion methods to convert to and from 'GRP' objects. 
 #&gt; 8.0.0 180.6  96 4291.4 2330 37.45 49.249 205.71  0  0   36   37
 #&gt; 8.0.1  30.8  16  652.0  599  7.76  6.740  29.10  0  2   10   12</div><div class='input'>
 <span class='co'>## Convert factor to GRP object and vice-versa</span>
-<span class='fu'>GRP</span>(<span class='no'>iris</span>$<span class='no'>Species</span>)</div><div class='output co'>#&gt; collapse grouping object of length 150 with 3 unordered groups
+<span class='fu'>GRP</span><span class='op'>(</span><span class='va'>iris</span><span class='op'>$</span><span class='va'>Species</span><span class='op'>)</span>
+</div><div class='output co'>#&gt; collapse grouping object of length 150 with 3 unordered groups
 #&gt; 
 #&gt; Call: GRP.factor(X = iris$Species), X is unordered
 #&gt; 
@@ -343,13 +360,15 @@ There are also several conversion methods to convert to and from 'GRP' objects. 
 #&gt; 
 #&gt; Groups with sizes: 
 #&gt;     setosa versicolor  virginica 
-#&gt;         50         50         50 </div><div class='input'><span class='fu'>as.factor_GRP</span>(<span class='no'>g</span>)</div><div class='output co'>#&gt;  [1] 6.0.1 6.0.1 4.1.1 6.1.0 8.0.0 6.1.0 8.0.0 4.1.0 4.1.0 6.1.0 6.1.0 8.0.0
+#&gt;         50         50         50 </div><div class='input'><span class='fu'>as.factor_GRP</span><span class='op'>(</span><span class='va'>g</span><span class='op'>)</span>
+</div><div class='output co'>#&gt;  [1] 6.0.1 6.0.1 4.1.1 6.1.0 8.0.0 6.1.0 8.0.0 4.1.0 4.1.0 6.1.0 6.1.0 8.0.0
 #&gt; [13] 8.0.0 8.0.0 8.0.0 8.0.0 8.0.0 4.1.1 4.1.1 4.1.1 4.1.0 8.0.0 8.0.0 8.0.0
 #&gt; [25] 8.0.0 4.1.1 4.0.1 4.1.1 8.0.1 6.0.1 8.0.1 4.1.1
 #&gt; Levels: 4.0.1 4.1.0 4.1.1 6.0.1 6.1.0 8.0.0 8.0.1</div><div class='input'>
 <span class='co'>## dplyr integration</span>
-<span class='fu'><a href='https://rdrr.io/r/base/library.html'>library</a></span>(<span class='no'>dplyr</span>)
-<span class='no'>mtcars</span> <span class='kw'>%&gt;%</span> <span class='fu'><a href='https://dplyr.tidyverse.org/reference/group_by.html'>group_by</a></span>(<span class='no'>cyl</span>,<span class='no'>vs</span>,<span class='no'>am</span>) <span class='kw'>%&gt;%</span> <span class='no'>GRP</span>    <span class='co'># Get GRP object from a dplyr grouped tibble</span></div><div class='output co'>#&gt; collapse grouping object of length 32 with 7 ordered groups
+<span class='kw'><a href='https://rdrr.io/r/base/library.html'>library</a></span><span class='op'>(</span><span class='va'><a href='https://dplyr.tidyverse.org'>dplyr</a></span><span class='op'>)</span>
+<span class='va'>mtcars</span> <span class='op'>%&gt;%</span> <span class='fu'><a href='https://dplyr.tidyverse.org/reference/group_by.html'>group_by</a></span><span class='op'>(</span><span class='va'>cyl</span>,<span class='va'>vs</span>,<span class='va'>am</span><span class='op'>)</span> <span class='op'>%&gt;%</span> <span class='va'>GRP</span>    <span class='co'># Get GRP object from a dplyr grouped tibble</span>
+</div><div class='output co'>#&gt; collapse grouping object of length 32 with 7 ordered groups
 #&gt; 
 #&gt; Call: GRP.grouped_df(X = .), X is ordered
 #&gt; 
@@ -359,7 +378,8 @@ There are also several conversion methods to convert to and from 'GRP' objects. 
 #&gt; 
 #&gt; Groups with sizes: 
 #&gt; 4.0.1 4.1.0 4.1.1 6.0.1 6.1.0 8.0.0 8.0.1 
-#&gt;     1     3     7     3     4    12     2 </div><div class='input'><span class='no'>mtcars</span> <span class='kw'>%&gt;%</span> <span class='fu'><a href='https://dplyr.tidyverse.org/reference/group_by.html'>group_by</a></span>(<span class='no'>cyl</span>,<span class='no'>vs</span>,<span class='no'>am</span>) <span class='kw'>%&gt;%</span> <span class='no'>fmean</span>  <span class='co'># Grouped mean using dplyr grouping</span></div><div class='output co'>#&gt; <span style='color: #949494;'># A tibble: 7 x 11</span><span>
+#&gt;     1     3     7     3     4    12     2 </div><div class='input'><span class='va'>mtcars</span> <span class='op'>%&gt;%</span> <span class='fu'><a href='https://dplyr.tidyverse.org/reference/group_by.html'>group_by</a></span><span class='op'>(</span><span class='va'>cyl</span>,<span class='va'>vs</span>,<span class='va'>am</span><span class='op'>)</span> <span class='op'>%&gt;%</span> <span class='va'>fmean</span>  <span class='co'># Grouped mean using dplyr grouping</span>
+</div><div class='output co'>#&gt; <span style='color: #949494;'># A tibble: 7 x 11</span><span>
 #&gt;     cyl    vs    am   mpg  disp    hp  drat    wt  qsec  gear  carb
 #&gt;   </span><span style='color: #949494;font-style: italic;'>&lt;dbl&gt;</span><span> </span><span style='color: #949494;font-style: italic;'>&lt;dbl&gt;</span><span> </span><span style='color: #949494;font-style: italic;'>&lt;dbl&gt;</span><span> </span><span style='color: #949494;font-style: italic;'>&lt;dbl&gt;</span><span> </span><span style='color: #949494;font-style: italic;'>&lt;dbl&gt;</span><span> </span><span style='color: #949494;font-style: italic;'>&lt;dbl&gt;</span><span> </span><span style='color: #949494;font-style: italic;'>&lt;dbl&gt;</span><span> </span><span style='color: #949494;font-style: italic;'>&lt;dbl&gt;</span><span> </span><span style='color: #949494;font-style: italic;'>&lt;dbl&gt;</span><span> </span><span style='color: #949494;font-style: italic;'>&lt;dbl&gt;</span><span> </span><span style='color: #949494;font-style: italic;'>&lt;dbl&gt;</span><span>
 #&gt; </span><span style='color: #BCBCBC;'>1</span><span>     4     0     1  26   120.   91    4.43  2.14  16.7  5     2   
@@ -368,16 +388,60 @@ There are also several conversion methods to convert to and from 'GRP' objects. 
 #&gt; </span><span style='color: #BCBCBC;'>4</span><span>     6     0     1  20.6 155   132.   3.81  2.76  16.3  4.33  4.67
 #&gt; </span><span style='color: #BCBCBC;'>5</span><span>     6     1     0  19.1 205.  115.   3.42  3.39  19.2  3.5   2.5 
 #&gt; </span><span style='color: #BCBCBC;'>6</span><span>     8     0     0  15.1 358.  194.   3.12  4.10  17.1  3     3.08
-#&gt; </span><span style='color: #BCBCBC;'>7</span><span>     8     0     1  15.4 326   300.   3.88  3.37  14.6  5     6   </div><div class='input'><span class='no'>mtcars</span> <span class='kw'>%&gt;%</span> <span class='fu'>fgroup_by</span>(<span class='no'>cyl</span>,<span class='no'>vs</span>,<span class='no'>am</span>) <span class='kw'>%&gt;%</span> <span class='no'>fmean</span> <span class='co'># Faster alternative with collapse grouping</span></div><div class='output co'>#&gt; </span><span style='color: #949494;'># A tibble: 7 x 11</span><span>
-#&gt;     cyl    vs    am   mpg  disp    hp  drat    wt  qsec  gear  carb
-#&gt;   </span><span style='color: #949494;font-style: italic;'>&lt;dbl&gt;</span><span> </span><span style='color: #949494;font-style: italic;'>&lt;dbl&gt;</span><span> </span><span style='color: #949494;font-style: italic;'>&lt;dbl&gt;</span><span> </span><span style='color: #949494;font-style: italic;'>&lt;dbl&gt;</span><span> </span><span style='color: #949494;font-style: italic;'>&lt;dbl&gt;</span><span> </span><span style='color: #949494;font-style: italic;'>&lt;dbl&gt;</span><span> </span><span style='color: #949494;font-style: italic;'>&lt;dbl&gt;</span><span> </span><span style='color: #949494;font-style: italic;'>&lt;dbl&gt;</span><span> </span><span style='color: #949494;font-style: italic;'>&lt;dbl&gt;</span><span> </span><span style='color: #949494;font-style: italic;'>&lt;dbl&gt;</span><span> </span><span style='color: #949494;font-style: italic;'>&lt;dbl&gt;</span><span>
-#&gt; </span><span style='color: #BCBCBC;'>1</span><span>     4     0     1  26   120.   91    4.43  2.14  16.7  5     2   
-#&gt; </span><span style='color: #BCBCBC;'>2</span><span>     4     1     0  22.9 136.   84.7  3.77  2.94  21.0  3.67  1.67
-#&gt; </span><span style='color: #BCBCBC;'>3</span><span>     4     1     1  28.4  89.8  80.6  4.15  2.03  18.7  4.14  1.43
-#&gt; </span><span style='color: #BCBCBC;'>4</span><span>     6     0     1  20.6 155   132.   3.81  2.76  16.3  4.33  4.67
-#&gt; </span><span style='color: #BCBCBC;'>5</span><span>     6     1     0  19.1 205.  115.   3.42  3.39  19.2  3.5   2.5 
-#&gt; </span><span style='color: #BCBCBC;'>6</span><span>     8     0     0  15.1 358.  194.   3.12  4.10  17.1  3     3.08
-#&gt; </span><span style='color: #BCBCBC;'>7</span><span>     8     0     1  15.4 326   300.   3.88  3.37  14.6  5     6   </div><div class='input'>
+#&gt; </span><span style='color: #BCBCBC;'>7</span><span>     8     0     1  15.4 326   300.   3.88  3.37  14.6  5     6   </div><div class='input'><span class='va'>mtcars</span> <span class='op'>%&gt;%</span> <span class='fu'>fgroup_by</span><span class='op'>(</span><span class='va'>cyl</span>,<span class='va'>vs</span>,<span class='va'>am</span><span class='op'>)</span> <span class='op'>%&gt;%</span> <span class='va'>fmean</span> <span class='co'># Faster alternative with collapse grouping</span>
+</div><div class='output co'>#&gt;   cyl vs am      mpg     disp        hp     drat       wt     qsec     gear
+#&gt; 1   4  0  1 26.00000 120.3000  91.00000 4.430000 2.140000 16.70000 5.000000
+#&gt; 2   4  1  0 22.90000 135.8667  84.66667 3.770000 2.935000 20.97000 3.666667
+#&gt; 3   4  1  1 28.37143  89.8000  80.57143 4.148571 2.028286 18.70000 4.142857
+#&gt; 4   6  0  1 20.56667 155.0000 131.66667 3.806667 2.755000 16.32667 4.333333
+#&gt; 5   6  1  0 19.12500 204.5500 115.25000 3.420000 3.388750 19.21500 3.500000
+#&gt; 6   8  0  0 15.05000 357.6167 194.16667 3.120833 4.104083 17.14250 3.000000
+#&gt; 7   8  0  1 15.40000 326.0000 299.50000 3.880000 3.370000 14.55000 5.000000
+#&gt;       carb
+#&gt; 1 2.000000
+#&gt; 2 1.666667
+#&gt; 3 1.428571
+#&gt; 4 4.666667
+#&gt; 5 2.500000
+#&gt; 6 3.083333
+#&gt; 7 6.000000</div><div class='input'>
+<span class='va'>mtcars</span> <span class='op'>%&gt;%</span> <span class='fu'>fgroup_by</span><span class='op'>(</span><span class='va'>cyl</span>,<span class='va'>vs</span>,<span class='va'>am</span><span class='op'>)</span>             <span class='co'># Print method</span>
+</div><div class='output co'>#&gt;                      mpg cyl  disp  hp drat    wt  qsec vs am gear carb
+#&gt; Mazda RX4           21.0   6 160.0 110 3.90 2.620 16.46  0  1    4    4
+#&gt; Mazda RX4 Wag       21.0   6 160.0 110 3.90 2.875 17.02  0  1    4    4
+#&gt; Datsun 710          22.8   4 108.0  93 3.85 2.320 18.61  1  1    4    1
+#&gt; Hornet 4 Drive      21.4   6 258.0 110 3.08 3.215 19.44  1  0    3    1
+#&gt; Hornet Sportabout   18.7   8 360.0 175 3.15 3.440 17.02  0  0    3    2
+#&gt; Valiant             18.1   6 225.0 105 2.76 3.460 20.22  1  0    3    1
+#&gt; Duster 360          14.3   8 360.0 245 3.21 3.570 15.84  0  0    3    4
+#&gt; Merc 240D           24.4   4 146.7  62 3.69 3.190 20.00  1  0    4    2
+#&gt; Merc 230            22.8   4 140.8  95 3.92 3.150 22.90  1  0    4    2
+#&gt; Merc 280            19.2   6 167.6 123 3.92 3.440 18.30  1  0    4    4
+#&gt; Merc 280C           17.8   6 167.6 123 3.92 3.440 18.90  1  0    4    4
+#&gt; Merc 450SE          16.4   8 275.8 180 3.07 4.070 17.40  0  0    3    3
+#&gt; Merc 450SL          17.3   8 275.8 180 3.07 3.730 17.60  0  0    3    3
+#&gt; Merc 450SLC         15.2   8 275.8 180 3.07 3.780 18.00  0  0    3    3
+#&gt; Cadillac Fleetwood  10.4   8 472.0 205 2.93 5.250 17.98  0  0    3    4
+#&gt; Lincoln Continental 10.4   8 460.0 215 3.00 5.424 17.82  0  0    3    4
+#&gt; Chrysler Imperial   14.7   8 440.0 230 3.23 5.345 17.42  0  0    3    4
+#&gt; Fiat 128            32.4   4  78.7  66 4.08 2.200 19.47  1  1    4    1
+#&gt; Honda Civic         30.4   4  75.7  52 4.93 1.615 18.52  1  1    4    2
+#&gt; Toyota Corolla      33.9   4  71.1  65 4.22 1.835 19.90  1  1    4    1
+#&gt; Toyota Corona       21.5   4 120.1  97 3.70 2.465 20.01  1  0    3    1
+#&gt; Dodge Challenger    15.5   8 318.0 150 2.76 3.520 16.87  0  0    3    2
+#&gt; AMC Javelin         15.2   8 304.0 150 3.15 3.435 17.30  0  0    3    2
+#&gt; Camaro Z28          13.3   8 350.0 245 3.73 3.840 15.41  0  0    3    4
+#&gt; Pontiac Firebird    19.2   8 400.0 175 3.08 3.845 17.05  0  0    3    2
+#&gt; Fiat X1-9           27.3   4  79.0  66 4.08 1.935 18.90  1  1    4    1
+#&gt; Porsche 914-2       26.0   4 120.3  91 4.43 2.140 16.70  0  1    5    2
+#&gt; Lotus Europa        30.4   4  95.1 113 3.77 1.513 16.90  1  1    5    2
+#&gt; Ford Pantera L      15.8   8 351.0 264 4.22 3.170 14.50  0  1    5    4
+#&gt; Ferrari Dino        19.7   6 145.0 175 3.62 2.770 15.50  0  1    5    6
+#&gt; Maserati Bora       15.0   8 301.0 335 3.54 3.570 14.60  0  1    5    8
+#&gt; Volvo 142E          21.4   4 121.0 109 4.11 2.780 18.60  1  1    4    2
+#&gt; 
+#&gt; Grouped by:  cyl, vs, am  [7 | 5 (3.8)]</div><div class='input'>
+
 </div></span></pre>
   </div>
   <div class="col-md-3 hidden-xs hidden-sm" id="pkgdown-sidebar">
@@ -394,7 +458,7 @@ There are also several conversion methods to convert to and from 'GRP' objects. 
 </div>
 
 <div class="pkgdown">
-  <p>Site built with <a href="https://pkgdown.r-lib.org/">pkgdown</a> 1.5.1.</p>
+  <p>Site built with <a href="https://pkgdown.r-lib.org/">pkgdown</a> 1.6.1.</p>
 </div>
 
       </footer>

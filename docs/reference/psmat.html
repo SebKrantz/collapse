@@ -72,7 +72,7 @@
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">collapse</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">1.3.2</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">1.4.0</span>
       </span>
     </div>
 
@@ -126,23 +126,23 @@
     <p><code>psmat</code> efficiently expands a panel-vector or <code><a href='https://rdrr.io/pkg/plm/man/pseries.html'>plm::pseries</a></code> into a matrix. If a data frame or <code><a href='https://rdrr.io/pkg/plm/man/pdata.frame.html'>plm::pdata.frame</a></code> is passed, <code>psmat</code> returns (default) a 3D array or a list of matrices.  <!-- % By default the matrix is created such that group-identifiers constitute the rows and time the columns. --></p>
     </div>
 
-    <pre class="usage"><span class='fu'>psmat</span>(<span class='no'>x</span>, <span class='no'>...</span>)
+    <pre class="usage"><span class='fu'>psmat</span><span class='op'>(</span><span class='va'>x</span>, <span class='va'>...</span><span class='op'>)</span>
 
 <span class='co'># S3 method for default</span>
-<span class='fu'>psmat</span>(<span class='no'>x</span>, <span class='no'>g</span>, <span class='kw'>t</span> <span class='kw'>=</span> <span class='kw'>NULL</span>, <span class='kw'>transpose</span> <span class='kw'>=</span> <span class='fl'>FALSE</span>, <span class='no'>...</span>)
+<span class='fu'>psmat</span><span class='op'>(</span><span class='va'>x</span>, <span class='va'>g</span>, t <span class='op'>=</span> <span class='cn'>NULL</span>, transpose <span class='op'>=</span> <span class='cn'>FALSE</span>, <span class='va'>...</span><span class='op'>)</span>
 
 <span class='co'># S3 method for pseries</span>
-<span class='fu'>psmat</span>(<span class='no'>x</span>, <span class='kw'>transpose</span> <span class='kw'>=</span> <span class='fl'>FALSE</span>, <span class='no'>...</span>)
+<span class='fu'>psmat</span><span class='op'>(</span><span class='va'>x</span>, transpose <span class='op'>=</span> <span class='cn'>FALSE</span>, <span class='va'>...</span><span class='op'>)</span>
 
 <span class='co'># S3 method for data.frame</span>
-<span class='fu'>psmat</span>(<span class='no'>x</span>, <span class='no'>by</span>, <span class='kw'>t</span> <span class='kw'>=</span> <span class='kw'>NULL</span>, <span class='kw'>cols</span> <span class='kw'>=</span> <span class='kw'>NULL</span>, <span class='kw'>transpose</span> <span class='kw'>=</span> <span class='fl'>FALSE</span>, <span class='kw'>array</span> <span class='kw'>=</span> <span class='fl'>TRUE</span>, <span class='no'>...</span>)
+<span class='fu'>psmat</span><span class='op'>(</span><span class='va'>x</span>, <span class='va'>by</span>, t <span class='op'>=</span> <span class='cn'>NULL</span>, cols <span class='op'>=</span> <span class='cn'>NULL</span>, transpose <span class='op'>=</span> <span class='cn'>FALSE</span>, array <span class='op'>=</span> <span class='cn'>TRUE</span>, <span class='va'>...</span><span class='op'>)</span>
 
 <span class='co'># S3 method for pdata.frame</span>
-<span class='fu'>psmat</span>(<span class='no'>x</span>, <span class='kw'>cols</span> <span class='kw'>=</span> <span class='kw'>NULL</span>, <span class='kw'>transpose</span> <span class='kw'>=</span> <span class='fl'>FALSE</span>, <span class='kw'>array</span> <span class='kw'>=</span> <span class='fl'>TRUE</span>, <span class='no'>...</span>)
+<span class='fu'>psmat</span><span class='op'>(</span><span class='va'>x</span>, cols <span class='op'>=</span> <span class='cn'>NULL</span>, transpose <span class='op'>=</span> <span class='cn'>FALSE</span>, array <span class='op'>=</span> <span class='cn'>TRUE</span>, <span class='va'>...</span><span class='op'>)</span>
 
 
 <span class='co'># S3 method for psmat</span>
-<span class='fu'><a href='https://rdrr.io/r/base/plot.html'>plot</a></span>(<span class='no'>x</span>, <span class='kw'>legend</span> <span class='kw'>=</span> <span class='fl'>FALSE</span>, <span class='kw'>colours</span> <span class='kw'>=</span> <span class='no'>legend</span>, <span class='kw'>labs</span> <span class='kw'>=</span> <span class='kw'>NULL</span>, <span class='no'>...</span>)</pre>
+<span class='fu'><a href='https://rdrr.io/r/graphics/plot.default.html'>plot</a></span><span class='op'>(</span><span class='va'>x</span>, legend <span class='op'>=</span> <span class='cn'>FALSE</span>, colours <span class='op'>=</span> <span class='va'>legend</span>, labs <span class='op'>=</span> <span class='cn'>NULL</span>, <span class='va'>...</span><span class='op'>)</span></pre>
 
     <h2 class="hasAnchor" id="arguments"><a class="anchor" href="#arguments"></a>Arguments</h2>
     <table class="ref-arguments">
@@ -201,14 +201,15 @@
     <p>A matrix or 3D array containing the data in <code>x</code>, where by default the rows constitute the groups-ids (<code>g/by</code>) and the columns the time variable or individual ids (<code>t</code>). 3D arrays contain the variables in the 3rd dimension. The objects have a class 'psmat', and also a 'transpose' attribute indicating whether <code>transpose = TRUE</code>.</p>
     <h2 class="hasAnchor" id="note"><a class="anchor" href="#note"></a>Note</h2>
 
-    <p>The <code>pdata.frame</code> method only works for properly subsetted objects of class 'pdata.frame'. A list of 'pseries' won't work. There also exist simple <code>aperm</code> and <code>[</code> (subset) methods for 'psmat' objects. These differ from the default methods only by keeping the class and the 'transpose' attribute.</p>
+    <p>The <code>pdata.frame</code> method only works for properly subsetted objects of class 'pdata.frame'. A list of 'pseries' won't work. There also exist simple <code>aperm</code> and <code><a href='https://rdrr.io/r/base/Extract.html'>[</a></code> (subset) methods for 'psmat' objects. These differ from the default methods only by keeping the class and the 'transpose' attribute.</p>
     <h2 class="hasAnchor" id="see-also"><a class="anchor" href="#see-also"></a>See also</h2>
 
-    <div class='dont-index'><p><a href='time-series-panel-series.html'>Time Series and Panel Series</a>, <a href='index.html'>Collapse Overview</a> <!-- %% ~~objects to See Also as \code{\link{help}}, ~~~ --></p></div>
+    <div class='dont-index'><p><a href='A7-time-series-panel-series.html'>Time Series and Panel Series</a>, <a href='index.html'>Collapse Overview</a> <!-- %% ~~objects to See Also as \code{\link{help}}, ~~~ --></p></div>
 
     <h2 class="hasAnchor" id="examples"><a class="anchor" href="#examples"></a>Examples</h2>
     <pre class="examples"><div class='input'><span class='co'>## World Development Panel Data</span>
-<span class='fu'><a href='https://rdrr.io/r/utils/head.html'>head</a></span>(<span class='no'>wlddev</span>)                                                    <span class='co'># View data</span></div><div class='output co'>#&gt;       country iso3c       date year decade     region     income  OECD PCGDP
+<span class='fu'><a href='https://rdrr.io/r/utils/head.html'>head</a></span><span class='op'>(</span><span class='va'>wlddev</span><span class='op'>)</span>                                                    <span class='co'># View data</span>
+</div><div class='output co'>#&gt;       country iso3c       date year decade     region     income  OECD PCGDP
 #&gt; 1 Afghanistan   AFG 1961-01-01 1960   1960 South Asia Low income FALSE    NA
 #&gt; 2 Afghanistan   AFG 1962-01-01 1961   1960 South Asia Low income FALSE    NA
 #&gt; 3 Afghanistan   AFG 1963-01-01 1962   1960 South Asia Low income FALSE    NA
@@ -221,7 +222,8 @@
 #&gt; 3 33.185   NA 114880000
 #&gt; 4 33.624   NA 236450000
 #&gt; 5 34.060   NA 302480000
-#&gt; 6 34.495   NA 370250000</div><div class='input'><span class='fu'><a href='qsu.html'>qsu</a></span>(<span class='no'>wlddev</span>, <span class='kw'>pid</span> <span class='kw'>=</span> ~ <span class='no'>iso3c</span>, <span class='kw'>cols</span> <span class='kw'>=</span> <span class='fl'>9</span>:<span class='fl'>12</span>, <span class='kw'>vlabels</span> <span class='kw'>=</span> <span class='fl'>TRUE</span>)         <span class='co'># Sumarizing data</span></div><div class='output co'>#&gt; , , PCGDP: GDP per capita (constant 2010 US$)
+#&gt; 6 34.495   NA 370250000</div><div class='input'><span class='fu'><a href='qsu.html'>qsu</a></span><span class='op'>(</span><span class='va'>wlddev</span>, pid <span class='op'>=</span> <span class='op'>~</span> <span class='va'>iso3c</span>, cols <span class='op'>=</span> <span class='fl'>9</span><span class='op'>:</span><span class='fl'>12</span>, vlabels <span class='op'>=</span> <span class='cn'>TRUE</span><span class='op'>)</span>         <span class='co'># Sumarizing data</span>
+</div><div class='output co'>#&gt; , , PCGDP: GDP per capita (constant 2010 US$)
 #&gt; 
 #&gt;              N/T        Mean          SD          Min         Max
 #&gt; Overall     8995  11563.6529  18348.4052     131.6464   191586.64
@@ -248,35 +250,45 @@
 #&gt; Overall     8336  428,746468  819,868971  -1.08038000e+09  2.45521800e+10
 #&gt; Between      178  418,026522  548,293709       423846.154  3.53258914e+09
 #&gt; Within   46.8315  428,746468  607,024040  -2.47969577e+09  2.35093916e+10
-#&gt; </div><div class='input'><span class='fu'><a href='https://rdrr.io/r/utils/str.html'>str</a></span>(<span class='fu'>psmat</span>(<span class='no'>wlddev</span>$<span class='no'>PCGDP</span>, <span class='no'>wlddev</span>$<span class='no'>iso3c</span>, <span class='no'>wlddev</span>$<span class='no'>year</span>))             <span class='co'># Generating matrix of GDP</span></div><div class='output co'>#&gt;  'psmat' num [1:216, 1:59] NA NA NA NA NA ...
+#&gt; </div><div class='input'><span class='fu'><a href='https://rdrr.io/r/utils/str.html'>str</a></span><span class='op'>(</span><span class='fu'>psmat</span><span class='op'>(</span><span class='va'>wlddev</span><span class='op'>$</span><span class='va'>PCGDP</span>, <span class='va'>wlddev</span><span class='op'>$</span><span class='va'>iso3c</span>, <span class='va'>wlddev</span><span class='op'>$</span><span class='va'>year</span><span class='op'>)</span><span class='op'>)</span>             <span class='co'># Generating matrix of GDP</span>
+</div><div class='output co'>#&gt;  'psmat' num [1:216, 1:59] NA NA NA NA NA ...
 #&gt;  - attr(*, "dimnames")=List of 2
 #&gt;   ..$ : chr [1:216] "ABW" "AFG" "AGO" "ALB" ...
 #&gt;   ..$ : chr [1:59] "1960" "1961" "1962" "1963" ...
-#&gt;  - attr(*, "transpose")= logi FALSE</div><div class='input'><span class='no'>r</span> <span class='kw'>&lt;-</span> <span class='fu'>psmat</span>(<span class='no'>wlddev</span>, <span class='no'>PCGDP</span> ~ <span class='no'>iso3c</span>, ~ <span class='no'>year</span>)                       <span class='co'># Same thing using data.frame method</span>
-<span class='fu'><a href='https://rdrr.io/r/base/plot.html'>plot</a></span>(<span class='no'>r</span>, <span class='kw'>main</span> <span class='kw'>=</span> <span class='fu'><a href='small-helper.html'>vlabels</a></span>(<span class='no'>wlddev</span>)[<span class='fl'>9</span>], <span class='kw'>xlab</span> <span class='kw'>=</span> <span class='st'>"Year"</span>)               <span class='co'># Plot the matrix</span></div><div class='img'><img src='psmat-1.png' alt='' width='700' height='433' /></div><div class='input'><span class='fu'><a href='https://rdrr.io/r/utils/str.html'>str</a></span>(<span class='no'>r</span>)                                                          <span class='co'># See srructure</span></div><div class='output co'>#&gt;  'psmat' num [1:216, 1:59] NA NA NA NA NA ...
+#&gt;  - attr(*, "transpose")= logi FALSE</div><div class='input'><span class='va'>r</span> <span class='op'>&lt;-</span> <span class='fu'>psmat</span><span class='op'>(</span><span class='va'>wlddev</span>, <span class='va'>PCGDP</span> <span class='op'>~</span> <span class='va'>iso3c</span>, <span class='op'>~</span> <span class='va'>year</span><span class='op'>)</span>                       <span class='co'># Same thing using data.frame method</span>
+<span class='fu'><a href='https://rdrr.io/r/graphics/plot.default.html'>plot</a></span><span class='op'>(</span><span class='va'>r</span>, main <span class='op'>=</span> <span class='fu'><a href='AA2-small-helpers.html'>vlabels</a></span><span class='op'>(</span><span class='va'>wlddev</span><span class='op'>)</span><span class='op'>[</span><span class='fl'>9</span><span class='op'>]</span>, xlab <span class='op'>=</span> <span class='st'>"Year"</span><span class='op'>)</span>               <span class='co'># Plot the matrix</span>
+</div><div class='img'><img src='psmat-1.png' alt='' width='700' height='433' /></div><div class='input'><span class='fu'><a href='https://rdrr.io/r/utils/str.html'>str</a></span><span class='op'>(</span><span class='va'>r</span><span class='op'>)</span>                                                          <span class='co'># See srructure</span>
+</div><div class='output co'>#&gt;  'psmat' num [1:216, 1:59] NA NA NA NA NA ...
 #&gt;  - attr(*, "dimnames")=List of 2
 #&gt;   ..$ : chr [1:216] "ABW" "AFG" "AGO" "ALB" ...
 #&gt;   ..$ : chr [1:59] "1960" "1961" "1962" "1963" ...
-#&gt;  - attr(*, "transpose")= logi FALSE</div><div class='input'><span class='fu'><a href='https://rdrr.io/r/utils/str.html'>str</a></span>(<span class='fu'>psmat</span>(<span class='no'>wlddev</span>$<span class='no'>PCGDP</span>, <span class='no'>wlddev</span>$<span class='no'>iso3c</span>))                          <span class='co'># The Data is sorted, could omit t</span></div><div class='output co'>#&gt; <span class='message'>No timevar provided: Assuming Balanced Panel</span></div><div class='output co'>#&gt;  'psmat' num [1:216, 1:59] NA NA NA NA NA ...
+#&gt;  - attr(*, "transpose")= logi FALSE</div><div class='input'><span class='fu'><a href='https://rdrr.io/r/utils/str.html'>str</a></span><span class='op'>(</span><span class='fu'>psmat</span><span class='op'>(</span><span class='va'>wlddev</span><span class='op'>$</span><span class='va'>PCGDP</span>, <span class='va'>wlddev</span><span class='op'>$</span><span class='va'>iso3c</span><span class='op'>)</span><span class='op'>)</span>                          <span class='co'># The Data is sorted, could omit t</span>
+</div><div class='output co'>#&gt; <span class='message'>No timevar provided: Assuming Balanced Panel</span></div><div class='output co'>#&gt;  'psmat' num [1:216, 1:59] NA NA NA NA NA ...
 #&gt;  - attr(*, "dimnames")=List of 2
 #&gt;   ..$ : chr [1:216] "ABW" "AFG" "AGO" "ALB" ...
 #&gt;   ..$ : chr [1:59] "1" "2" "3" "4" ...
-#&gt;  - attr(*, "transpose")= logi FALSE</div><div class='input'><span class='fu'><a href='https://rdrr.io/r/utils/str.html'>str</a></span>(<span class='fu'>psmat</span>(<span class='no'>wlddev</span>$<span class='no'>PCGDP</span>, <span class='fl'>216</span>))                                   <span class='co'># This panel is also balanced, so</span></div><div class='output co'>#&gt;  num [1:216, 1:59] NA NA 2466 NA NA ...
+#&gt;  - attr(*, "transpose")= logi FALSE</div><div class='input'><span class='fu'><a href='https://rdrr.io/r/utils/str.html'>str</a></span><span class='op'>(</span><span class='fu'>psmat</span><span class='op'>(</span><span class='va'>wlddev</span><span class='op'>$</span><span class='va'>PCGDP</span>, <span class='fl'>216</span><span class='op'>)</span><span class='op'>)</span>                                   <span class='co'># This panel is also balanced, so</span>
+</div><div class='output co'>#&gt;  num [1:216, 1:59] NA NA 2466 NA NA ...
 #&gt;  - attr(*, "dimnames")=List of 2
 #&gt;   ..$ : chr [1:216] "GRP.1" "GRP.2" "GRP.3" "GRP.4" ...
 #&gt;   ..$ : chr [1:59] "1" "2" "3" "4" ...</div><div class='input'><span class='co'># ..indicating the number of groups would be sufficient to obtain a matrix</span>
 
-<span class='no'>ar</span> <span class='kw'>&lt;-</span> <span class='fu'>psmat</span>(<span class='no'>wlddev</span>, ~ <span class='no'>iso3c</span>, ~ <span class='no'>year</span>, <span class='fl'>9</span>:<span class='fl'>12</span>)                      <span class='co'># Get array of transposed matrices</span>
-<span class='fu'><a href='https://rdrr.io/r/utils/str.html'>str</a></span>(<span class='no'>ar</span>)</div><div class='output co'>#&gt;  'psmat' num [1:216, 1:59, 1:4] NA NA NA NA NA ...
+<span class='va'>ar</span> <span class='op'>&lt;-</span> <span class='fu'>psmat</span><span class='op'>(</span><span class='va'>wlddev</span>, <span class='op'>~</span> <span class='va'>iso3c</span>, <span class='op'>~</span> <span class='va'>year</span>, <span class='fl'>9</span><span class='op'>:</span><span class='fl'>12</span><span class='op'>)</span>                      <span class='co'># Get array of transposed matrices</span>
+<span class='fu'><a href='https://rdrr.io/r/utils/str.html'>str</a></span><span class='op'>(</span><span class='va'>ar</span><span class='op'>)</span>
+</div><div class='output co'>#&gt;  'psmat' num [1:216, 1:59, 1:4] NA NA NA NA NA ...
 #&gt;  - attr(*, "dimnames")=List of 3
 #&gt;   ..$ : chr [1:216] "ABW" "AFG" "AGO" "ALB" ...
 #&gt;   ..$ : chr [1:59] "1960" "1961" "1962" "1963" ...
 #&gt;   ..$ : chr [1:4] "PCGDP" "LIFEEX" "GINI" "ODA"
-#&gt;  - attr(*, "transpose")= logi FALSE</div><div class='input'><span class='fu'><a href='https://rdrr.io/r/base/plot.html'>plot</a></span>(<span class='no'>ar</span>)</div><div class='img'><img src='psmat-2.png' alt='' width='700' height='433' /></div><div class='input'><span class='fu'><a href='https://rdrr.io/r/base/plot.html'>plot</a></span>(<span class='no'>ar</span>, <span class='kw'>legend</span> <span class='kw'>=</span> <span class='fl'>TRUE</span>)</div><div class='img'><img src='psmat-3.png' alt='' width='700' height='433' /></div><div class='input'><span class='fu'><a href='https://rdrr.io/r/base/plot.html'>plot</a></span>(<span class='fu'>psmat</span>(<span class='fu'><a href='collap.html'>collap</a></span>(<span class='no'>wlddev</span>, ~<span class='no'>region</span>+<span class='no'>year</span>, <span class='kw'>cols</span> <span class='kw'>=</span> <span class='fl'>9</span>:<span class='fl'>12</span>),           <span class='co'># More legible and fancy plot</span>
-           ~<span class='no'>region</span>, ~<span class='no'>year</span>), <span class='kw'>legend</span> <span class='kw'>=</span> <span class='fl'>TRUE</span>,
-     <span class='kw'>labs</span> <span class='kw'>=</span> <span class='fu'><a href='small-helper.html'>vlabels</a></span>(<span class='no'>wlddev</span>)[<span class='fl'>9</span>:<span class='fl'>12</span>])</div><div class='img'><img src='psmat-4.png' alt='' width='700' height='433' /></div><div class='input'>
-<span class='no'>psml</span> <span class='kw'>&lt;-</span> <span class='fu'>psmat</span>(<span class='no'>wlddev</span>, ~ <span class='no'>iso3c</span>, ~ <span class='no'>year</span>, <span class='fl'>9</span>:<span class='fl'>12</span>, <span class='kw'>array</span> <span class='kw'>=</span> <span class='fl'>FALSE</span>)     <span class='co'># This gives list of ps-matrices</span>
-<span class='fu'><a href='https://rdrr.io/r/utils/head.html'>head</a></span>(<span class='fu'><a href='unlist2d.html'>unlist2d</a></span>(<span class='no'>psml</span>, <span class='st'>"Variable"</span>, <span class='st'>"Country"</span>, <span class='kw'>id.factor</span> <span class='kw'>=</span> <span class='fl'>TRUE</span>),<span class='fl'>2</span>) <span class='co'># Using unlist2d, can generate DF</span></div><div class='output co'>#&gt;   Variable Country 1960 1961 1962 1963 1964 1965 1966 1967 1968 1969 1970 1971
+#&gt;  - attr(*, "transpose")= logi FALSE</div><div class='input'><span class='fu'><a href='https://rdrr.io/r/graphics/plot.default.html'>plot</a></span><span class='op'>(</span><span class='va'>ar</span><span class='op'>)</span>
+</div><div class='img'><img src='psmat-2.png' alt='' width='700' height='433' /></div><div class='input'><span class='fu'><a href='https://rdrr.io/r/graphics/plot.default.html'>plot</a></span><span class='op'>(</span><span class='va'>ar</span>, legend <span class='op'>=</span> <span class='cn'>TRUE</span><span class='op'>)</span>
+</div><div class='img'><img src='psmat-3.png' alt='' width='700' height='433' /></div><div class='input'><span class='fu'><a href='https://rdrr.io/r/graphics/plot.default.html'>plot</a></span><span class='op'>(</span><span class='fu'>psmat</span><span class='op'>(</span><span class='fu'><a href='collap.html'>collap</a></span><span class='op'>(</span><span class='va'>wlddev</span>, <span class='op'>~</span><span class='va'>region</span><span class='op'>+</span><span class='va'>year</span>, cols <span class='op'>=</span> <span class='fl'>9</span><span class='op'>:</span><span class='fl'>12</span><span class='op'>)</span>,           <span class='co'># More legible and fancy plot</span>
+           <span class='op'>~</span><span class='va'>region</span>, <span class='op'>~</span><span class='va'>year</span><span class='op'>)</span>, legend <span class='op'>=</span> <span class='cn'>TRUE</span>,
+     labs <span class='op'>=</span> <span class='fu'><a href='AA2-small-helpers.html'>vlabels</a></span><span class='op'>(</span><span class='va'>wlddev</span><span class='op'>)</span><span class='op'>[</span><span class='fl'>9</span><span class='op'>:</span><span class='fl'>12</span><span class='op'>]</span><span class='op'>)</span>
+</div><div class='img'><img src='psmat-4.png' alt='' width='700' height='433' /></div><div class='input'>
+<span class='va'>psml</span> <span class='op'>&lt;-</span> <span class='fu'>psmat</span><span class='op'>(</span><span class='va'>wlddev</span>, <span class='op'>~</span> <span class='va'>iso3c</span>, <span class='op'>~</span> <span class='va'>year</span>, <span class='fl'>9</span><span class='op'>:</span><span class='fl'>12</span>, array <span class='op'>=</span> <span class='cn'>FALSE</span><span class='op'>)</span>     <span class='co'># This gives list of ps-matrices</span>
+<span class='fu'><a href='https://rdrr.io/r/utils/head.html'>head</a></span><span class='op'>(</span><span class='fu'><a href='unlist2d.html'>unlist2d</a></span><span class='op'>(</span><span class='va'>psml</span>, <span class='st'>"Variable"</span>, <span class='st'>"Country"</span>, id.factor <span class='op'>=</span> <span class='cn'>TRUE</span><span class='op'>)</span>,<span class='fl'>2</span><span class='op'>)</span> <span class='co'># Using unlist2d, can generate DF</span>
+</div><div class='output co'>#&gt;   Variable Country 1960 1961 1962 1963 1964 1965 1966 1967 1968 1969 1970 1971
 #&gt; 1    PCGDP     ABW   NA   NA   NA   NA   NA   NA   NA   NA   NA   NA   NA   NA
 #&gt; 2    PCGDP     AFG   NA   NA   NA   NA   NA   NA   NA   NA   NA   NA   NA   NA
 #&gt;   1972 1973 1974 1975 1976 1977 1978 1979 1980 1981 1982 1983 1984 1985
@@ -298,9 +310,10 @@
 #&gt; 1 24288.9871 24508.8091   NA
 #&gt; 2   583.0551   583.8696   NA</div><div class='input'>
 <span class='co'>## Using plm simplifies things</span>
-<span class='no'>pwlddev</span> <span class='kw'>&lt;-</span> <span class='kw pkg'>plm</span><span class='kw ns'>::</span><span class='fu'><a href='https://rdrr.io/pkg/plm/man/pdata.frame.html'>pdata.frame</a></span>(<span class='no'>wlddev</span>, <span class='kw'>index</span> <span class='kw'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span>(<span class='st'>"iso3c"</span>,<span class='st'>"year"</span>))  <span class='co'># Creating a Panel Data Frame</span>
-<span class='no'>PCGDP</span> <span class='kw'>&lt;-</span> <span class='no'>pwlddev</span>$<span class='no'>PCGDP</span>                                          <span class='co'># A panel-Series of GDP per Capita</span>
-<span class='fu'><a href='https://rdrr.io/r/utils/head.html'>head</a></span>(<span class='fu'>psmat</span>(<span class='no'>PCGDP</span>), <span class='fl'>2</span>)                                           <span class='co'># Same as above, more parsimonious</span></div><div class='output co'>#&gt;     1960 1961 1962 1963 1964 1965 1966 1967 1968 1969 1970 1971 1972 1973 1974
+<span class='va'>pwlddev</span> <span class='op'>&lt;-</span> <span class='fu'>plm</span><span class='fu'>::</span><span class='fu'><a href='https://rdrr.io/pkg/plm/man/pdata.frame.html'>pdata.frame</a></span><span class='op'>(</span><span class='va'>wlddev</span>, index <span class='op'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span><span class='op'>(</span><span class='st'>"iso3c"</span>,<span class='st'>"year"</span><span class='op'>)</span><span class='op'>)</span>  <span class='co'># Creating a Panel Data Frame</span>
+<span class='va'>PCGDP</span> <span class='op'>&lt;-</span> <span class='va'>pwlddev</span><span class='op'>$</span><span class='va'>PCGDP</span>                                          <span class='co'># A panel-Series of GDP per Capita</span>
+<span class='fu'><a href='https://rdrr.io/r/utils/head.html'>head</a></span><span class='op'>(</span><span class='fu'>psmat</span><span class='op'>(</span><span class='va'>PCGDP</span><span class='op'>)</span>, <span class='fl'>2</span><span class='op'>)</span>                                           <span class='co'># Same as above, more parsimonious</span>
+</div><div class='output co'>#&gt;     1960 1961 1962 1963 1964 1965 1966 1967 1968 1969 1970 1971 1972 1973 1974
 #&gt; ABW   NA   NA   NA   NA   NA   NA   NA   NA   NA   NA   NA   NA   NA   NA   NA
 #&gt; AFG   NA   NA   NA   NA   NA   NA   NA   NA   NA   NA   NA   NA   NA   NA   NA
 #&gt;     1975 1976 1977 1978 1979 1980 1981 1982 1983 1984 1985  1986  1987  1988
@@ -314,7 +327,10 @@
 #&gt; AFG    NA   340   352   342   366   373   413   418   495   551   536   585
 #&gt;      2013  2014  2015  2016  2017 2018
 #&gt; ABW 24629 24692 24453 24289 24509   NA
-#&gt; AFG   598   595   586   583   584   NA</div><div class='input'><span class='fu'><a href='https://rdrr.io/r/base/plot.html'>plot</a></span>(<span class='fu'>psmat</span>(<span class='no'>PCGDP</span>))</div><div class='img'><img src='psmat-5.png' alt='' width='700' height='433' /></div><div class='input'><span class='fu'><a href='https://rdrr.io/r/base/plot.html'>plot</a></span>(<span class='fu'>psmat</span>(<span class='no'>pwlddev</span>[<span class='fl'>9</span>:<span class='fl'>12</span>]))</div><div class='img'><img src='psmat-6.png' alt='' width='700' height='433' /></div><div class='input'><span class='fu'><a href='https://rdrr.io/r/base/plot.html'>plot</a></span>(<span class='fu'>psmat</span>(<span class='fu'><a href='fgrowth.html'>G</a></span>(<span class='no'>pwlddev</span>[<span class='fl'>9</span>:<span class='fl'>12</span>])))                                   <span class='co'># Here plotting panel- growth rates</span></div><div class='img'><img src='psmat-7.png' alt='' width='700' height='433' /></div><div class='input'>
+#&gt; AFG   598   595   586   583   584   NA</div><div class='input'><span class='fu'><a href='https://rdrr.io/r/graphics/plot.default.html'>plot</a></span><span class='op'>(</span><span class='fu'>psmat</span><span class='op'>(</span><span class='va'>PCGDP</span><span class='op'>)</span><span class='op'>)</span>
+</div><div class='img'><img src='psmat-5.png' alt='' width='700' height='433' /></div><div class='input'><span class='fu'><a href='https://rdrr.io/r/graphics/plot.default.html'>plot</a></span><span class='op'>(</span><span class='fu'>psmat</span><span class='op'>(</span><span class='va'>pwlddev</span><span class='op'>[</span><span class='fl'>9</span><span class='op'>:</span><span class='fl'>12</span><span class='op'>]</span><span class='op'>)</span><span class='op'>)</span>
+</div><div class='img'><img src='psmat-6.png' alt='' width='700' height='433' /></div><div class='input'><span class='fu'><a href='https://rdrr.io/r/graphics/plot.default.html'>plot</a></span><span class='op'>(</span><span class='fu'>psmat</span><span class='op'>(</span><span class='fu'><a href='fgrowth.html'>G</a></span><span class='op'>(</span><span class='va'>pwlddev</span><span class='op'>[</span><span class='fl'>9</span><span class='op'>:</span><span class='fl'>12</span><span class='op'>]</span><span class='op'>)</span><span class='op'>)</span><span class='op'>)</span>                                   <span class='co'># Here plotting panel- growth rates</span>
+</div><div class='img'><img src='psmat-7.png' alt='' width='700' height='433' /></div><div class='input'>
 </div></pre>
   </div>
   <div class="col-md-3 hidden-xs hidden-sm" id="pkgdown-sidebar">
@@ -331,7 +347,7 @@
 </div>
 
 <div class="pkgdown">
-  <p>Site built with <a href="https://pkgdown.r-lib.org/">pkgdown</a> 1.5.1.</p>
+  <p>Site built with <a href="https://pkgdown.r-lib.org/">pkgdown</a> 1.6.1.</p>
 </div>
 
       </footer>

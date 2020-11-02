@@ -16,7 +16,7 @@
 *collapse* is a C/C++ based package for data transformation and statistical computing in R. It's core aims are:
 
 * To facilitate complex data transformation, exploration and computing tasks in R.
-* To help make R code fast, flexible, parsimonious and programmer friendly.
+* To help make R code fast, flexible, parsimonious and programmer friendly. 
 
 It is made compatible with base R, *dplyr*, *data.table* and the *plm* approach to panel data, and non-destructively handles other matrix or data frame based classes (such as 'ts', 'xts' / 'zoo', 'timeSeries', 'tsibble', 'tibbletime', 'sf' data frames etc.). 
 

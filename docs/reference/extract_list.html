@@ -78,7 +78,7 @@ get_elem returns the part of the list responding to either an identifier functio
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">collapse</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">1.3.2</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">1.4.0</span>
       </span>
     </div>
 
@@ -132,28 +132,28 @@ get_elem returns the part of the list responding to either an identifier functio
     <p>A suite of functions to subset or extract from (potentially complex) lists and list-like structures. Subsetting may occur according to certain data types, using identifier functions, element names or regular expressions to search the list for certain objects.</p>
 <ul>
 <li><p><code>atomic_elem</code> and <code>list_elem</code> are non-recursive functions to extract and replace the atomic and sub-list elements at the top-level of the list tree.</p></li>
-<li><p><code>reg_elem</code> is the recursive equivalent of <code>atomic_elem</code> and returns the 'regular' part of the list - with atomic elements in the final nodes. See <code><a href='is.unlistable.html'>is.regular</a></code>. <code>irreg_elem</code> returns all the non-regular elements (i.e. call and terms objects, formulas, etc...). See Examples.</p></li>
+<li><p><code>reg_elem</code> is the recursive equivalent of <code>atomic_elem</code> and returns the 'regular' part of the list - with atomic elements in the final nodes. See <code><a href='is.regular, is.unlistable.html'>is.regular</a></code>. <code>irreg_elem</code> returns all the non-regular elements (i.e. call and terms objects, formulas, etc...). See Examples.</p></li>
 <li><p><code>get_elem</code> returns the part of the list responding to either an identifier function, regular expression or exact element names, or indices applied to all final objects. <code>has_elem</code> checks for the existence of the searched element and returns <code>TRUE</code> if a match is found. See Examples.</p></li>
 </ul>
 
     </div>
 
     <pre class="usage"><span class='co'>## Non-recursive (top-level) subsetting and replacing</span>
-<span class='fu'>atomic_elem</span>(<span class='no'>l</span>, <span class='kw'>return</span> <span class='kw'>=</span> <span class='st'>"sublist"</span>, <span class='kw'>keep.class</span> <span class='kw'>=</span> <span class='fl'>FALSE</span>)
-<span class='fu'>atomic_elem</span>(<span class='no'>l</span>) <span class='kw'>&lt;-</span> <span class='no'>value</span>
-<span class='fu'>list_elem</span>(<span class='no'>l</span>, <span class='kw'>return</span> <span class='kw'>=</span> <span class='st'>"sublist"</span>, <span class='kw'>keep.class</span> <span class='kw'>=</span> <span class='fl'>FALSE</span>)
-<span class='fu'>list_elem</span>(<span class='no'>l</span>) <span class='kw'>&lt;-</span> <span class='no'>value</span>
+<span class='fu'>atomic_elem</span><span class='op'>(</span><span class='va'>l</span>, return <span class='op'>=</span> <span class='st'>"sublist"</span>, keep.class <span class='op'>=</span> <span class='cn'>FALSE</span><span class='op'>)</span>
+<span class='fu'>atomic_elem</span><span class='op'>(</span><span class='va'>l</span><span class='op'>)</span> <span class='op'>&lt;-</span> <span class='va'>value</span>
+<span class='fu'>list_elem</span><span class='op'>(</span><span class='va'>l</span>, return <span class='op'>=</span> <span class='st'>"sublist"</span>, keep.class <span class='op'>=</span> <span class='cn'>FALSE</span><span class='op'>)</span>
+<span class='fu'>list_elem</span><span class='op'>(</span><span class='va'>l</span><span class='op'>)</span> <span class='op'>&lt;-</span> <span class='va'>value</span>
 
 <span class='co'>## Recursive separation of regular (atomic) and irregular (non-atomic) parts</span>
-<span class='fu'>reg_elem</span>(<span class='no'>l</span>, <span class='kw'>recursive</span> <span class='kw'>=</span> <span class='fl'>TRUE</span>, <span class='kw'>keep.tree</span> <span class='kw'>=</span> <span class='fl'>FALSE</span>, <span class='kw'>keep.class</span> <span class='kw'>=</span> <span class='fl'>FALSE</span>)
-<span class='fu'>irreg_elem</span>(<span class='no'>l</span>, <span class='kw'>recursive</span> <span class='kw'>=</span> <span class='fl'>TRUE</span>, <span class='kw'>keep.tree</span> <span class='kw'>=</span> <span class='fl'>FALSE</span>, <span class='kw'>keep.class</span> <span class='kw'>=</span> <span class='fl'>FALSE</span>)
+<span class='fu'>reg_elem</span><span class='op'>(</span><span class='va'>l</span>, recursive <span class='op'>=</span> <span class='cn'>TRUE</span>, keep.tree <span class='op'>=</span> <span class='cn'>FALSE</span>, keep.class <span class='op'>=</span> <span class='cn'>FALSE</span><span class='op'>)</span>
+<span class='fu'>irreg_elem</span><span class='op'>(</span><span class='va'>l</span>, recursive <span class='op'>=</span> <span class='cn'>TRUE</span>, keep.tree <span class='op'>=</span> <span class='cn'>FALSE</span>, keep.class <span class='op'>=</span> <span class='cn'>FALSE</span><span class='op'>)</span>
 
 <span class='co'>## Extract elements using a function or regular expression</span>
-<span class='fu'>get_elem</span>(<span class='no'>l</span>, <span class='no'>elem</span>, <span class='kw'>recursive</span> <span class='kw'>=</span> <span class='fl'>TRUE</span>, <span class='kw'>DF.as.list</span> <span class='kw'>=</span> <span class='fl'>TRUE</span>, <span class='kw'>keep.tree</span> <span class='kw'>=</span> <span class='fl'>FALSE</span>,
-         <span class='kw'>keep.class</span> <span class='kw'>=</span> <span class='fl'>FALSE</span>, <span class='kw'>regex</span> <span class='kw'>=</span> <span class='fl'>FALSE</span>, <span class='no'>...</span>)
+<span class='fu'>get_elem</span><span class='op'>(</span><span class='va'>l</span>, <span class='va'>elem</span>, recursive <span class='op'>=</span> <span class='cn'>TRUE</span>, DF.as.list <span class='op'>=</span> <span class='cn'>TRUE</span>, keep.tree <span class='op'>=</span> <span class='cn'>FALSE</span>,
+         keep.class <span class='op'>=</span> <span class='cn'>FALSE</span>, regex <span class='op'>=</span> <span class='cn'>FALSE</span>, <span class='va'>...</span><span class='op'>)</span>
 
 <span class='co'>## Check for the existence of elements</span>
-<span class='fu'>has_elem</span>(<span class='no'>l</span>, <span class='no'>elem</span>, <span class='kw'>recursive</span> <span class='kw'>=</span> <span class='fl'>TRUE</span>, <span class='kw'>DF.as.list</span> <span class='kw'>=</span> <span class='fl'>TRUE</span>, <span class='kw'>regex</span> <span class='kw'>=</span> <span class='fl'>FALSE</span>, <span class='no'>...</span>)</pre>
+<span class='fu'>has_elem</span><span class='op'>(</span><span class='va'>l</span>, <span class='va'>elem</span>, recursive <span class='op'>=</span> <span class='cn'>TRUE</span>, DF.as.list <span class='op'>=</span> <span class='cn'>TRUE</span>, regex <span class='op'>=</span> <span class='cn'>FALSE</span>, <span class='va'>...</span><span class='op'>)</span></pre>
 
     <h2 class="hasAnchor" id="arguments"><a class="anchor" href="#arguments"></a>Arguments</h2>
     <table class="ref-arguments">
@@ -211,15 +211,16 @@ get_elem returns the part of the list responding to either an identifier functio
 
     <h2 class="hasAnchor" id="details"><a class="anchor" href="#details"></a>Details</h2>
 
-    <p>A list is made up of regular and irregular elements. <em>collapse</em> defines regular elements as all elements that are either atomic or a list (see <code><a href='is.unlistable.html'>is.regular</a></code>). <code>reg_elem</code> with <code>recursive = TRUE</code> therefore extracts the subset of the list tree leading up to atomic elements in the final nodes. This part of the list tree is unlistable - calling <code><a href='is.unlistable.html'>is.unlistable(reg_elem(l))</a></code> will be <code>TRUE</code> for all lists <code>l</code>. Conversely, all elements left behind by <code>reg_elem</code> will be picked up be <code>irreg_elem</code> (if available). Thus <code><a href='is.unlistable.html'>is.unlistable(irreg_elem(l))</a></code> is always <code>FALSE</code> for lists with irregular elements (otherwise <code>irreg_elem</code> returns an empty list). <br /></p>
+    <p>A list is made up of regular and irregular elements. <em>collapse</em> defines regular elements as all elements that are either atomic or a list (see <code><a href='is.regular, is.unlistable.html'>is.regular</a></code>). <code>reg_elem</code> with <code>recursive = TRUE</code> therefore extracts the subset of the list tree leading up to atomic elements in the final nodes. This part of the list tree is unlistable - calling <code><a href='is.regular, is.unlistable.html'>is.unlistable(reg_elem(l))</a></code> will be <code>TRUE</code> for all lists <code>l</code>. Conversely, all elements left behind by <code>reg_elem</code> will be picked up be <code>irreg_elem</code> (if available). Thus <code><a href='is.regular, is.unlistable.html'>is.unlistable(irreg_elem(l))</a></code> is always <code>FALSE</code> for lists with irregular elements (otherwise <code>irreg_elem</code> returns an empty list). <br /></p>
 <p>If <code>keep.tree = TRUE</code>, <code>reg_elem</code>, <code>irreg_elem</code> and <code>get_elem</code> always return the entire list tree, but cut off all of the branches not leading to the desired result. If <code>keep.tree = FALSE</code>, top-level parts of the tree are omitted so far this is possible. For example in a nested list with three levels and one data-matrix in one of the final branches, <code>get_elem(l, is.matrix, keep.tree = TRUE)</code> will return a list (<code>lres</code>) of depth 3, from which the matrix can be accessed as <code>lres[[1]][[1]][[1]]</code>. This however does not make much sense. <code>get_elem(l, is.matrix, keep.tree = FALSE)</code> will therefore figgure out that it can drop the entire tree and return just the matrix. <code>keep.tree = FALSE</code> makes additional optimizations if matching elements are at far-apart corners in a nested structure, by only preserving the hierarchy if elements are above each other on the same branch. Thus for a list <code>l &lt;- list(list(2,list("a",1)),list(1,list("b",2)))</code> calling <code>get_elem(l, is.character)</code> will just return <code><a href='https://rdrr.io/r/base/list.html'>list("a","b")</a></code>.</p>
     <h2 class="hasAnchor" id="see-also"><a class="anchor" href="#see-also"></a>See also</h2>
 
-    <div class='dont-index'><p><a href='list-processing.html'>List Processing</a>, <a href='index.html'>Collapse Overview</a></p></div>
+    <div class='dont-index'><p><a href='A8-list-processing.html'>List Processing</a>, <a href='index.html'>Collapse Overview</a></p></div>
 
     <h2 class="hasAnchor" id="examples"><a class="anchor" href="#examples"></a>Examples</h2>
-    <pre class="examples"><div class='input'><span class='no'>m</span> <span class='kw'>&lt;-</span> <span class='fu'><a href='quick-conversion.html'>qM</a></span>(<span class='no'>mtcars</span>)
-<span class='fu'>get_elem</span>(<span class='fu'><a href='https://rdrr.io/r/base/list.html'>list</a></span>(<span class='fu'><a href='https://rdrr.io/r/base/list.html'>list</a></span>(<span class='fu'><a href='https://rdrr.io/r/base/list.html'>list</a></span>(<span class='no'>m</span>))), <span class='no'>is.matrix</span>)</div><div class='output co'>#&gt;                      mpg cyl  disp  hp drat    wt  qsec vs am gear carb
+    <pre class="examples"><div class='input'><span class='va'>m</span> <span class='op'>&lt;-</span> <span class='fu'><a href='A4-quick-conversion.html'>qM</a></span><span class='op'>(</span><span class='va'>mtcars</span><span class='op'>)</span>
+<span class='fu'>get_elem</span><span class='op'>(</span><span class='fu'><a href='https://rdrr.io/r/base/list.html'>list</a></span><span class='op'>(</span><span class='fu'><a href='https://rdrr.io/r/base/list.html'>list</a></span><span class='op'>(</span><span class='fu'><a href='https://rdrr.io/r/base/list.html'>list</a></span><span class='op'>(</span><span class='va'>m</span><span class='op'>)</span><span class='op'>)</span><span class='op'>)</span>, <span class='va'>is.matrix</span><span class='op'>)</span>
+</div><div class='output co'>#&gt;                      mpg cyl  disp  hp drat    wt  qsec vs am gear carb
 #&gt; Mazda RX4           21.0   6 160.0 110 3.90 2.620 16.46  0  1    4    4
 #&gt; Mazda RX4 Wag       21.0   6 160.0 110 3.90 2.875 17.02  0  1    4    4
 #&gt; Datsun 710          22.8   4 108.0  93 3.85 2.320 18.61  1  1    4    1
@@ -251,7 +252,8 @@ get_elem returns the part of the list responding to either an identifier functio
 #&gt; Ford Pantera L      15.8   8 351.0 264 4.22 3.170 14.50  0  1    5    4
 #&gt; Ferrari Dino        19.7   6 145.0 175 3.62 2.770 15.50  0  1    5    6
 #&gt; Maserati Bora       15.0   8 301.0 335 3.54 3.570 14.60  0  1    5    8
-#&gt; Volvo 142E          21.4   4 121.0 109 4.11 2.780 18.60  1  1    4    2</div><div class='input'><span class='fu'>get_elem</span>(<span class='fu'><a href='https://rdrr.io/r/base/list.html'>list</a></span>(<span class='fu'><a href='https://rdrr.io/r/base/list.html'>list</a></span>(<span class='fu'><a href='https://rdrr.io/r/base/list.html'>list</a></span>(<span class='no'>m</span>))), <span class='no'>is.matrix</span>, <span class='kw'>keep.tree</span> <span class='kw'>=</span> <span class='fl'>TRUE</span>)</div><div class='output co'>#&gt; [[1]]
+#&gt; Volvo 142E          21.4   4 121.0 109 4.11 2.780 18.60  1  1    4    2</div><div class='input'><span class='fu'>get_elem</span><span class='op'>(</span><span class='fu'><a href='https://rdrr.io/r/base/list.html'>list</a></span><span class='op'>(</span><span class='fu'><a href='https://rdrr.io/r/base/list.html'>list</a></span><span class='op'>(</span><span class='fu'><a href='https://rdrr.io/r/base/list.html'>list</a></span><span class='op'>(</span><span class='va'>m</span><span class='op'>)</span><span class='op'>)</span><span class='op'>)</span>, <span class='va'>is.matrix</span>, keep.tree <span class='op'>=</span> <span class='cn'>TRUE</span><span class='op'>)</span>
+</div><div class='output co'>#&gt; [[1]]
 #&gt; [[1]][[1]]
 #&gt; [[1]][[1]][[1]]
 #&gt;                      mpg cyl  disp  hp drat    wt  qsec vs am gear carb
@@ -290,13 +292,17 @@ get_elem returns the part of the list responding to either an identifier functio
 #&gt; 
 #&gt; 
 #&gt; </div><div class='input'>
-<span class='no'>l</span> <span class='kw'>&lt;-</span> <span class='fu'><a href='https://rdrr.io/r/base/list.html'>list</a></span>(<span class='fu'><a href='https://rdrr.io/r/base/list.html'>list</a></span>(<span class='fl'>2</span>,<span class='fu'><a href='https://rdrr.io/r/base/list.html'>list</a></span>(<span class='st'>"a"</span>,<span class='fl'>1</span>)),<span class='fu'><a href='https://rdrr.io/r/base/list.html'>list</a></span>(<span class='fl'>1</span>,<span class='fu'><a href='https://rdrr.io/r/base/list.html'>list</a></span>(<span class='st'>"b"</span>,<span class='fl'>2</span>)))
-<span class='fu'>has_elem</span>(<span class='no'>l</span>, <span class='no'>is.logical</span>)</div><div class='output co'>#&gt; [1] FALSE</div><div class='input'><span class='fu'>has_elem</span>(<span class='no'>l</span>, <span class='no'>is.numeric</span>)</div><div class='output co'>#&gt; [1] TRUE</div><div class='input'><span class='fu'>get_elem</span>(<span class='no'>l</span>, <span class='no'>is.character</span>)</div><div class='output co'>#&gt; [[1]]
+<span class='va'>l</span> <span class='op'>&lt;-</span> <span class='fu'><a href='https://rdrr.io/r/base/list.html'>list</a></span><span class='op'>(</span><span class='fu'><a href='https://rdrr.io/r/base/list.html'>list</a></span><span class='op'>(</span><span class='fl'>2</span>,<span class='fu'><a href='https://rdrr.io/r/base/list.html'>list</a></span><span class='op'>(</span><span class='st'>"a"</span>,<span class='fl'>1</span><span class='op'>)</span><span class='op'>)</span>,<span class='fu'><a href='https://rdrr.io/r/base/list.html'>list</a></span><span class='op'>(</span><span class='fl'>1</span>,<span class='fu'><a href='https://rdrr.io/r/base/list.html'>list</a></span><span class='op'>(</span><span class='st'>"b"</span>,<span class='fl'>2</span><span class='op'>)</span><span class='op'>)</span><span class='op'>)</span>
+<span class='fu'>has_elem</span><span class='op'>(</span><span class='va'>l</span>, <span class='va'>is.logical</span><span class='op'>)</span>
+</div><div class='output co'>#&gt; [1] FALSE</div><div class='input'><span class='fu'>has_elem</span><span class='op'>(</span><span class='va'>l</span>, <span class='va'>is.numeric</span><span class='op'>)</span>
+</div><div class='output co'>#&gt; [1] TRUE</div><div class='input'><span class='fu'>get_elem</span><span class='op'>(</span><span class='va'>l</span>, <span class='va'>is.character</span><span class='op'>)</span>
+</div><div class='output co'>#&gt; [[1]]
 #&gt; [1] "a"
 #&gt; 
 #&gt; [[2]]
 #&gt; [1] "b"
-#&gt; </div><div class='input'><span class='fu'>get_elem</span>(<span class='no'>l</span>, <span class='no'>is.character</span>, <span class='kw'>keep.tree</span> <span class='kw'>=</span> <span class='fl'>TRUE</span>)</div><div class='output co'>#&gt; [[1]]
+#&gt; </div><div class='input'><span class='fu'>get_elem</span><span class='op'>(</span><span class='va'>l</span>, <span class='va'>is.character</span>, keep.tree <span class='op'>=</span> <span class='cn'>TRUE</span><span class='op'>)</span>
+</div><div class='output co'>#&gt; [[1]]
 #&gt; [[1]][[1]]
 #&gt; [[1]][[1]][[1]]
 #&gt; [1] "a"
@@ -310,8 +316,9 @@ get_elem returns the part of the list responding to either an identifier functio
 #&gt; 
 #&gt; 
 #&gt; </div><div class='input'>
-<span class='no'>l</span> <span class='kw'>&lt;-</span> <span class='fu'><a href='https://rdrr.io/r/stats/lm.html'>lm</a></span>(<span class='no'>mpg</span> ~ <span class='no'>cyl</span> + <span class='no'>vs</span>, <span class='kw'>data</span> <span class='kw'>=</span> <span class='no'>mtcars</span>)
-<span class='fu'><a href='https://rdrr.io/r/utils/str.html'>str</a></span>(<span class='fu'>reg_elem</span>(<span class='no'>l</span>))</div><div class='output co'>#&gt; List of 9
+<span class='va'>l</span> <span class='op'>&lt;-</span> <span class='fu'><a href='https://rdrr.io/r/stats/lm.html'>lm</a></span><span class='op'>(</span><span class='va'>mpg</span> <span class='op'>~</span> <span class='va'>cyl</span> <span class='op'>+</span> <span class='va'>vs</span>, data <span class='op'>=</span> <span class='va'>mtcars</span><span class='op'>)</span>
+<span class='fu'><a href='https://rdrr.io/r/utils/str.html'>str</a></span><span class='op'>(</span><span class='fu'>reg_elem</span><span class='op'>(</span><span class='va'>l</span><span class='op'>)</span><span class='op'>)</span>
+</div><div class='output co'>#&gt; List of 9
 #&gt;  $ coefficients : Named num [1:3] 39.625 -3.091 -0.939
 #&gt;   ..- attr(*, "names")= chr [1:3] "(Intercept)" "cyl" "vs"
 #&gt;  $ residuals    : Named num [1:32] -0.081 -0.081 -3.523 1.258 3.8 ...
@@ -347,10 +354,11 @@ get_elem returns the part of the list responding to either an identifier functio
 #&gt;   .. .. ..- attr(*, "order")= int [1:2] 1 1
 #&gt;   .. .. ..- attr(*, "intercept")= int 1
 #&gt;   .. .. ..- attr(*, "response")= int 1
-#&gt;   .. .. ..- attr(*, ".Environment")=&lt;environment: 0x0000004d32ff3070&gt; 
+#&gt;   .. .. ..- attr(*, ".Environment")=&lt;environment: 0x000000d5e2931ad0&gt; 
 #&gt;   .. .. ..- attr(*, "predvars")= language list(mpg, cyl, vs)
 #&gt;   .. .. ..- attr(*, "dataClasses")= Named chr [1:3] "numeric" "numeric" "numeric"
-#&gt;   .. .. .. ..- attr(*, "names")= chr [1:3] "mpg" "cyl" "vs"</div><div class='input'><span class='fu'><a href='https://rdrr.io/r/utils/str.html'>str</a></span>(<span class='fu'>irreg_elem</span>(<span class='no'>l</span>))</div><div class='output co'>#&gt; List of 2
+#&gt;   .. .. .. ..- attr(*, "names")= chr [1:3] "mpg" "cyl" "vs"</div><div class='input'><span class='fu'><a href='https://rdrr.io/r/utils/str.html'>str</a></span><span class='op'>(</span><span class='fu'>irreg_elem</span><span class='op'>(</span><span class='va'>l</span><span class='op'>)</span><span class='op'>)</span>
+</div><div class='output co'>#&gt; List of 2
 #&gt;  $ call : language lm(formula = mpg ~ cyl + vs, data = mtcars)
 #&gt;  $ terms:Classes 'terms', 'formula'  language mpg ~ cyl + vs
 #&gt;   .. ..- attr(*, "variables")= language list(mpg, cyl, vs)
@@ -362,10 +370,11 @@ get_elem returns the part of the list responding to either an identifier functio
 #&gt;   .. ..- attr(*, "order")= int [1:2] 1 1
 #&gt;   .. ..- attr(*, "intercept")= int 1
 #&gt;   .. ..- attr(*, "response")= int 1
-#&gt;   .. ..- attr(*, ".Environment")=&lt;environment: 0x0000004d32ff3070&gt; 
+#&gt;   .. ..- attr(*, ".Environment")=&lt;environment: 0x000000d5e2931ad0&gt; 
 #&gt;   .. ..- attr(*, "predvars")= language list(mpg, cyl, vs)
 #&gt;   .. ..- attr(*, "dataClasses")= Named chr [1:3] "numeric" "numeric" "numeric"
-#&gt;   .. .. ..- attr(*, "names")= chr [1:3] "mpg" "cyl" "vs"</div><div class='input'><span class='fu'>get_elem</span>(<span class='no'>l</span>, <span class='no'>is.matrix</span>)</div><div class='output co'>#&gt;                     (Intercept)          cyl          vs
+#&gt;   .. .. ..- attr(*, "names")= chr [1:3] "mpg" "cyl" "vs"</div><div class='input'><span class='fu'>get_elem</span><span class='op'>(</span><span class='va'>l</span>, <span class='va'>is.matrix</span><span class='op'>)</span>
+</div><div class='output co'>#&gt;                     (Intercept)          cyl          vs
 #&gt; Mazda RX4            -5.6568542 -35.00178567 -2.47487373
 #&gt; Mazda RX4 Wag         0.1767767   9.94359090 -2.27533496
 #&gt; Datsun 710            0.1767767   0.21715832 -1.64251357
@@ -399,7 +408,8 @@ get_elem returns the part of the list responding to either an identifier functio
 #&gt; Maserati Bora         0.1767767  -0.18511084 -0.01520019
 #&gt; Volvo 142E            0.1767767   0.21715832  0.13477385
 #&gt; attr(,"assign")
-#&gt; [1] 0 1 2</div><div class='input'><span class='fu'>get_elem</span>(<span class='no'>l</span>, <span class='st'>"residuals"</span>)</div><div class='output co'>#&gt;           Mazda RX4       Mazda RX4 Wag          Datsun 710      Hornet 4 Drive 
+#&gt; [1] 0 1 2</div><div class='input'><span class='fu'>get_elem</span><span class='op'>(</span><span class='va'>l</span>, <span class='st'>"residuals"</span><span class='op'>)</span>
+</div><div class='output co'>#&gt;           Mazda RX4       Mazda RX4 Wag          Datsun 710      Hornet 4 Drive 
 #&gt;          -0.0809747          -0.0809747          -3.5232427           1.2581068 
 #&gt;   Hornet Sportabout             Valiant          Duster 360           Merc 240D 
 #&gt;           3.8003749          -2.0418932          -0.5996251          -1.9232427 
@@ -414,7 +424,8 @@ get_elem returns the part of the list responding to either an identifier functio
 #&gt;    Pontiac Firebird           Fiat X1-9       Porsche 914-2        Lotus Europa 
 #&gt;           4.3003749           0.9767573          -1.2623243           4.0767573 
 #&gt;      Ford Pantera L        Ferrari Dino       Maserati Bora          Volvo 142E 
-#&gt;           0.9003749          -1.3809747           0.1003749          -4.9232427 </div><div class='input'><span class='fu'>get_elem</span>(<span class='no'>l</span>, <span class='st'>"fit"</span>, <span class='kw'>regex</span> <span class='kw'>=</span> <span class='fl'>TRUE</span>)</div><div class='output co'>#&gt;           Mazda RX4       Mazda RX4 Wag          Datsun 710      Hornet 4 Drive 
+#&gt;           0.9003749          -1.3809747           0.1003749          -4.9232427 </div><div class='input'><span class='fu'>get_elem</span><span class='op'>(</span><span class='va'>l</span>, <span class='st'>"fit"</span>, regex <span class='op'>=</span> <span class='cn'>TRUE</span><span class='op'>)</span>
+</div><div class='output co'>#&gt;           Mazda RX4       Mazda RX4 Wag          Datsun 710      Hornet 4 Drive 
 #&gt;            21.08097            21.08097            26.32324            20.14189 
 #&gt;   Hornet Sportabout             Valiant          Duster 360           Merc 240D 
 #&gt;            14.89963            20.14189            14.89963            26.32324 
@@ -429,7 +440,9 @@ get_elem returns the part of the list responding to either an identifier functio
 #&gt;    Pontiac Firebird           Fiat X1-9       Porsche 914-2        Lotus Europa 
 #&gt;            14.89963            26.32324            27.26232            26.32324 
 #&gt;      Ford Pantera L        Ferrari Dino       Maserati Bora          Volvo 142E 
-#&gt;            14.89963            21.08097            14.89963            26.32324 </div><div class='input'><span class='fu'>has_elem</span>(<span class='no'>l</span>, <span class='st'>"tol"</span>)</div><div class='output co'>#&gt; [1] TRUE</div><div class='input'><span class='fu'>get_elem</span>(<span class='no'>l</span>, <span class='st'>"tol"</span>)</div><div class='output co'>#&gt; [1] 1e-07</div><div class='input'>
+#&gt;            14.89963            21.08097            14.89963            26.32324 </div><div class='input'><span class='fu'>has_elem</span><span class='op'>(</span><span class='va'>l</span>, <span class='st'>"tol"</span><span class='op'>)</span>
+</div><div class='output co'>#&gt; [1] TRUE</div><div class='input'><span class='fu'>get_elem</span><span class='op'>(</span><span class='va'>l</span>, <span class='st'>"tol"</span><span class='op'>)</span>
+</div><div class='output co'>#&gt; [1] 1e-07</div><div class='input'>
 </div></pre>
   </div>
   <div class="col-md-3 hidden-xs hidden-sm" id="pkgdown-sidebar">
@@ -446,7 +459,7 @@ get_elem returns the part of the list responding to either an identifier functio
 </div>
 
 <div class="pkgdown">
-  <p>Site built with <a href="https://pkgdown.r-lib.org/">pkgdown</a> 1.5.1.</p>
+  <p>Site built with <a href="https://pkgdown.r-lib.org/">pkgdown</a> 1.6.1.</p>
 </div>
 
       </footer>

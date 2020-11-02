@@ -71,6 +71,7 @@ reference:
   - radixorder
   - funique
   - qF
+  - fdroplevels
   - groupid
   - seqid
 - title: "Fast Data Manipulation"
@@ -84,7 +85,7 @@ reference:
   - colorder
   - frename
 - title: "Quick Data Conversion"
-  desc: "Quick conversions between data.frame's, data.table's, matrices, arrays, lists, vectors and factors - fast and flexible, without method dispatch or extensive checks."
+  desc: "Quick conversions between data.frame's, data.table's, tibbles, matrices, arrays, lists, vectors and factors - fast and flexible, without method dispatch or extensive checks."
 - contents:
   - "A4-quick-conversion"
   - qF
@@ -94,7 +95,7 @@ reference:
   - "A5-advanced-aggregation"
   - collap
 - title: "Data Transformations"
-  desc: "Efficient row- and column- apply to data objects and Split-Apply-Combine computing. Fast (grouped, weighted) replacing and sweeping out of statistics, scaling / standardizing, (quasi-)centering, higher-dimensional centering, linear prediction and partialling-out."
+  desc: "Efficient row- and column- apply to data objects and Split-Apply-Combine computing. Fast (grouped, weighted) replacing and sweeping out of statistics, scaling / standardizing, (quasi-)centering, higher-dimensional centering, linear prediction / partialling-out and linear model fitting."
 - contents:
   - "A6-data-transformations"
   - dapply
@@ -103,8 +104,9 @@ reference:
   - fscale
   - "fbetween, fwithin"
   - "fHDbetween, fHDwithin"
+  - flm
 - title: "Time Series and Panel Series"
-  desc: "Fast (sequences of) lags / leads, and (lagged / leaded, iterated, quasi-, log-) differences and growth rates on (unordered) time series and panel data. Auto-, partial- and cross-correlation functions for panel data. Panel data to (ts-)array conversion."
+  desc: "Fast (sequences of) lags / leads, and (lagged / leaded, iterated, quasi-, log-) differences and (compounded) growth rates on (unordered) time series and panel data. Auto-, partial- and cross-correlation functions for panel data. Panel data to (ts-)array conversion."
 - contents:
   - "A7-time-series-panel-series"
   - flag
@@ -113,16 +115,17 @@ reference:
   - psacf
   - psmat
 - title: "List Processing"
-  desc: "Recursive list search / identification, extraction / subsetting, data-apply, and generalized recursive row-binding / unlisting in 2D."
+  desc: "Recursive list search / identification, extraction / subsetting, splitting, data-apply, and generalized recursive row-binding / unlisting in 2D."
 - contents:
   - "A8-list-processing"
   - "is.regular, is.unlistable"
   - ldepth
   - "has_elem, get_elem"
+  - rsplit
   - rapply2d
   - unlist2d
 - title: "Summary Statistics"
-  desc: "Fast (grouped, weighted, panel-decomposed) summary statistics for cross-sectional and complex multilevel / panel data."
+  desc: "Fast (grouped, weighted, panel-decomposed) summary statistics for cross-sectional and complex multilevel / panel data. A fast F-test for high-dimensional linear models."
 - contents:
   - "A9-summary-statistics"
   - qsu
@@ -135,7 +138,7 @@ reference:
 - contents:
   - "AA1-recode-replace"
 - title: "Small (Helper) Functions"
-  desc: "Convenience functions that help to deal with variable names, labels, missing values, matching and object checking etc.. Some functions are performance improved replacements for base R functions."
+  desc: "Convenience functions that help to deal with variable names, labels, attributes, missing values, matching and object checking etc.. Some functions are performance improved replacements for base R functions."
 - contents:
   - "AA2-small-helpers"
 - title: "Data"

@@ -72,7 +72,7 @@
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">collapse</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">1.3.2</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">1.4.0</span>
       </span>
     </div>
 
@@ -126,7 +126,7 @@
     <p><code>fFtest</code> computes an R-squared based F-test for the exclusion of the variables in <code>exc</code>, where the full (unrestricted) model is defined by variables supplied to both <code>exc</code> and <code>X</code>. The test is efficient and designed for cases where both <code>exc</code> and <code>X</code> may contain multiple factors and continuous variables.</p>
     </div>
 
-    <pre class="usage"><span class='fu'>fFtest</span>(<span class='no'>y</span>, <span class='no'>exc</span>, <span class='kw'>X</span> <span class='kw'>=</span> <span class='kw'>NULL</span>, <span class='kw'>full.df</span> <span class='kw'>=</span> <span class='fl'>TRUE</span>, <span class='no'>...</span>)</pre>
+    <pre class="usage"><span class='fu'>fFtest</span><span class='op'>(</span><span class='va'>y</span>, <span class='va'>exc</span>, X <span class='op'>=</span> <span class='cn'>NULL</span>, full.df <span class='op'>=</span> <span class='cn'>TRUE</span>, <span class='va'>...</span><span class='op'>)</span></pre>
 
     <h2 class="hasAnchor" id="arguments"><a class="anchor" href="#arguments"></a>Arguments</h2>
     <table class="ref-arguments">
@@ -155,7 +155,7 @@
 
     <h2 class="hasAnchor" id="details"><a class="anchor" href="#details"></a>Details</h2>
 
-    <p>Factors and continuous regressors are efficiently projected out using <code><a href='fHDbetween_fHDwithin.html'>fHDwithin</a></code>, and the option <code>full.df</code> regulates whether a degree of freedom is subtracted for each used factor level (equivalent to dummy-variable estimator / expanding factors), or only one degree of freedom per factor (fixed-effects estimation / treating factors as variables). The test automatically removes missing values and considers only the complete cases of <code>y, exc</code> and <code>X</code>. Unused factor levels in <code>exc</code> and <code>X</code> are dropped.</p>
+    <p>Factors and continuous regressors are efficiently projected out using <code><a href='fHDbetween, fHDwithin.html'>fHDwithin</a></code>, and the option <code>full.df</code> regulates whether a degree of freedom is subtracted for each used factor level (equivalent to dummy-variable estimator / expanding factors), or only one degree of freedom per factor (fixed-effects estimation / treating factors as variables). The test automatically removes missing values and considers only the complete cases of <code>y, exc</code> and <code>X</code>. Unused factor levels in <code>exc</code> and <code>X</code> are dropped.</p>
     <h2 class="hasAnchor" id="value"><a class="anchor" href="#value"></a>Value</h2>
 
     <p>A 5 x 3 numeric matrix of statistics. The columns contain statistics:</p><ol>
@@ -176,47 +176,56 @@
 <!-- %% \dots --></p>
     <h2 class="hasAnchor" id="see-also"><a class="anchor" href="#see-also"></a>See also</h2>
 
-    <div class='dont-index'><p><code><a href='fHDbetween_fHDwithin.html'>fHDwithin</a></code>, <a href='summary-statistics.html'>Summary Statistics</a>, <a href='data-transformations.html'>Data Transformations</a>, <a href='index.html'>Collapse Overview</a></p></div>
+    <div class='dont-index'><p><code><a href='fHDbetween, fHDwithin.html'>fHDwithin</a></code>, <a href='A9-summary-statistics.html'>Summary Statistics</a>, <a href='A6-data-transformations.html'>Data Transformations</a>, <a href='index.html'>Collapse Overview</a></p></div>
 
     <h2 class="hasAnchor" id="examples"><a class="anchor" href="#examples"></a>Examples</h2>
     <pre class="examples"><div class='input'><span class='co'>## We could use fFtest as a seasonality test:</span>
-<span class='fu'>fFtest</span>(<span class='no'>AirPassengers</span>, <span class='fu'><a href='qF.html'>qF</a></span>(<span class='fu'><a href='https://rdrr.io/r/stats/time.html'>cycle</a></span>(<span class='no'>AirPassengers</span>)))         <span class='co'># Testing for level-seasonality</span></div><div class='output co'>#&gt;   R-Sq.     DF1     DF2 F-Stat. P-value 
-#&gt;   0.106      11     132   1.424   0.169 </div><div class='input'><span class='fu'>fFtest</span>(<span class='no'>AirPassengers</span>, <span class='fu'><a href='qF.html'>qF</a></span>(<span class='fu'><a href='https://rdrr.io/r/stats/time.html'>cycle</a></span>(<span class='no'>AirPassengers</span>)),         <span class='co'># Seasonality test around a cubic trend</span>
-        <span class='fu'><a href='https://rdrr.io/r/stats/poly.html'>poly</a></span>(<span class='fu'><a href='https://rdrr.io/r/base/seq.html'>seq_along</a></span>(<span class='no'>AirPassengers</span>), <span class='fl'>3</span>))</div><div class='output co'>#&gt;                    R-Sq. DF1 DF2 F-Stat. P-Value
+<span class='fu'>fFtest</span><span class='op'>(</span><span class='va'>AirPassengers</span>, <span class='fu'><a href='qF, qG, finteraction.html'>qF</a></span><span class='op'>(</span><span class='fu'><a href='https://rdrr.io/r/stats/time.html'>cycle</a></span><span class='op'>(</span><span class='va'>AirPassengers</span><span class='op'>)</span><span class='op'>)</span><span class='op'>)</span>         <span class='co'># Testing for level-seasonality</span>
+</div><div class='output co'>#&gt;   R-Sq.     DF1     DF2 F-Stat. P-value 
+#&gt;   0.106      11     132   1.424   0.169 </div><div class='input'><span class='fu'>fFtest</span><span class='op'>(</span><span class='va'>AirPassengers</span>, <span class='fu'><a href='qF, qG, finteraction.html'>qF</a></span><span class='op'>(</span><span class='fu'><a href='https://rdrr.io/r/stats/time.html'>cycle</a></span><span class='op'>(</span><span class='va'>AirPassengers</span><span class='op'>)</span><span class='op'>)</span>,         <span class='co'># Seasonality test around a cubic trend</span>
+        <span class='fu'><a href='https://rdrr.io/r/stats/poly.html'>poly</a></span><span class='op'>(</span><span class='fu'><a href='https://rdrr.io/r/base/seq.html'>seq_along</a></span><span class='op'>(</span><span class='va'>AirPassengers</span><span class='op'>)</span>, <span class='fl'>3</span><span class='op'>)</span><span class='op'>)</span>
+</div><div class='output co'>#&gt;                    R-Sq. DF1 DF2 F-Stat. P-Value
 #&gt; Full Model         0.965  14 129 250.585   0.000
 #&gt; Restricted Model   0.862   3 140 291.593   0.000
-#&gt; Exclusion Rest.    0.102  11 129  33.890   0.000</div><div class='input'><span class='fu'>fFtest</span>(<span class='fu'><a href='fdiff.html'>fdiff</a></span>(<span class='no'>AirPassengers</span>), <span class='fu'><a href='qF.html'>qF</a></span>(<span class='fu'><a href='https://rdrr.io/r/stats/time.html'>cycle</a></span>(<span class='no'>AirPassengers</span>)))  <span class='co'># Seasonality in first-difference</span></div><div class='output co'>#&gt;   R-Sq.     DF1     DF2 F-Stat. P-value 
+#&gt; Exclusion Rest.    0.102  11 129  33.890   0.000</div><div class='input'><span class='fu'>fFtest</span><span class='op'>(</span><span class='fu'><a href='fdiff.html'>fdiff</a></span><span class='op'>(</span><span class='va'>AirPassengers</span><span class='op'>)</span>, <span class='fu'><a href='qF, qG, finteraction.html'>qF</a></span><span class='op'>(</span><span class='fu'><a href='https://rdrr.io/r/stats/time.html'>cycle</a></span><span class='op'>(</span><span class='va'>AirPassengers</span><span class='op'>)</span><span class='op'>)</span><span class='op'>)</span>  <span class='co'># Seasonality in first-difference</span>
+</div><div class='output co'>#&gt;   R-Sq.     DF1     DF2 F-Stat. P-value 
 #&gt;   0.749      11     131  35.487   0.000 </div><div class='input'>
 <span class='co'>## A more classical example with only continuous variables</span>
-<span class='fu'>fFtest</span>(<span class='no'>mtcars</span>$<span class='no'>mpg</span>, <span class='no'>mtcars</span>[<span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span>(<span class='st'>"cyl"</span>,<span class='st'>"vs"</span>)], <span class='no'>mtcars</span>[<span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span>(<span class='st'>"hp"</span>,<span class='st'>"carb"</span>)])</div><div class='output co'>#&gt;                   R-Sq. DF1 DF2 F-Stat. P-Value
+<span class='fu'>fFtest</span><span class='op'>(</span><span class='va'>mtcars</span><span class='op'>$</span><span class='va'>mpg</span>, <span class='va'>mtcars</span><span class='op'>[</span><span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span><span class='op'>(</span><span class='st'>"cyl"</span>,<span class='st'>"vs"</span><span class='op'>)</span><span class='op'>]</span>, <span class='va'>mtcars</span><span class='op'>[</span><span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span><span class='op'>(</span><span class='st'>"hp"</span>,<span class='st'>"carb"</span><span class='op'>)</span><span class='op'>]</span><span class='op'>)</span>
+</div><div class='output co'>#&gt;                   R-Sq. DF1 DF2 F-Stat. P-Value
 #&gt; Full Model        0.750   4  27  20.261   0.000
 #&gt; Restricted Model  0.605   2  29  22.175   0.000
 #&gt; Exclusion Rest.   0.145   2  27   7.858   0.002</div><div class='input'>
 <span class='co'>## Now encoding cyl and vs as factors</span>
-<span class='fu'>fFtest</span>(<span class='no'>mtcars</span>$<span class='no'>mpg</span>, <span class='fu'><a href='dapply.html'>dapply</a></span>(<span class='no'>mtcars</span>[<span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span>(<span class='st'>"cyl"</span>,<span class='st'>"vs"</span>)], <span class='no'>qF</span>), <span class='no'>mtcars</span>[<span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span>(<span class='st'>"hp"</span>,<span class='st'>"carb"</span>)])</div><div class='output co'>#&gt;                   R-Sq. DF1 DF2 F-Stat. P-Value
+<span class='fu'>fFtest</span><span class='op'>(</span><span class='va'>mtcars</span><span class='op'>$</span><span class='va'>mpg</span>, <span class='fu'><a href='dapply.html'>dapply</a></span><span class='op'>(</span><span class='va'>mtcars</span><span class='op'>[</span><span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span><span class='op'>(</span><span class='st'>"cyl"</span>,<span class='st'>"vs"</span><span class='op'>)</span><span class='op'>]</span>, <span class='va'>qF</span><span class='op'>)</span>, <span class='va'>mtcars</span><span class='op'>[</span><span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span><span class='op'>(</span><span class='st'>"hp"</span>,<span class='st'>"carb"</span><span class='op'>)</span><span class='op'>]</span><span class='op'>)</span>
+</div><div class='output co'>#&gt;                   R-Sq. DF1 DF2 F-Stat. P-Value
 #&gt; Full Model        0.756   5  26  16.140   0.000
 #&gt; Restricted Model  0.605   2  29  22.175   0.000
 #&gt; Exclusion Rest.   0.152   3  26   5.395   0.005</div><div class='input'>
 <span class='co'>## Using iris data: A factor and a continuous variable excluded</span>
-<span class='fu'>fFtest</span>(<span class='no'>iris</span>$<span class='no'>Sepal.Length</span>, <span class='no'>iris</span>[<span class='fl'>4</span>:<span class='fl'>5</span>], <span class='no'>iris</span>[<span class='fl'>2</span>:<span class='fl'>3</span>])</div><div class='output co'>#&gt;                    R-Sq. DF1 DF2 F-Stat. P-Value
+<span class='fu'>fFtest</span><span class='op'>(</span><span class='va'>iris</span><span class='op'>$</span><span class='va'>Sepal.Length</span>, <span class='va'>iris</span><span class='op'>[</span><span class='fl'>4</span><span class='op'>:</span><span class='fl'>5</span><span class='op'>]</span>, <span class='va'>iris</span><span class='op'>[</span><span class='fl'>2</span><span class='op'>:</span><span class='fl'>3</span><span class='op'>]</span><span class='op'>)</span>
+</div><div class='output co'>#&gt;                    R-Sq. DF1 DF2 F-Stat. P-Value
 #&gt; Full Model         0.867   5 144 188.251   0.000
 #&gt; Restricted Model   0.840   2 147 386.386   0.000
 #&gt; Exclusion Rest.    0.027   3 144   9.816   0.000</div><div class='input'>
 <span class='co'>## Testing the significance of country-FE in regression of GDP on life expectancy</span>
-<span class='fu'>fFtest</span>(<span class='no'>wlddev</span>$<span class='no'>PCGDP</span>, <span class='no'>wlddev</span>$<span class='no'>iso3c</span>, <span class='no'>wlddev</span>$<span class='no'>LIFEEX</span>)</div><div class='output co'>#&gt;                     R-Sq.  DF1  DF2  F-Stat.  P-Value
+<span class='fu'>fFtest</span><span class='op'>(</span><span class='va'>wlddev</span><span class='op'>$</span><span class='va'>PCGDP</span>, <span class='va'>wlddev</span><span class='op'>$</span><span class='va'>iso3c</span>, <span class='va'>wlddev</span><span class='op'>$</span><span class='va'>LIFEEX</span><span class='op'>)</span>
+</div><div class='output co'>#&gt;                     R-Sq.  DF1  DF2  F-Stat.  P-Value
 #&gt; Full Model          0.877  197 8200  296.420    0.000
 #&gt; Restricted Model    0.325    1 8396 4040.681    0.000
 #&gt; Exclusion Rest.     0.552  196 8200  187.541    0.000</div><div class='input'>
 <span class='co'>## Ok, country-FE are significant, what about adding time-FE</span>
-<span class='fu'>fFtest</span>(<span class='no'>wlddev</span>$<span class='no'>PCGDP</span>, <span class='fu'><a href='qF.html'>qF</a></span>(<span class='no'>wlddev</span>$<span class='no'>year</span>), <span class='no'>wlddev</span>[<span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span>(<span class='st'>"iso3c"</span>,<span class='st'>"LIFEEX"</span>)])</div><div class='output co'>#&gt;                     R-Sq.  DF1  DF2  F-Stat.  P-Value
+<span class='fu'>fFtest</span><span class='op'>(</span><span class='va'>wlddev</span><span class='op'>$</span><span class='va'>PCGDP</span>, <span class='fu'><a href='qF, qG, finteraction.html'>qF</a></span><span class='op'>(</span><span class='va'>wlddev</span><span class='op'>$</span><span class='va'>year</span><span class='op'>)</span>, <span class='va'>wlddev</span><span class='op'>[</span><span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span><span class='op'>(</span><span class='st'>"iso3c"</span>,<span class='st'>"LIFEEX"</span><span class='op'>)</span><span class='op'>]</span><span class='op'>)</span>
+</div><div class='output co'>#&gt;                     R-Sq.  DF1  DF2  F-Stat.  P-Value
 #&gt; Full Model          0.896  253 8144  277.440    0.000
 #&gt; Restricted Model    0.877  197 8200  296.420    0.000
 #&gt; Exclusion Rest.     0.019   56 8144   26.817    0.000</div><div class='input'>
 <span class='co'># Same test done using lm:</span>
-<span class='no'>data</span> <span class='kw'>&lt;-</span> <span class='fu'><a href='small-helper.html'>na_omit</a></span>(<span class='fu'><a href='select_replace_vars.html'>get_vars</a></span>(<span class='no'>wlddev</span>, <span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span>(<span class='st'>"iso3c"</span>,<span class='st'>"year"</span>,<span class='st'>"PCGDP"</span>,<span class='st'>"LIFEEX"</span>)))
-<span class='no'>full</span> <span class='kw'>&lt;-</span> <span class='fu'><a href='https://rdrr.io/r/stats/lm.html'>lm</a></span>(<span class='no'>PCGDP</span> ~ <span class='no'>LIFEEX</span> + <span class='no'>iso3c</span> + <span class='fu'><a href='qF.html'>qF</a></span>(<span class='no'>year</span>), <span class='no'>data</span>)
-<span class='no'>rest</span> <span class='kw'>&lt;-</span> <span class='fu'><a href='https://rdrr.io/r/stats/lm.html'>lm</a></span>(<span class='no'>PCGDP</span> ~ <span class='no'>LIFEEX</span> + <span class='no'>iso3c</span>, <span class='no'>data</span>)
-<span class='fu'><a href='https://rdrr.io/r/stats/anova.html'>anova</a></span>(<span class='no'>rest</span>, <span class='no'>full</span>)</div><div class='output co'>#&gt; Analysis of Variance Table
+<span class='va'>data</span> <span class='op'>&lt;-</span> <span class='fu'><a href='AA2-small-helpers.html'>na_omit</a></span><span class='op'>(</span><span class='fu'><a href='fselect, get_vars, add_vars.html'>get_vars</a></span><span class='op'>(</span><span class='va'>wlddev</span>, <span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span><span class='op'>(</span><span class='st'>"iso3c"</span>,<span class='st'>"year"</span>,<span class='st'>"PCGDP"</span>,<span class='st'>"LIFEEX"</span><span class='op'>)</span><span class='op'>)</span><span class='op'>)</span>
+<span class='va'>full</span> <span class='op'>&lt;-</span> <span class='fu'><a href='https://rdrr.io/r/stats/lm.html'>lm</a></span><span class='op'>(</span><span class='va'>PCGDP</span> <span class='op'>~</span> <span class='va'>LIFEEX</span> <span class='op'>+</span> <span class='va'>iso3c</span> <span class='op'>+</span> <span class='fu'><a href='qF, qG, finteraction.html'>qF</a></span><span class='op'>(</span><span class='va'>year</span><span class='op'>)</span>, <span class='va'>data</span><span class='op'>)</span>
+<span class='va'>rest</span> <span class='op'>&lt;-</span> <span class='fu'><a href='https://rdrr.io/r/stats/lm.html'>lm</a></span><span class='op'>(</span><span class='va'>PCGDP</span> <span class='op'>~</span> <span class='va'>LIFEEX</span> <span class='op'>+</span> <span class='va'>iso3c</span>, <span class='va'>data</span><span class='op'>)</span>
+<span class='fu'><a href='https://rdrr.io/r/stats/anova.html'>anova</a></span><span class='op'>(</span><span class='va'>rest</span>, <span class='va'>full</span><span class='op'>)</span>
+</div><div class='output co'>#&gt; Analysis of Variance Table
 #&gt; 
 #&gt; Model 1: PCGDP ~ LIFEEX + iso3c
 #&gt; Model 2: PCGDP ~ LIFEEX + iso3c + qF(year)
@@ -241,7 +250,7 @@
 </div>
 
 <div class="pkgdown">
-  <p>Site built with <a href="https://pkgdown.r-lib.org/">pkgdown</a> 1.5.1.</p>
+  <p>Site built with <a href="https://pkgdown.r-lib.org/">pkgdown</a> 1.6.1.</p>
 </div>
 
       </footer>

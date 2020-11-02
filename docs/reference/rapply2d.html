@@ -72,7 +72,7 @@
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">collapse</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">1.3.2</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">1.4.0</span>
       </span>
     </div>
 
@@ -126,7 +126,7 @@
     <p><code>rapply2d</code> is a recursive version of <code>lapply</code> with two key differences to <code><a href='https://rdrr.io/r/base/rapply.html'>rapply</a></code>: (1) Data frames are considered as final objects, not as (sub-)lists, and (2) the result is never simplified / unlisted.</p>
     </div>
 
-    <pre class="usage"><span class='fu'>rapply2d</span>(<span class='no'>l</span>, <span class='no'>FUN</span>, <span class='no'>...</span>)</pre>
+    <pre class="usage"><span class='fu'>rapply2d</span><span class='op'>(</span><span class='va'>l</span>, <span class='va'>FUN</span>, <span class='va'>...</span><span class='op'>)</span></pre>
 
     <h2 class="hasAnchor" id="arguments"><a class="anchor" href="#arguments"></a>Arguments</h2>
     <table class="ref-arguments">
@@ -150,11 +150,12 @@
     <p>A list of the same structure as <code>l</code>, where <code>FUN</code> was applied to all elements.</p>
     <h2 class="hasAnchor" id="see-also"><a class="anchor" href="#see-also"></a>See also</h2>
 
-    <div class='dont-index'><p><code><a href='unlist2d.html'>unlist2d</a></code>, <a href='list-processing.html'>List Processing</a>, <a href='index.html'>Collapse Overview</a></p></div>
+    <div class='dont-index'><p><code><a href='unlist2d.html'>unlist2d</a></code>, <a href='A8-list-processing.html'>List Processing</a>, <a href='index.html'>Collapse Overview</a></p></div>
 
     <h2 class="hasAnchor" id="examples"><a class="anchor" href="#examples"></a>Examples</h2>
-    <pre class="examples"><div class='input'><span class='no'>l</span> <span class='kw'>&lt;-</span> <span class='fu'><a href='https://rdrr.io/r/base/list.html'>list</a></span>(<span class='no'>mtcars</span>, <span class='fu'><a href='https://rdrr.io/r/base/list.html'>list</a></span>(<span class='no'>mtcars</span>, <span class='fu'><a href='https://rdrr.io/r/base/matrix.html'>as.matrix</a></span>(<span class='no'>mtcars</span>)))
-<span class='fu'>rapply2d</span>(<span class='no'>l</span>, <span class='no'>fmean</span>)</div><div class='output co'>#&gt; [[1]]
+    <pre class="examples"><div class='input'><span class='va'>l</span> <span class='op'>&lt;-</span> <span class='fu'><a href='https://rdrr.io/r/base/list.html'>list</a></span><span class='op'>(</span><span class='va'>mtcars</span>, <span class='fu'><a href='https://rdrr.io/r/base/list.html'>list</a></span><span class='op'>(</span><span class='va'>mtcars</span>, <span class='fu'><a href='https://rdrr.io/pkg/data.table/man/as.matrix.html'>as.matrix</a></span><span class='op'>(</span><span class='va'>mtcars</span><span class='op'>)</span><span class='op'>)</span><span class='op'>)</span>
+<span class='fu'>rapply2d</span><span class='op'>(</span><span class='va'>l</span>, <span class='va'>fmean</span><span class='op'>)</span>
+</div><div class='output co'>#&gt; [[1]]
 #&gt;        mpg        cyl       disp         hp       drat         wt       qsec 
 #&gt;  20.090625   6.187500 230.721875 146.687500   3.596562   3.217250  17.848750 
 #&gt;         vs         am       gear       carb 
@@ -173,7 +174,8 @@
 #&gt;         vs         am       gear       carb 
 #&gt;   0.437500   0.406250   3.687500   2.812500 
 #&gt; 
-#&gt; </div><div class='input'><span class='fu'><a href='unlist2d.html'>unlist2d</a></span>(<span class='fu'>rapply2d</span>(<span class='no'>l</span>, <span class='no'>fmean</span>))</div><div class='output co'>#&gt;   .id.1 .id.2      mpg    cyl     disp       hp     drat      wt     qsec
+#&gt; </div><div class='input'><span class='fu'><a href='unlist2d.html'>unlist2d</a></span><span class='op'>(</span><span class='fu'>rapply2d</span><span class='op'>(</span><span class='va'>l</span>, <span class='va'>fmean</span><span class='op'>)</span><span class='op'>)</span>
+</div><div class='output co'>#&gt;   .id.1 .id.2      mpg    cyl     disp       hp     drat      wt     qsec
 #&gt; 1     1    NA 20.09062 6.1875 230.7219 146.6875 3.596562 3.21725 17.84875
 #&gt; 2     2     1 20.09062 6.1875 230.7219 146.6875 3.596562 3.21725 17.84875
 #&gt; 3     2     2 20.09062 6.1875 230.7219 146.6875 3.596562 3.21725 17.84875
@@ -196,7 +198,7 @@
 </div>
 
 <div class="pkgdown">
-  <p>Site built with <a href="https://pkgdown.r-lib.org/">pkgdown</a> 1.5.1.</p>
+  <p>Site built with <a href="https://pkgdown.r-lib.org/">pkgdown</a> 1.6.1.</p>
 </div>
 
       </footer>

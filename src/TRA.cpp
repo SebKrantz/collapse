@@ -366,47 +366,41 @@ SEXP ret2(const SEXP& x, const SEXP& xAG, const SEXP& g) {
   return out;
 }
 
-SEXP retoth(const SEXP& x, const SEXP& xAG, const SEXP& g, int ret = 3) {
-  int gs = Rf_length(g);
-  switch(TYPEOF(x)) {
-  case REALSXP:
-  case INTSXP:
-  {
-    NumericVector xx = x; // Change this line to allow integer input ?
-    NumericVector AG = xAG;
-    int l = xx.size();
-    NumericVector out = no_init_vector(l);
+// TODO: allow integer input ??
+SEXP retoth(const NumericVector& x, const NumericVector& xAG, const SEXP& g, int ret = 3) {
+  int gs = Rf_length(g), l = x.size();
+  NumericVector out = no_init_vector(l);
     if(gs == 1) {
-      if(AG.size() != 1) stop("If g = NULL, STATS needs to be an atomic element!");
-      double AGx = AG[0];
+      if(xAG.size() != 1) stop("If g = NULL, STATS needs to be an atomic element!");
+      double AGx = xAG[0];
       switch(ret) {
       case 3:
-        out = xx - AGx;
+        out = x - AGx;
         break;
       case 4: stop("This transformation can only be performed with groups!");
       case 5:
-        out = xx * (1/AGx);
+        out = x * (1/AGx);
         break;
       case 6:
-        out = xx * (100 / AGx);
+        out = x * (100 / AGx);
         break;
       case 7:
-        out = xx + AGx;
+        out = x + AGx;
         break;
       case 8:
-        out = xx * AGx;
+        out = x * AGx;
         break;
       case 9:
-        for(int i = 0; i != l; ++i) out[i] = mymod(xx[i], AGx);
+        for(int i = 0; i != l; ++i) out[i] = mymod(x[i], AGx);
         break;
       case 10:
-        for(int i = 0; i != l; ++i) out[i] = myremain(xx[i], AGx);
+        for(int i = 0; i != l; ++i) out[i] = myremain(x[i], AGx);
         break;
       default: stop("Unknown Transformation");
       }
     } else {
       if(gs != l) stop("length(g) must match nrow(x)");
-      double *px = REAL(xx), *pout = REAL(out), *pAG = REAL(AG)-1;
+      double *px = REAL(x), *pout = REAL(out), *pAG = REAL(xAG)-1;
       int *pg = INTEGER(g);
       switch(ret) {
       case 3:
@@ -452,12 +446,6 @@ SEXP retoth(const SEXP& x, const SEXP& xAG, const SEXP& g, int ret = 3) {
     }
     DUPLICATE_ATTRIB(out, x);
     return out;
-  }
-  case STRSXP: stop("The requested transformation is not possible with strings");
-  case LGLSXP: stop("The requested transformation is not possible with logical data");
-  default:
-    stop("Not supported SEXP type!");
-  }
 }
 
 // [[Rcpp::export]]
@@ -502,14 +490,14 @@ List TRAlCpp(const List& x, const SEXP& xAG, const IntegerVector& g = 0, int ret
     CharacterVector AG = xAG;
     if(ret == 1)      for(int j = l; j--; ) out[j] = ret1(x[j], Rf_ScalarString(AG[j]), g); // Rf_ScalarString ? -> Not really necessary, a scalar string is still a SEXP ...
     else if(ret == 2) for(int j = l; j--; ) out[j] = ret2(x[j], Rf_ScalarString(AG[j]), g);
-    else              for(int j = l; j--; ) out[j] = retoth(x[j], Rf_ScalarString(AG[j]), g, ret);
+    else              stop("The requested transformation is not possible with strings");
     break;
   }
   case LGLSXP: {
     LogicalVector AG = xAG;
     if(ret == 1)      for(int j = l; j--; ) out[j] = ret1(x[j], Rf_ScalarLogical(AG[j]), g);
     else if(ret == 2) for(int j = l; j--; ) out[j] = ret2(x[j], Rf_ScalarLogical(AG[j]), g);
-    else              for(int j = l; j--; ) out[j] = retoth(x[j], Rf_ScalarLogical(AG[j]), g, ret);
+    else              stop("The requested transformation is not possible with logical data");
     break;
   }
   default: stop("Not supported SEXP type!");
