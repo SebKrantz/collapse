@@ -159,7 +159,7 @@ lm(mpg ~ carb, data = W(mtcars, ~ cyl, stub = FALSE,            # Here only the 
 lm(mpg ~ carb + B(carb,cyl), data = mtcars)                     # Procedure suggested by
 # ..Mundlak (1978) - partialling out group averages amounts to the same as demeaning the data
 
-plm::plm(mpg ~ carb, mtcars, index = "cyl", model = "within")   # Proof..
+plm::plm(mpg ~ carb, mtcars, index = "cyl", model = "within")   # "Proof"..
 
 # This takes the interaction of cyl, vs and am as fixed effects
 lm(W(mpg,list(cyl,vs,am)) ~ W(carb,list(cyl,vs,am)), data = mtcars)
