@@ -29,7 +29,7 @@ collapv(X, by, FUN = fmean, catFUN = fmode, cols = NULL, w = NULL, wFUN = fsum,
         sort = TRUE, decreasing = FALSE, na.last = TRUE, parallel = FALSE, mc.cores = 1L,
         return = c("wide","list","long","long_dupl"), give.names = "auto", sort.row, \dots)
 
-# Auxiliary function: for grouped data frame ('grouped_df') input + non-standard evaluation
+# Auxiliary function: for grouped data ('grouped_df') input + non-standard evaluation
 collapg(X, FUN = fmean, catFUN = fmode, cols = NULL, w = NULL, wFUN = fsum, custom = NULL,
         keep.group_vars = TRUE, keep.w = TRUE, keep.col.order = TRUE,
         parallel = FALSE, mc.cores = 1L,

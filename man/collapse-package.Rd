@@ -16,7 +16,7 @@ It is made compatible with \emph{dplyr}, \emph{data.table} and the \emph{plm} ap
 
 }
 \section{Getting Started}{
-Please see \link[=collapse-documentation]{Collapse Documentation & Overview}, or the introductory vignette. The documentation and vignettes can also comfortably be read on the \href{https://sebkrantz.github.io/collapse/}{package website}.
+Please see \link[=collapse-documentation]{Collapse Documentation & Overview}, or the introductory vignette. The documentation and vignettes can also comfortably be read on the \href{https://sebkrantz.github.io/collapse/}{package website}. A cheatsheet is available at \href{https://rstudio.com/resources/cheatsheets/}{Rstudio}.
 A compact introduction for quick-starters is provided in the examples below.
 }
 
