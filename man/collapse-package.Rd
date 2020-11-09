@@ -16,7 +16,7 @@ It is made compatible with \emph{dplyr}, \emph{data.table} and the \emph{plm} ap
 
 }
 \section{Getting Started}{
-Please see \link[=collapse-documentation]{Collapse Documentation & Overview}, or the introductory vignette. The documentation and vignettes can also comfortably be read on the \href{https://sebkrantz.github.io/collapse/}{package website}.
+Please see \link[=collapse-documentation]{Collapse Documentation & Overview}, or the introductory vignette. The documentation and vignettes can also comfortably be read on the \href{https://sebkrantz.github.io/collapse/}{package website}. A cheatsheet is available at \href{https://rstudio.com/resources/cheatsheets/}{Rstudio}.
 A compact introduction for quick-starters is provided in the examples below.
 }
 
@@ -389,7 +389,7 @@ head(collap(wlddev, ~ country + decade,
 head(collap(wlddev, ~ country + decade,
             custom = list(fmean = 9:10, fsd = 9:12, flast = 3, ffirst = 6:8)))
 
-# For grouped tibbles use collapg
+# For grouped data frames use collapg
 wlddev \%>\% fsubset(year > 1990, country, region, income, PCGDP:ODA) \%>\%
   fgroup_by(country) \%>\% collapg(fmean, ffirst) \%>\%
   ftransform(AMGDP = PCGDP > fmedian(PCGDP, list(region, income), TRA = "replace_fill"),

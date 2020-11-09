@@ -91,7 +91,7 @@ test_that("GRP works as intended", {
  expect_identical(GRPnames(GRP(mtcars$cyl, return.groups = FALSE)), NULL)
  expect_output(print(GRP(mtcars, ~ cyl + am)))
  expect_output(print(GRP(mtcars, ~ cyl + am, return.groups = FALSE)))
- expect_invisible(plot(GRP(mtcars, ~ cyl + am)))
+ # expect_invisible(plot(GRP(mtcars, ~ cyl + am)))
  expect_identical(GRP(GRP(mtcars$mpg)), GRP(mtcars$mpg))
  expect_identical(GRP.default(GRP(mtcars$mpg)), GRP(mtcars$mpg))
  expect_equal(GRP(mtcars$mpg)[[2]], unattrib(as.factor(mtcars$mpg)))

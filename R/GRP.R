@@ -246,10 +246,10 @@ GRP.pdata.frame <- function(X, effect = 1L, ..., group.sizes = TRUE, return.grou
 fgroup_by <- function(X, ..., sort = TRUE, decreasing = FALSE, na.last = TRUE, return.order = FALSE) {          #   e <- substitute(list(...)) # faster but does not preserve attributes of unique groups !
   clx <- oldClass(X)
   m <- match(c("GRP_df", "grouped_df", "data.frame"), clx, nomatch = 0L)
-  g <- GRP.default(fselect(if(m[2L]) fungroup(X) else X, ...), NULL, sort, decreasing, na.last, TRUE, return.order, FALSE)
+  attr(X, "groups") <- GRP.default(fselect(if(m[2L]) fungroup(X) else X, ...), NULL, sort, decreasing, na.last, TRUE, return.order, FALSE)
   # Needed: wlddev %>% fgroup_by(country) gives error if dplyr is loaded. Also sf objects etc..
   # .rows needs to be list(), NULL won't work !! Note: attaching a data.frame class calls data frame methods, even if "list" in front! -> Need GRP.grouped_df to restore object !
-  attr(X, "groups") <- `oldClass<-`(c(g, list(.rows = list())), c("GRP", "data.frame")) # `names<-`(eval(e, X, parent.frame()), all.vars(e))
+  # attr(X, "groups") <- `oldClass<-`(c(g, list(.rows = list())), c("GRP", "data.frame")) # `names<-`(eval(e, X, parent.frame()), all.vars(e))
   oldClass(X) <- c("GRP_df",  if(length(mp <- m[m != 0L])) clx[-mp] else clx, "grouped_df", if(m[3L]) "data.frame") # clx[-m] doesn't work if clx is only "data.table" for example
   # simplest, but X is coerced to data.frame. Through the above solution it can be a list and only receive the 'grouped_df' class
   # add_cl <- c("grouped_df", "data.frame")
@@ -260,14 +260,56 @@ fgroup_by <- function(X, ..., sort = TRUE, decreasing = FALSE, na.last = TRUE, r
 gby <- fgroup_by
 
 print.GRP_df <- function(x, ...) {
-  NextMethod()
-  g <- unclass(attr(x, "groups"))
-  cat("\nGrouped by: ", paste(g[[5L]], collapse = ", "), # Groups:
-      # if(any(g[[6L]])) "ordered groups" else "unordered groups", -> ordered 99% of times...
-      paste0(" [", g[[1L]], " | ", round(length(g[[2L]]) / g[[1L]]), " (", round(fsd.default(g[[3L]]), 1), ")]"))
-  if(inherits(x, "pdata.frame"))
-    message("\nNote: 'pdata.frame' methods for flag, fdiff, fgrowth, fbetween, fwithin and varying\n      take precedence over the 'grouped_df' methods for these functions.")
+  print(fungroup(x)) # better !! (the method could still print groups attribute etc. ) And can also get rid of .rows() in fgroup_by and other fuzz..
+  # but better keep for now, other functions in dplyr might check this and only preserve attributes if they exist. -> Nah. select(UGA_sf, addr_cname) doesn't work anyway..
+  # NextMethod()
+  g <- attr(x, "groups")
+  if(is.GRP(g)) { # Issue Patrice flagged !
+    # oldClass(g) <- NULL # could get rid of this if get rid of "data.frame" class.
+    stats <- if(length(g[[3L]]))
+      paste0(" [", g[[1L]], " | ", round(length(g[[2L]]) / g[[1L]]), " (", round(fsd.default(g[[3L]]), 1L), ")]") else
+        paste0(" [", g[[1L]], " | ", round(length(g[[2L]]) / g[[1L]]), "]")
+    # Groups: # if(any(g[[6L]])) "ordered groups" else "unordered groups", -> ordered 99% of times...
+    cat("\nGrouped by: ", paste(g[[5L]], collapse = ", "), stats, "\n")
+    if(inherits(x, "pdata.frame"))
+      message("\nNote: 'pdata.frame' methods for flag, fdiff, fgrowth, fbetween, fwithin and varying\n      take precedence over the 'grouped_df' methods for these functions.")
+  }
 }
+
+print.invisible <- function(x, ...) cat("")
+
+# Still solve this properly for data.table...
+`[.GRP_df` <- function(x, ...) {
+  if(inherits(x, "data.table")) {
+    res <- NextMethod()
+    if(any(grepl(":=", .c(...)))) {
+      eval.parent(substitute(x <- res))
+      oldClass(res) <- c("invisible", oldClass(res)) # return(invisible(res)) -> doesn't work here for some reason
+    } else {
+      if(!(is.list(res) && fnrow2(res) == fnrow2(x))) return(fungroup(res))
+      if(is.null(attr(res, "groups"))) attr(res, "groups") <- attr(x, "groups")
+      oldClass(res) <- oldClass(x)
+    }
+  } else {
+    res <- `[`(fungroup(x), ...) # does not respect data.table properties, but better for sf data frame and others which check validity of "groups" attribute
+    if(!(is.list(res) && fnrow2(res) == fnrow2(x))) return(res)
+    attr(res, "groups") <- attr(x, "groups")
+    oldClass(res) <- oldClass(x)
+  }
+  res
+}
+
+# missing doesn't work, its invidible return...
+# `[.GRP_df` <- function(x, ...) {
+#   tstop <- function(x) if(missing(x)) NULL else x
+#   res <- tstop(NextMethod()) # better than above (problems with data.table method, but do further checks...)
+#   if(is.null(res)) return(NULL)
+#   if(!(is.list(res) && fnrow2(res) == fnrow2(x))) return(fungroup(res))
+#   if(is.null(g <- attr(res, "groups"))) attr(res, "groups") <- g
+#   oldClass(res) <- oldClass(x)
+#   return(res)
+# }
+
 
 # Produce errors...
 # print_GRP_df_core <- function(x) {
@@ -350,7 +392,7 @@ GRP.grouped_df <- function(X, ..., return.groups = TRUE, call = TRUE) {
   # if(!missing(...)) unused_arg_action(match.call(), ...)
   # g <- unclass(attr(X, "groups"))
   g <- attr(X, "groups")
-  if(is.GRP(g)) return(`oldClass<-`(.subset(g, 1:8), "GRP")) # To avoid data.frame methods being called # return(g)
+  if(is.GRP(g)) return(g) # return(`oldClass<-`(.subset(g, 1:8), "GRP")) # To avoid data.frame methods being called
   if(!is.list(g)) stop("attr(X, 'groups') is not a grouping object")
   oldClass(g) <- NULL
   lg <- length(g)
