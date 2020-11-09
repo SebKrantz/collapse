@@ -389,7 +389,7 @@ head(collap(wlddev, ~ country + decade,
 head(collap(wlddev, ~ country + decade,
             custom = list(fmean = 9:10, fsd = 9:12, flast = 3, ffirst = 6:8)))
 
-# For grouped tibbles use collapg
+# For grouped data frames use collapg
 wlddev \%>\% fsubset(year > 1990, country, region, income, PCGDP:ODA) \%>\%
   fgroup_by(country) \%>\% collapg(fmean, ffirst) \%>\%
   ftransform(AMGDP = PCGDP > fmedian(PCGDP, list(region, income), TRA = "replace_fill"),

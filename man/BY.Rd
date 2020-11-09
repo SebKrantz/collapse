@@ -90,7 +90,7 @@ BY(num_vars(iris), f, quantile, expand.wide = TRUE)
 BY(num_vars(iris), f, quantile,        # Return as list of matrices
    expand.wide = TRUE, return = "list")
 
-## grouped tibble method (faster than dplyr only for small data)
+## grouped data frame method (faster than dplyr only for small data)
 library(dplyr)
 giris <- group_by(iris, Species)
 giris \%>\% BY(sum)                      # Compute sum

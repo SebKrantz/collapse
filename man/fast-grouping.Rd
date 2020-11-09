@@ -32,7 +32,7 @@
                  \code{\link[=radixorder]{radixorder(v)}}  \tab\tab No methods, for data frames and vectors  \tab\tab Radix-based ordering + grouping information \cr
                  \code{\link[=roworder]{roworder(v)}} \tab\tab No methods, for data frames \tab\tab Row sorting/reordering \cr
                  \code{\link{GRP}} \tab\tab \code{default, GRP, factor, qG, grouped_df, pseries, pdata.frame}  \tab\tab Fast grouping and a flexible grouping object \cr
-                 \code{\link{fgroup_by}} \tab\tab No methods, for data frames  \tab\tab Fast grouped tibbles \cr
+                 \code{\link{fgroup_by}} \tab\tab No methods, for data frames  \tab\tab Fast grouped data frame \cr
                  \code{\link{funique}} \tab\tab \code{default, data.frame}  \tab\tab Fast unique values/rows \cr
                  \code{\link{qF}} \tab\tab No methods, for vectors \tab\tab Quick factor generation \cr
                  \code{\link{qG}} \tab\tab No methods, for vectors \tab\tab Quick grouping of vectors and a 'factor-light' class \cr
