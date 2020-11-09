@@ -276,26 +276,27 @@ print.GRP_df <- function(x, ...) {
   }
 }
 
+print.invisible <- function(x, ...) cat("")
+
 # Still solve this properly for data.table...
 `[.GRP_df` <- function(x, ...) {
   if(inherits(x, "data.table")) {
     res <- NextMethod()
     if(any(grepl(":=", .c(...)))) {
       eval.parent(substitute(x <- res))
-      return(invisible(TRUE))
+      oldClass(res) <- c("invisible", oldClass(res)) # return(invisible(res)) -> doesn't work here for some reason
     } else {
       if(!(is.list(res) && fnrow2(res) == fnrow2(x))) return(fungroup(res))
-      if(is.null(g <- attr(res, "groups"))) attr(res, "groups") <- g
+      if(is.null(attr(res, "groups"))) attr(res, "groups") <- attr(x, "groups")
       oldClass(res) <- oldClass(x)
-      return(res)
     }
   } else {
     res <- `[`(fungroup(x), ...) # does not respect data.table properties, but better for sf data frame and others which check validity of "groups" attribute
     if(!(is.list(res) && fnrow2(res) == fnrow2(x))) return(res)
     attr(res, "groups") <- attr(x, "groups")
     oldClass(res) <- oldClass(x)
-    return(res)
   }
+  res
 }
 
 # missing doesn't work, its invidible return...
