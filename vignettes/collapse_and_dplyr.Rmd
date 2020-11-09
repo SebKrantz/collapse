@@ -179,7 +179,8 @@ microbenchmark(collapse = GGDC10S %>% fgroup_by(Variable, Country) %>% get_vars(
                hybrid = GGDC10S %>% group_by(Variable, Country) %>% select_at(6:16) %>% fmedian,
                dplyr = GGDC10S %>% group_by(Variable, Country) %>% select_at(6:16) %>% summarise_all(median, na.rm = TRUE))
 ```
-Benchmarks on the different components of this code and with larger data are provided under 'Benchmarks'. Note that a grouped tibble created with `fgroup_by` can no longer be used for grouped computations with *dplyr* verbs like `mutate` or `summarize`. To avoid errors with these functions and `print.grouped_df`, `[.grouped_df` etc., the classes assigned after `fgroup_by` are reshuffled, so that the data.frame is treated by the *dplyr* ecosystem like a normal tibble:
+Benchmarks on the different components of this code and with larger data are provided under 'Benchmarks'. Note that a grouped tibble created with `fgroup_by` can no longer be used for grouped computations with *dplyr* verbs like `mutate` or `summarize`.
+`fgroup_by` first assigns the class *GDP_df* which is for printing grouping information and subsetting, then the object classes (*tbl_df*, *data.table* or whatever else), followed by classes *grouped_df* and *data.frame*, and adds the grouping object in a 'groups' attribute. Since *tbl_df* is assigned before *grouped_df*, the object is treated by the *dplyr* ecosystem like a normal tibble.
 
 ```{r}
 class(group_by(GGDC10S, Variable, Country))
@@ -187,12 +188,14 @@ class(group_by(GGDC10S, Variable, Country))
 class(fgroup_by(GGDC10S, Variable, Country))
 ```
 
-In general `fgroup_by` first assigns the class *GDP_df* which is for printing grouping information, then the object classes (*tbl_df*, *data.table* or whatever else), followed by classes *grouped_df* and *data.frame*, and adds the grouping object in a 'groups' attribute. The function `fungroup` removes classes 'GDP_df' and 'grouped_df' and the 'groups' attribute (and can thus also be used for grouped tibbles created with `dplyr::group_by`). Thus any kind of data frame based class can be grouped with `fgroup_by`, and still retain full responsiveness to all methods defined for that class. Functions performing aggregation on the grouped data frame remove the grouping object and classes afterwards, yielding an object with the same class and attributes as the input. 
+ The function `fungroup` removes classes 'GDP_df' and 'grouped_df' and the 'groups' attribute (and can thus also be used for grouped tibbles created with `dplyr::group_by`). 
+ 
+ Note that any kind of data frame based class can be grouped with `fgroup_by`, and still retain full responsiveness to all methods defined for that class. Functions performing aggregation on the grouped data frame remove the grouping object and classes afterwards, yielding an object with the same class and attributes as the input. 
 
 The print method shown below reports the grouping variables, and then in square brackets the information `[number of groups | average group size (standard-deviation of group sizes)]`:
 
 ```{r}
-head(fgroup_by(GGDC10S, Variable, Country))
+fgroup_by(GGDC10S, Variable, Country)
 ```
 
 Note further that `fselect` and `get_vars` are not full drop-in replacements for `select` because they do not have a grouped_df method:
