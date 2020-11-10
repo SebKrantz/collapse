@@ -1,7 +1,7 @@
 Package: collapse
 Title: Advanced and Fast Data Transformation
-Version: 1.4.1
-Date: 2020-11-12
+Version: 1.4.2
+Date: 2020-11-11
 Authors@R: c(
            person("Sebastian", "Krantz", role = c("aut", "cre"), 
                   email = "sebastian.krantz@graduateinstitute.ch"),
@@ -9,6 +9,7 @@ Authors@R: c(
            person("Arun", "Srinivasan", role = "ctb"),
            person("Simen", "Gaure", role = "ctb"),
            person("Dirk", "Eddelbuettel", role = "ctb"),
+           person("Kevin", "Tappe", role = "ctb"),
            person("R Core Team and contributors worldwide", role = "ctb"),
            person("Martyn", "Plummer", role = "cph"),
            person("1999-2016 The R Core Team", role = "cph")
