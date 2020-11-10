@@ -72,7 +72,7 @@
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">collapse</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">1.4.0</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">1.4.2</span>
       </span>
     </div>
 
@@ -308,40 +308,40 @@
 <span class='co'># This also works for grouped and panel data frames (calling fwithin.grouped_df)</span>
 <span class='va'>airquality</span> <span class='op'>%&gt;%</span> <span class='fu'><a href='GRP, fgroup_by.html'>fgroup_by</a></span><span class='op'>(</span><span class='va'>Month</span><span class='op'>)</span> <span class='op'>%&gt;%</span>
   <span class='fu'>ftransformv</span><span class='op'>(</span><span class='fl'>1</span><span class='op'>:</span><span class='fl'>3</span>, <span class='va'>fwithin</span>, apply <span class='op'>=</span> <span class='cn'>FALSE</span><span class='op'>)</span> <span class='op'>%&gt;%</span> <span class='va'>head</span>
-</div><div class='output co'>#&gt; <span style='color: #949494;'># A tibble: 6 x 6</span><span>
-#&gt;    Ozone Solar.R   Wind  Temp Month   Day
-#&gt;    </span><span style='color: #949494;font-style: italic;'>&lt;dbl&gt;</span><span>   </span><span style='color: #949494;font-style: italic;'>&lt;dbl&gt;</span><span>  </span><span style='color: #949494;font-style: italic;'>&lt;dbl&gt;</span><span> </span><span style='color: #949494;font-style: italic;'>&lt;int&gt;</span><span> </span><span style='color: #949494;font-style: italic;'>&lt;int&gt;</span><span> </span><span style='color: #949494;font-style: italic;'>&lt;int&gt;</span><span>
-#&gt; </span><span style='color: #BCBCBC;'>1</span><span>  17.4     8.70 -</span><span style='color: #BB0000;'>4.22</span><span>     67     5     1
-#&gt; </span><span style='color: #BCBCBC;'>2</span><span>  12.4   -</span><span style='color: #BB0000;'>63.3</span><span>  -</span><span style='color: #BB0000;'>3.62</span><span>     72     5     2
-#&gt; </span><span style='color: #BCBCBC;'>3</span><span> -</span><span style='color: #BB0000;'>11.6</span><span>   -</span><span style='color: #BB0000;'>32.3</span><span>   0.977    74     5     3
-#&gt; </span><span style='color: #BCBCBC;'>4</span><span>  -</span><span style='color: #BB0000;'>5.62</span><span>  132.   -</span><span style='color: #BB0000;'>0.123</span><span>    62     5     4
-#&gt; </span><span style='color: #BCBCBC;'>5</span><span>  </span><span style='color: #BB0000;'>NA</span><span>      </span><span style='color: #BB0000;'>NA</span><span>     2.68     56     5     5
-#&gt; </span><span style='color: #BCBCBC;'>6</span><span>   4.38   </span><span style='color: #BB0000;'>NA</span><span>     3.28     66     5     6</div><div class='input'>
+</div><div class='output co'>#&gt;        Ozone    Solar.R       Wind Temp Month Day
+#&gt; 1  17.384615   8.703704 -4.2225806   67     5   1
+#&gt; 2  12.384615 -63.296296 -3.6225806   72     5   2
+#&gt; 3 -11.615385 -32.296296  0.9774194   74     5   3
+#&gt; 4  -5.615385 131.703704 -0.1225806   62     5   4
+#&gt; 5         NA         NA  2.6774194   56     5   5
+#&gt; 6   4.384615         NA  3.2774194   66     5   6</div><div class='input'>
 <span class='co'># But this gives the WRONG result (calling fwithin.default). Need option apply = FALSE!!</span>
 <span class='va'>airquality</span> <span class='op'>%&gt;%</span> <span class='fu'><a href='GRP, fgroup_by.html'>fgroup_by</a></span><span class='op'>(</span><span class='va'>Month</span><span class='op'>)</span> <span class='op'>%&gt;%</span>
   <span class='fu'>ftransformv</span><span class='op'>(</span><span class='fl'>1</span><span class='op'>:</span><span class='fl'>3</span>, <span class='va'>fwithin</span><span class='op'>)</span> <span class='op'>%&gt;%</span> <span class='va'>head</span>
-</div><div class='output co'>#&gt; </span><span style='color: #949494;'># A tibble: 6 x 6</span><span>
-#&gt;    Ozone Solar.R  Wind  Temp Month   Day
-#&gt;    </span><span style='color: #949494;font-style: italic;'>&lt;dbl&gt;</span><span>   </span><span style='color: #949494;font-style: italic;'>&lt;dbl&gt;</span><span> </span><span style='color: #949494;font-style: italic;'>&lt;dbl&gt;</span><span> </span><span style='color: #949494;font-style: italic;'>&lt;int&gt;</span><span> </span><span style='color: #949494;font-style: italic;'>&lt;int&gt;</span><span> </span><span style='color: #949494;font-style: italic;'>&lt;int&gt;</span><span>
-#&gt; </span><span style='color: #BCBCBC;'>1</span><span>  -</span><span style='color: #BB0000;'>1.13</span><span>    4.07 -</span><span style='color: #BB0000;'>2.56</span><span>    67     5     1
-#&gt; </span><span style='color: #BCBCBC;'>2</span><span>  -</span><span style='color: #BB0000;'>6.13</span><span>  -</span><span style='color: #BB0000;'>67.9</span><span>  -</span><span style='color: #BB0000;'>1.96</span><span>    72     5     2
-#&gt; </span><span style='color: #BCBCBC;'>3</span><span> -</span><span style='color: #BB0000;'>30.1</span><span>   -</span><span style='color: #BB0000;'>36.9</span><span>   2.64    74     5     3
-#&gt; </span><span style='color: #BCBCBC;'>4</span><span> -</span><span style='color: #BB0000;'>24.1</span><span>   127.    1.54    62     5     4
-#&gt; </span><span style='color: #BCBCBC;'>5</span><span>  </span><span style='color: #BB0000;'>NA</span><span>      </span><span style='color: #BB0000;'>NA</span><span>     4.34    56     5     5
-#&gt; </span><span style='color: #BCBCBC;'>6</span><span> -</span><span style='color: #BB0000;'>14.1</span><span>    </span><span style='color: #BB0000;'>NA</span><span>     4.94    66     5     6</div><div class='input'>
+</div><div class='output co'>#&gt;       Ozone    Solar.R      Wind Temp Month Day
+#&gt; 1  -1.12931   4.068493 -2.557516   67     5   1
+#&gt; 2  -6.12931 -67.931507 -1.957516   72     5   2
+#&gt; 3 -30.12931 -36.931507  2.642484   74     5   3
+#&gt; 4 -24.12931 127.068493  1.542484   62     5   4
+#&gt; 5        NA         NA  4.342484   56     5   5
+#&gt; 6 -14.12931         NA  4.942484   66     5   6</div><div class='input'>
 <span class='co'>## For more complex mutations we can use ftransform with compound pipes</span>
 <span class='va'>airquality</span> <span class='op'>%&gt;%</span> <span class='fu'><a href='GRP, fgroup_by.html'>fgroup_by</a></span><span class='op'>(</span><span class='va'>Month</span><span class='op'>)</span> <span class='op'>%&gt;%</span>
   <span class='fu'>ftransform</span><span class='op'>(</span><span class='fu'><a href='fselect, get_vars, add_vars.html'>get_vars</a></span><span class='op'>(</span><span class='va'>.</span>, <span class='fl'>1</span><span class='op'>:</span><span class='fl'>3</span><span class='op'>)</span> <span class='op'>%&gt;%</span> <span class='va'>fwithin</span> <span class='op'>%&gt;%</span> <span class='fu'><a href='flag.html'>flag</a></span><span class='op'>(</span><span class='fl'>0</span><span class='op'>:</span><span class='fl'>2</span><span class='op'>)</span><span class='op'>)</span> <span class='op'>%&gt;%</span> <span class='va'>head</span>
-</div><div class='output co'>#&gt; <span class='message'>Panel-lag computed without timevar: Assuming ordered data</span></div><div class='output co'>#&gt; </span><span style='color: #949494;'># A tibble: 6 x 12</span><span>
-#&gt;    Ozone Solar.R   Wind  Temp Month   Day L1.Ozone L2.Ozone L1.Solar.R
-#&gt;    </span><span style='color: #949494;font-style: italic;'>&lt;dbl&gt;</span><span>   </span><span style='color: #949494;font-style: italic;'>&lt;dbl&gt;</span><span>  </span><span style='color: #949494;font-style: italic;'>&lt;dbl&gt;</span><span> </span><span style='color: #949494;font-style: italic;'>&lt;int&gt;</span><span> </span><span style='color: #949494;font-style: italic;'>&lt;int&gt;</span><span> </span><span style='color: #949494;font-style: italic;'>&lt;int&gt;</span><span>    </span><span style='color: #949494;font-style: italic;'>&lt;dbl&gt;</span><span>    </span><span style='color: #949494;font-style: italic;'>&lt;dbl&gt;</span><span>      </span><span style='color: #949494;font-style: italic;'>&lt;dbl&gt;</span><span>
-#&gt; </span><span style='color: #BCBCBC;'>1</span><span>  17.4     8.70 -</span><span style='color: #BB0000;'>4.22</span><span>     67     5     1    </span><span style='color: #BB0000;'>NA</span><span>       </span><span style='color: #BB0000;'>NA</span><span>         </span><span style='color: #BB0000;'>NA</span><span>   
-#&gt; </span><span style='color: #BCBCBC;'>2</span><span>  12.4   -</span><span style='color: #BB0000;'>63.3</span><span>  -</span><span style='color: #BB0000;'>3.62</span><span>     72     5     2    17.4     </span><span style='color: #BB0000;'>NA</span><span>          8.70
-#&gt; </span><span style='color: #BCBCBC;'>3</span><span> -</span><span style='color: #BB0000;'>11.6</span><span>   -</span><span style='color: #BB0000;'>32.3</span><span>   0.977    74     5     3    12.4     17.4      -</span><span style='color: #BB0000;'>63.3</span><span> 
-#&gt; </span><span style='color: #BCBCBC;'>4</span><span>  -</span><span style='color: #BB0000;'>5.62</span><span>  132.   -</span><span style='color: #BB0000;'>0.123</span><span>    62     5     4   -</span><span style='color: #BB0000;'>11.6</span><span>     12.4      -</span><span style='color: #BB0000;'>32.3</span><span> 
-#&gt; </span><span style='color: #BCBCBC;'>5</span><span>  </span><span style='color: #BB0000;'>NA</span><span>      </span><span style='color: #BB0000;'>NA</span><span>     2.68     56     5     5    -</span><span style='color: #BB0000;'>5.62</span><span>   -</span><span style='color: #BB0000;'>11.6</span><span>      132.  
-#&gt; </span><span style='color: #BCBCBC;'>6</span><span>   4.38   </span><span style='color: #BB0000;'>NA</span><span>     3.28     66     5     6    </span><span style='color: #BB0000;'>NA</span><span>       -</span><span style='color: #BB0000;'>5.62</span><span>      </span><span style='color: #BB0000;'>NA</span><span>   
-#&gt; </span><span style='color: #949494;'># ... with 3 more variables: L2.Solar.R </span><span style='color: #949494;font-style: italic;'>&lt;dbl&gt;</span><span style='color: #949494;'>, L1.Wind </span><span style='color: #949494;font-style: italic;'>&lt;dbl&gt;</span><span style='color: #949494;'>, L2.Wind </span><span style='color: #949494;font-style: italic;'>&lt;dbl&gt;</span><span></div><div class='input'>
+</div><div class='output co'>#&gt; <span class='message'>Panel-lag computed without timevar: Assuming ordered data</span></div><div class='output co'>#&gt;        Ozone    Solar.R       Wind Temp Month Day   L1.Ozone   L2.Ozone
+#&gt; 1  17.384615   8.703704 -4.2225806   67     5   1         NA         NA
+#&gt; 2  12.384615 -63.296296 -3.6225806   72     5   2  17.384615         NA
+#&gt; 3 -11.615385 -32.296296  0.9774194   74     5   3  12.384615  17.384615
+#&gt; 4  -5.615385 131.703704 -0.1225806   62     5   4 -11.615385  12.384615
+#&gt; 5         NA         NA  2.6774194   56     5   5  -5.615385 -11.615385
+#&gt; 6   4.384615         NA  3.2774194   66     5   6         NA  -5.615385
+#&gt;   L1.Solar.R L2.Solar.R    L1.Wind    L2.Wind
+#&gt; 1         NA         NA         NA         NA
+#&gt; 2   8.703704         NA -4.2225806         NA
+#&gt; 3 -63.296296   8.703704 -3.6225806 -4.2225806
+#&gt; 4 -32.296296 -63.296296  0.9774194 -3.6225806
+#&gt; 5 131.703704 -32.296296 -0.1225806  0.9774194
+#&gt; 6         NA 131.703704  2.6774194 -0.1225806</div><div class='input'>
 <span class='va'>airquality</span> <span class='op'>%&gt;%</span> <span class='fu'>ftransform</span><span class='op'>(</span><span class='fu'><a href='fscale.html'>STD</a></span><span class='op'>(</span><span class='va'>.</span>, cols <span class='op'>=</span> <span class='fl'>1</span><span class='op'>:</span><span class='fl'>3</span><span class='op'>)</span> <span class='op'>%&gt;%</span> <span class='fu'><a href='AA1-recode-replace.html'>replace_NA</a></span><span class='op'>(</span><span class='fl'>0</span><span class='op'>)</span><span class='op'>)</span> <span class='op'>%&gt;%</span> <span class='va'>head</span>
 </div><div class='output co'>#&gt;   Ozone Solar.R Wind Temp Month Day   STD.Ozone STD.Solar.R   STD.Wind
 #&gt; 1    41     190  7.4   67     5   1 -0.03423409  0.04517615 -0.7259482
@@ -489,7 +489,7 @@
 #&gt; 4 -18    1
 #&gt; 5  NA    1
 #&gt; 6 -28    1</div><div class='input'>
-</div></span></pre>
+</div></pre>
   </div>
   <div class="col-md-3 hidden-xs hidden-sm" id="pkgdown-sidebar">
     <nav id="toc" data-toggle="toc" class="sticky-top">
