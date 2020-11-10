@@ -1,3 +1,9 @@
+# collapse 1.4.2
+
+* An improvement to the `[.GRP_df` method enabling the use of most *data.table* methods (such as `:=`) on a grouped *data.table* created with `fgroup_by`.
+
+* Some documentation updates by Kevin Tappe.
+
 # collapse 1.4.1
 collapse 1.4.1 is a small patch for 1.4.0 that:
 

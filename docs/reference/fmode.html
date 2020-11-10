@@ -73,7 +73,7 @@ The TRA argument can further be used to transform x using its (grouped, weighted
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">collapse</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">1.4.0</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">1.4.2</span>
       </span>
     </div>
 
@@ -229,17 +229,15 @@ If <code>na.rm = FALSE</code>, <code>NA</code> is not removed but treated as any
 </div><div class='output co'>#&gt; [1] 2</div><div class='input'>
 <span class='co'>## World Development Data</span>
 <span class='kw'><a href='https://rdrr.io/r/base/attach.html'>attach</a></span><span class='op'>(</span><span class='va'>wlddev</span><span class='op'>)</span>
-</div><div class='output co'>#&gt; <span class='message'>The following objects are masked _by_ .GlobalEnv:</span>
-#&gt; <span class='message'></span>
-#&gt; <span class='message'>    iso3c, year</span></div><div class='input'><span class='co'>## default vector method</span>
+<span class='co'>## default vector method</span>
 <span class='fu'>fmode</span><span class='op'>(</span><span class='va'>PCGDP</span><span class='op'>)</span>                      <span class='co'># Numeric mode</span>
 </div><div class='output co'>#&gt; [1] 339.6333
 #&gt; attr(,"label")
 #&gt; [1] "GDP per capita (constant 2010 US$)"</div><div class='input'><span class='fu'><a href='https://rdrr.io/r/utils/head.html'>head</a></span><span class='op'>(</span><span class='fu'>fmode</span><span class='op'>(</span><span class='va'>PCGDP</span>, <span class='va'>iso3c</span><span class='op'>)</span><span class='op'>)</span>         <span class='co'># Grouped numeric mode</span>
+</div><div class='output co'>#&gt;         ABW         AFG         AGO         ALB         AND         ARE 
+#&gt;  15669.6160    339.6333   2969.9604   2037.1227  42137.5190 102479.1890 </div><div class='input'><span class='fu'><a href='https://rdrr.io/r/utils/head.html'>head</a></span><span class='op'>(</span><span class='fu'>fmode</span><span class='op'>(</span><span class='va'>PCGDP</span>, <span class='va'>iso3c</span>, <span class='va'>LIFEEX</span><span class='op'>)</span><span class='op'>)</span> <span class='co'># Grouped and weighted numeric mode</span>
 </div><div class='output co'>#&gt;        ABW        AFG        AGO        ALB        AND        ARE 
-#&gt;   339.6333  2037.1227  2466.0382 10613.9115 42137.5190  2969.9604 </div><div class='input'><span class='fu'><a href='https://rdrr.io/r/utils/head.html'>head</a></span><span class='op'>(</span><span class='fu'>fmode</span><span class='op'>(</span><span class='va'>PCGDP</span>, <span class='va'>iso3c</span>, <span class='va'>LIFEEX</span><span class='op'>)</span><span class='op'>)</span> <span class='co'># Grouped and weighted numeric mode</span>
-</div><div class='output co'>#&gt;       ABW       AFG       AGO       ALB       AND       ARE 
-#&gt;  583.0551 4683.5192 4827.7243        NA        NA 3533.8652 </div><div class='input'><span class='fu'>fmode</span><span class='op'>(</span><span class='va'>region</span><span class='op'>)</span>                     <span class='co'># Factor mode</span>
+#&gt; 24288.9871   583.0551  3533.8652  4683.5192         NA 41449.6814 </div><div class='input'><span class='fu'>fmode</span><span class='op'>(</span><span class='va'>region</span><span class='op'>)</span>                     <span class='co'># Factor mode</span>
 </div><div class='output co'>#&gt; [1] Europe &amp; Central Asia
 #&gt; attr(,"label")
 #&gt; [1] Region
@@ -284,34 +282,48 @@ If <code>na.rm = FALSE</code>, <code>NA</code> is not removed but treated as any
 #&gt; 1 Afghanistan   AFG 1961-01-01 1960   1980 Europe &amp; Central Asia High income
 #&gt;    OECD    PCGDP LIFEEX GINI   ODA
 #&gt; 1 FALSE 339.6333 62.869   29 80000</div><div class='input'><span class='fu'><a href='https://rdrr.io/r/utils/head.html'>head</a></span><span class='op'>(</span><span class='fu'>fmode</span><span class='op'>(</span><span class='va'>wlddev</span>, <span class='va'>iso3c</span><span class='op'>)</span><span class='op'>)</span>         <span class='co'># Grouped mode</span>
-</div><div class='output co'>#&gt;            country iso3c       date year decade                     region
-#&gt; ABW    Afghanistan   AFG 1961-01-01 1960   1980                 South Asia
-#&gt; AFG        Albania   ALB 1961-01-01 1960   1980      Europe &amp; Central Asia
-#&gt; AGO        Algeria   DZA 1961-01-01 1960   1980 Middle East &amp; North Africa
-#&gt; ALB American Samoa   ASM 1961-01-01 1960   1980        East Asia &amp; Pacific
-#&gt; AND        Andorra   AND 1961-01-01 1960   1980      Europe &amp; Central Asia
-#&gt; ARE         Angola   AGO 1961-01-01 1960   1980        Sub-Saharan Africa 
-#&gt;                  income  OECD      PCGDP LIFEEX GINI        ODA
-#&gt; ABW          Low income FALSE   339.6333 32.292   NA  114440000
-#&gt; AFG Upper middle income FALSE  2037.1227 71.860 27.0    8550000
-#&gt; AGO Upper middle income FALSE  2466.0382 46.138 40.2 2965070000
-#&gt; ALB Upper middle income FALSE 10613.9115     NA   NA         NA
-#&gt; AND         High income FALSE 42137.5190     NA   NA         NA
-#&gt; ARE Lower middle income FALSE  2969.9604 33.251 52.0    -380000</div><div class='input'><span class='fu'><a href='https://rdrr.io/r/utils/head.html'>head</a></span><span class='op'>(</span><span class='fu'>fmode</span><span class='op'>(</span><span class='va'>wlddev</span>, <span class='va'>iso3c</span>, <span class='va'>LIFEEX</span><span class='op'>)</span><span class='op'>)</span> <span class='co'># Grouped and weighted mode</span>
-</div><div class='output co'>#&gt;            country iso3c       date year decade                     region
-#&gt; ABW    Afghanistan   AFG 2017-01-01 2016   2000                 South Asia
-#&gt; AFG        Albania   ALB 2017-01-01 2016   2000      Europe &amp; Central Asia
-#&gt; AGO        Algeria   DZA 2017-01-01 2016   2000 Middle East &amp; North Africa
-#&gt; ALB American Samoa   ASM 2019-01-01 2018   2020        East Asia &amp; Pacific
-#&gt; AND        Andorra   AND 2019-01-01 2018   2020      Europe &amp; Central Asia
-#&gt; ARE         Angola   AGO 2017-01-01 2016   2000        Sub-Saharan Africa 
-#&gt;                  income  OECD     PCGDP LIFEEX GINI        ODA
-#&gt; ABW          Low income FALSE  583.0551 63.673   NA 4069210000
-#&gt; AFG Upper middle income FALSE 4683.5192 71.860 29.0  168600000
-#&gt; AGO Upper middle income FALSE 4827.7243 76.078 27.6  157930000
-#&gt; ALB Upper middle income    NA        NA     NA   NA         NA
-#&gt; AND         High income    NA        NA     NA   NA         NA
-#&gt; ARE Lower middle income FALSE 3533.8652 61.547 42.7    -380000</div><div class='input'>
+</div><div class='output co'>#&gt;                  country iso3c       date year decade
+#&gt; ABW                Aruba   ABW 1961-01-01 1960   1980
+#&gt; AFG          Afghanistan   AFG 1961-01-01 1960   1980
+#&gt; AGO               Angola   AGO 1961-01-01 1960   1980
+#&gt; ALB              Albania   ALB 1961-01-01 1960   1980
+#&gt; AND              Andorra   AND 1961-01-01 1960   1980
+#&gt; ARE United Arab Emirates   ARE 1961-01-01 1960   1980
+#&gt;                         region              income  OECD       PCGDP LIFEEX
+#&gt; ABW Latin America &amp; Caribbean          High income FALSE  15669.6160 65.662
+#&gt; AFG                 South Asia          Low income FALSE    339.6333 32.292
+#&gt; AGO        Sub-Saharan Africa  Lower middle income FALSE   2969.9604 33.251
+#&gt; ALB      Europe &amp; Central Asia Upper middle income FALSE   2037.1227 71.860
+#&gt; AND      Europe &amp; Central Asia         High income FALSE  42137.5190     NA
+#&gt; ARE Middle East &amp; North Africa         High income FALSE 102479.1890 52.265
+#&gt;     GINI       ODA
+#&gt; ABW   NA  33630000
+#&gt; AFG   NA 114440000
+#&gt; AGO   52   -380000
+#&gt; ALB   27   8550000
+#&gt; AND   NA        NA
+#&gt; ARE   NA    120000</div><div class='input'><span class='fu'><a href='https://rdrr.io/r/utils/head.html'>head</a></span><span class='op'>(</span><span class='fu'>fmode</span><span class='op'>(</span><span class='va'>wlddev</span>, <span class='va'>iso3c</span>, <span class='va'>LIFEEX</span><span class='op'>)</span><span class='op'>)</span> <span class='co'># Grouped and weighted mode</span>
+</div><div class='output co'>#&gt;                  country iso3c       date year decade
+#&gt; ABW                Aruba   ABW 2017-01-01 2016   2000
+#&gt; AFG          Afghanistan   AFG 2017-01-01 2016   2000
+#&gt; AGO               Angola   AGO 2017-01-01 2016   2000
+#&gt; ALB              Albania   ALB 2017-01-01 2016   2000
+#&gt; AND              Andorra   AND 2019-01-01 2018   2020
+#&gt; ARE United Arab Emirates   ARE 2017-01-01 2016   2000
+#&gt;                         region              income  OECD      PCGDP LIFEEX GINI
+#&gt; ABW Latin America &amp; Caribbean          High income FALSE 24288.9871 75.867   NA
+#&gt; AFG                 South Asia          Low income FALSE   583.0551 63.673   NA
+#&gt; AGO        Sub-Saharan Africa  Lower middle income FALSE  3533.8652 61.547 42.7
+#&gt; ALB      Europe &amp; Central Asia Upper middle income FALSE  4683.5192 71.860 29.0
+#&gt; AND      Europe &amp; Central Asia         High income    NA         NA     NA   NA
+#&gt; ARE Middle East &amp; North Africa         High income FALSE 41449.6814 77.256   NA
+#&gt;            ODA
+#&gt; ABW  -11660000
+#&gt; AFG 4069210000
+#&gt; AGO    -380000
+#&gt; ALB  168600000
+#&gt; AND         NA
+#&gt; ARE    4270000</div><div class='input'>
 <span class='kw'><a href='https://rdrr.io/r/base/detach.html'>detach</a></span><span class='op'>(</span><span class='va'>wlddev</span><span class='op'>)</span>
 </div></pre>
   </div>
