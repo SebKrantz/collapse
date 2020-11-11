@@ -74,7 +74,7 @@
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">collapse</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">1.4.0</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">1.4.2</span>
       </span>
     </div>
 
@@ -206,7 +206,7 @@
     <colgroup><col class="name" /><col class="desc" /></colgroup>
     <tr>
       <th>x</th>
-      <td><p>a numeric vector, matrix, data frame, panel series (<code><a href='https://rdrr.io/pkg/plm/man/pseries.html'>plm::pseries</a></code>), panel data frame (<code><a href='https://rdrr.io/pkg/plm/man/pdata.frame.html'>plm::pdata.frame</a></code>) or grouped tibble (<code><a href='https://dplyr.tidyverse.org/reference/grouped_df.html'>dplyr::grouped_df</a></code>).</p></td>
+      <td><p>a numeric vector, matrix, data frame, panel series (class <code>pseries</code> of package <code>plm</code>), panel data frame (<code><a href='https://rdrr.io/pkg/plm/man/pdata.frame.html'>plm::pdata.frame</a></code>) or grouped tibble (<code><a href='https://dplyr.tidyverse.org/reference/grouped_df.html'>dplyr::grouped_df</a></code>).</p></td>
     </tr>
     <tr>
       <th>g</th>
@@ -218,7 +218,7 @@
     </tr>
     <tr>
       <th>w</th>
-      <td><p>a numeric vector of (non-negative) weights. <code>B/W</code> data frame and <code>pdata.frame</code> methods also allow a one-sided formula i.e. <code>~ weightcol</code>. The <code>grouped_df</code> (<em>dplyr</em>) method supports lazy-evaluation. See Examples.</p></td>
+      <td><p>a numeric vector of (non-negative) weights. <code>B</code>/<code>W</code> data frame and <code>pdata.frame</code> methods also allow a one-sided formula i.e. <code>~ weightcol</code>. The <code>grouped_df</code> (<em>dplyr</em>) method supports lazy-evaluation. See Examples.</p></td>
     </tr>
     <tr>
       <th>cols</th>
@@ -230,7 +230,7 @@
     </tr>
     <tr>
       <th>effect</th>
-      <td><p><em>plm</em> methods: Select which panel identifier should be used as grouping variable. 1L takes the first variable in the <code><a href='https://rdrr.io/pkg/plm/man/re-export_functions.html'>plm::index</a></code>, 2L the second etc..  Index variables can also be called by name using a character string. If more than one variable is supplied, the corresponding index-factors are interacted.</p></td>
+      <td><p><em>plm</em> methods: Select which panel identifier should be used as grouping variable. 1L takes the first variable in the <code><a href='https://rdrr.io/pkg/plm/man/re-export_functions.html'>plm::index</a></code>, 2L the second etc. Index variables can also be called by name using a character string. If more than one variable is supplied, the corresponding index-factors are interacted.</p></td>
     </tr>
     <tr>
       <th>stub</th>
@@ -238,15 +238,15 @@
     </tr>
     <tr>
       <th>fill</th>
-      <td><p><em>option to <code>fbetween/B</code></em>: Logical. <code>TRUE</code> will overwrite missing values in <code>x</code> with the respective average. By default missing values in <code>x</code> are preserved.</p></td>
+      <td><p><em>option to <code>fbetween</code>/<code>B</code></em>: Logical. <code>TRUE</code> will overwrite missing values in <code>x</code> with the respective average. By default missing values in <code>x</code> are preserved.</p></td>
     </tr>
     <tr>
       <th>mean</th>
-      <td><p><em>option to <code>fwithin/W</code></em>: The mean to center on, default is 0, but a different mean can be supplied and will be added to the data after the centering is performed. A special option when performing grouped centering is <code>mean = "overall.mean"</code>. In that case the overall mean of the data will be added after subtracting out group means.</p></td>
+      <td><p><em>option to <code>fwithin</code>/<code>W</code></em>: The mean to center on, default is 0, but a different mean can be supplied and will be added to the data after the centering is performed. A special option when performing grouped centering is <code>mean = "overall.mean"</code>. In that case the overall mean of the data will be added after subtracting out group means.</p></td>
     </tr>
     <tr>
       <th>theta</th>
-      <td><p><em>option to <code>fwithin/W</code></em>: Double. An optional scalar parameter for quasi-demeaning i.e. <code>x - theta * xi.</code>. This is useful for variance components ('random-effects') estimators. see Details.</p></td>
+      <td><p><em>option to <code>fwithin</code>/<code>W</code></em>: Double. An optional scalar parameter for quasi-demeaning i.e. <code>x - theta * xi.</code>. This is useful for variance components ('random-effects') estimators. see Details.</p></td>
     </tr>
     <tr>
       <th>keep.by, keep.ids, keep.group_vars</th>
@@ -264,14 +264,14 @@
 
     <h2 class="hasAnchor" id="details"><a class="anchor" href="#details"></a>Details</h2>
 
-    <p>Without groups, <code>fbetween/B</code> replaces all data points in <code>x</code> with their mean or weighted mean (if <code>w</code> is supplied). Similarly <code>fwithin/W</code> subtracts the (weighted) mean from all data points i.e. centers the data on the mean. <br /></p>
-<p>With groups supplied to <code>g</code>, the replacement / centering performed by <code>fbetween/B</code> | <code>fwithin/W</code> becomes groupwise. In terms of panel data notation: If <code>x</code> is a vector in such a panel dataset, <code>xit</code> denotes a single data-point belonging to group <code>i</code> in time-period <code>t</code> (<code>t</code> need not be a time-period). Then <code>xi.</code> denotes <code>x</code>, averaged over <code>t</code>. <code>fbetween/B</code> now returns <code>xi.</code> and <code>fwithin/W</code> returns <code>x - xi.</code>. Thus for any data <code>x</code> and any grouping vector <code>g</code>: <code>B(x,g) + W(x,g) = xi. + x - xi. = x</code>. In terms of variance, <code>fbetween/B</code> only retains the variance between group averages, while <code>fwithin/W</code>, by subtracting out group means, only retains the variance within those groups. <br /></p>
-<p>The data replacement performed by <code>fbetween/B</code> can keep (default) or overwrite missing values (option <code>fill = TRUE</code>) in <code>x</code>. <code>fwithin/W</code> can center data simply (default), or add back a mean after centering (option <code>mean = value</code>), or add the overall mean in groupwise computations (option <code>mean = "overall.mean"</code>). Let <code>x..</code> denote the overall mean of <code>x</code>, then <code>fwithin/W</code> with <code>mean = "overall.mean"</code> returns <code>x - xi. + x..</code> instead of <code>x - xi.</code>. This is useful to get rid of group-differences but preserve the overall level of the data. In regression analysis, centering with <code>mean = "overall.mean"</code> will only change the constant term. See Examples.</p>
-<p>If <code>theta != 1</code>, <code>fwithin/W</code> performs quasi-demeaning <code>x - theta * xi.</code>. If <code>mean = "overall.mean"</code>, <code>x - theta * xi. + theta * x..</code> is returned, so that the mean of the partially demeaned data is still equal to the overall data mean <code>x..</code>. A numeric value passed to <code>mean</code> will simply be added back to the quasi-demeaned data i.e. <code>x - theta * xi. + mean</code>.</p>
+    <p>Without groups, <code>fbetween</code>/<code>B</code> replaces all data points in <code>x</code> with their mean or weighted mean (if <code>w</code> is supplied). Similarly <code>fwithin/W</code> subtracts the (weighted) mean from all data points i.e. centers the data on the mean. <br /></p>
+<p>With groups supplied to <code>g</code>, the replacement / centering performed by <code>fbetween/B</code> | <code>fwithin/W</code> becomes groupwise. In terms of panel data notation: If <code>x</code> is a vector in such a panel dataset, <code>xit</code> denotes a single data-point belonging to group <code>i</code> in time-period <code>t</code> (<code>t</code> need not be a time-period). Then <code>xi.</code> denotes <code>x</code>, averaged over <code>t</code>. <code>fbetween</code>/<code>B</code> now returns <code>xi.</code> and <code>fwithin</code>/<code>W</code> returns <code>x - xi.</code>. Thus for any data <code>x</code> and any grouping vector <code>g</code>: <code>B(x,g) + W(x,g) = xi. + x - xi. = x</code>. In terms of variance, <code>fbetween/B</code> only retains the variance between group averages, while <code>fwithin</code>/<code>W</code>, by subtracting out group means, only retains the variance within those groups. <br /></p>
+<p>The data replacement performed by <code>fbetween</code>/<code>B</code> can keep (default) or overwrite missing values (option <code>fill = TRUE</code>) in <code>x</code>. <code>fwithin/W</code> can center data simply (default), or add back a mean after centering (option <code>mean = value</code>), or add the overall mean in groupwise computations (option <code>mean = "overall.mean"</code>). Let <code>x..</code> denote the overall mean of <code>x</code>, then <code>fwithin</code>/<code>W</code> with <code>mean = "overall.mean"</code> returns <code>x - xi. + x..</code> instead of <code>x - xi.</code>. This is useful to get rid of group-differences but preserve the overall level of the data. In regression analysis, centering with <code>mean = "overall.mean"</code> will only change the constant term. See Examples.</p>
+<p>If <code>theta != 1</code>, <code>fwithin</code>/<code>W</code> performs quasi-demeaning <code>x - theta * xi.</code>. If <code>mean = "overall.mean"</code>, <code>x - theta * xi. + theta * x..</code> is returned, so that the mean of the partially demeaned data is still equal to the overall data mean <code>x..</code>. A numeric value passed to <code>mean</code> will simply be added back to the quasi-demeaned data i.e. <code>x - theta * xi. + mean</code>.</p>
 <p>Now in the case of a linear panel model \(y_{it} = \beta_0 + \beta_1 X_{it} + u_{it}\) with \(u_{it} = \alpha_i + \epsilon_{it}\). If \(\alpha_i \neq \alpha = const.\) (there exists individual heterogeneity), then pooled OLS is at least inefficient and inference on \(\beta_1\) is invalid. If \(E[\alpha_i|X_{it}] = 0\) (mean independence of individual heterogeneity \(\alpha_i\)), the variance components or 'random-effects' estimator provides an asymptotically efficient FGLS solution by estimating a transformed model \(y_{it}-\theta y_{i.}  = \beta_0 + \beta_1 (X_{it} - \theta X_{i.}) + (u_{it} - \theta u_{i.}\)), where \(\theta = 1 - \frac{\sigma_\alpha}{\sqrt(\sigma^2_\alpha + T \sigma^2_\epsilon)}\). An estimate of \(\theta\) can be obtained from the an estimate of \(\hat{u}_{it}\) (the residuals from the pooled model). If \(E[\alpha_i|X_{it}] \neq 0\), pooled OLS is biased and inconsistent, and taking \(\theta = 1\) gives an unbiased and consistent fixed-effects estimator of \(\beta_1\). See Examples.</p>
     <h2 class="hasAnchor" id="value"><a class="anchor" href="#value"></a>Value</h2>
 
-    <p><code>fbetween/B</code> returns <code>x</code> with every element replaced by its (groupwise) mean (<code>xi.</code>). Missing values are preserved if <code>fill = FALSE</code> (the default). <code>fwithin/W</code> returns <code>x</code> where every element was subtracted its (groupwise) mean (<code>x - theta * xi. + mean</code> or, if <code>mean = "overall.mean"</code>, <code>x - theta * xi. + theta * x..</code>). See Details.</p>
+    <p><code>fbetween</code>/<code>B</code> returns <code>x</code> with every element replaced by its (groupwise) mean (<code>xi.</code>). Missing values are preserved if <code>fill = FALSE</code> (the default). <code>fwithin/W</code> returns <code>x</code> where every element was subtracted its (groupwise) mean (<code>x - theta * xi. + mean</code> or, if <code>mean = "overall.mean"</code>, <code>x - theta * xi. + theta * x..</code>). See Details.</p>
     <h2 class="hasAnchor" id="references"><a class="anchor" href="#references"></a>References</h2>
 
     <p>Mundlak, Yair. 1978. On the Pooling of Time Series and Cross Section Data. <em>Econometrica</em> 46 (1): 69-85.</p>
@@ -425,10 +425,10 @@
 #&gt;      34.8297       -0.4655       -4.7750  
 #&gt; </div><div class='input'><span class='co'># ..Mundlak (1978) - partialling out group averages amounts to the same as demeaning the data</span>
 
-<span class='fu'>plm</span><span class='fu'>::</span><span class='fu'><a href='https://rdrr.io/pkg/plm/man/plm.html'>plm</a></span><span class='op'>(</span><span class='va'>mpg</span> <span class='op'>~</span> <span class='va'>carb</span>, <span class='va'>mtcars</span>, index <span class='op'>=</span> <span class='st'>"cyl"</span>, model <span class='op'>=</span> <span class='st'>"within"</span><span class='op'>)</span>   <span class='co'># Proof..</span>
+<span class='fu'>plm</span><span class='fu'>::</span><span class='fu'><a href='https://rdrr.io/pkg/plm/man/plm.html'>plm</a></span><span class='op'>(</span><span class='va'>mpg</span> <span class='op'>~</span> <span class='va'>carb</span>, <span class='va'>mtcars</span>, index <span class='op'>=</span> <span class='st'>"cyl"</span>, model <span class='op'>=</span> <span class='st'>"within"</span><span class='op'>)</span>   <span class='co'># "Proof"..</span>
 </div><div class='output co'>#&gt; 
 #&gt; Model Formula: mpg ~ carb
-#&gt; &lt;environment: 0x000000d5e952dde8&gt;
+#&gt; &lt;environment: 0x00000090dd976ff0&gt;
 #&gt; 
 #&gt; Coefficients:
 #&gt;     carb 
@@ -510,7 +510,7 @@
 <span class='fu'>plm</span><span class='fu'>::</span><span class='fu'><a href='https://rdrr.io/pkg/plm/man/plm.html'>plm</a></span><span class='op'>(</span><span class='va'>mpg</span> <span class='op'>~</span> <span class='va'>carb</span>, <span class='va'>mtcars</span>, index <span class='op'>=</span> <span class='st'>"cyl"</span>, model <span class='op'>=</span> <span class='st'>"random"</span><span class='op'>)</span>
 </div><div class='output co'>#&gt; 
 #&gt; Model Formula: mpg ~ carb
-#&gt; &lt;environment: 0x000000d5e952dde8&gt;
+#&gt; &lt;environment: 0x00000090dd976ff0&gt;
 #&gt; 
 #&gt; Coefficients:
 #&gt; (Intercept)        carb 

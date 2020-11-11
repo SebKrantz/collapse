@@ -31,7 +31,7 @@
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">collapse</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">1.4.0</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">1.4.1</span>
       </span>
     </div>
 
@@ -54,13 +54,13 @@
 <li>
   <a href="https://twitter.com/collapse_R" target="_blank">
     <span class="fa fa-twitter"></span>
-     
+
   </a>
 </li>
 <li>
   <a href="https://github.com/SebKrantz/collapse" target="_blank">
     <span class="fa fa-github"></span>
-     
+
   </a>
 </li>
       </ul>
@@ -71,7 +71,7 @@
 </div>
 <!--/.navbar -->
 
-      
+
 
       </header><script src="collapse_intro_files/accessible-code-block-0.0.1/empty-anchor.js"></script><div class="row">
   <div class="col-md-9 contents">
@@ -80,16 +80,16 @@
 </h1>
             <h3 class="subtitle">Advanced and Fast Data Transformation in R</h3>
                         <h4 class="author">Sebastian Krantz</h4>
-            
+
             <h4 class="date">2020-11-02</h4>
-      
+
       <small class="dont-index">Source: <a href="https://github.com/SebKrantz/collapse/blob/master/vignettes/collapse_intro.Rmd"><code>vignettes/collapse_intro.Rmd</code></a></small>
       <div class="hidden name"><code>collapse_intro.Rmd</code></div>
 
     </div>
 
-    
-    
+
+
 <style type="text/css">
 pre {
   max-height: 500px;
@@ -377,7 +377,7 @@ pre[class] {
 <span class="co"># ODA      8336  428,746468  819,868971  -1.08038000e+09  2.45521800e+10   7.1918  122.9003</span></pre></div>
 <p>We could easily compute these statistics by region:</p>
 <div class="sourceCode" id="cb8"><pre class="downlit">
-<span class="fu"><a href="../reference/qsu.html">qsu</a></span><span class="op">(</span><span class="va">wlddev</span>, by <span class="op">=</span> <span class="op">~</span><span class="va">region</span>, cols <span class="op">=</span> <span class="fl">9</span><span class="op">:</span><span class="fl">12</span>, vlabels <span class="op">=</span> <span class="cn">TRUE</span>, higher <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span> 
+<span class="fu"><a href="../reference/qsu.html">qsu</a></span><span class="op">(</span><span class="va">wlddev</span>, by <span class="op">=</span> <span class="op">~</span><span class="va">region</span>, cols <span class="op">=</span> <span class="fl">9</span><span class="op">:</span><span class="fl">12</span>, vlabels <span class="op">=</span> <span class="cn">TRUE</span>, higher <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span>
 <span class="co"># , , PCGDP: GDP per capita (constant 2010 US$)</span>
 <span class="co"># </span>
 <span class="co">#                                N        Mean          SD         Min         Max    Skew     Kurt</span>
@@ -646,7 +646,7 @@ pre[class] {
 <span class="co"># Sub-Saharan Africa          5.9273  104.1212</span></pre></div>
 <p>Notice that the output here is a 4D array of summary statistics, which we could also subset (<code><a href="https://rdrr.io/r/base/Extract.html">[</a></code>) or permute (<code>aperm</code>) to view these statistics in any convenient way. If we don’t like the array, we can also output as a nested list of statistics matrices:</p>
 <div class="sourceCode" id="cb11"><pre class="downlit">
-<span class="va">l</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/qsu.html">qsu</a></span><span class="op">(</span><span class="va">wlddev</span>, by <span class="op">=</span> <span class="op">~</span> <span class="va">region</span>, pid <span class="op">=</span> <span class="op">~</span> <span class="va">iso3c</span>, cols <span class="op">=</span> <span class="fl">9</span><span class="op">:</span><span class="fl">12</span>, vlabels <span class="op">=</span> <span class="cn">TRUE</span>, 
+<span class="va">l</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/qsu.html">qsu</a></span><span class="op">(</span><span class="va">wlddev</span>, by <span class="op">=</span> <span class="op">~</span> <span class="va">region</span>, pid <span class="op">=</span> <span class="op">~</span> <span class="va">iso3c</span>, cols <span class="op">=</span> <span class="fl">9</span><span class="op">:</span><span class="fl">12</span>, vlabels <span class="op">=</span> <span class="cn">TRUE</span>,
          higher <span class="op">=</span> <span class="cn">TRUE</span>, array <span class="op">=</span> <span class="cn">FALSE</span><span class="op">)</span>
 
 <span class="fu"><a href="https://rdrr.io/r/utils/str.html">str</a></span><span class="op">(</span><span class="va">l</span>, give.attr <span class="op">=</span> <span class="cn">FALSE</span><span class="op">)</span>
@@ -786,9 +786,9 @@ pre[class] {
 <p>The first problem in summarizing this data is that value added (VA) is in local currency, the second that it contains 2 different Variables (VA and EMP) stacked in the same column. One way of solving the first problem could be converting the data to percentages through dividing by the overall VA and EMP contained in the last column. A different solution involving grouped-scaling is introduced in section 6.4. The second problem is again nicely handled by <code>qsu</code>, which can also compute panel-statistics by groups.</p>
 <div class="sourceCode" id="cb17"><pre class="downlit">
 <span class="co"># Converting data to percentages of overall VA / EMP, dapply keeps the attributes, see section 6.1</span>
-<span class="va">pGGDC10S</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/dapply.html">dapply</a></span><span class="op">(</span><span class="va">GGDC10S</span><span class="op">[</span><span class="fl">6</span><span class="op">:</span><span class="fl">15</span><span class="op">]</span>, <span class="va">`*`</span>, <span class="fl">100</span> <span class="op">/</span> <span class="va">GGDC10S</span><span class="op">$</span><span class="va">SUM</span><span class="op">)</span> 
+<span class="va">pGGDC10S</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/dapply.html">dapply</a></span><span class="op">(</span><span class="va">GGDC10S</span><span class="op">[</span><span class="fl">6</span><span class="op">:</span><span class="fl">15</span><span class="op">]</span>, <span class="va">`*`</span>, <span class="fl">100</span> <span class="op">/</span> <span class="va">GGDC10S</span><span class="op">$</span><span class="va">SUM</span><span class="op">)</span>
 <span class="co"># Summarizing the sectoral data by variable, overall, between and within countries</span>
-<span class="va">su</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/qsu.html">qsu</a></span><span class="op">(</span><span class="va">pGGDC10S</span>, by <span class="op">=</span> <span class="va">GGDC10S</span><span class="op">$</span><span class="va">Variable</span>, pid <span class="op">=</span> <span class="va">GGDC10S</span><span class="op">[</span><span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span><span class="op">(</span><span class="st">"Variable"</span>,<span class="st">"Country"</span><span class="op">)</span><span class="op">]</span>, higher <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span> 
+<span class="va">su</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/qsu.html">qsu</a></span><span class="op">(</span><span class="va">pGGDC10S</span>, by <span class="op">=</span> <span class="va">GGDC10S</span><span class="op">$</span><span class="va">Variable</span>, pid <span class="op">=</span> <span class="va">GGDC10S</span><span class="op">[</span><span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span><span class="op">(</span><span class="st">"Variable"</span>,<span class="st">"Country"</span><span class="op">)</span><span class="op">]</span>, higher <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span>
 
 <span class="co"># This gives a 4D array of summary statistics</span>
 <span class="fu"><a href="https://rdrr.io/r/utils/str.html">str</a></span><span class="op">(</span><span class="va">su</span><span class="op">)</span>
@@ -1072,7 +1072,7 @@ pre[class] {
 <span class="co"># 2  NA  NA</span></pre></div>
 <p>Thanks to the <em>data.table</em> C code and optimized R code, <code>fsubset</code> is very fast, and also improves upon <code>[.data.table</code> for small and medium-sized data.</p>
 <div class="sourceCode" id="cb27"><pre class="downlit">
-<span class="fu"><a href="https://rdrr.io/pkg/microbenchmark/man/microbenchmark.html">microbenchmark</a></span><span class="op">(</span>base <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/pkg/data.table/man/subset.data.table.html">subset</a></span><span class="op">(</span><span class="va">GGDC10S</span>, <span class="va">Variable</span> <span class="op">==</span> <span class="st">"VA"</span> <span class="op">&amp;</span> <span class="va">Year</span> <span class="op">&gt;</span> <span class="fl">1990</span>, <span class="va">AGR</span><span class="op">:</span><span class="va">SUM</span><span class="op">)</span>, 
+<span class="fu"><a href="https://rdrr.io/pkg/microbenchmark/man/microbenchmark.html">microbenchmark</a></span><span class="op">(</span>base <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/pkg/data.table/man/subset.data.table.html">subset</a></span><span class="op">(</span><span class="va">GGDC10S</span>, <span class="va">Variable</span> <span class="op">==</span> <span class="st">"VA"</span> <span class="op">&amp;</span> <span class="va">Year</span> <span class="op">&gt;</span> <span class="fl">1990</span>, <span class="va">AGR</span><span class="op">:</span><span class="va">SUM</span><span class="op">)</span>,
                collapse <span class="op">=</span> <span class="fu"><a href="../reference/fsubset.html">fsubset</a></span><span class="op">(</span><span class="va">GGDC10S</span>, <span class="va">Variable</span> <span class="op">==</span> <span class="st">"VA"</span> <span class="op">&amp;</span> <span class="va">Year</span> <span class="op">&gt;</span> <span class="fl">1990</span>, <span class="va">AGR</span><span class="op">:</span><span class="va">SUM</span><span class="op">)</span><span class="op">)</span>
 <span class="co"># Unit: microseconds</span>
 <span class="co">#      expr     min       lq     mean  median       uq      max neval cld</span>
@@ -1096,7 +1096,7 @@ pre[class] {
 <span class="co"># 1     ARG        LAM Latin America       VA 1950 5.887857e-07   0 3.53443e-06</span>
 <span class="co"># 2     ARG        LAM Latin America       VA 1951 9.165327e-07   0 4.77277e-06</span>
 
-<span class="fu"><a href="https://rdrr.io/pkg/microbenchmark/man/microbenchmark.html">microbenchmark</a></span><span class="op">(</span>collapse <span class="op">=</span> <span class="fu">collapse</span><span class="fu">::</span><span class="fu"><a href="../reference/roworder.html">roworder</a></span><span class="op">(</span><span class="va">GGDC10S</span>, <span class="op">-</span><span class="va">Variable</span>, <span class="va">Country</span><span class="op">)</span>, 
+<span class="fu"><a href="https://rdrr.io/pkg/microbenchmark/man/microbenchmark.html">microbenchmark</a></span><span class="op">(</span>collapse <span class="op">=</span> <span class="fu">collapse</span><span class="fu">::</span><span class="fu"><a href="../reference/roworder.html">roworder</a></span><span class="op">(</span><span class="va">GGDC10S</span>, <span class="op">-</span><span class="va">Variable</span>, <span class="va">Country</span><span class="op">)</span>,
                dplyr <span class="op">=</span> <span class="fu">dplyr</span><span class="fu">::</span><span class="fu"><a href="https://dplyr.tidyverse.org/reference/arrange.html">arrange</a></span><span class="op">(</span><span class="va">GGDC10S</span>, <span class="fu"><a href="https://dplyr.tidyverse.org/reference/desc.html">desc</a></span><span class="op">(</span><span class="va">Variable</span><span class="op">)</span>, <span class="va">Country</span><span class="op">)</span><span class="op">)</span>
 <span class="co"># Unit: microseconds</span>
 <span class="co">#      expr       min         lq       mean     median         uq        max neval cld</span>
@@ -1124,7 +1124,7 @@ pre[class] {
 <span class="co"># 2     ETH        SSA Sub-saharan Africa       VA 1961 4495.614 11.86979 109.616</span>
 
 <span class="co"># pos = "exchange" arranges selected rows in the order they are passed, without affecting other rows</span>
-<span class="fu"><a href="../reference/roworder.html">roworderv</a></span><span class="op">(</span><span class="va">GGDC10S</span>, neworder <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/with.html">with</a></span><span class="op">(</span><span class="va">GGDC10S</span>, <span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/which.html">which</a></span><span class="op">(</span><span class="va">Country</span> <span class="op">==</span> <span class="st">"GHA"</span><span class="op">)</span>, 
+<span class="fu"><a href="../reference/roworder.html">roworderv</a></span><span class="op">(</span><span class="va">GGDC10S</span>, neworder <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/with.html">with</a></span><span class="op">(</span><span class="va">GGDC10S</span>, <span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/which.html">which</a></span><span class="op">(</span><span class="va">Country</span> <span class="op">==</span> <span class="st">"GHA"</span><span class="op">)</span>,
                                               <span class="fu"><a href="https://rdrr.io/r/base/which.html">which</a></span><span class="op">(</span><span class="va">Country</span> <span class="op">==</span> <span class="st">"BWA"</span><span class="op">)</span><span class="op">)</span><span class="op">)</span>, pos <span class="op">=</span> <span class="st">"exchange"</span><span class="op">)</span> <span class="op">%&gt;%</span> <span class="fu"><a href="../reference/fsubset.html">ss</a></span><span class="op">(</span><span class="fl">1</span><span class="op">:</span><span class="fl">2</span>, <span class="fl">1</span><span class="op">:</span><span class="fl">8</span><span class="op">)</span>
 <span class="co">#   Country Regioncode             Region Variable Year        AGR         MIN        MAN</span>
 <span class="co"># 1     GHA        SSA Sub-saharan Africa       VA 1960 0.03576160 0.005103683 0.01744687</span>
@@ -1285,7 +1285,7 @@ pre[class] {
 <span class="co"># 1        NA   3.474820       NA 18.55556          NA     1.509095         NA  8.058578</span>
 <span class="co"># 2        NA   3.488659       NA 19.26805          NA     1.515105         NA  8.368008</span>
 
-<span class="fu"><a href="../reference/fselect,%20get_vars,%20add_vars.html">add_vars</a></span><span class="op">(</span><span class="va">wlddev</span>,  <span class="fu"><a href="../reference/fselect,%20get_vars,%20add_vars.html">get_vars</a></span><span class="op">(</span><span class="va">wlddev</span>, <span class="fl">9</span><span class="op">:</span><span class="fl">12</span><span class="op">)</span> <span class="op">%&gt;%</span> <span class="fu"><a href="https://rdrr.io/r/base/lapply.html">lapply</a></span><span class="op">(</span><span class="va">log</span><span class="op">)</span> <span class="op">%&gt;%</span> <span class="fu"><a href="../reference/AA2-small-helpers.html">add_stub</a></span><span class="op">(</span><span class="st">"log."</span><span class="op">)</span>, 
+<span class="fu"><a href="../reference/fselect,%20get_vars,%20add_vars.html">add_vars</a></span><span class="op">(</span><span class="va">wlddev</span>,  <span class="fu"><a href="../reference/fselect,%20get_vars,%20add_vars.html">get_vars</a></span><span class="op">(</span><span class="va">wlddev</span>, <span class="fl">9</span><span class="op">:</span><span class="fl">12</span><span class="op">)</span> <span class="op">%&gt;%</span> <span class="fu"><a href="https://rdrr.io/r/base/lapply.html">lapply</a></span><span class="op">(</span><span class="va">log</span><span class="op">)</span> <span class="op">%&gt;%</span> <span class="fu"><a href="../reference/AA2-small-helpers.html">add_stub</a></span><span class="op">(</span><span class="st">"log."</span><span class="op">)</span>,
                   <span class="fu"><a href="../reference/fselect,%20get_vars,%20add_vars.html">get_vars</a></span><span class="op">(</span><span class="va">wlddev</span>, <span class="fl">9</span><span class="op">:</span><span class="fl">12</span><span class="op">)</span> <span class="op">%&gt;%</span> <span class="fu"><a href="https://rdrr.io/r/base/lapply.html">lapply</a></span><span class="op">(</span><span class="va">log10</span><span class="op">)</span> <span class="op">%&gt;%</span> <span class="fu"><a href="../reference/AA2-small-helpers.html">add_stub</a></span><span class="op">(</span><span class="st">"log10."</span><span class="op">)</span>,
          pos <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span><span class="op">(</span><span class="fl">10</span>,<span class="fl">13</span>,<span class="fl">16</span>,<span class="fl">19</span>,<span class="fl">11</span>,<span class="fl">14</span>,<span class="fl">17</span>,<span class="fl">20</span><span class="op">)</span><span class="op">)</span> <span class="op">%&gt;%</span> <span class="fu"><a href="https://rdrr.io/r/utils/head.html">head</a></span><span class="op">(</span><span class="fl">2</span><span class="op">)</span>
 <span class="co">#       country iso3c       date year decade     region     income  OECD PCGDP log.PCGDP log10.PCGDP</span>
@@ -1421,7 +1421,7 @@ pre[class] {
 <span class="co">#  replace_NA(GGDC10S, 0) 411.441 447.587 698.4005 616.9375 679.4125 5230.026   100</span>
 
 <span class="co"># Adding log-transformed sectoral data: Some NaN and Inf values generated</span>
-<span class="fu"><a href="../reference/fselect,%20get_vars,%20add_vars.html">add_vars</a></span><span class="op">(</span><span class="va">GGDC10S</span>, <span class="fl">6</span><span class="op">:</span><span class="fl">16</span><span class="op">*</span><span class="fl">2</span><span class="op">-</span><span class="fl">5</span><span class="op">)</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/fselect,%20get_vars,%20add_vars.html">fselect</a></span><span class="op">(</span><span class="va">GGDC10S</span>, <span class="va">AGR</span><span class="op">:</span><span class="va">SUM</span><span class="op">)</span> <span class="op">%&gt;%</span> <span class="fu"><a href="https://rdrr.io/r/base/lapply.html">lapply</a></span><span class="op">(</span><span class="va">log</span><span class="op">)</span> <span class="op">%&gt;%</span> <span class="va">replace_Inf</span> <span class="op">%&gt;%</span> <span class="fu"><a href="../reference/AA2-small-helpers.html">add_stub</a></span><span class="op">(</span><span class="st">"log."</span><span class="op">)</span> 
+<span class="fu"><a href="../reference/fselect,%20get_vars,%20add_vars.html">add_vars</a></span><span class="op">(</span><span class="va">GGDC10S</span>, <span class="fl">6</span><span class="op">:</span><span class="fl">16</span><span class="op">*</span><span class="fl">2</span><span class="op">-</span><span class="fl">5</span><span class="op">)</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/fselect,%20get_vars,%20add_vars.html">fselect</a></span><span class="op">(</span><span class="va">GGDC10S</span>, <span class="va">AGR</span><span class="op">:</span><span class="va">SUM</span><span class="op">)</span> <span class="op">%&gt;%</span> <span class="fu"><a href="https://rdrr.io/r/base/lapply.html">lapply</a></span><span class="op">(</span><span class="va">log</span><span class="op">)</span> <span class="op">%&gt;%</span> <span class="va">replace_Inf</span> <span class="op">%&gt;%</span> <span class="fu"><a href="../reference/AA2-small-helpers.html">add_stub</a></span><span class="op">(</span><span class="st">"log."</span><span class="op">)</span>
 <span class="fu"><a href="https://rdrr.io/r/utils/head.html">head</a></span><span class="op">(</span><span class="va">GGDC10S</span>, <span class="fl">2</span><span class="op">)</span>
 <span class="co">#   Country Regioncode             Region Variable Year AGR log.AGR MIN log.MIN MAN log.MAN PU log.PU</span>
 <span class="co"># 1     BWA        SSA Sub-saharan Africa       VA 1960  NA      NA  NA      NA  NA      NA NA     NA</span>
@@ -1441,7 +1441,7 @@ pre[class] {
 <p>The perhaps most interesting function in this ensemble is <code>replace_outliers</code>, which replaces values falling outside a 1- or 2-sided numeric threshold or outside a certain number of column- standard deviations with a value (default is <code>NA</code>).</p>
 <div class="sourceCode" id="cb48"><pre class="downlit">
 <span class="co"># replace all values below 2 and above 100 with NA</span>
-<span class="fu"><a href="../reference/AA1-recode-replace.html">replace_outliers</a></span><span class="op">(</span><span class="va">mtcars</span>, <span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span><span class="op">(</span><span class="fl">2</span>, <span class="fl">100</span><span class="op">)</span><span class="op">)</span> <span class="op">%&gt;%</span> <span class="fu"><a href="https://rdrr.io/r/utils/head.html">head</a></span><span class="op">(</span><span class="fl">3</span><span class="op">)</span>        
+<span class="fu"><a href="../reference/AA1-recode-replace.html">replace_outliers</a></span><span class="op">(</span><span class="va">mtcars</span>, <span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span><span class="op">(</span><span class="fl">2</span>, <span class="fl">100</span><span class="op">)</span><span class="op">)</span> <span class="op">%&gt;%</span> <span class="fu"><a href="https://rdrr.io/r/utils/head.html">head</a></span><span class="op">(</span><span class="fl">3</span><span class="op">)</span>
 <span class="co">#                mpg cyl disp hp drat    wt  qsec vs am gear carb</span>
 <span class="co"># Mazda RX4     21.0   6   NA NA 3.90 2.620 16.46 NA NA    4    4</span>
 <span class="co"># Mazda RX4 Wag 21.0   6   NA NA 3.90 2.875 17.02 NA NA    4    4</span>
@@ -1462,7 +1462,7 @@ pre[class] {
 <span class="co"># Datsun 710    22.8   4   NA 93 3.85 2.320 18.61  1  1    4    1</span>
 
 <span class="co"># replace all values above or below 3 column-standard-deviations from the column-mean with NA</span>
-<span class="fu"><a href="../reference/AA1-recode-replace.html">replace_outliers</a></span><span class="op">(</span><span class="va">mtcars</span>, <span class="fl">3</span><span class="op">)</span> <span class="op">%&gt;%</span> <span class="fu"><a href="https://rdrr.io/r/utils/head.html">tail</a></span><span class="op">(</span><span class="fl">3</span><span class="op">)</span>                        
+<span class="fu"><a href="../reference/AA1-recode-replace.html">replace_outliers</a></span><span class="op">(</span><span class="va">mtcars</span>, <span class="fl">3</span><span class="op">)</span> <span class="op">%&gt;%</span> <span class="fu"><a href="https://rdrr.io/r/utils/head.html">tail</a></span><span class="op">(</span><span class="fl">3</span><span class="op">)</span>
 <span class="co">#                mpg cyl disp  hp drat   wt qsec vs am gear carb</span>
 <span class="co"># Ferrari Dino  19.7   6  145 175 3.62 2.77 15.5  0  1    5    6</span>
 <span class="co"># Maserati Bora 15.0   8  301 335 3.54 3.57 14.6  0  1    5   NA</span>
@@ -1641,7 +1641,7 @@ pre[class] {
 
 <span class="co"># Getting column indices </span>
 <span class="va">ind</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/fselect,%20get_vars,%20add_vars.html">fselect</a></span><span class="op">(</span><span class="va">mtcars</span>, <span class="va">cyl</span>, <span class="va">vs</span>, <span class="va">am</span>, return <span class="op">=</span> <span class="st">"indices"</span><span class="op">)</span>
-<span class="fu"><a href="../reference/fmean.html">fmean</a></span><span class="op">(</span><span class="fu"><a href="../reference/fselect,%20get_vars,%20add_vars.html">get_vars</a></span><span class="op">(</span><span class="va">mtcars</span>, <span class="op">-</span><span class="va">ind</span><span class="op">)</span>, <span class="fu"><a href="../reference/fselect,%20get_vars,%20add_vars.html">get_vars</a></span><span class="op">(</span><span class="va">mtcars</span>, <span class="va">ind</span><span class="op">)</span><span class="op">)</span>  
+<span class="fu"><a href="../reference/fmean.html">fmean</a></span><span class="op">(</span><span class="fu"><a href="../reference/fselect,%20get_vars,%20add_vars.html">get_vars</a></span><span class="op">(</span><span class="va">mtcars</span>, <span class="op">-</span><span class="va">ind</span><span class="op">)</span>, <span class="fu"><a href="../reference/fselect,%20get_vars,%20add_vars.html">get_vars</a></span><span class="op">(</span><span class="va">mtcars</span>, <span class="va">ind</span><span class="op">)</span><span class="op">)</span>
 <span class="co">#            mpg     disp        hp     drat       wt     qsec     gear     carb</span>
 <span class="co"># 4.0.1 26.00000 120.3000  91.00000 4.430000 2.140000 16.70000 5.000000 2.000000</span>
 <span class="co"># 4.1.0 22.90000 135.8667  84.66667 3.770000 2.935000 20.97000 3.666667 1.666667</span>
@@ -1914,7 +1914,7 @@ pre[class] {
                       <span class="fu"><a href="../reference/fvar,%20fsd.html">fsd</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/list.html">list</a></span><span class="op">(</span>carb_wsd_vs_am <span class="op">=</span> <span class="va">carb</span>, mpg_wsd_vs_am <span class="op">=</span> <span class="va">mpg</span><span class="op">)</span>, <span class="fu"><a href="https://rdrr.io/r/base/list.html">list</a></span><span class="op">(</span><span class="va">vs</span>, <span class="va">am</span><span class="op">)</span>, <span class="va">weights</span>, <span class="st">"replace"</span><span class="op">)</span><span class="op">)</span><span class="op">)</span>
 
 <span class="co"># Nested (Computing the weighted 3rd quartile of mpg, grouped by cyl and carb being greater than it's weighted median, grouped by vs)</span>
-<span class="fu"><a href="../reference/ftransform.html">settransform</a></span><span class="op">(</span><span class="va">mtcars</span>, 
+<span class="fu"><a href="../reference/ftransform.html">settransform</a></span><span class="op">(</span><span class="va">mtcars</span>,
  mpg_gwQ3_cyl <span class="op">=</span> <span class="fu"><a href="../reference/fnth.html">fnth</a></span><span class="op">(</span><span class="va">mpg</span>, <span class="fl">0.75</span>, <span class="fu"><a href="https://rdrr.io/r/base/list.html">list</a></span><span class="op">(</span><span class="va">cyl</span>, <span class="va">carb</span> <span class="op">&gt;</span> <span class="fu"><a href="../reference/fmedian.html">fmedian</a></span><span class="op">(</span><span class="va">carb</span>, <span class="va">vs</span>, <span class="va">weights</span>, <span class="fl">1L</span><span class="op">)</span><span class="op">)</span>, <span class="va">weights</span>, <span class="fl">1L</span><span class="op">)</span><span class="op">)</span>
 
 <span class="fu"><a href="https://rdrr.io/r/utils/head.html">head</a></span><span class="op">(</span><span class="va">mtcars</span><span class="op">)</span>
@@ -1989,7 +1989,7 @@ pre[class] {
 <p>Note that the columns of the data are in the original order and also retain all their attributes. To understand this result let us briefly examine the syntax of <code>collap</code>:</p>
 <div class="sourceCode" id="cb72"><pre class="downlit">
 <span class="fu"><a href="../reference/collap.html">collap</a></span><span class="op">(</span><span class="va">X</span>, <span class="va">by</span>, FUN <span class="op">=</span> <span class="va">fmean</span>, catFUN <span class="op">=</span> <span class="va">fmode</span>, cols <span class="op">=</span> <span class="cn">NULL</span>, w <span class="op">=</span> <span class="cn">NULL</span>, wFUN <span class="op">=</span> <span class="va">fsum</span>,
-       custom <span class="op">=</span> <span class="cn">NULL</span>, keep.by <span class="op">=</span> <span class="cn">TRUE</span>, keep.w <span class="op">=</span> <span class="cn">TRUE</span>, keep.col.order <span class="op">=</span> <span class="cn">TRUE</span>, 
+       custom <span class="op">=</span> <span class="cn">NULL</span>, keep.by <span class="op">=</span> <span class="cn">TRUE</span>, keep.w <span class="op">=</span> <span class="cn">TRUE</span>, keep.col.order <span class="op">=</span> <span class="cn">TRUE</span>,
        sort.row <span class="op">=</span> <span class="cn">TRUE</span>, parallel <span class="op">=</span> <span class="cn">FALSE</span>, mc.cores <span class="op">=</span> <span class="fl">1L</span>,
        return <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span><span class="op">(</span><span class="st">"wide"</span>,<span class="st">"list"</span>,<span class="st">"long"</span>,<span class="st">"long_dupl"</span><span class="op">)</span>, give.names <span class="op">=</span> <span class="st">"auto"</span><span class="op">)</span> <span class="co"># , ...</span></pre></div>
 <p>It is clear that <code>X</code> is the data and <code>by</code> supplies the grouping information, which can be a one- or two-sided formula or alternatively grouping vectors, factors, lists and <code>GRP</code> objects (like the <em>Fast Statistical Functions</em>). Then <code>FUN</code> provides the function(s) applied only to numeric variables in <code>X</code> and defaults to <code>fmean</code>, while <code>catFUN</code> provides the function(s) applied only to categorical variables in <code>X</code> and defaults to <code>fmode</code><a href="#fn3" class="footnote-ref" id="fnref3"><sup>3</sup></a>. <code>keep.col.order = TRUE</code> specifies that the data is to be returned with the original column-order. Thus in the above example it was sufficient to supply <code>X</code> and <code>by</code> and <code>collap</code> did the rest for us.</p>
@@ -2929,7 +2929,7 @@ pre[class] {
 <span class="co">#   0.874      11     131  82.238   0.000</span></pre></div>
 <p>The test shows significant seasonality, accounting for 87% of the variation in the growth rate of the series. We can plot the series together with the ordinary, seasonal (12-month) and deseasonalized monthly growth rate using:</p>
 <div class="sourceCode" id="cb112"><pre class="downlit">
-<span class="fu"><a href="../reference/fgrowth.html">G</a></span><span class="op">(</span><span class="va">AirPassengers</span>, <span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span><span class="op">(</span><span class="fl">0</span>, <span class="fl">1</span>, <span class="fl">12</span><span class="op">)</span><span class="op">)</span> <span class="op">%&gt;%</span> <span class="fu"><a href="https://rdrr.io/r/base/cbind.html">cbind</a></span><span class="op">(</span>W.G1 <span class="op">=</span> <span class="fu"><a href="../reference/fbetween,%20fwithin.html">W</a></span><span class="op">(</span><span class="fu"><a href="../reference/fgrowth.html">G</a></span><span class="op">(</span><span class="va">AirPassengers</span><span class="op">)</span>, <span class="va">f</span><span class="op">)</span><span class="op">)</span> <span class="op">%&gt;%</span> 
+<span class="fu"><a href="../reference/fgrowth.html">G</a></span><span class="op">(</span><span class="va">AirPassengers</span>, <span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span><span class="op">(</span><span class="fl">0</span>, <span class="fl">1</span>, <span class="fl">12</span><span class="op">)</span><span class="op">)</span> <span class="op">%&gt;%</span> <span class="fu"><a href="https://rdrr.io/r/base/cbind.html">cbind</a></span><span class="op">(</span>W.G1 <span class="op">=</span> <span class="fu"><a href="../reference/fbetween,%20fwithin.html">W</a></span><span class="op">(</span><span class="fu"><a href="../reference/fgrowth.html">G</a></span><span class="op">(</span><span class="va">AirPassengers</span><span class="op">)</span>, <span class="va">f</span><span class="op">)</span><span class="op">)</span> <span class="op">%&gt;%</span>
   <span class="fu"><a href="https://rdrr.io/r/graphics/plot.default.html">plot</a></span><span class="op">(</span>main <span class="op">=</span> <span class="st">"Growth Rate of Airpassengers"</span><span class="op">)</span></pre></div>
 <p><img src="collapse_intro_files/figure-html/unnamed-chunk-109-1.png" width="100%"> It is evident that taking the annualized growth rate also removes most of the periodic behavior. We can also compute second differences or growth rates of growth rates. Below we plot the ordinary and annual first and second differences of the data:</p>
 <div class="sourceCode" id="cb113"><pre class="downlit">
@@ -3536,8 +3536,8 @@ pre[class] {
       panel.border <span class="op">=</span> <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/element.html">element_rect</a></span><span class="op">(</span>colour <span class="op">=</span> <span class="st">"black"</span><span class="op">)</span><span class="op">)</span></pre></div>
 <p><img src="collapse_intro_files/figure-html/unnamed-chunk-137-1.png" width="100%"> To round things off, below we do the same thing for the FEVD’s:</p>
 <div class="sourceCode" id="cb141"><pre class="downlit">
-<span class="va">data</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/unlist2d.html">unlist2d</a></span><span class="op">(</span><span class="va">pFEVD</span>, idcols <span class="op">=</span> <span class="st">"variable"</span>, row.names <span class="op">=</span> <span class="st">"Time"</span>, id.factor <span class="op">=</span> <span class="cn">TRUE</span>, DT <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span> <span class="op">%&gt;%</span> 
-            <span class="fu"><a href="https://rdrr.io/pkg/data.table/man/melt.data.table.html">melt</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span><span class="op">(</span><span class="st">"variable"</span>, <span class="st">"Time"</span><span class="op">)</span>, variable.name <span class="op">=</span> <span class="st">"Sector"</span><span class="op">)</span> 
+<span class="va">data</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/unlist2d.html">unlist2d</a></span><span class="op">(</span><span class="va">pFEVD</span>, idcols <span class="op">=</span> <span class="st">"variable"</span>, row.names <span class="op">=</span> <span class="st">"Time"</span>, id.factor <span class="op">=</span> <span class="cn">TRUE</span>, DT <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span> <span class="op">%&gt;%</span>
+            <span class="fu"><a href="https://rdrr.io/pkg/data.table/man/melt.data.table.html">melt</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span><span class="op">(</span><span class="st">"variable"</span>, <span class="st">"Time"</span><span class="op">)</span>, variable.name <span class="op">=</span> <span class="st">"Sector"</span><span class="op">)</span>
 <span class="fu"><a href="https://rdrr.io/r/utils/head.html">head</a></span><span class="op">(</span><span class="va">data</span>, <span class="fl">3</span><span class="op">)</span>
 <span class="co">#       variable Time      Sector     value</span>
 <span class="co"># 1: STD.HDW.AGR    1 STD.HDW.AGR 0.8469414</span>
@@ -3780,7 +3780,7 @@ pre[class] {
       </footer>
 </div>
 
-  
+
 
 
   </body>

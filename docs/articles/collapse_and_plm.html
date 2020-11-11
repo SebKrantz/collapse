@@ -31,7 +31,7 @@
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">collapse</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">1.4.0</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">1.4.2</span>
       </span>
     </div>
 
@@ -73,7 +73,8 @@
 
       
 
-      </header><script src="collapse_and_plm_files/accessible-code-block-0.0.1/empty-anchor.js"></script><div class="row">
+      </header><script src="collapse_and_plm_files/accessible-code-block-0.0.1/empty-anchor.js"></script><link href="collapse_and_plm_files/anchor-sections-1.0/anchor-sections.css" rel="stylesheet">
+<script src="collapse_and_plm_files/anchor-sections-1.0/anchor-sections.js"></script><div class="row">
   <div class="col-md-9 contents">
     <div class="page-header toc-ignore">
       <h1 data-toc-skip>
@@ -82,7 +83,7 @@
             <h3 class="subtitle">Fast Transformation and Exploration of Panel Data</h3>
                         <h4 class="author">Sebastian Krantz</h4>
             
-            <h4 class="date">2020-11-02</h4>
+            <h4 class="date">2020-11-10</h4>
       
       <small class="dont-index">Source: <a href="https://github.com/SebKrantz/collapse/blob/master/vignettes/collapse_and_plm.Rmd"><code>vignettes/collapse_and_plm.Rmd</code></a></small>
       <div class="hidden name"><code>collapse_and_plm.Rmd</code></div>
@@ -290,7 +291,7 @@ pre[class] {
 <span class="co"># ABW-1961   ABW 1961      NA -6.135351     NA    NA</span>
 <span class="co"># ABW-1962   ABW 1962      NA -5.765351     NA    NA</span></pre></div>
 <!-- The main philosophy behind having transformation operators like `B` and `W` is that they are more parsimonious to use ad-hoc (i.e. to demean a variable in a regression formula), and also offer more convenient output for ad-hoc computations on data.frames, whereas the corresponding functions `fbetween` and `fwithin` are a bit simpler in terms of R-code (and thus a tiny bit faster) and also more convenient for programming since they require all inputs to be provided in terms of data.  -->
-<p><code>fbetween / B</code> and <code>fwithin / W</code> also support weighted computations. This of course applies more to panel-survey settings, but for the sake of illustration suppose we wanted to weight our between and within transformations by the amount of ODA these countries received:</p>
+<p><code>fbetween</code> / <code>B</code> and <code>fwithin</code> / <code>W</code> also support weighted computations. This of course applies more to panel-survey settings, but for the sake of illustration suppose we wanted to weight our between and within transformations by the amount of ODA these countries received:</p>
 <div class="sourceCode" id="cb10"><pre class="downlit">
 <span class="co"># This replaces values by the ODA-weighted group mean and also preserves the weight variable (ODA, argument keep.w = TRUE)</span>
 <span class="fu"><a href="https://rdrr.io/r/utils/head.html">head</a></span><span class="op">(</span><span class="fu"><a href="../reference/fbetween,%20fwithin.html">B</a></span><span class="op">(</span><span class="va">pwlddev</span>, w <span class="op">=</span> <span class="op">~</span> <span class="va">ODA</span><span class="op">)</span>, <span class="fl">3</span><span class="op">)</span>
@@ -317,7 +318,7 @@ pre[class] {
 <div id="higher-dimensional-between-and-within-transformations" class="section level3">
 <h3 class="hasAnchor">
 <a href="#higher-dimensional-between-and-within-transformations" class="anchor"></a>1.2 Higher-Dimensional Between and Within Transformations</h3>
-<p>Analogous to <code>fbetween / B</code> and <code>fwithin / W</code>, <em>collapse</em> provides a duo of functions and operators <code>fHDbetween / HDB</code> and <code>fHDwithin / HDW</code> to efficiently average and center data on multiple groups. The credit herefore goes to Simen Gaure, the author of the <em>lfe</em> package who wrote an efficient C- implementation of the alternating-projections algorithm to perform this task. <code>fHDbetween / HDB</code> and <code>fHDwithin / HDW</code> enrich this implementation (available in the function <code><a href="https://rdrr.io/pkg/lfe/man/demeanlist.html">lfe::demeanlist</a></code>) by providing more options regarding missing values, and also allowing continuous covariates and (full) interactions to be projected out alongside factors. The methods for <em>pseries</em> and <em>pdata.frame</em>’s are however rather simple, as they simply simultaneously center panel-vectors on all panel-identifiers in the index (which can be more than 2):</p>
+<p>Analogous to <code>fbetween</code> / <code>B</code> and <code>fwithin</code> / <code>W</code>, <em>collapse</em> provides a duo of functions and operators <code>fHDbetween</code> / <code>HDB</code> and <code>fHDwithin</code> / <code>HDW</code> to efficiently average and center data on multiple groups. The credit herefore goes to Simen Gaure, the author of the <em>lfe</em> package who wrote an efficient C- implementation of the alternating-projections algorithm to perform this task. <code>fHDbetween</code> / <code>HDB</code> and <code>fHDwithin</code> / <code>HDW</code> enrich this implementation (available in the function <code><a href="https://rdrr.io/pkg/lfe/man/demeanlist.html">lfe::demeanlist</a></code>) by providing more options regarding missing values, and also allowing continuous covariates and (full) interactions to be projected out alongside factors. The methods for <em>pseries</em> and <em>pdata.frame</em>’s are however rather simple, as they simply simultaneously center panel-vectors on all panel-identifiers in the index (which can be more than 2):</p>
 <div class="sourceCode" id="cb11"><pre class="downlit">
 <span class="co"># This simultaneously averages Life-Expectancy across countries and years </span>
 <span class="fu"><a href="https://rdrr.io/r/utils/head.html">head</a></span><span class="op">(</span><span class="fu"><a href="../reference/fHDbetween,%20fHDwithin.html">HDB</a></span><span class="op">(</span><span class="va">LIFEEX</span><span class="op">)</span><span class="op">)</span> <span class="co"># (same as running a regression on country and year dummies and taking the fitted values)</span>
@@ -328,7 +329,7 @@ pre[class] {
 <span class="fu"><a href="https://rdrr.io/r/utils/head.html">head</a></span><span class="op">(</span><span class="fu"><a href="../reference/fHDbetween,%20fHDwithin.html">HDW</a></span><span class="op">(</span><span class="va">LIFEEX</span><span class="op">)</span><span class="op">)</span> <span class="co"># (same as running a regression on country and year dummies and taking the residuals)</span>
 <span class="co"># ABW-1960 ABW-1961 ABW-1962 ABW-1963 ABW-1964 ABW-1965 </span>
 <span class="co"># 3.063807 2.978285 2.963845 2.893861 2.751525 2.663777</span></pre></div>
-<p>The architecture of <code>fHDbetween / HDB</code> and <code>fHDwithin / HDW</code> differs a bit from <code>fbetween / B</code> and <code>fwithin / W</code>. This is essentially a consequence of the underlying C-implementation (accessed through <code><a href="https://rdrr.io/pkg/lfe/man/demeanlist.html">lfe::demeanlist</a></code>), which was not built to accommodate missing values. <code>fHDbetween / HDB</code> and <code>fHDwithin / HDW</code> therefore both have an argument <code>fill = TRUE</code> (the default), which stipulates that missing values in the data are preserved in the output. The <em>collapse</em> default <code>na.rm = TRUE</code> again ensures that only complete cases are used for the computation:</p>
+<p>The architecture of <code>fHDbetween</code> / <code>HDB</code> and <code>fHDwithin</code> / <code>HDW</code> differs a bit from <code>fbetween</code> / <code>B</code> and <code>fwithin</code> / <code>W</code>. This is essentially a consequence of the underlying C-implementation (accessed through <code><a href="https://rdrr.io/pkg/lfe/man/demeanlist.html">lfe::demeanlist</a></code>), which was not built to accommodate missing values. <code>fHDbetween</code> / <code>HDB</code> and <code>fHDwithin</code> / <code>HDW</code> therefore both have an argument <code>fill = TRUE</code> (the default), which stipulates that missing values in the data are preserved in the output. The <em>collapse</em> default <code>na.rm = TRUE</code> again ensures that only complete cases are used for the computation:</p>
 <div class="sourceCode" id="cb12"><pre class="downlit">
 <span class="co"># Missing values are preserved in the output when fill = TRUE (the default)</span>
 <span class="fu"><a href="https://rdrr.io/r/utils/head.html">head</a></span><span class="op">(</span><span class="fu"><a href="../reference/fHDbetween,%20fHDwithin.html">HDB</a></span><span class="op">(</span><span class="va">PCGDP</span><span class="op">)</span>, <span class="fl">30</span><span class="op">)</span>  
@@ -363,7 +364,7 @@ pre[class] {
 <span class="co">#       12       13       14       15       16       17       18       19       20       21       22 </span>
 <span class="co"># ABW-1982 ABW-1983 ABW-1984 ABW-1985 ABW-2018 AFG-1960 AFG-1961 AFG-1962 </span>
 <span class="co">#       23       24       25       26       59       60       61       62</span></pre></div>
-<p>In the <em>pdata.frame</em> methods there are 3 different choices how to deal with missing values. The default for the <em>plm</em> classes in <code>variable.wise = TRUE</code>, which will essentially sequentially apply <code>fHDbetween.pseries</code> and <code>fHDwithin.pseries</code> (with the default <code>fill = TRUE</code>) to all columns. This is the same behavior as in <code>fbetween / B</code> and <code>fwithin / W</code>, which also consider the column-wise complete obs:</p>
+<p>In the <em>pdata.frame</em> methods there are 3 different choices how to deal with missing values. The default for the <em>plm</em> classes in <code>variable.wise = TRUE</code>, which will essentially sequentially apply <code>fHDbetween.pseries</code> and <code>fHDwithin.pseries</code> (with the default <code>fill = TRUE</code>) to all columns. This is the same behavior as in <code>fbetween</code> / <code>B</code> and <code>fwithin</code> / <code>W</code>, which also consider the column-wise complete obs:</p>
 <div class="sourceCode" id="cb13"><pre class="downlit">
 <span class="co"># This column-wise centers the data on countries and years</span>
 <span class="fu"><a href="https://rdrr.io/r/utils/head.html">tail</a></span><span class="op">(</span><span class="fu"><a href="../reference/fHDbetween,%20fHDwithin.html">HDW</a></span><span class="op">(</span><span class="va">pwlddev</span><span class="op">)</span>, <span class="fl">10</span><span class="op">)</span>
@@ -378,7 +379,7 @@ pre[class] {
 <span class="co"># ZWE-2016  3.660315e-28 -5526.032  -1.213358           NA  -6204739</span>
 <span class="co"># ZWE-2017  3.660315e-28 -5224.886         NA           NA  32144901</span>
 <span class="co"># ZWE-2018  3.660315e-28        NA         NA           NA        NA</span></pre></div>
-<p>If <code>variable.wise = FALSE</code>, <code>fHDbetween / HDB</code> and <code>fHDwithin / HDW</code> will only consider the complete cases in the dataset, but still return a dataset of the same dimensions (as long as <code>fill = TRUE</code>), resulting in some rows all-missing:</p>
+<p>If <code>variable.wise = FALSE</code>, <code>fHDbetween</code> / <code>HDB</code> and <code>fHDwithin</code> / <code>HDW</code> will only consider the complete cases in the dataset, but still return a dataset of the same dimensions (as long as <code>fill = TRUE</code>), resulting in some rows all-missing:</p>
 <div class="sourceCode" id="cb14"><pre class="downlit">
 <span class="co"># This centers the complete cases of the data data on countries and years and keeps missing cases</span>
 <span class="fu"><a href="https://rdrr.io/r/utils/head.html">tail</a></span><span class="op">(</span><span class="fu"><a href="../reference/fHDbetween,%20fHDwithin.html">HDW</a></span><span class="op">(</span><span class="va">pwlddev</span>, variable.wise <span class="op">=</span> <span class="cn">FALSE</span><span class="op">)</span>, <span class="fl">10</span><span class="op">)</span>
@@ -417,12 +418,12 @@ pre[class] {
 <!-- # This centers the complete cases of the data data on countries and years, and removes missing cases -->
 <!-- HDW(pwlddev, w = pwlddev$ODA, cols = 9:11, fill = FALSE, variable.wise = FALSE) -->
 <!-- ``` -->
-<p><em>Notes: </em> (1) Because of the different missing case options and associated challenges, panel-identifiers are not preserved in <code>HDB</code> and <code>HDW</code>. (2) The default <code>variable.wise = TRUE</code> and <code>fill = TRUE</code> was only set for the <em>pseries</em> and <em>pdata.frame</em> methods, to harmonize the default implementations with <code>fbetween / B</code> and <code>fwithin / W</code> for these classes. In the standard <em>default</em>, <em>matrix</em> and <em>data.frame</em> methods, the defaults are <code>variable.wise = FALSE</code> and <code>fill = FALSE</code> (i.e. missing cases are removed beforehand), which is generally more efficient.</p>
+<p><em>Notes: </em> (1) Because of the different missing case options and associated challenges, panel-identifiers are not preserved in <code>HDB</code> and <code>HDW</code>. (2) The default <code>variable.wise = TRUE</code> and <code>fill = TRUE</code> was only set for the <em>pseries</em> and <em>pdata.frame</em> methods, to harmonize the default implementations with <code>fbetween</code> / <code>B</code> and <code>fwithin</code> / <code>W</code> for these classes. In the standard <em>default</em>, <em>matrix</em> and <em>data.frame</em> methods, the defaults are <code>variable.wise = FALSE</code> and <code>fill = FALSE</code> (i.e. missing cases are removed beforehand), which is generally more efficient.</p>
 </div>
 <div id="scaling-and-centering" class="section level3">
 <h3 class="hasAnchor">
 <a href="#scaling-and-centering" class="anchor"></a>1.3 Scaling and Centering</h3>
-<p>Next to the above functions for grouped centering and averaging, the function / operator pair <code>fscale / STD</code> can be used to efficiently standardize (i.e. scale and center) panel data along an arbitrary dimension. The architecture is identical to that of <code>fwithin / W</code> or <code>fbetween / B</code>.</p>
+<p>Next to the above functions for grouped centering and averaging, the function / operator pair <code>fscale</code> / <code>STD</code> can be used to efficiently standardize (i.e. scale and center) panel data along an arbitrary dimension. The architecture is identical to that of <code>fwithin</code> / <code>W</code> or <code>fbetween</code> / <code>B</code>.</p>
 <div class="sourceCode" id="cb16"><pre class="downlit">
 <span class="co"># This standardizes GDP per capita in each country</span>
 <span class="va">STD_PCGDP</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/fscale.html">STD</a></span><span class="op">(</span><span class="va">PCGDP</span><span class="op">)</span>
@@ -464,7 +465,7 @@ pre[class] {
 <span class="co"># ABW-1963   ABW 1963        NA  0.9690544       NA      NA</span>
 <span class="co"># ABW-1964   ABW 1964        NA  0.9592609       NA      NA</span>
 <span class="co"># ABW-1965   ABW 1965        NA  0.9563056       NA      NA</span></pre></div>
-<p>More customized scaling can be done with the help of the <code>mean</code> and <code>sd</code> arguments to <code>fscale / STD</code>. By default <code>mean = 0</code> and <code>sd = 1</code>, but these could be assigned any numeric values:</p>
+<p>More customized scaling can be done with the help of the <code>mean</code> and <code>sd</code> arguments to <code>fscale</code> / <code>STD</code>. By default <code>mean = 0</code> and <code>sd = 1</code>, but these could be assigned any numeric values:</p>
 <div class="sourceCode" id="cb18"><pre class="downlit">
 <span class="co"># This will scale the data such that mean mean within each country is 5 and the standard deviation is 3</span>
 <span class="fu"><a href="../reference/qsu.html">qsu</a></span><span class="op">(</span><span class="fu"><a href="../reference/fscale.html">fscale</a></span><span class="op">(</span><span class="va">pwlddev</span><span class="op">$</span><span class="va">PCGDP</span>, mean <span class="op">=</span> <span class="fl">5</span>, sd <span class="op">=</span> <span class="fl">3</span><span class="op">)</span><span class="op">)</span>
@@ -508,9 +509,9 @@ pre[class] {
 <h3 class="hasAnchor">
 <a href="#panel-lags-leads-differences-and-growth-rates" class="anchor"></a>1.4 Panel Lags / Leads, Differences and Growth Rates</h3>
 <!-- A proper *and* fast implementation of panel- lags, differences and growth rates has been missing in R so far. -->
-<p>With <code>flag / L / F</code>, <code>fdiff / D</code> and <code>fgrowth / G</code>, <em>collapse</em> provides a fast and comprehensive C++ based solution to the computation of (sequences of) lags / leads and (sequences of) lagged / leaded and suitably iterated (quasi-, log-) differences and growth rates on panel data. The <em>pseries</em> and <em>pdata.frame</em> methods to these functions and associated <em>transformation operators</em> use the panel-identifiers in the ‘index’ attached to these objects (where the last variable in the ‘index’ is taken as the time-variable and the variables before that are taken as individual identifiers) to perform fast fully-identified time-dependent operations on panel data, without the need of sorting the data.</p>
+<p>With <code>flag</code> / <code>L</code> / <code>F</code>, <code>fdiff</code> / <code>D</code> and <code>fgrowth</code> / <code>G</code>, <em>collapse</em> provides a fast and comprehensive C++ based solution to the computation of (sequences of) lags / leads and (sequences of) lagged / leaded and suitably iterated (quasi-, log-) differences and growth rates on panel data. The <em>pseries</em> and <em>pdata.frame</em> methods to these functions and associated <em>transformation operators</em> use the panel-identifiers in the ‘index’ attached to these objects (where the last variable in the ‘index’ is taken as the time-variable and the variables before that are taken as individual identifiers) to perform fast fully-identified time-dependent operations on panel data, without the need of sorting the data.</p>
 <!-- With 'proper' I mean an implementation that does not require panel-vectors to be sorted (amounting i.e. to a grouped-lag on sorted data), but that takes into account both individual an time-identifiers in the computation. `plm::lag` and `dplyr::lag` (with the `order_by` argument) provide proper implementations but rely on base-R (split-apply-combine logic) which makes them slow. `data.table::shift` allows for pretty fast grouped lags on sorted data, but without taking into account the time-identifiers (you can do something like `DT[oder(time), shift(col1), by = pid]` in *data.table* but that sorts the data and is definitely more computationally expensive than the implementation introduced here).  -->
-<p>With <code>flag / L / F</code>, it is easy to lag or lead <em>pseries</em>:</p>
+<p>With <code>flag</code> / <code>L</code> / <code>F</code>, it is easy to lag or lead <em>pseries</em>:</p>
 <div class="sourceCode" id="cb21"><pre class="downlit">
 <span class="co"># A panel-lag</span>
 <span class="fu"><a href="https://rdrr.io/r/utils/head.html">head</a></span><span class="op">(</span><span class="fu"><a href="../reference/flag.html">flag</a></span><span class="op">(</span><span class="va">LIFEEX</span><span class="op">)</span><span class="op">)</span>      
@@ -551,7 +552,7 @@ pre[class] {
 <span class="co"># ABW-1963 67.113 66.787 66.444 66.074 65.662</span></pre></div>
 <!-- # Just the meaning is a bit ambiguous... -->
 <!-- head(plm::lead(LIFEEX, 1:-3), 4) -->
-<p>Of course the lag orders may be unevenly spaced, i.e. <code><a href="../reference/flag.html">L(x, -1:3*12)</a></code> would compute seasonal lags on monthly data. On <em>pdata.frame</em>’s, the effects of <code>flag</code> and <code>L / F</code> differ insofar that <code>flag</code> will just lag the entire dataset without preserving identifiers (although the index attribute is always preserved), whereas <code>L / F</code> by default (<code>cols = is.numeric</code>) select the numeric variables and add the panel-id’s on the left (default <code>keep.ids = TRUE</code>):</p>
+<p>Of course the lag orders may be unevenly spaced, i.e. <code><a href="../reference/flag.html">L(x, -1:3*12)</a></code> would compute seasonal lags on monthly data. On <em>pdata.frame</em>’s, the effects of <code>flag</code> and <code>L</code> / <code>F</code> differ insofar that <code>flag</code> will just lag the entire dataset without preserving identifiers (although the index attribute is always preserved), whereas <code>L</code> / <code>F</code> by default (<code>cols = is.numeric</code>) select the numeric variables and add the panel-id’s on the left (default <code>keep.ids = TRUE</code>):</p>
 <div class="sourceCode" id="cb23"><pre class="downlit">
 <span class="co"># This lags the entire data</span>
 <span class="fu"><a href="https://rdrr.io/r/utils/head.html">head</a></span><span class="op">(</span><span class="fu"><a href="../reference/flag.html">flag</a></span><span class="op">(</span><span class="va">pwlddev</span><span class="op">)</span><span class="op">)</span>
@@ -607,7 +608,7 @@ pre[class] {
 <span class="co"># ABW-1963    65.662      NA   NA      NA      NA      NA     NA  NA     NA     NA     NA</span>
 <span class="co"># ABW-1964    66.074      NA   NA      NA      NA      NA     NA  NA     NA     NA     NA</span>
 <span class="co"># ABW-1965    66.444      NA   NA      NA      NA      NA     NA  NA     NA     NA     NA</span></pre></div>
-<p>Essentially the same functionality applies to <code>fdiff / D</code> and <code>fgrowth / G</code>, with the main differences that these functions also have a <code>diff</code> argument to determine the number of iterations:</p>
+<p>Essentially the same functionality applies to <code>fdiff</code> / <code>D</code> and <code>fgrowth</code> / <code>G</code>, with the main differences that these functions also have a <code>diff</code> argument to determine the number of iterations:</p>
 <div class="sourceCode" id="cb25"><pre class="downlit">
 <span class="co"># Panel-difference of Life Expectancy</span>
 <span class="fu"><a href="https://rdrr.io/r/utils/head.html">head</a></span><span class="op">(</span><span class="fu"><a href="../reference/fdiff.html">fdiff</a></span><span class="op">(</span><span class="va">LIFEEX</span><span class="op">)</span><span class="op">)</span>
@@ -929,117 +930,117 @@ pre[class] {
 <span class="co"># Between Transformations</span>
 <span class="fu"><a href="https://rdrr.io/pkg/microbenchmark/man/microbenchmark.html">microbenchmark</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/pkg/plm/man/pseries.html">Between</a></span><span class="op">(</span><span class="va">LIFEEX_l</span>, na.rm <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span>, times <span class="op">=</span> <span class="fl">10</span><span class="op">)</span>
 <span class="co"># Unit: milliseconds</span>
-<span class="co">#                             expr      min      lq     mean   median       uq      max neval</span>
-<span class="co">#  Between(LIFEEX_l, na.rm = TRUE) 307.5978 323.673 371.0135 366.7227 392.3161 525.4167    10</span>
+<span class="co">#                             expr      min       lq     mean   median       uq      max neval</span>
+<span class="co">#  Between(LIFEEX_l, na.rm = TRUE) 321.2524 357.0205 417.1375 403.1269 409.7929 610.1959    10</span>
 <span class="fu"><a href="https://rdrr.io/pkg/microbenchmark/man/microbenchmark.html">microbenchmark</a></span><span class="op">(</span><span class="fu"><a href="../reference/fbetween,%20fwithin.html">fbetween</a></span><span class="op">(</span><span class="va">LIFEEX_l</span><span class="op">)</span>, times <span class="op">=</span> <span class="fl">10</span><span class="op">)</span>
 <span class="co"># Unit: milliseconds</span>
-<span class="co">#                expr      min       lq     mean   median       uq      max neval</span>
-<span class="co">#  fbetween(LIFEEX_l) 12.75867 20.55641 26.75345 22.15643 23.18972 52.57113    10</span>
+<span class="co">#                expr     min       lq     mean   median       uq      max neval</span>
+<span class="co">#  fbetween(LIFEEX_l) 22.9211 24.34998 32.24345 26.55534 32.26375 57.91812    10</span>
 
 <span class="co"># Within Transformations</span>
 <span class="fu"><a href="https://rdrr.io/pkg/microbenchmark/man/microbenchmark.html">microbenchmark</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/pkg/plm/man/pseries.html">Within</a></span><span class="op">(</span><span class="va">LIFEEX_l</span>, na.rm <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span>, times <span class="op">=</span> <span class="fl">10</span><span class="op">)</span>
 <span class="co"># Unit: milliseconds</span>
-<span class="co">#                            expr      min       lq     mean   median       uq      max neval</span>
-<span class="co">#  Within(LIFEEX_l, na.rm = TRUE) 500.0105 533.8196 638.3605 574.5381 791.9289 861.7613    10</span>
+<span class="co">#                            expr      min      lq     mean   median      uq      max neval</span>
+<span class="co">#  Within(LIFEEX_l, na.rm = TRUE) 569.5186 596.895 712.6798 671.8946 846.653 880.5353    10</span>
 <span class="fu"><a href="https://rdrr.io/pkg/microbenchmark/man/microbenchmark.html">microbenchmark</a></span><span class="op">(</span><span class="fu"><a href="../reference/fbetween,%20fwithin.html">fwithin</a></span><span class="op">(</span><span class="va">LIFEEX_l</span><span class="op">)</span>, times <span class="op">=</span> <span class="fl">10</span><span class="op">)</span>
 <span class="co"># Unit: milliseconds</span>
-<span class="co">#               expr      min       lq     mean  median       uq      max neval</span>
-<span class="co">#  fwithin(LIFEEX_l) 14.16882 21.18606 25.29583 21.7528 21.84517 69.75792    10</span>
+<span class="co">#               expr      min       lq     mean   median       uq      max neval</span>
+<span class="co">#  fwithin(LIFEEX_l) 17.30506 22.25262 28.08999 23.02976 26.84674 72.33283    10</span>
 
 <span class="co"># Higher-Dimenional Between and Within Transformations</span>
 <span class="fu"><a href="https://rdrr.io/pkg/microbenchmark/man/microbenchmark.html">microbenchmark</a></span><span class="op">(</span><span class="fu"><a href="../reference/fHDbetween,%20fHDwithin.html">fHDbetween</a></span><span class="op">(</span><span class="va">LIFEEX_l</span><span class="op">)</span>, times <span class="op">=</span> <span class="fl">10</span><span class="op">)</span>
 <span class="co"># Unit: milliseconds</span>
-<span class="co">#                  expr      min       lq     mean   median       uq      max neval</span>
-<span class="co">#  fHDbetween(LIFEEX_l) 147.0155 166.3023 205.2434 194.5058 199.3023 404.5076    10</span>
+<span class="co">#                  expr     min       lq     mean   median       uq     max neval</span>
+<span class="co">#  fHDbetween(LIFEEX_l) 154.451 163.1707 187.7346 189.5687 201.9608 239.829    10</span>
 <span class="fu"><a href="https://rdrr.io/pkg/microbenchmark/man/microbenchmark.html">microbenchmark</a></span><span class="op">(</span><span class="fu"><a href="../reference/fHDbetween,%20fHDwithin.html">fHDwithin</a></span><span class="op">(</span><span class="va">LIFEEX_l</span><span class="op">)</span>, times <span class="op">=</span> <span class="fl">10</span><span class="op">)</span>
 <span class="co"># Unit: milliseconds</span>
-<span class="co">#                 expr      min       lq     mean   median       uq      max neval</span>
-<span class="co">#  fHDwithin(LIFEEX_l) 149.4573 162.6877 183.4577 189.2526 200.8017 205.7917    10</span>
+<span class="co">#                 expr      min       lq     mean  median       uq     max neval</span>
+<span class="co">#  fHDwithin(LIFEEX_l) 139.6396 159.0036 215.2648 191.185 208.0088 465.399    10</span>
 
 <span class="co"># Single Lag</span>
 <span class="fu"><a href="https://rdrr.io/pkg/microbenchmark/man/microbenchmark.html">microbenchmark</a></span><span class="op">(</span><span class="fu">plm</span><span class="fu">::</span><span class="fu"><a href="https://rdrr.io/pkg/plm/man/re-export_functions.html">lag</a></span><span class="op">(</span><span class="va">LIFEEX_l</span><span class="op">)</span>, times <span class="op">=</span> <span class="fl">10</span><span class="op">)</span>
 <span class="co"># Unit: milliseconds</span>
 <span class="co">#                expr      min       lq     mean   median       uq      max neval</span>
-<span class="co">#  plm::lag(LIFEEX_l) 577.8009 613.5681 696.5552 662.4048 703.5941 950.4236    10</span>
+<span class="co">#  plm::lag(LIFEEX_l) 625.2492 658.3925 758.2946 700.9846 736.0178 1271.151    10</span>
 <span class="fu"><a href="https://rdrr.io/pkg/microbenchmark/man/microbenchmark.html">microbenchmark</a></span><span class="op">(</span><span class="fu"><a href="../reference/flag.html">flag</a></span><span class="op">(</span><span class="va">LIFEEX_l</span><span class="op">)</span>, times <span class="op">=</span> <span class="fl">10</span><span class="op">)</span>
 <span class="co"># Unit: milliseconds</span>
-<span class="co">#            expr      min       lq     mean   median       uq      max neval</span>
-<span class="co">#  flag(LIFEEX_l) 14.94038 19.33012 36.81719 31.14899 31.96429 98.90683    10</span>
+<span class="co">#            expr      min       lq     mean   median       uq     max neval</span>
+<span class="co">#  flag(LIFEEX_l) 16.41881 22.97911 41.20536 38.44407 41.42077 100.239    10</span>
 
 <span class="co"># Sequence of Lags / Leads</span>
 <span class="fu"><a href="https://rdrr.io/pkg/microbenchmark/man/microbenchmark.html">microbenchmark</a></span><span class="op">(</span><span class="fu">plm</span><span class="fu">::</span><span class="fu"><a href="https://rdrr.io/pkg/plm/man/re-export_functions.html">lag</a></span><span class="op">(</span><span class="va">LIFEEX_l</span>, <span class="op">-</span><span class="fl">1</span><span class="op">:</span><span class="fl">3</span><span class="op">)</span>, times <span class="op">=</span> <span class="fl">10</span><span class="op">)</span>
 <span class="co"># Unit: seconds</span>
-<span class="co">#                      expr      min       lq    mean   median       uq      max neval</span>
-<span class="co">#  plm::lag(LIFEEX_l, -1:3) 2.790336 2.915274 2.98478 2.931508 3.012802 3.387312    10</span>
+<span class="co">#                      expr      min       lq     mean   median       uq      max neval</span>
+<span class="co">#  plm::lag(LIFEEX_l, -1:3) 2.753855 2.890063 3.127837 3.120392 3.327894 3.490609    10</span>
 <span class="fu"><a href="https://rdrr.io/pkg/microbenchmark/man/microbenchmark.html">microbenchmark</a></span><span class="op">(</span><span class="fu"><a href="../reference/flag.html">flag</a></span><span class="op">(</span><span class="va">LIFEEX_l</span>, <span class="op">-</span><span class="fl">1</span><span class="op">:</span><span class="fl">3</span><span class="op">)</span>, times <span class="op">=</span> <span class="fl">10</span><span class="op">)</span>
 <span class="co"># Unit: milliseconds</span>
-<span class="co">#                  expr      min       lq     mean   median       uq     max neval</span>
-<span class="co">#  flag(LIFEEX_l, -1:3) 46.98098 50.99632 66.36759 56.21005 57.60748 120.457    10</span>
+<span class="co">#                  expr      min       lq     mean   median       uq      max neval</span>
+<span class="co">#  flag(LIFEEX_l, -1:3) 44.13529 45.15452 62.82426 47.55623 97.45839 104.7197    10</span>
 
 <span class="co"># Single difference</span>
 <span class="fu"><a href="https://rdrr.io/pkg/microbenchmark/man/microbenchmark.html">microbenchmark</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/diff.html">diff</a></span><span class="op">(</span><span class="va">LIFEEX_l</span><span class="op">)</span>, times <span class="op">=</span> <span class="fl">10</span><span class="op">)</span>
 <span class="co"># Unit: milliseconds</span>
 <span class="co">#            expr      min       lq     mean   median       uq      max neval</span>
-<span class="co">#  diff(LIFEEX_l) 691.6026 753.7234 810.9996 791.9532 843.6745 975.1319    10</span>
+<span class="co">#  diff(LIFEEX_l) 702.6594 751.8088 893.2818 898.3721 1011.945 1164.301    10</span>
 <span class="fu"><a href="https://rdrr.io/pkg/microbenchmark/man/microbenchmark.html">microbenchmark</a></span><span class="op">(</span><span class="fu"><a href="../reference/fdiff.html">fdiff</a></span><span class="op">(</span><span class="va">LIFEEX_l</span><span class="op">)</span>, times <span class="op">=</span> <span class="fl">10</span><span class="op">)</span>
 <span class="co"># Unit: milliseconds</span>
 <span class="co">#             expr      min       lq     mean   median       uq      max neval</span>
-<span class="co">#  fdiff(LIFEEX_l) 16.81953 23.50923 34.58733 30.96179 33.15577 98.74395    10</span>
+<span class="co">#  fdiff(LIFEEX_l) 15.16263 16.37865 25.41473 19.08894 27.44472 70.02126    10</span>
 
 <span class="co"># Iterated Difference</span>
 <span class="fu"><a href="https://rdrr.io/pkg/microbenchmark/man/microbenchmark.html">microbenchmark</a></span><span class="op">(</span><span class="fu"><a href="../reference/fdiff.html">fdiff</a></span><span class="op">(</span><span class="va">LIFEEX_l</span>, diff <span class="op">=</span> <span class="fl">2</span><span class="op">)</span>, times <span class="op">=</span> <span class="fl">10</span><span class="op">)</span>
 <span class="co"># Unit: milliseconds</span>
 <span class="co">#                       expr      min       lq     mean   median       uq      max neval</span>
-<span class="co">#  fdiff(LIFEEX_l, diff = 2) 19.85892 30.84332 38.42359 36.27928 37.60843 83.14223    10</span>
+<span class="co">#  fdiff(LIFEEX_l, diff = 2) 19.89464 20.85675 28.97736 23.33477 35.80607 60.62238    10</span>
 
 <span class="co"># Sequence of Lagged / Leaded and iterated differences</span>
 <span class="fu"><a href="https://rdrr.io/pkg/microbenchmark/man/microbenchmark.html">microbenchmark</a></span><span class="op">(</span><span class="fu"><a href="../reference/fdiff.html">fdiff</a></span><span class="op">(</span><span class="va">LIFEEX_l</span>, <span class="op">-</span><span class="fl">1</span><span class="op">:</span><span class="fl">3</span>, <span class="fl">1</span><span class="op">:</span><span class="fl">2</span><span class="op">)</span>, times <span class="op">=</span> <span class="fl">10</span><span class="op">)</span>
 <span class="co"># Unit: milliseconds</span>
-<span class="co">#                        expr      min       lq     mean   median       uq      max neval</span>
-<span class="co">#  fdiff(LIFEEX_l, -1:3, 1:2) 94.66747 115.7741 137.0788 119.9046 172.6493 177.5076    10</span>
+<span class="co">#                        expr      min       lq     mean   median       uq     max neval</span>
+<span class="co">#  fdiff(LIFEEX_l, -1:3, 1:2) 91.54248 137.1624 180.1453 151.6573 170.0451 423.262    10</span>
 
 <span class="co"># Single Growth Rate</span>
 <span class="fu"><a href="https://rdrr.io/pkg/microbenchmark/man/microbenchmark.html">microbenchmark</a></span><span class="op">(</span><span class="fu"><a href="../reference/fgrowth.html">fgrowth</a></span><span class="op">(</span><span class="va">LIFEEX_l</span><span class="op">)</span>, times <span class="op">=</span> <span class="fl">10</span><span class="op">)</span>
 <span class="co"># Unit: milliseconds</span>
-<span class="co">#               expr      min       lq     mean   median       uq      max neval</span>
-<span class="co">#  fgrowth(LIFEEX_l) 18.95661 29.08956 38.47701 35.88145 38.18989 84.33148    10</span>
+<span class="co">#               expr      min       lq     mean   median       uq     max neval</span>
+<span class="co">#  fgrowth(LIFEEX_l) 21.41456 23.61635 30.92603 24.34708 36.55666 62.1847    10</span>
 
 <span class="co"># Single Log-Difference</span>
 <span class="fu"><a href="https://rdrr.io/pkg/microbenchmark/man/microbenchmark.html">microbenchmark</a></span><span class="op">(</span><span class="fu"><a href="../reference/fdiff.html">fdiff</a></span><span class="op">(</span><span class="va">LIFEEX_l</span>, log <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span>, times <span class="op">=</span> <span class="fl">10</span><span class="op">)</span>
 <span class="co"># Unit: milliseconds</span>
 <span class="co">#                         expr      min       lq     mean   median       uq      max neval</span>
-<span class="co">#  fdiff(LIFEEX_l, log = TRUE) 60.68525 78.93679 94.65341 92.16357 94.46354 169.3319    10</span>
+<span class="co">#  fdiff(LIFEEX_l, log = TRUE) 60.56928 64.79436 81.86277 78.39043 87.97294 126.5507    10</span>
 
 <span class="co"># Panel Series to Matrix Conversion</span>
 <span class="co"># system.time(as.matrix(LIFEEX_l))  This takes about 3 minutes to compute</span>
 <span class="fu"><a href="https://rdrr.io/pkg/microbenchmark/man/microbenchmark.html">microbenchmark</a></span><span class="op">(</span><span class="fu"><a href="../reference/psmat.html">psmat</a></span><span class="op">(</span><span class="va">LIFEEX_l</span><span class="op">)</span>, times <span class="op">=</span> <span class="fl">10</span><span class="op">)</span>
 <span class="co"># Unit: milliseconds</span>
-<span class="co">#             expr      min       lq     mean   median       uq      max neval</span>
-<span class="co">#  psmat(LIFEEX_l) 4.809213 4.934163 6.866059 7.846823 7.923577 8.577331    10</span></pre></div>
+<span class="co">#             expr     min       lq     mean   median       uq      max neval</span>
+<span class="co">#  psmat(LIFEEX_l) 4.55798 4.622686 5.484793 5.435527 6.157334 6.751736    10</span></pre></div>
 <!-- The results show that I did not promise to much in the introduction. A speed gain of 20-40x is the norm, and for certain operations such as the sequence of lags and leads the speed gain is about 100x, and for the panel series to matrix conversion a 300x speed gain by using *collapse* vs. native *plm*.  -->
 <p>This shows a comparison between flag and <em>data.table</em>’s shift:</p>
 <div class="sourceCode" id="cb38"><pre class="downlit">
 <span class="fu"><a href="https://rdrr.io/pkg/microbenchmark/man/microbenchmark.html">microbenchmark</a></span><span class="op">(</span><span class="fu"><a href="../reference/flag.html">L</a></span><span class="op">(</span><span class="va">data</span>, cols <span class="op">=</span> <span class="fl">3</span><span class="op">:</span><span class="fl">6</span><span class="op">)</span>, times <span class="op">=</span> <span class="fl">10</span><span class="op">)</span>
 <span class="co"># Unit: milliseconds</span>
 <span class="co">#                 expr      min       lq     mean   median       uq      max neval</span>
-<span class="co">#  L(data, cols = 3:6) 20.08472 33.91038 44.32495 40.64626 42.56982 101.9208    10</span>
+<span class="co">#  L(data, cols = 3:6) 19.19715 21.69793 33.01621 26.35007 40.22884 82.30157    10</span>
 <span class="kw"><a href="https://rdrr.io/r/base/library.html">library</a></span><span class="op">(</span><span class="va"><a href="http://r-datatable.com">data.table</a></span><span class="op">)</span>
 <span class="fu"><a href="https://rdrr.io/pkg/data.table/man/setDT.html">setDT</a></span><span class="op">(</span><span class="va">data</span><span class="op">)</span>
 <span class="co"># 'Improper' panel-lag</span>
 <span class="fu"><a href="https://rdrr.io/pkg/microbenchmark/man/microbenchmark.html">microbenchmark</a></span><span class="op">(</span><span class="va">data</span><span class="op">[</span>, <span class="fu"><a href="https://rdrr.io/pkg/data.table/man/shift.html">shift</a></span><span class="op">(</span><span class="va">.SD</span><span class="op">)</span>, by <span class="op">=</span> <span class="va">iso3c</span>, .SDcols <span class="op">=</span> <span class="fl">3</span><span class="op">:</span><span class="fl">6</span><span class="op">]</span>, times <span class="op">=</span> <span class="fl">10</span><span class="op">)</span>
 <span class="co"># Unit: milliseconds</span>
-<span class="co">#                                           expr      min       lq    mean   median       uq      max</span>
-<span class="co">#  data[, shift(.SD), by = iso3c, .SDcols = 3:6] 501.9008 509.1889 531.979 524.3796 557.0802 573.6713</span>
-<span class="co">#  neval</span>
-<span class="co">#     10</span>
+<span class="co">#                                           expr      min       lq     mean   median       uq</span>
+<span class="co">#  data[, shift(.SD), by = iso3c, .SDcols = 3:6] 487.5325 495.4695 549.1769 536.4757 564.4229</span>
+<span class="co">#       max neval</span>
+<span class="co">#  743.7611    10</span>
 
 <span class="co"># This does what L is actually doing (without sorting the data)</span>
 <span class="fu"><a href="https://rdrr.io/pkg/microbenchmark/man/microbenchmark.html">microbenchmark</a></span><span class="op">(</span><span class="va">data</span><span class="op">[</span><span class="fu"><a href="https://rdrr.io/pkg/data.table/man/setorder.html">order</a></span><span class="op">(</span><span class="va">year</span><span class="op">)</span>, <span class="fu"><a href="https://rdrr.io/pkg/data.table/man/shift.html">shift</a></span><span class="op">(</span><span class="va">.SD</span><span class="op">)</span>, by <span class="op">=</span> <span class="va">iso3c</span>, .SDcols <span class="op">=</span> <span class="fl">3</span><span class="op">:</span><span class="fl">6</span><span class="op">]</span>, times <span class="op">=</span> <span class="fl">10</span><span class="op">)</span> 
 <span class="co"># Unit: milliseconds</span>
 <span class="co">#                                                      expr      min       lq     mean   median</span>
-<span class="co">#  data[order(year), shift(.SD), by = iso3c, .SDcols = 3:6] 508.3174 522.6656 545.5088 537.1682</span>
-<span class="co">#        uq      max neval</span>
-<span class="co">#  554.2608 617.3866    10</span></pre></div>
+<span class="co">#  data[order(year), shift(.SD), by = iso3c, .SDcols = 3:6] 500.1399 549.4976 601.2399 591.2596</span>
+<span class="co">#        uq     max neval</span>
+<span class="co">#  639.8419 767.282    10</span></pre></div>
 <p>The above dataset has 1 million obs in 20 thousand groups, but what about 10 million obs and 1 million groups? Do <em>collapse</em> functions scale efficiently as data and the number of groups grows large? Here is a simple benchmark:</p>
 <div class="sourceCode" id="cb39"><pre class="downlit">
 <span class="va">x</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/stats/Normal.html">rnorm</a></span><span class="op">(</span><span class="fl">1e7</span><span class="op">)</span>                                     <span class="co"># 10 million obs</span>
@@ -1048,32 +1049,32 @@ pre[class] {
 
 <span class="fu"><a href="https://rdrr.io/pkg/microbenchmark/man/microbenchmark.html">microbenchmark</a></span><span class="op">(</span><span class="fu"><a href="../reference/fbetween,%20fwithin.html">fbetween</a></span><span class="op">(</span><span class="va">x</span>, <span class="va">g</span><span class="op">)</span>, times <span class="op">=</span> <span class="fl">10</span><span class="op">)</span>
 <span class="co"># Unit: milliseconds</span>
-<span class="co">#            expr      min       lq     mean   median       uq      max neval</span>
-<span class="co">#  fbetween(x, g) 80.24608 82.07748 107.4028 90.21771 139.9175 143.9841    10</span>
+<span class="co">#            expr      min      lq     mean   median      uq      max neval</span>
+<span class="co">#  fbetween(x, g) 78.65081 81.4055 114.7226 118.0597 142.658 153.3782    10</span>
 <span class="fu"><a href="https://rdrr.io/pkg/microbenchmark/man/microbenchmark.html">microbenchmark</a></span><span class="op">(</span><span class="fu"><a href="../reference/fbetween,%20fwithin.html">fwithin</a></span><span class="op">(</span><span class="va">x</span>, <span class="va">g</span><span class="op">)</span>, times <span class="op">=</span> <span class="fl">10</span><span class="op">)</span>
 <span class="co"># Unit: milliseconds</span>
 <span class="co">#           expr      min       lq     mean   median       uq      max neval</span>
-<span class="co">#  fwithin(x, g) 80.90206 82.14977 114.7487 102.3369 142.8337 173.4918    10</span>
+<span class="co">#  fwithin(x, g) 78.11799 79.76153 104.9937 88.07156 137.1557 142.7374    10</span>
 <span class="fu"><a href="https://rdrr.io/pkg/microbenchmark/man/microbenchmark.html">microbenchmark</a></span><span class="op">(</span><span class="fu"><a href="../reference/flag.html">flag</a></span><span class="op">(</span><span class="va">x</span>, <span class="fl">1</span>, <span class="va">g</span>, <span class="va">t</span><span class="op">)</span>, times <span class="op">=</span> <span class="fl">10</span><span class="op">)</span>
 <span class="co"># Unit: milliseconds</span>
-<span class="co">#              expr      min       lq     mean   median       uq      max neval</span>
-<span class="co">#  flag(x, 1, g, t) 148.3074 210.0252 217.5297 212.9218 239.8863 261.2665    10</span>
+<span class="co">#              expr      min       lq    mean   median       uq      max neval</span>
+<span class="co">#  flag(x, 1, g, t) 126.7497 169.4333 175.245 179.0611 187.8652 197.5327    10</span>
 <span class="fu"><a href="https://rdrr.io/pkg/microbenchmark/man/microbenchmark.html">microbenchmark</a></span><span class="op">(</span><span class="fu"><a href="../reference/flag.html">flag</a></span><span class="op">(</span><span class="va">x</span>, <span class="op">-</span><span class="fl">1</span><span class="op">:</span><span class="fl">1</span>, <span class="va">g</span>, <span class="va">t</span><span class="op">)</span>, times <span class="op">=</span> <span class="fl">10</span><span class="op">)</span>
 <span class="co"># Unit: milliseconds</span>
-<span class="co">#                 expr      min      lq     mean   median       uq      max neval</span>
-<span class="co">#  flag(x, -1:1, g, t) 323.4155 326.707 400.9233 354.0218 409.3369 651.7789    10</span>
+<span class="co">#                 expr      min       lq     mean   median       uq      max neval</span>
+<span class="co">#  flag(x, -1:1, g, t) 282.3159 284.5083 341.3092 297.9138 321.9623 527.8443    10</span>
 <span class="fu"><a href="https://rdrr.io/pkg/microbenchmark/man/microbenchmark.html">microbenchmark</a></span><span class="op">(</span><span class="fu"><a href="../reference/fdiff.html">fdiff</a></span><span class="op">(</span><span class="va">x</span>, <span class="fl">1</span>, <span class="fl">1</span>, <span class="va">g</span>, <span class="va">t</span><span class="op">)</span>, times <span class="op">=</span> <span class="fl">10</span><span class="op">)</span>
 <span class="co"># Unit: milliseconds</span>
-<span class="co">#                  expr      min       lq     mean   median       uq      max neval</span>
-<span class="co">#  fdiff(x, 1, 1, g, t) 152.9997 168.1699 219.5773 224.6477 259.6507 285.6218    10</span>
+<span class="co">#                  expr      min       lq     mean  median       uq      max neval</span>
+<span class="co">#  fdiff(x, 1, 1, g, t) 123.4296 139.6596 170.6048 178.334 194.2309 202.2397    10</span>
 <span class="fu"><a href="https://rdrr.io/pkg/microbenchmark/man/microbenchmark.html">microbenchmark</a></span><span class="op">(</span><span class="fu"><a href="../reference/fdiff.html">fdiff</a></span><span class="op">(</span><span class="va">x</span>, <span class="fl">1</span>, <span class="fl">2</span>, <span class="va">g</span>, <span class="va">t</span><span class="op">)</span>, times <span class="op">=</span> <span class="fl">10</span><span class="op">)</span>
 <span class="co"># Unit: milliseconds</span>
-<span class="co">#                  expr      min      lq     mean   median       uq      max neval</span>
-<span class="co">#  fdiff(x, 1, 2, g, t) 188.9864 226.316 240.6728 232.4958 243.2912 310.1811    10</span>
+<span class="co">#                  expr     min       lq     mean   median       uq      max neval</span>
+<span class="co">#  fdiff(x, 1, 2, g, t) 167.278 170.9921 197.3542 205.3005 212.0724 232.9827    10</span>
 <span class="fu"><a href="https://rdrr.io/pkg/microbenchmark/man/microbenchmark.html">microbenchmark</a></span><span class="op">(</span><span class="fu"><a href="../reference/fdiff.html">fdiff</a></span><span class="op">(</span><span class="va">x</span>, <span class="op">-</span><span class="fl">1</span><span class="op">:</span><span class="fl">1</span>, <span class="fl">1</span><span class="op">:</span><span class="fl">2</span>, <span class="va">g</span>, <span class="va">t</span><span class="op">)</span>, times <span class="op">=</span> <span class="fl">10</span><span class="op">)</span>
 <span class="co"># Unit: milliseconds</span>
-<span class="co">#                       expr      min       lq     mean  median      uq      max neval</span>
-<span class="co">#  fdiff(x, -1:1, 1:2, g, t) 589.5051 599.7393 674.8078 625.106 714.732 874.8926    10</span></pre></div>
+<span class="co">#                       expr      min       lq    mean  median       uq      max neval</span>
+<span class="co">#  fdiff(x, -1:1, 1:2, g, t) 548.6176 551.3661 609.084 554.835 600.3534 820.7421    10</span></pre></div>
 <p>The results show that <em>collapse</em> functions perform very well even as the number of groups grows large.</p>
 <!-- in fact tests show that the large sample performance for aggregations with *collapse* is similar to *data.table*, and *collapse* grouped transformations like the ones shown here are generally faster than what can be done *data.table*.  -->
 <p>The conclusion of this benchmark analysis is that <em>collapse</em>’s fast functions, with or without the help of <em>plm</em> classes, allow for very fast transformations of panel data, and should enable R programmers and econometricians to implement high-performance panel data estimators without having to dive into C/C++ themselves or resorting to <em>data.table</em> metaprogramming.</p>
@@ -1276,8 +1277,8 @@ pre[class] {
 
 <span class="fu"><a href="https://rdrr.io/pkg/microbenchmark/man/microbenchmark.html">microbenchmark</a></span><span class="op">(</span><span class="fu"><a href="../reference/qsu.html">qsu</a></span><span class="op">(</span><span class="va">LIFEEX_l</span><span class="op">)</span><span class="op">)</span>
 <span class="co"># Unit: milliseconds</span>
-<span class="co">#           expr      min       lq     mean   median      uq      max neval</span>
-<span class="co">#  qsu(LIFEEX_l) 20.49884 23.35014 26.74622 25.33639 26.5194 145.4059   100</span></pre></div>
+<span class="co">#           expr      min       lq     mean median       uq      max neval</span>
+<span class="co">#  qsu(LIFEEX_l) 19.69026 22.84947 25.17424 23.611 24.70721 167.0281   100</span></pre></div>
 <p>Using the transformation functions and the functions <code>pwcor</code> and <code>pwcov</code>, we can also easily explore the correlation structure of the data:</p>
 <div class="sourceCode" id="cb48"><pre class="downlit">
 <span class="co"># Overall pairwise correlations with pairwise observation count and significance testing (* = significant at 5% level)</span>
@@ -1629,8 +1630,8 @@ pre[class] {
                       time.FE <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span><span class="op">)</span>
 <span class="co"># Unit: milliseconds</span>
 <span class="co">#        expr      min       lq     mean   median       uq      max neval cld</span>
-<span class="co">#      HT_est 10.60776 16.33780 21.31544 17.31576 19.27724 166.6187   100  a </span>
-<span class="co">#  HT_est_TFE 40.27744 47.21437 55.93970 49.81688 57.34263 194.2887   100   b</span></pre></div>
+<span class="co">#      HT_est 10.26282 16.55849 21.33873 17.06810 18.23884 180.0482   100  a </span>
+<span class="co">#  HT_est_TFE 38.19171 46.65057 51.84695 48.00092 50.46599 169.2352   100   b</span></pre></div>
 <p>At around 100,000 obs and 13,000 groups in an unbalanced panel, the computation involving 3 grouped centering and 1 grouped averaging task as well as 2 list-to matrix conversions and an IV-procedure took about 10 milliseconds with only individual effects, and about 40 - 45 milliseconds with individual and time-fixed effects (projected out iteratively). This should leave some room for running this on much larger data. <!--, and even for implementing a bootstrap standard error at this sample size. --></p>
 </div>
 <div id="references" class="section level2">

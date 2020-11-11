@@ -71,7 +71,7 @@
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">collapse</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">1.4.0</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">1.4.2</span>
       </span>
     </div>
 
@@ -120,6 +120,25 @@
       <small>Source: <a href='https://github.com/SebKrantz/collapse/blob/master/NEWS.md'><code>NEWS.md</code></a></small>
     </div>
 
+    <div id="collapse-142" class="section level1">
+<h1 class="page-header" data-toc-text="1.4.2">
+<a href="#collapse-142" class="anchor"></a>collapse 1.4.2<small> 2020-11-10 </small>
+</h1>
+<ul>
+<li><p>An improvement to the <code>[.GRP_df</code> method enabling the use of most <em>data.table</em> methods (such as <code>:=</code>) on a grouped <em>data.table</em> created with <code>fgroup_by</code>.</p></li>
+<li><p>Some documentation updates by Kevin Tappe.</p></li>
+</ul>
+</div>
+    <div id="collapse-141" class="section level1">
+<h1 class="page-header" data-toc-text="1.4.1">
+<a href="#collapse-141" class="anchor"></a>collapse 1.4.1<small> 2020-11-09 </small>
+</h1>
+<p>collapse 1.4.1 is a small patch for 1.4.0 that:</p>
+<ul>
+<li><p>fixes clang-UBSAN and rchk issues in 1.4.0 (minor bugs in compiled code resulting, in this case, from trying to coerce a <code>NaN</code> value to integer, and failing to protect a shallow copy of a variable).</p></li>
+<li><p>Adds a method <code>[.GRP_df</code> that allows robust subsetting of grouped objects created with <code>fgroup_by</code> (thanks to Patrice Kiener for flagging this).</p></li>
+</ul>
+</div>
     <div id="collapse-140" class="section level1">
 <h1 class="page-header" data-toc-text="1.4.0">
 <a href="#collapse-140" class="anchor"></a>collapse 1.4.0<small> 2020-11-01 </small>

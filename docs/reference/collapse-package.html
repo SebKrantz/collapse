@@ -78,7 +78,7 @@ It is made compatible with dplyr, data.table and the plm approach to panel data,
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">collapse</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">1.4.0</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">1.4.2</span>
       </span>
     </div>
 
@@ -141,7 +141,7 @@ Advanced and Fast Data Transformation</h1>
 
     <h2 class="hasAnchor" id="getting-started"><a class="anchor" href="#getting-started"></a>Getting Started</h2>
 
-    <p>Please see <a href='index.html'>Collapse Documentation &amp; Overview</a>, or the introductory vignette. The documentation and vignettes can also comfortably be read on the <a href='https://sebkrantz.github.io/collapse/'>package website</a>.
+    <p>Please see <a href='index.html'>Collapse Documentation &amp; Overview</a>, or the introductory vignette. The documentation and vignettes can also comfortably be read on the <a href='https://sebkrantz.github.io/collapse/'>package website</a>. A cheatsheet is available at <a href='https://rstudio.com/resources/cheatsheets/'>Rstudio</a>.
 A compact introduction for quick-starters is provided in the examples below.</p>
     <h2 class="hasAnchor" id="details"><a class="anchor" href="#details"></a>Details</h2>
 
@@ -569,11 +569,11 @@ Core S3 methods and efficient grouping and ordering functionality can be accesse
 <span class='va'>f2</span> <span class='op'>&lt;-</span> <span class='fu'><a href='qF, qG, finteraction.html'>qF</a></span><span class='op'>(</span><span class='va'>mtcars</span><span class='op'>$</span><span class='va'>cyl</span>, na.exclude <span class='op'>=</span> <span class='cn'>FALSE</span><span class='op'>)</span> <span class='co'># This can however be avoided through this option</span>
 <span class='fu'><a href='https://rdrr.io/r/base/class.html'>class</a></span><span class='op'>(</span><span class='va'>f2</span><span class='op'>)</span>                                <span class='co'># Note the added class</span>
 </div><div class='output co'>#&gt; [1] "factor"      "na.included"</div><div class='input'><span class='kw'><a href='https://rdrr.io/r/base/library.html'>library</a></span><span class='op'>(</span><span class='va'><a href='https://github.com/joshuaulrich/microbenchmark/'>microbenchmark</a></span><span class='op'>)</span>
-<span class='fu'><a href='https://rdrr.io/pkg/microbenchmark/man/microbenchmark.html'>microbenchmark</a></span><span class='op'>(</span><span class='fu'><a href='fmean.html'>fmean</a></span><span class='op'>(</span><span class='va'>mtcars</span>, <span class='va'>f1</span><span class='op'>)</span>, <span class='fu'><a href='fmean.html'>fmean</a></span><span class='op'>(</span><span class='va'>mtcars</span>, <span class='va'>f2</span><span class='op'>)</span><span class='op'>)</span> <span class='co'># A minor difference, larger on larger data</span>
+</div><div class='output co'>#&gt; <span class='warning'>Warning: package ‘microbenchmark’ was built under R version 4.0.3</span></div><div class='input'><span class='fu'><a href='https://rdrr.io/pkg/microbenchmark/man/microbenchmark.html'>microbenchmark</a></span><span class='op'>(</span><span class='fu'><a href='fmean.html'>fmean</a></span><span class='op'>(</span><span class='va'>mtcars</span>, <span class='va'>f1</span><span class='op'>)</span>, <span class='fu'><a href='fmean.html'>fmean</a></span><span class='op'>(</span><span class='va'>mtcars</span>, <span class='va'>f2</span><span class='op'>)</span><span class='op'>)</span> <span class='co'># A minor difference, larger on larger data</span>
 </div><div class='output co'>#&gt; Unit: microseconds
-#&gt;               expr    min     lq     mean median     uq    max neval cld
-#&gt;  fmean(mtcars, f1) 17.850 18.742 19.27366 19.189 19.635 28.560   100   a
-#&gt;  fmean(mtcars, f2) 16.511 17.404 18.71591 17.850 18.297 81.217   100   a</div><div class='input'>
+#&gt;               expr    min     lq     mean median     uq     max neval cld
+#&gt;  fmean(mtcars, f1) 17.404 19.412 23.95488 20.527 21.420 109.332   100   a
+#&gt;  fmean(mtcars, f2) 16.511 18.519 22.85710 19.635 20.305  72.739   100   a</div><div class='input'>
 <span class='fu'><a href='https://rdrr.io/r/base/with.html'>with</a></span><span class='op'>(</span><span class='va'>mtcars</span>, <span class='fu'><a href='qF, qG, finteraction.html'>finteraction</a></span><span class='op'>(</span><span class='va'>cyl</span>, <span class='va'>vs</span>, <span class='va'>am</span><span class='op'>)</span><span class='op'>)</span>  <span class='co'># Efficient interactions of vectors and/or factors</span>
 </div><div class='output co'>#&gt;  [1] 6.0.1 6.0.1 4.1.1 6.1.0 8.0.0 6.1.0 8.0.0 4.1.0 4.1.0 6.1.0 6.1.0 8.0.0
 #&gt; [13] 8.0.0 8.0.0 8.0.0 8.0.0 8.0.0 4.1.1 4.1.1 4.1.1 4.1.0 8.0.0 8.0.0 8.0.0
@@ -688,12 +688,12 @@ Core S3 methods and efficient grouping and ordering functionality can be accesse
 #&gt; Hornet Sportabout  9.524645 0.000000 0.000000 4.066120 1.2382368
 #&gt; Valiant           11.315413 1.984063 0.000000 4.066120 0.6191184</div><div class='input'><span class='fu'><a href='https://rdrr.io/pkg/microbenchmark/man/microbenchmark.html'>microbenchmark</a></span><span class='op'>(</span><span class='fu'><a href='TRA.html'>TRA</a></span><span class='op'>(</span><span class='va'>mtcars</span>, <span class='va'>sds</span>, <span class='st'>"/"</span><span class='op'>)</span>, <span class='fu'><a href='https://rdrr.io/r/base/sweep.html'>sweep</a></span><span class='op'>(</span><span class='va'>mtcars</span>, <span class='fl'>2</span>, <span class='va'>sds</span>, <span class='st'>"/"</span><span class='op'>)</span><span class='op'>)</span> <span class='co'># A remarkable performance gain..</span>
 </div><div class='output co'>#&gt; Unit: microseconds
-#&gt;                        expr      min       lq       mean   median        uq
-#&gt;       TRA(mtcars, sds, "/")   13.388   16.958   24.17796   26.329   29.2295
-#&gt;  sweep(mtcars, 2, sds, "/") 1105.357 1122.760 1185.50687 1137.486 1259.3120
+#&gt;                        expr      min       lq       mean    median       uq
+#&gt;       TRA(mtcars, sds, "/")   13.388   16.958   25.03925   25.8825   30.568
+#&gt;  sweep(mtcars, 2, sds, "/") 1110.712 1134.586 1250.98142 1255.2965 1273.593
 #&gt;       max neval cld
-#&gt;    44.179   100  a 
-#&gt;  1468.156   100   b</div><div class='input'><span class='va'>sds</span> <span class='op'>&lt;-</span> <span class='fu'><a href='fvar, fsd.html'>fsd</a></span><span class='op'>(</span><span class='va'>mtcars</span>, <span class='va'>f2</span><span class='op'>)</span>
+#&gt;    49.088   100  a 
+#&gt;  1784.101   100   b</div><div class='input'><span class='va'>sds</span> <span class='op'>&lt;-</span> <span class='fu'><a href='fvar, fsd.html'>fsd</a></span><span class='op'>(</span><span class='va'>mtcars</span>, <span class='va'>f2</span><span class='op'>)</span>
 <span class='fu'><a href='https://rdrr.io/r/utils/head.html'>head</a></span><span class='op'>(</span><span class='fu'><a href='TRA.html'>TRA</a></span><span class='op'>(</span><span class='va'>mtcars</span>, <span class='va'>sds</span>, <span class='st'>"/"</span>, <span class='va'>f2</span><span class='op'>)</span><span class='op'>)</span> <span class='co'># Groupd scaling (if sd's not needed: fsd(mtcars, f2, TRA = "/"))</span>
 </div><div class='output co'>#&gt;                         mpg cyl     disp       hp      drat       wt      qsec
 #&gt; Mazda RX4         14.447218 Inf 3.849628 4.534121  8.192327 7.352414  9.643407
@@ -769,24 +769,24 @@ Core S3 methods and efficient grouping and ordering functionality can be accesse
 #&gt; hp       109.00
 #&gt; drat       4.11
 #&gt; wt         2.78</div><div class='input'><span class='fu'><a href='https://rdrr.io/r/utils/head.html'>head</a></span><span class='op'>(</span><span class='fu'><a href='A4-quick-conversion.html'>qDT</a></span><span class='op'>(</span><span class='va'>mtcarsM</span>, <span class='st'>"cars"</span><span class='op'>)</span><span class='op'>)</span>                 <span class='co'># Saving row.names when converting matrix to data.table</span>
-</div><div class='output co'>#&gt;                cars  mpg cyl disp  hp drat    wt  qsec vs am gear carb
-#&gt; 1         Mazda RX4 21.0   6  160 110 3.90 2.620 16.46  0  1    4    4
-#&gt; 2     Mazda RX4 Wag 21.0   6  160 110 3.90 2.875 17.02  0  1    4    4
-#&gt; 3        Datsun 710 22.8   4  108  93 3.85 2.320 18.61  1  1    4    1
-#&gt; 4    Hornet 4 Drive 21.4   6  258 110 3.08 3.215 19.44  1  0    3    1
-#&gt; 5 Hornet Sportabout 18.7   8  360 175 3.15 3.440 17.02  0  0    3    2
-#&gt; 6           Valiant 18.1   6  225 105 2.76 3.460 20.22  1  0    3    1</div><div class='input'><span class='fu'><a href='https://rdrr.io/r/utils/head.html'>head</a></span><span class='op'>(</span><span class='fu'><a href='A4-quick-conversion.html'>qDT</a></span><span class='op'>(</span><span class='va'>mtcars</span>, <span class='st'>"cars"</span><span class='op'>)</span><span class='op'>)</span>                  <span class='co'># Same use a data.frame</span>
-</div><div class='output co'>#&gt;                cars  mpg cyl disp  hp drat    wt  qsec vs am gear carb
-#&gt; 1         Mazda RX4 21.0   6  160 110 3.90 2.620 16.46  0  1    4    4
-#&gt; 2     Mazda RX4 Wag 21.0   6  160 110 3.90 2.875 17.02  0  1    4    4
-#&gt; 3        Datsun 710 22.8   4  108  93 3.85 2.320 18.61  1  1    4    1
-#&gt; 4    Hornet 4 Drive 21.4   6  258 110 3.08 3.215 19.44  1  0    3    1
-#&gt; 5 Hornet Sportabout 18.7   8  360 175 3.15 3.440 17.02  0  0    3    2
-#&gt; 6           Valiant 18.1   6  225 105 2.76 3.460 20.22  1  0    3    1</div><div class='input'>
+</div><div class='output co'>#&gt;                 cars  mpg cyl disp  hp drat    wt  qsec vs am gear carb
+#&gt; 1:         Mazda RX4 21.0   6  160 110 3.90 2.620 16.46  0  1    4    4
+#&gt; 2:     Mazda RX4 Wag 21.0   6  160 110 3.90 2.875 17.02  0  1    4    4
+#&gt; 3:        Datsun 710 22.8   4  108  93 3.85 2.320 18.61  1  1    4    1
+#&gt; 4:    Hornet 4 Drive 21.4   6  258 110 3.08 3.215 19.44  1  0    3    1
+#&gt; 5: Hornet Sportabout 18.7   8  360 175 3.15 3.440 17.02  0  0    3    2
+#&gt; 6:           Valiant 18.1   6  225 105 2.76 3.460 20.22  1  0    3    1</div><div class='input'><span class='fu'><a href='https://rdrr.io/r/utils/head.html'>head</a></span><span class='op'>(</span><span class='fu'><a href='A4-quick-conversion.html'>qDT</a></span><span class='op'>(</span><span class='va'>mtcars</span>, <span class='st'>"cars"</span><span class='op'>)</span><span class='op'>)</span>                  <span class='co'># Same use a data.frame</span>
+</div><div class='output co'>#&gt;                 cars  mpg cyl disp  hp drat    wt  qsec vs am gear carb
+#&gt; 1:         Mazda RX4 21.0   6  160 110 3.90 2.620 16.46  0  1    4    4
+#&gt; 2:     Mazda RX4 Wag 21.0   6  160 110 3.90 2.875 17.02  0  1    4    4
+#&gt; 3:        Datsun 710 22.8   4  108  93 3.85 2.320 18.61  1  1    4    1
+#&gt; 4:    Hornet 4 Drive 21.4   6  258 110 3.08 3.215 19.44  1  0    3    1
+#&gt; 5: Hornet Sportabout 18.7   8  360 175 3.15 3.440 17.02  0  0    3    2
+#&gt; 6:           Valiant 18.1   6  225 105 2.76 3.460 20.22  1  0    3    1</div><div class='input'>
 
 <span class='co'>## Now let's get some real data and see how we can use this power for data manipulation</span>
 <span class='kw'><a href='https://rdrr.io/r/base/library.html'>library</a></span><span class='op'>(</span><span class='va'>magrittr</span><span class='op'>)</span>
-</div><div class='output co'>#&gt; <span class='message'></span>
+</div><div class='output co'>#&gt; <span class='warning'>Warning: package ‘magrittr’ was built under R version 4.0.3</span></div><div class='output co'>#&gt; <span class='message'></span>
 #&gt; <span class='message'>Attaching package: ‘magrittr’</span></div><div class='output co'>#&gt; <span class='message'>The following objects are masked from ‘package:testthat’:</span>
 #&gt; <span class='message'></span>
 #&gt; <span class='message'>    equals, is_less_than, not</span></div><div class='input'><span class='fu'><a href='https://rdrr.io/r/utils/head.html'>head</a></span><span class='op'>(</span><span class='va'>wlddev</span><span class='op'>)</span> <span class='co'># World Bank World Development Data: 216 countries, 59 years, 4 series (columns 9-12)</span>
@@ -1291,7 +1291,7 @@ Core S3 methods and efficient grouping and ordering functionality can be accesse
 #&gt; LIFEEX   .45*   .44*   .57*    1    -.34*  -.02*
 #&gt; GINI    -.30*  -.27*  -.42*  -.34*    1    -.17*
 #&gt; ODA      .12*   .12*  -.16*  -.02*  -.17*    1  </div><div class='input'><span class='fu'><a href='pwcor, pwcov, pwNobs.html'>pwcor</a></span><span class='op'>(</span><span class='fu'><a href='fmean.html'>fmean</a></span><span class='op'>(</span><span class='fu'><a href='fselect, get_vars, add_vars.html'>num_vars</a></span><span class='op'>(</span><span class='va'>wlddev</span><span class='op'>)</span>, <span class='va'>wlddev</span><span class='op'>$</span><span class='va'>country</span><span class='op'>)</span>, P <span class='op'>=</span> <span class='cn'>TRUE</span><span class='op'>)</span>    <span class='co'># Correlating country means</span>
-</div><div class='output co'>#&gt; <span class='warning'>Warning: Standardabweichung ist Null</span></div><div class='output co'>#&gt;           year  decade   PCGDP  LIFEEX    GINI     ODA
+</div><div class='output co'>#&gt; <span class='warning'>Warning: the standard deviation is zero</span></div><div class='output co'>#&gt;           year  decade   PCGDP  LIFEEX    GINI     ODA
 #&gt; year       1       NA      NA      NA      NA      NA 
 #&gt; decade     NA      1       NA      NA      NA      NA 
 #&gt; PCGDP      NA      NA      1      .60*   -.41*   -.24*
@@ -1362,7 +1362,7 @@ Core S3 methods and efficient grouping and ordering functionality can be accesse
 #&gt; 10 36.234</div><div class='input'>
 <span class='co'># Fast transforming</span>
 <span class='fu'><a href='https://rdrr.io/r/utils/head.html'>head</a></span><span class='op'>(</span><span class='fu'><a href='ftransform.html'>ftransform</a></span><span class='op'>(</span><span class='va'>wlddev</span>, ODA_GDP <span class='op'>=</span> <span class='va'>ODA</span> <span class='op'>/</span> <span class='va'>PCGDP</span>, ODA_LIFEEX <span class='op'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/MathFun.html'>sqrt</a></span><span class='op'>(</span><span class='va'>ODA</span><span class='op'>)</span> <span class='op'>/</span> <span class='va'>LIFEEX</span><span class='op'>)</span><span class='op'>)</span>
-</div><div class='output co'>#&gt; <span class='warning'>Warning: NaNs wurden erzeugt</span></div><div class='output co'>#&gt;       country iso3c       date year decade     region     income  OECD PCGDP
+</div><div class='output co'>#&gt; <span class='warning'>Warning: NaNs produced</span></div><div class='output co'>#&gt;       country iso3c       date year decade     region     income  OECD PCGDP
 #&gt; 1 Afghanistan   AFG 1961-01-01 1960   1960 South Asia Low income FALSE    NA
 #&gt; 2 Afghanistan   AFG 1962-01-01 1961   1960 South Asia Low income FALSE    NA
 #&gt; 3 Afghanistan   AFG 1963-01-01 1962   1960 South Asia Low income FALSE    NA
@@ -1376,7 +1376,7 @@ Core S3 methods and efficient grouping and ordering functionality can be accesse
 #&gt; 4 33.624   NA 236450000      NA   457.3201
 #&gt; 5 34.060   NA 302480000      NA   510.6269
 #&gt; 6 34.495   NA 370250000      NA   557.8165</div><div class='input'><span class='fu'><a href='ftransform.html'>settransform</a></span><span class='op'>(</span><span class='va'>wlddev</span>, ODA_GDP <span class='op'>=</span> <span class='va'>ODA</span> <span class='op'>/</span> <span class='va'>PCGDP</span>, ODA_LIFEEX <span class='op'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/MathFun.html'>sqrt</a></span><span class='op'>(</span><span class='va'>ODA</span><span class='op'>)</span> <span class='op'>/</span> <span class='va'>LIFEEX</span><span class='op'>)</span> <span class='co'># by reference</span>
-</div><div class='output co'>#&gt; <span class='warning'>Warning: NaNs wurden erzeugt</span></div><div class='input'><span class='fu'><a href='https://rdrr.io/r/utils/head.html'>head</a></span><span class='op'>(</span><span class='fu'><a href='ftransform.html'>ftransform</a></span><span class='op'>(</span><span class='va'>wlddev</span>, PCGDP <span class='op'>=</span> <span class='cn'>NULL</span>, ODA <span class='op'>=</span> <span class='cn'>NULL</span>, GINI_sum <span class='op'>=</span> <span class='fu'><a href='fsum.html'>fsum</a></span><span class='op'>(</span><span class='va'>GINI</span><span class='op'>)</span><span class='op'>)</span><span class='op'>)</span>
+</div><div class='output co'>#&gt; <span class='warning'>Warning: NaNs produced</span></div><div class='input'><span class='fu'><a href='https://rdrr.io/r/utils/head.html'>head</a></span><span class='op'>(</span><span class='fu'><a href='ftransform.html'>ftransform</a></span><span class='op'>(</span><span class='va'>wlddev</span>, PCGDP <span class='op'>=</span> <span class='cn'>NULL</span>, ODA <span class='op'>=</span> <span class='cn'>NULL</span>, GINI_sum <span class='op'>=</span> <span class='fu'><a href='fsum.html'>fsum</a></span><span class='op'>(</span><span class='va'>GINI</span><span class='op'>)</span><span class='op'>)</span><span class='op'>)</span>
 </div><div class='output co'>#&gt;       country iso3c       date year decade     region     income  OECD LIFEEX
 #&gt; 1 Afghanistan   AFG 1961-01-01 1960   1960 South Asia Low income FALSE 32.292
 #&gt; 2 Afghanistan   AFG 1962-01-01 1961   1960 South Asia Low income FALSE 32.742
@@ -1391,7 +1391,7 @@ Core S3 methods and efficient grouping and ordering functionality can be accesse
 #&gt; 4   NA      NA   457.3201  53423.1
 #&gt; 5   NA      NA   510.6269  53423.1
 #&gt; 6   NA      NA   557.8165  53423.1</div><div class='input'><span class='fu'><a href='https://rdrr.io/r/utils/head.html'>head</a></span><span class='op'>(</span><span class='fu'><a href='ftransform.html'>ftransformv</a></span><span class='op'>(</span><span class='va'>wlddev</span>, <span class='fl'>9</span><span class='op'>:</span><span class='fl'>12</span>, <span class='va'>log</span><span class='op'>)</span><span class='op'>)</span>           <span class='co'># Can also transform with lists of columns</span>
-</div><div class='output co'>#&gt; <span class='warning'>Warning: NaNs wurden erzeugt</span></div><div class='output co'>#&gt;       country iso3c       date year decade     region     income  OECD PCGDP
+</div><div class='output co'>#&gt; <span class='warning'>Warning: NaNs produced</span></div><div class='output co'>#&gt;       country iso3c       date year decade     region     income  OECD PCGDP
 #&gt; 1 Afghanistan   AFG 1961-01-01 1960   1960 South Asia Low income FALSE    NA
 #&gt; 2 Afghanistan   AFG 1962-01-01 1961   1960 South Asia Low income FALSE    NA
 #&gt; 3 Afghanistan   AFG 1963-01-01 1962   1960 South Asia Low income FALSE    NA
@@ -2486,7 +2486,7 @@ Core S3 methods and efficient grouping and ordering functionality can be accesse
 #&gt; 250  4130.264537          NA         NA          NA
 #&gt;  [ reached 'max' / getOption("max.print") -- omitted 12494 rows ]
 #&gt; 
-#&gt; Grouped by:  country  [216 | 59 (0)]</div><div class='input'><span class='va'>wlddev</span> <span class='op'>%&gt;%</span> <span class='fu'><a href='GRP, fgroup_by.html'>fgroup_by</a></span><span class='op'>(</span><span class='va'>country</span><span class='op'>)</span> <span class='op'>%&gt;%</span> <span class='fu'><a href='fselect, get_vars, add_vars.html'>fselect</a></span><span class='op'>(</span><span class='va'>PCGDP</span><span class='op'>:</span><span class='va'>ODA</span><span class='op'>)</span> <span class='op'>%&gt;%</span>
+#&gt; Grouped by:  country  [216 | 59 (0)] </div><div class='input'><span class='va'>wlddev</span> <span class='op'>%&gt;%</span> <span class='fu'><a href='GRP, fgroup_by.html'>fgroup_by</a></span><span class='op'>(</span><span class='va'>country</span><span class='op'>)</span> <span class='op'>%&gt;%</span> <span class='fu'><a href='fselect, get_vars, add_vars.html'>fselect</a></span><span class='op'>(</span><span class='va'>PCGDP</span><span class='op'>:</span><span class='va'>ODA</span><span class='op'>)</span> <span class='op'>%&gt;%</span>
 <span class='fu'><a href='fmedian.html'>fmedian</a></span><span class='op'>(</span>TRA <span class='op'>=</span> <span class='st'>"-"</span><span class='op'>)</span>                               <span class='co'># Grouped centering using the median</span>
 </div><div class='output co'>#&gt;             PCGDP  LIFEEX GINI        ODA
 #&gt; 1              NA -15.872   NA -138350000
@@ -2741,7 +2741,7 @@ Core S3 methods and efficient grouping and ordering functionality can be accesse
 #&gt; 250  3561.3544550      NA   NA         NA
 #&gt;  [ reached 'max' / getOption("max.print") -- omitted 12494 rows ]
 #&gt; 
-#&gt; Grouped by:  country  [216 | 59 (0)]</div><div class='input'><span class='co'># Replacing data points by the weighted first quartile:</span>
+#&gt; Grouped by:  country  [216 | 59 (0)] </div><div class='input'><span class='co'># Replacing data points by the weighted first quartile:</span>
 <span class='va'>wlddev</span> <span class='op'>%&gt;%</span> <span class='fu'><a href='GRP, fgroup_by.html'>fgroup_by</a></span><span class='op'>(</span><span class='va'>country</span><span class='op'>)</span> <span class='op'>%&gt;%</span> <span class='fu'><a href='fselect, get_vars, add_vars.html'>fselect</a></span><span class='op'>(</span><span class='va'>country</span>, <span class='va'>year</span>, <span class='va'>PCGDP</span><span class='op'>:</span><span class='va'>weights</span><span class='op'>)</span> <span class='op'>%&gt;%</span>
   <span class='fu'><a href='ftransform.html'>ftransform</a></span><span class='op'>(</span><span class='fu'><a href='fselect, get_vars, add_vars.html'>fselect</a></span><span class='op'>(</span><span class='va'>.</span>, <span class='op'>-</span><span class='va'>country</span>, <span class='op'>-</span><span class='va'>year</span><span class='op'>)</span> <span class='op'>%&gt;%</span> <span class='fu'><a href='fnth.html'>fnth</a></span><span class='op'>(</span><span class='fl'>0.25</span>, <span class='va'>weights</span>, <span class='st'>"replace_fill"</span><span class='op'>)</span><span class='op'>)</span>
 </div><div class='output co'>#&gt;         country year     PCGDP LIFEEX GINI       ODA    weights
@@ -2889,7 +2889,7 @@ Core S3 methods and efficient grouping and ordering functionality can be accesse
 #&gt; 142     Algeria 1983 3104.4936 51.673 27.6 237230000 0.82574887
 #&gt;  [ reached 'max' / getOption("max.print") -- omitted 12602 rows ]
 #&gt; 
-#&gt; Grouped by:  country  [216 | 59 (0)]</div><div class='input'>
+#&gt; Grouped by:  country  [216 | 59 (0)] </div><div class='input'>
 <span class='va'>wlddev</span> <span class='op'>%&gt;%</span> <span class='fu'><a href='GRP, fgroup_by.html'>fgroup_by</a></span><span class='op'>(</span><span class='va'>country</span><span class='op'>)</span> <span class='op'>%&gt;%</span> <span class='fu'><a href='fselect, get_vars, add_vars.html'>fselect</a></span><span class='op'>(</span><span class='va'>PCGDP</span><span class='op'>:</span><span class='va'>ODA</span><span class='op'>)</span> <span class='op'>%&gt;%</span> <span class='va'>fscale</span>               <span class='co'># Standardizing</span>
 </div><div class='output co'>#&gt;           PCGDP      LIFEEX       GINI         ODA
 #&gt; 1            NA -1.55109284         NA -0.61328586
@@ -3144,7 +3144,7 @@ Core S3 methods and efficient grouping and ordering functionality can be accesse
 #&gt; 250  0.94327017          NA         NA          NA
 #&gt;  [ reached 'max' / getOption("max.print") -- omitted 12494 rows ]
 #&gt; 
-#&gt; Grouped by:  country  [216 | 59 (0)]</div><div class='input'><span class='va'>wlddev</span> <span class='op'>%&gt;%</span> <span class='fu'><a href='GRP, fgroup_by.html'>fgroup_by</a></span><span class='op'>(</span><span class='va'>country</span><span class='op'>)</span> <span class='op'>%&gt;%</span> <span class='fu'><a href='fselect, get_vars, add_vars.html'>fselect</a></span><span class='op'>(</span><span class='va'>PCGDP</span><span class='op'>:</span><span class='va'>weights</span><span class='op'>)</span> <span class='op'>%&gt;%</span> <span class='fu'><a href='fscale.html'>fscale</a></span><span class='op'>(</span><span class='va'>weights</span><span class='op'>)</span>  <span class='co'># Weigted..</span>
+#&gt; Grouped by:  country  [216 | 59 (0)] </div><div class='input'><span class='va'>wlddev</span> <span class='op'>%&gt;%</span> <span class='fu'><a href='GRP, fgroup_by.html'>fgroup_by</a></span><span class='op'>(</span><span class='va'>country</span><span class='op'>)</span> <span class='op'>%&gt;%</span> <span class='fu'><a href='fselect, get_vars, add_vars.html'>fselect</a></span><span class='op'>(</span><span class='va'>PCGDP</span><span class='op'>:</span><span class='va'>weights</span><span class='op'>)</span> <span class='op'>%&gt;%</span> <span class='fu'><a href='fscale.html'>fscale</a></span><span class='op'>(</span><span class='va'>weights</span><span class='op'>)</span>  <span class='co'># Weigted..</span>
 </div><div class='output co'>#&gt;        weights       PCGDP      LIFEEX       GINI          ODA
 #&gt; 1   0.64960207          NA -1.56622172         NA -0.559821823
 #&gt; 2   0.75722274          NA -1.51852522         NA -0.500214720
@@ -3348,7 +3348,7 @@ Core S3 methods and efficient grouping and ordering functionality can be accesse
 #&gt; 200 0.29238554          NA          NA         NA           NA
 #&gt;  [ reached 'max' / getOption("max.print") -- omitted 12544 rows ]
 #&gt; 
-#&gt; Grouped by:  country  [216 | 59 (0)]</div><div class='input'>
+#&gt; Grouped by:  country  [216 | 59 (0)] </div><div class='input'>
 <span class='va'>wlddev</span> <span class='op'>%&gt;%</span> <span class='fu'><a href='fselect, get_vars, add_vars.html'>fselect</a></span><span class='op'>(</span><span class='va'>country</span>, <span class='va'>year</span>, <span class='va'>PCGDP</span><span class='op'>:</span><span class='va'>ODA</span><span class='op'>)</span> <span class='op'>%&gt;%</span>  <span class='co'># Adding 1 lead and 2 lags of each variable</span>
   <span class='fu'><a href='GRP, fgroup_by.html'>fgroup_by</a></span><span class='op'>(</span><span class='va'>country</span><span class='op'>)</span> <span class='op'>%&gt;%</span> <span class='fu'><a href='flag.html'>flag</a></span><span class='op'>(</span><span class='op'>-</span><span class='fl'>1</span><span class='op'>:</span><span class='fl'>2</span>, <span class='va'>year</span><span class='op'>)</span>
 </div><div class='output co'>#&gt;        country year F1.PCGDP    PCGDP L1.PCGDP L2.PCGDP F1.LIFEEX LIFEEX
@@ -3521,7 +3521,7 @@ Core S3 methods and efficient grouping and ordering functionality can be accesse
 #&gt; 55 4798270000 6233970000
 #&gt;  [ reached 'max' / getOption("max.print") -- omitted 12689 rows ]
 #&gt; 
-#&gt; Grouped by:  country  [216 | 59 (0)]</div><div class='input'><span class='va'>wlddev</span> <span class='op'>%&gt;%</span> <span class='fu'><a href='fselect, get_vars, add_vars.html'>fselect</a></span><span class='op'>(</span><span class='va'>country</span>, <span class='va'>year</span>, <span class='va'>PCGDP</span><span class='op'>:</span><span class='va'>ODA</span><span class='op'>)</span> <span class='op'>%&gt;%</span>  <span class='co'># Adding 1 lead and 10-year growth rates</span>
+#&gt; Grouped by:  country  [216 | 59 (0)] </div><div class='input'><span class='va'>wlddev</span> <span class='op'>%&gt;%</span> <span class='fu'><a href='fselect, get_vars, add_vars.html'>fselect</a></span><span class='op'>(</span><span class='va'>country</span>, <span class='va'>year</span>, <span class='va'>PCGDP</span><span class='op'>:</span><span class='va'>ODA</span><span class='op'>)</span> <span class='op'>%&gt;%</span>  <span class='co'># Adding 1 lead and 10-year growth rates</span>
   <span class='fu'><a href='GRP, fgroup_by.html'>fgroup_by</a></span><span class='op'>(</span><span class='va'>country</span><span class='op'>)</span> <span class='op'>%&gt;%</span> <span class='fu'><a href='fgrowth.html'>fgrowth</a></span><span class='op'>(</span><span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span><span class='op'>(</span><span class='fl'>0</span><span class='op'>:</span><span class='fl'>1</span>,<span class='fl'>10</span><span class='op'>)</span>, <span class='fl'>1</span>, <span class='va'>year</span><span class='op'>)</span>
 </div><div class='output co'>#&gt;        country year    PCGDP   G1.PCGDP L10G1.PCGDP LIFEEX G1.LIFEEX
 #&gt; 1  Afghanistan 1960       NA         NA          NA 32.292        NA
@@ -3669,7 +3669,7 @@ Core S3 methods and efficient grouping and ordering functionality can be accesse
 #&gt; 71     6.219786   NA      NA         NA         NA           NA          NA
 #&gt;  [ reached 'max' / getOption("max.print") -- omitted 12673 rows ]
 #&gt; 
-#&gt; Grouped by:  country  [216 | 59 (0)]</div><div class='input'>
+#&gt; Grouped by:  country  [216 | 59 (0)] </div><div class='input'>
 <span class='co'># etc...</span>
 
 <span class='co'># Aggregation with multiple functions</span>
@@ -3878,7 +3878,7 @@ Core S3 methods and efficient grouping and ordering functionality can be accesse
 #&gt; 20 -1098703448 -1128203448 -1084603448
 #&gt;  [ reached 'max' / getOption("max.print") -- omitted 12724 rows ]
 #&gt; 
-#&gt; Grouped by:  country  [216 | 59 (0)]</div><div class='input'>
+#&gt; Grouped by:  country  [216 | 59 (0)] </div><div class='input'>
 <span class='co'># With ftransform, can also easily do one or more grouped mutations on the fly..</span>
 <span class='fu'><a href='ftransform.html'>settransform</a></span><span class='op'>(</span><span class='va'>wlddev</span>, median_ODA <span class='op'>=</span> <span class='fu'><a href='fmedian.html'>fmedian</a></span><span class='op'>(</span><span class='va'>ODA</span>, <span class='fu'><a href='https://rdrr.io/r/base/list.html'>list</a></span><span class='op'>(</span><span class='va'>region</span>, <span class='va'>income</span><span class='op'>)</span>, TRA <span class='op'>=</span> <span class='st'>"replace_fill"</span><span class='op'>)</span><span class='op'>)</span>
 
@@ -3965,7 +3965,7 @@ Core S3 methods and efficient grouping and ordering functionality can be accesse
 #&gt; 4          NA        NA     49.69089  2.1258392       NA  203018929
 #&gt; 5    349.7596  11.89378     55.61818  1.8056120       NA 1113781886
 #&gt; 6    506.9931  86.22723     61.12978  1.2872844       NA 1102034385</div><div class='input'>
-<span class='co'># For grouped tibbles use collapg</span>
+<span class='co'># For grouped data frames use collapg</span>
 <span class='va'>wlddev</span> <span class='op'>%&gt;%</span> <span class='fu'><a href='fsubset.html'>fsubset</a></span><span class='op'>(</span><span class='va'>year</span> <span class='op'>&gt;</span> <span class='fl'>1990</span>, <span class='va'>country</span>, <span class='va'>region</span>, <span class='va'>income</span>, <span class='va'>PCGDP</span><span class='op'>:</span><span class='va'>ODA</span><span class='op'>)</span> <span class='op'>%&gt;%</span>
   <span class='fu'><a href='GRP, fgroup_by.html'>fgroup_by</a></span><span class='op'>(</span><span class='va'>country</span><span class='op'>)</span> <span class='op'>%&gt;%</span> <span class='fu'><a href='collap.html'>collapg</a></span><span class='op'>(</span><span class='va'>fmean</span>, <span class='va'>ffirst</span><span class='op'>)</span> <span class='op'>%&gt;%</span>
   <span class='fu'><a href='ftransform.html'>ftransform</a></span><span class='op'>(</span>AMGDP <span class='op'>=</span> <span class='va'>PCGDP</span> <span class='op'>&gt;</span> <span class='fu'><a href='fmedian.html'>fmedian</a></span><span class='op'>(</span><span class='va'>PCGDP</span>, <span class='fu'><a href='https://rdrr.io/r/base/list.html'>list</a></span><span class='op'>(</span><span class='va'>region</span>, <span class='va'>income</span><span class='op'>)</span>, TRA <span class='op'>=</span> <span class='st'>"replace_fill"</span><span class='op'>)</span>,
@@ -4338,10 +4338,12 @@ Core S3 methods and efficient grouping and ordering functionality can be accesse
 #&gt; </div><div class='input'>
 <span class='co'># Tranformation functions and operators also support plm panel data classes:</span>
 <span class='kw'><a href='https://rdrr.io/r/base/library.html'>library</a></span><span class='op'>(</span><span class='va'><a href='https://cran.r-project.org/package=plm'>plm</a></span><span class='op'>)</span>
-</div><div class='output co'>#&gt; <span class='message'></span>
+</div><div class='output co'>#&gt; <span class='warning'>Warning: package ‘plm’ was built under R version 4.0.3</span></div><div class='output co'>#&gt; <span class='message'></span>
 #&gt; <span class='message'>Attaching package: ‘plm’</span></div><div class='output co'>#&gt; <span class='message'>The following objects are masked from ‘package:dplyr’:</span>
 #&gt; <span class='message'></span>
-#&gt; <span class='message'>    between, lag, lead</span></div><div class='input'><span class='va'>pwlddev</span> <span class='op'>&lt;-</span> <span class='fu'><a href='https://rdrr.io/pkg/plm/man/pdata.frame.html'>pdata.frame</a></span><span class='op'>(</span><span class='va'>wlddev</span>, index <span class='op'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span><span class='op'>(</span><span class='st'>"country"</span>,<span class='st'>"year"</span><span class='op'>)</span><span class='op'>)</span>
+#&gt; <span class='message'>    between, lag, lead</span></div><div class='output co'>#&gt; <span class='message'>The following object is masked from ‘package:data.table’:</span>
+#&gt; <span class='message'></span>
+#&gt; <span class='message'>    between</span></div><div class='input'><span class='va'>pwlddev</span> <span class='op'>&lt;-</span> <span class='fu'><a href='https://rdrr.io/pkg/plm/man/pdata.frame.html'>pdata.frame</a></span><span class='op'>(</span><span class='va'>wlddev</span>, index <span class='op'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span><span class='op'>(</span><span class='st'>"country"</span>,<span class='st'>"year"</span><span class='op'>)</span><span class='op'>)</span>
 <span class='fu'><a href='https://rdrr.io/r/utils/head.html'>head</a></span><span class='op'>(</span><span class='fu'><a href='fbetween, fwithin.html'>W</a></span><span class='op'>(</span><span class='va'>pwlddev</span><span class='op'>$</span><span class='va'>PCGDP</span><span class='op'>)</span><span class='op'>)</span>                      <span class='co'># Country-demeaning</span>
 </div><div class='output co'>#&gt; Afghanistan-1960 Afghanistan-1961 Afghanistan-1962 Afghanistan-1963 
 #&gt;               NA               NA               NA               NA 

@@ -72,7 +72,7 @@
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">collapse</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">1.4.0</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">1.4.2</span>
       </span>
     </div>
 
@@ -402,7 +402,7 @@ but if <code>0 &lt; n &lt; 1</code>, the <code>ties</code> option regulates how 
 #&gt; Maserati Bora       1.0034364 1.00 1.3333333
 #&gt; Volvo 142E          0.9841270 1.00 1.0000000
 #&gt; 
-#&gt; Grouped by:  cyl, vs, am  [7 | 5 (3.8)]</div><div class='input'><span class='va'>mtcars</span> <span class='op'>%&gt;%</span> <span class='fu'><a href='GRP, fgroup_by.html'>fgroup_by</a></span><span class='op'>(</span><span class='va'>cyl</span>,<span class='va'>vs</span>,<span class='va'>am</span><span class='op'>)</span> <span class='op'>%&gt;%</span> <span class='fu'><a href='fselect, get_vars, add_vars.html'>fselect</a></span><span class='op'>(</span><span class='va'>mpg</span>, <span class='va'>hp</span><span class='op'>)</span> <span class='op'>%&gt;%</span>    <span class='co'># Faster selecting</span>
+#&gt; Grouped by:  cyl, vs, am  [7 | 5 (3.8)] </div><div class='input'><span class='va'>mtcars</span> <span class='op'>%&gt;%</span> <span class='fu'><a href='GRP, fgroup_by.html'>fgroup_by</a></span><span class='op'>(</span><span class='va'>cyl</span>,<span class='va'>vs</span>,<span class='va'>am</span><span class='op'>)</span> <span class='op'>%&gt;%</span> <span class='fu'><a href='fselect, get_vars, add_vars.html'>fselect</a></span><span class='op'>(</span><span class='va'>mpg</span>, <span class='va'>hp</span><span class='op'>)</span> <span class='op'>%&gt;%</span>    <span class='co'># Faster selecting</span>
       <span class='fu'>fnth</span><span class='op'>(</span><span class='fl'>0.75</span>, <span class='va'>hp</span>, <span class='st'>"/"</span><span class='op'>)</span>  <span class='co'># Divide mpg by its third weighted group-quartile, using hp as weights</span>
 </div><div class='output co'>#&gt;                      hp       mpg
 #&gt; Mazda RX4           110 1.0000000
@@ -438,7 +438,7 @@ but if <code>0 &lt; n &lt; 1</code>, the <code>ties</code> option regulates how 
 #&gt; Maserati Bora       335 0.9493671
 #&gt; Volvo 142E          109 0.7039474
 #&gt; 
-#&gt; Grouped by:  cyl, vs, am  [7 | 5 (3.8)]</div></span></pre>
+#&gt; Grouped by:  cyl, vs, am  [7 | 5 (3.8)] </div></span></pre>
   </div>
   <div class="col-md-3 hidden-xs hidden-sm" id="pkgdown-sidebar">
     <nav id="toc" data-toggle="toc" class="sticky-top">

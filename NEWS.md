@@ -1,3 +1,16 @@
+# collapse 1.4.2
+
+* An improvement to the `[.GRP_df` method enabling the use of most *data.table* methods (such as `:=`) on a grouped *data.table* created with `fgroup_by`.
+
+* Some documentation updates by Kevin Tappe.
+
+# collapse 1.4.1
+collapse 1.4.1 is a small patch for 1.4.0 that:
+
+* fixes clang-UBSAN and rchk issues in 1.4.0 (minor bugs in compiled code resulting, in this case, from trying to coerce a `NaN` value to integer, and failing to protect a shallow copy of a variable).
+
+* Adds a method `[.GRP_df` that allows robust subsetting of grouped objects created with `fgroup_by` (thanks to Patrice Kiener for flagging this).
+
 # collapse 1.4.0
 collapse 1.4.0, released early November 2020, presents some important refinements, particularly in the domain of attribute handling, as well as some additional functionality. The changes make *collapse* smarter, more broadly compatible and more secure, and should not break existing code.  <!-- , is a major update: -->
 

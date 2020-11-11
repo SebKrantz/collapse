@@ -42,9 +42,9 @@ SEXP duplAttributes(SEXP x, SEXP y) { // also look at data.table's keepattribute
 
 SEXP CsetAttrib(SEXP object, SEXP a) {
   SEXP res = PROTECT(Rf_shallow_duplicate(object)); // needed, otherwise error !!
-  SET_ATTRIB(res, Rf_coerceVector(a, LISTSXP));
+  SET_ATTRIB(res, PROTECT(Rf_coerceVector(a, LISTSXP)));
   Rf_classgets(res, Rf_getAttrib(res, R_ClassSymbol));
-  UNPROTECT(1);
+  UNPROTECT(2);
   return res;
 }
 

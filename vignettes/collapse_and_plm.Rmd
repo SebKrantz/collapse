@@ -190,7 +190,7 @@ head(W(pwlddev, cols = 9:12), 3) # Here using the cols argument
 
 <!-- The main philosophy behind having transformation operators like `B` and `W` is that they are more parsimonious to use ad-hoc (i.e. to demean a variable in a regression formula), and also offer more convenient output for ad-hoc computations on data.frames, whereas the corresponding functions `fbetween` and `fwithin` are a bit simpler in terms of R-code (and thus a tiny bit faster) and also more convenient for programming since they require all inputs to be provided in terms of data.  -->
 
-`fbetween / B` and `fwithin / W` also support weighted computations. This of course applies more to panel-survey settings, but for the sake of illustration suppose we wanted to weight our between and within transformations by the amount of ODA these countries received:
+`fbetween` / `B` and `fwithin` / `W` also support weighted computations. This of course applies more to panel-survey settings, but for the sake of illustration suppose we wanted to weight our between and within transformations by the amount of ODA these countries received:
 
 ```{r}
 # This replaces values by the ODA-weighted group mean and also preserves the weight variable (ODA, argument keep.w = TRUE)
@@ -207,7 +207,7 @@ As shown above, with `B` and `W` the weight column can also be passed as a formu
 
 ### 1.2 Higher-Dimensional Between and Within Transformations
 
-Analogous to `fbetween / B` and `fwithin / W`, *collapse* provides a duo of functions and operators `fHDbetween / HDB` and `fHDwithin / HDW` to efficiently average and center data on multiple groups. The credit herefore goes to Simen Gaure, the author of the *lfe* package who wrote an efficient C- implementation of the alternating-projections algorithm to perform this task. `fHDbetween / HDB` and `fHDwithin / HDW` enrich this implementation (available in the function `lfe::demeanlist`) by providing more options regarding missing values, and also allowing continuous covariates and (full) interactions to be projected out alongside factors. The methods for *pseries* and *pdata.frame*'s are however rather simple, as they simply simultaneously center panel-vectors on all panel-identifiers in the index (which can be more than 2):
+Analogous to `fbetween` / `B` and `fwithin` / `W`, *collapse* provides a duo of functions and operators `fHDbetween` / `HDB` and `fHDwithin` / `HDW` to efficiently average and center data on multiple groups. The credit herefore goes to Simen Gaure, the author of the *lfe* package who wrote an efficient C- implementation of the alternating-projections algorithm to perform this task. `fHDbetween` / `HDB` and `fHDwithin` / `HDW` enrich this implementation (available in the function `lfe::demeanlist`) by providing more options regarding missing values, and also allowing continuous covariates and (full) interactions to be projected out alongside factors. The methods for *pseries* and *pdata.frame*'s are however rather simple, as they simply simultaneously center panel-vectors on all panel-identifiers in the index (which can be more than 2):
 
 ```{r}
 # This simultaneously averages Life-Expectancy across countries and years 
@@ -217,7 +217,7 @@ head(HDB(LIFEEX)) # (same as running a regression on country and year dummies an
 head(HDW(LIFEEX)) # (same as running a regression on country and year dummies and taking the residuals)
 ```
 
-The architecture of `fHDbetween / HDB` and `fHDwithin / HDW` differs a bit from `fbetween / B` and `fwithin / W`. This is essentially a consequence of the underlying C-implementation (accessed through `lfe::demeanlist`), which was not built to accommodate missing values. `fHDbetween / HDB` and `fHDwithin / HDW` therefore both have an argument `fill = TRUE` (the default), which stipulates that missing values in the data are preserved in the output. The *collapse* default `na.rm = TRUE` again ensures that only complete cases are used for the computation:
+The architecture of `fHDbetween` / `HDB` and `fHDwithin` / `HDW` differs a bit from `fbetween` / `B` and `fwithin` / `W`. This is essentially a consequence of the underlying C-implementation (accessed through `lfe::demeanlist`), which was not built to accommodate missing values. `fHDbetween` / `HDB` and `fHDwithin` / `HDW` therefore both have an argument `fill = TRUE` (the default), which stipulates that missing values in the data are preserved in the output. The *collapse* default `na.rm = TRUE` again ensures that only complete cases are used for the computation:
 
 ```{r}
 # Missing values are preserved in the output when fill = TRUE (the default)
@@ -235,14 +235,14 @@ length(PCGDP)
 head(attr(nofill, "na.rm"), 30)
 ```
 
-In the *pdata.frame* methods there are 3 different choices how to deal with missing values. The default for the *plm* classes in `variable.wise = TRUE`, which will essentially sequentially apply `fHDbetween.pseries` and `fHDwithin.pseries` (with the default `fill = TRUE`) to all columns. This is the same behavior as in `fbetween / B` and `fwithin / W`, which also consider the column-wise complete obs:
+In the *pdata.frame* methods there are 3 different choices how to deal with missing values. The default for the *plm* classes in `variable.wise = TRUE`, which will essentially sequentially apply `fHDbetween.pseries` and `fHDwithin.pseries` (with the default `fill = TRUE`) to all columns. This is the same behavior as in `fbetween` / `B` and `fwithin` / `W`, which also consider the column-wise complete obs:
 
 ```{r}
 # This column-wise centers the data on countries and years
 tail(HDW(pwlddev), 10)
 ```
 
-If `variable.wise = FALSE`, `fHDbetween / HDB` and `fHDwithin / HDW` will only consider the complete cases in the dataset, but still return a dataset of the same dimensions (as long as `fill = TRUE`), resulting in some rows all-missing:
+If `variable.wise = FALSE`, `fHDbetween` / `HDB` and `fHDwithin` / `HDW` will only consider the complete cases in the dataset, but still return a dataset of the same dimensions (as long as `fill = TRUE`), resulting in some rows all-missing:
 
 ```{r}
 # This centers the complete cases of the data data on countries and years and keeps missing cases
@@ -265,12 +265,12 @@ tail(attr(res, "na.rm"))
 <!-- HDW(pwlddev, w = pwlddev$ODA, cols = 9:11, fill = FALSE, variable.wise = FALSE) -->
 <!-- ``` -->
 
-*Notes: * (1) Because of the different missing case options and associated challenges, panel-identifiers are not preserved in `HDB` and `HDW`. (2) The default `variable.wise = TRUE` and `fill = TRUE` was only set for the *pseries* and *pdata.frame* methods, to harmonize the default implementations with `fbetween / B` and `fwithin / W` for these classes. In the standard *default*, *matrix* and *data.frame* methods, the defaults are `variable.wise = FALSE` and `fill = FALSE` (i.e. missing cases are removed beforehand), which is generally more efficient. 
+*Notes: * (1) Because of the different missing case options and associated challenges, panel-identifiers are not preserved in `HDB` and `HDW`. (2) The default `variable.wise = TRUE` and `fill = TRUE` was only set for the *pseries* and *pdata.frame* methods, to harmonize the default implementations with `fbetween` / `B` and `fwithin` / `W` for these classes. In the standard *default*, *matrix* and *data.frame* methods, the defaults are `variable.wise = FALSE` and `fill = FALSE` (i.e. missing cases are removed beforehand), which is generally more efficient. 
 
 
 ### 1.3 Scaling and Centering
 
-Next to the above functions for grouped centering and averaging, the function / operator pair `fscale / STD` can be used to efficiently standardize (i.e. scale and center) panel data along an arbitrary dimension. The architecture is identical to that of `fwithin / W` or `fbetween / B`.  
+Next to the above functions for grouped centering and averaging, the function / operator pair `fscale` / `STD` can be used to efficiently standardize (i.e. scale and center) panel data along an arbitrary dimension. The architecture is identical to that of `fwithin` / `W` or `fbetween` / `B`.  
 
 ```{r}
 # This standardizes GDP per capita in each country
@@ -296,7 +296,7 @@ head(STD(pwlddev, cols = 9:12))
 head(STD(pwlddev, cols = 9:12, effect = "year"))
 ```
 
-More customized scaling can be done with the help of the `mean` and `sd` arguments to `fscale / STD`. By default `mean = 0` and `sd = 1`, but these could be assigned any numeric values:
+More customized scaling can be done with the help of the `mean` and `sd` arguments to `fscale` / `STD`. By default `mean = 0` and `sd = 1`, but these could be assigned any numeric values:
 
 ```{r}
 # This will scale the data such that mean mean within each country is 5 and the standard deviation is 3
@@ -331,12 +331,12 @@ All of this seamlessly generalizes to weighted scaling an centering, using the `
 ### 1.4 Panel Lags / Leads, Differences and Growth Rates
 <!-- A proper *and* fast implementation of panel- lags, differences and growth rates has been missing in R so far. -->
 
-With `flag / L / F`, `fdiff / D` and `fgrowth / G`, *collapse* provides a fast and comprehensive C++ based solution to the computation of (sequences of) lags / leads and (sequences of) lagged / leaded and suitably iterated (quasi-, log-) differences and growth rates on panel data. The *pseries* and *pdata.frame* methods to these functions and associated *transformation operators* use the panel-identifiers in the 'index' attached to these objects (where the last variable in the 'index' is taken as the time-variable and the variables before that are taken as individual identifiers) to perform fast fully-identified time-dependent operations on panel data, without the need of sorting the data.
+With `flag` / `L` / `F`, `fdiff` / `D` and `fgrowth` / `G`, *collapse* provides a fast and comprehensive C++ based solution to the computation of (sequences of) lags / leads and (sequences of) lagged / leaded and suitably iterated (quasi-, log-) differences and growth rates on panel data. The *pseries* and *pdata.frame* methods to these functions and associated *transformation operators* use the panel-identifiers in the 'index' attached to these objects (where the last variable in the 'index' is taken as the time-variable and the variables before that are taken as individual identifiers) to perform fast fully-identified time-dependent operations on panel data, without the need of sorting the data.
 
 <!-- With 'proper' I mean an implementation that does not require panel-vectors to be sorted (amounting i.e. to a grouped-lag on sorted data), but that takes into account both individual an time-identifiers in the computation. `plm::lag` and `dplyr::lag` (with the `order_by` argument) provide proper implementations but rely on base-R (split-apply-combine logic) which makes them slow. `data.table::shift` allows for pretty fast grouped lags on sorted data, but without taking into account the time-identifiers (you can do something like `DT[oder(time), shift(col1), by = pid]` in *data.table* but that sorts the data and is definitely more computationally expensive than the implementation introduced here).  -->
 
 
-With `flag / L / F`, it is easy to lag or lead *pseries*:
+With `flag` / `L` / `F`, it is easy to lag or lead *pseries*:
 
 ```{r}
 # A panel-lag
@@ -366,7 +366,7 @@ head(plm::lag(LIFEEX, -1:3), 4)
 <!-- # Just the meaning is a bit ambiguous... -->
 <!-- head(plm::lead(LIFEEX, 1:-3), 4) -->
 
-Of course the lag orders may be unevenly spaced, i.e. `L(x, -1:3*12)` would compute seasonal lags on monthly data. On *pdata.frame*'s, the effects of `flag` and `L / F` differ insofar that `flag` will just lag the entire dataset without preserving identifiers (although the index attribute is always preserved), whereas `L / F` by default (`cols = is.numeric`) select the numeric variables and add the panel-id's on the left (default `keep.ids = TRUE`): 
+Of course the lag orders may be unevenly spaced, i.e. `L(x, -1:3*12)` would compute seasonal lags on monthly data. On *pdata.frame*'s, the effects of `flag` and `L` / `F` differ insofar that `flag` will just lag the entire dataset without preserving identifiers (although the index attribute is always preserved), whereas `L` / `F` by default (`cols = is.numeric`) select the numeric variables and add the panel-id's on the left (default `keep.ids = TRUE`): 
 
 ```{r}
 # This lags the entire data
@@ -386,7 +386,7 @@ We can also easily compute a sequence of lags / leads on a panel data.frame:
 head(L(pwlddev, -1:3, cols = 9:12))
 ```
 
-Essentially the same functionality applies to `fdiff / D` and `fgrowth / G`, with the main differences that these functions also have a `diff` argument to determine the number of iterations:
+Essentially the same functionality applies to `fdiff` / `D` and `fgrowth` / `G`, with the main differences that these functions also have a `diff` argument to determine the number of iterations:
 
 ```{r}
 # Panel-difference of Life Expectancy

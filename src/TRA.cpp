@@ -14,8 +14,10 @@ using namespace Rcpp;
 // 9- Modulus
 // 10- Subtract Modulus
 
+// int(x * (1/y)) -> This gave the UBSAN error if NaN !!!
 inline double mymod(double x, double y) {
-  return x - (int)(x * (1/y)) * y; // faster than x - (int)(x/y) * y; // also C-style conversions seem to be faster ?
+  double z(x * (1/y));
+  return (z == z) ? x - (int)(z) * y : z; // faster than x - (int)(x/y) * y; // also C-style conversions seem to be faster ?
 }
 
 // #define mymod(x, y) (x - ((int)(x/y) * y)) // Macro: not faster !
@@ -26,8 +28,10 @@ inline double mymod(double x, double y) {
 //   return !mod ? x : x - mod * static_cast<long long>(x / mod);
 // }
 
+// int(x * (1/y)) -> This gave the UBSAN error if NaN !!!
 inline double myremain(double x, double y) {
-  return x - (x - (int)(x * (1/y)) * y); //   (int)(x * (1/y)) * y; <- This would be enough, but doesn't keep missing values in x!
+  double z(x * (1/y));
+  return (z == z) ? (int)(z) * y : z; //   (int)(x * (1/y)) * y; <- This would be enough, but doesn't keep missing values in x!
 }
 
 
