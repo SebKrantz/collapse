@@ -887,7 +887,7 @@ The estimator is written in such a way that variables of the type $X_{2it}$ and 
 Having coded the estimator, it would be good to have an example to run it on. I have tried to squeeze an example out of the `wlddev` data used so far in this vignette. It is quite crappy and suffers from a weak-IV problem, but for there sake of illustration lets do it: 
 
 We want to estimate the panel-regression of life-expectancy on GDP per Capita, ODA received, the GINI index and a time-invariant dummy indicating whether the country is an OECD member. All variables except the dummy enter in logs, so this is an elasticity regression. 
-<!-- dat <- droplevels(na_omit(get_vars(wlddev, c("iso3c","year","OECD","PCGDP","GINI","LIFEEX","ODA")))) -->
+<!-- dat <- fdroplevels(na_omit(get_vars(wlddev, c("iso3c","year","OECD","PCGDP","GINI","LIFEEX","ODA")))) -->
 <!-- get_vars(dat, 4:7) <- log(get_vars(dat, 4:7)) -->
 <!-- dat <- pdata.frame(dat, index = c("iso3c", "year")) -->
 <!-- dat$OECD <- as.numeric(dat$OECD) # Creating OECD dummy -->
@@ -910,7 +910,7 @@ We want to estimate the panel-regression of life-expectancy on GDP per Capita, O
 dat <- get_vars(wlddev, c("iso3c","year","OECD","PCGDP","LIFEEX","GINI","ODA"))
 get_vars(dat, 4:7) <- lapply(get_vars(dat, 4:7), log) # Taking logs of the data
 dat$OECD <- as.numeric(dat$OECD)                      # Creating OECD dummy
-dat <- pdata.frame(droplevels(na_omit(dat)),          # Creating Panel data.frame, after removing missing values
+dat <- pdata.frame(fdroplevels(na_omit(dat)),         # Creating Panel data.frame, after removing missing values
                    index = c("iso3c", "year"))        # and dropping unused factor levels
 pdim(dat)
 varying(dat)
@@ -966,7 +966,7 @@ Now a central questions is of course: How computationally efficient is this esti
 dat <- get_vars(data, c("iso3c","year","OECD","PCGDP","LIFEEX","GINI","ODA"))
 get_vars(dat, 4:7) <- lapply(get_vars(dat, 4:7), log) # Taking logs of the data
 dat$OECD <- as.numeric(dat$OECD)                      # Creating OECD dummy
-dat <- pdata.frame(droplevels(na_omit(dat)),          # Creating Panel data.frame, after removing missing values
+dat <- pdata.frame(fdroplevels(na_omit(dat)),         # Creating Panel data.frame, after removing missing values
                    index = c("iso3c", "year"))        # and dropping unused factor levels
 pdim(dat)
 varying(dat)
