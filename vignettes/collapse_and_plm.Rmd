@@ -207,7 +207,7 @@ As shown above, with `B` and `W` the weight column can also be passed as a formu
 
 ### 1.2 Higher-Dimensional Between and Within Transformations
 
-Analogous to `fbetween` / `B` and `fwithin` / `W`, *collapse* provides a duo of functions and operators `fHDbetween` / `HDB` and `fHDwithin` / `HDW` to efficiently average and center data on multiple groups. The credit herefore goes to Simen Gaure, the author of the *lfe* package who wrote an efficient C- implementation of the alternating-projections algorithm to perform this task. `fHDbetween` / `HDB` and `fHDwithin` / `HDW` enrich this implementation (available in the function `lfe::demeanlist`) by providing more options regarding missing values, and also allowing continuous covariates and (full) interactions to be projected out alongside factors. The methods for *pseries* and *pdata.frame*'s are however rather simple, as they simply simultaneously center panel-vectors on all panel-identifiers in the index (which can be more than 2):
+Analogous to `fbetween` / `B` and `fwithin` / `W`, *collapse* provides a duo of functions and operators `fHDbetween` / `HDB` and `fHDwithin` / `HDW` to efficiently average and center data on multiple groups. The credit herefore goes to Simen Gaure, the author of the *lfe* package who wrote an efficient C-implementation of the alternating-projections algorithm to perform this task. `fHDbetween` / `HDB` and `fHDwithin` / `HDW` enrich this implementation (available in the function `lfe::demeanlist`) by providing more options regarding missing values, and also allowing continuous covariates and (full) interactions to be projected out alongside factors. The methods for *pseries* and *pdata.frame*'s are however rather simple, as they simply simultaneously center panel-vectors on all panel-identifiers in the index (which can be more than 2):
 
 ```{r}
 # This simultaneously averages Life-Expectancy across countries and years 
@@ -534,7 +534,7 @@ data <- pdata.frame(data, index = c("iso3c", "year"))
 pdim(data)
 ```
 
-The data has 21600 individuals (countries) each observed for 59 years, the total number of rows is 1274400. We can pull out a series of life expectancy and run some benchmarks. The windows laptop on which these benchmarks were run has a 2x 2.2 GHZ Intel i5 processor, 8GB DDR3 RAM and a Samsung SSD hard drive. 
+The data has 21600 individuals (countries) each observed for 59 years, the total number of rows is 1274400. We can pull out a series of life expectancy and run some benchmarks. The Windows laptop on which these benchmarks were run has a 2x 2.2 GHZ Intel i5 processor, 8GB DDR3 RAM and a Samsung SSD hard drive. 
 
 ```{r, eval=NCRAN}
 library(microbenchmark)
@@ -583,7 +583,7 @@ microbenchmark(fdiff(LIFEEX_l, log = TRUE), times = 10)
 microbenchmark(psmat(LIFEEX_l), times = 10)
 ```
 
-<!-- The results show that I did not promise to much in the introduction. A speed gain of 20-40x is the norm, and for certain operations such as the sequence of lags and leads the speed gain is about 100x, and for the panel series to matrix conversion a 300x speed gain by using *collapse* vs. native *plm*.  -->
+<!-- The results show that I did not promise too much in the introduction. A speed gain of 20-40x is the norm, and for certain operations such as the sequence of lags and leads the speed gain is about 100x, and for the panel series to matrix conversion a 300x speed gain by using *collapse* vs. native *plm*.  -->
 
 This shows a comparison between flag and *data.table*'s shift:
 
@@ -616,7 +616,7 @@ microbenchmark(fdiff(x, -1:1, 1:2, g, t), times = 10)
 
 The results show that *collapse* functions perform very well even as the number of groups grows large.
 
-<!-- in fact tests show that the large sample performance for aggregations with *collapse* is similar to *data.table*, and *collapse* grouped transformations like the ones shown here are generally faster than what can be done *data.table*.  -->
+<!-- in fact tests show that the large sample performance for aggregations with *collapse* is similar to *data.table*, and *collapse* grouped transformations like the ones shown here are generally faster than what can be done with *data.table*.  -->
 
 The conclusion of this benchmark analysis is that *collapse*'s fast functions, with or without the help of *plm* classes, allow for very fast transformations of panel data, and should enable R programmers and econometricians to implement high-performance panel data estimators without having to dive into C/C++ themselves or resorting to *data.table* metaprogramming. 
 
@@ -661,7 +661,7 @@ head(round(fsd(pwlddev$GINI, index(pwlddev, "iso3c")), 2), 20)
 
 ### 2.2 Summary Statistics for Panel Data
 
-Efficient summary statistics for panel data have long been implemented in other statistical softwares. The command `qsu`, shorthand for 'quick-summary', is a very efficient summary statistics command inspired by the *xtsummarize* command in the STATA statistical software. It computes a default set of 5 statistics (N, mean, sd, min and max) and can also computed higher moments (skewness and kurtosis) in a single pass through the data (using a numerically stable online algorithm generalized from Welford's Algorithm for variance computations). With panel data, `qsu` computes these statistics not just on the raw data, but also on the between-transformed and within-transformed data: 
+Efficient summary statistics for panel data have long been implemented in other statistical softwares. The command `qsu`, shorthand for 'quick-summary', is a very efficient summary statistics command inspired by the *xtsummarize* command in the Stata statistical software. It computes a default set of 5 statistics (N, mean, sd, min and max) and can also computed higher moments (skewness and kurtosis) in a single pass through the data (using a numerically stable online algorithm generalized from Welford's Algorithm for variance computations). With panel data, `qsu` computes these statistics not just on the raw data, but also on the between-transformed and within-transformed data: 
 
 ```{r}
 qsu(pwlddev, cols = 9:12, higher = TRUE)
