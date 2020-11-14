@@ -31,7 +31,7 @@ $(function() {
           }
 
           if (currentParam[0] == paramKey) {
-            keyword = decodeURIComponent(currentParam[1].replace(/\+/g, "%20"));
+            keyword = decodeURIComponent(currentParam[1].replace(/\+/g, ""));
           }
         }
 

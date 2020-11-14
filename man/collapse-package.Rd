@@ -304,7 +304,7 @@ setrename(wlddev, country = Ctry, year = Yr)     # By reference
 head(frename(wlddev, tolower, cols = 9:12))
 
 # Fast grouping
-fgroup_by(wlddev, Ctry, decade) \%>\% fgroup_vars  # fgroup_by is a lot faster than dplyr::group_by
+fgroup_by(wlddev, Ctry, decade) \%>\% fgroup_vars \%>\% head # fgroup_by is a lot faster than dplyr::group_by
 rm(wlddev)                                       # .. but only works with collapse functions
 
 ## Now lets start putting things together
@@ -328,20 +328,22 @@ wlddev \%>\% fgroup_by(region, income) \%>\% fselect(PCGDP:weights) \%>\%
    fnth(0.75, weights)                           # Weighted group third quartile
 
 wlddev \%>\% fgroup_by(country) \%>\% fselect(PCGDP:ODA) \%>\%
-fwithin                                          # Within transformation
+fwithin \%>\% head                               # Within transformation
 wlddev \%>\% fgroup_by(country) \%>\% fselect(PCGDP:ODA) \%>\%
-fmedian(TRA = "-")                               # Grouped centering using the median
+fmedian(TRA = "-") \%>\% head                    # Grouped centering using the median
 # Replacing data points by the weighted first quartile:
 wlddev \%>\% fgroup_by(country) \%>\% fselect(country, year, PCGDP:weights) \%>\%
-  ftransform(fselect(., -country, -year) \%>\% fnth(0.25, weights, "replace_fill"))
+  ftransform(fselect(., -country, -year) \%>\%
+  fnth(0.25, weights, "replace_fill")) \%>\% head
 
-wlddev \%>\% fgroup_by(country) \%>\% fselect(PCGDP:ODA) \%>\% fscale               # Standardizing
-wlddev \%>\% fgroup_by(country) \%>\% fselect(PCGDP:weights) \%>\% fscale(weights)  # Weigted..
+wlddev \%>\% fgroup_by(country) \%>\% fselect(PCGDP:ODA) \%>\% fscale \%>\% head    # Standardizing
+wlddev \%>\% fgroup_by(country) \%>\% fselect(PCGDP:weights) \%>\%
+   fscale(weights) \%>\% head  # Weigted..
 
 wlddev \%>\% fselect(country, year, PCGDP:ODA) \%>\%  # Adding 1 lead and 2 lags of each variable
-  fgroup_by(country) \%>\% flag(-1:2, year)
+  fgroup_by(country) \%>\% flag(-1:2, year) \%>\% head
 wlddev \%>\% fselect(country, year, PCGDP:ODA) \%>\%  # Adding 1 lead and 10-year growth rates
-  fgroup_by(country) \%>\% fgrowth(c(0:1,10), 1, year)
+  fgroup_by(country) \%>\% fgrowth(c(0:1,10), 1, year) \%>\% head
 
 # etc...
 
@@ -360,7 +362,7 @@ wlddev \%>\% fselect(country, year, PCGDP:ODA) \%>\%
     add_vars(fdiff(., c(1,10), 1, year) \%>\% flag(0:2, year),  # Sequence of lagged differences
              ftransform(., fselect(., PCGDP:ODA) \%>\% fwithin \%>\% add_stub("W.")) \%>\%
                flag(0:2, year, keep.ids = FALSE))             # Sequence of lagged demeaned vars
-  }
+  } \%>\% head
 
 # With ftransform, can also easily do one or more grouped mutations on the fly..
 settransform(wlddev, median_ODA = fmedian(ODA, list(region, income), TRA = "replace_fill"))
@@ -393,7 +395,7 @@ head(collap(wlddev, ~ country + decade,
 wlddev \%>\% fsubset(year > 1990, country, region, income, PCGDP:ODA) \%>\%
   fgroup_by(country) \%>\% collapg(fmean, ffirst) \%>\%
   ftransform(AMGDP = PCGDP > fmedian(PCGDP, list(region, income), TRA = "replace_fill"),
-             AMODA = ODA > fmedian(ODA, income, TRA = "replace_fill"))
+             AMODA = ODA > fmedian(ODA, income, TRA = "replace_fill")) \%>\% head
 
 ## Additional flexibility for data transformation tasks is offerend by tidy transformation operators
 # Within-transformation (centering on overall mean)

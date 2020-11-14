@@ -100,7 +100,7 @@ The corresponding operators HDB and HDW additionally allow to predict / partial 
   </a>
 </li>
 <li>
-  <a href="https://github.com/SebKrantz/collapse" target="_blank">
+  <a href=https://github.com/SebKrantz/collapse" target="_blank">
     <span class="fa fa-github"></span>
      
   </a>
@@ -254,7 +254,7 @@ The corresponding operators HDB and HDW additionally allow to predict / partial 
     <p><code>HDB</code> returns fitted values of regressing <code>x</code> on <code>fl</code>. <code>HDW</code> returns residuals. See Details and Examples.</p>
     <h2 class="hasAnchor" id="see-also"><a class="anchor" href="#see-also"></a>See also</h2>
 
-    <div class='dont-index'><p><code><a href='fbetween, fwithin.html'>fbetween, fwithin</a></code>, <code><a href='fscale.html'>fscale</a></code>, <code><a href='TRA.html'>TRA</a></code>, <code><a href='fFtest.html'>fFtest</a></code>, <a href='A6-data-transformations.html'>Data Transformations</a>, <a href='index.html'>Collapse Overview</a></p></div>
+    <div class='dont-index'><p><code><a href='fbetween, fwithin.html'>fbetween, fwithin</a></code>, <code><a href='fscale.html'>fscale</a></code>, <code><a href='TRA.html'>TRA</a></code>, <code><a href='fFtest.html'>fFtest</a></code>, <a href='data-transformations.html'>Data Transformations</a>, <a href='index.html'>Collapse Overview</a></p></div>
 
     <h2 class="hasAnchor" id="examples"><a class="anchor" href="#examples"></a>Examples</h2>
     <pre class="examples"><div class='input'><span class='fu'>HDW</span><span class='op'>(</span><span class='va'>mtcars</span><span class='op'>$</span><span class='va'>mpg</span>, <span class='va'>mtcars</span><span class='op'>$</span><span class='va'>carb</span><span class='op'>)</span>                   <span class='co'># Simple regression problems..</span>
@@ -270,14 +270,14 @@ The corresponding operators HDB and HDW additionally allow to predict / partial 
 #&gt; [16] -0.536437711  4.206370638  4.627094192  0.503261089  4.387630904
 #&gt; [21] -2.143103442 -1.443053221 -2.532181498 -0.006021976  2.508321011
 #&gt; [26] -0.993468693 -0.152953961  2.763727417 -3.070040803  0.006171846
-#&gt; [31]  1.058881618 -2.968267683</div><div class='input'><span class='fu'>HDW</span><span class='op'>(</span><span class='va'>mtcars</span><span class='op'>$</span><span class='va'>mpg</span>, <span class='fu'><a href='A4-quick-conversion.html'>qM</a></span><span class='op'>(</span><span class='va'>mtcars</span><span class='op'>[</span><span class='op'>-</span><span class='fl'>1</span><span class='op'>]</span><span class='op'>)</span><span class='op'>)</span>
+#&gt; [31]  1.058881618 -2.968267683</div><div class='input'><span class='fu'>HDW</span><span class='op'>(</span><span class='va'>mtcars</span><span class='op'>$</span><span class='va'>mpg</span>, <span class='fu'><a href='quick-conversion.html'>qM</a></span><span class='op'>(</span><span class='va'>mtcars</span><span class='op'>[</span><span class='op'>-</span><span class='fl'>1</span><span class='op'>]</span><span class='op'>)</span><span class='op'>)</span>
 </div><div class='output co'>#&gt;  [1] -1.599505761 -1.111886079 -3.450644085  0.162595453  1.006565971
 #&gt;  [6] -2.283039036 -0.086256253  1.903988115 -1.619089898  0.500970058
 #&gt; [11] -1.391654392  2.227837890  1.700426404 -0.542224699 -1.634013415
 #&gt; [16] -0.536437711  4.206370638  4.627094192  0.503261089  4.387630904
 #&gt; [21] -2.143103442 -1.443053221 -2.532181498 -0.006021976  2.508321011
 #&gt; [26] -0.993468693 -0.152953961  2.763727417 -3.070040803  0.006171846
-#&gt; [31]  1.058881618 -2.968267683</div><div class='input'><span class='fu'><a href='https://rdrr.io/r/utils/head.html'>head</a></span><span class='op'>(</span><span class='fu'>HDW</span><span class='op'>(</span><span class='fu'><a href='A4-quick-conversion.html'>qM</a></span><span class='op'>(</span><span class='va'>mtcars</span><span class='op'>[</span><span class='fl'>3</span><span class='op'>:</span><span class='fl'>4</span><span class='op'>]</span><span class='op'>)</span>, <span class='va'>mtcars</span><span class='op'>[</span><span class='fl'>1</span><span class='op'>:</span><span class='fl'>2</span><span class='op'>]</span><span class='op'>)</span><span class='op'>)</span>
+#&gt; [31]  1.058881618 -2.968267683</div><div class='input'><span class='fu'><a href='https://rdrr.io/r/utils/head.html'>head</a></span><span class='op'>(</span><span class='fu'>HDW</span><span class='op'>(</span><span class='fu'><a href='quick-conversion.html'>qM</a></span><span class='op'>(</span><span class='va'>mtcars</span><span class='op'>[</span><span class='fl'>3</span><span class='op'>:</span><span class='fl'>4</span><span class='op'>]</span><span class='op'>)</span>, <span class='va'>mtcars</span><span class='op'>[</span><span class='fl'>1</span><span class='op'>:</span><span class='fl'>2</span><span class='op'>]</span><span class='op'>)</span><span class='op'>)</span>
 </div><div class='output co'>#&gt;                     HDW.disp     HDW.hp
 #&gt; Mazda RX4         -56.791929 -29.668202
 #&gt; Mazda RX4 Wag     -56.791929 -29.668202

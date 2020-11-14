@@ -105,7 +105,7 @@ get_elem returns the part of the list responding to either an identifier functio
   </a>
 </li>
 <li>
-  <a href="https://github.com/SebKrantz/collapse" target="_blank">
+  <a href=https://github.com/SebKrantz/collapse" target="_blank">
     <span class="fa fa-github"></span>
      
   </a>
@@ -215,10 +215,10 @@ get_elem returns the part of the list responding to either an identifier functio
 <p>If <code>keep.tree = TRUE</code>, <code>reg_elem</code>, <code>irreg_elem</code> and <code>get_elem</code> always return the entire list tree, but cut off all of the branches not leading to the desired result. If <code>keep.tree = FALSE</code>, top-level parts of the tree are omitted so far this is possible. For example in a nested list with three levels and one data-matrix in one of the final branches, <code>get_elem(l, is.matrix, keep.tree = TRUE)</code> will return a list (<code>lres</code>) of depth 3, from which the matrix can be accessed as <code>lres[[1]][[1]][[1]]</code>. This however does not make much sense. <code>get_elem(l, is.matrix, keep.tree = FALSE)</code> will therefore figgure out that it can drop the entire tree and return just the matrix. <code>keep.tree = FALSE</code> makes additional optimizations if matching elements are at far-apart corners in a nested structure, by only preserving the hierarchy if elements are above each other on the same branch. Thus for a list <code>l &lt;- list(list(2,list("a",1)),list(1,list("b",2)))</code> calling <code>get_elem(l, is.character)</code> will just return <code><a href='https://rdrr.io/r/base/list.html'>list("a","b")</a></code>.</p>
     <h2 class="hasAnchor" id="see-also"><a class="anchor" href="#see-also"></a>See also</h2>
 
-    <div class='dont-index'><p><a href='A8-list-processing.html'>List Processing</a>, <a href='index.html'>Collapse Overview</a></p></div>
+    <div class='dont-index'><p><a href='list-processing.html'>List Processing</a>, <a href='index.html'>Collapse Overview</a></p></div>
 
     <h2 class="hasAnchor" id="examples"><a class="anchor" href="#examples"></a>Examples</h2>
-    <pre class="examples"><div class='input'><span class='va'>m</span> <span class='op'>&lt;-</span> <span class='fu'><a href='A4-quick-conversion.html'>qM</a></span><span class='op'>(</span><span class='va'>mtcars</span><span class='op'>)</span>
+    <pre class="examples"><div class='input'><span class='va'>m</span> <span class='op'>&lt;-</span> <span class='fu'><a href='quick-conversion.html'>qM</a></span><span class='op'>(</span><span class='va'>mtcars</span><span class='op'>)</span>
 <span class='fu'>get_elem</span><span class='op'>(</span><span class='fu'><a href='https://rdrr.io/r/base/list.html'>list</a></span><span class='op'>(</span><span class='fu'><a href='https://rdrr.io/r/base/list.html'>list</a></span><span class='op'>(</span><span class='fu'><a href='https://rdrr.io/r/base/list.html'>list</a></span><span class='op'>(</span><span class='va'>m</span><span class='op'>)</span><span class='op'>)</span><span class='op'>)</span>, <span class='va'>is.matrix</span><span class='op'>)</span>
 </div><div class='output co'>#&gt;                      mpg cyl  disp  hp drat    wt  qsec vs am gear carb
 #&gt; Mazda RX4           21.0   6 160.0 110 3.90 2.620 16.46  0  1    4    4
@@ -354,7 +354,7 @@ get_elem returns the part of the list responding to either an identifier functio
 #&gt;   .. .. ..- attr(*, "order")= int [1:2] 1 1
 #&gt;   .. .. ..- attr(*, "intercept")= int 1
 #&gt;   .. .. ..- attr(*, "response")= int 1
-#&gt;   .. .. ..- attr(*, ".Environment")=&lt;environment: 0x00000090cbb6b988&gt; 
+#&gt;   .. .. ..- attr(*, ".Environment")=&lt;environment: 0x0000006531a06ab0&gt; 
 #&gt;   .. .. ..- attr(*, "predvars")= language list(mpg, cyl, vs)
 #&gt;   .. .. ..- attr(*, "dataClasses")= Named chr [1:3] "numeric" "numeric" "numeric"
 #&gt;   .. .. .. ..- attr(*, "names")= chr [1:3] "mpg" "cyl" "vs"</div><div class='input'><span class='fu'><a href='https://rdrr.io/r/utils/str.html'>str</a></span><span class='op'>(</span><span class='fu'>irreg_elem</span><span class='op'>(</span><span class='va'>l</span><span class='op'>)</span><span class='op'>)</span>
@@ -370,7 +370,7 @@ get_elem returns the part of the list responding to either an identifier functio
 #&gt;   .. ..- attr(*, "order")= int [1:2] 1 1
 #&gt;   .. ..- attr(*, "intercept")= int 1
 #&gt;   .. ..- attr(*, "response")= int 1
-#&gt;   .. ..- attr(*, ".Environment")=&lt;environment: 0x00000090cbb6b988&gt; 
+#&gt;   .. ..- attr(*, ".Environment")=&lt;environment: 0x0000006531a06ab0&gt; 
 #&gt;   .. ..- attr(*, "predvars")= language list(mpg, cyl, vs)
 #&gt;   .. ..- attr(*, "dataClasses")= Named chr [1:3] "numeric" "numeric" "numeric"
 #&gt;   .. .. ..- attr(*, "names")= chr [1:3] "mpg" "cyl" "vs"</div><div class='input'><span class='fu'>get_elem</span><span class='op'>(</span><span class='va'>l</span>, <span class='va'>is.matrix</span><span class='op'>)</span>

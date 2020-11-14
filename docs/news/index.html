@@ -98,7 +98,7 @@
   </a>
 </li>
 <li>
-  <a href="https://github.com/SebKrantz/collapse" target="_blank">
+  <a href=https://github.com/SebKrantz/collapse" target="_blank">
     <span class="fa fa-github"></span>
      
   </a>
@@ -149,11 +149,11 @@
 <a href="#changes-to-functionality" class="anchor"></a>Changes to Functionality</h3>
 <ul>
 <li><p><em>Deep Matrix Dispatch / Extended Time Series Support:</em> The default methods of all statistical and transformation functions dispatch to the matrix method if <code>is.matrix(x) &amp;&amp; !inherits(x, "matrix")</code> evaluates to <code>TRUE</code>. This specification avoids invoking the default method on classed matrix-based objects (such as multivariate time series of the <em>xts</em> / <em>zoo</em> class) not inheriting a ‘matrix’ class, while still allowing the user to manually call the default method on matrices (objects with implicit or explicit ‘matrix’ class). The change implies that <em>collapse</em>’s generic statistical functions are now well suited to transform <em>xts</em> / <em>zoo</em> and many other time series and matrix-based classes.</p></li>
-<li><p><em>Fully Non-Destructive Piped Workflow:</em> <code><a href="../reference/GRP,%20fgroup_by.html">fgroup_by(x, ...)</a></code> now only adds a class <em>grouped_df</em>, not classes <em>table_df</em>, <em>tbl</em>, <em>grouped_df</em>, and preserves all classes of <code>x</code>. This implies that workflows such as <code>x %&gt;% fgroup_by(...) %&gt;% fmean</code> etc. yields an object <code>xAG</code> of the same class and attributes as <code>x</code>, not a tibble as before. <em>collapse</em> aims to be as broadly compatible, class-agnostic and attribute preserving as possible.</p></li>
+<li><p><em>Fully Non-Destructive Piped Workflow:</em> <code><a href="../reference/GRP,fgroup_by.html">fgroup_by(x, ...)</a></code> now only adds a class <em>grouped_df</em>, not classes <em>table_df</em>, <em>tbl</em>, <em>grouped_df</em>, and preserves all classes of <code>x</code>. This implies that workflows such as <code>x %&gt;% fgroup_by(...) %&gt;% fmean</code> etc. yields an object <code>xAG</code> of the same class and attributes as <code>x</code>, not a tibble as before. <em>collapse</em> aims to be as broadly compatible, class-agnostic and attribute preserving as possible.</p></li>
 </ul>
 <!-- Not a priority for now! Not really necessary at all, can always use base R converters! --><ul>
 <li>
-<em>Thorough and Controlled Object Conversions:</em> Quick conversion functions <code>qDF</code>, <code>qDT</code> and <code>qM</code> now have additional arguments <code>keep.attr</code> and <code>class</code> providing precise user control over object conversions in terms of classes and other attributes assigned / maintained. The default (<code>keep.attr = FALSE</code>) yields <em>hard</em> conversions removing all but essential attributes from the object. E.g. before <code><a href="../reference/A4-quick-conversion.html">qM(EuStockMarkets)</a></code> would just have returned <code>EuStockMarkets</code> (because <code><a href="https://rdrr.io/r/base/matrix.html">is.matrix(EuStockMarkets)</a></code> is <code>TRUE</code>) whereas now the time series class and ‘tsp’ attribute are removed. <code><a href="../reference/A4-quick-conversion.html">qM(EuStockMarkets, keep.attr = TRUE)</a></code> returns <code>EuStockMarkets</code> as before.</li>
+<em>Thorough and Controlled Object Conversions:</em> Quick conversion functions <code>qDF</code>, <code>qDT</code> and <code>qM</code> now have additional arguments <code>keep.attr</code> and <code>class</code> providing precise user control over object conversions in terms of classes and other attributes assigned / maintained. The default (<code>keep.attr = FALSE</code>) yields <em>hard</em> conversions removing all but essential attributes from the object. E.g. before <code><a href="../reference/quick-conversion.html">qM(EuStockMarkets)</a></code> would just have returned <code>EuStockMarkets</code> (because <code><a href="https://rdrr.io/r/base/matrix.html">is.matrix(EuStockMarkets)</a></code> is <code>TRUE</code>) whereas now the time series class and ‘tsp’ attribute are removed. <code><a href="../reference/quick-conversion.html">qM(EuStockMarkets, keep.attr = TRUE)</a></code> returns <code>EuStockMarkets</code> as before.</li>
 </ul>
 <!--
 In general `keep.attr = TRUE` gives a *soft* conversion were attributes necessary to establish the new data type ('dim', 'dimnames', 'names', 'row.names', 'class') are modified, but all other attributes are kept. 
@@ -254,7 +254,7 @@ This may be useful in some cases, for examples it is now possible to write somet
 <li><p><code>fmode</code> now has the option to compute min and max mode, the default is still simply the first mode.</p></li>
 <li><p><code>fwithin</code> now supports quasi-demeaning (added argument <code>theta</code>) and can thus be used to manually estimate random-effects models.</p></li>
 <li><p><code>funique</code> is now generic with a default vector and data.frame method, providing fast unique values and rows of data. The default was changed to <code>sort = FALSE</code>.</p></li>
-<li><p>The shortcut <code>gvr</code> was created for <code><a href="../reference/fselect,%20get_vars,%20add_vars.html">get_vars(..., regex = TRUE)</a></code>.</p></li>
+<li><p>The shortcut <code>gvr</code> was created for <code><a href="../reference/fselect,get_vars,add_vars.html">get_vars(..., regex = TRUE)</a></code>.</p></li>
 <li><p>A helper <code>.c</code> was introduced for non-standard concatenation (i.e. <code>.c(a, b) == c("a", "b")</code>).</p></li>
 </ul>
 </div>
@@ -360,7 +360,7 @@ This may be useful in some cases, for examples it is now possible to write somet
 <p>collapse 1.1.0 released early April 2020: <!--  - some small fixes and additions: --></p>
 <ul>
 <li><p>Fixed remaining gcc10, LTO and valgrind issues in C/C++ code, and added some more tests (there are now ~ 5300 tests ensuring that <em>collapse</em> statistical functions perform as expected).</p></li>
-<li><p>Fixed the issue that supplying an unnamed list to <code><a href="../reference/GRP,%20fgroup_by.html">GRP()</a></code>, i.e. <code><a href="../reference/GRP,%20fgroup_by.html">GRP(list(v1, v2))</a></code> would give an error. Unnamed lists are now automatically named ‘Group.1’, ‘Group.2’, etc…</p></li>
+<li><p>Fixed the issue that supplying an unnamed list to <code><a href="../reference/GRP,fgroup_by.html">GRP()</a></code>, i.e. <code><a href="../reference/GRP,fgroup_by.html">GRP(list(v1, v2))</a></code> would give an error. Unnamed lists are now automatically named ‘Group.1’, ‘Group.2’, etc…</p></li>
 <li><p>Fixed an issue where aggregating by a single id in <code><a href="../reference/collap.html">collap()</a></code> (i.e. <code><a href="../reference/collap.html">collap(data, ~ id1)</a></code>), the id would be coded as factor in the aggregated data.frame. All variables including id’s now retain their class and attributes in the aggregated data.</p></li>
 <li><p>Added weights (<code>w</code>) argument to <code>fsum</code> and <code>fprod</code>.</p></li>
 <li><p>Added an argument <code>mean = 0</code> to <code>fwithin / W</code>. This allows simple and grouped centering on an arbitrary mean, <code>0</code> being the default. For grouped centering <code>mean = "overall.mean"</code> can be specified, which will center data on the overall mean of the data. The logical argument <code>add.global.mean = TRUE</code> used to toggle this in <em>collapse</em> 1.0.0 is therefore depreciated.</p></li>

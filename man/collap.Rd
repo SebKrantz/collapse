@@ -194,11 +194,11 @@ head(collap(wlddev, ~ country + decade,                         # No column reor
 
 
 ## Piped Use --------------------------------------------------
-wlddev \%>\% fgroup_by(country, decade) \%>\% collapg
-wlddev \%>\% fgroup_by(country, decade) \%>\% collapg(w = ODA)
-wlddev \%>\% fgroup_by(country, decade) \%>\% collapg(fmedian, flast)
+wlddev \%>\% fgroup_by(country, decade) \%>\% collapg \%>\% head
+wlddev \%>\% fgroup_by(country, decade) \%>\% collapg(w = ODA) \%>\% head
+wlddev \%>\% fgroup_by(country, decade) \%>\% collapg(fmedian, flast) \%>\% head
 wlddev \%>\% fgroup_by(country, decade) \%>\%
-  collapg(custom = list(fmean = 9:12, fmode = 5:7, flast = 3))
+  collapg(custom = list(fmean = 9:12, fmode = 5:7, flast = 3)) \%>\% head
 
 }
 % Add one or more standard keywords, see file 'KEYWORDS' in the
