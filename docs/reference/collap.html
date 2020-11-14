@@ -102,7 +102,7 @@ collap works with collapse's Fast Statistical Functions, providing extremely fas
   </a>
 </li>
 <li>
-  <a href="https://github.com/SebKrantz/collapse" target="_blank">
+  <a href=https://github.com/SebKrantz/collapse" target="_blank">
     <span class="fa fa-github"></span>
      
   </a>
@@ -128,7 +128,7 @@ collap works with collapse's Fast Statistical Functions, providing extremely fas
     <div class="ref-description">
     <p><code>collap</code> is a fast and easy to use multi-purpose data aggregation command.</p>
 <p>It performs simple aggregations, multi-type data aggregations applying different functions to numeric and categorical data, weighted aggregations (including weighted multi-type aggregations), multi-function aggregations applying multiple functions to each column, and fully customized aggregations where the user passes a list mapping functions to columns.</p>
-<p><code>collap</code> works with <em>collapse</em>'s <a href='A1-fast-statistical-functions.html'>Fast Statistical Functions</a>, providing extremely fast conventional and weighted aggregation. It also works with other functions but this does not deliver high speeds on large data and does not support weighted aggregations.</p>
+<p><code>collap</code> works with <em>collapse</em>'s <a href='fast-statistical-functions.html'>Fast Statistical Functions</a>, providing extremely fast conventional and weighted aggregation. It also works with other functions but this does not deliver high speeds on large data and does not support weighted aggregations.</p>
 <p><!-- % \code{collap} supports formula and data (i.e. grouping vectors or lists of vectors) input to \code{by}, whereas \code{collapv} allows names and indices of grouping columns to be passed to \code{by}. --></p>
     </div>
 
@@ -155,11 +155,11 @@ collap works with collapse's Fast Statistical Functions, providing extremely fas
     <colgroup><col class="name" /><col class="desc" /></colgroup>
     <tr>
       <th>X</th>
-      <td><p>a data frame, or an object coercible to data frame using <code><a href='A4-quick-conversion.html'>qDF</a></code>.</p></td>
+      <td><p>a data frame, or an object coercible to data frame using <code><a href='quick-conversion.html'>qDF</a></code>.</p></td>
     </tr>
     <tr>
       <th>by</th>
-      <td><p>for <code>collap</code>: a one-or two sided formula, i.e. <code>~ group1</code> or <code>var1 + var2 ~ group1 + group2</code>, or a atomic vector, list of vectors or <code><a href='GRP, fgroup_by.html'>GRP</a></code> object used to group <code>X</code>. For <code>collapv</code>: names or indices of grouping columns, or a logical vector or selector function such as <code><a href='AA2-small-helpers.html'>is.categorical</a></code> selecting grouping columns.</p></td>
+      <td><p>for <code>collap</code>: a one-or two sided formula, i.e. <code>~ group1</code> or <code>var1 + var2 ~ group1 + group2</code>, or a atomic vector, list of vectors or <code><a href='GRP, fgroup_by.html'>GRP</a></code> object used to group <code>X</code>. For <code>collapv</code>: names or indices of grouping columns, or a logical vector or selector function such as <code><a href='small-helpers.html'>is.categorical</a></code> selecting grouping columns.</p></td>
     </tr>
     <tr>
       <th>FUN</th>
@@ -167,7 +167,7 @@ collap works with collapse's Fast Statistical Functions, providing extremely fas
     </tr>
     <tr>
       <th>catFUN</th>
-      <td><p>same as <code>FUN</code>, but applied only to categorical (non-numeric) typed columns (<code><a href='AA2-small-helpers.html'>is.categorical</a></code>).</p></td>
+      <td><p>same as <code>FUN</code>, but applied only to categorical (non-numeric) typed columns (<code><a href='small-helpers.html'>is.categorical</a></code>).</p></td>
     </tr>
     <tr>
       <th>cols</th>
@@ -223,7 +223,7 @@ collap works with collapse's Fast Statistical Functions, providing extremely fas
     </tr>
     <tr>
       <th>...</th>
-      <td><p>additional arguments passed to all functions supplied to <code>FUN</code>, <code>catFUN</code>, <code>wFUN</code> or <code>custom</code>. The behavior of <a href='A1-fast-statistical-functions.html'>Fast Statistical Functions</a> is regulated by <code><a href='https://rdrr.io/r/base/options.html'>option("collapse_unused_arg_action")</a></code> and defaults to <code>"warning"</code>.</p></td>
+      <td><p>additional arguments passed to all functions supplied to <code>FUN</code>, <code>catFUN</code>, <code>wFUN</code> or <code>custom</code>. The behavior of <a href='fast-statistical-functions.html'>Fast Statistical Functions</a> is regulated by <code><a href='https://rdrr.io/r/base/options.html'>option("collapse_unused_arg_action")</a></code> and defaults to <code>"warning"</code>.</p></td>
     </tr>
     </table>
 
@@ -232,15 +232,15 @@ collap works with collapse's Fast Statistical Functions, providing extremely fas
     <p><code>collap</code> automatically checks each function passed to it whether it is a <a href='A1-fast-statistical-functions.html'>Fast Statistical Function</a> (i.e. whether the function name is contained in <code>.FAST_STAT_FUN</code>). If the function is a fast statistical function, <code>collap</code> only does the grouping and then calls the function to carry out the grouped computations. If the function is not one of <code>.FAST_STAT_FUN</code>, <code><a href='BY.html'>BY</a></code> is called internally to perform the computation. The resulting computations from each function are put into a list and recombined to produce the desired output format as controlled by the <code>return</code> argument. When multiple functions are used with <code>collap</code>, setting <code>parallel = TRUE</code> and the number of cores with <code>mc.cores</code> will instruct <code>collap</code> to execute these function calls in parallel using <code><a href='https://rdrr.io/r/parallel/mcdummies.html'>parallel::mclapply</a></code>. If only a single function is used which is not a <code>.FAST_STAT_FUN</code>, the <code>parallel</code> and <code>mc.cores</code> arguments are handed down to <code><a href='BY.html'>BY</a></code>. See Examples.</p>
     <h2 class="hasAnchor" id="value"><a class="anchor" href="#value"></a>Value</h2>
 
-    <p><code>X</code> aggregated. If <code>X</code> is not a data frame it is coerced to one using <code><a href='A4-quick-conversion.html'>qDF</a></code> and then aggregated.</p>
+    <p><code>X</code> aggregated. If <code>X</code> is not a data frame it is coerced to one using <code><a href='quick-conversion.html'>qDF</a></code> and then aggregated.</p>
     <h2 class="hasAnchor" id="note"><a class="anchor" href="#note"></a>Note</h2>
 
-    <p>Since <code><a href='BY.html'>BY</a></code> does not check and split additional arguments passed to it, it is presently not possible to create a weighted function in R and apply it to data by groups with <code>collap</code>. Weighted aggregations only work with <a href='A1-fast-statistical-functions.html'>Fast Statistical Functions</a> supporting weights. User written weighted functions can be applied using the <em>data.table</em> package.</p>
+    <p>Since <code><a href='BY.html'>BY</a></code> does not check and split additional arguments passed to it, it is presently not possible to create a weighted function in R and apply it to data by groups with <code>collap</code>. Weighted aggregations only work with <a href='fast-statistical-functions.html'>Fast Statistical Functions</a> supporting weights. User written weighted functions can be applied using the <em>data.table</em> package.</p>
 <p>The dispatch between using optimized <code>collapse</code> functions performing grouped computations internally or calling <code>BY</code> to perform split-apply-combine computing is done by matching the function name against <code>.FAST_STAT_FUN</code>. Thus code like <code>collapse::collap(data, ~ id, collapse::fmedian)</code> does not yield an optimized computation, as <code>"collapse::fmedian" %!in% .FAST_STAT_FUN</code>. If you want to perform optimized computations with <code>collap</code> without loading the pacckage, load the functions beforehand as well, e.g. <code>fmedian &lt;- collapse::fmedian; data, ~ id, fmedian)</code>. Alternatively it is of course also possible to use <code><a href='fmedian.html'>collapse::fmedian(collapse::fgroup_by(data, id))</a></code>, or something similar...</p>
 <p><!-- % \code{collap} by default (\code{keep.by = TRUE, keep.w = TRUE}) preserves all arguments passed to the \code{by} or \code{w} arguments, whether passed in a formula or externally. The names of externally passed vectors and lists are intelligently extracted. So it is possible to write \code{collap(iris, iris$Species)}, and obtain an aggregated data frame with two \code{Species} columns, whereas \code{collap(iris, ~ Species)} only has one \code{Species} column. Similarly for weight vectors passed to \code{w}. In this regard \code{collap} is more sophisticated than other \emph{collapse} functions where preservation of grouping and weight variables is restricted to formula use. For example \code{STD(iris, iris$Species)} does not preserve \code{Species} in the output, whereas \code{STD(iris, ~ Species)} does. This \code{collap} feature is there simply for convenience, for example sometimes a survey is disaggregated into several datasets, and this now allows easy pulling of identifiers or weights from other datasets for aggregations. If all information is available in one dataset, just using formulas is highly recommended. --></p>
     <h2 class="hasAnchor" id="see-also"><a class="anchor" href="#see-also"></a>See also</h2>
 
-    <div class='dont-index'><p><code><a href='BY.html'>BY</a></code>, <a href='A1-fast-statistical-functions.html'>Fast Statistical Functions</a>, <a href='index.html'>Collapse Overview</a></p></div>
+    <div class='dont-index'><p><code><a href='BY.html'>BY</a></code>, <a href='fast-statistical-functions.html'>Fast Statistical Functions</a>, <a href='index.html'>Collapse Overview</a></p></div>
 
     <h2 class="hasAnchor" id="examples"><a class="anchor" href="#examples"></a>Examples</h2>
     <pre class="examples"><div class='input'><span class='co'>## A Simple Introduction --------------------------------------</span>
@@ -327,7 +327,7 @@ collap works with collapse's Fast Statistical Functions, providing extremely fas
 </div><div class='output co'>#&gt;   Sepal.Length Sepal.Width Petal.Length Petal.Width    Species
 #&gt; 1        250.3    3.447423     1.465202   0.2480224     setosa
 #&gt; 2        296.8    2.784063     4.290195   1.3352089 versicolor
-#&gt; 3        329.4    2.987948     5.597116   2.0333030  virginica</div><div class='input'><span class='va'>weights</span> <span class='op'>&lt;-</span> <span class='fu'><a href='https://rdrr.io/r/base/MathFun.html'>abs</a></span><span class='op'>(</span><span class='fu'><a href='https://rdrr.io/r/stats/Normal.html'>rnorm</a></span><span class='op'>(</span><span class='fu'><a href='AA2-small-helpers.html'>fnrow</a></span><span class='op'>(</span><span class='va'>iris</span><span class='op'>)</span><span class='op'>)</span><span class='op'>)</span>
+#&gt; 3        329.4    2.987948     5.597116   2.0333030  virginica</div><div class='input'><span class='va'>weights</span> <span class='op'>&lt;-</span> <span class='fu'><a href='https://rdrr.io/r/base/MathFun.html'>abs</a></span><span class='op'>(</span><span class='fu'><a href='https://rdrr.io/r/stats/Normal.html'>rnorm</a></span><span class='op'>(</span><span class='fu'><a href='small-helpers.html'>fnrow</a></span><span class='op'>(</span><span class='va'>iris</span><span class='op'>)</span><span class='op'>)</span><span class='op'>)</span>
 <span class='fu'>collap</span><span class='op'>(</span><span class='va'>iris</span>, <span class='op'>~</span> <span class='va'>Species</span>, w <span class='op'>=</span> <span class='va'>weights</span><span class='op'>)</span>                           <span class='co'># Some random weights..</span>
 </div><div class='output co'>#&gt;    weights Sepal.Length Sepal.Width Petal.Length Petal.Width    Species
 #&gt; 1 39.56057     4.987909    3.427702     1.444973   0.2415078     setosa
@@ -515,7 +515,7 @@ collap works with collapse's Fast Statistical Functions, providing extremely fas
 #&gt; 6 Afghanistan Afghanistan   AFG 2015-01-01   2010 South Asia Low income FALSE</div><div class='input'>
 
 <span class='co'>## Weighted Aggregation ----------------------------------------</span>
-<span class='va'>weights</span> <span class='op'>&lt;-</span> <span class='fu'><a href='https://rdrr.io/r/base/MathFun.html'>abs</a></span><span class='op'>(</span><span class='fu'><a href='https://rdrr.io/r/stats/Normal.html'>rnorm</a></span><span class='op'>(</span><span class='fu'><a href='AA2-small-helpers.html'>fnrow</a></span><span class='op'>(</span><span class='va'>wlddev</span><span class='op'>)</span><span class='op'>)</span><span class='op'>)</span>                            <span class='co'># Random weight vector</span>
+<span class='va'>weights</span> <span class='op'>&lt;-</span> <span class='fu'><a href='https://rdrr.io/r/base/MathFun.html'>abs</a></span><span class='op'>(</span><span class='fu'><a href='https://rdrr.io/r/stats/Normal.html'>rnorm</a></span><span class='op'>(</span><span class='fu'><a href='small-helpers.html'>fnrow</a></span><span class='op'>(</span><span class='va'>wlddev</span><span class='op'>)</span><span class='op'>)</span><span class='op'>)</span>                            <span class='co'># Random weight vector</span>
 <span class='fu'><a href='https://rdrr.io/r/utils/head.html'>head</a></span><span class='op'>(</span><span class='fu'>collap</span><span class='op'>(</span><span class='va'>wlddev</span>, <span class='op'>~</span> <span class='va'>country</span> <span class='op'>+</span> <span class='va'>decade</span>, w <span class='op'>=</span> <span class='va'>weights</span><span class='op'>)</span><span class='op'>)</span>           <span class='co'># Takes weighted mean for numeric..</span>
 </div><div class='output co'>#&gt;     weights     country iso3c       date     year decade     region     income
 #&gt; 1  3.977500 Afghanistan   AFG 1963-01-01 1962.934   1960 South Asia Low income
@@ -804,1071 +804,64 @@ collap works with collapse's Fast Statistical Functions, providing extremely fas
 #&gt; 6         NA 5179680196 84.786556  1.3745334   Low income      FALSE</div><div class='input'>
 
 <span class='co'>## Piped Use --------------------------------------------------</span>
-<span class='va'>wlddev</span> <span class='op'>%&gt;%</span> <span class='fu'><a href='GRP, fgroup_by.html'>fgroup_by</a></span><span class='op'>(</span><span class='va'>country</span>, <span class='va'>decade</span><span class='op'>)</span> <span class='op'>%&gt;%</span> <span class='va'>collapg</span>
-</div><div class='output co'>#&gt;                country decade iso3c       date   year
-#&gt; 1          Afghanistan   1960   AFG 1961-01-01 1962.5
-#&gt; 2          Afghanistan   1970   AFG 1967-01-01 1970.0
-#&gt; 3          Afghanistan   1980   AFG 1976-01-01 1980.0
-#&gt; 4          Afghanistan   1990   AFG 1987-01-01 1990.0
-#&gt; 5          Afghanistan   2000   AFG 1996-01-01 2000.0
-#&gt; 6          Afghanistan   2010   AFG 2007-01-01 2010.0
-#&gt; 7          Afghanistan   2020   AFG 2016-01-01 2016.5
-#&gt; 8              Albania   1960   ALB 1961-01-01 1962.5
-#&gt; 9              Albania   1970   ALB 1967-01-01 1970.0
-#&gt; 10             Albania   1980   ALB 1976-01-01 1980.0
-#&gt; 11             Albania   1990   ALB 1987-01-01 1990.0
-#&gt; 12             Albania   2000   ALB 1996-01-01 2000.0
-#&gt; 13             Albania   2010   ALB 2007-01-01 2010.0
-#&gt; 14             Albania   2020   ALB 2016-01-01 2016.5
-#&gt; 15             Algeria   1960   DZA 1961-01-01 1962.5
-#&gt; 16             Algeria   1970   DZA 1967-01-01 1970.0
-#&gt; 17             Algeria   1980   DZA 1976-01-01 1980.0
-#&gt; 18             Algeria   1990   DZA 1987-01-01 1990.0
-#&gt; 19             Algeria   2000   DZA 1996-01-01 2000.0
-#&gt; 20             Algeria   2010   DZA 2007-01-01 2010.0
-#&gt; 21             Algeria   2020   DZA 2016-01-01 2016.5
-#&gt; 22      American Samoa   1960   ASM 1961-01-01 1962.5
-#&gt; 23      American Samoa   1970   ASM 1967-01-01 1970.0
-#&gt; 24      American Samoa   1980   ASM 1976-01-01 1980.0
-#&gt; 25      American Samoa   1990   ASM 1987-01-01 1990.0
-#&gt; 26      American Samoa   2000   ASM 1996-01-01 2000.0
-#&gt; 27      American Samoa   2010   ASM 2007-01-01 2010.0
-#&gt; 28      American Samoa   2020   ASM 2016-01-01 2016.5
-#&gt; 29             Andorra   1960   AND 1961-01-01 1962.5
-#&gt; 30             Andorra   1970   AND 1967-01-01 1970.0
-#&gt; 31             Andorra   1980   AND 1976-01-01 1980.0
-#&gt; 32             Andorra   1990   AND 1987-01-01 1990.0
-#&gt; 33             Andorra   2000   AND 1996-01-01 2000.0
-#&gt; 34             Andorra   2010   AND 2007-01-01 2010.0
-#&gt; 35             Andorra   2020   AND 2016-01-01 2016.5
-#&gt; 36              Angola   1960   AGO 1961-01-01 1962.5
-#&gt; 37              Angola   1970   AGO 1967-01-01 1970.0
-#&gt; 38              Angola   1980   AGO 1976-01-01 1980.0
-#&gt; 39              Angola   1990   AGO 1987-01-01 1990.0
-#&gt; 40              Angola   2000   AGO 1996-01-01 2000.0
-#&gt; 41              Angola   2010   AGO 2007-01-01 2010.0
-#&gt; 42              Angola   2020   AGO 2016-01-01 2016.5
-#&gt; 43 Antigua and Barbuda   1960   ATG 1961-01-01 1962.5
-#&gt; 44 Antigua and Barbuda   1970   ATG 1967-01-01 1970.0
-#&gt; 45 Antigua and Barbuda   1980   ATG 1976-01-01 1980.0
-#&gt; 46 Antigua and Barbuda   1990   ATG 1987-01-01 1990.0
-#&gt; 47 Antigua and Barbuda   2000   ATG 1996-01-01 2000.0
-#&gt; 48 Antigua and Barbuda   2010   ATG 2007-01-01 2010.0
-#&gt; 49 Antigua and Barbuda   2020   ATG 2016-01-01 2016.5
-#&gt; 50           Argentina   1960   ARG 1961-01-01 1962.5
-#&gt; 51           Argentina   1970   ARG 1967-01-01 1970.0
-#&gt; 52           Argentina   1980   ARG 1976-01-01 1980.0
-#&gt; 53           Argentina   1990   ARG 1987-01-01 1990.0
-#&gt; 54           Argentina   2000   ARG 1996-01-01 2000.0
-#&gt; 55           Argentina   2010   ARG 2007-01-01 2010.0
-#&gt; 56           Argentina   2020   ARG 2016-01-01 2016.5
-#&gt; 57             Armenia   1960   ARM 1961-01-01 1962.5
-#&gt; 58             Armenia   1970   ARM 1967-01-01 1970.0
-#&gt; 59             Armenia   1980   ARM 1976-01-01 1980.0
-#&gt; 60             Armenia   1990   ARM 1987-01-01 1990.0
-#&gt; 61             Armenia   2000   ARM 1996-01-01 2000.0
-#&gt; 62             Armenia   2010   ARM 2007-01-01 2010.0
-#&gt; 63             Armenia   2020   ARM 2016-01-01 2016.5
-#&gt; 64               Aruba   1960   ABW 1961-01-01 1962.5
-#&gt; 65               Aruba   1970   ABW 1967-01-01 1970.0
-#&gt; 66               Aruba   1980   ABW 1976-01-01 1980.0
-#&gt; 67               Aruba   1990   ABW 1987-01-01 1990.0
-#&gt; 68               Aruba   2000   ABW 1996-01-01 2000.0
-#&gt; 69               Aruba   2010   ABW 2007-01-01 2010.0
-#&gt; 70               Aruba   2020   ABW 2016-01-01 2016.5
-#&gt; 71           Australia   1960   AUS 1961-01-01 1962.5
-#&gt; 72           Australia   1970   AUS 1967-01-01 1970.0
-#&gt; 73           Australia   1980   AUS 1976-01-01 1980.0
-#&gt; 74           Australia   1990   AUS 1987-01-01 1990.0
-#&gt; 75           Australia   2000   AUS 1996-01-01 2000.0
-#&gt; 76           Australia   2010   AUS 2007-01-01 2010.0
-#&gt; 77           Australia   2020   AUS 2016-01-01 2016.5
-#&gt; 78             Austria   1960   AUT 1961-01-01 1962.5
-#&gt; 79             Austria   1970   AUT 1967-01-01 1970.0
-#&gt; 80             Austria   1980   AUT 1976-01-01 1980.0
-#&gt; 81             Austria   1990   AUT 1987-01-01 1990.0
-#&gt; 82             Austria   2000   AUT 1996-01-01 2000.0
-#&gt; 83             Austria   2010   AUT 2007-01-01 2010.0
-#&gt;                        region              income  OECD      PCGDP   LIFEEX
-#&gt; 1                  South Asia          Low income FALSE         NA 33.39967
-#&gt; 2                  South Asia          Low income FALSE         NA 36.70089
-#&gt; 3                  South Asia          Low income FALSE         NA 42.03909
-#&gt; 4                  South Asia          Low income FALSE         NA 49.69089
-#&gt; 5                  South Asia          Low income FALSE   349.7596 55.61818
-#&gt; 6                  South Asia          Low income FALSE   506.9931 61.12978
-#&gt; 7                  South Asia          Low income FALSE   584.2110 63.48050
-#&gt; 8       Europe &amp; Central Asia Upper middle income FALSE         NA 64.33067
-#&gt; 9       Europe &amp; Central Asia Upper middle income FALSE         NA 67.06911
-#&gt; 10      Europe &amp; Central Asia Upper middle income FALSE  2075.2327 70.15236
-#&gt; 11      Europe &amp; Central Asia Upper middle income FALSE  1729.7789 71.81789
-#&gt; 12      Europe &amp; Central Asia Upper middle income FALSE  2283.2600 73.83773
-#&gt; 13      Europe &amp; Central Asia Upper middle income FALSE  3975.0178 76.67056
-#&gt; 14      Europe &amp; Central Asia Upper middle income FALSE  4691.8731 78.25950
-#&gt; 15 Middle East &amp; North Africa Upper middle income FALSE  2130.4881 47.27383
-#&gt; 16 Middle East &amp; North Africa Upper middle income FALSE  2571.6500 50.42411
-#&gt; 17 Middle East &amp; North Africa Upper middle income FALSE  3597.5973 58.32591
-#&gt; 18 Middle East &amp; North Africa Upper middle income FALSE  3498.5153 66.56133
-#&gt; 19 Middle East &amp; North Africa Upper middle income FALSE  3626.5207 70.35527
-#&gt; 20 Middle East &amp; North Africa Upper middle income FALSE  4469.2330 74.57167
-#&gt; 21 Middle East &amp; North Africa Upper middle income FALSE  4802.5845 75.96900
-#&gt; 22        East Asia &amp; Pacific Upper middle income FALSE         NA       NA
-#&gt; 23        East Asia &amp; Pacific Upper middle income FALSE         NA       NA
-#&gt; 24        East Asia &amp; Pacific Upper middle income FALSE         NA       NA
-#&gt; 25        East Asia &amp; Pacific Upper middle income FALSE         NA       NA
-#&gt; 26        East Asia &amp; Pacific Upper middle income FALSE 10637.5300       NA
-#&gt; 27        East Asia &amp; Pacific Upper middle income FALSE 10209.8192       NA
-#&gt; 28        East Asia &amp; Pacific Upper middle income FALSE  9529.6520       NA
-#&gt; 29      Europe &amp; Central Asia         High income FALSE         NA       NA
-#&gt; 30      Europe &amp; Central Asia         High income FALSE 43184.3987       NA
-#&gt; 31      Europe &amp; Central Asia         High income FALSE 39765.4638       NA
-#&gt; 32      Europe &amp; Central Asia         High income FALSE 34675.3795       NA
-#&gt; 33      Europe &amp; Central Asia         High income FALSE 40820.0342       NA
-#&gt; 34      Europe &amp; Central Asia         High income FALSE 42257.9939       NA
-#&gt; 35      Europe &amp; Central Asia         High income FALSE 42889.1390       NA
-#&gt; 36        Sub-Saharan Africa  Lower middle income FALSE         NA 34.11433
-#&gt; 37        Sub-Saharan Africa  Lower middle income FALSE         NA 37.05800
-#&gt; 38        Sub-Saharan Africa  Lower middle income FALSE  2745.9567 40.38118
-#&gt; 39        Sub-Saharan Africa  Lower middle income FALSE  2450.5236 41.81489
-#&gt; 40        Sub-Saharan Africa  Lower middle income FALSE  2290.6677 47.47027
-#&gt; 41        Sub-Saharan Africa  Lower middle income FALSE  3580.8296 57.85833
-#&gt; 42        Sub-Saharan Africa  Lower middle income FALSE  3566.4054 61.39400
-#&gt; 43 Latin America &amp; Caribbean          High income FALSE         NA 63.15933
-#&gt; 44 Latin America &amp; Caribbean          High income FALSE         NA 65.87622
-#&gt; 45 Latin America &amp; Caribbean          High income FALSE  5623.1648 68.85809
-#&gt; 46 Latin America &amp; Caribbean          High income FALSE 10016.9918 71.34078
-#&gt; 47 Latin America &amp; Caribbean          High income FALSE 11479.8364 73.52100
-#&gt; 48 Latin America &amp; Caribbean          High income FALSE 13183.9669 75.40200
-#&gt; 49 Latin America &amp; Caribbean          High income FALSE 13182.5997 76.28550
-#&gt; 50 Latin America &amp; Caribbean          High income FALSE  5729.3618 65.26267
-#&gt; 51 Latin America &amp; Caribbean          High income FALSE  6950.3534 66.52600
-#&gt; 52 Latin America &amp; Caribbean          High income FALSE  7411.0612 69.38864
-#&gt; 53 Latin America &amp; Caribbean          High income FALSE  7067.4240 71.59978
-#&gt; 54 Latin America &amp; Caribbean          High income FALSE  7969.4459 73.79664
-#&gt; 55 Latin America &amp; Caribbean          High income FALSE 10125.8877 75.59644
-#&gt; 56 Latin America &amp; Caribbean          High income FALSE 10367.3262 76.49600
-#&gt; 57      Europe &amp; Central Asia Upper middle income FALSE         NA 67.05883
-#&gt; 58      Europe &amp; Central Asia Upper middle income FALSE         NA 69.94333
-#&gt; 59      Europe &amp; Central Asia Upper middle income FALSE         NA 70.64455
-#&gt; 60      Europe &amp; Central Asia Upper middle income FALSE  1238.0134 68.31133
-#&gt; 61      Europe &amp; Central Asia Upper middle income FALSE  1588.4868 71.13064
-#&gt; 62      Europe &amp; Central Asia Upper middle income FALSE  3422.2688 73.40111
-#&gt; 63      Europe &amp; Central Asia Upper middle income FALSE  4029.0706 74.53150
-#&gt; 64 Latin America &amp; Caribbean          High income FALSE         NA 66.58583
-#&gt; 65 Latin America &amp; Caribbean          High income FALSE         NA 69.14178
-#&gt; 66 Latin America &amp; Caribbean          High income FALSE         NA 72.17600
-#&gt; 67 Latin America &amp; Caribbean          High income FALSE 23677.0869 73.45356
-#&gt; 68 Latin America &amp; Caribbean          High income FALSE 26766.9300 73.85773
-#&gt; 69 Latin America &amp; Caribbean          High income FALSE 25238.7968 75.01078
-#&gt; 70 Latin America &amp; Caribbean          High income FALSE 24416.8009 75.79600
-#&gt; 71        East Asia &amp; Pacific         High income  TRUE 20183.3456 70.89593
-#&gt; 72        East Asia &amp; Pacific         High income  TRUE 25250.7296 71.24488
-#&gt; 73        East Asia &amp; Pacific         High income  TRUE 29651.4994 74.24798
-#&gt; 74        East Asia &amp; Pacific         High income  TRUE 35004.1754 76.95257
-#&gt; 75        East Asia &amp; Pacific         High income  TRUE 43625.3433 79.30244
-#&gt; 76        East Asia &amp; Pacific         High income  TRUE 52260.5141 81.70650
-#&gt; 77        East Asia &amp; Pacific         High income  TRUE 55558.2251 82.45000
-#&gt; 78      Europe &amp; Central Asia         High income  TRUE 14328.3581 69.42671
-#&gt; 79      Europe &amp; Central Asia         High income  TRUE 19641.8541 70.26377
-#&gt; 80      Europe &amp; Central Asia         High income  TRUE 26999.2763 72.50865
-#&gt; 81      Europe &amp; Central Asia         High income  TRUE 33284.3809 75.45095
-#&gt; 82      Europe &amp; Central Asia         High income  TRUE 40998.1925 78.08448
-#&gt; 83      Europe &amp; Central Asia         High income  TRUE 47395.3672 80.66125
-#&gt;        GINI        ODA
-#&gt; 1        NA  228641667
-#&gt; 2        NA  224881111
-#&gt; 3        NA  132813636
-#&gt; 4        NA  249072222
-#&gt; 5        NA 1045170000
-#&gt; 6        NA 5298066667
-#&gt; 7        NA 4028136667
-#&gt; 8        NA         NA
-#&gt; 9        NA         NA
-#&gt; 10       NA         NA
-#&gt; 11       NA  225820000
-#&gt; 12 29.76667  369668182
-#&gt; 13 29.50000  300570000
-#&gt; 14       NA  218996667
-#&gt; 15       NA 2349516667
-#&gt; 16       NA  677247778
-#&gt; 17       NA  413002727
-#&gt; 18 40.20000  356715556
-#&gt; 19 35.30000  324930000
-#&gt; 20 27.60000  212776667
-#&gt; 21       NA  143500000
-#&gt; 22       NA         NA
-#&gt; 23       NA         NA
-#&gt; 24       NA         NA
-#&gt; 25       NA         NA
-#&gt; 26       NA         NA
-#&gt; 27       NA         NA
-#&gt; 28       NA         NA
-#&gt; 29       NA         NA
-#&gt; 30       NA         NA
-#&gt; 31       NA         NA
-#&gt; 32       NA         NA
-#&gt; 33       NA         NA
-#&gt; 34       NA         NA
-#&gt; 35       NA         NA
-#&gt; 36       NA   66937500
-#&gt; 37       NA   21908889
-#&gt; 38       NA  134233636
-#&gt; 39       NA  355415556
-#&gt; 40 52.00000  566945455
-#&gt; 41 42.70000  232904444
-#&gt; 42       NA  275783333
-#&gt; 43       NA         NA
-#&gt; 44       NA    7165000
-#&gt; 45       NA   10685455
-#&gt; 46       NA    8026667
-#&gt; 47       NA    8310909
-#&gt; 48       NA    5728889
-#&gt; 49       NA    3840000
-#&gt; 50       NA   61793333
-#&gt; 51       NA  113775556
-#&gt; 52 40.80000   89034545
-#&gt; 53 45.20000  251384444
-#&gt; 54 50.26364  124307273
-#&gt; 55 43.35556   91840000
-#&gt; 56 42.40000   -6510000
-#&gt; 57       NA         NA
-#&gt; 58       NA         NA
-#&gt; 59       NA         NA
-#&gt; 60       NA  116422500
-#&gt; 61 35.48333  286812727
-#&gt; 62 29.91111  310387778
-#&gt; 63 32.45000  305663333
-#&gt; 64       NA         NA
-#&gt; 65       NA         NA
-#&gt; 66       NA   33630000
-#&gt; 67       NA   41563333
-#&gt; 68       NA   19857000
-#&gt; 69       NA         NA
-#&gt; 70       NA         NA
-#&gt; 71       NA         NA
-#&gt; 72       NA         NA
-#&gt; 73 31.90000         NA
-#&gt; 74 33.20000         NA
-#&gt; 75 33.20000         NA
-#&gt; 76 35.05000         NA
-#&gt; 77       NA         NA
-#&gt; 78       NA         NA
-#&gt; 79       NA         NA
-#&gt; 80       NA         NA
-#&gt; 81       NA         NA
-#&gt; 82 29.33333         NA
-#&gt; 83 30.55556         NA
-#&gt;  [ reached 'max' / getOption("max.print") -- omitted 1429 rows ]</div><div class='input'><span class='va'>wlddev</span> <span class='op'>%&gt;%</span> <span class='fu'><a href='GRP, fgroup_by.html'>fgroup_by</a></span><span class='op'>(</span><span class='va'>country</span>, <span class='va'>decade</span><span class='op'>)</span> <span class='op'>%&gt;%</span> <span class='fu'>collapg</span><span class='op'>(</span>w <span class='op'>=</span> <span class='va'>ODA</span><span class='op'>)</span>
-</div><div class='output co'>#&gt;                country decade         ODA iso3c       date     year
-#&gt; 1          Afghanistan   1960  1371850000   AFG 1966-01-01 1963.086
-#&gt; 2          Afghanistan   1970  2023930000   AFG 1967-01-01 1969.797
-#&gt; 3          Afghanistan   1980  1460950000   AFG 1978-01-01 1977.816
-#&gt; 4          Afghanistan   1990  2241650000   AFG 1992-01-01 1991.213
-#&gt; 5          Afghanistan   2000 11496870000   AFG 2006-01-01 2002.833
-#&gt; 6          Afghanistan   2010 47682600000   AFG 2012-01-01 2010.168
-#&gt; 7          Afghanistan   2020 12084410000   AFG 2016-01-01 2015.956
-#&gt; 8              Albania   1960          NA   ALB 1966-01-01       NA
-#&gt; 9              Albania   1970          NA   ALB 1975-01-01       NA
-#&gt; 10             Albania   1980          NA   ALB 1986-01-01       NA
-#&gt; 11             Albania   1990  1580740000   ALB 1993-01-01 1992.160
-#&gt; 12             Albania   2000  4066350000   ALB 2000-01-01 2000.325
-#&gt; 13             Albania   2010  2705130000   ALB 2007-01-01 2009.816
-#&gt; 14             Albania   2020   656990000   ALB 2016-01-01 2015.728
-#&gt; 15             Algeria   1960 14097100000   DZA 1962-01-01 1961.905
-#&gt; 16             Algeria   1970  6095230000   DZA 1967-01-01 1969.622
-#&gt; 17             Algeria   1980  4543030000   DZA 1976-01-01 1979.449
-#&gt; 18             Algeria   1990  3210440000   DZA 1993-01-01 1990.254
-#&gt; 19             Algeria   2000  3574230000   DZA 1999-01-01 1999.847
-#&gt; 20             Algeria   2010  1914990000   DZA 2008-01-01 2009.332
-#&gt; 21             Algeria   2020   430500000   DZA 2018-01-01 2016.228
-#&gt; 22      American Samoa   1960          NA   ASM 1966-01-01       NA
-#&gt; 23      American Samoa   1970          NA   ASM 1975-01-01       NA
-#&gt; 24      American Samoa   1980          NA   ASM 1986-01-01       NA
-#&gt; 25      American Samoa   1990          NA   ASM 1995-01-01       NA
-#&gt; 26      American Samoa   2000          NA   ASM 2006-01-01       NA
-#&gt; 27      American Samoa   2010          NA   ASM 2015-01-01       NA
-#&gt; 28      American Samoa   2020          NA   ASM 2019-01-01       NA
-#&gt; 29             Andorra   1960          NA   AND 1966-01-01       NA
-#&gt; 30             Andorra   1970          NA   AND 1975-01-01       NA
-#&gt; 31             Andorra   1980          NA   AND 1986-01-01       NA
-#&gt; 32             Andorra   1990          NA   AND 1995-01-01       NA
-#&gt; 33             Andorra   2000          NA   AND 2006-01-01       NA
-#&gt; 34             Andorra   2010          NA   AND 2015-01-01       NA
-#&gt; 35             Andorra   2020          NA   AND 2019-01-01       NA
-#&gt; 36              Angola   1960   267750000   AGO 1962-01-01 1961.179
-#&gt; 37              Angola   1970   197180000   AGO 1968-01-01 1966.946
-#&gt; 38              Angola   1980  1476570000   AGO 1985-01-01 1981.356
-#&gt; 39              Angola   1990  3198740000   AGO 1995-01-01 1990.737
-#&gt; 40              Angola   2000  6236400000   AGO 2005-01-01 2000.454
-#&gt; 41              Angola   2010  2096140000   AGO 2009-01-01 2009.963
-#&gt; 42              Angola   2020   827350000   AGO 2016-01-01 2015.779
-#&gt; 43 Antigua and Barbuda   1960          NA   ATG 1966-01-01       NA
-#&gt; 44 Antigua and Barbuda   1970    14330000   ATG 1975-01-01 1973.997
-#&gt; 45 Antigua and Barbuda   1980   117540000   ATG 1982-01-01 1979.593
-#&gt; 46 Antigua and Barbuda   1990    72240000   ATG 1989-01-01 1989.346
-#&gt; 47 Antigua and Barbuda   2000    91420000   ATG 2003-01-01 2000.265
-#&gt; 48 Antigua and Barbuda   2010    51560000   ATG 2011-01-01 2009.768
-#&gt; 49 Antigua and Barbuda   2020    11520000   ATG 2018-01-01 2016.707
-#&gt; 50           Argentina   1960   370760000   ARG 1964-01-01 1957.689
-#&gt; 51           Argentina   1970  1023980000   ARG 1969-01-01 1970.904
-#&gt; 52           Argentina   1980   979380000   ARG 1985-01-01 1980.210
-#&gt; 53           Argentina   1990  2262460000   ARG 1992-01-01 1990.335
-#&gt; 54           Argentina   2000  1367380000   ARG 2002-01-01 1999.777
-#&gt; 55           Argentina   2010   826560000   ARG 2013-01-01 2009.609
-#&gt; 56           Argentina   2020   -19530000   ARG 2017-01-01 2015.356
-#&gt; 57             Armenia   1960          NA   ARM 1966-01-01       NA
-#&gt; 58             Armenia   1970          NA   ARM 1975-01-01       NA
-#&gt; 59             Armenia   1980          NA   ARM 1986-01-01       NA
-#&gt; 60             Armenia   1990   465690000   ARM 1995-01-01 1993.485
-#&gt; 61             Armenia   2000  3154940000   ARM 2003-01-01 1999.945
-#&gt; 62             Armenia   2010  2793490000   ARM 2010-01-01 2009.819
-#&gt; 63             Armenia   2020   916990000   ARM 2016-01-01 2015.891
-#&gt; 64               Aruba   1960          NA   ABW 1966-01-01       NA
-#&gt; 65               Aruba   1970          NA   ABW 1975-01-01       NA
-#&gt; 66               Aruba   1980    33630000   ABW 1986-01-01 1985.000
-#&gt; 67               Aruba   1990   374070000   ABW 1987-01-01 1989.395
-#&gt; 68               Aruba   2000   198570000   ABW 2004-01-01 1999.377
-#&gt; 69               Aruba   2010          NA   ABW 2015-01-01       NA
-#&gt; 70               Aruba   2020          NA   ABW 2019-01-01       NA
-#&gt; 71           Australia   1960          NA   AUS 1966-01-01       NA
-#&gt; 72           Australia   1970          NA   AUS 1975-01-01       NA
-#&gt; 73           Australia   1980          NA   AUS 1986-01-01       NA
-#&gt; 74           Australia   1990          NA   AUS 1995-01-01       NA
-#&gt; 75           Australia   2000          NA   AUS 2006-01-01       NA
-#&gt; 76           Australia   2010          NA   AUS 2015-01-01       NA
-#&gt; 77           Australia   2020          NA   AUS 2019-01-01       NA
-#&gt; 78             Austria   1960          NA   AUT 1966-01-01       NA
-#&gt; 79             Austria   1970          NA   AUT 1975-01-01       NA
-#&gt; 80             Austria   1980          NA   AUT 1986-01-01       NA
-#&gt; 81             Austria   1990          NA   AUT 1995-01-01       NA
-#&gt; 82             Austria   2000          NA   AUT 2006-01-01       NA
-#&gt; 83             Austria   2010          NA   AUT 2015-01-01       NA
-#&gt;                        region              income  OECD      PCGDP   LIFEEX
-#&gt; 1                  South Asia          Low income FALSE         NA 33.65730
-#&gt; 2                  South Asia          Low income FALSE         NA 36.61192
-#&gt; 3                  South Asia          Low income FALSE         NA 40.63028
-#&gt; 4                  South Asia          Low income FALSE         NA 50.67509
-#&gt; 5                  South Asia          Low income FALSE   351.3902 57.20476
-#&gt; 6                  South Asia          Low income FALSE   515.1409 61.22270
-#&gt; 7                  South Asia          Low income FALSE   584.2452 63.47583
-#&gt; 8       Europe &amp; Central Asia Upper middle income    NA         NA       NA
-#&gt; 9       Europe &amp; Central Asia Upper middle income    NA         NA       NA
-#&gt; 10      Europe &amp; Central Asia Upper middle income    NA         NA       NA
-#&gt; 11      Europe &amp; Central Asia Upper middle income FALSE  1350.1234 71.84241
-#&gt; 12      Europe &amp; Central Asia Upper middle income FALSE  2322.9259 73.95863
-#&gt; 13      Europe &amp; Central Asia Upper middle income FALSE  3954.8302 76.61015
-#&gt; 14      Europe &amp; Central Asia Upper middle income FALSE  4646.1929 78.23142
-#&gt; 15 Middle East &amp; North Africa Upper middle income FALSE  2099.3746 47.00560
-#&gt; 16 Middle East &amp; North Africa Upper middle income FALSE  2528.4683 50.26386
-#&gt; 17 Middle East &amp; North Africa Upper middle income FALSE  3541.2836 57.70486
-#&gt; 18 Middle East &amp; North Africa Upper middle income FALSE  3483.1077 66.63783
-#&gt; 19 Middle East &amp; North Africa Upper middle income FALSE  3616.7491 70.28523
-#&gt; 20 Middle East &amp; North Africa Upper middle income FALSE  4439.4862 74.37387
-#&gt; 21 Middle East &amp; North Africa Upper middle income FALSE  4810.7726 76.00040
-#&gt; 22        East Asia &amp; Pacific Upper middle income    NA         NA       NA
-#&gt; 23        East Asia &amp; Pacific Upper middle income    NA         NA       NA
-#&gt; 24        East Asia &amp; Pacific Upper middle income    NA         NA       NA
-#&gt; 25        East Asia &amp; Pacific Upper middle income    NA         NA       NA
-#&gt; 26        East Asia &amp; Pacific Upper middle income    NA         NA       NA
-#&gt; 27        East Asia &amp; Pacific Upper middle income    NA         NA       NA
-#&gt; 28        East Asia &amp; Pacific Upper middle income    NA         NA       NA
-#&gt; 29      Europe &amp; Central Asia         High income    NA         NA       NA
-#&gt; 30      Europe &amp; Central Asia         High income    NA         NA       NA
-#&gt; 31      Europe &amp; Central Asia         High income    NA         NA       NA
-#&gt; 32      Europe &amp; Central Asia         High income    NA         NA       NA
-#&gt; 33      Europe &amp; Central Asia         High income    NA         NA       NA
-#&gt; 34      Europe &amp; Central Asia         High income    NA         NA       NA
-#&gt; 35      Europe &amp; Central Asia         High income    NA         NA       NA
-#&gt; 36        Sub-Saharan Africa  Lower middle income FALSE         NA 33.63799
-#&gt; 37        Sub-Saharan Africa  Lower middle income FALSE         NA 35.80735
-#&gt; 38        Sub-Saharan Africa  Lower middle income FALSE  2731.8427 40.65223
-#&gt; 39        Sub-Saharan Africa  Lower middle income FALSE  2335.5536 41.94498
-#&gt; 40        Sub-Saharan Africa  Lower middle income FALSE  2323.2232 47.95666
-#&gt; 41        Sub-Saharan Africa  Lower middle income FALSE  3596.3164 57.83306
-#&gt; 42        Sub-Saharan Africa  Lower middle income FALSE  3607.9087 61.34486
-#&gt; 43 Latin America &amp; Caribbean          High income    NA         NA       NA
-#&gt; 44 Latin America &amp; Caribbean          High income FALSE         NA 67.18015
-#&gt; 45 Latin America &amp; Caribbean          High income FALSE  5410.0079 68.75105
-#&gt; 46 Latin America &amp; Caribbean          High income FALSE  9811.5905 71.19636
-#&gt; 47 Latin America &amp; Caribbean          High income FALSE 11503.8747 73.58344
-#&gt; 48 Latin America &amp; Caribbean          High income FALSE 12902.9238 75.36831
-#&gt; 49 Latin America &amp; Caribbean          High income FALSE 13426.5393 76.21248
-#&gt; 50 Latin America &amp; Caribbean          High income FALSE  4666.4569 64.84988
-#&gt; 51 Latin America &amp; Caribbean          High income FALSE  7112.4967 66.73969
-#&gt; 52 Latin America &amp; Caribbean          High income FALSE  7386.9775 69.43943
-#&gt; 53 Latin America &amp; Caribbean          High income FALSE  7021.0552 71.66649
-#&gt; 54 Latin America &amp; Caribbean          High income FALSE  7905.2172 73.75112
-#&gt; 55 Latin America &amp; Caribbean          High income FALSE 10078.7578 75.53241
-#&gt; 56 Latin America &amp; Caribbean          High income    NA 10512.9276 76.38620
-#&gt; 57      Europe &amp; Central Asia Upper middle income    NA         NA       NA
-#&gt; 58      Europe &amp; Central Asia Upper middle income    NA         NA       NA
-#&gt; 59      Europe &amp; Central Asia Upper middle income    NA         NA       NA
-#&gt; 60      Europe &amp; Central Asia Upper middle income FALSE   937.0524 68.38232
-#&gt; 61      Europe &amp; Central Asia Upper middle income FALSE  1569.7383 71.12853
-#&gt; 62      Europe &amp; Central Asia Upper middle income FALSE  3392.7724 73.35317
-#&gt; 63      Europe &amp; Central Asia Upper middle income FALSE  4010.3239 74.52908
-#&gt; 64 Latin America &amp; Caribbean          High income    NA         NA       NA
-#&gt; 65 Latin America &amp; Caribbean          High income    NA         NA       NA
-#&gt; 66 Latin America &amp; Caribbean          High income FALSE         NA 73.18100
-#&gt; 67 Latin America &amp; Caribbean          High income FALSE 22661.3866 73.42649
-#&gt; 68 Latin America &amp; Caribbean          High income FALSE 26234.9912 73.82061
-#&gt; 69 Latin America &amp; Caribbean          High income    NA         NA       NA
-#&gt; 70 Latin America &amp; Caribbean          High income    NA         NA       NA
-#&gt; 71        East Asia &amp; Pacific         High income    NA         NA       NA
-#&gt; 72        East Asia &amp; Pacific         High income    NA         NA       NA
-#&gt; 73        East Asia &amp; Pacific         High income    NA         NA       NA
-#&gt; 74        East Asia &amp; Pacific         High income    NA         NA       NA
-#&gt; 75        East Asia &amp; Pacific         High income    NA         NA       NA
-#&gt; 76        East Asia &amp; Pacific         High income    NA         NA       NA
-#&gt; 77        East Asia &amp; Pacific         High income    NA         NA       NA
-#&gt; 78      Europe &amp; Central Asia         High income    NA         NA       NA
-#&gt; 79      Europe &amp; Central Asia         High income    NA         NA       NA
-#&gt; 80      Europe &amp; Central Asia         High income    NA         NA       NA
-#&gt; 81      Europe &amp; Central Asia         High income    NA         NA       NA
-#&gt; 82      Europe &amp; Central Asia         High income    NA         NA       NA
-#&gt; 83      Europe &amp; Central Asia         High income    NA         NA       NA
-#&gt;        GINI
-#&gt; 1        NA
-#&gt; 2        NA
-#&gt; 3        NA
-#&gt; 4        NA
-#&gt; 5        NA
-#&gt; 6        NA
-#&gt; 7        NA
-#&gt; 8        NA
-#&gt; 9        NA
-#&gt; 10       NA
-#&gt; 11       NA
-#&gt; 12 30.10158
-#&gt; 13 29.50151
-#&gt; 14       NA
-#&gt; 15       NA
-#&gt; 16       NA
-#&gt; 17       NA
-#&gt; 18 40.20000
-#&gt; 19 35.30000
-#&gt; 20 27.60000
-#&gt; 21       NA
-#&gt; 22       NA
-#&gt; 23       NA
-#&gt; 24       NA
-#&gt; 25       NA
-#&gt; 26       NA
-#&gt; 27       NA
-#&gt; 28       NA
-#&gt; 29       NA
-#&gt; 30       NA
-#&gt; 31       NA
-#&gt; 32       NA
-#&gt; 33       NA
-#&gt; 34       NA
-#&gt; 35       NA
-#&gt; 36       NA
-#&gt; 37       NA
-#&gt; 38       NA
-#&gt; 39       NA
-#&gt; 40 52.00000
-#&gt; 41 42.70000
-#&gt; 42       NA
-#&gt; 43       NA
-#&gt; 44       NA
-#&gt; 45       NA
-#&gt; 46       NA
-#&gt; 47       NA
-#&gt; 48       NA
-#&gt; 49       NA
-#&gt; 50       NA
-#&gt; 51       NA
-#&gt; 52 40.80000
-#&gt; 53 45.41969
-#&gt; 54 50.50492
-#&gt; 55 43.52502
-#&gt; 56 42.40000
-#&gt; 57       NA
-#&gt; 58       NA
-#&gt; 59       NA
-#&gt; 60       NA
-#&gt; 61 35.38399
-#&gt; 62 29.75725
-#&gt; 63 32.44860
-#&gt; 64       NA
-#&gt; 65       NA
-#&gt; 66       NA
-#&gt; 67       NA
-#&gt; 68       NA
-#&gt; 69       NA
-#&gt; 70       NA
-#&gt; 71       NA
-#&gt; 72       NA
-#&gt; 73       NA
-#&gt; 74       NA
-#&gt; 75       NA
-#&gt; 76       NA
-#&gt; 77       NA
-#&gt; 78       NA
-#&gt; 79       NA
-#&gt; 80       NA
-#&gt; 81       NA
-#&gt; 82       NA
-#&gt; 83       NA
-#&gt;  [ reached 'max' / getOption("max.print") -- omitted 1429 rows ]</div><div class='input'><span class='va'>wlddev</span> <span class='op'>%&gt;%</span> <span class='fu'><a href='GRP, fgroup_by.html'>fgroup_by</a></span><span class='op'>(</span><span class='va'>country</span>, <span class='va'>decade</span><span class='op'>)</span> <span class='op'>%&gt;%</span> <span class='fu'>collapg</span><span class='op'>(</span><span class='va'>fmedian</span>, <span class='va'>flast</span><span class='op'>)</span>
-</div><div class='output co'>#&gt;                country decade iso3c       date   year
-#&gt; 1          Afghanistan   1960   AFG 1966-01-01 1962.5
-#&gt; 2          Afghanistan   1970   AFG 1975-01-01 1970.0
-#&gt; 3          Afghanistan   1980   AFG 1986-01-01 1980.0
-#&gt; 4          Afghanistan   1990   AFG 1995-01-01 1990.0
-#&gt; 5          Afghanistan   2000   AFG 2006-01-01 2000.0
-#&gt; 6          Afghanistan   2010   AFG 2015-01-01 2010.0
-#&gt; 7          Afghanistan   2020   AFG 2019-01-01 2016.5
-#&gt; 8              Albania   1960   ALB 1966-01-01 1962.5
-#&gt; 9              Albania   1970   ALB 1975-01-01 1970.0
-#&gt; 10             Albania   1980   ALB 1986-01-01 1980.0
-#&gt; 11             Albania   1990   ALB 1995-01-01 1990.0
-#&gt; 12             Albania   2000   ALB 2006-01-01 2000.0
-#&gt; 13             Albania   2010   ALB 2015-01-01 2010.0
-#&gt; 14             Albania   2020   ALB 2019-01-01 2016.5
-#&gt; 15             Algeria   1960   DZA 1966-01-01 1962.5
-#&gt; 16             Algeria   1970   DZA 1975-01-01 1970.0
-#&gt; 17             Algeria   1980   DZA 1986-01-01 1980.0
-#&gt; 18             Algeria   1990   DZA 1995-01-01 1990.0
-#&gt; 19             Algeria   2000   DZA 2006-01-01 2000.0
-#&gt; 20             Algeria   2010   DZA 2015-01-01 2010.0
-#&gt; 21             Algeria   2020   DZA 2019-01-01 2016.5
-#&gt; 22      American Samoa   1960   ASM 1966-01-01 1962.5
-#&gt; 23      American Samoa   1970   ASM 1975-01-01 1970.0
-#&gt; 24      American Samoa   1980   ASM 1986-01-01 1980.0
-#&gt; 25      American Samoa   1990   ASM 1995-01-01 1990.0
-#&gt; 26      American Samoa   2000   ASM 2006-01-01 2000.0
-#&gt; 27      American Samoa   2010   ASM 2015-01-01 2010.0
-#&gt; 28      American Samoa   2020   ASM 2019-01-01 2016.5
-#&gt; 29             Andorra   1960   AND 1966-01-01 1962.5
-#&gt; 30             Andorra   1970   AND 1975-01-01 1970.0
-#&gt; 31             Andorra   1980   AND 1986-01-01 1980.0
-#&gt; 32             Andorra   1990   AND 1995-01-01 1990.0
-#&gt; 33             Andorra   2000   AND 2006-01-01 2000.0
-#&gt; 34             Andorra   2010   AND 2015-01-01 2010.0
-#&gt; 35             Andorra   2020   AND 2019-01-01 2016.5
-#&gt; 36              Angola   1960   AGO 1966-01-01 1962.5
-#&gt; 37              Angola   1970   AGO 1975-01-01 1970.0
-#&gt; 38              Angola   1980   AGO 1986-01-01 1980.0
-#&gt; 39              Angola   1990   AGO 1995-01-01 1990.0
-#&gt; 40              Angola   2000   AGO 2006-01-01 2000.0
-#&gt; 41              Angola   2010   AGO 2015-01-01 2010.0
-#&gt; 42              Angola   2020   AGO 2019-01-01 2016.5
-#&gt; 43 Antigua and Barbuda   1960   ATG 1966-01-01 1962.5
-#&gt; 44 Antigua and Barbuda   1970   ATG 1975-01-01 1970.0
-#&gt; 45 Antigua and Barbuda   1980   ATG 1986-01-01 1980.0
-#&gt; 46 Antigua and Barbuda   1990   ATG 1995-01-01 1990.0
-#&gt; 47 Antigua and Barbuda   2000   ATG 2006-01-01 2000.0
-#&gt; 48 Antigua and Barbuda   2010   ATG 2015-01-01 2010.0
-#&gt; 49 Antigua and Barbuda   2020   ATG 2019-01-01 2016.5
-#&gt; 50           Argentina   1960   ARG 1966-01-01 1962.5
-#&gt; 51           Argentina   1970   ARG 1975-01-01 1970.0
-#&gt; 52           Argentina   1980   ARG 1986-01-01 1980.0
-#&gt; 53           Argentina   1990   ARG 1995-01-01 1990.0
-#&gt; 54           Argentina   2000   ARG 2006-01-01 2000.0
-#&gt; 55           Argentina   2010   ARG 2015-01-01 2010.0
-#&gt; 56           Argentina   2020   ARG 2019-01-01 2016.5
-#&gt; 57             Armenia   1960   ARM 1966-01-01 1962.5
-#&gt; 58             Armenia   1970   ARM 1975-01-01 1970.0
-#&gt; 59             Armenia   1980   ARM 1986-01-01 1980.0
-#&gt; 60             Armenia   1990   ARM 1995-01-01 1990.0
-#&gt; 61             Armenia   2000   ARM 2006-01-01 2000.0
-#&gt; 62             Armenia   2010   ARM 2015-01-01 2010.0
-#&gt; 63             Armenia   2020   ARM 2019-01-01 2016.5
-#&gt; 64               Aruba   1960   ABW 1966-01-01 1962.5
-#&gt; 65               Aruba   1970   ABW 1975-01-01 1970.0
-#&gt; 66               Aruba   1980   ABW 1986-01-01 1980.0
-#&gt; 67               Aruba   1990   ABW 1995-01-01 1990.0
-#&gt; 68               Aruba   2000   ABW 2006-01-01 2000.0
-#&gt; 69               Aruba   2010   ABW 2015-01-01 2010.0
-#&gt; 70               Aruba   2020   ABW 2019-01-01 2016.5
-#&gt; 71           Australia   1960   AUS 1966-01-01 1962.5
-#&gt; 72           Australia   1970   AUS 1975-01-01 1970.0
-#&gt; 73           Australia   1980   AUS 1986-01-01 1980.0
-#&gt; 74           Australia   1990   AUS 1995-01-01 1990.0
-#&gt; 75           Australia   2000   AUS 2006-01-01 2000.0
-#&gt; 76           Australia   2010   AUS 2015-01-01 2010.0
-#&gt; 77           Australia   2020   AUS 2019-01-01 2016.5
-#&gt; 78             Austria   1960   AUT 1966-01-01 1962.5
-#&gt; 79             Austria   1970   AUT 1975-01-01 1970.0
-#&gt; 80             Austria   1980   AUT 1986-01-01 1980.0
-#&gt; 81             Austria   1990   AUT 1995-01-01 1990.0
-#&gt; 82             Austria   2000   AUT 2006-01-01 2000.0
-#&gt; 83             Austria   2010   AUT 2015-01-01 2010.0
-#&gt;                        region              income  OECD      PCGDP   LIFEEX
-#&gt; 1                  South Asia          Low income FALSE         NA 33.40450
-#&gt; 2                  South Asia          Low income FALSE         NA 36.67800
-#&gt; 3                  South Asia          Low income FALSE         NA 41.85300
-#&gt; 4                  South Asia          Low income FALSE         NA 49.85600
-#&gt; 5                  South Asia          Low income FALSE   346.9282 55.48200
-#&gt; 6                  South Asia          Low income FALSE   536.0125 61.22600
-#&gt; 7                  South Asia          Low income FALSE   583.8696 63.48050
-#&gt; 8       Europe &amp; Central Asia Upper middle income FALSE         NA 64.54900
-#&gt; 9       Europe &amp; Central Asia Upper middle income FALSE         NA 66.93300
-#&gt; 10      Europe &amp; Central Asia Upper middle income FALSE  2071.8682 70.20700
-#&gt; 11      Europe &amp; Central Asia Upper middle income FALSE  1880.0413 71.83600
-#&gt; 12      Europe &amp; Central Asia Upper middle income FALSE  2244.5648 73.95500
-#&gt; 13      Europe &amp; Central Asia Upper middle income FALSE  4094.3602 76.65200
-#&gt; 14      Europe &amp; Central Asia Upper middle income FALSE  4683.5192 78.25950
-#&gt; 15 Middle East &amp; North Africa Upper middle income FALSE  2167.0662 47.28050
-#&gt; 16 Middle East &amp; North Africa Upper middle income FALSE  2543.5633 50.36900
-#&gt; 17 Middle East &amp; North Africa Upper middle income FALSE  3620.7035 58.19600
-#&gt; 18 Middle East &amp; North Africa Upper middle income FALSE  3550.0327 66.72500
-#&gt; 19 Middle East &amp; North Africa Upper middle income FALSE  3541.0720 70.29200
-#&gt; 20 Middle East &amp; North Africa Upper middle income FALSE  4463.3947 74.67600
-#&gt; 21 Middle East &amp; North Africa Upper middle income FALSE  4820.4341 75.96900
-#&gt; 22        East Asia &amp; Pacific Upper middle income FALSE         NA       NA
-#&gt; 23        East Asia &amp; Pacific Upper middle income FALSE         NA       NA
-#&gt; 24        East Asia &amp; Pacific Upper middle income FALSE         NA       NA
-#&gt; 25        East Asia &amp; Pacific Upper middle income FALSE         NA       NA
-#&gt; 26        East Asia &amp; Pacific Upper middle income FALSE 10637.5174       NA
-#&gt; 27        East Asia &amp; Pacific Upper middle income FALSE 10282.4566       NA
-#&gt; 28        East Asia &amp; Pacific Upper middle income FALSE  9614.4727       NA
-#&gt; 29      Europe &amp; Central Asia         High income FALSE         NA       NA
-#&gt; 30      Europe &amp; Central Asia         High income FALSE 43051.2232       NA
-#&gt; 31      Europe &amp; Central Asia         High income FALSE 40495.6980       NA
-#&gt; 32      Europe &amp; Central Asia         High income FALSE 35204.9895       NA
-#&gt; 33      Europe &amp; Central Asia         High income FALSE 40801.5421       NA
-#&gt; 34      Europe &amp; Central Asia         High income FALSE 40785.0492       NA
-#&gt; 35      Europe &amp; Central Asia         High income FALSE 42958.5584       NA
-#&gt; 36        Sub-Saharan Africa  Lower middle income FALSE         NA 34.09300
-#&gt; 37        Sub-Saharan Africa  Lower middle income FALSE         NA 37.04700
-#&gt; 38        Sub-Saharan Africa  Lower middle income FALSE  2728.4829 40.54600
-#&gt; 39        Sub-Saharan Africa  Lower middle income FALSE  2614.4925 41.69600
-#&gt; 40        Sub-Saharan Africa  Lower middle income FALSE  2204.9099 47.11300
-#&gt; 41        Sub-Saharan Africa  Lower middle income FALSE  3585.9056 58.19200
-#&gt; 42        Sub-Saharan Africa  Lower middle income FALSE  3533.8652 61.39400
-#&gt; 43 Latin America &amp; Caribbean          High income FALSE         NA 63.18200
-#&gt; 44 Latin America &amp; Caribbean          High income FALSE         NA 65.89700
-#&gt; 45 Latin America &amp; Caribbean          High income FALSE  5596.6864 68.87300
-#&gt; 46 Latin America &amp; Caribbean          High income FALSE 10380.3079 71.35100
-#&gt; 47 Latin America &amp; Caribbean          High income FALSE 11335.1289 73.54100
-#&gt; 48 Latin America &amp; Caribbean          High income FALSE 12351.1612 75.41200
-#&gt; 49 Latin America &amp; Caribbean          High income FALSE 13286.0098 76.28550
-#&gt; 50 Latin America &amp; Caribbean          High income FALSE  5706.8289 65.27200
-#&gt; 51 Latin America &amp; Caribbean          High income FALSE  7056.8481 66.44900
-#&gt; 52 Latin America &amp; Caribbean          High income FALSE  7354.4299 69.46400
-#&gt; 53 Latin America &amp; Caribbean          High income FALSE  7130.5695 71.56500
-#&gt; 54 Latin America &amp; Caribbean          High income FALSE  7955.1277 73.83200
-#&gt; 55 Latin America &amp; Caribbean          High income FALSE 10276.2605 75.59500
-#&gt; 56 Latin America &amp; Caribbean          High income FALSE 10397.1365 76.49600
-#&gt; 57      Europe &amp; Central Asia Upper middle income FALSE         NA 67.05650
-#&gt; 58      Europe &amp; Central Asia Upper middle income FALSE         NA 70.14300
-#&gt; 59      Europe &amp; Central Asia Upper middle income FALSE         NA 70.78300
-#&gt; 60      Europe &amp; Central Asia Upper middle income FALSE   956.4709 68.21800
-#&gt; 61      Europe &amp; Central Asia Upper middle income FALSE  1404.3215 71.40900
-#&gt; 62      Europe &amp; Central Asia Upper middle income FALSE  3371.6728 73.33100
-#&gt; 63      Europe &amp; Central Asia Upper middle income FALSE  3935.2888 74.53150
-#&gt; 64 Latin America &amp; Caribbean          High income FALSE         NA 66.61550
-#&gt; 65 Latin America &amp; Caribbean          High income FALSE         NA 69.14000
-#&gt; 66 Latin America &amp; Caribbean          High income FALSE         NA 72.29300
-#&gt; 67 Latin America &amp; Caribbean          High income FALSE 25357.7869 73.46800
-#&gt; 68 Latin America &amp; Caribbean          High income FALSE 26966.0548 73.78700
-#&gt; 69 Latin America &amp; Caribbean          High income FALSE 24629.0800 75.01600
-#&gt; 70 Latin America &amp; Caribbean          High income FALSE 24452.6066 75.79600
-#&gt; 71        East Asia &amp; Pacific         High income  TRUE 19770.2045 70.89634
-#&gt; 72        East Asia &amp; Pacific         High income  TRUE 26132.6728 71.01854
-#&gt; 73        East Asia &amp; Pacific         High income  TRUE 29864.0346 74.33366
-#&gt; 74        East Asia &amp; Pacific         High income  TRUE 35178.0752 76.99463
-#&gt; 75        East Asia &amp; Pacific         High income  TRUE 44313.3182 79.23415
-#&gt; 76        East Asia &amp; Pacific         High income  TRUE 51936.8887 81.69512
-#&gt; 77        East Asia &amp; Pacific         High income  TRUE 55731.4956 82.45000
-#&gt; 78      Europe &amp; Central Asia         High income  TRUE 14196.1533 69.51049
-#&gt; 79      Europe &amp; Central Asia         High income  TRUE 19573.8669 70.05756
-#&gt; 80      Europe &amp; Central Asia         High income  TRUE 27485.8321 72.46341
-#&gt; 81      Europe &amp; Central Asia         High income  TRUE 33888.9956 75.56829
-#&gt; 82      Europe &amp; Central Asia         High income  TRUE 42001.2112 78.12683
-#&gt; 83      Europe &amp; Central Asia         High income  TRUE 47901.3654 80.58049
-#&gt;     GINI        ODA
-#&gt; 1     NA  234900000
-#&gt; 2     NA  229150000
-#&gt; 3     NA   72610000
-#&gt; 4     NA  238500000
-#&gt; 5     NA  306200000
-#&gt; 6     NA 5033950000
-#&gt; 7     NA 4069210000
-#&gt; 8     NA         NA
-#&gt; 9     NA         NA
-#&gt; 10    NA         NA
-#&gt; 11    NA  209400000
-#&gt; 12 30.60  352380000
-#&gt; 13 29.50  314990000
-#&gt; 14    NA  168600000
-#&gt; 15    NA 2494510000
-#&gt; 16    NA  709880000
-#&gt; 17    NA  405460000
-#&gt; 18 40.20  356970000
-#&gt; 19 35.30  319550000
-#&gt; 20 27.60  180020000
-#&gt; 21    NA  157930000
-#&gt; 22    NA         NA
-#&gt; 23    NA         NA
-#&gt; 24    NA         NA
-#&gt; 25    NA         NA
-#&gt; 26    NA         NA
-#&gt; 27    NA         NA
-#&gt; 28    NA         NA
-#&gt; 29    NA         NA
-#&gt; 30    NA         NA
-#&gt; 31    NA         NA
-#&gt; 32    NA         NA
-#&gt; 33    NA         NA
-#&gt; 34    NA         NA
-#&gt; 35    NA         NA
-#&gt; 36    NA    5985000
-#&gt; 37    NA     640000
-#&gt; 38    NA  131870000
-#&gt; 39    NA  370700000
-#&gt; 40 52.00  512840000
-#&gt; 41 42.70  228220000
-#&gt; 42    NA  218830000
-#&gt; 43    NA         NA
-#&gt; 44    NA    7165000
-#&gt; 45    NA   10620000
-#&gt; 46    NA    6710000
-#&gt; 47    NA    8100000
-#&gt; 48    NA    3870000
-#&gt; 49    NA    1660000
-#&gt; 50    NA  168165000
-#&gt; 51    NA  138850000
-#&gt; 52 40.80   96030000
-#&gt; 53 45.40  231240000
-#&gt; 54 49.80  125400000
-#&gt; 55 43.00   99350000
-#&gt; 56 42.40   -4790000
-#&gt; 57    NA         NA
-#&gt; 58    NA         NA
-#&gt; 59    NA         NA
-#&gt; 60    NA   97195000
-#&gt; 61 35.70  288030000
-#&gt; 62 29.70  294210000
-#&gt; 63 32.45  326430000
-#&gt; 64    NA         NA
-#&gt; 65    NA         NA
-#&gt; 66    NA   33630000
-#&gt; 67    NA   36710000
-#&gt; 68    NA   16530000
-#&gt; 69    NA         NA
-#&gt; 70    NA         NA
-#&gt; 71    NA         NA
-#&gt; 72    NA         NA
-#&gt; 73 31.90         NA
-#&gt; 74 33.20         NA
-#&gt; 75 33.50         NA
-#&gt; 76 35.05         NA
-#&gt; 77    NA         NA
-#&gt; 78    NA         NA
-#&gt; 79    NA         NA
-#&gt; 80    NA         NA
-#&gt; 81    NA         NA
-#&gt; 82 29.50         NA
-#&gt; 83 30.50         NA
-#&gt;  [ reached 'max' / getOption("max.print") -- omitted 1429 rows ]</div><div class='input'><span class='va'>wlddev</span> <span class='op'>%&gt;%</span> <span class='fu'><a href='GRP, fgroup_by.html'>fgroup_by</a></span><span class='op'>(</span><span class='va'>country</span>, <span class='va'>decade</span><span class='op'>)</span> <span class='op'>%&gt;%</span>
-  <span class='fu'>collapg</span><span class='op'>(</span>custom <span class='op'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/list.html'>list</a></span><span class='op'>(</span>fmean <span class='op'>=</span> <span class='fl'>9</span><span class='op'>:</span><span class='fl'>12</span>, fmode <span class='op'>=</span> <span class='fl'>5</span><span class='op'>:</span><span class='fl'>7</span>, flast <span class='op'>=</span> <span class='fl'>3</span><span class='op'>)</span><span class='op'>)</span>
-</div><div class='output co'>#&gt;                 country decade flast.date fmode.decade
-#&gt; 1           Afghanistan   1960 1966-01-01         1960
-#&gt; 2           Afghanistan   1970 1975-01-01         1970
-#&gt; 3           Afghanistan   1980 1986-01-01         1980
-#&gt; 4           Afghanistan   1990 1995-01-01         1990
-#&gt; 5           Afghanistan   2000 2006-01-01         2000
-#&gt; 6           Afghanistan   2010 2015-01-01         2010
-#&gt; 7           Afghanistan   2020 2019-01-01         2020
-#&gt; 8               Albania   1960 1966-01-01         1960
-#&gt; 9               Albania   1970 1975-01-01         1970
-#&gt; 10              Albania   1980 1986-01-01         1980
-#&gt; 11              Albania   1990 1995-01-01         1990
-#&gt; 12              Albania   2000 2006-01-01         2000
-#&gt; 13              Albania   2010 2015-01-01         2010
-#&gt; 14              Albania   2020 2019-01-01         2020
-#&gt; 15              Algeria   1960 1966-01-01         1960
-#&gt; 16              Algeria   1970 1975-01-01         1970
-#&gt; 17              Algeria   1980 1986-01-01         1980
-#&gt; 18              Algeria   1990 1995-01-01         1990
-#&gt; 19              Algeria   2000 2006-01-01         2000
-#&gt; 20              Algeria   2010 2015-01-01         2010
-#&gt; 21              Algeria   2020 2019-01-01         2020
-#&gt; 22       American Samoa   1960 1966-01-01         1960
-#&gt; 23       American Samoa   1970 1975-01-01         1970
-#&gt; 24       American Samoa   1980 1986-01-01         1980
-#&gt; 25       American Samoa   1990 1995-01-01         1990
-#&gt; 26       American Samoa   2000 2006-01-01         2000
-#&gt; 27       American Samoa   2010 2015-01-01         2010
-#&gt; 28       American Samoa   2020 2019-01-01         2020
-#&gt; 29              Andorra   1960 1966-01-01         1960
-#&gt; 30              Andorra   1970 1975-01-01         1970
-#&gt; 31              Andorra   1980 1986-01-01         1980
-#&gt; 32              Andorra   1990 1995-01-01         1990
-#&gt; 33              Andorra   2000 2006-01-01         2000
-#&gt; 34              Andorra   2010 2015-01-01         2010
-#&gt; 35              Andorra   2020 2019-01-01         2020
-#&gt; 36               Angola   1960 1966-01-01         1960
-#&gt; 37               Angola   1970 1975-01-01         1970
-#&gt; 38               Angola   1980 1986-01-01         1980
-#&gt; 39               Angola   1990 1995-01-01         1990
-#&gt; 40               Angola   2000 2006-01-01         2000
-#&gt; 41               Angola   2010 2015-01-01         2010
-#&gt; 42               Angola   2020 2019-01-01         2020
-#&gt; 43  Antigua and Barbuda   1960 1966-01-01         1960
-#&gt; 44  Antigua and Barbuda   1970 1975-01-01         1970
-#&gt; 45  Antigua and Barbuda   1980 1986-01-01         1980
-#&gt; 46  Antigua and Barbuda   1990 1995-01-01         1990
-#&gt; 47  Antigua and Barbuda   2000 2006-01-01         2000
-#&gt; 48  Antigua and Barbuda   2010 2015-01-01         2010
-#&gt; 49  Antigua and Barbuda   2020 2019-01-01         2020
-#&gt; 50            Argentina   1960 1966-01-01         1960
-#&gt; 51            Argentina   1970 1975-01-01         1970
-#&gt; 52            Argentina   1980 1986-01-01         1980
-#&gt; 53            Argentina   1990 1995-01-01         1990
-#&gt; 54            Argentina   2000 2006-01-01         2000
-#&gt; 55            Argentina   2010 2015-01-01         2010
-#&gt; 56            Argentina   2020 2019-01-01         2020
-#&gt; 57              Armenia   1960 1966-01-01         1960
-#&gt; 58              Armenia   1970 1975-01-01         1970
-#&gt; 59              Armenia   1980 1986-01-01         1980
-#&gt; 60              Armenia   1990 1995-01-01         1990
-#&gt; 61              Armenia   2000 2006-01-01         2000
-#&gt; 62              Armenia   2010 2015-01-01         2010
-#&gt; 63              Armenia   2020 2019-01-01         2020
-#&gt; 64                Aruba   1960 1966-01-01         1960
-#&gt; 65                Aruba   1970 1975-01-01         1970
-#&gt; 66                Aruba   1980 1986-01-01         1980
-#&gt; 67                Aruba   1990 1995-01-01         1990
-#&gt; 68                Aruba   2000 2006-01-01         2000
-#&gt; 69                Aruba   2010 2015-01-01         2010
-#&gt; 70                Aruba   2020 2019-01-01         2020
-#&gt; 71            Australia   1960 1966-01-01         1960
-#&gt; 72            Australia   1970 1975-01-01         1970
-#&gt; 73            Australia   1980 1986-01-01         1980
-#&gt; 74            Australia   1990 1995-01-01         1990
-#&gt; 75            Australia   2000 2006-01-01         2000
-#&gt; 76            Australia   2010 2015-01-01         2010
-#&gt; 77            Australia   2020 2019-01-01         2020
-#&gt; 78              Austria   1960 1966-01-01         1960
-#&gt; 79              Austria   1970 1975-01-01         1970
-#&gt; 80              Austria   1980 1986-01-01         1980
-#&gt; 81              Austria   1990 1995-01-01         1990
-#&gt; 82              Austria   2000 2006-01-01         2000
-#&gt; 83              Austria   2010 2015-01-01         2010
-#&gt; 84              Austria   2020 2019-01-01         2020
-#&gt; 85           Azerbaijan   1960 1966-01-01         1960
-#&gt; 86           Azerbaijan   1970 1975-01-01         1970
-#&gt; 87           Azerbaijan   1980 1986-01-01         1980
-#&gt; 88           Azerbaijan   1990 1995-01-01         1990
-#&gt; 89           Azerbaijan   2000 2006-01-01         2000
-#&gt; 90           Azerbaijan   2010 2015-01-01         2010
-#&gt; 91           Azerbaijan   2020 2019-01-01         2020
-#&gt; 92         Bahamas, The   1960 1966-01-01         1960
-#&gt; 93         Bahamas, The   1970 1975-01-01         1970
-#&gt; 94         Bahamas, The   1980 1986-01-01         1980
-#&gt; 95         Bahamas, The   1990 1995-01-01         1990
-#&gt; 96         Bahamas, The   2000 2006-01-01         2000
-#&gt; 97         Bahamas, The   2010 2015-01-01         2010
-#&gt; 98         Bahamas, The   2020 2019-01-01         2020
-#&gt; 99              Bahrain   1960 1966-01-01         1960
-#&gt; 100             Bahrain   1970 1975-01-01         1970
-#&gt;                   fmode.region        fmode.income fmean.PCGDP fmean.LIFEEX
-#&gt; 1                   South Asia          Low income          NA     33.39967
-#&gt; 2                   South Asia          Low income          NA     36.70089
-#&gt; 3                   South Asia          Low income          NA     42.03909
-#&gt; 4                   South Asia          Low income          NA     49.69089
-#&gt; 5                   South Asia          Low income    349.7596     55.61818
-#&gt; 6                   South Asia          Low income    506.9931     61.12978
-#&gt; 7                   South Asia          Low income    584.2110     63.48050
-#&gt; 8        Europe &amp; Central Asia Upper middle income          NA     64.33067
-#&gt; 9        Europe &amp; Central Asia Upper middle income          NA     67.06911
-#&gt; 10       Europe &amp; Central Asia Upper middle income   2075.2327     70.15236
-#&gt; 11       Europe &amp; Central Asia Upper middle income   1729.7789     71.81789
-#&gt; 12       Europe &amp; Central Asia Upper middle income   2283.2600     73.83773
-#&gt; 13       Europe &amp; Central Asia Upper middle income   3975.0178     76.67056
-#&gt; 14       Europe &amp; Central Asia Upper middle income   4691.8731     78.25950
-#&gt; 15  Middle East &amp; North Africa Upper middle income   2130.4881     47.27383
-#&gt; 16  Middle East &amp; North Africa Upper middle income   2571.6500     50.42411
-#&gt; 17  Middle East &amp; North Africa Upper middle income   3597.5973     58.32591
-#&gt; 18  Middle East &amp; North Africa Upper middle income   3498.5153     66.56133
-#&gt; 19  Middle East &amp; North Africa Upper middle income   3626.5207     70.35527
-#&gt; 20  Middle East &amp; North Africa Upper middle income   4469.2330     74.57167
-#&gt; 21  Middle East &amp; North Africa Upper middle income   4802.5845     75.96900
-#&gt; 22         East Asia &amp; Pacific Upper middle income          NA           NA
-#&gt; 23         East Asia &amp; Pacific Upper middle income          NA           NA
-#&gt; 24         East Asia &amp; Pacific Upper middle income          NA           NA
-#&gt; 25         East Asia &amp; Pacific Upper middle income          NA           NA
-#&gt; 26         East Asia &amp; Pacific Upper middle income  10637.5300           NA
-#&gt; 27         East Asia &amp; Pacific Upper middle income  10209.8192           NA
-#&gt; 28         East Asia &amp; Pacific Upper middle income   9529.6520           NA
-#&gt; 29       Europe &amp; Central Asia         High income          NA           NA
-#&gt; 30       Europe &amp; Central Asia         High income  43184.3987           NA
-#&gt; 31       Europe &amp; Central Asia         High income  39765.4638           NA
-#&gt; 32       Europe &amp; Central Asia         High income  34675.3795           NA
-#&gt; 33       Europe &amp; Central Asia         High income  40820.0342           NA
-#&gt; 34       Europe &amp; Central Asia         High income  42257.9939           NA
-#&gt; 35       Europe &amp; Central Asia         High income  42889.1390           NA
-#&gt; 36         Sub-Saharan Africa  Lower middle income          NA     34.11433
-#&gt; 37         Sub-Saharan Africa  Lower middle income          NA     37.05800
-#&gt; 38         Sub-Saharan Africa  Lower middle income   2745.9567     40.38118
-#&gt; 39         Sub-Saharan Africa  Lower middle income   2450.5236     41.81489
-#&gt; 40         Sub-Saharan Africa  Lower middle income   2290.6677     47.47027
-#&gt; 41         Sub-Saharan Africa  Lower middle income   3580.8296     57.85833
-#&gt; 42         Sub-Saharan Africa  Lower middle income   3566.4054     61.39400
-#&gt; 43  Latin America &amp; Caribbean          High income          NA     63.15933
-#&gt; 44  Latin America &amp; Caribbean          High income          NA     65.87622
-#&gt; 45  Latin America &amp; Caribbean          High income   5623.1648     68.85809
-#&gt; 46  Latin America &amp; Caribbean          High income  10016.9918     71.34078
-#&gt; 47  Latin America &amp; Caribbean          High income  11479.8364     73.52100
-#&gt; 48  Latin America &amp; Caribbean          High income  13183.9669     75.40200
-#&gt; 49  Latin America &amp; Caribbean          High income  13182.5997     76.28550
-#&gt; 50  Latin America &amp; Caribbean          High income   5729.3618     65.26267
-#&gt; 51  Latin America &amp; Caribbean          High income   6950.3534     66.52600
-#&gt; 52  Latin America &amp; Caribbean          High income   7411.0612     69.38864
-#&gt; 53  Latin America &amp; Caribbean          High income   7067.4240     71.59978
-#&gt; 54  Latin America &amp; Caribbean          High income   7969.4459     73.79664
-#&gt; 55  Latin America &amp; Caribbean          High income  10125.8877     75.59644
-#&gt; 56  Latin America &amp; Caribbean          High income  10367.3262     76.49600
-#&gt; 57       Europe &amp; Central Asia Upper middle income          NA     67.05883
-#&gt; 58       Europe &amp; Central Asia Upper middle income          NA     69.94333
-#&gt; 59       Europe &amp; Central Asia Upper middle income          NA     70.64455
-#&gt; 60       Europe &amp; Central Asia Upper middle income   1238.0134     68.31133
-#&gt; 61       Europe &amp; Central Asia Upper middle income   1588.4868     71.13064
-#&gt; 62       Europe &amp; Central Asia Upper middle income   3422.2688     73.40111
-#&gt; 63       Europe &amp; Central Asia Upper middle income   4029.0706     74.53150
-#&gt; 64  Latin America &amp; Caribbean          High income          NA     66.58583
-#&gt; 65  Latin America &amp; Caribbean          High income          NA     69.14178
-#&gt; 66  Latin America &amp; Caribbean          High income          NA     72.17600
-#&gt; 67  Latin America &amp; Caribbean          High income  23677.0869     73.45356
-#&gt; 68  Latin America &amp; Caribbean          High income  26766.9300     73.85773
-#&gt; 69  Latin America &amp; Caribbean          High income  25238.7968     75.01078
-#&gt; 70  Latin America &amp; Caribbean          High income  24416.8009     75.79600
-#&gt; 71         East Asia &amp; Pacific         High income  20183.3456     70.89593
-#&gt; 72         East Asia &amp; Pacific         High income  25250.7296     71.24488
-#&gt; 73         East Asia &amp; Pacific         High income  29651.4994     74.24798
-#&gt; 74         East Asia &amp; Pacific         High income  35004.1754     76.95257
-#&gt; 75         East Asia &amp; Pacific         High income  43625.3433     79.30244
-#&gt; 76         East Asia &amp; Pacific         High income  52260.5141     81.70650
-#&gt; 77         East Asia &amp; Pacific         High income  55558.2251     82.45000
-#&gt; 78       Europe &amp; Central Asia         High income  14328.3581     69.42671
-#&gt; 79       Europe &amp; Central Asia         High income  19641.8541     70.26377
-#&gt; 80       Europe &amp; Central Asia         High income  26999.2763     72.50865
-#&gt; 81       Europe &amp; Central Asia         High income  33284.3809     75.45095
-#&gt; 82       Europe &amp; Central Asia         High income  40998.1925     78.08448
-#&gt; 83       Europe &amp; Central Asia         High income  47395.3672     80.66125
-#&gt; 84       Europe &amp; Central Asia         High income  48370.8851     81.04024
-#&gt; 85       Europe &amp; Central Asia Upper middle income          NA     61.57250
-#&gt; 86       Europe &amp; Central Asia Upper middle income          NA     63.08267
-#&gt; 87       Europe &amp; Central Asia Upper middle income          NA     64.24864
-#&gt; 88       Europe &amp; Central Asia Upper middle income   2329.4629     64.90322
-#&gt; 89       Europe &amp; Central Asia Upper middle income   1765.7302     66.85673
-#&gt; 90       Europe &amp; Central Asia Upper middle income   5479.0105     70.78978
-#&gt; 91       Europe &amp; Central Asia Upper middle income   5927.8925     71.97350
-#&gt; 92  Latin America &amp; Caribbean          High income  20197.6780     63.70200
-#&gt; 93  Latin America &amp; Caribbean          High income  24598.1337     65.93111
-#&gt; 94  Latin America &amp; Caribbean          High income  23296.2875     68.50545
-#&gt; 95  Latin America &amp; Caribbean          High income  28213.1345     70.64200
-#&gt; 96  Latin America &amp; Caribbean          High income  30083.6880     72.45636
-#&gt; 97  Latin America &amp; Caribbean          High income  28745.9667     74.73367
-#&gt; 98  Latin America &amp; Caribbean          High income  26725.6356     75.60100
-#&gt; 99  Middle East &amp; North Africa         High income          NA     55.19483
-#&gt; 100 Middle East &amp; North Africa         High income          NA     63.24744
-#&gt;     fmean.GINI  fmean.ODA
-#&gt; 1           NA  228641667
-#&gt; 2           NA  224881111
-#&gt; 3           NA  132813636
-#&gt; 4           NA  249072222
-#&gt; 5           NA 1045170000
-#&gt; 6           NA 5298066667
-#&gt; 7           NA 4028136667
-#&gt; 8           NA         NA
-#&gt; 9           NA         NA
-#&gt; 10          NA         NA
-#&gt; 11          NA  225820000
-#&gt; 12    29.76667  369668182
-#&gt; 13    29.50000  300570000
-#&gt; 14          NA  218996667
-#&gt; 15          NA 2349516667
-#&gt; 16          NA  677247778
-#&gt; 17          NA  413002727
-#&gt; 18    40.20000  356715556
-#&gt; 19    35.30000  324930000
-#&gt; 20    27.60000  212776667
-#&gt; 21          NA  143500000
-#&gt; 22          NA         NA
-#&gt; 23          NA         NA
-#&gt; 24          NA         NA
-#&gt; 25          NA         NA
-#&gt; 26          NA         NA
-#&gt; 27          NA         NA
-#&gt; 28          NA         NA
-#&gt; 29          NA         NA
-#&gt; 30          NA         NA
-#&gt; 31          NA         NA
-#&gt; 32          NA         NA
-#&gt; 33          NA         NA
-#&gt; 34          NA         NA
-#&gt; 35          NA         NA
-#&gt; 36          NA   66937500
-#&gt; 37          NA   21908889
-#&gt; 38          NA  134233636
-#&gt; 39          NA  355415556
-#&gt; 40    52.00000  566945455
-#&gt; 41    42.70000  232904444
-#&gt; 42          NA  275783333
-#&gt; 43          NA         NA
-#&gt; 44          NA    7165000
-#&gt; 45          NA   10685455
-#&gt; 46          NA    8026667
-#&gt; 47          NA    8310909
-#&gt; 48          NA    5728889
-#&gt; 49          NA    3840000
-#&gt; 50          NA   61793333
-#&gt; 51          NA  113775556
-#&gt; 52    40.80000   89034545
-#&gt; 53    45.20000  251384444
-#&gt; 54    50.26364  124307273
-#&gt; 55    43.35556   91840000
-#&gt; 56    42.40000   -6510000
-#&gt; 57          NA         NA
-#&gt; 58          NA         NA
-#&gt; 59          NA         NA
-#&gt; 60          NA  116422500
-#&gt; 61    35.48333  286812727
-#&gt; 62    29.91111  310387778
-#&gt; 63    32.45000  305663333
-#&gt; 64          NA         NA
-#&gt; 65          NA         NA
-#&gt; 66          NA   33630000
-#&gt; 67          NA   41563333
-#&gt; 68          NA   19857000
-#&gt; 69          NA         NA
-#&gt; 70          NA         NA
-#&gt; 71          NA         NA
-#&gt; 72          NA         NA
-#&gt; 73    31.90000         NA
-#&gt; 74    33.20000         NA
-#&gt; 75    33.20000         NA
-#&gt; 76    35.05000         NA
-#&gt; 77          NA         NA
-#&gt; 78          NA         NA
-#&gt; 79          NA         NA
-#&gt; 80          NA         NA
-#&gt; 81          NA         NA
-#&gt; 82    29.33333         NA
-#&gt; 83    30.55556         NA
-#&gt; 84    30.50000         NA
-#&gt; 85          NA         NA
-#&gt; 86          NA         NA
-#&gt; 87          NA         NA
-#&gt; 88          NA   60480000
-#&gt; 89    23.36667  233089091
-#&gt; 90          NA  183480000
-#&gt; 91          NA   88233333
-#&gt; 92          NA     202500
-#&gt; 93          NA    2062222
-#&gt; 94          NA    4729091
-#&gt; 95          NA    4380000
-#&gt; 96          NA    9370000
-#&gt; 97          NA         NA
-#&gt; 98          NA         NA
-#&gt; 99          NA    6518333
-#&gt; 100         NA   36230000
-#&gt;  [ reached 'max' / getOption("max.print") -- omitted 1412 rows ]</div><div class='input'>
+<span class='va'>wlddev</span> <span class='op'>%&gt;%</span> <span class='fu'><a href='GRP, fgroup_by.html'>fgroup_by</a></span><span class='op'>(</span><span class='va'>country</span>, <span class='va'>decade</span><span class='op'>)</span> <span class='op'>%&gt;%</span> <span class='va'>collapg</span> <span class='op'>%&gt;%</span> <span class='va'>head</span>
+</div><div class='output co'>#&gt;       country decade iso3c       date   year     region     income  OECD
+#&gt; 1 Afghanistan   1960   AFG 1961-01-01 1962.5 South Asia Low income FALSE
+#&gt; 2 Afghanistan   1970   AFG 1967-01-01 1970.0 South Asia Low income FALSE
+#&gt; 3 Afghanistan   1980   AFG 1976-01-01 1980.0 South Asia Low income FALSE
+#&gt; 4 Afghanistan   1990   AFG 1987-01-01 1990.0 South Asia Low income FALSE
+#&gt; 5 Afghanistan   2000   AFG 1996-01-01 2000.0 South Asia Low income FALSE
+#&gt; 6 Afghanistan   2010   AFG 2007-01-01 2010.0 South Asia Low income FALSE
+#&gt;      PCGDP   LIFEEX GINI        ODA
+#&gt; 1       NA 33.39967   NA  228641667
+#&gt; 2       NA 36.70089   NA  224881111
+#&gt; 3       NA 42.03909   NA  132813636
+#&gt; 4       NA 49.69089   NA  249072222
+#&gt; 5 349.7596 55.61818   NA 1045170000
+#&gt; 6 506.9931 61.12978   NA 5298066667</div><div class='input'><span class='va'>wlddev</span> <span class='op'>%&gt;%</span> <span class='fu'><a href='GRP, fgroup_by.html'>fgroup_by</a></span><span class='op'>(</span><span class='va'>country</span>, <span class='va'>decade</span><span class='op'>)</span> <span class='op'>%&gt;%</span> <span class='fu'>collapg</span><span class='op'>(</span>w <span class='op'>=</span> <span class='va'>ODA</span><span class='op'>)</span> <span class='op'>%&gt;%</span> <span class='va'>head</span>
+</div><div class='output co'>#&gt;       country decade         ODA iso3c       date     year     region
+#&gt; 1 Afghanistan   1960  1371850000   AFG 1966-01-01 1963.086 South Asia
+#&gt; 2 Afghanistan   1970  2023930000   AFG 1967-01-01 1969.797 South Asia
+#&gt; 3 Afghanistan   1980  1460950000   AFG 1978-01-01 1977.816 South Asia
+#&gt; 4 Afghanistan   1990  2241650000   AFG 1992-01-01 1991.213 South Asia
+#&gt; 5 Afghanistan   2000 11496870000   AFG 2006-01-01 2002.833 South Asia
+#&gt; 6 Afghanistan   2010 47682600000   AFG 2012-01-01 2010.168 South Asia
+#&gt;       income  OECD    PCGDP   LIFEEX GINI
+#&gt; 1 Low income FALSE       NA 33.65730   NA
+#&gt; 2 Low income FALSE       NA 36.61192   NA
+#&gt; 3 Low income FALSE       NA 40.63028   NA
+#&gt; 4 Low income FALSE       NA 50.67509   NA
+#&gt; 5 Low income FALSE 351.3902 57.20476   NA
+#&gt; 6 Low income FALSE 515.1409 61.22270   NA</div><div class='input'><span class='va'>wlddev</span> <span class='op'>%&gt;%</span> <span class='fu'><a href='GRP, fgroup_by.html'>fgroup_by</a></span><span class='op'>(</span><span class='va'>country</span>, <span class='va'>decade</span><span class='op'>)</span> <span class='op'>%&gt;%</span> <span class='fu'>collapg</span><span class='op'>(</span><span class='va'>fmedian</span>, <span class='va'>flast</span><span class='op'>)</span> <span class='op'>%&gt;%</span> <span class='va'>head</span>
+</div><div class='output co'>#&gt;       country decade iso3c       date   year     region     income  OECD
+#&gt; 1 Afghanistan   1960   AFG 1966-01-01 1962.5 South Asia Low income FALSE
+#&gt; 2 Afghanistan   1970   AFG 1975-01-01 1970.0 South Asia Low income FALSE
+#&gt; 3 Afghanistan   1980   AFG 1986-01-01 1980.0 South Asia Low income FALSE
+#&gt; 4 Afghanistan   1990   AFG 1995-01-01 1990.0 South Asia Low income FALSE
+#&gt; 5 Afghanistan   2000   AFG 2006-01-01 2000.0 South Asia Low income FALSE
+#&gt; 6 Afghanistan   2010   AFG 2015-01-01 2010.0 South Asia Low income FALSE
+#&gt;      PCGDP  LIFEEX GINI        ODA
+#&gt; 1       NA 33.4045   NA  234900000
+#&gt; 2       NA 36.6780   NA  229150000
+#&gt; 3       NA 41.8530   NA   72610000
+#&gt; 4       NA 49.8560   NA  238500000
+#&gt; 5 346.9282 55.4820   NA  306200000
+#&gt; 6 536.0125 61.2260   NA 5033950000</div><div class='input'><span class='va'>wlddev</span> <span class='op'>%&gt;%</span> <span class='fu'><a href='GRP, fgroup_by.html'>fgroup_by</a></span><span class='op'>(</span><span class='va'>country</span>, <span class='va'>decade</span><span class='op'>)</span> <span class='op'>%&gt;%</span>
+  <span class='fu'>collapg</span><span class='op'>(</span>custom <span class='op'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/list.html'>list</a></span><span class='op'>(</span>fmean <span class='op'>=</span> <span class='fl'>9</span><span class='op'>:</span><span class='fl'>12</span>, fmode <span class='op'>=</span> <span class='fl'>5</span><span class='op'>:</span><span class='fl'>7</span>, flast <span class='op'>=</span> <span class='fl'>3</span><span class='op'>)</span><span class='op'>)</span> <span class='op'>%&gt;%</span> <span class='va'>head</span>
+</div><div class='output co'>#&gt;       country decade flast.date fmode.decade fmode.region fmode.income
+#&gt; 1 Afghanistan   1960 1966-01-01         1960   South Asia   Low income
+#&gt; 2 Afghanistan   1970 1975-01-01         1970   South Asia   Low income
+#&gt; 3 Afghanistan   1980 1986-01-01         1980   South Asia   Low income
+#&gt; 4 Afghanistan   1990 1995-01-01         1990   South Asia   Low income
+#&gt; 5 Afghanistan   2000 2006-01-01         2000   South Asia   Low income
+#&gt; 6 Afghanistan   2010 2015-01-01         2010   South Asia   Low income
+#&gt;   fmean.PCGDP fmean.LIFEEX fmean.GINI  fmean.ODA
+#&gt; 1          NA     33.39967         NA  228641667
+#&gt; 2          NA     36.70089         NA  224881111
+#&gt; 3          NA     42.03909         NA  132813636
+#&gt; 4          NA     49.69089         NA  249072222
+#&gt; 5    349.7596     55.61818         NA 1045170000
+#&gt; 6    506.9931     61.12978         NA 5298066667</div><div class='input'>
 </div></pre>
   </div>
   <div class="col-md-3 hidden-xs hidden-sm" id="pkgdown-sidebar">

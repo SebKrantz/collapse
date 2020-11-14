@@ -12,6 +12,8 @@ build_reference(examples = TRUE, topics = topics) # "collapse-package"
 Sys.setenv(NCRAN = "TRUE")
 build_articles(lazy = TRUE) # lazy = FALSE # Still do with NCRAN = TRUE
 # Replace all A0-collapse-documentation.html with index.html !!
+# Also replace A1-, A2- etc..
+# also replace / remove %20 (empty spaces)
 # Replce all <h1>Reference</h1> with <h1>Documentation & Overview</h1>
 # Replce all <h1>Articles</h1> with <h1>Vignettes / Articles</h1>
 # Replace &amp;lt;- with &lt;- and %&amp;gt;% with %&gt;% and

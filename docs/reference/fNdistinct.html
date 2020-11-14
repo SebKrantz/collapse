@@ -99,7 +99,7 @@
   </a>
 </li>
 <li>
-  <a href="https://github.com/SebKrantz/collapse" target="_blank">
+  <a href=https://github.com/SebKrantz/collapse" target="_blank">
     <span class="fa fa-github"></span>
      
   </a>
@@ -193,7 +193,7 @@
     <p>Integer. The number of distinct values in <code>x</code>, grouped by <code>g</code>, or (if <code><a href='TRA.html'>TRA</a></code> is used) <code>x</code> transformed by its distinct value count, grouped by <code>g</code>.</p>
     <h2 class="hasAnchor" id="see-also"><a class="anchor" href="#see-also"></a>See also</h2>
 
-    <div class='dont-index'><p><code><a href='fNobs.html'>fNobs</a></code>, <a href='A1-fast-statistical-functions.html'>Fast Statistical Functions</a>, <a href='index.html'>Collapse Overview</a></p></div>
+    <div class='dont-index'><p><code><a href='fNobs.html'>fNobs</a></code>, <a href='fast-statistical-functions.html'>Fast Statistical Functions</a>, <a href='index.html'>Collapse Overview</a></p></div>
 
     <h2 class="hasAnchor" id="examples"><a class="anchor" href="#examples"></a>Examples</h2>
     <pre class="examples"><div class='input'><span class='co'>## default vector method</span>
@@ -223,7 +223,7 @@
 #&gt; AND       1     1   59   59      7      1      1    1    48      0    0   0
 #&gt; ARE       1     1   59   59      7      1      1    1    43     57    0  43</div><div class='input'>
 <span class='co'>## matrix method</span>
-<span class='va'>aqm</span> <span class='op'>&lt;-</span> <span class='fu'><a href='A4-quick-conversion.html'>qM</a></span><span class='op'>(</span><span class='va'>airquality</span><span class='op'>)</span>
+<span class='va'>aqm</span> <span class='op'>&lt;-</span> <span class='fu'><a href='quick-conversion.html'>qM</a></span><span class='op'>(</span><span class='va'>airquality</span><span class='op'>)</span>
 <span class='fu'>fNdistinct</span><span class='op'>(</span><span class='va'>aqm</span><span class='op'>)</span>                                  <span class='co'># Also works for character or logical matrices</span>
 </div><div class='output co'>#&gt;   Ozone Solar.R    Wind    Temp   Month     Day 
 #&gt;      67     117      31      40       5      31 </div><div class='input'><span class='fu'>fNdistinct</span><span class='op'>(</span><span class='va'>aqm</span>, <span class='va'>airquality</span><span class='op'>$</span><span class='va'>Month</span><span class='op'>)</span>
