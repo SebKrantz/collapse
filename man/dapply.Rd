@@ -39,7 +39,7 @@ dapply(X, FUN, \dots, MARGIN = 2, parallel = FALSE, mc.cores = 1L,
 The performance gain from working with plain lists makes \code{dapply} not much slower than calling \code{lapply} itself on a data frame. Because of the conversions involved, row-operations require some memory, but are still faster than \code{base::apply}.
 }
 \value{
-\code{X} where \code{FUN} was applied to every row or column.
+An object\code{FUN} was applied to every row or column \code{X}, typically having the same class as \code{X}.
 }
 % \references{
 %% ~put references to the literature/web site here ~
@@ -69,7 +69,7 @@ dapply(m, sum, MARGIN = 1)                     # Same thing for matrices, faster
 head(dapply(m, sum, MARGIN = 1, drop = FALSE)) # Gives matrix with one column
 head(dapply(m, quantile, MARGIN = 1))          # Compute row-quantiles
 dapply(m, quantile)                            # Column-quantiles
-head(dapply(mtcars, quantile, MARGIN = 1))     # Same for data frames, output is also a data.frame
+head(dapply(mtcars, quantile, MARGIN = 1))     # Same for data frames, output is also a data frame
 dapply(mtcars, quantile)
 
 # With classed objects, we have to be a bit careful
@@ -85,7 +85,7 @@ gmtcars <- group_by(mtcars,cyl,vs,am)
 head(dapply(gmtcars, log))               # Still gives a grouped tibble back
 dapply(gmtcars, quantile, MARGIN = 1)    # Here it makes sense to keep the groups attribute
 dapply(gmtcars, quantile)                # This does not make much sense, ...
-dapply(gmtcars, quantile,                # better convert to plain data.frame:
+dapply(gmtcars, quantile,                # better convert to plain data frame:
        return = "data.frame")
 }
 % Add one or more standard keywords, see file 'KEYWORDS' in the
