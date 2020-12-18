@@ -6,6 +6,8 @@ template <int RTYPE>
 LogicalVector varyingCppImpl(Vector<RTYPE> x, int ng, IntegerVector g, bool any_group) {
 
   int l = x.size();
+  if(l < 2) return Rf_ScalarLogical(false); // Prevents seqfault for numeric(0) #101
+
   typedef typename Rcpp::traits::storage_type<RTYPE>::type storage_t;
   auto isnanT = (RTYPE == REALSXP) ? [](storage_t x) { return x != x; } :
     [](storage_t x) { return x == Vector<RTYPE>::get_na(); };

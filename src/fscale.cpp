@@ -10,6 +10,8 @@ using namespace Rcpp;
 NumericVector fscaleCpp(const NumericVector& x, int ng = 0, const IntegerVector& g = 0, const SEXP& w = R_NilValue,
                         bool narm = true, double set_mean = 0, double set_sd = 1) { // could set mean and sd with SEXP, but complicated...
   int l = x.size();
+  if(l < 1) return x; // Prevents seqfault for numeric(0) #101
+
   NumericVector out = no_init_vector(l);
   //   DUPLICATE_ATTRIB(out, x); // Any speed loss or overwriting attributes ?
   if (Rf_isNull(w)) { // No weights

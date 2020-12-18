@@ -5,6 +5,7 @@ using namespace Rcpp;
 NumericVector fmeanCpp(const NumericVector& x, int ng = 0, const IntegerVector& g = 0,
                        const SEXP& gs = R_NilValue, const SEXP& w = R_NilValue, bool narm = true) {
   int l = x.size();
+  if(l < 1) return x; // Prevents seqfault for numeric(0) #101
 
   if (Rf_isNull(w)) { // No weights
     if (ng == 0) {

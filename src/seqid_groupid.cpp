@@ -14,6 +14,8 @@ using namespace Rcpp;
 IntegerVector seqid(const IntegerVector& x, const SEXP& o = R_NilValue, int del = 1, int start = 1,
                     bool na_skip = false, bool skip_seq = false, bool check_o = true) {
   int l = x.size(), id = start, prev;
+  if(l < 1) return x; // Prevents seqfault for numeric(0) #101
+
   IntegerVector out = no_init_vector(l);
   if(Rf_isNull(o)) {
     if(na_skip) {
@@ -145,6 +147,7 @@ IntegerVector seqid(const IntegerVector& x, const SEXP& o = R_NilValue, int del 
 template <int RTYPE>
 IntegerVector groupidImpl(Vector<RTYPE> x, SEXP o, int start, bool na_skip, bool check_o) {
   int l = x.size(), id = start;
+  if(l < 1) return IntegerVector(0); // Prevents seqfault for numeric(0) #101
 
   typedef typename Rcpp::traits::storage_type<RTYPE>::type storage_t;
   auto isnanT = (RTYPE == REALSXP) ? [](storage_t x) { return x != x; } :

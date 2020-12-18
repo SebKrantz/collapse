@@ -15,6 +15,8 @@ auto nisnan = [](double x) { return x == x; };
 NumericVector fnthCpp(const NumericVector& x, double Q = 0.5, int ng = 0, const IntegerVector& g = 0,
                       const SEXP& gs = R_NilValue, const SEXP& w = R_NilValue, bool narm = true, int ret = 1) {
   int l = x.size();
+  if(l < 1) return x; // Prevents seqfault for numeric(0) #101
+
   bool tiesmean, lower;
   if(Q <= 0 || Q == 1) stop("n needs to be between 0 and 1, or between 1 and length(x). Use fmin and fmax for minima and maxima.");
   if(Q > 1) {
