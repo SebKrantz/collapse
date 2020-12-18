@@ -88,6 +88,7 @@ const char *memrecycle(SEXP target, SEXP where, int r, int len, SEXP source, int
 
 // utils.c
 bool allNA(SEXP x, bool errorForBadType);
+SEXP allNAv(SEXP x, SEXP errorForBadType);
 bool INHERITS(SEXP x, SEXP char_);
 bool Rinherits(SEXP x, SEXP char_);
 SEXP copyAsPlain(SEXP x);
