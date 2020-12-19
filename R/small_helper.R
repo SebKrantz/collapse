@@ -1,7 +1,25 @@
+# Row-operations (documented under data transformations...) ... see if any other package has it (i.e. matrixStats etc..)
+# or wirhout r ??? look for %+% function on Rducumentation.. rdio.
+
+"%rr%" <- function(X, v) TRA(X, v, "replace_fill") # outer(rep.int(1L, dim(X)[2L]), v)
+"%r+%" <- function(X, v) TRA(X, v, "+")
+"%r-%" <- function(X, v) TRA(X, v, "-")
+"%r*%" <- function(X, v) TRA(X, v, "*")
+"%r/%" <- function(X, v) TRA(X, v, "/")
+
+"%cr%" <- function(X, v) if(is.atomic(X)) duplAttributes(rep(v, NCOL(X)), X) else # outer(rep.int(1L, dim(X)[2L]), v)
+  duplAttributes(lapply(vector("list", length(unclass(X))), function(y) v), X)
+"%c+%" <- function(X, v) if(is.atomic(X)) X + v else duplAttributes(lapply(unattrib(X), `+`, v), X)
+"%c-%" <- function(X, v) if(is.atomic(X)) X - v else duplAttributes(lapply(unattrib(X), `-`, v), X)
+"%c*%" <- function(X, v) if(is.atomic(X)) X * v else duplAttributes(lapply(unattrib(X), `*`, v), X)
+"%c/%" <- function(X, v) if(is.atomic(X)) X / v else duplAttributes(lapply(unattrib(X), `/`, v), X) # or * 1L/v ??
+
 
 getenvFUN <- function(nam, efmt1 = "For this method need to install.packages('%s'), then unload [detach('package:collapse', unload = TRUE)] and reload [library(collapse)].")
   if(is.null(FUN <- .collapse_env[[nam]])) stop(sprintf(efmt1, strsplit(nam, "_", fixed = TRUE)[[1L]][1L])) else FUN
 
+
+# qM2 <- function(x) if(is.list(x)) do.call(cbind, x) else x
 
 null2NA <- function(x) if(is.null(x)) NA_character_ else x
 
@@ -13,6 +31,12 @@ vlabels <- function(X, attrn = "label") {
   res[vapply(res, is.null, TRUE)] <- NA_character_
   unlist(res)
 }
+
+# Slower on WDI !!!
+# vlabels2 <- function(X, attrn = "label") {
+#   if(is.atomic(X)) return(null2NA(attr(X, attrn)))
+#   vapply(X, function(x) if(is.null(a <- attr(x, attrn))) NA_character_ else a, character(1L))
+# }
 
 "vlabels<-" <- function(X, attrn = "label", value) {
   names(value) <- NULL
@@ -28,6 +52,13 @@ vlabels <- function(X, attrn = "label") {
   `oldClass<-`(X, clx)
 }
 
+# Also slower on WDI !!
+# "vlabels2<-" <- function(X, attrn = "label", value) {
+#   names(value) <- NULL
+#   if(is.atomic(X)) return(`attr<-`(X, attrn, value))
+#   duplAttributes(mapply(function(x, y) `attr<-`(x, attrn, y), `attributes<-`(X, NULL), as.vector(value, "list"),
+#                         SIMPLIFY = FALSE, USE.NAMES = FALSE), X)
+# }
 
 .c <- function(...) as.character(substitute(c(...))[-1L])
 
@@ -38,12 +69,12 @@ pasteclass <- function(x) if(length(cx <- class(x)) > 1L) paste(cx, collapse = "
 
 vclasses <- function(X) {
   if(is.atomic(X)) return(pasteclass(X))
-  vapply(X, pasteclass, character(1)) # unattrib(X): no names
+  vapply(X, pasteclass, character(1L)) # unattrib(X): no names
 }
 
 vtypes <- function(X) {
   if(is.atomic(X)) return(typeof(X))
-  vapply(X, typeof, character(1)) # unattrib(X): no names
+  vapply(X, typeof, character(1L)) # unattrib(X): no names
 }
 
 namlab <- function(X, class = FALSE, attrn = "label") {
@@ -159,8 +190,6 @@ is.Date <- function(x) inherits(x, c("Date","POSIXlt","POSIXct"))
 
 "%!in%" <- function(x, table) match(x, table, nomatch = 0L) == 0L
 
-na_rm <- function(x) x[!is.na(x)]
-
 # more consistent with base than na_rm
 # na.rm <- function(x) { # cpp version available, but not faster !
 #   if(length(attr(x, "names"))) { # gives corruped time-series !
@@ -170,6 +199,16 @@ na_rm <- function(x) x[!is.na(x)]
 #     setAttributes(r, ax)
 #   } else duplAttributes(x[!is.na(x)], x)
 # }
+
+allNA <- function(x) .Call(C_allNA, x, TRUE) # True means give error for unsupported vector types, not FALSE.
+
+missing_cases <- function(X, cols = NULL) {
+  if(is.list(X)) return(.Call(C_dt_na, X, if(is.null(cols)) seq_along(unclass(X)) else cols2int(cols, X, attr(X, "names"))))
+  if(is.matrix(X)) return(if(is.null(cols)) !complete.cases(X) else !complete.cases(X[, cols]))
+  is.na(X)
+}
+
+na_rm <- function(x) x[!is.na(x)]
 
 na_omit <- function(X, cols = NULL, na.attr = FALSE) {
   if(is.list(X)) {
