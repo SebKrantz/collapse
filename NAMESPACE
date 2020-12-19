@@ -1,4 +1,4 @@
-useDynLib(collapsedev15, .registration=TRUE) # , .fixes = "C_"
+useDynLib(collapse, .registration=TRUE) # , .fixes = "C_"
 importFrom(Rcpp, evalCpp)
 importFrom("graphics", "hist", "par", "plot")
 importFrom("grDevices", "rainbow")
