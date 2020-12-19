@@ -10,9 +10,17 @@
 
   suppressMessages({
 
-  .collapse_env$lfe_demeanlist <-
-         if(requireNamespace("lfe", quietly = TRUE)) # lfe::demeanlist else NULL
-             get0("demeanlist", envir = getNamespace("lfe")) else NULL
+  # .collapse_env$lfe_demeanlist <-
+  #        if(requireNamespace("lfe", quietly = TRUE)) # lfe::demeanlist else NULL
+  #            get0("demeanlist", envir = getNamespace("lfe"))
+
+  .collapse_env$fixest_demean <-
+        if(requireNamespace("fixest", quietly = TRUE)) # fixest::demean else NULL
+           get0("demean", envir = getNamespace("fixest")) else NULL
+
+  .collapse_env$weights_wtd.cors <-
+        if(requireNamespace("weights", quietly = TRUE)) # weights::wtd.cors else NULL
+           get0("wtd.cors", envir = getNamespace("weights")) else NULL
 
   .collapse_env$RcppArmadillo_fastLm <-
          if(requireNamespace("RcppArmadillo", quietly = TRUE)) # RcppArmadillo::fastLmPure else NULL
@@ -27,15 +35,9 @@
   assign(".collapse_env", .collapse_env, envir = parent.env(environment()))
 
   # Old solution: does not dynamically update, would have to re-install collapse after installing these packages
-  # assign(".lfe_demeanlist",
-  #        if(requireNamespace("lfe", quietly = TRUE))
-  #        get0("demeanlist", envir = getNamespace("lfe")) else NULL, envir = parent.env(environment()))
   # assign(".RcppArmadillo_fastLm",
   #        if(requireNamespace("RcppArmadillo", quietly = TRUE))
   #        get0("_RcppArmadillo_fastLm_impl", envir = getNamespace("RcppArmadillo")) else NULL, envir = parent.env(environment()))
-  # assign(".RcppEigen_fastLm",
-  #        if(requireNamespace("RcppEigen", quietly = TRUE))
-  #        get0("RcppEigen_fastLm_Impl", envir = getNamespace("RcppEigen")) else NULL, envir = parent.env(environment()))
 
   options("collapse_unused_arg_action" = "warning") # error, warning, message or none
 
@@ -50,7 +52,7 @@
   library.dynam.unload("collapse", libpath)
 }
 
-# Note: To create local dev version of package change package name in DESCRIPTION, NAMESPACE, this file,
+# Note: To create local dev version of package change package name in DESCRIPTION, NAMESPACE, this file (including C_collapse_init),
 # replace all instances of `_collapse_` in source files, and also rename `R_init_collapse` in ExportSymbols.cpp.
 # and in vignetter / Rd files replace library(collapse)
 release_questions <- function() {
@@ -58,7 +60,7 @@ release_questions <- function() {
     "Have you updated the version number in DESCRIPTION, NEWS.md, NEWS.Rd, cran.comments and .onAttach?",
     "Updated Readme?",
     "Spell check ?",
-    "built vignettes properly with Sys.setenv(NCRAN = TRUE)?",
+    "built vignettes properly with Sys.setenv(RUNBENCH = TRUE)?",
     "Have you updated all help files with code changes, even if it's only documenting arguments or links?",
     "updated collapse-package.Rd and collapse-documentation.Rd?",
     "All function in global_macros.R?",
