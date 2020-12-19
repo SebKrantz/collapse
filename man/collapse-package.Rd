@@ -16,7 +16,7 @@ It is made compatible with \emph{dplyr}, \emph{data.table} and the \emph{plm} ap
 
 }
 \section{Getting Started}{
-Please see \link[=collapse-documentation]{Collapse Documentation & Overview}, or the introductory vignette. The documentation and vignettes can also comfortably be read on the \href{https://sebkrantz.github.io/collapse/}{package website}. A cheatsheet is available at \href{https://rstudio.com/resources/cheatsheets/}{Rstudio}.
+Please see \link[=collapse-documentation]{Collapse Documentation & Overview}, or the introductory vignette. The documentation and vignettes can also comfortably be read on the \href{https://sebkrantz.github.io/collapse/}{package website}. A cheatsheet is available at \href{https://raw.githubusercontent.com/rstudio/cheatsheets/master/collapse.pdf}{Rstudio}.
 A compact introduction for quick-starters is provided in the examples below.
 }
 
@@ -75,7 +75,7 @@ Core S3 methods and efficient grouping and ordering functionality can be accesse
 
  Additional (hidden) S3 methods provide broad based compatibility and support for \emph{dplyr} (grouped tibble), \emph{data.table} and \emph{plm} panel data classes. Non-generic functions and core methods also seek to preserve object attributes (including column attributes such as variable labels), ensuring flexibility and non-destructive workflows.
 
- Missing values are efficiently skipped at C/C++ level. The package default is \code{na.rm = TRUE}, whereas \code{na.rm = FALSE} also yields efficient checking and early termination. Missing weights are supported. Core functionality and all statistical functions / computations are tested with 7700 unit tests for Base R equivalence, exempting some improvements (e.g. \code{fsum(NA, na.rm = TRUE)} evaluates to \code{NA}, not 0 like \code{sum(NA, na.rm = TRUE)}; similarly for \code{fmin} and \code{fmax}; no \code{NaN} values are generated from computations involving \code{NA} values etc...). Generic functions provide \link[=collapse-options]{security} against silent swallowing of unknown / misspelled arguments.
+ Missing values are efficiently skipped at C/C++ level. The package default is \code{na.rm = TRUE}, whereas \code{na.rm = FALSE} also yields efficient checking and early termination. Missing weights are supported. Core functionality and all statistical functions / computations are tested with 10,000 unit tests for Base R equivalence, exempting some improvements (e.g. \code{fsum(NA, na.rm = TRUE)} evaluates to \code{NA}, not 0 like \code{sum(NA, na.rm = TRUE)}; similarly for \code{fmin} and \code{fmax}; no \code{NaN} values are generated from computations involving \code{NA} values etc...). Generic functions provide \link[=collapse-options]{security} against silent swallowing of unknown / misspelled arguments.
 
  %Hence they also handle various date and time series classes etc., and can easily be integreated into most approaches to data transformation.
 
@@ -89,7 +89,7 @@ Apart from general performance considerations, \emph{collapse} excels at applica
 % The package largely avoids non-standard evaluation and exports core methods for maximum programmability.  % Most are S3 generic with methods for common \code{R} objects (vectors, matrices, data frames, \dots) % high computation  %(aggregation and transformations ~10x \emph{data.table} on data <1 Mio obs.).
 
 % Beyond speed, flexibility and parsimony in coding, a central objective of \emph{collapse} is to facilitate advanced / complex operations on data.
-\emph{collapse} is mainly coded in C++ and built with \code{Rcpp}, but also uses C functions from \emph{data.table} (grouping, ordering, subsetting, row-binding), \emph{lfe} (centering on multiple factors) and \emph{stats} (ACF and PACF). For the moment \emph{collapse} does not use low-level parallelism (such as OpenMP).
+\emph{collapse} is mainly coded in C++ and built with \code{Rcpp}, but also uses C functions from \emph{data.table} (grouping, ordering, subsetting, row-binding), \emph{fixest} (centering on multiple factors), \emph{weights} (weighted pairwise correlations) and \emph{stats} (ACF and PACF). For the moment \emph{collapse} does not use low-level parallelism (such as OpenMP).
 % \emph{collapse} is built with \code{Rcpp} and imports \code{C} functions from \emph{data.table}, \emph{lfe} and \emph{stats}. %, and uses \code{ggplot2} visualizations.
 
 
@@ -100,7 +100,7 @@ Apart from general performance considerations, \emph{collapse} excels at applica
 Other contributors from packages \emph{collapse} utilizes:
 \itemize{
 \item Matt Dowle, Arun Srinivasan and contributors worldwide (data.table)
-\item Simen Gaure (lfe)
+\item Laurent Berge (fixest)
 \item Dirk Eddelbuettel and contributors worldwide (Rcpp)
 \item R Core Team and contributors worldwide (stats)
 }
@@ -199,7 +199,6 @@ head(fdiff(EuStockMarkets, rho = 0.87))        # Quasi-differences (x_t - rho*x_
 head(fdiff(EuStockMarkets, log = TRUE))        # Log-differences
 head(fgrowth(EuStockMarkets))                  # Exact growth rates (percentage change)
 head(fgrowth(EuStockMarkets, logdiff = TRUE))  # Log-difference growth rates (percentage change)
-\donttest{
 # Note that it is not necessary to use factors for grouping.
 fmean(gv(mtcars, -c(2,8:9)), mtcars$cyl) # Can also use vector (internally converted using qF())
 fmean(gv(mtcars, -c(2,8:9)),
@@ -304,7 +303,7 @@ setrename(wlddev, country = Ctry, year = Yr)     # By reference
 head(frename(wlddev, tolower, cols = 9:12))
 
 # Fast grouping
-fgroup_by(wlddev, Ctry, decade) \%>\% fgroup_vars \%>\% head # fgroup_by is a lot faster than dplyr::group_by
+fgroup_by(wlddev, Ctry, decade) \%>\% fgroup_vars \%>\% head # fgroup_by is faster than dplyr::group_by
 rm(wlddev)                                       # .. but only works with collapse functions
 
 ## Now lets start putting things together
@@ -400,10 +399,12 @@ wlddev \%>\% fsubset(year > 1990, country, region, income, PCGDP:ODA) \%>\%
 ## Additional flexibility for data transformation tasks is offerend by tidy transformation operators
 # Within-transformation (centering on overall mean)
 head(W(wlddev, ~ country, cols = 9:12, mean = "overall.mean"))
+\donttest{
 # Partialling out country and year fixed effects
 head(HDW(wlddev, PCGDP + LIFEEX ~ qF(country) + qF(year)))
 # Same, adding ODA as continuous regressor
 head(HDW(wlddev, PCGDP + LIFEEX ~ qF(country) + qF(year) + ODA))
+}
 # Standardizing (scaling and centering) by country
 head(STD(wlddev, ~ country, cols = 9:12))
 # Computing 1 lead and 3 lags of the 4 series
@@ -433,8 +434,10 @@ head(W(pwlddev$PCGDP))                      # Country-demeaning
 head(W(pwlddev, cols = 9:12))
 head(W(pwlddev$PCGDP, effect = 2))          # Time-demeaning
 head(W(pwlddev, effect = 2, cols = 9:12))
+\donttest{
 head(HDW(pwlddev$PCGDP))                    # Country- and time-demeaning
 head(HDW(pwlddev, cols = 9:12))
+}
 head(STD(pwlddev$PCGDP))                    # Standardizing by country
 head(STD(pwlddev, cols = 9:12))
 head(L(pwlddev$PCGDP, -1:3))                # Panel-lags
@@ -445,7 +448,7 @@ head(G(pwlddev, 1, 1, 9:12))
 # Remove all objects used in this example section
 rm(v, d, w, f, f1, f2, g, mtcarsM, pwlddev, sds, series, wlddev)
 }
-}
+
 
 \keyword{package}
 \keyword{manip}
