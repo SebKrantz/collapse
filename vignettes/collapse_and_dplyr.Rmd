@@ -47,7 +47,7 @@ knitr::opts_chunk$set(error = FALSE, message = FALSE, warning = FALSE,
 #  out.width='100%'
 # )
 
-NCRAN <- identical(Sys.getenv("NCRAN"), "TRUE")
+RUNBENCH <- identical(Sys.getenv("RUNBENCH"), "TRUE")
 
 oldopts <- options(width = 100L)
 set.seed(101)
@@ -785,7 +785,7 @@ All benchmarks are run on a Windows 8.1 laptop with a 2x 2.2 GHZ Intel i5 proces
 ### 3.1 Data 
 Bechmarks are run on the original `GGDC10S` data used throughout this vignette and a larger dataset with approx. 1 million observations, obtained by replicating and row-binding `GGDC10S` 200 times while maintaining unique groups.
 
-```{r, eval=NCRAN}
+```{r, eval=RUNBENCH}
 # This shows the groups in GGDC10S
 GRP(GGDC10S, ~ Variable + Country)
 
@@ -805,7 +805,7 @@ gc()
 
 ### 3.1 Selecting, Subsetting, Ordering and Grouping
 
-```{r, eval=NCRAN, warning=FALSE, message=FALSE}
+```{r, eval=RUNBENCH, warning=FALSE, message=FALSE}
 ## Selecting columns
 # Small
 microbenchmark(dplyr = select(GGDC10S, Country, Variable, AGR:SUM),
@@ -881,7 +881,7 @@ gc()
 
 ### 3.1 Aggregation
 
-```{r, eval=NCRAN, warning=FALSE, message=FALSE}
+```{r, eval=RUNBENCH, warning=FALSE, message=FALSE}
 ## Grouping the data
 cgGGDC10S <- fgroup_by(GGDC10S, Variable, Country) %>% fselect(-Region, -Regioncode)
 gGGDC10S <- group_by(GGDC10S, Variable, Country) %>% fselect(-Region, -Regioncode)
@@ -978,7 +978,7 @@ gc()
 
 Below are some additional benchmarks for weighted aggregations and aggregations using the statistical mode, which cannot easily or efficiently be performed with *dplyr*. 
 
-```{r, eval=NCRAN, warning=FALSE, message=FALSE}
+```{r, eval=RUNBENCH, warning=FALSE, message=FALSE}
 ## Weighted Mean
 # Small
 microbenchmark(fmean(cgGGDC10S, SUM)) 
@@ -1012,7 +1012,7 @@ gc()
 
 ### 3.2 Transformation
 
-```{r, eval=NCRAN, warning=FALSE, message=FALSE}
+```{r, eval=RUNBENCH, warning=FALSE, message=FALSE}
 
 ## Replacing with group sum
 # Small
@@ -1077,7 +1077,7 @@ gc()
 
 Below again some benchmarks for transformations not easily of efficiently performed with *dplyr*, such as centering on the overall mean, mean-preserving scaling, weighted scaling and centering, sequences of lags / leads, (iterated) panel-differences and growth rates. 
 
-```{r, eval=NCRAN, warning=FALSE, message=FALSE}
+```{r, eval=RUNBENCH, warning=FALSE, message=FALSE}
 # Centering on overall mean
 microbenchmark(fwithin(cgdata, mean = "overall.mean"), times = 10)
 

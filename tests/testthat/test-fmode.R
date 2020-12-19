@@ -51,6 +51,8 @@ maxwa <- function(x) {
   `attributes<-`(`storage.mode<-`(max(xna), storage.mode(x)), attributes(x))
 }
 
+if(identical(Sys.getenv("NCRAN"), "TRUE")) {
+
 rowidv <- data.table::rowidv
 
 # firstmode <- function(x) {
@@ -74,6 +76,7 @@ Mode <- function(x, na.rm = FALSE, ties = "first") {
          stop("Unknown ties option"))
 }
 
+}
 
 # Mode <- function(x, na.rm = FALSE, ties = "first") {
 #   if(na.rm) x <- x[!is.na(x)]
@@ -118,6 +121,8 @@ wBY <- function(x, f, FUN, w, ...) {
     }), `names<-`, NULL)
 }
 
+if(identical(Sys.getenv("NCRAN"), "TRUE")) {
+
 test_that("fmode performs like Mode (defined above)", {
   for(t in c("first","min","max")) {
     # print(t)
@@ -157,6 +162,8 @@ test_that("fmode performs like Mode (defined above)", {
   expect_equal(fmode(getdataNA(tf), g, ties = t), BY(getdataNA(tf), g, Mode, na.rm = TRUE, ties = t))
   }
 })
+
+}
 
 test_that("fmode with weights performs as intended (unbiased)", {
   expect_equal(fmode(c(2,2,4,5,5,5)), fmode(c(2,4,5), w = c(2,1,3)))

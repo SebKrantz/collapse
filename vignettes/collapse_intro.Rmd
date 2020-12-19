@@ -48,6 +48,7 @@ knitr::opts_chunk$set(error = FALSE, message = FALSE, warning = FALSE,
 #  out.width='100%'
 # )
 
+RUNBENCH <- identical(Sys.getenv("RUNBENCH"), "TRUE")
 NCRAN <- identical(Sys.getenv("NCRAN"), "TRUE")
 
 oldopts <- options(width = 101L)
@@ -1265,7 +1266,7 @@ coef(lm(HDW.PCGDP ~ HDW.LIFEEX, HDW(data, PCGDP + LIFEEX ~ iso3c + year)))
 coef(lm(PCGDP ~ LIFEEX + HDB(LIFEEX, list(iso3c, year)), data))
 ```
 We may wish to test whether including time fixed-effects in the above regression actually impacts the fit. This can be done with the fast F-test:
-```{r}
+```{r, eval=NCRAN}
 # The syntax is fFtest(y, exc, X, full.df = TRUE). 'exc' are exclusion restrictions.
 # full.df = TRUE means count degrees of freedom in the same way as if dummies were created
 data %$% fFtest(PCGDP, year, list(LIFEEX, iso3c))
@@ -1529,7 +1530,7 @@ For this we will use the *vars* package^[I noticed there is a *panelvar* package
 
 
 
-```{r, warning=FALSE, message=FALSE}
+```{r, warning=FALSE, message=FALSE, eval=NCRAN}
 library(vars)
 # The 6 most important non-government sectors (see section 1)
 sec <- c("AGR","MAN","WRT","CON","TRA","FIRE")
@@ -1541,7 +1542,7 @@ plot(AGRmat)
 ```
 The plot shows quite some heterogeneity both in the levels (VA is in local currency) and in trend growth rates. In the panel-VAR estimation we are only really interested in the sectoral relationships within countries. Thus we need to harmonize this sectoral data further. One way would be taking growth rates or log-differences of the data, but VAR's are usually estimated in levels unless the data are cointegrated (and value added series do not, in general, exhibit unit-root behavior). Thus to harmonize the data further we opt for subtracting a country-sector specific cubic trend from the data in logs:
 
-```{r}
+```{r, eval=NCRAN}
 # Subtracting a country specific cubic growth trend
 AGRmat <- dapply(AGRmat, fHDwithin, poly(seq_row(AGRmat), 3), fill = TRUE)
 
@@ -1549,7 +1550,7 @@ plot(AGRmat)
 ```
 This seems to have done a decent job in curbing most of the heterogeneity. Some series however have a high variance around that cubic trend. Therefore a final step is to standardize the data to bring the variances in line:
 
-```{r}
+```{r, eval=NCRAN}
 # Standardizing the cubic log-detrended data
 AGRmat <- fscale(AGRmat)
 plot(AGRmat)
@@ -1558,13 +1559,13 @@ plot(AGRmat)
 Now this looks pretty good, and is about the most we can do in terms of harmonization without differencing the data. The code below applies these transformations to all sectors:
 
 
-```{r, fig.height=7}
+```{r, fig.height=7, eval=NCRAN}
 # Taking logs
-get_vars(data, 3:8) <- dapply(get_vars(data, 3:8), log)
-# Iteratively projecting out country FE and cubic trends from complete cases (still very slow)
-get_vars(data, 3:8) <- HDW(data, ~ qF(Country)*poly(Year, 3), fill = TRUE, eps = 1e-05)
+settfmv(data, 3:8, log)
+# Iteratively projecting out country FE and cubic trends from complete cases
+gv(data, 3:8) <- HDW(data, ~ qF(Country)*poly(Year, 3), fill = TRUE)
 # Scaling
-get_vars(data, 3:8) <- STD(data, ~ Country, cols = 3:8, keep.by = FALSE)
+settfmv(data, 3:8, STD, Country, apply = FALSE)
 
 # Check the plot
 plot(psmat(data, ~Country, ~Year))
@@ -1572,7 +1573,7 @@ plot(psmat(data, ~Country, ~Year))
 
 Since the data is annual, let us estimate the Panel-VAR with one lag:
 
-```{r}
+```{r, eval=NCRAN}
 # This adds one lag of all series to the data
 add_vars(data) <- L(data, 1, ~ Country, ~ Year, keep.ids = FALSE)
 # This removes missing values from all but the first row and drops identifier columns (vars is made for time series without gaps)
@@ -1597,7 +1598,7 @@ Having prepared the data, the code below estimates the panel-VAR using `lm` and 
 <!--              call = quote(VAR(y = data))) -->
 
 
-```{r}
+```{r, eval=NCRAN}
 # saving the names of the 6 sectors
 nam <- names(data)[1:6]
 
@@ -1617,7 +1618,7 @@ pVAR <- list(varresult = setNames(lapply(seq_len(6), function(i)    # list of 6 
 class(pVAR) <- "varest"
 ```
 The significant serial-correlation test below suggests that the panel-VAR with one lag is ill-identified, but the sample size is also quite large so the test is prone to reject, and the test is likely also still picking up remaining cross-sectional heterogeneity. For the purposes of this vignette this shall not bother us.
-```{r}
+```{r, eval=NCRAN}
 serial.test(pVAR)
 ```
  By default the VAR is identified using a Choleski ordering of the direct impact matrix in which the first variable (here Agriculture) is assumed to not be directly impacted by any other sector in the current period, and this descends down to the last variable (Finance and Real Estate), which is assumed to be impacted by all other sectors in the current period. For structural identification it is usually necessary to impose restrictions on the direct impact matrix in line with economic theory. It is difficult to conceive theories on the average worldwide interaction of broad economic sectors, but to aid identification we will compute the correlation matrix in growth rates and restrict the lowest coefficients to be 0, which should be better than just imposing a random Choleski ordering. 
@@ -1650,7 +1651,7 @@ serial.test(pVAR)
 
 <!-- ``` -->
 
-```{r}
+```{r, eval=NCRAN}
 # This computes the pairwise correlations between standardized sectoral growth rates across countries
 corr <- fsubset(GGDC10S, Variable == "VA") %>%   # Subset rows: Only VA
            fgroup_by(Country) %>%                # Group by country
@@ -1679,7 +1680,7 @@ pSVAR
 ```
 
 Now this object is quite involved, which brings us to the actual subject of this section:
-```{r}
+```{r, eval=NCRAN}
 # psVAR$var$varresult is a list containing the 6 linear models fitted above, it is not displayed in full here.
 str(pSVAR, give.attr = FALSE, max.level = 3)
 ```
@@ -1687,7 +1688,7 @@ str(pSVAR, give.attr = FALSE, max.level = 3)
 ### 8.1 List Search and Identification
 
 When dealing with such a list-like object, we might be interested in its complexity by measuring the level of nesting. This can be done with `ldepth`:
-```{r}
+```{r, eval=NCRAN}
 # The list-tree of this object has 5 levels of nesting
 ldepth(pSVAR)
 
@@ -1695,12 +1696,12 @@ ldepth(pSVAR)
 ldepth(data)
 ```
 Further we might be interested in knowing whether this list-object contains non-atomic elements like call, terms or formulas. The function `is.regular` in the *collapse* package checks if an object is atomic or list-like, and the recursive version `is.unlistable` checks whether all objects in a nested structure are atomic or list-like:
-```{r}
+```{r, eval=NCRAN}
 # Is this object composed only of atomic elements e.g. can it be unlisted?
 is.unlistable(pSVAR)
 ```
 Evidently this object is not unlistable, from viewing its structure we know that it contains several call and terms objects. We might also want to know if this object saves some kind of residuals or fitted values. This can be done using `has_elem`, which also supports regular expression search of element names:
-```{r}
+```{r, eval=NCRAN}
 # Does this object contain an element with "fitted" in its name?
 has_elem(pSVAR, "fitted", regex = TRUE)
 
@@ -1708,7 +1709,7 @@ has_elem(pSVAR, "fitted", regex = TRUE)
 has_elem(pSVAR, "residuals", regex = TRUE)
 ```
 We might also want to know whether the object contains some kind of data-matrix. This can be checked by calling:
-```{r}
+```{r, eval=NCRAN}
 # Is there a matrix stored in this object?
 has_elem(pSVAR, is.matrix)
 ```
@@ -1717,7 +1718,7 @@ These functions can sometimes be helpful in exploring objects. A much greater ad
 
 ### 8.2 List Subsetting
 Having gathered some information about the `pSVAR` object, this section introduces several extractor functions to pull out elements from such lists: `get_elem` can be used to pull out elements from lists in a simplified format^[The *vars* package also provides convenient extractor functions for some quantities, but `get_elem` of course works in a much broader range of contexts.].
-```{r}
+```{r, eval=NCRAN}
 # This is the path to the residuals from a single equation
 str(pSVAR$var$varresult$STD.HDW.AGR$residuals)
 
@@ -1729,24 +1730,24 @@ str(resid, give.attr = FALSE)
 plot.ts(qM(resid), main = "Panel-VAR Residuals")
 ```
 Similarly, we could pull out and plot the fitted values:
-```{r}
+```{r, eval=NCRAN}
 # Regular expression search and retrieval of fitted values
 plot.ts(qM(get_elem(pSVAR, "^fi", regex = TRUE)), main = "Panel-VAR Fitted Values")
 ```
 Below the main quantities of interest in SVAR analysis are computed: The impulse response functions (IRF's) and forecast error variance decompositions (FEVD's):
-```{r}
+```{r, eval=NCRAN}
 # This computes orthogonalized impulse response functions
 pIRF <- irf(pSVAR)
 # This computes the forecast error variance decompositions
 pFEVD <- fevd(pSVAR)
 ```
 The `pIRF` object contains the IRF's with lower and upper confidence bounds and some atomic elements providing information about the object:
-```{r}
+```{r, eval=NCRAN}
 # See the structure of a vars IRF object:
 str(pIRF, give.attr = FALSE)
 ```
 We could separately access the top-level atomic or list elements using `atomic_elem` or `list_elem`:
-```{r}
+```{r, eval=NCRAN}
 # Pool-out top-level atomic elements in the list
 str(atomic_elem(pIRF))
 ```
@@ -1761,7 +1762,7 @@ There are also recursive versions of `atomic_elem` and `list_elem` named `reg_el
 <!-- ``` -->
 <!-- `plot(pIRF)` would give us 6 charts of all sectoral responses to each sectoral shock.  -->
 In this section we however want to generate nicer and more compact plots using `ggplot2`, and also compute some statistics on the IRF data. Starting with the latter, the code below sums the 10-period impulse response coefficients of each sector in response to each sectoral impulse and stores them in a data frame:
-```{r}
+```{r, eval=NCRAN}
 # Computing the cumulative impact after 10 periods
 list_elem(pIRF) %>%                            # Pull out the sublist elements containing the IRF coefficients + CI's
   rapply2d(function(x) round(fsum(x), 2)) %>%  # Recursively apply the column-sums to coefficient matrices (could also use colSums)
@@ -1774,7 +1775,7 @@ The above cumulative coefficients suggest that Agriculture responds mostly to it
 <!-- Finance and Real Estate sector seems even more independent and really only responds to it's own dynamics. Manufacturing and Transport and Storage seem to be pretty interlinked with the other broad sectors. Wholesale and Retail Trade and Construction exhibit some strange dynamics (i.e. WRT responds more to the CON shock that to it's own shock, and CON responds strongly negatively to the WRT shock). -->
 
 Let us use `ggplot2` to create nice compact plots of the IRF's and FEVD's. For this task `unlist2d` will again be extremely helpful in creating the data frame representation required. Starting with the IRF's, we will discard the upper and lower bounds and just use the impulses:
-```{r}
+```{r, eval=NCRAN}
 # This binds the matrices after adding integer row-names to them to a data.table
 
 data <- pIRF$irf %>%                      # Get only the coefficient matrices, discard the confidence bounds
@@ -1806,7 +1807,7 @@ head(data, 3)
 
 ```
 To round things off, below we do the same thing for the FEVD's:
-```{r}
+```{r, eval=NCRAN}
 data <- unlist2d(pFEVD, idcols = "variable", row.names = "Time", id.factor = TRUE, DT = TRUE) %>% 
             melt(c("variable", "Time"), variable.name = "Sector") 
 head(data, 3)
@@ -1858,7 +1859,7 @@ Mundlak, Yair. 1978. “On the Pooling of Time Series and Cross Section Data.”
 
 <!-- #### Large Data -->
 
-<!-- ```{r, eval=NCRAN} -->
+<!-- ```{r, eval=RUNBENCH} -->
 <!-- # Creating a data.table with 10 columns and 1 mio. obs, including 10% missing values -->
 <!-- testdat <- na_insert(qDT(replicate(10, rnorm(1e6), simplify = FALSE)), prop = 0.1)  -->
 <!-- testdat[["g1"]] <- sample.int(1000, 1e6, replace = TRUE) # 1000 groups -->
@@ -1913,7 +1914,7 @@ Mundlak, Yair. 1978. “On the Pooling of Time Series and Cross Section Data.”
 <!-- ``` -->
 
 <!-- Below some weighted and mode computations that are not straightforward in *dplyr* or *data.table*: -->
-<!-- ```{r, eval=NCRAN} -->
+<!-- ```{r, eval=RUNBENCH} -->
 <!-- # Weighted Mean -->
 <!-- w <- abs(100*rnorm(1e6)) + 1 -->
 <!-- testdat[["w"]] <- w -->
@@ -1944,7 +1945,7 @@ Mundlak, Yair. 1978. “On the Pooling of Time Series and Cross Section Data.”
 <!-- I believe on really huge datasets aggregated on a multi-core machine, *data.table*'s memory efficiency and thread-parallelization will let it run faster with some GeForce optimized functions, but that does not apply to most users (I have tested up to 10 million obs. on my laptop where *collapse* is still very much in line). In comparison to *collapse* and *data.table* the performance of *dplyr* on this data is rather poor, especially for base functions that are not highly optimized like `sum`. I do however very much appreciate the tidyverse ecosystem for highly organized data exploration and transformation. Therefore I have created methods for all of the *Fast Statistical Functions* as well as `collap`, enabling them to be used effectively in the *dplyr* ecosystem where they produce amazing speed gains. This is the subject of the '*collapse* and *dplyr*' vignette. -->
 
 <!-- Apart from its non-reliance on non-standard evaluation, a central advantage of *collapse* for programming is the speed it maintains on smaller problems where it's more efficient R code compared to *dplyr* and *data.table* really plays out: -->
-<!-- ```{r, eval=NCRAN} -->
+<!-- ```{r, eval=RUNBENCH} -->
 <!-- # 12000 obs in 1500 groups: A more typical case -->
 <!-- GRP(wlddev, ~ iso3c + decade) -->
 
@@ -1971,7 +1972,7 @@ Mundlak, Yair. 1978. “On the Pooling of Time Series and Cross Section Data.”
 
 <!-- Below I provide benchmarks for some very common data transformation tasks, again comparing *collapse* to *dplyr* and *data.table*: -->
 
-<!-- ```{r, eval=NCRAN} -->
+<!-- ```{r, eval=RUNBENCH} -->
 <!-- # The average group size is 10, there are about 100000 groups -->
 <!-- GRP(testdat, ~ g1 + g2) -->
 
@@ -2038,7 +2039,7 @@ Mundlak, Yair. 1978. “On the Pooling of Time Series and Cross Section Data.”
 
 <!-- Below I provide some benchmarks for lags, differences and growth rates on panel data. I will run microbenchmarks on the `wlddev` dataset. benchmarks on larger panels are already provided in the other vignettes. Again I compare *collapse* to *dplyr* and *data.table*: -->
 
-<!-- ```{r, eval=NCRAN} -->
+<!-- ```{r, eval=RUNBENCH} -->
 <!-- # We have a balanced panel of 216 countries, each observed for 59 years -->
 <!-- descr(wlddev, cols = c("iso3c", "year")) -->
 

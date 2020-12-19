@@ -17,6 +17,8 @@ test_that("roworder works as intended", {
 
 })
 
+if(identical(Sys.getenv("NCRAN"), "TRUE")) {
+
 library(magrittr)
 test_that("colorder works as intended", {
   expect_identical(colorder(mtcars, vs, cyl:hp, am),
@@ -38,6 +40,8 @@ test_that("colorder works as intended", {
                    colorderv(mtcars, c("vs", "cyl|am"), regex = TRUE))
 
 })
+
+}
 
 test_that("frename works as intended", {
 

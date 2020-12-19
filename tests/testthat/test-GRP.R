@@ -275,6 +275,8 @@ test_that("GRP <> qG and factor <> qG conversions work", {
 
 })
 
+if(identical(Sys.getenv("NCRAN"), "TRUE")) {
+
 pwlddev <- plm::pdata.frame(wlddev, index = c("iso3c", "year"))
 iso3c <- plm::index(pwlddev, 1L)
 year <- plm::index(pwlddev, 2L)
@@ -287,6 +289,8 @@ test_that("GRP pseries and pdata.frame methods work as intended", {
   expect_equal(GRP(pwlddev$PCGDP, effect = "year", call = FALSE), GRP(pwlddev, effect = "year", call = FALSE))
 
 })
+
+}
 
 fl <- slt(wlddev, region, income)
 flNA <- na_insert(fl)
