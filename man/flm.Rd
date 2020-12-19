@@ -24,7 +24,7 @@ flm(y, X, w = NULL, add.icpt = FALSE, return.raw = FALSE, % sparse = FALSE
         \tabular{lllll}{\emph{ Int. }   \tab\tab \emph{ String }   \tab\tab \emph{ Description }  \cr
                  1 \tab\tab "lm"   \tab\tab uses \code{\link{.lm.fit}}. \cr
                  2 \tab\tab "solve" \tab\tab \code{solve(crossprod(X), crossprod(X, y))}. \cr
-                 3 \tab\tab "qr"   \tab\tab \code{qr.coef(qr(X, LAPACK = TRUE), y)}. \cr
+                 3 \tab\tab "qr"   \tab\tab \code{qr.coef(qr(X), y)}. \cr
                  4 \tab\tab "arma"   \tab\tab uses \code{RcppArmadillo::fastLmPure}. \cr
                  5 \tab\tab "chol"   \tab\tab \code{chol2inv(chol(crossprod(X))) \%*\% crossprod(X, y)} (quite fast but requires \code{crossprod(X)} to be positive definite).  \cr
                  6 \tab\tab "eigen"   \tab\tab uses \code{RcppEigen::fastLmPure} (very fast but potentially unstable, depending on the method). \cr
@@ -75,10 +75,11 @@ lmcoef
 
 all.equal(drop(coef), lmcoef)
 
+\donttest{ % Need RcppArmadillo and RcppEigen
 all_obj_equal(lapply(1:6, function(i)
   flm(mtcars$mpg, qM(mtcars[c("hp","carb")]),
       mtcars$wt, add.icpt = TRUE, method = i)))
-
+}
 }
 
 
