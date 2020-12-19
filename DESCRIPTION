@@ -1,13 +1,13 @@
-Package: collapse
+Package: collapsedev15
 Title: Advanced and Fast Data Transformation
-Version: 1.4.2
-Date: 2020-11-11
+Version: 1.5.0
+Date: 2020-12-18
 Authors@R: c(
            person("Sebastian", "Krantz", role = c("aut", "cre"), 
                   email = "sebastian.krantz@graduateinstitute.ch"),
            person("Matt", "Dowle", role = "ctb"),
            person("Arun", "Srinivasan", role = "ctb"),
-           person("Simen", "Gaure", role = "ctb"),
+           person("Laurent", "Berge", role = "ctb"),
            person("Dirk", "Eddelbuettel", role = "ctb"),
            person("Kevin", "Tappe", role = "ctb"),
            person("R Core Team and contributors worldwide", role = "ctb"),
@@ -29,9 +29,9 @@ Description: A C/C++ based package for advanced data transformation and
         manipulation and data object conversions.
     (2) Advanced aggregation: Fast and easy multi-data-type, multi-function, 
         weighted, parallelized and fully customized data aggregation.
-    (3) Advanced transformations: Fast (grouped) replacing and sweeping out of 
-        statistics, and (grouped, weighted) scaling / standardizing, between 
-        (averaging) and (quasi-)within (centering / demeaning) transformations, 
+    (3) Advanced transformations: Fast row / column arithmetic, (grouped) replacing 
+        and sweeping out of statistics, (grouped, weighted) scaling / standardizing, 
+        between (averaging) and (quasi-)within (centering / demeaning) transformations, 
         higher-dimensional centering (i.e. multiple fixed effects transformations), 
         linear prediction / partialling-out, linear model fitting and testing.
     (4) Advanced time-computations: Fast (sequences of) lags / leads, and 
@@ -54,7 +54,8 @@ LazyData: true
 Depends: R (>= 2.10)
 Imports: Rcpp (>= 1.0.1)
 LinkingTo: Rcpp
-Suggests: dplyr, plm, data.table, matrixStats, magrittr, lfe, RcppArmadillo, RcppEigen, 
-          ggplot2, scales, vars, knitr, rmarkdown, testthat, microbenchmark, covr
+Suggests: dplyr, plm, data.table, matrixStats, magrittr, fixest, weights, 
+          RcppArmadillo, RcppEigen, ggplot2, scales, vars, knitr, rmarkdown, 
+          testthat, microbenchmark, covr
 SystemRequirements: C++11
 VignetteBuilder: knitr
