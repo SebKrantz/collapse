@@ -37,7 +37,7 @@ colorder <- function(X, ..., pos = c("front","end","exchange")) { # This also ta
   iX <- seq_along(X)
   nl <- `names<-`(as.vector(iX, "list"), nam)
   vars <- eval(substitute(c(...)), nl, parent.frame())
-  if(!is.integer(vars)) stop("Unknown columns")
+  if(!is.integer(vars)) stop(paste0("Unknown columns: ", .c(...)))
   if(length(vars) != length(iX)) vars <- posord(iX, vars, pos[1L])
   setAttributes(X[vars], `[[<-`(ax, "names", nam[vars]))
 }
