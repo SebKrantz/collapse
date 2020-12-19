@@ -31,11 +31,11 @@ reg_elem(l, recursive = TRUE, keep.tree = FALSE, keep.class = FALSE)
 irreg_elem(l, recursive = TRUE, keep.tree = FALSE, keep.class = FALSE)
 
 ## Extract elements using a function or regular expression
-get_elem(l, elem, recursive = TRUE, DF.as.list = TRUE, keep.tree = FALSE,
+get_elem(l, elem, recursive = TRUE, DF.as.list = FALSE, keep.tree = FALSE,
          keep.class = FALSE, regex = FALSE, \dots)
 
 ## Check for the existence of elements
-has_elem(l, elem, recursive = TRUE, DF.as.list = TRUE, regex = FALSE, \dots)
+has_elem(l, elem, recursive = TRUE, DF.as.list = FALSE, regex = FALSE, \dots)
 
 }
 %- maybe also 'usage' for other objects documented here.
