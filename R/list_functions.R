@@ -1,5 +1,5 @@
-rapply2d <- function(l, FUN, ...) {
-  aply2d <- function(y) if(is.list(y) && !inherits(y,  "data.frame")) lapply(y, aply2d) else FUN(y, ...) # is.null(dim(y)) # qsu output shows list of DF can have dim attr.
+rapply2d <- function(l, FUN, ..., classes = "data.frame") {
+  aply2d <- function(y) if(is.list(y) && !inherits(y, classes)) lapply(y, aply2d) else FUN(y, ...) # is.null(dim(y)) # qsu output shows list of DF can have dim attr.
   aply2d(l) # lapply(x,aply2d) # if this is enabled, rapply2d takes apart data.frame if passed
 }
 
@@ -45,11 +45,11 @@ atomic_elem <- function(l, return = "sublist", keep.class = FALSE)
 
 is.regular <- function(x) is.list(x) || is.atomic(x) # fastest way?
 
-is.unlistable <- function(l, DF.as.list = TRUE) if(DF.as.list) all(unlist(rapply(l, is.atomic, how = "list"), use.names = FALSE)) else
+is.unlistable <- function(l, DF.as.list = FALSE) if(DF.as.list) all(unlist(rapply(l, is.atomic, how = "list"), use.names = FALSE)) else
   all(unlist(rapply2d(l, is.regular), use.names = FALSE)) # fastest way?
 
 # If data.frame, search all, otherwise, make optional counting df or not, but don't search them.
-ldepth <- function(l, DF.as.list = TRUE) {
+ldepth <- function(l, DF.as.list = FALSE) {
   if (inherits(l, "data.frame")) { # fast defining different functions in if-clause ?
     ld <- function(y,i) if(is.list(y)) lapply(y,ld,i+1L) else i
   } else if(DF.as.list) {
@@ -63,7 +63,7 @@ ldepth <- function(l, DF.as.list = TRUE) {
   max(unlist(ld(l, 0L), use.names = FALSE))
 }
 
-has_elem <- function(l, elem, recursive = TRUE, DF.as.list = TRUE, regex = FALSE, ...) {
+has_elem <- function(l, elem, recursive = TRUE, DF.as.list = FALSE, regex = FALSE, ...) {
   if(is.function(elem)) {
     if(!missing(...)) unused_arg_action(match.call(), ...)
     if(recursive) {
@@ -170,7 +170,7 @@ list_extract_ind <- function(l, ind, is.subl, keep.tree = FALSE) {
 # Note: all functions currently remove empty list elements !
 # keep.tree argument still issues wih xlevels
 
-get_elem <- function(l, elem, recursive = TRUE, DF.as.list = TRUE,
+get_elem <- function(l, elem, recursive = TRUE, DF.as.list = FALSE,
                      keep.tree = FALSE, keep.class = FALSE, regex = FALSE, ...) {
   if(recursive) { # possibly if is.list(x) is redundant, because you check above! -> nah, recursive?
     is.subl <- if(DF.as.list) is.list else function(x) is.list(x) && !inherits(x, "data.frame") # could do without, but it seems to remove data.frame attributes
