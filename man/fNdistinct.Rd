@@ -75,13 +75,13 @@ head(fNdistinct(wlddev, wlddev$iso3c))
 aqm <- qM(airquality)
 fNdistinct(aqm)                                  # Also works for character or logical matrices
 fNdistinct(aqm, airquality$Month)
-
+\donttest{ % No code relying on suggested package
 ## method for grouped tibbles - for use with dplyr:
 library(dplyr)
 airquality \%>\% group_by(Month) \%>\% fNdistinct
 wlddev \%>\% group_by(country) \%>\%
              select(PCGDP,LIFEEX,GINI,ODA) \%>\% fNdistinct
-
+}
 }
 \keyword{univar}
 \keyword{manip}

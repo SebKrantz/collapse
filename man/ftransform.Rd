@@ -99,7 +99,7 @@ head(ftransformv(airquality, 1:3, fwithin, Month))
 
 # This calls fwithin.data.frame, and only groups one time -> 5x faster!
 head(ftransformv(airquality, 1:3, fwithin, Month, apply = FALSE))
-
+\donttest{ % No code relying on suggested package
 library(magrittr) # Pipe operators
 # This also works for grouped and panel data frames (calling fwithin.grouped_df)
 airquality \%>\% fgroup_by(Month) \%>\%
@@ -129,7 +129,7 @@ ftransform(airquality, c(fmedian(list(Wind_Day_median = Wind,
                                       Ozone_Day_median = Ozone), Day, TRA = "replace"),
                          fsd(list(Wind_Month_sd = Wind,
                                   Ozone_Month_sd = Ozone), Month, TRA = "replace"))) \%>\% head
-
+}
 ## settransform(v) works like ftransform(v) but modifies a data frame in the global environment..
 settransform(airquality, Ratio = Ozone / Temp, Ozone = NULL, Temp = NULL)
 head(airquality)
@@ -139,7 +139,7 @@ rm(airquality)
 settransformv(airquality, 1:3, fwithin, Month, Temp, apply = FALSE)
 head(airquality)
 rm(airquality)
-
+\donttest{ % No code relying on suggested package
 # Suitably lagged first-differences
 settransform(airquality, get_vars(airquality, 1:3) \%>\% fdiff \%>\% flag(0:2))
 head(airquality)
@@ -154,7 +154,7 @@ rm(airquality)
 ftransform(airquality) <- get_vars(airquality, 1:3) \%>\% fdiff \%>\% flag(0:2)
 head(airquality)
 rm(airquality)
-
+}
 ## fcompute only returns the modified / computed columns, ...
 head(fcompute(airquality, Ozone = -Ozone))
 head(fcompute(airquality, new = -Ozone, Temp = (Temp-32)/1.8))

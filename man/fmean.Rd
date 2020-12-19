@@ -90,7 +90,7 @@ m <- qM(mtcars)
 fmean(m)
 fmean(m, g)
 head(fmean(m, g, TRA = "-")) # etc..
-
+\donttest{ % No code relying on suggested package
 ## method for grouped tibbles - for use with dplyr
 library(dplyr)
 mtcars \%>\% group_by(cyl,vs,am) \%>\% fmean           # Ordinary
@@ -101,6 +101,7 @@ mtcars \%>\% group_by(cyl,vs,am) \%>\%
 
 mtcars \%>\% fgroup_by(cyl,vs,am) \%>\%                # Equivalent and faster !
            fselect(mpg,hp) \%>\% fmean(hp, "-")
+}
 }
 \keyword{univar}
 \keyword{manip}

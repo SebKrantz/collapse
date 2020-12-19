@@ -110,9 +110,10 @@ collap(iris, ~ Species, w = weights)                           # Some random wei
 collap(iris, iris$Species, w = weights)                        # Note this behavior..
 collap(iris, iris$Species, w = weights,
        keep.by = FALSE, keep.w = FALSE)
+\donttest{ % No code relying on suggested package
 library(dplyr) # Needed for "\%>\%"
 iris \%>\% fgroup_by(Species) \%>\% collapg                        # dplyr style, but faster
-
+}
 ## Multi-Type Aggregation --------------------------------------
 head(wlddev)                                                    # World Development Panel Data
 head(collap(wlddev, ~ country + decade))                        # Aggregate by country and decade
@@ -197,14 +198,14 @@ head(collap(wlddev, ~ country + decade,                         # No column reor
             wFUN = list(fsum, fmax),
             parallel = TRUE, mc.cores = 1L, keep.col.order = FALSE))
 
-
+\donttest{ % No code relying on suggested package
 ## Piped Use --------------------------------------------------
 wlddev \%>\% fgroup_by(country, decade) \%>\% collapg \%>\% head
 wlddev \%>\% fgroup_by(country, decade) \%>\% collapg(w = ODA) \%>\% head
 wlddev \%>\% fgroup_by(country, decade) \%>\% collapg(fmedian, flast) \%>\% head
 wlddev \%>\% fgroup_by(country, decade) \%>\%
   collapg(custom = list(fmean = 9:12, fmode = 5:7, flast = 3)) \%>\% head
-
+}
 }
 % Add one or more standard keywords, see file 'KEYWORDS' in the
 % R documentation directory.

@@ -108,13 +108,14 @@ head(fsd(iris[-5], iris[[5]], TRA = "/")) # Data scaled by species (see also fsc
 m <- qM(mtcars)
 fsd(m)
 fsd(m, mtcars$cyl) # etc..
-
+\donttest{ % No code relying on suggested package
 ## method for grouped tibbles - for use with dplyr:
 library(dplyr)
 mtcars \%>\% group_by(cyl,vs,am) \%>\% fsd
 mtcars \%>\% group_by(cyl,vs,am) \%>\% fsd(keep.group_vars = FALSE) # Remove grouping columns
 mtcars \%>\% group_by(cyl,vs,am) \%>\% fsd(hp)      # Weighted by hp
 mtcars \%>\% group_by(cyl,vs,am) \%>\% fsd(hp, "/") # Weighted scaling transformation
+}
 }
 \keyword{univar}
 \keyword{manip}

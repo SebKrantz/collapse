@@ -213,9 +213,10 @@ fsd(gv(mtcars, -c(2,8:9)), g)
 f1 <- qF(mtcars$cyl)                     # Unlike GRP objects, factors are checked for NA's
 f2 <- qF(mtcars$cyl, na.exclude = FALSE) # This can however be avoided through this option
 class(f2)                                # Note the added class
+\donttest{ % No code relying on suggested package
 library(microbenchmark)
 microbenchmark(fmean(mtcars, f1), fmean(mtcars, f2)) # A minor difference, larger on larger data
-
+}
 with(mtcars, finteraction(cyl, vs, am))  # Efficient interactions of vectors and/or factors
 finteraction(gv(mtcars, c(2,8:9)))       # .. or lists of vectors/factors
 
@@ -230,7 +231,9 @@ BY(mtcars, f2, quantile, expand.wide = TRUE)
 # For efficient (grouped) replacing and sweeping out computed statistics, use TRA()
 sds <- fsd(mtcars)
 head(TRA(mtcars, sds, "/"))     # Simple scaling (if sd's not needed, use fsd(mtcars, TRA = "/"))
+\donttest{ % No code relying on suggested package
 microbenchmark(TRA(mtcars, sds, "/"), sweep(mtcars, 2, sds, "/")) # A remarkable performance gain..
+}
 sds <- fsd(mtcars, f2)
 head(TRA(mtcars, sds, "/", f2)) # Groupd scaling (if sd's not needed: fsd(mtcars, f2, TRA = "/"))
 
@@ -242,7 +245,7 @@ head(mrtl(mtcarsM, TRUE, "data.frame"))    # data.frame from matrix rows, etc..
 head(qDT(mtcarsM, "cars"))                 # Saving row.names when converting matrix to data.table
 head(qDT(mtcars, "cars"))                  # Same use a data.frame
 
-
+\donttest{ % No code relying on suggested package
 ## Now let's get some real data and see how we can use this power for data manipulation
 library(magrittr)
 head(wlddev) # World Bank World Development Data: 216 countries, 59 years, 4 series (columns 9-12)
@@ -268,7 +271,7 @@ pwcor(fwithin(num_vars(wlddev), wlddev$country), P = TRUE)  # Within-country cor
 psacf(wlddev, ~country, ~year, cols = 9:12)                 # Panel-data Autocorrelation function
 pspacf(wlddev, ~country, ~year, cols = 9:12)                # Partial panel-autocorrelations
 psmat(wlddev, ~iso3c, ~year, cols = 9:12) \%>\% plot          # Convert panel to 3D array and plot
-
+}
 ## collapse offers a few very efficent functions for data manipulation:
 # Fast selecting and replacing columns
 series <- get_vars(wlddev, 9:12)     # Same as wlddev[9:12] but 2x faster
@@ -289,10 +292,11 @@ head(ftransformv(wlddev, 9:12, log))           # Can also transform with lists o
 head(ftransformv(wlddev, 9:12, fscale, apply = FALSE)) # apply = FALSE invokes fscale.data.frame
 settransformv(wlddev, 9:12, fscale, apply = FALSE)     # Changing the data by reference
 ftransform(wlddev) <- fscale(gv(wlddev, 9:12))         # Same thing (using replacement method)
+\donttest{ % No code relying on suggested package
 wlddev \%<>\% ftransformv(9:12, fscale, apply = FALSE) # Same thing, using magrittr
 wlddev \%>\% ftransform(gv(., 9:12) \%>\%              # With compound pipes: Scaling and lagging
                         fscale \%>\% flag(0:2, iso3c, year)) \%>\% head
-
+}
 # Fast reordering
 head(roworder(wlddev, -country, year))
 head(colorder(wlddev, country, year))
@@ -301,14 +305,15 @@ head(colorder(wlddev, country, year))
 head(frename(wlddev, country = Ctry, year = Yr))
 setrename(wlddev, country = Ctry, year = Yr)     # By reference
 head(frename(wlddev, tolower, cols = 9:12))
-
+\donttest{ % No code relying on suggested package
 # Fast grouping
 fgroup_by(wlddev, Ctry, decade) \%>\% fgroup_vars \%>\% head # fgroup_by is faster than dplyr::group_by
+}
 rm(wlddev)                                       # .. but only works with collapse functions
 
 ## Now lets start putting things together
 wlddev[["weights"]] <- abs(rnorm(fnrow(wlddev))) # Adding some weights
-
+\donttest{ % No code relying on suggested package
 wlddev \%>\% fsubset(year > 1990, region, income, PCGDP:ODA) \%>\%
   fgroup_by(region, income) \%>\% fmean            # Fast aggregation using the mean
 
@@ -362,15 +367,16 @@ wlddev \%>\% fselect(country, year, PCGDP:ODA) \%>\%
              ftransform(., fselect(., PCGDP:ODA) \%>\% fwithin \%>\% add_stub("W.")) \%>\%
                flag(0:2, year, keep.ids = FALSE))             # Sequence of lagged demeaned vars
   } \%>\% head
-
+}
 # With ftransform, can also easily do one or more grouped mutations on the fly..
 settransform(wlddev, median_ODA = fmedian(ODA, list(region, income), TRA = "replace_fill"))
 
 settransform(wlddev, sd_ODA = fsd(ODA, list(region, income), TRA = "replace_fill"),
                      mean_GDP = fmean(PCGDP, country, TRA = "replace_fill"))
-
+\donttest{ % No code relying on suggested package
 wlddev \%<>\% ftransform(fmedian(list(median_ODA = ODA, median_GDP = PCGDP),
                                list(region, income), TRA = "replace_fill"))
+}
 rm(wlddev)
 
 ## For multi-type data aggregation, the function collap offers ease and flexibility
@@ -389,13 +395,13 @@ head(collap(wlddev, ~ country + decade,
 # Customized Aggregation: Assign columns to functions
 head(collap(wlddev, ~ country + decade,
             custom = list(fmean = 9:10, fsd = 9:12, flast = 3, ffirst = 6:8)))
-
+\donttest{ % No code relying on suggested package
 # For grouped data frames use collapg
 wlddev \%>\% fsubset(year > 1990, country, region, income, PCGDP:ODA) \%>\%
   fgroup_by(country) \%>\% collapg(fmean, ffirst) \%>\%
   ftransform(AMGDP = PCGDP > fmedian(PCGDP, list(region, income), TRA = "replace_fill"),
              AMODA = ODA > fmedian(ODA, income, TRA = "replace_fill")) \%>\% head
-
+}
 ## Additional flexibility for data transformation tasks is offerend by tidy transformation operators
 # Within-transformation (centering on overall mean)
 head(W(wlddev, ~ country, cols = 9:12, mean = "overall.mean"))
@@ -417,7 +423,7 @@ head(G(wlddev, c(1,10), 1, ~ country, ~year, cols = 9:12))
 # Adding growth rate variables to dataset
 add_vars(wlddev) <- G(wlddev, c(1, 10), 1, ~ country, ~year, cols = 9:12, keep.ids = FALSE)
 get_vars(wlddev, "G1.", regex = TRUE) <- NULL # Deleting again
-
+\donttest{ % No code relying on suggested package
 # These operators can conveniently be used in regression formulas:
 # Using a Mundlak (1978) procedure to estimate the effect of OECD on LIFEEX, controlling for PCGDP
 lm(LIFEEX ~ log(PCGDP) + OECD + B(log(PCGDP), country),
@@ -434,17 +440,15 @@ head(W(pwlddev$PCGDP))                      # Country-demeaning
 head(W(pwlddev, cols = 9:12))
 head(W(pwlddev$PCGDP, effect = 2))          # Time-demeaning
 head(W(pwlddev, effect = 2, cols = 9:12))
-\donttest{
 head(HDW(pwlddev$PCGDP))                    # Country- and time-demeaning
 head(HDW(pwlddev, cols = 9:12))
-}
 head(STD(pwlddev$PCGDP))                    # Standardizing by country
 head(STD(pwlddev, cols = 9:12))
 head(L(pwlddev$PCGDP, -1:3))                # Panel-lags
 head(L(pwlddev, -1:3, 9:12))
 head(G(pwlddev$PCGDP))                      # Panel-Growth rates
 head(G(pwlddev, 1, 1, 9:12))
-
+}
 # Remove all objects used in this example section
 rm(v, d, w, f, f1, f2, g, mtcarsM, pwlddev, sds, series, wlddev)
 }

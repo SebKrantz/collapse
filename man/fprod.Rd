@@ -88,13 +88,14 @@ m <- qM(mtcars)
 fprod(m)
 head(fprod(m, TRA = "/"))
 fprod(m, g) # etc..
-
+\donttest{ % No code relying on suggested package
 ## method for grouped tibbles - for use with dplyr
 library(dplyr)
 mtcars \%>\% group_by(cyl,vs,am) \%>\% fprod(hp)   # Weighted grouped product
 mtcars \%>\% fgroup_by(cyl,vs,am) \%>\% fprod(hp)  # Equivalent and faster
 mtcars \%>\% fgroup_by(cyl,vs,am) \%>\% fprod(TRA = "/")
 mtcars \%>\% fgroup_by(cyl,vs,am) \%>\% fselect(mpg) \%>\% fprod
+}
 }
 \keyword{univar}
 \keyword{manip}

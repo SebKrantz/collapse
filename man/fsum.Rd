@@ -90,14 +90,16 @@ fsum(m)
 fsum(m, TRA = "\%")
 fsum(m, g)
 fsum(m, g, TRA = "\%")
-
+\donttest{ % No code relying on suggested package
 ## method for grouped tibbles - for use with dplyr
 library(dplyr)
 mtcars \%>\% group_by(cyl,vs,am) \%>\% fsum(hp)  # Weighted grouped sum (total)
 mtcars \%>\% fgroup_by(cyl,vs,am) \%>\% fsum(hp) # Equivalent and faster !!
 mtcars \%>\% fgroup_by(cyl,vs,am) \%>\% fsum(TRA = "\%")
 mtcars \%>\% fgroup_by(cyl,vs,am) \%>\% fselect(mpg) \%>\% fsum
-}}
+}
+}
+}
 \section{Benchmark}{\preformatted{
 ## This compares fsum with data.table (2 threads) and base::rowsum
 # Starting with small data

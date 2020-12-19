@@ -111,14 +111,14 @@ qsu(wlddev, pid = ~ iso3c, vlabels = TRUE)   # Adding between and within countri
 # that we have GINI-data on only 161 countries, with only 8.42 observations per country on average,
 # and that GDP, LIFEEX and GINI vary more between-countries, but ODA received varies more within
 # countries over time.
-
+\donttest{ % No code relying on suggested package
 # Using plm:
 pwlddev <- plm::pdata.frame(wlddev,         # Creating a Panel Data Frame frame from this data
                   index = c("iso3c","year"))
 qsu(pwlddev)                                # Summary for pdata.frame -> qsu(wlddev, pid = ~ iso3c)
 qsu(pwlddev$PCGDP)                          # Default summary for Panel Series  (class pseries)
 qsu(G(pwlddev$PCGDP))                       # Summarizing GDP growth, see also ?G
-
+}
 # Grouped Panel Data Summaries -------------
 qsu(wlddev, ~ region, ~ iso3c, cols = 9:12) # Panel-Statistics by region
 psr <- qsu(pwlddev, ~ region, cols = 9:12)  # Same on plm pdata.frame

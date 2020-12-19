@@ -92,7 +92,7 @@ head(TRA(m, fmean(m, f), "-+", f))      # Centering on the overall mean ...
                                         #           W(m, f, mean = "overall.mean")]
 head(TRA(TRA(m, fmean(m, f), "-", f),   # Also the same thing done manually !!
      fmean(m), "+"))
-
+\donttest{ % No code relying on suggested package
 # grouped tibble method
 library(dplyr)
 iris \%>\%  group_by(Species) \%>\% TRA(fmean(.))
@@ -100,6 +100,7 @@ iris \%>\%  group_by(Species) \%>\% fmean(TRA = "-")        # Same thing
 iris \%>\%  group_by(Species) \%>\% TRA(fmean(.)[c(2,4)])   # Only transforming 2 columns
 iris \%>\%  group_by(Species) \%>\% TRA(fmean(.)[c(2,4)],   # Dropping species column
                             keep.group_vars = FALSE)
+}
 }
 % Add one or more standard keywords, see file 'KEYWORDS' in the R documentation directory.
 \keyword{manip} % __ONLY ONE__ keyword per line

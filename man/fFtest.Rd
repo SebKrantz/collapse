@@ -17,7 +17,7 @@ fFtest(y, exc, X = NULL, w = NULL, full.df = TRUE, \dots)
   \item{X}{a numeric vector, factor, numeric matrix or list / data frame of numeric vectors and/or factors: Covariates to include in both the restricted (without \code{exc}) and unrestricted model. If left empty (\code{X = NULL}), the test amounts to the F-test of the regression of \code{y} on \code{exc}.}
   \item{w}{numeric. A vector of (frequency) weights.}
   \item{full.df}{logical. If \code{TRUE} (default), the degrees of freedom are calculated as if both restricted and unrestricted models were estimated using \code{lm()} (i.e. as if factors were expanded to matrices of dummies). \code{FALSE} only uses one degree of freedom per factor.  }
-\item{\dots}{other arguments passed to \code{lfe::demeanlist}, the workhorse function underlying \code{fHDwithin}. }
+\item{\dots}{other arguments passed to \code{fixest::demean}, the workhorse function underlying \code{fHDwithin}. }
 
 }
 \details{

@@ -80,12 +80,12 @@ ffirst(airquality, airquality$Month, na.rm = FALSE) # Again first Ozone measurem
 aqm <- qM(airquality)
 ffirst(aqm)
 ffirst(aqm, airquality$Month) # etc..
-
+\donttest{ % No code relying on suggested package
 ## method for grouped tibbles - for use with dplyr
 library(dplyr)
 airquality \%>\% group_by(Month) \%>\% ffirst
 airquality \%>\% group_by(Month) \%>\% select(Ozone) \%>\% ffirst(na.rm = FALSE)
-
+}
 # Note: All examples generalize to flast.
 }
 \keyword{univar}
