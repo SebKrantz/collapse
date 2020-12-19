@@ -118,7 +118,7 @@ pwlddev <- plm::pdata.frame(wlddev,         # Creating a Panel Data Frame frame 
 qsu(pwlddev)                                # Summary for pdata.frame -> qsu(wlddev, pid = ~ iso3c)
 qsu(pwlddev$PCGDP)                          # Default summary for Panel Series  (class pseries)
 qsu(G(pwlddev$PCGDP))                       # Summarizing GDP growth, see also ?G
-}
+
 # Grouped Panel Data Summaries -------------
 qsu(wlddev, ~ region, ~ iso3c, cols = 9:12) # Panel-Statistics by region
 psr <- qsu(pwlddev, ~ region, cols = 9:12)  # Same on plm pdata.frame
@@ -130,6 +130,7 @@ print.qsu(psr[,"SD",,])                     # Considering only standard deviatio
 # -> In all regions variations in inequality (GINI) between countries are greater than variations
 # in inequality within countries. The opposite is true for Life-Expectancy in all regions apart
 # from Europe, etc..
+}
 psrl <- qsu(wlddev, ~ region, ~ iso3c,      # Same, but output as nested list
             cols = 9:12, array = FALSE)
 psrl                                        # We can use unlist2d to create a tidy data.frame
