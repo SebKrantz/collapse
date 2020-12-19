@@ -63,7 +63,7 @@ It is made compatible with base R, *dplyr*, *data.table* and the *plm* approach 
 install.packages("collapse")
 ```
 **NOTE:**
-The package is temporarily archived by CRAN because a suggested package *lfe* was removed from CRAN, and *collapse* had some unit tests depending on this package. It will be resubmitted to CRAN after their Christmas break in early January. For the time being, the package can be installed using:
+The package is temporarily archived by CRAN because a suggested package *lfe* was removed from CRAN, and *collapse* had some unit tests depending on this package. It will be resubmitted to CRAN after the Christmas break in early January. For the time being, the package can be installed using:
 
 ``` r
 # Binary version (for Windows and MacOSX, preferred option)
