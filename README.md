@@ -62,6 +62,16 @@ It is made compatible with base R, *dplyr*, *data.table* and the *plm* approach 
 # From the R console call
 install.packages("collapse")
 ```
+**NOTE:**
+The package is temporarily archived by CRAN because a suggested package *lfe* was removed from CRAN, and *collapse* had some unit tests depending on this package. It will be resubmitted to CRAN after their Christmas break in early January. For the time being, the package can be installed using:
+
+``` r
+# Preferred option
+install.packages("https://cran.r-project.org/src/contrib/Archive/collapse/collapse_1.4.2.tar.gz", repos = NULL, type = "source")
+
+# Or
+remotes::install_github("SebKrantz/collapse")
+```
 <!--
 # install the development version
 devtools::install_github("SebKrantz/collapse")
