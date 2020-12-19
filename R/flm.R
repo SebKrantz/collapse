@@ -26,7 +26,7 @@ flm <- function(y, X, w = NULL, add.icpt = FALSE, #  sparse = FALSE,
     if(return.raw) return(switch(method[1L],
                   lm = {
                     z <- .lm.fit(X * wts, y * wts, ...)
-                    z$residuals <- z$residuals / wts
+                    z$residuals <- z$residuals / wts # This is correct !!!
                     z
                   },
                   solve = (function(xw) solve(crossprod(xw), crossprod(xw, y * wts), ...))(X * wts),
@@ -35,7 +35,7 @@ flm <- function(y, X, w = NULL, add.icpt = FALSE, #  sparse = FALSE,
                   chol = (function(xw) chol2inv(chol(crossprod(xw), ...)) %*% crossprod(xw, y * wts))(X * wts),
                   eigen = {
                    z <- getenvFUN("RcppEigen_fastLm")(X * wts, y * wts, eigen.method) # .Call("RcppEigen_fastLm_Impl", X * wts, y * wts, eigen.method, PACKAGE = "RcppEigen")
-                   z$residuals <- z$residuals / wts
+                   z$residuals <- z$residuals / wts # This is correct !!!
                    z$fitted.values <- y - z$residuals
                    z
                   }, stop("Unknown method!")))
