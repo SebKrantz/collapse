@@ -317,8 +317,8 @@ print.invisible <- function(x, ...) cat("")
 
 # also needed to sort out errors with dplyr ...
 `[[.GRP_df` <-  function(x, ...) UseMethod("[[", fungroup(x)) # function(x, ..., exact = TRUE) .subset2(x, ..., exact = exact)
-`[<-.GRP_df` <- function(x, ...) UseMethod("[<-", fungroup(x))
-`[[<-.GRP_df` <- function(x, ...) UseMethod("[[<-", fungroup(x))
+`[<-.GRP_df` <- function(x, ..., value) UseMethod("[<-", fungroup(x))
+`[[<-.GRP_df` <- function(x, ..., value) UseMethod("[[<-", fungroup(x))
 
 # Produce errors...
 # print_GRP_df_core <- function(x) {
