@@ -6,6 +6,7 @@ using namespace Rcpp;
 // [[Rcpp::export]]
 NumericVector fsumCpp(const NumericVector& x, int ng = 0, const IntegerVector& g = 0, const SEXP& w = R_NilValue, bool narm = true) {
   int l = x.size();
+  if(l < 1) return x; // Prevents seqfault for numeric(0) #101
 
  if(Rf_isNull(w)) { // No weights
   if(ng == 0) {

@@ -93,12 +93,13 @@ m <- qM(mtcars)
 fmax(m)
 head(fmax(m, TRA = "\%"))
 fmax(m, g) # etc..
-
+\donttest{ % No code relying on suggested package
 ## method for grouped tibbles - for use with dplyr
 library(dplyr)
 mtcars \%>\% group_by(cyl,vs,am) \%>\% fmax
 mtcars \%>\% group_by(cyl,vs,am) \%>\% fmax("\%")
 mtcars \%>\% group_by(cyl,vs,am) \%>\% select(mpg) \%>\% fmax
+}
 }
 \keyword{univar}
 \keyword{manip}

@@ -98,7 +98,7 @@ psccf(wlddev$PCGDP, wlddev$LIFEEX, wlddev$country)              # CCF with Life-
 psacf(wlddev, PCGDP + LIFEEX + ODA ~ country, ~year)            # ACF and CCF of GDP, LIFEEX and ODA
 psacf(wlddev, ~ country, ~year, c(9:10,12))                     # Same, using cols argument
 pspacf(wlddev, ~ country, ~year, c(9:10,12))                    # Partial ACF
-
+\donttest{ % No code relying on suggested package
 ## Using plm:
 pwlddev <- plm::pdata.frame(wlddev, index = c("country","year"))# Creating a Panel Data Frame
 PCGDP <- pwlddev$PCGDP                                          # Panel Series  of GDP per Capita
@@ -108,6 +108,7 @@ pspacf(PCGDP)
 psccf(PCGDP, LIFEEX)
 psacf(pwlddev[c(9:10,12)])
 pspacf(pwlddev[c(9:10,12)])
+}
 }
 % Add one or more standard keywords, see file 'KEYWORDS' in the
 % R documentation directory.

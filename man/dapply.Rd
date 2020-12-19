@@ -78,7 +78,7 @@ dapply(EuStockMarkets, quantile)  # This gives an error because the tsp attribut
 }
 dapply(EuStockMarkets, quantile, return = "matrix")    # These both work fine..
 dapply(EuStockMarkets, quantile, return = "data.frame")
-
+\donttest{ % No code relying on suggested package
 # Similarly for grouped tibbles and other data frame classes
 library(dplyr)
 gmtcars <- group_by(mtcars,cyl,vs,am)
@@ -87,6 +87,7 @@ dapply(gmtcars, quantile, MARGIN = 1)    # Here it makes sense to keep the group
 dapply(gmtcars, quantile)                # This does not make much sense, ...
 dapply(gmtcars, quantile,                # better convert to plain data.frame:
        return = "data.frame")
+}
 }
 % Add one or more standard keywords, see file 'KEYWORDS' in the
 % R documentation directory.

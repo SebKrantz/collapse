@@ -9,9 +9,9 @@ pwNobs <- function(X) {
   n <- length(X)
   nr <- length(X[[1L]])
   N.mat <- diag(dg)
-  for (i in 1:(n - 1)) {
+  for (i in 1:(n - 1L)) {
     miss <- is.na(X[[i]]) # faster than complete.cases, also for large data ! // subsetting X[[j]] faster ?? -> NOPE !
-    for (j in (i + 1):n) N.mat[i, j] <- N.mat[j, i] <- nr - sum(miss | is.na(X[[j]])) # sum(complete.cases(X[[i]], X[[j]]))
+    for (j in (i + 1L):n) N.mat[i, j] <- N.mat[j, i] <- nr - sum(miss | is.na(X[[j]])) # sum(complete.cases(X[[i]], X[[j]]))
   }
   dimnames(N.mat) <- list(names(dg), names(dg))
   N.mat
@@ -41,24 +41,63 @@ corr.pmat <- function(cm, nm) {
 }
 
 complpwNobs <- function(X) {
-  if(is.list(X)) {
-    n <- length(unclass(X))
-    coln <- attr(X, "names")
-  } else {
+  # if(is.list(X)) { # Not needed anymore because now always coercing to matrix...
+  #   n <- length(unclass(X))
+  #   coln <- attr(X, "names")
+  # } else {
     n <- ncol(X)
     coln <- dimnames(X)[[2L]]
-  }
+  # }
   matrix(sum(complete.cases(X)), n, n, dimnames = list(coln, coln))
 }
 
 # Test:
 # all.equal(Hmisc::rcorr(qM(mtcars))$P, corr.pmat(r, n))
+namat <- function(X) {
+  nc <- dim(X)[2L]
+  cn <- dimnames(X)[[2L]]
+  mat <- rep(NA_real_, nc * nc)
+  dim(mat) <- c(nc, nc)
+  diag(mat) <- 1
+  dimnames(mat) <- list(cn, cn)
+  mat
+}
 
+nmat <- function(n, X) {
+  nc <- dim(X)[2L]
+  cn <- dimnames(X)[[2L]]
+  mat <- rep(n, nc * nc)
+  dim(mat) <- c(nc, nc)
+  dimnames(mat) <- list(cn, cn)
+  mat
+}
 
-pwcor <- function(X, ..., N = FALSE, P = FALSE, array = TRUE, use = "pairwise.complete.obs") {
-  r <- cor(X, ..., use = use)
-  if(!N && !P) return(`oldClass<-`(r, c("pwcor","matrix")))
-  n <- switch(use, pairwise.complete.obs = pwNobs(X), complpwNobs(X)) # switch faster than if with characters !! # what if using ... to supply y ???
+# Check speed of it ...
+# Also check weighted cor p-value against lm() with weights -> Good !!
+
+# -> This is good
+# all.equal(unattrib(cov.wt(mtcars, w, cor = TRUE)$cor), unattrib(pwcor(mtcars, w = w)))
+# all.equal(unattrib(cov.wt(mtcars, w, cor = TRUE)$cor), unattrib(pwcor(mtcars, w = w, use = "complete.obs")))
+# all.equal(pwcor(mtcars, w = w), pwcor(mtcars, w = w, use = "complete.obs"))
+pwcor <- function(X, ..., w = NULL, N = FALSE, P = FALSE, array = TRUE, use = "pairwise.complete.obs") {
+  if(is.list(X)) X <- do.call(cbind, X)
+  lcc <- FALSE
+  if(is.null(w)) r <- cor(X, ..., use = use) else if(use == "pairwise.complete.obs")
+  r <- getenvFUN("weights_wtd.cors")(X, ..., weight = w) else {
+    if(!missing(...)) stop("y is currently not supported with weighted correlations and use != 'pairwise.complete.obs'")
+    cc <- which(complete.cases(X, w))
+    lcc <- length(cc)
+    if(use == "all.obs" && lcc != length(w)) stop("missing observations in cov/cor")
+    if(lcc) {
+      if(lcc != length(w)) {
+        X <- X[cc, , drop = FALSE]
+        w <- w[cc]
+      }
+      r <- cov2cor(crossprod(sqrt(w) * BWmCpp(X, w = w, narm = FALSE))) # all.equal(cov2cor(crossprod(sqrt(w) * BWmCpp(X, w = w, narm = FALSE))), weights::wtd.cors(X, weight = w))
+    } else r <- switch(use, complete.obs = stop("no complete element pairs"), namat(X))
+  }
+  if(!(N || P)) return(`oldClass<-`(r, c("pwcor", "matrix")))
+  n <- if(lcc) nmat(lcc, X) else switch(use, pairwise.complete.obs = pwNobs(X), complpwNobs(X)) # TODO: what about weights paiwrise ? # what if using ... to supply y ???
   if(N) {
     res <- if(P) list(r = r, N = n, P = corr.pmat(r, n)) else list(r = r, N = n)
   } else res <- list(r = r, P = corr.pmat(r, n))
@@ -69,13 +108,39 @@ pwcor <- function(X, ..., N = FALSE, P = FALSE, array = TRUE, use = "pairwise.co
   res
 }
 
-pwcov <- function(X, ..., N = FALSE, P = FALSE, array = TRUE, use = "pairwise.complete.obs") {
-  r <- cov(X, ..., use = use)
-  if(!N && !P) return(`oldClass<-`(r, c("pwcov","matrix")))
-  n <- switch(use, pairwise.complete.obs = pwNobs(X), complpwNobs(X)) # switch faster than if with characters !!
+# Not all equal...
+# all.equal(unattrib(cov.wt(mtcars, w)$cov), unattrib(pwcov(mtcars, w = w)))
+# all.equal(unattrib(cov.wt(mtcars, w)$cov), unattrib(pwcov(mtcars, w = w, use = "complete.obs")))
+# all.equal(pwcov(mtcars, w = w), pwcov(mtcars, w = w, use = "complete.obs")) -> Yes !
+
+pwcov <- function(X, ..., w = NULL, N = FALSE, P = FALSE, array = TRUE, use = "pairwise.complete.obs") {
+  if(is.list(X)) X <- do.call(cbind, X)
+  lcc <- FALSE
+  if(is.null(w)) r <- cov(X, ..., use = use) else if(use == "pairwise.complete.obs") {
+    r <- getenvFUN("weights_wtd.cors")(X, ..., weight = w)
+    # sw <- sum(w, na.rm = TRUE)
+    Xsd <- fsd(X, w = w) # * (sw-1) / (1 - sum((w/sw)^2)) # cov.wt, method = "unbiased" ???
+    r <- if(missing(...)) r * outer(Xsd, Xsd) else r * outer(Xsd, fsd(..., w = w))
+  } else {
+    if(!missing(...)) stop("y is currently not supported with weighted correlations and use != 'pairwise.complete.obs'")
+    cc <- which(complete.cases(X, w))
+    lcc <- length(cc)
+    if(use == "all.obs" && lcc != length(w)) stop("missing observations in cov/cor")
+    if(lcc) {
+      if(lcc != length(w)) {
+        X <- X[cc, , drop = FALSE]
+        w <- w[cc]
+      }
+      r <- crossprod(sqrt(w) * BWmCpp(X, w = w, narm = FALSE)) / (sum(w) - 1) # Check numeric accuracy !
+      # w <- w/sum(w) # same method as cov.wt, method = "unbiased"
+      # r <- crossprod(sqrt(w) * BWmCpp(X, w = w, narm = FALSE)) / (1 - sum(w^2))
+    } else r <- switch(use, complete.obs = stop("no complete element pairs"), namat(X)) # namat correct ??
+  }
+  if(!(N || P)) return(`oldClass<-`(r, c("pwcov", "matrix")))
+  n <- if(lcc) nmat(lcc, X) else switch(use, pairwise.complete.obs = pwNobs(X), complpwNobs(X)) # TODO: what about weights paiwrise ?
   if(N) {                                           # good ??? // cov(X) / outer(fsd(X), fsd(X))
-    res <- if(P) list(cov = r, N = n, P = corr.pmat(cor(X, ..., use = use), n)) else list(cov = r, N = n)
-  } else res <- list(cov = r, P = corr.pmat(cor(X, ..., use = use), n))
+    res <- if(P) list(cov = r, N = n, P = corr.pmat(cov2cor(r), n)) else list(cov = r, N = n) # what about x and y here ??
+  } else res <- list(cov = r, P = corr.pmat(cov2cor(r), n))
   if(array) {
     res <- fsimplify2array(res)
     oldClass(res) <- c("pwcov","array","table")

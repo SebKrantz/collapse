@@ -76,12 +76,12 @@ data
 
 ## Lag the panel
 L(data, 1, value ~ newid, ~time)
-
+\donttest{
 ## A different possibility: Creating a consecutive time variable
 settransform(data, newtime = data.table::rowid(id))
 data
 L(data, 1, value ~ id, ~newtime)
-
+}
 ## With sorted data, the time variable can also just be omitted..
 L(data, 1, value ~ id)
 

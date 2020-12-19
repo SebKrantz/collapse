@@ -158,9 +158,9 @@ lm(mpg ~ carb, data = W(mtcars, ~ cyl, stub = FALSE,            # Here only the 
                         mean = "overall.mean"))
 lm(mpg ~ carb + B(carb,cyl), data = mtcars)                     # Procedure suggested by
 # ..Mundlak (1978) - partialling out group averages amounts to the same as demeaning the data
-
+\donttest{ % No code relying on suggested package
 plm::plm(mpg ~ carb, mtcars, index = "cyl", model = "within")   # "Proof"..
-
+}
 # This takes the interaction of cyl, vs and am as fixed effects
 lm(W(mpg,list(cyl,vs,am)) ~ W(carb,list(cyl,vs,am)), data = mtcars)
 lm(mpg ~ carb, data = W(mtcars, ~ cyl + vs + am, stub = FALSE))
@@ -179,9 +179,10 @@ T <- length(res) / fNdistinct(mtcars$cyl)
 sig2_alpha <- sig2_u - sig2_e
 theta <- 1 - sqrt(sig2_alpha) / sqrt(sig2_alpha + T * sig2_e)
 lm(mpg ~ carb, data = W(mtcars, ~ cyl, theta = theta, mean = "overall.mean", stub = FALSE))
-
+\donttest{ % No code relying on suggested package
 # A slightly different method to obtain theta...
 plm::plm(mpg ~ carb, mtcars, index = "cyl", model = "random")
+}
 }
 % Add one or more standard keywords, see file 'KEYWORDS' in the
 % R documentation directory.

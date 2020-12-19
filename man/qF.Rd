@@ -72,11 +72,11 @@ cylG                       # See the simple structure of this object
 cf  <- qF(wlddev$country)  # Bigger data
 cf2 <- qF(wlddev$country, na.exclude = FALSE)  # With na.included class
 dat <- num_vars(wlddev)
-
+\donttest{ % No code relying on suggested package
 # cf2 is faster in grouped operations because no missing value check is performed
 library(microbenchmark)
 microbenchmark(fmax(dat, cf), fmax(dat, cf2))
-
+}
 finteraction(mtcars$cyl, mtcars$vs)  # Interacting two variables (can be factors)
 head(finteraction(mtcars))           # A more crude example..
 

@@ -86,7 +86,7 @@ plot(psmat(collap(wlddev, ~region+year, cols = 9:12),           # More legible a
 
 psml <- psmat(wlddev, ~ iso3c, ~ year, 9:12, array = FALSE)     # This gives list of ps-matrices
 head(unlist2d(psml, "Variable", "Country", id.factor = TRUE),2) # Using unlist2d, can generate DF
-
+\donttest{ % No code relying on suggested package
 ## Using plm simplifies things
 pwlddev <- plm::pdata.frame(wlddev, index = c("iso3c","year"))  # Creating a Panel Data Frame
 PCGDP <- pwlddev$PCGDP                                          # A panel-Series of GDP per Capita
@@ -94,7 +94,7 @@ head(psmat(PCGDP), 2)                                           # Same as above,
 plot(psmat(PCGDP))
 plot(psmat(pwlddev[9:12]))
 plot(psmat(G(pwlddev[9:12])))                                   # Here plotting panel- growth rates
-
+}
 }
 % Add one or more standard keywords, see file 'KEYWORDS' in the
 % R documentation directory.

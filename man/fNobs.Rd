@@ -62,13 +62,13 @@ head(fNobs(wlddev, wlddev$iso3c))
 aqm <- qM(airquality)
 fNobs(aqm)                                  # Also works for character or logical matrices
 fNobs(aqm, airquality$Month)
-
+\donttest{ % No code relying on suggested package
 ## method for grouped tibbles - for use with dplyr
 library(dplyr)
 airquality \%>\% group_by(Month) \%>\% fNobs
 wlddev \%>\% group_by(country) \%>\%
            select(PCGDP,LIFEEX,GINI,ODA) \%>\% fNobs
-
+}
 }
 \keyword{univar}
 \keyword{manip}

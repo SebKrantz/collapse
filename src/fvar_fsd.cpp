@@ -7,7 +7,7 @@ using namespace Rcpp;
 NumericVector fvarsdCpp(const NumericVector& x, int ng = 0, const IntegerVector& g = 0, const SEXP& gs = R_NilValue,
                         const SEXP& w = R_NilValue, bool narm = true, bool stable_algo = true, bool sd = true) {
   int l = x.size();
-  if(l == 1) return Rf_ScalarReal(NA_REAL);
+  if(l < 2) return Rf_ScalarReal(NA_REAL); // Prevents seqfault for numeric(0) #101
 
   if(stable_algo) { // WELFORDS ONLINE METHOD ---------------------------------------------------------
     if(Rf_isNull(w)) { // No weights

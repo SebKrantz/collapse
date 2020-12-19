@@ -75,7 +75,8 @@ recode_num <- function(X, ..., default = NULL, missing = NULL) {
   repfun(X)
 }
 
-recode_char <- function(X, ..., default = NULL, missing = NULL, regex = FALSE) {
+recode_char <- function(X, ..., default = NULL, missing = NULL, regex = FALSE,
+                        ignore.case = FALSE, fixed = FALSE) {
   if(missing(...)) stop("recode_char requires arguments of the form: value = replacement")
   args <- list(...)
   nam <- names(args)
@@ -90,10 +91,10 @@ recode_char <- function(X, ..., default = NULL, missing = NULL, regex = FALSE) {
         if(missingl) {
           repfun <- function(y) if(is.character(y)) {
             y[is.na(y)] <- missing
-            `[<-`(y, grepl(nam, y), value = args)
+            `[<-`(y, grepl(nam, y, ignore.case, FALSE, fixed), value = args)
           } else y
         } else {
-          repfun <- function(y) if(is.character(y)) `[<-`(y, grepl(nam, y), value = args) else y
+          repfun <- function(y) if(is.character(y)) `[<-`(y, grepl(nam, y, ignore.case, FALSE, fixed), value = args) else y
         }
       } else {
         nr <- if(is.atomic(X)) NROW(X) else fnrow2(X)
@@ -101,10 +102,10 @@ recode_char <- function(X, ..., default = NULL, missing = NULL, regex = FALSE) {
           repfun <- function(y) if(is.character(y)) {
             z <- duplAttributes(rep(default, nr), y)
             z[is.na(y)] <- missing # could put behind -> better but inconsistent
-            `[<-`(z, grepl(nam, y), value = args)
+            `[<-`(z, grepl(nam, y, ignore.case, FALSE, fixed), value = args)
           } else y
         } else {
-          repfun <- function(y) if(is.character(y)) `[<-`(duplAttributes(rep(default, nr), y), grepl(nam, y), value = args) else y
+          repfun <- function(y) if(is.character(y)) `[<-`(duplAttributes(rep(default, nr), y), grepl(nam, y, ignore.case, FALSE, fixed), value = args) else y
         }
       }
     } else {
@@ -114,13 +115,13 @@ recode_char <- function(X, ..., default = NULL, missing = NULL, regex = FALSE) {
           repfun <- function(y) if(is.character(y)) {
             y[is.na(y)] <- missing
             z <- y
-            for(i in seqarg) z[grepl(nam[i], y)] <- args[[i]]
+            for(i in seqarg) z[grepl(nam[i], y, ignore.case, FALSE, fixed)] <- args[[i]]
             z
           } else y
         } else {
           repfun <- function(y) if(is.character(y)) {
             z <- y
-            for(i in seqarg) z[grepl(nam[i], y)] <- args[[i]]
+            for(i in seqarg) z[grepl(nam[i], y, ignore.case, FALSE, fixed)] <- args[[i]]
             z
           } else y
         }
@@ -130,13 +131,13 @@ recode_char <- function(X, ..., default = NULL, missing = NULL, regex = FALSE) {
           repfun <- function(y) if(is.character(y)) {
             z <- duplAttributes(rep(default, nr), y)
             z[is.na(y)] <- missing # could put behind -> better but inconsistent
-            for(i in seqarg) z[grepl(nam[i], y)] <- args[[i]]
+            for(i in seqarg) z[grepl(nam[i], y, ignore.case, FALSE, fixed)] <- args[[i]]
             z
           } else y
         } else {
           repfun <- function(y) if(is.character(y)) {
             z <- duplAttributes(rep(default, nr), y)
-            for(i in seqarg) z[grepl(nam[i], y)] <- args[[i]]
+            for(i in seqarg) z[grepl(nam[i], y, ignore.case, FALSE, fixed)] <- args[[i]]
             z
           } else y
         }

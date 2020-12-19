@@ -89,7 +89,7 @@ BY(num_vars(iris), f, quantile)
 BY(num_vars(iris), f, quantile, expand.wide = TRUE)
 BY(num_vars(iris), f, quantile,        # Return as list of matrices
    expand.wide = TRUE, return = "list")
-
+\donttest{ % No code relying on suggested package
 ## grouped data frame method (faster than dplyr only for small data)
 library(dplyr)
 giris <- group_by(iris, Species)
@@ -102,5 +102,6 @@ giris \%>\% BY(sum, return = "matrix",   # Matrix with row.names
 giris \%>\% BY(quantile)                 # Compute quantiles (output is stacked)
 giris \%>\% BY(quantile,                 # Much better, also keeps 'Species'
              expand.wide = TRUE)
+}
 }
 \keyword{manip}

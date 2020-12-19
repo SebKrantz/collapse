@@ -5,12 +5,26 @@ getdf <- function(x) {
 }
 
 
-fFtest <- function(y, exc, X = NULL, full.df = TRUE, ...) {
+fFtest <- function(y, exc, X = NULL, w = NULL, full.df = TRUE, ...) {
   if(!is.numeric(y)) stop("y needs to be a numeric vector")
   if(!is.null(X)) {
     Xn <- fNCOL(X)
     atl <- is.atomic(X) && is.numeric(X) && is.atomic(exc) && is.numeric(exc)
-    data <- if(atl) na_omit(cbind(y, X, exc)) else na_omit(qDF(c(list(y = y), qDF(X), qDF(exc))))
+    if(length(w)) {
+      if(atl) {
+        cc <- which(complete.cases(w, y, X, exc))
+        if(length(cc) < length(w)) {
+          data <- cbind(y, X, exc)[cc, , drop = FALSE]
+          w <- w[cc]
+        }
+      } else {
+        data <- na_omit(qDF(c(list(w = w), list(y = y), qDF(X), qDF(exc))))
+        w <- .subset2(data, 1L)
+        data[[1L]] <- NULL
+      }
+    } else {
+      data <- if(atl) na_omit(cbind(y, X, exc)) else na_omit(qDF(c(list(y = y), qDF(X), qDF(exc))))
+    }
     if(full.df && !atl && any(fc <- vapply(unattrib(data), is.factor, TRUE))) {
       cld <- oldClass(data)
       oldClass(data) <- NULL
@@ -34,12 +48,12 @@ fFtest <- function(y, exc, X = NULL, full.df = TRUE, ...) {
     vy <- fvar.default(y)
     if(atl) {
       n <- nrow(data)
-      r2f <- 1 - fvar.default(fHDwithin.default(y, data[, -1L], na.rm = FALSE, ...))/vy
-      r2r <- 1 - fvar.default(fHDwithin.default(y, data[, 2:(Xn+1L)], na.rm = FALSE, ...))/vy
+      r2f <- 1 - fvar.default(fHDwithin.default(y, data[, -1L], w, na.rm = FALSE, ...), w = w)/vy
+      r2r <- 1 - fvar.default(fHDwithin.default(y, data[, 2:(Xn+1L)], w, na.rm = FALSE, ...), w = w)/vy
     } else {
       n <- fnrow2(data)
-      r2f <- 1 - fvar.default(fHDwithin.default(y, fcolsubset(data, -1L), na.rm = FALSE, ...))/vy
-      r2r <- 1 - fvar.default(fHDwithin.default(y, fcolsubset(data, 2:(Xn+1L)), na.rm = FALSE, ...))/vy
+      r2f <- 1 - fvar.default(fHDwithin.default(y, fcolsubset(data, -1L), w, na.rm = FALSE, ...), w = w)/vy
+      r2r <- 1 - fvar.default(fHDwithin.default(y, fcolsubset(data, 2:(Xn+1L)), w, na.rm = FALSE, ...), w = w)/vy
     }
     ndff <- k-1
     ddff <- n-k
@@ -57,8 +71,9 @@ fFtest <- function(y, exc, X = NULL, full.df = TRUE, ...) {
                                   c("R-Sq.","DF1","DF2","F-Stat.","P-Value")))
     oldClass(res) <- c("fFtest","matrix")
   } else {
-    u <- fHDwithin.default(y, exc, na.rm = TRUE) # Residuals
+    u <- fHDwithin.default(y, exc, w, na.rm = TRUE, ...) # Residuals
     miss <- attr(u, "na.rm")
+    if(!is.null(miss)) w <- w[-miss]
     if(full.df && length(miss) && !is.atomic(exc) && !is.numeric(exc)) {
       p <- if(is.factor(exc)) fnlevels(exc[-miss, drop = TRUE])-1L else if(any(vapply(unattrib(exc), is.factor, TRUE)))
         getdf(fdroplevels.data.frame(ss(exc, -miss))) else length(unclass(exc))
@@ -66,7 +81,7 @@ fFtest <- function(y, exc, X = NULL, full.df = TRUE, ...) {
       p <- if(is.factor(exc) || (is.list(exc) && any(vapply(unattrib(exc), is.factor, TRUE)))) getdf(fdroplevels(exc)) else fNCOL(exc)
     } else p <- fNCOL(exc)
     n <- length(u)
-    r2 <- 1 - fvar.default(u)/fvar.default(if(is.null(miss)) y else y[-miss]) # R-Squared
+    r2 <- 1 - fvar.default(u, w = w)/fvar.default(if(is.null(miss)) y else y[-miss], w = w) # R-Squared
     ddf <- n-p-1
     Fstat <- r2/p * ddf/(1-r2) # F statistic for the model (the constant goes unrestricted)
     Pv <- pf(Fstat, p, ddf, lower.tail = FALSE) # P-value corresponding to the F statistic

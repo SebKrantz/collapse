@@ -6,6 +6,7 @@ using namespace Rcpp;
 RcppExport void multi_yw(void *, void *, void *, void *, void *, void *, void *, void *, void *, void *);
 RcppExport SEXP collapse_init(SEXP);
 RcppExport SEXP dt_na(SEXP, SEXP);
+RcppExport SEXP allNAv(SEXP, SEXP);
 RcppExport SEXP Cradixsort(SEXP, SEXP, SEXP, SEXP, SEXP, SEXP);
 RcppExport SEXP frankds(SEXP, SEXP, SEXP, SEXP);
 RcppExport SEXP pacf1(SEXP, SEXP);
@@ -112,6 +113,7 @@ static const R_CallMethodDef CallEntries[] = {
   {"Cpp_groupid", (DL_FUNC) &_collapse_groupid, 5},
   {"C_collapse_init", (DL_FUNC) &collapse_init, 1},
   {"C_dt_na",         (DL_FUNC) &dt_na,         2},
+  {"C_allNA",         (DL_FUNC) &allNAv,        2},
   {"C_radixsort",     (DL_FUNC) &Cradixsort,    6},
   {"C_frankds",       (DL_FUNC) &frankds,       4},
   {"C_pacf1",         (DL_FUNC) &pacf1,         2},

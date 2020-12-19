@@ -17,6 +17,7 @@ inline bool isnaOTH(typename Rcpp::traits::storage_type<RTYPE>::type x) {
 template <int RTYPE>
 Vector<RTYPE> flastCppImpl(const Vector<RTYPE>& x, int ng, const IntegerVector& g, bool narm) {
   int l = x.size();
+  if(l < 2) return x; // Prevents seqfault for numeric(0) #101
   auto isnanT = (RTYPE == REALSXP) ? isnaNUM<RTYPE> : isnaOTH<RTYPE>;
   if (ng == 0) {
     if(narm) {

@@ -11,6 +11,7 @@ using namespace Rcpp ;
 template <int RTYPE>
 Vector<RTYPE> fmodeImpl(const Vector<RTYPE>& x, int ng, const IntegerVector& g, const SEXP& gs, const SEXP& w, bool narm, int ret) {
   int l = x.size();
+  if(l < 1) return x; // Prevents seqfault for numeric(0) #101
   bool nfirstm = ret != 0, minm = ret == 1;
   typedef typename Rcpp::traits::storage_type<RTYPE>::type storage_t;
   auto isnanT = (RTYPE == REALSXP) ? [](storage_t x) { return x != x; } :
@@ -537,6 +538,7 @@ Vector<RTYPE> fmodeImpl(const Vector<RTYPE>& x, int ng, const IntegerVector& g, 
 
 IntegerVector fmodeFACT(const IntegerVector& x, int ng, const IntegerVector& g, const SEXP& gs, const SEXP& w, bool narm, int ret) {
   int l = x.size(), nlevp = Rf_nlevels(x)+1, val = 0;
+  if(l < 1) return x; // Prevents seqfault for numeric(0) #101
   bool nfirstm = ret != 0, minm = ret == 1;
 
   if(Rf_isNull(w)) { // No Weights
@@ -820,6 +822,7 @@ IntegerVector fmodeFACT(const IntegerVector& x, int ng, const IntegerVector& g, 
 template <> // No logical vector with sugar::IndexHash<RTYPE> !
 Vector<LGLSXP> fmodeImpl(const Vector<LGLSXP>& x, int ng, const IntegerVector& g, const SEXP& gs, const SEXP& w, bool narm, int ret) {
   int l = x.size();
+  if(l < 1) return x; // Prevents seqfault for numeric(0) #101
   bool maxm = ret != 1;
 
   if(Rf_isNull(w)) {

@@ -111,7 +111,7 @@ qsu(wlddev, pid = ~ iso3c, vlabels = TRUE)   # Adding between and within countri
 # that we have GINI-data on only 161 countries, with only 8.42 observations per country on average,
 # and that GDP, LIFEEX and GINI vary more between-countries, but ODA received varies more within
 # countries over time.
-
+\donttest{ % No code relying on suggested package
 # Using plm:
 pwlddev <- plm::pdata.frame(wlddev,         # Creating a Panel Data Frame frame from this data
                   index = c("iso3c","year"))
@@ -130,6 +130,7 @@ print.qsu(psr[,"SD",,])                     # Considering only standard deviatio
 # -> In all regions variations in inequality (GINI) between countries are greater than variations
 # in inequality within countries. The opposite is true for Life-Expectancy in all regions apart
 # from Europe, etc..
+}
 psrl <- qsu(wlddev, ~ region, ~ iso3c,      # Same, but output as nested list
             cols = 9:12, array = FALSE)
 psrl                                        # We can use unlist2d to create a tidy data.frame

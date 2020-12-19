@@ -2,21 +2,22 @@
 \alias{fFtest}
 %- Also NEED an '\alias' for EACH other topic documented here.
 \title{
-Fast F-test for Linear Models (with Factors)
+Fast (Weighted) F-test for Linear Models (with Factors)
 }
 \description{
 \code{fFtest} computes an R-squared based F-test for the exclusion of the variables in \code{exc}, where the full (unrestricted) model is defined by variables supplied to both \code{exc} and \code{X}. The test is efficient and designed for cases where both \code{exc} and \code{X} may contain multiple factors and continuous variables.
 }
 \usage{
-fFtest(y, exc, X = NULL, full.df = TRUE, \dots)
+fFtest(y, exc, X = NULL, w = NULL, full.df = TRUE, \dots)
 }
 %- maybe also 'usage' for other objects documented here.
 \arguments{
   \item{y}{a numeric vector: The dependent variable.}
   \item{exc}{a numeric vector, factor, numeric matrix or list / data frame of numeric vectors and/or factors: Variables to test / exclude.}
   \item{X}{a numeric vector, factor, numeric matrix or list / data frame of numeric vectors and/or factors: Covariates to include in both the restricted (without \code{exc}) and unrestricted model. If left empty (\code{X = NULL}), the test amounts to the F-test of the regression of \code{y} on \code{exc}.}
+  \item{w}{numeric. A vector of (frequency) weights.}
   \item{full.df}{logical. If \code{TRUE} (default), the degrees of freedom are calculated as if both restricted and unrestricted models were estimated using \code{lm()} (i.e. as if factors were expanded to matrices of dummies). \code{FALSE} only uses one degree of freedom per factor.  }
-\item{\dots}{other arguments passed to \code{lfe::demeanlist}, the workhorse function underlying \code{fHDwithin}. }
+\item{\dots}{other arguments passed to \code{fixest::demean}, the workhorse function underlying \code{fHDwithin}. }
 
 }
 \details{
@@ -60,19 +61,19 @@ fFtest(fdiff(AirPassengers), qF(cycle(AirPassengers)))  # Seasonality in first-d
 
 ## A more classical example with only continuous variables
 fFtest(mtcars$mpg, mtcars[c("cyl","vs")], mtcars[c("hp","carb")])
-
+\donttest{ % requires fixest package
 ## Now encoding cyl and vs as factors
 fFtest(mtcars$mpg, dapply(mtcars[c("cyl","vs")], qF), mtcars[c("hp","carb")])
-
+}
 ## Using iris data: A factor and a continuous variable excluded
 fFtest(iris$Sepal.Length, iris[4:5], iris[2:3])
 
 ## Testing the significance of country-FE in regression of GDP on life expectancy
 fFtest(wlddev$PCGDP, wlddev$iso3c, wlddev$LIFEEX)
-
+\donttest{ % requires fixest package
 ## Ok, country-FE are significant, what about adding time-FE
 fFtest(wlddev$PCGDP, qF(wlddev$year), wlddev[c("iso3c","LIFEEX")])
-
+}
 # Same test done using lm:
 data <- na_omit(get_vars(wlddev, c("iso3c","year","PCGDP","LIFEEX")))
 full <- lm(PCGDP ~ LIFEEX + iso3c + qF(year), data)

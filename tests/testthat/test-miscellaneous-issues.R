@@ -39,6 +39,8 @@ test_that("Using a factor with unused levels does not pose a problem to flag, fd
 
 })
 
+if(identical(Sys.getenv("NCRAN"), "TRUE")) {
+
 library(magrittr)
 test_that("Testing grouped_df methods", {
   gdf <- wlddev %>% fsubset(year > 1990, region, income, PCGDP:ODA) %>% fgroup_by(region, income)
@@ -124,5 +126,52 @@ test_that("Testing grouped_df methods", {
   expect_visible(gdf %>% fgrowth(logdiff = TRUE, scale = 1))
   expect_visible(gdf %>% fgrowth(-2:2, 1:2, logdiff = TRUE, scale = 1))
 })
+
+
+# Also better not run on CRAN...
+test_that("0-length vectors give expected output", {
+  funs <- .c(fsum, fprod, fmean, fmedian, fmin, fmax, fnth, fbetween, fwithin, fscale)
+  for(i in funs) {
+    FUN <- match.fun(i)
+    expect_true(all_identical(FUN(numeric(0)), FUN(integer(0)), numeric(0)))
+  }
+  funs <- .c(fmode, ffirst, flast)
+  for(i in funs) {
+    FUN <- match.fun(i)
+    expect_identical(FUN(numeric(0)), numeric(0))
+    expect_identical(FUN(integer(0)), integer(0))
+    expect_identical(FUN(character(0)), character(0))
+    expect_identical(FUN(logical(0)), logical(0))
+    expect_identical(FUN(factor(0)), factor(0))
+  }
+  funs <- .c(fvar, fsd)
+  for(i in funs) {
+    FUN <- match.fun(i)
+    expect_identical(FUN(numeric(0)), NA_real_)
+    expect_identical(FUN(integer(0)), NA_real_)
+  }
+  funs <- .c(fNobs, fNdistinct)
+  for(i in funs) {
+    FUN <- match.fun(i)
+    expect_identical(FUN(numeric(0)), 0L)
+    expect_identical(FUN(integer(0)), 0L)
+  }
+  funs <- .c(flag, fdiff, fgrowth)
+  for(i in funs) {
+    FUN <- match.fun(i)
+    expect_error(FUN(numeric(0)))
+    expect_error(FUN(integer(0)))
+  }
+  funs <- .c(groupid, seqid)
+  for(i in funs) {
+    FUN <- match.fun(i)
+    expect_identical(FUN(numeric(0)), integer(0))
+    expect_identical(FUN(integer(0)), integer(0))
+  }
+  expect_identical(varying(numeric(0)), FALSE)
+  expect_identical(TRA(numeric(0), 1), numeric(0))
+})
+
+}
 
 options(warn = 1)

@@ -37,6 +37,8 @@ inline double myremain(double x, double y) {
 
 SEXP ret1(const SEXP& x, const SEXP& xAG, const SEXP& g) {
   int tx = TYPEOF(x), txAG = TYPEOF(xAG), l = Rf_length(x), gs = Rf_length(g);
+  if(l < 1) return x; // Prevents seqfault for numeric(0) #101
+
   int *pg;
   bool nog = gs == 1;
   if(nog) {
@@ -130,6 +132,8 @@ SEXP ret1(const SEXP& x, const SEXP& xAG, const SEXP& g) {
 
 SEXP ret2(const SEXP& x, const SEXP& xAG, const SEXP& g) {
   int l = Rf_length(x), gs = Rf_length(g), tx = TYPEOF(x), txAG = TYPEOF(xAG);
+  if(l < 1) return x; // Prevents seqfault for numeric(0) #101
+
   int *pg;
   bool nog = gs == 1;
   if(nog) {
@@ -373,6 +377,8 @@ SEXP ret2(const SEXP& x, const SEXP& xAG, const SEXP& g) {
 // TODO: allow integer input ??
 SEXP retoth(const NumericVector& x, const NumericVector& xAG, const SEXP& g, int ret = 3) {
   int gs = Rf_length(g), l = x.size();
+  if(l < 1) return x; // Prevents seqfault for numeric(0) #101
+
   NumericVector out = no_init_vector(l);
     if(gs == 1) {
       if(xAG.size() != 1) stop("If g = NULL, STATS needs to be an atomic element!");

@@ -2,7 +2,7 @@ context("varying")
 
 # rm(list = ls())
 
-pwlddev <- plm::pdata.frame(wlddev, index = c("iso3c", "year"))
+if(identical(Sys.getenv("NCRAN"), "TRUE")) pwlddev <- plm::pdata.frame(wlddev, index = c("iso3c", "year"))
 gwlddev <- fgroup_by(wlddev, iso3c)
 wdm <- qM(`cat_vars<-`(wlddev, dapply(cat_vars(wlddev), qG)))
 g <- GRP(wlddev, ~ region + year)
@@ -95,6 +95,7 @@ test_that("data.frame method formula and cols work as intended", {
   expect_error(varying(wlddev, ~ region + year, cols = c("PCGDP", "country2")))
 })
 
+if(identical(Sys.getenv("NCRAN"), "TRUE")) {
 
 test_that("pseries and pdata.frame methods work as intended", {
   # pdata.frame
@@ -150,6 +151,7 @@ test_that("pseries and pdata.frame methods work as intended", {
 
 })
 
+}
 
 test_that("grouped_df method works as intended", {
 

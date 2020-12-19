@@ -5,6 +5,7 @@ template <typename F> // Faster non constant references here ! (for some weird r
 NumericVector fminmaxCppImpl(NumericVector x, int ng = 0, IntegerVector g = 0,
                              bool narm = true, F FUN = [](double a, double b) { return a > b; }, double init = R_PosInf) {
   int l = x.size();
+  if(l < 2) return x; // Prevents seqfault for numeric(0) #101
 
   if(ng == 0) {
     if(narm) {

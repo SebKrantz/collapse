@@ -1,3 +1,41 @@
+# collapse 1.5.0
+*collapse* 1.5.0, released early January 2020, also presents important refinements and some additional functionality. 
+
+### Bug Fixes
+
+* Segfaults in several *Fast Statistical Functions* when passed `numeric(0)` are fixed (thanks to @eshom and @acylam, [#101](https://github.com/SebKrantz/collapse/issues/101)). The default behavior is that all *collapse* functions return `numeric(0)` again, except for `fNobs`, `fNdistinct` which return `0L`, and `fvar`, `fsd` which return `NA_real`.
+
+### Changes to Functionality
+
+* In `collap`, the default behavior of `give.names = "auto"` was altered when used together with the `custom` argument. Before the function name was always added to the column names. Now it is only added if a column is aggregated with two different functions. I apologize if this breaks any code dependent on the new names, but this behavior just better reflects most common use (using only one function per column), and also STATA's collapse. 
+
+* For list processing functions like `get_elem`, `has_elem` etc. the default for the argument `DF.as.list` was changed from `TRUE` to `FALSE`. This means now by default if a nested lists contains data frame's, these data frame's will not be searched for matching elements. This default also reflects the more common usage of these functions (extracting entire data frame's or computed quantities from nested lists rather than searching / subsetting lists of data frame's). The change also delivers a considerable performance gain. 
+
+* Functions `fHDwithin / HDW` and `fHDbetween / HDB` have been reworked, delivering higher performance and greater functionality: For higher-dimensional centering and heterogenous slopes, the `demean` function from the *fixest* package is imported (conditional on the availability of that package). The linear prediction  and partialling out functionality is now built around `flm` and also allows for weights and different fitting methods. The default method chosen is a Choleski decomposition to invert X'X, which is very fast but requires the columns of X to be linearly independent (if not it will produce an error). Missing value removal is still done using *data.table* source code, so these functions are now truly equipped for large and complex linear prediction and partialling-out problems. To fully utilize them users must install *fixest*. 
+
+
+### Additions
+
+* Added a set of 10 operators `%rr%`, `%r+%`, `%r-%`, `%r*%`, `%r/%`, `%cr%`, `%c+%`, `%c-%`, `%c*%`, `%c/%` to facilitate and speed up row- and column-wise arithmetic operations involving a vector and a matrix / data frame / list. For example `X %r*% v` efficiently multiplies every row of `X` with `v`. Note that more advanced functionality is already provided in `TRA()`, `dapply()` and the *Fast Statistical Functions*, but these operators are intuitive and very convenient to use in matrix or matrix-style code. 
+
+* Added function `missing_cases` (opposite of `complete.cases` and faster for data frame's / lists).
+
+* Added function `allNA` for vectors. 
+
+### Improvements
+
+* Time series functions and operators `flag / L / F`, `fdiff / D / Dlog` and `fgrowth / G` now natively support irregular time series and panels, and feature a 'complete approach' to perform computation on those panels! Thus *collapse* now provides a comprehensive, robust and extremely fast approach to working with time-dependent data in R.  
+
+* `fFtest` now also supports weights.
+
+* Functions `pwcor` and `pwcov` can now also compute weighted correlations, supported by C-code that is (conditionally) imported from the *weights* package. 
+
+* `collap` now provides an easy workaround to aggregate some columns using weights and others without. The user may simply append the names of *Fast Statistical Functions* with `_uw`. Example: `collapse::collap(mtcars, ~ cyl, custom = list(fmean_uw = 3:4, fmean = 8:10), w = ~ wt)` aggregates columns 3 through 4 using a simple mean and columns 8 through 10 using the weighted mean. See `?collap` for further details. 
+
+* function `recode_char` now has additional options `ignore.case` and `fixed` (passed to `grepl`), for recoding character data based on regular expressions. 
+
+* `rapply2d` now has `classes` argument permitting more flexible use. 
+
 # collapse 1.4.2
 
 * An improvement to the `[.GRP_df` method enabling the use of most *data.table* methods (such as `:=`) on a grouped *data.table* created with `fgroup_by`.
@@ -12,7 +50,7 @@ collapse 1.4.1 is a small patch for 1.4.0 that:
 * Adds a method `[.GRP_df` that allows robust subsetting of grouped objects created with `fgroup_by` (thanks to Patrice Kiener for flagging this).
 
 # collapse 1.4.0
-collapse 1.4.0, released early November 2020, presents some important refinements, particularly in the domain of attribute handling, as well as some additional functionality. The changes make *collapse* smarter, more broadly compatible and more secure, and should not break existing code.  <!-- , is a major update: -->
+*collapse* 1.4.0, released early November 2020, presents some important refinements, particularly in the domain of attribute handling, as well as some additional functionality. The changes make *collapse* smarter, more broadly compatible and more secure, and should not break existing code.  <!-- , is a major update: -->
 
 ### Changes to Functionality
 
@@ -166,7 +204,7 @@ collapse 1.2.1, released end of May 2020: <!-- , is a patch for v1.2.0: -->
 
 * Minor fixes for 1.2.0 issues that prevented correct installation on Mac OS X and a vignette rebuilding error on solaris.
 
-* *fmode.grouped_df* with groups and weights now saves the sum of the weights instead of the max (this makes more sense as the max only applies if all elements are unique). 
+* `fmode.grouped_df` with groups and weights now saves the sum of the weights instead of the max (this makes more sense as the max only applies if all elements are unique). 
 
 # collapse 1.2.0
 collapse 1.2.0, released mid May 2020: <!-- , is a major update of the package - changes and additions: -->

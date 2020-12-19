@@ -10,7 +10,7 @@ In \emph{collapse} a regular R object is defined as an R object that is either a
 }
 \usage{
 is.regular(x)
-is.unlistable(l, DF.as.list = TRUE)
+is.unlistable(l, DF.as.list = FALSE)
 }
 %- maybe also 'usage' for other objects documented here.
 \arguments{
@@ -19,7 +19,7 @@ is.unlistable(l, DF.as.list = TRUE)
     \item{DF.as.list}{logical. \code{TRUE} treats data frames like (sub-)lists; \code{FALSE} like atomic elements.}
 }
 \details{
-\code{is.regular} is simply defined as \code{is.atomic(x) || is.list(x)}. \code{is.unlistable} is defined as \code{all(rapply(l, is.atomic))}. If \code{l} contains data frames, setting \code{DF.as.list = FALSE} yields checking using \code{all(unlist(rapply2d(l, is.regular)))}, which can be a lot faster than applying \code{is.atomic} to every data frame column.
+\code{is.regular} is simply defined as \code{is.atomic(x) || is.list(x)}. \code{is.unlistable} with \code{DF.as.list = TRUE} is defined as \code{all(rapply(l, is.atomic))}, whereas \code{DF.as.list = FALSE} yields checking using \code{all(unlist(rapply2d(l, is.regular), use.names = FALSE))}.  If \code{l} contains data frames, the latter can be a lot faster than applying \code{is.atomic} to every data frame column.
 }
 \value{
 \code{logical(1)} - \code{TRUE} or \code{FALSE}.

@@ -170,7 +170,7 @@ fsum(mtcars, g)                   # Compute the sum of mtcars, grouped by variab
 ## Convert factor to GRP object and vice-versa
 GRP(iris$Species)
 as.factor_GRP(g)
-
+\donttest{ % No code relying on suggested package
 ## dplyr integration
 library(dplyr)
 mtcars \%>\% group_by(cyl,vs,am) \%>\% GRP    # Get GRP object from a dplyr grouped tibble
@@ -178,7 +178,7 @@ mtcars \%>\% group_by(cyl,vs,am) \%>\% fmean  # Grouped mean using dplyr groupin
 mtcars \%>\% fgroup_by(cyl,vs,am) \%>\% fmean # Faster alternative with collapse grouping
 
 mtcars \%>\% fgroup_by(cyl,vs,am)             # Print method
-
+}
 
 }
 \keyword{manip}

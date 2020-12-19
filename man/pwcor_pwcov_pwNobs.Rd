@@ -6,15 +6,17 @@
 \alias{print.pwcor}
 %- Also NEED an '\alias' for EACH other topic documented here.
 \title{
-Pairwise Correlations, Covariances and Observation Count
+(Pairwise, Weighted) Correlations, Covariances and Observation Counts
 }
 \description{
-Computes (pairwise) Pearsons correlations, covariances and observation counts. Pairwise correlations and covariances can be computed together with observation counts and p-values, and output as 3D array (default) or list of matrices. \code{pwcor} and \code{pwcov} offer an elaborate print method. For an equivalent and faster implementation of \code{pwcor} see \code{Hmisc::rcorr} (written in Fortran), for weighted correlations see \code{weights::wtd.cors} (written in C).
+Computes (pairwise, weighted) Pearsons correlations, covariances and observation counts. Pairwise correlations and covariances can be computed together with observation counts and p-values, and output as 3D array (default) or list of matrices. \code{pwcor} and \code{pwcov} offer an elaborate print method.
+
+\emph{Notes:} \code{weights::wtd.cors} is imported for weighted pairwise correlations (written in C for speed). For weighted correlations with bootstrap SE's see \code{weights::wtd.cor} (but bootstrap can be slow). Weighted correlations for complex surveys are implemented in \code{jtools::svycor}. An equivalent and faster implementation of \code{pwcor} (without weights) is provided in \code{Hmisc::rcorr} (written in Fortran)
 }
 \usage{
-pwcor(X, \dots, N = FALSE, P = FALSE, array = TRUE, use = "pairwise.complete.obs")
+pwcor(X, \dots, w = NULL, N = FALSE, P = FALSE, array = TRUE, use = "pairwise.complete.obs")
 
-pwcov(X, \dots, N = FALSE, P = FALSE, array = TRUE, use = "pairwise.complete.obs")
+pwcov(X, \dots, w = NULL, N = FALSE, P = FALSE, array = TRUE, use = "pairwise.complete.obs")
 
 pwNobs(X)
 
@@ -29,6 +31,7 @@ pwNobs(X)
 \arguments{
   \item{X}{a matrix or data.frame, for \code{pwcor} and \code{pwcov} all columns must be numeric. All functions are faster on matrices, so converting is advised for large data (see \code{\link{qM}}).}
   \item{x}{an object of class 'pwcor' / 'pwcov'. }
+  \item{w}{numeric. A vector of (frequency) weights. }
   \item{N}{logical. \code{TRUE} also computes pairwise observation counts.}
   \item{P}{logical. \code{TRUE} also computes pairwise p-values (same as \code{\link{cor.test}} and \code{Hmisc::rcorr}).}
   \item{array}{logical. If \code{N = TRUE} or \code{P = TRUE}, \code{TRUE} (default) returns output as 3D array whereas \code{FALSE} returns a list of matrices.}
