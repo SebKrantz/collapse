@@ -15,6 +15,8 @@
 \alias{fnrow}
 \alias{fncol}
 \alias{fdim}
+\alias{allNA}
+\alias{missing_cases}
 \alias{na_rm}
 \alias{na_omit}
 \alias{na_insert}
@@ -56,6 +58,8 @@ fnlevels(x)                   # Faster version of nlevels(x) (for factors)
 fnrow(X)                      # Faster nrow for data frames (not faster for matrices)
 fncol(X)                      # Faster ncol for data frames (not faster for matrices)
 fdim(X)                       # Faster dim for data frames (not faster for matrices)
+allNA(x)                      # Check for all missing cases in a vector
+missing_cases(X, cols = NULL) # Find missing cases in a matrix / data framme
 na_rm(x)                      # Remove missing values from vector and return vector
 na_omit(X, cols = NULL,       # Faster na.omit for matrices and data frames
         na.attr = FALSE)
