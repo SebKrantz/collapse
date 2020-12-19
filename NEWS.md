@@ -1,5 +1,9 @@
 # collapse 1.5.0
-*collapse* 1.5.0, released early January 2020, also presents important refinements and some additional functionality. 
+*collapse* 1.5.0, released early January 2021, also presents important refinements and some additional functionality. 
+
+### Back to CRAN
+
+* I sincerely apologize for any inconveniences cause by the temporal archival of *collapse* from December 19, 2020. This archival was caused by the archival of the important *lfe* package on the 4th of December. *collapse* depended on *lfe* for higher-dimensional centering, providing the `fHDbetween / fHDwithin` functions for generalized linear projecting / partialling out. To remedy the damage caused by the removal of *lfe*, I had to fundamentally rewrite `fHDbetween / fHDwithin` to take advantage of the demeaning algorithm provided by *fixest*, which has some quite different mechanics. Beforehand, I made some significant changes to `fixest::demean` itself to make this integration happen. The deadline set for me was the 18th of December, but I realized I would not make this. A request to CRAN for extension was declined, so *collapse* got archived on the 19th. I have learned from this experience, and *collapse* is now sufficiently insulated in terms of all of its testing facilities that it will not face issues even if all suggested packages were removed from CRAN. 
 
 ### Bug Fixes
 
