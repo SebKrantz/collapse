@@ -448,9 +448,10 @@ head(L(pwlddev$PCGDP, -1:3))                # Panel-lags
 head(L(pwlddev, -1:3, 9:12))
 head(G(pwlddev$PCGDP))                      # Panel-Growth rates
 head(G(pwlddev, 1, 1, 9:12))
+rm(pwlddev)
 }
 # Remove all objects used in this example section
-rm(v, d, w, f, f1, f2, g, mtcarsM, pwlddev, sds, series, wlddev)
+rm(v, d, w, f, f1, f2, g, mtcarsM, sds, series, wlddev)
 }
 
 

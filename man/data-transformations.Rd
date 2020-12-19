@@ -45,7 +45,7 @@ All of \emph{collapse}'s \link[=A1-fast-statistical-functions]{Fast Statistical 
   \tabular{lllll}{\emph{ Function / S3 Generic }   \tab\tab \emph{ Methods }  \tab\tab \emph{ Description }  \cr % \Sexpr{"\u200B"} \Sexpr{"\u200B"} % \Sexpr{"\u200B"} \Sexpr{"\u200B"}
   \code{\link{dapply}} \tab\tab No methods, works with matrices and data frames \tab\tab Apply functions to rows or columns \cr
   \code{\link{BY}} \tab\tab \code{default, matrix, data.frame, grouped_df} \tab\tab Split-Apply-Combine computing \cr
-  \code{\link[arithmetic]{\%(r/c)(r/+/-/*//)\%}} \tab\tab No methods, works with matrices and data frames / lists \tab\tab Row- and column-arithmetic \cr
+  \code{\link[=arithmetic]{\%(r/c)(r/+/-/*//)\%}} \tab\tab No methods, works with matrices and data frames / lists \tab\tab Row- and column-arithmetic \cr
   \code{\link{TRA}} \tab\tab \code{default, matrix, data.frame, grouped_df} \tab\tab Replace and sweep out statistics \cr
   \code{\link[=fscale]{fscale/STD}} \tab\tab \code{default, matrix, data.frame, pseries, pdata.frame, grouped_df} \tab\tab Scale / standardize data \cr
   \code{\link[=fwithin]{fwithin/W}} \tab\tab \code{default, matrix, data.frame, pseries, pdata.frame, grouped_df}  \tab\tab Demean / center data \cr

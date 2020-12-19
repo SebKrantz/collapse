@@ -47,7 +47,8 @@ test_that("get_elem works well", { # Could still add more tests..
   expect_identical(get_elem(l, "residuals"), resid(l))
   expect_identical(get_elem(l, "fit", regex = TRUE), fitted(l))
   expect_equal(get_elem(l, "tol"), 1e-7)
-  expect_identical(get_elem(mtcars, 1), as.list(ss(mtcars, 1)))
+  expect_identical(get_elem(mtcars, 1), mtcars[[1]])
+  expect_identical(get_elem(mtcars, 1, DF.as.list = TRUE), as.list(ss(mtcars, 1)))
 
 })
 
@@ -63,8 +64,8 @@ test_that("reg_elem and irreg_elem work well", {
 
 test_that("has_elem works well", {
   expect_true(has_elem(l, is.matrix))
-  expect_false(has_elem(l, is.data.frame))
-  expect_true(has_elem(l, is.data.frame, DF.as.list = FALSE))
+  expect_true(has_elem(l, is.data.frame))
+  expect_false(has_elem(l, is.data.frame, DF.as.list = TRUE))
   expect_true(has_elem(l, is.categorical))
   expect_false(has_elem(l, is.Date))
   expect_false(has_elem(l, is.qG))
@@ -72,7 +73,8 @@ test_that("has_elem works well", {
   expect_false(has_elem(l, "am", recursive = FALSE))
   expect_false(has_elem(l, "pivot", recursive = FALSE))
   expect_true(has_elem(l, "pivot"))
-  expect_true(has_elem(l, "am"))
+  expect_true(has_elem(l, "am", DF.as.list = TRUE))
+  expect_false(has_elem(l, "am"))
   expect_true(has_elem(l, "tol"))
   expect_false(has_elem(l, "mod"))
   expect_true(has_elem(l, "mod", regex = TRUE))
