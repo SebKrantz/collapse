@@ -1,7 +1,7 @@
 #include <Rcpp.h>
 using namespace Rcpp;
 
-// NOTE: Speacial case is set_mean = -Inf, which is when on the R side mean = "overall.mean"
+// NOTE: Special case is set_mean = -Inf, which is when on the R side mean = "overall.mean"
 // TODO: Best simply adding set_mean to the mean calculation, or better other solution ?
 
 
@@ -10,7 +10,7 @@ NumericVector BWCpp(const NumericVector& x, int ng = 0, const IntegerVector& g =
                     const SEXP& gs = R_NilValue, const SEXP& w = R_NilValue,
                     bool narm = true, double theta = 1, double set_mean = 0, bool B = false, bool fill = false) {
   int l = x.size();
-  if(l < 1) return x; // Prevents seqfault for numeric(0) #101
+  if(l < 1) return x; // Prevents segfault for numeric(0) #101
   NumericVector out = no_init_vector(l);
 
   if (Rf_isNull(w)) { // No weights
@@ -81,7 +81,7 @@ NumericVector BWCpp(const NumericVector& x, int ng = 0, const IntegerVector& g =
         } else {
           if(set_mean != R_NegInf) {
             if(set_mean == 0 && theta == 1) {
-              for(int i = ng; i--; ) sum[i] /= n[i]; // faster using two loops? or combine ? -> two loos (this solution) is a lot faster !
+              for(int i = ng; i--; ) sum[i] /= n[i]; // faster using two loops? or combine ? -> two loops (this solution) is a lot faster !
             } else {
               for(int i = ng; i--; ) sum[i] = theta / n[i] * sum[i] - set_mean;
             }
@@ -184,7 +184,7 @@ NumericVector BWCpp(const NumericVector& x, int ng = 0, const IntegerVector& g =
         }
         sum = theta * sum/sumw - set_mean; // best ?
         if(B) {
-          if(fill) std::fill(out.begin(), out.end(), sum); // (double)sum // fastes ?
+          if(fill) std::fill(out.begin(), out.end(), sum); // (double)sum // fastest ?
           else {
             for(int i = 0; i != l; ++i) {
               if(std::isnan(x[i])) out[i] = x[i];
