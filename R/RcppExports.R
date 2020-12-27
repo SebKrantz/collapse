@@ -85,16 +85,16 @@ ffirstlCpp <- function(x, ng = 0L, g = 0L, narm = TRUE) {
     .Call(`_collapse_ffirstlCpp`, x, ng, g, narm)
 }
 
-flagleadCpp <- function(x, n = 1L, fill = NULL, ng = 0L, g = 0L, gs = NULL, t = NULL, names = TRUE) {
-    .Call(`_collapse_flagleadCpp`, x, n, fill, ng, g, gs, t, names)
+flagleadCpp <- function(x, n = 1L, fill = NULL, ng = 0L, g = 0L, t = NULL, names = TRUE) {
+    .Call(`_collapse_flagleadCpp`, x, n, fill, ng, g, t, names)
 }
 
-flagleadmCpp <- function(x, n = 1L, fill = NULL, ng = 0L, g = 0L, gs = NULL, t = NULL, names = TRUE) {
-    .Call(`_collapse_flagleadmCpp`, x, n, fill, ng, g, gs, t, names)
+flagleadmCpp <- function(x, n = 1L, fill = NULL, ng = 0L, g = 0L, t = NULL, names = TRUE) {
+    .Call(`_collapse_flagleadmCpp`, x, n, fill, ng, g, t, names)
 }
 
-flagleadlCpp <- function(x, n = 1L, fill = NULL, ng = 0L, g = 0L, gs = NULL, t = NULL, names = TRUE) {
-    .Call(`_collapse_flagleadlCpp`, x, n, fill, ng, g, gs, t, names)
+flagleadlCpp <- function(x, n = 1L, fill = NULL, ng = 0L, g = 0L, t = NULL, names = TRUE) {
+    .Call(`_collapse_flagleadlCpp`, x, n, fill, ng, g, t, names)
 }
 
 flastCpp <- function(x, ng = 0L, g = 0L, narm = TRUE) {

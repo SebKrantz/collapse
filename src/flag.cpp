@@ -3,10 +3,10 @@
 using namespace Rcpp;
 
 
-// 6th version: Type Dispatch and names argument !!
+// 7th version: Irregular time series and panels supported !
 template <int RTYPE>
 Vector<RTYPE> flagleadCppImpl(const Vector<RTYPE>& x, const IntegerVector& n, const SEXP& fill,
-                              int ng, const IntegerVector& g, const SEXP& gs, const SEXP& t, bool names) {
+                              int ng, const IntegerVector& g, const SEXP& t, bool names) {
 
   // typedef typename Rcpp::traits::storage_type<RTYPE>::type storage_t;
   // storage_t fil;
@@ -56,31 +56,44 @@ Vector<RTYPE> flagleadCppImpl(const Vector<RTYPE>& x, const IntegerVector& n, co
     } else { // Unordered data: Timevar provided
       IntegerVector ord = t;
       if(l != ord.size()) stop("length(x) must match length(t)");
-      LogicalVector ocheck(l, true);
-      IntegerVector omap = no_init_vector(l);
+      int min = INT_MAX, max = INT_MIN, osize, temp;
       for(int i = 0; i != l; ++i) {
-        if(ord[i] > l || ord[i] < 1) stop("t needs to be a factor or integer vector of time-periods between 1 and length(x)");
-        if(ocheck[ord[i]-1]) {
-          ocheck[ord[i]-1] = false;
-          omap[ord[i]-1] = i; // Note: omap is the same as order(ord) !!
-        } else {
-          stop("Repeated values in timevar");
-        }
+        if(ord[i] < min) min = ord[i];
+        if(ord[i] > max) max = ord[i];
       }
+      if(min == NA_INTEGER) stop("Timevar contains missing values");
+      osize = max-min+1;
+      if(osize > 3 * l) warning("Your time series is very irregular. Need to create an internal ordering vector of length %s to represent it.", osize);
+      IntegerVector omap(osize), ord2 = no_init_vector(l);
+      for(int i = 0; i != l; ++i) {
+        temp = ord[i] - min; // Best ? Or direct assign to ord2[i] ? Also check for panel version..
+        if(omap[temp]) stop("Repeated values in timevar");
+        omap[temp] = i+1;
+        ord2[i] = temp;
+      }
+      // return as<Vector<RTYPE> >(omap);
       for(int p = ns; p--; ) {
         int np = n[p];
         if(absn[p] > l) stop("lag-length exceeds length of vector");
         MatrixColumn<RTYPE> outp = out( _ , p);
         if(np>0) {
           if(names) colnam[p] = "L" + nc[p];
-          int i = 0;
-          while(i != np) outp[omap[i++]] = ff;
-          for( ; i != l; ++i) outp[omap[i]] = x[omap[i - np]];
+          for(int i = 0; i != l; ++i) { // Smarter solution using while ???
+            if(ord2[i] >= np && (temp = omap[ord2[i] - np])) {
+              outp[i] = x[temp-1];
+            } else {
+              outp[i] = ff;
+            }
+          }
         } else if(np<0) {
           if(names) colnam[p] = "F" + nc[p];
-          int st = l+np, i = l;
-          while(i != st) outp[omap[--i]] = ff;
-          for( ; i--; ) outp[omap[i]] = x[omap[i - np]];
+          for(int i = 0, osnp = osize+np; i != l; ++i) { // Smarter solution using while ???
+            if(ord2[i] < osnp && (temp = omap[ord2[i] - np])) {
+              outp[i] = x[temp-1];
+            } else {
+              outp[i] = ff;
+            }
+          }
         } else {
           if(names) colnam[p] = "--";
           outp = x;
@@ -125,37 +138,32 @@ Vector<RTYPE> flagleadCppImpl(const Vector<RTYPE>& x, const IntegerVector& n, co
       }
     } else { // Unordered data: Timevar provided
       IntegerVector ord = t;
+      int temp;
       if(l != ord.size()) stop("length(x) must match length(t)");
-      IntegerVector min(ngp, INT_MAX); // INFINITY gives bug !!
-      IntegerVector gsv = Rf_isNull(gs) ? IntegerVector(ng) : as<IntegerVector>(gs); // no_init_vector(ng); // No real improvements here by using C++ arrays !!
-      IntegerVector ord2 = no_init_vector(l); // use array ??
-      if(Rf_isNull(gs)) {
-        // std::fill(gsv.begin(), gsv.end(), 0);
-        // gsv = IntegerVector(ng);
-        for(int i = 0; i != l; ++i) {
-          ++gsv[g[i]-1];
-          if(ord[i] < min[g[i]]) min[g[i]] = ord[i];
-        }
-      } else {
-        // gsv = gs;
-        if(ng != gsv.size()) stop("ng must match length(gs)");
-        for(int i = 0; i != l; ++i) if(ord[i] < min[g[i]]) min[g[i]] = ord[i];
-      }
-      IntegerVector omap(l), cgs = no_init_vector(ngp);
-      // int cgs[ngp];
-      // cgs[1] = 0;
-      // for(int i = 2; i != ngp; ++i) cgs[i] = cgs[i-1] + gsv[i-2]; // or get "starts from forderv"
-      cgs[1] = 0;
-      for(int i = 1; i != ng; ++i) {
-        cgs[i+1] = cgs[i] + gsv[i-1]; // or get "starts from forderv"
-        if(min[i] == NA_INTEGER) stop("Timevar contains missing values"); // Fastest here ?
-      }
-      if(min[ng] == NA_INTEGER) stop("Timevar contains missing values"); // Fastest here ?
+      IntegerVector min(ngp, INT_MAX), max(ngp, INT_MIN), cgs = no_init_vector(ngp);
       for(int i = 0; i != l; ++i) {
-        ord2[i] = ord[i] - min[g[i]]; // still room for speed improvement ?? -> could get rid of the first if condition, if there is a gap, there will be a repeated value error later on !!
-        if(ord2[i] >= gsv[g[i]-1]) stop("Gaps in timevar within one or more groups");
-        if(omap[cgs[g[i]]+ord2[i]] == 0) omap[cgs[g[i]]+ord2[i]] = i;
-        else stop("Repeated values of timevar within one or more groups");
+        temp = g[i];
+        if(ord[i] < min[temp]) min[temp] = ord[i];
+        if(ord[i] > max[temp]) max[temp] = ord[i];
+      }
+      cgs[1] = 0; temp = 0;
+      for(int i = 1; i != ng; ++i) {
+        if(min[i] == NA_INTEGER) stop("Timevar contains missing values");
+        max[i] -= min[i] - 1; // need max[i] which stores the complete group sizes only if p<0 e.g. if computing leads..
+        temp += max[i];
+        cgs[i+1] = temp; // + max[i] - min[i] + 1;
+      }
+      if(min[ng] == NA_INTEGER) stop("Timevar contains missing values");
+      max[ng] -= min[ng] - 1;
+      temp += max[ng];
+      // omap provides the ordering to order the vector (needed to find previous / next values)
+      if(temp > 3 * l) warning("Your panel is very irregular. Need to create an internal ordering vector of length %s to represent it.", temp);
+      IntegerVector omap(temp), ord2 = no_init_vector(l);
+      for(int i = 0; i != l; ++i) {
+        ord2[i] = ord[i] - min[g[i]];
+        temp = cgs[g[i]] + ord2[i];
+        if(omap[temp]) stop("Repeated values of timevar within one or more groups");
+        omap[temp] = i+1; // needed to add 1 to distinguish between 0 and gap
       }
       for(int p = ns; p--; ) {
         int np = n[p];
@@ -164,8 +172,8 @@ Vector<RTYPE> flagleadCppImpl(const Vector<RTYPE>& x, const IntegerVector& n, co
         if(np>0) {
           if(names) colnam[p] = "L" + nc[p];
           for(int i = 0; i != l; ++i) {
-            if(ord2[i] >= np) {
-              outp[i] = x[omap[cgs[g[i]]+ord2[i]-np]];
+            if(ord2[i] >= np && (temp = omap[cgs[g[i]]+ord2[i]-np])) {
+              outp[i] = x[temp-1];
             } else {
               outp[i] = ff;
             }
@@ -173,8 +181,8 @@ Vector<RTYPE> flagleadCppImpl(const Vector<RTYPE>& x, const IntegerVector& n, co
         } else if(np<0) {
           if(names) colnam[p] = "F" + nc[p];
           for(int i = 0; i != l; ++i) {
-            if(ord2[i] < gsv[g[i]-1]+np) {
-              outp[i] = x[omap[cgs[g[i]]+ord2[i]-np]];
+            if(ord2[i] < max[g[i]]+np && (temp = omap[cgs[g[i]]+ord2[i]-np])) {
+              outp[i] = x[temp-1];
             } else {
               outp[i] = ff;
             }
@@ -205,32 +213,32 @@ Vector<RTYPE> flagleadCppImpl(const Vector<RTYPE>& x, const IntegerVector& n, co
 
 template <>
 Vector<CPLXSXP> flagleadCppImpl(const Vector<CPLXSXP>& x, const IntegerVector& n, const SEXP& fill,
-                               int ng, const IntegerVector& g, const SEXP& gs, const SEXP& t, bool names) {
+                               int ng, const IntegerVector& g, const SEXP& t, bool names) {
   stop("Not supported SEXP type!");
 }
 
 template <>
 Vector<VECSXP> flagleadCppImpl(const Vector<VECSXP>& x, const IntegerVector& n, const SEXP& fill,
-                               int ng, const IntegerVector& g, const SEXP& gs, const SEXP& t, bool names) {
+                               int ng, const IntegerVector& g, const SEXP& t, bool names) {
   stop("Not supported SEXP type!");
 }
 
 template <>
 Vector<RAWSXP> flagleadCppImpl(const Vector<RAWSXP>& x, const IntegerVector& n, const SEXP& fill,
-                               int ng, const IntegerVector& g, const SEXP& gs, const SEXP& t, bool names) {
+                               int ng, const IntegerVector& g, const SEXP& t, bool names) {
   stop("Not supported SEXP type!");
 }
 
 template <>
 Vector<EXPRSXP> flagleadCppImpl(const Vector<EXPRSXP>& x, const IntegerVector& n, const SEXP& fill,
-                                int ng, const IntegerVector& g, const SEXP& gs, const SEXP& t, bool names) {
+                                int ng, const IntegerVector& g, const SEXP& t, bool names) {
   stop("Not supported SEXP type!");
 }
 
 // [[Rcpp::export]]
 SEXP flagleadCpp(SEXP x, IntegerVector n = 1, SEXP fill = R_NilValue,
-                 int ng = 0, IntegerVector g = 0, SEXP gs = R_NilValue, SEXP t = R_NilValue, bool names = true){
-  RCPP_RETURN_VECTOR(flagleadCppImpl, x, n, fill, ng, g, gs, t, names);
+                 int ng = 0, IntegerVector g = 0, SEXP t = R_NilValue, bool names = true){
+  RCPP_RETURN_VECTOR(flagleadCppImpl, x, n, fill, ng, g, t, names);
 }
 
 
@@ -242,7 +250,7 @@ inline SEXP coln_check(SEXP x) {
 
 template <int RTYPE>
 Matrix<RTYPE> flagleadmCppImpl(const Matrix<RTYPE>& x, const IntegerVector& n, const SEXP& fill,
-                               int ng, const IntegerVector& g, const SEXP& gs, const SEXP& t, bool names) {
+                               int ng, const IntegerVector& g, const SEXP& t, bool names) {
 
   Vector<RTYPE> fil(1);
   if(Rf_isNull(fill)) { //  || fill != fill not necessary !!
@@ -298,16 +306,20 @@ Matrix<RTYPE> flagleadmCppImpl(const Matrix<RTYPE>& x, const IntegerVector& n, c
     } else { // Unordered data: Timevar Provided
       IntegerVector ord = t;
       if(l != ord.size()) stop("length(x) must match length(t)");
-      LogicalVector ocheck(l, true);
-      IntegerVector omap = no_init_vector(l);
+      int min = INT_MAX, max = INT_MIN, osize, temp;
       for(int i = 0; i != l; ++i) {
-        if(ord[i] > l || ord[i] < 1) stop("t needs to be a factor or integer vector of time-periods between 1 and length(x)");
-        if(ocheck[ord[i]-1]) {
-          ocheck[ord[i]-1] = false;
-          omap[ord[i]-1] = i; // Note: omap is the same as order(ord) !!
-        } else {
-          stop("Repeated values in timevar");
-        }
+        if(ord[i] < min) min = ord[i];
+        if(ord[i] > max) max = ord[i];
+      }
+      if(min == NA_INTEGER) stop("Timevar contains missing values");
+      osize = max-min+1;
+      if(osize > 3 * l) warning("Your time series is very irregular. Need to create an internal ordering vector of length %s to represent it.", osize);
+      IntegerVector omap(osize), ord2 = no_init_vector(l);
+      for(int i = 0; i != l; ++i) {
+        temp = ord[i] - min; // Best ? Or direct assign to ord2[i] ? Also check for panel version..
+        if(omap[temp]) stop("Repeated values in timevar");
+        omap[temp] = i+1;
+        ord2[i] = temp;
       }
       for(int j = 0; j != col; ++j) {
         ConstMatrixColumn<RTYPE> column = x( _ , j);
@@ -317,14 +329,22 @@ Matrix<RTYPE> flagleadmCppImpl(const Matrix<RTYPE>& x, const IntegerVector& n, c
           MatrixColumn<RTYPE> outj = out( _ , pos);
           if(np>0) {
             if(names) colnam[pos] = "L" + nc[p] + "." + coln[j];
-            int i = 0;
-            while(i != np) outj[omap[i++]] = ff;
-            for( ; i != l; ++i) outj[omap[i]] = column[omap[i - np]];
+            for(int i = 0; i != l; ++i) { // Smarter solution using while ???
+              if(ord2[i] >= np && (temp = omap[ord2[i] - np])) {
+                outj[i] = column[temp-1];
+              } else {
+                outj[i] = ff;
+              }
+            }
           } else if(np<0) {
             if(names) colnam[pos] = "F" + nc[p] + "." + coln[j];
-            int st = l+np, i = l;
-            while(i != st) outj[omap[--i]] = ff;
-            for( ; i--; ) outj[omap[i]] = column[omap[i - np]];
+            for(int i = 0, osnp = osize+np; i != l; ++i) { // Smarter solution using while ???
+              if(ord2[i] < osnp && (temp = omap[ord2[i] - np])) {
+                outj[i] = column[temp-1];
+              } else {
+                outj[i] = ff;
+              }
+            }
           } else {
             if(names) colnam[pos] = coln[j];
             outj = column;
@@ -375,37 +395,32 @@ Matrix<RTYPE> flagleadmCppImpl(const Matrix<RTYPE>& x, const IntegerVector& n, c
       }
     } else { // Unordered data: Timevar provided
       IntegerVector ord = t;
+      int temp;
       if(l != ord.size()) stop("length(x) must match length(t)");
-      IntegerVector min(ngp, INT_MAX);
-      IntegerVector gsv = Rf_isNull(gs) ? IntegerVector(ng) : as<IntegerVector>(gs); // no_init_vector(ng); // NULL; gives compiler warning
-      IntegerVector ord2 = no_init_vector(l); // See flag.cpp for any improvements on this code !!
-      if(Rf_isNull(gs)) {
-        // gsv = IntegerVector(ng);
-        // std::fill(gsv.begin(), gsv.end(), 0);
-        for(int i = 0; i != l; ++i) {
-          ++gsv[g[i]-1];
-          if(ord[i] < min[g[i]]) min[g[i]] = ord[i];
-        }
-      } else {
-        // gsv = gs;
-        if(ng != gsv.size()) stop("ng must match length(gs)");
-        for(int i = 0; i != l; ++i) if(ord[i] < min[g[i]]) min[g[i]] = ord[i];
+      IntegerVector min(ngp, INT_MAX), max(ngp, INT_MIN), cgs = no_init_vector(ngp);
+      for(int i = 0; i != l; ++i) {
+        temp = g[i];
+        if(ord[i] < min[temp]) min[temp] = ord[i];
+        if(ord[i] > max[temp]) max[temp] = ord[i];
       }
-      IntegerVector omap(l), cgs = no_init_vector(ngp), index = no_init_vector(l);
-      // int cgs[ngp], index[l]; // See above for any improvements on this code !!
-      cgs[1] = 0;
+      cgs[1] = 0; temp = 0;
       for(int i = 1; i != ng; ++i) {
-        cgs[i+1] = cgs[i] + gsv[i-1]; // or get "starts from forderv"
-        if(min[i] == NA_INTEGER) stop("Timevar contains missing values"); // Fastest here ?
+        if(min[i] == NA_INTEGER) stop("Timevar contains missing values");
+        max[i] -= min[i] - 1; // need max[i] which stores the complete group sizes only if p<0 e.g. if computing leads..
+        temp += max[i];
+        cgs[i+1] = temp; // + max[i] - min[i] + 1;
       }
-      if(min[ng] == NA_INTEGER) stop("Timevar contains missing values"); // Fastest here ?
-
+      if(min[ng] == NA_INTEGER) stop("Timevar contains missing values");
+      max[ng] -= min[ng] - 1;
+      temp += max[ng];
+      // omap provides the ordering to order the vector (needed to find previous / next values)
+      if(temp > 3 * l) warning("Your panel is very irregular. Need to create an internal ordering vector of length %s to represent it.", temp);
+      IntegerVector omap(temp), ord2 = no_init_vector(l), index = no_init_vector(l);
       for(int i = 0; i != l; ++i) {
         ord2[i] = ord[i] - min[g[i]];
-        if(ord2[i] >= gsv[g[i]-1]) stop("Gaps in timevar within one or more groups");
-        index[i] = cgs[g[i]]+ord2[i];
-        if(omap[index[i]] == 0) omap[index[i]] = i;
-        else stop("Repeated values of timevar within one or more groups");
+        index[i] = cgs[g[i]] + ord2[i];
+        if(omap[index[i]]) stop("Repeated values of timevar within one or more groups");
+        omap[index[i]] = i+1; // needed to add 1 to distinguish between 0 and gap
       }
       for(int j = 0; j != col; ++j) {
         ConstMatrixColumn<RTYPE> column = x( _ , j);
@@ -416,8 +431,8 @@ Matrix<RTYPE> flagleadmCppImpl(const Matrix<RTYPE>& x, const IntegerVector& n, c
           if(np>0) {
             if(names) colnam[pos] = "L" + nc[p] + "." + coln[j];
             for(int i = 0; i != l; ++i) {
-              if(ord2[i] >= np) {
-                outj[i] = column[omap[index[i]-np]];
+              if(ord2[i] >= np && (temp = omap[index[i]-np])) {
+                outj[i] = column[temp-1];
               } else {
                 outj[i] = ff;
               }
@@ -425,8 +440,8 @@ Matrix<RTYPE> flagleadmCppImpl(const Matrix<RTYPE>& x, const IntegerVector& n, c
           } else if(np<0) {
             if(names) colnam[pos] = "F" + nc[p] + "." + coln[j];
             for(int i = 0; i != l; ++i) { // best loop ??
-              if(ord2[i] < gsv[g[i]-1]+np) {
-                outj[i] = column[omap[index[i]-np]];
+              if(ord2[i] < max[g[i]]+np && (temp = omap[index[i]-np])) {
+                outj[i] = column[temp-1];
               } else {
                 outj[i] = ff;
               }
@@ -454,48 +469,44 @@ Matrix<RTYPE> flagleadmCppImpl(const Matrix<RTYPE>& x, const IntegerVector& n, c
 
 template <>
 Matrix<CPLXSXP> flagleadmCppImpl(const Matrix<CPLXSXP>& x, const IntegerVector& n, const SEXP& fill,
-                                int ng, const IntegerVector& g, const SEXP& gs, const SEXP& t, bool names) {
+                                int ng, const IntegerVector& g, const SEXP& t, bool names) {
   stop("Not supported SEXP type!");
 }
 
 template <>
 Matrix<VECSXP> flagleadmCppImpl(const Matrix<VECSXP>& x, const IntegerVector& n, const SEXP& fill,
-                                int ng, const IntegerVector& g, const SEXP& gs, const SEXP& t, bool names) {
+                                int ng, const IntegerVector& g, const SEXP& t, bool names) {
   stop("Not supported SEXP type!");
 }
 
 template <>
 Matrix<RAWSXP> flagleadmCppImpl(const Matrix<RAWSXP>& x, const IntegerVector& n, const SEXP& fill,
-                                int ng, const IntegerVector& g, const SEXP& gs, const SEXP& t, bool names) {
+                                int ng, const IntegerVector& g, const SEXP& t, bool names) {
   stop("Not supported SEXP type!");
 }
 
 template <>
 Matrix<EXPRSXP> flagleadmCppImpl(const Matrix<EXPRSXP>& x, const IntegerVector& n, const SEXP& fill,
-                                 int ng, const IntegerVector& g, const SEXP& gs, const SEXP& t, bool names) {
+                                 int ng, const IntegerVector& g, const SEXP& t, bool names) {
   stop("Not supported SEXP type!");
 }
 
 // [[Rcpp::export]]
 SEXP flagleadmCpp(SEXP x, IntegerVector n = 1, SEXP fill = R_NilValue,
-                  int ng = 0, IntegerVector g = 0, SEXP gs = R_NilValue, SEXP t = R_NilValue, bool names = true){
-  RCPP_RETURN_MATRIX(flagleadmCppImpl, x, n, fill, ng, g, gs, t, names);
+                  int ng = 0, IntegerVector g = 0, SEXP t = R_NilValue, bool names = true){
+  RCPP_RETURN_MATRIX(flagleadmCppImpl, x, n, fill, ng, g, t, names);
 }
 
 
 
 // [[Rcpp::export]]
 List flagleadlCpp(const List& x, const IntegerVector& n = 1, const SEXP& fill = R_NilValue,
-                  int ng = 0, const IntegerVector& g = 0, const SEXP& gs = R_NilValue,
-                  const SEXP& t = R_NilValue, bool names = true) {
+                  int ng = 0, const IntegerVector& g = 0, const SEXP& t = R_NilValue, bool names = true) {
 
-  bool lfill = fill == R_NilValue;
-  if(!lfill && TYPEOF(fill) == LGLSXP) {
-    LogicalVector f = fill;
-    lfill = f[0] == NA_LOGICAL;
-  }
+  bool lfill = Rf_isNull(fill);
+  if(!lfill && TYPEOF(fill) == LGLSXP) lfill = Rf_asLogical(fill) == NA_LOGICAL;
   int l = x.size(), ns = n.size(), pos = INT_MAX;
-  List out(l*ns);
+  List out(l * ns);
   IntegerVector absn = no_init_vector(ns);
   for(int i = 0; i != ns; ++i) {
     if(n[i] == pos) stop("duplicated values in n detected"); // because one might mistakenly pass a factor to the n-slot !!
@@ -514,11 +525,12 @@ List flagleadlCpp(const List& x, const IntegerVector& n = 1, const SEXP& fill = 
   if(ng == 0) { // No groups
     if(Rf_isNull(t)) { // Ordered data
       for(int j = 0; j != l; ++j) {
-        switch(TYPEOF(x[j])) {
+        int txj = TYPEOF(x[j]);
+        switch(txj) {
         case REALSXP: {
           NumericVector column = x[j];
           int row = column.size();
-          double ff = lfill ? NA_REAL : as<double>(fill);
+          double ff = lfill ? NA_REAL : Rf_asReal(fill); // as<double>()
           for(int p = 0; p != ns; ++p) {
             int np = n[p];
             if(absn[p] > row) stop("lag-length exceeds length of vector");
@@ -546,10 +558,11 @@ List flagleadlCpp(const List& x, const IntegerVector& n = 1, const SEXP& fill = 
           }
           break;
         }
+        case LGLSXP:
         case INTSXP: {
           IntegerVector column = x[j];
           int row = column.size();
-          int ff = lfill ? NA_INTEGER : as<int>(fill);
+          int ff = lfill ? NA_INTEGER : Rf_asInteger(fill); // as<int>()
           for(int p = 0; p != ns; ++p) {
             int np = n[p];
             if(absn[p] > row) stop("lag-length exceeds length of vector");
@@ -560,6 +573,7 @@ List flagleadlCpp(const List& x, const IntegerVector& n = 1, const SEXP& fill = 
               while(i != np) outjp[i++] = ff;
               for( ; i != row; ++i) outjp[i] = column[i - np];
               SHALLOW_DUPLICATE_ATTRIB(outjp, column);
+              if(txj == LGLSXP) SET_TYPEOF(outjp, LGLSXP);
               out[pos] = outjp;
             } else if(np<0) {
               IntegerVector outjp = no_init_vector(row);
@@ -568,10 +582,11 @@ List flagleadlCpp(const List& x, const IntegerVector& n = 1, const SEXP& fill = 
               while(i != st) outjp[--i] = ff;
               for( ; i--; ) outjp[i] = column[i - np];
               SHALLOW_DUPLICATE_ATTRIB(outjp, column);
+              if(txj == LGLSXP) SET_TYPEOF(outjp, LGLSXP);
               out[pos] = outjp;
             } else {
               if(names) nam[pos] = na[j];
-              out[pos] = column;
+              out[pos] = x[j];
             }
             ++pos;
           }
@@ -580,7 +595,8 @@ List flagleadlCpp(const List& x, const IntegerVector& n = 1, const SEXP& fill = 
         case STRSXP: {
           CharacterVector column = x[j];
           int row = column.size();
-          String ff = lfill ? NA_STRING : as<String>(fill); // String ??
+          // String ff = lfill ? NA_STRING : as<String>(fill); // String
+          SEXP ff = lfill ? NA_STRING : Rf_asChar(fill);
           for(int p = 0; p != ns; ++p) {
             int np = n[p];
             if(absn[p] > row) stop("lag-length exceeds length of vector");
@@ -594,37 +610,6 @@ List flagleadlCpp(const List& x, const IntegerVector& n = 1, const SEXP& fill = 
               out[pos] = outjp;
             } else if(np<0) {
               CharacterVector outjp = no_init_vector(row);
-              if(names) nam[pos] = "F" + nc[p] + "." + na[j];
-              int i = row, st = row+np;
-              while(i != st) outjp[--i] = ff;
-              for( ; i--; ) outjp[i] = column[i - np];
-              SHALLOW_DUPLICATE_ATTRIB(outjp, column);
-              out[pos] = outjp;
-            } else {
-              if(names) nam[pos] = na[j];
-              out[pos] = column;
-            }
-            ++pos;
-          }
-          break;
-        }
-        case LGLSXP: {
-          LogicalVector column = x[j];
-          int row = column.size();
-          auto ff = lfill ? NA_LOGICAL : as<bool>(fill);
-          for(int p = 0; p != ns; ++p) {
-            int np = n[p];
-            if(absn[p] > row) stop("lag-length exceeds length of vector");
-            if(np>0) {
-              LogicalVector outjp = no_init_vector(row);
-              if(names) nam[pos] = "L" + nc[p] + "." + na[j];
-              int i = 0;
-              while(i != np) outjp[i++] = ff;
-              for( ; i != row; ++i) outjp[i] = column[i - np];
-              SHALLOW_DUPLICATE_ATTRIB(outjp, column);
-              out[pos] = outjp;
-            } else if(np<0) {
-              LogicalVector outjp = no_init_vector(row);
               if(names) nam[pos] = "F" + nc[p] + "." + na[j];
               int i = row, st = row+np;
               while(i != st) outjp[--i] = ff;
@@ -644,41 +629,54 @@ List flagleadlCpp(const List& x, const IntegerVector& n = 1, const SEXP& fill = 
       }
     } else { // Unordered data: Timevar Provided
       IntegerVector ord = t;
-      int os = ord.size();
-      LogicalVector ocheck(os, true);
-      IntegerVector omap = no_init_vector(os);
+      int min = INT_MAX, max = INT_MIN, osize, temp, os = ord.size();
+      if(Rf_length(x[0]) != os) stop("nrow(x) must match length(t)");
       for(int i = 0; i != os; ++i) {
-        if(ord[i] > os || ord[i] < 1) stop("t needs to be a factor or integer vector of time-periods between 1 and length(x)");
-        if(ocheck[ord[i]-1]) {
-          ocheck[ord[i]-1] = false;
-          omap[ord[i]-1] = i; // Note: omap is the same as order(ord) !!
-        } else {
-          stop("Repeated values in timevar");
-        }
+        if(ord[i] < min) min = ord[i];
+        if(ord[i] > max) max = ord[i];
+      }
+      if(min == NA_INTEGER) stop("Timevar contains missing values");
+      osize = max-min+1;
+      if(osize > 3 * os) warning("Your time series is very irregular. Need to create an internal ordering vector of length %s to represent it.", osize);
+      IntegerVector omap(osize), ord2 = no_init_vector(os);
+      for(int i = 0; i != os; ++i) {
+        temp = ord[i] - min; // Best ? Or direct assign to ord2[i] ? Also check for panel version..
+        if(omap[temp]) stop("Repeated values in timevar");
+        omap[temp] = i+1;
+        ord2[i] = temp;
       }
       for(int j = 0; j != l; ++j) {
-        switch(TYPEOF(x[j])) {
+        int txj = TYPEOF(x[j]);
+        switch(txj) {
         case REALSXP: {
           NumericVector column = x[j];
-          if(os != column.size()) stop("length(x) must match length(t)");
-          double ff = lfill ? NA_REAL : as<double>(fill);
+          if(os != column.size()) stop("nrow(x) must match length(t)");
+          double ff = lfill ? NA_REAL : Rf_asReal(fill); // as<double>(
           for(int p = 0; p != ns; ++p) {
             int np = n[p];
             if(absn[p] > os) stop("lag-length exceeds length of vector");
             if(np>0) {
               NumericVector outjp = no_init_vector(os);
               if(names) nam[pos] = "L" + nc[p] + "." + na[j];
-              int i = 0;
-              while(i != np) outjp[omap[i++]] = ff;
-              for( ; i != os; ++i) outjp[omap[i]] = column[omap[i - np]];
+              for(int i = 0; i != os; ++i) { // Smarter solution using while ???
+                if(ord2[i] >= np && (temp = omap[ord2[i] - np])) {
+                  outjp[i] = column[temp-1];
+                } else {
+                  outjp[i] = ff;
+                }
+              }
               SHALLOW_DUPLICATE_ATTRIB(outjp, column);
               out[pos] = outjp;
             } else if(np<0) {
               NumericVector outjp = no_init_vector(os);
               if(names) nam[pos] = "F" + nc[p] + "." + na[j];
-              int st = os+np, i = os;
-              while(i != st) outjp[omap[--i]] = ff;
-              for( ; i--; ) outjp[omap[i]] = column[omap[i - np]];
+              for(int i = 0, osnp = osize+np; i != os; ++i) { // Smarter solution using while ???
+                if(ord2[i] < osnp && (temp = omap[ord2[i] - np])) {
+                  outjp[i] = column[temp-1];
+                } else {
+                  outjp[i] = ff;
+                }
+              }
               SHALLOW_DUPLICATE_ATTRIB(outjp, column);
               out[pos] = outjp;
             } else {
@@ -689,32 +687,43 @@ List flagleadlCpp(const List& x, const IntegerVector& n = 1, const SEXP& fill = 
           }
           break;
         }
+        case LGLSXP:
         case INTSXP: {
           IntegerVector column = x[j];
           if(os != column.size()) stop("length(x) must match length(t)");
-          int ff = lfill ? NA_INTEGER : as<int>(fill);
+          int ff = lfill ? NA_INTEGER : Rf_asInteger(fill); // as<int>(
           for(int p = 0; p != ns; ++p) {
             int np = n[p];
             if(absn[p] > os) stop("lag-length exceeds length of vector");
             if(np>0) {
               IntegerVector outjp = no_init_vector(os);
               if(names) nam[pos] = "L" + nc[p] + "." + na[j];
-              int i = 0;
-              while(i != np) outjp[omap[i++]] = ff;
-              for( ; i != os; ++i) outjp[omap[i]] = column[omap[i - np]];
+              for(int i = 0; i != os; ++i) { // Smarter solution using while ???
+                if(ord2[i] >= np && (temp = omap[ord2[i] - np])) {
+                  outjp[i] = column[temp-1];
+                } else {
+                  outjp[i] = ff;
+                }
+              }
               SHALLOW_DUPLICATE_ATTRIB(outjp, column);
+              if(txj == LGLSXP) SET_TYPEOF(outjp, LGLSXP);
               out[pos] = outjp;
             } else if(np<0) {
               IntegerVector outjp = no_init_vector(os);
               if(names) nam[pos] = "F" + nc[p] + "." + na[j];
-              int st = os+np, i = os;
-              while(i != st) outjp[omap[--i]] = ff;
-              for( ; i--; ) outjp[omap[i]] = column[omap[i - np]];
+              for(int i = 0, osnp = osize+np; i != os; ++i) { // Smarter solution using while ???
+                if(ord2[i] < osnp && (temp = omap[ord2[i] - np])) {
+                  outjp[i] = column[temp-1];
+                } else {
+                  outjp[i] = ff;
+                }
+              }
               SHALLOW_DUPLICATE_ATTRIB(outjp, column);
+              if(txj == LGLSXP) SET_TYPEOF(outjp, LGLSXP);
               out[pos] = outjp;
             } else {
               if(names) nam[pos] = na[j];
-              out[pos] = column;
+              out[pos] = x[j];
             }
             ++pos;
           }
@@ -723,55 +732,33 @@ List flagleadlCpp(const List& x, const IntegerVector& n = 1, const SEXP& fill = 
         case STRSXP: {
           CharacterVector column = x[j];
           if(os != column.size()) stop("length(x) must match length(t)");
-          String ff = lfill ? NA_STRING : as<String>(fill); // String ??
+          // String ff = lfill ? NA_STRING : as<String>(fill); // String ??
+          SEXP ff = lfill ? NA_STRING : Rf_asChar(fill);
           for(int p = 0; p != ns; ++p) {
             int np = n[p];
             if(absn[p] > os) stop("lag-length exceeds length of vector");
             if(np>0) {
               CharacterVector outjp = no_init_vector(os);
               if(names) nam[pos] = "L" + nc[p] + "." + na[j];
-              int i = 0;
-              while(i != np) outjp[omap[i++]] = ff;
-              for( ; i != os; ++i) outjp[omap[i]] = column[omap[i - np]];
+              for(int i = 0; i != os; ++i) { // Smarter solution using while ???
+                if(ord2[i] >= np && (temp = omap[ord2[i] - np])) {
+                  outjp[i] = column[temp-1];
+                } else {
+                  outjp[i] = ff;
+                }
+              }
               SHALLOW_DUPLICATE_ATTRIB(outjp, column);
               out[pos] = outjp;
             } else if(np<0) {
               CharacterVector outjp = no_init_vector(os);
               if(names) nam[pos] = "F" + nc[p] + "." + na[j];
-              int st = os+np, i = os;
-              while(i != st) outjp[omap[--i]] = ff;
-              for( ; i--; ) outjp[omap[i]] = column[omap[i - np]];
-              SHALLOW_DUPLICATE_ATTRIB(outjp, column);
-              out[pos] = outjp;
-            } else {
-              if(names) nam[pos] = na[j];
-              out[pos] = column;
-            }
-            ++pos;
-          }
-          break;
-        }
-        case LGLSXP: {
-          LogicalVector column = x[j];
-          if(os != column.size()) stop("length(x) must match length(t)");
-          auto ff = lfill ? NA_LOGICAL : as<bool>(fill);
-          for(int p = 0; p != ns; ++p) {
-            int np = n[p];
-            if(absn[p] > os) stop("lag-length exceeds length of vector");
-            if(np>0) {
-              LogicalVector outjp = no_init_vector(os);
-              if(names) nam[pos] = "L" + nc[p] + "." + na[j];
-              int i = 0;
-              while(i != np) outjp[omap[i++]] = ff;
-              for( ; i != os; ++i) outjp[omap[i]] = column[omap[i - np]];
-              SHALLOW_DUPLICATE_ATTRIB(outjp, column);
-              out[pos] = outjp;
-            } else if(np<0) {
-              LogicalVector outjp = no_init_vector(os);
-              if(names) nam[pos] = "F" + nc[p] + "." + na[j];
-              int st = os+np, i = os;
-              while(i != st) outjp[omap[--i]] = ff;
-              for( ; i--; ) outjp[omap[i]] = column[omap[i - np]];
+              for(int i = 0, osnp = osize+np; i != os; ++i) { // Smarter solution using while ???
+                if(ord2[i] < osnp && (temp = omap[ord2[i] - np])) {
+                  outjp[i] = column[temp-1];
+                } else {
+                  outjp[i] = ff;
+                }
+              }
               SHALLOW_DUPLICATE_ATTRIB(outjp, column);
               out[pos] = outjp;
             } else {
@@ -787,14 +774,15 @@ List flagleadlCpp(const List& x, const IntegerVector& n = 1, const SEXP& fill = 
       }
     }
   } else { // With groups
-    int gss = g.size(), ags = gss/ng, ngp = ng+1;
+    int gss = g.size(), ags = gss/ng, ngp = ng+1, temp = 0;
     if(Rf_isNull(t)) { // Ordered data
       std::vector<int> seen(ngp); // int seen[ngp], memsize = sizeof(int)*ngp;
       for(int j = 0; j != l; ++j) {
-        switch(TYPEOF(x[j])) {
+        int txj = TYPEOF(x[j]);
+        switch(txj) {
         case REALSXP: {
           NumericVector column = x[j];
-          double ff = lfill ? NA_REAL : as<double>(fill);
+          double ff = lfill ? NA_REAL : Rf_asReal(fill); // as<double>()
           if(gss != column.size()) stop("length(x) must match length(g)");
           for(int p = 0; p != ns; ++p) {
             int np = n[p];
@@ -835,9 +823,10 @@ List flagleadlCpp(const List& x, const IntegerVector& n = 1, const SEXP& fill = 
           }
           break;
         }
+        case LGLSXP:
         case INTSXP: {
           IntegerVector column = x[j];
-          int ff = lfill ? NA_INTEGER : as<int>(fill);
+          int ff = lfill ? NA_INTEGER : Rf_asInteger(fill); // as<int>()
           if(gss != column.size()) stop("length(x) must match length(g)");
           for(int p = 0; p != ns; ++p) {
             int np = n[p];
@@ -855,6 +844,7 @@ List flagleadlCpp(const List& x, const IntegerVector& n = 1, const SEXP& fill = 
                 }
               }
               SHALLOW_DUPLICATE_ATTRIB(outjp, column);
+              if(txj == LGLSXP) SET_TYPEOF(outjp, LGLSXP);
               out[pos] = outjp;
             } else if(np<0) {
               IntegerVector outjp = no_init_vector(gss);
@@ -869,10 +859,11 @@ List flagleadlCpp(const List& x, const IntegerVector& n = 1, const SEXP& fill = 
                 }
               }
               SHALLOW_DUPLICATE_ATTRIB(outjp, column);
+              if(txj == LGLSXP) SET_TYPEOF(outjp, LGLSXP);
               out[pos] = outjp;
             } else {
               if(names) nam[pos] = na[j];
-              out[pos] = column;
+              out[pos] = x[j];
             }
             ++pos;
           }
@@ -880,7 +871,8 @@ List flagleadlCpp(const List& x, const IntegerVector& n = 1, const SEXP& fill = 
         }
         case STRSXP: {
           CharacterVector column = x[j];
-          String ff = lfill ? NA_STRING : as<String>(fill); // String ??
+          // String ff = lfill ? NA_STRING : as<String>(fill); // String ??
+          SEXP ff = lfill ? NA_STRING : Rf_asChar(fill);
           if(gss != column.size()) stop("length(x) must match length(g)");
           for(int p = 0; p != ns; ++p) {
             int np = n[p];
@@ -901,49 +893,6 @@ List flagleadlCpp(const List& x, const IntegerVector& n = 1, const SEXP& fill = 
               out[pos] = outjp;
             } else if(np<0) {
               CharacterVector outjp = no_init_vector(gss);
-              if(names) nam[pos] = "F" + nc[p] + "." + na[j];
-              seen.assign(ngp, 0); //std::vector<int> seen(ngp); // memset(seen, 0, memsize);
-              for(int i = gss; i--; ) { // good??
-                if(seen[g[i]] == np) {
-                  outjp[i] = column[i-np];
-                } else {
-                  outjp[i] = ff;
-                  --seen[g[i]];
-                }
-              }
-              SHALLOW_DUPLICATE_ATTRIB(outjp, column);
-              out[pos] = outjp;
-            } else {
-              if(names) nam[pos] = na[j];
-              out[pos] = column;
-            }
-            ++pos;
-          }
-          break;
-        }
-        case LGLSXP: {
-          LogicalVector column = x[j];
-          auto ff = lfill ? NA_LOGICAL : as<bool>(fill);
-          if(gss != column.size()) stop("length(x) must match length(g)");
-          for(int p = 0; p != ns; ++p) {
-            int np = n[p];
-            if(absn[p] > ags) warning("lag-length exceeds average group-size (%i). This could also be a result of unused factor levels. See #25.", ags);
-            if(np>0) {
-              LogicalVector outjp = no_init_vector(gss);
-              if(names) nam[pos] = "L" + nc[p] + "." + na[j];
-              seen.assign(ngp, 0); //std::vector<int> seen(ngp); // memset(seen, 0, memsize);
-              for(int i = 0; i != gss; ++i) {
-                if(seen[g[i]] == np) {
-                  outjp[i] = column[i-np];
-                } else {
-                  outjp[i] = ff;
-                  ++seen[g[i]];
-                }
-              }
-              SHALLOW_DUPLICATE_ATTRIB(outjp, column);
-              out[pos] = outjp;
-            } else if(np<0) {
-              LogicalVector outjp = no_init_vector(gss);
               if(names) nam[pos] = "F" + nc[p] + "." + na[j];
               seen.assign(ngp, 0); //std::vector<int> seen(ngp); // memset(seen, 0, memsize);
               for(int i = gss; i--; ) { // good??
@@ -970,42 +919,40 @@ List flagleadlCpp(const List& x, const IntegerVector& n = 1, const SEXP& fill = 
     } else { // Unordered data: Timevar provided
       IntegerVector ord = t;
       if(gss != ord.size()) stop("length(g) must match length(t)");
-      IntegerVector min(ngp, INT_MAX); // Necessary !!!
-      IntegerVector gsv = Rf_isNull(gs) ? IntegerVector(ng) : as<IntegerVector>(gs); // = no_init_vector(ng); // NULL; gives compiler warning
-      IntegerVector ord2 = no_init_vector(gss); // See flag.cpp for any improvements on this code !!
-      if(Rf_isNull(gs)) {
-        // gsv = IntegerVector(ng);
-        // std::fill(gsv.begin(), gsv.end(), 0);
-        for(int i = 0; i != gss; ++i) {
-          ++gsv[g[i]-1];
-          if(ord[i] < min[g[i]]) min[g[i]] = ord[i];
-        }
-      } else {
-        // gsv = gs;
-        if(ng != gsv.size()) stop("ng must match length(gs)");
-        for(int i = 0; i != gss; ++i) if(ord[i] < min[g[i]]) min[g[i]] = ord[i];
-      }
-      IntegerVector omap(gss), cgs = no_init_vector(ngp), index = no_init_vector(gss);
-      // int cgs[ngp], index[gss]; // See flag.cpp for any improvements on this code !!
-      cgs[1] = 0;
-      for(int i = 1; i != ng; ++i) {
-        cgs[i+1] = cgs[i] + gsv[i-1]; // or get "starts from forderv"
-        if(min[i] == NA_INTEGER) stop("Timevar contains missing values"); // Fastest here ?
-      }
-      if(min[ng] == NA_INTEGER) stop("Timevar contains missing values"); // Fastest here ?
-
+      IntegerVector min(ngp, INT_MAX), max(ngp, INT_MIN), cgs = no_init_vector(ngp);
       for(int i = 0; i != gss; ++i) {
-        ord2[i] = ord[i] - min[g[i]];
-        if(ord2[i] >= gsv[g[i]-1]) stop("Gaps in timevar within one or more groups");
-        index[i] = cgs[g[i]]+ord2[i];
-        if(omap[index[i]] == 0) omap[index[i]] = i;
-        else stop("Repeated values of timevar within one or more groups");
+        temp = g[i];
+        if(ord[i] < min[temp]) min[temp] = ord[i];
+        if(ord[i] > max[temp]) max[temp] = ord[i];
       }
+      cgs[1] = 0; temp = 0;
+      for(int i = 1; i != ng; ++i) {
+        if(min[i] == NA_INTEGER) stop("Timevar contains missing values");
+        max[i] -= min[i] - 1; // need max[i] which stores the complete group sizes only if p<0 e.g. if computing leads..
+        temp += max[i];
+        cgs[i+1] = temp; // + max[i] - min[i] + 1;
+      }
+      if(min[ng] == NA_INTEGER) stop("Timevar contains missing values");
+      max[ng] -= min[ng] - 1;
+      temp += max[ng];
+      // index stores the position of the current observation in the ordered vector
+      // omap provides the ordering to order the vector (needed to find previous / next values)
+      if(temp > 3 * gss) warning("Your panel is very irregular. Need to create an internal ordering vector of length %s to represent it.", temp);
+      IntegerVector omap(temp), ord2 = no_init_vector(gss), index = no_init_vector(gss);
+      for(int i = 0; i != gss; ++i) {
+        ord2[i] = ord[i] - min[g[i]]; // Need ord2 can get rid of any part ?? ??
+        // if(ord2[i] >= gsv[g[i]-1]) stop("Gaps in timevar within one or more groups");
+        index[i] = cgs[g[i]] + ord2[i];
+        if(omap[index[i]]) stop("Repeated values of timevar within one or more groups");
+        omap[index[i]] = i+1; // needed to add 1 to distinguish between 0 and gap
+      }
+      // return List::create(cgs, min, max, ord2, index, omap);
       for(int j = 0; j != l; ++j) {
-        switch(TYPEOF(x[j])) {
+        int txj = TYPEOF(x[j]);
+        switch(txj) {
         case REALSXP: {
           NumericVector column = x[j];
-          double ff = lfill ? NA_REAL : as<double>(fill);
+          double ff = lfill ? NA_REAL : Rf_asReal(fill); // as<double>()
           if(gss != column.size()) stop("length(x) must match length(g)");
           for(int p = 0; p != ns; ++p) {
             int np = n[p];
@@ -1014,8 +961,8 @@ List flagleadlCpp(const List& x, const IntegerVector& n = 1, const SEXP& fill = 
               NumericVector outjp = no_init_vector(gss);
               if(names) nam[pos] = "L" + nc[p] + "." + na[j];
               for(int i = 0; i != gss; ++i) {
-                if(ord2[i] >= np) {
-                  outjp[i] = column[omap[index[i]-np]];
+                if(ord2[i] >= np && (temp = omap[index[i]-np])) {
+                  outjp[i] = column[temp-1];
                 } else {
                   outjp[i] = ff;
                 }
@@ -1026,8 +973,8 @@ List flagleadlCpp(const List& x, const IntegerVector& n = 1, const SEXP& fill = 
               NumericVector outjp = no_init_vector(gss);
               if(names) nam[pos] = "F" + nc[p] + "." + na[j];
               for(int i = 0; i != gss; ++i) { // best loop ??
-                if(ord2[i] < gsv[g[i]-1]+np) {
-                  outjp[i] = column[omap[index[i]-np]];
+                if(ord2[i] < max[g[i]]+np && (temp = omap[index[i]-np])) {
+                  outjp[i] = column[temp-1];
                 } else {
                   outjp[i] = ff;
                 }
@@ -1042,9 +989,10 @@ List flagleadlCpp(const List& x, const IntegerVector& n = 1, const SEXP& fill = 
           }
           break;
         }
+        case LGLSXP:
         case INTSXP: {
           IntegerVector column = x[j];
-          int ff = lfill ? NA_INTEGER : as<int>(fill);
+          int ff = lfill ? NA_INTEGER : Rf_asInteger(fill); // as<int>
           if(gss != column.size()) stop("length(x) must match length(g)");
           for(int p = 0; p != ns; ++p) {
             int np = n[p];
@@ -1053,29 +1001,31 @@ List flagleadlCpp(const List& x, const IntegerVector& n = 1, const SEXP& fill = 
               IntegerVector outjp = no_init_vector(gss);
               if(names) nam[pos] = "L" + nc[p] + "." + na[j];
               for(int i = 0; i != gss; ++i) {
-                if(ord2[i] >= np) {
-                  outjp[i] = column[omap[index[i]-np]];
+                if(ord2[i] >= np && (temp = omap[index[i]-np])) {
+                  outjp[i] = column[temp-1];
                 } else {
                   outjp[i] = ff;
                 }
               }
               SHALLOW_DUPLICATE_ATTRIB(outjp, column);
+              if(txj == LGLSXP) SET_TYPEOF(outjp, LGLSXP);
               out[pos] = outjp;
             } else if(np<0) {
               IntegerVector outjp = no_init_vector(gss);
               if(names) nam[pos] = "F" + nc[p] + "." + na[j];
               for(int i = 0; i != gss; ++i) { // best loop ??
-                if(ord2[i] < gsv[g[i]-1]+np) {
-                  outjp[i] = column[omap[index[i]-np]];
+                if(ord2[i] < max[g[i]]+np && (temp = omap[index[i]-np])) {
+                  outjp[i] = column[temp-1];
                 } else {
                   outjp[i] = ff;
                 }
               }
               SHALLOW_DUPLICATE_ATTRIB(outjp, column);
+              if(txj == LGLSXP) SET_TYPEOF(outjp, LGLSXP);
               out[pos] = outjp;
             } else {
               if(names) nam[pos] = na[j];
-              out[pos] = column;
+              out[pos] = x[j];
             }
             ++pos;
           }
@@ -1083,7 +1033,8 @@ List flagleadlCpp(const List& x, const IntegerVector& n = 1, const SEXP& fill = 
         }
         case STRSXP: {
           CharacterVector column = x[j];
-          String ff = lfill ? NA_STRING : as<String>(fill); // String ??
+          // String ff = lfill ? NA_STRING : as<String>(fill);
+          SEXP ff = lfill ? NA_STRING : Rf_asChar(fill);
           if(gss != column.size()) stop("length(x) must match length(g)");
           for(int p = 0; p != ns; ++p) {
             int np = n[p];
@@ -1092,8 +1043,8 @@ List flagleadlCpp(const List& x, const IntegerVector& n = 1, const SEXP& fill = 
               CharacterVector outjp = no_init_vector(gss);
               if(names) nam[pos] = "L" + nc[p] + "." + na[j];
               for(int i = 0; i != gss; ++i) {
-                if(ord2[i] >= np) {
-                  outjp[i] = column[omap[index[i]-np]];
+                if(ord2[i] >= np && (temp = omap[index[i]-np])) {
+                  outjp[i] = column[temp-1];
                 } else {
                   outjp[i] = ff;
                 }
@@ -1104,47 +1055,8 @@ List flagleadlCpp(const List& x, const IntegerVector& n = 1, const SEXP& fill = 
               CharacterVector outjp = no_init_vector(gss);
               if(names) nam[pos] = "F" + nc[p] + "." + na[j];
               for(int i = 0; i != gss; ++i) { // best loop ??
-                if(ord2[i] < gsv[g[i]-1]+np) {
-                  outjp[i] = column[omap[index[i]-np]];
-                } else {
-                  outjp[i] = ff;
-                }
-              }
-              SHALLOW_DUPLICATE_ATTRIB(outjp, column);
-              out[pos] = outjp;
-            } else {
-              if(names) nam[pos] = na[j];
-              out[pos] = column;
-            }
-            ++pos;
-          }
-          break;
-        }
-        case LGLSXP: {
-          LogicalVector column = x[j];
-          auto ff = lfill ? NA_LOGICAL : as<bool>(fill);
-          if(gss != column.size()) stop("length(x) must match length(g)");
-          for(int p = 0; p != ns; ++p) {
-            int np = n[p];
-            if(absn[p] > ags) warning("lag-length exceeds average group-size (%i). This could also be a result of unused factor levels. See #25.", ags);
-            if(np>0) {
-              LogicalVector outjp = no_init_vector(gss);
-              if(names) nam[pos] = "L" + nc[p] + "." + na[j];
-              for(int i = 0; i != gss; ++i) {
-                if(ord2[i] >= np) {
-                  outjp[i] = column[omap[index[i]-np]];
-                } else {
-                  outjp[i] = ff;
-                }
-              }
-              SHALLOW_DUPLICATE_ATTRIB(outjp, column);
-              out[pos] = outjp;
-            } else if(np<0) {
-              LogicalVector outjp = no_init_vector(gss);
-              if(names) nam[pos] = "F" + nc[p] + "." + na[j];
-              for(int i = 0; i != gss; ++i) { // best loop ??
-                if(ord2[i] < gsv[g[i]-1]+np) {
-                  outjp[i] = column[omap[index[i]-np]];
+                if(ord2[i] < max[g[i]]+np && (temp = omap[index[i]-np])) {
+                  outjp[i] = column[temp-1];
                 } else {
                   outjp[i] = ff;
                 }
