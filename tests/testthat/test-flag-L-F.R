@@ -1,6 +1,7 @@
 context("flag / L / F")
 
 # rm(list = ls())
+# TODO: test computations on irregular time series and panels
 
 x <- abs(10*rnorm(100))
 xNA <- x
@@ -271,13 +272,13 @@ test_that("flag produces errors for wrong input", {
   expect_error(flag(1:3, t = c(1,1,2)))
   expect_error(flag(1:3, t = c(1,2,2)))
   expect_error(flag(1:3, t = c(1,2,1)))
-  # expect_error(flag(1:10, g = c(1,1,1,2,2,2,3,3,3,3), t = c(1,1,2,1:3,1:4))) # This is the only possible statement which does not throw a reteated timevar error because the first C++ index is 0, and omap is also initialized with 0's.
+  expect_error(flag(1:10, g = c(1,1,1,2,2,2,3,3,3,3), t = c(1,1,2,1:3,1:4))) # This is the only possible statement which does not throw a reteated timevar error because the first C++ index is 0, and omap is also initialized with 0's.
   expect_error(flag(1:10, g = c(1,1,1,2,2,2,3,3,3,3), t = c(1,1,1,1:3,1:4)))
   expect_error(flag(1:10, g = c(1,1,1,2,2,2,3,3,3,3), t = c(1:3,1:3,1,1,3,4)))
   expect_error(flag(1:10, g = c(1,1,1,2,2,2,3,3,3,3), t = c(1,2,2,1:3,1:4)))
-  expect_error(flag(1:10, g = c(1,1,1,2,2,2,3,3,3,3), t = c(1,2,4,1:3,1:4)))
+  expect_visible(flag(1:10, g = c(1,1,1,2,2,2,3,3,3,3), t = c(1,2,4,1:3,1:4)))
   expect_error(flag(1:10, g = c(1,2,1,2,2,2,3,3,3,3), t = c(1:3,1:3,1:4)))
-  expect_error(flag(1:10, g = c(1,1,1,2,2,2,3,3,4,3), t = c(1:3,1:3,1:4)))
+  expect_visible(flag(1:10, g = c(1,1,1,2,2,2,3,3,4,3), t = c(1:3,1:3,1:4)))
   # The usual stuff: Wrongly sized grouping vectors or time-variables
   expect_error(flag(1:3, t = 1:2))
   expect_error(flag(1:3, t = 1:4))
@@ -374,13 +375,13 @@ test_that("L produces errors for wrong input", {
   expect_error(L(1:3, t = c(1,1,2)))
   expect_error(L(1:3, t = c(1,2,2)))
   expect_error(L(1:3, t = c(1,2,1)))
-  # expect_error(L(1:10, g = c(1,1,1,2,2,2,3,3,3,3), t = c(1,1,2,1:3,1:4))) # This is the only possible statement which does not throw a reteated timevar error because the first C++ index is 0, and omap is also initialized with 0's.
+  expect_error(L(1:10, g = c(1,1,1,2,2,2,3,3,3,3), t = c(1,1,2,1:3,1:4))) # This is the only possible statement which does not throw a reteated timevar error because the first C++ index is 0, and omap is also initialized with 0's.
   expect_error(L(1:10, g = c(1,1,1,2,2,2,3,3,3,3), t = c(1,1,1,1:3,1:4)))
   expect_error(L(1:10, g = c(1,1,1,2,2,2,3,3,3,3), t = c(1:3,1:3,1,1,3,4)))
   expect_error(L(1:10, g = c(1,1,1,2,2,2,3,3,3,3), t = c(1,2,2,1:3,1:4)))
-  expect_error(L(1:10, g = c(1,1,1,2,2,2,3,3,3,3), t = c(1,2,4,1:3,1:4)))
+  expect_visible(L(1:10, g = c(1,1,1,2,2,2,3,3,3,3), t = c(1,2,4,1:3,1:4)))
   expect_error(L(1:10, g = c(1,2,1,2,2,2,3,3,3,3), t = c(1:3,1:3,1:4)))
-  expect_error(L(1:10, g = c(1,1,1,2,2,2,3,3,4,3), t = c(1:3,1:3,1:4)))
+  expect_visible(L(1:10, g = c(1,1,1,2,2,2,3,3,4,3), t = c(1:3,1:3,1:4)))
   # The usual stuff: Wrongly sized grouping vectors or time-variables
   expect_error(L(1:3, t = 1:2))
   expect_error(L(1:3, t = 1:4))

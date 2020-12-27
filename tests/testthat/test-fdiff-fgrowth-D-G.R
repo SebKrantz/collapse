@@ -2,6 +2,8 @@ context("fdiff / D and fgrowth / G")
 
 # rm(list = ls())
 
+# TODO: test computations on irregular time series and panels
+
 x <- abs(10*rnorm(100))
 xNA <- x
 xNA[sample.int(100, 20)] <- NA
@@ -335,13 +337,16 @@ test_that("fdiff produces errors for wrong input", {
   expect_error(fdiff(1:3, t = c(1,1,2))); 34
   expect_error(fdiff(1:3, t = c(1,2,2))); 35
   expect_error(fdiff(1:3, t = c(1,2,1))); 36
-  # expect_error(fdiff(1:10, g = c(1,1,1,2,2,2,3,3,3,3), t = c(1,1,2,1:3,1:4))) # This is the only possible statement which does not throw a reteated timevar error because the first C++ index is 0, and omap is also initialized with 0's.
+  expect_error(fdiff(1:10, g = c(1,1,1,2,2,2,3,3,3,3), t = c(1,1,2,1:3,1:4))) # This is the only possible statement which does not throw a reteated timevar error because the first C++ index is 0, and omap is also initialized with 0's.
   expect_error(fdiff(1:10, g = c(1,1,1,2,2,2,3,3,3,3), t = c(1,1,1,1:3,1:4))); 37
   expect_error(fdiff(1:10, g = c(1,1,1,2,2,2,3,3,3,3), t = c(1:3,1:3,1,1,3,4))); 38
   expect_error(fdiff(1:10, g = c(1,1,1,2,2,2,3,3,3,3), t = c(1,2,2,1:3,1:4))); 39
-  expect_error(fdiff(1:10, g = c(1,1,1,2,2,2,3,3,3,3), t = c(1,2,4,1:3,1:4))); 40
+  expect_visible(fdiff(1:10, g = c(1,1,1,2,2,2,3,3,3,3), t = c(1,2,4,1:3,1:4))); 40
+  expect_error(fdiff(1:10, diff = 2, g = c(1,1,1,2,2,2,3,3,3,3), t = c(1,2,4,1:3,1:4))); 40
   expect_error(fdiff(1:10, g = c(1,2,1,2,2,2,3,3,3,3), t = c(1:3,1:3,1:4))); 41
-  expect_error(fdiff(1:10, g = c(1,1,1,2,2,2,3,3,4,3), t = c(1:3,1:3,1:4))); 42
+  expect_visible(fdiff(1:10, g = c(1,1,1,2,2,2,3,3,4,3), t = c(1:3,1:3,1:4))); 42
+  expect_error(fdiff(1:10, diff = 2, g = c(1,1,1,2,2,2,3,3,4,3), t = c(1:3,1:3,1:4))); 42
+
   # The usual stuff: Wrongly sized grouping vectors or time-variables
   expect_error(fdiff(1:3, t = 1:2)); 43
   expect_error(fdiff(1:3, t = 1:4)); 44
@@ -395,13 +400,15 @@ test_that("D produces errors for wrong input", {
   expect_error(D(1:3, t = c(1,1,2)))
   expect_error(D(1:3, t = c(1,2,2)))
   expect_error(D(1:3, t = c(1,2,1)))
-  # expect_error(D(1:10, g = c(1,1,1,2,2,2,3,3,3,3), t = c(1,1,2,1:3,1:4))) # This is the only possible statement which does not throw a reteated timevar error because the first C++ index is 0, and omap is also initialized with 0's.
+  expect_error(D(1:10, g = c(1,1,1,2,2,2,3,3,3,3), t = c(1,1,2,1:3,1:4))) # This is the only possible statement which does not throw a reteated timevar error because the first C++ index is 0, and omap is also initialized with 0's.
   expect_error(D(1:10, g = c(1,1,1,2,2,2,3,3,3,3), t = c(1,1,1,1:3,1:4)))
   expect_error(D(1:10, g = c(1,1,1,2,2,2,3,3,3,3), t = c(1:3,1:3,1,1,3,4)))
   expect_error(D(1:10, g = c(1,1,1,2,2,2,3,3,3,3), t = c(1,2,2,1:3,1:4)))
-  expect_error(D(1:10, g = c(1,1,1,2,2,2,3,3,3,3), t = c(1,2,4,1:3,1:4)))
+  expect_visible(D(1:10, g = c(1,1,1,2,2,2,3,3,3,3), t = c(1,2,4,1:3,1:4)))
+  expect_error(D(1:10, diff = 2, g = c(1,1,1,2,2,2,3,3,3,3), t = c(1,2,4,1:3,1:4)))
   expect_error(D(1:10, g = c(1,2,1,2,2,2,3,3,3,3), t = c(1:3,1:3,1:4)))
-  expect_error(D(1:10, g = c(1,1,1,2,2,2,3,3,4,3), t = c(1:3,1:3,1:4)))
+  expect_visible(D(1:10, g = c(1,1,1,2,2,2,3,3,4,3), t = c(1:3,1:3,1:4)))
+  expect_error(D(1:10, diff = 2, g = c(1,1,1,2,2,2,3,3,4,3), t = c(1:3,1:3,1:4)))
   # The usual stuff: Wrongly sized grouping vectors or time-variables
   expect_error(D(1:3, t = 1:2))
   expect_error(D(1:3, t = 1:4))
@@ -757,13 +764,15 @@ test_that("fgrowth produces errors for wrong input", {
   expect_error(fgrowth(1:3, t = c(1,1,2)))
   expect_error(fgrowth(1:3, t = c(1,2,2)))
   expect_error(fgrowth(1:3, t = c(1,2,1)))
-  # expect_error(fgrowth(1:10, g = c(1,1,1,2,2,2,3,3,3,3), t = c(1,1,2,1:3,1:4))) # This is the only possible statement which does not throw a reteated timevar error because the first C++ index is 0, and omap is also initialized with 0's.
+  expect_error(fgrowth(1:10, g = c(1,1,1,2,2,2,3,3,3,3), t = c(1,1,2,1:3,1:4))) # This is the only possible statement which does not throw a reteated timevar error because the first C++ index is 0, and omap is also initialized with 0's.
   expect_error(fgrowth(1:10, g = c(1,1,1,2,2,2,3,3,3,3), t = c(1,1,1,1:3,1:4)))
   expect_error(fgrowth(1:10, g = c(1,1,1,2,2,2,3,3,3,3), t = c(1:3,1:3,1,1,3,4)))
   expect_error(fgrowth(1:10, g = c(1,1,1,2,2,2,3,3,3,3), t = c(1,2,2,1:3,1:4)))
-  expect_error(fgrowth(1:10, g = c(1,1,1,2,2,2,3,3,3,3), t = c(1,2,4,1:3,1:4)))
+  expect_visible(fgrowth(1:10, g = c(1,1,1,2,2,2,3,3,3,3), t = c(1,2,4,1:3,1:4)))
+  expect_error(fgrowth(1:10, diff = 2, g = c(1,1,1,2,2,2,3,3,3,3), t = c(1,2,4,1:3,1:4)))
   expect_error(fgrowth(1:10, g = c(1,2,1,2,2,2,3,3,3,3), t = c(1:3,1:3,1:4)))
-  expect_error(fgrowth(1:10, g = c(1,1,1,2,2,2,3,3,4,3), t = c(1:3,1:3,1:4)))
+  expect_visible(fgrowth(1:10, g = c(1,1,1,2,2,2,3,3,4,3), t = c(1:3,1:3,1:4)))
+  expect_error(fgrowth(1:10, diff = 2, g = c(1,1,1,2,2,2,3,3,4,3), t = c(1:3,1:3,1:4)))
   # The usual stuff: Wrongly sized grouping vectors or time-variables
   expect_error(fgrowth(1:3, t = 1:2))
   expect_error(fgrowth(1:3, t = 1:4))
@@ -817,13 +826,15 @@ test_that("G produces errors for wrong input", {
   expect_error(G(1:3, t = c(1,1,2)))
   expect_error(G(1:3, t = c(1,2,2)))
   expect_error(G(1:3, t = c(1,2,1)))
-  # expect_error(G(1:10, g = c(1,1,1,2,2,2,3,3,3,3), t = c(1,1,2,1:3,1:4))) # This is the only possible statement which does not throw a reteated timevar error because the first C++ index is 0, and omap is also initialized with 0's.
+  expect_error(G(1:10, g = c(1,1,1,2,2,2,3,3,3,3), t = c(1,1,2,1:3,1:4))) # This is the only possible statement which does not throw a reteated timevar error because the first C++ index is 0, and omap is also initialized with 0's.
   expect_error(G(1:10, g = c(1,1,1,2,2,2,3,3,3,3), t = c(1,1,1,1:3,1:4)))
   expect_error(G(1:10, g = c(1,1,1,2,2,2,3,3,3,3), t = c(1:3,1:3,1,1,3,4)))
   expect_error(G(1:10, g = c(1,1,1,2,2,2,3,3,3,3), t = c(1,2,2,1:3,1:4)))
-  expect_error(G(1:10, g = c(1,1,1,2,2,2,3,3,3,3), t = c(1,2,4,1:3,1:4)))
+  expect_visible(G(1:10, g = c(1,1,1,2,2,2,3,3,3,3), t = c(1,2,4,1:3,1:4)))
+  expect_error(G(1:10, diff = 2, g = c(1,1,1,2,2,2,3,3,3,3), t = c(1,2,4,1:3,1:4)))
   expect_error(G(1:10, g = c(1,2,1,2,2,2,3,3,3,3), t = c(1:3,1:3,1:4)))
-  expect_error(G(1:10, g = c(1,1,1,2,2,2,3,3,4,3), t = c(1:3,1:3,1:4)))
+  expect_visible(G(1:10, g = c(1,1,1,2,2,2,3,3,4,3), t = c(1:3,1:3,1:4)))
+  expect_error(G(1:10, diff = 2, g = c(1,1,1,2,2,2,3,3,4,3), t = c(1:3,1:3,1:4)))
   # The usual stuff: Wrongly sized grouping vectors or time-variables
   expect_error(G(1:3, t = 1:2))
   expect_error(G(1:3, t = 1:4))
@@ -1177,13 +1188,15 @@ test_that("fgrowth with logdiff produces errors for wrong input", {
   expect_error(fgrowth(1:3, t = c(1,1,2), logdiff = TRUE))
   expect_error(fgrowth(1:3, t = c(1,2,2), logdiff = TRUE))
   expect_error(fgrowth(1:3, t = c(1,2,1), logdiff = TRUE))
-  # expect_error(fgrowth(1:10, g = c(1,1,1,2,2,2,3,3,3,3), t = c(1,1,2,1:3,1:4, logdiff = TRUE)) # This is the only possible statement which does not throw a reteated timevar error because the first C++ index is 0, and omap is also initialized with 0's.
+  expect_error(fgrowth(1:10, g = c(1,1,1,2,2,2,3,3,3,3), t = c(1,1,2,1:3,1:4), logdiff = TRUE)) # This is the only possible statement which does not throw a reteated timevar error because the first C++ index is 0, and omap is also initialized with 0's.
   expect_error(fgrowth(1:10, g = c(1,1,1,2,2,2,3,3,3,3), t = c(1,1,1,1:3,1:4), logdiff = TRUE))
   expect_error(fgrowth(1:10, g = c(1,1,1,2,2,2,3,3,3,3), t = c(1:3,1:3,1,1,3,4), logdiff = TRUE))
   expect_error(fgrowth(1:10, g = c(1,1,1,2,2,2,3,3,3,3), t = c(1,2,2,1:3,1:4), logdiff = TRUE))
-  expect_error(fgrowth(1:10, g = c(1,1,1,2,2,2,3,3,3,3), t = c(1,2,4,1:3,1:4), logdiff = TRUE))
+  expect_visible(fgrowth(1:10, g = c(1,1,1,2,2,2,3,3,3,3), t = c(1,2,4,1:3,1:4), logdiff = TRUE))
+  expect_error(fgrowth(1:10, diff = 2, g = c(1,1,1,2,2,2,3,3,3,3), t = c(1,2,4,1:3,1:4), logdiff = TRUE))
   expect_error(fgrowth(1:10, g = c(1,2,1,2,2,2,3,3,3,3), t = c(1:3,1:3,1:4), logdiff = TRUE))
-  expect_error(fgrowth(1:10, g = c(1,1,1,2,2,2,3,3,4,3), t = c(1:3,1:3,1:4), logdiff = TRUE))
+  expect_visible(fgrowth(1:10, g = c(1,1,1,2,2,2,3,3,4,3), t = c(1:3,1:3,1:4), logdiff = TRUE))
+  expect_error(fgrowth(1:10, diff = 2, g = c(1,1,1,2,2,2,3,3,4,3), t = c(1:3,1:3,1:4), logdiff = TRUE))
   # The usual stuff: Wrongly sized grouping vectors or time-variables
   expect_error(fgrowth(1:3, t = 1:2, logdiff = TRUE))
   expect_error(fgrowth(1:3, t = 1:4, logdiff = TRUE))
@@ -1237,13 +1250,15 @@ test_that("G with logdiff produces errors for wrong input", {
   expect_error(G(1:3, t = c(1,1,2), logdiff = TRUE))
   expect_error(G(1:3, t = c(1,2,2), logdiff = TRUE))
   expect_error(G(1:3, t = c(1,2,1), logdiff = TRUE))
-  # expect_error(G(1:10, g = c(1,1,1,2,2,2,3,3,3,3), t = c(1,1,2,1:3,1:4), logdiff = TRUE)) # This is the only possible statement which does not throw a reteated timevar error because the first C++ index is 0, and omap is also initialized with 0's.
+  expect_error(G(1:10, g = c(1,1,1,2,2,2,3,3,3,3), t = c(1,1,2,1:3,1:4), logdiff = TRUE)) # This is the only possible statement which does not throw a reteated timevar error because the first C++ index is 0, and omap is also initialized with 0's.
   expect_error(G(1:10, g = c(1,1,1,2,2,2,3,3,3,3), t = c(1,1,1,1:3,1:4), logdiff = TRUE))
   expect_error(G(1:10, g = c(1,1,1,2,2,2,3,3,3,3), t = c(1:3,1:3,1,1,3,4), logdiff = TRUE))
   expect_error(G(1:10, g = c(1,1,1,2,2,2,3,3,3,3), t = c(1,2,2,1:3,1:4), logdiff = TRUE))
-  expect_error(G(1:10, g = c(1,1,1,2,2,2,3,3,3,3), t = c(1,2,4,1:3,1:4), logdiff = TRUE))
+  expect_visible(G(1:10, g = c(1,1,1,2,2,2,3,3,3,3), t = c(1,2,4,1:3,1:4), logdiff = TRUE))
+  expect_error(G(1:10, diff = 2, g = c(1,1,1,2,2,2,3,3,3,3), t = c(1,2,4,1:3,1:4), logdiff = TRUE))
   expect_error(G(1:10, g = c(1,2,1,2,2,2,3,3,3,3), t = c(1:3,1:3,1:4), logdiff = TRUE))
-  expect_error(G(1:10, g = c(1,1,1,2,2,2,3,3,4,3), t = c(1:3,1:3,1:4), logdiff = TRUE))
+  expect_visible(G(1:10, g = c(1,1,1,2,2,2,3,3,4,3), t = c(1:3,1:3,1:4), logdiff = TRUE))
+  expect_error(G(1:10, diff = 2, g = c(1,1,1,2,2,2,3,3,4,3), t = c(1:3,1:3,1:4), logdiff = TRUE))
   # The usual stuff: Wrongly sized grouping vectors or time-variables
   expect_error(G(1:3, t = 1:2, logdiff = TRUE))
   expect_error(G(1:3, t = 1:4, logdiff = TRUE))

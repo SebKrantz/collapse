@@ -99,16 +99,16 @@ fdiffgrowthlCpp <- function(x, n = 1L, diff = 1L, fill = NA_real_, ng = 0L, g = 
     .Call(Cpp_fdiffgrowthl, x, n, diff, fill, ng, g, gs, t, ret, rho, names, power)
 }
 
-flagleadCpp <- function(x, n = 1L, fill = NULL, ng = 0L, g = 0L, gs = NULL, t = NULL, names = TRUE) {
-    .Call(Cpp_flaglead, x, n, fill, ng, g, gs, t, names)
+flagleadCpp <- function(x, n = 1L, fill = NULL, ng = 0L, g = 0L, t = NULL, names = TRUE) {
+    .Call(Cpp_flaglead, x, n, fill, ng, g, t, names)
 }
 
-flagleadmCpp <- function(x, n = 1L, fill = NULL, ng = 0L, g = 0L, gs = NULL, t = NULL, names = TRUE) {
-    .Call(Cpp_flagleadm, x, n, fill, ng, g, gs, t, names)
+flagleadmCpp <- function(x, n = 1L, fill = NULL, ng = 0L, g = 0L, t = NULL, names = TRUE) {
+    .Call(Cpp_flagleadm, x, n, fill, ng, g, t, names)
 }
 
-flagleadlCpp <- function(x, n = 1L, fill = NULL, ng = 0L, g = 0L, gs = NULL, t = NULL, names = TRUE) {
-    .Call(Cpp_flagleadl, x, n, fill, ng, g, gs, t, names)
+flagleadlCpp <- function(x, n = 1L, fill = NULL, ng = 0L, g = 0L, t = NULL, names = TRUE) {
+    .Call(Cpp_flagleadl, x, n, fill, ng, g, t, names)
 }
 
 flastCpp <- function(x, ng = 0L, g = 0L, narm = TRUE) {

@@ -11,11 +11,14 @@ using namespace Rcpp;
 // new setup: ret = 1L - differences, ret = 2L - log differences, ret = 3L - exact growth rates, ret = 4L - log-difference growth
 // also: if rho != 1, quasi-differencing and log differencing with rho... i.e. for cochrane-orcutt regression
 
+// This Approach: Hybrid: Currently does not support iterated differences on irregular time-series and panel data !!
+// TODO: Make comprehensive...
+
 template <typename F>
 NumericVector fdiffgrowthCppImpl(const NumericVector& x, const IntegerVector& n = 1, const IntegerVector& diff = 1,
-                         double fill = NA_REAL, int ng = 0, const IntegerVector& g = 0,
-                         const SEXP& gs = R_NilValue, const SEXP& t = R_NilValue,
-                         std::string stub = "", bool names = true, F FUN = [](double y, double x) { return y-x; }) {
+                                 double fill = NA_REAL, int ng = 0, const IntegerVector& g = 0,
+                                 const SEXP& gs = R_NilValue, const SEXP& t = R_NilValue,
+                                 std::string stub = "", bool names = true, F FUN = [](double y, double x) { return y-x; }) {
 
   int l = x.size(), ns = n.size(), ds = diff.size(), zeros = 0, pos = INT_MAX;
   IntegerVector absn = no_init_vector(ns);
@@ -122,15 +125,29 @@ NumericVector fdiffgrowthCppImpl(const NumericVector& x, const IntegerVector& n 
     } else { // Unordered data: Timevar provided
       IntegerVector ord = t;
       if(l != ord.size()) stop("length(x) must match length(t)");
-      LogicalVector ocheck(l, true);
-      IntegerVector omap = no_init_vector(l); // int omap[l];
+      int min = INT_MAX, max = INT_MIN, osize, temp;
       for(int i = 0; i != l; ++i) {
-        if(ord[i] > l || ord[i] < 1) stop("t needs to be a factor or integer vector of time-periods between 1 and length(x)");
-        if(ocheck[ord[i]-1]) {
-          ocheck[ord[i]-1] = false;
-          omap[ord[i]-1] = i;
-        } else {
-          stop("Repeated values in timevar");
+        if(ord[i] < min) min = ord[i];
+        if(ord[i] > max) max = ord[i];
+      }
+      if(min == NA_INTEGER) stop("Timevar contains missing values");
+      osize = max-min+1;
+      bool regular = osize == l;
+      IntegerVector omap(osize), ord2 = regular ? no_init_vector(1) : no_init_vector(l);
+      if(!regular) { // Irregular time series
+        if(osize > 3 * l) warning("Your time series is very irregular. Need to create an internal ordering vector of length %s to represent it.", osize);
+        if(Rcpp::max(diff) > 1) stop("Iterations are currently only supported for regular time series. See ?seqid to identify the regular bits in your time series, or just apply this function multiple times.");
+        for(int i = 0; i != l; ++i) {
+          temp = ord[i] - min; // Best ? Or direct assign to ord2[i] ? Also check for panel version..
+          if(omap[temp]) stop("Repeated values in timevar");
+          omap[temp] = i+1;
+          ord2[i] = temp;
+        }
+      } else { // Regular time series
+        for(int i = 0; i != l; ++i) {
+          temp = ord[i] - min;
+          if(omap[temp]) stop("Repeated values in timevar");
+          omap[temp] = i;
         }
       }
       for(int p = 0; p != ns; ++p) {
@@ -146,12 +163,22 @@ NumericVector fdiffgrowthCppImpl(const NumericVector& x, const IntegerVector& n 
             else colnam[pos] = "L" + nc[p] + stub + diffc[0];
           }
           ++pos;
-          for(int i = np; i != l; ++i) outp[omap[i]] = FUN(x[omap[i]], x[omap[i - np]]);
+          if(regular) {
+            for(int i = np; i != l; ++i) outp[omap[i]] = FUN(x[omap[i]], x[omap[i - np]]);
+          } else {
+            for(int i = 0; i != l; ++i) { // Smarter solution using while ???
+              if(ord2[i] >= np && (temp = omap[ord2[i] - np])) {
+                outp[i] = FUN(x[i], x[temp-1]);
+              } else {
+                outp[i] = fill;
+              }
+            }
+          }
           if(d1 > 1) for(int k = 1; k != d1; ++k) {
             int start = np*(k+1)-1;
             for(int i = l-1; i != start; --i) outp[omap[i]] = FUN(outp[omap[i]], outp[omap[i - np]]);
           }
-          for(int i = end; i--; ) outp[omap[i]] = fill;
+          if(regular) for(int i = end; i--; ) outp[omap[i]] = fill;
           if(ds > 1) {
             NumericVector outtemp = outp;
             for(int q = 1; q != ds; ++q) {
@@ -182,12 +209,22 @@ NumericVector fdiffgrowthCppImpl(const NumericVector& x, const IntegerVector& n 
             else colnam[pos] = "F" + nc[p] + stub + diffc[0];
           }
           ++pos;
-          for(int i = l+np; i--; ) outp[omap[i]] = FUN(x[omap[i]], x[omap[i - np]]);
+          if(regular) {
+            for(int i = l+np; i--; ) outp[omap[i]] = FUN(x[omap[i]], x[omap[i - np]]);
+          } else {
+            for(int i = 0, osnp = osize + np; i != l; ++i) { // Smarter solution using while ???
+              if(ord2[i] < osnp && (temp = omap[ord2[i] - np])) {
+                outp[i] = FUN(x[i], x[temp-1]);
+              } else {
+                outp[i] = fill;
+              }
+            }
+          }
           if(d1 > 1) for(int k = 1; k != d1; ++k) {
             int final = l+np*(k+1);
             for(int i = 0; i != final; ++i) outp[omap[i]] = FUN(outp[omap[i]], outp[omap[i - np]]);
           }
-          for(int i = end; i != l; ++i) outp[omap[i]] = fill;
+          if(regular) for(int i = end; i != l; ++i) outp[omap[i]] = fill;
           if(ds > 1) {
             NumericVector outtemp = outp;
             for(int q = 1; q != ds; ++q) {
@@ -217,8 +254,8 @@ NumericVector fdiffgrowthCppImpl(const NumericVector& x, const IntegerVector& n 
   } else {
     if(l != g.size()) stop("length(x) must match length(g)");
     int ags = l/ng, ngp = ng+1, maxdiff = max(diff);
-    IntegerVector gsv = Rf_isNull(gs) ? IntegerVector(ng) : as<IntegerVector>(gs); // no_init_vector(ng);
     if(Rf_isNull(t)) {
+      IntegerVector gsv = Rf_isNull(gs) ? IntegerVector(ng) : as<IntegerVector>(gs); // no_init_vector(ng);
       if(maxdiff != 1) {
         if(Rf_isNull(gs)) {
           // gsv = IntegerVector(ng);
@@ -347,36 +384,45 @@ NumericVector fdiffgrowthCppImpl(const NumericVector& x, const IntegerVector& n 
       }
     } else { // Unordered data: Timevar Provided
       IntegerVector ord = t;
+      int temp;
       if(l != ord.size()) stop("length(x) must match length(t)");
-      IntegerVector min(ngp, INT_MAX);
-      IntegerVector ord2 = no_init_vector(l);
-      if(Rf_isNull(gs)) {
-        // gsv = IntegerVector(ng);
-        // std::fill(gsv.begin(), gsv.end(), 0);
-        for(int i = 0; i != l; ++i) {
-          ++gsv[g[i]-1];
-          if(ord[i] < min[g[i]]) min[g[i]] = ord[i];
-        }
-      } else {
-        // gsv = gs;
-        if(ng != gsv.size()) stop("ng must match length(gs)");
-        for(int i = 0; i != l; ++i) if(ord[i] < min[g[i]]) min[g[i]] = ord[i];
-      }
-      IntegerVector omap(l), cgs = no_init_vector(ngp);
-      // int cgs[ngp], seen[ngp], memsize = sizeof(int)*(ngp);
-      cgs[1] = 0;
-      for(int i = 1; i != ng; ++i) {
-        cgs[i+1] = cgs[i] + gsv[i-1]; // or get "starts from forderv"
-        if(min[i] == NA_INTEGER) stop("Timevar contains missing values"); // Fastest here ?
-      }
-      if(min[ng] == NA_INTEGER) stop("Timevar contains missing values"); // Fastest here ?
-
+      IntegerVector min(ngp, INT_MAX), max(ngp, INT_MIN), cgs = no_init_vector(ngp);
       for(int i = 0; i != l; ++i) {
-        ord2[i] = ord[i] - min[g[i]];
-        if(ord2[i] >= gsv[g[i]-1]) stop("Gaps in timevar within one or more groups");
-        if(omap[cgs[g[i]]+ord2[i]] == 0) omap[cgs[g[i]]+ord2[i]] = i;
-        else stop("Repeated values of timevar within one or more groups");
+        temp = g[i];
+        if(ord[i] < min[temp]) min[temp] = ord[i];
+        if(ord[i] > max[temp]) max[temp] = ord[i];
       }
+      cgs[1] = 0; temp = 0;
+      for(int i = 1; i != ng; ++i) {
+        if(min[i] == NA_INTEGER) stop("Timevar contains missing values");
+        max[i] -= min[i] - 1; // need max[i] which stores the complete group sizes only if p<0 e.g. if computing leads..
+        temp += max[i];
+        cgs[i+1] = temp; // + max[i] - min[i] + 1;
+      }
+      if(min[ng] == NA_INTEGER) stop("Timevar contains missing values");
+      max[ng] -= min[ng] - 1;
+      temp += max[ng];
+      // omap provides the ordering to order the vector (needed to find previous / next values)
+      bool regular = temp == l;
+      IntegerVector omap(temp), ord2 = no_init_vector(l);
+      if(!regular) { // Irregular panel
+        if(temp > 3 * l) warning("Your panel is very irregular. Need to create an internal ordering vector of length %s to represent it.", temp);
+        if(maxdiff > 1) stop("Iterations are currently only supported for regular panels. See ?seqid to identify the regular bits in your panel, or just apply this function multiple times.");
+        for(int i = 0; i != l; ++i) {
+          ord2[i] = ord[i] - min[g[i]];
+          temp = cgs[g[i]] + ord2[i];
+          if(omap[temp]) stop("Repeated values of timevar within one or more groups");
+          omap[temp] = i+1; // needed to add 1 to distinguish between 0 and gap
+        }
+      } else { // Regular panel
+        for(int i = 0; i != l; ++i) {
+          ord2[i] = ord[i] - min[g[i]];
+          temp = cgs[g[i]] + ord2[i];
+          if(omap[temp]) stop("Repeated values of timevar within one or more groups");
+          omap[temp] = i;
+        }
+      }
+
       for(int p = 0; p != ns; ++p) {
         int np = n[p];
         if(absn[p]*maxdiff > ags) warning("abs(n * diff) exceeds average group-size (%i). This could also be a result of unused factor levels. See #25.", ags);
@@ -390,18 +436,28 @@ NumericVector fdiffgrowthCppImpl(const NumericVector& x, const IntegerVector& n 
             else colnam[pos] = "L" + nc[p] + stub + diffc[0];
           }
           ++pos;
-          for(int i = 0; i != l; ++i) {
-            if(ord2[i] >= np) {
-              outp[i] = FUN(x[i], x[omap[cgs[g[i]]+ord2[i]-np]]);
-            } else {
-              outp[i] = fill;
+          if(regular) {
+            for(int i = 0; i != l; ++i) {
+              if(ord2[i] >= np) {
+                outp[i] = FUN(x[i], x[omap[cgs[g[i]]+ord2[i]-np]]);
+              } else {
+                outp[i] = fill;
+              }
+            }
+          } else {
+            for(int i = 0; i != l; ++i) {
+              if(ord2[i] >= np && (temp = omap[cgs[g[i]]+ord2[i]-np])) {
+                outp[i] = FUN(x[i], x[temp-1]);
+              } else {
+                outp[i] = fill;
+              }
             }
           }
           if(d1 > 1) for(int k = 1; k != d1; ++k) {
             int start = np*(k+1);
             std::vector<int> seen(ngp); // memset(seen, 0, memsize);
             for(int i = l; i--; ) {
-              if(seen[g[omap[i]]] == gsv[g[omap[i]]-1]-start) outp[omap[i]] = fill;
+              if(seen[g[omap[i]]] == max[g[omap[i]]]-start) outp[omap[i]] = fill;
               else {
                 outp[omap[i]] = FUN(outp[omap[i]], outp[omap[i - np]]);
                 ++seen[g[omap[i]]];
@@ -417,7 +473,7 @@ NumericVector fdiffgrowthCppImpl(const NumericVector& x, const IntegerVector& n 
                 int start = np*(k+1);
                 std::vector<int> seen(ngp); // memset(seen, 0, memsize);
                 for(int i = l; i--; ) {
-                  if(seen[g[omap[i]]] == gsv[g[omap[i]]-1]-start) outtemp[omap[i]] = fill;
+                  if(seen[g[omap[i]]] == max[g[omap[i]]]-start) outtemp[omap[i]] = fill;
                   else {
                     outtemp[omap[i]] = FUN(outtemp[omap[i]], outtemp[omap[i - np]]);
                     ++seen[g[omap[i]]];
@@ -442,18 +498,28 @@ NumericVector fdiffgrowthCppImpl(const NumericVector& x, const IntegerVector& n 
             else colnam[pos] = "F" + nc[p] + stub + diffc[0];
           }
           ++pos;
-          for(int i = 0; i != l; ++i) {
-            if(ord2[i] < gsv[g[i]-1]+np) {
-              outp[i] = FUN(x[i], x[omap[cgs[g[i]]+ord2[i]-np]]);
-            } else {
-              outp[i] = fill;
+          if(regular) {
+            for(int i = 0; i != l; ++i) {
+              if(ord2[i] < max[g[i]]+np) {
+                outp[i] = FUN(x[i], x[omap[cgs[g[i]]+ord2[i]-np]]);
+              } else {
+                outp[i] = fill;
+              }
+            }
+          } else {
+            for(int i = 0; i != l; ++i) { // Smarter solution using while ???
+              if(ord2[i] < max[g[i]]+np && (temp = omap[cgs[g[i]]+ord2[i]-np])) {
+                outp[i] = FUN(x[i], x[temp-1]);
+              } else {
+                outp[i] = fill;
+              }
             }
           }
           if(d1 > 1) for(int k = 1; k != d1; ++k) {
             int start = np*(k+1);
             std::vector<int> seen(ngp); // memset(seen, 0, memsize);
             for(int i = 0; i != l; ++i) {
-              if(seen[g[omap[i]]] == gsv[g[omap[i]]-1]+start) outp[omap[i]] = fill;
+              if(seen[g[omap[i]]] == max[g[omap[i]]]+start) outp[omap[i]] = fill;
               else {
                 outp[omap[i]] = FUN(outp[omap[i]], outp[omap[i - np]]);
                 ++seen[g[omap[i]]];
@@ -469,7 +535,7 @@ NumericVector fdiffgrowthCppImpl(const NumericVector& x, const IntegerVector& n 
                 int start = np*(k+1);
                 std::vector<int> seen(ngp); // memset(seen, 0, memsize);
                 for(int i = 0; i != l; ++i) {
-                  if(seen[g[omap[i]]] == gsv[g[omap[i]]-1]+start) outtemp[omap[i]] = fill;
+                  if(seen[g[omap[i]]] == max[g[omap[i]]]+start) outtemp[omap[i]] = fill;
                   else {
                     outtemp[omap[i]] = FUN(outtemp[omap[i]], outtemp[omap[i - np]]);
                     ++seen[g[omap[i]]];
@@ -516,9 +582,9 @@ NumericVector fdiffgrowthCppImpl(const NumericVector& x, const IntegerVector& n 
 
 // [[Rcpp::export]]
 NumericVector fdiffgrowthCpp(const NumericVector& x, const IntegerVector& n = 1, const IntegerVector& diff = 1,
-                         double fill = NA_REAL, int ng = 0, const IntegerVector& g = 0,
-                         const SEXP& gs = R_NilValue, const SEXP& t = R_NilValue,
-                         int ret = 1, double rho = 1, bool names = true, double power = 1) {
+                             double fill = NA_REAL, int ng = 0, const IntegerVector& g = 0,
+                             const SEXP& gs = R_NilValue, const SEXP& t = R_NilValue,
+                             int ret = 1, double rho = 1, bool names = true, double power = 1) {
 
   std::string stub;
   if(ret < 4) {
@@ -546,9 +612,9 @@ inline SEXP coln_check(SEXP x) {
 
 template <typename F>
 NumericMatrix fdiffgrowthmCppImpl(const NumericMatrix& x, const IntegerVector& n = 1, const IntegerVector& diff = 1,
-                          double fill = NA_REAL, int ng = 0, const IntegerVector& g = 0,
-                          const SEXP& gs = R_NilValue, const SEXP& t = R_NilValue,
-                          std::string stub = "", bool names = true, F FUN = [](double y, double x) { return y-x; }) {
+                                  double fill = NA_REAL, int ng = 0, const IntegerVector& g = 0,
+                                  const SEXP& gs = R_NilValue, const SEXP& t = R_NilValue,
+                                  std::string stub = "", bool names = true, F FUN = [](double y, double x) { return y-x; }) {
 
   int l = x.nrow(), col = x.ncol(), ns = n.size(), ds = diff.size(), zeros = 0, pos = INT_MAX;
   IntegerVector absn = no_init_vector(ns);
@@ -659,16 +725,30 @@ NumericMatrix fdiffgrowthmCppImpl(const NumericMatrix& x, const IntegerVector& n
       }
     } else { // Unordered data: Timevar provided
       IntegerVector ord = t;
-      if(l != ord.size()) stop("nrow(x) must match length(t)");
-      LogicalVector ocheck(l, true);
-      IntegerVector omap = no_init_vector(l); // int omap[l];
+      if(l != ord.size()) stop("length(x) must match length(t)");
+      int min = INT_MAX, max = INT_MIN, osize, temp;
       for(int i = 0; i != l; ++i) {
-        if(ord[i] > l || ord[i] < 1) stop("t needs to be a factor or integer vector of time-periods between 1 and nrow(x)");
-        if(ocheck[ord[i]-1]) {
-          ocheck[ord[i]-1] = false;
-          omap[ord[i]-1] = i;
-        } else {
-          stop("Repeated values in timevar");
+        if(ord[i] < min) min = ord[i];
+        if(ord[i] > max) max = ord[i];
+      }
+      if(min == NA_INTEGER) stop("Timevar contains missing values");
+      osize = max-min+1;
+      bool regular = osize == l;
+      IntegerVector omap(osize), ord2 = regular ? no_init_vector(1) : no_init_vector(l);
+      if(!regular) { // Irregular time series
+        if(osize > 3 * l) warning("Your time series is very irregular. Need to create an internal ordering vector of length %s to represent it.", osize);
+        if(Rcpp::max(diff) > 1) stop("Iterations are currently only supported for regular time series. See ?seqid to identify the regular bits in your time series, or just apply this function multiple times.");
+        for(int i = 0; i != l; ++i) {
+          temp = ord[i] - min; // Best ? Or direct assign to ord2[i] ? Also check for panel version..
+          if(omap[temp]) stop("Repeated values in timevar");
+          omap[temp] = i+1;
+          ord2[i] = temp;
+        }
+      } else { // Regular time series
+        for(int i = 0; i != l; ++i) {
+          temp = ord[i] - min;
+          if(omap[temp]) stop("Repeated values in timevar");
+          omap[temp] = i;
         }
       }
       for(int j = 0; j != col; ++j) {
@@ -686,12 +766,22 @@ NumericMatrix fdiffgrowthmCppImpl(const NumericMatrix& x, const IntegerVector& n
               else colnam[pos] = "L" + nc[p] + stub + diffc[0] + "." + coln[j];
             }
             ++pos;
-            for(int i = np; i != l; ++i) outp[omap[i]] = FUN(column[omap[i]], column[omap[i - np]]);
+            if(regular) {
+              for(int i = np; i != l; ++i) outp[omap[i]] = FUN(column[omap[i]], column[omap[i - np]]);
+            } else {
+              for(int i = 0; i != l; ++i) { // Smarter solution using while ???
+                if(ord2[i] >= np && (temp = omap[ord2[i] - np])) {
+                  outp[i] = FUN(column[i], column[temp-1]);
+                } else {
+                  outp[i] = fill;
+                }
+              }
+            }
             if(d1 > 1) for(int k = 1; k != d1; ++k) {
               int start = np*(k+1)-1;
               for(int i = l-1; i != start; --i) outp[omap[i]] = FUN(outp[omap[i]], outp[omap[i - np]]);
             }
-            for(int i = end; i--; ) outp[omap[i]] = fill;
+            if(regular) for(int i = end; i--; ) outp[omap[i]] = fill;
             if(ds > 1) {
               NumericVector outtemp = outp;
               for(int q = 1; q != ds; ++q) {
@@ -722,12 +812,22 @@ NumericMatrix fdiffgrowthmCppImpl(const NumericMatrix& x, const IntegerVector& n
               else colnam[pos] = "F" + nc[p] + stub + diffc[0] + "." + coln[j];
             }
             ++pos;
-            for(int i = l+np; i--; ) outp[omap[i]] = FUN(column[omap[i]], column[omap[i - np]]);
+            if(regular) {
+              for(int i = l+np; i--; ) outp[omap[i]] = FUN(column[omap[i]], column[omap[i - np]]);
+            } else {
+              for(int i = 0, osnp = osize + np; i != l; ++i) { // Smarter solution using while ???
+                if(ord2[i] < osnp && (temp = omap[ord2[i] - np])) {
+                  outp[i] = FUN(column[i], column[temp-1]);
+                } else {
+                  outp[i] = fill;
+                }
+              }
+            }
             if(d1 > 1) for(int k = 1; k != d1; ++k) {
               int final = l+np*(k+1);
               for(int i = 0; i != final; ++i) outp[omap[i]] = FUN(outp[omap[i]], outp[omap[i - np]]);
             }
-            for(int i = end; i != l; ++i) outp[omap[i]] = fill;
+            if(regular) for(int i = end; i != l; ++i) outp[omap[i]] = fill;
             if(ds > 1) {
               NumericVector outtemp = outp;
               for(int q = 1; q != ds; ++q) {
@@ -758,8 +858,8 @@ NumericMatrix fdiffgrowthmCppImpl(const NumericMatrix& x, const IntegerVector& n
   } else { // With groups
     if(l != g.size()) stop("nrow(x) must match length(g)");
     int ags = l/ng, ngp = ng+1, maxdiff = max(diff);
-    IntegerVector gsv = Rf_isNull(gs) ? IntegerVector(ng) : as<IntegerVector>(gs); // no_init_vector(ng);
     if(Rf_isNull(t)) { // Ordered data
+      IntegerVector gsv = Rf_isNull(gs) ? IntegerVector(ng) : as<IntegerVector>(gs); // no_init_vector(ng);
       if(maxdiff != 1) {
         if(Rf_isNull(gs)) {
           // gsv = IntegerVector(ng);
@@ -891,37 +991,45 @@ NumericMatrix fdiffgrowthmCppImpl(const NumericMatrix& x, const IntegerVector& n
       }
     } else { // Unordered data: Timevar Provided
       IntegerVector ord = t;
-      if(l != ord.size()) stop("nrow(x) must match length(t)");
-      IntegerVector min(ngp, INT_MAX);
-      IntegerVector ord2 = no_init_vector(l);
-      if(Rf_isNull(gs)) {
-        // gsv = IntegerVector(ng);
-        // std::fill(gsv.begin(), gsv.end(), 0);
-        for(int i = 0; i != l; ++i) {
-          ++gsv[g[i]-1];
-          if(ord[i] < min[g[i]]) min[g[i]] = ord[i];
-        }
-      } else {
-        // gsv = gs;
-        if(ng != gsv.size()) stop("ng must match length(gs)");
-        for(int i = 0; i != l; ++i) if(ord[i] < min[g[i]]) min[g[i]] = ord[i];
-      }
-      IntegerVector omap(l), cgs = no_init_vector(ngp), index = no_init_vector(l);
-      // int cgs[ngp], seen[ngp], index[l], memsize = sizeof(int)*(ngp);
-      cgs[1] = 0;
-      for(int i = 1; i != ng; ++i) {
-        cgs[i+1] = cgs[i] + gsv[i-1]; // or get "starts from forderv"
-        if(min[i] == NA_INTEGER) stop("Timevar contains missing values"); // Fastest here ?
-      }
-      if(min[ng] == NA_INTEGER) stop("Timevar contains missing values"); // Fastest here ?
-
+      int temp;
+      if(l != ord.size()) stop("length(x) must match length(t)");
+      IntegerVector min(ngp, INT_MAX), max(ngp, INT_MIN), cgs = no_init_vector(ngp);
       for(int i = 0; i != l; ++i) {
-        ord2[i] = ord[i] - min[g[i]];
-        if(ord2[i] >= gsv[g[i]-1]) stop("Gaps in timevar within one or more groups");
-        index[i] = cgs[g[i]]+ord2[i]; // index ??
-        if(omap[index[i]] == 0) omap[index[i]] = i;
-        else stop("Repeated values of timevar within one or more groups");
+        temp = g[i];
+        if(ord[i] < min[temp]) min[temp] = ord[i];
+        if(ord[i] > max[temp]) max[temp] = ord[i];
       }
+      cgs[1] = 0; temp = 0;
+      for(int i = 1; i != ng; ++i) {
+        if(min[i] == NA_INTEGER) stop("Timevar contains missing values");
+        max[i] -= min[i] - 1; // need max[i] which stores the complete group sizes only if p<0 e.g. if computing leads..
+        temp += max[i];
+        cgs[i+1] = temp; // + max[i] - min[i] + 1;
+      }
+      if(min[ng] == NA_INTEGER) stop("Timevar contains missing values");
+      max[ng] -= min[ng] - 1;
+      temp += max[ng];
+      // omap provides the ordering to order the vector (needed to find previous / next values)
+      bool regular = temp == l;
+      IntegerVector omap(temp), ord2 = no_init_vector(l), index = no_init_vector(l);
+      if(!regular) { // Irregular panel
+        if(temp > 3 * l) warning("Your panel is very irregular. Need to create an internal ordering vector of length %s to represent it.", temp);
+        if(maxdiff > 1) stop("Iterations are currently only supported for regular panels. See ?seqid to identify the regular bits in your panel, or just apply this function multiple times.");
+        for(int i = 0; i != l; ++i) {
+          ord2[i] = ord[i] - min[g[i]];
+          index[i] = cgs[g[i]] + ord2[i];
+          if(omap[index[i]]) stop("Repeated values of timevar within one or more groups");
+          omap[index[i]] = i+1; // needed to add 1 to distinguish between 0 and gap
+        }
+      } else { // Regular panel
+        for(int i = 0; i != l; ++i) {
+          ord2[i] = ord[i] - min[g[i]];
+          index[i] = cgs[g[i]] + ord2[i];
+          if(omap[index[i]]) stop("Repeated values of timevar within one or more groups");
+          omap[index[i]] = i;
+        }
+      }
+
       for(int j = 0; j != col; ++j) {
         NumericMatrix::ConstColumn column = x( _ , j);
         for(int p = 0; p != ns; ++p) {
@@ -937,18 +1045,28 @@ NumericMatrix fdiffgrowthmCppImpl(const NumericMatrix& x, const IntegerVector& n
               else colnam[pos] = "L" + nc[p] + stub + diffc[0] + "." + coln[j];
             }
             ++pos;
-            for(int i = 0; i != l; ++i) {
-              if(ord2[i] >= np) {
-                outp[i] = FUN(column[i], column[omap[index[i]-np]]);
-              } else {
-                outp[i] = fill;
+            if(regular) {
+              for(int i = 0; i != l; ++i) {
+                if(ord2[i] >= np) {
+                  outp[i] = FUN(column[i], column[omap[index[i]-np]]);
+                } else {
+                  outp[i] = fill;
+                }
+              }
+            } else {
+              for(int i = 0; i != l; ++i) {
+                if(ord2[i] >= np && (temp = omap[index[i]-np])) {
+                  outp[i] = FUN(column[i], column[temp-1]);
+                } else {
+                  outp[i] = fill;
+                }
               }
             }
             if(d1 > 1) for(int k = 1; k != d1; ++k) {
               int start = np*(k+1);
               std::vector<int> seen(ngp); // memset(seen, 0, memsize);
               for(int i = l; i--; ) {
-                if(seen[g[omap[i]]] == gsv[g[omap[i]]-1]-start) outp[omap[i]] = fill;
+                if(seen[g[omap[i]]] == max[g[omap[i]]]-start) outp[omap[i]] = fill;
                 else {
                   outp[omap[i]] = FUN(outp[omap[i]], outp[omap[i - np]]);
                   ++seen[g[omap[i]]];
@@ -964,7 +1082,7 @@ NumericMatrix fdiffgrowthmCppImpl(const NumericMatrix& x, const IntegerVector& n
                   int start = np*(k+1);
                   std::vector<int> seen(ngp); // memset(seen, 0, memsize);
                   for(int i = l; i--; ) {
-                    if(seen[g[omap[i]]] == gsv[g[omap[i]]-1]-start) outtemp[omap[i]] = fill;
+                    if(seen[g[omap[i]]] == max[g[omap[i]]]-start) outtemp[omap[i]] = fill;
                     else {
                       outtemp[omap[i]] = FUN(outtemp[omap[i]], outtemp[omap[i - np]]);
                       ++seen[g[omap[i]]];
@@ -989,18 +1107,28 @@ NumericMatrix fdiffgrowthmCppImpl(const NumericMatrix& x, const IntegerVector& n
               else colnam[pos] = "F" + nc[p] + stub + diffc[0] + "." + coln[j];
             }
             ++pos;
-            for(int i = 0; i != l; ++i) {
-              if(ord2[i] < gsv[g[i]-1]+np) {
-                outp[i] = FUN(column[i], column[omap[index[i]-np]]);
-              } else {
-                outp[i] = fill;
+            if(regular) {
+              for(int i = 0; i != l; ++i) {
+                if(ord2[i] < max[g[i]]+np) {
+                  outp[i] = FUN(column[i], column[omap[index[i]-np]]);
+                } else {
+                  outp[i] = fill;
+                }
+              }
+            } else {
+              for(int i = 0; i != l; ++i) { // Smarter solution using while ???
+                if(ord2[i] < max[g[i]]+np && (temp = omap[index[i]-np])) {
+                  outp[i] = FUN(column[i], column[temp-1]);
+                } else {
+                  outp[i] = fill;
+                }
               }
             }
             if(d1 > 1) for(int k = 1; k != d1; ++k) {
               int start = np*(k+1);
               std::vector<int> seen(ngp); // memset(seen, 0, memsize);
               for(int i = 0; i != l; ++i) {
-                if(seen[g[omap[i]]] == gsv[g[omap[i]]-1]+start) outp[omap[i]] = fill;
+                if(seen[g[omap[i]]] == max[g[omap[i]]]+start) outp[omap[i]] = fill;
                 else {
                   outp[omap[i]] = FUN(outp[omap[i]], outp[omap[i - np]]);
                   ++seen[g[omap[i]]];
@@ -1016,7 +1144,7 @@ NumericMatrix fdiffgrowthmCppImpl(const NumericMatrix& x, const IntegerVector& n
                   int start = np*(k+1);
                   std::vector<int> seen(ngp); // memset(seen, 0, memsize);
                   for(int i = 0; i != l; ++i) {
-                    if(seen[g[omap[i]]] == gsv[g[omap[i]]-1]+start) outtemp[omap[i]] = fill;
+                    if(seen[g[omap[i]]] == max[g[omap[i]]]+start) outtemp[omap[i]] = fill;
                     else {
                       outtemp[omap[i]] = FUN(outtemp[omap[i]], outtemp[omap[i - np]]);
                       ++seen[g[omap[i]]];
@@ -1086,9 +1214,9 @@ NumericMatrix fdiffgrowthmCpp(const NumericMatrix& x, const IntegerVector& n = 1
 
 template <typename F>
 List fdiffgrowthlCppImpl(const List& x, const IntegerVector& n = 1, const IntegerVector& diff = 1,
-                 double fill = NA_REAL, int ng = 0, const IntegerVector& g = 0,
-                 const SEXP& gs = R_NilValue, const SEXP& t = R_NilValue,
-                 std::string stub = "", bool names = true, F FUN = [](double y, double x) { return y-x; }) { // const needed for #if response...
+                         double fill = NA_REAL, int ng = 0, const IntegerVector& g = 0,
+                         const SEXP& gs = R_NilValue, const SEXP& t = R_NilValue,
+                         std::string stub = "", bool names = true, F FUN = [](double y, double x) { return y-x; }) { // const needed for #if response...
 
   int l = x.size(), ns = n.size(), ds = diff.size(), zeros = 0, pos = INT_MAX;
   IntegerVector absn = no_init_vector(ns);
@@ -1199,18 +1327,33 @@ List fdiffgrowthlCppImpl(const List& x, const IntegerVector& n = 1, const Intege
       }
     } else { // Unordered data: Timevar provided
       IntegerVector ord = t;
-      int os = ord.size(); // omap[os];
-      IntegerVector omap = no_init_vector(os);
-      LogicalVector ocheck(os, true);
+      int min = INT_MAX, max = INT_MIN, osize, temp, os = ord.size();
+      if(Rf_length(x[0]) != os) stop("length(x) must match length(t)");
       for(int i = 0; i != os; ++i) {
-        if(ord[i] > os || ord[i] < 1) stop("t needs to be a factor or integer vector of time-periods between 1 and nrow(x)");
-        if(ocheck[ord[i]-1]) {
-          ocheck[ord[i]-1] = false;
-          omap[ord[i]-1] = i;
-        } else {
-          stop("Repeated values in timevar");
+        if(ord[i] < min) min = ord[i];
+        if(ord[i] > max) max = ord[i];
+      }
+      if(min == NA_INTEGER) stop("Timevar contains missing values");
+      osize = max-min+1;
+      bool regular = osize == os;
+      IntegerVector omap(osize), ord2 = regular ? no_init_vector(1) : no_init_vector(os);
+      if(!regular) { // Irregular time series
+        if(osize > 3 * os) warning("Your time series is very irregular. Need to create an internal ordering vector of length %s to represent it.", osize);
+        if(Rcpp::max(diff) > 1) stop("Iterations are currently only supported for regular time series. See ?seqid to identify the regular bits in your time series, or just apply this function multiple times.");
+        for(int i = 0; i != os; ++i) {
+          temp = ord[i] - min; // Best ? Or direct assign to ord2[i] ? Also check for panel version..
+          if(omap[temp]) stop("Repeated values in timevar");
+          omap[temp] = i+1;
+          ord2[i] = temp;
+        }
+      } else { // Regular time series
+        for(int i = 0; i != os; ++i) {
+          temp = ord[i] - min;
+          if(omap[temp]) stop("Repeated values in timevar");
+          omap[temp] = i;
         }
       }
+
       for(int j = 0; j != l; ++j) {
         NumericVector column = x[j];
         if(os != column.size()) stop("nrow(x) must match length(t)");
@@ -1227,12 +1370,22 @@ List fdiffgrowthlCppImpl(const List& x, const IntegerVector& n = 1, const Intege
               if(L1) nam[pos] = stub + diffc[0] + "." + na[j];
               else nam[pos] = "L" + nc[p] + stub + diffc[0] + "." + na[j];
             }
-            for(int i = np; i != os; ++i) outjp[omap[i]] = FUN(column[omap[i]], column[omap[i - np]]);
+            if(regular) {
+              for(int i = np; i != os; ++i) outjp[omap[i]] = FUN(column[omap[i]], column[omap[i - np]]);
+            } else {
+              for(int i = 0; i != os; ++i) { // Smarter solution using while ???
+                if(ord2[i] >= np && (temp = omap[ord2[i] - np])) {
+                  outjp[i] = FUN(column[i], column[temp-1]);
+                } else {
+                  outjp[i] = fill;
+                }
+              }
+            }
             if(d1 > 1) for(int k = 1; k != d1; ++k) {
               int start = np*(k+1)-1;
               for(int i = os-1; i != start; --i) outjp[omap[i]] = FUN(outjp[omap[i]], outjp[omap[i - np]]);
             }
-            for(int i = end; i--; ) outjp[omap[i]] = fill;
+            if(regular) for(int i = end; i--; ) outjp[omap[i]] = fill;
             out[pos++] = outjp;
             if(ds > 1) {
               NumericVector outtemp = Rf_shallow_duplicate(outjp);
@@ -1263,12 +1416,22 @@ List fdiffgrowthlCppImpl(const List& x, const IntegerVector& n = 1, const Intege
               if(F1) nam[pos] = stub2 + diffc[0] + "." + na[j];
               else nam[pos] = "F" + nc[p] + stub + diffc[0] + "." + na[j];
             }
-            for(int i = os+np; i--; ) outjp[omap[i]] = FUN(column[omap[i]], column[omap[i - np]]);
+            if(regular) {
+              for(int i = os+np; i--; ) outjp[omap[i]] = FUN(column[omap[i]], column[omap[i - np]]);
+            } else {
+              for(int i = 0, osnp = osize + np; i != os; ++i) { // Smarter solution using while ???
+                if(ord2[i] < osnp && (temp = omap[ord2[i] - np])) {
+                  outjp[i] = FUN(column[i], column[temp-1]);
+                } else {
+                  outjp[i] = fill;
+                }
+              }
+            }
             if(d1 > 1) for(int k = 1; k != d1; ++k) {
               int final = os+np*(k+1);
               for(int i = 0; i != final; ++i) outjp[omap[i]] = FUN(outjp[omap[i]], outjp[omap[i - np]]);
             }
-            for(int i = end; i != os; ++i) outjp[omap[i]] = fill;
+            if(regular) for(int i = end; i != os; ++i) outjp[omap[i]] = fill;
             out[pos++] = outjp;
             if(ds > 1) {
               NumericVector outtemp = Rf_shallow_duplicate(outjp);
@@ -1297,8 +1460,8 @@ List fdiffgrowthlCppImpl(const List& x, const IntegerVector& n = 1, const Intege
     }
   } else { // With groups
     int gss = g.size(), ags = gss/ng, ngp = ng+1, maxdiff = max(diff);
-    IntegerVector gsv = Rf_isNull(gs) ? IntegerVector(ng) : as<IntegerVector>(gs); // no_init_vector(ng);
     if(Rf_isNull(t)) { // Ordered data
+      IntegerVector gsv = Rf_isNull(gs) ? IntegerVector(ng) : as<IntegerVector>(gs); // no_init_vector(ng);
       if(maxdiff != 1) {
         if(Rf_isNull(gs)) {
           // gsv = IntegerVector(ng);
@@ -1430,37 +1593,45 @@ List fdiffgrowthlCppImpl(const List& x, const IntegerVector& n = 1, const Intege
       }
     } else { // Unordered data: Timevar Provided
       IntegerVector ord = t;
-      if(gss != ord.size()) stop("length(g) must match length(t)");
-      IntegerVector min(ngp, INT_MAX);
-      IntegerVector ord2 = no_init_vector(gss);
-      if(Rf_isNull(gs)) {
-        // gsv = IntegerVector(ng);
-        // std::fill(gsv.begin(), gsv.end(), 0);
-        for(int i = 0; i != gss; ++i) {
-          ++gsv[g[i]-1];
-          if(ord[i] < min[g[i]]) min[g[i]] = ord[i];
-        }
-      } else {
-        // gsv = gs;
-        if(ng != gsv.size()) stop("ng must match length(gs)");
-        for(int i = 0; i != gss; ++i) if(ord[i] < min[g[i]]) min[g[i]] = ord[i];
-      }
-      IntegerVector omap(gss), cgs = no_init_vector(ngp), index = no_init_vector(gss);
-      // int cgs[ngp], seen[ngp], index[gss], memsize = sizeof(int)*(ngp);
-      cgs[1] = 0;
-      for(int i = 1; i != ng; ++i) {
-        cgs[i+1] = cgs[i] + gsv[i-1]; // or get "starts from forderv"
-        if(min[i] == NA_INTEGER) stop("Timevar contains missing values"); // Fastest here ?
-      }
-      if(min[ng] == NA_INTEGER) stop("Timevar contains missing values"); // Fastest here ?
-
+      int temp;
+      if(gss != ord.size()) stop("length(x) must match length(t)");
+      IntegerVector min(ngp, INT_MAX), max(ngp, INT_MIN), cgs = no_init_vector(ngp);
       for(int i = 0; i != gss; ++i) {
-        ord2[i] = ord[i] - min[g[i]];
-        if(ord2[i] >= gsv[g[i]-1]) stop("Gaps in timevar within one or more groups");
-        index[i] = cgs[g[i]]+ord2[i]; // index ?
-        if(omap[index[i]] == 0) omap[index[i]] = i;
-        else stop("Repeated values of timevar within one or more groups");
+        temp = g[i];
+        if(ord[i] < min[temp]) min[temp] = ord[i];
+        if(ord[i] > max[temp]) max[temp] = ord[i];
       }
+      cgs[1] = 0; temp = 0;
+      for(int i = 1; i != ng; ++i) {
+        if(min[i] == NA_INTEGER) stop("Timevar contains missing values");
+        max[i] -= min[i] - 1; // need max[i] which stores the complete group sizes only if p<0 e.g. if computing leads..
+        temp += max[i];
+        cgs[i+1] = temp; // + max[i] - min[i] + 1;
+      }
+      if(min[ng] == NA_INTEGER) stop("Timevar contains missing values");
+      max[ng] -= min[ng] - 1;
+      temp += max[ng];
+      // omap provides the ordering to order the vector (needed to find previous / next values)
+      bool regular = temp == gss;
+      IntegerVector omap(temp), ord2 = no_init_vector(gss), index = no_init_vector(gss);
+      if(!regular) { // Irregular panel
+        if(temp > 3 * gss) warning("Your panel is very irregular. Need to create an internal ordering vector of length %s to represent it.", temp);
+        if(maxdiff > 1) stop("Iterations are currently only supported for regular panels. See ?seqid to identify the regular bits in your panel, or just apply this function multiple times.");
+        for(int i = 0; i != gss; ++i) {
+          ord2[i] = ord[i] - min[g[i]];
+          index[i] = cgs[g[i]] + ord2[i];
+          if(omap[index[i]]) stop("Repeated values of timevar within one or more groups");
+          omap[index[i]] = i+1; // needed to add 1 to distinguish between 0 and gap
+        }
+      } else { // Regular panel
+        for(int i = 0; i != gss; ++i) {
+          ord2[i] = ord[i] - min[g[i]];
+          index[i] = cgs[g[i]] + ord2[i];
+          if(omap[index[i]]) stop("Repeated values of timevar within one or more groups");
+          omap[index[i]] = i;
+        }
+      }
+
       for(int j = 0; j != l; ++j) {
         NumericVector column = x[j];
         if(gss != column.size()) stop("nrow(x) must match length(g)");
@@ -1477,18 +1648,28 @@ List fdiffgrowthlCppImpl(const List& x, const IntegerVector& n = 1, const Intege
               if(L1) nam[pos] = stub + diffc[0] + "." + na[j];
               else nam[pos] = "L" + nc[p] + stub + diffc[0] + "." + na[j];
             }
-            for(int i = 0; i != gss; ++i) {
-              if(ord2[i] >= np) {
-                outjp[i] = FUN(column[i], column[omap[index[i]-np]]);
-              } else {
-                outjp[i] = fill;
+            if(regular) {
+              for(int i = 0; i != gss; ++i) {
+                if(ord2[i] >= np) {
+                  outjp[i] = FUN(column[i], column[omap[index[i]-np]]);
+                } else {
+                  outjp[i] = fill;
+                }
+              }
+            } else {
+              for(int i = 0; i != gss; ++i) {
+                if(ord2[i] >= np && (temp = omap[index[i]-np])) {
+                  outjp[i] = FUN(column[i], column[temp-1]);
+                } else {
+                  outjp[i] = fill;
+                }
               }
             }
             if(d1 > 1) for(int k = 1; k != d1; ++k) {
               int start = np*(k+1);
               std::vector<int> seen(ngp); // memset(seen, 0, memsize);
               for(int i = gss; i--; ) {
-                if(seen[g[omap[i]]] == gsv[g[omap[i]]-1]-start) outjp[omap[i]] = fill;
+                if(seen[g[omap[i]]] == max[g[omap[i]]]-start) outjp[omap[i]] = fill;
                 else {
                   outjp[omap[i]] = FUN(outjp[omap[i]], outjp[omap[i - np]]);
                   ++seen[g[omap[i]]];
@@ -1505,7 +1686,7 @@ List fdiffgrowthlCppImpl(const List& x, const IntegerVector& n = 1, const Intege
                   int start = np*(k+1);
                   std::vector<int> seen(ngp); // memset(seen, 0, memsize);
                   for(int i = gss; i--; ) {
-                    if(seen[g[omap[i]]] == gsv[g[omap[i]]-1]-start) outtemp[omap[i]] = fill;
+                    if(seen[g[omap[i]]] == max[g[omap[i]]]-start) outtemp[omap[i]] = fill;
                     else {
                       outtemp[omap[i]] = FUN(outtemp[omap[i]], outtemp[omap[i - np]]);
                       ++seen[g[omap[i]]];
@@ -1529,18 +1710,28 @@ List fdiffgrowthlCppImpl(const List& x, const IntegerVector& n = 1, const Intege
               if(F1) nam[pos] = stub2 + diffc[0] + "." + na[j];
               else nam[pos] = "F" + nc[p] + stub + diffc[0] + "." + na[j];
             }
-            for(int i = 0; i != gss; ++i) {
-              if(ord2[i] < gsv[g[i]-1]+np) {
-                outjp[i] = FUN(column[i], column[omap[index[i]-np]]);
-              } else {
-                outjp[i] = fill;
+            if(regular) {
+              for(int i = 0; i != gss; ++i) {
+                if(ord2[i] < max[g[i]]+np) {
+                  outjp[i] = FUN(column[i], column[omap[index[i]-np]]);
+                } else {
+                  outjp[i] = fill;
+                }
+              }
+            } else {
+              for(int i = 0; i != gss; ++i) { // Smarter solution using while ???
+                if(ord2[i] < max[g[i]]+np && (temp = omap[index[i]-np])) {
+                  outjp[i] = FUN(column[i], column[temp-1]);
+                } else {
+                  outjp[i] = fill;
+                }
               }
             }
             if(d1 > 1) for(int k = 1; k != d1; ++k) {
               int start = np*(k+1);
               std::vector<int> seen(ngp); // memset(seen, 0, memsize);
               for(int i = 0; i != gss; ++i) {
-                if(seen[g[omap[i]]] == gsv[g[omap[i]]-1]+start) outjp[omap[i]] = fill;
+                if(seen[g[omap[i]]] == max[g[omap[i]]]+start) outjp[omap[i]] = fill;
                 else {
                   outjp[omap[i]] = FUN(outjp[omap[i]], outjp[omap[i - np]]);
                   ++seen[g[omap[i]]];
@@ -1557,7 +1748,7 @@ List fdiffgrowthlCppImpl(const List& x, const IntegerVector& n = 1, const Intege
                   int start = np*(k+1);
                   std::vector<int> seen(ngp); // memset(seen, 0, memsize);
                   for(int i = 0; i != gss; ++i) {
-                    if(seen[g[omap[i]]] == gsv[g[omap[i]]-1]+start) outtemp[omap[i]] = fill;
+                    if(seen[g[omap[i]]] == max[g[omap[i]]]+start) outtemp[omap[i]] = fill;
                     else {
                       outtemp[omap[i]] = FUN(outtemp[omap[i]], outtemp[omap[i - np]]);
                       ++seen[g[omap[i]]];
