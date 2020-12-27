@@ -4,6 +4,8 @@ context("miscellaneous issues")
 
 options(warn = -1)
 
+if(identical(Sys.getenv("NCRAN"), "TRUE")) {
+
 test_that("Using a factor with unused levels does not pose a problem to flag, fdiff or fgrowth (#25)", {
   wlddev2 <- subset(wlddev, iso3c %in% c("ALB", "AFG", "DZA"))
   wlddev3 <- droplevels(wlddev2)
@@ -39,7 +41,7 @@ test_that("Using a factor with unused levels does not pose a problem to flag, fd
 
 })
 
-if(identical(Sys.getenv("NCRAN"), "TRUE")) {
+
 
 library(magrittr)
 test_that("Testing grouped_df methods", {

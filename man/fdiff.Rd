@@ -101,9 +101,11 @@ If more than one value is passed to \code{n} and/or \code{diff}, the data is exp
 
 With groups/panel-identifiers supplied to \code{g/by}, \code{fdiff/D/Dlog} efficiently compute panel-differences. If \code{t} is left empty, the data needs to be ordered such that all values belonging to a group are consecutive and in the right order. It is not necessary that the groups themselves occur in the right order. If time-variable(s) are supplied to \code{t}, the panel is fully identified and differences can be securely computed even if the data is completely unordered.
 
-\code{fdiff/D/Dlog} supports balanced panels and unbalanced panels where various individuals are observed for different time-sequences (both start, end and duration of observation can differ for each individual), but does not natively support irregularly spaced time series and panels. For computational details and efficiency considerations see the help page for \code{\link{flag}}. A work-around for differencing irregular panels is easily achieved with the help of \code{\link{seqid}}.
+\code{fdiff/D/Dlog} supports balanced panels and unbalanced panels where various individuals are observed for different time-sequences.
+% (both start, end and duration of observation can differ for each individual), but does not natively support irregularly spaced time series and panels.
+For computational details and efficiency considerations see the help page for \code{\link{flag}}. %A work-around for differencing irregular panels is easily achieved with the help of \code{\link{seqid}}.
 
-It is also possible to compute differences on unordered vectors / time series (thus utilizing \code{t} but leaving \code{g/by} empty).
+It is also possible to compute differences on unordered vectors or irregular time series (thus utilizing \code{t} but leaving \code{g/by} empty).
 
 The methods applying to \emph{plm} objects (panel series and panel data frames) automatically utilize the panel-identifiers attached to these objects and thus securely compute fully identified panel-differences. If these objects have > 2 panel-identifiers attached to them, the last identifier is assumed to be the time-variable, and the others are taken as grouping-variables and interacted.
 }
