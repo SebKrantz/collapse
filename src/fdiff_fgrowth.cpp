@@ -255,15 +255,14 @@ NumericVector fdiffgrowthCppImpl(const NumericVector& x, const IntegerVector& n 
     if(l != g.size()) stop("length(x) must match length(g)");
     int ags = l/ng, ngp = ng+1, maxdiff = max(diff);
     if(Rf_isNull(t)) {
-      IntegerVector gsv = Rf_isNull(gs) ? IntegerVector(ng) : as<IntegerVector>(gs); // no_init_vector(ng);
+      bool cond = !Rf_isNull(gs);
+      IntegerVector gsv = (cond || maxdiff == 1) ? no_init_vector(1) : IntegerVector(ng);
+      int *pgsv = cond ? INTEGER(gs)-1 : INTEGER(gsv)-1;
       if(maxdiff != 1) {
-        if(Rf_isNull(gs)) {
-          // gsv = IntegerVector(ng);
-          // std::fill(gsv.begin(), gsv.end(), 0);
-          for(int i = 0; i != l; ++i) ++gsv[g[i]-1];
+        if(cond) {
+          if(ng != Rf_length(gs)) stop("ng must match length(gs)");
         } else {
-          // gsv = gs;
-          if(ng != gsv.size()) stop("ng must match length(gs)");
+          for(int i = 0; i != l; ++i) ++pgsv[g[i]];
         }
       }
       // int seen[ngp], memsize = sizeof(int)*(ngp);
@@ -292,7 +291,7 @@ NumericVector fdiffgrowthCppImpl(const NumericVector& x, const IntegerVector& n 
             int start = np*(k+1);
             std::vector<int> seen(ngp); // memset(seen, 0, memsize);
             for(int i = l; i--; ) {
-              if(seen[g[i]] == gsv[g[i]-1]-start) outp[i] = fill;
+              if(seen[g[i]] == pgsv[g[i]]-start) outp[i] = fill;
               else {
                 outp[i] = FUN(outp[i], outp[i - np]);
                 ++seen[g[i]];
@@ -308,7 +307,7 @@ NumericVector fdiffgrowthCppImpl(const NumericVector& x, const IntegerVector& n 
                 int start = np*(k+1); // Right ? -> seems so
                 std::vector<int> seen(ngp); // memset(seen, 0, memsize); // Needed, because it loops from the beginning
                 for(int i = l; i--; ) {
-                  if(seen[g[i]] == gsv[g[i]-1]-start) outtemp[i] = fill;
+                  if(seen[g[i]] == pgsv[g[i]]-start) outtemp[i] = fill;
                   else {
                     outtemp[i] = FUN(outtemp[i], outtemp[i - np]);
                     ++seen[g[i]];
@@ -345,7 +344,7 @@ NumericVector fdiffgrowthCppImpl(const NumericVector& x, const IntegerVector& n 
             int start = np*(k+1);
             std::vector<int> seen(ngp); // memset(seen, 0, memsize);
             for(int i = 0; i != l; ++i) {
-              if(seen[g[i]] == gsv[g[i]-1]+start) outp[i] = fill;
+              if(seen[g[i]] == pgsv[g[i]]+start) outp[i] = fill;
               else {
                 outp[i] = FUN(outp[i], outp[i - np]);
                 ++seen[g[i]];
@@ -361,7 +360,7 @@ NumericVector fdiffgrowthCppImpl(const NumericVector& x, const IntegerVector& n 
                 int start = np*(k+1);
                 std::vector<int> seen(ngp); // memset(seen, 0, memsize);
                 for(int i = 0; i != l; ++i) {
-                  if(seen[g[i]] == gsv[g[i]-1]+start) outtemp[i] = fill;
+                  if(seen[g[i]] == pgsv[g[i]]+start) outtemp[i] = fill;
                   else {
                     outtemp[i] = FUN(outtemp[i], outtemp[i - np]);
                     ++seen[g[i]];
@@ -859,15 +858,14 @@ NumericMatrix fdiffgrowthmCppImpl(const NumericMatrix& x, const IntegerVector& n
     if(l != g.size()) stop("nrow(x) must match length(g)");
     int ags = l/ng, ngp = ng+1, maxdiff = max(diff);
     if(Rf_isNull(t)) { // Ordered data
-      IntegerVector gsv = Rf_isNull(gs) ? IntegerVector(ng) : as<IntegerVector>(gs); // no_init_vector(ng);
+      bool cond = !Rf_isNull(gs);
+      IntegerVector gsv = (cond || maxdiff == 1) ? no_init_vector(1) : IntegerVector(ng);
+      int *pgsv = cond ? INTEGER(gs)-1 : INTEGER(gsv)-1;
       if(maxdiff != 1) {
-        if(Rf_isNull(gs)) {
-          // gsv = IntegerVector(ng);
-          // std::fill(gsv.begin(), gsv.end(), 0);
-          for(int i = 0; i != l; ++i) ++gsv[g[i]-1];
+        if(cond) {
+          if(ng != Rf_length(gs)) stop("ng must match length(gs)");
         } else {
-          // gsv = gs;
-          if(ng != gsv.size()) stop("ng must match length(gs)");
+          for(int i = 0; i != l; ++i) ++pgsv[g[i]];
         }
       }
       // int seen[ngp], memsize = sizeof(int)*(ngp);
@@ -898,7 +896,7 @@ NumericMatrix fdiffgrowthmCppImpl(const NumericMatrix& x, const IntegerVector& n
               int start = np*(k+1);
               std::vector<int> seen(ngp); // memset(seen, 0, memsize);
               for(int i = l; i--; ) {
-                if(seen[g[i]] == gsv[g[i]-1]-start) outp[i] = fill;
+                if(seen[g[i]] == pgsv[g[i]]-start) outp[i] = fill;
                 else {
                   outp[i] = FUN(outp[i], outp[i - np]);
                   ++seen[g[i]];
@@ -914,7 +912,7 @@ NumericMatrix fdiffgrowthmCppImpl(const NumericMatrix& x, const IntegerVector& n
                   int start = np*(k+1);
                   std::vector<int> seen(ngp); // memset(seen, 0, memsize);
                   for(int i = l; i--; ) {
-                    if(seen[g[i]] == gsv[g[i]-1]-start) outtemp[i] = fill;
+                    if(seen[g[i]] == pgsv[g[i]]-start) outtemp[i] = fill;
                     else {
                       outtemp[i] = FUN(outtemp[i], outtemp[i - np]);
                       ++seen[g[i]];
@@ -951,7 +949,7 @@ NumericMatrix fdiffgrowthmCppImpl(const NumericMatrix& x, const IntegerVector& n
               int start = np*(k+1);
               std::vector<int> seen(ngp); // memset(seen, 0, memsize);
               for(int i = 0; i != l; ++i) {
-                if(seen[g[i]] == gsv[g[i]-1]+start) outp[i] = fill;
+                if(seen[g[i]] == pgsv[g[i]]+start) outp[i] = fill;
                 else {
                   outp[i] = FUN(outp[i], outp[i - np]);
                   ++seen[g[i]];
@@ -967,7 +965,7 @@ NumericMatrix fdiffgrowthmCppImpl(const NumericMatrix& x, const IntegerVector& n
                   int start = np*(k+1);
                   std::vector<int> seen(ngp); // memset(seen, 0, memsize);
                   for(int i = 0; i != l; ++i) {
-                    if(seen[g[i]] == gsv[g[i]-1]+start) outtemp[i] = fill;
+                    if(seen[g[i]] == pgsv[g[i]]+start) outtemp[i] = fill;
                     else {
                       outtemp[i] = FUN(outtemp[i], outtemp[i - np]);
                       ++seen[g[i]];
@@ -1461,15 +1459,14 @@ List fdiffgrowthlCppImpl(const List& x, const IntegerVector& n = 1, const Intege
   } else { // With groups
     int gss = g.size(), ags = gss/ng, ngp = ng+1, maxdiff = max(diff);
     if(Rf_isNull(t)) { // Ordered data
-      IntegerVector gsv = Rf_isNull(gs) ? IntegerVector(ng) : as<IntegerVector>(gs); // no_init_vector(ng);
+      bool cond = !Rf_isNull(gs);
+      IntegerVector gsv = (cond || maxdiff == 1) ? no_init_vector(1) : IntegerVector(ng);
+      int *pgsv = cond ? INTEGER(gs)-1 : INTEGER(gsv)-1;
       if(maxdiff != 1) {
-        if(Rf_isNull(gs)) {
-          // gsv = IntegerVector(ng);
-          // std::fill(gsv.begin(), gsv.end(), 0);
-          for(int i = 0; i != gss; ++i) ++gsv[g[i]-1];
+        if(cond) {
+          if(ng != Rf_length(gs)) stop("ng must match length(gs)");
         } else {
-          // gsv = gs;
-          if(ng != gsv.size()) stop("ng must match length(gs)");
+          for(int i = 0; i != gss; ++i) ++pgsv[g[i]];
         }
       }
       // int seen[ngp], memsize = sizeof(int)*(ngp);
@@ -1501,7 +1498,7 @@ List fdiffgrowthlCppImpl(const List& x, const IntegerVector& n = 1, const Intege
               int start = np*(k+1);
               std::vector<int> seen(ngp); // memset(seen, 0, memsize);
               for(int i = gss; i--; ) {
-                if(seen[g[i]] == gsv[g[i]-1]-start) outjp[i] = fill;
+                if(seen[g[i]] == pgsv[g[i]]-start) outjp[i] = fill;
                 else {
                   outjp[i] = FUN(outjp[i], outjp[i - np]);
                   ++seen[g[i]];
@@ -1518,7 +1515,7 @@ List fdiffgrowthlCppImpl(const List& x, const IntegerVector& n = 1, const Intege
                   int start = np*(k+1);
                   std::vector<int> seen(ngp); // memset(seen, 0, memsize);
                   for(int i = gss; i--; ) {
-                    if(seen[g[i]] == gsv[g[i]-1]-start) outtemp[i] = fill;
+                    if(seen[g[i]] == pgsv[g[i]]-start) outtemp[i] = fill;
                     else {
                       outtemp[i] = FUN(outtemp[i], outtemp[i - np]);
                       ++seen[g[i]];
@@ -1554,7 +1551,7 @@ List fdiffgrowthlCppImpl(const List& x, const IntegerVector& n = 1, const Intege
               int start = np*(k+1);
               std::vector<int> seen(ngp); // memset(seen, 0, memsize);
               for(int i = 0; i != gss; ++i) {
-                if(seen[g[i]] == gsv[g[i]-1]+start) outjp[i] = fill;
+                if(seen[g[i]] == pgsv[g[i]]+start) outjp[i] = fill;
                 else {
                   outjp[i] = FUN(outjp[i], outjp[i - np]);
                   ++seen[g[i]];
@@ -1571,7 +1568,7 @@ List fdiffgrowthlCppImpl(const List& x, const IntegerVector& n = 1, const Intege
                   int start = np*(k+1);
                   std::vector<int> seen(ngp); // memset(seen, 0, memsize);
                   for(int i = 0; i != gss; ++i) {
-                    if(seen[g[i]] == gsv[g[i]-1]+start) outtemp[i] = fill;
+                    if(seen[g[i]] == pgsv[g[i]]+start) outtemp[i] = fill;
                     else {
                       outtemp[i] = FUN(outtemp[i], outtemp[i - np]);
                       ++seen[g[i]];
