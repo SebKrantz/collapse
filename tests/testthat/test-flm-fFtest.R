@@ -37,16 +37,56 @@ test_that("fFtest works as intended", {
   r <- fFtest(iris$Sepal.Length, gv(iris, -1L))
   rlm <- summary(lm(Sepal.Length ~., iris))
   expect_equal(unattrib(r)[1:4], unattrib(c(rlm$r.squared, rlm$fstatistic[c(2:3, 1L)])))
+  # Same with weights:
+  w <- abs(rnorm(fnrow(iris)))
+  r <- fFtest(iris$Sepal.Length, gv(iris, -1L), w = w)
+  rlm <- summary(lm(Sepal.Length ~., weights = w, iris))
+  expect_equal(unattrib(r)[1:4], unattrib(c(rlm$r.squared, rlm$fstatistic[c(2:3, 1L)])))
+
+  # Repeat with missing values
+  iris <- na_insert(iris)
+  r <- fFtest(iris$Sepal.Length, gv(iris, -1L))
+  rlm <- summary(lm(Sepal.Length ~., iris))
+  expect_equal(unattrib(r)[1:4], unattrib(c(rlm$r.squared, rlm$fstatistic[c(2:3, 1L)])))
+  # Same with weights:
+  w <- na_insert(w)
+  r <- fFtest(iris$Sepal.Length, gv(iris, -1L), w = w)
+  rlm <- summary(lm(Sepal.Length ~., weights = w, iris))
+  expect_equal(unattrib(r)[1:4], unattrib(c(rlm$r.squared, rlm$fstatistic[c(2:3, 1L)])))
+  rm(iris)
+
   if(NCRAN) {
   r <- fFtest(wlddev$PCGDP, qF(wlddev$year), wlddev[c("iso3c","LIFEEX")])
   # Same test done using lm:
-  data <- na_omit(get_vars(wlddev, c("iso3c","year","PCGDP","LIFEEX")))
+  data <- na_omit(get_vars(wlddev, c("iso3c","year","PCGDP","LIFEEX")), na.attr = TRUE)
   full <- lm(PCGDP ~ LIFEEX + iso3c + qF(year), data)
   rest <- lm(PCGDP ~ LIFEEX + iso3c, data)
   ranv <- anova(rest, full)
 
+  expect_equal(unattrib(r[1L, 1:4]), unlist(summary(full)[c("r.squared", "fstatistic")],
+                                            use.names = FALSE)[c(1L, 3:4, 2L)])
+  expect_equal(unattrib(r[2L, 1:4]), unlist(summary(rest)[c("r.squared", "fstatistic")],
+                                            use.names = FALSE)[c(1L, 3:4, 2L)])
   expect_equal(rev(unattrib(r[1:2, 3L])), ranv$Res.Df)
+  expect_equal(r[3L, 2L], na_rm(ranv$Df))
   expect_equal(r[3L, 4L], na_rm(ranv$F))
   expect_equal(r[3L, 5L], na_rm(ranv$`Pr(>F)`))
+
+  # Same with weights:
+  w <- abs(rnorm(fnrow(wlddev)))
+  r <- fFtest(wlddev$PCGDP, qF(wlddev$year), wlddev[c("iso3c","LIFEEX")], w)
+  full <- lm(PCGDP ~ LIFEEX + iso3c + qF(year), weights = w[-attr(data, "na.action")], data)
+  rest <- lm(PCGDP ~ LIFEEX + iso3c, weights = w[-attr(data, "na.action")], data)
+  ranv <- anova(rest, full)
+
+  expect_equal(unattrib(r[1L, 1:4]), unlist(summary(full)[c("r.squared", "fstatistic")],
+                                            use.names = FALSE)[c(1L, 3:4, 2L)])
+  expect_equal(unattrib(r[2L, 1:4]), unlist(summary(rest)[c("r.squared", "fstatistic")],
+                                            use.names = FALSE)[c(1L, 3:4, 2L)])
+  expect_equal(rev(unattrib(r[1:2, 3L])), ranv$Res.Df)
+  expect_equal(r[3L, 2L], na_rm(ranv$Df))
+  expect_equal(r[3L, 4L], na_rm(ranv$F))
+  expect_equal(r[3L, 5L], na_rm(ranv$`Pr(>F)`))
+
   }
 })
