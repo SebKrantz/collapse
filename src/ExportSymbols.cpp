@@ -24,6 +24,8 @@ RcppExport SEXP cond_duplAttributes(SEXP x, SEXP y);
 RcppExport SEXP CsetAttrib(SEXP object, SEXP a);
 RcppExport SEXP CcopyAttrib(SEXP to, SEXP from);
 RcppExport SEXP CcopyMostAttrib(SEXP to, SEXP from);
+RcppExport SEXP lassign(SEXP x, SEXP s, SEXP rows, SEXP fill);
+RcppExport SEXP groups2GRP(SEXP x, SEXP lx, SEXP gs);
 
 static const R_CMethodDef CEntries[]  = {
   {"C_multi_yw", (DL_FUNC) &multi_yw, 10},
@@ -107,8 +109,8 @@ static const R_CallMethodDef CallEntries[] = {
   {"C_setAttrib", (DL_FUNC) &CsetAttrib, 2},
   {"C_copyAttrib", (DL_FUNC) &CcopyAttrib, 2},
   {"C_copyMostAttrib", (DL_FUNC) &CcopyMostAttrib, 2},
-  {"Cpp_groups2GRP", (DL_FUNC) &_collapse_groups2GRPCpp, 3},
-  {"Cpp_lassign", (DL_FUNC) &_collapse_lassignCpp, 4},
+  {"C_groups2GRP", (DL_FUNC) &groups2GRP, 3},
+  {"C_lassign", (DL_FUNC) &lassign, 4},
   {"Cpp_seqid", (DL_FUNC) &_collapse_seqid, 7},
   {"Cpp_groupid", (DL_FUNC) &_collapse_groupid, 5},
   {"C_collapse_init", (DL_FUNC) &collapse_init, 1},

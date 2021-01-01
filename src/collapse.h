@@ -148,10 +148,6 @@ RcppExport SEXP _collapse_fdroplevelsCpp(SEXP xSEXP, SEXP check_NASEXP);
 // SEXP _collapse_cond_duplAttributes(SEXP xSEXP, SEXP ySEXP);
 // cond_duplattributes
 // RcppExport SEXP _collapse_cond_duplattributes(SEXP xSEXP, SEXP ySEXP);
-// lassignCpp
-RcppExport SEXP _collapse_lassignCpp(SEXP xSEXP, SEXP sSEXP, SEXP rowsSEXP, SEXP fillSEXP);
-// groups2GRP
-RcppExport SEXP _collapse_groups2GRPCpp(SEXP xSEXP, SEXP lxSEXP, SEXP gsSEXP);
 // seqid
 RcppExport SEXP _collapse_seqid(SEXP xSEXP, SEXP oSEXP, SEXP delSEXP, SEXP startSEXP, SEXP na_skipSEXP, SEXP skip_seqSEXP, SEXP check_oSEXP);
 // groupid
