@@ -38,16 +38,21 @@ X \%c/\% v    # Divide each column of X by v
 %- maybe also 'usage' for other objects documented here.
 \arguments{
   \item{X}{a vector, matrix, data frame or list like object with rows (r) ro columns (c) matching \code{v}.}
-  \item{v}{a suitable atomic vector. If \code{X} is a list, \code{v} can also be a scalar (for column-operations) or a matching list of atomic elements (for row-operations on data frame's / lists).}
+  \item{v}{a suitable atomic vector. If \code{X} is a list, \code{v} can also be a scalar or list of vectors (for column-operations) or a matching list of scalar atomic elements (for row-operations on data frame's / lists).}
 }
 \details{
-With a matrix or data frame \code{X}, the default behavior of R when calling \code{X op v} (such as multiplication \code{X * v}) is to perform the operation of the vector \code{v} with each column of \code{X}. The equivalent operation is performed by \code{X \%cop\% v}, with the difference that it computes significantly faster if \code{X} is a data frame / list. A more complex but frequently required task is to perform an operation with \code{v} on each row of \code{X}. This is provided based on efficient C++ code by the \code{\%rop\%} set of functions, e.g. \code{X \%r*\% v} efficiently multiplies \code{v} to each row of \code{X}.
+With a matrix or data frame \code{X}, the default behavior of R when calling \code{X op v} (such as multiplication \code{X * v}) is to perform the operation of \code{v} with each column of \code{X}. The equivalent operation is performed by \code{X \%cop\% v}, with the difference that it computes significantly faster if \code{X} is a data frame / list. A more complex but frequently required task is to perform an operation with \code{v} on each row of \code{X}. This is provided based on efficient C++ code by the \code{\%rop\%} set of functions, e.g. \code{X \%r*\% v} efficiently multiplies \code{v} to each row of \code{X}.
 }
 \value{
 \code{X} where the operation with \code{v} was performed on each row or column. All attributes of \code{X} are preserved.
 }
 \note{
-These functions are all quite simple, they only work with \code{X} on the LHS i.e. \code{v \%op\% X} will likely fail. The row operations are simple wrappers around \code{\link{TRA}} which provides more operations including grouped replacing and sweeping (where \code{V} would be a matrix or data frame with less rows than \code{X} being mapped to the rows of \code{X} by grouping vectors). One consequence is that just like \code{\link{TRA}}, row-wise mathematical operations (+, -, *, /) always yield numeric output, even if both \code{X} and \code{v} may be integer. This is different for column- operations which depend on base R and may also preserve integer data.
+\emph{Computations and Output:} These functions are all quite simple, they only work with \code{X} on the LHS i.e. \code{v \%op\% X} will likely fail. The row operations are simple wrappers around \code{\link{TRA}} which provides more operations including grouped replacing and sweeping (where \code{v} would be a matrix or data frame with less rows than \code{X} being mapped to the rows of \code{X} by grouping vectors). One consequence is that just like \code{\link{TRA}}, row-wise mathematical operations (+, -, *, /) always yield numeric output, even if both \code{X} and \code{v} may be integer. This is different for column- operations which depend on base R and may also preserve integer data.
+
+\emph{Rules of Arithmetic:} Since these operators are defined as simple infix functions, the normal rules of arithmetic are not respected. So \code{a \%c+\% b \%c*\% c} evaluates as \code{(a \%c+\% b) \%c*\% c}. As with all chained infix operations, they are just evaluated sequentially from left to right.
+
+\emph{Performance Notes:} For Fast Statistical Functions, using \code{fmedian(X, TRA = "-")} will be a tiny bit faster than \code{X \%r-\% fmedian(X)}. Also use \code{fwithin(X)} for fast centering using the mean, and \code{fscale(X)} for fast scaling and centering or mean-preserving scaling.
+
 }
 
 %% ~Make other sections like Warning with \section{Warning }{....} ~
@@ -57,23 +62,27 @@ These functions are all quite simple, they only work with \code{X} on the LHS i.
 }
 
 \examples{
-# Using data frame's / lists
+## Using data frame's / lists
 v <- mtcars$cyl
 mtcars \%cr\% v
 mtcars \%c-\% v
+mtcars \%r-\% v
 mtcars \%r-\% lapply(mtcars, quantile, 0.28)
 
-# Using matrices
+mtcars \%c*\% 5       # Significantly faster than mtcars * 5
+mtcars \%c*\% mtcars  # Significantly faster than mtcars * mtcars
+
+## Using matrices
 X <- qM(mtcars)
 X \%cr\% v
 X \%c-\% v
 X \%r-\% dapply(X, quantile, 0.28)
-
-# General Notes: For Fast Statistical Functions, using
-# fmedian(X, TRA = "-") will be faster than X \%r-\% fmedian(X).
-# Also use fwithin(X) for fast centering using the mean, and
-# fscale(X) for fast scaling and centering or mean-preserving scaling
-
+\donttest{
+## Chained Operations
+library(magrittr)
+mtcars \%>\% fwithin \%r-\% rnorm(11) \%c*\% 5 \%>\%
+    tfm(mpg = fsum(mpg)) \%>\% qsu
+}
 }
 % Add one or more standard keywords, see file 'KEYWORDS' in the
 % R documentation directory (show via RShowDoc("KEYWORDS")):

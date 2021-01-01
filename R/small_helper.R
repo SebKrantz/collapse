@@ -7,12 +7,22 @@
 "%r*%" <- function(X, v) TRA(X, v, "*")
 "%r/%" <- function(X, v) TRA(X, v, "/")
 
-"%cr%" <- function(X, v) if(is.atomic(X)) duplAttributes(rep(v, NCOL(X)), X) else # outer(rep.int(1L, dim(X)[2L]), v)
-  duplAttributes(lapply(vector("list", length(unclass(X))), function(y) v), X)
-"%c+%" <- function(X, v) if(is.atomic(X)) X + v else duplAttributes(lapply(unattrib(X), `+`, v), X)
-"%c-%" <- function(X, v) if(is.atomic(X)) X - v else duplAttributes(lapply(unattrib(X), `-`, v), X)
-"%c*%" <- function(X, v) if(is.atomic(X)) X * v else duplAttributes(lapply(unattrib(X), `*`, v), X)
-"%c/%" <- function(X, v) if(is.atomic(X)) X / v else duplAttributes(lapply(unattrib(X), `/`, v), X) # or * 1L/v ??
+"%cr%" <- function(X, v) if(is.atomic(X)) return(duplAttributes(rep(v, NCOL(X)), X)) else # outer(rep.int(1L, dim(X)[2L]), v)
+  if(is.atomic(v)) return(duplAttributes(lapply(vector("list", length(unclass(X))), function(y) v))) else
+    copyAttrib(v, X) # copyAttrib first makes a shallow copy of v
+"%c+%" <- function(X, v) if(is.atomic(X)) return(X + v) else
+  duplAttributes(if(is.atomic(v)) lapply(unattrib(X), `+`, v) else
+    mapply(`+`, unattrib(X), unattrib(v), USE.NAMES = FALSE, SIMPLIFY = FALSE), X)
+"%c-%" <- function(X, v) if(is.atomic(X)) return(X - v) else
+  duplAttributes(if(is.atomic(v)) lapply(unattrib(X), `-`, v) else
+    mapply(`-`, unattrib(X), unattrib(v), USE.NAMES = FALSE, SIMPLIFY = FALSE), X)
+"%c*%" <- function(X, v) if(is.atomic(X)) return(X * v) else
+  duplAttributes(if(is.atomic(v)) lapply(unattrib(X), `*`, v) else
+    mapply(`*`, unattrib(X), unattrib(v), USE.NAMES = FALSE, SIMPLIFY = FALSE), X)
+"%c/%" <- function(X, v) if(is.atomic(X)) return(X / v) else  # or * 1L/v ??
+  duplAttributes(if(is.atomic(v)) lapply(unattrib(X), `/`, v) else
+    mapply(`/`, unattrib(X), unattrib(v), USE.NAMES = FALSE, SIMPLIFY = FALSE), X)
+
 
 
 getenvFUN <- function(nam, efmt1 = "For this method need to install.packages('%s'), then unload [detach('package:collapse', unload = TRUE)] and reload [library(collapse)].")
