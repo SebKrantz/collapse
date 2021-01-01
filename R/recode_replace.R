@@ -208,7 +208,7 @@ recode_char <- function(X, ..., default = NULL, missing = NULL, regex = FALSE,
   repfun(X)
 }
 
-replace_NA <- function(X, value) {
+replace_NA <- function(X, value = 0L) {
   if(is.list(X))
     duplAttributes(lapply(unattrib(X), function(y) `[<-`(y, is.na(y), value = value)), X) else
     `[<-`(X, is.na(X), value = value)
