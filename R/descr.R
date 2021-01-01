@@ -23,6 +23,11 @@ descr <- function(X, Ndistinct = TRUE, higher = TRUE, table = TRUE,
                                                       list(Class = class(x), Label = attr(x, label.attr),
                                                            Stats = if(Ndistinct) c(N = fNobsCpp(x), Ndist = fNdistinctCpp(x)) else `names<-`(fNobsCpp(x), 'Nobs'))
 
+  descrdate <- function(x) list(Class = class(x), Label = attr(x, label.attr),
+                                Stats = c(if(Ndistinct) c(N = fNobsCpp(x), Ndist = fNdistinctCpp(x)) else `names<-`(fNobsCpp(x), 'Nobs'),
+                                          `names<-`(range(x, na.rm = TRUE), c("Min", "Max"))))
+
+
   if(is.list(X)) class(X) <- NULL else X <- unclass(qDF(X))
   if(length(cols)) X <- X[cols2int(cols, X, names(X), FALSE)]
   res <- vector('list', length(X))
@@ -31,7 +36,7 @@ descr <- function(X, Ndistinct = TRUE, higher = TRUE, table = TRUE,
   if(!all(num)) {
     date <- vapply(unattrib(X), is.Date, TRUE)
     if(any(date)) {
-      res[date] <- lapply(X[date], descrcat, FALSE)
+      res[date] <- lapply(X[date], descrdate)
       cat <- !(num | date)
     } else cat <- !num
     res[cat] <- lapply(X[cat], descrcat)
