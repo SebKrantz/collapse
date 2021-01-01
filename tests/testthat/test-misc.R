@@ -33,6 +33,38 @@ test_that("descr, pwcor, pwcov, pwNobs", {
 
 })
 
+if(identical(Sys.getenv("NCRAN"), "TRUE")) {
+
+test_that("weighted correlations are correct", {
+
+  w <- abs(rnorm(fnrow(wlddev)))
+  cc <- which(!missing_cases(nv(wlddev)))
+
+  expect_equal(unclass(pwcor(nv(wlddev), w = w)), weights::wtd.cors(nv(wlddev), w = w))
+  expect_equal(unclass(pwcor(nv(wlddev), w = w)), cov2cor(unclass(pwcov(nv(wlddev), w = w))))
+  expect_true(all_obj_equal(unclass(pwcor(ss(nv(wlddev), cc), w = w[cc])),
+                            cov2cor(unclass(pwcov(ss(nv(wlddev), cc), w = w[cc]))),
+                            unclass(pwcor(nv(wlddev), w = w, use = "complete.obs")),
+                            weights::wtd.cors(ss(nv(wlddev), cc), w = w[cc]),
+                            cov.wt(ss(nv(wlddev), cc), w[cc], cor = TRUE)$cor))
+
+  suppressWarnings(
+  expect_true(all_obj_equal(replace_NA(pwcor(ss(nv(wlddev), cc), w = w[cc], P = TRUE, array = FALSE)$P, 0),
+                            replace_NA(pwcov(ss(nv(wlddev), cc), w = w[cc], P = TRUE, array = FALSE)$P, 0),
+                            replace_NA(pwcor(ss(nv(wlddev), cc), w = w[cc], P = TRUE, array = FALSE, use = "complete.obs")$P, 0),
+                            replace_NA(pwcov(ss(nv(wlddev), cc), w = w[cc], P = TRUE, array = FALSE, use = "complete.obs")$P, 0),
+                            weights::wtd.cor(ss(nv(wlddev), cc), w = w[cc])$p.value)))
+
+  expect_true(all_obj_equal(unclass(pwcov(ss(nv(wlddev), cc), w = w[cc])),
+                            unclass(pwcov(nv(wlddev), w = w, use = "complete.obs"))))
+
+  expect_equal(cov.wt(ss(nv(wlddev), cc), w[cc])$cov, unclass(pwcov(nv(wlddev), w = w, use = "complete.obs")),
+               tolerance = 1e-3)
+
+})
+
+}
+
 test_that("deep matrix dispatch works well", {
 
   tsm <- EuStockMarkets
