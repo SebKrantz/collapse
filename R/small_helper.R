@@ -7,8 +7,9 @@
 "%r*%" <- function(X, v) TRA(X, v, "*")
 "%r/%" <- function(X, v) TRA(X, v, "/")
 
+# othidentity <- function(x, y) y
 "%cr%" <- function(X, v) if(is.atomic(X)) return(duplAttributes(rep(v, NCOL(X)), X)) else # outer(rep.int(1L, dim(X)[2L]), v)
-  if(is.atomic(v)) return(duplAttributes(lapply(vector("list", length(unclass(X))), function(y) v))) else
+  if(is.atomic(v)) return(duplAttributes(lapply(vector("list", length(unclass(X))), function(z) v), X)) else
     copyAttrib(v, X) # copyAttrib first makes a shallow copy of v
 "%c+%" <- function(X, v) if(is.atomic(X)) return(X + v) else
   duplAttributes(if(is.atomic(v)) lapply(unattrib(X), `+`, v) else
@@ -218,7 +219,7 @@ missing_cases <- function(X, cols = NULL) {
   is.na(X)
 }
 
-na_rm <- function(x) x[!is.na(x)]
+na_rm <- function(x) .Call(C_na_rm, x)  # x[!is.na(x)]
 
 na_omit <- function(X, cols = NULL, na.attr = FALSE) {
   if(is.list(X)) {
@@ -232,7 +233,9 @@ na_omit <- function(X, cols = NULL, na.attr = FALSE) {
     if(!(is.numeric(rn) || is.null(rn) || rn[1L] == "1")) attr(res, "row.names") <- rn[rkeep]
   } else {
     rl <- if(is.null(cols)) complete.cases(X) else complete.cases(X[, cols])
-    res <- if(is.matrix(X)) X[rl, , drop = FALSE] else X[rl]
+    rkeep <- which(rl)
+    if(length(rkeep) == NROW(X)) return(X)
+    res <- if(is.matrix(X)) X[rkeep, , drop = FALSE] else X[rkeep]
   }
   if(na.attr) attr(res, "na.action") <- `oldClass<-`(which(!rl), "omit")
   res
@@ -526,25 +529,5 @@ fsimplify2array <- function(l) {
 
 
 
-# Experimental:
 
-# faster pipe: more challenging than it seems...
-# `%>>%` <- function(lhs, rhs) {
-#     rhs_call <- substitute(rhs)
-#     eval(rhs_call, envir = lhs, enclos = parent.frame())
-# }
-#
-# > pipeR::`%>>%`
-# function (x, expr)
-# {
-#   x
-#   expr <- substitute(expr)
-#   envir <- parent.frame()
-#   switch(class(expr), `NULL` = NULL, character = {
-#     cat(expr, "\n")
-#     x
-#   }, `{` = pipe_dot(x, expr, envir), `(` = pipe_fun(x,
-#                                                     expr[[2L]], envir), pipe_symbol(x, expr, envir, TRUE,
-#                                                                                     pipe_first))
-# }
 
