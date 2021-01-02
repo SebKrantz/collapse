@@ -25,7 +25,7 @@ fmedian(x, \dots)
         use.g.names = FALSE, keep.group_vars = TRUE, keep.w = TRUE, \dots)
 }
 \arguments{
-\item{x}{a numeric vector, matrix, data frame or grouped tibble (\code{dplyr::grouped_df}).}
+\item{x}{a numeric vector, matrix, data frame or grouped data frame (class 'grouped_df').}
 
 \item{g}{a factor, \code{\link{GRP}} object, atomic vector (internally converted to factor) or a list of vectors / factors (internally converted to a \code{\link{GRP}} object) used to group \code{x}.}
 

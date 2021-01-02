@@ -39,7 +39,7 @@ flast(x, \dots)
       use.g.names = FALSE, keep.group_vars = TRUE, \dots)
 }
 \arguments{
-\item{x}{a vector, matrix, data frame or grouped tibble (\code{dplyr::grouped_df}).}
+\item{x}{a vector, matrix, data frame or grouped data frame (class 'grouped_df').}
 
 \item{g}{a factor, \code{\link{GRP}} object, atomic vector (internally converted to factor) or a list of vectors / factors (internally converted to a \code{\link{GRP}} object) used to group \code{x}.}
 
@@ -81,7 +81,7 @@ aqm <- qM(airquality)
 ffirst(aqm)
 ffirst(aqm, airquality$Month) # etc..
 \donttest{ % No code relying on suggested package
-## method for grouped tibbles - for use with dplyr
+## method for grouped data frames - created with dplyr::group_by or fgroup_by
 library(dplyr)
 airquality \%>\% group_by(Month) \%>\% ffirst
 airquality \%>\% group_by(Month) \%>\% select(Ozone) \%>\% ffirst(na.rm = FALSE)

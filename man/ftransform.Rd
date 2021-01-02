@@ -12,7 +12,7 @@
 \alias{fcompute}
 \title{Fast Transform and Compute Columns on a Data Frame}
 \description{
-  \code{ftransform} is a much faster version of \code{base::transform} and \code{dplyr::mutate} for data frames. It returns the data frame with new columns computed and/or existing columns modified or deleted. \code{settransform} does all of that by reference i.e. it modifies the data frame in the global environment. \code{fcompute} can be used to compute new columns from the columns in a data frame and returns only the computed columns.
+  \code{ftransform} is a much faster version of \code{\link{transform}} and \code{dplyr::mutate} for data frames. It returns the data frame with new columns computed and/or existing columns modified or deleted. \code{settransform} does all of that by reference i.e. it modifies the data frame in the global environment. \code{fcompute} can be used to compute new columns from the columns in a data frame and returns only the computed columns.
 }
 
 \usage{
@@ -40,7 +40,7 @@ fcompute(X, \dots)
     \item{\dots}{further arguments of the form \code{column = value}. The \code{value} can be a combination of other columns, a scalar value, or \code{NULL}, which deletes \code{column}. Alternatively it is also possible to place a single list here, which will be treated like a list of \code{column = value} arguments. For \code{ftransformv}, \code{\dots} can be used to pass further arguments to \code{FUN}. \emph{Note:} The ellipsis (\code{\dots}) is always evaluated within the data frame (\code{X}) environment. See Examples.}
     \item{vars}{variables to be transformed by applying \code{FUN} to them: select using names, indices, a logical vector or a selector function (e.g. \code{is.numeric}).}
     \item{FUN}{a single function yielding a result of length \code{NROW(X)} or 1. See also \code{apply}.}
-    \item{apply}{logical. \code{TRUE} (default) will apply \code{FUN} to each column selected in \code{vars}; \code{FALSE} will apply \code{FUN} to the subsetted data frame i.e. \code{FUN(get_vars(X, vars), ...)}. The latter is useful for \emph{collapse} functions with data frame or grouped tibble / panel-data frame methods, yielding performance gains and enabling grouped transformations. See Examples.}
+    \item{apply}{logical. \code{TRUE} (default) will apply \code{FUN} to each column selected in \code{vars}; \code{FALSE} will apply \code{FUN} to the subsetted data frame i.e. \code{FUN(get_vars(X, vars), ...)}. The latter is useful for \emph{collapse} functions with data frame or grouped / panel data frame methods, yielding performance gains and enabling grouped transformations. See Examples.}
     \item{value}{a named list of replacements, it will be treated like an evaluated list of \code{column = value} arguments.}
 }
 \details{
@@ -109,6 +109,16 @@ airquality \%>\% fgroup_by(Month) \%>\%
 airquality \%>\% fgroup_by(Month) \%>\%
   ftransformv(1:3, fwithin) \%>\% head
 
+# For grouped modification of single columns in a grouped dataset, we can use GRP():
+airquality \%>\% fgroup_by(Month) \%>\%
+  ftransform(W_Ozone = fwithin(Ozone, GRP(.)),                 # Grouped centering
+             sd_Ozone_m = fsd(Ozone, GRP(.), TRA = "replace"), # In-Month standard deviation
+             sd_Ozone = fsd(Ozone, TRA = "replace"),           # Overall standard deviation
+             sd_Ozone2 = fsd(Ozone, TRA = "replace_fill"),     # Same, overwriting NA's
+             sd_Ozone3 = fsd(Ozone)) \%>\% head                  # Same thing (calling rep())
+
+rm(airquality)
+
 ## For more complex mutations we can use ftransform with compound pipes
 airquality \%>\% fgroup_by(Month) \%>\%
   ftransform(get_vars(., 1:3) \%>\% fwithin \%>\% flag(0:2)) \%>\% head
@@ -119,7 +129,7 @@ airquality \%>\% ftransform(STD(., cols = 1:3) \%>\% replace_NA(0)) \%>\% head
 airquality \%>\% # The variance of Wind and Ozone, by month, weighted by temperature:
   ftransform(fvar(list(Wind_var = Wind, Ozone_var = Ozone), Month, Temp, "replace")) \%>\% head
 
-# Same as above using a grouped tibble (a bit more complex)
+# Same as above using a grouped data frame (a bit more complex)
 airquality \%>\% fgroup_by(Month) \%>\%
   ftransform(fselect(., Wind, Ozone) \%>\% fvar(Temp, "replace") \%>\% add_stub("_var", FALSE)) \%>\%
   fungroup \%>\% head

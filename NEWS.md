@@ -3,20 +3,24 @@
 
 ### Back to CRAN
 
-* I apologize for any inconveniences cause by the temporal archival of *collapse* from December 19, 2020. This archival was caused by the archival of the important *lfe* package on the 4th of December. *collapse* depended on *lfe* for higher-dimensional centering, providing the `fHDbetween / fHDwithin` functions for generalized linear projecting / partialling out. To remedy the damage caused by the removal of *lfe*, I had to fundamentally rewrite `fHDbetween / fHDwithin` to take advantage of the demeaning algorithm provided by *fixest*, which has some quite different mechanics. Beforehand, I made some significant changes to `fixest::demean` itself to make this integration happen. The deadline set for me was the 18th of December, but I realized I would not make this. A request to CRAN for extension was declined, so *collapse* got archived on the 19th. I have learned from this experience, and *collapse* is now sufficiently insulated in terms of all of its testing facilities that it will not face issues even if all suggested packages were removed from CRAN. 
+* I apologize for inconveniences caused by the temporal archival of *collapse* from December 19, 2020. This archival was caused by the archival of the important *lfe* package on the 4th of December. *collapse* depended on *lfe* for higher-dimensional centering, providing the `fHDbetween / fHDwithin` functions for generalized linear projecting / partialling out. To remedy the damage caused by the removal of *lfe*, I had to rewrite `fHDbetween / fHDwithin` to take advantage of the demeaning algorithm provided by *fixest*, which has some quite different mechanics. Beforehand, I made some significant changes to `fixest::demean` itself to make this integration happen. The CRAN deadline was the 18th of December, and I realized too late that I would not make this. A request to CRAN for extension was declined, so *collapse* got archived on the 19th. I have learned from this experience, and *collapse* is now sufficiently insulated that it will not be taken off CRAN even if all suggested packages were removed from CRAN. 
 
 ### Bug Fixes
 
-* Segfaults in several *Fast Statistical Functions* when passed `numeric(0)` are fixed (thanks to @eshom and @acylam, [#101](https://github.com/SebKrantz/collapse/issues/101)). The default behavior is that all *collapse* functions return `numeric(0)` again, except for `fNobs`, `fNdistinct` which return `0L`, and `fvar`, `fsd` which return `NA_real`.
+* Segfaults in several *Fast Statistical Functions* when passed `numeric(0)` are fixed (thanks to @eshom and @acylam, [#101](https://github.com/SebKrantz/collapse/issues/101)). The default behavior is that all *collapse* functions return `numeric(0)` again, except for `fNobs`, `fNdistinct` which return `0L`, and `fvar`, `fsd` which return `NA_real_`.
 
 ### Changes to Functionality
 
-* In `collap`, the default behavior of `give.names = "auto"` was altered when used together with the `custom` argument. Before the function name was always added to the column names. Now it is only added if a column is aggregated with two different functions. I apologize if this breaks any code dependent on the new names, but this behavior just better reflects most common use (using only one function per column), and also STATA's collapse. 
+* Functions `fHDwithin / HDW` and `fHDbetween / HDB` have been reworked, delivering higher performance and greater functionality: For higher-dimensional centering and heterogenous slopes, the `demean` function from the *fixest* package is imported (conditional on the availability of that package). The linear prediction  and partialling out functionality is now built around `flm` and also allows for weights and different fitting methods. 
 
-* For list processing functions like `get_elem`, `has_elem` etc. the default for the argument `DF.as.list` was changed from `TRUE` to `FALSE`. This means now by default if a nested lists contains data frame's, these data frame's will not be searched for matching elements. This default also reflects the more common usage of these functions (extracting entire data frame's or computed quantities from nested lists rather than searching / subsetting lists of data frame's). The change also delivers a considerable performance gain. 
+* In `collap`, the default behavior of `give.names = "auto"` was altered when used together with the `custom` argument. Before the function name was always added to the column names. Now it is only added if a column is aggregated with two different functions. I apologize if this breaks any code dependent on the new names, but this behavior just better reflects most common use (applying only one function per column), as well as STATA's collapse. 
 
-* Functions `fHDwithin / HDW` and `fHDbetween / HDB` have been reworked, delivering higher performance and greater functionality: For higher-dimensional centering and heterogenous slopes, the `demean` function from the *fixest* package is imported (conditional on the availability of that package). The linear prediction  and partialling out functionality is now built around `flm` and also allows for weights and different fitting methods. The default method chosen is a Choleski decomposition to invert X'X, which is very fast but requires the columns of X to be linearly independent (if not it will produce an error). Missing value removal is still done using *data.table* source code, so these functions are now truly equipped for large and complex linear prediction and partialling-out problems. To fully utilize them users must install *fixest*. 
+* For list processing functions like `get_elem`, `has_elem` etc. the default for the argument `DF.as.list` was changed from `TRUE` to `FALSE`. This means if a nested lists contains data frame's, these data frame's will not be searched for matching elements. This default also reflects the more common usage of these functions (extracting entire data frame's or computed quantities from nested lists rather than searching / subsetting lists of data frame's). The change also delivers a considerable performance gain. 
 
+
+<!-- Missing value removal is still done using *data.table* source code, so these functions are now equipped for large and complex linear prediction and partialling-out problems. To fully utilize them users must install *fixest*. -->
+
+* Vignettes were outsourced to the [website](<https://sebkrantz.github.io/collapse/articles/index.html>), and also made available as PDF versions for download there. This nearly halves the size of the source package, and should induce users to appreciate the built-in documentation. The website also makes for much more convenient reading and navigation of these book-style vignettes. A vignette on the use of *collapse* with *data.table* will be added shortly.
 
 ### Additions
 
@@ -24,21 +28,28 @@
 
 * Added function `missing_cases` (opposite of `complete.cases` and faster for data frame's / lists).
 
-* Added function `allNA` for vectors. 
+* Added function `allNA` for atomic vectors. 
 
 ### Improvements
 
-* Time series functions and operators `flag / L / F`, `fdiff / D / Dlog` and `fgrowth / G` now natively support irregular time series and panels, and feature a 'complete approach' i.e. values are shifted around taking full account of the underlying time-dimension for irregular time series and panels! Thus *collapse* now provides a comprehensive, robust and extremely fast approach to working with time-dependent data in R.  
+* Time series functions and operators `flag / L / F`, `fdiff / D / Dlog` and `fgrowth / G` now natively support irregular time series and panels, and feature a 'complete approach' i.e. values are shifted around taking full account of the underlying time-dimension!
+
+<!-- Thus *collapse* now provides a comprehensive, robust and extremely fast approach to working with time-dependent data in R. -->
+
+* Functions `pwcor` and `pwcov` can now compute weighted correlations on the pairwise or complete observations, supported by C-code that is (conditionally) imported from the *weights* package. 
 
 * `fFtest` now also supports weights.
 
-* Functions `pwcor` and `pwcov` can now also compute weighted correlations, supported by C-code that is (conditionally) imported from the *weights* package. 
+* `collap` now provides an easy workaround to aggregate some columns using weights and others without. The user may simply append the names of *Fast Statistical Functions* with `_uw` to disable weights. Example: `collapse::collap(mtcars, ~ cyl, custom = list(fmean_uw = 3:4, fmean = 8:10), w = ~ wt)` aggregates columns 3 through 4 using a simple mean and columns 8 through 10 using the weighted mean. 
 
-* `collap` now provides an easy workaround to aggregate some columns using weights and others without. The user may simply append the names of *Fast Statistical Functions* with `_uw`. Example: `collapse::collap(mtcars, ~ cyl, custom = list(fmean_uw = 3:4, fmean = 8:10), w = ~ wt)` aggregates columns 3 through 4 using a simple mean and columns 8 through 10 using the weighted mean. See `?collap` for further details. 
+* The parallelism in `collap` using `parallel::mclapply` has been reworked to operate at the column-level, and not at the function level as before. It is still not available for Windows though. The default number of cores was set to `mc.cores = 2L`, which now gives an error on windows if `parallel = TRUE`. A version of *collapse* that is parallelized at the C/C++ level may appear this year. 
 
-* function `recode_char` now has additional options `ignore.case` and `fixed` (passed to `grepl`), for recoding character data based on regular expressions. 
+* function `recode_char` now has additional options `ignore.case` and `fixed` (passed to `grepl`), for enhanced recoding character data based on regular expressions. 
 
 * `rapply2d` now has `classes` argument permitting more flexible use. 
+
+* `na_rm` and some other internal functions were rewritten in C. `na_rm` is now 2x faster than `x[!is.na(x)]` with missing values and 10x faster without missing values. 
+
 
 # collapse 1.4.2
 

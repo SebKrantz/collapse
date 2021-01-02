@@ -65,7 +65,7 @@ fungroup(X, \dots)
 \method{plot}{GRP}(x, breaks = "auto", type = "s", horizontal = FALSE, \dots)
 }
 \arguments{
-  \item{X}{a vector, list of columns or data frame (default method), or a classed object (conversion/extractor methods).}
+  \item{X}{a vector, list of columns or data frame (default method), or a classed object (conversion / extractor methods).}
 
   \item{x}{a GRP object.}
 
@@ -124,13 +124,13 @@ The sorting and ordering functionality for \code{GRP} only affects (2), that is 
 
 %This in-turn changes the order of values/rows in the output of \emph{collapse} functions (the row/value corresponding to group 1 always comes out on top). The default setting with \code{sort = TRUE} and \code{decreasing = FALSE} results in groups being sorted in ascending order. This is equivalent to performing grouped operations in \emph{data.table} using \code{keyby}, whereas \code{sort = FALSE} is equivalent to \emph{data.table} grouping with \code{by}, however this only works if the \code{by} columns are character, numeric grouping columns are always ordered.
 
-Next to \code{GRP}, there is the function \code{fgroup_by} as a significantly faster alternative to \code{dplyr::group_by}. It creates a grouped data frame by attaching a 'GRP' object to a data frame. \emph{collapse} functions with a grouped_df method applied to that data frame will yield grouped computations. Note that \code{fgroup_by} can only be used in combination with \emph{collapse} functions, not with \emph{dplyr} verbs such as \code{summarize} or \code{mutate}. The converse is not true, you can group data with \code{dplyr::group_by} and then apply \emph{collapse} functions. Note also the \code{fgroup_by} is class-agnostic, i.e. the classes of the data frame or list passed are preserved, and all standard methods (like subsetting with \code{`[`} or \code{print} methods) apply to the grouped object. Apart from the class 'grouped_df' which is added behind any classes the object might inherit (apart from 'data.frame'), a class 'GRP_df' is added in front. This class responds to \code{print} method and a subset (\code{`[`}) methods. Both first call corresponding method for the object and then print / attach the grouping information. \code{print.GRP_df} prints below the object print one line indicating the grouping variables, followed, in square brackets, by the following information: \code{[number of groups | average group size (standard-deviation of group sizes)]}.
+Next to \code{GRP}, there is the function \code{fgroup_by} as a significantly faster alternative to \code{dplyr::group_by}. It creates a grouped data frame by attaching a 'GRP' object to a data frame. \emph{collapse} functions with a grouped_df method applied to that data frame will yield grouped computations. Note that \code{fgroup_by} can only be used in combination with \emph{collapse} functions, not with \emph{dplyr} verbs such as \code{summarize} or \code{mutate}. The converse is not true, you can group data with \code{dplyr::group_by} and then apply \emph{collapse} functions. Note also the \code{fgroup_by} is class-agnostic, i.e. the classes of the data frame or list passed are preserved, and all standard methods (like subsetting with \code{`[`} or \code{print} methods) apply to the grouped object. Apart from the class 'grouped_df' which is added behind any classes the object might inherit (apart from 'data.frame'), a class 'GRP_df' is added in front. This class responds to \code{print} method and subset (\code{`[`}) methods. Both first call the corresponding method for the object and then print / attach the grouping information. \code{print.GRP_df} prints below the object print one line indicating the grouping variables, followed, in square brackets, by the following information: \code{[number of groups | average group size (standard-deviation of group sizes)]}.
 
 \code{GRP} is an S3 generic function with one default method supporting vector and list input and several conversion methods:
 
 The conversion of factors to 'GRP' objects by \code{GRP.factor} involves obtaining the number of groups calling \code{ng <- fnlevels(f)} and then computing the count of each level using \code{\link[=tabulate]{tabulate(f, ng)}}. The integer group-id (2) is already given by the factor itself after removing the levels and class attributes and replacing any missing values with \code{ng + 1L}. The levels are put in a list and moved to position (4) in the 'GRP' object, which is reserved for the unique groups. Going from factor to 'GRP' object thus only requires a tabulation of the levels, whereas creating a factor from a 'GRP' object using \code{as.factor_GRP} does not involve any computations, but may involve interactions if multiple grouping columns were used (which are then interacted to produce unique factor levels) or \code{\link{as.character}} conversions if the grouping column(s) were numeric (which are potentially expensive).
 
-The method \code{GRP.grouped_df} takes the 'groups' attribute from a grouped data frame and converts it to a 'GRP' object. If the grouped data frame was generated using \code{fgroup_by}, all work is done already. If it was created using \code{dplyr::group_by}, a C++ routine is called to efficiently convert the grouping object.
+The method \code{GRP.grouped_df} takes the 'groups' attribute from a grouped data frame and converts it to a 'GRP' object. If the grouped data frame was generated using \code{fgroup_by}, all work is done already. If it was created using \code{dplyr::group_by}, a C routine is called to efficiently convert the grouping object.
 
 \emph{Note}: For faster factor generation and a factor-light class 'qG' which avoids the coercion of factor levels to character also see \code{\link{qF}} and \code{\link{qG}}.
 }
@@ -177,7 +177,7 @@ mtcars \%>\% group_by(cyl,vs,am) \%>\% GRP    # Get GRP object from a dplyr grou
 mtcars \%>\% group_by(cyl,vs,am) \%>\% fmean  # Grouped mean using dplyr grouping
 mtcars \%>\% fgroup_by(cyl,vs,am) \%>\% fmean # Faster alternative with collapse grouping
 
-mtcars \%>\% fgroup_by(cyl,vs,am)             # Print method
+mtcars \%>\% fgroup_by(cyl,vs,am)           # Print method for grouped data frame
 }
 
 }

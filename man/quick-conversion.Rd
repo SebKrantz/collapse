@@ -21,22 +21,29 @@ Fast, flexible and precise conversion of common data objects, without method dis
 }
 }
 \usage{
-qDF(X, row.names.col = FALSE, keep.attr = FALSE, class = "data.frame")
-qDT(X, row.names.col = FALSE, keep.attr = FALSE, class = c("data.table", "data.frame"))
-qTBL(X, row.names.col = FALSE, keep.attr = FALSE)
-qM(X, keep.attr = FALSE, class = NULL)
-as.numeric_factor(X, keep.attr = TRUE)
-as.character_factor(X, keep.attr = TRUE)
+# Converting between matrices, data frames / tables / tibbles
 
-# Programmer functions: matrix rows or columns to list - fully in C++
+ qDF(X, row.names.col = FALSE, keep.attr = FALSE, class = "data.frame")
+ qDT(X, row.names.col = FALSE, keep.attr = FALSE, class = c("data.table", "data.frame"))
+qTBL(X, row.names.col = FALSE, keep.attr = FALSE)
+  qM(X,                        keep.attr = FALSE, class = NULL)
+
+# Programmer functions: matrix rows or columns to list / DF / DT - fully in C++
+
 mctl(X, names = FALSE, return = "list")
 mrtl(X, names = FALSE, return = "list")
+
+# Converting factors or factor columns
+
+  as.numeric_factor(X, keep.attr = TRUE)
+as.character_factor(X, keep.attr = TRUE)
+
 }
 %- maybe also 'usage' for other objects documented here.
 \arguments{
   \item{X}{a vector, factor, matrix, higher-dimensional array, data frame or list. \code{mctl} and \code{mrtl} only accept matrices, \code{as.numeric_factor} and \code{as.character_factor} only accept factors, data frames or lists.}
   \item{row.names.col}{should a column capturing names or row.names be added? i.e. when converting atomic objects to data frame or data frame to \emph{data.table}. Can be logical \code{TRUE}, which will add a column \code{"row.names"} in front, or can supply a name for the column i.e. \code{"column1"}.}
-  \item{keep.attr}{logical. \code{FALSE} (default) yields a \emph{hard} / \emph{thorough} object conversion: All unnecessary attributes are removed from the object yielding a plain matrix / data.frame / data.table. \code{FALSE} yields a \emph{soft} / \emph{minimal} object conversion: Only the attributes 'names', 'row.names', 'dim', 'dimnames' and 'levels' are modified in the conversion. Other attributes are preserved. See also \code{class}.}
+  \item{keep.attr}{logical. \code{FALSE} (default) yields a \emph{hard} / \emph{thorough} object conversion: All unnecessary attributes are removed from the object yielding a plain matrix / data.frame / \emph{data.table}. \code{FALSE} yields a \emph{soft} / \emph{minimal} object conversion: Only the attributes 'names', 'row.names', 'dim', 'dimnames' and 'levels' are modified in the conversion. Other attributes are preserved. See also \code{class}.}
   \item{class}{if a vector of classes is passed here, the converted object will be assigned these classes. If \code{NULL} is passed, the default classes are assigned: \code{qM} assigns no class, \code{qDF} a class \code{"data.frame"}, and \code{qDT} a class \code{c("data.table", "data.frame")}. If \code{keep.attr = TRUE} and \code{class = NULL} and the object already inherits the default classes, further inherited classes are preserved. See Details and the Example. }
 
 
@@ -63,8 +70,8 @@ The default \code{keep.attr = FALSE} ensures \emph{hard} conversions so that all
 }
 \value{
 \code{qDF} - returns a data.frame\cr
-\code{qDT} - returns a data.table\cr
-\code{qTBL} - returns a tibble\cr
+\code{qDT} - returns a \emph{data.table}\cr
+\code{qTBL} - returns a \emph{tibble}\cr
 \code{qM} - returns a matrix\cr
 \code{mctl}, \code{mrtl} - return a list, data frame or \emph{data.table} \cr
 \code{qF} - returns a factor\cr

@@ -267,7 +267,7 @@ dateg2$ordered <- NULL
 
 test_that("GRP <> qG and factor <> qG conversions work", {
 
-  expect_equal(dateg, dateg2)
+  # expect_equal(dateg, dateg2)
   expect_equal(qF(unattrib(wlddev$country)), as.factor_qG(qG(unattrib(wlddev$country), return.groups = TRUE)))
   expect_equal(qF(unattrib(wlddev$country)), qF(qG(unattrib(wlddev$country), return.groups = TRUE)))
   expect_equal(qG(unattrib(wlddev$country)), qG(qF(unattrib(wlddev$country))))

@@ -66,7 +66,7 @@ With a matrix or data frame \code{X}, the default behavior of R when calling \co
 v <- mtcars$cyl
 mtcars \%cr\% v
 mtcars \%c-\% v
-mtcars \%r-\% v
+mtcars \%r-\% seq_col(mtcars)
 mtcars \%r-\% lapply(mtcars, quantile, 0.28)
 
 mtcars \%c*\% 5       # Significantly faster than mtcars * 5

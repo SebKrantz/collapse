@@ -18,15 +18,15 @@
 }
 
 \item \bold{Splitting} \itemize{
-\item \code{rsplit} recursively splits a vector or data frame into subsets according to combinations of (multiple) vectors / factors - by default returning a (nested) list. If \code{flatten = TRUE}, the list is flattened yielding the same result as \code{\link{split}}. \code{rsplit} is also faster than \code{\link{split}}, particularly for data frames.
+\item \code{\link{rsplit}} recursively splits a vector or data frame into subsets according to combinations of (multiple) vectors / factors - by default returning a (nested) list. If \code{flatten = TRUE}, the list is flattened yielding the same result as \code{\link{split}}. \code{rsplit} is also faster than \code{\link{split}}, particularly for data frames.
 }
 
 \item \bold{Apply Functions} \itemize{
-\item \code{\link{rapply2d}} is a recursive version of \code{base::lapply} with two key differences to \code{base::rapply}: (1) Data frames are considered as atomic objects, not as (sub-)lists, and (2) the result is not simplified.
+\item \code{\link{rapply2d}} is a recursive version of \code{\link{lapply}} with two key differences to \code{\link{rapply}}: (1) Data frames are considered as atomic objects, not as (sub-)lists, and (2) the result is not simplified.
 }
 
 \item \bold{Unlisting / Row-Binding} \itemize{
-\item \code{\link{unlist2d}} efficiently unlists unlistable lists in 2-dimensions and creates a data frame (or \emph{data.table}) representation of the list (unlike \code{base::unlist} which returns an atomic vector). This is done by recursively flattening and row-binding R objects in the list (using \code{data.table::rbindlist}) while creating identifier columns for each level of the list-tree and (optionally) saving the row-names of the objects in a separate column. \code{\link{unlist2d}} can thus also be understood as a recursive generalization of \code{do.call(rbind, l)}, for lists of vectors, data frames, arrays or heterogeneous objects.
+\item \code{\link{unlist2d}} efficiently unlists unlistable lists in 2-dimensions and creates a data frame (or \emph{data.table}) representation of the list (unlike \code{\link{unlist}} which returns an atomic vector). This is done by recursively flattening and row-binding R objects in the list (using \code{data.table::rbindlist}) while creating identifier columns for each level of the list-tree and (optionally) saving the row-names of the objects in a separate column. \code{\link{unlist2d}} can thus also be understood as a recursive generalization of \code{do.call(rbind, l)}, for lists of vectors, data frames, arrays or heterogeneous objects.
 }
 
 }

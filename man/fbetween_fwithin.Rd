@@ -75,7 +75,7 @@ fbetween(x, \dots)
 \method{W}{pdata.frame}(x, effect = 1L, w = NULL, cols = is.numeric, na.rm = TRUE,
   mean = 0, theta = 1, stub = "W.", keep.ids = TRUE, keep.w = TRUE, \dots)
 
-# Methods for compatibility with dplyr:
+# Methods for grouped data frame / compatibility with dplyr:
 
 \method{fbetween}{grouped_df}(x, w = NULL, na.rm = TRUE, fill = FALSE,
          keep.group_vars = TRUE, keep.w = TRUE, \dots)
@@ -88,7 +88,7 @@ fbetween(x, \dots)
 }
 
 \arguments{
-  \item{x}{a numeric vector, matrix, data frame, panel series (class \code{pseries} of package \code{plm}), panel data frame (\code{plm::pdata.frame}) or grouped tibble (\code{dplyr::grouped_df}).}
+  \item{x}{a numeric vector, matrix, data frame, panel series (class \code{pseries} of package \code{plm}), panel data frame (\code{plm::pdata.frame}) or grouped data frame (class 'grouped_df').}
   \item{g}{a factor, \code{\link{GRP}} object, atomic vector (internally converted to factor) or a list of vectors / factors (internally converted to a \code{\link{GRP}} object) used to group \code{x}.}
   \item{by}{\emph{B and W data.frame method}: Same as g, but also allows one- or two-sided formulas i.e. \code{~ group1} or \code{var1 + var2 ~ group1 + group2}. See Examples.}
   \item{w}{a numeric vector of (non-negative) weights. \code{B}/\code{W} data frame and \code{pdata.frame} methods also allow a one-sided formula i.e. \code{~ weightcol}. The \code{grouped_df} (\emph{dplyr}) method supports lazy-evaluation. See Examples.}

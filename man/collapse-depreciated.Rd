@@ -2,15 +2,13 @@
 \alias{collapse-depreciated}
 \alias{Recode}
 \alias{replace_non_finite}
-\alias{as.factor.GRP}
-\alias{group_names.GRP}
 \title{
  Depreciated \emph{collapse} Functions
 }
 \description{
 The functions \code{Recode} and \code{replace_non_finite} available until \emph{collapse} v1.1.0 will be removed soon. Since v1.2.0, \code{Recode} is replaced by \code{\link{recode_num}} and \code{\link{recode_char}} and \code{replace_non_finite} is replaced by \code{\link{replace_Inf}}.
 
-The function \code{as.factor.GRP} was renamed to \code{\link{as.factor_GRP}} to make it clear that this is not a method, and \code{group_names.GRP} was renamed to \code{\link{GRPnames}} for the same reason and to increase parsimony.
+%The function \code{as.factor.GRP} was renamed to \code{\link{as.factor_GRP}} to make it clear that this is not a method, and \code{group_names.GRP} was renamed to \code{\link{GRPnames}} for the same reason and to increase parsimony.
 }
 \usage{
 Recode(X, \dots, copy = FALSE, reserve.na.nan = TRUE, regex = FALSE)

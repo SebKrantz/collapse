@@ -53,7 +53,7 @@ other arguments passed to \code{\link{qsu.default}}.
 \item{summary}{logical. \code{TRUE} (default) computes and displays a summary of the frequencies if the size of the table for a categorical variables exceeds \code{2*n}.}
 }
 \details{
-\code{descr} was heavily inspired by \code{Hmisc::describe}, but computes about 10x faster. The performance is comparable to \code{base::summary}. \code{descr} was built as a wrapper around \code{\link{qsu}}, to enrich the set of statistics computed by \code{\link{qsu}} for both numeric and categorical variables.
+\code{descr} was heavily inspired by \code{Hmisc::describe}, but computes about 10x faster. The performance is comparable to \code{\link{summary}}. \code{descr} was built as a wrapper around \code{\link{qsu}}, to enrich the set of statistics computed by \code{\link{qsu}} for both numeric and categorical variables.
 
 \code{\link{qsu}} itself is yet about 10x faster than \code{descr}, and is optimized for grouped, panel data and weighted statistics. It is possible to also compute grouped, panel data and/or weighted statistics with \code{descr} by passing group-ids to \code{g}, panel-ids to \code{pid} or a weight vector to \code{w}. These arguments are handed down to \code{\link{qsu.default}} and only affect the statistics natively computed by \code{qsu}, i.e. passing a weight vector produces a weighted mean, sd, skewness and kurtosis but not weighted quantiles.
 

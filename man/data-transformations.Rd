@@ -28,11 +28,11 @@ Supported operations are:
 }
 All of \emph{collapse}'s \link[=A1-fast-statistical-functions]{Fast Statistical Functions} have a built-in \code{TRA} argument for faster access (i.e. you can compute (groupwise) statistics and use them to transform your data with a single function call).
 
-\item \code{\link[=fscale]{fscale/STD}} is an S3 generic to perform (groupwise and / or weighted) \bold{scaling / standardizing} of data and is orders of magnitude faster than \code{base::scale}.
+\item \code{\link[=fscale]{fscale/STD}} is an S3 generic to perform (groupwise and / or weighted) \bold{scaling / standardizing} of data and is orders of magnitude faster than \code{\link{scale}}.
 
-\item \code{\link[=fwithin]{fwithin/W}} is an S3 generic to efficiently perform (groupwise and / or weighted) \bold{within-transformations / demeaning / centering} of data. Similarly \code{\link[=fbetween]{fbetween/B}} computes (groupwise and / or weighted) \bold{between-transformations / averages}.
+\item \code{\link[=fwithin]{fwithin/W}} is an S3 generic to efficiently perform (groupwise and / or weighted) \bold{within-transformations / demeaning / centering} of data. Similarly \code{\link[=fbetween]{fbetween/B}} computes (groupwise and / or weighted) \bold{between-transformations / averages} (also a lot faster than \code{\link{ave}}).
 
-\item \code{\link[=HDW]{fHDwithin/HDW}}, shorthand for 'higher-dimensional within transform', is an S3 generic to efficiently \bold{center data on multiple groups} and partial-out linear models (possibly involving many levels of fixed effects). In other words, \code{\link[=HDW]{fHDwithin/HDW}} efficiently computes \bold{residuals} from (potentially complex) linear models. Similarly \code{\link[=HDB]{fHDbetween/HDB}}, shorthand for 'higher-dimensional between transformation', computes the corresponding means or \bold{fitted values}.
+\item \code{\link[=HDW]{fHDwithin/HDW}}, shorthand for 'higher-dimensional within transform', is an S3 generic to efficiently \bold{center data on multiple groups and partial-out linear models} (possibly involving many levels of fixed effects). In other words, \code{\link[=HDW]{fHDwithin/HDW}} efficiently computes \bold{residuals} from (potentially complex) linear models. Similarly \code{\link[=HDB]{fHDbetween/HDB}}, shorthand for 'higher-dimensional between transformation', computes the corresponding means or \bold{fitted values}.
 
 %\item \code{flm} is an efficient function for bare-bones (weighted) \bold{linear model fitting}. It supports 6 different fitting methods, 4 from base R, and 2 utilizing the \emph{RcppArmadillo} or \emph{RcppEigen} packages.
 

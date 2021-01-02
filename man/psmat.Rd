@@ -33,7 +33,7 @@ psmat(x, \dots)
   \item{x}{a vector, panel series (\code{plm::pseries}), data frame or panel data frame (\code{plm::pdata.frame}).}
   \item{g}{a factor, \code{GRP} object, atomic vector (internally converted to factor) or a list of vectors / factors (internally converted to a \code{GRP} object) used to group \code{x}. If the panel is balanced an integer indicating the number of groups can also be supplied. See Examples.}
 \item{by}{\emph{data.frame method}: Same input as \code{g}, but also allows one- or two-sided formulas using the variables in \code{x}, i.e. \code{~ idvar} or \code{var1 + var2 ~ idvar1 + idvar2}.}
-\item{t}{same inputs as \code{g}, to indicate the time-variable or second identifier(s). \code{g} and \code{t} together should fully identify the panel. If \code{t = NULL}, the data is assumed sorted and \code{seq_col} is used to generate rownames for the output matrix.}
+\item{t}{same inputs as \code{g}, to indicate the time-variable(s) or second identifier(s). \code{g} and \code{t} together should fully identify the panel. If \code{t = NULL}, the data is assumed sorted and \code{seq_col} is used to generate rownames for the output matrix.}
 \item{cols}{\emph{data.frame method}: Select columns using a function, column names, indices or a logical vector. \emph{Note}: \code{cols} is ignored if a two-sided formula is passed to \code{by}.}
 \item{transpose}{logical. \code{TRUE} generates the matrix such that \code{g/by -> columns, t -> rows}. Default is \code{g/by -> rows, t -> columns}.}
 \item{array}{\emph{data.frame / pdata.frame methods}: logical. \code{TRUE} returns a 3D array (if just one column is selected a matrix is returned). \code{FALSE} returns a list of matrices.}

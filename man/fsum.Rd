@@ -24,7 +24,7 @@ fsum(x, \dots)
      use.g.names = FALSE, keep.group_vars = TRUE, keep.w = TRUE, \dots)
 }
 \arguments{
-\item{x}{a numeric vector, matrix, data frame or grouped tibble (\code{dplyr::grouped_df}).}
+\item{x}{a numeric vector, matrix, data frame or grouped data frame (class 'grouped_df').}
 
 \item{g}{a factor, \code{GRP} object, atomic vector (internally converted to factor) or a list of vectors / factors (internally converted to a \code{GRP} object) used to group \code{x}.}
 
@@ -49,7 +49,7 @@ fsum(x, \dots)
 \details{
 % Non-grouped sum computations internally utilize long-doubles in C++, for additional numeric precision.
 
-Missing-value removal as controlled by the \code{na.rm} argument is done very efficiently by simply skipping them in the computation (thus setting \code{na.rm = FALSE} on data with no missing values doesn't give extra speed). Large performance gains can nevertheless be achieved in the presence of missing values if \code{na.rm = FALSE}, since then the corresponding computation is terminated once a \code{NA} is encountered and \code{NA} is returned (unlike \code{base::sum} which just runs through without any checks).
+Missing-value removal as controlled by the \code{na.rm} argument is done very efficiently by simply skipping them in the computation (thus setting \code{na.rm = FALSE} on data with no missing values doesn't give extra speed). Large performance gains can nevertheless be achieved in the presence of missing values if \code{na.rm = FALSE}, since then the corresponding computation is terminated once a \code{NA} is encountered and \code{NA} is returned (unlike \code{\link{sum}} which just runs through without any checks).
 
 The weighted sum (i.e. survey total) is computed as \code{sum(x * w)}. If \code{na.rm = TRUE}, missing values will be removed from both \code{x} and \code{w} i.e. utilizing only \code{x[complete.cases(x,w)]} and \code{w[complete.cases(x,w)]}.
 
@@ -91,7 +91,7 @@ fsum(m, TRA = "\%")
 fsum(m, g)
 fsum(m, g, TRA = "\%")
 \donttest{ % No code relying on suggested package
-## method for grouped tibbles - for use with dplyr
+## method for grouped data frames - created with dplyr::group_by or fgroup_by
 library(dplyr)
 mtcars \%>\% group_by(cyl,vs,am) \%>\% fsum(hp)  # Weighted grouped sum (total)
 mtcars \%>\% fgroup_by(cyl,vs,am) \%>\% fsum(hp) # Equivalent and faster !!

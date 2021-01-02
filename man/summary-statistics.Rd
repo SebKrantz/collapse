@@ -10,7 +10,7 @@
 
 \item \code{\link{descr}} computes a concise and detailed description of a data frame, including frequency tables for categorical variables and various statistics and quantiles for numeric variables. It is inspired by \code{Hmisc::describe}, but about 10x faster.
 
-\item \code{\link{pwcor}}, \code{\link{pwcov}} and \code{\link{pwNobs}} compute pairwise correlations, covariances and observation counts on matrices and data frames. Pairwise correlations and covariances can be computed together with observation counts and p-values, and output as 3D array (default) or list of matrices. A major feature of \code{pwcor} and \code{pwcov} is the print method displaying all of these statistics in a single correlation table.
+\item \code{\link{pwcor}}, \code{\link{pwcov}} and \code{\link{pwNobs}} compute (weighted) pairwise correlations, covariances and observation counts on matrices and data frames. Pairwise correlations and covariances can be computed together with observation counts and p-values, and output as 3D array (default) or list of matrices. A major feature of \code{pwcor} and \code{pwcov} is the print method displaying all of these statistics in a single correlation table.
 
 \item \code{\link{varying}} very efficiently checks for the presence of any variation in data (optionally) within groups (such as panel-identifiers).
 
