@@ -60,3 +60,50 @@ SEXP lassign(SEXP x, SEXP s, SEXP rows, SEXP fill) {
   return out;
 }
 
+
+SEXP Cna_rm(SEXP x) {
+  const int n = length(x);
+  if (n < 1) return x;
+  int k = 0;
+  switch(TYPEOF(x)) {
+  case LGLSXP:
+  case INTSXP: {
+    const int *xd = INTEGER(x);
+    for (int i = 0; i != n; ++i) if(xd[i] == NA_INTEGER) ++k;
+    if(k == 0) return x;
+    SEXP out = PROTECT(allocVector(TYPEOF(x), n - k));
+    int *pout = INTEGER(out);
+    k = 0;
+    for (int i = 0; i != n; ++i) if(xd[i] != NA_INTEGER) pout[k++] = xd[i];
+    copyMostAttrib(x, out);
+    UNPROTECT(1);
+    return out;
+  }
+  case REALSXP: { // What about integer64??
+    const double *xd = REAL(x);
+    for (int i = 0; i != n; ++i) if(ISNAN(xd[i])) ++k;
+    if(k == 0) return x;
+    SEXP out = PROTECT(allocVector(REALSXP, n - k));
+    double *pout = REAL(out);
+    k = 0;
+    for (int i = 0; i != n; ++i) if(!ISNAN(xd[i])) pout[k++] = xd[i]; // using xd[i] == xd[i] is not faster !!
+    copyMostAttrib(x, out);
+    UNPROTECT(1);
+    return out;
+  }
+  case STRSXP: {
+    const SEXP *xd = STRING_PTR(x);
+    for (int i = 0; i != n; ++i) if(xd[i] == NA_STRING) ++k;
+    if(k == 0) return x;
+    SEXP out = PROTECT(allocVector(STRSXP, n - k));
+    SEXP *pout = STRING_PTR(out);
+    k = 0;
+    for (int i = 0; i != n; ++i) if(xd[i] != NA_STRING) pout[k++] = xd[i];
+    copyMostAttrib(x, out);
+    UNPROTECT(1);
+    return out;
+  }}
+  error("Unsupported type '%s' passed to na_rm()", type2char(TYPEOF(x)));
+}
+
+
