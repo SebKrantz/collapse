@@ -63,6 +63,15 @@ test_that("weighted correlations are correct", {
 
 })
 
+test_that("na_rm works well", {
+  expect_equal(sapply(na_insert(wlddev), function(x) vtypes(na_rm(x))), vtypes(wlddev))
+  expect_equal(sapply(na_insert(wlddev), function(x) vlabels(na_rm(x))), vlabels(wlddev))
+  expect_equal(sapply(na_insert(wlddev), function(x) vclasses(na_rm(x))), vclasses(wlddev))
+  wldNA <- na_insert(wlddev)
+  expect_equal(lengths(lapply(wldNA, na_rm)), fNobs(wldNA))
+  rm(wldNA)
+})
+
 }
 
 test_that("deep matrix dispatch works well", {
