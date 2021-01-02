@@ -433,8 +433,8 @@ radixfact <- function(x, sort, ord, fact, naincl, keep, retgrp = FALSE) {
       attr(f, "levels") <- if(attr(o, "sorted")) unattrib(tochar(.Call(C_subsetVector, x, st))) else
             unattrib(tochar(.Call(C_subsetVector, x, o[st]))) # use C_subsetvector ?
     } else {
-      attr(f, "levels") <- if(attr(o, "sorted")) unattrib(tochar(na_rm(.Call(C_subsetVector, x, st)))) else
-            unattrib(tochar(na_rm(.Call(C_subsetVector, x, o[st]))))
+      attr(f, "levels") <- if(attr(o, "sorted")) unattrib(na_rm(tochar(.Call(C_subsetVector, x, st)))) else
+            unattrib(na_rm(tochar(.Call(C_subsetVector, x, o[st]))))
     }
     oldClass(f) <- c(if(ord) "ordered", "factor", if(naincl) "na.included")
   } else {
