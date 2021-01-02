@@ -9,6 +9,7 @@ Authors@R: c(
            person("Arun", "Srinivasan", role = "ctb"),
            person("Laurent", "Berge", role = "ctb"),
            person("Dirk", "Eddelbuettel", role = "ctb"),
+           person("Josh", "Pasek", role = "ctb"),
            person("Kevin", "Tappe", role = "ctb"),
            person("R Core Team and contributors worldwide", role = "ctb"),
            person("Martyn", "Plummer", role = "cph"),
