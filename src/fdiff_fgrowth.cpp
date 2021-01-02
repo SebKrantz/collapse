@@ -136,7 +136,7 @@ NumericVector fdiffgrowthCppImpl(const NumericVector& x, const IntegerVector& n 
       IntegerVector omap(osize), ord2 = regular ? no_init_vector(1) : no_init_vector(l);
       if(!regular) { // Irregular time series
         if(osize > 3 * l) warning("Your time series is very irregular. Need to create an internal ordering vector of length %s to represent it.", osize);
-        if(Rcpp::max(diff) > 1) stop("Iterations are currently only supported for regular time series. See ?seqid to identify the regular bits in your time series, or just apply this function multiple times.");
+        if(Rcpp::max(diff) > 1) stop("Iterations are currently only supported for regular time series. See ?seqid to identify the regular sequences in your time series, or just apply this function multiple times.");
         for(int i = 0; i != l; ++i) {
           temp = ord[i] - min; // Best ? Or direct assign to ord2[i] ? Also check for panel version..
           if(omap[temp]) stop("Repeated values in timevar");
@@ -268,7 +268,7 @@ NumericVector fdiffgrowthCppImpl(const NumericVector& x, const IntegerVector& n 
       // int seen[ngp], memsize = sizeof(int)*(ngp);
       for(int p = 0; p != ns; ++p) {
         int np = n[p];
-        if(absn[p]*maxdiff > ags) warning("abs(n * diff) exceeds average group-size (%i). This could also be a result of unused factor levels. See #25.", ags);
+        if(absn[p]*maxdiff > ags) warning("abs(n * diff) exceeds average group-size (%i). This could also be a result of unused factor levels. See #25. Use fdroplevels() to remove unused factor levels from your data.", ags);
         if(np>0) { // Positive lagged and iterated differences
           int d1 = diff[0];
           bool L1 = np == 1;
@@ -391,22 +391,20 @@ NumericVector fdiffgrowthCppImpl(const NumericVector& x, const IntegerVector& n 
         if(ord[i] < min[temp]) min[temp] = ord[i];
         if(ord[i] > max[temp]) max[temp] = ord[i];
       }
-      cgs[1] = 0; temp = 0;
-      for(int i = 1; i != ng; ++i) {
+      temp = 0;
+      for(int i = 1; i != ngp; ++i) {
         if(min[i] == NA_INTEGER) stop("Timevar contains missing values");
+        if(min[i] == INT_MAX) continue; // Needed in case of unused factor levels (group vector too large)
+        cgs[i] = temp; // This needs to b here (for unused factor levels case...)
         max[i] -= min[i] - 1; // need max[i] which stores the complete group sizes only if p<0 e.g. if computing leads..
         temp += max[i];
-        cgs[i+1] = temp; // + max[i] - min[i] + 1;
       }
-      if(min[ng] == NA_INTEGER) stop("Timevar contains missing values");
-      max[ng] -= min[ng] - 1;
-      temp += max[ng];
       // omap provides the ordering to order the vector (needed to find previous / next values)
       bool regular = temp == l;
       IntegerVector omap(temp), ord2 = no_init_vector(l);
       if(!regular) { // Irregular panel
         if(temp > 3 * l) warning("Your panel is very irregular. Need to create an internal ordering vector of length %s to represent it.", temp);
-        if(maxdiff > 1) stop("Iterations are currently only supported for regular panels. See ?seqid to identify the regular bits in your panel, or just apply this function multiple times.");
+        if(maxdiff > 1) stop("Iterations are currently only supported for regular panels. See ?seqid to identify the regular sequences in your panel, or just apply this function multiple times.");
         for(int i = 0; i != l; ++i) {
           ord2[i] = ord[i] - min[g[i]];
           temp = cgs[g[i]] + ord2[i];
@@ -424,7 +422,7 @@ NumericVector fdiffgrowthCppImpl(const NumericVector& x, const IntegerVector& n 
 
       for(int p = 0; p != ns; ++p) {
         int np = n[p];
-        if(absn[p]*maxdiff > ags) warning("abs(n * diff) exceeds average group-size (%i). This could also be a result of unused factor levels. See #25.", ags);
+        if(absn[p]*maxdiff > ags) warning("abs(n * diff) exceeds average group-size (%i). This could also be a result of unused factor levels. See #25. Use fdroplevels() to remove unused factor levels from your data.", ags);
         if(np>0) { // Positive lagged and iterated differences
           int d1 = diff[0];
           bool L1 = np == 1;
@@ -736,7 +734,7 @@ NumericMatrix fdiffgrowthmCppImpl(const NumericMatrix& x, const IntegerVector& n
       IntegerVector omap(osize), ord2 = regular ? no_init_vector(1) : no_init_vector(l);
       if(!regular) { // Irregular time series
         if(osize > 3 * l) warning("Your time series is very irregular. Need to create an internal ordering vector of length %s to represent it.", osize);
-        if(Rcpp::max(diff) > 1) stop("Iterations are currently only supported for regular time series. See ?seqid to identify the regular bits in your time series, or just apply this function multiple times.");
+        if(Rcpp::max(diff) > 1) stop("Iterations are currently only supported for regular time series. See ?seqid to identify the regular sequences in your time series, or just apply this function multiple times.");
         for(int i = 0; i != l; ++i) {
           temp = ord[i] - min; // Best ? Or direct assign to ord2[i] ? Also check for panel version..
           if(omap[temp]) stop("Repeated values in timevar");
@@ -873,7 +871,7 @@ NumericMatrix fdiffgrowthmCppImpl(const NumericMatrix& x, const IntegerVector& n
         NumericMatrix::ConstColumn column = x( _ , j);
         for(int p = 0; p != ns; ++p) {
           int np = n[p];
-          if(absn[p]*maxdiff > ags) warning("abs(n * diff) exceeds average group-size (%i). This could also be a result of unused factor levels. See #25.", ags);
+          if(absn[p]*maxdiff > ags) warning("abs(n * diff) exceeds average group-size (%i). This could also be a result of unused factor levels. See #25. Use fdroplevels() to remove unused factor levels from your data.", ags);
           if(np>0) { // Positive lagged and iterated differences
             int d1 = diff[0];
             bool L1 = np == 1;
@@ -997,22 +995,20 @@ NumericMatrix fdiffgrowthmCppImpl(const NumericMatrix& x, const IntegerVector& n
         if(ord[i] < min[temp]) min[temp] = ord[i];
         if(ord[i] > max[temp]) max[temp] = ord[i];
       }
-      cgs[1] = 0; temp = 0;
-      for(int i = 1; i != ng; ++i) {
+      temp = 0;
+      for(int i = 1; i != ngp; ++i) {
         if(min[i] == NA_INTEGER) stop("Timevar contains missing values");
+        if(min[i] == INT_MAX) continue; // Needed in case of unused factor levels (group vector too large)
+        cgs[i] = temp; // This needs to b here (for unused factor levels case...)
         max[i] -= min[i] - 1; // need max[i] which stores the complete group sizes only if p<0 e.g. if computing leads..
         temp += max[i];
-        cgs[i+1] = temp; // + max[i] - min[i] + 1;
       }
-      if(min[ng] == NA_INTEGER) stop("Timevar contains missing values");
-      max[ng] -= min[ng] - 1;
-      temp += max[ng];
       // omap provides the ordering to order the vector (needed to find previous / next values)
       bool regular = temp == l;
       IntegerVector omap(temp), ord2 = no_init_vector(l), index = no_init_vector(l);
       if(!regular) { // Irregular panel
         if(temp > 3 * l) warning("Your panel is very irregular. Need to create an internal ordering vector of length %s to represent it.", temp);
-        if(maxdiff > 1) stop("Iterations are currently only supported for regular panels. See ?seqid to identify the regular bits in your panel, or just apply this function multiple times.");
+        if(maxdiff > 1) stop("Iterations are currently only supported for regular panels. See ?seqid to identify the regular sequences in your panel, or just apply this function multiple times.");
         for(int i = 0; i != l; ++i) {
           ord2[i] = ord[i] - min[g[i]];
           index[i] = cgs[g[i]] + ord2[i];
@@ -1032,7 +1028,7 @@ NumericMatrix fdiffgrowthmCppImpl(const NumericMatrix& x, const IntegerVector& n
         NumericMatrix::ConstColumn column = x( _ , j);
         for(int p = 0; p != ns; ++p) {
           int np = n[p];
-          if(absn[p]*maxdiff > ags) warning("abs(n * diff) exceeds average group-size (%i). This could also be a result of unused factor levels. See #25.", ags);
+          if(absn[p]*maxdiff > ags) warning("abs(n * diff) exceeds average group-size (%i). This could also be a result of unused factor levels. See #25. Use fdroplevels() to remove unused factor levels from your data.", ags);
           if(np>0) { // Positive lagged and iterated differences
             int d1 = diff[0];
             bool L1 = np == 1;
@@ -1337,7 +1333,7 @@ List fdiffgrowthlCppImpl(const List& x, const IntegerVector& n = 1, const Intege
       IntegerVector omap(osize), ord2 = regular ? no_init_vector(1) : no_init_vector(os);
       if(!regular) { // Irregular time series
         if(osize > 3 * os) warning("Your time series is very irregular. Need to create an internal ordering vector of length %s to represent it.", osize);
-        if(Rcpp::max(diff) > 1) stop("Iterations are currently only supported for regular time series. See ?seqid to identify the regular bits in your time series, or just apply this function multiple times.");
+        if(Rcpp::max(diff) > 1) stop("Iterations are currently only supported for regular time series. See ?seqid to identify the regular sequences in your time series, or just apply this function multiple times.");
         for(int i = 0; i != os; ++i) {
           temp = ord[i] - min; // Best ? Or direct assign to ord2[i] ? Also check for panel version..
           if(omap[temp]) stop("Repeated values in timevar");
@@ -1475,7 +1471,7 @@ List fdiffgrowthlCppImpl(const List& x, const IntegerVector& n = 1, const Intege
         if(gss != column.size()) stop("nrow(x) must match length(g)");
         for(int p = 0; p != ns; ++p) {
           int np = n[p];
-          if(absn[p]*maxdiff > ags) warning("abs(n * diff) exceeds average group-size (%i). This could also be a result of unused factor levels. See #25.", ags);
+          if(absn[p]*maxdiff > ags) warning("abs(n * diff) exceeds average group-size (%i). This could also be a result of unused factor levels. See #25. Use fdroplevels() to remove unused factor levels from your data.", ags);
           if(np>0) { // Positive lagged and iterated differences
             int d1 = diff[0];
             bool L1 = np == 1;
@@ -1598,22 +1594,20 @@ List fdiffgrowthlCppImpl(const List& x, const IntegerVector& n = 1, const Intege
         if(ord[i] < min[temp]) min[temp] = ord[i];
         if(ord[i] > max[temp]) max[temp] = ord[i];
       }
-      cgs[1] = 0; temp = 0;
-      for(int i = 1; i != ng; ++i) {
+      temp = 0;
+      for(int i = 1; i != ngp; ++i) {
         if(min[i] == NA_INTEGER) stop("Timevar contains missing values");
+        if(min[i] == INT_MAX) continue; // Needed in case of unused factor levels (group vector too large)
+        cgs[i] = temp; // This needs to b here (for unused factor levels case...)
         max[i] -= min[i] - 1; // need max[i] which stores the complete group sizes only if p<0 e.g. if computing leads..
         temp += max[i];
-        cgs[i+1] = temp; // + max[i] - min[i] + 1;
       }
-      if(min[ng] == NA_INTEGER) stop("Timevar contains missing values");
-      max[ng] -= min[ng] - 1;
-      temp += max[ng];
       // omap provides the ordering to order the vector (needed to find previous / next values)
       bool regular = temp == gss;
       IntegerVector omap(temp), ord2 = no_init_vector(gss), index = no_init_vector(gss);
       if(!regular) { // Irregular panel
         if(temp > 3 * gss) warning("Your panel is very irregular. Need to create an internal ordering vector of length %s to represent it.", temp);
-        if(maxdiff > 1) stop("Iterations are currently only supported for regular panels. See ?seqid to identify the regular bits in your panel, or just apply this function multiple times.");
+        if(maxdiff > 1) stop("Iterations are currently only supported for regular panels. See ?seqid to identify the regular sequences in your panel, or just apply this function multiple times.");
         for(int i = 0; i != gss; ++i) {
           ord2[i] = ord[i] - min[g[i]];
           index[i] = cgs[g[i]] + ord2[i];
@@ -1634,7 +1628,7 @@ List fdiffgrowthlCppImpl(const List& x, const IntegerVector& n = 1, const Intege
         if(gss != column.size()) stop("nrow(x) must match length(g)");
         for(int p = 0; p != ns; ++p) {
           int np = n[p];
-          if(absn[p]*maxdiff > ags) warning("abs(n * diff) exceeds average group-size (%i). This could also be a result of unused factor levels. See #25.", ags);
+          if(absn[p]*maxdiff > ags) warning("abs(n * diff) exceeds average group-size (%i). This could also be a result of unused factor levels. See #25. Use fdroplevels() to remove unused factor levels from your data.", ags);
           if(np>0) { // Positive lagged and iterated differences
             int d1 = diff[0];
             bool L1 = np == 1;
