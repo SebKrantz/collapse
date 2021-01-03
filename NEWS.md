@@ -1,5 +1,5 @@
 # collapse 1.5.0
-*collapse* 1.5.0, released early January 2021, also presents important refinements and some additional functionality. 
+*collapse* 1.5.0, released early January 2021, presents important refinements and some additional functionality. 
 
 ### Back to CRAN
 
@@ -20,7 +20,7 @@
 
 <!-- Missing value removal is still done using *data.table* source code, so these functions are now equipped for large and complex linear prediction and partialling-out problems. To fully utilize them users must install *fixest*. -->
 
-* Vignettes were outsourced to the [website](<https://sebkrantz.github.io/collapse/articles/index.html>), and also made available as PDF versions for download there. This nearly halves the size of the source package, and should induce users to appreciate the built-in documentation. The website also makes for much more convenient reading and navigation of these book-style vignettes. A vignette on the use of *collapse* with *data.table* will be added shortly.
+* Vignettes were outsourced to the [website](<https://sebkrantz.github.io/collapse/articles/index.html>), and also made available as PDF versions for download there. This nearly halves the size of the source package, and should induce users to appreciate the built-in documentation. The website also makes for much more convenient reading and navigation of these book-style vignettes. 
 
 ### Additions
 
@@ -29,6 +29,8 @@
 * Added function `missing_cases` (opposite of `complete.cases` and faster for data frame's / lists).
 
 * Added function `allNA` for atomic vectors. 
+
+* New vignette about using *collapse* together with *data.table*, available [online](<https://sebkrantz.github.io/collapse/articles/index.html>).
 
 ### Improvements
 
@@ -42,7 +44,7 @@
 
 * `collap` now provides an easy workaround to aggregate some columns using weights and others without. The user may simply append the names of *Fast Statistical Functions* with `_uw` to disable weights. Example: `collapse::collap(mtcars, ~ cyl, custom = list(fmean_uw = 3:4, fmean = 8:10), w = ~ wt)` aggregates columns 3 through 4 using a simple mean and columns 8 through 10 using the weighted mean. 
 
-* The parallelism in `collap` using `parallel::mclapply` has been reworked to operate at the column-level, and not at the function level as before. It is still not available for Windows though. The default number of cores was set to `mc.cores = 2L`, which now gives an error on windows if `parallel = TRUE`. A version of *collapse* that is parallelized at the C/C++ level may appear this year. 
+* The parallelism in `collap` using `parallel::mclapply` has been reworked to operate at the column-level, and not at the function level as before. It is still not available for Windows though. The default number of cores was set to `mc.cores = 2L`, which now gives an error on windows if `parallel = TRUE`.  
 
 * function `recode_char` now has additional options `ignore.case` and `fixed` (passed to `grepl`), for enhanced recoding character data based on regular expressions. 
 

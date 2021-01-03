@@ -13,7 +13,7 @@
 ![downloads](http://cranlogs.r-pkg.org/badges/grand-total/collapse?color=blue)
 <!-- badges: end -->
 
-*collapse* is a C/C++ based package for data transformation and statistical computing in R. It's core aims are:
+*collapse* is a C/C++ based package for data transformation and statistical computing in R. It's aims are:
 
 * To facilitate complex data transformation, exploration and computing tasks in R.
 * To help make R code fast, flexible, parsimonious and programmer friendly. 
@@ -23,6 +23,7 @@ It is made compatible with base R, *dplyr*, *data.table* and the *plm* approach 
 <!-- *collapse* thus provides a robust, flexible, class-agnostic and computationally advanced toolkit for data manipulation in R. -->
 
 <!-- Core functions are implicit-type generic and attribute preserving, supporting other matrix or data frame based classes e.g. time series (*ts*, *xts* / *zoo*, *timeSeries* etc.), *sf* data frames etc. -->
+
 
 **Key Features:**
 
@@ -35,17 +36,17 @@ It is made compatible with base R, *dplyr*, *data.table* and the *plm* approach 
 *  **Advanced aggregation**: Fast and easy multi-data-type, multi-function, 
         weighted, parallelized and fully customized data aggregation.
 
-*  **Advanced transformations**: Fast (grouped) replacing and sweeping out of 
-        statistics, and (grouped, weighted) scaling / standardizing, between 
-        (averaging) and (quasi-)within (centering / demeaning) transformations, 
+*  **Advanced transformations**: Fast row / column arithmetic, (grouped) replacing 
+        and sweeping out of statistics, (grouped, weighted) scaling / standardizing, 
+        between (averaging) and (quasi-)within (centering / demeaning) transformations, 
         higher-dimensional centering (i.e. multiple fixed effects transformations), 
         linear prediction / partialling-out, linear model fitting and testing.
 
 *  **Advanced time-computations**: Fast (sequences of) lags / leads, and 
         (lagged / leaded, iterated, quasi-, log-) differences and (compounded) 
-        growth rates on (unordered) time series and panel data. Multivariate auto-, 
-        partial- and cross-correlation functions for panel data. 
-        Panel data to (ts-)array conversions. 
+        growth rates on (unordered, irregular) time series and panel data. 
+        Multivariate auto-, partial- and cross-correlation functions for panel data. 
+        Panel data to (ts-)array conversions.
 
 *  **List processing**: (Recursive) list search / identification, splitting, 
         extraction / subsetting, data-apply, and generalized recursive 
@@ -54,13 +55,19 @@ It is made compatible with base R, *dplyr*, *data.table* and the *plm* approach 
 * **Advanced data exploration**: Fast (grouped, weighted, panel-decomposed) 
         summary statistics for complex multilevel / panel data.
 
-*collapse* is mainly coded in C++ and built with *Rcpp*, but also uses C functions from *data.table*, *lfe* and *stats*. Effort has been expended to minimize the execution speed of R code employed. 
+*collapse* is mainly coded in C++ and built with *Rcpp*, but also uses C/C++ functions from *data.table*, *fixest*, *weights*, *RcppArmadillo*, *RcppEigen* and *stats*. Effort has been expended to minimize the execution speed of R code employed. 
 
 ## Installation
 
 ``` r
-# From the R console call
+# Install the current version on CRAN
 install.packages("collapse")
+
+# Install a previous version from the CRAN Archive (Requires Rtools)
+install.packages("https://cran.r-project.org/src/contrib/Archive/collapse/collapse_1.4.2.tar.gz", repos = NULL, type = "source")
+
+# Install a stable development version from Github (Requires Rtools)
+remotes::install_github("SebKrantz/collapse")
 ```
 <!--
 # install the development version
