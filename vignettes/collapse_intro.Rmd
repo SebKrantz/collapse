@@ -662,7 +662,7 @@ microbenchmark(qDT(wlddev), qDT(EuStockMarkets), as.data.table(wlddev), as.data.
 # Converting a time series to data.frame
 head(qDF(AirPassengers))
 ```
-By default these functions drop all uncessessary attributes from matrices or lists / data frames in the conversion, but this can be changed using the `keep.attr = TRUE` argument. 
+By default these functions drop all unnecessary attributes from matrices or lists / data frames in the conversion, but this can be changed using the `keep.attr = TRUE` argument. 
 
 A useful additional feature of `qDF` and `qDT` is the `row.names.col` argument, enabling the saving of names / row-names in a column when converting from vector, matrix, array or data frame:
 
@@ -1006,7 +1006,7 @@ While `ftransform` and the `TRA` argument to the *Fast Statistical Functions* in
 ### 6.1 Row and Column Arithmetic
 When dealing with matrices or matrix-like datasets, we often have to perform operations applying a vector to the rows or columns of the data object in question. The mathematical operations of base R (`+`, `-`, `*`, `/`, `%%`, ...) operate column-wise and are quite inefficient when used with data frames. Even in matrix code it is challenging to efficiently apply a vector `v` to the rows of a matrix `X`. 
 
-For this reason *collapse* inroduces a set of efficient row- and column-wise arithmetric operators for matrix-like objects: `%rr%`, `%r+%`, `%r-%`, `%r*%`, `%r/%`, `%cr%`, `%c+%`, `%c-%`, `%c*%`, `%c/%`. 
+For this reason *collapse* introduces a set of efficient row- and column-wise arithmetic operators for matrix-like objects: `%rr%`, `%r+%`, `%r-%`, `%r*%`, `%r/%`, `%cr%`, `%c+%`, `%c-%`, `%c*%`, `%c/%`. 
 
 ```{r, eval=NCRAN}
 X <- qM(fselect(GGDC10S, AGR:SUM))
@@ -1169,7 +1169,7 @@ head(fmedian(miris, f, TRA = "-+"), 3)
 This is the within transformation also computed by `qsu` discussed in section 1. It's utility in the case of grouped centering is demonstrated visually in section 6.5.
 -->
 
-As mentioned, calling the `TRA()` function does not make much sense if the same task can be performed using the *Fast Statistical Functions* or the arithmetic operators. It is however a very useful function to call for complex transformations involving grouped sweeping operations with precompted quantities. 
+As mentioned, calling the `TRA()` function does not make much sense if the same task can be performed using the *Fast Statistical Functions* or the arithmetic operators. It is however a very useful function to call for complex transformations involving grouped sweeping operations with precomputed quantities. 
 
 ### 6.4 Fast Standardizing
 

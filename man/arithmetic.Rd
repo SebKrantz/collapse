@@ -37,7 +37,7 @@ X \%c/\% v    # Divide each column of X by v
 }
 %- maybe also 'usage' for other objects documented here.
 \arguments{
-  \item{X}{a vector, matrix, data frame or list like object with rows (r) ro columns (c) matching \code{v}.}
+  \item{X}{a vector, matrix, data frame or list like object with rows (r) columns (c) matching \code{v}.}
   \item{v}{a suitable atomic vector. If \code{X} is a list, \code{v} can also be a scalar or list of vectors (for column-operations) or a matching list of scalar atomic elements (for row-operations on data frame's / lists).}
 }
 \details{
