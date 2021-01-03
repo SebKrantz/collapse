@@ -43,12 +43,12 @@ knitr::opts_chunk$set(error = FALSE, message = FALSE, warning = FALSE,
 
 set.seed(101)
 ```
-
+<!--
 *collapse* is a C/C++ based package for data transformation and statistical computing in R. It's aims are:
 
 1. To facilitate complex data transformation, exploration and computing tasks in R.
 2. To help make R code fast, flexible, parsimonious and programmer friendly. 
-
+-->
 This vignette focuses on the integration of *collapse* and the popular *plm* ('Linear Models for Panel Data') package by Yves Croissant, Giovanni Millo and Kevin Tappe. It will demonstrate the utility of the *pseries* and *pdata.frame* classes introduced in *plm* together with the corresponding methods for fast *collapse* functions (implemented in C or C++), to extend and facilitate extremely fast computations on panel-vectors and panel data frames (20-100 times faster than native *plm*). The *collapse* package should enable R programmers to - with very little effort - write high-performance code in the domain of panel data exploration and panel data econometrics. 
 
 <!-- The computations considered are between and within transformations (grouped averaging and centering), higher-dimensional between and within transformations (i.e. averaging and centering over multiple groups), standardizing (i.e. scaling and centering), weighted versions of all of the above, sequences of panel- lags / leads and lagged / leaded and iterated differences and growth rates / log-differences, panel- auto-, partial-auto and cross-correlation functions, panel data to (ts-) matrix / array conversions, and summary statistics for panel data. Not really covered in this vignette is the whole suite of *Fast Statistical Functions* in the *collapse* package, which may of course also be used for grouped and weighted operations on panel data, but currently do not have methods for *plm* classes.  -->

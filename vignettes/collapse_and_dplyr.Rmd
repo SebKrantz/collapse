@@ -45,11 +45,12 @@ knitr::opts_chunk$set(error = FALSE, message = FALSE, warning = FALSE,
 set.seed(101)
 ```
 
+<!--
 *collapse* is a C/C++ based package for data transformation and statistical computing in R. It's aims are:
 
 1. To facilitate complex data transformation, exploration and computing tasks in R.
 2. To help make R code fast, flexible, parsimonious and programmer friendly. 
-
+-->
 This vignette focuses on the integration of *collapse* and the popular *dplyr* package by Hadley Wickham. In particular it will demonstrate how using *collapse*'s fast functions and some fast alternatives for *dplyr* verbs can substantially facilitate and speed up basic data manipulation, grouped and weighted aggregations and transformations, and panel data computations (i.e. between- and within-transformations, panel-lags, differences and growth rates) in a *dplyr* (piped) workflow. 
 
 ***
@@ -709,7 +710,7 @@ GGDC10S %>%
     fgroup_by(Variable, Country) %>% flag(-1:1, Year)
 ```
 
-If the time-variable passed does not exactly identify the data (i.e. because of gaps or repeated values in each group), all 3 functions will issue appropriate error messages. `flag`, `fdiff` and `fgrowth` support unbalanced panels with different start and end periods and duration of coverage for each individual, but not irregular panels. A workaround for such panels exists with the function `seqid` which generates a new panel-id identifying consecutive time-sequences at the sub-individual level, see `?seqid`. 
+If the time-variable passed does not exactly identify the data (i.e. because of repeated values in each group), all 3 functions will issue appropriate error messages. `flag`, `fdiff` and `fgrowth` support irregular time series and unbalanced panels. <!-- with different start and end periods and duration of coverage for each individual, but not irregular panels. A workaround for such panels exists with the function `seqid` which generates a new panel-id identifying consecutive time-sequences at the sub-individual level, see `?seqid`. -->
 
 It is also possible to omit the time-variable if one is certain that the data is sorted:
 ```{r, eval=NCRAN}
