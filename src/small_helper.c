@@ -1,6 +1,9 @@
 #include <R.h>
 #include <Rinternals.h>
 
+#define SEXPPTR(x) ((SEXP *)DATAPTR(x))  // to avoid overhead of looped STRING_ELT and VECTOR_ELT
+
+
 SEXP groups2GRP(SEXP x, SEXP lx, SEXP gs) {
   int l = length(x);
   SEXP out = PROTECT(allocVector(INTSXP, asInteger(lx)));
@@ -13,10 +16,11 @@ SEXP groups2GRP(SEXP x, SEXP lx, SEXP gs) {
   // we take the R API (INTEGER()[i], REAL()[i], etc) outside loops for the simple types even when not parallel. For this
   // type list case (VECSXP) it might be that some items are ALTREP for example, so we really should use the heavier
   // _ELT accessor (VECTOR_ELT) inside the loop in this case.
+  SEXP *px = SEXPPTR(x);
 
   for(int j = l; j--; ) { // This can go in any direction..
-    SEXP column = VECTOR_ELT(x, j);
-    int *pcolumn = INTEGER(column), jp = j+1;
+    // SEXP column = VECTOR_ELT(x, j);
+    int *pcolumn = INTEGER(px[j]), jp = j+1;
     for(int i = pgs[j]; i--; ) pout[pcolumn[i]] = jp; // This can go in any direction...
   }
   UNPROTECT(1);
@@ -28,12 +32,13 @@ SEXP lassign(SEXP x, SEXP s, SEXP rows, SEXP fill) {
   int l = length(x), tr = TYPEOF(rows), ss = asInteger(s), rs = length(rows);
   SEXP out = PROTECT(allocVector(VECSXP, l));
   // SEXP *px = VECTOR_PTR(x); // -> Depreciated interface: https://github.com/hadley/r-internals/blob/ea892fa79bbffe961e78dbe9c90ce4ca3bf2d9bc/vectors.md
+  SEXP *px = SEXPPTR(x);
   double dfill = asReal(fill);
 
   if(tr == INTSXP) {
     int *rowsv = INTEGER(rows); //, vs = ss * sizeof(double);
     for(int j = l; j--; ) {
-      SEXP column = VECTOR_ELT(x, j);
+      SEXP column = px[j]; // VECTOR_ELT(x, j);
       if(length(column) != rs) error("length(rows) must match nrow(x)");
       SEXP outj;
       SET_VECTOR_ELT(out, j, outj = allocVector(REALSXP, ss));
@@ -47,7 +52,7 @@ SEXP lassign(SEXP x, SEXP s, SEXP rows, SEXP fill) {
     int *rowsv = LOGICAL(rows);
     if(ss != rs) error("length(rows) must match length(s) if rows is a logical vector");
     for(int j = l; j--; ) {
-      SEXP column = VECTOR_ELT(x, j);
+      SEXP column = px[j]; // VECTOR_ELT(x, j);
       SEXP outj;
       SET_VECTOR_ELT(out, j, outj = allocVector(REALSXP, ss));
       double *pcolumn = REAL(column), *poutj = REAL(outj);
