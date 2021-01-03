@@ -55,8 +55,6 @@ LazyData: true
 Depends: R (>= 2.10)
 Imports: Rcpp (>= 1.0.1)
 LinkingTo: Rcpp
-Suggests: dplyr, plm, data.table, matrixStats, magrittr, fixest, weights, 
-          RcppArmadillo, RcppEigen, ggplot2, scales, vars, knitr, rmarkdown, 
-          testthat, microbenchmark, covr
+Suggests: dplyr, plm, data.table, matrixStats, magrittr, fixest, vars, weights, 
+          RcppArmadillo, RcppEigen, ggplot2, scales, microbenchmark, testthat, covr
 SystemRequirements: C++11
-VignetteBuilder: knitr
