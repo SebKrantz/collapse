@@ -2,6 +2,9 @@
 ^\.Rproj\.user$
 .*.Rnw
 .*.pdf
+\.fsrc$
+\.o$
+\.so$
 ^README\.md$
 ^README\.Rmd$
 ^cran-comments\.md$
