@@ -1,11 +1,23 @@
 # Row-operations (documented under data transformations...) ... see if any other package has it (i.e. matrixStats etc..)
 # or wirhout r ??? look for %+% function on Rducumentation.. rdio.
 
-"%rr%" <- function(X, v) TRA(X, v, "replace_fill") # outer(rep.int(1L, dim(X)[2L]), v)
-"%r+%" <- function(X, v) TRA(X, v, "+")
-"%r-%" <- function(X, v) TRA(X, v, "-")
-"%r*%" <- function(X, v) TRA(X, v, "*")
-"%r/%" <- function(X, v) TRA(X, v, "/")
+"%rr%" <- function(X, v) if(is.atomic(X) || is.atomic(v) || inherits(X, "data.frame")) TRA(X, v, "replace_fill") else # outer(rep.int(1L, dim(X)[2L]), v)
+  duplAttributes(mapply(function(x, y) TRA(x, y, "replace_fill"), unattrib(X), unattrib(v),
+                        USE.NAMES = FALSE, SIMPLIFY = FALSE), X)
+"%r+%" <- function(X, v) if(is.atomic(X) || is.atomic(v) || inherits(X, "data.frame")) TRA(X, v, "+") else
+  duplAttributes(mapply(function(x, y) TRA(x, y, "+"), unattrib(X), unattrib(v),
+                        USE.NAMES = FALSE, SIMPLIFY = FALSE), X)
+"%r-%" <- function(X, v) if(is.atomic(X) || is.atomic(v) || inherits(X, "data.frame")) TRA(X, v, "-") else
+  duplAttributes(mapply(function(x, y) TRA(x, y, "-"), unattrib(X), unattrib(v),
+                        USE.NAMES = FALSE, SIMPLIFY = FALSE), X)
+"%r*%" <- function(X, v) if(is.atomic(X) || is.atomic(v) || inherits(X, "data.frame")) TRA(X, v, "*") else
+  duplAttributes(mapply(function(x, y) TRA(x, y, "*"), unattrib(X), unattrib(v),
+                        USE.NAMES = FALSE, SIMPLIFY = FALSE), X)
+"%r/%" <- function(X, v) if(is.atomic(X) || is.atomic(v) || inherits(X, "data.frame")) TRA(X, v, "/") else
+  duplAttributes(mapply(function(x, y) TRA(x, y, "/"), unattrib(X), unattrib(v),
+                        USE.NAMES = FALSE, SIMPLIFY = FALSE), X)
+
+
 
 # othidentity <- function(x, y) y
 "%cr%" <- function(X, v) if(is.atomic(X)) return(duplAttributes(rep(v, NCOL(X)), X)) else # outer(rep.int(1L, dim(X)[2L]), v)

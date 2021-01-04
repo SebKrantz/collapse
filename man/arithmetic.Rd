@@ -37,8 +37,8 @@ X \%c/\% v    # Divide each column of X by v
 }
 %- maybe also 'usage' for other objects documented here.
 \arguments{
-  \item{X}{a vector, matrix, data frame or list like object with rows (r) columns (c) matching \code{v}.}
-  \item{v}{a suitable atomic vector. If \code{X} is a list, \code{v} can also be a scalar or list of vectors (for column-operations) or a matching list of scalar atomic elements (for row-operations on data frame's / lists).}
+  \item{X}{a vector, matrix, data frame or list like object (with rows (r) columns (c) matching \code{v}).}
+  \item{v}{a suitable atomic vector. If \code{X} is a list, \code{v} can also be a scalar or list of vectors (for column-operations) or a list of scalar atomic elements (for row-operations on data frame's). It is also possible to sweep lists of vectors \code{v} out of lists of matrices \code{X} (or even lists of data frames \code{X} for row-operations).}
 }
 \details{
 With a matrix or data frame \code{X}, the default behavior of R when calling \code{X op v} (such as multiplication \code{X * v}) is to perform the operation of \code{v} with each column of \code{X}. The equivalent operation is performed by \code{X \%cop\% v}, with the difference that it computes significantly faster if \code{X} is a data frame / list. A more complex but frequently required task is to perform an operation with \code{v} on each row of \code{X}. This is provided based on efficient C++ code by the \code{\%rop\%} set of functions, e.g. \code{X \%r*\% v} efficiently multiplies \code{v} to each row of \code{X}.
