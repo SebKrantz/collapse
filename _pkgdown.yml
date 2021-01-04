@@ -45,6 +45,10 @@ articles:
   navbar: collapse and dplyr
   contents:
   - collapse_and_plm
+- title: collapse and data.table
+  desc: Shows how collapse and data.table may be used concurrently in a harmonious way
+  contents:
+  - collapse_and_data.table
 
 reference:
 - contents: "collapse-package"
@@ -95,18 +99,23 @@ reference:
   - "A5-advanced-aggregation"
   - collap
 - title: "Data Transformations"
-  desc: "Efficient row- and column- apply to data objects and Split-Apply-Combine computing. Fast (grouped, weighted) replacing and sweeping out of statistics, scaling / standardizing, (quasi-)centering, higher-dimensional centering, linear prediction / partialling-out and linear model fitting."
+  desc: "Fast row / column arithmetic, efficient row / column apply to data objects and Split-Apply-Combine computing. Fast (grouped, weighted) replacing and sweeping out of statistics, scaling / standardizing, (quasi-)centering, higher-dimensional centering, linear prediction / partialling-out."
 - contents:
   - "A6-data-transformations"
+  - arithmetic
   - dapply
   - BY
   - TRA
   - fscale
   - "fbetween, fwithin"
   - "fHDbetween, fHDwithin"
+- title: "Linear Models"
+  desc: "Fast (weighted) linear model fitting. A fast F-test for high-dimensional linear models."
+- contents:
   - flm
+  - fFtest
 - title: "Time Series and Panel Series"
-  desc: "Fast (sequences of) lags / leads, and (lagged / leaded, iterated, quasi-, log-) differences and (compounded) growth rates on (unordered) time series and panel data. Auto-, partial- and cross-correlation functions for panel data. Panel data to (ts-)array conversion."
+  desc: "Fast (sequences of) lags / leads, and (lagged / leaded, iterated, quasi-, log-) differences and (compounded) growth rates on (unordered, irregular) time series and panel data. Auto-, partial- and cross-correlation functions for panel data. Panel data to (ts-)array conversion."
 - contents:
   - "A7-time-series-panel-series"
   - flag
@@ -125,14 +134,13 @@ reference:
   - rapply2d
   - unlist2d
 - title: "Summary Statistics"
-  desc: "Fast (grouped, weighted, panel-decomposed) summary statistics for cross-sectional and complex multilevel / panel data. A fast F-test for high-dimensional linear models."
+  desc: "Fast (grouped, weighted, panel-decomposed) summary statistics for cross-sectional and complex multilevel / panel data."
 - contents:
   - "A9-summary-statistics"
   - qsu
   - descr
   - "pwcor, pwcov, pwNobs"
   - varying
-  - fFtest
 - title: "Recode and Replace Values"
   desc: "Efficiently recode and replace values in matrix-like objects."
 - contents:

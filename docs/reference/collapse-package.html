@@ -78,7 +78,7 @@ It is made compatible with dplyr, data.table and the plm approach to panel data,
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">collapse</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">1.4.2</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">1.5.0</span>
       </span>
     </div>
 
@@ -141,34 +141,40 @@ Advanced and Fast Data Transformation</h1>
 
     <h2 class="hasAnchor" id="getting-started"><a class="anchor" href="#getting-started"></a>Getting Started</h2>
 
-    <p>Please see <a href='index.html'>Collapse Documentation &amp; Overview</a>, or the introductory vignette. The documentation and vignettes can also comfortably be read on the <a href='https://sebkrantz.github.io/collapse/'>package website</a>. A cheatsheet is available at <a href='https://rstudio.com/resources/cheatsheets/'>Rstudio</a>.
-A compact introduction for quick-starters is provided in the examples below.</p>
+    <p>See <a href='index.html'>Collapse Documentation &amp; Overview</a>, or read the <a href='https://sebkrantz.github.io/collapse/articles/collapse_intro.html'>introductory vignette</a>. All vignettes can be accessed on the <a href='https://sebkrantz.github.io/collapse/'>package website</a>. A cheatsheet is available at <a href='https://raw.githubusercontent.com/rstudio/cheatsheets/master/collapse.pdf'>Rstudio</a>.
+A compact introduction for quick-starters is provided in the examples section below.</p>
     <h2 class="hasAnchor" id="details"><a class="anchor" href="#details"></a>Details</h2>
 
     <p><!-- % Put this below bullet points ?? % \emph{collapse} provides a carefully conceived % \emph{collapse} provides a compact set of functions % organized roughly into several topics -->
-<em>collapse</em> provides an integrated suite of statistical and data manipulation functions (see <a href='index.html'>Collapse Overview</a>). These improve, complement and significantly extend the capabilities of base R and packages like <em>dplyr</em>, <em>data.table</em>, <em>plm</em>, <em>matrixStats</em>, <em>Rfast</em> etc.. Key improvements and extensions are:</p>
+<em>collapse</em> provides an integrated suite of statistical and data manipulation functions. These improve, complement and extend the capabilities of base R and packages like <em>dplyr</em>, <em>data.table</em>, <em>plm</em>, <em>matrixStats</em>, <em>Rfast</em> etc.. Key Highlights:</p>
 <ul>
 <li><p>Fast C/C++ based (grouped, weighted) computations embedded in highly optimized R code.</p></li>
 <li><p>More complex statistical, time series / panel data and recursive (list-processing) operations.</p></li>
 <li><p>A flexible and generic approach supporting and preserving many R objects. <!-- % standard  % (S3 generic statistical functions, class/attribute preservation). % , compatibility with \emph{dplyr}, \emph{plm} and \emph{data.table} --></p></li>
 <li><p>Optimized programming in standard and non-standard evaluation.</p></li>
 </ul><p><!-- % To explain this a bit: -->
-The statistical and data transformation functions in <em>collapse</em> are S3 generic with core methods for vectors, matrices and data frames, and internally support grouped and weighted computations carried out in C/C++. Thus functions need only be called once for column-wise and/or grouped computations, providing a lot of extra speed and full support for sampling weights. Furthermore the R code is strongly optimized and inputs are swiftly passed to compiled C/C++ code, with further checks run at C/C++ level. Various efficient algorithms are implemented in C/C++. <!-- %This approach enables flexible and parsimonious programming and data manipulation in R at high speeds. --></p>
+The statistical functions in <em>collapse</em> are S3 generic with core methods for vectors, matrices and data frames, and internally support grouped and weighted computations carried out in C/C++. <!-- %Thus functions need only be called once for column-wise and/or grouped computations, providing a lot of extra speed and full support for sampling weights. -->
+R code is strongly optimized and inputs are swiftly passed to compiled C/C++ code, <!-- %, with further checks run at that level. -->
+where various efficient algorithms are implemented. <!-- %This approach enables flexible and parsimonious programming and data manipulation in R at high speeds. --></p>
 <p><!-- %when passed to a \emph{collapse} statistical function together with a suitable data object % To provide extra speed and programmability -->
-Core S3 methods and efficient grouping and ordering functionality can be accessed by the user. For example <code><a href='GRP, fgroup_by.html'>GRP()</a></code> creates grouping objects directly passed to C++ by statistical functions. <code><a href='GRP, fgroup_by.html'>fgroup_by()</a></code> attaches these objects to a data frame, yielding efficient chained calls when combined with <em>magrittr</em> pipes, <a href='fast-data-manipulation.html'>fast manipulation functions</a> and <a href='fast-statistical-functions.html'>fast statistical functions</a>. Performance gains are also realized when grouping with factors, or computing on grouped (<em>dplyr</em>) or panel data (<em>plm</em>) frames. <!-- %Hence \emph{collapse} enables optimized programming and data manipulation in both standard and non-standard evaluation. --></p>
+To facilitate efficient programming, core S3 methods, grouping and ordering functionality and some C-level helper functions can be accessed by the user.</p>
+<p><!-- %For example \code{GRP()} creates grouping objects directly passed to C++ by statistical functions. \code{fgroup_by()} attaches these objects to a data frame, yielding efficient chained calls when combined with \emph{magrittr} pipes, \link[=A3-fast-data-manipulation]{fast manipulation functions} and \link[=A1-fast-statistical-functions]{fast statistical functions}. --></p>
+<p><!-- %Performance gains are also realized when grouping with factors, or computing on grouped (\emph{dplyr}) or panel data (\emph{plm}) frames. --></p>
+<p><!-- %Hence \emph{collapse} enables optimized programming and data manipulation in both standard and non-standard evaluation. --></p>
 <p><!-- %The function \code{fgroup_by} can be used to efficiently create a grouped tibble inside dplyr-like chained calls (constructed with \emph{magrittr} pipes, fast manipulation functions like \code{fselect}, \code{fsubset}, \code{ftransform} and fast statistical functions). Thus \emph{collapse} enables optimized programming in both standard and non-standard evaluation. --></p>
 
 <p><!-- % attributes of atomic objects are preserved if the dimensions are unaltered by the computation, and data frame attributes are always preserved, --></p>
-<p>Additional (hidden) S3 methods provide broad based compatibility and support for <em>dplyr</em> (grouped tibble), <em>data.table</em> and <em>plm</em> panel data classes. Non-generic functions and core methods also seek to preserve object attributes (including column attributes such as variable labels), ensuring flexibility and non-destructive workflows.</p>
-<p>Missing values are efficiently skipped at C/C++ level. The package default is <code>na.rm = TRUE</code>, whereas <code>na.rm = FALSE</code> also yields efficient checking and early termination. Missing weights are supported. Core functionality and all statistical functions / computations are tested with 7700 unit tests for Base R equivalence, exempting some improvements (e.g. <code><a href='fsum.html'>fsum(NA, na.rm = TRUE)</a></code> evaluates to <code>NA</code>, not 0 like <code><a href='https://rdrr.io/r/base/sum.html'>sum(NA, na.rm = TRUE)</a></code>; similarly for <code>fmin</code> and <code>fmax</code>; no <code>NaN</code> values are generated from computations involving <code>NA</code> values etc...). Generic functions provide <a href='collapse-options.html'>security</a> against silent swallowing of unknown / misspelled arguments.</p>
+<p>Additional (hidden) S3 methods provide broad based compatibility with <em>dplyr</em> (grouped tibble), <em>data.table</em> and <em>plm</em> panel data classes. Functions and core methods also seek to preserve object attributes (including column attributes such as variable labels), ensuring flexibility and non-destructive workflows with a very broad range of R objects (including most time-series classes).</p>
+<p>Missing values are efficiently skipped at C/C++ level. The package default is <code>na.rm = TRUE</code>, whereas <code>na.rm = FALSE</code> also yields efficient checking and early termination. Missing weights are supported. Core functionality and all statistical functions / computations are tested with 10,000 unit tests for Base R equivalence, exempting some improvements (e.g. <code><a href='fsum.html'>fsum(NA, na.rm = TRUE)</a></code> evaluates to <code>NA</code>, not 0, similarly for <code>fmin</code> and <code>fmax</code>; no <code>NaN</code> values are generated from computations involving <code>NA</code> values). Generic functions provide some <a href='collapse-options.html'>security</a> against silent swallowing of arguments.</p>
 <p><!-- %Hence they also handle various date and time series classes etc., and can easily be integreated into most approaches to data transformation. --></p>
 <p><!-- %A global \code{option("collapse_unused_arg_action")} can be set to regulate the behavior when unused arguments are passed to a generic function. The default is to issue a warning. --></p>
 
 <p><em>collapse</em> installs with a built-in hierarchical <a href='index.html'>documentation</a> facilitating the use of the package. The vignettes are complimentary and also follow a more structured approach. <!-- % and \code{base/stats}. % extra methods warrant, provide ? --></p>
-<p>Apart from general performance considerations, <em>collapse</em> excels at applications involving fast panel data transformations and techniques, fast weighted computations (e.g. weighted aggregation), fast programming and aggregation with categorical and mixed-type data, fast programming with (multivariate) time series, and programming with lists of data objects. <!-- %Other broad areas are fast grouped and weighted programming to implement new statistical techniques and packages, and fast data manipulation code (i.e. server-side for \code{shiny} apps). --></p>
+<p><!-- %Apart from general performance considerations, \emph{collapse} excels at applications involving fast panel data transformations and techniques, fast weighted computations (e.g. weighted aggregation), fast programming and aggregation with categorical and mixed-type data, fast programming with (multivariate) time series, and programming with lists of data objects. --></p>
+<p><!-- %Other broad areas are fast grouped and weighted programming to implement new statistical techniques and packages, and fast data manipulation code (i.e. server-side for \code{shiny} apps). --></p>
 <p><!-- % The package largely avoids non-standard evaluation and exports core methods for maximum programmability.  % Most are S3 generic with methods for common \code{R} objects (vectors, matrices, data frames, \dots) % high computation  %(aggregation and transformations ~10x \emph{data.table} on data &lt;1 Mio obs.). --></p>
 <p><!-- % Beyond speed, flexibility and parsimony in coding, a central objective of \emph{collapse} is to facilitate advanced / complex operations on data. -->
-<em>collapse</em> is mainly coded in C++ and built with <code>Rcpp</code>, but also uses C functions from <em>data.table</em> (grouping, ordering, subsetting, row-binding), <em>lfe</em> (centering on multiple factors) and <em>stats</em> (ACF and PACF). For the moment <em>collapse</em> does not use low-level parallelism (such as OpenMP).
+The package is mainly coded in C++ and built with <em>Rcpp</em>, but also uses C functions from <em>data.table</em> (grouping, ordering, subsetting, row-binding), <em>fixest</em> (centering on multiple factors), <em>weights</em> (weighted pairwise correlations), <em>stats</em> (ACF and PACF) and <em>RcppArmadillo / RcppEigen</em> (fast linear fitting methods). For the moment <em>collapse</em> does not utilize low-level parallelism (such as OpenMP).
 <!-- % \emph{collapse} is built with \code{Rcpp} and imports \code{C} functions from \emph{data.table}, \emph{lfe} and \emph{stats}. %, and uses \code{ggplot2} visualizations. --></p>
 
 
@@ -177,10 +183,11 @@ Core S3 methods and efficient grouping and ordering functionality can be accesse
     <p><!-- % \author{ -->
 <b>Maintainer</b>: Sebastian Krantz <a href='mailto:sebastian.krantz@graduateinstitute.ch'>sebastian.krantz@graduateinstitute.ch</a></p>
 <p>Other contributors from packages <em>collapse</em> utilizes:</p><ul>
-<li><p>Matt Dowle, Arun Srinivasan and contributors worldwide (data.table)</p></li>
-<li><p>Simen Gaure (lfe)</p></li>
-<li><p>Dirk Eddelbuettel and contributors worldwide (Rcpp)</p></li>
-<li><p>R Core Team and contributors worldwide (stats)</p></li>
+<li><p>Matt Dowle, Arun Srinivasan and contributors worldwide (<em>data.table</em>)</p></li>
+<li><p>Dirk Eddelbuettel and contributors worldwide (<em>Rcpp</em>, <em>RcppArmadillo</em>, <em>RcppEigen</em>)</p></li>
+<li><p>Laurent Berge (<em>fixest</em>)</p></li>
+<li><p>Josh Pasek (<em>weights</em>)</p></li>
+<li><p>R Core Team and contributors worldwide (<em>stats</em>)</p></li>
 </ul><p>I thank Ralf Stubner, Joseph Wood and Dirk Eddelbuettel for helpful answers on Stackoverflow, Joris Meys for encouraging me and helping to set up the <a href='https://github.com/SebKrantz/collapse'>Github repository</a> for <em>collapse</em>, Matthieu Stigler, Patrice Kiener, Zhiyi Xu and Kevin Tappe for feature requests and helpful suggestions.</p>
     <h2 class="hasAnchor" id="developing-feature-requests-bug-reporting"><a class="anchor" href="#developing-feature-requests-bug-reporting"></a>Developing / Feature Requests / Bug Reporting</h2>
 
@@ -200,22 +207,22 @@ Core S3 methods and efficient grouping and ordering functionality can be accesse
 
 <span class='co'># Simple statistics</span>
 <span class='fu'><a href='fmean.html'>fmean</a></span><span class='op'>(</span><span class='va'>v</span><span class='op'>)</span>               <span class='co'># vector</span>
-</div><div class='output co'>#&gt; [1] 5.843333</div><div class='input'><span class='fu'><a href='fmean.html'>fmean</a></span><span class='op'>(</span><span class='fu'><a href='quick-conversion.html'>qM</a></span><span class='op'>(</span><span class='va'>d</span><span class='op'>)</span><span class='op'>)</span>           <span class='co'># matrix (qM is a faster as.matrix)</span>
+</div><div class='output co'>#&gt; [1] 5.843333</div><div class='input'><span class='fu'><a href='fmean.html'>fmean</a></span><span class='op'>(</span><span class='fu'><a href='A4-quick-conversion.html'>qM</a></span><span class='op'>(</span><span class='va'>d</span><span class='op'>)</span><span class='op'>)</span>           <span class='co'># matrix (qM is a faster as.matrix)</span>
 </div><div class='output co'>#&gt; Sepal.Length  Sepal.Width Petal.Length  Petal.Width 
 #&gt;     5.843333     3.057333     3.758000     1.199333 </div><div class='input'><span class='fu'><a href='fmean.html'>fmean</a></span><span class='op'>(</span><span class='va'>d</span><span class='op'>)</span>               <span class='co'># data.frame</span>
 </div><div class='output co'>#&gt; Sepal.Length  Sepal.Width Petal.Length  Petal.Width 
 #&gt;     5.843333     3.057333     3.758000     1.199333 </div><div class='input'>
 <span class='co'># Preserving data structure</span>
-<span class='fu'><a href='fmean.html'>fmean</a></span><span class='op'>(</span><span class='fu'><a href='quick-conversion.html'>qM</a></span><span class='op'>(</span><span class='va'>d</span><span class='op'>)</span>, drop <span class='op'>=</span> <span class='cn'>FALSE</span><span class='op'>)</span>     <span class='co'># Still a matrix</span>
+<span class='fu'><a href='fmean.html'>fmean</a></span><span class='op'>(</span><span class='fu'><a href='A4-quick-conversion.html'>qM</a></span><span class='op'>(</span><span class='va'>d</span><span class='op'>)</span>, drop <span class='op'>=</span> <span class='cn'>FALSE</span><span class='op'>)</span>     <span class='co'># Still a matrix</span>
 </div><div class='output co'>#&gt;      Sepal.Length Sepal.Width Petal.Length Petal.Width
 #&gt; [1,]     5.843333    3.057333        3.758    1.199333</div><div class='input'><span class='fu'><a href='fmean.html'>fmean</a></span><span class='op'>(</span><span class='va'>d</span>, drop <span class='op'>=</span> <span class='cn'>FALSE</span><span class='op'>)</span>         <span class='co'># Still a data.frame</span>
 </div><div class='output co'>#&gt;   Sepal.Length Sepal.Width Petal.Length Petal.Width
 #&gt; 1     5.843333    3.057333        3.758    1.199333</div><div class='input'>
 <span class='co'># Weighted statistics, supported by most functions...</span>
-<span class='va'>w</span> <span class='op'>&lt;-</span> <span class='fu'><a href='https://rdrr.io/r/base/MathFun.html'>abs</a></span><span class='op'>(</span><span class='fu'><a href='https://rdrr.io/r/stats/Normal.html'>rnorm</a></span><span class='op'>(</span><span class='fu'><a href='small-helpers.html'>fnrow</a></span><span class='op'>(</span><span class='va'>iris</span><span class='op'>)</span><span class='op'>)</span><span class='op'>)</span>
+<span class='va'>w</span> <span class='op'>&lt;-</span> <span class='fu'><a href='https://rdrr.io/r/base/MathFun.html'>abs</a></span><span class='op'>(</span><span class='fu'><a href='https://rdrr.io/r/stats/Normal.html'>rnorm</a></span><span class='op'>(</span><span class='fu'><a href='AA2-small-helpers.html'>fnrow</a></span><span class='op'>(</span><span class='va'>iris</span><span class='op'>)</span><span class='op'>)</span><span class='op'>)</span>
 <span class='fu'><a href='fmean.html'>fmean</a></span><span class='op'>(</span><span class='va'>d</span>, w <span class='op'>=</span> <span class='va'>w</span><span class='op'>)</span>
 </div><div class='output co'>#&gt; Sepal.Length  Sepal.Width Petal.Length  Petal.Width 
-#&gt;     5.820133     3.070317     3.737224     1.200975 </div><div class='input'>
+#&gt;     5.776605     3.059187     3.648546     1.174385 </div><div class='input'>
 <span class='co'># Grouped statistics...</span>
 <span class='fu'><a href='fmean.html'>fmean</a></span><span class='op'>(</span><span class='va'>d</span>, <span class='va'>f</span><span class='op'>)</span>
 </div><div class='output co'>#&gt;            Sepal.Length Sepal.Width Petal.Length Petal.Width
@@ -225,9 +232,9 @@ Core S3 methods and efficient grouping and ordering functionality can be accesse
 <span class='co'># Groupwise-weighted statistics...</span>
 <span class='fu'><a href='fmean.html'>fmean</a></span><span class='op'>(</span><span class='va'>d</span>, <span class='va'>f</span>, <span class='va'>w</span><span class='op'>)</span>
 </div><div class='output co'>#&gt;            Sepal.Length Sepal.Width Petal.Length Petal.Width
-#&gt; setosa         4.987909    3.427702     1.444973   0.2415078
-#&gt; versicolor     5.891207    2.785107     4.202130   1.3139783
-#&gt; virginica      6.577970    2.999060     5.555977   2.0436818</div><div class='input'>
+#&gt; setosa         4.953186    3.394165     1.411027   0.2384878
+#&gt; versicolor     5.952750    2.753233     4.268907   1.3287435
+#&gt; virginica      6.483938    2.979511     5.444769   2.0190572</div><div class='input'>
 <span class='co'># Simple Transformations...</span>
 <span class='fu'><a href='https://rdrr.io/r/utils/head.html'>head</a></span><span class='op'>(</span><span class='fu'><a href='fmode.html'>fmode</a></span><span class='op'>(</span><span class='va'>d</span>, TRA <span class='op'>=</span> <span class='st'>"replace"</span><span class='op'>)</span><span class='op'>)</span>    <span class='co'># Replacing values with the mode</span>
 </div><div class='output co'>#&gt;   Sepal.Length Sepal.Width Petal.Length Petal.Width
@@ -261,12 +268,12 @@ Core S3 methods and efficient grouping and ordering functionality can be accesse
 <span class='co'># Weighted Transformations...</span>
 <span class='fu'><a href='https://rdrr.io/r/utils/head.html'>head</a></span><span class='op'>(</span><span class='fu'><a href='fnth.html'>fnth</a></span><span class='op'>(</span><span class='va'>d</span>, <span class='fl'>0.75</span>, w <span class='op'>=</span> <span class='va'>w</span>, TRA <span class='op'>=</span> <span class='st'>"replace"</span><span class='op'>)</span><span class='op'>)</span>  <span class='co'># Replacing by the weighted 3rd quartile</span>
 </div><div class='output co'>#&gt;   Sepal.Length Sepal.Width Petal.Length Petal.Width
-#&gt; 1          6.4         3.4          5.1         1.8
-#&gt; 2          6.4         3.4          5.1         1.8
-#&gt; 3          6.4         3.4          5.1         1.8
-#&gt; 4          6.4         3.4          5.1         1.8
-#&gt; 5          6.4         3.4          5.1         1.8
-#&gt; 6          6.4         3.4          5.1         1.8</div><div class='input'>
+#&gt; 1          6.4         3.3          5.1         1.8
+#&gt; 2          6.4         3.3          5.1         1.8
+#&gt; 3          6.4         3.3          5.1         1.8
+#&gt; 4          6.4         3.3          5.1         1.8
+#&gt; 5          6.4         3.3          5.1         1.8
+#&gt; 6          6.4         3.3          5.1         1.8</div><div class='input'>
 <span class='co'># Grouped Transformations...</span>
 <span class='fu'><a href='https://rdrr.io/r/utils/head.html'>head</a></span><span class='op'>(</span><span class='fu'><a href='fvar, fsd.html'>fvar</a></span><span class='op'>(</span><span class='va'>d</span>, <span class='va'>f</span>, TRA <span class='op'>=</span> <span class='st'>"replace"</span><span class='op'>)</span><span class='op'>)</span>  <span class='co'># Replacing values with the group variance</span>
 </div><div class='output co'>#&gt;   Sepal.Length Sepal.Width Petal.Length Petal.Width
@@ -314,17 +321,17 @@ Core S3 methods and efficient grouping and ordering functionality can be accesse
 <span class='co'># Grouped and weighted transformations...</span>
 <span class='fu'><a href='https://rdrr.io/r/utils/head.html'>head</a></span><span class='op'>(</span><span class='fu'><a href='fvar, fsd.html'>fsd</a></span><span class='op'>(</span><span class='va'>d</span>, <span class='va'>f</span>, <span class='va'>w</span>, <span class='st'>"/"</span><span class='op'>)</span>, <span class='fl'>3</span><span class='op'>)</span>         <span class='co'># weighted scaling</span>
 </div><div class='output co'>#&gt;   Sepal.Length Sepal.Width Petal.Length Petal.Width
-#&gt; 1     13.60974    8.569937     7.242618    2.042857
-#&gt; 2     13.07602    7.345660     7.242618    2.042857
-#&gt; 3     12.54231    7.835371     6.725289    2.042857</div><div class='input'><span class='fu'><a href='https://rdrr.io/r/utils/head.html'>head</a></span><span class='op'>(</span><span class='fu'><a href='fmedian.html'>fmedian</a></span><span class='op'>(</span><span class='va'>d</span>, <span class='va'>f</span>, <span class='va'>w</span>, <span class='st'>"-"</span><span class='op'>)</span>, <span class='fl'>3</span><span class='op'>)</span>     <span class='co'># subtracting the weighted group-median</span>
+#&gt; 1     13.43241    9.195503     7.099440     2.15052
+#&gt; 2     12.90565    7.881860     7.099440     2.15052
+#&gt; 3     12.37889    8.407317     6.592337     2.15052</div><div class='input'><span class='fu'><a href='https://rdrr.io/r/utils/head.html'>head</a></span><span class='op'>(</span><span class='fu'><a href='fmedian.html'>fmedian</a></span><span class='op'>(</span><span class='va'>d</span>, <span class='va'>f</span>, <span class='va'>w</span>, <span class='st'>"-"</span><span class='op'>)</span>, <span class='fl'>3</span><span class='op'>)</span>     <span class='co'># subtracting the weighted group-median</span>
 </div><div class='output co'>#&gt;   Sepal.Length Sepal.Width Petal.Length Petal.Width
 #&gt; 1          0.1         0.1          0.0           0
 #&gt; 2         -0.1        -0.4          0.0           0
 #&gt; 3         -0.3        -0.2         -0.1           0</div><div class='input'><span class='fu'><a href='https://rdrr.io/r/utils/head.html'>head</a></span><span class='op'>(</span><span class='fu'><a href='fmode.html'>fmode</a></span><span class='op'>(</span><span class='va'>d</span>, <span class='va'>f</span>, <span class='va'>w</span>, <span class='st'>"replace"</span><span class='op'>)</span>, <span class='fl'>3</span><span class='op'>)</span> <span class='co'># replace with weighted statistical mode</span>
 </div><div class='output co'>#&gt;   Sepal.Length Sepal.Width Petal.Length Petal.Width
-#&gt; 1          4.8         3.4          1.4         0.2
-#&gt; 2          4.8         3.4          1.4         0.2
-#&gt; 3          4.8         3.4          1.4         0.2</div><div class='input'>
+#&gt; 1            5         3.4          1.4         0.2
+#&gt; 2            5         3.4          1.4         0.2
+#&gt; 3            5         3.4          1.4         0.2</div><div class='input'>
 <span class='co'>## Some more advanced transformations...</span>
 <span class='fu'><a href='https://rdrr.io/r/utils/head.html'>head</a></span><span class='op'>(</span><span class='fu'><a href='fbetween, fwithin.html'>fbetween</a></span><span class='op'>(</span><span class='va'>d</span><span class='op'>)</span><span class='op'>)</span>                             <span class='co'># Averaging (faster t.: fmean(d, TRA = "replace"))</span>
 </div><div class='output co'>#&gt;   Sepal.Length Sepal.Width Petal.Length Petal.Width
@@ -342,33 +349,33 @@ Core S3 methods and efficient grouping and ordering functionality can be accesse
 #&gt; 5   -0.8433333  0.54266667       -2.358  -0.9993333
 #&gt; 6   -0.4433333  0.84266667       -2.058  -0.7993333</div><div class='input'><span class='fu'><a href='https://rdrr.io/r/utils/head.html'>head</a></span><span class='op'>(</span><span class='fu'><a href='fbetween, fwithin.html'>fwithin</a></span><span class='op'>(</span><span class='va'>d</span>, <span class='va'>f</span>, <span class='va'>w</span><span class='op'>)</span><span class='op'>)</span>                        <span class='co'># Grouped and weighted (same as fmean(d, f, w, "-"))</span>
 </div><div class='output co'>#&gt;   Sepal.Length Sepal.Width Petal.Length Petal.Width
-#&gt; 1   0.11209135  0.07229848  -0.04497335 -0.04150782
-#&gt; 2  -0.08790865 -0.42770152  -0.04497335 -0.04150782
-#&gt; 3  -0.28790865 -0.22770152  -0.14497335 -0.04150782
-#&gt; 4  -0.38790865 -0.32770152   0.05502665 -0.04150782
-#&gt; 5   0.01209135  0.17229848  -0.04497335 -0.04150782
-#&gt; 6   0.41209135  0.47229848   0.25502665  0.15849218</div><div class='input'><span class='fu'><a href='https://rdrr.io/r/utils/head.html'>head</a></span><span class='op'>(</span><span class='fu'><a href='fbetween, fwithin.html'>fwithin</a></span><span class='op'>(</span><span class='va'>d</span>, <span class='va'>f</span>, <span class='va'>w</span>, mean <span class='op'>=</span> <span class='fl'>5</span><span class='op'>)</span><span class='op'>)</span>              <span class='co'># Setting a custom mean</span>
+#&gt; 1   0.14681396   0.1058355   -0.0110271 -0.03848783
+#&gt; 2  -0.05318604  -0.3941645   -0.0110271 -0.03848783
+#&gt; 3  -0.25318604  -0.1941645   -0.1110271 -0.03848783
+#&gt; 4  -0.35318604  -0.2941645    0.0889729 -0.03848783
+#&gt; 5   0.04681396   0.2058355   -0.0110271 -0.03848783
+#&gt; 6   0.44681396   0.5058355    0.2889729  0.16151217</div><div class='input'><span class='fu'><a href='https://rdrr.io/r/utils/head.html'>head</a></span><span class='op'>(</span><span class='fu'><a href='fbetween, fwithin.html'>fwithin</a></span><span class='op'>(</span><span class='va'>d</span>, <span class='va'>f</span>, <span class='va'>w</span>, mean <span class='op'>=</span> <span class='fl'>5</span><span class='op'>)</span><span class='op'>)</span>              <span class='co'># Setting a custom mean</span>
 </div><div class='output co'>#&gt;   Sepal.Length Sepal.Width Petal.Length Petal.Width
-#&gt; 1     5.112091    5.072298     4.955027    4.958492
-#&gt; 2     4.912091    4.572298     4.955027    4.958492
-#&gt; 3     4.712091    4.772298     4.855027    4.958492
-#&gt; 4     4.612091    4.672298     5.055027    4.958492
-#&gt; 5     5.012091    5.172298     4.955027    4.958492
-#&gt; 6     5.412091    5.472298     5.255027    5.158492</div><div class='input'><span class='fu'><a href='https://rdrr.io/r/utils/head.html'>head</a></span><span class='op'>(</span><span class='fu'><a href='fbetween, fwithin.html'>fwithin</a></span><span class='op'>(</span><span class='va'>d</span>, <span class='va'>f</span>, <span class='va'>w</span>, theta <span class='op'>=</span> <span class='fl'>0.76</span><span class='op'>)</span><span class='op'>)</span>          <span class='co'># Quasi-centering i.e. d - theta*fbetween(d, f, w)</span>
+#&gt; 1     5.146814    5.105835     4.988973    4.961512
+#&gt; 2     4.946814    4.605835     4.988973    4.961512
+#&gt; 3     4.746814    4.805835     4.888973    4.961512
+#&gt; 4     4.646814    4.705835     5.088973    4.961512
+#&gt; 5     5.046814    5.205835     4.988973    4.961512
+#&gt; 6     5.446814    5.505835     5.288973    5.161512</div><div class='input'><span class='fu'><a href='https://rdrr.io/r/utils/head.html'>head</a></span><span class='op'>(</span><span class='fu'><a href='fbetween, fwithin.html'>fwithin</a></span><span class='op'>(</span><span class='va'>d</span>, <span class='va'>f</span>, <span class='va'>w</span>, theta <span class='op'>=</span> <span class='fl'>0.76</span><span class='op'>)</span><span class='op'>)</span>          <span class='co'># Quasi-centering i.e. d - theta*fbetween(d, f, w)</span>
 </div><div class='output co'>#&gt;   Sepal.Length Sepal.Width Petal.Length Petal.Width
-#&gt; 1    1.3091894   0.8949468    0.3018203  0.01645406
-#&gt; 2    1.1091894   0.3949468    0.3018203  0.01645406
-#&gt; 3    0.9091894   0.5949468    0.2018203  0.01645406
-#&gt; 4    0.8091894   0.4949468    0.4018203  0.01645406
-#&gt; 5    1.2091894   0.9949468    0.3018203  0.01645406
-#&gt; 6    1.6091894   1.2949468    0.6018203  0.21645406</div><div class='input'><span class='fu'><a href='https://rdrr.io/r/utils/head.html'>head</a></span><span class='op'>(</span><span class='fu'><a href='fbetween, fwithin.html'>fwithin</a></span><span class='op'>(</span><span class='va'>d</span>, <span class='va'>f</span>, <span class='va'>w</span>, mean <span class='op'>=</span> <span class='st'>"overall.mean"</span><span class='op'>)</span><span class='op'>)</span> <span class='co'># Preserving the overall mean of the data</span>
+#&gt; 1    1.3355786    0.920435    0.3276194  0.01874925
+#&gt; 2    1.1355786    0.420435    0.3276194  0.01874925
+#&gt; 3    0.9355786    0.620435    0.2276194  0.01874925
+#&gt; 4    0.8355786    0.520435    0.4276194  0.01874925
+#&gt; 5    1.2355786    1.020435    0.3276194  0.01874925
+#&gt; 6    1.6355786    1.320435    0.6276194  0.21874925</div><div class='input'><span class='fu'><a href='https://rdrr.io/r/utils/head.html'>head</a></span><span class='op'>(</span><span class='fu'><a href='fbetween, fwithin.html'>fwithin</a></span><span class='op'>(</span><span class='va'>d</span>, <span class='va'>f</span>, <span class='va'>w</span>, mean <span class='op'>=</span> <span class='st'>"overall.mean"</span><span class='op'>)</span><span class='op'>)</span> <span class='co'># Preserving the overall mean of the data</span>
 </div><div class='output co'>#&gt;   Sepal.Length Sepal.Width Petal.Length Petal.Width
-#&gt; 1     5.932224    3.142615      3.69225    1.159467
-#&gt; 2     5.732224    2.642615      3.69225    1.159467
-#&gt; 3     5.532224    2.842615      3.59225    1.159467
-#&gt; 4     5.432224    2.742615      3.79225    1.159467
-#&gt; 5     5.832224    3.242615      3.69225    1.159467
-#&gt; 6     6.232224    3.542615      3.99225    1.359467</div><div class='input'><span class='fu'><a href='https://rdrr.io/r/utils/head.html'>head</a></span><span class='op'>(</span><span class='fu'><a href='fscale.html'>fscale</a></span><span class='op'>(</span><span class='va'>d</span><span class='op'>)</span><span class='op'>)</span>                               <span class='co'># Scaling and centering</span>
+#&gt; 1     5.923419    3.165023     3.637519    1.135897
+#&gt; 2     5.723419    2.665023     3.637519    1.135897
+#&gt; 3     5.523419    2.865023     3.537519    1.135897
+#&gt; 4     5.423419    2.765023     3.737519    1.135897
+#&gt; 5     5.823419    3.265023     3.637519    1.135897
+#&gt; 6     6.223419    3.565023     3.937519    1.335897</div><div class='input'><span class='fu'><a href='https://rdrr.io/r/utils/head.html'>head</a></span><span class='op'>(</span><span class='fu'><a href='fscale.html'>fscale</a></span><span class='op'>(</span><span class='va'>d</span><span class='op'>)</span><span class='op'>)</span>                               <span class='co'># Scaling and centering</span>
 </div><div class='output co'>#&gt;   Sepal.Length Sepal.Width Petal.Length Petal.Width
 #&gt; 1   -0.8976739  1.01560199    -1.335752   -1.311052
 #&gt; 2   -1.1392005 -0.13153881    -1.335752   -1.311052
@@ -391,35 +398,35 @@ Core S3 methods and efficient grouping and ordering functionality can be accesse
 #&gt; 5     2.788022    6.792424  -0.24925490   -2.733823
 #&gt; 6     4.237181    8.857277   0.26057397   -1.946667</div><div class='input'><span class='fu'><a href='https://rdrr.io/r/utils/head.html'>head</a></span><span class='op'>(</span><span class='fu'><a href='fscale.html'>fscale</a></span><span class='op'>(</span><span class='va'>d</span>, <span class='va'>f</span>, <span class='va'>w</span><span class='op'>)</span><span class='op'>)</span>                         <span class='co'># Grouped and weighted scaling and centering</span>
 </div><div class='output co'>#&gt;   Sepal.Length Sepal.Width Petal.Length Petal.Width
-#&gt; 1    0.2991243   0.1770267   -0.2326606  -0.4239726
-#&gt; 2   -0.2345909  -1.0472500   -0.2326606  -0.4239726
-#&gt; 3   -0.7683061  -0.5575393   -0.7499905  -0.4239726
-#&gt; 4   -1.0351637  -0.8023947    0.2846693  -0.4239726
-#&gt; 5    0.0322667   0.4218821   -0.2326606  -0.4239726
-#&gt; 6    1.0996971   1.1564481    1.3193291   1.6188841</div><div class='input'><span class='fu'><a href='https://rdrr.io/r/utils/head.html'>head</a></span><span class='op'>(</span><span class='fu'><a href='fscale.html'>fscale</a></span><span class='op'>(</span><span class='va'>d</span>, <span class='va'>f</span>, <span class='va'>w</span>, mean <span class='op'>=</span> <span class='fl'>5</span>, sd <span class='op'>=</span> <span class='fl'>3</span><span class='op'>)</span><span class='op'>)</span>       <span class='co'># Custom grouped and weighted scaling and centering</span>
+#&gt; 1    0.3866795   0.2780602  -0.05591874  -0.4138441
+#&gt; 2   -0.1400817  -1.0355831  -0.05591874  -0.4138441
+#&gt; 3   -0.6668429  -0.5101258  -0.56302158  -0.4138441
+#&gt; 4   -0.9302235  -0.7728545   0.45118410  -0.4138441
+#&gt; 5    0.1232989   0.5407889  -0.05591874  -0.4138441
+#&gt; 6    1.1768213   1.3289749   1.46538978   1.7366754</div><div class='input'><span class='fu'><a href='https://rdrr.io/r/utils/head.html'>head</a></span><span class='op'>(</span><span class='fu'><a href='fscale.html'>fscale</a></span><span class='op'>(</span><span class='va'>d</span>, <span class='va'>f</span>, <span class='va'>w</span>, mean <span class='op'>=</span> <span class='fl'>5</span>, sd <span class='op'>=</span> <span class='fl'>3</span><span class='op'>)</span><span class='op'>)</span>       <span class='co'># Custom grouped and weighted scaling and centering</span>
 </div><div class='output co'>#&gt;   Sepal.Length Sepal.Width Petal.Length Petal.Width
-#&gt; 1     5.897373    5.531080     4.302018    3.728082
-#&gt; 2     4.296227    1.858250     4.302018    3.728082
-#&gt; 3     2.695082    3.327382     2.750029    3.728082
-#&gt; 4     1.894509    2.592816     5.854008    3.728082
-#&gt; 5     5.096800    6.265646     4.302018    3.728082
-#&gt; 6     8.299091    8.469344     8.957987    9.856652</div><div class='input'><span class='fu'><a href='https://rdrr.io/r/utils/head.html'>head</a></span><span class='op'>(</span><span class='fu'><a href='fscale.html'>fscale</a></span><span class='op'>(</span><span class='va'>d</span>, <span class='va'>f</span>, <span class='va'>w</span>, mean <span class='op'>=</span> <span class='cn'>FALSE</span>,            <span class='co'># Preserving group means</span>
+#&gt; 1     6.160038    5.834181     4.832244    3.758468
+#&gt; 2     4.579755    1.893251     4.832244    3.758468
+#&gt; 3     2.999471    3.469623     3.310935    3.758468
+#&gt; 4     2.209329    2.681437     6.353552    3.758468
+#&gt; 5     5.369897    6.622367     4.832244    3.758468
+#&gt; 6     8.530464    8.986925     9.396169   10.210026</div><div class='input'><span class='fu'><a href='https://rdrr.io/r/utils/head.html'>head</a></span><span class='op'>(</span><span class='fu'><a href='fscale.html'>fscale</a></span><span class='op'>(</span><span class='va'>d</span>, <span class='va'>f</span>, <span class='va'>w</span>, mean <span class='op'>=</span> <span class='cn'>FALSE</span>,            <span class='co'># Preserving group means</span>
             sd <span class='op'>=</span> <span class='st'>"within.sd"</span><span class='op'>)</span><span class='op'>)</span>                <span class='co'># and setting group-sd to fsd(fwithin(d, f, w), w = w)</span>
 </div><div class='output co'>#&gt;   Sepal.Length Sepal.Width Petal.Length Petal.Width
-#&gt; 1     5.146169    3.492976     1.340054   0.1512274
-#&gt; 2     4.863791    3.041553     1.340054   0.1512274
-#&gt; 3     4.581414    3.222122     1.106762   0.1512274
-#&gt; 4     4.440225    3.131837     1.573346   0.1512274
-#&gt; 5     5.004980    3.583261     1.340054   0.1512274
-#&gt; 6     5.569735    3.854115     2.039930   0.5862317</div><div class='input'><span class='fu'><a href='https://rdrr.io/r/utils/head.html'>head</a></span><span class='op'>(</span><span class='fu'><a href='fscale.html'>fscale</a></span><span class='op'>(</span><span class='va'>d</span>, <span class='va'>f</span>, <span class='va'>w</span>, mean <span class='op'>=</span> <span class='st'>"overall.mean"</span>,   <span class='co'># Full harmonization of group means and variances,</span>
+#&gt; 1     5.150131    3.490028     1.387948   0.1476540
+#&gt; 2     4.881839    3.037139     1.387948   0.1476540
+#&gt; 3     4.613547    3.218294     1.178651   0.1476540
+#&gt; 4     4.479402    3.127717     1.597244   0.1476540
+#&gt; 5     5.015985    3.580606     1.387948   0.1476540
+#&gt; 6     5.552568    3.852339     2.015838   0.6196673</div><div class='input'><span class='fu'><a href='https://rdrr.io/r/utils/head.html'>head</a></span><span class='op'>(</span><span class='fu'><a href='fscale.html'>fscale</a></span><span class='op'>(</span><span class='va'>d</span>, <span class='va'>f</span>, <span class='va'>w</span>, mean <span class='op'>=</span> <span class='st'>"overall.mean"</span>,   <span class='co'># Full harmonization of group means and variances,</span>
             sd <span class='op'>=</span> <span class='st'>"within.sd"</span><span class='op'>)</span><span class='op'>)</span>                <span class='co'># while preserving the level and scale of the data.</span>
 </div><div class='output co'>#&gt;   Sepal.Length Sepal.Width Petal.Length Petal.Width
-#&gt; 1     5.978393    3.135591     3.632305    1.110695
-#&gt; 2     5.696015    2.684168     3.632305    1.110695
-#&gt; 3     5.413638    2.864737     3.399013    1.110695
-#&gt; 4     5.272449    2.774452     3.865596    1.110695
-#&gt; 5     5.837204    3.225876     3.632305    1.110695
-#&gt; 6     6.401959    3.496730     4.332180    1.545699</div><div class='input'>
+#&gt; 1     5.973549    3.155051     3.625467    1.083551
+#&gt; 2     5.705258    2.702161     3.625467    1.083551
+#&gt; 3     5.436966    2.883317     3.416170    1.083551
+#&gt; 4     5.302820    2.792739     3.834764    1.083551
+#&gt; 5     5.839404    3.245628     3.625467    1.083551
+#&gt; 6     6.375987    3.517362     4.253357    1.555564</div><div class='input'>
 <span class='fu'><a href='https://rdrr.io/r/utils/head.html'>head</a></span><span class='op'>(</span><span class='fu'><a href='fselect, get_vars, add_vars.html'>get_vars</a></span><span class='op'>(</span><span class='va'>iris</span>, <span class='fl'>1</span><span class='op'>:</span><span class='fl'>2</span><span class='op'>)</span><span class='op'>)</span>                      <span class='co'># Use get_vars for fast selecting, gv is shortcut</span>
 </div><div class='output co'>#&gt;   Sepal.Length Sepal.Width
 #&gt; 1          5.1         3.5
@@ -511,8 +518,7 @@ Core S3 methods and efficient grouping and ordering functionality can be accesse
 #&gt; [3,] -0.4422175 -0.5880448 -1.8740638 -0.4889587
 #&gt; [4,]  0.9003794  0.3271184 -0.5779182  0.9027020
 #&gt; [5,] -0.1778217  0.1483372  0.8743353  0.5771847
-#&gt; [6,] -0.4676712 -0.8933417 -0.5120160 -0.7230164</div><div class='input'><span class='co'># \donttest{</span>
-<span class='co'># Note that it is not necessary to use factors for grouping.</span>
+#&gt; [6,] -0.4676712 -0.8933417 -0.5120160 -0.7230164</div><div class='input'><span class='co'># Note that it is not necessary to use factors for grouping.</span>
 <span class='fu'><a href='fmean.html'>fmean</a></span><span class='op'>(</span><span class='fu'><a href='fselect, get_vars, add_vars.html'>gv</a></span><span class='op'>(</span><span class='va'>mtcars</span>, <span class='op'>-</span><span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span><span class='op'>(</span><span class='fl'>2</span>,<span class='fl'>8</span><span class='op'>:</span><span class='fl'>9</span><span class='op'>)</span><span class='op'>)</span>, <span class='va'>mtcars</span><span class='op'>$</span><span class='va'>cyl</span><span class='op'>)</span> <span class='co'># Can also use vector (internally converted using qF())</span>
 </div><div class='output co'>#&gt;        mpg     disp        hp     drat       wt     qsec     gear     carb
 #&gt; 4 26.66364 105.1364  82.63636 4.070909 2.285727 19.13727 4.090909 1.545455
@@ -568,12 +574,13 @@ Core S3 methods and efficient grouping and ordering functionality can be accesse
 <span class='va'>f1</span> <span class='op'>&lt;-</span> <span class='fu'><a href='qF, qG, finteraction.html'>qF</a></span><span class='op'>(</span><span class='va'>mtcars</span><span class='op'>$</span><span class='va'>cyl</span><span class='op'>)</span>                     <span class='co'># Unlike GRP objects, factors are checked for NA's</span>
 <span class='va'>f2</span> <span class='op'>&lt;-</span> <span class='fu'><a href='qF, qG, finteraction.html'>qF</a></span><span class='op'>(</span><span class='va'>mtcars</span><span class='op'>$</span><span class='va'>cyl</span>, na.exclude <span class='op'>=</span> <span class='cn'>FALSE</span><span class='op'>)</span> <span class='co'># This can however be avoided through this option</span>
 <span class='fu'><a href='https://rdrr.io/r/base/class.html'>class</a></span><span class='op'>(</span><span class='va'>f2</span><span class='op'>)</span>                                <span class='co'># Note the added class</span>
-</div><div class='output co'>#&gt; [1] "factor"      "na.included"</div><div class='input'><span class='kw'><a href='https://rdrr.io/r/base/library.html'>library</a></span><span class='op'>(</span><span class='va'><a href='https://github.com/joshuaulrich/microbenchmark/'>microbenchmark</a></span><span class='op'>)</span>
+</div><div class='output co'>#&gt; [1] "factor"      "na.included"</div><div class='input'> 
+<span class='kw'><a href='https://rdrr.io/r/base/library.html'>library</a></span><span class='op'>(</span><span class='va'><a href='https://github.com/joshuaulrich/microbenchmark/'>microbenchmark</a></span><span class='op'>)</span>
 <span class='fu'><a href='https://rdrr.io/pkg/microbenchmark/man/microbenchmark.html'>microbenchmark</a></span><span class='op'>(</span><span class='fu'><a href='fmean.html'>fmean</a></span><span class='op'>(</span><span class='va'>mtcars</span>, <span class='va'>f1</span><span class='op'>)</span>, <span class='fu'><a href='fmean.html'>fmean</a></span><span class='op'>(</span><span class='va'>mtcars</span>, <span class='va'>f2</span><span class='op'>)</span><span class='op'>)</span> <span class='co'># A minor difference, larger on larger data</span>
 </div><div class='output co'>#&gt; Unit: microseconds
-#&gt;               expr    min     lq     mean median     uq     max neval cld
-#&gt;  fmean(mtcars, f1) 22.759 23.652 26.60999 24.098 26.106 112.009   100   a
-#&gt;  fmean(mtcars, f2) 21.866 22.759 26.78854 23.205 25.437 136.999   100   a</div><div class='input'>
+#&gt;               expr    min     lq     mean median     uq    max neval cld
+#&gt;  fmean(mtcars, f1) 16.065 16.511 17.80554 16.957 17.404 46.410   100   a
+#&gt;  fmean(mtcars, f2) 14.727 15.619 16.75246 15.619 16.065 82.556   100   a</div><div class='input'>
 <span class='fu'><a href='https://rdrr.io/r/base/with.html'>with</a></span><span class='op'>(</span><span class='va'>mtcars</span>, <span class='fu'><a href='qF, qG, finteraction.html'>finteraction</a></span><span class='op'>(</span><span class='va'>cyl</span>, <span class='va'>vs</span>, <span class='va'>am</span><span class='op'>)</span><span class='op'>)</span>  <span class='co'># Efficient interactions of vectors and/or factors</span>
 </div><div class='output co'>#&gt;  [1] 6.0.1 6.0.1 4.1.1 6.1.0 8.0.0 6.1.0 8.0.0 4.1.0 4.1.0 6.1.0 6.1.0 8.0.0
 #&gt; [13] 8.0.0 8.0.0 8.0.0 8.0.0 8.0.0 4.1.1 4.1.1 4.1.1 4.1.0 8.0.0 8.0.0 8.0.0
@@ -686,14 +693,16 @@ Core S3 methods and efficient grouping and ordering functionality can be accesse
 #&gt; Datsun 710        10.414433 1.984063 2.004044 5.421494 0.6191184
 #&gt; Hornet 4 Drive    10.878913 1.984063 0.000000 4.066120 0.6191184
 #&gt; Hornet Sportabout  9.524645 0.000000 0.000000 4.066120 1.2382368
-#&gt; Valiant           11.315413 1.984063 0.000000 4.066120 0.6191184</div><div class='input'><span class='fu'><a href='https://rdrr.io/pkg/microbenchmark/man/microbenchmark.html'>microbenchmark</a></span><span class='op'>(</span><span class='fu'><a href='TRA.html'>TRA</a></span><span class='op'>(</span><span class='va'>mtcars</span>, <span class='va'>sds</span>, <span class='st'>"/"</span><span class='op'>)</span>, <span class='fu'><a href='https://rdrr.io/r/base/sweep.html'>sweep</a></span><span class='op'>(</span><span class='va'>mtcars</span>, <span class='fl'>2</span>, <span class='va'>sds</span>, <span class='st'>"/"</span><span class='op'>)</span><span class='op'>)</span> <span class='co'># A remarkable performance gain..</span>
+#&gt; Valiant           11.315413 1.984063 0.000000 4.066120 0.6191184</div><div class='input'> 
+<span class='fu'><a href='https://rdrr.io/pkg/microbenchmark/man/microbenchmark.html'>microbenchmark</a></span><span class='op'>(</span><span class='fu'><a href='TRA.html'>TRA</a></span><span class='op'>(</span><span class='va'>mtcars</span>, <span class='va'>sds</span>, <span class='st'>"/"</span><span class='op'>)</span>, <span class='fu'><a href='https://rdrr.io/r/base/sweep.html'>sweep</a></span><span class='op'>(</span><span class='va'>mtcars</span>, <span class='fl'>2</span>, <span class='va'>sds</span>, <span class='st'>"/"</span><span class='op'>)</span><span class='op'>)</span> <span class='co'># A remarkable performance gain..</span>
 </div><div class='output co'>#&gt; Unit: microseconds
-#&gt;                        expr      min       lq       mean   median       uq
-#&gt;       TRA(mtcars, sds, "/")   14.281   17.404   27.90857   27.891   35.700
-#&gt;  sweep(mtcars, 2, sds, "/") 1153.998 1210.448 1326.99978 1295.236 1356.595
+#&gt;                        expr      min        lq       mean   median        uq
+#&gt;       TRA(mtcars, sds, "/")   12.048   14.5035   22.57597   23.652   28.7835
+#&gt;  sweep(mtcars, 2, sds, "/") 1108.035 1126.3310 1185.17317 1140.388 1253.2885
 #&gt;       max neval cld
-#&gt;    61.136   100  a 
-#&gt;  2449.457   100   b</div><div class='input'><span class='va'>sds</span> <span class='op'>&lt;-</span> <span class='fu'><a href='fvar, fsd.html'>fsd</a></span><span class='op'>(</span><span class='va'>mtcars</span>, <span class='va'>f2</span><span class='op'>)</span>
+#&gt;    45.517   100  a 
+#&gt;  1544.019   100   b</div><div class='input'>
+<span class='va'>sds</span> <span class='op'>&lt;-</span> <span class='fu'><a href='fvar, fsd.html'>fsd</a></span><span class='op'>(</span><span class='va'>mtcars</span>, <span class='va'>f2</span><span class='op'>)</span>
 <span class='fu'><a href='https://rdrr.io/r/utils/head.html'>head</a></span><span class='op'>(</span><span class='fu'><a href='TRA.html'>TRA</a></span><span class='op'>(</span><span class='va'>mtcars</span>, <span class='va'>sds</span>, <span class='st'>"/"</span>, <span class='va'>f2</span><span class='op'>)</span><span class='op'>)</span> <span class='co'># Groupd scaling (if sd's not needed: fsd(mtcars, f2, TRA = "/"))</span>
 </div><div class='output co'>#&gt;                         mpg cyl     disp       hp      drat       wt      qsec
 #&gt; Mazda RX4         14.447218 Inf 3.849628 4.534121  8.192327 7.352414  9.643407
@@ -711,15 +720,15 @@ Core S3 methods and efficient grouping and ordering functionality can be accesse
 #&gt; Valiant           1.870829 0.000000 4.347413 0.5516773</div><div class='input'>
 <span class='co'># All functions above perserve the structure of matrices / data frames</span>
 <span class='co'># If conversions are required, use these efficient functions:</span>
-<span class='va'>mtcarsM</span> <span class='op'>&lt;-</span> <span class='fu'><a href='quick-conversion.html'>qM</a></span><span class='op'>(</span><span class='va'>mtcars</span><span class='op'>)</span>                      <span class='co'># Matrix from data.frame</span>
-<span class='fu'><a href='https://rdrr.io/r/utils/head.html'>head</a></span><span class='op'>(</span><span class='fu'><a href='quick-conversion.html'>qDF</a></span><span class='op'>(</span><span class='va'>mtcarsM</span><span class='op'>)</span><span class='op'>)</span>                         <span class='co'># data.frame from matrix columns</span>
+<span class='va'>mtcarsM</span> <span class='op'>&lt;-</span> <span class='fu'><a href='A4-quick-conversion.html'>qM</a></span><span class='op'>(</span><span class='va'>mtcars</span><span class='op'>)</span>                      <span class='co'># Matrix from data.frame</span>
+<span class='fu'><a href='https://rdrr.io/r/utils/head.html'>head</a></span><span class='op'>(</span><span class='fu'><a href='A4-quick-conversion.html'>qDF</a></span><span class='op'>(</span><span class='va'>mtcarsM</span><span class='op'>)</span><span class='op'>)</span>                         <span class='co'># data.frame from matrix columns</span>
 </div><div class='output co'>#&gt;                    mpg cyl disp  hp drat    wt  qsec vs am gear carb
 #&gt; Mazda RX4         21.0   6  160 110 3.90 2.620 16.46  0  1    4    4
 #&gt; Mazda RX4 Wag     21.0   6  160 110 3.90 2.875 17.02  0  1    4    4
 #&gt; Datsun 710        22.8   4  108  93 3.85 2.320 18.61  1  1    4    1
 #&gt; Hornet 4 Drive    21.4   6  258 110 3.08 3.215 19.44  1  0    3    1
 #&gt; Hornet Sportabout 18.7   8  360 175 3.15 3.440 17.02  0  0    3    2
-#&gt; Valiant           18.1   6  225 105 2.76 3.460 20.22  1  0    3    1</div><div class='input'><span class='fu'><a href='https://rdrr.io/r/utils/head.html'>head</a></span><span class='op'>(</span><span class='fu'><a href='quick-conversion.html'>mrtl</a></span><span class='op'>(</span><span class='va'>mtcarsM</span>, <span class='cn'>TRUE</span>, <span class='st'>"data.frame"</span><span class='op'>)</span><span class='op'>)</span>    <span class='co'># data.frame from matrix rows, etc..</span>
+#&gt; Valiant           18.1   6  225 105 2.76 3.460 20.22  1  0    3    1</div><div class='input'><span class='fu'><a href='https://rdrr.io/r/utils/head.html'>head</a></span><span class='op'>(</span><span class='fu'><a href='A4-quick-conversion.html'>mrtl</a></span><span class='op'>(</span><span class='va'>mtcarsM</span>, <span class='cn'>TRUE</span>, <span class='st'>"data.frame"</span><span class='op'>)</span><span class='op'>)</span>    <span class='co'># data.frame from matrix rows, etc..</span>
 </div><div class='output co'>#&gt;      Mazda RX4 Mazda RX4 Wag Datsun 710 Hornet 4 Drive Hornet Sportabout
 #&gt; mpg      21.00        21.000      22.80         21.400             18.70
 #&gt; cyl       6.00         6.000       4.00          6.000              8.00
@@ -768,14 +777,14 @@ Core S3 methods and efficient grouping and ordering functionality can be accesse
 #&gt; disp     121.00
 #&gt; hp       109.00
 #&gt; drat       4.11
-#&gt; wt         2.78</div><div class='input'><span class='fu'><a href='https://rdrr.io/r/utils/head.html'>head</a></span><span class='op'>(</span><span class='fu'><a href='quick-conversion.html'>qDT</a></span><span class='op'>(</span><span class='va'>mtcarsM</span>, <span class='st'>"cars"</span><span class='op'>)</span><span class='op'>)</span>                 <span class='co'># Saving row.names when converting matrix to data.table</span>
+#&gt; wt         2.78</div><div class='input'><span class='fu'><a href='https://rdrr.io/r/utils/head.html'>head</a></span><span class='op'>(</span><span class='fu'><a href='A4-quick-conversion.html'>qDT</a></span><span class='op'>(</span><span class='va'>mtcarsM</span>, <span class='st'>"cars"</span><span class='op'>)</span><span class='op'>)</span>                 <span class='co'># Saving row.names when converting matrix to data.table</span>
 </div><div class='output co'>#&gt;                 cars  mpg cyl disp  hp drat    wt  qsec vs am gear carb
 #&gt; 1:         Mazda RX4 21.0   6  160 110 3.90 2.620 16.46  0  1    4    4
 #&gt; 2:     Mazda RX4 Wag 21.0   6  160 110 3.90 2.875 17.02  0  1    4    4
 #&gt; 3:        Datsun 710 22.8   4  108  93 3.85 2.320 18.61  1  1    4    1
 #&gt; 4:    Hornet 4 Drive 21.4   6  258 110 3.08 3.215 19.44  1  0    3    1
 #&gt; 5: Hornet Sportabout 18.7   8  360 175 3.15 3.440 17.02  0  0    3    2
-#&gt; 6:           Valiant 18.1   6  225 105 2.76 3.460 20.22  1  0    3    1</div><div class='input'><span class='fu'><a href='https://rdrr.io/r/utils/head.html'>head</a></span><span class='op'>(</span><span class='fu'><a href='quick-conversion.html'>qDT</a></span><span class='op'>(</span><span class='va'>mtcars</span>, <span class='st'>"cars"</span><span class='op'>)</span><span class='op'>)</span>                  <span class='co'># Same use a data.frame</span>
+#&gt; 6:           Valiant 18.1   6  225 105 2.76 3.460 20.22  1  0    3    1</div><div class='input'><span class='fu'><a href='https://rdrr.io/r/utils/head.html'>head</a></span><span class='op'>(</span><span class='fu'><a href='A4-quick-conversion.html'>qDT</a></span><span class='op'>(</span><span class='va'>mtcars</span>, <span class='st'>"cars"</span><span class='op'>)</span><span class='op'>)</span>                  <span class='co'># Same use a data.frame</span>
 </div><div class='output co'>#&gt;                 cars  mpg cyl disp  hp drat    wt  qsec vs am gear carb
 #&gt; 1:         Mazda RX4 21.0   6  160 110 3.90 2.620 16.46  0  1    4    4
 #&gt; 2:     Mazda RX4 Wag 21.0   6  160 110 3.90 2.875 17.02  0  1    4    4
@@ -783,9 +792,9 @@ Core S3 methods and efficient grouping and ordering functionality can be accesse
 #&gt; 4:    Hornet 4 Drive 21.4   6  258 110 3.08 3.215 19.44  1  0    3    1
 #&gt; 5: Hornet Sportabout 18.7   8  360 175 3.15 3.440 17.02  0  0    3    2
 #&gt; 6:           Valiant 18.1   6  225 105 2.76 3.460 20.22  1  0    3    1</div><div class='input'>
-
+ 
 <span class='co'>## Now let's get some real data and see how we can use this power for data manipulation</span>
-<span class='kw'><a href='https://rdrr.io/r/base/library.html'>library</a></span><span class='op'>(</span><span class='va'>magrittr</span><span class='op'>)</span>
+<span class='kw'><a href='https://rdrr.io/r/base/library.html'>library</a></span><span class='op'>(</span><span class='va'><a href='https://magrittr.tidyverse.org'>magrittr</a></span><span class='op'>)</span>
 <span class='fu'><a href='https://rdrr.io/r/utils/head.html'>head</a></span><span class='op'>(</span><span class='va'>wlddev</span><span class='op'>)</span> <span class='co'># World Bank World Development Data: 216 countries, 59 years, 4 series (columns 9-12)</span>
 </div><div class='output co'>#&gt;       country iso3c       date year decade     region     income  OECD PCGDP
 #&gt; 1 Afghanistan   AFG 1961-01-01 1960   1960 South Asia Low income FALSE    NA
@@ -802,7 +811,7 @@ Core S3 methods and efficient grouping and ordering functionality can be accesse
 #&gt; 5 34.060   NA 302480000
 #&gt; 6 34.495   NA 370250000</div><div class='input'>
 <span class='co'># Starting with some discriptive tools...</span>
-<span class='fu'><a href='small-helpers.html'>namlab</a></span><span class='op'>(</span><span class='va'>wlddev</span>, class <span class='op'>=</span> <span class='cn'>TRUE</span><span class='op'>)</span>           <span class='co'># Show variable names, labels and classes</span>
+<span class='fu'><a href='AA2-small-helpers.html'>namlab</a></span><span class='op'>(</span><span class='va'>wlddev</span>, class <span class='op'>=</span> <span class='cn'>TRUE</span><span class='op'>)</span>           <span class='co'># Show variable names, labels and classes</span>
 </div><div class='output co'>#&gt;    Variable     Class                                   Label
 #&gt; 1   country character                            Country Name
 #&gt; 2     iso3c    factor                            Country Code
@@ -924,8 +933,8 @@ Core S3 methods and efficient grouping and ordering functionality can be accesse
 #&gt; --------------------------------------------------------------------------------
 #&gt; date (Date): Date Recorded (Fictitious)
 #&gt; Stats: 
-#&gt;       N  Ndist
-#&gt;   12744     59
+#&gt;       N  Ndist    Min    Max
+#&gt;   12744     59  -3287  17897
 #&gt; --------------------------------------------------------------------------------
 #&gt; year (integer): Year
 #&gt; Stats: 
@@ -1417,6 +1426,7 @@ Core S3 methods and efficient grouping and ordering functionality can be accesse
 #&gt; 5 -2.601033   NA -0.15400811      NA   510.6269
 #&gt; 6 -2.563041   NA -0.07134856      NA   557.8165</div><div class='input'><span class='fu'><a href='ftransform.html'>settransformv</a></span><span class='op'>(</span><span class='va'>wlddev</span>, <span class='fl'>9</span><span class='op'>:</span><span class='fl'>12</span>, <span class='va'>fscale</span>, apply <span class='op'>=</span> <span class='cn'>FALSE</span><span class='op'>)</span>     <span class='co'># Changing the data by reference</span>
 <span class='fu'><a href='ftransform.html'>ftransform</a></span><span class='op'>(</span><span class='va'>wlddev</span><span class='op'>)</span> <span class='op'>&lt;-</span> <span class='fu'><a href='fscale.html'>fscale</a></span><span class='op'>(</span><span class='fu'><a href='fselect, get_vars, add_vars.html'>gv</a></span><span class='op'>(</span><span class='va'>wlddev</span>, <span class='fl'>9</span><span class='op'>:</span><span class='fl'>12</span><span class='op'>)</span><span class='op'>)</span>         <span class='co'># Same thing (using replacement method)</span>
+ 
 <span class='va'>wlddev</span> <span class='op'>%&lt;&gt;%</span> <span class='fu'><a href='ftransform.html'>ftransformv</a></span><span class='op'>(</span><span class='fl'>9</span><span class='op'>:</span><span class='fl'>12</span>, <span class='va'>fscale</span>, apply <span class='op'>=</span> <span class='cn'>FALSE</span><span class='op'>)</span> <span class='co'># Same thing, using magrittr</span>
 <span class='va'>wlddev</span> <span class='op'>%&gt;%</span> <span class='fu'><a href='ftransform.html'>ftransform</a></span><span class='op'>(</span><span class='fu'><a href='fselect, get_vars, add_vars.html'>gv</a></span><span class='op'>(</span><span class='va'>.</span>, <span class='fl'>9</span><span class='op'>:</span><span class='fl'>12</span><span class='op'>)</span> <span class='op'>%&gt;%</span>              <span class='co'># With compound pipes: Scaling and lagging</span>
                         <span class='va'>fscale</span> <span class='op'>%&gt;%</span> <span class='fu'><a href='flag.html'>flag</a></span><span class='op'>(</span><span class='fl'>0</span><span class='op'>:</span><span class='fl'>2</span>, <span class='va'>iso3c</span>, <span class='va'>year</span><span class='op'>)</span><span class='op'>)</span> <span class='op'>%&gt;%</span> <span class='va'>head</span>
@@ -1501,20 +1511,21 @@ Core S3 methods and efficient grouping and ordering functionality can be accesse
 #&gt; 3 -2.677455   NA -0.38282516      NA   322.9835
 #&gt; 4 -2.639113   NA -0.23454537      NA   457.3201
 #&gt; 5 -2.601033   NA -0.15400811      NA   510.6269
-#&gt; 6 -2.563041   NA -0.07134856      NA   557.8165</div><div class='input'>
+#&gt; 6 -2.563041   NA -0.07134856      NA   557.8165</div><div class='input'> 
 <span class='co'># Fast grouping</span>
-<span class='fu'><a href='GRP, fgroup_by.html'>fgroup_by</a></span><span class='op'>(</span><span class='va'>wlddev</span>, <span class='va'>Ctry</span>, <span class='va'>decade</span><span class='op'>)</span> <span class='op'>%&gt;%</span> <span class='va'>fgroup_vars</span> <span class='op'>%&gt;%</span> <span class='va'>head</span> <span class='co'># fgroup_by is a lot faster than dplyr::group_by</span>
+<span class='fu'><a href='GRP, fgroup_by.html'>fgroup_by</a></span><span class='op'>(</span><span class='va'>wlddev</span>, <span class='va'>Ctry</span>, <span class='va'>decade</span><span class='op'>)</span> <span class='op'>%&gt;%</span> <span class='va'>fgroup_vars</span> <span class='op'>%&gt;%</span> <span class='va'>head</span> <span class='co'># fgroup_by is faster than dplyr::group_by</span>
 </div><div class='output co'>#&gt;          Ctry decade
 #&gt; 1 Afghanistan   1960
 #&gt; 2 Afghanistan   1960
 #&gt; 3 Afghanistan   1960
 #&gt; 4 Afghanistan   1960
 #&gt; 5 Afghanistan   1960
-#&gt; 6 Afghanistan   1960</div><div class='input'><span class='fu'><a href='https://rdrr.io/r/base/rm.html'>rm</a></span><span class='op'>(</span><span class='va'>wlddev</span><span class='op'>)</span>                                       <span class='co'># .. but only works with collapse functions</span>
+#&gt; 6 Afghanistan   1960</div><div class='input'>
+<span class='fu'><a href='https://rdrr.io/r/base/rm.html'>rm</a></span><span class='op'>(</span><span class='va'>wlddev</span><span class='op'>)</span>                                       <span class='co'># .. but only works with collapse functions</span>
 
 <span class='co'>## Now lets start putting things together</span>
-<span class='va'>wlddev</span><span class='op'>[[</span><span class='st'>"weights"</span><span class='op'>]</span><span class='op'>]</span> <span class='op'>&lt;-</span> <span class='fu'><a href='https://rdrr.io/r/base/MathFun.html'>abs</a></span><span class='op'>(</span><span class='fu'><a href='https://rdrr.io/r/stats/Normal.html'>rnorm</a></span><span class='op'>(</span><span class='fu'><a href='small-helpers.html'>fnrow</a></span><span class='op'>(</span><span class='va'>wlddev</span><span class='op'>)</span><span class='op'>)</span><span class='op'>)</span> <span class='co'># Adding some weights</span>
-
+<span class='va'>wlddev</span><span class='op'>[[</span><span class='st'>"weights"</span><span class='op'>]</span><span class='op'>]</span> <span class='op'>&lt;-</span> <span class='fu'><a href='https://rdrr.io/r/base/MathFun.html'>abs</a></span><span class='op'>(</span><span class='fu'><a href='https://rdrr.io/r/stats/Normal.html'>rnorm</a></span><span class='op'>(</span><span class='fu'><a href='AA2-small-helpers.html'>fnrow</a></span><span class='op'>(</span><span class='va'>wlddev</span><span class='op'>)</span><span class='op'>)</span><span class='op'>)</span> <span class='co'># Adding some weights</span>
+ 
 <span class='va'>wlddev</span> <span class='op'>%&gt;%</span> <span class='fu'><a href='fsubset.html'>fsubset</a></span><span class='op'>(</span><span class='va'>year</span> <span class='op'>&gt;</span> <span class='fl'>1990</span>, <span class='va'>region</span>, <span class='va'>income</span>, <span class='va'>PCGDP</span><span class='op'>:</span><span class='va'>ODA</span><span class='op'>)</span> <span class='op'>%&gt;%</span>
   <span class='fu'><a href='GRP, fgroup_by.html'>fgroup_by</a></span><span class='op'>(</span><span class='va'>region</span>, <span class='va'>income</span><span class='op'>)</span> <span class='op'>%&gt;%</span> <span class='va'>fmean</span>            <span class='co'># Fast aggregation using the mean</span>
 </div><div class='output co'>#&gt;                        region              income      PCGDP   LIFEEX     GINI
@@ -1586,153 +1597,153 @@ Core S3 methods and efficient grouping and ordering functionality can be accesse
 <span class='va'>wlddev</span> <span class='op'>%&gt;%</span> <span class='fu'><a href='fsubset.html'>fsubset</a></span><span class='op'>(</span><span class='va'>year</span> <span class='op'>&gt;</span> <span class='fl'>1990</span>, <span class='va'>region</span>, <span class='va'>income</span>, <span class='va'>PCGDP</span><span class='op'>:</span><span class='va'>weights</span><span class='op'>)</span> <span class='op'>%&gt;%</span>
   <span class='fu'><a href='GRP, fgroup_by.html'>fgroup_by</a></span><span class='op'>(</span><span class='va'>region</span>, <span class='va'>income</span><span class='op'>)</span> <span class='op'>%&gt;%</span> <span class='fu'><a href='fmean.html'>fmean</a></span><span class='op'>(</span><span class='va'>weights</span><span class='op'>)</span>   <span class='co'># Weighted group means</span>
 </div><div class='output co'>#&gt;                        region              income sum.weights      PCGDP
-#&gt; 1         East Asia &amp; Pacific         High income   300.73443 32535.0873
-#&gt; 2         East Asia &amp; Pacific Lower middle income   279.01969  1771.8099
-#&gt; 3         East Asia &amp; Pacific Upper middle income   224.91291  4592.4804
-#&gt; 4       Europe &amp; Central Asia         High income   809.71312 40484.5542
-#&gt; 5       Europe &amp; Central Asia          Low income    24.53648   667.7065
-#&gt; 6       Europe &amp; Central Asia Lower middle income   139.84525  1804.6316
-#&gt; 7       Europe &amp; Central Asia Upper middle income   312.86863  5361.5993
-#&gt; 8  Latin America &amp; Caribbean          High income   419.33178 16330.5341
-#&gt; 9  Latin America &amp; Caribbean           Low income    18.48715   740.0116
-#&gt; 10 Latin America &amp; Caribbean  Lower middle income    83.29918  1985.3639
-#&gt; 11 Latin America &amp; Caribbean  Upper middle income   419.73036  5778.7699
-#&gt; 12 Middle East &amp; North Africa         High income   170.49354 31824.0638
-#&gt; 13 Middle East &amp; North Africa          Low income    44.91585  1083.3794
-#&gt; 14 Middle East &amp; North Africa Lower middle income   112.29470  2527.7801
-#&gt; 15 Middle East &amp; North Africa Upper middle income   144.11550  5327.4652
-#&gt; 16              North America         High income    66.39706 53221.3232
-#&gt; 17                 South Asia          Low income    46.26539   512.0051
-#&gt; 18                 South Asia Lower middle income   114.06867  1313.7411
-#&gt; 19                 South Asia Upper middle income    20.88375  6688.2928
-#&gt; 20        Sub-Saharan Africa          High income    25.66975 10072.3943
-#&gt; 21        Sub-Saharan Africa           Low income   553.45920   569.9829
-#&gt; 22        Sub-Saharan Africa  Lower middle income   301.44204  1700.9802
-#&gt; 23        Sub-Saharan Africa  Upper middle income   143.07495  7390.2252
+#&gt; 1         East Asia &amp; Pacific         High income   291.65909 32215.5325
+#&gt; 2         East Asia &amp; Pacific Lower middle income   301.21731  1801.0386
+#&gt; 3         East Asia &amp; Pacific Upper middle income   226.69780  4297.6217
+#&gt; 4       Europe &amp; Central Asia         High income   817.86411 41155.1820
+#&gt; 5       Europe &amp; Central Asia          Low income    25.03589   659.0844
+#&gt; 6       Europe &amp; Central Asia Lower middle income   137.85081  1854.0827
+#&gt; 7       Europe &amp; Central Asia Upper middle income   297.57731  5275.1427
+#&gt; 8  Latin America &amp; Caribbean          High income   399.55745 16270.1348
+#&gt; 9  Latin America &amp; Caribbean           Low income    20.27540   747.8325
+#&gt; 10 Latin America &amp; Caribbean  Lower middle income    96.22736  1943.9761
+#&gt; 11 Latin America &amp; Caribbean  Upper middle income   405.70410  5951.1551
+#&gt; 12 Middle East &amp; North Africa         High income   177.17273 31430.5657
+#&gt; 13 Middle East &amp; North Africa          Low income    37.55455  1115.5404
+#&gt; 14 Middle East &amp; North Africa Lower middle income   106.67434  2567.4225
+#&gt; 15 Middle East &amp; North Africa Upper middle income   133.04772  5247.8202
+#&gt; 16              North America         High income    72.29442 54758.5730
+#&gt; 17                 South Asia          Low income    40.40590   525.2406
+#&gt; 18                 South Asia Lower middle income   120.67832  1331.7884
+#&gt; 19                 South Asia Upper middle income    19.19608  6569.0910
+#&gt; 20        Sub-Saharan Africa          High income    23.95364 10152.8009
+#&gt; 21        Sub-Saharan Africa           Low income   604.40943   574.4440
+#&gt; 22        Sub-Saharan Africa  Lower middle income   301.01853  1722.1403
+#&gt; 23        Sub-Saharan Africa  Upper middle income   131.81385  7333.1136
 #&gt;      LIFEEX     GINI        ODA
-#&gt; 1  78.40040 33.81169   90018477
-#&gt; 2  64.97048 36.24963  460372324
-#&gt; 3  71.38858 42.41719  193013548
-#&gt; 4  77.28098 30.97984  373339253
-#&gt; 5  66.15523 31.56368  210257834
-#&gt; 6  69.21882 33.19505  371612539
-#&gt; 7  71.19670 33.40636  469854637
-#&gt; 8  74.98075 48.82484   37825642
-#&gt; 9  58.50887 41.10000  611258494
-#&gt; 10 68.50195 50.92938  574656331
-#&gt; 11 71.78401 50.75871  172981447
-#&gt; 12 75.68702 33.80694  254984469
-#&gt; 13 66.23924 35.12435  955572860
-#&gt; 14 68.73060 36.79271 1057780664
-#&gt; 15 71.56742 38.16513  704307168
-#&gt; 16 78.44841 36.43617   -3582998
-#&gt; 17 60.53247 34.57565 1462549567
-#&gt; 18 65.74735 34.80987 1387786479
-#&gt; 19 71.75302 40.48143   38856557
-#&gt; 20 72.26625 46.80000   27512919
-#&gt; 21 53.62525 42.21557  743378381
-#&gt; 22 55.89451 45.21262  654257693
-#&gt; 23 59.40339 55.05373  182078185</div><div class='input'>
+#&gt; 1  78.01314 33.19044  104803431
+#&gt; 2  65.35285 36.66044  493317499
+#&gt; 3  71.29268 41.39382  253746554
+#&gt; 4  77.39843 30.89092  292744132
+#&gt; 5  67.30364 33.08699  259412786
+#&gt; 6  69.00075 32.71763  349887514
+#&gt; 7  70.91226 33.83694  488481064
+#&gt; 8  74.92983 50.03180   35566394
+#&gt; 9  58.94597 41.10000  634390820
+#&gt; 10 68.22479 51.80813  578012510
+#&gt; 11 71.82668 50.80986  172564255
+#&gt; 12 75.34040 33.58082  237659873
+#&gt; 13 66.91980 35.33782  816381107
+#&gt; 14 68.52748 36.02410 1082513423
+#&gt; 15 71.72737 36.21473 1018077165
+#&gt; 16 78.77813 35.15873   -3791356
+#&gt; 17 60.74631 39.74479 1903476136
+#&gt; 18 65.64312 34.95140 1193512301
+#&gt; 19 72.09931 38.96846   36867417
+#&gt; 20 72.34255 46.80000   21455750
+#&gt; 21 53.40449 42.75318  685415791
+#&gt; 22 55.95782 46.98785  621113653
+#&gt; 23 60.69838 56.00698  203897480</div><div class='input'>
 <span class='va'>wlddev</span> <span class='op'>%&gt;%</span> <span class='fu'><a href='fsubset.html'>fsubset</a></span><span class='op'>(</span><span class='va'>year</span> <span class='op'>&gt;</span> <span class='fl'>1990</span>, <span class='va'>region</span>, <span class='va'>income</span>, <span class='va'>PCGDP</span><span class='op'>:</span><span class='va'>weights</span><span class='op'>)</span> <span class='op'>%&gt;%</span>
   <span class='fu'><a href='GRP, fgroup_by.html'>fgroup_by</a></span><span class='op'>(</span><span class='va'>region</span>, <span class='va'>income</span><span class='op'>)</span> <span class='op'>%&gt;%</span> <span class='fu'><a href='fvar, fsd.html'>fsd</a></span><span class='op'>(</span><span class='va'>weights</span><span class='op'>)</span>     <span class='co'># Weighted group standard deviations</span>
-</div><div class='output co'>#&gt;                        region              income sum.weights       PCGDP
-#&gt; 1         East Asia &amp; Pacific         High income   300.73443 12644.22620
-#&gt; 2         East Asia &amp; Pacific Lower middle income   279.01969   932.49732
-#&gt; 3         East Asia &amp; Pacific Upper middle income   224.91291  2537.49345
-#&gt; 4       Europe &amp; Central Asia         High income   809.71312 29565.37423
-#&gt; 5       Europe &amp; Central Asia          Low income    24.53648   251.02962
-#&gt; 6       Europe &amp; Central Asia Lower middle income   139.84525  1024.72625
-#&gt; 7       Europe &amp; Central Asia Upper middle income   312.86863  2758.90021
-#&gt; 8  Latin America &amp; Caribbean          High income   419.33178  8526.71824
-#&gt; 9  Latin America &amp; Caribbean           Low income    18.48715    48.84022
-#&gt; 10 Latin America &amp; Caribbean  Lower middle income    83.29918   621.55903
-#&gt; 11 Latin America &amp; Caribbean  Upper middle income   419.73036  2567.67309
-#&gt; 12 Middle East &amp; North Africa         High income   170.49354 17148.95352
-#&gt; 13 Middle East &amp; North Africa          Low income    44.91585   131.91799
-#&gt; 14 Middle East &amp; North Africa Lower middle income   112.29470   722.30620
-#&gt; 15 Middle East &amp; North Africa Upper middle income   144.11550  2300.15019
-#&gt; 16              North America         High income    66.39706 16492.65039
-#&gt; 17                 South Asia          Low income    46.26539   110.93776
-#&gt; 18                 South Asia Lower middle income   114.06867   772.99318
-#&gt; 19                 South Asia Upper middle income    20.88375  1270.86618
-#&gt; 20        Sub-Saharan Africa          High income    25.66975  1715.48613
-#&gt; 21        Sub-Saharan Africa           Low income   553.45920   286.09493
-#&gt; 22        Sub-Saharan Africa  Lower middle income   301.44204   869.64288
-#&gt; 23        Sub-Saharan Africa  Upper middle income   143.07495  3889.83067
+</div><div class='output co'>#&gt;                        region              income sum.weights      PCGDP
+#&gt; 1         East Asia &amp; Pacific         High income   291.65909 12984.0931
+#&gt; 2         East Asia &amp; Pacific Lower middle income   301.21731   918.9109
+#&gt; 3         East Asia &amp; Pacific Upper middle income   226.69780  2395.2797
+#&gt; 4       Europe &amp; Central Asia         High income   817.86411 29425.8433
+#&gt; 5       Europe &amp; Central Asia          Low income    25.03589   222.1011
+#&gt; 6       Europe &amp; Central Asia Lower middle income   137.85081  1027.2732
+#&gt; 7       Europe &amp; Central Asia Upper middle income   297.57731  2878.2048
+#&gt; 8  Latin America &amp; Caribbean          High income   399.55745  8498.5586
+#&gt; 9  Latin America &amp; Caribbean           Low income    20.27540    65.1951
+#&gt; 10 Latin America &amp; Caribbean  Lower middle income    96.22736   602.1835
+#&gt; 11 Latin America &amp; Caribbean  Upper middle income   405.70410  2674.5702
+#&gt; 12 Middle East &amp; North Africa         High income   177.17273 16155.6434
+#&gt; 13 Middle East &amp; North Africa          Low income    37.55455   129.2630
+#&gt; 14 Middle East &amp; North Africa Lower middle income   106.67434   770.1745
+#&gt; 15 Middle East &amp; North Africa Upper middle income   133.04772  2289.7278
+#&gt; 16              North America         High income    72.29442 17709.3499
+#&gt; 17                 South Asia          Low income    40.40590   118.3048
+#&gt; 18                 South Asia Lower middle income   120.67832   784.7046
+#&gt; 19                 South Asia Upper middle income    19.19608  1222.7727
+#&gt; 20        Sub-Saharan Africa          High income    23.95364  1858.2715
+#&gt; 21        Sub-Saharan Africa           Low income   604.40943   291.4469
+#&gt; 22        Sub-Saharan Africa  Lower middle income   301.01853   886.3252
+#&gt; 23        Sub-Saharan Africa  Upper middle income   131.81385  3360.5091
 #&gt;      LIFEEX       GINI        ODA
-#&gt; 1  3.450674  1.3801947  195589453
-#&gt; 2  4.675777  3.5531122  601674545
-#&gt; 3  2.573758  3.3503792  596103462
-#&gt; 4  3.691684  3.6430575  693987197
-#&gt; 5  2.925799  1.6148859  106510590
-#&gt; 6  1.901661  5.5822387  244569061
-#&gt; 7  3.540006  5.5263929  655324471
-#&gt; 8  2.729875  5.6937112   59913850
-#&gt; 9  2.100741  0.0000000  544934199
-#&gt; 10 4.669793  5.5494375  284960436
-#&gt; 11 3.492169  4.5886596  249390433
-#&gt; 12 3.092219  6.0739957  630711407
-#&gt; 13 5.677498  0.6233995 1732313117
-#&gt; 14 5.568898  4.7061897  974947192
-#&gt; 15 3.010914  5.8297483 1655303543
-#&gt; 16 1.838540  4.0752077    3938693
-#&gt; 17 5.772894  3.5673740 1715435750
-#&gt; 18 4.794988  3.6874390 1038646313
-#&gt; 19 4.887808  1.9187447   16794498
-#&gt; 20 1.103838  0.0000000   20679160
-#&gt; 21 6.352786  5.6252106  766386626
-#&gt; 22 6.712581  7.4750271  757159679
-#&gt; 23 6.769252 11.8992120  246508449</div><div class='input'>
+#&gt; 1  3.462191  1.0550989  221192000
+#&gt; 2  4.631328  5.2402847  676478842
+#&gt; 3  2.604335  3.4414475  685659808
+#&gt; 4  3.734317  3.4737236  639876252
+#&gt; 5  2.831099  0.9489419  110165270
+#&gt; 6  1.783168  5.6123498  235649670
+#&gt; 7  3.576654  5.9342680  644010611
+#&gt; 8  2.659423  5.4590931   57888097
+#&gt; 9  2.589587  0.0000000  538366668
+#&gt; 10 4.817523  5.3271267  256214607
+#&gt; 11 3.306151  4.9266352  231187252
+#&gt; 12 2.941952  5.2223978  629365098
+#&gt; 13 5.662427  0.9268690 1659213788
+#&gt; 14 5.727382  3.7628669 1036993970
+#&gt; 15 3.166006  5.3601535 2757960518
+#&gt; 16 1.959598  4.0229848    5129259
+#&gt; 17 5.710382 10.0076352 2024516452
+#&gt; 18 5.196553  3.7971879  961905982
+#&gt; 19 4.686722  2.2696941   13573485
+#&gt; 20 1.410758  0.0000000   12047879
+#&gt; 21 6.159556  6.0658429  744637674
+#&gt; 22 7.330579  7.4718832  775118404
+#&gt; 23 7.370616 11.3513975  303891052</div><div class='input'>
 <span class='va'>wlddev</span> <span class='op'>%&gt;%</span> <span class='fu'><a href='GRP, fgroup_by.html'>fgroup_by</a></span><span class='op'>(</span><span class='va'>region</span>, <span class='va'>income</span><span class='op'>)</span> <span class='op'>%&gt;%</span> <span class='fu'><a href='fselect, get_vars, add_vars.html'>fselect</a></span><span class='op'>(</span><span class='va'>PCGDP</span><span class='op'>:</span><span class='va'>weights</span><span class='op'>)</span> <span class='op'>%&gt;%</span>
    <span class='fu'><a href='fnth.html'>fnth</a></span><span class='op'>(</span><span class='fl'>0.75</span>, <span class='va'>weights</span><span class='op'>)</span>                           <span class='co'># Weighted group third quartile</span>
 </div><div class='output co'>#&gt;                        region              income sum.weights      PCGDP
-#&gt; 1         East Asia &amp; Pacific         High income   632.41429 36400.0374
-#&gt; 2         East Asia &amp; Pacific Lower middle income   601.06594  2294.3703
-#&gt; 3         East Asia &amp; Pacific Upper middle income   458.02638  3787.4045
-#&gt; 4       Europe &amp; Central Asia         High income  1752.44685 43354.7685
-#&gt; 5       Europe &amp; Central Asia          Low income    47.24736  1166.5070
-#&gt; 6       Europe &amp; Central Asia Lower middle income   270.50533  2905.8574
-#&gt; 7       Europe &amp; Central Asia Upper middle income   661.75966  6525.8514
-#&gt; 8  Latin America &amp; Caribbean          High income   841.60882 16249.6740
-#&gt; 9  Latin America &amp; Caribbean           Low income    40.14507   985.5712
-#&gt; 10 Latin America &amp; Caribbean  Lower middle income   185.44412  2174.4371
-#&gt; 11 Latin America &amp; Caribbean  Upper middle income   864.79537  6297.3232
-#&gt; 12 Middle East &amp; North Africa         High income   377.95873 35730.3293
-#&gt; 13 Middle East &amp; North Africa          Low income    97.74149  1170.1436
-#&gt; 14 Middle East &amp; North Africa Lower middle income   244.59065  2521.1862
-#&gt; 15 Middle East &amp; North Africa Upper middle income   282.49551  5964.1790
-#&gt; 16              North America         High income   141.74913 50221.8420
-#&gt; 17                 South Asia          Low income    93.62502   550.5150
-#&gt; 18                 South Asia Lower middle income   232.06474  1140.2063
-#&gt; 19                 South Asia Upper middle income    41.81126  7490.4452
-#&gt; 20        Sub-Saharan Africa          High income    49.59646  9730.6999
-#&gt; 21        Sub-Saharan Africa           Low income  1211.17280   642.8774
-#&gt; 22        Sub-Saharan Africa  Lower middle income   641.66651  1785.0190
-#&gt; 23        Sub-Saharan Africa  Upper middle income   293.72019  8580.0784
+#&gt; 1         East Asia &amp; Pacific         High income   599.25186 36904.4751
+#&gt; 2         East Asia &amp; Pacific Lower middle income   627.97744  2213.9027
+#&gt; 3         East Asia &amp; Pacific Upper middle income   467.14191  3708.1950
+#&gt; 4       Europe &amp; Central Asia         High income  1784.00290 43052.6031
+#&gt; 5       Europe &amp; Central Asia          Low income    42.97951   925.6394
+#&gt; 6       Europe &amp; Central Asia Lower middle income   266.56320  2966.5001
+#&gt; 7       Europe &amp; Central Asia Upper middle income   646.81510  6642.0351
+#&gt; 8  Latin America &amp; Caribbean          High income   845.12862 16683.4224
+#&gt; 9  Latin America &amp; Caribbean           Low income    45.10144  1018.2128
+#&gt; 10 Latin America &amp; Caribbean  Lower middle income   205.42139  2224.2652
+#&gt; 11 Latin America &amp; Caribbean  Upper middle income   861.69168  6414.8829
+#&gt; 12 Middle East &amp; North Africa         High income   366.63484 35522.7274
+#&gt; 13 Middle East &amp; North Africa          Low income    83.20945  1182.8982
+#&gt; 14 Middle East &amp; North Africa Lower middle income   234.18600  2524.2665
+#&gt; 15 Middle East &amp; North Africa Upper middle income   284.66077  6073.4062
+#&gt; 16              North America         High income   146.61643 50407.3413
+#&gt; 17                 South Asia          Low income    95.78254   536.0125
+#&gt; 18                 South Asia Lower middle income   241.47379  1130.0901
+#&gt; 19                 South Asia Upper middle income    44.69755  7537.6368
+#&gt; 20        Sub-Saharan Africa          High income    51.24001  9730.6999
+#&gt; 21        Sub-Saharan Africa           Low income  1265.77242   645.3699
+#&gt; 22        Sub-Saharan Africa  Lower middle income   629.52735  1881.8953
+#&gt; 23        Sub-Saharan Africa  Upper middle income   283.66175  7523.2795
 #&gt;      LIFEEX GINI        ODA
-#&gt; 1  78.48366 34.7  220840000
-#&gt; 2  65.64100 38.1  655000000
-#&gt; 3  71.17700 45.5  155550000
-#&gt; 4  77.63415 33.8  201530000
-#&gt; 5  65.89400 32.7  297400000
-#&gt; 6  69.84400 37.4  479030000
-#&gt; 7  71.66341 37.5  558080000
-#&gt; 8  75.13300 53.4   67410000
-#&gt; 9  57.71600 41.1  458910000
-#&gt; 10 68.83400 55.5  596630000
-#&gt; 11 72.13000 54.8  239350000
-#&gt; 12 75.55100 41.0  132830000
-#&gt; 13 68.98100 35.0 1301450000
-#&gt; 14 70.16200 40.6 1362250000
-#&gt; 15 71.24800 43.6  546440000
-#&gt; 16 78.54146 40.4     310000
-#&gt; 17 59.69400 35.2  630540000
-#&gt; 18 66.32200 37.4 2475010000
-#&gt; 19 72.60300 41.3   35910000
-#&gt; 20 73.08293 46.8   41530000
-#&gt; 21 53.35700 45.5  626580000
-#&gt; 22 58.07000 50.1  601430000
-#&gt; 23 61.51800 63.0  157340000</div><div class='input'>
+#&gt; 1  77.88293 33.5  289390000
+#&gt; 2  65.87100 38.1  670020000
+#&gt; 3  70.84100 45.3  166660000
+#&gt; 4  77.68537 33.6  173170000
+#&gt; 5  68.05200 34.0  349960000
+#&gt; 6  69.72600 37.1  460920000
+#&gt; 7  71.80200 39.5  566410000
+#&gt; 8  75.01600 54.8   56220000
+#&gt; 9  58.53500 41.1  370380000
+#&gt; 10 68.54100 55.8  606610000
+#&gt; 11 72.02700 54.6  243710000
+#&gt; 12 75.30015 38.9  119280000
+#&gt; 13 69.42300 35.0 1254970000
+#&gt; 14 69.91200 40.0 1408660000
+#&gt; 15 71.05300 43.0  559660000
+#&gt; 16 78.69024 38.2     310000
+#&gt; 17 58.50000 43.8  619820000
+#&gt; 18 66.62500 36.4 2355020000
+#&gt; 19 72.60300 38.4   34900000
+#&gt; 20 73.08293 46.8   42180000
+#&gt; 21 53.64800 46.0  604970000
+#&gt; 22 57.91900 52.0  601430000
+#&gt; 23 62.06200 63.3  164470000</div><div class='input'>
 <span class='va'>wlddev</span> <span class='op'>%&gt;%</span> <span class='fu'><a href='GRP, fgroup_by.html'>fgroup_by</a></span><span class='op'>(</span><span class='va'>country</span><span class='op'>)</span> <span class='op'>%&gt;%</span> <span class='fu'><a href='fselect, get_vars, add_vars.html'>fselect</a></span><span class='op'>(</span><span class='va'>PCGDP</span><span class='op'>:</span><span class='va'>ODA</span><span class='op'>)</span> <span class='op'>%&gt;%</span>
 <span class='va'>fwithin</span> <span class='op'>%&gt;%</span> <span class='va'>head</span>                               <span class='co'># Within transformation</span>
 </div><div class='output co'>#&gt;   PCGDP    LIFEEX GINI         ODA
@@ -1753,13 +1764,13 @@ Core S3 methods and efficient grouping and ordering functionality can be accesse
 <span class='va'>wlddev</span> <span class='op'>%&gt;%</span> <span class='fu'><a href='GRP, fgroup_by.html'>fgroup_by</a></span><span class='op'>(</span><span class='va'>country</span><span class='op'>)</span> <span class='op'>%&gt;%</span> <span class='fu'><a href='fselect, get_vars, add_vars.html'>fselect</a></span><span class='op'>(</span><span class='va'>country</span>, <span class='va'>year</span>, <span class='va'>PCGDP</span><span class='op'>:</span><span class='va'>weights</span><span class='op'>)</span> <span class='op'>%&gt;%</span>
   <span class='fu'><a href='ftransform.html'>ftransform</a></span><span class='op'>(</span><span class='fu'><a href='fselect, get_vars, add_vars.html'>fselect</a></span><span class='op'>(</span><span class='va'>.</span>, <span class='op'>-</span><span class='va'>country</span>, <span class='op'>-</span><span class='va'>year</span><span class='op'>)</span> <span class='op'>%&gt;%</span>
   <span class='fu'><a href='fnth.html'>fnth</a></span><span class='op'>(</span><span class='fl'>0.25</span>, <span class='va'>weights</span>, <span class='st'>"replace_fill"</span><span class='op'>)</span><span class='op'>)</span> <span class='op'>%&gt;%</span> <span class='va'>head</span>
-</div><div class='output co'>#&gt;       country year    PCGDP LIFEEX GINI      ODA   weights
-#&gt; 1 Afghanistan 1960 365.5487 38.056   NA 1.82e+08 0.5424367
-#&gt; 2 Afghanistan 1961 365.5487 38.056   NA 1.82e+08 1.4538464
-#&gt; 3 Afghanistan 1962 365.5487 38.056   NA 1.82e+08 0.1803493
-#&gt; 4 Afghanistan 1963 365.5487 38.056   NA 1.82e+08 0.4978897
-#&gt; 5 Afghanistan 1964 365.5487 38.056   NA 1.82e+08 1.2931589
-#&gt; 6 Afghanistan 1965 365.5487 38.056   NA 1.82e+08 0.7547536</div><div class='input'>
+</div><div class='output co'>#&gt;       country year    PCGDP LIFEEX GINI       ODA    weights
+#&gt; 1 Afghanistan 1960 365.5487  38.54   NA 162680000 1.27022678
+#&gt; 2 Afghanistan 1961 365.5487  38.54   NA 162680000 1.40429939
+#&gt; 3 Afghanistan 1962 365.5487  38.54   NA 162680000 0.36137383
+#&gt; 4 Afghanistan 1963 365.5487  38.54   NA 162680000 1.22312383
+#&gt; 5 Afghanistan 1964 365.5487  38.54   NA 162680000 0.08801738
+#&gt; 6 Afghanistan 1965 365.5487  38.54   NA 162680000 1.11696390</div><div class='input'>
 <span class='va'>wlddev</span> <span class='op'>%&gt;%</span> <span class='fu'><a href='GRP, fgroup_by.html'>fgroup_by</a></span><span class='op'>(</span><span class='va'>country</span><span class='op'>)</span> <span class='op'>%&gt;%</span> <span class='fu'><a href='fselect, get_vars, add_vars.html'>fselect</a></span><span class='op'>(</span><span class='va'>PCGDP</span><span class='op'>:</span><span class='va'>ODA</span><span class='op'>)</span> <span class='op'>%&gt;%</span> <span class='va'>fscale</span> <span class='op'>%&gt;%</span> <span class='va'>head</span>    <span class='co'># Standardizing</span>
 </div><div class='output co'>#&gt;   PCGDP    LIFEEX GINI        ODA
 #&gt; 1    NA -1.551093   NA -0.6132859
@@ -1769,13 +1780,13 @@ Core S3 methods and efficient grouping and ordering functionality can be accesse
 #&gt; 5    NA -1.375191   NA -0.5200308
 #&gt; 6    NA -1.331912   NA -0.4864215</div><div class='input'><span class='va'>wlddev</span> <span class='op'>%&gt;%</span> <span class='fu'><a href='GRP, fgroup_by.html'>fgroup_by</a></span><span class='op'>(</span><span class='va'>country</span><span class='op'>)</span> <span class='op'>%&gt;%</span> <span class='fu'><a href='fselect, get_vars, add_vars.html'>fselect</a></span><span class='op'>(</span><span class='va'>PCGDP</span><span class='op'>:</span><span class='va'>weights</span><span class='op'>)</span> <span class='op'>%&gt;%</span>
    <span class='fu'><a href='fscale.html'>fscale</a></span><span class='op'>(</span><span class='va'>weights</span><span class='op'>)</span> <span class='op'>%&gt;%</span> <span class='va'>head</span>  <span class='co'># Weigted..</span>
-</div><div class='output co'>#&gt;     weights PCGDP    LIFEEX GINI        ODA
-#&gt; 1 0.5424367    NA -1.530263   NA -0.5747393
-#&gt; 2 1.4538464    NA -1.484799   NA -0.5078686
-#&gt; 3 0.1803493    NA -1.440042   NA -0.5744918
-#&gt; 4 0.4978897    NA -1.395690   NA -0.5061253
-#&gt; 5 1.2931589    NA -1.351640   NA -0.4689924
-#&gt; 6 0.7547536    NA -1.307691   NA -0.4308810</div><div class='input'>
+</div><div class='output co'>#&gt;      weights PCGDP    LIFEEX GINI        ODA
+#&gt; 1 1.27022678    NA -1.508262   NA -0.5796510
+#&gt; 2 1.40429939    NA -1.463114   NA -0.5195093
+#&gt; 3 0.36137383    NA -1.418668   NA -0.5794284
+#&gt; 4 1.22312383    NA -1.374624   NA -0.5179414
+#&gt; 5 0.08801738    NA -1.330880   NA -0.4845450
+#&gt; 6 1.11696390    NA -1.287237   NA -0.4502687</div><div class='input'>
 <span class='va'>wlddev</span> <span class='op'>%&gt;%</span> <span class='fu'><a href='fselect, get_vars, add_vars.html'>fselect</a></span><span class='op'>(</span><span class='va'>country</span>, <span class='va'>year</span>, <span class='va'>PCGDP</span><span class='op'>:</span><span class='va'>ODA</span><span class='op'>)</span> <span class='op'>%&gt;%</span>  <span class='co'># Adding 1 lead and 2 lags of each variable</span>
   <span class='fu'><a href='GRP, fgroup_by.html'>fgroup_by</a></span><span class='op'>(</span><span class='va'>country</span><span class='op'>)</span> <span class='op'>%&gt;%</span> <span class='fu'><a href='flag.html'>flag</a></span><span class='op'>(</span><span class='op'>-</span><span class='fl'>1</span><span class='op'>:</span><span class='fl'>2</span>, <span class='va'>year</span><span class='op'>)</span> <span class='op'>%&gt;%</span> <span class='va'>head</span>
 </div><div class='output co'>#&gt;       country year F1.PCGDP PCGDP L1.PCGDP L2.PCGDP F1.LIFEEX LIFEEX L1.LIFEEX
@@ -1820,9 +1831,9 @@ Core S3 methods and efficient grouping and ordering functionality can be accesse
 <span class='va'>wlddev</span> <span class='op'>%&gt;%</span> <span class='fu'><a href='fsubset.html'>fsubset</a></span><span class='op'>(</span><span class='va'>year</span> <span class='op'>&gt;</span> <span class='fl'>1990</span>, <span class='va'>region</span>, <span class='va'>income</span>, <span class='va'>PCGDP</span><span class='op'>:</span><span class='va'>ODA</span><span class='op'>)</span> <span class='op'>%&gt;%</span>
   <span class='fu'><a href='GRP, fgroup_by.html'>fgroup_by</a></span><span class='op'>(</span><span class='va'>region</span>, <span class='va'>income</span><span class='op'>)</span> <span class='op'>%&gt;%</span> <span class='op'>{</span>
     <span class='fu'><a href='fselect, get_vars, add_vars.html'>add_vars</a></span><span class='op'>(</span><span class='fu'><a href='GRP, fgroup_by.html'>fgroup_vars</a></span><span class='op'>(</span><span class='va'>.</span>, <span class='st'>"unique"</span><span class='op'>)</span>,
-             <span class='fu'><a href='fmedian.html'>fmedian</a></span><span class='op'>(</span><span class='va'>.</span>, keep.group_vars <span class='op'>=</span> <span class='cn'>FALSE</span><span class='op'>)</span> <span class='op'>%&gt;%</span> <span class='fu'><a href='small-helpers.html'>add_stub</a></span><span class='op'>(</span><span class='st'>"median_"</span><span class='op'>)</span>,
-             <span class='fu'><a href='fmean.html'>fmean</a></span><span class='op'>(</span><span class='va'>.</span>, keep.group_vars <span class='op'>=</span> <span class='cn'>FALSE</span><span class='op'>)</span> <span class='op'>%&gt;%</span> <span class='fu'><a href='small-helpers.html'>add_stub</a></span><span class='op'>(</span><span class='st'>"mean_"</span><span class='op'>)</span>,
-             <span class='fu'><a href='fvar, fsd.html'>fsd</a></span><span class='op'>(</span><span class='va'>.</span>, keep.group_vars <span class='op'>=</span> <span class='cn'>FALSE</span><span class='op'>)</span> <span class='op'>%&gt;%</span> <span class='fu'><a href='small-helpers.html'>add_stub</a></span><span class='op'>(</span><span class='st'>"sd_"</span><span class='op'>)</span><span class='op'>)</span>
+             <span class='fu'><a href='fmedian.html'>fmedian</a></span><span class='op'>(</span><span class='va'>.</span>, keep.group_vars <span class='op'>=</span> <span class='cn'>FALSE</span><span class='op'>)</span> <span class='op'>%&gt;%</span> <span class='fu'><a href='AA2-small-helpers.html'>add_stub</a></span><span class='op'>(</span><span class='st'>"median_"</span><span class='op'>)</span>,
+             <span class='fu'><a href='fmean.html'>fmean</a></span><span class='op'>(</span><span class='va'>.</span>, keep.group_vars <span class='op'>=</span> <span class='cn'>FALSE</span><span class='op'>)</span> <span class='op'>%&gt;%</span> <span class='fu'><a href='AA2-small-helpers.html'>add_stub</a></span><span class='op'>(</span><span class='st'>"mean_"</span><span class='op'>)</span>,
+             <span class='fu'><a href='fvar, fsd.html'>fsd</a></span><span class='op'>(</span><span class='va'>.</span>, keep.group_vars <span class='op'>=</span> <span class='cn'>FALSE</span><span class='op'>)</span> <span class='op'>%&gt;%</span> <span class='fu'><a href='AA2-small-helpers.html'>add_stub</a></span><span class='op'>(</span><span class='st'>"sd_"</span><span class='op'>)</span><span class='op'>)</span>
   <span class='op'>}</span> <span class='op'>%&gt;%</span> <span class='va'>head</span>
 </div><div class='output co'>#&gt;                  region              income median_PCGDP median_LIFEEX
 #&gt; 1   East Asia &amp; Pacific         High income   32191.9487      78.13400
@@ -1849,7 +1860,7 @@ Core S3 methods and efficient grouping and ordering functionality can be accesse
 <span class='va'>wlddev</span> <span class='op'>%&gt;%</span> <span class='fu'><a href='fselect, get_vars, add_vars.html'>fselect</a></span><span class='op'>(</span><span class='va'>country</span>, <span class='va'>year</span>, <span class='va'>PCGDP</span><span class='op'>:</span><span class='va'>ODA</span><span class='op'>)</span> <span class='op'>%&gt;%</span>
   <span class='fu'><a href='GRP, fgroup_by.html'>fgroup_by</a></span><span class='op'>(</span><span class='va'>country</span><span class='op'>)</span> <span class='op'>%&gt;%</span> <span class='op'>{</span>
     <span class='fu'><a href='fselect, get_vars, add_vars.html'>add_vars</a></span><span class='op'>(</span><span class='fu'><a href='fdiff.html'>fdiff</a></span><span class='op'>(</span><span class='va'>.</span>, <span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span><span class='op'>(</span><span class='fl'>1</span>,<span class='fl'>10</span><span class='op'>)</span>, <span class='fl'>1</span>, <span class='va'>year</span><span class='op'>)</span> <span class='op'>%&gt;%</span> <span class='fu'><a href='flag.html'>flag</a></span><span class='op'>(</span><span class='fl'>0</span><span class='op'>:</span><span class='fl'>2</span>, <span class='va'>year</span><span class='op'>)</span>,  <span class='co'># Sequence of lagged differences</span>
-             <span class='fu'><a href='ftransform.html'>ftransform</a></span><span class='op'>(</span><span class='va'>.</span>, <span class='fu'><a href='fselect, get_vars, add_vars.html'>fselect</a></span><span class='op'>(</span><span class='va'>.</span>, <span class='va'>PCGDP</span><span class='op'>:</span><span class='va'>ODA</span><span class='op'>)</span> <span class='op'>%&gt;%</span> <span class='va'>fwithin</span> <span class='op'>%&gt;%</span> <span class='fu'><a href='small-helpers.html'>add_stub</a></span><span class='op'>(</span><span class='st'>"W."</span><span class='op'>)</span><span class='op'>)</span> <span class='op'>%&gt;%</span>
+             <span class='fu'><a href='ftransform.html'>ftransform</a></span><span class='op'>(</span><span class='va'>.</span>, <span class='fu'><a href='fselect, get_vars, add_vars.html'>fselect</a></span><span class='op'>(</span><span class='va'>.</span>, <span class='va'>PCGDP</span><span class='op'>:</span><span class='va'>ODA</span><span class='op'>)</span> <span class='op'>%&gt;%</span> <span class='va'>fwithin</span> <span class='op'>%&gt;%</span> <span class='fu'><a href='AA2-small-helpers.html'>add_stub</a></span><span class='op'>(</span><span class='st'>"W."</span><span class='op'>)</span><span class='op'>)</span> <span class='op'>%&gt;%</span>
                <span class='fu'><a href='flag.html'>flag</a></span><span class='op'>(</span><span class='fl'>0</span><span class='op'>:</span><span class='fl'>2</span>, <span class='va'>year</span>, keep.ids <span class='op'>=</span> <span class='cn'>FALSE</span><span class='op'>)</span><span class='op'>)</span>             <span class='co'># Sequence of lagged demeaned vars</span>
   <span class='op'>}</span> <span class='op'>%&gt;%</span> <span class='va'>head</span>
 </div><div class='output co'>#&gt;       country year D1.PCGDP L1.D1.PCGDP L2.D1.PCGDP L10D1.PCGDP L1.L10D1.PCGDP
@@ -1913,9 +1924,37 @@ Core S3 methods and efficient grouping and ordering functionality can be accesse
 
 <span class='fu'><a href='ftransform.html'>settransform</a></span><span class='op'>(</span><span class='va'>wlddev</span>, sd_ODA <span class='op'>=</span> <span class='fu'><a href='fvar, fsd.html'>fsd</a></span><span class='op'>(</span><span class='va'>ODA</span>, <span class='fu'><a href='https://rdrr.io/r/base/list.html'>list</a></span><span class='op'>(</span><span class='va'>region</span>, <span class='va'>income</span><span class='op'>)</span>, TRA <span class='op'>=</span> <span class='st'>"replace_fill"</span><span class='op'>)</span>,
                      mean_GDP <span class='op'>=</span> <span class='fu'><a href='fmean.html'>fmean</a></span><span class='op'>(</span><span class='va'>PCGDP</span>, <span class='va'>country</span>, TRA <span class='op'>=</span> <span class='st'>"replace_fill"</span><span class='op'>)</span><span class='op'>)</span>
-
+ 
 <span class='va'>wlddev</span> <span class='op'>%&lt;&gt;%</span> <span class='fu'><a href='ftransform.html'>ftransform</a></span><span class='op'>(</span><span class='fu'><a href='fmedian.html'>fmedian</a></span><span class='op'>(</span><span class='fu'><a href='https://rdrr.io/r/base/list.html'>list</a></span><span class='op'>(</span>median_ODA <span class='op'>=</span> <span class='va'>ODA</span>, median_GDP <span class='op'>=</span> <span class='va'>PCGDP</span><span class='op'>)</span>,
                                <span class='fu'><a href='https://rdrr.io/r/base/list.html'>list</a></span><span class='op'>(</span><span class='va'>region</span>, <span class='va'>income</span><span class='op'>)</span>, TRA <span class='op'>=</span> <span class='st'>"replace_fill"</span><span class='op'>)</span><span class='op'>)</span>
+
+<span class='co'># On a groped data frame it is also possible to grouped transform certain columns</span>
+<span class='co'># but perform aggregate operatins on others:</span>
+<span class='va'>wlddev</span> <span class='op'>%&gt;%</span> <span class='fu'><a href='GRP, fgroup_by.html'>fgroup_by</a></span><span class='op'>(</span><span class='va'>region</span>, <span class='va'>income</span><span class='op'>)</span> <span class='op'>%&gt;%</span>
+    <span class='fu'><a href='ftransform.html'>ftransform</a></span><span class='op'>(</span>gmedian_GDP <span class='op'>=</span> <span class='fu'><a href='fmedian.html'>fmedian</a></span><span class='op'>(</span><span class='va'>PCGDP</span>, <span class='fu'><a href='GRP, fgroup_by.html'>GRP</a></span><span class='op'>(</span><span class='va'>.</span><span class='op'>)</span>, TRA <span class='op'>=</span> <span class='st'>"replace"</span><span class='op'>)</span>,
+               omedian_GDP <span class='op'>=</span> <span class='fu'><a href='fmedian.html'>fmedian</a></span><span class='op'>(</span><span class='va'>PCGDP</span>, TRA <span class='op'>=</span> <span class='st'>"replace"</span><span class='op'>)</span>,  <span class='co'># "replace" preserves NA's</span>
+               omedian_GDP_fill <span class='op'>=</span> <span class='fu'><a href='fmedian.html'>fmedian</a></span><span class='op'>(</span><span class='va'>PCGDP</span><span class='op'>)</span><span class='op'>)</span> <span class='op'>%&gt;%</span> <span class='va'>tail</span>
+</div><div class='output co'>#&gt;        country iso3c       date year decade              region     income
+#&gt; 12739 Zimbabwe   ZWE 2014-01-01 2013   2010 Sub-Saharan Africa  Low income
+#&gt; 12740 Zimbabwe   ZWE 2015-01-01 2014   2010 Sub-Saharan Africa  Low income
+#&gt; 12741 Zimbabwe   ZWE 2016-01-01 2015   2020 Sub-Saharan Africa  Low income
+#&gt; 12742 Zimbabwe   ZWE 2017-01-01 2016   2020 Sub-Saharan Africa  Low income
+#&gt; 12743 Zimbabwe   ZWE 2018-01-01 2017   2020 Sub-Saharan Africa  Low income
+#&gt; 12744 Zimbabwe   ZWE 2019-01-01 2018   2020 Sub-Saharan Africa  Low income
+#&gt;        OECD    PCGDP LIFEEX GINI       ODA   weights median_ODA    sd_ODA
+#&gt; 12739 FALSE 1086.827 58.053   NA 747060000 1.2866910  303050000 583312298
+#&gt; 12740 FALSE 1086.874 59.360   NA 682510000 1.0915974  303050000 583312298
+#&gt; 12741 FALSE 1080.573 60.398   NA 775210000 1.2050854  303050000 583312298
+#&gt; 12742 FALSE 1063.601 61.163   NA 654250000 1.0356776  303050000 583312298
+#&gt; 12743 FALSE 1088.063     NA   NA 717530000 1.4067308  303050000 583312298
+#&gt; 12744 FALSE       NA     NA   NA        NA 0.2975208  303050000 583312298
+#&gt;       mean_GDP median_GDP gmedian_GDP omedian_GDP omedian_GDP_fill
+#&gt; 12739 1205.542   510.9111    510.9111    3619.608         3619.608
+#&gt; 12740 1205.542   510.9111    510.9111    3619.608         3619.608
+#&gt; 12741 1205.542   510.9111    510.9111    3619.608         3619.608
+#&gt; 12742 1205.542   510.9111    510.9111    3619.608         3619.608
+#&gt; 12743 1205.542   510.9111    510.9111    3619.608         3619.608
+#&gt; 12744 1205.542   510.9111          NA          NA         3619.608</div><div class='input'>
 <span class='fu'><a href='https://rdrr.io/r/base/rm.html'>rm</a></span><span class='op'>(</span><span class='va'>wlddev</span><span class='op'>)</span>
 
 <span class='co'>## For multi-type data aggregation, the function collap offers ease and flexibility</span>
@@ -1935,23 +1974,23 @@ Core S3 methods and efficient grouping and ordering functionality can be accesse
 #&gt; 4       NA 49.69089   NA  249072222
 #&gt; 5 349.7596 55.61818   NA 1045170000
 #&gt; 6 506.9931 61.12978   NA 5298066667</div><div class='input'>
-<span class='va'>wlddev</span><span class='op'>[[</span><span class='st'>"weights"</span><span class='op'>]</span><span class='op'>]</span> <span class='op'>&lt;-</span> <span class='fu'><a href='https://rdrr.io/r/base/MathFun.html'>abs</a></span><span class='op'>(</span><span class='fu'><a href='https://rdrr.io/r/stats/Normal.html'>rnorm</a></span><span class='op'>(</span><span class='fu'><a href='small-helpers.html'>fnrow</a></span><span class='op'>(</span><span class='va'>wlddev</span><span class='op'>)</span><span class='op'>)</span><span class='op'>)</span> <span class='co'># Adding some weights</span>
+<span class='va'>wlddev</span><span class='op'>[[</span><span class='st'>"weights"</span><span class='op'>]</span><span class='op'>]</span> <span class='op'>&lt;-</span> <span class='fu'><a href='https://rdrr.io/r/base/MathFun.html'>abs</a></span><span class='op'>(</span><span class='fu'><a href='https://rdrr.io/r/stats/Normal.html'>rnorm</a></span><span class='op'>(</span><span class='fu'><a href='AA2-small-helpers.html'>fnrow</a></span><span class='op'>(</span><span class='va'>wlddev</span><span class='op'>)</span><span class='op'>)</span><span class='op'>)</span> <span class='co'># Adding some weights</span>
 <span class='co'># taking weighted mean and weighted mode:</span>
 <span class='fu'><a href='https://rdrr.io/r/utils/head.html'>head</a></span><span class='op'>(</span><span class='fu'><a href='collap.html'>collap</a></span><span class='op'>(</span><span class='va'>wlddev</span>, <span class='op'>~</span> <span class='va'>country</span> <span class='op'>+</span> <span class='va'>decade</span>, <span class='va'>fmean</span>, <span class='va'>fmode</span>, w <span class='op'>=</span> <span class='op'>~</span> <span class='va'>weights</span>, wFUN <span class='op'>=</span> <span class='va'>fsum</span><span class='op'>)</span><span class='op'>)</span>
 </div><div class='output co'>#&gt;       country iso3c       date     year decade     region     income  OECD
-#&gt; 1 Afghanistan   AFG 1964-01-01 1962.488   1960 South Asia Low income FALSE
-#&gt; 2 Afghanistan   AFG 1972-01-01 1970.331   1970 South Asia Low income FALSE
-#&gt; 3 Afghanistan   AFG 1982-01-01 1980.560   1980 South Asia Low income FALSE
-#&gt; 4 Afghanistan   AFG 1993-01-01 1989.638   1990 South Asia Low income FALSE
-#&gt; 5 Afghanistan   AFG 2005-01-01 2000.137   2000 South Asia Low income FALSE
-#&gt; 6 Afghanistan   AFG 2009-01-01 2010.032   2010 South Asia Low income FALSE
+#&gt; 1 Afghanistan   AFG 1963-01-01 1962.864   1960 South Asia Low income FALSE
+#&gt; 2 Afghanistan   AFG 1968-01-01 1969.969   1970 South Asia Low income FALSE
+#&gt; 3 Afghanistan   AFG 1983-01-01 1979.935   1980 South Asia Low income FALSE
+#&gt; 4 Afghanistan   AFG 1995-01-01 1989.535   1990 South Asia Low income FALSE
+#&gt; 5 Afghanistan   AFG 2002-01-01 1999.706   2000 South Asia Low income FALSE
+#&gt; 6 Afghanistan   AFG 2007-01-01 2008.801   2010 South Asia Low income FALSE
 #&gt;      PCGDP   LIFEEX GINI        ODA   weights
-#&gt; 1       NA 33.39369   NA  233032109  5.901153
-#&gt; 2       NA 36.84552   NA  209806593  4.818366
-#&gt; 3       NA 42.38547   NA  114286811 10.252101
-#&gt; 4       NA 49.43187   NA  257716014  8.172353
-#&gt; 5 346.2446 55.69122   NA 1092660439 11.514668
-#&gt; 6 499.9116 61.16738   NA 5338176114  5.294708</div><div class='input'>
+#&gt; 1       NA 33.56209   NA  213703092  3.241628
+#&gt; 2       NA 36.68749   NA  225725932 10.394738
+#&gt; 3       NA 41.98449   NA  126127891  9.744293
+#&gt; 4       NA 49.31073   NA  216571739  7.352586
+#&gt; 5 347.0847 55.42477   NA  764540772  8.429065
+#&gt; 6 464.6815 60.52531   NA 4736021503  5.522172</div><div class='input'>
 <span class='co'># Multi-function aggregation of certain columns</span>
 <span class='fu'><a href='https://rdrr.io/r/utils/head.html'>head</a></span><span class='op'>(</span><span class='fu'><a href='collap.html'>collap</a></span><span class='op'>(</span><span class='va'>wlddev</span>, <span class='op'>~</span> <span class='va'>country</span> <span class='op'>+</span> <span class='va'>decade</span>,
             <span class='fu'><a href='https://rdrr.io/r/base/list.html'>list</a></span><span class='op'>(</span><span class='va'>fmean</span>, <span class='va'>fmedian</span>, <span class='va'>fsd</span><span class='op'>)</span>,
@@ -1993,7 +2032,7 @@ Core S3 methods and efficient grouping and ordering functionality can be accesse
 #&gt; 3          NA        NA     42.03909  2.1599808       NA  108271755
 #&gt; 4          NA        NA     49.69089  2.1258392       NA  203018929
 #&gt; 5    349.7596  11.89378     55.61818  1.8056120       NA 1113781886
-#&gt; 6    506.9931  86.22723     61.12978  1.2872844       NA 1102034385</div><div class='input'>
+#&gt; 6    506.9931  86.22723     61.12978  1.2872844       NA 1102034385</div><div class='input'> 
 <span class='co'># For grouped data frames use collapg</span>
 <span class='va'>wlddev</span> <span class='op'>%&gt;%</span> <span class='fu'><a href='fsubset.html'>fsubset</a></span><span class='op'>(</span><span class='va'>year</span> <span class='op'>&gt;</span> <span class='fl'>1990</span>, <span class='va'>country</span>, <span class='va'>region</span>, <span class='va'>income</span>, <span class='va'>PCGDP</span><span class='op'>:</span><span class='va'>ODA</span><span class='op'>)</span> <span class='op'>%&gt;%</span>
   <span class='fu'><a href='GRP, fgroup_by.html'>fgroup_by</a></span><span class='op'>(</span><span class='va'>country</span><span class='op'>)</span> <span class='op'>%&gt;%</span> <span class='fu'><a href='collap.html'>collapg</a></span><span class='op'>(</span><span class='va'>fmean</span>, <span class='va'>ffirst</span><span class='op'>)</span> <span class='op'>%&gt;%</span>
@@ -2022,23 +2061,25 @@ Core S3 methods and efficient grouping and ordering functionality can be accesse
 #&gt; 3 Afghanistan      NA 49.14393     NA -807446980
 #&gt; 4 Afghanistan      NA 49.58293     NA -685876980
 #&gt; 5 Afghanistan      NA 50.01893     NA -619846980
-#&gt; 6 Afghanistan      NA 50.45393     NA -552076980</div><div class='input'><span class='co'># Partialling out country and year fixed effects</span>
+#&gt; 6 Afghanistan      NA 50.45393     NA -552076980</div><div class='input'><span class='co'># \donttest{</span>
+<span class='co'># Partialling out country and year fixed effects</span>
 <span class='fu'><a href='https://rdrr.io/r/utils/head.html'>head</a></span><span class='op'>(</span><span class='fu'><a href='fHDbetween, fHDwithin.html'>HDW</a></span><span class='op'>(</span><span class='va'>wlddev</span>, <span class='va'>PCGDP</span> <span class='op'>+</span> <span class='va'>LIFEEX</span> <span class='op'>~</span> <span class='fu'><a href='qF, qG, finteraction.html'>qF</a></span><span class='op'>(</span><span class='va'>country</span><span class='op'>)</span> <span class='op'>+</span> <span class='fu'><a href='qF, qG, finteraction.html'>qF</a></span><span class='op'>(</span><span class='va'>year</span><span class='op'>)</span><span class='op'>)</span><span class='op'>)</span>
-</div><div class='output co'>#&gt;    HDW.PCGDP  HDW.LIFEEX
-#&gt; 43 1330.1375 -1.42544500
-#&gt; 44 1182.5750 -1.09828726
-#&gt; 45  688.3730 -0.85895107
-#&gt; 46  399.7352 -0.54114762
-#&gt; 47  -59.5705 -0.31875491
-#&gt; 48 -449.2181 -0.09380395</div><div class='input'><span class='co'># Same, adding ODA as continuous regressor</span>
+</div><div class='output co'>#&gt;     HDW.PCGDP  HDW.LIFEEX
+#&gt; 43 1330.13750 -1.42544502
+#&gt; 44 1182.57499 -1.09828728
+#&gt; 45  688.37304 -0.85895109
+#&gt; 46  399.73520 -0.54114765
+#&gt; 47  -59.57049 -0.31875493
+#&gt; 48 -449.21805 -0.09380397</div><div class='input'><span class='co'># Same, adding ODA as continuous regressor</span>
 <span class='fu'><a href='https://rdrr.io/r/utils/head.html'>head</a></span><span class='op'>(</span><span class='fu'><a href='fHDbetween, fHDwithin.html'>HDW</a></span><span class='op'>(</span><span class='va'>wlddev</span>, <span class='va'>PCGDP</span> <span class='op'>+</span> <span class='va'>LIFEEX</span> <span class='op'>~</span> <span class='fu'><a href='qF, qG, finteraction.html'>qF</a></span><span class='op'>(</span><span class='va'>country</span><span class='op'>)</span> <span class='op'>+</span> <span class='fu'><a href='qF, qG, finteraction.html'>qF</a></span><span class='op'>(</span><span class='va'>year</span><span class='op'>)</span> <span class='op'>+</span> <span class='va'>ODA</span><span class='op'>)</span><span class='op'>)</span>
 </div><div class='output co'>#&gt;     HDW.PCGDP  HDW.LIFEEX
-#&gt; 43 -313.14014 -1.41953598
-#&gt; 44 -435.90972 -1.10211824
-#&gt; 45 -618.49311 -0.76508543
+#&gt; 43 -313.14014 -1.41953599
+#&gt; 44 -435.90972 -1.10211825
+#&gt; 45 -618.49311 -0.76508544
 #&gt; 46   32.47045 -0.50982100
 #&gt; 47 -129.44076 -0.32181018
-#&gt; 48  218.14942  0.08018899</div><div class='input'><span class='co'># Standardizing (scaling and centering) by country</span>
+#&gt; 48  218.14942  0.08018899</div><div class='input'><span class='co'># }</span>
+<span class='co'># Standardizing (scaling and centering) by country</span>
 <span class='fu'><a href='https://rdrr.io/r/utils/head.html'>head</a></span><span class='op'>(</span><span class='fu'><a href='fscale.html'>STD</a></span><span class='op'>(</span><span class='va'>wlddev</span>, <span class='op'>~</span> <span class='va'>country</span>, cols <span class='op'>=</span> <span class='fl'>9</span><span class='op'>:</span><span class='fl'>12</span><span class='op'>)</span><span class='op'>)</span>
 </div><div class='output co'>#&gt;       country STD.PCGDP STD.LIFEEX STD.GINI    STD.ODA
 #&gt; 1 Afghanistan        NA  -1.551093       NA -0.6132859
@@ -2122,7 +2163,7 @@ Core S3 methods and efficient grouping and ordering functionality can be accesse
 #&gt; 6         NA  22.40479        NA</div><div class='input'><span class='co'># Adding growth rate variables to dataset</span>
 <span class='fu'><a href='fselect, get_vars, add_vars.html'>add_vars</a></span><span class='op'>(</span><span class='va'>wlddev</span><span class='op'>)</span> <span class='op'>&lt;-</span> <span class='fu'><a href='fgrowth.html'>G</a></span><span class='op'>(</span><span class='va'>wlddev</span>, <span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span><span class='op'>(</span><span class='fl'>1</span>, <span class='fl'>10</span><span class='op'>)</span>, <span class='fl'>1</span>, <span class='op'>~</span> <span class='va'>country</span>, <span class='op'>~</span><span class='va'>year</span>, cols <span class='op'>=</span> <span class='fl'>9</span><span class='op'>:</span><span class='fl'>12</span>, keep.ids <span class='op'>=</span> <span class='cn'>FALSE</span><span class='op'>)</span>
 <span class='fu'><a href='fselect, get_vars, add_vars.html'>get_vars</a></span><span class='op'>(</span><span class='va'>wlddev</span>, <span class='st'>"G1."</span>, regex <span class='op'>=</span> <span class='cn'>TRUE</span><span class='op'>)</span> <span class='op'>&lt;-</span> <span class='cn'>NULL</span> <span class='co'># Deleting again</span>
-
+ 
 <span class='co'># These operators can conveniently be used in regression formulas:</span>
 <span class='co'># Using a Mundlak (1978) procedure to estimate the effect of OECD on LIFEEX, controlling for PCGDP</span>
 <span class='fu'><a href='https://rdrr.io/r/stats/lm.html'>lm</a></span><span class='op'>(</span><span class='va'>LIFEEX</span> <span class='op'>~</span> <span class='fu'><a href='https://rdrr.io/r/base/Log.html'>log</a></span><span class='op'>(</span><span class='va'>PCGDP</span><span class='op'>)</span> <span class='op'>+</span> <span class='va'>OECD</span> <span class='op'>+</span> <span class='fu'><a href='fbetween, fwithin.html'>B</a></span><span class='op'>(</span><span class='fu'><a href='https://rdrr.io/r/base/Log.html'>log</a></span><span class='op'>(</span><span class='va'>PCGDP</span><span class='op'>)</span>, <span class='va'>country</span><span class='op'>)</span>,
@@ -2156,7 +2197,10 @@ Core S3 methods and efficient grouping and ordering functionality can be accesse
 #&gt; </div><div class='input'>
 <span class='co'># Tranformation functions and operators also support plm panel data classes:</span>
 <span class='kw'><a href='https://rdrr.io/r/base/library.html'>library</a></span><span class='op'>(</span><span class='va'><a href='https://cran.r-project.org/package=plm'>plm</a></span><span class='op'>)</span>
-<span class='va'>pwlddev</span> <span class='op'>&lt;-</span> <span class='fu'><a href='https://rdrr.io/pkg/plm/man/pdata.frame.html'>pdata.frame</a></span><span class='op'>(</span><span class='va'>wlddev</span>, index <span class='op'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span><span class='op'>(</span><span class='st'>"country"</span>,<span class='st'>"year"</span><span class='op'>)</span><span class='op'>)</span>
+</div><div class='output co'>#&gt; <span class='message'></span>
+#&gt; <span class='message'>Attaching package: ‘plm’</span></div><div class='output co'>#&gt; <span class='message'>The following objects are masked from ‘package:dplyr’:</span>
+#&gt; <span class='message'></span>
+#&gt; <span class='message'>    between, lag, lead</span></div><div class='input'><span class='va'>pwlddev</span> <span class='op'>&lt;-</span> <span class='fu'><a href='https://rdrr.io/pkg/plm/man/pdata.frame.html'>pdata.frame</a></span><span class='op'>(</span><span class='va'>wlddev</span>, index <span class='op'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span><span class='op'>(</span><span class='st'>"country"</span>,<span class='st'>"year"</span><span class='op'>)</span><span class='op'>)</span>
 <span class='fu'><a href='https://rdrr.io/r/utils/head.html'>head</a></span><span class='op'>(</span><span class='fu'><a href='fbetween, fwithin.html'>W</a></span><span class='op'>(</span><span class='va'>pwlddev</span><span class='op'>$</span><span class='va'>PCGDP</span><span class='op'>)</span><span class='op'>)</span>                      <span class='co'># Country-demeaning</span>
 </div><div class='output co'>#&gt; Afghanistan-1960 Afghanistan-1961 Afghanistan-1962 Afghanistan-1963 
 #&gt;               NA               NA               NA               NA 
@@ -2247,10 +2291,10 @@ Core S3 methods and efficient grouping and ordering functionality can be accesse
 #&gt; Afghanistan-1962 Afghanistan 1962       NA  1.353002      NA -50.76923
 #&gt; Afghanistan-1963 Afghanistan 1963       NA  1.322887      NA 105.82347
 #&gt; Afghanistan-1964 Afghanistan 1964       NA  1.296693      NA  27.92557
-#&gt; Afghanistan-1965 Afghanistan 1965       NA  1.277158      NA  22.40479</div><div class='input'>
+#&gt; Afghanistan-1965 Afghanistan 1965       NA  1.277158      NA  22.40479</div><div class='input'><span class='fu'><a href='https://rdrr.io/r/base/rm.html'>rm</a></span><span class='op'>(</span><span class='va'>pwlddev</span><span class='op'>)</span>
+
 <span class='co'># Remove all objects used in this example section</span>
-<span class='fu'><a href='https://rdrr.io/r/base/rm.html'>rm</a></span><span class='op'>(</span><span class='va'>v</span>, <span class='va'>d</span>, <span class='va'>w</span>, <span class='va'>f</span>, <span class='va'>f1</span>, <span class='va'>f2</span>, <span class='va'>g</span>, <span class='va'>mtcarsM</span>, <span class='va'>pwlddev</span>, <span class='va'>sds</span>, <span class='va'>series</span>, <span class='va'>wlddev</span><span class='op'>)</span>
-<span class='co'># }</span>
+<span class='fu'><a href='https://rdrr.io/r/base/rm.html'>rm</a></span><span class='op'>(</span><span class='va'>v</span>, <span class='va'>d</span>, <span class='va'>w</span>, <span class='va'>f</span>, <span class='va'>f1</span>, <span class='va'>f2</span>, <span class='va'>g</span>, <span class='va'>mtcarsM</span>, <span class='va'>sds</span>, <span class='va'>series</span>, <span class='va'>wlddev</span><span class='op'>)</span>
 </div></span></pre>
   </div>
   <div class="col-md-3 hidden-xs hidden-sm" id="pkgdown-sidebar">

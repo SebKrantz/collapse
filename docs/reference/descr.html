@@ -72,7 +72,7 @@
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">collapse</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">1.4.2</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">1.5.0</span>
       </span>
     </div>
 
@@ -141,7 +141,7 @@
     <colgroup><col class="name" /><col class="desc" /></colgroup>
     <tr>
       <th>X</th>
-      <td><p>a data frame or list of atomic vectors. Atomic vectors, matrices or arrays can be passed but will first be coerced to data frame using <code><a href='quick-conversion.html'>qDF</a></code>.</p></td>
+      <td><p>a data frame or list of atomic vectors. Atomic vectors, matrices or arrays can be passed but will first be coerced to data frame using <code><a href='A4-quick-conversion.html'>qDF</a></code>.</p></td>
     </tr>
     <tr>
       <th>Ndistinct</th>
@@ -153,7 +153,7 @@
     </tr>
     <tr>
       <th>table</th>
-      <td><p>logical. <code>TRUE</code> (default) calls <code><a href='https://rdrr.io/r/base/table.html'>table</a></code> on all categorical variables (excluding <a href='small-helpers.html'>Date</a> variables).</p></td>
+      <td><p>logical. <code>TRUE</code> (default) calls <code><a href='https://rdrr.io/r/base/table.html'>table</a></code> on all categorical variables (excluding <a href='AA2-small-helpers.html'>Date</a> variables).</p></td>
     </tr>
     <tr>
       <th>Qprobs</th>
@@ -199,7 +199,7 @@
 
     <h2 class="hasAnchor" id="details"><a class="anchor" href="#details"></a>Details</h2>
 
-    <p><code>descr</code> was heavily inspired by <code><a href='https://rdrr.io/pkg/Hmisc/man/describe.html'>Hmisc::describe</a></code>, but computes about 10x faster. The performance is comparable to <code><a href='https://rdrr.io/r/base/summary.html'>base::summary</a></code>. <code>descr</code> was built as a wrapper around <code><a href='qsu.html'>qsu</a></code>, to enrich the set of statistics computed by <code><a href='qsu.html'>qsu</a></code> for both numeric and categorical variables.</p>
+    <p><code>descr</code> was heavily inspired by <code><a href='https://rdrr.io/pkg/Hmisc/man/describe.html'>Hmisc::describe</a></code>, but computes about 10x faster. The performance is comparable to <code><a href='https://rdrr.io/r/base/summary.html'>summary</a></code>. <code>descr</code> was built as a wrapper around <code><a href='qsu.html'>qsu</a></code>, to enrich the set of statistics computed by <code><a href='qsu.html'>qsu</a></code> for both numeric and categorical variables.</p>
 <p><code><a href='qsu.html'>qsu</a></code> itself is yet about 10x faster than <code>descr</code>, and is optimized for grouped, panel data and weighted statistics. It is possible to also compute grouped, panel data and/or weighted statistics with <code>descr</code> by passing group-ids to <code>g</code>, panel-ids to <code>pid</code> or a weight vector to <code>w</code>. These arguments are handed down to <code><a href='qsu.html'>qsu.default</a></code> and only affect the statistics natively computed by <code>qsu</code>, i.e. passing a weight vector produces a weighted mean, sd, skewness and kurtosis but not weighted quantiles.</p>
 <p>The list-object returned from <code>descr</code> can be converted to a tidy data frame using <code>as.data.frame</code>. This representation will not include frequency tables computed for categorical variables, and the method cannot handle arrays of statistics (applicable when <code>g</code> or <code>pid</code> arguments are passed to <code>descr</code>, in that case <code>as.data.frame.descr</code> will throw an appropriate error).</p>
     <h2 class="hasAnchor" id="value"><a class="anchor" href="#value"></a>Value</h2>
@@ -207,7 +207,7 @@
     <p>A 2-level nested list, the top-level containing the statistics computed for each variable, which are themselves stored in a list containing the class, the label, the basic statistics and quantiles / tables computed for the variable. The object is given a class 'descr' and also has the number of observations in the dataset attached as an 'N' attribute, as well as an attribute 'arstat' indicating whether the object contains arrays of statistics, and an attribute 'table' indicating whether <code>table = TRUE</code> (i.e. the object could contain tables for categorical variables).</p>
     <h2 class="hasAnchor" id="see-also"><a class="anchor" href="#see-also"></a>See also</h2>
 
-    <div class='dont-index'><p><code><a href='qsu.html'>qsu</a></code>, <code><a href='pwcor, pwcov, pwNobs.html'>pwcor</a></code>, <a href='summary-statistics.html'>Summary Statistics</a>, <a href='fast-statistical-functions.html'>Fast Statistical Functions</a>, <a href='index.html'>Collapse Overview</a></p></div>
+    <div class='dont-index'><p><code><a href='qsu.html'>qsu</a></code>, <code><a href='pwcor, pwcov, pwNobs.html'>pwcor</a></code>, <a href='A9-summary-statistics.html'>Summary Statistics</a>, <a href='A1-fast-statistical-functions.html'>Fast Statistical Functions</a>, <a href='index.html'>Collapse Overview</a></p></div>
 
     <h2 class="hasAnchor" id="examples"><a class="anchor" href="#examples"></a>Examples</h2>
     <pre class="examples"><div class='input'><span class='co'>## Standard Use</span>
@@ -316,8 +316,8 @@
 #&gt; --------------------------------------------------------------------------------
 #&gt; date (Date): Date Recorded (Fictitious)
 #&gt; Stats: 
-#&gt;       N  Ndist
-#&gt;   12744     59
+#&gt;       N  Ndist    Min    Max
+#&gt;   12744     59  -3287  17897
 #&gt; --------------------------------------------------------------------------------
 #&gt; year (integer): Year
 #&gt; Stats: 
@@ -580,19 +580,19 @@
 #&gt; 10   LIFEEX   numeric Life expectancy at birth, total (years) 11068 10048
 #&gt; 11     GINI   numeric        GINI index (World Bank estimate)  1356   363
 #&gt; 12      ODA   numeric    Net ODA received (constant 2015 US$)  8336  7564
-#&gt;            Mean           SD           Min          Max          Skew
-#&gt; 1            NA           NA            NA           NA            NA
-#&gt; 2            NA           NA            NA           NA            NA
-#&gt; 3            NA           NA            NA           NA            NA
-#&gt; 4  1.989000e+03 1.703005e+01  1.960000e+03 2.018000e+03 -6.402075e-16
-#&gt; 5  1.988983e+03 1.763107e+01  1.960000e+03 2.020000e+03  6.221301e-03
-#&gt; 6            NA           NA            NA           NA            NA
-#&gt; 7            NA           NA            NA           NA            NA
-#&gt; 8            NA           NA            NA           NA            NA
-#&gt; 9  1.156365e+04 1.834841e+04  1.316464e+02 1.915866e+05  3.112130e+00
-#&gt; 10 6.384109e+01 1.144971e+01  1.890700e+01 8.541707e+01 -6.692252e-01
-#&gt; 11 3.939757e+01 9.676435e+00  1.620000e+01 6.580000e+01  4.613314e-01
-#&gt; 12 4.287465e+08 8.198690e+08 -1.080380e+09 2.455218e+10  7.191848e+00
+#&gt;              Min          Max         Mean           SD          Skew
+#&gt; 1             NA           NA           NA           NA            NA
+#&gt; 2             NA           NA           NA           NA            NA
+#&gt; 3  -3.287000e+03 1.789700e+04           NA           NA            NA
+#&gt; 4   1.960000e+03 2.018000e+03 1.989000e+03 1.703005e+01 -6.402075e-16
+#&gt; 5   1.960000e+03 2.020000e+03 1.988983e+03 1.763107e+01  6.221301e-03
+#&gt; 6             NA           NA           NA           NA            NA
+#&gt; 7             NA           NA           NA           NA            NA
+#&gt; 8             NA           NA           NA           NA            NA
+#&gt; 9   1.316464e+02 1.915866e+05 1.156365e+04 1.834841e+04  3.112130e+00
+#&gt; 10  1.890700e+01 8.541707e+01 6.384109e+01 1.144971e+01 -6.692252e-01
+#&gt; 11  1.620000e+01 6.580000e+01 3.939757e+01 9.676435e+00  4.613314e-01
+#&gt; 12 -1.080380e+09 2.455218e+10 4.287465e+08 8.198690e+08  7.191848e+00
 #&gt;          Kurt            1%           5%          25%          50%          75%
 #&gt; 1          NA            NA           NA           NA           NA           NA
 #&gt; 2          NA            NA           NA           NA           NA           NA
@@ -740,8 +740,8 @@
 #&gt; --------------------------------------------------------------------------------
 #&gt; date (Date): Date Recorded (Fictitious)
 #&gt; Stats: 
-#&gt;       N  Ndist
-#&gt;   12744     59
+#&gt;       N  Ndist    Min    Max
+#&gt;   12744     59  -3287  17897
 #&gt; --------------------------------------------------------------------------------
 #&gt; year (integer): Year
 #&gt; Stats: 

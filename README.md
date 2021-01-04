@@ -77,13 +77,15 @@ devtools::install_github("SebKrantz/collapse")
 ## Documentation
 *collapse* installs with a built-in structured [documentation](<https://sebkrantz.github.io/collapse/reference/index.html>), implemented via a set of separate help pages. Calling `help('collapse-documentation')` from the R console brings up the the top-level documentation page, which provides an overview of the entire functionality of the package and links to all other documentation pages. 
 
-In addition, *collapse* provides 3 vignettes:
+In addition, *collapse* provides 4 vignettes (available online):
 
 * [Introduction to *collapse*](<https://sebkrantz.github.io/collapse/articles/collapse_intro.html>): Introduces all main features of the package in a structured way.
 
 * [*collapse* and *dplyr*](<https://sebkrantz.github.io/collapse/articles/collapse_and_dplyr.html>): Demonstrates the integration of *collapse* with *dplyr* / *tidyverse* workflows and associated performance improvements.
 
 * [*collapse* and *plm*](<https://sebkrantz.github.io/collapse/articles/collapse_and_plm.html>): Demonstrates the integration of *collapse* with the *plm* package and provides examples of fast and easy programming with panel data. 
+
+* [*collapse* and *data.table*](<https://sebkrantz.github.io/collapse/articles/collapse_and_data.table.html>): Shows how *collapse* and *data.table* may be used together in a harmonious way. 
 
 ### Cheatsheet
 

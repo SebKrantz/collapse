@@ -6,7 +6,7 @@
 <meta http-equiv="X-UA-Compatible" content="IE=edge">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-<title>Quick Data Conversion — quick-conversion • collapse</title>
+<title>Quick Data Conversion — A4-quick-conversion • collapse</title>
 
 
 <!-- jquery -->
@@ -39,7 +39,7 @@
 
 
 
-<meta property="og:title" content="Quick Data Conversion — quick-conversion" />
+<meta property="og:title" content="Quick Data Conversion — A4-quick-conversion" />
 <meta property="og:description" content="Fast, flexible and precise conversion of common data objects, without method dispatch and extensive checks:
 qDF, qDT and qTBL convert vectors, matrices, higher-dimensional arrays and suitable lists to data frame, data.table and tibble, respectively.
 qM converts vectors, higher-dimensional arrays, data frames and suitable lists to matrix.
@@ -79,7 +79,7 @@ as.numeric_factor and as.character_factor convert factors, or all factor columns
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">collapse</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">1.4.2</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">1.5.0</span>
       </span>
     </div>
 
@@ -95,7 +95,7 @@ as.numeric_factor and as.character_factor convert factors, or all factor columns
   <a href="../news/index.html">News</a>
 </li>
 <li>
-  <a href="https://sebkrantz.github.io/Rblog/" target="_blank">Blog</a>
+  <a href="https://sebkrantz.github.io/Rblog/">Blog</a>
 </li>
       </ul>
       <ul class="nav navbar-nav navbar-right">
@@ -140,16 +140,22 @@ as.numeric_factor and as.character_factor convert factors, or all factor columns
 
     </div>
 
-    <pre class="usage"><span class='fu'>qDF</span><span class='op'>(</span><span class='va'>X</span>, row.names.col <span class='op'>=</span> <span class='cn'>FALSE</span>, keep.attr <span class='op'>=</span> <span class='cn'>FALSE</span>, class <span class='op'>=</span> <span class='st'>"data.frame"</span><span class='op'>)</span>
-<span class='fu'>qDT</span><span class='op'>(</span><span class='va'>X</span>, row.names.col <span class='op'>=</span> <span class='cn'>FALSE</span>, keep.attr <span class='op'>=</span> <span class='cn'>FALSE</span>, class <span class='op'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span><span class='op'>(</span><span class='st'>"data.table"</span>, <span class='st'>"data.frame"</span><span class='op'>)</span><span class='op'>)</span>
-<span class='fu'>qTBL</span><span class='op'>(</span><span class='va'>X</span>, row.names.col <span class='op'>=</span> <span class='cn'>FALSE</span>, keep.attr <span class='op'>=</span> <span class='cn'>FALSE</span><span class='op'>)</span>
-<span class='fu'>qM</span><span class='op'>(</span><span class='va'>X</span>, keep.attr <span class='op'>=</span> <span class='cn'>FALSE</span>, class <span class='op'>=</span> <span class='cn'>NULL</span><span class='op'>)</span>
-<span class='fu'>as.numeric_factor</span><span class='op'>(</span><span class='va'>X</span>, keep.attr <span class='op'>=</span> <span class='cn'>TRUE</span><span class='op'>)</span>
-<span class='fu'>as.character_factor</span><span class='op'>(</span><span class='va'>X</span>, keep.attr <span class='op'>=</span> <span class='cn'>TRUE</span><span class='op'>)</span>
+    <pre class="usage"><span class='co'># Converting between matrices, data frames / tables / tibbles</span>
 
-<span class='co'># Programmer functions: matrix rows or columns to list - fully in C++</span>
+ <span class='fu'>qDF</span><span class='op'>(</span><span class='va'>X</span>, row.names.col <span class='op'>=</span> <span class='cn'>FALSE</span>, keep.attr <span class='op'>=</span> <span class='cn'>FALSE</span>, class <span class='op'>=</span> <span class='st'>"data.frame"</span><span class='op'>)</span>
+ <span class='fu'>qDT</span><span class='op'>(</span><span class='va'>X</span>, row.names.col <span class='op'>=</span> <span class='cn'>FALSE</span>, keep.attr <span class='op'>=</span> <span class='cn'>FALSE</span>, class <span class='op'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span><span class='op'>(</span><span class='st'>"data.table"</span>, <span class='st'>"data.frame"</span><span class='op'>)</span><span class='op'>)</span>
+<span class='fu'>qTBL</span><span class='op'>(</span><span class='va'>X</span>, row.names.col <span class='op'>=</span> <span class='cn'>FALSE</span>, keep.attr <span class='op'>=</span> <span class='cn'>FALSE</span><span class='op'>)</span>
+  <span class='fu'>qM</span><span class='op'>(</span><span class='va'>X</span>,                        keep.attr <span class='op'>=</span> <span class='cn'>FALSE</span>, class <span class='op'>=</span> <span class='cn'>NULL</span><span class='op'>)</span>
+
+<span class='co'># Programmer functions: matrix rows or columns to list / DF / DT - fully in C++</span>
+
 <span class='fu'>mctl</span><span class='op'>(</span><span class='va'>X</span>, names <span class='op'>=</span> <span class='cn'>FALSE</span>, return <span class='op'>=</span> <span class='st'>"list"</span><span class='op'>)</span>
-<span class='fu'>mrtl</span><span class='op'>(</span><span class='va'>X</span>, names <span class='op'>=</span> <span class='cn'>FALSE</span>, return <span class='op'>=</span> <span class='st'>"list"</span><span class='op'>)</span></pre>
+<span class='fu'>mrtl</span><span class='op'>(</span><span class='va'>X</span>, names <span class='op'>=</span> <span class='cn'>FALSE</span>, return <span class='op'>=</span> <span class='st'>"list"</span><span class='op'>)</span>
+
+<span class='co'># Converting factors or factor columns</span>
+
+  <span class='fu'>as.numeric_factor</span><span class='op'>(</span><span class='va'>X</span>, keep.attr <span class='op'>=</span> <span class='cn'>TRUE</span><span class='op'>)</span>
+<span class='fu'>as.character_factor</span><span class='op'>(</span><span class='va'>X</span>, keep.attr <span class='op'>=</span> <span class='cn'>TRUE</span><span class='op'>)</span></pre>
 
     <h2 class="hasAnchor" id="arguments"><a class="anchor" href="#arguments"></a>Arguments</h2>
     <table class="ref-arguments">
@@ -164,7 +170,7 @@ as.numeric_factor and as.character_factor convert factors, or all factor columns
     </tr>
     <tr>
       <th>keep.attr</th>
-      <td><p>logical. <code>FALSE</code> (default) yields a <em>hard</em> / <em>thorough</em> object conversion: All unnecessary attributes are removed from the object yielding a plain matrix / data.frame / data.table. <code>FALSE</code> yields a <em>soft</em> / <em>minimal</em> object conversion: Only the attributes 'names', 'row.names', 'dim', 'dimnames' and 'levels' are modified in the conversion. Other attributes are preserved. See also <code>class</code>.</p></td>
+      <td><p>logical. <code>FALSE</code> (default) yields a <em>hard</em> / <em>thorough</em> object conversion: All unnecessary attributes are removed from the object yielding a plain matrix / data.frame / <em>data.table</em>. <code>FALSE</code> yields a <em>soft</em> / <em>minimal</em> object conversion: Only the attributes 'names', 'row.names', 'dim', 'dimnames' and 'levels' are modified in the conversion. Other attributes are preserved. See also <code>class</code>.</p></td>
     </tr>
     <tr>
       <th>class</th>
@@ -196,8 +202,8 @@ as.numeric_factor and as.character_factor convert factors, or all factor columns
     <h2 class="hasAnchor" id="value"><a class="anchor" href="#value"></a>Value</h2>
 
     <p><code>qDF</code> - returns a data.frame<br />
-<code>qDT</code> - returns a data.table<br />
-<code>qTBL</code> - returns a tibble<br />
+<code>qDT</code> - returns a <em>data.table</em><br />
+<code>qTBL</code> - returns a <em>tibble</em><br />
 <code>qM</code> - returns a matrix<br />
 <code>mctl</code>, <code>mrtl</code> - return a list, data frame or <em>data.table</em> <br />
 <code>qF</code> - returns a factor<br />

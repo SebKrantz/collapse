@@ -247,7 +247,7 @@ Since transformations (`:=` operations) are not highly optimized in *data.table*
 ```{r}
 # Lets generate a large dataset and benchmark this stuff
 DT_large <- replicate(1000, qDT(wlddev), simplify = FALSE) %>% 
-    lapply(tfm, country = paste(country, round(rnorm(1), 5L))) %>%
+    lapply(tfm, country = paste(country, rnorm(1))) %>%
     rbindlist
 
 # 12.7 million Obs

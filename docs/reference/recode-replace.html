@@ -6,7 +6,7 @@
 <meta http-equiv="X-UA-Compatible" content="IE=edge">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-<title>Recode and Replace Values in Matrix-Like Objects — recode-replace • collapse</title>
+<title>Recode and Replace Values in Matrix-Like Objects — AA1-recode-replace • collapse</title>
 
 
 <!-- jquery -->
@@ -39,10 +39,10 @@
 
 
 
-<meta property="og:title" content="Recode and Replace Values in Matrix-Like Objects — recode-replace" />
+<meta property="og:title" content="Recode and Replace Values in Matrix-Like Objects — AA1-recode-replace" />
 <meta property="og:description" content="A small suite of functions to efficiently perform common recoding and replacing tasks in matrix-like objects (vectors, matrices, arrays, data frames, lists of atomic objects):
-recode_num and recode_char can be used to efficiently recode multiple numeric or character values, respectively. The syntax is inspired by dplyr::recode, but the functionality is enhanced in the following respects: (1) they are faster than dplyr::recode, (2) when passed a data frame / list, all appropriately typed columns will be recoded. (3) They preserve the attributes of the data object and of columns in a data frame / list, and (4) recode_char also supports regular expression matching using grepl.
-replace_NA efficiently replaces NA/NaN with a value. data frames can be multi-typed.
+recode_num and recode_char can be used to efficiently recode multiple numeric or character values, respectively. The syntax is inspired by dplyr::recode, but the functionality is enhanced in the following respects: (1) they are faster than dplyr::recode, (2) when passed a data frame / list, all appropriately typed columns will be recoded. (3) They preserve the attributes of the data object and of columns in a data frame / list, and (4) recode_char also supports regular expression matching using grepl. Note that simple replacing tasks on a vector can also effectively be handled by data.table::fcase and data.table::fifelse.
+replace_NA efficiently replaces NA/NaN with a value (default is 0L). data can be multi-typed. For numeric data a faster and more versatile alternative is provided by data.table::nafill and data.table::setnafill.
 replace_Inf replaces Inf/-Inf (or optionally NaN/Inf/-Inf) with a value (default is NA). replace_Inf skips non-numeric columns in a data frame.
 replace_outliers replaces values falling outside a 1- or 2-sided numeric threshold or outside a certain number of column- standard deviations with a value (default is NA). replace_outliers skips non-numeric columns in a data frame.
 
@@ -78,7 +78,7 @@ replace_outliers replaces values falling outside a 1- or 2-sided numeric thresho
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">collapse</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">1.4.2</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">1.5.0</span>
       </span>
     </div>
 
@@ -94,7 +94,7 @@ replace_outliers replaces values falling outside a 1- or 2-sided numeric thresho
   <a href="../news/index.html">News</a>
 </li>
 <li>
-  <a href="https://sebkrantz.github.io/Rblog/" target="_blank">Blog</a>
+  <a href="https://sebkrantz.github.io/Rblog/">Blog</a>
 </li>
       </ul>
       <ul class="nav navbar-nav navbar-right">
@@ -130,8 +130,8 @@ replace_outliers replaces values falling outside a 1- or 2-sided numeric thresho
 
     <div class="ref-description">
     <p>A small suite of functions to efficiently perform common recoding and replacing tasks in matrix-like objects (vectors, matrices, arrays, data frames, lists of atomic objects):</p><ul>
-<li><p><code>recode_num</code> and <code>recode_char</code> can be used to efficiently recode multiple numeric or character values, respectively. The syntax is inspired by <code><a href='https://dplyr.tidyverse.org/reference/recode.html'>dplyr::recode</a></code>, but the functionality is enhanced in the following respects: (1) they are faster than <code><a href='https://dplyr.tidyverse.org/reference/recode.html'>dplyr::recode</a></code>, (2) when passed a data frame / list, all appropriately typed columns will be recoded. (3) They preserve the attributes of the data object and of columns in a data frame / list, and (4) <code>recode_char</code> also supports regular expression matching using <code><a href='https://rdrr.io/r/base/grep.html'>grepl</a></code>.</p></li>
-<li><p><code>replace_NA</code> efficiently replaces <code>NA/NaN</code> with a value. data frames can be multi-typed.</p></li>
+<li><p><code>recode_num</code> and <code>recode_char</code> can be used to efficiently recode multiple numeric or character values, respectively. The syntax is inspired by <code><a href='https://dplyr.tidyverse.org/reference/recode.html'>dplyr::recode</a></code>, but the functionality is enhanced in the following respects: (1) they are faster than <code><a href='https://dplyr.tidyverse.org/reference/recode.html'>dplyr::recode</a></code>, (2) when passed a data frame / list, all appropriately typed columns will be recoded. (3) They preserve the attributes of the data object and of columns in a data frame / list, and (4) <code>recode_char</code> also supports regular expression matching using <code><a href='https://rdrr.io/r/base/grep.html'>grepl</a></code>. <em>Note</em> that simple replacing tasks on a vector can also effectively be handled by <code><a href='https://rdrr.io/pkg/data.table/man/fcase.html'>data.table::fcase</a></code> and <code><a href='https://rdrr.io/pkg/data.table/man/fifelse.html'>data.table::fifelse</a></code>.</p></li>
+<li><p><code>replace_NA</code> efficiently replaces <code>NA/NaN</code> with a value (default is <code>0L</code>). data can be multi-typed. For numeric data a faster and more versatile alternative is provided by <code><a href='https://rdrr.io/pkg/data.table/man/nafill.html'>data.table::nafill</a></code> and <code><a href='https://rdrr.io/pkg/data.table/man/nafill.html'>data.table::setnafill</a></code>.</p></li>
 <li><p><code>replace_Inf</code> replaces <code>Inf/-Inf</code> (or optionally <code>NaN/Inf/-Inf</code>) with a value (default is <code>NA</code>). <code>replace_Inf</code> skips non-numeric columns in a data frame.</p></li>
 <li><p><code>replace_outliers</code> replaces values falling outside a 1- or 2-sided numeric threshold or outside a certain number of column- standard deviations with a value (default is <code>NA</code>). <code>replace_outliers</code> skips non-numeric columns in a data frame.</p></li>
 </ul>
@@ -140,9 +140,10 @@ replace_outliers replaces values falling outside a 1- or 2-sided numeric thresho
 
     <pre class="usage"><span class='fu'>recode_num</span><span class='op'>(</span><span class='va'>X</span>, <span class='va'>...</span>, default <span class='op'>=</span> <span class='cn'>NULL</span>, missing <span class='op'>=</span> <span class='cn'>NULL</span><span class='op'>)</span>
 
-<span class='fu'>recode_char</span><span class='op'>(</span><span class='va'>X</span>, <span class='va'>...</span>, default <span class='op'>=</span> <span class='cn'>NULL</span>, missing <span class='op'>=</span> <span class='cn'>NULL</span>, regex <span class='op'>=</span> <span class='cn'>FALSE</span><span class='op'>)</span>
+<span class='fu'>recode_char</span><span class='op'>(</span><span class='va'>X</span>, <span class='va'>...</span>, default <span class='op'>=</span> <span class='cn'>NULL</span>, missing <span class='op'>=</span> <span class='cn'>NULL</span>, regex <span class='op'>=</span> <span class='cn'>FALSE</span>,
+            ignore.case <span class='op'>=</span> <span class='cn'>FALSE</span>, fixed <span class='op'>=</span> <span class='cn'>FALSE</span><span class='op'>)</span>
 
-<span class='fu'>replace_NA</span><span class='op'>(</span><span class='va'>X</span>, <span class='va'>value</span><span class='op'>)</span>
+<span class='fu'>replace_NA</span><span class='op'>(</span><span class='va'>X</span>, value <span class='op'>=</span> <span class='fl'>0L</span><span class='op'>)</span>
 
 <span class='fu'>replace_Inf</span><span class='op'>(</span><span class='va'>X</span>, value <span class='op'>=</span> <span class='cn'>NA</span>, replace.nan <span class='op'>=</span> <span class='cn'>FALSE</span><span class='op'>)</span>
 
@@ -194,6 +195,10 @@ replace_outliers replaces values falling outside a 1- or 2-sided numeric thresho
 </ul>
 </td>
     </tr>
+    <tr>
+      <th>ignore.case, fixed</th>
+      <td><p>logical. Passed to <code><a href='https://rdrr.io/r/base/grep.html'>grepl</a></code> and only applicable if <code>regex = TRUE</code>.</p></td>
+    </tr>
     </table>
 
     <h2 class="hasAnchor" id="note"><a class="anchor" href="#note"></a>Note</h2>
@@ -201,7 +206,7 @@ replace_outliers replaces values falling outside a 1- or 2-sided numeric thresho
     <p>These functions are not generic and do not offer support for factors or date(-time) objects. see <code><a href='https://dplyr.tidyverse.org/reference/recode.html'>dplyr::recode_factor</a></code>, <em>forcats</em> and other appropriate packages for dealing with these classes.</p>
     <h2 class="hasAnchor" id="see-also"><a class="anchor" href="#see-also"></a>See also</h2>
 
-    <div class='dont-index'><p><a href='index.html'>Collapse Overview</a>, <a href='small-helpers.html'>Small (Helper) Functions</a></p></div>
+    <div class='dont-index'><p><a href='A0-collapse-documentation.html'>Collapse Overview</a>, <a href='AA2-small-helpers.html'>Small (Helper) Functions</a></p></div>
 
     <h2 class="hasAnchor" id="examples"><a class="anchor" href="#examples"></a>Examples</h2>
     <pre class="examples"><div class='input'><span class='fu'>recode_char</span><span class='op'>(</span><span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span><span class='op'>(</span><span class='st'>"a"</span>,<span class='st'>"b"</span>,<span class='st'>"c"</span><span class='op'>)</span>, a <span class='op'>=</span> <span class='st'>"b"</span>, b <span class='op'>=</span> <span class='st'>"c"</span><span class='op'>)</span>

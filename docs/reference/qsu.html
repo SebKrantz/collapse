@@ -73,7 +73,7 @@ It computes a set of 7 statistics (nobs, mean, sd, min, max, skewness and kurtos
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">collapse</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">1.4.2</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">1.5.0</span>
       </span>
     </div>
 
@@ -89,7 +89,7 @@ It computes a set of 7 statistics (nobs, mean, sd, min, max, skewness and kurtos
   <a href="../news/index.html">News</a>
 </li>
 <li>
-  <a href="https://sebkrantz.github.io/Rblog/" target="_blank">Blog</a>
+  <a href="https://sebkrantz.github.io/Rblog/">Blog</a>
 </li>
       </ul>
       <ul class="nav navbar-nav navbar-right">
@@ -191,7 +191,7 @@ It computes a set of 7 statistics (nobs, mean, sd, min, max, skewness and kurtos
     </tr>
     <tr>
       <th>vlabels</th>
-      <td><p>logical. Use variable labels in the summary. See <code><a href='small-helpers.html'>vlabels</a></code>.</p></td>
+      <td><p>logical. Use variable labels in the summary. See <code><a href='AA2-small-helpers.html'>vlabels</a></code>.</p></td>
     </tr>
     <tr>
       <th>effect</th>
@@ -230,7 +230,7 @@ It computes a set of 7 statistics (nobs, mean, sd, min, max, skewness and kurtos
 <p>If <code>pid</code> is used, <code>qsu</code> performs a panel-decomposition of each variable and computes 3 sets of statistics: Statistics computed on the 'Overall' (raw) data, statistics computed on the 'Between' - transformed (pid - averaged) data, and statistics computed on the 'Within' - transformed (pid - demeaned) data.</p>
 <p>More formally, let <b><code>x</code></b> (bold) be a panel vector of data for <code>N</code> individuals indexed by <code>i</code>, recorded for <code>T</code> periods, indexed by <code>t</code>. <code>xit</code> then denotes a single data-point belonging to individual <code>i</code> in time-period <code>t</code> (<code>t/T</code> must not represent time). Then <code>xi.</code> denotes the average of all values for individual <code>i</code> (averaged over <code>t</code>), and by extension <b><code>xN.</code></b> is the vector (length <code>N</code>) of such averages for all individuals. If no groups are supplied to <code>g/by</code>, the 'Between' statistics are computed on <b><code>xN.</code></b>, the vector of individual averages. (This means that for a non-balanced panel or in the presence of missing values, the 'Overall' mean computed on <b><code>x</code></b> can be slightly different than the 'Between' mean computed on <b><code>xN.</code></b>). If groups are supplied to <code>g/by</code>, <b><code>xN.</code></b> is expanded to the vector <b><code>xi.</code></b> (length <code>N x T</code>) by replacing each value <code>xit</code> in <b><code>x</code></b> with <code>xi.</code>, while preserving missing values in <b><code>x</code></b>. Grouped Between-statistics are then computed on <b><code>xi.</code></b>, with the only difference that the number of observations ('Between-N') reported for each group is the number of distinct non-missing values of <b><code>xi.</code></b> in each group (not the total number of non-missing values of <b><code>xi.</code></b> in each group, which is already reported in 'Overall-N').</p>
 <p>'Within' statistics are always computed on the vector <b><code>x - xi. + x..</code></b>, where <b><code>x..</code></b> is simply the 'Overall' mean computed from <b><code>x</code></b>, which is added back to preserve the level of the data. The 'Within' mean computed on this data will always be identical to the 'Overall' mean. In the summary output, <code>qsu</code> reports not 'N', which would be identical to the 'Overall-N', but 'T', the average number of time-periods of data available for each individual obtained as 'T' = 'Overall-N / 'Between-N'. See Examples.</p>
-<p>Apart from 'N/T' and the extrema, the standard-deviations ('SD') computed on between- and within- transformed data are extremely valuable because they indicate how much of the variation in a panel-variable is between-individuals and how much of the variation is within-individuals (over time). At the extremes, variables that have common values across individuals (such as the time-variable 't' in a balanced panel), can readily be identified as individual-invariant because the 'Between-SD' on this variable is 0 and the 'Within-SD' is equal to the 'Overall-SD'. Analogous, time-invariant individual characteristics (such as the individual-id 'i') have a 0 'Within-SD' and a 'Between-SD' equal to the 'Overall-SD'.</p>
+<p>Apart from 'N/T' and the extrema, the standard-deviations ('SD') computed on between- and within- transformed data are extremely valuable because they indicate how much of the variation in a panel-variable is between-individuals and how much of the variation is within-individuals (over time). At the extremes, variables that have common values across individuals (such as the time-variable(s) 't' in a balanced panel), can readily be identified as individual-invariant because the 'Between-SD' on this variable is 0 and the 'Within-SD' is equal to the 'Overall-SD'. Analogous, time-invariant individual characteristics (such as the individual-id 'i') have a 0 'Within-SD' and a 'Between-SD' equal to the 'Overall-SD'.</p>
 <p><code>qsu</code> comes with it's own print method which by default writes out up to 9 digits at 4 decimal places. Larger numbers are printed in scientific format. for numbers between 7 and 9 digits, a comma ',' is placed after the 6th digit to designate the millions. Missing values are printed using '-'.</p>
     <h2 class="hasAnchor" id="value"><a class="anchor" href="#value"></a>Value</h2>
 
@@ -243,7 +243,7 @@ It computes a set of 7 statistics (nobs, mean, sd, min, max, skewness and kurtos
     <p>If weights <code>w</code> are used together with <code>pid</code>, transformed data is computed using weighted individual means i.e. weighted <b><code>xi.</code></b> and weighted <b><code>x..</code></b>. Weighted statistics are subsequently computed on this weighted-transformed data.</p>
     <h2 class="hasAnchor" id="see-also"><a class="anchor" href="#see-also"></a>See also</h2>
 
-    <div class='dont-index'><p><code><a href='descr.html'>descr</a></code>, <code><a href='pwcor, pwcov, pwNobs.html'>pwcor</a></code>, <a href='fast-statistical-functions.html'>Fast Statistical Functions</a>, <a href='index.html'>Collapse Overview</a>  <!-- %% ~~objects to See Also as \code{\link{help}}, ~~~ --></p></div>
+    <div class='dont-index'><p><code><a href='descr.html'>descr</a></code>, <code><a href='pwcor, pwcov, pwNobs.html'>pwcor</a></code>, <a href='A1-fast-statistical-functions.html'>Fast Statistical Functions</a>, <a href='index.html'>Collapse Overview</a>  <!-- %% ~~objects to See Also as \code{\link{help}}, ~~~ --></p></div>
 
     <h2 class="hasAnchor" id="examples"><a class="anchor" href="#examples"></a>Examples</h2>
     <pre class="examples"><div class='input'>
@@ -705,7 +705,7 @@ It computes a set of 7 statistics (nobs, mean, sd, min, max, skewness and kurtos
 <span class='co'># that we have GINI-data on only 161 countries, with only 8.42 observations per country on average,</span>
 <span class='co'># and that GDP, LIFEEX and GINI vary more between-countries, but ODA received varies more within</span>
 <span class='co'># countries over time.</span>
-
+ 
 <span class='co'># Using plm:</span>
 <span class='va'>pwlddev</span> <span class='op'>&lt;-</span> <span class='fu'>plm</span><span class='fu'>::</span><span class='fu'><a href='https://rdrr.io/pkg/plm/man/pdata.frame.html'>pdata.frame</a></span><span class='op'>(</span><span class='va'>wlddev</span>,         <span class='co'># Creating a Panel Data Frame frame from this data</span>
                   index <span class='op'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span><span class='op'>(</span><span class='st'>"iso3c"</span>,<span class='st'>"year"</span><span class='op'>)</span><span class='op'>)</span>
@@ -1241,6 +1241,7 @@ It computes a set of 7 statistics (nobs, mean, sd, min, max, skewness and kurtos
 #&gt; </div><div class='input'><span class='co'># -&gt; In all regions variations in inequality (GINI) between countries are greater than variations</span>
 <span class='co'># in inequality within countries. The opposite is true for Life-Expectancy in all regions apart</span>
 <span class='co'># from Europe, etc..</span>
+
 <span class='va'>psrl</span> <span class='op'>&lt;-</span> <span class='fu'>qsu</span><span class='op'>(</span><span class='va'>wlddev</span>, <span class='op'>~</span> <span class='va'>region</span>, <span class='op'>~</span> <span class='va'>iso3c</span>,      <span class='co'># Same, but output as nested list</span>
             cols <span class='op'>=</span> <span class='fl'>9</span><span class='op'>:</span><span class='fl'>12</span>, array <span class='op'>=</span> <span class='cn'>FALSE</span><span class='op'>)</span>
 <span class='va'>psrl</span>                                        <span class='co'># We can use unlist2d to create a tidy data.frame</span>
@@ -1435,56 +1436,56 @@ It computes a set of 7 statistics (nobs, mean, sd, min, max, skewness and kurtos
 #&gt; country  12744           -           -                -               -
 #&gt; iso3c    12744           -           -                -               -
 #&gt; date     12744           -           -                -               -
-#&gt; year     12744   1989.1456     19.1608             1960            2018
-#&gt; decade   12744   1989.1015     19.8133             1960            2020
+#&gt; year     12744   1989.0998     19.2519             1960            2018
+#&gt; decade   12744   1989.0942       19.91             1960            2020
 #&gt; region   12744           -           -                -               -
 #&gt; income   12744           -           -                -               -
 #&gt; OECD     12744           -           -                -               -
-#&gt; PCGDP     8995  11412.1622  20065.1456         131.6464       191586.64
-#&gt; LIFEEX   11068     63.7371     12.8759           18.907         85.4171
-#&gt; GINI      1356     39.3113     10.5657             16.2            65.8
-#&gt; ODA       8336  427,272977  829,280065  -1.08038000e+09  2.45521800e+10
+#&gt; PCGDP     8995  11795.1066  21006.6495         131.6464       191586.64
+#&gt; LIFEEX   11068     63.9185      13.058           18.907         85.4171
+#&gt; GINI      1356     39.4496     11.1782             16.2            65.8
+#&gt; ODA       8336  420,722658  847,083073  -1.08038000e+09  2.45521800e+10
 #&gt;             Skew     Kurt
 #&gt; country        -        -
 #&gt; iso3c          -        -
 #&gt; date           -        -
-#&gt; year      0.0089    4.362
-#&gt; decade    0.0233   4.6417
+#&gt; year     -0.0273   4.3155
+#&gt; decade    -0.026   4.6907
 #&gt; region         -        -
 #&gt; income         -        -
 #&gt; OECD           -        -
-#&gt; PCGDP     4.0529  31.9747
-#&gt; LIFEEX   -0.9469   6.5374
-#&gt; GINI      0.5259     4.56
-#&gt; ODA       5.5722  57.4694</div><div class='input'><span class='va'>weightsNA</span> <span class='op'>&lt;-</span> <span class='va'>weights</span>                        <span class='co'># Weights may contain missing values.. inserting 1000</span>
+#&gt; PCGDP     4.4054  38.9941
+#&gt; LIFEEX   -0.8989   6.2774
+#&gt; GINI      0.7985   6.9324
+#&gt; ODA       6.0537  65.9787</div><div class='input'><span class='va'>weightsNA</span> <span class='op'>&lt;-</span> <span class='va'>weights</span>                        <span class='co'># Weights may contain missing values.. inserting 1000</span>
 <span class='va'>weightsNA</span><span class='op'>[</span><span class='fu'><a href='https://rdrr.io/r/base/sample.html'>sample.int</a></span><span class='op'>(</span><span class='va'>n</span>, <span class='fl'>1000</span><span class='op'>)</span><span class='op'>]</span> <span class='op'>&lt;-</span> <span class='cn'>NA</span>
 <span class='fu'>qsu</span><span class='op'>(</span><span class='va'>wlddev</span>, w <span class='op'>=</span> <span class='va'>weightsNA</span>, higher <span class='op'>=</span> <span class='cn'>TRUE</span><span class='op'>)</span>   <span class='co'># But now these values are removed from all variables</span>
 </div><div class='output co'>#&gt;              N        Mean          SD              Min             Max
 #&gt; country  12744           -           -                -               -
 #&gt; iso3c    12744           -           -                -               -
 #&gt; date     12744           -           -                -               -
-#&gt; year     11744   1989.1667     19.1492             1960            2018
-#&gt; decade   11744   1989.1237     19.8038             1960            2020
+#&gt; year     11744   1989.1442     19.2227             1960            2018
+#&gt; decade   11744   1989.1335     19.8649             1960            2020
 #&gt; region   12744           -           -                -               -
 #&gt; income   12744           -           -                -               -
 #&gt; OECD     12744           -           -                -               -
-#&gt; PCGDP     8299  11385.9013   20129.132         131.6464       191586.64
-#&gt; LIFEEX   10194     63.6918     12.8464           18.907         85.4171
-#&gt; GINI      1237     39.2628     10.3822             16.2            65.8
-#&gt; ODA       7694  422,592220  821,391413  -1.08038000e+09  2.45521800e+10
+#&gt; PCGDP     8302  11822.4141  21087.0964         131.6464       191586.64
+#&gt; LIFEEX   10195     63.9559     13.0413           18.907         85.4171
+#&gt; GINI      1239       39.56      11.111             16.2            65.8
+#&gt; ODA       7697  417,130367  837,962090  -1.08038000e+09  2.45521800e+10
 #&gt;             Skew     Kurt
 #&gt; country        -        -
 #&gt; iso3c          -        -
 #&gt; date           -        -
-#&gt; year      0.0091   4.3878
-#&gt; decade    0.0203   4.6529
+#&gt; year     -0.0453    4.321
+#&gt; decade   -0.0495   4.6983
 #&gt; region         -        -
 #&gt; income         -        -
 #&gt; OECD           -        -
-#&gt; PCGDP     4.1401  33.1765
-#&gt; LIFEEX   -0.9384   6.2907
-#&gt; GINI      0.4852   4.4792
-#&gt; ODA       5.7247  61.2442</div><div class='input'>
+#&gt; PCGDP     4.4713  40.1835
+#&gt; LIFEEX    -0.907   6.3303
+#&gt; GINI      0.8861   7.1904
+#&gt; ODA       6.0594  67.3546</div><div class='input'>
 <span class='co'># Grouped and panel-summaries can also be weighted in the same manor</span>
 </div></pre>
   </div>

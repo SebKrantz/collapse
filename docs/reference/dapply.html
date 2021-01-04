@@ -72,7 +72,7 @@
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">collapse</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">1.4.2</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">1.5.0</span>
       </span>
     </div>
 
@@ -150,11 +150,11 @@
     </tr>
     <tr>
       <th>parallel</th>
-      <td><p>logical. <code>TRUE</code> implements simple parallel execution by internally calling <code><a href='https://rdrr.io/r/parallel/mcdummies.html'>parallel::mclapply</a></code> instead of <code><a href='https://rdrr.io/r/base/lapply.html'>base::lapply</a></code>.</p></td>
+      <td><p>logical. <code>TRUE</code> implements simple parallel execution by internally calling <code>mclapply</code> instead of <code><a href='https://rdrr.io/r/base/lapply.html'>lapply</a></code>.</p></td>
     </tr>
     <tr>
       <th>mc.cores</th>
-      <td><p>integer. Argument to <code><a href='https://rdrr.io/r/parallel/mcdummies.html'>parallel::mclapply</a></code> indicating the number of cores to use for parallel execution. Can use <code><a href='https://rdrr.io/r/parallel/detectCores.html'>parallel::detectCores()</a></code> to select all available cores. See also <code><a href='https://rdrr.io/r/parallel/mcdummies.html'>?parallel::mclapply</a></code>.</p></td>
+      <td><p>integer. Argument to <code>mclapply</code> indicating the number of cores to use for parallel execution. Can use <code>detectCores()</code> to select all available cores.</p></td>
     </tr>
     <tr>
       <th>return</th>
@@ -168,23 +168,23 @@
 
     <h2 class="hasAnchor" id="details"><a class="anchor" href="#details"></a>Details</h2>
 
-    <p><code>dapply</code> is an efficient command to apply functions to rows or columns of data without loosing information (attributes) about the data or changing the classes or format of the data. It is principally an efficient wrapper around <code><a href='https://rdrr.io/r/base/lapply.html'>base::lapply</a></code> and works as follows:</p>
+    <p><code>dapply</code> is an efficient command to apply functions to rows or columns of data without loosing information (attributes) about the data or changing the classes or format of the data. It is principally an efficient wrapper around <code><a href='https://rdrr.io/r/base/lapply.html'>lapply</a></code> and works as follows:</p>
 <ul>
 <li><p>Save the attributes of <code>X</code>.</p></li>
-<li><p>If <code>MARGIN = 2</code> (columns), convert matrices to plain lists of columns using <code><a href='quick-conversion.html'>mctl</a></code> and remove all attributes from data frames.</p></li>
-<li><p>If <code>MARGIN = 1</code> (rows), convert matrices to plain lists of rows using <code><a href='quick-conversion.html'>mrtl</a></code>. For data frames remove all attributes, efficiently convert to matrix using <code><a href='https://rdrr.io/r/base/do.call.html'>do.call(rbind, X)</a></code> and also convert to list of rows using <code><a href='quick-conversion.html'>mrtl</a></code>.</p></li>
-<li><p>Call <code><a href='https://rdrr.io/r/base/lapply.html'>base::lapply</a></code> or <code><a href='https://rdrr.io/r/parallel/mcdummies.html'>parallel::mclapply</a></code> on these plain lists (which is faster than calling <code>lapply</code> on an object with attributes).</p></li>
-<li><p>depending on the requested output type, use <code><a href='https://rdrr.io/r/base/matrix.html'>base::matrix</a></code>, <code><a href='https://rdrr.io/r/base/unlist.html'>base::unlist</a></code> or <code><a href='https://rdrr.io/r/base/do.call.html'>do.call(cbind, ...)</a></code> to convert the result back to a matrix or list of columns.</p></li>
+<li><p>If <code>MARGIN = 2</code> (columns), convert matrices to plain lists of columns using <code><a href='A4-quick-conversion.html'>mctl</a></code> and remove all attributes from data frames.</p></li>
+<li><p>If <code>MARGIN = 1</code> (rows), convert matrices to plain lists of rows using <code><a href='A4-quick-conversion.html'>mrtl</a></code>. For data frames remove all attributes, efficiently convert to matrix using <code><a href='https://rdrr.io/r/base/do.call.html'>do.call(rbind, X)</a></code> and also convert to list of rows using <code><a href='A4-quick-conversion.html'>mrtl</a></code>.</p></li>
+<li><p>Call <code><a href='https://rdrr.io/r/base/lapply.html'>lapply</a></code> or <code>mclapply</code> on these plain lists (which is faster than calling <code>lapply</code> on an object with attributes).</p></li>
+<li><p>depending on the requested output type, use <code><a href='https://rdrr.io/r/base/matrix.html'>matrix</a></code>, <code><a href='https://rdrr.io/r/base/unlist.html'>unlist</a></code> or <code><a href='https://rdrr.io/r/base/do.call.html'>do.call(cbind, ...)</a></code> to convert the result back to a matrix or list of columns.</p></li>
 <li><p>modify the relevant attributes accordingly and efficiently attach to the object again (no further checks). <!-- % , non essential attributes are kept and added at the end of the attribute list --></p></li>
 </ul>
 
-<p>The performance gain from working with plain lists makes <code>dapply</code> not much slower than calling <code>lapply</code> itself on a data frame. Because of the conversions involved, row-operations require some memory, but are still faster than <code><a href='https://rdrr.io/r/base/apply.html'>base::apply</a></code>.</p>
+<p>The performance gain from working with plain lists makes <code>dapply</code> not much slower than calling <code>lapply</code> itself on a data frame. Because of the conversions involved, row-operations require some memory, but are still faster than <code><a href='https://rdrr.io/r/base/apply.html'>apply</a></code>.</p>
     <h2 class="hasAnchor" id="value"><a class="anchor" href="#value"></a>Value</h2>
 
     <p><code>X</code> where <code>FUN</code> was applied to every row or column.</p>
     <h2 class="hasAnchor" id="see-also"><a class="anchor" href="#see-also"></a>See also</h2>
 
-    <div class='dont-index'><p><code><a href='BY.html'>BY</a></code>, <code><a href='collap.html'>collap</a></code>, <a href='fast-statistical-functions.html'>Fast Statistical Functions</a>, <a href='data-transformations.html'>Data Transformations</a>, <a href='index.html'>Collapse Overview</a></p></div>
+    <div class='dont-index'><p><code><a href='BY.html'>BY</a></code>, <code><a href='collap.html'>collap</a></code>, <a href='A1-fast-statistical-functions.html'>Fast Statistical Functions</a>, <a href='A6-data-transformations.html'>Data Transformations</a>, <a href='index.html'>Collapse Overview</a></p></div>
 
     <h2 class="hasAnchor" id="examples"><a class="anchor" href="#examples"></a>Examples</h2>
     <pre class="examples"><div class='input'><span class='fu'><a href='https://rdrr.io/r/utils/head.html'>head</a></span><span class='op'>(</span><span class='fu'>dapply</span><span class='op'>(</span><span class='va'>mtcars</span>, <span class='va'>log</span><span class='op'>)</span><span class='op'>)</span>                      <span class='co'># Take natural log of each variable</span>
@@ -335,8 +335,8 @@
 #&gt; 25%  1744.102 2165.625 1875.15 2843.150
 #&gt; 50%  2140.565 2796.350 1992.30 3246.600
 #&gt; 75%  2722.367 3812.425 2274.35 3993.575
-#&gt; 100% 6186.090 8412.000 4388.50 6179.000</div><div class='input'>
-<span class='co'># Similarly for grouped tibbles and other data frame classes</span>
+#&gt; 100% 6186.090 8412.000 4388.50 6179.000</div><div class='input'> 
+<span class='co'># Similarly for grouped tibbles and other data frame based classes</span>
 <span class='kw'><a href='https://rdrr.io/r/base/library.html'>library</a></span><span class='op'>(</span><span class='va'><a href='https://dplyr.tidyverse.org'>dplyr</a></span><span class='op'>)</span>
 <span class='va'>gmtcars</span> <span class='op'>&lt;-</span> <span class='fu'><a href='https://dplyr.tidyverse.org/reference/group_by.html'>group_by</a></span><span class='op'>(</span><span class='va'>mtcars</span>,<span class='va'>cyl</span>,<span class='va'>vs</span>,<span class='va'>am</span><span class='op'>)</span>
 <span class='fu'><a href='https://rdrr.io/r/utils/head.html'>head</a></span><span class='op'>(</span><span class='fu'>dapply</span><span class='op'>(</span><span class='va'>gmtcars</span>, <span class='va'>log</span><span class='op'>)</span><span class='op'>)</span>               <span class='co'># Still gives a grouped tibble back</span>
@@ -380,7 +380,8 @@
 #&gt; 25%  15.425   4 120.825  96.5 3.080 2.58125 16.8925  0  0    3    2
 #&gt; 50%  19.200   6 196.300 123.0 3.695 3.32500 17.7100  0  0    4    2
 #&gt; 75%  22.800   8 326.000 180.0 3.920 3.61000 18.9000  1  1    4    4
-#&gt; 100% 33.900   8 472.000 335.0 4.930 5.42400 22.9000  1  1    5    8</div></span></pre>
+#&gt; 100% 33.900   8 472.000 335.0 4.930 5.42400 22.9000  1  1    5    8</div><div class='input'>
+</div></span></pre>
   </div>
   <div class="col-md-3 hidden-xs hidden-sm" id="pkgdown-sidebar">
     <nav id="toc" data-toggle="toc" class="sticky-top">

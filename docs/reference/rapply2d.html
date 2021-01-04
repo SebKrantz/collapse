@@ -72,7 +72,7 @@
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">collapse</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">1.4.2</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">1.5.0</span>
       </span>
     </div>
 
@@ -88,7 +88,7 @@
   <a href="../news/index.html">News</a>
 </li>
 <li>
-  <a href="https://sebkrantz.github.io/Rblog/" target="_blank">Blog</a>
+  <a href="https://sebkrantz.github.io/Rblog/">Blog</a>
 </li>
       </ul>
       <ul class="nav navbar-nav navbar-right">
@@ -126,7 +126,7 @@
     <p><code>rapply2d</code> is a recursive version of <code>lapply</code> with two key differences to <code><a href='https://rdrr.io/r/base/rapply.html'>rapply</a></code>: (1) Data frames are considered as final objects, not as (sub-)lists, and (2) the result is never simplified / unlisted.</p>
     </div>
 
-    <pre class="usage"><span class='fu'>rapply2d</span><span class='op'>(</span><span class='va'>l</span>, <span class='va'>FUN</span>, <span class='va'>...</span><span class='op'>)</span></pre>
+    <pre class="usage"><span class='fu'>rapply2d</span><span class='op'>(</span><span class='va'>l</span>, <span class='va'>FUN</span>, <span class='va'>...</span>, classes <span class='op'>=</span> <span class='st'>"data.frame"</span><span class='op'>)</span></pre>
 
     <h2 class="hasAnchor" id="arguments"><a class="anchor" href="#arguments"></a>Arguments</h2>
     <table class="ref-arguments">
@@ -143,14 +143,18 @@
       <th>...</th>
       <td><p>additional elements passed to FUN.</p></td>
     </tr>
+    <tr>
+      <th>classes</th>
+      <td><p>character. These are classes of list-based objects inside <code>l</code> which <code>FUN</code> should be applied to. Note that <code>FUN</code> is also applied to all non-list elements in <code>l</code>. It is thus quite different from the <code>classes</code> argument to <code><a href='https://rdrr.io/r/base/rapply.html'>rapply</a></code>.</p></td>
+    </tr>
     </table>
 
     <h2 class="hasAnchor" id="value"><a class="anchor" href="#value"></a>Value</h2>
 
-    <p>A list of the same structure as <code>l</code>, where <code>FUN</code> was applied to all elements.</p>
+    <p>A list of the same structure as <code>l</code>, where <code>FUN</code> was applied to all final (atomic) elements and list-based objects of a class included in <code>classes</code>.</p>
     <h2 class="hasAnchor" id="see-also"><a class="anchor" href="#see-also"></a>See also</h2>
 
-    <div class='dont-index'><p><code><a href='unlist2d.html'>unlist2d</a></code>, <a href='list-processing.html'>List Processing</a>, <a href='index.html'>Collapse Overview</a></p></div>
+    <div class='dont-index'><p><code><a href='rsplit.html'>rsplit</a></code>, <code><a href='unlist2d.html'>unlist2d</a></code>, <a href='A8-list-processing.html'>List Processing</a>, <a href='A0-collapse-documentation.html'>Collapse Overview</a></p></div>
 
     <h2 class="hasAnchor" id="examples"><a class="anchor" href="#examples"></a>Examples</h2>
     <pre class="examples"><div class='input'><span class='va'>l</span> <span class='op'>&lt;-</span> <span class='fu'><a href='https://rdrr.io/r/base/list.html'>list</a></span><span class='op'>(</span><span class='va'>mtcars</span>, <span class='fu'><a href='https://rdrr.io/r/base/list.html'>list</a></span><span class='op'>(</span><span class='va'>mtcars</span>, <span class='fu'><a href='https://rdrr.io/pkg/data.table/man/as.matrix.html'>as.matrix</a></span><span class='op'>(</span><span class='va'>mtcars</span><span class='op'>)</span><span class='op'>)</span><span class='op'>)</span>

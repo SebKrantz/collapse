@@ -42,7 +42,7 @@ Fast (Quasi-, Log-) Differences for Time Series and Panel Data — fdiff • col
 
 <meta property="og:title" content="
 Fast (Quasi-, Log-) Differences for Time Series and Panel Data — fdiff" />
-<meta property="og:description" content="fdiff is a S3 generic to compute (sequences of) suitably lagged / leaded and iterated differences, quasi-differences, log-differences or quasi-log-differences. The difference and log-difference operators D and Dlog also exists as parsimonious wrappers around fdiff. Apart from being more parsimonious, they provide more flexibility than fdiff when applied to data frames." />
+<meta property="og:description" content="fdiff is a S3 generic to compute (sequences of) suitably lagged / leaded and iterated differences, quasi-differences, log-differences or quasi-log-differences. The difference and log-difference operators D and Dlog also exists as parsimonious wrappers around fdiff, providing more flexibility than fdiff when applied to data frames." />
 
 
 
@@ -74,7 +74,7 @@ Fast (Quasi-, Log-) Differences for Time Series and Panel Data — fdiff" />
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">collapse</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">1.4.2</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">1.5.0</span>
       </span>
     </div>
 
@@ -126,7 +126,7 @@ Fast (Quasi-, Log-) Differences for Time Series and Panel Data</h1>
     </div>
 
     <div class="ref-description">
-    <p><code>fdiff</code> is a S3 generic to compute (sequences of) suitably lagged / leaded and iterated differences, quasi-differences, log-differences or quasi-log-differences. The difference and log-difference operators <code>D</code> and <code>Dlog</code> also exists as parsimonious wrappers around <code>fdiff</code>. Apart from being more parsimonious, they provide more flexibility than <code>fdiff</code> when applied to data frames.</p>
+    <p><code>fdiff</code> is a S3 generic to compute (sequences of) suitably lagged / leaded and iterated differences, quasi-differences, log-differences or quasi-log-differences. The difference and log-difference operators <code>D</code> and <code>Dlog</code> also exists as parsimonious wrappers around <code>fdiff</code>, providing more flexibility than <code>fdiff</code> when applied to data frames.</p>
     </div>
 
     <pre class="usage"><span class='fu'>fdiff</span><span class='op'>(</span><span class='va'>x</span>, n <span class='op'>=</span> <span class='fl'>1</span>, diff <span class='op'>=</span> <span class='fl'>1</span>, <span class='va'>...</span><span class='op'>)</span>
@@ -180,7 +180,7 @@ Fast (Quasi-, Log-) Differences for Time Series and Panel Data</h1>
 <span class='fu'>Dlog</span><span class='op'>(</span><span class='va'>x</span>, n <span class='op'>=</span> <span class='fl'>1</span>, diff <span class='op'>=</span> <span class='fl'>1</span>, cols <span class='op'>=</span> <span class='va'>is.numeric</span>, fill <span class='op'>=</span> <span class='cn'>NA</span>, rho <span class='op'>=</span> <span class='fl'>1</span>, stubs <span class='op'>=</span> <span class='cn'>TRUE</span>,
      keep.ids <span class='op'>=</span> <span class='cn'>TRUE</span>, <span class='va'>...</span><span class='op'>)</span>
 
-<span class='co'># Methods for compatibility with dplyr:</span>
+<span class='co'># Methods for grouped data frame / compatibility with dplyr:</span>
 
 <span class='co'># S3 method for grouped_df</span>
 <span class='fu'>fdiff</span><span class='op'>(</span><span class='va'>x</span>, n <span class='op'>=</span> <span class='fl'>1</span>, diff <span class='op'>=</span> <span class='fl'>1</span>, t <span class='op'>=</span> <span class='cn'>NULL</span>, fill <span class='op'>=</span> <span class='cn'>NA</span>, log <span class='op'>=</span> <span class='cn'>FALSE</span>, rho <span class='op'>=</span> <span class='fl'>1</span>,
@@ -197,7 +197,7 @@ Fast (Quasi-, Log-) Differences for Time Series and Panel Data</h1>
     <colgroup><col class="name" /><col class="desc" /></colgroup>
     <tr>
       <th>x</th>
-      <td><p>a numeric vector / time series, (time series) matrix, data frame, panel series (<code><a href='https://rdrr.io/pkg/plm/man/pseries.html'>plm::pseries</a></code>), panel data frame (<code><a href='https://rdrr.io/pkg/plm/man/pdata.frame.html'>plm::pdata.frame</a></code>) or grouped tibble (<code><a href='https://dplyr.tidyverse.org/reference/grouped_df.html'>dplyr::grouped_df</a></code>).</p></td>
+      <td><p>a numeric vector / time series, (time series) matrix, data frame, panel series (<code><a href='https://rdrr.io/pkg/plm/man/pseries.html'>plm::pseries</a></code>), panel data frame (<code><a href='https://rdrr.io/pkg/plm/man/pdata.frame.html'>plm::pdata.frame</a></code>) or grouped data frame (class 'grouped_df').</p></td>
     </tr>
     <tr>
       <th>n</th>
@@ -217,7 +217,7 @@ Fast (Quasi-, Log-) Differences for Time Series and Panel Data</h1>
     </tr>
     <tr>
       <th>t</th>
-      <td><p>same input as <code>g/by</code>, to indicate the time-variable. For safe computation of differences on unordered time series and panels. Data Frame method also allows one-sided formula i.e. <code>~time</code>. grouped_df method supports lazy-evaluation i.e. <code>time</code> (no quotes).</p></td>
+      <td><p>same input as <code>g/by</code>, to indicate the time-variable(s). For safe computation of differences on unordered time series and panels. Data Frame method also allows one-sided formula i.e. <code>~time</code>. grouped_df method supports lazy-evaluation i.e. <code>time</code> (no quotes).</p></td>
     </tr>
     <tr>
       <th>cols</th>
@@ -229,11 +229,11 @@ Fast (Quasi-, Log-) Differences for Time Series and Panel Data</h1>
     </tr>
     <tr>
       <th>log</th>
-      <td><p>logical. <code>TRUE</code> Computes log-differences instead. See Details.</p></td>
+      <td><p>logical. <code>TRUE</code> computes log-differences instead. See Details.</p></td>
     </tr>
     <tr>
       <th>rho</th>
-      <td><p>double. Autocorrelation parameter. Set to a value between 0 and 1 for quasi-differencing. However any numeric value can be supplied.</p></td>
+      <td><p>double. Autocorrelation parameter. Set to a value between 0 and 1 for quasi-differencing. Any numeric value can be supplied.</p></td>
     </tr>
     <tr>
       <th>stubs</th>
@@ -241,7 +241,7 @@ Fast (Quasi-, Log-) Differences for Time Series and Panel Data</h1>
     </tr>
     <tr>
       <th>keep.ids</th>
-      <td><p><em>data.frame / pdata.frame / grouped_df methods</em>: Logical. Drop all panel-identifiers from the output (which includes all variables passed to <code>by</code> or <code>t</code>). <em>Note</em>: For panel data frames and grouped tibbles identifiers are dropped, but the 'index' / 'groups' attributes are kept.</p></td>
+      <td><p><em>data.frame / pdata.frame / grouped_df methods</em>: Logical. Drop all panel-identifiers from the output (which includes all variables passed to <code>by</code> or <code>t</code>). <em>Note</em>: For grouped / panel data frames identifiers are dropped, but the 'groups' / 'index' attributes are kept.</p></td>
     </tr>
     <tr>
       <th>...</th>
@@ -253,9 +253,11 @@ Fast (Quasi-, Log-) Differences for Time Series and Panel Data</h1>
 
     <p>By default, <code>fdiff/D/Dlog</code> return <code>x</code> with all columns differenced / log-differenced. Differences are computed as <code>repeat(diff) x[i] - rho*x[i-n]</code>, and log-differences as <code>repeat(diff) log(x[i]) - rho*log(x[i-n])</code>. If <code>rho &lt; 1</code>, this becomes quasi- (or partial) differencing, which is a technique suggested by Cochrane and Orcutt (1949) to deal with serial correlation in regression models, where <code>rho</code> is typically estimated by running a regression of the model residuals on the lagged residuals. Setting <code>diff = 2</code> returns differences of differences etc... and setting <code>n = 2</code> returns simple differences computed by subtracting twice-lagged <code>x</code> from <code>x</code>. It is also possible to compute forward differences by passing negative <code>n</code> values. <code>n</code> also supports arbitrary vectors of integers (lags), and <code>diff</code> supports positive sequences of integers (differences):</p>
 <p>If more than one value is passed to <code>n</code> and/or <code>diff</code>, the data is expanded-wide as follows: If <code>x</code> is an atomic vector or time series, a (time series) matrix is returned with columns ordered first by lag, then by difference. If <code>x</code> is a matrix or data frame, each column is expanded in like manor such that the output has <code>ncol(x)*length(n)*length(diff)</code> columns ordered first by column name, then by lag, then by difference.</p>
-<p>With groups/panel-identifiers supplied to <code>g/by</code>, <code>fdiff/D/Dlog</code> efficiently compute panel-differences. If <code>t</code> is left empty, the data needs to be ordered such that all values belonging to a group are consecutive and in the right order. It is not necessary that the groups themselves occur in the right order. If time-variable(s) are supplied to <code>t</code>, the panel is fully identified and differences can be securely computed even if the data is completely unordered.</p>
-<p><code>fdiff/D/Dlog</code> supports balanced panels and unbalanced panels where various individuals are observed for different time-sequences (both start, end and duration of observation can differ for each individual), but does not natively support irregularly spaced time series and panels. For computational details and efficiency considerations see the help page for <code><a href='flag.html'>flag</a></code>. A work-around for differencing irregular panels is easily achieved with the help of <code><a href='seqid.html'>seqid</a></code>.</p>
-<p>It is also possible to compute differences on unordered vectors / time series (thus utilizing <code>t</code> but leaving <code>g/by</code> empty).</p>
+<p>With groups/panel-identifiers supplied to <code>g/by</code>, <code>fdiff/D/Dlog</code> efficiently compute panel-differences. If <code>t</code> is left empty, the data needs to be ordered such that all values belonging to a group are consecutive and in the right order. It is not necessary that the groups themselves occur in the right order. If time-variable(s) are supplied to <code>t</code>, the panel is fully identified and differences can be securely computed even if the data is unordered.</p>
+<p><code>fdiff/D/Dlog</code> supports balanced panels and unbalanced panels where various individuals are observed for different time-sequences.
+<!-- % (both start, end and duration of observation can differ for each individual), but does not natively support irregularly spaced time series and panels. -->
+For computational details and efficiency considerations see the help page for <code><a href='flag.html'>flag</a></code>. <!-- %A work-around for differencing irregular panels is easily achieved with the help of \code{\link{seqid}}. --></p>
+<p>It is also possible to compute differences on unordered vectors or irregular time series (thus utilizing <code>t</code> but leaving <code>g/by</code> empty).</p>
 <p>The methods applying to <em>plm</em> objects (panel series and panel data frames) automatically utilize the panel-identifiers attached to these objects and thus securely compute fully identified panel-differences. If these objects have &gt; 2 panel-identifiers attached to them, the last identifier is assumed to be the time-variable, and the others are taken as grouping-variables and interacted.</p>
     <h2 class="hasAnchor" id="value"><a class="anchor" href="#value"></a>Value</h2>
 
@@ -266,7 +268,7 @@ Fast (Quasi-, Log-) Differences for Time Series and Panel Data</h1>
 <p>Prais, S. J. &amp; Winsten, C. B. (1954). Trend Estimators and Serial Correlation. <em>Cowles Commission Discussion Paper No. 383.</em> Chicago.</p>
     <h2 class="hasAnchor" id="see-also"><a class="anchor" href="#see-also"></a>See also</h2>
 
-    <div class='dont-index'><p><code><a href='flag.html'>flag/L/F</a></code>, <code><a href='fgrowth.html'>fgrowth/G</a></code>, <a href='time-series-panel-series.html'>Time Series and Panel Series</a>, <a href='index.html'>Collapse Overview</a></p></div>
+    <div class='dont-index'><p><code><a href='flag.html'>flag/L/F</a></code>, <code><a href='fgrowth.html'>fgrowth/G</a></code>, <a href='A7-time-series-panel-series.html'>Time Series and Panel Series</a>, <a href='index.html'>Collapse Overview</a></p></div>
 
     <h2 class="hasAnchor" id="examples"><a class="anchor" href="#examples"></a>Examples</h2>
     <pre class="examples"><div class='input'><span class='co'>## Simple Time Series: AirPassengers</span>
@@ -636,7 +638,7 @@ Fast (Quasi-, Log-) Differences for Time Series and Panel Data</h1>
 #&gt;   (4750 observations deleted due to missingness)
 #&gt; Multiple R-squared:  0.1281,	Adjusted R-squared:  0.1276 
 #&gt; F-statistic: 234.8 on 5 and 7988 DF,  p-value: &lt; 2.2e-16
-#&gt; </div><div class='input'>
+#&gt; </div><div class='input'> 
 <span class='co'>## Using plm can make things easier, but avoid attaching or 'with' calls:</span>
 <span class='va'>pwlddev</span> <span class='op'>&lt;-</span> <span class='fu'>plm</span><span class='fu'>::</span><span class='fu'><a href='https://rdrr.io/pkg/plm/man/pdata.frame.html'>pdata.frame</a></span><span class='op'>(</span><span class='va'>wlddev</span>, index <span class='op'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span><span class='op'>(</span><span class='st'>"country"</span>,<span class='st'>"year"</span><span class='op'>)</span><span class='op'>)</span>
 <span class='fu'><a href='https://rdrr.io/r/utils/head.html'>head</a></span><span class='op'>(</span><span class='fu'>D</span><span class='op'>(</span><span class='va'>pwlddev</span>, <span class='fl'>0</span><span class='op'>:</span><span class='fl'>1</span>, <span class='fl'>1</span>, <span class='fl'>9</span><span class='op'>:</span><span class='fl'>10</span><span class='op'>)</span><span class='op'>)</span>                          <span class='co'># Again differences of LIFEEX and PCGDP</span>

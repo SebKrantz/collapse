@@ -72,7 +72,7 @@
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">collapse</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">1.4.2</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">1.5.0</span>
       </span>
     </div>
 
@@ -149,7 +149,7 @@
     <colgroup><col class="name" /><col class="desc" /></colgroup>
     <tr>
       <th>x</th>
-      <td><p>a numeric vector, matrix, data frame or grouped tibble (<code><a href='https://dplyr.tidyverse.org/reference/grouped_df.html'>dplyr::grouped_df</a></code>).</p></td>
+      <td><p>a numeric vector, matrix, data frame or grouped data frame (class 'grouped_df').</p></td>
     </tr>
     <tr>
       <th>g</th>
@@ -193,7 +193,7 @@
     <h2 class="hasAnchor" id="details"><a class="anchor" href="#details"></a>Details</h2>
 
     <p>Non-grouped product computations internally utilize long-doubles in C++, for additional numeric precision.</p>
-<p>Missing-value removal as controlled by the <code>na.rm</code> argument is done very efficiently by simply skipping them in the computation (thus setting <code>na.rm = FALSE</code> on data with no missing values doesn't give extra speed). Large performance gains can nevertheless be achieved in the presence of missing values if <code>na.rm = FALSE</code>, since then the corresponding computation is terminated once a <code>NA</code> is encountered and <code>NA</code> is returned (unlike <code><a href='https://rdrr.io/r/base/prod.html'>base::prod</a></code> which just runs through without any checks).</p>
+<p>Missing-value removal as controlled by the <code>na.rm</code> argument is done very efficiently by simply skipping them in the computation (thus setting <code>na.rm = FALSE</code> on data with no missing values doesn't give extra speed). Large performance gains can nevertheless be achieved in the presence of missing values if <code>na.rm = FALSE</code>, since then the corresponding computation is terminated once a <code>NA</code> is encountered and <code>NA</code> is returned (unlike <code><a href='https://rdrr.io/r/base/prod.html'>prod</a></code> which just runs through without any checks).</p>
 <p>This all seamlessly generalizes to grouped computations, which are performed in a single pass (without splitting the data) and therefore extremely fast.</p>
 <p>The weighted product is computed as <code><a href='https://rdrr.io/r/base/prod.html'>prod(x * w)</a></code>. If <code>na.rm = TRUE</code>, missing values will be removed from both <code>x</code> and <code>w</code> i.e. utilizing only <code>x[complete.cases(x,w)]</code> and <code>w[complete.cases(x,w)]</code>.</p>
 <p>When applied to data frames with groups or <code>drop = FALSE</code>, <code>fprod</code> preserves all column attributes (such as variable labels) but does not distinguish between classed and unclassed objects. The attributes of the data frame itself are also preserved.</p>
@@ -202,7 +202,7 @@
     <p>The (<code>w</code> weighted) product of <code>x</code>, grouped by <code>g</code>, or (if <code><a href='TRA.html'>TRA</a></code> is used) <code>x</code> transformed by its product, grouped by <code>g</code>.</p>
     <h2 class="hasAnchor" id="see-also"><a class="anchor" href="#see-also"></a>See also</h2>
 
-    <div class='dont-index'><p><code><a href='fsum.html'>fsum</a></code>, <a href='fast-statistical-functions.html'>Fast Statistical Functions</a>, <a href='index.html'>Collapse Overview</a></p></div>
+    <div class='dont-index'><p><code><a href='fsum.html'>fsum</a></code>, <a href='A1-fast-statistical-functions.html'>Fast Statistical Functions</a>, <a href='index.html'>Collapse Overview</a></p></div>
 
     <h2 class="hasAnchor" id="examples"><a class="anchor" href="#examples"></a>Examples</h2>
     <pre class="examples"><div class='input'><span class='co'>## default vector method</span>
@@ -297,7 +297,7 @@
 #&gt; 6 6.360378e+14  0  0 531441 442368
 #&gt; 7 2.117000e+02  0  1     25     32</div><div class='input'>
 <span class='co'>## matrix method</span>
-<span class='va'>m</span> <span class='op'>&lt;-</span> <span class='fu'><a href='quick-conversion.html'>qM</a></span><span class='op'>(</span><span class='va'>mtcars</span><span class='op'>)</span>
+<span class='va'>m</span> <span class='op'>&lt;-</span> <span class='fu'><a href='A4-quick-conversion.html'>qM</a></span><span class='op'>(</span><span class='va'>mtcars</span><span class='op'>)</span>
 <span class='fu'>fprod</span><span class='op'>(</span><span class='va'>m</span><span class='op'>)</span>
 </div><div class='output co'>#&gt;          mpg          cyl         disp           hp         drat           wt 
 #&gt; 1.264241e+41 5.163908e+24 2.789968e+73 7.016390e+67 4.366447e+17 3.884021e+15 
@@ -339,8 +339,8 @@
 #&gt; 6.0.1 2.086503e+01 4.342313e+03  0  1     80     96
 #&gt; 6.1.0 1.316358e+02 1.359535e+05  1  0    144     16
 #&gt; 8.0.0 1.914897e+07 6.360378e+14  0  0 531441 442368
-#&gt; 8.0.1 1.131690e+01 2.117000e+02  0  1     25     32</div><div class='input'>
-<span class='co'>## method for grouped tibbles - for use with dplyr</span>
+#&gt; 8.0.1 1.131690e+01 2.117000e+02  0  1     25     32</div><div class='input'> 
+<span class='co'>## method for grouped data frames - created with dplyr::group_by or fgroup_by</span>
 <span class='kw'><a href='https://rdrr.io/r/base/library.html'>library</a></span><span class='op'>(</span><span class='va'><a href='https://dplyr.tidyverse.org'>dplyr</a></span><span class='op'>)</span>
 <span class='va'>mtcars</span> <span class='op'>%&gt;%</span> <span class='fu'><a href='https://dplyr.tidyverse.org/reference/group_by.html'>group_by</a></span><span class='op'>(</span><span class='va'>cyl</span>,<span class='va'>vs</span>,<span class='va'>am</span><span class='op'>)</span> <span class='op'>%&gt;%</span> <span class='fu'>fprod</span><span class='op'>(</span><span class='va'>hp</span><span class='op'>)</span>   <span class='co'># Weighted grouped product</span>
 </div><div class='output co'>#&gt; <span style='color: #949494;'># A tibble: 7 x 11</span><span>
@@ -478,7 +478,8 @@
 #&gt; 4   6  0  1 8.687700e+03
 #&gt; 5   6  1  0 1.323773e+05
 #&gt; 6   8  0  0 1.103122e+14
-#&gt; 7   8  0  1 2.370000e+02</div></span></pre>
+#&gt; 7   8  0  1 2.370000e+02</div><div class='input'>
+</div></span></pre>
   </div>
   <div class="col-md-3 hidden-xs hidden-sm" id="pkgdown-sidebar">
     <nav id="toc" data-toggle="toc" class="sticky-top">
