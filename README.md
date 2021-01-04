@@ -69,20 +69,6 @@ install.packages("https://cran.r-project.org/src/contrib/Archive/collapse/collap
 # Install a stable development version from Github (Requires Rtools)
 remotes::install_github("SebKrantz/collapse")
 ```
-**NOTE:**
-The package is temporarily archived by CRAN because a suggested package *lfe* was removed from CRAN, and *collapse* had some unit tests depending on this package. It will be resubmitted to CRAN after the Christmas break in early January. For the time being, the package can be installed using:
-
-``` r
-# Binary version (for Windows and MacOSX, preferred option)
-install.packages("https://mirrors.dotsrc.org/cran/bin/windows/contrib/r-release/collapse_1.4.2.zip", repos = NULL)
-install.packages("https://mirrors.dotsrc.org/cran/bin/macosx/contrib/r-release/collapse_1.4.2.tgz", repos = NULL)
-
-# Source from CRAN Archive (Requires Rtools)
-install.packages("https://cran.r-project.org/src/contrib/Archive/collapse/collapse_1.4.2.tar.gz", repos = NULL, type = "source")
-
-# Or directly from Github (Requires Rtools)
-remotes::install_github("SebKrantz/collapse")
-```
 <!--
 # install the development version
 devtools::install_github("SebKrantz/collapse")
