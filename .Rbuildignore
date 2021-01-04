@@ -1,6 +1,10 @@
 ^collapse\.Rproj$
 ^\.Rproj\.user$
 .*.Rnw
+.*.pdf
+\.fsrc$
+\.o$
+\.so$
 ^README\.md$
 ^README\.Rmd$
 ^cran-comments\.md$
@@ -11,11 +15,10 @@
 collapse_intro_files
 collapse_and_dplyr_files
 collapse_and_plm_files
-vignettes/collapse_intro_cache
-vignettes/collapse_and_plm_cache
-vignettes/collapse_and_dplyr_cache
-vignettes/collapse_and_data.table.Rmd
-vignettes/collapse_and_data.table_cache
+vignettes/collapse_intro
+vignettes/collapse_and_plm
+vignettes/collapse_and_dplyr
+vignettes/collapse_and_data.table
 ^doc$
 ^\.RData
 ^Meta$

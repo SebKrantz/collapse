@@ -72,7 +72,7 @@
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">collapse</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">1.4.2</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">1.5.0</span>
       </span>
     </div>
 
@@ -164,7 +164,7 @@
     <colgroup><col class="name" /><col class="desc" /></colgroup>
     <tr>
       <th>x</th>
-      <td><p>a numeric vector, matrix, data frame or grouped tibble (<code><a href='https://dplyr.tidyverse.org/reference/grouped_df.html'>dplyr::grouped_df</a></code>).</p></td>
+      <td><p>a numeric vector, matrix, data frame or grouped data frame (class 'grouped_df').</p></td>
     </tr>
     <tr>
       <th>g</th>
@@ -185,7 +185,7 @@
     </tr>
     <tr>
       <th>use.g.names</th>
-      <td><p>logical. Make group-names and add to the result as names (default method) or row-names (matrix and data frame methods). No row-names are generated for <em>data.table</em>'s and grouped tibbles.</p></td>
+      <td><p>logical. Make group-names and add to the result as names (default method) or row-names (matrix and data frame methods). No row-names are generated for <em>data.table</em>'s.</p></td>
     </tr>
     <tr>
       <th>drop</th>
@@ -225,7 +225,7 @@
     <p>Welford, B. P. (1962). Note on a method for calculating corrected sums of squares and products. <em>Technometrics</em>. 4 (3): 419-420. doi:10.2307/1266577.</p>
     <h2 class="hasAnchor" id="see-also"><a class="anchor" href="#see-also"></a>See also</h2>
 
-    <div class='dont-index'><p><a href='fast-statistical-functions.html'>Fast Statistical Functions</a>, <a href='index.html'>Collapse Overview</a></p></div>
+    <div class='dont-index'><p><a href='A1-fast-statistical-functions.html'>Fast Statistical Functions</a>, <a href='index.html'>Collapse Overview</a></p></div>
 
     <h2 class="hasAnchor" id="examples"><a class="anchor" href="#examples"></a>Examples</h2>
     <pre class="examples"><div class='input'><span class='co'>## default vector method</span>
@@ -275,7 +275,7 @@
 #&gt; 5     14.18481    9.497068     8.061544    1.897793
 #&gt; 6     15.31960   10.288490     9.789018    3.795585</div><div class='input'>
 <span class='co'>## matrix method</span>
-<span class='va'>m</span> <span class='op'>&lt;-</span> <span class='fu'><a href='quick-conversion.html'>qM</a></span><span class='op'>(</span><span class='va'>mtcars</span><span class='op'>)</span>
+<span class='va'>m</span> <span class='op'>&lt;-</span> <span class='fu'><a href='A4-quick-conversion.html'>qM</a></span><span class='op'>(</span><span class='va'>mtcars</span><span class='op'>)</span>
 <span class='fu'>fsd</span><span class='op'>(</span><span class='va'>m</span><span class='op'>)</span>
 </div><div class='output co'>#&gt;         mpg         cyl        disp          hp        drat          wt 
 #&gt;   6.0269481   1.7859216 123.9386938  68.5628685   0.5346787   0.9784574 
@@ -288,8 +288,8 @@
 #&gt;          am      gear     carb
 #&gt; 4 0.4670994 0.5393599 0.522233
 #&gt; 6 0.5345225 0.6900656 1.812654
-#&gt; 8 0.3631365 0.7262730 1.556624</div><div class='input'>
-<span class='co'>## method for grouped tibbles - for use with dplyr:</span>
+#&gt; 8 0.3631365 0.7262730 1.556624</div><div class='input'> 
+<span class='co'>## method for grouped data frames - created with dplyr::group_by or fgroup_by</span>
 <span class='kw'><a href='https://rdrr.io/r/base/library.html'>library</a></span><span class='op'>(</span><span class='va'><a href='https://dplyr.tidyverse.org'>dplyr</a></span><span class='op'>)</span>
 <span class='va'>mtcars</span> <span class='op'>%&gt;%</span> <span class='fu'><a href='https://dplyr.tidyverse.org/reference/group_by.html'>group_by</a></span><span class='op'>(</span><span class='va'>cyl</span>,<span class='va'>vs</span>,<span class='va'>am</span><span class='op'>)</span> <span class='op'>%&gt;%</span> <span class='va'>fsd</span>
 </div><div class='output co'>#&gt; <span style='color: #949494;'># A tibble: 7 x 11</span><span>
@@ -336,7 +336,8 @@
 #&gt; </span><span style='color: #BCBCBC;'> 8</span><span>     4     1     0    62 21.7  12.8  34.0   9.34  14.3   8.22 4.11 
 #&gt; </span><span style='color: #BCBCBC;'> 9</span><span>     4     1     0    95 20.3  12.3  36.1   9.22  16.3   8.22 4.11 
 #&gt; </span><span style='color: #BCBCBC;'>10</span><span>     6     1     0   123 13.8   4.32  7.69 34.8   26.1   8.01 2.67 
-#&gt; </span><span style='color: #949494;'># ... with 22 more rows</span><span></div></span></pre>
+#&gt; </span><span style='color: #949494;'># ... with 22 more rows</span><span></div><div class='input'>
+</div></span></pre>
   </div>
   <div class="col-md-3 hidden-xs hidden-sm" id="pkgdown-sidebar">
     <nav id="toc" data-toggle="toc" class="sticky-top">

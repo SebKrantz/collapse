@@ -290,18 +290,10 @@ cond_duplAttributes <- function(x, y) {
 #     invisible(.Call(C_cond_duplattributes, x, y))
 # }
 
-groups2GRPCpp <- function(x, lx, gs) {
-    .Call(Cpp_groups2GRP, x, lx, gs)
-}
-
 # # gapid <- function(x) {
 # #   if(is.integer(unclass(x))) .Call(Cpp_gapid, x) else # good ??
 # #   .Call(Cpp_gapid, qG(x)) # , na.exclude = FALSE not needed... NA is own group... not last group..
 # # }
-
-lassignCpp <- function(x, s, rows = NULL, fill = NA_real_) {
-    .Call(Cpp_lassign, x, s, rows, fill)
-}
 
 seqid <- function(x, o = NULL, del = 1L, start = 1L, na.skip = FALSE, skip.seq = FALSE, check.o = TRUE) {
   .Call(Cpp_seqid, x, o, del, start, na.skip, skip.seq, check.o)

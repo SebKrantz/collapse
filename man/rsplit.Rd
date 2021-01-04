@@ -31,7 +31,7 @@ rsplit(x, \dots)
 a (nested) list containing the subsets of \code{x}.
 }
 \seealso{
-\code{\link{unlist2d}}, \link[=A8-list-processing]{List Processing}, \link[=collapse-documentation]{Collapse Overview}
+\code{\link{rapply2d}}, \code{\link{unlist2d}}, \link[=A8-list-processing]{List Processing}, \link[=collapse-documentation]{Collapse Overview}
 }
 \examples{
 

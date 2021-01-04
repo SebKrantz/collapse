@@ -40,7 +40,7 @@
 
 
 <meta property="og:title" content="Auto- and Cross- Covariance and Correlation Function Estimation for Panel Series — psacf" />
-<meta property="og:description" content="psacf, pspacf and psccf compute (and by default plot) estimates of the auto-, partial auto- and cross- correlation or covariance functions for panel-vectors and plm::pseries. They are analogues to stats::acf, stats::pacf and stats::ccf." />
+<meta property="og:description" content="psacf, pspacf and psccf compute (and by default plot) estimates of the auto-, partial auto- and cross- correlation or covariance functions for panel-vectors and plm::pseries. They are analogues to acf, pacf and ccf." />
 
 
 
@@ -72,7 +72,7 @@
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">collapse</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">1.4.2</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">1.5.0</span>
       </span>
     </div>
 
@@ -123,7 +123,7 @@
     </div>
 
     <div class="ref-description">
-    <p><code>psacf</code>, <code>pspacf</code> and <code>psccf</code> compute (and by default plot) estimates of the auto-, partial auto- and cross- correlation or covariance functions for panel-vectors and <code><a href='https://rdrr.io/pkg/plm/man/pseries.html'>plm::pseries</a></code>. They are analogues to <code><a href='https://rdrr.io/r/stats/acf.html'>stats::acf</a></code>, <code><a href='https://rdrr.io/r/stats/acf.html'>stats::pacf</a></code> and <code><a href='https://rdrr.io/r/stats/acf.html'>stats::ccf</a></code>.</p>
+    <p><code>psacf</code>, <code>pspacf</code> and <code>psccf</code> compute (and by default plot) estimates of the auto-, partial auto- and cross- correlation or covariance functions for panel-vectors and <code><a href='https://rdrr.io/pkg/plm/man/pseries.html'>plm::pseries</a></code>. They are analogues to <code><a href='https://rdrr.io/r/stats/acf.html'>acf</a></code>, <code><a href='https://rdrr.io/r/stats/acf.html'>pacf</a></code> and <code><a href='https://rdrr.io/r/stats/acf.html'>ccf</a></code>.</p>
     </div>
 
     <pre class="usage"><span class='fu'>psacf</span><span class='op'>(</span><span class='va'>x</span>, <span class='va'>...</span><span class='op'>)</span>
@@ -179,7 +179,7 @@ panel data-frame (<code><a href='https://rdrr.io/pkg/plm/man/pdata.frame.html'>p
     </tr>
     <tr>
       <th>t</th>
-      <td><p>same input as g, to indicate the time-variable. For secure computations on unordered panel-vectors. Data frame method also allows one-sided formula i.e. <code>~time</code>.</p></td>
+      <td><p>same input as g, to indicate the time-variable(s). For secure computations on unordered panel-vectors. Data frame method also allows one-sided formula i.e. <code>~time</code>.</p></td>
     </tr>
     <tr>
       <th>cols</th>
@@ -203,25 +203,25 @@ panel data-frame (<code><a href='https://rdrr.io/pkg/plm/man/pdata.frame.html'>p
     </tr>
     <tr>
       <th>...</th>
-      <td><p>further arguments to be passed to <code>stats:::plot.acf</code>.</p></td>
+      <td><p>further arguments to be passed to <code><a href='https://rdrr.io/r/stats/plot.acf.html'>plot.acf</a></code>.</p></td>
     </tr>
     </table>
 
     <h2 class="hasAnchor" id="details"><a class="anchor" href="#details"></a>Details</h2>
 
     <p>If <code>gscale = TRUE</code> data are standardized within each group (using <code><a href='fscale.html'>fscale</a></code>) such that the group-mean is 0 and the group-standard deviation is 1. This is strongly recommended for most panels to get rid of individual-specific heterogeneity which would corrupt the ACF computations.</p>
-<p>After scaling, <code>psacf</code>, <code>pspacf</code> and <code>psccf</code> compute the ACF/CCF by creating a matrix of panel-lags of the series using <code><a href='flag.html'>flag</a></code> and then correlating this matrix with the series (<code>x, y</code>) using <code><a href='https://rdrr.io/r/stats/cor.html'>stats::cor</a></code> and pairwise-complete observations. This may require a lot of memory on large data, but is done because passing a sequence of lags to <code><a href='flag.html'>flag</a></code> and thus calling <code><a href='flag.html'>flag</a></code> and <code><a href='https://rdrr.io/r/stats/cor.html'>stats::cor</a></code> one time is much faster than calling them <code>lag.max</code> times. The partial ACF is computed from the ACF using a Yule-Walker decomposition, in the same way as in <code><a href='https://rdrr.io/r/stats/acf.html'>stats::pacf</a></code>.</p>
+<p>After scaling, <code>psacf</code>, <code>pspacf</code> and <code>psccf</code> compute the ACF/CCF by creating a matrix of panel-lags of the series using <code><a href='flag.html'>flag</a></code> and then correlating this matrix with the series (<code>x, y</code>) using <code><a href='https://rdrr.io/r/stats/cor.html'>cor</a></code> and pairwise-complete observations. This may require a lot of memory on large data, but is done because passing a sequence of lags to <code><a href='flag.html'>flag</a></code> and thus calling <code><a href='flag.html'>flag</a></code> and <code><a href='https://rdrr.io/r/stats/cor.html'>cor</a></code> one time is much faster than calling them <code>lag.max</code> times. The partial ACF is computed from the ACF using a Yule-Walker decomposition, in the same way as in <code><a href='https://rdrr.io/r/stats/acf.html'>pacf</a></code>.</p>
     <h2 class="hasAnchor" id="value"><a class="anchor" href="#value"></a>Value</h2>
 
-    <p>An object of class 'acf', see <code><a href='https://rdrr.io/r/stats/acf.html'>?stats::acf</a></code>. The result is returned invisibly if <code>plot = TRUE</code>.</p>
+    <p>An object of class 'acf', see <code><a href='https://rdrr.io/r/stats/acf.html'>acf</a></code>. The result is returned invisibly if <code>plot = TRUE</code>.</p>
     <h2 class="hasAnchor" id="note"><a class="anchor" href="#note"></a>Note</h2>
 
-    <p><!-- % \code{psacf} does not compute the true ACF defined as dividing the autocorvariance function of \code{x} by the variance of \code{x}. Rather, for reasons having to do with computational efficiency and assuming use on larger panel-vectors, \code{psacf} simply uses \code{stats::cor} to correlate \code{x} with it's lags (thus dividing the autocovariance by the product of the standard deviations of \code{x} and it's lag). --></p>
+    <p><!-- % \code{psacf} does not compute the true ACF defined as dividing the autocorvariance function of \code{x} by the variance of \code{x}. Rather, for reasons having to do with computational efficiency and assuming use on larger panel-vectors, \code{psacf} simply uses \code{\link{cor} to correlate \code{x} with it's lags (thus dividing the autocovariance by the product of the standard deviations of \code{x} and it's lag). --></p>
 <p>For <code><a href='https://rdrr.io/pkg/plm/man/pseries.html'>plm::pseries</a></code> and <code><a href='https://rdrr.io/pkg/plm/man/pdata.frame.html'>plm::pdata.frame</a></code>, the first index variable is assumed to be the group-id and the second the time variable. If more than 2 index variables are attached to <code><a href='https://rdrr.io/pkg/plm/man/pseries.html'>plm::pseries</a></code>, the last one is taken as the time variable and the others are taken as group-id's and interacted.</p>
 <p>The <code>pdata.frame</code> method only works for properly subsetted objects of class 'pdata.frame'. A list of 'pseries' will not work.</p>
     <h2 class="hasAnchor" id="see-also"><a class="anchor" href="#see-also"></a>See also</h2>
 
-    <div class='dont-index'><p><a href='time-series-panel-series.html'>Time Series and Panel Series</a>, <a href='index.html'>Collapse Overview</a> <!-- %% ~~objects to See Also as \code{\link{help}}, ~~~ --></p></div>
+    <div class='dont-index'><p><a href='A7-time-series-panel-series.html'>Time Series and Panel Series</a>, <a href='index.html'>Collapse Overview</a> <!-- %% ~~objects to See Also as \code{\link{help}}, ~~~ --></p></div>
 
     <h2 class="hasAnchor" id="examples"><a class="anchor" href="#examples"></a>Examples</h2>
     <pre class="examples"><div class='input'><span class='co'>## World Development Panel Data</span>
@@ -248,7 +248,7 @@ panel data-frame (<code><a href='https://rdrr.io/pkg/plm/man/pdata.frame.html'>p
 <span class='fu'>psacf</span><span class='op'>(</span><span class='va'>wlddev</span>, <span class='va'>PCGDP</span> <span class='op'>+</span> <span class='va'>LIFEEX</span> <span class='op'>+</span> <span class='va'>ODA</span> <span class='op'>~</span> <span class='va'>country</span>, <span class='op'>~</span><span class='va'>year</span><span class='op'>)</span>            <span class='co'># ACF and CCF of GDP, LIFEEX and ODA</span>
 </div><div class='input'><span class='fu'>psacf</span><span class='op'>(</span><span class='va'>wlddev</span>, <span class='op'>~</span> <span class='va'>country</span>, <span class='op'>~</span><span class='va'>year</span>, <span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span><span class='op'>(</span><span class='fl'>9</span><span class='op'>:</span><span class='fl'>10</span>,<span class='fl'>12</span><span class='op'>)</span><span class='op'>)</span>                     <span class='co'># Same, using cols argument</span>
 </div><div class='img'><img src='psacf-6.png' alt='' width='700' height='433' /></div><div class='input'><span class='fu'>pspacf</span><span class='op'>(</span><span class='va'>wlddev</span>, <span class='op'>~</span> <span class='va'>country</span>, <span class='op'>~</span><span class='va'>year</span>, <span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span><span class='op'>(</span><span class='fl'>9</span><span class='op'>:</span><span class='fl'>10</span>,<span class='fl'>12</span><span class='op'>)</span><span class='op'>)</span>                    <span class='co'># Partial ACF</span>
-</div><div class='img'><img src='psacf-7.png' alt='' width='700' height='433' /></div><div class='input'>
+</div><div class='img'><img src='psacf-7.png' alt='' width='700' height='433' /></div><div class='input'> 
 <span class='co'>## Using plm:</span>
 <span class='va'>pwlddev</span> <span class='op'>&lt;-</span> <span class='fu'>plm</span><span class='fu'>::</span><span class='fu'><a href='https://rdrr.io/pkg/plm/man/pdata.frame.html'>pdata.frame</a></span><span class='op'>(</span><span class='va'>wlddev</span>, index <span class='op'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span><span class='op'>(</span><span class='st'>"country"</span>,<span class='st'>"year"</span><span class='op'>)</span><span class='op'>)</span><span class='co'># Creating a Panel Data Frame</span>
 <span class='va'>PCGDP</span> <span class='op'>&lt;-</span> <span class='va'>pwlddev</span><span class='op'>$</span><span class='va'>PCGDP</span>                                          <span class='co'># Panel Series  of GDP per Capita</span>
@@ -258,7 +258,8 @@ panel data-frame (<code><a href='https://rdrr.io/pkg/plm/man/pdata.frame.html'>p
 </div><div class='img'><img src='psacf-9.png' alt='' width='700' height='433' /></div><div class='input'><span class='fu'>psccf</span><span class='op'>(</span><span class='va'>PCGDP</span>, <span class='va'>LIFEEX</span><span class='op'>)</span>
 </div><div class='img'><img src='psacf-10.png' alt='' width='700' height='433' /></div><div class='input'><span class='fu'>psacf</span><span class='op'>(</span><span class='va'>pwlddev</span><span class='op'>[</span><span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span><span class='op'>(</span><span class='fl'>9</span><span class='op'>:</span><span class='fl'>10</span>,<span class='fl'>12</span><span class='op'>)</span><span class='op'>]</span><span class='op'>)</span>
 </div><div class='img'><img src='psacf-11.png' alt='' width='700' height='433' /></div><div class='input'><span class='fu'>pspacf</span><span class='op'>(</span><span class='va'>pwlddev</span><span class='op'>[</span><span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span><span class='op'>(</span><span class='fl'>9</span><span class='op'>:</span><span class='fl'>10</span>,<span class='fl'>12</span><span class='op'>)</span><span class='op'>]</span><span class='op'>)</span>
-</div><div class='img'><img src='psacf-12.png' alt='' width='700' height='433' /></div></pre>
+</div><div class='img'><img src='psacf-12.png' alt='' width='700' height='433' /></div><div class='input'>
+</div></pre>
   </div>
   <div class="col-md-3 hidden-xs hidden-sm" id="pkgdown-sidebar">
     <nav id="toc" data-toggle="toc" class="sticky-top">

@@ -44,8 +44,8 @@ fFtest <- function(y, exc, X = NULL, w = NULL, full.df = TRUE, ...) {
         y <- .subset2(data, 1L)
       }
     }
-    kr <- k-p-1
-    vy <- fvar.default(y)
+    kr <- k-p-1L
+    vy <- fvar.default(y, w = w)
     if(atl) {
       n <- nrow(data)
       r2f <- 1 - fvar.default(fHDwithin.default(y, data[, -1L], w, na.rm = FALSE, ...), w = w)/vy
@@ -55,11 +55,11 @@ fFtest <- function(y, exc, X = NULL, w = NULL, full.df = TRUE, ...) {
       r2f <- 1 - fvar.default(fHDwithin.default(y, fcolsubset(data, -1L), w, na.rm = FALSE, ...), w = w)/vy
       r2r <- 1 - fvar.default(fHDwithin.default(y, fcolsubset(data, 2:(Xn+1L)), w, na.rm = FALSE, ...), w = w)/vy
     }
-    ndff <- k-1
+    ndff <- k-1L
     ddff <- n-k
     Fstatf <- r2f/ndff * ddff/(1-r2f)
     pf <- pf(Fstatf, ndff, ddff, lower.tail = FALSE)
-    ddfr <- n-kr-1
+    ddfr <- n-kr-1L
     Fstatr <- r2r/kr * ddfr/(1-r2r)
     pr <- pf(Fstatr, kr, ddfr, lower.tail = FALSE)
     Fstate <- (r2f - r2r)/p * ddff/(1-r2f)
@@ -82,7 +82,7 @@ fFtest <- function(y, exc, X = NULL, w = NULL, full.df = TRUE, ...) {
     } else p <- fNCOL(exc)
     n <- length(u)
     r2 <- 1 - fvar.default(u, w = w)/fvar.default(if(is.null(miss)) y else y[-miss], w = w) # R-Squared
-    ddf <- n-p-1
+    ddf <- n-p-1L
     Fstat <- r2/p * ddf/(1-r2) # F statistic for the model (the constant goes unrestricted)
     Pv <- pf(Fstat, p, ddf, lower.tail = FALSE) # P-value corresponding to the F statistic
     res <- c(`R-Sq.` = r2, `DF1` = p, `DF2` = ddf, `F-Stat.` = Fstat, `P-value` = Pv)

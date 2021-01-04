@@ -72,7 +72,7 @@
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">collapse</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">1.4.2</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">1.5.0</span>
       </span>
     </div>
 
@@ -162,7 +162,7 @@
     <colgroup><col class="name" /><col class="desc" /></colgroup>
     <tr>
       <th>x</th>
-      <td><p>a vector, matrix, data frame or grouped tibble (<code><a href='https://dplyr.tidyverse.org/reference/grouped_df.html'>dplyr::grouped_df</a></code>).</p></td>
+      <td><p>a vector, matrix, data frame or grouped data frame (class 'grouped_df').</p></td>
     </tr>
     <tr>
       <th>g</th>
@@ -200,7 +200,7 @@
     <p><code>ffirst</code> returns the first value in <code>x</code>, grouped by <code>g</code>, or (if <code><a href='TRA.html'>TRA</a></code> is used) <code>x</code> transformed by its first value, grouped by <code>g</code>. Similarly <code>flast</code> returns the last value in <code>x</code>, ...</p>
     <h2 class="hasAnchor" id="see-also"><a class="anchor" href="#see-also"></a>See also</h2>
 
-    <div class='dont-index'><p><a href='fast-statistical-functions.html'>Fast Statistical Functions</a>, <a href='index.html'>Collapse Overview</a></p></div>
+    <div class='dont-index'><p><a href='A1-fast-statistical-functions.html'>Fast Statistical Functions</a>, <a href='index.html'>Collapse Overview</a></p></div>
 
     <h2 class="hasAnchor" id="examples"><a class="anchor" href="#examples"></a>Examples</h2>
     <pre class="examples"><div class='input'><span class='co'>## default vector method</span>
@@ -228,7 +228,7 @@
 #&gt; 8    39      83  6.9   81     8   1
 #&gt; 9    96     167  6.9   91     9   1</div><div class='input'>
 <span class='co'>## matrix method</span>
-<span class='va'>aqm</span> <span class='op'>&lt;-</span> <span class='fu'><a href='quick-conversion.html'>qM</a></span><span class='op'>(</span><span class='va'>airquality</span><span class='op'>)</span>
+<span class='va'>aqm</span> <span class='op'>&lt;-</span> <span class='fu'><a href='A4-quick-conversion.html'>qM</a></span><span class='op'>(</span><span class='va'>airquality</span><span class='op'>)</span>
 <span class='fu'>ffirst</span><span class='op'>(</span><span class='va'>aqm</span><span class='op'>)</span>
 </div><div class='output co'>#&gt;   Ozone Solar.R    Wind    Temp   Month     Day 
 #&gt;    41.0   190.0     7.4    67.0     5.0     1.0 </div><div class='input'><span class='fu'>ffirst</span><span class='op'>(</span><span class='va'>aqm</span>, <span class='va'>airquality</span><span class='op'>$</span><span class='va'>Month</span><span class='op'>)</span> <span class='co'># etc..</span>
@@ -237,8 +237,8 @@
 #&gt; 6    29     286  8.6   78     6   1
 #&gt; 7   135     269  4.1   84     7   1
 #&gt; 8    39      83  6.9   81     8   1
-#&gt; 9    96     167  6.9   91     9   1</div><div class='input'>
-<span class='co'>## method for grouped tibbles - for use with dplyr</span>
+#&gt; 9    96     167  6.9   91     9   1</div><div class='input'> 
+<span class='co'>## method for grouped data frames - created with dplyr::group_by or fgroup_by</span>
 <span class='kw'><a href='https://rdrr.io/r/base/library.html'>library</a></span><span class='op'>(</span><span class='va'><a href='https://dplyr.tidyverse.org'>dplyr</a></span><span class='op'>)</span>
 <span class='va'>airquality</span> <span class='op'>%&gt;%</span> <span class='fu'><a href='https://dplyr.tidyverse.org/reference/group_by.html'>group_by</a></span><span class='op'>(</span><span class='va'>Month</span><span class='op'>)</span> <span class='op'>%&gt;%</span> <span class='va'>ffirst</span>
 </div><div class='output co'>#&gt; <span style='color: #949494;'># A tibble: 5 x 6</span><span>

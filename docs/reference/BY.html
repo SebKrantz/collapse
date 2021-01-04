@@ -72,7 +72,7 @@
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">collapse</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">1.4.2</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">1.5.0</span>
       </span>
     </div>
 
@@ -181,11 +181,11 @@
     </tr>
     <tr>
       <th>parallel</th>
-      <td><p>logical. <code>TRUE</code> implements simple parallel execution by internally calling <code><a href='https://rdrr.io/r/parallel/mcdummies.html'>parallel::mclapply</a></code> instead of <code><a href='https://rdrr.io/r/base/lapply.html'>base::lapply</a></code>.</p></td>
+      <td><p>logical. <code>TRUE</code> implements simple parallel execution by internally calling <code>mclapply</code> instead of <code><a href='https://rdrr.io/r/base/lapply.html'>lapply</a></code>.</p></td>
     </tr>
     <tr>
       <th>mc.cores</th>
-      <td><p>integer. Argument to <code><a href='https://rdrr.io/r/parallel/mcdummies.html'>parallel::mclapply</a></code> indicating the number of cores to use for parallel execution. Can use <code><a href='https://rdrr.io/r/parallel/detectCores.html'>parallel::detectCores()</a></code> to select all available cores. See also <code><a href='https://rdrr.io/r/parallel/mcdummies.html'>?parallel::mclapply</a></code>.</p></td>
+      <td><p>integer. Argument to <code>mclapply</code> indicating the number of cores to use for parallel execution. Can use <code>detectCores()</code> to select all available cores.</p></td>
     </tr>
     <tr>
       <th>return</th>
@@ -199,16 +199,16 @@
 
     <h2 class="hasAnchor" id="details"><a class="anchor" href="#details"></a>Details</h2>
 
-    <p><code>BY</code> is a frugal re-implementation of the Split-Apply-Combine computing paradigm. It is generally faster than <code><a href='https://rdrr.io/r/base/tapply.html'>base::tapply</a></code>, <code><a href='https://rdrr.io/r/base/by.html'>base::by</a></code>, <code>base::aggregate</code> and <code>plyr</code>, and preserves data attributes just like <code><a href='dapply.html'>dapply</a></code>.  <!-- % and more versatile though not faster than \emph{dplyr} --></p>
-<p><!-- %I note at this point that the philosophy of \emph{collapse} is to move beyond this rather slow computing paradigm, which is why the \link[=fast-statistical-functions]{Fast Statistical Functions} were implemented. However sometimes tasks need to be performed that involve more complex and customized operations on data, and for these cases \code{BY} is a good solution. --></p>
-<p>It is however principally a wrapper around <code><a href='https://rdrr.io/r/base/lapply.html'>lapply(split(x, g), FUN, ...)</a></code>, that strongly optimizes on attribute checking compared to <em>base</em> R functions. For more details look at the documentation for <code><a href='dapply.html'>dapply</a></code> which works very similar (apart from the splitting performed in <code>BY</code>). For larger tasks requiring split-apply-combine computing on data frames use <em>dplyr</em>, <em>data.table</em>, or try to work with the <a href='fast-statistical-functions.html'>Fast Statistical Functions</a>.</p>
-<p><code>BY</code> is used internally in <code><a href='collap.html'>collap</a></code> for functions that are not <a href='fast-statistical-functions.html'>Fast Statistical Functions</a>.</p>
+    <p><code>BY</code> is a frugal re-implementation of the Split-Apply-Combine computing paradigm. It is generally faster than <code><a href='https://rdrr.io/r/base/tapply.html'>tapply</a></code>, <code><a href='https://rdrr.io/r/base/by.html'>by</a></code>, <code><a href='https://rdrr.io/r/stats/aggregate.html'>aggregate</a></code> and <em>plyr</em>, and preserves data attributes just like <code><a href='dapply.html'>dapply</a></code>.  <!-- % and more versatile though not faster than \emph{dplyr} --></p>
+<p><!-- %I note at this point that the philosophy of \emph{collapse} is to move beyond this rather slow computing paradigm, which is why the \link[=A1-fast-statistical-functions]{Fast Statistical Functions} were implemented. However sometimes tasks need to be performed that involve more complex and customized operations on data, and for these cases \code{BY} is a good solution. --></p>
+<p>It is however principally a wrapper around <code><a href='https://rdrr.io/r/base/lapply.html'>lapply(split(x, g), FUN, ...)</a></code>, that strongly optimizes on attribute checking compared to <em>base</em> R functions. For more details look at the documentation for <code><a href='dapply.html'>dapply</a></code> which works very similar (apart from the splitting performed in <code>BY</code>). For larger tasks requiring split-apply-combine computing on data frames use <em>dplyr</em>, <em>data.table</em>, or try to work with the <a href='A1-fast-statistical-functions.html'>Fast Statistical Functions</a>.</p>
+<p><code>BY</code> is used internally in <code><a href='collap.html'>collap</a></code> for functions that are not <a href='A1-fast-statistical-functions.html'>Fast Statistical Functions</a>.</p>
     <h2 class="hasAnchor" id="value"><a class="anchor" href="#value"></a>Value</h2>
 
     <p><code>X</code> where <code>FUN</code> was applied to every column split by <code>g</code>.</p>
     <h2 class="hasAnchor" id="see-also"><a class="anchor" href="#see-also"></a>See also</h2>
 
-    <div class='dont-index'><p><code><a href='dapply.html'>dapply</a></code>, <code><a href='collap.html'>collap</a></code>, <a href='fast-statistical-functions.html'>Fast Statistical Functions</a>, <a href='data-transformations.html'>Data Transformations</a>, <a href='index.html'>Collapse Overview</a></p></div>
+    <div class='dont-index'><p><code><a href='dapply.html'>dapply</a></code>, <code><a href='collap.html'>collap</a></code>, <a href='A1-fast-statistical-functions.html'>Fast Statistical Functions</a>, <a href='A6-data-transformations.html'>Data Transformations</a>, <a href='index.html'>Collapse Overview</a></p></div>
 
     <h2 class="hasAnchor" id="examples"><a class="anchor" href="#examples"></a>Examples</h2>
     <pre class="examples"><div class='input'><span class='va'>v</span> <span class='op'>&lt;-</span> <span class='va'>iris</span><span class='op'>$</span><span class='va'>Sepal.Length</span>   <span class='co'># A numeric vector</span>
@@ -232,7 +232,7 @@
 #&gt; versicolor 4.9 5.600 5.9 6.3  7.0
 #&gt; virginica  4.9 6.225 6.5 6.9  7.9</div><div class='input'>
 <span class='co'>## matrix method</span>
-<span class='va'>m</span> <span class='op'>&lt;-</span> <span class='fu'><a href='quick-conversion.html'>qM</a></span><span class='op'>(</span><span class='fu'><a href='fselect, get_vars, add_vars.html'>num_vars</a></span><span class='op'>(</span><span class='va'>iris</span><span class='op'>)</span><span class='op'>)</span>
+<span class='va'>m</span> <span class='op'>&lt;-</span> <span class='fu'><a href='A4-quick-conversion.html'>qM</a></span><span class='op'>(</span><span class='fu'><a href='fselect, get_vars, add_vars.html'>num_vars</a></span><span class='op'>(</span><span class='va'>iris</span><span class='op'>)</span><span class='op'>)</span>
 <span class='fu'>BY</span><span class='op'>(</span><span class='va'>m</span>, <span class='va'>f</span>, <span class='va'>sum</span><span class='op'>)</span>                          <span class='co'># Also return as matrix</span>
 </div><div class='output co'>#&gt;            Sepal.Length Sepal.Width Petal.Length Petal.Width
 #&gt; setosa            250.3       171.4         73.1        12.3
@@ -401,10 +401,10 @@
 #&gt; setosa     0.1 0.2 0.2 0.3  0.6
 #&gt; versicolor 1.0 1.2 1.3 1.5  1.8
 #&gt; virginica  1.4 1.8 2.0 2.3  2.5
-#&gt; </div><div class='input'>
+#&gt; </div><div class='input'> 
 <span class='co'>## grouped data frame method (faster than dplyr only for small data)</span>
 <span class='kw'><a href='https://rdrr.io/r/base/library.html'>library</a></span><span class='op'>(</span><span class='va'><a href='https://dplyr.tidyverse.org'>dplyr</a></span><span class='op'>)</span>
-</div><div class='output co'>#&gt; <span class='warning'>Warning: package ‘dplyr’ was built under R version 4.0.3</span></div><div class='output co'>#&gt; <span class='message'></span>
+</div><div class='output co'>#&gt; <span class='message'></span>
 #&gt; <span class='message'>Attaching package: ‘dplyr’</span></div><div class='output co'>#&gt; <span class='message'>The following object is masked from ‘package:testthat’:</span>
 #&gt; <span class='message'></span>
 #&gt; <span class='message'>    matches</span></div><div class='output co'>#&gt; <span class='message'>The following objects are masked from ‘package:stats’:</span>
@@ -467,7 +467,8 @@
 #&gt; </span><span style='color: #949494;'>#   `Petal.Length.25%` </span><span style='color: #949494;font-style: italic;'>&lt;dbl&gt;</span><span style='color: #949494;'>, `Petal.Length.50%` </span><span style='color: #949494;font-style: italic;'>&lt;dbl&gt;</span><span style='color: #949494;'>,</span><span>
 #&gt; </span><span style='color: #949494;'>#   `Petal.Length.75%` </span><span style='color: #949494;font-style: italic;'>&lt;dbl&gt;</span><span style='color: #949494;'>, `Petal.Length.100%` </span><span style='color: #949494;font-style: italic;'>&lt;dbl&gt;</span><span style='color: #949494;'>,</span><span>
 #&gt; </span><span style='color: #949494;'>#   `Petal.Width.0%` </span><span style='color: #949494;font-style: italic;'>&lt;dbl&gt;</span><span style='color: #949494;'>, `Petal.Width.25%` </span><span style='color: #949494;font-style: italic;'>&lt;dbl&gt;</span><span style='color: #949494;'>, `Petal.Width.50%` </span><span style='color: #949494;font-style: italic;'>&lt;dbl&gt;</span><span style='color: #949494;'>,</span><span>
-#&gt; </span><span style='color: #949494;'>#   `Petal.Width.75%` </span><span style='color: #949494;font-style: italic;'>&lt;dbl&gt;</span><span style='color: #949494;'>, `Petal.Width.100%` </span><span style='color: #949494;font-style: italic;'>&lt;dbl&gt;</span><span></div></span></pre>
+#&gt; </span><span style='color: #949494;'>#   `Petal.Width.75%` </span><span style='color: #949494;font-style: italic;'>&lt;dbl&gt;</span><span style='color: #949494;'>, `Petal.Width.100%` </span><span style='color: #949494;font-style: italic;'>&lt;dbl&gt;</span><span></div><div class='input'>
+</div></span></pre>
   </div>
   <div class="col-md-3 hidden-xs hidden-sm" id="pkgdown-sidebar">
     <nav id="toc" data-toggle="toc" class="sticky-top">

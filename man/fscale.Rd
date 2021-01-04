@@ -47,7 +47,7 @@ fscale(x, \dots)
 \method{STD}{pdata.frame}(x, effect = 1L, w = NULL, cols = is.numeric, na.rm = TRUE,
     mean = 0, sd = 1, stub = "STD.", keep.ids = TRUE, keep.w = TRUE, \dots)
 
-# Methods for compatibility with dplyr:
+# Methods for grouped data frame / compatibility with dplyr:
 
 \method{fscale}{grouped_df}(x, w = NULL, na.rm = TRUE, mean = 0, sd = 1,
        keep.group_vars = TRUE, keep.w = TRUE, \dots)
@@ -56,7 +56,7 @@ fscale(x, \dots)
 }
 %- maybe also 'usage' for other objects documented here.
 \arguments{
-  \item{x}{a numeric vector, matrix, data frame, panel series (\code{plm::pseries}), panel data frame (\code{plm::pdata.frame}) or grouped tibble (\code{dplyr::grouped_df}).}
+  \item{x}{a numeric vector, matrix, data frame, panel series (\code{plm::pseries}), panel data frame (\code{plm::pdata.frame}) or grouped data frame (class 'grouped_df').}
   \item{g}{a factor, \code{\link{GRP}} object, atomic vector (internally converted to factor) or a list of vectors / factors (internally converted to a \code{\link{GRP}} object) used to group \code{x}.}
   \item{by}{\emph{STD data.frame method}: Same as \code{g}, but also allows one- or two-sided formulas i.e. \code{~ group1} or \code{var1 + var2 ~ group1 + group2}. See Examples.}
     \item{cols}{\emph{data.frame method}: Select columns to scale using a function, column names, indices or a logical vector. Default: All numeric variables. \emph{Note}: \code{cols} is ignored if a two-sided formula is passed to \code{by}.}

@@ -6,7 +6,7 @@
 Fast Radix-Based Ordering
 }
 \description{
-A slight modification of \code{base::order(\dots, method = "radix")} that is more programmer friendly and, importantly, provides features for ordered grouping of data (similar to \code{data.table:::forderv} which has more or less the same source code). \code{radixorderv} is a programmers version directly supporting vector and list input. % Apart from added grouping features, the source code and standard functionality is identical to \code{base::order(\dots, method = "radix")}.
+A slight modification of \code{\link[=order]{order(..., method = "radix")}} that is more programmer friendly and, importantly, provides features for ordered grouping of data (similar to \code{data.table:::forderv} which has more or less the same source code). \code{radixorderv} is a programmers version directly supporting vector and list input. % Apart from added grouping features, the source code and standard functionality is identical to \code{\link{order(\dots, method = "radix")}.
 }
 \usage{
 radixorder(\dots, na.last = TRUE, decreasing = FALSE, starts = FALSE,
@@ -38,7 +38,7 @@ logical. Should the sort order be increasing or decreasing? Can be a vector of l
 }
 }
 % \details{
-% \code{radixorder} works just like \code{base::order(\dots, method = "radix")}, the source code is the same. However if \code{starts = TRUE}, and attribute
+% \code{radixorder} works just like \code{\link[=order]{order(\dots, method = "radix")}}, the source code is the same. However if \code{starts = TRUE}, and attribute
 % }
 %}
 \value{

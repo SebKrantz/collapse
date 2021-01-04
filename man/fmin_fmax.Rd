@@ -38,7 +38,7 @@ fmin(x, \dots)
      use.g.names = FALSE, keep.group_vars = TRUE, \dots)
 }
 \arguments{
-\item{x}{a numeric vector, matrix, data frame or grouped tibble (\code{dplyr::grouped_df}).}
+\item{x}{a numeric vector, matrix, data frame or grouped data frame (class 'grouped_df').}
 
 \item{g}{a factor, \code{\link{GRP}} object, atomic vector (internally converted to factor) or a list of vectors / factors (internally converted to a \code{\link{GRP}} object) used to group \code{x}.}
 
@@ -57,7 +57,7 @@ fmin(x, \dots)
 \item{\dots}{arguments to be passed to or from other methods.}
 }
 \details{
-Missing-value removal as controlled by the \code{na.rm} argument is done at no extra cost since in C++ any logical comparison involving \code{NA} or \code{NaN} evaluates to \code{FALSE}. Large performance gains can nevertheless be achieved in the presence of missing values if \code{na.rm = FALSE}, since then the corresponding computation is terminated once a \code{NA} is encountered and \code{NA} is returned (unlike \code{base::max} and \code{base::min} which just run through without any checks).
+Missing-value removal as controlled by the \code{na.rm} argument is done at no extra cost since in C++ any logical comparison involving \code{NA} or \code{NaN} evaluates to \code{FALSE}. Large performance gains can nevertheless be achieved in the presence of missing values if \code{na.rm = FALSE}, since then the corresponding computation is terminated once a \code{NA} is encountered and \code{NA} is returned (unlike \code{\link{max}} and \code{\link{min}} which just run through without any checks).
 
 This all seamlessly generalizes to grouped computations, which are performed in a single pass (without splitting the data) and therefore extremely fast.
 
@@ -94,7 +94,7 @@ fmax(m)
 head(fmax(m, TRA = "\%"))
 fmax(m, g) # etc..
 \donttest{ % No code relying on suggested package
-## method for grouped tibbles - for use with dplyr
+## method for grouped data frames - created with dplyr::group_by or fgroup_by
 library(dplyr)
 mtcars \%>\% group_by(cyl,vs,am) \%>\% fmax
 mtcars \%>\% group_by(cyl,vs,am) \%>\% fmax("\%")

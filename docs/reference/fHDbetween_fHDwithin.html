@@ -73,7 +73,7 @@ The corresponding operators HDB and HDW additionally allow to predict / partial 
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">collapse</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">1.4.2</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">1.5.0</span>
       </span>
     </div>
 
@@ -134,35 +134,35 @@ The corresponding operators HDB and HDW additionally allow to predict / partial 
        <span class='fu'>HDW</span><span class='op'>(</span><span class='va'>x</span>, <span class='va'>...</span><span class='op'>)</span>
 
 <span class='co'># S3 method for default</span>
-<span class='fu'>fHDbetween</span><span class='op'>(</span><span class='va'>x</span>, <span class='va'>fl</span>, w <span class='op'>=</span> <span class='cn'>NULL</span>, na.rm <span class='op'>=</span> <span class='cn'>TRUE</span>, fill <span class='op'>=</span> <span class='cn'>FALSE</span>, <span class='va'>...</span><span class='op'>)</span>
+<span class='fu'>fHDbetween</span><span class='op'>(</span><span class='va'>x</span>, <span class='va'>fl</span>, w <span class='op'>=</span> <span class='cn'>NULL</span>, na.rm <span class='op'>=</span> <span class='cn'>TRUE</span>, fill <span class='op'>=</span> <span class='cn'>FALSE</span>, lm.method <span class='op'>=</span> <span class='st'>"qr"</span>, <span class='va'>...</span><span class='op'>)</span>
 <span class='co'># S3 method for default</span>
-<span class='fu'>fHDwithin</span><span class='op'>(</span><span class='va'>x</span>, <span class='va'>fl</span>, w <span class='op'>=</span> <span class='cn'>NULL</span>, na.rm <span class='op'>=</span> <span class='cn'>TRUE</span>, fill <span class='op'>=</span> <span class='cn'>FALSE</span>, <span class='va'>...</span><span class='op'>)</span>
+<span class='fu'>fHDwithin</span><span class='op'>(</span><span class='va'>x</span>, <span class='va'>fl</span>, w <span class='op'>=</span> <span class='cn'>NULL</span>, na.rm <span class='op'>=</span> <span class='cn'>TRUE</span>, fill <span class='op'>=</span> <span class='cn'>FALSE</span>, lm.method <span class='op'>=</span> <span class='st'>"qr"</span>, <span class='va'>...</span><span class='op'>)</span>
 <span class='co'># S3 method for default</span>
-<span class='fu'>HDB</span><span class='op'>(</span><span class='va'>x</span>, <span class='va'>fl</span>, w <span class='op'>=</span> <span class='cn'>NULL</span>, na.rm <span class='op'>=</span> <span class='cn'>TRUE</span>, fill <span class='op'>=</span> <span class='cn'>FALSE</span>, <span class='va'>...</span><span class='op'>)</span>
+<span class='fu'>HDB</span><span class='op'>(</span><span class='va'>x</span>, <span class='va'>fl</span>, w <span class='op'>=</span> <span class='cn'>NULL</span>, na.rm <span class='op'>=</span> <span class='cn'>TRUE</span>, fill <span class='op'>=</span> <span class='cn'>FALSE</span>, lm.method <span class='op'>=</span> <span class='st'>"qr"</span>, <span class='va'>...</span><span class='op'>)</span>
 <span class='co'># S3 method for default</span>
-<span class='fu'>HDW</span><span class='op'>(</span><span class='va'>x</span>, <span class='va'>fl</span>, w <span class='op'>=</span> <span class='cn'>NULL</span>, na.rm <span class='op'>=</span> <span class='cn'>TRUE</span>, fill <span class='op'>=</span> <span class='cn'>FALSE</span>, <span class='va'>...</span><span class='op'>)</span>
+<span class='fu'>HDW</span><span class='op'>(</span><span class='va'>x</span>, <span class='va'>fl</span>, w <span class='op'>=</span> <span class='cn'>NULL</span>, na.rm <span class='op'>=</span> <span class='cn'>TRUE</span>, fill <span class='op'>=</span> <span class='cn'>FALSE</span>, lm.method <span class='op'>=</span> <span class='st'>"qr"</span>, <span class='va'>...</span><span class='op'>)</span>
 
 <span class='co'># S3 method for matrix</span>
-<span class='fu'>fHDbetween</span><span class='op'>(</span><span class='va'>x</span>, <span class='va'>fl</span>, w <span class='op'>=</span> <span class='cn'>NULL</span>, na.rm <span class='op'>=</span> <span class='cn'>TRUE</span>, fill <span class='op'>=</span> <span class='cn'>FALSE</span>, <span class='va'>...</span><span class='op'>)</span>
+<span class='fu'>fHDbetween</span><span class='op'>(</span><span class='va'>x</span>, <span class='va'>fl</span>, w <span class='op'>=</span> <span class='cn'>NULL</span>, na.rm <span class='op'>=</span> <span class='cn'>TRUE</span>, fill <span class='op'>=</span> <span class='cn'>FALSE</span>, lm.method <span class='op'>=</span> <span class='st'>"qr"</span>, <span class='va'>...</span><span class='op'>)</span>
 <span class='co'># S3 method for matrix</span>
-<span class='fu'>fHDwithin</span><span class='op'>(</span><span class='va'>x</span>, <span class='va'>fl</span>, w <span class='op'>=</span> <span class='cn'>NULL</span>, na.rm <span class='op'>=</span> <span class='cn'>TRUE</span>, fill <span class='op'>=</span> <span class='cn'>FALSE</span>, <span class='va'>...</span><span class='op'>)</span>
+<span class='fu'>fHDwithin</span><span class='op'>(</span><span class='va'>x</span>, <span class='va'>fl</span>, w <span class='op'>=</span> <span class='cn'>NULL</span>, na.rm <span class='op'>=</span> <span class='cn'>TRUE</span>, fill <span class='op'>=</span> <span class='cn'>FALSE</span>, lm.method <span class='op'>=</span> <span class='st'>"qr"</span>, <span class='va'>...</span><span class='op'>)</span>
 <span class='co'># S3 method for matrix</span>
-<span class='fu'>HDB</span><span class='op'>(</span><span class='va'>x</span>, <span class='va'>fl</span>, w <span class='op'>=</span> <span class='cn'>NULL</span>, na.rm <span class='op'>=</span> <span class='cn'>TRUE</span>, fill <span class='op'>=</span> <span class='cn'>FALSE</span>, stub <span class='op'>=</span> <span class='st'>"HDB."</span>, <span class='va'>...</span><span class='op'>)</span>
+<span class='fu'>HDB</span><span class='op'>(</span><span class='va'>x</span>, <span class='va'>fl</span>, w <span class='op'>=</span> <span class='cn'>NULL</span>, na.rm <span class='op'>=</span> <span class='cn'>TRUE</span>, fill <span class='op'>=</span> <span class='cn'>FALSE</span>, stub <span class='op'>=</span> <span class='st'>"HDB."</span>, lm.method <span class='op'>=</span> <span class='st'>"qr"</span>, <span class='va'>...</span><span class='op'>)</span>
 <span class='co'># S3 method for matrix</span>
-<span class='fu'>HDW</span><span class='op'>(</span><span class='va'>x</span>, <span class='va'>fl</span>, w <span class='op'>=</span> <span class='cn'>NULL</span>, na.rm <span class='op'>=</span> <span class='cn'>TRUE</span>, fill <span class='op'>=</span> <span class='cn'>FALSE</span>, stub <span class='op'>=</span> <span class='st'>"HDW."</span>, <span class='va'>...</span><span class='op'>)</span>
+<span class='fu'>HDW</span><span class='op'>(</span><span class='va'>x</span>, <span class='va'>fl</span>, w <span class='op'>=</span> <span class='cn'>NULL</span>, na.rm <span class='op'>=</span> <span class='cn'>TRUE</span>, fill <span class='op'>=</span> <span class='cn'>FALSE</span>, stub <span class='op'>=</span> <span class='st'>"HDW."</span>, lm.method <span class='op'>=</span> <span class='st'>"qr"</span>, <span class='va'>...</span><span class='op'>)</span>
 
 <span class='co'># S3 method for data.frame</span>
 <span class='fu'>fHDbetween</span><span class='op'>(</span><span class='va'>x</span>, <span class='va'>fl</span>, w <span class='op'>=</span> <span class='cn'>NULL</span>, na.rm <span class='op'>=</span> <span class='cn'>TRUE</span>, fill <span class='op'>=</span> <span class='cn'>FALSE</span>,
-           variable.wise <span class='op'>=</span> <span class='cn'>FALSE</span>, <span class='va'>...</span><span class='op'>)</span>
+           variable.wise <span class='op'>=</span> <span class='cn'>FALSE</span>, lm.method <span class='op'>=</span> <span class='st'>"qr"</span>, <span class='va'>...</span><span class='op'>)</span>
 <span class='co'># S3 method for data.frame</span>
 <span class='fu'>fHDwithin</span><span class='op'>(</span><span class='va'>x</span>, <span class='va'>fl</span>, w <span class='op'>=</span> <span class='cn'>NULL</span>, na.rm <span class='op'>=</span> <span class='cn'>TRUE</span>, fill <span class='op'>=</span> <span class='cn'>FALSE</span>,
-          variable.wise <span class='op'>=</span> <span class='cn'>FALSE</span>, <span class='va'>...</span><span class='op'>)</span>
+          variable.wise <span class='op'>=</span> <span class='cn'>FALSE</span>, lm.method <span class='op'>=</span> <span class='st'>"qr"</span>, <span class='va'>...</span><span class='op'>)</span>
 <span class='co'># S3 method for data.frame</span>
 <span class='fu'>HDB</span><span class='op'>(</span><span class='va'>x</span>, <span class='va'>fl</span>, w <span class='op'>=</span> <span class='cn'>NULL</span>, cols <span class='op'>=</span> <span class='va'>is.numeric</span>, na.rm <span class='op'>=</span> <span class='cn'>TRUE</span>, fill <span class='op'>=</span> <span class='cn'>FALSE</span>,
-    variable.wise <span class='op'>=</span> <span class='cn'>FALSE</span>, stub <span class='op'>=</span> <span class='st'>"HDB."</span>, <span class='va'>...</span><span class='op'>)</span>
+    variable.wise <span class='op'>=</span> <span class='cn'>FALSE</span>, stub <span class='op'>=</span> <span class='st'>"HDB."</span>, lm.method <span class='op'>=</span> <span class='st'>"qr"</span>, <span class='va'>...</span><span class='op'>)</span>
 <span class='co'># S3 method for data.frame</span>
 <span class='fu'>HDW</span><span class='op'>(</span><span class='va'>x</span>, <span class='va'>fl</span>, w <span class='op'>=</span> <span class='cn'>NULL</span>, cols <span class='op'>=</span> <span class='va'>is.numeric</span>, na.rm <span class='op'>=</span> <span class='cn'>TRUE</span>, fill <span class='op'>=</span> <span class='cn'>FALSE</span>,
-    variable.wise <span class='op'>=</span> <span class='cn'>FALSE</span>, stub <span class='op'>=</span> <span class='st'>"HDW."</span>, <span class='va'>...</span><span class='op'>)</span>
+    variable.wise <span class='op'>=</span> <span class='cn'>FALSE</span>, stub <span class='op'>=</span> <span class='st'>"HDW."</span>, lm.method <span class='op'>=</span> <span class='st'>"qr"</span>, <span class='va'>...</span><span class='op'>)</span>
 
 <span class='co'># Methods for compatibility with plm:</span>
 
@@ -201,7 +201,7 @@ The corresponding operators HDB and HDW additionally allow to predict / partial 
     </tr>
     <tr>
       <th>w</th>
-      <td><p>a vector of (non-negative) weights. Currently only weighted centering/averaging is supported, not weighted linear models.</p></td>
+      <td><p>a vector of (non-negative) weights.</p></td>
     </tr>
     <tr>
       <th>cols</th>
@@ -221,28 +221,36 @@ The corresponding operators HDB and HDW additionally allow to predict / partial 
     </tr>
     <tr>
       <th>stub</th>
-      <td><p>a prefix / stub to rename all transformed columns. <code>FALSE</code> will not rename columns.</p></td>
+      <td><p>a prefix or stub to rename all transformed columns. <code>FALSE</code> will not rename columns.</p></td>
+    </tr>
+    <tr>
+      <th>lm.method</th>
+      <td><p>character. The linear fitting method. Supported are <code>"chol"</code> and <code>"qr"</code>. See <code><a href='flm.html'>flm</a></code>.</p></td>
     </tr>
     <tr>
       <th>...</th>
-      <td><p>further arguments passed to <code><a href='https://rdrr.io/pkg/lfe/man/demeanlist.html'>lfe::demeanlist</a></code> (if <code>fl</code> contains factors), or to / from other methods.</p></td>
+      <td><p>further arguments passed to <code><a href='https://rdrr.io/pkg/fixest/man/demean.html'>fixest::demean</a></code> and <code><a href='https://rdrr.io/r/base/chol.html'>chol</a></code> / <code><a href='https://rdrr.io/r/base/qr.html'>qr</a></code>. Possible choices are <code>tol</code> to set a uniform numerical tolerance for the entire fitting process, or <code>nthreads</code> and <code>iter</code> to govern the higher-order centering process.</p></td>
     </tr>
     </table>
 
     <h2 class="hasAnchor" id="details"><a class="anchor" href="#details"></a>Details</h2>
 
-    <p><code>fHDbetween/HDB</code> and <code>fHDwithin/HDW</code> can be understood as generalizations of <code><a href='https://rdrr.io/pkg/lfe/man/demeanlist.html'>lfe::demeanlist</a></code> to continuous-data and formula input, and more choices dealing with missing values. They are powerful tools for high-dimensional linear prediction problems involving large factors and datasets, but can just as well handle ordinary regression problems. Intended areas of use are to efficiently obtain residuals and predicted values from data, and to prepare data for complex linear models involving multiple levels of fixed effects. Such models can now be fitted using <code><a href='https://rdrr.io/r/stats/lm.html'>lm()</a></code> on data prepared with <code>fHDwithin / HDW</code> (relying on bootstrapped SE's for inference, or implementing the appropriate corrections). See Examples.</p>
-<p>If <code>fl</code> is a vector or matrix, the result are identical to <code>lm</code> i.e. <code>fHDbetween / HDB</code> returns <code><a href='https://rdrr.io/r/stats/fitted.values.html'>fitted(lm(x ~ fl))</a></code> and <code>fHDwithin / HDW</code> <code><a href='https://rdrr.io/r/stats/residuals.html'>residuals(lm(x ~ fl))</a></code>. If <code>fl</code> is a list containing factors, all variables in <code>x</code> and non-factor variables in <code>fl</code> are centered on these factors using the method of alternating projections implemented by <code><a href='https://rdrr.io/pkg/lfe/man/demeanlist.html'>lfe::demeanlist</a></code>. Afterwards the centered data is regressed on the centered predictors. If <code>fl</code> is just a list of factors, <code>fHDwithin/HDW</code> returns the centered data and <code>fHDbetween/HDB</code> the corresponding means. Take as a most general example a list <code>fl = list(fct1, fct2, ..., var1, var2, ...)</code> where <code>fcti</code> are factors and <code>vari</code> are continuous variables. The output of <code>fHDwithin/HDW | fHDbetween/HDB</code> will then be identical to calling <code>resid | fitted</code> on <code><a href='https://rdrr.io/r/stats/lm.html'>lm(x ~ fct1 + fct2 + ... + var1 + var2 + ...)</a></code>. The computations performed by <code>fHDwithin/HDW</code> and <code>fHDbetween/HDB</code> are however much faster and more memory efficient than <code>lm</code> because factors are not passed to <code><a href='https://rdrr.io/r/stats/model.matrix.html'>stats::model.matrix</a></code> and expanded to matrices of dummies but projected out using <code><a href='https://rdrr.io/pkg/lfe/man/demeanlist.html'>lfe::demeanlist</a></code>.</p>
-<p>The formula interface to the data.frame method (only supported by the operators <code>HDW | HDB</code>) provides ease of use and allows for additional modeling complexity. For example it is possible to project out formulas like <code>HDW(data, ~ fct1*var1  + fct2:fct3 + var2:fct2:fct3 + var1:var2:var3 + poly(var5,3)*fct5)</code> containing simple <code>(:)</code> or full <code>(*)</code> interactions of factors with continuous variables or polynomials of continuous variables, and two-or three-way interactions of factors and continuous variables. If the formula is one-sided as in the example above (the space left of <code>(~)</code> is left empty), the formula is applied to all variables selected through <code>cols</code>. The specification provided in <code>cols</code> (default: all numeric variables not used in the formula) can be overridden by supplying one-or more dependent variables. For example <code>HDW(data, var1 + var2 ~ fct1 + fct2)</code> will return a data.frame with <code>var1</code> and <code>var2</code> centered on <code>fct1</code> and <code>fct2</code>.</p>
+    <p><code>fHDbetween/HDB</code> and <code>fHDwithin/HDW</code> are powerful functions for high-dimensional linear prediction problems involving large factors and datasets, but can just as well handle ordinary regression problems. They are implemented as efficient wrappers around <code><a href='fbetween, fwithin.html'>fbetween / fwithin</a></code>, <code><a href='flm.html'>flm</a></code> and <code><a href='https://rdrr.io/pkg/fixest/man/demean.html'>fixest::demean</a></code> (imported for higher-order centering tasks).</p>
+<p>Intended areas of use are to efficiently obtain residuals and predicted values from data, and to prepare data for complex linear models involving multiple levels of fixed effects. Such models can now be fitted using <code><a href='https://rdrr.io/r/stats/lm.html'>lm()</a></code> on data prepared with <code>fHDwithin / HDW</code> (relying on bootstrapped SE's for inference, or implementing the appropriate corrections). See Examples.</p>
+<p>If <code>fl</code> is a vector or matrix, the result are identical to <code>lm</code> i.e. <code>fHDbetween / HDB</code> returns <code><a href='https://rdrr.io/r/stats/fitted.values.html'>fitted(lm(x ~ fl))</a></code> and <code>fHDwithin / HDW</code> <code><a href='https://rdrr.io/r/stats/residuals.html'>residuals(lm(x ~ fl))</a></code>. If <code>fl</code> is a list containing factors, all variables in <code>x</code> and non-factor variables in <code>fl</code> are centered on these factors using either <code><a href='fbetween, fwithin.html'>fbetween / fwithin</a></code> for a single factor or <code><a href='https://rdrr.io/pkg/fixest/man/demean.html'>fixest::demean</a></code> for multiple factors. Afterwards the centered data is regressed on the centered predictors. If <code>fl</code> is just a list of factors, <code>fHDwithin/HDW</code> returns the centered data and <code>fHDbetween/HDB</code> the corresponding means. Take as a most general example a list <code>fl = list(fct1, fct2, ..., var1, var2, ...)</code> where <code>fcti</code> are factors and <code>vari</code> are continuous variables. The output of <code>fHDwithin/HDW | fHDbetween/HDB</code> will then be identical to calling <code>resid | fitted</code> on <code><a href='https://rdrr.io/r/stats/lm.html'>lm(x ~ fct1 + fct2 + ... + var1 + var2 + ...)</a></code>. The computations performed by <code>fHDwithin/HDW</code> and <code>fHDbetween/HDB</code> are however much faster and more memory efficient than <code>lm</code> because factors are not passed to <code><a href='https://rdrr.io/r/stats/model.matrix.html'>model.matrix</a></code> and expanded to matrices of dummies but projected beforehand.</p>
+<p>The formula interface to the data.frame method (only supported by the operators <code>HDW | HDB</code>) provides ease of use and allows for additional modeling complexity. For example it is possible to project out formulas like <code>HDW(data, ~ fct1*var1  + fct2:fct3 + var2:fct2:fct3 + var2:var3 + poly(var5,3)*fct5)</code> containing simple <code>(:)</code> or full <code>(*)</code> interactions of factors with continuous variables or polynomials of continuous variables, and two-or three-way interactions of factors and continuous variables. If the formula is one-sided as in the example above (the space left of <code>(~)</code> is left empty), the formula is applied to all variables selected through <code>cols</code>. The specification provided in <code>cols</code> (default: all numeric variables not used in the formula) can be overridden by supplying one-or more dependent variables. For example <code>HDW(data, var1 + var2 ~ fct1 + fct2)</code> will return a data.frame with <code>var1</code> and <code>var2</code> centered on <code>fct1</code> and <code>fct2</code>.</p>
 <p>The special methods for <code><a href='https://rdrr.io/pkg/plm/man/pseries.html'>plm::pseries</a></code> and <code><a href='https://rdrr.io/pkg/plm/man/pdata.frame.html'>plm::pdata.frame</a></code> center a panel series or variables in a panel data frame on all panel-identifiers. By default in these methods <code>fill = TRUE</code> and <code>variable.wise = TRUE</code>, so missing values are kept. This change in the default arguments was done to ensure a coherent framework of functions and operators applied to <em>plm</em> panel data classes.</p>
     <h2 class="hasAnchor" id="note"><a class="anchor" href="#note"></a>Note</h2>
 
-    <p><b>Weights are currently only supported for centering / averaging, not for linear regression.</b></p><h3 class='hasAnchor' id='arguments'><a class='anchor' href='#arguments'></a>Caution with full (*) and factor-continuous variable interactions:</h3>
-<p>In general full interactions specified with <code>(*)</code> can be very slow on large data, and <code><a href='https://rdrr.io/pkg/lfe/man/demeanlist.html'>lfe::demeanlist</a></code> is also not very speedy on interaction between factors and continuous variables, so these structures should be used with caution (don't just specify an interaction like that on a large dataset, start with smaller data and see how long computations take. Upon further updates of <code><a href='https://rdrr.io/pkg/lfe/man/demeanlist.html'>lfe::demeanlist</a></code>, performance might improve).</p>
+    
+
+<p><!-- % \subsection{Caution with full (*) and factor-continuous variable interactions:}{ -->
+<!-- % In general full interactions specified with \code{(*)} can be very slow on large data, and \code{lfe::demeanlist} is also not very speedy on interaction between factors and continuous variables, so these structures should be used with caution (don't just specify an interaction like that on a large dataset, start with smaller data and see how long computations take. Upon further updates of \code{lfe::demeanlist}, performance might improve). -->
+<!-- % } --></p>
 <h3 class='hasAnchor' id='arguments'><a class='anchor' href='#arguments'></a>On the differences between <code>fHDwithin/HDW</code>... and <code>fwithin/W</code>...:</h3>
 
 <ul>
-<li><p><code>fHDwithin/HDW</code> can center data on multiple factors and also partial out continuous variables while <code>fwithin/W</code> only centers on one factor or the interaction of a set of factors, and does that very efficiently...</p></li>
+<li><p><code>fHDwithin/HDW</code> can center data on multiple factors and also partial out continuous variables and factor-continuous interactions while <code>fwithin/W</code> only centers on one factor or the interaction of a set of factors, and does that very efficiently.</p></li>
 <li><p><code>HDW(data, ~ qF(group1) + qF(group2))</code> simultaneously centers numeric variables in data on <code>group1</code> and <code>group2</code>, while <code><a href='fbetween, fwithin.html'>W(data, ~ group1 + group2)</a></code> centers data on the interaction of <code>group1</code> and <code>group2</code>. The equivalent operation in <code>HDW</code> would be: <code>HDW(data, ~ qF(group1):qF(group2))</code>.</p></li>
 <li><p><code>W</code> always does computations on the variable-wise complete observations (in both matrices and data frames), whereas by default <code>HDW</code> removes all cases missing in either <code>x</code> or <code>fl</code>. In short, <code><a href='fbetween, fwithin.html'>W(data, ~ group1 + group2)</a></code> is actually equivalent to <code>HDW(data, ~ qF(group1):qF(group2), variable.wise = TRUE)</code>. <code>HDW(data, ~ qF(group1):qF(group2))</code> would remove any missing cases.</p></li>
 <li><p><code>fbetween/B</code> and <code>fwithin/W</code> have options to fill missing cases using group-averages and to add the overall mean back to group-demeaned data. These options are not available in <code>fHDbetween/HDB</code> and <code>fHDwithin/HDW</code>. Since <code>HDB</code> and <code>HDW</code> by default remove missing cases, they also don't have options to keep grouping-columns as in <code>B</code> and <code>W</code>.</p></li>
@@ -254,7 +262,7 @@ The corresponding operators HDB and HDW additionally allow to predict / partial 
     <p><code>HDB</code> returns fitted values of regressing <code>x</code> on <code>fl</code>. <code>HDW</code> returns residuals. See Details and Examples.</p>
     <h2 class="hasAnchor" id="see-also"><a class="anchor" href="#see-also"></a>See also</h2>
 
-    <div class='dont-index'><p><code><a href='fbetween, fwithin.html'>fbetween, fwithin</a></code>, <code><a href='fscale.html'>fscale</a></code>, <code><a href='TRA.html'>TRA</a></code>, <code><a href='fFtest.html'>fFtest</a></code>, <a href='data-transformations.html'>Data Transformations</a>, <a href='index.html'>Collapse Overview</a></p></div>
+    <div class='dont-index'><p><code><a href='fbetween, fwithin.html'>fbetween, fwithin</a></code>, <code><a href='fscale.html'>fscale</a></code>, <code><a href='TRA.html'>TRA</a></code>, <code><a href='flm.html'>flm</a></code>, <code><a href='fFtest.html'>fFtest</a></code>, <a href='A6-data-transformations.html'>Data Transformations</a>, <a href='index.html'>Collapse Overview</a></p></div>
 
     <h2 class="hasAnchor" id="examples"><a class="anchor" href="#examples"></a>Examples</h2>
     <pre class="examples"><div class='input'><span class='fu'>HDW</span><span class='op'>(</span><span class='va'>mtcars</span><span class='op'>$</span><span class='va'>mpg</span>, <span class='va'>mtcars</span><span class='op'>$</span><span class='va'>carb</span><span class='op'>)</span>                   <span class='co'># Simple regression problems..</span>
@@ -270,14 +278,14 @@ The corresponding operators HDB and HDW additionally allow to predict / partial 
 #&gt; [16] -0.536437711  4.206370638  4.627094192  0.503261089  4.387630904
 #&gt; [21] -2.143103442 -1.443053221 -2.532181498 -0.006021976  2.508321011
 #&gt; [26] -0.993468693 -0.152953961  2.763727417 -3.070040803  0.006171846
-#&gt; [31]  1.058881618 -2.968267683</div><div class='input'><span class='fu'>HDW</span><span class='op'>(</span><span class='va'>mtcars</span><span class='op'>$</span><span class='va'>mpg</span>, <span class='fu'><a href='quick-conversion.html'>qM</a></span><span class='op'>(</span><span class='va'>mtcars</span><span class='op'>[</span><span class='op'>-</span><span class='fl'>1</span><span class='op'>]</span><span class='op'>)</span><span class='op'>)</span>
+#&gt; [31]  1.058881618 -2.968267683</div><div class='input'><span class='fu'>HDW</span><span class='op'>(</span><span class='va'>mtcars</span><span class='op'>$</span><span class='va'>mpg</span>, <span class='fu'><a href='A4-quick-conversion.html'>qM</a></span><span class='op'>(</span><span class='va'>mtcars</span><span class='op'>[</span><span class='op'>-</span><span class='fl'>1</span><span class='op'>]</span><span class='op'>)</span><span class='op'>)</span>
 </div><div class='output co'>#&gt;  [1] -1.599505761 -1.111886079 -3.450644085  0.162595453  1.006565971
 #&gt;  [6] -2.283039036 -0.086256253  1.903988115 -1.619089898  0.500970058
 #&gt; [11] -1.391654392  2.227837890  1.700426404 -0.542224699 -1.634013415
 #&gt; [16] -0.536437711  4.206370638  4.627094192  0.503261089  4.387630904
 #&gt; [21] -2.143103442 -1.443053221 -2.532181498 -0.006021976  2.508321011
 #&gt; [26] -0.993468693 -0.152953961  2.763727417 -3.070040803  0.006171846
-#&gt; [31]  1.058881618 -2.968267683</div><div class='input'><span class='fu'><a href='https://rdrr.io/r/utils/head.html'>head</a></span><span class='op'>(</span><span class='fu'>HDW</span><span class='op'>(</span><span class='fu'><a href='quick-conversion.html'>qM</a></span><span class='op'>(</span><span class='va'>mtcars</span><span class='op'>[</span><span class='fl'>3</span><span class='op'>:</span><span class='fl'>4</span><span class='op'>]</span><span class='op'>)</span>, <span class='va'>mtcars</span><span class='op'>[</span><span class='fl'>1</span><span class='op'>:</span><span class='fl'>2</span><span class='op'>]</span><span class='op'>)</span><span class='op'>)</span>
+#&gt; [31]  1.058881618 -2.968267683</div><div class='input'><span class='fu'><a href='https://rdrr.io/r/utils/head.html'>head</a></span><span class='op'>(</span><span class='fu'>HDW</span><span class='op'>(</span><span class='fu'><a href='A4-quick-conversion.html'>qM</a></span><span class='op'>(</span><span class='va'>mtcars</span><span class='op'>[</span><span class='fl'>3</span><span class='op'>:</span><span class='fl'>4</span><span class='op'>]</span><span class='op'>)</span>, <span class='va'>mtcars</span><span class='op'>[</span><span class='fl'>1</span><span class='op'>:</span><span class='fl'>2</span><span class='op'>]</span><span class='op'>)</span><span class='op'>)</span>
 </div><div class='output co'>#&gt;                     HDW.disp     HDW.hp
 #&gt; Mazda RX4         -56.791929 -29.668202
 #&gt; Mazda RX4 Wag     -56.791929 -29.668202
@@ -298,14 +306,15 @@ The corresponding operators HDB and HDW additionally allow to predict / partial 
 #&gt; 3      -0.15951256      -0.1742640
 #&gt; 4      -0.44070173      -0.3051992
 #&gt; 5       0.04989286       0.2102684
-#&gt; 6       0.17930818       0.3391766</div><div class='input'><span class='fu'><a href='https://rdrr.io/r/utils/head.html'>head</a></span><span class='op'>(</span><span class='fu'>HDW</span><span class='op'>(</span><span class='va'>wlddev</span>, <span class='va'>PCGDP</span> <span class='op'>+</span> <span class='va'>LIFEEX</span> <span class='op'>~</span> <span class='va'>iso3c</span> <span class='op'>+</span> <span class='fu'><a href='qF, qG, finteraction.html'>qF</a></span><span class='op'>(</span><span class='va'>year</span><span class='op'>)</span><span class='op'>)</span><span class='op'>)</span> <span class='co'># Partialling out 2 fixed effects</span>
-</div><div class='output co'>#&gt;    HDW.PCGDP  HDW.LIFEEX
-#&gt; 43 1330.1375 -1.42544500
-#&gt; 44 1182.5750 -1.09828726
-#&gt; 45  688.3730 -0.85895107
-#&gt; 46  399.7352 -0.54114762
-#&gt; 47  -59.5705 -0.31875491
-#&gt; 48 -449.2181 -0.09380395</div><div class='input'><span class='fu'><a href='https://rdrr.io/r/utils/head.html'>head</a></span><span class='op'>(</span><span class='fu'>HDW</span><span class='op'>(</span><span class='va'>wlddev</span>, <span class='va'>PCGDP</span> <span class='op'>+</span> <span class='va'>LIFEEX</span> <span class='op'>~</span> <span class='va'>iso3c</span> <span class='op'>+</span> <span class='fu'><a href='qF, qG, finteraction.html'>qF</a></span><span class='op'>(</span><span class='va'>year</span><span class='op'>)</span>, variable.wise <span class='op'>=</span> <span class='cn'>TRUE</span><span class='op'>)</span><span class='op'>)</span> <span class='co'># Variable-wise</span>
+#&gt; 6       0.17930818       0.3391766</div><div class='input'> 
+<span class='fu'><a href='https://rdrr.io/r/utils/head.html'>head</a></span><span class='op'>(</span><span class='fu'>HDW</span><span class='op'>(</span><span class='va'>wlddev</span>, <span class='va'>PCGDP</span> <span class='op'>+</span> <span class='va'>LIFEEX</span> <span class='op'>~</span> <span class='va'>iso3c</span> <span class='op'>+</span> <span class='fu'><a href='qF, qG, finteraction.html'>qF</a></span><span class='op'>(</span><span class='va'>year</span><span class='op'>)</span><span class='op'>)</span><span class='op'>)</span> <span class='co'># Partialling out 2 fixed effects</span>
+</div><div class='output co'>#&gt;     HDW.PCGDP  HDW.LIFEEX
+#&gt; 43 1330.13750 -1.42544502
+#&gt; 44 1182.57499 -1.09828728
+#&gt; 45  688.37304 -0.85895109
+#&gt; 46  399.73520 -0.54114765
+#&gt; 47  -59.57049 -0.31875493
+#&gt; 48 -449.21805 -0.09380397</div><div class='input'><span class='fu'><a href='https://rdrr.io/r/utils/head.html'>head</a></span><span class='op'>(</span><span class='fu'>HDW</span><span class='op'>(</span><span class='va'>wlddev</span>, <span class='va'>PCGDP</span> <span class='op'>+</span> <span class='va'>LIFEEX</span> <span class='op'>~</span> <span class='va'>iso3c</span> <span class='op'>+</span> <span class='fu'><a href='qF, qG, finteraction.html'>qF</a></span><span class='op'>(</span><span class='va'>year</span><span class='op'>)</span>, variable.wise <span class='op'>=</span> <span class='cn'>TRUE</span><span class='op'>)</span><span class='op'>)</span> <span class='co'># Variable-wise</span>
 </div><div class='output co'>#&gt;   HDW.PCGDP HDW.LIFEEX
 #&gt; 1        NA  -5.979000
 #&gt; 2        NA  -6.026522
@@ -314,9 +323,9 @@ The corresponding operators HDB and HDW additionally allow to predict / partial 
 #&gt; 5        NA  -5.974282
 #&gt; 6        NA  -5.949030</div><div class='input'><span class='fu'><a href='https://rdrr.io/r/utils/head.html'>head</a></span><span class='op'>(</span><span class='fu'>HDW</span><span class='op'>(</span><span class='va'>wlddev</span>, <span class='va'>PCGDP</span> <span class='op'>+</span> <span class='va'>LIFEEX</span> <span class='op'>~</span> <span class='va'>iso3c</span> <span class='op'>+</span> <span class='fu'><a href='qF, qG, finteraction.html'>qF</a></span><span class='op'>(</span><span class='va'>year</span><span class='op'>)</span> <span class='op'>+</span> <span class='va'>ODA</span><span class='op'>)</span><span class='op'>)</span> <span class='co'># Adding ODA as a continuouus regressor</span>
 </div><div class='output co'>#&gt;     HDW.PCGDP  HDW.LIFEEX
-#&gt; 43 -313.14014 -1.41953598
-#&gt; 44 -435.90972 -1.10211824
-#&gt; 45 -618.49311 -0.76508543
+#&gt; 43 -313.14014 -1.41953599
+#&gt; 44 -435.90972 -1.10211825
+#&gt; 45 -618.49311 -0.76508544
 #&gt; 46   32.47045 -0.50982100
 #&gt; 47 -129.44076 -0.32181018
 #&gt; 48  218.14942  0.08018899</div><div class='input'><span class='fu'><a href='https://rdrr.io/r/utils/head.html'>head</a></span><span class='op'>(</span><span class='fu'>HDW</span><span class='op'>(</span><span class='va'>wlddev</span>, <span class='va'>PCGDP</span> <span class='op'>+</span> <span class='va'>LIFEEX</span> <span class='op'>~</span> <span class='va'>iso3c</span><span class='op'>:</span><span class='fu'><a href='qF, qG, finteraction.html'>qF</a></span><span class='op'>(</span><span class='va'>decade</span><span class='op'>)</span> <span class='op'>+</span> <span class='fu'><a href='qF, qG, finteraction.html'>qF</a></span><span class='op'>(</span><span class='va'>year</span><span class='op'>)</span> <span class='op'>+</span> <span class='va'>ODA</span><span class='op'>)</span><span class='op'>)</span> <span class='co'># Country-decade and year FE's</span>
@@ -327,7 +336,22 @@ The corresponding operators HDB and HDW additionally allow to predict / partial 
 #&gt; 46  -47.12759  0.3808471
 #&gt; 47  102.56605 -0.4047093
 #&gt; 48   64.81635 -0.2036750</div><div class='input'>
-<span class='co'># More complex examples (Currently only recommended for smaller data)</span>
+<span class='fu'><a href='https://rdrr.io/r/utils/head.html'>head</a></span><span class='op'>(</span><span class='fu'>HDW</span><span class='op'>(</span><span class='va'>wlddev</span>, <span class='va'>PCGDP</span> <span class='op'>+</span> <span class='va'>LIFEEX</span> <span class='op'>~</span> <span class='va'>iso3c</span><span class='op'>*</span><span class='va'>year</span><span class='op'>)</span><span class='op'>)</span>          <span class='co'># Country specific time trends</span>
+</div><div class='output co'>#&gt;    HDW.PCGDP HDW.LIFEEX
+#&gt; 43  22.04333 -0.3454583
+#&gt; 44  12.11213 -0.2339262
+#&gt; 45 -21.06117 -0.1103940
+#&gt; 46 -19.66670  0.0131381
+#&gt; 47 -34.86051  0.1216702
+#&gt; 48 -17.37947  0.2042024</div><div class='input'><span class='fu'><a href='https://rdrr.io/r/utils/head.html'>head</a></span><span class='op'>(</span><span class='fu'>HDW</span><span class='op'>(</span><span class='va'>wlddev</span>, <span class='va'>PCGDP</span> <span class='op'>+</span> <span class='va'>LIFEEX</span> <span class='op'>~</span> <span class='va'>iso3c</span><span class='op'>*</span><span class='fu'><a href='https://rdrr.io/r/stats/poly.html'>poly</a></span><span class='op'>(</span><span class='va'>year</span>, <span class='fl'>3</span><span class='op'>)</span><span class='op'>)</span><span class='op'>)</span> <span class='co'># Country specific cubic trends</span>
+</div><div class='output co'>#&gt;      HDW.PCGDP   HDW.LIFEEX
+#&gt; 43 -8.71647982  0.041812418
+#&gt; 44 13.80083979 -0.019209991
+#&gt; 45 -0.80791065 -0.038647989
+#&gt; 46  7.73712047 -0.029345342
+#&gt; 47 -9.25015025 -0.007145816
+#&gt; 48 -0.03663079  0.016106823</div><div class='input'>
+<span class='co'># More complex examples</span>
 <span class='fu'><a href='https://rdrr.io/r/stats/lm.html'>lm</a></span><span class='op'>(</span><span class='va'>HDW.mpg</span> <span class='op'>~</span> <span class='va'>HDW.hp</span>, data <span class='op'>=</span> <span class='fu'>HDW</span><span class='op'>(</span><span class='va'>mtcars</span>, <span class='op'>~</span> <span class='fu'><a href='https://rdrr.io/r/base/factor.html'>factor</a></span><span class='op'>(</span><span class='va'>cyl</span><span class='op'>)</span><span class='op'>*</span><span class='va'>carb</span> <span class='op'>+</span> <span class='va'>vs</span> <span class='op'>+</span> <span class='va'>wt</span><span class='op'>:</span><span class='va'>gear</span> <span class='op'>+</span> <span class='va'>wt</span><span class='op'>:</span><span class='va'>gear</span><span class='op'>:</span><span class='va'>carb</span><span class='op'>)</span><span class='op'>)</span>
 </div><div class='output co'>#&gt; 
 #&gt; Call:
@@ -336,7 +360,7 @@ The corresponding operators HDB and HDW additionally allow to predict / partial 
 #&gt; 
 #&gt; Coefficients:
 #&gt; (Intercept)       HDW.hp  
-#&gt;   1.032e-09   -2.366e-02  
+#&gt;  -1.937e-16   -2.366e-02  
 #&gt; </div><div class='input'><span class='fu'><a href='https://rdrr.io/r/stats/lm.html'>lm</a></span><span class='op'>(</span><span class='va'>mpg</span> <span class='op'>~</span> <span class='va'>hp</span> <span class='op'>+</span> <span class='fu'><a href='https://rdrr.io/r/base/factor.html'>factor</a></span><span class='op'>(</span><span class='va'>cyl</span><span class='op'>)</span><span class='op'>*</span><span class='va'>carb</span> <span class='op'>+</span> <span class='va'>vs</span> <span class='op'>+</span> <span class='va'>wt</span><span class='op'>:</span><span class='va'>gear</span> <span class='op'>+</span> <span class='va'>wt</span><span class='op'>:</span><span class='va'>gear</span><span class='op'>:</span><span class='va'>carb</span>, data <span class='op'>=</span> <span class='va'>mtcars</span><span class='op'>)</span>
 </div><div class='output co'>#&gt; 
 #&gt; Call:
@@ -359,7 +383,7 @@ The corresponding operators HDB and HDW additionally allow to predict / partial 
 #&gt; 
 #&gt; Coefficients:
 #&gt; (Intercept)       HDW.hp  
-#&gt;   1.444e-09   -2.740e-02  
+#&gt;   5.182e-16   -2.740e-02  
 #&gt; </div><div class='input'><span class='fu'><a href='https://rdrr.io/r/stats/lm.html'>lm</a></span><span class='op'>(</span><span class='va'>mpg</span> <span class='op'>~</span> <span class='va'>hp</span> <span class='op'>+</span> <span class='fu'><a href='https://rdrr.io/r/base/factor.html'>factor</a></span><span class='op'>(</span><span class='va'>cyl</span><span class='op'>)</span><span class='op'>*</span><span class='va'>carb</span> <span class='op'>+</span> <span class='va'>vs</span> <span class='op'>+</span> <span class='va'>wt</span><span class='op'>:</span><span class='va'>gear</span>, data <span class='op'>=</span> <span class='va'>mtcars</span><span class='op'>)</span>
 </div><div class='output co'>#&gt; 
 #&gt; Call:
@@ -401,7 +425,7 @@ The corresponding operators HDB and HDW additionally allow to predict / partial 
 #&gt; 
 #&gt; Coefficients:
 #&gt; (Intercept)       HDW.hp  
-#&gt;   5.193e-16   -6.227e-02  
+#&gt;  -2.143e-15   -6.117e-02  
 #&gt; </div><div class='input'><span class='fu'><a href='https://rdrr.io/r/stats/lm.html'>lm</a></span><span class='op'>(</span><span class='va'>mpg</span> <span class='op'>~</span> <span class='va'>hp</span> <span class='op'>+</span> <span class='va'>cyl</span><span class='op'>*</span><span class='va'>carb</span> <span class='op'>+</span> <span class='fu'><a href='https://rdrr.io/r/base/factor.html'>factor</a></span><span class='op'>(</span><span class='va'>cyl</span><span class='op'>)</span><span class='op'>*</span><span class='fu'><a href='https://rdrr.io/r/stats/poly.html'>poly</a></span><span class='op'>(</span><span class='va'>drat</span>,<span class='fl'>2</span><span class='op'>)</span>, data <span class='op'>=</span> <span class='va'>mtcars</span><span class='op'>)</span>
 </div><div class='output co'>#&gt; 
 #&gt; Call:
@@ -423,7 +447,9 @@ The corresponding operators HDB and HDW additionally allow to predict / partial 
 #&gt;                   -18.35266                    -18.70972  
 #&gt; factor(cyl)8:poly(drat, 2)2  
 #&gt;                    -0.56842  
-#&gt; </div></pre>
+#&gt; </div><div class='input'>
+
+</div></pre>
   </div>
   <div class="col-md-3 hidden-xs hidden-sm" id="pkgdown-sidebar">
     <nav id="toc" data-toggle="toc" class="sticky-top">

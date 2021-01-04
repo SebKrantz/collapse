@@ -37,14 +37,14 @@ BY(x, \dots)
   \item{use.g.names}{logical. Make group-names and add to the result as names (default method) or row-names (matrix and data frame methods). No row-names are generated for \emph{data.table}'s.}
   \item{sort}{logical. Sort the groups? Internally passed to \code{\link{GRP}} or \code{\link{qF}}, and only effective if \code{g} is not already a factor or \code{\link{GRP}} object.}
   \item{expand.wide}{logical. If \code{FUN} is a vector-valued function returning a vector of fixed length > 1 (such as the \code{\link{quantile}} function), \code{expand.wide} can be used to return the result in a wider format (instead of stacking the resulting vectors of fixed length above each other in each output column).}
-\item{parallel}{logical. \code{TRUE} implements simple parallel execution by internally calling \code{parallel::mclapply} instead of \code{base::lapply}.}
-  \item{mc.cores}{integer. Argument to \code{parallel::mclapply} indicating the number of cores to use for parallel execution. Can use \code{parallel::detectCores()} to select all available cores. See also \code{?parallel::mclapply}.}
+\item{parallel}{logical. \code{TRUE} implements simple parallel execution by internally calling \code{\link{mclapply}} instead of \code{\link{lapply}}.}
+  \item{mc.cores}{integer. Argument to \code{\link{mclapply}} indicating the number of cores to use for parallel execution. Can use \code{\link[=detectCores]{detectCores()}} to select all available cores.}
 \item{return}{an integer or string indicating the type of object to return. The default \code{1 - "same"} returns the same object type (i.e. class and other attributes are retained, just the names for the dimensions are adjusted). \code{2 - "matrix"} always returns the output as matrix, \code{3 - "data.frame"} always returns a data frame and \code{4 - "list"} returns the raw (uncombined) output. \emph{Note}: \code{4 - "list"} works together with \code{expand.wide} to return a list of matrices.}
 \item{keep.group_vars}{\emph{grouped_df method:} Logical. \code{FALSE} removes grouping variables after computation.}
 %    \item{simplify}{logical. Simplify the result to return an object of the same class and with the same attributes. If \code{FALSE}, the raw computation retult in form of a (nested) list is returned.}
 }
 \details{
-\code{BY} is a frugal re-implementation of the Split-Apply-Combine computing paradigm. It is generally faster than \code{base::tapply}, \code{base::by}, \code{base::aggregate} and \code{plyr}, and preserves data attributes just like \code{\link{dapply}}.  % and more versatile though not faster than \emph{dplyr}
+\code{BY} is a frugal re-implementation of the Split-Apply-Combine computing paradigm. It is generally faster than \code{\link{tapply}}, \code{\link{by}}, \code{\link{aggregate}} and \emph{plyr}, and preserves data attributes just like \code{\link{dapply}}.  % and more versatile though not faster than \emph{dplyr}
 
 %I note at this point that the philosophy of \emph{collapse} is to move beyond this rather slow computing paradigm, which is why the \link[=A1-fast-statistical-functions]{Fast Statistical Functions} were implemented. However sometimes tasks need to be performed that involve more complex and customized operations on data, and for these cases \code{BY} is a good solution.
 

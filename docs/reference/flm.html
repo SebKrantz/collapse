@@ -72,7 +72,7 @@
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">collapse</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">1.4.2</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">1.5.0</span>
       </span>
     </div>
 
@@ -159,7 +159,7 @@
 <tr><td><em> Int. </em></td><td></td><td><em> String </em></td><td></td><td><em> Description </em></td></tr>
 <tr><td>1</td><td></td><td>"lm"</td><td></td><td>uses <code><a href='https://rdrr.io/r/stats/lmfit.html'>.lm.fit</a></code>.</td></tr>
 <tr><td>2</td><td></td><td>"solve"</td><td></td><td><code><a href='https://rdrr.io/r/base/solve.html'>solve(crossprod(X), crossprod(X, y))</a></code>.</td></tr>
-<tr><td>3</td><td></td><td>"qr"</td><td></td><td><code><a href='https://rdrr.io/r/base/qr.html'>qr.coef(qr(X, LAPACK = TRUE), y)</a></code>.</td></tr>
+<tr><td>3</td><td></td><td>"qr"</td><td></td><td><code><a href='https://rdrr.io/r/base/qr.html'>qr.coef(qr(X), y)</a></code>.</td></tr>
 <tr><td>4</td><td></td><td>"arma"</td><td></td><td>uses <code><a href='https://rdrr.io/pkg/RcppArmadillo/man/fastLm.html'>RcppArmadillo::fastLmPure</a></code>.</td></tr>
 <tr><td>5</td><td></td><td>"chol"</td><td></td><td><code>chol2inv(chol(crossprod(X))) %*% crossprod(X, y)</code> (quite fast but requires <code><a href='https://rdrr.io/r/base/crossprod.html'>crossprod(X)</a></code> to be positive definite).</td></tr>
 <tr><td>6</td><td></td><td>"eigen"</td><td></td><td>uses <code><a href='https://rdrr.io/pkg/RcppEigen/man/fastLm.html'>RcppEigen::fastLmPure</a></code> (very fast but potentially unstable, depending on the method).</td></tr>
@@ -194,10 +194,10 @@
     <p>Method "qr" supports sparse matrices, so for an <code>X</code> matrix with many dummy variables consider method "qr" passing <code>as(X, "dgCMatrix")</code> instead of just <code>X</code>.</p>
     <h2 class="hasAnchor" id="see-also"><a class="anchor" href="#see-also"></a>See also</h2>
 
-    <div class='dont-index'><p><code><a href='fHDbetween, fHDwithin.html'>fHDwithin/HDW</a></code>, <code><a href='fFtest.html'>fFtest</a></code>, <a href='data-transformations.html'>Data Transformations</a>, <a href='index.html'>Collapse Overview</a></p></div>
+    <div class='dont-index'><p><code><a href='fHDbetween, fHDwithin.html'>fHDwithin/HDW</a></code>, <code><a href='fFtest.html'>fFtest</a></code>, <a href='A6-data-transformations.html'>Data Transformations</a>, <a href='index.html'>Collapse Overview</a></p></div>
 
     <h2 class="hasAnchor" id="examples"><a class="anchor" href="#examples"></a>Examples</h2>
-    <pre class="examples"><div class='input'><span class='va'>coef</span> <span class='op'>&lt;-</span> <span class='fu'>flm</span><span class='op'>(</span><span class='va'>mtcars</span><span class='op'>$</span><span class='va'>mpg</span>, <span class='fu'><a href='quick-conversion.html'>qM</a></span><span class='op'>(</span><span class='va'>mtcars</span><span class='op'>[</span><span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span><span class='op'>(</span><span class='st'>"hp"</span>,<span class='st'>"carb"</span><span class='op'>)</span><span class='op'>]</span><span class='op'>)</span>,
+    <pre class="examples"><div class='input'><span class='va'>coef</span> <span class='op'>&lt;-</span> <span class='fu'>flm</span><span class='op'>(</span><span class='va'>mtcars</span><span class='op'>$</span><span class='va'>mpg</span>, <span class='fu'><a href='A4-quick-conversion.html'>qM</a></span><span class='op'>(</span><span class='va'>mtcars</span><span class='op'>[</span><span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span><span class='op'>(</span><span class='st'>"hp"</span>,<span class='st'>"carb"</span><span class='op'>)</span><span class='op'>]</span><span class='op'>)</span>,
             <span class='va'>mtcars</span><span class='op'>$</span><span class='va'>wt</span>, add.icpt <span class='op'>=</span> <span class='cn'>TRUE</span><span class='op'>)</span>
 <span class='va'>coef</span>
 </div><div class='output co'>#&gt;                    [,1]
@@ -210,8 +210,9 @@
 #&gt; 28.48401839 -0.06834996  0.33207257 </div><div class='input'>
 <span class='fu'><a href='https://rdrr.io/r/base/all.equal.html'>all.equal</a></span><span class='op'>(</span><span class='fu'><a href='https://rdrr.io/r/base/drop.html'>drop</a></span><span class='op'>(</span><span class='va'>coef</span><span class='op'>)</span>, <span class='va'>lmcoef</span><span class='op'>)</span>
 </div><div class='output co'>#&gt; [1] TRUE</div><div class='input'>
-<span class='fu'><a href='small-helpers.html'>all_obj_equal</a></span><span class='op'>(</span><span class='fu'><a href='https://rdrr.io/r/base/lapply.html'>lapply</a></span><span class='op'>(</span><span class='fl'>1</span><span class='op'>:</span><span class='fl'>6</span>, <span class='kw'>function</span><span class='op'>(</span><span class='va'>i</span><span class='op'>)</span>
-  <span class='fu'>flm</span><span class='op'>(</span><span class='va'>mtcars</span><span class='op'>$</span><span class='va'>mpg</span>, <span class='fu'><a href='quick-conversion.html'>qM</a></span><span class='op'>(</span><span class='va'>mtcars</span><span class='op'>[</span><span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span><span class='op'>(</span><span class='st'>"hp"</span>,<span class='st'>"carb"</span><span class='op'>)</span><span class='op'>]</span><span class='op'>)</span>,
+ 
+<span class='fu'><a href='AA2-small-helpers.html'>all_obj_equal</a></span><span class='op'>(</span><span class='fu'><a href='https://rdrr.io/r/base/lapply.html'>lapply</a></span><span class='op'>(</span><span class='fl'>1</span><span class='op'>:</span><span class='fl'>6</span>, <span class='kw'>function</span><span class='op'>(</span><span class='va'>i</span><span class='op'>)</span>
+  <span class='fu'>flm</span><span class='op'>(</span><span class='va'>mtcars</span><span class='op'>$</span><span class='va'>mpg</span>, <span class='fu'><a href='A4-quick-conversion.html'>qM</a></span><span class='op'>(</span><span class='va'>mtcars</span><span class='op'>[</span><span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span><span class='op'>(</span><span class='st'>"hp"</span>,<span class='st'>"carb"</span><span class='op'>)</span><span class='op'>]</span><span class='op'>)</span>,
       <span class='va'>mtcars</span><span class='op'>$</span><span class='va'>wt</span>, add.icpt <span class='op'>=</span> <span class='cn'>TRUE</span>, method <span class='op'>=</span> <span class='va'>i</span><span class='op'>)</span><span class='op'>)</span><span class='op'>)</span>
 </div><div class='output co'>#&gt; [1] TRUE</div><div class='input'>
 </div></pre>

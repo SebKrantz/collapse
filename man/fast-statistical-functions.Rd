@@ -4,7 +4,7 @@
 \alias{.FAST_FUN}
 \title{Fast (Grouped, Weighted) Statistical Functions for Matrix-Like Objects}  % Vectors, Matrix and Data Frame Columns}
 \description{
-With \code{\link{fsum}}, \code{\link{fprod}}, \code{\link{fmean}}, \code{\link{fmedian}}, \code{\link{fmode}}, \code{\link{fvar}}, \code{\link{fsd}}, \code{\link{fmin}}, \code{\link{fmax}}, \code{\link{fnth}}, \code{\link{ffirst}}, \code{\link{flast}}, \code{\link{fNobs}} and \code{\link{fNdistinct}}, \emph{collapse} presents a coherent set of extremely fast and flexible statistical functions (S3 generics) to perform column-wise, grouped and weighted computations on atomic vectors, matrices and data frames, with special support for \emph{dplyr} grouped tibbles and data.table's.
+With \code{\link{fsum}}, \code{\link{fprod}}, \code{\link{fmean}}, \code{\link{fmedian}}, \code{\link{fmode}}, \code{\link{fvar}}, \code{\link{fsd}}, \code{\link{fmin}}, \code{\link{fmax}}, \code{\link{fnth}}, \code{\link{ffirst}}, \code{\link{flast}}, \code{\link{fNobs}} and \code{\link{fNdistinct}}, \emph{collapse} presents a coherent set of extremely fast and flexible statistical functions (S3 generics) to perform column-wise, grouped and weighted computations on atomic vectors, matrices and data frames, with special support for grouped data frames / tibbles (\emph{dplyr}) and \emph{data.table}'s.
 }
 \section{Usage}{\preformatted{
 ## All functions (FUN) follow a common syntax in 4 methods:
@@ -29,7 +29,7 @@ FUN(x, [w = NULL,] TRA = NULL, [na.rm = TRUE,]
 }
 \section{Arguments}{
 \tabular{lll}{
-\code{x} \tab \tab a vector, matrix, data frame or grouped tibble (\code{dplyr::grouped_df}). \cr
+\code{x} \tab \tab a vector, matrix, data frame or grouped data frame (class 'grouped_df'). \cr
 
 \code{g} \tab \tab a factor, \code{\link{GRP}} object, atomic vector (internally converted to factor) or a list of vectors / factors (internally converted to a \code{\link{GRP}} object) used to group \code{x}. \cr
 
@@ -97,15 +97,14 @@ fmode(wlddev, wlddev$income)             # Grouped statistical modes ..
 m <- qM(mtcars)
 fsum(m)
 fsum(m, g) # ..
-\donttest{ % No code relying on suggested package
-## method for grouped tibbles - for use with dplyr
+
+## method for grouped data frames - created with dplyr::group_by or fgroup_by
 library(dplyr)
 mtcars \%>\% group_by(cyl,vs,am) \%>\% select(mpg,carb) \%>\% fsum
 mtcars \%>\% fgroup_by(cyl,vs,am) \%>\% fselect(mpg,carb) \%>\% fsum # equivalent and faster !!
 mtcars \%>\% fgroup_by(cyl,vs,am) \%>\% fsum(TRA = "\%")
 mtcars \%>\% fgroup_by(cyl,vs,am) \%>\% fmean(hp)         # weighted grouped mean, save sum of weights
 mtcars \%>\% fgroup_by(cyl,vs,am) \%>\% fmean(hp, keep.group_vars = FALSE)
-}
 }
 }
 \section{Benchmark}{\preformatted{

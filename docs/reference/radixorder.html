@@ -40,7 +40,7 @@
 
 
 <meta property="og:title" content="Fast Radix-Based Ordering — radixorder" />
-<meta property="og:description" content="A slight modification of base::order(..., method = &quot;radix&quot;) that is more programmer friendly and, importantly, provides features for ordered grouping of data (similar to data.table:::forderv which has more or less the same source code). radixorderv is a programmers version directly supporting vector and list input. " />
+<meta property="og:description" content="A slight modification of order(..., method = &quot;radix&quot;) that is more programmer friendly and, importantly, provides features for ordered grouping of data (similar to data.table:::forderv which has more or less the same source code). radixorderv is a programmers version directly supporting vector and list input. " />
 
 
 
@@ -72,7 +72,7 @@
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">collapse</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">1.4.2</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">1.5.0</span>
       </span>
     </div>
 
@@ -88,7 +88,7 @@
   <a href="../news/index.html">News</a>
 </li>
 <li>
-  <a href="https://sebkrantz.github.io/Rblog/" target="_blank">Blog</a>
+  <a href="https://sebkrantz.github.io/Rblog/">Blog</a>
 </li>
       </ul>
       <ul class="nav navbar-nav navbar-right">
@@ -123,7 +123,7 @@
     </div>
 
     <div class="ref-description">
-    <p>A slight modification of <code><a href='https://rdrr.io/r/base/order.html'>base::order(..., method = "radix")</a></code> that is more programmer friendly and, importantly, provides features for ordered grouping of data (similar to <code>data.table:::forderv</code> which has more or less the same source code). <code>radixorderv</code> is a programmers version directly supporting vector and list input. <!-- % Apart from added grouping features, the source code and standard functionality is identical to \code{base::order(\dots, method = "radix")}. --></p>
+    <p>A slight modification of <code><a href='https://rdrr.io/pkg/data.table/man/setorder.html'>order(..., method = "radix")</a></code> that is more programmer friendly and, importantly, provides features for ordered grouping of data (similar to <code>data.table:::forderv</code> which has more or less the same source code). <code>radixorderv</code> is a programmers version directly supporting vector and list input. <!-- % Apart from added grouping features, the source code and standard functionality is identical to \code{\link{order(\dots, method = "radix")}. --></p>
     </div>
 
     <pre class="usage"><span class='fu'>radixorder</span><span class='op'>(</span><span class='va'>...</span>, na.last <span class='op'>=</span> <span class='cn'>TRUE</span>, decreasing <span class='op'>=</span> <span class='cn'>FALSE</span>, starts <span class='op'>=</span> <span class='cn'>FALSE</span>,
@@ -172,7 +172,7 @@
     <p>An integer ordering vector with attributes: Unless <code>na.last = NA</code> an attribute 'sorted' indicating whether the input data was already sorted is attached. If <code>starts = TRUE</code>, 'starts' giving a vector of group starts in the ordered data, and if <code>group.sizes = TRUE</code>, 'group.sizes' giving the vector of group sizes are attached. In either case an attribute 'maxgrpn' providing the size of the largest group is also attached.</p>
     <h2 class="hasAnchor" id="see-also"><a class="anchor" href="#see-also"></a>See also</h2>
 
-    <div class='dont-index'><p><a href='fast-grouping-ordering.html'>Fast Grouping and Ordering</a>, <a href='index.html'>Collapse Overview</a></p></div>
+    <div class='dont-index'><p><a href='A2-fast-grouping-ordering.html'>Fast Grouping and Ordering</a>, <a href='index.html'>Collapse Overview</a></p></div>
 
     <h2 class="hasAnchor" id="examples"><a class="anchor" href="#examples"></a>Examples</h2>
     <pre class="examples"><div class='input'><span class='fu'>radixorder</span><span class='op'>(</span><span class='va'>mtcars</span><span class='op'>$</span><span class='va'>mpg</span><span class='op'>)</span>

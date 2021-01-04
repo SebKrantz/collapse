@@ -5,7 +5,7 @@
 \description{
 \emph{collapse} provides the following functions to efficiently group and order data:
 \itemize{
-\item \code{\link{radixorder}}, provides fast radix-ordering through direct access to the method \code{base::order(\dots, method = "radix")}, as well as the possibility to return some attributes very useful for grouping data and finding unique elements. \code{\link{radixorderv}} exists as a programmers alternative. The function \code{\link[=roworder]{roworder(v)}} efficiently reorders a data frame based on an ordering computed by \code{\link{radixorderv}}. %The source code for both \code{\link{radixorder}} and \code{base::order(\dots, method = "radix")}, comes from \code{data.table:::forder}.
+\item \code{\link{radixorder}}, provides fast radix-ordering through direct access to the method \code{\link[=order]{order(..., method = "radix")}}, as well as the possibility to return some attributes very useful for grouping data and finding unique elements. \code{\link{radixorderv}} exists as a programmers alternative. The function \code{\link[=roworder]{roworder(v)}} efficiently reorders a data frame based on an ordering computed by \code{\link{radixorderv}}. %The source code for both \code{\link{radixorder}} and \code{\link{order(\dots, method = "radix")}, comes from \code{data.table:::forder}.
 %\code{\link{radixorder}} was modified to optionally return either a vector of group starts, a vector of group sizes, or both as an attribute, and also an attribute providing the size of the largest group and a logical statement on whether the input was already ordered. The function \code{\link{radixorderv}} exists as a programmers alternative.
 
 \item \code{\link{GRP}} creates \emph{collapse} grouping objects of class 'GRP' based on \code{\link{radixorderv}}. 'GRP' objects form the central building block for grouped operations and programming in \emph{collapse} and are very efficient inputs to all \emph{collapse} functions supporting grouped operations. A 'GRP' object provides information about (1) the number of groups, (2) which rows belong to which group, (3) the group sizes, (4) the unique groups, (5) the variables used for grouping, (6) whether the grouping and initial inputs were ordered and (7) (optionally) the output from \code{\link{radixorder}} containing the ordering vector with group starts and maximum group size attributes.
@@ -18,13 +18,13 @@
 
 \item \code{\link{qG}}, shorthand for 'quick-group', generates a kind of factor-light without the levels attribute but instead an attribute providing the number of levels. Optionally the levels / groups can be attached, but without converting them to character. Objects have a class 'qG', which is also recognized in the \emph{collapse} ecosystem.
 
-\item \code{\link{fdroplevels}} is a substantially faster replacement for \code{base::droplevels}.
+\item \code{\link{fdroplevels}} is a substantially faster replacement for \code{\link{droplevels}}.
 
-\item \code{\link{finteraction}} is a fast alternative to \code{base::interaction} implemented as a wrapper around \code{as.factor_GRP(GRP(\dots))}. It can be used to generate a factor from multiple vectors, factors or a list of vectors / factors. Unused factor levels are always dropped.
+\item \code{\link{finteraction}} is a fast alternative to \code{\link{interaction}} implemented as a wrapper around \code{as.factor_GRP(GRP(\dots))}. It can be used to generate a factor from multiple vectors, factors or a list of vectors / factors. Unused factor levels are always dropped.
 
 \item \code{\link{groupid}} is a generalization of \code{data.table::rleid} providing a run-length type group-id from atomic vectors. It is generalization as it also supports passing an ordering vector and skipping missing values. For example \code{\link{qF}} and \code{\link{qG}} with \code{method = "radix"} are essentially implemented using \code{groupid(x, radixorder(x))}.
 
-\item \code{\link{seqid}} is a specialized function which creates a group-id from sequences of integer values. For any ordinary panel dataset \code{groupid(id, order(id, time))} and \code{seqid(time, order(id, time))} provide the same id variable. \code{\link{seqid}} is especially useful for identifying discontinuities in time-sequences and helps to perform operations such as lags or differences on irregularly spaced time series and panels.
+\item \code{\link{seqid}} is a specialized function which creates a group-id from sequences of integer values. For any ordinary panel dataset \code{groupid(id, order(id, time))} and \code{seqid(time, order(id, time))} provide the same id variable. \code{\link{seqid}} is especially useful for identifying discontinuities in time-sequences and can help to perform operations such as iterated differences on such data.
 }
 }
 \section{Table of Functions}{

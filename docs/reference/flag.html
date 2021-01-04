@@ -73,7 +73,7 @@
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">collapse</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">1.4.2</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">1.5.0</span>
       </span>
     </div>
 
@@ -125,7 +125,7 @@
 
     <div class="ref-description">
     <p><code>flag</code> is an S3 generic to compute (sequences of) lags and leads. <code>L</code> and <code>F</code> are wrappers around <code>flag</code> representing the lag- and lead-operators, such that <code>L(x,-1) = F(x,1) = F(x)</code> and <code>L(x,-3:3) = F(x,3:-3)</code>. <code>L</code> and <code>F</code> provide more flexibility than <code>flag</code> when applied to data frames (i.e.  column subsetting, formula input and id-variable-preservation capabilities...), but are otherwise identical.</p>
-<p>(<code>flag</code> is more of a programmers function in style of the <a href='fast-statistical-functions.html'>Fast Statistical Functions</a> while <code>L</code> and <code>F</code> are more practical to use in regression formulas or for computations on data frames.)</p>
+<p>(<code>flag</code> is more of a programmers function in style of the <a href='A1-fast-statistical-functions.html'>Fast Statistical Functions</a> while <code>L</code> and <code>F</code> are more practical to use in regression formulas or for computations on data frames.)</p>
     </div>
 
     <pre class="usage"><span class='fu'>flag</span><span class='op'>(</span><span class='va'>x</span>, n <span class='op'>=</span> <span class='fl'>1</span>, <span class='va'>...</span><span class='op'>)</span>
@@ -173,7 +173,7 @@
 <span class='fu'>F</span><span class='op'>(</span><span class='va'>x</span>, n <span class='op'>=</span> <span class='fl'>1</span>, cols <span class='op'>=</span> <span class='va'>is.numeric</span>, fill <span class='op'>=</span> <span class='cn'>NA</span>, stubs <span class='op'>=</span> <span class='cn'>TRUE</span>,
   keep.ids <span class='op'>=</span> <span class='cn'>TRUE</span>, <span class='va'>...</span><span class='op'>)</span>
 
-<span class='co'># Methods for compatibility with dplyr:</span>
+<span class='co'># Methods for grouped data frame / compatibility with dplyr:</span>
 
 <span class='co'># S3 method for grouped_df</span>
 <span class='fu'>flag</span><span class='op'>(</span><span class='va'>x</span>, n <span class='op'>=</span> <span class='fl'>1</span>, t <span class='op'>=</span> <span class='cn'>NULL</span>, fill <span class='op'>=</span> <span class='cn'>NA</span>, stubs <span class='op'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/length.html'>length</a></span><span class='op'>(</span><span class='va'>n</span><span class='op'>)</span> <span class='op'>&gt;</span> <span class='fl'>1L</span>, keep.ids <span class='op'>=</span> <span class='cn'>TRUE</span>, <span class='va'>...</span><span class='op'>)</span>
@@ -187,7 +187,7 @@
     <colgroup><col class="name" /><col class="desc" /></colgroup>
     <tr>
       <th>x</th>
-      <td><p>a vector / time series, (time series) matrix, data frame, panel series (<code><a href='https://rdrr.io/pkg/plm/man/pseries.html'>plm::pseries</a></code>), panel data frame (<code><a href='https://rdrr.io/pkg/plm/man/pdata.frame.html'>plm::pdata.frame</a></code>) or grouped tibble (<code><a href='https://dplyr.tidyverse.org/reference/grouped_df.html'>dplyr::grouped_df</a></code>). Data must not be numeric i.e you can also lag a date variable, character data etc...</p></td>
+      <td><p>a vector / time series, (time series) matrix, data frame, panel series (<code><a href='https://rdrr.io/pkg/plm/man/pseries.html'>plm::pseries</a></code>), panel data frame (<code><a href='https://rdrr.io/pkg/plm/man/pdata.frame.html'>plm::pdata.frame</a></code>) or grouped data frame (class 'grouped_df'). Data must not be numeric i.e you can also lag a date variable, character data etc...</p></td>
     </tr>
     <tr>
       <th>n</th>
@@ -203,7 +203,7 @@
     </tr>
     <tr>
       <th>t</th>
-      <td><p>same input as <code>g/by</code>, to indicate the time-variable. For safe computation of differences on unordered time series and panels. Data Frame method also allows one-sided formula i.e. <code>~time</code>. grouped_df method supports lazy-evaluation i.e. <code>time</code> (no quotes).</p></td>
+      <td><p>same input as <code>g/by</code>, to indicate the time-variable(s). For safe computation of differences on unordered time series and panels. Data Frame method also allows one-sided formula i.e. <code>~time</code>. grouped_df method supports lazy-evaluation i.e. <code>time</code> (no quotes).</p></td>
     </tr>
     <tr>
       <th>cols</th>
@@ -219,7 +219,7 @@
     </tr>
     <tr>
       <th>keep.ids</th>
-      <td><p><em>data.frame / pdata.frame / grouped_df methods</em>: Logical. Drop all panel-identifiers from the output (which includes all variables passed to <code>by</code> or <code>t</code>). <em>Note</em>: For panel data frames and grouped tibbles identifiers are dropped, but the 'index' / 'groups' attributes are kept.</p></td>
+      <td><p><em>data.frame / pdata.frame / grouped_df methods</em>: Logical. Drop all panel-identifiers from the output (which includes all variables passed to <code>by</code> or <code>t</code>). <em>Note</em>: For grouped / panel data frames identifiers are dropped, but the 'groups' / 'index' attributes are kept.</p></td>
     </tr>
     <tr>
       <th>...</th>
@@ -230,11 +230,13 @@
     <h2 class="hasAnchor" id="details"><a class="anchor" href="#details"></a>Details</h2>
 
     <p>If a single integer is passed to <code>n</code>, and <code>g/by</code> and <code>t</code> are left empty, <code>flag/L/F</code> just returns <code>x</code> with all columns lagged / leaded by <code>n</code>. If <code>length(n)&gt;1</code>, and <code>x</code> is an atomic vector (time series), <code>flag/L/F</code> returns a (time series) matrix with lags / leads computed in the same order as passed to <code>n</code>. If instead <code>x</code> is a matrix / data frame, a matrix / data frame with <code>ncol(x)*length(n)</code> columns is returned where columns are sorted first by variable and then by lag (so all lags computed on a variable are grouped together). <code>x</code> can be of any standard data type.</p>
-<p>With groups/panel-identifiers supplied to <code>g/by</code>, <code>flag/L/F</code> efficiently computes a panel-lag/lead by shifting the entire vector(s) but inserting <code>fill</code> elements in the right places. If <code>t</code> is left empty, the data needs to be ordered such that all values belonging to a group are consecutive and in the right order. It is not necessary that the groups themselves occur in the right order. If a time-variable is supplied to <code>t</code> (or a list of time-variables uniquely identifying the time-dimension), the panel is fully identified and lags / leads can be securely computed even if the data is completely unordered.</p>
-<p><code>flag/L/F</code> supports balanced panels and unbalanced panels where various individuals are observed for different time-sequences (both start, end and duration of observation can differ for each individual). <code>flag/L/F</code> does not natively support irregularly spaced time series and panels, that is situations where there are either gaps in time and/or repeated observations in the same time-period for some individual (see also computational details below). For such cases the function <code><a href='seqid.html'>seqid</a></code> can be used to generate an appropriate panel-identifier (i.e. splitting individuals with an irregular time-sequence into multiple individuals with regular time-sequences before applying <code>flag/L/F</code>).</p>
+<p>With groups/panel-identifiers supplied to <code>g/by</code>, <code>flag/L/F</code> efficiently computes a panel-lag/lead by shifting the entire vector(s) but inserting <code>fill</code> elements in the right places. If <code>t</code> is left empty, the data needs to be ordered such that all values belonging to a group are consecutive and in the right order. It is not necessary that the groups themselves occur in the right order. If a time-variable is supplied to <code>t</code> (or a list of time-variables uniquely identifying the time-dimension), the panel is fully identified and lags / leads can be securely computed even if the data is unordered.</p>
+<p>It is also possible to lag unordered or irregular time series utilizing only the <code>t</code> argument to identify the temporal dimension of the data.</p>
+<p>Since v1.5.0 <code>flag/L/F</code> provide full built-in support for irregular time series and unbalanced panels. The suggested workaround using the <code><a href='seqid.html'>seqid</a></code> function is therefore no longer necessary.
+<!-- %\code{flag/L/F} supports balanced panels and unbalanced panels where various individuals are observed for different time-sequences (both start, end and duration of observation can differ for each individual). \code{flag/L/F} does not natively support irregularly spaced time series and panels, that is situations where there are either gaps in time and/or repeated observations in the same time-period for some individual (see also computational details below). For such cases the function \code{\link{seqid}} can be used to generate an appropriate panel-identifier (i.e. splitting individuals with an irregular time-sequence into multiple individuals with regular time-sequences before applying \code{flag/L/F}). --></p>
 <p><!-- %(in that case data is shifted around and \code{fill} values are inserted in such a way that if the data were sorted afterwards the result would be identical to computing lags / leads on sorted data). Internally this works by using the grouping- and time-variable(s) to create an ordering and then accessing the panel-vector(s) through this ordering. If the data is just a bit unordered, such computations are nearly as fast as computations on ordered data (without \code{t}), however, if the data is very unordered, it can take significantly longer. Since most panel data come perfectly or pretty ordered, I recommend always supplying \code{t} to be on the safe-side. --></p>
-<p>It is also possible to compute lags / leads on unordered time series (thus utilizing <code>t</code> but leaving <code>g/by</code> empty), although this is probably more rare to encounter than unordered panels. Irregularly spaced time series can also be lagged using a panel- identifier generated with <code><a href='seqid.html'>seqid</a></code>.</p>
-<p>Computationally, if both <code>g/by</code> and <code>t</code> are supplied, <code>flag/L/F</code> uses two initial passes to create an ordering through which the data are accessed. First-pass: Calculate group sizes and the minimum time-value for each individual. Second-pass: Generate the ordering by placing the current element index into the vector slot obtained by adding the cumulative group size and the current time-value subtracted its individual-minimum together. This method of computation is faster than any sort-based method and delivers optimal performance if the panel-id supplied to <code>g/by</code> is already a factor variable, and if <code>t</code> is either an integer or factor variable. If <code>g/by</code> is not factor or <code>t</code> is not factor or integer, <code><a href='qF, qG, finteraction.html'>qG</a></code> or <code><a href='GRP, fgroup_by.html'>GRP</a></code> will be called to group the respective identifier and this can be expensive, so for optimal performance prepare the data (or use <em>plm</em> classes). A caveat of not using sort-based methods is that gaps or repeated values in time are only recognized towards the end of the second pass where they cannot be rectified anymore, and thus <code>flag/L/F</code> does not natively support irregular panels but throws an error.</p>
+<p><!-- % It is also possible to compute lags / leads on unordered time series (thus utilizing \code{t} but leaving \code{g/by} empty), although this is probably more rare to encounter than unordered panels. Irregularly spaced time series can also be lagged using a panel- identifier generated with \code{\link{seqid}}. --></p>
+<p>Computationally, if both <code>g/by</code> and <code>t</code> are supplied, <code>flag/L/F</code> uses two initial passes to create an ordering through which the data are accessed. First-pass: Calculate minimum and maximum time-value for each individual. Second-pass: Generate the ordering by placing the current element index into the vector slot obtained by adding the cumulative group size and the current time-value subtracted its individual-minimum together. This method of computation is faster than any sort-based method and delivers optimal performance if the panel-id supplied to <code>g/by</code> is already a factor variable, and if <code>t</code> is either an integer or factor variable. If <code>g/by</code> is not factor or <code>t</code> is not factor or integer, <code><a href='qF, qG, finteraction.html'>qG</a></code> or <code><a href='GRP, fgroup_by.html'>GRP</a></code> will be called to group the respective identifier and this can be expensive, so for optimal performance prepare the data (or use <em>plm</em> classes). <!-- %A caveat of not using sort-based methods is that gaps or repeated values in time are only recognized towards the end of the second pass where they cannot be rectified anymore, and thus \code{flag/L/F} does not natively support irregular panels but throws an error. --></p>
 
 <p>The methods applying to <em>plm</em> objects (panel series and panel data frames) automatically utilize the factor panel-identifiers attached to these objects and thus securely and efficiently compute fully identified panel-lags. If these objects have &gt; 2 panel-identifiers attached to them, the last identifier is assumed to be the time-variable, and the others are taken as grouping-variables and interacted. Note that <code>flag/L/F</code> is significantly faster than <code>plm::lag/plm::lead</code> since the latter is written in R and based on a Split-Apply-Combine logic.</p>
     <h2 class="hasAnchor" id="value"><a class="anchor" href="#value"></a>Value</h2>
@@ -242,7 +244,7 @@
     <p><code>x</code> lagged / leaded <code>n</code>-times, grouped by <code>g/by</code>, ordered by <code>t</code>. See Details and Examples.</p>
     <h2 class="hasAnchor" id="see-also"><a class="anchor" href="#see-also"></a>See also</h2>
 
-    <div class='dont-index'><p><code><a href='fdiff.html'>fdiff</a></code>, <code><a href='fgrowth.html'>fgrowth</a></code>, <a href='time-series-panel-series.html'>Time Series and Panel Series</a>, <a href='index.html'>Collapse Overview</a></p></div>
+    <div class='dont-index'><p><code><a href='fdiff.html'>fdiff</a></code>, <code><a href='fgrowth.html'>fgrowth</a></code>, <a href='A7-time-series-panel-series.html'>Time Series and Panel Series</a>, <a href='index.html'>Collapse Overview</a></p></div>
 
     <h2 class="hasAnchor" id="examples"><a class="anchor" href="#examples"></a>Examples</h2>
     <pre class="examples"><div class='input'><span class='co'>## Simple Time Series: AirPassengers</span>
@@ -273,7 +275,7 @@
 #&gt; 1958 318 362 348 363 435 491 505 404 359 310 337 360
 #&gt; 1959 342 406 396 420 472 548 559 463 407 362 405 417
 #&gt; 1960 391 419 461 472 535 622 606 508 461 390 432  NA</div><div class='input'>
-<span class='fu'><a href='small-helpers.html'>all_identical</a></span><span class='op'>(</span><span class='fu'>L</span><span class='op'>(</span><span class='va'>AirPassengers</span><span class='op'>)</span>,       <span class='co'># 3 identical ways of computing 1 lag</span>
+<span class='fu'><a href='AA2-small-helpers.html'>all_identical</a></span><span class='op'>(</span><span class='fu'>L</span><span class='op'>(</span><span class='va'>AirPassengers</span><span class='op'>)</span>,       <span class='co'># 3 identical ways of computing 1 lag</span>
               <span class='fu'>flag</span><span class='op'>(</span><span class='va'>AirPassengers</span><span class='op'>)</span>,
               <span class='fu'>F</span><span class='op'>(</span><span class='va'>AirPassengers</span>, <span class='op'>-</span><span class='fl'>1</span><span class='op'>)</span><span class='op'>)</span>
 </div><div class='output co'>#&gt; [1] TRUE</div><div class='input'>
@@ -504,7 +506,7 @@
 #&gt;   (4750 observations deleted due to missingness)
 #&gt; Multiple R-squared:  0.9974,	Adjusted R-squared:  0.9974 
 #&gt; F-statistic: 6.166e+05 on 5 and 7988 DF,  p-value: &lt; 2.2e-16
-#&gt; </div><div class='input'>
+#&gt; </div><div class='input'> 
 <span class='co'>## Using plm:</span>
 <span class='va'>pwlddev</span> <span class='op'>&lt;-</span> <span class='fu'>plm</span><span class='fu'>::</span><span class='fu'><a href='https://rdrr.io/pkg/plm/man/pdata.frame.html'>pdata.frame</a></span><span class='op'>(</span><span class='va'>wlddev</span>, index <span class='op'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span><span class='op'>(</span><span class='st'>"iso3c"</span>,<span class='st'>"year"</span><span class='op'>)</span><span class='op'>)</span>
 <span class='fu'><a href='https://rdrr.io/r/utils/head.html'>head</a></span><span class='op'>(</span><span class='fu'>L</span><span class='op'>(</span><span class='va'>pwlddev</span>, <span class='fl'>0</span><span class='op'>:</span><span class='fl'>2</span>, <span class='fl'>9</span><span class='op'>:</span><span class='fl'>10</span><span class='op'>)</span><span class='op'>)</span>                                     <span class='co'># Again 2 lags of GDP and LIFEEX</span>
@@ -624,7 +626,8 @@
 #&gt; </span><span style='color: #BCBCBC;'> 8</span><span> AFG    </span><span style='text-decoration: underline;'>1</span><span>967    </span><span style='color: #BB0000;'>NA</span><span>       </span><span style='color: #BB0000;'>NA</span><span>       </span><span style='color: #BB0000;'>NA</span><span>   35.4      34.9      34.5
 #&gt; </span><span style='color: #BCBCBC;'> 9</span><span> AFG    </span><span style='text-decoration: underline;'>1</span><span>968    </span><span style='color: #BB0000;'>NA</span><span>       </span><span style='color: #BB0000;'>NA</span><span>       </span><span style='color: #BB0000;'>NA</span><span>   35.8      35.4      34.9
 #&gt; </span><span style='color: #BCBCBC;'>10</span><span> AFG    </span><span style='text-decoration: underline;'>1</span><span>969    </span><span style='color: #BB0000;'>NA</span><span>       </span><span style='color: #BB0000;'>NA</span><span>       </span><span style='color: #BB0000;'>NA</span><span>   36.2      35.8      35.4
-#&gt; </span><span style='color: #949494;'># ... with 12,734 more rows</span><span></div></span></pre>
+#&gt; </span><span style='color: #949494;'># ... with 12,734 more rows</span><span></div><div class='input'>
+</div></span></pre>
   </div>
   <div class="col-md-3 hidden-xs hidden-sm" id="pkgdown-sidebar">
     <nav id="toc" data-toggle="toc" class="sticky-top">

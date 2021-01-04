@@ -40,7 +40,7 @@
 
 
 <meta property="og:title" content="Fast Transform and Compute Columns on a Data Frame — ftransform" />
-<meta property="og:description" content="ftransform is a much faster version of base::transform and dplyr::mutate for data frames. It returns the data frame with new columns computed and/or existing columns modified or deleted. settransform does all of that by reference i.e. it modifies the data frame in the global environment. fcompute can be used to compute new columns from the columns in a data frame and returns only the computed columns." />
+<meta property="og:description" content="ftransform is a much faster version of transform and dplyr::mutate for data frames. It returns the data frame with new columns computed and/or existing columns modified or deleted. settransform does all of that by reference i.e. it modifies the data frame in the global environment. fcompute can be used to compute new columns from the columns in a data frame and returns only the computed columns." />
 
 
 
@@ -72,7 +72,7 @@
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">collapse</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">1.4.2</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">1.5.0</span>
       </span>
     </div>
 
@@ -123,7 +123,7 @@
     </div>
 
     <div class="ref-description">
-    <p><code>ftransform</code> is a much faster version of <code><a href='https://rdrr.io/r/base/transform.html'>base::transform</a></code> and <code><a href='https://dplyr.tidyverse.org/reference/mutate.html'>dplyr::mutate</a></code> for data frames. It returns the data frame with new columns computed and/or existing columns modified or deleted. <code>settransform</code> does all of that by reference i.e. it modifies the data frame in the global environment. <code>fcompute</code> can be used to compute new columns from the columns in a data frame and returns only the computed columns.</p>
+    <p><code>ftransform</code> is a much faster version of <code><a href='https://rdrr.io/r/base/transform.html'>transform</a></code> and <code><a href='https://dplyr.tidyverse.org/reference/mutate.html'>dplyr::mutate</a></code> for data frames. It returns the data frame with new columns computed and/or existing columns modified or deleted. <code>settransform</code> does all of that by reference i.e. it modifies the data frame in the global environment. <code>fcompute</code> can be used to compute new columns from the columns in a data frame and returns only the computed columns.</p>
     </div>
 
     <pre class="usage"><span class='co'># Modify and return data frame</span>
@@ -166,7 +166,7 @@
     </tr>
     <tr>
       <th>apply</th>
-      <td><p>logical. <code>TRUE</code> (default) will apply <code>FUN</code> to each column selected in <code>vars</code>; <code>FALSE</code> will apply <code>FUN</code> to the subsetted data frame i.e. <code>FUN(get_vars(X, vars), ...)</code>. The latter is useful for <em>collapse</em> functions with data frame or grouped tibble / panel-data frame methods, yielding performance gains and enabling grouped transformations. See Examples.</p></td>
+      <td><p>logical. <code>TRUE</code> (default) will apply <code>FUN</code> to each column selected in <code>vars</code>; <code>FALSE</code> will apply <code>FUN</code> to the subsetted data frame i.e. <code>FUN(get_vars(X, vars), ...)</code>. The latter is useful for <em>collapse</em> functions with data frame or grouped / panel data frame methods, yielding performance gains and enabling grouped transformations. See Examples.</p></td>
     </tr>
     <tr>
       <th>value</th>
@@ -192,7 +192,7 @@
     <p>The modified data frame <code>X</code>, or, for <code>fcompute</code>, a new data frame with the columns computed on <code>X</code>. All attributes of <code>X</code> are preserved.</p>
     <h2 class="hasAnchor" id="see-also"><a class="anchor" href="#see-also"></a>See also</h2>
 
-    <div class='dont-index'><p><code><a href='https://rdrr.io/r/base/with.html'>with</a></code>, <code><a href='https://rdrr.io/r/base/with.html'>within</a></code>, <code><a href='fselect, get_vars, add_vars.html'>add_vars</a></code>, <a href='fast-data-manipulation.html'>Data Frame Manipulation</a>, <a href='index.html'>Collapse Overview</a></p></div>
+    <div class='dont-index'><p><code><a href='https://rdrr.io/r/base/with.html'>with</a></code>, <code><a href='https://rdrr.io/r/base/with.html'>within</a></code>, <code><a href='fselect, get_vars, add_vars.html'>add_vars</a></code>, <a href='A3-fast-data-manipulation.html'>Data Frame Manipulation</a>, <a href='index.html'>Collapse Overview</a></p></div>
 
     <h2 class="hasAnchor" id="examples"><a class="anchor" href="#examples"></a>Examples</h2>
     <pre class="examples"><div class='input'><span class='co'>## ftransform modifies and returns a data.frame</span>
@@ -303,8 +303,8 @@
 #&gt; 3 -11.615385 -32.296296  0.9774194   74     5   3
 #&gt; 4  -5.615385 131.703704 -0.1225806   62     5   4
 #&gt; 5         NA         NA  2.6774194   56     5   5
-#&gt; 6   4.384615         NA  3.2774194   66     5   6</div><div class='input'>
-<span class='kw'><a href='https://rdrr.io/r/base/library.html'>library</a></span><span class='op'>(</span><span class='va'>magrittr</span><span class='op'>)</span> <span class='co'># Pipe operators</span>
+#&gt; 6   4.384615         NA  3.2774194   66     5   6</div><div class='input'> 
+<span class='kw'><a href='https://rdrr.io/r/base/library.html'>library</a></span><span class='op'>(</span><span class='va'><a href='https://magrittr.tidyverse.org'>magrittr</a></span><span class='op'>)</span> <span class='co'># Pipe operators</span>
 <span class='co'># This also works for grouped and panel data frames (calling fwithin.grouped_df)</span>
 <span class='va'>airquality</span> <span class='op'>%&gt;%</span> <span class='fu'><a href='GRP, fgroup_by.html'>fgroup_by</a></span><span class='op'>(</span><span class='va'>Month</span><span class='op'>)</span> <span class='op'>%&gt;%</span>
   <span class='fu'>ftransformv</span><span class='op'>(</span><span class='fl'>1</span><span class='op'>:</span><span class='fl'>3</span>, <span class='va'>fwithin</span>, apply <span class='op'>=</span> <span class='cn'>FALSE</span><span class='op'>)</span> <span class='op'>%&gt;%</span> <span class='va'>head</span>
@@ -325,6 +325,29 @@
 #&gt; 4 -24.12931 127.068493  1.542484   62     5   4
 #&gt; 5        NA         NA  4.342484   56     5   5
 #&gt; 6 -14.12931         NA  4.942484   66     5   6</div><div class='input'>
+<span class='co'># For grouped modification of single columns in a grouped dataset, we can use GRP():</span>
+<span class='va'>airquality</span> <span class='op'>%&gt;%</span> <span class='fu'><a href='GRP, fgroup_by.html'>fgroup_by</a></span><span class='op'>(</span><span class='va'>Month</span><span class='op'>)</span> <span class='op'>%&gt;%</span>
+  <span class='fu'>ftransform</span><span class='op'>(</span>W_Ozone <span class='op'>=</span> <span class='fu'><a href='fbetween, fwithin.html'>fwithin</a></span><span class='op'>(</span><span class='va'>Ozone</span>, <span class='fu'><a href='GRP, fgroup_by.html'>GRP</a></span><span class='op'>(</span><span class='va'>.</span><span class='op'>)</span><span class='op'>)</span>,                 <span class='co'># Grouped centering</span>
+             sd_Ozone_m <span class='op'>=</span> <span class='fu'><a href='fvar, fsd.html'>fsd</a></span><span class='op'>(</span><span class='va'>Ozone</span>, <span class='fu'><a href='GRP, fgroup_by.html'>GRP</a></span><span class='op'>(</span><span class='va'>.</span><span class='op'>)</span>, TRA <span class='op'>=</span> <span class='st'>"replace"</span><span class='op'>)</span>, <span class='co'># In-Month standard deviation</span>
+             sd_Ozone <span class='op'>=</span> <span class='fu'><a href='fvar, fsd.html'>fsd</a></span><span class='op'>(</span><span class='va'>Ozone</span>, TRA <span class='op'>=</span> <span class='st'>"replace"</span><span class='op'>)</span>,           <span class='co'># Overall standard deviation</span>
+             sd_Ozone2 <span class='op'>=</span> <span class='fu'><a href='fvar, fsd.html'>fsd</a></span><span class='op'>(</span><span class='va'>Ozone</span>, TRA <span class='op'>=</span> <span class='st'>"replace_fill"</span><span class='op'>)</span>,     <span class='co'># Same, overwriting NA's</span>
+             sd_Ozone3 <span class='op'>=</span> <span class='fu'><a href='fvar, fsd.html'>fsd</a></span><span class='op'>(</span><span class='va'>Ozone</span><span class='op'>)</span><span class='op'>)</span> <span class='op'>%&gt;%</span> <span class='va'>head</span>                  <span class='co'># Same thing (calling rep())</span>
+</div><div class='output co'>#&gt;   Ozone Solar.R Wind Temp Month Day    W_Ozone sd_Ozone_m sd_Ozone sd_Ozone2
+#&gt; 1    41     190  7.4   67     5   1  17.384615   22.22445 32.98788  32.98788
+#&gt; 2    36     118  8.0   72     5   2  12.384615   22.22445 32.98788  32.98788
+#&gt; 3    12     149 12.6   74     5   3 -11.615385   22.22445 32.98788  32.98788
+#&gt; 4    18     313 11.5   62     5   4  -5.615385   22.22445 32.98788  32.98788
+#&gt; 5    NA      NA 14.3   56     5   5         NA         NA       NA  32.98788
+#&gt; 6    28      NA 14.9   66     5   6   4.384615   22.22445 32.98788  32.98788
+#&gt;   sd_Ozone3
+#&gt; 1  32.98788
+#&gt; 2  32.98788
+#&gt; 3  32.98788
+#&gt; 4  32.98788
+#&gt; 5  32.98788
+#&gt; 6  32.98788</div><div class='input'>
+<span class='fu'><a href='https://rdrr.io/r/base/rm.html'>rm</a></span><span class='op'>(</span><span class='va'>airquality</span><span class='op'>)</span>
+</div><div class='output co'>#&gt; <span class='warning'>Warning: object 'airquality' not found</span></div><div class='input'>
 <span class='co'>## For more complex mutations we can use ftransform with compound pipes</span>
 <span class='va'>airquality</span> <span class='op'>%&gt;%</span> <span class='fu'><a href='GRP, fgroup_by.html'>fgroup_by</a></span><span class='op'>(</span><span class='va'>Month</span><span class='op'>)</span> <span class='op'>%&gt;%</span>
   <span class='fu'>ftransform</span><span class='op'>(</span><span class='fu'><a href='fselect, get_vars, add_vars.html'>get_vars</a></span><span class='op'>(</span><span class='va'>.</span>, <span class='fl'>1</span><span class='op'>:</span><span class='fl'>3</span><span class='op'>)</span> <span class='op'>%&gt;%</span> <span class='va'>fwithin</span> <span class='op'>%&gt;%</span> <span class='fu'><a href='flag.html'>flag</a></span><span class='op'>(</span><span class='fl'>0</span><span class='op'>:</span><span class='fl'>2</span><span class='op'>)</span><span class='op'>)</span> <span class='op'>%&gt;%</span> <span class='va'>head</span>
@@ -342,7 +365,7 @@
 #&gt; 4 -32.296296 -63.296296  0.9774194 -3.6225806
 #&gt; 5 131.703704 -32.296296 -0.1225806  0.9774194
 #&gt; 6         NA 131.703704  2.6774194 -0.1225806</div><div class='input'>
-<span class='va'>airquality</span> <span class='op'>%&gt;%</span> <span class='fu'>ftransform</span><span class='op'>(</span><span class='fu'><a href='fscale.html'>STD</a></span><span class='op'>(</span><span class='va'>.</span>, cols <span class='op'>=</span> <span class='fl'>1</span><span class='op'>:</span><span class='fl'>3</span><span class='op'>)</span> <span class='op'>%&gt;%</span> <span class='fu'><a href='recode-replace.html'>replace_NA</a></span><span class='op'>(</span><span class='fl'>0</span><span class='op'>)</span><span class='op'>)</span> <span class='op'>%&gt;%</span> <span class='va'>head</span>
+<span class='va'>airquality</span> <span class='op'>%&gt;%</span> <span class='fu'>ftransform</span><span class='op'>(</span><span class='fu'><a href='fscale.html'>STD</a></span><span class='op'>(</span><span class='va'>.</span>, cols <span class='op'>=</span> <span class='fl'>1</span><span class='op'>:</span><span class='fl'>3</span><span class='op'>)</span> <span class='op'>%&gt;%</span> <span class='fu'><a href='AA1-recode-replace.html'>replace_NA</a></span><span class='op'>(</span><span class='fl'>0</span><span class='op'>)</span><span class='op'>)</span> <span class='op'>%&gt;%</span> <span class='va'>head</span>
 </div><div class='output co'>#&gt;   Ozone Solar.R Wind Temp Month Day   STD.Ozone STD.Solar.R   STD.Wind
 #&gt; 1    41     190  7.4   67     5   1 -0.03423409  0.04517615 -0.7259482
 #&gt; 2    36     118  8.0   72     5   2 -0.18580489 -0.75430487 -0.5556388
@@ -360,9 +383,9 @@
 #&gt; 4    18     313 11.5   62     5   4 12.08975  533.2819
 #&gt; 5    NA      NA 14.3   56     5   5 12.08975        NA
 #&gt; 6    28      NA 14.9   66     5   6 12.08975  533.2819</div><div class='input'>
-<span class='co'># Same as above using a grouped tibble (a bit more complex)</span>
+<span class='co'># Same as above using a grouped data frame (a bit more complex)</span>
 <span class='va'>airquality</span> <span class='op'>%&gt;%</span> <span class='fu'><a href='GRP, fgroup_by.html'>fgroup_by</a></span><span class='op'>(</span><span class='va'>Month</span><span class='op'>)</span> <span class='op'>%&gt;%</span>
-  <span class='fu'>ftransform</span><span class='op'>(</span><span class='fu'><a href='fselect, get_vars, add_vars.html'>fselect</a></span><span class='op'>(</span><span class='va'>.</span>, <span class='va'>Wind</span>, <span class='va'>Ozone</span><span class='op'>)</span> <span class='op'>%&gt;%</span> <span class='fu'><a href='fvar, fsd.html'>fvar</a></span><span class='op'>(</span><span class='va'>Temp</span>, <span class='st'>"replace"</span><span class='op'>)</span> <span class='op'>%&gt;%</span> <span class='fu'><a href='small-helpers.html'>add_stub</a></span><span class='op'>(</span><span class='st'>"_var"</span>, <span class='cn'>FALSE</span><span class='op'>)</span><span class='op'>)</span> <span class='op'>%&gt;%</span>
+  <span class='fu'>ftransform</span><span class='op'>(</span><span class='fu'><a href='fselect, get_vars, add_vars.html'>fselect</a></span><span class='op'>(</span><span class='va'>.</span>, <span class='va'>Wind</span>, <span class='va'>Ozone</span><span class='op'>)</span> <span class='op'>%&gt;%</span> <span class='fu'><a href='fvar, fsd.html'>fvar</a></span><span class='op'>(</span><span class='va'>Temp</span>, <span class='st'>"replace"</span><span class='op'>)</span> <span class='op'>%&gt;%</span> <span class='fu'><a href='AA2-small-helpers.html'>add_stub</a></span><span class='op'>(</span><span class='st'>"_var"</span>, <span class='cn'>FALSE</span><span class='op'>)</span><span class='op'>)</span> <span class='op'>%&gt;%</span>
   <span class='va'>fungroup</span> <span class='op'>%&gt;%</span> <span class='va'>head</span>
 </div><div class='output co'>#&gt;   Ozone Solar.R Wind Temp Month Day Wind_var Ozone_var
 #&gt; 1    41     190  7.4   67     5   1 12.08975  533.2819
@@ -411,7 +434,7 @@
 #&gt; 4  -6.77464 126.571669  0.01082677   62     5   4
 #&gt; 5        NA         NA  2.81082677   56     5   5
 #&gt; 6   3.22536         NA  3.41082677   66     5   6</div><div class='input'><span class='fu'><a href='https://rdrr.io/r/base/rm.html'>rm</a></span><span class='op'>(</span><span class='va'>airquality</span><span class='op'>)</span>
-
+ 
 <span class='co'># Suitably lagged first-differences</span>
 <span class='fu'>settransform</span><span class='op'>(</span><span class='va'>airquality</span>, <span class='fu'><a href='fselect, get_vars, add_vars.html'>get_vars</a></span><span class='op'>(</span><span class='va'>airquality</span>, <span class='fl'>1</span><span class='op'>:</span><span class='fl'>3</span><span class='op'>)</span> <span class='op'>%&gt;%</span> <span class='va'>fdiff</span> <span class='op'>%&gt;%</span> <span class='fu'><a href='flag.html'>flag</a></span><span class='op'>(</span><span class='fl'>0</span><span class='op'>:</span><span class='fl'>2</span><span class='op'>)</span><span class='op'>)</span>
 <span class='fu'><a href='https://rdrr.io/r/utils/head.html'>head</a></span><span class='op'>(</span><span class='va'>airquality</span><span class='op'>)</span>

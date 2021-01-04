@@ -31,11 +31,14 @@ seqid(x, o = NULL, del = 1L, start = 1L, na.skip = FALSE,
 
 }
 \details{
-\code{seqid} was created primarily to deal with problems of computing lagged values, differences and growth rates on irregularly spaced time series and panels (\href{https://github.com/SebKrantz/collapse/issues/26}{#26}). \code{flag}, \code{fdiff} and \code{fgrowth} do not natively support such panels because they do not pre-compute an ordering of the data but directly compute the ordering from the supplied id and time variables while providing errors for gaps and repeated time values. see \code{\link{flag}} for computational details.
+\code{seqid} was created primarily as a workaround to deal with problems of computing lagged values, differences and growth rates on irregularly spaced time series and panels before \emph{collapse} version 1.5.0 (\href{https://github.com/SebKrantz/collapse/issues/26}{#26}). Now \code{flag}, \code{fdiff} and \code{fgrowth} natively support irregular data so this workaround is superfluous, except for iterated differencing which is not yet supported with irregular data.
 
-Fortunately any irregular time series or panel series can be expressed as a regular panel series with a group-id created such that the time-periods within each group are consecutive.
+% panels because they do not pre-compute an ordering of the data but directly compute the ordering from the supplied id and time variables while providing errors for gaps and repeated time values. see \code{\link{flag}} for computational details.
 
-A simple solution to applying existing functionality (\code{flag}, \code{fdiff} and \code{fgrowth}) to irregular time series and panels is thus to create a group-id that fully identifies the data together with the time variable. \code{seqid} makes this very easy: For an irregular panel with some arbitrary gaps or repeated values in the time variable, an appropriate id variable can be generated using \code{settransform(data, newid = seqid(time, radixorder(id, time)))}. Lags can then be computed using \code{L(data, 1, ~newid, ~time)} etc. This way \emph{collapse} maintains a balance between offering very fast computations on regular time series and panels (which may be unbalanced but where observations for each entity are consecutive in time), and flexibility of application.
+The theory of the workaround was to express an irregular time series or panel series as a regular panel series with a group-id created such that the time-periods within each group are consecutive. \code{seqid} makes this very easy: For an irregular panel with some gaps or repeated values in the time variable, an appropriate id variable can be generated using \code{settransform(data, newid = seqid(time, radixorder(id, time)))}. Lags can then be computed using \code{L(data, 1, ~newid, ~time)} etc.
+
+%A simple solution to applying existing functionality (\code{flag}, \code{fdiff} and \code{fgrowth}) to irregular time series and panels is thus to create a group-id that fully identifies the data together with the time variable.
+% This way \emph{collapse} maintains a balance between offering very fast computations on regular time series and panels (which may be unbalanced but where observations for each entity are consecutive in time), and flexibility of application.
 
 In general, for any regularly spaced panel the identity given by \code{identical(groupid(id, order(id, time)), seqid(time, order(id, time)))} should hold.
 
@@ -66,15 +69,15 @@ data <- data.frame(id = rep(1:3, each = 4),
                    time = c(1:4, 1:2, 4:5, 1:4),
                    value = rnorm(12))
 data
-\dontrun{
-## Gaps in time error
+
+## This gave a gaps in time error previous to collapse 1.5.0
 L(data, 1, value ~ id, ~time)
-}
+
 ## Generating new id variable (here seqid(time) would suffice as data is sorted)
 settransform(data, newid = seqid(time, order(id, time)))
 data
 
-## Lag the panel
+## Lag the panel this way
 L(data, 1, value ~ newid, ~time)
 \donttest{
 ## A different possibility: Creating a consecutive time variable

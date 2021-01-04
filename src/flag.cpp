@@ -107,7 +107,7 @@ Vector<RTYPE> flagleadCppImpl(const Vector<RTYPE>& x, const IntegerVector& n, co
       // int seen[ngp], memsize = sizeof(int)*ngp;
       for(int p = ns; p--; ) {
         int np = n[p];
-        if(absn[p] > ags) warning("lag-length exceeds average group-size (%i). This could also be a result of unused factor levels. See #25.", ags);
+        if(absn[p] > ags) warning("lag-length exceeds average group-size (%i). This could also be a result of unused factor levels. See #25. Use fdroplevels() to remove unused factor levels from your data.", ags);
         MatrixColumn<RTYPE> outp = out( _ , p);
         if(np>0) {
           if(names) colnam[p] = "L" + nc[p];
@@ -146,16 +146,14 @@ Vector<RTYPE> flagleadCppImpl(const Vector<RTYPE>& x, const IntegerVector& n, co
         if(ord[i] < min[temp]) min[temp] = ord[i];
         if(ord[i] > max[temp]) max[temp] = ord[i];
       }
-      cgs[1] = 0; temp = 0;
-      for(int i = 1; i != ng; ++i) {
+      temp = 0;
+      for(int i = 1; i != ngp; ++i) {
         if(min[i] == NA_INTEGER) stop("Timevar contains missing values");
+        if(min[i] == INT_MAX) continue; // Needed in case of unused factor levels (group vector too large)
+        cgs[i] = temp; // This needs to b here (for unused factor levels case...)
         max[i] -= min[i] - 1; // need max[i] which stores the complete group sizes only if p<0 e.g. if computing leads..
         temp += max[i];
-        cgs[i+1] = temp; // + max[i] - min[i] + 1;
       }
-      if(min[ng] == NA_INTEGER) stop("Timevar contains missing values");
-      max[ng] -= min[ng] - 1;
-      temp += max[ng];
       // omap provides the ordering to order the vector (needed to find previous / next values)
       if(temp > 3 * l) warning("Your panel is very irregular. Need to create an internal ordering vector of length %s to represent it.", temp);
       IntegerVector omap(temp), ord2 = no_init_vector(l);
@@ -167,7 +165,7 @@ Vector<RTYPE> flagleadCppImpl(const Vector<RTYPE>& x, const IntegerVector& n, co
       }
       for(int p = ns; p--; ) {
         int np = n[p];
-        if(absn[p] > ags) warning("lag-length exceeds average group-size (%i). This could also be a result of unused factor levels. See #25.", ags);
+        if(absn[p] > ags) warning("lag-length exceeds average group-size (%i). This could also be a result of unused factor levels. See #25. Use fdroplevels() to remove unused factor levels from your data.", ags);
         MatrixColumn<RTYPE> outp = out( _ , p);
         if(np>0) {
           if(names) colnam[p] = "L" + nc[p];
@@ -362,7 +360,7 @@ Matrix<RTYPE> flagleadmCppImpl(const Matrix<RTYPE>& x, const IntegerVector& n, c
         ConstMatrixColumn<RTYPE> column = x( _ , j);
         for(int p = 0; p != ns; ++p) {
           int np = n[p];
-          if(absn[p] > ags) warning("lag-length exceeds average group-size (%i). This could also be a result of unused factor levels. See #25.", ags);
+          if(absn[p] > ags) warning("lag-length exceeds average group-size (%i). This could also be a result of unused factor levels. See #25. Use fdroplevels() to remove unused factor levels from your data.", ags);
           MatrixColumn<RTYPE> outj = out( _ , pos);
           if(np>0) {
             if(names) colnam[pos] = "L" + nc[p] + "." + coln[j];
@@ -403,16 +401,14 @@ Matrix<RTYPE> flagleadmCppImpl(const Matrix<RTYPE>& x, const IntegerVector& n, c
         if(ord[i] < min[temp]) min[temp] = ord[i];
         if(ord[i] > max[temp]) max[temp] = ord[i];
       }
-      cgs[1] = 0; temp = 0;
-      for(int i = 1; i != ng; ++i) {
+      temp = 0;
+      for(int i = 1; i != ngp; ++i) {
         if(min[i] == NA_INTEGER) stop("Timevar contains missing values");
+        if(min[i] == INT_MAX) continue; // Needed in case of unused factor levels (group vector too large)
+        cgs[i] = temp; // This needs to b here (for unused factor levels case...)
         max[i] -= min[i] - 1; // need max[i] which stores the complete group sizes only if p<0 e.g. if computing leads..
         temp += max[i];
-        cgs[i+1] = temp; // + max[i] - min[i] + 1;
       }
-      if(min[ng] == NA_INTEGER) stop("Timevar contains missing values");
-      max[ng] -= min[ng] - 1;
-      temp += max[ng];
       // omap provides the ordering to order the vector (needed to find previous / next values)
       if(temp > 3 * l) warning("Your panel is very irregular. Need to create an internal ordering vector of length %s to represent it.", temp);
       IntegerVector omap(temp), ord2 = no_init_vector(l), index = no_init_vector(l);
@@ -426,7 +422,7 @@ Matrix<RTYPE> flagleadmCppImpl(const Matrix<RTYPE>& x, const IntegerVector& n, c
         ConstMatrixColumn<RTYPE> column = x( _ , j);
         for(int p = 0; p != ns; ++p) {
           int np = n[p];
-          if(absn[p] > ags) warning("lag-length exceeds average group-size (%i). This could also be a result of unused factor levels. See #25.", ags);
+          if(absn[p] > ags) warning("lag-length exceeds average group-size (%i). This could also be a result of unused factor levels. See #25. Use fdroplevels() to remove unused factor levels from your data.", ags);
           MatrixColumn<RTYPE> outj = out( _ , pos);
           if(np>0) {
             if(names) colnam[pos] = "L" + nc[p] + "." + coln[j];
@@ -786,7 +782,7 @@ List flagleadlCpp(const List& x, const IntegerVector& n = 1, const SEXP& fill = 
           if(gss != column.size()) stop("length(x) must match length(g)");
           for(int p = 0; p != ns; ++p) {
             int np = n[p];
-            if(absn[p] > ags) warning("lag-length exceeds average group-size (%i). This could also be a result of unused factor levels. See #25.", ags);
+            if(absn[p] > ags) warning("lag-length exceeds average group-size (%i). This could also be a result of unused factor levels. See #25. Use fdroplevels() to remove unused factor levels from your data.", ags);
             if(np>0) {
               NumericVector outjp = no_init_vector(gss);
               if(names) nam[pos] = "L" + nc[p] + "." + na[j];
@@ -830,7 +826,7 @@ List flagleadlCpp(const List& x, const IntegerVector& n = 1, const SEXP& fill = 
           if(gss != column.size()) stop("length(x) must match length(g)");
           for(int p = 0; p != ns; ++p) {
             int np = n[p];
-            if(absn[p] > ags) warning("lag-length exceeds average group-size (%i). This could also be a result of unused factor levels. See #25.", ags);
+            if(absn[p] > ags) warning("lag-length exceeds average group-size (%i). This could also be a result of unused factor levels. See #25. Use fdroplevels() to remove unused factor levels from your data.", ags);
             if(np>0) {
               IntegerVector outjp = no_init_vector(gss);
               if(names) nam[pos] = "L" + nc[p] + "." + na[j];
@@ -876,7 +872,7 @@ List flagleadlCpp(const List& x, const IntegerVector& n = 1, const SEXP& fill = 
           if(gss != column.size()) stop("length(x) must match length(g)");
           for(int p = 0; p != ns; ++p) {
             int np = n[p];
-            if(absn[p] > ags) warning("lag-length exceeds average group-size (%i). This could also be a result of unused factor levels. See #25.", ags);
+            if(absn[p] > ags) warning("lag-length exceeds average group-size (%i). This could also be a result of unused factor levels. See #25. Use fdroplevels() to remove unused factor levels from your data.", ags);
             if(np>0) {
               CharacterVector outjp = no_init_vector(gss);
               if(names) nam[pos] = "L" + nc[p] + "." + na[j];
@@ -920,21 +916,26 @@ List flagleadlCpp(const List& x, const IntegerVector& n = 1, const SEXP& fill = 
       IntegerVector ord = t;
       if(gss != ord.size()) stop("length(g) must match length(t)");
       IntegerVector min(ngp, INT_MAX), max(ngp, INT_MIN), cgs = no_init_vector(ngp);
+      // return List::create(min, max); // Note: INT_MIN is the same as NA_INTEGER
       for(int i = 0; i != gss; ++i) {
         temp = g[i];
         if(ord[i] < min[temp]) min[temp] = ord[i];
         if(ord[i] > max[temp]) max[temp] = ord[i];
       }
-      cgs[1] = 0; temp = 0;
-      for(int i = 1; i != ng; ++i) {
+      temp = 0;
+      for(int i = 1; i != ngp; ++i) {
         if(min[i] == NA_INTEGER) stop("Timevar contains missing values");
+        if(min[i] == INT_MAX) continue; // Needed in case of unused factor levels (group vector too large)
+        cgs[i] = temp; // This needs to b here (for unused factor levels case...)
         max[i] -= min[i] - 1; // need max[i] which stores the complete group sizes only if p<0 e.g. if computing leads..
-        temp += max[i];
-        cgs[i+1] = temp; // + max[i] - min[i] + 1;
+        temp += max[i]; // + max[i] - min[i] + 1;
       }
-      if(min[ng] == NA_INTEGER) stop("Timevar contains missing values");
-      max[ng] -= min[ng] - 1;
-      temp += max[ng];
+      // if(min[ng] == NA_INTEGER) stop("Timevar contains missing values");
+      // if(min[ng] != INT_MAX) {
+      //   max[ng] -= min[ng] - 1;
+      //   temp += max[ng];
+      // }
+      // return List::create(cgs, min, max);
       // index stores the position of the current observation in the ordered vector
       // omap provides the ordering to order the vector (needed to find previous / next values)
       if(temp > 3 * gss) warning("Your panel is very irregular. Need to create an internal ordering vector of length %s to represent it.", temp);
@@ -956,7 +957,7 @@ List flagleadlCpp(const List& x, const IntegerVector& n = 1, const SEXP& fill = 
           if(gss != column.size()) stop("length(x) must match length(g)");
           for(int p = 0; p != ns; ++p) {
             int np = n[p];
-            if(absn[p] > ags) warning("lag-length exceeds average group-size (%i). This could also be a result of unused factor levels. See #25.", ags);
+            if(absn[p] > ags) warning("lag-length exceeds average group-size (%i). This could also be a result of unused factor levels. See #25. Use fdroplevels() to remove unused factor levels from your data.", ags);
             if(np>0) {
               NumericVector outjp = no_init_vector(gss);
               if(names) nam[pos] = "L" + nc[p] + "." + na[j];
@@ -996,7 +997,7 @@ List flagleadlCpp(const List& x, const IntegerVector& n = 1, const SEXP& fill = 
           if(gss != column.size()) stop("length(x) must match length(g)");
           for(int p = 0; p != ns; ++p) {
             int np = n[p];
-            if(absn[p] > ags) warning("lag-length exceeds average group-size (%i). This could also be a result of unused factor levels. See #25.", ags);
+            if(absn[p] > ags) warning("lag-length exceeds average group-size (%i). This could also be a result of unused factor levels. See #25. Use fdroplevels() to remove unused factor levels from your data.", ags);
             if(np>0) {
               IntegerVector outjp = no_init_vector(gss);
               if(names) nam[pos] = "L" + nc[p] + "." + na[j];
@@ -1038,7 +1039,7 @@ List flagleadlCpp(const List& x, const IntegerVector& n = 1, const SEXP& fill = 
           if(gss != column.size()) stop("length(x) must match length(g)");
           for(int p = 0; p != ns; ++p) {
             int np = n[p];
-            if(absn[p] > ags) warning("lag-length exceeds average group-size (%i). This could also be a result of unused factor levels. See #25.", ags);
+            if(absn[p] > ags) warning("lag-length exceeds average group-size (%i). This could also be a result of unused factor levels. See #25. Use fdroplevels() to remove unused factor levels from your data.", ags);
             if(np>0) {
               CharacterVector outjp = no_init_vector(gss);
               if(names) nam[pos] = "L" + nc[p] + "." + na[j];

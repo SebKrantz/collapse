@@ -40,7 +40,7 @@
 
 
 <meta property="og:title" content="Fast Subsetting Matrix-Like Objects — fsubset" />
-<meta property="og:description" content="fsubset returns subsets of vectors, matrices or data frames which meet conditions. It is programmed very efficiently and uses C source code from the data.table package. Especially for data frames it is significantly (4-5 times) faster than base::subset or dplyr::filter. The methods also provide enhanced functionality compared to base::subset. The function ss provides a significantly faster alternative to [.data.frame." />
+<meta property="og:description" content="fsubset returns subsets of vectors, matrices or data frames which meet conditions. It is programmed very efficiently and uses C source code from the data.table package. Especially for data frames it is significantly (4-5 times) faster than subset or dplyr::filter. The methods also provide enhanced functionality compared to subset. The function ss provides a significantly faster alternative to [.data.frame." />
 
 
 
@@ -72,7 +72,7 @@
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">collapse</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">1.4.2</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">1.5.0</span>
       </span>
     </div>
 
@@ -123,7 +123,7 @@
     </div>
 
     <div class="ref-description">
-    <p><code>fsubset</code> returns subsets of vectors, matrices or data frames which meet conditions. It is programmed very efficiently and uses C source code from the <em>data.table</em> package. Especially for data frames it is significantly (4-5 times) faster than <code><a href='https://rdrr.io/r/base/subset.html'>base::subset</a></code> or <code><a href='https://dplyr.tidyverse.org/reference/filter.html'>dplyr::filter</a></code>. The methods also provide enhanced functionality compared to <code><a href='https://rdrr.io/r/base/subset.html'>base::subset</a></code>. The function <code>ss</code> provides a significantly faster alternative to <code>[.data.frame</code>.</p>
+    <p><code>fsubset</code> returns subsets of vectors, matrices or data frames which meet conditions. It is programmed very efficiently and uses C source code from the <em>data.table</em> package. Especially for data frames it is significantly (4-5 times) faster than <code><a href='https://rdrr.io/r/base/subset.html'>subset</a></code> or <code><a href='https://dplyr.tidyverse.org/reference/filter.html'>dplyr::filter</a></code>. The methods also provide enhanced functionality compared to <code><a href='https://rdrr.io/r/base/subset.html'>subset</a></code>. The function <code>ss</code> provides a significantly faster alternative to <code>[.data.frame</code>.</p>
     </div>
 
     <pre class="usage"><span class='fu'>fsubset</span><span class='op'>(</span><span class='va'>x</span>, <span class='va'>...</span><span class='op'>)</span>
@@ -174,11 +174,11 @@
     <h2 class="hasAnchor" id="details"><a class="anchor" href="#details"></a>Details</h2>
 
     <p><code>fsubset</code> is a generic function, with methods supplied for vectors, matrices, and data
-  frames (including lists). It represents an improvement in both speed and functionality over <code><a href='https://rdrr.io/r/base/subset.html'>base::subset</a></code>. The non-generic function <code>ss</code> is an improvement of <code>[.data.frame</code>. For subsetting columns alone, please see <a href='fselect, get_vars, add_vars.html'>selecting and replacing columns</a>.</p>
+  frames (including lists). It represents an improvement in both speed and functionality over <code><a href='https://rdrr.io/r/base/subset.html'>subset</a></code>. The non-generic function <code>ss</code> is an improvement of <code>[.data.frame</code>. For subsetting columns alone, please see <a href='fselect, get_vars, add_vars.html'>selecting and replacing columns</a>.</p>
 <p>For ordinary vectors, the result is <code><a href='https://rdrr.io/r/base/CallExternal.html'>.Call(C_subsetVector, x, subset)</a></code>, where <code>C_subsetVector</code> is an internal function in the <em>data.table</em> package. The <code>subset</code> can be integer or logical. Appropriate errors are delivered for wrong use.</p>
-<p>For matrices the implementation is all base-R but slightly more efficient and more versatile than <code><a href='https://rdrr.io/r/base/subset.html'>base::subset.matrix</a></code>. Thus it is possible to <code>subset</code> matrix rows using logical or integer vectors, or character vectors matching rownames. The <code>drop</code> argument is passed on to the indexing method for matrices.</p>
+<p>For matrices the implementation is all base-R but slightly more efficient and more versatile than <code><a href='https://rdrr.io/r/base/subset.html'>subset.matrix</a></code>. Thus it is possible to <code>subset</code> matrix rows using logical or integer vectors, or character vectors matching rownames. The <code>drop</code> argument is passed on to the indexing method for matrices.</p>
 <p>For both matrices and data frames, the <code>...</code> argument can be used to subset columns, and is evaluated in a non-standard way. Thus it can support vectors of column names, indices or logical vectors, but also multiple comma separated column names passed without quotes, each of which may also be replaced by a sequence of columns i.e. <code>col1:coln</code> (see examples).</p>
-<p>For data frames, the <code>subset</code> argument is also evaluated in a non-standard way. Thus next to vector of row-indices or logical vectors, it supports logical expressions of the form <code>col2 &gt; 5 &amp; col2 &lt; col3</code> etc. (see examples). The data frame method uses <code>C_subsetDT</code>, an internal C function from the <em>data.table</em> package to subset data frames, hence it is significantly faster than <code><a href='https://rdrr.io/r/base/subset.html'>base::subset.data.frame</a></code>. If fast data frame subsetting is required but no non-standard evaluation, the function <code>ss</code> is slightly simpler and faster.</p>
+<p>For data frames, the <code>subset</code> argument is also evaluated in a non-standard way. Thus next to vector of row-indices or logical vectors, it supports logical expressions of the form <code>col2 &gt; 5 &amp; col2 &lt; col3</code> etc. (see examples). The data frame method uses <code>C_subsetDT</code>, an internal C function from the <em>data.table</em> package to subset data frames, hence it is significantly faster than <code><a href='https://rdrr.io/r/base/subset.html'>subset.data.frame</a></code>. If fast data frame subsetting is required but no non-standard evaluation, the function <code>ss</code> is slightly simpler and faster.</p>
 <p>Factors may have empty levels after subsetting; unused levels are not automatically removed.  See <code><a href='https://rdrr.io/r/base/droplevels.html'>droplevels</a></code> for a way to drop all unused levels from a data frame.</p>
     <h2 class="hasAnchor" id="value"><a class="anchor" href="#value"></a>Value</h2>
 
@@ -189,7 +189,7 @@
     <div class='dont-index'><p><code><a href='fselect, get_vars, add_vars.html'>fselect</a></code>,
   <code><a href='fselect, get_vars, add_vars.html'>get_vars</a></code>,
   <code><a href='ftransform.html'>ftransform</a></code>,
-<a href='fast-data-manipulation.html'>Data Frame Manipulation</a>, <a href='index.html'>Collapse Overview</a></p></div>
+<a href='A3-fast-data-manipulation.html'>Data Frame Manipulation</a>, <a href='index.html'>Collapse Overview</a></p></div>
 
     <h2 class="hasAnchor" id="examples"><a class="anchor" href="#examples"></a>Examples</h2>
     <pre class="examples"><div class='input'><span class='fu'>fsubset</span><span class='op'>(</span><span class='va'>airquality</span>, <span class='va'>Temp</span> <span class='op'>&gt;</span> <span class='fl'>90</span>, <span class='va'>Ozone</span>, <span class='va'>Temp</span><span class='op'>)</span>

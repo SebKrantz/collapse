@@ -140,7 +140,7 @@ SEXP ret2(const SEXP& x, const SEXP& xAG, const SEXP& g) {
     if(Rf_length(xAG) != 1) stop("If g = NULL, NROW(STATS) needs to be 1");
   } else {
     if(gs != l) stop("length(g) must match NROW(x)");
-    pg = INTEGER(g);
+    pg = INTEGER(g); // Wmaybe uninitialized
   }
 
   SEXP out = PROTECT(Rf_allocVector(txAG, l));

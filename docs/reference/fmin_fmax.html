@@ -72,7 +72,7 @@
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">collapse</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">1.4.2</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">1.5.0</span>
       </span>
     </div>
 
@@ -162,7 +162,7 @@
     <colgroup><col class="name" /><col class="desc" /></colgroup>
     <tr>
       <th>x</th>
-      <td><p>a numeric vector, matrix, data frame or grouped tibble (<code><a href='https://dplyr.tidyverse.org/reference/grouped_df.html'>dplyr::grouped_df</a></code>).</p></td>
+      <td><p>a numeric vector, matrix, data frame or grouped data frame (class 'grouped_df').</p></td>
     </tr>
     <tr>
       <th>g</th>
@@ -197,7 +197,7 @@
 
     <h2 class="hasAnchor" id="details"><a class="anchor" href="#details"></a>Details</h2>
 
-    <p>Missing-value removal as controlled by the <code>na.rm</code> argument is done at no extra cost since in C++ any logical comparison involving <code>NA</code> or <code>NaN</code> evaluates to <code>FALSE</code>. Large performance gains can nevertheless be achieved in the presence of missing values if <code>na.rm = FALSE</code>, since then the corresponding computation is terminated once a <code>NA</code> is encountered and <code>NA</code> is returned (unlike <code><a href='https://rdrr.io/r/base/Extremes.html'>base::max</a></code> and <code><a href='https://rdrr.io/r/base/Extremes.html'>base::min</a></code> which just run through without any checks).</p>
+    <p>Missing-value removal as controlled by the <code>na.rm</code> argument is done at no extra cost since in C++ any logical comparison involving <code>NA</code> or <code>NaN</code> evaluates to <code>FALSE</code>. Large performance gains can nevertheless be achieved in the presence of missing values if <code>na.rm = FALSE</code>, since then the corresponding computation is terminated once a <code>NA</code> is encountered and <code>NA</code> is returned (unlike <code><a href='https://rdrr.io/r/base/Extremes.html'>max</a></code> and <code><a href='https://rdrr.io/r/base/Extremes.html'>min</a></code> which just run through without any checks).</p>
 <p>This all seamlessly generalizes to grouped computations, which are performed in a single pass (without splitting the data) and therefore extremely fast.</p>
 <p>When applied to data frames with groups or <code>drop = FALSE</code>, <code>fmax</code> and <code>fmin</code> preserve all column attributes (such as variable labels) but do not distinguish between classed and unclassed objects. The attributes of the data frame itself are also preserved.</p>
     <h2 class="hasAnchor" id="value"><a class="anchor" href="#value"></a>Value</h2>
@@ -205,7 +205,7 @@
     <p><code>fmax</code> returns the maximum value of <code>x</code>, grouped by <code>g</code>, or (if <code><a href='TRA.html'>TRA</a></code> is used) <code>x</code> transformed by its maximum value, grouped by <code>g</code>. Analogous, <code>fmin</code> returns the minimum value ...</p>
     <h2 class="hasAnchor" id="see-also"><a class="anchor" href="#see-also"></a>See also</h2>
 
-    <div class='dont-index'><p><a href='fast-statistical-functions.html'>Fast Statistical Functions</a>, <a href='index.html'>Collapse Overview</a></p></div>
+    <div class='dont-index'><p><a href='A1-fast-statistical-functions.html'>Fast Statistical Functions</a>, <a href='index.html'>Collapse Overview</a></p></div>
 
     <h2 class="hasAnchor" id="examples"><a class="anchor" href="#examples"></a>Examples</h2>
     <pre class="examples"><div class='input'><span class='co'>## default vector method</span>
@@ -270,7 +270,7 @@
 #&gt; 6 19.2   8 472.0 245 3.73 5.424 18.00  0  0    3    4
 #&gt; 7 15.8   8 351.0 335 4.22 3.570 14.60  0  1    5    8</div><div class='input'>
 <span class='co'>## matrix method</span>
-<span class='va'>m</span> <span class='op'>&lt;-</span> <span class='fu'><a href='quick-conversion.html'>qM</a></span><span class='op'>(</span><span class='va'>mtcars</span><span class='op'>)</span>
+<span class='va'>m</span> <span class='op'>&lt;-</span> <span class='fu'><a href='A4-quick-conversion.html'>qM</a></span><span class='op'>(</span><span class='va'>mtcars</span><span class='op'>)</span>
 <span class='fu'>fmax</span><span class='op'>(</span><span class='va'>m</span><span class='op'>)</span>
 </div><div class='output co'>#&gt;     mpg     cyl    disp      hp    drat      wt    qsec      vs      am    gear 
 #&gt;  33.900   8.000 472.000 335.000   4.930   5.424  22.900   1.000   1.000   5.000 
@@ -297,8 +297,8 @@
 #&gt; 6.0.1 21.0   6 160.0 175 3.90 2.875 17.02  0  1    5    6
 #&gt; 6.1.0 21.4   6 258.0 123 3.92 3.460 20.22  1  0    4    4
 #&gt; 8.0.0 19.2   8 472.0 245 3.73 5.424 18.00  0  0    3    4
-#&gt; 8.0.1 15.8   8 351.0 335 4.22 3.570 14.60  0  1    5    8</div><div class='input'>
-<span class='co'>## method for grouped tibbles - for use with dplyr</span>
+#&gt; 8.0.1 15.8   8 351.0 335 4.22 3.570 14.60  0  1    5    8</div><div class='input'> 
+<span class='co'>## method for grouped data frames - created with dplyr::group_by or fgroup_by</span>
 <span class='kw'><a href='https://rdrr.io/r/base/library.html'>library</a></span><span class='op'>(</span><span class='va'><a href='https://dplyr.tidyverse.org'>dplyr</a></span><span class='op'>)</span>
 <span class='va'>mtcars</span> <span class='op'>%&gt;%</span> <span class='fu'><a href='https://dplyr.tidyverse.org/reference/group_by.html'>group_by</a></span><span class='op'>(</span><span class='va'>cyl</span>,<span class='va'>vs</span>,<span class='va'>am</span><span class='op'>)</span> <span class='op'>%&gt;%</span> <span class='va'>fmax</span>
 </div><div class='output co'>#&gt; <span style='color: #949494;'># A tibble: 7 x 11</span><span>
@@ -335,7 +335,8 @@
 #&gt; </span><span style='color: #BCBCBC;'>4</span><span>     6     0     1  21  
 #&gt; </span><span style='color: #BCBCBC;'>5</span><span>     6     1     0  21.4
 #&gt; </span><span style='color: #BCBCBC;'>6</span><span>     8     0     0  19.2
-#&gt; </span><span style='color: #BCBCBC;'>7</span><span>     8     0     1  15.8</div></span></pre>
+#&gt; </span><span style='color: #BCBCBC;'>7</span><span>     8     0     1  15.8</div><div class='input'>
+</div></span></pre>
   </div>
   <div class="col-md-3 hidden-xs hidden-sm" id="pkgdown-sidebar">
     <nav id="toc" data-toggle="toc" class="sticky-top">

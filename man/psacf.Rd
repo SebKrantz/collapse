@@ -17,7 +17,7 @@
 Auto- and Cross- Covariance and Correlation Function Estimation for Panel Series
 }
 \description{
-\code{psacf}, \code{pspacf} and \code{psccf} compute (and by default plot) estimates of the auto-, partial auto- and cross- correlation or covariance functions for panel-vectors and \code{plm::pseries}. They are analogues to \code{stats::acf}, \code{stats::pacf} and \code{stats::ccf}.
+\code{psacf}, \code{pspacf} and \code{psccf} compute (and by default plot) estimates of the auto-, partial auto- and cross- correlation or covariance functions for panel-vectors and \code{plm::pseries}. They are analogues to \code{\link{acf}}, \code{\link{pacf}} and \code{\link{ccf}}.
 }
 \usage{
 psacf(x, \dots)
@@ -52,21 +52,21 @@ panel data-frame (\code{plm::pdata.frame}).}
   \item{g}{a factor, \code{\link{GRP}} object, atomic vector (internally converted to factor) or a list of vectors / factors (internally converted to a \code{\link{GRP}} object) used to group \code{x, y}. }
   \item{by}{\emph{data.frame method}: Same input as \code{g}, but also allows one- or two-sided formulas using the variables in \code{x}, i.e. \code{~ idvar} or \code{var1 + var2 ~ idvar1 + idvar2}.}
 
-    \item{t}{same input as g, to indicate the time-variable. For secure computations on unordered panel-vectors. Data frame method also allows one-sided formula i.e. \code{~time}.}
+    \item{t}{same input as g, to indicate the time-variable(s). For secure computations on unordered panel-vectors. Data frame method also allows one-sided formula i.e. \code{~time}.}
     \item{cols}{\emph{data.frame method}: Select columns using a function, column names, indices or a logical vector. \emph{Note}: \code{cols} is ignored if a two-sided formula is passed to \code{by}.}
 \item{lag.max}{integer. Maximum lag at which to calculate the acf. Default is \code{2*sqrt(length(x)/ng)} where \code{ng} is the number of groups in the panel series / supplied to \code{g}.}
 \item{type}{character. String giving the type of acf to be computed. Allowed values are "correlation" (the default), "covariance" or "partial".}
 \item{plot}{logical. If \code{TRUE} (default) the acf is plotted.}
 \item{gscale}{logical. Do a groupwise scaling / standardization of \code{x, y} (using \code{\link{fscale}} and the groups supplied to \code{g}) before computing panel-autocovariances / correlations. See Details.}
-\item{\dots}{further arguments to be passed to \code{stats:::plot.acf}.}
+\item{\dots}{further arguments to be passed to \code{\link{plot.acf}}.}
 }
 \details{
 If \code{gscale = TRUE} data are standardized within each group (using \code{\link{fscale}}) such that the group-mean is 0 and the group-standard deviation is 1. This is strongly recommended for most panels to get rid of individual-specific heterogeneity which would corrupt the ACF computations.
 
-After scaling, \code{psacf}, \code{pspacf} and \code{psccf} compute the ACF/CCF by creating a matrix of panel-lags of the series using \code{\link{flag}} and then correlating this matrix with the series (\code{x, y}) using \code{stats::cor} and pairwise-complete observations. This may require a lot of memory on large data, but is done because passing a sequence of lags to \code{\link{flag}} and thus calling \code{\link{flag}} and \code{stats::cor} one time is much faster than calling them \code{lag.max} times. The partial ACF is computed from the ACF using a Yule-Walker decomposition, in the same way as in \code{stats::pacf}.
+After scaling, \code{psacf}, \code{pspacf} and \code{psccf} compute the ACF/CCF by creating a matrix of panel-lags of the series using \code{\link{flag}} and then correlating this matrix with the series (\code{x, y}) using \code{\link{cor}} and pairwise-complete observations. This may require a lot of memory on large data, but is done because passing a sequence of lags to \code{\link{flag}} and thus calling \code{\link{flag}} and \code{\link{cor}} one time is much faster than calling them \code{lag.max} times. The partial ACF is computed from the ACF using a Yule-Walker decomposition, in the same way as in \code{\link{pacf}}.
 }
 \value{
-An object of class 'acf', see \code{?stats::acf}. The result is returned invisibly if \code{plot = TRUE}.}
+An object of class 'acf', see \code{\link{acf}}. The result is returned invisibly if \code{plot = TRUE}.}
 % \references{
 %% ~put references to the literature/web site here ~
 % }
@@ -74,7 +74,7 @@ An object of class 'acf', see \code{?stats::acf}. The result is returned invisib
 %%  ~~who you are~~
 % }
 \note{
-% \code{psacf} does not compute the true ACF defined as dividing the autocorvariance function of \code{x} by the variance of \code{x}. Rather, for reasons having to do with computational efficiency and assuming use on larger panel-vectors, \code{psacf} simply uses \code{stats::cor} to correlate \code{x} with it's lags (thus dividing the autocovariance by the product of the standard deviations of \code{x} and it's lag).
+% \code{psacf} does not compute the true ACF defined as dividing the autocorvariance function of \code{x} by the variance of \code{x}. Rather, for reasons having to do with computational efficiency and assuming use on larger panel-vectors, \code{psacf} simply uses \code{\link{cor} to correlate \code{x} with it's lags (thus dividing the autocovariance by the product of the standard deviations of \code{x} and it's lag).
 
 For \code{plm::pseries} and \code{plm::pdata.frame}, the first index variable is assumed to be the group-id and the second the time variable. If more than 2 index variables are attached to \code{plm::pseries}, the last one is taken as the time variable and the others are taken as group-id's and interacted.
 

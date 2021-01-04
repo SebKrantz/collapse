@@ -39,24 +39,24 @@ fHDbetween(x, \dots)
        HDB(x, \dots)
        HDW(x, \dots)
 
-\method{fHDbetween}{default}(x, fl, w = NULL, na.rm = TRUE, fill = FALSE, lm.method = "chol", \dots)
-\method{fHDwithin}{default}(x, fl, w = NULL, na.rm = TRUE, fill = FALSE, lm.method = "chol", \dots)
-\method{HDB}{default}(x, fl, w = NULL, na.rm = TRUE, fill = FALSE, lm.method = "chol", \dots)
-\method{HDW}{default}(x, fl, w = NULL, na.rm = TRUE, fill = FALSE, lm.method = "chol", \dots)
+\method{fHDbetween}{default}(x, fl, w = NULL, na.rm = TRUE, fill = FALSE, lm.method = "qr", \dots)
+\method{fHDwithin}{default}(x, fl, w = NULL, na.rm = TRUE, fill = FALSE, lm.method = "qr", \dots)
+\method{HDB}{default}(x, fl, w = NULL, na.rm = TRUE, fill = FALSE, lm.method = "qr", \dots)
+\method{HDW}{default}(x, fl, w = NULL, na.rm = TRUE, fill = FALSE, lm.method = "qr", \dots)
 
-\method{fHDbetween}{matrix}(x, fl, w = NULL, na.rm = TRUE, fill = FALSE, lm.method = "chol", \dots)
-\method{fHDwithin}{matrix}(x, fl, w = NULL, na.rm = TRUE, fill = FALSE, lm.method = "chol", \dots)
-\method{HDB}{matrix}(x, fl, w = NULL, na.rm = TRUE, fill = FALSE, stub = "HDB.", lm.method = "chol", \dots)
-\method{HDW}{matrix}(x, fl, w = NULL, na.rm = TRUE, fill = FALSE, stub = "HDW.", lm.method = "chol", \dots)
+\method{fHDbetween}{matrix}(x, fl, w = NULL, na.rm = TRUE, fill = FALSE, lm.method = "qr", \dots)
+\method{fHDwithin}{matrix}(x, fl, w = NULL, na.rm = TRUE, fill = FALSE, lm.method = "qr", \dots)
+\method{HDB}{matrix}(x, fl, w = NULL, na.rm = TRUE, fill = FALSE, stub = "HDB.", lm.method = "qr", \dots)
+\method{HDW}{matrix}(x, fl, w = NULL, na.rm = TRUE, fill = FALSE, stub = "HDW.", lm.method = "qr", \dots)
 
 \method{fHDbetween}{data.frame}(x, fl, w = NULL, na.rm = TRUE, fill = FALSE,
-           variable.wise = FALSE, lm.method = "chol", \dots)
+           variable.wise = FALSE, lm.method = "qr", \dots)
 \method{fHDwithin}{data.frame}(x, fl, w = NULL, na.rm = TRUE, fill = FALSE,
-          variable.wise = FALSE, lm.method = "chol", \dots)
+          variable.wise = FALSE, lm.method = "qr", \dots)
 \method{HDB}{data.frame}(x, fl, w = NULL, cols = is.numeric, na.rm = TRUE, fill = FALSE,
-    variable.wise = FALSE, stub = "HDB.", lm.method = "chol", \dots)
+    variable.wise = FALSE, stub = "HDB.", lm.method = "qr", \dots)
 \method{HDW}{data.frame}(x, fl, w = NULL, cols = is.numeric, na.rm = TRUE, fill = FALSE,
-    variable.wise = FALSE, stub = "HDW.", lm.method = "chol", \dots)
+    variable.wise = FALSE, stub = "HDW.", lm.method = "qr", \dots)
 
 # Methods for compatibility with plm:
 
@@ -93,7 +93,7 @@ fHDbetween(x, \dots)
 
 Intended areas of use are to efficiently obtain residuals and predicted values from data, and to prepare data for complex linear models involving multiple levels of fixed effects. Such models can now be fitted using \code{lm()} on data prepared with \code{fHDwithin / HDW} (relying on bootstrapped SE's for inference, or implementing the appropriate corrections). See Examples.
 
-If \code{fl} is a vector or matrix, the result are identical to \code{lm} i.e. \code{fHDbetween / HDB} returns \code{fitted(lm(x ~ fl))} and \code{fHDwithin / HDW} \code{residuals(lm(x ~ fl))}. If \code{fl} is a list containing factors, all variables in \code{x} and non-factor variables in \code{fl} are centered on these factors using either \code{\link[=fwithin]{fbetween / fwithin}} for a single factor or \code{fixest::demean} for multiple factors. Afterwards the centered data is regressed on the centered predictors. If \code{fl} is just a list of factors, \code{fHDwithin/HDW} returns the centered data and \code{fHDbetween/HDB} the corresponding means. Take as a most general example a list \code{fl = list(fct1, fct2, ..., var1, var2, ...)} where \code{fcti} are factors and \code{vari} are continuous variables. The output of \code{fHDwithin/HDW | fHDbetween/HDB} will then be identical to calling \code{resid | fitted} on \code{lm(x ~ fct1 + fct2 + ... + var1 + var2 + ...)}. The computations performed by \code{fHDwithin/HDW} and \code{fHDbetween/HDB} are however much faster and more memory efficient than \code{lm} because factors are not passed to \code{stats::model.matrix} and expanded to matrices of dummies but projected beforehand.
+If \code{fl} is a vector or matrix, the result are identical to \code{lm} i.e. \code{fHDbetween / HDB} returns \code{fitted(lm(x ~ fl))} and \code{fHDwithin / HDW} \code{residuals(lm(x ~ fl))}. If \code{fl} is a list containing factors, all variables in \code{x} and non-factor variables in \code{fl} are centered on these factors using either \code{\link[=fwithin]{fbetween / fwithin}} for a single factor or \code{fixest::demean} for multiple factors. Afterwards the centered data is regressed on the centered predictors. If \code{fl} is just a list of factors, \code{fHDwithin/HDW} returns the centered data and \code{fHDbetween/HDB} the corresponding means. Take as a most general example a list \code{fl = list(fct1, fct2, ..., var1, var2, ...)} where \code{fcti} are factors and \code{vari} are continuous variables. The output of \code{fHDwithin/HDW | fHDbetween/HDB} will then be identical to calling \code{resid | fitted} on \code{lm(x ~ fct1 + fct2 + ... + var1 + var2 + ...)}. The computations performed by \code{fHDwithin/HDW} and \code{fHDbetween/HDB} are however much faster and more memory efficient than \code{lm} because factors are not passed to \code{\link{model.matrix}} and expanded to matrices of dummies but projected beforehand.
 
 The formula interface to the data.frame method (only supported by the operators \code{HDW | HDB}) provides ease of use and allows for additional modeling complexity. For example it is possible to project out formulas like \code{HDW(data, ~ fct1*var1  + fct2:fct3 + var2:fct2:fct3 + var2:var3 + poly(var5,3)*fct5)} containing simple \code{(:)} or full \code{(*)} interactions of factors with continuous variables or polynomials of continuous variables, and two-or three-way interactions of factors and continuous variables. If the formula is one-sided as in the example above (the space left of \code{(~)} is left empty), the formula is applied to all variables selected through \code{cols}. The specification provided in \code{cols} (default: all numeric variables not used in the formula) can be overridden by supplying one-or more dependent variables. For example \code{HDW(data, var1 + var2 ~ fct1 + fct2)} will return a data.frame with \code{var1} and \code{var2} centered on \code{fct1} and \code{fct2}.
 
@@ -130,7 +130,7 @@ The special methods for \code{plm::pseries} and \code{plm::pdata.frame} center a
 %% ~Make other sections like Warning with \section{Warning }{\dots.} ~
 
 \seealso{
-\code{\link[=fbetween]{fbetween, fwithin}}, \code{\link{fscale}}, \code{\link{TRA}}, \code{\link{fFtest}}, \link[=A6-data-transformations]{Data Transformations}, \link[=collapse-documentation]{Collapse Overview}
+\code{\link[=fbetween]{fbetween, fwithin}}, \code{\link{fscale}}, \code{\link{TRA}}, \code{\link{flm}}, \code{\link{fFtest}}, \link[=A6-data-transformations]{Data Transformations}, \link[=collapse-documentation]{Collapse Overview}
 }
 \examples{
 HDW(mtcars$mpg, mtcars$carb)                   # Simple regression problems..
@@ -145,7 +145,10 @@ head(HDW(wlddev, PCGDP + LIFEEX ~ iso3c + qF(year), variable.wise = TRUE)) # Var
 head(HDW(wlddev, PCGDP + LIFEEX ~ iso3c + qF(year) + ODA)) # Adding ODA as a continuouus regressor
 head(HDW(wlddev, PCGDP + LIFEEX ~ iso3c:qF(decade) + qF(year) + ODA)) # Country-decade and year FE's
 
-# More complex examples (Currently only recommended for smaller data)
+head(HDW(wlddev, PCGDP + LIFEEX ~ iso3c*year))          # Country specific time trends
+head(HDW(wlddev, PCGDP + LIFEEX ~ iso3c*poly(year, 3))) # Country specific cubic trends
+
+# More complex examples
 lm(HDW.mpg ~ HDW.hp, data = HDW(mtcars, ~ factor(cyl)*carb + vs + wt:gear + wt:gear:carb))
 lm(mpg ~ hp + factor(cyl)*carb + vs + wt:gear + wt:gear:carb, data = mtcars)
 

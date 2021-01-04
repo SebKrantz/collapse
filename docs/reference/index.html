@@ -71,7 +71,7 @@
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">collapse</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">1.4.2</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">1.5.0</span>
       </span>
     </div>
 
@@ -153,7 +153,7 @@ Advanced and Fast Data Transformation</p></td>
       <tr>
         
         <td>
-          <p><code><a href="fast-statistical-functions.html">fast-statistical-functions</a></code> </p>
+          <p><code><a href="fast-statistical-functions.html">A1-fast-statistical-functions</a></code> </p>
         </td>
         <td><p>Fast (Grouped, Weighted) Statistical Functions for Matrix-Like Objects</p></td>
       </tr><tr>
@@ -238,7 +238,7 @@ Advanced and Fast Data Transformation</p></td>
       <tr>
         
         <td>
-          <p><code><a href="fast-grouping.html">fast-grouping-ordering</a></code> </p>
+          <p><code><a href="fast-grouping.html">A2-fast-grouping-ordering</a></code> </p>
         </td>
         <td><p>Fast Grouping and Ordering</p></td>
       </tr><tr>
@@ -299,7 +299,7 @@ Advanced and Fast Data Transformation</p></td>
       <tr>
         
         <td>
-          <p><code><a href="fast-data-manipulation.html">fast-data-manipulation</a></code> </p>
+          <p><code><a href="fast-data-manipulation.html">A3-fast-data-manipulation</a></code> </p>
         </td>
         <td><p>Fast Data Manipulation</p></td>
       </tr><tr>
@@ -354,7 +354,7 @@ Advanced and Fast Data Transformation</p></td>
       <tr>
         
         <td>
-          <p><code><a href="quick-conversion.html">qDF()</a></code> <code><a href="quick-conversion.html">qDT()</a></code> <code><a href="quick-conversion.html">qTBL()</a></code> <code><a href="quick-conversion.html">qM()</a></code> <code><a href="quick-conversion.html">as.numeric_factor()</a></code> <code><a href="quick-conversion.html">as.character_factor()</a></code> <code><a href="quick-conversion.html">mctl()</a></code> <code><a href="quick-conversion.html">mrtl()</a></code> </p>
+          <p><code><a href="quick-conversion.html">qDF()</a></code> <code><a href="quick-conversion.html">qDT()</a></code> <code><a href="quick-conversion.html">qTBL()</a></code> <code><a href="quick-conversion.html">qM()</a></code> <code><a href="quick-conversion.html">mctl()</a></code> <code><a href="quick-conversion.html">mrtl()</a></code> <code><a href="quick-conversion.html">as.numeric_factor()</a></code> <code><a href="quick-conversion.html">as.character_factor()</a></code> </p>
         </td>
         <td><p>Quick Data Conversion</p></td>
       </tr><tr>
@@ -387,7 +387,7 @@ Advanced and Fast Data Transformation</p></td>
       <tr>
         <th colspan="2">
           <h2 id="section-data-transformations" class="hasAnchor"><a href="#section-data-transformations" class="anchor"></a>Data Transformations</h2>
-          <p class="section-desc"><p>Efficient row- and column- apply to data objects and Split-Apply-Combine computing. Fast (grouped, weighted) replacing and sweeping out of statistics, scaling / standardizing, (quasi-)centering, higher-dimensional centering, linear prediction / partialling-out and linear model fitting.</p></p>
+          <p class="section-desc"><p>Fast row / column arithmetic, efficient row / column apply to data objects and Split-Apply-Combine computing. Fast (grouped, weighted) replacing and sweeping out of statistics, scaling / standardizing, (quasi-)centering, higher-dimensional centering, linear prediction / partialling-out.</p></p>
         </th>
       </tr>
       
@@ -398,9 +398,15 @@ Advanced and Fast Data Transformation</p></td>
       <tr>
         
         <td>
-          <p><code><a href="data-transformations.html">data-transformations</a></code> </p>
+          <p><code><a href="data-transformations.html">A6-data-transformations</a></code> </p>
         </td>
         <td><p>Data Transformations</p></td>
+      </tr><tr>
+        
+        <td>
+          <p><code><a href="arithmetic.html">`%rr%`</a></code> <code><a href="arithmetic.html">`%r+%`</a></code> <code><a href="arithmetic.html">`%r-%`</a></code> <code><a href="arithmetic.html">`%r*%`</a></code> <code><a href="arithmetic.html">`%r/%`</a></code> <code><a href="arithmetic.html">`%cr%`</a></code> <code><a href="arithmetic.html">`%c+%`</a></code> <code><a href="arithmetic.html">`%c-%`</a></code> <code><a href="arithmetic.html">`%c*%`</a></code> <code><a href="arithmetic.html">`%c/%`</a></code> </p>
+        </td>
+        <td><p>Fast Row/Column Arithmetic for Matrix-Like Objects</p></td>
       </tr><tr>
         
         <td>
@@ -437,18 +443,12 @@ Advanced and Fast Data Transformation</p></td>
           <p><code><a href="fHDbetween_fHDwithin.html">fHDbetween()</a></code> <code><a href="fHDbetween_fHDwithin.html">fHDwithin()</a></code> <code><a href="fHDbetween_fHDwithin.html">HDB()</a></code> <code><a href="fHDbetween_fHDwithin.html">HDW()</a></code> </p>
         </td>
         <td><p>Higher-Dimensional Centering and Linear Prediction</p></td>
-      </tr><tr>
-        
-        <td>
-          <p><code><a href="flm.html">flm()</a></code> </p>
-        </td>
-        <td><p>Fast (Weighted) Linear Model Fitting <!-- % Sparse, --></p></td>
       </tr>
     </tbody><tbody>
       <tr>
         <th colspan="2">
-          <h2 id="section-time-series-and-panel-series" class="hasAnchor"><a href="#section-time-series-and-panel-series" class="anchor"></a>Time Series and Panel Series</h2>
-          <p class="section-desc"><p>Fast (sequences of) lags / leads, and (lagged / leaded, iterated, quasi-, log-) differences and (compounded) growth rates on (unordered) time series and panel data. Auto-, partial- and cross-correlation functions for panel data. Panel data to (ts-)array conversion.</p></p>
+          <h2 id="section-linear-models" class="hasAnchor"><a href="#section-linear-models" class="anchor"></a>Linear Models</h2>
+          <p class="section-desc"><p>Fast (weighted) linear model fitting. A fast F-test for high-dimensional linear models.</p></p>
         </th>
       </tr>
       
@@ -459,7 +459,32 @@ Advanced and Fast Data Transformation</p></td>
       <tr>
         
         <td>
-          <p><code><a href="time-series-panel-series.html">time-series-panel-series</a></code> </p>
+          <p><code><a href="flm.html">flm()</a></code> </p>
+        </td>
+        <td><p>Fast (Weighted) Linear Model Fitting <!-- % Sparse, --></p></td>
+      </tr><tr>
+        
+        <td>
+          <p><code><a href="fFtest.html">fFtest()</a></code> </p>
+        </td>
+        <td><p>Fast (Weighted) F-test for Linear Models (with Factors)</p></td>
+      </tr>
+    </tbody><tbody>
+      <tr>
+        <th colspan="2">
+          <h2 id="section-time-series-and-panel-series" class="hasAnchor"><a href="#section-time-series-and-panel-series" class="anchor"></a>Time Series and Panel Series</h2>
+          <p class="section-desc"><p>Fast (sequences of) lags / leads, and (lagged / leaded, iterated, quasi-, log-) differences and (compounded) growth rates on (unordered, irregular) time series and panel data. Auto-, partial- and cross-correlation functions for panel data. Panel data to (ts-)array conversion.</p></p>
+        </th>
+      </tr>
+      
+      
+    </tbody><tbody>
+      
+      
+      <tr>
+        
+        <td>
+          <p><code><a href="time-series-panel-series.html">A7-time-series-panel-series</a></code> </p>
         </td>
         <td><p>Time Series and Panel Series</p></td>
       </tr><tr>
@@ -510,7 +535,7 @@ Fast Growth Rates for Time Series and Panel Data</p></td>
       <tr>
         
         <td>
-          <p><code><a href="list-processing.html">list-processing</a></code> </p>
+          <p><code><a href="list-processing.html">A8-list-processing</a></code> </p>
         </td>
         <td><p>List Processing</p></td>
       </tr><tr>
@@ -554,7 +579,7 @@ Fast Growth Rates for Time Series and Panel Data</p></td>
       <tr>
         <th colspan="2">
           <h2 id="section-summary-statistics" class="hasAnchor"><a href="#section-summary-statistics" class="anchor"></a>Summary Statistics</h2>
-          <p class="section-desc"><p>Fast (grouped, weighted, panel-decomposed) summary statistics for cross-sectional and complex multilevel / panel data. A fast F-test for high-dimensional linear models.</p></p>
+          <p class="section-desc"><p>Fast (grouped, weighted, panel-decomposed) summary statistics for cross-sectional and complex multilevel / panel data.</p></p>
         </th>
       </tr>
       
@@ -565,7 +590,7 @@ Fast Growth Rates for Time Series and Panel Data</p></td>
       <tr>
         
         <td>
-          <p><code><a href="summary-statistics.html">summary-statistics</a></code> </p>
+          <p><code><a href="summary-statistics.html">A9-summary-statistics</a></code> </p>
         </td>
         <td><p>Summary Statistics</p></td>
       </tr><tr>
@@ -585,19 +610,13 @@ Fast Growth Rates for Time Series and Panel Data</p></td>
         <td>
           <p><code><a href="pwcor_pwcov_pwNobs.html">pwcor()</a></code> <code><a href="pwcor_pwcov_pwNobs.html">pwcov()</a></code> <code><a href="pwcor_pwcov_pwNobs.html">pwNobs()</a></code> <code><a href="pwcor_pwcov_pwNobs.html">print(<i>&lt;pwcor&gt;</i>)</a></code> <code><a href="pwcor_pwcov_pwNobs.html">print(<i>&lt;pwcov&gt;</i>)</a></code> </p>
         </td>
-        <td><p>Pairwise Correlations, Covariances and Observation Count</p></td>
+        <td><p>(Pairwise, Weighted) Correlations, Covariances and Observation Counts</p></td>
       </tr><tr>
         
         <td>
           <p><code><a href="varying.html">varying()</a></code> </p>
         </td>
         <td><p>Fast Check of Variation in Data</p></td>
-      </tr><tr>
-        
-        <td>
-          <p><code><a href="fFtest.html">fFtest()</a></code> </p>
-        </td>
-        <td><p>Fast F-test for Linear Models (with Factors)</p></td>
       </tr>
     </tbody><tbody>
       <tr>
@@ -633,7 +652,7 @@ Fast Growth Rates for Time Series and Panel Data</p></td>
       <tr>
         
         <td>
-          <p><code><a href="small-helper.html">.c()</a></code> <code><a href="small-helper.html">vlabels()</a></code> <code><a href="small-helper.html">`vlabels&lt;-`()</a></code> <code><a href="small-helper.html">vclasses()</a></code> <code><a href="small-helper.html">vtypes()</a></code> <code><a href="small-helper.html">namlab()</a></code> <code><a href="small-helper.html">add_stub()</a></code> <code><a href="small-helper.html">rm_stub()</a></code> <code><a href="small-helper.html">`%!in%`</a></code> <code><a href="small-helper.html">ckmatch()</a></code> <code><a href="small-helper.html">fnlevels()</a></code> <code><a href="small-helper.html">fnrow()</a></code> <code><a href="small-helper.html">fncol()</a></code> <code><a href="small-helper.html">fdim()</a></code> <code><a href="small-helper.html">na_rm()</a></code> <code><a href="small-helper.html">na_omit()</a></code> <code><a href="small-helper.html">na_insert()</a></code> <code><a href="small-helper.html">cinv()</a></code> <code><a href="small-helper.html">all_identical()</a></code> <code><a href="small-helper.html">all_obj_equal()</a></code> <code><a href="small-helper.html">seq_row()</a></code> <code><a href="small-helper.html">seq_col()</a></code> <code><a href="small-helper.html">setRownames()</a></code> <code><a href="small-helper.html">setColnames()</a></code> <code><a href="small-helper.html">setDimnames()</a></code> <code><a href="small-helper.html">unattrib()</a></code> <code><a href="small-helper.html">setAttrib()</a></code> <code><a href="small-helper.html">copyAttrib()</a></code> <code><a href="small-helper.html">copyMostAttrib()</a></code> <code><a href="small-helper.html">is.categorical()</a></code> <code><a href="small-helper.html">is.Date()</a></code> </p>
+          <p><code><a href="small-helper.html">.c()</a></code> <code><a href="small-helper.html">vlabels()</a></code> <code><a href="small-helper.html">`vlabels&lt;-`()</a></code> <code><a href="small-helper.html">vclasses()</a></code> <code><a href="small-helper.html">vtypes()</a></code> <code><a href="small-helper.html">namlab()</a></code> <code><a href="small-helper.html">add_stub()</a></code> <code><a href="small-helper.html">rm_stub()</a></code> <code><a href="small-helper.html">`%!in%`</a></code> <code><a href="small-helper.html">ckmatch()</a></code> <code><a href="small-helper.html">fnlevels()</a></code> <code><a href="small-helper.html">fnrow()</a></code> <code><a href="small-helper.html">fncol()</a></code> <code><a href="small-helper.html">fdim()</a></code> <code><a href="small-helper.html">allNA()</a></code> <code><a href="small-helper.html">missing_cases()</a></code> <code><a href="small-helper.html">na_rm()</a></code> <code><a href="small-helper.html">na_omit()</a></code> <code><a href="small-helper.html">na_insert()</a></code> <code><a href="small-helper.html">cinv()</a></code> <code><a href="small-helper.html">all_identical()</a></code> <code><a href="small-helper.html">all_obj_equal()</a></code> <code><a href="small-helper.html">seq_row()</a></code> <code><a href="small-helper.html">seq_col()</a></code> <code><a href="small-helper.html">setRownames()</a></code> <code><a href="small-helper.html">setColnames()</a></code> <code><a href="small-helper.html">setDimnames()</a></code> <code><a href="small-helper.html">unattrib()</a></code> <code><a href="small-helper.html">setAttrib()</a></code> <code><a href="small-helper.html">copyAttrib()</a></code> <code><a href="small-helper.html">copyMostAttrib()</a></code> <code><a href="small-helper.html">is.categorical()</a></code> <code><a href="small-helper.html">is.Date()</a></code> </p>
         </td>
         <td><p>Small (Helper) Functions <!-- % \emph{collapse} --></p></td>
       </tr>

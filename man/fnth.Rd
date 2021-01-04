@@ -27,7 +27,7 @@ fnth(x, n = 0.5, \dots)
      ties = "mean", \dots)
 }
 \arguments{
-\item{x}{a numeric vector, matrix, data frame or grouped tibble (\code{dplyr::grouped_df}).}
+\item{x}{a numeric vector, matrix, data frame or grouped data frame (class 'grouped_df').}
 
 \item{n}{the element to return using a single integer index such that \code{1 < n < NROW(x)}, or a probability \code{0 < n < 1}. See Details. }
 

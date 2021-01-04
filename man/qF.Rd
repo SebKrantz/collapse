@@ -33,7 +33,7 @@ finteraction(\dots, ordered = FALSE, sort = TRUE)
   \item{na.exclude}{logical. \code{TRUE} preserves missing values (i.e. no level is generated for \code{NA}).}
   \item{sort}{logical. \code{TRUE} sorts the levels in ascending order (like \code{\link{factor}}); \code{FALSE} provides the levels in an arbitrary order (determined by the hash map if \code{method = "hash"}), which can be slightly faster.}
   \item{drop}{logical. If \code{x} is a factor, \code{TRUE} efficiently drops unused factor levels beforehand using \code{\link{fdroplevels}}.}
-  \item{keep.attr}{logical. If \code{TRUE} and \code{x} has additional attributes apart from 'levels' and 'class', these are preseved in the conversion to factor.}
+  \item{keep.attr}{logical. If \code{TRUE} and \code{x} has additional attributes apart from 'levels' and 'class', these are preserved in the conversion to factor.}
   \item{method}{an integer or character string specifying the method of computation:
         \tabular{lllll}{\emph{ Int. }   \tab\tab \emph{ String }   \tab\tab \emph{ Description }  \cr
                  1 \tab\tab "auto"   \tab\tab automatic selection: hash for character, logical or if \code{length(x) < 500}, else radix. \cr

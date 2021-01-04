@@ -1,18 +1,41 @@
 # Row-operations (documented under data transformations...) ... see if any other package has it (i.e. matrixStats etc..)
 # or wirhout r ??? look for %+% function on Rducumentation.. rdio.
 
-"%rr%" <- function(X, v) TRA(X, v, "replace_fill") # outer(rep.int(1L, dim(X)[2L]), v)
-"%r+%" <- function(X, v) TRA(X, v, "+")
-"%r-%" <- function(X, v) TRA(X, v, "-")
-"%r*%" <- function(X, v) TRA(X, v, "*")
-"%r/%" <- function(X, v) TRA(X, v, "/")
+"%rr%" <- function(X, v) if(is.atomic(X) || is.atomic(v) || inherits(X, "data.frame")) TRA(X, v, "replace_fill") else # outer(rep.int(1L, dim(X)[2L]), v)
+  duplAttributes(mapply(function(x, y) TRA(x, y, "replace_fill"), unattrib(X), unattrib(v),
+                        USE.NAMES = FALSE, SIMPLIFY = FALSE), X)
+"%r+%" <- function(X, v) if(is.atomic(X) || is.atomic(v) || inherits(X, "data.frame")) TRA(X, v, "+") else
+  duplAttributes(mapply(function(x, y) TRA(x, y, "+"), unattrib(X), unattrib(v),
+                        USE.NAMES = FALSE, SIMPLIFY = FALSE), X)
+"%r-%" <- function(X, v) if(is.atomic(X) || is.atomic(v) || inherits(X, "data.frame")) TRA(X, v, "-") else
+  duplAttributes(mapply(function(x, y) TRA(x, y, "-"), unattrib(X), unattrib(v),
+                        USE.NAMES = FALSE, SIMPLIFY = FALSE), X)
+"%r*%" <- function(X, v) if(is.atomic(X) || is.atomic(v) || inherits(X, "data.frame")) TRA(X, v, "*") else
+  duplAttributes(mapply(function(x, y) TRA(x, y, "*"), unattrib(X), unattrib(v),
+                        USE.NAMES = FALSE, SIMPLIFY = FALSE), X)
+"%r/%" <- function(X, v) if(is.atomic(X) || is.atomic(v) || inherits(X, "data.frame")) TRA(X, v, "/") else
+  duplAttributes(mapply(function(x, y) TRA(x, y, "/"), unattrib(X), unattrib(v),
+                        USE.NAMES = FALSE, SIMPLIFY = FALSE), X)
 
-"%cr%" <- function(X, v) if(is.atomic(X)) duplAttributes(rep(v, NCOL(X)), X) else # outer(rep.int(1L, dim(X)[2L]), v)
-  duplAttributes(lapply(vector("list", length(unclass(X))), function(y) v), X)
-"%c+%" <- function(X, v) if(is.atomic(X)) X + v else duplAttributes(lapply(unattrib(X), `+`, v), X)
-"%c-%" <- function(X, v) if(is.atomic(X)) X - v else duplAttributes(lapply(unattrib(X), `-`, v), X)
-"%c*%" <- function(X, v) if(is.atomic(X)) X * v else duplAttributes(lapply(unattrib(X), `*`, v), X)
-"%c/%" <- function(X, v) if(is.atomic(X)) X / v else duplAttributes(lapply(unattrib(X), `/`, v), X) # or * 1L/v ??
+
+
+# othidentity <- function(x, y) y
+"%cr%" <- function(X, v) if(is.atomic(X)) return(duplAttributes(rep(v, NCOL(X)), X)) else # outer(rep.int(1L, dim(X)[2L]), v)
+  if(is.atomic(v)) return(duplAttributes(lapply(vector("list", length(unclass(X))), function(z) v), X)) else
+    copyAttrib(v, X) # copyAttrib first makes a shallow copy of v
+"%c+%" <- function(X, v) if(is.atomic(X)) return(X + v) else
+  duplAttributes(if(is.atomic(v)) lapply(unattrib(X), `+`, v) else
+    mapply(`+`, unattrib(X), unattrib(v), USE.NAMES = FALSE, SIMPLIFY = FALSE), X)
+"%c-%" <- function(X, v) if(is.atomic(X)) return(X - v) else
+  duplAttributes(if(is.atomic(v)) lapply(unattrib(X), `-`, v) else
+    mapply(`-`, unattrib(X), unattrib(v), USE.NAMES = FALSE, SIMPLIFY = FALSE), X)
+"%c*%" <- function(X, v) if(is.atomic(X)) return(X * v) else
+  duplAttributes(if(is.atomic(v)) lapply(unattrib(X), `*`, v) else
+    mapply(`*`, unattrib(X), unattrib(v), USE.NAMES = FALSE, SIMPLIFY = FALSE), X)
+"%c/%" <- function(X, v) if(is.atomic(X)) return(X / v) else  # or * 1L/v ??
+  duplAttributes(if(is.atomic(v)) lapply(unattrib(X), `/`, v) else
+    mapply(`/`, unattrib(X), unattrib(v), USE.NAMES = FALSE, SIMPLIFY = FALSE), X)
+
 
 
 getenvFUN <- function(nam, efmt1 = "For this method need to install.packages('%s'), then unload [detach('package:collapse', unload = TRUE)] and reload [library(collapse)].")
@@ -208,7 +231,7 @@ missing_cases <- function(X, cols = NULL) {
   is.na(X)
 }
 
-na_rm <- function(x) x[!is.na(x)]
+na_rm <- function(x) .Call(C_na_rm, x)  # x[!is.na(x)]
 
 na_omit <- function(X, cols = NULL, na.attr = FALSE) {
   if(is.list(X)) {
@@ -222,7 +245,9 @@ na_omit <- function(X, cols = NULL, na.attr = FALSE) {
     if(!(is.numeric(rn) || is.null(rn) || rn[1L] == "1")) attr(res, "row.names") <- rn[rkeep]
   } else {
     rl <- if(is.null(cols)) complete.cases(X) else complete.cases(X[, cols])
-    res <- if(is.matrix(X)) X[rl, , drop = FALSE] else X[rl]
+    rkeep <- which(rl)
+    if(length(rkeep) == NROW(X)) return(X)
+    res <- if(is.matrix(X)) X[rkeep, , drop = FALSE] else X[rkeep]
   }
   if(na.attr) attr(res, "na.action") <- `oldClass<-`(which(!rl), "omit")
   res
@@ -516,25 +541,5 @@ fsimplify2array <- function(l) {
 
 
 
-# Experimental:
 
-# faster pipe: more challenging than it seems...
-# `%>>%` <- function(lhs, rhs) {
-#     rhs_call <- substitute(rhs)
-#     eval(rhs_call, envir = lhs, enclos = parent.frame())
-# }
-#
-# > pipeR::`%>>%`
-# function (x, expr)
-# {
-#   x
-#   expr <- substitute(expr)
-#   envir <- parent.frame()
-#   switch(class(expr), `NULL` = NULL, character = {
-#     cat(expr, "\n")
-#     x
-#   }, `{` = pipe_dot(x, expr, envir), `(` = pipe_fun(x,
-#                                                     expr[[2L]], envir), pipe_symbol(x, expr, envir, TRUE,
-#                                                                                     pipe_first))
-# }
 

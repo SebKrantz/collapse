@@ -22,7 +22,7 @@ fdroplevels(x, ...)
   \item{\dots}{not used.}
 }
 \details{
-\code{base::droplevels} passes a factor from which levels are to be dropped to \code{\link{factor}}, which first calls \code{\link{unique}} and then \code{\link{match}} to drop unused levels. Both functions internally use a hash table, which is highly inefficient. \code{fdroplevels} does not require mapping values at all, but uses a super fast boolean vector method to determine which levels are unused and remove those levels. In addition, if no unused levels are found, \code{x} is simply returned. Any missing values found in \code{x} are efficiently skipped in the process of checking and replacing levels. All other attributes of \code{x} are preserved.
+\code{\link{droplevels}} passes a factor from which levels are to be dropped to \code{\link{factor}}, which first calls \code{\link{unique}} and then \code{\link{match}} to drop unused levels. Both functions internally use a hash table, which is highly inefficient. \code{fdroplevels} does not require mapping values at all, but uses a super fast boolean vector method to determine which levels are unused and remove those levels. In addition, if no unused levels are found, \code{x} is simply returned. Any missing values found in \code{x} are efficiently skipped in the process of checking and replacing levels. All other attributes of \code{x} are preserved.
 }
 \value{
 \code{x} will any unused factor levels removed.

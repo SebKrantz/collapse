@@ -71,7 +71,7 @@
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">collapse</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">1.4.2</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">1.5.0</span>
       </span>
     </div>
 
@@ -120,6 +120,64 @@
       <small>Source: <a href='https://github.com/SebKrantz/collapse/blob/master/NEWS.md'><code>NEWS.md</code></a></small>
     </div>
 
+    <div id="collapse-150" class="section level1">
+<h1 class="page-header" data-toc-text="1.5.0">
+<a href="#collapse-150" class="anchor"></a>collapse 1.5.0<small> 2021-01-04 </small>
+</h1>
+<p><em>collapse</em> 1.5.0, released early January 2021, presents important refinements and some additional functionality.</p>
+<div id="back-to-cran" class="section level3">
+<h3 class="hasAnchor">
+<a href="#back-to-cran" class="anchor"></a>Back to CRAN</h3>
+<ul>
+<li>I apologize for inconveniences caused by the temporal archival of <em>collapse</em> from December 19, 2020. This archival was caused by the archival of the important <em>lfe</em> package on the 4th of December. <em>collapse</em> depended on <em>lfe</em> for higher-dimensional centering, providing the <code>fHDbetween / fHDwithin</code> functions for generalized linear projecting / partialling out. To remedy the damage caused by the removal of <em>lfe</em>, I had to rewrite <code>fHDbetween / fHDwithin</code> to take advantage of the demeaning algorithm provided by <em>fixest</em>, which has some quite different mechanics. Beforehand, I made some significant changes to <code><a href="https://rdrr.io/pkg/fixest/man/demean.html">fixest::demean</a></code> itself to make this integration happen. The CRAN deadline was the 18th of December, and I realized too late that I would not make this. A request to CRAN for extension was declined, so <em>collapse</em> got archived on the 19th. I have learned from this experience, and <em>collapse</em> is now sufficiently insulated that it will not be taken off CRAN even if all suggested packages were removed from CRAN.</li>
+</ul>
+</div>
+<div id="bug-fixes" class="section level3">
+<h3 class="hasAnchor">
+<a href="#bug-fixes" class="anchor"></a>Bug Fixes</h3>
+<ul>
+<li>Segfaults in several <em>Fast Statistical Functions</em> when passed <code><a href="https://rdrr.io/r/base/numeric.html">numeric(0)</a></code> are fixed (thanks to <a href='https://github.com/eshom'>@eshom</a> and <a href='https://github.com/acylam'>@acylam</a>, <a href="https://github.com/SebKrantz/collapse/issues/101"><a href='https://github.com/SebKrantz/collapse/issues/101'>#101</a></a>). The default behavior is that all <em>collapse</em> functions return <code><a href="https://rdrr.io/r/base/numeric.html">numeric(0)</a></code> again, except for <code>fNobs</code>, <code>fNdistinct</code> which return <code>0L</code>, and <code>fvar</code>, <code>fsd</code> which return <code>NA_real_</code>.</li>
+</ul>
+</div>
+<div id="changes-to-functionality" class="section level3">
+<h3 class="hasAnchor">
+<a href="#changes-to-functionality" class="anchor"></a>Changes to Functionality</h3>
+<ul>
+<li><p>Functions <code>fHDwithin / HDW</code> and <code>fHDbetween / HDB</code> have been reworked, delivering higher performance and greater functionality: For higher-dimensional centering and heterogenous slopes, the <code>demean</code> function from the <em>fixest</em> package is imported (conditional on the availability of that package). The linear prediction and partialling out functionality is now built around <code>flm</code> and also allows for weights and different fitting methods.</p></li>
+<li><p>In <code>collap</code>, the default behavior of <code>give.names = "auto"</code> was altered when used together with the <code>custom</code> argument. Before the function name was always added to the column names. Now it is only added if a column is aggregated with two different functions. I apologize if this breaks any code dependent on the new names, but this behavior just better reflects most common use (applying only one function per column), as well as STATA’s collapse.</p></li>
+<li><p>For list processing functions like <code>get_elem</code>, <code>has_elem</code> etc. the default for the argument <code>DF.as.list</code> was changed from <code>TRUE</code> to <code>FALSE</code>. This means if a nested lists contains data frame’s, these data frame’s will not be searched for matching elements. This default also reflects the more common usage of these functions (extracting entire data frame’s or computed quantities from nested lists rather than searching / subsetting lists of data frame’s). The change also delivers a considerable performance gain.</p></li>
+</ul>
+<!-- Missing value removal is still done using *data.table* source code, so these functions are now equipped for large and complex linear prediction and partialling-out problems. To fully utilize them users must install *fixest*. --><ul>
+<li>Vignettes were outsourced to the <a href="https://sebkrantz.github.io/collapse/articles/index.html">website</a>, and also made available as PDF versions for download there. This nearly halves the size of the source package, and should induce users to appreciate the built-in documentation. The website also makes for much more convenient reading and navigation of these book-style vignettes.</li>
+</ul>
+</div>
+<div id="additions" class="section level3">
+<h3 class="hasAnchor">
+<a href="#additions" class="anchor"></a>Additions</h3>
+<ul>
+<li><p>Added a set of 10 operators <code><a href="../reference/arithmetic.html">%rr%</a></code>, <code><a href="../reference/arithmetic.html">%r+%</a></code>, <code><a href="../reference/arithmetic.html">%r-%</a></code>, <code><a href="../reference/arithmetic.html">%r*%</a></code>, <code><a href="../reference/arithmetic.html">%r/%</a></code>, <code><a href="../reference/arithmetic.html">%cr%</a></code>, <code><a href="../reference/arithmetic.html">%c+%</a></code>, <code><a href="../reference/arithmetic.html">%c-%</a></code>, <code><a href="../reference/arithmetic.html">%c*%</a></code>, <code><a href="../reference/arithmetic.html">%c/%</a></code> to facilitate and speed up row- and column-wise arithmetic operations involving a vector and a matrix / data frame / list. For example <code>X %r*% v</code> efficiently multiplies every row of <code>X</code> with <code>v</code>. Note that more advanced functionality is already provided in <code><a href="../reference/TRA.html">TRA()</a></code>, <code><a href="../reference/dapply.html">dapply()</a></code> and the <em>Fast Statistical Functions</em>, but these operators are intuitive and very convenient to use in matrix or matrix-style code, or in piped expressions.</p></li>
+<li><p>Added function <code>missing_cases</code> (opposite of <code>complete.cases</code> and faster for data frame’s / lists).</p></li>
+<li><p>Added function <code>allNA</code> for atomic vectors.</p></li>
+<li><p>New vignette about using <em>collapse</em> together with <em>data.table</em>, available <a href="https://sebkrantz.github.io/collapse/articles/index.html">online</a>.</p></li>
+</ul>
+</div>
+<div id="improvements" class="section level3">
+<h3 class="hasAnchor">
+<a href="#improvements" class="anchor"></a>Improvements</h3>
+<ul>
+<li>Time series functions and operators <code>flag / L / F</code>, <code>fdiff / D / Dlog</code> and <code>fgrowth / G</code> now natively support irregular time series and panels, and feature a ‘complete approach’ i.e. values are shifted around taking full account of the underlying time-dimension!</li>
+</ul>
+<!-- Thus *collapse* now provides a comprehensive, robust and extremely fast approach to working with time-dependent data in R. --><ul>
+<li><p>Functions <code>pwcor</code> and <code>pwcov</code> can now compute weighted correlations on the pairwise or complete observations, supported by C-code that is (conditionally) imported from the <em>weights</em> package.</p></li>
+<li><p><code>fFtest</code> now also supports weights.</p></li>
+<li><p><code>collap</code> now provides an easy workaround to aggregate some columns using weights and others without. The user may simply append the names of <em>Fast Statistical Functions</em> with <code>_uw</code> to disable weights. Example: <code><a href="../reference/collap.html">collapse::collap(mtcars, ~ cyl, custom = list(fmean_uw = 3:4, fmean = 8:10), w = ~ wt)</a></code> aggregates columns 3 through 4 using a simple mean and columns 8 through 10 using the weighted mean.</p></li>
+<li><p>The parallelism in <code>collap</code> using <code><a href="https://rdrr.io/r/parallel/mcdummies.html">parallel::mclapply</a></code> has been reworked to operate at the column-level, and not at the function level as before. It is still not available for Windows though. The default number of cores was set to <code>mc.cores = 2L</code>, which now gives an error on windows if <code>parallel = TRUE</code>.</p></li>
+<li><p>function <code>recode_char</code> now has additional options <code>ignore.case</code> and <code>fixed</code> (passed to <code>grepl</code>), for enhanced recoding character data based on regular expressions.</p></li>
+<li><p><code>rapply2d</code> now has <code>classes</code> argument permitting more flexible use.</p></li>
+<li><p><code>na_rm</code> and some other internal functions were rewritten in C. <code>na_rm</code> is now 2x faster than <code>x[!is.na(x)]</code> with missing values and 10x faster without missing values.</p></li>
+</ul>
+</div>
+</div>
     <div id="collapse-142" class="section level1">
 <h1 class="page-header" data-toc-text="1.4.2">
 <a href="#collapse-142" class="anchor"></a>collapse 1.4.2<small> 2020-11-10 </small>
@@ -143,17 +201,17 @@
 <h1 class="page-header" data-toc-text="1.4.0">
 <a href="#collapse-140" class="anchor"></a>collapse 1.4.0<small> 2020-11-01 </small>
 </h1>
-<p>collapse 1.4.0, released early November 2020, presents some important refinements, particularly in the domain of attribute handling, as well as some additional functionality. The changes make <em>collapse</em> smarter, more broadly compatible and more secure, and should not break existing code. <!-- , is a major update: --></p>
-<div id="changes-to-functionality" class="section level3">
+<p><em>collapse</em> 1.4.0, released early November 2020, presents some important refinements, particularly in the domain of attribute handling, as well as some additional functionality. The changes make <em>collapse</em> smarter, more broadly compatible and more secure, and should not break existing code. <!-- , is a major update: --></p>
+<div id="changes-to-functionality-1" class="section level3">
 <h3 class="hasAnchor">
-<a href="#changes-to-functionality" class="anchor"></a>Changes to Functionality</h3>
+<a href="#changes-to-functionality-1" class="anchor"></a>Changes to Functionality</h3>
 <ul>
 <li><p><em>Deep Matrix Dispatch / Extended Time Series Support:</em> The default methods of all statistical and transformation functions dispatch to the matrix method if <code>is.matrix(x) &amp;&amp; !inherits(x, "matrix")</code> evaluates to <code>TRUE</code>. This specification avoids invoking the default method on classed matrix-based objects (such as multivariate time series of the <em>xts</em> / <em>zoo</em> class) not inheriting a ‘matrix’ class, while still allowing the user to manually call the default method on matrices (objects with implicit or explicit ‘matrix’ class). The change implies that <em>collapse</em>’s generic statistical functions are now well suited to transform <em>xts</em> / <em>zoo</em> and many other time series and matrix-based classes.</p></li>
-<li><p><em>Fully Non-Destructive Piped Workflow:</em> <code><a href="../reference/GRP,fgroup_by.html">fgroup_by(x, ...)</a></code> now only adds a class <em>grouped_df</em>, not classes <em>table_df</em>, <em>tbl</em>, <em>grouped_df</em>, and preserves all classes of <code>x</code>. This implies that workflows such as <code>x %&gt;% fgroup_by(...) %&gt;% fmean</code> etc. yields an object <code>xAG</code> of the same class and attributes as <code>x</code>, not a tibble as before. <em>collapse</em> aims to be as broadly compatible, class-agnostic and attribute preserving as possible.</p></li>
+<li><p><em>Fully Non-Destructive Piped Workflow:</em> <code><a href="../reference/GRP,%20fgroup_by.html">fgroup_by(x, ...)</a></code> now only adds a class <em>grouped_df</em>, not classes <em>table_df</em>, <em>tbl</em>, <em>grouped_df</em>, and preserves all classes of <code>x</code>. This implies that workflows such as <code>x %&gt;% fgroup_by(...) %&gt;% fmean</code> etc. yields an object <code>xAG</code> of the same class and attributes as <code>x</code>, not a tibble as before. <em>collapse</em> aims to be as broadly compatible, class-agnostic and attribute preserving as possible.</p></li>
 </ul>
 <!-- Not a priority for now! Not really necessary at all, can always use base R converters! --><ul>
 <li>
-<em>Thorough and Controlled Object Conversions:</em> Quick conversion functions <code>qDF</code>, <code>qDT</code> and <code>qM</code> now have additional arguments <code>keep.attr</code> and <code>class</code> providing precise user control over object conversions in terms of classes and other attributes assigned / maintained. The default (<code>keep.attr = FALSE</code>) yields <em>hard</em> conversions removing all but essential attributes from the object. E.g. before <code><a href="../reference/quick-conversion.html">qM(EuStockMarkets)</a></code> would just have returned <code>EuStockMarkets</code> (because <code><a href="https://rdrr.io/r/base/matrix.html">is.matrix(EuStockMarkets)</a></code> is <code>TRUE</code>) whereas now the time series class and ‘tsp’ attribute are removed. <code><a href="../reference/quick-conversion.html">qM(EuStockMarkets, keep.attr = TRUE)</a></code> returns <code>EuStockMarkets</code> as before.</li>
+<em>Thorough and Controlled Object Conversions:</em> Quick conversion functions <code>qDF</code>, <code>qDT</code> and <code>qM</code> now have additional arguments <code>keep.attr</code> and <code>class</code> providing precise user control over object conversions in terms of classes and other attributes assigned / maintained. The default (<code>keep.attr = FALSE</code>) yields <em>hard</em> conversions removing all but essential attributes from the object. E.g. before <code><a href="../reference/A4-quick-conversion.html">qM(EuStockMarkets)</a></code> would just have returned <code>EuStockMarkets</code> (because <code><a href="https://rdrr.io/r/base/matrix.html">is.matrix(EuStockMarkets)</a></code> is <code>TRUE</code>) whereas now the time series class and ‘tsp’ attribute are removed. <code><a href="../reference/A4-quick-conversion.html">qM(EuStockMarkets, keep.attr = TRUE)</a></code> returns <code>EuStockMarkets</code> as before.</li>
 </ul>
 <!--
 In general `keep.attr = TRUE` gives a *soft* conversion were attributes necessary to establish the new data type ('dim', 'dimnames', 'names', 'row.names', 'class') are modified, but all other attributes are kept. 
@@ -180,9 +238,9 @@ This may be useful in some cases, for examples it is now possible to write somet
 <em>Reduced Dependency Burden:</em> The dependency on the <em>lfe</em> package was made optional. Functions <code>fHDwithin</code> / <code>fHDbetween</code> can only perform higher-dimensional centering if <em>lfe</em> is available. Linear prediction and centering with a single factor (among a list of covariates) is still possible without installing <em>lfe</em>. This change means that <em>collapse</em> now only depends on base R and <em>Rcpp</em> and is supported down to R version 2.10.</li>
 </ul>
 </div>
-<div id="additions" class="section level3">
+<div id="additions-1" class="section level3">
 <h3 class="hasAnchor">
-<a href="#additions" class="anchor"></a>Additions</h3>
+<a href="#additions-1" class="anchor"></a>Additions</h3>
 <ul>
 <li><p>Added function <code>rsplit</code> for efficient (recursive) splitting of vectors and data frames.</p></li>
 <li><p>Added function <code>fdroplevels</code> for very fast missing level removal + added argument <code>drop</code> to <code>qF</code> and <code>GRP.factor</code>, the default is <code>drop = FALSE</code>. The addition of <code>fdroplevels</code> also enhances the speed of the <code>fFtest</code> function.</p></li>
@@ -195,9 +253,9 @@ This may be useful in some cases, for examples it is now possible to write somet
 <li><p>A print method for grouped data frames of any class was added.</p></li>
 </ul>
 </div>
-<div id="improvements" class="section level3">
+<div id="improvements-1" class="section level3">
 <h3 class="hasAnchor">
-<a href="#improvements" class="anchor"></a>Improvements</h3>
+<a href="#improvements-1" class="anchor"></a>Improvements</h3>
 <ul>
 <li>Faster internal methods for factors for <code>funique</code>, <code>fmode</code> and <code>fNdistinct</code>.</li>
 </ul>
@@ -233,18 +291,18 @@ This may be useful in some cases, for examples it is now possible to write somet
 <a href="#collapse-130" class="anchor"></a>collapse 1.3.0<small> 2020-08-11 </small>
 </h1>
 <p>collapse 1.3.0, released mid August 2020: <!-- , is another major update: --></p>
-<div id="changes-to-functionality-1" class="section level3">
+<div id="changes-to-functionality-2" class="section level3">
 <h3 class="hasAnchor">
-<a href="#changes-to-functionality-1" class="anchor"></a>Changes to Functionality</h3>
+<a href="#changes-to-functionality-2" class="anchor"></a>Changes to Functionality</h3>
 <ul>
 <li><p><code>dapply</code> and <code>BY</code> now drop all unnecessary attributes if <code>return = "matrix"</code> or <code>return = "data.frame"</code> are explicitly requested (the default <code>return = "same"</code> still seeks to preserve the input data structure).</p></li>
 <li><p><code>unlist2d</code> now saves integer rownames if <code>row.names = TRUE</code> and a list of matrices without rownames is passed, and <code>id.factor = TRUE</code> generates a normal factor not an ordered factor. It is however possible to write <code>id.factor = "ordered"</code> to get an ordered factor id.</p></li>
 <li><p><code>fdiff</code> argument <code>logdiff</code> renamed to <code>log</code>, and taking logs is now done in R (reduces size of C++ code and does not generate as many NaN’s). <code>logdiff</code> may still be used, but it may be deactivated in the future. Also in the matrix and data.frame methods for <code>flag</code>, <code>fdiff</code> and <code>fgrowth</code>, columns are only stub-renamed if more than one lag/difference/growth rate is computed.</p></li>
 </ul>
 </div>
-<div id="additions-1" class="section level3">
+<div id="additions-2" class="section level3">
 <h3 class="hasAnchor">
-<a href="#additions-1" class="anchor"></a>Additions</h3>
+<a href="#additions-2" class="anchor"></a>Additions</h3>
 <ul>
 <li><p>Added <code>fnth</code> for fast (grouped, weighted) n’th element/quantile computations.</p></li>
 <li><p>Added <code><a href="../reference/roworder.html">roworder(v)</a></code> and <code><a href="../reference/colorder.html">colorder(v)</a></code> for fast row and column reordering.</p></li>
@@ -254,13 +312,13 @@ This may be useful in some cases, for examples it is now possible to write somet
 <li><p><code>fmode</code> now has the option to compute min and max mode, the default is still simply the first mode.</p></li>
 <li><p><code>fwithin</code> now supports quasi-demeaning (added argument <code>theta</code>) and can thus be used to manually estimate random-effects models.</p></li>
 <li><p><code>funique</code> is now generic with a default vector and data.frame method, providing fast unique values and rows of data. The default was changed to <code>sort = FALSE</code>.</p></li>
-<li><p>The shortcut <code>gvr</code> was created for <code><a href="../reference/fselect,get_vars,add_vars.html">get_vars(..., regex = TRUE)</a></code>.</p></li>
+<li><p>The shortcut <code>gvr</code> was created for <code><a href="../reference/fselect,%20get_vars,%20add_vars.html">get_vars(..., regex = TRUE)</a></code>.</p></li>
 <li><p>A helper <code>.c</code> was introduced for non-standard concatenation (i.e. <code>.c(a, b) == c("a", "b")</code>).</p></li>
 </ul>
 </div>
-<div id="improvements-1" class="section level3">
+<div id="improvements-2" class="section level3">
 <h3 class="hasAnchor">
-<a href="#improvements-1" class="anchor"></a>Improvements</h3>
+<a href="#improvements-2" class="anchor"></a>Improvements</h3>
 <ul>
 <li><p><code>fmode</code> and <code>fNdistinct</code> have become a bit faster.</p></li>
 <li><p><code>fgroup_by</code> now preserves <em>data.table</em>’s.</p></li>
@@ -282,7 +340,7 @@ This may be useful in some cases, for examples it is now possible to write somet
 <p>collapse 1.2.1, released end of May 2020: <!-- , is a patch for v1.2.0: --></p>
 <ul>
 <li><p>Minor fixes for 1.2.0 issues that prevented correct installation on Mac OS X and a vignette rebuilding error on solaris.</p></li>
-<li><p><em>fmode.grouped_df</em> with groups and weights now saves the sum of the weights instead of the max (this makes more sense as the max only applies if all elements are unique).</p></li>
+<li><p><code>fmode.grouped_df</code> with groups and weights now saves the sum of the weights instead of the max (this makes more sense as the max only applies if all elements are unique).</p></li>
 </ul>
 </div>
     <div id="collapse-120" class="section level1">
@@ -290,9 +348,9 @@ This may be useful in some cases, for examples it is now possible to write somet
 <a href="#collapse-120" class="anchor"></a>collapse 1.2.0<small> 2020-05-19 </small>
 </h1>
 <p>collapse 1.2.0, released mid May 2020: <!-- , is a major update of the package - changes and additions: --></p>
-<div id="changes-to-functionality-2" class="section level3">
+<div id="changes-to-functionality-3" class="section level3">
 <h3 class="hasAnchor">
-<a href="#changes-to-functionality-2" class="anchor"></a>Changes to Functionality</h3>
+<a href="#changes-to-functionality-3" class="anchor"></a>Changes to Functionality</h3>
 <ul>
 <li><p><em>grouped_df</em> methods for fast statistical functions now always attach the grouping variables to the output in aggregations, unless argument <code>keep.group_vars = FALSE</code>. (formerly grouping variables were only attached if also present in the data. Code hinged on this feature should be adjusted)</p></li>
 <li><p><code>qF</code> <code>ordered</code> argument default was changed to <code>ordered = FALSE</code>, and the <code>NA</code> level is only added if <code>na.exclude = FALSE</code>. Thus <code>qF</code> now behaves exactly like <code>as.factor</code>.</p></li>
@@ -301,17 +359,17 @@ This may be useful in some cases, for examples it is now possible to write somet
 <li><p><code>GRP</code> argument <code>order</code> is depreciated in favor of argument <code>decreasing</code>. <code>order</code> can still be used but will be removed at some point.</p></li>
 </ul>
 </div>
-<div id="bug-fixes" class="section level3">
+<div id="bug-fixes-1" class="section level3">
 <h3 class="hasAnchor">
-<a href="#bug-fixes" class="anchor"></a>Bug Fixes</h3>
+<a href="#bug-fixes-1" class="anchor"></a>Bug Fixes</h3>
 <ul>
 <li>Fixed a bug in <code>flag</code> where unused factor levels caused a group size error.</li>
 </ul>
 <!-- It is still recommended to remove unused factor levels when programming with factors, some functions check for them, others not. For example `fmean(data, f)` will simply generate a missing row for each unused factor level. If in doubt, use safer `GRP` objects for grouped programming. A general level check for all functions will not be implemented as this requires an additional pass in some cases. -->
 </div>
-<div id="additions-2" class="section level3">
+<div id="additions-3" class="section level3">
 <h3 class="hasAnchor">
-<a href="#additions-2" class="anchor"></a>Additions</h3>
+<a href="#additions-3" class="anchor"></a>Additions</h3>
 <ul>
 <li>
 <p>Added a suite of functions for fast data manipulation:</p>
@@ -338,9 +396,9 @@ This may be useful in some cases, for examples it is now possible to write somet
 <li><p>Added a <code>Dlog</code> operator for faster access to log-differences.</p></li>
 </ul>
 </div>
-<div id="improvements-2" class="section level3">
+<div id="improvements-3" class="section level3">
 <h3 class="hasAnchor">
-<a href="#improvements-2" class="anchor"></a>Improvements</h3>
+<a href="#improvements-3" class="anchor"></a>Improvements</h3>
 <ul>
 <li><p>Faster grouping with <code>GRP</code> and faster factor generation with added radix method + automatic dispatch between hash and radix method. <code>qF</code> is now ~ 5x faster than <code>as.factor</code> on character and around 30x faster on numeric data. Also <code>qG</code> was enhanced.</p></li>
 <li><p>Further slight speed tweaks here and there.</p></li>
@@ -360,7 +418,7 @@ This may be useful in some cases, for examples it is now possible to write somet
 <p>collapse 1.1.0 released early April 2020: <!--  - some small fixes and additions: --></p>
 <ul>
 <li><p>Fixed remaining gcc10, LTO and valgrind issues in C/C++ code, and added some more tests (there are now ~ 5300 tests ensuring that <em>collapse</em> statistical functions perform as expected).</p></li>
-<li><p>Fixed the issue that supplying an unnamed list to <code><a href="../reference/GRP,fgroup_by.html">GRP()</a></code>, i.e. <code><a href="../reference/GRP,fgroup_by.html">GRP(list(v1, v2))</a></code> would give an error. Unnamed lists are now automatically named ‘Group.1’, ‘Group.2’, etc…</p></li>
+<li><p>Fixed the issue that supplying an unnamed list to <code><a href="../reference/GRP,%20fgroup_by.html">GRP()</a></code>, i.e. <code><a href="../reference/GRP,%20fgroup_by.html">GRP(list(v1, v2))</a></code> would give an error. Unnamed lists are now automatically named ‘Group.1’, ‘Group.2’, etc…</p></li>
 <li><p>Fixed an issue where aggregating by a single id in <code><a href="../reference/collap.html">collap()</a></code> (i.e. <code><a href="../reference/collap.html">collap(data, ~ id1)</a></code>), the id would be coded as factor in the aggregated data.frame. All variables including id’s now retain their class and attributes in the aggregated data.</p></li>
 <li><p>Added weights (<code>w</code>) argument to <code>fsum</code> and <code>fprod</code>.</p></li>
 <li><p>Added an argument <code>mean = 0</code> to <code>fwithin / W</code>. This allows simple and grouped centering on an arbitrary mean, <code>0</code> being the default. For grouped centering <code>mean = "overall.mean"</code> can be specified, which will center data on the overall mean of the data. The logical argument <code>add.global.mean = TRUE</code> used to toggle this in <em>collapse</em> 1.0.0 is therefore depreciated.</p></li>

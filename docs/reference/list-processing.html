@@ -6,7 +6,7 @@
 <meta http-equiv="X-UA-Compatible" content="IE=edge">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-<title>List Processing — list-processing • collapse</title>
+<title>List Processing — A8-list-processing • collapse</title>
 
 
 <!-- jquery -->
@@ -39,7 +39,7 @@
 
 
 
-<meta property="og:title" content="List Processing — list-processing" />
+<meta property="og:title" content="List Processing — A8-list-processing" />
 <meta property="og:description" content="collapse provides the following set of functions to work with lists of R objects:
 Search and Identification
 is.regular checks whether an R object is either atomic or a list. A (nested) list composed of regular objects at each level of the list-tree is unlistable to an atomic vector - checked by is.unlistable.
@@ -55,10 +55,10 @@ Splitting
 rsplit recursively splits a vector or data frame into subsets according to combinations of (multiple) vectors / factors - by default returning a (nested) list. If flatten = TRUE, the list is flattened yielding the same result as split. rsplit is also faster than split, particularly for data frames.
 
 Apply Functions
-rapply2d is a recursive version of base::lapply with two key differences to base::rapply: (1) Data frames are considered as atomic objects, not as (sub-)lists, and (2) the result is not simplified.
+rapply2d is a recursive version of lapply with two key differences to rapply: (1) Data frames are considered as atomic objects, not as (sub-)lists, and (2) the result is not simplified.
 
 Unlisting / Row-Binding
-unlist2d efficiently unlists unlistable lists in 2-dimensions and creates a data frame (or data.table) representation of the list (unlike base::unlist which returns an atomic vector). This is done by recursively flattening and row-binding R objects in the list (using data.table::rbindlist) while creating identifier columns for each level of the list-tree and (optionally) saving the row-names of the objects in a separate column. unlist2d can thus also be understood as a recursive generalization of do.call(rbind, l), for lists of vectors, data frames, arrays or heterogeneous objects.
+unlist2d efficiently unlists unlistable lists in 2-dimensions and creates a data frame (or data.table) representation of the list (unlike unlist which returns an atomic vector). This is done by recursively flattening and row-binding R objects in the list (using data.table::rbindlist) while creating identifier columns for each level of the list-tree and (optionally) saving the row-names of the objects in a separate column. unlist2d can thus also be understood as a recursive generalization of do.call(rbind, l), for lists of vectors, data frames, arrays or heterogeneous objects.
 
 
 " />
@@ -93,7 +93,7 @@ unlist2d efficiently unlists unlistable lists in 2-dimensions and creates a data
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">collapse</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">1.4.2</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">1.5.0</span>
       </span>
     </div>
 
@@ -156,13 +156,13 @@ unlist2d efficiently unlists unlistable lists in 2-dimensions and creates a data
 <li><p><code><a href='has_elem, get_elem.html'>get_elem</a></code> extracts elements from a list using element names, regular expressions applied to element names, a function applied to the elements, or element-indices used to subset the lowest-level sub-lists. by default the result is presented as a simplified list containing all matching elements. With the <code>keep.tree</code> option however <code><a href='has_elem, get_elem.html'>get_elem</a></code> can also be used to subset lists i.e. maintain the full tree but cut off non-matching branches.</p></li>
 </ul></li>
 <li><p><b>Splitting</b></p><ul>
-<li><p><code>rsplit</code> recursively splits a vector or data frame into subsets according to combinations of (multiple) vectors / factors - by default returning a (nested) list. If <code>flatten = TRUE</code>, the list is flattened yielding the same result as <code><a href='https://rdrr.io/pkg/data.table/man/split.html'>split</a></code>. <code>rsplit</code> is also faster than <code><a href='https://rdrr.io/pkg/data.table/man/split.html'>split</a></code>, particularly for data frames.</p></li>
+<li><p><code><a href='rsplit.html'>rsplit</a></code> recursively splits a vector or data frame into subsets according to combinations of (multiple) vectors / factors - by default returning a (nested) list. If <code>flatten = TRUE</code>, the list is flattened yielding the same result as <code><a href='https://rdrr.io/pkg/data.table/man/split.html'>split</a></code>. <code>rsplit</code> is also faster than <code><a href='https://rdrr.io/pkg/data.table/man/split.html'>split</a></code>, particularly for data frames.</p></li>
 </ul></li>
 <li><p><b>Apply Functions</b></p><ul>
-<li><p><code><a href='rapply2d.html'>rapply2d</a></code> is a recursive version of <code><a href='https://rdrr.io/r/base/lapply.html'>base::lapply</a></code> with two key differences to <code><a href='https://rdrr.io/r/base/rapply.html'>base::rapply</a></code>: (1) Data frames are considered as atomic objects, not as (sub-)lists, and (2) the result is not simplified.</p></li>
+<li><p><code><a href='rapply2d.html'>rapply2d</a></code> is a recursive version of <code><a href='https://rdrr.io/r/base/lapply.html'>lapply</a></code> with two key differences to <code><a href='https://rdrr.io/r/base/rapply.html'>rapply</a></code>: (1) Data frames are considered as atomic objects, not as (sub-)lists, and (2) the result is not simplified.</p></li>
 </ul></li>
 <li><p><b>Unlisting / Row-Binding</b></p><ul>
-<li><p><code><a href='unlist2d.html'>unlist2d</a></code> efficiently unlists unlistable lists in 2-dimensions and creates a data frame (or <em>data.table</em>) representation of the list (unlike <code><a href='https://rdrr.io/r/base/unlist.html'>base::unlist</a></code> which returns an atomic vector). This is done by recursively flattening and row-binding R objects in the list (using <code><a href='https://rdrr.io/pkg/data.table/man/rbindlist.html'>data.table::rbindlist</a></code>) while creating identifier columns for each level of the list-tree and (optionally) saving the row-names of the objects in a separate column. <code><a href='unlist2d.html'>unlist2d</a></code> can thus also be understood as a recursive generalization of <code><a href='https://rdrr.io/r/base/do.call.html'>do.call(rbind, l)</a></code>, for lists of vectors, data frames, arrays or heterogeneous objects.</p></li>
+<li><p><code><a href='unlist2d.html'>unlist2d</a></code> efficiently unlists unlistable lists in 2-dimensions and creates a data frame (or <em>data.table</em>) representation of the list (unlike <code><a href='https://rdrr.io/r/base/unlist.html'>unlist</a></code> which returns an atomic vector). This is done by recursively flattening and row-binding R objects in the list (using <code><a href='https://rdrr.io/pkg/data.table/man/rbindlist.html'>data.table::rbindlist</a></code>) while creating identifier columns for each level of the list-tree and (optionally) saving the row-names of the objects in a separate column. <code><a href='unlist2d.html'>unlist2d</a></code> can thus also be understood as a recursive generalization of <code><a href='https://rdrr.io/r/base/do.call.html'>do.call(rbind, l)</a></code>, for lists of vectors, data frames, arrays or heterogeneous objects.</p></li>
 </ul></li>
 </ul>
 

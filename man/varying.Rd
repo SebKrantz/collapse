@@ -26,14 +26,14 @@ varying(x, ...)
 \method{varying}{pdata.frame}(x, effect = 1L, cols = NULL, any_group = TRUE, use.g.names = TRUE,
         drop = TRUE, ...)
 
-# Methods for compatibility with dplyr:
+# Methods for grouped data frame / compatibility with dplyr:
 
 \method{varying}{grouped_df}(x, any_group = TRUE, use.g.names = FALSE, drop = TRUE,
         keep.group_vars = TRUE, ...)
 }
 %- maybe also 'usage' for other objects documented here.
 \arguments{
-\item{x}{a vector, matrix, data.frame, panel series (\code{plm::pseries}), panel data frame (\code{plm::pdata.frame}) or grouped tibble (\code{dplyr::grouped_df}). Data must not be numeric.}
+\item{x}{a vector, matrix, data.frame, panel series (\code{plm::pseries}), panel data frame (\code{plm::pdata.frame}) or grouped data frame (class 'grouped_df'). Data must not be numeric.}
 
 \item{g}{a factor, \code{GRP} object, atomic vector (internally converted to factor) or a list of vectors / factors (internally converted to a \code{GRP} object) used to group \code{x}.}
 

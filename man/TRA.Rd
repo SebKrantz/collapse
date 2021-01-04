@@ -22,7 +22,7 @@ TRA(x, STATS, FUN = "-", ...)
 \method{TRA}{grouped_df}(x, STATS, FUN = "-", keep.group_vars = TRUE, ...)
 }
 \arguments{
-  \item{x}{a atomic vector, matrix, data frame or grouped tibble (\code{dplyr::grouped_df}).}
+  \item{x}{a atomic vector, matrix, data frame or grouped data frame (class 'grouped_df').}
   \item{STATS}{a matching set of summary statistics. See Details and Examples.}
   \item{FUN}{an integer or character string indicating the operation to perform. There are 10 supported operations:
     \tabular{lllll}{\emph{ Int. }   \tab\tab \emph{ String }   \tab\tab \emph{ Description }  \cr
@@ -56,7 +56,7 @@ Correct computation requires that \code{g} as used in \code{fmean} and \code{g} 
 
 %In contrast to the other methods, \code{TRA.grouped_df} matches column names exactly, thus \code{STATS} can be any subset of aggregated columns in \code{x} in any order, with or without grouping columns. \code{TRA.grouped_df} will transform the columns in \code{x} with their aggregated versions matched from \code{STATS} (ignoring grouping columns found in \code{x} or \code{STATS} and columns in \code{x} not found in \code{STATS}), and return \code{x} again.
 
-If \code{x} is a grouped tibble (\code{grouped_df}), \code{TRA} matches the columns of \code{x} and \code{STATS} and also checks for grouping columns in \code{x} and \code{STATS}. \code{TRA.grouped_df} will then only transform those columns in \code{x} for which matching counterparts were found in \code{STATS} (exempting grouping columns) and return \code{x} again (with columns in the same order). If \code{keep.group_vars = FALSE}, the grouping columns are dropped after computation, however the "groups" attribute is not dropped (it can be removed using \code{dplyr::ungroup()}).
+If \code{x} is a grouped data frame ('grouped_df'), \code{TRA} matches the columns of \code{x} and \code{STATS} and also checks for grouping columns in \code{x} and \code{STATS}. \code{TRA.grouped_df} will then only transform those columns in \code{x} for which matching counterparts were found in \code{STATS} (exempting grouping columns) and return \code{x} again (with columns in the same order). If \code{keep.group_vars = FALSE}, the grouping columns are dropped after computation, however the "groups" attribute is not dropped (it can be removed using \code{\link[=fungroup]{fungroup()}} or \code{dplyr::ungroup()}).
 }
 \value{
 \code{x} with columns replaced or swept out using \code{STATS}, (optionally) grouped by \code{g}.
@@ -100,6 +100,8 @@ iris \%>\%  group_by(Species) \%>\% fmean(TRA = "-")        # Same thing
 iris \%>\%  group_by(Species) \%>\% TRA(fmean(.)[c(2,4)])   # Only transforming 2 columns
 iris \%>\%  group_by(Species) \%>\% TRA(fmean(.)[c(2,4)],   # Dropping species column
                             keep.group_vars = FALSE)
+
+iris \%>\%  fgroup_by(Species) \%>\% TRA(fmean(.))  # Faster collapse grouping...
 }
 }
 % Add one or more standard keywords, see file 'KEYWORDS' in the R documentation directory.

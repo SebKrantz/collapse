@@ -73,7 +73,7 @@ The TRA argument can further be used to transform x using its (grouped, weighted
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">collapse</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">1.4.2</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">1.5.0</span>
       </span>
     </div>
 
@@ -152,7 +152,7 @@ The <code><a href='TRA.html'>TRA</a></code> argument can further be used to tran
     <colgroup><col class="name" /><col class="desc" /></colgroup>
     <tr>
       <th>x</th>
-      <td><p>a vector, matrix, data frame or grouped tibble (<code><a href='https://dplyr.tidyverse.org/reference/grouped_df.html'>dplyr::grouped_df</a></code>).</p></td>
+      <td><p>a vector, matrix, data frame or grouped data frame (class 'grouped_df').</p></td>
     </tr>
     <tr>
       <th>g</th>
@@ -211,13 +211,13 @@ If <code>na.rm = FALSE</code>, <code>NA</code> is not removed but treated as any
 <p>The weighted mode is computed by summing up the weights for all distinct values and choosing the value with the largest sum. If <code>na.rm = TRUE</code>, missing values will be removed from both <code>x</code> and <code>w</code> i.e. utilizing only <code>x[complete.cases(x,w)]</code> and <code>w[complete.cases(x,w)]</code>.</p>
 <p>It is possible that multiple values have the same mode that is the maximum frequency or sum of weights. Typical cases are simply when all values are either all the same or all distinct. In such cases, the default option <code>ties = "first"</code> returns the first occurring value in the data reaching the maximum frequency count or sum of weights. For example in a sample <code>x = c(1, 3, 2, 2, 4, 4, 1, 7)</code>, the first mode is 2 as <code>fmode</code> goes through the data from left to right. It is also possible to take the minimum or maximum mode, i.e. <code>fmode(x, ties = "min")</code> returns 1, and <code>fmode(x, ties = "max")</code> returns 4. It should be noted that options <code>ties = "min"</code> and <code>ties = "max"</code> work well for numeric/integer/factor data as well as date/time variables, but give unintuitive results for character data (no strict alphabetic sorting, similar to using <code>&lt;</code> and <code>&gt;</code> to compare character values in R). These options are also best avoided if missing values are counted (<code>na.rm = FALSE</code>) since no proper logical comparison with missing values is possible: With numeric data it depends, since in C++ any comparison with <code>NA_real_</code> evaluates to <code>FALSE</code>, <code>NA_real_</code> is chosen as the min or max mode only if it is also the first mode, and never otherwise. For integer data, <code>NA_integer_</code> is stored as the smallest integer in C++, so it will always be chosen as the min mode and never as the max mode. For character data, <code>NA_character_</code> is stored as the string <code>"NA"</code> in C++ and thus the behavior depends on the other character content.</p>
 <p>This all seamlessly generalizes to grouped computations, which are performed by mapping the data to a sparse-array and then going group-by group.</p>
-<p><code>fmode</code> preserves all the attributes of the objects it is applied to (apart from names or row-names which are adjusted as necessary in grouped operations). If a data frame is passed to <code>fmode</code> and <code>drop = TRUE</code> (the default), <code><a href='https://rdrr.io/r/base/unlist.html'>base::unlist</a></code> will be called on the result, which might not be sensible depending on the data at hand.</p>
+<p><code>fmode</code> preserves all the attributes of the objects it is applied to (apart from names or row-names which are adjusted as necessary in grouped operations). If a data frame is passed to <code>fmode</code> and <code>drop = TRUE</code> (the default), <code><a href='https://rdrr.io/r/base/unlist.html'>unlist</a></code> will be called on the result, which might not be sensible depending on the data at hand.</p>
     <h2 class="hasAnchor" id="value"><a class="anchor" href="#value"></a>Value</h2>
 
     <p>The (<code>w</code> weighted) statistical mode of <code>x</code>, grouped by <code>g</code>, or (if <code><a href='TRA.html'>TRA</a></code> is used) <code>x</code> transformed by its mode, grouped by <code>g</code>. See also Details.</p>
     <h2 class="hasAnchor" id="see-also"><a class="anchor" href="#see-also"></a>See also</h2>
 
-    <div class='dont-index'><p><code><a href='fmean.html'>fmean</a></code>, <code><a href='fmedian.html'>fmedian</a></code>, <a href='fast-statistical-functions.html'>Fast Statistical Functions</a>, <a href='index.html'>Collapse Overview</a></p></div>
+    <div class='dont-index'><p><code><a href='fmean.html'>fmean</a></code>, <code><a href='fmedian.html'>fmedian</a></code>, <a href='A1-fast-statistical-functions.html'>Fast Statistical Functions</a>, <a href='index.html'>Collapse Overview</a></p></div>
 
     <h2 class="hasAnchor" id="examples"><a class="anchor" href="#examples"></a>Examples</h2>
     <pre class="examples"><div class='input'><span class='va'>x</span> <span class='op'>&lt;-</span> <span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span><span class='op'>(</span><span class='fl'>1</span>, <span class='fl'>3</span>, <span class='fl'>2</span>, <span class='fl'>2</span>, <span class='fl'>4</span>, <span class='fl'>4</span>, <span class='fl'>1</span>, <span class='fl'>7</span>, <span class='cn'>NA</span>, <span class='cn'>NA</span>, <span class='cn'>NA</span><span class='op'>)</span>
@@ -250,7 +250,7 @@ If <code>na.rm = FALSE</code>, <code>NA</code> is not removed but treated as any
 #&gt; attr(,"label")
 #&gt; [1] "Is OECD Member Country?"</div><div class='input'>                                  <span class='co'># ..all the above can also be performed grouped and weighted</span>
 <span class='co'>## matrix method</span>
-<span class='va'>m</span> <span class='op'>&lt;-</span> <span class='fu'><a href='quick-conversion.html'>qM</a></span><span class='op'>(</span><span class='va'>airquality</span><span class='op'>)</span>
+<span class='va'>m</span> <span class='op'>&lt;-</span> <span class='fu'><a href='A4-quick-conversion.html'>qM</a></span><span class='op'>(</span><span class='va'>airquality</span><span class='op'>)</span>
 <span class='fu'>fmode</span><span class='op'>(</span><span class='va'>m</span><span class='op'>)</span>
 </div><div class='output co'>#&gt;   Ozone Solar.R    Wind    Temp   Month     Day 
 #&gt;    23.0   259.0    11.5    81.0     5.0     1.0 </div><div class='input'><span class='fu'>fmode</span><span class='op'>(</span><span class='va'>m</span>, na.rm <span class='op'>=</span> <span class='cn'>FALSE</span><span class='op'>)</span>         <span class='co'># NA frequency is also counted</span>

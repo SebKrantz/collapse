@@ -26,7 +26,7 @@ fmode(x, \dots)
       ties = "first", \dots)
 }
 \arguments{
-\item{x}{a vector, matrix, data frame or grouped tibble (\code{dplyr::grouped_df}).}
+\item{x}{a vector, matrix, data frame or grouped data frame (class 'grouped_df').}
 
 \item{g}{a factor, \code{\link{GRP}} object, atomic vector (internally converted to factor) or a list of vectors / factors (internally converted to a \code{\link{GRP}} object) used to group \code{x}.}
 
@@ -69,7 +69,7 @@ It is possible that multiple values have the same mode that is the maximum frequ
 
 This all seamlessly generalizes to grouped computations, which are performed by mapping the data to a sparse-array and then going group-by group.
 
-\code{fmode} preserves all the attributes of the objects it is applied to (apart from names or row-names which are adjusted as necessary in grouped operations). If a data frame is passed to \code{fmode} and \code{drop = TRUE} (the default), \code{base::unlist} will be called on the result, which might not be sensible depending on the data at hand.
+\code{fmode} preserves all the attributes of the objects it is applied to (apart from names or row-names which are adjusted as necessary in grouped operations). If a data frame is passed to \code{fmode} and \code{drop = TRUE} (the default), \code{\link{unlist}} will be called on the result, which might not be sensible depending on the data at hand.
 }
 \value{
 The (\code{w} weighted) statistical mode of \code{x}, grouped by \code{g}, or (if \code{\link{TRA}} is used) \code{x} transformed by its mode, grouped by \code{g}. See also Details.

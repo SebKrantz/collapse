@@ -57,7 +57,7 @@ G(x, n = 1, diff = 1, \dots)
 \method{G}{pdata.frame}(x, n = 1, diff = 1, cols = is.numeric, fill = NA, logdiff = FALSE,
   scale = 100, power = 1, stubs = TRUE, keep.ids = TRUE, \dots)
 
-# Methods for compatibility with dplyr:
+# Methods for grouped data frame / compatibility with dplyr:
 
 \method{fgrowth}{grouped_df}(x, n = 1, diff = 1, t = NULL, fill = NA, logdiff = FALSE,
         scale = 100, power = 1, stubs = length(n) + length(diff) > 2L,
@@ -66,19 +66,19 @@ G(x, n = 1, diff = 1, \dots)
   scale = 100, power = 1, stubs = TRUE, keep.ids = TRUE, \dots)
 }
 \arguments{
-  \item{x}{a numeric vector, matrix, data frame, panel series (\code{plm::pseries}), panel data frame (\code{plm::pdata.frame}) or grouped tibble (\code{dplyr::grouped_df}).}
+  \item{x}{a numeric vector, matrix, data frame, panel series (\code{plm::pseries}), panel data frame (\code{plm::pdata.frame}) or grouped data frame (class 'grouped_df').}
   \item{n}{integer. A vector indicating the number of lags or leads.}
   \item{diff}{integer. A vector of integers > 1 indicating the order of taking growth rates, e.g. \code{diff = 2} means computing the growth rate of the growth rate.}
   \item{g}{a factor, \code{\link{GRP}} object, atomic vector (internally converted to factor) or a list of vectors / factors (internally converted to a \code{\link{GRP}} object) used to group \code{x}.}
   \item{by}{\emph{data.frame method}: Same as \code{g}, but also allows one- or two-sided formulas i.e. \code{~ group1} or \code{var1 + var2 ~ group1 + group2}. See Examples.}
-  \item{t}{same input as \code{g/by}, to indicate the time-variable. For safe computation of growth rates on unordered time series and panels. Data Frame method also allows one-sided formula i.e. \code{~time}. grouped_df method supports lazy-evaluation i.e. \code{time} (no quotes).}
+  \item{t}{same input as \code{g/by}, to indicate the time-variable(s). For safe computation of growth rates on unordered time series and panels. Data Frame method also allows one-sided formula i.e. \code{~time}. grouped_df method supports lazy-evaluation i.e. \code{time} (no quotes).}
   \item{cols}{\emph{data.frame method}: Select columns to compute growth rates using a function, column names, indices or a logical vector. Default: All numeric variables. \emph{Note}: \code{cols} is ignored if a two-sided formula is passed to \code{by}.}
   \item{fill}{value to insert when vectors are shifted. Default is \code{NA}. }
   \item{logdiff}{logical. Compute log-difference growth rates instead of exact growth rates. See Details.}
   \item{scale}{logical. Scale factor post-applied to growth rates, default is 100 which gives growth rates in percentage terms. See Details.}
   \item{power}{numeric. Apply a power to annualize or compound growth rates e.g. \code{fgrowth(AirPassengers, 12, power = 1/12)} is equivalent to \code{((AirPassengers/flag(AirPassengers, 12))^(1/12)-1)*100}.}
   \item{stubs}{logical. \code{TRUE} will rename all computed columns by adding a prefix "L\code{n}G\code{diff}." / "F\code{n}G\code{diff}.", or "L\code{n}Dlog\code{diff}." / "F\code{n}Dlog\code{diff}." if \code{logdiff = TRUE}.}
-  \item{keep.ids}{\emph{data.frame / pdata.frame / grouped_df methods}: Logical. Drop all panel-identifiers from the output (which includes all variables passed to \code{by} or \code{t}). \emph{Note}: For panel data frames and grouped tibbles identifiers are dropped, but the 'index' / 'groups' attributes are kept.}
+  \item{keep.ids}{\emph{data.frame / pdata.frame / grouped_df methods}: Logical. Drop all panel-identifiers from the output (which includes all variables passed to \code{by} or \code{t}). \emph{Note}: For grouped / panel data frames identifiers are dropped, but the 'groups' / 'index' attributes are kept.}
   \item{\dots}{arguments to be passed to or from other methods.}
 }
 \details{

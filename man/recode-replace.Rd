@@ -12,7 +12,7 @@ Recode and Replace Values in Matrix-Like Objects
 A small suite of functions to efficiently perform common recoding and replacing tasks in matrix-like objects (vectors, matrices, arrays, data frames, lists of atomic objects):
 \itemize{
 \item \code{recode_num} and \code{recode_char} can be used to efficiently recode multiple numeric or character values, respectively. The syntax is inspired by \code{dplyr::recode}, but the functionality is enhanced in the following respects: (1) they are faster than \code{dplyr::recode}, (2) when passed a data frame / list, all appropriately typed columns will be recoded. (3) They preserve the attributes of the data object and of columns in a data frame / list, and (4) \code{recode_char} also supports regular expression matching using \code{\link{grepl}}. \emph{Note} that simple replacing tasks on a vector can also effectively be handled by \code{data.table::fcase} and \code{data.table::fifelse}.
-\item \code{replace_NA} efficiently replaces \code{NA/NaN} with a value. data can be multi-typed. For numeric data a faster and more versatile alternative is provided by \code{data.table::nafill} and \code{data.table::setnafill}.
+\item \code{replace_NA} efficiently replaces \code{NA/NaN} with a value (default is \code{0L}). data can be multi-typed. For numeric data a faster and more versatile alternative is provided by \code{data.table::nafill} and \code{data.table::setnafill}.
 \item \code{replace_Inf} replaces \code{Inf/-Inf} (or optionally \code{NaN/Inf/-Inf}) with a value (default is \code{NA}). \code{replace_Inf} skips non-numeric columns in a data frame.
 \item \code{replace_outliers} replaces values falling outside a 1- or 2-sided numeric threshold or outside a certain number of column- standard deviations with a value (default is \code{NA}). \code{replace_outliers} skips non-numeric columns in a data frame.
 }
@@ -23,7 +23,7 @@ recode_num(X, \dots, default = NULL, missing = NULL)
 recode_char(X, \dots, default = NULL, missing = NULL, regex = FALSE,
             ignore.case = FALSE, fixed = FALSE)
 
-replace_NA(X, value)
+replace_NA(X, value = 0L)
 
 replace_Inf(X, value = NA, replace.nan = FALSE)
 

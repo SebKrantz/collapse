@@ -409,7 +409,7 @@ GRP.grouped_df <- function(X, ..., return.groups = TRUE, call = TRUE) {
   ng <- length(gr)
   gs <- lengths(gr, FALSE)
   return(`oldClass<-`(list(N.groups = ng, # The cpp here speeds up things a lot !!
-                        group.id = .Call(Cpp_groups2GRP, gr, fnrow2(X), gs),  # Old: rep(seq_len(ng), gs)[order(unlist(gr, FALSE, FALSE))], # .Internal(radixsort(TRUE, FALSE, FALSE, TRUE, .Internal(unlist(gr, FALSE, FALSE))))
+                        group.id = .Call(C_groups2GRP, gr, fnrow2(X), gs),  # Old: rep(seq_len(ng), gs)[order(unlist(gr, FALSE, FALSE))], # .Internal(radixsort(TRUE, FALSE, FALSE, TRUE, .Internal(unlist(gr, FALSE, FALSE))))
                         group.sizes = gs,
                         groups = if(return.groups) g[-lg] else NULL, # better reclass afterwards ?
                         group.vars = names(g)[-lg],
@@ -433,8 +433,8 @@ radixfact <- function(x, sort, ord, fact, naincl, keep, retgrp = FALSE) {
       attr(f, "levels") <- if(attr(o, "sorted")) unattrib(tochar(.Call(C_subsetVector, x, st))) else
             unattrib(tochar(.Call(C_subsetVector, x, o[st]))) # use C_subsetvector ?
     } else {
-      attr(f, "levels") <- if(attr(o, "sorted")) unattrib(tochar(na_rm(.Call(C_subsetVector, x, st)))) else
-            unattrib(tochar(na_rm(.Call(C_subsetVector, x, o[st]))))
+      attr(f, "levels") <- if(attr(o, "sorted")) unattrib(na_rm(tochar(.Call(C_subsetVector, x, st)))) else
+            unattrib(na_rm(tochar(.Call(C_subsetVector, x, o[st]))))
     }
     oldClass(f) <- c(if(ord) "ordered", "factor", if(naincl) "na.included")
   } else {
