@@ -125,7 +125,7 @@
 
     <div class="ref-description">
     <p><code>flag</code> is an S3 generic to compute (sequences of) lags and leads. <code>L</code> and <code>F</code> are wrappers around <code>flag</code> representing the lag- and lead-operators, such that <code>L(x,-1) = F(x,1) = F(x)</code> and <code>L(x,-3:3) = F(x,3:-3)</code>. <code>L</code> and <code>F</code> provide more flexibility than <code>flag</code> when applied to data frames (i.e.  column subsetting, formula input and id-variable-preservation capabilities...), but are otherwise identical.</p>
-<p>(<code>flag</code> is more of a programmers function in style of the <a href='A1-fast-statistical-functions.html'>Fast Statistical Functions</a> while <code>L</code> and <code>F</code> are more practical to use in regression formulas or for computations on data frames.)</p>
+<p>(<code>flag</code> is more of a programmers function in style of the <a href='fast-statistical-functions.html'>Fast Statistical Functions</a> while <code>L</code> and <code>F</code> are more practical to use in regression formulas or for computations on data frames.)</p>
     </div>
 
     <pre class="usage"><span class='fu'>flag</span><span class='op'>(</span><span class='va'>x</span>, n <span class='op'>=</span> <span class='fl'>1</span>, <span class='va'>...</span><span class='op'>)</span>
