@@ -16,9 +16,9 @@ flm <- function(y, X, w = NULL, add.icpt = FALSE, #  sparse = FALSE,
                 return.raw = FALSE, # only.coef
                 method = c("lm", "solve", "qr", "arma", "chol", "eigen"),
                 eigen.method = 3L, ...) {
+  if(add.icpt) X <- cbind(`(Intercept)` = 1, X)
   n <- dim(X)[1L]
   if(n != NROW(y)) stop("NROW(y) must match nrow(X)")
-  if(add.icpt) X <- cbind(`(Intercept)` = 1, X)
   # if(sparse) X <- as(X, "dgCMatrix") # what about y ??
   if(length(w)) {
     if(length(w) != n) stop("w must be numeric and length(w) == nrow(X)")

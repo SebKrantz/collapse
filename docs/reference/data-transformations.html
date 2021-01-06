@@ -153,7 +153,7 @@ STD, W, B, HDW, HDB, L, D, Dlog and G are parsimonious wrappers around the f- fu
     <div class="ref-description">
     <p><em>collapse</em> provides an ensemble of functions to perform common data transformations efficiently and user friendly:</p><ul>
 <li><p><code><a href='dapply.html'>dapply</a></code> <b>applies functions to rows or columns</b> of matrices and data frames, preserving the data format.</p></li>
-<li><p><code><a href='BY.html'>BY</a></code> is an S3 generic for <b>Split-Apply-Combine computing</b> and can perform aggregation as well as grouped transformations (for aggregation please also see <code><a href='collap.html'>collap</a></code> and the <a href='fast-statistical-functions.html'>Fast Statistical Functions</a>).</p></li>
+<li><p><code><a href='BY.html'>BY</a></code> is an S3 generic for <b>Split-Apply-Combine computing</b> and can perform aggregation as well as grouped transformations (for aggregation please also see <code><a href='collap.html'>collap</a></code> and the <a href='A1-fast-statistical-functions.html'>Fast Statistical Functions</a>).</p></li>
 <li><p>A set of arithmetic operators facilitates <b>row-wise</b> <code><a href='arithmetic.html'>%rr%</a></code>, <code><a href='arithmetic.html'>%r+%</a></code>, <code><a href='arithmetic.html'>%r-%</a></code>, <code><a href='arithmetic.html'>%r*%</a></code>, <code><a href='arithmetic.html'>%r/%</a></code> and
 <b>column-wise</b> <code><a href='arithmetic.html'>%cr%</a></code>, <code><a href='arithmetic.html'>%c+%</a></code>, <code><a href='arithmetic.html'>%c-%</a></code>, <code><a href='arithmetic.html'>%c*%</a></code>, <code><a href='arithmetic.html'>%c/%</a></code> <b>replacing and sweeping operations</b> involving a vector and a matrix or data frame / list.</p></li>
 <li><p><code><a href='TRA.html'>TRA</a></code> is a more advanced S3 generic to efficiently perform <b>(groupwise) replacing and sweeping out of statistics</b>. <!-- %The basic syntax is \code{TRA(x, xag, g)} where \code{x} is data to be transformed, \code{xag} is some set of aggregate statistics to tranform \code{x} and \code{g} is an optional grouping vector for grouped transformations. -->
@@ -171,7 +171,7 @@ Supported operations are:</p><table class='table'>
 <tr><td>9</td><td></td><td>"%%"</td><td></td><td>modulus</td></tr>
 <tr><td>10</td><td></td><td>"-%%"</td><td></td><td>subtract modulus</td></tr>
 </table>
-<p>All of <em>collapse</em>'s <a href='fast-statistical-functions.html'>Fast Statistical Functions</a> have a built-in <code>TRA</code> argument for faster access (i.e. you can compute (groupwise) statistics and use them to transform your data with a single function call).</p></li>
+<p>All of <em>collapse</em>'s <a href='A1-fast-statistical-functions.html'>Fast Statistical Functions</a> have a built-in <code>TRA</code> argument for faster access (i.e. you can compute (groupwise) statistics and use them to transform your data with a single function call).</p></li>
 <li><p><code><a href='fscale.html'>fscale/STD</a></code> is an S3 generic to perform (groupwise and / or weighted) <b>scaling / standardizing</b> of data and is orders of magnitude faster than <code><a href='https://rdrr.io/r/base/scale.html'>scale</a></code>.</p></li>
 <li><p><code><a href='fbetween, fwithin.html'>fwithin/W</a></code> is an S3 generic to efficiently perform (groupwise and / or weighted) <b>within-transformations / demeaning / centering</b> of data. Similarly <code><a href='fbetween, fwithin.html'>fbetween/B</a></code> computes (groupwise and / or weighted) <b>between-transformations / averages</b> (also a lot faster than <code><a href='https://rdrr.io/r/stats/ave.html'>ave</a></code>).</p></li>
 <li><p><code><a href='fHDbetween, fHDwithin.html'>fHDwithin/HDW</a></code>, shorthand for 'higher-dimensional within transform', is an S3 generic to efficiently <b>center data on multiple groups and partial-out linear models</b> (possibly involving many levels of fixed effects). In other words, <code><a href='fHDbetween, fHDwithin.html'>fHDwithin/HDW</a></code> efficiently computes <b>residuals</b> from (potentially complex) linear models. Similarly <code><a href='fHDbetween, fHDwithin.html'>fHDbetween/HDB</a></code>, shorthand for 'higher-dimensional between transformation', computes the corresponding means or <b>fitted values</b>.</p>
@@ -207,7 +207,7 @@ Supported operations are:</p><table class='table'>
 
     <h2 class="hasAnchor" id="see-also"><a class="anchor" href="#see-also"></a>See also</h2>
 
-    <div class='dont-index'><p><a href='index.html'>Collapse Overview</a>, <a href='fast-statistical-functions.html'>Fast Statistical Functions</a>, <a href='A7-time-series-panel-series.html'>Time Series and Panel Series</a></p></div>
+    <div class='dont-index'><p><a href='index.html'>Collapse Overview</a>, <a href='A1-fast-statistical-functions.html'>Fast Statistical Functions</a>, <a href='A7-time-series-panel-series.html'>Time Series and Panel Series</a></p></div>
 
   </div>
   <div class="col-md-3 hidden-xs hidden-sm" id="pkgdown-sidebar">
