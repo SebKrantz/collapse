@@ -1597,7 +1597,7 @@ SEXP Cradixsort(SEXP NA_last, SEXP decreasing, SEXP RETstrt, SEXP RETgs, SEXP SO
 
 
   /* When grouping, we round off doubles to account for imprecision */
-  setNumericRounding(retGrp ? 2 : 0);
+  setNumericRounding(0); // before: retGrp ? 2 : 0
 
   if (args == R_NilValue)
     return R_NilValue;
