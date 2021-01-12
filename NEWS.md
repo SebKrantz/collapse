@@ -28,7 +28,9 @@ A small patch for 1.5.0 that:
 
 <!-- Missing value removal is still done using *data.table* source code, so these functions are now equipped for large and complex linear prediction and partialling-out problems. To fully utilize them users must install *fixest*. -->
 
-* Vignettes were outsourced to the [website](<https://sebkrantz.github.io/collapse/articles/index.html>), and also made available as PDF versions for download there. This nearly halves the size of the source package, and should induce users to appreciate the built-in documentation. The website also makes for much more convenient reading and navigation of these book-style vignettes. 
+* Vignettes were outsourced to the [website](<https://sebkrantz.github.io/collapse/articles/index.html>). This nearly halves the size of the source package, and should induce users to appreciate the built-in documentation. The website also makes for much more convenient reading and navigation of these book-style vignettes. 
+
+<!-- , and also made available as PDF versions for download there -->
 
 ### Additions
 
