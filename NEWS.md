@@ -1,3 +1,11 @@
+# collapse 1.5.1
+A small patch for 1.5.0 that:
+
+* Fixes a numeric precision issue when grouping doubles (e.g. before `qF(wlddev$LIFEEX)` gave an error, now it works). 
+
+* Fixes a minor issue with `fHDwithin` when applied to *pseries* and `fill = FALSE`.
+
+
 # collapse 1.5.0
 *collapse* 1.5.0, released early January 2021, presents important refinements and some additional functionality. 
 
