@@ -420,8 +420,11 @@ GRP.grouped_df <- function(X, ..., return.groups = TRUE, call = TRUE) {
 
 is.qG <- function(x) inherits(x, "qG")
 
+# TODO: fix na_rm speed for character data...
+na_rm2 <- function(x, sort) if(!anyNA(x)) x else if(sort) x[-length(x)] else x[!is.na(x)]
+
 # TODO: what about NA last option ?
-# TODO: More efficient remove missing values ?
+
 radixfact <- function(x, sort, ord, fact, naincl, keep, retgrp = FALSE) {
   o <- .Call(C_radixsort, TRUE, FALSE, fact || naincl || retgrp, naincl, sort, pairlist(x))
   st <- attr(o, "starts")
@@ -433,8 +436,8 @@ radixfact <- function(x, sort, ord, fact, naincl, keep, retgrp = FALSE) {
       attr(f, "levels") <- if(attr(o, "sorted")) unattrib(tochar(.Call(C_subsetVector, x, st))) else
             unattrib(tochar(.Call(C_subsetVector, x, o[st]))) # use C_subsetvector ?
     } else {
-      attr(f, "levels") <- if(attr(o, "sorted")) unattrib(na_rm(tochar(.Call(C_subsetVector, x, st)))) else
-            unattrib(na_rm(tochar(.Call(C_subsetVector, x, o[st]))))
+      attr(f, "levels") <- if(attr(o, "sorted")) unattrib(tochar(na_rm2(.Call(C_subsetVector, x, st), sort))) else
+            unattrib(tochar(na_rm2(.Call(C_subsetVector, x, o[st]), sort)))
     }
     oldClass(f) <- c(if(ord) "ordered", "factor", if(naincl) "na.included")
   } else {
@@ -443,7 +446,7 @@ radixfact <- function(x, sort, ord, fact, naincl, keep, retgrp = FALSE) {
       if(naincl) {
          attr(f, "groups") <- if(attr(o, "sorted")) .Call(C_subsetVector, x, st) else .Call(C_subsetVector, x, o[st])
       } else {
-         attr(f, "groups") <- if(attr(o, "sorted")) na_rm(.Call(C_subsetVector, x, st)) else na_rm(.Call(C_subsetVector, x, o[st]))
+         attr(f, "groups") <- if(attr(o, "sorted")) na_rm2(.Call(C_subsetVector, x, st), sort) else na_rm2(.Call(C_subsetVector, x, o[st]), sort)
       }
     }
     oldClass(f) <- c(if(ord) "ordered", "qG", if(naincl) "na.included")

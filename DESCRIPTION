@@ -1,7 +1,7 @@
 Package: collapse
 Title: Advanced and Fast Data Transformation
-Version: 1.5.0
-Date: 2021-01-04
+Version: 1.5.1
+Date: 2021-01-12
 Authors@R: c(
            person("Sebastian", "Krantz", role = c("aut", "cre"), 
                   email = "sebastian.krantz@graduateinstitute.ch"),
@@ -55,6 +55,6 @@ LazyData: true
 Depends: R (>= 2.10)
 Imports: Rcpp (>= 1.0.1)
 LinkingTo: Rcpp
-Suggests: dplyr, plm, data.table, matrixStats, magrittr, fixest, vars, weights, 
+Suggests: dplyr, plm, data.table, matrixStats, magrittr, fixest, vars, weights, kit, 
           RcppArmadillo, RcppEigen, ggplot2, scales, microbenchmark, testthat, covr
 SystemRequirements: C++11

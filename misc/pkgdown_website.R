@@ -12,6 +12,7 @@ build_reference(examples = TRUE, topics = topics) # "collapse-package"
 Sys.setenv(NCRAN = "TRUE")
 Sys.setenv(RUNBENCH = "TRUE")
 build_articles(lazy = TRUE) # lazy = FALSE # Still do with NCRAN = TRUE
+build_article("collapse_and_plm")
 # Replace all A0-collapse-documentation.html with index.html !!
 # Also replace A1-, A2- etc.. -> nah, doesn't really help...
 # also replace / remove %20 (empty spaces) (nah...)

@@ -94,22 +94,22 @@
         <li>
   <a href="https://twitter.com/collapse_R" target="_blank">
     <span class="fa fa-twitter"></span>
-     
+
   </a>
 </li>
 <li>
   <a href="https://github.com/SebKrantz/collapse" target="_blank">
     <span class="fa fa-github"></span>
-     
+
   </a>
 </li>
       </ul>
-      
+
     </div><!--/.nav-collapse -->
   </div><!--/.container -->
 </div><!--/.navbar -->
 
-      
+
 
       </header>
 
@@ -120,6 +120,16 @@
       <small>Source: <a href='https://github.com/SebKrantz/collapse/blob/master/NEWS.md'><code>NEWS.md</code></a></small>
     </div>
 
+    <div id="collapse-151" class="section level1">
+<h1 class="page-header" data-toc-text="1.5.1">
+<a href="#collapse-151" class="anchor"></a>collapse 1.5.1<small> Unreleased </small>
+</h1>
+<p>A small patch for 1.5.0 that:</p>
+<ul>
+<li><p>Fixes a numeric precision issue when grouping doubles (e.g. before <code><a href="../reference/qF,%20qG,%20finteraction.html">qF(wlddev$LIFEEX)</a></code> gave an error, now it works).</p></li>
+<li><p>Fixes a minor issue with <code>fHDwithin</code> when applied to <em>pseries</em> and <code>fill = FALSE</code>.</p></li>
+</ul>
+</div>
     <div id="collapse-150" class="section level1">
 <h1 class="page-header" data-toc-text="1.5.0">
 <a href="#collapse-150" class="anchor"></a>collapse 1.5.0<small> 2021-01-04 </small>
@@ -148,7 +158,7 @@
 <li><p>For list processing functions like <code>get_elem</code>, <code>has_elem</code> etc. the default for the argument <code>DF.as.list</code> was changed from <code>TRUE</code> to <code>FALSE</code>. This means if a nested lists contains data frame’s, these data frame’s will not be searched for matching elements. This default also reflects the more common usage of these functions (extracting entire data frame’s or computed quantities from nested lists rather than searching / subsetting lists of data frame’s). The change also delivers a considerable performance gain.</p></li>
 </ul>
 <!-- Missing value removal is still done using *data.table* source code, so these functions are now equipped for large and complex linear prediction and partialling-out problems. To fully utilize them users must install *fixest*. --><ul>
-<li>Vignettes were outsourced to the <a href="https://sebkrantz.github.io/collapse/articles/index.html">website</a>, and also made available as PDF versions for download there. This nearly halves the size of the source package, and should induce users to appreciate the built-in documentation. The website also makes for much more convenient reading and navigation of these book-style vignettes.</li>
+<li>Vignettes were outsourced to the <a href="https://sebkrantz.github.io/collapse/articles/index.html">website</a>. This nearly halves the size of the source package, and should induce users to appreciate the built-in documentation. The website also makes for much more convenient reading and navigation of these book-style vignettes.</li>
 </ul>
 </div>
 <div id="additions" class="section level3">
@@ -214,9 +224,9 @@
 <em>Thorough and Controlled Object Conversions:</em> Quick conversion functions <code>qDF</code>, <code>qDT</code> and <code>qM</code> now have additional arguments <code>keep.attr</code> and <code>class</code> providing precise user control over object conversions in terms of classes and other attributes assigned / maintained. The default (<code>keep.attr = FALSE</code>) yields <em>hard</em> conversions removing all but essential attributes from the object. E.g. before <code><a href="../reference/A4-quick-conversion.html">qM(EuStockMarkets)</a></code> would just have returned <code>EuStockMarkets</code> (because <code><a href="https://rdrr.io/r/base/matrix.html">is.matrix(EuStockMarkets)</a></code> is <code>TRUE</code>) whereas now the time series class and ‘tsp’ attribute are removed. <code><a href="../reference/A4-quick-conversion.html">qM(EuStockMarkets, keep.attr = TRUE)</a></code> returns <code>EuStockMarkets</code> as before.</li>
 </ul>
 <!--
-In general `keep.attr = TRUE` gives a *soft* conversion were attributes necessary to establish the new data type ('dim', 'dimnames', 'names', 'row.names', 'class') are modified, but all other attributes are kept. 
-This may be useful in some cases, for examples it is now possible to write something like `mtcars %>% fgroup_by(cyl, vs, am) %>% qM(TRUE) %>% fmean(attr(.,"groups"))`. 
- 
+In general `keep.attr = TRUE` gives a *soft* conversion were attributes necessary to establish the new data type ('dim', 'dimnames', 'names', 'row.names', 'class') are modified, but all other attributes are kept.
+This may be useful in some cases, for examples it is now possible to write something like `mtcars %>% fgroup_by(cyl, vs, am) %>% qM(TRUE) %>% fmean(attr(.,"groups"))`.
+
  (ensuring that `qDF`, `qDT` and `qM` now truly behave like `as.data.frame`, `as.data.table` and `as.matrix`) --><ul>
 <li>
 <p><em>Smarter Attribute Handling:</em> Drawing on the guidance given in the R Internals manual, the following standards for optimal non-destructive attribute handling are formalized and communicated to the user:</p>
@@ -228,7 +238,7 @@ This may be useful in some cases, for examples it is now possible to write somet
 </ul>
 </li>
 </ul>
-<!-- This simple but thorough (and now formalized) system of attribute handling should be optimal in more than 90% of common applications. --><p><!--  
+<!-- This simple but thorough (and now formalized) system of attribute handling should be optimal in more than 90% of common applications. --><p><!--
   + The default methods of statistical functions returning numeric values (`fmean`, `fmedian`, `fsum`, `fprod`, `fvar`, `fsd`, `fmin`, `fmax` and `fnth`, `fNobs` and `fNdistinct`) do not preserve the attributes of classed objects (e.g. univariate time series) in grouped aggregations. This is consistent with the matrix methods of these functions and avoids errors, particularly after computations on time series. --></p>
 <p><!--, random conversions to tibble are not part of its philosophy. --></p>
 <!--
@@ -459,7 +469,7 @@ This may be useful in some cases, for examples it is now possible to write somet
       </footer>
    </div>
 
-  
+
 
 
   </body>

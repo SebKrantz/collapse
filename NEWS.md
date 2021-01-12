@@ -1,3 +1,11 @@
+# collapse 1.5.1
+A small patch for 1.5.0 that:
+
+* Fixes a numeric precision issue when grouping doubles (e.g. before `qF(wlddev$LIFEEX)` gave an error, now it works). 
+
+* Fixes a minor issue with `fHDwithin` when applied to *pseries* and `fill = FALSE`.
+
+
 # collapse 1.5.0
 *collapse* 1.5.0, released early January 2021, presents important refinements and some additional functionality. 
 
@@ -20,7 +28,9 @@
 
 <!-- Missing value removal is still done using *data.table* source code, so these functions are now equipped for large and complex linear prediction and partialling-out problems. To fully utilize them users must install *fixest*. -->
 
-* Vignettes were outsourced to the [website](<https://sebkrantz.github.io/collapse/articles/index.html>), and also made available as PDF versions for download there. This nearly halves the size of the source package, and should induce users to appreciate the built-in documentation. The website also makes for much more convenient reading and navigation of these book-style vignettes. 
+* Vignettes were outsourced to the [website](<https://sebkrantz.github.io/collapse/articles/index.html>). This nearly halves the size of the source package, and should induce users to appreciate the built-in documentation. The website also makes for much more convenient reading and navigation of these book-style vignettes. 
+
+<!-- , and also made available as PDF versions for download there -->
 
 ### Additions
 
