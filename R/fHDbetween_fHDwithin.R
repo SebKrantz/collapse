@@ -1,4 +1,6 @@
 
+# TODO: More tests for attribute handling + Optimize linear fitting...
+
 demean <- function(x, fl, weights, ..., means = FALSE) {
   if(length(fl) == 1L && is.null(attr(fl, "slope.flag"))) {
     clx <- oldClass(x) # Need to do this because could call fbetween.grouped_df of fbetween.pseries / pdata.frame
@@ -8,8 +10,10 @@ demean <- function(x, fl, weights, ..., means = FALSE) {
   msg <- "For higher-dimensional centering and projecting out interactions need to install.packages('%s'), then unload [detach('package:collapse', unload = TRUE)] and reload [library(collapse)]."
   res <- getenvFUN("fixest_demean", msg)(x, fl, attr(fl, "slope.vars"), attr(fl, "slope.flag"),
                                          weights = weights, ..., im_confident = TRUE)
-  if(is.atomic(res)) return(if(means) x - res else res) # Need matrix dimensions... for subset in variable.wise... do.call(cbind, fl[!fc]) needs to be preserved... # return(if(means) x - drop(res) else drop(res))
   if(!means) return(res)
+    # if(!is.matrix(x)) dim(res) <- NULL # also need for flmres... e.g. with weights... intercept is no longer always added, so res needs to be a matrix...
+    # Need matrix dimensions... for subset in variable.wise... do.call(cbind, fl[!fc]) needs to be preserved... # return(if(means) x - drop(res) else drop(res))
+  if(is.atomic(res)) return(x - res)
   duplAttributes(mapply(`-`, unattrib(x), unattrib(res), SIMPLIFY = FALSE, USE.NAMES = FALSE), x)
 }
 
@@ -324,8 +328,11 @@ fHDwithin.pseries <- function(x, w = NULL, na.rm = TRUE, fill = TRUE, ...) {
     if(fill) {
       x[cc] <- demean(x[cc], g, w[cc], ...) # keeps attributes ?? -> Yes !!
       return(x)
-    } else return(addAttributes(demean(x[cc], g, w[cc], ...),
-                                list(index = g, na.rm = seq_along(x)[-cc]))) # keeps attributes ?? -> Nope !!
+    }
+    xcc <- x[cc]
+    return(setAttributes(demean(xcc, g, w[cc], ...),
+                         c(attributes(xcc), list(index = g, na.rm = seq_along(x)[-cc]))))
+
   }
   g <- attr(x, "index") # what about cases ?? -> nah, named !!
   `attr<-`(demean(x, g, w, ...), "index", g) # keeps attributes ?? -> Nope !!
