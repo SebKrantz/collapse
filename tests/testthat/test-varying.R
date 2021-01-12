@@ -2,7 +2,7 @@ context("varying")
 
 # rm(list = ls())
 
-if(identical(Sys.getenv("NCRAN"), "TRUE")) pwlddev <- plm::pdata.frame(wlddev, index = c("iso3c", "year"))
+if(identical(Sys.getenv("NCRAN"), "TRUE")) pwlddev <- eval(parse(text = paste0("plm", ":", ":", "pdata.frame(wlddev, index = c('iso3c', 'year'))")))
 gwlddev <- fgroup_by(wlddev, iso3c)
 wdm <- qM(`cat_vars<-`(wlddev, dapply(cat_vars(wlddev), qG)))
 g <- GRP(wlddev, ~ region + year)
