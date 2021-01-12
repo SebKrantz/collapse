@@ -152,7 +152,14 @@ print.pwcor <- function(x, digits = 2L, sig.level = 0.05, show = c("all","lower.
   formfun <- function(x, dg1 = FALSE) {
     xx <- format(round(x, digits)) # , digits = digits-1
     xx <- sub("(-?)0\\.", "\\1.", xx)
-    if(dg1) diag(xx) <- paste0(c("  1",rep(" ",digits-1)), collapse = "") else {
+    if(dg1) {
+      dgx <- diag(xx)
+      new1 <- paste0(c("  1", rep(" ",digits-1)), collapse = "")
+      if(!all(st <- startsWith(dgx, " 1"))) {
+        dgx[st] <- new1
+        diag(xx) <- dgx
+      } else diag(xx) <- new1
+    } else {
       xna <- is.na(x)
       xx[xna] <- ""
       xpos <- x >= 1 & !xna
