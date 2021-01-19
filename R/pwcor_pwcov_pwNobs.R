@@ -155,7 +155,7 @@ print.pwcor <- function(x, digits = 2L, sig.level = 0.05, show = c("all","lower.
     if(dg1) {
       dgx <- diag(xx)
       new1 <- paste0(c("  1", rep(" ",digits-1)), collapse = "")
-      if(!all(st <- startsWith(dgx, " 1"))) {
+      if(!all(st <- startsWith(dgx, " 1") | startsWith(dgx, "1"))) { # can have positive or negative values...
         dgx[st] <- new1
         diag(xx) <- dgx
       } else diag(xx) <- new1
@@ -210,7 +210,7 @@ print.pwcor <- function(x, digits = 2L, sig.level = 0.05, show = c("all","lower.
 print.pwcov <- function(x, digits = 2L, sig.level = 0.05, show = c("all","lower.tri","upper.tri"), spacing = 1L, ...) {
   formfun <- function(x, adj = FALSE) {
     xx <- format(round(x, digits), digits = 9, big.mark = ",", big.interval = 6)
-    xx <- sub("(-?)0\\.", "\\1.", xx)
+    # xx <- sub("(-?)0\\.", "\\1.", xx) # Not needed here...
     if(adj) {
       xna <- is.na(x)
       xx[xna] <- ""

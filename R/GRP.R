@@ -408,7 +408,7 @@ GRP.grouped_df <- function(X, ..., return.groups = TRUE, call = TRUE) {
   gr <- g[[lg]]
   ng <- length(gr)
   gs <- lengths(gr, FALSE)
-  return(`oldClass<-`(list(N.groups = ng, # The cpp here speeds up things a lot !!
+  return(`oldClass<-`(list(N.groups = ng, # The C code here speeds up things a lot !!
                         group.id = .Call(C_groups2GRP, gr, fnrow2(X), gs),  # Old: rep(seq_len(ng), gs)[order(unlist(gr, FALSE, FALSE))], # .Internal(radixsort(TRUE, FALSE, FALSE, TRUE, .Internal(unlist(gr, FALSE, FALSE))))
                         group.sizes = gs,
                         groups = if(return.groups) g[-lg] else NULL, # better reclass afterwards ?
@@ -421,9 +421,12 @@ GRP.grouped_df <- function(X, ..., return.groups = TRUE, call = TRUE) {
 is.qG <- function(x) inherits(x, "qG")
 
 # TODO: fix na_rm speed for character data...
-na_rm2 <- function(x, sort) if(!anyNA(x)) x else if(sort) x[-length(x)] else x[!is.na(x)]
+na_rm2 <- function(x, sort) {
+  if(sort) return(if(is.na(x[length(x)])) x[-length(x)] else x)
+  if(anyNA(x)) x[!is.na(x)] else x # use na_rm here when speed fixed.. (get rid of anyNA then ...)
+}
 
-# TODO: what about NA last option ?
+# What about NA last option to radixsort ? -> Nah, vector o becomes too short...
 
 radixfact <- function(x, sort, ord, fact, naincl, keep, retgrp = FALSE) {
   o <- .Call(C_radixsort, TRUE, FALSE, fact || naincl || retgrp, naincl, sort, pairlist(x))
