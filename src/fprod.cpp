@@ -335,7 +335,7 @@ SEXP fprodlCpp(const List& x, int ng = 0, const IntegerVector& g = 0,
       List out(l);
       for(int j = l; j--; ) {
         out[j] = prod[j];
-        SHALLOW_DUPLICATE_ATTRIB(out[j], x[j]);
+        DUPLICATE_ATTRIB(out[j], x[j]);
       }
       DUPLICATE_ATTRIB(out, x);
       Rf_setAttrib(out, R_RowNamesSymbol, Rf_ScalarInteger(1));
@@ -355,7 +355,7 @@ SEXP fprodlCpp(const List& x, int ng = 0, const IntegerVector& g = 0,
             else prodj[g[i]-1] *= column[i];
           }
         }
-        SHALLOW_DUPLICATE_ATTRIB(prodj, column);
+        DUPLICATE_ATTRIB(prodj, column);
         prod[j] = prodj;
       }
     } else {
@@ -375,7 +375,7 @@ SEXP fprodlCpp(const List& x, int ng = 0, const IntegerVector& g = 0,
             prodj[g[i]-1] *= column[i];
           }
         }
-        SHALLOW_DUPLICATE_ATTRIB(prodj, column);
+        DUPLICATE_ATTRIB(prodj, column);
         prod[j] = prodj;
       }
     }
@@ -424,7 +424,7 @@ SEXP fprodlCpp(const List& x, int ng = 0, const IntegerVector& g = 0,
        List out(l);
        for(int j = l; j--; ) {
          out[j] = prod[j];
-         SHALLOW_DUPLICATE_ATTRIB(out[j], x[j]);
+         DUPLICATE_ATTRIB(out[j], x[j]);
        }
        DUPLICATE_ATTRIB(out, x);
        Rf_setAttrib(out, R_RowNamesSymbol, Rf_ScalarInteger(1));
@@ -447,7 +447,7 @@ SEXP fprodlCpp(const List& x, int ng = 0, const IntegerVector& g = 0,
              prodj[g[i]-1] *= column[i]*wg[i];
            }
          }
-         SHALLOW_DUPLICATE_ATTRIB(prodj, column);
+         DUPLICATE_ATTRIB(prodj, column);
          prod[j] = prodj;
        }
      } else {
@@ -467,7 +467,7 @@ SEXP fprodlCpp(const List& x, int ng = 0, const IntegerVector& g = 0,
              prodj[g[i]-1] *= column[i]*wg[i];
            }
          }
-         SHALLOW_DUPLICATE_ATTRIB(prodj, column);
+         DUPLICATE_ATTRIB(prodj, column);
          prod[j] = prodj;
        }
      }

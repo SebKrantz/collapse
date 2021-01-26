@@ -339,7 +339,7 @@ SEXP fsumlCpp(const List& x, int ng = 0, const IntegerVector& g = 0, const SEXP&
       List out(l);
       for(int j = l; j--; ) {
         out[j] = sum[j];
-        SHALLOW_DUPLICATE_ATTRIB(out[j], x[j]);
+        DUPLICATE_ATTRIB(out[j], x[j]);
       }
       DUPLICATE_ATTRIB(out, x);
       Rf_setAttrib(out, R_RowNamesSymbol, Rf_ScalarInteger(1));
@@ -359,7 +359,7 @@ SEXP fsumlCpp(const List& x, int ng = 0, const IntegerVector& g = 0, const SEXP&
             else sumj[g[i]-1] += column[i];
           }
         }
-        SHALLOW_DUPLICATE_ATTRIB(sumj, column);
+        DUPLICATE_ATTRIB(sumj, column);
         sum[j] = sumj;
       }
     } else {
@@ -379,7 +379,7 @@ SEXP fsumlCpp(const List& x, int ng = 0, const IntegerVector& g = 0, const SEXP&
             sumj[g[i]-1] += column[i];
           }
         }
-        SHALLOW_DUPLICATE_ATTRIB(sumj, column);
+        DUPLICATE_ATTRIB(sumj, column);
         sum[j] = sumj;
       }
     }
@@ -428,7 +428,7 @@ SEXP fsumlCpp(const List& x, int ng = 0, const IntegerVector& g = 0, const SEXP&
        List out(l);
        for(int j = l; j--; ) {
          out[j] = sum[j];
-         SHALLOW_DUPLICATE_ATTRIB(out[j], x[j]);
+         DUPLICATE_ATTRIB(out[j], x[j]);
        }
        DUPLICATE_ATTRIB(out, x);
        Rf_setAttrib(out, R_RowNamesSymbol, Rf_ScalarInteger(1));
@@ -451,7 +451,7 @@ SEXP fsumlCpp(const List& x, int ng = 0, const IntegerVector& g = 0, const SEXP&
              sumj[g[i]-1] += column[i]*wg[i];
            }
          }
-         SHALLOW_DUPLICATE_ATTRIB(sumj, column);
+         DUPLICATE_ATTRIB(sumj, column);
          sum[j] = sumj;
        }
      } else {
@@ -471,7 +471,7 @@ SEXP fsumlCpp(const List& x, int ng = 0, const IntegerVector& g = 0, const SEXP&
              sumj[g[i]-1] += column[i]*wg[i];
            }
          }
-         SHALLOW_DUPLICATE_ATTRIB(sumj, column);
+         DUPLICATE_ATTRIB(sumj, column);
          sum[j] = sumj;
        }
      }
