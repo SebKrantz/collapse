@@ -536,7 +536,7 @@ List flagleadlCpp(const List& x, const IntegerVector& n = 1, const SEXP& fill = 
               int i = 0;
               while(i != np) outjp[i++] = ff;
               for( ; i != row; ++i) outjp[i] = column[i - np];
-              SHALLOW_DUPLICATE_ATTRIB(outjp, column);
+              DUPLICATE_ATTRIB(outjp, column);
               out[pos] = outjp;
             } else if(np<0) {
               NumericVector outjp = no_init_vector(row);
@@ -544,7 +544,7 @@ List flagleadlCpp(const List& x, const IntegerVector& n = 1, const SEXP& fill = 
               int i = row, st = row+np;
               while(i != st) outjp[--i] = ff;
               for( ; i--; ) outjp[i] = column[i - np];
-              SHALLOW_DUPLICATE_ATTRIB(outjp, column);
+              DUPLICATE_ATTRIB(outjp, column);
               out[pos] = outjp;
             } else {
               if(names) nam[pos] = na[j];
@@ -568,7 +568,7 @@ List flagleadlCpp(const List& x, const IntegerVector& n = 1, const SEXP& fill = 
               int i = 0;
               while(i != np) outjp[i++] = ff;
               for( ; i != row; ++i) outjp[i] = column[i - np];
-              SHALLOW_DUPLICATE_ATTRIB(outjp, column);
+              DUPLICATE_ATTRIB(outjp, column);
               if(txj == LGLSXP) SET_TYPEOF(outjp, LGLSXP);
               out[pos] = outjp;
             } else if(np<0) {
@@ -577,7 +577,7 @@ List flagleadlCpp(const List& x, const IntegerVector& n = 1, const SEXP& fill = 
               int i = row, st = row+np;
               while(i != st) outjp[--i] = ff;
               for( ; i--; ) outjp[i] = column[i - np];
-              SHALLOW_DUPLICATE_ATTRIB(outjp, column);
+              DUPLICATE_ATTRIB(outjp, column);
               if(txj == LGLSXP) SET_TYPEOF(outjp, LGLSXP);
               out[pos] = outjp;
             } else {
@@ -602,7 +602,7 @@ List flagleadlCpp(const List& x, const IntegerVector& n = 1, const SEXP& fill = 
               int i = 0;
               while(i != np) outjp[i++] = ff;
               for( ; i != row; ++i) outjp[i] = column[i - np];
-              SHALLOW_DUPLICATE_ATTRIB(outjp, column);
+              DUPLICATE_ATTRIB(outjp, column);
               out[pos] = outjp;
             } else if(np<0) {
               CharacterVector outjp = no_init_vector(row);
@@ -610,7 +610,7 @@ List flagleadlCpp(const List& x, const IntegerVector& n = 1, const SEXP& fill = 
               int i = row, st = row+np;
               while(i != st) outjp[--i] = ff;
               for( ; i--; ) outjp[i] = column[i - np];
-              SHALLOW_DUPLICATE_ATTRIB(outjp, column);
+              DUPLICATE_ATTRIB(outjp, column);
               out[pos] = outjp;
             } else {
               if(names) nam[pos] = na[j];
@@ -661,7 +661,7 @@ List flagleadlCpp(const List& x, const IntegerVector& n = 1, const SEXP& fill = 
                   outjp[i] = ff;
                 }
               }
-              SHALLOW_DUPLICATE_ATTRIB(outjp, column);
+              DUPLICATE_ATTRIB(outjp, column);
               out[pos] = outjp;
             } else if(np<0) {
               NumericVector outjp = no_init_vector(os);
@@ -673,7 +673,7 @@ List flagleadlCpp(const List& x, const IntegerVector& n = 1, const SEXP& fill = 
                   outjp[i] = ff;
                 }
               }
-              SHALLOW_DUPLICATE_ATTRIB(outjp, column);
+              DUPLICATE_ATTRIB(outjp, column);
               out[pos] = outjp;
             } else {
               if(names) nam[pos] = na[j];
@@ -701,7 +701,7 @@ List flagleadlCpp(const List& x, const IntegerVector& n = 1, const SEXP& fill = 
                   outjp[i] = ff;
                 }
               }
-              SHALLOW_DUPLICATE_ATTRIB(outjp, column);
+              DUPLICATE_ATTRIB(outjp, column);
               if(txj == LGLSXP) SET_TYPEOF(outjp, LGLSXP);
               out[pos] = outjp;
             } else if(np<0) {
@@ -714,7 +714,7 @@ List flagleadlCpp(const List& x, const IntegerVector& n = 1, const SEXP& fill = 
                   outjp[i] = ff;
                 }
               }
-              SHALLOW_DUPLICATE_ATTRIB(outjp, column);
+              DUPLICATE_ATTRIB(outjp, column);
               if(txj == LGLSXP) SET_TYPEOF(outjp, LGLSXP);
               out[pos] = outjp;
             } else {
@@ -743,7 +743,7 @@ List flagleadlCpp(const List& x, const IntegerVector& n = 1, const SEXP& fill = 
                   outjp[i] = ff;
                 }
               }
-              SHALLOW_DUPLICATE_ATTRIB(outjp, column);
+              DUPLICATE_ATTRIB(outjp, column);
               out[pos] = outjp;
             } else if(np<0) {
               CharacterVector outjp = no_init_vector(os);
@@ -755,7 +755,7 @@ List flagleadlCpp(const List& x, const IntegerVector& n = 1, const SEXP& fill = 
                   outjp[i] = ff;
                 }
               }
-              SHALLOW_DUPLICATE_ATTRIB(outjp, column);
+              DUPLICATE_ATTRIB(outjp, column);
               out[pos] = outjp;
             } else {
               if(names) nam[pos] = na[j];
@@ -795,7 +795,7 @@ List flagleadlCpp(const List& x, const IntegerVector& n = 1, const SEXP& fill = 
                   ++seen[g[i]];
                 }
               }
-              SHALLOW_DUPLICATE_ATTRIB(outjp, column);
+              DUPLICATE_ATTRIB(outjp, column);
               out[pos] = outjp;
             } else if(np<0) {
               NumericVector outjp = no_init_vector(gss);
@@ -809,7 +809,7 @@ List flagleadlCpp(const List& x, const IntegerVector& n = 1, const SEXP& fill = 
                   --seen[g[i]];
                 }
               }
-              SHALLOW_DUPLICATE_ATTRIB(outjp, column);
+              DUPLICATE_ATTRIB(outjp, column);
               out[pos] = outjp;
             } else {
               if(names) nam[pos] = na[j];
@@ -839,7 +839,7 @@ List flagleadlCpp(const List& x, const IntegerVector& n = 1, const SEXP& fill = 
                   ++seen[g[i]];
                 }
               }
-              SHALLOW_DUPLICATE_ATTRIB(outjp, column);
+              DUPLICATE_ATTRIB(outjp, column);
               if(txj == LGLSXP) SET_TYPEOF(outjp, LGLSXP);
               out[pos] = outjp;
             } else if(np<0) {
@@ -854,7 +854,7 @@ List flagleadlCpp(const List& x, const IntegerVector& n = 1, const SEXP& fill = 
                   --seen[g[i]];
                 }
               }
-              SHALLOW_DUPLICATE_ATTRIB(outjp, column);
+              DUPLICATE_ATTRIB(outjp, column);
               if(txj == LGLSXP) SET_TYPEOF(outjp, LGLSXP);
               out[pos] = outjp;
             } else {
@@ -885,7 +885,7 @@ List flagleadlCpp(const List& x, const IntegerVector& n = 1, const SEXP& fill = 
                   ++seen[g[i]];
                 }
               }
-              SHALLOW_DUPLICATE_ATTRIB(outjp, column);
+              DUPLICATE_ATTRIB(outjp, column);
               out[pos] = outjp;
             } else if(np<0) {
               CharacterVector outjp = no_init_vector(gss);
@@ -899,7 +899,7 @@ List flagleadlCpp(const List& x, const IntegerVector& n = 1, const SEXP& fill = 
                   --seen[g[i]];
                 }
               }
-              SHALLOW_DUPLICATE_ATTRIB(outjp, column);
+              DUPLICATE_ATTRIB(outjp, column);
               out[pos] = outjp;
             } else {
               if(names) nam[pos] = na[j];
@@ -968,7 +968,7 @@ List flagleadlCpp(const List& x, const IntegerVector& n = 1, const SEXP& fill = 
                   outjp[i] = ff;
                 }
               }
-              SHALLOW_DUPLICATE_ATTRIB(outjp, column);
+              DUPLICATE_ATTRIB(outjp, column);
               out[pos] = outjp;
             } else if(np<0) {
               NumericVector outjp = no_init_vector(gss);
@@ -980,7 +980,7 @@ List flagleadlCpp(const List& x, const IntegerVector& n = 1, const SEXP& fill = 
                   outjp[i] = ff;
                 }
               }
-              SHALLOW_DUPLICATE_ATTRIB(outjp, column);
+              DUPLICATE_ATTRIB(outjp, column);
               out[pos] = outjp;
             } else {
               if(names) nam[pos] = na[j];
@@ -1008,7 +1008,7 @@ List flagleadlCpp(const List& x, const IntegerVector& n = 1, const SEXP& fill = 
                   outjp[i] = ff;
                 }
               }
-              SHALLOW_DUPLICATE_ATTRIB(outjp, column);
+              DUPLICATE_ATTRIB(outjp, column);
               if(txj == LGLSXP) SET_TYPEOF(outjp, LGLSXP);
               out[pos] = outjp;
             } else if(np<0) {
@@ -1021,7 +1021,7 @@ List flagleadlCpp(const List& x, const IntegerVector& n = 1, const SEXP& fill = 
                   outjp[i] = ff;
                 }
               }
-              SHALLOW_DUPLICATE_ATTRIB(outjp, column);
+              DUPLICATE_ATTRIB(outjp, column);
               if(txj == LGLSXP) SET_TYPEOF(outjp, LGLSXP);
               out[pos] = outjp;
             } else {
@@ -1050,7 +1050,7 @@ List flagleadlCpp(const List& x, const IntegerVector& n = 1, const SEXP& fill = 
                   outjp[i] = ff;
                 }
               }
-              SHALLOW_DUPLICATE_ATTRIB(outjp, column);
+              DUPLICATE_ATTRIB(outjp, column);
               out[pos] = outjp;
             } else if(np<0) {
               CharacterVector outjp = no_init_vector(gss);
@@ -1062,7 +1062,7 @@ List flagleadlCpp(const List& x, const IntegerVector& n = 1, const SEXP& fill = 
                   outjp[i] = ff;
                 }
               }
-              SHALLOW_DUPLICATE_ATTRIB(outjp, column);
+              DUPLICATE_ATTRIB(outjp, column);
               out[pos] = outjp;
             } else {
               if(names) nam[pos] = na[j];

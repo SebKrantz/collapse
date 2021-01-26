@@ -552,7 +552,7 @@ SEXP fnthlCpp(const List& x, double Q = 0.5, int ng = 0, const IntegerVector& g 
         List out(l);
         for(int j = l; j--; ) {
           out[j] = out[j];
-          SHALLOW_DUPLICATE_ATTRIB(out[j], x[j]);
+          DUPLICATE_ATTRIB(out[j], x[j]);
         }
         DUPLICATE_ATTRIB(out, x);
         Rf_setAttrib(out, R_RowNamesSymbol, Rf_ScalarInteger(1));
@@ -594,7 +594,7 @@ SEXP fnthlCpp(const List& x, double Q = 0.5, int ng = 0, const IntegerVector& g 
               nthj[i-1] = (tiesmean && n%2 == 0) ? (*(mid) + *(std::min_element(mid+1, end)))*0.5 : *(mid);
             }
           }
-          SHALLOW_DUPLICATE_ATTRIB(nthj, column);
+          DUPLICATE_ATTRIB(nthj, column);
           out[j] = nthj;
         }
       } else {
@@ -622,7 +622,7 @@ SEXP fnthlCpp(const List& x, double Q = 0.5, int ng = 0, const IntegerVector& g 
             std::nth_element(begin, mid, end);
             nthj[i] = (tiesmean && n%2 == 0) ? (*(mid) + *(std::min_element(mid+1, end)))*0.5 : *(mid);
           }
-          SHALLOW_DUPLICATE_ATTRIB(nthj, column);
+          DUPLICATE_ATTRIB(nthj, column);
           out[j] = nthj;
         }
       }
@@ -693,7 +693,7 @@ SEXP fnthlCpp(const List& x, double Q = 0.5, int ng = 0, const IntegerVector& g 
           List out(l);
           for(int j = l; j--; ) {
             out[j] = out[j];
-            SHALLOW_DUPLICATE_ATTRIB(out[j], x[j]);
+            DUPLICATE_ATTRIB(out[j], x[j]);
           }
           DUPLICATE_ATTRIB(out, x);
           Rf_setAttrib(out, R_RowNamesSymbol, Rf_ScalarInteger(1));
@@ -761,7 +761,7 @@ SEXP fnthlCpp(const List& x, double Q = 0.5, int ng = 0, const IntegerVector& g 
             }
           }
         }
-        SHALLOW_DUPLICATE_ATTRIB(nthj, column);
+        DUPLICATE_ATTRIB(nthj, column);
         out[j] = nthj;
       }
       DUPLICATE_ATTRIB(out, x);
