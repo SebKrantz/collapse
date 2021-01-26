@@ -194,7 +194,7 @@ SEXP fminmaxlCppImpl(const List& x, int ng = 0, const IntegerVector& g = 0,
       List out(l);
       for(int j = l; j--; ) {
         out[j] = min[j];
-        SHALLOW_DUPLICATE_ATTRIB(out[j], x[j]);
+        DUPLICATE_ATTRIB(out[j], x[j]);
       }
       DUPLICATE_ATTRIB(out, x);
       Rf_setAttrib(out, R_RowNamesSymbol, Rf_ScalarInteger(1));
@@ -213,7 +213,7 @@ SEXP fminmaxlCppImpl(const List& x, int ng = 0, const IntegerVector& g = 0,
             if(FUN(minj[g[i]-1], column[i]) || std::isnan(minj[g[i]-1])) minj[g[i]-1] = column[i];
           }
         }
-        SHALLOW_DUPLICATE_ATTRIB(minj, column);
+        DUPLICATE_ATTRIB(minj, column);
         min[j] = minj;
       }
     } else {
@@ -233,7 +233,7 @@ SEXP fminmaxlCppImpl(const List& x, int ng = 0, const IntegerVector& g = 0,
             if(FUN(minj[g[i]-1], column[i])) minj[g[i]-1] = column[i];
           }
         }
-        SHALLOW_DUPLICATE_ATTRIB(minj, column);
+        DUPLICATE_ATTRIB(minj, column);
         min[j] = minj;
       }
     }

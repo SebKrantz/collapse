@@ -257,7 +257,7 @@ SEXP flastlCpp(const List& x, int ng = 0, const IntegerVector& g = 0, bool narm 
           int k = column.size()-1;
           while(std::isnan(column[k]) && k!=0) --k;
           NumericVector out(1, column[k]);
-          SHALLOW_DUPLICATE_ATTRIB(out, column);
+          DUPLICATE_ATTRIB(out, column);
           last[j] = out;
           break;
         }
@@ -266,7 +266,7 @@ SEXP flastlCpp(const List& x, int ng = 0, const IntegerVector& g = 0, bool narm 
           int k = column.size()-1;
           while(column[k] == NA_INTEGER && k!=0) --k;
           IntegerVector out(1, column[k]);
-          SHALLOW_DUPLICATE_ATTRIB(out, column);
+          DUPLICATE_ATTRIB(out, column);
           last[j] = out;
           break;
         }
@@ -275,7 +275,7 @@ SEXP flastlCpp(const List& x, int ng = 0, const IntegerVector& g = 0, bool narm 
           int k = column.size()-1;
           while(column[k] == NA_STRING && k!=0) --k;
           SEXP out = Rf_ScalarString(column[k]); // CharacterVector out(1, column[k]);
-          SHALLOW_DUPLICATE_ATTRIB(out, column);
+          DUPLICATE_ATTRIB(out, column);
           last[j] = out;
           break;
         }
@@ -284,7 +284,7 @@ SEXP flastlCpp(const List& x, int ng = 0, const IntegerVector& g = 0, bool narm 
           int k = column.size()-1;
           while(column[k] == NA_LOGICAL && k!=0) --k;
           LogicalVector out(1, column[k]);
-          SHALLOW_DUPLICATE_ATTRIB(out, column);
+          DUPLICATE_ATTRIB(out, column);
           last[j] = out;
           break;
         }
@@ -299,28 +299,28 @@ SEXP flastlCpp(const List& x, int ng = 0, const IntegerVector& g = 0, bool narm 
         case REALSXP: {
           NumericVector column = x[j];
           NumericVector out(1, *(column.end()-1));
-          SHALLOW_DUPLICATE_ATTRIB(out, column);
+          DUPLICATE_ATTRIB(out, column);
           last[j] = out;
           break;
         }
         case INTSXP: {
           IntegerVector column = x[j];
           IntegerVector out(1, *(column.end()-1));
-          SHALLOW_DUPLICATE_ATTRIB(out, column);
+          DUPLICATE_ATTRIB(out, column);
           last[j] = out;
           break;
         }
         case STRSXP: {
           CharacterVector column = x[j];
           SEXP out = Rf_ScalarString(*(column.end()-1)); // CharacterVector out(1, String(*(column.end()-1)));
-          SHALLOW_DUPLICATE_ATTRIB(out, column);
+          DUPLICATE_ATTRIB(out, column);
           last[j] = out;
           break;
         }
         case LGLSXP: {
           LogicalVector column = x[j];
           LogicalVector out(1, *(column.end()-1));
-          SHALLOW_DUPLICATE_ATTRIB(out, column);
+          DUPLICATE_ATTRIB(out, column);
           last[j] = out;
           break;
         }
@@ -352,7 +352,7 @@ SEXP flastlCpp(const List& x, int ng = 0, const IntegerVector& g = 0, bool narm 
               }
             }
           }
-          SHALLOW_DUPLICATE_ATTRIB(lastj, column);
+          DUPLICATE_ATTRIB(lastj, column);
           last[j] = lastj;
           break;
         }
@@ -369,7 +369,7 @@ SEXP flastlCpp(const List& x, int ng = 0, const IntegerVector& g = 0, bool narm 
               }
             }
           }
-          SHALLOW_DUPLICATE_ATTRIB(lastj, column);
+          DUPLICATE_ATTRIB(lastj, column);
           last[j] = lastj;
           break;
         }
@@ -386,7 +386,7 @@ SEXP flastlCpp(const List& x, int ng = 0, const IntegerVector& g = 0, bool narm 
               }
             }
           }
-          SHALLOW_DUPLICATE_ATTRIB(lastj, column);
+          DUPLICATE_ATTRIB(lastj, column);
           last[j] = lastj;
           break;
         }
@@ -403,7 +403,7 @@ SEXP flastlCpp(const List& x, int ng = 0, const IntegerVector& g = 0, bool narm 
               }
             }
           }
-          SHALLOW_DUPLICATE_ATTRIB(lastj, column);
+          DUPLICATE_ATTRIB(lastj, column);
           last[j] = lastj;
           break;
         }
@@ -432,28 +432,28 @@ SEXP flastlCpp(const List& x, int ng = 0, const IntegerVector& g = 0, bool narm 
           NumericVector column = x[j];
           if(gss != column.size()) stop("length(g) must match nrow(X)");
           last[j] = column[lastindex];
-          SHALLOW_DUPLICATE_ATTRIB(last[j], column);
+          DUPLICATE_ATTRIB(last[j], column);
           break;
         }
         case INTSXP: {
           IntegerVector column = x[j];
           if(gss != column.size()) stop("length(g) must match nrow(X)");
           last[j] = column[lastindex];
-          SHALLOW_DUPLICATE_ATTRIB(last[j], column);
+          DUPLICATE_ATTRIB(last[j], column);
           break;
         }
         case STRSXP: {
           CharacterVector column = x[j];
           if(gss != column.size()) stop("length(g) must match nrow(X)");
           last[j] = column[lastindex];
-          SHALLOW_DUPLICATE_ATTRIB(last[j], column);
+          DUPLICATE_ATTRIB(last[j], column);
           break;
         }
         case LGLSXP: {
           LogicalVector column = x[j];
           if(gss != column.size()) stop("length(g) must match nrow(X)");
           last[j] = column[lastindex];
-          SHALLOW_DUPLICATE_ATTRIB(last[j], column);
+          DUPLICATE_ATTRIB(last[j], column);
           break;
         }
         default:
