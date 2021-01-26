@@ -1257,7 +1257,7 @@ List fdiffgrowthlCppImpl(const List& x, const IntegerVector& n = 1, const Intege
               for(int i = row-1; i != start; --i) outjp[i] = FUN(outjp[i], outjp[i - np]);
             }
             for(int i = end; i--; ) outjp[i] = fill;
-            SHALLOW_DUPLICATE_ATTRIB(outjp, column);
+            DUPLICATE_ATTRIB(outjp, column);
             out[pos++] = outjp;
             if(ds > 1) {
               NumericVector outtemp = Rf_shallow_duplicate(outjp);
@@ -1283,7 +1283,7 @@ List fdiffgrowthlCppImpl(const List& x, const IntegerVector& n = 1, const Intege
             if(d1 < 1) stop("diff must be a vector of integers > 0");
             if(end <= 0) stop("abs(n * diff) needs to be < nrow(x)");
             NumericVector outjp = no_init_vector(row);
-            SHALLOW_DUPLICATE_ATTRIB(outjp, column);
+            DUPLICATE_ATTRIB(outjp, column);
             if(names) {
               if(F1) nam[pos] = stub2 + diffc[0] + "." + na[j];
               else nam[pos] = "F" + nc[p] + stub + diffc[0] + "." + na[j];
@@ -1359,7 +1359,7 @@ List fdiffgrowthlCppImpl(const List& x, const IntegerVector& n = 1, const Intege
             if(d1 < 1) stop("diff must be a vector of integers > 0");
             if(end >= os) stop("n * diff needs to be < nrow(x)");
             NumericVector outjp = no_init_vector(os);
-            SHALLOW_DUPLICATE_ATTRIB(outjp, column);
+            DUPLICATE_ATTRIB(outjp, column);
             if(names) {
               if(L1) nam[pos] = stub + diffc[0] + "." + na[j];
               else nam[pos] = "L" + nc[p] + stub + diffc[0] + "." + na[j];
@@ -1405,7 +1405,7 @@ List fdiffgrowthlCppImpl(const List& x, const IntegerVector& n = 1, const Intege
             if(d1 < 1) stop("diff must be a vector of integers > 0");
             if(end <= 0) stop("abs(n * diff) needs to be < nrow(x)");
             NumericVector outjp = no_init_vector(os);
-            SHALLOW_DUPLICATE_ATTRIB(outjp, column);
+            DUPLICATE_ATTRIB(outjp, column);
             if(names) {
               if(F1) nam[pos] = stub2 + diffc[0] + "." + na[j];
               else nam[pos] = "F" + nc[p] + stub + diffc[0] + "." + na[j];
@@ -1477,7 +1477,7 @@ List fdiffgrowthlCppImpl(const List& x, const IntegerVector& n = 1, const Intege
             bool L1 = np == 1;
             if(d1 < 1) stop("diff must be a vector of integers > 0");
             NumericVector outjp = no_init_vector(gss);
-            SHALLOW_DUPLICATE_ATTRIB(outjp, column);
+            DUPLICATE_ATTRIB(outjp, column);
             std::vector<int> seen(ngp); // memset(seen, 0, memsize);
             if(names) {
               if(L1) nam[pos] = stub + diffc[0] + "." + na[j];
@@ -1530,7 +1530,7 @@ List fdiffgrowthlCppImpl(const List& x, const IntegerVector& n = 1, const Intege
             bool F1 = np == -1;
             if(d1 < 1) stop("diff must be a vector of integers > 0");
             NumericVector outjp = no_init_vector(gss);
-            SHALLOW_DUPLICATE_ATTRIB(outjp, column);
+            DUPLICATE_ATTRIB(outjp, column);
             std::vector<int> seen(ngp); // memset(seen, 0, memsize);
             if(names) {
               if(F1) nam[pos] = stub2 + diffc[0] + "." + na[j];
@@ -1634,7 +1634,7 @@ List fdiffgrowthlCppImpl(const List& x, const IntegerVector& n = 1, const Intege
             bool L1 = np == 1;
             if(d1 < 1) stop("diff must be a vector of integers > 0");
             NumericVector outjp = no_init_vector(gss);
-            SHALLOW_DUPLICATE_ATTRIB(outjp, column);
+            DUPLICATE_ATTRIB(outjp, column);
             if(names) {
               if(L1) nam[pos] = stub + diffc[0] + "." + na[j];
               else nam[pos] = "L" + nc[p] + stub + diffc[0] + "." + na[j];
@@ -1696,7 +1696,7 @@ List fdiffgrowthlCppImpl(const List& x, const IntegerVector& n = 1, const Intege
             bool F1 = np == -1;
             if(d1 < 1) stop("diff must be a vector of integers > 0");
             NumericVector outjp = no_init_vector(gss);
-            SHALLOW_DUPLICATE_ATTRIB(outjp, column);
+            DUPLICATE_ATTRIB(outjp, column);
             if(names) {
               if(F1) nam[pos] = stub2 + diffc[0] + "." + na[j];
               else nam[pos] = "F" + nc[p] + stub + diffc[0] + "." + na[j];

@@ -718,7 +718,7 @@ List BWlCpp(const List& x, int ng = 0, const IntegerVector& g = 0,
           } else {
             out[j] = column - sumj;
           }
-          SHALLOW_DUPLICATE_ATTRIB(out[j], column); // good ?
+          DUPLICATE_ATTRIB(out[j], column); // good ?
         }
       } else {
         for(int j = l; j--; ) {
@@ -739,7 +739,7 @@ List BWlCpp(const List& x, int ng = 0, const IntegerVector& g = 0,
           } else {
             out[j] = column - sumj;
           }
-          SHALLOW_DUPLICATE_ATTRIB(out[j], column);
+          DUPLICATE_ATTRIB(out[j], column);
         }
       }
     } else { // With groups
@@ -796,7 +796,7 @@ List BWlCpp(const List& x, int ng = 0, const IntegerVector& g = 0,
               for(int i = 0; i != row; ++i) outj[i] = column[i] - sumj[g[i]-1] + osum;
             }
           }
-          SHALLOW_DUPLICATE_ATTRIB(outj, column);
+          DUPLICATE_ATTRIB(outj, column);
           out[j] = outj;
         }
       } else {
@@ -851,7 +851,7 @@ List BWlCpp(const List& x, int ng = 0, const IntegerVector& g = 0,
                 for(int i = 0; i != row; ++i) outj[i] = column[i] - sumj[g[i]-1] + osum;
               }
             }
-            SHALLOW_DUPLICATE_ATTRIB(outj, column);
+            DUPLICATE_ATTRIB(outj, column);
             out[j] = outj;
           }
         } else {
@@ -903,7 +903,7 @@ List BWlCpp(const List& x, int ng = 0, const IntegerVector& g = 0,
                 for(int i = 0; i != row; ++i) outj[i] = column[i] - sumj[g[i]-1] + osum;
               }
             }
-            SHALLOW_DUPLICATE_ATTRIB(outj, column);
+            DUPLICATE_ATTRIB(outj, column);
             out[j] = outj;
           }
         }
@@ -941,7 +941,7 @@ List BWlCpp(const List& x, int ng = 0, const IntegerVector& g = 0,
           } else {
             out[j] = column - sumj;
           }
-          SHALLOW_DUPLICATE_ATTRIB(out[j], column); // good like this ?
+          DUPLICATE_ATTRIB(out[j], column); // good like this ?
         }
       } else {
         for(int j = l; j--; ) {
@@ -964,7 +964,7 @@ List BWlCpp(const List& x, int ng = 0, const IntegerVector& g = 0,
           } else {
             out[j] = column - sumj;
           }
-          SHALLOW_DUPLICATE_ATTRIB(out[j], column);
+          DUPLICATE_ATTRIB(out[j], column);
         }
       }
     } else { // With groups
@@ -1021,7 +1021,7 @@ List BWlCpp(const List& x, int ng = 0, const IntegerVector& g = 0,
               for(int i = 0; i != row; ++i) outj[i] = column[i] - sumj[g[i]-1] + osum;
             }
           }
-          SHALLOW_DUPLICATE_ATTRIB(outj, column);
+          DUPLICATE_ATTRIB(outj, column);
           out[j] = outj;
         }
       } else {
@@ -1071,7 +1071,7 @@ List BWlCpp(const List& x, int ng = 0, const IntegerVector& g = 0,
               for(int i = 0; i != row; ++i) outj[i] = column[i] - sumj[g[i]-1] + osum;
             }
           }
-          SHALLOW_DUPLICATE_ATTRIB(outj, column);
+          DUPLICATE_ATTRIB(outj, column);
           out[j] = outj;
         }
       }

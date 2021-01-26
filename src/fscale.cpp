@@ -612,7 +612,7 @@ List fscalelCpp(const List& x, int ng = 0, const IntegerVector& g = 0, const SEX
           else outj = (column-meanj)*M2j + set_mean; // best ?
         }
         loopend:;
-        SHALLOW_DUPLICATE_ATTRIB(outj, column);
+        DUPLICATE_ATTRIB(outj, column);
         out[j] = outj;
       }
     } else { // with groups
@@ -704,7 +704,7 @@ List fscalelCpp(const List& x, int ng = 0, const IntegerVector& g = 0, const SEX
           for(int i = 0; i != gss; ++i) outj[i] = (column[i]-meanj[g[i]-1])*M2j[g[i]-1] + gl_meanj; // best ?
         }
         loopend2:;
-        SHALLOW_DUPLICATE_ATTRIB(outj, column);
+        DUPLICATE_ATTRIB(outj, column);
         out[j] = outj;
       }
     }
@@ -756,7 +756,7 @@ List fscalelCpp(const List& x, int ng = 0, const IntegerVector& g = 0, const SEX
           else outj = (column-meanj)*M2j + set_mean; // best ?
         }
         loopend3:;
-        SHALLOW_DUPLICATE_ATTRIB(outj, column);
+        DUPLICATE_ATTRIB(outj, column);
         out[j] = outj;
       }
     } else { // with groups and weights
@@ -849,7 +849,7 @@ List fscalelCpp(const List& x, int ng = 0, const IntegerVector& g = 0, const SEX
           for(int i = 0; i != gss; ++i) outj[i] = (column[i]-meanj[g[i]-1])*M2j[g[i]-1] + gl_meanj; // best ?
         }
         loopend4:;
-        SHALLOW_DUPLICATE_ATTRIB(outj, column);
+        DUPLICATE_ATTRIB(outj, column);
         out[j] = outj;
       }
     }
