@@ -14,7 +14,7 @@
 
 \item \code{\link{varying}} very efficiently checks for the presence of any variation in data (optionally) within groups (such as panel-identifiers).
 
-\item \code{\link{fFtest}} is a fast implementation of the R-Squared based F-test, to test \bold{exclusion restrictions} in linear models potentially involving multiple large factors (fixed effects). It internally utilizes \code{\link{fHDwithin}} to project out factors while counting the degrees of freedom.
+% \item \code{\link{fFtest}} is a fast implementation of the R-Squared based F-test, to test \bold{exclusion restrictions} in linear models potentially involving multiple large factors (fixed effects). It internally utilizes \code{\link{fHDwithin}} to project out factors while counting the degrees of freedom.
 
 }
 }
@@ -26,7 +26,7 @@
                  \code{\link{pwcov}} \tab\tab No methods, for matrices or data frames \tab\tab Pairwise covariances \cr
                  \code{\link{pwNobs}} \tab\tab No methods, for matrices or data frames \tab\tab Pairwise observation counts \cr
                 \code{\link{varying}} \tab\tab \code{default, matrix, data.frame, pseries, pdata.frame, grouped_df} \tab\tab Fast variation check \cr
-                \code{\link{fFtest}} \tab\tab No methods, it's a standalone test to which data needs to be supplied.  \tab\tab Fast F-test of exclusion restrictions in linear models (with factors variables) \cr
+%                \code{\link{fFtest}} \tab\tab No methods, it's a standalone test to which data needs to be supplied.  \tab\tab Fast F-test of exclusion restrictions in linear models (with factors variables) \cr
 }
 }
 \seealso{

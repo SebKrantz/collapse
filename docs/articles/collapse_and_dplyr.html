@@ -668,7 +668,7 @@ pre[class] {
 <h3 class="hasAnchor">
 <a href="#replacing-and-sweeping-out-statistics" class="anchor"></a>2.2 Replacing and Sweeping out Statistics</h3>
 <!-- using Fast Statistical Functions -->
-<p>All statistical (scalar-valued) functions in the collapse package (<code>fsum, fprod, fmean, fmedian, fmode, fvar, fsd, fmin, fmax, fnth, ffirst, flast, fNobs, fNdistinct</code>) have a <code>TRA</code> argument which can be used to efficiently transforms data by either (column-wise) replacing data values with computed statistics or sweeping the statistics out of the data. Operations can be specified using either an integer or quoted operator / string. The 10 operations supported by <code>TRA</code> are:</p>
+<p>All statistical (scalar-valued) functions in the collapse package (<code>fsum, fprod, fmean, fmedian, fmode, fvar, fsd, fmin, fmax, fnth, ffirst, flast, fNobs, fNdistinct</code>) have a <code>TRA</code> argument which can be used to efficiently transform data by either (column-wise) replacing data values with computed statistics or sweeping the statistics out of the data. Operations can be specified using either an integer or quoted operator / string. The 10 operations supported by <code>TRA</code> are:</p>
 <ul>
 <li><p>1 - “replace_fill” : replace and overwrite missing values (same as <code>mutate</code>)</p></li>
 <li><p>2 - “replace” : replace but preserve missing values</p></li>
