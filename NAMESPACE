@@ -33,6 +33,8 @@ importFrom("stats", "as.formula", "complete.cases", "cor", "cov", "var", "pt",
  export(fsubset.data.frame)
  export(fsubset.default)
  export(fsubset.matrix)
+ export(fsummarise)
+ export(smr)
  export(ftransform)
  export(tfm)
  export(`ftransform<-`)
