@@ -2,11 +2,12 @@
 \alias{collapse-depreciated}
 \alias{Recode}
 \alias{replace_non_finite}
+\alias{is.regular}
 \title{
  Depreciated \emph{collapse} Functions
 }
 \description{
-The functions \code{Recode} and \code{replace_non_finite} available until \emph{collapse} v1.1.0 will be removed soon. Since v1.2.0, \code{Recode} is replaced by \code{\link{recode_num}} and \code{\link{recode_char}} and \code{replace_non_finite} is replaced by \code{\link{replace_Inf}}.
+The functions \code{Recode} and \code{replace_non_finite} available until \emph{collapse} v1.1.0 will be removed soon. Since v1.2.0, \code{Recode} is replaced by \code{\link{recode_num}} and \code{\link{recode_char}} and \code{replace_non_finite} is replaced by \code{\link{replace_Inf}}. Since version 1.5.1, \code{is.regular} is depreciated - the function is not very useful and clashes with a more important one in the \emph{zoo} package.
 
 %The function \code{as.factor.GRP} was renamed to \code{\link{as.factor_GRP}} to make it clear that this is not a method, and \code{group_names.GRP} was renamed to \code{\link{GRPnames}} for the same reason and to increase parsimony.
 }
@@ -14,10 +15,13 @@ The functions \code{Recode} and \code{replace_non_finite} available until \emph{
 Recode(X, \dots, copy = FALSE, reserve.na.nan = TRUE, regex = FALSE)
 
 replace_non_finite(X, value = NA, replace.nan = TRUE)
+
+is.regular(x)
 }
 %- maybe also 'usage' for other objects documented here.
 \arguments{
   \item{X}{a vector, matrix or data frame.}
+  \item{x}{an R object. }
   \item{\dots}{comma-separated recode arguments of the form: \code{name = newname, `2` = 0, `NaN` = 0, `NA` = 0, `Inf` = NA, `-Inf` = NA}, etc\dots}
   \item{value}{a single (scalar) value to replace matching elements with. Default is \code{NA}.}
   \item{copy}{logical. For reciprocal or sequential replacements of the form \code{a = b, b = c} make a copy of \code{X} to prevent \code{a} being replaced with \code{b} and then all \code{b}-values being replaced with \code{c} again. In general \code{Recode} does the replacements one-after the other, starting with the first. }

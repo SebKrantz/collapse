@@ -43,10 +43,14 @@ atomic_elem <- function(l, return = "sublist", keep.class = FALSE)
   setAttributes(l, al)
 }
 
-is.regular <- function(x) is.list(x) || is.atomic(x) # fastest way?
+is_regular <- function(x) is.list(x) || is.atomic(x) # fastest way?
+is.regular <- function(x) {
+  .Deprecated(msg = "is.regular is depreciated, see help('collapse-depreciated')")
+  is.list(x) || is.atomic(x)
+}
 
 is.unlistable <- function(l, DF.as.list = FALSE) if(DF.as.list) all(unlist(rapply(l, is.atomic, how = "list"), use.names = FALSE)) else
-  all(unlist(rapply2d(l, is.regular), use.names = FALSE)) # fastest way?
+  all(unlist(rapply2d(l, is_regular), use.names = FALSE)) # fastest way?
 
 # If data.frame, search all, otherwise, make optional counting df or not, but don't search them.
 ldepth <- function(l, DF.as.list = FALSE) {
@@ -218,13 +222,13 @@ reg_elem <- function(l, recursive = TRUE, keep.tree = FALSE, keep.class = FALSE)
   # if(inherits(l, "data.frame")) if(keep.class) return(l) else return(unattrib(l))
   if(recursive) {
     is.subl <- function(x) is.list(x) && !inherits(x, "data.frame")
-    l <- list_extract_FUN(l, is.regular, is.subl, keep.tree)
+    l <- list_extract_FUN(l, is_regular, is.subl, keep.tree)
     if(keep.class && is.list(l)) {
       al[["names"]] <- names(l)
       return(setAttributes(l, al))
     } else return(l)
   } else {
-    matches <- which(vapply(l, is.regular, TRUE, USE.NAMES = FALSE)) # l <- base::Filter(is.regular,l)
+    matches <- which(vapply(l, is_regular, TRUE, USE.NAMES = FALSE)) # l <- base::Filter(is_regular,l)
     if(keep.tree || length(matches) != 1L) {
       if(keep.class) return(fcolsubset(l, matches)) else return(.subset(l, matches))
     } else return(.subset2(l, matches))
@@ -243,7 +247,7 @@ irreg_elem <- function(l, recursive = TRUE, keep.tree = FALSE, keep.class = FALS
       return(setAttributes(l, al))
     } else return(l)
   } else {
-    matches <- which(vapply(l, is.irregular, TRUE, USE.NAMES = FALSE)) # l <- base::Filter(is.regular,l)
+    matches <- which(vapply(l, is.irregular, TRUE, USE.NAMES = FALSE)) # l <- base::Filter(is_regular,l)
     if(keep.tree || length(matches) != 1L) {
       if(keep.class) return(fcolsubset(l, matches)) else return(.subset(l, matches))
     } else return(.subset2(l, matches))
