@@ -16,7 +16,7 @@ vignette: >
 1. To facilitate complex data transformation, exploration and computing tasks in R.
 2. To help make R code fast, flexible, parsimonious and programmer friendly. 
 
-It among the fastest, most broadly compatible, and most well documented packages on CRAN. Documentation takes 4 forms:
+It among the fastest, most broadly compatible, and most well documented packages on CRAN. Documentation comes in 4 different forms:
 
 ## Built-In Structured Documentation
 
