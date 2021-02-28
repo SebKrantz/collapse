@@ -222,6 +222,7 @@ importFrom("stats", "as.formula", "complete.cases", "cor", "cov", "var", "pt",
  export(qsu.data.frame)
  export(descr)
  export(rapply2d)
+ export(t_list)
  export(rsplit)
  export(rsplit.default)
  export(rsplit.data.frame)
