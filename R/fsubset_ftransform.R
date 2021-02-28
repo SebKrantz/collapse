@@ -100,78 +100,78 @@ ftransform_core <- function(X, value) { # value is unclassed, X has all attribut
   setAttributes(c(X, value[!matched]), ax)
 }
 
-ftransform <- function(X, ...) { # `_data` ?
-  if(!is.list(X)) stop("X needs to be a list of equal length columns or a data.frame")
-  e <- eval(substitute(list(...)), X, parent.frame())
+ftransform <- function(.data, ...) { # `_data` ?
+  if(!is.list(.data)) stop(".data needs to be a list of equal length columns or a data.frame")
+  e <- eval(substitute(list(...)), .data, parent.frame())
   if(is.null(names(e)) && length(e) == 1L && is.list(e[[1L]])) e <- unclass(e[[1L]]) # support list input -> added in v1.3.0
-  ftransform_core(X, e)
+  ftransform_core(.data, e)
 }
 
 tfm <- ftransform
 
-`ftransform<-` <- function(X, value) {
-  if(!is.list(X)) stop("X needs to be a list of equal length columns or a data.frame")
+`ftransform<-` <- function(.data, value) {
+  if(!is.list(.data)) stop(".data needs to be a list of equal length columns or a data.frame")
   if(!is.list(value)) stop("value needs to be a named list")
-  ftransform_core(X, unclass(value))
+  ftransform_core(.data, unclass(value))
 }
 `tfm<-` <- `ftransform<-`
 
 # Example:
 # ftransform(mtcars, cyl = cyl + 10, vs2 = 1, mpg = NULL)
 
-ftransformv <- function(X, vars, FUN, ..., apply = TRUE) {
-  if(!is.list(X)) stop("X needs to be a list of equal length columns or a data.frame")
+ftransformv <- function(.data, vars, FUN, ..., apply = TRUE) {
+  if(!is.list(.data)) stop(".data needs to be a list of equal length columns or a data.frame")
   if(!is.function(FUN)) stop("FUN needs to be a function")
   if(apply) {
-    clx <- oldClass(X)
-    oldClass(X) <- NULL
-    vars <- cols2int(vars, X, names(X), FALSE)
-    value <- unattrib(X[vars])
+    clx <- oldClass(.data)
+    oldClass(.data) <- NULL
+    vars <- cols2int(vars, .data, names(.data), FALSE)
+    value <- unattrib(.data[vars])
     value <- if(missing(...)) lapply(value, FUN) else
-      eval(substitute(lapply(value, FUN, ...)), X, parent.frame())
+      eval(substitute(lapply(value, FUN, ...)), .data, parent.frame())
   } else {
-    nam <- attr(X, "names")
-    vars <- cols2int(vars, X, nam, FALSE)
-    value <- fcolsubset(X, vars)
+    nam <- attr(.data, "names")
+    vars <- cols2int(vars, .data, nam, FALSE)
+    value <- fcolsubset(.data, vars)
     value <- if(missing(...)) unclass(FUN(value)) else # unclass needed here ? -> yes for lengths...
-      unclass(eval(substitute(FUN(value, ...)), X, parent.frame()))
-    if(!identical(names(value), nam[vars])) return(ftransform_core(X, value))
-    clx <- oldClass(X)
-    oldClass(X) <- NULL
+      unclass(eval(substitute(FUN(value, ...)), .data, parent.frame()))
+    if(!identical(names(value), nam[vars])) return(ftransform_core(.data, value))
+    clx <- oldClass(.data)
+    oldClass(.data) <- NULL
   }
   le <- lengths(value, FALSE)
-  nr <- length(X[[1L]])
-  if(all(le == nr)) X[vars] <- value else if(all(le == 1L))
-    X[vars] <- lapply(value, rep, nr) else {
-      if(apply) names(value) <- names(X)[vars]
-      return(ftransform_core(X, value)) # stop("lengths of result must be nrow(X) or 1")
+  nr <- length(.data[[1L]])
+  if(all(le == nr)) .data[vars] <- value else if(all(le == 1L))
+    .data[vars] <- lapply(value, rep, nr) else {
+      if(apply) names(value) <- names(.data)[vars]
+      return(ftransform_core(.data, value)) # stop("lengths of result must be nrow(.data) or 1")
   }
-  return(`oldClass<-`(X, clx))
+  return(`oldClass<-`(.data, clx))
 }
 
 tfmv <- ftransformv
 
-settransform <- function(X, ...) eval.parent(substitute(X <- ftransform(X, ...))) # can use `<-`(X, ftransform(X,...)) but not faster ..
+settransform <- function(.data, ...) eval.parent(substitute(.data <- ftransform(.data, ...))) # can use `<-`(.data, ftransform(.data,...)) but not faster ..
 
 settfm <- settransform
 
-settransformv <- function(X, vars, FUN, ..., apply = TRUE)
-  eval.parent(substitute(X <- ftransformv(X, vars, FUN, ..., apply = apply)))
+settransformv <- function(.data, vars, FUN, ..., apply = TRUE)
+  eval.parent(substitute(.data <- ftransformv(.data, vars, FUN, ..., apply = apply)))
 
 settfmv <- settransformv
 
 
-fcompute <- function(X, ...) { # within ?
-  ax <- attributes(X)
-  if(!length(ax[["names"]]) || fanyDuplicated(ax[["names"]])) stop("All columns of X have to be uniquely named")
-  e <- eval(substitute(list(...)), X, parent.frame())
+fcompute <- function(.data, ...) { # within ?
+  ax <- attributes(.data)
+  if(!length(ax[["names"]]) || fanyDuplicated(ax[["names"]])) stop("All columns of .data have to be uniquely named")
+  e <- eval(substitute(list(...)), .data, parent.frame())
   if(is.null(names(e)) && length(e) == 1L && is.list(e[[1L]])) e <- unclass(e[[1L]]) # support list input -> added in v1.3.0 # sensible ??? what application ??
   ax[["names"]] <- names(e)
   le <- lengths(e, FALSE)
-  nr <- fnrow2(X)
+  nr <- fnrow2(.data)
   rl <- le == nr
   if(all(rl)) return(setAttributes(e, ax)) # All computed vectors have the right length
-  if(any(1L < le & !rl)) stop("Lengths of replacements must be equal to nrow(X) or 1")
+  if(any(1L < le & !rl)) stop("Lengths of replacements must be equal to nrow(.data) or 1")
   e[!rl] <- lapply(e[!rl], rep, nr)
   setAttributes(e, ax)
 }

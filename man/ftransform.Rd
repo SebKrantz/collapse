@@ -17,38 +17,38 @@
 
 \usage{
 # Modify and return data frame
-ftransform(X, \dots)
-ftransformv(X, vars, FUN, \dots, apply = TRUE)
-tfm(X, \dots)               # Shortcut for ftransform
-tfmv(X, vars, FUN, \dots, apply = TRUE)
+ftransform(.data, \dots)
+ftransformv(.data, vars, FUN, \dots, apply = TRUE)
+tfm(.data, \dots)               # Shortcut for ftransform
+tfmv(.data, vars, FUN, \dots, apply = TRUE)
 
 # Modify data frame by reference
-settransform(X, \dots)
-settransformv(X, vars, FUN, \dots, apply = TRUE)
-settfm(X, \dots)            # Shortcut for settransform
-settfmv(X, vars, FUN, \dots, apply = TRUE)
+settransform(.data, \dots)
+settransformv(.data, vars, FUN, \dots, apply = TRUE)
+settfm(.data, \dots)            # Shortcut for settransform
+settfmv(.data, vars, FUN, \dots, apply = TRUE)
 
 # Replace/add modified columns in/to a data frame
-ftransform(X) <- value
-tfm(X) <- value           # Shortcut for ftransform<-
+ftransform(.data) <- value
+tfm(.data) <- value           # Shortcut for ftransform<-
 
 # Compute columns, returned as a new data frame
-fcompute(X, \dots)
+fcompute(.data, \dots)
 }
 \arguments{
-    \item{X}{a data frame or named list of columns.}
-    \item{\dots}{further arguments of the form \code{column = value}. The \code{value} can be a combination of other columns, a scalar value, or \code{NULL}, which deletes \code{column}. Alternatively it is also possible to place a single list here, which will be treated like a list of \code{column = value} arguments. For \code{ftransformv}, \code{\dots} can be used to pass further arguments to \code{FUN}. \emph{Note:} The ellipsis (\code{\dots}) is always evaluated within the data frame (\code{X}) environment. See Examples.}
+    \item{.data}{a data frame or named list of columns.}
+    \item{\dots}{further arguments of the form \code{column = value}. The \code{value} can be a combination of other columns, a scalar value, or \code{NULL}, which deletes \code{column}. Alternatively it is also possible to place a single list here, which will be treated like a list of \code{column = value} arguments. For \code{ftransformv}, \code{\dots} can be used to pass further arguments to \code{FUN}. \emph{Note:} The ellipsis (\code{\dots}) is always evaluated within the data frame (\code{.data}) environment. See Examples.}
     \item{vars}{variables to be transformed by applying \code{FUN} to them: select using names, indices, a logical vector or a selector function (e.g. \code{is.numeric}).}
-    \item{FUN}{a single function yielding a result of length \code{NROW(X)} or 1. See also \code{apply}.}
-    \item{apply}{logical. \code{TRUE} (default) will apply \code{FUN} to each column selected in \code{vars}; \code{FALSE} will apply \code{FUN} to the subsetted data frame i.e. \code{FUN(get_vars(X, vars), ...)}. The latter is useful for \emph{collapse} functions with data frame or grouped / panel data frame methods, yielding performance gains and enabling grouped transformations. See Examples.}
+    \item{FUN}{a single function yielding a result of length \code{NROW(.data)} or 1. See also \code{apply}.}
+    \item{apply}{logical. \code{TRUE} (default) will apply \code{FUN} to each column selected in \code{vars}; \code{FALSE} will apply \code{FUN} to the subsetted data frame i.e. \code{FUN(get_vars(.data, vars), ...)}. The latter is useful for \emph{collapse} functions with data frame or grouped / panel data frame methods, yielding performance gains and enabling grouped transformations. See Examples.}
     \item{value}{a named list of replacements, it will be treated like an evaluated list of \code{column = value} arguments.}
 }
 \details{
   The \code{\dots} arguments to \code{ftransform} are tagged
   vector expressions, which are evaluated in the data frame
-  \code{X}.  The tags are matched against \code{names(X)}, and for
+  \code{.data}.  The tags are matched against \code{names(.data)}, and for
   those that match, the values replace the corresponding variable in
-  \code{X}, whereas the others are appended to \code{X}. It is also possible to delete columns by assigning \code{NULL} to them, i.e. \code{ftransform(data, colk = NULL)} removes \code{colk} from the data. \emph{Note} that \code{names(X)} and the names of the \code{...} arguments are checked for uniqueness beforehand, yielding an error if this is not the case.
+  \code{.data}, whereas the others are appended to \code{.data}. It is also possible to delete columns by assigning \code{NULL} to them, i.e. \code{ftransform(data, colk = NULL)} removes \code{colk} from the data. \emph{Note} that \code{names(.data)} and the names of the \code{...} arguments are checked for uniqueness beforehand, yielding an error if this is not the case.
 
   Since \emph{collapse} v1.3.0, is is also possible to pass a single named list to \code{\dots}, i.e. \code{ftransform(data, newdata)}. This list will be treated like a list of tagged vector expressions. \emph{Note} the different behavior: \code{ftransform(data, list(newcol = col1))} is the same as \code{ftransform(data, newcol = col1)}, whereas \code{ftransform(data, newcol = as.list(col1))} creates a list column. Something like \code{ftransform(data, as.list(col1))} gives an error because the list is not named. See Examples.   % and \code{ftransform(data, as.list(col1))} gives an error because an unnamed list is passed. % , but \code{ftransform(data, setNames(as.list(col1), col1))} will work and add the values of \code{col1} as separate columns.
 
@@ -60,10 +60,10 @@ fcompute(X, \dots)
 
   The function \code{settransform} does all of that by reference, but uses base-R's copy-on modify semantics, which is equivalent to replacing the data with \code{<-} (thus it is still memory efficient but the data will have a different memory address afterwards).
 
-The function \code{fcompute} works just like \code{ftransform}, but returns only the changed / computed columns without modifying or appending the data in \code{X}.
+The function \code{fcompute} works just like \code{ftransform}, but returns only the changed / computed columns without modifying or appending the data in \code{.data}.
 }
 \value{
-  The modified data frame \code{X}, or, for \code{fcompute}, a new data frame with the columns computed on \code{X}. All attributes of \code{X} are preserved.
+  The modified data frame \code{.data}, or, for \code{fcompute}, a new data frame with the columns computed on \code{.data}. All attributes of \code{.data} are preserved.
 }
 \seealso{\code{\link{with}}, \code{\link{within}}, \code{\link{add_vars}}, \link[=A3-fast-data-manipulation]{Data Frame Manipulation}, \link[=collapse-documentation]{Collapse Overview}
 }
@@ -86,7 +86,7 @@ head(ftransform(airquality, # Grouped operations by month:
 head(ftransform(airquality, Ozone_Month_high_median =
                   fmedian(Ozone, list(Month, Temp > fbetween(Temp, Month)), TRA = "replace_fill")))
 
-## ftransformv can be used to modify multiply columns using a function
+## ftransformv can be used to modify multiple columns using a function
 head(ftransformv(airquality, 1:3, log))
 head(`[<-`(airquality, 1:3, value = lapply(airquality[1:3], log))) # Same thing in base R
 
