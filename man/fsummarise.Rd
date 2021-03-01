@@ -6,7 +6,7 @@
 Fast Summarise
 }
 \description{
-\code{fsummarize} is a much faster version of \code{dplyr::summarise}, when used together with the \emph{\link[=A1-fast-statistical-functions]{Fast Statistical Functions}}.
+\code{fsummarize} is a much faster version of \code{dplyr::summarise}, when used together with the \link[=A1-fast-statistical-functions]{Fast Statistical Functions}.
 }
 \usage{
 fsummarise(.data, ..., keep.group_vars = TRUE)
@@ -18,7 +18,7 @@ smr(.data, ..., keep.group_vars = TRUE)        # Shortcut
  a (grouped) data frame or named list of columns. Grouped data can be created with \code{\link{fgroup_by}} or \code{dplyr::group_by}.
 }
   \item{\dots}{
-  name-value pairs of summary functions. The name will be the name of the variable in the result. Functions when applied to a vector need to return a scalar. For fast performance and weighted aggregation use the \emph{\link[=A1-fast-statistical-functions]{Fast Statistical Functions}}.
+  name-value pairs of summary functions. The name will be the name of the variable in the result. Functions when applied to a vector need to return a scalar. For fast performance and weighted aggregation use the \link[=A1-fast-statistical-functions]{Fast Statistical Functions}.
 }
   \item{keep.group_vars}{
 logical. \code{FALSE} removes grouping variables after computation.
@@ -28,7 +28,7 @@ logical. \code{FALSE} removes grouping variables after computation.
 If \code{.data} is grouped by \code{\link{fgroup_by}} or \code{dplyr::group_by}, the result is a data frame of the same class and attributes with rows reduced to the number of groups. If \code{.data} is not grouped, the result is a data frame of the same class and attributes with 1 row.
 }
 \note{
-Functions other than the \emph{\link[=A1-fast-statistical-functions]{Fast Statistical Functions}} cannot be passed weight vectors as \code{fsummarize} only splits the \code{.data}, not any arguments passed to functions. If you want to summarize data with a weighted function you created yourself, use \emph{data.table}.
+Functions other than the \link[=A1-fast-statistical-functions]{Fast Statistical Functions} cannot be passed weight vectors as \code{fsummarize} only splits the \code{.data}, not any arguments passed to functions. If you want to summarize data with a weighted function you created yourself, use \emph{data.table}.
 }
 \seealso{
 \code{\link{collap}}, \link[=A3-fast-data-manipulation]{Data Frame Manipulation}, \link[=A1-fast-statistical-functions]{Fast Statistical Functions}, \link[=collapse-documentation]{Collapse Overview}

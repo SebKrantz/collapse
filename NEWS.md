@@ -1,3 +1,36 @@
+# collapse 1.5.2
+
+### Changes to Functionality
+
+* The first argument of `ftransform` was renamed to `.data` from `X`. This was done to enable the user to transform columns named "X". For the same reason the first argument of `frename` was renamed to `.x` from `x` (not `.data` to make it explicit that `.x` can be any R object with a "names" attribute). It is not possible to depreciate `X` and `x` without at the same time undoing the benefits of the argument renaming, thus this change is immediate and code breaking in rare cases where the first argument is explicitly set. 
+
+* The function `is.regular` to check whether an R object is atomic or list-like is depreciated and will be removed before the end of the year. This was done to avoid a namespace clash with the *zoo* package (#127).
+
+### Bug Fixes
+
+* For reasons of efficiency, most statistical and transformation functions used the C macro `SHALLOW_DUPLICATE_ATTRIB` to copy column attributes in a data frame. Since this macro does not copy S4 object bits, it caused some problems with S4 object columns such as POSIXct (e.g. computing lags/leads, first and last values on these columns). This is now fixed, all statistical functions (apart from `fvar` and `fsd`) now use `DUPLICATE_ATTRIB` and thus preserve S4 object columns (#91). 
+
+<!-- Also `BY` now handles POSIXct properly. -->
+
+* `unlist2d` produced a subsetting error if an empty list was present in the list-tree. This is now fixed, empty or `NULL` elements in the list-tree are simply ignored (#99).
+
+### Additions
+
+* A function `fsummarize` was added to facilitate translating *dplyr* / *data.table* code to *collapse*. Like `collap`, it is only very fast when used with the *Fast Statistical Functions*. 
+
+* A function `t_list` is made available to efficiently transpose lists of lists. 
+
+<!-- 
+* A small set of row-wise statistical functions: `rowsums`, `rowmeans`, `rowNobs`, `rowmins` and `rowmaxs` is introduced for fast (grouped, weighted) row-wise computations on matrices and data frames. -->
+
+### Improvements
+<!-- 
+* `ffirst` and `flast` were rewritten in C, with slightly better performance and reduced file size. -->
+
+* C files are compiled -O3 on Windows, which gives a boost of around 20% for the grouping mechanism applied to character data.
+
+
+
 # collapse 1.5.1
 A small patch for 1.5.0 that:
 

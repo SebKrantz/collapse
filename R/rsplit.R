@@ -3,7 +3,15 @@ fsplit <- function(x, f, drop, ...) if(drop && is.factor(f))
   split(x, .Call(Cpp_fdroplevels, f, !inherits(f, "na.included")), drop = FALSE, ...) else
     split(x, qF(f), drop = FALSE, ...)
 
-t_list <- function(x) .Call(Cpp_mctl, do.call(rbind, x), TRUE, 0L)
+t_list2 <- function(x) .Call(Cpp_mctl, do.call(rbind, x), TRUE, 0L)
+
+# This is for export
+t_list <- function(l) {
+  lmat <- do.call(rbind, l)
+  rn <- dimnames(lmat)[[1L]]
+  .Call(C_copyMostAttrib,
+        lapply(.Call(Cpp_mctl, lmat, TRUE, 0L), `names<-`, rn), l)
+}
 
 
 # fsplit_DF2 <- function(x, f, drop, ...) {
@@ -45,7 +53,7 @@ rsplit.default <- function(x, fl, drop = TRUE, flatten = FALSE, ...) { # , check
   rspl <- function(y, fly) {
     if(length(fly) == 1L) return(fsplit(y, fly[[1L]], drop, ...))
     mapply(rspl, y = fsplit(y, fly[[1L]], drop, ...),
-           fly = t_list(lapply(fly[-1L], fsplit, fly[[1L]], drop, ...)), SIMPLIFY = FALSE) # Possibility to avoid transpose ? C_subsetDT ??
+           fly = t_list2(lapply(fly[-1L], fsplit, fly[[1L]], drop, ...)), SIMPLIFY = FALSE) # Possibility to avoid transpose ? C_subsetDT ??
   }
   rspl(x, fl)
 }
@@ -105,7 +113,7 @@ rsplit.data.frame <- function(x, by, drop = TRUE, flatten = FALSE, # check = TRU
   rspl_DF <- function(y, fly) {
     if(length(fly) == 1L) return(fsplit_DF(y, fly[[1L]], ...))
     mapply(rspl_DF, y = fsplit_DF(y, fly[[1L]], ...),
-           fly = t_list(lapply(fly[-1L], fsplit, fly[[1L]], drop, ...)), SIMPLIFY = FALSE) # Possibility to avoid transpose ?
+           fly = t_list2(lapply(fly[-1L], fsplit, fly[[1L]], drop, ...)), SIMPLIFY = FALSE) # Possibility to avoid transpose ?
   }                # use C_subsetDT here as well ??? what is faster ???
   rspl_DF(x, by)
 }

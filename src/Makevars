@@ -10,6 +10,8 @@ strippedLib: $(SHLIB)
 # PKG_CXXFLAGS="-O3 -pipe"
 # PKG_CPPFLAGS=-O3 -pipe
 
+# PKG_CFLAGS = -O3
+
 # CFLAGS = -g -O -mtune=native
 ## for C++ code
 # CXXFLAGS = -g -O -mtune=native

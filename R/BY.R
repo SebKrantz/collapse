@@ -13,7 +13,7 @@ BY.default <- function(x, g, FUN, ..., use.g.names = TRUE, sort = TRUE,
   if(!is.factor(g)) g <- if(is.GRP(g)) as.factor_GRP(g) else if(is.list(g))
                          as.factor_GRP(GRP.default(g, sort = sort, call = FALSE)) else
                            qF(g, sort = sort, na.exclude = FALSE)
-    res <- aplyfun(split.default(x, g), FUN, ...)
+    res <- aplyfun(split(x, g), FUN, ...)
     if(simplify < 3L) {
       if(expand.wide) {
         res <- do.call(rbind, res)
@@ -58,7 +58,7 @@ BY.data.frame <- function(x, g, FUN, ..., use.g.names = TRUE, sort = TRUE,
     ax <- attributes(x)
     if(expand.wide) {
       if(return < 3L) { # Return a data.frame
-        splitfun <- function(y) .Call(Cpp_mctl, do.call(rbind, lapply(split.default(y, g), FUN, ...)), TRUE, 0L)
+        splitfun <- function(y) .Call(Cpp_mctl, do.call(rbind, lapply(split(y, g), FUN, ...)), TRUE, 0L)
         res <- unlist(aplyfun(x, splitfun), recursive = FALSE, use.names = TRUE)
         if(return == 1L) {
           ax[["names"]] <- names(res)
@@ -81,14 +81,14 @@ BY.data.frame <- function(x, g, FUN, ..., use.g.names = TRUE, sort = TRUE,
       if(use.g.names && (matl || !inherits(x, "data.table"))) { # using names...
         attributes(x) <- NULL
         res <- vector("list", length(x))
-        res[[1L]] <- unlist(lapply(split.default(`names<-`(x[[1L]], ax[["row.names"]]), g), FUN, ...), FALSE, TRUE)
+        res[[1L]] <- unlist(lapply(split(`names<-`(x[[1L]], ax[["row.names"]]), g), FUN, ...), FALSE, TRUE)
         if(matl) dn <- list(names(res[[1L]]), ax[["names"]]) else ax[["row.names"]] <- names(res[[1L]])
         setattr(res[[1L]], "names", NULL) # faster than  names(res[[1]]) <- NULL
         if(!matl && typeof(res[[1L]]) == typeof(x[[1L]])) { # length(res[[1]]) == nrow(x) &&   always safe ?
           setattr(x[[1L]], "names", NULL)
           duplattributes(res[[1L]], x[[1L]])
-          splitfun <- function(y) duplAttributes(unlist(lapply(split.default(y, g), FUN, ...), FALSE, FALSE), y)
-        } else splitfun <- function(y) unlist(lapply(split.default(y, g), FUN, ...), FALSE, FALSE)
+          splitfun <- function(y) duplAttributes(unlist(lapply(split(y, g), FUN, ...), FALSE, FALSE), y)
+        } else splitfun <- function(y) unlist(lapply(split(y, g), FUN, ...), FALSE, FALSE)
         res[-1L] <- aplyfun(x[-1L], splitfun)
         if(matl) {
           res <- do.call(cbind, res)
@@ -102,7 +102,7 @@ BY.data.frame <- function(x, g, FUN, ..., use.g.names = TRUE, sort = TRUE,
           dimr <- dim(res)
           ax <- list(dim = dimr, dimnames = list(if(length(x[[1L]]) == dimr[1L] && ax[["row.names"]][1L] != "1") ax[["row.names"]] else NULL, ax[["names"]]))
         } else {
-          splitfun <- function(y) cond_duplAttributes(unlist(lapply(split.default(y, g), FUN, ...), FALSE, FALSE), y)
+          splitfun <- function(y) cond_duplAttributes(unlist(lapply(split(y, g), FUN, ...), FALSE, FALSE), y)
           res <- aplyfun(x, splitfun)
           if(length(res[[1L]]) != length(x[[1L]])) ax[["row.names"]] <- .set_row_names(length(res[[1L]]))
         }
@@ -110,9 +110,9 @@ BY.data.frame <- function(x, g, FUN, ..., use.g.names = TRUE, sort = TRUE,
     }
     return(setAttributes(res, ax))
   }
-  if(expand.wide) return(aplyfun(x, function(y) do.call(rbind, lapply(split.default(y, g), FUN, ...))))
-  if(use.g.names) return(aplyfun(x, function(y) lapply(split.default(y, g), FUN, ...))) else
-  return(aplyfun(x, function(y) `names<-`(lapply(split.default(y, g), FUN, ...), NULL)))
+  if(expand.wide) return(aplyfun(x, function(y) do.call(rbind, lapply(split(y, g), FUN, ...))))
+  if(use.g.names) return(aplyfun(x, function(y) lapply(split(y, g), FUN, ...))) else
+  return(aplyfun(x, function(y) `names<-`(lapply(split(y, g), FUN, ...), NULL)))
 }
 
 BY.list <- function(x, g, FUN, ..., use.g.names = TRUE, sort = TRUE,
