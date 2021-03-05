@@ -10,6 +10,7 @@
 ^cran-comments\.md$
 ^experimental$
 ^testing$
+^tests$
 ^\.travis\.yml$
 ^\.build\.timestamp$
 collapse_intro_files
