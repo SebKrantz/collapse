@@ -56,7 +56,7 @@ Depends: R (>= 2.10)
 Imports: Rcpp (>= 1.0.1)
 LinkingTo: Rcpp
 Suggests: dplyr, plm, data.table, matrixStats, magrittr, fixest, lfe, vars, weights, kit, 
-          RcppArmadillo, RcppEigen, ggplot2, scales, microbenchmark, knitr, rmarkdown
+          RcppArmadillo, RcppEigen, ggplot2, scales, microbenchmark, testthat, covr, knitr, rmarkdown
 SystemRequirements: C++11
 VignetteBuilder: knitr
 
