@@ -72,7 +72,7 @@
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">collapse</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">1.5.1</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">1.5.3</span>
       </span>
     </div>
 
@@ -94,13 +94,13 @@
       <ul class="nav navbar-nav navbar-right">
         <li>
   <a href="https://twitter.com/collapse_R" target="_blank">
-    <span class="fa fa-twitter"></span>
+    <span class="fas fa-twitter"></span>
      
   </a>
 </li>
 <li>
   <a href="https://github.com/SebKrantz/collapse" target="_blank">
-    <span class="fa fa-github"></span>
+    <span class="fas fa-github"></span>
      
   </a>
 </li>
@@ -168,7 +168,7 @@
 <p><em>Performance Notes:</em> For Fast Statistical Functions, using <code><a href='fmedian.html'>fmedian(X, TRA = "-")</a></code> will be a tiny bit faster than <code>X %r-% fmedian(X)</code>. Also use <code><a href='fbetween, fwithin.html'>fwithin(X)</a></code> for fast centering using the mean, and <code><a href='fscale.html'>fscale(X)</a></code> for fast scaling and centering or mean-preserving scaling.</p>
     <h2 class="hasAnchor" id="see-also"><a class="anchor" href="#see-also"></a>See also</h2>
 
-    <div class='dont-index'><p><code><a href='TRA.html'>TRA</a></code>, <code><a href='dapply.html'>dapply</a></code>, <a href='A6-data-transformations.html'>Data Transformations</a>, <a href='index.html'>Collapse Overview</a></p></div>
+    <div class='dont-index'><p><code><a href='TRA.html'>TRA</a></code>, <code><a href='dapply.html'>dapply</a></code>, <a href='data-transformations.html'>Data Transformations</a>, <a href='index.html'>Collapse Overview</a></p></div>
 
     <h2 class="hasAnchor" id="examples"><a class="anchor" href="#examples"></a>Examples</h2>
     <pre class="examples"><div class='input'><span class='co'>## Using data frame's / lists</span>
@@ -239,7 +239,7 @@
 #&gt; Ford Pantera L       7.8   0 343.0 256 -3.78 -4.830  6.50 -8 -7   -3   -4
 #&gt; Ferrari Dino        13.7   0 139.0 169 -2.38 -3.230  9.50 -6 -5   -1    0
 #&gt; Maserati Bora        7.0   0 293.0 327 -4.46 -4.430  6.60 -8 -7   -3    0
-#&gt; Volvo 142E          17.4   0 117.0 105  0.11 -1.220 14.60 -3 -3    0   -2</div><div class='input'><span class='va'>mtcars</span> <span class='op'>%r-%</span> <span class='fu'><a href='AA2-small-helpers.html'>seq_col</a></span><span class='op'>(</span><span class='va'>mtcars</span><span class='op'>)</span>
+#&gt; Volvo 142E          17.4   0 117.0 105  0.11 -1.220 14.60 -3 -3    0   -2</div><div class='input'><span class='va'>mtcars</span> <span class='op'>%r-%</span> <span class='fu'><a href='small-helpers.html'>seq_col</a></span><span class='op'>(</span><span class='va'>mtcars</span><span class='op'>)</span>
 </div><div class='output co'>#&gt;                      mpg cyl  disp  hp  drat     wt  qsec vs am gear carb
 #&gt; Mazda RX4           20.0   4 157.0 106 -1.10 -3.380  9.46 -8 -8   -6   -7
 #&gt; Mazda RX4 Wag       20.0   4 157.0 106 -1.10 -3.125 10.02 -8 -8   -6   -7
@@ -440,7 +440,7 @@
 #&gt; Maserati Bora        1   25   64
 #&gt; Volvo 142E           1   16    4</div><div class='input'>
 <span class='co'>## Using matrices</span>
-<span class='va'>X</span> <span class='op'>&lt;-</span> <span class='fu'><a href='A4-quick-conversion.html'>qM</a></span><span class='op'>(</span><span class='va'>mtcars</span><span class='op'>)</span>
+<span class='va'>X</span> <span class='op'>&lt;-</span> <span class='fu'><a href='quick-conversion.html'>qM</a></span><span class='op'>(</span><span class='va'>mtcars</span><span class='op'>)</span>
 <span class='va'>X</span> <span class='op'>%cr%</span> <span class='va'>v</span>
 </div><div class='output co'>#&gt;                     mpg cyl disp hp drat wt qsec vs am gear carb
 #&gt; Mazda RX4             6   6    6  6    6  6    6  6  6    6    6

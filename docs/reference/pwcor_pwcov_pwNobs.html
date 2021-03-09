@@ -73,7 +73,7 @@ Notes: weights::wtd.cors is imported for weighted pairwise correlations (written
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">collapse</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">1.5.1</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">1.5.3</span>
       </span>
     </div>
 
@@ -95,13 +95,13 @@ Notes: weights::wtd.cors is imported for weighted pairwise correlations (written
       <ul class="nav navbar-nav navbar-right">
         <li>
   <a href="https://twitter.com/collapse_R" target="_blank">
-    <span class="fa fa-twitter"></span>
+    <span class="fas fa-twitter"></span>
      
   </a>
 </li>
 <li>
   <a href="https://github.com/SebKrantz/collapse" target="_blank">
-    <span class="fa fa-github"></span>
+    <span class="fas fa-github"></span>
      
   </a>
 </li>
@@ -200,10 +200,10 @@ Notes: weights::wtd.cors is imported for weighted pairwise correlations (written
     <p>a numeric matrix, 3D array or list of matrices with the computed statistics. For <code>pwcor</code> and <code>pwcov</code> the object has a class 'pwcor' and 'pwcov', respectively.</p>
     <h2 class="hasAnchor" id="see-also"><a class="anchor" href="#see-also"></a>See also</h2>
 
-    <div class='dont-index'><p><code><a href='qsu.html'>qsu</a></code>, <a href='A9-summary-statistics.html'>Summary Statistics</a>, <a href='index.html'>Collapse Overview</a> <!-- %% ~~objects to See Also as --></p></div>
+    <div class='dont-index'><p><code><a href='qsu.html'>qsu</a></code>, <a href='summary-statistics.html'>Summary Statistics</a>, <a href='index.html'>Collapse Overview</a> <!-- %% ~~objects to See Also as --></p></div>
 
     <h2 class="hasAnchor" id="examples"><a class="anchor" href="#examples"></a>Examples</h2>
-    <pre class="examples"><div class='input'><span class='va'>mna</span> <span class='op'>&lt;-</span> <span class='fu'><a href='AA2-small-helpers.html'>na_insert</a></span><span class='op'>(</span><span class='va'>mtcars</span><span class='op'>)</span>
+    <pre class="examples"><div class='input'><span class='va'>mna</span> <span class='op'>&lt;-</span> <span class='fu'><a href='small-helpers.html'>na_insert</a></span><span class='op'>(</span><span class='va'>mtcars</span><span class='op'>)</span>
 <span class='fu'>pwcor</span><span class='op'>(</span><span class='va'>mna</span><span class='op'>)</span>
 </div><div class='output co'>#&gt;        mpg   cyl  disp    hp  drat    wt  qsec    vs    am  gear  carb
 #&gt; mpg     1   -.85  -.83  -.79   .69  -.84   .43   .64   .57   .43  -.54
@@ -219,28 +219,28 @@ Notes: weights::wtd.cors is imported for weighted pairwise correlations (written
 #&gt; carb  -.54   .52   .35   .77  -.11   .38  -.66  -.53   .08   .34    1 </div><div class='input'><span class='fu'>pwcov</span><span class='op'>(</span><span class='va'>mna</span><span class='op'>)</span>
 </div><div class='output co'>#&gt;            mpg       cyl      disp        hp      drat        wt      qsec
 #&gt; mpg      34.52     -9.14   -581.29   -333.81      2.19     -4.17      4.85
-#&gt; cyl      -9.14      3.06    189.48    104.41      -.63      1.04     -2.16
-#&gt; disp   -581.29    189.48   1444.07   6873.60    -46.11     84.26   -116.50
+#&gt; cyl      -9.14      3.06    189.48    104.41     -0.63      1.04     -2.16
+#&gt; disp   -581.29    189.48  14440.07   6873.60    -46.11     84.26   -116.50
 #&gt; hp     -333.81    104.41   6873.60   5082.36    -17.17     41.74   -102.56
-#&gt; drat      2.19      -.63    -46.11    -17.17       .30      -.31       .13
-#&gt; wt       -4.17      1.04     84.26     41.74      -.31       .82      -.41
-#&gt; qsec      4.85     -2.16   -116.50   -102.56       .13      -.41      3.26
-#&gt; vs        1.74      -.73    -41.03    -24.41       .11      -.17       .71
-#&gt; am        1.59      -.31    -32.17     -7.55       .21      -.30      -.13
-#&gt; gear      1.81      -.45     -4.69     -6.84       .29      -.40      -.08
-#&gt; carb     -5.39      1.54     74.62     88.75      -.08       .62     -1.92
+#&gt; drat      2.19     -0.63    -46.11    -17.17      0.30     -0.31      0.13
+#&gt; wt       -4.17      1.04     84.26     41.74     -0.31      0.82     -0.41
+#&gt; qsec      4.85     -2.16   -116.50   -102.56      0.13     -0.41      3.26
+#&gt; vs        1.74     -0.73    -41.03    -24.41      0.11     -0.17      0.71
+#&gt; am        1.59     -0.31    -32.17     -7.55      0.21     -0.30     -0.13
+#&gt; gear      1.81     -0.45    -40.69     -6.84      0.29     -0.40     -0.08
+#&gt; carb     -5.39      1.54     74.62     88.75     -0.08      0.62     -1.92
 #&gt;             vs        am      gear      carb
 #&gt; mpg       1.74      1.59      1.81     -5.39
-#&gt; cyl       -.73      -.31      -.45      1.54
-#&gt; disp    -41.03    -32.17     -4.69     74.62
+#&gt; cyl      -0.73     -0.31     -0.45      1.54
+#&gt; disp    -41.03    -32.17    -40.69     74.62
 #&gt; hp      -24.41     -7.55     -6.84     88.75
-#&gt; drat       .11       .21       .29      -.08
-#&gt; wt        -.17      -.30      -.40       .62
-#&gt; qsec       .71      -.13      -.08     -1.92
-#&gt; vs         .24       .00       .05      -.44
-#&gt; am         .00       .23       .28       .07
-#&gt; gear       .05       .28       .51       .42
-#&gt; carb      -.44       .07       .42      2.79</div><div class='input'><span class='fu'>pwNobs</span><span class='op'>(</span><span class='va'>mna</span><span class='op'>)</span>
+#&gt; drat      0.11      0.21      0.29     -0.08
+#&gt; wt       -0.17     -0.30     -0.40      0.62
+#&gt; qsec      0.71     -0.13     -0.08     -1.92
+#&gt; vs        0.24      0.00      0.05     -0.44
+#&gt; am        0.00      0.23      0.28      0.07
+#&gt; gear      0.05      0.28      0.51      0.42
+#&gt; carb     -0.44      0.07      0.42      2.79</div><div class='input'><span class='fu'>pwNobs</span><span class='op'>(</span><span class='va'>mna</span><span class='op'>)</span>
 </div><div class='output co'>#&gt;      mpg cyl disp hp drat wt qsec vs am gear carb
 #&gt; mpg   29  27   26 26   27 26   26 27 26   27   26
 #&gt; cyl   27  29   27 26   26 26   27 27 26   26   26

@@ -72,7 +72,7 @@
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">collapse</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">1.5.1</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">1.5.3</span>
       </span>
     </div>
 
@@ -94,13 +94,13 @@
       <ul class="nav navbar-nav navbar-right">
         <li>
   <a href="https://twitter.com/collapse_R" target="_blank">
-    <span class="fa fa-twitter"></span>
+    <span class="fas fa-twitter"></span>
      
   </a>
 </li>
 <li>
   <a href="https://github.com/SebKrantz/collapse" target="_blank">
-    <span class="fa fa-github"></span>
+    <span class="fas fa-github"></span>
      
   </a>
 </li>
@@ -126,15 +126,15 @@
     <p>A fast substitute for <code><a href='https://dplyr.tidyverse.org/reference/rename.html'>dplyr::rename</a></code>. <code>setrename</code> renames objects by reference. These functions also work with objects other than data frames that have a 'names' attribute.</p>
     </div>
 
-    <pre class="usage"><span class='fu'>frename</span><span class='op'>(</span><span class='va'>x</span>, <span class='va'>...</span>, cols <span class='op'>=</span> <span class='cn'>NULL</span><span class='op'>)</span>
+    <pre class="usage"><span class='fu'>frename</span><span class='op'>(</span><span class='va'>.x</span>, <span class='va'>...</span>, cols <span class='op'>=</span> <span class='cn'>NULL</span><span class='op'>)</span>
 
-<span class='fu'>setrename</span><span class='op'>(</span><span class='va'>x</span>, <span class='va'>...</span>, cols <span class='op'>=</span> <span class='cn'>NULL</span><span class='op'>)</span></pre>
+<span class='fu'>setrename</span><span class='op'>(</span><span class='va'>.x</span>, <span class='va'>...</span>, cols <span class='op'>=</span> <span class='cn'>NULL</span><span class='op'>)</span></pre>
 
     <h2 class="hasAnchor" id="arguments"><a class="anchor" href="#arguments"></a>Arguments</h2>
     <table class="ref-arguments">
     <colgroup><col class="name" /><col class="desc" /></colgroup>
     <tr>
-      <th>x</th>
+      <th>.x</th>
       <td><p>an R object with a 'names' attribute.</p></td>
     </tr>
     <tr>
@@ -143,16 +143,16 @@
     </tr>
     <tr>
       <th>cols</th>
-      <td><p>If <code>...</code> is a function, select a subset of columns/elements to rename using names, indices, a logical vector or a function applied to the columns if <code>x</code> is a data frame (i.e. <code>is.numeric</code>).</p></td>
+      <td><p>If <code>...</code> is a function, select a subset of columns/elements to rename using names, indices, a logical vector or a function applied to the columns if <code>.x</code> is a data frame (e.g. <code>is.numeric</code>).</p></td>
     </tr>
     </table>
 
     <h2 class="hasAnchor" id="value"><a class="anchor" href="#value"></a>Value</h2>
 
-    <p><code>x</code> renamed.</p>
+    <p><code>.x</code> renamed.</p>
     <h2 class="hasAnchor" id="see-also"><a class="anchor" href="#see-also"></a>See also</h2>
 
-    <div class='dont-index'><p><a href='A3-fast-data-manipulation.html'>Data Frame Manipulation</a>, <a href='index.html'>Collapse Overview</a></p></div>
+    <div class='dont-index'><p><a href='fast-data-manipulation.html'>Data Frame Manipulation</a>, <a href='index.html'>Collapse Overview</a></p></div>
 
     <h2 class="hasAnchor" id="examples"><a class="anchor" href="#examples"></a>Examples</h2>
     <pre class="examples"><div class='input'><span class='co'>## Using tagged expressions</span>

@@ -40,19 +40,20 @@
 
 
 <meta property="og:title" content="List Processing — A8-list-processing" />
-<meta property="og:description" content="collapse provides the following set of functions to work with lists of R objects:
+<meta property="og:description" content="collapse provides the following set of functions to efficiently work with lists of R objects:
 Search and Identification
-is.regular checks whether an R object is either atomic or a list. A (nested) list composed of regular objects at each level of the list-tree is unlistable to an atomic vector - checked by is.unlistable.
+is.unlistable checks whether a (nested) list is composed of atomic objects in all final nodes, and thus unlistable to an atomic vector using unlist.
 ldepth determines the level of nesting of the list (i.e. the maximum number of nodes of the list-tree).
 has_elem searches elements in a list using element names, regular expressions applied to element names, or a function applied to the elements, and returns TRUE if any matches were found.
 
 Subsetting
 atomic_elem examines the top-level of a list and returns a sublist with the atomic elements. Conversely list_elem returns the sublist of elements which are themselves lists or list-like objects.
-reg_elem and irreg_elem are recursive versions of the former. reg_elem extracts the regular part of the list-tree (leading to atomic elements in the final nodes), while irreg_elem extracts the 'irregular' part of the list tree leading to non-atomic elements in the final nodes. (Tipp: try calling both on an lm object). Naturally for all lists l, is.unlistable(reg_elem(l)) evaluates to TRUE...
+reg_elem and irreg_elem are recursive versions of the former. reg_elem extracts the 'regular' part of the list-tree leading to atomic elements in the final nodes, while irreg_elem extracts the 'irregular' part of the list tree leading to non-atomic elements in the final nodes. (Tipp: try calling both on an lm object). Naturally for all lists l, is.unlistable(reg_elem(l)) evaluates to TRUE...
 get_elem extracts elements from a list using element names, regular expressions applied to element names, a function applied to the elements, or element-indices used to subset the lowest-level sub-lists. by default the result is presented as a simplified list containing all matching elements. With the keep.tree option however get_elem can also be used to subset lists i.e. maintain the full tree but cut off non-matching branches.
 
-Splitting
+Splitting and Transposition
 rsplit recursively splits a vector or data frame into subsets according to combinations of (multiple) vectors / factors - by default returning a (nested) list. If flatten = TRUE, the list is flattened yielding the same result as split. rsplit is also faster than split, particularly for data frames.
+t_list efficiently transposes nested lists of lists, such as those obtained from splitting a data frame by multiple variables using rsplit.
 
 Apply Functions
 rapply2d is a recursive version of lapply with two key differences to rapply: (1) Data frames are considered as atomic objects, not as (sub-)lists, and (2) the result is not simplified.
@@ -93,7 +94,7 @@ unlist2d efficiently unlists unlistable lists in 2-dimensions and creates a data
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">collapse</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">1.5.1</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">1.5.3</span>
       </span>
     </div>
 
@@ -115,13 +116,13 @@ unlist2d efficiently unlists unlistable lists in 2-dimensions and creates a data
       <ul class="nav navbar-nav navbar-right">
         <li>
   <a href="https://twitter.com/collapse_R" target="_blank">
-    <span class="fa fa-twitter"></span>
+    <span class="fas fa-twitter"></span>
      
   </a>
 </li>
 <li>
   <a href="https://github.com/SebKrantz/collapse" target="_blank">
-    <span class="fa fa-github"></span>
+    <span class="fas fa-github"></span>
      
   </a>
 </li>
@@ -144,19 +145,20 @@ unlist2d efficiently unlists unlistable lists in 2-dimensions and creates a data
     </div>
 
     <div class="ref-description">
-    <p><em>collapse</em> provides the following set of functions to work with lists of R objects:</p><ul>
+    <p><em>collapse</em> provides the following set of functions to efficiently work with lists of R objects:</p><ul>
 <li><p><b>Search and Identification</b></p><ul>
-<li><p><code><a href='is.regular, is.unlistable.html'>is.regular</a></code> checks whether an R object is either atomic or a list. A (nested) list composed of regular objects at each level of the list-tree is unlistable to an atomic vector - checked by <code><a href='is.regular, is.unlistable.html'>is.unlistable</a></code>.</p></li>
+<li><p><code><a href='is.unlistable.html'>is.unlistable</a></code> checks whether a (nested) list is composed of atomic objects in all final nodes, and thus unlistable to an atomic vector using <code><a href='https://rdrr.io/r/base/unlist.html'>unlist</a></code>.</p></li>
 <li><p><code><a href='ldepth.html'>ldepth</a></code> determines the level of nesting of the list (i.e. the maximum number of nodes of the list-tree).</p></li>
 <li><p><code><a href='has_elem, get_elem.html'>has_elem</a></code> searches elements in a list using element names, regular expressions applied to element names, or a function applied to the elements, and returns <code>TRUE</code> if any matches were found.</p></li>
 </ul></li>
 <li><p><b>Subsetting</b></p><ul>
 <li><p><code><a href='has_elem, get_elem.html'>atomic_elem</a></code> examines the top-level of a list and returns a sublist with the atomic elements. Conversely <code><a href='has_elem, get_elem.html'>list_elem</a></code> returns the sublist of elements which are themselves lists or list-like objects.</p></li>
-<li><p><code><a href='has_elem, get_elem.html'>reg_elem</a></code> and <code><a href='has_elem, get_elem.html'>irreg_elem</a></code> are recursive versions of the former. <code><a href='has_elem, get_elem.html'>reg_elem</a></code> extracts the regular part of the list-tree (leading to atomic elements in the final nodes), while <code><a href='has_elem, get_elem.html'>irreg_elem</a></code> extracts the 'irregular' part of the list tree leading to non-atomic elements in the final nodes. (<em>Tipp</em>: try calling both on an <code>lm</code> object). Naturally for all lists <code>l</code>, <code><a href='is.regular, is.unlistable.html'>is.unlistable(reg_elem(l))</a></code> evaluates to <code>TRUE</code>...</p></li>
+<li><p><code><a href='has_elem, get_elem.html'>reg_elem</a></code> and <code><a href='has_elem, get_elem.html'>irreg_elem</a></code> are recursive versions of the former. <code><a href='has_elem, get_elem.html'>reg_elem</a></code> extracts the 'regular' part of the list-tree leading to atomic elements in the final nodes, while <code><a href='has_elem, get_elem.html'>irreg_elem</a></code> extracts the 'irregular' part of the list tree leading to non-atomic elements in the final nodes. (<em>Tipp</em>: try calling both on an <code>lm</code> object). Naturally for all lists <code>l</code>, <code><a href='is.unlistable.html'>is.unlistable(reg_elem(l))</a></code> evaluates to <code>TRUE</code>...</p></li>
 <li><p><code><a href='has_elem, get_elem.html'>get_elem</a></code> extracts elements from a list using element names, regular expressions applied to element names, a function applied to the elements, or element-indices used to subset the lowest-level sub-lists. by default the result is presented as a simplified list containing all matching elements. With the <code>keep.tree</code> option however <code><a href='has_elem, get_elem.html'>get_elem</a></code> can also be used to subset lists i.e. maintain the full tree but cut off non-matching branches.</p></li>
 </ul></li>
-<li><p><b>Splitting</b></p><ul>
+<li><p><b>Splitting and Transposition</b></p><ul>
 <li><p><code><a href='rsplit.html'>rsplit</a></code> recursively splits a vector or data frame into subsets according to combinations of (multiple) vectors / factors - by default returning a (nested) list. If <code>flatten = TRUE</code>, the list is flattened yielding the same result as <code><a href='https://rdrr.io/pkg/data.table/man/split.html'>split</a></code>. <code>rsplit</code> is also faster than <code><a href='https://rdrr.io/pkg/data.table/man/split.html'>split</a></code>, particularly for data frames.</p></li>
+<li><p><code><a href='t_list.html'>t_list</a></code> efficiently transposes nested lists of lists, such as those obtained from splitting a data frame by multiple variables using <code><a href='rsplit.html'>rsplit</a></code>.</p></li>
 </ul></li>
 <li><p><b>Apply Functions</b></p><ul>
 <li><p><code><a href='rapply2d.html'>rapply2d</a></code> is a recursive version of <code><a href='https://rdrr.io/r/base/lapply.html'>lapply</a></code> with two key differences to <code><a href='https://rdrr.io/r/base/rapply.html'>rapply</a></code>: (1) Data frames are considered as atomic objects, not as (sub-)lists, and (2) the result is not simplified.</p></li>
@@ -174,16 +176,17 @@ unlist2d efficiently unlists unlistable lists in 2-dimensions and creates a data
 
     <p></p><table class='table'>
 <tr><td><em> Function </em></td><td></td><td><em> Description </em></td></tr>
-<tr><td><code><a href='is.regular, is.unlistable.html'>is.regular</a></code></td><td></td><td><code>function(x) is.atomic(x) || is.list(x)</code></td></tr>
-<tr><td><code><a href='is.regular, is.unlistable.html'>is.unlistable</a></code></td><td></td><td>Checks if list is unlistable</td></tr>
+<tr><td><!-- % \code{\link{is.regular}} \tab\tab \code{function(x) is.atomic(x) || is.list(x)} \cr -->
+  <code><a href='is.unlistable.html'>is.unlistable</a></code></td><td></td><td>Checks if list is unlistable</td></tr>
 <tr><td><code><a href='ldepth.html'>ldepth</a></code></td><td></td><td>Level of nesting / maximum depth of list-tree</td></tr>
 <tr><td><code><a href='has_elem, get_elem.html'>has_elem</a></code></td><td></td><td>Checks if list contains a certain element</td></tr>
 <tr><td><code><a href='has_elem, get_elem.html'>get_elem</a></code></td><td></td><td>Subset list / extract certain elements</td></tr>
 <tr><td><code><a href='has_elem, get_elem.html'>atomic_elem</a></code></td><td></td><td>Top-level subset atomic elements</td></tr>
 <tr><td><code><a href='has_elem, get_elem.html'>list_elem</a></code></td><td></td><td>Top-level subset list/list-like elements</td></tr>
-<tr><td><code><a href='has_elem, get_elem.html'>reg_elem</a></code></td><td></td><td>Recursive version of <code>atomic_elem</code>: Subset / extract regular part of list</td></tr>
+<tr><td><code><a href='has_elem, get_elem.html'>reg_elem</a></code></td><td></td><td>Recursive version of <code>atomic_elem</code>: Subset / extract 'regular' part of list</td></tr>
 <tr><td><code><a href='has_elem, get_elem.html'>irreg_elem</a></code></td><td></td><td>Subset / extract non-regular part of list</td></tr>
 <tr><td><code><a href='rsplit.html'>rsplit</a></code></td><td></td><td>Recursively split vectors or data frames / lists</td></tr>
+<tr><td><code><a href='t_list.html'>t_list</a></code></td><td></td><td>Transpose lists of lists</td></tr>
 <tr><td><code><a href='rapply2d.html'>rapply2d</a></code></td><td></td><td>Recursively apply functions to lists of data objects</td></tr>
 <tr><td><code><a href='unlist2d.html'>unlist2d</a></code></td><td></td><td>Recursively unlist/row-bind lists of data objects in 2D, to data frame or <em>data.table</em></td></tr>
 </table>
