@@ -1,6 +1,6 @@
 # Make package website:
 # usethis::use_pkgdown() # overwrites _pkgdown.yml
-library(pkgdown)
+library(pkgdown) # Built with pkgdown 1.6.1
 # update .pkgdown.yml
 init_site()
 build_home(preview = FALSE)

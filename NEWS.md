@@ -1,3 +1,7 @@
+# collapse 1.5.3
+
+* A test that occasionally fails on Mac is removed, and all unit testing is now removed from CRAN. *collapse* has close to 10,000 unit tests covering all central pieces of code. Half of these tests depend on generated data, and for some reasons there is always a test or two that occasionally fail on some operating system (usually not Windows), requiring me to submit a patch. This is not constructive to either the development or the use of this package, therefore tests are now removed from CRAN. They are still run on codecov.io, and every new release is thoroughly tested on Windows. 
+
 # collapse 1.5.2
 
 ### Changes to Functionality

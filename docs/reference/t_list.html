@@ -6,7 +6,7 @@
 <meta http-equiv="X-UA-Compatible" content="IE=edge">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-<title>Recursively Apply a Function to a List of Data Objects — rapply2d • collapse</title>
+<title>Efficient List Transpose — t_list • collapse</title>
 
 
 <!-- jquery -->
@@ -39,8 +39,8 @@
 
 
 
-<meta property="og:title" content="Recursively Apply a Function to a List of Data Objects — rapply2d" />
-<meta property="og:description" content="rapply2d is a recursive version of lapply with two key differences to rapply: (1) Data frames are considered as final objects, not as (sub-)lists, and (2) the result is never simplified / unlisted." />
+<meta property="og:title" content="Efficient List Transpose — t_list" />
+<meta property="og:description" content="t_list turns a list of lists inside-out. The performance is quite efficient regardless of the size of the list." />
 
 
 
@@ -99,7 +99,7 @@
   </a>
 </li>
 <li>
-  <a href="https://github.com/SebKrantz/collapse" target="_blank">
+  <a href="https://github.com/SebKrantz/collapse">
     <span class="fas fa-github"></span>
      
   </a>
@@ -117,76 +117,77 @@
 <div class="row">
   <div class="col-md-9 contents">
     <div class="page-header">
-    <h1>Recursively Apply a Function to a List of Data Objects</h1>
+    <h1>Efficient List Transpose</h1>
     
-    <div class="hidden name"><code>rapply2d.Rd</code></div>
+    <div class="hidden name"><code>t_list.Rd</code></div>
     </div>
 
     <div class="ref-description">
-    <p><code>rapply2d</code> is a recursive version of <code>lapply</code> with two key differences to <code><a href='https://rdrr.io/r/base/rapply.html'>rapply</a></code>: (1) Data frames are considered as final objects, not as (sub-)lists, and (2) the result is never simplified / unlisted.</p>
+    <p><code>t_list</code> turns a list of lists inside-out. The performance is quite efficient regardless of the size of the list.</p>
     </div>
 
-    <pre class="usage"><span class='fu'>rapply2d</span><span class='op'>(</span><span class='va'>l</span>, <span class='va'>FUN</span>, <span class='va'>...</span>, classes <span class='op'>=</span> <span class='st'>"data.frame"</span><span class='op'>)</span></pre>
+    <pre class="usage"><span class='fu'>t_list</span><span class='op'>(</span><span class='va'>l</span><span class='op'>)</span></pre>
 
     <h2 class="hasAnchor" id="arguments"><a class="anchor" href="#arguments"></a>Arguments</h2>
     <table class="ref-arguments">
     <colgroup><col class="name" /><col class="desc" /></colgroup>
     <tr>
       <th>l</th>
-      <td><p>a list.</p></td>
-    </tr>
-    <tr>
-      <th>FUN</th>
-      <td><p>a function that can be applied to all elements in l.</p></td>
-    </tr>
-    <tr>
-      <th>...</th>
-      <td><p>additional elements passed to FUN.</p></td>
-    </tr>
-    <tr>
-      <th>classes</th>
-      <td><p>character. These are classes of list-based objects inside <code>l</code> which <code>FUN</code> should be applied to. Note that <code>FUN</code> is also applied to all non-list elements in <code>l</code>. It is thus quite different from the <code>classes</code> argument to <code><a href='https://rdrr.io/r/base/rapply.html'>rapply</a></code>.</p></td>
+      <td><p>a list of lists. Elements inside the sublists can be heterogenous, including further lists.</p></td>
     </tr>
     </table>
 
     <h2 class="hasAnchor" id="value"><a class="anchor" href="#value"></a>Value</h2>
 
-    <p>A list of the same structure as <code>l</code>, where <code>FUN</code> was applied to all final (atomic) elements and list-based objects of a class included in <code>classes</code>.</p>
+    <p><code>l</code> transposed such that the second layer of the list becomes the top layer and the top layer the second layer. See Examples.</p>
     <h2 class="hasAnchor" id="see-also"><a class="anchor" href="#see-also"></a>See also</h2>
 
-    <div class='dont-index'><p><code><a href='rsplit.html'>rsplit</a></code>, <code><a href='unlist2d.html'>unlist2d</a></code>, <a href='list-processing.html'>List Processing</a>, <a href='index.html'>Collapse Overview</a></p></div>
+    <div class='dont-index'><p><code><a href='rsplit.html'>rsplit</a></code>, <a href='list-processing.html'>List Processing</a>, <a href='index.html'>Collapse Overview</a></p></div>
 
     <h2 class="hasAnchor" id="examples"><a class="anchor" href="#examples"></a>Examples</h2>
-    <pre class="examples"><div class='input'><span class='va'>l</span> <span class='op'>&lt;-</span> <span class='fu'><a href='https://rdrr.io/r/base/list.html'>list</a></span><span class='op'>(</span><span class='va'>mtcars</span>, <span class='fu'><a href='https://rdrr.io/r/base/list.html'>list</a></span><span class='op'>(</span><span class='va'>mtcars</span>, <span class='fu'><a href='https://rdrr.io/pkg/data.table/man/as.matrix.html'>as.matrix</a></span><span class='op'>(</span><span class='va'>mtcars</span><span class='op'>)</span><span class='op'>)</span><span class='op'>)</span>
-<span class='fu'>rapply2d</span><span class='op'>(</span><span class='va'>l</span>, <span class='va'>fmean</span><span class='op'>)</span>
-</div><div class='output co'>#&gt; [[1]]
-#&gt;        mpg        cyl       disp         hp       drat         wt       qsec 
-#&gt;  20.090625   6.187500 230.721875 146.687500   3.596562   3.217250  17.848750 
-#&gt;         vs         am       gear       carb 
-#&gt;   0.437500   0.406250   3.687500   2.812500 
-#&gt; 
-#&gt; [[2]]
-#&gt; [[2]][[1]]
-#&gt;        mpg        cyl       disp         hp       drat         wt       qsec 
-#&gt;  20.090625   6.187500 230.721875 146.687500   3.596562   3.217250  17.848750 
-#&gt;         vs         am       gear       carb 
-#&gt;   0.437500   0.406250   3.687500   2.812500 
-#&gt; 
-#&gt; [[2]][[2]]
-#&gt;        mpg        cyl       disp         hp       drat         wt       qsec 
-#&gt;  20.090625   6.187500 230.721875 146.687500   3.596562   3.217250  17.848750 
-#&gt;         vs         am       gear       carb 
-#&gt;   0.437500   0.406250   3.687500   2.812500 
-#&gt; 
-#&gt; </div><div class='input'><span class='fu'><a href='unlist2d.html'>unlist2d</a></span><span class='op'>(</span><span class='fu'>rapply2d</span><span class='op'>(</span><span class='va'>l</span>, <span class='va'>fmean</span><span class='op'>)</span><span class='op'>)</span>
-</div><div class='output co'>#&gt;   .id.1 .id.2      mpg    cyl     disp       hp     drat      wt     qsec
-#&gt; 1     1    NA 20.09062 6.1875 230.7219 146.6875 3.596562 3.21725 17.84875
-#&gt; 2     2     1 20.09062 6.1875 230.7219 146.6875 3.596562 3.21725 17.84875
-#&gt; 3     2     2 20.09062 6.1875 230.7219 146.6875 3.596562 3.21725 17.84875
-#&gt;       vs      am   gear   carb
-#&gt; 1 0.4375 0.40625 3.6875 2.8125
-#&gt; 2 0.4375 0.40625 3.6875 2.8125
-#&gt; 3 0.4375 0.40625 3.6875 2.8125</div></pre>
+    <pre class="examples"><div class='input'><span class='co'># Homogenous list of lists</span>
+<span class='va'>l</span> <span class='op'>&lt;-</span> <span class='fu'><a href='https://rdrr.io/r/base/list.html'>list</a></span><span class='op'>(</span>a <span class='op'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/list.html'>list</a></span><span class='op'>(</span>c <span class='op'>=</span> <span class='fl'>1</span>, d <span class='op'>=</span> <span class='fl'>2</span><span class='op'>)</span>, b <span class='op'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/list.html'>list</a></span><span class='op'>(</span>c <span class='op'>=</span> <span class='fl'>3</span>, d <span class='op'>=</span> <span class='fl'>4</span><span class='op'>)</span><span class='op'>)</span>
+<span class='fu'><a href='https://rdrr.io/r/utils/str.html'>str</a></span><span class='op'>(</span><span class='va'>l</span><span class='op'>)</span>
+</div><div class='output co'>#&gt; List of 2
+#&gt;  $ a:List of 2
+#&gt;   ..$ c: num 1
+#&gt;   ..$ d: num 2
+#&gt;  $ b:List of 2
+#&gt;   ..$ c: num 3
+#&gt;   ..$ d: num 4</div><div class='input'><span class='fu'><a href='https://rdrr.io/r/utils/str.html'>str</a></span><span class='op'>(</span><span class='fu'>t_list</span><span class='op'>(</span><span class='va'>l</span><span class='op'>)</span><span class='op'>)</span>
+</div><div class='output co'>#&gt; List of 2
+#&gt;  $ c:List of 2
+#&gt;   ..$ a: num 1
+#&gt;   ..$ b: num 3
+#&gt;  $ d:List of 2
+#&gt;   ..$ a: num 2
+#&gt;   ..$ b: num 4</div><div class='input'>
+<span class='co'># Heterogenous case</span>
+<span class='va'>l2</span> <span class='op'>&lt;-</span> <span class='fu'><a href='https://rdrr.io/r/base/list.html'>list</a></span><span class='op'>(</span>a <span class='op'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/list.html'>list</a></span><span class='op'>(</span>c <span class='op'>=</span> <span class='fl'>1</span>, d <span class='op'>=</span> <span class='va'>letters</span><span class='op'>)</span>, b <span class='op'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/list.html'>list</a></span><span class='op'>(</span>c <span class='op'>=</span> <span class='fl'>3</span><span class='op'>:</span><span class='fl'>10</span>, d <span class='op'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/list.html'>list</a></span><span class='op'>(</span><span class='fl'>4</span>, e <span class='op'>=</span> <span class='fl'>5</span><span class='op'>)</span><span class='op'>)</span><span class='op'>)</span>
+<span class='fu'><a href='https://rdrr.io/r/base/attr.html'>attr</a></span><span class='op'>(</span><span class='va'>l2</span>, <span class='st'>"bla"</span><span class='op'>)</span> <span class='op'>&lt;-</span> <span class='st'>"abc"</span>  <span class='co'># Attributes other than names are preserved</span>
+<span class='fu'><a href='https://rdrr.io/r/utils/str.html'>str</a></span><span class='op'>(</span><span class='va'>l2</span><span class='op'>)</span>
+</div><div class='output co'>#&gt; List of 2
+#&gt;  $ a:List of 2
+#&gt;   ..$ c: num 1
+#&gt;   ..$ d: chr [1:26] "a" "b" "c" "d" ...
+#&gt;  $ b:List of 2
+#&gt;   ..$ c: int [1:8] 3 4 5 6 7 8 9 10
+#&gt;   ..$ d:List of 2
+#&gt;   .. ..$  : num 4
+#&gt;   .. ..$ e: num 5
+#&gt;  - attr(*, "bla")= chr "abc"</div><div class='input'><span class='fu'><a href='https://rdrr.io/r/utils/str.html'>str</a></span><span class='op'>(</span><span class='fu'>t_list</span><span class='op'>(</span><span class='va'>l2</span><span class='op'>)</span><span class='op'>)</span>
+</div><div class='output co'>#&gt; List of 2
+#&gt;  $ c:List of 2
+#&gt;   ..$ a: num 1
+#&gt;   ..$ b: int [1:8] 3 4 5 6 7 8 9 10
+#&gt;  $ d:List of 2
+#&gt;   ..$ a: chr [1:26] "a" "b" "c" "d" ...
+#&gt;   ..$ b:List of 2
+#&gt;   .. ..$  : num 4
+#&gt;   .. ..$ e: num 5
+#&gt;  - attr(*, "bla")= chr "abc"</div><div class='input'>
+<span class='fu'><a href='https://rdrr.io/r/base/rm.html'>rm</a></span><span class='op'>(</span><span class='va'>l</span>, <span class='va'>l2</span><span class='op'>)</span>
+</div></pre>
   </div>
   <div class="col-md-3 hidden-xs hidden-sm" id="pkgdown-sidebar">
     <nav id="toc" data-toggle="toc" class="sticky-top">

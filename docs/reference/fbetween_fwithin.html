@@ -74,7 +74,7 @@
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">collapse</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">1.5.1</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">1.5.3</span>
       </span>
     </div>
 
@@ -96,13 +96,13 @@
       <ul class="nav navbar-nav navbar-right">
         <li>
   <a href="https://twitter.com/collapse_R" target="_blank">
-    <span class="fa fa-twitter"></span>
+    <span class="fas fa-twitter"></span>
      
   </a>
 </li>
 <li>
   <a href="https://github.com/SebKrantz/collapse" target="_blank">
-    <span class="fa fa-github"></span>
+    <span class="fas fa-github"></span>
      
   </a>
 </li>
@@ -230,7 +230,7 @@
     </tr>
     <tr>
       <th>effect</th>
-      <td><p><em>plm</em> methods: Select which panel identifier should be used as grouping variable. 1L takes the first variable in the <code><a href='https://rdrr.io/pkg/plm/man/re-export_functions.html'>plm::index</a></code>, 2L the second etc. Index variables can also be called by name using a character string. If more than one variable is supplied, the corresponding index-factors are interacted.</p></td>
+      <td><p><em>plm</em> methods: Select which panel identifier should be used as grouping variable. 1L takes the first variable in the <code><a href='https://rdrr.io/pkg/plm/man/index.plm.html'>plm::index</a></code>, 2L the second etc. Index variables can also be called by name using a character string. If more than one variable is supplied, the corresponding index-factors are interacted.</p></td>
     </tr>
     <tr>
       <th>stub</th>
@@ -277,7 +277,7 @@
     <p>Mundlak, Yair. 1978. On the Pooling of Time Series and Cross Section Data. <em>Econometrica</em> 46 (1): 69-85.</p>
     <h2 class="hasAnchor" id="see-also"><a class="anchor" href="#see-also"></a>See also</h2>
 
-    <div class='dont-index'><p><code><a href='fHDbetween, fHDwithin.html'>fHDbetween/HDB and fHDwithin/HDW</a></code>, <code><a href='fscale.html'>fscale/STD</a></code>, <code><a href='TRA.html'>TRA</a></code>, <a href='A6-data-transformations.html'>Data Transformations</a>, <a href='index.html'>Collapse Overview</a></p></div>
+    <div class='dont-index'><p><code><a href='fHDbetween, fHDwithin.html'>fHDbetween/HDB and fHDwithin/HDW</a></code>, <code><a href='fscale.html'>fscale/STD</a></code>, <code><a href='TRA.html'>TRA</a></code>, <a href='data-transformations.html'>Data Transformations</a>, <a href='index.html'>Collapse Overview</a></p></div>
 
     <h2 class="hasAnchor" id="examples"><a class="anchor" href="#examples"></a>Examples</h2>
     <pre class="examples"><div class='input'><span class='co'>## Simple centering and averaging</span>
@@ -378,7 +378,7 @@
 #&gt; 4   AFG      NA -14.25816     NA -1114623448
 #&gt; 5   AFG      NA -13.82216     NA -1048593448
 #&gt; 6   AFG      NA -13.38716     NA  -980823448</div><div class='input'><span class='fu'><a href='https://rdrr.io/r/utils/head.html'>head</a></span><span class='op'>(</span><span class='fu'><a href='https://rdrr.io/r/base/cbind.html'>cbind</a></span><span class='op'>(</span><span class='fu'><a href='fselect, get_vars, add_vars.html'>get_vars</a></span><span class='op'>(</span><span class='va'>wlddev</span>,<span class='st'>"iso3c"</span><span class='op'>)</span>,     <span class='co'># Same thing done manually using fwithin..</span>
-      <span class='fu'><a href='AA2-small-helpers.html'>add_stub</a></span><span class='op'>(</span><span class='fu'>fwithin</span><span class='op'>(</span><span class='fu'><a href='fselect, get_vars, add_vars.html'>get_vars</a></span><span class='op'>(</span><span class='va'>wlddev</span>,<span class='fl'>9</span><span class='op'>:</span><span class='fl'>12</span><span class='op'>)</span>, <span class='va'>wlddev</span><span class='op'>$</span><span class='va'>iso3c</span><span class='op'>)</span>, <span class='st'>"W."</span><span class='op'>)</span><span class='op'>)</span><span class='op'>)</span>
+      <span class='fu'><a href='small-helpers.html'>add_stub</a></span><span class='op'>(</span><span class='fu'>fwithin</span><span class='op'>(</span><span class='fu'><a href='fselect, get_vars, add_vars.html'>get_vars</a></span><span class='op'>(</span><span class='va'>wlddev</span>,<span class='fl'>9</span><span class='op'>:</span><span class='fl'>12</span><span class='op'>)</span>, <span class='va'>wlddev</span><span class='op'>$</span><span class='va'>iso3c</span><span class='op'>)</span>, <span class='st'>"W."</span><span class='op'>)</span><span class='op'>)</span><span class='op'>)</span>
 </div><div class='output co'>#&gt;   iso3c W.PCGDP  W.LIFEEX W.GINI       W.ODA
 #&gt; 1   AFG      NA -15.59016     NA -1236633448
 #&gt; 2   AFG      NA -15.14016     NA -1117723448
@@ -428,7 +428,7 @@
 <span class='fu'>plm</span><span class='fu'>::</span><span class='fu'><a href='https://rdrr.io/pkg/plm/man/plm.html'>plm</a></span><span class='op'>(</span><span class='va'>mpg</span> <span class='op'>~</span> <span class='va'>carb</span>, <span class='va'>mtcars</span>, index <span class='op'>=</span> <span class='st'>"cyl"</span>, model <span class='op'>=</span> <span class='st'>"within"</span><span class='op'>)</span>   <span class='co'># "Proof"..</span>
 </div><div class='output co'>#&gt; 
 #&gt; Model Formula: mpg ~ carb
-#&gt; &lt;environment: 0x000000c3edbe5138&gt;
+#&gt; &lt;environment: 0x00000078247d0928&gt;
 #&gt; 
 #&gt; Coefficients:
 #&gt;     carb 
@@ -510,7 +510,7 @@
 <span class='fu'>plm</span><span class='fu'>::</span><span class='fu'><a href='https://rdrr.io/pkg/plm/man/plm.html'>plm</a></span><span class='op'>(</span><span class='va'>mpg</span> <span class='op'>~</span> <span class='va'>carb</span>, <span class='va'>mtcars</span>, index <span class='op'>=</span> <span class='st'>"cyl"</span>, model <span class='op'>=</span> <span class='st'>"random"</span><span class='op'>)</span>
 </div><div class='output co'>#&gt; 
 #&gt; Model Formula: mpg ~ carb
-#&gt; &lt;environment: 0x000000c3edbe5138&gt;
+#&gt; &lt;environment: 0x00000078247d0928&gt;
 #&gt; 
 #&gt; Coefficients:
 #&gt; (Intercept)        carb 

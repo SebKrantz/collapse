@@ -72,7 +72,7 @@
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">collapse</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">1.5.1</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">1.5.3</span>
       </span>
     </div>
 
@@ -94,13 +94,13 @@
       <ul class="nav navbar-nav navbar-right">
         <li>
   <a href="https://twitter.com/collapse_R" target="_blank">
-    <span class="fa fa-twitter"></span>
+    <span class="fas fa-twitter"></span>
      
   </a>
 </li>
 <li>
   <a href="https://github.com/SebKrantz/collapse" target="_blank">
-    <span class="fa fa-github"></span>
+    <span class="fas fa-github"></span>
      
   </a>
 </li>
@@ -158,7 +158,7 @@
     <p>If <code>x</code> is malformed i.e. has too few levels, this function can cause a segmentation fault, thus only use with ordinary / proper factors.</p>
     <h2 class="hasAnchor" id="see-also"><a class="anchor" href="#see-also"></a>See also</h2>
 
-    <div class='dont-index'><p><code><a href='qF, qG, finteraction.html'>qF</a></code>, <code><a href='funique.html'>funique</a></code>, <a href='A2-fast-grouping-ordering.html'>Fast Grouping and Ordering</a>, <a href='index.html'>Collapse Overview</a></p></div>
+    <div class='dont-index'><p><code><a href='qF, qG, finteraction.html'>qF</a></code>, <code><a href='funique.html'>funique</a></code>, <a href='fast-grouping-ordering.html'>Fast Grouping and Ordering</a>, <a href='index.html'>Collapse Overview</a></p></div>
 
     <h2 class="hasAnchor" id="examples"><a class="anchor" href="#examples"></a>Examples</h2>
     <pre class="examples"><div class='input'><span class='va'>f</span> <span class='op'>&lt;-</span> <span class='va'>iris</span><span class='op'>$</span><span class='va'>Species</span><span class='op'>[</span><span class='fl'>1</span><span class='op'>:</span><span class='fl'>100</span><span class='op'>]</span>
@@ -182,7 +182,7 @@
 #&gt;  [97] versicolor versicolor versicolor versicolor
 #&gt; Levels: setosa versicolor</div><div class='input'><span class='fu'><a href='https://rdrr.io/r/base/identical.html'>identical</a></span><span class='op'>(</span><span class='fu'>fdroplevels</span><span class='op'>(</span><span class='va'>f</span><span class='op'>)</span>, <span class='fu'><a href='https://rdrr.io/r/base/droplevels.html'>droplevels</a></span><span class='op'>(</span><span class='va'>f</span><span class='op'>)</span><span class='op'>)</span>
 </div><div class='output co'>#&gt; [1] TRUE</div><div class='input'>
-<span class='va'>fNA</span> <span class='op'>&lt;-</span> <span class='fu'><a href='AA2-small-helpers.html'>na_insert</a></span><span class='op'>(</span><span class='va'>f</span><span class='op'>)</span>
+<span class='va'>fNA</span> <span class='op'>&lt;-</span> <span class='fu'><a href='small-helpers.html'>na_insert</a></span><span class='op'>(</span><span class='va'>f</span><span class='op'>)</span>
 <span class='fu'>fdroplevels</span><span class='op'>(</span><span class='va'>fNA</span><span class='op'>)</span>
 </div><div class='output co'>#&gt;   [1] setosa     setosa     setosa     setosa     &lt;NA&gt;       setosa    
 #&gt;   [7] setosa     setosa     setosa     setosa     setosa     setosa    

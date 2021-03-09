@@ -84,6 +84,7 @@ reference:
   - "A3-fast-data-manipulation"
   - "fselect, get_vars, add_vars"
   - fsubset
+  - fsummarise
   - ftransform
   - roworder
   - colorder
@@ -127,10 +128,11 @@ reference:
   desc: "Recursive list search / identification, extraction / subsetting, splitting, data-apply, and generalized recursive row-binding / unlisting in 2D."
 - contents:
   - "A8-list-processing"
-  - "is.regular, is.unlistable"
+  - is.unlistable
   - ldepth
   - "has_elem, get_elem"
   - rsplit
+  - t_list
   - rapply2d
   - unlist2d
 - title: "Summary Statistics"

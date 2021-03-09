@@ -75,7 +75,7 @@ collap works with collapse's Fast Statistical Functions, providing extremely fas
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">collapse</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">1.5.1</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">1.5.3</span>
       </span>
     </div>
 
@@ -97,13 +97,13 @@ collap works with collapse's Fast Statistical Functions, providing extremely fas
       <ul class="nav navbar-nav navbar-right">
         <li>
   <a href="https://twitter.com/collapse_R" target="_blank">
-    <span class="fa fa-twitter"></span>
+    <span class="fas fa-twitter"></span>
      
   </a>
 </li>
 <li>
   <a href="https://github.com/SebKrantz/collapse" target="_blank">
-    <span class="fa fa-github"></span>
+    <span class="fas fa-github"></span>
      
   </a>
 </li>
@@ -128,7 +128,7 @@ collap works with collapse's Fast Statistical Functions, providing extremely fas
     <div class="ref-description">
     <p><code>collap</code> is a fast and easy to use multi-purpose data aggregation command.</p>
 <p>It performs simple aggregations, multi-type data aggregations applying different functions to numeric and categorical data, weighted aggregations (including weighted multi-type aggregations), multi-function aggregations applying multiple functions to each column, and fully customized aggregations where the user passes a list mapping functions to columns.</p>
-<p><code>collap</code> works with <em>collapse</em>'s <a href='A1-fast-statistical-functions.html'>Fast Statistical Functions</a>, providing extremely fast conventional and weighted aggregation. It also works with other functions but this does not deliver high speeds on large data and does not support weighted aggregations.</p>
+<p><code>collap</code> works with <em>collapse</em>'s <a href='fast-statistical-functions.html'>Fast Statistical Functions</a>, providing extremely fast conventional and weighted aggregation. It also works with other functions but this does not deliver high speeds on large data and does not support weighted aggregations.</p>
 <p><!-- % \code{collap} supports formula and data (i.e. grouping vectors or lists of vectors) input to \code{by}, whereas \code{collapv} allows names and indices of grouping columns to be passed to \code{by}. --></p>
     </div>
 
@@ -155,11 +155,11 @@ collap works with collapse's Fast Statistical Functions, providing extremely fas
     <colgroup><col class="name" /><col class="desc" /></colgroup>
     <tr>
       <th>X</th>
-      <td><p>a data frame, or an object coercible to data frame using <code><a href='A4-quick-conversion.html'>qDF</a></code>.</p></td>
+      <td><p>a data frame, or an object coercible to data frame using <code><a href='quick-conversion.html'>qDF</a></code>.</p></td>
     </tr>
     <tr>
       <th>by</th>
-      <td><p>for <code>collap</code>: a one-or two sided formula, i.e. <code>~ group1</code> or <code>var1 + var2 ~ group1 + group2</code>, or a atomic vector, list of vectors or <code><a href='GRP, fgroup_by.html'>GRP</a></code> object used to group <code>X</code>. For <code>collapv</code>: names or indices of grouping columns, or a logical vector or selector function such as <code><a href='AA2-small-helpers.html'>is.categorical</a></code> selecting grouping columns.</p></td>
+      <td><p>for <code>collap</code>: a one-or two sided formula, i.e. <code>~ group1</code> or <code>var1 + var2 ~ group1 + group2</code>, or a atomic vector, list of vectors or <code><a href='GRP, fgroup_by.html'>GRP</a></code> object used to group <code>X</code>. For <code>collapv</code>: names or indices of grouping columns, or a logical vector or selector function such as <code><a href='small-helpers.html'>is.categorical</a></code> selecting grouping columns.</p></td>
     </tr>
     <tr>
       <th>FUN</th>
@@ -167,7 +167,7 @@ collap works with collapse's Fast Statistical Functions, providing extremely fas
     </tr>
     <tr>
       <th>catFUN</th>
-      <td><p>same as <code>FUN</code>, but applied only to categorical (non-numeric) typed columns (<code><a href='AA2-small-helpers.html'>is.categorical</a></code>).</p></td>
+      <td><p>same as <code>FUN</code>, but applied only to categorical (non-numeric) typed columns (<code><a href='small-helpers.html'>is.categorical</a></code>).</p></td>
     </tr>
     <tr>
       <th>cols</th>
@@ -223,27 +223,27 @@ collap works with collapse's Fast Statistical Functions, providing extremely fas
     </tr>
     <tr>
       <th>...</th>
-      <td><p>additional arguments passed to all functions supplied to <code>FUN</code>, <code>catFUN</code>, <code>wFUN</code> or <code>custom</code>. The behavior of <a href='A1-fast-statistical-functions.html'>Fast Statistical Functions</a> is regulated by <code><a href='https://rdrr.io/r/base/options.html'>option("collapse_unused_arg_action")</a></code> and defaults to <code>"warning"</code>.</p></td>
+      <td><p>additional arguments passed to all functions supplied to <code>FUN</code>, <code>catFUN</code>, <code>wFUN</code> or <code>custom</code>. The behavior of <a href='fast-statistical-functions.html'>Fast Statistical Functions</a> is regulated by <code><a href='https://rdrr.io/r/base/options.html'>option("collapse_unused_arg_action")</a></code> and defaults to <code>"warning"</code>.</p></td>
     </tr>
     </table>
 
     <h2 class="hasAnchor" id="details"><a class="anchor" href="#details"></a>Details</h2>
 
-    <p><code>collap</code> automatically checks each function passed to it whether it is a <a href='A1-fast-statistical-functions.html'>Fast Statistical Function</a> (i.e. whether the function name is contained in <code>.FAST_STAT_FUN</code>). If the function is a fast statistical function, <code>collap</code> only does the grouping and then calls the function to carry out the grouped computations. If the function is not one of <code>.FAST_STAT_FUN</code>, <code><a href='BY.html'>BY</a></code> is called internally to perform the computation. The resulting computations from each function are put into a list and recombined to produce the desired output format as controlled by the <code>return</code> argument.</p>
+    <p><code>collap</code> automatically checks each function passed to it whether it is a <a href='fast-statistical-functions.html'>Fast Statistical Function</a> (i.e. whether the function name is contained in <code>.FAST_STAT_FUN</code>). If the function is a fast statistical function, <code>collap</code> only does the grouping and then calls the function to carry out the grouped computations. If the function is not one of <code>.FAST_STAT_FUN</code>, <code><a href='BY.html'>BY</a></code> is called internally to perform the computation. The resulting computations from each function are put into a list and recombined to produce the desired output format as controlled by the <code>return</code> argument.</p>
 <p>When setting <code>parallel = TRUE</code> on a non-windows computer, aggregations will efficiently be parallelized at the column level using <code>mclapply</code> utilizing <code>mc.cores</code> cores.</p>
     <h2 class="hasAnchor" id="value"><a class="anchor" href="#value"></a>Value</h2>
 
-    <p><code>X</code> aggregated. If <code>X</code> is not a data frame it is coerced to one using <code><a href='A4-quick-conversion.html'>qDF</a></code> and then aggregated.</p>
+    <p><code>X</code> aggregated. If <code>X</code> is not a data frame it is coerced to one using <code><a href='quick-conversion.html'>qDF</a></code> and then aggregated.</p>
     <h2 class="hasAnchor" id="note"><a class="anchor" href="#note"></a>Note</h2>
 
-    <p>(1) Since <code><a href='BY.html'>BY</a></code> does not check and split additional arguments passed to it, it is presently not possible to create a weighted function in R and apply it to data by groups with <code>collap</code>. Weighted aggregations only work with <a href='A1-fast-statistical-functions.html'>Fast Statistical Functions</a> supporting weights. User written weighted functions can be applied using the <em>data.table</em> package.</p>
+    <p>(1) Since <code><a href='BY.html'>BY</a></code> does not check and split additional arguments passed to it, it is presently not possible to create a weighted function in R and apply it to data by groups with <code>collap</code>. Weighted aggregations only work with <a href='fast-statistical-functions.html'>Fast Statistical Functions</a> supporting weights. User written weighted functions can be applied using the <em>data.table</em> package.</p>
 <p>(2) When the <code>w</code> argument is used, the weights are passed to all <a href='A1-fast-statistical-functions.html'>Fast Statistical Functions</a>. This may be undesirable in settings like <code>collapse::collap(data, ~ id, custom = list(fsum = ..., fmean = ...), w = ~ weights)</code> where some columns are to be aggregated using the weighted mean, and others using a simple sum or another unweighted statistic. Since many <a href='A1-fast-statistical-functions.html'>Fast Statistical Functions</a> including <code><a href='fsum.html'>fsum</a></code> support weights, the above computes a weighted mean and a weighted sum. A couple of workarounds were outlined <a href='https://github.com/SebKrantz/collapse/issues/96'>here</a>, but <em>collapse</em> 1.5.0 incorporates an easy solution into <code>collap</code>: It is now possible to simply append <a href='A1-fast-statistical-functions.html'>Fast Statistical Functions</a> by <code>_uw</code> to yield an unweighted computation. So for the above example we can write: <code>collapse::collap(data, ~ id, custom = list(fsum_uw = ..., fmean = ...), w = ~ weights)</code> to get the weighted mean and the simple sum. <em>Note</em> that the <code>_uw</code> functions are not available for use outside collap. Thus one also needs to quote them when passed to the <code>FUN</code> or <code>catFUN</code> arguments, e.g. use <code>collap(data, ~ id, fmean, "fmode_uw", w = ~ weighs)</code>, since <code>collap(data, ~ id, fmean, fmode_uw, w = ~ weighs)</code> gives an error stating that <code>fmode_uw</code> was not found. <em>Note</em> also that it is never necessary for functions passed to <code>wFUN</code> to be appended like this, as the weights are never used to aggregate themselves.</p>
-<p>(3) The dispatch between using optimized <a href='A1-fast-statistical-functions.html'>Fast Statistical Functions</a> performing grouped computations internally or calling <code>BY</code> to perform split-apply-combine computing is done by matching the function name against <code>.FAST_STAT_FUN</code>. Thus code like <code>collapse::collap(data, ~ id, collapse::fmedian)</code> does not yield an optimized computation, as <code>"collapse::fmedian" %!in% .FAST_STAT_FUN</code>. It is sufficient to write <code>collapse::collap(data, ~ id, "fmedian")</code> to get the desired result when the <em>collapse</em> namespace is not attached.</p>
+<p>(3) The dispatch between using optimized <a href='fast-statistical-functions.html'>Fast Statistical Functions</a> performing grouped computations internally or calling <code>BY</code> to perform split-apply-combine computing is done by matching the function name against <code>.FAST_STAT_FUN</code>. Thus code like <code>collapse::collap(data, ~ id, collapse::fmedian)</code> does not yield an optimized computation, as <code>"collapse::fmedian" %!in% .FAST_STAT_FUN</code>. It is sufficient to write <code>collapse::collap(data, ~ id, "fmedian")</code> to get the desired result when the <em>collapse</em> namespace is not attached.</p>
 <p><!-- %If you want to perform optimized computations with \code{collap} without loading the pacckage, load the functions beforehand as well, e.g. \code{fmedian &lt;- collapse::fmedian; data, ~ id, fmedian)}. Alternatively it is of course also possible to use \code{collapse::fmedian(collapse::fgroup_by(data, id))}, or something similar... --></p>
 <p><!-- % \code{collap} by default (\code{keep.by = TRUE, keep.w = TRUE}) preserves all arguments passed to the \code{by} or \code{w} arguments, whether passed in a formula or externally. The names of externally passed vectors and lists are intelligently extracted. So it is possible to write \code{collap(iris, iris$Species)}, and obtain an aggregated data frame with two \code{Species} columns, whereas \code{collap(iris, ~ Species)} only has one \code{Species} column. Similarly for weight vectors passed to \code{w}. In this regard \code{collap} is more sophisticated than other \emph{collapse} functions where preservation of grouping and weight variables is restricted to formula use. For example \code{STD(iris, iris$Species)} does not preserve \code{Species} in the output, whereas \code{STD(iris, ~ Species)} does. This \code{collap} feature is there simply for convenience, for example sometimes a survey is disaggregated into several datasets, and this now allows easy pulling of identifiers or weights from other datasets for aggregations. If all information is available in one dataset, just using formulas is highly recommended. --></p>
     <h2 class="hasAnchor" id="see-also"><a class="anchor" href="#see-also"></a>See also</h2>
 
-    <div class='dont-index'><p><code><a href='BY.html'>BY</a></code>, <a href='A1-fast-statistical-functions.html'>Fast Statistical Functions</a>, <a href='index.html'>Collapse Overview</a></p></div>
+    <div class='dont-index'><p><code><a href='BY.html'>BY</a></code>, <a href='fast-statistical-functions.html'>Fast Statistical Functions</a>, <a href='index.html'>Collapse Overview</a></p></div>
 
     <h2 class="hasAnchor" id="examples"><a class="anchor" href="#examples"></a>Examples</h2>
     <pre class="examples"><div class='input'><span class='co'>## A Simple Introduction --------------------------------------</span>
@@ -326,7 +326,7 @@ collap works with collapse's Fast Statistical Functions, providing extremely fas
 </div><div class='output co'>#&gt;   Sepal.Length Sepal.Width Petal.Length Petal.Width    Species
 #&gt; 1        250.3    3.447423     1.465202   0.2480224     setosa
 #&gt; 2        296.8    2.784063     4.290195   1.3352089 versicolor
-#&gt; 3        329.4    2.987948     5.597116   2.0333030  virginica</div><div class='input'><span class='va'>weights</span> <span class='op'>&lt;-</span> <span class='fu'><a href='https://rdrr.io/r/base/MathFun.html'>abs</a></span><span class='op'>(</span><span class='fu'><a href='https://rdrr.io/r/stats/Normal.html'>rnorm</a></span><span class='op'>(</span><span class='fu'><a href='AA2-small-helpers.html'>fnrow</a></span><span class='op'>(</span><span class='va'>iris</span><span class='op'>)</span><span class='op'>)</span><span class='op'>)</span>
+#&gt; 3        329.4    2.987948     5.597116   2.0333030  virginica</div><div class='input'><span class='va'>weights</span> <span class='op'>&lt;-</span> <span class='fu'><a href='https://rdrr.io/r/base/MathFun.html'>abs</a></span><span class='op'>(</span><span class='fu'><a href='https://rdrr.io/r/stats/Normal.html'>rnorm</a></span><span class='op'>(</span><span class='fu'><a href='small-helpers.html'>fnrow</a></span><span class='op'>(</span><span class='va'>iris</span><span class='op'>)</span><span class='op'>)</span><span class='op'>)</span>
 <span class='fu'>collap</span><span class='op'>(</span><span class='va'>iris</span>, <span class='op'>~</span> <span class='va'>Species</span>, w <span class='op'>=</span> <span class='va'>weights</span><span class='op'>)</span>                           <span class='co'># Some random weights..</span>
 </div><div class='output co'>#&gt;    weights Sepal.Length Sepal.Width Petal.Length Petal.Width    Species
 #&gt; 1 39.05823     4.938751    3.360079     1.439973   0.2210811     setosa
@@ -515,7 +515,7 @@ collap works with collapse's Fast Statistical Functions, providing extremely fas
 #&gt; 6 Afghanistan Afghanistan   AFG 2015-01-01   2010 South Asia Low income FALSE</div><div class='input'>
 
 <span class='co'>## Weighted Aggregation ----------------------------------------</span>
-<span class='va'>weights</span> <span class='op'>&lt;-</span> <span class='fu'><a href='https://rdrr.io/r/base/MathFun.html'>abs</a></span><span class='op'>(</span><span class='fu'><a href='https://rdrr.io/r/stats/Normal.html'>rnorm</a></span><span class='op'>(</span><span class='fu'><a href='AA2-small-helpers.html'>fnrow</a></span><span class='op'>(</span><span class='va'>wlddev</span><span class='op'>)</span><span class='op'>)</span><span class='op'>)</span>                            <span class='co'># Random weight vector</span>
+<span class='va'>weights</span> <span class='op'>&lt;-</span> <span class='fu'><a href='https://rdrr.io/r/base/MathFun.html'>abs</a></span><span class='op'>(</span><span class='fu'><a href='https://rdrr.io/r/stats/Normal.html'>rnorm</a></span><span class='op'>(</span><span class='fu'><a href='small-helpers.html'>fnrow</a></span><span class='op'>(</span><span class='va'>wlddev</span><span class='op'>)</span><span class='op'>)</span><span class='op'>)</span>                            <span class='co'># Random weight vector</span>
 <span class='fu'><a href='https://rdrr.io/r/utils/head.html'>head</a></span><span class='op'>(</span><span class='fu'>collap</span><span class='op'>(</span><span class='va'>wlddev</span>, <span class='op'>~</span> <span class='va'>country</span> <span class='op'>+</span> <span class='va'>decade</span>, w <span class='op'>=</span> <span class='va'>weights</span><span class='op'>)</span><span class='op'>)</span>           <span class='co'># Takes weighted mean for numeric..</span>
 </div><div class='output co'>#&gt;     weights     country iso3c       date     year decade     region     income
 #&gt; 1  5.219775 Afghanistan   AFG 1964-01-01 1962.878   1960 South Asia Low income

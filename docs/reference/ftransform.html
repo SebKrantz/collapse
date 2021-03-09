@@ -72,7 +72,7 @@
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">collapse</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">1.5.1</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">1.5.3</span>
       </span>
     </div>
 
@@ -94,13 +94,13 @@
       <ul class="nav navbar-nav navbar-right">
         <li>
   <a href="https://twitter.com/collapse_R" target="_blank">
-    <span class="fa fa-twitter"></span>
+    <span class="fas fa-twitter"></span>
      
   </a>
 </li>
 <li>
   <a href="https://github.com/SebKrantz/collapse" target="_blank">
-    <span class="fa fa-github"></span>
+    <span class="fas fa-github"></span>
      
   </a>
 </li>
@@ -127,34 +127,34 @@
     </div>
 
     <pre class="usage"><span class='co'># Modify and return data frame</span>
-<span class='fu'>ftransform</span><span class='op'>(</span><span class='va'>X</span>, <span class='va'>...</span><span class='op'>)</span>
-<span class='fu'>ftransformv</span><span class='op'>(</span><span class='va'>X</span>, <span class='va'>vars</span>, <span class='va'>FUN</span>, <span class='va'>...</span>, apply <span class='op'>=</span> <span class='cn'>TRUE</span><span class='op'>)</span>
-<span class='fu'>tfm</span><span class='op'>(</span><span class='va'>X</span>, <span class='va'>...</span><span class='op'>)</span>               <span class='co'># Shortcut for ftransform</span>
-<span class='fu'>tfmv</span><span class='op'>(</span><span class='va'>X</span>, <span class='va'>vars</span>, <span class='va'>FUN</span>, <span class='va'>...</span>, apply <span class='op'>=</span> <span class='cn'>TRUE</span><span class='op'>)</span>
+<span class='fu'>ftransform</span><span class='op'>(</span><span class='va'>.data</span>, <span class='va'>...</span><span class='op'>)</span>
+<span class='fu'>ftransformv</span><span class='op'>(</span><span class='va'>.data</span>, <span class='va'>vars</span>, <span class='va'>FUN</span>, <span class='va'>...</span>, apply <span class='op'>=</span> <span class='cn'>TRUE</span><span class='op'>)</span>
+<span class='fu'>tfm</span><span class='op'>(</span><span class='va'>.data</span>, <span class='va'>...</span><span class='op'>)</span>               <span class='co'># Shortcut for ftransform</span>
+<span class='fu'>tfmv</span><span class='op'>(</span><span class='va'>.data</span>, <span class='va'>vars</span>, <span class='va'>FUN</span>, <span class='va'>...</span>, apply <span class='op'>=</span> <span class='cn'>TRUE</span><span class='op'>)</span>
 
 <span class='co'># Modify data frame by reference</span>
-<span class='fu'>settransform</span><span class='op'>(</span><span class='va'>X</span>, <span class='va'>...</span><span class='op'>)</span>
-<span class='fu'>settransformv</span><span class='op'>(</span><span class='va'>X</span>, <span class='va'>vars</span>, <span class='va'>FUN</span>, <span class='va'>...</span>, apply <span class='op'>=</span> <span class='cn'>TRUE</span><span class='op'>)</span>
-<span class='fu'>settfm</span><span class='op'>(</span><span class='va'>X</span>, <span class='va'>...</span><span class='op'>)</span>            <span class='co'># Shortcut for settransform</span>
-<span class='fu'>settfmv</span><span class='op'>(</span><span class='va'>X</span>, <span class='va'>vars</span>, <span class='va'>FUN</span>, <span class='va'>...</span>, apply <span class='op'>=</span> <span class='cn'>TRUE</span><span class='op'>)</span>
+<span class='fu'>settransform</span><span class='op'>(</span><span class='va'>.data</span>, <span class='va'>...</span><span class='op'>)</span>
+<span class='fu'>settransformv</span><span class='op'>(</span><span class='va'>.data</span>, <span class='va'>vars</span>, <span class='va'>FUN</span>, <span class='va'>...</span>, apply <span class='op'>=</span> <span class='cn'>TRUE</span><span class='op'>)</span>
+<span class='fu'>settfm</span><span class='op'>(</span><span class='va'>.data</span>, <span class='va'>...</span><span class='op'>)</span>            <span class='co'># Shortcut for settransform</span>
+<span class='fu'>settfmv</span><span class='op'>(</span><span class='va'>.data</span>, <span class='va'>vars</span>, <span class='va'>FUN</span>, <span class='va'>...</span>, apply <span class='op'>=</span> <span class='cn'>TRUE</span><span class='op'>)</span>
 
 <span class='co'># Replace/add modified columns in/to a data frame</span>
-<span class='fu'>ftransform</span><span class='op'>(</span><span class='va'>X</span><span class='op'>)</span> <span class='op'>&lt;-</span> <span class='va'>value</span>
-<span class='fu'>tfm</span><span class='op'>(</span><span class='va'>X</span><span class='op'>)</span> <span class='op'>&lt;-</span> <span class='va'>value</span>           <span class='co'># Shortcut for ftransform&lt;-</span>
+<span class='fu'>ftransform</span><span class='op'>(</span><span class='va'>.data</span><span class='op'>)</span> <span class='op'>&lt;-</span> <span class='va'>value</span>
+<span class='fu'>tfm</span><span class='op'>(</span><span class='va'>.data</span><span class='op'>)</span> <span class='op'>&lt;-</span> <span class='va'>value</span>           <span class='co'># Shortcut for ftransform&lt;-</span>
 
 <span class='co'># Compute columns, returned as a new data frame</span>
-<span class='fu'>fcompute</span><span class='op'>(</span><span class='va'>X</span>, <span class='va'>...</span><span class='op'>)</span></pre>
+<span class='fu'>fcompute</span><span class='op'>(</span><span class='va'>.data</span>, <span class='va'>...</span><span class='op'>)</span></pre>
 
     <h2 class="hasAnchor" id="arguments"><a class="anchor" href="#arguments"></a>Arguments</h2>
     <table class="ref-arguments">
     <colgroup><col class="name" /><col class="desc" /></colgroup>
     <tr>
-      <th>X</th>
+      <th>.data</th>
       <td><p>a data frame or named list of columns.</p></td>
     </tr>
     <tr>
       <th>...</th>
-      <td><p>further arguments of the form <code>column = value</code>. The <code>value</code> can be a combination of other columns, a scalar value, or <code>NULL</code>, which deletes <code>column</code>. Alternatively it is also possible to place a single list here, which will be treated like a list of <code>column = value</code> arguments. For <code>ftransformv</code>, <code>...</code> can be used to pass further arguments to <code>FUN</code>. <em>Note:</em> The ellipsis (<code>...</code>) is always evaluated within the data frame (<code>X</code>) environment. See Examples.</p></td>
+      <td><p>further arguments of the form <code>column = value</code>. The <code>value</code> can be a combination of other columns, a scalar value, or <code>NULL</code>, which deletes <code>column</code>. Alternatively it is also possible to place a single list here, which will be treated like a list of <code>column = value</code> arguments. For <code>ftransformv</code>, <code>...</code> can be used to pass further arguments to <code>FUN</code>. <em>Note:</em> The ellipsis (<code>...</code>) is always evaluated within the data frame (<code>.data</code>) environment. See Examples.</p></td>
     </tr>
     <tr>
       <th>vars</th>
@@ -162,11 +162,11 @@
     </tr>
     <tr>
       <th>FUN</th>
-      <td><p>a single function yielding a result of length <code><a href='https://rdrr.io/r/base/nrow.html'>NROW(X)</a></code> or 1. See also <code>apply</code>.</p></td>
+      <td><p>a single function yielding a result of length <code><a href='https://rdrr.io/r/base/nrow.html'>NROW(.data)</a></code> or 1. See also <code>apply</code>.</p></td>
     </tr>
     <tr>
       <th>apply</th>
-      <td><p>logical. <code>TRUE</code> (default) will apply <code>FUN</code> to each column selected in <code>vars</code>; <code>FALSE</code> will apply <code>FUN</code> to the subsetted data frame i.e. <code>FUN(get_vars(X, vars), ...)</code>. The latter is useful for <em>collapse</em> functions with data frame or grouped / panel data frame methods, yielding performance gains and enabling grouped transformations. See Examples.</p></td>
+      <td><p>logical. <code>TRUE</code> (default) will apply <code>FUN</code> to each column selected in <code>vars</code>; <code>FALSE</code> will apply <code>FUN</code> to the subsetted data frame i.e. <code>FUN(get_vars(.data, vars), ...)</code>. The latter is useful for <em>collapse</em> functions with data frame or grouped / panel data frame methods, yielding performance gains and enabling grouped transformations. See Examples.</p></td>
     </tr>
     <tr>
       <th>value</th>
@@ -178,21 +178,21 @@
 
     <p>The <code>...</code> arguments to <code>ftransform</code> are tagged
   vector expressions, which are evaluated in the data frame
-  <code>X</code>.  The tags are matched against <code><a href='https://rdrr.io/r/base/names.html'>names(X)</a></code>, and for
+  <code>.data</code>.  The tags are matched against <code><a href='https://rdrr.io/r/base/names.html'>names(.data)</a></code>, and for
   those that match, the values replace the corresponding variable in
-  <code>X</code>, whereas the others are appended to <code>X</code>. It is also possible to delete columns by assigning <code>NULL</code> to them, i.e. <code>ftransform(data, colk = NULL)</code> removes <code>colk</code> from the data. <em>Note</em> that <code><a href='https://rdrr.io/r/base/names.html'>names(X)</a></code> and the names of the <code>...</code> arguments are checked for uniqueness beforehand, yielding an error if this is not the case.</p>
+  <code>.data</code>, whereas the others are appended to <code>.data</code>. It is also possible to delete columns by assigning <code>NULL</code> to them, i.e. <code>ftransform(data, colk = NULL)</code> removes <code>colk</code> from the data. <em>Note</em> that <code><a href='https://rdrr.io/r/base/names.html'>names(.data)</a></code> and the names of the <code>...</code> arguments are checked for uniqueness beforehand, yielding an error if this is not the case.</p>
 <p>Since <em>collapse</em> v1.3.0, is is also possible to pass a single named list to <code>...</code>, i.e. <code>ftransform(data, newdata)</code>. This list will be treated like a list of tagged vector expressions. <em>Note</em> the different behavior: <code>ftransform(data, list(newcol = col1))</code> is the same as <code>ftransform(data, newcol = col1)</code>, whereas <code>ftransform(data, newcol = as.list(col1))</code> creates a list column. Something like <code>ftransform(data, as.list(col1))</code> gives an error because the list is not named. See Examples.   <!-- % and \code{ftransform(data, as.list(col1))} gives an error because an unnamed list is passed. % , but \code{ftransform(data, setNames(as.list(col1), col1))} will work and add the values of \code{col1} as separate columns. --></p>
 <p><!-- % \code{ftransform(data, fmean(list(col1mean = col1, col2mean = col2), drop = FALSE))} etc. --></p>
 <p><!-- % For example \code{ftransformv(data, 1:3, log)} is the same as \code{ftransform(data, lapply(get_vars(data, 1:3), log))}, and \code{ftransformv(data, 1:3, log, apply = FALSE)} is the same as \code{ftransform(data, log(get_vars(data, 1:3)))}. --></p>
 <p>The function <code>ftransformv</code> added in v1.3.2 provides a fast replacement for the functions <code><a href='https://dplyr.tidyverse.org/reference/mutate_all.html'>dplyr::mutate_at</a></code> and <code><a href='https://dplyr.tidyverse.org/reference/mutate_all.html'>dplyr::mutate_if</a></code> facilitating mutations of groups of columns (<code><a href='https://dplyr.tidyverse.org/reference/mutate_all.html'>dplyr::mutate_all</a></code> is already accounted for by <code><a href='dapply.html'>dapply</a></code>). See Examples.</p>
 <p>The function <code>settransform</code> does all of that by reference, but uses base-R's copy-on modify semantics, which is equivalent to replacing the data with <code>&lt;-</code> (thus it is still memory efficient but the data will have a different memory address afterwards).</p>
-<p>The function <code>fcompute</code> works just like <code>ftransform</code>, but returns only the changed / computed columns without modifying or appending the data in <code>X</code>.</p>
+<p>The function <code>fcompute</code> works just like <code>ftransform</code>, but returns only the changed / computed columns without modifying or appending the data in <code>.data</code>.</p>
     <h2 class="hasAnchor" id="value"><a class="anchor" href="#value"></a>Value</h2>
 
-    <p>The modified data frame <code>X</code>, or, for <code>fcompute</code>, a new data frame with the columns computed on <code>X</code>. All attributes of <code>X</code> are preserved.</p>
+    <p>The modified data frame <code>.data</code>, or, for <code>fcompute</code>, a new data frame with the columns computed on <code>.data</code>. All attributes of <code>.data</code> are preserved.</p>
     <h2 class="hasAnchor" id="see-also"><a class="anchor" href="#see-also"></a>See also</h2>
 
-    <div class='dont-index'><p><code><a href='https://rdrr.io/r/base/with.html'>with</a></code>, <code><a href='https://rdrr.io/r/base/with.html'>within</a></code>, <code><a href='fselect, get_vars, add_vars.html'>add_vars</a></code>, <a href='A3-fast-data-manipulation.html'>Data Frame Manipulation</a>, <a href='index.html'>Collapse Overview</a></p></div>
+    <div class='dont-index'><p><code><a href='https://rdrr.io/r/base/with.html'>with</a></code>, <code><a href='https://rdrr.io/r/base/with.html'>within</a></code>, <code><a href='fselect, get_vars, add_vars.html'>add_vars</a></code>, <a href='fast-data-manipulation.html'>Data Frame Manipulation</a>, <a href='index.html'>Collapse Overview</a></p></div>
 
     <h2 class="hasAnchor" id="examples"><a class="anchor" href="#examples"></a>Examples</h2>
     <pre class="examples"><div class='input'><span class='co'>## ftransform modifies and returns a data.frame</span>
@@ -254,7 +254,7 @@
 #&gt; 4    18     313 11.5   62     5   4                      14
 #&gt; 5    NA      NA 14.3   56     5   5                      14
 #&gt; 6    28      NA 14.9   66     5   6                      28</div><div class='input'>
-<span class='co'>## ftransformv can be used to modify multiply columns using a function</span>
+<span class='co'>## ftransformv can be used to modify multiple columns using a function</span>
 <span class='fu'><a href='https://rdrr.io/r/utils/head.html'>head</a></span><span class='op'>(</span><span class='fu'>ftransformv</span><span class='op'>(</span><span class='va'>airquality</span>, <span class='fl'>1</span><span class='op'>:</span><span class='fl'>3</span>, <span class='va'>log</span><span class='op'>)</span><span class='op'>)</span>
 </div><div class='output co'>#&gt;      Ozone  Solar.R     Wind Temp Month Day
 #&gt; 1 3.713572 5.247024 2.001480   67     5   1
@@ -385,7 +385,7 @@
 #&gt; 6    28      NA 14.9   66     5   6 12.08975  533.2819</div><div class='input'>
 <span class='co'># Same as above using a grouped data frame (a bit more complex)</span>
 <span class='va'>airquality</span> <span class='op'>%&gt;%</span> <span class='fu'><a href='GRP, fgroup_by.html'>fgroup_by</a></span><span class='op'>(</span><span class='va'>Month</span><span class='op'>)</span> <span class='op'>%&gt;%</span>
-  <span class='fu'>ftransform</span><span class='op'>(</span><span class='fu'><a href='fselect, get_vars, add_vars.html'>fselect</a></span><span class='op'>(</span><span class='va'>.</span>, <span class='va'>Wind</span>, <span class='va'>Ozone</span><span class='op'>)</span> <span class='op'>%&gt;%</span> <span class='fu'><a href='fvar, fsd.html'>fvar</a></span><span class='op'>(</span><span class='va'>Temp</span>, <span class='st'>"replace"</span><span class='op'>)</span> <span class='op'>%&gt;%</span> <span class='fu'><a href='AA2-small-helpers.html'>add_stub</a></span><span class='op'>(</span><span class='st'>"_var"</span>, <span class='cn'>FALSE</span><span class='op'>)</span><span class='op'>)</span> <span class='op'>%&gt;%</span>
+  <span class='fu'>ftransform</span><span class='op'>(</span><span class='fu'><a href='fselect, get_vars, add_vars.html'>fselect</a></span><span class='op'>(</span><span class='va'>.</span>, <span class='va'>Wind</span>, <span class='va'>Ozone</span><span class='op'>)</span> <span class='op'>%&gt;%</span> <span class='fu'><a href='fvar, fsd.html'>fvar</a></span><span class='op'>(</span><span class='va'>Temp</span>, <span class='st'>"replace"</span><span class='op'>)</span> <span class='op'>%&gt;%</span> <span class='fu'><a href='small-helpers.html'>add_stub</a></span><span class='op'>(</span><span class='st'>"_var"</span>, <span class='cn'>FALSE</span><span class='op'>)</span><span class='op'>)</span> <span class='op'>%&gt;%</span>
   <span class='va'>fungroup</span> <span class='op'>%&gt;%</span> <span class='va'>head</span>
 </div><div class='output co'>#&gt;   Ozone Solar.R Wind Temp Month Day Wind_var Ozone_var
 #&gt; 1    41     190  7.4   67     5   1 12.08975  533.2819
