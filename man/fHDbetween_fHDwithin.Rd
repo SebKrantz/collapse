@@ -133,7 +133,7 @@ The special methods for \code{plm::pseries} and \code{plm::pdata.frame} center a
 \code{\link[=fbetween]{fbetween, fwithin}}, \code{\link{fscale}}, \code{\link{TRA}}, \code{\link{flm}}, \code{\link{fFtest}}, \link[=A6-data-transformations]{Data Transformations}, \link[=collapse-documentation]{Collapse Overview}
 }
 \examples{
-HDW(mtcars$mpg, mtcars$carb)                   # Simple regression problems..
+HDW(mtcars$mpg, mtcars$carb)                   # Simple regression problems
 HDW(mtcars$mpg, mtcars[-1])
 HDW(mtcars$mpg, qM(mtcars[-1]))
 head(HDW(qM(mtcars[3:4]), mtcars[1:2]))
@@ -142,7 +142,7 @@ head(HDW(iris[1:2], iris[3:5]))                # Adding the Species factor -> fi
 \donttest{ % We don't test because this code depends on suggested package.
 head(HDW(wlddev, PCGDP + LIFEEX ~ iso3c + qF(year))) # Partialling out 2 fixed effects
 head(HDW(wlddev, PCGDP + LIFEEX ~ iso3c + qF(year), variable.wise = TRUE)) # Variable-wise
-head(HDW(wlddev, PCGDP + LIFEEX ~ iso3c + qF(year) + ODA)) # Adding ODA as a continuouus regressor
+head(HDW(wlddev, PCGDP + LIFEEX ~ iso3c + qF(year) + ODA)) # Adding ODA as a continuous regressor
 head(HDW(wlddev, PCGDP + LIFEEX ~ iso3c:qF(decade) + qF(year) + ODA)) # Country-decade and year FE's
 
 head(HDW(wlddev, PCGDP + LIFEEX ~ iso3c*year))          # Country specific time trends
