@@ -8,7 +8,7 @@ fselect <- function(x, ..., return = "data") { # This also takes names and indic
   vars <- eval(substitute(c(...)), nl, parent.frame())
   # if(!is.integer(vars)) stop(paste0("Unknown columns: ", .c(...))) # if(!is.integer(vars) || max(vars) > length(nam)) # nah, a bit redundant..
   if(is.character(vars)) vars <- ckmatch(vars, nam)
-  if(!is.numeric(vars)) stop("... needs to be column names, or character / integer / logical vectors")
+  # if(!is.numeric(vars)) stop("... needs to be column names, or character / integer / logical vectors")
   switch(return,
          data = setAttributes(x[vars], `[[<-`(ax, "names", nam[vars])), # Also Improvements in code below ?
          names = nam[vars],
@@ -32,7 +32,7 @@ slt <- fselect # good, consistent
   nl <- `names<-`(as.vector(seq_along(x), "list"), names(x))
   vars <- eval(substitute(c(...)), nl, parent.frame())
   if(is.character(vars)) vars <- ckmatch(vars, names(x))
-  if(!is.numeric(vars)) stop("... needs to be column names, or character / integer / logical vectors")
+  # if(!is.numeric(vars)) stop("... needs to be column names, or character / integer / logical vectors")
   # if(!is.integer(vars)) stop(paste0("Unknown columns: ", .c(...)))
   if(is.null(value)) {
     if(!length(vars)) return(`oldClass<-`(x, clx))
