@@ -246,6 +246,8 @@ collap <- function(X, by, FUN = fmean, catFUN = fmode, cols = NULL, w = NULL, wF
       res[[1L]] <- list(by[[4L]]) # could add later using "c" ?
       ind <- 2L
     }
+
+    custom_names <- lapply(custom, names)
     custom <- lapply(custom, cols2int, X, nam) # could integrate below, but then reorder doesn't work !
 
     if(autorn) give.names <- fanyDuplicated(unlist(custom, FALSE, FALSE))
@@ -256,12 +258,12 @@ collap <- function(X, by, FUN = fmean, catFUN = fmode, cols = NULL, w = NULL, wF
 
     if(nwl) {
       res[[ind]] <- condsetn(lapply(seq_along(namFUN), function(i)
-                      applyfuns_internal(`oldClass<-`(X[custom[[i]]], "data.frame"), by, mymatchfun(namFUN[i]),
+                      applyfuns_internal(`oldClass<-`(setnck(X[custom[[i]]], custom_names[[i]]), "data.frame"), by, mymatchfun(namFUN[i]),
                                          fFUN[i], parallel, mc.cores, ...)[[1L]]), namFUN, give.names)
     } else {
       if(!all(fFUN)) warning("collap can only perform weighted aggregations with the fast statistical functions (see .FAST_STAT_FUN): Ignoring weights argument to other functions")
       res[[ind]] <- condsetn(lapply(seq_along(namFUN), function(i)
-                      applyfuns_internal(`oldClass<-`(X[custom[[i]]], "data.frame"), by, mymatchfun(namFUN[i]),
+                      applyfuns_internal(`oldClass<-`(setnck(X[custom[[i]]], custom_names[[i]]), "data.frame"), by, mymatchfun(namFUN[i]),
                                          fFUN[i], parallel, mc.cores, w = w, ...)[[1L]]), namFUN, give.names)
     }
 
@@ -448,18 +450,19 @@ collapv <- function(X, by, FUN = fmean, catFUN = fmode, cols = NULL, w = NULL, w
       ind <- 2L
     }
 
+    custom_names <- lapply(custom, names)
     custom <- lapply(custom, cols2int, X, nam)
 
     if(autorn) give.names <- fanyDuplicated(unlist(custom, FALSE, FALSE))
 
     if(nwl) {
       res[[ind]] <- condsetn(lapply(seq_along(namFUN), function(i)
-        applyfuns_internal(`oldClass<-`(X[custom[[i]]], "data.frame"), by, mymatchfun(namFUN[i]),
+        applyfuns_internal(`oldClass<-`(setnck(X[custom[[i]]], custom_names[[i]]), "data.frame"), by, mymatchfun(namFUN[i]),
                            fFUN[i], parallel, mc.cores, ...)[[1L]]), namFUN, give.names)
     } else {
       if(!all(fFUN)) warning("collap can only perform weighted aggregations with the fast statistical functions (see .FAST_STAT_FUN): Ignoring weights argument to other functions")
       res[[ind]] <- condsetn(lapply(seq_along(namFUN), function(i)
-        applyfuns_internal(`oldClass<-`(X[custom[[i]]], "data.frame"), by, mymatchfun(namFUN[i]),
+        applyfuns_internal(`oldClass<-`(setnck(X[custom[[i]]], custom_names[[i]]), "data.frame"), by, mymatchfun(namFUN[i]),
                            fFUN[i], parallel, mc.cores, w = w, ...)[[1L]]), namFUN, give.names)
     }
 

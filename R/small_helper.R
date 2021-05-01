@@ -331,6 +331,13 @@ condsetn <- function(x, value, cond) {
   x
 }
 
+setnck <- function(x, value) {
+  if(is.null(value)) return(x)
+  ren <- nzchar(value)
+  if(all(ren)) names(x) <- value else names(x)[ren] <- value[ren]
+  x
+}
+
 # give_nam <- function(x, gn, stub) {
 #   if(!gn) return(x)
 #   attr(x, "names") <- paste0(stub, attr(x, "names"))
