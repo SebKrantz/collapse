@@ -166,12 +166,13 @@ test_that("add_vars errors for wrong input", {
   expect_error(add_vars(wlddev, 9:12) <- wlddev[9:10])
 })
 
-test_that("fselect errors for wrong input", {
-  expect_error(fselect(mtcars, 1))
-  expect_error(fselect(mtcars, "bla"))
-  expect_error(fselect(mtcars, "mpg"))
-  expect_error(fselect(mtcars, mpg:bla))
-  expect_error(fselect(mtcars, mpg > cyl))
-  expect_error(fselect(mtcars, ~mpg))
-})
+# Disabled, more flexibility allowed.
+# test_that("fselect errors for wrong input", {
+#   expect_error(fselect(mtcars, 1))
+#   expect_error(fselect(mtcars, "bla"))
+#   expect_error(fselect(mtcars, "mpg"))
+#   expect_error(fselect(mtcars, mpg:bla))
+#   expect_error(fselect(mtcars, mpg > cyl))
+#   expect_error(fselect(mtcars, ~mpg))
+# })
 
