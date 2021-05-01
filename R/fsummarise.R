@@ -24,7 +24,7 @@ fsummarise <- function(.data, ..., keep.group_vars = TRUE) {
       # if(any(FUNs %!in% .FAST_STAT_FUN)) ...
     for(i in seq_along(e)[-1L]) { # This is good and very fast
       ei <- e[[i]]
-      e[[i]] <- if(any(as.character(ei[[1L]]) == .FAST_STAT_FUN))
+      e[[i]] <- if(any(as.character(ei[[1L]]) %in% .FAST_STAT_FUN)) # need %in% here because could pass collapse::fmean etc..
                   fFUN_add_groups(ei) else othFUN_compute(ei)
     }
     res <- eval(e, c(list(.g_ = g), .data), parent.frame())
