@@ -50,7 +50,7 @@ within <- function(x, na.rm = FALSE, mean = 0) {
   return(x - m + mean)
 }
 
-# NOTE: This is what fbetween and fwithin currently do: If missing values, compute weighted mean on available obs, and center x using it. but don't insert aditional missing values in x for missing weights ..
+# NOTE: This is what fbetween and fwithin currently do: If missing values, compute weighted mean on available obs, and center x using it. But don't insert additional missing values in x for missing weights ..
 wbetween <- function(x, w, na.rm = FALSE) {
   if(na.rm) {
     xcc <- !is.na(x)
