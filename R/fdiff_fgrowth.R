@@ -33,7 +33,7 @@ fdiff.pseries <- function(x, n = 1, diff = 1, fill = NA, log = FALSE, rho = 1, s
   if(!missing(...)) if(checkld(...)) log <- list(...)[["logdiff"]] else unused_arg_action(match.call(), ...)
   if(log) x <- baselog(x)
   index <- unclass(attr(x, "index"))
-  if(length(index) > 2L) index <- c(finteraction(index[-length(index)]), index[length(index)])
+  if(length(index) > 2L) index <- list(finteraction(index[-length(index)]), index[[length(index)]])
   if(is.matrix(x))
     .Call(Cpp_fdiffgrowthm,x,n,diff,fill,fnlevels(index[[1L]]),index[[1L]],NULL,index[[2L]],1L+log,rho,stubs,1) else
       .Call(Cpp_fdiffgrowth,x,n,diff,fill,fnlevels(index[[1L]]),index[[1L]],NULL,index[[2L]],1L+log,rho,stubs,1)
@@ -103,7 +103,7 @@ fdiff.pdata.frame <- function(x, n = 1, diff = 1, fill = NA, log = FALSE, rho = 
   if(!missing(...)) if(checkld(...)) log <- list(...)[["logdiff"]] else unused_arg_action(match.call(), ...)
   if(log) x <- fdapply(x, baselog)
   index <- unclass(attr(x, "index"))
-  if(length(index) > 2L) index <- c(finteraction(index[-length(index)]), index[length(index)])
+  if(length(index) > 2L) index <- list(finteraction(index[-length(index)]), index[[length(index)]])
   .Call(Cpp_fdiffgrowthl,x,n,diff,fill,fnlevels(index[[1L]]),index[[1L]],NULL,index[[2L]],1L+log,rho,stubs,1)
 }
 
@@ -132,7 +132,7 @@ fgrowth.pseries <- function(x, n = 1, diff = 1, fill = NA, logdiff = FALSE, scal
   if(!missing(...)) unused_arg_action(match.call(), ...)
   if(logdiff) x <- if(scale == 1) baselog(x) else scale * baselog(x)
   index <- unclass(attr(x, "index"))
-  if(length(index) > 2L) index <- c(finteraction(index[-length(index)]), index[length(index)])
+  if(length(index) > 2L) index <- list(finteraction(index[-length(index)]), index[[length(index)]])
   if(is.matrix(x))
     .Call(Cpp_fdiffgrowthm,x,n,diff,fill,fnlevels(index[[1L]]),index[[1L]],NULL,index[[2L]],4L-logdiff,scale,stubs,power) else
       .Call(Cpp_fdiffgrowth,x,n,diff,fill,fnlevels(index[[1L]]),index[[1L]],NULL,index[[2L]],4L-logdiff,scale,stubs,power)
@@ -202,7 +202,7 @@ fgrowth.pdata.frame <- function(x, n = 1, diff = 1, fill = NA, logdiff = FALSE, 
   if(!missing(...)) unused_arg_action(match.call(), ...)
   if(logdiff) x <- if(scale == 1) fdapply(x, baselog) else fdapply(x, function(y) scale * baselog(y))
   index <- unclass(attr(x, "index"))
-  if(length(index) > 2L) index <- c(finteraction(index[-length(index)]), index[length(index)])
+  if(length(index) > 2L) index <- list(finteraction(index[-length(index)]), index[[length(index)]])
   .Call(Cpp_fdiffgrowthl,x,n,diff,fill,fnlevels(index[[1L]]),index[[1L]],NULL,index[[2L]],4L-logdiff,scale,stubs,power)
 }
 
@@ -283,7 +283,7 @@ DG_pdata_frame_template <- function(x, n = 1, diff = 1, cols = is.numeric, fill 
     if(length(gn) && is.null(cols)) cols <- seq_along(unclass(x))[-gn]
   } else gn <- NULL
 
-  if(length(index) > 2L) index <- c(finteraction(index[-length(index)]), index[length(index)])
+  if(length(index) > 2L) index <- list(finteraction(index[-length(index)]), index[[length(index)]])
 
   cld <- function(y) switch(return, y, fdapply(y, baselog), if(rho == 1) fdapply(y, baselog) else fdapply(y, function(k) rho * baselog(k)), y)
 

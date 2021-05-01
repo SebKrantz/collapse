@@ -119,7 +119,7 @@ psacf.data.frame <- function(x, by, t = NULL, cols = is.numeric, lag.max = NULL,
 psacf.pseries <- function(x, lag.max = NULL, type = c("correlation", "covariance","partial"), plot = TRUE, gscale = TRUE, ...) {
   if(!is.numeric(x)) stop("'x' must be a numeric pseries ")
   index <- unclass(attr(x, "index"))
-  if(length(index) > 2L) index <- c(finteraction(index[-length(index)]), index[length(index)])
+  if(length(index) > 2L) index <- list(finteraction(index[-length(index)]), index[[length(index)]])
   nl <- fnlevels(index[[1L]])
   typei <- switch(type[1L], correlation = 1L, covariance = 2L, partial = 3L, stop("Unknown type!"))
   series <- l1orlst(as.character(substitute(x))) # faster ?
@@ -155,7 +155,7 @@ psacf.pdata.frame <- function(x, cols = is.numeric, lag.max = NULL, type = c("co
   if(length(cols)) x <- x[cols2int(cols, x, names(x), FALSE)]
   lx <- length(x)
   snames <- names(x)
-  if(length(index) > 2L) index <- c(finteraction(index[-length(index)]), index[length(index)])
+  if(length(index) > 2L) index <- list(finteraction(index[-length(index)]), index[[length(index)]])
   ng <- fnlevels(index[[1L]])
   attributes(x) <- NULL # necessary after unclass above ?
     if(is.null(lag.max)) lag.max <- round(2*sqrt(nrx/ng))
@@ -262,7 +262,7 @@ psccf.pseries <- function(x, y, lag.max = NULL, type = c("correlation", "covaria
   index <- attr(x, "index")
   if(!identical(index,attr(y,"index"))) stop("index of x and y differs")
   oldClass(index) <- NULL
-  if(length(index) > 2L) index <- c(finteraction(index[-length(index)]), index[length(index)])
+  if(length(index) > 2L) index <- list(finteraction(index[-length(index)]), index[[length(index)]])
   nl <- fnlevels(index[[1L]])
   typei <- switch(type[1L], correlation = 1L, covariance = 2L, partial = 3L, stop("Unknown type!"))
   snames <- paste(c(l1orlst(as.character(substitute(x))), l1orlst(as.character(substitute(x)))), collapse = " & ")
