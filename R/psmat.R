@@ -77,7 +77,7 @@ psmat.pseries <- function(x, transpose = FALSE, ...) {
   if(!missing(...)) unused_arg_action(match.call(), ...)
   index <- unclass(attr(x, "index"))
   if(is.matrix(x)) stop("x is already a matrix")
-  if(length(index) > 2L) index <- c(finteraction(index[-length(index)]), index[length(index)])
+  if(length(index) > 2L) index <- list(finteraction(index[-length(index)]), index[[length(index)]])
   .Call(Cpp_psmat, x, index[[1L]], index[[2L]], transpose)
 }
 
@@ -85,7 +85,7 @@ psmat.pdata.frame <- function(x, cols = NULL, transpose = FALSE, array = TRUE, .
   if(!missing(...)) unused_arg_action(match.call(), ...)
   oldClass(x) <- NULL
   index <- unclass(attr(x, "index"))
-  if(length(index) > 2L) index <- c(finteraction(index[-length(index)]), index[length(index)])
+  if(length(index) > 2L) index <- list(finteraction(index[-length(index)]), index[[length(index)]])
   res <- lapply(if(is.null(cols)) x else x[cols2int(cols, x, names(x), FALSE)], psmatCpp, index[[1L]], index[[2L]], transpose)
   if(array) {
     if(length(res) == 1L) return(res[[1L]]) else

@@ -19,7 +19,7 @@ flag.default <- function(x, n = 1, g = NULL, t = NULL, fill = NA, stubs = TRUE, 
 flag.pseries <- function(x, n = 1, fill = NA, stubs = TRUE, ...) {
   if(!missing(...)) unused_arg_action(match.call(), ...)
   index <- unclass(attr(x, "index"))
-  if(length(index) > 2L) index <- c(finteraction(index[-length(index)]), index[length(index)])
+  if(length(index) > 2L) index <- list(finteraction(index[-length(index)]), index[[length(index)]])
   if(is.matrix(x))
   .Call(Cpp_flagleadm,x,n,fill,fnlevels(index[[1L]]),index[[1L]],index[[2L]],stubs) else
   .Call(Cpp_flaglead,x,n,fill,fnlevels(index[[1L]]),index[[1L]],index[[2L]],stubs)
@@ -83,7 +83,7 @@ flag.list <- function(x, n = 1, g = NULL, t = NULL, fill = NA, stubs = length(n)
 flag.pdata.frame <- function(x, n = 1, fill = NA, stubs = length(n) > 1L, ...) {
   if(!missing(...)) unused_arg_action(match.call(), ...)
   index <- unclass(attr(x, "index"))
-  if(length(index) > 2L) index <- c(finteraction(index[-length(index)]), index[length(index)])
+  if(length(index) > 2L) index <- list(finteraction(index[-length(index)]), index[[length(index)]])
   .Call(Cpp_flagleadl,x,n,fill,fnlevels(index[[1L]]),index[[1L]],index[[2L]],stubs)
 }
 
@@ -178,7 +178,7 @@ L.pdata.frame <- function(x, n = 1, cols = is.numeric, fill = NA, stubs = TRUE, 
     if(length(gn) && is.null(cols)) cols <- seq_along(unclass(x))[-gn]
   } else gn <- NULL
 
-  if(length(index) > 2L) index <- c(finteraction(index[-length(index)]), index[length(index)])
+  if(length(index) > 2L) index <- list(finteraction(index[-length(index)]), index[[length(index)]])
 
   if(length(cols)) cols <- cols2int(cols, x, nam, FALSE)
 
