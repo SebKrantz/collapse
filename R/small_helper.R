@@ -333,9 +333,8 @@ condsetn <- function(x, value, cond) {
 
 setnck <- function(x, value) {
   if(is.null(value)) return(x)
-  empty <- !nzchar(value)
-  if(any(empty)) value[empty] <- names(x)[empty]
-  names(x) <- value
+  ren <- nzchar(value)
+  if(all(ren)) names(x) <- value else names(x)[ren] <- value[ren]
   x
 }
 
