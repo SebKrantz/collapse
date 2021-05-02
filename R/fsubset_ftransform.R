@@ -46,12 +46,17 @@ fsubset.data.frame <- function(x, subset, ...) {
     ix <- seq_along(unclass(x))
     nl <- `names<-`(as.vector(ix, "list"), attr(x, "names"))
     vars <- eval(substitute(c(...)), nl, parent.frame())
+    nam_vars <- names(vars)
     if(is.integer(vars)) {
       if(any(vars < 0L)) vars <- ix[vars]
     } else {
       if(is.character(vars)) vars <- ckmatch(vars, names(nl)) else if(is.numeric(vars)) {
         vars <- if(any(vars < 0)) ix[vars] else as.integer(vars)
       } else stop("... needs to be comma separated column names, or column indices")
+    }
+    if(length(nam_vars)) {
+      nonmiss <- nzchar(nam_vars)
+      attr(x, "names")[vars[nonmiss]] <- nam_vars[nonmiss]
     }
   }
   r <- eval(substitute(subset), x, parent.frame())

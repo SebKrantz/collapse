@@ -36,6 +36,11 @@ test_that("fsubset works like base::subset for data frames", {
                    unattrib(subset(airquality, Day == 1 & !is.na(Ozone), c(Ozone:Wind, Month))))
 })
 
+test_that("fsubset column renaming", {
+
+  expect_equal(names(fsubset(airquality, Temp > 90, OZ = Ozone, Temp)), .c(OZ, Temp))
+
+})
 
 test_that("ss works like an improved version of [", { # replaced setRownames wit unattrib because of unexplained test failures on some systems
   expect_equal(ss(airquality, 1:100, 1:3), airquality[1:100, 1:3])

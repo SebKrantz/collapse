@@ -40,7 +40,7 @@ ss(x, i, j)
 
   For matrices the implementation is all base-R but slightly more efficient and more versatile than \code{\link{subset.matrix}}. Thus it is possible to \code{subset} matrix rows using logical or integer vectors, or character vectors matching rownames. The \code{drop} argument is passed on to the indexing method for matrices.
 
-  For both matrices and data frames, the \code{\dots} argument can be used to subset columns, and is evaluated in a non-standard way. Thus it can support vectors of column names, indices or logical vectors, but also multiple comma separated column names passed without quotes, each of which may also be replaced by a sequence of columns i.e. \code{col1:coln} (see examples).
+  For both matrices and data frames, the \code{\dots} argument can be used to subset columns, and is evaluated in a non-standard way. Thus it can support vectors of column names, indices or logical vectors, but also multiple comma separated column names passed without quotes, each of which may also be replaced by a sequence of columns i.e. \code{col1:coln}, and new column names may be assigned e.g. \code{fsubset(data, col1 > 20, newname =  col2, col3:col6)} (see examples).
 
   For data frames, the \code{subset} argument is also evaluated in a non-standard way. Thus next to vector of row-indices or logical vectors, it supports logical expressions of the form \code{col2 > 5 & col2 < col3} etc. (see examples). The data frame method uses \code{C_subsetDT}, an internal C function from the \emph{data.table} package to subset data frames, hence it is significantly faster than \code{\link{subset.data.frame}}. If fast data frame subsetting is required but no non-standard evaluation, the function \code{ss} is slightly simpler and faster.
 
@@ -59,6 +59,7 @@ Factors may have empty levels after subsetting; unused levels are not automatica
 }
 \examples{
 fsubset(airquality, Temp > 90, Ozone, Temp)
+fsubset(airquality, Temp > 90, OZ = Ozone, Temp) # With renaming
 fsubset(airquality, Day == 1, -Temp)
 fsubset(airquality, Day == 1, -(Day:Temp))
 fsubset(airquality, Day == 1, Ozone:Wind)

@@ -176,3 +176,8 @@ test_that("add_vars errors for wrong input", {
 #   expect_error(fselect(mtcars, ~mpg))
 # })
 
+
+test_that("fselect works properly", {
+  expect_equal(fselect(mtcars, mpg:vs), mtcars[1:8])
+  expect_equal(names(fselect(mtcars, bla = mpg, cyl:vs)), c("bla", names(mtcars)[2:8]))
+})
