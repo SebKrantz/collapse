@@ -43,7 +43,7 @@ qsu(x, \dots)
   \item{by}{\emph{(p)data.frame method}: Same as \code{g}, but also allows one- or two-sided formulas i.e. \code{~ group1 + group2} or \code{var1 + var2 ~ group1 + group2}. See Examples.}
   \item{pid}{same input as \code{g/by}: Specify a panel-identifier to also compute statistics on between- and within- transformed data. Data frame method also supports one- or two-sided formulas. Transformations are taken independently from grouping with \code{g/by} (grouped statistics are computed on the transformed data if \code{g/by} is also used). However, passing any LHS variables to \code{pid} will overwrite any \code{LHS} variables passed to \code{by}.}
   \item{w}{a vector of (non-negative) weights. Adding weights will compute the weighted mean, sd, skewness and kurtosis, and transform the data using weighted individual means if \code{pid} is used.}
-  \item{cols}{select columns to summarize using column names, indices, a logical vector or a function (i.e. \code{is.numeric}). Two-sided formulas passed to \code{by} or \code{pid} overwrite \code{cols}.}
+  \item{cols}{select columns to summarize using column names, indices, a logical vector or a function (e.g. \code{is.numeric}). Two-sided formulas passed to \code{by} or \code{pid} overwrite \code{cols}.}
 
   \item{higher}{logical. Add higher moments (skewness and kurtosis).}
   \item{array}{logical. If computations have more than 2 dimensions (up to a maximum of 4D: variables, statistics, groups and panel-decomposition) output to array, else output (nested) list of matrices.}
