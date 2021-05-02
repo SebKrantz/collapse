@@ -68,6 +68,17 @@ test_that("ftransform works like base::transform", {
 })
 
 
+test_that("fcompute works well", {
+
+  expect_equal(fcompute(airquality, new = -Ozone, new2 = 1, keep = 1:3), ftransform(airquality[1:3], new = -Ozone, new2 = 1))
+  expect_equal(names(fcompute(airquality, new = -Ozone, new2 = 1, keep = 1:3)), .c(Ozone, Solar.R, Wind, new, new2))
+  expect_equal(names(fcompute(airquality, new = -Ozone, new2 = 1)), .c(new, new2))
+  expect_equal(names(fcompute(airquality, Ozone = -Ozone, new = 1, keep = 1:3)), .c(Ozone, Solar.R, Wind, new))
+
+})
+
+
+
 # Still do wrong input...
 
 test_that("fsubset error for wrong input", {
