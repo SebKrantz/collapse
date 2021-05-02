@@ -5,6 +5,8 @@ gmtc <- fgroup_by(mtcars, cyl)
 test_that("replace_NA and replace_Inf work well", {
 
 expect_equal(replace_NA(airquality, 0), `[<-`(airquality, is.na(airquality), value = 0))
+expect_equal(replace_NA(airquality, 0, cols = 1:2), `[<-`(airquality, is.na(airquality), value = 0))
+expect_equal(replace_NA(airquality, 0, cols = is.numeric), `[<-`(airquality, is.na(airquality), value = 0))
 expect_equal(replace_NA(flag(EuStockMarkets), 0), `[<-`(flag(EuStockMarkets), is.na(flag(EuStockMarkets)), value = 0))
 
 expect_equal(replace_Inf(dapply(mtcars, log)), `[<-`(dapply(mtcars, log), sapply(dapply(mtcars, log), is.infinite), value = NA))

@@ -208,10 +208,17 @@ recode_char <- function(X, ..., default = NULL, missing = NULL, regex = FALSE,
   repfun(X)
 }
 
-replace_NA <- function(X, value = 0L) {
-  if(is.list(X))
-    duplAttributes(lapply(unattrib(X), function(y) `[<-`(y, is.na(y), value = value)), X) else
-    `[<-`(X, is.na(X), value = value)
+replace_NA <- function(X, value = 0L, cols = NULL) {
+  if(is.list(X)) {
+    if(is.null(cols)) return(duplAttributes(lapply(unattrib(X), function(y) `[<-`(y, is.na(y), value = value)), X))
+    if(is.function(cols)) return(duplAttributes(lapply(unattrib(X), function(y) if(cols(y)) `[<-`(y, is.na(y), value = value) else y), X))
+    clx <- oldClass(X)
+    oldClass(X) <- NULL
+    cols <- cols2int(cols, X, names(X), FALSE)
+    X[cols] <- lapply(unattrib(X[cols]), function(y) `[<-`(y, is.na(y), value = value))
+    return(`oldClass<-`(X, clx))
+  }
+  `[<-`(X, is.na(X), value = value)
 }
 
 # Remove Inf (Infinity) and NaN (Not a number) from vectors or data frames:
