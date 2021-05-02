@@ -33,7 +33,7 @@ ftransform(.data) <- value
 tfm(.data) <- value           # Shortcut for ftransform<-
 
 # Compute columns, returned as a new data frame
-fcompute(.data, \dots)
+fcompute(.data, \dots, keep = NULL)
 }
 \arguments{
     \item{.data}{a data frame or named list of columns.}
@@ -42,6 +42,7 @@ fcompute(.data, \dots)
     \item{FUN}{a single function yielding a result of length \code{NROW(.data)} or 1. See also \code{apply}.}
     \item{apply}{logical. \code{TRUE} (default) will apply \code{FUN} to each column selected in \code{vars}; \code{FALSE} will apply \code{FUN} to the subsetted data frame i.e. \code{FUN(get_vars(.data, vars), ...)}. The latter is useful for \emph{collapse} functions with data frame or grouped / panel data frame methods, yielding performance gains and enabling grouped transformations. See Examples.}
     \item{value}{a named list of replacements, it will be treated like an evaluated list of \code{column = value} arguments.}
+    \item{keep}{select columns to preserve using column names, indices or a function (e.g. \code{is.numeric}). By default computed columns are added after the preserved ones, unless they are assigned the same name in which case the preserved columns will be replaced in order. See Examples.}
 }
 \details{
   The \code{\dots} arguments to \code{ftransform} are tagged
@@ -165,10 +166,17 @@ ftransform(airquality) <- get_vars(airquality, 1:3) \%>\% fdiff \%>\% flag(0:2)
 head(airquality)
 rm(airquality)
 }
-## fcompute only returns the modified / computed columns, ...
+## fcompute only returns the modified / computed columns
 head(fcompute(airquality, Ozone = -Ozone))
 head(fcompute(airquality, new = -Ozone, Temp = (Temp-32)/1.8))
 head(fcompute(airquality, new = -Ozone, new2 = 1))
+
+# Can preserve existing columns, computed ones are added to the right if names are different
+head(fcompute(airquality, new = -Ozone, new2 = 1, keep = 1:3))
+
+# If given same name as preserved columns, preserved columns are replaced in order...
+head(fcompute(airquality, Ozone = -Ozone, new = 1, keep = 1:3))
+
 
 }
 \keyword{manip}

@@ -156,6 +156,10 @@ test_that("collap custom aggreagtion performs as intended", {
                       custom = list(fmean = "PCGDP", fsd = c("LIFEEX","GINI"), flast = "date")),
                collap(wlddev, g,
                       custom = list(fmean = "PCGDP", fsd = 10:11, flast = "date")))
+  expect_equal(names(collap(wlddev, g,
+                      custom = list(fmean = c(GDP = "PCGDP"), fsd = c("LIFEEX", GN = "GINI"), flast = "date"),
+                      keep.by = FALSE, keep.col.order = FALSE)),
+               .c(GDP, LIFEEX, GN, date))
 
 })
 

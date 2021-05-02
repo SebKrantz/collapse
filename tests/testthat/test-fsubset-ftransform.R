@@ -36,6 +36,11 @@ test_that("fsubset works like base::subset for data frames", {
                    unattrib(subset(airquality, Day == 1 & !is.na(Ozone), c(Ozone:Wind, Month))))
 })
 
+test_that("fsubset column renaming", {
+
+  expect_equal(names(fsubset(airquality, Temp > 90, OZ = Ozone, Temp)), .c(OZ, Temp))
+
+})
 
 test_that("ss works like an improved version of [", { # replaced setRownames wit unattrib because of unexplained test failures on some systems
   expect_equal(ss(airquality, 1:100, 1:3), airquality[1:100, 1:3])
@@ -66,6 +71,17 @@ test_that("ftransform works like base::transform", {
   expect_equal(ftransform(airquality, Ozone = NULL, Temp = NULL), transform(airquality, Ozone = NULL, Temp = NULL))
 
 })
+
+
+test_that("fcompute works well", {
+
+  expect_equal(fcompute(airquality, new = -Ozone, new2 = 1, keep = 1:3), ftransform(airquality[1:3], new = -Ozone, new2 = 1))
+  expect_equal(names(fcompute(airquality, new = -Ozone, new2 = 1, keep = 1:3)), .c(Ozone, Solar.R, Wind, new, new2))
+  expect_equal(names(fcompute(airquality, new = -Ozone, new2 = 1)), .c(new, new2))
+  expect_equal(names(fcompute(airquality, Ozone = -Ozone, new = 1, keep = 1:3)), .c(Ozone, Solar.R, Wind, new))
+
+})
+
 
 
 # Still do wrong input...

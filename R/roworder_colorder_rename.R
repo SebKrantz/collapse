@@ -58,7 +58,7 @@ frename <- function(.x, ..., cols = NULL) {
   args <- substitute(c(...))[-1L]
   nam <- attr(.x, "names")
   namarg <- names(args)
-  if(is.null(namarg) || any(namarg == "")) {
+  if(is.null(namarg) || !all(nzchar(namarg))) {
     if(!is.function(..1)) stop("... needs to be expressions colname = newname, or a function to apply to the names of columns in cols.")
     FUN <- if(...length() == 1L) ..1 else # could do special case if ...length() == 2L
       function(x) do.call(..1, c(list(x), list(...)[-1L]))
@@ -76,7 +76,7 @@ setrename <- function(.x, ..., cols = NULL) {
   args <- substitute(c(...))[-1L]
   nam <- attr(.x, "names")
   namarg <- names(args)
-  if(is.null(namarg) || any(namarg == "")) {
+  if(is.null(namarg) || !all(nzchar(namarg))) {
     if(!is.function(..1)) stop("... needs to be expressions colname = newname, or a function to apply to the names of columns in cols.")
     FUN <- if(...length() == 1L) ..1 else # could do special case if ...length() == 2L
       function(x) do.call(..1, c(list(x), list(...)[-1L]))

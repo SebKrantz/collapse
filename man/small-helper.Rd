@@ -94,7 +94,7 @@ is.Date(x)                    # Check if object is of class "Date", "POSIXlt" or
   \item{class}{logical. Also show the classes of variables in X in a column?}
   \item{stub}{a single character stub, i.e. "log.", which by default will be pre-applied to all variables or column names in X.}
   \item{pre}{logical. \code{FALSE} will post-apply \code{stub}.}
-  \item{cols}{only removes rows with missing values on these columns. Columns can be selected using column names, indices, a logical vector or a selector function (i.e. \code{is.numeric}).}
+  \item{cols}{only removes rows with missing values on these columns. Columns can be selected using column names, indices, a logical vector or a selector function (e.g. \code{is.numeric}).}
   \item{na.attr}{logical. \code{TRUE} adds an attribute containing the removed cases. For compatibility reasons this is exactly the same format as \code{na.omit} i.e. the attribute is called "na.action" and of class "omit".}
   \item{nm}{a suitable vector of row- or column-names.}
   \item{dn}{a suitable vector or list of names for dimension(s).}

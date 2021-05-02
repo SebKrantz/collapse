@@ -93,7 +93,7 @@ Date_vars(x) <- value
   }
 \item{regex}{logical. \code{TRUE} will do regular expression search on the column names of \code{x} using a (vector of) regular expression(s) passed to \code{vars}. Matching is done using \code{\link{grep}}.}
 \item{pos}{the position where columns are added in the data frame. \code{"end"} (default) will append the data frame at the end (right) side. "front" will add columns in front (left). Alternatively one can pass a vector of positions (matching \code{length(value)} if value is a list). In that case the other columns will be shifted around the new ones while maintaining their order. }
-\item{\dots}{for \code{fselect}: column names and expressions. for \code{get_vars}: further arguments passed to \code{\link{grep}}, if \code{regex = TRUE}. For \code{add_vars}: Same as \code{value}, a single argument passed may also be a vector or matrix, multiple arguments must each be a list (they are combined using \code{c(\dots)}).}
+\item{\dots}{for \code{fselect}: column names and expressions e.g. \code{fselect(mtcars, newname = mpg, hp, carb:vs)}. for \code{get_vars}: further arguments passed to \code{\link{grep}}, if \code{regex = TRUE}. For \code{add_vars}: Same as \code{value}, a single argument passed may also be a vector or matrix, multiple arguments must each be a list (they are combined using \code{c(\dots)}).}
 }
 
 \details{
@@ -118,7 +118,7 @@ The functions here only check the length of the first column, which is one of th
 }
 \examples{
 ## Wold Development Data
-head(fselect(wlddev, country, year, PCGDP))                # Fast dplyr-like selecting
+head(fselect(wlddev, Country = country, Year = year, ODA)) # Fast dplyr-like selecting
 head(fselect(wlddev, -country, -year, -PCGDP))
 head(fselect(wlddev, country, year, PCGDP:ODA))
 head(fselect(wlddev, -(PCGDP:ODA)))

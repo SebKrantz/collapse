@@ -41,7 +41,7 @@ varying(x, ...)
 
 \item{any_group}{logical. If \code{!is.null(g)}, \code{FALSE} will check and report variation in all groups, whereas the default \code{TRUE} only checks if there is variation within any group. See Examples.}
 
-  \item{cols}{select columns using column names, indices or a function (i.e. \code{is.numeric}). Two-sided formulas passed to \code{by} overwrite \code{cols}.}
+  \item{cols}{select columns using column names, indices or a function (e.g. \code{is.numeric}). Two-sided formulas passed to \code{by} overwrite \code{cols}.}
 
 \item{use.g.names}{logical. Make group-names and add to the result as names (default method) or row-names (matrix and data frame methods). No row-names are generated for \emph{data.table}'s.}
 

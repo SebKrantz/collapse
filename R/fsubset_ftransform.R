@@ -46,12 +46,17 @@ fsubset.data.frame <- function(x, subset, ...) {
     ix <- seq_along(unclass(x))
     nl <- `names<-`(as.vector(ix, "list"), attr(x, "names"))
     vars <- eval(substitute(c(...)), nl, parent.frame())
+    nam_vars <- names(vars)
     if(is.integer(vars)) {
       if(any(vars < 0L)) vars <- ix[vars]
     } else {
       if(is.character(vars)) vars <- ckmatch(vars, names(nl)) else if(is.numeric(vars)) {
         vars <- if(any(vars < 0)) ix[vars] else as.integer(vars)
       } else stop("... needs to be comma separated column names, or column indices")
+    }
+    if(length(nam_vars)) {
+      nonmiss <- nzchar(nam_vars)
+      attr(x, "names")[vars[nonmiss]] <- nam_vars[nonmiss]
     }
   }
   r <- eval(substitute(subset), x, parent.frame())
@@ -69,7 +74,6 @@ ftransform_core <- function(X, value) { # value is unclassed, X has all attribut
   ax <- attributes(X) # keep like this ?
   oldClass(X) <- NULL
   nam <- names(value)
-  # if(is.null(nam) || any(nam == "")) stop("all expressions have to be named") # any(nam == "") is also not very fast for large data frames
   if(!length(nam) || fanyDuplicated(nam)) stop("All replacement expressions have to be uniquely named")
   namX <- names(X) # !length also detects character(0)
   if(!length(namX) || fanyDuplicated(namX)) stop("All columns of X have to be uniquely named")
@@ -161,11 +165,21 @@ settransformv <- function(.data, vars, FUN, ..., apply = TRUE)
 settfmv <- settransformv
 
 
-fcompute <- function(.data, ...) { # within ?
+fcompute <- function(.data, ..., keep = NULL) { # within ?
   ax <- attributes(.data)
-  if(!length(ax[["names"]]) || fanyDuplicated(ax[["names"]])) stop("All columns of .data have to be uniquely named")
+  nam <- ax[["names"]]
+  if(!length(nam) || fanyDuplicated(nam)) stop("All columns of .data have to be uniquely named")
   e <- eval(substitute(list(...)), .data, parent.frame())
   if(is.null(names(e)) && length(e) == 1L && is.list(e[[1L]])) e <- unclass(e[[1L]]) # support list input -> added in v1.3.0 # sensible ??? what application ??
+  if(length(keep)) {
+    keep <- cols2int(keep, .data, nam, FALSE)
+    if(any(m <- match(names(e), nam[keep], nomatch = 0L))) {
+      temp <- .subset(.data, keep)
+      pos <- m > 0L
+      temp[m[pos]] <- e[pos]
+      e <- c(temp, e[!pos])
+    } else e <- c(.subset(.data, keep), e)
+  }
   ax[["names"]] <- names(e)
   le <- lengths(e, FALSE)
   nr <- fnrow2(.data)

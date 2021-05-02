@@ -3,6 +3,8 @@ context("list-processing")
 l <- lm(mpg ~cyl +  vs + am, mtcars)
 # str(l, give.attr = FALSE)
 
+is.regular <- function(x) is.atomic(x) || is.list(x)
+
 test_that("atomic_elem and list_elem work well", {
   expect_equal(atomic_elem(l), unclass(l)[sapply(l, is.atomic)])
   expect_equal(list_elem(l), unclass(l)[sapply(l, is.list)])

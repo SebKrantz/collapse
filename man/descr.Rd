@@ -37,7 +37,7 @@ logical. \code{TRUE} (default) calls \code{\link{table}} on all categorical vari
 double. Probabilities for quantiles to compute on numeric variables, passed down to \code{\link{quantile}}. If something non-numeric is passed (i.e. \code{NULL}, \code{FALSE}, \code{NA}, \code{""} etc.), no quantiles are computed.
 }
   \item{cols}{
-select columns to describe using column names, indices, a logical vector or a function (i.e. \code{is.numeric}).
+select columns to describe using column names, indices, a logical vector or a function (e.g. \code{is.numeric}).
 }
   \item{label.attr}{
 character. The name of a label attribute to display for each variable (if variables are labeled).
