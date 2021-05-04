@@ -99,6 +99,7 @@ collap <- function(X, by, FUN = fmean, catFUN = fmode, cols = NULL, w = NULL, wF
   if(!inherits(X, "data.frame")) X <- qDF(X)
   ax <- attributes(X)
   oldClass(X) <- NULL
+  if(length(X[[1L]]) == 0L) stop("data passed to collap() has 0 rows.") #160, 0 rows can cause segfault...
   nam <- names(X)
   # attributes(X) <- NULL
   # attr(X, "class") <- "data.frame" # class needed for method dispatch of fast functions, not for BY !
