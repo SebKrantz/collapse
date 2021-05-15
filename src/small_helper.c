@@ -3,6 +3,37 @@
 
 #define SEXPPTR(x) ((SEXP *)DATAPTR(x))  // to avoid overhead of looped STRING_ELT and VECTOR_ELT
 
+// Faster than rep_len(value, n) and slightly faster than matrix(value, n) (which in turn is faster than rep_len)...
+SEXP falloc(SEXP value, SEXP n) {
+  int l = asInteger(n), tval = TYPEOF(value);
+  if(length(value) > 1) error("Mst supply a single value to falloc");
+  SEXP out = PROTECT(allocVector(tval, l));
+  switch(tval) {
+    case INTSXP:
+    case LGLSXP: {
+      int val = asInteger(value), *pout = INTEGER(out);
+      if(val == 0) memset(pout, 0, l*sizeof(int));
+      else for(int i = l; i--; ) pout[i] = val;
+      break;
+    }
+    case REALSXP: {
+      double val = asReal(value), *pout = REAL(out);
+      if(val == 0) memset(pout, 0, l*sizeof(double));
+      else for(int i = l; i--; ) pout[i] = val;
+      break;
+    }
+    case STRSXP:
+    case VECSXP:{
+      SEXP *pout = SEXPPTR(out);
+      for(int i = l; i--; ) pout[i] = value;
+      break;
+    }
+    default: error("Not supportd SEXP Type!");
+  }
+  UNPROTECT(1);
+  return out;
+}
+
 
 SEXP groups2GRP(SEXP x, SEXP lx, SEXP gs) {
   int l = length(x);
