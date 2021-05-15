@@ -344,6 +344,32 @@ SEXP subsetDT(SEXP x, SEXP rows, SEXP cols) { // , SEXP fastret
         if (this<1 || this>LENGTH(x)) error("Item %d of 'cols' is %d which is outside 1-based range [1,ncol(x)=%d]", i+1, this, LENGTH(x));
       }
 
+      // Adding sf geometry column if not already selected...
+      if(INHERITS(x, char_sf)) {
+        int sfcoln = NA_INTEGER, sf_col_sel = 0, *pcols = INTEGER(cols);
+        SEXP nam = PROTECT(getAttrib(x, R_NamesSymbol));
+        SEXP *pnam = STRING_PTR(nam), sfcol = asChar(getAttrib(x, sym_sf_column));
+        for(int i = length(x); i--; ) {
+          if(pnam[i] == sfcol) {
+            sfcoln = i + 1;
+            break;
+          }
+        }
+        UNPROTECT(1);
+        if(sfcoln == NA_INTEGER) error("sf data frame has no attribute 'sf_column'");
+        for(int i = LENGTH(cols); i--; ) {
+          if(pcols[i] == sfcoln) {
+            sf_col_sel = 1;
+            break;
+          }
+        }
+        if(sf_col_sel == 0) {
+          cols = PROTECT(extendIntVec(cols, LENGTH(cols), sfcoln));
+          ++nprotect;
+        }
+      }
+
+
     int overAlloc = 1024; // checkOverAlloc(GetOption(install("datatable.alloccol"), R_NilValue));
     SEXP ans = PROTECT(allocVector(VECSXP, LENGTH(cols)+overAlloc)); nprotect++;  // doing alloc.col directly here; eventually alloc.col can be deprecated.
 
@@ -354,7 +380,7 @@ SEXP subsetDT(SEXP x, SEXP rows, SEXP cols) { // , SEXP fastret
   // class is also copied here which retains superclass name in class vector as has been the case for many years; e.g. tests 1228.* for #5296
 
   SET_TRUELENGTH(ans, LENGTH(ans));
-  SETLENGTH(ans, LENGTH(cols));
+  SETLENGTH(ans, LENGTH(cols)); // This is because overalloc... don't know why..?
   int ansn;
   if (isNull(rows)) {
     ansn = nrow;
