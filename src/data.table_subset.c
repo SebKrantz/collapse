@@ -5,6 +5,9 @@
 
 #include "data.table.h"
 
+#define SEXPPTR(x) ((SEXP *)DATAPTR(x))  // to avoid overhead of looped STRING_ELT and VECTOR_ELT
+
+
 // #pragma GCC diagnostic ignored "-Wunknown-pragmas" // don't display this warning!! // https://stackoverflow.com/questions/1867065/how-to-suppress-gcc-warnings-from-library-headers?noredirect=1&lq=1
 
 static void subsetVectorRaw(SEXP ans, SEXP source, SEXP idx, const bool anyNA)
@@ -240,6 +243,36 @@ static void checkCol(SEXP col, int colNum, int nrow, SEXP x)
   }
 }
 
+
+/* subset columns of a list efficiently */
+
+SEXP subsetCols(SEXP x, SEXP cols) { // SEXP fretall
+  if(TYPEOF(x) != VECSXP) error("x is not a list.");
+  int l = LENGTH(x);
+  if(l == 0) return x; //  ncol == 0 -> Nope, need emty selections such as cat_vars(mtcars) !!
+  cols = PROTECT(convertNegAndZeroIdx(cols, ScalarInteger(l), ScalarLogical(FALSE)));
+  int ncol = LENGTH(cols);
+  // if(ncol == 0 || (asLogical(fretall) && l == ncol)) return(x);
+  int *pcols = INTEGER(cols);
+  SEXP ans = PROTECT(allocVector(VECSXP, ncol));
+  SEXP *px = SEXPPTR(x), *pans = SEXPPTR(ans);
+  for(int i = 0; i < ncol; i++) {
+    pans[i] = px[pcols[i]-1]; // SET_VECTOR_ELT(ans, i, VECTOR_ELT(x, pcols[i]-1));
+  }
+  copyMostAttrib(x, ans); // includes row.names and class...
+  // clear any index that was copied over by copyMostAttrib(), e.g. #1760 and #1734 (test 1678)
+  setAttrib(ans, sym_index, R_NilValue);
+  // names
+  SEXP nam = PROTECT(getAttrib(x, R_NamesSymbol));
+  if(!isNull(nam)) {
+    SEXP tmp = PROTECT(allocVector(STRSXP, ncol));
+    setAttrib(ans, R_NamesSymbol, tmp);
+    subsetVectorRaw(tmp, nam, cols, /*anyNA=*/false);
+    UNPROTECT(4);
+  } else UNPROTECT(3);
+  return ans;
+}
+
 /*
   * subsetDT - Subsets a data.table
 * NOTE:
@@ -249,12 +282,17 @@ static void checkCol(SEXP col, int colNum, int nrow, SEXP x)
 *   4) Could do it other ways but may as well go to C now as we were going to do that anyway
 */
 
-SEXP subsetDT(SEXP x, SEXP rows, SEXP cols) {
+SEXP subsetDT(SEXP x, SEXP rows, SEXP cols) { // , SEXP fastret
     int nprotect=0;
     if (!isNewList(x)) error("Internal error. Argument 'x' to CsubsetDT is type '%s' not 'list'", type2char(TYPEOF(rows))); // # nocov
-      if (!length(x)) return(x);  // return empty list
+      if (!length(x)) return x;  // return empty list
 
-    const int nrow = length(VECTOR_ELT(x,0));
+    const int nrow = length(VECTOR_ELT(x, 0));
+    // if fast return, return data.table if all rows selected through positive indices...
+    // if(asLogical(fastret) && nrow == LENGTH(rows) && INTEGER(rows)[0] > 0) {
+    //  if(LENGTH(cols) == length(x)) return x;
+    //  return subsetCols(x, cols);
+    // }
     // check index once up front for 0 or NA, for branchless subsetVectorRaw which is repeated for each column
     bool anyNA=false, orderedSubset=true;   // true for when rows==null (meaning all rows)
     if (!isNull(rows) && check_idx(rows, nrow, &anyNA, &orderedSubset)!=NULL) {

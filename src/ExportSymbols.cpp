@@ -13,7 +13,9 @@ RcppExport SEXP pacf1(SEXP, SEXP);
 RcppExport SEXP rbindlist(SEXP, SEXP, SEXP, SEXP);
 RcppExport SEXP setcolorder(SEXP, SEXP);
 RcppExport SEXP subsetDT(SEXP, SEXP, SEXP);
+RcppExport SEXP subsetCols(SEXP, SEXP);
 RcppExport SEXP subsetVector(SEXP, SEXP);
+RcppExport SEXP falloc(SEXP, SEXP);
 RcppExport SEXP setAttributes(SEXP x, SEXP a);
 RcppExport void setattributes(SEXP x, SEXP a);
 // RcppExport SEXP CsetAttr(SEXP object, SEXP a, SEXP v); -> mot more efficeint than attr i.e. for row.names...
@@ -123,6 +125,8 @@ static const R_CallMethodDef CallEntries[] = {
   {"C_pacf1",         (DL_FUNC) &pacf1,         2},
   {"C_rbindlist",     (DL_FUNC) &rbindlist,     4},
   {"C_setcolorder",   (DL_FUNC) &setcolorder,   2},
+  {"C_subsetCols",    (DL_FUNC) &subsetCols,    2},
+  {"C_alloc",         (DL_FUNC) &falloc,        2},
   {"C_subsetDT",      (DL_FUNC) &subsetDT,      3},
   {"C_subsetVector",  (DL_FUNC) &subsetVector,  2},
   {NULL, NULL, 0}

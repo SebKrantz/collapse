@@ -6,7 +6,7 @@
 // Faster than rep_len(value, n) and slightly faster than matrix(value, n) (which in turn is faster than rep_len)...
 SEXP falloc(SEXP value, SEXP n) {
   int l = asInteger(n), tval = TYPEOF(value);
-  if(length(value) > 1) error("Mst supply a single value to falloc");
+  if(length(value) > 1) error("Must supply a single value to alloc()");
   SEXP out = PROTECT(allocVector(tval, l));
   switch(tval) {
     case INTSXP:
@@ -18,18 +18,23 @@ SEXP falloc(SEXP value, SEXP n) {
     }
     case REALSXP: {
       double val = asReal(value), *pout = REAL(out);
-      if(val == 0) memset(pout, 0, l*sizeof(double));
+      if(val == 0.0) memset(pout, 0.0, l*sizeof(double));
       else for(int i = l; i--; ) pout[i] = val;
       break;
     }
-    case STRSXP:
-    case VECSXP:{
+    case STRSXP: {
+      SEXP val = asChar(value), *pout = STRING_PTR(out);
+      for(int i = l; i--; ) pout[i] = val;
+      break;
+    }
+    case VECSXP: {
       SEXP *pout = SEXPPTR(out);
       for(int i = l; i--; ) pout[i] = value;
       break;
     }
-    default: error("Not supportd SEXP Type!");
+    default: error("Not supportd SEXP Type in alloc()");
   }
+  copyMostAttrib(value, out);
   UNPROTECT(1);
   return out;
 }
@@ -60,7 +65,7 @@ SEXP groups2GRP(SEXP x, SEXP lx, SEXP gs) {
 
 // Note: Only supports numeric data!!!!
 SEXP lassign(SEXP x, SEXP s, SEXP rows, SEXP fill) {
-  int l = length(x), tr = TYPEOF(rows), ss = asInteger(s), rs = length(rows);
+  int l = length(x), tr = TYPEOF(rows), ss = asInteger(s), rs = LENGTH(rows);
   SEXP out = PROTECT(allocVector(VECSXP, l));
   // SEXP *px = VECTOR_PTR(x); // -> Depreciated interface: https://github.com/hadley/r-internals/blob/ea892fa79bbffe961e78dbe9c90ce4ca3bf2d9bc/vectors.md
   SEXP *px = SEXPPTR(x);
@@ -98,7 +103,7 @@ SEXP lassign(SEXP x, SEXP s, SEXP rows, SEXP fill) {
 
 
 SEXP Cna_rm(SEXP x) {
-  const int n = length(x);
+  const int n = LENGTH(x);
   if (n < 1) return x;
   int k = 0;
   switch(TYPEOF(x)) {
