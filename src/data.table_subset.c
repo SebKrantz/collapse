@@ -244,16 +244,53 @@ static void checkCol(SEXP col, int colNum, int nrow, SEXP x)
 }
 
 
+/* helper */
+SEXP extendIntVec(SEXP x, int len, int val) {
+  SEXP out = PROTECT(allocVector(INTSXP, len + 1));
+  int *pout = INTEGER(out), *px = INTEGER(x);
+  for(int i = len; i--; ) pout[i] = px[i];
+  pout[len] = val;
+  UNPROTECT(1);
+  return out;
+}
+
+
 /* subset columns of a list efficiently */
 
 SEXP subsetCols(SEXP x, SEXP cols) { // SEXP fretall
   if(TYPEOF(x) != VECSXP) error("x is not a list.");
-  int l = LENGTH(x);
+  int l = LENGTH(x), nprotect = 3;
   if(l == 0) return x; //  ncol == 0 -> Nope, need emty selections such as cat_vars(mtcars) !!
-  cols = PROTECT(convertNegAndZeroIdx(cols, ScalarInteger(l), ScalarLogical(FALSE)));
+  PROTECT_INDEX ipx;
+  PROTECT_WITH_INDEX(cols = convertNegAndZeroIdx(cols, ScalarInteger(l), ScalarLogical(FALSE)), &ipx);
   int ncol = LENGTH(cols);
-  // if(ncol == 0 || (asLogical(fretall) && l == ncol)) return(x);
   int *pcols = INTEGER(cols);
+  // if(ncol == 0 || (asLogical(fretall) && l == ncol)) return(x);
+  // names
+  SEXP nam = PROTECT(getAttrib(x, R_NamesSymbol));
+  // sf data frames: Need to add sf_column
+  if(INHERITS(x, char_sf)) {
+    int sfcoln = NA_INTEGER, sf_col_sel = 0;
+    SEXP *pnam = STRING_PTR(nam), sfcol = asChar(getAttrib(x, sym_sf_column));
+    for(int i = l; i--; ) {
+      if(pnam[i] == sfcol) {
+        sfcoln = i + 1;
+        break;
+      }
+    }
+    if(sfcoln == NA_INTEGER) error("sf data frame has no attribute 'sf_column'");
+    for(int i = ncol; i--; ) {
+      if(pcols[i] == sfcoln) {
+        sf_col_sel = 1;
+        break;
+      }
+    }
+    if(sf_col_sel == 0) {
+      REPROTECT(cols = extendIntVec(cols, ncol, sfcoln), ipx);
+      ++ncol;
+      pcols = INTEGER(cols);
+    }
+  }
   SEXP ans = PROTECT(allocVector(VECSXP, ncol));
   SEXP *px = SEXPPTR(x), *pans = SEXPPTR(ans);
   for(int i = 0; i < ncol; i++) {
@@ -262,14 +299,13 @@ SEXP subsetCols(SEXP x, SEXP cols) { // SEXP fretall
   copyMostAttrib(x, ans); // includes row.names and class...
   // clear any index that was copied over by copyMostAttrib(), e.g. #1760 and #1734 (test 1678)
   setAttrib(ans, sym_index, R_NilValue);
-  // names
-  SEXP nam = PROTECT(getAttrib(x, R_NamesSymbol));
   if(!isNull(nam)) {
     SEXP tmp = PROTECT(allocVector(STRSXP, ncol));
     setAttrib(ans, R_NamesSymbol, tmp);
     subsetVectorRaw(tmp, nam, cols, /*anyNA=*/false);
-    UNPROTECT(4);
-  } else UNPROTECT(3);
+    ++nprotect;
+  }
+  UNPROTECT(nprotect);
   return ans;
 }
 
