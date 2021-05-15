@@ -15,6 +15,7 @@
 \alias{fnrow}
 \alias{fncol}
 \alias{fdim}
+\alias{alloc}
 \alias{allNA}
 \alias{missing_cases}
 \alias{na_rm}
@@ -58,6 +59,7 @@ fnlevels(x)                   # Faster version of nlevels(x) (for factors)
 fnrow(X)                      # Faster nrow for data frames (not faster for matrices)
 fncol(X)                      # Faster ncol for data frames (not faster for matrices)
 fdim(X)                       # Faster dim for data frames (not faster for matrices)
+alloc(value, n)               # Same as rep_len for a single value, but faster
 allNA(x)                      # Check for all missing cases in a vector
 missing_cases(X, cols = NULL) # Find missing cases in a matrix / data framme
 na_rm(x)                      # Remove missing values from vector and return vector
@@ -90,7 +92,8 @@ is.Date(x)                    # Check if object is of class "Date", "POSIXlt" or
   \item{object, to, from}{a suitable R object.}
   \item{a}{a suitable list of attributes.}
   \item{attrn}{character. Name of attribute to store labels or retrieve labels from.}
-  \item{value}{a matching character vector of variable labels.}
+  \item{value}{for \code{alloc}: a single value of any vector type. For \code{vlabels}: a matching character vector of variable labels.}
+  \item{n}{integer. The length of the vector to allocate with \code{value}.}
   \item{class}{logical. Also show the classes of variables in X in a column?}
   \item{stub}{a single character stub, i.e. "log.", which by default will be pre-applied to all variables or column names in X.}
   \item{pre}{logical. \code{FALSE} will post-apply \code{stub}.}
