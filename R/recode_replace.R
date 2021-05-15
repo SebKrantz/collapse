@@ -276,6 +276,64 @@ replace_outliers <- function(X, limits, value = NA, single.limit = c("SDs", "min
 }
 
 
+
+# pad or fpad? x is vector, matrix or data.frame
+pad_atomic <- function(x, i, n, value) {
+  ax <- attributes(x)
+  tx <- typeof(x)
+  if(typeof(value) != tx) value <- as.vector(value, tx)
+  if(is.matrix(x)) {
+    k <- dim(x)[2L]
+    m <- .Call(C_falloc, value, n * k)  # matrix(value, n, k)
+    dim(m) <- c(n, k)
+    m[i, ] <- x
+    if(length(ax) == 1L) return(m)
+    ax[["dim"]] <- c(n, k)
+    # Could also pad row-names? perhaps with names of i ??
+    if(length(ax[["dimnames"]][[1L]])) ax[["dimnames"]] <- list(NULL, ax[["dimnames"]][[2L]])
+    if(is.object(x)) ax[["class"]] <- NULL
+    return(`attributes<-`(m, ax)) # fastest ??
+  }
+  r <- .Call(C_falloc, value, n) # matrix(value, n) # matrix is faster than rep_len !!!!
+  r[i] <- x
+  if(is.null(ax)) return(r)
+  if(length(names(x))) {
+    if(length(ax) == 1L) return(r)
+    ax[["names"]] <- NULL
+  }
+  return(`attributes<-`(r, ax))
+}
+
+# microbenchmark::microbenchmark(x[-i] <- ri, x[i2] <- ri)
+# Unit: milliseconds
+# expr       min       lq     mean   median       uq       max neval cld
+# x[-i] <- ri 255.16654 420.7083 491.7369 446.0340 476.3324 1290.7396   100   b
+# x[i2] <- ri  80.18755 136.8012 157.0027 146.8156 166.7158  311.5526   100  a
+# microbenchmark::microbenchmark(seq_along(x)[-i])
+# Unit: milliseconds
+# expr      min       lq     mean   median       uq      max neval
+# seq_along(x)[-i] 506.0745 541.7975 605.0245 567.8115 585.8384 1341.035   100
+
+pad <- function(x, i, value = NA, method = "auto") { # 1 - i is same length as x, fill missing, 2 - i is positive: insert missing values in positions
+  ilog <- is.logical(i)
+  ineg <- i[1L] < 0L
+  n <- if(is.list(x)) length(.subset2(x, 1L)) else if(is.matrix(x)) dim(x)[1L] else length(x)
+  xpos <- switch(method, auto = if(ilog) sum(i) == n else if(ineg) FALSE else length(i) == n,
+                 xpos = TRUE, vpos = FALSE)
+  n <- if(ilog) length(i) else if(xpos && !ineg) max(i) else n + length(i)
+  if(is.atomic(x)) return(pad_atomic(x, if(xpos || ineg) i else if(ilog) !i else -i, n, value))
+  if(!is.list(x)) stop("x must be atomic or a list")
+  if(ilog) i <- which(if(xpos) i else !i) else if(!xpos) i <- seq_len(n)[if(ineg) i else -i]
+  ax <- attributes(x)
+  attributes(x) <- NULL
+  res <- lapply(x, pad_atomic, i, n, value)
+  if(length(ax[["row.names"]])) ax[["row.names"]] <- .set_row_names(n)
+  return(setAttributes(res, ax))
+}
+
+# Something like this already exists?? -> should work with lists as well...
+
+
 # Previous version of Recode (Until collapse 1.1.0), Now depreciated in favor or recode_num and recode_char
 comp <- function(x, val) do.call(cbind, lapply(x, `==`, val))
 comp_grepl <- function(x, val) do.call(cbind, lapply(x, function(y) grepl(val, y)))
