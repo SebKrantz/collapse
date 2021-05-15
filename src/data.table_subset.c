@@ -40,9 +40,9 @@ static void subsetVectorRaw(SEXP ans, SEXP source, SEXP idx, const bool anyNA)
   // arise only over a threshold of n.
 
   switch(TYPEOF(source)) {
-    case INTSXP: case LGLSXP: {
-      int *sp = INTEGER(source);
-      int *ap = INTEGER(ans);
+    case INTSXP:
+    case LGLSXP: {
+      int *sp = INTEGER(source), *ap = INTEGER(ans);
       PARLOOP(NA_INTEGER)
     } break;
     case REALSXP : {
@@ -51,8 +51,7 @@ static void subsetVectorRaw(SEXP ans, SEXP source, SEXP idx, const bool anyNA)
         int64_t *ap = (int64_t *)REAL(ans);
         PARLOOP(INT64_MIN)
       } else {
-        double *sp = REAL(source);
-        double *ap = REAL(ans);
+        double *sp = REAL(source), *ap = REAL(ans);
         PARLOOP(NA_REAL)
       }
     } break;
@@ -64,11 +63,16 @@ static void subsetVectorRaw(SEXP ans, SEXP source, SEXP idx, const bool anyNA)
       // TODO - discuss with Luke Tierney. Produce benchmarks on integer/double to see if it's worth making a safe
     //        API interface for package use for STRSXP.
     // Aside: setkey() is a separate special case (a permutation) and does do this in parallel without using SET_*.
-    SEXP *sp = STRING_PTR(source);
+    SEXP *sp = STRING_PTR(source), *ap = STRING_PTR(ans);
     if (anyNA) {
-      for (int i=0; i<n; i++) { int elem = idxp[i]; SET_STRING_ELT(ans, i, elem==NA_INTEGER ? NA_STRING : sp[elem-1]); }
+      for (int i=0; i<n; i++) {
+        int elem = idxp[i];
+        ap[i] = elem == NA_INTEGER ? NA_STRING : sp[elem-1];
+      }
     } else {
-      for (int i=0; i<n; i++) {                     SET_STRING_ELT(ans, i, sp[idxp[i]-1]); }
+      for (int i=0; i<n; i++) {
+        ap[i] = sp[idxp[i]-1];
+      }
     }
   } break;
   case VECSXP : {
@@ -78,20 +82,24 @@ static void subsetVectorRaw(SEXP ans, SEXP source, SEXP idx, const bool anyNA)
       // we take the R API (INTEGER()[i], REAL()[i], etc) outside loops for the simple types even when not parallel. For this
       // type list case (VECSXP) it might be that some items are ALTREP for example, so we really should use the heavier
       // _ELT accessor (VECTOR_ELT) inside the loop in this case.
+      SEXP *sp = SEXPPTR(source), *ap = SEXPPTR(ans);
       if (anyNA) {
-        for (int i=0; i<n; i++) { int elem = idxp[i]; SET_VECTOR_ELT(ans, i, elem==NA_INTEGER ? R_NilValue : VECTOR_ELT(source, elem-1)); }
+        for (int i=0; i<n; i++) {
+          int elem = idxp[i];
+          ap[i] = elem == NA_INTEGER ? R_NilValue : sp[elem-1];
+        }
       } else {
-        for (int i=0; i<n; i++) {                     SET_VECTOR_ELT(ans, i, VECTOR_ELT(source, idxp[i]-1)); }
+        for (int i=0; i<n; i++) {
+          ap[i] = sp[idxp[i]-1];
+        }
       }
     } break;
     case CPLXSXP : {
-      Rcomplex *sp = COMPLEX(source);
-      Rcomplex *ap = COMPLEX(ans);
+      Rcomplex *sp = COMPLEX(source), *ap = COMPLEX(ans);
       PARLOOP(NA_CPLX)
     } break;
     case RAWSXP : {
-      Rbyte *sp = RAW(source);
-      Rbyte *ap = RAW(ans);
+      Rbyte *sp = RAW(source), *ap = RAW(ans);
       PARLOOP(0)
     } break;
     default :
@@ -339,17 +347,17 @@ SEXP subsetDT(SEXP x, SEXP rows, SEXP cols) { // , SEXP fastret
     }
 
     if (!isInteger(cols)) error("Internal error. Argument 'cols' to Csubset is type '%s' not 'integer'", type2char(TYPEOF(cols))); // # nocov
-      for (int i=0; i<LENGTH(cols); i++) {
-        int this = INTEGER(cols)[i];
-        if (this<1 || this>LENGTH(x)) error("Item %d of 'cols' is %d which is outside 1-based range [1,ncol(x)=%d]", i+1, this, LENGTH(x));
+    int ncol = LENGTH(cols), l = LENGTH(x), *pcols = INTEGER(cols);
+      for (int i = 0; i < ncol; i++) {
+        if (pcols[i] < 1 || pcols[i] > l) error("Item %d of 'cols' is %d which is outside 1-based range [1,ncol(x)=%d]", i+1, pcols[i], l);
       }
 
       // Adding sf geometry column if not already selected...
       if(INHERITS(x, char_sf)) {
-        int sfcoln = NA_INTEGER, sf_col_sel = 0, *pcols = INTEGER(cols);
+        int sfcoln = NA_INTEGER, sf_col_sel = 0;
         SEXP nam = PROTECT(getAttrib(x, R_NamesSymbol));
         SEXP *pnam = STRING_PTR(nam), sfcol = asChar(getAttrib(x, sym_sf_column));
-        for(int i = length(x); i--; ) {
+        for(int i = l; i--; ) {
           if(pnam[i] == sfcol) {
             sfcoln = i + 1;
             break;
@@ -357,7 +365,7 @@ SEXP subsetDT(SEXP x, SEXP rows, SEXP cols) { // , SEXP fastret
         }
         UNPROTECT(1);
         if(sfcoln == NA_INTEGER) error("sf data frame has no attribute 'sf_column'");
-        for(int i = LENGTH(cols); i--; ) {
+        for(int i = ncol; i--; ) {
           if(pcols[i] == sfcoln) {
             sf_col_sel = 1;
             break;
@@ -365,13 +373,14 @@ SEXP subsetDT(SEXP x, SEXP rows, SEXP cols) { // , SEXP fastret
         }
         if(sf_col_sel == 0) {
           cols = PROTECT(extendIntVec(cols, LENGTH(cols), sfcoln));
-          ++nprotect;
+          ++ncol; ++nprotect;
+          pcols = INTEGER(cols);
         }
       }
 
 
-    int overAlloc = 1024; // checkOverAlloc(GetOption(install("datatable.alloccol"), R_NilValue));
-    SEXP ans = PROTECT(allocVector(VECSXP, LENGTH(cols)+overAlloc)); nprotect++;  // doing alloc.col directly here; eventually alloc.col can be deprecated.
+    // int overAlloc = 1024; // checkOverAlloc(GetOption(install("datatable.alloccol"), R_NilValue));
+    SEXP ans = PROTECT(allocVector(VECSXP, ncol)); nprotect++; // +overAlloc  // doing alloc.col directly here; eventually alloc.col can be deprecated.
 
     // user-defined and superclass attributes get copied as from v1.12.0
     copyMostAttrib(x, ans);
@@ -379,33 +388,33 @@ SEXP subsetDT(SEXP x, SEXP rows, SEXP cols) { // , SEXP fastret
     // includes row.names (oddly, given other dims aren't) and "sorted" dealt with below
   // class is also copied here which retains superclass name in class vector as has been the case for many years; e.g. tests 1228.* for #5296
 
-  SET_TRUELENGTH(ans, LENGTH(ans));
-  SETLENGTH(ans, LENGTH(cols)); // This is because overalloc... don't know why..?
+  // This is because overalloc.. creating columns by reference stuff..
+  // SET_TRUELENGTH(ans, LENGTH(ans));
+  // SETLENGTH(ans, LENGTH(cols));
   int ansn;
+  SEXP *px = SEXPPTR(x), *pans = SEXPPTR(ans);
   if (isNull(rows)) {
     ansn = nrow;
-    const int *colD = INTEGER(cols);
-    for (int i=0; i<LENGTH(cols); i++) {
-      SEXP thisCol = VECTOR_ELT(x, colD[i]-1);
-      checkCol(thisCol, colD[i], nrow, x);
-      SET_VECTOR_ELT(ans, i, copyAsPlain(thisCol));
+    for (int i = 0; i < ncol; i++) {
+      SEXP thisCol = px[pcols[i]-1];
+      checkCol(thisCol, pcols[i], nrow, x);
+      pans[i] = thisCol; // copyAsPlain(thisCol) -> No deep copy
       // materialize the column subset as we have always done for now, until REFCNT is on by default in R (TODO)
     }
   } else {
     ansn = LENGTH(rows);  // has been checked not to contain zeros or negatives, so this length is the length of result
-    const int *colD = INTEGER(cols);
-    for (int i=0; i<LENGTH(cols); i++) {
-      SEXP source = VECTOR_ELT(x, colD[i]-1);
-      checkCol(source, colD[i], nrow, x);
+    for (int i = 0; i < ncol; i++) {
+      SEXP source = px[pcols[i]-1];
+      checkCol(source, pcols[i], nrow, x);
       SEXP target;
-      SET_VECTOR_ELT(ans, i, target=allocVector(TYPEOF(source), ansn));
+      SET_VECTOR_ELT(ans, i, target = allocVector(TYPEOF(source), ansn));
       copyMostAttrib(source, target);
       subsetVectorRaw(target, source, rows, anyNA);  // parallel within column
     }
   }
-  SEXP tmp = PROTECT(allocVector(STRSXP, LENGTH(cols)+overAlloc)); nprotect++;
-  SET_TRUELENGTH(tmp, LENGTH(tmp));
-  SETLENGTH(tmp, LENGTH(cols));
+  SEXP tmp = PROTECT(allocVector(STRSXP, ncol)); nprotect++;
+  // SET_TRUELENGTH(tmp, LENGTH(tmp));
+  // SETLENGTH(tmp, LENGTH(cols));
   setAttrib(ans, R_NamesSymbol, tmp);
   subsetVectorRaw(tmp, getAttrib(x, R_NamesSymbol), cols, /*anyNA=*/false);
 
