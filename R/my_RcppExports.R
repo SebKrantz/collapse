@@ -75,18 +75,6 @@ fbstatslCpp <- function(x, ext = FALSE, ng = 0L, g = 0L, npg = 0L, pg = 0L, w = 
     .Call(Cpp_fbstatsl, x, ext, ng, g, npg, pg, w, array, gn)
 }
 
-ffirstCpp <- function(x, ng = 0L, g = 0L, narm = TRUE) {
-    .Call(Cpp_ffirst, x, ng, g, narm)
-}
-
-ffirstmCpp <- function(x, ng = 0L, g = 0L, narm = TRUE, drop = TRUE) {
-    .Call(Cpp_ffirstm, x, ng, g, narm, drop)
-}
-
-ffirstlCpp <- function(x, ng = 0L, g = 0L, narm = TRUE) {
-    .Call(Cpp_ffirstl, x, ng, g, narm)
-}
-
 fdiffgrowthCpp <- function(x, n = 1L, diff = 1L, fill = NA_real_, ng = 0L, g = 0L, gs = NULL, t = NULL, ret = 1L, rho = 1, names = TRUE, power = 1) {
     .Call(Cpp_fdiffgrowth, x, n, diff, fill, ng, g, gs, t, ret, rho, names, power)
 }
@@ -109,18 +97,6 @@ flagleadmCpp <- function(x, n = 1L, fill = NULL, ng = 0L, g = 0L, t = NULL, name
 
 flagleadlCpp <- function(x, n = 1L, fill = NULL, ng = 0L, g = 0L, t = NULL, names = TRUE) {
     .Call(Cpp_flagleadl, x, n, fill, ng, g, t, names)
-}
-
-flastCpp <- function(x, ng = 0L, g = 0L, narm = TRUE) {
-    .Call(Cpp_flast, x, ng, g, narm)
-}
-
-flastmCpp <- function(x, ng = 0L, g = 0L, narm = TRUE, drop = TRUE) {
-    .Call(Cpp_flastm, x, ng, g, narm, drop)
-}
-
-flastlCpp <- function(x, ng = 0L, g = 0L, narm = TRUE) {
-    .Call(Cpp_flastl, x, ng, g, narm)
 }
 
 fminmaxCpp <- function(x, ng = 0L, g = 0L, narm = TRUE, ret = 1L) {

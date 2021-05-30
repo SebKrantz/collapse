@@ -319,49 +319,6 @@ BEGIN_RCPP
     return rcpp_result_gen;
 END_RCPP
 }
-// ffirstCpp
-SEXP ffirstCpp(SEXP x, int ng, IntegerVector g, bool narm);
-RcppExport SEXP _collapse_ffirstCpp(SEXP xSEXP, SEXP ngSEXP, SEXP gSEXP, SEXP narmSEXP) {
-BEGIN_RCPP
-    Rcpp::RObject rcpp_result_gen;
-    Rcpp::RNGScope rcpp_rngScope_gen;
-    Rcpp::traits::input_parameter< SEXP >::type x(xSEXP);
-    Rcpp::traits::input_parameter< int >::type ng(ngSEXP);
-    Rcpp::traits::input_parameter< IntegerVector >::type g(gSEXP);
-    Rcpp::traits::input_parameter< bool >::type narm(narmSEXP);
-    rcpp_result_gen = Rcpp::wrap(ffirstCpp(x, ng, g, narm));
-    return rcpp_result_gen;
-END_RCPP
-}
-// ffirstmCpp
-SEXP ffirstmCpp(SEXP x, int ng, IntegerVector g, bool narm, bool drop);
-RcppExport SEXP _collapse_ffirstmCpp(SEXP xSEXP, SEXP ngSEXP, SEXP gSEXP, SEXP narmSEXP, SEXP dropSEXP) {
-BEGIN_RCPP
-    Rcpp::RObject rcpp_result_gen;
-    Rcpp::RNGScope rcpp_rngScope_gen;
-    Rcpp::traits::input_parameter< SEXP >::type x(xSEXP);
-    Rcpp::traits::input_parameter< int >::type ng(ngSEXP);
-    Rcpp::traits::input_parameter< IntegerVector >::type g(gSEXP);
-    Rcpp::traits::input_parameter< bool >::type narm(narmSEXP);
-    Rcpp::traits::input_parameter< bool >::type drop(dropSEXP);
-    rcpp_result_gen = Rcpp::wrap(ffirstmCpp(x, ng, g, narm, drop));
-    return rcpp_result_gen;
-END_RCPP
-}
-// ffirstlCpp
-SEXP ffirstlCpp(const List& x, int ng, const IntegerVector& g, bool narm);
-RcppExport SEXP _collapse_ffirstlCpp(SEXP xSEXP, SEXP ngSEXP, SEXP gSEXP, SEXP narmSEXP) {
-BEGIN_RCPP
-    Rcpp::RObject rcpp_result_gen;
-    Rcpp::RNGScope rcpp_rngScope_gen;
-    Rcpp::traits::input_parameter< const List& >::type x(xSEXP);
-    Rcpp::traits::input_parameter< int >::type ng(ngSEXP);
-    Rcpp::traits::input_parameter< const IntegerVector& >::type g(gSEXP);
-    Rcpp::traits::input_parameter< bool >::type narm(narmSEXP);
-    rcpp_result_gen = Rcpp::wrap(ffirstlCpp(x, ng, g, narm));
-    return rcpp_result_gen;
-END_RCPP
-}
 // flagleadCpp
 SEXP flagleadCpp(SEXP x, IntegerVector n, SEXP fill, int ng, IntegerVector g, SEXP t, bool names);
 RcppExport SEXP _collapse_flagleadCpp(SEXP xSEXP, SEXP nSEXP, SEXP fillSEXP, SEXP ngSEXP, SEXP gSEXP, SEXP tSEXP, SEXP namesSEXP) {
@@ -410,49 +367,6 @@ BEGIN_RCPP
     Rcpp::traits::input_parameter< const SEXP& >::type t(tSEXP);
     Rcpp::traits::input_parameter< bool >::type names(namesSEXP);
     rcpp_result_gen = Rcpp::wrap(flagleadlCpp(x, n, fill, ng, g, t, names));
-    return rcpp_result_gen;
-END_RCPP
-}
-// flastCpp
-SEXP flastCpp(SEXP x, int ng, IntegerVector g, bool narm);
-RcppExport SEXP _collapse_flastCpp(SEXP xSEXP, SEXP ngSEXP, SEXP gSEXP, SEXP narmSEXP) {
-BEGIN_RCPP
-    Rcpp::RObject rcpp_result_gen;
-    Rcpp::RNGScope rcpp_rngScope_gen;
-    Rcpp::traits::input_parameter< SEXP >::type x(xSEXP);
-    Rcpp::traits::input_parameter< int >::type ng(ngSEXP);
-    Rcpp::traits::input_parameter< IntegerVector >::type g(gSEXP);
-    Rcpp::traits::input_parameter< bool >::type narm(narmSEXP);
-    rcpp_result_gen = Rcpp::wrap(flastCpp(x, ng, g, narm));
-    return rcpp_result_gen;
-END_RCPP
-}
-// flastmCpp
-SEXP flastmCpp(SEXP x, int ng, IntegerVector g, bool narm, bool drop);
-RcppExport SEXP _collapse_flastmCpp(SEXP xSEXP, SEXP ngSEXP, SEXP gSEXP, SEXP narmSEXP, SEXP dropSEXP) {
-BEGIN_RCPP
-    Rcpp::RObject rcpp_result_gen;
-    Rcpp::RNGScope rcpp_rngScope_gen;
-    Rcpp::traits::input_parameter< SEXP >::type x(xSEXP);
-    Rcpp::traits::input_parameter< int >::type ng(ngSEXP);
-    Rcpp::traits::input_parameter< IntegerVector >::type g(gSEXP);
-    Rcpp::traits::input_parameter< bool >::type narm(narmSEXP);
-    Rcpp::traits::input_parameter< bool >::type drop(dropSEXP);
-    rcpp_result_gen = Rcpp::wrap(flastmCpp(x, ng, g, narm, drop));
-    return rcpp_result_gen;
-END_RCPP
-}
-// flastlCpp
-SEXP flastlCpp(const List& x, int ng, const IntegerVector& g, bool narm);
-RcppExport SEXP _collapse_flastlCpp(SEXP xSEXP, SEXP ngSEXP, SEXP gSEXP, SEXP narmSEXP) {
-BEGIN_RCPP
-    Rcpp::RObject rcpp_result_gen;
-    Rcpp::RNGScope rcpp_rngScope_gen;
-    Rcpp::traits::input_parameter< const List& >::type x(xSEXP);
-    Rcpp::traits::input_parameter< int >::type ng(ngSEXP);
-    Rcpp::traits::input_parameter< const IntegerVector& >::type g(gSEXP);
-    Rcpp::traits::input_parameter< bool >::type narm(narmSEXP);
-    rcpp_result_gen = Rcpp::wrap(flastlCpp(x, ng, g, narm));
     return rcpp_result_gen;
 END_RCPP
 }

@@ -29,6 +29,13 @@ RcppExport SEXP CcopyMostAttrib(SEXP to, SEXP from);
 RcppExport SEXP lassign(SEXP x, SEXP s, SEXP rows, SEXP fill);
 RcppExport SEXP groups2GRP(SEXP x, SEXP lx, SEXP gs);
 RcppExport SEXP Cna_rm(SEXP x);
+// ffirst and flast rewritten in C:
+RcppExport SEXP ffirstC(SEXP x, SEXP Rng, SEXP g, SEXP Rnarm);
+RcppExport SEXP ffirstmC(SEXP x, SEXP Rng, SEXP g, SEXP Rnarm, SEXP Rdrop);
+RcppExport SEXP ffirstlC(SEXP x, SEXP Rng, SEXP g, SEXP Rnarm);
+RcppExport SEXP flastC(SEXP x, SEXP Rng, SEXP g, SEXP Rnarm);
+RcppExport SEXP flastmC(SEXP x, SEXP Rng, SEXP g, SEXP Rnarm, SEXP Rdrop);
+RcppExport SEXP flastlC(SEXP x, SEXP Rng, SEXP g, SEXP Rnarm);
 
 static const R_CMethodDef CEntries[]  = {
   {"C_multi_yw", (DL_FUNC) &multi_yw, 10},
@@ -55,27 +62,24 @@ static const R_CallMethodDef CallEntries[] = {
   {"Cpp_fbstats", (DL_FUNC) &_collapse_fbstatsCpp, 10},
   {"Cpp_fbstatsm", (DL_FUNC) &_collapse_fbstatsmCpp, 9},
   {"Cpp_fbstatsl", (DL_FUNC) &_collapse_fbstatslCpp, 9},
-  {"Cpp_ffirst", (DL_FUNC) &_collapse_ffirstCpp, 4},
-  {"Cpp_ffirstm", (DL_FUNC) &_collapse_ffirstmCpp, 5},
-  {"Cpp_ffirstl", (DL_FUNC) &_collapse_ffirstlCpp, 4},
+  {"C_ffirst", (DL_FUNC) &ffirstC, 4},
+  {"C_ffirstm", (DL_FUNC) &ffirstmC, 5},
+  {"C_ffirstl", (DL_FUNC) &ffirstlC, 4},
   {"Cpp_fdiffgrowth", (DL_FUNC) &_collapse_fdiffgrowthCpp, 12},
   {"Cpp_fdiffgrowthm", (DL_FUNC) &_collapse_fdiffgrowthmCpp, 12},
   {"Cpp_fdiffgrowthl", (DL_FUNC) &_collapse_fdiffgrowthlCpp, 12},
   {"Cpp_flaglead", (DL_FUNC) &_collapse_flagleadCpp, 7},
   {"Cpp_flagleadm", (DL_FUNC) &_collapse_flagleadmCpp, 7},
   {"Cpp_flagleadl", (DL_FUNC) &_collapse_flagleadlCpp, 7},
-  {"Cpp_flast", (DL_FUNC) &_collapse_flastCpp, 4},
-  {"Cpp_flastm", (DL_FUNC) &_collapse_flastmCpp, 5},
-  {"Cpp_flastl", (DL_FUNC) &_collapse_flastlCpp, 4},
+  {"C_flast", (DL_FUNC) &flastC, 4},
+  {"C_flastm", (DL_FUNC) &flastmC, 5},
+  {"C_flastl", (DL_FUNC) &flastlC, 4},
   {"Cpp_fminmax", (DL_FUNC) &_collapse_fminmaxCpp, 5},
   {"Cpp_fminmaxm", (DL_FUNC) &_collapse_fminmaxmCpp, 6},
   {"Cpp_fminmaxl", (DL_FUNC) &_collapse_fminmaxlCpp, 6},
   {"Cpp_fmean", (DL_FUNC) &_collapse_fmeanCpp, 6},
   {"Cpp_fmeanm", (DL_FUNC) &_collapse_fmeanmCpp, 7},
   {"Cpp_fmeanl", (DL_FUNC) &_collapse_fmeanlCpp, 7},
-  // {"Cpp_fmedian", (DL_FUNC) &_collapse_fmedianCpp, 6},
-  // {"Cpp_fmedianm", (DL_FUNC) &_collapse_fmedianmCpp, 7},
-  // {"Cpp_fmedianl", (DL_FUNC) &_collapse_fmedianlCpp, 7},
   {"Cpp_fnth", (DL_FUNC) &_collapse_fnthCpp, 8},
   {"Cpp_fnthm", (DL_FUNC) &_collapse_fnthmCpp, 9},
   {"Cpp_fnthl", (DL_FUNC) &_collapse_fnthlCpp, 9},

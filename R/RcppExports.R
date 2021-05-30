@@ -73,18 +73,6 @@ fdiffgrowthlCpp <- function(x, n = 1L, diff = 1L, fill = NA_real_, ng = 0L, g = 
     .Call(`_collapse_fdiffgrowthlCpp`, x, n, diff, fill, ng, g, gs, t, ret, rho, names, power)
 }
 
-ffirstCpp <- function(x, ng = 0L, g = 0L, narm = TRUE) {
-    .Call(`_collapse_ffirstCpp`, x, ng, g, narm)
-}
-
-ffirstmCpp <- function(x, ng = 0L, g = 0L, narm = TRUE, drop = TRUE) {
-    .Call(`_collapse_ffirstmCpp`, x, ng, g, narm, drop)
-}
-
-ffirstlCpp <- function(x, ng = 0L, g = 0L, narm = TRUE) {
-    .Call(`_collapse_ffirstlCpp`, x, ng, g, narm)
-}
-
 flagleadCpp <- function(x, n = 1L, fill = NULL, ng = 0L, g = 0L, t = NULL, names = TRUE) {
     .Call(`_collapse_flagleadCpp`, x, n, fill, ng, g, t, names)
 }
@@ -95,18 +83,6 @@ flagleadmCpp <- function(x, n = 1L, fill = NULL, ng = 0L, g = 0L, t = NULL, name
 
 flagleadlCpp <- function(x, n = 1L, fill = NULL, ng = 0L, g = 0L, t = NULL, names = TRUE) {
     .Call(`_collapse_flagleadlCpp`, x, n, fill, ng, g, t, names)
-}
-
-flastCpp <- function(x, ng = 0L, g = 0L, narm = TRUE) {
-    .Call(`_collapse_flastCpp`, x, ng, g, narm)
-}
-
-flastmCpp <- function(x, ng = 0L, g = 0L, narm = TRUE, drop = TRUE) {
-    .Call(`_collapse_flastmCpp`, x, ng, g, narm, drop)
-}
-
-flastlCpp <- function(x, ng = 0L, g = 0L, narm = TRUE) {
-    .Call(`_collapse_flastlCpp`, x, ng, g, narm)
 }
 
 fmeanCpp <- function(x, ng = 0L, g = 0L, gs = NULL, w = NULL, narm = TRUE) {
