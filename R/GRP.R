@@ -478,7 +478,9 @@ qF <- function(x, ordered = FALSE, na.exclude = TRUE, sort = TRUE, drop = FALSE,
     if(!keep.attr && !all(names(ax <- attributes(x)) == c("levels", "class")))
       attributes(x) <- ax[c("levels", "class")]
     if(na.exclude || inherits(x, "na.included")) {
-      if(ordered && !is.ordered(x)) oldClass(x) <- c("ordered", oldClass(x)) # can set unordered ??
+      clx <- oldClass(x)
+      if(ordered && !any(clx == "ordered")) oldClass(x) <- c("ordered", clx) else # can set unordered ??
+      if(!ordered && any(clx == "ordered")) oldClass(x) <- clx[clx != "ordered"]
       if(drop) return(.Call(Cpp_fdroplevels, x, !inherits(x, "na.included"))) else return(x)
     }
     x <- addNA2(x)
