@@ -36,6 +36,10 @@ RcppExport SEXP ffirstlC(SEXP x, SEXP Rng, SEXP g, SEXP Rnarm);
 RcppExport SEXP flastC(SEXP x, SEXP Rng, SEXP g, SEXP Rnarm);
 RcppExport SEXP flastmC(SEXP x, SEXP Rng, SEXP g, SEXP Rnarm, SEXP Rdrop);
 RcppExport SEXP flastlC(SEXP x, SEXP Rng, SEXP g, SEXP Rnarm);
+// Added fcumsum, written in C:
+RcppExport SEXP fcumsumC(SEXP x, SEXP Rng, SEXP g, SEXP o, SEXP Rnarm, SEXP Rfill);
+RcppExport SEXP fcumsummC(SEXP x, SEXP Rng, SEXP g, SEXP o, SEXP Rnarm, SEXP Rfill);
+RcppExport SEXP fcumsumlC(SEXP x, SEXP Rng, SEXP g, SEXP o, SEXP Rnarm, SEXP Rfill);
 
 static const R_CMethodDef CEntries[]  = {
   {"C_multi_yw", (DL_FUNC) &multi_yw, 10},
@@ -133,6 +137,9 @@ static const R_CallMethodDef CallEntries[] = {
   {"C_alloc",         (DL_FUNC) &falloc,        2},
   {"C_subsetDT",      (DL_FUNC) &subsetDT,      3},
   {"C_subsetVector",  (DL_FUNC) &subsetVector,  2},
+  {"C_fcumsum",       (DL_FUNC) &fcumsumC,      6},
+  {"C_fcumsumm",      (DL_FUNC) &fcumsummC,     6},
+  {"C_fcumsuml",      (DL_FUNC) &fcumsumlC,     6},
   {NULL, NULL, 0}
 };
 
