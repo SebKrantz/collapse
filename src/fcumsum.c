@@ -145,10 +145,11 @@ void fcumsum_int_impl_order(int *pout, int *px, int ng, int *pg, int *po, int na
 SEXP fcumsumC(SEXP x, SEXP Rng, SEXP g, SEXP o, SEXP Rnarm, SEXP Rfill) {
   int l = length(x), tx = TYPEOF(x), ng = asInteger(Rng),
     narm = asInteger(Rnarm), fill = asInteger(Rfill), *pg = INTEGER(g),
-    ord  = length(o) > 1, *po = INTEGER(o);
+    ord  = length(o) > 1, *po = ord ? INTEGER(o) : pg;
   if (l < 1) return x; // Prevents seqfault for numeric(0) #101
   if(ng > 0 && l != length(g)) error("length(g) must match length(x)");
   if(ord && l != length(o)) error("length(o) must match length(x)");
+  if(tx == LGLSXP) tx = INTSXP;
   SEXP out = PROTECT(allocVector(tx, l));
   switch(tx) {
   case REALSXP: {
@@ -157,8 +158,7 @@ SEXP fcumsumC(SEXP x, SEXP Rng, SEXP g, SEXP o, SEXP Rnarm, SEXP Rfill) {
     else fcumsum_double_impl(pout, px, ng, pg, narm, fill, l);
     break;
   }
-  case INTSXP:
-  case LGLSXP: {
+  case INTSXP: {
     int *px = INTEGER(x), *pout = INTEGER(out);
     if(ord) fcumsum_int_impl_order(pout, px, ng, pg, po, narm, fill, l);
     else fcumsum_int_impl(pout, px, ng, pg, narm, fill, l);
@@ -176,10 +176,11 @@ SEXP fcumsummC(SEXP x, SEXP Rng, SEXP g, SEXP o, SEXP Rnarm, SEXP Rfill) {
   if(isNull(dim)) error("x is not a matrix");
   int tx = TYPEOF(x), l = INTEGER(dim)[0], col = INTEGER(dim)[1],
      ng = asInteger(Rng), narm = asInteger(Rnarm), fill = asInteger(Rfill), *pg = INTEGER(g),
-     ord  = length(o) > 1, *po = INTEGER(o);
+     ord  = length(o) > 1, *po = ord ? INTEGER(o) : pg;
   if (l < 1) return x; // Prevents seqfault for numeric(0) #101
   if(ng > 0 && l != length(g)) error("length(g) must match nrow(x)");
   if(ord && l != length(o)) error("length(o) must match nrow(x)");
+  if(tx == LGLSXP) tx = INTSXP;
   SEXP out = PROTECT(allocVector(tx, l * col));
   switch(tx) {
   case REALSXP: {
@@ -188,8 +189,7 @@ SEXP fcumsummC(SEXP x, SEXP Rng, SEXP g, SEXP o, SEXP Rnarm, SEXP Rfill) {
     else for(int j = 0; j != col; ++j) fcumsum_double_impl(pout + j*l, px + j*l, ng, pg, narm, fill, l);
     break;
   }
-  case INTSXP:
-  case LGLSXP: {
+  case INTSXP: {
     int *px = INTEGER(x), *pout = INTEGER(out);
     if(ord) for(int j = 0; j != col; ++j) fcumsum_int_impl_order(pout + j*l, px + j*l, ng, pg, po, narm, fill, l);
     else for(int j = 0; j != col; ++j) fcumsum_int_impl(pout + j*l, px + j*l, ng, pg, narm, fill, l);
