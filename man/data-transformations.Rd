@@ -36,7 +36,7 @@ All of \emph{collapse}'s \link[=A1-fast-statistical-functions]{Fast Statistical 
 
 %\item \code{flm} is an efficient function for bare-bones (weighted) \bold{linear model fitting}. It supports 6 different fitting methods, 4 from base R, and 2 utilizing the \emph{RcppArmadillo} or \emph{RcppEigen} packages.
 
-\item \code{\link[=flag]{flag/L/F}}, \code{\link[=fdiff]{fdiff/D/Dlog}} and \code{\link[=fgrowth]{fgrowth/G}} are S3 generics to compute sequences of \bold{lags / leads} and suitably lagged and iterated (quasi-, log-) \bold{differences} and \bold{growth rates} on time series and panel data. More in \link[=A7-time-series-panel-series]{Time Series and Panel Series}.
+\item \code{\link[=flag]{flag/L/F}}, \code{\link[=fdiff]{fdiff/D/Dlog}} and \code{\link[=fgrowth]{fgrowth/G}} are S3 generics to compute sequences of \bold{lags / leads} and suitably lagged and iterated (quasi-, log-) \bold{differences} and \bold{growth rates} on time series and panel data. \code{\link{fcumsum}} flexibly computes cumulative sums. More in \link[=A7-time-series-panel-series]{Time Series and Panel Series}.
 
 \item \code{STD, W, B, HDW, HDB, L, D, Dlog} and \code{G} are parsimonious wrappers around the \code{f-} functions above representing the corresponding transformation 'operators'. They have additional capabilities when applied to data-frames (i.e. variable selection, formula input, auto-renaming and id-variable preservation), and are easier to employ in regression formulas, but are otherwise identical in functionality.
 }
@@ -53,9 +53,7 @@ All of \emph{collapse}'s \link[=A1-fast-statistical-functions]{Fast Statistical 
   \code{\link[=HDW]{fHDwithin/HDW}} \tab\tab \code{default, matrix, data.frame, pseries, pdata.frame} \tab\tab High-dimensional centering and lm residuals \cr
   \code{\link[=HDB]{fHDbetween/HDB}} \tab\tab \code{default, matrix, data.frame, pseries, pdata.frame} \tab\tab High-dimensional averages and lm fitted values \cr
   % \code{\link{flm}} \tab\tab No methods, for matrices \tab\tab Linear model fitting \cr
-  \code{\link[=flag]{flag/L/F}} \tab\tab \code{default, matrix, data.frame, pseries, pdata.frame, grouped_df}  \tab\tab (Sequences of) lags / leads \cr
-  \code{\link[=fdiff]{fdiff/D/Dlog}} \tab\tab \code{default, matrix, data.frame, pseries, pdata.frame, grouped_df}  \tab\tab (Sequences of lagged/leaded and iterated quasi- log-) differences \cr
-  \code{\link[=fdiff]{fgrowth/G}} \tab\tab \code{default, matrix, data.frame, pseries, pdata.frame, grouped_df}  \tab\tab (Sequences of lagged/leaded and iterated) growth rates
+  \code{\link[=flag]{flag/L/F}}, \code{\link[=fdiff]{fdiff/D/Dlog}}, \code{\link[=fdiff]{fgrowth/G}}, \code{\link{fcumsum}} \tab\tab \code{default, matrix, data.frame, pseries, pdata.frame, grouped_df}  \tab\tab (Sequences of) lags / leads, differences, growth rates and cumulative sums
 }
 }
 \seealso{
