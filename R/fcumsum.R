@@ -3,7 +3,7 @@ fcumsum <- function(x, ...) UseMethod("fcumsum") # , x
 fcumsum.default <- function(x, g = NULL, o = NULL, na.rm = TRUE, fill = FALSE, check.o = TRUE, ...) {
   if(is.matrix(x) && !inherits(x, "matrix")) return(UseMethod("fcumsum", unclass(x)))
   if(!missing(...)) unused_arg_action(match.call(), ...)
-  if(!is.null(o) && check.o) o <- ford(o)
+  if(!is.null(o) && check.o) o <- ford(o, g)
   if(is.null(g)) return(.Call(C_fcumsum,x,0L,0L,o,na.rm,fill))
   if(is.atomic(g)) {
     if(is.nmfactor(g)) nl <- fnlevels(g) else {
@@ -20,7 +20,7 @@ fcumsum.pseries <- function(x, na.rm = TRUE, fill = FALSE, ...) {
   if(!missing(...)) unused_arg_action(match.call(), ...)
   index <- unclass(attr(x, "index"))
   g <- if(length(index) > 2L) finteraction(index[-length(index)]) else index[[1L]]
-  o <- ford(index[[length(index)]])
+  o <- ford(index[[length(index)]], g)
   if(is.matrix(x))
     .Call(C_fcumsumm,x,fnlevels(g),g,o,na.rm,fill) else
       .Call(C_fcumsum,x,fnlevels(g),g,o,na.rm,fill)
@@ -28,7 +28,7 @@ fcumsum.pseries <- function(x, na.rm = TRUE, fill = FALSE, ...) {
 
 fcumsum.matrix <- function(x, g = NULL, o = NULL, na.rm = TRUE, fill = FALSE, check.o = TRUE, ...) {
   if(!missing(...)) unused_arg_action(match.call(), ...)
-  if(!is.null(o) && check.o) o <- ford(o)
+  if(!is.null(o) && check.o) o <- ford(o, g)
   if(is.null(g)) return(.Call(C_fcumsumm,x,0L,0L,o,na.rm,fill))
   if(is.atomic(g)) {
     if(is.nmfactor(g)) nl <- fnlevels(g) else {
@@ -55,7 +55,7 @@ fcumsum.grouped_df <- function(x, o = NULL, na.rm = TRUE, fill = FALSE, check.o 
       if(any(gn %in% on)) stop("ordervar coincides with grouping variables!")
       o <- .subset(x, on)
     }
-    if(check.o) o <- ford(o)
+    if(check.o) o <- ford(o, g)
     gn <- c(gn, on)
   }
   if(length(gn)) {
@@ -70,7 +70,7 @@ fcumsum.grouped_df <- function(x, o = NULL, na.rm = TRUE, fill = FALSE, check.o 
 
 fcumsum.data.frame <- function(x, g = NULL, o = NULL, na.rm = TRUE, fill = FALSE, check.o = TRUE, ...) {
   if(!missing(...)) unused_arg_action(match.call(), ...)
-  if(!is.null(o) && check.o) o <- ford(o)
+  if(!is.null(o) && check.o) o <- ford(o, g)
   if(is.null(g)) return(.Call(C_fcumsuml,x,0L,0L,o,na.rm,fill))
   if(is.atomic(g)) {
     if(is.nmfactor(g)) nl <- fnlevels(g) else {
@@ -90,6 +90,6 @@ fcumsum.pdata.frame <- function(x, na.rm = TRUE, fill = FALSE, ...) {
   if(!missing(...)) unused_arg_action(match.call(), ...)
   index <- unclass(attr(x, "index"))
   g <- if(length(index) > 2L) finteraction(index[-length(index)]) else index[[1L]]
-  o <- ford(index[[length(index)]])
+  o <- ford(index[[length(index)]], g)
   .Call(C_fcumsuml,x,fnlevels(g),g,o,na.rm,fill)
 }
