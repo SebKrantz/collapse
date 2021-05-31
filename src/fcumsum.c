@@ -37,15 +37,15 @@ void fcumsum_double_impl(double *pout, double *px, int ng, int *pg, int narm, in
 void fcumsum_double_impl_order(double *pout, double *px, int ng, int *pg, int *po, int narm, int fill, int l) {
   if(ng == 0) {
     if(narm <= 0) {
-      pout[po[0]] = px[po[0]];
-      for(int i = 1; i != l; ++i) pout[po[i]] = pout[po[i-1]] + px[po[i]];
+      pout[po[0]-1] = px[po[0]-1];
+      for(int i = 1; i != l; ++i) pout[po[i]-1] = pout[po[i-1]-1] + px[po[i]-1];
     } else if(fill) {
-      pout[po[0]] = ISNAN(px[po[0]]) ? 0.0 : px[po[0]];
-      for(int i = 1; i != l; ++i) pout[po[i]] = pout[po[i-1]] + (ISNAN(px[po[i]]) ? 0.0 : px[po[i]]);
+      pout[po[0]-1] = ISNAN(px[po[0]-1]) ? 0.0 : px[po[0]-1];
+      for(int i = 1; i != l; ++i) pout[po[i]-1] = pout[po[i-1]-1] + (ISNAN(px[po[i]-1]) ? 0.0 : px[po[i]-1]);
     } else {
       double last = 0;
       for(int i = 0, poi; i != l; ++i) {
-        poi = po[i];
+        poi = po[i]-1;
         if(ISNAN(px[poi])) pout[poi] = px[poi];
         else last = pout[poi] = px[poi] + last;
       }
@@ -55,17 +55,17 @@ void fcumsum_double_impl_order(double *pout, double *px, int ng, int *pg, int *p
     memset(last, 0.0, sizeof(double) * (ng+1));
     if(narm <= 0) {
       for(int i = 0, poi; i != l; ++i) {
-        poi = po[i];
+        poi = po[i]-1;
         last[pg[poi]] = pout[poi] = last[pg[poi]] + px[poi];
       }
     } else if(fill) {
       for(int i = 0, poi; i != l; ++i) {
-        poi = po[i];
+        poi = po[i]-1;
         last[pg[poi]] = pout[poi] = last[pg[poi]] + (ISNAN(px[poi]) ? 0.0 : px[poi]);
       }
     } else {
       for(int i = 0, poi; i != l; ++i) {
-        poi = po[i];
+        poi = po[i]-1;
         if(ISNAN(px[poi])) pout[poi] = px[poi];
         else last[pg[poi]] = pout[poi] = last[pg[poi]] + px[poi];
       }
@@ -107,14 +107,14 @@ void fcumsum_int_impl(int *pout, int *px, int ng, int *pg, int narm, int fill, i
 void fcumsum_int_impl_order(int *pout, int *px, int ng, int *pg, int *po, int narm, int fill, int l) {
   if(ng == 0) {
     if(narm <= 0) {
-      pout[po[0]] = px[po[0]];
-      for(int i = 1; i != l; ++i) pout[po[i]] = pout[po[i-1]] + px[po[i]];
+      pout[po[0]-1] = px[po[0]-1];
+      for(int i = 1; i != l; ++i) pout[po[i]-1] = pout[po[i-1]-1] + px[po[i]-1];
     } else if(fill) {
-      pout[po[0]] = (px[po[0]] == NA_INTEGER) ? 0 : px[po[0]];
-      for(int i = 1; i != l; ++i) pout[po[i]] = pout[po[i-1]] + (px[po[i]] == NA_INTEGER ? 0 : px[po[i]]);
+      pout[po[0]-1] = (px[po[0]-1] == NA_INTEGER) ? 0 : px[po[0]-1];
+      for(int i = 1; i != l; ++i) pout[po[i]-1] = pout[po[i-1]-1] + (px[po[i]-1] == NA_INTEGER ? 0 : px[po[i]-1]);
     } else {
       for(int i = 0, last = 0, poi; i != l; ++i) {
-        poi = po[i];
+        poi = po[i]-1;
         if(px[poi] == NA_INTEGER) pout[poi] = NA_INTEGER;
         else last = pout[poi] = px[poi] + last;
       }
@@ -124,17 +124,17 @@ void fcumsum_int_impl_order(int *pout, int *px, int ng, int *pg, int *po, int na
     memset(last, 0, sizeof(int) * (ng+1));
     if(narm <= 0) {
       for(int i = 0, poi; i != l; ++i) {
-        poi = po[i];
+        poi = po[i]-1;
         last[pg[poi]] = pout[poi] = last[pg[poi]] + px[poi];
       }
     } else if(fill) {
       for(int i = 0, poi; i != l; ++i) {
-        poi = po[i];
+        poi = po[i]-1;
         last[pg[poi]] = pout[poi] = last[pg[poi]] + (px[poi] == NA_INTEGER ? 0 : px[poi]);
       }
     } else {
       for(int i = 0, poi; i != l; ++i) {
-        poi = po[i];
+        poi = po[i]-1;
         if(px[poi] == NA_INTEGER) pout[poi] = NA_INTEGER;
         else last[pg[poi]] = pout[poi] = last[pg[poi]] + px[poi];
       }
