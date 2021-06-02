@@ -1,5 +1,5 @@
 
-# ind must be plain integer !!!
+# ind must be integer (not numeric) !!!
 get_vars_ind <- function(x, ind, return = "data")
   switch(return,
          data = .Call(C_subsetCols, x, ind),
@@ -23,7 +23,7 @@ get_vars_indl <- function(x, indl, return = "data")
 
 # ind can be integer or logical
 "get_vars_ind<-" <- function(x, ind, value) {
-  if(is.logical(ind)) ind <- which(ind)
+  ind <- if(is.logical(ind)) which(ind) else as.integer(ind)
   if(is.null(value)) {
     if(!length(ind)) return(x)
     return(.Call(C_subsetCols, x, -ind))
@@ -53,14 +53,14 @@ fselect <- function(x, ..., return = "data") { # This also takes names and indic
   vars <- eval(substitute(c(...)), nl, parent.frame())
   # if(!is.integer(vars)) stop(paste0("Unknown columns: ", .c(...))) # if(!is.integer(vars) || max(vars) > length(nam)) # nah, a bit redundant..
   nam_vars <- names(vars)
-  if(is.character(vars)) vars <- ckmatch(vars, nam)
+  vars <- if(is.character(vars)) ckmatch(vars, nam) else as.integer(vars) # needed, otherwise selecting with doubles gives an error
   if(length(nam_vars)) { # Allow renaming during selection
     nonmiss <- nzchar(nam_vars)
     nam[vars[nonmiss]] <- nam_vars[nonmiss]
   }
   # if(!is.numeric(vars)) stop("... needs to be column names, or character / integer / logical vectors")
-  switch(return,
-         data = .Call(C_subsetCols, x, vars), # setAttributes(x[vars], `[[<-`(ax, "names", nam[vars])), # Also Improvements in code below ?
+  switch(return, # need this for sf data.frame
+         data = .Call(C_subsetCols, if(length(nam_vars)) `attr<-`(x, "names", nam) else x, vars), # setAttributes(x[vars], `[[<-`(ax, "names", nam[vars])), # Also Improvements in code below ?
          names = nam[vars],
          indices = vars,
          named_indices = `names<-`(vars, nam[vars]),
@@ -80,6 +80,7 @@ slt <- fselect # good, consistent
   nl <- `names<-`(as.vector(seq_along(nam), "list"), nam)
   vars <- eval(substitute(c(...)), nl, parent.frame())
   if(is.character(vars)) vars <- ckmatch(vars, nam)
+  if(vars[1L] < 0L) vars <- seq_along(nam)[vars]
   # if(!is.numeric(vars)) stop("... needs to be column names, or character / integer / logical vectors")
   # if(!is.integer(vars)) stop(paste0("Unknown columns: ", .c(...)))
   `get_vars_ind<-`(x, vars, value)
@@ -89,7 +90,6 @@ slt <- fselect # good, consistent
 
 
 # STD(fselect(GGDC10S, Country, Variable, Year, AGR:SUM))
-
 # Idea: also do this for replacement functions, replacing characters renames, replacong number reorders, replacing 3 does renaming and reordering?
 
 num_vars <- function(x, return = "data") get_vars_indl(x, vapply(`attributes<-`(x, NULL), is.numeric, TRUE), return)
@@ -120,7 +120,7 @@ get_vars <- function(x, vars, return = "data", regex = FALSE, ...) {
    ind <- rgrep(vars, attr(x, "names"), ...)
  } else {
    if(!missing(...)) unused_arg_action(match.call(), ...)
-   ind <- cols2int(vars, x, attr(x, "names"), FALSE)
+   ind <- cols2int(vars, x, attr(x, "names"))
  }
  get_vars_ind(x, ind, return)
 }
@@ -130,7 +130,7 @@ gv <- function(x, vars, return = "data", ...) {
     warning("Please use the new shortcut 'gvr' for regex column selection.")
     return(get_vars(x, vars, return, ...))
   }
-  ind <- cols2int(vars, x, attr(x, "names"), FALSE)
+  ind <- cols2int(vars, x, attr(x, "names"))
   get_vars_ind(x, ind, return)
 }
 
@@ -148,7 +148,7 @@ gvr <- function(x, vars, return = "data", ...) {
     ind <- rgrep(vars, attr(x, "names"), ...)
   } else {
     if(!missing(...)) unused_arg_action(match.call(), ...)
-    ind <- cols2int(vars, x, attr(x, "names"), FALSE)
+    ind <- cols2int(vars, x, attr(x, "names"))
   }
   `get_vars_ind<-`(x, ind, value)
 }
@@ -158,7 +158,7 @@ gvr <- function(x, vars, return = "data", ...) {
     warning("Please use the new shortcut 'gvr<-' for regex column replacement.")
     return(`get_vars<-`(x, vars, ..., value = value))
   }
-  ind <- cols2int(vars, x, attr(x, "names"), FALSE)
+  ind <- cols2int(vars, x, attr(x, "names"))
   `get_vars_ind<-`(x, ind, value)
 }
 
