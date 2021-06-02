@@ -314,19 +314,19 @@ pad_atomic <- function(x, i, n, value) {
 # expr      min       lq     mean   median       uq      max neval
 # seq_along(x)[-i] 506.0745 541.7975 605.0245 567.8115 585.8384 1341.035   100
 
-pad <- function(x, i, value = NA, method = "auto") { # 1 - i is same length as x, fill missing, 2 - i is positive: insert missing values in positions
+pad <- function(X, i, value = NA, method = c("auto", "xpos", "vpos")) { # 1 - i is same length as X, fill missing, 2 - i is positive: insert missing values in positions
   ilog <- is.logical(i)
   ineg <- i[1L] < 0L
-  n <- if(is.list(x)) length(.subset2(x, 1L)) else if(is.matrix(x)) dim(x)[1L] else length(x)
-  xpos <- switch(method, auto = if(ilog) sum(i) == n else if(ineg) FALSE else length(i) == n,
+  n <- if(is.list(X)) length(.subset2(X, 1L)) else if(is.matrix(X)) dim(X)[1L] else length(X)
+  xpos <- switch(method[1L], auto = if(ilog) sum(i) == n else if(ineg) FALSE else length(i) == n,
                  xpos = TRUE, vpos = FALSE)
   n <- if(ilog) length(i) else if(xpos && !ineg) max(i) else n + length(i)
-  if(is.atomic(x)) return(pad_atomic(x, if(xpos || ineg) i else if(ilog) !i else -i, n, value))
-  if(!is.list(x)) stop("x must be atomic or a list")
+  if(is.atomic(X)) return(pad_atomic(X, if(xpos || ineg) i else if(ilog) !i else -i, n, value))
+  if(!is.list(X)) stop("X must be atomic or a list")
   if(ilog) i <- which(if(xpos) i else !i) else if(!xpos) i <- seq_len(n)[if(ineg) i else -i]
-  ax <- attributes(x)
-  attributes(x) <- NULL
-  res <- lapply(x, pad_atomic, i, n, value)
+  ax <- attributes(X)
+  attributes(X) <- NULL
+  res <- lapply(X, pad_atomic, i, n, value)
   if(length(ax[["row.names"]])) ax[["row.names"]] <- .set_row_names(n)
   return(setAttributes(res, ax))
 }
