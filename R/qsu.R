@@ -177,6 +177,12 @@ qsu.data.frame <- function(x, by = NULL, pid = NULL, w = NULL, cols = NULL, high
 qsu.list <- function(x, by = NULL, pid = NULL, w = NULL, cols = NULL, higher = FALSE, array = TRUE, vlabels = FALSE, ...)
   qsu.data.frame(x, by, pid, w, cols, higher, array, vlabels, ...)
 
+qsu.sf <- function(x, by = NULL, pid = NULL, w = NULL, cols = NULL, higher = FALSE, array = TRUE, vlabels = FALSE, ...) {
+  oldClass(x) <- NULL
+  x[[attr(x, "sf_column")]] <- NULL
+  qsu.data.frame(x, by, pid, w, cols, higher, array, vlabels, ...)
+}
+
 qsu.pdata.frame <- function(x, by = NULL, w = NULL, cols = NULL, effect = 1L, higher = FALSE, array = TRUE, vlabels = FALSE, ...) {
   if(!missing(...)) unused_arg_action(match.call(), ...)
   pid <- if(length(effect) == 1L) .subset2(attr(x, "index"), effect) else finteraction(.subset(attr(x, "index"), effect))

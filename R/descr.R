@@ -28,7 +28,11 @@ descr <- function(X, Ndistinct = TRUE, higher = TRUE, table = TRUE,
                                           `names<-`(range(x, na.rm = TRUE), c("Min", "Max"))))
 
 
-  if(is.list(X)) class(X) <- NULL else X <- unclass(qDF(X))
+  if(is.list(X)) {
+    is_sf <- inherits(X, "sf")
+    class(X) <- NULL
+    if(is_sf) X[[attr(X, "sf_column")]] <- NULL
+  } else X <- unclass(qDF(X))
   if(length(cols)) X <- X[cols2int(cols, X, names(X), FALSE)]
   res <- vector('list', length(X))
   num <- vapply(unattrib(X), is.numeric, TRUE)

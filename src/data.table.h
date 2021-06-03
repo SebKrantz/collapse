@@ -44,6 +44,8 @@ extern SEXP char_nanotime;
 extern SEXP char_factor;
 extern SEXP char_ordered;
 extern SEXP char_dataframe;
+extern SEXP char_datatable;
+extern SEXP char_sf;
 // not currently needed (base_radixsort uses install), but perhaps later..
 // extern SEXP sym_sorted;
 // extern SEXP sym_maxgrpn;
@@ -51,6 +53,7 @@ extern SEXP char_dataframe;
 // extern SEXP char_starts;
 extern SEXP sym_index;
 extern SEXP sym_inherits;
+extern SEXP sym_sf_column;
 
 long long DtoLL(double x);
 double LLtoD(long long x);

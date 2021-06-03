@@ -122,6 +122,14 @@ varying.grouped_df <- function(x, any_group = TRUE, use.g.names = FALSE, drop = 
   } else return(setAttributes(.Call(Cpp_varyingl,x,g[[1L]],g[[2L]],FALSE,FALSE), ax))
 }
 
+varying.sf <- function(x, by = NULL, cols = NULL, any_group = TRUE, use.g.names = TRUE, drop = TRUE, ...) {
+  clx <- oldClass(x)
+  oldClass(x) <- NULL
+  x[[attr(x, "sf_column")]] <- NULL
+  oldClass(x) <- clx[clx != "sf"]
+  if(any(clx == "grouped_df")) return(varying.grouped_df(x, any_group, use.g.names, drop, ...))
+  varying.data.frame(x, by, cols, any_group, use.g.names, drop, ...)
+}
 
 
 # Previous versions: Like fast statistical functions ...

@@ -194,7 +194,7 @@ BY.grouped_df <- function(x, FUN, ..., use.g.names = FALSE, keep.group_vars = TR
     if(!keep.group_vars) return(BY.data.frame(x[-gn], g, FUN, ..., # colsubset(x, -gn) dont use colsubset -> doesn't drop group attachment !, for the other cases can always use ungroup !
                            use.g.names = use.g.names, sort = TRUE, expand.wide = expand.wide,
                            parallel = parallel, mc.cores = mc.cores, return = return))
-      res <- BY.data.frame(fcolsubset(x, -gn), g, FUN, ...,
+      res <- BY.data.frame(.Call(C_subsetCols, x, -gn, FALSE), g, FUN, ...,
                            use.g.names = use.g.names, sort = TRUE, expand.wide = expand.wide,
                            parallel = parallel, mc.cores = mc.cores, return = return)
       if(is.data.frame(res)) {

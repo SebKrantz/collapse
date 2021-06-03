@@ -2,7 +2,7 @@
 # ind must be integer (not numeric) !!!
 get_vars_ind <- function(x, ind, return = "data")
   switch(return,
-         data = .Call(C_subsetCols, x, ind),
+         data = .Call(C_subsetCols, x, ind, TRUE),
          names = attr(x, "names")[ind],
          indices = ind,
          named_indices = `names<-`(ind, attr(x, "names")[ind]),
@@ -13,7 +13,7 @@ get_vars_ind <- function(x, ind, return = "data")
 # ind must be logical !!! (this used to be get_vars_FUN)
 get_vars_indl <- function(x, indl, return = "data")
   switch(return,
-         data = .Call(C_subsetCols, x, which(indl)),
+         data = .Call(C_subsetCols, x, which(indl), TRUE),
          names = attr(x, "names")[indl],
          indices = which(indl),
          named_indices = which(`names<-`(indl, attr(x, "names"))),
@@ -26,7 +26,7 @@ get_vars_indl <- function(x, indl, return = "data")
   ind <- if(is.logical(ind)) which(ind) else as.integer(ind)
   if(is.null(value)) {
     if(!length(ind)) return(x)
-    return(.Call(C_subsetCols, x, -ind))
+    return(.Call(C_subsetCols, x, -ind, TRUE))
   }
   clx <- oldClass(x)
   oldClass(x) <- NULL
@@ -60,7 +60,7 @@ fselect <- function(x, ..., return = "data") { # This also takes names and indic
   }
   # if(!is.numeric(vars)) stop("... needs to be column names, or character / integer / logical vectors")
   switch(return, # need this for sf data.frame
-         data = .Call(C_subsetCols, if(length(nam_vars)) `attr<-`(x, "names", nam) else x, vars), # setAttributes(x[vars], `[[<-`(ax, "names", nam[vars])), # Also Improvements in code below ?
+         data = .Call(C_subsetCols, if(length(nam_vars)) `attr<-`(x, "names", nam) else x, vars, TRUE), # setAttributes(x[vars], `[[<-`(ax, "names", nam[vars])), # Also Improvements in code below ?
          names = nam[vars],
          indices = vars,
          named_indices = `names<-`(vars, nam[vars]),

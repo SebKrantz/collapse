@@ -40,7 +40,7 @@ ss <- function(x, i, j) {
       nr <- fnrow2(x)
       if(length(i) != nr) stop("i needs to be integer or logical(nrow(x))") # which(r & !is.na(r)) not needed !
       i <- which(i)
-      if(length(i) == nr) if(mj) return(x) else return(.Call(C_subsetCols, x, j))
+      if(length(i) == nr) if(mj) return(x) else return(.Call(C_subsetCols, x, j, TRUE))
     } else stop("i needs to be integer or logical(nrow(x))")
   }
   rn <- attr(x, "row.names")
@@ -71,7 +71,7 @@ fsubset.data.frame <- function(x, subset, ...) {
     nr <- fnrow2(x)
     if(length(r) != nr) stop("subset needs to be an expression evaluating to logical(nrow(x)) or integer") # which(r & !is.na(r)) not needed !
     r <- which(r)
-    if(length(r) == nr) if(missing(...)) return(x) else return(.Call(C_subsetCols, x, vars))
+    if(length(r) == nr) if(missing(...)) return(x) else return(.Call(C_subsetCols, x, vars, TRUE))
   } else if(is.numeric(r)) r <- as.integer(r) else
     stop("subset needs to be an expression evaluating to logical(nrow(x)) or integer")
   rn <- attr(x, "row.names")
@@ -148,7 +148,7 @@ ftransformv <- function(.data, vars, FUN, ..., apply = TRUE) {
   } else {
     nam <- attr(.data, "names")
     vars <- cols2int(vars, .data, nam, FALSE)
-    value <- fcolsubset(.data, vars)
+    value <- .Call(C_subsetCols, .data, vars, FALSE)
     value <- if(missing(...)) unclass(FUN(value)) else # unclass needed here ? -> yes for lengths...
       unclass(eval(substitute(FUN(value, ...)), .data, parent.frame()))
     if(!identical(names(value), nam[vars])) return(ftransform_core(.data, value))

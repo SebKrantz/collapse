@@ -379,14 +379,8 @@ fgroup_vars <- function(X, return = "data") {
   if(!is.list(g)) stop("attr(X, 'groups') is not a grouping object")
   vars <- if(is_GRP(g)) g[[5L]] else attr(g, "names")[-length(unclass(g))]
   switch(return[1L],
-    data = {
-      ax <- attributes(X)
-      ax[["class"]] <- fsetdiff(ax[["class"]], c("GRP_df", "grouped_df"))  # ax[["class"]][ax[["class"]] != "grouped_df"]
-      ind <- ckmatch(vars, ax[["names"]])
-      ax[["names"]] <- vars
-      setAttributes(.subset(X, ind), ax[names(ax) != "groups"])
-    },
-    unique = if(is_GRP(g)) g[[4L]] else fcolsubset(g, -length(unclass(g))), # what about attr(*, ".drop") ??
+    data = .Call(C_subsetCols, fungroup(X), ckmatch(vars, attr(X, "names")), TRUE),
+    unique = if(is_GRP(g)) g[[4L]] else .Call(C_subsetCols, g, -length(unclass(g)), FALSE), # what about attr(*, ".drop") ??
     names = vars,
     indices = ckmatch(vars, attr(X, "names")),
     named_indices = `names<-`(ckmatch(vars, attr(X, "names")), vars),
@@ -572,6 +566,16 @@ funique.data.frame <- function(x, cols = NULL, sort = FALSE, ...) {
 
 funique.list <- function(x, cols = NULL, sort = FALSE, ...) funique.data.frame(x, cols, sort, ...)
 
+funique.sf <- function(x, cols = NULL, sort = FALSE, ...) {
+  cols <- if(is.null(cols)) which(attr(x, "names") != attr(x, "sf_column")) else
+                            cols2int(cols, x, attr(x, "names"), FALSE)
+  o <- radixorderv(.subset(x, cols), starts = TRUE, sort = sort, ...)
+  if(attr(o, "maxgrpn") == 1L && (!sort || attr(o, "sorted"))) return(x)
+  st <- if(attr(o, "sorted")) attr(o, "starts") else o[attr(o, "starts")]
+  rn <- attr(x, "row.names")
+  if(is.numeric(rn) || is.null(rn) || rn[1L] == "1") return(.Call(C_subsetDT, x, st, seq_along(unclass(x))))
+  return(`attr<-`(.Call(C_subsetDT, x, st, seq_along(unclass(x))), "row.names", rn[st]))
+}
 
 fdroplevels <- function(x, ...) UseMethod("fdroplevels")
 

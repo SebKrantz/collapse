@@ -265,7 +265,7 @@ SEXP extendIntVec(SEXP x, int len, int val) {
 
 /* subset columns of a list efficiently */
 
-SEXP subsetCols(SEXP x, SEXP cols) { // SEXP fretall
+SEXP subsetCols(SEXP x, SEXP cols, SEXP checksf) { // SEXP fretall
   if(TYPEOF(x) != VECSXP) error("x is not a list.");
   int l = LENGTH(x), nprotect = 3;
   if(l == 0) return x; //  ncol == 0 -> Nope, need emty selections such as cat_vars(mtcars) !!
@@ -277,7 +277,7 @@ SEXP subsetCols(SEXP x, SEXP cols) { // SEXP fretall
   // names
   SEXP nam = PROTECT(getAttrib(x, R_NamesSymbol));
   // sf data frames: Need to add sf_column
-  if(INHERITS(x, char_sf)) {
+  if(asLogical(checksf) && INHERITS(x, char_sf)) {
     int sfcoln = NA_INTEGER, sf_col_sel = 0;
     SEXP *pnam = STRING_PTR(nam), sfcol = asChar(getAttrib(x, sym_sf_column));
     for(int i = l; i--; ) {
