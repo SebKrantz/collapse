@@ -18,7 +18,14 @@ posord <- function(sq, o, pos) switch(pos, front = c(o, sq[-o]), end = c(sq[-o],
 
 roworderv <- function(X, cols = NULL, neworder = NULL, decreasing = FALSE, na.last = TRUE, pos = c("front","end","exchange")) {
   if(is.null(neworder)) {
-    neworder <- radixorderv(if(is.null(cols)) X else colsubset(X, cols), na.last, decreasing)
+    if(is.null(cols)) {
+      if(inherits(X, "sf")) {
+        Xo <- X
+        oldClass(Xo) <- NULL
+        Xo[[attr(Xo, "sf_column")]] <- NULL
+        neworder <- radixorderv(Xo, na.last, decreasing)
+      } else neworder <- radixorderv(X, na.last, decreasing)
+    } else neworder <- radixorderv(colsubset(X, cols), na.last, decreasing)
     if(!is.na(na.last) && attr(neworder, "sorted")) return(X)
   } else {
     if(!is.integer(neworder)) neworder <- if(is.numeric(neworder)) as.integer(neworder) else if(is.logical(neworder))

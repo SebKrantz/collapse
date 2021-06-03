@@ -86,9 +86,9 @@ rsplit.data.frame <- function(x, by, drop = TRUE, flatten = FALSE, # check = TRU
         cols <- if(is.null(cols)) -byn else cols2int(cols, x, nam, FALSE)
     }
     by <- .subset(x, byn)
-    if(length(cols)) x <- fcolsubset(x, if(keep.by) c(byn, cols) else cols)
+    if(length(cols)) x <- fcolsubset(x, if(keep.by) c(byn, cols) else cols, TRUE)
   } else if(length(cols))
-    x <- fcolsubset(x, cols2int(cols, x, attr(x, "names"), FALSE))
+    x <- fcolsubset(x, cols2int(cols, x, attr(x, "names"), FALSE), TRUE)
 
   if(simplify && length(unclass(x)) == 1L)
     return(rsplit.default(.subset2(x, 1L), by, drop, flatten, ...))  # , check

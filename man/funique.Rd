@@ -2,6 +2,7 @@
 \alias{funique}
 \alias{funique.default}
 \alias{funique.data.frame}
+\alias{funique.sf}
 %- Also NEED an '\alias' for EACH other topic documented here.
 \title{
 Fast Unique Elements / Rows
@@ -15,6 +16,8 @@ funique(x, \dots)
 \method{funique}{default}(x, sort = FALSE, method = c("auto", "radix", "hash"), \dots)
 
 \method{funique}{data.frame}(x, cols = NULL, sort = FALSE, \dots)
+
+\method{funique}{sf}(x, cols = NULL, sort = FALSE, \dots)
 
 }
 %- maybe also 'usage' for other objects documented here.
@@ -33,11 +36,12 @@ funique(x, \dots)
 }
 \details{
 If \code{x} is a data frame / list and all rows are already unique, then \code{x} is returned. Otherwise a copy of \code{x} with duplicate rows removed is returned.  See \code{\link{qF}} for some additional computational details.
+
+The \emph{sf} method simply ignores the geometry column when determining unique values.
 }
 \value{
 \code{x} with duplicate elements/rows removed. % sorted in ascending order if \code{sort = TRUE}, and in order of first occurrence if \code{sort = FALSE}.
 }
-
 \seealso{
 \code{\link{qF}}, \link[=A2-fast-grouping-ordering]{Fast Grouping and Ordering}, \link[=collapse-documentation]{Collapse Overview}.
 }
