@@ -10,10 +10,10 @@ demean <- function(x, fl, weights, ..., means = FALSE) {
   msg <- "For higher-dimensional centering and projecting out interactions need to install.packages('%s'), then unload [detach('package:collapse', unload = TRUE)] and reload [library(collapse)]."
   res <- getenvFUN("fixest_demean", msg)(x, fl, attr(fl, "slope.vars"), attr(fl, "slope.flag"),
                                          weights = weights, ..., im_confident = TRUE)
-  if(!means) return(res)
+  if(!means) return(duplAttributes(res, x))
     # if(!is.matrix(x)) dim(res) <- NULL # also need for flmres... e.g. with weights... intercept is no longer always added, so res needs to be a matrix...
     # Need matrix dimensions... for subset in variable.wise... do.call(cbind, fl[!fc]) needs to be preserved... # return(if(means) x - drop(res) else drop(res))
-  if(is.atomic(res)) return(x - res)
+  if(is.atomic(res)) return(duplAttributes(x - res, x))
   duplAttributes(mapply(`-`, unattrib(x), unattrib(res), SIMPLIFY = FALSE, USE.NAMES = FALSE), x)
 }
 
@@ -322,20 +322,29 @@ fHDwithin.default <- function(x, fl, w = NULL, na.rm = TRUE, fill = FALSE, lm.me
     return(setAttributes(x, ax))
   } else return(setAttributes(demean(x, fl, w, ...), ax))
 }
-fHDwithin.pseries <- function(x, w = NULL, na.rm = TRUE, fill = TRUE, ...) {
-  if(na.rm && length(cc <- which(!is.na(x)))) {
-     g <- lapply(attr(x, "index"), function(y) y[cc]) # good ! faster than subsetDT
+fHDwithin.pseries <- function(x, effect = 1:2, w = NULL, na.rm = TRUE, fill = TRUE, ...) {
+  ix <- attr(x, "index")
+  namix <- attr(ix, "names")
+  effect <- cols2int(effect, ix, namix)
+  g <- .subset(ix, effect)
+  if(na.rm && length(cc <- which(!is.na(x))) != length(x)) {
+     g <- .Call(C_subsetDT, g, cc, seq_along(g)) # lapply(g, `[`, cc) -> slower !
     if(fill) {
-      x[cc] <- demean(x[cc], g, w[cc], ...) # keeps attributes ?? -> Yes !!
+      x[cc] <- demean(.subset(`names<-`(x, NULL), cc), g, w[cc], ...) # keeps attributes ?? -> Yes !!
       return(x)
     }
-    xcc <- x[cc]
+    xcc <- .subset(x, cc)
+    nix <- length(unclass(ix))
+    if(nix != length(g)) {
+      toss <- seq_len(nix)[-effect]
+      reix <- copyMostAttrib(c(.Call(C_subsetDT, ix, cc, toss), g)[namix], ix)
+    } else reix <- copyMostAttrib(g, ix)
+    attr(reix, "row.names") <- .set_row_names(length(cc))
     return(setAttributes(demean(xcc, g, w[cc], ...),
-                         c(attributes(xcc), list(index = g, na.rm = seq_along(x)[-cc]))))
-
+                         c(attributes(xcc), list(index = reix,
+                                                 na.rm = seq_along(x)[-cc]))))
   }
-  g <- attr(x, "index") # what about cases ?? -> nah, named !!
-  `attr<-`(demean(x, g, w, ...), "index", g) # keeps attributes ?? -> Nope !!
+  demean(x, g, w, ...) # keeps attributes ?? -> Yes !!
 }
 
 # x = mNA; fl = m; lm.method = "qr"
@@ -393,26 +402,42 @@ fHDwithin.matrix <- function(x, fl, w = NULL, na.rm = TRUE, fill = FALSE, lm.met
     return(setAttributes(x, ax))
   } else return(setAttributes(demean(x, fl, w, ...), ax))
 }
-fHDwithin.pdata.frame <- function(x, w = NULL, na.rm = TRUE, fill = TRUE, variable.wise = TRUE, ...) {
-  ax <- attributes(x)
+fHDwithin.pdata.frame <- function(x, effect = 1:2, w = NULL, na.rm = TRUE, fill = TRUE, variable.wise = TRUE, ...) {
+  ix <- attr(x, "index")
+  namix <- attr(ix, "names")
+  effect <- cols2int(effect, ix, namix)
+  g <- .subset(ix, effect)
+
   if(na.rm && fill && variable.wise) {
+    ax <- attributes(x)
     attributes(x) <- NULL
     varwisecomp <- function(x, fl, w, ...) lapply(x, function(y) {
       ycc <- which(!is.na(y))
-      y[ycc] <- demean(y[ycc], subsetfl(fl, ycc), w[ycc], ...)
+      y[ycc] <- demean(.subset(y, ycc), subsetfl(fl, ycc), w[ycc], ...)
       return(y)
     })
-    return(setAttributes(varwisecomp(x, ax[["index"]], w, ...), ax))
+    return(setAttributes(varwisecomp(x, g, w, ...), ax))
   } else if(na.rm && any(miss <- .Call(C_dt_na, x, seq_along(unclass(x))))) {
+    cc <- which(!miss)
+    gcc <- .Call(C_subsetDT, g, cc, seq_along(g))
+    attr(x, "index") <- NULL
+    Y <- demean(.Call(C_subsetDT, x, cc, seq_along(unclass(x))), gcc, w[cc], ...)
+    if(fill) {
+      ax <- attributes(x)
       ax[["na.rm"]] <- which(miss)
-      cc <- which(!miss)
-      Y <- demean(.Call(C_subsetDT, x, cc, seq_along(unclass(x))),
-                  lapply(ax[["index"]], function(y) y[cc]), w[cc], ...)
-    if(fill) return(setAttributes(.Call(C_lassign, Y, fnrow2(x), cc, NA_real_), ax)) else {
-      ax[["row.names"]] <- ax[["row.names"]][cc]
-      return(setAttributes(Y, ax))
+      return(setAttributes(.Call(C_lassign, Y, fnrow2(x), cc, NA_real_), ax))
     }
-  } else return(setAttributes(demean(x, ax[["index"]], w, ...), ax))
+    attr(Y, "row.names") <- attr(x, "row.names")[cc] # row.names of pdata.frame are special.
+    nix <- length(unclass(ix))
+    if(nix != length(g)) {
+      toss <- seq_len(nix)[-effect]
+      reix <- copyMostAttrib(c(.Call(C_subsetDT, ix, cc, toss), gcc)[namix], ix)
+    } else reix <- copyMostAttrib(gcc, ix)
+    attr(reix, "row.names") <- .set_row_names(length(cc))
+    attr(Y, "index") <- reix
+    attr(Y, "na.rm") <- which(miss)
+    return(Y)
+  } else return(demean(x, g, w, ...)) # setAttributes(, ax) -> Not needed anymore (included in demean())
 }
 
 # x = data[5:6]; fl = data[-(5:6)]; variable.wise = TRUE
@@ -494,8 +519,8 @@ HDW.default <- function(x, fl, w = NULL, na.rm = TRUE, fill = FALSE, lm.method =
   fHDwithin.default(x, fl, w, na.rm, fill, lm.method, ...)
 }
 
-HDW.pseries <- function(x, w = NULL, na.rm = TRUE, fill = TRUE, ...)
-  fHDwithin.pseries(x, w, na.rm, fill, ...)
+HDW.pseries <- function(x, effect = 1:2, w = NULL, na.rm = TRUE, fill = TRUE, ...)
+  fHDwithin.pseries(x, effect, w, na.rm, fill, ...)
 
 HDW.matrix <- function(x, fl, w = NULL, na.rm = TRUE, fill = FALSE, stub = "HDW.", lm.method = "qr", ...)
   add_stub(fHDwithin.matrix(x, fl, w, na.rm, fill, lm.method, ...), stub)
@@ -564,9 +589,9 @@ HDW.data.frame <- function(x, fl, w = NULL, cols = is.numeric, na.rm = TRUE, fil
  add_stub(fHDwithin.data.frame(if(is.null(cols)) x else colsubset(x, cols), fl, w, na.rm, fill, variable.wise, lm.method, ...), stub)
 }
 
-HDW.pdata.frame <- function(x, w = NULL, cols = is.numeric, na.rm = TRUE, fill = TRUE,
+HDW.pdata.frame <- function(x, effect = 1:2, w = NULL, cols = is.numeric, na.rm = TRUE, fill = TRUE,
                             variable.wise = TRUE, stub = "HDW.", ...)
-add_stub(fHDwithin.pdata.frame(if(is.null(cols)) x else colsubset(x, cols), w, na.rm, fill, variable.wise, ...), stub)
+add_stub(fHDwithin.pdata.frame(if(is.null(cols)) x else colsubset(x, cols), effect, w, na.rm, fill, variable.wise, ...), stub)
 
 
 # Theory: y = ?1 x1 + ?2 x2 + e
@@ -645,8 +670,8 @@ fHDbetween.default <- function(x, fl, w = NULL, na.rm = TRUE, fill = FALSE, lm.m
 }
 
 
-fHDbetween.pseries <- function(x, w = NULL, na.rm = TRUE, fill = TRUE, ...)
-  fHDwithin.pseries(x, w, na.rm, fill, ..., means = TRUE)
+fHDbetween.pseries <- function(x, effect = 1:2, w = NULL, na.rm = TRUE, fill = TRUE, ...)
+  fHDwithin.pseries(x, effect, w, na.rm, fill, ..., means = TRUE)
 
 fHDbetween.matrix <- function(x, fl, w = NULL, na.rm = TRUE, fill = FALSE, lm.method = "qr", ...) {
   ax <- attributes(x)
@@ -707,8 +732,8 @@ fHDbetween.matrix <- function(x, fl, w = NULL, na.rm = TRUE, fill = FALSE, lm.me
   } else return(setAttributes(demean(x, fl, w, ..., means = TRUE), ax))
 }
 
-fHDbetween.pdata.frame <- function(x, w = NULL, na.rm = TRUE, fill = TRUE, variable.wise = TRUE, ...)
-  fHDwithin.pdata.frame(x, w, na.rm, fill, variable.wise, ..., means = TRUE)
+fHDbetween.pdata.frame <- function(x, effect = 1:2, w = NULL, na.rm = TRUE, fill = TRUE, variable.wise = TRUE, ...)
+  fHDwithin.pdata.frame(x, effect, w, na.rm, fill, variable.wise, ..., means = TRUE)
 
 
 fHDbetween.data.frame <- function(x, fl, w = NULL, na.rm = TRUE, fill = FALSE, variable.wise = FALSE, lm.method = "qr", ...) {
@@ -792,8 +817,8 @@ HDB.default <- function(x, fl, w = NULL, na.rm = TRUE, fill = FALSE, lm.method =
   fHDbetween.default(x, fl, w, na.rm, fill, lm.method, ...)
 }
 
-HDB.pseries <- function(x, w = NULL, na.rm = TRUE, fill = TRUE, ...)
-  fHDwithin.pseries(x, w, na.rm, fill, ..., means = TRUE)
+HDB.pseries <- function(x, effect = 1:2, w = NULL, na.rm = TRUE, fill = TRUE, ...)
+  fHDwithin.pseries(x, effect, w, na.rm, fill, ..., means = TRUE)
 
 
 HDB.matrix <- function(x, fl, w = NULL, na.rm = TRUE, fill = FALSE, stub = "HDB.", lm.method = "qr", ...)
@@ -868,9 +893,9 @@ HDB.data.frame <- function(x, fl, w = NULL, cols = is.numeric, na.rm = TRUE, fil
 }
 
 
-HDB.pdata.frame <- function(x, w = NULL, cols = is.numeric, na.rm = TRUE, fill = TRUE,
+HDB.pdata.frame <- function(x, effect = 1:2, w = NULL, cols = is.numeric, na.rm = TRUE, fill = TRUE,
                             variable.wise = TRUE, stub = "HDB.", ...)
-  add_stub(fHDwithin.pdata.frame(if(is.null(cols)) x else colsubset(x, cols), w, na.rm, fill, variable.wise, ..., means = TRUE), stub)
+  add_stub(fHDwithin.pdata.frame(if(is.null(cols)) x else colsubset(x, cols), effect, w, na.rm, fill, variable.wise, ..., means = TRUE), stub)
 
 
 
