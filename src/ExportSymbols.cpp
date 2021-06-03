@@ -29,6 +29,10 @@ RcppExport SEXP CcopyMostAttrib(SEXP to, SEXP from);
 RcppExport SEXP lassign(SEXP x, SEXP s, SEXP rows, SEXP fill);
 RcppExport SEXP groups2GRP(SEXP x, SEXP lx, SEXP gs);
 RcppExport SEXP Cna_rm(SEXP x);
+// fnobs rewritten in C:
+RcppExport SEXP fnobsC(SEXP x, SEXP Rng, SEXP g);
+RcppExport SEXP fnobsmC(SEXP x, SEXP Rng, SEXP g, SEXP Rdrop);
+RcppExport SEXP fnobslC(SEXP x, SEXP Rng, SEXP g, SEXP Rdrop);
 // ffirst and flast rewritten in C:
 RcppExport SEXP ffirstC(SEXP x, SEXP Rng, SEXP g, SEXP Rnarm);
 RcppExport SEXP ffirstmC(SEXP x, SEXP Rng, SEXP g, SEXP Rnarm, SEXP Rdrop);
@@ -57,9 +61,9 @@ static const R_CallMethodDef CallEntries[] = {
   {"Cpp_fndistinctl", (DL_FUNC) &_collapse_fndistinctlCpp, 6},
   {"Cpp_fndistinctm", (DL_FUNC) &_collapse_fndistinctmCpp, 6},
   {"Cpp_pwnobsm", (DL_FUNC) &_collapse_pwnobsmCpp, 1},
-  {"Cpp_fnobs", (DL_FUNC) &_collapse_fnobsCpp, 3},
-  {"Cpp_fnobsm", (DL_FUNC) &_collapse_fnobsmCpp, 4},
-  {"Cpp_fnobsl", (DL_FUNC) &_collapse_fnobslCpp, 4},
+  {"C_fnobs", (DL_FUNC) &fnobsC, 3},
+  {"C_fnobsm", (DL_FUNC) &fnobsmC, 4},
+  {"C_fnobsl", (DL_FUNC) &fnobslC, 4},
   {"Cpp_varying", (DL_FUNC) &_collapse_varyingCpp, 4},
   {"Cpp_varyingm", (DL_FUNC) &_collapse_varyingmCpp, 5},
   {"Cpp_varyingl", (DL_FUNC) &_collapse_varyinglCpp, 5},

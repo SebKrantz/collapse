@@ -39,16 +39,16 @@ pwnobsmCpp <- function(x) {
     .Call(Cpp_pwnobsm, x)
 }
 
-fnobsCpp <- function(x, ng = 0L, g = 0L) {
-    .Call(Cpp_fnobs, x, ng, g)
+fnobsC <- function(x, ng = 0L, g = 0L) {
+    .Call(C_fnobs, x, ng, g)
 }
 
-fnobsmCpp <- function(x, ng = 0L, g = 0L, drop = TRUE) {
-    .Call(Cpp_fnobsm, x, ng, g, drop)
+fnobsmC <- function(x, ng = 0L, g = 0L, drop = TRUE) {
+    .Call(C_fnobsm, x, ng, g, drop)
 }
 
-fnobslCpp <- function(x, ng = 0L, g = 0L, drop = TRUE) {
-    .Call(Cpp_fnobsl, x, ng, g, drop)
+fnobslC <- function(x, ng = 0L, g = 0L, drop = TRUE) {
+    .Call(C_fnobsl, x, ng, g, drop)
 }
 
 varyingCpp <- function(x, ng = 0L, g = 0L, any_group = TRUE) {

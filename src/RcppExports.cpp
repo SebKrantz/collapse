@@ -478,47 +478,6 @@ BEGIN_RCPP
     return rcpp_result_gen;
 END_RCPP
 }
-// fnobsCpp
-IntegerVector fnobsCpp(const SEXP& x, int ng, const IntegerVector& g);
-RcppExport SEXP _collapse_fnobsCpp(SEXP xSEXP, SEXP ngSEXP, SEXP gSEXP) {
-BEGIN_RCPP
-    Rcpp::RObject rcpp_result_gen;
-    Rcpp::RNGScope rcpp_rngScope_gen;
-    Rcpp::traits::input_parameter< const SEXP& >::type x(xSEXP);
-    Rcpp::traits::input_parameter< int >::type ng(ngSEXP);
-    Rcpp::traits::input_parameter< const IntegerVector& >::type g(gSEXP);
-    rcpp_result_gen = Rcpp::wrap(fnobsCpp(x, ng, g));
-    return rcpp_result_gen;
-END_RCPP
-}
-// fnobsmCpp
-SEXP fnobsmCpp(const SEXP& x, int ng, const IntegerVector& g, bool drop);
-RcppExport SEXP _collapse_fnobsmCpp(SEXP xSEXP, SEXP ngSEXP, SEXP gSEXP, SEXP dropSEXP) {
-BEGIN_RCPP
-    Rcpp::RObject rcpp_result_gen;
-    Rcpp::RNGScope rcpp_rngScope_gen;
-    Rcpp::traits::input_parameter< const SEXP& >::type x(xSEXP);
-    Rcpp::traits::input_parameter< int >::type ng(ngSEXP);
-    Rcpp::traits::input_parameter< const IntegerVector& >::type g(gSEXP);
-    Rcpp::traits::input_parameter< bool >::type drop(dropSEXP);
-    rcpp_result_gen = Rcpp::wrap(fnobsmCpp(x, ng, g, drop));
-    return rcpp_result_gen;
-END_RCPP
-}
-// fnobslCpp
-SEXP fnobslCpp(const List& x, int ng, const IntegerVector& g, bool drop);
-RcppExport SEXP _collapse_fnobslCpp(SEXP xSEXP, SEXP ngSEXP, SEXP gSEXP, SEXP dropSEXP) {
-BEGIN_RCPP
-    Rcpp::RObject rcpp_result_gen;
-    Rcpp::RNGScope rcpp_rngScope_gen;
-    Rcpp::traits::input_parameter< const List& >::type x(xSEXP);
-    Rcpp::traits::input_parameter< int >::type ng(ngSEXP);
-    Rcpp::traits::input_parameter< const IntegerVector& >::type g(gSEXP);
-    Rcpp::traits::input_parameter< bool >::type drop(dropSEXP);
-    rcpp_result_gen = Rcpp::wrap(fnobslCpp(x, ng, g, drop));
-    return rcpp_result_gen;
-END_RCPP
-}
 // fnthCpp
 NumericVector fnthCpp(const NumericVector& x, double Q, int ng, const IntegerVector& g, const SEXP& gs, const SEXP& w, bool narm, int ret);
 RcppExport SEXP _collapse_fnthCpp(SEXP xSEXP, SEXP QSEXP, SEXP ngSEXP, SEXP gSEXP, SEXP gsSEXP, SEXP wSEXP, SEXP narmSEXP, SEXP retSEXP) {

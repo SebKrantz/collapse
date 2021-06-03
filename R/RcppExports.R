@@ -109,18 +109,6 @@ fndistinctmCpp <- function(x, ng = 0L, g = 0L, gs = NULL, narm = TRUE, drop = TR
     .Call(`_collapse_fndistinctmCpp`, x, ng, g, gs, narm, drop)
 }
 
-fnobsCpp <- function(x, ng = 0L, g = 0L) {
-    .Call(`_collapse_fnobsCpp`, x, ng, g)
-}
-
-fnobsmCpp <- function(x, ng = 0L, g = 0L, drop = TRUE) {
-    .Call(`_collapse_fnobsmCpp`, x, ng, g, drop)
-}
-
-fnobslCpp <- function(x, ng = 0L, g = 0L, drop = TRUE) {
-    .Call(`_collapse_fnobslCpp`, x, ng, g, drop)
-}
-
 fnthCpp <- function(x, Q = 0.5, ng = 0L, g = 0L, gs = NULL, w = NULL, narm = TRUE, ret = 1L) {
     .Call(`_collapse_fnthCpp`, x, Q, ng, g, gs, w, narm, ret)
 }

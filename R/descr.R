@@ -18,13 +18,13 @@ descr <- function(X, Ndistinct = TRUE, higher = TRUE, table = TRUE,
                                          function(x, ...) list(Class = class(x), Label = attr(x, label.attr), Stats = numstats(x, ...))
   # Could make this more efficient ?
   descrcat <- function(x, tab = table) if(tab) list(Class = class(x), Label = attr(x, label.attr),
-                                                    Stats = if(Ndistinct) c(N = fnobsCpp(x), Ndist = fndistinctCpp(x)) else `names<-`(fnobsCpp(x), 'Nobs'),
+                                                    Stats = if(Ndistinct) c(N = fnobsC(x), Ndist = fndistinctCpp(x)) else `names<-`(fnobsC(x), 'Nobs'),
                                                     Table = natrm(fnobs.default(x, x))) else # table(x). fnobs is a lot Faster, but includes NA as level !
                                                       list(Class = class(x), Label = attr(x, label.attr),
-                                                           Stats = if(Ndistinct) c(N = fnobsCpp(x), Ndist = fndistinctCpp(x)) else `names<-`(fnobsCpp(x), 'Nobs'))
+                                                           Stats = if(Ndistinct) c(N = fnobsC(x), Ndist = fndistinctCpp(x)) else `names<-`(fnobsC(x), 'Nobs'))
 
   descrdate <- function(x) list(Class = class(x), Label = attr(x, label.attr),
-                                Stats = c(if(Ndistinct) c(N = fnobsCpp(x), Ndist = fndistinctCpp(x)) else `names<-`(fnobsCpp(x), 'Nobs'),
+                                Stats = c(if(Ndistinct) c(N = fnobsC(x), Ndist = fndistinctCpp(x)) else `names<-`(fnobsC(x), 'Nobs'),
                                           `names<-`(range(x, na.rm = TRUE), c("Min", "Max"))))
 
 
