@@ -34,7 +34,7 @@ myModFrame <- function(f, data) {
 finteract <- function(x, facts, mf) { # x and facts are logical
   f <- which(x & facts)
   if(length(f) == 1L) mf[[f]] else if(length(f) == 2L) do.call(`:`, mf[f]) else
-    as.factor_GRP(GRP.default(mf[f], call = FALSE))
+    as_factor_GRP(GRP.default(mf[f], call = FALSE))
 }
 
 slinteract <- function(sl, facts, mf) { # sl and facts are  logical
@@ -266,10 +266,10 @@ flmres <- function(y, X, w = NULL, meth = "qr", resi = TRUE, ...) {
 
 
 
-fHDwithin <- function(x, ...) UseMethod("fHDwithin") # , x
+fhdwithin <- function(x, ...) UseMethod("fhdwithin") # , x
 
-fHDwithin.default <- function(x, fl, w = NULL, na.rm = TRUE, fill = FALSE, lm.method = "qr", ...) {
-  if(is.matrix(x) && !inherits(x, "matrix")) return(fHDwithin.matrix(x, fl, w, na.rm, fill, ...))
+fhdwithin.default <- function(x, fl, w = NULL, na.rm = TRUE, fill = FALSE, lm.method = "qr", ...) {
+  if(is.matrix(x) && !inherits(x, "matrix")) return(fhdwithin.matrix(x, fl, w, na.rm, fill, ...))
   ax <- attributes(x)
   if(na.rm) {
     cc <- complete.cases(x, fl, w) # gives error if lengths don't match, otherwise demeanlist and qr.resid give errors !!
@@ -322,7 +322,7 @@ fHDwithin.default <- function(x, fl, w = NULL, na.rm = TRUE, fill = FALSE, lm.me
     return(setAttributes(x, ax))
   } else return(setAttributes(demean(x, fl, w, ...), ax))
 }
-fHDwithin.pseries <- function(x, effect = 1:2, w = NULL, na.rm = TRUE, fill = TRUE, ...) {
+fhdwithin.pseries <- function(x, effect = 1:2, w = NULL, na.rm = TRUE, fill = TRUE, ...) {
   ix <- attr(x, "index")
   namix <- attr(ix, "names")
   effect <- cols2int(effect, ix, namix)
@@ -348,7 +348,7 @@ fHDwithin.pseries <- function(x, effect = 1:2, w = NULL, na.rm = TRUE, fill = TR
 }
 
 # x = mNA; fl = m; lm.method = "qr"
-fHDwithin.matrix <- function(x, fl, w = NULL, na.rm = TRUE, fill = FALSE, lm.method = "qr", ...) {
+fhdwithin.matrix <- function(x, fl, w = NULL, na.rm = TRUE, fill = FALSE, lm.method = "qr", ...) {
   ax <- attributes(x)
   if(na.rm) {
     cc <- complete.cases(x, fl, w) # gives error if lengths don't match, otherwise demeanlist and qr.resid give errors !!
@@ -402,7 +402,7 @@ fHDwithin.matrix <- function(x, fl, w = NULL, na.rm = TRUE, fill = FALSE, lm.met
     return(setAttributes(x, ax))
   } else return(setAttributes(demean(x, fl, w, ...), ax))
 }
-fHDwithin.pdata.frame <- function(x, effect = 1:2, w = NULL, na.rm = TRUE, fill = TRUE, variable.wise = TRUE, ...) {
+fhdwithin.pdata.frame <- function(x, effect = 1:2, w = NULL, na.rm = TRUE, fill = TRUE, variable.wise = TRUE, ...) {
   ix <- attr(x, "index")
   namix <- attr(ix, "names")
   effect <- cols2int(effect, ix, namix)
@@ -441,7 +441,7 @@ fHDwithin.pdata.frame <- function(x, effect = 1:2, w = NULL, na.rm = TRUE, fill 
 }
 
 # x = data[5:6]; fl = data[-(5:6)]; variable.wise = TRUE
-fHDwithin.data.frame <- function(x, fl, w = NULL, na.rm = TRUE, fill = FALSE, variable.wise = FALSE, lm.method = "qr", ...) {
+fhdwithin.data.frame <- function(x, fl, w = NULL, na.rm = TRUE, fill = FALSE, variable.wise = FALSE, lm.method = "qr", ...) {
   ax <- attributes(x)
 
   if(na.rm) {
@@ -516,14 +516,14 @@ HDW <- function(x, ...) UseMethod("HDW") # , x
 
 HDW.default <- function(x, fl, w = NULL, na.rm = TRUE, fill = FALSE, lm.method = "qr", ...) {
   if(is.matrix(x) && !inherits(x, "matrix")) return(HDW.matrix(x, fl, w, na.rm, fill, lm.method, ...))
-  fHDwithin.default(x, fl, w, na.rm, fill, lm.method, ...)
+  fhdwithin.default(x, fl, w, na.rm, fill, lm.method, ...)
 }
 
 HDW.pseries <- function(x, effect = 1:2, w = NULL, na.rm = TRUE, fill = TRUE, ...)
-  fHDwithin.pseries(x, effect, w, na.rm, fill, ...)
+  fhdwithin.pseries(x, effect, w, na.rm, fill, ...)
 
 HDW.matrix <- function(x, fl, w = NULL, na.rm = TRUE, fill = FALSE, stub = "HDW.", lm.method = "qr", ...)
-  add_stub(fHDwithin.matrix(x, fl, w, na.rm, fill, lm.method, ...), stub)
+  add_stub(fhdwithin.matrix(x, fl, w, na.rm, fill, lm.method, ...), stub)
 
 
 
@@ -586,12 +586,12 @@ HDW.data.frame <- function(x, fl, w = NULL, cols = is.numeric, na.rm = TRUE, fil
       return(setAttributes(Y, ax))
     }
   }  # fl is not a formula !!
- add_stub(fHDwithin.data.frame(if(is.null(cols)) x else colsubset(x, cols), fl, w, na.rm, fill, variable.wise, lm.method, ...), stub)
+ add_stub(fhdwithin.data.frame(if(is.null(cols)) x else colsubset(x, cols), fl, w, na.rm, fill, variable.wise, lm.method, ...), stub)
 }
 
 HDW.pdata.frame <- function(x, effect = 1:2, w = NULL, cols = is.numeric, na.rm = TRUE, fill = TRUE,
                             variable.wise = TRUE, stub = "HDW.", ...)
-add_stub(fHDwithin.pdata.frame(if(is.null(cols)) x else colsubset(x, cols), effect, w, na.rm, fill, variable.wise, ...), stub)
+add_stub(fhdwithin.pdata.frame(if(is.null(cols)) x else colsubset(x, cols), effect, w, na.rm, fill, variable.wise, ...), stub)
 
 
 # Theory: y = ?1 x1 + ?2 x2 + e
@@ -604,14 +604,14 @@ add_stub(fHDwithin.pdata.frame(if(is.null(cols)) x else colsubset(x, cols), effe
 # P2 y = ?1 P2 x1 + ?2 x2
 # Haven't quite figgured it out, but my solution is to just subtract the demeaned data !!
 
-# Note: Only changes to fHDwithin is in the computation part: Perhaps you can combine the code in some better way to reduce code duplication ??
+# Note: Only changes to fhdwithin is in the computation part: Perhaps you can combine the code in some better way to reduce code duplication ??
 
 
-fHDbetween <- function(x, ...) UseMethod("fHDbetween") # , x
+fhdbetween <- function(x, ...) UseMethod("fhdbetween") # , x
 
 
-fHDbetween.default <- function(x, fl, w = NULL, na.rm = TRUE, fill = FALSE, lm.method = "qr", ...) {
-  if(is.matrix(x) && !inherits(x, "matrix")) return(fHDwithin.matrix(x, fl, w, na.rm, fill, lm.method, ...))
+fhdbetween.default <- function(x, fl, w = NULL, na.rm = TRUE, fill = FALSE, lm.method = "qr", ...) {
+  if(is.matrix(x) && !inherits(x, "matrix")) return(fhdwithin.matrix(x, fl, w, na.rm, fill, lm.method, ...))
   ax <- attributes(x)
   if(na.rm) {
     cc <- complete.cases(x, fl, w) # gives error if lengths don't match, otherwise demeanlist and qr.resid give errors !!
@@ -651,7 +651,7 @@ fHDbetween.default <- function(x, fl, w = NULL, na.rm = TRUE, fill = FALSE, lm.m
     xmat <- if(na.rm) cbind(Intercept = 1L, fl[cc]) else cbind(Intercept = 1L, fl)
     nallfc <- fcl <- FALSE
   }
-  # Only this part of the code is different from fHDwithin...
+  # Only this part of the code is different from fhdwithin...
   if(nallfc || !fcl) {
     if(na.rm && fill) {
       x[-cc] <- NA
@@ -670,10 +670,10 @@ fHDbetween.default <- function(x, fl, w = NULL, na.rm = TRUE, fill = FALSE, lm.m
 }
 
 
-fHDbetween.pseries <- function(x, effect = 1:2, w = NULL, na.rm = TRUE, fill = TRUE, ...)
-  fHDwithin.pseries(x, effect, w, na.rm, fill, ..., means = TRUE)
+fhdbetween.pseries <- function(x, effect = 1:2, w = NULL, na.rm = TRUE, fill = TRUE, ...)
+  fhdwithin.pseries(x, effect, w, na.rm, fill, ..., means = TRUE)
 
-fHDbetween.matrix <- function(x, fl, w = NULL, na.rm = TRUE, fill = FALSE, lm.method = "qr", ...) {
+fhdbetween.matrix <- function(x, fl, w = NULL, na.rm = TRUE, fill = FALSE, lm.method = "qr", ...) {
   ax <- attributes(x)
   if(na.rm) {
     cc <- complete.cases(x, fl, w) # gives error if lengths don't match, otherwise demeanlist and qr.resid give errors !!
@@ -714,7 +714,7 @@ fHDbetween.matrix <- function(x, fl, w = NULL, na.rm = TRUE, fill = FALSE, lm.me
     xmat <- if(na.rm) cbind(Intercept = 1L, fl[cc]) else cbind(Intercept = 1L, fl)
     nallfc <- fcl <- FALSE
   }
-  # Only this part of the code is different from fHDwithin...
+  # Only this part of the code is different from fhdwithin...
   if(nallfc || !fcl) {
     if(na.rm && fill) {
       x[-cc, ] <- NA
@@ -732,11 +732,11 @@ fHDbetween.matrix <- function(x, fl, w = NULL, na.rm = TRUE, fill = FALSE, lm.me
   } else return(setAttributes(demean(x, fl, w, ..., means = TRUE), ax))
 }
 
-fHDbetween.pdata.frame <- function(x, effect = 1:2, w = NULL, na.rm = TRUE, fill = TRUE, variable.wise = TRUE, ...)
-  fHDwithin.pdata.frame(x, effect, w, na.rm, fill, variable.wise, ..., means = TRUE)
+fhdbetween.pdata.frame <- function(x, effect = 1:2, w = NULL, na.rm = TRUE, fill = TRUE, variable.wise = TRUE, ...)
+  fhdwithin.pdata.frame(x, effect, w, na.rm, fill, variable.wise, ..., means = TRUE)
 
 
-fHDbetween.data.frame <- function(x, fl, w = NULL, na.rm = TRUE, fill = FALSE, variable.wise = FALSE, lm.method = "qr", ...) {
+fhdbetween.data.frame <- function(x, fl, w = NULL, na.rm = TRUE, fill = FALSE, variable.wise = FALSE, lm.method = "qr", ...) {
   ax <- attributes(x)
 
   if(na.rm) {
@@ -777,7 +777,7 @@ fHDbetween.data.frame <- function(x, fl, w = NULL, na.rm = TRUE, fill = FALSE, v
     xmat <- if(na.rm) cbind(Intercept = 1L, fl[cc]) else cbind(Intercept = 1L, fl)
     nallfc <- fcl <- FALSE
   }
-  # Only this part of the code is different from fHDwithin !!
+  # Only this part of the code is different from fhdwithin !!
   if(variable.wise) {
     if(na.rm) { # this means there were mising values in fl, which were already removed!
       return(setAttributes(lapply(unattrib(x), function(y) {
@@ -814,15 +814,15 @@ HDB <- function(x, ...) UseMethod("HDB") # , x
 
 HDB.default <- function(x, fl, w = NULL, na.rm = TRUE, fill = FALSE, lm.method = "qr", ...) {
   if(is.matrix(x) && !inherits(x, "matrix")) return(HDB.matrix(x, fl, w, na.rm, fill, lm.method, ...))
-  fHDbetween.default(x, fl, w, na.rm, fill, lm.method, ...)
+  fhdbetween.default(x, fl, w, na.rm, fill, lm.method, ...)
 }
 
 HDB.pseries <- function(x, effect = 1:2, w = NULL, na.rm = TRUE, fill = TRUE, ...)
-  fHDwithin.pseries(x, effect, w, na.rm, fill, ..., means = TRUE)
+  fhdwithin.pseries(x, effect, w, na.rm, fill, ..., means = TRUE)
 
 
 HDB.matrix <- function(x, fl, w = NULL, na.rm = TRUE, fill = FALSE, stub = "HDB.", lm.method = "qr", ...)
-  add_stub(fHDbetween.matrix(x, fl, w, na.rm, fill, lm.method, ...), stub)
+  add_stub(fhdbetween.matrix(x, fl, w, na.rm, fill, lm.method, ...), stub)
 
 HDB.data.frame <- function(x, fl, w = NULL, cols = is.numeric, na.rm = TRUE, fill = FALSE,
                            variable.wise = FALSE, stub = "HDB.", lm.method = "qr", ...) {
@@ -857,7 +857,7 @@ HDB.data.frame <- function(x, fl, w = NULL, cols = is.numeric, na.rm = TRUE, fil
     if(nallfc) xmat <- demean(xmat, fl, w, ...)
 
 
-    # Only this part of the code is different from fHDwithin !!
+    # Only this part of the code is different from fhdwithin !!
     if(variable.wise) {
       if(na.rm) { # this means there were mising values in fl, which were already removed!
         return(setAttributes(lapply(unattrib(x), function(y) {
@@ -889,13 +889,13 @@ HDB.data.frame <- function(x, fl, w = NULL, cols = is.numeric, na.rm = TRUE, fil
       return(setAttributes(Y, ax))
     }
   }  # fl is not a formula !!
-  add_stub(fHDbetween.data.frame(if(is.null(cols)) x else colsubset(x, cols), fl, w, na.rm, fill, variable.wise, lm.method, ...), stub)
+  add_stub(fhdbetween.data.frame(if(is.null(cols)) x else colsubset(x, cols), fl, w, na.rm, fill, variable.wise, lm.method, ...), stub)
 }
 
 
 HDB.pdata.frame <- function(x, effect = 1:2, w = NULL, cols = is.numeric, na.rm = TRUE, fill = TRUE,
                             variable.wise = TRUE, stub = "HDB.", ...)
-  add_stub(fHDwithin.pdata.frame(if(is.null(cols)) x else colsubset(x, cols), effect, w, na.rm, fill, variable.wise, ..., means = TRUE), stub)
+  add_stub(fhdwithin.pdata.frame(if(is.null(cols)) x else colsubset(x, cols), effect, w, na.rm, fill, variable.wise, ..., means = TRUE), stub)
 
 
 

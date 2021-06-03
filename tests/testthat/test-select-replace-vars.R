@@ -12,10 +12,10 @@ test_that("selecting vars works well", {
   expect_identical(get_vars(wlddev, is.factor), wlddev[sapply(wlddev, is.factor)])
 
   expect_identical(num_vars(wlddev), wlddev[sapply(wlddev, is.numeric)])
-  expect_identical(cat_vars(wlddev), wlddev[sapply(wlddev, is.categorical)])
+  expect_identical(cat_vars(wlddev), wlddev[sapply(wlddev, is_categorical)])
   expect_identical(char_vars(wlddev), wlddev[sapply(wlddev, is.character)])
   expect_identical(fact_vars(wlddev), wlddev[sapply(wlddev, is.factor)])
-  expect_identical(Date_vars(wlddev), wlddev[sapply(wlddev, is.Date)])
+  expect_identical(date_vars(wlddev), wlddev[sapply(wlddev, is_date)])
 })
 
 test_that("replacing vars works well", {
@@ -72,7 +72,7 @@ test_that("replacing vars works well", {
   expect_identical(wlddevold, wlddev)
 
   wlddevold <- wlddev
-  Date_vars(wlddev) <- Date_vars(wlddev)
+  date_vars(wlddev) <- date_vars(wlddev)
   expect_identical(wlddevold, wlddev)
 })
 
@@ -125,13 +125,23 @@ test_that("replacing with or adding atomic elements works well", {
 })
 
 
+test_that("empty selections work well", {
+  expect_equal(cat_vars(mtcars), mtcars[0L])
+  expect_equal(char_vars(mtcars), mtcars[0L])
+  expect_equal(fact_vars(mtcars), mtcars[0L])
+  expect_equal(logi_vars(mtcars), mtcars[0L])
+  expect_equal(get_vars(mtcars, is.character), mtcars[0L])
+  expect_equal(get_vars(mtcars, 0L), mtcars[0L])
+  expect_error(get_vars(mtcars, NULL))
+})
+
 
 test_that("select vars errors for wrong input", {
   expect_error(get_vars(wlddev, 13))
   expect_error(get_vars(wlddev, 1:13))
   expect_error(get_vars(wlddev, -13))
   expect_error(get_vars(wlddev, c("PCGDP","ODA3")))
-  expect_warning(get_vars(wlddev, "bla", regex = TRUE)) # Better give error
+  # expect_warning(get_vars(wlddev, "bla", regex = TRUE)) # Better give error
   expect_error(get_vars(wlddev, c(sapply(wlddev, is.numeric), TRUE)))
   expect_error(get_vars(wlddev, sapply(wlddev, is.numeric)[-1]))
 })
@@ -178,6 +188,20 @@ test_that("add_vars errors for wrong input", {
 
 
 test_that("fselect works properly", {
+  expect_equal(fselect(mtcars, mpg, 2), mtcars[1:2])
   expect_equal(fselect(mtcars, mpg:vs), mtcars[1:8])
   expect_equal(names(fselect(mtcars, bla = mpg, cyl:vs)), c("bla", names(mtcars)[2:8]))
+  expect_invisible(fselect(wlddev, -PCGDP) <- fselect(wlddev, -PCGDP))
+})
+
+
+test_that("no problems with numeric values", {
+  expect_equal(fselect(mtcars, 1), mtcars[1])
+  expect_equal(get_vars(mtcars, 1), mtcars[1])
+  expect_equal(gv(mtcars, 1), mtcars[1])
+
+  expect_invisible(fselect(mtcars, 1) <- mtcars[1])
+  expect_invisible(get_vars(mtcars, 1) <- mtcars[1])
+  expect_invisible(gv(mtcars, 1) <- mtcars[1])
+  expect_invisible(av(mtcars, pos = 1) <- mtcars[1])
 })

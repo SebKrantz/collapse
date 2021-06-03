@@ -302,7 +302,7 @@ wlddev %>% fselect(country, PCGDP, LIFEEX) %>%
   # This counts missing values on PCGDP and LIFEEX only
   na_omit(cols = -1L) %>% 
   # This removes countries with less than 20 observations
-  fsubset(fNobs(PCGDP, country, "replace_fill") > 20L) %>% 
+  fsubset(fnobs(PCGDP, country, "replace_fill") > 20L) %>% 
   qDT %>% 
   # Run estimations by country using data.table
   .[, qDT(coeftest(lm(G(PCGDP) ~ G(LIFEEX))), "Coef"), keyby = country] %>% head
@@ -313,7 +313,7 @@ If we only need the coefficients, not the standard errors, we can also use `coll
 ```{r}
 wlddev %>% fselect(country, PCGDP, LIFEEX) %>% 
   na_omit(cols = -1L) %>% 
-  fsubset(fNobs(PCGDP, country, "replace_fill") > 20L) %>% 
+  fsubset(fnobs(PCGDP, country, "replace_fill") > 20L) %>% 
   qDT %>% 
   .[, mrtl(flm(fgrowth(PCGDP)[-1L], 
                cbind(Intercept = 1, 
@@ -329,13 +329,13 @@ microbenchmark(
   
 A = wlddev %>% fselect(country, PCGDP, LIFEEX) %>% 
   na_omit(cols = -1L) %>% 
-  fsubset(fNobs(PCGDP, country, "replace_fill") > 20L) %>% 
+  fsubset(fnobs(PCGDP, country, "replace_fill") > 20L) %>% 
   qDT %>% 
   .[, qDT(coeftest(lm(G(PCGDP) ~ G(LIFEEX))), "Coef"), keyby = country],
 
 B = wlddev %>% fselect(country, PCGDP, LIFEEX) %>% 
   na_omit(cols = -1L) %>% 
-  fsubset(fNobs(PCGDP, country, "replace_fill") > 20L) %>% 
+  fsubset(fnobs(PCGDP, country, "replace_fill") > 20L) %>% 
   qDT %>% 
   .[, mrtl(flm(fgrowth(PCGDP)[-1L], 
                cbind(Intercept = 1, 

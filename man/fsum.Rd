@@ -75,7 +75,7 @@ fsum(mpg, mtcars$cyl, mtcars$hp)  # Weighted grouped sum (total)
 fsum(mpg, mtcars[c(2,8:9)])       # More groups..
 g <- GRP(mtcars, ~ cyl + vs + am) # Precomputing groups gives more speed !
 fsum(mpg, g)
-fmean(mpg, g) == fsum(mpg, g) / fNobs(mpg, g)
+fmean(mpg, g) == fsum(mpg, g) / fnobs(mpg, g)
 fsum(mpg, g, TRA = "\%")           # Percentages by group
 
 ## data.frame method

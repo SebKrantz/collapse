@@ -5,7 +5,7 @@ using namespace Rcpp;
 SEXP sym_label = Rf_install("label");
 
 template <int RTYPE>
-IntegerVector fNobsCppImpl(Vector<RTYPE> x, int ng, IntegerVector g) {
+IntegerVector fnobsCppImpl(Vector<RTYPE> x, int ng, IntegerVector g) {
 
   int l = x.size();
 
@@ -35,35 +35,35 @@ IntegerVector fNobsCppImpl(Vector<RTYPE> x, int ng, IntegerVector g) {
 }
 
 template <>
-IntegerVector fNobsCppImpl(Vector<CPLXSXP> x, int ng, IntegerVector) {
+IntegerVector fnobsCppImpl(Vector<CPLXSXP> x, int ng, IntegerVector) {
   stop("Not supported SEXP type!");
 }
 
 template <>
-IntegerVector fNobsCppImpl(Vector<VECSXP> x, int ng, IntegerVector) {
+IntegerVector fnobsCppImpl(Vector<VECSXP> x, int ng, IntegerVector) {
   stop("Not supported SEXP type!");
 }
 
 template <>
-IntegerVector fNobsCppImpl(Vector<RAWSXP> x, int ng, IntegerVector) {
+IntegerVector fnobsCppImpl(Vector<RAWSXP> x, int ng, IntegerVector) {
   stop("Not supported SEXP type!");
 }
 
 template <>
-IntegerVector fNobsCppImpl(Vector<EXPRSXP> x, int ng, IntegerVector) {
+IntegerVector fnobsCppImpl(Vector<EXPRSXP> x, int ng, IntegerVector) {
   stop("Not supported SEXP type!");
 }
 
 // [[Rcpp::export]]
-IntegerVector fNobsCpp(const SEXP& x, int ng = 0, const IntegerVector& g = 0){
-  RCPP_RETURN_VECTOR(fNobsCppImpl, x, ng, g);
+IntegerVector fnobsCpp(const SEXP& x, int ng = 0, const IntegerVector& g = 0){
+  RCPP_RETURN_VECTOR(fnobsCppImpl, x, ng, g);
 }
 
 
 
 
 template <int RTYPE>
-SEXP fNobsmCppImpl(Matrix<RTYPE> x, int ng, IntegerVector g, bool drop) {
+SEXP fnobsmCppImpl(Matrix<RTYPE> x, int ng, IntegerVector g, bool drop) {
   int l = x.nrow(), col = x.ncol();
 
   if(ng == 0) { // Fastest loops ? Is perhaps an iterator better suited? or a STD algorithm to count ?
@@ -113,34 +113,34 @@ SEXP fNobsmCppImpl(Matrix<RTYPE> x, int ng, IntegerVector g, bool drop) {
 }
 
 template <>
-SEXP fNobsmCppImpl(Matrix<CPLXSXP> x, int ng, IntegerVector g, bool drop) {
+SEXP fnobsmCppImpl(Matrix<CPLXSXP> x, int ng, IntegerVector g, bool drop) {
   stop("Not supported SEXP type!");
 }
 
 template <>
-SEXP fNobsmCppImpl(Matrix<VECSXP> x, int ng, IntegerVector g, bool drop) {
+SEXP fnobsmCppImpl(Matrix<VECSXP> x, int ng, IntegerVector g, bool drop) {
   stop("Not supported SEXP type!");
 }
 
 template <>
-SEXP fNobsmCppImpl(Matrix<RAWSXP> x, int ng, IntegerVector g, bool drop) {
+SEXP fnobsmCppImpl(Matrix<RAWSXP> x, int ng, IntegerVector g, bool drop) {
   stop("Not supported SEXP type!");
 }
 
 template <>
-SEXP fNobsmCppImpl(Matrix<EXPRSXP> x, int ng, IntegerVector g, bool drop) {
+SEXP fnobsmCppImpl(Matrix<EXPRSXP> x, int ng, IntegerVector g, bool drop) {
   stop("Not supported SEXP type!");
 }
 
 // [[Rcpp::export]]
-SEXP fNobsmCpp(const SEXP& x, int ng = 0, const IntegerVector& g = 0, bool drop = true){
-  RCPP_RETURN_MATRIX(fNobsmCppImpl, x, ng, g, drop);
+SEXP fnobsmCpp(const SEXP& x, int ng = 0, const IntegerVector& g = 0, bool drop = true){
+  RCPP_RETURN_MATRIX(fnobsmCppImpl, x, ng, g, drop);
 }
 
 
 
 // [[Rcpp::export]]
-SEXP fNobslCpp(const List& x, int ng = 0, const IntegerVector& g = 0, bool drop = true) {
+SEXP fnobslCpp(const List& x, int ng = 0, const IntegerVector& g = 0, bool drop = true) {
   int l = x.size();
 
   if(ng == 0) {

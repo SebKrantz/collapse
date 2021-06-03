@@ -12,11 +12,13 @@ fmin_uw <- function(x, g, w, ...) fmin(x, g, ...)
 fmax_uw <- function(x, g, w, ...) fmax(x, g, ...)
 ffirst_uw <- function(x, g, w, ...) ffirst(x, g, ...)
 flast_uw <- function(x, g, w, ...) flast(x, g, ...)
-fNobs_uw <- function(x, g, w, ...) fNobs(x, g, ...)
-fNdistinct_uw <- function(x, g, w, ...) fNdistinct(x, g, ...)
+fnobs_uw <- function(x, g, w, ...) fnobs(x, g, ...)
+fndistinct_uw <- function(x, g, w, ...) fndistinct(x, g, ...)
+fNobs_uw <- function(x, g, w, ...) fnobs(x, g, ...)
+fNdistinct_uw <- function(x, g, w, ...) fndistinct(x, g, ...)
 
 FSF <- c("fmean","fmedian","fmode","fsum","fprod","fsd","fvar",
-         "fmin","fmax","fnth","ffirst","flast","fNobs","fNdistinct")
+         "fmin","fmax","fnth","ffirst","flast","fnobs","fndistinct", "fNobs","fNdistinct")
 
 .FAST_STAT_FUN_EXT <- c(FSF, paste0(FSF, "_uw"))
 
@@ -36,8 +38,10 @@ mymatchfun <- function(FUN) {
          fnth = fnth,
          ffirst = ffirst,
          flast = flast,
-         fNobs = fNobs,
-         fNdistinct = fNdistinct,
+         fnobs = fnobs,
+         fndistinct = fndistinct,
+         fNobs = fnobs,
+         fNdistinct = fndistinct,
          # cat(paste0(paste0(FSF, "_uw"), " = ", paste0(FSF, "_uw"), ",\n"))
          fmean_uw = fmean_uw,
          fmedian_uw = fmedian_uw,
@@ -51,8 +55,10 @@ mymatchfun <- function(FUN) {
          fnth_uw = fnth_uw,
          ffirst_uw = ffirst_uw,
          flast_uw = flast_uw,
-         fNobs_uw = fNobs_uw,
-         fNdistinct_uw = fNdistinct_uw,
+         fnobs_uw = fnobs_uw,
+         fndistinct_uw = fndistinct_uw,
+         fNobs_uw = fnobs_uw,
+         fNdistinct_uw = fndistinct_uw,
          match.fun(FUN)) # get(FUN, mode = "function", envir = parent.frame(2)) -> no error message
 }
 
@@ -125,7 +131,7 @@ collap <- function(X, by, FUN = fmean, catFUN = fmode, cols = NULL, w = NULL, wF
     by <- GRP.default(`names<-`(list(by), l1orlst(as.character(substitute(by)))), NULL, sort, decreasing, na.last, keep.by, call = FALSE)
   } else {
     if(ncustoml) if(is.null(cols)) vl <- FALSE else v <- cols2int(cols, X, nam)
-    if(!is.GRP(by)) {
+    if(!is_GRP(by)) {
       numby <- seq_along(unclass(by))
       by <- GRP.default(by, numby, sort, decreasing, na.last, keep.by, call = FALSE)
     } else numby <- seq_along(by[[5L]])

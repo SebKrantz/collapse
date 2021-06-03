@@ -32,7 +32,7 @@ All of \emph{collapse}'s \link[=A1-fast-statistical-functions]{Fast Statistical 
 
 \item \code{\link[=fwithin]{fwithin/W}} is an S3 generic to efficiently perform (groupwise and / or weighted) \bold{within-transformations / demeaning / centering} of data. Similarly \code{\link[=fbetween]{fbetween/B}} computes (groupwise and / or weighted) \bold{between-transformations / averages} (also a lot faster than \code{\link{ave}}).
 
-\item \code{\link[=HDW]{fHDwithin/HDW}}, shorthand for 'higher-dimensional within transform', is an S3 generic to efficiently \bold{center data on multiple groups and partial-out linear models} (possibly involving many levels of fixed effects). In other words, \code{\link[=HDW]{fHDwithin/HDW}} efficiently computes \bold{residuals} from (potentially complex) linear models. Similarly \code{\link[=HDB]{fHDbetween/HDB}}, shorthand for 'higher-dimensional between transformation', computes the corresponding means or \bold{fitted values}.
+\item \code{\link[=HDW]{fhdwithin/HDW}}, shorthand for 'higher-dimensional within transform', is an S3 generic to efficiently \bold{center data on multiple groups and partial-out linear models} (possibly involving many levels of fixed effects). In other words, \code{\link[=HDW]{fhdwithin/HDW}} efficiently computes \bold{residuals} from (potentially complex) linear models. Similarly \code{\link[=HDB]{fhdbetween/HDB}}, shorthand for 'higher-dimensional between transformation', computes the corresponding means or \bold{fitted values}.
 
 %\item \code{flm} is an efficient function for bare-bones (weighted) \bold{linear model fitting}. It supports 6 different fitting methods, 4 from base R, and 2 utilizing the \emph{RcppArmadillo} or \emph{RcppEigen} packages.
 
@@ -50,8 +50,8 @@ All of \emph{collapse}'s \link[=A1-fast-statistical-functions]{Fast Statistical 
   \code{\link[=fscale]{fscale/STD}} \tab\tab \code{default, matrix, data.frame, pseries, pdata.frame, grouped_df} \tab\tab Scale / standardize data \cr
   \code{\link[=fwithin]{fwithin/W}} \tab\tab \code{default, matrix, data.frame, pseries, pdata.frame, grouped_df}  \tab\tab Demean / center data \cr
   \code{\link[=fbetween]{fbetween/B}} \tab\tab \code{default, matrix, data.frame, pseries, pdata.frame, grouped_df}  \tab\tab Compute means / average data \cr
-  \code{\link[=HDW]{fHDwithin/HDW}} \tab\tab \code{default, matrix, data.frame, pseries, pdata.frame} \tab\tab High-dimensional centering and lm residuals \cr
-  \code{\link[=HDB]{fHDbetween/HDB}} \tab\tab \code{default, matrix, data.frame, pseries, pdata.frame} \tab\tab High-dimensional averages and lm fitted values \cr
+  \code{\link[=HDW]{fhdwithin/HDW}} \tab\tab \code{default, matrix, data.frame, pseries, pdata.frame} \tab\tab High-dimensional centering and lm residuals \cr
+  \code{\link[=HDB]{fhdbetween/HDB}} \tab\tab \code{default, matrix, data.frame, pseries, pdata.frame} \tab\tab High-dimensional averages and lm fitted values \cr
   % \code{\link{flm}} \tab\tab No methods, for matrices \tab\tab Linear model fitting \cr
   \code{\link[=flag]{flag/L/F}}, \code{\link[=fdiff]{fdiff/D/Dlog}}, \code{\link[=fdiff]{fgrowth/G}}, \code{\link{fcumsum}} \tab\tab \code{default, matrix, data.frame, pseries, pdata.frame, grouped_df}  \tab\tab (Sequences of) lags / leads, differences, growth rates and cumulative sums
 }

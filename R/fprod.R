@@ -18,7 +18,7 @@ fprod.default <- function(x, g = NULL, w = NULL, TRA = NULL, na.rm = TRUE, use.g
       g <- qG(g, na.exclude = FALSE)
       return(.Call(Cpp_fprod,x,attr(g,"N.groups"),g,w,na.rm))
     }
-    if(!is.GRP(g)) g <- GRP.default(g, return.groups = use.g.names, call = FALSE)
+    if(!is_GRP(g)) g <- GRP.default(g, return.groups = use.g.names, call = FALSE)
     if(use.g.names) return(`names<-`(.Call(Cpp_fprod,x,g[[1L]],g[[2L]],w,na.rm), GRPnames(g)))
     return(.Call(Cpp_fprod,x,g[[1L]],g[[2L]],w,na.rm))
   }
@@ -28,7 +28,7 @@ fprod.default <- function(x, g = NULL, w = NULL, TRA = NULL, na.rm = TRUE, use.g
     g <- qG(g, na.exclude = FALSE)
     return(.Call(Cpp_TRA,x,.Call(Cpp_fprod,x,attr(g,"N.groups"),g,w,na.rm),g,TtI(TRA)))
   }
-  if(!is.GRP(g)) g <- GRP.default(g, return.groups = FALSE, call = FALSE)
+  if(!is_GRP(g)) g <- GRP.default(g, return.groups = FALSE, call = FALSE)
   .Call(Cpp_TRA,x,.Call(Cpp_fprod,x,g[[1L]],g[[2L]],w,na.rm),g[[2L]],TtI(TRA))
 }
 
@@ -46,7 +46,7 @@ fprod.matrix <- function(x, g = NULL, w = NULL, TRA = NULL, na.rm = TRUE, use.g.
       g <- qG(g, na.exclude = FALSE)
       return(.Call(Cpp_fprodm,x,attr(g,"N.groups"),g,w,na.rm,FALSE))
     }
-    if(!is.GRP(g)) g <- GRP.default(g, return.groups = use.g.names, call = FALSE)
+    if(!is_GRP(g)) g <- GRP.default(g, return.groups = use.g.names, call = FALSE)
     if(use.g.names) return(`dimnames<-`(.Call(Cpp_fprodm,x,g[[1L]],g[[2L]],w,na.rm,FALSE), list(GRPnames(g), dimnames(x)[[2L]])))
     return(.Call(Cpp_fprodm,x,g[[1L]],g[[2L]],w,na.rm,FALSE))
   }
@@ -56,7 +56,7 @@ fprod.matrix <- function(x, g = NULL, w = NULL, TRA = NULL, na.rm = TRUE, use.g.
     g <- qG(g, na.exclude = FALSE)
     return(.Call(Cpp_TRAm,x,.Call(Cpp_fprodm,x,attr(g,"N.groups"),g,w,na.rm,FALSE),g,TtI(TRA)))
   }
-  if(!is.GRP(g)) g <- GRP.default(g, return.groups = FALSE, call = FALSE)
+  if(!is_GRP(g)) g <- GRP.default(g, return.groups = FALSE, call = FALSE)
   .Call(Cpp_TRAm,x,.Call(Cpp_fprodm,x,g[[1L]],g[[2L]],w,na.rm,FALSE),g[[2L]],TtI(TRA))
 }
 
@@ -74,7 +74,7 @@ fprod.data.frame <- function(x, g = NULL, w = NULL, TRA = NULL, na.rm = TRUE, us
       g <- qG(g, na.exclude = FALSE)
       return(.Call(Cpp_fprodl,x,attr(g,"N.groups"),g,w,na.rm,FALSE))
     }
-    if(!is.GRP(g)) g <- GRP.default(g, return.groups = use.g.names, call = FALSE)
+    if(!is_GRP(g)) g <- GRP.default(g, return.groups = use.g.names, call = FALSE)
     if(use.g.names && !inherits(x, "data.table") && length(groups <- GRPnames(g)))
       return(setRnDF(.Call(Cpp_fprodl,x,g[[1L]],g[[2L]],w,na.rm,FALSE), groups))
     return(.Call(Cpp_fprodl,x,g[[1L]],g[[2L]],w,na.rm,FALSE))
@@ -85,7 +85,7 @@ fprod.data.frame <- function(x, g = NULL, w = NULL, TRA = NULL, na.rm = TRUE, us
     g <- qG(g, na.exclude = FALSE)
     return(.Call(Cpp_TRAl,x,.Call(Cpp_fprodl,x,attr(g,"N.groups"),g,w,na.rm,FALSE),g,TtI(TRA)))
   }
-  if(!is.GRP(g)) g <- GRP.default(g, return.groups = FALSE, call = FALSE)
+  if(!is_GRP(g)) g <- GRP.default(g, return.groups = FALSE, call = FALSE)
   .Call(Cpp_TRAl,x,.Call(Cpp_fprodl,x,g[[1L]],g[[2L]],w,na.rm,FALSE),g[[2L]],TtI(TRA))
 }
 

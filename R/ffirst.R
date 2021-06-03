@@ -18,7 +18,7 @@ ffirst.default <- function(x, g = NULL, TRA = NULL, na.rm = TRUE, use.g.names = 
       g <- qG(g, na.exclude = FALSE)
       return(.Call(C_ffirst,x,attr(g,"N.groups"),g,na.rm))
     }
-    if(!is.GRP(g)) g <- GRP.default(g, return.groups = use.g.names, call = FALSE)
+    if(!is_GRP(g)) g <- GRP.default(g, return.groups = use.g.names, call = FALSE)
     if(use.g.names) return(`names<-`(.Call(C_ffirst,x,g[[1L]],g[[2L]],na.rm), GRPnames(g)))
     return(.Call(C_ffirst,x,g[[1L]],g[[2L]],na.rm))
   }
@@ -28,7 +28,7 @@ ffirst.default <- function(x, g = NULL, TRA = NULL, na.rm = TRUE, use.g.names = 
     g <- qG(g, na.exclude = FALSE)
     return(.Call(Cpp_TRA,x,.Call(C_ffirst,x,attr(g,"N.groups"),g,na.rm),g,TtI(TRA)))
   }
-  if(!is.GRP(g)) g <- GRP.default(g, return.groups = FALSE, call = FALSE)
+  if(!is_GRP(g)) g <- GRP.default(g, return.groups = FALSE, call = FALSE)
   .Call(Cpp_TRA,x,.Call(C_ffirst,x,g[[1L]],g[[2L]],na.rm),g[[2L]],TtI(TRA))
 }
 
@@ -46,7 +46,7 @@ ffirst.matrix <- function(x, g = NULL, TRA = NULL, na.rm = TRUE, use.g.names = T
       g <- qG(g, na.exclude = FALSE)
       return(.Call(C_ffirstm,x,attr(g,"N.groups"),g,na.rm,FALSE))
     }
-    if(!is.GRP(g)) g <- GRP.default(g, return.groups = use.g.names, call = FALSE)
+    if(!is_GRP(g)) g <- GRP.default(g, return.groups = use.g.names, call = FALSE)
     if(use.g.names) return(`dimnames<-`(.Call(C_ffirstm,x,g[[1L]],g[[2L]],na.rm,FALSE), list(GRPnames(g), dimnames(x)[[2L]])))
     return(.Call(C_ffirstm,x,g[[1L]],g[[2L]],na.rm,FALSE))
   }
@@ -56,7 +56,7 @@ ffirst.matrix <- function(x, g = NULL, TRA = NULL, na.rm = TRUE, use.g.names = T
     g <- qG(g, na.exclude = FALSE)
     return(.Call(Cpp_TRAm,x,.Call(C_ffirstm,x,attr(g,"N.groups"),g,na.rm,FALSE),g,TtI(TRA)))
   }
-  if(!is.GRP(g)) g <- GRP.default(g, return.groups = FALSE, call = FALSE)
+  if(!is_GRP(g)) g <- GRP.default(g, return.groups = FALSE, call = FALSE)
   .Call(Cpp_TRAm,x,.Call(C_ffirstm,x,g[[1L]],g[[2L]],na.rm,FALSE),g[[2L]],TtI(TRA))
 }
 
@@ -74,7 +74,7 @@ ffirst.data.frame <- function(x, g = NULL, TRA = NULL, na.rm = TRUE, use.g.names
       g <- qG(g, na.exclude = FALSE)
       return(.Call(C_ffirstl,x,attr(g,"N.groups"),g,na.rm))
     }
-    if(!is.GRP(g)) g <- GRP.default(g, return.groups = use.g.names, call = FALSE)
+    if(!is_GRP(g)) g <- GRP.default(g, return.groups = use.g.names, call = FALSE)
     if(use.g.names && !inherits(x, "data.table") && length(groups <- GRPnames(g)))
       return(setRnDF(.Call(C_ffirstl,x,g[[1L]],g[[2L]],na.rm), groups))
     return(.Call(C_ffirstl,x,g[[1L]],g[[2L]],na.rm))
@@ -85,7 +85,7 @@ ffirst.data.frame <- function(x, g = NULL, TRA = NULL, na.rm = TRUE, use.g.names
     g <- qG(g, na.exclude = FALSE)
     return(.Call(Cpp_TRAl,x,.Call(C_ffirstl,x,attr(g,"N.groups"),g,na.rm),g,TtI(TRA)))
   }
-  if(!is.GRP(g)) g <- GRP.default(g, return.groups = FALSE, call = FALSE)
+  if(!is_GRP(g)) g <- GRP.default(g, return.groups = FALSE, call = FALSE)
   .Call(Cpp_TRAl,x,.Call(C_ffirstl,x,g[[1L]],g[[2L]],na.rm),g[[2L]],TtI(TRA))
 }
 

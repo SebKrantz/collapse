@@ -47,94 +47,6 @@ BEGIN_RCPP
     return rcpp_result_gen;
 END_RCPP
 }
-// fNdistinctCpp
-SEXP fNdistinctCpp(const SEXP& x, int ng, const IntegerVector& g, const SEXP& gs, bool narm);
-RcppExport SEXP _collapse_fNdistinctCpp(SEXP xSEXP, SEXP ngSEXP, SEXP gSEXP, SEXP gsSEXP, SEXP narmSEXP) {
-BEGIN_RCPP
-    Rcpp::RObject rcpp_result_gen;
-    Rcpp::RNGScope rcpp_rngScope_gen;
-    Rcpp::traits::input_parameter< const SEXP& >::type x(xSEXP);
-    Rcpp::traits::input_parameter< int >::type ng(ngSEXP);
-    Rcpp::traits::input_parameter< const IntegerVector& >::type g(gSEXP);
-    Rcpp::traits::input_parameter< const SEXP& >::type gs(gsSEXP);
-    Rcpp::traits::input_parameter< bool >::type narm(narmSEXP);
-    rcpp_result_gen = Rcpp::wrap(fNdistinctCpp(x, ng, g, gs, narm));
-    return rcpp_result_gen;
-END_RCPP
-}
-// fNdistinctlCpp
-SEXP fNdistinctlCpp(const List& x, int ng, const IntegerVector& g, const SEXP& gs, bool narm, bool drop);
-RcppExport SEXP _collapse_fNdistinctlCpp(SEXP xSEXP, SEXP ngSEXP, SEXP gSEXP, SEXP gsSEXP, SEXP narmSEXP, SEXP dropSEXP) {
-BEGIN_RCPP
-    Rcpp::RObject rcpp_result_gen;
-    Rcpp::RNGScope rcpp_rngScope_gen;
-    Rcpp::traits::input_parameter< const List& >::type x(xSEXP);
-    Rcpp::traits::input_parameter< int >::type ng(ngSEXP);
-    Rcpp::traits::input_parameter< const IntegerVector& >::type g(gSEXP);
-    Rcpp::traits::input_parameter< const SEXP& >::type gs(gsSEXP);
-    Rcpp::traits::input_parameter< bool >::type narm(narmSEXP);
-    Rcpp::traits::input_parameter< bool >::type drop(dropSEXP);
-    rcpp_result_gen = Rcpp::wrap(fNdistinctlCpp(x, ng, g, gs, narm, drop));
-    return rcpp_result_gen;
-END_RCPP
-}
-// fNdistinctmCpp
-SEXP fNdistinctmCpp(SEXP x, int ng, IntegerVector g, SEXP gs, bool narm, bool drop);
-RcppExport SEXP _collapse_fNdistinctmCpp(SEXP xSEXP, SEXP ngSEXP, SEXP gSEXP, SEXP gsSEXP, SEXP narmSEXP, SEXP dropSEXP) {
-BEGIN_RCPP
-    Rcpp::RObject rcpp_result_gen;
-    Rcpp::RNGScope rcpp_rngScope_gen;
-    Rcpp::traits::input_parameter< SEXP >::type x(xSEXP);
-    Rcpp::traits::input_parameter< int >::type ng(ngSEXP);
-    Rcpp::traits::input_parameter< IntegerVector >::type g(gSEXP);
-    Rcpp::traits::input_parameter< SEXP >::type gs(gsSEXP);
-    Rcpp::traits::input_parameter< bool >::type narm(narmSEXP);
-    Rcpp::traits::input_parameter< bool >::type drop(dropSEXP);
-    rcpp_result_gen = Rcpp::wrap(fNdistinctmCpp(x, ng, g, gs, narm, drop));
-    return rcpp_result_gen;
-END_RCPP
-}
-// fNobsCpp
-IntegerVector fNobsCpp(const SEXP& x, int ng, const IntegerVector& g);
-RcppExport SEXP _collapse_fNobsCpp(SEXP xSEXP, SEXP ngSEXP, SEXP gSEXP) {
-BEGIN_RCPP
-    Rcpp::RObject rcpp_result_gen;
-    Rcpp::RNGScope rcpp_rngScope_gen;
-    Rcpp::traits::input_parameter< const SEXP& >::type x(xSEXP);
-    Rcpp::traits::input_parameter< int >::type ng(ngSEXP);
-    Rcpp::traits::input_parameter< const IntegerVector& >::type g(gSEXP);
-    rcpp_result_gen = Rcpp::wrap(fNobsCpp(x, ng, g));
-    return rcpp_result_gen;
-END_RCPP
-}
-// fNobsmCpp
-SEXP fNobsmCpp(const SEXP& x, int ng, const IntegerVector& g, bool drop);
-RcppExport SEXP _collapse_fNobsmCpp(SEXP xSEXP, SEXP ngSEXP, SEXP gSEXP, SEXP dropSEXP) {
-BEGIN_RCPP
-    Rcpp::RObject rcpp_result_gen;
-    Rcpp::RNGScope rcpp_rngScope_gen;
-    Rcpp::traits::input_parameter< const SEXP& >::type x(xSEXP);
-    Rcpp::traits::input_parameter< int >::type ng(ngSEXP);
-    Rcpp::traits::input_parameter< const IntegerVector& >::type g(gSEXP);
-    Rcpp::traits::input_parameter< bool >::type drop(dropSEXP);
-    rcpp_result_gen = Rcpp::wrap(fNobsmCpp(x, ng, g, drop));
-    return rcpp_result_gen;
-END_RCPP
-}
-// fNobslCpp
-SEXP fNobslCpp(const List& x, int ng, const IntegerVector& g, bool drop);
-RcppExport SEXP _collapse_fNobslCpp(SEXP xSEXP, SEXP ngSEXP, SEXP gSEXP, SEXP dropSEXP) {
-BEGIN_RCPP
-    Rcpp::RObject rcpp_result_gen;
-    Rcpp::RNGScope rcpp_rngScope_gen;
-    Rcpp::traits::input_parameter< const List& >::type x(xSEXP);
-    Rcpp::traits::input_parameter< int >::type ng(ngSEXP);
-    Rcpp::traits::input_parameter< const IntegerVector& >::type g(gSEXP);
-    Rcpp::traits::input_parameter< bool >::type drop(dropSEXP);
-    rcpp_result_gen = Rcpp::wrap(fNobslCpp(x, ng, g, drop));
-    return rcpp_result_gen;
-END_RCPP
-}
 // BWCpp
 NumericVector BWCpp(const NumericVector& x, int ng, const IntegerVector& g, const SEXP& gs, const SEXP& w, bool narm, double theta, double set_mean, bool B, bool fill);
 RcppExport SEXP _collapse_BWCpp(SEXP xSEXP, SEXP ngSEXP, SEXP gSEXP, SEXP gsSEXP, SEXP wSEXP, SEXP narmSEXP, SEXP thetaSEXP, SEXP set_meanSEXP, SEXP BSEXP, SEXP fillSEXP) {
@@ -519,6 +431,94 @@ BEGIN_RCPP
     return rcpp_result_gen;
 END_RCPP
 }
+// fndistinctCpp
+SEXP fndistinctCpp(const SEXP& x, int ng, const IntegerVector& g, const SEXP& gs, bool narm);
+RcppExport SEXP _collapse_fndistinctCpp(SEXP xSEXP, SEXP ngSEXP, SEXP gSEXP, SEXP gsSEXP, SEXP narmSEXP) {
+BEGIN_RCPP
+    Rcpp::RObject rcpp_result_gen;
+    Rcpp::RNGScope rcpp_rngScope_gen;
+    Rcpp::traits::input_parameter< const SEXP& >::type x(xSEXP);
+    Rcpp::traits::input_parameter< int >::type ng(ngSEXP);
+    Rcpp::traits::input_parameter< const IntegerVector& >::type g(gSEXP);
+    Rcpp::traits::input_parameter< const SEXP& >::type gs(gsSEXP);
+    Rcpp::traits::input_parameter< bool >::type narm(narmSEXP);
+    rcpp_result_gen = Rcpp::wrap(fndistinctCpp(x, ng, g, gs, narm));
+    return rcpp_result_gen;
+END_RCPP
+}
+// fndistinctlCpp
+SEXP fndistinctlCpp(const List& x, int ng, const IntegerVector& g, const SEXP& gs, bool narm, bool drop);
+RcppExport SEXP _collapse_fndistinctlCpp(SEXP xSEXP, SEXP ngSEXP, SEXP gSEXP, SEXP gsSEXP, SEXP narmSEXP, SEXP dropSEXP) {
+BEGIN_RCPP
+    Rcpp::RObject rcpp_result_gen;
+    Rcpp::RNGScope rcpp_rngScope_gen;
+    Rcpp::traits::input_parameter< const List& >::type x(xSEXP);
+    Rcpp::traits::input_parameter< int >::type ng(ngSEXP);
+    Rcpp::traits::input_parameter< const IntegerVector& >::type g(gSEXP);
+    Rcpp::traits::input_parameter< const SEXP& >::type gs(gsSEXP);
+    Rcpp::traits::input_parameter< bool >::type narm(narmSEXP);
+    Rcpp::traits::input_parameter< bool >::type drop(dropSEXP);
+    rcpp_result_gen = Rcpp::wrap(fndistinctlCpp(x, ng, g, gs, narm, drop));
+    return rcpp_result_gen;
+END_RCPP
+}
+// fndistinctmCpp
+SEXP fndistinctmCpp(SEXP x, int ng, IntegerVector g, SEXP gs, bool narm, bool drop);
+RcppExport SEXP _collapse_fndistinctmCpp(SEXP xSEXP, SEXP ngSEXP, SEXP gSEXP, SEXP gsSEXP, SEXP narmSEXP, SEXP dropSEXP) {
+BEGIN_RCPP
+    Rcpp::RObject rcpp_result_gen;
+    Rcpp::RNGScope rcpp_rngScope_gen;
+    Rcpp::traits::input_parameter< SEXP >::type x(xSEXP);
+    Rcpp::traits::input_parameter< int >::type ng(ngSEXP);
+    Rcpp::traits::input_parameter< IntegerVector >::type g(gSEXP);
+    Rcpp::traits::input_parameter< SEXP >::type gs(gsSEXP);
+    Rcpp::traits::input_parameter< bool >::type narm(narmSEXP);
+    Rcpp::traits::input_parameter< bool >::type drop(dropSEXP);
+    rcpp_result_gen = Rcpp::wrap(fndistinctmCpp(x, ng, g, gs, narm, drop));
+    return rcpp_result_gen;
+END_RCPP
+}
+// fnobsCpp
+IntegerVector fnobsCpp(const SEXP& x, int ng, const IntegerVector& g);
+RcppExport SEXP _collapse_fnobsCpp(SEXP xSEXP, SEXP ngSEXP, SEXP gSEXP) {
+BEGIN_RCPP
+    Rcpp::RObject rcpp_result_gen;
+    Rcpp::RNGScope rcpp_rngScope_gen;
+    Rcpp::traits::input_parameter< const SEXP& >::type x(xSEXP);
+    Rcpp::traits::input_parameter< int >::type ng(ngSEXP);
+    Rcpp::traits::input_parameter< const IntegerVector& >::type g(gSEXP);
+    rcpp_result_gen = Rcpp::wrap(fnobsCpp(x, ng, g));
+    return rcpp_result_gen;
+END_RCPP
+}
+// fnobsmCpp
+SEXP fnobsmCpp(const SEXP& x, int ng, const IntegerVector& g, bool drop);
+RcppExport SEXP _collapse_fnobsmCpp(SEXP xSEXP, SEXP ngSEXP, SEXP gSEXP, SEXP dropSEXP) {
+BEGIN_RCPP
+    Rcpp::RObject rcpp_result_gen;
+    Rcpp::RNGScope rcpp_rngScope_gen;
+    Rcpp::traits::input_parameter< const SEXP& >::type x(xSEXP);
+    Rcpp::traits::input_parameter< int >::type ng(ngSEXP);
+    Rcpp::traits::input_parameter< const IntegerVector& >::type g(gSEXP);
+    Rcpp::traits::input_parameter< bool >::type drop(dropSEXP);
+    rcpp_result_gen = Rcpp::wrap(fnobsmCpp(x, ng, g, drop));
+    return rcpp_result_gen;
+END_RCPP
+}
+// fnobslCpp
+SEXP fnobslCpp(const List& x, int ng, const IntegerVector& g, bool drop);
+RcppExport SEXP _collapse_fnobslCpp(SEXP xSEXP, SEXP ngSEXP, SEXP gSEXP, SEXP dropSEXP) {
+BEGIN_RCPP
+    Rcpp::RObject rcpp_result_gen;
+    Rcpp::RNGScope rcpp_rngScope_gen;
+    Rcpp::traits::input_parameter< const List& >::type x(xSEXP);
+    Rcpp::traits::input_parameter< int >::type ng(ngSEXP);
+    Rcpp::traits::input_parameter< const IntegerVector& >::type g(gSEXP);
+    Rcpp::traits::input_parameter< bool >::type drop(dropSEXP);
+    rcpp_result_gen = Rcpp::wrap(fnobslCpp(x, ng, g, drop));
+    return rcpp_result_gen;
+END_RCPP
+}
 // fnthCpp
 NumericVector fnthCpp(const NumericVector& x, double Q, int ng, const IntegerVector& g, const SEXP& gs, const SEXP& w, bool narm, int ret);
 RcppExport SEXP _collapse_fnthCpp(SEXP xSEXP, SEXP QSEXP, SEXP ngSEXP, SEXP gSEXP, SEXP gsSEXP, SEXP wSEXP, SEXP narmSEXP, SEXP retSEXP) {
@@ -816,14 +816,14 @@ BEGIN_RCPP
     return rcpp_result_gen;
 END_RCPP
 }
-// pwNobsmCpp
-IntegerMatrix pwNobsmCpp(SEXP x);
-RcppExport SEXP _collapse_pwNobsmCpp(SEXP xSEXP) {
+// pwnobsmCpp
+IntegerMatrix pwnobsmCpp(SEXP x);
+RcppExport SEXP _collapse_pwnobsmCpp(SEXP xSEXP) {
 BEGIN_RCPP
     Rcpp::RObject rcpp_result_gen;
     Rcpp::RNGScope rcpp_rngScope_gen;
     Rcpp::traits::input_parameter< SEXP >::type x(xSEXP);
-    rcpp_result_gen = Rcpp::wrap(pwNobsmCpp(x));
+    rcpp_result_gen = Rcpp::wrap(pwnobsmCpp(x));
     return rcpp_result_gen;
 END_RCPP
 }

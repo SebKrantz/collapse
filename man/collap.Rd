@@ -38,9 +38,9 @@ collapg(X, FUN = fmean, catFUN = fmode, cols = NULL, w = NULL, wFUN = fsum, cust
 %- maybe also 'usage' for other objects documented here.
 \arguments{
   \item{X}{a data frame, or an object coercible to data frame using \code{\link{qDF}}.}
-  \item{by}{for \code{collap}: a one-or two sided formula, i.e. \code{~ group1} or \code{var1 + var2 ~ group1 + group2}, or a atomic vector, list of vectors or \code{\link{GRP}} object used to group \code{X}. For \code{collapv}: names or indices of grouping columns, or a logical vector or selector function such as \code{\link{is.categorical}} selecting grouping columns.}
+  \item{by}{for \code{collap}: a one-or two sided formula, i.e. \code{~ group1} or \code{var1 + var2 ~ group1 + group2}, or a atomic vector, list of vectors or \code{\link{GRP}} object used to group \code{X}. For \code{collapv}: names or indices of grouping columns, or a logical vector or selector function such as \code{\link{is_categorical}} selecting grouping columns.}
 \item{FUN}{a function, list of functions (i.e. \code{list(fsum, fmean, fsd)} or \code{list(myfun1 = function(x).., sd = sd)}), or a character vector of function names, which are automatically applied only to numeric variables.}
-\item{catFUN}{same as \code{FUN}, but applied only to categorical (non-numeric) typed columns (\code{\link{is.categorical}}).}
+\item{catFUN}{same as \code{FUN}, but applied only to categorical (non-numeric) typed columns (\code{\link{is_categorical}}).}
 \item{cols}{select columns to aggregate using a function, column names, indices or logical vector. \emph{Note}: \code{cols} is ignored if a two-sided formula is passed to \code{by}.}
 \item{w}{weights. Can be passed as numeric vector or alternatively as formula i.e. \code{~ weightvar} in \code{collap} or column name / index etc. i.e. \code{"weightvar"} in \code{collapv}. \code{collapg} supports non-standard evaluations so \code{weightvar} can be indicated without quotes if found in \code{X}. }
 \item{wFUN}{same as \code{FUN}: Function(s) to aggregate weight variable if \code{keep.w = TRUE}. By default the sum of the weights is computed in each group.}
@@ -137,7 +137,7 @@ head(collap(wlddev, g, keep.by = FALSE))                        # This is slight
 # Aggregate categorical data using not the mode but the last element
 head(collap(wlddev, ~ country + decade, fmean, flast))
 head(collap(wlddev, ~ country + decade, catFUN = flast,         # Aggregate only categorical data
-            cols = is.categorical))
+            cols = is_categorical))
 
 
 ## Weighted Aggregation ----------------------------------------
@@ -152,7 +152,7 @@ wlddev$weights <- NULL
 
 
 ## Multi-Function Aggregation ----------------------------------
-head(collap(wlddev, ~ country + decade, list(fmean, fNobs),     # Saving mean and Nobs
+head(collap(wlddev, ~ country + decade, list(fmean, fnobs),     # Saving mean and Nobs
             cols = 9:12))
 
 head(collap(wlddev, ~ country + decade,                         # Same using base R -> slower
@@ -161,21 +161,21 @@ head(collap(wlddev, ~ country + decade,                         # Same using bas
             cols = 9:12, na.rm = TRUE))
 
 lapply(collap(wlddev, ~ country + decade,                       # List output format
-            list(fmean, fNobs), cols = 9:12, return = "list"), head)
+            list(fmean, fnobs), cols = 9:12, return = "list"), head)
 
 head(collap(wlddev, ~ country + decade,                         # Long output format
-            list(fmean, fNobs), cols = 9:12, return = "long"))
+            list(fmean, fnobs), cols = 9:12, return = "long"))
 
 head(collap(wlddev, ~ country + decade,                         # Also aggregating categorical data,
-            list(fmean, fNobs), return = "long_dupl"))          # and duplicating it 2 times
+            list(fmean, fnobs), return = "long_dupl"))          # and duplicating it 2 times
 
 head(collap(wlddev, ~ country + decade,                         # Now also using 2 functions on
-            list(fmean, fNobs), list(fmode, flast),             # categorical data
+            list(fmean, fnobs), list(fmode, flast),             # categorical data
             keep.col.order = FALSE))
 
 head(collap(wlddev, ~ country + decade,                         # More functions, string input,
-            c("fmean","fsum","fNobs","fsd","fvar"),             # parallelized execution
-            c("fmode","ffirst","flast","fNdistinct"),           # (choose more than 1 cores,
+            c("fmean","fsum","fnobs","fsd","fvar"),             # parallelized execution
+            c("fmode","ffirst","flast","fndistinct"),           # (choose more than 1 cores,
             parallel = TRUE, mc.cores = 1L,                     # depending on your machine)
             keep.col.order = FALSE))
 

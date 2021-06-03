@@ -12,7 +12,7 @@ f <- as.factor(sample.int(10, 100, TRUE))
 data <- wlddev[wlddev$iso3c %in% c("BLZ","IND","USA","SRB","GRL"), ]
 l <- nrow(data)
 g <- GRP(droplevels(data$iso3c))
-gf <- as.factor_GRP(g)
+gf <- as_factor_GRP(g)
 dataNA <- na_insert(data)
 m <- as.matrix(num_vars(data)) # without num_vars also works for ties = "first"
 mNA <- as.matrix(num_vars(dataNA))
@@ -100,7 +100,7 @@ wMode <- function(x, w, na.rm = FALSE, ties = "first") {
   g <- GRP.default(x, call = FALSE)
   switch(ties,
          first = {
-           g <- as.factor_GRP(g)
+           g <- as_factor_GRP(g)
            o <- radixorder(unlist(split.default(seq_along(w), g), use.names = FALSE))
            sw <- unlist(lapply(split.default(w, g), cumsum), use.names = FALSE)[o]
            fsubset.default(x, which.max(sw))
@@ -118,7 +118,7 @@ wBY <- function(x, f, FUN, w, ...) {
   if(is.atomic(x)) return(dapply(x, function(xi) mapply(FUN, split(xi, f), wspl, ...)))
   dapply(dapply(x, function(xi) {
     r <- Map(FUN, split(xi, f), wspl, ...)
-    if(is.Date(xi)) do.call(c, r) else unlist(r)
+    if(is_date(xi)) do.call(c, r) else unlist(r)
     }), `names<-`, NULL)
 }
 

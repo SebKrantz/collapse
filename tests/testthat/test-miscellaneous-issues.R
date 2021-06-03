@@ -76,8 +76,8 @@ test_that("Testing grouped_df methods", {
   expect_visible(gdf %>% fmax)
   expect_visible(gdf %>% ffirst)
   expect_visible(gdf %>% flast)
-  expect_visible(gdf %>% fNobs)
-  expect_visible(gdf %>% fNdistinct)
+  expect_visible(gdf %>% fnobs)
+  expect_visible(gdf %>% fndistinct)
   expect_visible(gdf %>% collapg)
   expect_visible(gdf %>% fmean(w = wgt)) # good?
   expect_equal(gdf %>% collapg(w = wgt) %>% slt(-wgt), gdf %>% collapg(w = wgt, keep.w = FALSE))
@@ -152,7 +152,7 @@ test_that("0-length vectors give expected output", {
     expect_identical(FUN(numeric(0)), NA_real_)
     expect_identical(FUN(integer(0)), NA_real_)
   }
-  funs <- .c(fNobs, fNdistinct)
+  funs <- .c(fnobs, fndistinct)
   for(i in funs) {
     FUN <- match.fun(i)
     expect_identical(FUN(numeric(0)), 0L)

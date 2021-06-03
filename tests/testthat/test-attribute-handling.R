@@ -15,7 +15,7 @@ f1 <- sample.int(5, length(AirPassengers), replace = TRUE)
 f2 <- sample.int(5, nrow(EuStockMarkets), replace = TRUE)
 
 numFUN <- setdiff(.FAST_STAT_FUN, c("fnth", "fmode", "ffirst", "flast"))
-countFUN <- c("fNobs", "fNdistinct")
+countFUN <- c("fnobs", "fndistinct")
 
 test_that("statistical functions handle attributes properly", {
 
@@ -102,7 +102,7 @@ test_that("statistical functions handle attributes properly", {
 
 })
 
-transFUN <- setdiff(c(.FAST_FUN, .OPERATOR_FUN), c(.FAST_STAT_FUN, "fHDbetween", "fHDwithin", "HDB", "HDW"))
+transFUN <- setdiff(c(.FAST_FUN, .OPERATOR_FUN), c(.FAST_STAT_FUN, "fhdbetween", "fhdwithin", "HDB", "HDW"))
 
 options(collapse_unused_arg_action = "none", warn = -1)
 
@@ -147,7 +147,7 @@ test_that("TRA attribute preservation works well", {
   expect_equal(attributes(TRA(AirPassengers, 1, "-")), attributes(AirPassengers))            # Double
   expect_equal(attributes(TRA(AirPassengers, 1L, "-")), attributes(AirPassengers))           # Integer -> Coerced to double in numeric operation
   f <- qF(sample.int(5L, length(AirPassengers), TRUE), na.exclude = FALSE)
-  num <- unclass(fmean(AirPassengers, f)); int <- fNobs(AirPassengers, f)
+  num <- unclass(fmean(AirPassengers, f)); int <- fnobs(AirPassengers, f)
   expect_equal(attributes(TRA(AirPassengers, num, "replace", f)), attributes(AirPassengers))      # Double
   expect_equal(attributes(TRA(AirPassengers, int, "replace", f))[[1]], tsp(AirPassengers))        # Integer -> Change of type !!
   expect_equal(attributes(TRA(AirPassengers, num, "replace_fill", f)), attributes(AirPassengers)) # Double
@@ -163,7 +163,7 @@ test_that("TRA attribute preservation works well", {
   expect_equal(attributes(TRA(EuStockMarkets, rep(1, 4L), "-")), attributes(EuStockMarkets))                # Double
   expect_equal(attributes(TRA(EuStockMarkets, rep(1L, 4L), "-")), attributes(EuStockMarkets))               # Integer -> Coerced to double in numeric operation
   f <- qF(sample.int(5L, nrow(EuStockMarkets), TRUE), na.exclude = FALSE)
-  num <- unclass(fmean(EuStockMarkets, f)); int <- fNobs(EuStockMarkets, f)
+  num <- unclass(fmean(EuStockMarkets, f)); int <- fnobs(EuStockMarkets, f)
   expect_equal(attributes(TRA(EuStockMarkets, num, "replace", f)), attributes(EuStockMarkets))         # Double
   expect_equal(attributes(TRA(EuStockMarkets, int, "replace", f))[["tsp"]], tsp(EuStockMarkets))       # Integer -> Change of type !!
   expect_equal(attributes(TRA(EuStockMarkets, num, "replace_fill", f)), attributes(EuStockMarkets))    # Double
@@ -174,10 +174,10 @@ test_that("TRA attribute preservation works well", {
   # Data Frame Method
   # CATEGORICAL
   # Simple
-  expect_equal(vclasses(unattrib(fNdistinct(wlddev, TRA = "replace_fill"))), rep("integer", 12L))
-  expect_equal(vclasses(unattrib(fNdistinct(wlddev, TRA = "replace"))), rep("integer", 12L))
-  expect_equal(vclasses(unattrib(fNobs(wlddev, TRA = "replace_fill"))), rep("integer", 12L))
-  expect_equal(vclasses(unattrib(fNobs(wlddev, TRA = "replace"))), rep("integer", 12L))
+  expect_equal(vclasses(unattrib(fndistinct(wlddev, TRA = "replace_fill"))), rep("integer", 12L))
+  expect_equal(vclasses(unattrib(fndistinct(wlddev, TRA = "replace"))), rep("integer", 12L))
+  expect_equal(vclasses(unattrib(fnobs(wlddev, TRA = "replace_fill"))), rep("integer", 12L))
+  expect_equal(vclasses(unattrib(fnobs(wlddev, TRA = "replace"))), rep("integer", 12L))
   expect_equal(lapply(ffirst(wlddev, TRA = "replace_fill"), attributes), lapply(wlddev, attributes))
   expect_equal(lapply(ffirst(wlddev, TRA = "replace"), attributes), lapply(wlddev, attributes))
   expect_equal(lapply(flast(wlddev, TRA = "replace_fill"), attributes), lapply(wlddev, attributes))
@@ -185,10 +185,10 @@ test_that("TRA attribute preservation works well", {
   expect_equal(lapply(fmode(wlddev, TRA = "replace_fill"), attributes), lapply(wlddev, attributes))
   expect_equal(lapply(fmode(wlddev, TRA = "replace"), attributes), lapply(wlddev, attributes))
   # Grouped
-  expect_equal(vclasses(unattrib(fNdistinct(wlddev, wlddev$iso3c, TRA = "replace_fill"))), rep("integer", 12L))
-  expect_equal(vclasses(unattrib(fNdistinct(wlddev, wlddev$iso3c, TRA = "replace"))), rep("integer", 12L))
-  expect_equal(vclasses(unattrib(fNobs(wlddev, wlddev$iso3c, TRA = "replace_fill"))), rep("integer", 12L))
-  expect_equal(vclasses(unattrib(fNobs(wlddev, wlddev$iso3c, TRA = "replace"))), rep("integer", 12L))
+  expect_equal(vclasses(unattrib(fndistinct(wlddev, wlddev$iso3c, TRA = "replace_fill"))), rep("integer", 12L))
+  expect_equal(vclasses(unattrib(fndistinct(wlddev, wlddev$iso3c, TRA = "replace"))), rep("integer", 12L))
+  expect_equal(vclasses(unattrib(fnobs(wlddev, wlddev$iso3c, TRA = "replace_fill"))), rep("integer", 12L))
+  expect_equal(vclasses(unattrib(fnobs(wlddev, wlddev$iso3c, TRA = "replace"))), rep("integer", 12L))
   expect_equal(lapply(ffirst(wlddev, wlddev$iso3c, TRA = "replace_fill"), attributes), lapply(wlddev, attributes))
   expect_equal(lapply(ffirst(wlddev, wlddev$iso3c, TRA = "replace"), attributes), lapply(wlddev, attributes))
   expect_equal(lapply(flast(wlddev, wlddev$iso3c, TRA = "replace_fill"), attributes), lapply(wlddev, attributes))
@@ -199,12 +199,12 @@ test_that("TRA attribute preservation works well", {
   # Numeric
   nwld <- num_vars(wlddev)
   # Simple
-  expect_equal(vclasses(unattrib(fNdistinct(nwld, TRA = "replace_fill"))), rep("integer", fncol(nwld)))
-  expect_equal(vclasses(unattrib(fNdistinct(nwld, TRA = "replace"))), rep("integer", fncol(nwld)))
-  expect_equal(vclasses(unattrib(fNdistinct(nwld, TRA = "-"))), rep("numeric", fncol(nwld)))
-  expect_equal(vclasses(unattrib(fNobs(nwld, TRA = "replace_fill"))), rep("integer", fncol(nwld)))
-  expect_equal(vclasses(unattrib(fNobs(nwld, TRA = "replace"))), rep("integer", fncol(nwld)))
-  expect_equal(vclasses(unattrib(fNobs(nwld, TRA = "%%"))), rep("numeric", fncol(nwld)))
+  expect_equal(vclasses(unattrib(fndistinct(nwld, TRA = "replace_fill"))), rep("integer", fncol(nwld)))
+  expect_equal(vclasses(unattrib(fndistinct(nwld, TRA = "replace"))), rep("integer", fncol(nwld)))
+  expect_equal(vclasses(unattrib(fndistinct(nwld, TRA = "-"))), rep("numeric", fncol(nwld)))
+  expect_equal(vclasses(unattrib(fnobs(nwld, TRA = "replace_fill"))), rep("integer", fncol(nwld)))
+  expect_equal(vclasses(unattrib(fnobs(nwld, TRA = "replace"))), rep("integer", fncol(nwld)))
+  expect_equal(vclasses(unattrib(fnobs(nwld, TRA = "%%"))), rep("numeric", fncol(nwld)))
   expect_equal(lapply(fmean(nwld, TRA = "replace_fill"), attributes), lapply(nwld, attributes))
   expect_equal(lapply(fmean(nwld, TRA = "replace"), attributes), lapply(nwld, attributes))
   expect_equal(lapply(fmean(nwld, TRA = "+"), attributes), lapply(nwld, attributes))
@@ -215,12 +215,12 @@ test_that("TRA attribute preservation works well", {
   expect_equal(lapply(fmedian(nwld, TRA = "replace"), attributes), lapply(nwld, attributes))
   expect_equal(lapply(fmedian(nwld, TRA = "-"), attributes), lapply(nwld, attributes))
   # Grouped
-  expect_equal(vclasses(unattrib(fNdistinct(nwld, wlddev$iso3c, TRA = "replace_fill"))), rep("integer", fncol(nwld)))
-  expect_equal(vclasses(unattrib(fNdistinct(nwld, wlddev$iso3c, TRA = "replace"))), rep("integer", fncol(nwld)))
-  expect_equal(vclasses(unattrib(fNdistinct(nwld, wlddev$iso3c, TRA = "-%%"))), rep("numeric", fncol(nwld)))
-  expect_equal(vclasses(unattrib(fNobs(nwld, wlddev$iso3c, TRA = "replace_fill"))), rep("integer", fncol(nwld)))
-  expect_equal(vclasses(unattrib(fNobs(nwld, wlddev$iso3c, TRA = "replace"))), rep("integer", fncol(nwld)))
-  expect_equal(vclasses(unattrib(fNobs(nwld, wlddev$iso3c, TRA = "*"))), rep("numeric", fncol(nwld)))
+  expect_equal(vclasses(unattrib(fndistinct(nwld, wlddev$iso3c, TRA = "replace_fill"))), rep("integer", fncol(nwld)))
+  expect_equal(vclasses(unattrib(fndistinct(nwld, wlddev$iso3c, TRA = "replace"))), rep("integer", fncol(nwld)))
+  expect_equal(vclasses(unattrib(fndistinct(nwld, wlddev$iso3c, TRA = "-%%"))), rep("numeric", fncol(nwld)))
+  expect_equal(vclasses(unattrib(fnobs(nwld, wlddev$iso3c, TRA = "replace_fill"))), rep("integer", fncol(nwld)))
+  expect_equal(vclasses(unattrib(fnobs(nwld, wlddev$iso3c, TRA = "replace"))), rep("integer", fncol(nwld)))
+  expect_equal(vclasses(unattrib(fnobs(nwld, wlddev$iso3c, TRA = "*"))), rep("numeric", fncol(nwld)))
   expect_equal(lapply(fmean(nwld, wlddev$iso3c, TRA = "replace_fill"), attributes), lapply(nwld, attributes))
   expect_equal(lapply(fmean(nwld, wlddev$iso3c, TRA = "replace"), attributes), lapply(nwld, attributes))
   expect_equal(lapply(fmean(nwld, wlddev$iso3c, TRA = "-+"), attributes), lapply(nwld, attributes))

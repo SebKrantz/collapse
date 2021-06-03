@@ -23,32 +23,32 @@ TRAlCpp <- function(x, xAG, g = 0L, ret = 1L) {
     .Call(Cpp_TRAl, x, xAG, g, ret)
 }
 
-fNdistinctCpp <- function(x, ng = 0L, g = 0L, gs = NULL, narm = TRUE) {
-    .Call(Cpp_fNdistinct, x, ng, g, gs, narm)
+fndistinctCpp <- function(x, ng = 0L, g = 0L, gs = NULL, narm = TRUE) {
+    .Call(Cpp_fndistinct, x, ng, g, gs, narm)
 }
 
-fNdistinctlCpp <- function(x, ng = 0L, g = 0L, gs = NULL, narm = TRUE, drop = TRUE) {
-    .Call(Cpp_fNdistinctl, x, ng, g, gs, narm, drop)
+fndistinctlCpp <- function(x, ng = 0L, g = 0L, gs = NULL, narm = TRUE, drop = TRUE) {
+    .Call(Cpp_fndistinctl, x, ng, g, gs, narm, drop)
 }
 
-fNdistinctmCpp <- function(x, ng = 0L, g = 0L, gs = NULL, narm = TRUE, drop = TRUE) {
-    .Call(Cpp_fNdistinctm, x, ng, g, gs, narm, drop)
+fndistinctmCpp <- function(x, ng = 0L, g = 0L, gs = NULL, narm = TRUE, drop = TRUE) {
+    .Call(Cpp_fndistinctm, x, ng, g, gs, narm, drop)
 }
 
-pwNobsmCpp <- function(x) {
-    .Call(Cpp_pwNobsm, x)
+pwnobsmCpp <- function(x) {
+    .Call(Cpp_pwnobsm, x)
 }
 
-fNobsCpp <- function(x, ng = 0L, g = 0L) {
-    .Call(Cpp_fNobs, x, ng, g)
+fnobsCpp <- function(x, ng = 0L, g = 0L) {
+    .Call(Cpp_fnobs, x, ng, g)
 }
 
-fNobsmCpp <- function(x, ng = 0L, g = 0L, drop = TRUE) {
-    .Call(Cpp_fNobsm, x, ng, g, drop)
+fnobsmCpp <- function(x, ng = 0L, g = 0L, drop = TRUE) {
+    .Call(Cpp_fnobsm, x, ng, g, drop)
 }
 
-fNobslCpp <- function(x, ng = 0L, g = 0L, drop = TRUE) {
-    .Call(Cpp_fNobsl, x, ng, g, drop)
+fnobslCpp <- function(x, ng = 0L, g = 0L, drop = TRUE) {
+    .Call(Cpp_fnobsl, x, ng, g, drop)
 }
 
 varyingCpp <- function(x, ng = 0L, g = 0L, any_group = TRUE) {

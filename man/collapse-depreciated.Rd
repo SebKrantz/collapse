@@ -9,7 +9,7 @@
 \description{
 The functions \code{Recode} and \code{replace_non_finite} available until \emph{collapse} v1.1.0 will be removed soon. Since v1.2.0, \code{Recode} is replaced by \code{\link{recode_num}} and \code{\link{recode_char}} and \code{replace_non_finite} is replaced by \code{\link{replace_Inf}}. Since version 1.5.1, \code{is.regular} is depreciated - the function is not very useful and clashes with a more important one in the \emph{zoo} package.
 
-%The function \code{as.factor.GRP} was renamed to \code{\link{as.factor_GRP}} to make it clear that this is not a method, and \code{group_names.GRP} was renamed to \code{\link{GRPnames}} for the same reason and to increase parsimony.
+%The function \code{as.factor.GRP} was renamed to \code{\link{as_factor_GRP}} to make it clear that this is not a method, and \code{group_names.GRP} was renamed to \code{\link{GRPnames}} for the same reason and to increase parsimony.
 }
 \usage{
 Recode(X, \dots, copy = FALSE, reserve.na.nan = TRUE, regex = FALSE)

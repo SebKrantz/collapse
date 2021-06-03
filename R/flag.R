@@ -12,7 +12,7 @@ flag.default <- function(x, n = 1, g = NULL, t = NULL, fill = NA, stubs = TRUE, 
     }
     return(.Call(Cpp_flaglead,x,n,fill,nl,g,G_t(t),stubs))
   }
-  if(!is.GRP(g)) g <- GRP.default(g, return.groups = FALSE, call = FALSE)
+  if(!is_GRP(g)) g <- GRP.default(g, return.groups = FALSE, call = FALSE)
   .Call(Cpp_flaglead,x,n,fill,g[[1L]],g[[2L]],G_t(t),stubs)
 }
 
@@ -35,7 +35,7 @@ flag.matrix <- function(x, n = 1, g = NULL, t = NULL, fill = NA, stubs = length(
     }
     return(.Call(Cpp_flagleadm,x,n,fill,nl,g,G_t(t),stubs))
   }
-  if(!is.GRP(g)) g <- GRP.default(g, return.groups = FALSE, call = FALSE)
+  if(!is_GRP(g)) g <- GRP.default(g, return.groups = FALSE, call = FALSE)
   .Call(Cpp_flagleadm,x,n,fill,g[[1L]],g[[2L]],G_t(t),stubs)
 }
 
@@ -74,7 +74,7 @@ flag.data.frame <- function(x, n = 1, g = NULL, t = NULL, fill = NA, stubs = len
     }
     return(.Call(Cpp_flagleadl,x,n,fill,nl,g,G_t(t),stubs))
   }
-  if(!is.GRP(g)) g <- GRP.default(g, return.groups = FALSE, call = FALSE)
+  if(!is_GRP(g)) g <- GRP.default(g, return.groups = FALSE, call = FALSE)
   .Call(Cpp_flagleadl,x,n,fill,g[[1L]],g[[2L]],G_t(t),stubs)
 }
 flag.list <- function(x, n = 1, g = NULL, t = NULL, fill = NA, stubs = length(n) > 1L, ...)
@@ -127,7 +127,7 @@ L.data.frame <- function(x, n = 1, by = NULL, t = NULL, cols = is.numeric,
     } else {
       gn <- NULL
       if(length(cols)) cols <- cols2int(cols, x, nam)
-      if(!is.GRP(by)) by <- if(is.null(by)) list(0L, 0L, NULL) else if(is.atomic(by)) # Necessary for if by is passed externally !
+      if(!is_GRP(by)) by <- if(is.null(by)) list(0L, 0L, NULL) else if(is.atomic(by)) # Necessary for if by is passed externally !
         at2GRP(by) else GRP.default(by, return.groups = FALSE, call = FALSE)
     }
 
@@ -160,7 +160,7 @@ L.data.frame <- function(x, n = 1, by = NULL, t = NULL, cols = is.numeric,
     }
     return(.Call(Cpp_flagleadl,x,n,fill,nl,by,G_t(t),stubs))
   }
-  if(!is.GRP(by)) by <- GRP.default(by, return.groups = FALSE, call = FALSE)
+  if(!is_GRP(by)) by <- GRP.default(by, return.groups = FALSE, call = FALSE)
   .Call(Cpp_flagleadl,x,n,fill,by[[1L]],by[[2L]],G_t(t),stubs)
 }
 

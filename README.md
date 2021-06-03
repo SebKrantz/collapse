@@ -124,7 +124,7 @@ fmode(qM(d), g, w, ties = "max")  # Or matrices (grouped and weighted maximum mo
 
 # A fast set of data manipulation functions allows complex piped programming at high speeds
 library(magrittr)                            # Pipe operators
-iris %>% fgroup_by(Species) %>% fNdistinct   # Grouped distinct value counts
+iris %>% fgroup_by(Species) %>% fndistinct   # Grouped distinct value counts
 iris %>% fgroup_by(Species) %>% fmedian(w)   # Weighted group medians 
 iris %>% add_vars(w) %>%                     # Adding weight vector to dataset
   fsubset(Sepal.Length < fmean(Sepal.Length), Species, Sepal.Width:w) %>% # Fast selecting and subsetting
@@ -198,8 +198,8 @@ fscale(d, g, w, mean = "overall.mean",   # Setting group means to overall weight
        sd = "within.sd")                 # and group sd's to fsd(fwithin(d, g, w), w = w)
 
 get_vars(iris, 1:2)                      # Use get_vars for fast selecting data.frame columns, gv is shortcut
-fHDbetween(gv(iris, 1:2), gv(iris, 3:5)) # Linear prediction with factors and continuous covariates
-fHDwithin(gv(iris, 1:2), gv(iris, 3:5))  # Linear partialling out factors and continuous covariates
+fhdbetween(gv(iris, 1:2), gv(iris, 3:5)) # Linear prediction with factors and continuous covariates
+fhdwithin(gv(iris, 1:2), gv(iris, 3:5))  # Linear partialling out factors and continuous covariates
 
 # This again opens up new possibilities for data manipulation...
 iris %>%  
@@ -232,7 +232,7 @@ L(pdata, -1:3)          # Same as above, ...
 psacf(pdata)            # Multivariate panel-ACF
 psmat(pdata) %>% plot   # 3D-array of time series from panel data + plotting
 
-HDW(pdata)              # This projects out id and time fixed effects.. (HDW is operator for fHDwithin)
+HDW(pdata)              # This projects out id and time fixed effects.. (HDW is operator for fhdwithin)
 W(pdata, effect = "Id") # Only Id effects.. (W is operator for fwithin)
 
 ## List Processing ----------------------------------------------------------------------------------------------
@@ -244,7 +244,7 @@ l <- list(a = qM(mtcars[1:8]),                                   # Matrix
                             f = fsd(mtcars))))                   # Vector
 
 ldepth(l)                       # List has 4 levels of nesting (considering that mtcars is a data.frame)
-is.unlistable(l)                # Can be unlisted
+is_unlistable(l)                # Can be unlisted
 has_elem(l, "f")                # Contains an element by the name of "f"
 has_elem(l, is.matrix)          # Contains a matrix
 
@@ -264,11 +264,11 @@ list(mod1 = lm(mpg ~ carb, mtcars),
 ## Summary Statistics -------------------------------------------------------------------------------------------
 
 irisNA <- na_insert(iris, prop = 0.15)  # Randmonly set 15% missing
-fNobs(irisNA)                           # Observation count
-pwNobs(irisNA)                          # Pairwise observation count
-fNobs(irisNA, g)                        # Grouped observation count
-fNdistinct(irisNA)                      # Same with distinct values... (default na.rm = TRUE skips NA's)
-fNdistinct(irisNA, g)  
+fnobs(irisNA)                           # Observation count
+pwnobs(irisNA)                          # Pairwise observation count
+fnobs(irisNA, g)                        # Grouped observation count
+fndistinct(irisNA)                      # Same with distinct values... (default na.rm = TRUE skips NA's)
+fndistinct(irisNA, g)  
 
 descr(iris)                                   # Detailed statistical description of data
 
@@ -319,10 +319,10 @@ Some simple benchmarks against *dplyr*, *data.table* and *plm* are provided in [
 
 <!--
 
-fNdistinct(wlddev)
-fNdistinct(wlddev, wlddev$iso3c)
+fndistinct(wlddev)
+fndistinct(wlddev, wlddev$iso3c)
 
-wlddev %>% fgroup_by(iso3c) %>% fNdistinct
+wlddev %>% fgroup_by(iso3c) %>% fndistinct
 
 collap(wlddev, ~ country + decade, fmean, fmode)
 

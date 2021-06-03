@@ -18,7 +18,7 @@ fmean.default <- function(x, g = NULL, w = NULL, TRA = NULL, na.rm = TRUE, use.g
       g <- qG(g, na.exclude = FALSE)
       return(.Call(Cpp_fmean,x,attr(g,"N.groups"),g,NULL,w,na.rm))
     }
-    if(!is.GRP(g)) g <- GRP.default(g, return.groups = use.g.names, call = FALSE)
+    if(!is_GRP(g)) g <- GRP.default(g, return.groups = use.g.names, call = FALSE)
     if(use.g.names) return(`names<-`(.Call(Cpp_fmean,x,g[[1L]],g[[2L]],g[[3L]],w,na.rm), GRPnames(g)))
     return(.Call(Cpp_fmean,x,g[[1L]],g[[2L]],g[[3L]],w,na.rm))
   }
@@ -28,7 +28,7 @@ fmean.default <- function(x, g = NULL, w = NULL, TRA = NULL, na.rm = TRUE, use.g
     g <- qG(g, na.exclude = FALSE)
     return(.Call(Cpp_TRA,x,.Call(Cpp_fmean,x,attr(g,"N.groups"),g,NULL,w,na.rm),g,TtI(TRA)))
   }
-  if(!is.GRP(g)) g <- GRP.default(g, return.groups = FALSE, call = FALSE)
+  if(!is_GRP(g)) g <- GRP.default(g, return.groups = FALSE, call = FALSE)
   .Call(Cpp_TRA,x,.Call(Cpp_fmean,x,g[[1L]],g[[2L]],g[[3L]],w,na.rm),g[[2L]],TtI(TRA))
 }
 
@@ -46,7 +46,7 @@ fmean.matrix <- function(x, g = NULL, w = NULL, TRA = NULL, na.rm = TRUE, use.g.
       g <- qG(g, na.exclude = FALSE)
       return(.Call(Cpp_fmeanm,x,attr(g,"N.groups"),g,NULL,w,na.rm,drop))
     }
-    if(!is.GRP(g)) g <- GRP.default(g, return.groups = use.g.names, call = FALSE)
+    if(!is_GRP(g)) g <- GRP.default(g, return.groups = use.g.names, call = FALSE)
     if(use.g.names) return(`dimnames<-`(.Call(Cpp_fmeanm,x,g[[1L]],g[[2L]],g[[3L]],w,na.rm,drop), list(GRPnames(g), dimnames(x)[[2L]])))
     return(.Call(Cpp_fmeanm,x,g[[1L]],g[[2L]],g[[3L]],w,na.rm,drop))
   }
@@ -56,7 +56,7 @@ fmean.matrix <- function(x, g = NULL, w = NULL, TRA = NULL, na.rm = TRUE, use.g.
     g <- qG(g, na.exclude = FALSE)
     return(.Call(Cpp_TRAm,x,.Call(Cpp_fmeanm,x,attr(g,"N.groups"),g,NULL,w,na.rm,drop),g,TtI(TRA)))
   }
-  if(!is.GRP(g)) g <- GRP.default(g, return.groups = FALSE, call = FALSE)
+  if(!is_GRP(g)) g <- GRP.default(g, return.groups = FALSE, call = FALSE)
   .Call(Cpp_TRAm,x,.Call(Cpp_fmeanm,x,g[[1L]],g[[2L]],g[[3L]],w,na.rm,drop),g[[2L]],TtI(TRA))
 }
 
@@ -74,7 +74,7 @@ fmean.data.frame <- function(x, g = NULL, w = NULL, TRA = NULL, na.rm = TRUE, us
       g <- qG(g, na.exclude = FALSE)
       return(.Call(Cpp_fmeanl,x,attr(g,"N.groups"),g,NULL,w,na.rm,drop))
     }
-    if(!is.GRP(g)) g <- GRP.default(g, return.groups = use.g.names, call = FALSE)
+    if(!is_GRP(g)) g <- GRP.default(g, return.groups = use.g.names, call = FALSE)
     if(use.g.names && !inherits(x, "data.table") && length(groups <- GRPnames(g)))
     return(setRnDF(.Call(Cpp_fmeanl,x,g[[1L]],g[[2L]],g[[3L]],w,na.rm,drop), groups))
     return(.Call(Cpp_fmeanl,x,g[[1L]],g[[2L]],g[[3L]],w,na.rm,drop))
@@ -85,7 +85,7 @@ fmean.data.frame <- function(x, g = NULL, w = NULL, TRA = NULL, na.rm = TRUE, us
     g <- qG(g, na.exclude = FALSE)
     return(.Call(Cpp_TRAl,x,.Call(Cpp_fmeanl,x,attr(g,"N.groups"),g,NULL,w,na.rm,drop),g,TtI(TRA)))
   }
-  if(!is.GRP(g)) g <- GRP.default(g, return.groups = FALSE, call = FALSE)
+  if(!is_GRP(g)) g <- GRP.default(g, return.groups = FALSE, call = FALSE)
   .Call(Cpp_TRAl,x,.Call(Cpp_fmeanl,x,g[[1L]],g[[2L]],g[[3L]],w,na.rm,drop),g[[2L]],TtI(TRA))
 }
 

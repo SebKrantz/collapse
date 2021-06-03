@@ -11,20 +11,20 @@ descr <- function(X, Ndistinct = TRUE, higher = TRUE, table = TRUE,
 
   dotsok <- if(!missing(...)) names(substitute(c(...))[-1L]) %!in% c('pid','g') else TRUE
 
-  numstats <- if(Ndistinct && dotsok) function(x, ...) armat(qsu.default(x, higher = higher, ...), fNdistinctCpp(x)) else function(x, ...) qsu.default(x, higher = higher, ...)
+  numstats <- if(Ndistinct && dotsok) function(x, ...) armat(qsu.default(x, higher = higher, ...), fndistinctCpp(x)) else function(x, ...) qsu.default(x, higher = higher, ...)
 
   descrnum <- if(is.numeric(Qprobs)) function(x, ...) list(Class = class(x), Label = attr(x, label.attr), Stats = numstats(x, ...),
                                                           Quant = quantile(x, probs = Qprobs, na.rm = TRUE)) else
                                          function(x, ...) list(Class = class(x), Label = attr(x, label.attr), Stats = numstats(x, ...))
   # Could make this more efficient ?
   descrcat <- function(x, tab = table) if(tab) list(Class = class(x), Label = attr(x, label.attr),
-                                                    Stats = if(Ndistinct) c(N = fNobsCpp(x), Ndist = fNdistinctCpp(x)) else `names<-`(fNobsCpp(x), 'Nobs'),
-                                                    Table = natrm(fNobs.default(x, x))) else # table(x). fNobs is a lot Faster, but includes NA as level !
+                                                    Stats = if(Ndistinct) c(N = fnobsCpp(x), Ndist = fndistinctCpp(x)) else `names<-`(fnobsCpp(x), 'Nobs'),
+                                                    Table = natrm(fnobs.default(x, x))) else # table(x). fnobs is a lot Faster, but includes NA as level !
                                                       list(Class = class(x), Label = attr(x, label.attr),
-                                                           Stats = if(Ndistinct) c(N = fNobsCpp(x), Ndist = fNdistinctCpp(x)) else `names<-`(fNobsCpp(x), 'Nobs'))
+                                                           Stats = if(Ndistinct) c(N = fnobsCpp(x), Ndist = fndistinctCpp(x)) else `names<-`(fnobsCpp(x), 'Nobs'))
 
   descrdate <- function(x) list(Class = class(x), Label = attr(x, label.attr),
-                                Stats = c(if(Ndistinct) c(N = fNobsCpp(x), Ndist = fNdistinctCpp(x)) else `names<-`(fNobsCpp(x), 'Nobs'),
+                                Stats = c(if(Ndistinct) c(N = fnobsCpp(x), Ndist = fndistinctCpp(x)) else `names<-`(fnobsCpp(x), 'Nobs'),
                                           `names<-`(range(x, na.rm = TRUE), c("Min", "Max"))))
 
 
@@ -34,7 +34,7 @@ descr <- function(X, Ndistinct = TRUE, higher = TRUE, table = TRUE,
   num <- vapply(unattrib(X), is.numeric, TRUE)
   res[num] <- lapply(X[num], descrnum, ...)
   if(!all(num)) {
-    date <- vapply(unattrib(X), is.Date, TRUE)
+    date <- vapply(unattrib(X), is_date, TRUE)
     if(any(date)) {
       res[date] <- lapply(X[date], descrdate)
       cat <- !(num | date)

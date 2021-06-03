@@ -12,7 +12,7 @@ unlist2d(l, idcols = ".id", row.names = FALSE, recursive = TRUE,
 }
 %- maybe also 'usage' for other objects documented here.
 \arguments{
-  \item{l}{a unlistable list (with atomic elements in all final nodes, see \code{\link{is.unlistable}}).}
+  \item{l}{a unlistable list (with atomic elements in all final nodes, see \code{\link{is_unlistable}}).}
   \item{idcols}{a character stub or a vector of names for id-columns automatically added - one for each level of nesting in \code{l}. By default the stub is \code{".id"}, so columns will be of the form \code{".id.1", ".id.2",} etc... . if \code{idcols = TRUE}, the stub is also set to \code{".id"}. If \code{idcols = FALSE}, id-columns are omitted. The content of the id columns are the list names, or (if missing) integers for the list elements. Missing elements in asymmetric nested structures are filled up with \code{NA}. See Examples. }
   \item{row.names}{\code{TRUE} extracts row names from all the objects in \code{l} (where available) and adds them to the output in a column named \code{"row.names"}. Alternatively, a column name i.e. \code{row.names = "file"} can be supplied. For plain matrices in \code{l}, integer row names are generated. }
   \item{recursive}{logical. if \code{FALSE}, only process the lowest (deepest) level of \code{l}.}

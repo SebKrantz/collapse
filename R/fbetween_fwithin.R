@@ -14,7 +14,7 @@ fwithin.default <- function(x, g = NULL, w = NULL, na.rm = TRUE, mean = 0, theta
     g <- qG(g, sort = FALSE, na.exclude = FALSE)
     return(.Call(Cpp_BW,x,attr(g,"N.groups"),g,NULL,w,na.rm,theta,ckm(mean),FALSE,FALSE))
   }
-  if(!is.GRP(g)) g <- GRP.default(g, return.groups = FALSE, call = FALSE)
+  if(!is_GRP(g)) g <- GRP.default(g, return.groups = FALSE, call = FALSE)
   .Call(Cpp_BW,x,g[[1L]],g[[2L]],g[[3L]],w,na.rm,theta,ckm(mean),FALSE,FALSE)
 }
 
@@ -32,7 +32,7 @@ fwithin.matrix <- function(x, g = NULL, w = NULL, na.rm = TRUE, mean = 0, theta 
     g <- qG(g, sort = FALSE, na.exclude = FALSE)
     return(.Call(Cpp_BWm,x,attr(g,"N.groups"),g,NULL,w,na.rm,theta,ckm(mean),FALSE,FALSE))
   }
-  if(!is.GRP(g)) g <- GRP.default(g, return.groups = FALSE, call = FALSE)
+  if(!is_GRP(g)) g <- GRP.default(g, return.groups = FALSE, call = FALSE)
   .Call(Cpp_BWm,x,g[[1L]],g[[2L]],g[[3L]],w,na.rm,theta,ckm(mean),FALSE,FALSE)
 }
 
@@ -44,7 +44,7 @@ fwithin.data.frame <- function(x, g = NULL, w = NULL, na.rm = TRUE, mean = 0, th
     g <- qG(g, sort = FALSE, na.exclude = FALSE)
     return(.Call(Cpp_BWl,x,attr(g,"N.groups"),g,NULL,w,na.rm,theta,ckm(mean),FALSE,FALSE))
   }
-  if(!is.GRP(g)) g <- GRP.default(g, return.groups = FALSE, call = FALSE)
+  if(!is_GRP(g)) g <- GRP.default(g, return.groups = FALSE, call = FALSE)
   .Call(Cpp_BWl,x,g[[1L]],g[[2L]],g[[3L]],w,na.rm,theta,ckm(mean),FALSE,FALSE)
 }
 
@@ -176,7 +176,7 @@ W.data.frame <- function(x, by = NULL, w = NULL, cols = is.numeric, na.rm = TRUE
     } else {
       gn <- NULL
       if(length(cols)) cols <- cols2int(cols, x, nam)
-      if(!is.GRP(by)) by <- if(is.null(by)) list(0L, 0L, NULL) else if(is.atomic(by)) # Necessary if by is passed externally !
+      if(!is_GRP(by)) by <- if(is.null(by)) list(0L, 0L, NULL) else if(is.atomic(by)) # Necessary if by is passed externally !
         at2GRP(by) else GRP.default(by, return.groups = FALSE, call = FALSE)
     }
 
@@ -208,7 +208,7 @@ W.data.frame <- function(x, by = NULL, w = NULL, cols = is.numeric, na.rm = TRUE
     by <- qG(by, sort = FALSE, na.exclude = FALSE)
     return(.Call(Cpp_BWl,x,attr(by,"N.groups"),by,NULL,w,na.rm,theta,ckm(mean),FALSE,FALSE))
   }
-  if(!is.GRP(by)) by <- GRP.default(by, return.groups = FALSE, call = FALSE)
+  if(!is_GRP(by)) by <- GRP.default(by, return.groups = FALSE, call = FALSE)
   .Call(Cpp_BWl,x,by[[1L]],by[[2L]],by[[3L]],w,na.rm,theta,ckm(mean),FALSE,FALSE)
 }
 
@@ -230,7 +230,7 @@ fbetween.default <- function(x, g = NULL, w = NULL, na.rm = TRUE, fill = FALSE, 
     g <- qG(g, sort = FALSE, na.exclude = FALSE)
     return(.Call(Cpp_BW,x,attr(g,"N.groups"),g,NULL,w,na.rm,1,0,TRUE,fill))
   }
-  if(!is.GRP(g)) g <- GRP.default(g, return.groups = FALSE, call = FALSE)
+  if(!is_GRP(g)) g <- GRP.default(g, return.groups = FALSE, call = FALSE)
   .Call(Cpp_BW,x,g[[1L]],g[[2L]],g[[3L]],w,na.rm,1,0,TRUE,fill)
 }
 
@@ -248,7 +248,7 @@ fbetween.matrix <- function(x, g = NULL, w = NULL, na.rm = TRUE, fill = FALSE, .
     g <- qG(g, sort = FALSE, na.exclude = FALSE)
     return(.Call(Cpp_BWm,x,attr(g,"N.groups"),g,NULL,w,na.rm,1,0,TRUE,fill))
   }
-  if(!is.GRP(g)) g <- GRP.default(g, return.groups = FALSE, call = FALSE)
+  if(!is_GRP(g)) g <- GRP.default(g, return.groups = FALSE, call = FALSE)
   .Call(Cpp_BWm,x,g[[1L]],g[[2L]],g[[3L]],w,na.rm,1,0,TRUE,fill)
 }
 
@@ -260,7 +260,7 @@ fbetween.data.frame <- function(x, g = NULL, w = NULL, na.rm = TRUE, fill = FALS
     g <- qG(g, sort = FALSE, na.exclude = FALSE)
     return(.Call(Cpp_BWl,x,attr(g,"N.groups"),g,NULL,w,na.rm,1,0,TRUE,fill))
   }
-  if(!is.GRP(g)) g <- GRP.default(g, return.groups = FALSE, call = FALSE)
+  if(!is_GRP(g)) g <- GRP.default(g, return.groups = FALSE, call = FALSE)
   .Call(Cpp_BWl,x,g[[1L]],g[[2L]],g[[3L]],w,na.rm,1,0,TRUE,fill)
 }
 
@@ -391,7 +391,7 @@ B.data.frame <- function(x, by = NULL, w = NULL, cols = is.numeric, na.rm = TRUE
     } else {
       gn <- NULL
       if(length(cols)) cols <- cols2int(cols, x, nam)
-      if(!is.GRP(by)) by <- if(is.null(by)) list(0L, 0L, NULL) else if(is.atomic(by)) # Necessary if by is passed externally !
+      if(!is_GRP(by)) by <- if(is.null(by)) list(0L, 0L, NULL) else if(is.atomic(by)) # Necessary if by is passed externally !
         at2GRP(by) else GRP.default(by, return.groups = FALSE, call = FALSE)
     }
 
@@ -423,7 +423,7 @@ B.data.frame <- function(x, by = NULL, w = NULL, cols = is.numeric, na.rm = TRUE
     by <- qG(by, sort = FALSE, na.exclude = FALSE)
     return(.Call(Cpp_BWl,x,attr(by,"N.groups"),by,NULL,w,na.rm,1,0,TRUE,fill))
   }
-  if(!is.GRP(by)) by <- GRP.default(by, return.groups = FALSE, call = FALSE)
+  if(!is_GRP(by)) by <- GRP.default(by, return.groups = FALSE, call = FALSE)
   .Call(Cpp_BWl,x,by[[1L]],by[[2L]],by[[3L]],w,na.rm,1,0,TRUE,fill)
 }
 

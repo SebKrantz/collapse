@@ -55,12 +55,12 @@ test_that("get_elem works well", { # Could still add more tests..
 })
 
 test_that("reg_elem and irreg_elem work well", {
-  expect_true(is.unlistable(reg_elem(l)))
-  expect_false(is.unlistable(irreg_elem(l)))
-  expect_true(is.unlistable(reg_elem(list(l), keep.tree = FALSE)))
-  expect_true(is.unlistable(reg_elem(list(l), keep.tree = TRUE)))
-  expect_false(is.unlistable(irreg_elem(list(l), keep.tree = FALSE)))
-  expect_false(is.unlistable(irreg_elem(list(l), keep.tree = TRUE)))
+  expect_true(is_unlistable(reg_elem(l)))
+  expect_false(is_unlistable(irreg_elem(l)))
+  expect_true(is_unlistable(reg_elem(list(l), keep.tree = FALSE)))
+  expect_true(is_unlistable(reg_elem(list(l), keep.tree = TRUE)))
+  expect_false(is_unlistable(irreg_elem(list(l), keep.tree = FALSE)))
+  expect_false(is_unlistable(irreg_elem(list(l), keep.tree = TRUE)))
 
 })
 
@@ -68,9 +68,9 @@ test_that("has_elem works well", {
   expect_true(has_elem(l, is.matrix))
   expect_true(has_elem(l, is.data.frame))
   expect_false(has_elem(l, is.data.frame, DF.as.list = TRUE))
-  expect_true(has_elem(l, is.categorical))
-  expect_false(has_elem(l, is.Date))
-  expect_false(has_elem(l, is.qG))
+  expect_true(has_elem(l, is_categorical))
+  expect_false(has_elem(l, is_date))
+  expect_false(has_elem(l, is_qG))
 
   expect_false(has_elem(l, "am", recursive = FALSE))
   expect_false(has_elem(l, "pivot", recursive = FALSE))

@@ -13,7 +13,7 @@ wNA[sample.int(100,20)] <- NA
 wdatNA[sample.int(32, 5)] <- NA
 f <- as.factor(sample.int(10, 100, TRUE))
 g <- GRP(mtcars, ~ cyl + vs + am)
-gf <- as.factor_GRP(g)
+gf <- as_factor_GRP(g)
 mtcNA <- na_insert(mtcars)
 mtcNA[27,1] <- NA # single group NA !!
 m <- as.matrix(mtcars)

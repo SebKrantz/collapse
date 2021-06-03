@@ -18,7 +18,7 @@ fmin.default <- function(x, g = NULL, TRA = NULL, na.rm = TRUE, use.g.names = TR
       g <- qG(g, na.exclude = FALSE)
       return(.Call(Cpp_fminmax,x,attr(g,"N.groups"),g,na.rm,1L))
     }
-    if(!is.GRP(g)) g <- GRP.default(g, return.groups = use.g.names, call = FALSE)
+    if(!is_GRP(g)) g <- GRP.default(g, return.groups = use.g.names, call = FALSE)
     if(use.g.names) return(`names<-`(.Call(Cpp_fminmax,x,g[[1L]],g[[2L]],na.rm,1L), GRPnames(g)))
     return(.Call(Cpp_fminmax,x,g[[1L]],g[[2L]],na.rm,1L))
   }
@@ -28,7 +28,7 @@ fmin.default <- function(x, g = NULL, TRA = NULL, na.rm = TRUE, use.g.names = TR
     g <- qG(g, na.exclude = FALSE)
     return(.Call(Cpp_TRA,x,.Call(Cpp_fminmax,x,attr(g,"N.groups"),g,na.rm,1L),g,TtI(TRA)))
   }
-  if(!is.GRP(g)) g <- GRP.default(g, return.groups = FALSE, call = FALSE)
+  if(!is_GRP(g)) g <- GRP.default(g, return.groups = FALSE, call = FALSE)
   .Call(Cpp_TRA,x,.Call(Cpp_fminmax,x,g[[1L]],g[[2L]],na.rm,1L),g[[2L]],TtI(TRA))
 }
 
@@ -46,7 +46,7 @@ fmin.matrix <- function(x, g = NULL, TRA = NULL, na.rm = TRUE, use.g.names = TRU
       g <- qG(g, na.exclude = FALSE)
       return(.Call(Cpp_fminmaxm,x,attr(g,"N.groups"),g,na.rm,FALSE,1L))
     }
-    if(!is.GRP(g)) g <- GRP.default(g, return.groups = use.g.names, call = FALSE)
+    if(!is_GRP(g)) g <- GRP.default(g, return.groups = use.g.names, call = FALSE)
     if(use.g.names) return(`dimnames<-`(.Call(Cpp_fminmaxm,x,g[[1L]],g[[2L]],na.rm,FALSE,1L), list(GRPnames(g), dimnames(x)[[2L]])))
     return(.Call(Cpp_fminmaxm,x,g[[1L]],g[[2L]],na.rm,FALSE,1L))
   }
@@ -56,7 +56,7 @@ fmin.matrix <- function(x, g = NULL, TRA = NULL, na.rm = TRUE, use.g.names = TRU
     g <- qG(g, na.exclude = FALSE)
     return(.Call(Cpp_TRAm,x,.Call(Cpp_fminmaxm,x,attr(g,"N.groups"),g,na.rm,FALSE,1L),g,TtI(TRA)))
   }
-  if(!is.GRP(g)) g <- GRP.default(g, return.groups = FALSE, call = FALSE)
+  if(!is_GRP(g)) g <- GRP.default(g, return.groups = FALSE, call = FALSE)
   .Call(Cpp_TRAm,x,.Call(Cpp_fminmaxm,x,g[[1L]],g[[2L]],na.rm,FALSE,1L),g[[2L]],TtI(TRA))
 }
 
@@ -74,7 +74,7 @@ fmin.data.frame <- function(x, g = NULL, TRA = NULL, na.rm = TRUE, use.g.names =
       g <- qG(g, na.exclude = FALSE)
       return(.Call(Cpp_fminmaxl,x,attr(g,"N.groups"),g,na.rm,FALSE,1L))
     }
-    if(!is.GRP(g)) g <- GRP.default(g, return.groups = use.g.names, call = FALSE)
+    if(!is_GRP(g)) g <- GRP.default(g, return.groups = use.g.names, call = FALSE)
     if(use.g.names && !inherits(x, "data.table") && length(groups <- GRPnames(g)))
       return(setRnDF(.Call(Cpp_fminmaxl,x,g[[1L]],g[[2L]],na.rm,FALSE,1L), groups))
     return(.Call(Cpp_fminmaxl,x,g[[1L]],g[[2L]],na.rm,FALSE,1L))
@@ -85,7 +85,7 @@ fmin.data.frame <- function(x, g = NULL, TRA = NULL, na.rm = TRUE, use.g.names =
     g <- qG(g, na.exclude = FALSE)
     return(.Call(Cpp_TRAl,x,.Call(Cpp_fminmaxl,x,attr(g,"N.groups"),g,na.rm,FALSE,1L),g,TtI(TRA)))
   }
-  if(!is.GRP(g)) g <- GRP.default(g, return.groups = FALSE, call = FALSE)
+  if(!is_GRP(g)) g <- GRP.default(g, return.groups = FALSE, call = FALSE)
   .Call(Cpp_TRAl,x,.Call(Cpp_fminmaxl,x,g[[1L]],g[[2L]],na.rm,FALSE,1L),g[[2L]],TtI(TRA))
 }
 
@@ -144,7 +144,7 @@ fmax.default <- function(x, g = NULL, TRA = NULL, na.rm = TRUE, use.g.names = TR
       g <- qG(g, na.exclude = FALSE)
       return(.Call(Cpp_fminmax,x,attr(g,"N.groups"),g,na.rm,2L))
     }
-    if(!is.GRP(g)) g <- GRP.default(g, return.groups = use.g.names, call = FALSE)
+    if(!is_GRP(g)) g <- GRP.default(g, return.groups = use.g.names, call = FALSE)
     if(use.g.names) return(`names<-`(.Call(Cpp_fminmax,x,g[[1L]],g[[2L]],na.rm,2L), GRPnames(g)))
     return(.Call(Cpp_fminmax,x,g[[1L]],g[[2L]],na.rm,2L))
   }
@@ -154,7 +154,7 @@ fmax.default <- function(x, g = NULL, TRA = NULL, na.rm = TRUE, use.g.names = TR
     g <- qG(g, na.exclude = FALSE)
     return(.Call(Cpp_TRA,x,.Call(Cpp_fminmax,x,attr(g,"N.groups"),g,na.rm,2L),g,TtI(TRA)))
   }
-  if(!is.GRP(g)) g <- GRP.default(g, return.groups = FALSE, call = FALSE)
+  if(!is_GRP(g)) g <- GRP.default(g, return.groups = FALSE, call = FALSE)
   .Call(Cpp_TRA,x,.Call(Cpp_fminmax,x,g[[1L]],g[[2L]],na.rm,2L),g[[2L]],TtI(TRA))
 }
 
@@ -172,7 +172,7 @@ fmax.matrix <- function(x, g = NULL, TRA = NULL, na.rm = TRUE, use.g.names = TRU
       g <- qG(g, na.exclude = FALSE)
       return(.Call(Cpp_fminmaxm,x,attr(g,"N.groups"),g,na.rm,FALSE,2L))
     }
-    if(!is.GRP(g)) g <- GRP.default(g, return.groups = use.g.names, call = FALSE)
+    if(!is_GRP(g)) g <- GRP.default(g, return.groups = use.g.names, call = FALSE)
     if(use.g.names) return(`dimnames<-`(.Call(Cpp_fminmaxm,x,g[[1L]],g[[2L]],na.rm,FALSE,2L), list(GRPnames(g), dimnames(x)[[2L]])))
     return(.Call(Cpp_fminmaxm,x,g[[1L]],g[[2L]],na.rm,FALSE,2L))
   }
@@ -182,7 +182,7 @@ fmax.matrix <- function(x, g = NULL, TRA = NULL, na.rm = TRUE, use.g.names = TRU
     g <- qG(g, na.exclude = FALSE)
     return(.Call(Cpp_TRAm,x,.Call(Cpp_fminmaxm,x,attr(g,"N.groups"),g,na.rm,FALSE,2L),g,TtI(TRA)))
   }
-  if(!is.GRP(g)) g <- GRP.default(g, return.groups = FALSE, call = FALSE)
+  if(!is_GRP(g)) g <- GRP.default(g, return.groups = FALSE, call = FALSE)
   .Call(Cpp_TRAm,x,.Call(Cpp_fminmaxm,x,g[[1L]],g[[2L]],na.rm,FALSE,2L),g[[2L]],TtI(TRA))
 }
 
@@ -200,7 +200,7 @@ fmax.data.frame <- function(x, g = NULL, TRA = NULL, na.rm = TRUE, use.g.names =
       g <- qG(g, na.exclude = FALSE)
       return(.Call(Cpp_fminmaxl,x,attr(g,"N.groups"),g,na.rm,FALSE,2L))
     }
-    if(!is.GRP(g)) g <- GRP.default(g, return.groups = use.g.names, call = FALSE)
+    if(!is_GRP(g)) g <- GRP.default(g, return.groups = use.g.names, call = FALSE)
     if(use.g.names && !inherits(x, "data.table") && length(groups <- GRPnames(g)))
       return(setRnDF(.Call(Cpp_fminmaxl,x,g[[1L]],g[[2L]],na.rm,FALSE,2L), groups))
     return(.Call(Cpp_fminmaxl,x,g[[1L]],g[[2L]],na.rm,FALSE,2L))
@@ -211,7 +211,7 @@ fmax.data.frame <- function(x, g = NULL, TRA = NULL, na.rm = TRUE, use.g.names =
     g <- qG(g, na.exclude = FALSE)
     return(.Call(Cpp_TRAl,x,.Call(Cpp_fminmaxl,x,attr(g,"N.groups"),g,na.rm,FALSE,2L),g,TtI(TRA)))
   }
-  if(!is.GRP(g)) g <- GRP.default(g, return.groups = FALSE, call = FALSE)
+  if(!is_GRP(g)) g <- GRP.default(g, return.groups = FALSE, call = FALSE)
   .Call(Cpp_TRAl,x,.Call(Cpp_fminmaxl,x,g[[1L]],g[[2L]],na.rm,FALSE,2L),g[[2L]],TtI(TRA))
 }
 

@@ -88,7 +88,7 @@ unlist2d <- function(l, idcols = ".id", row.names = FALSE, recursive = TRUE, id.
 # Examples:
 
 # # example:
-# l = lapply(split(iris[1:4], iris[5]), function(x)list(N = fNobs(x), mean = fmean(x), sd = fsd(x)))
+# l = lapply(split(iris[1:4], iris[5]), function(x)list(N = fnobs(x), mean = fmean(x), sd = fsd(x)))
 #
 # # neat example:
 # l = list(a = mtcars[1:8],b = list(c = mtcars[4:11], d = list(e = mtcars[2:10])))

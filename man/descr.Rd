@@ -25,13 +25,13 @@ descr(X, Ndistinct = TRUE, higher = TRUE, table = TRUE,
 a data frame or list of atomic vectors. Atomic vectors, matrices or arrays can be passed but will first be coerced to data frame using \code{\link{qDF}}.
 }
   \item{Ndistinct}{
-logical. \code{TRUE} (default) computes the number of distinct values on all variables using \code{\link{fNdistinct}}.
+logical. \code{TRUE} (default) computes the number of distinct values on all variables using \code{\link{fndistinct}}.
 }
   \item{higher}{
 logical. Argument is passed down to \code{\link{qsu}}: \code{TRUE} (default) computes the skewness and the kurtosis.
 }
   \item{table}{
-logical. \code{TRUE} (default) calls \code{\link{table}} on all categorical variables (excluding \link[=is.Date]{Date} variables).
+logical. \code{TRUE} (default) calls \code{\link{table}} on all categorical variables (excluding \link[=is_date]{Date} variables).
 }
   \item{Qprobs}{
 double. Probabilities for quantiles to compute on numeric variables, passed down to \code{\link{quantile}}. If something non-numeric is passed (i.e. \code{NULL}, \code{FALSE}, \code{NA}, \code{""} etc.), no quantiles are computed.

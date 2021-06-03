@@ -24,7 +24,7 @@ psacf.default <- function(x, g, t = NULL, lag.max = NULL, type = c("correlation"
     if(is.null(lag.max)) lag.max <- round(2*sqrt(length(x)/ng))
     acf <- getacf(ng, g)
   } else {
-    if(!is.GRP(g)) g <- GRP.default(g, return.groups = FALSE, call = FALSE)
+    if(!is_GRP(g)) g <- GRP.default(g, return.groups = FALSE, call = FALSE)
     if(is.null(lag.max)) lag.max <- round(2*sqrt(length(x)/g[[1L]]))
     acf <- getacf(g[[1L]], g[[2L]])
   }
@@ -91,7 +91,7 @@ psacf.data.frame <- function(x, by, t = NULL, cols = is.numeric, lag.max = NULL,
     if(is.null(lag.max)) lag.max <- round(2*sqrt(nrx/ng))
     acf <- getacf(ng, by)
   } else {
-    if(!is.GRP(by)) by <- GRP.default(by, return.groups = FALSE, call = FALSE)
+    if(!is_GRP(by)) by <- GRP.default(by, return.groups = FALSE, call = FALSE)
     if(is.null(lag.max)) lag.max <- round(2*sqrt(nrx/by[[1L]]))
     acf <- getacf(by[[1L]], by[[2L]])
   }
@@ -237,7 +237,7 @@ psccf.default <- function(x, y, g, t = NULL, lag.max = NULL, type = c("correlati
     if(is.null(lag.max)) lag.max <- round(2*sqrt(lx/ng))
     acf <- getccf(ng, g)
   } else {
-    if(!is.GRP(g)) g <- GRP.default(g, return.groups = FALSE, call = FALSE)
+    if(!is_GRP(g)) g <- GRP.default(g, return.groups = FALSE, call = FALSE)
     if(is.null(lag.max)) lag.max <- round(2*sqrt(lx/g[[1L]]))
     acf <- getccf(g[[1L]], g[[2L]])
   }

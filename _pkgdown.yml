@@ -65,8 +65,8 @@ reference:
   - "fmin, fmax"
   - fnth
   - "ffirst, flast"
-  - fNobs
-  - fNdistinct
+  - fnobs
+  - fndistinct
 - title: "Fast Grouping and Ordering"
   desc: "Fast (ordered) groupings from vectors, data.frames, lists. Fast ordering, unique values / rows, factor generation and interactions, run-length type grouping and grouping of time-sequences."
 - contents:
@@ -109,7 +109,7 @@ reference:
   - TRA
   - fscale
   - "fbetween, fwithin"
-  - "fHDbetween, fHDwithin"
+  - "fhdbetween, fhdwithin"
 - title: "Linear Models"
   desc: "Fast (weighted) linear model fitting. A fast F-test for high-dimensional linear models."
 - contents:
@@ -128,7 +128,7 @@ reference:
   desc: "Recursive list search / identification, extraction / subsetting, splitting, data-apply, and generalized recursive row-binding / unlisting in 2D."
 - contents:
   - "A8-list-processing"
-  - is.unlistable
+  - is_unlistable
   - ldepth
   - "has_elem, get_elem"
   - rsplit
@@ -141,7 +141,7 @@ reference:
   - "A9-summary-statistics"
   - qsu
   - descr
-  - "pwcor, pwcov, pwNobs"
+  - "pwcor, pwcov, pwnobs"
   - varying
 - title: "Recode and Replace Values"
   desc: "Efficiently recode and replace values in matrix-like objects."

@@ -13,20 +13,20 @@ RcppExport SEXP _collapse_TRACpp(SEXP xSEXP, SEXP xAGSEXP, SEXP gSEXP, SEXP retS
 RcppExport SEXP _collapse_TRAmCpp(SEXP xSEXP, SEXP xAGSEXP, SEXP gSEXP, SEXP retSEXP);
 // TRAlCpp
 RcppExport SEXP _collapse_TRAlCpp(SEXP xSEXP, SEXP xAGSEXP, SEXP gSEXP, SEXP retSEXP);
-// fNdistinctCpp
-RcppExport SEXP _collapse_fNdistinctCpp(SEXP xSEXP, SEXP ngSEXP, SEXP gSEXP, SEXP gsSEXP, SEXP narmSEXP);
-// fNdistinctlCpp
-RcppExport SEXP _collapse_fNdistinctlCpp(SEXP xSEXP, SEXP ngSEXP, SEXP gSEXP, SEXP gsSEXP, SEXP narmSEXP, SEXP dropSEXP);
-// fNdistinctmCpp
-RcppExport SEXP _collapse_fNdistinctmCpp(SEXP xSEXP, SEXP ngSEXP, SEXP gSEXP, SEXP gsSEXP, SEXP narmSEXP, SEXP dropSEXP);
-// pwNobsmCpp
-RcppExport SEXP _collapse_pwNobsmCpp(SEXP xSEXP);
-// fNobsCpp
-RcppExport SEXP _collapse_fNobsCpp(SEXP xSEXP, SEXP ngSEXP, SEXP gSEXP);
-// fNobsmCpp
-RcppExport SEXP _collapse_fNobsmCpp(SEXP xSEXP, SEXP ngSEXP, SEXP gSEXP, SEXP dropSEXP);
-// fNobslCpp
-RcppExport SEXP _collapse_fNobslCpp(SEXP xSEXP, SEXP ngSEXP, SEXP gSEXP, SEXP dropSEXP);
+// fndistinctCpp
+RcppExport SEXP _collapse_fndistinctCpp(SEXP xSEXP, SEXP ngSEXP, SEXP gSEXP, SEXP gsSEXP, SEXP narmSEXP);
+// fndistinctlCpp
+RcppExport SEXP _collapse_fndistinctlCpp(SEXP xSEXP, SEXP ngSEXP, SEXP gSEXP, SEXP gsSEXP, SEXP narmSEXP, SEXP dropSEXP);
+// fndistinctmCpp
+RcppExport SEXP _collapse_fndistinctmCpp(SEXP xSEXP, SEXP ngSEXP, SEXP gSEXP, SEXP gsSEXP, SEXP narmSEXP, SEXP dropSEXP);
+// pwnobsmCpp
+RcppExport SEXP _collapse_pwnobsmCpp(SEXP xSEXP);
+// fnobsCpp
+RcppExport SEXP _collapse_fnobsCpp(SEXP xSEXP, SEXP ngSEXP, SEXP gSEXP);
+// fnobsmCpp
+RcppExport SEXP _collapse_fnobsmCpp(SEXP xSEXP, SEXP ngSEXP, SEXP gSEXP, SEXP dropSEXP);
+// fnobslCpp
+RcppExport SEXP _collapse_fnobslCpp(SEXP xSEXP, SEXP ngSEXP, SEXP gSEXP, SEXP dropSEXP);
 // varyingCpp
 RcppExport SEXP _collapse_varyingCpp(SEXP xSEXP, SEXP ngSEXP, SEXP gSEXP, SEXP any_groupSEXP);
 // varyingmCpp

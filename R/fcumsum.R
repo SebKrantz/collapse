@@ -12,7 +12,7 @@ fcumsum.default <- function(x, g = NULL, o = NULL, na.rm = TRUE, fill = FALSE, c
     }
     return(.Call(C_fcumsum,x,nl,g,o,na.rm,fill))
   }
-  if(!is.GRP(g)) g <- GRP.default(g, return.groups = FALSE, call = FALSE)
+  if(!is_GRP(g)) g <- GRP.default(g, return.groups = FALSE, call = FALSE)
   .Call(C_fcumsum,x,g[[1L]],g[[2L]],o,na.rm,fill)
 }
 
@@ -37,7 +37,7 @@ fcumsum.matrix <- function(x, g = NULL, o = NULL, na.rm = TRUE, fill = FALSE, ch
     }
     return(.Call(C_fcumsumm,x,nl,g,o,na.rm,fill))
   }
-  if(!is.GRP(g)) g <- GRP.default(g, return.groups = FALSE, call = FALSE)
+  if(!is_GRP(g)) g <- GRP.default(g, return.groups = FALSE, call = FALSE)
   .Call(C_fcumsumm,x,g[[1L]],g[[2L]],o,na.rm,fill)
 }
 
@@ -79,7 +79,7 @@ fcumsum.data.frame <- function(x, g = NULL, o = NULL, na.rm = TRUE, fill = FALSE
     }
     return(.Call(C_fcumsuml,x,nl,g,o,na.rm,fill))
   }
-  if(!is.GRP(g)) g <- GRP.default(g, return.groups = FALSE, call = FALSE)
+  if(!is_GRP(g)) g <- GRP.default(g, return.groups = FALSE, call = FALSE)
   .Call(C_fcumsuml,x,g[[1L]],g[[2L]],o,na.rm,fill)
 }
 

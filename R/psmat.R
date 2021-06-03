@@ -10,14 +10,14 @@ psmat.default <- function(x, g, t = NULL, transpose = FALSE, ...) {
     matrix(x, nrow = round(g), byrow = TRUE,
     dimnames = list(paste0("GRP.",seq_len(g)), seq_len(length(x)/round(g))))
   } else {
-  if(!is.nmfactor(g)) if(is.atomic(g)) g <- qF(g, na.exclude = FALSE) else if(is.GRP(g))
-                    g <- as.factor_GRP(g) else g <- as.factor_GRP(GRP.default(g, call = FALSE))
+  if(!is.nmfactor(g)) if(is.atomic(g)) g <- qF(g, na.exclude = FALSE) else if(is_GRP(g))
+                    g <- as_factor_GRP(g) else g <- as_factor_GRP(GRP.default(g, call = FALSE))
   if(is.null(t)) {
     message("No timevar provided: Assuming Balanced Panel")
     return(.Call(Cpp_psmat,x, g, NULL, transpose))
   } else {
-    if(!is.nmfactor(t)) if(is.atomic(t)) t <- qF(t, na.exclude = FALSE) else if(is.GRP(t))
-                      t <- as.factor_GRP(t) else t <- as.factor_GRP(GRP.default(t, call = FALSE))
+    if(!is.nmfactor(t)) if(is.atomic(t)) t <- qF(t, na.exclude = FALSE) else if(is_GRP(t))
+                      t <- as_factor_GRP(t) else t <- as_factor_GRP(GRP.default(t, call = FALSE))
     return(.Call(Cpp_psmat,x, g, t, transpose))
     }
   }
@@ -56,14 +56,14 @@ psmat.data.frame <- function(x, by, t = NULL, cols = NULL, transpose = FALSE, ar
       x <- x[v]
     } else if(length(cols)) x <- x[cols2int(cols, x, names(x), FALSE)]
 
-    if(!is.nmfactor(by)) if(is.atomic(by)) by <- qF(by, na.exclude = FALSE) else if(is.GRP(by))
-                         by <- as.factor_GRP(by) else by <- as.factor_GRP(GRP.default(by, call = FALSE))
+    if(!is.nmfactor(by)) if(is.atomic(by)) by <- qF(by, na.exclude = FALSE) else if(is_GRP(by))
+                         by <- as_factor_GRP(by) else by <- as_factor_GRP(GRP.default(by, call = FALSE))
       if(is.null(t)) {
         message("No timevar provided: Assuming Balanced Panel")
         res <- lapply(x, psmatCpp, by, NULL, transpose)
       } else {
-        if(!is.nmfactor(t)) if(is.atomic(t)) t <- qF(t, na.exclude = FALSE) else if(is.GRP(t))
-                  t <- as.factor_GRP(t) else t <- as.factor_GRP(GRP.default(t, call = FALSE))
+        if(!is.nmfactor(t)) if(is.atomic(t)) t <- qF(t, na.exclude = FALSE) else if(is_GRP(t))
+                  t <- as_factor_GRP(t) else t <- as_factor_GRP(GRP.default(t, call = FALSE))
         res <- lapply(x, psmatCpp, by, t, transpose)
       }
   }

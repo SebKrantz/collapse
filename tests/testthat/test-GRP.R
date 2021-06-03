@@ -187,25 +187,25 @@ test_that("fgroup_vars works as intended", {
 
 test_that("GRP <> factor conversions run seamlessly", {
 
-  expect_identical(unclass(iris$Species), unclass(as.factor_GRP(GRP(iris$Species)))) # as.factor_GRP always adds class "na.included"
+  expect_identical(unclass(iris$Species), unclass(as_factor_GRP(GRP(iris$Species)))) # as_factor_GRP always adds class "na.included"
 
-  expect_identical(unclass(wlddev$iso3c[1:200]), unclass(as.factor_GRP(GRP(wlddev$iso3c[1:200])))) # as.factor_GRP always adds class "na.included"
-  expect_identical(unclass(fdroplevels(wlddev$iso3c[1:200])), unclass(as.factor_GRP(GRP(wlddev$iso3c[1:200], drop = TRUE)))) # as.factor_GRP always adds class "na.included"
+  expect_identical(unclass(wlddev$iso3c[1:200]), unclass(as_factor_GRP(GRP(wlddev$iso3c[1:200])))) # as_factor_GRP always adds class "na.included"
+  expect_identical(unclass(fdroplevels(wlddev$iso3c[1:200])), unclass(as_factor_GRP(GRP(wlddev$iso3c[1:200], drop = TRUE)))) # as_factor_GRP always adds class "na.included"
 
-  expect_identical(unclass(`vlabels<-`(wlddev2$iso3c, "label", NULL)), unclass(as.factor_GRP(GRP(wlddev2$iso3c))))
+  expect_identical(unclass(`vlabels<-`(wlddev2$iso3c, "label", NULL)), unclass(as_factor_GRP(GRP(wlddev2$iso3c))))
   int <- sample.int(10,100,TRUE)
-  expect_identical(unclass(qF(int)), unclass(as.factor_GRP(GRP(int))))
-  expect_identical(unclass(qF(int)), unclass(as.factor_GRP(GRP(qF(int)))))
+  expect_identical(unclass(qF(int)), unclass(as_factor_GRP(GRP(int))))
+  expect_identical(unclass(qF(int)), unclass(as_factor_GRP(GRP(qF(int)))))
   intNA <- int
   intNA[sample(100,20)] <- NA
-  expect_identical(unclass(qF(intNA, na.exclude = FALSE)), unclass(as.factor_GRP(GRP(intNA))))
-  expect_identical(unclass(qF(intNA, na.exclude = FALSE)), unclass(as.factor_GRP(GRP(qF(intNA)))))
+  expect_identical(unclass(qF(intNA, na.exclude = FALSE)), unclass(as_factor_GRP(GRP(intNA))))
+  expect_identical(unclass(qF(intNA, na.exclude = FALSE)), unclass(as_factor_GRP(GRP(qF(intNA)))))
   dblNA <- as.double(intNA)
-  expect_false(identical(unclass(qF(dblNA)), unclass(as.factor_GRP(GRP(dblNA))))) # qF with na.exclude = TRUE retains double NA's...
-  expect_false(identical(unclass(qF(dblNA)), unclass(as.factor_GRP(GRP(qF(dblNA))))))
-  expect_identical(qF(dblNA, na.exclude = FALSE), as.factor_GRP(GRP(dblNA)))
-  expect_identical(qF(dblNA, na.exclude = FALSE), as.factor_GRP(GRP(qF(dblNA))))
-  expect_identical(qF(dblNA, na.exclude = FALSE), as.factor_GRP(GRP(qF(dblNA, na.exclude = FALSE))))
+  expect_false(identical(unclass(qF(dblNA)), unclass(as_factor_GRP(GRP(dblNA))))) # qF with na.exclude = TRUE retains double NA's...
+  expect_false(identical(unclass(qF(dblNA)), unclass(as_factor_GRP(GRP(qF(dblNA))))))
+  expect_identical(qF(dblNA, na.exclude = FALSE), as_factor_GRP(GRP(dblNA)))
+  expect_identical(qF(dblNA, na.exclude = FALSE), as_factor_GRP(GRP(qF(dblNA))))
+  expect_identical(qF(dblNA, na.exclude = FALSE), as_factor_GRP(GRP(qF(dblNA, na.exclude = FALSE))))
 
 })
 

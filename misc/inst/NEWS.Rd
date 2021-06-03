@@ -97,7 +97,7 @@
 
 \item Added the modulus (\code{\%\%}) and subtract modulus (\code{-\%\%}) operations to \code{TRA()}.
 
-\item Added the function \code{finteraction}, for fast interactions, and \code{as.character_factor} to coerce a factor, or all factors in a list, to character (analogous to \code{as.numeric_factor}). Also exported the function \code{ckmatch}, for matching with an error message showing non-matched elements.
+\item Added the function \code{finteraction}, for fast interactions, and \code{as_character_factor} to coerce a factor, or all factors in a list, to character (analogous to \code{as_numeric_factor}). Also exported the function \code{ckmatch}, for matching with an error message showing non-matched elements.
 
 }
 

@@ -198,8 +198,8 @@ head(fscale(d, f, w, mean = "overall.mean",   # Full harmonization of group mean
             sd = "within.sd"))                # while preserving the level and scale of the data.
 
 head(get_vars(iris, 1:2))                      # Use get_vars for fast selecting, gv is shortcut
-head(fHDbetween(gv(iris, 1:2), gv(iris, 3:5))) # Linear prediction with factors and covariates
-head(fHDwithin(gv(iris, 1:2), gv(iris, 3:5)))  # Linear partialling out factors and covariates
+head(fhdbetween(gv(iris, 1:2), gv(iris, 3:5))) # Linear prediction with factors and covariates
+head(fhdwithin(gv(iris, 1:2), gv(iris, 3:5)))  # Linear partialling out factors and covariates
 ss(iris, 1:10, 1:2)                            # Similarly fsubset/ss for fast subsetting rows
 
 # Simple Time-Computations..
@@ -263,10 +263,10 @@ head(wlddev) # World Bank World Development Data: 216 countries, 59 years, 4 ser
 
 # Starting with some discriptive tools...
 namlab(wlddev, class = TRUE)           # Show variable names, labels and classes
-fNobs(wlddev)                          # Observation count
-pwNobs(wlddev)                         # Pairwise observation count
-head(fNobs(wlddev, wlddev$country))    # Grouped observation count
-fNdistinct(wlddev)                     # Distinct values
+fnobs(wlddev)                          # Observation count
+pwnobs(wlddev)                         # Pairwise observation count
+head(fnobs(wlddev, wlddev$country))    # Grouped observation count
+fndistinct(wlddev)                     # Distinct values
 descr(wlddev)                          # Describe data
 varying(wlddev, ~ country)             # Show which variables vary within countries
 qsu(wlddev, pid = ~ country,           # Panel-summarize columns 9 though 12 of this data

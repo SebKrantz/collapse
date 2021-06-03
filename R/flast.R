@@ -18,7 +18,7 @@ flast.default <- function(x, g = NULL, TRA = NULL, na.rm = TRUE, use.g.names = T
       g <- qG(g, na.exclude = FALSE)
       return(.Call(C_flast,x,attr(g,"N.groups"),g,na.rm))
     }
-    if(!is.GRP(g)) g <- GRP.default(g, return.groups = use.g.names, call = FALSE)
+    if(!is_GRP(g)) g <- GRP.default(g, return.groups = use.g.names, call = FALSE)
     if(use.g.names) return(`names<-`(.Call(C_flast,x,g[[1L]],g[[2L]],na.rm), GRPnames(g)))
     return(.Call(C_flast,x,g[[1L]],g[[2L]],na.rm))
   }
@@ -28,7 +28,7 @@ flast.default <- function(x, g = NULL, TRA = NULL, na.rm = TRUE, use.g.names = T
     g <- qG(g, na.exclude = FALSE)
     return(.Call(Cpp_TRA,x,.Call(C_flast,x,attr(g,"N.groups"),g,na.rm),g,TtI(TRA)))
   }
-  if(!is.GRP(g)) g <- GRP.default(g, return.groups = FALSE, call = FALSE)
+  if(!is_GRP(g)) g <- GRP.default(g, return.groups = FALSE, call = FALSE)
   .Call(Cpp_TRA,x,.Call(C_flast,x,g[[1L]],g[[2L]],na.rm),g[[2L]],TtI(TRA))
 }
 
@@ -46,7 +46,7 @@ flast.matrix <- function(x, g = NULL, TRA = NULL, na.rm = TRUE, use.g.names = TR
       g <- qG(g, na.exclude = FALSE)
       return(.Call(C_flastm,x,attr(g,"N.groups"),g,na.rm,FALSE))
     }
-    if(!is.GRP(g)) g <- GRP.default(g, return.groups = use.g.names, call = FALSE)
+    if(!is_GRP(g)) g <- GRP.default(g, return.groups = use.g.names, call = FALSE)
     if(use.g.names) return(`dimnames<-`(.Call(C_flastm,x,g[[1L]],g[[2L]],na.rm,FALSE), list(GRPnames(g), dimnames(x)[[2L]])))
     return(.Call(C_flastm,x,g[[1L]],g[[2L]],na.rm,FALSE))
   }
@@ -56,7 +56,7 @@ flast.matrix <- function(x, g = NULL, TRA = NULL, na.rm = TRUE, use.g.names = TR
     g <- qG(g, na.exclude = FALSE)
     return(.Call(Cpp_TRAm,x,.Call(C_flastm,x,attr(g,"N.groups"),g,na.rm,FALSE),g,TtI(TRA)))
   }
-  if(!is.GRP(g)) g <- GRP.default(g, return.groups = FALSE, call = FALSE)
+  if(!is_GRP(g)) g <- GRP.default(g, return.groups = FALSE, call = FALSE)
   .Call(Cpp_TRAm,x,.Call(C_flastm,x,g[[1L]],g[[2L]],na.rm,FALSE),g[[2L]],TtI(TRA))
 }
 
@@ -74,7 +74,7 @@ flast.data.frame <- function(x, g = NULL, TRA = NULL, na.rm = TRUE, use.g.names 
       g <- qG(g, na.exclude = FALSE)
       return(.Call(C_flastl,x,attr(g,"N.groups"),g,na.rm))
     }
-    if(!is.GRP(g)) g <- GRP.default(g, return.groups = use.g.names, call = FALSE)
+    if(!is_GRP(g)) g <- GRP.default(g, return.groups = use.g.names, call = FALSE)
     if(use.g.names && !inherits(x, "data.table") && length(groups <- GRPnames(g)))
       return(setRnDF(.Call(C_flastl,x,g[[1L]],g[[2L]],na.rm), groups))
     return(.Call(C_flastl,x,g[[1L]],g[[2L]],na.rm))
@@ -85,7 +85,7 @@ flast.data.frame <- function(x, g = NULL, TRA = NULL, na.rm = TRUE, use.g.names 
     g <- qG(g, na.exclude = FALSE)
     return(.Call(Cpp_TRAl,x,.Call(C_flastl,x,attr(g,"N.groups"),g,na.rm),g,TtI(TRA)))
   }
-  if(!is.GRP(g)) g <- GRP.default(g, return.groups = FALSE, call = FALSE)
+  if(!is_GRP(g)) g <- GRP.default(g, return.groups = FALSE, call = FALSE)
   .Call(Cpp_TRAl,x,.Call(C_flastl,x,g[[1L]],g[[2L]],na.rm),g[[2L]],TtI(TRA))
 }
 

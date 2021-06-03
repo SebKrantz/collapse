@@ -4,7 +4,7 @@ context("Misc")
 
 m <- na_insert(qM(mtcars))
 
-test_that("descr, pwcor, pwcov, pwNobs", {
+test_that("descr, pwcor, pwcov, pwnobs", {
 
   expect_visible(descr(wlddev))
   expect_visible(as.data.frame(descr(wlddev)))
@@ -23,13 +23,13 @@ test_that("descr, pwcor, pwcov, pwNobs", {
   expect_output(print(pwcov(nv(wlddev), N = TRUE, P = TRUE)))
   expect_output(print(pwcov(nv(wlddev), N = TRUE, P = TRUE, use = "complete.obs")))
 
-  expect_visible(pwNobs(wlddev))
-  expect_visible(pwNobs(GGDC10S))
+  expect_visible(pwnobs(wlddev))
+  expect_visible(pwnobs(GGDC10S))
 
   expect_visible(descr(m))
   expect_visible(pwcor(m))
   expect_visible(pwcov(m))
-  expect_visible(pwNobs(m))
+  expect_visible(pwnobs(m))
 
 })
 
@@ -72,7 +72,7 @@ test_that("na_rm works well", {
   expect_equal(sapply(na_insert(wlddev), function(x) vlabels(na_rm(x))), vlabels(wlddev))
   expect_equal(sapply(na_insert(wlddev), function(x) vclasses(na_rm(x))), vclasses(wlddev))
   wldNA <- na_insert(wlddev)
-  expect_equal(lengths(lapply(wldNA, na_rm)), fNobs(wldNA))
+  expect_equal(lengths(lapply(wldNA, na_rm)), fnobs(wldNA))
   rm(wldNA)
 })
 
@@ -146,7 +146,7 @@ test_that("fast functions give same result using different grouping mechanisms",
    expect_equal(FUN(fselect(gmtc, -cyl), TRA = 1L), TRA(fselect(gmtc, -cyl), FUN(gmtc, keep.group_vars = FALSE), 1L))
  }
 
-  for(i in setdiff(.FAST_FUN, c(.FAST_STAT_FUN, "fHDbetween", "fHDwithin"))) {
+  for(i in setdiff(.FAST_FUN, c(.FAST_STAT_FUN, "fhdbetween", "fhdwithin"))) {
 
     FUN <- match.fun(i)
     expect_true(all_obj_equal(FUN(v, g = mtcars$cyl), FUN(v, g = f), FUN(v, g = fcc), FUN(v, g = g), FUN(v, g = gl)))
@@ -169,7 +169,7 @@ test_that("fast functions give same result using different grouping mechanisms",
 l <- as.list(mtcars)
 test_that("list and df methods give same results", {
 
-  for (i in setdiff(c(.FAST_FUN, .OPERATOR_FUN), c("fHDbetween", "fHDwithin", "HDB", "HDW"))) {
+  for (i in setdiff(c(.FAST_FUN, .OPERATOR_FUN), c("fhdbetween", "fhdwithin", "HDB", "HDW"))) {
     FUN <- match.fun(i)
     expect_equal(unattrib(FUN(mtcars)), unattrib(FUN(l)))
   }
@@ -181,7 +181,7 @@ wFUNs <- c("fmean","fmedian","fsum","fprod","fmode","fvar","fsd","fscale","STD",
 
 test_that("fast functions give appropriate warnings", {
 
-  for (i in setdiff(c(.FAST_FUN, .OPERATOR_FUN, "qsu"), c("fHDbetween", "fHDwithin", "HDB", "HDW"))) {
+  for (i in setdiff(c(.FAST_FUN, .OPERATOR_FUN, "qsu"), c("fhdbetween", "fhdwithin", "HDB", "HDW"))) {
     FUN <- match.fun(i)
     expect_warning(FUN(v, bla = 1))
     expect_warning(FUN(m, bla = 1))

@@ -15,7 +15,7 @@ TRA.default <- function(x, STATS, FUN = "-", g = NULL, ...) {
     }
     return(.Call(Cpp_TRA,x,STATS,g,TtI(FUN)))
   }
-  if(!is.GRP(g)) g <- GRP.default(g, return.groups = FALSE, call = FALSE)
+  if(!is_GRP(g)) g <- GRP.default(g, return.groups = FALSE, call = FALSE)
   if(g[[1L]] != length(STATS)) stop("number of groups must match length(STATS)")
   .Call(Cpp_TRA,x,STATS,g[[2L]],TtI(FUN))
 }
@@ -32,7 +32,7 @@ TRA.matrix <- function(x, STATS, FUN = "-", g = NULL, ...) {
     }
     return(.Call(Cpp_TRAm,x,STATS,g,TtI(FUN)))
   }
-  if(!is.GRP(g)) g <- GRP.default(g, return.groups = FALSE, call = FALSE)
+  if(!is_GRP(g)) g <- GRP.default(g, return.groups = FALSE, call = FALSE)
   if(g[[1L]] != nrow(STATS)) stop("number of groups must match nrow(STATS)")
   .Call(Cpp_TRAm,x,STATS,g[[2L]],TtI(FUN))
 }
@@ -49,7 +49,7 @@ TRA.data.frame <- function(x, STATS, FUN = "-", g = NULL, ...) {
     }
     return(.Call(Cpp_TRAl,x,STATS,g,TtI(FUN)))
   }
-  if(!is.GRP(g)) g <- GRP.default(g, return.groups = FALSE, call = FALSE)
+  if(!is_GRP(g)) g <- GRP.default(g, return.groups = FALSE, call = FALSE)
   if(g[[1L]] != fnrow2(STATS)) stop("number of groups must match nrow(STATS)")
   .Call(Cpp_TRAl,x,STATS,g[[2L]],TtI(FUN))
 }

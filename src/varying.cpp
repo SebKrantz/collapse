@@ -12,7 +12,7 @@ LogicalVector varyingCppImpl(Vector<RTYPE> x, int ng, IntegerVector g, bool any_
   auto isnanT = (RTYPE == REALSXP) ? [](storage_t x) { return x != x; } :
     [](storage_t x) { return x == Vector<RTYPE>::get_na(); };
 
-    if(ng == 0) { // Note: Does not return NA if all NA... can be checked with fNobs ...
+    if(ng == 0) { // Note: Does not return NA if all NA... can be checked with fnobs ...
       int j = l-1;
       storage_t vi = x[j];
       while(isnanT(vi) && j!=0) vi = x[--j];

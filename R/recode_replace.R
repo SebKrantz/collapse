@@ -1,7 +1,7 @@
 
 
 # inspired by ?dplyr::recode
-# Think about adopting this code for as.numeric_factor and as.character_factor
+# Think about adopting this code for as_numeric_factor and as_character_factor
 recode_num <- function(X, ..., default = NULL, missing = NULL) {
   if(missing(...)) stop("recode_num requires arguments of the form: value = replacement")
   args <- list(...)
