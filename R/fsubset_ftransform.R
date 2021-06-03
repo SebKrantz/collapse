@@ -49,6 +49,7 @@ ss <- function(x, i, j) {
 }
 
 fsubset.data.frame <- function(x, subset, ...) {
+  r <- eval(substitute(subset), x, parent.frame()) # Needs to be placed above any column renaming
   if(missing(...)) vars <- seq_along(unclass(x)) else {
     ix <- seq_along(unclass(x))
     nl <- `names<-`(as.vector(ix, "list"), attr(x, "names"))
@@ -66,7 +67,6 @@ fsubset.data.frame <- function(x, subset, ...) {
       attr(x, "names")[vars[nonmiss]] <- nam_vars[nonmiss]
     }
   }
-  r <- eval(substitute(subset), x, parent.frame())
   if(is.logical(r)) {
     nr <- fnrow2(x)
     if(length(r) != nr) stop("subset needs to be an expression evaluating to logical(nrow(x)) or integer") # which(r & !is.na(r)) not needed !
