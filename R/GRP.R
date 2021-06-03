@@ -246,6 +246,7 @@ GRP.pdata.frame <- function(X, effect = 1L, ..., group.sizes = TRUE, return.grou
 fgroup_by <- function(X, ..., sort = TRUE, decreasing = FALSE, na.last = TRUE, return.order = FALSE) {          #   e <- substitute(list(...)) # faster but does not preserve attributes of unique groups !
   clx <- oldClass(X)
   m <- match(c("GRP_df", "grouped_df", "data.frame"), clx, nomatch = 0L)
+  if(any(clx == "sf")) oldClass(X) <- clx[clx != "sf"]
   attr(X, "groups") <- GRP.default(fselect(if(m[2L]) fungroup(X) else X, ...), NULL, sort, decreasing, na.last, TRUE, return.order, FALSE)
   # Needed: wlddev %>% fgroup_by(country) gives error if dplyr is loaded. Also sf objects etc..
   # .rows needs to be list(), NULL won't work !! Note: attaching a data.frame class calls data frame methods, even if "list" in front! -> Need GRP.grouped_df to restore object !
