@@ -4,10 +4,10 @@
 #define SEXPPTR(x) ((SEXP *)DATAPTR(x))  // to avoid overhead of looped VECTOR_ELT
 
 SEXP fnobsC(SEXP x, SEXP Rng, SEXP g) {
-  int l = length(x), ng = asInteger(Rng), tx = TYPEOF(x);
+  int l = length(x), ng = asInteger(Rng);
   if (ng == 0) {
     int n = 0;
-    switch(tx) {
+    switch(TYPEOF(x)) {
       case REALSXP: {
         double *px = REAL(x);
         for(int i = 0; i != l; ++i) if(px[i] == px[i]) ++n;
@@ -37,7 +37,7 @@ SEXP fnobsC(SEXP x, SEXP Rng, SEXP g) {
     SEXP n = PROTECT(allocVector(INTSXP, ng));
     int *pn = INTEGER(n), *pg = INTEGER(g);
     memset(pn, 0, sizeof(int) * ng); --pn;
-    switch(tx) {
+    switch(TYPEOF(x)) {
       case REALSXP: {
         double *px = REAL(x);
         for(int i = 0; i != l; ++i) if(px[i] == px[i]) ++pn[pg[i]];
@@ -77,13 +77,13 @@ SEXP fnobsC(SEXP x, SEXP Rng, SEXP g) {
 SEXP fnobsmC(SEXP x, SEXP Rng, SEXP g, SEXP Rdrop) {
   SEXP dim = getAttrib(x, R_DimSymbol); // protect ??
   if(isNull(dim)) error("x is not a matrix");
-  int tx = TYPEOF(x), ng = asInteger(Rng), drop = asInteger(Rdrop),
+  int ng = asInteger(Rng), drop = asInteger(Rdrop),
     l = INTEGER(dim)[0], col = INTEGER(dim)[1];
 
   if (ng == 0) {
     SEXP n = PROTECT(allocVector(INTSXP, col));
     int *pn = INTEGER(n);
-    switch(tx) {
+    switch(TYPEOF(x)) {
       case REALSXP: {
         double *px = REAL(x);
         for(int j = 0; j != col; ++j) {
@@ -136,7 +136,7 @@ SEXP fnobsmC(SEXP x, SEXP Rng, SEXP g, SEXP Rdrop) {
     SEXP n = PROTECT(allocMatrix(INTSXP, ng, col));
     memset(INTEGER(n), 0, sizeof(int) * ng * col);
     int *pg = INTEGER(g);
-    switch(tx) {
+    switch(TYPEOF(x)) {
       case REALSXP: {
         for(int j = 0; j != col; ++j) {
           int *pn = INTEGER(n) + j * ng - 1;
@@ -178,7 +178,7 @@ SEXP fnobsmC(SEXP x, SEXP Rng, SEXP g, SEXP Rdrop) {
 
 SEXP fnobslC(SEXP x, SEXP Rng, SEXP g, SEXP Rdrop) {
   int l = length(x), ng = asInteger(Rng);
-  if(l < 1) return x; // Prevents seqfault for numeric(0) #101
+  // if(l < 1) return x;
   if(asLogical(Rdrop) && ng == 0) {
     SEXP out = PROTECT(allocVector(INTSXP, l)), *px = SEXPPTR(x);
     int *pout = INTEGER(out);
