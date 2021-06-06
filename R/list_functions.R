@@ -52,6 +52,8 @@ is.regular <- function(x) {
 is_unlistable <- function(l, DF.as.list = FALSE) if(DF.as.list) all(unlist(rapply(l, is.atomic, how = "list"), use.names = FALSE)) else
   all(unlist(rapply2d(l, is_regular), use.names = FALSE)) # fastest way?
 
+is.unlistable <- is_unlistable
+
 # If data.frame, search all, otherwise, make optional counting df or not, but don't search them.
 ldepth <- function(l, DF.as.list = FALSE) {
   if (inherits(l, "data.frame")) { # fast defining different functions in if-clause ?

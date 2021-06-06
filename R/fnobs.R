@@ -125,3 +125,8 @@ fnobs.grouped_df <- function(x, TRA = NULL, use.g.names = FALSE, keep.group_vars
     return(setAttributes(.Call(Cpp_TRAl,x[-gn],.Call(C_fnobsl,x[-gn],g[[1L]],g[[2L]],FALSE),g[[2L]],TtI(TRA)), ax))
   } else return(.Call(Cpp_TRAl,x,.Call(C_fnobsl,x,g[[1L]],g[[2L]],FALSE),g[[2L]],TtI(TRA)))
 }
+
+fNobs <- fnobs
+fNobs.default <- function(x, ...) fnobs.default(x, ...)
+fNobs.matrix <- function(x, ...) fnobs.matrix(x, ...)
+fNobs.data.frame <- function(x, ...) fnobs.data.frame(x, ...)

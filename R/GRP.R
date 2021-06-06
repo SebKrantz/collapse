@@ -87,6 +87,7 @@ GRP.default <- function(X, by = NULL, sort = TRUE, decreasing = FALSE, na.last =
 }
 
 is_GRP <- function(x) inherits(x, "GRP")
+is.GRP <- is_GRP
 
 GRPnames <- function(x, force.char = TRUE) { # , ...
   groups <- x[[4L]]
@@ -163,6 +164,8 @@ as_factor_GRP <- function(x, ordered = FALSE) { # , ...
   oldClass(f) <- if(ordered) c("ordered","factor","na.included") else c("factor","na.included") # previously if any(x[[6L]])
   f
 }
+
+as.factor_GRP <- as_factor_GRP
 
 # as.factor.GRP <- function(x, ordered = FALSE) {
 #   .Deprecated("as_factor_GRP")
@@ -414,6 +417,7 @@ GRP.grouped_df <- function(X, ..., return.groups = TRUE, call = TRUE) {
 }
 
 is_qG <- function(x) inherits(x, "qG")
+is.qG <- is_qG
 
 # TODO: fix na_rm speed for character data...
 na_rm2 <- function(x, sort) {
@@ -452,7 +456,7 @@ radixfact <- function(x, sort, ord, fact, naincl, keep, retgrp = FALSE) {
   f
 }
 
-as.factor_qG <- function(x, ordered = FALSE, na.exclude = TRUE) {
+as_factor_qG <- function(x, ordered = FALSE, na.exclude = TRUE) {
   groups <- if(is.null(attr(x, "groups"))) as.character(seq_len(attr(x, "N.groups"))) else tochar(attr(x, "groups"))
   nainc <- inherits(x, "na.included")
   if(na.exclude || nainc) {
@@ -466,6 +470,8 @@ as.factor_qG <- function(x, ordered = FALSE, na.exclude = TRUE) {
   }
   return(`attributes<-`(x, list(levels = groups, class = clx)))
 }
+
+as.factor_qG <- as_factor_qG
 
 qF <- function(x, ordered = FALSE, na.exclude = TRUE, sort = TRUE, drop = FALSE,
                keep.attr = TRUE, method = c("auto", "radix", "hash")) {
@@ -482,7 +488,7 @@ qF <- function(x, ordered = FALSE, na.exclude = TRUE, sort = TRUE, drop = FALSE,
     oldClass(x) <- c(if(ordered) "ordered", "factor", "na.included")
     if(drop) return(.Call(Cpp_fdroplevels, x, FALSE)) else return(x)
   }
-  if(is_qG(x)) return(as.factor_qG(x, ordered, na.exclude))
+  if(is_qG(x)) return(as_factor_qG(x, ordered, na.exclude))
   switch(method[1L], # if((is.character(x) && !na.exclude) || (length(x) < 500 && !(is.character(x) && na.exclude)))
          auto  = if(is.character(x) || is.logical(x) || length(x) < 500L) .Call(Cpp_qF, x, sort, ordered, na.exclude, keep.attr, 1L) else
            radixfact(x, sort, ordered, TRUE, !na.exclude, keep.attr),

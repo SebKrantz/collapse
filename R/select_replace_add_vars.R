@@ -109,6 +109,8 @@ logi_vars <- function(x, return = "data") get_vars_indl(x, vapply(`attributes<-`
 
 date_vars <- function(x, return = "data") get_vars_indl(x, vapply(`attributes<-`(x, NULL), is_date, TRUE), return)
 "date_vars<-" <- function(x, value) `get_vars_ind<-`(x, vapply(`attributes<-`(x, NULL), is_date, TRUE), value)
+Date_vars <- date_vars
+"Date_vars<-" <- `date_vars<-`
 
 cat_vars <- function(x, return = "data") get_vars_indl(x, !vapply(`attributes<-`(x, NULL), is.numeric, TRUE), return)
 "cat_vars<-" <- function(x, value) `get_vars_ind<-`(x, !vapply(`attributes<-`(x, NULL), is.numeric, TRUE), value)

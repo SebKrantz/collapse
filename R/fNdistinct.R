@@ -128,3 +128,7 @@ fndistinct.grouped_df <- function(x, TRA = NULL, na.rm = TRUE, use.g.names = FAL
   } else return(.Call(Cpp_TRAl,x,.Call(Cpp_fndistinctl,x,g[[1L]],g[[2L]],g[[3L]],na.rm,FALSE),g[[2L]],TtI(TRA)))
 }
 
+fNdistinct <- fndistinct
+fNdistinct.default <- function(x, ...) fndistinct.default(x, ...)
+fNdistinct.matrix <- function(x, ...) fndistinct.matrix(x, ...)
+fNdistinct.data.frame <- function(x, ...) fndistinct.data.frame(x, ...)

@@ -898,7 +898,15 @@ HDB.pdata.frame <- function(x, effect = 1:2, w = NULL, cols = is.numeric, na.rm 
   add_stub(fhdwithin.pdata.frame(if(is.null(cols)) x else colsubset(x, cols), effect, w, na.rm, fill, variable.wise, ..., means = TRUE), stub)
 
 
+fHDbetween <- fhdbetween
+fHDbetween.default <- function(x, ...) fhdbetween.default(x, ...)
+fHDbetween.matrix <- function(x, ...) fhdbetween.matrix(x, ...)
+fHDbetween.data.frame <- function(x, ...) fhdbetween.data.frame(x, ...)
 
+fHDwithin <- fhdwithin
+fHDwithin.default <- function(x, ...) fhdwithin.default(x, ...)
+fHDwithin.matrix <- function(x, ...) fhdwithin.matrix(x, ...)
+fHDwithin.data.frame <- function(x, ...) fhdwithin.data.frame(x, ...)
 
 
 #
