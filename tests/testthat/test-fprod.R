@@ -1,7 +1,7 @@
 context("fprod")
 
 # rm(list = ls())
-
+set.seed(101)
 x <- rnorm(100)
 w <- abs(100*rnorm(100))
 wdat <- abs(100*rnorm(32))

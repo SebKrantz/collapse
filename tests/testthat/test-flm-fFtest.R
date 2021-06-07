@@ -48,11 +48,13 @@ test_that("fFtest works as intended", {
   expect_equal(unattrib(r)[1:4], unattrib(c(rlm$r.squared, rlm$fstatistic[c(2:3, 1L)])))
 
   # Repeat with missing values
+  set.seed(101)
   iris <- na_insert(iris)
   r <- fFtest(iris$Sepal.Length, gv(iris, -1L))
   rlm <- summary(lm(Sepal.Length ~., iris))
   expect_equal(unattrib(r)[1:4], unattrib(c(rlm$r.squared, rlm$fstatistic[c(2:3, 1L)])))
   # Same with weights:
+  set.seed(101)
   w <- na_insert(w)
   r <- fFtest(iris$Sepal.Length, gv(iris, -1L), w = w)
   rlm <- summary(lm(Sepal.Length ~., weights = w, iris))

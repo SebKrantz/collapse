@@ -1,7 +1,7 @@
 context("quick-conversion")
 
 # rm(list = ls())
-
+set.seed(101)
 x <- rnorm(10)
 xNA <- x
 xNA[c(3,10)] <- NA

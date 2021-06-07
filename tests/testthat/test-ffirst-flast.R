@@ -1,7 +1,7 @@
 context("ffirst and flast")
 
 # rm(list = ls())
-
+set.seed(101)
 x <- rnorm(100)
 w <- abs(100 * rnorm(100))
 xNA <- x

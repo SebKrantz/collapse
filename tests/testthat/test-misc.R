@@ -1,7 +1,7 @@
 context("Misc")
 
 # rm(list = ls())
-
+set.seed(101)
 m <- na_insert(qM(mtcars))
 
 test_that("descr, pwcor, pwcov, pwnobs", {
@@ -68,6 +68,7 @@ test_that("weighted correlations are correct", {
 })
 
 test_that("na_rm works well", {
+  set.seed(101)
   expect_equal(sapply(na_insert(wlddev), function(x) vtypes(na_rm(x))), vtypes(wlddev))
   expect_equal(sapply(na_insert(wlddev), function(x) vlabels(na_rm(x))), vlabels(wlddev))
   expect_equal(sapply(na_insert(wlddev), function(x) vclasses(na_rm(x))), vclasses(wlddev))
@@ -82,6 +83,7 @@ test_that("deep matrix dispatch works well", {
 
   tsm <- EuStockMarkets
   class(tsm) <- setdiff(class(tsm), "matrix")
+  set.seed(101)
   f <- qF(sample.int(5, nrow(tsm), TRUE))
   NCOL2 <- function(x) if(length(d <- dim(x)) > 1L) d[2L] else length(x)
 

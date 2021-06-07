@@ -1,7 +1,7 @@
 context("fnobs and fndistinct")
 
 # rm(list = ls())
-
+set.seed(101)
 x <- rnorm(100)
 xNA <- x
 xNA[sample.int(100,20)] <- NA

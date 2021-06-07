@@ -1,7 +1,7 @@
 context("radixorder, GRP, qF, qG")
 
 # rm(list = ls())
-
+set.seed(101)
 mtcNA <- na_insert(mtcars)
 wlddev2 <- slt(wlddev, -date)
 num_vars(wlddev2) <- round(num_vars(wlddev2), 8)
@@ -193,10 +193,12 @@ test_that("GRP <> factor conversions run seamlessly", {
   expect_identical(unclass(fdroplevels(wlddev$iso3c[1:200])), unclass(as_factor_GRP(GRP(wlddev$iso3c[1:200], drop = TRUE)))) # as_factor_GRP always adds class "na.included"
 
   expect_identical(unclass(`vlabels<-`(wlddev2$iso3c, "label", NULL)), unclass(as_factor_GRP(GRP(wlddev2$iso3c))))
+  set.seed(101)
   int <- sample.int(10,100,TRUE)
   expect_identical(unclass(qF(int)), unclass(as_factor_GRP(GRP(int))))
   expect_identical(unclass(qF(int)), unclass(as_factor_GRP(GRP(qF(int)))))
   intNA <- int
+  set.seed(101)
   intNA[sample(100,20)] <- NA
   expect_identical(unclass(qF(intNA, na.exclude = FALSE)), unclass(as_factor_GRP(GRP(intNA))))
   expect_identical(unclass(qF(intNA, na.exclude = FALSE)), unclass(as_factor_GRP(GRP(qF(intNA)))))
@@ -296,6 +298,7 @@ test_that("GRP pseries and pdata.frame methods work as intended", {
 }
 
 fl <- slt(wlddev, region, income)
+set.seed(101)
 flNA <- na_insert(fl)
 
 test_that("finteraction works as intended", {
@@ -312,6 +315,7 @@ test_that("finteraction works as intended", {
 
 wld150 <- ss(wlddev, 1:150)
 vlabels(wld150) <- NULL
+set.seed(101)
 wldNA150 <- na_insert(ss(wlddev, 1:150))
 vlabels(wldNA150) <- NULL
 
@@ -332,11 +336,13 @@ test_that("fdroplevels works as intended", {
 # Note: Should extend with other than just character data..
 
 rctry <- wlddev$country[order(rnorm(length(wlddev$country)))]
+set.seed(101)
 rctryNA <- na_insert(rctry)
 
 rdat <- sbt(GGDC10S, order(rnorm(length(Variable))), Variable, Country)
 vlabels(rdat) <- NULL
 vlabels(rdat, "format.stata") <- NULL
+set.seed(101)
 rdatNA <- na_insert(rdat)
 
 test_that("funique works well", {

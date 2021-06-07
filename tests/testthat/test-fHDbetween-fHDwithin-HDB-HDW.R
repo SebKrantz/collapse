@@ -6,7 +6,7 @@ context("fhdbetween / HDB and fhdwithin / HDW")
 # TODO: Sort out why certain tests fail...
 
 options(warn = -1)
-
+set.seed(101)
 x <- rnorm(100)
 w <- abs(100*rnorm(100))
 wdat <- abs(100*rnorm(32))
@@ -111,6 +111,7 @@ test_that("fhdwithin with one factor performs like fwithin", {
 
 })
 
+set.seed(101)
 f2 <- qF(sample.int(10, 100, TRUE))
 fl <- list(f, f2)
 

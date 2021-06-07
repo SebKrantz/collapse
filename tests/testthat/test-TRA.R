@@ -1,7 +1,7 @@
 context("TRA")
 
 # rm(list = ls())
-
+set.seed(101)
 d <- na_insert(iris[1:4])
 v <- d$Sepal.Length
 m <- as.matrix(d)
@@ -104,6 +104,7 @@ test_that("TRA handles different data types as intended", {
   expect_true(is.integer(fnobs(EuStockMarkets, TRA = "replace")))
   for(i in c("-", "+", "*", "/", "%", "%%", "-%%"))  expect_true(is.numeric(fnobs(EuStockMarkets, TRA = i)))
   # Vector & Matrix: Grouped
+  set.seed(101)
   expect_true(is.integer(fnobs(letters, sample.int(3, length(letters), TRUE), TRA = "replace_fill")))
   expect_true(is.integer(fnobs(letters, sample.int(3, length(letters), TRUE), TRA = "replace")))
   for(i in c("-", "-+", "+", "*", "/", "%", "%%", "-%%"))  expect_error(fnobs(letters, sample.int(3, length(letters), TRUE), TRA = i))

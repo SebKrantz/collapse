@@ -1,7 +1,7 @@
 context("fsubset and ftransform")
 
 # rm(list = ls())
-
+set.seed(101)
 v <- na_insert(mtcars$mpg)
 m <- na_insert(as.matrix(mtcars))
 
@@ -39,6 +39,9 @@ test_that("fsubset works like base::subset for data frames", {
 test_that("fsubset column renaming", {
 
   expect_equal(names(fsubset(airquality, Temp > 90, OZ = Ozone, Temp)), .c(OZ, Temp))
+  expect_equal(names(fsubset(mtcars, cyl == 4, bla = cyl)), "bla")
+
+
 
 })
 
@@ -48,13 +51,16 @@ test_that("ss works like an improved version of [", { # replaced setRownames wit
   expect_equal(ss(airquality, 1:100, -(1:3)), airquality[1:100, -(1:3)])
   expect_equal(unattrib(ss(airquality, -(1:100), -(1:3))), unattrib(airquality[-(1:100), -(1:3)]))
   nam <- names(airquality)[2:5]
+  set.seed(101)
   v <- sample.int(fnrow(airquality), 100)
   expect_equal(unattrib(ss(airquality, v, nam)), unattrib(airquality[v, nam, drop = FALSE]))
   expect_equal(unattrib(ss(airquality, -v, nam)), unattrib(airquality[-v, nam, drop = FALSE]))
+  set.seed(101)
   vl <- sample(c(TRUE, FALSE), fnrow(airquality), replace = TRUE)
   cl <- sample(c(TRUE, FALSE), fncol(airquality), replace = TRUE)
   expect_equal(unattrib(ss(airquality, vl, nam)), unattrib(airquality[vl, nam, drop = FALSE]))
   expect_equal(unattrib(ss(airquality, vl, cl)), unattrib(airquality[vl, cl, drop = FALSE]))
+  set.seed(101)
   vl <- na_insert(vl)
   cl[4L] <- NA
   expect_equal(unattrib(ss(airquality, vl, nam)), unattrib(airquality[vl & !is.na(vl), nam, drop = FALSE]))

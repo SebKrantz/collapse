@@ -10,7 +10,7 @@ gm <- qM(gmtc, TRUE)
 g2 <- GRP(mtcars, ~ cyl + vs + am)
 
 # gDTmtc <- fgroup_by(qDT(mtcars), cyl, vs, am)
-
+set.seed(101)
 f1 <- sample.int(5, length(AirPassengers), replace = TRUE)
 f2 <- sample.int(5, nrow(EuStockMarkets), replace = TRUE)
 
@@ -146,6 +146,7 @@ test_that("TRA attribute preservation works well", {
   expect_equal(attributes(TRA(AirPassengers, 1L, "replace_fill"))[[1]], tsp(AirPassengers))  # Integer -> Change of type !!
   expect_equal(attributes(TRA(AirPassengers, 1, "-")), attributes(AirPassengers))            # Double
   expect_equal(attributes(TRA(AirPassengers, 1L, "-")), attributes(AirPassengers))           # Integer -> Coerced to double in numeric operation
+  set.seed(101)
   f <- qF(sample.int(5L, length(AirPassengers), TRUE), na.exclude = FALSE)
   num <- unclass(fmean(AirPassengers, f)); int <- fnobs(AirPassengers, f)
   expect_equal(attributes(TRA(AirPassengers, num, "replace", f)), attributes(AirPassengers))      # Double
@@ -162,6 +163,7 @@ test_that("TRA attribute preservation works well", {
   expect_equal(attributes(TRA(EuStockMarkets, rep(1L, 4L), "replace_fill"))[["tsp"]], tsp(EuStockMarkets))  # Integer -> Change of type !!
   expect_equal(attributes(TRA(EuStockMarkets, rep(1, 4L), "-")), attributes(EuStockMarkets))                # Double
   expect_equal(attributes(TRA(EuStockMarkets, rep(1L, 4L), "-")), attributes(EuStockMarkets))               # Integer -> Coerced to double in numeric operation
+  set.seed(101)
   f <- qF(sample.int(5L, nrow(EuStockMarkets), TRUE), na.exclude = FALSE)
   num <- unclass(fmean(EuStockMarkets, f)); int <- fnobs(EuStockMarkets, f)
   expect_equal(attributes(TRA(EuStockMarkets, num, "replace", f)), attributes(EuStockMarkets))         # Double
