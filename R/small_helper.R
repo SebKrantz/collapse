@@ -207,9 +207,11 @@ copyMostAttrib <- function(to, from) .Call(C_copyMostAttrib, to, from)
 addAttributes <- function(x, a) .Call(C_setAttributes, x, c(attributes(x), a))
 
 
-is.categorical <- function(x) !is.numeric(x)
+is_categorical <- function(x) !is.numeric(x)
+is.categorical <- is_categorical
 
-is.Date <- function(x) inherits(x, c("Date","POSIXlt","POSIXct"))
+is_date <- function(x) inherits(x, c("Date","POSIXlt","POSIXct"))
+is.Date <- is_date
 
 "%!in%" <- function(x, table) match(x, table, nomatch = 0L) == 0L
 
@@ -222,6 +224,8 @@ is.Date <- function(x) inherits(x, c("Date","POSIXlt","POSIXct"))
 #     setAttributes(r, ax)
 #   } else duplAttributes(x[!is.na(x)], x)
 # }
+
+alloc <- function(value, n) .Call(C_alloc, value, n)
 
 allNA <- function(x) .Call(C_allNA, x, TRUE) # True means give error for unsupported vector types, not FALSE.
 
@@ -291,7 +295,15 @@ seq_col <- function(X) if(is.list(X)) seq_along(unclass(X)) else seq_len(ncol(X)
 
 # na.last is false !!
 forder.int <- function(x) .Call(C_radixsort, FALSE, FALSE, FALSE, FALSE, TRUE, pairlist(x)) # if(is.unsorted(x)) .Call(C_forder, x, NULL, FALSE, TRUE, 1L, TRUE) else seq_along(x) # since forder gives integer(0) if sorted !
-# forder.vec <- function(x) if(length(x) < 1000L) .Call(C_radixsort, TRUE, FALSE, FALSE, FALSE, TRUE, pairlist(x)) else order(x, method = "radix")
+ford <- function(x, g = NULL) {
+  if(!is.null(g)) {
+    x <- c(if(is.atomic(g)) list(g) else if(is_GRP(g)) g[2L] else g,
+           if(is.atomic(x)) list(x) else x, list(method = "radix"))
+    return(do.call(order, x))
+  }
+  if(is.list(x)) return(do.call(order, c(x, list(method = "radix"))))
+  if(length(x) < 1000L) .Call(C_radixsort, TRUE, FALSE, FALSE, FALSE, TRUE, pairlist(x)) else order(x, method = "radix")
+}
 
 fsetdiff <- function(x, y) x[match(x, y, 0L) == 0L] # not unique !
 
@@ -302,7 +314,7 @@ ffka <- function(x, f) {
 }
 
 
-as.numeric_factor <- function(X, keep.attr = TRUE) {
+as_numeric_factor <- function(X, keep.attr = TRUE) {
   if(is.atomic(X)) if(keep.attr) return(ffka(X, as.numeric)) else
     return(as.numeric(attr(X, "levels"))[X])
   if(keep.attr) return(duplAttributes(lapply(unattrib(X),
@@ -311,7 +323,7 @@ as.numeric_factor <- function(X, keep.attr = TRUE) {
   function(y) if(is.factor(y)) as.numeric(attr(y, "levels"))[y] else y), X)
 }
 
-as.character_factor <- function(X, keep.attr = TRUE) {
+as_character_factor <- function(X, keep.attr = TRUE) {
   if(is.atomic(X)) if(keep.attr) return(ffka(X, tochar)) else
     return(as.character.factor(X))
   if(keep.attr) return(duplAttributes(lapply(unattrib(X),
@@ -319,6 +331,9 @@ as.character_factor <- function(X, keep.attr = TRUE) {
   duplAttributes(lapply(unattrib(X),
   function(y) if(is.factor(y)) as.character.factor(y) else y), X)
 }
+
+as.numeric_factor <- as_numeric_factor
+as.character_factor <- as_character_factor
 
 setRnDF <- function(df, nm) `attr<-`(df, "row.names", nm)
 
@@ -352,15 +367,14 @@ cols2int <- function(cols, x, nam, topos = TRUE) {
  if(is.numeric(cols)) {
    l <- length(unclass(x)) # length(nam) ?
    if(cols[1L] < 0L) { # This is sufficient to check negative indices: No R function allows subsetting mixing positive and negative indices.
-     if(topos) {
-       cols <- seq_len(l)[cols]
-       if(!length(cols) || anyNA(cols)) stop("Index out of range abs(1:length(x))")
-       return(cols)
-     }
      if(-min(cols) > l) stop("Index out of range abs(1:length(x))")
+     if(topos) return(seq_len(l)[cols])
+     # cols <- seq_len(l)[cols]
+     # if(!length(cols) || anyNA(cols)) stop("Index out of range abs(1:length(x))") -> used to put earlier check after if(topos) and use this one instead. But turns out that doesn't always work well.
+     # return(cols)
    } else if(max(cols) > l) stop("Index out of range abs(1:length(x))")
    # if(max(abs(cols)) > length(unclass(x))) stop("Index out of range abs(1:length(x))") # Before collapse 1.4.0 !
-   return(as.integer(cols)) # return(cols) # as.integer is better, and at very little cost..
+   return(as.integer(cols)) # as.integer is necessary (for C_subsetCols), and at very little cost..
  }
  if(is.character(cols)) return(ckmatch(cols, nam))
  if(is.function(cols)) return(which(vapply(unattrib(x), cols, TRUE)))
@@ -386,53 +400,59 @@ cols2int <- function(cols, x, nam, topos = TRUE) {
 #   r
 # }
 
-# Fastest! even though it involves code duplication..
-colsubset <- function(x, ind) {
-  ax <- attributes(x)
-  if(is.numeric(ind)) {
-    attributes(x) <- NULL # note: attributes(x) <- NULL is very slightly faster than class(x) <- NULL
-    if(max(abs(ind)) > length(x)) stop("Index out of range abs(1:length(x))")
-    ax[["names"]] <- ax[["names"]][ind]
-    return(.Call(C_setAttributes, x[ind], ax))
-  }
+colsubset <- function(x, ind, checksf = FALSE) {
+  if(is.numeric(ind)) return(.Call(C_subsetCols, x, as.integer(ind), checksf))
   if(is.logical(ind)) {
-    attributes(x) <- NULL
-    if(length(ind) != length(x)) stop("Logical subsetting vector must match length(x)")
-    ax[["names"]] <- ax[["names"]][ind]
-    return(.Call(C_setAttributes, x[ind], ax))
+    nc <- length(unclass(x))
+    if(length(ind) != nc) stop("Logical subsetting vector must match length(x)")
+    ind <- which(ind)
+    if(length(ind) == nc) return(x)
+    return(.Call(C_subsetCols, x, ind, checksf))
   }
-  ind <- if(is.character(ind)) ckmatch(ind, ax[["names"]]) else vapply(`attributes<-`(x, NULL), ind, TRUE)
-  ax[["names"]] <- ax[["names"]][ind]
-  .Call(C_setAttributes, .subset(x, ind), ax)
+  ind <- if(is.character(ind)) ckmatch(ind, attr(x, "names")) else which(vapply(`attributes<-`(x, NULL), ind, TRUE))
+  return(.Call(C_subsetCols, x, ind, checksf))
 }
 
-# Previous: slower..
+# Previously Fastest! even though it involves code duplication..
 # colsubset <- function(x, ind) {
 #   ax <- attributes(x)
 #   if(is.numeric(ind)) {
-#     if(max(abs(ind)) > length(unclass(x))) stop("Index out of range abs(1:length(x))")
-#   } else if(is.logical(ind)) {
-#     if(length(ind) != length(unclass(x))) stop("Logical subsetting vector must match length(x)")
-#   } else ind <- if(is.character(ind)) ckmatch(ind, ax[["names"]]) else vapply(`attributes<-`(x, NULL), ind, TRUE)
+#     attributes(x) <- NULL # note: attributes(x) <- NULL is very slightly faster than class(x) <- NULL
+#     if(max(abs(ind)) > length(x)) stop("Index out of range abs(1:length(x))")
+#     ax[["names"]] <- ax[["names"]][ind]
+#     return(.Call(C_setAttributes, x[ind], ax))
+#   }
+#   if(is.logical(ind)) {
+#     attributes(x) <- NULL
+#     if(length(ind) != length(x)) stop("Logical subsetting vector must match length(x)")
+#     ax[["names"]] <- ax[["names"]][ind]
+#     return(.Call(C_setAttributes, x[ind], ax))
+#   }
+#   ind <- if(is.character(ind)) ckmatch(ind, ax[["names"]]) else vapply(`attributes<-`(x, NULL), ind, TRUE)
 #   ax[["names"]] <- ax[["names"]][ind]
-#   .Call(C_setAttributes, .subset(x, ind), ax) # return(`attributes<-`(x[ind], ax)) # This is slow on large data -> a lot of checks !
+#   .Call(C_setAttributes, .subset(x, ind), ax)
 # }
 
 
-fcolsubset <- function(x, ind) { # fastest !
-  ax <- attributes(x)
-  ax[["names"]] <- ax[["names"]][ind]
-  .Call(C_setAttributes, .subset(x, ind), ax)
+fcolsubset <- function(x, ind, checksf = FALSE) { # fastest !
+  .Call(C_subsetCols, x, if(is.logical(ind)) which(ind) else as.integer(ind), checksf)
+  # Fastet! becore C version:
+  # ax <- attributes(x)
+  # ax[["names"]] <- ax[["names"]][ind]
+  # .Call(C_setAttributes, .subset(x, ind), ax)
 }
 
+# Sorted out 1.5.3 -> 1.6.0:
 # Fastest because vapply runs faster on a list without any attributes !
-colsubsetFUN <- function(x, FUN) {
-  ax <- attributes(x)
-  attributes(x) <- NULL
-  ind <- vapply(x, FUN, TRUE)
-  ax[["names"]] <- ax[["names"]][ind]
-  .Call(C_setAttributes, x[ind], ax)
-}
+# colsubsetFUN <- function(x, FUN) {
+#   .Call(C_subsetCols, x, which(vapply(`attributes<-`(x, NULL), FUN, TRUE)))
+#   # Fastet! becore C version:
+#   # ax <- attributes(x)
+#   # attributes(x) <- NULL
+#   # ind <- vapply(x, FUN, TRUE)
+#   # ax[["names"]] <- ax[["names"]][ind]
+#   # .Call(C_setAttributes, x[ind], ax)
+# }
 
 at2GRP <- function(x) {
   if(is.nmfactor(x)) return(list(length(attr(x, "levels")), x, NULL))
@@ -450,20 +470,20 @@ G_t <- function(x, wm = 1L) {
     return(x)
   } # If integer time variable contains NA, noes not break C++ code..
   if(is.atomic(x)) if(is.integer(unclass(x))) return(x) else return(qG(x, na.exclude = FALSE, sort = TRUE, method = "hash")) # make sure it is sorted ! qG already checks factor !
-  if(is.GRP(x)) return(x[[2L]]) else return(GRP.default(x, return.groups = FALSE, sort = TRUE, call = FALSE)[[2L]])
+  if(is_GRP(x)) return(x[[2L]]) else return(GRP.default(x, return.groups = FALSE, sort = TRUE, call = FALSE)[[2L]])
 }
 
 # Not currently used !!
 # G_t2 <- function(x) {
 #   if(is.atomic(x)) if(is.integer(unclass(x))) return(x) else return(qG(x, sort = TRUE, na.exclude = FALSE, method = "hash")) # Hashing seems generally faster for time-variables !!
-#   if(is.GRP(x)) return(x[[2L]]) else return(GRP.default(x, return.groups = FALSE, sort = TRUE, call = FALSE)[[2L]])
+#   if(is_GRP(x)) return(x[[2L]]) else return(GRP.default(x, return.groups = FALSE, sort = TRUE, call = FALSE)[[2L]])
 # }
 
 
 rgrep <- function(exp, nam, ..., sort = TRUE) if(length(exp) == 1L) grep(exp, nam, ...) else .Call(Cpp_funique, unlist(lapply(exp, grep, nam, ...), use.names = FALSE), sort)
 rgrepl <- function(exp, nam, ...) if(length(exp) == 1L) grepl(exp, nam, ...) else Reduce(`|`, lapply(exp, grepl, nam, ...))
 
-fanyDuplicated <- function(x) if(length(x) < 100L) anyDuplicated.default(x) > 0L else .Call(Cpp_fNdistinct,x,0L,0L,NULL,FALSE) != length(x)
+fanyDuplicated <- function(x) if(length(x) < 100L) anyDuplicated.default(x) > 0L else .Call(Cpp_fndistinct,x,0L,0L,NULL,FALSE) != length(x)
 
 # NROW2 <- function(x, d) if(length(d)) d[1L] else length(x)
 # NCOL2 <- function(d, ilv) if(ilv) d[2L] else 1L
@@ -524,7 +544,7 @@ l1orlst <- function(x) if(length(x) == 1L) x else x[length(x)]
 fsimplify2array <- function(l) {
   res <- do.call(cbind, l) # lapply(l, `dimnames<-`, NULL) # also faster than unlist..
   dim(res) <- c(dim(l[[1L]]), length(l))
-  dimnames(res) <- c(dimnames(l[[1L]]), list(names(l)))
+  dimnames(res) <- c(if(length(dn <- dimnames(l[[1L]]))) dn else list(NULL, NULL), list(names(l)))
   res
 }
 
