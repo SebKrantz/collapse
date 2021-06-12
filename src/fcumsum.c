@@ -149,18 +149,14 @@ SEXP fcumsumC(SEXP x, SEXP Rng, SEXP g, SEXP o, SEXP Rnarm, SEXP Rfill) {
   if(tx == LGLSXP) tx = INTSXP;
   SEXP out = PROTECT(allocVector(tx, l));
   switch(tx) {
-  case REALSXP: {
-    double *px = REAL(x), *pout = REAL(out);
-    if(ord) fcumsum_double_impl_order(pout, px, ng, pg, po, narm, fill, l);
-    else fcumsum_double_impl(pout, px, ng, pg, narm, fill, l);
+  case REALSXP:
+    if(ord) fcumsum_double_impl_order(REAL(out), REAL(x), ng, pg, po, narm, fill, l);
+    else fcumsum_double_impl(REAL(out), REAL(x), ng, pg, narm, fill, l);
     break;
-  }
-  case INTSXP: {
-    int *px = INTEGER(x), *pout = INTEGER(out);
-    if(ord) fcumsum_int_impl_order(pout, px, ng, pg, po, narm, fill, l);
-    else fcumsum_int_impl(pout, px, ng, pg, narm, fill, l);
+  case INTSXP:
+    if(ord) fcumsum_int_impl_order(INTEGER(out), INTEGER(x), ng, pg, po, narm, fill, l);
+    else fcumsum_int_impl(INTEGER(out), INTEGER(x), ng, pg, narm, fill, l);
     break;
-  }
   default: error("Unsupported SEXP type");
   }
   DUPLICATE_ATTRIB(out, x);
