@@ -145,16 +145,16 @@ fscalelCpp <- function(x, ng = 0L, g = 0L, w = NULL, narm = TRUE, set_mean = 0, 
     .Call(`_collapse_fscalelCpp`, x, ng, g, w, narm, set_mean, set_sd)
 }
 
-fsumCpp <- function(x, ng = 0L, g = 0L, w = NULL, narm = TRUE) {
-    .Call(`_collapse_fsumCpp`, x, ng, g, w, narm)
+fsumC <- function(x, ng = 0L, g = 0L, w = NULL, narm = TRUE) {
+    .Call(`_collapse_fsumC`, x, ng, g, w, narm)
 }
 
-fsummCpp <- function(x, ng = 0L, g = 0L, w = NULL, narm = TRUE, drop = TRUE) {
-    .Call(`_collapse_fsummCpp`, x, ng, g, w, narm, drop)
+fsummC <- function(x, ng = 0L, g = 0L, w = NULL, narm = TRUE, drop = TRUE) {
+    .Call(`_collapse_fsummC`, x, ng, g, w, narm, drop)
 }
 
-fsumlCpp <- function(x, ng = 0L, g = 0L, w = NULL, narm = TRUE, drop = TRUE) {
-    .Call(`_collapse_fsumlCpp`, x, ng, g, w, narm, drop)
+fsumlC <- function(x, ng = 0L, g = 0L, w = NULL, narm = TRUE, drop = TRUE) {
+    .Call(`_collapse_fsumlC`, x, ng, g, w, narm, drop)
 }
 
 fvarsdCpp <- function(x, ng = 0L, g = 0L, gs = NULL, w = NULL, narm = TRUE, stable_algo = TRUE, sd = TRUE) {

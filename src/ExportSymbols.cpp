@@ -40,6 +40,10 @@ RcppExport SEXP ffirstlC(SEXP x, SEXP Rng, SEXP g, SEXP Rnarm);
 RcppExport SEXP flastC(SEXP x, SEXP Rng, SEXP g, SEXP Rnarm);
 RcppExport SEXP flastmC(SEXP x, SEXP Rng, SEXP g, SEXP Rnarm, SEXP Rdrop);
 RcppExport SEXP flastlC(SEXP x, SEXP Rng, SEXP g, SEXP Rnarm);
+// fsum rewritten in C:
+RcppExport SEXP fsumC(SEXP x, SEXP Rng, SEXP g, SEXP Rnarm);
+RcppExport SEXP fsummC(SEXP x, SEXP Rng, SEXP g, SEXP Rnarm, SEXP Rdrop);
+RcppExport SEXP fsumlC(SEXP x, SEXP Rng, SEXP g, SEXP Rnarm, SEXP Rdrop);
 // Added fcumsum, written in C:
 RcppExport SEXP fcumsumC(SEXP x, SEXP Rng, SEXP g, SEXP o, SEXP Rnarm, SEXP Rfill);
 RcppExport SEXP fcumsummC(SEXP x, SEXP Rng, SEXP g, SEXP o, SEXP Rnarm, SEXP Rfill);
@@ -100,9 +104,9 @@ static const R_CallMethodDef CallEntries[] = {
   {"Cpp_fscale", (DL_FUNC) &_collapse_fscaleCpp, 7},
   {"Cpp_fscalem", (DL_FUNC) &_collapse_fscalemCpp, 7},
   {"Cpp_fscalel", (DL_FUNC) &_collapse_fscalelCpp, 7},
-  {"Cpp_fsum", (DL_FUNC) &_collapse_fsumCpp, 5},
-  {"Cpp_fsumm", (DL_FUNC) &_collapse_fsummCpp, 6},
-  {"Cpp_fsuml", (DL_FUNC) &_collapse_fsumlCpp, 6},
+  {"C_fsum", (DL_FUNC) &fsumC, 5},
+  {"C_fsumm", (DL_FUNC) &fsummC, 6},
+  {"C_fsuml", (DL_FUNC) &fsumlC, 6},
   {"Cpp_fvarsd", (DL_FUNC) &_collapse_fvarsdCpp, 8},
   {"Cpp_fvarsdm", (DL_FUNC) &_collapse_fvarsdmCpp, 9},
   {"Cpp_fvarsdl", (DL_FUNC) &_collapse_fvarsdlCpp, 9},
