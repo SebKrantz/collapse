@@ -1,7 +1,4 @@
-#include <R.h>
-#include <Rinternals.h>
-
-#define SEXPPTR(x) ((SEXP *)DATAPTR(x))  // to avoid overhead of looped VECTOR_ELT
+#include "collapse_c.h"
 
 void fcumsum_double_impl(double *pout, double *px, int ng, int *pg, int narm, int fill, int l) {
   if(ng == 0) {

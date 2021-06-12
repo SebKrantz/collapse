@@ -1,7 +1,33 @@
-#include <R.h>
-#include <Rinternals.h>
+#include "collapse_c.h"
 
-#define SEXPPTR(x) ((SEXP *)DATAPTR(x))  // to avoid overhead of looped STRING_ELT and VECTOR_ELT
+void matCopyAttr(SEXP out, SEXP x, SEXP Rdrop, int ng) {
+  SEXP cn = VECTOR_ELT(getAttrib(x, R_DimNamesSymbol), 1); // PROTECT ??
+  if(ng == 0 && asLogical(Rdrop)) {
+    if(length(cn)) setAttrib(out, R_NamesSymbol, cn);
+  } else {
+    SEXP dim, dn;
+    setAttrib(out, R_DimSymbol, dim = getAttrib(x, R_DimSymbol)); // duplicate ??
+    INTEGER(dim)[0] = ng == 0 ? 1 : ng;
+    if(length(cn)) {
+      setAttrib(out, R_DimSymbol, dn = allocVector(VECSXP, 2)); // Protected by out..
+      SET_VECTOR_ELT(dn, 0, R_NilValue);
+      SET_VECTOR_ELT(dn, 1, cn);
+    }
+    if(!isObject(x)) copyMostAttrib(x, out);
+  }
+}
+
+void DFcopyAttr(SEXP out, SEXP x, int ng) {
+  DUPLICATE_ATTRIB(out, x);
+  if(ng == 0) {
+    setAttrib(out, R_RowNamesSymbol, ScalarInteger(1));
+  } else {
+    SEXP rn;
+    setAttrib(out, R_RowNamesSymbol, rn = allocVector(INTSXP, 2));
+    INTEGER(rn)[0] = NA_INTEGER;
+    INTEGER(rn)[1] = -ng;
+  }
+}
 
 // Faster than rep_len(value, n) and slightly faster than matrix(value, n) (which in turn is faster than rep_len)...
 SEXP falloc(SEXP value, SEXP n) {

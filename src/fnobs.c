@@ -1,7 +1,4 @@
-#include <R.h>
-#include <Rinternals.h>
-
-#define SEXPPTR(x) ((SEXP *)DATAPTR(x))  // to avoid overhead of looped VECTOR_ELT
+#include "collapse_c.h"
 
 SEXP fnobsC(SEXP x, SEXP Rng, SEXP g) {
   int l = length(x), ng = asInteger(Rng);
