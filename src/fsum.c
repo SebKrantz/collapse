@@ -115,10 +115,7 @@ void fsum_int_impl(int *pout, int *px, int ng, int *pg, int narm, int l) {
     } else {
       memset(pout, 0, sizeof(int) * l);
       --pout;
-      for(int i = 0; i != l; ++i) {
-        if(px[i] == NA_INTEGER) pout[pg[i]] = NA_INTEGER;
-        else pout[pg[i]] += px[i];
-      }
+      for(int i = l; i--; ) pout[pg[i]] += px[i]; // Used to stop loop when all groups passed with NA, but probably no speed gain since groups are mostly ordered.
     }
   }
 }
