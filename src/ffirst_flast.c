@@ -77,7 +77,7 @@ SEXP ffirst_impl(SEXP x, int ng, SEXP g, bool narm, int *gl) {
         for(int i = ng; i--; ) pfirst[i] = NA_REAL;
         --pfirst;
         for(int i = 0; i != l; ++i) {
-          if(!ISNAN(px[i])) {
+          if(NISNAN(px[i])) {
             if(ISNAN(pfirst[pg[i]])) {
               pfirst[pg[i]] = px[i];
               ++ngs;
@@ -307,7 +307,7 @@ SEXP ffirstmC(SEXP x, SEXP Rng, SEXP g, SEXP Rnarm, SEXP Rdrop) {
         for(int i = ng * col; i--; ) pfirst[i] = NA_REAL;
         --pfirst;
         for(int j = 0; j != col; ++j) {
-          for(int i = 0; i != l; ++i) if(!ISNAN(px[i]) && ISNAN(pfirst[pg[i]])) pfirst[pg[i]] = px[i];
+          for(int i = 0; i != l; ++i) if(NISNAN(px[i]) && ISNAN(pfirst[pg[i]])) pfirst[pg[i]] = px[i];
           px += l; pfirst += ng;
         }
         break;
@@ -446,7 +446,7 @@ SEXP flast_impl(SEXP x, int ng, SEXP g, bool narm, int *gl) {
         for(int i = ng; i--; ) plast[i] = NA_REAL;
         --plast;
         for(int i = l; i--; ) {
-          if(!ISNAN(px[i])) {
+          if(NISNAN(px[i])) {
             if(ISNAN(plast[pg[i]])) {
               plast[pg[i]] = px[i];
               ++ngs;
@@ -646,7 +646,7 @@ SEXP flastmC(SEXP x, SEXP Rng, SEXP g, SEXP Rnarm, SEXP Rdrop) {
         for(int i = ng * col; i--; ) plast[i] = NA_REAL;
         --plast;
         for(int j = 0; j != col; ++j) {
-          for(int i = l; i--; ) if(!ISNAN(px[i]) && ISNAN(plast[pg[i]])) plast[pg[i]] = px[i];
+          for(int i = l; i--; ) if(NISNAN(px[i]) && ISNAN(plast[pg[i]])) plast[pg[i]] = px[i];
           px += l; plast += ng;
         }
         break;

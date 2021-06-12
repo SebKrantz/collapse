@@ -153,7 +153,7 @@ SEXP Cna_rm(SEXP x) {
     SEXP out = PROTECT(allocVector(REALSXP, n - k));
     double *pout = REAL(out);
     k = 0;
-    for (int i = 0; i != n; ++i) if(!ISNAN(xd[i])) pout[k++] = xd[i]; // using xd[i] == xd[i] is not faster !!
+    for (int i = 0; i != n; ++i) if(NISNAN(xd[i])) pout[k++] = xd[i]; // using xd[i] == xd[i] is not faster !!
     copyMostAttrib(x, out);
     UNPROTECT(1);
     return out;
