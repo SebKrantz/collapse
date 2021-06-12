@@ -141,19 +141,22 @@ SEXP fsumC(SEXP x, SEXP Rng, SEXP g, SEXP w, SEXP Rnarm) {
     }
   } else {
     if(l != length(w)) error("length(w) must match length(x)");
-    bool twr = TYPEOF(w) == REALSXP, txr = tx == REALSXP;
+    int tw = TYPEOF(w);
     SEXP xr, wr;
-    if(!twr) {
-      if(TYPEOF(w) != INTSXP) error("weigths must be double or integer");
+    double *px, *pw;
+    if(tw != REALSXP) {
+      if(tw != INTSXP) error("weigths must be double or integer");
       wr = PROTECT(coerceVector(w, REALSXP));
+      pw = REAL(wr);
       ++nprotect;
-    }
-    if(!txr) {
-      if(TYPEOF(x) != INTSXP) error("x must be double or integer");
+    } else pw = REAL(w);
+    if(tx != REALSXP) {
+      if(tx != INTSXP) error("x must be double or integer");
       xr = PROTECT(coerceVector(x, REALSXP));
+      px = REAL(xr);
       ++nprotect;
-    }
-    fsum_weights_impl(REAL(out), txr ? REAL(x) : REAL(xr), ng, INTEGER(g), twr ? REAL(w) : REAL(wr), narm, l);
+    } else px = REAL(x);
+    fsum_weights_impl(REAL(out), px, ng, INTEGER(g), pw, narm, l);
   }
   if(ng && !isObject(x)) copyMostAttrib(x, out);
   UNPROTECT(nprotect);
@@ -163,7 +166,7 @@ SEXP fsumC(SEXP x, SEXP Rng, SEXP g, SEXP w, SEXP Rnarm) {
 SEXP fsummC(SEXP x, SEXP Rng, SEXP g, SEXP w, SEXP Rnarm, SEXP Rdrop) {
   SEXP dim = getAttrib(x, R_DimSymbol);
   if(isNull(dim)) error("x is not a matrix");
-  int tx = TYPEOF(x), l = INTEGER(dim)[0], col = INTEGER(dim)[1], *pg = INTEGER(g);
+  int tx = TYPEOF(x), l = INTEGER(dim)[0], col = INTEGER(dim)[1], *pg = INTEGER(g),
       ng = asInteger(Rng), narm = asInteger(Rnarm), nprotect = 1, nwl = isNull(w);
   if (l < 1) return x; // Prevents seqfault for numeric(0) #101
   if(ng && l != length(g)) error("length(g) must match nrow(x)");
@@ -185,19 +188,21 @@ SEXP fsummC(SEXP x, SEXP Rng, SEXP g, SEXP w, SEXP Rnarm, SEXP Rdrop) {
     }
   } else {
     if(l != length(w)) error("length(w) must match nrow(x)");
-    bool twr = TYPEOF(w) == REALSXP, txr = tx == REALSXP;
+    int tw = TYPEOF(w);
     SEXP xr, wr;
-    if(!twr) {
-      if(TYPEOF(w) != INTSXP) error("weigths must be double or integer");
+    double *px, *pw, *pout = REAL(out);
+    if(tw != REALSXP) {
+      if(tw != INTSXP) error("weigths must be double or integer");
       wr = PROTECT(coerceVector(w, REALSXP));
+      pw = REAL(wr);
       ++nprotect;
-    }
-    if(!txr) {
-      if(TYPEOF(x) != INTSXP) error("x must be double or integer");
+    } else pw = REAL(w);
+    if(tx != REALSXP) {
+      if(tx != INTSXP) error("x must be double or integer");
       xr = PROTECT(coerceVector(x, REALSXP));
+      px = REAL(xr);
       ++nprotect;
-    }
-    double *px = txr ? REAL(x) : REAL(xr), *pout = REAL(out), *pw = twr ? REAL(w) : REAL(wr);
+    } else px = REAL(x);
     for(int j = 0; j != col; ++j) fsum_weights_impl(pout + j*l, px + j*l, ng, pg, pw, narm, l);
   }
   matCopyAttr(out, x, Rdrop, ng);
@@ -213,12 +218,13 @@ SEXP fsumlC(SEXP x, SEXP Rng, SEXP g, SEXP w, SEXP Rnarm, SEXP Rdrop) {
     double *pout = REAL(out);
     for(int j = 0; j != l; ++j) pout[j] = asReal(fsumC(px[j], Rng, g, w, Rnarm));
     setAttrib(out, R_NamesSymbol, getAttrib(x, R_NamesSymbol));
-  } else {
-    SEXP out = PROTECT(allocVector(VECSXP, l)), *pout = SEXPPTR(out), *px = SEXPPTR(x);
-    for(int j = 0; j != l; ++j) pout[j] = fsumC(px[j], Rng, g, w, Rnarm);
-    if(ng == 0) for(int j = 0; j != l; ++j) copyMostAttrib(px[j], pout[j]);
-    DFcopyAttr(out, x, ng);
+    UNPROTECT(1);
+    return out;
   }
+  SEXP out = PROTECT(allocVector(VECSXP, l)), *pout = SEXPPTR(out), *px = SEXPPTR(x);
+  for(int j = 0; j != l; ++j) pout[j] = fsumC(px[j], Rng, g, w, Rnarm);
+  if(ng == 0) for(int j = 0; j != l; ++j) copyMostAttrib(px[j], pout[j]);
+  DFcopyAttr(out, x, ng);
   UNPROTECT(1);
   return out;
 }
