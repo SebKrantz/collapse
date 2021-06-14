@@ -6,16 +6,20 @@ void matCopyAttr(SEXP out, SEXP x, SEXP Rdrop, int ng) {
     if(length(cn)) setAttrib(out, R_NamesSymbol, cn);
   } else {
     SEXP dim, dn;
-    setAttrib(out, R_DimSymbol, dim = getAttrib(x, R_DimSymbol)); // duplicate ??
+    dim = PROTECT(duplicate(getAttrib(x, R_DimSymbol)));
     INTEGER(dim)[0] = ng == 0 ? 1 : ng;
+    dimgets(out, dim);
     if(length(cn)) {
-      setAttrib(out, R_DimSymbol, dn = allocVector(VECSXP, 2)); // Protected by out..
+      setAttrib(out, R_DimNamesSymbol, dn = allocVector(VECSXP, 2)); // Protected by out..
       SET_VECTOR_ELT(dn, 0, R_NilValue);
       SET_VECTOR_ELT(dn, 1, cn);
     }
     if(!isObject(x)) copyMostAttrib(x, out);
+    UNPROTECT(1);
   }
 }
+
+
 
 void DFcopyAttr(SEXP out, SEXP x, int ng) {
   DUPLICATE_ATTRIB(out, x);
