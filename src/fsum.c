@@ -33,7 +33,7 @@ void fsum_double_impl(double *pout, double *px, int ng, int *pg, int narm, int l
         }
       }
     } else {
-      memset(pout, 0, sizeof(double) * l);
+      memset(pout, 0.0, sizeof(double) * ng);
       --pout;
       for(int i = l; i--; ) pout[pg[i]] += px[i]; // Used to stop loop when all groups passed with NA, but probably no speed gain since groups are mostly ordered.
     }
@@ -73,7 +73,7 @@ void fsum_weights_impl(double *pout, double *px, int ng, int *pg, double *pw, in
         else pout[pg[i]] += px[i] * pw[i];
       }
     } else {
-      memset(pout, 0, sizeof(double) * l);
+      memset(pout, 0.0, sizeof(double) * ng);
       --pout;
       for(int i = l; i--; ) pout[pg[i]] += px[i] * pw[i]; // Used to stop loop when all groups passed with NA, but probably no speed gain since groups are mostly ordered.
     }
@@ -113,7 +113,7 @@ void fsum_int_impl(int *pout, int *px, int ng, int *pg, int narm, int l) {
         }
       }
     } else {
-      memset(pout, 0, sizeof(int) * l);
+      memset(pout, 0, sizeof(int) * ng);
       --pout;
       for(int i = l; i--; ) pout[pg[i]] += px[i]; // Used to stop loop when all groups passed with NA, but probably no speed gain since groups are mostly ordered.
     }
@@ -142,7 +142,7 @@ SEXP fsumC(SEXP x, SEXP Rng, SEXP g, SEXP w, SEXP Rnarm) {
     SEXP xr, wr;
     double *px, *pw;
     if(tw != REALSXP) {
-      if(tw != INTSXP) error("weigths must be double or integer");
+      if(tw != INTSXP && tw != LGLSXP) error("weigths must be double or integer");
       wr = PROTECT(coerceVector(w, REALSXP));
       pw = REAL(wr);
       ++nprotect;
@@ -164,21 +164,22 @@ SEXP fsummC(SEXP x, SEXP Rng, SEXP g, SEXP w, SEXP Rnarm, SEXP Rdrop) {
   SEXP dim = getAttrib(x, R_DimSymbol);
   if(isNull(dim)) error("x is not a matrix");
   int tx = TYPEOF(x), l = INTEGER(dim)[0], col = INTEGER(dim)[1], *pg = INTEGER(g),
-      ng = asInteger(Rng), narm = asInteger(Rnarm), nprotect = 1, nwl = isNull(w);
+      ng = asInteger(Rng), ng1 = ng == 0 ? 1 : ng,
+      narm = asInteger(Rnarm), nprotect = 1, nwl = isNull(w);
   if (l < 1) return x; // Prevents seqfault for numeric(0) #101
   if(ng && l != length(g)) error("length(g) must match nrow(x)");
   if(tx == LGLSXP) tx = INTSXP;
-  SEXP out = PROTECT(allocVector(nwl ? tx : REALSXP, ng ? l * ng : l));
+  SEXP out = PROTECT(allocVector(nwl ? tx : REALSXP, ng == 0 ? col : col * ng));
   if(nwl) {
     switch(tx) {
       case REALSXP: {
         double *px = REAL(x), *pout = REAL(out);
-        for(int j = 0; j != col; ++j) fsum_double_impl(pout + j*l, px + j*l, ng, pg, narm, l);
+        for(int j = 0; j != col; ++j) fsum_double_impl(pout + j*ng1, px + j*l, ng, pg, narm, l);
         break;
       }
       case INTSXP: {
         int *px = INTEGER(x), *pout = INTEGER(out);
-        for(int j = 0; j != col; ++j) fsum_int_impl(pout + j*l, px + j*l, ng, pg, narm, l);
+        for(int j = 0; j != col; ++j) fsum_int_impl(pout + j*ng1, px + j*l, ng, pg, narm, l);
         break;
       }
       default: error("Unsupported SEXP type");
@@ -189,7 +190,7 @@ SEXP fsummC(SEXP x, SEXP Rng, SEXP g, SEXP w, SEXP Rnarm, SEXP Rdrop) {
     SEXP xr, wr;
     double *px, *pw, *pout = REAL(out);
     if(tw != REALSXP) {
-      if(tw != INTSXP) error("weigths must be double or integer");
+      if(tw != INTSXP && tw != LGLSXP) error("weigths must be double or integer");
       wr = PROTECT(coerceVector(w, REALSXP));
       pw = REAL(wr);
       ++nprotect;
@@ -200,7 +201,7 @@ SEXP fsummC(SEXP x, SEXP Rng, SEXP g, SEXP w, SEXP Rnarm, SEXP Rdrop) {
       px = REAL(xr);
       ++nprotect;
     } else px = REAL(x);
-    for(int j = 0; j != col; ++j) fsum_weights_impl(pout + j*l, px + j*l, ng, pg, pw, narm, l);
+    for(int j = 0; j != col; ++j) fsum_weights_impl(pout + j*ng1, px + j*l, ng, pg, pw, narm, l);
   }
   matCopyAttr(out, x, Rdrop, ng);
   UNPROTECT(nprotect);
