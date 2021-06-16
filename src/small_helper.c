@@ -1,7 +1,8 @@
 #include "collapse_c.h"
 
 void matCopyAttr(SEXP out, SEXP x, SEXP Rdrop, int ng) {
-  SEXP cn = VECTOR_ELT(getAttrib(x, R_DimNamesSymbol), 1); // PROTECT ??
+  SEXP dn = getAttrib(x, R_DimNamesSymbol);
+  SEXP cn = isNull(dn) ? R_NilValue : VECTOR_ELT(dn, 1); // PROTECT ??
   if(ng == 0 && asLogical(Rdrop)) {
     if(length(cn)) setAttrib(out, R_NamesSymbol, cn);
   } else {
@@ -18,8 +19,6 @@ void matCopyAttr(SEXP out, SEXP x, SEXP Rdrop, int ng) {
     UNPROTECT(1);
   }
 }
-
-
 
 void DFcopyAttr(SEXP out, SEXP x, int ng) {
   DUPLICATE_ATTRIB(out, x);

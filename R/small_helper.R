@@ -115,8 +115,12 @@ add_stub <- function(X, stub, pre = TRUE) {
   if(is.atomic(X) && is.array(X)) {
     if(length(dim(X)) > 2L) stop("Can't stub higher dimensional arrays!")
     dn <- dimnames(X)
-    dimnames(X) <- list(dn[[1L]], if(pre) paste0(stub, dn[[2L]]) else paste0(dn[[2L]], stub))
-  } else attr(X, "names") <- if(pre) paste0(stub, attr(X, "names")) else paste0(attr(X, "names"), stub)
+    cn <- dn[[2L]]
+    if(length(cn)) dimnames(X) <- list(dn[[1L]], if(pre) paste0(stub, cn) else paste0(cn, stub))
+  } else {
+    nam <- attr(X, "names")
+    if(length(nam)) attr(X, "names") <- if(pre) paste0(stub, nam) else paste0(nam, stub)
+  }
   X
 }
 
