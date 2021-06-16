@@ -1,6 +1,6 @@
 #include "collapse_c.h"
 // #include <stdint.h>
-#include <stdbool.h>
+// #include <stdbool.h>
 
 // TODO: Implemented smarter copy names ?!
 // About Pointers
@@ -9,7 +9,7 @@
 
 
 // Use const ?
-SEXP ffirst_impl(SEXP x, int ng, SEXP g, bool narm, int *gl) {
+SEXP ffirst_impl(SEXP x, int ng, SEXP g, int narm, int *gl) {
 
   int l = length(x), tx = TYPEOF(x), end = l-1;
   if (l < 2) return x; // Prevents seqfault for numeric(0) #101
@@ -60,10 +60,8 @@ SEXP ffirst_impl(SEXP x, int ng, SEXP g, bool narm, int *gl) {
       }
     }
     copyMostAttrib(x, out); //  DUPLICATE_ATTRIB(out, x);
-    if(getAttrib(x, R_NamesSymbol) != R_NilValue) {
-      if(narm) namesgets(out, STRING_ELT(getAttrib(x, R_NamesSymbol), j)); // ScalarString()??
-      else namesgets(out, STRING_ELT(getAttrib(x, R_NamesSymbol), 0)); // ScalarString()??
-    }
+    if(!isNull(getAttrib(x, R_NamesSymbol)))
+      namesgets(out, STRING_ELT(getAttrib(x, R_NamesSymbol), j)); // ScalarString()??
     UNPROTECT(1);
     return out;
   } else { // with groups
@@ -77,11 +75,10 @@ SEXP ffirst_impl(SEXP x, int ng, SEXP g, bool narm, int *gl) {
         for(int i = ng; i--; ) pfirst[i] = NA_REAL;
         --pfirst;
         for(int i = 0; i != l; ++i) {
-          if(NISNAN(px[i])) {
+          if(NISNAN(px[i])) { // Fastest ???
             if(ISNAN(pfirst[pg[i]])) {
               pfirst[pg[i]] = px[i];
-              ++ngs;
-              if(ngs == ng) break;
+              if(++ngs == ng) break;
             }
           }
         }
@@ -95,8 +92,7 @@ SEXP ffirst_impl(SEXP x, int ng, SEXP g, bool narm, int *gl) {
           if(px[i] != NA_STRING) {
             if(pfirst[pg[i]] == NA_STRING) {
               pfirst[pg[i]] = px[i];
-              ++ngs;
-              if(ngs == ng) break;
+              if(++ngs == ng) break;
             }
           }
         }
@@ -111,8 +107,7 @@ SEXP ffirst_impl(SEXP x, int ng, SEXP g, bool narm, int *gl) {
           if(px[i] != NA_INTEGER) {
             if(pfirst[pg[i]] == NA_INTEGER) {
               pfirst[pg[i]] = px[i];
-              ++ngs;
-              if(ngs == ng) break;
+              if(++ngs == ng) break;
             }
           }
         }
@@ -126,8 +121,7 @@ SEXP ffirst_impl(SEXP x, int ng, SEXP g, bool narm, int *gl) {
           if(length(px[i])) {
             if(pfirst[pg[i]] == R_NilValue) {
               pfirst[pg[i]] = px[i];
-              ++ngs;
-              if(ngs == ng) break;
+              if(++ngs == ng) break;
             }
           }
         }
@@ -179,7 +173,7 @@ SEXP ffirst_impl(SEXP x, int ng, SEXP g, bool narm, int *gl) {
 }
 
 SEXP ffirstC(SEXP x, SEXP Rng, SEXP g, SEXP Rnarm) {
-  int *pgl, ng = asInteger(Rng), narm = asLogical(Rnarm);
+  int *pgl, ng = asInteger(Rng), narm = asInteger(Rnarm);
   if(ng == 0 || narm) {
     pgl = &ng; // TO avoid Wmaybe uninitialized
     return ffirst_impl(x, ng, g, narm, pgl);
@@ -187,9 +181,10 @@ SEXP ffirstC(SEXP x, SEXP Rng, SEXP g, SEXP Rnarm) {
 
   // Using C-Array -> Error, possibly because unprotected ???
   int gl[ng], *pg = INTEGER(g), lg = length(g);
-  memset(gl, 0, sizeof(int) * ng); //
-  pgl = &gl[0] - 1; // Or gl-1; // Pointer to -1 array element (since g starts from 1): https://beginnersbook.com/2014/01/c-pointer-to-array-example/
-  for(int i = 0; i != lg; ++i) if(pgl[pg[i]] == 0) pgl[pg[i]] = i; // Correct? even for first value ?
+  pgl = &gl[0];
+  for(int i = ng; i--; ) pgl[i] = NA_INTEGER;
+  --pgl; // &gl[0]-1 Or gl-1; // Pointer to -1 array element (since g starts from 1): https://beginnersbook.com/2014/01/c-pointer-to-array-example/
+  for(int i = 0; i != lg; ++i) if(pgl[pg[i]] == NA_INTEGER) pgl[pg[i]] = i; // Correct? even for first value ?
 
   //  SEXP gl = PROTECT(allocVector(INTSXP, ng));
   //  memset(gl, 0, sizeof(int)*ng); //
@@ -198,32 +193,34 @@ SEXP ffirstC(SEXP x, SEXP Rng, SEXP g, SEXP Rnarm) {
   //  for(int i = length(g); i--; ) if(!pgl[pg[i]]) pgl[pg[i]] = i; // Correct? even for first value ?
 
 
-  //  SEXP out = PROTECT(allocVector(INTSXP, ng));
-  //  int *pout = INTEGER(out);
-  //  for(int i = ng; i--; ) pout[i] = pgl[i+1];
-  //  UNPROTECT(1);
-  //  return out; // Checking pointer: appears to be correct...
+  // SEXP out = PROTECT(allocVector(INTSXP, ng));
+  // int *pout = INTEGER(out);
+  // for(int i = ng; i--; ) pout[i] = pgl[i+1];
+  // UNPROTECT(1);
+  // return out; // Checking pointer: appears to be correct...
   // UNPROTECT(1);
   // return gl;
   return ffirst_impl(x, ng, g, narm, ++pgl);
 }
 
 SEXP ffirstlC(SEXP x, SEXP Rng, SEXP g, SEXP Rnarm) {
-  int l = length(x), *pgl, ng = asInteger(Rng), narm = asLogical(Rnarm), groups = ng != 0;
-  if(groups && !narm) {
-    int gl[ng], *pg = INTEGER(g), lg = length(g);
-    memset(gl, 0, sizeof(int) * ng);
-    pgl = &gl[0] - 1; // Or gl - 1; // Pointer to -1 array element (since g starts from 1): https://beginnersbook.com/2014/01/c-pointer-to-array-example/
-    for(int i = 0; i != lg; ++i) if(pgl[pg[i]] == 0) pgl[pg[i]] = i; // Correct? even for first value ?
+  int l = length(x), *pgl, ng = asInteger(Rng), narm = asInteger(Rnarm), nprotect = 1;
+  if(ng > 0 && !narm) {
+    // Cant use integer array here because apparently it is removed by the garbage collector when passed to a new function
+    SEXP gl = PROTECT(allocVector(INTSXP, ng)); ++nprotect;
+    int *pg = INTEGER(g), lg = length(g); // gl[ng],
+    pgl = INTEGER(gl); // pgl = &gl[0];
+    for(int i = ng; i--; ) pgl[i] = NA_INTEGER;
+    --pgl;
+    for(int i = 0; i != lg; ++i) if(pgl[pg[i]] == NA_INTEGER) pgl[pg[i]] = i;
     ++pgl;
   } else pgl = &l; // To avoid Wmaybe uninitialized..
+  // return ffirst_impl(VECTOR_ELT(x, 0), ng, g, narm, pgl);
   SEXP out = PROTECT(allocVector(VECSXP, l));
   SEXP *px = SEXPPTR(x), *pout = SEXPPTR(out);
-  // SEXP *px = SEXPPTR(x);
-  //  return ffirst_impl(VECTOR_ELT(x, 0), ng, g, narm, pgl);
   for(int j = 0; j != l; ++j) pout[j] = ffirst_impl(px[j], ng, g, narm, pgl);
   DFcopyAttr(out, x, ng);
-  UNPROTECT(1);
+  UNPROTECT(nprotect);
   return out;
 }
 
@@ -231,8 +228,7 @@ SEXP ffirstlC(SEXP x, SEXP Rng, SEXP g, SEXP Rnarm) {
 SEXP ffirstmC(SEXP x, SEXP Rng, SEXP g, SEXP Rnarm, SEXP Rdrop) {
   SEXP dim = getAttrib(x, R_DimSymbol);
   if(isNull(dim)) error("x is not a matrix");
-  int tx = TYPEOF(x), ng = asInteger(Rng),
-    narm = asLogical(Rnarm),
+  int tx = TYPEOF(x), ng = asInteger(Rng), narm = asInteger(Rnarm),
     l = INTEGER(dim)[0], col = INTEGER(dim)[1], end = l-1, nprotect = 1;
   if (l < 2) return x;
   if (ng == 0) {
@@ -337,10 +333,11 @@ SEXP ffirstmC(SEXP x, SEXP Rng, SEXP g, SEXP Rnarm, SEXP Rdrop) {
       }
     } else {
       int gl[ng], *pgl, lg = length(g);
-      memset(gl, 0, sizeof(int) * ng);
-      pgl = &gl[0] - 1; // Or gl - 1; // Pointer to -1 array element (since g starts from 1): https://beginnersbook.com/2014/01/c-pointer-to-array-example/
-      for(int i = 0; i != lg; ++i) if(pgl[pg[i]] == 0) pgl[pg[i]] = i; // Correct? even for first value ?
-      pgl++;
+      pgl = &gl[0];
+      for(int i = ng; i--; ) pgl[i] = NA_INTEGER;
+      --pgl;
+      for(int i = 0; i != lg; ++i) if(pgl[pg[i]] == NA_INTEGER) pgl[pg[i]] = i;
+      ++pgl;
       switch(tx) {
       case REALSXP: {
         double *px = REAL(x), *pfirst = REAL(first);
@@ -378,7 +375,7 @@ SEXP ffirstmC(SEXP x, SEXP Rng, SEXP g, SEXP Rnarm, SEXP Rdrop) {
 
 
 // Use const ?
-SEXP flast_impl(SEXP x, int ng, SEXP g, bool narm, int *gl) {
+SEXP flast_impl(SEXP x, int ng, SEXP g, int narm, int *gl) {
 
   int l = length(x), tx = TYPEOF(x);
   if (l < 2) return x; // Prevents seqfault for numeric(0) #101
@@ -429,10 +426,8 @@ SEXP flast_impl(SEXP x, int ng, SEXP g, bool narm, int *gl) {
       }
     }
     copyMostAttrib(x, out); //  DUPLICATE_ATTRIB(out, x);
-    if(getAttrib(x, R_NamesSymbol) != R_NilValue) {
-      if(narm) namesgets(out, STRING_ELT(getAttrib(x, R_NamesSymbol), j)); // ScalarString()??
-      else namesgets(out, STRING_ELT(getAttrib(x, R_NamesSymbol), l-1)); // ScalarString()??
-    }
+    if(!isNull(getAttrib(x, R_NamesSymbol)))
+      namesgets(out, STRING_ELT(getAttrib(x, R_NamesSymbol), j)); // ScalarString()??
     UNPROTECT(1);
     return out;
   } else { // with groups
@@ -449,8 +444,7 @@ SEXP flast_impl(SEXP x, int ng, SEXP g, bool narm, int *gl) {
           if(NISNAN(px[i])) {
             if(ISNAN(plast[pg[i]])) {
               plast[pg[i]] = px[i];
-              ++ngs;
-              if(ngs == ng) break;
+              if(++ngs == ng) break;
             }
           }
         }
@@ -464,8 +458,7 @@ SEXP flast_impl(SEXP x, int ng, SEXP g, bool narm, int *gl) {
           if(px[i] != NA_STRING) {
             if(plast[pg[i]] == NA_STRING) {
               plast[pg[i]] = px[i];
-              ++ngs;
-              if(ngs == ng) break;
+              if(++ngs == ng) break;
             }
           }
         }
@@ -480,8 +473,7 @@ SEXP flast_impl(SEXP x, int ng, SEXP g, bool narm, int *gl) {
           if(px[i] != NA_INTEGER) {
             if(plast[pg[i]] == NA_INTEGER) {
               plast[pg[i]] = px[i];
-              ++ngs;
-              if(ngs == ng) break;
+              if(++ngs == ng) break;
             }
           }
         }
@@ -495,8 +487,7 @@ SEXP flast_impl(SEXP x, int ng, SEXP g, bool narm, int *gl) {
           if(length(px[i])) {
             if(plast[pg[i]] == R_NilValue) {
               plast[pg[i]] = px[i];
-              ++ngs;
-              if(ngs == ng) break;
+              if(++ngs == ng) break;
             }
           }
         }
@@ -537,32 +528,35 @@ SEXP flast_impl(SEXP x, int ng, SEXP g, bool narm, int *gl) {
 }
 
 SEXP flastC(SEXP x, SEXP Rng, SEXP g, SEXP Rnarm) {
-  int *pgl, ng = asInteger(Rng), narm = asLogical(Rnarm);
+  int *pgl, ng = asInteger(Rng), narm = asInteger(Rnarm);
   if(ng == 0 || narm) {
     pgl = &ng;
     return flast_impl(x, ng, g, narm, pgl);
   }
   int gl[ng], *pg = INTEGER(g);
-  memset(gl, 0, sizeof(int) * ng);
-  pgl = &gl[0] - 1;
-  for(int i = length(g); i--; ) if(pgl[pg[i]] == 0) pgl[pg[i]] = i;
+  pgl = &gl[0];
+  for(int i = ng; i--; ) pgl[i] = NA_INTEGER;
+  --pgl;
+  for(int i = length(g); i--; ) if(pgl[pg[i]] == NA_INTEGER) pgl[pg[i]] = i;
   return flast_impl(x, ng, g, narm, ++pgl);
 }
 
 SEXP flastlC(SEXP x, SEXP Rng, SEXP g, SEXP Rnarm) {
-  int l = length(x), *pgl, ng = asInteger(Rng), narm = asLogical(Rnarm);
-  if(ng != 0 && !narm) {
-    int gl[ng], *pg = INTEGER(g);
-    memset(gl, 0, sizeof(int) * ng);
-    pgl = &gl[0] - 1;
-    for(int i = length(g); i--; ) if(pgl[pg[i]] == 0) pgl[pg[i]] = i;
+  int l = length(x), *pgl, ng = asInteger(Rng), narm = asInteger(Rnarm), nprotect = 1;
+  if(ng > 0 && !narm) {
+    SEXP gl = PROTECT(allocVector(INTSXP, ng)); ++nprotect;
+    int *pg = INTEGER(g);
+    pgl = INTEGER(gl);
+    for(int i = ng; i--; ) pgl[i] = NA_INTEGER;
+    --pgl;
+    for(int i = length(g); i--; ) if(pgl[pg[i]] == NA_INTEGER) pgl[pg[i]] = i;
     ++pgl;
   } else pgl = &l;
   SEXP out = PROTECT(allocVector(VECSXP, l));
   SEXP *px = SEXPPTR(x), *pout = SEXPPTR(out);
   for(int j = 0; j != l; ++j) pout[j] = flast_impl(px[j], ng, g, narm, pgl);
   DFcopyAttr(out, x, ng);
-  UNPROTECT(1);
+  UNPROTECT(nprotect);
   return out;
 }
 
@@ -571,7 +565,7 @@ SEXP flastmC(SEXP x, SEXP Rng, SEXP g, SEXP Rnarm, SEXP Rdrop) {
   SEXP dim = getAttrib(x, R_DimSymbol);
   if(isNull(dim)) error("x is not a matrix");
   int tx = TYPEOF(x), ng = asInteger(Rng),
-    narm = asLogical(Rnarm), l = INTEGER(dim)[0],
+    narm = asInteger(Rnarm), l = INTEGER(dim)[0],
     col = INTEGER(dim)[1], nprotect = 1;
   if (l < 2) return x;
   if (ng == 0) {
@@ -583,8 +577,7 @@ SEXP flastmC(SEXP x, SEXP Rng, SEXP g, SEXP Rnarm, SEXP Rdrop) {
         for(int j = 0, i = l-1; j != col; ++j) {
           while(ISNAN(px[i]) && i != 0) --i;
           pout[j] = px[i];
-          px += l;
-          i = l-1;
+          px += l; i = l-1;
         }
         break;
       }
@@ -593,8 +586,7 @@ SEXP flastmC(SEXP x, SEXP Rng, SEXP g, SEXP Rnarm, SEXP Rdrop) {
         for(int j = 0, i = l-1; j != col; ++j) {
           while(px[i] == NA_STRING && i != 0) --i;
           pout[j] = px[i];
-          px += l;
-          i = l-1;
+          px += l; i = l-1;
         }
         break;
       }
@@ -604,8 +596,7 @@ SEXP flastmC(SEXP x, SEXP Rng, SEXP g, SEXP Rnarm, SEXP Rdrop) {
         for(int j = 0, i = l-1; j != col; ++j) {
           while(px[i] == NA_INTEGER && i != 0) --i;
           pout[j] = px[i];
-          px += l;
-          i = l-1;
+          px += l; i = l-1;
         }
         break;
       }
@@ -676,10 +667,11 @@ SEXP flastmC(SEXP x, SEXP Rng, SEXP g, SEXP Rnarm, SEXP Rdrop) {
       }
     } else {
       int gl[ng], *pgl;
-      memset(gl, 0, sizeof(int) * ng);
-      pgl = &gl[0] - 1; // Or gl - 1; // Pointer to -1 array element (since g starts from 1): https://beginnersbook.com/2014/01/c-pointer-to-array-example/
-      for(int i = length(g); i--; ) if(pgl[pg[i]] == 0) pgl[pg[i]] = i; // Correct? even for last value ?
-      pgl++;
+      pgl = &gl[0];
+      for(int i = ng; i--; ) pgl[i] = NA_INTEGER;
+      --pgl;
+      for(int i = l; i--; ) if(pgl[pg[i]] == NA_INTEGER) pgl[pg[i]] = i;
+      ++pgl;
       switch(tx) {
       case REALSXP: {
         double *px = REAL(x), *plast = REAL(last);
