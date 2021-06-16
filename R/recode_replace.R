@@ -27,12 +27,12 @@ recode_num <- function(X, ..., default = NULL, missing = NULL) {
       nr <- if(is.atomic(X)) NROW(X) else fnrow2(X)
       if(missingl) {
         repfun <- function(y) if(is.numeric(y)) {
-          z <- duplAttributes(rep(default, nr), y)
+          z <- duplAttributes(alloc(default, nr), y)
           z[is.na(y)] <- missing # could put behind -> better but inconsistent
           `[<-`(z, y == nam, value = args)
         } else y
       } else {
-        repfun <- function(y) if(is.numeric(y)) `[<-`(duplAttributes(rep(default, nr), y), y == nam, value = args) else y
+        repfun <- function(y) if(is.numeric(y)) `[<-`(duplAttributes(alloc(default, nr), y), y == nam, value = args) else y
       }
     }
   } else {
@@ -56,14 +56,14 @@ recode_num <- function(X, ..., default = NULL, missing = NULL) {
       nr <- if(is.atomic(X)) NROW(X) else fnrow2(X)
       if(missingl) {
         repfun <- function(y) if(is.numeric(y)) {
-          z <- duplAttributes(rep(default, nr), y)
+          z <- duplAttributes(alloc(default, nr), y)
           z[is.na(y)] <- missing # could put behind -> better but inconsistent
           for(i in seqarg) z[y == nam[i]] <- args[[i]]
           z
         } else y
       } else {
         repfun <- function(y) if(is.numeric(y)) {
-          z <- duplAttributes(rep(default, nr), y)
+          z <- duplAttributes(alloc(default, nr), y)
           for(i in seqarg) z[y == nam[i]] <- args[[i]]
           z
         } else y
@@ -100,12 +100,12 @@ recode_char <- function(X, ..., default = NULL, missing = NULL, regex = FALSE,
         nr <- if(is.atomic(X)) NROW(X) else fnrow2(X)
         if(missingl) {
           repfun <- function(y) if(is.character(y)) {
-            z <- duplAttributes(rep(default, nr), y)
+            z <- duplAttributes(alloc(default, nr), y)
             z[is.na(y)] <- missing # could put behind -> better but inconsistent
             `[<-`(z, grepl(nam, y, ignore.case, FALSE, fixed), value = args)
           } else y
         } else {
-          repfun <- function(y) if(is.character(y)) `[<-`(duplAttributes(rep(default, nr), y), grepl(nam, y, ignore.case, FALSE, fixed), value = args) else y
+          repfun <- function(y) if(is.character(y)) `[<-`(duplAttributes(alloc(default, nr), y), grepl(nam, y, ignore.case, FALSE, fixed), value = args) else y
         }
       }
     } else {
@@ -129,14 +129,14 @@ recode_char <- function(X, ..., default = NULL, missing = NULL, regex = FALSE,
         nr <- if(is.atomic(X)) NROW(X) else fnrow2(X)
         if(missingl) {
           repfun <- function(y) if(is.character(y)) {
-            z <- duplAttributes(rep(default, nr), y)
+            z <- duplAttributes(alloc(default, nr), y)
             z[is.na(y)] <- missing # could put behind -> better but inconsistent
             for(i in seqarg) z[grepl(nam[i], y, ignore.case, FALSE, fixed)] <- args[[i]]
             z
           } else y
         } else {
           repfun <- function(y) if(is.character(y)) {
-            z <- duplAttributes(rep(default, nr), y)
+            z <- duplAttributes(alloc(default, nr), y)
             for(i in seqarg) z[grepl(nam[i], y, ignore.case, FALSE, fixed)] <- args[[i]]
             z
           } else y
@@ -159,12 +159,12 @@ recode_char <- function(X, ..., default = NULL, missing = NULL, regex = FALSE,
         nr <- if(is.atomic(X)) NROW(X) else fnrow2(X)
         if(missingl) {
           repfun <- function(y) if(is.character(y)) {
-            z <- duplAttributes(rep(default, nr), y)
+            z <- duplAttributes(alloc(default, nr), y)
             z[is.na(y)] <- missing # could put behind -> better but inconsistent
             `[<-`(z, y == nam, value = args)
           } else y
         } else {
-          repfun <- function(y) if(is.character(y)) `[<-`(duplAttributes(rep(default, nr), y), y == nam, value = args) else y
+          repfun <- function(y) if(is.character(y)) `[<-`(duplAttributes(alloc(default, nr), y), y == nam, value = args) else y
         }
       }
     } else {
@@ -188,14 +188,14 @@ recode_char <- function(X, ..., default = NULL, missing = NULL, regex = FALSE,
         nr <- if(is.atomic(X)) NROW(X) else fnrow2(X)
         if(missingl) {
           repfun <- function(y) if(is.character(y)) {
-            z <- duplAttributes(rep(default, nr), y)
+            z <- duplAttributes(alloc(default, nr), y)
             z[is.na(y)] <- missing # could put behind -> better but inconsistent
             for(i in seqarg) z[y == nam[i]] <- args[[i]]
             z
           } else y
         } else {
           repfun <- function(y) if(is.character(y)) {
-            z <- duplAttributes(rep(default, nr), y)
+            z <- duplAttributes(alloc(default, nr), y)
             for(i in seqarg) z[y == nam[i]] <- args[[i]]
             z
           } else y

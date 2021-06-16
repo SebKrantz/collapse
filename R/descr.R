@@ -111,7 +111,7 @@ as.data.frame.descr <- function(x, ...) {
           unlist(`names<-`(lapply(z[-(1:2)], as.vector, "list"), NULL), recursive = FALSE)))
    }
    r <- .Call(C_rbindlist, r, TRUE, TRUE, "Variable")
-   if(all(is.na(r[["Label"]]))) r[["Label"]] <- NULL
+   if(allNA(r[["Label"]])) r[["Label"]] <- NULL
    attr(r, "row.names") <- .set_row_names(length(r[[1L]]))
    class(r) <- "data.frame"
    r

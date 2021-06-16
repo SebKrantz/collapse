@@ -152,7 +152,7 @@ getfl <- function(mf) {
       moddat <- model.matrix.default(as.formula(form), data = `oldClass<-`(mf, clmf))
     } else {
       moddat <- if(is.null(slflag) || any(slflag > 0L)) NULL else
-                rep(1, length(mf[[1L]]))
+                alloc(1, length(mf[[1L]]))
     }
   } else {
     fctdat <- NULL
@@ -294,7 +294,7 @@ fhdwithin.default <- function(x, fl, w = NULL, na.rm = TRUE, fill = FALSE, lm.me
     if(nallfc) {
       xmat <- demean(do.call(cbind, fl[!fc]), fl[fc], w, ...)
       fl <- fl[fc]
-    } else if(!fcl) xmat <- do.call(cbind, c(list(rep.int(1L, length(fl[[1L]]))), fl))
+    } else if(!fcl) xmat <- do.call(cbind, c(list(alloc(1L, length(fl[[1L]]))), fl))
   } else if(is.matrix(fl)) {
     # if(!missing(...)) unused_arg_action(match.call(), ...)
     xmat <- if(na.rm) cbind(Intercept = 1L, fl[cc, , drop = FALSE]) else cbind(Intercept = 1L, fl)
@@ -374,7 +374,7 @@ fhdwithin.matrix <- function(x, fl, w = NULL, na.rm = TRUE, fill = FALSE, lm.met
     if(nallfc) {
       xmat <- demean(do.call(cbind, fl[!fc]), fl[fc], w, ...)
       fl <- fl[fc]
-    } else if(!fcl) xmat <- do.call(cbind, c(list(rep.int(1L, length(fl[[1L]]))), fl))
+    } else if(!fcl) xmat <- do.call(cbind, c(list(alloc(1L, length(fl[[1L]]))), fl))
   } else if(is.matrix(fl)) {
     # if(!missing(...)) unused_arg_action(match.call(), ...)
     xmat <- if(na.rm) cbind(Intercept = 1L, fl[cc, , drop = FALSE]) else cbind(Intercept = 1L, fl)
@@ -467,7 +467,7 @@ fhdwithin.data.frame <- function(x, fl, w = NULL, na.rm = TRUE, fill = FALSE, va
     if(nallfc) {
       xmat <- demean(do.call(cbind, fl[!fc]), fl[fc], w, ...)
       fl <- fl[fc]
-    } else if(!fcl) xmat <- do.call(cbind, c(list(rep.int(1L, length(fl[[1L]]))), fl))
+    } else if(!fcl) xmat <- do.call(cbind, c(list(alloc(1L, length(fl[[1L]]))), fl))
   } else if(is.matrix(fl)) {
       # if(!missing(...)) unused_arg_action(match.call(), ...)
       xmat <- if(na.rm) cbind(Intercept = 1L, fl[cc, , drop = FALSE]) else cbind(Intercept = 1L, fl)
@@ -636,7 +636,7 @@ fhdbetween.default <- function(x, fl, w = NULL, na.rm = TRUE, fill = FALSE, lm.m
     if(nallfc) {
       xmat <- demean(do.call(cbind, fl[!fc]), fl[fc], w, ...)
       fl <- fl[fc]
-    } else if(!fcl) xmat <- do.call(cbind, c(list(rep.int(1L, length(fl[[1L]]))), fl))
+    } else if(!fcl) xmat <- do.call(cbind, c(list(alloc(1L, length(fl[[1L]]))), fl))
   } else if(is.matrix(fl)) {
     # if(!missing(...)) unused_arg_action(match.call(), ...)
     xmat <- if(na.rm) cbind(Intercept = 1L, fl[cc, , drop = FALSE]) else cbind(Intercept = 1L, fl)
@@ -699,7 +699,7 @@ fhdbetween.matrix <- function(x, fl, w = NULL, na.rm = TRUE, fill = FALSE, lm.me
     if(nallfc) {
       xmat <- demean(do.call(cbind, fl[!fc]), fl[fc], w, ...)
       fl <- fl[fc]
-    } else if(!fcl) xmat <- do.call(cbind, c(list(rep.int(1L, length(fl[[1L]]))), fl))
+    } else if(!fcl) xmat <- do.call(cbind, c(list(alloc(1L, length(fl[[1L]]))), fl))
   } else if(is.matrix(fl)) {
     # if(!missing(...)) unused_arg_action(match.call(), ...)
     xmat <- if(na.rm) cbind(Intercept = 1L, fl[cc, , drop = FALSE]) else cbind(Intercept = 1L, fl)
@@ -762,7 +762,7 @@ fhdbetween.data.frame <- function(x, fl, w = NULL, na.rm = TRUE, fill = FALSE, v
     if(nallfc) {
       xmat <- demean(do.call(cbind, fl[!fc]), fl[fc], w, ...)
       fl <- fl[fc]
-    } else if(!fcl) xmat <- do.call(cbind, c(list(rep.int(1L, length(fl[[1L]]))), fl))
+    } else if(!fcl) xmat <- do.call(cbind, c(list(alloc(1L, length(fl[[1L]]))), fl))
   } else if(is.matrix(fl)) {
     # if(!missing(...)) unused_arg_action(match.call(), ...)
     xmat <- if(na.rm) cbind(Intercept = 1L, fl[cc, , drop = FALSE]) else cbind(Intercept = 1L, fl)
