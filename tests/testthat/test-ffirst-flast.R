@@ -16,9 +16,18 @@ g <- GRP(droplevels(data$iso3c))
 dataNA <- na_insert(data)
 m <- as.matrix(data)
 mNA <- as.matrix(dataNA)
+data$LC <- as.list(data$PCGDP)
+dataNA$LC <- lapply(na_insert(data["LC"])[[1]], function(x) if(is.na(x)) NULL else x)
 
-basefirst <- function(x, na.rm = FALSE) if(na.rm) x[which(!is.na(x))[1L]] else x[1L]
-baselast <- function(x, na.rm = FALSE) if(na.rm && !all(na <- is.na(x))) x[which(!na)[sum(!na)]] else x[length(x)]
+basefirst <- function(x, na.rm = FALSE) {
+  if(is.list(x)) return(if(na.rm) x[which(lengths(x) > 0L)[1L]] else x[1L])
+  if(na.rm) x[which(!is.na(x))[1L]] else x[1L]
+}
+baselast <- function(x, na.rm = FALSE) {
+  lst <- function(x) x[length(x)]
+  if(is.list(x)) return(if(na.rm) x[lst(which(lengths(x) > 0L))] else lst(x))
+  if(na.rm && !all(na <- is.na(x))) x[lst(which(!na))] else lst(x)
+}
 
 # ffirst
 
