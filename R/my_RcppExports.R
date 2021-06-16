@@ -99,17 +99,17 @@ flagleadlCpp <- function(x, n = 1L, fill = NULL, ng = 0L, g = 0L, t = NULL, name
     .Call(Cpp_flagleadl, x, n, fill, ng, g, t, names)
 }
 
-fminmaxCpp <- function(x, ng = 0L, g = 0L, narm = TRUE, ret = 1L) {
-    .Call(Cpp_fminmax, x, ng, g, narm, ret)
-}
-
-fminmaxmCpp <- function(x, ng = 0L, g = 0L, narm = TRUE, drop = TRUE, ret = 1L) {
-    .Call(Cpp_fminmaxm, x, ng, g, narm, drop, ret)
-}
-
-fminmaxlCpp <- function(x, ng = 0L, g = 0L, narm = TRUE, drop = TRUE, ret = 1L) {
-    .Call(Cpp_fminmaxl, x, ng, g, narm, drop, ret)
-}
+# fminmaxC <- function(x, ng = 0L, g = 0L, narm = TRUE, ret = 1L) {
+#     .Call(C_fminmax, x, ng, g, narm, ret)
+# }
+#
+# fminmaxmC <- function(x, ng = 0L, g = 0L, narm = TRUE, drop = TRUE, ret = 1L) {
+#     .Call(C_fminmaxm, x, ng, g, narm, drop, ret)
+# }
+#
+# fminmaxlC <- function(x, ng = 0L, g = 0L, narm = TRUE, drop = TRUE, ret = 1L) {
+#     .Call(C_fminmaxl, x, ng, g, narm, drop, ret)
+# }
 
 fmeanCpp <- function(x, ng = 0L, g = 0L, gs = NULL, w = NULL, narm = TRUE) {
     .Call(Cpp_fmean, x, ng, g, gs, w, narm)

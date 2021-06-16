@@ -44,6 +44,13 @@ RcppExport SEXP flastlC(SEXP x, SEXP Rng, SEXP g, SEXP Rnarm);
 RcppExport SEXP fsumC(SEXP x, SEXP Rng, SEXP g, SEXP Rnarm);
 RcppExport SEXP fsummC(SEXP x, SEXP Rng, SEXP g, SEXP Rnarm, SEXP Rdrop);
 RcppExport SEXP fsumlC(SEXP x, SEXP Rng, SEXP g, SEXP Rnarm, SEXP Rdrop);
+// fmin and fmax rewritten in C:
+RcppExport SEXP fminC(SEXP x, SEXP Rng, SEXP g, SEXP Rnarm);
+RcppExport SEXP fminmC(SEXP x, SEXP Rng, SEXP g, SEXP Rnarm, SEXP Rdrop);
+RcppExport SEXP fminlC(SEXP x, SEXP Rng, SEXP g, SEXP Rnarm, SEXP Rdrop);
+RcppExport SEXP fmaxC(SEXP x, SEXP Rng, SEXP g, SEXP Rnarm);
+RcppExport SEXP fmaxmC(SEXP x, SEXP Rng, SEXP g, SEXP Rnarm, SEXP Rdrop);
+RcppExport SEXP fmaxlC(SEXP x, SEXP Rng, SEXP g, SEXP Rnarm, SEXP Rdrop);
 // Added fcumsum, written in C:
 RcppExport SEXP fcumsumC(SEXP x, SEXP Rng, SEXP g, SEXP o, SEXP Rnarm, SEXP Rfill);
 RcppExport SEXP fcumsummC(SEXP x, SEXP Rng, SEXP g, SEXP o, SEXP Rnarm, SEXP Rfill);
@@ -86,9 +93,12 @@ static const R_CallMethodDef CallEntries[] = {
   {"C_flast", (DL_FUNC) &flastC, 4},
   {"C_flastm", (DL_FUNC) &flastmC, 5},
   {"C_flastl", (DL_FUNC) &flastlC, 4},
-  {"Cpp_fminmax", (DL_FUNC) &_collapse_fminmaxCpp, 5},
-  {"Cpp_fminmaxm", (DL_FUNC) &_collapse_fminmaxmCpp, 6},
-  {"Cpp_fminmaxl", (DL_FUNC) &_collapse_fminmaxlCpp, 6},
+  {"C_fmin", (DL_FUNC) &fminC, 4},
+  {"C_fminm", (DL_FUNC) &fminmC, 5},
+  {"C_fminl", (DL_FUNC) &fminlC, 5},
+  {"C_fmax", (DL_FUNC) &fmaxC, 4},
+  {"C_fmaxm", (DL_FUNC) &fmaxmC, 5},
+  {"C_fmaxl", (DL_FUNC) &fmaxlC, 5},
   {"Cpp_fmean", (DL_FUNC) &_collapse_fmeanCpp, 6},
   {"Cpp_fmeanm", (DL_FUNC) &_collapse_fmeanmCpp, 7},
   {"Cpp_fmeanl", (DL_FUNC) &_collapse_fmeanlCpp, 7},

@@ -73,18 +73,6 @@ fmeanlCpp <- function(x, ng = 0L, g = 0L, gs = NULL, w = NULL, narm = TRUE, drop
     .Call(`_collapse_fmeanlCpp`, x, ng, g, gs, w, narm, drop)
 }
 
-fminmaxCpp <- function(x, ng = 0L, g = 0L, narm = TRUE, ret = 1L) {
-    .Call(`_collapse_fminmaxCpp`, x, ng, g, narm, ret)
-}
-
-fminmaxmCpp <- function(x, ng = 0L, g = 0L, narm = TRUE, drop = TRUE, ret = 1L) {
-    .Call(`_collapse_fminmaxmCpp`, x, ng, g, narm, drop, ret)
-}
-
-fminmaxlCpp <- function(x, ng = 0L, g = 0L, narm = TRUE, drop = TRUE, ret = 1L) {
-    .Call(`_collapse_fminmaxlCpp`, x, ng, g, narm, drop, ret)
-}
-
 fmodeCpp <- function(x, ng = 0L, g = 0L, gs = NULL, w = NULL, narm = TRUE, ret = 0L) {
     .Call(`_collapse_fmodeCpp`, x, ng, g, gs, w, narm, ret)
 }
@@ -143,18 +131,6 @@ fscalemCpp <- function(x, ng = 0L, g = 0L, w = NULL, narm = TRUE, set_mean = 0, 
 
 fscalelCpp <- function(x, ng = 0L, g = 0L, w = NULL, narm = TRUE, set_mean = 0, set_sd = 1) {
     .Call(`_collapse_fscalelCpp`, x, ng, g, w, narm, set_mean, set_sd)
-}
-
-fsumC <- function(x, ng = 0L, g = 0L, w = NULL, narm = TRUE) {
-    .Call(`_collapse_fsumC`, x, ng, g, w, narm)
-}
-
-fsummC <- function(x, ng = 0L, g = 0L, w = NULL, narm = TRUE, drop = TRUE) {
-    .Call(`_collapse_fsummC`, x, ng, g, w, narm, drop)
-}
-
-fsumlC <- function(x, ng = 0L, g = 0L, w = NULL, narm = TRUE, drop = TRUE) {
-    .Call(`_collapse_fsumlC`, x, ng, g, w, narm, drop)
 }
 
 fvarsdCpp <- function(x, ng = 0L, g = 0L, gs = NULL, w = NULL, narm = TRUE, stable_algo = TRUE, sd = TRUE) {

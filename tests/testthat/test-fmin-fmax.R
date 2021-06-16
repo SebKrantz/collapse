@@ -2,7 +2,7 @@ context("fmin and fmax")
 
 # rm(list = ls())
 set.seed(101)
-x <- rnorm(100)
+x <- rnorm(100) * 10000
 xNA <- x
 xNA[sample.int(100,20)] <- NA
 f <- as.factor(sample.int(10, 100, TRUE))
@@ -25,7 +25,7 @@ inf2NA <- function(x) {
 
 options(warn = -1)
 
-# fmin
+# fmin double
 
 test_that("fmin performs like base::min", {
   expect_equal(fmin(NA), min(NA))
@@ -122,7 +122,7 @@ test_that("fmin produces errors for wrong input", {
 })
 
 
-# fmax
+# fmax double
 
 test_that("fmax performs like base::max", {
   expect_equal(fmax(NA), max(NA))
@@ -215,6 +215,142 @@ test_that("fmax produces errors for wrong input", {
   expect_error(fmax(mtcars,1:31))
   expect_error(fmax(wlddev))
   expect_error(fmax(wlddev, wlddev$iso3c))
+
+})
+
+
+
+# fmin int
+
+x <- as.integer(x)
+xNA <- as.integer(xNA)
+mtcNA <- dapply(mtcNA, as.integer)
+mtcars <- dapply(mtcars, as.integer)
+storage.mode(m) <- "integer"
+storage.mode(mNA) <- "integer"
+
+test_that("fmin performs like base::min", {
+  expect_equal(fmin(x), min(x, na.rm = TRUE))
+  expect_equal(fmin(x, na.rm = FALSE), min(x))
+  expect_equal(fmin(xNA, na.rm = FALSE), min(xNA))
+  expect_equal(fmin(xNA), min(xNA, na.rm = TRUE))
+  expect_equal(fmin(mtcars), fmin(m))
+  expect_equal(fmin(m), dapply(m, min, na.rm = TRUE))
+  expect_equal(fmin(m, na.rm = FALSE), dapply(m, min))
+  expect_equal(fmin(mNA, na.rm = FALSE), dapply(mNA, min))
+  expect_equal(fmin(mNA), dapply(mNA, min, na.rm = TRUE))
+  expect_equal(fmin(mtcars), dapply(mtcars, min, na.rm = TRUE))
+  expect_equal(fmin(mtcars, na.rm = FALSE), dapply(mtcars, min))
+  expect_equal(fmin(mtcNA, na.rm = FALSE), dapply(mtcNA, min))
+  expect_equal(fmin(mtcNA), dapply(mtcNA, min, na.rm = TRUE))
+  expect_equal(fmin(x, f), BY(x, f, min, na.rm = TRUE))
+  expect_equal(fmin(x, f, na.rm = FALSE), BY(x, f, min))
+  expect_equal(fmin(xNA, f, na.rm = FALSE), BY(xNA, f, min))
+  expect_equal(fmin(xNA, f), inf2NA(BY(xNA, f, min, na.rm = TRUE)))
+  expect_equal(fmin(m, g), BY(m, g, min, na.rm = TRUE))
+  expect_equal(fmin(m, g, na.rm = FALSE), BY(m, g, min))
+  expect_equal(fmin(mNA, g, na.rm = FALSE), BY(mNA, g, min))
+  expect_equal(fmin(mNA, g), inf2NA(BY(mNA, g, min, na.rm = TRUE))) # min(NA, na.rm = TRUE) gives Inf
+  expect_equal(fmin(mtcars, g), BY(mtcars, g, min, na.rm = TRUE))
+  expect_equal(fmin(mtcars, g, na.rm = FALSE), BY(mtcars, g, min))
+  expect_equal(fmin(mtcNA, g, na.rm = FALSE), BY(mtcNA, g, min))
+  expect_equal(fmin(mtcNA, g), inf2NA(BY(mtcNA, g, min, na.rm = TRUE))) # min(NA, na.rm = TRUE) gives Inf
+})
+
+test_that("fmin performs numerically stable", {
+  expect_true(all_obj_equal(replicate(50, fmin(x), simplify = FALSE)))
+  expect_true(all_obj_equal(replicate(50, fmin(x, na.rm = FALSE), simplify = FALSE)))
+  expect_true(all_obj_equal(replicate(50, fmin(xNA, na.rm = FALSE), simplify = FALSE)))
+  expect_true(all_obj_equal(replicate(50, fmin(xNA), simplify = FALSE)))
+  expect_true(all_obj_equal(replicate(50, fmin(m), simplify = FALSE)))
+  expect_true(all_obj_equal(replicate(50, fmin(m, na.rm = FALSE), simplify = FALSE)))
+  expect_true(all_obj_equal(replicate(50, fmin(mNA, na.rm = FALSE), simplify = FALSE)))
+  expect_true(all_obj_equal(replicate(50, fmin(mNA), simplify = FALSE)))
+  expect_true(all_obj_equal(replicate(50, fmin(mtcars), simplify = FALSE)))
+  expect_true(all_obj_equal(replicate(50, fmin(mtcars, na.rm = FALSE), simplify = FALSE)))
+  expect_true(all_obj_equal(replicate(50, fmin(mtcNA, na.rm = FALSE), simplify = FALSE)))
+  expect_true(all_obj_equal(replicate(50, fmin(mtcNA), simplify = FALSE)))
+  expect_true(all_obj_equal(replicate(50, fmin(x, f), simplify = FALSE)))
+  expect_true(all_obj_equal(replicate(50, fmin(x, f, na.rm = FALSE), simplify = FALSE)))
+  expect_true(all_obj_equal(replicate(50, fmin(xNA, f, na.rm = FALSE), simplify = FALSE)))
+  expect_true(all_obj_equal(replicate(50, fmin(xNA, f), simplify = FALSE)))
+  expect_true(all_obj_equal(replicate(50, fmin(m, g), simplify = FALSE)))
+  expect_true(all_obj_equal(replicate(50, fmin(m, g, na.rm = FALSE), simplify = FALSE)))
+  expect_true(all_obj_equal(replicate(50, fmin(mNA, g, na.rm = FALSE), simplify = FALSE)))
+  expect_true(all_obj_equal(replicate(50, fmin(mNA, g), simplify = FALSE)))
+  expect_true(all_obj_equal(replicate(50, fmin(mtcars, g), simplify = FALSE)))
+  expect_true(all_obj_equal(replicate(50, fmin(mtcars, g, na.rm = FALSE), simplify = FALSE)))
+  expect_true(all_obj_equal(replicate(50, fmin(mtcNA, g, na.rm = FALSE), simplify = FALSE)))
+  expect_true(all_obj_equal(replicate(50, fmin(mtcNA, g), simplify = FALSE)))
+})
+
+test_that("fmin produces errors for wrong input", {
+  expect_error(fmin(m,1:31))
+  expect_error(fmin(mtcars,1:31))
+})
+
+
+# fmax int
+
+test_that("fmax performs like base::max", {
+  expect_equal(fmax(x), max(x, na.rm = TRUE))
+  expect_equal(fmax(x, na.rm = FALSE), max(x))
+  expect_equal(fmax(xNA, na.rm = FALSE), max(xNA))
+  expect_equal(fmax(xNA), max(xNA, na.rm = TRUE))
+  expect_equal(fmax(mtcars), fmax(m))
+  expect_equal(fmax(m), dapply(m, max, na.rm = TRUE))
+  expect_equal(fmax(m, na.rm = FALSE), dapply(m, max))
+  expect_equal(fmax(mNA, na.rm = FALSE), dapply(mNA, max))
+  expect_equal(fmax(mNA), dapply(mNA, max, na.rm = TRUE))
+  expect_equal(fmax(mtcars), dapply(mtcars, max, na.rm = TRUE))
+  expect_equal(fmax(mtcars, na.rm = FALSE), dapply(mtcars, max))
+  expect_equal(fmax(mtcNA, na.rm = FALSE), dapply(mtcNA, max))
+  expect_equal(fmax(mtcNA), dapply(mtcNA, max, na.rm = TRUE))
+  expect_equal(fmax(x, f), BY(x, f, max, na.rm = TRUE))
+  expect_equal(fmax(x, f, na.rm = FALSE), BY(x, f, max))
+  expect_equal(fmax(xNA, f, na.rm = FALSE), BY(xNA, f, max))
+  expect_equal(fmax(xNA, f), inf2NA(BY(xNA, f, max, na.rm = TRUE)))
+  expect_equal(fmax(m, g), BY(m, g, max, na.rm = TRUE))
+  expect_equal(fmax(m, g, na.rm = FALSE), BY(m, g, max))
+  expect_equal(fmax(mNA, g, na.rm = FALSE), BY(mNA, g, max))
+  expect_equal(fmax(mNA, g), inf2NA(BY(mNA, g, max, na.rm = TRUE))) # max(NA, na.rm = TRUE) gives -Inf
+  expect_equal(fmax(mtcars, g), BY(mtcars, g, max, na.rm = TRUE))
+  expect_equal(fmax(mtcars, g, na.rm = FALSE), BY(mtcars, g, max))
+  expect_equal(fmax(mtcNA, g, na.rm = FALSE), BY(mtcNA, g, max))
+  expect_equal(fmax(mtcNA, g), inf2NA(BY(mtcNA, g, max, na.rm = TRUE))) # max(NA, na.rm = TRUE) gives -Inf
+})
+
+test_that("fmax performs numerically stable", {
+  expect_true(all_obj_equal(replicate(50, fmax(x), simplify = FALSE)))
+  expect_true(all_obj_equal(replicate(50, fmax(x, na.rm = FALSE), simplify = FALSE)))
+  expect_true(all_obj_equal(replicate(50, fmax(xNA, na.rm = FALSE), simplify = FALSE)))
+  expect_true(all_obj_equal(replicate(50, fmax(xNA), simplify = FALSE)))
+  expect_true(all_obj_equal(replicate(50, fmax(m), simplify = FALSE)))
+  expect_true(all_obj_equal(replicate(50, fmax(m, na.rm = FALSE), simplify = FALSE)))
+  expect_true(all_obj_equal(replicate(50, fmax(mNA, na.rm = FALSE), simplify = FALSE)))
+  expect_true(all_obj_equal(replicate(50, fmax(mNA), simplify = FALSE)))
+  expect_true(all_obj_equal(replicate(50, fmax(mtcars), simplify = FALSE)))
+  expect_true(all_obj_equal(replicate(50, fmax(mtcars, na.rm = FALSE), simplify = FALSE)))
+  expect_true(all_obj_equal(replicate(50, fmax(mtcNA, na.rm = FALSE), simplify = FALSE)))
+  expect_true(all_obj_equal(replicate(50, fmax(mtcNA), simplify = FALSE)))
+  expect_true(all_obj_equal(replicate(50, fmax(x, f), simplify = FALSE)))
+  expect_true(all_obj_equal(replicate(50, fmax(x, f, na.rm = FALSE), simplify = FALSE)))
+  expect_true(all_obj_equal(replicate(50, fmax(xNA, f, na.rm = FALSE), simplify = FALSE)))
+  expect_true(all_obj_equal(replicate(50, fmax(xNA, f), simplify = FALSE)))
+  expect_true(all_obj_equal(replicate(50, fmax(m, g), simplify = FALSE)))
+  expect_true(all_obj_equal(replicate(50, fmax(m, g, na.rm = FALSE), simplify = FALSE)))
+  expect_true(all_obj_equal(replicate(50, fmax(mNA, g, na.rm = FALSE), simplify = FALSE)))
+  expect_true(all_obj_equal(replicate(50, fmax(mNA, g), simplify = FALSE)))
+  expect_true(all_obj_equal(replicate(50, fmax(mtcars, g), simplify = FALSE)))
+  expect_true(all_obj_equal(replicate(50, fmax(mtcars, g, na.rm = FALSE), simplify = FALSE)))
+  expect_true(all_obj_equal(replicate(50, fmax(mtcNA, g, na.rm = FALSE), simplify = FALSE)))
+  expect_true(all_obj_equal(replicate(50, fmax(mtcNA, g), simplify = FALSE)))
+})
+
+
+test_that("fmax produces errors for wrong input", {
+  expect_error(fmax(m,1:31))
+  expect_error(fmax(mtcars,1:31))
 
 })
 
