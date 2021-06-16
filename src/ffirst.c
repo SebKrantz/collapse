@@ -169,7 +169,7 @@ SEXP ffirst_impl(SEXP x, int ng, SEXP g, int narm, int *gl) {
 }
 
 SEXP ffirstC(SEXP x, SEXP Rng, SEXP g, SEXP Rnarm) {
-  int *pgl, ng = asInteger(Rng), narm = asInteger(Rnarm);
+  int *pgl, ng = asInteger(Rng), narm = asLogical(Rnarm);
   if(ng == 0 || narm) {
     pgl = &ng; // TO avoid Wmaybe uninitialized
     return ffirst_impl(x, ng, g, narm, pgl);
@@ -200,7 +200,7 @@ SEXP ffirstC(SEXP x, SEXP Rng, SEXP g, SEXP Rnarm) {
 }
 
 SEXP ffirstlC(SEXP x, SEXP Rng, SEXP g, SEXP Rnarm) {
-  int l = length(x), *pgl, ng = asInteger(Rng), narm = asInteger(Rnarm), nprotect = 1;
+  int l = length(x), *pgl, ng = asInteger(Rng), narm = asLogical(Rnarm), nprotect = 1;
   if(ng > 0 && !narm) {
     // Cant use integer array here because apparently it is removed by the garbage collector when passed to a new function
     SEXP gl = PROTECT(allocVector(INTSXP, ng)); ++nprotect;
@@ -224,7 +224,7 @@ SEXP ffirstlC(SEXP x, SEXP Rng, SEXP g, SEXP Rnarm) {
 SEXP ffirstmC(SEXP x, SEXP Rng, SEXP g, SEXP Rnarm, SEXP Rdrop) {
   SEXP dim = getAttrib(x, R_DimSymbol);
   if(isNull(dim)) error("x is not a matrix");
-  int tx = TYPEOF(x), ng = asInteger(Rng), narm = asInteger(Rnarm),
+  int tx = TYPEOF(x), ng = asInteger(Rng), narm = asLogical(Rnarm),
     l = INTEGER(dim)[0], col = INTEGER(dim)[1], end = l-1;
   if (l < 2) return x;
   if (ng == 0) {

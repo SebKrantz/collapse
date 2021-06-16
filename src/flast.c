@@ -150,7 +150,7 @@ SEXP flast_impl(SEXP x, int ng, SEXP g, int narm, int *gl) {
 }
 
 SEXP flastC(SEXP x, SEXP Rng, SEXP g, SEXP Rnarm) {
-  int *pgl, ng = asInteger(Rng), narm = asInteger(Rnarm);
+  int *pgl, ng = asInteger(Rng), narm = asLogical(Rnarm);
   if(ng == 0 || narm) {
     pgl = &ng;
     return flast_impl(x, ng, g, narm, pgl);
@@ -164,7 +164,7 @@ SEXP flastC(SEXP x, SEXP Rng, SEXP g, SEXP Rnarm) {
 }
 
 SEXP flastlC(SEXP x, SEXP Rng, SEXP g, SEXP Rnarm) {
-  int l = length(x), *pgl, ng = asInteger(Rng), narm = asInteger(Rnarm), nprotect = 1;
+  int l = length(x), *pgl, ng = asInteger(Rng), narm = asLogical(Rnarm), nprotect = 1;
   if(ng > 0 && !narm) {
     SEXP gl = PROTECT(allocVector(INTSXP, ng)); ++nprotect;
     int *pg = INTEGER(g);
@@ -186,7 +186,7 @@ SEXP flastlC(SEXP x, SEXP Rng, SEXP g, SEXP Rnarm) {
 SEXP flastmC(SEXP x, SEXP Rng, SEXP g, SEXP Rnarm, SEXP Rdrop) {
   SEXP dim = getAttrib(x, R_DimSymbol);
   if(isNull(dim)) error("x is not a matrix");
-  int tx = TYPEOF(x), ng = asInteger(Rng), narm = asInteger(Rnarm),
+  int tx = TYPEOF(x), ng = asInteger(Rng), narm = asLogical(Rnarm),
     l = INTEGER(dim)[0], col = INTEGER(dim)[1];
   if (l < 2) return x;
   if (ng == 0) {

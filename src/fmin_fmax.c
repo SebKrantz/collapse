@@ -138,7 +138,7 @@ void fmax_int_impl(int *pout, int *px, int ng, int *pg, int narm, int l) {
 
 
 SEXP fminC(SEXP x, SEXP Rng, SEXP g, SEXP Rnarm) {
-  int l = length(x), tx = TYPEOF(x), ng = asInteger(Rng), narm = asInteger(Rnarm);
+  int l = length(x), tx = TYPEOF(x), ng = asInteger(Rng), narm = asLogical(Rnarm);
   if (l < 1) return x; // Prevents seqfault for numeric(0) #101
   if(ng && l != length(g)) error("length(g) must match length(x)");
   if(tx == LGLSXP) tx = INTSXP;
@@ -159,7 +159,7 @@ SEXP fminmC(SEXP x, SEXP Rng, SEXP g, SEXP Rnarm, SEXP Rdrop) {
   SEXP dim = getAttrib(x, R_DimSymbol);
   if(isNull(dim)) error("x is not a matrix");
   int tx = TYPEOF(x), l = INTEGER(dim)[0], col = INTEGER(dim)[1], *pg = INTEGER(g),
-    ng = asInteger(Rng), ng1 = ng == 0 ? 1 : ng, narm = asInteger(Rnarm);
+    ng = asInteger(Rng), ng1 = ng == 0 ? 1 : ng, narm = asLogical(Rnarm);
   if (l < 1) return x; // Prevents seqfault for numeric(0) #101
   if(ng && l != length(g)) error("length(g) must match nrow(x)");
   if(tx == LGLSXP) tx = INTSXP;
@@ -203,7 +203,7 @@ SEXP fminlC(SEXP x, SEXP Rng, SEXP g, SEXP Rnarm, SEXP Rdrop) {
 
 
 SEXP fmaxC(SEXP x, SEXP Rng, SEXP g, SEXP Rnarm) {
-  int l = length(x), tx = TYPEOF(x), ng = asInteger(Rng), narm = asInteger(Rnarm);
+  int l = length(x), tx = TYPEOF(x), ng = asInteger(Rng), narm = asLogical(Rnarm);
   if (l < 1) return x; // Prevents seqfault for numeric(0) #101
   if(ng && l != length(g)) error("length(g) must match length(x)");
   if(tx == LGLSXP) tx = INTSXP;
@@ -224,7 +224,7 @@ SEXP fmaxmC(SEXP x, SEXP Rng, SEXP g, SEXP Rnarm, SEXP Rdrop) {
   SEXP dim = getAttrib(x, R_DimSymbol);
   if(isNull(dim)) error("x is not a matrix");
   int tx = TYPEOF(x), l = INTEGER(dim)[0], col = INTEGER(dim)[1], *pg = INTEGER(g),
-    ng = asInteger(Rng), ng1 = ng == 0 ? 1 : ng, narm = asInteger(Rnarm);
+    ng = asInteger(Rng), ng1 = ng == 0 ? 1 : ng, narm = asLogical(Rnarm);
   if (l < 1) return x; // Prevents seqfault for numeric(0) #101
   if(ng && l != length(g)) error("length(g) must match nrow(x)");
   if(tx == LGLSXP) tx = INTSXP;

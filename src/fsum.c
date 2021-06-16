@@ -123,7 +123,7 @@ void fsum_int_impl(int *pout, int *px, int ng, int *pg, int narm, int l) {
 
 SEXP fsumC(SEXP x, SEXP Rng, SEXP g, SEXP w, SEXP Rnarm) {
   int l = length(x), tx = TYPEOF(x), ng = asInteger(Rng),
-    narm = asInteger(Rnarm), nprotect = 1, nwl = isNull(w);
+    narm = asLogical(Rnarm), nprotect = 1, nwl = isNull(w);
   if (l < 1) return x; // Prevents seqfault for numeric(0) #101
   if(ng && l != length(g)) error("length(g) must match length(x)");
   if(tx == LGLSXP) tx = INTSXP;
@@ -165,7 +165,7 @@ SEXP fsummC(SEXP x, SEXP Rng, SEXP g, SEXP w, SEXP Rnarm, SEXP Rdrop) {
   if(isNull(dim)) error("x is not a matrix");
   int tx = TYPEOF(x), l = INTEGER(dim)[0], col = INTEGER(dim)[1], *pg = INTEGER(g),
       ng = asInteger(Rng), ng1 = ng == 0 ? 1 : ng,
-      narm = asInteger(Rnarm), nprotect = 1, nwl = isNull(w);
+      narm = asLogical(Rnarm), nprotect = 1, nwl = isNull(w);
   if (l < 1) return x; // Prevents seqfault for numeric(0) #101
   if(ng && l != length(g)) error("length(g) must match nrow(x)");
   if(tx == LGLSXP) tx = INTSXP;

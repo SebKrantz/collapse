@@ -141,7 +141,7 @@ void fcumsum_int_impl_order(int *pout, int *px, int ng, int *pg, int *po, int na
 
 SEXP fcumsumC(SEXP x, SEXP Rng, SEXP g, SEXP o, SEXP Rnarm, SEXP Rfill) {
   int l = length(x), tx = TYPEOF(x), ng = asInteger(Rng),
-    narm = asInteger(Rnarm), fill = asInteger(Rfill), *pg = INTEGER(g),
+    narm = asLogical(Rnarm), fill = asLogical(Rfill), *pg = INTEGER(g),
     ord  = length(o) > 1, *po = ord ? INTEGER(o) : pg;
   if (l < 1) return x; // Prevents seqfault for numeric(0) #101
   if(ng > 0 && l != length(g)) error("length(g) must match length(x)");
@@ -168,7 +168,7 @@ SEXP fcumsummC(SEXP x, SEXP Rng, SEXP g, SEXP o, SEXP Rnarm, SEXP Rfill) {
   SEXP dim = getAttrib(x, R_DimSymbol);
   if(isNull(dim)) error("x is not a matrix");
   int tx = TYPEOF(x), l = INTEGER(dim)[0], col = INTEGER(dim)[1],
-     ng = asInteger(Rng), narm = asInteger(Rnarm), fill = asInteger(Rfill), *pg = INTEGER(g),
+     ng = asInteger(Rng), narm = asLogical(Rnarm), fill = asLogical(Rfill), *pg = INTEGER(g),
      ord  = length(o) > 1, *po = ord ? INTEGER(o) : pg;
   if (l < 1) return x; // Prevents seqfault for numeric(0) #101
   if(ng > 0 && l != length(g)) error("length(g) must match nrow(x)");
