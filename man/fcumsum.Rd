@@ -56,7 +56,7 @@ the cumulative sum of values in \code{x}, (optionally) grouped by \code{g} and/o
 }
 
 \section{Warning}{
-\code{fcumsum} explicitly supports integers, but integer overflow is not checked, so when you are summing an integer vector or matrix \code{x}, the maximum value of the sum should not be larger than 2,147,483,647 or smaller than -2,147,483,647. If in doubt about this, use \code{fcumsum(as.numeric(x))}.
+\code{fcumsum} explicitly supports integers, but integer overflow is not checked in grouped cumulative summations, so when you are cumulatively summing an integer vector or matrix \code{x} by groups, the elements inside each group should not be larger than 2,147,483,647 or smaller than -2,147,483,647.
 }
 \seealso{
 \code{\link{fdiff}}, \code{\link{fgrowth}}, \link[=A7-time-series-panel-series]{Time Series and Panel Series}, \link[=collapse-documentation]{Collapse Overview}
