@@ -140,7 +140,7 @@ SEXP fsumC(SEXP x, SEXP Rng, SEXP g, SEXP w, SEXP Rnarm) {
         if(ng > 0) fsum_int_g_impl(INTEGER(out), INTEGER(x), ng, INTEGER(g), narm, l);
         else {
           double sum = fsum_int_impl(INTEGER(x), narm, l);
-          if(sum > INT_MAX || sum < INT_MIN) return ScalarReal(sum); // INT_MIN is NA_INTEGER
+          if(sum > INT_MAX || sum < INT_MIN || (narm && sum == NA_INTEGER)) return ScalarReal(sum); // INT_MIN is NA_INTEGER
           return ScalarInteger((int)sum);
         }
         break;
@@ -198,7 +198,7 @@ SEXP fsummC(SEXP x, SEXP Rng, SEXP g, SEXP w, SEXP Rnarm, SEXP Rdrop) {
           int anyoutl = 0;
           for(int j = 0; j != col; ++j) {
             double sumj = fsum_int_impl(px + j*l, narm, l);
-            if(sumj > INT_MAX || sumj < INT_MIN) anyoutl = 1;
+            if(sumj > INT_MAX || sumj < INT_MIN || (narm && sumj == NA_INTEGER)) anyoutl = 1;
             pout[j] = sumj;
           }
           if(anyoutl == 0) {
