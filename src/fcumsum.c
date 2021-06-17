@@ -77,8 +77,16 @@ void fcumsum_int_impl(int *pout, int *px, int ng, int *pg, int narm, int fill, i
   if(ng == 0) {
     double ckof;
     if(narm <= 0) {
+      int i = 1;
       ckof = pout[0] = px[0];
-      for(int i = 1; i != l; ++i) pout[i] = ckof += px[i];
+      if(px[0] == NA_INTEGER) --i;
+      for( ; i != l; ++i) {
+        if(px[i] == NA_INTEGER) {
+          for( ; i != l; ++i) pout[i] = NA_INTEGER;
+          break;
+        }
+        pout[i] = ckof += px[i];
+      }
     } else if(fill) {
       ckof = pout[0] = (px[0] == NA_INTEGER) ? 0 : px[0];
       for(int i = 1; i != l; ++i) {
@@ -98,7 +106,15 @@ void fcumsum_int_impl(int *pout, int *px, int ng, int *pg, int narm, int fill, i
     int last[ng+1]; // Also pass pointer to function ??
     memset(last, 0, sizeof(int) * (ng+1));
     if(narm <= 0) {
-      for(int i = 0; i != l; ++i) last[pg[i]] = pout[i] = last[pg[i]] + px[i];
+      for(int i = 0, lsi; i != l; ++i) {
+        if(px[i] == NA_INTEGER) {
+          pout[i] = last[pg[i]] = NA_INTEGER;
+          continue;
+        }
+        lsi = last[pg[i]];
+        if(lsi == NA_INTEGER) pout[i] = NA_INTEGER;
+        else last[pg[i]] = pout[i] = lsi + px[i];
+      }
     } else if(fill) {
       for(int i = 0; i != l; ++i) last[pg[i]] = pout[i] = last[pg[i]] + (px[i] == NA_INTEGER ? 0 : px[i]);
     } else {
@@ -114,15 +130,23 @@ void fcumsum_int_impl_order(int *pout, int *px, int ng, int *pg, int *po, int na
   if(ng == 0) {
     double ckof;
     if(narm <= 0) {
-      --pout; --px;
-      ckof = pout[po[0]] = px[po[0]];
-      for(int i = 1; i != l; ++i) pout[po[i]] = ckof += px[po[i]];
+      int i = 1, poi;
+      ckof = pout[po[0]-1] = px[po[0]-1];
+      if(px[po[0]-1] == NA_INTEGER) --i;
+      for( ; i != l; ++i) {
+        poi = po[i]-1;
+        if(px[poi] == NA_INTEGER) {
+          for( ; i != l; ++i) pout[po[i]-1] = NA_INTEGER;
+          break;
+        }
+        pout[poi] = ckof += px[poi];
+      }
     } else if(fill) {
-      --pout; --px;
-      ckof = pout[po[0]] = (px[po[0]] == NA_INTEGER) ? 0 : px[po[0]];
-      for(int i = 1; i != l; ++i) {
-        if(px[po[i]] != NA_INTEGER) ckof += px[po[i]];
-        pout[po[i]] = ckof;
+      ckof = pout[po[0]-1] = (px[po[0]-1] == NA_INTEGER) ? 0 : px[po[0]-1];
+      for(int i = 1, poi; i != l; ++i) {
+        poi = po[i]-1;
+        if(px[poi] != NA_INTEGER) ckof += px[poi];
+        pout[poi] = ckof;
       }
     } else {
       ckof = 0.0;
@@ -138,9 +162,15 @@ void fcumsum_int_impl_order(int *pout, int *px, int ng, int *pg, int *po, int na
     int last[ng+1]; // Also pass pointer to function ??
     memset(last, 0, sizeof(int) * (ng+1));
     if(narm <= 0) {
-      for(int i = 0, poi; i != l; ++i) {
+      for(int i = 0, poi, lsi; i != l; ++i) {
         poi = po[i]-1;
-        last[pg[poi]] = pout[poi] = last[pg[poi]] + px[poi];
+        if(px[poi] == NA_INTEGER) {
+          pout[poi] = last[pg[poi]] = NA_INTEGER;
+          continue;
+        }
+        lsi = last[pg[poi]];
+        if(lsi == NA_INTEGER) pout[poi] = NA_INTEGER;
+        else last[pg[poi]] = pout[poi] = lsi + px[poi];
       }
     } else if(fill) {
       for(int i = 0, poi; i != l; ++i) {
