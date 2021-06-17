@@ -89,7 +89,7 @@ double fsum_int_impl(int *px, int narm, int l) {
       sum = px[j];
       for(int i = j; i--; ) if(px[i] != NA_INTEGER) sum += px[i];
     } else {
-      sum = NA_REAL;
+      sum = (l > 1 || px[j] == NA_INTEGER) ? NA_REAL : px[j];
     }
   } else {
     sum = 0;
@@ -118,7 +118,13 @@ void fsum_int_g_impl(int *pout, int *px, int ng, int *pg, int narm, int l) {
   } else {
     memset(pout, 0, sizeof(int) * ng);
     --pout;
-    for(int i = l; i--; ) pout[pg[i]] += px[i]; // Used to stop loop when all groups passed with NA, but probably no speed gain since groups are mostly ordered.
+    for(int i = l; i--; ) {
+      if(px[i] == NA_INTEGER) {
+        pout[pg[i]] = NA_INTEGER;
+        continue;
+      }
+      if(pout[pg[i]] != NA_INTEGER) pout[pg[i]] += px[i]; // Used to stop loop when all groups passed with NA, but probably no speed gain since groups are mostly ordered.
+    }
   }
 }
 
