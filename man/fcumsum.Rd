@@ -55,8 +55,9 @@ The \emph{pseries} and \emph{pdata.frame} methods assume that the last factor in
 the cumulative sum of values in \code{x}, (optionally) grouped by \code{g} and/or ordered by \code{o}. See Details and Examples.
 }
 
-%% ~Make other sections like Warning with \section{Warning }{\dots.} ~
-
+\section{Warning}{
+\code{fcumsum} explicitly supports integers, but integer overflow is not checked, so when you are summing an integer vector or matrix \code{x}, the maximum value of the sum should not be larger than 2,147,483,647 or smaller than -2,147,483,647. If in doubt about this, use \code{fcumsum(as.numeric(x))}.
+}
 \seealso{
 \code{\link{fdiff}}, \code{\link{fgrowth}}, \link[=A7-time-series-panel-series]{Time Series and Panel Series}, \link[=collapse-documentation]{Collapse Overview}
 }
@@ -64,7 +65,6 @@ the cumulative sum of values in \code{x}, (optionally) grouped by \code{g} and/o
 fcumsum(AirPassengers)
 fcumsum(EuStockMarkets)
 fcumsum(mtcars)
-}
 }
 % Add one or more standard keywords, see file 'KEYWORDS' in the
 % R documentation directory.

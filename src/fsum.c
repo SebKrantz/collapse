@@ -80,43 +80,45 @@ void fsum_weights_impl(double *pout, double *px, int ng, int *pg, double *pw, in
   }
 }
 
-void fsum_int_impl(int *pout, int *px, int ng, int *pg, int narm, int l) {
-  if(ng == 0) {
-    int sum;
-    if(narm) {
-      int j = l-1;
+double fsum_int_impl(int *px, int narm, int l) {
+  double sum;
+  if(narm) {
+    int j = l-1;
+    while(px[j] == NA_INTEGER && j!=0) --j;
+    if(j != 0) {
       sum = px[j];
-      while(sum == NA_INTEGER && j!=0) sum = px[--j];
-      if(j != 0) for(int i = j; i--; ) {
-        if(px[i] != NA_INTEGER) sum += px[i];
-      }
+      for(int i = j; i--; ) if(px[i] != NA_INTEGER) sum += px[i];
     } else {
-      sum = 0;
-      for(int i = 0; i != l; ++i) {
-        if(px[i] == NA_INTEGER) {
-          sum = px[i];
-          break;
-        } else {
-          sum += px[i];
-        }
-      }
+      sum = NA_REAL;
     }
-    pout[0] = sum;
   } else {
-    if(narm) {
-      for(int i = ng; i--; ) pout[i] = NA_INTEGER;
-      --pout;
-      for(int i = l; i--; ) {
-        if(px[i] != NA_INTEGER) {
-          if(pout[pg[i]] == NA_INTEGER) pout[pg[i]] = px[i];
-          else pout[pg[i]] += px[i];
-        }
+    sum = 0;
+    for(int i = 0; i != l; ++i) {
+      if(px[i] == NA_INTEGER) {
+        sum = NA_REAL;
+        break;
+      } else {
+        sum += px[i];
       }
-    } else {
-      memset(pout, 0, sizeof(int) * ng);
-      --pout;
-      for(int i = l; i--; ) pout[pg[i]] += px[i]; // Used to stop loop when all groups passed with NA, but probably no speed gain since groups are mostly ordered.
     }
+  }
+  return sum;
+}
+
+void fsum_int_g_impl(int *pout, int *px, int ng, int *pg, int narm, int l) {
+  if(narm) {
+    for(int i = ng; i--; ) pout[i] = NA_INTEGER;
+    --pout;
+    for(int i = l; i--; ) {
+      if(px[i] != NA_INTEGER) {
+        if(pout[pg[i]] == NA_INTEGER) pout[pg[i]] = px[i];
+        else pout[pg[i]] += px[i];
+      }
+    }
+  } else {
+    memset(pout, 0, sizeof(int) * ng);
+    --pout;
+    for(int i = l; i--; ) pout[pg[i]] += px[i]; // Used to stop loop when all groups passed with NA, but probably no speed gain since groups are mostly ordered.
   }
 }
 
@@ -127,13 +129,22 @@ SEXP fsumC(SEXP x, SEXP Rng, SEXP g, SEXP w, SEXP Rnarm) {
   if (l < 1) return x; // Prevents seqfault for numeric(0) #101
   if(ng && l != length(g)) error("length(g) must match length(x)");
   if(tx == LGLSXP) tx = INTSXP;
-  SEXP out = PROTECT(allocVector(nwl ? tx : REALSXP, ng == 0 ? 1 : ng));
+  SEXP out;
+  if(!(ng == 0 && nwl && tx == INTSXP))
+    out = PROTECT(allocVector(nwl ? tx : REALSXP, ng == 0 ? 1 : ng));
   if(nwl) {
     switch(tx) {
       case REALSXP: fsum_double_impl(REAL(out), REAL(x), ng, INTEGER(g), narm, l);
         break;
-      case INTSXP: fsum_int_impl(INTEGER(out), INTEGER(x), ng, INTEGER(g), narm, l);
+      case INTSXP: {
+        if(ng > 0) fsum_int_g_impl(INTEGER(out), INTEGER(x), ng, INTEGER(g), narm, l);
+        else {
+          double sum = fsum_int_impl(INTEGER(x), narm, l);
+          if(sum > INT_MAX || sum < INT_MIN) return ScalarReal(sum); // INT_MIN is NA_INTEGER
+          return ScalarInteger((int)sum);
+        }
         break;
+      }
       default: error("Unsupported SEXP type");
     }
   } else {
@@ -169,7 +180,7 @@ SEXP fsummC(SEXP x, SEXP Rng, SEXP g, SEXP w, SEXP Rnarm, SEXP Rdrop) {
   if (l < 1) return x; // Prevents seqfault for numeric(0) #101
   if(ng && l != length(g)) error("length(g) must match nrow(x)");
   if(tx == LGLSXP) tx = INTSXP;
-  SEXP out = PROTECT(allocVector(nwl ? tx : REALSXP, ng == 0 ? col : col * ng));
+  SEXP out = PROTECT(allocVector((nwl && ng > 0) ? tx : REALSXP, ng == 0 ? col : col * ng));
   if(nwl) {
     switch(tx) {
       case REALSXP: {
@@ -178,8 +189,25 @@ SEXP fsummC(SEXP x, SEXP Rng, SEXP g, SEXP w, SEXP Rnarm, SEXP Rdrop) {
         break;
       }
       case INTSXP: {
-        int *px = INTEGER(x), *pout = INTEGER(out);
-        for(int j = 0; j != col; ++j) fsum_int_impl(pout + j*ng1, px + j*l, ng, pg, narm, l);
+        int *px = INTEGER(x);
+        if(ng > 0) {
+          int *pout = INTEGER(out);
+          for(int j = 0; j != col; ++j) fsum_int_g_impl(pout + j*ng1, px + j*l, ng, pg, narm, l);
+        } else {
+          double *pout = REAL(out);
+          int anyoutl = 0;
+          for(int j = 0; j != col; ++j) {
+            double sumj = fsum_int_impl(px + j*l, narm, l);
+            if(sumj > INT_MAX || sumj < INT_MIN) anyoutl = 1;
+            pout[j] = sumj;
+          }
+          if(anyoutl == 0) {
+            SEXP iout = PROTECT(coerceVector(out, INTSXP));
+            matCopyAttr(iout, x, Rdrop, ng);
+            UNPROTECT(2);
+            return iout;
+          }
+        }
         break;
       }
       default: error("Unsupported SEXP type");
