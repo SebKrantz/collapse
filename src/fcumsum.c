@@ -12,7 +12,7 @@ void fcumsum_double_impl(double *pout, double *px, int ng, int *pg, int narm, in
       double last = 0;
       for(int i = 0; i != l; ++i) {
         if(ISNAN(px[i])) pout[i] = px[i];
-        else last = pout[i] = px[i] + last;
+        else pout[i] = last += px[i];
       }
     }
   } else {
@@ -34,17 +34,19 @@ void fcumsum_double_impl(double *pout, double *px, int ng, int *pg, int narm, in
 void fcumsum_double_impl_order(double *pout, double *px, int ng, int *pg, int *po, int narm, int fill, int l) {
   if(ng == 0) {
     if(narm <= 0) {
-      pout[po[0]-1] = px[po[0]-1];
-      for(int i = 1; i != l; ++i) pout[po[i]-1] = pout[po[i-1]-1] + px[po[i]-1];
+      --pout; --px;
+      pout[po[0]] = px[po[0]];
+      for(int i = 1; i != l; ++i) pout[po[i]] = pout[po[i-1]] + px[po[i]];
     } else if(fill) {
-      pout[po[0]-1] = ISNAN(px[po[0]-1]) ? 0.0 : px[po[0]-1];
-      for(int i = 1; i != l; ++i) pout[po[i]-1] = pout[po[i-1]-1] + (ISNAN(px[po[i]-1]) ? 0.0 : px[po[i]-1]);
+      --pout; --px;
+      pout[po[0]] = ISNAN(px[po[0]]) ? 0.0 : px[po[0]];
+      for(int i = 1; i != l; ++i) pout[po[i]] = pout[po[i-1]] + (ISNAN(px[po[i]]) ? 0.0 : px[po[i]]);
     } else {
       double last = 0;
       for(int i = 0, poi; i != l; ++i) {
         poi = po[i]-1;
         if(ISNAN(px[poi])) pout[poi] = px[poi];
-        else last = pout[poi] = px[poi] + last;
+        else pout[poi] = last += px[poi];
       }
     }
   } else {
@@ -73,18 +75,25 @@ void fcumsum_double_impl_order(double *pout, double *px, int ng, int *pg, int *p
 
 void fcumsum_int_impl(int *pout, int *px, int ng, int *pg, int narm, int fill, int l) {
   if(ng == 0) {
+    double ckof;
     if(narm <= 0) {
-      pout[0] = px[0];
-      for(int i = 1; i != l; ++i) pout[i] = pout[i-1] + px[i];
+      ckof = pout[0] = px[0];
+      for(int i = 1; i != l; ++i) pout[i] = ckof += px[i];
     } else if(fill) {
-      pout[0] = (px[0] == NA_INTEGER) ? 0 : px[0];
-      for(int i = 1; i != l; ++i) pout[i] = pout[i-1] + (px[i] == NA_INTEGER ? 0 : px[i]);
+      ckof = pout[0] = (px[0] == NA_INTEGER) ? 0 : px[0];
+      for(int i = 1; i != l; ++i) {
+        if(px[i] != NA_INTEGER) ckof += px[i];
+        pout[i] = ckof;
+      }
     } else {
-      for(int i = 0, last = 0; i != l; ++i) {
+      ckof = 0.0;
+      for(int i = 0; i != l; ++i) {
         if(px[i] == NA_INTEGER) pout[i] = NA_INTEGER;
-        else last = pout[i] = px[i] + last;
+        else pout[i] = ckof += px[i];
       }
     }
+    if(ckof > INT_MAX || ckof < INT_MIN || (narm && ckof == NA_INTEGER))
+      error("Integer overflow, use fcumsum(as.numeric(x))");
   } else {
     int last[ng+1]; // Also pass pointer to function ??
     memset(last, 0, sizeof(int) * (ng+1));
@@ -103,19 +112,28 @@ void fcumsum_int_impl(int *pout, int *px, int ng, int *pg, int narm, int fill, i
 
 void fcumsum_int_impl_order(int *pout, int *px, int ng, int *pg, int *po, int narm, int fill, int l) {
   if(ng == 0) {
+    double ckof;
     if(narm <= 0) {
-      pout[po[0]-1] = px[po[0]-1];
-      for(int i = 1; i != l; ++i) pout[po[i]-1] = pout[po[i-1]-1] + px[po[i]-1];
+      --pout; --px;
+      ckof = pout[po[0]] = px[po[0]];
+      for(int i = 1; i != l; ++i) pout[po[i]] = ckof += px[po[i]];
     } else if(fill) {
-      pout[po[0]-1] = (px[po[0]-1] == NA_INTEGER) ? 0 : px[po[0]-1];
-      for(int i = 1; i != l; ++i) pout[po[i]-1] = pout[po[i-1]-1] + (px[po[i]-1] == NA_INTEGER ? 0 : px[po[i]-1]);
+      --pout; --px;
+      ckof = pout[po[0]] = (px[po[0]] == NA_INTEGER) ? 0 : px[po[0]];
+      for(int i = 1; i != l; ++i) {
+        if(px[po[i]] != NA_INTEGER) ckof += px[po[i]];
+        pout[po[i]] = ckof;
+      }
     } else {
-      for(int i = 0, last = 0, poi; i != l; ++i) {
+      ckof = 0.0;
+      for(int i = 0, poi; i != l; ++i) {
         poi = po[i]-1;
         if(px[poi] == NA_INTEGER) pout[poi] = NA_INTEGER;
-        else last = pout[poi] = px[poi] + last;
+        else pout[poi] = ckof += px[poi];
       }
     }
+    if(ckof > INT_MAX || ckof < INT_MIN || (narm && ckof == NA_INTEGER))
+      error("Integer overflow, use fcumsum(as.numeric(x))");
   } else {
     int last[ng+1]; // Also pass pointer to function ??
     memset(last, 0, sizeof(int) * (ng+1));
