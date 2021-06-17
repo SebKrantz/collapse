@@ -63,6 +63,8 @@ The (\code{w} weighted) sum of \code{x}, grouped by \code{g}, or (if \code{\link
 }
 \section{Warning}{
 Since 1.6.0 \code{fsum} explicitly supports integers, but integer overflow is not checked in grouped summations, so when you are summing an integer vector or matrix \code{x} by groups, the sum inside each group should not be larger than 2,147,483,647 or smaller than -2,147,483,648.
+
+This is not a concern for weighted summations, where both \code{x} and \code{w} are coerced to double beforehand.
 }
 \section{See Also}{
 \code{\link{fprod}}, \code{\link{fmean}}, \link[=A1-fast-statistical-functions]{Fast Statistical Functions}, \link[=collapse-documentation]{Collapse Overview}
