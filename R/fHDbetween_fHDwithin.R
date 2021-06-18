@@ -201,6 +201,10 @@ subsetfl <- function(fl, cc) {
 
 # (Weighted) linear model fitting for vectors and lists...
 
+# Neded to sort out some insufficiencies of base R default functions when dealing with dimensions
+`%**%` <- function(x, y) if(length(y) > 1L) x %*% y else x * y
+tcrossprod2 <- function(x, y) if(length(x) > 1L) tcrossprod(x, y) else `dim<-`(x * y, c(1L, length(y)))
+
 # y = x; X = xmat; w = w; meth = lm.method
 flmres <- function(y, X, w = NULL, meth = "qr", resi = TRUE, ...) {
   # n <- dim(X)[1L]
@@ -213,7 +217,7 @@ flmres <- function(y, X, w = NULL, meth = "qr", resi = TRUE, ...) {
       dimnames(y) <- NULL
       return(drop(switch(meth,
                          qr = {
-                           fit <- X %*% qr.coef(qr(X * wts, ...), y * wts) # same as lm...
+                           fit <- X %**% qr.coef(qr(X * wts, ...), y * wts) # same as lm...
                            if(resi) y - fit else fit
                          },
                          chol = {
@@ -227,12 +231,12 @@ flmres <- function(y, X, w = NULL, meth = "qr", resi = TRUE, ...) {
       return(switch(meth,
                      qr = {
                        calc <- qr(X * wts, ...)
-                       if(resi) lapply(y, function(z) drop(z - X %*% qr.coef(calc, z * wts))) else
-                                lapply(y, function(z) drop(X %*% qr.coef(calc, z * wts)))
+                       if(resi) lapply(y, function(z) drop(z - X %**% qr.coef(calc, z * wts))) else
+                                lapply(y, function(z) drop(X %**% qr.coef(calc, z * wts)))
                      },
                      chol = {
                        calc <- X * wts
-                       calc <- X %*% tcrossprod(chol2inv(chol(crossprod(calc), ...)), calc)
+                       calc <- X %*% tcrossprod2(chol2inv(chol(crossprod(calc), ...)), calc)
                        if(resi) lapply(y, function(z) drop(z - calc %*% (z * wts))) else
                                 lapply(y, function(z) drop(calc %*% (z * wts)))
                      },
@@ -256,7 +260,7 @@ flmres <- function(y, X, w = NULL, meth = "qr", resi = TRUE, ...) {
                            lapply(y, function(z) drop(qr.fitted(calc, z)))
                 },
                 chol = {
-                  calc <- X %*% tcrossprod(chol2inv(chol(crossprod(X), ...)), X)
+                  calc <- X %*% tcrossprod2(chol2inv(chol(crossprod(X), ...)), X)
                   if(resi) lapply(y, function(z) drop(z - calc %*% z)) else
                            lapply(y, function(z) drop(calc %*% z))
                 },
@@ -525,8 +529,7 @@ HDW.pseries <- function(x, effect = 1:2, w = NULL, na.rm = TRUE, fill = TRUE, ..
 HDW.matrix <- function(x, fl, w = NULL, na.rm = TRUE, fill = FALSE, stub = "HDW.", lm.method = "qr", ...)
   add_stub(fhdwithin.matrix(x, fl, w, na.rm, fill, lm.method, ...), stub)
 
-
-
+# x = mtcars; fl = ~ qF(cyl):carb; w = wdat; stub = FALSE
 HDW.data.frame <- function(x, fl, w = NULL, cols = is.numeric, na.rm = TRUE, fill = FALSE,
                            variable.wise = FALSE, stub = "HDW.", lm.method = "qr", ...) {
   if(is.call(fl)) {
