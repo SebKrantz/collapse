@@ -25,12 +25,12 @@ static void subsetVectorRaw(SEXP ans, SEXP source, SEXP idx, const bool anyNA)
 
   #define PARLOOP(_NAVAL_)                                        \
   if (anyNA) {                                                    \
-    for (int i=0; i<n; i++) {                                     \
+    for (int i = 0; i != n; ++i) {                                \
       int elem = idxp[i];                                         \
       ap[i] = elem==NA_INTEGER ? _NAVAL_ : sp[elem-1];            \
     }                                                             \
   } else {                                                        \
-    for (int i=0; i<n; i++) {                                     \
+    for (int i = 0; i != n; ++i) {                                \
       ap[i] = sp[idxp[i]-1];                                      \
     }                                                             \
   }
@@ -65,12 +65,12 @@ static void subsetVectorRaw(SEXP ans, SEXP source, SEXP idx, const bool anyNA)
     // Aside: setkey() is a separate special case (a permutation) and does do this in parallel without using SET_*.
     SEXP *sp = STRING_PTR(source), *ap = STRING_PTR(ans);
     if (anyNA) {
-      for (int i=0; i<n; i++) {
+      for (int i = 0; i != n; ++i) {
         int elem = idxp[i];
         ap[i] = elem == NA_INTEGER ? NA_STRING : sp[elem-1];
       }
     } else {
-      for (int i=0; i<n; i++) {
+      for (int i = 0; i != n; ++i) {
         ap[i] = sp[idxp[i]-1];
       }
     }
@@ -84,12 +84,12 @@ static void subsetVectorRaw(SEXP ans, SEXP source, SEXP idx, const bool anyNA)
       // _ELT accessor (VECTOR_ELT) inside the loop in this case.
       SEXP *sp = SEXPPTR(source), *ap = SEXPPTR(ans);
       if (anyNA) {
-        for (int i=0; i<n; i++) {
+        for (int i = 0; i != n; ++i) {
           int elem = idxp[i];
           ap[i] = elem == NA_INTEGER ? R_NilValue : sp[elem-1];
         }
       } else {
-        for (int i=0; i<n; i++) {
+        for (int i = 0; i != n; ++i) {
           ap[i] = sp[idxp[i]-1];
         }
       }
@@ -116,7 +116,7 @@ static const char *check_idx(SEXP idx, int max, bool *anyNA_out, bool *orderedSu
     bool anyLess=false, anyNA=false;
   int last = INT32_MIN;
   int *idxp = INTEGER(idx), n=LENGTH(idx);
-  for (int i=0; i<n; i++) {
+  for (int i = 0; i != n; ++i) {
     int elem = idxp[i];
     if (elem<=0 && elem!=NA_INTEGER) return "Internal inefficiency: idx contains negatives or zeros. Should have been dealt with earlier.";  // e.g. test 762  (TODO-fix)
     if (elem>max) return "Internal inefficiency: idx contains an item out-of-range. Should have been dealt with earlier.";                   // e.g. test 1639.64
@@ -145,7 +145,7 @@ SEXP convertNegAndZeroIdx(SEXP idx, SEXP maxArg, SEXP allowOverMax)
 
                   bool stop = false;
                   // #pragma omp parallel for num_threads(getDTthreads())
-                  for (int i=0; i<n; i++) {
+                  for (int i = 0; i != n; ++i) {
                     if (stop) continue;
                     int elem = idxp[i];
                     if ((elem<1 && elem!=NA_INTEGER) || elem>max) stop=true;
@@ -156,7 +156,7 @@ SEXP convertNegAndZeroIdx(SEXP idx, SEXP maxArg, SEXP allowOverMax)
                     // else massage the input to a standard idx where all items are either NA or in range [1,max] ...
 
                   int countNeg=0, countZero=0, countNA=0, firstOverMax=0;
-                  for (int i=0; i<n; i++) {
+                  for (int i = 0; i != n; ++i) {
                     int elem = idxp[i];
                     if (elem==NA_INTEGER) countNA++;
                     else if (elem<0) countNeg++;
@@ -169,8 +169,8 @@ SEXP convertNegAndZeroIdx(SEXP idx, SEXP maxArg, SEXP allowOverMax)
 
                   int countPos = n-countNeg-countZero-countNA;
                   if (countPos && countNeg) {
-                    int i=0, firstNeg=0, firstPos=0;
-                    while (i<n && (firstNeg==0 || firstPos==0)) {
+                    int i = 0, firstNeg=0, firstPos=0;
+                    while (i != n && (firstNeg==0 || firstPos==0)) {
                       int elem = idxp[i];
                       if (firstPos==0 && elem>0) firstPos=i+1;
                       if (firstNeg==0 && elem<0 && elem!=NA_INTEGER) firstNeg=i+1;
@@ -179,8 +179,8 @@ SEXP convertNegAndZeroIdx(SEXP idx, SEXP maxArg, SEXP allowOverMax)
                     error("Item %d of i is %d and item %d is %d. Cannot mix positives and negatives.", firstNeg, idxp[firstNeg-1], firstPos, idxp[firstPos-1]);
                   }
                   if (countNeg && countNA) {
-                    int i=0, firstNeg=0, firstNA=0;
-                    while (i<n && (firstNeg==0 || firstNA==0)) {
+                    int i = 0, firstNeg=0, firstNA=0;
+                    while (i != n && (firstNeg==0 || firstNA==0)) {
                       int elem = idxp[i];
                       if (firstNeg==0 && elem<0 && elem!=NA_INTEGER) firstNeg=i+1;
                       if (firstNA==0 && elem==NA_INTEGER) firstNA=i+1;
@@ -194,7 +194,7 @@ SEXP convertNegAndZeroIdx(SEXP idx, SEXP maxArg, SEXP allowOverMax)
                     // just zeros to remove, or >max to convert to NA
                     ans = PROTECT(allocVector(INTSXP, n - countZero));
                     int *ansp = INTEGER(ans);
-                    for (int i=0, ansi=0; i<n; i++) {
+                    for (int i = 0, ansi = 0; i != n; ++i) {
                       int elem = idxp[i];
                       if (elem==0) continue;
                       ansp[ansi++] = elem>max ? NA_INTEGER : elem;
@@ -202,10 +202,10 @@ SEXP convertNegAndZeroIdx(SEXP idx, SEXP maxArg, SEXP allowOverMax)
                   } else {
                     // idx is all negative without any NA but perhaps some zeros
                     bool *keep = (bool *)R_alloc(max, sizeof(bool));    // 4 times less memory that INTSXP in src/main/subscript.c
-                    for (int i=0; i<max; i++) keep[i] = true;
+                    for (int i = 0; i != max; ++i) keep[i] = true;
                     int countRemoved=0, countDup=0, countBeyond=0;   // idx=c(-10,-5,-10) removing row 10 twice
                     int firstBeyond=0, firstDup=0;
-                    for (int i=0; i<n; i++) {
+                    for (int i = 0; i != n; ++i) {
                       int elem = -idxp[i];
                       if (elem==0) continue;
                       if (elem>max) {
@@ -228,7 +228,7 @@ SEXP convertNegAndZeroIdx(SEXP idx, SEXP maxArg, SEXP allowOverMax)
                     int ansn = max-countRemoved;
                     ans = PROTECT(allocVector(INTSXP, ansn));
                     int *ansp = INTEGER(ans);
-                    for (int i=0, ansi=0; i<max; i++) {
+                    for (int i = 0, ansi = 0; i != max; ++i) {
                       if (keep[i]) ansp[ansi++] = i+1;
                     }
                   }
@@ -301,12 +301,12 @@ SEXP subsetCols(SEXP x, SEXP cols, SEXP checksf) { // SEXP fretall
   }
   SEXP ans = PROTECT(allocVector(VECSXP, ncol));
   SEXP *px = SEXPPTR(x), *pans = SEXPPTR(ans);
-  for(int i = 0; i < ncol; i++) {
+  for(int i = 0; i != ncol; ++i) {
     pans[i] = px[pcols[i]-1]; // SET_VECTOR_ELT(ans, i, VECTOR_ELT(x, pcols[i]-1));
   }
   copyMostAttrib(x, ans); // includes row.names and class...
   // clear any index that was copied over by copyMostAttrib(), e.g. #1760 and #1734 (test 1678)
-  setAttrib(ans, sym_index, R_NilValue);
+  // setAttrib(ans, sym_index, R_NilValue); -> deletes "index" attribute of pdata.frame -> don't use!!
   if(!isNull(nam)) {
     SEXP tmp = PROTECT(allocVector(STRSXP, ncol));
     setAttrib(ans, R_NamesSymbol, tmp);
@@ -348,7 +348,7 @@ SEXP subsetDT(SEXP x, SEXP rows, SEXP cols) { // , SEXP fastret
 
     if (!isInteger(cols)) error("Internal error. Argument 'cols' to Csubset is type '%s' not 'integer'", type2char(TYPEOF(cols))); // # nocov
     int ncol = LENGTH(cols), l = LENGTH(x), *pcols = INTEGER(cols);
-      for (int i = 0; i < ncol; i++) {
+      for (int i = 0; i != ncol; ++i) {
         if (pcols[i] < 1 || pcols[i] > l) error("Item %d of 'cols' is %d which is outside 1-based range [1,ncol(x)=%d]", i+1, pcols[i], l);
       }
 
@@ -395,7 +395,7 @@ SEXP subsetDT(SEXP x, SEXP rows, SEXP cols) { // , SEXP fastret
   SEXP *px = SEXPPTR(x), *pans = SEXPPTR(ans);
   if (isNull(rows)) {
     ansn = nrow;
-    for (int i = 0; i < ncol; i++) {
+    for (int i = 0; i != ncol; ++i) {
       SEXP thisCol = px[pcols[i]-1];
       checkCol(thisCol, pcols[i], nrow, x);
       pans[i] = thisCol; // copyAsPlain(thisCol) -> No deep copy
@@ -403,7 +403,7 @@ SEXP subsetDT(SEXP x, SEXP rows, SEXP cols) { // , SEXP fastret
     }
   } else {
     ansn = LENGTH(rows);  // has been checked not to contain zeros or negatives, so this length is the length of result
-    for (int i = 0; i < ncol; i++) {
+    for (int i = 0; i != ncol; ++i) {
       SEXP source = px[pcols[i]-1];
       checkCol(source, pcols[i], nrow, x);
       SEXP target;
@@ -424,7 +424,7 @@ SEXP subsetDT(SEXP x, SEXP rows, SEXP cols) { // , SEXP fastret
   setAttrib(ans, R_RowNamesSymbol, tmp);  // The contents of tmp must be set before being passed to setAttrib(). setAttrib looks at tmp value and copies it in the case of R_RowNamesSymbol. Caused hard to track bug around 28 Sep 2014.
 
   // clear any index that was copied over by copyMostAttrib() above, e.g. #1760 and #1734 (test 1678)
-  setAttrib(ans, sym_index, R_NilValue);
+  setAttrib(ans, sym_index, R_NilValue); // also ok for pdata.frame (can't use on subsetted data frame)
 
   // unlock(ans);
   // setselfref(ans);
