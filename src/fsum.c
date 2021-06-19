@@ -80,50 +80,55 @@ void fsum_weights_impl(double *pout, double *px, int ng, int *pg, double *pw, in
   }
 }
 
+// using long long internally is substantially faster than using doubles !!
 double fsum_int_impl(int *px, int narm, int l) {
-  double sum;
+  long long sum;
   if(narm) {
     int j = l-1;
     while(px[j] == NA_INTEGER && j!=0) --j;
-    if(j != 0) {
-      sum = px[j];
-      for(int i = j; i--; ) if(px[i] != NA_INTEGER) sum += px[i];
-    } else {
-      sum = (l > 1 || px[j] == NA_INTEGER) ? NA_REAL : px[j];
-    }
+    sum = (long long)px[j];
+    if(j == 0 && (l > 1 || px[j] == NA_INTEGER)) return NA_REAL;
+    for(int i = j; i--; ) if(px[i] != NA_INTEGER) sum += (long long)px[i];
   } else {
     sum = 0;
     for(int i = 0; i != l; ++i) {
-      if(px[i] == NA_INTEGER) {
-        sum = NA_REAL;
-        break;
-      } else {
-        sum += px[i];
-      }
+      if(px[i] == NA_INTEGER) return NA_REAL;
+      sum += (long long)px[i];
     }
   }
-  return sum;
+  return (double)sum;
 }
 
 void fsum_int_g_impl(int *pout, int *px, int ng, int *pg, int narm, int l) {
+  long long ckof;
   if(narm) {
     for(int i = ng; i--; ) pout[i] = NA_INTEGER;
     --pout;
-    for(int i = l; i--; ) {
+    for(int i = l, lsi; i--; ) {
       if(px[i] != NA_INTEGER) {
-        if(pout[pg[i]] == NA_INTEGER) pout[pg[i]] = px[i];
-        else pout[pg[i]] += px[i];
+        lsi = pout[pg[i]];
+        if(lsi == NA_INTEGER) pout[pg[i]] = px[i];
+        else {
+          ckof = (long long)lsi + px[i];
+          if(ckof > INT_MAX || ckof <= INT_MIN) error("Integer overflow in one or more groups. Integers in R are bounded between 2,147,483,647 and -2,147,483,647. The sum within each group should be in that range.");
+          pout[pg[i]] = (int)ckof;
+        }
       }
     }
   } else {
     memset(pout, 0, sizeof(int) * ng);
     --pout;
-    for(int i = l; i--; ) {
+    for(int i = l, lsi; i--; ) {
       if(px[i] == NA_INTEGER) {
         pout[pg[i]] = NA_INTEGER;
         continue;
       }
-      if(pout[pg[i]] != NA_INTEGER) pout[pg[i]] += px[i]; // Used to stop loop when all groups passed with NA, but probably no speed gain since groups are mostly ordered.
+      lsi = pout[pg[i]];
+      if(lsi != NA_INTEGER) { // Used to stop loop when all groups passed with NA, but probably no speed gain since groups are mostly ordered.
+        ckof = (long long)lsi + px[i];
+        if(ckof > INT_MAX || ckof <= INT_MIN) error("Integer overflow in one or more groups. Integers in R are bounded between 2,147,483,647 and -2,147,483,647. The sum within each group should be in that range.");
+        pout[pg[i]] = (int)ckof;
+      }
     }
   }
 }
@@ -146,7 +151,7 @@ SEXP fsumC(SEXP x, SEXP Rng, SEXP g, SEXP w, SEXP Rnarm) {
         if(ng > 0) fsum_int_g_impl(INTEGER(out), INTEGER(x), ng, INTEGER(g), narm, l);
         else {
           double sum = fsum_int_impl(INTEGER(x), narm, l);
-          if(sum > INT_MAX || sum < INT_MIN || (narm && sum == NA_INTEGER)) return ScalarReal(sum); // INT_MIN is NA_INTEGER
+          if(sum > INT_MAX || sum <= INT_MIN) return ScalarReal(sum); // INT_MIN is NA_INTEGER
           return ScalarInteger((int)sum);
         }
         break;
@@ -204,7 +209,7 @@ SEXP fsummC(SEXP x, SEXP Rng, SEXP g, SEXP w, SEXP Rnarm, SEXP Rdrop) {
           int anyoutl = 0;
           for(int j = 0; j != col; ++j) {
             double sumj = fsum_int_impl(px + j*l, narm, l);
-            if(sumj > INT_MAX || sumj < INT_MIN || (narm && sumj == NA_INTEGER)) anyoutl = 1;
+            if(sumj > INT_MAX || sumj <= INT_MIN) anyoutl = 1;
             pout[j] = sumj;
           }
           if(anyoutl == 0) {

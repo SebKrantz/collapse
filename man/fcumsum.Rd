@@ -50,21 +50,34 @@ If \code{na.rm = FALSE}, \code{fcumsum} works like \code{\link{cumsum}} and prop
 By default the cumulative sum is computed in the order in which elements appear in \code{x}. If \code{o} is provided, the cumulative sum is computed in the order given by \code{radixorderv(o)}, without the need to first sort \code{x}. This applies as well if groups are used (\code{g}), in which the cumulative sum is computed separately in each group.
 
 The \emph{pseries} and \emph{pdata.frame} methods assume that the last factor in the \code{plm::index} is the time-variable and the rest ar grouping variables. The time-variable is passed to \code{radixorderv} and used for ordered computation, so that cumulative sums are accurately computed regardless of whether the panel-data is ordered or balanced.
+
+\code{fcumsum} explicitly supports integers. Integers in R are bounded at bounded at +-2,147,483,647, and an integer overflow error will be provided if the cumulative sum (within any group) exceeds +-2,147,483,647.
+
 }
 \value{
 the cumulative sum of values in \code{x}, (optionally) grouped by \code{g} and/or ordered by \code{o}. See Details and Examples.
 }
 
-\section{Warning}{
-\code{fcumsum} explicitly supports integers, but integer overflow is not checked in grouped cumulative summations, so when you are cumulatively summing an integer vector or matrix \code{x} by groups, the elements inside each group should not be larger than 2,147,483,647 or smaller than -2,147,483,647.
-}
 \seealso{
 \code{\link{fdiff}}, \code{\link{fgrowth}}, \link[=A7-time-series-panel-series]{Time Series and Panel Series}, \link[=collapse-documentation]{Collapse Overview}
 }
 \examples{
+## Non-grouped
 fcumsum(AirPassengers)
 fcumsum(EuStockMarkets)
 fcumsum(mtcars)
+
+# Non-grouped but ordered
+o <- order(rnorm(nrow(EuStockMarkets)))
+all.equal(copyAttrib(fcumsum(EuStockMarkets[o, ], o = o)[order(o), ], EuStockMarkets),
+          fcumsum(EuStockMarkets))
+
+## Grouped
+with(wlddev, fcumsum(PCGDP, iso3c))
+
+## Grouped and ordered
+with(wlddev, fcumsum(PCGDP, iso3c, year))
+with(wlddev, fcumsum(PCGDP, iso3c, year, fill = TRUE))
 }
 % Add one or more standard keywords, see file 'KEYWORDS' in the
 % R documentation directory.

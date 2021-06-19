@@ -74,8 +74,8 @@ void fcumsum_double_impl_order(double *pout, double *px, int ng, int *pg, int *p
 
 
 void fcumsum_int_impl(int *pout, int *px, int ng, int *pg, int narm, int fill, int l) {
+  long long ckof;
   if(ng == 0) {
-    double ckof;
     if(narm <= 0) {
       int i = 1;
       ckof = pout[0] = px[0];
@@ -90,18 +90,18 @@ void fcumsum_int_impl(int *pout, int *px, int ng, int *pg, int narm, int fill, i
     } else if(fill) {
       ckof = pout[0] = (px[0] == NA_INTEGER) ? 0 : px[0];
       for(int i = 1; i != l; ++i) {
-        if(px[i] != NA_INTEGER) ckof += px[i];
-        pout[i] = ckof;
+        if(px[i] != NA_INTEGER) ckof += (long long)px[i];
+        pout[i] = (int)ckof;
       }
     } else {
-      ckof = 0.0;
+      ckof = 0;
       for(int i = 0; i != l; ++i) {
         if(px[i] == NA_INTEGER) pout[i] = NA_INTEGER;
         else pout[i] = ckof += px[i];
       }
     }
     if(ckof > INT_MAX || ckof < INT_MIN || (narm && ckof == NA_INTEGER))
-      error("Integer overflow, use fcumsum(as.numeric(x))");
+      error("Integer overflow. Integers in R are bounded between 2,147,483,647 and -2,147,483,647. Use fcumsum(as.numeric(x)).");
   } else {
     int last[ng+1]; // Also pass pointer to function ??
     memset(last, 0, sizeof(int) * (ng+1));
@@ -113,22 +113,37 @@ void fcumsum_int_impl(int *pout, int *px, int ng, int *pg, int narm, int fill, i
         }
         lsi = last[pg[i]];
         if(lsi == NA_INTEGER) pout[i] = NA_INTEGER;
-        else last[pg[i]] = pout[i] = lsi + px[i];
+        else {
+          ckof = (long long)lsi + px[i];
+          if(ckof > INT_MAX || ckof <= INT_MIN) error("Integer overflow in one or more groups. Integers in R are bounded between 2,147,483,647 and -2,147,483,647. The sum within each group should be in that range.");
+          last[pg[i]] = pout[i] = (int)ckof;
+        }
       }
     } else if(fill) {
-      for(int i = 0; i != l; ++i) last[pg[i]] = pout[i] = last[pg[i]] + (px[i] == NA_INTEGER ? 0 : px[i]);
+      for(int i = 0; i != l; ++i) {
+        if(px[i] == NA_INTEGER) pout[i] = last[pg[i]];
+        else {
+          ckof = (long long)last[pg[i]] + px[i];
+          if(ckof > INT_MAX || ckof <= INT_MIN) error("Integer overflow in one or more groups. Integers in R are bounded between 2,147,483,647 and -2,147,483,647. The sum within each group should be in that range.");
+          last[pg[i]] = pout[i] = (int)ckof;
+        }
+      }
     } else {
       for(int i = 0; i != l; ++i) {
         if(px[i] == NA_INTEGER) pout[i] = NA_INTEGER;
-        else last[pg[i]] = pout[i] = last[pg[i]] + px[i];
+        else {
+          ckof = (long long)last[pg[i]] + px[i];
+          if(ckof > INT_MAX || ckof <= INT_MIN) error("Integer overflow in one or more groups. Integers in R are bounded between 2,147,483,647 and -2,147,483,647. The sum within each group should be in that range.");
+          last[pg[i]] = pout[i] = (int)ckof;
+        }
       }
     }
   }
 }
 
 void fcumsum_int_impl_order(int *pout, int *px, int ng, int *pg, int *po, int narm, int fill, int l) {
+  long long ckof;
   if(ng == 0) {
-    double ckof;
     if(narm <= 0) {
       int i = 1, poi;
       ckof = pout[po[0]-1] = px[po[0]-1];
@@ -145,11 +160,11 @@ void fcumsum_int_impl_order(int *pout, int *px, int ng, int *pg, int *po, int na
       ckof = pout[po[0]-1] = (px[po[0]-1] == NA_INTEGER) ? 0 : px[po[0]-1];
       for(int i = 1, poi; i != l; ++i) {
         poi = po[i]-1;
-        if(px[poi] != NA_INTEGER) ckof += px[poi];
-        pout[poi] = ckof;
+        if(px[poi] != NA_INTEGER) ckof += (long long)px[poi];
+        pout[poi] = (int)ckof;
       }
     } else {
-      ckof = 0.0;
+      ckof = 0;
       for(int i = 0, poi; i != l; ++i) {
         poi = po[i]-1;
         if(px[poi] == NA_INTEGER) pout[poi] = NA_INTEGER;
@@ -157,7 +172,7 @@ void fcumsum_int_impl_order(int *pout, int *px, int ng, int *pg, int *po, int na
       }
     }
     if(ckof > INT_MAX || ckof < INT_MIN || (narm && ckof == NA_INTEGER))
-      error("Integer overflow, use fcumsum(as.numeric(x))");
+      error("Integer overflow. Integers in R are bounded between 2,147,483,647 and -2,147,483,647. Use fcumsum(as.numeric(x)).");
   } else {
     int last[ng+1]; // Also pass pointer to function ??
     memset(last, 0, sizeof(int) * (ng+1));
@@ -170,18 +185,31 @@ void fcumsum_int_impl_order(int *pout, int *px, int ng, int *pg, int *po, int na
         }
         lsi = last[pg[poi]];
         if(lsi == NA_INTEGER) pout[poi] = NA_INTEGER;
-        else last[pg[poi]] = pout[poi] = lsi + px[poi];
+        else {
+          ckof = (long long)lsi + px[poi];
+          if(ckof > INT_MAX || ckof <= INT_MIN) error("Integer overflow in one or more groups. Integers in R are bounded between 2,147,483,647 and -2,147,483,647. The sum within each group should be in that range.");
+          last[pg[poi]] = pout[poi] = (int)ckof;
+        }
       }
     } else if(fill) {
       for(int i = 0, poi; i != l; ++i) {
         poi = po[i]-1;
-        last[pg[poi]] = pout[poi] = last[pg[poi]] + (px[poi] == NA_INTEGER ? 0 : px[poi]);
+        if(px[poi] == NA_INTEGER) pout[poi] = last[pg[poi]];
+        else {
+          ckof = (long long)last[pg[poi]] + px[poi];
+          if(ckof > INT_MAX || ckof <= INT_MIN) error("Integer overflow in one or more groups. Integers in R are bounded between 2,147,483,647 and -2,147,483,647. The sum within each group should be in that range.");
+          last[pg[poi]] = pout[poi] = (int)ckof;
+        }
       }
     } else {
       for(int i = 0, poi; i != l; ++i) {
         poi = po[i]-1;
         if(px[poi] == NA_INTEGER) pout[poi] = NA_INTEGER;
-        else last[pg[poi]] = pout[poi] = last[pg[poi]] + px[poi];
+        else {
+          ckof = (long long)last[pg[poi]] + px[poi];
+          if(ckof > INT_MAX || ckof <= INT_MIN) error("Integer overflow in one or more groups. Integers in R are bounded between 2,147,483,647 and -2,147,483,647. The sum within each group should be in that range.");
+          last[pg[poi]] = pout[poi] = (int)ckof;
+        }
       }
     }
   }

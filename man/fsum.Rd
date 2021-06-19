@@ -51,20 +51,17 @@ fsum(x, \dots)
 
 Missing-value removal as controlled by the \code{na.rm} argument is done very efficiently by simply skipping them in the computation (thus setting \code{na.rm = FALSE} on data with no missing values doesn't give extra speed). Large performance gains can nevertheless be achieved in the presence of missing values if \code{na.rm = FALSE}, since then the corresponding computation is terminated once a \code{NA} is encountered and \code{NA} is returned (unlike \code{\link{sum}} which just runs through without any checks).
 
-The weighted sum (i.e. survey total) is computed as \code{sum(x * w)}. If \code{na.rm = TRUE}, missing values will be removed from both \code{x} and \code{w} i.e. utilizing only \code{x[complete.cases(x,w)]} and \code{w[complete.cases(x,w)]}.
+The weighted sum (i.e. survey total) is computed as \code{sum(x * w)}, but in one pass and about twice as efficient. If \code{na.rm = TRUE}, missing values will be removed from both \code{x} and \code{w} i.e. utilizing only \code{x[complete.cases(x,w)]} and \code{w[complete.cases(x,w)]}.
 
 This all seamlessly generalizes to grouped computations, which are performed in a single pass (without splitting the data) and therefore extremely fast. See Benchmark and Examples below.
 
-When applied to data frames with groups or \code{drop = FALSE}, \code{fsum} preserves all column attributes (such as variable labels) but does not distinguish between classed and unclassed objects. The attributes of the data frame itself are also preserved.
+When applied to data frames with groups or \code{drop = FALSE}, \code{fsum} preserves all column attributes (such as variable labels), unless columns have a class (checked using \code{is.object}). The attributes of the data frame itself are also preserved.
+
+Since v1.6.0 \code{fsum} explicitly supports integers. Integers are summed using the long long type in C which is bounded at +-9,223,372,036,854,775,807 (so ~4.3 billion times greater than the minimum/maximum R integer bounded at +-2,147,483,647). If the value of the sum is outside +-2,147,483,647, a double containing the result is returned, otherwise an integer is returned. With groups, an integer overflow error is provided if the sum in any group is outside +-2,147,483,647.
 
 }
 \value{
 The (\code{w} weighted) sum of \code{x}, grouped by \code{g}, or (if \code{\link{TRA}} is used) \code{x} transformed by its sum, grouped by \code{g}.
-}
-\section{Warning}{
-Since 1.6.0 \code{fsum} explicitly supports integers, but integer overflow is not checked in grouped summations, so when you are summing an integer vector or matrix \code{x} by groups, the sum inside each group should not be larger than 2,147,483,647 or smaller than -2,147,483,648.
-
-This is not a concern for weighted summations, where both \code{x} and \code{w} are coerced to double beforehand.
 }
 \section{See Also}{
 \code{\link{fprod}}, \code{\link{fmean}}, \link[=A1-fast-statistical-functions]{Fast Statistical Functions}, \link[=collapse-documentation]{Collapse Overview}
