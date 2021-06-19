@@ -83,7 +83,7 @@ static void savetl_end()
   // even if _init() has not been called yet (pointers NULL). Such as
   // to clear up before error. Also, it might be that nothing needed
   // to be saved anyway.
-  for (int i = 0; i < nsaved; i++)
+  for (int i = 0; i != nsaved; ++i)
     SET_TRLEN(saveds[i], savedtl[i]);
   free(saveds);  // does nothing on NULL input
   free(savedtl);
@@ -154,7 +154,7 @@ static void mpush(int x, int n)
     return;
   if (gsalloc[flip] < gsngrp[flip] + n)
     growstack(((uint64_t)(gsngrp[flip]) + n) * 2);
-  for (int i = 0; i < n; i++)
+  for (int i = 0; i != n; ++i)
     gs[flip][gsngrp[flip]++] = x;
   if (x > gsmax[flip])
     gsmax[flip] = x;
@@ -206,7 +206,7 @@ static void setRange(int *x, int n)
   int i = 0;
   while(i < n && x[i] == NA_INTEGER) i++;
   if (i < n) xmax = xmin = x[i];
-  for (; i < n; i++) {
+  for (; i != n; ++i) {
     int tmp = x[i];
     if (tmp == NA_INTEGER)
       continue;
@@ -259,7 +259,7 @@ static void icount(int *x, int *o, int n)
   if (range > N_RANGE)
     Error("Internal error: range = %d; isorted cannot handle range > %d",
           range, N_RANGE);
-  for (int i = 0; i < n; i++) {
+  for (int i = 0; i != n; ++i) {
     // For nalast=NA case, we won't remove/skip NAs, rather set 'o' indices
     // to 0. subset will skip them. We can't know how many NAs to skip
     // beforehand - i.e. while allocating "ans" vector
@@ -275,7 +275,7 @@ static void icount(int *x, int *o, int n)
     tmp += counts[napos];
   }
   int w = (order==1) ? 0 : range-1;
-  for (int i = 0; i < range; i++)
+  for (int i = 0; i != range; ++i)
     /* no point in adding tmp < n && i <= range, since range includes max,
      need to go to max, unlike 256 loops elsewhere in radixsort.c */
   {
@@ -300,7 +300,7 @@ static void icount(int *x, int *o, int n)
   // nalast = 1, -1 are both taken care already.
   if (nalast == 0)
     // nalast = 0 is dealt with separately as it just sets o to 0
-    for (int i = 0; i < n; i++)
+    for (int i = 0; i != n; ++i)
       o[i] = (x[o[i] - 1] == NA_INTEGER) ? 0 : o[i];
   // at those indices where x is NA. x[o[i]-1] because x is not modifed here.
 
@@ -310,7 +310,7 @@ static void icount(int *x, int *o, int n)
     /* Many zeros in counts already. Loop through n instead,
      doesn't matter if we set to 0 several times on any repeats */
     counts[napos] = 0;
-    for (int i = 0; i < n; i++) {
+    for (int i = 0; i != n; ++i) {
       if (x[i] != NA_INTEGER)
         counts[x[i] - xmin] = 0;
     }
@@ -327,7 +327,7 @@ static void iinsert(int *x, int *o, int n)
   /*  when nalast == 0, iinsert will be called only from within iradix,
    where o[.] = 0 for x[.]=NA is already taken care of */
 {
-  for (int i = 1; i < n; i++) {
+  for (int i = 1; i != n; ++i) {
     int xtmp = x[i];
     if (xtmp < x[i - 1]) {
       int j = i - 1;
@@ -342,7 +342,7 @@ static void iinsert(int *x, int *o, int n)
     }
   }
   int tt = 0;
-  for (int i = 1; i < n; i++) {
+  for (int i = 1; i != n; ++i) {
     if (x[i] == x[i - 1]) tt++;
     else {
       push(tt + 1);
@@ -431,7 +431,7 @@ static void iradix(int *x, int *o, int n)
   int nextradix, itmp, thisgrpn, maxgrpn;
   unsigned int thisx = 0, shift, *thiscounts;
 
-  for (int i = 0; i < n;i++) {
+  for (int i = 0; i != n; ++i) {
     /* parallel histogramming pass; i.e. count occurrences of
      0:255 in each byte.  Sequential so almost negligible. */
     // relies on overflow behaviour. And shouldn't -INT_MIN be up in iradix?
@@ -458,10 +458,10 @@ static void iradix(int *x, int *o, int n)
     if (nalast == 0 && x[0] == NA_INTEGER)
       // all values are identical. return 0 if nalast=0 & all NA
       // because of 'return', have to take care of it here.
-      for (int i = 0; i < n; i++)
+      for (int i = 0; i != n; ++i)
         o[i] = 0;
     else
-      for (int i = 0; i < n; i++)
+      for (int i = 0; i != n; ++i)
         o[i] = (i + 1);
     push(n);
     return;
@@ -478,7 +478,7 @@ static void iradix(int *x, int *o, int n)
 
   itmp = thiscounts[0];
   maxgrpn = itmp;
-  for (int i = 1; itmp < n && i < 256; i++) {
+  for (int i = 1; itmp < n && i < 256; ++i) {
     thisgrpn = thiscounts[i];
     if (thisgrpn) {
       // don't cummulate through 0s, important below.
@@ -518,14 +518,14 @@ static void iradix(int *x, int *o, int n)
           thiscounts[0], radix);
   thiscounts[256] = n;
   itmp = 0;
-  for (int i = 1; itmp < n && i <= 256; i++) {
+  for (int i = 1; itmp < n && i <= 256; ++i) {
     if (thiscounts[i] == 0) continue;
     // undo cumulate; i.e. diff
     thisgrpn = thiscounts[i] - itmp;
     if (thisgrpn == 1 || nextradix == -1) {
       push(thisgrpn);
     } else {
-      for (int j = 0; j < thisgrpn; j++)
+      for (int j = 0; j != thisgrpn; ++j)
         // this is why this xsub here can't be the same memory as
         // xsub in do_radixsort.
         ((int *)radix_xsub)[j] = icheck(x[o[itmp+j]-1]);
@@ -537,7 +537,7 @@ static void iradix(int *x, int *o, int n)
   }
   if (nalast == 0) // nalast = 1, -1 are both taken care already.
     // nalast = 0 is dealt with separately as it just sets o to 0
-    for (int i = 0; i < n; i++)
+    for (int i = 0; i != n; ++i)
       o[i] = (x[o[i] - 1] == NA_INTEGER) ? 0 : o[i];
   // at those indices where x is NA. x[o[i]-1] because x is not
   // modified by reference unlike iinsert or iradix_r
@@ -564,12 +564,12 @@ static void iradix_r(int *xsub, int *osub, int n, int radix)
   shift = radix * 8;
   thiscounts = radixcounts[radix];
 
-  for (int i = 0; i < n; i++) {
+  for (int i = 0; i != n; ++i) {
     thisx = (unsigned int) xsub[i] - INT_MIN; // sequential in xsub
     thiscounts[thisx >> shift & 0xFF]++;
   }
   itmp = thiscounts[0];
-  for (int i = 1; itmp < n && i < 256; i++) {
+  for (int i = 1; itmp < n && i < 256; ++i) {
     if (thiscounts[i]) // don't cummulate through 0s, important below
       thiscounts[i] = (itmp += thiscounts[i]);
   } // INCLUDED ??
@@ -593,7 +593,7 @@ static void iradix_r(int *xsub, int *osub, int n, int radix)
           thiscounts[0], radix);
   thiscounts[256] = n;
   itmp = 0;
-  for (int i = 1; itmp < n && i <= 256; i++) {
+  for (int i = 1; itmp < n && i <= 256; ++i) {
     if (thiscounts[i] == 0)
       continue;
     thisgrpn = thiscounts[i] - itmp;        // undo cummulate; i.e. diff
@@ -669,15 +669,15 @@ static void dradix(unsigned char *x, int *o, int n)
   unsigned long long thisx = 0;
   // see comments in iradix for structure.  This follows the same.
   // TO DO: merge iradix in here (almost ready)
-  for (int i = 0; i < n; i++) {
+  for (int i = 0; i != n; ++i) {
     thisx = twiddle(x, i, order);
-    for (radix = 0; radix < colSize; radix++)
+    for (radix = 0; radix != colSize; ++radix)
       // if dround == 2 then radix 0 and 1 will be all 0 here and skipped.
       /* on little endian, 0 is the least significant bits (the right)
        and 7 is the most including sign (the left); i.e. reversed. */
       radixcounts[radix][((unsigned char *)&thisx)[RADIX_BYTE]]++;
   }
-  for (radix = 0; radix < colSize; radix++) {
+  for (radix = 0; radix != colSize; ++radix) {
     // thisx is the last x after loop above
     int i = ((unsigned char *) &thisx)[RADIX_BYTE];
     skip[radix] = radixcounts[radix][i] == n;
@@ -692,10 +692,10 @@ static void dradix(unsigned char *x, int *o, int n)
     if (nalast == 0 && is_nan(x, 0))
       // all values are identical. return 0 if nalast=0 & all NA
       // because of 'return', have to take care of it here.
-      for (int i = 0; i < n; i++)
+      for (int i = 0; i != n; ++i)
         o[i] = 0;
     else
-      for (int i = 0; i < n; i++)
+      for (int i = 0; i != n; ++i)
         o[i] = (i + 1);
     push(n);
     return;
@@ -709,7 +709,7 @@ static void dradix(unsigned char *x, int *o, int n)
   thiscounts = radixcounts[radix];
   itmp = thiscounts[0];
   maxgrpn = itmp;
-  for (int i = 1; itmp < n && i < 256; i++) {
+  for (int i = 1; itmp < n && i < 256; ++i) {
     thisgrpn = thiscounts[i];
     if (thisgrpn) {  // don't cummulate through 0s, important below
       if (thisgrpn > maxgrpn)
@@ -748,7 +748,7 @@ static void dradix(unsigned char *x, int *o, int n)
           thiscounts[0], radix);
   thiscounts[256] = n;
   itmp = 0;
-  for (int i = 1; itmp < n && i <= 256; i++) {
+  for (int i = 1; itmp < n && i <= 256; ++i) {
     if (thiscounts[i] == 0)
       continue;
     thisgrpn = thiscounts[i] - itmp;  // undo cummulate; i.e. diff
@@ -757,12 +757,12 @@ static void dradix(unsigned char *x, int *o, int n)
     } else {
       if (colSize == 4) { // ready for merging in iradix ...
         error("Not yet used, still using iradix instead");
-        for (int j = 0; j < thisgrpn; j++)
+        for (int j = 0; j != thisgrpn; ++j)
           ((int *)radix_xsub)[j] = (int)twiddle(x, o[itmp+j]-1, order);
         // this is why this xsub here can't be the same memory
         // as xsub in do_radixsort
       } else
-        for (int j = 0; j < thisgrpn; j++)
+        for (int j = 0; j != thisgrpn; ++j)
           ((unsigned long long *)radix_xsub)[j] =
             twiddle(x, o[itmp+j]-1, order);
       // changes xsub and o by reference recursively.
@@ -772,7 +772,7 @@ static void dradix(unsigned char *x, int *o, int n)
     thiscounts[i] = 0;
   }
   if (nalast == 0) // nalast = 1, -1 are both taken care already.
-    for (int i = 0; i < n; i++)
+    for (int i = 0; i != n; ++i)
       o[i] = is_nan(x, o[i] - 1) ? 0 : o[i];
   // nalast = 0 is dealt with separately as it just sets o to 0
   // at those indices where x is NA. x[o[i]-1] because x is not
@@ -788,7 +788,7 @@ static void dinsert(unsigned long long *x, int *o, int n)
 {
   int otmp, tt;
   unsigned long long xtmp;
-  for (int i = 1; i < n; i++) {
+  for (int i = 1; i != n; ++i) {
     xtmp = x[i];
     if (xtmp < x[i - 1]) {
       int j = i - 1;
@@ -803,7 +803,7 @@ static void dinsert(unsigned long long *x, int *o, int n)
     }
   }
   tt = 0;
-  for (int i = 1; i < n; i++) {
+  for (int i = 1; i != n; ++i) {
     if (x[i] == x[i - 1]) tt++;
     else {
       push(tt + 1);
@@ -833,12 +833,12 @@ static void dradix_r(unsigned char *xsub, int *osub, int n, int radix)
   }
   thiscounts = radixcounts[radix];
   p = xsub + RADIX_BYTE;
-  for (int i = 0; i < n; i++) {
+  for (int i = 0; i != n; ++i) {
     thiscounts[*p]++;
     p += colSize;
   }
   itmp = thiscounts[0];
-  for (int i = 1; itmp < n && i < 256; i++) {
+  for (int i = 1; itmp < n && i < 256; ++i) {
     if (thiscounts[i]) // don't cummulate through 0s, important below
       thiscounts[i] = (itmp += thiscounts[i]);
   } // INCLUDED ??
@@ -874,7 +874,7 @@ static void dradix_r(unsigned char *xsub, int *osub, int n, int radix)
           thiscounts[0], radix);
   thiscounts[256] = n;
   itmp = 0;
-  for (int i = 1; itmp < n && i <= 256; i++) {
+  for (int i = 1; itmp < n && i <= 256; ++i) {
     if (thiscounts[i] == 0)
       continue;
     thisgrpn = thiscounts[i] - itmp;        // undo cummulate; i.e. diff
@@ -926,12 +926,12 @@ static int StrCmp(SEXP x, SEXP y)            // also used by bmerge and chmatch
 static void checkEncodings(SEXP x)
 {
   cetype_t ce;
+  SEXP *px = STRING_PTR(x);
+  int i, lx = length(x);
+  for (i = 0; i != lx && px[i] == NA_STRING; ++i);
 
-  int i;
-  for (i = 0; i < length(x) && STRING_ELT(x, i) == NA_STRING; i++);
-
-  if (i < length(x)) {
-    ce = CHAR_ENCODING(STRING_ELT(x, i));
+  if (i < lx) {
+    ce = CHAR_ENCODING(px[i]);
     if (ce == CE_NATIVE) {
       error("Character encoding must be UTF-8, Latin-1 or bytes");
     }
@@ -989,7 +989,7 @@ static void cradix_r(SEXP * xsub, int n, int radix)
   // much an issue.
 
   thiscounts = cradix_counts + radix * 256;
-  for (int i = 0; i < n; i++) {
+  for (int i = 0; i != n; ++i) {
     thisx = xsub[i] == NA_STRING ?
     0 : (radix < LENGTH(xsub[i]) ?
     (unsigned char) (CHAR(xsub[i])[radix]) : 1);
@@ -1004,7 +1004,7 @@ static void cradix_r(SEXP * xsub, int n, int radix)
     return;
   }
   itmp = thiscounts[0];
-  for (int i = 1; i < 256; i++) {
+  for (int i = 1; i != 256; ++i) {
     if (thiscounts[i])     // don't cummulate through 0s, important below
       thiscounts[i] = (itmp += thiscounts[i]);
   } // INCLUDED ??
@@ -1024,7 +1024,7 @@ static void cradix_r(SEXP * xsub, int n, int radix)
     Error("Logical error. counts[0]=%d in cradix but should have been decremented to 0. radix=%d",
           thiscounts[0], radix);
   itmp = 0;
-  for (int i = 1; i < 256; i++) {
+  for (int i = 1; i != 256; ++i) {
     if (thiscounts[i] == 0)
       continue;
     thisgrpn = thiscounts[i] - itmp;        // undo cummulate; i.e. diff
@@ -1058,7 +1058,7 @@ static void cgroup(SEXP * x, int *o, int n)
     Error
     ("Internal error. ustr isn't empty when starting cgroup: ustr_n=%d, ustr_alloc=%d",
      ustr_n, ustr_alloc);
-  for (int i = 0; i < n; i++) {
+  for (int i = 0; i != n; ++i) {
     SEXP s = x[i];
     if (TRLEN(s) < 0) {        // this case first as it's the most frequent
       SET_TRLEN(s, TRLEN(s) - 1);
@@ -1093,7 +1093,7 @@ static void cgroup(SEXP * x, int *o, int n)
   // where equal (sort needed therefore, unfortunately?, only if
   // there are any marked encodings present)
   int cumsum = 0;
-  for (int i = 0; i < ustr_n; i++) {      // 0.000
+  for (int i = 0; i != ustr_n; ++i) {      // 0.000
     push(-TRLEN(ustr[i]));
     SET_TRLEN(ustr[i], cumsum += -TRLEN(ustr[i]));
   }
@@ -1106,7 +1106,7 @@ static void cgroup(SEXP * x, int *o, int n)
   }
   // The cummulate meant counts are left non zero, so reset for next
   // time (0.00s).
-  for (int i = 0; i < ustr_n; i++)
+  for (int i = 0; i != ustr_n; ++i)
     SET_TRLEN(ustr[i], 0);
   ustr_n = 0;
 }
@@ -1136,16 +1136,16 @@ static void csort(SEXP * x, int *o, int n)
   /* can't use otmp, since iradix might be called here and that uses
    otmp (and xtmp).  alloc_csort_otmp(n) is called from do_radixsort for
    either n=nrow if 1st arg, or n=maxgrpn if onwards args */
-  for (int i = 0; i < n; i++)
+  for (int i = 0; i != n; ++i)
     csort_otmp[i] = (x[i] == NA_STRING) ? NA_INTEGER : -TRLEN(x[i]);
   if (nalast == 0 && n == 2) {
     // special case for nalast == 0. n == 1 is handled inside
     // do_radixsort. at least 1 will be NA here else use o from caller
     // directly (not 1st arg)
     if (o[0] == -1)
-      for (int i = 0; i < n; i++)
+      for (int i = 0; i != n; ++i)
         o[i] = i + 1;
-    for (int i = 0;  i < n; i++) {
+    for (int i = 0;  i != n; ++i) {
       if (csort_otmp[i] == NA_INTEGER) o[i] = 0;
     } // INCLUDED ??
     push(1); push(1);
@@ -1153,10 +1153,10 @@ static void csort(SEXP * x, int *o, int n)
   }
   if (n < N_SMALL && nalast != 0) { // TO DO: calibrate() N_SMALL=200
     if (o[0] == -1)
-      for (int i = 0; i < n; i++)
+      for (int i = 0; i != n; ++i)
         o[i] = i + 1;
     // else use o from caller directly (not 1st arg)
-    for (int i = 0; i < n; i++)
+    for (int i = 0; i != n; ++i)
       csort_otmp[i] = icheck(csort_otmp[i]);
     iinsert(csort_otmp, o, n);
   } else {
@@ -1188,7 +1188,7 @@ static void csort_pre(SEXP * x, int n)
   int old_un, new_un;
   // savetl_init() is called once at the start of do_radixsort
   old_un = ustr_n;
-  for (int i = 0; i < n; i++) {
+  for (int i = 0; i != n; ++i) {
     s = x[i];
     // this case first as it's the most frequent. Already in ustr,
     // this negative is its ordering.
@@ -1249,7 +1249,7 @@ static void csort_pre(SEXP * x, int n)
   // sorts ustr in-place by reference save ordering in the
   // CHARSXP. negative so as to distinguish with R's own usage.
   cradix_r(ustr, ustr_n, 0);
-  for (int i = 0; i < ustr_n; i++)
+  for (int i = 0; i != ustr_n; ++i)
     SET_TRLEN(ustr[i], -i - 1);
 }
 
@@ -1279,7 +1279,7 @@ static int isorted(int *x, int n)
   //   to sort routines to replace o's with 0's
   // no NAs ? continue to check rest of isorted - the same routine as usual
   if (nalast == 0) {
-    for (int k = 0; k < n; k++) {
+    for (int k = 0; k != n; ++k) {
       if (x[k] != NA_INTEGER) j++;
     } // INCLUDED ??
     if (j == 0) {
@@ -1307,7 +1307,7 @@ static int isorted(int *x, int n)
   }
   int old = gsngrp[flip];
   int tt = 1;
-  for (int i = 1; i < n; i++) {
+  for (int i = 1; i != n; ++i) {
     if (icheck(x[i]) < icheck(x[i - 1])) {
       gsngrp[flip] = old;
       return (0);
@@ -1337,7 +1337,7 @@ static int dsorted(double *x, int n)
     //           replace o's with 0's
     // no NAs  ? continue to check the rest of isorted -
     //           the same routine as usual
-    for (int k = 0; k < n; k++) {
+    for (int k = 0; k != n; ++k) {
       if (!is_nan(x, k)) j++;
     } // INCLUDED ??
     if (j == 0) {
@@ -1372,7 +1372,7 @@ static int dsorted(double *x, int n)
   }
   int old = gsngrp[flip];
   int tt = 1;
-  for (int i = 1; i < n; i++) {
+  for (int i = 1; i != n; ++i) {
     // TO DO: once we get past -Inf, NA and NaN at the bottom, and
     //        +Inf at the top, the middle only need be twiddled
     //        for tolerance (worth it?)
@@ -1407,7 +1407,7 @@ static int csorted(SEXP *x, int n)
     //           to replace o's with 0's
     // no NAs  ? continue to check the rest of isorted -
     //           the same routine as usual
-    for (int k = 0; k < n; k++) {
+    for (int k = 0; k != n; ++k) {
       if (x[k] != NA_STRING) j++;
     } // INCLUDED ??
     if (j == 0) {
@@ -1436,7 +1436,7 @@ static int csorted(SEXP *x, int n)
   }
   int old = gsngrp[flip];
   int tt = 1;
-  for (int i = 1; i < n; i++) {
+  for (int i = 1; i != n; ++i) {
     tmp = StrCmp2(x[i], x[i - 1]);
     if (tmp < 0) {
       gsngrp[flip] = old;
@@ -1463,7 +1463,7 @@ static void isort(int *x, int *o, int n)
         o[0] = 1;
         o[1] = 2;
       }
-      for (int i = 0; i < n; i++) {
+      for (int i = 0; i != n; ++i) {
         if (x[i] == NA_INTEGER) o[i] = 0;
       } // INCLUDED ??
       push(1); push(1);
@@ -1480,7 +1480,7 @@ static void isort(int *x, int *o, int n)
     if (order != 1 || nalast != -1)
       // so that default case, i.e., order=1, nalast=FALSE will
       // not be affected (ex: `setkey`)
-      for (int i = 0; i < n; i++)
+      for (int i = 0; i != n; ++i)
         x[i] = icheck(x[i]);
     iinsert(x, o, n);
   } else {
@@ -1516,7 +1516,7 @@ static void dsort(double *x, int *o, int n)
         o[0] = 1;
         o[1] = 2;
       }
-      for (int i = 0; i < n; i++) {
+      for (int i = 0; i != n; ++i) {
         if (is_nan(x, i)) o[i] = 0;
       } // INCLUDED ??
       push(1); push(1);
@@ -1526,7 +1526,7 @@ static void dsort(double *x, int *o, int n)
   }
   if (n < N_SMALL && o[0] != -1 && nalast != 0) {
     // see comment above in iradix_r re N_SMALL=200,  and isort for o[0]
-    for (int i = 0; i < n; i++)
+    for (int i = 0; i != n; ++i)
       ((unsigned long long *)x)[i] = twiddle(x, i, order);
     // have to twiddle here anyways, can't speed up default case
     // like in isort
@@ -1613,7 +1613,7 @@ SEXP Cradixsort(SEXP NA_last, SEXP decreasing, SEXP RETstrt, SEXP RETgs, SEXP SO
 
   if (narg != length(decreasing))
     error("length(decreasing) must match the number of order arguments");
-  for (int i = 0; i < narg; i++) {
+  for (int i = 0; i != narg; ++i) {
     if (LOGICAL(decreasing)[i] == NA_LOGICAL)
       error("'decreasing' elements must be TRUE or FALSE");
   }
@@ -1676,19 +1676,19 @@ SEXP Cradixsort(SEXP NA_last, SEXP decreasing, SEXP RETstrt, SEXP RETgs, SEXP SO
     if (tmp == 1) {
       // same as expected in 'order' (1 = increasing, -1 = decreasing)
       isSorted = TRUE;
-      for (int i = 0; i < n; i++)
+      for (int i = 0; i != n; ++i)
         o[i] = i + 1;
     } else if (tmp == -1) {
       // -1 (or -n for result of strcmp), strictly opposite to
       // -expected 'order'
       isSorted = FALSE;
-      for (int i = 0; i < n; i++)
+      for (int i = 0; i != n; ++i)
         o[i] = n - i;
     } else if (nalast == 0 && tmp == -2) {
       // happens only when nalast=NA/0. Means all NAs, replace
       // with 0's therefore!
       isSorted = FALSE;
-      for (int i = 0; i < n; i++)
+      for (int i = 0; i != n; ++i)
         o[i] = 0;
     }
   } else {
@@ -1772,7 +1772,7 @@ SEXP Cradixsort(SEXP NA_last, SEXP decreasing, SEXP RETstrt, SEXP RETgs, SEXP SO
             col, type2char(TYPEOF(x)));
     }
     int i = 0;
-    for (int grp = 0; grp < ngrp; grp++) {
+    for (int grp = 0; grp != ngrp; ++grp) {
       thisgrpn = gs[1 - flip][grp];
       if (thisgrpn == 1) {
         if (nalast == 0) {
@@ -1818,13 +1818,13 @@ SEXP Cradixsort(SEXP NA_last, SEXP decreasing, SEXP RETstrt, SEXP RETgs, SEXP SO
       //        When doing this, xsub could be allocated at
       //        that point for the first time.
       if (TYPEOF(x) == STRSXP)
-        for (int j = 0; j < thisgrpn; j++)
+        for (int j = 0; j != thisgrpn; ++j)
           ((SEXP *) xsub)[j] = ((SEXP *) xd)[o[i++] - 1];
       else if (TYPEOF(x) == REALSXP)
-        for (int j = 0; j < thisgrpn; j++)
+        for (int j = 0; j != thisgrpn; ++j)
           ((double *) xsub)[j] = ((double *) xd)[o[i++] - 1];
       else
-        for (int j = 0; j < thisgrpn; j++)
+        for (int j = 0; j != thisgrpn; ++j)
           ((int *) xsub)[j] = ((int *) xd)[o[i++] - 1];
 
       // continue; // BASELINE short circuit timing
@@ -1848,7 +1848,7 @@ SEXP Cradixsort(SEXP NA_last, SEXP decreasing, SEXP RETstrt, SEXP RETgs, SEXP SO
         } else if (nalast == 0 && tmp == -2) {
           // all NAs, replace osub[.] with 0s.
           isSorted = FALSE;
-          for (int k = 0; k < thisgrpn; k++) osub[k] = 0;
+          for (int k = 0; k != thisgrpn; ++k) osub[k] = 0;
         }
         continue;
       }
@@ -1861,11 +1861,11 @@ SEXP Cradixsort(SEXP NA_last, SEXP decreasing, SEXP RETstrt, SEXP RETgs, SEXP SO
 
       if (newo[0] != -1) {
         if (nalast != 0)
-          for (int j = 0; j < thisgrpn; j++)
+          for (int j = 0; j != thisgrpn; ++j)
             // reuse xsub to reorder osub
             ((int *) xsub)[j] = osub[newo[j] - 1];
         else
-          for (int j = 0; j < thisgrpn; j++)
+          for (int j = 0; j != thisgrpn; ++j)
             // final nalast case to handle!
             ((int *) xsub)[j] = (newo[j] == 0) ? 0 :
             osub[newo[j] - 1];
@@ -1877,7 +1877,7 @@ SEXP Cradixsort(SEXP NA_last, SEXP decreasing, SEXP RETstrt, SEXP RETgs, SEXP SO
   if (!sortStr && ustr_n != 0)
     Error("Internal error: at the end of do_radixsort sortStr == FALSE but ustr_n !=0 [%d]",
           ustr_n);
-  for(int i = 0; i < ustr_n; i++)
+  for(int i = 0; i != ustr_n; ++i)
     SET_TRLEN(ustr[i], 0);
   maxlen = 1;  // reset global. Minimum needed to count "" and NA
   ustr_n = 0;
@@ -1902,7 +1902,7 @@ SEXP Cradixsort(SEXP NA_last, SEXP decreasing, SEXP RETstrt, SEXP RETgs, SEXP SO
         int ngm1 = ngrp-1;
         px[0] = 1;
         py[ngm1] = gs[flip][ngm1];
-        for (int i = 0; i < ngm1; i++) {
+        for (int i = 0; i != ngm1; ++i) {
           py[i] = gs[flip][i];
           px[i + 1] = px[i] + py[i];
         }
@@ -1913,14 +1913,14 @@ SEXP Cradixsort(SEXP NA_last, SEXP decreasing, SEXP RETstrt, SEXP RETgs, SEXP SO
       if (ngrp > 0) {
         int ngm1 = ngrp-1;
         px[0] = 1;
-        for (int i = 0; i < ngm1; i++) {
+        for (int i = 0; i != ngm1; ++i) {
           px[i + 1] = px[i] + gs[flip][i];
         }
         maxgrpn = gsmax[flip];
       }
     } else {
       if (ngrp > 0) {
-        for (int i = 0; i < ngrp; i++) {
+        for (int i = 0; i != ngrp; ++i) {
           px[i] = gs[flip][i];
         }
         maxgrpn = gsmax[flip];
@@ -1948,14 +1948,14 @@ SEXP Cradixsort(SEXP NA_last, SEXP decreasing, SEXP RETstrt, SEXP RETgs, SEXP SO
   Rboolean dropZeros = !retGrp && !isSorted && nalast == 0;
   if (dropZeros) {
     int zeros = 0;
-    for (int i = 0; i < n; i++) {
+    for (int i = 0; i != n; ++i) {
       if (o[i] == 0)
         zeros++;
     }
     if (zeros > 0) {
       PROTECT(ans = allocVector(INTSXP, n - zeros));
       int *o2 = INTEGER(ans);
-      for (int i = 0, i2 = 0; i < n; i++) {
+      for (int i = 0, i2 = 0; i != n; ++i) {
         if (o[i] > 0)
           o2[i2++] = o[i];
       }
@@ -2019,9 +2019,9 @@ void Cdoubleradixsort(int *o, Rboolean NA_last, Rboolean decreasing, SEXP x) {
   tmp = dsorted(xd, n);
   if (tmp) { // -1 or 1.
     if (tmp == 1) { // same as expected in 'order' (1 = increasing, -1 = decreasing)
-      for (int i = 0; i < n; i++) o[i] = i + 1;
+      for (int i = 0; i != n; ++i) o[i] = i + 1;
     } else if (tmp == -1) { // -1 (or -n for result of strcmp), strictly opposite to -expected 'order'
-      for (int i = 0; i < n; i++) o[i] = n - i;
+      for (int i = 0; i != n; ++i) o[i] = n - i;
     }
   } else {
       dsort(xd, o, n);
