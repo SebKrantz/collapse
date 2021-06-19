@@ -79,7 +79,9 @@ void fcumsum_int_impl(int *pout, int *px, int ng, int *pg, int narm, int fill, i
     if(narm <= 0) {
       int i = 1;
       ckof = pout[0] = px[0];
-      if(px[0] == NA_INTEGER) --i;
+      if(ckof == NA_INTEGER) {
+        --i; ckof = 0;
+      }
       for( ; i != l; ++i) {
         if(px[i] == NA_INTEGER) {
           for( ; i != l; ++i) pout[i] = NA_INTEGER;
@@ -100,7 +102,7 @@ void fcumsum_int_impl(int *pout, int *px, int ng, int *pg, int narm, int fill, i
         else pout[i] = ckof += px[i];
       }
     }
-    if(ckof > INT_MAX || ckof < INT_MIN || (narm && ckof == NA_INTEGER))
+    if(ckof > INT_MAX || ckof <= INT_MIN)
       error("Integer overflow. Integers in R are bounded between 2,147,483,647 and -2,147,483,647. Use fcumsum(as.numeric(x)).");
   } else {
     int last[ng+1]; // Also pass pointer to function ??
@@ -147,7 +149,9 @@ void fcumsum_int_impl_order(int *pout, int *px, int ng, int *pg, int *po, int na
     if(narm <= 0) {
       int i = 1, poi;
       ckof = pout[po[0]-1] = px[po[0]-1];
-      if(px[po[0]-1] == NA_INTEGER) --i;
+      if(ckof == NA_INTEGER) {
+        --i; ckof = 0;
+      }
       for( ; i != l; ++i) {
         poi = po[i]-1;
         if(px[poi] == NA_INTEGER) {
@@ -171,7 +175,7 @@ void fcumsum_int_impl_order(int *pout, int *px, int ng, int *pg, int *po, int na
         else pout[poi] = ckof += px[poi];
       }
     }
-    if(ckof > INT_MAX || ckof < INT_MIN || (narm && ckof == NA_INTEGER))
+    if(ckof > INT_MAX || ckof <= INT_MIN)
       error("Integer overflow. Integers in R are bounded between 2,147,483,647 and -2,147,483,647. Use fcumsum(as.numeric(x)).");
   } else {
     int last[ng+1]; // Also pass pointer to function ??
