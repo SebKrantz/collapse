@@ -304,15 +304,15 @@ SEXP subsetCols(SEXP x, SEXP cols, SEXP checksf) { // SEXP fretall
   for(int i = 0; i != ncol; ++i) {
     pans[i] = px[pcols[i]-1]; // SET_VECTOR_ELT(ans, i, VECTOR_ELT(x, pcols[i]-1));
   }
-  copyMostAttrib(x, ans); // includes row.names and class...
-  // clear any index that was copied over by copyMostAttrib(), e.g. #1760 and #1734 (test 1678)
-  // setAttrib(ans, sym_index, R_NilValue); -> deletes "index" attribute of pdata.frame -> don't use!!
   if(!isNull(nam)) {
     SEXP tmp = PROTECT(allocVector(STRSXP, ncol));
     setAttrib(ans, R_NamesSymbol, tmp);
     subsetVectorRaw(tmp, nam, cols, /*anyNA=*/false);
     ++nprotect;
   }
+  copyMostAttrib(x, ans); // includes row.names and class...
+  // clear any index that was copied over by copyMostAttrib(), e.g. #1760 and #1734 (test 1678)
+  // setAttrib(ans, sym_index, R_NilValue); -> deletes "index" attribute of pdata.frame -> don't use!!
   UNPROTECT(nprotect);
   return ans;
 }
