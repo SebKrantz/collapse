@@ -179,6 +179,7 @@ NumericVector fmeanCpp(const NumericVector& x, int ng = 0, const IntegerVector& 
 SEXP fmeanmCpp(const NumericMatrix& x, int ng = 0, const IntegerVector& g = 0, const SEXP& gs = R_NilValue,
                const SEXP& w = R_NilValue, bool narm = true, bool drop = true) {
   int l = x.nrow(), col = x.ncol();
+  if(l < 1) return x; // Prevents seqfault for numeric(0) #101
 
   if(Rf_isNull(w)) { // No weights
     if(ng == 0) {
@@ -421,6 +422,7 @@ SEXP fmeanmCpp(const NumericMatrix& x, int ng = 0, const IntegerVector& g = 0, c
 SEXP fmeanlCpp(const List& x, int ng = 0, const IntegerVector& g = 0, const SEXP& gs = R_NilValue,
                const SEXP& w = R_NilValue, bool narm = true, bool drop = true) {
   int l = x.size();
+  if(Rf_length(x[0]) == 0) stop("empty dataset.");
 
   if(Rf_isNull(w)) { // No weights
     if(ng == 0) {
