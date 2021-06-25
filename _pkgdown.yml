@@ -122,6 +122,7 @@ reference:
   - flag
   - fdiff
   - fgrowth
+  - fcumsum
   - psacf
   - psmat
 - title: "List Processing"
@@ -147,6 +148,7 @@ reference:
   desc: "Efficiently recode and replace values in matrix-like objects."
 - contents:
   - "AA1-recode-replace"
+  - pad
 - title: "Small (Helper) Functions"
   desc: "Convenience functions that help to deal with variable names, labels, attributes, missing values, matching and object checking etc.. Some functions are performance improved replacements for base R functions."
 - contents:
