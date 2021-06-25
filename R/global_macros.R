@@ -14,8 +14,8 @@
 
 # Get updated .COLLAPSE_ALL:
 # ".default$|.matrix$|.data.frame$"
-v <- grep("\\.|N|HD", objects("package:collapse"), invert = TRUE, value = TRUE)
-cat(v, sep = '", "')
+# v <- grep("\\.|N|HD", objects("package:collapse"), invert = TRUE, value = TRUE)
+# cat(v, sep = '", "')
 
 # all package objects..
 # allobj <- ls(getNamespace("collapse"), all.names=TRUE)
