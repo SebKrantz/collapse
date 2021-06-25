@@ -167,13 +167,13 @@ ftransformv <- function(.data, vars, FUN, ..., apply = TRUE) {
 
 tfmv <- ftransformv
 
-# get0("ftransform", envir = getNamespace("collapse"))
-settransform <- function(.data, ...) eval.parent(substitute(.data <- ftransform(.data, ...))) # can use `<-`(.data, ftransform(.data,...)) but not faster ..
+
+settransform <- function(.data, ...) eval.parent(substitute(.data <- get0("ftransform", envir = getNamespace("collapse"))(.data, ...))) # can use `<-`(.data, ftransform(.data,...)) but not faster ..
 
 settfm <- settransform
 
 settransformv <- function(.data, vars, FUN, ..., apply = TRUE)
-  eval.parent(substitute(.data <- ftransformv(.data, vars, FUN, ..., apply = apply)))
+  eval.parent(substitute(.data <- get0("ftransformv", envir = getNamespace("collapse"))(.data, vars, FUN, ..., apply = apply)))
 
 settfmv <- settransformv
 
