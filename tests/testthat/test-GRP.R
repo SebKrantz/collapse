@@ -152,6 +152,8 @@ test_that("fgroup_by works as intended", {
 
   expect_output(print(fgroup_by(mtcars, cyl, vs, am)))
   expect_equal(GRP(fgroup_by(mtcars, cyl, vs, am)), GRP(mtcars, ~ cyl + vs + am, call = FALSE))
+  expect_equal(GRP(fgroup_by(mtcars, c("cyl", "vs", "am"))), GRP(mtcars, ~ cyl + vs + am, call = FALSE))
+  expect_equal(GRP(fgroup_by(mtcars, c(2, 8:9))), GRP(mtcars, ~ cyl + vs + am, call = FALSE))
   expect_identical(fungroup(fgroup_by(mtcars, cyl, vs, am)), mtcars)
   expect_equal(fgroup_by(fgroup_by(mtcars, cyl, vs, am), cyl), fgroup_by(mtcars, cyl))
 
