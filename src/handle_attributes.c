@@ -41,25 +41,28 @@ SEXP duplAttributes(SEXP x, SEXP y) { // also look at data.table's keepattribute
 
 
 SEXP CsetAttrib(SEXP object, SEXP a) {
-  SEXP res = PROTECT(Rf_shallow_duplicate(object)); // needed, otherwise error !!
+  int il = isList(object);
+  SEXP res = il ? PROTECT(Rf_shallow_duplicate(object)) : object; // needed, otherwise error !!
   SET_ATTRIB(res, PROTECT(Rf_coerceVector(a, LISTSXP)));
   Rf_classgets(res, Rf_getAttrib(res, R_ClassSymbol));
-  UNPROTECT(2);
+  UNPROTECT(il+1);
   return res;
 }
 
 SEXP CcopyAttrib(SEXP to, SEXP from) {
-  SEXP res = PROTECT(Rf_shallow_duplicate(to));
+  int il = isList(to);
+  SEXP res = il ? PROTECT(Rf_shallow_duplicate(to)) : to;
   DUPLICATE_ATTRIB(res, from);
-  UNPROTECT(1);
+  UNPROTECT(il);
   return res;
 }
 
 
 SEXP CcopyMostAttrib(SEXP to, SEXP from) {
-  SEXP res = PROTECT(Rf_shallow_duplicate(to));
+  int il = isList(to);
+  SEXP res = il ? PROTECT(Rf_shallow_duplicate(to)) : to;
   Rf_copyMostAttrib(from, res);
-  UNPROTECT(1);
+  UNPROTECT(il);
   return res;
 }
 
@@ -67,6 +70,7 @@ SEXP CcopyMostAttrib(SEXP to, SEXP from) {
 void duplattributes(SEXP x, SEXP y) {
   DUPLICATE_ATTRIB(x, y); // SET_ATTRIB(x, ATTRIB(y));
   Rf_classgets(x, Rf_getAttrib(y, R_ClassSymbol)); // This solves the warning message !!
+  // just to return R_NilValue; and the SEXP... retrns NULL anyway
 }
 
 SEXP cond_duplAttributes(SEXP x, SEXP y) {
