@@ -2,7 +2,7 @@
 \alias{qF}
 \alias{qG}
 \alias{is_qG}
-\alias{as.factor_qG}
+\alias{as_factor_qG}
 \alias{finteraction}
 \title{
 Fast Factor Generation, Interactions and Vector Grouping
@@ -23,7 +23,7 @@ qG(x, ordered = FALSE, na.exclude = TRUE, sort = TRUE,
 
 is_qG(x)
 
-as.factor_qG(x, ordered = FALSE, na.exclude = TRUE)
+as_factor_qG(x, ordered = FALSE, na.exclude = TRUE)
 
 finteraction(\dots, ordered = FALSE, sort = TRUE)
 }
@@ -59,7 +59,7 @@ There are two methods of computation: radix ordering and index hashing. Radix or
 \code{qF} returns an (ordered) factor. \code{qG} returns an object of class 'qG': an integer grouping vector with an attribute 'N.groups' indicating the number of groups, and, if \code{return.groups = TRUE}, an attribute 'groups' containing the vector of unique groups / elements in \code{x} corresponding to the integer-id.
 }
 \note{
-Neither \code{qF} nor \code{qG} can reorder groups / factor levels. These objects can however be converted into one another using \code{qF/qG} or the direct method \code{as.factor_qG}, and it is also possible to add a class 'ordered' (\code{ordered = TRUE}) and to create am extra level / integer for missing values (\code{na.exclude = FALSE}). % Apart from that \code{qF} and \code{qG} don't do much to each others objects.
+Neither \code{qF} nor \code{qG} can reorder groups / factor levels. These objects can however be converted into one another using \code{qF/qG} or the direct method \code{as_factor_qG}, and it is also possible to add a class 'ordered' (\code{ordered = TRUE}) and to create am extra level / integer for missing values (\code{na.exclude = FALSE}). % Apart from that \code{qF} and \code{qG} don't do much to each others objects.
 }
 \seealso{
 \code{\link{groupid}}, \code{\link{GRP}}, \link[=A2-fast-grouping-ordering]{Fast Grouping and Ordering}, \link[=collapse-documentation]{Collapse Overview}
