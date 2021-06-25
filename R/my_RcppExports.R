@@ -208,11 +208,19 @@ fvarsdlCpp <- function(x, ng = 0L, g = 0L, gs = NULL, w = NULL, narm = TRUE, sta
 }
 
 mrtl <- function(X, names = FALSE, return = "list") {
-    .Call(Cpp_mrtl, X, names, switch(return, list = 0L, data.frame = 1L, data.table = 2L, stop("Unknown return option!")))
+  switch(return,
+         list = .Call(Cpp_mrtl, X, names, 0L),
+         data.frame = .Call(Cpp_mrtl, X, names, 1L),
+         data.table = alc(.Call(Cpp_mrtl, X, names, 2L)),
+         stop("Unknown return option!"))
 }
 
 mctl <- function(X, names = FALSE, return = "list") {
-    .Call(Cpp_mctl, X, names, switch(return, list = 0L, data.frame = 1L, data.table = 2L, stop("Unknown return option!")))
+  switch(return,
+         list = .Call(Cpp_mctl, X, names, 0L),
+         data.frame = .Call(Cpp_mctl, X, names, 1L),
+         data.table = alc(.Call(Cpp_mctl, X, names, 2L)),
+         stop("Unknown return option!"))
 }
 
 psmatCpp <- function(x, g, t = NULL, transpose = FALSE) {

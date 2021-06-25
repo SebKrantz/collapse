@@ -72,6 +72,7 @@ vlabels <- function(X, attrn = "label") {
     if(length(X) != length(value)) stop("length(X) must match length(value)")
     for (i in seq_along(value)) attr(X[[i]], attrn) <- value[i]
   }
+  if(any(clx == "data.table")) return(alc(`oldClass<-`(X, clx)))
   `oldClass<-`(X, clx)
 }
 
@@ -119,7 +120,10 @@ add_stub <- function(X, stub, pre = TRUE) {
     if(length(cn)) dimnames(X) <- list(dn[[1L]], if(pre) paste0(stub, cn) else paste0(cn, stub))
   } else {
     nam <- attr(X, "names")
-    if(length(nam)) attr(X, "names") <- if(pre) paste0(stub, nam) else paste0(nam, stub)
+    if(length(nam)) {
+      attr(X, "names") <- if(pre) paste0(stub, nam) else paste0(nam, stub)
+      if(inherits(X, "data.table")) X <- alc(X)
+    }
   }
   X
 }
@@ -144,7 +148,10 @@ rm_stub <- function(X, stub, pre = TRUE) {
     if(length(d) > 2L) stop("Can't remove stub from higher dimensional arrays!")
     dn <- dimnames(X)
     dimnames(X) <- list(dn[[1L]], rmstubFUN(dn[[2L]]))
-  } else attr(X, "names") <- rmstubFUN(attr(X, "names"))
+  } else {
+    attr(X, "names") <- rmstubFUN(attr(X, "names"))
+    if(inherits(X, "data.table")) X <- alc(X)
+  }
   X
 }
 
@@ -152,7 +159,9 @@ setRownames <- function(object, nm = if(is.atomic(object)) seq_row(object) else 
   if(is.list(object)) {
     l <- length(.subset2(object, 1L))
     if(is.null(nm)) nm <- .set_row_names(l) else if(length(nm) != l) stop("supplied row-names must match list extent")
-    return(`attr<-`(object, "row.names", nm))
+    attr(object, "row.names") <- nm
+    if(inherits(object, "data.table")) return(alc(object))
+    return(object)
   }
   if(!is.array(object)) stop("Setting row-names only supported on arrays and lists")
   dn <- dimnames(object)
@@ -161,8 +170,10 @@ setRownames <- function(object, nm = if(is.atomic(object)) seq_row(object) else 
 
 setColnames <- function(object, nm) {
   if(is.atomic(object) && is.array(object))
-    dimnames(object)[[2L]] <- nm else
+    dimnames(object)[[2L]] <- nm else {
     attr(object, "names") <- nm
+    if(inherits(object, "data.table")) return(alc(object))
+  }
   object
 }
 
@@ -191,6 +202,12 @@ all_obj_equal <- function(...) {
 cinv <- function(X) chol2inv(chol(X))
 
 interact_names <- function(l) do.call(paste, c(expand.grid(l, KEEP.OUT.ATTRS = FALSE, stringsAsFactors = FALSE), list(sep = ".")))
+
+# set over-allocation for data.table's
+alc <- function(x, n = options("collapse_DT_alloccol")[[1L]]) .Call(C_alloccol, x, n)
+condalc <- function(x, DT, n = options("collapse_DT_alloccol")[[1L]]) if(DT) .Call(C_alloccol, x, n) else x
+alcSA <- function(x, a, n = options("collapse_DT_alloccol")[[1L]]) .Call(C_alloccol, .Call(C_setAttributes, x, a), n)
+condalcSA <- function(x, a, DT, n = options("collapse_DT_alloccol")[[1L]]) if(DT) .Call(C_alloccol, .Call(C_setAttributes, x, a), n) else .Call(C_setAttributes, x, a)
 
 unattrib <- function(object) `attributes<-`(object, NULL)
 
@@ -247,17 +264,21 @@ na_omit <- function(X, cols = NULL, na.attr = FALSE) {
     rl <- if(is.null(cols)) !.Call(C_dt_na, X, iX) else
       !.Call(C_dt_na, X, cols2int(cols, X, attr(X, "names"))) # gives error if X not list
     rkeep <- which(rl)
-    if(length(rkeep) == fnrow2(X)) return(X)
+    if(length(rkeep) == fnrow2(X)) return(condalc(X, inherits(X, "data.table")))
     res <- .Call(C_subsetDT, X, rkeep, iX)
     rn <- attr(X, "row.names")
     if(!(is.numeric(rn) || is.null(rn) || rn[1L] == "1")) attr(res, "row.names") <- rn[rkeep]
+    if(na.attr) {
+      attr(res, "na.action") <- `oldClass<-`(which(!rl), "omit")
+      if(inherits(res, "data.table")) return(alc(res))
+    }
   } else {
     rl <- if(is.null(cols)) complete.cases(X) else complete.cases(X[, cols])
     rkeep <- which(rl)
     if(length(rkeep) == NROW(X)) return(X)
     res <- if(is.matrix(X)) X[rkeep, , drop = FALSE] else X[rkeep]
+    if(na.attr) attr(res, "na.action") <- `oldClass<-`(which(!rl), "omit")
   }
-  if(na.attr) attr(res, "na.action") <- `oldClass<-`(which(!rl), "omit")
   res
 }
 
@@ -265,7 +286,8 @@ na_insert <- function(X, prop = 0.1) {
   if(is.list(X)) {
     n <- fnrow2(X)
     nmiss <- floor(n * prop)
-    return(duplAttributes(lapply(unattrib(X), function(y) `[<-`(y, sample.int(n, nmiss), value = NA)), X))
+    res <- duplAttributes(lapply(unattrib(X), function(y) `[<-`(y, sample.int(n, nmiss), value = NA)), X)
+    return(if(inherits(X, "data.table")) alc(res) else res)
   }
   if(!is.atomic(X)) stop("X must be an atomic vector, array or data.frame")
   l <- length(X)
@@ -321,19 +343,21 @@ ffka <- function(x, f) {
 as_numeric_factor <- function(X, keep.attr = TRUE) {
   if(is.atomic(X)) if(keep.attr) return(ffka(X, as.numeric)) else
     return(as.numeric(attr(X, "levels"))[X])
-  if(keep.attr) return(duplAttributes(lapply(unattrib(X),
-                function(y) if(is.factor(y)) ffka(y, as.numeric) else y), X))
-  duplAttributes(lapply(unattrib(X),
-  function(y) if(is.factor(y)) as.numeric(attr(y, "levels"))[y] else y), X)
+  res <- duplAttributes(lapply(unattrib(X),
+    if(keep.attr) (function(y) if(is.factor(y)) ffka(y, as.numeric) else y) else
+                  (function(y) if(is.factor(y)) as.numeric(attr(y, "levels"))[y] else y)), X)
+  if(inherits(X, "data.table")) return(alc(res))
+  res
 }
 
 as_character_factor <- function(X, keep.attr = TRUE) {
   if(is.atomic(X)) if(keep.attr) return(ffka(X, tochar)) else
     return(as.character.factor(X))
-  if(keep.attr) return(duplAttributes(lapply(unattrib(X),
-                function(y) if(is.factor(y)) ffka(y, tochar) else y), X))
-  duplAttributes(lapply(unattrib(X),
-  function(y) if(is.factor(y)) as.character.factor(y) else y), X)
+  res <- duplAttributes(lapply(unattrib(X),
+         if(keep.attr) (function(y) if(is.factor(y)) ffka(y, tochar) else y) else
+                       (function(y) if(is.factor(y)) as.character.factor(y) else y)), X)
+  if(inherits(X, "data.table")) return(alc(res))
+  res
 }
 
 as.numeric_factor <- as_numeric_factor

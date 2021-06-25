@@ -102,7 +102,10 @@ collap <- function(X, by, FUN = fmean, catFUN = fmode, cols = NULL, w = NULL, wF
   ncustoml <- is.null(custom)
   autorn <- is.character(give.names) && give.names == "auto"
   nwl <- is.null(w)
-  if(!inherits(X, "data.frame")) X <- qDF(X)
+  if(inherits(X, "data.frame")) DTl <- inherits(X, "data.table") else {
+    X <- qDF(X)
+    DTl <- FALSE
+  }
   ax <- attributes(X)
   oldClass(X) <- NULL
   if(length(X[[1L]]) == 0L) stop("data passed to collap() has 0 rows.") #160, 0 rows can cause segfault...
@@ -288,11 +291,11 @@ collap <- function(X, by, FUN = fmean, catFUN = fmode, cols = NULL, w = NULL, wF
         ax[["row.names"]] <- .set_row_names(by[[1L]])
         if(!keep.by) return(lapply(res, function(e) {
                             ax[["names"]] <- names(e)
-                            setAttributes(e, ax) }))
+                            condalcSA(e, ax, DTl) }))
         namby <- attr(res[[1L]], "names") # always works ??
         return(lapply(res[-1L], function(e) {
           ax[["names"]] <- c(namby, names(e))
-          setAttributes(c(res[[1L]], e), ax) }))
+          condalcSA(c(res[[1L]], e), ax, DTl) }))
       } else {
         if(return != 4L) {
           res <- if(!keep.by) .Call(C_rbindlist, res, TRUE, TRUE, "Function") else # data.table:::Crbindlist
@@ -316,7 +319,7 @@ collap <- function(X, by, FUN = fmean, catFUN = fmode, cols = NULL, w = NULL, wF
   if(keep.col.order) .Call(C_setcolorder, res, o) # data.table:::Csetcolorder
   ax[["names"]] <- names(res)
   ax[["row.names"]] <- .set_row_names(length(res[[1L]]))
-  setAttributes(res, ax)
+  return(condalcSA(res, ax, DTl))
 }
 
 
@@ -335,7 +338,10 @@ collapv <- function(X, by, FUN = fmean, catFUN = fmode, cols = NULL, w = NULL, w
   ncustoml <- is.null(custom)
   autorn <- is.character(give.names) && give.names == "auto"
   nwl <- is.null(w)
-  if(!inherits(X, "data.frame")) X <- qDF(X)
+  if(inherits(X, "data.frame")) DTl <- inherits(X, "data.table") else {
+    X <- qDF(X)
+    DTl <- FALSE
+  }
   ax <- attributes(X)
   oldClass(X) <- NULL
   if(length(X[[1L]]) == 0L) stop("data passed to collapv() has 0 rows.") #160, 0 rows can cause segfault...
@@ -487,11 +493,11 @@ collapv <- function(X, by, FUN = fmean, catFUN = fmode, cols = NULL, w = NULL, w
         ax[["row.names"]] <- .set_row_names(by[[1L]])
         if(!keep.by) return(lapply(res, function(e) {
                             ax[["names"]] <- names(e)
-                            setAttributes(e, ax) }))
+                            condalcSA(e, ax, DTl) }))
         namby <- attr(res[[1L]], "names") # always works ??
         return(lapply(res[-1L], function(e) {
           ax[["names"]] <- c(namby, names(e))
-          setAttributes(c(res[[1L]], e), ax) }))
+          condalcSA(c(res[[1L]], e), ax, DTl) }))
       } else {
         if(return != 4L) {
           res <- if(!keep.by) .Call(C_rbindlist, res, TRUE, TRUE, "Function") else # data.table:::Crbindlist
@@ -515,7 +521,7 @@ collapv <- function(X, by, FUN = fmean, catFUN = fmode, cols = NULL, w = NULL, w
   if(keep.col.order) .Call(C_setcolorder, res, o) # data.table:::Csetcolorder
   ax[["names"]] <- names(res)
   ax[["row.names"]] <- .set_row_names(length(res[[1L]]))
-  setAttributes(res, ax)
+  return(condalcSA(res, ax, DTl))
 }
 
 
@@ -540,7 +546,7 @@ collapg <- function(X, FUN = fmean, catFUN = fmode, cols = NULL, w = NULL, wFUN 
     }
   }
   if(is.null(custom)) X <- fcolsubset(X, ngn) # else X <- X # because of non-standard eval.. X is "."
-  eval(substitute(collap(X, by, FUN, catFUN, cols, w, wFUN, custom,
-       keep.group_vars, keep.w, keep.col.order, TRUE, FALSE, TRUE, parallel,
-       mc.cores, return, give.names, sort.row, ...)))
+  return(eval(substitute(collap(X, by, FUN, catFUN, cols, w, wFUN, custom,
+         keep.group_vars, keep.w, keep.col.order, TRUE, FALSE, TRUE, parallel,
+         mc.cores, return, give.names, sort.row, ...))))
 }

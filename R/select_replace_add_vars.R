@@ -25,7 +25,7 @@ get_vars_indl <- function(x, indl, return = "data")
 "get_vars_ind<-" <- function(x, ind, value) {
   ind <- if(is.logical(ind)) which(ind) else as.integer(ind)
   if(is.null(value)) {
-    if(!length(ind)) return(x)
+    if(!length(ind)) return(condalc(x, inherits(x, "data.table")))
     return(.Call(C_subsetCols, x, -ind, TRUE))
   }
   clx <- oldClass(x)
@@ -41,7 +41,7 @@ get_vars_indl <- function(x, indl, return = "data")
     if(length(ind) != 1L) stop("NCOL(value) must match selected variables") # length(num_vars(x))
     x[[ind]] <- value
   }
-  return(`oldClass<-`(x, clx))
+  return(condalc(`oldClass<-`(x, clx), any(clx == "data.table")))
 }
 
 
@@ -49,6 +49,7 @@ fselect <- function(x, ..., return = "data") { # This also takes names and indic
   # ax <- attributes(x)
   # oldClass(x) <- NULL # attributes ?
   nam <- attr(x, "names")
+  # if(inherits(x, "data.table")) nam <- nam[seq_col(x)] # required because of overallocation... -> Should be solved now, always take shallow copy...
   nl <- `names<-`(as.vector(seq_along(nam), "list"), nam)
   vars <- eval(substitute(c(...)), nl, parent.frame())
   # if(!is.integer(vars)) stop(paste0("Unknown columns: ", .c(...))) # if(!is.integer(vars) || max(vars) > length(nam)) # nah, a bit redundant..
@@ -77,6 +78,7 @@ slt <- fselect # good, consistent
 
 "fselect<-" <- function(x, ..., value) {
   nam <- attr(x, "names")
+  # if(inherits(x, "data.table")) nam <- nam[seq_col(x)] # required because of overallocation... Should be solved now -> always make shallow copy
   nl <- `names<-`(as.vector(seq_along(nam), "list"), nam)
   vars <- eval(substitute(c(...)), nl, parent.frame())
   if(is.character(vars)) vars <- ckmatch(vars, nam)
@@ -182,11 +184,11 @@ gvr <- function(x, vars, return = "data", ...) {
       if(pos == "end") {
         ax[["names"]] <- if(length(nam <- names(value)))  c(ax[["names"]], nam) else
           c(ax[["names"]], paste0("V", seq(lx+1L, lx+length(value))))
-        return(setAttributes(c(x, value), ax))
+        return(condalcSA(c(x, value), ax, any(ax[["class"]] == "data.table")))
       } else if(pos != "front") stop("pos needs to be 'end', 'front' or a suitable numeric / integer vector of positions!")
         ax[["names"]] <- if(length(nam <- names(value)))  c(nam, ax[["names"]]) else
           c(paste0("V", seq_along(value)), ax[["names"]])
-        return(setAttributes(c(value, x), ax))
+        return(condalcSA(c(value, x), ax, any(ax[["class"]] == "data.table")))
     }
     lv <- length(value)
     tl <- lv+lx
@@ -194,7 +196,7 @@ gvr <- function(x, vars, return = "data", ...) {
     o <- forder.int(c(seq_len(tl)[-pos], pos))
     ax[["names"]] <- if(length(nam <- names(value)))  c(ax[["names"]], nam)[o] else
         c(ax[["names"]], paste0("V", pos))[o] # FASTER THIS WAY? -> It seems so...
-    return(setAttributes(c(x, value)[o], ax)) # fastest ?? use setcolorder ? (probably not )
+    return(condalcSA(c(x, value)[o], ax, any(ax[["class"]] == "data.table"))) # fastest ?? use setcolorder ? (probably not )
     # ind <- seq(lx+1L, lx+length(value))
     # x[ind] <- value  # FASTER than simply using x[names(value)] <- value ? -> Yes !
     # ax[["names"]] <- if(length(nam <- names(value)))  c(ax[["names"]], nam) else
@@ -208,15 +210,15 @@ gvr <- function(x, vars, return = "data", ...) {
       if(pos == "end") {
         x[[lx+1L]] <- value
         ax[["names"]] <- c(ax[["names"]], nam) # paste0("V", lx+1L)
-        return(setAttributes(x, ax))
+        return(condalcSA(x, ax, any(ax[["class"]] == "data.table")))
       } else if(pos != "front") stop("pos needs to be 'end', 'front' or a suitable numeric / integer vector of positions!")
       ax[["names"]] <- c(nam, ax[["names"]])
-      return(setAttributes(c(list(value), x), ax))
+      return(condalcSA(c(list(value), x), ax, any(ax[["class"]] == "data.table")))
     }
     if(!is.numeric(pos) || length(pos) > 1L || pos > lx+1L) stop("pos needs to be 'end', 'front' or a suitable numeric / integer vector of positions!")
     o <- forder.int(c(1:lx, pos-1L))
     ax[["names"]] <- c(ax[["names"]], nam)[o]
-    return(setAttributes(c(x, list(value))[o], ax))
+    return(condalcSA(c(x, list(value))[o], ax, any(ax[["class"]] == "data.table")))
   }
 }
 "av<-" <- `add_vars<-`

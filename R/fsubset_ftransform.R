@@ -120,7 +120,7 @@ ftransform <- function(.data, ...) { # `_data` ?
   if(!is.list(.data)) stop(".data needs to be a list of equal length columns or a data.frame")
   e <- eval(substitute(list(...)), .data, parent.frame())
   if(is.null(names(e)) && length(e) == 1L && is.list(e[[1L]])) e <- unclass(e[[1L]]) # support list input -> added in v1.3.0
-  ftransform_core(.data, e)
+  return(condalc(ftransform_core(.data, e), inherits(.data, "data.table")))
 }
 
 tfm <- ftransform
@@ -128,7 +128,7 @@ tfm <- ftransform
 `ftransform<-` <- function(.data, value) {
   if(!is.list(.data)) stop(".data needs to be a list of equal length columns or a data.frame")
   if(!is.list(value)) stop("value needs to be a named list")
-  ftransform_core(.data, unclass(value))
+  return(condalc(ftransform_core(.data, unclass(value)), inherits(.data, "data.table")))
 }
 `tfm<-` <- `ftransform<-`
 
@@ -138,8 +138,8 @@ tfm <- ftransform
 ftransformv <- function(.data, vars, FUN, ..., apply = TRUE) {
   if(!is.list(.data)) stop(".data needs to be a list of equal length columns or a data.frame")
   if(!is.function(FUN)) stop("FUN needs to be a function")
+  clx <- oldClass(.data)
   if(apply) {
-    clx <- oldClass(.data)
     oldClass(.data) <- NULL
     vars <- cols2int(vars, .data, names(.data), FALSE)
     value <- unattrib(.data[vars])
@@ -151,8 +151,8 @@ ftransformv <- function(.data, vars, FUN, ..., apply = TRUE) {
     value <- .Call(C_subsetCols, .data, vars, FALSE)
     value <- if(missing(...)) unclass(FUN(value)) else # unclass needed here ? -> yes for lengths...
       unclass(eval(substitute(FUN(value, ...)), .data, parent.frame()))
-    if(!identical(names(value), nam[vars])) return(ftransform_core(.data, value))
-    clx <- oldClass(.data)
+    if(!identical(names(value), nam[vars]))
+      return(condalc(ftransform_core(.data, value), any(clx == "data.table")))
     oldClass(.data) <- NULL
   }
   le <- lengths(value, FALSE)
@@ -160,13 +160,14 @@ ftransformv <- function(.data, vars, FUN, ..., apply = TRUE) {
   if(all(le == nr)) .data[vars] <- value else if(all(le == 1L))
     .data[vars] <- lapply(value, alloc, nr) else {
       if(apply) names(value) <- names(.data)[vars]
-      return(ftransform_core(.data, value)) # stop("lengths of result must be nrow(.data) or 1")
+      return(condalc(ftransform_core(.data, value), any(clx == "data.table"))) # stop("lengths of result must be nrow(.data) or 1")
   }
-  return(`oldClass<-`(.data, clx))
+  return(condalc(`oldClass<-`(.data, clx), any(clx == "data.table")))
 }
 
 tfmv <- ftransformv
 
+# get0("ftransform", envir = getNamespace("collapse"))
 settransform <- function(.data, ...) eval.parent(substitute(.data <- ftransform(.data, ...))) # can use `<-`(.data, ftransform(.data,...)) but not faster ..
 
 settfm <- settransform
@@ -196,10 +197,10 @@ fcompute <- function(.data, ..., keep = NULL) { # within ?
   le <- lengths(e, FALSE)
   nr <- fnrow2(.data)
   rl <- le == nr
-  if(all(rl)) return(setAttributes(e, ax)) # All computed vectors have the right length
+  if(all(rl)) return(condalcSA(e, ax, inherits(.data, "data.table"))) # All computed vectors have the right length
   if(any(1L < le & !rl)) stop("Lengths of replacements must be equal to nrow(.data) or 1")
   e[!rl] <- lapply(e[!rl], alloc, nr)
-  setAttributes(e, ax)
+  return(condalcSA(e, ax, inherits(.data, "data.table")))
 }
 
 

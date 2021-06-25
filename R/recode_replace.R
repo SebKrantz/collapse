@@ -70,7 +70,10 @@ recode_num <- function(X, ..., default = NULL, missing = NULL) {
       }
     }
   }
-  if(is.list(X)) return(duplAttributes(lapply(unattrib(X), repfun), X))
+  if(is.list(X)) {
+    res <- duplAttributes(lapply(unattrib(X), repfun), X)
+    return(if(inherits(X, "data.table")) alc(res) else res)
+  }
   if(!is.numeric(X)) stop("X needs to be numeric or a list")
   repfun(X)
 }
@@ -203,20 +206,25 @@ recode_char <- function(X, ..., default = NULL, missing = NULL, regex = FALSE,
       }
     }
   }
-  if(is.list(X)) return(duplAttributes(lapply(unattrib(X), repfun), X))
+  if(is.list(X)) {
+    res <- duplAttributes(lapply(unattrib(X), repfun), X)
+    return(if(inherits(X, "data.table")) alc(res) else res)
+  }
   if(!is.character(X)) stop("X needs to be character or a list")
   repfun(X)
 }
 
 replace_NA <- function(X, value = 0L, cols = NULL) {
   if(is.list(X)) {
-    if(is.null(cols)) return(duplAttributes(lapply(unattrib(X), function(y) `[<-`(y, is.na(y), value = value)), X))
-    if(is.function(cols)) return(duplAttributes(lapply(unattrib(X), function(y) if(cols(y)) `[<-`(y, is.na(y), value = value) else y), X))
+    if(is.null(cols)) return(condalc(duplAttributes(lapply(unattrib(X),
+      function(y) `[<-`(y, is.na(y), value = value)), X), inherits(X, "data.table")))
+    if(is.function(cols)) return(condalc(duplAttributes(lapply(unattrib(X),
+      function(y) if(cols(y)) `[<-`(y, is.na(y), value = value) else y), X), inherits(X, "data.table")))
     clx <- oldClass(X)
     oldClass(X) <- NULL
     cols <- cols2int(cols, X, names(X), FALSE)
     X[cols] <- lapply(unattrib(X[cols]), function(y) `[<-`(y, is.na(y), value = value))
-    return(`oldClass<-`(X, clx))
+    return(condalc(`oldClass<-`(X, clx), any(clx == "data.table")))
   }
   `[<-`(X, is.na(X), value = value)
 }
@@ -225,8 +233,10 @@ replace_NA <- function(X, value = 0L, cols = NULL) {
 replace_Inf <- function(X, value = NA, replace.nan = FALSE) {
   if(is.list(X)) {
     # if(!inherits(X, "data.frame")) stop("replace_non_finite only works with atomic objects or data.frames")
-    if(replace.nan) return(duplAttributes(lapply(unattrib(X), function(y) if(is.numeric(y)) `[<-`(y, is.infinite(y) | is.nan(y), value = value) else y), X))
-    return(duplAttributes(lapply(unattrib(X), function(y) if(is.numeric(y)) `[<-`(y, is.infinite(y), value = value) else y), X))
+    res <- duplAttributes(lapply(unattrib(X),
+             if(replace.nan) (function(y) if(is.numeric(y)) `[<-`(y, is.infinite(y) | is.nan(y), value = value) else y) else
+                             (function(y) if(is.numeric(y)) `[<-`(y, is.infinite(y), value = value) else y)), X)
+    return(if(inherits(X, "data.table")) alc(res) else res)
   }
   if(!is.numeric(X)) stop("Infinite values can only be replaced in numeric objects!")
   if(replace.nan) return(`[<-`(X, is.infinite(X) | is.nan(X), value = value)) #  !is.finite(X) also replaces NA
@@ -247,8 +257,10 @@ replace_outliers <- function(X, limits, value = NA, single.limit = c("SDs", "min
   }
   if(is.list(X)) {
     # if(!inherits(X, "data.frame")) stop("replace_outliers only works with atomic objects or data.frames")
-    if(lg1) return(duplAttributes(lapply(unattrib(X), function(y) if(is.numeric(y)) `[<-`(y, y < l1 | y > l2, value = value) else y), X)) # could use data.table::between -> but it seems not faster !
-    return(switch(single.limit[1L], # Allows grouped scaling if X is a grouped_df, but requires extra memory equal to X ... extra argument gSDs ?
+    if(lg1) {
+      res <- duplAttributes(lapply(unattrib(X), function(y) if(is.numeric(y)) `[<-`(y, y < l1 | y > l2, value = value) else y), X) # could use data.table::between -> but it seems not faster !
+    } else {
+      res <- switch(single.limit[1L], # Allows grouped scaling if X is a grouped_df, but requires extra memory equal to X ... extra argument gSDs ?
            SDs = {
              if(inherits(X, c("grouped_df", "pdata.frame"))) {
               num <- vapply(unattrib(X), is.numeric, TRUE)
@@ -264,7 +276,9 @@ replace_outliers <- function(X, limits, value = NA, single.limit = c("SDs", "min
            min = duplAttributes(lapply(unattrib(X), function(y) if(is.numeric(y)) `[<-`(y, y < limits, value = value) else y), X),
            max = duplAttributes(lapply(unattrib(X), function(y) if(is.numeric(y)) `[<-`(y, y > limits, value = value) else y), X),
            overall_SDs = duplAttributes(lapply(unattrib(X), function(y) if(is.numeric(y)) `[<-`(y, abs(fscaleCpp(y)) > limits, value = value) else y), X),
-           stop("Unknown single.limit option")))
+           stop("Unknown single.limit option"))
+    }
+    return(if(inherits(res, "data.table")) alc(res) else res)
   }
   if(!is.numeric(X)) stop("Outliers can only be replaced in numeric objects!")
   if(lg1) return(`[<-`(X, X < l1 | X > l2, value = value))
@@ -328,7 +342,7 @@ pad <- function(X, i, value = NA, method = c("auto", "xpos", "vpos")) { # 1 - i 
   attributes(X) <- NULL
   res <- lapply(X, pad_atomic, i, n, value)
   if(length(ax[["row.names"]])) ax[["row.names"]] <- .set_row_names(n)
-  return(setAttributes(res, ax))
+  return(condalcSA(res, ax, any(ax[["class"]] == "data.table")))
 }
 
 # Something like this already exists?? -> should work with lists as well...

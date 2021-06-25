@@ -79,6 +79,7 @@ unlist2d <- function(l, idcols = ".id", row.names = FALSE, recursive = TRUE, id.
       rn <- which(nams == row.names)
       if(length(rn) && rn != 1L) .Call(C_setcolorder, l, c(rn, seq_along(nams)[-rn]))
     }
+    if(DT) return(alc(l))
   }
   # attr(l, ".internal.selfref") <- NULL
   l

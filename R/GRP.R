@@ -258,6 +258,7 @@ fgroup_by <- function(X, ..., sort = TRUE, decreasing = FALSE, na.last = TRUE, r
   # simplest, but X is coerced to data.frame. Through the above solution it can be a list and only receive the 'grouped_df' class
   # add_cl <- c("grouped_df", "data.frame")
   # oldClass(X) <- c(fsetdiff(oldClass(X), add_cl), add_cl)
+  if(any(clx == "data.table")) return(alc(X))
   X
 }
 
@@ -563,7 +564,8 @@ funique.data.frame <- function(x, cols = NULL, sort = FALSE, ...) {
   # if(!missing(...)) unused_arg_action(match.call(), ...)
   o <- if(is.null(cols)) radixorderv(x, starts = TRUE, sort = sort, ...) else
        radixorderv(colsubset(x, cols), starts = TRUE, sort = sort, ...) # if(is.call(by)) .subset(x, ckmatch(attr(x, "names"), all.vars(by)))
-  if(attr(o, "maxgrpn") == 1L && (!sort || attr(o, "sorted"))) return(x)
+  if(attr(o, "maxgrpn") == 1L && (!sort || attr(o, "sorted"))) # return(x)
+     return(if(inherits(x, "data.table")) alc(x) else x)
   st <- if(attr(o, "sorted")) attr(o, "starts") else o[attr(o, "starts")]
   rn <- attr(x, "row.names")
   if(is.numeric(rn) || is.null(rn) || rn[1L] == "1") return(.Call(C_subsetDT, x, st, seq_along(unclass(x))))
@@ -600,8 +602,10 @@ fdroplevels.factor <- function(x, ...) {
 
 fdroplevels.data.frame <- function(x, ...) {
   if(!missing(...)) unused_arg_action(match.call(), ...)
-  duplAttributes(lapply(unattrib(x), function(y)
+  res <- duplAttributes(lapply(unattrib(x), function(y)
     if(is.factor(y)) .Call(Cpp_fdroplevels, y, !inherits(y, "na.included")) else y), x)
+  if(inherits(x, "data.table")) return(alc(res))
+  res
 }
 
 fdroplevels.list <- fdroplevels.data.frame

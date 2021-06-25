@@ -17,7 +17,8 @@ othFUN_compute <- function(x) {
 fsummarise <- function(.data, ..., keep.group_vars = TRUE) {
   if(!is.list(.data)) stop(".data needs to be a list of equal length columns or a data.frame")
   e <- substitute(list(...))
-  if(inherits(.data, "grouped_df")) {
+  cld <- oldClass(.data)
+  if(any(cld == "grouped_df")) {
     g <- GRP.grouped_df(.data, call = FALSE)
     ax <- attributes(fungroup(.data))
       # FUNs <- vapply(e[-1L], function(x) as.character(x[[1L]]), character(1L), USE.NAMES = FALSE)
@@ -31,13 +32,13 @@ fsummarise <- function(.data, ..., keep.group_vars = TRUE) {
     if(keep.group_vars) res <- c(g[["groups"]], res)
     ax[["names"]] <- names(res)
     ax[["row.names"]] <- .set_row_names(g[[1L]])
-    return(setAttributes(res, ax))
+    return(condalcSA(res, ax, any(cld == "data.table")))
   }
   ax <- attributes(.data)
   res <- eval(e, .data, parent.frame())
   ax[["names"]] <- names(res)
   ax[["row.names"]] <- 1L
-  setAttributes(res, ax)
+  return(condalcSA(res, ax, any(cld == "data.table")))
 }
 
 smr <- fsummarise
