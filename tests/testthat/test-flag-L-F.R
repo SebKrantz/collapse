@@ -445,4 +445,3 @@ test_that("L.data.frame method is foolproof", {
 
 
 
-

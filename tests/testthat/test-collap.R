@@ -234,9 +234,9 @@ test_that("collap multi-function aggreagtion with weights performs as intended",
                             flast(get_vars(wlddev, c(2:3,6:8)), g, use.g.names = FALSE))[order(c(1,5,12,12,4,9:11,4,9:11,2:3,6:8,2:3,6:8))]))
 })
 
+v1 <- c("year","PCGDP","LIFEEX","GINI")
+v2 <- c("iso3c","date","region","income", "OECD")
 test_that("collap weighted customized aggregation works as intended", {
-  v1 <- c("year","PCGDP","LIFEEX","GINI")
-  v2 <- c("iso3c","date","region","income", "OECD")
   # Not keeping order ...
   expect_equal(collap(wlddev, ~ country + decade, w = ~ ODA, custom = list(fmean = v1, fmode = v2), keep.col.order = FALSE, give.names = FALSE),
                add_vars(g$groups,
@@ -329,6 +329,11 @@ test_that("collapv performs as intended in simple uses", {
   expect_equal(collapv(wlddev, v, keep.by = FALSE),
                cbind(fmean(get_vars(wlddev, c(4,9:12)), g, use.g.names = FALSE),
                      fmode(get_vars(wlddev, c(2:3,6:8)), g, use.g.names = FALSE))[order(c(4,9:12,2:3,6:8))])
+
+  expect_equal(names(collapv(wlddev, v,
+                            custom = list(fmean = c(GDP = "PCGDP"), fsd = c("LIFEEX", GN = "GINI"), flast = "date"),
+                            keep.by = FALSE, keep.col.order = FALSE)),
+               .c(GDP, LIFEEX, GN, date))
 
 })
 
@@ -501,9 +506,9 @@ test_that("collapv multi-function aggreagtion with weights performs as intended"
                             flast(get_vars(wlddev, c(2:3,6:8)), g, use.g.names = FALSE))[order(c(1,5,12,12,4,9:11,4,9:11,2:3,6:8,2:3,6:8))]))
 })
 
+v1 <- c("year","PCGDP","LIFEEX","GINI")
+v2 <- c("iso3c","date","region","income", "OECD")
 test_that("collapv weighted customized aggregation works as intended", {
-  v1 <- c("year","PCGDP","LIFEEX","GINI")
-  v2 <- c("iso3c","date","region","income", "OECD")
   # Not keeping order ...
   expect_equal(collapv(wlddev, v, w = "ODA", custom = list(fmean = v1, fmode = v2), keep.col.order = FALSE, give.names = FALSE),
                add_vars(g$groups,

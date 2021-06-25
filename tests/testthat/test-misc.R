@@ -119,7 +119,11 @@ test_that("fast functions give same result using different grouping mechanisms",
    expect_true(all_obj_equal(FUN(m, g = mtcars$cyl, use.g.names = FALSE), FUN(m, g = f, use.g.names = FALSE), FUN(m, g = fcc, use.g.names = FALSE), FUN(m, g = g, use.g.names = FALSE), FUN(m, g = gl, use.g.names = FALSE)))
 
    expect_true(all_obj_equal(FUN(mtcars, g = mtcars$cyl), FUN(mtcars, g = f), FUN(mtcars, g = fcc), FUN(mtcars, g = g), FUN(mtcars, g = gl)))
-   expect_true(all_obj_equal(FUN(mtcars, g = mtcars$cyl, use.g.names = FALSE), FUN(mtcars, g = f, use.g.names = FALSE), FUN(mtcars, g = fcc, use.g.names = FALSE), FUN(mtcars, g = g, use.g.names = FALSE), FUN(mtcars, g = gl, use.g.names = FALSE)))
+   expect_true(all_obj_equal(FUN(mtcars, g = mtcars$cyl, use.g.names = FALSE),
+                             FUN(mtcars, g = f, use.g.names = FALSE),
+                             FUN(mtcars, g = fcc, use.g.names = FALSE),
+                             FUN(mtcars, g = g, use.g.names = FALSE),
+                             FUN(mtcars, g = gl, use.g.names = FALSE)))
 
    expect_true(all_obj_equal(gv(FUN(mtcars, g = mtcars$cyl, use.g.names = FALSE), -2), gv(FUN(gmtc), -1), gv(FUN(gv(gmtc,-2)), -1), FUN(gv(gmtc,-2), keep.group_vars = FALSE), FUN(gmtc, keep.group_vars = FALSE)))
 

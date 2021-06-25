@@ -19,10 +19,9 @@ m2 <- replicate(10, rnorm(10))
 setdfdt <- function(x) {
   attr(x, "row.names") <- .set_row_names(length(x[[1L]]))
   class(x) <- c("data.table","data.frame")
-  x
+  alc(x)
 }
 
-# TODO: Possibly add keep.attributes argument to qM, qDF and qDT
 
 test_that("conversions to factor run smoothly", {
   expect_identical(ordered(as.factor(x)), qF(x, ordered = TRUE))

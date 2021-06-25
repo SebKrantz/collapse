@@ -110,9 +110,16 @@ test_that("pseries and pdata.frame methods work as intended", {
 
   atrapply <- function(X, FUN, ...) {
     res <- vector("list", fncol(X))
-    for(i in seq_col(X)) res[[i]] <- FUN(X[, i], ...)
+    for(i in seq_col(X)) {
+      res[[i]] <- FUN(X[[i]], ...)
+    }
     res
   }
+
+  # Making sure fselect and get_vars etc. work properly.
+  expect_identical(attributes(fselect(pwlddev, country:ODA)), attributes(pwlddev))
+  expect_identical(attributes(get_vars(pwlddev, seq_col(pwlddev))), attributes(pwlddev))
+
   # pseries
   expect_equal(unlist(atrapply(fselect(pwlddev, -iso3c), varying)), c(FALSE,TRUE,TRUE,TRUE,FALSE,FALSE,FALSE,TRUE,TRUE,TRUE,TRUE))
   expect_equal(unlist(atrapply(fselect(pwlddev, -iso3c), varying, effect = "iso3c")), c(FALSE,TRUE,TRUE,TRUE,FALSE,FALSE,FALSE,TRUE,TRUE,TRUE,TRUE))

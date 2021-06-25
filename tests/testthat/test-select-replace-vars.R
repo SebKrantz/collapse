@@ -24,7 +24,15 @@ test_that("replacing vars works well", {
   expect_identical(wlddevold, wlddev)
 
   wlddevold <- wlddev
+  fselect(wlddev, PCGDP:GINI) <- fselect(wlddev, PCGDP:GINI)
+  expect_identical(wlddevold, wlddev)
+
+  wlddevold <- wlddev
   get_vars(wlddev, -(4:8)) <- get_vars(wlddev, -(4:8))
+  expect_identical(wlddevold, wlddev)
+
+  wlddevold <- wlddev
+  fselect(wlddev, -(PCGDP:GINI)) <- fselect(wlddev, -(PCGDP:GINI))
   expect_identical(wlddevold, wlddev)
 
   wlddevold <- wlddev

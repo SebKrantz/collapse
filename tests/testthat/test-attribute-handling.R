@@ -117,19 +117,19 @@ test_that("transformation functions preserve all attributes", {
   expect_identical(attributes(FUN(EuStockMarkets, stubs = FALSE, stub = FALSE)), attributes(EuStockMarkets))
   expect_identical(attributes(FUN(m, stubs = FALSE, stub = FALSE)), attributes(m))
   expect_identical(attributes(FUN(gm, stubs = FALSE, stub = FALSE)), attributes(gm))
-  expect_identical(attributes(FUN(if(i %in% c("flag","L","F")) wlddev else num_vars(wlddev), stubs = FALSE, stub = FALSE)), attributes(if(i == "flag") wlddev else num_vars(wlddev)))
+  expect_identical(attributes(FUN(if(i == "flag") wlddev else num_vars(wlddev), stubs = FALSE, stub = FALSE)), attributes(if(i == "flag") wlddev else num_vars(wlddev)))
   expect_identical(attributes(FUN(`oldClass<-`(gmtc, "data.frame"), stubs = FALSE, stub = FALSE)), attributes(`oldClass<-`(gmtc, "data.frame")))
 
   # Grouped
-  for(k in if(i %in% c("flag","L","F")) names(wlddev) else num_vars(wlddev, "names")) expect_identical(attributes(FUN(wlddev[[k]], g = g1)), attributes(wlddev[[k]]))
+  for(k in if(i == "flag") names(wlddev) else num_vars(wlddev, "names")) expect_identical(attributes(FUN(wlddev[[k]], g = g1)), attributes(wlddev[[k]]))
   expect_identical(attributes(FUN(AirPassengers, g = f1)), attributes(AirPassengers))
   expect_identical(attributes(FUN(EuStockMarkets, g = f2, stubs = FALSE, stub = FALSE)), attributes(EuStockMarkets))
   expect_identical(attributes(FUN(m, g = g2, stubs = FALSE, stub = FALSE)), attributes(m))
   expect_identical(attributes(FUN(gm, g = attr(gm, "groups"), stubs = FALSE, stub = FALSE)), attributes(gm))
-  expect_identical(attributes(FUN(if(i %in% c("flag","L","F")) wlddev else num_vars(wlddev), g = g1, by = g1, stubs = FALSE, stub = FALSE)), attributes(if(i == "flag") wlddev else num_vars(wlddev)))
+  expect_identical(attributes(FUN(if(i == "flag") wlddev else num_vars(wlddev), g = g1, by = g1, stubs = FALSE, stub = FALSE)), attributes(if(i == "flag") wlddev else num_vars(wlddev)))
   expect_identical(attributes(FUN(`oldClass<-`(gmtc, "data.frame"), g = g2, by = g2, stubs = FALSE, stub = FALSE)), `[[<-`(attributes(gmtc), "class", "data.frame"))
   expect_identical(attributes(if(i %in% c("B","W", "STD")) FUN(gmtc, stub = FALSE) else FUN(gmtc, stubs = FALSE)), `[[<-`(attributes(gmtc), "names", c(fgroup_vars(gmtc, "names"), names(mtcars)[-c(2L ,8:9)])))
-  if(i %in% c("flag", "L", "F", "fdiff", "D", "Dlog", "fgrowth", "G"))
+  if(i %in% c("fcumsum", "flag", "L", "F", "fdiff", "D", "Dlog", "fgrowth", "G"))
     expect_identical(attributes(FUN(gmtc, keep.ids = FALSE, stubs = FALSE)), `[[<-`(attributes(gmtc), "names", names(mtcars)[-c(2L ,8:9)])) else
     expect_identical(attributes(FUN(gmtc, keep.group_vars = FALSE, stub = FALSE)), `[[<-`(attributes(gmtc), "names", names(mtcars)[-c(2L ,8:9)]))
  }

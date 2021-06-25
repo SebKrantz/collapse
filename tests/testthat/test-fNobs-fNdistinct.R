@@ -11,8 +11,10 @@ g <- GRP(droplevels(data$iso3c))
 dataNA <- na_insert(data)
 m <- as.matrix(data)
 mNA <- as.matrix(dataNA)
+data$LC <- as.list(data$PCGDP)
+dataNA$LC <- lapply(na_insert(data["LC"])[[1]], function(x) if(is.na(x)) NULL else x)
 
-Nobs <- function(x) sum(!is.na(x))
+Nobs <- function(x) if(is.list(x)) sum(lengths(x) > 0L) else sum(!is.na(x))
 Ndistinct <- function(x, na.rm = FALSE) {
   if(na.rm) return(length(unique(x[!is.na(x)])))
   return(length(unique(x)))
@@ -27,7 +29,7 @@ test_that("fnobs performs like Nobs (defined above)", {
   expect_equal(fnobs(-1:1), Nobs(-1:1))
   expect_equal(fnobs(x), Nobs(x))
   expect_equal(fnobs(xNA), Nobs(xNA))
-  expect_equal(fnobs(data), fnobs(m))
+  expect_equal(fnobs(data[-length(data)]), fnobs(m))
   expect_equal(fnobs(m), dapply(m, Nobs))
   expect_equal(fnobs(mNA), dapply(mNA, Nobs))
   expect_equal(fnobs(x, f), BY(x, f, Nobs))
@@ -77,7 +79,8 @@ test_that("fnobs produces errors for wrong input", {
   expect_visible(fnobs(wlddev, wlddev$iso3c))
 })
 
-
+data$LC <- NULL
+dataNA$LC <- NULL
 
 # fndistinct
 
