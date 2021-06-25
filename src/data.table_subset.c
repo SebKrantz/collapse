@@ -37,7 +37,7 @@ void setselfref(SEXP x) {
   // Store pointer to itself so we can detect if the object has been copied. See
   // ?copy for why copies are not just inefficient but cause a problem for over-allocated data.tables.
   // Called from C only, not R level, so returns void.
-  setAttrib(x, SelfRefSymbol, R_NilValue); // Probably not needed but I like it here.
+  // setAttrib(x, SelfRefSymbol, R_NilValue); // Probably not needed but I like it here.
   setAttrib(x, SelfRefSymbol, p=R_MakeExternalPtr(
     R_NilValue,                  // for identical() to return TRUE. identical() doesn't look at tag and prot
     PROTECT(getAttrib(x, R_NamesSymbol)),  // to detect if names has been replaced and its tl lost, e.g. setattr(DT,"names",...)
@@ -136,23 +136,30 @@ static SEXP shallow(SEXP dt, SEXP cols, R_len_t n)
 }
 
 // Can allocate conditionally on size, for export... use in collap, qDT etc.
- SEXP Calloccol(SEXP dt, SEXP Rn)
- {
-   R_len_t tl, n, l;
-   l = LENGTH(dt);
-   n = l + asInteger(Rn);
-   tl = TRUELENGTH(dt);
-   // R <= 2.13.2 and we didn't catch uninitialized tl somehow
-   if (tl<0) error("Internal error, tl of class is marked but tl<0."); // # nocov
-   // better disable these...
-   if (tl>0 && tl<l) error("Internal error, please report (including result of sessionInfo()) to collapse issue tracker: tl (%d) < l (%d) but tl of class is marked.", tl, l); // # nocov
-   if (tl>l+10000) warning("tl (%d) is greater than 10,000 items over-allocated (l = %d). If you didn't set the collapse_DT_alloccol option to be very large, please report to collapse issue tracker including the result of sessionInfo().",tl,l);
-   if (n>tl) return(shallow(dt,R_NilValue,n)); // usual case (increasing alloc)
-   // otherwise the finalizer can't clear up the Large Vector heap
-   setselfref(dt); // better, otherwise may be invalid !!
-   return(dt);
- }
+SEXP Calloccol(SEXP dt, SEXP Rn)
+{
+  R_len_t tl, n, l;
+  l = LENGTH(dt);
+  n = l + asInteger(Rn);
+  tl = TRUELENGTH(dt);
+  // R <= 2.13.2 and we didn't catch uninitialized tl somehow
+  if (tl < 0) error("Internal error, tl of class is marked but tl<0."); // # nocov
+  // better disable these...
+  if (tl > 0 && tl < l) error("Internal error, please report (including result of sessionInfo()) to collapse issue tracker: tl (%d) < l (%d) but tl of class is marked.", tl, l); // # nocov
+  if (tl > l+10000) warning("tl (%d) is greater than 10,000 items over-allocated (l = %d). If you didn't set the collapse_DT_alloccol option to be very large, please report to collapse issue tracker including the result of sessionInfo().",tl,l);
 
+// TODO:  MAKE THIS WORK WITHOUT SHALLOW COPYING EVERY TIME !!!
+
+// if (n > tl)
+    return shallow(dt, R_NilValue, n); // usual case (increasing alloc)
+
+//  SEXP nam = PROTECT(getAttrib(dt, R_NamesSymbol));
+//  if(LENGTH(nam) != l) SETLENGTH(nam, l);
+//  SET_TRUELENGTH(nam, n);
+//  setselfref(dt); // better, otherwise may be invalid !!
+//  UNPROTECT(1);
+//  return(dt);
+}
 // #pragma GCC diagnostic ignored "-Wunknown-pragmas" // don't display this warning!! // https://stackoverflow.com/questions/1867065/how-to-suppress-gcc-warnings-from-library-headers?noredirect=1&lq=1
 
 static void subsetVectorRaw(SEXP ans, SEXP source, SEXP idx, const bool anyNA)
