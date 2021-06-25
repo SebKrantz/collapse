@@ -18,7 +18,7 @@ bool allNA(SEXP x, bool errorForBadType) {
   case LGLSXP:
   case INTSXP: {
     const int *xd = INTEGER(x);
-    for (int i=0; i<n; ++i)    if (xd[i]!=NA_INTEGER) {
+    for (int i=0; i != n; ++i)    if (xd[i]!=NA_INTEGER) {
       return false;
     }
     return true;
@@ -26,19 +26,19 @@ bool allNA(SEXP x, bool errorForBadType) {
   case REALSXP:
     if (Rinherits(x,char_integer64)) {
       const int64_t *xd = (int64_t *)REAL(x);
-      for (int i=0; i<n; ++i)  if (xd[i]!=NA_INTEGER64) {
+      for (int i=0; i != n; ++i)  if (xd[i]!=NA_INTEGER64) {
         return false;
       }
     } else {
       const double *xd = REAL(x);
-      for (int i=0; i<n; ++i)  if (!ISNAN(xd[i])) {
+      for (int i=0; i != n; ++i)  if (!ISNAN(xd[i])) {
         return false;
       }
     }
     return true;
   case STRSXP: {
     const SEXP *xd = STRING_PTR(x);
-    for (int i=0; i<n; ++i)    if (xd[i]!=NA_STRING) {
+    for (int i=0; i != n; ++i)    if (xd[i]!=NA_STRING) {
       return false;
     }
     return true;
@@ -128,11 +128,11 @@ SEXP copyAsPlain(SEXP x) {
     break;                                                       // # nocov
   case STRSXP: {
     const SEXP *xp=STRING_PTR(x);                                // covered by as.character(as.hexmode(1:500)) after test 642
-    for (R_xlen_t i=0; i<n; ++i) SET_STRING_ELT(ans, i, xp[i]);
+    for (R_xlen_t i=0; i != n; ++i) SET_STRING_ELT(ans, i, xp[i]);
   } break;
   case VECSXP: {
     const SEXP *xp=VECTOR_PTR(x);                                // # nocov
-    for (R_xlen_t i=0; i<n; ++i) SET_VECTOR_ELT(ans, i, xp[i]);  // # nocov
+    for (R_xlen_t i=0; i != n; ++i) SET_VECTOR_ELT(ans, i, xp[i]);  // # nocov
   } break;                                                       // # nocov
   default:
     error("Internal error: unsupported type '%s' passed to copyAsPlain()", type2char(TYPEOF(x))); // # nocov
@@ -175,7 +175,7 @@ SEXP dt_na(SEXP x, SEXP cols) {
   }
   SEXP ans = PROTECT(allocVector(LGLSXP, n));
   int *ians = LOGICAL(ans);
-  for (int i=0; i<n; ++i) ians[i]=0;
+  for (int i=0; i != n; ++i) ians[i]=0;
   for (int i=0; i<LENGTH(cols); ++i) {
     SEXP v = VECTOR_ELT(x, INTEGER(cols)[i]-1);
     if (!length(v) || isNewList(v) || isList(v)) continue; // like stats:::na.omit.data.frame, skip list/pairlist columns
@@ -184,27 +184,27 @@ SEXP dt_na(SEXP x, SEXP cols) {
     switch (TYPEOF(v)) {
     case LGLSXP: {
       const int *iv = LOGICAL(v);
-      for (int j=0; j<n; ++j) ians[j] |= (iv[j] == NA_LOGICAL);
+      for (int j=0; j != n; ++j) ians[j] |= (iv[j] == NA_LOGICAL);
     }
       break;
     case INTSXP: {
       const int *iv = INTEGER(v);
-      for (int j=0; j<n; ++j) ians[j] |= (iv[j] == NA_INTEGER);
+      for (int j=0; j != n; ++j) ians[j] |= (iv[j] == NA_INTEGER);
     }
       break;
     case STRSXP: {
       const SEXP *sv = STRING_PTR(v);
-      for (int j=0; j<n; ++j) ians[j] |= (sv[j] == NA_STRING);
+      for (int j=0; j != n; ++j) ians[j] |= (sv[j] == NA_STRING);
     }
       break;
     case REALSXP: {
       const double *dv = REAL(v);
       if (INHERITS(v, char_integer64)) {
-        for (int j=0; j<n; ++j) {
+        for (int j=0; j != n; ++j) {
           ians[j] |= (DtoLL(dv[j]) == NA_INT64_LL);   // TODO: can be == NA_INT64_D directly
         }
       } else {
-        for (int j=0; j<n; ++j) ians[j] |= ISNAN(dv[j]);
+        for (int j=0; j != n; ++j) ians[j] |= ISNAN(dv[j]);
       }
     }
       break;
@@ -215,7 +215,7 @@ SEXP dt_na(SEXP x, SEXP cols) {
       break;
     case CPLXSXP: {
       // taken from https://github.com/wch/r-source/blob/d75f39d532819ccc8251f93b8ab10d5b83aac89a/src/main/coerce.c
-      for (int j=0; j<n; ++j) ians[j] |= (ISNAN(COMPLEX(v)[j].r) || ISNAN(COMPLEX(v)[j].i));
+      for (int j=0; j != n; ++j) ians[j] |= (ISNAN(COMPLEX(v)[j].r) || ISNAN(COMPLEX(v)[j].i));
     }
       break;
     default:
@@ -236,13 +236,13 @@ SEXP frankds(SEXP xorderArg, SEXP xstartArg, SEXP xlenArg, SEXP dns) {
   if(n > 0) {
     if(asLogical(dns)) {
       k=1;
-      for (i = 0; i < ng; i++) {
+      for (i = 0; i != ng; i++) {
         for (j = xstart[i]-1, end = xstart[i]+xlen[i]-1; j < end; j++)
           ians[xorder[j]-1] = k;
         k++;
       }
     } else {
-      for (i = 0; i < ng; i++) {
+      for (i = 0; i != ng; i++) {
         k=1;
         for (j = xstart[i]-1, end = xstart[i]+xlen[i]-1; j < end; j++)
           ians[xorder[j]-1] = k++;
@@ -296,7 +296,7 @@ SEXP frankds(SEXP xorderArg, SEXP xstartArg, SEXP xlenArg, SEXP dns) {
 //     case REALSXP: {
 //       const double *dv = REAL(v);
 //       if (INHERITS(v, char_integer64)) {
-//         for (j=0; j<n; j++) {
+//         for (j=0; j != n; j++) {
 //           if (DtoLL(dv[j]) == NA_INT64_LL) {
 //             LOGICAL(ans)[0] = 1;
 //             break;
@@ -340,7 +340,7 @@ SEXP setcolorder(SEXP x, SEXP o)
   // Double-check here at C level that o[] is a strict permutation of 1:ncol. Reordering columns by reference makes no
   // difference to generations/refcnt so we can write behind barrier in this very special case of strict permutation.
   bool *seen = Calloc(ncol, bool);
-  for (int i=0; i<ncol; ++i) {
+  for (int i=0; i != ncol; ++i) {
     if (od[i]==NA_INTEGER || od[i]<1 || od[i]>ncol)
       error("Internal error: o passed to Csetcolorder contains an NA or out-of-bounds");  // # nocov
     if (seen[od[i]-1])
@@ -351,9 +351,9 @@ SEXP setcolorder(SEXP x, SEXP o)
 
   SEXP *tmp = Calloc(ncol, SEXP);
   SEXP *xd = VECTOR_PTR(x), *namesd = STRING_PTR(names);
-  for (int i=0; i<ncol; ++i) tmp[i] = xd[od[i]-1];
+  for (int i=0; i != ncol; ++i) tmp[i] = xd[od[i]-1];
   memcpy(xd, tmp, ncol*sizeof(SEXP)); // sizeof is type size_t so no overflow here
-  for (int i=0; i<ncol; ++i) tmp[i] = namesd[od[i]-1];
+  for (int i=0; i != ncol; ++i) tmp[i] = namesd[od[i]-1];
   memcpy(namesd, tmp, ncol*sizeof(SEXP));
   // No need to change key (if any); sorted attribute is column names not positions
   Free(tmp);
