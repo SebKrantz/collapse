@@ -60,18 +60,18 @@ fhdbetween(x, \dots)
 
 # Methods for compatibility with plm:
 
-\method{fhdbetween}{pseries}(x, w = NULL, na.rm = TRUE, fill = TRUE, \dots)
-\method{fhdwithin}{pseries}(x, w = NULL, na.rm = TRUE, fill = TRUE, \dots)
-\method{HDB}{pseries}(x, w = NULL, na.rm = TRUE, fill = TRUE, \dots)
-\method{HDW}{pseries}(x, w = NULL, na.rm = TRUE, fill = TRUE, \dots)
+\method{fhdbetween}{pseries}(x, effect = 1:2, w = NULL, na.rm = TRUE, fill = TRUE, \dots)
+\method{fhdwithin}{pseries}(x, effect = 1:2, w = NULL, na.rm = TRUE, fill = TRUE, \dots)
+\method{HDB}{pseries}(x, effect = 1:2, w = NULL, na.rm = TRUE, fill = TRUE, \dots)
+\method{HDW}{pseries}(x, effect = 1:2, w = NULL, na.rm = TRUE, fill = TRUE, \dots)
 
-\method{fhdbetween}{pdata.frame}(x, w = NULL, na.rm = TRUE, fill = TRUE,
+\method{fhdbetween}{pdata.frame}(x, effect = 1:2, w = NULL, na.rm = TRUE, fill = TRUE,
            variable.wise = TRUE, \dots)
-\method{fhdwithin}{pdata.frame}(x, w = NULL, na.rm = TRUE, fill = TRUE,
+\method{fhdwithin}{pdata.frame}(x, effect = 1:2, w = NULL, na.rm = TRUE, fill = TRUE,
           variable.wise = TRUE, \dots)
-\method{HDB}{pdata.frame}(x, w = NULL, cols = is.numeric, na.rm = TRUE, fill = TRUE,
+\method{HDB}{pdata.frame}(x, effect = 1:2, w = NULL, cols = is.numeric, na.rm = TRUE, fill = TRUE,
     variable.wise = TRUE, stub = "HDB.", \dots)
-\method{HDW}{pdata.frame}(x, w = NULL, cols = is.numeric, na.rm = TRUE, fill = TRUE,
+\method{HDW}{pdata.frame}(x, effect = 1:2, w = NULL, cols = is.numeric, na.rm = TRUE, fill = TRUE,
     variable.wise = TRUE, stub = "HDW.", \dots)
 }
 
@@ -83,6 +83,7 @@ fhdbetween(x, \dots)
   \item{na.rm}{remove missing values from both \code{x} and \code{fl}. by default rows with missing values in \code{x} or \code{fl} are removed. In that case an attribute "na.rm" is attached containing the rows removed.}
   \item{fill}{If \code{na.rm = TRUE}, \code{fill = TRUE} will not remove rows with missing values in \code{x} or \code{fl}, but fill them with \code{NA}'s.}
   \item{variable.wise}{\emph{data.frame methods}: Setting \code{variable.wise = TRUE} will process each column individually i.e. use all non-missing cases in each column and in \code{fl} (\code{fl} is only checked for missing values if \code{na.rm = TRUE}). This is a lot less efficient but uses all data available in each column. }
+\item{effect}{\emph{plm} methods: Select which panel identifiers should be used for centering. 1L takes the first variable in the \code{plm::index}, 2L the second etc. Index variables can also be called by name using a character vector. }
 \item{stub}{a prefix or stub to rename all transformed columns. \code{FALSE} will not rename columns.}
 \item{lm.method}{character. The linear fitting method. Supported are \code{"chol"} and \code{"qr"}. See \code{\link{flm}}.}
   \item{\dots}{further arguments passed to \code{fixest::demean} and \code{\link{chol}} / \code{\link{qr}}. Possible choices are \code{tol} to set a uniform numerical tolerance for the entire fitting process, or \code{nthreads} and \code{iter} to govern the higher-order centering process.}
