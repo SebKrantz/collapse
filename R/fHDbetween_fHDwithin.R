@@ -326,7 +326,7 @@ fhdwithin.default <- function(x, fl, w = NULL, na.rm = TRUE, fill = FALSE, lm.me
     return(setAttributes(x, ax))
   } else return(setAttributes(demean(x, fl, w, ...), ax))
 }
-fhdwithin.pseries <- function(x, effect = 1:2, w = NULL, na.rm = TRUE, fill = TRUE, ...) {
+fhdwithin.pseries <- function(x, effect = seq_col(attr(x, "index")), w = NULL, na.rm = TRUE, fill = TRUE, ...) {
   ix <- attr(x, "index")
   namix <- attr(ix, "names")
   effect <- cols2int(effect, ix, namix)
@@ -406,7 +406,7 @@ fhdwithin.matrix <- function(x, fl, w = NULL, na.rm = TRUE, fill = FALSE, lm.met
     return(setAttributes(x, ax))
   } else return(setAttributes(demean(x, fl, w, ...), ax))
 }
-fhdwithin.pdata.frame <- function(x, effect = 1:2, w = NULL, na.rm = TRUE, fill = TRUE, variable.wise = TRUE, ...) {
+fhdwithin.pdata.frame <- function(x, effect = seq_col(attr(x, "index")), w = NULL, na.rm = TRUE, fill = TRUE, variable.wise = TRUE, ...) {
   ix <- attr(x, "index")
   namix <- attr(ix, "names")
   effect <- cols2int(effect, ix, namix)
@@ -523,7 +523,7 @@ HDW.default <- function(x, fl, w = NULL, na.rm = TRUE, fill = FALSE, lm.method =
   fhdwithin.default(x, fl, w, na.rm, fill, lm.method, ...)
 }
 
-HDW.pseries <- function(x, effect = 1:2, w = NULL, na.rm = TRUE, fill = TRUE, ...)
+HDW.pseries <- function(x, effect = seq_col(attr(x, "index")), w = NULL, na.rm = TRUE, fill = TRUE, ...)
   fhdwithin.pseries(x, effect, w, na.rm, fill, ...)
 
 HDW.matrix <- function(x, fl, w = NULL, na.rm = TRUE, fill = FALSE, stub = "HDW.", lm.method = "qr", ...)
@@ -592,7 +592,7 @@ HDW.data.frame <- function(x, fl, w = NULL, cols = is.numeric, na.rm = TRUE, fil
  add_stub(fhdwithin.data.frame(if(is.null(cols)) x else colsubset(x, cols), fl, w, na.rm, fill, variable.wise, lm.method, ...), stub)
 }
 
-HDW.pdata.frame <- function(x, effect = 1:2, w = NULL, cols = is.numeric, na.rm = TRUE, fill = TRUE,
+HDW.pdata.frame <- function(x, effect = seq_col(attr(x, "index")), w = NULL, cols = is.numeric, na.rm = TRUE, fill = TRUE,
                             variable.wise = TRUE, stub = "HDW.", ...)
 add_stub(fhdwithin.pdata.frame(if(is.null(cols)) x else colsubset(x, cols), effect, w, na.rm, fill, variable.wise, ...), stub)
 
@@ -673,7 +673,7 @@ fhdbetween.default <- function(x, fl, w = NULL, na.rm = TRUE, fill = FALSE, lm.m
 }
 
 
-fhdbetween.pseries <- function(x, effect = 1:2, w = NULL, na.rm = TRUE, fill = TRUE, ...)
+fhdbetween.pseries <- function(x, effect = seq_col(attr(x, "index")), w = NULL, na.rm = TRUE, fill = TRUE, ...)
   fhdwithin.pseries(x, effect, w, na.rm, fill, ..., means = TRUE)
 
 fhdbetween.matrix <- function(x, fl, w = NULL, na.rm = TRUE, fill = FALSE, lm.method = "qr", ...) {
@@ -735,7 +735,7 @@ fhdbetween.matrix <- function(x, fl, w = NULL, na.rm = TRUE, fill = FALSE, lm.me
   } else return(setAttributes(demean(x, fl, w, ..., means = TRUE), ax))
 }
 
-fhdbetween.pdata.frame <- function(x, effect = 1:2, w = NULL, na.rm = TRUE, fill = TRUE, variable.wise = TRUE, ...)
+fhdbetween.pdata.frame <- function(x, effect = seq_col(attr(x, "index")), w = NULL, na.rm = TRUE, fill = TRUE, variable.wise = TRUE, ...)
   fhdwithin.pdata.frame(x, effect, w, na.rm, fill, variable.wise, ..., means = TRUE)
 
 
@@ -820,7 +820,7 @@ HDB.default <- function(x, fl, w = NULL, na.rm = TRUE, fill = FALSE, lm.method =
   fhdbetween.default(x, fl, w, na.rm, fill, lm.method, ...)
 }
 
-HDB.pseries <- function(x, effect = 1:2, w = NULL, na.rm = TRUE, fill = TRUE, ...)
+HDB.pseries <- function(x, effect = seq_col(attr(x, "index")), w = NULL, na.rm = TRUE, fill = TRUE, ...)
   fhdwithin.pseries(x, effect, w, na.rm, fill, ..., means = TRUE)
 
 
@@ -896,7 +896,7 @@ HDB.data.frame <- function(x, fl, w = NULL, cols = is.numeric, na.rm = TRUE, fil
 }
 
 
-HDB.pdata.frame <- function(x, effect = 1:2, w = NULL, cols = is.numeric, na.rm = TRUE, fill = TRUE,
+HDB.pdata.frame <- function(x, effect = seq_col(attr(x, "index")), w = NULL, cols = is.numeric, na.rm = TRUE, fill = TRUE,
                             variable.wise = TRUE, stub = "HDB.", ...)
   add_stub(fhdwithin.pdata.frame(if(is.null(cols)) x else colsubset(x, cols), effect, w, na.rm, fill, variable.wise, ..., means = TRUE), stub)
 
