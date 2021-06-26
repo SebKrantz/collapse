@@ -34,7 +34,7 @@
 \alias{as.character_factor}
 \alias{as.numeric_factor}
 \alias{Date_vars}
-
+\alias{Date_vars<-}
 %- Also NEED an '\alias' for EACH other topic documented here.
 \title{
 Renamed Functions
@@ -42,7 +42,7 @@ Renamed Functions
 \description{
 These functions were renamed moving from collapse 1.5.3 to 1.6.0 to make the namespace more consistent. They will stick around for a while, and be depreciated in 2022.
 }
-\usage{
+\section{Renaming}{\preformatted{
 fNobs -> fnobs
 fNdistinct -> fndistinct
 pwNobs -> pwnobs
@@ -58,4 +58,6 @@ is.Date -> is_date
 as.numeric_factor -> as_numeric_factor
 as.character_factor -> as_character_factor
 Date_vars -> date_vars
+`Date_vars<-` -> `date_vars<-`
+}
 }
