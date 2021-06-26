@@ -42,23 +42,23 @@ SEXP falloc(SEXP value, SEXP n) {
     case LGLSXP: {
       int val = asInteger(value), *pout = INTEGER(out);
       if(val == 0) memset(pout, 0, l*sizeof(int));
-      else for(int i = l; i--; ) pout[i] = val;
+      else for(int i = 0; i != l; ++i) pout[i] = val;
       break;
     }
     case REALSXP: {
       double val = asReal(value), *pout = REAL(out);
       if(val == 0.0) memset(pout, 0.0, l*sizeof(double));
-      else for(int i = l; i--; ) pout[i] = val;
+      else for(int i = 0; i != l; ++i) pout[i] = val;
       break;
     }
     case STRSXP: {
       SEXP val = asChar(value), *pout = STRING_PTR(out);
-      for(int i = l; i--; ) pout[i] = val;
+      for(int i = 0; i != l; ++i) pout[i] = val;
       break;
     }
     case VECSXP: {
       SEXP *pout = SEXPPTR(out);
-      for(int i = l; i--; ) pout[i] = value;
+      for(int i = 0; i != l; ++i) pout[i] = value;
       break;
     }
     default: error("Not supportd SEXP Type in alloc()");
