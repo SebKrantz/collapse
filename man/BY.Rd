@@ -93,14 +93,14 @@ BY(num_vars(iris), f, quantile,        # Return as list of matrices
 ## grouped data frame method (faster than dplyr only for small data)
 library(dplyr)
 giris <- group_by(iris, Species)
-giris \%>\% BY(sum)                      # Compute sum
-giris \%>\% BY(sum, use.g.names = TRUE,  # Use row.names and
-             keep.group_vars = FALSE)  # remove 'Species' and groups attribute
-giris \%>\% BY(sum, return = "matrix")   # Return matrix
-giris \%>\% BY(sum, return = "matrix",   # Matrix with row.names
+giris |> BY(sum)                      # Compute sum
+giris |> BY(sum, use.g.names = TRUE,  # Use row.names and
+             keep.group_vars = FALSE) # remove 'Species' and groups attribute
+giris |> BY(sum, return = "matrix")   # Return matrix
+giris |> BY(sum, return = "matrix",   # Matrix with row.names
              use.g.names = TRUE)
-giris \%>\% BY(quantile)                 # Compute quantiles (output is stacked)
-giris \%>\% BY(quantile,                 # Much better, also keeps 'Species'
+giris |> BY(quantile)                 # Compute quantiles (output is stacked)
+giris |> BY(quantile,                 # Much better, also keeps 'Species'
              expand.wide = TRUE)
 }
 }

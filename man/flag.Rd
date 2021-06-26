@@ -165,8 +165,8 @@ summary(lm(PCGDP ~ L(PCGDP,1:2) + L(LIFEEX,0:2)))               # THIS WORKS !
 
 ## Using dplyr:
 library(dplyr)
-wlddev \%>\% group_by(iso3c) \%>\% select(PCGDP,LIFEEX) \%>\% L(0:2)
-wlddev \%>\% group_by(iso3c) \%>\% select(year,PCGDP,LIFEEX) \%>\% L(0:2,year) # Also using t (safer)
+wlddev |> group_by(iso3c) |> select(PCGDP,LIFEEX) |> L(0:2)
+wlddev |> group_by(iso3c) |> select(year,PCGDP,LIFEEX) |> L(0:2,year) # Also using t (safer)
 }
 }
 % Add one or more standard keywords, see file 'KEYWORDS' in the

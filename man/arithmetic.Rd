@@ -77,16 +77,14 @@ X <- qM(mtcars)
 X \%cr\% v
 X \%c-\% v
 X \%r-\% dapply(X, quantile, 0.28)
-\donttest{
+
 ## Chained Operations
-library(magrittr)
-mtcars \%>\% fwithin \%r-\% rnorm(11) \%c*\% 5 \%>\%
-    tfm(mpg = fsum(mpg)) \%>\% qsu
-}
+mtcars |> fwithin() \%r-\% rnorm(11) \%c*\% 5 |>
+    tfm(mpg = fsum(mpg)) |> qsu()
 }
 % Add one or more standard keywords, see file 'KEYWORDS' in the
 % R documentation directory (show via RShowDoc("KEYWORDS")):
-% \keyword{ ~kwd1 }
+\keyword{manip}
 % \keyword{ ~kwd2 }
 % Use only one keyword per line.
 % For non-standard keywords, use \concept instead of \keyword:

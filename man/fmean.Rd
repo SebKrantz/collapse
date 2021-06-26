@@ -93,14 +93,14 @@ head(fmean(m, g, TRA = "-")) # etc..
 \donttest{ % No code relying on suggested package
 ## method for grouped data frames - created with dplyr::group_by or fgroup_by
 library(dplyr)
-mtcars \%>\% group_by(cyl,vs,am) \%>\% fmean           # Ordinary
-mtcars \%>\% group_by(cyl,vs,am) \%>\% fmean(hp)       # Weighted
-mtcars \%>\% group_by(cyl,vs,am) \%>\% fmean(hp, "-")  # Weighted Transform
-mtcars \%>\% group_by(cyl,vs,am) \%>\%
-           select(mpg,hp) \%>\% fmean(hp, "-")       # Only mpg
+mtcars |> group_by(cyl,vs,am) |> fmean()         # Ordinary
+mtcars |> group_by(cyl,vs,am) |> fmean(hp)       # Weighted
+mtcars |> group_by(cyl,vs,am) |> fmean(hp, "-")  # Weighted Transform
+mtcars |> group_by(cyl,vs,am) |>
+           select(mpg,hp) |> fmean(hp, "-")      # Only mpg
 
-mtcars \%>\% fgroup_by(cyl,vs,am) \%>\%                # Equivalent and faster !
-           fselect(mpg,hp) \%>\% fmean(hp, "-")
+mtcars |> fgroup_by(cyl,vs,am) |>                # Equivalent and faster !
+           fselect(mpg,hp) |> fmean(hp, "-")
 }
 }
 \keyword{univar}

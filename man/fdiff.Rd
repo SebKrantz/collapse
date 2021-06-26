@@ -206,12 +206,12 @@ summary(lm(D(PCGDP) ~ L(D(PCGDP,0:1)) + L(D(LIFEEX,0:1),0:1))) # THIS WORKS !
 
 ## Using dplyr:
 library(dplyr)
-wlddev \%>\% group_by(country) \%>\%
-             select(PCGDP,LIFEEX) \%>\% fdiff(0:1,1:2)       # Adding a first and second difference
-wlddev \%>\% group_by(country) \%>\%
-             select(year,PCGDP,LIFEEX) \%>\% D(0:1,1:2,year) # Also using t (safer)
-wlddev \%>\% group_by(country) \%>\%                           # Dropping id's
-             select(year,PCGDP,LIFEEX) \%>\% D(0:1,1:2,year, keep.ids = FALSE)
+wlddev |> group_by(country) |>
+             select(PCGDP,LIFEEX) |> fdiff(0:1,1:2)       # Adding a first and second difference
+wlddev |> group_by(country) |>
+             select(year,PCGDP,LIFEEX) |> D(0:1,1:2,year) # Also using t (safer)
+wlddev |> group_by(country) |>                            # Dropping id's
+             select(year,PCGDP,LIFEEX) |> D(0:1,1:2,year, keep.ids = FALSE)
 }
 }
 % Add one or more standard keywords, see file 'KEYWORDS' in the

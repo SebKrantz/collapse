@@ -83,8 +83,8 @@ ffirst(aqm, airquality$Month) # etc..
 \donttest{ % No code relying on suggested package
 ## method for grouped data frames - created with dplyr::group_by or fgroup_by
 library(dplyr)
-airquality \%>\% group_by(Month) \%>\% ffirst
-airquality \%>\% group_by(Month) \%>\% select(Ozone) \%>\% ffirst(na.rm = FALSE)
+airquality |> group_by(Month) |> ffirst()
+airquality |> group_by(Month) |> select(Ozone) |> ffirst(na.rm = FALSE)
 }
 # Note: All examples generalize to flast.
 }

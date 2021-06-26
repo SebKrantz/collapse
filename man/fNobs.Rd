@@ -65,9 +65,9 @@ fnobs(aqm, airquality$Month)
 \donttest{ % No code relying on suggested package
 ## method for grouped data frames - created with dplyr::group_by or fgroup_by
 library(dplyr)
-airquality \%>\% group_by(Month) \%>\% fnobs
-wlddev \%>\% group_by(country) \%>\%
-           select(PCGDP,LIFEEX,GINI,ODA) \%>\% fnobs
+airquality |> group_by(Month) |> fnobs()
+wlddev |> group_by(country) |>
+           select(PCGDP,LIFEEX,GINI,ODA) |> fnobs()
 }
 }
 \keyword{univar}

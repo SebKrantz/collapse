@@ -111,10 +111,10 @@ fsd(m, mtcars$cyl) # etc..
 \donttest{ % No code relying on suggested package
 ## method for grouped data frames - created with dplyr::group_by or fgroup_by
 library(dplyr)
-mtcars \%>\% group_by(cyl,vs,am) \%>\% fsd
-mtcars \%>\% group_by(cyl,vs,am) \%>\% fsd(keep.group_vars = FALSE) # Remove grouping columns
-mtcars \%>\% group_by(cyl,vs,am) \%>\% fsd(hp)      # Weighted by hp
-mtcars \%>\% group_by(cyl,vs,am) \%>\% fsd(hp, "/") # Weighted scaling transformation
+mtcars |> group_by(cyl,vs,am) |> fsd()
+mtcars |> group_by(cyl,vs,am) |> fsd(keep.group_vars = FALSE) # Remove grouping columns
+mtcars |> group_by(cyl,vs,am) |> fsd(hp)      # Weighted by hp
+mtcars |> group_by(cyl,vs,am) |> fsd(hp, "/") # Weighted scaling transformation
 }
 }
 \keyword{univar}

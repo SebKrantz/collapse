@@ -44,30 +44,29 @@ fsummarise(mtcars, mean_mpg = mean(mpg),
                    sd_mpg = sd(mpg))
 
 # Grouped use
-library(magrittr)
-mtcars \%>\% fgroup_by(cyl) \%>\%
+mtcars |> fgroup_by(cyl) |>
   fsummarise(mean_mpg = fmean(mpg),
              sd_mpg = fsd(mpg))
 
 # This is still efficient but quite a bit slower on large data (many groups)
-mtcars \%>\% fgroup_by(cyl) \%>\%
+mtcars |> fgroup_by(cyl) |>
   fsummarise(mean_mpg = mean(mpg),
              sd_mpg = sd(mpg))
 
 # Weighted aggregation
-mtcars \%>\% fgroup_by(cyl) \%>\%
+mtcars |> fgroup_by(cyl) |>
   fsummarise(w_mean_mpg = fmean(mpg, wt),
              w_sd_mpg = fsd(mpg, wt))
 
 \donttest{ % No code relying on suggested package
 ## Can also group with dplyr::group_by, but at a conversion cost, see ?GRP
 library(dplyr)
-mtcars \%>\% group_by(cyl) \%>\%
+mtcars |> group_by(cyl) |>
   fsummarise(mean_mpg = fmean(mpg),
              sd_mpg = fsd(mpg))
 
 # Again less efficient...
-mtcars \%>\% group_by(cyl) \%>\%
+mtcars |> group_by(cyl) |>
   fsummarise(mean_mpg = mean(mpg),
              sd_mpg = sd(mpg))
 

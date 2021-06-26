@@ -153,10 +153,10 @@ summary(lm(G(PCGDP) ~ L(G(PCGDP,0:1)) + L(G(LIFEEX,0:1),0:1))) # THIS WORKS !
 
 ## Using dplyr:
 library(dplyr)
-wlddev \%>\% group_by(country) \%>\%
-             select(PCGDP,LIFEEX) \%>\% fgrowth(0:1)         # Adding growth rates
-wlddev \%>\% group_by(country) \%>\%
-             select(year,PCGDP,LIFEEX) \%>\%
+wlddev |> group_by(country) |>
+             select(PCGDP,LIFEEX) |> fgrowth(0:1)          # Adding growth rates
+wlddev |> group_by(country) |>
+             select(year,PCGDP,LIFEEX) |>
              fgrowth(0:1, t = year)                        # Also using t (safer)
 }
 }

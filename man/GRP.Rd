@@ -105,7 +105,7 @@ fungroup(X, \dots)
       }
   }
 
- %  \item{untibble}{logical. \code{TRUE} also removes classes \code{c("tbl_df", "tbl")} from \code{X}. \code{fgroup_by} attaches an attribute \code{"was.tibble"} indicating if \code{X} was a tibble prior to grouping. The argument thus defaults to \code{TRUE} if this attribute is attached and equal to \code{FALSE}, so that \code{identical(X, X \%>\% fgroup_by(...) \%>\% fungroup)}, regardless of the nature of \code{X}. }
+ %  \item{untibble}{logical. \code{TRUE} also removes classes \code{c("tbl_df", "tbl")} from \code{X}. \code{fgroup_by} attaches an attribute \code{"was.tibble"} indicating if \code{X} was a tibble prior to grouping. The argument thus defaults to \code{TRUE} if this attribute is attached and equal to \code{FALSE}, so that \code{identical(X, X |> fgroup_by(...) |> fungroup())}, regardless of the nature of \code{X}. }
 
   \item{n}{integer. Number of groups to print out.}
 
@@ -173,11 +173,11 @@ as_factor_GRP(g)
 \donttest{ % No code relying on suggested package
 ## dplyr integration
 library(dplyr)
-mtcars \%>\% group_by(cyl,vs,am) \%>\% GRP    # Get GRP object from a dplyr grouped tibble
-mtcars \%>\% group_by(cyl,vs,am) \%>\% fmean  # Grouped mean using dplyr grouping
-mtcars \%>\% fgroup_by(cyl,vs,am) \%>\% fmean # Faster alternative with collapse grouping
+mtcars |> group_by(cyl,vs,am) |> GRP()    # Get GRP object from a dplyr grouped tibble
+mtcars |> group_by(cyl,vs,am) |> fmean()  # Grouped mean using dplyr grouping
+mtcars |> fgroup_by(cyl,vs,am) |> fmean() # Faster alternative with collapse grouping
 
-mtcars \%>\% fgroup_by(cyl,vs,am)           # Print method for grouped data frame
+mtcars |> fgroup_by(cyl,vs,am)            # Print method for grouped data frame
 }
 
 }
