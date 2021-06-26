@@ -6,6 +6,8 @@ options(warn = -1)
 
 g <- GRP(wlddev, ~ country + decade)
 
+oa <- function(x) setAttrib(unattrib(x), attributes(x)[c("names", "row.names", "class")])
+
 Mode <- function(x, na.rm = FALSE) {
   if(na.rm) x <- x[!is.na(x)]
   ux <- unique(x)
@@ -22,26 +24,26 @@ test_that("collap performs as intended in simple uses", {
   expect_equal(collap(iris, ~Species, keep.by = FALSE), fmean(iris[-5], iris$Species, use.g.names = FALSE))
   expect_equal(collap(airquality, ~Month, keep.by = FALSE), fmean(airquality[-5], airquality$Month, use.g.names = FALSE))
 
-  expect_equal(collap(wlddev, ~ country + decade, keep.col.order = FALSE),
-               cbind(g$groups, fmean(get_vars(wlddev, c(4,9:12)), g, use.g.names = FALSE),
-                     fmode(get_vars(wlddev, c(2:3,6:8)), g, use.g.names = FALSE)))
-  expect_equal(collap(wlddev, ~ country + decade),
-               cbind(g$groups, fmean(get_vars(wlddev, c(4,9:12)), g, use.g.names = FALSE),
-                     fmode(get_vars(wlddev, c(2:3,6:8)), g, use.g.names = FALSE))[order(c(1,5,4,9:12,2:3,6:8))])
-  expect_equal(collap(wlddev, ~ country + decade, keep.col.order = FALSE, keep.by = FALSE),
-               cbind(fmean(get_vars(wlddev, c(4,9:12)), g, use.g.names = FALSE),
-                     fmode(get_vars(wlddev, c(2:3,6:8)), g, use.g.names = FALSE)))
-  expect_equal(collap(wlddev, ~ country + decade, keep.by = FALSE),
-               cbind(fmean(get_vars(wlddev, c(4,9:12)), g, use.g.names = FALSE),
-                     fmode(get_vars(wlddev, c(2:3,6:8)), g, use.g.names = FALSE))[order(c(4,9:12,2:3,6:8))])
+  expect_equal(oa(collap(wlddev, ~ country + decade, keep.col.order = FALSE)),
+               oa(cbind(g$groups, fmean(get_vars(wlddev, c(4,9:12)), g, use.g.names = FALSE),
+                     fmode(get_vars(wlddev, c(2:3,6:8)), g, use.g.names = FALSE))))
+  expect_equal(oa(collap(wlddev, ~ country + decade)),
+               oa(cbind(g$groups, fmean(get_vars(wlddev, c(4,9:12)), g, use.g.names = FALSE),
+                     fmode(get_vars(wlddev, c(2:3,6:8)), g, use.g.names = FALSE)))[order(c(1,5,4,9:12,2:3,6:8))])
+  expect_equal(oa(collap(wlddev, ~ country + decade, keep.col.order = FALSE, keep.by = FALSE)),
+               oa(cbind(fmean(get_vars(wlddev, c(4,9:12)), g, use.g.names = FALSE),
+                     fmode(get_vars(wlddev, c(2:3,6:8)), g, use.g.names = FALSE))))
+  expect_equal(oa(collap(wlddev, ~ country + decade, keep.by = FALSE)),
+               oa(cbind(fmean(get_vars(wlddev, c(4,9:12)), g, use.g.names = FALSE),
+                     fmode(get_vars(wlddev, c(2:3,6:8)), g, use.g.names = FALSE)))[order(c(4,9:12,2:3,6:8))])
 
-  expect_equal(collap(wlddev, g, keep.by = FALSE),
-               cbind(g$groups, fmean(get_vars(wlddev, c(4,9:12)), g, use.g.names = FALSE),
-                     fmode(get_vars(wlddev, c(2:3,6:8)), g, use.g.names = FALSE))[order(c(1,5,4,9:12,2:3,6:8))])
+  expect_equal(oa(collap(wlddev, g, keep.by = FALSE)),
+               oa(cbind(g$groups, fmean(get_vars(wlddev, c(4,9:12)), g, use.g.names = FALSE),
+                     fmode(get_vars(wlddev, c(2:3,6:8)), g, use.g.names = FALSE)))[order(c(1,5,4,9:12,2:3,6:8))])
 
-  expect_equal(collap(wlddev, wlddev[c("country","decade")], keep.by = FALSE),
-               cbind(g$groups, fmean(get_vars(wlddev, c(4,9:12)), g, use.g.names = FALSE),
-                     fmode(get_vars(wlddev, c(2:3,6:8)), g, use.g.names = FALSE))[order(c(1,5,4,9:12,2:3,6:8))])
+  expect_equal(oa(collap(wlddev, wlddev[c("country","decade")], keep.by = FALSE)),
+               oa(cbind(g$groups, fmean(get_vars(wlddev, c(4,9:12)), g, use.g.names = FALSE),
+                     fmode(get_vars(wlddev, c(2:3,6:8)), g, use.g.names = FALSE)))[order(c(1,5,4,9:12,2:3,6:8))])
 
 })
 
@@ -62,100 +64,131 @@ test_that("collap preserves data attributes", {
 })
 
 test_that("collap performs as intended in simple uses with base/stats functions", {
-  expect_equal(collap(mtcars, mtcars$cyl, sum, keep.by = FALSE), fsum(mtcars, mtcars$cyl, use.g.names = FALSE))
-  expect_equal(collap(mtcars, ~cyl, mean.default), fmean(mtcars, mtcars$cyl, use.g.names = FALSE))
-  expect_equal(collap(mtcars, ~cyl, mean), fmean(mtcars, mtcars$cyl, use.g.names = FALSE)) # error !!
+  expect_equal(oa(collap(mtcars, mtcars$cyl, sum, keep.by = FALSE)),
+               oa(fsum(mtcars, mtcars$cyl, use.g.names = FALSE)))
+  expect_equal(oa(collap(mtcars, ~cyl, mean.default)),
+               oa(fmean(mtcars, mtcars$cyl, use.g.names = FALSE)))
+  expect_equal(oa(collap(mtcars, ~cyl, mean)),
+               oa(fmean(mtcars, mtcars$cyl, use.g.names = FALSE)))
 
-  expect_equal(collap(mtcars, mtcars[2], sum, keep.by = FALSE), fsum(mtcars, mtcars$cyl, use.g.names = FALSE))
-  expect_equal(collap(mtcars, ~cyl, sum, keep.by = FALSE), fsum(mtcars[-2], mtcars$cyl, use.g.names = FALSE))
-  expect_equal(collap(iris, ~Species, sum, keep.by = FALSE), fsum(iris[-5], iris$Species, use.g.names = FALSE))
-  expect_equal(collap(airquality, ~Month, sum, na.rm = TRUE, keep.by = FALSE), fsum(airquality[-5], airquality$Month, use.g.names = FALSE))
+  expect_equal(oa(collap(mtcars, mtcars[2], sum, keep.by = FALSE)),
+               oa(fsum(mtcars, mtcars$cyl, use.g.names = FALSE)))
+  expect_equal(oa(collap(mtcars, ~cyl, sum, keep.by = FALSE)),
+               oa(fsum(mtcars[-2], mtcars$cyl, use.g.names = FALSE)))
+  expect_equal(oa(collap(iris, ~Species, sum, keep.by = FALSE)),
+               oa(fsum(iris[-5], iris$Species, use.g.names = FALSE)))
+  expect_equal(oa(collap(airquality, ~Month, sum, na.rm = TRUE, keep.by = FALSE)),
+               oa(fsum(airquality[-5], airquality$Month, use.g.names = FALSE)))
 
-  expect_equal(collap(wlddev, ~ country + decade, sum, Mode, na.rm = TRUE, keep.col.order = FALSE),
-               cbind(g$groups, BY(get_vars(wlddev, c(4,9:12)), g, sum, na.rm = TRUE, use.g.names = FALSE),
-                     BY(get_vars(wlddev, c(2:3,6:8)), g, Mode, na.rm = TRUE, use.g.names = FALSE)))
-  expect_equal(collap(wlddev, ~ country + decade, sum, Mode, na.rm = TRUE),
-               cbind(g$groups, BY(get_vars(wlddev, c(4,9:12)), g, sum, na.rm = TRUE, use.g.names = FALSE),
-                     BY(get_vars(wlddev, c(2:3,6:8)), g, Mode, na.rm = TRUE, use.g.names = FALSE))[order(c(1,5,4,9:12,2:3,6:8))])
+  expect_equal(oa(collap(wlddev, ~ country + decade, sum, Mode, na.rm = TRUE, keep.col.order = FALSE)),
+               oa(cbind(g$groups, BY(get_vars(wlddev, c(4,9:12)), g, sum, na.rm = TRUE, use.g.names = FALSE),
+                     BY(get_vars(wlddev, c(2:3,6:8)), g, Mode, na.rm = TRUE, use.g.names = FALSE))))
+  expect_equal(oa(collap(wlddev, ~ country + decade, sum, Mode, na.rm = TRUE)),
+               oa(cbind(g$groups, BY(get_vars(wlddev, c(4,9:12)), g, sum, na.rm = TRUE, use.g.names = FALSE),
+                     BY(get_vars(wlddev, c(2:3,6:8)), g, Mode, na.rm = TRUE, use.g.names = FALSE)))[order(c(1,5,4,9:12,2:3,6:8))])
 })
 
 test_that("collap using 2-sided formula or cols performs as intended", {
-  expect_equal(collap(mtcars, mpg ~ cyl, keep.by = FALSE), fmean(mtcars["mpg"], mtcars$cyl, use.g.names = FALSE))
-  expect_equal(collap(mtcars, mpg ~ cyl, keep.by = FALSE, cols = 300:1000), fmean(mtcars["mpg"], mtcars$cyl, use.g.names = FALSE)) # cols is ignored, as should be
-  expect_equal(collap(mtcars, ~ cyl, keep.by = FALSE, cols = 1), fmean(mtcars["mpg"], mtcars$cyl, use.g.names = FALSE))
-  expect_equal(collap(mtcars, wt + mpg ~ cyl + vs + am, keep.by = FALSE), fmean(mtcars[c("mpg","wt")], mtcars[c("cyl","vs","am")], use.g.names = FALSE))
-  expect_equal(collap(mtcars, ~ cyl + vs + am, keep.by = FALSE, cols = c(6,1)), fmean(mtcars[c("mpg","wt")], mtcars[c("cyl","vs","am")], use.g.names = FALSE))
-  expect_equal(collap(iris, Sepal.Length + Sepal.Width ~ Species, keep.by = FALSE), fmean(iris[1:2], iris$Species, use.g.names = FALSE))
-  expect_equal(collap(airquality, ~ Month, keep.by = FALSE), fmean(airquality[-5], airquality$Month, use.g.names = FALSE))
-  expect_equal(collap(airquality, ~ Month, keep.by = FALSE, cols = 1:3), fmean(airquality[1:3], airquality$Month, use.g.names = FALSE))
+  expect_equal(oa(collap(mtcars, mpg ~ cyl, keep.by = FALSE)),
+               oa(fmean(mtcars["mpg"], mtcars$cyl, use.g.names = FALSE)))
+  expect_equal(oa(collap(mtcars, mpg ~ cyl, keep.by = FALSE, cols = 300:1000)),
+               oa(fmean(mtcars["mpg"], mtcars$cyl, use.g.names = FALSE))) # cols is ignored, as should be
+  expect_equal(oa(collap(mtcars, ~ cyl, keep.by = FALSE, cols = 1)),
+               oa(fmean(mtcars["mpg"], mtcars$cyl, use.g.names = FALSE)))
+  expect_equal(oa(collap(mtcars, wt + mpg ~ cyl + vs + am, keep.by = FALSE)),
+               oa(fmean(mtcars[c("mpg","wt")], mtcars[c("cyl","vs","am")], use.g.names = FALSE)))
+  expect_equal(oa(collap(mtcars, ~ cyl + vs + am, keep.by = FALSE, cols = c(6,1))),
+               oa(fmean(mtcars[c("mpg","wt")], mtcars[c("cyl","vs","am")], use.g.names = FALSE)))
+  expect_equal(oa(collap(iris, Sepal.Length + Sepal.Width ~ Species, keep.by = FALSE)),
+               oa(fmean(iris[1:2], iris$Species, use.g.names = FALSE)))
+  expect_equal(oa(collap(airquality, ~ Month, keep.by = FALSE)),
+               oa(fmean(airquality[-5], airquality$Month, use.g.names = FALSE)))
+  expect_equal(oa(collap(airquality, ~ Month, keep.by = FALSE, cols = 1:3)),
+               oa(fmean(airquality[1:3], airquality$Month, use.g.names = FALSE)))
 
-  expect_equal(collap(wlddev, ~ country + decade, cols = 9:12), collap(wlddev, PCGDP + LIFEEX + GINI + ODA ~ country + decade))
-  expect_equal(collap(wlddev, ~ country + decade, cols = 9:12), collap(wlddev, ~ country + decade, cols = 9:12, keep.col.order = FALSE))
-  expect_equal(collap(wlddev, ~ country + decade, cols = c(2:3,6:8)), collap(wlddev, iso3c + date + region + income + OECD ~ country + decade))
-  expect_false(identical(collap(wlddev, ~ country + decade, cols = c(2:3,6:8)), collap(wlddev, ~ country + decade, cols = c(2:3,6:8), keep.col.order = FALSE)))
+  expect_equal(oa(collap(wlddev, ~ country + decade, cols = 9:12)),
+               oa(collap(wlddev, PCGDP + LIFEEX + GINI + ODA ~ country + decade)))
+  expect_equal(oa(collap(wlddev, ~ country + decade, cols = 9:12)),
+               oa(collap(wlddev, ~ country + decade, cols = 9:12, keep.col.order = FALSE)))
+  expect_equal(oa(collap(wlddev, ~ country + decade, cols = c(2:3,6:8))),
+               oa(collap(wlddev, iso3c + date + region + income + OECD ~ country + decade)))
+  expect_false(identical(oa(collap(wlddev, ~ country + decade, cols = c(2:3,6:8))),
+                         oa(collap(wlddev, ~ country + decade, cols = c(2:3,6:8), keep.col.order = FALSE))))
 
-  expect_equal(collap(wlddev, ~ country + decade, cols = 9:12, keep.by = FALSE), collap(wlddev, PCGDP + LIFEEX + GINI + ODA ~ country + decade, keep.by = FALSE))
-  expect_equal(collap(wlddev, ~ country + decade, cols = 9:12, keep.by = FALSE), collap(wlddev, ~ country + decade, cols = 9:12, keep.col.order = FALSE, keep.by = FALSE))
-  expect_equal(collap(wlddev, ~ country + decade, cols = c(2:3,6:8), keep.by = FALSE), collap(wlddev, iso3c + date + region + income + OECD ~ country + decade, keep.by = FALSE))
-  expect_equal(collap(wlddev, ~ country + decade, cols = c(2:3,6:8), keep.by = FALSE), collap(wlddev, ~ country + decade, cols = c(2:3,6:8), keep.col.order = FALSE, keep.by = FALSE))
+  expect_equal(oa(collap(wlddev, ~ country + decade, cols = 9:12, keep.by = FALSE)),
+               oa(collap(wlddev, PCGDP + LIFEEX + GINI + ODA ~ country + decade, keep.by = FALSE)))
+  expect_equal(oa(collap(wlddev, ~ country + decade, cols = 9:12, keep.by = FALSE)),
+               oa(collap(wlddev, ~ country + decade, cols = 9:12, keep.col.order = FALSE, keep.by = FALSE)))
+  expect_equal(oa(collap(wlddev, ~ country + decade, cols = c(2:3,6:8), keep.by = FALSE)),
+               oa(collap(wlddev, iso3c + date + region + income + OECD ~ country + decade, keep.by = FALSE)))
+  expect_equal(oa(collap(wlddev, ~ country + decade, cols = c(2:3,6:8), keep.by = FALSE)),
+               oa(collap(wlddev, ~ country + decade, cols = c(2:3,6:8), keep.col.order = FALSE, keep.by = FALSE)))
 
-  expect_equal(collap(wlddev, g, cols = 9:12, keep.by = FALSE), collap(wlddev, PCGDP + LIFEEX + GINI + ODA ~ country + decade, keep.by = FALSE))
-  expect_equal(collap(wlddev, g, cols = 9:12, keep.by = FALSE), collap(wlddev, ~ country + decade, cols = 9:12, keep.col.order = FALSE, keep.by = FALSE))
-  expect_equal(collap(wlddev, g, cols = c(2:3,6:8), keep.by = FALSE), collap(wlddev, iso3c + date + region + income + OECD ~ country + decade, keep.by = FALSE))
-  expect_equal(collap(wlddev, g, cols = c(2:3,6:8), keep.by = FALSE), collap(wlddev, ~ country + decade, cols = c(2:3,6:8), keep.col.order = FALSE, keep.by = FALSE))
+  expect_equal(oa(collap(wlddev, g, cols = 9:12, keep.by = FALSE)),
+               oa(collap(wlddev, PCGDP + LIFEEX + GINI + ODA ~ country + decade, keep.by = FALSE)))
+  expect_equal(oa(collap(wlddev, g, cols = 9:12, keep.by = FALSE)),
+               oa(collap(wlddev, ~ country + decade, cols = 9:12, keep.col.order = FALSE, keep.by = FALSE)))
+  expect_equal(oa(collap(wlddev, g, cols = c(2:3,6:8), keep.by = FALSE)),
+               oa(collap(wlddev, iso3c + date + region + income + OECD ~ country + decade, keep.by = FALSE)))
+  expect_equal(oa(collap(wlddev, g, cols = c(2:3,6:8), keep.by = FALSE)),
+               oa(collap(wlddev, ~ country + decade, cols = c(2:3,6:8), keep.col.order = FALSE, keep.by = FALSE)))
 
-  expect_equal(collap(wlddev, wlddev[c("country","decade")], cols = 9:12, keep.by = FALSE), collap(wlddev, PCGDP + LIFEEX + GINI + ODA ~ country + decade, keep.by = FALSE))
-  expect_equal(collap(wlddev, wlddev[c("country","decade")], cols = 9:12, keep.by = FALSE), collap(wlddev, ~ country + decade, cols = 9:12, keep.col.order = FALSE, keep.by = FALSE))
-  expect_equal(collap(wlddev, wlddev[c("country","decade")], cols = c(2:3,6:8), keep.by = FALSE), collap(wlddev, iso3c + date + region + income + OECD ~ country + decade, keep.by = FALSE))
-  expect_equal(collap(wlddev, wlddev[c("country","decade")], cols = c(2:3,6:8), keep.by = FALSE), collap(wlddev, ~ country + decade, cols = c(2:3,6:8), keep.col.order = FALSE, keep.by = FALSE))
+  expect_equal(oa(collap(wlddev, wlddev[c("country","decade")], cols = 9:12, keep.by = FALSE)),
+               oa(collap(wlddev, PCGDP + LIFEEX + GINI + ODA ~ country + decade, keep.by = FALSE)))
+  expect_equal(oa(collap(wlddev, wlddev[c("country","decade")], cols = 9:12, keep.by = FALSE)),
+               oa(collap(wlddev, ~ country + decade, cols = 9:12, keep.col.order = FALSE, keep.by = FALSE)))
+  expect_equal(oa(collap(wlddev, wlddev[c("country","decade")], cols = c(2:3,6:8), keep.by = FALSE)),
+               oa(collap(wlddev, iso3c + date + region + income + OECD ~ country + decade, keep.by = FALSE)))
+  expect_equal(oa(collap(wlddev, wlddev[c("country","decade")], cols = c(2:3,6:8), keep.by = FALSE)),
+               oa(collap(wlddev, ~ country + decade, cols = c(2:3,6:8), keep.col.order = FALSE, keep.by = FALSE)))
 
 })
 
 test_that("collap multi-function aggreagtion performs as intended", {
-  expect_equal(collap(wlddev, ~ country + decade, list(fmean, fmedian), keep.col.order = FALSE, give.names = FALSE),
-               cbind(g$groups, fmean(get_vars(wlddev, c(4,9:12)), g, use.g.names = FALSE), fmedian(get_vars(wlddev, c(4,9:12)), g, use.g.names = FALSE),
-                     fmode(get_vars(wlddev, c(2:3,6:8)), g, use.g.names = FALSE)))
-  expect_equal(collap(wlddev, ~ country + decade, list(fmean, fmedian), list(fmode, flast), keep.col.order = FALSE, give.names = FALSE),
-               cbind(g$groups, fmean(get_vars(wlddev, c(4,9:12)), g, use.g.names = FALSE), fmedian(get_vars(wlddev, c(4,9:12)), g, use.g.names = FALSE),
-                     fmode(get_vars(wlddev, c(2:3,6:8)), g, use.g.names = FALSE), flast(get_vars(wlddev, c(2:3,6:8)), g, use.g.names = FALSE)))
+  expect_equal(oa(collap(wlddev, ~ country + decade, list(fmean, fmedian), keep.col.order = FALSE, give.names = FALSE)),
+               oa(cbind(g$groups, fmean(get_vars(wlddev, c(4,9:12)), g, use.g.names = FALSE), fmedian(get_vars(wlddev, c(4,9:12)), g, use.g.names = FALSE),
+                     fmode(get_vars(wlddev, c(2:3,6:8)), g, use.g.names = FALSE))))
+  expect_equal(oa(collap(wlddev, ~ country + decade, list(fmean, fmedian), list(fmode, flast), keep.col.order = FALSE, give.names = FALSE)),
+               oa(cbind(g$groups, fmean(get_vars(wlddev, c(4,9:12)), g, use.g.names = FALSE), fmedian(get_vars(wlddev, c(4,9:12)), g, use.g.names = FALSE),
+                     fmode(get_vars(wlddev, c(2:3,6:8)), g, use.g.names = FALSE), flast(get_vars(wlddev, c(2:3,6:8)), g, use.g.names = FALSE))))
   # with column ordering:
-  expect_equal(unname(collap(wlddev, ~ country + decade, list(fmean, fmedian))),
-               unname(cbind(g$groups, fmean(get_vars(wlddev, c(4,9:12)), g, use.g.names = FALSE), fmedian(get_vars(wlddev, c(4,9:12)), g, use.g.names = FALSE),
-                     fmode(get_vars(wlddev, c(2:3,6:8)), g, use.g.names = FALSE))[order(c(1,5,4,9:12,4,9:12,2:3,6:8))]))
-  expect_equal(unname(collap(wlddev, ~ country + decade, list(fmean, fmedian), list(fmode, flast))),
-               unname(cbind(g$groups, fmean(get_vars(wlddev, c(4,9:12)), g, use.g.names = FALSE), fmedian(get_vars(wlddev, c(4,9:12)), g, use.g.names = FALSE),
-                      fmode(get_vars(wlddev, c(2:3,6:8)), g, use.g.names = FALSE), flast(get_vars(wlddev, c(2:3,6:8)), g, use.g.names = FALSE))[order(c(1,5,4,9:12,4,9:12,2:3,6:8,2:3,6:8))]))
+  expect_equal(unname(oa(collap(wlddev, ~ country + decade, list(fmean, fmedian)))),
+               unname(oa(cbind(g$groups, fmean(get_vars(wlddev, c(4,9:12)), g, use.g.names = FALSE), fmedian(get_vars(wlddev, c(4,9:12)), g, use.g.names = FALSE),
+                     fmode(get_vars(wlddev, c(2:3,6:8)), g, use.g.names = FALSE))[order(c(1,5,4,9:12,4,9:12,2:3,6:8))])))
+  expect_equal(unname(oa(collap(wlddev, ~ country + decade, list(fmean, fmedian), list(fmode, flast)))),
+               unname(oa(cbind(g$groups, fmean(get_vars(wlddev, c(4,9:12)), g, use.g.names = FALSE), fmedian(get_vars(wlddev, c(4,9:12)), g, use.g.names = FALSE),
+                      fmode(get_vars(wlddev, c(2:3,6:8)), g, use.g.names = FALSE), flast(get_vars(wlddev, c(2:3,6:8)), g, use.g.names = FALSE)))[order(c(1,5,4,9:12,4,9:12,2:3,6:8,2:3,6:8))]))
 })
 
 test_that("collap custom aggreagtion performs as intended", {
-  expect_equal(unname(collap(wlddev, ~ country + decade,
-                      custom = list(fmean = 9:12, fsd = 9:10, fmode = 7:8), keep.col.order = FALSE)),
-               unname(cbind(g$groups, fmean(wlddev[9:12], g, use.g.names = FALSE),
+  expect_equal(unname(oa(collap(wlddev, ~ country + decade,
+                      custom = list(fmean = 9:12, fsd = 9:10, fmode = 7:8), keep.col.order = FALSE))),
+               unname(oa(cbind(g$groups, fmean(wlddev[9:12], g, use.g.names = FALSE),
                                       fsd(wlddev[9:10], g, use.g.names = FALSE),
-                                      fmode(wlddev[7:8], g, use.g.names = FALSE))))
-  expect_equal(unname(collap(wlddev, ~ country + decade,
-                             custom = list(fmean = 9:12, fsd = 9:10, fmode = 7:8))),
-               unname(cbind(g$groups, fmean(wlddev[9:12], g, use.g.names = FALSE),
+                                      fmode(wlddev[7:8], g, use.g.names = FALSE)))))
+  expect_equal(unname(oa(collap(wlddev, ~ country + decade,
+                             custom = list(fmean = 9:12, fsd = 9:10, fmode = 7:8)))),
+               unname(oa(cbind(g$groups, fmean(wlddev[9:12], g, use.g.names = FALSE),
                             fsd(wlddev[9:10], g, use.g.names = FALSE),
-                            fmode(wlddev[7:8], g, use.g.names = FALSE))[order(c(1,5,9:12,9:10,7:8))]))
+                            fmode(wlddev[7:8], g, use.g.names = FALSE)))[order(c(1,5,9:12,9:10,7:8))]))
 
-  expect_equal(collap(wlddev, ~ country + decade,
-               custom = list(fmean = 9:12, fsd = 9:10, fmode = 7:8)),
-               collap(wlddev, ~ country + decade,
-               custom = list(fmean = 9:12, fsd = c("PCGDP","LIFEEX"), fmode = 7:8)))
-  expect_equal(collap(wlddev, ~ country + decade,
-               custom = list(fmean = "PCGDP", fsd = c("LIFEEX","GINI"), flast = "date")),
-               collap(wlddev, ~ country + decade,
-               custom = list(fmean = "PCGDP", fsd = 10:11, flast = "date")))
+  expect_equal(oa(collap(wlddev, ~ country + decade,
+               custom = list(fmean = 9:12, fsd = 9:10, fmode = 7:8))),
+               oa(collap(wlddev, ~ country + decade,
+               custom = list(fmean = 9:12, fsd = c("PCGDP","LIFEEX"), fmode = 7:8))))
+  expect_equal(oa(collap(wlddev, ~ country + decade,
+               custom = list(fmean = "PCGDP", fsd = c("LIFEEX","GINI"), flast = "date"))),
+               oa(collap(wlddev, ~ country + decade,
+               custom = list(fmean = "PCGDP", fsd = 10:11, flast = "date"))))
 
-  expect_equal(collap(wlddev, g,
-                      custom = list(fmean = 9:12, fsd = 9:10, fmode = 7:8)),
-               collap(wlddev, ~ country + decade,
-                      custom = list(fmean = 9:12, fsd = c("PCGDP","LIFEEX"), fmode = 7:8)))
-  expect_equal(collap(wlddev, g,
-                      custom = list(fmean = "PCGDP", fsd = c("LIFEEX","GINI"), flast = "date")),
-               collap(wlddev, g,
-                      custom = list(fmean = "PCGDP", fsd = 10:11, flast = "date")))
+  expect_equal(oa(collap(wlddev, g,
+                      custom = list(fmean = 9:12, fsd = 9:10, fmode = 7:8))),
+               oa(collap(wlddev, ~ country + decade,
+                      custom = list(fmean = 9:12, fsd = c("PCGDP","LIFEEX"), fmode = 7:8))))
+  expect_equal(oa(collap(wlddev, g,
+                      custom = list(fmean = "PCGDP", fsd = c("LIFEEX","GINI"), flast = "date"))),
+               oa(collap(wlddev, g,
+                      custom = list(fmean = "PCGDP", fsd = 10:11, flast = "date"))))
   expect_equal(names(collap(wlddev, g,
                       custom = list(fmean = c(GDP = "PCGDP"), fsd = c("LIFEEX", GN = "GINI"), flast = "date"),
                       keep.by = FALSE, keep.col.order = FALSE)),
@@ -165,117 +198,121 @@ test_that("collap custom aggreagtion performs as intended", {
 
 test_that("collap weighted aggregations work as intended", {
   # Not keeping order ...
-  expect_equal(collap(wlddev, ~ country + decade, w = ~ ODA, keep.col.order = FALSE),
-                 add_vars(g$groups,
+  expect_equal(oa(collap(wlddev, ~ country + decade, w = ~ ODA, keep.col.order = FALSE)),
+               oa(add_vars(g$groups,
                   fsum(get_vars(wlddev, "ODA"), g, use.g.names = FALSE),
                   fmean(get_vars(wlddev, c("year","PCGDP","LIFEEX","GINI")), g, wlddev$ODA, use.g.names = FALSE),
-                  fmode(get_vars(wlddev, c("iso3c","date","region","income", "OECD")), g, wlddev$ODA, use.g.names = FALSE)))
+                  fmode(get_vars(wlddev, c("iso3c","date","region","income", "OECD")), g, wlddev$ODA, use.g.names = FALSE))))
 
-  expect_equal(collap(wlddev, ~ country + decade, w = ~ ODA, keep.col.order = FALSE, keep.by = FALSE),
-               add_vars(fsum(get_vars(wlddev, "ODA"), g, use.g.names = FALSE),
+  expect_equal(oa(collap(wlddev, ~ country + decade, w = ~ ODA, keep.col.order = FALSE, keep.by = FALSE)),
+               oa(add_vars(fsum(get_vars(wlddev, "ODA"), g, use.g.names = FALSE),
                         fmean(get_vars(wlddev, c("year","PCGDP","LIFEEX","GINI")), g, wlddev$ODA, use.g.names = FALSE),
-                        fmode(get_vars(wlddev, c("iso3c","date","region","income", "OECD")), g, wlddev$ODA, use.g.names = FALSE)))
+                        fmode(get_vars(wlddev, c("iso3c","date","region","income", "OECD")), g, wlddev$ODA, use.g.names = FALSE))))
 
-  expect_equal(collap(wlddev, ~ country + decade, w = ~ ODA, keep.col.order = FALSE, keep.w = FALSE),
-               add_vars(g$groups, fmean(get_vars(wlddev, c("year","PCGDP","LIFEEX","GINI")), g, wlddev$ODA, use.g.names = FALSE),
-                        fmode(get_vars(wlddev, c("iso3c","date","region","income", "OECD")), g, wlddev$ODA, use.g.names = FALSE)))
+  expect_equal(oa(collap(wlddev, ~ country + decade, w = ~ ODA, keep.col.order = FALSE, keep.w = FALSE)),
+               oa(add_vars(g$groups, fmean(get_vars(wlddev, c("year","PCGDP","LIFEEX","GINI")), g, wlddev$ODA, use.g.names = FALSE),
+                        fmode(get_vars(wlddev, c("iso3c","date","region","income", "OECD")), g, wlddev$ODA, use.g.names = FALSE))))
 
-  expect_equal(collap(wlddev, ~ country + decade, w = ~ ODA, keep.col.order = FALSE, keep.by = FALSE, keep.w = FALSE),
-               add_vars(fmean(get_vars(wlddev, c("year","PCGDP","LIFEEX","GINI")), g, wlddev$ODA, use.g.names = FALSE),
-                        fmode(get_vars(wlddev, c("iso3c","date","region","income", "OECD")), g, wlddev$ODA, use.g.names = FALSE)))
+  expect_equal(oa(collap(wlddev, ~ country + decade, w = ~ ODA, keep.col.order = FALSE, keep.by = FALSE, keep.w = FALSE)),
+               oa(add_vars(fmean(get_vars(wlddev, c("year","PCGDP","LIFEEX","GINI")), g, wlddev$ODA, use.g.names = FALSE),
+                        fmode(get_vars(wlddev, c("iso3c","date","region","income", "OECD")), g, wlddev$ODA, use.g.names = FALSE))))
 
   # keeping order ...
-  expect_equal(collap(wlddev, ~ country + decade, w = ~ ODA),
-               add_vars(g$groups,
+  expect_equal(oa(collap(wlddev, ~ country + decade, w = ~ ODA)),
+               oa(add_vars(g$groups,
                         fsum(get_vars(wlddev, "ODA"), g, use.g.names = FALSE),
                         fmean(get_vars(wlddev, c("year","PCGDP","LIFEEX","GINI")), g, wlddev$ODA, use.g.names = FALSE),
-                        fmode(get_vars(wlddev, c("iso3c","date","region","income", "OECD")), g, wlddev$ODA, use.g.names = FALSE))[names(wlddev)])
+                        fmode(get_vars(wlddev, c("iso3c","date","region","income", "OECD")), g, wlddev$ODA, use.g.names = FALSE)))[names(wlddev)])
 
-  expect_equal(collap(wlddev, ~ country + decade, w = ~ ODA, keep.by = FALSE),
-               add_vars(fsum(get_vars(wlddev, "ODA"), g, use.g.names = FALSE),
+  expect_equal(oa(collap(wlddev, ~ country + decade, w = ~ ODA, keep.by = FALSE)),
+               oa(add_vars(fsum(get_vars(wlddev, "ODA"), g, use.g.names = FALSE),
                         fmean(get_vars(wlddev, c("year","PCGDP","LIFEEX","GINI")), g, wlddev$ODA, use.g.names = FALSE),
-                        fmode(get_vars(wlddev, c("iso3c","date","region","income", "OECD")), g, wlddev$ODA, use.g.names = FALSE))[setdiff(names(wlddev), g$group.vars)])
+                        fmode(get_vars(wlddev, c("iso3c","date","region","income", "OECD")), g, wlddev$ODA, use.g.names = FALSE)))[setdiff(names(wlddev), g$group.vars)])
 
-  expect_equal(collap(wlddev, ~ country + decade, w = ~ ODA, keep.w = FALSE),
-               add_vars(g$groups, fmean(get_vars(wlddev, c("year","PCGDP","LIFEEX","GINI")), g, wlddev$ODA, use.g.names = FALSE),
-                        fmode(get_vars(wlddev, c("iso3c","date","region","income", "OECD")), g, wlddev$ODA, use.g.names = FALSE))[setdiff(names(wlddev), "ODA")])
+  expect_equal(oa(collap(wlddev, ~ country + decade, w = ~ ODA, keep.w = FALSE)),
+               oa(add_vars(g$groups, fmean(get_vars(wlddev, c("year","PCGDP","LIFEEX","GINI")), g, wlddev$ODA, use.g.names = FALSE),
+                        fmode(get_vars(wlddev, c("iso3c","date","region","income", "OECD")), g, wlddev$ODA, use.g.names = FALSE)))[setdiff(names(wlddev), "ODA")])
 
-  expect_equal(collap(wlddev, ~ country + decade, w = ~ ODA, keep.by = FALSE, keep.w = FALSE),
-               add_vars(fmean(get_vars(wlddev, c("year","PCGDP","LIFEEX","GINI")), g, wlddev$ODA, use.g.names = FALSE),
-                        fmode(get_vars(wlddev, c("iso3c","date","region","income", "OECD")), g, wlddev$ODA, use.g.names = FALSE))[setdiff(names(wlddev), c(g$group.vars, "ODA"))])
+  expect_equal(oa(collap(wlddev, ~ country + decade, w = ~ ODA, keep.by = FALSE, keep.w = FALSE)),
+               oa(add_vars(fmean(get_vars(wlddev, c("year","PCGDP","LIFEEX","GINI")), g, wlddev$ODA, use.g.names = FALSE),
+                        fmode(get_vars(wlddev, c("iso3c","date","region","income", "OECD")), g, wlddev$ODA, use.g.names = FALSE)))[setdiff(names(wlddev), c(g$group.vars, "ODA"))])
 
 
 })
 
 test_that("collap multi-function aggreagtion with weights performs as intended", {
-  expect_equal(collap(wlddev, ~ country + decade, list(fmean, fsd), w = ~ ODA, keep.col.order = FALSE, give.names = FALSE),
-               cbind(g$groups, fsum(get_vars(wlddev, 12), g, use.g.names = FALSE), fmean(get_vars(wlddev, c(4,9:11)), g, wlddev$ODA, use.g.names = FALSE),
+
+  expect_equal(oa(collap(wlddev, ~ country + decade, list(fmean, fsd), w = ~ ODA, keep.col.order = FALSE, give.names = FALSE)),
+               oa(cbind(g$groups, fsum(get_vars(wlddev, 12), g, use.g.names = FALSE), fmean(get_vars(wlddev, c(4,9:11)), g, wlddev$ODA, use.g.names = FALSE),
                      fsd(get_vars(wlddev, c(4,9:11)), g, wlddev$ODA, use.g.names = FALSE),
-                     fmode(get_vars(wlddev, c(2:3,6:8)), g, wlddev$ODA, use.g.names = FALSE)))
-  expect_equal(collap(wlddev, ~ country + decade, list(fmean, fsd), list(fmode, flast), w = ~ ODA, keep.col.order = FALSE, give.names = FALSE),
-               cbind(g$groups, fsum(get_vars(wlddev, 12), g, use.g.names = FALSE), fmean(get_vars(wlddev, c(4,9:11)), g, wlddev$ODA, use.g.names = FALSE),
+                     fmode(get_vars(wlddev, c(2:3,6:8)), g, wlddev$ODA, use.g.names = FALSE))))
+
+  expect_equal(oa(collap(wlddev, ~ country + decade, list(fmean, fsd), list(fmode, flast), w = ~ ODA, keep.col.order = FALSE, give.names = FALSE)),
+               oa(cbind(g$groups, fsum(get_vars(wlddev, 12), g, use.g.names = FALSE), fmean(get_vars(wlddev, c(4,9:11)), g, wlddev$ODA, use.g.names = FALSE),
                      fsd(get_vars(wlddev, c(4,9:11)), g, wlddev$ODA, use.g.names = FALSE),
-                     fmode(get_vars(wlddev, c(2:3,6:8)), g, wlddev$ODA, use.g.names = FALSE), flast(get_vars(wlddev, c(2:3,6:8)), g, use.g.names = FALSE)))
+                     fmode(get_vars(wlddev, c(2:3,6:8)), g, wlddev$ODA, use.g.names = FALSE), flast(get_vars(wlddev, c(2:3,6:8)), g, use.g.names = FALSE))))
+
   # with column ordering:
-  expect_equal(unname(collap(wlddev, ~ country + decade, list(fmean, fsd), w = ~ ODA, wFUN = list(fsum, fmax))),
-               unname(cbind(g$groups,
+  expect_equal(unname(oa(collap(wlddev, ~ country + decade, list(fmean, fsd), w = ~ ODA, wFUN = list(fsum, fmax)))),
+               unname(oa(cbind(g$groups,
                             fsum(get_vars(wlddev, 12), g, use.g.names = FALSE),
                             fmax(get_vars(wlddev, 12), g, use.g.names = FALSE),
                             fmean(get_vars(wlddev, c(4,9:11)), g, wlddev$ODA, use.g.names = FALSE),
                             fsd(get_vars(wlddev, c(4,9:11)), g, wlddev$ODA, use.g.names = FALSE),
-                            fmode(get_vars(wlddev, c(2:3,6:8)), g, wlddev$ODA, use.g.names = FALSE))[order(c(1,5,12,12,4,9:11,4,9:11,2:3,6:8))]))
-  expect_equal(unname(collap(wlddev, ~ country + decade, list(fmean, fsd), list(fmode, flast), w = ~ ODA, wFUN = list(fsum, fmax))),
-               unname(cbind(g$groups,
+                            fmode(get_vars(wlddev, c(2:3,6:8)), g, wlddev$ODA, use.g.names = FALSE)))[order(c(1,5,12,12,4,9:11,4,9:11,2:3,6:8))]))
+
+  expect_equal(unname(oa(collap(wlddev, ~ country + decade, list(fmean, fsd), list(fmode, flast), w = ~ ODA, wFUN = list(fsum, fmax)))),
+               unname(oa(cbind(g$groups,
                             fsum(get_vars(wlddev, 12), g, use.g.names = FALSE),
                             fmax(get_vars(wlddev, 12), g, use.g.names = FALSE),
                             fmean(get_vars(wlddev, c(4,9:11)), g, wlddev$ODA, use.g.names = FALSE),
                             fsd(get_vars(wlddev, c(4,9:11)), g, wlddev$ODA, use.g.names = FALSE),
                             fmode(get_vars(wlddev, c(2:3,6:8)), g, wlddev$ODA, use.g.names = FALSE),
-                            flast(get_vars(wlddev, c(2:3,6:8)), g, use.g.names = FALSE))[order(c(1,5,12,12,4,9:11,4,9:11,2:3,6:8,2:3,6:8))]))
+                            flast(get_vars(wlddev, c(2:3,6:8)), g, use.g.names = FALSE)))[order(c(1,5,12,12,4,9:11,4,9:11,2:3,6:8,2:3,6:8))]))
 })
 
 v1 <- c("year","PCGDP","LIFEEX","GINI")
 v2 <- c("iso3c","date","region","income", "OECD")
 test_that("collap weighted customized aggregation works as intended", {
   # Not keeping order ...
-  expect_equal(collap(wlddev, ~ country + decade, w = ~ ODA, custom = list(fmean = v1, fmode = v2), keep.col.order = FALSE, give.names = FALSE),
-               add_vars(g$groups,
+  expect_equal(oa(collap(wlddev, ~ country + decade, w = ~ ODA, custom = list(fmean = v1, fmode = v2), keep.col.order = FALSE, give.names = FALSE)),
+               oa(add_vars(g$groups,
                         fsum(get_vars(wlddev, "ODA"), g, use.g.names = FALSE),
                         fmean(get_vars(wlddev, c("year","PCGDP","LIFEEX","GINI")), g, wlddev$ODA, use.g.names = FALSE),
-                        fmode(get_vars(wlddev, c("iso3c","date","region","income", "OECD")), g, wlddev$ODA, use.g.names = FALSE)))
+                        fmode(get_vars(wlddev, c("iso3c","date","region","income", "OECD")), g, wlddev$ODA, use.g.names = FALSE))))
 
-  expect_equal(collap(wlddev, ~ country + decade, w = ~ ODA, custom = list(fmean = v1, fmode = v2), keep.col.order = FALSE, keep.by = FALSE, give.names = FALSE),
-               add_vars(fsum(get_vars(wlddev, "ODA"), g, use.g.names = FALSE),
+  expect_equal(unattrib(collap(wlddev, ~ country + decade, w = ~ ODA, custom = list(fmean = v1, fmode = v2), keep.col.order = FALSE, keep.by = FALSE, give.names = FALSE)),
+               unattrib(add_vars(fsum(get_vars(wlddev, "ODA"), g, use.g.names = FALSE),
                         fmean(get_vars(wlddev, c("year","PCGDP","LIFEEX","GINI")), g, wlddev$ODA, use.g.names = FALSE),
-                        fmode(get_vars(wlddev, c("iso3c","date","region","income", "OECD")), g, wlddev$ODA, use.g.names = FALSE)))
+                        fmode(get_vars(wlddev, c("iso3c","date","region","income", "OECD")), g, wlddev$ODA, use.g.names = FALSE))))
 
-  expect_equal(collap(wlddev, ~ country + decade, w = ~ ODA, custom = list(fmean = v1, fmode = v2), keep.col.order = FALSE, keep.w = FALSE, give.names = FALSE),
-               add_vars(g$groups, fmean(get_vars(wlddev, c("year","PCGDP","LIFEEX","GINI")), g, wlddev$ODA, use.g.names = FALSE),
-                        fmode(get_vars(wlddev, c("iso3c","date","region","income", "OECD")), g, wlddev$ODA, use.g.names = FALSE)))
+  expect_equal(oa(collap(wlddev, ~ country + decade, w = ~ ODA, custom = list(fmean = v1, fmode = v2), keep.col.order = FALSE, keep.w = FALSE, give.names = FALSE)),
+               oa(add_vars(g$groups, fmean(get_vars(wlddev, c("year","PCGDP","LIFEEX","GINI")), g, wlddev$ODA, use.g.names = FALSE),
+                        fmode(get_vars(wlddev, c("iso3c","date","region","income", "OECD")), g, wlddev$ODA, use.g.names = FALSE))))
 
-  expect_equal(collap(wlddev, ~ country + decade, w = ~ ODA, custom = list(fmean = v1, fmode = v2), keep.col.order = FALSE, keep.by = FALSE, keep.w = FALSE, give.names = FALSE),
-               add_vars(fmean(get_vars(wlddev, c("year","PCGDP","LIFEEX","GINI")), g, wlddev$ODA, use.g.names = FALSE),
-                        fmode(get_vars(wlddev, c("iso3c","date","region","income", "OECD")), g, wlddev$ODA, use.g.names = FALSE)))
+  expect_equal(oa(collap(wlddev, ~ country + decade, w = ~ ODA, custom = list(fmean = v1, fmode = v2), keep.col.order = FALSE, keep.by = FALSE, keep.w = FALSE, give.names = FALSE)),
+               oa(add_vars(fmean(get_vars(wlddev, c("year","PCGDP","LIFEEX","GINI")), g, wlddev$ODA, use.g.names = FALSE),
+                        fmode(get_vars(wlddev, c("iso3c","date","region","income", "OECD")), g, wlddev$ODA, use.g.names = FALSE))))
 
   # keeping order ...
-  expect_equal(collap(wlddev, ~ country + decade, w = ~ ODA, custom = list(fmean = v1, fmode = v2), give.names = FALSE),
-               add_vars(g$groups,
+  expect_equal(oa(collap(wlddev, ~ country + decade, w = ~ ODA, custom = list(fmean = v1, fmode = v2), give.names = FALSE)),
+               oa(add_vars(g$groups,
                         fsum(get_vars(wlddev, "ODA"), g, use.g.names = FALSE),
                         fmean(get_vars(wlddev, c("year","PCGDP","LIFEEX","GINI")), g, wlddev$ODA, use.g.names = FALSE),
-                        fmode(get_vars(wlddev, c("iso3c","date","region","income", "OECD")), g, wlddev$ODA, use.g.names = FALSE))[names(wlddev)])
+                        fmode(get_vars(wlddev, c("iso3c","date","region","income", "OECD")), g, wlddev$ODA, use.g.names = FALSE)))[names(wlddev)])
 
-  expect_equal(collap(wlddev, ~ country + decade, w = ~ ODA, keep.by = FALSE, custom = list(fmean = v1, fmode = v2), give.names = FALSE),
-               add_vars(fsum(get_vars(wlddev, "ODA"), g, use.g.names = FALSE),
+  expect_equal(oa(collap(wlddev, ~ country + decade, w = ~ ODA, keep.by = FALSE, custom = list(fmean = v1, fmode = v2), give.names = FALSE)),
+               oa(add_vars(fsum(get_vars(wlddev, "ODA"), g, use.g.names = FALSE),
                         fmean(get_vars(wlddev, c("year","PCGDP","LIFEEX","GINI")), g, wlddev$ODA, use.g.names = FALSE),
-                        fmode(get_vars(wlddev, c("iso3c","date","region","income", "OECD")), g, wlddev$ODA, use.g.names = FALSE))[setdiff(names(wlddev), g$group.vars)])
+                        fmode(get_vars(wlddev, c("iso3c","date","region","income", "OECD")), g, wlddev$ODA, use.g.names = FALSE)))[setdiff(names(wlddev), g$group.vars)])
 
-  expect_equal(collap(wlddev, ~ country + decade, w = ~ ODA, keep.w = FALSE, custom = list(fmean = v1, fmode = v2), give.names = FALSE),
-               add_vars(g$groups, fmean(get_vars(wlddev, c("year","PCGDP","LIFEEX","GINI")), g, wlddev$ODA, use.g.names = FALSE),
-                        fmode(get_vars(wlddev, c("iso3c","date","region","income", "OECD")), g, wlddev$ODA, use.g.names = FALSE))[setdiff(names(wlddev), "ODA")])
+  expect_equal(oa(collap(wlddev, ~ country + decade, w = ~ ODA, keep.w = FALSE, custom = list(fmean = v1, fmode = v2), give.names = FALSE)),
+               oa(add_vars(g$groups, fmean(get_vars(wlddev, c("year","PCGDP","LIFEEX","GINI")), g, wlddev$ODA, use.g.names = FALSE),
+                        fmode(get_vars(wlddev, c("iso3c","date","region","income", "OECD")), g, wlddev$ODA, use.g.names = FALSE)))[setdiff(names(wlddev), "ODA")])
 
-  expect_equal(collap(wlddev, ~ country + decade, w = ~ ODA, keep.by = FALSE, keep.w = FALSE, custom = list(fmean = v1, fmode = v2), give.names = FALSE),
-               add_vars(fmean(get_vars(wlddev, c("year","PCGDP","LIFEEX","GINI")), g, wlddev$ODA, use.g.names = FALSE),
-                        fmode(get_vars(wlddev, c("iso3c","date","region","income", "OECD")), g, wlddev$ODA, use.g.names = FALSE))[setdiff(names(wlddev), c(g$group.vars, "ODA"))])
+  expect_equal(oa(collap(wlddev, ~ country + decade, w = ~ ODA, keep.by = FALSE, keep.w = FALSE, custom = list(fmean = v1, fmode = v2), give.names = FALSE)),
+               oa(add_vars(fmean(get_vars(wlddev, c("year","PCGDP","LIFEEX","GINI")), g, wlddev$ODA, use.g.names = FALSE),
+                        fmode(get_vars(wlddev, c("iso3c","date","region","income", "OECD")), g, wlddev$ODA, use.g.names = FALSE)))[setdiff(names(wlddev), c(g$group.vars, "ODA"))])
 
 
 })
@@ -312,23 +349,28 @@ test_that("collap gives informative errors", {
 v <- c(1, 5)
 
 test_that("collapv performs as intended in simple uses", {
-  expect_equal(collapv(mtcars, 2), fmean(mtcars, mtcars$cyl, use.g.names = FALSE))
-  expect_equal(collapv(mtcars, 2, keep.by = FALSE), fmean(mtcars[-2], mtcars$cyl, use.g.names = FALSE))
-  expect_equal(collapv(iris, "Species", keep.by = FALSE), fmean(iris[-5], iris$Species, use.g.names = FALSE))
-  expect_equal(collapv(airquality, "Month", keep.by = FALSE), fmean(airquality[-5], airquality$Month, use.g.names = FALSE))
+  expect_equal(oa(collapv(mtcars, 2)),
+               oa(fmean(mtcars, mtcars$cyl, use.g.names = FALSE)))
+  expect_equal(oa(collapv(mtcars, 2, keep.by = FALSE)),
+               oa(fmean(mtcars[-2], mtcars$cyl, use.g.names = FALSE)))
+  expect_equal(oa(collapv(iris, "Species", keep.by = FALSE)),
+               oa(fmean(iris[-5], iris$Species, use.g.names = FALSE)))
+  expect_equal(oa(collapv(airquality, "Month", keep.by = FALSE)),
+               oa(fmean(airquality[-5], airquality$Month, use.g.names = FALSE)))
 
-  expect_equal(collapv(wlddev, v, keep.col.order = FALSE),
-               cbind(g$groups, fmean(get_vars(wlddev, c(4,9:12)), g, use.g.names = FALSE),
-                     fmode(get_vars(wlddev, c(2:3,6:8)), g, use.g.names = FALSE)))
-  expect_equal(collapv(wlddev, v),
-               cbind(g$groups, fmean(get_vars(wlddev, c(4,9:12)), g, use.g.names = FALSE),
-                     fmode(get_vars(wlddev, c(2:3,6:8)), g, use.g.names = FALSE))[order(c(1,5,4,9:12,2:3,6:8))])
-  expect_equal(collapv(wlddev, v, keep.col.order = FALSE, keep.by = FALSE),
-               cbind(fmean(get_vars(wlddev, c(4,9:12)), g, use.g.names = FALSE),
-                     fmode(get_vars(wlddev, c(2:3,6:8)), g, use.g.names = FALSE)))
-  expect_equal(collapv(wlddev, v, keep.by = FALSE),
-               cbind(fmean(get_vars(wlddev, c(4,9:12)), g, use.g.names = FALSE),
-                     fmode(get_vars(wlddev, c(2:3,6:8)), g, use.g.names = FALSE))[order(c(4,9:12,2:3,6:8))])
+  expect_equal(oa(collapv(wlddev, v, keep.col.order = FALSE)),
+               oa(cbind(g$groups, fmean(get_vars(wlddev, c(4,9:12)), g, use.g.names = FALSE),
+                     fmode(get_vars(wlddev, c(2:3,6:8)), g, use.g.names = FALSE))))
+
+  expect_equal(oa(collapv(wlddev, v)),
+               oa(cbind(g$groups, fmean(get_vars(wlddev, c(4,9:12)), g, use.g.names = FALSE),
+                     fmode(get_vars(wlddev, c(2:3,6:8)), g, use.g.names = FALSE)))[order(c(1,5,4,9:12,2:3,6:8))])
+  expect_equal(oa(collapv(wlddev, v, keep.col.order = FALSE, keep.by = FALSE)),
+               oa(cbind(fmean(get_vars(wlddev, c(4,9:12)), g, use.g.names = FALSE),
+                     fmode(get_vars(wlddev, c(2:3,6:8)), g, use.g.names = FALSE))))
+  expect_equal(oa(collapv(wlddev, v, keep.by = FALSE)),
+               oa(cbind(fmean(get_vars(wlddev, c(4,9:12)), g, use.g.names = FALSE),
+                     fmode(get_vars(wlddev, c(2:3,6:8)), g, use.g.names = FALSE)))[order(c(4,9:12,2:3,6:8))])
 
   expect_equal(names(collapv(wlddev, v,
                             custom = list(fmean = c(GDP = "PCGDP"), fsd = c("LIFEEX", GN = "GINI"), flast = "date"),
@@ -354,200 +396,220 @@ test_that("collapv preserves data attributes", {
 })
 
 test_that("collapv performs as intended in simple uses with base/stats functions", {
-  expect_equal(collapv(mtcars, "cyl", mean.default), fmean(mtcars, mtcars$cyl, use.g.names = FALSE))
-  expect_equal(collapv(mtcars, "cyl", mean), fmean(mtcars, mtcars$cyl, use.g.names = FALSE))
+  expect_equal(oa(collapv(mtcars, "cyl", mean.default)),
+               oa(fmean(mtcars, mtcars$cyl, use.g.names = FALSE)))
+  expect_equal(oa(collapv(mtcars, "cyl", mean)),
+               oa(fmean(mtcars, mtcars$cyl, use.g.names = FALSE)))
 
-  expect_equal(collapv(mtcars, 2, sum, keep.by = FALSE), fsum(mtcars[-2], mtcars$cyl, use.g.names = FALSE))
-  expect_equal(collapv(iris, 5, sum, keep.by = FALSE), fsum(iris[-5], iris$Species, use.g.names = FALSE))
-  expect_equal(collapv(airquality, "Month", sum, na.rm = TRUE, keep.by = FALSE), fsum(airquality[-5], airquality$Month, use.g.names = FALSE))
+  expect_equal(oa(collapv(mtcars, 2, sum, keep.by = FALSE)),
+               oa(fsum(mtcars[-2], mtcars$cyl, use.g.names = FALSE)))
+  expect_equal(oa(collapv(iris, 5, sum, keep.by = FALSE)),
+               oa(fsum(iris[-5], iris$Species, use.g.names = FALSE)))
+  expect_equal(oa(collapv(airquality, "Month", sum, na.rm = TRUE, keep.by = FALSE)),
+               oa(fsum(airquality[-5], airquality$Month, use.g.names = FALSE)))
 
-  expect_equal(collapv(wlddev, v, sum, Mode, na.rm = TRUE, keep.col.order = FALSE),
-               cbind(g$groups, BY(get_vars(wlddev, c(4,9:12)), g, sum, na.rm = TRUE, use.g.names = FALSE),
-                     BY(get_vars(wlddev, c(2:3,6:8)), g, Mode, na.rm = TRUE, use.g.names = FALSE)))
-  expect_equal(collapv(wlddev, v, sum, Mode, na.rm = TRUE),
-               cbind(g$groups, BY(get_vars(wlddev, c(4,9:12)), g, sum, na.rm = TRUE, use.g.names = FALSE),
-                     BY(get_vars(wlddev, c(2:3,6:8)), g, Mode, na.rm = TRUE, use.g.names = FALSE))[order(c(1,5,4,9:12,2:3,6:8))])
+  expect_equal(oa(collapv(wlddev, v, sum, Mode, na.rm = TRUE, keep.col.order = FALSE)),
+               oa(cbind(g$groups, BY(get_vars(wlddev, c(4,9:12)), g, sum, na.rm = TRUE, use.g.names = FALSE),
+                     BY(get_vars(wlddev, c(2:3,6:8)), g, Mode, na.rm = TRUE, use.g.names = FALSE))))
+  expect_equal(oa(collapv(wlddev, v, sum, Mode, na.rm = TRUE)),
+               oa(cbind(g$groups, BY(get_vars(wlddev, c(4,9:12)), g, sum, na.rm = TRUE, use.g.names = FALSE),
+                     BY(get_vars(wlddev, c(2:3,6:8)), g, Mode, na.rm = TRUE, use.g.names = FALSE)))[order(c(1,5,4,9:12,2:3,6:8))])
 })
 
 test_that("collapv using cols performs as intended", {
-  expect_equal(collapv(mtcars, 2, keep.by = FALSE, cols = 1), fmean(mtcars["mpg"], mtcars$cyl, use.g.names = FALSE))
-  expect_equal(collapv(mtcars, c("cyl", "vs", "am"), keep.by = FALSE, cols = c(6,1)), fmean(mtcars[c("mpg","wt")], mtcars[c("cyl","vs","am")], use.g.names = FALSE))
-  expect_equal(collapv(airquality, "Month", keep.by = FALSE), fmean(airquality[-5], airquality$Month, use.g.names = FALSE))
-  expect_equal(collapv(airquality, "Month", keep.by = FALSE, cols = 1:3), fmean(airquality[1:3], airquality$Month, use.g.names = FALSE))
+  expect_equal(oa(collapv(mtcars, 2, keep.by = FALSE, cols = 1)),
+               oa(fmean(mtcars["mpg"], mtcars$cyl, use.g.names = FALSE)))
+  expect_equal(oa(collapv(mtcars, c("cyl", "vs", "am"), keep.by = FALSE, cols = c(6,1))),
+               oa(fmean(mtcars[c("mpg","wt")], mtcars[c("cyl","vs","am")], use.g.names = FALSE)))
+  expect_equal(oa(collapv(airquality, "Month", keep.by = FALSE)),
+               oa(fmean(airquality[-5], airquality$Month, use.g.names = FALSE)))
+  expect_equal(oa(collapv(airquality, "Month", keep.by = FALSE, cols = 1:3)),
+               oa(fmean(airquality[1:3], airquality$Month, use.g.names = FALSE)))
 
-  expect_equal(collapv(wlddev, v, cols = 9:12), collap(wlddev, PCGDP + LIFEEX + GINI + ODA ~ country + decade))
-  expect_equal(collapv(wlddev, v, cols = 9:12), collap(wlddev, ~ country + decade, cols = 9:12, keep.col.order = FALSE))
-  expect_equal(collapv(wlddev, v, cols = c(2:3,6:8)), collap(wlddev, iso3c + date + region + income + OECD ~ country + decade))
-  expect_false(identical(collapv(wlddev, v, cols = c(2:3,6:8)), collap(wlddev, ~ country + decade, cols = c(2:3,6:8), keep.col.order = FALSE)))
+  expect_equal(oa(collapv(wlddev, v, cols = 9:12)),
+               oa(collap(wlddev, PCGDP + LIFEEX + GINI + ODA ~ country + decade)))
+  expect_equal(oa(collapv(wlddev, v, cols = 9:12)),
+               oa(collap(wlddev, ~ country + decade, cols = 9:12, keep.col.order = FALSE)))
+  expect_equal(oa(collapv(wlddev, v, cols = c(2:3,6:8))),
+               oa(collap(wlddev, iso3c + date + region + income + OECD ~ country + decade)))
+  expect_false(identical(collapv(wlddev, v, cols = c(2:3,6:8)),
+                         collap(wlddev, ~ country + decade, cols = c(2:3,6:8), keep.col.order = FALSE)))
 
-  expect_equal(collapv(wlddev, v, cols = 9:12, keep.by = FALSE), collap(wlddev, PCGDP + LIFEEX + GINI + ODA ~ country + decade, keep.by = FALSE))
-  expect_equal(collapv(wlddev, v, cols = 9:12, keep.by = FALSE), collap(wlddev, ~ country + decade, cols = 9:12, keep.col.order = FALSE, keep.by = FALSE))
-  expect_equal(collapv(wlddev, v, cols = c(2:3,6:8), keep.by = FALSE), collap(wlddev, iso3c + date + region + income + OECD ~ country + decade, keep.by = FALSE))
-  expect_equal(collapv(wlddev, v, cols = c(2:3,6:8), keep.by = FALSE), collap(wlddev, ~ country + decade, cols = c(2:3,6:8), keep.col.order = FALSE, keep.by = FALSE))
+  expect_equal(oa(collapv(wlddev, v, cols = 9:12, keep.by = FALSE)),
+               oa(collap(wlddev, PCGDP + LIFEEX + GINI + ODA ~ country + decade, keep.by = FALSE)))
+  expect_equal(oa(collapv(wlddev, v, cols = 9:12, keep.by = FALSE)),
+               oa(collap(wlddev, ~ country + decade, cols = 9:12, keep.col.order = FALSE, keep.by = FALSE)))
+  expect_equal(oa(collapv(wlddev, v, cols = c(2:3,6:8), keep.by = FALSE)),
+               oa(collap(wlddev, iso3c + date + region + income + OECD ~ country + decade, keep.by = FALSE)))
+  expect_equal(oa(collapv(wlddev, v, cols = c(2:3,6:8), keep.by = FALSE)),
+               oa(collap(wlddev, ~ country + decade, cols = c(2:3,6:8), keep.col.order = FALSE, keep.by = FALSE)))
 
 })
 
 test_that("collapv multi-function aggreagtion performs as intended", {
-  expect_equal(collapv(wlddev, v, list(fmean, fmedian), keep.col.order = FALSE, give.names = FALSE),
-               cbind(g$groups, fmean(get_vars(wlddev, c(4,9:12)), g, use.g.names = FALSE), fmedian(get_vars(wlddev, c(4,9:12)), g, use.g.names = FALSE),
-                     fmode(get_vars(wlddev, c(2:3,6:8)), g, use.g.names = FALSE)))
-  expect_equal(collapv(wlddev, v, list(fmean, fmedian), list(fmode, flast), keep.col.order = FALSE, give.names = FALSE),
-               cbind(g$groups, fmean(get_vars(wlddev, c(4,9:12)), g, use.g.names = FALSE), fmedian(get_vars(wlddev, c(4,9:12)), g, use.g.names = FALSE),
-                     fmode(get_vars(wlddev, c(2:3,6:8)), g, use.g.names = FALSE), flast(get_vars(wlddev, c(2:3,6:8)), g, use.g.names = FALSE)))
+
+  expect_equal(oa(collapv(wlddev, v, list(fmean, fmedian), keep.col.order = FALSE, give.names = FALSE)),
+               oa(cbind(g$groups, fmean(get_vars(wlddev, c(4,9:12)), g, use.g.names = FALSE), fmedian(get_vars(wlddev, c(4,9:12)), g, use.g.names = FALSE),
+                     fmode(get_vars(wlddev, c(2:3,6:8)), g, use.g.names = FALSE))))
+  expect_equal(oa(collapv(wlddev, v, list(fmean, fmedian), list(fmode, flast), keep.col.order = FALSE, give.names = FALSE)),
+               oa(cbind(g$groups, fmean(get_vars(wlddev, c(4,9:12)), g, use.g.names = FALSE), fmedian(get_vars(wlddev, c(4,9:12)), g, use.g.names = FALSE),
+                     fmode(get_vars(wlddev, c(2:3,6:8)), g, use.g.names = FALSE), flast(get_vars(wlddev, c(2:3,6:8)), g, use.g.names = FALSE))))
   # with column ordering:
-  expect_equal(unname(collapv(wlddev, v, list(fmean, fmedian))),
-               unname(cbind(g$groups, fmean(get_vars(wlddev, c(4,9:12)), g, use.g.names = FALSE), fmedian(get_vars(wlddev, c(4,9:12)), g, use.g.names = FALSE),
-                            fmode(get_vars(wlddev, c(2:3,6:8)), g, use.g.names = FALSE))[order(c(1,5,4,9:12,4,9:12,2:3,6:8))]))
-  expect_equal(unname(collapv(wlddev, v, list(fmean, fmedian), list(fmode, flast))),
-               unname(cbind(g$groups, fmean(get_vars(wlddev, c(4,9:12)), g, use.g.names = FALSE), fmedian(get_vars(wlddev, c(4,9:12)), g, use.g.names = FALSE),
-                            fmode(get_vars(wlddev, c(2:3,6:8)), g, use.g.names = FALSE), flast(get_vars(wlddev, c(2:3,6:8)), g, use.g.names = FALSE))[order(c(1,5,4,9:12,4,9:12,2:3,6:8,2:3,6:8))]))
+  expect_equal(unname(oa(collapv(wlddev, v, list(fmean, fmedian)))),
+               unname(oa(cbind(g$groups, fmean(get_vars(wlddev, c(4,9:12)), g, use.g.names = FALSE), fmedian(get_vars(wlddev, c(4,9:12)), g, use.g.names = FALSE),
+                            fmode(get_vars(wlddev, c(2:3,6:8)), g, use.g.names = FALSE)))[order(c(1,5,4,9:12,4,9:12,2:3,6:8))]))
+  expect_equal(unname(oa(collapv(wlddev, v, list(fmean, fmedian), list(fmode, flast)))),
+               unname(oa(cbind(g$groups, fmean(get_vars(wlddev, c(4,9:12)), g, use.g.names = FALSE), fmedian(get_vars(wlddev, c(4,9:12)), g, use.g.names = FALSE),
+                            fmode(get_vars(wlddev, c(2:3,6:8)), g, use.g.names = FALSE), flast(get_vars(wlddev, c(2:3,6:8)), g, use.g.names = FALSE)))[order(c(1,5,4,9:12,4,9:12,2:3,6:8,2:3,6:8))]))
 })
 
 test_that("collapv custom aggreagtion performs as intended", {
-  expect_equal(unname(collapv(wlddev, v,
-                             custom = list(fmean = 9:12, fsd = 9:10, fmode = 7:8), keep.col.order = FALSE)),
-               unname(cbind(g$groups, fmean(wlddev[9:12], g, use.g.names = FALSE),
+  expect_equal(unname(oa(collapv(wlddev, v,
+                             custom = list(fmean = 9:12, fsd = 9:10, fmode = 7:8), keep.col.order = FALSE))),
+               unname(oa(cbind(g$groups, fmean(wlddev[9:12], g, use.g.names = FALSE),
                             fsd(wlddev[9:10], g, use.g.names = FALSE),
-                            fmode(wlddev[7:8], g, use.g.names = FALSE))))
-  expect_equal(unname(collapv(wlddev, v,
-                             custom = list(fmean = 9:12, fsd = 9:10, fmode = 7:8))),
-               unname(cbind(g$groups, fmean(wlddev[9:12], g, use.g.names = FALSE),
+                            fmode(wlddev[7:8], g, use.g.names = FALSE)))))
+  expect_equal(unname(oa(collapv(wlddev, v,
+                             custom = list(fmean = 9:12, fsd = 9:10, fmode = 7:8)))),
+               unname(oa(cbind(g$groups, fmean(wlddev[9:12], g, use.g.names = FALSE),
                             fsd(wlddev[9:10], g, use.g.names = FALSE),
-                            fmode(wlddev[7:8], g, use.g.names = FALSE))[order(c(1,5,9:12,9:10,7:8))]))
+                            fmode(wlddev[7:8], g, use.g.names = FALSE)))[order(c(1,5,9:12,9:10,7:8))]))
 
-  expect_equal(collapv(wlddev, v,
-                      custom = list(fmean = 9:12, fsd = 9:10, fmode = 7:8)),
-               collapv(wlddev, v,
-                      custom = list(fmean = 9:12, fsd = c("PCGDP","LIFEEX"), fmode = 7:8)))
-  expect_equal(collapv(wlddev, v,
-                      custom = list(fmean = "PCGDP", fsd = c("LIFEEX","GINI"), flast = "date")),
-               collapv(wlddev, v,
-                      custom = list(fmean = "PCGDP", fsd = 10:11, flast = "date")))
+  expect_equal(oa(collapv(wlddev, v,
+                      custom = list(fmean = 9:12, fsd = 9:10, fmode = 7:8))),
+               oa(collapv(wlddev, v,
+                      custom = list(fmean = 9:12, fsd = c("PCGDP","LIFEEX"), fmode = 7:8))))
+  expect_equal(oa(collapv(wlddev, v,
+                      custom = list(fmean = "PCGDP", fsd = c("LIFEEX","GINI"), flast = "date"))),
+               oa(collapv(wlddev, v,
+                      custom = list(fmean = "PCGDP", fsd = 10:11, flast = "date"))))
 
-  expect_equal(collapv(wlddev, v,
-                      custom = list(fmean = 9:12, fsd = 9:10, fmode = 7:8)),
-               collapv(wlddev, v,
-                      custom = list(fmean = 9:12, fsd = c("PCGDP","LIFEEX"), fmode = 7:8)))
-  expect_equal(collapv(wlddev, v,
-                      custom = list(fmean = "PCGDP", fsd = c("LIFEEX","GINI"), flast = "date")),
-               collapv(wlddev, v,
-                      custom = list(fmean = "PCGDP", fsd = 10:11, flast = "date")))
+  expect_equal(oa(collapv(wlddev, v,
+                      custom = list(fmean = 9:12, fsd = 9:10, fmode = 7:8))),
+               oa(collapv(wlddev, v,
+                      custom = list(fmean = 9:12, fsd = c("PCGDP","LIFEEX"), fmode = 7:8))))
+  expect_equal(oa(collapv(wlddev, v,
+                      custom = list(fmean = "PCGDP", fsd = c("LIFEEX","GINI"), flast = "date"))),
+               oa(collapv(wlddev, v,
+                      custom = list(fmean = "PCGDP", fsd = 10:11, flast = "date"))))
 
 })
 
 test_that("collapv weighted aggregations work as intended", {
   # Not keeping order ...
-  expect_equal(collapv(wlddev, v, w = "ODA", keep.col.order = FALSE),
-               add_vars(g$groups,
+  expect_equal(oa(collapv(wlddev, v, w = "ODA", keep.col.order = FALSE)),
+               oa(add_vars(g$groups,
                         fsum(get_vars(wlddev, "ODA"), g, use.g.names = FALSE),
                         fmean(get_vars(wlddev, c("year","PCGDP","LIFEEX","GINI")), g, wlddev$ODA, use.g.names = FALSE),
-                        fmode(get_vars(wlddev, c("iso3c","date","region","income", "OECD")), g, wlddev$ODA, use.g.names = FALSE)))
+                        fmode(get_vars(wlddev, c("iso3c","date","region","income", "OECD")), g, wlddev$ODA, use.g.names = FALSE))))
 
-  expect_equal(collapv(wlddev, v, w = "ODA", keep.col.order = FALSE, keep.by = FALSE),
-               add_vars(fsum(get_vars(wlddev, "ODA"), g, use.g.names = FALSE),
+  expect_equal(oa(collapv(wlddev, v, w = "ODA", keep.col.order = FALSE, keep.by = FALSE)),
+               oa(add_vars(fsum(get_vars(wlddev, "ODA"), g, use.g.names = FALSE),
                         fmean(get_vars(wlddev, c("year","PCGDP","LIFEEX","GINI")), g, wlddev$ODA, use.g.names = FALSE),
-                        fmode(get_vars(wlddev, c("iso3c","date","region","income", "OECD")), g, wlddev$ODA, use.g.names = FALSE)))
+                        fmode(get_vars(wlddev, c("iso3c","date","region","income", "OECD")), g, wlddev$ODA, use.g.names = FALSE))))
 
-  expect_equal(collapv(wlddev, v, w = "ODA", keep.col.order = FALSE, keep.w = FALSE),
-               add_vars(g$groups, fmean(get_vars(wlddev, c("year","PCGDP","LIFEEX","GINI")), g, wlddev$ODA, use.g.names = FALSE),
-                        fmode(get_vars(wlddev, c("iso3c","date","region","income", "OECD")), g, wlddev$ODA, use.g.names = FALSE)))
+  expect_equal(oa(collapv(wlddev, v, w = "ODA", keep.col.order = FALSE, keep.w = FALSE)),
+               oa(add_vars(g$groups, fmean(get_vars(wlddev, c("year","PCGDP","LIFEEX","GINI")), g, wlddev$ODA, use.g.names = FALSE),
+                        fmode(get_vars(wlddev, c("iso3c","date","region","income", "OECD")), g, wlddev$ODA, use.g.names = FALSE))))
 
-  expect_equal(collapv(wlddev, v, w = "ODA", keep.col.order = FALSE, keep.by = FALSE, keep.w = FALSE),
-               add_vars(fmean(get_vars(wlddev, c("year","PCGDP","LIFEEX","GINI")), g, wlddev$ODA, use.g.names = FALSE),
-                        fmode(get_vars(wlddev, c("iso3c","date","region","income", "OECD")), g, wlddev$ODA, use.g.names = FALSE)))
+  expect_equal(oa(collapv(wlddev, v, w = "ODA", keep.col.order = FALSE, keep.by = FALSE, keep.w = FALSE)),
+               oa(add_vars(fmean(get_vars(wlddev, c("year","PCGDP","LIFEEX","GINI")), g, wlddev$ODA, use.g.names = FALSE),
+                        fmode(get_vars(wlddev, c("iso3c","date","region","income", "OECD")), g, wlddev$ODA, use.g.names = FALSE))))
 
   # keeping order ...
-  expect_equal(collapv(wlddev, v, w = "ODA"),
-               add_vars(g$groups,
+  expect_equal(oa(collapv(wlddev, v, w = "ODA")),
+               oa(add_vars(g$groups,
                         fsum(get_vars(wlddev, "ODA"), g, use.g.names = FALSE),
                         fmean(get_vars(wlddev, c("year","PCGDP","LIFEEX","GINI")), g, wlddev$ODA, use.g.names = FALSE),
-                        fmode(get_vars(wlddev, c("iso3c","date","region","income", "OECD")), g, wlddev$ODA, use.g.names = FALSE))[names(wlddev)])
+                        fmode(get_vars(wlddev, c("iso3c","date","region","income", "OECD")), g, wlddev$ODA, use.g.names = FALSE)))[names(wlddev)])
 
-  expect_equal(collapv(wlddev, v, w = "ODA", keep.by = FALSE),
-               add_vars(fsum(get_vars(wlddev, "ODA"), g, use.g.names = FALSE),
+  expect_equal(oa(collapv(wlddev, v, w = "ODA", keep.by = FALSE)),
+               oa(add_vars(fsum(get_vars(wlddev, "ODA"), g, use.g.names = FALSE),
                         fmean(get_vars(wlddev, c("year","PCGDP","LIFEEX","GINI")), g, wlddev$ODA, use.g.names = FALSE),
-                        fmode(get_vars(wlddev, c("iso3c","date","region","income", "OECD")), g, wlddev$ODA, use.g.names = FALSE))[setdiff(names(wlddev), g$group.vars)])
+                        fmode(get_vars(wlddev, c("iso3c","date","region","income", "OECD")), g, wlddev$ODA, use.g.names = FALSE)))[setdiff(names(wlddev), g$group.vars)])
 
-  expect_equal(collapv(wlddev, v, w = "ODA", keep.w = FALSE),
-               add_vars(g$groups, fmean(get_vars(wlddev, c("year","PCGDP","LIFEEX","GINI")), g, wlddev$ODA, use.g.names = FALSE),
-                        fmode(get_vars(wlddev, c("iso3c","date","region","income", "OECD")), g, wlddev$ODA, use.g.names = FALSE))[setdiff(names(wlddev), "ODA")])
+  expect_equal(oa(collapv(wlddev, v, w = "ODA", keep.w = FALSE)),
+               oa(add_vars(g$groups, fmean(get_vars(wlddev, c("year","PCGDP","LIFEEX","GINI")), g, wlddev$ODA, use.g.names = FALSE),
+                        fmode(get_vars(wlddev, c("iso3c","date","region","income", "OECD")), g, wlddev$ODA, use.g.names = FALSE)))[setdiff(names(wlddev), "ODA")])
 
-  expect_equal(collapv(wlddev, v, w = "ODA", keep.by = FALSE, keep.w = FALSE),
-               add_vars(fmean(get_vars(wlddev, c("year","PCGDP","LIFEEX","GINI")), g, wlddev$ODA, use.g.names = FALSE),
-                        fmode(get_vars(wlddev, c("iso3c","date","region","income", "OECD")), g, wlddev$ODA, use.g.names = FALSE))[setdiff(names(wlddev), c(g$group.vars, "ODA"))])
+  expect_equal(oa(collapv(wlddev, v, w = "ODA", keep.by = FALSE, keep.w = FALSE)),
+               oa(add_vars(fmean(get_vars(wlddev, c("year","PCGDP","LIFEEX","GINI")), g, wlddev$ODA, use.g.names = FALSE),
+                        fmode(get_vars(wlddev, c("iso3c","date","region","income", "OECD")), g, wlddev$ODA, use.g.names = FALSE)))[setdiff(names(wlddev), c(g$group.vars, "ODA"))])
 
 
 })
 
 test_that("collapv multi-function aggreagtion with weights performs as intended", {
-  expect_equal(collapv(wlddev, v, list(fmean, fsd), w = "ODA", keep.col.order = FALSE, give.names = FALSE),
-               cbind(g$groups, fsum(get_vars(wlddev, 12), g, use.g.names = FALSE), fmean(get_vars(wlddev, c(4,9:11)), g, wlddev$ODA, use.g.names = FALSE),
+
+  expect_equal(oa(collapv(wlddev, v, list(fmean, fsd), w = "ODA", keep.col.order = FALSE, give.names = FALSE)),
+               oa(cbind(g$groups, fsum(get_vars(wlddev, 12), g, use.g.names = FALSE), fmean(get_vars(wlddev, c(4,9:11)), g, wlddev$ODA, use.g.names = FALSE),
                      fsd(get_vars(wlddev, c(4,9:11)), g, wlddev$ODA, use.g.names = FALSE),
-                     fmode(get_vars(wlddev, c(2:3,6:8)), g, wlddev$ODA, use.g.names = FALSE)))
-  expect_equal(collapv(wlddev, v, list(fmean, fsd), list(fmode, flast), w = "ODA", keep.col.order = FALSE, give.names = FALSE),
-               cbind(g$groups, fsum(get_vars(wlddev, 12), g, use.g.names = FALSE), fmean(get_vars(wlddev, c(4,9:11)), g, wlddev$ODA, use.g.names = FALSE),
+                     fmode(get_vars(wlddev, c(2:3,6:8)), g, wlddev$ODA, use.g.names = FALSE))))
+  expect_equal(oa(collapv(wlddev, v, list(fmean, fsd), list(fmode, flast), w = "ODA", keep.col.order = FALSE, give.names = FALSE)),
+               oa(cbind(g$groups, fsum(get_vars(wlddev, 12), g, use.g.names = FALSE), fmean(get_vars(wlddev, c(4,9:11)), g, wlddev$ODA, use.g.names = FALSE),
                      fsd(get_vars(wlddev, c(4,9:11)), g, wlddev$ODA, use.g.names = FALSE),
-                     fmode(get_vars(wlddev, c(2:3,6:8)), g, wlddev$ODA, use.g.names = FALSE), flast(get_vars(wlddev, c(2:3,6:8)), g, use.g.names = FALSE)))
+                     fmode(get_vars(wlddev, c(2:3,6:8)), g, wlddev$ODA, use.g.names = FALSE), flast(get_vars(wlddev, c(2:3,6:8)), g, use.g.names = FALSE))))
   # with column ordering:
-  expect_equal(unname(collapv(wlddev, v, list(fmean, fsd), w = "ODA", wFUN = list(fsum, fmax))),
-               unname(cbind(g$groups,
+  expect_equal(unname(oa(collapv(wlddev, v, list(fmean, fsd), w = "ODA", wFUN = list(fsum, fmax)))),
+               unname(oa(cbind(g$groups,
                             fsum(get_vars(wlddev, 12), g, use.g.names = FALSE),
                             fmax(get_vars(wlddev, 12), g, use.g.names = FALSE),
                             fmean(get_vars(wlddev, c(4,9:11)), g, wlddev$ODA, use.g.names = FALSE),
                             fsd(get_vars(wlddev, c(4,9:11)), g, wlddev$ODA, use.g.names = FALSE),
-                            fmode(get_vars(wlddev, c(2:3,6:8)), g, wlddev$ODA, use.g.names = FALSE))[order(c(1,5,12,12,4,9:11,4,9:11,2:3,6:8))]))
-  expect_equal(unname(collapv(wlddev, v, list(fmean, fsd), list(fmode, flast), w = "ODA", wFUN = list(fsum, fmax))),
-               unname(cbind(g$groups,
+                            fmode(get_vars(wlddev, c(2:3,6:8)), g, wlddev$ODA, use.g.names = FALSE)))[order(c(1,5,12,12,4,9:11,4,9:11,2:3,6:8))]))
+
+  expect_equal(unattrib(collapv(wlddev, v, list(fmean, fsd), list(fmode, flast), w = "ODA", wFUN = list(fsum, fmax))),
+               unattrib(cbind(g$groups,
                             fsum(get_vars(wlddev, 12), g, use.g.names = FALSE),
                             fmax(get_vars(wlddev, 12), g, use.g.names = FALSE),
                             fmean(get_vars(wlddev, c(4,9:11)), g, wlddev$ODA, use.g.names = FALSE),
                             fsd(get_vars(wlddev, c(4,9:11)), g, wlddev$ODA, use.g.names = FALSE),
                             fmode(get_vars(wlddev, c(2:3,6:8)), g, wlddev$ODA, use.g.names = FALSE),
-                            flast(get_vars(wlddev, c(2:3,6:8)), g, use.g.names = FALSE))[order(c(1,5,12,12,4,9:11,4,9:11,2:3,6:8,2:3,6:8))]))
+                            flast(get_vars(wlddev, c(2:3,6:8)), g, use.g.names = FALSE)))[order(c(1,5,12,12,4,9:11,4,9:11,2:3,6:8,2:3,6:8))])
 })
 
 v1 <- c("year","PCGDP","LIFEEX","GINI")
 v2 <- c("iso3c","date","region","income", "OECD")
 test_that("collapv weighted customized aggregation works as intended", {
   # Not keeping order ...
-  expect_equal(collapv(wlddev, v, w = "ODA", custom = list(fmean = v1, fmode = v2), keep.col.order = FALSE, give.names = FALSE),
-               add_vars(g$groups,
+  expect_equal(oa(collapv(wlddev, v, w = "ODA", custom = list(fmean = v1, fmode = v2), keep.col.order = FALSE, give.names = FALSE)),
+               oa(add_vars(g$groups,
                         fsum(get_vars(wlddev, "ODA"), g, use.g.names = FALSE),
                         fmean(get_vars(wlddev, c("year","PCGDP","LIFEEX","GINI")), g, wlddev$ODA, use.g.names = FALSE),
-                        fmode(get_vars(wlddev, c("iso3c","date","region","income", "OECD")), g, wlddev$ODA, use.g.names = FALSE)))
+                        fmode(get_vars(wlddev, c("iso3c","date","region","income", "OECD")), g, wlddev$ODA, use.g.names = FALSE))))
 
-  expect_equal(collapv(wlddev, v, w = "ODA", custom = list(fmean = v1, fmode = v2), keep.col.order = FALSE, keep.by = FALSE, give.names = FALSE),
-               add_vars(fsum(get_vars(wlddev, "ODA"), g, use.g.names = FALSE),
+  expect_equal(unattrib(collapv(wlddev, v, w = "ODA", custom = list(fmean = v1, fmode = v2), keep.col.order = FALSE, keep.by = FALSE, give.names = FALSE)),
+               unattrib(add_vars(fsum(get_vars(wlddev, "ODA"), g, use.g.names = FALSE),
                         fmean(get_vars(wlddev, c("year","PCGDP","LIFEEX","GINI")), g, wlddev$ODA, use.g.names = FALSE),
-                        fmode(get_vars(wlddev, c("iso3c","date","region","income", "OECD")), g, wlddev$ODA, use.g.names = FALSE)))
+                        fmode(get_vars(wlddev, c("iso3c","date","region","income", "OECD")), g, wlddev$ODA, use.g.names = FALSE))))
 
-  expect_equal(collapv(wlddev, v, w = "ODA", custom = list(fmean = v1, fmode = v2), keep.col.order = FALSE, keep.w = FALSE, give.names = FALSE),
-               add_vars(g$groups, fmean(get_vars(wlddev, c("year","PCGDP","LIFEEX","GINI")), g, wlddev$ODA, use.g.names = FALSE),
-                        fmode(get_vars(wlddev, c("iso3c","date","region","income", "OECD")), g, wlddev$ODA, use.g.names = FALSE)))
+  expect_equal(oa(collapv(wlddev, v, w = "ODA", custom = list(fmean = v1, fmode = v2), keep.col.order = FALSE, keep.w = FALSE, give.names = FALSE)),
+               oa(add_vars(g$groups, fmean(get_vars(wlddev, c("year","PCGDP","LIFEEX","GINI")), g, wlddev$ODA, use.g.names = FALSE),
+                        fmode(get_vars(wlddev, c("iso3c","date","region","income", "OECD")), g, wlddev$ODA, use.g.names = FALSE))))
 
-  expect_equal(collapv(wlddev, v, w = "ODA", custom = list(fmean = v1, fmode = v2), keep.col.order = FALSE, keep.by = FALSE, keep.w = FALSE, give.names = FALSE),
-               add_vars(fmean(get_vars(wlddev, c("year","PCGDP","LIFEEX","GINI")), g, wlddev$ODA, use.g.names = FALSE),
-                        fmode(get_vars(wlddev, c("iso3c","date","region","income", "OECD")), g, wlddev$ODA, use.g.names = FALSE)))
+  expect_equal(oa(collapv(wlddev, v, w = "ODA", custom = list(fmean = v1, fmode = v2), keep.col.order = FALSE, keep.by = FALSE, keep.w = FALSE, give.names = FALSE)),
+               oa(add_vars(fmean(get_vars(wlddev, c("year","PCGDP","LIFEEX","GINI")), g, wlddev$ODA, use.g.names = FALSE),
+                        fmode(get_vars(wlddev, c("iso3c","date","region","income", "OECD")), g, wlddev$ODA, use.g.names = FALSE))))
 
   # keeping order ...
-  expect_equal(collapv(wlddev, v, w = "ODA", custom = list(fmean = v1, fmode = v2), give.names = FALSE),
-               add_vars(g$groups,
+  expect_equal(oa(collapv(wlddev, v, w = "ODA", custom = list(fmean = v1, fmode = v2), give.names = FALSE)),
+               oa(add_vars(g$groups,
                         fsum(get_vars(wlddev, "ODA"), g, use.g.names = FALSE),
                         fmean(get_vars(wlddev, c("year","PCGDP","LIFEEX","GINI")), g, wlddev$ODA, use.g.names = FALSE),
-                        fmode(get_vars(wlddev, c("iso3c","date","region","income", "OECD")), g, wlddev$ODA, use.g.names = FALSE))[names(wlddev)])
+                        fmode(get_vars(wlddev, c("iso3c","date","region","income", "OECD")), g, wlddev$ODA, use.g.names = FALSE)))[names(wlddev)])
 
-  expect_equal(collapv(wlddev, v, w = "ODA", keep.by = FALSE, custom = list(fmean = v1, fmode = v2), give.names = FALSE),
-               add_vars(fsum(get_vars(wlddev, "ODA"), g, use.g.names = FALSE),
+  expect_equal(oa(collapv(wlddev, v, w = "ODA", keep.by = FALSE, custom = list(fmean = v1, fmode = v2), give.names = FALSE)),
+               oa(add_vars(fsum(get_vars(wlddev, "ODA"), g, use.g.names = FALSE),
                         fmean(get_vars(wlddev, c("year","PCGDP","LIFEEX","GINI")), g, wlddev$ODA, use.g.names = FALSE),
-                        fmode(get_vars(wlddev, c("iso3c","date","region","income", "OECD")), g, wlddev$ODA, use.g.names = FALSE))[setdiff(names(wlddev), g$group.vars)])
+                        fmode(get_vars(wlddev, c("iso3c","date","region","income", "OECD")), g, wlddev$ODA, use.g.names = FALSE)))[setdiff(names(wlddev), g$group.vars)])
 
-  expect_equal(collapv(wlddev, v, w = "ODA", keep.w = FALSE, custom = list(fmean = v1, fmode = v2), give.names = FALSE),
-               add_vars(g$groups, fmean(get_vars(wlddev, c("year","PCGDP","LIFEEX","GINI")), g, wlddev$ODA, use.g.names = FALSE),
-                        fmode(get_vars(wlddev, c("iso3c","date","region","income", "OECD")), g, wlddev$ODA, use.g.names = FALSE))[setdiff(names(wlddev), "ODA")])
+  expect_equal(oa(collapv(wlddev, v, w = "ODA", keep.w = FALSE, custom = list(fmean = v1, fmode = v2), give.names = FALSE)),
+               oa(add_vars(g$groups, fmean(get_vars(wlddev, c("year","PCGDP","LIFEEX","GINI")), g, wlddev$ODA, use.g.names = FALSE),
+                        fmode(get_vars(wlddev, c("iso3c","date","region","income", "OECD")), g, wlddev$ODA, use.g.names = FALSE)))[setdiff(names(wlddev), "ODA")])
 
-  expect_equal(collapv(wlddev, v, w = "ODA", keep.by = FALSE, keep.w = FALSE, custom = list(fmean = v1, fmode = v2), give.names = FALSE),
-               add_vars(fmean(get_vars(wlddev, c("year","PCGDP","LIFEEX","GINI")), g, wlddev$ODA, use.g.names = FALSE),
-                        fmode(get_vars(wlddev, c("iso3c","date","region","income", "OECD")), g, wlddev$ODA, use.g.names = FALSE))[setdiff(names(wlddev), c(g$group.vars, "ODA"))])
+  expect_equal(oa(collapv(wlddev, v, w = "ODA", keep.by = FALSE, keep.w = FALSE, custom = list(fmean = v1, fmode = v2), give.names = FALSE)),
+               oa(add_vars(fmean(get_vars(wlddev, c("year","PCGDP","LIFEEX","GINI")), g, wlddev$ODA, use.g.names = FALSE),
+                        fmode(get_vars(wlddev, c("iso3c","date","region","income", "OECD")), g, wlddev$ODA, use.g.names = FALSE)))[setdiff(names(wlddev), c(g$group.vars, "ODA"))])
 
 
 })
