@@ -193,6 +193,8 @@ fcompute <- function(.data, ..., keep = NULL) { # within ?
       e <- c(temp, e[!pos])
     } else e <- c(.subset(.data, keep), e)
   }
+  if(inherits(.data, "sf") && !any(names(e) == attr(.data, "sf_column")))
+        e <- c(e, .subset(.data, attr(.data, "sf_column")))
   ax[["names"]] <- names(e)
   le <- lengths(e, FALSE)
   nr <- fnrow2(.data)
