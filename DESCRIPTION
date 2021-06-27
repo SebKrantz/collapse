@@ -36,7 +36,7 @@ Description: A C/C++ based package for advanced data transformation and
         higher-dimensional centering (i.e. multiple fixed effects transformations), 
         linear prediction / partialling-out, linear model fitting and testing.
     (4) Advanced time-computations: Fast (sequences of) lags / leads, and 
-        (lagged / leaded, iterated, quasi-, log-) differences and (compounded) 
+        (lagged / leaded, iterated, quasi-, log-) differences, (compounded) 
         growth rates, and cumulative sums on (unordered, irregular) time series and 
         panel data. Multivariate auto-, partial- and cross-correlation functions for panel data. 
         Panel data to (ts-)array conversions.

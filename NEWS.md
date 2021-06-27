@@ -45,7 +45,7 @@ This is done in a very careful manor, the others will stick around for a long wh
 
 * The plot method for panel series matrices and arrays `plot.psmat` was improved slightly. It now supports custom colours and drawing of a grid. 
 
-* `settransform` and `settransformv` can now be called without attaching the package e.g. `collapse::settransform(data, ...)`. These errored before when *collapse* is not loaded because they are simply wrappers around `data <- ftransform(data, ...)`. I'd like to note from a discussion that contrary to some views held in the *data.table* community, avoiding shallow copies with `<-` (e.g. via `:=`) in my experience does not yield noticeable performance gains, as you may verify with any large dataset. Where *data.table* is faster on big data this mostly has to do with paralellism and sometimes with algorithms, generally not memory efficiency.
+* `settransform` and `settransformv` can now be called without attaching the package e.g. `collapse::settransform(data, ...)`. These errored before when *collapse* is not loaded because they are simply wrappers around `data <- ftransform(data, ...)`. I'd like to note from a [discussion](https://github.com/SebKrantz/collapse/issues/136) that avoiding shallow copies with `<-` (e.g. via `:=`) does not appear to yield noticeable performance gains. Where *data.table* is faster on big data this mostly has to do with parallelism and sometimes with algorithms, generally not memory efficiency.
 
 * Functions `setAttrib`, `copyAttrib` and `copyMostAttrib` only make a shallow copy of lists, not of atomic vectors (which amounts to doing a full copy and is inefficient). Thus atomic objects are now modified in-place. 
 
@@ -218,7 +218,7 @@ This may be useful in some cases, for examples it is now possible to write somet
 
 * `fgrowth` supports annualizing / compounding growth rates through added `power` argument.
 
-* A function `flm` was added for barebones (weighted) linear regression fitting using different efficient methods: 4 from base R (`.lm.fit`, `solve`, `qr`, `chol`), using `fastLm` from *RcppArmadillo* (if installed), or `fastLm` from *RcppEigen* (if installed). 
+* A function `flm` was added for bare bones (weighted) linear regression fitting using different efficient methods: 4 from base R (`.lm.fit`, `solve`, `qr`, `chol`), using `fastLm` from *RcppArmadillo* (if installed), or `fastLm` from *RcppEigen* (if installed). 
 
 * Added function `qTBL` to quickly convert R objects to tibble.
 
