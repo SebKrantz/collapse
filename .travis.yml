@@ -16,7 +16,7 @@ r_packages:
 
 # only report coverage after build is successful
 after_success:
-  - Rscript -e 'library(covr); options(covr.flags = c(CXXFLAGS = "-O2", LDFLAGS="")); codecov()'
+  - Rscript -e 'library(covr); options(covr.flags = c(CXXFLAGS = "-O2", LDFLAGS="")); Sys.setenv(NCRAN = TRUE); codecov(type = "all")'
 
 
 notifications:
