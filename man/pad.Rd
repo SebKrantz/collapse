@@ -16,7 +16,7 @@ pad(X, i, value = NA, method = c("auto", "xpos", "vpos"))
   a vector, matrix, data frame or list of equal-length columns.
 }
   \item{i}{
-  either an integer (positive or negtive) or logical vector giving positions / rows of \code{X} into which \code{value}'s should be inserted, or, alternatvely, a positive integer vector with \code{length(i) == NROW(X)}, but with some gaps in the indices into which \code{value}'s can be inserted, or a logical vector with \code{sum(i) == NROW(X)} such that \code{value}'s can be inserted for \code{FALSE} values in the logical vector. See also \code{method} and Examples.
+  either an integer (positive or negative) or logical vector giving positions / rows of \code{X} into which \code{value}'s should be inserted, or, alternatively, a positive integer vector with \code{length(i) == NROW(X)}, but with some gaps in the indices into which \code{value}'s can be inserted, or a logical vector with \code{sum(i) == NROW(X)} such that \code{value}'s can be inserted for \code{FALSE} values in the logical vector. See also \code{method} and Examples.
 }
   \item{value}{
  a scalar value to be replicated and inserted into \code{X} at positions / rows given by \code{i}. Default is \code{NA}.
