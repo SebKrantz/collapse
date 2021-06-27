@@ -43,6 +43,7 @@
 <meta property="og:description" content="collapse provides the following functions to work with time-dependent data:
 flag, and the lag- and lead- operators L and F are S3 generics to efficiently compute sequences of lags and leads on ordered or unordered regular / balanced or irregular / unbalanced time series and panel data.
 Similarly, fdiff, fgrowth, and the operators D, Dlog and G are S3 generics to efficiently compute sequences of suitably lagged / leaded and iterated differences, log-differences and growth rates. fdiff/D/Dlog can also compute quasi-differences of the form \(x_t - \rho x_{t-1}\) or \(log(x_t) - \rho log(x_{t-1})\) for log-differences.
+fcumsum is an S3 generic to efficiently compute cumulative sums on time series and panel data. In contrast to cumsum, it can handle missing values and supports both grouped and ordered computations.
 psmat is an S3 generic to efficiently convert panel-vectors or plm::pseries and data frames or plm::pdata.frame's to panel series matrices and 3D arrays, respectively.
 psacf, pspacf and psccf are S3 generics to compute estimates of the auto-, partial auto- and cross- correlation or covariance functions for panel-vectors or plm::pseries, and multivariate versions for data frames or plm::pdata.frame's.
 
@@ -78,7 +79,7 @@ psacf, pspacf and psccf are S3 generics to compute estimates of the auto-, parti
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">collapse</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">1.5.3</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">1.6.0</span>
       </span>
     </div>
 
@@ -100,12 +101,12 @@ psacf, pspacf and psccf are S3 generics to compute estimates of the auto-, parti
       <ul class="nav navbar-nav navbar-right">
         <li>
   <a href="https://twitter.com/collapse_R" target="_blank">
-    <span class="fa fa-twitter"></span>
+    <span class="fas fa-twitter"></span>
      
   </a>
 </li>
 <li>
-  <a href="https://github.com/SebKrantz/collapse">
+  <a href="https://github.com/SebKrantz/collapse" target="_blank">
     <span class="fas fa-github"></span>
      
   </a>
@@ -132,6 +133,7 @@ psacf, pspacf and psccf are S3 generics to compute estimates of the auto-, parti
     <p><em>collapse</em> provides the following functions to work with time-dependent data:</p><ul>
 <li><p><code><a href='flag.html'>flag</a></code>, and the lag- and lead- operators <code><a href='flag.html'>L</a></code> and <code><a href='flag.html'>F</a></code> are S3 generics to efficiently compute sequences of <b>lags and leads</b> on ordered or unordered regular / balanced or irregular / unbalanced time series and panel data.</p></li>
 <li><p>Similarly, <code><a href='fdiff.html'>fdiff</a></code>, <code><a href='fgrowth.html'>fgrowth</a></code>, and the operators <code><a href='fdiff.html'>D</a></code>, <code><a href='fdiff.html'>Dlog</a></code> and <code><a href='fgrowth.html'>G</a></code> are S3 generics to efficiently compute sequences of suitably lagged / leaded and iterated <b>differences, log-differences and growth rates</b>. <code><a href='fdiff.html'>fdiff/D/Dlog</a></code> can also compute <b>quasi-differences</b> of the form \(x_t - \rho x_{t-1}\) or \(log(x_t) - \rho log(x_{t-1})\) for log-differences.</p></li>
+<li><p><code><a href='fcumsum.html'>fcumsum</a></code> is an S3 generic to efficiently compute cumulative sums on time series and panel data. In contrast to <code><a href='https://rdrr.io/r/base/cumsum.html'>cumsum</a></code>, it can handle missing values and supports both grouped and ordered computations.</p></li>
 <li><p><code><a href='psmat.html'>psmat</a></code> is an S3 generic to efficiently convert panel-vectors or <code><a href='https://rdrr.io/pkg/plm/man/pseries.html'>plm::pseries</a></code> and data frames or <code><a href='https://rdrr.io/pkg/plm/man/pdata.frame.html'>plm::pdata.frame</a></code>'s to <b>panel series matrices and 3D arrays</b>, respectively.</p></li>
 <li><p><code><a href='psacf.html'>psacf</a></code>, <code><a href='psacf.html'>pspacf</a></code> and <code><a href='psacf.html'>psccf</a></code> are S3 generics to compute estimates of the <b>auto-, partial auto- and cross- correlation or covariance functions</b> for panel-vectors or <code><a href='https://rdrr.io/pkg/plm/man/pseries.html'>plm::pseries</a></code>, and multivariate versions for data frames or <code><a href='https://rdrr.io/pkg/plm/man/pdata.frame.html'>plm::pdata.frame</a></code>'s.</p></li>
 </ul>
@@ -148,6 +150,7 @@ psacf, pspacf and psccf are S3 generics to compute estimates of the auto-, parti
                  <code><a href='flag.html'>flag/L/F</a></code></td><td></td><td><code>default, matrix, data.frame, pseries, pdata.frame, grouped_df</code></td><td></td><td>Compute (sequences of) lags and leads</td></tr>
 <tr><td><code><a href='fdiff.html'>fdiff/D/Dlog</a></code></td><td></td><td><code>default, matrix, data.frame, pseries, pdata.frame, grouped_df</code></td><td></td><td>Compute (sequences of lagged / leaded and iterated) (quasi-)differences or (quasi-)log-differences</td></tr>
 <tr><td><code><a href='fgrowth.html'>fgrowth/G</a></code></td><td></td><td><code>default, matrix, data.frame, pseries, pdata.frame, grouped_df</code></td><td></td><td>Compute (sequences of lagged / leaded and iterated) growth rates (exact or via log-differencing, in percentage terms)</td></tr>
+<tr><td><code><a href='fcumsum.html'>fcumsum</a></code></td><td></td><td><code>default, matrix, data.frame, pseries, pdata.frame, grouped_df</code></td><td></td><td>Compute cumulative sums</td></tr>
 <tr><td><code><a href='psmat.html'>psmat</a></code></td><td></td><td><code>default, pseries, data.frame, pdata.frame</code></td><td></td><td>Convert panel data to matrix / array</td></tr>
 <tr><td><code><a href='psacf.html'>psacf</a></code></td><td></td><td><code>default, pseries, data.frame, pdata.frame</code></td><td></td><td>Compute ACF on panel data</td></tr>
 <tr><td><code><a href='psacf.html'>pspacf</a></code></td><td></td><td><code>default, pseries, data.frame, pdata.frame</code></td><td></td><td>Compute PACF on panel data</td></tr>

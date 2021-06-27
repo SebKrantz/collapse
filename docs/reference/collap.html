@@ -75,7 +75,7 @@ collap works with collapse's Fast Statistical Functions, providing extremely fas
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">collapse</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">1.5.3</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">1.6.0</span>
       </span>
     </div>
 
@@ -97,13 +97,13 @@ collap works with collapse's Fast Statistical Functions, providing extremely fas
       <ul class="nav navbar-nav navbar-right">
         <li>
   <a href="https://twitter.com/collapse_R" target="_blank">
-    <span class="fa fa-twitter"></span>
+    <span class="fas fa-twitter"></span>
      
   </a>
 </li>
 <li>
   <a href="https://github.com/SebKrantz/collapse" target="_blank">
-    <span class="fa fa-github"></span>
+    <span class="fas fa-github"></span>
      
   </a>
 </li>
@@ -159,7 +159,7 @@ collap works with collapse's Fast Statistical Functions, providing extremely fas
     </tr>
     <tr>
       <th>by</th>
-      <td><p>for <code>collap</code>: a one-or two sided formula, i.e. <code>~ group1</code> or <code>var1 + var2 ~ group1 + group2</code>, or a atomic vector, list of vectors or <code><a href='GRP, fgroup_by.html'>GRP</a></code> object used to group <code>X</code>. For <code>collapv</code>: names or indices of grouping columns, or a logical vector or selector function such as <code><a href='small-helpers.html'>is.categorical</a></code> selecting grouping columns.</p></td>
+      <td><p>for <code>collap</code>: a one-or two sided formula, i.e. <code>~ group1</code> or <code>var1 + var2 ~ group1 + group2</code>, or a atomic vector, list of vectors or <code><a href='GRP, fgroup_by.html'>GRP</a></code> object used to group <code>X</code>. For <code>collapv</code>: names or indices of grouping columns, or a logical vector or selector function such as <code><a href='small-helper.html'>is_categorical</a></code> selecting grouping columns.</p></td>
     </tr>
     <tr>
       <th>FUN</th>
@@ -167,7 +167,7 @@ collap works with collapse's Fast Statistical Functions, providing extremely fas
     </tr>
     <tr>
       <th>catFUN</th>
-      <td><p>same as <code>FUN</code>, but applied only to categorical (non-numeric) typed columns (<code><a href='small-helpers.html'>is.categorical</a></code>).</p></td>
+      <td><p>same as <code>FUN</code>, but applied only to categorical (non-numeric) typed columns (<code><a href='small-helper.html'>is_categorical</a></code>).</p></td>
     </tr>
     <tr>
       <th>cols</th>
@@ -183,7 +183,7 @@ collap works with collapse's Fast Statistical Functions, providing extremely fas
     </tr>
     <tr>
       <th>custom</th>
-      <td><p>a named list specifying a fully customized aggregation task. The names of the list are function names and the content columns to aggregate using this function (same input as <code>cols</code>). For example <code>custom = list(fmean = 1:6, fsd = 7:9, fmode = 10:11)</code> tells <code>collap</code> to aggregate columns 1-6 of <code>X</code> using the mean, columns 7-9 using the standard deviation etc. <em>Note</em>: <code>custom</code> lets <code>collap</code> ignore any inputs passed to <code>FUN</code>, <code>catFUN</code> or <code>cols</code>.</p></td>
+      <td><p>a named list specifying a fully customized aggregation task. The names of the list are function names and the content columns to aggregate using this function (same input as <code>cols</code>). For example <code>custom = list(fmean = 1:6, fsd = 7:9, fmode = 10:11)</code> tells <code>collap</code> to aggregate columns 1-6 of <code>X</code> using the mean, columns 7-9 using the standard deviation etc. <em>Notes</em>: <code>custom</code> lets <code>collap</code> ignore any inputs passed to <code>FUN</code>, <code>catFUN</code> or <code>cols</code>. Since v1.6.0 you can also rename columns e.g. <code>custom = list(fmean = c(newname = "col1", "col2"), fmode = c(newname = 3))</code>.</p></td>
     </tr>
     <tr>
       <th>keep.by, keep.group_vars</th>
@@ -237,7 +237,7 @@ collap works with collapse's Fast Statistical Functions, providing extremely fas
     <h2 class="hasAnchor" id="note"><a class="anchor" href="#note"></a>Note</h2>
 
     <p>(1) Since <code><a href='BY.html'>BY</a></code> does not check and split additional arguments passed to it, it is presently not possible to create a weighted function in R and apply it to data by groups with <code>collap</code>. Weighted aggregations only work with <a href='fast-statistical-functions.html'>Fast Statistical Functions</a> supporting weights. User written weighted functions can be applied using the <em>data.table</em> package.</p>
-<p>(2) When the <code>w</code> argument is used, the weights are passed to all <a href='A1-fast-statistical-functions.html'>Fast Statistical Functions</a>. This may be undesirable in settings like <code>collapse::collap(data, ~ id, custom = list(fsum = ..., fmean = ...), w = ~ weights)</code> where some columns are to be aggregated using the weighted mean, and others using a simple sum or another unweighted statistic. Since many <a href='A1-fast-statistical-functions.html'>Fast Statistical Functions</a> including <code><a href='fsum.html'>fsum</a></code> support weights, the above computes a weighted mean and a weighted sum. A couple of workarounds were outlined <a href='https://github.com/SebKrantz/collapse/issues/96'>here</a>, but <em>collapse</em> 1.5.0 incorporates an easy solution into <code>collap</code>: It is now possible to simply append <a href='A1-fast-statistical-functions.html'>Fast Statistical Functions</a> by <code>_uw</code> to yield an unweighted computation. So for the above example we can write: <code>collapse::collap(data, ~ id, custom = list(fsum_uw = ..., fmean = ...), w = ~ weights)</code> to get the weighted mean and the simple sum. <em>Note</em> that the <code>_uw</code> functions are not available for use outside collap. Thus one also needs to quote them when passed to the <code>FUN</code> or <code>catFUN</code> arguments, e.g. use <code>collap(data, ~ id, fmean, "fmode_uw", w = ~ weighs)</code>, since <code>collap(data, ~ id, fmean, fmode_uw, w = ~ weighs)</code> gives an error stating that <code>fmode_uw</code> was not found. <em>Note</em> also that it is never necessary for functions passed to <code>wFUN</code> to be appended like this, as the weights are never used to aggregate themselves.</p>
+<p>(2) When the <code>w</code> argument is used, the weights are passed to all <a href='fast-statistical-functions.html'>Fast Statistical Functions</a>. This may be undesirable in settings like <code>collapse::collap(data, ~ id, custom = list(fsum = ..., fmean = ...), w = ~ weights)</code> where some columns are to be aggregated using the weighted mean, and others using a simple sum or another unweighted statistic. Since many <a href='fast-statistical-functions.html'>Fast Statistical Functions</a> including <code><a href='fsum.html'>fsum</a></code> support weights, the above computes a weighted mean and a weighted sum. A couple of workarounds were outlined <a href='https://github.com/SebKrantz/collapse/issues/96'>here</a>, but <em>collapse</em> 1.5.0 incorporates an easy solution into <code>collap</code>: It is now possible to simply append <a href='fast-statistical-functions.html'>Fast Statistical Functions</a> by <code>_uw</code> to yield an unweighted computation. So for the above example we can write: <code>collapse::collap(data, ~ id, custom = list(fsum_uw = ..., fmean = ...), w = ~ weights)</code> to get the weighted mean and the simple sum. <em>Note</em> that the <code>_uw</code> functions are not available for use outside collap. Thus one also needs to quote them when passed to the <code>FUN</code> or <code>catFUN</code> arguments, e.g. use <code>collap(data, ~ id, fmean, "fmode_uw", w = ~ weighs)</code>, since <code>collap(data, ~ id, fmean, fmode_uw, w = ~ weighs)</code> gives an error stating that <code>fmode_uw</code> was not found. <em>Note</em> also that it is never necessary for functions passed to <code>wFUN</code> to be appended like this, as the weights are never used to aggregate themselves.</p>
 <p>(3) The dispatch between using optimized <a href='fast-statistical-functions.html'>Fast Statistical Functions</a> performing grouped computations internally or calling <code>BY</code> to perform split-apply-combine computing is done by matching the function name against <code>.FAST_STAT_FUN</code>. Thus code like <code>collapse::collap(data, ~ id, collapse::fmedian)</code> does not yield an optimized computation, as <code>"collapse::fmedian" %!in% .FAST_STAT_FUN</code>. It is sufficient to write <code>collapse::collap(data, ~ id, "fmedian")</code> to get the desired result when the <em>collapse</em> namespace is not attached.</p>
 <p><!-- %If you want to perform optimized computations with \code{collap} without loading the pacckage, load the functions beforehand as well, e.g. \code{fmedian &lt;- collapse::fmedian; data, ~ id, fmedian)}. Alternatively it is of course also possible to use \code{collapse::fmedian(collapse::fgroup_by(data, id))}, or something similar... --></p>
 <p><!-- % \code{collap} by default (\code{keep.by = TRUE, keep.w = TRUE}) preserves all arguments passed to the \code{by} or \code{w} arguments, whether passed in a formula or externally. The names of externally passed vectors and lists are intelligently extracted. So it is possible to write \code{collap(iris, iris$Species)}, and obtain an aggregated data frame with two \code{Species} columns, whereas \code{collap(iris, ~ Species)} only has one \code{Species} column. Similarly for weight vectors passed to \code{w}. In this regard \code{collap} is more sophisticated than other \emph{collapse} functions where preservation of grouping and weight variables is restricted to formula use. For example \code{STD(iris, iris$Species)} does not preserve \code{Species} in the output, whereas \code{STD(iris, ~ Species)} does. This \code{collap} feature is there simply for convenience, for example sometimes a survey is disaggregated into several datasets, and this now allows easy pulling of identifiers or weights from other datasets for aggregations. If all information is available in one dataset, just using formulas is highly recommended. --></p>
@@ -326,7 +326,7 @@ collap works with collapse's Fast Statistical Functions, providing extremely fas
 </div><div class='output co'>#&gt;   Sepal.Length Sepal.Width Petal.Length Petal.Width    Species
 #&gt; 1        250.3    3.447423     1.465202   0.2480224     setosa
 #&gt; 2        296.8    2.784063     4.290195   1.3352089 versicolor
-#&gt; 3        329.4    2.987948     5.597116   2.0333030  virginica</div><div class='input'><span class='va'>weights</span> <span class='op'>&lt;-</span> <span class='fu'><a href='https://rdrr.io/r/base/MathFun.html'>abs</a></span><span class='op'>(</span><span class='fu'><a href='https://rdrr.io/r/stats/Normal.html'>rnorm</a></span><span class='op'>(</span><span class='fu'><a href='small-helpers.html'>fnrow</a></span><span class='op'>(</span><span class='va'>iris</span><span class='op'>)</span><span class='op'>)</span><span class='op'>)</span>
+#&gt; 3        329.4    2.987948     5.597116   2.0333030  virginica</div><div class='input'><span class='va'>weights</span> <span class='op'>&lt;-</span> <span class='fu'><a href='https://rdrr.io/r/base/MathFun.html'>abs</a></span><span class='op'>(</span><span class='fu'><a href='https://rdrr.io/r/stats/Normal.html'>rnorm</a></span><span class='op'>(</span><span class='fu'><a href='small-helper.html'>fnrow</a></span><span class='op'>(</span><span class='va'>iris</span><span class='op'>)</span><span class='op'>)</span><span class='op'>)</span>
 <span class='fu'>collap</span><span class='op'>(</span><span class='va'>iris</span>, <span class='op'>~</span> <span class='va'>Species</span>, w <span class='op'>=</span> <span class='va'>weights</span><span class='op'>)</span>                           <span class='co'># Some random weights..</span>
 </div><div class='output co'>#&gt;    weights Sepal.Length Sepal.Width Petal.Length Petal.Width    Species
 #&gt; 1 39.05823     4.938751    3.360079     1.439973   0.2210811     setosa
@@ -344,9 +344,8 @@ collap works with collapse's Fast Statistical Functions, providing extremely fas
 </div><div class='output co'>#&gt;   Sepal.Length Sepal.Width Petal.Length Petal.Width    Species
 #&gt; 1     4.938751    3.360079     1.439973   0.2210811     setosa
 #&gt; 2     5.918390    2.769699     4.236550   1.3255695 versicolor
-#&gt; 3     6.590353    3.012308     5.572586   2.0047445  virginica</div><div class='input'> 
-<span class='kw'><a href='https://rdrr.io/r/base/library.html'>library</a></span><span class='op'>(</span><span class='va'><a href='https://dplyr.tidyverse.org'>dplyr</a></span><span class='op'>)</span> <span class='co'># Needed for "%&gt;%"</span>
-<span class='va'>iris</span> <span class='op'>%&gt;%</span> <span class='fu'><a href='GRP, fgroup_by.html'>fgroup_by</a></span><span class='op'>(</span><span class='va'>Species</span><span class='op'>)</span> <span class='op'>%&gt;%</span> <span class='va'>collapg</span>                        <span class='co'># dplyr style, but faster</span>
+#&gt; 3     6.590353    3.012308     5.572586   2.0047445  virginica</div><div class='input'>
+<span class='va'>iris</span> |&gt; <span class='fu'><a href='GRP, fgroup_by.html'>fgroup_by</a></span><span class='op'>(</span><span class='va'>Species</span><span class='op'>)</span> |&gt; <span class='fu'>collapg</span><span class='op'>(</span><span class='op'>)</span>                        <span class='co'># dplyr style, but faster</span>
 </div><div class='output co'>#&gt;      Species Sepal.Length Sepal.Width Petal.Length Petal.Width
 #&gt; 1     setosa        5.006       3.428        1.462       0.246
 #&gt; 2 versicolor        5.936       2.770        4.260       1.326
@@ -360,508 +359,499 @@ collap works with collapse's Fast Statistical Functions, providing extremely fas
 #&gt; 4 Afghanistan   AFG 1964-01-01 1963   1960 South Asia Low income FALSE    NA
 #&gt; 5 Afghanistan   AFG 1965-01-01 1964   1960 South Asia Low income FALSE    NA
 #&gt; 6 Afghanistan   AFG 1966-01-01 1965   1960 South Asia Low income FALSE    NA
-#&gt;   LIFEEX GINI       ODA
-#&gt; 1 32.292   NA 114440000
-#&gt; 2 32.742   NA 233350000
-#&gt; 3 33.185   NA 114880000
-#&gt; 4 33.624   NA 236450000
-#&gt; 5 34.060   NA 302480000
-#&gt; 6 34.495   NA 370250000</div><div class='input'><span class='fu'><a href='https://rdrr.io/r/utils/head.html'>head</a></span><span class='op'>(</span><span class='fu'>collap</span><span class='op'>(</span><span class='va'>wlddev</span>, <span class='op'>~</span> <span class='va'>country</span> <span class='op'>+</span> <span class='va'>decade</span><span class='op'>)</span><span class='op'>)</span>                        <span class='co'># Aggregate by country and decade</span>
+#&gt;   LIFEEX GINI       ODA     POP
+#&gt; 1 32.446   NA 116769997 8996973
+#&gt; 2 32.962   NA 232080002 9169410
+#&gt; 3 33.471   NA 112839996 9351441
+#&gt; 4 33.971   NA 237720001 9543205
+#&gt; 5 34.463   NA 295920013 9744781
+#&gt; 6 34.948   NA 341839996 9956320</div><div class='input'><span class='fu'><a href='https://rdrr.io/r/utils/head.html'>head</a></span><span class='op'>(</span><span class='fu'>collap</span><span class='op'>(</span><span class='va'>wlddev</span>, <span class='op'>~</span> <span class='va'>country</span> <span class='op'>+</span> <span class='va'>decade</span><span class='op'>)</span><span class='op'>)</span>                        <span class='co'># Aggregate by country and decade</span>
 </div><div class='output co'>#&gt;       country iso3c       date   year decade     region     income  OECD
-#&gt; 1 Afghanistan   AFG 1961-01-01 1962.5   1960 South Asia Low income FALSE
-#&gt; 2 Afghanistan   AFG 1967-01-01 1970.0   1970 South Asia Low income FALSE
-#&gt; 3 Afghanistan   AFG 1976-01-01 1980.0   1980 South Asia Low income FALSE
-#&gt; 4 Afghanistan   AFG 1987-01-01 1990.0   1990 South Asia Low income FALSE
-#&gt; 5 Afghanistan   AFG 1996-01-01 2000.0   2000 South Asia Low income FALSE
-#&gt; 6 Afghanistan   AFG 2007-01-01 2010.0   2010 South Asia Low income FALSE
-#&gt;      PCGDP   LIFEEX GINI        ODA
-#&gt; 1       NA 33.39967   NA  228641667
-#&gt; 2       NA 36.70089   NA  224881111
-#&gt; 3       NA 42.03909   NA  132813636
-#&gt; 4       NA 49.69089   NA  249072222
-#&gt; 5 349.7596 55.61818   NA 1045170000
-#&gt; 6 506.9931 61.12978   NA 5298066667</div><div class='input'><span class='fu'><a href='https://rdrr.io/r/utils/head.html'>head</a></span><span class='op'>(</span><span class='fu'>collap</span><span class='op'>(</span><span class='va'>wlddev</span>, <span class='op'>~</span> <span class='va'>country</span> <span class='op'>+</span> <span class='va'>decade</span>, <span class='va'>fmedian</span>, <span class='va'>ffirst</span><span class='op'>)</span><span class='op'>)</span>       <span class='co'># Different functions</span>
+#&gt; 1 Afghanistan   AFG 1961-01-01 1964.5   1960 South Asia Low income FALSE
+#&gt; 2 Afghanistan   AFG 1971-01-01 1974.5   1970 South Asia Low income FALSE
+#&gt; 3 Afghanistan   AFG 1981-01-01 1984.5   1980 South Asia Low income FALSE
+#&gt; 4 Afghanistan   AFG 1991-01-01 1994.5   1990 South Asia Low income FALSE
+#&gt; 5 Afghanistan   AFG 2001-01-01 2004.5   2000 South Asia Low income FALSE
+#&gt; 6 Afghanistan   AFG 2011-01-01 2014.5   2010 South Asia Low income FALSE
+#&gt;      PCGDP  LIFEEX GINI        ODA      POP
+#&gt; 1       NA 34.6908   NA  222288999  9886773
+#&gt; 2       NA 39.9053   NA  236169998 12451803
+#&gt; 3       NA 46.4176   NA   71666001 12291854
+#&gt; 4       NA 53.0097   NA  317255000 16931903
+#&gt; 5 379.3730 58.0881   NA 3054051961 24870022
+#&gt; 6 567.4047 63.0715   NA 5023859033 33741195</div><div class='input'><span class='fu'><a href='https://rdrr.io/r/utils/head.html'>head</a></span><span class='op'>(</span><span class='fu'>collap</span><span class='op'>(</span><span class='va'>wlddev</span>, <span class='op'>~</span> <span class='va'>country</span> <span class='op'>+</span> <span class='va'>decade</span>, <span class='va'>fmedian</span>, <span class='va'>ffirst</span><span class='op'>)</span><span class='op'>)</span>       <span class='co'># Different functions</span>
 </div><div class='output co'>#&gt;       country iso3c       date   year decade     region     income  OECD
-#&gt; 1 Afghanistan   AFG 1961-01-01 1962.5   1960 South Asia Low income FALSE
-#&gt; 2 Afghanistan   AFG 1967-01-01 1970.0   1970 South Asia Low income FALSE
-#&gt; 3 Afghanistan   AFG 1976-01-01 1980.0   1980 South Asia Low income FALSE
-#&gt; 4 Afghanistan   AFG 1987-01-01 1990.0   1990 South Asia Low income FALSE
-#&gt; 5 Afghanistan   AFG 1996-01-01 2000.0   2000 South Asia Low income FALSE
-#&gt; 6 Afghanistan   AFG 2007-01-01 2010.0   2010 South Asia Low income FALSE
-#&gt;      PCGDP  LIFEEX GINI        ODA
-#&gt; 1       NA 33.4045   NA  234900000
-#&gt; 2       NA 36.6780   NA  229150000
-#&gt; 3       NA 41.8530   NA   72610000
-#&gt; 4       NA 49.8560   NA  238500000
-#&gt; 5 346.9282 55.4820   NA  306200000
-#&gt; 6 536.0125 61.2260   NA 5033950000</div><div class='input'><span class='fu'><a href='https://rdrr.io/r/utils/head.html'>head</a></span><span class='op'>(</span><span class='fu'>collap</span><span class='op'>(</span><span class='va'>wlddev</span>, <span class='op'>~</span> <span class='va'>country</span> <span class='op'>+</span> <span class='va'>decade</span>, cols <span class='op'>=</span> <span class='va'>is.numeric</span><span class='op'>)</span><span class='op'>)</span>     <span class='co'># Aggregate only numeric columns</span>
-</div><div class='output co'>#&gt;       country   year decade decade    PCGDP   LIFEEX GINI        ODA
-#&gt; 1 Afghanistan 1962.5   1960   1960       NA 33.39967   NA  228641667
-#&gt; 2 Afghanistan 1970.0   1970   1970       NA 36.70089   NA  224881111
-#&gt; 3 Afghanistan 1980.0   1980   1980       NA 42.03909   NA  132813636
-#&gt; 4 Afghanistan 1990.0   1990   1990       NA 49.69089   NA  249072222
-#&gt; 5 Afghanistan 2000.0   2000   2000 349.7596 55.61818   NA 1045170000
-#&gt; 6 Afghanistan 2010.0   2010   2010 506.9931 61.12978   NA 5298066667</div><div class='input'><span class='fu'><a href='https://rdrr.io/r/utils/head.html'>head</a></span><span class='op'>(</span><span class='fu'>collap</span><span class='op'>(</span><span class='va'>wlddev</span>, <span class='op'>~</span> <span class='va'>country</span> <span class='op'>+</span> <span class='va'>decade</span>, cols <span class='op'>=</span> <span class='fl'>9</span><span class='op'>:</span><span class='fl'>12</span><span class='op'>)</span><span class='op'>)</span>           <span class='co'># Only the 4 series</span>
-</div><div class='output co'>#&gt;       country decade    PCGDP   LIFEEX GINI        ODA
-#&gt; 1 Afghanistan   1960       NA 33.39967   NA  228641667
-#&gt; 2 Afghanistan   1970       NA 36.70089   NA  224881111
-#&gt; 3 Afghanistan   1980       NA 42.03909   NA  132813636
-#&gt; 4 Afghanistan   1990       NA 49.69089   NA  249072222
-#&gt; 5 Afghanistan   2000 349.7596 55.61818   NA 1045170000
-#&gt; 6 Afghanistan   2010 506.9931 61.12978   NA 5298066667</div><div class='input'><span class='fu'><a href='https://rdrr.io/r/utils/head.html'>head</a></span><span class='op'>(</span><span class='fu'>collap</span><span class='op'>(</span><span class='va'>wlddev</span>, <span class='va'>PCGDP</span> <span class='op'>+</span> <span class='va'>LIFEEX</span> <span class='op'>~</span> <span class='va'>country</span> <span class='op'>+</span> <span class='va'>decade</span><span class='op'>)</span><span class='op'>)</span>         <span class='co'># Only GDP and life-expactancy</span>
-</div><div class='output co'>#&gt;       country decade    PCGDP   LIFEEX
-#&gt; 1 Afghanistan   1960       NA 33.39967
-#&gt; 2 Afghanistan   1970       NA 36.70089
-#&gt; 3 Afghanistan   1980       NA 42.03909
-#&gt; 4 Afghanistan   1990       NA 49.69089
-#&gt; 5 Afghanistan   2000 349.7596 55.61818
-#&gt; 6 Afghanistan   2010 506.9931 61.12978</div><div class='input'><span class='fu'><a href='https://rdrr.io/r/utils/head.html'>head</a></span><span class='op'>(</span><span class='fu'>collap</span><span class='op'>(</span><span class='va'>wlddev</span>, <span class='va'>PCGDP</span> <span class='op'>+</span> <span class='va'>LIFEEX</span> <span class='op'>~</span> <span class='va'>country</span> <span class='op'>+</span> <span class='va'>decade</span>, <span class='va'>fsum</span><span class='op'>)</span><span class='op'>)</span>   <span class='co'># Using the sum instead</span>
+#&gt; 1 Afghanistan   AFG 1961-01-01 1964.5   1960 South Asia Low income FALSE
+#&gt; 2 Afghanistan   AFG 1971-01-01 1974.5   1970 South Asia Low income FALSE
+#&gt; 3 Afghanistan   AFG 1981-01-01 1984.5   1980 South Asia Low income FALSE
+#&gt; 4 Afghanistan   AFG 1991-01-01 1994.5   1990 South Asia Low income FALSE
+#&gt; 5 Afghanistan   AFG 2001-01-01 2004.5   2000 South Asia Low income FALSE
+#&gt; 6 Afghanistan   AFG 2011-01-01 2014.5   2010 South Asia Low income FALSE
+#&gt;      PCGDP  LIFEEX GINI        ODA      POP
+#&gt; 1       NA 34.7055   NA  234900002  9850551
+#&gt; 2       NA 39.8430   NA  246509995 12551055
+#&gt; 3       NA 46.4005   NA   48539999 12071250
+#&gt; 4       NA 53.1200   NA  285175003 17593192
+#&gt; 5 361.2596 58.0310   NA 2984469971 25190481
+#&gt; 6 572.3641 63.1715   NA 4651180176 33892199</div><div class='input'><span class='fu'><a href='https://rdrr.io/r/utils/head.html'>head</a></span><span class='op'>(</span><span class='fu'>collap</span><span class='op'>(</span><span class='va'>wlddev</span>, <span class='op'>~</span> <span class='va'>country</span> <span class='op'>+</span> <span class='va'>decade</span>, cols <span class='op'>=</span> <span class='va'>is.numeric</span><span class='op'>)</span><span class='op'>)</span>     <span class='co'># Aggregate only numeric columns</span>
+</div><div class='output co'>#&gt;       country   year decade decade    PCGDP  LIFEEX GINI        ODA      POP
+#&gt; 1 Afghanistan 1964.5   1960   1960       NA 34.6908   NA  222288999  9886773
+#&gt; 2 Afghanistan 1974.5   1970   1970       NA 39.9053   NA  236169998 12451803
+#&gt; 3 Afghanistan 1984.5   1980   1980       NA 46.4176   NA   71666001 12291854
+#&gt; 4 Afghanistan 1994.5   1990   1990       NA 53.0097   NA  317255000 16931903
+#&gt; 5 Afghanistan 2004.5   2000   2000 379.3730 58.0881   NA 3054051961 24870022
+#&gt; 6 Afghanistan 2014.5   2010   2010 567.4047 63.0715   NA 5023859033 33741195</div><div class='input'><span class='fu'><a href='https://rdrr.io/r/utils/head.html'>head</a></span><span class='op'>(</span><span class='fu'>collap</span><span class='op'>(</span><span class='va'>wlddev</span>, <span class='op'>~</span> <span class='va'>country</span> <span class='op'>+</span> <span class='va'>decade</span>, cols <span class='op'>=</span> <span class='fl'>9</span><span class='op'>:</span><span class='fl'>13</span><span class='op'>)</span><span class='op'>)</span>           <span class='co'># Only the 5 series</span>
+</div><div class='output co'>#&gt;       country decade    PCGDP  LIFEEX GINI        ODA      POP
+#&gt; 1 Afghanistan   1960       NA 34.6908   NA  222288999  9886773
+#&gt; 2 Afghanistan   1970       NA 39.9053   NA  236169998 12451803
+#&gt; 3 Afghanistan   1980       NA 46.4176   NA   71666001 12291854
+#&gt; 4 Afghanistan   1990       NA 53.0097   NA  317255000 16931903
+#&gt; 5 Afghanistan   2000 379.3730 58.0881   NA 3054051961 24870022
+#&gt; 6 Afghanistan   2010 567.4047 63.0715   NA 5023859033 33741195</div><div class='input'><span class='fu'><a href='https://rdrr.io/r/utils/head.html'>head</a></span><span class='op'>(</span><span class='fu'>collap</span><span class='op'>(</span><span class='va'>wlddev</span>, <span class='va'>PCGDP</span> <span class='op'>+</span> <span class='va'>LIFEEX</span> <span class='op'>~</span> <span class='va'>country</span> <span class='op'>+</span> <span class='va'>decade</span><span class='op'>)</span><span class='op'>)</span>         <span class='co'># Only GDP and life-expactancy</span>
 </div><div class='output co'>#&gt;       country decade    PCGDP  LIFEEX
-#&gt; 1 Afghanistan   1960       NA 200.398
-#&gt; 2 Afghanistan   1970       NA 330.308
-#&gt; 3 Afghanistan   1980       NA 462.430
-#&gt; 4 Afghanistan   1990       NA 447.218
-#&gt; 5 Afghanistan   2000 1399.038 611.800
-#&gt; 6 Afghanistan   2010 4562.938 550.168</div><div class='input'><span class='fu'><a href='https://rdrr.io/r/utils/head.html'>head</a></span><span class='op'>(</span><span class='fu'>collap</span><span class='op'>(</span><span class='va'>wlddev</span>, <span class='va'>PCGDP</span> <span class='op'>+</span> <span class='va'>LIFEEX</span> <span class='op'>~</span> <span class='va'>country</span> <span class='op'>+</span> <span class='va'>decade</span>, <span class='va'>sum</span>,     <span class='co'># Same using base::sum -&gt; slower!</span>
+#&gt; 1 Afghanistan   1960       NA 34.6908
+#&gt; 2 Afghanistan   1970       NA 39.9053
+#&gt; 3 Afghanistan   1980       NA 46.4176
+#&gt; 4 Afghanistan   1990       NA 53.0097
+#&gt; 5 Afghanistan   2000 379.3730 58.0881
+#&gt; 6 Afghanistan   2010 567.4047 63.0715</div><div class='input'><span class='fu'><a href='https://rdrr.io/r/utils/head.html'>head</a></span><span class='op'>(</span><span class='fu'>collap</span><span class='op'>(</span><span class='va'>wlddev</span>, <span class='va'>PCGDP</span> <span class='op'>+</span> <span class='va'>LIFEEX</span> <span class='op'>~</span> <span class='va'>country</span> <span class='op'>+</span> <span class='va'>decade</span>, <span class='va'>fsum</span><span class='op'>)</span><span class='op'>)</span>   <span class='co'># Using the sum instead</span>
+</div><div class='output co'>#&gt;       country decade    PCGDP  LIFEEX
+#&gt; 1 Afghanistan   1960       NA 346.908
+#&gt; 2 Afghanistan   1970       NA 399.053
+#&gt; 3 Afghanistan   1980       NA 464.176
+#&gt; 4 Afghanistan   1990       NA 530.097
+#&gt; 5 Afghanistan   2000 3034.984 580.881
+#&gt; 6 Afghanistan   2010 5674.047 630.715</div><div class='input'><span class='fu'><a href='https://rdrr.io/r/utils/head.html'>head</a></span><span class='op'>(</span><span class='fu'>collap</span><span class='op'>(</span><span class='va'>wlddev</span>, <span class='va'>PCGDP</span> <span class='op'>+</span> <span class='va'>LIFEEX</span> <span class='op'>~</span> <span class='va'>country</span> <span class='op'>+</span> <span class='va'>decade</span>, <span class='va'>sum</span>,     <span class='co'># Same using base::sum -&gt; slower!</span>
             na.rm <span class='op'>=</span> <span class='cn'>TRUE</span><span class='op'>)</span><span class='op'>)</span>
 </div><div class='output co'>#&gt;       country decade    PCGDP  LIFEEX
-#&gt; 1 Afghanistan   1960    0.000 200.398
-#&gt; 2 Afghanistan   1970    0.000 330.308
-#&gt; 3 Afghanistan   1980    0.000 462.430
-#&gt; 4 Afghanistan   1990    0.000 447.218
-#&gt; 5 Afghanistan   2000 1399.038 611.800
-#&gt; 6 Afghanistan   2010 4562.938 550.168</div><div class='input'><span class='fu'><a href='https://rdrr.io/r/utils/head.html'>head</a></span><span class='op'>(</span><span class='fu'>collap</span><span class='op'>(</span><span class='va'>wlddev</span>, <span class='va'>wlddev</span><span class='op'>[</span><span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span><span class='op'>(</span><span class='st'>"country"</span>,<span class='st'>"decade"</span><span class='op'>)</span><span class='op'>]</span>, <span class='va'>fsum</span>,        <span class='co'># Same, exploring different inputs</span>
+#&gt; 1 Afghanistan   1960    0.000 346.908
+#&gt; 2 Afghanistan   1970    0.000 399.053
+#&gt; 3 Afghanistan   1980    0.000 464.176
+#&gt; 4 Afghanistan   1990    0.000 530.097
+#&gt; 5 Afghanistan   2000 3034.984 580.881
+#&gt; 6 Afghanistan   2010 5674.047 630.715</div><div class='input'><span class='fu'><a href='https://rdrr.io/r/utils/head.html'>head</a></span><span class='op'>(</span><span class='fu'>collap</span><span class='op'>(</span><span class='va'>wlddev</span>, <span class='va'>wlddev</span><span class='op'>[</span><span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span><span class='op'>(</span><span class='st'>"country"</span>,<span class='st'>"decade"</span><span class='op'>)</span><span class='op'>]</span>, <span class='va'>fsum</span>,        <span class='co'># Same, exploring different inputs</span>
             cols <span class='op'>=</span> <span class='fl'>9</span><span class='op'>:</span><span class='fl'>10</span><span class='op'>)</span><span class='op'>)</span>
 </div><div class='output co'>#&gt;       country decade    PCGDP  LIFEEX
-#&gt; 1 Afghanistan   1960       NA 200.398
-#&gt; 2 Afghanistan   1970       NA 330.308
-#&gt; 3 Afghanistan   1980       NA 462.430
-#&gt; 4 Afghanistan   1990       NA 447.218
-#&gt; 5 Afghanistan   2000 1399.038 611.800
-#&gt; 6 Afghanistan   2010 4562.938 550.168</div><div class='input'><span class='fu'><a href='https://rdrr.io/r/utils/head.html'>head</a></span><span class='op'>(</span><span class='fu'>collap</span><span class='op'>(</span><span class='va'>wlddev</span><span class='op'>[</span><span class='fl'>9</span><span class='op'>:</span><span class='fl'>10</span><span class='op'>]</span>, <span class='va'>wlddev</span><span class='op'>[</span><span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span><span class='op'>(</span><span class='st'>"country"</span>,<span class='st'>"decade"</span><span class='op'>)</span><span class='op'>]</span>, <span class='va'>fsum</span><span class='op'>)</span><span class='op'>)</span>
+#&gt; 1 Afghanistan   1960       NA 346.908
+#&gt; 2 Afghanistan   1970       NA 399.053
+#&gt; 3 Afghanistan   1980       NA 464.176
+#&gt; 4 Afghanistan   1990       NA 530.097
+#&gt; 5 Afghanistan   2000 3034.984 580.881
+#&gt; 6 Afghanistan   2010 5674.047 630.715</div><div class='input'><span class='fu'><a href='https://rdrr.io/r/utils/head.html'>head</a></span><span class='op'>(</span><span class='fu'>collap</span><span class='op'>(</span><span class='va'>wlddev</span><span class='op'>[</span><span class='fl'>9</span><span class='op'>:</span><span class='fl'>10</span><span class='op'>]</span>, <span class='va'>wlddev</span><span class='op'>[</span><span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span><span class='op'>(</span><span class='st'>"country"</span>,<span class='st'>"decade"</span><span class='op'>)</span><span class='op'>]</span>, <span class='va'>fsum</span><span class='op'>)</span><span class='op'>)</span>
 </div><div class='output co'>#&gt;       country decade    PCGDP  LIFEEX
-#&gt; 1 Afghanistan   1960       NA 200.398
-#&gt; 2 Afghanistan   1970       NA 330.308
-#&gt; 3 Afghanistan   1980       NA 462.430
-#&gt; 4 Afghanistan   1990       NA 447.218
-#&gt; 5 Afghanistan   2000 1399.038 611.800
-#&gt; 6 Afghanistan   2010 4562.938 550.168</div><div class='input'><span class='fu'><a href='https://rdrr.io/r/utils/head.html'>head</a></span><span class='op'>(</span><span class='fu'>collapv</span><span class='op'>(</span><span class='va'>wlddev</span>, <span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span><span class='op'>(</span><span class='st'>"country"</span>,<span class='st'>"decade"</span><span class='op'>)</span>, <span class='va'>fsum</span><span class='op'>)</span><span class='op'>)</span>              <span class='co'># ..names/indices with collapv</span>
+#&gt; 1 Afghanistan   1960       NA 346.908
+#&gt; 2 Afghanistan   1970       NA 399.053
+#&gt; 3 Afghanistan   1980       NA 464.176
+#&gt; 4 Afghanistan   1990       NA 530.097
+#&gt; 5 Afghanistan   2000 3034.984 580.881
+#&gt; 6 Afghanistan   2010 5674.047 630.715</div><div class='input'><span class='fu'><a href='https://rdrr.io/r/utils/head.html'>head</a></span><span class='op'>(</span><span class='fu'>collapv</span><span class='op'>(</span><span class='va'>wlddev</span>, <span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span><span class='op'>(</span><span class='st'>"country"</span>,<span class='st'>"decade"</span><span class='op'>)</span>, <span class='va'>fsum</span><span class='op'>)</span><span class='op'>)</span>              <span class='co'># ..names/indices with collapv</span>
 </div><div class='output co'>#&gt;       country iso3c       date  year decade     region     income  OECD
-#&gt; 1 Afghanistan   AFG 1961-01-01 11775   1960 South Asia Low income FALSE
-#&gt; 2 Afghanistan   AFG 1967-01-01 17730   1970 South Asia Low income FALSE
-#&gt; 3 Afghanistan   AFG 1976-01-01 21780   1980 South Asia Low income FALSE
-#&gt; 4 Afghanistan   AFG 1987-01-01 17910   1990 South Asia Low income FALSE
-#&gt; 5 Afghanistan   AFG 1996-01-01 22000   2000 South Asia Low income FALSE
-#&gt; 6 Afghanistan   AFG 2007-01-01 18090   2010 South Asia Low income FALSE
-#&gt;      PCGDP  LIFEEX GINI         ODA
-#&gt; 1       NA 200.398   NA  1371850000
-#&gt; 2       NA 330.308   NA  2023930000
-#&gt; 3       NA 462.430   NA  1460950000
-#&gt; 4       NA 447.218   NA  2241650000
-#&gt; 5 1399.038 611.800   NA 11496870000
-#&gt; 6 4562.938 550.168   NA 47682600000</div><div class='input'><span class='fu'><a href='https://rdrr.io/r/utils/head.html'>head</a></span><span class='op'>(</span><span class='fu'>collapv</span><span class='op'>(</span><span class='va'>wlddev</span>, <span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span><span class='op'>(</span><span class='fl'>1</span>,<span class='fl'>5</span><span class='op'>)</span>, <span class='va'>fsum</span><span class='op'>)</span><span class='op'>)</span>
+#&gt; 1 Afghanistan   AFG 1961-01-01 19645   1960 South Asia Low income FALSE
+#&gt; 2 Afghanistan   AFG 1971-01-01 19745   1970 South Asia Low income FALSE
+#&gt; 3 Afghanistan   AFG 1981-01-01 19845   1980 South Asia Low income FALSE
+#&gt; 4 Afghanistan   AFG 1991-01-01 19945   1990 South Asia Low income FALSE
+#&gt; 5 Afghanistan   AFG 2001-01-01 20045   2000 South Asia Low income FALSE
+#&gt; 6 Afghanistan   AFG 2011-01-01 20145   2010 South Asia Low income FALSE
+#&gt;      PCGDP  LIFEEX GINI         ODA       POP
+#&gt; 1       NA 346.908   NA  2222889992  98867731
+#&gt; 2       NA 399.053   NA  2361699982 124518028
+#&gt; 3       NA 464.176   NA   716660007 122918537
+#&gt; 4       NA 530.097   NA  3172550003 169319030
+#&gt; 5 3034.984 580.881   NA 30540519608 248700217
+#&gt; 6 5674.047 630.715   NA 50238590332 337411950</div><div class='input'><span class='fu'><a href='https://rdrr.io/r/utils/head.html'>head</a></span><span class='op'>(</span><span class='fu'>collapv</span><span class='op'>(</span><span class='va'>wlddev</span>, <span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span><span class='op'>(</span><span class='fl'>1</span>,<span class='fl'>5</span><span class='op'>)</span>, <span class='va'>fsum</span><span class='op'>)</span><span class='op'>)</span>
 </div><div class='output co'>#&gt;       country iso3c       date  year decade     region     income  OECD
-#&gt; 1 Afghanistan   AFG 1961-01-01 11775   1960 South Asia Low income FALSE
-#&gt; 2 Afghanistan   AFG 1967-01-01 17730   1970 South Asia Low income FALSE
-#&gt; 3 Afghanistan   AFG 1976-01-01 21780   1980 South Asia Low income FALSE
-#&gt; 4 Afghanistan   AFG 1987-01-01 17910   1990 South Asia Low income FALSE
-#&gt; 5 Afghanistan   AFG 1996-01-01 22000   2000 South Asia Low income FALSE
-#&gt; 6 Afghanistan   AFG 2007-01-01 18090   2010 South Asia Low income FALSE
-#&gt;      PCGDP  LIFEEX GINI         ODA
-#&gt; 1       NA 200.398   NA  1371850000
-#&gt; 2       NA 330.308   NA  2023930000
-#&gt; 3       NA 462.430   NA  1460950000
-#&gt; 4       NA 447.218   NA  2241650000
-#&gt; 5 1399.038 611.800   NA 11496870000
-#&gt; 6 4562.938 550.168   NA 47682600000</div><div class='input'>
+#&gt; 1 Afghanistan   AFG 1961-01-01 19645   1960 South Asia Low income FALSE
+#&gt; 2 Afghanistan   AFG 1971-01-01 19745   1970 South Asia Low income FALSE
+#&gt; 3 Afghanistan   AFG 1981-01-01 19845   1980 South Asia Low income FALSE
+#&gt; 4 Afghanistan   AFG 1991-01-01 19945   1990 South Asia Low income FALSE
+#&gt; 5 Afghanistan   AFG 2001-01-01 20045   2000 South Asia Low income FALSE
+#&gt; 6 Afghanistan   AFG 2011-01-01 20145   2010 South Asia Low income FALSE
+#&gt;      PCGDP  LIFEEX GINI         ODA       POP
+#&gt; 1       NA 346.908   NA  2222889992  98867731
+#&gt; 2       NA 399.053   NA  2361699982 124518028
+#&gt; 3       NA 464.176   NA   716660007 122918537
+#&gt; 4       NA 530.097   NA  3172550003 169319030
+#&gt; 5 3034.984 580.881   NA 30540519608 248700217
+#&gt; 6 5674.047 630.715   NA 50238590332 337411950</div><div class='input'>
 <span class='va'>g</span> <span class='op'>&lt;-</span> <span class='fu'><a href='GRP, fgroup_by.html'>GRP</a></span><span class='op'>(</span><span class='va'>wlddev</span>, <span class='op'>~</span> <span class='va'>country</span> <span class='op'>+</span> <span class='va'>decade</span><span class='op'>)</span>                            <span class='co'># Precomputing the grouping</span>
 <span class='fu'><a href='https://rdrr.io/r/utils/head.html'>head</a></span><span class='op'>(</span><span class='fu'>collap</span><span class='op'>(</span><span class='va'>wlddev</span>, <span class='va'>g</span>, keep.by <span class='op'>=</span> <span class='cn'>FALSE</span><span class='op'>)</span><span class='op'>)</span>                        <span class='co'># This is slightly faster now</span>
 </div><div class='output co'>#&gt;       country iso3c       date   year decade     region     income  OECD
-#&gt; 1 Afghanistan   AFG 1961-01-01 1962.5   1960 South Asia Low income FALSE
-#&gt; 2 Afghanistan   AFG 1967-01-01 1970.0   1970 South Asia Low income FALSE
-#&gt; 3 Afghanistan   AFG 1976-01-01 1980.0   1980 South Asia Low income FALSE
-#&gt; 4 Afghanistan   AFG 1987-01-01 1990.0   1990 South Asia Low income FALSE
-#&gt; 5 Afghanistan   AFG 1996-01-01 2000.0   2000 South Asia Low income FALSE
-#&gt; 6 Afghanistan   AFG 2007-01-01 2010.0   2010 South Asia Low income FALSE
-#&gt;      PCGDP   LIFEEX GINI        ODA
-#&gt; 1       NA 33.39967   NA  228641667
-#&gt; 2       NA 36.70089   NA  224881111
-#&gt; 3       NA 42.03909   NA  132813636
-#&gt; 4       NA 49.69089   NA  249072222
-#&gt; 5 349.7596 55.61818   NA 1045170000
-#&gt; 6 506.9931 61.12978   NA 5298066667</div><div class='input'><span class='co'># Aggregate categorical data using not the mode but the last element</span>
+#&gt; 1 Afghanistan   AFG 1961-01-01 1964.5   1960 South Asia Low income FALSE
+#&gt; 2 Afghanistan   AFG 1971-01-01 1974.5   1970 South Asia Low income FALSE
+#&gt; 3 Afghanistan   AFG 1981-01-01 1984.5   1980 South Asia Low income FALSE
+#&gt; 4 Afghanistan   AFG 1991-01-01 1994.5   1990 South Asia Low income FALSE
+#&gt; 5 Afghanistan   AFG 2001-01-01 2004.5   2000 South Asia Low income FALSE
+#&gt; 6 Afghanistan   AFG 2011-01-01 2014.5   2010 South Asia Low income FALSE
+#&gt;      PCGDP  LIFEEX GINI        ODA      POP
+#&gt; 1       NA 34.6908   NA  222288999  9886773
+#&gt; 2       NA 39.9053   NA  236169998 12451803
+#&gt; 3       NA 46.4176   NA   71666001 12291854
+#&gt; 4       NA 53.0097   NA  317255000 16931903
+#&gt; 5 379.3730 58.0881   NA 3054051961 24870022
+#&gt; 6 567.4047 63.0715   NA 5023859033 33741195</div><div class='input'><span class='co'># Aggregate categorical data using not the mode but the last element</span>
 <span class='fu'><a href='https://rdrr.io/r/utils/head.html'>head</a></span><span class='op'>(</span><span class='fu'>collap</span><span class='op'>(</span><span class='va'>wlddev</span>, <span class='op'>~</span> <span class='va'>country</span> <span class='op'>+</span> <span class='va'>decade</span>, <span class='va'>fmean</span>, <span class='va'>flast</span><span class='op'>)</span><span class='op'>)</span>
 </div><div class='output co'>#&gt;       country iso3c       date   year decade     region     income  OECD
-#&gt; 1 Afghanistan   AFG 1966-01-01 1962.5   1960 South Asia Low income FALSE
-#&gt; 2 Afghanistan   AFG 1975-01-01 1970.0   1970 South Asia Low income FALSE
-#&gt; 3 Afghanistan   AFG 1986-01-01 1980.0   1980 South Asia Low income FALSE
-#&gt; 4 Afghanistan   AFG 1995-01-01 1990.0   1990 South Asia Low income FALSE
-#&gt; 5 Afghanistan   AFG 2006-01-01 2000.0   2000 South Asia Low income FALSE
-#&gt; 6 Afghanistan   AFG 2015-01-01 2010.0   2010 South Asia Low income FALSE
-#&gt;      PCGDP   LIFEEX GINI        ODA
-#&gt; 1       NA 33.39967   NA  228641667
-#&gt; 2       NA 36.70089   NA  224881111
-#&gt; 3       NA 42.03909   NA  132813636
-#&gt; 4       NA 49.69089   NA  249072222
-#&gt; 5 349.7596 55.61818   NA 1045170000
-#&gt; 6 506.9931 61.12978   NA 5298066667</div><div class='input'><span class='fu'><a href='https://rdrr.io/r/utils/head.html'>head</a></span><span class='op'>(</span><span class='fu'>collap</span><span class='op'>(</span><span class='va'>wlddev</span>, <span class='op'>~</span> <span class='va'>country</span> <span class='op'>+</span> <span class='va'>decade</span>, catFUN <span class='op'>=</span> <span class='va'>flast</span>,         <span class='co'># Aggregate only categorical data</span>
-            cols <span class='op'>=</span> <span class='va'>is.categorical</span><span class='op'>)</span><span class='op'>)</span>
+#&gt; 1 Afghanistan   AFG 1970-01-01 1964.5   1960 South Asia Low income FALSE
+#&gt; 2 Afghanistan   AFG 1980-01-01 1974.5   1970 South Asia Low income FALSE
+#&gt; 3 Afghanistan   AFG 1990-01-01 1984.5   1980 South Asia Low income FALSE
+#&gt; 4 Afghanistan   AFG 2000-01-01 1994.5   1990 South Asia Low income FALSE
+#&gt; 5 Afghanistan   AFG 2010-01-01 2004.5   2000 South Asia Low income FALSE
+#&gt; 6 Afghanistan   AFG 2020-01-01 2014.5   2010 South Asia Low income FALSE
+#&gt;      PCGDP  LIFEEX GINI        ODA      POP
+#&gt; 1       NA 34.6908   NA  222288999  9886773
+#&gt; 2       NA 39.9053   NA  236169998 12451803
+#&gt; 3       NA 46.4176   NA   71666001 12291854
+#&gt; 4       NA 53.0097   NA  317255000 16931903
+#&gt; 5 379.3730 58.0881   NA 3054051961 24870022
+#&gt; 6 567.4047 63.0715   NA 5023859033 33741195</div><div class='input'><span class='fu'><a href='https://rdrr.io/r/utils/head.html'>head</a></span><span class='op'>(</span><span class='fu'>collap</span><span class='op'>(</span><span class='va'>wlddev</span>, <span class='op'>~</span> <span class='va'>country</span> <span class='op'>+</span> <span class='va'>decade</span>, catFUN <span class='op'>=</span> <span class='va'>flast</span>,         <span class='co'># Aggregate only categorical data</span>
+            cols <span class='op'>=</span> <span class='va'>is_categorical</span><span class='op'>)</span><span class='op'>)</span>
 </div><div class='output co'>#&gt;       country     country iso3c       date decade     region     income  OECD
-#&gt; 1 Afghanistan Afghanistan   AFG 1966-01-01   1960 South Asia Low income FALSE
-#&gt; 2 Afghanistan Afghanistan   AFG 1975-01-01   1970 South Asia Low income FALSE
-#&gt; 3 Afghanistan Afghanistan   AFG 1986-01-01   1980 South Asia Low income FALSE
-#&gt; 4 Afghanistan Afghanistan   AFG 1995-01-01   1990 South Asia Low income FALSE
-#&gt; 5 Afghanistan Afghanistan   AFG 2006-01-01   2000 South Asia Low income FALSE
-#&gt; 6 Afghanistan Afghanistan   AFG 2015-01-01   2010 South Asia Low income FALSE</div><div class='input'>
+#&gt; 1 Afghanistan Afghanistan   AFG 1970-01-01   1960 South Asia Low income FALSE
+#&gt; 2 Afghanistan Afghanistan   AFG 1980-01-01   1970 South Asia Low income FALSE
+#&gt; 3 Afghanistan Afghanistan   AFG 1990-01-01   1980 South Asia Low income FALSE
+#&gt; 4 Afghanistan Afghanistan   AFG 2000-01-01   1990 South Asia Low income FALSE
+#&gt; 5 Afghanistan Afghanistan   AFG 2010-01-01   2000 South Asia Low income FALSE
+#&gt; 6 Afghanistan Afghanistan   AFG 2020-01-01   2010 South Asia Low income FALSE</div><div class='input'>
 
 <span class='co'>## Weighted Aggregation ----------------------------------------</span>
-<span class='va'>weights</span> <span class='op'>&lt;-</span> <span class='fu'><a href='https://rdrr.io/r/base/MathFun.html'>abs</a></span><span class='op'>(</span><span class='fu'><a href='https://rdrr.io/r/stats/Normal.html'>rnorm</a></span><span class='op'>(</span><span class='fu'><a href='small-helpers.html'>fnrow</a></span><span class='op'>(</span><span class='va'>wlddev</span><span class='op'>)</span><span class='op'>)</span><span class='op'>)</span>                            <span class='co'># Random weight vector</span>
-<span class='fu'><a href='https://rdrr.io/r/utils/head.html'>head</a></span><span class='op'>(</span><span class='fu'>collap</span><span class='op'>(</span><span class='va'>wlddev</span>, <span class='op'>~</span> <span class='va'>country</span> <span class='op'>+</span> <span class='va'>decade</span>, w <span class='op'>=</span> <span class='va'>weights</span><span class='op'>)</span><span class='op'>)</span>           <span class='co'># Takes weighted mean for numeric..</span>
-</div><div class='output co'>#&gt;     weights     country iso3c       date     year decade     region     income
-#&gt; 1  5.219775 Afghanistan   AFG 1964-01-01 1962.878   1960 South Asia Low income
-#&gt; 2  6.280377 Afghanistan   AFG 1972-01-01 1970.986   1970 South Asia Low income
-#&gt; 3 12.357487 Afghanistan   AFG 1979-01-01 1980.104   1980 South Asia Low income
-#&gt; 4  9.588870 Afghanistan   AFG 1987-01-01 1989.056   1990 South Asia Low income
-#&gt; 5  9.112089 Afghanistan   AFG 2004-01-01 2000.208   2000 South Asia Low income
-#&gt; 6  9.513924 Afghanistan   AFG 2009-01-01 2008.957   2010 South Asia Low income
-#&gt;    OECD    PCGDP   LIFEEX GINI        ODA
-#&gt; 1 FALSE       NA 33.56576   NA  247280527
-#&gt; 2 FALSE       NA 37.14266   NA  221160015
-#&gt; 3 FALSE       NA 42.06259   NA  123263137
-#&gt; 4 FALSE       NA 48.93413   NA  199747378
-#&gt; 5 FALSE 354.9449 55.73774   NA 1108491908
-#&gt; 6 FALSE 471.7897 60.65860   NA 5290040073</div><div class='input'><span class='co'># ..and weighted mode for categorical data. The weight vector is aggregated using fsum</span>
-<span class='va'>wlddev</span><span class='op'>$</span><span class='va'>weights</span> <span class='op'>&lt;-</span> <span class='va'>weights</span>                                       <span class='co'># Adding to data</span>
-<span class='fu'><a href='https://rdrr.io/r/utils/head.html'>head</a></span><span class='op'>(</span><span class='fu'>collap</span><span class='op'>(</span><span class='va'>wlddev</span>, <span class='op'>~</span> <span class='va'>country</span> <span class='op'>+</span> <span class='va'>decade</span>, w <span class='op'>=</span> <span class='op'>~</span> <span class='va'>weights</span><span class='op'>)</span><span class='op'>)</span>         <span class='co'># Keeps column order</span>
-</div><div class='output co'>#&gt;       country iso3c       date     year decade     region     income  OECD
-#&gt; 1 Afghanistan   AFG 1964-01-01 1962.878   1960 South Asia Low income FALSE
-#&gt; 2 Afghanistan   AFG 1972-01-01 1970.986   1970 South Asia Low income FALSE
-#&gt; 3 Afghanistan   AFG 1979-01-01 1980.104   1980 South Asia Low income FALSE
-#&gt; 4 Afghanistan   AFG 1987-01-01 1989.056   1990 South Asia Low income FALSE
-#&gt; 5 Afghanistan   AFG 2004-01-01 2000.208   2000 South Asia Low income FALSE
-#&gt; 6 Afghanistan   AFG 2009-01-01 2008.957   2010 South Asia Low income FALSE
-#&gt;      PCGDP   LIFEEX GINI        ODA   weights
-#&gt; 1       NA 33.56576   NA  247280527  5.219775
-#&gt; 2       NA 37.14266   NA  221160015  6.280377
-#&gt; 3       NA 42.06259   NA  123263137 12.357487
-#&gt; 4       NA 48.93413   NA  199747378  9.588870
-#&gt; 5 354.9449 55.73774   NA 1108491908  9.112089
-#&gt; 6 471.7897 60.65860   NA 5290040073  9.513924</div><div class='input'><span class='fu'><a href='https://rdrr.io/r/utils/head.html'>head</a></span><span class='op'>(</span><span class='fu'>collap</span><span class='op'>(</span><span class='va'>wlddev</span>, <span class='op'>~</span> <span class='va'>country</span> <span class='op'>+</span> <span class='va'>decade</span>, w <span class='op'>=</span> <span class='op'>~</span> <span class='va'>weights</span>,          <span class='co'># Aggregating weights using sum</span>
-            wFUN <span class='op'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/list.html'>list</a></span><span class='op'>(</span><span class='va'>fsum</span>, <span class='va'>fmax</span><span class='op'>)</span><span class='op'>)</span><span class='op'>)</span>                           <span class='co'># and max (corresponding to mode)</span>
-</div><div class='output co'>#&gt;       country iso3c       date     year decade     region     income  OECD
-#&gt; 1 Afghanistan   AFG 1964-01-01 1962.878   1960 South Asia Low income FALSE
-#&gt; 2 Afghanistan   AFG 1972-01-01 1970.986   1970 South Asia Low income FALSE
-#&gt; 3 Afghanistan   AFG 1979-01-01 1980.104   1980 South Asia Low income FALSE
-#&gt; 4 Afghanistan   AFG 1987-01-01 1989.056   1990 South Asia Low income FALSE
-#&gt; 5 Afghanistan   AFG 2004-01-01 2000.208   2000 South Asia Low income FALSE
-#&gt; 6 Afghanistan   AFG 2009-01-01 2008.957   2010 South Asia Low income FALSE
-#&gt;      PCGDP   LIFEEX GINI        ODA fsum.weights fmax.weights
-#&gt; 1       NA 33.56576   NA  247280527     5.219775     1.790592
-#&gt; 2       NA 37.14266   NA  221160015     6.280377     1.270672
-#&gt; 3       NA 42.06259   NA  123263137    12.357487     2.211769
-#&gt; 4       NA 48.93413   NA  199747378     9.588870     2.564408
-#&gt; 5 354.9449 55.73774   NA 1108491908     9.112089     2.446680
-#&gt; 6 471.7897 60.65860   NA 5290040073     9.513924     2.648932</div><div class='input'><span class='va'>wlddev</span><span class='op'>$</span><span class='va'>weights</span> <span class='op'>&lt;-</span> <span class='cn'>NULL</span>
+<span class='co'># We aggregate to region level using population weights</span>
+<span class='fu'><a href='https://rdrr.io/r/utils/head.html'>head</a></span><span class='op'>(</span><span class='fu'>collap</span><span class='op'>(</span><span class='va'>wlddev</span>, <span class='op'>~</span> <span class='va'>region</span> <span class='op'>+</span> <span class='va'>year</span>, w <span class='op'>=</span> <span class='op'>~</span> <span class='va'>POP</span><span class='op'>)</span><span class='op'>)</span>                <span class='co'># Takes weighted mean for numeric..</span>
+</div><div class='output co'>#&gt;   country iso3c       date year decade              region              income
+#&gt; 1   China   CHN 1961-01-01 1960   1960 East Asia &amp; Pacific Upper middle income
+#&gt; 2   China   CHN 1962-01-01 1961   1960 East Asia &amp; Pacific Upper middle income
+#&gt; 3   China   CHN 1963-01-01 1962   1960 East Asia &amp; Pacific Upper middle income
+#&gt; 4   China   CHN 1964-01-01 1963   1960 East Asia &amp; Pacific Upper middle income
+#&gt; 5   China   CHN 1965-01-01 1964   1960 East Asia &amp; Pacific Upper middle income
+#&gt; 6   China   CHN 1966-01-01 1965   1960 East Asia &amp; Pacific Upper middle income
+#&gt;    OECD    PCGDP   LIFEEX GINI       ODA        POP
+#&gt; 1 FALSE 1313.760 48.20996   NA 764164132 1018832214
+#&gt; 2 FALSE 1395.228 48.73451   NA 774544481 1021806689
+#&gt; 3 FALSE 1463.441 49.39960   NA 915939856 1035694621
+#&gt; 4 FALSE 1540.621 50.37529   NA 748978431 1060888744
+#&gt; 5 FALSE 1665.385 51.57330   NA 619226983 1085690423
+#&gt; 6 FALSE 1733.757 52.94426   NA 702381139 1111494204</div><div class='input'><span class='co'># ..and weighted mode for categorical data. The weight vector is aggregated using fsum</span>
 
+<span class='fu'><a href='https://rdrr.io/r/utils/head.html'>head</a></span><span class='op'>(</span><span class='fu'>collap</span><span class='op'>(</span><span class='va'>wlddev</span>, <span class='op'>~</span> <span class='va'>region</span> <span class='op'>+</span> <span class='va'>year</span>, w <span class='op'>=</span> <span class='op'>~</span> <span class='va'>POP</span>,                 <span class='co'># Aggregating weights using sum</span>
+            wFUN <span class='op'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/list.html'>list</a></span><span class='op'>(</span><span class='va'>fsum</span>, <span class='va'>fmax</span><span class='op'>)</span><span class='op'>)</span><span class='op'>)</span>                           <span class='co'># and max (corresponding to mode)</span>
+</div><div class='output co'>#&gt;   country iso3c       date year decade              region              income
+#&gt; 1   China   CHN 1961-01-01 1960   1960 East Asia &amp; Pacific Upper middle income
+#&gt; 2   China   CHN 1962-01-01 1961   1960 East Asia &amp; Pacific Upper middle income
+#&gt; 3   China   CHN 1963-01-01 1962   1960 East Asia &amp; Pacific Upper middle income
+#&gt; 4   China   CHN 1964-01-01 1963   1960 East Asia &amp; Pacific Upper middle income
+#&gt; 5   China   CHN 1965-01-01 1964   1960 East Asia &amp; Pacific Upper middle income
+#&gt; 6   China   CHN 1966-01-01 1965   1960 East Asia &amp; Pacific Upper middle income
+#&gt;    OECD    PCGDP   LIFEEX GINI       ODA   fsum.POP  fmax.POP
+#&gt; 1 FALSE 1313.760 48.20996   NA 764164132 1018832214 667070000
+#&gt; 2 FALSE 1395.228 48.73451   NA 774544481 1021806689 660330000
+#&gt; 3 FALSE 1463.441 49.39960   NA 915939856 1035694621 665770000
+#&gt; 4 FALSE 1540.621 50.37529   NA 748978431 1060888744 682335000
+#&gt; 5 FALSE 1665.385 51.57330   NA 619226983 1085690423 698355000
+#&gt; 6 FALSE 1733.757 52.94426   NA 702381139 1111494204 715185000</div><div class='input'>
 
 <span class='co'>## Multi-Function Aggregation ----------------------------------</span>
-<span class='fu'><a href='https://rdrr.io/r/utils/head.html'>head</a></span><span class='op'>(</span><span class='fu'>collap</span><span class='op'>(</span><span class='va'>wlddev</span>, <span class='op'>~</span> <span class='va'>country</span> <span class='op'>+</span> <span class='va'>decade</span>, <span class='fu'><a href='https://rdrr.io/r/base/list.html'>list</a></span><span class='op'>(</span><span class='va'>fmean</span>, <span class='va'>fNobs</span><span class='op'>)</span>,     <span class='co'># Saving mean and Nobs</span>
-            cols <span class='op'>=</span> <span class='fl'>9</span><span class='op'>:</span><span class='fl'>12</span><span class='op'>)</span><span class='op'>)</span>
-</div><div class='output co'>#&gt;       country decade fmean.PCGDP fNobs.PCGDP fmean.LIFEEX fNobs.LIFEEX
-#&gt; 1 Afghanistan   1960          NA           0     33.39967            6
-#&gt; 2 Afghanistan   1970          NA           0     36.70089            9
-#&gt; 3 Afghanistan   1980          NA           0     42.03909           11
-#&gt; 4 Afghanistan   1990          NA           0     49.69089            9
-#&gt; 5 Afghanistan   2000    349.7596           4     55.61818           11
-#&gt; 6 Afghanistan   2010    506.9931           9     61.12978            9
-#&gt;   fmean.GINI fNobs.GINI  fmean.ODA fNobs.ODA
-#&gt; 1         NA          0  228641667         6
-#&gt; 2         NA          0  224881111         9
-#&gt; 3         NA          0  132813636        11
-#&gt; 4         NA          0  249072222         9
-#&gt; 5         NA          0 1045170000        11
-#&gt; 6         NA          0 5298066667         9</div><div class='input'>
+<span class='fu'><a href='https://rdrr.io/r/utils/head.html'>head</a></span><span class='op'>(</span><span class='fu'>collap</span><span class='op'>(</span><span class='va'>wlddev</span>, <span class='op'>~</span> <span class='va'>country</span> <span class='op'>+</span> <span class='va'>decade</span>, <span class='fu'><a href='https://rdrr.io/r/base/list.html'>list</a></span><span class='op'>(</span><span class='va'>fmean</span>, <span class='va'>fnobs</span><span class='op'>)</span>,     <span class='co'># Saving mean and Nobs</span>
+            cols <span class='op'>=</span> <span class='fl'>9</span><span class='op'>:</span><span class='fl'>13</span><span class='op'>)</span><span class='op'>)</span>
+</div><div class='output co'>#&gt;       country decade fmean.PCGDP fnobs.PCGDP fmean.LIFEEX fnobs.LIFEEX
+#&gt; 1 Afghanistan   1960          NA           0      34.6908           10
+#&gt; 2 Afghanistan   1970          NA           0      39.9053           10
+#&gt; 3 Afghanistan   1980          NA           0      46.4176           10
+#&gt; 4 Afghanistan   1990          NA           0      53.0097           10
+#&gt; 5 Afghanistan   2000    379.3730           8      58.0881           10
+#&gt; 6 Afghanistan   2010    567.4047          10      63.0715           10
+#&gt;   fmean.GINI fnobs.GINI  fmean.ODA fnobs.ODA fmean.POP fnobs.POP
+#&gt; 1         NA          0  222288999        10   9886773        10
+#&gt; 2         NA          0  236169998        10  12451803        10
+#&gt; 3         NA          0   71666001        10  12291854        10
+#&gt; 4         NA          0  317255000        10  16931903        10
+#&gt; 5         NA          0 3054051961        10  24870022        10
+#&gt; 6         NA          0 5023859033        10  33741195        10</div><div class='input'>
 <span class='fu'><a href='https://rdrr.io/r/utils/head.html'>head</a></span><span class='op'>(</span><span class='fu'>collap</span><span class='op'>(</span><span class='va'>wlddev</span>, <span class='op'>~</span> <span class='va'>country</span> <span class='op'>+</span> <span class='va'>decade</span>,                         <span class='co'># Same using base R -&gt; slower</span>
             <span class='fu'><a href='https://rdrr.io/r/base/list.html'>list</a></span><span class='op'>(</span>mean <span class='op'>=</span> <span class='va'>mean</span>,
                  Nobs <span class='op'>=</span> <span class='kw'>function</span><span class='op'>(</span><span class='va'>x</span>, <span class='va'>...</span><span class='op'>)</span> <span class='fu'><a href='https://rdrr.io/r/base/sum.html'>sum</a></span><span class='op'>(</span><span class='op'>!</span><span class='fu'><a href='https://rdrr.io/r/base/NA.html'>is.na</a></span><span class='op'>(</span><span class='va'>x</span><span class='op'>)</span><span class='op'>)</span><span class='op'>)</span>,
-            cols <span class='op'>=</span> <span class='fl'>9</span><span class='op'>:</span><span class='fl'>12</span>, na.rm <span class='op'>=</span> <span class='cn'>TRUE</span><span class='op'>)</span><span class='op'>)</span>
+            cols <span class='op'>=</span> <span class='fl'>9</span><span class='op'>:</span><span class='fl'>13</span>, na.rm <span class='op'>=</span> <span class='cn'>TRUE</span><span class='op'>)</span><span class='op'>)</span>
 </div><div class='output co'>#&gt;       country decade mean.PCGDP Nobs.PCGDP mean.LIFEEX Nobs.LIFEEX mean.GINI
-#&gt; 1 Afghanistan   1960        NaN          0    33.39967           6       NaN
-#&gt; 2 Afghanistan   1970        NaN          0    36.70089           9       NaN
-#&gt; 3 Afghanistan   1980        NaN          0    42.03909          11       NaN
-#&gt; 4 Afghanistan   1990        NaN          0    49.69089           9       NaN
-#&gt; 5 Afghanistan   2000   349.7596          4    55.61818          11       NaN
-#&gt; 6 Afghanistan   2010   506.9931          9    61.12978           9       NaN
-#&gt;   Nobs.GINI   mean.ODA Nobs.ODA
-#&gt; 1         0  228641667        6
-#&gt; 2         0  224881111        9
-#&gt; 3         0  132813636       11
-#&gt; 4         0  249072222        9
-#&gt; 5         0 1045170000       11
-#&gt; 6         0 5298066667        9</div><div class='input'>
+#&gt; 1 Afghanistan   1960        NaN          0     34.6908          10       NaN
+#&gt; 2 Afghanistan   1970        NaN          0     39.9053          10       NaN
+#&gt; 3 Afghanistan   1980        NaN          0     46.4176          10       NaN
+#&gt; 4 Afghanistan   1990        NaN          0     53.0097          10       NaN
+#&gt; 5 Afghanistan   2000   379.3730          8     58.0881          10       NaN
+#&gt; 6 Afghanistan   2010   567.4047         10     63.0715          10       NaN
+#&gt;   Nobs.GINI   mean.ODA Nobs.ODA mean.POP Nobs.POP
+#&gt; 1         0  222288999       10  9886773       10
+#&gt; 2         0  236169998       10 12451803       10
+#&gt; 3         0   71666001       10 12291854       10
+#&gt; 4         0  317255000       10 16931903       10
+#&gt; 5         0 3054051961       10 24870022       10
+#&gt; 6         0 5023859033       10 33741195       10</div><div class='input'>
 <span class='fu'><a href='https://rdrr.io/r/base/lapply.html'>lapply</a></span><span class='op'>(</span><span class='fu'>collap</span><span class='op'>(</span><span class='va'>wlddev</span>, <span class='op'>~</span> <span class='va'>country</span> <span class='op'>+</span> <span class='va'>decade</span>,                       <span class='co'># List output format</span>
-            <span class='fu'><a href='https://rdrr.io/r/base/list.html'>list</a></span><span class='op'>(</span><span class='va'>fmean</span>, <span class='va'>fNobs</span><span class='op'>)</span>, cols <span class='op'>=</span> <span class='fl'>9</span><span class='op'>:</span><span class='fl'>12</span>, return <span class='op'>=</span> <span class='st'>"list"</span><span class='op'>)</span>, <span class='va'>head</span><span class='op'>)</span>
+            <span class='fu'><a href='https://rdrr.io/r/base/list.html'>list</a></span><span class='op'>(</span><span class='va'>fmean</span>, <span class='va'>fnobs</span><span class='op'>)</span>, cols <span class='op'>=</span> <span class='fl'>9</span><span class='op'>:</span><span class='fl'>13</span>, return <span class='op'>=</span> <span class='st'>"list"</span><span class='op'>)</span>, <span class='va'>head</span><span class='op'>)</span>
 </div><div class='output co'>#&gt; $fmean
-#&gt;       country decade    PCGDP   LIFEEX GINI        ODA
-#&gt; 1 Afghanistan   1960       NA 33.39967   NA  228641667
-#&gt; 2 Afghanistan   1970       NA 36.70089   NA  224881111
-#&gt; 3 Afghanistan   1980       NA 42.03909   NA  132813636
-#&gt; 4 Afghanistan   1990       NA 49.69089   NA  249072222
-#&gt; 5 Afghanistan   2000 349.7596 55.61818   NA 1045170000
-#&gt; 6 Afghanistan   2010 506.9931 61.12978   NA 5298066667
+#&gt;       country decade    PCGDP  LIFEEX GINI        ODA      POP
+#&gt; 1 Afghanistan   1960       NA 34.6908   NA  222288999  9886773
+#&gt; 2 Afghanistan   1970       NA 39.9053   NA  236169998 12451803
+#&gt; 3 Afghanistan   1980       NA 46.4176   NA   71666001 12291854
+#&gt; 4 Afghanistan   1990       NA 53.0097   NA  317255000 16931903
+#&gt; 5 Afghanistan   2000 379.3730 58.0881   NA 3054051961 24870022
+#&gt; 6 Afghanistan   2010 567.4047 63.0715   NA 5023859033 33741195
 #&gt; 
-#&gt; $fNobs
-#&gt;       country decade PCGDP LIFEEX GINI ODA
-#&gt; 1 Afghanistan   1960     0      6    0   6
-#&gt; 2 Afghanistan   1970     0      9    0   9
-#&gt; 3 Afghanistan   1980     0     11    0  11
-#&gt; 4 Afghanistan   1990     0      9    0   9
-#&gt; 5 Afghanistan   2000     4     11    0  11
-#&gt; 6 Afghanistan   2010     9      9    0   9
+#&gt; $fnobs
+#&gt;       country decade PCGDP LIFEEX GINI ODA POP
+#&gt; 1 Afghanistan   1960     0     10    0  10  10
+#&gt; 2 Afghanistan   1970     0     10    0  10  10
+#&gt; 3 Afghanistan   1980     0     10    0  10  10
+#&gt; 4 Afghanistan   1990     0     10    0  10  10
+#&gt; 5 Afghanistan   2000     8     10    0  10  10
+#&gt; 6 Afghanistan   2010    10     10    0  10  10
 #&gt; </div><div class='input'>
 <span class='fu'><a href='https://rdrr.io/r/utils/head.html'>head</a></span><span class='op'>(</span><span class='fu'>collap</span><span class='op'>(</span><span class='va'>wlddev</span>, <span class='op'>~</span> <span class='va'>country</span> <span class='op'>+</span> <span class='va'>decade</span>,                         <span class='co'># Long output format</span>
-            <span class='fu'><a href='https://rdrr.io/r/base/list.html'>list</a></span><span class='op'>(</span><span class='va'>fmean</span>, <span class='va'>fNobs</span><span class='op'>)</span>, cols <span class='op'>=</span> <span class='fl'>9</span><span class='op'>:</span><span class='fl'>12</span>, return <span class='op'>=</span> <span class='st'>"long"</span><span class='op'>)</span><span class='op'>)</span>
-</div><div class='output co'>#&gt;   Function     country decade    PCGDP   LIFEEX GINI        ODA
-#&gt; 1    fmean Afghanistan   1960       NA 33.39967   NA  228641667
-#&gt; 2    fmean Afghanistan   1970       NA 36.70089   NA  224881111
-#&gt; 3    fmean Afghanistan   1980       NA 42.03909   NA  132813636
-#&gt; 4    fmean Afghanistan   1990       NA 49.69089   NA  249072222
-#&gt; 5    fmean Afghanistan   2000 349.7596 55.61818   NA 1045170000
-#&gt; 6    fmean Afghanistan   2010 506.9931 61.12978   NA 5298066667</div><div class='input'>
+            <span class='fu'><a href='https://rdrr.io/r/base/list.html'>list</a></span><span class='op'>(</span><span class='va'>fmean</span>, <span class='va'>fnobs</span><span class='op'>)</span>, cols <span class='op'>=</span> <span class='fl'>9</span><span class='op'>:</span><span class='fl'>13</span>, return <span class='op'>=</span> <span class='st'>"long"</span><span class='op'>)</span><span class='op'>)</span>
+</div><div class='output co'>#&gt;   Function     country decade    PCGDP  LIFEEX GINI        ODA      POP
+#&gt; 1    fmean Afghanistan   1960       NA 34.6908   NA  222288999  9886773
+#&gt; 2    fmean Afghanistan   1970       NA 39.9053   NA  236169998 12451803
+#&gt; 3    fmean Afghanistan   1980       NA 46.4176   NA   71666001 12291854
+#&gt; 4    fmean Afghanistan   1990       NA 53.0097   NA  317255000 16931903
+#&gt; 5    fmean Afghanistan   2000 379.3730 58.0881   NA 3054051961 24870022
+#&gt; 6    fmean Afghanistan   2010 567.4047 63.0715   NA 5023859033 33741195</div><div class='input'>
 <span class='fu'><a href='https://rdrr.io/r/utils/head.html'>head</a></span><span class='op'>(</span><span class='fu'>collap</span><span class='op'>(</span><span class='va'>wlddev</span>, <span class='op'>~</span> <span class='va'>country</span> <span class='op'>+</span> <span class='va'>decade</span>,                         <span class='co'># Also aggregating categorical data,</span>
-            <span class='fu'><a href='https://rdrr.io/r/base/list.html'>list</a></span><span class='op'>(</span><span class='va'>fmean</span>, <span class='va'>fNobs</span><span class='op'>)</span>, return <span class='op'>=</span> <span class='st'>"long_dupl"</span><span class='op'>)</span><span class='op'>)</span>          <span class='co'># and duplicating it 2 times</span>
+            <span class='fu'><a href='https://rdrr.io/r/base/list.html'>list</a></span><span class='op'>(</span><span class='va'>fmean</span>, <span class='va'>fnobs</span><span class='op'>)</span>, return <span class='op'>=</span> <span class='st'>"long_dupl"</span><span class='op'>)</span><span class='op'>)</span>          <span class='co'># and duplicating it 2 times</span>
 </div><div class='output co'>#&gt;   Function     country iso3c       date   year decade     region     income
-#&gt; 1    fmean Afghanistan   AFG 1961-01-01 1962.5   1960 South Asia Low income
-#&gt; 2    fmean Afghanistan   AFG 1967-01-01 1970.0   1970 South Asia Low income
-#&gt; 3    fmean Afghanistan   AFG 1976-01-01 1980.0   1980 South Asia Low income
-#&gt; 4    fmean Afghanistan   AFG 1987-01-01 1990.0   1990 South Asia Low income
-#&gt; 5    fmean Afghanistan   AFG 1996-01-01 2000.0   2000 South Asia Low income
-#&gt; 6    fmean Afghanistan   AFG 2007-01-01 2010.0   2010 South Asia Low income
-#&gt;    OECD    PCGDP   LIFEEX GINI        ODA
-#&gt; 1 FALSE       NA 33.39967   NA  228641667
-#&gt; 2 FALSE       NA 36.70089   NA  224881111
-#&gt; 3 FALSE       NA 42.03909   NA  132813636
-#&gt; 4 FALSE       NA 49.69089   NA  249072222
-#&gt; 5 FALSE 349.7596 55.61818   NA 1045170000
-#&gt; 6 FALSE 506.9931 61.12978   NA 5298066667</div><div class='input'>
+#&gt; 1    fmean Afghanistan   AFG 1961-01-01 1964.5   1960 South Asia Low income
+#&gt; 2    fmean Afghanistan   AFG 1971-01-01 1974.5   1970 South Asia Low income
+#&gt; 3    fmean Afghanistan   AFG 1981-01-01 1984.5   1980 South Asia Low income
+#&gt; 4    fmean Afghanistan   AFG 1991-01-01 1994.5   1990 South Asia Low income
+#&gt; 5    fmean Afghanistan   AFG 2001-01-01 2004.5   2000 South Asia Low income
+#&gt; 6    fmean Afghanistan   AFG 2011-01-01 2014.5   2010 South Asia Low income
+#&gt;    OECD    PCGDP  LIFEEX GINI        ODA      POP
+#&gt; 1 FALSE       NA 34.6908   NA  222288999  9886773
+#&gt; 2 FALSE       NA 39.9053   NA  236169998 12451803
+#&gt; 3 FALSE       NA 46.4176   NA   71666001 12291854
+#&gt; 4 FALSE       NA 53.0097   NA  317255000 16931903
+#&gt; 5 FALSE 379.3730 58.0881   NA 3054051961 24870022
+#&gt; 6 FALSE 567.4047 63.0715   NA 5023859033 33741195</div><div class='input'>
 <span class='fu'><a href='https://rdrr.io/r/utils/head.html'>head</a></span><span class='op'>(</span><span class='fu'>collap</span><span class='op'>(</span><span class='va'>wlddev</span>, <span class='op'>~</span> <span class='va'>country</span> <span class='op'>+</span> <span class='va'>decade</span>,                         <span class='co'># Now also using 2 functions on</span>
-            <span class='fu'><a href='https://rdrr.io/r/base/list.html'>list</a></span><span class='op'>(</span><span class='va'>fmean</span>, <span class='va'>fNobs</span><span class='op'>)</span>, <span class='fu'><a href='https://rdrr.io/r/base/list.html'>list</a></span><span class='op'>(</span><span class='va'>fmode</span>, <span class='va'>flast</span><span class='op'>)</span>,             <span class='co'># categorical data</span>
+            <span class='fu'><a href='https://rdrr.io/r/base/list.html'>list</a></span><span class='op'>(</span><span class='va'>fmean</span>, <span class='va'>fnobs</span><span class='op'>)</span>, <span class='fu'><a href='https://rdrr.io/r/base/list.html'>list</a></span><span class='op'>(</span><span class='va'>fmode</span>, <span class='va'>flast</span><span class='op'>)</span>,             <span class='co'># categorical data</span>
             keep.col.order <span class='op'>=</span> <span class='cn'>FALSE</span><span class='op'>)</span><span class='op'>)</span>
 </div><div class='output co'>#&gt;       country decade fmean.year fmean.PCGDP fmean.LIFEEX fmean.GINI  fmean.ODA
-#&gt; 1 Afghanistan   1960     1962.5          NA     33.39967         NA  228641667
-#&gt; 2 Afghanistan   1970     1970.0          NA     36.70089         NA  224881111
-#&gt; 3 Afghanistan   1980     1980.0          NA     42.03909         NA  132813636
-#&gt; 4 Afghanistan   1990     1990.0          NA     49.69089         NA  249072222
-#&gt; 5 Afghanistan   2000     2000.0    349.7596     55.61818         NA 1045170000
-#&gt; 6 Afghanistan   2010     2010.0    506.9931     61.12978         NA 5298066667
-#&gt;   fNobs.year fNobs.PCGDP fNobs.LIFEEX fNobs.GINI fNobs.ODA fmode.iso3c
-#&gt; 1          6           0            6          0         6         AFG
-#&gt; 2          9           0            9          0         9         AFG
-#&gt; 3         11           0           11          0        11         AFG
-#&gt; 4          9           0            9          0         9         AFG
-#&gt; 5         11           4           11          0        11         AFG
-#&gt; 6          9           9            9          0         9         AFG
-#&gt;   fmode.date fmode.region fmode.income fmode.OECD flast.iso3c flast.date
-#&gt; 1 1961-01-01   South Asia   Low income      FALSE         AFG 1966-01-01
-#&gt; 2 1967-01-01   South Asia   Low income      FALSE         AFG 1975-01-01
-#&gt; 3 1976-01-01   South Asia   Low income      FALSE         AFG 1986-01-01
-#&gt; 4 1987-01-01   South Asia   Low income      FALSE         AFG 1995-01-01
-#&gt; 5 1996-01-01   South Asia   Low income      FALSE         AFG 2006-01-01
-#&gt; 6 2007-01-01   South Asia   Low income      FALSE         AFG 2015-01-01
-#&gt;   flast.region flast.income flast.OECD
-#&gt; 1   South Asia   Low income      FALSE
-#&gt; 2   South Asia   Low income      FALSE
-#&gt; 3   South Asia   Low income      FALSE
-#&gt; 4   South Asia   Low income      FALSE
-#&gt; 5   South Asia   Low income      FALSE
-#&gt; 6   South Asia   Low income      FALSE</div><div class='input'>
+#&gt; 1 Afghanistan   1960     1964.5          NA      34.6908         NA  222288999
+#&gt; 2 Afghanistan   1970     1974.5          NA      39.9053         NA  236169998
+#&gt; 3 Afghanistan   1980     1984.5          NA      46.4176         NA   71666001
+#&gt; 4 Afghanistan   1990     1994.5          NA      53.0097         NA  317255000
+#&gt; 5 Afghanistan   2000     2004.5    379.3730      58.0881         NA 3054051961
+#&gt; 6 Afghanistan   2010     2014.5    567.4047      63.0715         NA 5023859033
+#&gt;   fmean.POP fnobs.year fnobs.PCGDP fnobs.LIFEEX fnobs.GINI fnobs.ODA fnobs.POP
+#&gt; 1   9886773         10           0           10          0        10        10
+#&gt; 2  12451803         10           0           10          0        10        10
+#&gt; 3  12291854         10           0           10          0        10        10
+#&gt; 4  16931903         10           0           10          0        10        10
+#&gt; 5  24870022         10           8           10          0        10        10
+#&gt; 6  33741195         10          10           10          0        10        10
+#&gt;   fmode.iso3c fmode.date fmode.region fmode.income fmode.OECD flast.iso3c
+#&gt; 1         AFG 1961-01-01   South Asia   Low income      FALSE         AFG
+#&gt; 2         AFG 1971-01-01   South Asia   Low income      FALSE         AFG
+#&gt; 3         AFG 1981-01-01   South Asia   Low income      FALSE         AFG
+#&gt; 4         AFG 1991-01-01   South Asia   Low income      FALSE         AFG
+#&gt; 5         AFG 2001-01-01   South Asia   Low income      FALSE         AFG
+#&gt; 6         AFG 2011-01-01   South Asia   Low income      FALSE         AFG
+#&gt;   flast.date flast.region flast.income flast.OECD
+#&gt; 1 1970-01-01   South Asia   Low income      FALSE
+#&gt; 2 1980-01-01   South Asia   Low income      FALSE
+#&gt; 3 1990-01-01   South Asia   Low income      FALSE
+#&gt; 4 2000-01-01   South Asia   Low income      FALSE
+#&gt; 5 2010-01-01   South Asia   Low income      FALSE
+#&gt; 6 2020-01-01   South Asia   Low income      FALSE</div><div class='input'>
 <span class='fu'><a href='https://rdrr.io/r/utils/head.html'>head</a></span><span class='op'>(</span><span class='fu'>collap</span><span class='op'>(</span><span class='va'>wlddev</span>, <span class='op'>~</span> <span class='va'>country</span> <span class='op'>+</span> <span class='va'>decade</span>,                         <span class='co'># More functions, string input,</span>
-            <span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span><span class='op'>(</span><span class='st'>"fmean"</span>,<span class='st'>"fsum"</span>,<span class='st'>"fNobs"</span>,<span class='st'>"fsd"</span>,<span class='st'>"fvar"</span><span class='op'>)</span>,             <span class='co'># parallelized execution</span>
-            <span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span><span class='op'>(</span><span class='st'>"fmode"</span>,<span class='st'>"ffirst"</span>,<span class='st'>"flast"</span>,<span class='st'>"fNdistinct"</span><span class='op'>)</span>,           <span class='co'># (choose more than 1 cores,</span>
+            <span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span><span class='op'>(</span><span class='st'>"fmean"</span>,<span class='st'>"fsum"</span>,<span class='st'>"fnobs"</span>,<span class='st'>"fsd"</span>,<span class='st'>"fvar"</span><span class='op'>)</span>,             <span class='co'># parallelized execution</span>
+            <span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span><span class='op'>(</span><span class='st'>"fmode"</span>,<span class='st'>"ffirst"</span>,<span class='st'>"flast"</span>,<span class='st'>"fndistinct"</span><span class='op'>)</span>,           <span class='co'># (choose more than 1 cores,</span>
             parallel <span class='op'>=</span> <span class='cn'>TRUE</span>, mc.cores <span class='op'>=</span> <span class='fl'>1L</span>,                     <span class='co'># depending on your machine)</span>
             keep.col.order <span class='op'>=</span> <span class='cn'>FALSE</span><span class='op'>)</span><span class='op'>)</span>
 </div><div class='output co'>#&gt;       country decade fmean.year fmean.PCGDP fmean.LIFEEX fmean.GINI  fmean.ODA
-#&gt; 1 Afghanistan   1960     1962.5          NA     33.39967         NA  228641667
-#&gt; 2 Afghanistan   1970     1970.0          NA     36.70089         NA  224881111
-#&gt; 3 Afghanistan   1980     1980.0          NA     42.03909         NA  132813636
-#&gt; 4 Afghanistan   1990     1990.0          NA     49.69089         NA  249072222
-#&gt; 5 Afghanistan   2000     2000.0    349.7596     55.61818         NA 1045170000
-#&gt; 6 Afghanistan   2010     2010.0    506.9931     61.12978         NA 5298066667
-#&gt;   fsum.year fsum.PCGDP fsum.LIFEEX fsum.GINI    fsum.ODA fNobs.year fNobs.PCGDP
-#&gt; 1     11775         NA     200.398        NA  1371850000          6           0
-#&gt; 2     17730         NA     330.308        NA  2023930000          9           0
-#&gt; 3     21780         NA     462.430        NA  1460950000         11           0
-#&gt; 4     17910         NA     447.218        NA  2241650000          9           0
-#&gt; 5     22000   1399.038     611.800        NA 11496870000         11           4
-#&gt; 6     18090   4562.938     550.168        NA 47682600000          9           9
-#&gt;   fNobs.LIFEEX fNobs.GINI fNobs.ODA fsd.year fsd.PCGDP fsd.LIFEEX fsd.GINI
-#&gt; 1            6          0         6 1.870829        NA  0.8236083       NA
-#&gt; 2            9          0         9 2.738613        NA  1.2329864       NA
-#&gt; 3           11          0        11 3.316625        NA  2.1599808       NA
-#&gt; 4            9          0         9 2.738613        NA  2.1258392       NA
-#&gt; 5           11          0        11 3.316625  11.89378  1.8056120       NA
-#&gt; 6            9          0         9 2.738613  86.22723  1.2872844       NA
-#&gt;      fsd.ODA fvar.year fvar.PCGDP fvar.LIFEEX fvar.GINI     fvar.ODA
-#&gt; 1  101559732       3.5         NA   0.6783307        NA 1.031438e+16
-#&gt; 2   58515953       7.5         NA   1.5202554        NA 3.424117e+15
-#&gt; 3  108271755      11.0         NA   4.6655169        NA 1.172277e+16
-#&gt; 4  203018929       7.5         NA   4.5191921        NA 4.121669e+16
-#&gt; 5 1113781886      11.0    141.462   3.2602346        NA 1.240510e+18
-#&gt; 6 1102034385       7.5   7435.136   1.6571012        NA 1.214480e+18
-#&gt;   fmode.iso3c fmode.date fmode.region fmode.income fmode.OECD ffirst.iso3c
-#&gt; 1         AFG 1961-01-01   South Asia   Low income      FALSE          AFG
-#&gt; 2         AFG 1967-01-01   South Asia   Low income      FALSE          AFG
-#&gt; 3         AFG 1976-01-01   South Asia   Low income      FALSE          AFG
-#&gt; 4         AFG 1987-01-01   South Asia   Low income      FALSE          AFG
-#&gt; 5         AFG 1996-01-01   South Asia   Low income      FALSE          AFG
-#&gt; 6         AFG 2007-01-01   South Asia   Low income      FALSE          AFG
-#&gt;   ffirst.date ffirst.region ffirst.income ffirst.OECD flast.iso3c flast.date
-#&gt; 1  1961-01-01    South Asia    Low income       FALSE         AFG 1966-01-01
-#&gt; 2  1967-01-01    South Asia    Low income       FALSE         AFG 1975-01-01
-#&gt; 3  1976-01-01    South Asia    Low income       FALSE         AFG 1986-01-01
-#&gt; 4  1987-01-01    South Asia    Low income       FALSE         AFG 1995-01-01
-#&gt; 5  1996-01-01    South Asia    Low income       FALSE         AFG 2006-01-01
-#&gt; 6  2007-01-01    South Asia    Low income       FALSE         AFG 2015-01-01
-#&gt;   flast.region flast.income flast.OECD fNdistinct.iso3c fNdistinct.date
-#&gt; 1   South Asia   Low income      FALSE                1               6
-#&gt; 2   South Asia   Low income      FALSE                1               9
-#&gt; 3   South Asia   Low income      FALSE                1              11
-#&gt; 4   South Asia   Low income      FALSE                1               9
-#&gt; 5   South Asia   Low income      FALSE                1              11
-#&gt; 6   South Asia   Low income      FALSE                1               9
-#&gt;   fNdistinct.region fNdistinct.income fNdistinct.OECD
-#&gt; 1                 1                 1               1
-#&gt; 2                 1                 1               1
-#&gt; 3                 1                 1               1
-#&gt; 4                 1                 1               1
-#&gt; 5                 1                 1               1
-#&gt; 6                 1                 1               1</div><div class='input'>
+#&gt; 1 Afghanistan   1960     1964.5          NA      34.6908         NA  222288999
+#&gt; 2 Afghanistan   1970     1974.5          NA      39.9053         NA  236169998
+#&gt; 3 Afghanistan   1980     1984.5          NA      46.4176         NA   71666001
+#&gt; 4 Afghanistan   1990     1994.5          NA      53.0097         NA  317255000
+#&gt; 5 Afghanistan   2000     2004.5    379.3730      58.0881         NA 3054051961
+#&gt; 6 Afghanistan   2010     2014.5    567.4047      63.0715         NA 5023859033
+#&gt;   fmean.POP fsum.year fsum.PCGDP fsum.LIFEEX fsum.GINI    fsum.ODA  fsum.POP
+#&gt; 1   9886773     19645         NA     346.908        NA  2222889992  98867731
+#&gt; 2  12451803     19745         NA     399.053        NA  2361699982 124518028
+#&gt; 3  12291854     19845         NA     464.176        NA   716660007 122918537
+#&gt; 4  16931903     19945         NA     530.097        NA  3172550003 169319030
+#&gt; 5  24870022     20045   3034.984     580.881        NA 30540519608 248700217
+#&gt; 6  33741195     20145   5674.047     630.715        NA 50238590332 337411950
+#&gt;   fnobs.year fnobs.PCGDP fnobs.LIFEEX fnobs.GINI fnobs.ODA fnobs.POP fsd.year
+#&gt; 1         10           0           10          0        10        10  3.02765
+#&gt; 2         10           0           10          0        10        10  3.02765
+#&gt; 3         10           0           10          0        10        10  3.02765
+#&gt; 4         10           0           10          0        10        10  3.02765
+#&gt; 5         10           8           10          0        10        10  3.02765
+#&gt; 6         10          10           10          0        10        10  3.02765
+#&gt;   fsd.PCGDP fsd.LIFEEX fsd.GINI    fsd.ODA   fsd.POP fvar.year fvar.PCGDP
+#&gt; 1        NA   1.490964       NA   80884369  637640.4  9.166667         NA
+#&gt; 2        NA   1.738383       NA   34241008  793653.6  9.166667         NA
+#&gt; 3        NA   2.161460       NA   72958531  655220.5  9.166667         NA
+#&gt; 4        NA   1.695424       NA  160500141 2792866.0  9.166667         NA
+#&gt; 5  53.66524   1.565630       NA 2013110021 2636348.3  9.166667   2879.958
+#&gt; 6  18.07999   1.274644       NA 1090075663 3032956.1  9.166667    326.886
+#&gt;   fvar.LIFEEX fvar.GINI     fvar.ODA     fvar.POP fmode.iso3c fmode.date
+#&gt; 1    2.222975        NA 6.542281e+15 4.065853e+11         AFG 1961-01-01
+#&gt; 2    3.021974        NA 1.172447e+15 6.298860e+11         AFG 1971-01-01
+#&gt; 3    4.671908        NA 5.322947e+15 4.293139e+11         AFG 1981-01-01
+#&gt; 4    2.874463        NA 2.576030e+16 7.800100e+12         AFG 1991-01-01
+#&gt; 5    2.451196        NA 4.052612e+18 6.950332e+12         AFG 2001-01-01
+#&gt; 6    1.624717        NA 1.188265e+18 9.198823e+12         AFG 2011-01-01
+#&gt;   fmode.region fmode.income fmode.OECD ffirst.iso3c ffirst.date ffirst.region
+#&gt; 1   South Asia   Low income      FALSE          AFG  1961-01-01    South Asia
+#&gt; 2   South Asia   Low income      FALSE          AFG  1971-01-01    South Asia
+#&gt; 3   South Asia   Low income      FALSE          AFG  1981-01-01    South Asia
+#&gt; 4   South Asia   Low income      FALSE          AFG  1991-01-01    South Asia
+#&gt; 5   South Asia   Low income      FALSE          AFG  2001-01-01    South Asia
+#&gt; 6   South Asia   Low income      FALSE          AFG  2011-01-01    South Asia
+#&gt;   ffirst.income ffirst.OECD flast.iso3c flast.date flast.region flast.income
+#&gt; 1    Low income       FALSE         AFG 1970-01-01   South Asia   Low income
+#&gt; 2    Low income       FALSE         AFG 1980-01-01   South Asia   Low income
+#&gt; 3    Low income       FALSE         AFG 1990-01-01   South Asia   Low income
+#&gt; 4    Low income       FALSE         AFG 2000-01-01   South Asia   Low income
+#&gt; 5    Low income       FALSE         AFG 2010-01-01   South Asia   Low income
+#&gt; 6    Low income       FALSE         AFG 2020-01-01   South Asia   Low income
+#&gt;   flast.OECD fndistinct.iso3c fndistinct.date fndistinct.region
+#&gt; 1      FALSE                1              10                 1
+#&gt; 2      FALSE                1              10                 1
+#&gt; 3      FALSE                1              10                 1
+#&gt; 4      FALSE                1              10                 1
+#&gt; 5      FALSE                1              10                 1
+#&gt; 6      FALSE                1              10                 1
+#&gt;   fndistinct.income fndistinct.OECD
+#&gt; 1                 1               1
+#&gt; 2                 1               1
+#&gt; 3                 1               1
+#&gt; 4                 1               1
+#&gt; 5                 1               1
+#&gt; 6                 1               1</div><div class='input'>
 
 <span class='co'>## Custom Aggregation ------------------------------------------</span>
 <span class='fu'><a href='https://rdrr.io/r/utils/head.html'>head</a></span><span class='op'>(</span><span class='fu'>collap</span><span class='op'>(</span><span class='va'>wlddev</span>, <span class='op'>~</span> <span class='va'>country</span> <span class='op'>+</span> <span class='va'>decade</span>,                         <span class='co'># Custom aggregation</span>
-            custom <span class='op'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/list.html'>list</a></span><span class='op'>(</span>fmean <span class='op'>=</span> <span class='fl'>9</span><span class='op'>:</span><span class='fl'>12</span>, fsd <span class='op'>=</span> <span class='fl'>9</span><span class='op'>:</span><span class='fl'>10</span>, fmode <span class='op'>=</span> <span class='fl'>7</span><span class='op'>:</span><span class='fl'>8</span><span class='op'>)</span><span class='op'>)</span><span class='op'>)</span>
+            custom <span class='op'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/list.html'>list</a></span><span class='op'>(</span>fmean <span class='op'>=</span> <span class='fl'>9</span><span class='op'>:</span><span class='fl'>13</span>, fsd <span class='op'>=</span> <span class='fl'>9</span><span class='op'>:</span><span class='fl'>10</span>, fmode <span class='op'>=</span> <span class='fl'>7</span><span class='op'>:</span><span class='fl'>8</span><span class='op'>)</span><span class='op'>)</span><span class='op'>)</span>
 </div><div class='output co'>#&gt;       country decade fmode.income fmode.OECD fmean.PCGDP fsd.PCGDP fmean.LIFEEX
-#&gt; 1 Afghanistan   1960   Low income      FALSE          NA        NA     33.39967
-#&gt; 2 Afghanistan   1970   Low income      FALSE          NA        NA     36.70089
-#&gt; 3 Afghanistan   1980   Low income      FALSE          NA        NA     42.03909
-#&gt; 4 Afghanistan   1990   Low income      FALSE          NA        NA     49.69089
-#&gt; 5 Afghanistan   2000   Low income      FALSE    349.7596  11.89378     55.61818
-#&gt; 6 Afghanistan   2010   Low income      FALSE    506.9931  86.22723     61.12978
-#&gt;   fsd.LIFEEX fmean.GINI  fmean.ODA
-#&gt; 1  0.8236083         NA  228641667
-#&gt; 2  1.2329864         NA  224881111
-#&gt; 3  2.1599808         NA  132813636
-#&gt; 4  2.1258392         NA  249072222
-#&gt; 5  1.8056120         NA 1045170000
-#&gt; 6  1.2872844         NA 5298066667</div><div class='input'>
+#&gt; 1 Afghanistan   1960   Low income      FALSE          NA        NA      34.6908
+#&gt; 2 Afghanistan   1970   Low income      FALSE          NA        NA      39.9053
+#&gt; 3 Afghanistan   1980   Low income      FALSE          NA        NA      46.4176
+#&gt; 4 Afghanistan   1990   Low income      FALSE          NA        NA      53.0097
+#&gt; 5 Afghanistan   2000   Low income      FALSE    379.3730  53.66524      58.0881
+#&gt; 6 Afghanistan   2010   Low income      FALSE    567.4047  18.07999      63.0715
+#&gt;   fsd.LIFEEX fmean.GINI  fmean.ODA fmean.POP
+#&gt; 1   1.490964         NA  222288999   9886773
+#&gt; 2   1.738383         NA  236169998  12451803
+#&gt; 3   2.161460         NA   71666001  12291854
+#&gt; 4   1.695424         NA  317255000  16931903
+#&gt; 5   1.565630         NA 3054051961  24870022
+#&gt; 6   1.274644         NA 5023859033  33741195</div><div class='input'>
 <span class='fu'><a href='https://rdrr.io/r/utils/head.html'>head</a></span><span class='op'>(</span><span class='fu'>collap</span><span class='op'>(</span><span class='va'>wlddev</span>, <span class='op'>~</span> <span class='va'>country</span> <span class='op'>+</span> <span class='va'>decade</span>,                         <span class='co'># Using column names</span>
             custom <span class='op'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/list.html'>list</a></span><span class='op'>(</span>fmean <span class='op'>=</span> <span class='st'>"PCGDP"</span>, fsd <span class='op'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span><span class='op'>(</span><span class='st'>"LIFEEX"</span>,<span class='st'>"GINI"</span><span class='op'>)</span>,
                           flast <span class='op'>=</span> <span class='st'>"date"</span><span class='op'>)</span><span class='op'>)</span><span class='op'>)</span>
-</div><div class='output co'>#&gt;       country       date decade    PCGDP    LIFEEX GINI
-#&gt; 1 Afghanistan 1966-01-01   1960       NA 0.8236083   NA
-#&gt; 2 Afghanistan 1975-01-01   1970       NA 1.2329864   NA
-#&gt; 3 Afghanistan 1986-01-01   1980       NA 2.1599808   NA
-#&gt; 4 Afghanistan 1995-01-01   1990       NA 2.1258392   NA
-#&gt; 5 Afghanistan 2006-01-01   2000 349.7596 1.8056120   NA
-#&gt; 6 Afghanistan 2015-01-01   2010 506.9931 1.2872844   NA</div><div class='input'>
+</div><div class='output co'>#&gt;       country       date decade    PCGDP   LIFEEX GINI
+#&gt; 1 Afghanistan 1970-01-01   1960       NA 1.490964   NA
+#&gt; 2 Afghanistan 1980-01-01   1970       NA 1.738383   NA
+#&gt; 3 Afghanistan 1990-01-01   1980       NA 2.161460   NA
+#&gt; 4 Afghanistan 2000-01-01   1990       NA 1.695424   NA
+#&gt; 5 Afghanistan 2010-01-01   2000 379.3730 1.565630   NA
+#&gt; 6 Afghanistan 2020-01-01   2010 567.4047 1.274644   NA</div><div class='input'>
 <span class='fu'><a href='https://rdrr.io/r/utils/head.html'>head</a></span><span class='op'>(</span><span class='fu'>collap</span><span class='op'>(</span><span class='va'>wlddev</span>, <span class='op'>~</span> <span class='va'>country</span> <span class='op'>+</span> <span class='va'>decade</span>,                         <span class='co'># Weighted parallelized custom</span>
             custom <span class='op'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/list.html'>list</a></span><span class='op'>(</span>fmean <span class='op'>=</span> <span class='fl'>9</span><span class='op'>:</span><span class='fl'>12</span>, fsd <span class='op'>=</span> <span class='fl'>9</span><span class='op'>:</span><span class='fl'>10</span>,             <span class='co'># aggregation</span>
-                          fmode <span class='op'>=</span> <span class='fl'>7</span><span class='op'>:</span><span class='fl'>8</span><span class='op'>)</span>, w <span class='op'>=</span> <span class='va'>weights</span>,
+                          fmode <span class='op'>=</span> <span class='fl'>7</span><span class='op'>:</span><span class='fl'>8</span><span class='op'>)</span>, w <span class='op'>=</span> <span class='op'>~</span> <span class='va'>POP</span>,
             wFUN <span class='op'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/list.html'>list</a></span><span class='op'>(</span><span class='va'>fsum</span>, <span class='va'>fmax</span><span class='op'>)</span>,
             parallel <span class='op'>=</span> <span class='cn'>TRUE</span>, mc.cores <span class='op'>=</span> <span class='fl'>1L</span><span class='op'>)</span><span class='op'>)</span>
-</div><div class='output co'>#&gt;   fsum.weights fmax.weights     country decade fmode.income fmode.OECD
-#&gt; 1     5.219775     1.790592 Afghanistan   1960   Low income      FALSE
-#&gt; 2     6.280377     1.270672 Afghanistan   1970   Low income      FALSE
-#&gt; 3    12.357487     2.211769 Afghanistan   1980   Low income      FALSE
-#&gt; 4     9.588870     2.564408 Afghanistan   1990   Low income      FALSE
-#&gt; 5     9.112089     2.446680 Afghanistan   2000   Low income      FALSE
-#&gt; 6     9.513924     2.648932 Afghanistan   2010   Low income      FALSE
-#&gt;   fmean.PCGDP fsd.PCGDP fmean.LIFEEX fsd.LIFEEX fmean.GINI  fmean.ODA
-#&gt; 1          NA        NA     33.56576  0.8351381         NA  247280527
-#&gt; 2          NA        NA     37.14266  1.1330649         NA  221160015
-#&gt; 3          NA        NA     42.06259  1.8611270         NA  123263137
-#&gt; 4          NA        NA     48.93413  2.2581963         NA  199747378
-#&gt; 5    354.9449  8.672255     55.73774  1.8527170         NA 1108491908
-#&gt; 6    471.7897 78.761274     60.65860  1.0621405         NA 5290040073</div><div class='input'>
+</div><div class='output co'>#&gt;       country decade fmode.income fmode.OECD fmean.PCGDP fsd.PCGDP fmean.LIFEEX
+#&gt; 1 Afghanistan   1960   Low income      FALSE          NA        NA     34.77716
+#&gt; 2 Afghanistan   1970   Low income      FALSE          NA        NA     40.00367
+#&gt; 3 Afghanistan   1980   Low income      FALSE          NA        NA     46.32098
+#&gt; 4 Afghanistan   1990   Low income      FALSE          NA        NA     53.25897
+#&gt; 5 Afghanistan   2000   Low income      FALSE    382.5583  51.11423     58.23630
+#&gt; 6 Afghanistan   2010   Low income      FALSE    568.0810  16.37030     63.17450
+#&gt;   fsd.LIFEEX fmean.GINI  fmean.ODA  fsum.POP fmax.POP
+#&gt; 1   1.413369         NA  223006447  98867731 10893776
+#&gt; 2   1.643608         NA  236798314 124518028 13411056
+#&gt; 3   2.061847         NA   70613923 122918537 13356511
+#&gt; 4   1.556185         NA  306818649 169319030 20170844
+#&gt; 5   1.476279         NA 3240143310 248700217 28394813
+#&gt; 6   1.196725         NA 4942806183 337411950 38041754</div><div class='input'>
 <span class='fu'><a href='https://rdrr.io/r/utils/head.html'>head</a></span><span class='op'>(</span><span class='fu'>collap</span><span class='op'>(</span><span class='va'>wlddev</span>, <span class='op'>~</span> <span class='va'>country</span> <span class='op'>+</span> <span class='va'>decade</span>,                         <span class='co'># No column reordering</span>
             custom <span class='op'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/list.html'>list</a></span><span class='op'>(</span>fmean <span class='op'>=</span> <span class='fl'>9</span><span class='op'>:</span><span class='fl'>12</span>, fsd <span class='op'>=</span> <span class='fl'>9</span><span class='op'>:</span><span class='fl'>10</span>,
-                          fmode <span class='op'>=</span> <span class='fl'>7</span><span class='op'>:</span><span class='fl'>8</span><span class='op'>)</span>, w <span class='op'>=</span> <span class='va'>weights</span>,
+                          fmode <span class='op'>=</span> <span class='fl'>7</span><span class='op'>:</span><span class='fl'>8</span><span class='op'>)</span>, w <span class='op'>=</span> <span class='op'>~</span> <span class='va'>POP</span>,
             wFUN <span class='op'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/list.html'>list</a></span><span class='op'>(</span><span class='va'>fsum</span>, <span class='va'>fmax</span><span class='op'>)</span>,
             parallel <span class='op'>=</span> <span class='cn'>TRUE</span>, mc.cores <span class='op'>=</span> <span class='fl'>1L</span>, keep.col.order <span class='op'>=</span> <span class='cn'>FALSE</span><span class='op'>)</span><span class='op'>)</span>
-</div><div class='output co'>#&gt;       country decade fsum.weights fmax.weights fmean.PCGDP fmean.LIFEEX
-#&gt; 1 Afghanistan   1960     5.219775     1.790592          NA     33.56576
-#&gt; 2 Afghanistan   1970     6.280377     1.270672          NA     37.14266
-#&gt; 3 Afghanistan   1980    12.357487     2.211769          NA     42.06259
-#&gt; 4 Afghanistan   1990     9.588870     2.564408          NA     48.93413
-#&gt; 5 Afghanistan   2000     9.112089     2.446680    354.9449     55.73774
-#&gt; 6 Afghanistan   2010     9.513924     2.648932    471.7897     60.65860
-#&gt;   fmean.GINI  fmean.ODA fsd.PCGDP fsd.LIFEEX fmode.income fmode.OECD
-#&gt; 1         NA  247280527        NA  0.8351381   Low income      FALSE
-#&gt; 2         NA  221160015        NA  1.1330649   Low income      FALSE
-#&gt; 3         NA  123263137        NA  1.8611270   Low income      FALSE
-#&gt; 4         NA  199747378        NA  2.2581963   Low income      FALSE
-#&gt; 5         NA 1108491908  8.672255  1.8527170   Low income      FALSE
-#&gt; 6         NA 5290040073 78.761274  1.0621405   Low income      FALSE</div><div class='input'>
- 
+</div><div class='output co'>#&gt;       country decade  fsum.POP fmax.POP fmean.PCGDP fmean.LIFEEX fmean.GINI
+#&gt; 1 Afghanistan   1960  98867731 10893776          NA     34.77716         NA
+#&gt; 2 Afghanistan   1970 124518028 13411056          NA     40.00367         NA
+#&gt; 3 Afghanistan   1980 122918537 13356511          NA     46.32098         NA
+#&gt; 4 Afghanistan   1990 169319030 20170844          NA     53.25897         NA
+#&gt; 5 Afghanistan   2000 248700217 28394813    382.5583     58.23630         NA
+#&gt; 6 Afghanistan   2010 337411950 38041754    568.0810     63.17450         NA
+#&gt;    fmean.ODA fsd.PCGDP fsd.LIFEEX fmode.income fmode.OECD
+#&gt; 1  223006447        NA   1.413369   Low income      FALSE
+#&gt; 2  236798314        NA   1.643608   Low income      FALSE
+#&gt; 3   70613923        NA   2.061847   Low income      FALSE
+#&gt; 4  306818649        NA   1.556185   Low income      FALSE
+#&gt; 5 3240143310  51.11423   1.476279   Low income      FALSE
+#&gt; 6 4942806183  16.37030   1.196725   Low income      FALSE</div><div class='input'>
 <span class='co'>## Piped Use --------------------------------------------------</span>
-<span class='va'>wlddev</span> <span class='op'>%&gt;%</span> <span class='fu'><a href='GRP, fgroup_by.html'>fgroup_by</a></span><span class='op'>(</span><span class='va'>country</span>, <span class='va'>decade</span><span class='op'>)</span> <span class='op'>%&gt;%</span> <span class='va'>collapg</span> <span class='op'>%&gt;%</span> <span class='va'>head</span>
+<span class='va'>wlddev</span> |&gt; <span class='fu'><a href='GRP, fgroup_by.html'>fgroup_by</a></span><span class='op'>(</span><span class='va'>country</span>, <span class='va'>decade</span><span class='op'>)</span> |&gt; <span class='fu'>collapg</span><span class='op'>(</span><span class='op'>)</span> |&gt; <span class='fu'><a href='https://rdrr.io/r/utils/head.html'>head</a></span><span class='op'>(</span><span class='op'>)</span>
 </div><div class='output co'>#&gt;       country decade iso3c       date   year     region     income  OECD
-#&gt; 1 Afghanistan   1960   AFG 1961-01-01 1962.5 South Asia Low income FALSE
-#&gt; 2 Afghanistan   1970   AFG 1967-01-01 1970.0 South Asia Low income FALSE
-#&gt; 3 Afghanistan   1980   AFG 1976-01-01 1980.0 South Asia Low income FALSE
-#&gt; 4 Afghanistan   1990   AFG 1987-01-01 1990.0 South Asia Low income FALSE
-#&gt; 5 Afghanistan   2000   AFG 1996-01-01 2000.0 South Asia Low income FALSE
-#&gt; 6 Afghanistan   2010   AFG 2007-01-01 2010.0 South Asia Low income FALSE
-#&gt;      PCGDP   LIFEEX GINI        ODA
-#&gt; 1       NA 33.39967   NA  228641667
-#&gt; 2       NA 36.70089   NA  224881111
-#&gt; 3       NA 42.03909   NA  132813636
-#&gt; 4       NA 49.69089   NA  249072222
-#&gt; 5 349.7596 55.61818   NA 1045170000
-#&gt; 6 506.9931 61.12978   NA 5298066667</div><div class='input'><span class='va'>wlddev</span> <span class='op'>%&gt;%</span> <span class='fu'><a href='GRP, fgroup_by.html'>fgroup_by</a></span><span class='op'>(</span><span class='va'>country</span>, <span class='va'>decade</span><span class='op'>)</span> <span class='op'>%&gt;%</span> <span class='fu'>collapg</span><span class='op'>(</span>w <span class='op'>=</span> <span class='va'>ODA</span><span class='op'>)</span> <span class='op'>%&gt;%</span> <span class='va'>head</span>
-</div><div class='output co'>#&gt;       country decade         ODA iso3c       date     year     region
-#&gt; 1 Afghanistan   1960  1371850000   AFG 1966-01-01 1963.086 South Asia
-#&gt; 2 Afghanistan   1970  2023930000   AFG 1967-01-01 1969.797 South Asia
-#&gt; 3 Afghanistan   1980  1460950000   AFG 1978-01-01 1977.816 South Asia
-#&gt; 4 Afghanistan   1990  2241650000   AFG 1992-01-01 1991.213 South Asia
-#&gt; 5 Afghanistan   2000 11496870000   AFG 2006-01-01 2002.833 South Asia
-#&gt; 6 Afghanistan   2010 47682600000   AFG 2012-01-01 2010.168 South Asia
-#&gt;       income  OECD    PCGDP   LIFEEX GINI
-#&gt; 1 Low income FALSE       NA 33.65730   NA
-#&gt; 2 Low income FALSE       NA 36.61192   NA
-#&gt; 3 Low income FALSE       NA 40.63028   NA
-#&gt; 4 Low income FALSE       NA 50.67509   NA
-#&gt; 5 Low income FALSE 351.3902 57.20476   NA
-#&gt; 6 Low income FALSE 515.1409 61.22270   NA</div><div class='input'><span class='va'>wlddev</span> <span class='op'>%&gt;%</span> <span class='fu'><a href='GRP, fgroup_by.html'>fgroup_by</a></span><span class='op'>(</span><span class='va'>country</span>, <span class='va'>decade</span><span class='op'>)</span> <span class='op'>%&gt;%</span> <span class='fu'>collapg</span><span class='op'>(</span><span class='va'>fmedian</span>, <span class='va'>flast</span><span class='op'>)</span> <span class='op'>%&gt;%</span> <span class='va'>head</span>
+#&gt; 1 Afghanistan   1960   AFG 1961-01-01 1964.5 South Asia Low income FALSE
+#&gt; 2 Afghanistan   1970   AFG 1971-01-01 1974.5 South Asia Low income FALSE
+#&gt; 3 Afghanistan   1980   AFG 1981-01-01 1984.5 South Asia Low income FALSE
+#&gt; 4 Afghanistan   1990   AFG 1991-01-01 1994.5 South Asia Low income FALSE
+#&gt; 5 Afghanistan   2000   AFG 2001-01-01 2004.5 South Asia Low income FALSE
+#&gt; 6 Afghanistan   2010   AFG 2011-01-01 2014.5 South Asia Low income FALSE
+#&gt;      PCGDP  LIFEEX GINI        ODA      POP
+#&gt; 1       NA 34.6908   NA  222288999  9886773
+#&gt; 2       NA 39.9053   NA  236169998 12451803
+#&gt; 3       NA 46.4176   NA   71666001 12291854
+#&gt; 4       NA 53.0097   NA  317255000 16931903
+#&gt; 5 379.3730 58.0881   NA 3054051961 24870022
+#&gt; 6 567.4047 63.0715   NA 5023859033 33741195</div><div class='input'><span class='va'>wlddev</span> |&gt; <span class='fu'><a href='GRP, fgroup_by.html'>fgroup_by</a></span><span class='op'>(</span><span class='va'>region</span>, <span class='va'>year</span><span class='op'>)</span> |&gt; <span class='fu'>collapg</span><span class='op'>(</span>w <span class='op'>=</span> <span class='va'>POP</span><span class='op'>)</span> |&gt; <span class='fu'><a href='https://rdrr.io/r/utils/head.html'>head</a></span><span class='op'>(</span><span class='op'>)</span>
+</div><div class='output co'>#&gt;                region year        POP country iso3c       date decade
+#&gt; 1 East Asia &amp; Pacific 1960 1018832214   China   CHN 1961-01-01   1960
+#&gt; 2 East Asia &amp; Pacific 1961 1021806689   China   CHN 1962-01-01   1960
+#&gt; 3 East Asia &amp; Pacific 1962 1035694621   China   CHN 1963-01-01   1960
+#&gt; 4 East Asia &amp; Pacific 1963 1060888744   China   CHN 1964-01-01   1960
+#&gt; 5 East Asia &amp; Pacific 1964 1085690423   China   CHN 1965-01-01   1960
+#&gt; 6 East Asia &amp; Pacific 1965 1111494204   China   CHN 1966-01-01   1960
+#&gt;                income  OECD    PCGDP   LIFEEX GINI       ODA
+#&gt; 1 Upper middle income FALSE 1313.760 48.20996   NA 764164132
+#&gt; 2 Upper middle income FALSE 1395.228 48.73451   NA 774544481
+#&gt; 3 Upper middle income FALSE 1463.441 49.39960   NA 915939856
+#&gt; 4 Upper middle income FALSE 1540.621 50.37529   NA 748978431
+#&gt; 5 Upper middle income FALSE 1665.385 51.57330   NA 619226983
+#&gt; 6 Upper middle income FALSE 1733.757 52.94426   NA 702381139</div><div class='input'><span class='va'>wlddev</span> |&gt; <span class='fu'><a href='GRP, fgroup_by.html'>fgroup_by</a></span><span class='op'>(</span><span class='va'>country</span>, <span class='va'>decade</span><span class='op'>)</span> |&gt; <span class='fu'>collapg</span><span class='op'>(</span><span class='va'>fmedian</span>, <span class='va'>flast</span><span class='op'>)</span> |&gt; <span class='fu'><a href='https://rdrr.io/r/utils/head.html'>head</a></span><span class='op'>(</span><span class='op'>)</span>
 </div><div class='output co'>#&gt;       country decade iso3c       date   year     region     income  OECD
-#&gt; 1 Afghanistan   1960   AFG 1966-01-01 1962.5 South Asia Low income FALSE
-#&gt; 2 Afghanistan   1970   AFG 1975-01-01 1970.0 South Asia Low income FALSE
-#&gt; 3 Afghanistan   1980   AFG 1986-01-01 1980.0 South Asia Low income FALSE
-#&gt; 4 Afghanistan   1990   AFG 1995-01-01 1990.0 South Asia Low income FALSE
-#&gt; 5 Afghanistan   2000   AFG 2006-01-01 2000.0 South Asia Low income FALSE
-#&gt; 6 Afghanistan   2010   AFG 2015-01-01 2010.0 South Asia Low income FALSE
-#&gt;      PCGDP  LIFEEX GINI        ODA
-#&gt; 1       NA 33.4045   NA  234900000
-#&gt; 2       NA 36.6780   NA  229150000
-#&gt; 3       NA 41.8530   NA   72610000
-#&gt; 4       NA 49.8560   NA  238500000
-#&gt; 5 346.9282 55.4820   NA  306200000
-#&gt; 6 536.0125 61.2260   NA 5033950000</div><div class='input'><span class='va'>wlddev</span> <span class='op'>%&gt;%</span> <span class='fu'><a href='GRP, fgroup_by.html'>fgroup_by</a></span><span class='op'>(</span><span class='va'>country</span>, <span class='va'>decade</span><span class='op'>)</span> <span class='op'>%&gt;%</span>
-  <span class='fu'>collapg</span><span class='op'>(</span>custom <span class='op'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/list.html'>list</a></span><span class='op'>(</span>fmean <span class='op'>=</span> <span class='fl'>9</span><span class='op'>:</span><span class='fl'>12</span>, fmode <span class='op'>=</span> <span class='fl'>5</span><span class='op'>:</span><span class='fl'>7</span>, flast <span class='op'>=</span> <span class='fl'>3</span><span class='op'>)</span><span class='op'>)</span> <span class='op'>%&gt;%</span> <span class='va'>head</span>
-</div><div class='output co'>#&gt;       country decade       date decade     region     income    PCGDP   LIFEEX
-#&gt; 1 Afghanistan   1960 1966-01-01   1960 South Asia Low income       NA 33.39967
-#&gt; 2 Afghanistan   1970 1975-01-01   1970 South Asia Low income       NA 36.70089
-#&gt; 3 Afghanistan   1980 1986-01-01   1980 South Asia Low income       NA 42.03909
-#&gt; 4 Afghanistan   1990 1995-01-01   1990 South Asia Low income       NA 49.69089
-#&gt; 5 Afghanistan   2000 2006-01-01   2000 South Asia Low income 349.7596 55.61818
-#&gt; 6 Afghanistan   2010 2015-01-01   2010 South Asia Low income 506.9931 61.12978
+#&gt; 1 Afghanistan   1960   AFG 1970-01-01 1964.5 South Asia Low income FALSE
+#&gt; 2 Afghanistan   1970   AFG 1980-01-01 1974.5 South Asia Low income FALSE
+#&gt; 3 Afghanistan   1980   AFG 1990-01-01 1984.5 South Asia Low income FALSE
+#&gt; 4 Afghanistan   1990   AFG 2000-01-01 1994.5 South Asia Low income FALSE
+#&gt; 5 Afghanistan   2000   AFG 2010-01-01 2004.5 South Asia Low income FALSE
+#&gt; 6 Afghanistan   2010   AFG 2020-01-01 2014.5 South Asia Low income FALSE
+#&gt;      PCGDP  LIFEEX GINI        ODA      POP
+#&gt; 1       NA 34.7055   NA  234900002  9850551
+#&gt; 2       NA 39.8430   NA  246509995 12551055
+#&gt; 3       NA 46.4005   NA   48539999 12071250
+#&gt; 4       NA 53.1200   NA  285175003 17593192
+#&gt; 5 361.2596 58.0310   NA 2984469971 25190481
+#&gt; 6 572.3641 63.1715   NA 4651180176 33892199</div><div class='input'><span class='va'>wlddev</span> |&gt; <span class='fu'><a href='GRP, fgroup_by.html'>fgroup_by</a></span><span class='op'>(</span><span class='va'>country</span>, <span class='va'>decade</span><span class='op'>)</span> |&gt;
+  <span class='fu'>collapg</span><span class='op'>(</span>custom <span class='op'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/list.html'>list</a></span><span class='op'>(</span>fmean <span class='op'>=</span> <span class='fl'>9</span><span class='op'>:</span><span class='fl'>12</span>, fmode <span class='op'>=</span> <span class='fl'>5</span><span class='op'>:</span><span class='fl'>7</span>, flast <span class='op'>=</span> <span class='fl'>3</span><span class='op'>)</span><span class='op'>)</span> |&gt; <span class='fu'><a href='https://rdrr.io/r/utils/head.html'>head</a></span><span class='op'>(</span><span class='op'>)</span>
+</div><div class='output co'>#&gt;       country decade       date decade     region     income    PCGDP  LIFEEX
+#&gt; 1 Afghanistan   1960 1970-01-01   1960 South Asia Low income       NA 34.6908
+#&gt; 2 Afghanistan   1970 1980-01-01   1970 South Asia Low income       NA 39.9053
+#&gt; 3 Afghanistan   1980 1990-01-01   1980 South Asia Low income       NA 46.4176
+#&gt; 4 Afghanistan   1990 2000-01-01   1990 South Asia Low income       NA 53.0097
+#&gt; 5 Afghanistan   2000 2010-01-01   2000 South Asia Low income 379.3730 58.0881
+#&gt; 6 Afghanistan   2010 2020-01-01   2010 South Asia Low income 567.4047 63.0715
 #&gt;   GINI        ODA
-#&gt; 1   NA  228641667
-#&gt; 2   NA  224881111
-#&gt; 3   NA  132813636
-#&gt; 4   NA  249072222
-#&gt; 5   NA 1045170000
-#&gt; 6   NA 5298066667</div><div class='input'>
+#&gt; 1   NA  222288999
+#&gt; 2   NA  236169998
+#&gt; 3   NA   71666001
+#&gt; 4   NA  317255000
+#&gt; 5   NA 3054051961
+#&gt; 6   NA 5023859033</div><div class='input'>
 </div></pre>
   </div>
   <div class="col-md-3 hidden-xs hidden-sm" id="pkgdown-sidebar">

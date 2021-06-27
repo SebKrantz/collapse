@@ -5,11 +5,11 @@ us_trade <- ots_create_tidy_data(years = 2000:2018, reporters = "usa", table = "
 
 fdim(us_trade)
 
-fNdistinct(us_trade)
-qsu(with(us_trade, fNobs(year, list(partner_iso, product_code))))
+fndistinct(us_trade)
+qsu(with(us_trade, fnobs(year, list(partner_iso, product_code))))
 qsu(us_trade, by = export_value_usd + import_value_usd ~ year, pid = ~ partner_iso + year)
 us_trade_agg <- collap(us_trade, ~ partner_iso + group_code + year, fsum)
-qsu(with(us_trade_agg, fNobs(year, list(partner_iso, group_code))))
+qsu(with(us_trade_agg, fnobs(year, list(partner_iso, group_code))))
 
 L(us_trade_agg, 1, ~ partner_iso + group_code)
 

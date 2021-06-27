@@ -72,7 +72,7 @@
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">collapse</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">1.5.3</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">1.6.0</span>
       </span>
     </div>
 
@@ -94,13 +94,13 @@
       <ul class="nav navbar-nav navbar-right">
         <li>
   <a href="https://twitter.com/collapse_R" target="_blank">
-    <span class="fa fa-twitter"></span>
+    <span class="fas fa-twitter"></span>
      
   </a>
 </li>
 <li>
   <a href="https://github.com/SebKrantz/collapse" target="_blank">
-    <span class="fa fa-github"></span>
+    <span class="fas fa-github"></span>
      
   </a>
 </li>
@@ -233,13 +233,13 @@ panel data-frame (<code><a href='https://rdrr.io/pkg/plm/man/pdata.frame.html'>p
 #&gt; 4 Afghanistan   AFG 1964-01-01 1963   1960 South Asia Low income FALSE    NA
 #&gt; 5 Afghanistan   AFG 1965-01-01 1964   1960 South Asia Low income FALSE    NA
 #&gt; 6 Afghanistan   AFG 1966-01-01 1965   1960 South Asia Low income FALSE    NA
-#&gt;   LIFEEX GINI       ODA
-#&gt; 1 32.292   NA 114440000
-#&gt; 2 32.742   NA 233350000
-#&gt; 3 33.185   NA 114880000
-#&gt; 4 33.624   NA 236450000
-#&gt; 5 34.060   NA 302480000
-#&gt; 6 34.495   NA 370250000</div><div class='input'><span class='fu'>psacf</span><span class='op'>(</span><span class='va'>wlddev</span><span class='op'>$</span><span class='va'>PCGDP</span>, <span class='va'>wlddev</span><span class='op'>$</span><span class='va'>country</span>, <span class='va'>wlddev</span><span class='op'>$</span><span class='va'>year</span><span class='op'>)</span>                <span class='co'># ACF of GDP per Capita</span>
+#&gt;   LIFEEX GINI       ODA     POP
+#&gt; 1 32.446   NA 116769997 8996973
+#&gt; 2 32.962   NA 232080002 9169410
+#&gt; 3 33.471   NA 112839996 9351441
+#&gt; 4 33.971   NA 237720001 9543205
+#&gt; 5 34.463   NA 295920013 9744781
+#&gt; 6 34.948   NA 341839996 9956320</div><div class='input'><span class='fu'>psacf</span><span class='op'>(</span><span class='va'>wlddev</span><span class='op'>$</span><span class='va'>PCGDP</span>, <span class='va'>wlddev</span><span class='op'>$</span><span class='va'>country</span>, <span class='va'>wlddev</span><span class='op'>$</span><span class='va'>year</span><span class='op'>)</span>                <span class='co'># ACF of GDP per Capita</span>
 </div><div class='img'><img src='psacf-1.png' alt='' width='700' height='433' /></div><div class='input'><span class='fu'>psacf</span><span class='op'>(</span><span class='va'>wlddev</span>, <span class='va'>PCGDP</span> <span class='op'>~</span> <span class='va'>country</span>, <span class='op'>~</span><span class='va'>year</span><span class='op'>)</span>                           <span class='co'># Same using data.frame method</span>
 </div><div class='img'><img src='psacf-2.png' alt='' width='700' height='433' /></div><div class='input'><span class='fu'>psacf</span><span class='op'>(</span><span class='va'>wlddev</span><span class='op'>$</span><span class='va'>PCGDP</span>, <span class='va'>wlddev</span><span class='op'>$</span><span class='va'>country</span><span class='op'>)</span>                             <span class='co'># The Data is sorted, can omit t</span>
 </div><div class='output co'>#&gt; <span class='message'>Panel Series ACF computed without timevar: Assuming ordered data</span></div><div class='img'><img src='psacf-3.png' alt='' width='700' height='433' /></div><div class='input'><span class='fu'>pspacf</span><span class='op'>(</span><span class='va'>wlddev</span><span class='op'>$</span><span class='va'>PCGDP</span>, <span class='va'>wlddev</span><span class='op'>$</span><span class='va'>country</span><span class='op'>)</span>                            <span class='co'># Partial ACF</span>

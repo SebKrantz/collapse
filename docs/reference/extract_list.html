@@ -78,7 +78,7 @@ get_elem returns the part of the list responding to either an identifier functio
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">collapse</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">1.5.3</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">1.6.0</span>
       </span>
     </div>
 
@@ -100,13 +100,13 @@ get_elem returns the part of the list responding to either an identifier functio
       <ul class="nav navbar-nav navbar-right">
         <li>
   <a href="https://twitter.com/collapse_R" target="_blank">
-    <span class="fa fa-twitter"></span>
+    <span class="fas fa-twitter"></span>
      
   </a>
 </li>
 <li>
   <a href="https://github.com/SebKrantz/collapse" target="_blank">
-    <span class="fa fa-github"></span>
+    <span class="fas fa-github"></span>
      
   </a>
 </li>
@@ -211,7 +211,7 @@ get_elem returns the part of the list responding to either an identifier functio
 
     <h2 class="hasAnchor" id="details"><a class="anchor" href="#details"></a>Details</h2>
 
-    <p>For a lack of better terminology, <em>collapse</em> defines 'regular' R objects as objects that are either atomic or a list. <code>reg_elem</code> with <code>recursive = TRUE</code> extracts the subset of the list tree leading up to atomic elements in the final nodes. This part of the list tree is unlistable - calling <code><a href='is.unlistable.html'>is.unlistable(reg_elem(l))</a></code> will be <code>TRUE</code> for all lists <code>l</code>. Conversely, all elements left behind by <code>reg_elem</code> will be picked up be <code>irreg_elem</code> (if available). Thus <code><a href='is.unlistable.html'>is.unlistable(irreg_elem(l))</a></code> is always <code>FALSE</code> for lists with irregular elements (otherwise <code>irreg_elem</code> returns an empty list). <br /></p>
+    <p>For a lack of better terminology, <em>collapse</em> defines 'regular' R objects as objects that are either atomic or a list. <code>reg_elem</code> with <code>recursive = TRUE</code> extracts the subset of the list tree leading up to atomic elements in the final nodes. This part of the list tree is unlistable - calling <code><a href='is_unlistable.html'>is_unlistable(reg_elem(l))</a></code> will be <code>TRUE</code> for all lists <code>l</code>. Conversely, all elements left behind by <code>reg_elem</code> will be picked up be <code>irreg_elem</code> (if available). Thus <code><a href='is_unlistable.html'>is_unlistable(irreg_elem(l))</a></code> is always <code>FALSE</code> for lists with irregular elements (otherwise <code>irreg_elem</code> returns an empty list). <br /></p>
 <p>If <code>keep.tree = TRUE</code>, <code>reg_elem</code>, <code>irreg_elem</code> and <code>get_elem</code> always return the entire list tree, but cut off all of the branches not leading to the desired result. If <code>keep.tree = FALSE</code>, top-level parts of the tree are omitted so far this is possible. For example in a nested list with three levels and one data-matrix in one of the final branches, <code>get_elem(l, is.matrix, keep.tree = TRUE)</code> will return a list (<code>lres</code>) of depth 3, from which the matrix can be accessed as <code>lres[[1]][[1]][[1]]</code>. This however does not make much sense. <code>get_elem(l, is.matrix, keep.tree = FALSE)</code> will therefore figgure out that it can drop the entire tree and return just the matrix. <code>keep.tree = FALSE</code> makes additional optimizations if matching elements are at far-apart corners in a nested structure, by only preserving the hierarchy if elements are above each other on the same branch. Thus for a list <code>l &lt;- list(list(2,list("a",1)),list(1,list("b",2)))</code> calling <code>get_elem(l, is.character)</code> will just return <code><a href='https://rdrr.io/r/base/list.html'>list("a","b")</a></code>.</p>
     <h2 class="hasAnchor" id="see-also"><a class="anchor" href="#see-also"></a>See also</h2>
 
@@ -354,7 +354,7 @@ get_elem returns the part of the list responding to either an identifier functio
 #&gt;   .. .. ..- attr(*, "order")= int [1:2] 1 1
 #&gt;   .. .. ..- attr(*, "intercept")= int 1
 #&gt;   .. .. ..- attr(*, "response")= int 1
-#&gt;   .. .. ..- attr(*, ".Environment")=&lt;environment: 0x0000007812b8a488&gt; 
+#&gt;   .. .. ..- attr(*, ".Environment")=&lt;environment: 0x000000664f66f668&gt; 
 #&gt;   .. .. ..- attr(*, "predvars")= language list(mpg, cyl, vs)
 #&gt;   .. .. ..- attr(*, "dataClasses")= Named chr [1:3] "numeric" "numeric" "numeric"
 #&gt;   .. .. .. ..- attr(*, "names")= chr [1:3] "mpg" "cyl" "vs"</div><div class='input'><span class='fu'><a href='https://rdrr.io/r/utils/str.html'>str</a></span><span class='op'>(</span><span class='fu'>irreg_elem</span><span class='op'>(</span><span class='va'>l</span><span class='op'>)</span><span class='op'>)</span>
@@ -370,7 +370,7 @@ get_elem returns the part of the list responding to either an identifier functio
 #&gt;   .. ..- attr(*, "order")= int [1:2] 1 1
 #&gt;   .. ..- attr(*, "intercept")= int 1
 #&gt;   .. ..- attr(*, "response")= int 1
-#&gt;   .. ..- attr(*, ".Environment")=&lt;environment: 0x0000007812b8a488&gt; 
+#&gt;   .. ..- attr(*, ".Environment")=&lt;environment: 0x000000664f66f668&gt; 
 #&gt;   .. ..- attr(*, "predvars")= language list(mpg, cyl, vs)
 #&gt;   .. ..- attr(*, "dataClasses")= Named chr [1:3] "numeric" "numeric" "numeric"
 #&gt;   .. .. ..- attr(*, "names")= chr [1:3] "mpg" "cyl" "vs"</div><div class='input'><span class='fu'>get_elem</span><span class='op'>(</span><span class='va'>l</span>, <span class='va'>is.matrix</span><span class='op'>)</span>

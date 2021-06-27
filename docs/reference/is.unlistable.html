@@ -6,7 +6,7 @@
 <meta http-equiv="X-UA-Compatible" content="IE=edge">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-<title>Unlistable Lists — is.unlistable • collapse</title>
+<title>Unlistable Lists — is_unlistable • collapse</title>
 
 
 <!-- jquery -->
@@ -39,8 +39,8 @@
 
 
 
-<meta property="og:title" content="Unlistable Lists — is.unlistable" />
-<meta property="og:description" content="A (nested) list with atomic objects in all final nodes of the list-tree is unlistable - checked with is.unlistable." />
+<meta property="og:title" content="Unlistable Lists — is_unlistable" />
+<meta property="og:description" content="A (nested) list with atomic objects in all final nodes of the list-tree is unlistable - checked with is_unlistable." />
 
 
 
@@ -72,7 +72,7 @@
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">collapse</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">1.5.3</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">1.6.0</span>
       </span>
     </div>
 
@@ -94,13 +94,13 @@
       <ul class="nav navbar-nav navbar-right">
         <li>
   <a href="https://twitter.com/collapse_R" target="_blank">
-    <span class="fa fa-twitter"></span>
+    <span class="fas fa-twitter"></span>
      
   </a>
 </li>
 <li>
   <a href="https://github.com/SebKrantz/collapse" target="_blank">
-    <span class="fa fa-github"></span>
+    <span class="fas fa-github"></span>
      
   </a>
 </li>
@@ -123,10 +123,10 @@
     </div>
 
     <div class="ref-description">
-    <p>A (nested) list with atomic objects in all final nodes of the list-tree is unlistable - checked with <code>is.unlistable</code>.</p>
+    <p>A (nested) list with atomic objects in all final nodes of the list-tree is unlistable - checked with <code>is_unlistable</code>.</p>
     </div>
 
-    <pre class="usage"><span class='fu'>is.unlistable</span><span class='op'>(</span><span class='va'>l</span>, DF.as.list <span class='op'>=</span> <span class='cn'>FALSE</span><span class='op'>)</span></pre>
+    <pre class="usage"><span class='fu'>is_unlistable</span><span class='op'>(</span><span class='va'>l</span>, DF.as.list <span class='op'>=</span> <span class='cn'>FALSE</span><span class='op'>)</span></pre>
 
     <h2 class="hasAnchor" id="arguments"><a class="anchor" href="#arguments"></a>Arguments</h2>
     <table class="ref-arguments">
@@ -143,7 +143,7 @@
 
     <h2 class="hasAnchor" id="details"><a class="anchor" href="#details"></a>Details</h2>
 
-    <p><code>is.unlistable</code> with <code>DF.as.list = TRUE</code> is defined as <code><a href='https://rdrr.io/r/base/all.html'>all(rapply(l, is.atomic))</a></code>, whereas <code>DF.as.list = FALSE</code> yields checking using <code><a href='https://rdrr.io/r/base/all.html'>all(unlist(rapply2d(l, function(x) is.atomic(x) || is.list(x)), use.names = FALSE))</a></code>, assuming that data frames are lists composed of atomic elements.  If <code>l</code> contains data frames, the latter can be a lot faster than applying <code>is.atomic</code> to every data frame column.</p>
+    <p><code>is_unlistable</code> with <code>DF.as.list = TRUE</code> is defined as <code><a href='https://rdrr.io/r/base/all.html'>all(rapply(l, is.atomic))</a></code>, whereas <code>DF.as.list = FALSE</code> yields checking using <code><a href='https://rdrr.io/r/base/all.html'>all(unlist(rapply2d(l, function(x) is.atomic(x) || is.list(x)), use.names = FALSE))</a></code>, assuming that data frames are lists composed of atomic elements.  If <code>l</code> contains data frames, the latter can be a lot faster than applying <code>is.atomic</code> to every data frame column.</p>
     <h2 class="hasAnchor" id="value"><a class="anchor" href="#value"></a>Value</h2>
 
     <p><code><a href='https://rdrr.io/r/base/logical.html'>logical(1)</a></code> - <code>TRUE</code> or <code>FALSE</code>.</p>
@@ -153,9 +153,9 @@
 
     <h2 class="hasAnchor" id="examples"><a class="anchor" href="#examples"></a>Examples</h2>
     <pre class="examples"><div class='input'><span class='va'>l</span> <span class='op'>&lt;-</span> <span class='fu'><a href='https://rdrr.io/r/base/list.html'>list</a></span><span class='op'>(</span><span class='fl'>1</span>, <span class='fl'>2</span>, <span class='fu'><a href='https://rdrr.io/r/base/list.html'>list</a></span><span class='op'>(</span><span class='fl'>3</span>, <span class='fl'>4</span>, <span class='st'>"b"</span>, <span class='cn'>FALSE</span><span class='op'>)</span><span class='op'>)</span>
-<span class='fu'>is.unlistable</span><span class='op'>(</span><span class='va'>l</span><span class='op'>)</span>
+<span class='fu'>is_unlistable</span><span class='op'>(</span><span class='va'>l</span><span class='op'>)</span>
 </div><div class='output co'>#&gt; [1] TRUE</div><div class='input'><span class='va'>l</span> <span class='op'>&lt;-</span> <span class='fu'><a href='https://rdrr.io/r/base/list.html'>list</a></span><span class='op'>(</span><span class='fl'>1</span>, <span class='fl'>2</span>, <span class='fu'><a href='https://rdrr.io/r/base/list.html'>list</a></span><span class='op'>(</span><span class='fl'>3</span>, <span class='fl'>4</span>, <span class='st'>"b"</span>, <span class='cn'>FALSE</span>, <span class='va'>e</span> <span class='op'>~</span> <span class='va'>b</span><span class='op'>)</span><span class='op'>)</span>
-<span class='fu'>is.unlistable</span><span class='op'>(</span><span class='va'>l</span><span class='op'>)</span>
+<span class='fu'>is_unlistable</span><span class='op'>(</span><span class='va'>l</span><span class='op'>)</span>
 </div><div class='output co'>#&gt; [1] FALSE</div><div class='input'>
 </div></pre>
   </div>

@@ -119,7 +119,7 @@ pre[class] {
 <div id="fast-aggregations" class="section level2">
 <h2 class="hasAnchor">
 <a href="#fast-aggregations" class="anchor"></a>1. Fast Aggregations</h2>
-<p>A key feature of <em>collapse</em> is it’s broad set of <em>Fast Statistical Functions</em> (<code>fsum, fprod, fmean, fmedian, fmode, fvar, fsd, fmin, fmax, fnth, ffirst, flast, fNobs, fNdistinct</code>) which are able to substantially speed-up column-wise, grouped and weighted computations on vectors, matrices or data frames. The functions are S3 generic, with a default (vector), matrix and data frame method, as well as a grouped_df method for grouped tibbles used by <em>dplyr</em>. The grouped tibble method has the following arguments:</p>
+<p>A key feature of <em>collapse</em> is it’s broad set of <em>Fast Statistical Functions</em> (<code>fsum, fprod, fmean, fmedian, fmode, fvar, fsd, fmin, fmax, fnth, ffirst, flast, fnobs, fndistinct</code>) which are able to substantially speed-up column-wise, grouped and weighted computations on vectors, matrices or data frames. The functions are S3 generic, with a default (vector), matrix and data frame method, as well as a grouped_df method for grouped tibbles used by <em>dplyr</em>. The grouped tibble method has the following arguments:</p>
 <div class="sourceCode" id="cb1"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb1-1"><a href="#cb1-1"></a><span class="kw">FUN.grouped_df</span>(x, [<span class="dt">w =</span> <span class="ot">NULL</span>,] <span class="dt">TRA =</span> <span class="ot">NULL</span>, [<span class="dt">na.rm =</span> <span class="ot">TRUE</span>,]</span>
 <span id="cb1-2"><a href="#cb1-2"></a>               <span class="dt">use.g.names =</span> <span class="ot">FALSE</span>, <span class="dt">keep.group_vars =</span> <span class="ot">TRUE</span>, [<span class="dt">keep.w =</span> <span class="ot">TRUE</span>,] ...)</span></code></pre></div>
 <p>where <code>w</code> is a weight variable, and <code>TRA</code> and can be used to transform <code>x</code> using the computed statistics and one of 10 available transformations (<code>"replace_fill", "replace", "-", "-+", "/", "%", "+", "*", "%%", "-%%"</code>, discussed in section 2). <code>na.rm</code> efficiently removes missing values and is <code>TRUE</code> by default. <code>use.g.names</code> generates new row-names from the unique combinations of groups (default: disabled), whereas <code>keep.group_vars</code> (default: enabled) will keep the grouping columns as is custom in the native <code>data %&gt;% group_by(...) %&gt;% summarize(...)</code> workflow in <em>dplyr</em>. Finally, <code>keep.w</code> regulates whether a weighting variable used is also aggregated and saved in a column. For <code>fsum, fmean, fmedian, fnth, fvar, fsd</code> and <code>fmode</code> this will compute the sum of the weights in each group, whereas <code>fprod</code> returns the product of the weights.</p>
@@ -147,7 +147,7 @@ pre[class] {
 <span class="co"># 6 1.3462312 7.064825 1.939007 1.246789 5.695848 2.678338 39.34710</span>
 
 <span class="co"># Summarize the Data: </span>
-<span class="co"># descr(GGDC10S, cols = is.categorical)</span>
+<span class="co"># descr(GGDC10S, cols = is_categorical)</span>
 <span class="co"># aperm(qsu(GGDC10S, ~Variable, cols = is.numeric))</span>
 
 <span class="co"># Efficiently converting to tibble (no deep copy)</span>
@@ -156,12 +156,12 @@ pre[class] {
 <div class="sourceCode" id="cb3"><pre class="downlit">
 <span class="kw"><a href="https://rdrr.io/r/base/library.html">library</a></span><span class="op">(</span><span class="va"><a href="https://dplyr.tidyverse.org">dplyr</a></span><span class="op">)</span>
 
-<span class="va">GGDC10S</span> <span class="op">%&gt;%</span> <span class="va">fNobs</span>                       <span class="co"># Number of Observations</span>
+<span class="va">GGDC10S</span> <span class="op">%&gt;%</span> <span class="va">fnobs</span>                       <span class="co"># Number of Observations</span>
 <span class="co">#    Country Regioncode     Region   Variable       Year        AGR        MIN        MAN         PU </span>
 <span class="co">#       5027       5027       5027       5027       5027       4364       4355       4355       4354 </span>
 <span class="co">#        CON        WRT        TRA       FIRE        GOV        OTH        SUM </span>
 <span class="co">#       4355       4355       4355       4355       3482       4248       4364</span>
-<span class="va">GGDC10S</span> <span class="op">%&gt;%</span> <span class="va">fNdistinct</span>                  <span class="co"># Number of distinct values</span>
+<span class="va">GGDC10S</span> <span class="op">%&gt;%</span> <span class="va">fndistinct</span>                  <span class="co"># Number of distinct values</span>
 <span class="co">#    Country Regioncode     Region   Variable       Year        AGR        MIN        MAN         PU </span>
 <span class="co">#         43          6          6          2         67       4353       4224       4353       4237 </span>
 <span class="co">#        CON        WRT        TRA       FIRE        GOV        OTH        SUM </span>
@@ -272,7 +272,7 @@ pre[class] {
 <h3 class="hasAnchor">
 <a href="#more-speed-using-collapse-verbs" class="anchor"></a>1.2 More Speed using <em>collapse</em> Verbs</h3>
 <p><em>collapse</em> fast functions do not develop their maximal performance on a grouped tibble created with <code>group_by</code> because of the additional conversion cost of the grouping object incurred by <code>GRP.grouped_df</code>. This cost is already minimized through the use of C++, but we can do even better replacing <code>group_by</code> with <code><a href="../reference/GRP,%20fgroup_by.html">collapse::fgroup_by</a></code>. <code>fgroup_by</code> works like <code>group_by</code> but does the grouping with <code><a href="../reference/GRP,%20fgroup_by.html">collapse::GRP</a></code> (up to 10x faster than <code>group_by</code>) and simply attaches a <em>collapse</em> grouping object to the grouped_df. Thus the speed gain is 2-fold: Faster grouping and no conversion cost when calling <em>collapse</em> functions.</p>
-<p>Another improvement comes from replacing the <em>dplyr</em> verb <code>select</code> with <code><a href="../reference/fselect,%20get_vars,%20add_vars.html">collapse::fselect</a></code>, and, for selection using column names, indices or functions use <code><a href="../reference/fselect,%20get_vars,%20add_vars.html">collapse::get_vars</a></code> instead of <code>select_at</code> or <code>select_if</code>. Next to <code>get_vars</code>, <em>collapse</em> also introduces the predicates <code>num_vars</code>, <code>cat_vars</code>, <code>char_vars</code>, <code>fact_vars</code>, <code>logi_vars</code> and <code>Date_vars</code> to efficiently select columns by type.</p>
+<p>Another improvement comes from replacing the <em>dplyr</em> verb <code>select</code> with <code><a href="../reference/fselect,%20get_vars,%20add_vars.html">collapse::fselect</a></code>, and, for selection using column names, indices or functions use <code><a href="../reference/fselect,%20get_vars,%20add_vars.html">collapse::get_vars</a></code> instead of <code>select_at</code> or <code>select_if</code>. Next to <code>get_vars</code>, <em>collapse</em> also introduces the predicates <code>num_vars</code>, <code>cat_vars</code>, <code>char_vars</code>, <code>fact_vars</code>, <code>logi_vars</code> and <code>date_vars</code> to efficiently select columns by type.</p>
 <div class="sourceCode" id="cb7"><pre class="downlit">
 <span class="va">GGDC10S</span> <span class="op">%&gt;%</span> <span class="fu"><a href="../reference/GRP,%20fgroup_by.html">fgroup_by</a></span><span class="op">(</span><span class="va">Variable</span>, <span class="va">Country</span><span class="op">)</span> <span class="op">%&gt;%</span> <span class="fu"><a href="../reference/fselect,%20get_vars,%20add_vars.html">get_vars</a></span><span class="op">(</span><span class="fl">6</span><span class="op">:</span><span class="fl">16</span><span class="op">)</span> <span class="op">%&gt;%</span> <span class="va">fmedian</span>
 <span class="co"># # A tibble: 85 x 13</span>
@@ -668,7 +668,7 @@ pre[class] {
 <h3 class="hasAnchor">
 <a href="#replacing-and-sweeping-out-statistics" class="anchor"></a>2.2 Replacing and Sweeping out Statistics</h3>
 <!-- using Fast Statistical Functions -->
-<p>All statistical (scalar-valued) functions in the collapse package (<code>fsum, fprod, fmean, fmedian, fmode, fvar, fsd, fmin, fmax, fnth, ffirst, flast, fNobs, fNdistinct</code>) have a <code>TRA</code> argument which can be used to efficiently transform data by either (column-wise) replacing data values with computed statistics or sweeping the statistics out of the data. Operations can be specified using either an integer or quoted operator / string. The 10 operations supported by <code>TRA</code> are:</p>
+<p>All statistical (scalar-valued) functions in the collapse package (<code>fsum, fprod, fmean, fmedian, fmode, fvar, fsd, fmin, fmax, fnth, ffirst, flast, fnobs, fndistinct</code>) have a <code>TRA</code> argument which can be used to efficiently transform data by either (column-wise) replacing data values with computed statistics or sweeping the statistics out of the data. Operations can be specified using either an integer or quoted operator / string. The 10 operations supported by <code>TRA</code> are:</p>
 <ul>
 <li><p>1 - “replace_fill” : replace and overwrite missing values (same as <code>mutate</code>)</p></li>
 <li><p>2 - “replace” : replace but preserve missing values</p></li>
@@ -828,7 +828,7 @@ pre[class] {
 <span class="co"># This adds a groupwise observation count next to each column</span>
 <span class="fu"><a href="../reference/fselect,%20get_vars,%20add_vars.html">add_vars</a></span><span class="op">(</span><span class="va">GGDC10S</span>, <span class="fu"><a href="https://rdrr.io/r/base/seq.html">seq</a></span><span class="op">(</span><span class="fl">7</span>,<span class="fl">27</span>,<span class="fl">2</span><span class="op">)</span><span class="op">)</span> <span class="op">&lt;-</span> <span class="va">GGDC10S</span> <span class="op">%&gt;%</span>
     <span class="fu"><a href="../reference/GRP,%20fgroup_by.html">fgroup_by</a></span><span class="op">(</span><span class="va">Variable</span>, <span class="va">Country</span><span class="op">)</span> <span class="op">%&gt;%</span> <span class="fu"><a href="../reference/fselect,%20get_vars,%20add_vars.html">fselect</a></span><span class="op">(</span><span class="va">AGR</span><span class="op">:</span><span class="va">SUM</span><span class="op">)</span> <span class="op">%&gt;%</span>
-    <span class="fu"><a href="../reference/fNobs.html">fNobs</a></span><span class="op">(</span><span class="st">"replace_fill"</span><span class="op">)</span> <span class="op">%&gt;%</span> <span class="fu"><a href="../reference/small-helpers.html">add_stub</a></span><span class="op">(</span><span class="st">"N_"</span><span class="op">)</span>
+    <span class="fu"><a href="../reference/fnobs.html">fnobs</a></span><span class="op">(</span><span class="st">"replace_fill"</span><span class="op">)</span> <span class="op">%&gt;%</span> <span class="fu"><a href="../reference/small-helpers.html">add_stub</a></span><span class="op">(</span><span class="st">"N_"</span><span class="op">)</span>
 
 <span class="fu"><a href="https://rdrr.io/r/utils/head.html">head</a></span><span class="op">(</span><span class="va">GGDC10S</span><span class="op">)</span>
 <span class="co"># # A tibble: 6 x 27</span>
@@ -1632,7 +1632,7 @@ pre[class] {
 <span class="co">## Number of Distinct Values</span>
 <span class="co"># Small</span>
 <span class="fu"><a href="https://rdrr.io/pkg/microbenchmark/man/microbenchmark.html">microbenchmark</a></span><span class="op">(</span>dplyr <span class="op">=</span> <span class="fu"><a href="https://dplyr.tidyverse.org/reference/summarise_all.html">summarise_all</a></span><span class="op">(</span><span class="va">gGGDC10S</span>, <span class="va">n_distinct</span>, na.rm <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span>,
-               collapse <span class="op">=</span> <span class="fu"><a href="../reference/fNdistinct.html">fNdistinct</a></span><span class="op">(</span><span class="va">cgGGDC10S</span><span class="op">)</span><span class="op">)</span>
+               collapse <span class="op">=</span> <span class="fu"><a href="../reference/fndistinct.html">fndistinct</a></span><span class="op">(</span><span class="va">cgGGDC10S</span><span class="op">)</span><span class="op">)</span>
 <span class="co"># Unit: milliseconds</span>
 <span class="co">#      expr       min        lq      mean    median        uq      max neval cld</span>
 <span class="co">#     dplyr 65.569491 67.342659 70.766485 68.975481 73.907195 82.63760   100   b</span>
@@ -1640,7 +1640,7 @@ pre[class] {
 
 <span class="co"># Large</span>
 <span class="fu"><a href="https://rdrr.io/pkg/microbenchmark/man/microbenchmark.html">microbenchmark</a></span><span class="op">(</span>dplyr <span class="op">=</span> <span class="fu"><a href="https://dplyr.tidyverse.org/reference/summarise_all.html">summarise_all</a></span><span class="op">(</span><span class="va">gdata</span>, <span class="va">n_distinct</span>, na.rm <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span>,
-               collapse <span class="op">=</span> <span class="fu"><a href="../reference/fNdistinct.html">fNdistinct</a></span><span class="op">(</span><span class="va">cgdata</span><span class="op">)</span>, times <span class="op">=</span> <span class="fl">5</span><span class="op">)</span>
+               collapse <span class="op">=</span> <span class="fu"><a href="../reference/fndistinct.html">fndistinct</a></span><span class="op">(</span><span class="va">cgdata</span><span class="op">)</span>, times <span class="op">=</span> <span class="fl">5</span><span class="op">)</span>
 <span class="co"># Unit: milliseconds</span>
 <span class="co">#      expr        min         lq       mean     median         uq        max neval cld</span>
 <span class="co">#     dplyr 12894.1111 13107.1415 17884.8903 16243.7631 17612.7355 29566.7005     5   b</span>

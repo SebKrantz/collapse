@@ -72,7 +72,7 @@
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">collapse</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">1.5.3</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">1.6.0</span>
       </span>
     </div>
 
@@ -94,13 +94,13 @@
       <ul class="nav navbar-nav navbar-right">
         <li>
   <a href="https://twitter.com/collapse_R" target="_blank">
-    <span class="fa fa-twitter"></span>
+    <span class="fas fa-twitter"></span>
      
   </a>
 </li>
 <li>
   <a href="https://github.com/SebKrantz/collapse" target="_blank">
-    <span class="fa fa-github"></span>
+    <span class="fas fa-github"></span>
      
   </a>
 </li>
@@ -153,14 +153,14 @@
     </tr>
     <tr>
       <th>...</th>
-      <td><p>other arguments passed to <code>fHDwithin</code>. Sensible options might be the <code>lm.method</code> argument or further control parameters to <code><a href='https://rdrr.io/pkg/fixest/man/demean.html'>fixest::demean</a></code>, the workhorse function underlying <code>fHDwithin</code> for higher-order centering tasks.</p></td>
+      <td><p>other arguments passed to <code>fhdwithin</code>. Sensible options might be the <code>lm.method</code> argument or further control parameters to <code><a href='https://lrberge.github.io/fixest/reference/demean.html'>fixest::demean</a></code>, the workhorse function underlying <code>fhdwithin</code> for higher-order centering tasks.</p></td>
     </tr>
     </table>
 
     <h2 class="hasAnchor" id="details"><a class="anchor" href="#details"></a>Details</h2>
 
-    <p>Factors and continuous regressors are efficiently projected out using <code><a href='fHDbetween, fHDwithin.html'>fHDwithin</a></code>, and the option <code>full.df</code> regulates whether a degree of freedom is subtracted for each used factor level (equivalent to dummy-variable estimator / expanding factors), or only one degree of freedom per factor (treating factors as variables). The test automatically removes missing values and considers only the complete cases of <code>y, exc</code> and <code>X</code>. Unused factor levels in <code>exc</code> and <code>X</code> are dropped.</p>
-<p><em>Note</em> that an intercept is always added by <code><a href='fHDbetween, fHDwithin.html'>fHDwithin</a></code>, so it is not necessary to include an intercept in data supplied to <code>exc</code> / <code>X</code>.</p>
+    <p>Factors and continuous regressors are efficiently projected out using <code><a href='fhdbetween, fhdwithin.html'>fhdwithin</a></code>, and the option <code>full.df</code> regulates whether a degree of freedom is subtracted for each used factor level (equivalent to dummy-variable estimator / expanding factors), or only one degree of freedom per factor (treating factors as variables). The test automatically removes missing values and considers only the complete cases of <code>y, exc</code> and <code>X</code>. Unused factor levels in <code>exc</code> and <code>X</code> are dropped.</p>
+<p><em>Note</em> that an intercept is always added by <code><a href='fhdbetween, fhdwithin.html'>fhdwithin</a></code>, so it is not necessary to include an intercept in data supplied to <code>exc</code> / <code>X</code>.</p>
     <h2 class="hasAnchor" id="value"><a class="anchor" href="#value"></a>Value</h2>
 
     <p>A 5 x 3 numeric matrix of statistics. The columns contain statistics:</p><ol>
@@ -181,7 +181,7 @@
 <!-- %% \dots --></p>
     <h2 class="hasAnchor" id="see-also"><a class="anchor" href="#see-also"></a>See also</h2>
 
-    <div class='dont-index'><p><code><a href='flm.html'>flm</a></code>, <code><a href='fHDbetween, fHDwithin.html'>fHDwithin</a></code>, <a href='data-transformations.html'>Data Transformations</a>, <a href='index.html'>Collapse Overview</a></p></div>
+    <div class='dont-index'><p><code><a href='flm.html'>flm</a></code>, <code><a href='fhdbetween, fhdwithin.html'>fhdwithin</a></code>, <a href='data-transformations.html'>Data Transformations</a>, <a href='index.html'>Collapse Overview</a></p></div>
 
     <h2 class="hasAnchor" id="examples"><a class="anchor" href="#examples"></a>Examples</h2>
     <pre class="examples"><div class='input'><span class='co'>## We could use fFtest as a seasonality test:</span>
@@ -216,17 +216,17 @@
 <span class='co'>## Testing the significance of country-FE in regression of GDP on life expectancy</span>
 <span class='fu'>fFtest</span><span class='op'>(</span><span class='va'>wlddev</span><span class='op'>$</span><span class='va'>PCGDP</span>, <span class='va'>wlddev</span><span class='op'>$</span><span class='va'>iso3c</span>, <span class='va'>wlddev</span><span class='op'>$</span><span class='va'>LIFEEX</span><span class='op'>)</span>
 </div><div class='output co'>#&gt;                     R-Sq.  DF1  DF2  F-Stat.  P-Value
-#&gt; Full Model          0.877  197 8200  296.420    0.000
-#&gt; Restricted Model    0.325    1 8396 4040.681    0.000
-#&gt; Exclusion Rest.     0.552  196 8200  187.541    0.000</div><div class='input'> 
+#&gt; Full Model          0.873  199 8822  304.661    0.000
+#&gt; Restricted Model    0.320    1 9020 4253.335    0.000
+#&gt; Exclusion Rest.     0.553  198 8822  193.803    0.000</div><div class='input'> 
 <span class='co'>## Ok, country-FE are significant, what about adding time-FE</span>
 <span class='fu'>fFtest</span><span class='op'>(</span><span class='va'>wlddev</span><span class='op'>$</span><span class='va'>PCGDP</span>, <span class='fu'><a href='qF, qG, finteraction.html'>qF</a></span><span class='op'>(</span><span class='va'>wlddev</span><span class='op'>$</span><span class='va'>year</span><span class='op'>)</span>, <span class='va'>wlddev</span><span class='op'>[</span><span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span><span class='op'>(</span><span class='st'>"iso3c"</span>,<span class='st'>"LIFEEX"</span><span class='op'>)</span><span class='op'>]</span><span class='op'>)</span>
 </div><div class='output co'>#&gt;                     R-Sq.  DF1  DF2  F-Stat.  P-Value
-#&gt; Full Model          0.896  253 8144  277.440    0.000
-#&gt; Restricted Model    0.877  197 8200  296.420    0.000
-#&gt; Exclusion Rest.     0.019   56 8144   26.817    0.000</div><div class='input'>
+#&gt; Full Model          0.894  258 8763  286.130    0.000
+#&gt; Restricted Model    0.873  199 8822  304.661    0.000
+#&gt; Exclusion Rest.     0.021   59 8763   29.280    0.000</div><div class='input'>
 <span class='co'># Same test done using lm:</span>
-<span class='va'>data</span> <span class='op'>&lt;-</span> <span class='fu'><a href='small-helpers.html'>na_omit</a></span><span class='op'>(</span><span class='fu'><a href='fselect, get_vars, add_vars.html'>get_vars</a></span><span class='op'>(</span><span class='va'>wlddev</span>, <span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span><span class='op'>(</span><span class='st'>"iso3c"</span>,<span class='st'>"year"</span>,<span class='st'>"PCGDP"</span>,<span class='st'>"LIFEEX"</span><span class='op'>)</span><span class='op'>)</span><span class='op'>)</span>
+<span class='va'>data</span> <span class='op'>&lt;-</span> <span class='fu'><a href='small-helper.html'>na_omit</a></span><span class='op'>(</span><span class='fu'><a href='fselect, get_vars, add_vars.html'>get_vars</a></span><span class='op'>(</span><span class='va'>wlddev</span>, <span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span><span class='op'>(</span><span class='st'>"iso3c"</span>,<span class='st'>"year"</span>,<span class='st'>"PCGDP"</span>,<span class='st'>"LIFEEX"</span><span class='op'>)</span><span class='op'>)</span><span class='op'>)</span>
 <span class='va'>full</span> <span class='op'>&lt;-</span> <span class='fu'><a href='https://rdrr.io/r/stats/lm.html'>lm</a></span><span class='op'>(</span><span class='va'>PCGDP</span> <span class='op'>~</span> <span class='va'>LIFEEX</span> <span class='op'>+</span> <span class='va'>iso3c</span> <span class='op'>+</span> <span class='fu'><a href='qF, qG, finteraction.html'>qF</a></span><span class='op'>(</span><span class='va'>year</span><span class='op'>)</span>, <span class='va'>data</span><span class='op'>)</span>
 <span class='va'>rest</span> <span class='op'>&lt;-</span> <span class='fu'><a href='https://rdrr.io/r/stats/lm.html'>lm</a></span><span class='op'>(</span><span class='va'>PCGDP</span> <span class='op'>~</span> <span class='va'>LIFEEX</span> <span class='op'>+</span> <span class='va'>iso3c</span>, <span class='va'>data</span><span class='op'>)</span>
 <span class='fu'><a href='https://rdrr.io/r/stats/anova.html'>anova</a></span><span class='op'>(</span><span class='va'>rest</span>, <span class='va'>full</span><span class='op'>)</span>
@@ -234,9 +234,9 @@
 #&gt; 
 #&gt; Model 1: PCGDP ~ LIFEEX + iso3c
 #&gt; Model 2: PCGDP ~ LIFEEX + iso3c + qF(year)
-#&gt;   Res.Df        RSS Df  Sum of Sq      F    Pr(&gt;F)    
-#&gt; 1   8200 2.5036e+11                                   
-#&gt; 2   8144 2.1138e+11 56 3.8979e+10 26.817 &lt; 2.2e-16 ***
+#&gt;   Res.Df        RSS Df  Sum of Sq     F    Pr(&gt;F)    
+#&gt; 1   8822 3.0044e+11                                  
+#&gt; 2   8763 2.5097e+11 59 4.9475e+10 29.28 &lt; 2.2e-16 ***
 #&gt; ---
 #&gt; Signif. codes:  0 ‘***’ 0.001 ‘**’ 0.01 ‘*’ 0.05 ‘.’ 0.1 ‘ ’ 1</div><div class='input'>
 </div></pre>

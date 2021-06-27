@@ -45,7 +45,7 @@ qDF, qDT and qTBL convert vectors, matrices, higher-dimensional arrays and suita
 qM converts vectors, higher-dimensional arrays, data frames and suitable lists to matrix.
 mctl and mrtl column- or row-wise convert a matrix to list, data frame or data.table. They are used internally by qDF and qDT, dapply, BY, etc...
 qF converts atomic vectors to factor (documented on a separate page).
-as.numeric_factor and as.character_factor convert factors, or all factor columns in a data frame / list, to numeric or character (by converting the levels).
+as_numeric_factor and as_character_factor convert factors, or all factor columns in a data frame / list, to numeric or character (by converting the levels).
 
 " />
 
@@ -79,7 +79,7 @@ as.numeric_factor and as.character_factor convert factors, or all factor columns
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">collapse</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">1.5.3</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">1.6.0</span>
       </span>
     </div>
 
@@ -101,13 +101,13 @@ as.numeric_factor and as.character_factor convert factors, or all factor columns
       <ul class="nav navbar-nav navbar-right">
         <li>
   <a href="https://twitter.com/collapse_R" target="_blank">
-    <span class="fa fa-twitter"></span>
+    <span class="fas fa-twitter"></span>
      
   </a>
 </li>
 <li>
   <a href="https://github.com/SebKrantz/collapse" target="_blank">
-    <span class="fa fa-github"></span>
+    <span class="fas fa-github"></span>
      
   </a>
 </li>
@@ -135,7 +135,7 @@ as.numeric_factor and as.character_factor convert factors, or all factor columns
 <li><p><code>qM</code> converts vectors, higher-dimensional arrays, data frames and suitable lists to matrix.</p></li>
 <li><p><code>mctl</code> and <code>mrtl</code> column- or row-wise convert a matrix to list, data frame or <em>data.table</em>. They are used internally by <code>qDF</code> and <code>qDT</code>, <code><a href='dapply.html'>dapply</a></code>, <code><a href='BY.html'>BY</a></code>, etc...</p></li>
 <li><p><code><a href='qF, qG, finteraction.html'>qF</a></code> converts atomic vectors to factor (documented on a separate page).</p></li>
-<li><p><code>as.numeric_factor</code> and <code>as.character_factor</code> convert factors, or all factor columns in a data frame / list, to numeric or character (by converting the levels).</p></li>
+<li><p><code>as_numeric_factor</code> and <code>as_character_factor</code> convert factors, or all factor columns in a data frame / list, to numeric or character (by converting the levels).</p></li>
 </ul>
 
     </div>
@@ -154,15 +154,15 @@ as.numeric_factor and as.character_factor convert factors, or all factor columns
 
 <span class='co'># Converting factors or factor columns</span>
 
-  <span class='fu'>as.numeric_factor</span><span class='op'>(</span><span class='va'>X</span>, keep.attr <span class='op'>=</span> <span class='cn'>TRUE</span><span class='op'>)</span>
-<span class='fu'>as.character_factor</span><span class='op'>(</span><span class='va'>X</span>, keep.attr <span class='op'>=</span> <span class='cn'>TRUE</span><span class='op'>)</span></pre>
+  <span class='fu'>as_numeric_factor</span><span class='op'>(</span><span class='va'>X</span>, keep.attr <span class='op'>=</span> <span class='cn'>TRUE</span><span class='op'>)</span>
+<span class='fu'>as_character_factor</span><span class='op'>(</span><span class='va'>X</span>, keep.attr <span class='op'>=</span> <span class='cn'>TRUE</span><span class='op'>)</span></pre>
 
     <h2 class="hasAnchor" id="arguments"><a class="anchor" href="#arguments"></a>Arguments</h2>
     <table class="ref-arguments">
     <colgroup><col class="name" /><col class="desc" /></colgroup>
     <tr>
       <th>X</th>
-      <td><p>a vector, factor, matrix, higher-dimensional array, data frame or list. <code>mctl</code> and <code>mrtl</code> only accept matrices, <code>as.numeric_factor</code> and <code>as.character_factor</code> only accept factors, data frames or lists.</p></td>
+      <td><p>a vector, factor, matrix, higher-dimensional array, data frame or list. <code>mctl</code> and <code>mrtl</code> only accept matrices, <code>as_numeric_factor</code> and <code>as_character_factor</code> only accept factors, data frames or lists.</p></td>
     </tr>
     <tr>
       <th>row.names.col</th>
@@ -207,8 +207,8 @@ as.numeric_factor and as.character_factor convert factors, or all factor columns
 <code>qM</code> - returns a matrix<br />
 <code>mctl</code>, <code>mrtl</code> - return a list, data frame or <em>data.table</em> <br />
 <code>qF</code> - returns a factor<br />
-<code>as.numeric_factor</code> - returns X with factors converted to numeric variables<br />
-<code>as.character_factor</code> - returns X with factors converted to character variables</p>
+<code>as_numeric_factor</code> - returns X with factors converted to numeric variables<br />
+<code>as_character_factor</code> - returns X with factors converted to character variables</p>
     <h2 class="hasAnchor" id="note"><a class="anchor" href="#note"></a>Note</h2>
 
     <p><code>qTBL</code> is a simple wrapper around <code>qDT</code> assigning different classes, i.e. <code>qTBL(x)</code> is equivalent to <code>qDT(x, class = c("tbl_df", "tbl", "data.frame"))</code>. Similar converters for other data frame based classes are easily created from <code>qDF</code> and <code>qDT</code>. The principle difference between them is that <code>qDF</code> preserves rownames whereas <code>qDT</code> always assigns integer rownames.</p>
@@ -290,7 +290,7 @@ as.numeric_factor and as.character_factor convert factors, or all factor columns
 </div><div class='output co'>#&gt;  [1] 6 6 4 6 8 6 8 4 4 6 6 8 8 8 8 8 8 4 4 4 4 8 8 8 8 4 4 4 8 6 8 4
 #&gt; Levels: 4 6 8</div><div class='input'>
 <span class='co'># Factor to numeric conversions</span>
-<span class='fu'><a href='https://rdrr.io/r/base/identical.html'>identical</a></span><span class='op'>(</span><span class='va'>mtcars</span>,  <span class='fu'>as.numeric_factor</span><span class='op'>(</span><span class='fu'><a href='dapply.html'>dapply</a></span><span class='op'>(</span><span class='va'>mtcars</span>, <span class='va'>qF</span><span class='op'>)</span><span class='op'>)</span><span class='op'>)</span>
+<span class='fu'><a href='https://rdrr.io/r/base/identical.html'>identical</a></span><span class='op'>(</span><span class='va'>mtcars</span>,  <span class='fu'>as_numeric_factor</span><span class='op'>(</span><span class='fu'><a href='dapply.html'>dapply</a></span><span class='op'>(</span><span class='va'>mtcars</span>, <span class='va'>qF</span><span class='op'>)</span><span class='op'>)</span><span class='op'>)</span>
 </div><div class='output co'>#&gt; [1] TRUE</div><div class='input'>
 
 

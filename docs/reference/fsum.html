@@ -72,7 +72,7 @@
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">collapse</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">1.5.3</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">1.6.0</span>
       </span>
     </div>
 
@@ -94,13 +94,13 @@
       <ul class="nav navbar-nav navbar-right">
         <li>
   <a href="https://twitter.com/collapse_R" target="_blank">
-    <span class="fa fa-twitter"></span>
+    <span class="fas fa-twitter"></span>
      
   </a>
 </li>
 <li>
   <a href="https://github.com/SebKrantz/collapse" target="_blank">
-    <span class="fa fa-github"></span>
+    <span class="fas fa-github"></span>
      
   </a>
 </li>
@@ -194,9 +194,10 @@
 
     <p><!-- % Non-grouped sum computations internally utilize long-doubles in C++, for additional numeric precision. --></p>
 <p>Missing-value removal as controlled by the <code>na.rm</code> argument is done very efficiently by simply skipping them in the computation (thus setting <code>na.rm = FALSE</code> on data with no missing values doesn't give extra speed). Large performance gains can nevertheless be achieved in the presence of missing values if <code>na.rm = FALSE</code>, since then the corresponding computation is terminated once a <code>NA</code> is encountered and <code>NA</code> is returned (unlike <code><a href='https://rdrr.io/r/base/sum.html'>sum</a></code> which just runs through without any checks).</p>
-<p>The weighted sum (i.e. survey total) is computed as <code><a href='https://rdrr.io/r/base/sum.html'>sum(x * w)</a></code>. If <code>na.rm = TRUE</code>, missing values will be removed from both <code>x</code> and <code>w</code> i.e. utilizing only <code>x[complete.cases(x,w)]</code> and <code>w[complete.cases(x,w)]</code>.</p>
+<p>The weighted sum (i.e. survey total) is computed as <code><a href='https://rdrr.io/r/base/sum.html'>sum(x * w)</a></code>, but in one pass and about twice as efficient. If <code>na.rm = TRUE</code>, missing values will be removed from both <code>x</code> and <code>w</code> i.e. utilizing only <code>x[complete.cases(x,w)]</code> and <code>w[complete.cases(x,w)]</code>.</p>
 <p>This all seamlessly generalizes to grouped computations, which are performed in a single pass (without splitting the data) and therefore extremely fast. See Benchmark and Examples below.</p>
-<p>When applied to data frames with groups or <code>drop = FALSE</code>, <code>fsum</code> preserves all column attributes (such as variable labels) but does not distinguish between classed and unclassed objects. The attributes of the data frame itself are also preserved.</p>
+<p>When applied to data frames with groups or <code>drop = FALSE</code>, <code>fsum</code> preserves all column attributes (such as variable labels), unless columns have a class (checked using <code>is.object</code>). The attributes of the data frame itself are also preserved.</p>
+<p>Since v1.6.0 <code>fsum</code> explicitly supports integers. Integers are summed using the long long type in C which is bounded at +-9,223,372,036,854,775,807 (so ~4.3 billion times greater than the minimum/maximum R integer bounded at +-2,147,483,647). If the value of the sum is outside +-2,147,483,647, a double containing the result is returned, otherwise an integer is returned. With groups, an integer overflow error is provided if the sum in any group is outside +-2,147,483,647.</p>
     <h2 class="hasAnchor" id="value"><a class="anchor" href="#value"></a>Value</h2>
 
     <p>The (<code>w</code> weighted) sum of <code>x</code>, grouped by <code>g</code>, or (if <code><a href='TRA.html'>TRA</a></code> is used) <code>x</code> transformed by its sum, grouped by <code>g</code>.</p>
@@ -216,7 +217,7 @@ fsum(mpg, mtcars$cyl, mtcars$hp)  # Weighted grouped sum (total)
 fsum(mpg, mtcars[c(2,8:9)])       # More groups..
 g &lt;- GRP(mtcars, ~ cyl + vs + am) # Precomputing groups gives more speed !
 fsum(mpg, g)
-fmean(mpg, g) == fsum(mpg, g) / fNobs(mpg, g)
+fmean(mpg, g) == fsum(mpg, g) / fnobs(mpg, g)
 fsum(mpg, g, TRA = "%")           # Percentages by group
 
 ## data.frame method
@@ -234,10 +235,10 @@ fsum(m, g, TRA = "%")
 \donttest{ &lt;!-- % No code relying on suggested package --&gt;
 ## method for grouped data frames - created with dplyr::group_by or fgroup_by
 library(dplyr)
-mtcars %&gt;% group_by(cyl,vs,am) %&gt;% fsum(hp)  # Weighted grouped sum (total)
-mtcars %&gt;% fgroup_by(cyl,vs,am) %&gt;% fsum(hp) # Equivalent and faster !!
-mtcars %&gt;% fgroup_by(cyl,vs,am) %&gt;% fsum(TRA = "%")
-mtcars %&gt;% fgroup_by(cyl,vs,am) %&gt;% fselect(mpg) %&gt;% fsum
+mtcars |&gt; group_by(cyl,vs,am) |&gt; fsum(hp)  # Weighted grouped sum (total)
+mtcars |&gt; fgroup_by(cyl,vs,am) |&gt; fsum(hp) # Equivalent and faster !!
+mtcars |&gt; fgroup_by(cyl,vs,am) |&gt; fsum(TRA = "%")
+mtcars |&gt; fgroup_by(cyl,vs,am) |&gt; fselect(mpg) |&gt; fsum()
 }
 </pre>
 

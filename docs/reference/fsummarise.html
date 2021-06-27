@@ -72,7 +72,7 @@
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">collapse</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">1.5.3</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">1.6.0</span>
       </span>
     </div>
 
@@ -94,13 +94,13 @@
       <ul class="nav navbar-nav navbar-right">
         <li>
   <a href="https://twitter.com/collapse_R" target="_blank">
-    <span class="fa fa-twitter"></span>
+    <span class="fas fa-twitter"></span>
      
   </a>
 </li>
 <li>
   <a href="https://github.com/SebKrantz/collapse" target="_blank">
-    <span class="fa fa-github"></span>
+    <span class="fas fa-github"></span>
      
   </a>
 </li>
@@ -168,8 +168,7 @@
 </div><div class='output co'>#&gt;   mean_mpg   sd_mpg
 #&gt; 1 20.09062 6.026948</div><div class='input'>
 <span class='co'># Grouped use</span>
-<span class='kw'><a href='https://rdrr.io/r/base/library.html'>library</a></span><span class='op'>(</span><span class='va'><a href='https://magrittr.tidyverse.org'>magrittr</a></span><span class='op'>)</span>
-<span class='va'>mtcars</span> <span class='op'>%&gt;%</span> <span class='fu'><a href='GRP, fgroup_by.html'>fgroup_by</a></span><span class='op'>(</span><span class='va'>cyl</span><span class='op'>)</span> <span class='op'>%&gt;%</span>
+<span class='va'>mtcars</span> |&gt; <span class='fu'><a href='GRP, fgroup_by.html'>fgroup_by</a></span><span class='op'>(</span><span class='va'>cyl</span><span class='op'>)</span> |&gt;
   <span class='fu'>fsummarise</span><span class='op'>(</span>mean_mpg <span class='op'>=</span> <span class='fu'><a href='fmean.html'>fmean</a></span><span class='op'>(</span><span class='va'>mpg</span><span class='op'>)</span>,
              sd_mpg <span class='op'>=</span> <span class='fu'><a href='fvar, fsd.html'>fsd</a></span><span class='op'>(</span><span class='va'>mpg</span><span class='op'>)</span><span class='op'>)</span>
 </div><div class='output co'>#&gt;   cyl mean_mpg   sd_mpg
@@ -177,7 +176,7 @@
 #&gt; 2   6 19.74286 1.453567
 #&gt; 3   8 15.10000 2.560048</div><div class='input'>
 <span class='co'># This is still efficient but quite a bit slower on large data (many groups)</span>
-<span class='va'>mtcars</span> <span class='op'>%&gt;%</span> <span class='fu'><a href='GRP, fgroup_by.html'>fgroup_by</a></span><span class='op'>(</span><span class='va'>cyl</span><span class='op'>)</span> <span class='op'>%&gt;%</span>
+<span class='va'>mtcars</span> |&gt; <span class='fu'><a href='GRP, fgroup_by.html'>fgroup_by</a></span><span class='op'>(</span><span class='va'>cyl</span><span class='op'>)</span> |&gt;
   <span class='fu'>fsummarise</span><span class='op'>(</span>mean_mpg <span class='op'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/mean.html'>mean</a></span><span class='op'>(</span><span class='va'>mpg</span><span class='op'>)</span>,
              sd_mpg <span class='op'>=</span> <span class='fu'><a href='https://rdrr.io/r/stats/sd.html'>sd</a></span><span class='op'>(</span><span class='va'>mpg</span><span class='op'>)</span><span class='op'>)</span>
 </div><div class='output co'>#&gt;   cyl mean_mpg   sd_mpg
@@ -185,7 +184,7 @@
 #&gt; 2   6 19.74286 1.453567
 #&gt; 3   8 15.10000 2.560048</div><div class='input'>
 <span class='co'># Weighted aggregation</span>
-<span class='va'>mtcars</span> <span class='op'>%&gt;%</span> <span class='fu'><a href='GRP, fgroup_by.html'>fgroup_by</a></span><span class='op'>(</span><span class='va'>cyl</span><span class='op'>)</span> <span class='op'>%&gt;%</span>
+<span class='va'>mtcars</span> |&gt; <span class='fu'><a href='GRP, fgroup_by.html'>fgroup_by</a></span><span class='op'>(</span><span class='va'>cyl</span><span class='op'>)</span> |&gt;
   <span class='fu'>fsummarise</span><span class='op'>(</span>w_mean_mpg <span class='op'>=</span> <span class='fu'><a href='fmean.html'>fmean</a></span><span class='op'>(</span><span class='va'>mpg</span>, <span class='va'>wt</span><span class='op'>)</span>,
              w_sd_mpg <span class='op'>=</span> <span class='fu'><a href='fvar, fsd.html'>fsd</a></span><span class='op'>(</span><span class='va'>mpg</span>, <span class='va'>wt</span><span class='op'>)</span><span class='op'>)</span>
 </div><div class='output co'>#&gt;   cyl w_mean_mpg w_sd_mpg
@@ -195,7 +194,7 @@
  
 <span class='co'>## Can also group with dplyr::group_by, but at a conversion cost, see ?GRP</span>
 <span class='kw'><a href='https://rdrr.io/r/base/library.html'>library</a></span><span class='op'>(</span><span class='va'><a href='https://dplyr.tidyverse.org'>dplyr</a></span><span class='op'>)</span>
-<span class='va'>mtcars</span> <span class='op'>%&gt;%</span> <span class='fu'><a href='https://dplyr.tidyverse.org/reference/group_by.html'>group_by</a></span><span class='op'>(</span><span class='va'>cyl</span><span class='op'>)</span> <span class='op'>%&gt;%</span>
+<span class='va'>mtcars</span> |&gt; <span class='fu'><a href='https://dplyr.tidyverse.org/reference/group_by.html'>group_by</a></span><span class='op'>(</span><span class='va'>cyl</span><span class='op'>)</span> |&gt;
   <span class='fu'>fsummarise</span><span class='op'>(</span>mean_mpg <span class='op'>=</span> <span class='fu'><a href='fmean.html'>fmean</a></span><span class='op'>(</span><span class='va'>mpg</span><span class='op'>)</span>,
              sd_mpg <span class='op'>=</span> <span class='fu'><a href='fvar, fsd.html'>fsd</a></span><span class='op'>(</span><span class='va'>mpg</span><span class='op'>)</span><span class='op'>)</span>
 </div><div class='output co'>#&gt; <span style='color: #949494;'># A tibble: 3 x 3</span><span>
@@ -205,7 +204,7 @@
 #&gt; </span><span style='color: #BCBCBC;'>2</span><span>     6     19.7   1.45
 #&gt; </span><span style='color: #BCBCBC;'>3</span><span>     8     15.1   2.56</div><div class='input'>
 <span class='co'># Again less efficient...</span>
-<span class='va'>mtcars</span> <span class='op'>%&gt;%</span> <span class='fu'><a href='https://dplyr.tidyverse.org/reference/group_by.html'>group_by</a></span><span class='op'>(</span><span class='va'>cyl</span><span class='op'>)</span> <span class='op'>%&gt;%</span>
+<span class='va'>mtcars</span> |&gt; <span class='fu'><a href='https://dplyr.tidyverse.org/reference/group_by.html'>group_by</a></span><span class='op'>(</span><span class='va'>cyl</span><span class='op'>)</span> |&gt;
   <span class='fu'>fsummarise</span><span class='op'>(</span>mean_mpg <span class='op'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/mean.html'>mean</a></span><span class='op'>(</span><span class='va'>mpg</span><span class='op'>)</span>,
              sd_mpg <span class='op'>=</span> <span class='fu'><a href='https://rdrr.io/r/stats/sd.html'>sd</a></span><span class='op'>(</span><span class='va'>mpg</span><span class='op'>)</span><span class='op'>)</span>
 </div><div class='output co'>#&gt; </span><span style='color: #949494;'># A tibble: 3 x 3</span><span>

@@ -72,7 +72,7 @@
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">collapse</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">1.5.3</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">1.6.0</span>
       </span>
     </div>
 
@@ -94,13 +94,13 @@
       <ul class="nav navbar-nav navbar-right">
         <li>
   <a href="https://twitter.com/collapse_R" target="_blank">
-    <span class="fa fa-twitter"></span>
+    <span class="fas fa-twitter"></span>
      
   </a>
 </li>
 <li>
   <a href="https://github.com/SebKrantz/collapse" target="_blank">
-    <span class="fa fa-github"></span>
+    <span class="fas fa-github"></span>
      
   </a>
 </li>
@@ -275,7 +275,7 @@
 #&gt; 5     14.18481    9.497068     8.061544    1.897793
 #&gt; 6     15.31960   10.288490     9.789018    3.795585</div><div class='input'>
 <span class='co'>## matrix method</span>
-<span class='va'>m</span> <span class='op'>&lt;-</span> <span class='fu'><a href='A4-quick-conversion.html'>qM</a></span><span class='op'>(</span><span class='va'>mtcars</span><span class='op'>)</span>
+<span class='va'>m</span> <span class='op'>&lt;-</span> <span class='fu'><a href='quick-conversion.html'>qM</a></span><span class='op'>(</span><span class='va'>mtcars</span><span class='op'>)</span>
 <span class='fu'>fsd</span><span class='op'>(</span><span class='va'>m</span><span class='op'>)</span>
 </div><div class='output co'>#&gt;         mpg         cyl        disp          hp        drat          wt 
 #&gt;   6.0269481   1.7859216 123.9386938  68.5628685   0.5346787   0.9784574 
@@ -291,27 +291,27 @@
 #&gt; 8 0.3631365 0.7262730 1.556624</div><div class='input'> 
 <span class='co'>## method for grouped data frames - created with dplyr::group_by or fgroup_by</span>
 <span class='kw'><a href='https://rdrr.io/r/base/library.html'>library</a></span><span class='op'>(</span><span class='va'><a href='https://dplyr.tidyverse.org'>dplyr</a></span><span class='op'>)</span>
-<span class='va'>mtcars</span> <span class='op'>%&gt;%</span> <span class='fu'><a href='https://dplyr.tidyverse.org/reference/group_by.html'>group_by</a></span><span class='op'>(</span><span class='va'>cyl</span>,<span class='va'>vs</span>,<span class='va'>am</span><span class='op'>)</span> <span class='op'>%&gt;%</span> <span class='va'>fsd</span>
+<span class='va'>mtcars</span> |&gt; <span class='fu'><a href='https://dplyr.tidyverse.org/reference/group_by.html'>group_by</a></span><span class='op'>(</span><span class='va'>cyl</span>,<span class='va'>vs</span>,<span class='va'>am</span><span class='op'>)</span> |&gt; <span class='fu'>fsd</span><span class='op'>(</span><span class='op'>)</span>
 </div><div class='output co'>#&gt; <span style='color: #949494;'># A tibble: 7 x 11</span><span>
 #&gt;     cyl    vs    am    mpg  disp    hp   drat     wt    qsec   gear   carb
 #&gt;   </span><span style='color: #949494;font-style: italic;'>&lt;dbl&gt;</span><span> </span><span style='color: #949494;font-style: italic;'>&lt;dbl&gt;</span><span> </span><span style='color: #949494;font-style: italic;'>&lt;dbl&gt;</span><span>  </span><span style='color: #949494;font-style: italic;'>&lt;dbl&gt;</span><span> </span><span style='color: #949494;font-style: italic;'>&lt;dbl&gt;</span><span> </span><span style='color: #949494;font-style: italic;'>&lt;dbl&gt;</span><span>  </span><span style='color: #949494;font-style: italic;'>&lt;dbl&gt;</span><span>  </span><span style='color: #949494;font-style: italic;'>&lt;dbl&gt;</span><span>   </span><span style='color: #949494;font-style: italic;'>&lt;dbl&gt;</span><span>  </span><span style='color: #949494;font-style: italic;'>&lt;dbl&gt;</span><span>  </span><span style='color: #949494;font-style: italic;'>&lt;dbl&gt;</span><span>
 #&gt; </span><span style='color: #BCBCBC;'>1</span><span>     4     0     1 </span><span style='color: #BB0000;'>NA</span><span>     </span><span style='color: #BB0000;'>NA</span><span>    </span><span style='color: #BB0000;'>NA</span><span>    </span><span style='color: #BB0000;'>NA</span><span>     </span><span style='color: #BB0000;'>NA</span><span>     </span><span style='color: #BB0000;'>NA</span><span>      </span><span style='color: #BB0000;'>NA</span><span>     </span><span style='color: #BB0000;'>NA</span><span>    
-#&gt; </span><span style='color: #BCBCBC;'>2</span><span>     4     1     0  1.45  14.0  19.7   0.130  0.408  1.67    0.577  0.577
+#&gt; </span><span style='color: #BCBCBC;'>2</span><span>     4     1     0  1.45  14.0  19.7   0.13   0.408  1.67    0.577  0.577
 #&gt; </span><span style='color: #BCBCBC;'>3</span><span>     4     1     1  4.76  18.8  24.1   0.378  0.440  0.945   0.378  0.535
 #&gt; </span><span style='color: #BCBCBC;'>4</span><span>     6     0     1  0.751  8.66 37.5   0.162  0.128  0.769   0.577  1.15 
 #&gt; </span><span style='color: #BCBCBC;'>5</span><span>     6     1     0  1.63  44.7   9.18  0.592  0.116  0.816   0.577  1.73 
 #&gt; </span><span style='color: #BCBCBC;'>6</span><span>     8     0     0  2.77  71.8  33.4   0.230  0.768  0.802   0      0.900
-#&gt; </span><span style='color: #BCBCBC;'>7</span><span>     8     0     1  0.566 35.4  50.2   0.481  0.283  0.070</span><span style='text-decoration: underline;'>7</span><span>  0      2.83 </div><div class='input'><span class='va'>mtcars</span> <span class='op'>%&gt;%</span> <span class='fu'><a href='https://dplyr.tidyverse.org/reference/group_by.html'>group_by</a></span><span class='op'>(</span><span class='va'>cyl</span>,<span class='va'>vs</span>,<span class='va'>am</span><span class='op'>)</span> <span class='op'>%&gt;%</span> <span class='fu'>fsd</span><span class='op'>(</span>keep.group_vars <span class='op'>=</span> <span class='cn'>FALSE</span><span class='op'>)</span> <span class='co'># Remove grouping columns</span>
+#&gt; </span><span style='color: #BCBCBC;'>7</span><span>     8     0     1  0.566 35.4  50.2   0.481  0.283  0.070</span><span style='text-decoration: underline;'>7</span><span>  0      2.83 </div><div class='input'><span class='va'>mtcars</span> |&gt; <span class='fu'><a href='https://dplyr.tidyverse.org/reference/group_by.html'>group_by</a></span><span class='op'>(</span><span class='va'>cyl</span>,<span class='va'>vs</span>,<span class='va'>am</span><span class='op'>)</span> |&gt; <span class='fu'>fsd</span><span class='op'>(</span>keep.group_vars <span class='op'>=</span> <span class='cn'>FALSE</span><span class='op'>)</span> <span class='co'># Remove grouping columns</span>
 </div><div class='output co'>#&gt; </span><span style='color: #949494;'># A tibble: 7 x 8</span><span>
 #&gt;      mpg  disp    hp   drat     wt    qsec   gear   carb
 #&gt;    </span><span style='color: #949494;font-style: italic;'>&lt;dbl&gt;</span><span> </span><span style='color: #949494;font-style: italic;'>&lt;dbl&gt;</span><span> </span><span style='color: #949494;font-style: italic;'>&lt;dbl&gt;</span><span>  </span><span style='color: #949494;font-style: italic;'>&lt;dbl&gt;</span><span>  </span><span style='color: #949494;font-style: italic;'>&lt;dbl&gt;</span><span>   </span><span style='color: #949494;font-style: italic;'>&lt;dbl&gt;</span><span>  </span><span style='color: #949494;font-style: italic;'>&lt;dbl&gt;</span><span>  </span><span style='color: #949494;font-style: italic;'>&lt;dbl&gt;</span><span>
 #&gt; </span><span style='color: #BCBCBC;'>1</span><span> </span><span style='color: #BB0000;'>NA</span><span>     </span><span style='color: #BB0000;'>NA</span><span>    </span><span style='color: #BB0000;'>NA</span><span>    </span><span style='color: #BB0000;'>NA</span><span>     </span><span style='color: #BB0000;'>NA</span><span>     </span><span style='color: #BB0000;'>NA</span><span>      </span><span style='color: #BB0000;'>NA</span><span>     </span><span style='color: #BB0000;'>NA</span><span>    
-#&gt; </span><span style='color: #BCBCBC;'>2</span><span>  1.45  14.0  19.7   0.130  0.408  1.67    0.577  0.577
+#&gt; </span><span style='color: #BCBCBC;'>2</span><span>  1.45  14.0  19.7   0.13   0.408  1.67    0.577  0.577
 #&gt; </span><span style='color: #BCBCBC;'>3</span><span>  4.76  18.8  24.1   0.378  0.440  0.945   0.378  0.535
 #&gt; </span><span style='color: #BCBCBC;'>4</span><span>  0.751  8.66 37.5   0.162  0.128  0.769   0.577  1.15 
 #&gt; </span><span style='color: #BCBCBC;'>5</span><span>  1.63  44.7   9.18  0.592  0.116  0.816   0.577  1.73 
 #&gt; </span><span style='color: #BCBCBC;'>6</span><span>  2.77  71.8  33.4   0.230  0.768  0.802   0      0.900
-#&gt; </span><span style='color: #BCBCBC;'>7</span><span>  0.566 35.4  50.2   0.481  0.283  0.070</span><span style='text-decoration: underline;'>7</span><span>  0      2.83 </div><div class='input'><span class='va'>mtcars</span> <span class='op'>%&gt;%</span> <span class='fu'><a href='https://dplyr.tidyverse.org/reference/group_by.html'>group_by</a></span><span class='op'>(</span><span class='va'>cyl</span>,<span class='va'>vs</span>,<span class='va'>am</span><span class='op'>)</span> <span class='op'>%&gt;%</span> <span class='fu'>fsd</span><span class='op'>(</span><span class='va'>hp</span><span class='op'>)</span>      <span class='co'># Weighted by hp</span>
+#&gt; </span><span style='color: #BCBCBC;'>7</span><span>  0.566 35.4  50.2   0.481  0.283  0.070</span><span style='text-decoration: underline;'>7</span><span>  0      2.83 </div><div class='input'><span class='va'>mtcars</span> |&gt; <span class='fu'><a href='https://dplyr.tidyverse.org/reference/group_by.html'>group_by</a></span><span class='op'>(</span><span class='va'>cyl</span>,<span class='va'>vs</span>,<span class='va'>am</span><span class='op'>)</span> |&gt; <span class='fu'>fsd</span><span class='op'>(</span><span class='va'>hp</span><span class='op'>)</span>      <span class='co'># Weighted by hp</span>
 </div><div class='output co'>#&gt; </span><span style='color: #949494;'># A tibble: 7 x 11</span><span>
 #&gt;     cyl    vs    am sum.hp   mpg  disp  drat     wt   qsec  gear  carb
 #&gt;   </span><span style='color: #949494;font-style: italic;'>&lt;dbl&gt;</span><span> </span><span style='color: #949494;font-style: italic;'>&lt;dbl&gt;</span><span> </span><span style='color: #949494;font-style: italic;'>&lt;dbl&gt;</span><span>  </span><span style='color: #949494;font-style: italic;'>&lt;dbl&gt;</span><span> </span><span style='color: #949494;font-style: italic;'>&lt;dbl&gt;</span><span> </span><span style='color: #949494;font-style: italic;'>&lt;dbl&gt;</span><span> </span><span style='color: #949494;font-style: italic;'>&lt;dbl&gt;</span><span>  </span><span style='color: #949494;font-style: italic;'>&lt;dbl&gt;</span><span>  </span><span style='color: #949494;font-style: italic;'>&lt;dbl&gt;</span><span> </span><span style='color: #949494;font-style: italic;'>&lt;dbl&gt;</span><span> </span><span style='color: #949494;font-style: italic;'>&lt;dbl&gt;</span><span>
@@ -321,7 +321,7 @@
 #&gt; </span><span style='color: #BCBCBC;'>4</span><span>     6     0     1    395 0.647  7.46 0.139 0.095</span><span style='text-decoration: underline;'>9</span><span> 0.651  0.497 0.995
 #&gt; </span><span style='color: #BCBCBC;'>5</span><span>     6     1     0    461 1.40  38.8  0.509 0.098</span><span style='text-decoration: underline;'>9</span><span> 0.701  0.499 1.50 
 #&gt; </span><span style='color: #BCBCBC;'>6</span><span>     8     0     0   </span><span style='text-decoration: underline;'>2</span><span>330 2.66  68.8  0.233 0.756  0.830  0     0.851
-#&gt; </span><span style='color: #BCBCBC;'>7</span><span>     8     0     1    599 0.398 24.8  0.338 0.199  0.049</span><span style='text-decoration: underline;'>7</span><span> 0     1.99 </div><div class='input'><span class='va'>mtcars</span> <span class='op'>%&gt;%</span> <span class='fu'><a href='https://dplyr.tidyverse.org/reference/group_by.html'>group_by</a></span><span class='op'>(</span><span class='va'>cyl</span>,<span class='va'>vs</span>,<span class='va'>am</span><span class='op'>)</span> <span class='op'>%&gt;%</span> <span class='fu'>fsd</span><span class='op'>(</span><span class='va'>hp</span>, <span class='st'>"/"</span><span class='op'>)</span> <span class='co'># Weighted scaling transformation</span>
+#&gt; </span><span style='color: #BCBCBC;'>7</span><span>     8     0     1    599 0.398 24.8  0.338 0.199  0.049</span><span style='text-decoration: underline;'>7</span><span> 0     1.99 </div><div class='input'><span class='va'>mtcars</span> |&gt; <span class='fu'><a href='https://dplyr.tidyverse.org/reference/group_by.html'>group_by</a></span><span class='op'>(</span><span class='va'>cyl</span>,<span class='va'>vs</span>,<span class='va'>am</span><span class='op'>)</span> |&gt; <span class='fu'>fsd</span><span class='op'>(</span><span class='va'>hp</span>, <span class='st'>"/"</span><span class='op'>)</span> <span class='co'># Weighted scaling transformation</span>
 </div><div class='output co'>#&gt; </span><span style='color: #949494;'># A tibble: 32 x 11</span><span>
 #&gt; </span><span style='color: #949494;'># Groups:   cyl, vs, am [7]</span><span>
 #&gt;      cyl    vs    am    hp   mpg  disp  drat    wt  qsec   gear  carb
