@@ -199,7 +199,7 @@ As shown above, with `B` and `W` the weight column can also be passed as a formu
 
 ### 1.2 Higher-Dimensional Between and Within Transformations
 
-Analogous to `fbetween` / `B` and `fwithin` / `W`, *collapse* provides a duo of functions and operators `fhdbetween` / `HDB` and `fhdwithin` / `HDW` to efficiently average and center data on multiple groups. The credit herefore goes to Laurent Berge, the author of the *fixest* package who wrote an efficient C-implementation of the alternating-projections algorithm to perform this task. `fhdbetween` / `HDB` and `fhdwithin` / `HDW` enrich this implementation (available in the function `fixest::demean`) by providing more options regarding missing values, and also allowing continuous covariates and (full) interactions to be projected out alongside factors. The methods for *pseries* and *pdata.frame*'s are however rather simple, as they simply simultaneously center panel-vectors on all panel-identifiers in the index (which can be more than 2):
+Analogous to `fbetween` / `B` and `fwithin` / `W`, *collapse* provides a duo of functions and operators `fhdbetween` / `HDB` and `fhdwithin` / `HDW` to efficiently average and center data on multiple groups. The credit herefore goes to Laurent Berge, the author of the *fixest* package who wrote an efficient C-implementation of the alternating-projections algorithm to perform this task. `fhdbetween` / `HDB` and `fhdwithin` / `HDW` enrich this implementation (available in the function `fixest::demean`) by providing more options regarding missing values, and also allowing continuous covariates and (full) interactions to be projected out alongside factors. The methods for *pseries* and *pdata.frame*'s are however rather simple, as they simply simultaneously center panel-vectors on various panel-identifiers in the index (which can be more than 2, the default is to center on all identifiers):
 
 ```{r, eval = NCRAN}
 # This simultaneously averages Life-Expectancy across countries and years 
@@ -338,8 +338,8 @@ head(flag(LIFEEX))
 head(flag(LIFEEX, -1))
 
 # The lag and lead operators are even more parsimonious to employ:
-all_identical(L(LIFEEX), flag(LIFEEX), plm::lag(LIFEEX))
-all_identical(F(LIFEEX), flag(LIFEEX, -1), plm::lead(LIFEEX))
+all_identical(L(LIFEEX), flag(LIFEEX), lag(LIFEEX))
+all_identical(F(LIFEEX), flag(LIFEEX, -1), lead(LIFEEX))
 ```
 
 It is also possible to compute a sequence of lags / leads using `flag` or one of the operators:
@@ -351,12 +351,12 @@ head(flag(LIFEEX, -1:3))
 all_identical(L(LIFEEX, -1:3), F(LIFEEX, 1:-3), flag(LIFEEX, -1:3))
 
 # The native plm implementation also returns a matrix of lags but with different column names
-head(plm::lag(LIFEEX, -1:3), 4)
+head(lag(LIFEEX, -1:3), 4)
 
 ```
 
 <!-- # Just the meaning is a bit ambiguous... -->
-<!-- head(plm::lead(LIFEEX, 1:-3), 4) -->
+<!-- head(lead(LIFEEX, 1:-3), 4) -->
 
 Of course the lag orders may be unevenly spaced, i.e. `L(x, -1:3*12)` would compute seasonal lags on monthly data. On *pdata.frame*'s, the effects of `flag` and `L` / `F` differ insofar that `flag` will just lag the entire dataset without preserving identifiers (although the index attribute is always preserved), whereas `L` / `F` by default (`cols = is.numeric`) select the numeric variables and add the panel-id's on the left (default `keep.ids = TRUE`): 
 
@@ -547,11 +547,11 @@ microbenchmark(fhdbetween(LIFEEX_l), times = 10)
 microbenchmark(fhdwithin(LIFEEX_l), times = 10)
 
 # Single Lag
-microbenchmark(plm::lag(LIFEEX_l), times = 10)
+microbenchmark(lag(LIFEEX_l), times = 10)
 microbenchmark(flag(LIFEEX_l), times = 10)
 
 # Sequence of Lags / Leads
-microbenchmark(plm::lag(LIFEEX_l, -1:3), times = 10)
+microbenchmark(lag(LIFEEX_l, -1:3), times = 10)
 microbenchmark(flag(LIFEEX_l, -1:3), times = 10)
 
 # Single difference
