@@ -53,6 +53,7 @@ fselect <- function(x, ..., return = "data") { # This also takes names and indic
   nl <- `names<-`(as.vector(seq_along(nam), "list"), nam)
   vars <- eval(substitute(c(...)), nl, parent.frame())
   # if(!is.integer(vars)) stop(paste0("Unknown columns: ", .c(...))) # if(!is.integer(vars) || max(vars) > length(nam)) # nah, a bit redundant..
+  if(!is.atomic(vars) || is.logical(vars)) stop("... needs to be expressions evaluating to integer or character")
   nam_vars <- names(vars)
   vars <- if(is.character(vars)) ckmatch(vars, nam) else as.integer(vars) # needed, otherwise selecting with doubles gives an error
   if(length(nam_vars)) { # Allow renaming during selection
@@ -81,6 +82,7 @@ slt <- fselect # good, consistent
   # if(inherits(x, "data.table")) nam <- nam[seq_col(x)] # required because of overallocation... Should be solved now -> always make shallow copy
   nl <- `names<-`(as.vector(seq_along(nam), "list"), nam)
   vars <- eval(substitute(c(...)), nl, parent.frame())
+  if(!is.atomic(vars) || is.logical(vars)) stop("... needs to be expressions evaluating to integer or character")
   if(is.character(vars)) vars <- ckmatch(vars, nam)
   if(vars[1L] < 0L) vars <- seq_along(nam)[vars]
   # if(!is.numeric(vars)) stop("... needs to be column names, or character / integer / logical vectors")
