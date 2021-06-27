@@ -1066,7 +1066,7 @@ On data frames, the performance is comparable to `lapply`, and `dapply` is about
 ### 6.2 Split-Apply-Combine Computing
 `BY` is a generalization of `dapply` for grouped computations using functions that are not part of the *Fast Statistical Functions* introduced above. It fundamentally is a re-implementation of the `lapply(split(x, g), FUN, ...)` computing paradigm in base R, but substantially faster and more versatile than functions like `tapply`, `by` or `aggregate`. It is however not faster than *dplyr* or *data.table* for larger grouped computations on data frames requiring split-apply-combine computing.
 
-`BY` is S3 generic with methods for vector, matrix, data.frame and grouped_df^[`BY.grouped_df` is probably only useful together with the `expand.wide = TRUE` argument which *dplyr* does not have, because otherwise *dplyr*'s `summarize` and `mutate` are substantially faster on larger data.]. It also supports the same grouping (`g`) inputs as the *Fast Statistical Functions* (grouping vectors, factors, lists or *GRP* objects). Below the use of `BY` is demonstrated on vectors matrices and data frames.
+`BY` is S3 generic with methods for vector, matrix, data.frame and grouped_df^[`BY.grouped_df` is probably only useful together with the `expand.wide = TRUE` argument which *dplyr* does not have, because otherwise *dplyr*'s `summarise` and `mutate` are substantially faster on larger data.]. It also supports the same grouping (`g`) inputs as the *Fast Statistical Functions* (grouping vectors, factors, lists or *GRP* objects). Below the use of `BY` is demonstrated on vectors matrices and data frames.
 
 <!-- On bigger data.frame's however split-apply combine computing with *dplyr* is faster.  -->
 
