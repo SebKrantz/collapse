@@ -21,6 +21,6 @@ test_that("qsu gives errors for wrong input", {
 
   expect_equal(qsu(wlddev, PCGDP ~ region + income, ~ iso3c), qsu(wlddev, ~ region + income, pid = PCGDP ~ iso3c))
 
-  expect_error(qsu(wlddev, cols = 9:13))
+  expect_error(qsu(wlddev, cols = 9:14))
   expect_error(qsu(wlddev, cols = c("PCGDP","bla")))
 })

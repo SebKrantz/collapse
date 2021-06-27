@@ -415,8 +415,8 @@ test_that("L.data.frame method is foolproof", {
   expect_visible(L(wlddev, -1:1,~iso3c, cols = NULL))
   expect_visible(L(wlddev, -1:1,wlddev$iso3c, wlddev$year, cols = NULL))
   expect_visible(L(wlddev, -1:1,~iso3c, ~year, cols = NULL))
-  expect_error(L(wlddev, cols = 9:13))
-  expect_error(L(wlddev, -1:1,~iso3c, ~year, cols = 9:13))
+  expect_error(L(wlddev, cols = 9:14))
+  expect_error(L(wlddev, -1:1,~iso3c, ~year, cols = 9:14))
   expect_error(L(wlddev, cols = c("PCGDP","LIFEEX","bla")))
   expect_error(L(wlddev, -1:1,~iso3c, ~year, cols = c("PCGDP","LIFEEX","bla")))
 

@@ -178,10 +178,10 @@ test_that("TRA attribute preservation works well", {
   # Data Frame Method
   # CATEGORICAL
   # Simple
-  expect_equal(vclasses(unattrib(fndistinct(wlddev, TRA = "replace_fill"))), rep("integer", 12L))
-  expect_equal(vclasses(unattrib(fndistinct(wlddev, TRA = "replace"))), rep("integer", 12L))
-  expect_equal(vclasses(unattrib(fnobs(wlddev, TRA = "replace_fill"))), rep("integer", 12L))
-  expect_equal(vclasses(unattrib(fnobs(wlddev, TRA = "replace"))), rep("integer", 12L))
+  expect_equal(vclasses(unattrib(fndistinct(wlddev, TRA = "replace_fill"))), rep("integer", 13L))
+  expect_equal(vclasses(unattrib(fndistinct(wlddev, TRA = "replace"))), rep("integer", 13L))
+  expect_equal(vclasses(unattrib(fnobs(wlddev, TRA = "replace_fill"))), rep("integer", 13L))
+  expect_equal(vclasses(unattrib(fnobs(wlddev, TRA = "replace"))), rep("integer", 13L))
   expect_equal(lapply(ffirst(wlddev, TRA = "replace_fill"), attributes), lapply(wlddev, attributes))
   expect_equal(lapply(ffirst(wlddev, TRA = "replace"), attributes), lapply(wlddev, attributes))
   expect_equal(lapply(flast(wlddev, TRA = "replace_fill"), attributes), lapply(wlddev, attributes))
@@ -189,10 +189,10 @@ test_that("TRA attribute preservation works well", {
   expect_equal(lapply(fmode(wlddev, TRA = "replace_fill"), attributes), lapply(wlddev, attributes))
   expect_equal(lapply(fmode(wlddev, TRA = "replace"), attributes), lapply(wlddev, attributes))
   # Grouped
-  expect_equal(vclasses(unattrib(fndistinct(wlddev, wlddev$iso3c, TRA = "replace_fill"))), rep("integer", 12L))
-  expect_equal(vclasses(unattrib(fndistinct(wlddev, wlddev$iso3c, TRA = "replace"))), rep("integer", 12L))
-  expect_equal(vclasses(unattrib(fnobs(wlddev, wlddev$iso3c, TRA = "replace_fill"))), rep("integer", 12L))
-  expect_equal(vclasses(unattrib(fnobs(wlddev, wlddev$iso3c, TRA = "replace"))), rep("integer", 12L))
+  expect_equal(vclasses(unattrib(fndistinct(wlddev, wlddev$iso3c, TRA = "replace_fill"))), rep("integer", 13L))
+  expect_equal(vclasses(unattrib(fndistinct(wlddev, wlddev$iso3c, TRA = "replace"))), rep("integer", 13L))
+  expect_equal(vclasses(unattrib(fnobs(wlddev, wlddev$iso3c, TRA = "replace_fill"))), rep("integer", 13L))
+  expect_equal(vclasses(unattrib(fnobs(wlddev, wlddev$iso3c, TRA = "replace"))), rep("integer", 13L))
   expect_equal(lapply(ffirst(wlddev, wlddev$iso3c, TRA = "replace_fill"), attributes), lapply(wlddev, attributes))
   expect_equal(lapply(ffirst(wlddev, wlddev$iso3c, TRA = "replace"), attributes), lapply(wlddev, attributes))
   expect_equal(lapply(flast(wlddev, wlddev$iso3c, TRA = "replace_fill"), attributes), lapply(wlddev, attributes))

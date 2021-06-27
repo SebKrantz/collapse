@@ -94,7 +94,7 @@ test_that("fcompute works well", {
 
 test_that("fsubset error for wrong input", {
   # expect_error(fsubset(mtcars, mpg))
-  # expect_error(fsubset(mtcars, mpg:cyl))
+  expect_warning(fsubset(mtcars, mpg:cyl))
   expect_error(fsubset(mtcars, "mpg"))
   expect_error(fsubset(mtcars, TRUE))
   expect_error(fsubset(mtcars, mpg > 15, cyl < 4))

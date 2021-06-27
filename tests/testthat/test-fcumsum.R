@@ -10,7 +10,7 @@ f <- as.factor(rep(1:10, each = 10))
 t <- as.factor(rep(1:100))
 
 data <- wlddev[wlddev$iso3c %in% c("BLZ","IND","USA","SRB","GRL"), ]
-data$ODA <- NULL # Too large (integer overflow)
+settransform(data, ODA = NULL, POP = NULL) # Too large (integer overflow)
 g <- GRP(droplevels(data$iso3c))
 td <- as.factor(data$year)
 dataNA <- na_insert(data)

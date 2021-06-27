@@ -108,7 +108,7 @@ test_that("psmat gives errors for wrong input", {
   expect_error(psmat(wlddev, PCGDP + LIFEEX + GINI + ODA + bla ~ iso3c, ~ year))
   expect_error(psmat(wlddev, PCGDP + LIFEEX + GINI + ODA ~ iso3c + bla, ~ year))
   # cols
-  expect_error(psmat(wlddev, ~ iso3c, ~ year, cols = 13))
+  expect_error(psmat(wlddev, ~ iso3c, ~ year, cols = 14))
   expect_error(psmat(wlddev, ~ iso3c, ~ year, cols = "bla"))
   expect_visible(psmat(wlddev, ~ iso3c, ~ year, cols = sapply(wlddev, is.numeric)))
   expect_error(psmat(wlddev, ~ iso3c, ~ year, cols = sapply(wlddev, is.numeric)[-1]))
@@ -140,7 +140,7 @@ test_that("psacf gives errors for wrong input", {
   expect_error(psacf(wlddev, PCGDP + LIFEEX + GINI + ODA + bla ~ iso3c, ~ year, plot = FALSE))
   expect_error(psacf(wlddev, PCGDP + LIFEEX + GINI + ODA ~ iso3c + bla, ~ year, plot = FALSE))
   # cols
-  expect_error(psacf(wlddev, ~ iso3c, ~ year, cols = 13, plot = FALSE))
+  expect_error(psacf(wlddev, ~ iso3c, ~ year, cols = 14, plot = FALSE))
   expect_error(psacf(wlddev, ~ iso3c, ~ year, cols = "bla", plot = FALSE))
   expect_visible(psacf(wlddev, ~ iso3c, ~ year, cols = sapply(wlddev, is.numeric), plot = FALSE))
   expect_error(psacf(wlddev, ~ iso3c, ~ year, cols = sapply(wlddev, is.numeric)[-1], plot = FALSE))

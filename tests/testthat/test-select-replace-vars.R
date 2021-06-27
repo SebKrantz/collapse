@@ -97,11 +97,11 @@ test_that("adding vars works well", {
   expect_identical(wlddev1, add_vars(temp, wlddev))
 
   wlddev1 <- wlddev
-  temp <- STD(get_vars(wlddev, 9:12))
-  add_vars(wlddev1, c(10,12,14,16)) <- temp
-  expect_true(all_identical(wlddev1,  add_vars(wlddev, temp, pos = c(10,12,14,16)),
+  temp <- STD(get_vars(wlddev, 9:13))
+  add_vars(wlddev1, c(10,12,14,16,18)) <- temp
+  expect_true(all_identical(wlddev1,  add_vars(wlddev, temp, pos = c(10,12,14,16,18)),
                             add_vars(gv(wlddev, 1:9), gv(temp, 1), gv(wlddev, 10), gv(temp, 2),
-                                     gv(wlddev, 11), gv(temp, 3), gv(wlddev, 12), gv(temp, 4))))
+                                     gv(wlddev, 11), gv(temp, 3), gv(wlddev, 12), gv(temp, 4), gv(wlddev, 13), gv(temp, 5))))
 
 })
 
@@ -145,9 +145,9 @@ test_that("empty selections work well", {
 
 
 test_that("select vars errors for wrong input", {
-  expect_error(get_vars(wlddev, 13))
-  expect_error(get_vars(wlddev, 1:13))
-  expect_error(get_vars(wlddev, -13))
+  expect_error(get_vars(wlddev, 14))
+  expect_error(get_vars(wlddev, 1:14))
+  expect_error(get_vars(wlddev, -14))
   expect_error(get_vars(wlddev, c("PCGDP","ODA3")))
   # expect_warning(get_vars(wlddev, "bla", regex = TRUE)) # Better give error
   expect_error(get_vars(wlddev, c(sapply(wlddev, is.numeric), TRUE)))
@@ -155,10 +155,10 @@ test_that("select vars errors for wrong input", {
 })
 
 test_that("replace vars errors for wrong input", {
-  expect_error(get_vars(wlddev, 13) <- wlddev[12])
+  expect_error(get_vars(wlddev, 14) <- wlddev[12])
   expect_error(get_vars(wlddev, "ODA3") <- wlddev[12])
   expect_error(get_vars(wlddev, "bla", regex = TRUE) <- wlddev[12])
-  expect_error(get_vars(wlddev, -13) <- wlddev[12])
+  expect_error(get_vars(wlddev, -14) <- wlddev[12])
   expect_error(get_vars(wlddev, 11:12) <- wlddev[12])
   expect_error(get_vars(wlddev, 9:12) <- wlddev[8:12])
   expect_invisible(get_vars(wlddev, 12) <- wlddev$ODA)
@@ -169,7 +169,7 @@ test_that("replace vars errors for wrong input", {
 })
 
 test_that("add_vars errors for wrong input", {
-  expect_error(add_vars(wlddev, 14) <- wlddev[12])
+  expect_error(add_vars(wlddev, 15) <- wlddev[12])
   expect_error(add_vars(wlddev, "ODA3") <- wlddev[12])
 
   expect_error(add_vars(wlddev) <- qM(wlddev[9:12])[-1, ])
@@ -184,15 +184,14 @@ test_that("add_vars errors for wrong input", {
   expect_error(add_vars(wlddev, 9:12) <- wlddev[9:10])
 })
 
-# Disabled, more flexibility allowed.
-# test_that("fselect errors for wrong input", {
-#   expect_error(fselect(mtcars, 1))
-#   expect_error(fselect(mtcars, "bla"))
-#   expect_error(fselect(mtcars, "mpg"))
-#   expect_error(fselect(mtcars, mpg:bla))
-#   expect_error(fselect(mtcars, mpg > cyl))
-#   expect_error(fselect(mtcars, ~mpg))
-# })
+test_that("fselect errors for wrong input", {
+    expect_visible(fselect(mtcars, 1))
+    expect_error(fselect(mtcars, "bla"))
+    expect_visible(fselect(mtcars, "mpg"))
+    expect_error(fselect(mtcars, mpg:bla))
+    expect_error(fselect(mtcars, mpg > cyl))
+    expect_error(fselect(mtcars, ~mpg))
+})
 
 
 test_that("fselect works properly", {

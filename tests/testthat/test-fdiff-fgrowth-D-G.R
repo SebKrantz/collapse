@@ -443,8 +443,8 @@ test_that("D.data.frame method is foolproof", {
   expect_error(D(wlddev, 1,1,~iso3c, cols = NULL))
   expect_error(D(wlddev, 1,1,wlddev$iso3c, wlddev$year, cols = NULL))
   expect_error(D(wlddev, 1,1,~iso3c, ~year, cols = NULL))
-  expect_error(D(wlddev, cols = 9:13))
-  expect_error(D(wlddev, 1,1,~iso3c, ~year, cols = 9:13))
+  expect_error(D(wlddev, cols = 9:14))
+  expect_error(D(wlddev, 1,1,~iso3c, ~year, cols = 9:14))
   expect_error(D(wlddev, cols = c("PCGDP","LIFEEX","bla")))
   expect_error(D(wlddev, 1,1,~iso3c, ~year, cols = c("PCGDP","LIFEEX","bla")))
 
@@ -869,8 +869,8 @@ test_that("G.data.frame method is foolproof", {
   expect_error(G(wlddev, 1,1,~iso3c, cols = NULL))
   expect_error(G(wlddev, 1,1,wlddev$iso3c, wlddev$year, cols = NULL))
   expect_error(G(wlddev, 1,1,~iso3c, ~year, cols = NULL))
-  expect_error(G(wlddev, cols = 9:13))
-  expect_error(G(wlddev, 1,1,~iso3c, ~year, cols = 9:13))
+  expect_error(G(wlddev, cols = 9:14))
+  expect_error(G(wlddev, 1,1,~iso3c, ~year, cols = 9:14))
   expect_error(G(wlddev, cols = c("PCGDP","LIFEEX","bla")))
   expect_error(G(wlddev, 1,1,~iso3c, ~year, cols = c("PCGDP","LIFEEX","bla")))
 
@@ -1294,8 +1294,8 @@ test_that("G.data.frame method with logdiff is foolproof", {
   expect_error(G(wlddev, 1,1,~iso3c, cols = NULL, logdiff = TRUE))
   expect_error(G(wlddev, 1,1,wlddev$iso3c, wlddev$year, cols = NULL, logdiff = TRUE))
   expect_error(G(wlddev, 1,1,~iso3c, ~year, cols = NULL, logdiff = TRUE))
-  expect_error(G(wlddev, cols = 9:13, logdiff = TRUE))
-  expect_error(G(wlddev, 1,1,~iso3c, ~year, cols = 9:13, logdiff = TRUE))
+  expect_error(G(wlddev, cols = 9:14, logdiff = TRUE))
+  expect_error(G(wlddev, 1,1,~iso3c, ~year, cols = 9:14, logdiff = TRUE))
   expect_error(G(wlddev, cols = c("PCGDP","LIFEEX","bla"), logdiff = TRUE))
   expect_error(G(wlddev, 1,1,~iso3c, ~year, cols = c("PCGDP","LIFEEX","bla"), logdiff = TRUE))
 
