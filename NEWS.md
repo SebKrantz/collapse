@@ -39,7 +39,7 @@ This is done in a very careful manor, the others will stick around for a long wh
 
 * `fcompute` now has a `keep` argument, to preserve several existing columns when computing columns on a data frame. 
 
-* `replace_NA` now has a `cols` argument, so we can do `replace_NA(data, cols = is.numeric)`, to replace `NA`'s in numeric columns. I not that for big numeric data `data.table::setnafill` is the most efficient solution. 
+* `replace_NA` now has a `cols` argument, so we can do `replace_NA(data, cols = is.numeric)`, to replace `NA`'s in numeric columns. I note that for big numeric data `data.table::setnafill` is the most efficient solution. 
 
 * `fhdbetween` and `fhdwithin` have an `effect` argument in *plm* methods, allowing centering on selected identifiers. The default is still to center on all panel identifiers. 
 
@@ -51,8 +51,7 @@ This is done in a very careful manor, the others will stick around for a long wh
 
 * Functions `setAttrib`, `copyAttrib` and `copyMostAttrib` only make a shallow copy of lists, not of atomic vectors (which amounts to doing a full copy and is inefficient). Thus atomic objects are now modified in-place. 
 
-* Small improvements: Calling `qF(x, ordered = FALSE)` on an ordered factor will remove the ordered class, the operators `L`, `F`, `D`, `Dlog`, `G`, `B`, `W`, `HDB`, `HDW` 
-and functions like `pwcor` now work on unnamed matrices or data frames. 
+* Small improvements: Calling `qF(x, ordered = FALSE)` on an ordered factor will remove the ordered class, the operators `L`, `F`, `D`, `Dlog`, `G`, `B`, `W`, `HDB`, `HDW` and functions like `pwcor` now work on unnamed matrices or data frames. 
 
 
 # collapse 1.5.3
