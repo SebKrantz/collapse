@@ -60,19 +60,21 @@ fhdbetween(x, \dots)
 
 # Methods for compatibility with plm:
 
-\method{fhdbetween}{pseries}(x, effect = 1:2, w = NULL, na.rm = TRUE, fill = TRUE, \dots)
-\method{fhdwithin}{pseries}(x, effect = 1:2, w = NULL, na.rm = TRUE, fill = TRUE, \dots)
-\method{HDB}{pseries}(x, effect = 1:2, w = NULL, na.rm = TRUE, fill = TRUE, \dots)
-\method{HDW}{pseries}(x, effect = 1:2, w = NULL, na.rm = TRUE, fill = TRUE, \dots)
+\method{fhdbetween}{pseries}(x, effect = seq_col(attr(x, "index")), w = NULL, na.rm = TRUE,
+           fill = TRUE, \dots)
+\method{fhdwithin}{pseries}(x, effect = seq_col(attr(x, "index")), w = NULL, na.rm = TRUE,
+          fill = TRUE, \dots)
+\method{HDB}{pseries}(x, effect = seq_col(attr(x, "index")), w = NULL, na.rm = TRUE, fill = TRUE, \dots)
+\method{HDW}{pseries}(x, effect = seq_col(attr(x, "index")), w = NULL, na.rm = TRUE, fill = TRUE, \dots)
 
-\method{fhdbetween}{pdata.frame}(x, effect = 1:2, w = NULL, na.rm = TRUE, fill = TRUE,
+\method{fhdbetween}{pdata.frame}(x, effect = seq_col(attr(x, "index")), w = NULL, na.rm = TRUE, fill = TRUE,
            variable.wise = TRUE, \dots)
-\method{fhdwithin}{pdata.frame}(x, effect = 1:2, w = NULL, na.rm = TRUE, fill = TRUE,
+\method{fhdwithin}{pdata.frame}(x, effect = seq_col(attr(x, "index")), w = NULL, na.rm = TRUE, fill = TRUE,
           variable.wise = TRUE, \dots)
-\method{HDB}{pdata.frame}(x, effect = 1:2, w = NULL, cols = is.numeric, na.rm = TRUE, fill = TRUE,
-    variable.wise = TRUE, stub = "HDB.", \dots)
-\method{HDW}{pdata.frame}(x, effect = 1:2, w = NULL, cols = is.numeric, na.rm = TRUE, fill = TRUE,
-    variable.wise = TRUE, stub = "HDW.", \dots)
+\method{HDB}{pdata.frame}(x, effect = seq_col(attr(x, "index")), w = NULL, cols = is.numeric, na.rm = TRUE,
+    fill = TRUE, variable.wise = TRUE, stub = "HDB.", \dots)
+\method{HDW}{pdata.frame}(x, effect = seq_col(attr(x, "index")), w = NULL, cols = is.numeric, na.rm = TRUE,
+    fill = TRUE, variable.wise = TRUE, stub = "HDW.", \dots)
 }
 
 \arguments{
