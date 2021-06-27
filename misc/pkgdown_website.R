@@ -39,6 +39,10 @@ build_news()
 
 # in pkgdown.js, add line
 # $("#bloglink").removeClass("active");   below     menu_anchor.closest("li.dropdown").addClass("active");
+
+# Finally: Fix favicons by replacing "fas fa- with "fa fa-
 preview_site()
+
+
 
 # ?build_home
