@@ -87,7 +87,7 @@ In addition, *collapse* provides 5 vignettes (available online):
 
 * [***collapse* and *data.table***](<https://sebkrantz.github.io/collapse/articles/collapse_and_data.table.html>): Shows how *collapse* and *data.table* may be used together in a harmonious way. 
 
-* [***collapse* and *sf***](<https://sebkrantz.github.io/collapse/articles/collapse_and_sf.html>): Shows how collapse can be used to manipulate *sf* data frames.
+* [***collapse* and *sf***](<https://sebkrantz.github.io/collapse/articles/collapse_and_sf.html>): Shows how collapse can be used to efficiently manipulate *sf* data frames.
 
 ### Cheatsheet
 

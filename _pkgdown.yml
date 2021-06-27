@@ -49,6 +49,10 @@ articles:
   desc: Shows how collapse and data.table may be used concurrently in a harmonious way
   contents:
   - collapse_and_data.table
+- title: collapse and sf
+  desc: Shows how collapse can be used to efficiently manipulate sf data frames
+  contents:
+  - collapse_and_sf
 
 reference:
 - contents: "collapse-package"
