@@ -92,8 +92,10 @@ test_that("statistical functions handle attributes properly", {
     expect_identical(attributes(FUN(gm, attr(gm, "groups"))), list(dim = c(7L, 11L), dimnames = list(GRPnames(g2), colnames(m)), groups = attr(gm, "groups")))
     expect_identical(attributes(FUN(wlddev, g1, use.g.names = FALSE)), `[[<-`(attributes(wlddev), "row.names", value = seq_len(g1[[1L]])))
     expect_identical(attributes(FUN(wlddev, g1)), `[[<-`(attributes(wlddev), "row.names", value = GRPnames(g1)))
+    if(Sys.getenv("NCRAN") == "TRUE") {
     expect_identical(attributes(FUN(`oldClass<-`(gmtc, "data.frame"), g2, use.g.names = FALSE)),  `[[<-`(`[[<-`(attributes(gmtc), "row.names", value = seq_len(g2[[1L]])), "class", "data.frame"))
     expect_identical(attributes(FUN(`oldClass<-`(gmtc, "data.frame"), g2)), `[[<-`(`[[<-`(attributes(gmtc), "row.names", GRPnames(g2)), "class", "data.frame"))
+    }
     expect_identical(attributes(FUN(gmtc)), list(names = c(fgroup_vars(gmtc, "names"), names(mtcars)[-c(2,8:9)]), row.names = seq_len(g2[[1L]]), class = "data.frame"))
     expect_identical(attributes(FUN(gmtc, use.g.names = TRUE)), list(names = c(fgroup_vars(gmtc, "names"), names(mtcars)[-c(2,8:9)]), row.names = GRPnames(g2), class = "data.frame"))
     expect_identical(attributes(FUN(gmtc, keep.group_vars = FALSE)), list(names = names(mtcars)[-c(2,8:9)], row.names = seq_len(g2[[1L]]), class = "data.frame"))
