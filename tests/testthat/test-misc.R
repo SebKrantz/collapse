@@ -110,7 +110,7 @@ gmtc <- fgroup_by(mtcars, cyl)
 test_that("fast functions give same result using different grouping mechanisms", {
 
  for(i in .FAST_STAT_FUN) {
-
+   # print(i)
    FUN <- match.fun(i)
    expect_true(all_obj_equal(FUN(v, g = mtcars$cyl), FUN(v, g = f), FUN(v, g = fcc), FUN(v, g = g), FUN(v, g = gl)))
    expect_true(all_obj_equal(FUN(v, g = mtcars$cyl, use.g.names = FALSE), FUN(v, g = f, use.g.names = FALSE), FUN(v, g = fcc, use.g.names = FALSE), FUN(v, g = g, use.g.names = FALSE), FUN(v, g = gl, use.g.names = FALSE)))
@@ -119,13 +119,18 @@ test_that("fast functions give same result using different grouping mechanisms",
    expect_true(all_obj_equal(FUN(m, g = mtcars$cyl, use.g.names = FALSE), FUN(m, g = f, use.g.names = FALSE), FUN(m, g = fcc, use.g.names = FALSE), FUN(m, g = g, use.g.names = FALSE), FUN(m, g = gl, use.g.names = FALSE)))
 
    expect_true(all_obj_equal(FUN(mtcars, g = mtcars$cyl), FUN(mtcars, g = f), FUN(mtcars, g = fcc), FUN(mtcars, g = g), FUN(mtcars, g = gl)))
+   if(Sys.getenv("NCRAN") == "TRUE")
    expect_true(all_obj_equal(FUN(mtcars, g = mtcars$cyl, use.g.names = FALSE),
                              FUN(mtcars, g = f, use.g.names = FALSE),
                              FUN(mtcars, g = fcc, use.g.names = FALSE),
                              FUN(mtcars, g = g, use.g.names = FALSE),
                              FUN(mtcars, g = gl, use.g.names = FALSE)))
-
-   expect_true(all_obj_equal(gv(FUN(mtcars, g = mtcars$cyl, use.g.names = FALSE), -2), gv(FUN(gmtc), -1), gv(FUN(gv(gmtc,-2)), -1), FUN(gv(gmtc,-2), keep.group_vars = FALSE), FUN(gmtc, keep.group_vars = FALSE)))
+  if(Sys.getenv("NCRAN") == "TRUE")
+  expect_true(all_obj_equal(gv(FUN(mtcars, g = mtcars$cyl, use.g.names = FALSE), -2),
+                             gv(FUN(gmtc), -1),
+                             gv(FUN(gv(gmtc,-2)), -1),
+                             FUN(gv(gmtc,-2), keep.group_vars = FALSE),
+                             FUN(gmtc, keep.group_vars = FALSE)))
 
    expect_equal(FUN(v, TRA = 2L), TRA(v, FUN(v), 2L))
    expect_true(all_obj_equal(FUN(v, g = mtcars$cyl, TRA = 1L), TRA(v, FUN(v, g = mtcars$cyl), 1L, mtcars$cyl),
@@ -200,4 +205,9 @@ test_that("fast functions give appropriate warnings", {
     }
   }
 
+})
+
+test_that("fselect and fsubset cannot easily be confuesed", {
+  expect_warning(fsubset(mtcars, mpg:vs, wt))
+  expect_error(fselect(mtcars, mpg == 1))
 })

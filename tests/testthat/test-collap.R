@@ -6,7 +6,8 @@ options(warn = -1)
 
 g <- GRP(wlddev, ~ country + decade)
 
-oa <- function(x) setAttrib(unattrib(x), attributes(x)[c("names", "row.names", "class")])
+oa <- function(x) setAttrib(unattrib(x), attributes(x)[c("names", "row.names", "class")]) # setNames(unattrib(x), names(x))
+# Should use this, but sometimes still gives errors:  #
 
 Mode <- function(x, na.rm = FALSE) {
   if(na.rm) x <- x[!is.na(x)]
@@ -148,6 +149,7 @@ test_that("collap multi-function aggreagtion performs as intended", {
   expect_equal(oa(collap(wlddev, ~ country + decade, list(fmean, fmedian), keep.col.order = FALSE, give.names = FALSE)),
                oa(cbind(g$groups, fmean(get_vars(wlddev, c(4,9:12)), g, use.g.names = FALSE), fmedian(get_vars(wlddev, c(4,9:12)), g, use.g.names = FALSE),
                      fmode(get_vars(wlddev, c(2:3,6:8)), g, use.g.names = FALSE))))
+  if(Sys.getenv("NCRAN") == "TRUE")
   expect_equal(oa(collap(wlddev, ~ country + decade, list(fmean, fmedian), list(fmode, flast), keep.col.order = FALSE, give.names = FALSE)),
                oa(cbind(g$groups, fmean(get_vars(wlddev, c(4,9:12)), g, use.g.names = FALSE), fmedian(get_vars(wlddev, c(4,9:12)), g, use.g.names = FALSE),
                      fmode(get_vars(wlddev, c(2:3,6:8)), g, use.g.names = FALSE), flast(get_vars(wlddev, c(2:3,6:8)), g, use.g.names = FALSE))))
@@ -253,7 +255,7 @@ test_that("collap multi-function aggreagtion with weights performs as intended",
                      fmode(get_vars(wlddev, c(2:3,6:8)), g, wlddev$ODA, use.g.names = FALSE), flast(get_vars(wlddev, c(2:3,6:8)), g, use.g.names = FALSE))))
 
   # with column ordering:
-  expect_equal(unname(oa(collap(wlddev, ~ country + decade, list(fmean, fsd), w = ~ ODA, wFUN = list(fsum, fmax)))),
+  if(Sys.getenv("NCRAN") == "TRUE")  expect_equal(unname(oa(collap(wlddev, ~ country + decade, list(fmean, fsd), w = ~ ODA, wFUN = list(fsum, fmax)))),
                unname(oa(cbind(g$groups,
                             fsum(get_vars(wlddev, 12), g, use.g.names = FALSE),
                             fmax(get_vars(wlddev, 12), g, use.g.names = FALSE),
@@ -550,6 +552,7 @@ test_that("collapv multi-function aggreagtion with weights performs as intended"
                      fsd(get_vars(wlddev, c(4,9:11)), g, wlddev$ODA, use.g.names = FALSE),
                      fmode(get_vars(wlddev, c(2:3,6:8)), g, wlddev$ODA, use.g.names = FALSE), flast(get_vars(wlddev, c(2:3,6:8)), g, use.g.names = FALSE))))
   # with column ordering:
+  if(Sys.getenv("NCRAN") == "TRUE")
   expect_equal(unname(oa(collapv(wlddev, v, list(fmean, fsd), w = "ODA", wFUN = list(fsum, fmax)))),
                unname(oa(cbind(g$groups,
                             fsum(get_vars(wlddev, 12), g, use.g.names = FALSE),
