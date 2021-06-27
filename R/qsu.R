@@ -13,7 +13,7 @@ qsu.default <- function(x, g = NULL, pid = NULL, w = NULL, higher = FALSE, array
       }
       return(fbstatsCpp(x,higher,0L,0L,nid,pid,w))
     }
-    if(!is.GRP(pid)) pid <- GRP.default(pid, return.groups = FALSE, call = FALSE)
+    if(!is_GRP(pid)) pid <- GRP.default(pid, return.groups = FALSE, call = FALSE)
     return(fbstatsCpp(x,higher,0L,0L,pid[[1L]],pid[[2L]],w))
   }
   if(is.atomic(g)) {
@@ -27,10 +27,10 @@ qsu.default <- function(x, g = NULL, pid = NULL, w = NULL, higher = FALSE, array
       }
       return(fbstatsCpp(x,higher,length(lev),g,nid,pid,w,array,TRUE,lev))
     }
-    if(!is.GRP(pid)) pid <- GRP.default(pid, return.groups = FALSE, call = FALSE)
+    if(!is_GRP(pid)) pid <- GRP.default(pid, return.groups = FALSE, call = FALSE)
     return(fbstatsCpp(x,higher,length(lev),g,pid[[1L]],pid[[2L]],w,array,TRUE,lev))
   }
-  if(!is.GRP(g)) g <- GRP.default(g, call = FALSE)
+  if(!is_GRP(g)) g <- GRP.default(g, call = FALSE)
   if(is.null(pid)) return(fbstatsCpp(x,higher,g[[1L]],g[[2L]],0L,0L,w,TRUE,TRUE,GRPnames(g)))
   if(is.atomic(pid)) {
     if(is.nmfactor(pid)) nid <- fnlevels(pid) else {
@@ -39,7 +39,7 @@ qsu.default <- function(x, g = NULL, pid = NULL, w = NULL, higher = FALSE, array
     }
     return(fbstatsCpp(x,higher,g[[1L]],g[[2L]],nid,pid,w,array,TRUE,GRPnames(g)))
   }
-  if(!is.GRP(pid)) pid <- GRP.default(pid, return.groups = FALSE, call = FALSE)
+  if(!is_GRP(pid)) pid <- GRP.default(pid, return.groups = FALSE, call = FALSE)
   fbstatsCpp(x,higher,g[[1L]],g[[2L]],pid[[1L]],pid[[2L]],w,array,TRUE,GRPnames(g))
 }
 
@@ -52,7 +52,7 @@ qsu.pseries <- function(x, g = NULL, w = NULL, effect = 1L, higher = FALSE, arra
     lev <- attr(g, "levels")
     return(fbstatsCpp(x,higher,length(lev),g,fnlevels(pid),pid,w,array,TRUE,lev))
   }
-  if(!is.GRP(g)) g <- GRP.default(g, call = FALSE)
+  if(!is_GRP(g)) g <- GRP.default(g, call = FALSE)
   fbstatsCpp(x,higher,g[[1L]],g[[2L]],fnlevels(pid),pid,w,array,TRUE,GRPnames(g))
 }
 
@@ -67,7 +67,7 @@ qsu.matrix <- function(x, g = NULL, pid = NULL, w = NULL, higher = FALSE, array 
       }
       return(fbstatsmCpp(x,higher,0L,0L,nid,pid,w,array))
     }
-    if(!is.GRP(pid)) pid <- GRP.default(pid, return.groups = FALSE, call = FALSE)
+    if(!is_GRP(pid)) pid <- GRP.default(pid, return.groups = FALSE, call = FALSE)
     return(fbstatsmCpp(x,higher,0L,0L,pid[[1L]],pid[[2L]],w,array))
   }
   if(is.atomic(g)) {
@@ -81,10 +81,10 @@ qsu.matrix <- function(x, g = NULL, pid = NULL, w = NULL, higher = FALSE, array 
       }
       return(fbstatsmCpp(x,higher,length(lev),g,nid,pid,w,array,lev))
     }
-    if(!is.GRP(pid)) pid <- GRP.default(pid, return.groups = FALSE, call = FALSE)
+    if(!is_GRP(pid)) pid <- GRP.default(pid, return.groups = FALSE, call = FALSE)
     return(fbstatsmCpp(x,higher,length(lev),g,pid[[1L]],pid[[2L]],w,array,lev))
   }
-  if(!is.GRP(g)) g <- GRP.default(g, call = FALSE)
+  if(!is_GRP(g)) g <- GRP.default(g, call = FALSE)
   if(is.null(pid)) return(fbstatsmCpp(x,higher,g[[1L]],g[[2L]],0L,0L,w,array,GRPnames(g)))
   if(is.atomic(pid)) {
     if(is.nmfactor(pid)) nid <- fnlevels(pid) else {
@@ -93,7 +93,7 @@ qsu.matrix <- function(x, g = NULL, pid = NULL, w = NULL, higher = FALSE, array 
     }
     return(fbstatsmCpp(x,higher,g[[1L]],g[[2L]],nid,pid,w,array,GRPnames(g)))
   }
-  if(!is.GRP(pid)) pid <- GRP.default(pid, return.groups = FALSE, call = FALSE)
+  if(!is_GRP(pid)) pid <- GRP.default(pid, return.groups = FALSE, call = FALSE)
   fbstatsmCpp(x,higher,g[[1L]],g[[2L]],pid[[1L]],pid[[2L]],w,array,GRPnames(g))
 }
 
@@ -144,7 +144,7 @@ qsu.data.frame <- function(x, by = NULL, pid = NULL, w = NULL, cols = NULL, high
       }
       return(drop(fbstatslCpp(x,higher,0L,0L,nid,pid,w,array)))
     }
-    if(!is.GRP(pid)) pid <- GRP.default(pid, return.groups = FALSE, call = FALSE)
+    if(!is_GRP(pid)) pid <- GRP.default(pid, return.groups = FALSE, call = FALSE)
     return(drop(fbstatslCpp(x,higher,0L,0L,pid[[1L]],pid[[2L]],w,array)))
   }
   if(is.atomic(by)) {
@@ -158,10 +158,10 @@ qsu.data.frame <- function(x, by = NULL, pid = NULL, w = NULL, cols = NULL, high
       }
       return(drop(fbstatslCpp(x,higher,length(lev),by,nid,pid,w,array,lev)))
     }
-    if(!is.GRP(pid)) pid <- GRP.default(pid, return.groups = FALSE, call = FALSE)
+    if(!is_GRP(pid)) pid <- GRP.default(pid, return.groups = FALSE, call = FALSE)
     return(drop(fbstatslCpp(x,higher,length(lev),by,pid[[1L]],pid[[2L]],w,array,lev)))
   }
-  if(!is.GRP(by)) by <- GRP.default(by, call = FALSE)
+  if(!is_GRP(by)) by <- GRP.default(by, call = FALSE)
   if(is.null(pid)) return(drop(fbstatslCpp(x,higher,by[[1L]],by[[2L]],0L,0L,w,array,GRPnames(by))))
   if(is.atomic(pid)) {
     if(is.nmfactor(pid)) nid <- fnlevels(pid) else {
@@ -170,12 +170,18 @@ qsu.data.frame <- function(x, by = NULL, pid = NULL, w = NULL, cols = NULL, high
     }
     return(drop(fbstatslCpp(x,higher,by[[1L]],by[[2L]],nid,pid,w,array,GRPnames(by))))
   }
-  if(!is.GRP(pid)) pid <- GRP.default(pid, return.groups = FALSE, call = FALSE)
+  if(!is_GRP(pid)) pid <- GRP.default(pid, return.groups = FALSE, call = FALSE)
   drop(fbstatslCpp(x,higher,by[[1L]],by[[2L]],pid[[1L]],pid[[2L]],w,array,GRPnames(by)))
 }
 
 qsu.list <- function(x, by = NULL, pid = NULL, w = NULL, cols = NULL, higher = FALSE, array = TRUE, vlabels = FALSE, ...)
   qsu.data.frame(x, by, pid, w, cols, higher, array, vlabels, ...)
+
+qsu.sf <- function(x, by = NULL, pid = NULL, w = NULL, cols = NULL, higher = FALSE, array = TRUE, vlabels = FALSE, ...) {
+  oldClass(x) <- NULL
+  x[[attr(x, "sf_column")]] <- NULL
+  qsu.data.frame(x, by, pid, w, cols, higher, array, vlabels, ...)
+}
 
 qsu.pdata.frame <- function(x, by = NULL, w = NULL, cols = NULL, effect = 1L, higher = FALSE, array = TRUE, vlabels = FALSE, ...) {
   if(!missing(...)) unused_arg_action(match.call(), ...)
@@ -213,7 +219,7 @@ qsu.pdata.frame <- function(x, by = NULL, w = NULL, cols = NULL, effect = 1L, hi
     lev <- attr(by, "levels")
     return(drop(fbstatslCpp(x,higher,length(lev),by,fnlevels(pid),pid,w,array,lev)))
   }
-  if(!is.GRP(by)) by <- GRP.default(by, call = FALSE)
+  if(!is_GRP(by)) by <- GRP.default(by, call = FALSE)
   drop(fbstatslCpp(x,higher,by[[1L]],by[[2L]],fnlevels(pid),pid,w,array,GRPnames(by)))
 }
 

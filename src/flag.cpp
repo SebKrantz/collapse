@@ -200,9 +200,9 @@ Vector<RTYPE> flagleadCppImpl(const Vector<RTYPE>& x, const IntegerVector& n, co
       CharacterVector classes = Rf_getAttrib(out, R_ClassSymbol);
       classes.push_back("matrix");
       Rf_classgets(out, classes);
-    } else {
-      Rf_classgets(out, Rf_mkString("matrix"));
-    }
+    } // else {
+      // Rf_classgets(out, Rf_mkString("matrix"));
+      // }
     if(names) Rf_dimnamesgets(out, List::create(Rf_getAttrib(x, R_NamesSymbol), colnam));
     // out.attr("class") = CharacterVector::create(x.attr("class"),"matrix");
   }

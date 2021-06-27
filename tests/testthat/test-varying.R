@@ -20,7 +20,7 @@ test_that("vector, matrix and data.frame methods work as intended", {
   expect_true(all_identical(dapply(wlddev, varying), varying(wlddev), varying(wdm)))
   expect_true(all_identical(dapply(wlddev, varying, drop = FALSE), varying(wlddev, drop = FALSE), qDF(varying(wdm, drop = FALSE))))
 
-  expect_equal(dapply(unattrib(wlddev), varying, wlddev$iso3c), c(FALSE,FALSE,TRUE,TRUE,TRUE,FALSE,FALSE,FALSE,TRUE,TRUE,TRUE,TRUE))
+  expect_equal(dapply(unattrib(wlddev), varying, wlddev$iso3c), c(FALSE,FALSE,TRUE,TRUE,TRUE,FALSE,FALSE,FALSE,TRUE,TRUE,TRUE,TRUE,TRUE))
   expect_true(all_identical(dapply(wlddev, varying, wlddev$iso3c), varying(wlddev, wlddev$iso3c),  varying(wdm, wlddev$iso3c)))
   expect_true(all_identical(dapply(wlddev, varying, wlddev$iso3c, drop = FALSE), varying(wlddev, wlddev$iso3c, drop = FALSE),  qDF(varying(wdm, wlddev$iso3c, drop = FALSE))))
 
@@ -41,7 +41,7 @@ test_that("vector, matrix and data.frame methods work as intended", {
                             varying(wdm,  wlddev$iso3c, any_group = FALSE, use.g.names = FALSE, drop = FALSE)))
 
   # With grouping objects...
-  expect_equal(dapply(unattrib(wlddev), varying, g), c(TRUE,TRUE,FALSE,FALSE,FALSE,FALSE,TRUE,TRUE,TRUE,TRUE,TRUE,TRUE))
+  expect_equal(dapply(unattrib(wlddev), varying, g), c(TRUE,TRUE,FALSE,FALSE,FALSE,FALSE,TRUE,TRUE,TRUE,TRUE,TRUE,TRUE,TRUE))
   expect_true(all_identical(dapply(wlddev, varying, g), varying(wlddev, g),  varying(wdm, g)))
   expect_true(all_identical(dapply(wlddev, varying, g, drop = FALSE), varying(wlddev, g, drop = FALSE),  qDF(varying(wdm, g, drop = FALSE))))
 
@@ -99,10 +99,10 @@ if(identical(Sys.getenv("NCRAN"), "TRUE")) {
 
 test_that("pseries and pdata.frame methods work as intended", {
   # pdata.frame
-  expect_equal(unattrib(varying(pwlddev)), c(FALSE,TRUE,TRUE,TRUE,FALSE,FALSE,FALSE,TRUE,TRUE,TRUE,TRUE))
-  expect_equal(unattrib(varying(pwlddev, effect = "iso3c")), c(FALSE,TRUE,TRUE,TRUE,FALSE,FALSE,FALSE,TRUE,TRUE,TRUE,TRUE))
-  expect_equal(unattrib(varying(pwlddev, effect = 2L)), c(TRUE,TRUE,FALSE,FALSE,TRUE,TRUE,TRUE,TRUE,TRUE,TRUE,TRUE))
-  expect_equal(unattrib(varying(pwlddev, effect = "year")), c(TRUE,TRUE,FALSE,FALSE,TRUE,TRUE,TRUE,TRUE,TRUE,TRUE,TRUE))
+  expect_equal(unattrib(varying(pwlddev)), c(FALSE,TRUE,TRUE,TRUE,FALSE,FALSE,FALSE,TRUE,TRUE,TRUE,TRUE,TRUE))
+  expect_equal(unattrib(varying(pwlddev, effect = "iso3c")), c(FALSE,TRUE,TRUE,TRUE,FALSE,FALSE,FALSE,TRUE,TRUE,TRUE,TRUE,TRUE))
+  expect_equal(unattrib(varying(pwlddev, effect = 2L)), c(TRUE,TRUE,FALSE,FALSE,TRUE,TRUE,TRUE,TRUE,TRUE,TRUE,TRUE,TRUE))
+  expect_equal(unattrib(varying(pwlddev, effect = "year")), c(TRUE,TRUE,FALSE,FALSE,TRUE,TRUE,TRUE,TRUE,TRUE,TRUE,TRUE,TRUE))
 
   expect_true(is.atomic(varying(pwlddev, drop = TRUE)))
   expect_true(is.data.frame(varying(pwlddev, drop = FALSE)))
@@ -110,14 +110,21 @@ test_that("pseries and pdata.frame methods work as intended", {
 
   atrapply <- function(X, FUN, ...) {
     res <- vector("list", fncol(X))
-    for(i in seq_col(X)) res[[i]] <- FUN(X[, i], ...)
+    for(i in seq_col(X)) {
+      res[[i]] <- FUN(X[[i]], ...)
+    }
     res
   }
+
+  # Making sure fselect and get_vars etc. work properly.
+  expect_identical(attributes(fselect(pwlddev, country:POP)), attributes(pwlddev))
+  expect_identical(attributes(get_vars(pwlddev, seq_col(pwlddev))), attributes(pwlddev))
+
   # pseries
-  expect_equal(unlist(atrapply(fselect(pwlddev, -iso3c), varying)), c(FALSE,TRUE,TRUE,TRUE,FALSE,FALSE,FALSE,TRUE,TRUE,TRUE,TRUE))
-  expect_equal(unlist(atrapply(fselect(pwlddev, -iso3c), varying, effect = "iso3c")), c(FALSE,TRUE,TRUE,TRUE,FALSE,FALSE,FALSE,TRUE,TRUE,TRUE,TRUE))
-  expect_equal(unlist(atrapply(fselect(pwlddev, -year), varying, effect = 2L)), c(TRUE,TRUE,FALSE,FALSE,TRUE,TRUE,TRUE,TRUE,TRUE,TRUE,TRUE))
-  expect_equal(unlist(atrapply(fselect(pwlddev, -year), varying, effect = "year")), c(TRUE,TRUE,FALSE,FALSE,TRUE,TRUE,TRUE,TRUE,TRUE,TRUE,TRUE))
+  expect_equal(unlist(atrapply(fselect(pwlddev, -iso3c), varying)), c(FALSE,TRUE,TRUE,TRUE,FALSE,FALSE,FALSE,TRUE,TRUE,TRUE,TRUE,TRUE))
+  expect_equal(unlist(atrapply(fselect(pwlddev, -iso3c), varying, effect = "iso3c")), c(FALSE,TRUE,TRUE,TRUE,FALSE,FALSE,FALSE,TRUE,TRUE,TRUE,TRUE,TRUE))
+  expect_equal(unlist(atrapply(fselect(pwlddev, -year), varying, effect = 2L)), c(TRUE,TRUE,FALSE,FALSE,TRUE,TRUE,TRUE,TRUE,TRUE,TRUE,TRUE,TRUE))
+  expect_equal(unlist(atrapply(fselect(pwlddev, -year), varying, effect = "year")), c(TRUE,TRUE,FALSE,FALSE,TRUE,TRUE,TRUE,TRUE,TRUE,TRUE,TRUE,TRUE))
 
   expect_equal(varying(pwlddev$PCGDP), varying(wlddev$PCGDP, wlddev$iso3c))
   expect_equal(varying(pwlddev$PCGDP, any_group = FALSE), varying(wlddev$PCGDP, wlddev$iso3c, any_group = FALSE))
@@ -155,7 +162,7 @@ test_that("pseries and pdata.frame methods work as intended", {
 
 test_that("grouped_df method works as intended", {
 
-  expect_equal(unattrib(varying(gwlddev)), c(FALSE,TRUE,TRUE,TRUE,FALSE,FALSE,FALSE,TRUE,TRUE,TRUE,TRUE))
+  expect_equal(unattrib(varying(gwlddev)), c(FALSE,TRUE,TRUE,TRUE,FALSE,FALSE,FALSE,TRUE,TRUE,TRUE,TRUE,TRUE))
   expect_true(is.atomic(varying(gwlddev, drop = TRUE)))
   expect_true(is.data.frame(varying(gwlddev, drop = FALSE)))
   expect_true(is.data.frame(varying(gwlddev, any_group = FALSE)))

@@ -4,7 +4,7 @@
 \alias{.FAST_FUN}
 \title{Fast (Grouped, Weighted) Statistical Functions for Matrix-Like Objects}  % Vectors, Matrix and Data Frame Columns}
 \description{
-With \code{\link{fsum}}, \code{\link{fprod}}, \code{\link{fmean}}, \code{\link{fmedian}}, \code{\link{fmode}}, \code{\link{fvar}}, \code{\link{fsd}}, \code{\link{fmin}}, \code{\link{fmax}}, \code{\link{fnth}}, \code{\link{ffirst}}, \code{\link{flast}}, \code{\link{fNobs}} and \code{\link{fNdistinct}}, \emph{collapse} presents a coherent set of extremely fast and flexible statistical functions (S3 generics) to perform column-wise, grouped and weighted computations on atomic vectors, matrices and data frames, with special support for grouped data frames / tibbles (\emph{dplyr}) and \emph{data.table}'s.
+With \code{\link{fsum}}, \code{\link{fprod}}, \code{\link{fmean}}, \code{\link{fmedian}}, \code{\link{fmode}}, \code{\link{fvar}}, \code{\link{fsd}}, \code{\link{fmin}}, \code{\link{fmax}}, \code{\link{fnth}}, \code{\link{ffirst}}, \code{\link{flast}}, \code{\link{fnobs}} and \code{\link{fndistinct}}, \emph{collapse} presents a coherent set of extremely fast and flexible statistical functions (S3 generics) to perform column-wise, grouped and weighted computations on atomic vectors, matrices and data frames, with special support for grouped data frames / tibbles (\emph{dplyr}) and \emph{data.table}'s.
 }
 \section{Usage}{\preformatted{
 ## All functions (FUN) follow a common syntax in 4 methods:
@@ -38,7 +38,7 @@ FUN(x, [w = NULL,] TRA = NULL, [na.rm = TRUE,]
 \code{TRA} \tab \tab an integer or quoted operator indicating the transformation to perform:
 1 - "replace_fill"     |     2 - "replace"     |     3 - "-"     |     4 - "-+"     |     5 - "/"     |     6 - "\%"     |     7 - "+"     |     8 - "*"     |     9 - "\%\%"     |     10 - "-\%\%". See \code{\link{TRA}}. \cr
 
-\code{na.rm} \tab \tab logical. Skip missing values in \code{x}. Defaults to \code{TRUE} in all functions and implemented at very little computational cost. Not available for \code{\link{fNobs}}. \cr
+\code{na.rm} \tab \tab logical. Skip missing values in \code{x}. Defaults to \code{TRUE} in all functions and implemented at very little computational cost. Not available for \code{\link{fnobs}}. \cr
 
 \code{use.g.names} \tab \tab logical. Make group-names and add to the result as names (default method) or row-names (matrix and data frame methods). No row-names are generated for \emph{data.table}'s. \cr
 
@@ -60,7 +60,7 @@ Please see the documentation of individual functions.
 \section{Notes}{
 \itemize{
 \item Panel-decomposed (i.e. between and within) statistics as well as grouped and weighted skewness and kurtosis are implemented in \code{\link{qsu}}.
-\item The vector-valued functions and operators \code{\link[=fscale]{fscale/STD}}, \code{\link[=fbetween]{fbetween/B}}, \code{\link[=fHDbetween]{fHDbetween/HDB}}, \code{\link[=fwithin]{fwithin/W}}, \code{\link[=fHDwithin]{fHDwithin/HDW}}, \code{\link[=flag]{flag/L/F}}, \code{\link[=fdiff]{fdiff/D/Dlog}} and \code{\link[=fgrowth]{fgrowth/G}} are documented under \link[=A6-data-transformations]{Data Transformations} and \link[=A7-time-series-panel-series]{Time Series and Panel Series}. These functions also support \code{plm::pseries} and \code{plm::pdata.frame}'s.
+\item The vector-valued functions and operators \code{\link[=fscale]{fscale/STD}}, \code{\link[=fbetween]{fbetween/B}}, \code{\link[=fhdbetween]{fhdbetween/HDB}}, \code{\link[=fwithin]{fwithin/W}}, \code{\link[=fhdwithin]{fhdwithin/HDW}}, \code{\link[=flag]{flag/L/F}}, \code{\link[=fdiff]{fdiff/D/Dlog}} and \code{\link[=fgrowth]{fgrowth/G}} are documented under \link[=A6-data-transformations]{Data Transformations} and \link[=A7-time-series-panel-series]{Time Series and Panel Series}. These functions also support \code{plm::pseries} and \code{plm::pdata.frame}'s.
 }
 }
 \seealso{
@@ -100,11 +100,11 @@ fsum(m, g) # ..
 
 ## method for grouped data frames - created with dplyr::group_by or fgroup_by
 library(dplyr)
-mtcars \%>\% group_by(cyl,vs,am) \%>\% select(mpg,carb) \%>\% fsum
-mtcars \%>\% fgroup_by(cyl,vs,am) \%>\% fselect(mpg,carb) \%>\% fsum # equivalent and faster !!
-mtcars \%>\% fgroup_by(cyl,vs,am) \%>\% fsum(TRA = "\%")
-mtcars \%>\% fgroup_by(cyl,vs,am) \%>\% fmean(hp)         # weighted grouped mean, save sum of weights
-mtcars \%>\% fgroup_by(cyl,vs,am) \%>\% fmean(hp, keep.group_vars = FALSE)
+mtcars |> group_by(cyl,vs,am) |> select(mpg,carb) |> fsum()
+mtcars |> fgroup_by(cyl,vs,am) |> fselect(mpg,carb) |> fsum() # equivalent and faster !!
+mtcars |> fgroup_by(cyl,vs,am) |> fsum(TRA = "\%")
+mtcars |> fgroup_by(cyl,vs,am) |> fmean(hp)         # weighted grouped mean, save sum of weights
+mtcars |> fgroup_by(cyl,vs,am) |> fmean(hp, keep.group_vars = FALSE)
 }
 }
 \section{Benchmark}{\preformatted{

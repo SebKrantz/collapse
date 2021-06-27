@@ -1,10 +1,10 @@
 context("Misc")
 
 # rm(list = ls())
-
+set.seed(101)
 m <- na_insert(qM(mtcars))
 
-test_that("descr, pwcor, pwcov, pwNobs", {
+test_that("descr, pwcor, pwcov, pwnobs", {
 
   expect_visible(descr(wlddev))
   expect_visible(as.data.frame(descr(wlddev)))
@@ -23,13 +23,13 @@ test_that("descr, pwcor, pwcov, pwNobs", {
   expect_output(print(pwcov(nv(wlddev), N = TRUE, P = TRUE)))
   expect_output(print(pwcov(nv(wlddev), N = TRUE, P = TRUE, use = "complete.obs")))
 
-  expect_visible(pwNobs(wlddev))
-  expect_visible(pwNobs(GGDC10S))
+  expect_visible(pwnobs(wlddev))
+  expect_visible(pwnobs(GGDC10S))
 
   expect_visible(descr(m))
   expect_visible(pwcor(m))
   expect_visible(pwcov(m))
-  expect_visible(pwNobs(m))
+  expect_visible(pwnobs(m))
 
 })
 
@@ -68,11 +68,12 @@ test_that("weighted correlations are correct", {
 })
 
 test_that("na_rm works well", {
+  set.seed(101)
   expect_equal(sapply(na_insert(wlddev), function(x) vtypes(na_rm(x))), vtypes(wlddev))
   expect_equal(sapply(na_insert(wlddev), function(x) vlabels(na_rm(x))), vlabels(wlddev))
   expect_equal(sapply(na_insert(wlddev), function(x) vclasses(na_rm(x))), vclasses(wlddev))
   wldNA <- na_insert(wlddev)
-  expect_equal(lengths(lapply(wldNA, na_rm)), fNobs(wldNA))
+  expect_equal(lengths(lapply(wldNA, na_rm)), fnobs(wldNA))
   rm(wldNA)
 })
 
@@ -82,6 +83,7 @@ test_that("deep matrix dispatch works well", {
 
   tsm <- EuStockMarkets
   class(tsm) <- setdiff(class(tsm), "matrix")
+  set.seed(101)
   f <- qF(sample.int(5, nrow(tsm), TRUE))
   NCOL2 <- function(x) if(length(d <- dim(x)) > 1L) d[2L] else length(x)
 
@@ -108,7 +110,7 @@ gmtc <- fgroup_by(mtcars, cyl)
 test_that("fast functions give same result using different grouping mechanisms", {
 
  for(i in .FAST_STAT_FUN) {
-
+   # print(i)
    FUN <- match.fun(i)
    expect_true(all_obj_equal(FUN(v, g = mtcars$cyl), FUN(v, g = f), FUN(v, g = fcc), FUN(v, g = g), FUN(v, g = gl)))
    expect_true(all_obj_equal(FUN(v, g = mtcars$cyl, use.g.names = FALSE), FUN(v, g = f, use.g.names = FALSE), FUN(v, g = fcc, use.g.names = FALSE), FUN(v, g = g, use.g.names = FALSE), FUN(v, g = gl, use.g.names = FALSE)))
@@ -117,9 +119,18 @@ test_that("fast functions give same result using different grouping mechanisms",
    expect_true(all_obj_equal(FUN(m, g = mtcars$cyl, use.g.names = FALSE), FUN(m, g = f, use.g.names = FALSE), FUN(m, g = fcc, use.g.names = FALSE), FUN(m, g = g, use.g.names = FALSE), FUN(m, g = gl, use.g.names = FALSE)))
 
    expect_true(all_obj_equal(FUN(mtcars, g = mtcars$cyl), FUN(mtcars, g = f), FUN(mtcars, g = fcc), FUN(mtcars, g = g), FUN(mtcars, g = gl)))
-   expect_true(all_obj_equal(FUN(mtcars, g = mtcars$cyl, use.g.names = FALSE), FUN(mtcars, g = f, use.g.names = FALSE), FUN(mtcars, g = fcc, use.g.names = FALSE), FUN(mtcars, g = g, use.g.names = FALSE), FUN(mtcars, g = gl, use.g.names = FALSE)))
-
-   expect_true(all_obj_equal(gv(FUN(mtcars, g = mtcars$cyl, use.g.names = FALSE), -2), gv(FUN(gmtc), -1), gv(FUN(gv(gmtc,-2)), -1), FUN(gv(gmtc,-2), keep.group_vars = FALSE), FUN(gmtc, keep.group_vars = FALSE)))
+   if(Sys.getenv("NCRAN") == "TRUE")
+   expect_true(all_obj_equal(FUN(mtcars, g = mtcars$cyl, use.g.names = FALSE),
+                             FUN(mtcars, g = f, use.g.names = FALSE),
+                             FUN(mtcars, g = fcc, use.g.names = FALSE),
+                             FUN(mtcars, g = g, use.g.names = FALSE),
+                             FUN(mtcars, g = gl, use.g.names = FALSE)))
+  if(Sys.getenv("NCRAN") == "TRUE")
+  expect_true(all_obj_equal(gv(FUN(mtcars, g = mtcars$cyl, use.g.names = FALSE), -2),
+                             gv(FUN(gmtc), -1),
+                             gv(FUN(gv(gmtc,-2)), -1),
+                             FUN(gv(gmtc,-2), keep.group_vars = FALSE),
+                             FUN(gmtc, keep.group_vars = FALSE)))
 
    expect_equal(FUN(v, TRA = 2L), TRA(v, FUN(v), 2L))
    expect_true(all_obj_equal(FUN(v, g = mtcars$cyl, TRA = 1L), TRA(v, FUN(v, g = mtcars$cyl), 1L, mtcars$cyl),
@@ -146,7 +157,7 @@ test_that("fast functions give same result using different grouping mechanisms",
    expect_equal(FUN(fselect(gmtc, -cyl), TRA = 1L), TRA(fselect(gmtc, -cyl), FUN(gmtc, keep.group_vars = FALSE), 1L))
  }
 
-  for(i in setdiff(.FAST_FUN, c(.FAST_STAT_FUN, "fHDbetween", "fHDwithin"))) {
+  for(i in setdiff(.FAST_FUN, c(.FAST_STAT_FUN, "fhdbetween", "fhdwithin"))) {
 
     FUN <- match.fun(i)
     expect_true(all_obj_equal(FUN(v, g = mtcars$cyl), FUN(v, g = f), FUN(v, g = fcc), FUN(v, g = g), FUN(v, g = gl)))
@@ -169,7 +180,7 @@ test_that("fast functions give same result using different grouping mechanisms",
 l <- as.list(mtcars)
 test_that("list and df methods give same results", {
 
-  for (i in setdiff(c(.FAST_FUN, .OPERATOR_FUN), c("fHDbetween", "fHDwithin", "HDB", "HDW"))) {
+  for (i in setdiff(c(.FAST_FUN, .OPERATOR_FUN), c("fhdbetween", "fhdwithin", "HDB", "HDW"))) {
     FUN <- match.fun(i)
     expect_equal(unattrib(FUN(mtcars)), unattrib(FUN(l)))
   }
@@ -181,7 +192,7 @@ wFUNs <- c("fmean","fmedian","fsum","fprod","fmode","fvar","fsd","fscale","STD",
 
 test_that("fast functions give appropriate warnings", {
 
-  for (i in setdiff(c(.FAST_FUN, .OPERATOR_FUN, "qsu"), c("fHDbetween", "fHDwithin", "HDB", "HDW"))) {
+  for (i in setdiff(c(.FAST_FUN, .OPERATOR_FUN, "qsu"), c("fhdbetween", "fhdwithin", "HDB", "HDW"))) {
     FUN <- match.fun(i)
     expect_warning(FUN(v, bla = 1))
     expect_warning(FUN(m, bla = 1))
@@ -194,4 +205,9 @@ test_that("fast functions give appropriate warnings", {
     }
   }
 
+})
+
+test_that("fselect and fsubset cannot easily be confuesed", {
+  expect_warning(fsubset(mtcars, mpg:vs, wt))
+  expect_error(fselect(mtcars, mpg == 1))
 })

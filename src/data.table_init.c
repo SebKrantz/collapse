@@ -18,13 +18,18 @@ SEXP char_nanotime;
 SEXP char_factor;
 SEXP char_ordered;
 SEXP char_dataframe;
+SEXP char_datatable;
+SEXP char_sf;
 // not currently needed (base_radixsort uses install), but perhaps later..
-// SEXP sym_sorted;
+SEXP sym_sorted;
 // SEXP sym_maxgrpn;
 // SEXP sym_starts;
 // SEXP char_starts;
 SEXP sym_index;
 SEXP sym_inherits;
+SEXP sym_sf_column;
+SEXP SelfRefSymbol;
+SEXP sym_datatable_locked;
 
 double NA_INT64_D;
 long long NA_INT64_LL;
@@ -114,6 +119,8 @@ SEXP collapse_init(SEXP mess) // void SEXP mess DllInfo *info
   char_factor =    PRINTNAME(install("factor"));
   char_ordered =   PRINTNAME(install("ordered"));
   char_dataframe = PRINTNAME(install("data.frame"));
+  char_datatable = PRINTNAME(install("data.table"));
+  char_sf = PRINTNAME(install("sf"));
 
   if (TYPEOF(char_integer64) != CHARSXP) {
     // checking one is enough in case of any R-devel changes
@@ -129,10 +136,13 @@ SEXP collapse_init(SEXP mess) // void SEXP mess DllInfo *info
   // keeps the code neat and readable. Also see grep's added to CRAN_Release.cmd to find such calls.
 
   // not currently needed (base_radixsort uses install), but perhaps later..
-  // sym_sorted  = install("sorted");
+  sym_sorted  = install("sorted");
   // sym_maxgrpn = install("maxgrpn");
   sym_index   = install("index");
   sym_inherits = install("inherits");
+  sym_sf_column = install("sf_column");
+  SelfRefSymbol = install(".internal.selfref");
+  sym_datatable_locked = install(".data.table.locked");
 
   return mess;
 }

@@ -22,7 +22,8 @@ fsubset.matrix <- function(x, subset, ..., drop = FALSE) {
 # No lazy eval
 ss <- function(x, i, j) {
   if(is.atomic(x)) if(is.array(x)) return(if(missing(j)) x[i, , drop = FALSE] else x[i, j, drop = FALSE]) else return(x[i])
-  if(missing(j)) j <- seq_along(unclass(x)) else if(is.integer(j)) {
+  mj <- missing(j)
+  if(mj) j <- seq_along(unclass(x)) else if(is.integer(j)) {
     if(any(j < 0L)) j <- seq_along(unclass(x))[j]
   } else {
     if(is.character(j)) {
@@ -34,14 +35,21 @@ ss <- function(x, i, j) {
      j <- if(any(j < 0)) seq_along(unclass(x))[j] else as.integer(j)
     } else stop("j needs to be supplied integer indices, character column names, or a suitable logical vector")
   }
-  if(!is.integer(i)) i <- if(is.numeric(i)) as.integer(i) else if(is.logical(i) && length(i) == fnrow2(x)) which(i) else
-      stop("i needs to be integer or logical(nrow(x))")
+  if(!is.integer(i)) {
+    if(is.numeric(i)) i <- as.integer(i) else if(is.logical(i)) {
+      nr <- fnrow2(x)
+      if(length(i) != nr) stop("i needs to be integer or logical(nrow(x))") # which(r & !is.na(r)) not needed !
+      i <- which(i)
+      if(length(i) == nr) if(mj) return(x) else return(.Call(C_subsetCols, x, j, TRUE))
+    } else stop("i needs to be integer or logical(nrow(x))")
+  }
   rn <- attr(x, "row.names")
   if(is.numeric(rn) || is.null(rn) || rn[1L] == "1") return(.Call(C_subsetDT, x, i, j))
   return(`attr<-`(.Call(C_subsetDT, x, i, j), "row.names", rn[i]))
 }
 
 fsubset.data.frame <- function(x, subset, ...) {
+  r <- eval(substitute(subset), x, parent.frame()) # Needs to be placed above any column renaming
   if(missing(...)) vars <- seq_along(unclass(x)) else {
     ix <- seq_along(unclass(x))
     nl <- `names<-`(as.vector(ix, "list"), attr(x, "names"))
@@ -59,9 +67,13 @@ fsubset.data.frame <- function(x, subset, ...) {
       attr(x, "names")[vars[nonmiss]] <- nam_vars[nonmiss]
     }
   }
-  r <- eval(substitute(subset), x, parent.frame())
-  if(is.logical(r) && length(r) == fnrow2(x)) r <- which(r) else if(is.numeric(r))
-    r <- as.integer(r) else stop("subset needs to be an expression evaluating to logical(nrow(x)) or integer") # which(r & !is.na(r)) not needed !
+  if(is.logical(r)) {
+    nr <- fnrow2(x)
+    if(length(r) != nr) stop("subset needs to be an expression evaluating to logical(nrow(x)) or integer") # which(r & !is.na(r)) not needed !
+    r <- which(r)
+    if(length(r) == nr) if(missing(...)) return(x) else return(.Call(C_subsetCols, x, vars, TRUE))
+  } else if(is.numeric(r)) r <- as.integer(r) else
+    stop("subset needs to be an expression evaluating to logical(nrow(x)) or integer")
   rn <- attr(x, "row.names")
   if(is.numeric(rn) || is.null(rn) || rn[1L] == "1") return(.Call(C_subsetDT, x, r, vars))
   return(`attr<-`(.Call(C_subsetDT, x, r, vars), "row.names", rn[r]))
@@ -86,7 +98,7 @@ ftransform_core <- function(X, value) { # value is unclassed, X has all attribut
     if(any(matched)) X[inx[matched]] <- value[matched]
   } else { # Some do not
     if(any(1L < le & !rl)) stop("Lengths of replacements must be equal to nrow(X) or 1, or NULL to delete columns")
-    if(any(le1 <- le == 1L)) value[le1] <- lapply(value[le1], rep, nr) # Length 1 arguments. can use TRA ?, or rep_len, but what about date variables ?
+    if(any(le1 <- le == 1L)) value[le1] <- lapply(value[le1], alloc, nr) # Length 1 arguments. can use TRA ?, or rep_len, but what about date variables ?
     if(any(le0 <- le == 0L)) { # best order -> yes, ftransform(mtcars, bla = NULL) just returns mtcars, but could also put this error message:
       if(any(le0 & !matched)) stop(paste("Can only delete existing columns, unknown columns:", paste(nam[le0 & !matched], collapse = ", ")))
       if(all(le0)) {
@@ -108,7 +120,7 @@ ftransform <- function(.data, ...) { # `_data` ?
   if(!is.list(.data)) stop(".data needs to be a list of equal length columns or a data.frame")
   e <- eval(substitute(list(...)), .data, parent.frame())
   if(is.null(names(e)) && length(e) == 1L && is.list(e[[1L]])) e <- unclass(e[[1L]]) # support list input -> added in v1.3.0
-  ftransform_core(.data, e)
+  return(condalc(ftransform_core(.data, e), inherits(.data, "data.table")))
 }
 
 tfm <- ftransform
@@ -116,7 +128,7 @@ tfm <- ftransform
 `ftransform<-` <- function(.data, value) {
   if(!is.list(.data)) stop(".data needs to be a list of equal length columns or a data.frame")
   if(!is.list(value)) stop("value needs to be a named list")
-  ftransform_core(.data, unclass(value))
+  return(condalc(ftransform_core(.data, unclass(value)), inherits(.data, "data.table")))
 }
 `tfm<-` <- `ftransform<-`
 
@@ -126,8 +138,8 @@ tfm <- ftransform
 ftransformv <- function(.data, vars, FUN, ..., apply = TRUE) {
   if(!is.list(.data)) stop(".data needs to be a list of equal length columns or a data.frame")
   if(!is.function(FUN)) stop("FUN needs to be a function")
+  clx <- oldClass(.data)
   if(apply) {
-    clx <- oldClass(.data)
     oldClass(.data) <- NULL
     vars <- cols2int(vars, .data, names(.data), FALSE)
     value <- unattrib(.data[vars])
@@ -136,31 +148,32 @@ ftransformv <- function(.data, vars, FUN, ..., apply = TRUE) {
   } else {
     nam <- attr(.data, "names")
     vars <- cols2int(vars, .data, nam, FALSE)
-    value <- fcolsubset(.data, vars)
+    value <- .Call(C_subsetCols, .data, vars, FALSE)
     value <- if(missing(...)) unclass(FUN(value)) else # unclass needed here ? -> yes for lengths...
       unclass(eval(substitute(FUN(value, ...)), .data, parent.frame()))
-    if(!identical(names(value), nam[vars])) return(ftransform_core(.data, value))
-    clx <- oldClass(.data)
+    if(!identical(names(value), nam[vars]))
+      return(condalc(ftransform_core(.data, value), any(clx == "data.table")))
     oldClass(.data) <- NULL
   }
   le <- lengths(value, FALSE)
   nr <- length(.data[[1L]])
   if(all(le == nr)) .data[vars] <- value else if(all(le == 1L))
-    .data[vars] <- lapply(value, rep, nr) else {
+    .data[vars] <- lapply(value, alloc, nr) else {
       if(apply) names(value) <- names(.data)[vars]
-      return(ftransform_core(.data, value)) # stop("lengths of result must be nrow(.data) or 1")
+      return(condalc(ftransform_core(.data, value), any(clx == "data.table"))) # stop("lengths of result must be nrow(.data) or 1")
   }
-  return(`oldClass<-`(.data, clx))
+  return(condalc(`oldClass<-`(.data, clx), any(clx == "data.table")))
 }
 
 tfmv <- ftransformv
 
-settransform <- function(.data, ...) eval.parent(substitute(.data <- ftransform(.data, ...))) # can use `<-`(.data, ftransform(.data,...)) but not faster ..
+
+settransform <- function(.data, ...) eval.parent(substitute(.data <- get0("ftransform", envir = getNamespace("collapse"))(.data, ...))) # can use `<-`(.data, ftransform(.data,...)) but not faster ..
 
 settfm <- settransform
 
 settransformv <- function(.data, vars, FUN, ..., apply = TRUE)
-  eval.parent(substitute(.data <- ftransformv(.data, vars, FUN, ..., apply = apply)))
+  eval.parent(substitute(.data <- get0("ftransformv", envir = getNamespace("collapse"))(.data, vars, FUN, ..., apply = apply)))
 
 settfmv <- settransformv
 
@@ -180,14 +193,16 @@ fcompute <- function(.data, ..., keep = NULL) { # within ?
       e <- c(temp, e[!pos])
     } else e <- c(.subset(.data, keep), e)
   }
+  if(inherits(.data, "sf") && !any(names(e) == attr(.data, "sf_column")))
+        e <- c(e, .subset(.data, attr(.data, "sf_column")))
   ax[["names"]] <- names(e)
   le <- lengths(e, FALSE)
   nr <- fnrow2(.data)
   rl <- le == nr
-  if(all(rl)) return(setAttributes(e, ax)) # All computed vectors have the right length
+  if(all(rl)) return(condalcSA(e, ax, inherits(.data, "data.table"))) # All computed vectors have the right length
   if(any(1L < le & !rl)) stop("Lengths of replacements must be equal to nrow(.data) or 1")
-  e[!rl] <- lapply(e[!rl], rep, nr)
-  setAttributes(e, ax)
+  e[!rl] <- lapply(e[!rl], alloc, nr)
+  return(condalcSA(e, ax, inherits(.data, "data.table")))
 }
 
 

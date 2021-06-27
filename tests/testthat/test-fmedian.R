@@ -1,7 +1,7 @@
 context("fmedian and fnth")
 
 # rm(list = ls())
-
+set.seed(101)
 x <- rnorm(100)
 w <- as.integer(round(10*abs(rnorm(100))))  # -> Numeric precision issues in R
 wdat <- as.integer(round(10*abs(rnorm(32))))
@@ -11,7 +11,7 @@ xNA[sample.int(100,20)] <- NA
 wNA[is.na(xNA)] <- NA  # only missing weights if x also missing
 f <- as.factor(sample.int(10, 100, TRUE))
 g <- GRP(mtcars, ~ cyl + vs + am)
-gf <- as.factor_GRP(g)
+gf <- as_factor_GRP(g)
 mtcNA <- na_insert(mtcars)
 mtcNA[27, 1] <- NA # single group NA !!
 m <- as.matrix(mtcars)
@@ -336,7 +336,7 @@ test_that("fmedian produces errors for wrong input", {
 # fnth
 
 g <- GRP(mtcars, ~ cyl)
-gf <- as.factor_GRP(g)
+gf <- as_factor_GRP(g)
 
 test_that("fnth gives a proper lower/upper/average weighted median on complete data", {
 

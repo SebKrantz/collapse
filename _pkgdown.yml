@@ -49,6 +49,10 @@ articles:
   desc: Shows how collapse and data.table may be used concurrently in a harmonious way
   contents:
   - collapse_and_data.table
+- title: collapse and sf
+  desc: Shows how collapse can be used to efficiently manipulate sf data frames
+  contents:
+  - collapse_and_sf
 
 reference:
 - contents: "collapse-package"
@@ -65,8 +69,8 @@ reference:
   - "fmin, fmax"
   - fnth
   - "ffirst, flast"
-  - fNobs
-  - fNdistinct
+  - fnobs
+  - fndistinct
 - title: "Fast Grouping and Ordering"
   desc: "Fast (ordered) groupings from vectors, data.frames, lists. Fast ordering, unique values / rows, factor generation and interactions, run-length type grouping and grouping of time-sequences."
 - contents:
@@ -109,7 +113,7 @@ reference:
   - TRA
   - fscale
   - "fbetween, fwithin"
-  - "fHDbetween, fHDwithin"
+  - "fhdbetween, fhdwithin"
 - title: "Linear Models"
   desc: "Fast (weighted) linear model fitting. A fast F-test for high-dimensional linear models."
 - contents:
@@ -122,13 +126,14 @@ reference:
   - flag
   - fdiff
   - fgrowth
+  - fcumsum
   - psacf
   - psmat
 - title: "List Processing"
   desc: "Recursive list search / identification, extraction / subsetting, splitting, data-apply, and generalized recursive row-binding / unlisting in 2D."
 - contents:
   - "A8-list-processing"
-  - is.unlistable
+  - is_unlistable
   - ldepth
   - "has_elem, get_elem"
   - rsplit
@@ -141,12 +146,13 @@ reference:
   - "A9-summary-statistics"
   - qsu
   - descr
-  - "pwcor, pwcov, pwNobs"
+  - "pwcor, pwcov, pwnobs"
   - varying
 - title: "Recode and Replace Values"
   desc: "Efficiently recode and replace values in matrix-like objects."
 - contents:
   - "AA1-recode-replace"
+  - pad
 - title: "Small (Helper) Functions"
   desc: "Convenience functions that help to deal with variable names, labels, attributes, missing values, matching and object checking etc.. Some functions are performance improved replacements for base R functions."
 - contents:

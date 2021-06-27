@@ -77,7 +77,7 @@ Simple replacing tasks on a vector can also effectively be handled by \code{data
 %% ~Make other sections like Warning with \section{Warning }{\dots.} ~
 
 \seealso{
-\link[=collapse-documentation]{Collapse Overview}, \link[=AA2-small-helpers]{Small (Helper) Functions}
+\code{\link{pad}}, \link[=collapse-documentation]{Collapse Overview}, \link[=AA2-small-helpers]{Small (Helper) Functions}
 }
 \examples{
 recode_char(c("a","b","c"), a = "b", b = "c")

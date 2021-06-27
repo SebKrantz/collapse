@@ -1,3 +1,60 @@
+# collapse 1.6.0
+*collapse* 1.6.0, released end of June 2021, presents some significant improvements in the user-friendliness, compatibility and programmability of the package, as well as a few function additions. 
+
+### Changes to Functionality
+
+* `ffirst`, `flast`, `fnobs`, `fsum`, `fmin` and `fmax` were rewritten in C. The former three now also support list columns (where `NULL` or empty list elements are considered missing values when `na.rm = TRUE`), and are extremely fast for grouped aggregation if `na.rm = FALSE`. The latter three also support and return integers, with significant performance gains, even compared to base R. Code using these functions expecting an error for list-columns or expecting double output even if the input is integer should be adjusted. 
+
+* *collapse* now directly supports *sf* data frames through functions like `fselect`, `fsubset`, `num_vars`, `qsu`, `descr`, `varying`, `funique`, `roworder`, `rsplit`, `fcompute` etc., which will take along the geometry column even if it is not explicitly selected (mirroring *dplyr* methods for *sf* data frames). This is mostly done internally at C-level, so functions remain simple and fast. Existing code that explicitly selects the geometry column is unaffected by the change, but code of the form `sf_data %>% num_vars %>% qDF %>% ...`, where columns excluding geometry were selected and the object later converted to a data frame, needs to be rewritten as `sf_data %>% qDF %>% num_vars %>% ...`. A short vignette was added describing the integration of *collapse* and *sf*. 
+
+* I've received several requests for increased namespace consistency. *collapse* functions were named to be consistent with base R, *dplyr* and *data.table*, resulting in names like `is.Date`, `fgroup_by` or `settransformv`. To me this makes sense, but I've been convinced that a bit more consistency is advantageous. Towards that end I have decided to eliminate the '.' notation of base R and to remove some unexpected capitalizations in function names giving some people the impression I was using camel-case. The following functions are renamed:
+`fNobs` -> `fnobs`, `fNdistinct` -> `fndistinct`, `pwNobs` -> `pwnobs`, `fHDwithin` -> `fhdwithin`
+`fHDbetween` -> `fhdbetween`, `as.factor_GRP` -> `as_factor_GRP`, `as.factor_qG` -> `as_factor_qG`, `is.GRP` -> `is_GRP`, `is.qG` -> `is_qG`, `is.unlistable` -> `is_unlistable`, `is.categorical` -> `is_categorical`, `is.Date` -> `is_date`, `as.numeric_factor` -> `as_numeric_factor`, `as.character_factor` -> `as_character_factor`, 
+`Date_vars` -> `date_vars`. 
+This is done in a very careful manor, the others will stick around for a long while (end of 2022), and the generics of `fNobs`, `fNdistinct`, `fHDbetween` and `fHDwithin` will be kept in the package for an indeterminate period, but their core methods will not be exported beyond 2022. I will start warning about these renamed functions in 2022. In the future I will undogmatically stick to a function naming style with lowercase function names and underslashes where words need to be split. Other function names will be kept. To say something about this: The quick-conversion functions `qDF` `qDT`, `qM`, `qF`, `qG` are consistent and in-line with *data.table* (`setDT` etc.), and similarly the operators `L`, `F`, `D`, `Dlog`, `G`, `B`, `W`, `HDB`, `HDW`. I'll keep `GRP`, `BY` and `TRA`, for lack of better names, parsimony and because they are central to the package. The camel case will be kept in helper functions `setDimnames` etc. because they work like *stats* `setNames` and do not modify the argument by reference (like `settransform` or `setrename` and various *data.table* functions). Functions `copyAttrib` and `copyMostAttrib` are exports of like-named functions in the C API and thus kept as they are. Finally, I want to keep `fFtest` the way it is because the F-distribution is widely recognized by a capital F. 
+
+* I've updated the `wlddev` dataset with the latest data from the World Bank, and also added a variable giving the total population (which may be useful e.g. for population-weighted aggregations across regions). The extra column could invalidate codes used to demonstrate something (I had to adjust some examples, tests and code in vignettes).
+
+### Additions
+
+* Added a function `fcumsum` (written in C), permitting flexible (grouped, ordered) cumulative summations on matrix-like objects (integer or double typed) with extra methods for grouped data frames and panel series and data frames. Apart from the internal grouping, and an ordering argument allowing cumulative sums in a different order than data appear, `fcumsum` has 2 options to deal with missing values. The default (`na.rm = TRUE`) is to skip (preserve) missing values, whereas setting `fill = TRUE` allows missing values to be populated with the previous value of the cumulative sum (starting from 0). 
+
+* Added a function `alloc` to efficiently generate vectors initialized with any value (faster than `rep_len`). 
+
+* Added a function `pad` to efficiently pad vectors / matrices / data.frames with a value (default is `NA`). This function was mainly created to make it easy to expand results coming from a statistical model fitted on data with missing values to the original length. For example let `data <- na_insert(mtcars); mod <- lm(mpg ~ cyl, data)`, then we can do `settransform(data, resid = pad(resid(mod), mod$na.action))`, or we could do `pad(model.matrix(mod), mod$na.action)` or `pad(model.frame(mod), mod$na.action)` to receive matrices and data frames from model data matching the rows of `data`. `pad` is a general function that will also work with mixed-type data. It is also possible to pass a vector of indices matching the rows of the data to `pad`, in which case `pad` will fill gaps in those indices with a value/row in the data.  
+
+
+### Improvements
+
+* Full *data.table* support, including reference semantics (`set*`, `:=`)!! There is some complex C-level programming behind *data.table*'s operations by reference. Notably, additional (hidden) column pointers are allocated to be able to add columns without taking a shallow copy of the *data.table*, and an `".internal.selfref"` attribute containing an external pointer is used to check if any shallow copy was made using base R commands like `<-`. This is done to avoid even a shallow copy of the *data.table* in manipulations using `:=` (and is in my opinion not worth it as even large tables are shallow copied by base R (>=3.1.0) within microseconds and all of this complicates development immensely). Previously, *collapse* treated *data.table*'s like any other data frame, using shallow copies in manipulations and preserving the attributes (thus ignoring how *data.table* works internally). This produced a warning whenever you wanted to use *data.table* reference semantics (`set*`, `:=`) after passing the *data.table* through a *collapse* function such as `collap`, `fselect`, `fsubset`, `fgroup_by` etc. From v1.6.0, I have adopted essential C code from *data.table* to do the overallocation and generate the `".internal.selfref"` attribute, thus seamless workflows combining *collapse* and *data.table* are now possible. This comes at a cost of about 2-3 microseconds per function, as to do this I have to shallow copy the *data.table* again and add extra column pointers and an `".internal.selfref"` attribute telling *data.table* that this table was not copied (it seems to be the only way to do it for now). This integration encompasses all data manipulation functions in *collapse*, but not the *Fast Statistical Functions* themselves. Thus you can do `agDT <- DT %>% fselect(id, col1:coln) %>% collap(~id, fsum); agDT[, newcol := 1]`, but you would need to do add a `qDT` after a function like `fsum` if you want to use reference semantics without incurring a warning: `agDT <- DT %>% fselect(id, col1:coln) %>% fgroup_by(id) %>% fsum %>% qDT; agDT[, newcol := 1]`. *collapse* appears to be the first package that attempts to account for *data.table*'s internal working without importing *data.table*, and `qDT` is now the fastest way to create a fully functional *data.table* from any R object. A global option `"collapse_DT_alloccol"` was added to regulate how many columns *collapse* overallocates when creating *data.table*'s. The default is 100, which is lower than the *data.table* default of 1024. This was done to increase efficiency of the additional shallow copies, and may be changed by the user. 
+
+* Programming enabled with `fselect` and `fgroup_by` (you can now pass vectors containing column names or indices). Note that instead of `fselect` you should use `get_vars` for standard eval programming.  
+
+* `fselect` and `fsubset` support in-place renaming e.g. `fselect(data, newname = var1, var3:varN)`,
+`fsubset(data, vark > varp, newname = var1, var3:varN)`.
+
+* `collap` supports renaming columns in the custom argument, e.g. `collap(data, ~ id, custom = list(fmean = c(newname = "var1", "var2"), fmode = c(newname = 3), flast = is_date))`. 
+
+* Performance improvements: `fsubset` / `ss` return the data or perform a simple column subset without deep copying the data if all rows are selected through a logical expression. `fselect` and `get_vars`, `num_vars` etc. are slightly faster through data frame subsetting done fully in C. `ftransform` / `fcompute` use `alloc` instead of `base::rep` to replicate a scalar value which is slightly more efficient. 
+
+* `fcompute` now has a `keep` argument, to preserve several existing columns when computing columns on a data frame. 
+
+* `replace_NA` now has a `cols` argument, so we can do `replace_NA(data, cols = is.numeric)`, to replace `NA`'s in numeric columns. I not that for big numeric data `data.table::setnafill` is the most efficient solution. 
+
+* `fhdbetween` and `fhdwithin` have an `effect` argument in *plm* methods, allowing centering on selected identifiers. The default is still to center on all panel identifiers. 
+
+ <!-- * `flag`, `fdiff`, `fgrowth` methods for *tsibble* and *tibbletime* -->
+
+* The plot method for panel series matrices and arrays `plot.psmat` was improved slightly. It now supports custom colours and drawing of a grid. 
+
+* `settransform` and `settransformv` can now be called without attaching the package e.g. `collapse::settransform(data, ...)`. These errored before when *collapse* is not loaded because they are simply wrappers around `data <- ftransform(data, ...)`. I'd like to note from a [discussion](https://github.com/SebKrantz/collapse/issues/136) that avoiding shallow copies with `<-` (e.g. via `:=`) does not appear to yield noticeable performance gains. Where *data.table* is faster on big data this mostly has to do with parallelism and sometimes with algorithms, generally not memory efficiency.
+
+* Functions `setAttrib`, `copyAttrib` and `copyMostAttrib` only make a shallow copy of lists, not of atomic vectors (which amounts to doing a full copy and is inefficient). Thus atomic objects are now modified in-place. 
+
+* Small improvements: Calling `qF(x, ordered = FALSE)` on an ordered factor will remove the ordered class, the operators `L`, `F`, `D`, `Dlog`, `G`, `B`, `W`, `HDB`, `HDW` 
+and functions like `pwcor` now work on unnamed matrices or data frames. 
+
+
 # collapse 1.5.3
 
 * A test that occasionally fails on Mac is removed, and all unit testing is now removed from CRAN. *collapse* has close to 10,000 unit tests covering all central pieces of code. Half of these tests depend on generated data, and for some reasons there is always a test or two that occasionally fail on some operating system (usually not Windows), requiring me to submit a patch. This is not constructive to either the development or the use of this package, therefore tests are now removed from CRAN. They are still run on codecov.io, and every new release is thoroughly tested on Windows. 
@@ -40,7 +97,7 @@ A small patch for 1.5.0 that:
 
 * Fixes a numeric precision issue when grouping doubles (e.g. before `qF(wlddev$LIFEEX)` gave an error, now it works). 
 
-* Fixes a minor issue with `fHDwithin` when applied to *pseries* and `fill = FALSE`.
+* Fixes a minor issue with `fhdwithin` when applied to *pseries* and `fill = FALSE`.
 
 
 # collapse 1.5.0
@@ -48,15 +105,15 @@ A small patch for 1.5.0 that:
 
 ### Back to CRAN
 
-* I apologize for inconveniences caused by the temporal archival of *collapse* from December 19, 2020. This archival was caused by the archival of the important *lfe* package on the 4th of December. *collapse* depended on *lfe* for higher-dimensional centering, providing the `fHDbetween / fHDwithin` functions for generalized linear projecting / partialling out. To remedy the damage caused by the removal of *lfe*, I had to rewrite `fHDbetween / fHDwithin` to take advantage of the demeaning algorithm provided by *fixest*, which has some quite different mechanics. Beforehand, I made some significant changes to `fixest::demean` itself to make this integration happen. The CRAN deadline was the 18th of December, and I realized too late that I would not make this. A request to CRAN for extension was declined, so *collapse* got archived on the 19th. I have learned from this experience, and *collapse* is now sufficiently insulated that it will not be taken off CRAN even if all suggested packages were removed from CRAN. 
+* I apologize for inconveniences caused by the temporal archival of *collapse* from December 19, 2020. This archival was caused by the archival of the important *lfe* package on the 4th of December. *collapse* depended on *lfe* for higher-dimensional centering, providing the `fhdbetween / fhdwithin` functions for generalized linear projecting / partialling out. To remedy the damage caused by the removal of *lfe*, I had to rewrite `fhdbetween / fhdwithin` to take advantage of the demeaning algorithm provided by *fixest*, which has some quite different mechanics. Beforehand, I made some significant changes to `fixest::demean` itself to make this integration happen. The CRAN deadline was the 18th of December, and I realized too late that I would not make this. A request to CRAN for extension was declined, so *collapse* got archived on the 19th. I have learned from this experience, and *collapse* is now sufficiently insulated that it will not be taken off CRAN even if all suggested packages were removed from CRAN. 
 
 ### Bug Fixes
 
-* Segfaults in several *Fast Statistical Functions* when passed `numeric(0)` are fixed (thanks to @eshom and @acylam, [#101](https://github.com/SebKrantz/collapse/issues/101)). The default behavior is that all *collapse* functions return `numeric(0)` again, except for `fNobs`, `fNdistinct` which return `0L`, and `fvar`, `fsd` which return `NA_real_`.
+* Segfaults in several *Fast Statistical Functions* when passed `numeric(0)` are fixed (thanks to @eshom and @acylam, [#101](https://github.com/SebKrantz/collapse/issues/101)). The default behavior is that all *collapse* functions return `numeric(0)` again, except for `fnobs`, `fndistinct` which return `0L`, and `fvar`, `fsd` which return `NA_real_`.
 
 ### Changes to Functionality
 
-* Functions `fHDwithin / HDW` and `fHDbetween / HDB` have been reworked, delivering higher performance and greater functionality: For higher-dimensional centering and heterogenous slopes, the `demean` function from the *fixest* package is imported (conditional on the availability of that package). The linear prediction  and partialling out functionality is now built around `flm` and also allows for weights and different fitting methods. 
+* Functions `fhdwithin / HDW` and `fhdbetween / HDB` have been reworked, delivering higher performance and greater functionality: For higher-dimensional centering and heterogenous slopes, the `demean` function from the *fixest* package is imported (conditional on the availability of that package). The linear prediction  and partialling out functionality is now built around `flm` and also allows for weights and different fitting methods. 
 
 * In `collap`, the default behavior of `give.names = "auto"` was altered when used together with the `custom` argument. Before the function name was always added to the column names. Now it is only added if a column is aggregated with two different functions. I apologize if this breaks any code dependent on the new names, but this behavior just better reflects most common use (applying only one function per column), as well as STATA's collapse. 
 
@@ -139,13 +196,13 @@ This may be useful in some cases, for examples it is now possible to write somet
   
   + Transformations with functions like `flag`, `fwithin`, `fscale` etc. are also unaltered: All attributes of the input are preserved in the output (regardless of whether the input is a vector, matrix, data.frame or related classed object). The same holds for transformation options modifying the input ("-", "-+", "/", "+", "\*", "%%", "-%%") when using `TRA()` function or the `TRA = "..."` argument to the *Fast Statistical Functions*. 
   
-  + For `TRA` 'replace' and 'replace_fill' options, the data type of the STATS is preserved, not of x. This provides better results particularly with functions like `fNobs` and `fNdistinct`. E.g. previously `fNobs(letters, TRA = "replace")` would have returned the observation counts coerced to character, because `letters` is character. Now the result is integer typed. For attribute handling this means that the attributes of x are preserved unless x is a classed object and the data types of x and STATS do not match. An exemption to this rule is made if x is a factor and an integer (non-factor) replacement is offered to STATS. In that case the attributes of x are copied exempting the 'class' and 'levels' attribute, e.g. so that `fNobs(iris$Species, TRA = "replace")` gives an integer vector, not a (malformed) factor. In the unlikely event that STATS is a classed object, the attributes of STATS are preserved and the attributes of x discarded. 
+  + For `TRA` 'replace' and 'replace_fill' options, the data type of the STATS is preserved, not of x. This provides better results particularly with functions like `fnobs` and `fndistinct`. E.g. previously `fnobs(letters, TRA = "replace")` would have returned the observation counts coerced to character, because `letters` is character. Now the result is integer typed. For attribute handling this means that the attributes of x are preserved unless x is a classed object and the data types of x and STATS do not match. An exemption to this rule is made if x is a factor and an integer (non-factor) replacement is offered to STATS. In that case the attributes of x are copied exempting the 'class' and 'levels' attribute, e.g. so that `fnobs(iris$Species, TRA = "replace")` gives an integer vector, not a (malformed) factor. In the unlikely event that STATS is a classed object, the attributes of STATS are preserved and the attributes of x discarded. 
   
 <!-- This simple but thorough (and now formalized) system of attribute handling should be optimal in more than 90% of common applications. -->
 
   
  <!--  
-  + The default methods of statistical functions returning numeric values (`fmean`, `fmedian`, `fsum`, `fprod`, `fvar`, `fsd`, `fmin`, `fmax` and `fnth`, `fNobs` and `fNdistinct`) do not preserve the attributes of classed objects (e.g. univariate time series) in grouped aggregations. This is consistent with the matrix methods of these functions and avoids errors, particularly after computations on time series. -->
+  + The default methods of statistical functions returning numeric values (`fmean`, `fmedian`, `fsum`, `fprod`, `fvar`, `fsd`, `fmin`, `fmax` and `fnth`, `fnobs` and `fndistinct`) do not preserve the attributes of classed objects (e.g. univariate time series) in grouped aggregations. This is consistent with the matrix methods of these functions and avoids errors, particularly after computations on time series. -->
  
  <!--, random conversions to tibble are not part of its philosophy. -->
 
@@ -153,7 +210,7 @@ This may be useful in some cases, for examples it is now possible to write somet
 * All S3 generic functions with a `default` method for atomic vectors and a `matrix` method now have an additional internal dispatch from the `default` to the `matrix` method if a classed matrix object missing a 'matrix' class is passed to the generic. For example consider a matrix time series `x <- structure(matrix(1:9, ncol = 3), class = "ts", tsp = c(1, 3, 1))` inheriting only a 'ts' but not a 'matrix' class. In collapse 1.3.2 `fsum(x)` would invoke the default method and return a scalar value. Now `fsum(x)` returns the sum for each column in the matrix. The `matrix` method is only called from the `default` method if `is.matrix(x) && !inherits(x, "matrix")` evaluates to `TRUE`, thus it is still possible to manually invoke the default method on a matrix. As the example indicates, this change is warranted to improve the inherent compatibility of *collapse* with various time series and matrix based classes (such as *xts* / *zoo*). -->
 
 
-* *Reduced Dependency Burden:* The dependency on the *lfe* package was made optional. Functions `fHDwithin` / `fHDbetween` can only perform higher-dimensional centering if *lfe* is available. Linear prediction and centering with a single factor (among a list of covariates) is still possible without installing *lfe*. This change means that *collapse* now only depends on base R and *Rcpp* and is supported down to R version 2.10. 
+* *Reduced Dependency Burden:* The dependency on the *lfe* package was made optional. Functions `fhdwithin` / `fhdbetween` can only perform higher-dimensional centering if *lfe* is available. Linear prediction and centering with a single factor (among a list of covariates) is still possible without installing *lfe*. This change means that *collapse* now only depends on base R and *Rcpp* and is supported down to R version 2.10. 
 
 ### Additions
 
@@ -163,7 +220,7 @@ This may be useful in some cases, for examples it is now possible to write somet
 
 * `fgrowth` supports annualizing / compounding growth rates through added `power` argument.
 
-* A function `flm` was added for barebones (weighted) linear regression fitting using different efficient methods: 4 from base R (`.lm.fit`, `solve`, `qr`, `chol`), using `fastLm` from *RcppArmadillo* (if installed), or `fastLm` from *RcppEigen* (if installed). 
+* A function `flm` was added for bare bones (weighted) linear regression fitting using different efficient methods: 4 from base R (`.lm.fit`, `solve`, `qr`, `chol`), using `fastLm` from *RcppArmadillo* (if installed), or `fastLm` from *RcppEigen* (if installed). 
 
 * Added function `qTBL` to quickly convert R objects to tibble.
 
@@ -177,7 +234,7 @@ This may be useful in some cases, for examples it is now possible to write somet
 
 ### Improvements
 
-* Faster internal methods for factors for `funique`, `fmode` and `fNdistinct`.
+* Faster internal methods for factors for `funique`, `fmode` and `fndistinct`.
 
 <!-- * `flag`, `fdiff`, `fgrowth` support *xts* / *zoo* via explicit methods for fast and secure computations on unordered data. --> 
 
@@ -196,7 +253,7 @@ This may be useful in some cases, for examples it is now possible to write somet
 # collapse 1.3.2
 collapse 1.3.2, released mid September 2020: <!-- , is a minor update: -->
 
-* Fixed a small bug in `fNdistinct` for grouped distinct value counts on logical vectors. 
+* Fixed a small bug in `fndistinct` for grouped distinct value counts on logical vectors. 
 
 * Additional security for `ftransform`, which now efficiently checks the names of the data and replacement arguments for uniqueness, and also allows computing and transforming list-columns.  
 
@@ -242,7 +299,7 @@ collapse 1.3.0, released mid August 2020: <!-- , is another major update: -->
 
 ### Improvements
 
-* `fmode` and `fNdistinct` have become a bit faster.
+* `fmode` and `fndistinct` have become a bit faster.
 
 * `fgroup_by` now preserves *data.table*'s.
 
@@ -346,7 +403,7 @@ collapse 1.1.0 released early April 2020: <!--  - some small fixes and additions
 
 * Added the modulus (`%%`) and subtract modulus (`-%%`) operations to `TRA()`. 
 
-* Added the function `finteraction`, for fast interactions, and `as.character_factor` to coerce a factor, or all factors in a list, to character (analogous to `as.numeric_factor`). Also exported the function `ckmatch`, for matching with error message showing non-matched elements.
+* Added the function `finteraction`, for fast interactions, and `as_character_factor` to coerce a factor, or all factors in a list, to character (analogous to `as_numeric_factor`). Also exported the function `ckmatch`, for matching with error message showing non-matched elements.
 
 
 # collapse 1.0.0 and earlier

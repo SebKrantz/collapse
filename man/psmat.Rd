@@ -26,7 +26,7 @@ psmat(x, \dots)
 \method{psmat}{pdata.frame}(x, cols = NULL, transpose = FALSE, array = TRUE, \dots)
 
 
-\method{plot}{psmat}(x, legend = FALSE, colours = legend, labs = NULL, \dots)
+\method{plot}{psmat}(x, legend = FALSE, colours = legend, labs = NULL, grid = FALSE, \dots)
 }
 %- maybe also 'usage' for other objects documented here.
 \arguments{
@@ -40,8 +40,9 @@ psmat(x, \dots)
   \item{\dots}{arguments to be passed to or from other methods, or for the plot method additional arguments passed to \code{ts.plot}.}
 
 \item{legend}{logical. Automatically create a legend of panel-groups.}
-\item{colours}{logical. Automatically colour by panel-groups.}
+\item{colours}{either \code{TRUE} to automatically colour by panel-groups using \code{\link{rainbow}} or a character vector of colours matching the number of panel-groups (series).}
 \item{labs}{character. Provide a character-vector of variable labels / series titles when plotting an array.}
+\item{grid}{logical. Calls \code{\link{grid}} to draw gridlines on the plot.}
 }
 \details{
 For \code{plm::pseries}, the first \code{index} variable is taken to be the group-id and the second the time variable. If more than 2 index variables are attached to \code{plm::pseries}, the last one is taken as the time variable and the others are taken as group-id's and interacted.

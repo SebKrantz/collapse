@@ -5,6 +5,7 @@
 \alias{qsu.data.frame}
 \alias{qsu.pseries}
 \alias{qsu.pdata.frame}
+\alias{qsu.sf}
 \alias{print.qsu}
 % - Also NEED an '\alias' for EACH other topic documented here.
 \title{
@@ -30,6 +31,11 @@ qsu(x, \dots)
 \method{qsu}{pseries}(x, g = NULL, w = NULL, effect = 1L, higher = FALSE, array = TRUE, \dots)
 
 \method{qsu}{pdata.frame}(x, by = NULL, w = NULL, cols = NULL, effect = 1L,
+    higher = FALSE, array = TRUE, vlabels = FALSE, \dots)
+
+# Methods for compatibility with sf:
+
+\method{qsu}{sf}(x, by = NULL, pid = NULL, w = NULL, cols = NULL,
     higher = FALSE, array = TRUE, vlabels = FALSE, \dots)
 
 
@@ -71,6 +77,7 @@ Apart from 'N/T' and the extrema, the standard-deviations ('SD') computed on bet
 
 \code{qsu} comes with it's own print method which by default writes out up to 9 digits at 4 decimal places. Larger numbers are printed in scientific format. for numbers between 7 and 9 digits, a comma ',' is placed after the 6th digit to designate the millions. Missing values are printed using '-'.
 
+The \emph{sf} method simply ignores the geometry column.
 }
 \value{
 A vector, matrix, array or list of matrices of summary statistics. All matrices and arrays have a class 'qsu' and a class 'table' attached.

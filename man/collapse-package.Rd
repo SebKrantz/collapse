@@ -198,8 +198,8 @@ head(fscale(d, f, w, mean = "overall.mean",   # Full harmonization of group mean
             sd = "within.sd"))                # while preserving the level and scale of the data.
 
 head(get_vars(iris, 1:2))                      # Use get_vars for fast selecting, gv is shortcut
-head(fHDbetween(gv(iris, 1:2), gv(iris, 3:5))) # Linear prediction with factors and covariates
-head(fHDwithin(gv(iris, 1:2), gv(iris, 3:5)))  # Linear partialling out factors and covariates
+head(fhdbetween(gv(iris, 1:2), gv(iris, 3:5))) # Linear prediction with factors and covariates
+head(fhdwithin(gv(iris, 1:2), gv(iris, 3:5)))  # Linear partialling out factors and covariates
 ss(iris, 1:10, 1:2)                            # Similarly fsubset/ss for fast subsetting rows
 
 # Simple Time-Computations..
@@ -259,14 +259,14 @@ head(qDT(mtcars, "cars"))                  # Same use a data.frame
 \donttest{ % No code relying on suggested package
 ## Now let's get some real data and see how we can use this power for data manipulation
 library(magrittr)
-head(wlddev) # World Bank World Development Data: 216 countries, 59 years, 4 series (columns 9-12)
+head(wlddev) # World Bank World Development Data: 216 countries, 61 years, 5 series (columns 9-13)
 
 # Starting with some discriptive tools...
 namlab(wlddev, class = TRUE)           # Show variable names, labels and classes
-fNobs(wlddev)                          # Observation count
-pwNobs(wlddev)                         # Pairwise observation count
-head(fNobs(wlddev, wlddev$country))    # Grouped observation count
-fNdistinct(wlddev)                     # Distinct values
+fnobs(wlddev)                          # Observation count
+pwnobs(wlddev)                         # Pairwise observation count
+head(fnobs(wlddev, wlddev$country))    # Grouped observation count
+fndistinct(wlddev)                     # Distinct values
 descr(wlddev)                          # Describe data
 varying(wlddev, ~ country)             # Show which variables vary within countries
 qsu(wlddev, pid = ~ country,           # Panel-summarize columns 9 though 12 of this data
@@ -323,7 +323,6 @@ fgroup_by(wlddev, Ctry, decade) \%>\% fgroup_vars \%>\% head # fgroup_by is fast
 rm(wlddev)                                       # .. but only works with collapse functions
 
 ## Now lets start putting things together
-wlddev[["weights"]] <- abs(rnorm(fnrow(wlddev))) # Adding some weights
 \donttest{ % No code relying on suggested package
 wlddev \%>\% fsubset(year > 1990, region, income, PCGDP:ODA) \%>\%
   fgroup_by(region, income) \%>\% fmean            # Fast aggregation using the mean
@@ -333,27 +332,28 @@ library(dplyr)
 wlddev \%>\% filter(year > 1990) \%>\% select(region, income, PCGDP:ODA) \%>\%
   group_by(region,income) \%>\% fmean       # This is already a lot faster than summarize_all(mean)
 
-wlddev \%>\% fsubset(year > 1990, region, income, PCGDP:weights) \%>\%
-  fgroup_by(region, income) \%>\% fmean(weights)   # Weighted group means
+wlddev \%>\% fsubset(year > 1990, region, income, PCGDP:POP) \%>\%
+  fgroup_by(region, income) \%>\% fmean(POP)     # Weighted group means
 
-wlddev \%>\% fsubset(year > 1990, region, income, PCGDP:weights) \%>\%
-  fgroup_by(region, income) \%>\% fsd(weights)     # Weighted group standard deviations
+wlddev \%>\% fsubset(year > 1990, region, income, PCGDP:POP) \%>\%
+  fgroup_by(region, income) \%>\% fsd(POP)       # Weighted group standard deviations
 
-wlddev \%>\% fgroup_by(region, income) \%>\% fselect(PCGDP:weights) \%>\%
-   fnth(0.75, weights)                           # Weighted group third quartile
+wlddev \%>\% na_omit(cols = "POP") \%>\% fgroup_by(region, income) \%>\%
+  fselect(PCGDP:POP) \%>\% fnth(0.75, POP)       # Weighted group third quartile
 
 wlddev \%>\% fgroup_by(country) \%>\% fselect(PCGDP:ODA) \%>\%
 fwithin \%>\% head                               # Within transformation
 wlddev \%>\% fgroup_by(country) \%>\% fselect(PCGDP:ODA) \%>\%
 fmedian(TRA = "-") \%>\% head                    # Grouped centering using the median
 # Replacing data points by the weighted first quartile:
-wlddev \%>\% fgroup_by(country) \%>\% fselect(country, year, PCGDP:weights) \%>\%
+wlddev \%>\% na_omit(cols = "POP") \%>\% fgroup_by(country) \%>\%
+  fselect(country, year, PCGDP:POP) \%>\%
   ftransform(fselect(., -country, -year) \%>\%
-  fnth(0.25, weights, "replace_fill")) \%>\% head
+  fnth(0.25, POP, "replace_fill")) \%>\% head
 
 wlddev \%>\% fgroup_by(country) \%>\% fselect(PCGDP:ODA) \%>\% fscale \%>\% head    # Standardizing
-wlddev \%>\% fgroup_by(country) \%>\% fselect(PCGDP:weights) \%>\%
-   fscale(weights) \%>\% head  # Weigted..
+wlddev \%>\% fgroup_by(country) \%>\% fselect(PCGDP:POP) \%>\%
+   fscale(POP) \%>\% head  # Weigted..
 
 wlddev \%>\% fselect(country, year, PCGDP:ODA) \%>\%  # Adding 1 lead and 2 lags of each variable
   fgroup_by(country) \%>\% flag(-1:2, year) \%>\% head
@@ -401,9 +401,8 @@ rm(wlddev)
 # Aggregate this data by country and decade: Numeric columns with mean, categorical with mode
 head(collap(wlddev, ~ country + decade, fmean, fmode))
 
-wlddev[["weights"]] <- abs(rnorm(fnrow(wlddev))) # Adding some weights
 # taking weighted mean and weighted mode:
-head(collap(wlddev, ~ country + decade, fmean, fmode, w = ~ weights, wFUN = fsum))
+head(collap(wlddev, ~ country + decade, fmean, fmode, w = ~ POP, wFUN = fsum))
 
 # Multi-function aggregation of certain columns
 head(collap(wlddev, ~ country + decade,

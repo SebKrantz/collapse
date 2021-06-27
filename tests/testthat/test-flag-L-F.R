@@ -2,7 +2,7 @@ context("flag / L / F")
 
 # rm(list = ls())
 # TODO: test computations on irregular time series and panels
-
+set.seed(101)
 x <- abs(10*rnorm(100))
 xNA <- x
 xNA[sample.int(100, 20)] <- NA
@@ -31,7 +31,7 @@ o = order(o)
 od = order(rnorm(length(td)))
 muo = m[od, ]
 datauo = data[od, ]
-guo = as.factor_GRP(g)[od]
+guo = as_factor_GRP(g)[od]
 tduo = td[od]
 t2duo = seq_along(od)[od]
 od = order(od)
@@ -415,8 +415,8 @@ test_that("L.data.frame method is foolproof", {
   expect_visible(L(wlddev, -1:1,~iso3c, cols = NULL))
   expect_visible(L(wlddev, -1:1,wlddev$iso3c, wlddev$year, cols = NULL))
   expect_visible(L(wlddev, -1:1,~iso3c, ~year, cols = NULL))
-  expect_error(L(wlddev, cols = 9:13))
-  expect_error(L(wlddev, -1:1,~iso3c, ~year, cols = 9:13))
+  expect_error(L(wlddev, cols = 9:14))
+  expect_error(L(wlddev, -1:1,~iso3c, ~year, cols = 9:14))
   expect_error(L(wlddev, cols = c("PCGDP","LIFEEX","bla")))
   expect_error(L(wlddev, -1:1,~iso3c, ~year, cols = c("PCGDP","LIFEEX","bla")))
 
@@ -441,7 +441,6 @@ test_that("L.data.frame method is foolproof", {
   expect_error(L(wlddev, -1:1,~iso3c3, ~year, cols = 9:12))
   expect_error(L(wlddev, cols = c("PC3GDP","LIFEEX")))
 })
-
 
 
 

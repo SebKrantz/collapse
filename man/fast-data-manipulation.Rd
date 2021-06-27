@@ -7,7 +7,7 @@
 \itemize{
 \item \code{\link{fselect}} is a much faster alternative to \code{dplyr::select} to select columns using expressions involving column names. \code{\link{get_vars}} is a more versatile and programmer friendly function to efficiently select and replace columns by names, indices, logical vectors, regular expressions or using functions to identify columns.
 
-\item The functions \code{\link{num_vars}}, \code{\link{cat_vars}}, \code{\link{char_vars}}, \code{\link{fact_vars}}, \code{\link{logi_vars}} and \code{\link{Date_vars}} are convenience functions to efficiently select and replace columns by data type.
+\item The functions \code{\link{num_vars}}, \code{\link{cat_vars}}, \code{\link{char_vars}}, \code{\link{fact_vars}}, \code{\link{logi_vars}} and \code{\link{date_vars}} are convenience functions to efficiently select and replace columns by data type.
 
 \item \code{\link{add_vars}} efficiently adds new columns at any position within a data frame (default at the end). This can be done vie replacement (i.e. \code{add_vars(data) <- newdata}) or returning the appended data (i.e. \code{add_vars(data, newdata1, newdata2, \dots)}). Because of the latter, \code{add_vars} is also a more efficient alternative to \code{cbind.data.frame}.
 
@@ -28,7 +28,7 @@
 \section{Table of Functions}{
   \tabular{lllll}{\emph{ Function / S3 Generic }   \tab\tab \emph{ Methods }   \tab\tab \emph{ Description }  \cr
                  \code{\link[=fselect]{fselect(<-)}} \tab\tab No methods, for data frames  \tab\tab Fast select or replace columns (non-standard evaluation) \cr
-                 \code{\link[=get_vars]{get_vars(<-)}}, \code{\link[=num_vars]{num_vars(<-)}}, \code{\link[=cat_vars]{cat_vars(<-)}}, \code{\link[=char_vars]{char_vars(<-)}}, \code{\link[=fact_vars]{fact_vars(<-)}}, \code{\link[=logi_vars]{logi_vars(<-)}}, \code{\link[=Date_vars]{Date_vars(<-)}} \tab\tab No methods, for data frames  \tab\tab Fast select or replace columns \cr
+                 \code{\link[=get_vars]{get_vars(<-)}}, \code{\link[=num_vars]{num_vars(<-)}}, \code{\link[=cat_vars]{cat_vars(<-)}}, \code{\link[=char_vars]{char_vars(<-)}}, \code{\link[=fact_vars]{fact_vars(<-)}}, \code{\link[=logi_vars]{logi_vars(<-)}}, \code{\link[=date_vars]{date_vars(<-)}} \tab\tab No methods, for data frames  \tab\tab Fast select or replace columns \cr
                  \code{\link[=add_vars]{add_vars(<-)}} \tab\tab No methods, for data frames  \tab\tab Fast add columns \cr
                  \code{\link{fsubset}} \tab\tab \code{default, matrix, data.frame} \tab\tab Fast subset data (non-standard evaluation) \cr
                  \code{\link{ss}} \tab\tab No methods, for data frames \tab\tab Fast subset data frames \cr

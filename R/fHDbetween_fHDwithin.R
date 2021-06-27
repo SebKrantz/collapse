@@ -10,10 +10,10 @@ demean <- function(x, fl, weights, ..., means = FALSE) {
   msg <- "For higher-dimensional centering and projecting out interactions need to install.packages('%s'), then unload [detach('package:collapse', unload = TRUE)] and reload [library(collapse)]."
   res <- getenvFUN("fixest_demean", msg)(x, fl, attr(fl, "slope.vars"), attr(fl, "slope.flag"),
                                          weights = weights, ..., im_confident = TRUE)
-  if(!means) return(res)
+  if(!means) return(duplAttributes(res, x))
     # if(!is.matrix(x)) dim(res) <- NULL # also need for flmres... e.g. with weights... intercept is no longer always added, so res needs to be a matrix...
     # Need matrix dimensions... for subset in variable.wise... do.call(cbind, fl[!fc]) needs to be preserved... # return(if(means) x - drop(res) else drop(res))
-  if(is.atomic(res)) return(x - res)
+  if(is.atomic(res)) return(duplAttributes(x - res, x))
   duplAttributes(mapply(`-`, unattrib(x), unattrib(res), SIMPLIFY = FALSE, USE.NAMES = FALSE), x)
 }
 
@@ -34,7 +34,7 @@ myModFrame <- function(f, data) {
 finteract <- function(x, facts, mf) { # x and facts are logical
   f <- which(x & facts)
   if(length(f) == 1L) mf[[f]] else if(length(f) == 2L) do.call(`:`, mf[f]) else
-    as.factor_GRP(GRP.default(mf[f], call = FALSE))
+    as_factor_GRP(GRP.default(mf[f], call = FALSE))
 }
 
 slinteract <- function(sl, facts, mf) { # sl and facts are  logical
@@ -152,7 +152,7 @@ getfl <- function(mf) {
       moddat <- model.matrix.default(as.formula(form), data = `oldClass<-`(mf, clmf))
     } else {
       moddat <- if(is.null(slflag) || any(slflag > 0L)) NULL else
-                rep(1, length(mf[[1L]]))
+                alloc(1, length(mf[[1L]]))
     }
   } else {
     fctdat <- NULL
@@ -201,6 +201,10 @@ subsetfl <- function(fl, cc) {
 
 # (Weighted) linear model fitting for vectors and lists...
 
+# Neded to sort out some insufficiencies of base R default functions when dealing with dimensions
+`%**%` <- function(x, y) if(length(y) > 1L) x %*% y else x * y
+tcrossprod2 <- function(x, y) if(length(x) > 1L) tcrossprod(x, y) else `dim<-`(x * y, c(1L, length(y)))
+
 # y = x; X = xmat; w = w; meth = lm.method
 flmres <- function(y, X, w = NULL, meth = "qr", resi = TRUE, ...) {
   # n <- dim(X)[1L]
@@ -213,7 +217,7 @@ flmres <- function(y, X, w = NULL, meth = "qr", resi = TRUE, ...) {
       dimnames(y) <- NULL
       return(drop(switch(meth,
                          qr = {
-                           fit <- X %*% qr.coef(qr(X * wts, ...), y * wts) # same as lm...
+                           fit <- X %**% qr.coef(qr(X * wts, ...), y * wts) # same as lm...
                            if(resi) y - fit else fit
                          },
                          chol = {
@@ -227,12 +231,12 @@ flmres <- function(y, X, w = NULL, meth = "qr", resi = TRUE, ...) {
       return(switch(meth,
                      qr = {
                        calc <- qr(X * wts, ...)
-                       if(resi) lapply(y, function(z) drop(z - X %*% qr.coef(calc, z * wts))) else
-                                lapply(y, function(z) drop(X %*% qr.coef(calc, z * wts)))
+                       if(resi) lapply(y, function(z) drop(z - X %**% qr.coef(calc, z * wts))) else
+                                lapply(y, function(z) drop(X %**% qr.coef(calc, z * wts)))
                      },
                      chol = {
                        calc <- X * wts
-                       calc <- X %*% tcrossprod(chol2inv(chol(crossprod(calc), ...)), calc)
+                       calc <- X %*% tcrossprod2(chol2inv(chol(crossprod(calc), ...)), calc)
                        if(resi) lapply(y, function(z) drop(z - calc %*% (z * wts))) else
                                 lapply(y, function(z) drop(calc %*% (z * wts)))
                      },
@@ -256,7 +260,7 @@ flmres <- function(y, X, w = NULL, meth = "qr", resi = TRUE, ...) {
                            lapply(y, function(z) drop(qr.fitted(calc, z)))
                 },
                 chol = {
-                  calc <- X %*% tcrossprod(chol2inv(chol(crossprod(X), ...)), X)
+                  calc <- X %*% tcrossprod2(chol2inv(chol(crossprod(X), ...)), X)
                   if(resi) lapply(y, function(z) drop(z - calc %*% z)) else
                            lapply(y, function(z) drop(calc %*% z))
                 },
@@ -266,10 +270,10 @@ flmres <- function(y, X, w = NULL, meth = "qr", resi = TRUE, ...) {
 
 
 
-fHDwithin <- function(x, ...) UseMethod("fHDwithin") # , x
+fhdwithin <- function(x, ...) UseMethod("fhdwithin") # , x
 
-fHDwithin.default <- function(x, fl, w = NULL, na.rm = TRUE, fill = FALSE, lm.method = "qr", ...) {
-  if(is.matrix(x) && !inherits(x, "matrix")) return(fHDwithin.matrix(x, fl, w, na.rm, fill, ...))
+fhdwithin.default <- function(x, fl, w = NULL, na.rm = TRUE, fill = FALSE, lm.method = "qr", ...) {
+  if(is.matrix(x) && !inherits(x, "matrix")) return(fhdwithin.matrix(x, fl, w, na.rm, fill, ...))
   ax <- attributes(x)
   if(na.rm) {
     cc <- complete.cases(x, fl, w) # gives error if lengths don't match, otherwise demeanlist and qr.resid give errors !!
@@ -294,7 +298,7 @@ fHDwithin.default <- function(x, fl, w = NULL, na.rm = TRUE, fill = FALSE, lm.me
     if(nallfc) {
       xmat <- demean(do.call(cbind, fl[!fc]), fl[fc], w, ...)
       fl <- fl[fc]
-    } else if(!fcl) xmat <- do.call(cbind, c(list(rep.int(1L, length(fl[[1L]]))), fl))
+    } else if(!fcl) xmat <- do.call(cbind, c(list(alloc(1L, length(fl[[1L]]))), fl))
   } else if(is.matrix(fl)) {
     # if(!missing(...)) unused_arg_action(match.call(), ...)
     xmat <- if(na.rm) cbind(Intercept = 1L, fl[cc, , drop = FALSE]) else cbind(Intercept = 1L, fl)
@@ -322,24 +326,33 @@ fHDwithin.default <- function(x, fl, w = NULL, na.rm = TRUE, fill = FALSE, lm.me
     return(setAttributes(x, ax))
   } else return(setAttributes(demean(x, fl, w, ...), ax))
 }
-fHDwithin.pseries <- function(x, w = NULL, na.rm = TRUE, fill = TRUE, ...) {
-  if(na.rm && length(cc <- which(!is.na(x)))) {
-     g <- lapply(attr(x, "index"), function(y) y[cc]) # good ! faster than subsetDT
+fhdwithin.pseries <- function(x, effect = seq_col(attr(x, "index")), w = NULL, na.rm = TRUE, fill = TRUE, ...) {
+  ix <- attr(x, "index")
+  namix <- attr(ix, "names")
+  effect <- cols2int(effect, ix, namix)
+  g <- .subset(ix, effect)
+  if(na.rm && length(cc <- which(!is.na(x))) != length(x)) {
+     g <- .Call(C_subsetDT, g, cc, seq_along(g)) # lapply(g, `[`, cc) -> slower !
     if(fill) {
-      x[cc] <- demean(x[cc], g, w[cc], ...) # keeps attributes ?? -> Yes !!
+      x[cc] <- demean(.subset(`names<-`(x, NULL), cc), g, w[cc], ...) # keeps attributes ?? -> Yes !!
       return(x)
     }
-    xcc <- x[cc]
+    xcc <- .subset(x, cc)
+    nix <- length(unclass(ix))
+    if(nix != length(g)) {
+      toss <- seq_len(nix)[-effect]
+      reix <- copyMostAttrib(c(.Call(C_subsetDT, ix, cc, toss), g)[namix], ix)
+    } else reix <- copyMostAttrib(g, ix)
+    attr(reix, "row.names") <- .set_row_names(length(cc))
     return(setAttributes(demean(xcc, g, w[cc], ...),
-                         c(attributes(xcc), list(index = g, na.rm = seq_along(x)[-cc]))))
-
+                         c(attributes(xcc), list(index = reix,
+                                                 na.rm = seq_along(x)[-cc]))))
   }
-  g <- attr(x, "index") # what about cases ?? -> nah, named !!
-  `attr<-`(demean(x, g, w, ...), "index", g) # keeps attributes ?? -> Nope !!
+  demean(x, g, w, ...) # keeps attributes ?? -> Yes !!
 }
 
 # x = mNA; fl = m; lm.method = "qr"
-fHDwithin.matrix <- function(x, fl, w = NULL, na.rm = TRUE, fill = FALSE, lm.method = "qr", ...) {
+fhdwithin.matrix <- function(x, fl, w = NULL, na.rm = TRUE, fill = FALSE, lm.method = "qr", ...) {
   ax <- attributes(x)
   if(na.rm) {
     cc <- complete.cases(x, fl, w) # gives error if lengths don't match, otherwise demeanlist and qr.resid give errors !!
@@ -365,7 +378,7 @@ fHDwithin.matrix <- function(x, fl, w = NULL, na.rm = TRUE, fill = FALSE, lm.met
     if(nallfc) {
       xmat <- demean(do.call(cbind, fl[!fc]), fl[fc], w, ...)
       fl <- fl[fc]
-    } else if(!fcl) xmat <- do.call(cbind, c(list(rep.int(1L, length(fl[[1L]]))), fl))
+    } else if(!fcl) xmat <- do.call(cbind, c(list(alloc(1L, length(fl[[1L]]))), fl))
   } else if(is.matrix(fl)) {
     # if(!missing(...)) unused_arg_action(match.call(), ...)
     xmat <- if(na.rm) cbind(Intercept = 1L, fl[cc, , drop = FALSE]) else cbind(Intercept = 1L, fl)
@@ -393,30 +406,47 @@ fHDwithin.matrix <- function(x, fl, w = NULL, na.rm = TRUE, fill = FALSE, lm.met
     return(setAttributes(x, ax))
   } else return(setAttributes(demean(x, fl, w, ...), ax))
 }
-fHDwithin.pdata.frame <- function(x, w = NULL, na.rm = TRUE, fill = TRUE, variable.wise = TRUE, ...) {
-  ax <- attributes(x)
+
+# x = collapse:::colsubset(pwlddev, is.numeric)
+fhdwithin.pdata.frame <- function(x, effect = seq_col(attr(x, "index")), w = NULL, na.rm = TRUE, fill = TRUE, variable.wise = TRUE, ...) {
+  ix <- attr(x, "index")
+  namix <- attr(ix, "names")
+  effect <- cols2int(effect, ix, namix)
+  g <- .subset(ix, effect)
+
   if(na.rm && fill && variable.wise) {
+    ax <- attributes(x)
     attributes(x) <- NULL
     varwisecomp <- function(x, fl, w, ...) lapply(x, function(y) {
       ycc <- which(!is.na(y))
-      y[ycc] <- demean(y[ycc], subsetfl(fl, ycc), w[ycc], ...)
+      y[ycc] <- demean(.subset(y, ycc), subsetfl(fl, ycc), w[ycc], ...)
       return(y)
     })
-    return(setAttributes(varwisecomp(x, ax[["index"]], w, ...), ax))
+    return(setAttributes(varwisecomp(x, g, w, ...), ax))
   } else if(na.rm && any(miss <- .Call(C_dt_na, x, seq_along(unclass(x))))) {
+    cc <- which(!miss)
+    gcc <- .Call(C_subsetDT, g, cc, seq_along(g))
+    Y <- demean(.Call(C_subsetDT, x, cc, seq_along(unclass(x))), gcc, w[cc], ...)
+    if(fill) {
+      ax <- attributes(x)
       ax[["na.rm"]] <- which(miss)
-      cc <- which(!miss)
-      Y <- demean(.Call(C_subsetDT, x, cc, seq_along(unclass(x))),
-                  lapply(ax[["index"]], function(y) y[cc]), w[cc], ...)
-    if(fill) return(setAttributes(.Call(C_lassign, Y, fnrow2(x), cc, NA_real_), ax)) else {
-      ax[["row.names"]] <- ax[["row.names"]][cc]
-      return(setAttributes(Y, ax))
+      return(setAttributes(.Call(C_lassign, Y, fnrow2(x), cc, NA_real_), ax))
     }
-  } else return(setAttributes(demean(x, ax[["index"]], w, ...), ax))
+    attr(Y, "row.names") <- attr(x, "row.names")[cc] # row.names of pdata.frame are special.
+    nix <- length(unclass(ix))
+    if(nix != length(g)) {
+      toss <- seq_len(nix)[-effect]
+      reix <- copyMostAttrib(c(.Call(C_subsetDT, ix, cc, toss), gcc)[namix], ix)
+    } else reix <- copyMostAttrib(gcc, ix)
+    attr(reix, "row.names") <- .set_row_names(length(cc))
+    attr(Y, "index") <- reix
+    attr(Y, "na.rm") <- which(miss)
+    return(Y)
+  } else return(demean(x, g, w, ...)) # setAttributes(, ax) -> Not needed anymore (included in demean())
 }
 
 # x = data[5:6]; fl = data[-(5:6)]; variable.wise = TRUE
-fHDwithin.data.frame <- function(x, fl, w = NULL, na.rm = TRUE, fill = FALSE, variable.wise = FALSE, lm.method = "qr", ...) {
+fhdwithin.data.frame <- function(x, fl, w = NULL, na.rm = TRUE, fill = FALSE, variable.wise = FALSE, lm.method = "qr", ...) {
   ax <- attributes(x)
 
   if(na.rm) {
@@ -442,7 +472,7 @@ fHDwithin.data.frame <- function(x, fl, w = NULL, na.rm = TRUE, fill = FALSE, va
     if(nallfc) {
       xmat <- demean(do.call(cbind, fl[!fc]), fl[fc], w, ...)
       fl <- fl[fc]
-    } else if(!fcl) xmat <- do.call(cbind, c(list(rep.int(1L, length(fl[[1L]]))), fl))
+    } else if(!fcl) xmat <- do.call(cbind, c(list(alloc(1L, length(fl[[1L]]))), fl))
   } else if(is.matrix(fl)) {
       # if(!missing(...)) unused_arg_action(match.call(), ...)
       xmat <- if(na.rm) cbind(Intercept = 1L, fl[cc, , drop = FALSE]) else cbind(Intercept = 1L, fl)
@@ -491,17 +521,16 @@ HDW <- function(x, ...) UseMethod("HDW") # , x
 
 HDW.default <- function(x, fl, w = NULL, na.rm = TRUE, fill = FALSE, lm.method = "qr", ...) {
   if(is.matrix(x) && !inherits(x, "matrix")) return(HDW.matrix(x, fl, w, na.rm, fill, lm.method, ...))
-  fHDwithin.default(x, fl, w, na.rm, fill, lm.method, ...)
+  fhdwithin.default(x, fl, w, na.rm, fill, lm.method, ...)
 }
 
-HDW.pseries <- function(x, w = NULL, na.rm = TRUE, fill = TRUE, ...)
-  fHDwithin.pseries(x, w, na.rm, fill, ...)
+HDW.pseries <- function(x, effect = seq_col(attr(x, "index")), w = NULL, na.rm = TRUE, fill = TRUE, ...)
+  fhdwithin.pseries(x, effect, w, na.rm, fill, ...)
 
 HDW.matrix <- function(x, fl, w = NULL, na.rm = TRUE, fill = FALSE, stub = "HDW.", lm.method = "qr", ...)
-  add_stub(fHDwithin.matrix(x, fl, w, na.rm, fill, lm.method, ...), stub)
+  add_stub(fhdwithin.matrix(x, fl, w, na.rm, fill, lm.method, ...), stub)
 
-
-
+# x = mtcars; fl = ~ qF(cyl):carb; w = wdat; stub = FALSE
 HDW.data.frame <- function(x, fl, w = NULL, cols = is.numeric, na.rm = TRUE, fill = FALSE,
                            variable.wise = FALSE, stub = "HDW.", lm.method = "qr", ...) {
   if(is.call(fl)) {
@@ -561,12 +590,12 @@ HDW.data.frame <- function(x, fl, w = NULL, cols = is.numeric, na.rm = TRUE, fil
       return(setAttributes(Y, ax))
     }
   }  # fl is not a formula !!
- add_stub(fHDwithin.data.frame(if(is.null(cols)) x else colsubset(x, cols), fl, w, na.rm, fill, variable.wise, lm.method, ...), stub)
+ add_stub(fhdwithin.data.frame(if(is.null(cols)) x else colsubset(x, cols), fl, w, na.rm, fill, variable.wise, lm.method, ...), stub)
 }
 
-HDW.pdata.frame <- function(x, w = NULL, cols = is.numeric, na.rm = TRUE, fill = TRUE,
+HDW.pdata.frame <- function(x, effect = seq_col(attr(x, "index")), w = NULL, cols = is.numeric, na.rm = TRUE, fill = TRUE,
                             variable.wise = TRUE, stub = "HDW.", ...)
-add_stub(fHDwithin.pdata.frame(if(is.null(cols)) x else colsubset(x, cols), w, na.rm, fill, variable.wise, ...), stub)
+add_stub(fhdwithin.pdata.frame(if(is.null(cols)) x else colsubset(x, cols), effect, w, na.rm, fill, variable.wise, ...), stub)
 
 
 # Theory: y = ?1 x1 + ?2 x2 + e
@@ -579,14 +608,14 @@ add_stub(fHDwithin.pdata.frame(if(is.null(cols)) x else colsubset(x, cols), w, n
 # P2 y = ?1 P2 x1 + ?2 x2
 # Haven't quite figgured it out, but my solution is to just subtract the demeaned data !!
 
-# Note: Only changes to fHDwithin is in the computation part: Perhaps you can combine the code in some better way to reduce code duplication ??
+# Note: Only changes to fhdwithin is in the computation part: Perhaps you can combine the code in some better way to reduce code duplication ??
 
 
-fHDbetween <- function(x, ...) UseMethod("fHDbetween") # , x
+fhdbetween <- function(x, ...) UseMethod("fhdbetween") # , x
 
 
-fHDbetween.default <- function(x, fl, w = NULL, na.rm = TRUE, fill = FALSE, lm.method = "qr", ...) {
-  if(is.matrix(x) && !inherits(x, "matrix")) return(fHDwithin.matrix(x, fl, w, na.rm, fill, lm.method, ...))
+fhdbetween.default <- function(x, fl, w = NULL, na.rm = TRUE, fill = FALSE, lm.method = "qr", ...) {
+  if(is.matrix(x) && !inherits(x, "matrix")) return(fhdwithin.matrix(x, fl, w, na.rm, fill, lm.method, ...))
   ax <- attributes(x)
   if(na.rm) {
     cc <- complete.cases(x, fl, w) # gives error if lengths don't match, otherwise demeanlist and qr.resid give errors !!
@@ -611,7 +640,7 @@ fHDbetween.default <- function(x, fl, w = NULL, na.rm = TRUE, fill = FALSE, lm.m
     if(nallfc) {
       xmat <- demean(do.call(cbind, fl[!fc]), fl[fc], w, ...)
       fl <- fl[fc]
-    } else if(!fcl) xmat <- do.call(cbind, c(list(rep.int(1L, length(fl[[1L]]))), fl))
+    } else if(!fcl) xmat <- do.call(cbind, c(list(alloc(1L, length(fl[[1L]]))), fl))
   } else if(is.matrix(fl)) {
     # if(!missing(...)) unused_arg_action(match.call(), ...)
     xmat <- if(na.rm) cbind(Intercept = 1L, fl[cc, , drop = FALSE]) else cbind(Intercept = 1L, fl)
@@ -626,7 +655,7 @@ fHDbetween.default <- function(x, fl, w = NULL, na.rm = TRUE, fill = FALSE, lm.m
     xmat <- if(na.rm) cbind(Intercept = 1L, fl[cc]) else cbind(Intercept = 1L, fl)
     nallfc <- fcl <- FALSE
   }
-  # Only this part of the code is different from fHDwithin...
+  # Only this part of the code is different from fhdwithin...
   if(nallfc || !fcl) {
     if(na.rm && fill) {
       x[-cc] <- NA
@@ -645,10 +674,10 @@ fHDbetween.default <- function(x, fl, w = NULL, na.rm = TRUE, fill = FALSE, lm.m
 }
 
 
-fHDbetween.pseries <- function(x, w = NULL, na.rm = TRUE, fill = TRUE, ...)
-  fHDwithin.pseries(x, w, na.rm, fill, ..., means = TRUE)
+fhdbetween.pseries <- function(x, effect = seq_col(attr(x, "index")), w = NULL, na.rm = TRUE, fill = TRUE, ...)
+  fhdwithin.pseries(x, effect, w, na.rm, fill, ..., means = TRUE)
 
-fHDbetween.matrix <- function(x, fl, w = NULL, na.rm = TRUE, fill = FALSE, lm.method = "qr", ...) {
+fhdbetween.matrix <- function(x, fl, w = NULL, na.rm = TRUE, fill = FALSE, lm.method = "qr", ...) {
   ax <- attributes(x)
   if(na.rm) {
     cc <- complete.cases(x, fl, w) # gives error if lengths don't match, otherwise demeanlist and qr.resid give errors !!
@@ -674,7 +703,7 @@ fHDbetween.matrix <- function(x, fl, w = NULL, na.rm = TRUE, fill = FALSE, lm.me
     if(nallfc) {
       xmat <- demean(do.call(cbind, fl[!fc]), fl[fc], w, ...)
       fl <- fl[fc]
-    } else if(!fcl) xmat <- do.call(cbind, c(list(rep.int(1L, length(fl[[1L]]))), fl))
+    } else if(!fcl) xmat <- do.call(cbind, c(list(alloc(1L, length(fl[[1L]]))), fl))
   } else if(is.matrix(fl)) {
     # if(!missing(...)) unused_arg_action(match.call(), ...)
     xmat <- if(na.rm) cbind(Intercept = 1L, fl[cc, , drop = FALSE]) else cbind(Intercept = 1L, fl)
@@ -689,7 +718,7 @@ fHDbetween.matrix <- function(x, fl, w = NULL, na.rm = TRUE, fill = FALSE, lm.me
     xmat <- if(na.rm) cbind(Intercept = 1L, fl[cc]) else cbind(Intercept = 1L, fl)
     nallfc <- fcl <- FALSE
   }
-  # Only this part of the code is different from fHDwithin...
+  # Only this part of the code is different from fhdwithin...
   if(nallfc || !fcl) {
     if(na.rm && fill) {
       x[-cc, ] <- NA
@@ -707,11 +736,11 @@ fHDbetween.matrix <- function(x, fl, w = NULL, na.rm = TRUE, fill = FALSE, lm.me
   } else return(setAttributes(demean(x, fl, w, ..., means = TRUE), ax))
 }
 
-fHDbetween.pdata.frame <- function(x, w = NULL, na.rm = TRUE, fill = TRUE, variable.wise = TRUE, ...)
-  fHDwithin.pdata.frame(x, w, na.rm, fill, variable.wise, ..., means = TRUE)
+fhdbetween.pdata.frame <- function(x, effect = seq_col(attr(x, "index")), w = NULL, na.rm = TRUE, fill = TRUE, variable.wise = TRUE, ...)
+  fhdwithin.pdata.frame(x, effect, w, na.rm, fill, variable.wise, ..., means = TRUE)
 
 
-fHDbetween.data.frame <- function(x, fl, w = NULL, na.rm = TRUE, fill = FALSE, variable.wise = FALSE, lm.method = "qr", ...) {
+fhdbetween.data.frame <- function(x, fl, w = NULL, na.rm = TRUE, fill = FALSE, variable.wise = FALSE, lm.method = "qr", ...) {
   ax <- attributes(x)
 
   if(na.rm) {
@@ -737,7 +766,7 @@ fHDbetween.data.frame <- function(x, fl, w = NULL, na.rm = TRUE, fill = FALSE, v
     if(nallfc) {
       xmat <- demean(do.call(cbind, fl[!fc]), fl[fc], w, ...)
       fl <- fl[fc]
-    } else if(!fcl) xmat <- do.call(cbind, c(list(rep.int(1L, length(fl[[1L]]))), fl))
+    } else if(!fcl) xmat <- do.call(cbind, c(list(alloc(1L, length(fl[[1L]]))), fl))
   } else if(is.matrix(fl)) {
     # if(!missing(...)) unused_arg_action(match.call(), ...)
     xmat <- if(na.rm) cbind(Intercept = 1L, fl[cc, , drop = FALSE]) else cbind(Intercept = 1L, fl)
@@ -752,7 +781,7 @@ fHDbetween.data.frame <- function(x, fl, w = NULL, na.rm = TRUE, fill = FALSE, v
     xmat <- if(na.rm) cbind(Intercept = 1L, fl[cc]) else cbind(Intercept = 1L, fl)
     nallfc <- fcl <- FALSE
   }
-  # Only this part of the code is different from fHDwithin !!
+  # Only this part of the code is different from fhdwithin !!
   if(variable.wise) {
     if(na.rm) { # this means there were mising values in fl, which were already removed!
       return(setAttributes(lapply(unattrib(x), function(y) {
@@ -789,15 +818,15 @@ HDB <- function(x, ...) UseMethod("HDB") # , x
 
 HDB.default <- function(x, fl, w = NULL, na.rm = TRUE, fill = FALSE, lm.method = "qr", ...) {
   if(is.matrix(x) && !inherits(x, "matrix")) return(HDB.matrix(x, fl, w, na.rm, fill, lm.method, ...))
-  fHDbetween.default(x, fl, w, na.rm, fill, lm.method, ...)
+  fhdbetween.default(x, fl, w, na.rm, fill, lm.method, ...)
 }
 
-HDB.pseries <- function(x, w = NULL, na.rm = TRUE, fill = TRUE, ...)
-  fHDwithin.pseries(x, w, na.rm, fill, ..., means = TRUE)
+HDB.pseries <- function(x, effect = seq_col(attr(x, "index")), w = NULL, na.rm = TRUE, fill = TRUE, ...)
+  fhdwithin.pseries(x, effect, w, na.rm, fill, ..., means = TRUE)
 
 
 HDB.matrix <- function(x, fl, w = NULL, na.rm = TRUE, fill = FALSE, stub = "HDB.", lm.method = "qr", ...)
-  add_stub(fHDbetween.matrix(x, fl, w, na.rm, fill, lm.method, ...), stub)
+  add_stub(fhdbetween.matrix(x, fl, w, na.rm, fill, lm.method, ...), stub)
 
 HDB.data.frame <- function(x, fl, w = NULL, cols = is.numeric, na.rm = TRUE, fill = FALSE,
                            variable.wise = FALSE, stub = "HDB.", lm.method = "qr", ...) {
@@ -832,7 +861,7 @@ HDB.data.frame <- function(x, fl, w = NULL, cols = is.numeric, na.rm = TRUE, fil
     if(nallfc) xmat <- demean(xmat, fl, w, ...)
 
 
-    # Only this part of the code is different from fHDwithin !!
+    # Only this part of the code is different from fhdwithin !!
     if(variable.wise) {
       if(na.rm) { # this means there were mising values in fl, which were already removed!
         return(setAttributes(lapply(unattrib(x), function(y) {
@@ -864,16 +893,24 @@ HDB.data.frame <- function(x, fl, w = NULL, cols = is.numeric, na.rm = TRUE, fil
       return(setAttributes(Y, ax))
     }
   }  # fl is not a formula !!
-  add_stub(fHDbetween.data.frame(if(is.null(cols)) x else colsubset(x, cols), fl, w, na.rm, fill, variable.wise, lm.method, ...), stub)
+  add_stub(fhdbetween.data.frame(if(is.null(cols)) x else colsubset(x, cols), fl, w, na.rm, fill, variable.wise, lm.method, ...), stub)
 }
 
 
-HDB.pdata.frame <- function(x, w = NULL, cols = is.numeric, na.rm = TRUE, fill = TRUE,
+HDB.pdata.frame <- function(x, effect = seq_col(attr(x, "index")), w = NULL, cols = is.numeric, na.rm = TRUE, fill = TRUE,
                             variable.wise = TRUE, stub = "HDB.", ...)
-  add_stub(fHDwithin.pdata.frame(if(is.null(cols)) x else colsubset(x, cols), w, na.rm, fill, variable.wise, ..., means = TRUE), stub)
+  add_stub(fhdwithin.pdata.frame(if(is.null(cols)) x else colsubset(x, cols), effect, w, na.rm, fill, variable.wise, ..., means = TRUE), stub)
 
 
+fHDbetween <- fhdbetween
+fHDbetween.default <- function(x, ...) fhdbetween.default(x, ...)
+fHDbetween.matrix <- function(x, ...) fhdbetween.matrix(x, ...)
+fHDbetween.data.frame <- function(x, ...) fhdbetween.data.frame(x, ...)
 
+fHDwithin <- fhdwithin
+fHDwithin.default <- function(x, ...) fhdwithin.default(x, ...)
+fHDwithin.matrix <- function(x, ...) fhdwithin.matrix(x, ...)
+fHDwithin.data.frame <- function(x, ...) fhdwithin.data.frame(x, ...)
 
 
 #

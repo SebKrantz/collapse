@@ -1,7 +1,7 @@
-\name{pwcor, pwcov, pwNobs}
+\name{pwcor, pwcov, pwnobs}
 \alias{pwcor}
 \alias{pwcov}
-\alias{pwNobs}
+\alias{pwnobs}
 \alias{print.pwcov}
 \alias{print.pwcor}
 %- Also NEED an '\alias' for EACH other topic documented here.
@@ -18,7 +18,7 @@ pwcor(X, \dots, w = NULL, N = FALSE, P = FALSE, array = TRUE, use = "pairwise.co
 
 pwcov(X, \dots, w = NULL, N = FALSE, P = FALSE, array = TRUE, use = "pairwise.complete.obs")
 
-pwNobs(X)
+pwnobs(X)
 
 \method{print}{pwcor}(x, digits = 2L, sig.level = 0.05, show = c("all","lower.tri","upper.tri"),
       spacing = 1L, \dots)
@@ -56,7 +56,7 @@ a numeric matrix, 3D array or list of matrices with the computed statistics. For
 mna <- na_insert(mtcars)
 pwcor(mna)
 pwcov(mna)
-pwNobs(mna)
+pwnobs(mna)
 pwcor(mna, N = TRUE)
 pwcor(mna, P = TRUE)
 pwcor(mna, N = TRUE, P = TRUE)

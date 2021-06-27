@@ -1,8 +1,8 @@
 \name{qF, qG, finteraction}
 \alias{qF}
 \alias{qG}
-\alias{is.qG}
-\alias{as.factor_qG}
+\alias{is_qG}
+\alias{as_factor_qG}
 \alias{finteraction}
 \title{
 Fast Factor Generation, Interactions and Vector Grouping
@@ -21,9 +21,9 @@ qF(x, ordered = FALSE, na.exclude = TRUE, sort = TRUE, drop = FALSE,
 qG(x, ordered = FALSE, na.exclude = TRUE, sort = TRUE,
    return.groups = FALSE, method = c("auto", "radix", "hash"))
 
-is.qG(x)
+is_qG(x)
 
-as.factor_qG(x, ordered = FALSE, na.exclude = TRUE)
+as_factor_qG(x, ordered = FALSE, na.exclude = TRUE)
 
 finteraction(\dots, ordered = FALSE, sort = TRUE)
 }
@@ -53,13 +53,13 @@ There are two methods of computation: radix ordering and index hashing. Radix or
 
 \code{qG} is in the first place a programmers function. It generates a factor-'light' consisting of only an integer grouping vector and an attribute providing the number of groups. It is faster and more memory efficient than \code{\link{GRP}} for grouping atomic vectors, which is the main reason it exists. The fact that it (optionally) returns the unique groups / levels without converting them to character is an added bonus (this also provides a small performance gain compared to \code{qF}).
 
-\code{finteraction} is simply a wrapper around \code{as.factor_GRP(GRP.default(X, sort = TRUE))}, where X is replaced by the arguments in '\dots' combined in a list. See \code{\link{GRP}} for computational details. In general: All vectors, factors, or lists of vectors / factors passed can be interacted. Interactions always create a level for missing values and always drop any unused levels.
+\code{finteraction} is simply a wrapper around \code{as_factor_GRP(GRP.default(X, sort = TRUE))}, where X is replaced by the arguments in '\dots' combined in a list. See \code{\link{GRP}} for computational details. In general: All vectors, factors, or lists of vectors / factors passed can be interacted. Interactions always create a level for missing values and always drop any unused levels.
 }
 \value{
 \code{qF} returns an (ordered) factor. \code{qG} returns an object of class 'qG': an integer grouping vector with an attribute 'N.groups' indicating the number of groups, and, if \code{return.groups = TRUE}, an attribute 'groups' containing the vector of unique groups / elements in \code{x} corresponding to the integer-id.
 }
 \note{
-Neither \code{qF} nor \code{qG} can reorder groups / factor levels. These objects can however be converted into one another using \code{qF/qG} or the direct method \code{as.factor_qG}, and it is also possible to add a class 'ordered' (\code{ordered = TRUE}) and to create am extra level / integer for missing values (\code{na.exclude = FALSE}). % Apart from that \code{qF} and \code{qG} don't do much to each others objects.
+Neither \code{qF} nor \code{qG} can reorder groups / factor levels. These objects can however be converted into one another using \code{qF/qG} or the direct method \code{as_factor_qG}, and it is also possible to add a class 'ordered' (\code{ordered = TRUE}) and to create am extra level / integer for missing values (\code{na.exclude = FALSE}). % Apart from that \code{qF} and \code{qG} don't do much to each others objects.
 }
 \seealso{
 \code{\link{groupid}}, \code{\link{GRP}}, \link[=A2-fast-grouping-ordering]{Fast Grouping and Ordering}, \link[=collapse-documentation]{Collapse Overview}

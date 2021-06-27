@@ -11,30 +11,34 @@ descr <- function(X, Ndistinct = TRUE, higher = TRUE, table = TRUE,
 
   dotsok <- if(!missing(...)) names(substitute(c(...))[-1L]) %!in% c('pid','g') else TRUE
 
-  numstats <- if(Ndistinct && dotsok) function(x, ...) armat(qsu.default(x, higher = higher, ...), fNdistinctCpp(x)) else function(x, ...) qsu.default(x, higher = higher, ...)
+  numstats <- if(Ndistinct && dotsok) function(x, ...) armat(qsu.default(x, higher = higher, ...), fndistinctCpp(x)) else function(x, ...) qsu.default(x, higher = higher, ...)
 
   descrnum <- if(is.numeric(Qprobs)) function(x, ...) list(Class = class(x), Label = attr(x, label.attr), Stats = numstats(x, ...),
                                                           Quant = quantile(x, probs = Qprobs, na.rm = TRUE)) else
                                          function(x, ...) list(Class = class(x), Label = attr(x, label.attr), Stats = numstats(x, ...))
   # Could make this more efficient ?
   descrcat <- function(x, tab = table) if(tab) list(Class = class(x), Label = attr(x, label.attr),
-                                                    Stats = if(Ndistinct) c(N = fNobsCpp(x), Ndist = fNdistinctCpp(x)) else `names<-`(fNobsCpp(x), 'Nobs'),
-                                                    Table = natrm(fNobs.default(x, x))) else # table(x). fNobs is a lot Faster, but includes NA as level !
+                                                    Stats = if(Ndistinct) c(N = fnobsC(x), Ndist = fndistinctCpp(x)) else `names<-`(fnobsC(x), 'Nobs'),
+                                                    Table = natrm(fnobs.default(x, x))) else # table(x). fnobs is a lot Faster, but includes NA as level !
                                                       list(Class = class(x), Label = attr(x, label.attr),
-                                                           Stats = if(Ndistinct) c(N = fNobsCpp(x), Ndist = fNdistinctCpp(x)) else `names<-`(fNobsCpp(x), 'Nobs'))
+                                                           Stats = if(Ndistinct) c(N = fnobsC(x), Ndist = fndistinctCpp(x)) else `names<-`(fnobsC(x), 'Nobs'))
 
   descrdate <- function(x) list(Class = class(x), Label = attr(x, label.attr),
-                                Stats = c(if(Ndistinct) c(N = fNobsCpp(x), Ndist = fNdistinctCpp(x)) else `names<-`(fNobsCpp(x), 'Nobs'),
+                                Stats = c(if(Ndistinct) c(N = fnobsC(x), Ndist = fndistinctCpp(x)) else `names<-`(fnobsC(x), 'Nobs'),
                                           `names<-`(range(x, na.rm = TRUE), c("Min", "Max"))))
 
 
-  if(is.list(X)) class(X) <- NULL else X <- unclass(qDF(X))
+  if(is.list(X)) {
+    is_sf <- inherits(X, "sf")
+    class(X) <- NULL
+    if(is_sf) X[[attr(X, "sf_column")]] <- NULL
+  } else X <- unclass(qDF(X))
   if(length(cols)) X <- X[cols2int(cols, X, names(X), FALSE)]
   res <- vector('list', length(X))
   num <- vapply(unattrib(X), is.numeric, TRUE)
   res[num] <- lapply(X[num], descrnum, ...)
   if(!all(num)) {
-    date <- vapply(unattrib(X), is.Date, TRUE)
+    date <- vapply(unattrib(X), is_date, TRUE)
     if(any(date)) {
       res[date] <- lapply(X[date], descrdate)
       cat <- !(num | date)
@@ -107,7 +111,7 @@ as.data.frame.descr <- function(x, ...) {
           unlist(`names<-`(lapply(z[-(1:2)], as.vector, "list"), NULL), recursive = FALSE)))
    }
    r <- .Call(C_rbindlist, r, TRUE, TRUE, "Variable")
-   if(all(is.na(r[["Label"]]))) r[["Label"]] <- NULL
+   if(allNA(r[["Label"]])) r[["Label"]] <- NULL
    attr(r, "row.names") <- .set_row_names(length(r[[1L]]))
    class(r) <- "data.frame"
    r

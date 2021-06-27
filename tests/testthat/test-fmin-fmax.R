@@ -1,8 +1,8 @@
 context("fmin and fmax")
 
 # rm(list = ls())
-
-x <- rnorm(100)
+set.seed(101)
+x <- rnorm(100) * 10000
 xNA <- x
 xNA[sample.int(100,20)] <- NA
 f <- as.factor(sample.int(10, 100, TRUE))
@@ -25,7 +25,7 @@ inf2NA <- function(x) {
 
 options(warn = -1)
 
-# fmin
+# fmin double
 
 test_that("fmin performs like base::min", {
   expect_equal(fmin(NA), min(NA))
@@ -122,7 +122,7 @@ test_that("fmin produces errors for wrong input", {
 })
 
 
-# fmax
+# fmax double
 
 test_that("fmax performs like base::max", {
   expect_equal(fmax(NA), max(NA))
@@ -215,6 +215,147 @@ test_that("fmax produces errors for wrong input", {
   expect_error(fmax(mtcars,1:31))
   expect_error(fmax(wlddev))
   expect_error(fmax(wlddev, wlddev$iso3c))
+
+})
+
+
+
+# fmin int
+
+x <- as.integer(x)
+xNA <- as.integer(xNA)
+mtcNA <- dapply(mtcNA, as.integer)
+mtcars <- dapply(mtcars, as.integer)
+storage.mode(m) <- "integer"
+storage.mode(mNA) <- "integer"
+
+toint <- function(x) {
+  storage.mode(x) <- "integer"
+  x
+}
+
+test_that("fmin with integers performs like base::min", {
+  expect_identical(fmin(x), min(x, na.rm = TRUE))
+  expect_identical(fmin(x, na.rm = FALSE), min(x))
+  expect_identical(fmin(xNA, na.rm = FALSE), min(xNA))
+  expect_identical(fmin(xNA), min(xNA, na.rm = TRUE))
+  expect_identical(toint(fmin(mtcars)), fmin(m))
+  expect_identical(fmin(m), dapply(m, min, na.rm = TRUE))
+  expect_identical(fmin(m, na.rm = FALSE), dapply(m, min))
+  expect_identical(fmin(mNA, na.rm = FALSE), dapply(mNA, min))
+  expect_identical(fmin(mNA), dapply(mNA, min, na.rm = TRUE))
+  expect_identical(toint(fmin(mtcars)), dapply(mtcars, min, na.rm = TRUE))
+  expect_identical(toint(fmin(mtcars, na.rm = FALSE)), dapply(mtcars, min))
+  expect_identical(toint(fmin(mtcNA, na.rm = FALSE)), dapply(mtcNA, min))
+  expect_identical(toint(fmin(mtcNA)), dapply(mtcNA, min, na.rm = TRUE))
+  expect_identical(fmin(x, f), BY(x, f, min, na.rm = TRUE))
+  expect_identical(fmin(x, f, na.rm = FALSE), BY(x, f, min))
+  expect_identical(fmin(xNA, f, na.rm = FALSE), BY(xNA, f, min))
+  expect_identical(fmin(xNA, f), inf2NA(BY(xNA, f, min, na.rm = TRUE)))
+  expect_identical(fmin(m, g), BY(m, g, min, na.rm = TRUE))
+  expect_identical(fmin(m, g, na.rm = FALSE), BY(m, g, min))
+  expect_identical(fmin(mNA, g, na.rm = FALSE), BY(mNA, g, min))
+  expect_identical(fmin(mNA, g), toint(inf2NA(BY(mNA, g, min, na.rm = TRUE)))) # min(NA, na.rm = TRUE) gives Inf
+  expect_identical(fmin(mtcars, g), BY(mtcars, g, min, na.rm = TRUE))
+  expect_identical(fmin(mtcars, g, na.rm = FALSE), BY(mtcars, g, min))
+  expect_identical(fmin(mtcNA, g, na.rm = FALSE), BY(mtcNA, g, min))
+  expect_identical(fmin(mtcNA, g), dapply(inf2NA(BY(mtcNA, g, min, na.rm = TRUE)), toint)) # min(NA, na.rm = TRUE) gives Inf
+})
+
+test_that("fmin with integers performs numerically stable", {
+  expect_true(all_identical(replicate(50, fmin(x), simplify = FALSE)))
+  expect_true(all_identical(replicate(50, fmin(x, na.rm = FALSE), simplify = FALSE)))
+  expect_true(all_identical(replicate(50, fmin(xNA, na.rm = FALSE), simplify = FALSE)))
+  expect_true(all_identical(replicate(50, fmin(xNA), simplify = FALSE)))
+  expect_true(all_identical(replicate(50, fmin(m), simplify = FALSE)))
+  expect_true(all_identical(replicate(50, fmin(m, na.rm = FALSE), simplify = FALSE)))
+  expect_true(all_identical(replicate(50, fmin(mNA, na.rm = FALSE), simplify = FALSE)))
+  expect_true(all_identical(replicate(50, fmin(mNA), simplify = FALSE)))
+  expect_true(all_identical(replicate(50, fmin(mtcars), simplify = FALSE)))
+  expect_true(all_identical(replicate(50, fmin(mtcars, na.rm = FALSE), simplify = FALSE)))
+  expect_true(all_identical(replicate(50, fmin(mtcNA, na.rm = FALSE), simplify = FALSE)))
+  expect_true(all_identical(replicate(50, fmin(mtcNA), simplify = FALSE)))
+  expect_true(all_identical(replicate(50, fmin(x, f), simplify = FALSE)))
+  expect_true(all_identical(replicate(50, fmin(x, f, na.rm = FALSE), simplify = FALSE)))
+  expect_true(all_identical(replicate(50, fmin(xNA, f, na.rm = FALSE), simplify = FALSE)))
+  expect_true(all_identical(replicate(50, fmin(xNA, f), simplify = FALSE)))
+  expect_true(all_identical(replicate(50, fmin(m, g), simplify = FALSE)))
+  expect_true(all_identical(replicate(50, fmin(m, g, na.rm = FALSE), simplify = FALSE)))
+  expect_true(all_identical(replicate(50, fmin(mNA, g, na.rm = FALSE), simplify = FALSE)))
+  expect_true(all_identical(replicate(50, fmin(mNA, g), simplify = FALSE)))
+  expect_true(all_identical(replicate(50, fmin(mtcars, g), simplify = FALSE)))
+  expect_true(all_identical(replicate(50, fmin(mtcars, g, na.rm = FALSE), simplify = FALSE)))
+  expect_true(all_identical(replicate(50, fmin(mtcNA, g, na.rm = FALSE), simplify = FALSE)))
+  expect_true(all_identical(replicate(50, fmin(mtcNA, g), simplify = FALSE)))
+})
+
+test_that("fmin with integers produces errors for wrong input", {
+  expect_error(fmin(m,1:31))
+  expect_error(fmin(mtcars,1:31))
+})
+
+
+# fmax int
+
+test_that("fmax with integers performs like base::max", {
+  expect_identical(fmax(x), max(x, na.rm = TRUE))
+  expect_identical(fmax(x, na.rm = FALSE), max(x))
+  expect_identical(fmax(xNA, na.rm = FALSE), max(xNA))
+  expect_identical(fmax(xNA), max(xNA, na.rm = TRUE))
+  expect_identical(toint(fmax(mtcars)), fmax(m))
+  expect_identical(fmax(m), dapply(m, max, na.rm = TRUE))
+  expect_identical(fmax(m, na.rm = FALSE), dapply(m, max))
+  expect_identical(fmax(mNA, na.rm = FALSE), dapply(mNA, max))
+  expect_identical(fmax(mNA), dapply(mNA, max, na.rm = TRUE))
+  expect_identical(toint(fmax(mtcars)), dapply(mtcars, max, na.rm = TRUE))
+  expect_identical(toint(fmax(mtcars, na.rm = FALSE)), dapply(mtcars, max))
+  expect_identical(toint(fmax(mtcNA, na.rm = FALSE)), dapply(mtcNA, max))
+  expect_identical(toint(fmax(mtcNA)), dapply(mtcNA, max, na.rm = TRUE))
+  expect_identical(fmax(x, f), BY(x, f, max, na.rm = TRUE))
+  expect_identical(fmax(x, f, na.rm = FALSE), BY(x, f, max))
+  expect_identical(fmax(xNA, f, na.rm = FALSE), BY(xNA, f, max))
+  expect_identical(fmax(xNA, f), inf2NA(BY(xNA, f, max, na.rm = TRUE)))
+  expect_identical(fmax(m, g), BY(m, g, max, na.rm = TRUE))
+  expect_identical(fmax(m, g, na.rm = FALSE), BY(m, g, max))
+  expect_identical(fmax(mNA, g, na.rm = FALSE), BY(mNA, g, max))
+  expect_identical(fmax(mNA, g), toint(inf2NA(BY(mNA, g, max, na.rm = TRUE)))) # max(NA, na.rm = TRUE) gives -Inf
+  expect_identical(fmax(mtcars, g), BY(mtcars, g, max, na.rm = TRUE))
+  expect_identical(fmax(mtcars, g, na.rm = FALSE), BY(mtcars, g, max))
+  expect_identical(fmax(mtcNA, g, na.rm = FALSE), BY(mtcNA, g, max))
+  expect_identical(fmax(mtcNA, g), dapply(inf2NA(BY(mtcNA, g, max, na.rm = TRUE)), toint)) # max(NA, na.rm = TRUE) gives -Inf
+})
+
+test_that("fmax with integers performs numerically stable", {
+  expect_true(all_identical(replicate(50, fmax(x), simplify = FALSE)))
+  expect_true(all_identical(replicate(50, fmax(x, na.rm = FALSE), simplify = FALSE)))
+  expect_true(all_identical(replicate(50, fmax(xNA, na.rm = FALSE), simplify = FALSE)))
+  expect_true(all_identical(replicate(50, fmax(xNA), simplify = FALSE)))
+  expect_true(all_identical(replicate(50, fmax(m), simplify = FALSE)))
+  expect_true(all_identical(replicate(50, fmax(m, na.rm = FALSE), simplify = FALSE)))
+  expect_true(all_identical(replicate(50, fmax(mNA, na.rm = FALSE), simplify = FALSE)))
+  expect_true(all_identical(replicate(50, fmax(mNA), simplify = FALSE)))
+  expect_true(all_identical(replicate(50, fmax(mtcars), simplify = FALSE)))
+  expect_true(all_identical(replicate(50, fmax(mtcars, na.rm = FALSE), simplify = FALSE)))
+  expect_true(all_identical(replicate(50, fmax(mtcNA, na.rm = FALSE), simplify = FALSE)))
+  expect_true(all_identical(replicate(50, fmax(mtcNA), simplify = FALSE)))
+  expect_true(all_identical(replicate(50, fmax(x, f), simplify = FALSE)))
+  expect_true(all_identical(replicate(50, fmax(x, f, na.rm = FALSE), simplify = FALSE)))
+  expect_true(all_identical(replicate(50, fmax(xNA, f, na.rm = FALSE), simplify = FALSE)))
+  expect_true(all_identical(replicate(50, fmax(xNA, f), simplify = FALSE)))
+  expect_true(all_identical(replicate(50, fmax(m, g), simplify = FALSE)))
+  expect_true(all_identical(replicate(50, fmax(m, g, na.rm = FALSE), simplify = FALSE)))
+  expect_true(all_identical(replicate(50, fmax(mNA, g, na.rm = FALSE), simplify = FALSE)))
+  expect_true(all_identical(replicate(50, fmax(mNA, g), simplify = FALSE)))
+  expect_true(all_identical(replicate(50, fmax(mtcars, g), simplify = FALSE)))
+  expect_true(all_identical(replicate(50, fmax(mtcars, g, na.rm = FALSE), simplify = FALSE)))
+  expect_true(all_identical(replicate(50, fmax(mtcNA, g, na.rm = FALSE), simplify = FALSE)))
+  expect_true(all_identical(replicate(50, fmax(mtcNA, g), simplify = FALSE)))
+})
+
+
+test_that("fmax with integers produces errors for wrong input", {
+  expect_error(fmax(m,1:31))
+  expect_error(fmax(mtcars,1:31))
 
 })
 

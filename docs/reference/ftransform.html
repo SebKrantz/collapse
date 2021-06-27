@@ -72,7 +72,7 @@
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">collapse</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">1.5.3</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">1.6.0</span>
       </span>
     </div>
 
@@ -94,13 +94,13 @@
       <ul class="nav navbar-nav navbar-right">
         <li>
   <a href="https://twitter.com/collapse_R" target="_blank">
-    <span class="fa fa-twitter"></span>
+    <span class="fas fa-twitter"></span>
      
   </a>
 </li>
 <li>
   <a href="https://github.com/SebKrantz/collapse" target="_blank">
-    <span class="fa fa-github"></span>
+    <span class="fas fa-github"></span>
      
   </a>
 </li>
@@ -123,7 +123,7 @@
     </div>
 
     <div class="ref-description">
-    <p><code>ftransform</code> is a much faster version of <code><a href='https://rdrr.io/r/base/transform.html'>transform</a></code> and <code><a href='https://dplyr.tidyverse.org/reference/mutate.html'>dplyr::mutate</a></code> for data frames. It returns the data frame with new columns computed and/or existing columns modified or deleted. <code>settransform</code> does all of that by reference i.e. it modifies the data frame in the global environment. <code>fcompute</code> can be used to compute new columns from the columns in a data frame and returns only the computed columns.</p>
+    <p><code>ftransform</code> is a much faster version of <code><a href='https://rdrr.io/pkg/data.table/man/transform.data.table.html'>transform</a></code> and <code><a href='https://dplyr.tidyverse.org/reference/mutate.html'>dplyr::mutate</a></code> for data frames. It returns the data frame with new columns computed and/or existing columns modified or deleted. <code>settransform</code> does all of that by reference i.e. it modifies the data frame in the global environment. <code>fcompute</code> can be used to compute new columns from the columns in a data frame and returns only the computed columns.</p>
     </div>
 
     <pre class="usage"><span class='co'># Modify and return data frame</span>
@@ -143,7 +143,7 @@
 <span class='fu'>tfm</span><span class='op'>(</span><span class='va'>.data</span><span class='op'>)</span> <span class='op'>&lt;-</span> <span class='va'>value</span>           <span class='co'># Shortcut for ftransform&lt;-</span>
 
 <span class='co'># Compute columns, returned as a new data frame</span>
-<span class='fu'>fcompute</span><span class='op'>(</span><span class='va'>.data</span>, <span class='va'>...</span><span class='op'>)</span></pre>
+<span class='fu'>fcompute</span><span class='op'>(</span><span class='va'>.data</span>, <span class='va'>...</span>, keep <span class='op'>=</span> <span class='cn'>NULL</span><span class='op'>)</span></pre>
 
     <h2 class="hasAnchor" id="arguments"><a class="anchor" href="#arguments"></a>Arguments</h2>
     <table class="ref-arguments">
@@ -172,6 +172,10 @@
       <th>value</th>
       <td><p>a named list of replacements, it will be treated like an evaluated list of <code>column = value</code> arguments.</p></td>
     </tr>
+    <tr>
+      <th>keep</th>
+      <td><p>select columns to preserve using column names, indices or a function (e.g. <code>is.numeric</code>). By default computed columns are added after the preserved ones, unless they are assigned the same name in which case the preserved columns will be replaced in order. See Examples.</p></td>
+    </tr>
     </table>
 
     <h2 class="hasAnchor" id="details"><a class="anchor" href="#details"></a>Details</h2>
@@ -192,7 +196,7 @@
     <p>The modified data frame <code>.data</code>, or, for <code>fcompute</code>, a new data frame with the columns computed on <code>.data</code>. All attributes of <code>.data</code> are preserved.</p>
     <h2 class="hasAnchor" id="see-also"><a class="anchor" href="#see-also"></a>See also</h2>
 
-    <div class='dont-index'><p><code><a href='https://rdrr.io/r/base/with.html'>with</a></code>, <code><a href='https://rdrr.io/r/base/with.html'>within</a></code>, <code><a href='fselect, get_vars, add_vars.html'>add_vars</a></code>, <a href='fast-data-manipulation.html'>Data Frame Manipulation</a>, <a href='index.html'>Collapse Overview</a></p></div>
+    <div class='dont-index'><p><code><a href='https://rdrr.io/r/base/with.html'>with</a></code>, <code><a href='https://rdrr.io/pkg/data.table/man/transform.data.table.html'>within</a></code>, <code><a href='fselect, get_vars, add_vars.html'>add_vars</a></code>, <a href='fast-data-manipulation.html'>Data Frame Manipulation</a>, <a href='index.html'>Collapse Overview</a></p></div>
 
     <h2 class="hasAnchor" id="examples"><a class="anchor" href="#examples"></a>Examples</h2>
     <pre class="examples"><div class='input'><span class='co'>## ftransform modifies and returns a data.frame</span>
@@ -365,7 +369,7 @@
 #&gt; 4 -32.296296 -63.296296  0.9774194 -3.6225806
 #&gt; 5 131.703704 -32.296296 -0.1225806  0.9774194
 #&gt; 6         NA 131.703704  2.6774194 -0.1225806</div><div class='input'>
-<span class='va'>airquality</span> <span class='op'>%&gt;%</span> <span class='fu'>ftransform</span><span class='op'>(</span><span class='fu'><a href='fscale.html'>STD</a></span><span class='op'>(</span><span class='va'>.</span>, cols <span class='op'>=</span> <span class='fl'>1</span><span class='op'>:</span><span class='fl'>3</span><span class='op'>)</span> <span class='op'>%&gt;%</span> <span class='fu'><a href='AA1-recode-replace.html'>replace_NA</a></span><span class='op'>(</span><span class='fl'>0</span><span class='op'>)</span><span class='op'>)</span> <span class='op'>%&gt;%</span> <span class='va'>head</span>
+<span class='va'>airquality</span> <span class='op'>%&gt;%</span> <span class='fu'>ftransform</span><span class='op'>(</span><span class='fu'><a href='fscale.html'>STD</a></span><span class='op'>(</span><span class='va'>.</span>, cols <span class='op'>=</span> <span class='fl'>1</span><span class='op'>:</span><span class='fl'>3</span><span class='op'>)</span> <span class='op'>%&gt;%</span> <span class='fu'><a href='recode-replace.html'>replace_NA</a></span><span class='op'>(</span><span class='fl'>0</span><span class='op'>)</span><span class='op'>)</span> <span class='op'>%&gt;%</span> <span class='va'>head</span>
 </div><div class='output co'>#&gt;   Ozone Solar.R Wind Temp Month Day   STD.Ozone STD.Solar.R   STD.Wind
 #&gt; 1    41     190  7.4   67     5   1 -0.03423409  0.04517615 -0.7259482
 #&gt; 2    36     118  8.0   72     5   2 -0.18580489 -0.75430487 -0.5556388
@@ -385,7 +389,7 @@
 #&gt; 6    28      NA 14.9   66     5   6 12.08975  533.2819</div><div class='input'>
 <span class='co'># Same as above using a grouped data frame (a bit more complex)</span>
 <span class='va'>airquality</span> <span class='op'>%&gt;%</span> <span class='fu'><a href='GRP, fgroup_by.html'>fgroup_by</a></span><span class='op'>(</span><span class='va'>Month</span><span class='op'>)</span> <span class='op'>%&gt;%</span>
-  <span class='fu'>ftransform</span><span class='op'>(</span><span class='fu'><a href='fselect, get_vars, add_vars.html'>fselect</a></span><span class='op'>(</span><span class='va'>.</span>, <span class='va'>Wind</span>, <span class='va'>Ozone</span><span class='op'>)</span> <span class='op'>%&gt;%</span> <span class='fu'><a href='fvar, fsd.html'>fvar</a></span><span class='op'>(</span><span class='va'>Temp</span>, <span class='st'>"replace"</span><span class='op'>)</span> <span class='op'>%&gt;%</span> <span class='fu'><a href='small-helpers.html'>add_stub</a></span><span class='op'>(</span><span class='st'>"_var"</span>, <span class='cn'>FALSE</span><span class='op'>)</span><span class='op'>)</span> <span class='op'>%&gt;%</span>
+  <span class='fu'>ftransform</span><span class='op'>(</span><span class='fu'><a href='fselect, get_vars, add_vars.html'>fselect</a></span><span class='op'>(</span><span class='va'>.</span>, <span class='va'>Wind</span>, <span class='va'>Ozone</span><span class='op'>)</span> <span class='op'>%&gt;%</span> <span class='fu'><a href='fvar, fsd.html'>fvar</a></span><span class='op'>(</span><span class='va'>Temp</span>, <span class='st'>"replace"</span><span class='op'>)</span> <span class='op'>%&gt;%</span> <span class='fu'><a href='small-helper.html'>add_stub</a></span><span class='op'>(</span><span class='st'>"_var"</span>, <span class='cn'>FALSE</span><span class='op'>)</span><span class='op'>)</span> <span class='op'>%&gt;%</span>
   <span class='va'>fungroup</span> <span class='op'>%&gt;%</span> <span class='va'>head</span>
 </div><div class='output co'>#&gt;   Ozone Solar.R Wind Temp Month Day Wind_var Ozone_var
 #&gt; 1    41     190  7.4   67     5   1 12.08975  533.2819
@@ -489,7 +493,7 @@
 #&gt; 5    -1.1     4.6
 #&gt; 6     2.8    -1.1</div><div class='input'><span class='fu'><a href='https://rdrr.io/r/base/rm.html'>rm</a></span><span class='op'>(</span><span class='va'>airquality</span><span class='op'>)</span>
 
-<span class='co'>## fcompute only returns the modified / computed columns, ...</span>
+<span class='co'>## fcompute only returns the modified / computed columns</span>
 <span class='fu'><a href='https://rdrr.io/r/utils/head.html'>head</a></span><span class='op'>(</span><span class='fu'>fcompute</span><span class='op'>(</span><span class='va'>airquality</span>, Ozone <span class='op'>=</span> <span class='op'>-</span><span class='va'>Ozone</span><span class='op'>)</span><span class='op'>)</span>
 </div><div class='output co'>#&gt;   Ozone
 #&gt; 1   -41
@@ -512,6 +516,25 @@
 #&gt; 4 -18    1
 #&gt; 5  NA    1
 #&gt; 6 -28    1</div><div class='input'>
+<span class='co'># Can preserve existing columns, computed ones are added to the right if names are different</span>
+<span class='fu'><a href='https://rdrr.io/r/utils/head.html'>head</a></span><span class='op'>(</span><span class='fu'>fcompute</span><span class='op'>(</span><span class='va'>airquality</span>, new <span class='op'>=</span> <span class='op'>-</span><span class='va'>Ozone</span>, new2 <span class='op'>=</span> <span class='fl'>1</span>, keep <span class='op'>=</span> <span class='fl'>1</span><span class='op'>:</span><span class='fl'>3</span><span class='op'>)</span><span class='op'>)</span>
+</div><div class='output co'>#&gt;   Ozone Solar.R Wind new new2
+#&gt; 1    41     190  7.4 -41    1
+#&gt; 2    36     118  8.0 -36    1
+#&gt; 3    12     149 12.6 -12    1
+#&gt; 4    18     313 11.5 -18    1
+#&gt; 5    NA      NA 14.3  NA    1
+#&gt; 6    28      NA 14.9 -28    1</div><div class='input'>
+<span class='co'># If given same name as preserved columns, preserved columns are replaced in order...</span>
+<span class='fu'><a href='https://rdrr.io/r/utils/head.html'>head</a></span><span class='op'>(</span><span class='fu'>fcompute</span><span class='op'>(</span><span class='va'>airquality</span>, Ozone <span class='op'>=</span> <span class='op'>-</span><span class='va'>Ozone</span>, new <span class='op'>=</span> <span class='fl'>1</span>, keep <span class='op'>=</span> <span class='fl'>1</span><span class='op'>:</span><span class='fl'>3</span><span class='op'>)</span><span class='op'>)</span>
+</div><div class='output co'>#&gt;   Ozone Solar.R Wind new
+#&gt; 1   -41     190  7.4   1
+#&gt; 2   -36     118  8.0   1
+#&gt; 3   -12     149 12.6   1
+#&gt; 4   -18     313 11.5   1
+#&gt; 5    NA      NA 14.3   1
+#&gt; 6   -28      NA 14.9   1</div><div class='input'>
+
 </div></pre>
   </div>
   <div class="col-md-3 hidden-xs hidden-sm" id="pkgdown-sidebar">

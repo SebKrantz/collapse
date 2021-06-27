@@ -5,6 +5,161 @@
 
 #include "data.table.h"
 
+#define SEXPPTR(x) ((SEXP *)DATAPTR(x))  // to avoid overhead of looped STRING_ELT and VECTOR_ELT
+
+// selfref stuff is taken from data.tables assign.c
+
+static void finalizer(SEXP p)
+{
+  SEXP x;
+  R_len_t n, l, tl;
+  if(!R_ExternalPtrAddr(p)) error("Internal error: finalizer hasn't received an ExternalPtr"); // # nocov
+  p = R_ExternalPtrTag(p);
+  if (!isString(p)) error("Internal error: finalizer's ExternalPtr doesn't see names in tag"); // # nocov
+  l = LENGTH(p);
+  tl = TRUELENGTH(p);
+  if (l<0 || tl<l) error("Internal error: finalizer sees l=%d, tl=%d",l,tl); // # nocov
+  n = tl-l;
+  if (n==0) {
+    // gc's ReleaseLargeFreeVectors() will have reduced R_LargeVallocSize by the correct amount
+    // already, so nothing to do (but almost never the case).
+    return;
+  }
+  x = PROTECT(allocVector(INTSXP, 50));  // 50 so it's big enough to be on LargeVector heap. See NodeClassSize in memory.c:allocVector
+  // INTSXP rather than VECSXP so that GC doesn't inspect contents after LENGTH (thanks to Karl Miller, Jul 2015)
+  SETLENGTH(x,50+n*2*sizeof(void *)/4);  // 1*n for the names, 1*n for the VECSXP itself (both are over allocated).
+  UNPROTECT(1);
+  return;
+}
+
+void setselfref(SEXP x) {
+  SEXP p;
+  // Store pointer to itself so we can detect if the object has been copied. See
+  // ?copy for why copies are not just inefficient but cause a problem for over-allocated data.tables.
+  // Called from C only, not R level, so returns void.
+  // setAttrib(x, SelfRefSymbol, R_NilValue); // Probably not needed but I like it here.
+  setAttrib(x, SelfRefSymbol, p=R_MakeExternalPtr(
+    R_NilValue,                  // for identical() to return TRUE. identical() doesn't look at tag and prot
+    PROTECT(getAttrib(x, R_NamesSymbol)),  // to detect if names has been replaced and its tl lost, e.g. setattr(DT,"names",...)
+    PROTECT(R_MakeExternalPtr(   // to avoid an infinite loop in object.size(), if prot=x here
+        x,                         // to know if this data.table has been copied by key<-, attr<-, names<-, etc.
+        R_NilValue,                // this tag and prot currently unused
+        R_NilValue
+    ))
+  ));
+  R_RegisterCFinalizerEx(p, finalizer, FALSE);
+  UNPROTECT(2);
+
+  /*
+   *  base::identical doesn't check prot and tag of EXTPTR, just that the ptr itself is the
+   same in both objects. R_NilValue is always equal to R_NilValue.  R_NilValue is a memory
+   location constant within an R session, but can vary from session to session. So, it
+   looks like a pointer to a user looking at attributes(DT), but they might wonder how it
+   works if they realise the selfref of all data.tables all point to the same address (rather
+   than to the table itself which would be reasonable to expect given the attribute's name).
+   *  p=NULL rather than R_NilValue works too, other than we need something other than NULL
+   so we can detect tables loaded from disk (which set p to NULL, see 5.13 of R-exts).
+   *  x is wrapped in another EXTPTR because of object.size (called by tables(), and by users).
+   If the prot (or tag) was x directly it sends object.size into an infinite loop and then
+   "segfault from C stack overflow" (object.size does count tag and prot, unlike identical,
+   but doesn't count what's pointed to).
+   *  Could use weak reference possibly, but the fact that they can get be set to R_NilValue
+   by gc (?) didn't seem appropriate.
+   *  If the .internal.selfref attribute is removed (e.g. by user code), nothing will break, but
+   an extra copy will just be taken on next :=, with warning, with a new selfref.
+   *  object.size will count size of names twice, but that's ok as only small.
+   *  Thanks to Steve L for suggesting ExtPtr for this, rather than the previous REALSXP
+   vector which required data.table to do a show/hide dance in a masked identical.
+   */
+}
+
+// also need this stuff from assign.c
+static SEXP shallow(SEXP dt, SEXP cols, R_len_t n)
+{
+  // NEW: cols argument to specify the columns to shallow copy on. If NULL, all columns.
+  // called from alloccol where n is checked carefully, or from shallow() at R level
+  // where n is set to truelength (i.e. a shallow copy only with no size change)
+  int protecti=0;
+  SEXP newdt = PROTECT(allocVector(VECSXP, n)); protecti++;   // to do, use growVector here?
+  SET_ATTRIB(newdt, shallow_duplicate(ATTRIB(dt)));
+  SET_OBJECT(newdt, OBJECT(dt));
+  IS_S4_OBJECT(dt) ? SET_S4_OBJECT(newdt) : UNSET_S4_OBJECT(newdt);  // To support S4 objects that incude data.table
+  //SHALLOW_DUPLICATE_ATTRIB(newdt, dt);  // SHALLOW_DUPLICATE_ATTRIB would be a bit neater but is only available from R 3.3.0
+
+  // TO DO: keepattr() would be faster, but can't because shallow isn't merely a shallow copy. It
+  //        also increases truelength. Perhaps make that distinction, then, and split out, but marked
+  //        so that the next change knows to duplicate.
+  //        keepattr() also merely points to the entire attrbutes list and thus doesn't allow replacing
+  //        some of its elements.
+
+  // We copy all attributes that refer to column names so that calling setnames on either
+  // the original or the shallow copy doesn't break anything.
+  SEXP index = PROTECT(getAttrib(dt, sym_index)); protecti++;
+  setAttrib(newdt, sym_index, shallow_duplicate(index));
+
+  SEXP sorted = PROTECT(getAttrib(dt, sym_sorted)); protecti++;
+  setAttrib(newdt, sym_sorted, duplicate(sorted));
+
+  SEXP names = PROTECT(getAttrib(dt, R_NamesSymbol)); protecti++;
+  SEXP newnames = PROTECT(allocVector(STRSXP, n)); protecti++;
+
+  SEXP *pdt = SEXPPTR(dt), *pnewdt = SEXPPTR(newdt),
+    *pnam = STRING_PTR(names), *pnnam = STRING_PTR(newnames);
+
+  const int l = isNull(cols) ? LENGTH(dt) : length(cols);
+  if (isNull(cols)) {
+    for (int i=0; i != l; ++i) pnewdt[i] = pdt[i];
+    if (length(names)) {
+      if (length(names) < l) error("Internal error: length(names)>0 but <length(dt)"); // # nocov
+      for (int i=0; i != l; ++i) pnnam[i] = pnam[i];
+    }
+    // else an unnamed data.table is valid e.g. unname(DT) done by ggplot2, and .SD may have its names cleared in dogroups, but shallow will always create names for data.table(NULL) which has 100 slots all empty so you can add to an empty data.table by reference ok.
+  } else {
+    int *pcols = INTEGER(cols);
+    for (int i=0; i != l; ++i) pnewdt[i] = pdt[pcols[i]-1];
+    if (length(names)) {
+      // no need to check length(names) < l here. R-level checks if all value
+      // in 'cols' are valid - in the range of 1:length(names(x))
+      for (int i=0; i != l; ++i) pnnam[i] = pnam[pcols[i]-1];
+    }
+  }
+  setAttrib(newdt, R_NamesSymbol, newnames);
+  // setAttrib appears to change length and truelength, so need to do that first _then_ SET next,
+  // otherwise (if the SET were were first) the 100 tl is assigned to length.
+  SETLENGTH(newnames,l);
+  SET_TRUELENGTH(newnames,n);
+  SETLENGTH(newdt,l);
+  SET_TRUELENGTH(newdt,n);
+  setselfref(newdt);
+  UNPROTECT(protecti);
+  return(newdt);
+}
+
+// Can allocate conditionally on size, for export... use in collap, qDT etc.
+SEXP Calloccol(SEXP dt, SEXP Rn)
+{
+  R_len_t tl, n, l;
+  l = LENGTH(dt);
+  n = l + asInteger(Rn);
+  tl = TRUELENGTH(dt);
+  // R <= 2.13.2 and we didn't catch uninitialized tl somehow
+  if (tl < 0) error("Internal error, tl of class is marked but tl<0."); // # nocov
+  // better disable these...
+  if (tl > 0 && tl < l) error("Internal error, please report (including result of sessionInfo()) to collapse issue tracker: tl (%d) < l (%d) but tl of class is marked.", tl, l); // # nocov
+  if (tl > l+10000) warning("tl (%d) is greater than 10,000 items over-allocated (l = %d). If you didn't set the collapse_DT_alloccol option to be very large, please report to collapse issue tracker including the result of sessionInfo().",tl,l);
+
+// TODO:  MAKE THIS WORK WITHOUT SHALLOW COPYING EVERY TIME !!!
+
+// if (n > tl)
+    return shallow(dt, R_NilValue, n); // usual case (increasing alloc)
+
+//  SEXP nam = PROTECT(getAttrib(dt, R_NamesSymbol));
+//  if(LENGTH(nam) != l) SETLENGTH(nam, l);
+//  SET_TRUELENGTH(nam, n);
+//  setselfref(dt); // better, otherwise may be invalid !!
+//  UNPROTECT(1);
+//  return(dt);
+}
 // #pragma GCC diagnostic ignored "-Wunknown-pragmas" // don't display this warning!! // https://stackoverflow.com/questions/1867065/how-to-suppress-gcc-warnings-from-library-headers?noredirect=1&lq=1
 
 static void subsetVectorRaw(SEXP ans, SEXP source, SEXP idx, const bool anyNA)
@@ -22,12 +177,12 @@ static void subsetVectorRaw(SEXP ans, SEXP source, SEXP idx, const bool anyNA)
 
   #define PARLOOP(_NAVAL_)                                        \
   if (anyNA) {                                                    \
-    for (int i=0; i<n; i++) {                                     \
+    for (int i = 0; i != n; ++i) {                                \
       int elem = idxp[i];                                         \
       ap[i] = elem==NA_INTEGER ? _NAVAL_ : sp[elem-1];            \
     }                                                             \
   } else {                                                        \
-    for (int i=0; i<n; i++) {                                     \
+    for (int i = 0; i != n; ++i) {                                \
       ap[i] = sp[idxp[i]-1];                                      \
     }                                                             \
   }
@@ -37,9 +192,9 @@ static void subsetVectorRaw(SEXP ans, SEXP source, SEXP idx, const bool anyNA)
   // arise only over a threshold of n.
 
   switch(TYPEOF(source)) {
-    case INTSXP: case LGLSXP: {
-      int *sp = INTEGER(source);
-      int *ap = INTEGER(ans);
+    case INTSXP:
+    case LGLSXP: {
+      int *sp = INTEGER(source), *ap = INTEGER(ans);
       PARLOOP(NA_INTEGER)
     } break;
     case REALSXP : {
@@ -48,8 +203,7 @@ static void subsetVectorRaw(SEXP ans, SEXP source, SEXP idx, const bool anyNA)
         int64_t *ap = (int64_t *)REAL(ans);
         PARLOOP(INT64_MIN)
       } else {
-        double *sp = REAL(source);
-        double *ap = REAL(ans);
+        double *sp = REAL(source), *ap = REAL(ans);
         PARLOOP(NA_REAL)
       }
     } break;
@@ -61,11 +215,16 @@ static void subsetVectorRaw(SEXP ans, SEXP source, SEXP idx, const bool anyNA)
       // TODO - discuss with Luke Tierney. Produce benchmarks on integer/double to see if it's worth making a safe
     //        API interface for package use for STRSXP.
     // Aside: setkey() is a separate special case (a permutation) and does do this in parallel without using SET_*.
-    SEXP *sp = STRING_PTR(source);
+    SEXP *sp = STRING_PTR(source), *ap = STRING_PTR(ans);
     if (anyNA) {
-      for (int i=0; i<n; i++) { int elem = idxp[i]; SET_STRING_ELT(ans, i, elem==NA_INTEGER ? NA_STRING : sp[elem-1]); }
+      for (int i = 0; i != n; ++i) {
+        int elem = idxp[i];
+        ap[i] = elem == NA_INTEGER ? NA_STRING : sp[elem-1];
+      }
     } else {
-      for (int i=0; i<n; i++) {                     SET_STRING_ELT(ans, i, sp[idxp[i]-1]); }
+      for (int i = 0; i != n; ++i) {
+        ap[i] = sp[idxp[i]-1];
+      }
     }
   } break;
   case VECSXP : {
@@ -75,20 +234,24 @@ static void subsetVectorRaw(SEXP ans, SEXP source, SEXP idx, const bool anyNA)
       // we take the R API (INTEGER()[i], REAL()[i], etc) outside loops for the simple types even when not parallel. For this
       // type list case (VECSXP) it might be that some items are ALTREP for example, so we really should use the heavier
       // _ELT accessor (VECTOR_ELT) inside the loop in this case.
+      SEXP *sp = SEXPPTR(source), *ap = SEXPPTR(ans);
       if (anyNA) {
-        for (int i=0; i<n; i++) { int elem = idxp[i]; SET_VECTOR_ELT(ans, i, elem==NA_INTEGER ? R_NilValue : VECTOR_ELT(source, elem-1)); }
+        for (int i = 0; i != n; ++i) {
+          int elem = idxp[i];
+          ap[i] = elem == NA_INTEGER ? R_NilValue : sp[elem-1];
+        }
       } else {
-        for (int i=0; i<n; i++) {                     SET_VECTOR_ELT(ans, i, VECTOR_ELT(source, idxp[i]-1)); }
+        for (int i = 0; i != n; ++i) {
+          ap[i] = sp[idxp[i]-1];
+        }
       }
     } break;
     case CPLXSXP : {
-      Rcomplex *sp = COMPLEX(source);
-      Rcomplex *ap = COMPLEX(ans);
+      Rcomplex *sp = COMPLEX(source), *ap = COMPLEX(ans);
       PARLOOP(NA_CPLX)
     } break;
     case RAWSXP : {
-      Rbyte *sp = RAW(source);
-      Rbyte *ap = RAW(ans);
+      Rbyte *sp = RAW(source), *ap = RAW(ans);
       PARLOOP(0)
     } break;
     default :
@@ -96,25 +259,25 @@ static void subsetVectorRaw(SEXP ans, SEXP source, SEXP idx, const bool anyNA)
   }
 }
 
-static const char *check_idx(SEXP idx, int max, bool *anyNA_out, bool *orderedSubset_out)
+static const char *check_idx(SEXP idx, int max, bool *anyNA_out) // , bool *orderedSubset_out) Not needed
 // set anyNA for branchless subsetVectorRaw
 // error if any negatives, zeros or >max since they should have been dealt with by convertNegAndZeroIdx() called ealier at R level.
 // single cache efficient sweep with prefetch, so very low priority to go parallel
 {
   if (!isInteger(idx)) error("Internal error. 'idx' is type '%s' not 'integer'", type2char(TYPEOF(idx))); // # nocov
-    bool anyLess=false, anyNA=false;
-  int last = INT32_MIN;
-  int *idxp = INTEGER(idx), n=LENGTH(idx);
-  for (int i=0; i<n; i++) {
+    bool anyNA = false; // anyLess=false,
+  // int last = INT32_MIN;
+  int *idxp = INTEGER(idx), n = LENGTH(idx);
+  for (int i = 0; i != n; ++i) {
     int elem = idxp[i];
     if (elem<=0 && elem!=NA_INTEGER) return "Internal inefficiency: idx contains negatives or zeros. Should have been dealt with earlier.";  // e.g. test 762  (TODO-fix)
     if (elem>max) return "Internal inefficiency: idx contains an item out-of-range. Should have been dealt with earlier.";                   // e.g. test 1639.64
     anyNA |= elem==NA_INTEGER;
-    anyLess |= elem<last;
-    last = elem;
+    // anyLess |= elem<last;
+    // last = elem;
   }
   *anyNA_out = anyNA;
-  *orderedSubset_out = !anyLess; // for the purpose of ordered keys elem==last is allowed
+  // *orderedSubset_out = !anyLess; // for the purpose of ordered keys elem==last is allowed
   return NULL;
 }
 
@@ -134,7 +297,7 @@ SEXP convertNegAndZeroIdx(SEXP idx, SEXP maxArg, SEXP allowOverMax)
 
                   bool stop = false;
                   // #pragma omp parallel for num_threads(getDTthreads())
-                  for (int i=0; i<n; i++) {
+                  for (int i = 0; i != n; ++i) {
                     if (stop) continue;
                     int elem = idxp[i];
                     if ((elem<1 && elem!=NA_INTEGER) || elem>max) stop=true;
@@ -145,7 +308,7 @@ SEXP convertNegAndZeroIdx(SEXP idx, SEXP maxArg, SEXP allowOverMax)
                     // else massage the input to a standard idx where all items are either NA or in range [1,max] ...
 
                   int countNeg=0, countZero=0, countNA=0, firstOverMax=0;
-                  for (int i=0; i<n; i++) {
+                  for (int i = 0; i != n; ++i) {
                     int elem = idxp[i];
                     if (elem==NA_INTEGER) countNA++;
                     else if (elem<0) countNeg++;
@@ -158,8 +321,8 @@ SEXP convertNegAndZeroIdx(SEXP idx, SEXP maxArg, SEXP allowOverMax)
 
                   int countPos = n-countNeg-countZero-countNA;
                   if (countPos && countNeg) {
-                    int i=0, firstNeg=0, firstPos=0;
-                    while (i<n && (firstNeg==0 || firstPos==0)) {
+                    int i = 0, firstNeg=0, firstPos=0;
+                    while (i != n && (firstNeg==0 || firstPos==0)) {
                       int elem = idxp[i];
                       if (firstPos==0 && elem>0) firstPos=i+1;
                       if (firstNeg==0 && elem<0 && elem!=NA_INTEGER) firstNeg=i+1;
@@ -168,8 +331,8 @@ SEXP convertNegAndZeroIdx(SEXP idx, SEXP maxArg, SEXP allowOverMax)
                     error("Item %d of i is %d and item %d is %d. Cannot mix positives and negatives.", firstNeg, idxp[firstNeg-1], firstPos, idxp[firstPos-1]);
                   }
                   if (countNeg && countNA) {
-                    int i=0, firstNeg=0, firstNA=0;
-                    while (i<n && (firstNeg==0 || firstNA==0)) {
+                    int i = 0, firstNeg=0, firstNA=0;
+                    while (i != n && (firstNeg==0 || firstNA==0)) {
                       int elem = idxp[i];
                       if (firstNeg==0 && elem<0 && elem!=NA_INTEGER) firstNeg=i+1;
                       if (firstNA==0 && elem==NA_INTEGER) firstNA=i+1;
@@ -183,7 +346,7 @@ SEXP convertNegAndZeroIdx(SEXP idx, SEXP maxArg, SEXP allowOverMax)
                     // just zeros to remove, or >max to convert to NA
                     ans = PROTECT(allocVector(INTSXP, n - countZero));
                     int *ansp = INTEGER(ans);
-                    for (int i=0, ansi=0; i<n; i++) {
+                    for (int i = 0, ansi = 0; i != n; ++i) {
                       int elem = idxp[i];
                       if (elem==0) continue;
                       ansp[ansi++] = elem>max ? NA_INTEGER : elem;
@@ -191,10 +354,10 @@ SEXP convertNegAndZeroIdx(SEXP idx, SEXP maxArg, SEXP allowOverMax)
                   } else {
                     // idx is all negative without any NA but perhaps some zeros
                     bool *keep = (bool *)R_alloc(max, sizeof(bool));    // 4 times less memory that INTSXP in src/main/subscript.c
-                    for (int i=0; i<max; i++) keep[i] = true;
+                    for (int i = 0; i != max; ++i) keep[i] = true;
                     int countRemoved=0, countDup=0, countBeyond=0;   // idx=c(-10,-5,-10) removing row 10 twice
                     int firstBeyond=0, firstDup=0;
-                    for (int i=0; i<n; i++) {
+                    for (int i = 0; i != n; ++i) {
                       int elem = -idxp[i];
                       if (elem==0) continue;
                       if (elem>max) {
@@ -217,7 +380,7 @@ SEXP convertNegAndZeroIdx(SEXP idx, SEXP maxArg, SEXP allowOverMax)
                     int ansn = max-countRemoved;
                     ans = PROTECT(allocVector(INTSXP, ansn));
                     int *ansp = INTEGER(ans);
-                    for (int i=0, ansi=0; i<max; i++) {
+                    for (int i = 0, ansi = 0; i != max; ++i) {
                       if (keep[i]) ansp[ansi++] = i+1;
                     }
                   }
@@ -240,6 +403,79 @@ static void checkCol(SEXP col, int colNum, int nrow, SEXP x)
   }
 }
 
+
+/* helper */
+SEXP extendIntVec(SEXP x, int len, int val) {
+  SEXP out = PROTECT(allocVector(INTSXP, len + 1));
+  int *pout = INTEGER(out), *px = INTEGER(x);
+  for(int i = len; i--; ) pout[i] = px[i];
+  pout[len] = val;
+  UNPROTECT(1);
+  return out;
+}
+
+
+/* subset columns of a list efficiently */
+
+SEXP subsetCols(SEXP x, SEXP cols, SEXP checksf) { // SEXP fretall
+  if(TYPEOF(x) != VECSXP) error("x is not a list.");
+  int l = LENGTH(x), nprotect = 3;
+  if(l == 0) return x; //  ncol == 0 -> Nope, need emty selections such as cat_vars(mtcars) !!
+  PROTECT_INDEX ipx;
+  PROTECT_WITH_INDEX(cols = convertNegAndZeroIdx(cols, ScalarInteger(l), ScalarLogical(FALSE)), &ipx);
+  int ncol = LENGTH(cols);
+  int *pcols = INTEGER(cols);
+  // if(ncol == 0 || (asLogical(fretall) && l == ncol)) return(x);
+  // names
+  SEXP nam = PROTECT(getAttrib(x, R_NamesSymbol));
+  // sf data frames: Need to add sf_column
+  if(asLogical(checksf) && INHERITS(x, char_sf)) {
+    int sfcoln = NA_INTEGER, sf_col_sel = 0;
+    SEXP *pnam = STRING_PTR(nam), sfcol = asChar(getAttrib(x, sym_sf_column));
+    for(int i = l; i--; ) {
+      if(pnam[i] == sfcol) {
+        sfcoln = i + 1;
+        break;
+      }
+    }
+    if(sfcoln == NA_INTEGER) error("sf data frame has no attribute 'sf_column'");
+    for(int i = ncol; i--; ) {
+      if(pcols[i] == sfcoln) {
+        sf_col_sel = 1;
+        break;
+      }
+    }
+    if(sf_col_sel == 0) {
+      REPROTECT(cols = extendIntVec(cols, ncol, sfcoln), ipx);
+      ++ncol;
+      pcols = INTEGER(cols);
+    }
+  }
+  SEXP ans = PROTECT(allocVector(VECSXP, ncol));
+  SEXP *px = SEXPPTR(x), *pans = SEXPPTR(ans);
+  for(int i = 0; i != ncol; ++i) {
+    pans[i] = px[pcols[i]-1]; // SET_VECTOR_ELT(ans, i, VECTOR_ELT(x, pcols[i]-1));
+  }
+  if(!isNull(nam)) {
+    SEXP tmp = PROTECT(allocVector(STRSXP, ncol));
+    setAttrib(ans, R_NamesSymbol, tmp);
+    subsetVectorRaw(tmp, nam, cols, /*anyNA=*/false);
+    ++nprotect;
+  }
+  copyMostAttrib(x, ans); // includes row.names and class...
+  // clear any index that was copied over by copyMostAttrib(), e.g. #1760 and #1734 (test 1678)
+  // setAttrib(ans, sym_index, R_NilValue); -> deletes "index" attribute of pdata.frame -> don't use!!
+
+  if(INHERITS(x, char_datatable)) {
+    setAttrib(ans, sym_datatable_locked, R_NilValue);
+    UNPROTECT(nprotect);
+    return shallow(ans, R_NilValue, ncol+100); // 1024 is data.table default..
+    // setselfref(ans); // done by shallow
+  }
+  UNPROTECT(nprotect);
+  return ans;
+}
+
 /*
   * subsetDT - Subsets a data.table
 * NOTE:
@@ -249,29 +485,61 @@ static void checkCol(SEXP col, int colNum, int nrow, SEXP x)
 *   4) Could do it other ways but may as well go to C now as we were going to do that anyway
 */
 
-SEXP subsetDT(SEXP x, SEXP rows, SEXP cols) {
+SEXP subsetDT(SEXP x, SEXP rows, SEXP cols) { // , SEXP fastret
     int nprotect=0;
     if (!isNewList(x)) error("Internal error. Argument 'x' to CsubsetDT is type '%s' not 'list'", type2char(TYPEOF(rows))); // # nocov
-      if (!length(x)) return(x);  // return empty list
+      if (!length(x)) return x;  // return empty list
 
-    const int nrow = length(VECTOR_ELT(x,0));
+    const int nrow = length(VECTOR_ELT(x, 0));
+    // if fast return, return data.table if all rows selected through positive indices...
+    // if(asLogical(fastret) && nrow == LENGTH(rows) && INTEGER(rows)[0] > 0) {
+    //  if(LENGTH(cols) == length(x)) return x;
+    //  return subsetCols(x, cols);
+    // }
     // check index once up front for 0 or NA, for branchless subsetVectorRaw which is repeated for each column
-    bool anyNA=false, orderedSubset=true;   // true for when rows==null (meaning all rows)
-    if (!isNull(rows) && check_idx(rows, nrow, &anyNA, &orderedSubset)!=NULL) {
+    bool anyNA=false; // , orderedSubset=true;   // true for when rows==null (meaning all rows)
+    if (!isNull(rows) && check_idx(rows, nrow, &anyNA)!=NULL) { // , &orderedSubset
       SEXP max = PROTECT(ScalarInteger(nrow)); nprotect++;
       rows = PROTECT(convertNegAndZeroIdx(rows, max, ScalarLogical(TRUE))); nprotect++;
-      const char *err = check_idx(rows, nrow, &anyNA, &orderedSubset);
+      const char *err = check_idx(rows, nrow, &anyNA); // , &orderedSubset
       if (err!=NULL) error(err);
     }
 
     if (!isInteger(cols)) error("Internal error. Argument 'cols' to Csubset is type '%s' not 'integer'", type2char(TYPEOF(cols))); // # nocov
-      for (int i=0; i<LENGTH(cols); i++) {
-        int this = INTEGER(cols)[i];
-        if (this<1 || this>LENGTH(x)) error("Item %d of 'cols' is %d which is outside 1-based range [1,ncol(x)=%d]", i+1, this, LENGTH(x));
+    int ncol = LENGTH(cols), l = LENGTH(x), *pcols = INTEGER(cols);
+      for (int i = 0; i != ncol; ++i) {
+        if (pcols[i] < 1 || pcols[i] > l) error("Item %d of 'cols' is %d which is outside 1-based range [1,ncol(x)=%d]", i+1, pcols[i], l);
       }
 
-    int overAlloc = 1024; // checkOverAlloc(GetOption(install("datatable.alloccol"), R_NilValue));
-    SEXP ans = PROTECT(allocVector(VECSXP, LENGTH(cols)+overAlloc)); nprotect++;  // doing alloc.col directly here; eventually alloc.col can be deprecated.
+      // Adding sf geometry column if not already selected...
+      if(INHERITS(x, char_sf)) {
+        int sfcoln = NA_INTEGER, sf_col_sel = 0;
+        SEXP nam = PROTECT(getAttrib(x, R_NamesSymbol));
+        SEXP *pnam = STRING_PTR(nam), sfcol = asChar(getAttrib(x, sym_sf_column));
+        for(int i = l; i--; ) {
+          if(pnam[i] == sfcol) {
+            sfcoln = i + 1;
+            break;
+          }
+        }
+        UNPROTECT(1);
+        if(sfcoln == NA_INTEGER) error("sf data frame has no attribute 'sf_column'");
+        for(int i = ncol; i--; ) {
+          if(pcols[i] == sfcoln) {
+            sf_col_sel = 1;
+            break;
+          }
+        }
+        if(sf_col_sel == 0) {
+          cols = PROTECT(extendIntVec(cols, LENGTH(cols), sfcoln));
+          ++ncol; ++nprotect;
+          pcols = INTEGER(cols);
+        }
+      }
+
+
+    // int overAlloc = 1024; // checkOverAlloc(GetOption(install("datatable.alloccol"), R_NilValue));
+    SEXP ans = PROTECT(allocVector(VECSXP, ncol)); nprotect++; // +overAlloc  // doing alloc.col directly here; eventually alloc.col can be deprecated.
 
     // user-defined and superclass attributes get copied as from v1.12.0
     copyMostAttrib(x, ans);
@@ -279,33 +547,33 @@ SEXP subsetDT(SEXP x, SEXP rows, SEXP cols) {
     // includes row.names (oddly, given other dims aren't) and "sorted" dealt with below
   // class is also copied here which retains superclass name in class vector as has been the case for many years; e.g. tests 1228.* for #5296
 
-  SET_TRUELENGTH(ans, LENGTH(ans));
-  SETLENGTH(ans, LENGTH(cols));
+  // This is because overalloc.. creating columns by reference stuff..
+  // SET_TRUELENGTH(ans, LENGTH(ans));
+  // SETLENGTH(ans, LENGTH(cols));
   int ansn;
+  SEXP *px = SEXPPTR(x), *pans = SEXPPTR(ans);
   if (isNull(rows)) {
     ansn = nrow;
-    const int *colD = INTEGER(cols);
-    for (int i=0; i<LENGTH(cols); i++) {
-      SEXP thisCol = VECTOR_ELT(x, colD[i]-1);
-      checkCol(thisCol, colD[i], nrow, x);
-      SET_VECTOR_ELT(ans, i, copyAsPlain(thisCol));
+    for (int i = 0; i != ncol; ++i) {
+      SEXP thisCol = px[pcols[i]-1];
+      checkCol(thisCol, pcols[i], nrow, x);
+      pans[i] = thisCol; // copyAsPlain(thisCol) -> No deep copy
       // materialize the column subset as we have always done for now, until REFCNT is on by default in R (TODO)
     }
   } else {
     ansn = LENGTH(rows);  // has been checked not to contain zeros or negatives, so this length is the length of result
-    const int *colD = INTEGER(cols);
-    for (int i=0; i<LENGTH(cols); i++) {
-      SEXP source = VECTOR_ELT(x, colD[i]-1);
-      checkCol(source, colD[i], nrow, x);
+    for (int i = 0; i != ncol; ++i) {
+      SEXP source = px[pcols[i]-1];
+      checkCol(source, pcols[i], nrow, x);
       SEXP target;
-      SET_VECTOR_ELT(ans, i, target=allocVector(TYPEOF(source), ansn));
+      SET_VECTOR_ELT(ans, i, target = allocVector(TYPEOF(source), ansn));
       copyMostAttrib(source, target);
       subsetVectorRaw(target, source, rows, anyNA);  // parallel within column
     }
   }
-  SEXP tmp = PROTECT(allocVector(STRSXP, LENGTH(cols)+overAlloc)); nprotect++;
-  SET_TRUELENGTH(tmp, LENGTH(tmp));
-  SETLENGTH(tmp, LENGTH(cols));
+  SEXP tmp = PROTECT(allocVector(STRSXP, ncol)); nprotect++;
+  // SET_TRUELENGTH(tmp, LENGTH(tmp));
+  // SETLENGTH(tmp, LENGTH(cols));
   setAttrib(ans, R_NamesSymbol, tmp);
   subsetVectorRaw(tmp, getAttrib(x, R_NamesSymbol), cols, /*anyNA=*/false);
 
@@ -315,20 +583,25 @@ SEXP subsetDT(SEXP x, SEXP rows, SEXP cols) {
   setAttrib(ans, R_RowNamesSymbol, tmp);  // The contents of tmp must be set before being passed to setAttrib(). setAttrib looks at tmp value and copies it in the case of R_RowNamesSymbol. Caused hard to track bug around 28 Sep 2014.
 
   // clear any index that was copied over by copyMostAttrib() above, e.g. #1760 and #1734 (test 1678)
-  setAttrib(ans, sym_index, R_NilValue);
+  setAttrib(ans, sym_index, R_NilValue); // also ok for pdata.frame (can't use on subsetted or ordered data frame)
 
-  // unlock(ans);
-  // setselfref(ans);
+  if(INHERITS(x, char_datatable)) {
+    setAttrib(ans, sym_sorted, R_NilValue);
+    setAttrib(ans, sym_datatable_locked, R_NilValue);
+    UNPROTECT(nprotect);
+    return shallow(ans, R_NilValue, ncol+100); // 1024 is data.table default..
+    // setselfref(ans); // done by shallow
+  }
   UNPROTECT(nprotect);
   return ans;
 }
 
 SEXP subsetVector(SEXP x, SEXP idx) { // idx is 1-based passed from R level
-  bool anyNA=false, orderedSubset=false;
+  bool anyNA = false; //, orderedSubset=false;
   int nprotect=0;
   if (isNull(x))
     error("Internal error: NULL can not be subset. It is invalid for a data.table to contain a NULL column.");      // # nocov
-  if (check_idx(idx, length(x), &anyNA, &orderedSubset) != NULL)
+  if (check_idx(idx, length(x), &anyNA) != NULL) // , &orderedSubset
     error("Internal error: CsubsetVector is internal-use-only but has received negatives, zeros or out-of-range");  // # nocov
   SEXP ans = PROTECT(allocVector(TYPEOF(x), length(idx))); nprotect++;
   copyMostAttrib(x, ans);

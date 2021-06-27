@@ -15,6 +15,7 @@
 \alias{fnrow}
 \alias{fncol}
 \alias{fdim}
+\alias{alloc}
 \alias{allNA}
 \alias{missing_cases}
 \alias{na_rm}
@@ -31,8 +32,8 @@
 \alias{setAttrib}
 \alias{copyAttrib}
 \alias{copyMostAttrib}
-\alias{is.categorical}
-\alias{is.Date}
+\alias{is_categorical}
+\alias{is_date}
 
 %- Also NEED an '\alias' for EACH other topic documented here.
 \title{
@@ -58,6 +59,7 @@ fnlevels(x)                   # Faster version of nlevels(x) (for factors)
 fnrow(X)                      # Faster nrow for data frames (not faster for matrices)
 fncol(X)                      # Faster ncol for data frames (not faster for matrices)
 fdim(X)                       # Faster dim for data frames (not faster for matrices)
+alloc(value, n)               # Same as rep_len for a single value, but faster
 allNA(x)                      # Check for all missing cases in a vector
 missing_cases(X, cols = NULL) # Find missing cases in a matrix / data framme
 na_rm(x)                      # Remove missing values from vector and return vector
@@ -79,8 +81,8 @@ unattrib(object)              # Remove all attributes from object
 setAttrib(object, a)          # Replace all attributes with list of attributes 'a'
 copyAttrib(to, from)          # Copy all attributes from object 'from' to object 'to'
 copyMostAttrib(to, from)      # Copy most attributes from object 'from' to object 'to'
-is.categorical(x)             # The opposite of is.numeric
-is.Date(x)                    # Check if object is of class "Date", "POSIXlt" or "POSIXct"
+is_categorical(x)             # The opposite of is.numeric
+is_date(x)                    # Check if object is of class "Date", "POSIXlt" or "POSIXct"
 
 }
 %- maybe also 'usage' for other objects documented here.
@@ -90,7 +92,8 @@ is.Date(x)                    # Check if object is of class "Date", "POSIXlt" or
   \item{object, to, from}{a suitable R object.}
   \item{a}{a suitable list of attributes.}
   \item{attrn}{character. Name of attribute to store labels or retrieve labels from.}
-  \item{value}{a matching character vector of variable labels.}
+  \item{value}{for \code{alloc}: a single value of any vector type. For \code{vlabels}: a matching character vector of variable labels.}
+  \item{n}{integer. The length of the vector to allocate with \code{value}.}
   \item{class}{logical. Also show the classes of variables in X in a column?}
   \item{stub}{a single character stub, i.e. "log.", which by default will be pre-applied to all variables or column names in X.}
   \item{pre}{logical. \code{FALSE} will post-apply \code{stub}.}
@@ -160,7 +163,7 @@ rm(l)
 
 ## Missing values
 mtc_na <- na_insert(mtcars, 0.15)    # Set 15\% of values missing at random
-fNobs(mtc_na)                        # See observation count
+fnobs(mtc_na)                        # See observation count
 na_omit(mtc_na)                      # 12x faster than na.omit(mtc_na)
 na_omit(mtc_na, na.attr = TRUE)      # Adds attribute with removed cases, like na.omit
 na_omit(mtc_na, cols = c("vs","am")) # Removes only cases missing vs or am

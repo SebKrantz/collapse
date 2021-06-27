@@ -14,7 +14,7 @@
 \alias{char_vars}
 \alias{fact_vars}
 \alias{logi_vars}
-\alias{Date_vars}
+\alias{date_vars}
 \alias{add_vars}
 \alias{av}
 \alias{get_vars<-}
@@ -26,7 +26,7 @@
 \alias{char_vars<-}
 \alias{fact_vars<-}
 \alias{logi_vars<-}
-\alias{Date_vars<-}
+\alias{date_vars<-}
 \alias{add_vars<-}
 \alias{av<-}
 \title{Fast Select, Replace or Add Data Frame Columns}
@@ -64,7 +64,7 @@ num_vars(x, return = "data")
 num_vars(x) <- value
       nv(x, return = "data")       # Shortcut for num_vars
       nv(x) <- value               # Shortcut for num_vars<-
-cat_vars(x, return = "data")       # Categorical variables, see is.categorical
+cat_vars(x, return = "data")       # Categorical variables, see is_categorical
 cat_vars(x) <- value
 char_vars(x, return = "data")
 char_vars(x) <- value
@@ -72,8 +72,8 @@ fact_vars(x, return = "data")
 fact_vars(x) <- value
 logi_vars(x, return = "data")
 logi_vars(x) <- value
-Date_vars(x, return = "data")      # See is.Date
-Date_vars(x) <- value
+date_vars(x, return = "data")      # See is_date
+date_vars(x) <- value
 }
 
 \arguments{
@@ -128,7 +128,7 @@ rm(wlddev)
 
 head(num_vars(wlddev))                                     # Select numeric variables
 head(cat_vars(wlddev))                                     # Select categorical (non-numeric) vars
-head(get_vars(wlddev, is.categorical))                     # Same thing
+head(get_vars(wlddev, is_categorical))                     # Same thing
 
 num_vars(wlddev) <- num_vars(wlddev)                       # Replace Numeric Variables by themselves
 get_vars(wlddev,is.numeric) <- get_vars(wlddev,is.numeric) # Same thing
@@ -143,7 +143,7 @@ get_vars(wlddev, 9:12) <- get_vars(wlddev, 9:12)           # 9x faster wlddev[9:
 add_vars(wlddev) <- STD(gv(wlddev,9:12), wlddev$iso3c)     # Add Standardized columns 9 through 12
 head(wlddev)                                               # gv and av are shortcuts
 
-get_vars(wlddev, 13:16) <- NULL                            # Efficient Deleting added columns again
+get_vars(wlddev, 14:17) <- NULL                            # Efficient Deleting added columns again
 av(wlddev, "front") <- STD(gv(wlddev,9:12), wlddev$iso3c)  # Again adding in Front
 head(wlddev)
 get_vars(wlddev, 1:4) <- NULL                              # Deleting

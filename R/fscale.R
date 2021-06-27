@@ -16,7 +16,7 @@ fscale.default <- function(x, g = NULL, w = NULL, na.rm = TRUE, mean = 0, sd = 1
     g <- qG(g, sort = FALSE, na.exclude = FALSE)
     return(.Call(Cpp_fscale,x,attr(g,"N.groups"),g,w,na.rm,cm(mean),csd(sd)))
   }
-  if(!is.GRP(g)) g <- GRP.default(g, return.groups = FALSE, call = FALSE)
+  if(!is_GRP(g)) g <- GRP.default(g, return.groups = FALSE, call = FALSE)
   .Call(Cpp_fscale,x,g[[1L]],g[[2L]],w,na.rm,cm(mean),csd(sd))
 }
 
@@ -34,7 +34,7 @@ fscale.matrix <- function(x, g = NULL, w = NULL, na.rm = TRUE, mean = 0, sd = 1,
     g <- qG(g, sort = FALSE, na.exclude = FALSE)
     return(.Call(Cpp_fscalem,x,attr(g,"N.groups"),g,w,na.rm,cm(mean),csd(sd)))
   }
-  if(!is.GRP(g)) g <- GRP.default(g, return.groups = FALSE, call = FALSE)
+  if(!is_GRP(g)) g <- GRP.default(g, return.groups = FALSE, call = FALSE)
   .Call(Cpp_fscalem,x,g[[1L]],g[[2L]],w,na.rm,cm(mean),csd(sd))
 }
 
@@ -69,7 +69,7 @@ fscale.data.frame <- function(x, g = NULL, w = NULL, na.rm = TRUE, mean = 0, sd 
     g <- qG(g, sort = FALSE, na.exclude = FALSE)
     return(.Call(Cpp_fscalel,x,attr(g,"N.groups"),g,w,na.rm,cm(mean),csd(sd)))
   }
-  if(!is.GRP(g)) g <- GRP.default(g, return.groups = FALSE, call = FALSE)
+  if(!is_GRP(g)) g <- GRP.default(g, return.groups = FALSE, call = FALSE)
   .Call(Cpp_fscalel,x,g[[1L]],g[[2L]],w,na.rm,cm(mean),csd(sd))
 }
 
@@ -184,7 +184,7 @@ STD.data.frame <- function(x, by = NULL, w = NULL, cols = is.numeric,
     } else {
       gn <- NULL
       if(length(cols)) cols <- cols2int(cols, x, nam)
-      if(!is.GRP(by)) by <- if(is.null(by)) list(0L, 0L, NULL) else if(is.atomic(by)) # Necessary for if by is passed externally !
+      if(!is_GRP(by)) by <- if(is.null(by)) list(0L, 0L, NULL) else if(is.atomic(by)) # Necessary for if by is passed externally !
         at2GRP(by) else GRP.default(by, return.groups = FALSE, call = FALSE)
     }
 
@@ -216,7 +216,7 @@ STD.data.frame <- function(x, by = NULL, w = NULL, cols = is.numeric,
     by <- qG(by, sort = FALSE, na.exclude = FALSE)
     return(.Call(Cpp_fscalel,x,attr(by,"N.groups"),by,w,na.rm,cm(mean),csd(sd)))
   }
-  if(!is.GRP(by)) by <- GRP.default(by, return.groups = FALSE, call = FALSE)
+  if(!is_GRP(by)) by <- GRP.default(by, return.groups = FALSE, call = FALSE)
   .Call(Cpp_fscalel,x,by[[1L]],by[[2L]],w,na.rm,cm(mean),csd(sd))
 }
 

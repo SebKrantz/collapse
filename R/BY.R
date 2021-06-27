@@ -10,8 +10,8 @@ BY.default <- function(x, g, FUN, ..., use.g.names = TRUE, sort = TRUE,
   if(!(is.function(FUN) || is.character(FUN))) stop("FUN needs to be a function")
   aplyfun <- if(parallel) function(...) mclapply(..., mc.cores = mc.cores) else lapply
   simplify <- switch(return[1L], same = 1L, vector = 2L, list = 3L, stop("BY.default only supports same, vector and list output!"))
-  if(!is.factor(g)) g <- if(is.GRP(g)) as.factor_GRP(g) else if(is.list(g))
-                         as.factor_GRP(GRP.default(g, sort = sort, call = FALSE)) else
+  if(!is.factor(g)) g <- if(is_GRP(g)) as_factor_GRP(g) else if(is.list(g))
+                         as_factor_GRP(GRP.default(g, sort = sort, call = FALSE)) else
                            qF(g, sort = sort, na.exclude = FALSE)
     res <- aplyfun(split(x, g), FUN, ...)
     if(simplify < 3L) {
@@ -51,8 +51,8 @@ BY.data.frame <- function(x, g, FUN, ..., use.g.names = TRUE, sort = TRUE,
   aplyfun <- if(parallel) function(...) mclapply(..., mc.cores = mc.cores) else lapply
   return <- switch(return[1L], same = 1L, matrix = 3L, data.frame = 2L, list = 0L,
                    stop("Unknown return option!"))
-  if(!is.factor(g)) g <- if(is.GRP(g)) as.factor_GRP(g) else if(is.list(g))
-                    as.factor_GRP(GRP.default(g, sort = sort, call = FALSE)) else
+  if(!is.factor(g)) g <- if(is_GRP(g)) as_factor_GRP(g) else if(is.list(g))
+                    as_factor_GRP(GRP.default(g, sort = sort, call = FALSE)) else
                       qF(g, sort = sort, na.exclude = FALSE)
   if(return != 0L) {
     ax <- attributes(x)
@@ -128,8 +128,8 @@ BY.matrix <- function(x, g, FUN, ..., use.g.names = TRUE, sort = TRUE,
   aplyfun <- if(parallel) function(...) parallel::mclapply(..., mc.cores = mc.cores) else lapply
   return <- switch(return[1L], same = 3L, matrix = 2L, data.frame = 1L, list = 0L,
                    stop("Unknown return option!"))
-  if(!is.factor(g)) g <- if(is.GRP(g)) as.factor_GRP(g) else if(is.list(g))
-                    as.factor_GRP(GRP.default(g, sort = sort, call = FALSE)) else
+  if(!is.factor(g)) g <- if(is_GRP(g)) as_factor_GRP(g) else if(is.list(g))
+                    as_factor_GRP(GRP.default(g, sort = sort, call = FALSE)) else
                     qF(g, sort = sort, na.exclude = FALSE)
   if(return != 0L) {
     ax <- attributes(x)
@@ -188,13 +188,13 @@ BY.grouped_df <- function(x, FUN, ..., use.g.names = FALSE, keep.group_vars = TR
   g <- GRP.grouped_df(x, call = FALSE)
   groups <- g[[4L]]
   gnam <- g[[5L]]
-  g <- as.factor_GRP(g)
+  g <- as_factor_GRP(g)
   gn <- which(attr(x, "names") %in% gnam) # correct !
   if(length(gn)) {
     if(!keep.group_vars) return(BY.data.frame(x[-gn], g, FUN, ..., # colsubset(x, -gn) dont use colsubset -> doesn't drop group attachment !, for the other cases can always use ungroup !
                            use.g.names = use.g.names, sort = TRUE, expand.wide = expand.wide,
                            parallel = parallel, mc.cores = mc.cores, return = return))
-      res <- BY.data.frame(fcolsubset(x, -gn), g, FUN, ...,
+      res <- BY.data.frame(.Call(C_subsetCols, x, -gn, FALSE), g, FUN, ...,
                            use.g.names = use.g.names, sort = TRUE, expand.wide = expand.wide,
                            parallel = parallel, mc.cores = mc.cores, return = return)
       if(is.data.frame(res)) {

@@ -64,7 +64,7 @@ This is an R port to \code{std::nth_element}, an efficient partial sorting algor
 
 \code{fnth} generalizes the principles of median value calculation to find arbitrary elements. It offers considerable flexibility by providing both simple order statistics and simple discontinuous quantile estimation. Regarding the former, setting \code{n} to an index between 1 and \code{NROW(x)} will return the n'th smallest element of \code{x}, about 2x faster than \code{sort(x, partial = n)[n]}. As to the latter, setting \code{n} to a probability between 0 and 1 will return the corresponding element of \code{x}, and resolve ties between multiple qualifying elements (such as when \code{n = 0.5} and \code{x} is even) using the arithmetic average \code{ties = "mean"}, or the smallest \code{ties = "min"} or largest \code{ties = "max"} of those elements.
 
-If \code{n > 1} is used and \code{x} contains missing values (and \code{na.rm = TRUE}, otherwise \code{NA} is returned), \code{n} is internally converted to a probability using \code{p = (n-1)/(NROW(x)-1)}, and that probability is applied to the set of complete elements (of each column if \code{x} is a matrix or data frame) to find the \code{as.integer(p*(fNobs(x)-1))+1L}'th element (which corresponds to option \code{ties = "min"}). Note that it is necessary to subtract and add 1 so that \code{n = 1} corresponds to \code{p = 0} and \code{n = NROW(x)} to \code{p = 1}. %So if \code{n > 1} is used in the presence of missing values, and the default \code{ties = "mean"} is enabled, the resulting element could be the average of two elements.
+If \code{n > 1} is used and \code{x} contains missing values (and \code{na.rm = TRUE}, otherwise \code{NA} is returned), \code{n} is internally converted to a probability using \code{p = (n-1)/(NROW(x)-1)}, and that probability is applied to the set of complete elements (of each column if \code{x} is a matrix or data frame) to find the \code{as.integer(p*(fnobs(x)-1))+1L}'th element (which corresponds to option \code{ties = "min"}). Note that it is necessary to subtract and add 1 so that \code{n = 1} corresponds to \code{p = 0} and \code{n = NROW(x)} to \code{p = 1}. %So if \code{n > 1} is used in the presence of missing values, and the default \code{ties = "mean"} is enabled, the resulting element could be the average of two elements.
 
 When using grouped computations (supplying a vector or list to \code{g} subdividing \code{x}) and \code{n > 1} is used, it is transformed to a probability \code{p = (n-1)/(NROW(x)/ng-1)} (where \code{ng} contains the number of unique groups in \code{g}) and \code{ties = "lower"} is used to sort out clashes. This could be useful for example to return the n'th smallest element of each group in a balanced panel, but with unequal group sizes it more intuitive to pass a probability to \code{n}.
 
@@ -94,7 +94,7 @@ fnth(mpg, 0.75, w = mtcars$hp)    # Weighted third quartile: Weighted by hp
 fnth(mpg, 0.75, TRA = "-")        # Simple transformation: Subtract third quartile
 fnth(mpg, 0.75, mtcars$cyl)             # Grouped third quartile
 fnth(mpg, 0.75, mtcars[c(2,8:9)])       # More groups..
-g <- GRP(mtcars, ~ cyl + vs + am)    # Precomputing groups gives more speed !
+g <- GRP(mtcars, ~ cyl + vs + am)       # Precomputing groups gives more speed !
 fnth(mpg, 0.75, g)
 fnth(mpg, 0.75, g, mtcars$hp)           # Grouped weighted third quartile
 fnth(mpg, 0.75, g, TRA = "-")           # Groupwise subtract third quartile
@@ -115,11 +115,11 @@ fnth(m, 0.75, g) # etc..
 \donttest{ % No code relying on suggested package
 library(dplyr)
 ## grouped_df method
-mtcars \%>\% group_by(cyl,vs,am) \%>\% fnth(0.75)
-mtcars \%>\% group_by(cyl,vs,am) \%>\% fnth(0.75, hp)           # Weighted
-mtcars \%>\% fgroup_by(cyl,vs,am) \%>\% fnth(0.75)              # Faster grouping!
-mtcars \%>\% fgroup_by(cyl,vs,am) \%>\% fnth(0.75, TRA = "/")   # Divide by third quartile
-mtcars \%>\% fgroup_by(cyl,vs,am) \%>\% fselect(mpg, hp) \%>\%    # Faster selecting
+mtcars |> group_by(cyl,vs,am) |> fnth(0.75)
+mtcars |> group_by(cyl,vs,am) |> fnth(0.75, hp)           # Weighted
+mtcars |> fgroup_by(cyl,vs,am) |> fnth(0.75)              # Faster grouping!
+mtcars |> fgroup_by(cyl,vs,am) |> fnth(0.75, TRA = "/")   # Divide by third quartile
+mtcars |> fgroup_by(cyl,vs,am) |> fselect(mpg, hp) |>     # Faster selecting
       fnth(0.75, hp, "/")  # Divide mpg by its third weighted group-quartile, using hp as weights
 }
 }

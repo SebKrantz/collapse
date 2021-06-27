@@ -72,7 +72,7 @@
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">collapse</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">1.5.3</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">1.6.0</span>
       </span>
     </div>
 
@@ -94,13 +94,13 @@
       <ul class="nav navbar-nav navbar-right">
         <li>
   <a href="https://twitter.com/collapse_R" target="_blank">
-    <span class="fa fa-twitter"></span>
+    <span class="fas fa-twitter"></span>
      
   </a>
 </li>
 <li>
   <a href="https://github.com/SebKrantz/collapse" target="_blank">
-    <span class="fa fa-github"></span>
+    <span class="fas fa-github"></span>
      
   </a>
 </li>
@@ -123,7 +123,7 @@
     </div>
 
     <div class="ref-description">
-    <p><code>funique</code> is a substantially faster alternative to <code><a href='https://rdrr.io/r/base/unique.html'>unique</a></code>. It is generic with a default vector method and a data frame method.</p>
+    <p><code>funique</code> is a substantially faster alternative to <code><a href='https://rdrr.io/pkg/data.table/man/duplicated.html'>unique</a></code>. It is generic with a default vector method and a data frame method.</p>
     </div>
 
     <pre class="usage"><span class='fu'>funique</span><span class='op'>(</span><span class='va'>x</span>, <span class='va'>...</span><span class='op'>)</span>
@@ -132,6 +132,9 @@
 <span class='fu'>funique</span><span class='op'>(</span><span class='va'>x</span>, sort <span class='op'>=</span> <span class='cn'>FALSE</span>, method <span class='op'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span><span class='op'>(</span><span class='st'>"auto"</span>, <span class='st'>"radix"</span>, <span class='st'>"hash"</span><span class='op'>)</span>, <span class='va'>...</span><span class='op'>)</span>
 
 <span class='co'># S3 method for data.frame</span>
+<span class='fu'>funique</span><span class='op'>(</span><span class='va'>x</span>, cols <span class='op'>=</span> <span class='cn'>NULL</span>, sort <span class='op'>=</span> <span class='cn'>FALSE</span>, <span class='va'>...</span><span class='op'>)</span>
+
+<span class='co'># S3 method for sf</span>
 <span class='fu'>funique</span><span class='op'>(</span><span class='va'>x</span>, cols <span class='op'>=</span> <span class='cn'>NULL</span>, sort <span class='op'>=</span> <span class='cn'>FALSE</span>, <span class='va'>...</span><span class='op'>)</span></pre>
 
     <h2 class="hasAnchor" id="arguments"><a class="anchor" href="#arguments"></a>Arguments</h2>
@@ -168,6 +171,7 @@
     <h2 class="hasAnchor" id="details"><a class="anchor" href="#details"></a>Details</h2>
 
     <p>If <code>x</code> is a data frame / list and all rows are already unique, then <code>x</code> is returned. Otherwise a copy of <code>x</code> with duplicate rows removed is returned.  See <code><a href='qF, qG, finteraction.html'>qF</a></code> for some additional computational details.</p>
+<p>The <em>sf</em> method simply ignores the geometry column when determining unique values.</p>
     <h2 class="hasAnchor" id="value"><a class="anchor" href="#value"></a>Value</h2>
 
     <p><code>x</code> with duplicate elements/rows removed. <!-- % sorted in ascending order if \code{sort = TRUE}, and in order of first occurrence if \code{sort = FALSE}. --></p>

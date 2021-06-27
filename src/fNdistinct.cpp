@@ -7,7 +7,7 @@ using namespace Rcpp;
 
 
 template <int RTYPE>
-IntegerVector fNdistinctImpl(const Vector<RTYPE>& x, int ng, const IntegerVector& g,
+IntegerVector fndistinctImpl(const Vector<RTYPE>& x, int ng, const IntegerVector& g,
                               const SEXP& gs, bool narm) {
   int l = x.size();
   typedef typename Rcpp::traits::storage_type<RTYPE>::type storage_t;
@@ -104,7 +104,7 @@ IntegerVector fNdistinctImpl(const Vector<RTYPE>& x, int ng, const IntegerVector
 }
 
 
-IntegerVector fNdistinctFACT(const IntegerVector& x, int ng, const IntegerVector& g,
+IntegerVector fndistinctFACT(const IntegerVector& x, int ng, const IntegerVector& g,
                              const SEXP& gs, bool narm) {
   int l = x.size(), nlevp = Rf_nlevels(x)+1, n = 1;
     if(ng == 0) {
@@ -192,7 +192,7 @@ IntegerVector fNdistinctFACT(const IntegerVector& x, int ng, const IntegerVector
 }
 
 // No logical vector with sugar::IndexHash<RTYPE> !
-IntegerVector fNdistinctLOGI(const LogicalVector& x, int ng, const IntegerVector& g,
+IntegerVector fndistinctLOGI(const LogicalVector& x, int ng, const IntegerVector& g,
                               const SEXP& gs, bool narm) {
   int l = x.size();
 
@@ -271,18 +271,18 @@ IntegerVector fNdistinctLOGI(const LogicalVector& x, int ng, const IntegerVector
 
 
 // [[Rcpp::export]]
-SEXP fNdistinctCpp(const SEXP& x, int ng = 0, const IntegerVector& g = 0, const SEXP& gs = R_NilValue, bool narm = true) {
+SEXP fndistinctCpp(const SEXP& x, int ng = 0, const IntegerVector& g = 0, const SEXP& gs = R_NilValue, bool narm = true) {
   switch(TYPEOF(x)) {
   case REALSXP:
-    return fNdistinctImpl<REALSXP>(x, ng, g, gs, narm);
+    return fndistinctImpl<REALSXP>(x, ng, g, gs, narm);
   case INTSXP:
     if(Rf_isFactor(x) && (ng == 0 || Rf_nlevels(x) < Rf_length(x) / ng * 3))
-      return fNdistinctFACT(x, ng, g, gs, narm);
-    return fNdistinctImpl<INTSXP>(x, ng, g, gs, narm);
+      return fndistinctFACT(x, ng, g, gs, narm);
+    return fndistinctImpl<INTSXP>(x, ng, g, gs, narm);
   case STRSXP:
-    return fNdistinctImpl<STRSXP>(x, ng, g, gs, narm);
+    return fndistinctImpl<STRSXP>(x, ng, g, gs, narm);
   case LGLSXP:
-    return fNdistinctLOGI(x, ng, g, gs, narm);
+    return fndistinctLOGI(x, ng, g, gs, narm);
   default: stop("Not supported SEXP type !");
   }
   return R_NilValue;
@@ -290,7 +290,7 @@ SEXP fNdistinctCpp(const SEXP& x, int ng = 0, const IntegerVector& g = 0, const 
 
 
 // [[Rcpp::export]]
-SEXP fNdistinctlCpp(const List& x, int ng = 0, const IntegerVector& g = 0,
+SEXP fndistinctlCpp(const List& x, int ng = 0, const IntegerVector& g = 0,
                     const SEXP& gs = R_NilValue, bool narm = true, bool drop = true) {
   int l = x.size();
   List out(l);
@@ -298,18 +298,18 @@ SEXP fNdistinctlCpp(const List& x, int ng = 0, const IntegerVector& g = 0,
   for(int j = l; j--; ) {
     switch(TYPEOF(x[j])) {
     case REALSXP:
-      out[j] = fNdistinctImpl<REALSXP>(x[j], ng, g, gs, narm);
+      out[j] = fndistinctImpl<REALSXP>(x[j], ng, g, gs, narm);
       break;
     case INTSXP:
       if(Rf_isFactor(x[j]) && (ng == 0 || Rf_nlevels(x[j]) < Rf_length(x[j]) / ng * 3))
-        out[j] = fNdistinctFACT(x[j], ng, g, gs, narm);
-      else out[j] = fNdistinctImpl<INTSXP>(x[j], ng, g, gs, narm);
+        out[j] = fndistinctFACT(x[j], ng, g, gs, narm);
+      else out[j] = fndistinctImpl<INTSXP>(x[j], ng, g, gs, narm);
       break;
     case STRSXP:
-      out[j] = fNdistinctImpl<STRSXP>(x[j], ng, g, gs, narm);
+      out[j] = fndistinctImpl<STRSXP>(x[j], ng, g, gs, narm);
       break;
     case LGLSXP:
-      out[j] = fNdistinctLOGI(x[j], ng, g, gs, narm);
+      out[j] = fndistinctLOGI(x[j], ng, g, gs, narm);
       break;
     default: stop("Not supported SEXP type !");
     }
@@ -330,7 +330,7 @@ SEXP fNdistinctlCpp(const List& x, int ng = 0, const IntegerVector& g = 0,
 
 
 template <int RTYPE>
-SEXP fNdistinctmImpl(const Matrix<RTYPE>& x, int ng, const IntegerVector& g,
+SEXP fndistinctmImpl(const Matrix<RTYPE>& x, int ng, const IntegerVector& g,
                       const SEXP& gs, bool narm, bool drop) {
   int l = x.nrow(), col = x.ncol();
   typedef typename Rcpp::traits::storage_type<RTYPE>::type storage_t;
@@ -442,7 +442,7 @@ SEXP fNdistinctmImpl(const Matrix<RTYPE>& x, int ng, const IntegerVector& g,
 }
 
 template <> // No logical vector with sugar::IndexHash<RTYPE> !
-SEXP fNdistinctmImpl(const Matrix<LGLSXP>& x, int ng, const IntegerVector& g, const SEXP& gs, bool narm, bool drop) {
+SEXP fndistinctmImpl(const Matrix<LGLSXP>& x, int ng, const IntegerVector& g, const SEXP& gs, bool narm, bool drop) {
   int l = x.nrow(), col = x.ncol();
 
   if(ng == 0) {
@@ -540,38 +540,38 @@ SEXP fNdistinctmImpl(const Matrix<LGLSXP>& x, int ng, const IntegerVector& g, co
 }
 
 template <>
-SEXP fNdistinctmImpl(const Matrix<CPLXSXP>& x, int ng, const IntegerVector& g, const SEXP& gs, bool narm, bool drop) {
+SEXP fndistinctmImpl(const Matrix<CPLXSXP>& x, int ng, const IntegerVector& g, const SEXP& gs, bool narm, bool drop) {
   stop("Not supported SEXP type!");
 }
 
 template <>
-SEXP fNdistinctmImpl(const Matrix<VECSXP>& x, int ng, const IntegerVector& g, const SEXP& gs, bool narm, bool drop) {
+SEXP fndistinctmImpl(const Matrix<VECSXP>& x, int ng, const IntegerVector& g, const SEXP& gs, bool narm, bool drop) {
   stop("Not supported SEXP type!");
 }
 
 template <>
-SEXP fNdistinctmImpl(const Matrix<RAWSXP>& x, int ng, const IntegerVector& g, const SEXP& gs, bool narm, bool drop) {
+SEXP fndistinctmImpl(const Matrix<RAWSXP>& x, int ng, const IntegerVector& g, const SEXP& gs, bool narm, bool drop) {
   stop("Not supported SEXP type!");
 }
 
 template <>
-SEXP fNdistinctmImpl(const Matrix<EXPRSXP>& x, int ng, const IntegerVector& g, const SEXP& gs, bool narm, bool drop) {
+SEXP fndistinctmImpl(const Matrix<EXPRSXP>& x, int ng, const IntegerVector& g, const SEXP& gs, bool narm, bool drop) {
   stop("Not supported SEXP type!");
 }
 
 
 // [[Rcpp::export]]
-SEXP fNdistinctmCpp(SEXP x, int ng = 0, IntegerVector g = 0, SEXP gs = R_NilValue, bool narm = true, bool drop = true) {
-  RCPP_RETURN_MATRIX(fNdistinctmImpl, x, ng, g, gs, narm, drop);
+SEXP fndistinctmCpp(SEXP x, int ng = 0, IntegerVector g = 0, SEXP gs = R_NilValue, bool narm = true, bool drop = true) {
+  RCPP_RETURN_MATRIX(fndistinctmImpl, x, ng, g, gs, narm, drop);
 }
 
 
 // This brings down code size from 180 kb to 168 kb, but about 25% slower than above..
 // template <int RTYPE>
-// SEXP fNdistinctmImpl(const Matrix<RTYPE>& x, int ng, const IntegerVector& g, const SEXP& gs, bool narm, bool drop) {
+// SEXP fndistinctmImpl(const Matrix<RTYPE>& x, int ng, const IntegerVector& g, const SEXP& gs, bool narm, bool drop) {
 //   int col = x.ncol();
 //   Matrix<RTYPE> out = (ng == 0) ? no_init_matrix(1, col) : no_init_matrix(ng, col);
-//   for(int j = col; j--; ) out(_, j) = fNdistinctImpl<RTYPE>(x(_, j), ng, g, gs, narm);
+//   for(int j = col; j--; ) out(_, j) = fndistinctImpl<RTYPE>(x(_, j), ng, g, gs, narm);
 //   if(drop) {
 //     Rf_setAttrib(out, R_DimSymbol, R_NilValue);
 //     Rf_setAttrib(out, R_NamesSymbol, colnames(x));
@@ -583,27 +583,27 @@ SEXP fNdistinctmCpp(SEXP x, int ng = 0, IntegerVector g = 0, SEXP gs = R_NilValu
 //
 //
 // template <>
-// SEXP fNdistinctmImpl(const Matrix<CPLXSXP>& x, int ng, const IntegerVector& g, const SEXP& gs, bool narm, bool drop) {
+// SEXP fndistinctmImpl(const Matrix<CPLXSXP>& x, int ng, const IntegerVector& g, const SEXP& gs, bool narm, bool drop) {
 //   stop("Not supported SEXP type!");
 // }
 //
 // template <>
-// SEXP fNdistinctmImpl(const Matrix<VECSXP>& x, int ng, const IntegerVector& g, const SEXP& gs, bool narm, bool drop) {
+// SEXP fndistinctmImpl(const Matrix<VECSXP>& x, int ng, const IntegerVector& g, const SEXP& gs, bool narm, bool drop) {
 //   stop("Not supported SEXP type!");
 // }
 //
 // template <>
-// SEXP fNdistinctmImpl(const Matrix<RAWSXP>& x, int ng, const IntegerVector& g, const SEXP& gs, bool narm, bool drop) {
+// SEXP fndistinctmImpl(const Matrix<RAWSXP>& x, int ng, const IntegerVector& g, const SEXP& gs, bool narm, bool drop) {
 //   stop("Not supported SEXP type!");
 // }
 //
 // template <>
-// SEXP fNdistinctmImpl(const Matrix<EXPRSXP>& x, int ng, const IntegerVector& g, const SEXP& gs, bool narm, bool drop) {
+// SEXP fndistinctmImpl(const Matrix<EXPRSXP>& x, int ng, const IntegerVector& g, const SEXP& gs, bool narm, bool drop) {
 //   stop("Not supported SEXP type!");
 // }
 //
 //
 // // [[Rcpp::export]]
-// SEXP fNdistinctmCpp(SEXP x, int ng = 0, IntegerVector g = 0, SEXP gs = R_NilValue, bool narm = true, bool drop = true) {
-//   RCPP_RETURN_MATRIX(fNdistinctmImpl, x, ng, g, gs, narm, drop);
+// SEXP fndistinctmCpp(SEXP x, int ng = 0, IntegerVector g = 0, SEXP gs = R_NilValue, bool narm = true, bool drop = true) {
+//   RCPP_RETURN_MATRIX(fndistinctmImpl, x, ng, g, gs, narm, drop);
 // }

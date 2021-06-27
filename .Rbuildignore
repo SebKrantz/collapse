@@ -19,6 +19,7 @@ vignettes/collapse_intro
 vignettes/collapse_and_plm
 vignettes/collapse_and_dplyr
 vignettes/collapse_and_data.table
+vignettes/collapse_and_sf
 ^doc$
 ^\.RData
 ^Meta$

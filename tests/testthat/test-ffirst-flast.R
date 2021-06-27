@@ -1,7 +1,10 @@
 context("ffirst and flast")
 
-# rm(list = ls())
+# TODO: Check matrix with list columns !!
+# Benchmark with groups: Bettr to check missing x ???
 
+# rm(list = ls())
+set.seed(101)
 x <- rnorm(100)
 w <- abs(100 * rnorm(100))
 xNA <- x
@@ -16,9 +19,18 @@ g <- GRP(droplevels(data$iso3c))
 dataNA <- na_insert(data)
 m <- as.matrix(data)
 mNA <- as.matrix(dataNA)
+data$LC <- as.list(data$PCGDP)
+dataNA$LC <- lapply(na_insert(data["LC"])[[1]], function(x) if(is.na(x)) NULL else x)
 
-basefirst <- function(x, na.rm = FALSE) if(na.rm) x[which(!is.na(x))[1L]] else x[1L]
-baselast <- function(x, na.rm = FALSE) if(na.rm && !all(na <- is.na(x))) x[which(!na)[sum(!na)]] else x[length(x)]
+basefirst <- function(x, na.rm = FALSE) {
+  if(is.list(x)) return(if(na.rm) x[which(lengths(x) > 0L)[1L]] else x[1L])
+  if(na.rm) x[which(!is.na(x))[1L]] else x[1L]
+}
+baselast <- function(x, na.rm = FALSE) {
+  lst <- function(x) x[length(x)]
+  if(is.list(x)) return(if(na.rm) x[lst(which(lengths(x) > 0L))] else lst(x))
+  if(na.rm && !all(na <- is.na(x))) x[lst(which(!na))] else lst(x)
+}
 
 # ffirst
 
@@ -33,8 +45,10 @@ test_that("ffirst performs like basefirst (defined above)", {
   expect_equal(ffirst(-1:1, na.rm = FALSE), basefirst(-1:1))
   expect_equal(ffirst(x), basefirst(x, na.rm = TRUE))
   expect_equal(ffirst(x, na.rm = FALSE), basefirst(x))
+  expect_equal(ffirst(m[, 1]), basefirst(m[, 1]))
   expect_equal(ffirst(xNA, na.rm = FALSE), basefirst(xNA))
   expect_equal(ffirst(xNA), basefirst(xNA, na.rm = TRUE))
+  expect_equal(ffirst(mNA[, 1]), basefirst(mNA[, 1], na.rm = TRUE))
   expect_equal(ffirst(m), dapply(m, basefirst, na.rm = TRUE))
   expect_equal(ffirst(m, na.rm = FALSE), dapply(m, basefirst))
   expect_equal(ffirst(mNA, na.rm = FALSE), dapply(mNA, basefirst))
@@ -153,8 +167,10 @@ test_that("flast performs like baselast (defined above)", {
   expect_equal(flast(-1:1, na.rm = FALSE), baselast(-1:1))
   expect_equal(flast(x), baselast(x, na.rm = TRUE))
   expect_equal(flast(x, na.rm = FALSE), baselast(x))
+  expect_equal(flast(m[, 1]), baselast(m[, 1]))
   expect_equal(flast(xNA, na.rm = FALSE), baselast(xNA))
   expect_equal(flast(xNA), baselast(xNA, na.rm = TRUE))
+  expect_equal(flast(mNA[, 1]), baselast(mNA[, 1], na.rm = TRUE))
   expect_equal(flast(m), dapply(m, baselast, na.rm = TRUE))
   expect_equal(flast(m, na.rm = FALSE), dapply(m, baselast))
   expect_equal(flast(mNA, na.rm = FALSE), dapply(mNA, baselast))

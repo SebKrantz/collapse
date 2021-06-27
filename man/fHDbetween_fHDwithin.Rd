@@ -1,16 +1,16 @@
-\name{fHDbetween, fHDwithin}
-\alias{fHDbetween}
-\alias{fHDbetween.default}
-\alias{fHDbetween.matrix}
-\alias{fHDbetween.data.frame}
-\alias{fHDbetween.pseries}
-\alias{fHDbetween.pdata.frame}
-\alias{fHDwithin}
-\alias{fHDwithin.default}
-\alias{fHDwithin.matrix}
-\alias{fHDwithin.data.frame}
-\alias{fHDwithin.pseries}
-\alias{fHDwithin.pdata.frame}
+\name{fhdbetween, fhdwithin}
+\alias{fhdbetween}
+\alias{fhdbetween.default}
+\alias{fhdbetween.matrix}
+\alias{fhdbetween.data.frame}
+\alias{fhdbetween.pseries}
+\alias{fhdbetween.pdata.frame}
+\alias{fhdwithin}
+\alias{fhdwithin.default}
+\alias{fhdwithin.matrix}
+\alias{fhdwithin.data.frame}
+\alias{fhdwithin.pseries}
+\alias{fhdwithin.pdata.frame}
 \alias{HDW}
 \alias{HDW.default}
 \alias{HDW.matrix}
@@ -28,30 +28,30 @@
 Higher-Dimensional Centering and Linear Prediction
 }
 \description{
-\code{fHDbetween} is a generalization of \code{fbetween} to efficiently predict with multiple factors and linear models (i.e. predict with vectors/factors, matrices, or data frames/lists where the latter may contain multiple factor variables). Similarly \code{fHDwithin} is a generalization of \code{fwithin} to center on multiple factors and partial-out linear models.
+\code{fhdbetween} is a generalization of \code{fbetween} to efficiently predict with multiple factors and linear models (i.e. predict with vectors/factors, matrices, or data frames/lists where the latter may contain multiple factor variables). Similarly \code{fhdwithin} is a generalization of \code{fwithin} to center on multiple factors and partial-out linear models.
 
 The corresponding operators \code{HDB} and \code{HDW} additionally allow to predict / partial out full \code{lm()} formulas with interactions between variables.
 
 }
 \usage{
-fHDbetween(x, \dots)
- fHDwithin(x, \dots)
+fhdbetween(x, \dots)
+ fhdwithin(x, \dots)
        HDB(x, \dots)
        HDW(x, \dots)
 
-\method{fHDbetween}{default}(x, fl, w = NULL, na.rm = TRUE, fill = FALSE, lm.method = "qr", \dots)
-\method{fHDwithin}{default}(x, fl, w = NULL, na.rm = TRUE, fill = FALSE, lm.method = "qr", \dots)
+\method{fhdbetween}{default}(x, fl, w = NULL, na.rm = TRUE, fill = FALSE, lm.method = "qr", \dots)
+\method{fhdwithin}{default}(x, fl, w = NULL, na.rm = TRUE, fill = FALSE, lm.method = "qr", \dots)
 \method{HDB}{default}(x, fl, w = NULL, na.rm = TRUE, fill = FALSE, lm.method = "qr", \dots)
 \method{HDW}{default}(x, fl, w = NULL, na.rm = TRUE, fill = FALSE, lm.method = "qr", \dots)
 
-\method{fHDbetween}{matrix}(x, fl, w = NULL, na.rm = TRUE, fill = FALSE, lm.method = "qr", \dots)
-\method{fHDwithin}{matrix}(x, fl, w = NULL, na.rm = TRUE, fill = FALSE, lm.method = "qr", \dots)
+\method{fhdbetween}{matrix}(x, fl, w = NULL, na.rm = TRUE, fill = FALSE, lm.method = "qr", \dots)
+\method{fhdwithin}{matrix}(x, fl, w = NULL, na.rm = TRUE, fill = FALSE, lm.method = "qr", \dots)
 \method{HDB}{matrix}(x, fl, w = NULL, na.rm = TRUE, fill = FALSE, stub = "HDB.", lm.method = "qr", \dots)
 \method{HDW}{matrix}(x, fl, w = NULL, na.rm = TRUE, fill = FALSE, stub = "HDW.", lm.method = "qr", \dots)
 
-\method{fHDbetween}{data.frame}(x, fl, w = NULL, na.rm = TRUE, fill = FALSE,
+\method{fhdbetween}{data.frame}(x, fl, w = NULL, na.rm = TRUE, fill = FALSE,
            variable.wise = FALSE, lm.method = "qr", \dots)
-\method{fHDwithin}{data.frame}(x, fl, w = NULL, na.rm = TRUE, fill = FALSE,
+\method{fhdwithin}{data.frame}(x, fl, w = NULL, na.rm = TRUE, fill = FALSE,
           variable.wise = FALSE, lm.method = "qr", \dots)
 \method{HDB}{data.frame}(x, fl, w = NULL, cols = is.numeric, na.rm = TRUE, fill = FALSE,
     variable.wise = FALSE, stub = "HDB.", lm.method = "qr", \dots)
@@ -60,19 +60,21 @@ fHDbetween(x, \dots)
 
 # Methods for compatibility with plm:
 
-\method{fHDbetween}{pseries}(x, w = NULL, na.rm = TRUE, fill = TRUE, \dots)
-\method{fHDwithin}{pseries}(x, w = NULL, na.rm = TRUE, fill = TRUE, \dots)
-\method{HDB}{pseries}(x, w = NULL, na.rm = TRUE, fill = TRUE, \dots)
-\method{HDW}{pseries}(x, w = NULL, na.rm = TRUE, fill = TRUE, \dots)
+\method{fhdbetween}{pseries}(x, effect = seq_col(attr(x, "index")), w = NULL, na.rm = TRUE,
+           fill = TRUE, \dots)
+\method{fhdwithin}{pseries}(x, effect = seq_col(attr(x, "index")), w = NULL, na.rm = TRUE,
+          fill = TRUE, \dots)
+\method{HDB}{pseries}(x, effect = seq_col(attr(x, "index")), w = NULL, na.rm = TRUE, fill = TRUE, \dots)
+\method{HDW}{pseries}(x, effect = seq_col(attr(x, "index")), w = NULL, na.rm = TRUE, fill = TRUE, \dots)
 
-\method{fHDbetween}{pdata.frame}(x, w = NULL, na.rm = TRUE, fill = TRUE,
+\method{fhdbetween}{pdata.frame}(x, effect = seq_col(attr(x, "index")), w = NULL, na.rm = TRUE, fill = TRUE,
            variable.wise = TRUE, \dots)
-\method{fHDwithin}{pdata.frame}(x, w = NULL, na.rm = TRUE, fill = TRUE,
+\method{fhdwithin}{pdata.frame}(x, effect = seq_col(attr(x, "index")), w = NULL, na.rm = TRUE, fill = TRUE,
           variable.wise = TRUE, \dots)
-\method{HDB}{pdata.frame}(x, w = NULL, cols = is.numeric, na.rm = TRUE, fill = TRUE,
-    variable.wise = TRUE, stub = "HDB.", \dots)
-\method{HDW}{pdata.frame}(x, w = NULL, cols = is.numeric, na.rm = TRUE, fill = TRUE,
-    variable.wise = TRUE, stub = "HDW.", \dots)
+\method{HDB}{pdata.frame}(x, effect = seq_col(attr(x, "index")), w = NULL, cols = is.numeric, na.rm = TRUE,
+    fill = TRUE, variable.wise = TRUE, stub = "HDB.", \dots)
+\method{HDW}{pdata.frame}(x, effect = seq_col(attr(x, "index")), w = NULL, cols = is.numeric, na.rm = TRUE,
+    fill = TRUE, variable.wise = TRUE, stub = "HDW.", \dots)
 }
 
 \arguments{
@@ -83,17 +85,18 @@ fHDbetween(x, \dots)
   \item{na.rm}{remove missing values from both \code{x} and \code{fl}. by default rows with missing values in \code{x} or \code{fl} are removed. In that case an attribute "na.rm" is attached containing the rows removed.}
   \item{fill}{If \code{na.rm = TRUE}, \code{fill = TRUE} will not remove rows with missing values in \code{x} or \code{fl}, but fill them with \code{NA}'s.}
   \item{variable.wise}{\emph{data.frame methods}: Setting \code{variable.wise = TRUE} will process each column individually i.e. use all non-missing cases in each column and in \code{fl} (\code{fl} is only checked for missing values if \code{na.rm = TRUE}). This is a lot less efficient but uses all data available in each column. }
+\item{effect}{\emph{plm} methods: Select which panel identifiers should be used for centering. 1L takes the first variable in the \code{plm::index}, 2L the second etc. Index variables can also be called by name using a character vector. }
 \item{stub}{a prefix or stub to rename all transformed columns. \code{FALSE} will not rename columns.}
 \item{lm.method}{character. The linear fitting method. Supported are \code{"chol"} and \code{"qr"}. See \code{\link{flm}}.}
   \item{\dots}{further arguments passed to \code{fixest::demean} and \code{\link{chol}} / \code{\link{qr}}. Possible choices are \code{tol} to set a uniform numerical tolerance for the entire fitting process, or \code{nthreads} and \code{iter} to govern the higher-order centering process.}
 
 }
 \details{
-\code{fHDbetween/HDB} and \code{fHDwithin/HDW} are powerful functions for high-dimensional linear prediction problems involving large factors and datasets, but can just as well handle ordinary regression problems. They are implemented as efficient wrappers around \code{\link[=fwithin]{fbetween / fwithin}}, \code{\link{flm}} and \code{fixest::demean} (imported for higher-order centering tasks).
+\code{fhdbetween/HDB} and \code{fhdwithin/HDW} are powerful functions for high-dimensional linear prediction problems involving large factors and datasets, but can just as well handle ordinary regression problems. They are implemented as efficient wrappers around \code{\link[=fwithin]{fbetween / fwithin}}, \code{\link{flm}} and \code{fixest::demean} (imported for higher-order centering tasks).
 
-Intended areas of use are to efficiently obtain residuals and predicted values from data, and to prepare data for complex linear models involving multiple levels of fixed effects. Such models can now be fitted using \code{lm()} on data prepared with \code{fHDwithin / HDW} (relying on bootstrapped SE's for inference, or implementing the appropriate corrections). See Examples.
+Intended areas of use are to efficiently obtain residuals and predicted values from data, and to prepare data for complex linear models involving multiple levels of fixed effects. Such models can now be fitted using \code{lm()} on data prepared with \code{fhdwithin / HDW} (relying on bootstrapped SE's for inference, or implementing the appropriate corrections). See Examples.
 
-If \code{fl} is a vector or matrix, the result are identical to \code{lm} i.e. \code{fHDbetween / HDB} returns \code{fitted(lm(x ~ fl))} and \code{fHDwithin / HDW} \code{residuals(lm(x ~ fl))}. If \code{fl} is a list containing factors, all variables in \code{x} and non-factor variables in \code{fl} are centered on these factors using either \code{\link[=fwithin]{fbetween / fwithin}} for a single factor or \code{fixest::demean} for multiple factors. Afterwards the centered data is regressed on the centered predictors. If \code{fl} is just a list of factors, \code{fHDwithin/HDW} returns the centered data and \code{fHDbetween/HDB} the corresponding means. Take as a most general example a list \code{fl = list(fct1, fct2, ..., var1, var2, ...)} where \code{fcti} are factors and \code{vari} are continuous variables. The output of \code{fHDwithin/HDW | fHDbetween/HDB} will then be identical to calling \code{resid | fitted} on \code{lm(x ~ fct1 + fct2 + ... + var1 + var2 + ...)}. The computations performed by \code{fHDwithin/HDW} and \code{fHDbetween/HDB} are however much faster and more memory efficient than \code{lm} because factors are not passed to \code{\link{model.matrix}} and expanded to matrices of dummies but projected beforehand.
+If \code{fl} is a vector or matrix, the result are identical to \code{lm} i.e. \code{fhdbetween / HDB} returns \code{fitted(lm(x ~ fl))} and \code{fhdwithin / HDW} \code{residuals(lm(x ~ fl))}. If \code{fl} is a list containing factors, all variables in \code{x} and non-factor variables in \code{fl} are centered on these factors using either \code{\link[=fwithin]{fbetween / fwithin}} for a single factor or \code{fixest::demean} for multiple factors. Afterwards the centered data is regressed on the centered predictors. If \code{fl} is just a list of factors, \code{fhdwithin/HDW} returns the centered data and \code{fhdbetween/HDB} the corresponding means. Take as a most general example a list \code{fl = list(fct1, fct2, ..., var1, var2, ...)} where \code{fcti} are factors and \code{vari} are continuous variables. The output of \code{fhdwithin/HDW | fhdbetween/HDB} will then be identical to calling \code{resid | fitted} on \code{lm(x ~ fct1 + fct2 + ... + var1 + var2 + ...)}. The computations performed by \code{fhdwithin/HDW} and \code{fhdbetween/HDB} are however much faster and more memory efficient than \code{lm} because factors are not passed to \code{\link{model.matrix}} and expanded to matrices of dummies but projected beforehand.
 
 The formula interface to the data.frame method (only supported by the operators \code{HDW | HDB}) provides ease of use and allows for additional modeling complexity. For example it is possible to project out formulas like \code{HDW(data, ~ fct1*var1  + fct2:fct3 + var2:fct2:fct3 + var2:var3 + poly(var5,3)*fct5)} containing simple \code{(:)} or full \code{(*)} interactions of factors with continuous variables or polynomials of continuous variables, and two-or three-way interactions of factors and continuous variables. If the formula is one-sided as in the example above (the space left of \code{(~)} is left empty), the formula is applied to all variables selected through \code{cols}. The specification provided in \code{cols} (default: all numeric variables not used in the formula) can be overridden by supplying one-or more dependent variables. For example \code{HDW(data, var1 + var2 ~ fct1 + fct2)} will return a data.frame with \code{var1} and \code{var2} centered on \code{fct1} and \code{fct2}.
 
@@ -105,12 +108,12 @@ The special methods for \code{plm::pseries} and \code{plm::pdata.frame} center a
 % In general full interactions specified with \code{(*)} can be very slow on large data, and \code{lfe::demeanlist} is also not very speedy on interaction between factors and continuous variables, so these structures should be used with caution (don't just specify an interaction like that on a large dataset, start with smaller data and see how long computations take. Upon further updates of \code{lfe::demeanlist}, performance might improve).
 % }
 
-\subsection{On the differences between \code{fHDwithin/HDW}\dots and \code{fwithin/W}\dots:}{
+\subsection{On the differences between \code{fhdwithin/HDW}\dots and \code{fwithin/W}\dots:}{
 \itemize{
-\item \code{fHDwithin/HDW} can center data on multiple factors and also partial out continuous variables and factor-continuous interactions while \code{fwithin/W} only centers on one factor or the interaction of a set of factors, and does that very efficiently.
+\item \code{fhdwithin/HDW} can center data on multiple factors and also partial out continuous variables and factor-continuous interactions while \code{fwithin/W} only centers on one factor or the interaction of a set of factors, and does that very efficiently.
 \item \code{HDW(data, ~ qF(group1) + qF(group2))} simultaneously centers numeric variables in data on \code{group1} and \code{group2}, while \code{W(data, ~ group1 + group2)} centers data on the interaction of \code{group1} and \code{group2}. The equivalent operation in \code{HDW} would be: \code{HDW(data, ~ qF(group1):qF(group2))}.
 \item \code{W} always does computations on the variable-wise complete observations (in both matrices and data frames), whereas by default \code{HDW} removes all cases missing in either \code{x} or \code{fl}. In short, \code{W(data, ~ group1 + group2)} is actually equivalent to \code{HDW(data, ~ qF(group1):qF(group2), variable.wise = TRUE)}. \code{HDW(data, ~ qF(group1):qF(group2))} would remove any missing cases.
-\item \code{fbetween/B} and \code{fwithin/W} have options to fill missing cases using group-averages and to add the overall mean back to group-demeaned data. These options are not available in \code{fHDbetween/HDB} and \code{fHDwithin/HDW}. Since \code{HDB} and \code{HDW} by default remove missing cases, they also don't have options to keep grouping-columns as in \code{B} and \code{W}.
+\item \code{fbetween/B} and \code{fwithin/W} have options to fill missing cases using group-averages and to add the overall mean back to group-demeaned data. These options are not available in \code{fhdbetween/HDB} and \code{fhdwithin/HDW}. Since \code{HDB} and \code{HDW} by default remove missing cases, they also don't have options to keep grouping-columns as in \code{B} and \code{W}.
 }
 }
 }

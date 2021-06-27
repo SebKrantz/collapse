@@ -24,13 +24,13 @@ After installing *collapse*, you can call `help("collapse-documentation")` which
 
 Thus *collapse* comes with a fully structured hierarchical documentation which you can browse within R - and you don't require anything else to fully understand this package. The Documentation is also available [online](<https://sebkrantz.github.io/collapse/reference/index.html>).
 
-In addition, the package page under `help("collapse-package")` provides some more general information about the package and its design philosophy, as well as a very compact set of examples covering most of the important functionality. 
+In addition, the package page under `help("collapse-package")` provides some more general information about the package and its design philosophy, as well as a very compact set of examples covering important functionality. 
 
 Reading `help("collapse-package")` and `help("collapse-documentation")` and working through the examples on `help("collapse-package")` is probably the fastest way to get acquainted with the package. 
 
 ## Vignettes
 
-There are also 4 vignettes which are available [online](<https://sebkrantz.github.io/collapse/articles/index.html>) (due to their size and the enhanced browsing experience on the website). The vignettes are:
+There are also 5 vignettes which are available [online](<https://sebkrantz.github.io/collapse/articles/index.html>) (due to their size and the enhanced browsing experience on the website). The vignettes are:
 
 * [**Introduction to *collapse* **](<https://sebkrantz.github.io/collapse/articles/collapse_intro.html>): Introduces all main features in a structured way
 
@@ -39,6 +39,8 @@ There are also 4 vignettes which are available [online](<https://sebkrantz.githu
 * [***collapse* and *plm***](<https://sebkrantz.github.io/collapse/articles/collapse_and_plm.html>): Demonstrates the integration of collapse with *plm* and shows examples of efficient programming with panel data
 
 * [***collapse* and *data.table***](<https://sebkrantz.github.io/collapse/articles/collapse_and_data.table.html>): Shows how collapse and *data.table* may be used together in a harmonious way
+
+* [***collapse* and *sf***](<https://sebkrantz.github.io/collapse/articles/collapse_and_sf.html>): Shows how collapse can be used to efficiently manipulate *sf* data frames
 
 ## Blog
 

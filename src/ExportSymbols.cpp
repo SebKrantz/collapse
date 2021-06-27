@@ -13,7 +13,10 @@ RcppExport SEXP pacf1(SEXP, SEXP);
 RcppExport SEXP rbindlist(SEXP, SEXP, SEXP, SEXP);
 RcppExport SEXP setcolorder(SEXP, SEXP);
 RcppExport SEXP subsetDT(SEXP, SEXP, SEXP);
+RcppExport SEXP subsetCols(SEXP, SEXP, SEXP);
 RcppExport SEXP subsetVector(SEXP, SEXP);
+RcppExport SEXP Calloccol(SEXP dt, SEXP Rn);
+RcppExport SEXP falloc(SEXP, SEXP);
 RcppExport SEXP setAttributes(SEXP x, SEXP a);
 RcppExport void setattributes(SEXP x, SEXP a);
 // RcppExport SEXP CsetAttr(SEXP object, SEXP a, SEXP v); -> mot more efficeint than attr i.e. for row.names...
@@ -27,6 +30,32 @@ RcppExport SEXP CcopyMostAttrib(SEXP to, SEXP from);
 RcppExport SEXP lassign(SEXP x, SEXP s, SEXP rows, SEXP fill);
 RcppExport SEXP groups2GRP(SEXP x, SEXP lx, SEXP gs);
 RcppExport SEXP Cna_rm(SEXP x);
+// fnobs rewritten in C:
+RcppExport SEXP fnobsC(SEXP x, SEXP Rng, SEXP g);
+RcppExport SEXP fnobsmC(SEXP x, SEXP Rng, SEXP g, SEXP Rdrop);
+RcppExport SEXP fnobslC(SEXP x, SEXP Rng, SEXP g, SEXP Rdrop);
+// ffirst and flast rewritten in C:
+RcppExport SEXP ffirstC(SEXP x, SEXP Rng, SEXP g, SEXP Rnarm);
+RcppExport SEXP ffirstmC(SEXP x, SEXP Rng, SEXP g, SEXP Rnarm, SEXP Rdrop);
+RcppExport SEXP ffirstlC(SEXP x, SEXP Rng, SEXP g, SEXP Rnarm);
+RcppExport SEXP flastC(SEXP x, SEXP Rng, SEXP g, SEXP Rnarm);
+RcppExport SEXP flastmC(SEXP x, SEXP Rng, SEXP g, SEXP Rnarm, SEXP Rdrop);
+RcppExport SEXP flastlC(SEXP x, SEXP Rng, SEXP g, SEXP Rnarm);
+// fsum rewritten in C:
+RcppExport SEXP fsumC(SEXP x, SEXP Rng, SEXP g, SEXP Rnarm);
+RcppExport SEXP fsummC(SEXP x, SEXP Rng, SEXP g, SEXP Rnarm, SEXP Rdrop);
+RcppExport SEXP fsumlC(SEXP x, SEXP Rng, SEXP g, SEXP Rnarm, SEXP Rdrop);
+// fmin and fmax rewritten in C:
+RcppExport SEXP fminC(SEXP x, SEXP Rng, SEXP g, SEXP Rnarm);
+RcppExport SEXP fminmC(SEXP x, SEXP Rng, SEXP g, SEXP Rnarm, SEXP Rdrop);
+RcppExport SEXP fminlC(SEXP x, SEXP Rng, SEXP g, SEXP Rnarm, SEXP Rdrop);
+RcppExport SEXP fmaxC(SEXP x, SEXP Rng, SEXP g, SEXP Rnarm);
+RcppExport SEXP fmaxmC(SEXP x, SEXP Rng, SEXP g, SEXP Rnarm, SEXP Rdrop);
+RcppExport SEXP fmaxlC(SEXP x, SEXP Rng, SEXP g, SEXP Rnarm, SEXP Rdrop);
+// Added fcumsum, written in C:
+RcppExport SEXP fcumsumC(SEXP x, SEXP Rng, SEXP g, SEXP o, SEXP Rnarm, SEXP Rfill);
+RcppExport SEXP fcumsummC(SEXP x, SEXP Rng, SEXP g, SEXP o, SEXP Rnarm, SEXP Rfill);
+RcppExport SEXP fcumsumlC(SEXP x, SEXP Rng, SEXP g, SEXP o, SEXP Rnarm, SEXP Rfill);
 
 static const R_CMethodDef CEntries[]  = {
   {"C_multi_yw", (DL_FUNC) &multi_yw, 10},
@@ -40,40 +69,40 @@ static const R_CallMethodDef CallEntries[] = {
   {"Cpp_TRA", (DL_FUNC) &_collapse_TRACpp, 4},
   {"Cpp_TRAm", (DL_FUNC) &_collapse_TRAmCpp, 4},
   {"Cpp_TRAl", (DL_FUNC) &_collapse_TRAlCpp, 4},
-  {"Cpp_fNdistinct", (DL_FUNC) &_collapse_fNdistinctCpp, 5},
-  {"Cpp_fNdistinctl", (DL_FUNC) &_collapse_fNdistinctlCpp, 6},
-  {"Cpp_fNdistinctm", (DL_FUNC) &_collapse_fNdistinctmCpp, 6},
-  {"Cpp_pwNobsm", (DL_FUNC) &_collapse_pwNobsmCpp, 1},
-  {"Cpp_fNobs", (DL_FUNC) &_collapse_fNobsCpp, 3},
-  {"Cpp_fNobsm", (DL_FUNC) &_collapse_fNobsmCpp, 4},
-  {"Cpp_fNobsl", (DL_FUNC) &_collapse_fNobslCpp, 4},
+  {"Cpp_fndistinct", (DL_FUNC) &_collapse_fndistinctCpp, 5},
+  {"Cpp_fndistinctl", (DL_FUNC) &_collapse_fndistinctlCpp, 6},
+  {"Cpp_fndistinctm", (DL_FUNC) &_collapse_fndistinctmCpp, 6},
+  {"Cpp_pwnobsm", (DL_FUNC) &_collapse_pwnobsmCpp, 1},
+  {"C_fnobs", (DL_FUNC) &fnobsC, 3},
+  {"C_fnobsm", (DL_FUNC) &fnobsmC, 4},
+  {"C_fnobsl", (DL_FUNC) &fnobslC, 4},
   {"Cpp_varying", (DL_FUNC) &_collapse_varyingCpp, 4},
   {"Cpp_varyingm", (DL_FUNC) &_collapse_varyingmCpp, 5},
   {"Cpp_varyingl", (DL_FUNC) &_collapse_varyinglCpp, 5},
   {"Cpp_fbstats", (DL_FUNC) &_collapse_fbstatsCpp, 10},
   {"Cpp_fbstatsm", (DL_FUNC) &_collapse_fbstatsmCpp, 9},
   {"Cpp_fbstatsl", (DL_FUNC) &_collapse_fbstatslCpp, 9},
-  {"Cpp_ffirst", (DL_FUNC) &_collapse_ffirstCpp, 4},
-  {"Cpp_ffirstm", (DL_FUNC) &_collapse_ffirstmCpp, 5},
-  {"Cpp_ffirstl", (DL_FUNC) &_collapse_ffirstlCpp, 4},
+  {"C_ffirst", (DL_FUNC) &ffirstC, 4},
+  {"C_ffirstm", (DL_FUNC) &ffirstmC, 5},
+  {"C_ffirstl", (DL_FUNC) &ffirstlC, 4},
   {"Cpp_fdiffgrowth", (DL_FUNC) &_collapse_fdiffgrowthCpp, 12},
   {"Cpp_fdiffgrowthm", (DL_FUNC) &_collapse_fdiffgrowthmCpp, 12},
   {"Cpp_fdiffgrowthl", (DL_FUNC) &_collapse_fdiffgrowthlCpp, 12},
   {"Cpp_flaglead", (DL_FUNC) &_collapse_flagleadCpp, 7},
   {"Cpp_flagleadm", (DL_FUNC) &_collapse_flagleadmCpp, 7},
   {"Cpp_flagleadl", (DL_FUNC) &_collapse_flagleadlCpp, 7},
-  {"Cpp_flast", (DL_FUNC) &_collapse_flastCpp, 4},
-  {"Cpp_flastm", (DL_FUNC) &_collapse_flastmCpp, 5},
-  {"Cpp_flastl", (DL_FUNC) &_collapse_flastlCpp, 4},
-  {"Cpp_fminmax", (DL_FUNC) &_collapse_fminmaxCpp, 5},
-  {"Cpp_fminmaxm", (DL_FUNC) &_collapse_fminmaxmCpp, 6},
-  {"Cpp_fminmaxl", (DL_FUNC) &_collapse_fminmaxlCpp, 6},
+  {"C_flast", (DL_FUNC) &flastC, 4},
+  {"C_flastm", (DL_FUNC) &flastmC, 5},
+  {"C_flastl", (DL_FUNC) &flastlC, 4},
+  {"C_fmin", (DL_FUNC) &fminC, 4},
+  {"C_fminm", (DL_FUNC) &fminmC, 5},
+  {"C_fminl", (DL_FUNC) &fminlC, 5},
+  {"C_fmax", (DL_FUNC) &fmaxC, 4},
+  {"C_fmaxm", (DL_FUNC) &fmaxmC, 5},
+  {"C_fmaxl", (DL_FUNC) &fmaxlC, 5},
   {"Cpp_fmean", (DL_FUNC) &_collapse_fmeanCpp, 6},
   {"Cpp_fmeanm", (DL_FUNC) &_collapse_fmeanmCpp, 7},
   {"Cpp_fmeanl", (DL_FUNC) &_collapse_fmeanlCpp, 7},
-  // {"Cpp_fmedian", (DL_FUNC) &_collapse_fmedianCpp, 6},
-  // {"Cpp_fmedianm", (DL_FUNC) &_collapse_fmedianmCpp, 7},
-  // {"Cpp_fmedianl", (DL_FUNC) &_collapse_fmedianlCpp, 7},
   {"Cpp_fnth", (DL_FUNC) &_collapse_fnthCpp, 8},
   {"Cpp_fnthm", (DL_FUNC) &_collapse_fnthmCpp, 9},
   {"Cpp_fnthl", (DL_FUNC) &_collapse_fnthlCpp, 9},
@@ -86,9 +115,9 @@ static const R_CallMethodDef CallEntries[] = {
   {"Cpp_fscale", (DL_FUNC) &_collapse_fscaleCpp, 7},
   {"Cpp_fscalem", (DL_FUNC) &_collapse_fscalemCpp, 7},
   {"Cpp_fscalel", (DL_FUNC) &_collapse_fscalelCpp, 7},
-  {"Cpp_fsum", (DL_FUNC) &_collapse_fsumCpp, 5},
-  {"Cpp_fsumm", (DL_FUNC) &_collapse_fsummCpp, 6},
-  {"Cpp_fsuml", (DL_FUNC) &_collapse_fsumlCpp, 6},
+  {"C_fsum", (DL_FUNC) &fsumC, 5},
+  {"C_fsumm", (DL_FUNC) &fsummC, 6},
+  {"C_fsuml", (DL_FUNC) &fsumlC, 6},
   {"Cpp_fvarsd", (DL_FUNC) &_collapse_fvarsdCpp, 8},
   {"Cpp_fvarsdm", (DL_FUNC) &_collapse_fvarsdmCpp, 9},
   {"Cpp_fvarsdl", (DL_FUNC) &_collapse_fvarsdlCpp, 9},
@@ -123,8 +152,14 @@ static const R_CallMethodDef CallEntries[] = {
   {"C_pacf1",         (DL_FUNC) &pacf1,         2},
   {"C_rbindlist",     (DL_FUNC) &rbindlist,     4},
   {"C_setcolorder",   (DL_FUNC) &setcolorder,   2},
+  {"C_subsetCols",    (DL_FUNC) &subsetCols,    3},
+  {"C_alloc",         (DL_FUNC) &falloc,        2},
   {"C_subsetDT",      (DL_FUNC) &subsetDT,      3},
   {"C_subsetVector",  (DL_FUNC) &subsetVector,  2},
+  {"C_alloccol",      (DL_FUNC) &Calloccol,     2},
+  {"C_fcumsum",       (DL_FUNC) &fcumsumC,      6},
+  {"C_fcumsumm",      (DL_FUNC) &fcumsummC,     6},
+  {"C_fcumsuml",      (DL_FUNC) &fcumsumlC,     6},
   {NULL, NULL, 0}
 };
 

@@ -1,27 +1,27 @@
-\name{fNdistinct}
-\alias{fNdistinct}
-\alias{fNdistinct.default}
-\alias{fNdistinct.matrix}
-\alias{fNdistinct.data.frame}
-\alias{fNdistinct.grouped_df}
+\name{fndistinct}
+\alias{fndistinct}
+\alias{fndistinct.default}
+\alias{fndistinct.matrix}
+\alias{fndistinct.data.frame}
+\alias{fndistinct.grouped_df}
 \title{Fast (Grouped) Distinct Value Count for Matrix-Like Objects}  % Vectors, Matrix and Data Frame Columns}
 \description{
-\code{fNdistinct} is a generic function that (column-wise) computes the number of distinct values in \code{x}, (optionally) grouped by \code{g}. It is significantly faster than \code{length(unique(x))}. The \code{\link{TRA}} argument can further be used to transform \code{x} using its (grouped) distinct value count.
+\code{fndistinct} is a generic function that (column-wise) computes the number of distinct values in \code{x}, (optionally) grouped by \code{g}. It is significantly faster than \code{length(unique(x))}. The \code{\link{TRA}} argument can further be used to transform \code{x} using its (grouped) distinct value count.
 }
 
 \usage{
-fNdistinct(x, \dots)
+fndistinct(x, \dots)
 
-\method{fNdistinct}{default}(x, g = NULL, TRA = NULL, na.rm = TRUE,
+\method{fndistinct}{default}(x, g = NULL, TRA = NULL, na.rm = TRUE,
            use.g.names = TRUE, \dots)
 
-\method{fNdistinct}{matrix}(x, g = NULL, TRA = NULL, na.rm = TRUE,
+\method{fndistinct}{matrix}(x, g = NULL, TRA = NULL, na.rm = TRUE,
            use.g.names = TRUE, drop = TRUE, \dots)
 
-\method{fNdistinct}{data.frame}(x, g = NULL, TRA = NULL, na.rm = TRUE,
+\method{fndistinct}{data.frame}(x, g = NULL, TRA = NULL, na.rm = TRUE,
            use.g.names = TRUE, drop = TRUE, \dots)
 
-\method{fNdistinct}{grouped_df}(x, TRA = NULL, na.rm = TRUE,
+\method{fndistinct}{grouped_df}(x, TRA = NULL, na.rm = TRUE,
            use.g.names = FALSE, keep.group_vars = TRUE, \dots)
 }
 \arguments{
@@ -45,42 +45,42 @@ fNdistinct(x, \dots)
 
 }
 \details{
-\code{fNdistinct} implements a fast algorithm to find the number of distinct values utilizing index- hashing implemented in the \code{Rcpp::sugar::IndexHash} class.
+\code{fndistinct} implements a fast algorithm to find the number of distinct values utilizing index- hashing implemented in the \code{Rcpp::sugar::IndexHash} class.
 
 If \code{na.rm = TRUE} (the default), missing values will be skipped yielding substantial performance gains in data with many missing values. If \code{na.rm = TRUE}, missing values will simply be treated as any other value and read into the hash-map. Thus with the former, a numeric vector \code{c(1.25,NaN,3.56,NA)} will have a distinct value count of 2, whereas the latter will return a distinct value count of 4.
 
 Grouped computations are performed by mapping the data to a sparse-array and then hash-mapping each group. This is often not much slower than using a larger hash-map for the entire data when \code{g = NULL}.
 
-\code{fNdistinct} preserves all attributes of non-classed vectors / columns, and only the 'label' attribute (if available) of classed vectors / columns (i.e. dates or factors). When applied to data frames and matrices, the row-names are adjusted as necessary.
+\code{fndistinct} preserves all attributes of non-classed vectors / columns, and only the 'label' attribute (if available) of classed vectors / columns (i.e. dates or factors). When applied to data frames and matrices, the row-names are adjusted as necessary.
 
 }
 \value{
 Integer. The number of distinct values in \code{x}, grouped by \code{g}, or (if \code{\link{TRA}} is used) \code{x} transformed by its distinct value count, grouped by \code{g}.
 }
 \seealso{
-\code{\link{fNobs}}, \link[=A1-fast-statistical-functions]{Fast Statistical Functions}, \link[=collapse-documentation]{Collapse Overview}
+\code{\link{fnobs}}, \link[=A1-fast-statistical-functions]{Fast Statistical Functions}, \link[=collapse-documentation]{Collapse Overview}
 }
 \examples{
 ## default vector method
-fNdistinct(airquality$Solar.R)                   # Simple distinct value count
-fNdistinct(airquality$Solar.R, airquality$Month) # Grouped distinct value count
+fndistinct(airquality$Solar.R)                   # Simple distinct value count
+fndistinct(airquality$Solar.R, airquality$Month) # Grouped distinct value count
 
 ## data.frame method
-fNdistinct(airquality)
-fNdistinct(airquality, airquality$Month)
-fNdistinct(wlddev)                               # Works with data of all types!
-head(fNdistinct(wlddev, wlddev$iso3c))
+fndistinct(airquality)
+fndistinct(airquality, airquality$Month)
+fndistinct(wlddev)                               # Works with data of all types!
+head(fndistinct(wlddev, wlddev$iso3c))
 
 ## matrix method
 aqm <- qM(airquality)
-fNdistinct(aqm)                                  # Also works for character or logical matrices
-fNdistinct(aqm, airquality$Month)
+fndistinct(aqm)                                  # Also works for character or logical matrices
+fndistinct(aqm, airquality$Month)
 \donttest{ % No code relying on suggested package
 ## method for grouped data frames - created with dplyr::group_by or fgroup_by
 library(dplyr)
-airquality \%>\% group_by(Month) \%>\% fNdistinct
-wlddev \%>\% group_by(country) \%>\%
-             select(PCGDP,LIFEEX,GINI,ODA) \%>\% fNdistinct
+airquality |> group_by(Month) |> fndistinct()
+wlddev |> group_by(country) |>
+             select(PCGDP,LIFEEX,GINI,ODA) |> fndistinct()
 }
 }
 \keyword{univar}

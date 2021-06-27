@@ -14,6 +14,7 @@ expect_identical(unattrib(seqid(c(1, NA, 3), na.skip = TRUE, skip.seq = TRUE)), 
 expect_identical(unattrib(seqid(c(1, NA, 2), na.skip = TRUE, skip.seq = TRUE)), as.integer(c(1, NA, 2)))
 expect_identical(unattrib(seqid(x)), unattrib(seqid(x, na.skip = TRUE)))
 
+set.seed(101)
 xNA <- na_insert(x, prop = 0.15)
 expect_true(!anyNA(seqid(xNA)))
 expect_identical(is.na(seqid(xNA, na.skip = TRUE)), is.na(xNA))
@@ -83,6 +84,7 @@ test_that("groupid performas as expected", {
 
 # groupid(x)
 # groupid(x, na.skip = TRUE)
+set.seed(101)
 xNA <- na_insert(x, prop = 0.15)
 # groupid(xNA)  # desirable behavior ??
 # groupid(xNA, na.skip = TRUE) # -> Yes !!

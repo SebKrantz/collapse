@@ -44,13 +44,18 @@ extern SEXP char_nanotime;
 extern SEXP char_factor;
 extern SEXP char_ordered;
 extern SEXP char_dataframe;
+extern SEXP char_datatable;
+extern SEXP char_sf;
 // not currently needed (base_radixsort uses install), but perhaps later..
-// extern SEXP sym_sorted;
+extern SEXP sym_sorted;
 // extern SEXP sym_maxgrpn;
 // extern SEXP sym_starts;
 // extern SEXP char_starts;
 extern SEXP sym_index;
 extern SEXP sym_inherits;
+extern SEXP sym_sf_column;
+extern SEXP SelfRefSymbol;
+extern SEXP sym_datatable_locked;
 
 long long DtoLL(double x);
 double LLtoD(long long x);
@@ -77,7 +82,8 @@ SEXP setcolorder(SEXP x, SEXP o);
 // subset.c
 SEXP subsetVector(SEXP x, SEXP idx);
 SEXP anyNA(SEXP x, SEXP cols);
-SEXP uniqlengths(SEXP x, SEXP n);
+// SEXP uniqlengths(SEXP x, SEXP n);
+SEXP Calloccol(SEXP dt, SEXP Rn);
 
 // frank.c
 SEXP dt_na(SEXP x, SEXP cols);

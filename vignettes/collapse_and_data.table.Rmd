@@ -86,13 +86,13 @@ library(data.table)
 DT <- qDT(wlddev) # collapse::qDT converts objects to data.table using a shallow copy
 
 
-DT %>% gby(country) %>% gv(9:12) %>% fmean
+DT %>% gby(country) %>% gv(9:13) %>% fmean
 
 # Same thing, but notice that fmean give's NA's for missing countries
-DT[, lapply(.SD, mean, na.rm = TRUE), keyby = country, .SDcols = 9:12]
+DT[, lapply(.SD, mean, na.rm = TRUE), keyby = country, .SDcols = 9:13]
 
 # This also works without magrittr pipes with the collap() function
-collap(DT, ~ country, fmean, cols = 9:12)
+collap(DT, ~ country, fmean, cols = 9:13)
 
 ```
 
@@ -103,15 +103,15 @@ At this data size *collapse* outperforms *data.table* (which might reverse as da
 ```{r}
 library(microbenchmark)
 
-microbenchmark(collapse = DT %>% gby(country) %>% get_vars(9:12) %>% fmean,
-               data.table = DT[, lapply(.SD, mean, na.rm = TRUE), keyby = country, .SDcols = 9:12])
+microbenchmark(collapse = DT %>% gby(country) %>% get_vars(9:13) %>% fmean,
+               data.table = DT[, lapply(.SD, mean, na.rm = TRUE), keyby = country, .SDcols = 9:13])
 
 ```
 
 It is critical to never do something like this:
 
 ```{r}
-DT[, lapply(.SD, fmean), keyby = country, .SDcols = 9:12]
+DT[, lapply(.SD, fmean), keyby = country, .SDcols = 9:13]
 ```
 The reason is that *collapse* functions are S3 generic with methods for vectors, matrices and data frames among others. So you incur a method-dispatch for every column and every group the function is applied to.
 
@@ -120,25 +120,25 @@ fmean
 methods(fmean)
 ```
 
-You may now contend that `base::mean` is also S3 generic, but in this `DT[, lapply(.SD, mean, na.rm = TRUE), by = country, .SDcols = 9:12]` code *data.table* does not use `base::mean`, but `data.table:::gmean`, an internal optimized mean function which is efficiently applied over those groups (see `?data.table::GForce`). `fmean` works similar, and includes this functionality explicitly. 
+You may now contend that `base::mean` is also S3 generic, but in this `DT[, lapply(.SD, mean, na.rm = TRUE), by = country, .SDcols = 9:13]` code *data.table* does not use `base::mean`, but `data.table:::gmean`, an internal optimized mean function which is efficiently applied over those groups (see `?data.table::GForce`). `fmean` works similar, and includes this functionality explicitly. 
 
 ```{r}
-str(fmean.data.frame)
+args(fmean.data.frame)
 ```
 
 Here we can see the `x` argument for the data, the `g` argument for grouping vectors, a weight vector `w`, different options `TRA` to transform the original data using the computed means, and some functionality regarding missing values (default: removed / skipped), group names (which are added as row-names to a data frame, but not to a *data.table*) etc. So we can also do
 
 ```{r}
-fmean(gv(DT, 9:12), DT$country)
+fmean(gv(DT, 9:13), DT$country)
 
 # Or
 g <- GRP(DT, "country")
-add_vars(g[["groups"]], fmean(gv(DT, 9:12), g))
+add_vars(g[["groups"]], fmean(gv(DT, 9:13), g))
 ```
-To give us the same result obtained through the high-level functions `gby / fgroup_by` or `collap`. This is however not what *data.table* is doing in `DT[, lapply(.SD, fmean), by = country, .SDcols = 9:12]`. Since `fmean` is not a function it recognizes and is able to optimize, it does something like this,
+To give us the same result obtained through the high-level functions `gby / fgroup_by` or `collap`. This is however not what *data.table* is doing in `DT[, lapply(.SD, fmean), by = country, .SDcols = 9:13]`. Since `fmean` is not a function it recognizes and is able to optimize, it does something like this,
 
 ```{r}
-BY(gv(DT, 9:12), g, fmean) # using collapse::BY
+BY(gv(DT, 9:13), g, fmean) # using collapse::BY
 ```
 which applies `fmean` to every group in every column of the data. 
 
@@ -164,18 +164,18 @@ So if we would want to use `fmean` inside the *data.table*, we should do somethi
 ```{r}
 # This does not save the grouping columns, we are simply passing a grouping vector to g
 # and aggregating the subset of the data table (.SD).
-DT[, fmean(.SD, country), .SDcols = 9:12]
+DT[, fmean(.SD, country), .SDcols = 9:13]
 
 # If we want to keep the grouping columns, we need to group .SD first.
-DT[, fmean(gby(.SD, country)), .SDcols = c(1L, 9:12)]
+DT[, fmean(gby(.SD, country)), .SDcols = c(1L, 9:13)]
 ```
 Needless to say this kind of programming seems a bit arcane, so there is actually not that great of a scope to use collapse's *Fast Statistical Functions* for aggregations inside *data.table*. I drive this point home with a benchmark:
 ```{r}
-microbenchmark(collapse = DT %>% gby(country) %>% get_vars(9:12) %>% fmean,
-               data.table = DT[, lapply(.SD, mean, na.rm = TRUE), keyby = country, .SDcols = 9:12],
-               data.table_base = DT[, lapply(.SD, base::mean, na.rm = TRUE), keyby = country, .SDcols = 9:12],
-               hybrid_bad = DT[, lapply(.SD, fmean), keyby = country, .SDcols = 9:12],
-               hybrid_ok = DT[, fmean(gby(.SD, country)), .SDcols = c(1L, 9:12)])
+microbenchmark(collapse = DT %>% gby(country) %>% get_vars(9:13) %>% fmean,
+               data.table = DT[, lapply(.SD, mean, na.rm = TRUE), keyby = country, .SDcols = 9:13],
+               data.table_base = DT[, lapply(.SD, base::mean, na.rm = TRUE), keyby = country, .SDcols = 9:13],
+               hybrid_bad = DT[, lapply(.SD, fmean), keyby = country, .SDcols = 9:13],
+               hybrid_ok = DT[, fmean(gby(.SD, country)), .SDcols = c(1L, 9:13)])
 
 ```
 
@@ -227,19 +227,19 @@ DT[, lag_PCGDP := fgrowth(PCGDP, 1L, 1L, country, year)] # 1 lag, 1 iteration
 
 # Several Growth rates
 DT[order(year), paste0("growth_", .c(PCGDP, LIFEEX, GINI, ODA)) := (.SD / shift(.SD, 1L) - 1) * 100, 
-   by = country, .SDcols = 9:12]
+   by = country, .SDcols = 9:13]
 
 # Same thing using collapse
-DT %<>% tfm(gv(., 9:12) %>% fgrowth(1L, 1L, country, year) %>% add_stub("growth_"))
+DT %<>% tfm(gv(., 9:13) %>% fgrowth(1L, 1L, country, year) %>% add_stub("growth_"))
 
 # Or even simpler using settransform and the Growth operator
-settfmv(DT, 9:12, G, 1L, 1L, country, year, apply = FALSE)
+settfmv(DT, 9:13, G, 1L, 1L, country, year, apply = FALSE)
 
 head(DT)
 
 ```
 <!--
-# av(DT) <- DT %>% gby(country) %>% slt(year, 9:12) %>% 
+# av(DT) <- DT %>% gby(country) %>% slt(year, 9:13) %>% 
 #     fgrowth(1L, 1L, year, keep.ids = FALSE) %>% add_stub("growth_")
 -->
 Since transformations (`:=` operations) are not highly optimized in *data.table*, *collapse* will be faster in most circumstances. <!-- even on very large data with a strong computer. -->  Also time series functionality in *collapse* is significantly faster as it does not require data to be ordered or balanced to compute. For example `flag` computes an ordered lag without sorting the entire data first. 
@@ -302,7 +302,7 @@ wlddev %>% fselect(country, PCGDP, LIFEEX) %>%
   # This counts missing values on PCGDP and LIFEEX only
   na_omit(cols = -1L) %>% 
   # This removes countries with less than 20 observations
-  fsubset(fNobs(PCGDP, country, "replace_fill") > 20L) %>% 
+  fsubset(fnobs(PCGDP, country, "replace_fill") > 20L) %>% 
   qDT %>% 
   # Run estimations by country using data.table
   .[, qDT(coeftest(lm(G(PCGDP) ~ G(LIFEEX))), "Coef"), keyby = country] %>% head
@@ -313,7 +313,7 @@ If we only need the coefficients, not the standard errors, we can also use `coll
 ```{r}
 wlddev %>% fselect(country, PCGDP, LIFEEX) %>% 
   na_omit(cols = -1L) %>% 
-  fsubset(fNobs(PCGDP, country, "replace_fill") > 20L) %>% 
+  fsubset(fnobs(PCGDP, country, "replace_fill") > 20L) %>% 
   qDT %>% 
   .[, mrtl(flm(fgrowth(PCGDP)[-1L], 
                cbind(Intercept = 1, 
@@ -329,13 +329,13 @@ microbenchmark(
   
 A = wlddev %>% fselect(country, PCGDP, LIFEEX) %>% 
   na_omit(cols = -1L) %>% 
-  fsubset(fNobs(PCGDP, country, "replace_fill") > 20L) %>% 
+  fsubset(fnobs(PCGDP, country, "replace_fill") > 20L) %>% 
   qDT %>% 
   .[, qDT(coeftest(lm(G(PCGDP) ~ G(LIFEEX))), "Coef"), keyby = country],
 
 B = wlddev %>% fselect(country, PCGDP, LIFEEX) %>% 
   na_omit(cols = -1L) %>% 
-  fsubset(fNobs(PCGDP, country, "replace_fill") > 20L) %>% 
+  fsubset(fnobs(PCGDP, country, "replace_fill") > 20L) %>% 
   qDT %>% 
   .[, mrtl(flm(fgrowth(PCGDP)[-1L], 
                cbind(Intercept = 1, 

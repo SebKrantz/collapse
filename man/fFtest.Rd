@@ -17,13 +17,13 @@ fFtest(y, exc, X = NULL, w = NULL, full.df = TRUE, \dots)
   \item{X}{a numeric vector, factor, numeric matrix or list / data frame of numeric vectors and/or factors: Covariates to include in both the restricted (without \code{exc}) and unrestricted model. If left empty (\code{X = NULL}), the test amounts to the F-test of the regression of \code{y} on \code{exc}.}
   \item{w}{numeric. A vector of (frequency) weights.}
   \item{full.df}{logical. If \code{TRUE} (default), the degrees of freedom are calculated as if both restricted and unrestricted models were estimated using \code{lm()} (i.e. as if factors were expanded to matrices of dummies). \code{FALSE} only uses one degree of freedom per factor.  }
-\item{\dots}{other arguments passed to \code{fHDwithin}. Sensible options might be the \code{lm.method} argument or further control parameters to \code{fixest::demean}, the workhorse function underlying \code{fHDwithin} for higher-order centering tasks. }
+\item{\dots}{other arguments passed to \code{fhdwithin}. Sensible options might be the \code{lm.method} argument or further control parameters to \code{fixest::demean}, the workhorse function underlying \code{fhdwithin} for higher-order centering tasks. }
 
 }
 \details{
-Factors and continuous regressors are efficiently projected out using \code{\link{fHDwithin}}, and the option \code{full.df} regulates whether a degree of freedom is subtracted for each used factor level (equivalent to dummy-variable estimator / expanding factors), or only one degree of freedom per factor (treating factors as variables). The test automatically removes missing values and considers only the complete cases of \code{y, exc} and \code{X}. Unused factor levels in \code{exc} and \code{X} are dropped.
+Factors and continuous regressors are efficiently projected out using \code{\link{fhdwithin}}, and the option \code{full.df} regulates whether a degree of freedom is subtracted for each used factor level (equivalent to dummy-variable estimator / expanding factors), or only one degree of freedom per factor (treating factors as variables). The test automatically removes missing values and considers only the complete cases of \code{y, exc} and \code{X}. Unused factor levels in \code{exc} and \code{X} are dropped.
 
-\emph{Note} that an intercept is always added by \code{\link{fHDwithin}}, so it is not necessary to include an intercept in data supplied to \code{exc} / \code{X}.
+\emph{Note} that an intercept is always added by \code{\link{fhdwithin}}, so it is not necessary to include an intercept in data supplied to \code{exc} / \code{X}.
 }
 \value{
 A 5 x 3 numeric matrix of statistics. The columns contain statistics:
@@ -52,7 +52,7 @@ If \code{X = NULL}, only a vector of the same 5 statistics testing the model (\c
 %% ~Make other sections like Warning with \section{Warning }{\dots.} ~
 
 \seealso{
-\code{\link{flm}}, \code{\link{fHDwithin}}, \link[=A6-data-transformations]{Data Transformations}, \link[=collapse-documentation]{Collapse Overview}
+\code{\link{flm}}, \code{\link{fhdwithin}}, \link[=A6-data-transformations]{Data Transformations}, \link[=collapse-documentation]{Collapse Overview}
 }
 \examples{
 ## We could use fFtest as a seasonality test:

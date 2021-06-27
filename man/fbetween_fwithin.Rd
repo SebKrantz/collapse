@@ -130,7 +130,7 @@ Mundlak, Yair. 1978. On the Pooling of Time Series and Cross Section Data. \emph
 %% ~Make other sections like Warning with \section{Warning }{\dots.} ~
 
 \seealso{
-\code{\link[=HDW]{fHDbetween/HDB and fHDwithin/HDW}}, \code{\link[=fscale]{fscale/STD}}, \code{\link{TRA}}, \link[=A6-data-transformations]{Data Transformations}, \link[=collapse-documentation]{Collapse Overview}
+\code{\link[=HDW]{fhdbetween/HDB and fhdwithin/HDW}}, \code{\link[=fscale]{fscale/STD}}, \code{\link{TRA}}, \link[=A6-data-transformations]{Data Transformations}, \link[=collapse-documentation]{Collapse Overview}
 }
 \examples{
 ## Simple centering and averaging
@@ -145,9 +145,9 @@ head(fbetween(mtcars, mtcars$cyl))
 head(fwithin(mtcars, mtcars$cyl))
 all.equal(fbetween(mtcars, mtcars$cyl) + fwithin(mtcars, mtcars$cyl), mtcars)
 
-head(W(wlddev, ~ iso3c, cols = 9:12))    # Center the 4 series in this dataset by country
+head(W(wlddev, ~ iso3c, cols = 9:13))    # Center the 5 series in this dataset by country
 head(cbind(get_vars(wlddev,"iso3c"),     # Same thing done manually using fwithin..
-      add_stub(fwithin(get_vars(wlddev,9:12), wlddev$iso3c), "W.")))
+      add_stub(fwithin(get_vars(wlddev,9:13), wlddev$iso3c), "W.")))
 
 ## Using B() and W() for fixed-effects regressions:
 
@@ -175,7 +175,7 @@ lm(mpg ~ carb + B(carb,cyl,hp), data = mtcars)       # WRONG ! Gives a different
 res <- HDW(mtcars, mpg ~ carb)[[1]]  # Get residuals from pooled OLS
 sig2_u <- fvar(res)
 sig2_e <- fvar(fwithin(res, mtcars$cyl))
-T <- length(res) / fNdistinct(mtcars$cyl)
+T <- length(res) / fndistinct(mtcars$cyl)
 sig2_alpha <- sig2_u - sig2_e
 theta <- 1 - sqrt(sig2_alpha) / sqrt(sig2_alpha + T * sig2_e)
 lm(mpg ~ carb, data = W(mtcars, ~ cyl, theta = theta, mean = "overall.mean", stub = FALSE))

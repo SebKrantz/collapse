@@ -1,24 +1,24 @@
-\name{fNobs}
-\alias{fNobs}
-\alias{fNobs.default}
-\alias{fNobs.matrix}
-\alias{fNobs.data.frame}
-\alias{fNobs.grouped_df}
+\name{fnobs}
+\alias{fnobs}
+\alias{fnobs.default}
+\alias{fnobs.matrix}
+\alias{fnobs.data.frame}
+\alias{fnobs.grouped_df}
 \title{Fast (Grouped) Observation Count for Matrix-Like Objects}  % Vectors, Matrix and Data Frame Columns}
 \description{
-\code{fNobs} is a generic function that (column-wise) computes the number of non-missing values in \code{x}, (optionally) grouped by \code{g}. It is much faster than \code{sum(!is.na(x))}. The \code{\link{TRA}} argument can further be used to transform \code{x} using its (grouped) observation count.
+\code{fnobs} is a generic function that (column-wise) computes the number of non-missing values in \code{x}, (optionally) grouped by \code{g}. It is much faster than \code{sum(!is.na(x))}. The \code{\link{TRA}} argument can further be used to transform \code{x} using its (grouped) observation count.
 }
 
 \usage{
-fNobs(x, \dots)
+fnobs(x, \dots)
 
-\method{fNobs}{default}(x, g = NULL, TRA = NULL, use.g.names = TRUE, \dots)
+\method{fnobs}{default}(x, g = NULL, TRA = NULL, use.g.names = TRUE, \dots)
 
-\method{fNobs}{matrix}(x, g = NULL, TRA = NULL, use.g.names = TRUE, drop = TRUE, \dots)
+\method{fnobs}{matrix}(x, g = NULL, TRA = NULL, use.g.names = TRUE, drop = TRUE, \dots)
 
-\method{fNobs}{data.frame}(x, g = NULL, TRA = NULL, use.g.names = TRUE, drop = TRUE, \dots)
+\method{fnobs}{data.frame}(x, g = NULL, TRA = NULL, use.g.names = TRUE, drop = TRUE, \dots)
 
-\method{fNobs}{grouped_df}(x, TRA = NULL, use.g.names = FALSE, keep.group_vars = TRUE, \dots)
+\method{fnobs}{grouped_df}(x, TRA = NULL, use.g.names = FALSE, keep.group_vars = TRUE, \dots)
 }
 \arguments{
 \item{x}{a vector, matrix, data frame or grouped data frame (class 'grouped_df').}
@@ -39,35 +39,35 @@ fNobs(x, \dots)
 
 }
 \details{
-\code{fNobs} preserves all attributes of non-classed vectors / columns, and only the 'label' attribute (if available) of classed vectors / columns (i.e. dates or factors). When applied to data frames and matrices, the row-names are adjusted as necessary.
+\code{fnobs} preserves all attributes of non-classed vectors / columns, and only the 'label' attribute (if available) of classed vectors / columns (i.e. dates or factors). When applied to data frames and matrices, the row-names are adjusted as necessary.
 }
 \value{
 Integer. The number of non-missing observations in \code{x}, grouped by \code{g}, or (if \code{\link{TRA}} is used) \code{x} transformed by its number of non-missing observations, grouped by \code{g}.
 }
 \seealso{
-\code{\link{fNdistinct}}, \link[=A1-fast-statistical-functions]{Fast Statistical Functions}, \link[=collapse-documentation]{Collapse Overview}
+\code{\link{fndistinct}}, \link[=A1-fast-statistical-functions]{Fast Statistical Functions}, \link[=collapse-documentation]{Collapse Overview}
 }
 \examples{
 ## default vector method
-fNobs(airquality$Solar.R)                   # Simple Nobs
-fNobs(airquality$Solar.R, airquality$Month) # Grouped Nobs
+fnobs(airquality$Solar.R)                   # Simple Nobs
+fnobs(airquality$Solar.R, airquality$Month) # Grouped Nobs
 
 ## data.frame method
-fNobs(airquality)
-fNobs(airquality, airquality$Month)
-fNobs(wlddev)                               # Works with data of all types!
-head(fNobs(wlddev, wlddev$iso3c))
+fnobs(airquality)
+fnobs(airquality, airquality$Month)
+fnobs(wlddev)                               # Works with data of all types!
+head(fnobs(wlddev, wlddev$iso3c))
 
 ## matrix method
 aqm <- qM(airquality)
-fNobs(aqm)                                  # Also works for character or logical matrices
-fNobs(aqm, airquality$Month)
+fnobs(aqm)                                  # Also works for character or logical matrices
+fnobs(aqm, airquality$Month)
 \donttest{ % No code relying on suggested package
 ## method for grouped data frames - created with dplyr::group_by or fgroup_by
 library(dplyr)
-airquality \%>\% group_by(Month) \%>\% fNobs
-wlddev \%>\% group_by(country) \%>\%
-           select(PCGDP,LIFEEX,GINI,ODA) \%>\% fNobs
+airquality |> group_by(Month) |> fnobs()
+wlddev |> group_by(country) |>
+           select(PCGDP,LIFEEX,GINI,ODA) |> fnobs()
 }
 }
 \keyword{univar}

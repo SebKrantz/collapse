@@ -72,7 +72,7 @@
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">collapse</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">1.5.3</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">1.6.0</span>
       </span>
     </div>
 
@@ -94,12 +94,12 @@
       <ul class="nav navbar-nav navbar-right">
         <li>
   <a href="https://twitter.com/collapse_R" target="_blank">
-    <span class="fa fa-twitter"></span>
+    <span class="fas fa-twitter"></span>
      
   </a>
 </li>
 <li>
-  <a href="https://github.com/SebKrantz/collapse">
+  <a href="https://github.com/SebKrantz/collapse" target="_blank">
     <span class="fas fa-github"></span>
      
   </a>
@@ -142,6 +142,7 @@
 <span class='fu'>fnrow</span><span class='op'>(</span><span class='va'>X</span><span class='op'>)</span>                      <span class='co'># Faster nrow for data frames (not faster for matrices)</span>
 <span class='fu'>fncol</span><span class='op'>(</span><span class='va'>X</span><span class='op'>)</span>                      <span class='co'># Faster ncol for data frames (not faster for matrices)</span>
 <span class='fu'>fdim</span><span class='op'>(</span><span class='va'>X</span><span class='op'>)</span>                       <span class='co'># Faster dim for data frames (not faster for matrices)</span>
+<span class='fu'>alloc</span><span class='op'>(</span><span class='va'>value</span>, <span class='va'>n</span><span class='op'>)</span>               <span class='co'># Same as rep_len for a single value, but faster</span>
 <span class='fu'>allNA</span><span class='op'>(</span><span class='va'>x</span><span class='op'>)</span>                      <span class='co'># Check for all missing cases in a vector</span>
 <span class='fu'>missing_cases</span><span class='op'>(</span><span class='va'>X</span>, cols <span class='op'>=</span> <span class='cn'>NULL</span><span class='op'>)</span> <span class='co'># Find missing cases in a matrix / data framme</span>
 <span class='fu'>na_rm</span><span class='op'>(</span><span class='va'>x</span><span class='op'>)</span>                      <span class='co'># Remove missing values from vector and return vector</span>
@@ -163,8 +164,8 @@
 <span class='fu'>setAttrib</span><span class='op'>(</span><span class='va'>object</span>, <span class='va'>a</span><span class='op'>)</span>          <span class='co'># Replace all attributes with list of attributes 'a'</span>
 <span class='fu'>copyAttrib</span><span class='op'>(</span><span class='va'>to</span>, <span class='va'>from</span><span class='op'>)</span>          <span class='co'># Copy all attributes from object 'from' to object 'to'</span>
 <span class='fu'>copyMostAttrib</span><span class='op'>(</span><span class='va'>to</span>, <span class='va'>from</span><span class='op'>)</span>      <span class='co'># Copy most attributes from object 'from' to object 'to'</span>
-<span class='fu'>is.categorical</span><span class='op'>(</span><span class='va'>x</span><span class='op'>)</span>             <span class='co'># The opposite of is.numeric</span>
-<span class='fu'>is.Date</span><span class='op'>(</span><span class='va'>x</span><span class='op'>)</span>                    <span class='co'># Check if object is of class "Date", "POSIXlt" or "POSIXct"</span></pre>
+<span class='fu'>is_categorical</span><span class='op'>(</span><span class='va'>x</span><span class='op'>)</span>             <span class='co'># The opposite of is.numeric</span>
+<span class='fu'>is_date</span><span class='op'>(</span><span class='va'>x</span><span class='op'>)</span>                    <span class='co'># Check if object is of class "Date", "POSIXlt" or "POSIXct"</span></pre>
 
     <h2 class="hasAnchor" id="arguments"><a class="anchor" href="#arguments"></a>Arguments</h2>
     <table class="ref-arguments">
@@ -191,7 +192,11 @@
     </tr>
     <tr>
       <th>value</th>
-      <td><p>a matching character vector of variable labels.</p></td>
+      <td><p>for <code>alloc</code>: a single value of any vector type. For <code>vlabels</code>: a matching character vector of variable labels.</p></td>
+    </tr>
+    <tr>
+      <th>n</th>
+      <td><p>integer. The length of the vector to allocate with <code>value</code>.</p></td>
     </tr>
     <tr>
       <th>class</th>
@@ -207,7 +212,7 @@
     </tr>
     <tr>
       <th>cols</th>
-      <td><p>only removes rows with missing values on these columns. Columns can be selected using column names, indices, a logical vector or a selector function (i.e. <code>is.numeric</code>).</p></td>
+      <td><p>only removes rows with missing values on these columns. Columns can be selected using column names, indices, a logical vector or a selector function (e.g. <code>is.numeric</code>).</p></td>
     </tr>
     <tr>
       <th>na.attr</th>
@@ -249,43 +254,60 @@
 </div><div class='output co'>#&gt; [1] "a"      "b"      "c d"    "e == f"</div><div class='input'>
 <span class='co'>## Variable labels</span>
 <span class='fu'>namlab</span><span class='op'>(</span><span class='va'>wlddev</span>, class <span class='op'>=</span> <span class='cn'>TRUE</span><span class='op'>)</span>
-</div><div class='output co'>#&gt;    Variable     Class                                   Label
-#&gt; 1   country character                            Country Name
-#&gt; 2     iso3c    factor                            Country Code
-#&gt; 3      date      Date              Date Recorded (Fictitious)
-#&gt; 4      year   integer                                    Year
-#&gt; 5    decade   numeric                                  Decade
-#&gt; 6    region    factor                                  Region
-#&gt; 7    income    factor                            Income Level
-#&gt; 8      OECD   logical                 Is OECD Member Country?
-#&gt; 9     PCGDP   numeric      GDP per capita (constant 2010 US$)
-#&gt; 10   LIFEEX   numeric Life expectancy at birth, total (years)
-#&gt; 11     GINI   numeric        GINI index (World Bank estimate)
-#&gt; 12      ODA   numeric    Net ODA received (constant 2015 US$)</div><div class='input'><span class='fu'>vlabels</span><span class='op'>(</span><span class='va'>wlddev</span><span class='op'>)</span>
-</div><div class='output co'>#&gt;                                   country 
-#&gt;                            "Country Name" 
-#&gt;                                     iso3c 
-#&gt;                            "Country Code" 
-#&gt;                                      date 
-#&gt;              "Date Recorded (Fictitious)" 
-#&gt;                                      year 
-#&gt;                                    "Year" 
-#&gt;                                    decade 
-#&gt;                                  "Decade" 
-#&gt;                                    region 
-#&gt;                                  "Region" 
-#&gt;                                    income 
-#&gt;                            "Income Level" 
-#&gt;                                      OECD 
-#&gt;                 "Is OECD Member Country?" 
-#&gt;                                     PCGDP 
-#&gt;      "GDP per capita (constant 2010 US$)" 
-#&gt;                                    LIFEEX 
-#&gt; "Life expectancy at birth, total (years)" 
-#&gt;                                      GINI 
-#&gt;        "GINI index (World Bank estimate)" 
-#&gt;                                       ODA 
-#&gt;    "Net ODA received (constant 2015 US$)" </div><div class='input'><span class='fu'>vlabels</span><span class='op'>(</span><span class='va'>wlddev</span><span class='op'>)</span> <span class='op'>&lt;-</span> <span class='fu'>vlabels</span><span class='op'>(</span><span class='va'>wlddev</span><span class='op'>)</span>
+</div><div class='output co'>#&gt;    Variable     Class
+#&gt; 1   country character
+#&gt; 2     iso3c    factor
+#&gt; 3      date      Date
+#&gt; 4      year   integer
+#&gt; 5    decade   integer
+#&gt; 6    region    factor
+#&gt; 7    income    factor
+#&gt; 8      OECD   logical
+#&gt; 9     PCGDP   numeric
+#&gt; 10   LIFEEX   numeric
+#&gt; 11     GINI   numeric
+#&gt; 12      ODA   numeric
+#&gt; 13      POP   numeric
+#&gt;                                                                                Label
+#&gt; 1                                                                       Country Name
+#&gt; 2                                                                       Country Code
+#&gt; 3                                                         Date Recorded (Fictitious)
+#&gt; 4                                                                               Year
+#&gt; 5                                                                             Decade
+#&gt; 6                                                                             Region
+#&gt; 7                                                                       Income Level
+#&gt; 8                                                            Is OECD Member Country?
+#&gt; 9                                                 GDP per capita (constant 2010 US$)
+#&gt; 10                                           Life expectancy at birth, total (years)
+#&gt; 11                                                  Gini index (World Bank estimate)
+#&gt; 12 Net official development assistance and official aid received (constant 2018 US$)
+#&gt; 13                                                                 Population, total</div><div class='input'><span class='fu'>vlabels</span><span class='op'>(</span><span class='va'>wlddev</span><span class='op'>)</span>
+</div><div class='output co'>#&gt;                                                                             country 
+#&gt;                                                                      "Country Name" 
+#&gt;                                                                               iso3c 
+#&gt;                                                                      "Country Code" 
+#&gt;                                                                                date 
+#&gt;                                                        "Date Recorded (Fictitious)" 
+#&gt;                                                                                year 
+#&gt;                                                                              "Year" 
+#&gt;                                                                              decade 
+#&gt;                                                                            "Decade" 
+#&gt;                                                                              region 
+#&gt;                                                                            "Region" 
+#&gt;                                                                              income 
+#&gt;                                                                      "Income Level" 
+#&gt;                                                                                OECD 
+#&gt;                                                           "Is OECD Member Country?" 
+#&gt;                                                                               PCGDP 
+#&gt;                                                "GDP per capita (constant 2010 US$)" 
+#&gt;                                                                              LIFEEX 
+#&gt;                                           "Life expectancy at birth, total (years)" 
+#&gt;                                                                                GINI 
+#&gt;                                                  "Gini index (World Bank estimate)" 
+#&gt;                                                                                 ODA 
+#&gt; "Net official development assistance and official aid received (constant 2018 US$)" 
+#&gt;                                                                                 POP 
+#&gt;                                                                 "Population, total" </div><div class='input'><span class='fu'>vlabels</span><span class='op'>(</span><span class='va'>wlddev</span><span class='op'>)</span> <span class='op'>&lt;-</span> <span class='fu'>vlabels</span><span class='op'>(</span><span class='va'>wlddev</span><span class='op'>)</span>
 
 <span class='co'>## Stub-renaming</span>
 <span class='va'>log_mtc</span> <span class='op'>&lt;-</span> <span class='fu'>add_stub</span><span class='op'>(</span><span class='fu'><a href='https://rdrr.io/r/base/Log.html'>log</a></span><span class='op'>(</span><span class='va'>mtcars</span><span class='op'>)</span>, <span class='st'>"log."</span><span class='op'>)</span>
@@ -442,58 +464,64 @@
 
 <span class='co'>## Missing values</span>
 <span class='va'>mtc_na</span> <span class='op'>&lt;-</span> <span class='fu'>na_insert</span><span class='op'>(</span><span class='va'>mtcars</span>, <span class='fl'>0.15</span><span class='op'>)</span>    <span class='co'># Set 15% of values missing at random</span>
-<span class='fu'><a href='fNobs.html'>fNobs</a></span><span class='op'>(</span><span class='va'>mtc_na</span><span class='op'>)</span>                        <span class='co'># See observation count</span>
+<span class='fu'><a href='fnobs.html'>fnobs</a></span><span class='op'>(</span><span class='va'>mtc_na</span><span class='op'>)</span>                        <span class='co'># See observation count</span>
 </div><div class='output co'>#&gt;  mpg  cyl disp   hp drat   wt qsec   vs   am gear carb 
 #&gt;   28   28   28   28   28   28   28   28   28   28   28 </div><div class='input'><span class='fu'>na_omit</span><span class='op'>(</span><span class='va'>mtc_na</span><span class='op'>)</span>                      <span class='co'># 12x faster than na.omit(mtc_na)</span>
-</div><div class='output co'>#&gt;             mpg cyl  disp  hp drat   wt qsec vs am gear carb
-#&gt; Merc 240D  24.4   4 146.7  62 3.69 3.19 20.0  1  0    4    2
-#&gt; Merc 280C  17.8   6 167.6 123 3.92 3.44 18.9  1  0    4    4
-#&gt; Merc 450SE 16.4   8 275.8 180 3.07 4.07 17.4  0  0    3    3
-#&gt; Merc 450SL 17.3   8 275.8 180 3.07 3.73 17.6  0  0    3    3
-#&gt; Volvo 142E 21.4   4 121.0 109 4.11 2.78 18.6  1  1    4    2</div><div class='input'><span class='fu'>na_omit</span><span class='op'>(</span><span class='va'>mtc_na</span>, na.attr <span class='op'>=</span> <span class='cn'>TRUE</span><span class='op'>)</span>      <span class='co'># Adds attribute with removed cases, like na.omit</span>
-</div><div class='output co'>#&gt;             mpg cyl  disp  hp drat   wt qsec vs am gear carb
-#&gt; Merc 240D  24.4   4 146.7  62 3.69 3.19 20.0  1  0    4    2
-#&gt; Merc 280C  17.8   6 167.6 123 3.92 3.44 18.9  1  0    4    4
-#&gt; Merc 450SE 16.4   8 275.8 180 3.07 4.07 17.4  0  0    3    3
-#&gt; Merc 450SL 17.3   8 275.8 180 3.07 3.73 17.6  0  0    3    3
-#&gt; Volvo 142E 21.4   4 121.0 109 4.11 2.78 18.6  1  1    4    2</div><div class='input'><span class='fu'>na_omit</span><span class='op'>(</span><span class='va'>mtc_na</span>, cols <span class='op'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span><span class='op'>(</span><span class='st'>"vs"</span>,<span class='st'>"am"</span><span class='op'>)</span><span class='op'>)</span> <span class='co'># Removes only cases missing vs or am</span>
 </div><div class='output co'>#&gt;                      mpg cyl  disp  hp drat    wt  qsec vs am gear carb
-#&gt; Mazda RX4           21.0   6 160.0 110 3.90 2.620    NA  0  1   NA    4
-#&gt; Hornet 4 Drive      21.4   6 258.0 110 3.08 3.215 19.44  1  0    3   NA
-#&gt; Hornet Sportabout   18.7   8 360.0 175 3.15 3.440 17.02  0  0    3   NA
-#&gt; Valiant             18.1   6 225.0 105   NA 3.460 20.22  1  0    3    1
-#&gt; Merc 240D           24.4   4 146.7  62 3.69 3.190 20.00  1  0    4    2
-#&gt; Merc 230              NA   4 140.8  95 3.92 3.150 22.90  1  0    4    2
-#&gt; Merc 280            19.2   6    NA 123 3.92 3.440    NA  1  0    4    4
-#&gt; Merc 280C           17.8   6 167.6 123 3.92 3.440 18.90  1  0    4    4
-#&gt; Merc 450SE          16.4   8 275.8 180 3.07 4.070 17.40  0  0    3    3
+#&gt; Mazda RX4           21.0   6 160.0 110 3.90 2.620 16.46  0  1    4    4
 #&gt; Merc 450SL          17.3   8 275.8 180 3.07 3.730 17.60  0  0    3    3
-#&gt; Merc 450SLC         15.2   8 275.8 180 3.07 3.780    NA  0  0    3    3
-#&gt; Cadillac Fleetwood  10.4  NA 472.0 205 2.93 5.250 17.98  0  0    3    4
-#&gt; Lincoln Continental 10.4  NA 460.0  NA 3.00 5.424 17.82  0  0    3    4
-#&gt; Fiat 128            32.4   4  78.7  NA 4.08 2.200 19.47  1  1    4    1
-#&gt; Honda Civic           NA   4  75.7  NA 4.93 1.615 18.52  1  1    4    2
-#&gt; Toyota Corolla      33.9   4  71.1  65 4.22    NA 19.90  1  1    4    1
-#&gt; Toyota Corona       21.5   4 120.1  97 3.70    NA 20.01  1  0    3    1
-#&gt; Dodge Challenger    15.5   8 318.0 150 2.76    NA 16.87  0  0   NA    2
-#&gt; AMC Javelin         15.2   8    NA 150 3.15 3.435 17.30  0  0    3    2
-#&gt; Porsche 914-2       26.0  NA 120.3  91 4.43 2.140 16.70  0  1    5    2
-#&gt; Lotus Europa        30.4   4    NA 113 3.77 1.513 16.90  1  1    5   NA
-#&gt; Ford Pantera L      15.8   8 351.0 264 4.22 3.170 14.50  0  1   NA    4
-#&gt; Maserati Bora       15.0   8 301.0 335 3.54    NA 14.60  0  1   NA    8
-#&gt; Volvo 142E          21.4   4 121.0 109 4.11 2.780 18.60  1  1    4    2</div><div class='input'><span class='fu'>na_omit</span><span class='op'>(</span><span class='fu'><a href='A4-quick-conversion.html'>qM</a></span><span class='op'>(</span><span class='va'>mtc_na</span><span class='op'>)</span><span class='op'>)</span>                  <span class='co'># Also works for matrices</span>
-</div><div class='output co'>#&gt;             mpg cyl  disp  hp drat   wt qsec vs am gear carb
-#&gt; Merc 240D  24.4   4 146.7  62 3.69 3.19 20.0  1  0    4    2
-#&gt; Merc 280C  17.8   6 167.6 123 3.92 3.44 18.9  1  0    4    4
-#&gt; Merc 450SE 16.4   8 275.8 180 3.07 4.07 17.4  0  0    3    3
-#&gt; Merc 450SL 17.3   8 275.8 180 3.07 3.73 17.6  0  0    3    3
-#&gt; Volvo 142E 21.4   4 121.0 109 4.11 2.78 18.6  1  1    4    2</div><div class='input'><span class='fu'>na_omit</span><span class='op'>(</span><span class='va'>mtc_na</span><span class='op'>$</span><span class='va'>vs</span>, na.attr <span class='op'>=</span> <span class='cn'>TRUE</span><span class='op'>)</span>   <span class='co'># Also works with vectors</span>
-</div><div class='output co'>#&gt;  [1] 0 1 1 0 1 1 1 1 1 0 0 0 0 0 0 1 1 1 1 0 0 0 0 1 0 0 0 1
+#&gt; Lincoln Continental 10.4   8 460.0 215 3.00 5.424 17.82  0  0    3    4
+#&gt; Honda Civic         30.4   4  75.7  52 4.93 1.615 18.52  1  1    4    2
+#&gt; Porsche 914-2       26.0   4 120.3  91 4.43 2.140 16.70  0  1    5    2
+#&gt; Ford Pantera L      15.8   8 351.0 264 4.22 3.170 14.50  0  1    5    4
+#&gt; Maserati Bora       15.0   8 301.0 335 3.54 3.570 14.60  0  1    5    8</div><div class='input'><span class='fu'>na_omit</span><span class='op'>(</span><span class='va'>mtc_na</span>, na.attr <span class='op'>=</span> <span class='cn'>TRUE</span><span class='op'>)</span>      <span class='co'># Adds attribute with removed cases, like na.omit</span>
+</div><div class='output co'>#&gt;                      mpg cyl  disp  hp drat    wt  qsec vs am gear carb
+#&gt; Mazda RX4           21.0   6 160.0 110 3.90 2.620 16.46  0  1    4    4
+#&gt; Merc 450SL          17.3   8 275.8 180 3.07 3.730 17.60  0  0    3    3
+#&gt; Lincoln Continental 10.4   8 460.0 215 3.00 5.424 17.82  0  0    3    4
+#&gt; Honda Civic         30.4   4  75.7  52 4.93 1.615 18.52  1  1    4    2
+#&gt; Porsche 914-2       26.0   4 120.3  91 4.43 2.140 16.70  0  1    5    2
+#&gt; Ford Pantera L      15.8   8 351.0 264 4.22 3.170 14.50  0  1    5    4
+#&gt; Maserati Bora       15.0   8 301.0 335 3.54 3.570 14.60  0  1    5    8</div><div class='input'><span class='fu'>na_omit</span><span class='op'>(</span><span class='va'>mtc_na</span>, cols <span class='op'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span><span class='op'>(</span><span class='st'>"vs"</span>,<span class='st'>"am"</span><span class='op'>)</span><span class='op'>)</span> <span class='co'># Removes only cases missing vs or am</span>
+</div><div class='output co'>#&gt;                      mpg cyl  disp  hp drat    wt  qsec vs am gear carb
+#&gt; Mazda RX4           21.0   6 160.0 110 3.90 2.620 16.46  0  1    4    4
+#&gt; Mazda RX4 Wag         NA   6 160.0 110 3.90 2.875 17.02  0  1    4   NA
+#&gt; Hornet 4 Drive      21.4  NA 258.0 110 3.08 3.215    NA  1  0    3    1
+#&gt; Duster 360            NA   8 360.0 245 3.21 3.570 15.84  0  0    3    4
+#&gt; Merc 240D           24.4   4 146.7  62 3.69 3.190 20.00  1  0   NA    2
+#&gt; Merc 230            22.8  NA 140.8  95 3.92 3.150 22.90  1  0    4    2
+#&gt; Merc 280            19.2   6    NA 123 3.92    NA    NA  1  0    4    4
+#&gt; Merc 280C           17.8   6 167.6  NA 3.92 3.440    NA  1  0    4   NA
+#&gt; Merc 450SE          16.4  NA 275.8 180 3.07 4.070    NA  0  0    3    3
+#&gt; Merc 450SL          17.3   8 275.8 180 3.07 3.730 17.60  0  0    3    3
+#&gt; Lincoln Continental 10.4   8 460.0 215 3.00 5.424 17.82  0  0    3    4
+#&gt; Chrysler Imperial   14.7   8 440.0 230 3.23 5.345 17.42  0  0   NA    4
+#&gt; Honda Civic         30.4   4  75.7  52 4.93 1.615 18.52  1  1    4    2
+#&gt; Dodge Challenger    15.5  NA 318.0 150 2.76 3.520 16.87  0  0   NA    2
+#&gt; AMC Javelin           NA   8 304.0 150 3.15 3.435 17.30  0  0    3    2
+#&gt; Camaro Z28          13.3   8    NA 245   NA 3.840 15.41  0  0    3    4
+#&gt; Pontiac Firebird    19.2   8 400.0 175   NA 3.845 17.05  0  0    3    2
+#&gt; Fiat X1-9           27.3   4  79.0  NA 4.08 1.935 18.90  1  1    4    1
+#&gt; Porsche 914-2       26.0   4 120.3  91 4.43 2.140 16.70  0  1    5    2
+#&gt; Lotus Europa        30.4   4    NA 113 3.77 1.513 16.90  1  1    5    2
+#&gt; Ford Pantera L      15.8   8 351.0 264 4.22 3.170 14.50  0  1    5    4
+#&gt; Ferrari Dino        19.7   6 145.0 175 3.62    NA 15.50  0  1    5   NA
+#&gt; Maserati Bora       15.0   8 301.0 335 3.54 3.570 14.60  0  1    5    8
+#&gt; Volvo 142E          21.4   4    NA  NA 4.11 2.780 18.60  1  1   NA    2</div><div class='input'><span class='fu'>na_omit</span><span class='op'>(</span><span class='fu'><a href='quick-conversion.html'>qM</a></span><span class='op'>(</span><span class='va'>mtc_na</span><span class='op'>)</span><span class='op'>)</span>                  <span class='co'># Also works for matrices</span>
+</div><div class='output co'>#&gt;                      mpg cyl  disp  hp drat    wt  qsec vs am gear carb
+#&gt; Mazda RX4           21.0   6 160.0 110 3.90 2.620 16.46  0  1    4    4
+#&gt; Merc 450SL          17.3   8 275.8 180 3.07 3.730 17.60  0  0    3    3
+#&gt; Lincoln Continental 10.4   8 460.0 215 3.00 5.424 17.82  0  0    3    4
+#&gt; Honda Civic         30.4   4  75.7  52 4.93 1.615 18.52  1  1    4    2
+#&gt; Porsche 914-2       26.0   4 120.3  91 4.43 2.140 16.70  0  1    5    2
+#&gt; Ford Pantera L      15.8   8 351.0 264 4.22 3.170 14.50  0  1    5    4
+#&gt; Maserati Bora       15.0   8 301.0 335 3.54 3.570 14.60  0  1    5    8</div><div class='input'><span class='fu'>na_omit</span><span class='op'>(</span><span class='va'>mtc_na</span><span class='op'>$</span><span class='va'>vs</span>, na.attr <span class='op'>=</span> <span class='cn'>TRUE</span><span class='op'>)</span>   <span class='co'># Also works with vectors</span>
+</div><div class='output co'>#&gt;  [1] 0 0 1 1 0 1 1 1 1 0 0 0 0 0 0 1 1 0 0 0 0 1 0 1 0 0 0 1
 #&gt; attr(,"na.action")
-#&gt; [1]  2  7 24 26
+#&gt; [1]  5  6 18 20
 #&gt; attr(,"class")
 #&gt; [1] "omit"</div><div class='input'><span class='fu'>na_rm</span><span class='op'>(</span><span class='va'>mtc_na</span><span class='op'>$</span><span class='va'>vs</span><span class='op'>)</span>                     <span class='co'># For vectors na_rm is faster ...</span>
-</div><div class='output co'>#&gt;  [1] 0 1 1 0 1 1 1 1 1 0 0 0 0 0 0 1 1 1 1 0 0 0 0 1 0 0 0 1</div><div class='input'><span class='fu'><a href='https://rdrr.io/r/base/rm.html'>rm</a></span><span class='op'>(</span><span class='va'>mtc_na</span><span class='op'>)</span>
+</div><div class='output co'>#&gt;  [1] 0 0 1 1 0 1 1 1 1 0 0 0 0 0 0 1 1 0 0 0 0 1 0 1 0 0 0 1</div><div class='input'><span class='fu'><a href='https://rdrr.io/r/base/rm.html'>rm</a></span><span class='op'>(</span><span class='va'>mtc_na</span><span class='op'>)</span>
 </div></pre>
   </div>
   <div class="col-md-3 hidden-xs hidden-sm" id="pkgdown-sidebar">

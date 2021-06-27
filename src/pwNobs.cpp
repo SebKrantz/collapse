@@ -3,7 +3,7 @@
 using namespace Rcpp;
 
 template <int RTYPE>
-IntegerMatrix pwNobsmCppImpl(const Matrix<RTYPE>& x) {
+IntegerMatrix pwnobsmCppImpl(const Matrix<RTYPE>& x) {
   int l = x.nrow(), col = x.ncol();
   auto isnnanT = (RTYPE == REALSXP) ? [](typename Rcpp::traits::storage_type<RTYPE>::type x) { return x == x; } :
     [](typename Rcpp::traits::storage_type<RTYPE>::type x) { return x != Vector<RTYPE>::get_na(); };
@@ -24,28 +24,28 @@ IntegerMatrix pwNobsmCppImpl(const Matrix<RTYPE>& x) {
 }
 
 template <>
-IntegerMatrix pwNobsmCppImpl(const Matrix<CPLXSXP>& x) {
+IntegerMatrix pwnobsmCppImpl(const Matrix<CPLXSXP>& x) {
   stop("Not supported SEXP type!");
 }
 
 template <>
-IntegerMatrix pwNobsmCppImpl(const Matrix<VECSXP>& x) {
+IntegerMatrix pwnobsmCppImpl(const Matrix<VECSXP>& x) {
   stop("Not supported SEXP type!");
 }
 
 template <>
-IntegerMatrix pwNobsmCppImpl(const Matrix<RAWSXP>& x) {
+IntegerMatrix pwnobsmCppImpl(const Matrix<RAWSXP>& x) {
   stop("Not supported SEXP type!");
 }
 
 template <>
-IntegerMatrix pwNobsmCppImpl(const Matrix<EXPRSXP>& x) {
+IntegerMatrix pwnobsmCppImpl(const Matrix<EXPRSXP>& x) {
   stop("Not supported SEXP type!");
 }
 
 // [[Rcpp::export]]
-IntegerMatrix pwNobsmCpp(SEXP x){
-  RCPP_RETURN_MATRIX(pwNobsmCppImpl, x);
+IntegerMatrix pwnobsmCpp(SEXP x){
+  RCPP_RETURN_MATRIX(pwnobsmCppImpl, x);
 }
 
 
@@ -58,7 +58,7 @@ IntegerMatrix pwNobsmCpp(SEXP x){
 //
 // Not fast !!! :
 // // [[Rcpp::export]]
-// IntegerMatrix pwNobslCpp(const List& x) {
+// IntegerMatrix pwnobslCpp(const List& x) {
 //   int l = x.size();
 //   IntegerMatrix out = no_init_matrix(l, l);
 //   for(int j = 0; j != l; ++j) {
@@ -251,7 +251,7 @@ IntegerMatrix pwNobsmCpp(SEXP x){
 
 //
 // // [[Rcpp::export]]
-// IntegerMatrix pwNobslCpp(const List& x) {
+// IntegerMatrix pwnobslCpp(const List& x) {
 //   int l = x.size();
 //   IntegerMatrix out = no_init_matrix(l, l);
 //   for(int j = 0; j != l; ++j) {

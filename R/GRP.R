@@ -86,7 +86,8 @@ GRP.default <- function(X, by = NULL, sort = TRUE, decreasing = FALSE, na.last =
                         call = if(call) match.call() else NULL), "GRP"))
 }
 
-is.GRP <- function(x) inherits(x, "GRP")
+is_GRP <- function(x) inherits(x, "GRP")
+is.GRP <- is_GRP
 
 GRPnames <- function(x, force.char = TRUE) { # , ...
   groups <- x[[4L]]
@@ -146,9 +147,9 @@ plot.GRP <- function(x, breaks = "auto", type = "s", horizontal = FALSE, ...) {
   hist(x[[3L]], breaks, xlab = "Group Size", main = "Histogram of Group Sizes", ...)
 }
 
-as.factor_GRP <- function(x, ordered = FALSE) { # , ...
+as_factor_GRP <- function(x, ordered = FALSE) { # , ...
   # if(is.factor(x)) return(x)
-  # if(!is.GRP(x)) stop("x must be a 'GRP' object")
+  # if(!is_GRP(x)) stop("x must be a 'GRP' object")
   f <- x[[2L]]
   gr <- unclass(x[[4L]])
   if(is.null(gr)) {
@@ -164,14 +165,16 @@ as.factor_GRP <- function(x, ordered = FALSE) { # , ...
   f
 }
 
+as.factor_GRP <- as_factor_GRP
+
 # as.factor.GRP <- function(x, ordered = FALSE) {
-#   .Deprecated("as.factor_GRP")
-#   as.factor_GRP(x, ordered)
+#   .Deprecated("as_factor_GRP")
+#   as_factor_GRP(x, ordered)
 # }
 
 finteraction <- function(..., ordered = FALSE, sort = TRUE) { # does it drop levels ? -> Yes !
-  if(...length() == 1L && is.list(...)) return(as.factor_GRP(GRP.default(..., sort = sort, call = FALSE), ordered))
-  as.factor_GRP(GRP.default(list(...), sort = sort, call = FALSE), ordered)
+  if(...length() == 1L && is.list(...)) return(as_factor_GRP(GRP.default(..., sort = sort, call = FALSE), ordered))
+  as_factor_GRP(GRP.default(list(...), sort = sort, call = FALSE), ordered)
 }
 
 GRP.qG <- function(X, ..., group.sizes = TRUE, return.groups = TRUE, call = TRUE) {
@@ -246,6 +249,7 @@ GRP.pdata.frame <- function(X, effect = 1L, ..., group.sizes = TRUE, return.grou
 fgroup_by <- function(X, ..., sort = TRUE, decreasing = FALSE, na.last = TRUE, return.order = FALSE) {          #   e <- substitute(list(...)) # faster but does not preserve attributes of unique groups !
   clx <- oldClass(X)
   m <- match(c("GRP_df", "grouped_df", "data.frame"), clx, nomatch = 0L)
+  if(any(clx == "sf")) oldClass(X) <- clx[clx != "sf"]
   attr(X, "groups") <- GRP.default(fselect(if(m[2L]) fungroup(X) else X, ...), NULL, sort, decreasing, na.last, TRUE, return.order, FALSE)
   # Needed: wlddev %>% fgroup_by(country) gives error if dplyr is loaded. Also sf objects etc..
   # .rows needs to be list(), NULL won't work !! Note: attaching a data.frame class calls data frame methods, even if "list" in front! -> Need GRP.grouped_df to restore object !
@@ -254,6 +258,7 @@ fgroup_by <- function(X, ..., sort = TRUE, decreasing = FALSE, na.last = TRUE, r
   # simplest, but X is coerced to data.frame. Through the above solution it can be a list and only receive the 'grouped_df' class
   # add_cl <- c("grouped_df", "data.frame")
   # oldClass(X) <- c(fsetdiff(oldClass(X), add_cl), add_cl)
+  if(any(clx == "data.table")) return(alc(X))
   X
 }
 
@@ -264,7 +269,7 @@ print.GRP_df <- function(x, ...) {
   # but better keep for now, other functions in dplyr might check this and only preserve attributes if they exist. -> Nah. select(UGA_sf, addr_cname) doesn't work anyway..
   # NextMethod()
   g <- attr(x, "groups")
-  if(is.GRP(g)) { # Issue Patrice flagged !
+  if(is_GRP(g)) { # Issue Patrice flagged !
     # oldClass(g) <- NULL # could get rid of this if get rid of "data.frame" class.
     stats <- if(length(g[[3L]]))
       paste0(" [", g[[1L]], " | ", round(length(g[[2L]]) / g[[1L]]), " (", round(fsd.default(g[[3L]]), 1L), ")]") else
@@ -376,16 +381,10 @@ fungroup <- function(X, ...) {
 fgroup_vars <- function(X, return = "data") {
   g <- attr(X, "groups")
   if(!is.list(g)) stop("attr(X, 'groups') is not a grouping object")
-  vars <- if(is.GRP(g)) g[[5L]] else attr(g, "names")[-length(unclass(g))]
+  vars <- if(is_GRP(g)) g[[5L]] else attr(g, "names")[-length(unclass(g))]
   switch(return[1L],
-    data = {
-      ax <- attributes(X)
-      ax[["class"]] <- fsetdiff(ax[["class"]], c("GRP_df", "grouped_df"))  # ax[["class"]][ax[["class"]] != "grouped_df"]
-      ind <- ckmatch(vars, ax[["names"]])
-      ax[["names"]] <- vars
-      setAttributes(.subset(X, ind), ax[names(ax) != "groups"])
-    },
-    unique = if(is.GRP(g)) g[[4L]] else fcolsubset(g, -length(unclass(g))), # what about attr(*, ".drop") ??
+    data = .Call(C_subsetCols, fungroup(X), ckmatch(vars, attr(X, "names")), TRUE),
+    unique = if(is_GRP(g)) g[[4L]] else .Call(C_subsetCols, g, -length(unclass(g)), FALSE), # what about attr(*, ".drop") ??
     names = vars,
     indices = ckmatch(vars, attr(X, "names")),
     named_indices = `names<-`(ckmatch(vars, attr(X, "names")), vars),
@@ -401,7 +400,7 @@ GRP.grouped_df <- function(X, ..., return.groups = TRUE, call = TRUE) {
   # if(!missing(...)) unused_arg_action(match.call(), ...)
   # g <- unclass(attr(X, "groups"))
   g <- attr(X, "groups")
-  if(is.GRP(g)) return(g) # return(`oldClass<-`(.subset(g, 1:8), "GRP")) # To avoid data.frame methods being called
+  if(is_GRP(g)) return(g) # return(`oldClass<-`(.subset(g, 1:8), "GRP")) # To avoid data.frame methods being called
   if(!is.list(g)) stop("attr(X, 'groups') is not a grouping object")
   oldClass(g) <- NULL
   lg <- length(g)
@@ -418,7 +417,8 @@ GRP.grouped_df <- function(X, ..., return.groups = TRUE, call = TRUE) {
                         call = if(call) match.call() else NULL), "GRP"))
 }
 
-is.qG <- function(x) inherits(x, "qG")
+is_qG <- function(x) inherits(x, "qG")
+is.qG <- is_qG
 
 # TODO: fix na_rm speed for character data...
 na_rm2 <- function(x, sort) {
@@ -457,7 +457,7 @@ radixfact <- function(x, sort, ord, fact, naincl, keep, retgrp = FALSE) {
   f
 }
 
-as.factor_qG <- function(x, ordered = FALSE, na.exclude = TRUE) {
+as_factor_qG <- function(x, ordered = FALSE, na.exclude = TRUE) {
   groups <- if(is.null(attr(x, "groups"))) as.character(seq_len(attr(x, "N.groups"))) else tochar(attr(x, "groups"))
   nainc <- inherits(x, "na.included")
   if(na.exclude || nainc) {
@@ -472,20 +472,24 @@ as.factor_qG <- function(x, ordered = FALSE, na.exclude = TRUE) {
   return(`attributes<-`(x, list(levels = groups, class = clx)))
 }
 
+as.factor_qG <- as_factor_qG
+
 qF <- function(x, ordered = FALSE, na.exclude = TRUE, sort = TRUE, drop = FALSE,
                keep.attr = TRUE, method = c("auto", "radix", "hash")) {
   if(is.factor(x)) {
     if(!keep.attr && !all(names(ax <- attributes(x)) == c("levels", "class")))
       attributes(x) <- ax[c("levels", "class")]
     if(na.exclude || inherits(x, "na.included")) {
-      if(ordered && !is.ordered(x)) oldClass(x) <- c("ordered", oldClass(x)) # can set unordered ??
+      clx <- oldClass(x)
+      if(ordered && !any(clx == "ordered")) oldClass(x) <- c("ordered", clx) else # can set unordered ??
+      if(!ordered && any(clx == "ordered")) oldClass(x) <- clx[clx != "ordered"]
       if(drop) return(.Call(Cpp_fdroplevels, x, !inherits(x, "na.included"))) else return(x)
     }
     x <- addNA2(x)
     oldClass(x) <- c(if(ordered) "ordered", "factor", "na.included")
     if(drop) return(.Call(Cpp_fdroplevels, x, FALSE)) else return(x)
   }
-  if(is.qG(x)) return(as.factor_qG(x, ordered, na.exclude))
+  if(is_qG(x)) return(as_factor_qG(x, ordered, na.exclude))
   switch(method[1L], # if((is.character(x) && !na.exclude) || (length(x) < 500 && !(is.character(x) && na.exclude)))
          auto  = if(is.character(x) || is.logical(x) || length(x) < 500L) .Call(Cpp_qF, x, sort, ordered, na.exclude, keep.attr, 1L) else
            radixfact(x, sort, ordered, TRUE, !na.exclude, keep.attr),
@@ -560,7 +564,8 @@ funique.data.frame <- function(x, cols = NULL, sort = FALSE, ...) {
   # if(!missing(...)) unused_arg_action(match.call(), ...)
   o <- if(is.null(cols)) radixorderv(x, starts = TRUE, sort = sort, ...) else
        radixorderv(colsubset(x, cols), starts = TRUE, sort = sort, ...) # if(is.call(by)) .subset(x, ckmatch(attr(x, "names"), all.vars(by)))
-  if(attr(o, "maxgrpn") == 1L && (!sort || attr(o, "sorted"))) return(x)
+  if(attr(o, "maxgrpn") == 1L && (!sort || attr(o, "sorted"))) # return(x)
+     return(if(inherits(x, "data.table")) alc(x) else x)
   st <- if(attr(o, "sorted")) attr(o, "starts") else o[attr(o, "starts")]
   rn <- attr(x, "row.names")
   if(is.numeric(rn) || is.null(rn) || rn[1L] == "1") return(.Call(C_subsetDT, x, st, seq_along(unclass(x))))
@@ -569,6 +574,16 @@ funique.data.frame <- function(x, cols = NULL, sort = FALSE, ...) {
 
 funique.list <- function(x, cols = NULL, sort = FALSE, ...) funique.data.frame(x, cols, sort, ...)
 
+funique.sf <- function(x, cols = NULL, sort = FALSE, ...) {
+  cols <- if(is.null(cols)) which(attr(x, "names") != attr(x, "sf_column")) else
+                            cols2int(cols, x, attr(x, "names"), FALSE)
+  o <- radixorderv(.subset(x, cols), starts = TRUE, sort = sort, ...)
+  if(attr(o, "maxgrpn") == 1L && (!sort || attr(o, "sorted"))) return(x)
+  st <- if(attr(o, "sorted")) attr(o, "starts") else o[attr(o, "starts")]
+  rn <- attr(x, "row.names")
+  if(is.numeric(rn) || is.null(rn) || rn[1L] == "1") return(.Call(C_subsetDT, x, st, seq_along(unclass(x))))
+  return(`attr<-`(.Call(C_subsetDT, x, st, seq_along(unclass(x))), "row.names", rn[st]))
+}
 
 fdroplevels <- function(x, ...) UseMethod("fdroplevels")
 
@@ -587,8 +602,10 @@ fdroplevels.factor <- function(x, ...) {
 
 fdroplevels.data.frame <- function(x, ...) {
   if(!missing(...)) unused_arg_action(match.call(), ...)
-  duplAttributes(lapply(unattrib(x), function(y)
+  res <- duplAttributes(lapply(unattrib(x), function(y)
     if(is.factor(y)) .Call(Cpp_fdroplevels, y, !inherits(y, "na.included")) else y), x)
+  if(inherits(x, "data.table")) return(alc(res))
+  res
 }
 
 fdroplevels.list <- fdroplevels.data.frame

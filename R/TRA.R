@@ -15,7 +15,7 @@ TRA.default <- function(x, STATS, FUN = "-", g = NULL, ...) {
     }
     return(.Call(Cpp_TRA,x,STATS,g,TtI(FUN)))
   }
-  if(!is.GRP(g)) g <- GRP.default(g, return.groups = FALSE, call = FALSE)
+  if(!is_GRP(g)) g <- GRP.default(g, return.groups = FALSE, call = FALSE)
   if(g[[1L]] != length(STATS)) stop("number of groups must match length(STATS)")
   .Call(Cpp_TRA,x,STATS,g[[2L]],TtI(FUN))
 }
@@ -32,7 +32,7 @@ TRA.matrix <- function(x, STATS, FUN = "-", g = NULL, ...) {
     }
     return(.Call(Cpp_TRAm,x,STATS,g,TtI(FUN)))
   }
-  if(!is.GRP(g)) g <- GRP.default(g, return.groups = FALSE, call = FALSE)
+  if(!is_GRP(g)) g <- GRP.default(g, return.groups = FALSE, call = FALSE)
   if(g[[1L]] != nrow(STATS)) stop("number of groups must match nrow(STATS)")
   .Call(Cpp_TRAm,x,STATS,g[[2L]],TtI(FUN))
 }
@@ -49,7 +49,7 @@ TRA.data.frame <- function(x, STATS, FUN = "-", g = NULL, ...) {
     }
     return(.Call(Cpp_TRAl,x,STATS,g,TtI(FUN)))
   }
-  if(!is.GRP(g)) g <- GRP.default(g, return.groups = FALSE, call = FALSE)
+  if(!is_GRP(g)) g <- GRP.default(g, return.groups = FALSE, call = FALSE)
   if(g[[1L]] != fnrow2(STATS)) stop("number of groups must match nrow(STATS)")
   .Call(Cpp_TRAl,x,STATS,g[[2L]],TtI(FUN))
 }
@@ -59,13 +59,16 @@ TRA.list <- function(x, STATS, FUN = "-", g = NULL, ...) TRA.data.frame(x, STATS
 TRA.grouped_df <- function(x, STATS, FUN = "-", keep.group_vars = TRUE, ...) {
   if(!missing(...)) unused_arg_action(match.call(), ...)
   g <- GRP.grouped_df(x, call = FALSE)
+  clx <- oldClass(x)
+  oldClass(x) <- NULL
   oldClass(STATS) <- NULL
   if(g[[1L]] != length(STATS[[1L]])) stop("number of groups must match nrow(STATS)")
   nognst <- names(STATS) %!in% g[[5L]]
-  mt <- ckmatch(names(STATS), attr(x, "names"), "Variables in STATS not found in x:")
+  mt <- ckmatch(names(STATS), names(x), "Variables in STATS not found in x:")
   mt <- mt[nognst]
-  get_vars(x, mt) <- .Call(Cpp_TRAl, .subset(x, mt),STATS[nognst],g[[2L]],TtI(FUN))
-  if(!keep.group_vars) return(fcolsubset(x, attr(x, "names") %!in% g[[5L]]))
+  x[mt] <- .Call(Cpp_TRAl,x[mt],STATS[nognst],g[[2L]],TtI(FUN))
+  if(!keep.group_vars) x[names(x) %in% g[[5L]]] <- NULL
+  oldClass(x) <- clx
   x
 }
 

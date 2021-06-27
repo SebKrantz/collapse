@@ -6,6 +6,7 @@
 \alias{varying.pseries}
 \alias{varying.pdata.frame}
 \alias{varying.grouped_df}
+\alias{varying.sf}
 \title{Fast Check of Variation in Data}  % Vectors, Matrix and Data Frame Columns}
 \description{
 \code{varying} is a generic function that (column-wise) checks for variation in the values of \code{x}, (optionally) within the groups \code{g} (e.g. a panel-identifier).
@@ -30,6 +31,12 @@ varying(x, ...)
 
 \method{varying}{grouped_df}(x, any_group = TRUE, use.g.names = FALSE, drop = TRUE,
         keep.group_vars = TRUE, ...)
+
+# Methods for grouped data frame / compatibility with sf:
+
+\method{varying}{sf}(x, by = NULL, cols = NULL, any_group = TRUE, use.g.names = TRUE, drop = TRUE, ...)
+
+
 }
 %- maybe also 'usage' for other objects documented here.
 \arguments{
@@ -63,6 +70,8 @@ If groups are supplied to \code{g} (or alternatively a \emph{grouped_df} to \cod
 \item If \code{any_group = TRUE} (the default), \code{varying} checks each column for variation in any of the groups defined by \code{g}, and returns \code{TRUE} if such within-variation was detected and \code{FALSE} otherwise. Thus only one logical value is returned for each column and the computation on each column is terminated as soon as any variation within any group was found.
 \item If \code{any_group = FALSE}, \code{varying} runs through the entire data checking each group for variation and returns, for each column in \code{x}, a logical vector reporting the variation check for all groups. If a group contains only missing values, a \code{NA} is returned for that group.
 }
+
+The \emph{sf} method simply ignores the geometry column.
 }
 \value{
 A logical vector or (if \code{!is.null(g)} and \code{any_group = FALSE}), a matrix or data frame of logical vectors indicating whether the data vary (over the dimension supplied by \code{g}).

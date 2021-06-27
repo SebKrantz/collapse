@@ -4,7 +4,7 @@ rapply2d <- function(l, FUN, ..., classes = "data.frame") {
 }
 
 get_elem_FUN <- function(x, FUN, return = "sublist", keep_class = FALSE)
-  switch(return, sublist = if(keep_class) colsubsetFUN(x, FUN) else .subset(x, vapply(`attributes<-`(x, NULL), FUN, TRUE)),
+  switch(return, sublist = if(keep_class) fcolsubset(x, vapply(`attributes<-`(x, NULL), FUN, TRUE)) else .subset(x, vapply(`attributes<-`(x, NULL), FUN, TRUE)),
          names = attr(x, "names")[vapply(`attributes<-`(x, NULL), FUN, TRUE)],
          indices = which(vapply(`attributes<-`(x, NULL), FUN, TRUE)),
          named_indices = which(`names<-`(vapply(`attributes<-`(x, NULL), FUN, TRUE), attr(x, "names"))),
@@ -49,8 +49,10 @@ is.regular <- function(x) {
   is.list(x) || is.atomic(x)
 }
 
-is.unlistable <- function(l, DF.as.list = FALSE) if(DF.as.list) all(unlist(rapply(l, is.atomic, how = "list"), use.names = FALSE)) else
+is_unlistable <- function(l, DF.as.list = FALSE) if(DF.as.list) all(unlist(rapply(l, is.atomic, how = "list"), use.names = FALSE)) else
   all(unlist(rapply2d(l, is_regular), use.names = FALSE)) # fastest way?
+
+is.unlistable <- is_unlistable
 
 # If data.frame, search all, otherwise, make optional counting df or not, but don't search them.
 ldepth <- function(l, DF.as.list = FALSE) {

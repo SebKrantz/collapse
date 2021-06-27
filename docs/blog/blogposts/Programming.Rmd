@@ -75,7 +75,7 @@ library(Rcpp)
 sourceCpp("ganyNA.cpp")
 
 ganyNA <- function(x, g, use.g.names = TRUE) {
-  if(is.atomic(g) || !is.GRP(g)) g <- GRP(g, return.groups = use.g.names)
+  if(is.atomic(g) || !is_GRP(g)) g <- GRP(g, return.groups = use.g.names)
   if(use.g.names) setNames(ganyNACpp(x, g[[1L]], g[[2L]]), GRPnames(g, FALSE)) else
     ganyNACpp(x, g[[1L]], g[[2L]])
 }

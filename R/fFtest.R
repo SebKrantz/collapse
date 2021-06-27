@@ -48,12 +48,12 @@ fFtest <- function(y, exc, X = NULL, w = NULL, full.df = TRUE, ...) {
     vy <- fvar.default(y, w = w)
     if(atl) {
       n <- nrow(data)
-      r2f <- 1 - fvar.default(fHDwithin.default(y, data[, -1L], w, na.rm = FALSE, ...), w = w)/vy
-      r2r <- 1 - fvar.default(fHDwithin.default(y, data[, 2:(Xn+1L)], w, na.rm = FALSE, ...), w = w)/vy
+      r2f <- 1 - fvar.default(fhdwithin.default(y, data[, -1L], w, na.rm = FALSE, ...), w = w)/vy
+      r2r <- 1 - fvar.default(fhdwithin.default(y, data[, 2:(Xn+1L)], w, na.rm = FALSE, ...), w = w)/vy
     } else {
       n <- fnrow2(data)
-      r2f <- 1 - fvar.default(fHDwithin.default(y, fcolsubset(data, -1L), w, na.rm = FALSE, ...), w = w)/vy
-      r2r <- 1 - fvar.default(fHDwithin.default(y, fcolsubset(data, 2:(Xn+1L)), w, na.rm = FALSE, ...), w = w)/vy
+      r2f <- 1 - fvar.default(fhdwithin.default(y, fcolsubset(data, -1L), w, na.rm = FALSE, ...), w = w)/vy
+      r2r <- 1 - fvar.default(fhdwithin.default(y, fcolsubset(data, 2:(Xn+1L)), w, na.rm = FALSE, ...), w = w)/vy
     }
     ndff <- k-1L
     ddff <- n-k
@@ -71,7 +71,7 @@ fFtest <- function(y, exc, X = NULL, w = NULL, full.df = TRUE, ...) {
                                   c("R-Sq.","DF1","DF2","F-Stat.","P-Value")))
     oldClass(res) <- c("fFtest","matrix")
   } else {
-    u <- fHDwithin.default(y, exc, w, na.rm = TRUE, ...) # Residuals
+    u <- fhdwithin.default(y, exc, w, na.rm = TRUE, ...) # Residuals
     miss <- attr(u, "na.rm")
     if(!is.null(miss)) w <- w[-miss]
     if(full.df && length(miss) && !is.atomic(exc) && !is.numeric(exc)) {

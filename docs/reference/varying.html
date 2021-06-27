@@ -72,7 +72,7 @@
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">collapse</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">1.5.3</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">1.6.0</span>
       </span>
     </div>
 
@@ -94,12 +94,12 @@
       <ul class="nav navbar-nav navbar-right">
         <li>
   <a href="https://twitter.com/collapse_R" target="_blank">
-    <span class="fa fa-twitter"></span>
+    <span class="fas fa-twitter"></span>
      
   </a>
 </li>
 <li>
-  <a href="https://github.com/SebKrantz/collapse">
+  <a href="https://github.com/SebKrantz/collapse" target="_blank">
     <span class="fas fa-github"></span>
      
   </a>
@@ -150,7 +150,12 @@
 
 <span class='co'># S3 method for grouped_df</span>
 <span class='fu'>varying</span><span class='op'>(</span><span class='va'>x</span>, any_group <span class='op'>=</span> <span class='cn'>TRUE</span>, use.g.names <span class='op'>=</span> <span class='cn'>FALSE</span>, drop <span class='op'>=</span> <span class='cn'>TRUE</span>,
-        keep.group_vars <span class='op'>=</span> <span class='cn'>TRUE</span>, <span class='va'>...</span><span class='op'>)</span></pre>
+        keep.group_vars <span class='op'>=</span> <span class='cn'>TRUE</span>, <span class='va'>...</span><span class='op'>)</span>
+
+<span class='co'># Methods for grouped data frame / compatibility with sf:</span>
+
+<span class='co'># S3 method for sf</span>
+<span class='fu'>varying</span><span class='op'>(</span><span class='va'>x</span>, by <span class='op'>=</span> <span class='cn'>NULL</span>, cols <span class='op'>=</span> <span class='cn'>NULL</span>, any_group <span class='op'>=</span> <span class='cn'>TRUE</span>, use.g.names <span class='op'>=</span> <span class='cn'>TRUE</span>, drop <span class='op'>=</span> <span class='cn'>TRUE</span>, <span class='va'>...</span><span class='op'>)</span></pre>
 
     <h2 class="hasAnchor" id="arguments"><a class="anchor" href="#arguments"></a>Arguments</h2>
     <table class="ref-arguments">
@@ -173,7 +178,7 @@
     </tr>
     <tr>
       <th>cols</th>
-      <td><p>select columns using column names, indices or a function (i.e. <code>is.numeric</code>). Two-sided formulas passed to <code>by</code> overwrite <code>cols</code>.</p></td>
+      <td><p>select columns using column names, indices or a function (e.g. <code>is.numeric</code>). Two-sided formulas passed to <code>by</code> overwrite <code>cols</code>.</p></td>
     </tr>
     <tr>
       <th>use.g.names</th>
@@ -206,6 +211,7 @@
 <li><p>If <code>any_group = FALSE</code>, <code>varying</code> runs through the entire data checking each group for variation and returns, for each column in <code>x</code>, a logical vector reporting the variation check for all groups. If a group contains only missing values, a <code>NA</code> is returned for that group.</p></li>
 </ul>
 
+<p>The <em>sf</em> method simply ignores the geometry column.</p>
     <h2 class="hasAnchor" id="value"><a class="anchor" href="#value"></a>Value</h2>
 
     <p>A logical vector or (if <code>!is.null(g)</code> and <code>any_group = FALSE</code>), a matrix or data frame of logical vectors indicating whether the data vary (over the dimension supplied by <code>g</code>).</p>
@@ -218,12 +224,14 @@
 <span class='fu'>varying</span><span class='op'>(</span><span class='va'>wlddev</span><span class='op'>)</span>
 </div><div class='output co'>#&gt; country   iso3c    date    year  decade  region  income    OECD   PCGDP  LIFEEX 
 #&gt;    TRUE    TRUE    TRUE    TRUE    TRUE    TRUE    TRUE    TRUE    TRUE    TRUE 
-#&gt;    GINI     ODA 
-#&gt;    TRUE    TRUE </div><div class='input'>
+#&gt;    GINI     ODA     POP 
+#&gt;    TRUE    TRUE    TRUE </div><div class='input'>
 <span class='co'>## Checks whether data are time-variant i.e. vary within country</span>
 <span class='fu'>varying</span><span class='op'>(</span><span class='va'>wlddev</span>, <span class='op'>~</span> <span class='va'>country</span><span class='op'>)</span>
 </div><div class='output co'>#&gt;  iso3c   date   year decade region income   OECD  PCGDP LIFEEX   GINI    ODA 
-#&gt;  FALSE   TRUE   TRUE   TRUE  FALSE  FALSE  FALSE   TRUE   TRUE   TRUE   TRUE </div><div class='input'>
+#&gt;  FALSE   TRUE   TRUE   TRUE  FALSE  FALSE  FALSE   TRUE   TRUE   TRUE   TRUE 
+#&gt;    POP 
+#&gt;   TRUE </div><div class='input'>
 <span class='co'>## Same as above but done for each country individually, countries without data are coded NA</span>
 <span class='fu'><a href='https://rdrr.io/r/utils/head.html'>head</a></span><span class='op'>(</span><span class='fu'>varying</span><span class='op'>(</span><span class='va'>wlddev</span>, <span class='op'>~</span> <span class='va'>country</span>, any_group <span class='op'>=</span> <span class='cn'>FALSE</span><span class='op'>)</span><span class='op'>)</span>
 </div><div class='output co'>#&gt;                iso3c date year decade region income  OECD PCGDP LIFEEX GINI
@@ -233,13 +241,13 @@
 #&gt; American Samoa FALSE TRUE TRUE   TRUE  FALSE  FALSE FALSE  TRUE     NA   NA
 #&gt; Andorra        FALSE TRUE TRUE   TRUE  FALSE  FALSE FALSE  TRUE     NA   NA
 #&gt; Angola         FALSE TRUE TRUE   TRUE  FALSE  FALSE FALSE  TRUE   TRUE TRUE
-#&gt;                 ODA
-#&gt; Afghanistan    TRUE
-#&gt; Albania        TRUE
-#&gt; Algeria        TRUE
-#&gt; American Samoa   NA
-#&gt; Andorra          NA
-#&gt; Angola         TRUE</div></pre>
+#&gt;                 ODA  POP
+#&gt; Afghanistan    TRUE TRUE
+#&gt; Albania        TRUE TRUE
+#&gt; Algeria        TRUE TRUE
+#&gt; American Samoa   NA TRUE
+#&gt; Andorra          NA TRUE
+#&gt; Angola         TRUE TRUE</div></pre>
   </div>
   <div class="col-md-3 hidden-xs hidden-sm" id="pkgdown-sidebar">
     <nav id="toc" data-toggle="toc" class="sticky-top">

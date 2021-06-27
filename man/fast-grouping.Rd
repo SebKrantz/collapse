@@ -20,7 +20,7 @@
 
 \item \code{\link{fdroplevels}} is a substantially faster replacement for \code{\link{droplevels}}.
 
-\item \code{\link{finteraction}} is a fast alternative to \code{\link{interaction}} implemented as a wrapper around \code{as.factor_GRP(GRP(\dots))}. It can be used to generate a factor from multiple vectors, factors or a list of vectors / factors. Unused factor levels are always dropped.
+\item \code{\link{finteraction}} is a fast alternative to \code{\link{interaction}} implemented as a wrapper around \code{as_factor_GRP(GRP(\dots))}. It can be used to generate a factor from multiple vectors, factors or a list of vectors / factors. Unused factor levels are always dropped.
 
 \item \code{\link{groupid}} is a generalization of \code{data.table::rleid} providing a run-length type group-id from atomic vectors. It is generalization as it also supports passing an ordering vector and skipping missing values. For example \code{\link{qF}} and \code{\link{qG}} with \code{method = "radix"} are essentially implemented using \code{groupid(x, radixorder(x))}.
 

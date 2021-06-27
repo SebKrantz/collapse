@@ -76,8 +76,8 @@ test_that("Testing grouped_df methods", {
   expect_visible(gdf %>% fmax)
   expect_visible(gdf %>% ffirst)
   expect_visible(gdf %>% flast)
-  expect_visible(gdf %>% fNobs)
-  expect_visible(gdf %>% fNdistinct)
+  expect_visible(gdf %>% fnobs)
+  expect_visible(gdf %>% fndistinct)
   expect_visible(gdf %>% collapg)
   expect_visible(gdf %>% fmean(w = wgt)) # good?
   expect_equal(gdf %>% collapg(w = wgt) %>% slt(-wgt), gdf %>% collapg(w = wgt, keep.w = FALSE))
@@ -102,6 +102,7 @@ test_that("Testing grouped_df methods", {
   expect_visible(gdf %>% W(wgt))
   expect_equal(gdf %>% W(wgt) %>% slt(-wgt), gdf %>% W(wgt, keep.w = FALSE))
   expect_equal(gdf %>% fwithin, gdf %>% W(stub = FALSE))
+  expect_visible(gdf %>% fcumsum)
   expect_visible(gdf %>% flag)
   expect_visible(gdf %>% L)
   expect_visible(gdf %>% F)
@@ -132,10 +133,15 @@ test_that("Testing grouped_df methods", {
 
 # Also better not run on CRAN...
 test_that("0-length vectors give expected output", {
-  funs <- .c(fsum, fprod, fmean, fmedian, fmin, fmax, fnth, fbetween, fwithin, fscale)
+  funs <- .c(fsum, fprod, fmean, fmedian, fmin, fmax, fnth, fcumsum, fbetween, fwithin, fscale)
   for(i in funs) {
     FUN <- match.fun(i)
-    expect_true(all_identical(FUN(numeric(0)), FUN(integer(0)), numeric(0)))
+    if(i %!in% .c(fsum, fmin, fmax, fcumsum)) {
+      expect_true(all_identical(FUN(numeric(0)), FUN(integer(0)), numeric(0)))
+    } else {
+      expect_identical(FUN(numeric(0)), numeric(0))
+      expect_identical(FUN(integer(0)), integer(0))
+    }
   }
   funs <- .c(fmode, ffirst, flast)
   for(i in funs) {
@@ -152,7 +158,7 @@ test_that("0-length vectors give expected output", {
     expect_identical(FUN(numeric(0)), NA_real_)
     expect_identical(FUN(integer(0)), NA_real_)
   }
-  funs <- .c(fNobs, fNdistinct)
+  funs <- .c(fnobs, fndistinct)
   for(i in funs) {
     FUN <- match.fun(i)
     expect_identical(FUN(numeric(0)), 0L)
@@ -175,5 +181,46 @@ test_that("0-length vectors give expected output", {
 })
 
 }
+
+X <- matrix(rnorm(1000), ncol = 10)
+g <- qG(sample.int(10, 100, TRUE))
+gf <- as_factor_qG(g)
+funs <- grep("hd|log", c(.FAST_FUN, .OPERATOR_FUN), ignore.case = TRUE, invert = TRUE, value = TRUE)
+
+test_that("functions work on plain matrices", {
+  for(i in funs) {
+    expect_visible(match.fun(i)(X))
+    expect_visible(match.fun(i)(X, g = g))
+    expect_visible(match.fun(i)(X, g = gf))
+    expect_visible(match.fun(i)(X, g = g, use.g.names = FALSE))
+    expect_visible(match.fun(i)(X, g = gf, use.g.names = FALSE))
+  }
+})
+
+Xl <- mctl(X)
+
+test_that("functions work on plain lists", {
+  for(i in funs) {
+    expect_visible(match.fun(i)(Xl))
+    expect_visible(match.fun(i)(Xl, g = g, by = g))
+    expect_visible(match.fun(i)(Xl, g = gf, by = gf))
+    expect_visible(match.fun(i)(X, g = g, by = g, use.g.names = FALSE))
+    expect_visible(match.fun(i)(X, g = gf, by = gf, use.g.names = FALSE))
+  }
+})
+
+test_that("time series functions work inside lm", {
+  expect_equal(unname(coef(lm(mpg ~ L(cyl, 0:2), mtcars))), unname(coef(lm(mpg ~ cyl + L(cyl, 1) + L(cyl, 2), mtcars))))
+  expect_equal(unname(coef(lm(mpg ~ F(cyl, 0:2), mtcars))), unname(coef(lm(mpg ~ cyl + F(cyl, 1) + F(cyl, 2), mtcars))))
+  expect_equal(unname(coef(lm(mpg ~ D(cyl, 0:2), mtcars))), unname(coef(lm(mpg ~ cyl + D(cyl, 1) + D(cyl, 2), mtcars))))
+  expect_equal(unname(coef(lm(mpg ~ G(cyl, 0:2), mtcars))), unname(coef(lm(mpg ~ cyl + G(cyl, 1) + G(cyl, 2), mtcars))))
+
+  expect_equal(unname(coef(lm(mpg ~ L(L(cyl, 0:2)), mtcars))), unname(coef(lm(mpg ~ L(cyl) + L(cyl, 2) + L(cyl, 3), mtcars))))
+  expect_equal(unname(coef(lm(mpg ~ L(F(cyl, 0:2)), mtcars))), unname(coef(lm(mpg ~ L(cyl) + cyl + F(cyl, 1), mtcars))))
+  expect_equal(unname(coef(lm(mpg ~ L(D(cyl, 0:2)), mtcars))), unname(coef(lm(mpg ~ L(cyl) + L(D(cyl)) + L(D(cyl, 2)), mtcars))))
+  expect_equal(unname(coef(lm(mpg ~ L(G(cyl, 0:2)), mtcars))), unname(coef(lm(mpg ~ L(cyl) + L(G(cyl)) + L(G(cyl, 2)), mtcars))))
+
+})
+
 
 options(warn = 1)

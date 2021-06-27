@@ -10,14 +10,14 @@ psmat.default <- function(x, g, t = NULL, transpose = FALSE, ...) {
     matrix(x, nrow = round(g), byrow = TRUE,
     dimnames = list(paste0("GRP.",seq_len(g)), seq_len(length(x)/round(g))))
   } else {
-  if(!is.nmfactor(g)) if(is.atomic(g)) g <- qF(g, na.exclude = FALSE) else if(is.GRP(g))
-                    g <- as.factor_GRP(g) else g <- as.factor_GRP(GRP.default(g, call = FALSE))
+  if(!is.nmfactor(g)) if(is.atomic(g)) g <- qF(g, na.exclude = FALSE) else if(is_GRP(g))
+                    g <- as_factor_GRP(g) else g <- as_factor_GRP(GRP.default(g, call = FALSE))
   if(is.null(t)) {
     message("No timevar provided: Assuming Balanced Panel")
     return(.Call(Cpp_psmat,x, g, NULL, transpose))
   } else {
-    if(!is.nmfactor(t)) if(is.atomic(t)) t <- qF(t, na.exclude = FALSE) else if(is.GRP(t))
-                      t <- as.factor_GRP(t) else t <- as.factor_GRP(GRP.default(t, call = FALSE))
+    if(!is.nmfactor(t)) if(is.atomic(t)) t <- qF(t, na.exclude = FALSE) else if(is_GRP(t))
+                      t <- as_factor_GRP(t) else t <- as_factor_GRP(GRP.default(t, call = FALSE))
     return(.Call(Cpp_psmat,x, g, t, transpose))
     }
   }
@@ -56,14 +56,14 @@ psmat.data.frame <- function(x, by, t = NULL, cols = NULL, transpose = FALSE, ar
       x <- x[v]
     } else if(length(cols)) x <- x[cols2int(cols, x, names(x), FALSE)]
 
-    if(!is.nmfactor(by)) if(is.atomic(by)) by <- qF(by, na.exclude = FALSE) else if(is.GRP(by))
-                         by <- as.factor_GRP(by) else by <- as.factor_GRP(GRP.default(by, call = FALSE))
+    if(!is.nmfactor(by)) if(is.atomic(by)) by <- qF(by, na.exclude = FALSE) else if(is_GRP(by))
+                         by <- as_factor_GRP(by) else by <- as_factor_GRP(GRP.default(by, call = FALSE))
       if(is.null(t)) {
         message("No timevar provided: Assuming Balanced Panel")
         res <- lapply(x, psmatCpp, by, NULL, transpose)
       } else {
-        if(!is.nmfactor(t)) if(is.atomic(t)) t <- qF(t, na.exclude = FALSE) else if(is.GRP(t))
-                  t <- as.factor_GRP(t) else t <- as.factor_GRP(GRP.default(t, call = FALSE))
+        if(!is.nmfactor(t)) if(is.atomic(t)) t <- qF(t, na.exclude = FALSE) else if(is_GRP(t))
+                  t <- as_factor_GRP(t) else t <- as_factor_GRP(GRP.default(t, call = FALSE))
         res <- lapply(x, psmatCpp, by, t, transpose)
       }
   }
@@ -93,15 +93,18 @@ psmat.pdata.frame <- function(x, cols = NULL, transpose = FALSE, array = TRUE, .
   } else return(res)
 }
 
-plot.psmat <- function(x, legend = FALSE, colours = legend, labs = NULL, ...) {
+plot.psmat <- function(x, legend = FALSE,
+                       colours = legend,
+                       labs = NULL,
+                       grid = FALSE, ...) {
   d <- dim(x)
   arl <- length(d) == 3L
   if(isFALSE(attr(x, "transpose"))) {
-    x <- if(arl) aperm(x, c(2,1,3)) else t.default(x)
+    x <- if(arl) aperm(x, c(2L, 1L, 3L)) else t.default(x)
     d <- dim(x)
   }
   dn <- dimnames(x)
-  colours <- if(colours) rainbow(d[2L]) else TRUE
+  colours <- if(isTRUE(colours)) rainbow(d[2L]) else if(isFALSE(colours)) TRUE else colours
   t <- as.numeric(dn[[1L]])
   if(!is.na(t[1L])) {
     mint <- min(t)
@@ -111,27 +114,36 @@ plot.psmat <- function(x, legend = FALSE, colours = legend, labs = NULL, ...) {
     maxt <- length(t)
   }
   ns <- d[2L]
+  dots <- list(...)
   if(arl) {
     vars <- if(is.null(labs)) dn[[3L]] else labs
     nv <- d[3L]
-    if(nv == 2L) mfr <- c(1,2+legend) else if(nv+legend <= 4L) mfr <- c(2,2) else {
+    if(nv == 2L) mfr <- c(1L, 2L + legend) else if(nv + legend <= 4L) mfr <- c(2L, 2L) else {
       sqnv <- sqrt(nv)
       fsqnv <- floor(sqnv)
-      mfr <- if(sqnv == fsqnv) c(fsqnv+legend,fsqnv) else c(fsqnv+1L,fsqnv)
+      mfr <- if(sqnv == fsqnv) c(fsqnv+legend,fsqnv) else c(fsqnv + 1L, fsqnv)
     }
-    oldpar <- par(mfrow = mfr, mar = c(2.5,2.5,2.1,1.5), mgp = c(2.5,1,0))
+    oldpar <- par(mfrow = mfr, mar = c(2.5, 2.5, 2.1, 1.5), mgp = c(2.5, 1, 0))
     on.exit(par(oldpar))
-    for(i in seq_along(vars)) ts.plot(ts(x[, , i], mint, maxt), main = vars[i], col = colours, xlab = NULL, ...)
+    for(i in seq_along(vars)) {
+      ts.plot(ts(x[, , i], mint, maxt), main = vars[i], col = colours, xlab = NULL, ...)
+      if(grid) grid()
+    }
     if(legend) {
-      plot(1, type="n", axes=FALSE) #, xlab="", ylab="")
-      legend('topleft', dn[[2L]], col = colours, lty=1, cex= if(ns > 80L) .65 else 1, bty = "n",
-             ncol = if(ns <= 10L) 1L else if(nv == 2L) floor(ns^.25) else floor(ns^.37))
+      plot(1:10, type = "n", axes = FALSE, xlab = NA, ylab = NA)
+      legend(x = 0, y = if(nv == 2L) 10.5 else 10.75,  # 'topleft',
+             dn[[2L]], col = colours, lty = if(any(names(dots) == "lty")) dots[["lty"]] else 1L,
+             cex= if(ns > 80L) 1-sqrt(ns)/sqrt(1150) else 1, bty = "n", xpd = TRUE, # y.intersp = 0.5, x.intersp = 0.5,
+             ncol = if(ns <= 10L) 1L else if(nv == 2L) floor(ns^.32) else floor(ns^.39)) # .37
     }
   } else {
     ts.plot(ts(x, mint, maxt), col = colours, ...)
-    if(legend) legend('topleft', dn[[2L]], col = colours, lty=1,
-                      cex= if(ns > 80L) .65 else 1, bty = "n",
-                      ncol = if(d[2L] <= 10L) 1L else floor(d[2L]^.37))
+    if(grid) grid()
+    if(legend) legend('topleft', dn[[2L]], col = colours,
+                      lty = if(any(names(dots) == "lty")) dots[["lty"]] else 1L,
+                      cex= if(ns > 80L) 1-sqrt(ns)/sqrt(1150) else 1, bty = "n", xpd = TRUE,
+                      # y.intersp = 0.5, x.intersp = 0.5,
+                      ncol = if(d[2L] <= 10L) 1L else floor(d[2L]^.39)) #.37
   }
 }
 

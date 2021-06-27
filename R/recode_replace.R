@@ -1,7 +1,7 @@
 
 
 # inspired by ?dplyr::recode
-# Think about adopting this code for as.numeric_factor and as.character_factor
+# Think about adopting this code for as_numeric_factor and as_character_factor
 recode_num <- function(X, ..., default = NULL, missing = NULL) {
   if(missing(...)) stop("recode_num requires arguments of the form: value = replacement")
   args <- list(...)
@@ -27,12 +27,12 @@ recode_num <- function(X, ..., default = NULL, missing = NULL) {
       nr <- if(is.atomic(X)) NROW(X) else fnrow2(X)
       if(missingl) {
         repfun <- function(y) if(is.numeric(y)) {
-          z <- duplAttributes(rep(default, nr), y)
+          z <- duplAttributes(alloc(default, nr), y)
           z[is.na(y)] <- missing # could put behind -> better but inconsistent
           `[<-`(z, y == nam, value = args)
         } else y
       } else {
-        repfun <- function(y) if(is.numeric(y)) `[<-`(duplAttributes(rep(default, nr), y), y == nam, value = args) else y
+        repfun <- function(y) if(is.numeric(y)) `[<-`(duplAttributes(alloc(default, nr), y), y == nam, value = args) else y
       }
     }
   } else {
@@ -56,21 +56,24 @@ recode_num <- function(X, ..., default = NULL, missing = NULL) {
       nr <- if(is.atomic(X)) NROW(X) else fnrow2(X)
       if(missingl) {
         repfun <- function(y) if(is.numeric(y)) {
-          z <- duplAttributes(rep(default, nr), y)
+          z <- duplAttributes(alloc(default, nr), y)
           z[is.na(y)] <- missing # could put behind -> better but inconsistent
           for(i in seqarg) z[y == nam[i]] <- args[[i]]
           z
         } else y
       } else {
         repfun <- function(y) if(is.numeric(y)) {
-          z <- duplAttributes(rep(default, nr), y)
+          z <- duplAttributes(alloc(default, nr), y)
           for(i in seqarg) z[y == nam[i]] <- args[[i]]
           z
         } else y
       }
     }
   }
-  if(is.list(X)) return(duplAttributes(lapply(unattrib(X), repfun), X))
+  if(is.list(X)) {
+    res <- duplAttributes(lapply(unattrib(X), repfun), X)
+    return(if(inherits(X, "data.table")) alc(res) else res)
+  }
   if(!is.numeric(X)) stop("X needs to be numeric or a list")
   repfun(X)
 }
@@ -100,12 +103,12 @@ recode_char <- function(X, ..., default = NULL, missing = NULL, regex = FALSE,
         nr <- if(is.atomic(X)) NROW(X) else fnrow2(X)
         if(missingl) {
           repfun <- function(y) if(is.character(y)) {
-            z <- duplAttributes(rep(default, nr), y)
+            z <- duplAttributes(alloc(default, nr), y)
             z[is.na(y)] <- missing # could put behind -> better but inconsistent
             `[<-`(z, grepl(nam, y, ignore.case, FALSE, fixed), value = args)
           } else y
         } else {
-          repfun <- function(y) if(is.character(y)) `[<-`(duplAttributes(rep(default, nr), y), grepl(nam, y, ignore.case, FALSE, fixed), value = args) else y
+          repfun <- function(y) if(is.character(y)) `[<-`(duplAttributes(alloc(default, nr), y), grepl(nam, y, ignore.case, FALSE, fixed), value = args) else y
         }
       }
     } else {
@@ -129,14 +132,14 @@ recode_char <- function(X, ..., default = NULL, missing = NULL, regex = FALSE,
         nr <- if(is.atomic(X)) NROW(X) else fnrow2(X)
         if(missingl) {
           repfun <- function(y) if(is.character(y)) {
-            z <- duplAttributes(rep(default, nr), y)
+            z <- duplAttributes(alloc(default, nr), y)
             z[is.na(y)] <- missing # could put behind -> better but inconsistent
             for(i in seqarg) z[grepl(nam[i], y, ignore.case, FALSE, fixed)] <- args[[i]]
             z
           } else y
         } else {
           repfun <- function(y) if(is.character(y)) {
-            z <- duplAttributes(rep(default, nr), y)
+            z <- duplAttributes(alloc(default, nr), y)
             for(i in seqarg) z[grepl(nam[i], y, ignore.case, FALSE, fixed)] <- args[[i]]
             z
           } else y
@@ -159,12 +162,12 @@ recode_char <- function(X, ..., default = NULL, missing = NULL, regex = FALSE,
         nr <- if(is.atomic(X)) NROW(X) else fnrow2(X)
         if(missingl) {
           repfun <- function(y) if(is.character(y)) {
-            z <- duplAttributes(rep(default, nr), y)
+            z <- duplAttributes(alloc(default, nr), y)
             z[is.na(y)] <- missing # could put behind -> better but inconsistent
             `[<-`(z, y == nam, value = args)
           } else y
         } else {
-          repfun <- function(y) if(is.character(y)) `[<-`(duplAttributes(rep(default, nr), y), y == nam, value = args) else y
+          repfun <- function(y) if(is.character(y)) `[<-`(duplAttributes(alloc(default, nr), y), y == nam, value = args) else y
         }
       }
     } else {
@@ -188,14 +191,14 @@ recode_char <- function(X, ..., default = NULL, missing = NULL, regex = FALSE,
         nr <- if(is.atomic(X)) NROW(X) else fnrow2(X)
         if(missingl) {
           repfun <- function(y) if(is.character(y)) {
-            z <- duplAttributes(rep(default, nr), y)
+            z <- duplAttributes(alloc(default, nr), y)
             z[is.na(y)] <- missing # could put behind -> better but inconsistent
             for(i in seqarg) z[y == nam[i]] <- args[[i]]
             z
           } else y
         } else {
           repfun <- function(y) if(is.character(y)) {
-            z <- duplAttributes(rep(default, nr), y)
+            z <- duplAttributes(alloc(default, nr), y)
             for(i in seqarg) z[y == nam[i]] <- args[[i]]
             z
           } else y
@@ -203,20 +206,25 @@ recode_char <- function(X, ..., default = NULL, missing = NULL, regex = FALSE,
       }
     }
   }
-  if(is.list(X)) return(duplAttributes(lapply(unattrib(X), repfun), X))
+  if(is.list(X)) {
+    res <- duplAttributes(lapply(unattrib(X), repfun), X)
+    return(if(inherits(X, "data.table")) alc(res) else res)
+  }
   if(!is.character(X)) stop("X needs to be character or a list")
   repfun(X)
 }
 
 replace_NA <- function(X, value = 0L, cols = NULL) {
   if(is.list(X)) {
-    if(is.null(cols)) return(duplAttributes(lapply(unattrib(X), function(y) `[<-`(y, is.na(y), value = value)), X))
-    if(is.function(cols)) return(duplAttributes(lapply(unattrib(X), function(y) if(cols(y)) `[<-`(y, is.na(y), value = value) else y), X))
+    if(is.null(cols)) return(condalc(duplAttributes(lapply(unattrib(X),
+      function(y) `[<-`(y, is.na(y), value = value)), X), inherits(X, "data.table")))
+    if(is.function(cols)) return(condalc(duplAttributes(lapply(unattrib(X),
+      function(y) if(cols(y)) `[<-`(y, is.na(y), value = value) else y), X), inherits(X, "data.table")))
     clx <- oldClass(X)
     oldClass(X) <- NULL
     cols <- cols2int(cols, X, names(X), FALSE)
     X[cols] <- lapply(unattrib(X[cols]), function(y) `[<-`(y, is.na(y), value = value))
-    return(`oldClass<-`(X, clx))
+    return(condalc(`oldClass<-`(X, clx), any(clx == "data.table")))
   }
   `[<-`(X, is.na(X), value = value)
 }
@@ -225,8 +233,10 @@ replace_NA <- function(X, value = 0L, cols = NULL) {
 replace_Inf <- function(X, value = NA, replace.nan = FALSE) {
   if(is.list(X)) {
     # if(!inherits(X, "data.frame")) stop("replace_non_finite only works with atomic objects or data.frames")
-    if(replace.nan) return(duplAttributes(lapply(unattrib(X), function(y) if(is.numeric(y)) `[<-`(y, is.infinite(y) | is.nan(y), value = value) else y), X))
-    return(duplAttributes(lapply(unattrib(X), function(y) if(is.numeric(y)) `[<-`(y, is.infinite(y), value = value) else y), X))
+    res <- duplAttributes(lapply(unattrib(X),
+             if(replace.nan) (function(y) if(is.numeric(y)) `[<-`(y, is.infinite(y) | is.nan(y), value = value) else y) else
+                             (function(y) if(is.numeric(y)) `[<-`(y, is.infinite(y), value = value) else y)), X)
+    return(if(inherits(X, "data.table")) alc(res) else res)
   }
   if(!is.numeric(X)) stop("Infinite values can only be replaced in numeric objects!")
   if(replace.nan) return(`[<-`(X, is.infinite(X) | is.nan(X), value = value)) #  !is.finite(X) also replaces NA
@@ -247,8 +257,10 @@ replace_outliers <- function(X, limits, value = NA, single.limit = c("SDs", "min
   }
   if(is.list(X)) {
     # if(!inherits(X, "data.frame")) stop("replace_outliers only works with atomic objects or data.frames")
-    if(lg1) return(duplAttributes(lapply(unattrib(X), function(y) if(is.numeric(y)) `[<-`(y, y < l1 | y > l2, value = value) else y), X)) # could use data.table::between -> but it seems not faster !
-    return(switch(single.limit[1L], # Allows grouped scaling if X is a grouped_df, but requires extra memory equal to X ... extra argument gSDs ?
+    if(lg1) {
+      res <- duplAttributes(lapply(unattrib(X), function(y) if(is.numeric(y)) `[<-`(y, y < l1 | y > l2, value = value) else y), X) # could use data.table::between -> but it seems not faster !
+    } else {
+      res <- switch(single.limit[1L], # Allows grouped scaling if X is a grouped_df, but requires extra memory equal to X ... extra argument gSDs ?
            SDs = {
              if(inherits(X, c("grouped_df", "pdata.frame"))) {
               num <- vapply(unattrib(X), is.numeric, TRUE)
@@ -264,7 +276,9 @@ replace_outliers <- function(X, limits, value = NA, single.limit = c("SDs", "min
            min = duplAttributes(lapply(unattrib(X), function(y) if(is.numeric(y)) `[<-`(y, y < limits, value = value) else y), X),
            max = duplAttributes(lapply(unattrib(X), function(y) if(is.numeric(y)) `[<-`(y, y > limits, value = value) else y), X),
            overall_SDs = duplAttributes(lapply(unattrib(X), function(y) if(is.numeric(y)) `[<-`(y, abs(fscaleCpp(y)) > limits, value = value) else y), X),
-           stop("Unknown single.limit option")))
+           stop("Unknown single.limit option"))
+    }
+    return(if(inherits(res, "data.table")) alc(res) else res)
   }
   if(!is.numeric(X)) stop("Outliers can only be replaced in numeric objects!")
   if(lg1) return(`[<-`(X, X < l1 | X > l2, value = value))
@@ -274,6 +288,64 @@ replace_outliers <- function(X, limits, value = NA, single.limit = c("SDs", "min
     max = `[<-`(X, X > limits, value = value),
     stop("Unknown single.limit option"))
 }
+
+
+
+# pad or fpad? x is vector, matrix or data.frame
+pad_atomic <- function(x, i, n, value) {
+  ax <- attributes(x)
+  tx <- typeof(x)
+  if(typeof(value) != tx) value <- as.vector(value, tx)
+  if(is.matrix(x)) {
+    k <- dim(x)[2L]
+    m <- .Call(C_alloc, value, n * k)  # matrix(value, n, k)
+    dim(m) <- c(n, k)
+    m[i, ] <- x
+    if(length(ax) == 1L) return(m)
+    ax[["dim"]] <- c(n, k)
+    # Could also pad row-names? perhaps with names of i ??
+    if(length(ax[["dimnames"]][[1L]])) ax[["dimnames"]] <- list(NULL, ax[["dimnames"]][[2L]])
+    if(is.object(x)) ax[["class"]] <- NULL
+    return(`attributes<-`(m, ax)) # fastest ??
+  }
+  r <- .Call(C_alloc, value, n) # matrix(value, n) # matrix is faster than rep_len !!!!
+  r[i] <- x
+  if(is.null(ax)) return(r)
+  if(length(names(x))) {
+    if(length(ax) == 1L) return(r)
+    ax[["names"]] <- NULL
+  }
+  return(`attributes<-`(r, ax))
+}
+
+# microbenchmark::microbenchmark(x[-i] <- ri, x[i2] <- ri)
+# Unit: milliseconds
+# expr       min       lq     mean   median       uq       max neval cld
+# x[-i] <- ri 255.16654 420.7083 491.7369 446.0340 476.3324 1290.7396   100   b
+# x[i2] <- ri  80.18755 136.8012 157.0027 146.8156 166.7158  311.5526   100  a
+# microbenchmark::microbenchmark(seq_along(x)[-i])
+# Unit: milliseconds
+# expr      min       lq     mean   median       uq      max neval
+# seq_along(x)[-i] 506.0745 541.7975 605.0245 567.8115 585.8384 1341.035   100
+
+pad <- function(X, i, value = NA, method = c("auto", "xpos", "vpos")) { # 1 - i is same length as X, fill missing, 2 - i is positive: insert missing values in positions
+  ilog <- is.logical(i)
+  ineg <- i[1L] < 0L
+  n <- if(is.list(X)) length(.subset2(X, 1L)) else if(is.matrix(X)) dim(X)[1L] else length(X)
+  xpos <- switch(method[1L], auto = if(ilog) sum(i) == n else if(ineg) FALSE else length(i) == n,
+                 xpos = TRUE, vpos = FALSE)
+  n <- if(ilog) length(i) else if(xpos && !ineg) max(i) else n + length(i)
+  if(is.atomic(X)) return(pad_atomic(X, if(xpos || ineg) i else if(ilog) !i else -i, n, value))
+  if(!is.list(X)) stop("X must be atomic or a list")
+  if(ilog) i <- which(if(xpos) i else !i) else if(!xpos) i <- seq_len(n)[if(ineg) i else -i]
+  ax <- attributes(X)
+  attributes(X) <- NULL
+  res <- lapply(X, pad_atomic, i, n, value)
+  if(length(ax[["row.names"]])) ax[["row.names"]] <- .set_row_names(n)
+  return(condalcSA(res, ax, any(ax[["class"]] == "data.table")))
+}
+
+# Something like this already exists?? -> should work with lists as well...
 
 
 # Previous version of Recode (Until collapse 1.1.0), Now depreciated in favor or recode_num and recode_char

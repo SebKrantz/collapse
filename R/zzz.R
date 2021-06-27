@@ -39,7 +39,8 @@
   #        if(requireNamespace("RcppArmadillo", quietly = TRUE))
   #        get0("_RcppArmadillo_fastLm_impl", envir = getNamespace("RcppArmadillo")) else NULL, envir = parent.env(environment()))
 
-  options("collapse_unused_arg_action" = "warning") # error, warning, message or none
+  options(collapse_unused_arg_action = "warning", # error, warning, message or none
+          collapse_DT_alloccol = 100L)
 
   invisible(res)
 }

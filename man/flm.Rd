@@ -63,7 +63,7 @@ Method "qr" supports sparse matrices, so for an \code{X} matrix with many dummy 
 %% ~Make other sections like Warning with \section{Warning }{....} ~
 
 \seealso{
-\code{\link[=HDW]{fHDwithin/HDW}}, \code{\link{fFtest}}, \link[=A6-data-transformations]{Data Transformations}, \link[=collapse-documentation]{Collapse Overview}
+\code{\link[=HDW]{fhdwithin/HDW}}, \code{\link{fFtest}}, \link[=A6-data-transformations]{Data Transformations}, \link[=collapse-documentation]{Collapse Overview}
 }
 \examples{
 coef <- flm(mtcars$mpg, qM(mtcars[c("hp","carb")]),

@@ -23,32 +23,32 @@ TRAlCpp <- function(x, xAG, g = 0L, ret = 1L) {
     .Call(Cpp_TRAl, x, xAG, g, ret)
 }
 
-fNdistinctCpp <- function(x, ng = 0L, g = 0L, gs = NULL, narm = TRUE) {
-    .Call(Cpp_fNdistinct, x, ng, g, gs, narm)
+fndistinctCpp <- function(x, ng = 0L, g = 0L, gs = NULL, narm = TRUE) {
+    .Call(Cpp_fndistinct, x, ng, g, gs, narm)
 }
 
-fNdistinctlCpp <- function(x, ng = 0L, g = 0L, gs = NULL, narm = TRUE, drop = TRUE) {
-    .Call(Cpp_fNdistinctl, x, ng, g, gs, narm, drop)
+fndistinctlCpp <- function(x, ng = 0L, g = 0L, gs = NULL, narm = TRUE, drop = TRUE) {
+    .Call(Cpp_fndistinctl, x, ng, g, gs, narm, drop)
 }
 
-fNdistinctmCpp <- function(x, ng = 0L, g = 0L, gs = NULL, narm = TRUE, drop = TRUE) {
-    .Call(Cpp_fNdistinctm, x, ng, g, gs, narm, drop)
+fndistinctmCpp <- function(x, ng = 0L, g = 0L, gs = NULL, narm = TRUE, drop = TRUE) {
+    .Call(Cpp_fndistinctm, x, ng, g, gs, narm, drop)
 }
 
-pwNobsmCpp <- function(x) {
-    .Call(Cpp_pwNobsm, x)
+pwnobsmCpp <- function(x) {
+    .Call(Cpp_pwnobsm, x)
 }
 
-fNobsCpp <- function(x, ng = 0L, g = 0L) {
-    .Call(Cpp_fNobs, x, ng, g)
+fnobsC <- function(x, ng = 0L, g = 0L) {
+    .Call(C_fnobs, x, ng, g)
 }
 
-fNobsmCpp <- function(x, ng = 0L, g = 0L, drop = TRUE) {
-    .Call(Cpp_fNobsm, x, ng, g, drop)
+fnobsmC <- function(x, ng = 0L, g = 0L, drop = TRUE) {
+    .Call(C_fnobsm, x, ng, g, drop)
 }
 
-fNobslCpp <- function(x, ng = 0L, g = 0L, drop = TRUE) {
-    .Call(Cpp_fNobsl, x, ng, g, drop)
+fnobslC <- function(x, ng = 0L, g = 0L, drop = TRUE) {
+    .Call(C_fnobsl, x, ng, g, drop)
 }
 
 varyingCpp <- function(x, ng = 0L, g = 0L, any_group = TRUE) {
@@ -75,18 +75,6 @@ fbstatslCpp <- function(x, ext = FALSE, ng = 0L, g = 0L, npg = 0L, pg = 0L, w = 
     .Call(Cpp_fbstatsl, x, ext, ng, g, npg, pg, w, array, gn)
 }
 
-ffirstCpp <- function(x, ng = 0L, g = 0L, narm = TRUE) {
-    .Call(Cpp_ffirst, x, ng, g, narm)
-}
-
-ffirstmCpp <- function(x, ng = 0L, g = 0L, narm = TRUE, drop = TRUE) {
-    .Call(Cpp_ffirstm, x, ng, g, narm, drop)
-}
-
-ffirstlCpp <- function(x, ng = 0L, g = 0L, narm = TRUE) {
-    .Call(Cpp_ffirstl, x, ng, g, narm)
-}
-
 fdiffgrowthCpp <- function(x, n = 1L, diff = 1L, fill = NA_real_, ng = 0L, g = 0L, gs = NULL, t = NULL, ret = 1L, rho = 1, names = TRUE, power = 1) {
     .Call(Cpp_fdiffgrowth, x, n, diff, fill, ng, g, gs, t, ret, rho, names, power)
 }
@@ -111,29 +99,17 @@ flagleadlCpp <- function(x, n = 1L, fill = NULL, ng = 0L, g = 0L, t = NULL, name
     .Call(Cpp_flagleadl, x, n, fill, ng, g, t, names)
 }
 
-flastCpp <- function(x, ng = 0L, g = 0L, narm = TRUE) {
-    .Call(Cpp_flast, x, ng, g, narm)
-}
-
-flastmCpp <- function(x, ng = 0L, g = 0L, narm = TRUE, drop = TRUE) {
-    .Call(Cpp_flastm, x, ng, g, narm, drop)
-}
-
-flastlCpp <- function(x, ng = 0L, g = 0L, narm = TRUE) {
-    .Call(Cpp_flastl, x, ng, g, narm)
-}
-
-fminmaxCpp <- function(x, ng = 0L, g = 0L, narm = TRUE, ret = 1L) {
-    .Call(Cpp_fminmax, x, ng, g, narm, ret)
-}
-
-fminmaxmCpp <- function(x, ng = 0L, g = 0L, narm = TRUE, drop = TRUE, ret = 1L) {
-    .Call(Cpp_fminmaxm, x, ng, g, narm, drop, ret)
-}
-
-fminmaxlCpp <- function(x, ng = 0L, g = 0L, narm = TRUE, drop = TRUE, ret = 1L) {
-    .Call(Cpp_fminmaxl, x, ng, g, narm, drop, ret)
-}
+# fminmaxC <- function(x, ng = 0L, g = 0L, narm = TRUE, ret = 1L) {
+#     .Call(C_fminmax, x, ng, g, narm, ret)
+# }
+#
+# fminmaxmC <- function(x, ng = 0L, g = 0L, narm = TRUE, drop = TRUE, ret = 1L) {
+#     .Call(C_fminmaxm, x, ng, g, narm, drop, ret)
+# }
+#
+# fminmaxlC <- function(x, ng = 0L, g = 0L, narm = TRUE, drop = TRUE, ret = 1L) {
+#     .Call(C_fminmaxl, x, ng, g, narm, drop, ret)
+# }
 
 fmeanCpp <- function(x, ng = 0L, g = 0L, gs = NULL, w = NULL, narm = TRUE) {
     .Call(Cpp_fmean, x, ng, g, gs, w, narm)
@@ -207,16 +183,16 @@ fscalelCpp <- function(x, ng = 0L, g = 0L, w = NULL, narm = TRUE, set_mean = 0, 
     .Call(Cpp_fscalel, x, ng, g, w, narm, set_mean, set_sd)
 }
 
-fsumCpp <- function(x, ng = 0L, g = 0L, w = NULL, narm = TRUE) {
-    .Call(Cpp_fsum, x, ng, g, w, narm)
+fsumC <- function(x, ng = 0L, g = 0L, w = NULL, narm = TRUE) {
+    .Call(C_fsum, x, ng, g, w, narm)
 }
 
-fsummCpp <- function(x, ng = 0L, g = 0L, w = NULL, narm = TRUE, drop = TRUE) {
-    .Call(Cpp_fsumm, x, ng, g, w, narm, drop)
+fsummC <- function(x, ng = 0L, g = 0L, w = NULL, narm = TRUE, drop = TRUE) {
+    .Call(C_fsumm, x, ng, g, w, narm, drop)
 }
 
-fsumlCpp <- function(x, ng = 0L, g = 0L, w = NULL, narm = TRUE, drop = TRUE) {
-    .Call(Cpp_fsuml, x, ng, g, w, narm, drop)
+fsumlC <- function(x, ng = 0L, g = 0L, w = NULL, narm = TRUE, drop = TRUE) {
+    .Call(C_fsuml, x, ng, g, w, narm, drop)
 }
 
 fvarsdCpp <- function(x, ng = 0L, g = 0L, gs = NULL, w = NULL, narm = TRUE, stable_algo = TRUE, sd = TRUE) {
@@ -232,11 +208,19 @@ fvarsdlCpp <- function(x, ng = 0L, g = 0L, gs = NULL, w = NULL, narm = TRUE, sta
 }
 
 mrtl <- function(X, names = FALSE, return = "list") {
-    .Call(Cpp_mrtl, X, names, switch(return, list = 0L, data.frame = 1L, data.table = 2L, stop("Unknown return option!")))
+  switch(return,
+         list = .Call(Cpp_mrtl, X, names, 0L),
+         data.frame = .Call(Cpp_mrtl, X, names, 1L),
+         data.table = alc(.Call(Cpp_mrtl, X, names, 2L)),
+         stop("Unknown return option!"))
 }
 
 mctl <- function(X, names = FALSE, return = "list") {
-    .Call(Cpp_mctl, X, names, switch(return, list = 0L, data.frame = 1L, data.table = 2L, stop("Unknown return option!")))
+  switch(return,
+         list = .Call(Cpp_mctl, X, names, 0L),
+         data.frame = .Call(Cpp_mctl, X, names, 1L),
+         data.table = alc(.Call(Cpp_mctl, X, names, 2L)),
+         stop("Unknown return option!"))
 }
 
 psmatCpp <- function(x, g, t = NULL, transpose = FALSE) {

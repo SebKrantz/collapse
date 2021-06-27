@@ -13,30 +13,6 @@ TRAmCpp <- function(x, xAG, g = 0L, ret = 1L) {
     .Call(`_collapse_TRAmCpp`, x, xAG, g, ret)
 }
 
-fNdistinctCpp <- function(x, ng = 0L, g = 0L, gs = NULL, narm = TRUE) {
-    .Call(`_collapse_fNdistinctCpp`, x, ng, g, gs, narm)
-}
-
-fNdistinctlCpp <- function(x, ng = 0L, g = 0L, gs = NULL, narm = TRUE, drop = TRUE) {
-    .Call(`_collapse_fNdistinctlCpp`, x, ng, g, gs, narm, drop)
-}
-
-fNdistinctmCpp <- function(x, ng = 0L, g = 0L, gs = NULL, narm = TRUE, drop = TRUE) {
-    .Call(`_collapse_fNdistinctmCpp`, x, ng, g, gs, narm, drop)
-}
-
-fNobsCpp <- function(x, ng = 0L, g = 0L) {
-    .Call(`_collapse_fNobsCpp`, x, ng, g)
-}
-
-fNobsmCpp <- function(x, ng = 0L, g = 0L, drop = TRUE) {
-    .Call(`_collapse_fNobsmCpp`, x, ng, g, drop)
-}
-
-fNobslCpp <- function(x, ng = 0L, g = 0L, drop = TRUE) {
-    .Call(`_collapse_fNobslCpp`, x, ng, g, drop)
-}
-
 BWCpp <- function(x, ng = 0L, g = 0L, gs = NULL, w = NULL, narm = TRUE, theta = 1, set_mean = 0, B = FALSE, fill = FALSE) {
     .Call(`_collapse_BWCpp`, x, ng, g, gs, w, narm, theta, set_mean, B, fill)
 }
@@ -73,18 +49,6 @@ fdiffgrowthlCpp <- function(x, n = 1L, diff = 1L, fill = NA_real_, ng = 0L, g = 
     .Call(`_collapse_fdiffgrowthlCpp`, x, n, diff, fill, ng, g, gs, t, ret, rho, names, power)
 }
 
-ffirstCpp <- function(x, ng = 0L, g = 0L, narm = TRUE) {
-    .Call(`_collapse_ffirstCpp`, x, ng, g, narm)
-}
-
-ffirstmCpp <- function(x, ng = 0L, g = 0L, narm = TRUE, drop = TRUE) {
-    .Call(`_collapse_ffirstmCpp`, x, ng, g, narm, drop)
-}
-
-ffirstlCpp <- function(x, ng = 0L, g = 0L, narm = TRUE) {
-    .Call(`_collapse_ffirstlCpp`, x, ng, g, narm)
-}
-
 flagleadCpp <- function(x, n = 1L, fill = NULL, ng = 0L, g = 0L, t = NULL, names = TRUE) {
     .Call(`_collapse_flagleadCpp`, x, n, fill, ng, g, t, names)
 }
@@ -95,18 +59,6 @@ flagleadmCpp <- function(x, n = 1L, fill = NULL, ng = 0L, g = 0L, t = NULL, name
 
 flagleadlCpp <- function(x, n = 1L, fill = NULL, ng = 0L, g = 0L, t = NULL, names = TRUE) {
     .Call(`_collapse_flagleadlCpp`, x, n, fill, ng, g, t, names)
-}
-
-flastCpp <- function(x, ng = 0L, g = 0L, narm = TRUE) {
-    .Call(`_collapse_flastCpp`, x, ng, g, narm)
-}
-
-flastmCpp <- function(x, ng = 0L, g = 0L, narm = TRUE, drop = TRUE) {
-    .Call(`_collapse_flastmCpp`, x, ng, g, narm, drop)
-}
-
-flastlCpp <- function(x, ng = 0L, g = 0L, narm = TRUE) {
-    .Call(`_collapse_flastlCpp`, x, ng, g, narm)
 }
 
 fmeanCpp <- function(x, ng = 0L, g = 0L, gs = NULL, w = NULL, narm = TRUE) {
@@ -121,18 +73,6 @@ fmeanlCpp <- function(x, ng = 0L, g = 0L, gs = NULL, w = NULL, narm = TRUE, drop
     .Call(`_collapse_fmeanlCpp`, x, ng, g, gs, w, narm, drop)
 }
 
-fminmaxCpp <- function(x, ng = 0L, g = 0L, narm = TRUE, ret = 1L) {
-    .Call(`_collapse_fminmaxCpp`, x, ng, g, narm, ret)
-}
-
-fminmaxmCpp <- function(x, ng = 0L, g = 0L, narm = TRUE, drop = TRUE, ret = 1L) {
-    .Call(`_collapse_fminmaxmCpp`, x, ng, g, narm, drop, ret)
-}
-
-fminmaxlCpp <- function(x, ng = 0L, g = 0L, narm = TRUE, drop = TRUE, ret = 1L) {
-    .Call(`_collapse_fminmaxlCpp`, x, ng, g, narm, drop, ret)
-}
-
 fmodeCpp <- function(x, ng = 0L, g = 0L, gs = NULL, w = NULL, narm = TRUE, ret = 0L) {
     .Call(`_collapse_fmodeCpp`, x, ng, g, gs, w, narm, ret)
 }
@@ -143,6 +83,18 @@ fmodelCpp <- function(x, ng = 0L, g = 0L, gs = NULL, w = NULL, narm = TRUE, ret 
 
 fmodemCpp <- function(x, ng = 0L, g = 0L, gs = NULL, w = NULL, narm = TRUE, drop = TRUE, ret = 0L) {
     .Call(`_collapse_fmodemCpp`, x, ng, g, gs, w, narm, drop, ret)
+}
+
+fndistinctCpp <- function(x, ng = 0L, g = 0L, gs = NULL, narm = TRUE) {
+    .Call(`_collapse_fndistinctCpp`, x, ng, g, gs, narm)
+}
+
+fndistinctlCpp <- function(x, ng = 0L, g = 0L, gs = NULL, narm = TRUE, drop = TRUE) {
+    .Call(`_collapse_fndistinctlCpp`, x, ng, g, gs, narm, drop)
+}
+
+fndistinctmCpp <- function(x, ng = 0L, g = 0L, gs = NULL, narm = TRUE, drop = TRUE) {
+    .Call(`_collapse_fndistinctmCpp`, x, ng, g, gs, narm, drop)
 }
 
 fnthCpp <- function(x, Q = 0.5, ng = 0L, g = 0L, gs = NULL, w = NULL, narm = TRUE, ret = 1L) {
@@ -181,18 +133,6 @@ fscalelCpp <- function(x, ng = 0L, g = 0L, w = NULL, narm = TRUE, set_mean = 0, 
     .Call(`_collapse_fscalelCpp`, x, ng, g, w, narm, set_mean, set_sd)
 }
 
-fsumCpp <- function(x, ng = 0L, g = 0L, w = NULL, narm = TRUE) {
-    .Call(`_collapse_fsumCpp`, x, ng, g, w, narm)
-}
-
-fsummCpp <- function(x, ng = 0L, g = 0L, w = NULL, narm = TRUE, drop = TRUE) {
-    .Call(`_collapse_fsummCpp`, x, ng, g, w, narm, drop)
-}
-
-fsumlCpp <- function(x, ng = 0L, g = 0L, w = NULL, narm = TRUE, drop = TRUE) {
-    .Call(`_collapse_fsumlCpp`, x, ng, g, w, narm, drop)
-}
-
 fvarsdCpp <- function(x, ng = 0L, g = 0L, gs = NULL, w = NULL, narm = TRUE, stable_algo = TRUE, sd = TRUE) {
     .Call(`_collapse_fvarsdCpp`, x, ng, g, gs, w, narm, stable_algo, sd)
 }
@@ -217,8 +157,8 @@ psmatCpp <- function(x, g, t = NULL, transpose = FALSE) {
     .Call(`_collapse_psmatCpp`, x, g, t, transpose)
 }
 
-pwNobsmCpp <- function(x) {
-    .Call(`_collapse_pwNobsmCpp`, x)
+pwnobsmCpp <- function(x) {
+    .Call(`_collapse_pwnobsmCpp`, x)
 }
 
 qFCpp <- function(x, sort = TRUE, ordered = TRUE, na_exclude = TRUE, keep_attr = TRUE, ret = 1L) {

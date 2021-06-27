@@ -15,7 +15,7 @@ varying.default <- function(x, g = NULL, any_group = TRUE, use.g.names = TRUE, .
     g <- qG(g, na.exclude = FALSE)
     return(.Call(Cpp_varying,x,attr(g,"N.groups"),g,any_group))
   }
-  if(!is.GRP(g)) g <- GRP.default(g, return.groups = use.g.names && !any_group, call = FALSE)
+  if(!is_GRP(g)) g <- GRP.default(g, return.groups = use.g.names && !any_group, call = FALSE)
   if(use.g.names && !any_group) return(`names<-`(.Call(Cpp_varying,x,g[[1L]],g[[2L]],any_group), GRPnames(g)))
   .Call(Cpp_varying,x,g[[1L]],g[[2L]],any_group)
 }
@@ -43,7 +43,7 @@ varying.matrix <- function(x, g = NULL, any_group = TRUE, use.g.names = TRUE, dr
     g <- qG(g, na.exclude = FALSE)
     return(.Call(Cpp_varyingm,x,attr(g,"N.groups"),g,any_group,drop))
   }
-  if(!is.GRP(g)) g <- GRP.default(g, return.groups = use.g.names && !any_group, call = FALSE)
+  if(!is_GRP(g)) g <- GRP.default(g, return.groups = use.g.names && !any_group, call = FALSE)
   if(use.g.names && !any_group) return(`dimnames<-`(.Call(Cpp_varyingm,x,g[[1L]],g[[2L]],any_group,FALSE), list(GRPnames(g), dimnames(x)[[2L]])))
   .Call(Cpp_varyingm,x,g[[1L]],g[[2L]],any_group,drop)
 }
@@ -75,7 +75,7 @@ varying.data.frame <- function(x, by = NULL, cols = NULL, any_group = TRUE, use.
     by <- qG(by, na.exclude = FALSE)
     return(.Call(Cpp_varyingl,x,attr(by,"N.groups"),by,any_group,drop))
   }
-  if(!is.GRP(by)) by <- GRP.default(by, return.groups = use.g.names && !any_group, call = FALSE)
+  if(!is_GRP(by)) by <- GRP.default(by, return.groups = use.g.names && !any_group, call = FALSE)
   if(use.g.names && !any_group && !inherits(x, "data.table") && length(groups <- GRPnames(by)))
     return(setRnDF(.Call(Cpp_varyingl,x,by[[1L]],by[[2L]],any_group,FALSE), groups))
   .Call(Cpp_varyingl,x,by[[1L]],by[[2L]],any_group,drop)
@@ -122,6 +122,14 @@ varying.grouped_df <- function(x, any_group = TRUE, use.g.names = FALSE, drop = 
   } else return(setAttributes(.Call(Cpp_varyingl,x,g[[1L]],g[[2L]],FALSE,FALSE), ax))
 }
 
+varying.sf <- function(x, by = NULL, cols = NULL, any_group = TRUE, use.g.names = TRUE, drop = TRUE, ...) {
+  clx <- oldClass(x)
+  oldClass(x) <- NULL
+  x[[attr(x, "sf_column")]] <- NULL
+  oldClass(x) <- clx[clx != "sf"]
+  if(any(clx == "grouped_df")) return(varying.grouped_df(x, any_group, use.g.names, drop, ...))
+  varying.data.frame(x, by, cols, any_group, use.g.names, drop, ...)
+}
 
 
 # Previous versions: Like fast statistical functions ...
@@ -143,7 +151,7 @@ varying.grouped_df <- function(x, any_group = TRUE, use.g.names = FALSE, drop = 
 #         }
 #       }
 #     } else {
-#       if(!is.GRP(g)) g <- GRP.default(g, return.groups = use.g.names && !any_group, call = FALSE)
+#       if(!is_GRP(g)) g <- GRP.default(g, return.groups = use.g.names && !any_group, call = FALSE)
 #       if(use.g.names && !any_group) return(`names<-`(.Call(Cpp_varying,x,g[[1L]],g[[2L]],any_group), GRPnames(g))) else
 #         return(.Call(Cpp_varying,x,g[[1L]],g[[2L]],any_group))
 #     }
@@ -155,7 +163,7 @@ varying.grouped_df <- function(x, any_group = TRUE, use.g.names = FALSE, drop = 
 #       }
 #       return(.Call(Cpp_TRA,x,.Call(Cpp_varying,x,ng,g,any_group),if(any_group) 0L else g,TtI(TRA)))
 #     } else {
-#       if(!is.GRP(g)) g <- GRP.default(g, return.groups = FALSE, call = FALSE)
+#       if(!is_GRP(g)) g <- GRP.default(g, return.groups = FALSE, call = FALSE)
 #       return(.Call(Cpp_TRA,x,.Call(Cpp_varying,x,g[[1L]],g[[2L]],any_group),if(any_group) 0L else g[[2L]],TtI(TRA)))
 #     }
 #   }
@@ -176,7 +184,7 @@ varying.grouped_df <- function(x, any_group = TRUE, use.g.names = FALSE, drop = 
 #         }
 #       }
 #     } else {
-#       if(!is.GRP(g)) g <- GRP.default(g, return.groups = use.g.names && !any_group, call = FALSE)
+#       if(!is_GRP(g)) g <- GRP.default(g, return.groups = use.g.names && !any_group, call = FALSE)
 #       if(use.g.names && !any_group) return(`dimnames<-`(.Call(Cpp_varyingm,x,g[[1L]],g[[2L]],any_group,FALSE), list(GRPnames(g), dimnames(x)[[2L]]))) else
 #         return(.Call(Cpp_varyingm,x,g[[1L]],g[[2L]],any_group,drop))
 #     }
@@ -188,7 +196,7 @@ varying.grouped_df <- function(x, any_group = TRUE, use.g.names = FALSE, drop = 
 #       }
 #       return(.Call(Cpp_TRAm,x,.Call(Cpp_varyingm,x,ng,g,any_group,drop),if(any_group) 0L else g,TtI(TRA)))
 #     } else {
-#       if(!is.GRP(g)) g <- GRP.default(g, return.groups = FALSE, call = FALSE)
+#       if(!is_GRP(g)) g <- GRP.default(g, return.groups = FALSE, call = FALSE)
 #       return(.Call(Cpp_TRAm,x,.Call(Cpp_varyingm,x,g[[1L]],g[[2L]],any_group,drop),if(any_group) 0L else g[[2L]],TtI(TRA)))
 #     }
 #   }
@@ -209,7 +217,7 @@ varying.grouped_df <- function(x, any_group = TRUE, use.g.names = FALSE, drop = 
 #         }
 #       }
 #     } else {
-#       if(!is.GRP(g)) g <- GRP.default(g, return.groups = use.g.names && !any_group, call = FALSE)
+#       if(!is_GRP(g)) g <- GRP.default(g, return.groups = use.g.names && !any_group, call = FALSE)
 #       if(use.g.names && !any_group && !inherits(x, "data.table") && length(groups <- GRPnames(g)))
 #         return(setRnDF(.Call(Cpp_varyingl,x,g[[1L]],g[[2L]],any_group,FALSE), groups)) else
 #           return(.Call(Cpp_varyingl,x,g[[1L]],g[[2L]],any_group,drop))
@@ -222,7 +230,7 @@ varying.grouped_df <- function(x, any_group = TRUE, use.g.names = FALSE, drop = 
 #       }
 #       return(.Call(Cpp_TRAl,x,.Call(Cpp_varyingl,x,ng,g,any_group,drop),if(any_group) 0L else g,TtI(TRA)))
 #     } else {
-#       if(!is.GRP(g)) g <- GRP.default(g, return.groups = FALSE, call = FALSE)
+#       if(!is_GRP(g)) g <- GRP.default(g, return.groups = FALSE, call = FALSE)
 #       return(.Call(Cpp_TRAl,x,.Call(Cpp_varyingl,x,g[[1L]],g[[2L]],any_group,drop),if(any_group) 0L else g[[2L]],TtI(TRA)))
 #     }
 #   }

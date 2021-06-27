@@ -11,18 +11,18 @@
 \alias{gby}
 \alias{fgroup_vars}
 \alias{fungroup}
-\alias{is.GRP}
+\alias{is_GRP}
 \alias{print.GRP}
 \alias{plot.GRP}
 \alias{GRPnames}
-\alias{as.factor_GRP}
+\alias{as_factor_GRP}
 \title{Fast Grouping / \emph{collapse} Grouping Objects}
 \description{
   \code{GRP} performs fast, ordered and unordered, groupings of vectors and data frames (or lists of vectors) using \code{\link{radixorderv}}. The output is a list-like object of class 'GRP' which can be printed, plotted and used as an efficient input to all of \emph{collapse}'s fast statistical and transformation functions / operators, as well as to \code{\link{collap}}, \code{\link{BY}} and \code{\link{TRA}}.
 
 \code{fgroup_by} is similar to \code{dplyr::group_by} but faster. It creates a grouped data frame with a 'GRP' object attached - for faster dplyr-like programming with \emph{collapse}'s fast functions.
 
-There are also several conversion methods to convert to and from 'GRP' objects. Notable among these is \code{GRP.grouped_df}, which returns a 'GRP' object from a grouped data frame created with \code{dplyr::group_by} (or \code{fgroup_by}), and the duo \code{GRP.factor} and \code{as.factor_GRP}.
+There are also several conversion methods to convert to and from 'GRP' objects. Notable among these is \code{GRP.grouped_df}, which returns a 'GRP' object from a grouped data frame created with \code{dplyr::group_by} (or \code{fgroup_by}), and the duo \code{GRP.factor} and \code{as_factor_GRP}.
 }
 \usage{
 GRP(X, \dots)
@@ -44,9 +44,9 @@ GRP(X, \dots)
 \method{GRP}{grouped_df}(X, \dots, return.groups = TRUE, call = TRUE)
 
 # Identify, get group names, and convert GRP object to factor
-is.GRP(x)
+is_GRP(x)
 GRPnames(x, force.char = TRUE)
-as.factor_GRP(x, ordered = FALSE)
+as_factor_GRP(x, ordered = FALSE)
 
 # Fast, class-agnostic version of dplyr::group_by for use with fast functions, see details
 fgroup_by(X, \dots, sort = TRUE, decreasing = FALSE, na.last = TRUE,
@@ -105,7 +105,7 @@ fungroup(X, \dots)
       }
   }
 
- %  \item{untibble}{logical. \code{TRUE} also removes classes \code{c("tbl_df", "tbl")} from \code{X}. \code{fgroup_by} attaches an attribute \code{"was.tibble"} indicating if \code{X} was a tibble prior to grouping. The argument thus defaults to \code{TRUE} if this attribute is attached and equal to \code{FALSE}, so that \code{identical(X, X \%>\% fgroup_by(...) \%>\% fungroup)}, regardless of the nature of \code{X}. }
+ %  \item{untibble}{logical. \code{TRUE} also removes classes \code{c("tbl_df", "tbl")} from \code{X}. \code{fgroup_by} attaches an attribute \code{"was.tibble"} indicating if \code{X} was a tibble prior to grouping. The argument thus defaults to \code{TRUE} if this attribute is attached and equal to \code{FALSE}, so that \code{identical(X, X |> fgroup_by(...) |> fungroup())}, regardless of the nature of \code{X}. }
 
   \item{n}{integer. Number of groups to print out.}
 
@@ -128,7 +128,7 @@ Next to \code{GRP}, there is the function \code{fgroup_by} as a significantly fa
 
 \code{GRP} is an S3 generic function with one default method supporting vector and list input and several conversion methods:
 
-The conversion of factors to 'GRP' objects by \code{GRP.factor} involves obtaining the number of groups calling \code{ng <- fnlevels(f)} and then computing the count of each level using \code{\link[=tabulate]{tabulate(f, ng)}}. The integer group-id (2) is already given by the factor itself after removing the levels and class attributes and replacing any missing values with \code{ng + 1L}. The levels are put in a list and moved to position (4) in the 'GRP' object, which is reserved for the unique groups. Going from factor to 'GRP' object thus only requires a tabulation of the levels, whereas creating a factor from a 'GRP' object using \code{as.factor_GRP} does not involve any computations, but may involve interactions if multiple grouping columns were used (which are then interacted to produce unique factor levels) or \code{\link{as.character}} conversions if the grouping column(s) were numeric (which are potentially expensive).
+The conversion of factors to 'GRP' objects by \code{GRP.factor} involves obtaining the number of groups calling \code{ng <- fnlevels(f)} and then computing the count of each level using \code{\link[=tabulate]{tabulate(f, ng)}}. The integer group-id (2) is already given by the factor itself after removing the levels and class attributes and replacing any missing values with \code{ng + 1L}. The levels are put in a list and moved to position (4) in the 'GRP' object, which is reserved for the unique groups. Going from factor to 'GRP' object thus only requires a tabulation of the levels, whereas creating a factor from a 'GRP' object using \code{as_factor_GRP} does not involve any computations, but may involve interactions if multiple grouping columns were used (which are then interacted to produce unique factor levels) or \code{\link{as.character}} conversions if the grouping column(s) were numeric (which are potentially expensive).
 
 The method \code{GRP.grouped_df} takes the 'groups' attribute from a grouped data frame and converts it to a 'GRP' object. If the grouped data frame was generated using \code{fgroup_by}, all work is done already. If it was created using \code{dplyr::group_by}, a C routine is called to efficiently convert the grouping object.
 
@@ -169,15 +169,15 @@ fsum(mtcars, g)                   # Compute the sum of mtcars, grouped by variab
 
 ## Convert factor to GRP object and vice-versa
 GRP(iris$Species)
-as.factor_GRP(g)
+as_factor_GRP(g)
 \donttest{ % No code relying on suggested package
 ## dplyr integration
 library(dplyr)
-mtcars \%>\% group_by(cyl,vs,am) \%>\% GRP    # Get GRP object from a dplyr grouped tibble
-mtcars \%>\% group_by(cyl,vs,am) \%>\% fmean  # Grouped mean using dplyr grouping
-mtcars \%>\% fgroup_by(cyl,vs,am) \%>\% fmean # Faster alternative with collapse grouping
+mtcars |> group_by(cyl,vs,am) |> GRP()    # Get GRP object from a dplyr grouped tibble
+mtcars |> group_by(cyl,vs,am) |> fmean()  # Grouped mean using dplyr grouping
+mtcars |> fgroup_by(cyl,vs,am) |> fmean() # Faster alternative with collapse grouping
 
-mtcars \%>\% fgroup_by(cyl,vs,am)           # Print method for grouped data frame
+mtcars |> fgroup_by(cyl,vs,am)            # Print method for grouped data frame
 }
 
 }

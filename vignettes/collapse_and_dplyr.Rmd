@@ -67,7 +67,7 @@ This vignette focuses on the integration of *collapse* and the popular *dplyr* p
 
 ## 1. Fast Aggregations
 
-A key feature of *collapse* is it's broad set of *Fast Statistical Functions* (`fsum, fprod, fmean, fmedian, fmode, fvar, fsd, fmin, fmax, fnth, ffirst, flast, fNobs, fNdistinct`) which are able to substantially speed-up column-wise, grouped and weighted computations on vectors, matrices or data frames. The functions are S3 generic, with a default (vector), matrix and data frame method, as well as a grouped_df method for grouped tibbles used by *dplyr*. The grouped tibble method has the following arguments:  
+A key feature of *collapse* is it's broad set of *Fast Statistical Functions* (`fsum, fprod, fmean, fmedian, fmode, fvar, fsd, fmin, fmax, fnth, ffirst, flast, fnobs, fndistinct`) which are able to substantially speed-up column-wise, grouped and weighted computations on vectors, matrices or data frames. The functions are S3 generic, with a default (vector), matrix and data frame method, as well as a grouped_df method for grouped tibbles used by *dplyr*. The grouped tibble method has the following arguments:  
 
 ```{r eval=FALSE}
 FUN.grouped_df(x, [w = NULL,] TRA = NULL, [na.rm = TRUE,]
@@ -87,7 +87,7 @@ library(collapse)
 head(GGDC10S)
 
 # Summarize the Data: 
-# descr(GGDC10S, cols = is.categorical)
+# descr(GGDC10S, cols = is_categorical)
 # aperm(qsu(GGDC10S, ~Variable, cols = is.numeric))
 
 # Efficiently converting to tibble (no deep copy)
@@ -99,8 +99,8 @@ Simple column-wise computations using the fast functions and pipe operators are 
 ```{r, eval=NCRAN}
 library(dplyr)
 
-GGDC10S %>% fNobs                       # Number of Observations
-GGDC10S %>% fNdistinct                  # Number of distinct values
+GGDC10S %>% fnobs                       # Number of Observations
+GGDC10S %>% fndistinct                  # Number of distinct values
 GGDC10S %>% select_at(6:16) %>% fmedian # Median
 GGDC10S %>% select_at(6:16) %>% fmean   # Mean
 GGDC10S %>% fmode                       # Mode
@@ -163,7 +163,7 @@ It is obvious that *collapse* is faster than *dplyr* since it's method of comput
 ### 1.2 More Speed using *collapse* Verbs
 *collapse* fast functions do not develop their maximal performance on a grouped tibble created with `group_by` because of the additional conversion cost of the grouping object incurred by `GRP.grouped_df`. This cost is already minimized through the use of C++, but we can do even better replacing `group_by` with `collapse::fgroup_by`. `fgroup_by` works like `group_by` but does the grouping with `collapse::GRP` (up to 10x faster than `group_by`) and simply attaches a *collapse* grouping object to the grouped_df. Thus the speed gain is 2-fold: Faster grouping and no conversion cost when calling *collapse* functions.
 
-Another improvement comes from replacing the *dplyr* verb `select` with `collapse::fselect`, and, for selection using column names, indices or functions use `collapse::get_vars` instead of `select_at` or `select_if`. Next to `get_vars`, *collapse* also introduces the predicates `num_vars`, `cat_vars`, `char_vars`, `fact_vars`, `logi_vars` and `Date_vars` to efficiently select columns by type.
+Another improvement comes from replacing the *dplyr* verb `select` with `collapse::fselect`, and, for selection using column names, indices or functions use `collapse::get_vars` instead of `select_at` or `select_if`. Next to `get_vars`, *collapse* also introduces the predicates `num_vars`, `cat_vars`, `char_vars`, `fact_vars`, `logi_vars` and `date_vars` to efficiently select columns by type.
 
 ```{r, eval=NCRAN}
 GGDC10S %>% fgroup_by(Variable, Country) %>% get_vars(6:16) %>% fmedian
@@ -399,7 +399,7 @@ GGDC10S %>% fsubset(Variable == "VA", Country, Year, AGR, SUM) %>%
 ### 2.2 Replacing and Sweeping out Statistics
 <!-- using Fast Statistical Functions -->
 
-All statistical (scalar-valued) functions in the collapse package (`fsum, fprod, fmean, fmedian, fmode, fvar, fsd, fmin, fmax, fnth, ffirst, flast, fNobs, fNdistinct`) have a `TRA` argument which can be used to efficiently transform data by either (column-wise) replacing data values with computed statistics or sweeping the statistics out of the data. Operations can be specified using either an integer or quoted operator / string. The 10 operations supported by `TRA` are:
+All statistical (scalar-valued) functions in the collapse package (`fsum, fprod, fmean, fmedian, fmode, fvar, fsd, fmin, fmax, fnth, ffirst, flast, fnobs, fndistinct`) have a `TRA` argument which can be used to efficiently transform data by either (column-wise) replacing data values with computed statistics or sweeping the statistics out of the data. Operations can be specified using either an integer or quoted operator / string. The 10 operations supported by `TRA` are:
 
 * 1 - "replace_fill" : replace and overwrite missing values (same as `mutate`)
 
@@ -528,7 +528,7 @@ Of course it is also possible to combine multiple functions as in the aggregatio
 # This adds a groupwise observation count next to each column
 add_vars(GGDC10S, seq(7,27,2)) <- GGDC10S %>%
     fgroup_by(Variable, Country) %>% fselect(AGR:SUM) %>%
-    fNobs("replace_fill") %>% add_stub("N_")
+    fnobs("replace_fill") %>% add_stub("N_")
 
 head(GGDC10S)
 rm(GGDC10S)
@@ -949,11 +949,11 @@ microbenchmark(dplyr = summarise_all(gdata, first),
 ## Number of Distinct Values
 # Small
 microbenchmark(dplyr = summarise_all(gGGDC10S, n_distinct, na.rm = TRUE),
-               collapse = fNdistinct(cgGGDC10S))
+               collapse = fndistinct(cgGGDC10S))
 
 # Large
 microbenchmark(dplyr = summarise_all(gdata, n_distinct, na.rm = TRUE),
-               collapse = fNdistinct(cgdata), times = 5)
+               collapse = fndistinct(cgdata), times = 5)
 
 gc()
 ```

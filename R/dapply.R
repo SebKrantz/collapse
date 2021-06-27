@@ -62,6 +62,7 @@ dapply <- function(X, FUN, ..., MARGIN = 2, parallel = FALSE,
       res <- .Call(Cpp_mctl, matrix(unlist(res, use.names = FALSE), ncol = lx1, byrow = TRUE), FALSE, 0L) # definitely faster than do.call(rbind, X)
     } else if(lx1 != dX[1L])
       ax[["row.names"]] <- if(length(nx1 <- names(res[[1L]]))) nx1 else .set_row_names(lx1) # could also make deparse(substitute(FUN)), but that is not so typical for data.frames !
+   if(any(ax[["class"]] == "data.table")) return(alcSA(res, ax))
   }
   setAttributes(res, ax)
 }

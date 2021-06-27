@@ -25,7 +25,7 @@ fdiff.default <- function(x, n = 1, diff = 1, g = NULL, t = NULL, fill = NA, log
     }
     return(.Call(Cpp_fdiffgrowth,x,n,diff,fill,nl,g,NULL,G_t(t,2L),1L+log,rho,stubs,1))
   }
-  if(!is.GRP(g)) g <- GRP.default(g, return.groups = FALSE, call = FALSE)
+  if(!is_GRP(g)) g <- GRP.default(g, return.groups = FALSE, call = FALSE)
   .Call(Cpp_fdiffgrowth,x,n,diff,fill,g[[1L]],g[[2L]],g[[3L]],G_t(t,2L),1L+log,rho,stubs,1)
 }
 
@@ -50,7 +50,7 @@ fdiff.matrix <- function(x, n = 1, diff = 1, g = NULL, t = NULL, fill = NA, log 
     }
     return(.Call(Cpp_fdiffgrowthm,x,n,diff,fill,nl,g,NULL,G_t(t,2L),1L+log,rho,stubs,1))
   }
-  if(!is.GRP(g)) g <- GRP.default(g, return.groups = FALSE, call = FALSE)
+  if(!is_GRP(g)) g <- GRP.default(g, return.groups = FALSE, call = FALSE)
   .Call(Cpp_fdiffgrowthm,x,n,diff,fill,g[[1L]],g[[2L]],g[[3L]],G_t(t,2L),1L+log,rho,stubs,1)
 }
 
@@ -92,7 +92,7 @@ fdiff.data.frame <- function(x, n = 1, diff = 1, g = NULL, t = NULL, fill = NA, 
     }
     return(.Call(Cpp_fdiffgrowthl,x,n,diff,fill,nl,g,NULL,G_t(t,2L),1L+log,rho,stubs,1))
   }
-  if(!is.GRP(g)) g <- GRP.default(g, return.groups = FALSE, call = FALSE)
+  if(!is_GRP(g)) g <- GRP.default(g, return.groups = FALSE, call = FALSE)
   .Call(Cpp_fdiffgrowthl,x,n,diff,fill,g[[1L]],g[[2L]],g[[3L]],G_t(t,2L),1L+log,rho,stubs,1)
 }
 
@@ -124,7 +124,7 @@ fgrowth.default <- function(x, n = 1, diff = 1, g = NULL, t = NULL, fill = NA, l
     }
     return(.Call(Cpp_fdiffgrowth,x,n,diff,fill,nl,g,NULL,G_t(t,3L),4L-logdiff,scale,stubs,power))
   }
-  if(!is.GRP(g)) g <- GRP.default(g, return.groups = FALSE, call = FALSE)
+  if(!is_GRP(g)) g <- GRP.default(g, return.groups = FALSE, call = FALSE)
   .Call(Cpp_fdiffgrowth,x,n,diff,fill,g[[1L]],g[[2L]],g[[3L]],G_t(t,3L),4L-logdiff,scale,stubs,power)
 }
 
@@ -149,7 +149,7 @@ fgrowth.matrix <- function(x, n = 1, diff = 1, g = NULL, t = NULL, fill = NA, lo
     }
     return(.Call(Cpp_fdiffgrowthm,x,n,diff,fill,nl,g,NULL,G_t(t,3L),4L-logdiff,scale,stubs,power))
   }
-  if(!is.GRP(g)) g <- GRP.default(g, return.groups = FALSE, call = FALSE)
+  if(!is_GRP(g)) g <- GRP.default(g, return.groups = FALSE, call = FALSE)
   .Call(Cpp_fdiffgrowthm,x,n,diff,fill,g[[1L]],g[[2L]],g[[3L]],G_t(t,3L),4L-logdiff,scale,stubs,power)
 }
 
@@ -191,7 +191,7 @@ fgrowth.data.frame <- function(x, n = 1, diff = 1, g = NULL, t = NULL, fill = NA
     }
     return(.Call(Cpp_fdiffgrowthl,x,n,diff,fill,nl,g,NULL,G_t(t,3L),4L-logdiff,scale,stubs,power))
   }
-  if(!is.GRP(g)) g <- GRP.default(g, return.groups = FALSE, call = FALSE)
+  if(!is_GRP(g)) g <- GRP.default(g, return.groups = FALSE, call = FALSE)
   .Call(Cpp_fdiffgrowthl,x,n,diff,fill,g[[1L]],g[[2L]],g[[3L]],G_t(t,3L),4L-logdiff,scale,stubs,power)
 }
 
@@ -233,7 +233,7 @@ DG_data_frame_template <- function(x, n = 1, diff = 1, by = NULL, t = NULL, cols
     } else {
       gn <- NULL
       if(length(cols)) cols <- cols2int(cols, x, nam)
-      if(!is.GRP(by)) by <- if(is.null(by)) list(0L, 0L, NULL) else if(is.atomic(by)) # Necessary if by is passed externally !
+      if(!is_GRP(by)) by <- if(is.null(by)) list(0L, 0L, NULL) else if(is.atomic(by)) # Necessary if by is passed externally !
         at2GRP(by) else GRP.default(by, return.groups = FALSE, call = FALSE)
     }
 
@@ -266,7 +266,7 @@ DG_data_frame_template <- function(x, n = 1, diff = 1, by = NULL, t = NULL, cols
     }
     return(.Call(Cpp_fdiffgrowthl,cld(x),n,diff,fill,nl,by,NULL,G_t(t,message),return,rho,stubs,power))
   }
-  if(!is.GRP(by)) by <- GRP.default(by, return.groups = FALSE, call = FALSE)
+  if(!is_GRP(by)) by <- GRP.default(by, return.groups = FALSE, call = FALSE)
   .Call(Cpp_fdiffgrowthl,cld(x),n,diff,fill,by[[1L]],by[[2L]],by[[3L]],G_t(t,message),return,rho,stubs,power)
 }
 

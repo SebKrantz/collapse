@@ -184,7 +184,7 @@ help(&#39;collapse-documentation&#39;)</code></pre>
 </div>
 <div id="demonstration" class="section level1">
 <h1>Demonstration</h1>
-<p>I will start by briefly demonstrating the <em>Fast Statistical Functions</em>, which are a central feature of <em>collapse</em>. Currently there are 13 of them (<code>fmean</code>, <code>fmedian</code>, <code>fmode</code>, <code>fsum</code>, <code>fprod</code>, <code>fsd</code>, <code>fvar</code>, <code>fmin</code>, <code>fmax</code>, <code>ffirst</code>, <code>flast</code>, <code>fNobs</code> and <code>fNdistinct</code>), they are all S3 generic and support fast grouped computations on vectors, matrices, data.frame’s, lists and grouped tibble’s (class <em>grouped_df</em>). Calling these functions on different objects yields simple column-wise statistical computations:</p>
+<p>I will start by briefly demonstrating the <em>Fast Statistical Functions</em>, which are a central feature of <em>collapse</em>. Currently there are 13 of them (<code>fmean</code>, <code>fmedian</code>, <code>fmode</code>, <code>fsum</code>, <code>fprod</code>, <code>fsd</code>, <code>fvar</code>, <code>fmin</code>, <code>fmax</code>, <code>ffirst</code>, <code>flast</code>, <code>fnobs</code> and <code>fndistinct</code>), they are all S3 generic and support fast grouped computations on vectors, matrices, data.frame’s, lists and grouped tibble’s (class <em>grouped_df</em>). Calling these functions on different objects yields simple column-wise statistical computations:</p>
 <pre class="r"><code>library(collapse)
 v &lt;- iris$Sepal.Length
 d &lt;- num_vars(iris)    # Saving numeric variables
@@ -279,7 +279,7 @@ plot(fscale(get_vars(d, 1:2), g, mean = &quot;overall.mean&quot;, sd = &quot;wit
      main = &quot;Harmonized Mean and Variance&quot;)</code></pre>
 <p><img src="post/2020-06-08-welcome-to-collapse_files/figure-html/unnamed-chunk-7-1.png" width="100%" /></p>
 <pre class="r"><code>par(oldpar)</code></pre>
-<p>The function <code>get_vars</code> is 2x faster than <code>[.data.frame</code>, attribute-preserving, and also supports column selection using functions or regular expressions. It’s replacement version <code>get_vars&lt;-</code> is 6x faster than <code>[&lt;-.data.frame</code>. Apart from <code>fbetween</code> and <code>fwithin</code>, the functions <code>fHDbetween</code> and <code>fHDwithin</code> can average or center data on multiple groups, and they can also project out continuous variables alongside (i.e. they provide fitted values or residuals from regression problems which may or may not involve one or more factors).</p>
+<p>The function <code>get_vars</code> is 2x faster than <code>[.data.frame</code>, attribute-preserving, and also supports column selection using functions or regular expressions. It’s replacement version <code>get_vars&lt;-</code> is 6x faster than <code>[&lt;-.data.frame</code>. Apart from <code>fbetween</code> and <code>fwithin</code>, the functions <code>fhdbetween</code> and <code>fhdwithin</code> can average or center data on multiple groups, and they can also project out continuous variables alongside (i.e. they provide fitted values or residuals from regression problems which may or may not involve one or more factors).</p>
 <p>For the manipulation of time-series and panel-series, <em>collapse</em> offers the functions <code>flag</code>, <code>fdiff</code> and <code>fgrowth</code>.</p>
 <pre class="r"><code>head3 &lt;- function(x) head(x, 3L)
 head3(flag(EuStockMarkets, -1:1))      # A sequence of lags and leads
@@ -319,7 +319,7 @@ head3(wlddev)
 ## 3 Afghanistan   AFG 1963-01-01 1962   1960 South Asia Low income FALSE    NA 33.185   NA 114880000</code></pre>
 <p>All variables in this data have labels stored in a ‘label’ attribute (the default if you import with <em>haven</em>). Variable labels can be accessed and set using <code>vlabels</code> and <code>vlabels&lt;-</code>, and viewed together with names and classes using <code>namlab</code>. In general variable labels and other attributes will be preserved in when working with <em>collapse</em>. <em>collapse</em> provides some of the fastest and most advanced summary statistics:</p>
 <pre class="r"><code># Distinct value count
-fNdistinct(wlddev)
+fndistinct(wlddev)
 ## country   iso3c    date    year  decade  region  income    OECD   PCGDP  LIFEEX    GINI     ODA
 ##     216     216      59      59       7       7       4       2    8995   10048     363    7564
 # Use descr(wlddev) for a detailed description of each variable
@@ -526,7 +526,7 @@ head3(us_trade)
 
 # 19 years, 221 trading partners, 1222 products, unbalanced panel with product-time gaps...
 qDF(rbind(class = vclasses(us_trade),
-          Ndistinct = fNdistinct(us_trade)))
+          Ndistinct = fndistinct(us_trade)))
 ##              year reporter_iso reporter_fullname_english partner_iso partner_fullname_english
 ## class     integer    character                 character   character                character
 ## Ndistinct      19            1                         1         221                      221
@@ -684,13 +684,13 @@ tryCatch(L(us_trade, 1, export_value_usd + import_value_usd ~ partner_iso + prod
 settransform(us_trade, id = unattrib(seqid(year + unattrib(finteraction(partner_iso, product_code)) * 20L)))
 # Notes: Normally id = seqid(year) would be enough on sorted data, but here we also have very different start and end dates...thus is some cases the next group starts the year after the former ends, checked with: table(with(us_trade, ffirst(fdiff(year), list(partner_iso, product_code))) == 1). unattrib removes all attributes, giving a plain integer id (just done for the benchmark here, otherwise collapse would have an advantage).
 
-fNdistinct(us_trade$id)
+fndistinct(us_trade$id)
 ## [1] 423884
 # Another nice comparison... fmode is similarly fast for categorical aggregation...
-microbenchmark(fNdistinct(us_trade$id), n_distinct(us_trade$id))
+microbenchmark(fndistinct(us_trade$id), n_distinct(us_trade$id))
 ## Unit: milliseconds
 ##                     expr       min        lq      mean    median        uq       max neval
-##  fNdistinct(us_trade$id)  28.04757  28.50877  29.62054  28.89656  29.53983  40.52868   100
+##  fndistinct(us_trade$id)  28.04757  28.50877  29.62054  28.89656  29.53983  40.52868   100
 ##  n_distinct(us_trade$id) 121.75249 123.37014 125.34740 124.79768 126.48271 143.47405   100
 
 # Here we go now:

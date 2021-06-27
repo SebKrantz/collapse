@@ -33,9 +33,9 @@ test_that("replace_outliers works well.", {
 
 })
 
+set.seed(101)
 lmiss <- na_insert(letters)
 month.miss <- na_insert(month.name)
-
 char_dat <- na_insert(char_vars(GGDC10S))
 
 options(warn = -1)
@@ -76,6 +76,7 @@ test_that("recode_char works well", {
 
 })
 
+set.seed(101)
 vmiss <- na_insert(mtcars$cyl)
 mtcNA <- na_insert(mtcars)
 test_that("recode_num works well", {

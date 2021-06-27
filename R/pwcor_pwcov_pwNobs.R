@@ -1,10 +1,10 @@
 # sumcc <- function(x, y)  sum(complete.cases(x,y))
-# pwNobs <- function(x) qM(dapply(x, function(y) dapply(x, sumcc, y)))
+# pwnobs <- function(x) qM(dapply(x, function(y) dapply(x, sumcc, y)))
 
-pwNobs <- function(X) {
-  if(is.atomic(X) && is.matrix(X)) return(.Call(Cpp_pwNobsm, X)) # cn <- dimnames(X)[[2L]] # X <- mctl(X)
+pwnobs <- function(X) {
+  if(is.atomic(X) && is.matrix(X)) return(.Call(Cpp_pwnobsm, X)) # cn <- dimnames(X)[[2L]] # X <- mctl(X)
   if(!is.list(X)) stop("X must be a matrix or data.frame!") # -> if unequal length will warn below !!
-  dg <- fNobs.data.frame(X)
+  dg <- fnobs.data.frame(X)
   oldClass(X) <- NULL
   n <- length(X)
   nr <- length(X[[1L]])
@@ -17,6 +17,7 @@ pwNobs <- function(X) {
   N.mat
 }
 
+pwNobs <- function(X) pwnobs(X)
 # corr.p <- function(r, n) {
 #   if (n < 3L) return(1)
 #   df <- n - 2L
@@ -40,7 +41,7 @@ corr.pmat <- function(cm, nm) {
   # p.mat
 }
 
-complpwNobs <- function(X) {
+complpwnobs <- function(X) {
   # if(is.list(X)) { # Not needed anymore because now always coercing to matrix...
   #   n <- length(unclass(X))
   #   coln <- attr(X, "names")
@@ -97,7 +98,7 @@ pwcor <- function(X, ..., w = NULL, N = FALSE, P = FALSE, array = TRUE, use = "p
     } else r <- switch(use, complete.obs = stop("no complete element pairs"), namat(X))
   }
   if(!(N || P)) return(`oldClass<-`(r, c("pwcor", "matrix")))
-  n <- if(lcc) nmat(lcc, X) else switch(use, pairwise.complete.obs = pwNobs(X), complpwNobs(X)) # TODO: what about weights paiwrise ? # what if using ... to supply y ???
+  n <- if(lcc) nmat(lcc, X) else switch(use, pairwise.complete.obs = pwnobs(X), complpwnobs(X)) # TODO: what about weights paiwrise ? # what if using ... to supply y ???
   if(N) {
     res <- if(P) list(r = r, N = n, P = corr.pmat(r, n)) else list(r = r, N = n)
   } else res <- list(r = r, P = corr.pmat(r, n))
@@ -137,7 +138,7 @@ pwcov <- function(X, ..., w = NULL, N = FALSE, P = FALSE, array = TRUE, use = "p
     } else r <- switch(use, complete.obs = stop("no complete element pairs"), namat(X)) # namat correct ??
   }
   if(!(N || P)) return(`oldClass<-`(r, c("pwcov", "matrix")))
-  n <- if(lcc) nmat(lcc, X) else switch(use, pairwise.complete.obs = pwNobs(X), complpwNobs(X)) # TODO: what about weights paiwrise ?
+  n <- if(lcc) nmat(lcc, X) else switch(use, pairwise.complete.obs = pwnobs(X), complpwnobs(X)) # TODO: what about weights paiwrise ?
   if(N) {                                           # good ??? // cov(X) / outer(fsd(X), fsd(X))
     res <- if(P) list(cov = r, N = n, P = corr.pmat(cov2cor(r), n)) else list(cov = r, N = n) # what about x and y here ??
   } else res <- list(cov = r, P = corr.pmat(cov2cor(r), n))

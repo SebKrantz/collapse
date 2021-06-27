@@ -102,7 +102,7 @@ Regarding documentation, I do not really like the default R format of function-R
 
 # Demonstration 
 
-I will start by briefly demonstrating the *Fast Statistical Functions*, which are a central feature of *collapse*. Currently there are 13 of them (`fmean`, `fmedian`, `fmode`, `fsum`, `fprod`, `fsd`, `fvar`, `fmin`, `fmax`, `ffirst`, `flast`, `fNobs` and `fNdistinct`), they are all S3 generic and support fast grouped computations on vectors, matrices, data.frame's, lists and grouped tibble's (class *grouped_df*). Calling these functions on different objects yields simple column-wise statistical computations:
+I will start by briefly demonstrating the *Fast Statistical Functions*, which are a central feature of *collapse*. Currently there are 13 of them (`fmean`, `fmedian`, `fmode`, `fsum`, `fprod`, `fsd`, `fvar`, `fmin`, `fmax`, `ffirst`, `flast`, `fnobs` and `fndistinct`), they are all S3 generic and support fast grouped computations on vectors, matrices, data.frame's, lists and grouped tibble's (class *grouped_df*). Calling these functions on different objects yields simple column-wise statistical computations:
 
 ```{r, message=FALSE}
 library(collapse)
@@ -182,7 +182,7 @@ par(oldpar)
 
 ```
 
-The function `get_vars` is 2x faster than `[.data.frame`, attribute-preserving, and also supports column selection using functions or regular expressions. It's replacement version `get_vars<-` is 6x faster than `[<-.data.frame`. Apart from `fbetween` and `fwithin`, the functions `fHDbetween` and `fHDwithin` can average or center data on multiple groups, and they can also project out continuous variables alongside (i.e. they provide fitted values or residuals from regression problems which may or may not involve one or more factors). 
+The function `get_vars` is 2x faster than `[.data.frame`, attribute-preserving, and also supports column selection using functions or regular expressions. It's replacement version `get_vars<-` is 6x faster than `[<-.data.frame`. Apart from `fbetween` and `fwithin`, the functions `fhdbetween` and `fhdwithin` can average or center data on multiple groups, and they can also project out continuous variables alongside (i.e. they provide fitted values or residuals from regression problems which may or may not involve one or more factors). 
 
 For the manipulation of time-series and panel-series, *collapse* offers the functions `flag`, `fdiff` and `fgrowth`. 
  
@@ -224,7 +224,7 @@ head3(wlddev)
 All variables in this data have labels stored in a 'label' attribute (the default if you import with *haven*). Variable labels can be accessed and set using `vlabels` and `vlabels<-`, and viewed together with names and classes using `namlab`. In general variable labels and other attributes will be preserved in when working with *collapse*. *collapse* provides some of the fastest and most advanced summary statistics:
 ```{r}
 # Distinct value count
-fNdistinct(wlddev)
+fndistinct(wlddev)
 # Use descr(wlddev) for a detailed description of each variable
 
 # Checking for within-country variation
@@ -337,7 +337,7 @@ head3(us_trade)
 
 # 19 years, 221 trading partners, 1222 products, unbalanced panel with product-time gaps...
 qDF(rbind(class = vclasses(us_trade), 
-          Ndistinct = fNdistinct(us_trade)))
+          Ndistinct = fndistinct(us_trade)))
 
 # Summarizing data between and within partner-product pairs
 qsu(us_trade, pid = export_value_usd + import_value_usd ~ partner_iso + product_code)
@@ -414,9 +414,9 @@ tryCatch(L(us_trade, 1, export_value_usd + import_value_usd ~ partner_iso + prod
 settransform(us_trade, id = unattrib(seqid(year + unattrib(finteraction(partner_iso, product_code)) * 20L)))
 # Notes: Normally id = seqid(year) would be enough on sorted data, but here we also have very different start and end dates...thus is some cases the next group starts the year after the former ends, checked with: table(with(us_trade, ffirst(fdiff(year), list(partner_iso, product_code))) == 1). unattrib removes all attributes, giving a plain integer id (just done for the benchmark here, otherwise collapse would have an advantage).
 
-fNdistinct(us_trade$id) 
+fndistinct(us_trade$id) 
 # Another nice comparison... fmode is similarly fast for categorical aggregation...
-microbenchmark(fNdistinct(us_trade$id), n_distinct(us_trade$id))
+microbenchmark(fndistinct(us_trade$id), n_distinct(us_trade$id))
 
 # Here we go now: 
 microbenchmark(collapse = L(us_trade, 1, export_value_usd + import_value_usd ~ id),

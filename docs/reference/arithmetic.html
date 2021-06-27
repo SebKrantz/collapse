@@ -72,7 +72,7 @@
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">collapse</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">1.5.3</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">1.6.0</span>
       </span>
     </div>
 
@@ -94,13 +94,13 @@
       <ul class="nav navbar-nav navbar-right">
         <li>
   <a href="https://twitter.com/collapse_R" target="_blank">
-    <span class="fa fa-twitter"></span>
+    <span class="fas fa-twitter"></span>
      
   </a>
 </li>
 <li>
   <a href="https://github.com/SebKrantz/collapse" target="_blank">
-    <span class="fa fa-github"></span>
+    <span class="fas fa-github"></span>
      
   </a>
 </li>
@@ -239,7 +239,7 @@
 #&gt; Ford Pantera L       7.8   0 343.0 256 -3.78 -4.830  6.50 -8 -7   -3   -4
 #&gt; Ferrari Dino        13.7   0 139.0 169 -2.38 -3.230  9.50 -6 -5   -1    0
 #&gt; Maserati Bora        7.0   0 293.0 327 -4.46 -4.430  6.60 -8 -7   -3    0
-#&gt; Volvo 142E          17.4   0 117.0 105  0.11 -1.220 14.60 -3 -3    0   -2</div><div class='input'><span class='va'>mtcars</span> <span class='op'>%r-%</span> <span class='fu'><a href='small-helpers.html'>seq_col</a></span><span class='op'>(</span><span class='va'>mtcars</span><span class='op'>)</span>
+#&gt; Volvo 142E          17.4   0 117.0 105  0.11 -1.220 14.60 -3 -3    0   -2</div><div class='input'><span class='va'>mtcars</span> <span class='op'>%r-%</span> <span class='fu'><a href='small-helper.html'>seq_col</a></span><span class='op'>(</span><span class='va'>mtcars</span><span class='op'>)</span>
 </div><div class='output co'>#&gt;                      mpg cyl  disp  hp  drat     wt  qsec vs am gear carb
 #&gt; Mazda RX4           20.0   4 157.0 106 -1.10 -3.380  9.46 -8 -8   -6   -7
 #&gt; Mazda RX4 Wag       20.0   4 157.0 106 -1.10 -3.125 10.02 -8 -8   -6   -7
@@ -573,14 +573,10 @@
 #&gt; Ford Pantera L         2
 #&gt; Ferrari Dino           4
 #&gt; Maserati Bora          6
-#&gt; Volvo 142E             0</div><div class='input'><span class='co'># \donttest{</span>
+#&gt; Volvo 142E             0</div><div class='input'>
 <span class='co'>## Chained Operations</span>
-<span class='kw'><a href='https://rdrr.io/r/base/library.html'>library</a></span><span class='op'>(</span><span class='va'><a href='https://magrittr.tidyverse.org'>magrittr</a></span><span class='op'>)</span>
-</div><div class='output co'>#&gt; <span class='message'></span>
-#&gt; <span class='message'>Attaching package: ‘magrittr’</span></div><div class='output co'>#&gt; <span class='message'>The following objects are masked from ‘package:testthat’:</span>
-#&gt; <span class='message'></span>
-#&gt; <span class='message'>    equals, is_less_than, not</span></div><div class='input'><span class='va'>mtcars</span> <span class='op'>%&gt;%</span> <span class='va'>fwithin</span> <span class='op'>%r-%</span> <span class='fu'><a href='https://rdrr.io/r/stats/Normal.html'>rnorm</a></span><span class='op'>(</span><span class='fl'>11</span><span class='op'>)</span> <span class='op'>%c*%</span> <span class='fl'>5</span> <span class='op'>%&gt;%</span>
-    <span class='fu'><a href='ftransform.html'>tfm</a></span><span class='op'>(</span>mpg <span class='op'>=</span> <span class='fu'><a href='fsum.html'>fsum</a></span><span class='op'>(</span><span class='va'>mpg</span><span class='op'>)</span><span class='op'>)</span> <span class='op'>%&gt;%</span> <span class='va'>qsu</span>
+<span class='va'>mtcars</span> |&gt; <span class='fu'><a href='fbetween, fwithin.html'>fwithin</a></span><span class='op'>(</span><span class='op'>)</span> <span class='op'>%r-%</span> <span class='fu'><a href='https://rdrr.io/r/stats/Normal.html'>rnorm</a></span><span class='op'>(</span><span class='fl'>11</span><span class='op'>)</span> <span class='op'>%c*%</span> <span class='fl'>5</span> |&gt;
+    <span class='fu'><a href='ftransform.html'>tfm</a></span><span class='op'>(</span>mpg <span class='op'>=</span> <span class='fu'><a href='fsum.html'>fsum</a></span><span class='op'>(</span><span class='va'>mpg</span><span class='op'>)</span><span class='op'>)</span> |&gt; <span class='fu'><a href='qsu.html'>qsu</a></span><span class='op'>(</span><span class='op'>)</span>
 </div><div class='output co'>#&gt;        N     Mean        SD        Min        Max
 #&gt; mpg   32  224.007         0    224.007    224.007
 #&gt; cyl   32  -1.2766    8.9296   -12.2141     7.7859
@@ -592,8 +588,7 @@
 #&gt; vs    32   1.2366    2.5201    -0.9509     4.0491
 #&gt; am    32    1.221     2.495    -0.8103     4.1897
 #&gt; gear  32   1.4135     3.689     -2.024      7.976
-#&gt; carb  32   2.7685     8.076     -6.294     28.706</div><div class='input'><span class='co'># }</span>
-</div></pre>
+#&gt; carb  32   2.7685     8.076     -6.294     28.706</div></pre>
   </div>
   <div class="col-md-3 hidden-xs hidden-sm" id="pkgdown-sidebar">
     <nav id="toc" data-toggle="toc" class="sticky-top">

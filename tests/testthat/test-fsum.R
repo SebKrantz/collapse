@@ -1,8 +1,14 @@
 context("fsum")
 
-# rm(list = ls())
 
-x <- rnorm(100)
+# TODO:
+# identical(as.integer(fsum(td, g)), unname(fsum(t, g)))
+# str(fsum(m))
+# Do integer checks using identical, not all.equal..
+
+# rm(list = ls())
+set.seed(101)
+x <- rnorm(100) * 1000
 w <- abs(100*rnorm(100))
 wdat <- abs(100*rnorm(32))
 xNA <- x
@@ -13,7 +19,7 @@ wNA[sample.int(100,20)] <- NA
 wdatNA[sample.int(32, 5)] <- NA
 f <- as.factor(sample.int(10, 100, TRUE))
 g <- GRP(mtcars, ~ cyl + vs + am)
-gf <- as.factor_GRP(g)
+gf <- as_factor_GRP(g)
 mtcNA <- na_insert(mtcars)
 mtcNA[27,1] <- NA # single group NA !!
 m <- as.matrix(mtcars)
@@ -22,7 +28,7 @@ mNAc <- mNA
 storage.mode(mNAc) <- "character"
 
 na20 <- function(x) {
-  x[is.na(x)] <- 0
+  x[is.na(x)] <- 0L
   x
 }
 
@@ -48,11 +54,11 @@ test_that("fsum performs like base::sum and base::colSums", {
   expect_equal(fsum(NA), sum(NA))
   expect_equal(fsum(NA, na.rm = FALSE), sum(NA))
   expect_equal(fsum(1), sum(1, na.rm = TRUE))
-  expect_equal(fsum(1:3), sum(1:3, na.rm = TRUE))
-  expect_equal(fsum(-1:1), sum(-1:1, na.rm = TRUE))
+  expect_identical(fsum(1:3), sum(1:3, na.rm = TRUE))
+  expect_identical(fsum(-1:1), sum(-1:1, na.rm = TRUE))
   expect_equal(fsum(1, na.rm = FALSE), sum(1))
-  expect_equal(fsum(1:3, na.rm = FALSE), sum(1:3))
-  expect_equal(fsum(-1:1, na.rm = FALSE), sum(-1:1))
+  expect_identical(fsum(1:3, na.rm = FALSE), sum(1:3))
+  expect_identical(fsum(-1:1, na.rm = FALSE), sum(-1:1))
   expect_equal(fsum(x), sum(x, na.rm = TRUE))
   expect_equal(fsum(x, na.rm = FALSE), sum(x))
   expect_equal(fsum(xNA, na.rm = FALSE), sum(xNA))
@@ -297,7 +303,7 @@ test_that("fsum with weights handles special values in the right way", {
   expect_equal(fsum(1:3, w = c(1,-Inf,3), na.rm = FALSE), -Inf)
 })
 
-test_that("fsum sumuces errors for wrong input", {
+test_that("fsum produces errors for wrong input", {
   expect_error(fsum("a"))
   expect_error(fsum(NA_character_))
   expect_error(fsum(mNAc))
@@ -321,4 +327,218 @@ test_that("fsum sumuces errors for wrong input", {
   expect_error(fsum(wlddev, wlddev$iso3c))
   expect_error(fsum(wlddev, wlddev$iso3c, wlddev$year))
 })
+
+# Testing fsum with integers...
+
+x <- as.integer(x)
+xNA <- as.integer(xNA)
+mtcars <- dapply(mtcars, as.integer)
+mtcNA <- dapply(mtcNA, as.integer)
+storage.mode(m) <- "integer"
+storage.mode(mNA) <- "integer"
+
+toint <- function(x) {
+  storage.mode(x) <- "integer"
+  x
+}
+
+
+test_that("fsum with integers performs like base::sum and base::colSums", {
+  expect_identical(fsum(x), sum(x, na.rm = TRUE))
+  expect_identical(fsum(x, na.rm = FALSE), sum(x))
+  expect_identical(fsum(xNA, na.rm = FALSE), sum(xNA))
+  expect_identical(fsum(xNA), sum(xNA, na.rm = TRUE))
+  expect_identical(toint(fsum(mtcars)), fsum(m))
+  expect_identical(fsum(m), toint(colSums(m, na.rm = TRUE)))
+  expect_identical(fsum(m, na.rm = FALSE), toint(colSums(m)))
+  expect_identical(fsum(mNA, na.rm = FALSE), toint(colSums(mNA)))
+  expect_identical(fsum(mNA), toint(colSums(mNA, na.rm = TRUE)))
+  expect_identical(toint(fsum(mtcars)), dapply(mtcars, sum, na.rm = TRUE))
+  expect_identical(toint(fsum(mtcars, na.rm = FALSE)), dapply(mtcars, sum))
+  expect_identical(toint(fsum(mtcNA, na.rm = FALSE)), dapply(mtcNA, sum))
+  expect_identical(toint(fsum(mtcNA)), dapply(mtcNA, sum, na.rm = TRUE))
+  expect_identical(fsum(x, f), BY(x, f, sum, na.rm = TRUE))
+  expect_identical(fsum(x, f, na.rm = FALSE), BY(x, f, sum))
+  expect_identical(fsum(xNA, f, na.rm = FALSE), BY(xNA, f, sum))
+  expect_identical(na20(fsum(xNA, f)), BY(xNA, f, sum, na.rm = TRUE))
+  expect_identical(fsum(m, g), BY(m, g, sum, na.rm = TRUE))
+  expect_identical(fsum(m, g, na.rm = FALSE), BY(m, g, sum))
+  expect_identical(fsum(mNA, g, na.rm = FALSE), BY(mNA, g, sum))
+  expect_identical(na20(fsum(mNA, g)), BY(mNA, g, sum, na.rm = TRUE)) # error, sum(NA) give 0
+  expect_identical(fsum(mtcars, g), BY(mtcars, g, sum, na.rm = TRUE))
+  expect_identical(fsum(mtcars, g, na.rm = FALSE), BY(mtcars, g, sum))
+  expect_identical(fsum(mtcNA, g, na.rm = FALSE), BY(mtcNA, g, sum))
+  expect_identical(na20(fsum(mtcNA, g)), BY(mtcNA, g, sum, na.rm = TRUE)) # error, sum(NA) give 0
+})
+
+test_that("fsum with integers and weights performs like wsum (defined above)", {
+  # complete weights
+  expect_equal(fsum(x, w = w), wsum(x, w))
+  expect_equal(fsum(x, w = w, na.rm = FALSE), wsum(x, w))
+  expect_equal(fsum(xNA, w = w, na.rm = FALSE), wsum(xNA, w))
+  expect_equal(fsum(xNA, w = w), wsum(xNA, w, na.rm = TRUE))
+  expect_equal(fsum(mtcars, w = wdat), fsum(m, w = wdat))
+  expect_equal(fsum(m, w = wdat), dapply(m, wsum, wdat, na.rm = TRUE))
+  expect_equal(fsum(m, w = wdat, na.rm = FALSE), dapply(m, wsum, wdat))
+  expect_equal(fsum(mNA, w = wdat, na.rm = FALSE), dapply(mNA, wsum, wdat))
+  expect_equal(fsum(mNA, w = wdat), dapply(mNA, wsum, wdat, na.rm = TRUE))
+  expect_equal(fsum(mtcars, w = wdat), dapply(mtcars, wsum, wdat, na.rm = TRUE))
+  expect_equal(fsum(mtcars, w = wdat, na.rm = FALSE), dapply(mtcars, wsum, wdat))
+  expect_equal(fsum(mtcNA, w = wdat, na.rm = FALSE), dapply(mtcNA, wsum, wdat))
+  expect_equal(fsum(mtcNA, w = wdat), dapply(mtcNA, wsum, wdat, na.rm = TRUE))
+  expect_equal(fsum(x, f, w), wBY(x, f, wsum, w))
+  expect_equal(fsum(x, f, w, na.rm = FALSE), wBY(x, f, wsum, w))
+  expect_equal(fsum(xNA, f, w, na.rm = FALSE), wBY(xNA, f, wsum, w))
+  expect_equal(fsum(xNA, f, w), wBY(xNA, f, wsum, w, na.rm = TRUE))
+  expect_equal(fsum(m, g, wdat), wBY(m, gf, wsum, wdat))
+  expect_equal(fsum(m, g, wdat, na.rm = FALSE), wBY(m, gf, wsum, wdat))
+  expect_equal(fsum(mNA, g, wdat, na.rm = FALSE),  wBY(mNA, gf, wsum, wdat))
+  expect_equal(fsum(mNA, g, wdat), wBY(mNA, gf, wsum, wdat, na.rm = TRUE))
+  expect_equal(fsum(mtcars, g, wdat), wBY(mtcars, gf, wsum, wdat))
+  expect_equal(fsum(mtcars, g, wdat, na.rm = FALSE), wBY(mtcars, gf, wsum, wdat))
+  expect_equal(fsum(mtcNA, g, wdat, na.rm = FALSE), wBY(mtcNA, gf, wsum, wdat))
+  expect_equal(fsum(mtcNA, g, wdat), wBY(mtcNA, gf, wsum, wdat, na.rm = TRUE))
+  # missing weights
+  expect_equal(fsum(x, w = wNA), wsum(x, wNA, na.rm = TRUE))
+  expect_equal(fsum(x, w = wNA, na.rm = FALSE), wsum(x, wNA))
+  expect_equal(fsum(xNA, w = wNA, na.rm = FALSE), wsum(xNA, wNA))
+  expect_equal(fsum(xNA, w = wNA), wsum(xNA, wNA, na.rm = TRUE))
+  expect_equal(fsum(mtcars, w = wdatNA), fsum(m, w = wdatNA))
+  expect_equal(fsum(m, w = wdatNA), dapply(m, wsum, wdatNA, na.rm = TRUE))
+  expect_equal(fsum(m, w = wdatNA, na.rm = FALSE), dapply(m, wsum, wdatNA))
+  expect_equal(fsum(mNA, w = wdatNA, na.rm = FALSE), dapply(mNA, wsum, wdatNA))
+  expect_equal(fsum(mNA, w = wdatNA), dapply(mNA, wsum, wdatNA, na.rm = TRUE))
+  expect_equal(fsum(mtcars, w = wdatNA), dapply(mtcars, wsum, wdatNA, na.rm = TRUE))
+  expect_equal(fsum(mtcars, w = wdatNA, na.rm = FALSE), dapply(mtcars, wsum, wdatNA))
+  expect_equal(fsum(mtcNA, w = wdatNA, na.rm = FALSE), dapply(mtcNA, wsum, wdatNA))
+  expect_equal(fsum(mtcNA, w = wdatNA), dapply(mtcNA, wsum, wdatNA, na.rm = TRUE))
+  expect_equal(fsum(x, f, wNA), wBY(x, f, wsum, wNA, na.rm = TRUE))
+  expect_equal(fsum(x, f, wNA, na.rm = FALSE), wBY(x, f, wsum, wNA))
+  expect_equal(fsum(xNA, f, wNA, na.rm = FALSE), wBY(xNA, f, wsum, wNA))
+  expect_equal(fsum(xNA, f, wNA), wBY(xNA, f, wsum, wNA, na.rm = TRUE))
+  expect_equal(fsum(m, g, wdatNA), wBY(m, gf, wsum, wdatNA, na.rm = TRUE))
+  expect_equal(fsum(m, g, wdatNA, na.rm = FALSE), wBY(m, gf, wsum, wdatNA))
+  expect_equal(fsum(mNA, g, wdatNA, na.rm = FALSE),  wBY(mNA, gf, wsum, wdatNA))
+  expect_equal(fsum(mNA, g, wdatNA), wBY(mNA, gf, wsum, wdatNA, na.rm = TRUE))
+  expect_equal(fsum(mtcars, g, wdatNA), wBY(mtcars, gf, wsum, wdatNA, na.rm = TRUE))
+  expect_equal(fsum(mtcars, g, wdatNA, na.rm = FALSE), wBY(mtcars, gf, wsum, wdatNA))
+  expect_equal(fsum(mtcNA, g, wdatNA, na.rm = FALSE), wBY(mtcNA, gf, wsum, wdatNA))
+  expect_equal(fsum(mtcNA, g, wdatNA), wBY(mtcNA, gf, wsum, wdatNA, na.rm = TRUE))
+})
+
+test_that("fsum performs numerically stable", {
+  expect_true(all_identical(replicate(50, fsum(x), simplify = FALSE)))
+  expect_true(all_identical(replicate(50, fsum(x, na.rm = FALSE), simplify = FALSE)))
+  expect_true(all_identical(replicate(50, fsum(xNA, na.rm = FALSE), simplify = FALSE)))
+  expect_true(all_identical(replicate(50, fsum(xNA), simplify = FALSE)))
+  expect_true(all_identical(replicate(50, fsum(m), simplify = FALSE)))
+  expect_true(all_identical(replicate(50, fsum(m, na.rm = FALSE), simplify = FALSE)))
+  expect_true(all_identical(replicate(50, fsum(mNA, na.rm = FALSE), simplify = FALSE)))
+  expect_true(all_identical(replicate(50, fsum(mNA), simplify = FALSE)))
+  expect_true(all_identical(replicate(50, fsum(mtcars), simplify = FALSE)))
+  expect_true(all_identical(replicate(50, fsum(mtcars, na.rm = FALSE), simplify = FALSE)))
+  expect_true(all_identical(replicate(50, fsum(mtcNA, na.rm = FALSE), simplify = FALSE)))
+  expect_true(all_identical(replicate(50, fsum(mtcNA), simplify = FALSE)))
+  expect_true(all_identical(replicate(50, fsum(x, f), simplify = FALSE)))
+  expect_true(all_identical(replicate(50, fsum(x, f, na.rm = FALSE), simplify = FALSE)))
+  expect_true(all_identical(replicate(50, fsum(xNA, f, na.rm = FALSE), simplify = FALSE)))
+  expect_true(all_identical(replicate(50, fsum(xNA, f), simplify = FALSE)))
+  expect_true(all_identical(replicate(50, fsum(m, g), simplify = FALSE)))
+  expect_true(all_identical(replicate(50, fsum(m, g, na.rm = FALSE), simplify = FALSE)))
+  expect_true(all_identical(replicate(50, fsum(mNA, g, na.rm = FALSE), simplify = FALSE)))
+  expect_true(all_identical(replicate(50, fsum(mNA, g), simplify = FALSE)))
+  expect_true(all_identical(replicate(50, fsum(mtcars, g), simplify = FALSE)))
+  expect_true(all_identical(replicate(50, fsum(mtcars, g, na.rm = FALSE), simplify = FALSE)))
+  expect_true(all_identical(replicate(50, fsum(mtcNA, g, na.rm = FALSE), simplify = FALSE)))
+  expect_true(all_identical(replicate(50, fsum(mtcNA, g), simplify = FALSE)))
+})
+
+test_that("fsum with integers and complete weights performs numerically stable", {
+  expect_true(all_obj_equal(replicate(50, fsum(x, w = w), simplify = FALSE)))
+  expect_true(all_obj_equal(replicate(50, fsum(x, w = w, na.rm = FALSE), simplify = FALSE)))
+  expect_true(all_obj_equal(replicate(50, fsum(xNA, w = w, na.rm = FALSE), simplify = FALSE)))
+  expect_true(all_obj_equal(replicate(50, fsum(xNA, w = w), simplify = FALSE)))
+  expect_true(all_obj_equal(replicate(50, fsum(m, w = wdat), simplify = FALSE)))
+  expect_true(all_obj_equal(replicate(50, fsum(m, w = wdat, na.rm = FALSE), simplify = FALSE)))
+  expect_true(all_obj_equal(replicate(50, fsum(mNA, w = wdat, na.rm = FALSE), simplify = FALSE)))
+  expect_true(all_obj_equal(replicate(50, fsum(mNA, w = wdat), simplify = FALSE)))
+  expect_true(all_obj_equal(replicate(50, fsum(mtcars, w = wdat), simplify = FALSE)))
+  expect_true(all_obj_equal(replicate(50, fsum(mtcars, w = wdat, na.rm = FALSE), simplify = FALSE)))
+  expect_true(all_obj_equal(replicate(50, fsum(mtcNA, w = wdat, na.rm = FALSE), simplify = FALSE)))
+  expect_true(all_obj_equal(replicate(50, fsum(mtcNA, w = wdat), simplify = FALSE)))
+  expect_true(all_obj_equal(replicate(50, fsum(x, f, w), simplify = FALSE)))
+  expect_true(all_obj_equal(replicate(50, fsum(x, f, w, na.rm = FALSE), simplify = FALSE)))
+  expect_true(all_obj_equal(replicate(50, fsum(xNA, f, w, na.rm = FALSE), simplify = FALSE)))
+  expect_true(all_obj_equal(replicate(50, fsum(xNA, f, w), simplify = FALSE)))
+  expect_true(all_obj_equal(replicate(50, fsum(m, g, wdat), simplify = FALSE)))
+  expect_true(all_obj_equal(replicate(50, fsum(m, g, wdat, na.rm = FALSE), simplify = FALSE)))
+  expect_true(all_obj_equal(replicate(50, fsum(mNA, g, wdat, na.rm = FALSE), simplify = FALSE)))
+  expect_true(all_obj_equal(replicate(50, fsum(mNA, g, wdat), simplify = FALSE)))
+  expect_true(all_obj_equal(replicate(50, fsum(mtcars, g, wdat), simplify = FALSE)))
+  expect_true(all_obj_equal(replicate(50, fsum(mtcars, g, wdat, na.rm = FALSE), simplify = FALSE)))
+  expect_true(all_obj_equal(replicate(50, fsum(mtcNA, g, wdat, na.rm = FALSE), simplify = FALSE)))
+  expect_true(all_obj_equal(replicate(50, fsum(mtcNA, g, wdat), simplify = FALSE)))
+})
+
+test_that("fsum with integers and missing weights performs numerically stable", {
+  expect_true(all_obj_equal(replicate(50, fsum(x, w = wNA), simplify = FALSE)))
+  expect_true(all_obj_equal(replicate(50, fsum(x, w = wNA, na.rm = FALSE), simplify = FALSE)))
+  expect_true(all_obj_equal(replicate(50, fsum(xNA, w = wNA, na.rm = FALSE), simplify = FALSE)))
+  expect_true(all_obj_equal(replicate(50, fsum(xNA, w = wNA), simplify = FALSE)))
+  expect_true(all_obj_equal(replicate(50, fsum(m, w = wdatNA), simplify = FALSE)))
+  expect_true(all_obj_equal(replicate(50, fsum(m, w = wdatNA, na.rm = FALSE), simplify = FALSE)))
+  expect_true(all_obj_equal(replicate(50, fsum(mNA, w = wdatNA, na.rm = FALSE), simplify = FALSE)))
+  expect_true(all_obj_equal(replicate(50, fsum(mNA, w = wdatNA), simplify = FALSE)))
+  expect_true(all_obj_equal(replicate(50, fsum(mtcars, w = wdatNA), simplify = FALSE)))
+  expect_true(all_obj_equal(replicate(50, fsum(mtcars, w = wdatNA, na.rm = FALSE), simplify = FALSE)))
+  expect_true(all_obj_equal(replicate(50, fsum(mtcNA, w = wdatNA, na.rm = FALSE), simplify = FALSE)))
+  expect_true(all_obj_equal(replicate(50, fsum(mtcNA, w = wdatNA), simplify = FALSE)))
+  expect_true(all_obj_equal(replicate(50, fsum(x, f, wNA), simplify = FALSE)))
+  expect_true(all_obj_equal(replicate(50, fsum(x, f, wNA, na.rm = FALSE), simplify = FALSE)))
+  expect_true(all_obj_equal(replicate(50, fsum(xNA, f, wNA, na.rm = FALSE), simplify = FALSE)))
+  expect_true(all_obj_equal(replicate(50, fsum(xNA, f, wNA), simplify = FALSE)))
+  expect_true(all_obj_equal(replicate(50, fsum(m, g, wdatNA), simplify = FALSE)))
+  expect_true(all_obj_equal(replicate(50, fsum(m, g, wdatNA, na.rm = FALSE), simplify = FALSE)))
+  expect_true(all_obj_equal(replicate(50, fsum(mNA, g, wdatNA, na.rm = FALSE), simplify = FALSE)))
+  expect_true(all_obj_equal(replicate(50, fsum(mNA, g, wdatNA), simplify = FALSE)))
+  expect_true(all_obj_equal(replicate(50, fsum(mtcars, g, wdatNA), simplify = FALSE)))
+  expect_true(all_obj_equal(replicate(50, fsum(mtcars, g, wdatNA, na.rm = FALSE), simplify = FALSE)))
+  expect_true(all_obj_equal(replicate(50, fsum(mtcNA, g, wdatNA, na.rm = FALSE), simplify = FALSE)))
+  expect_true(all_obj_equal(replicate(50, fsum(mtcNA, g, wdatNA), simplify = FALSE)))
+})
+
+test_that("fsum with integers produces errors for wrong input", {
+  expect_error(fsum(m,1:31))
+  expect_error(fsum(mtcars,1:31))
+  expect_error(fsum(mtcars, w = 1:31))
+  expect_error(fsum(mNA, w = 1:33))
+  expect_error(fsum(m,1:32,1:20))
+  expect_error(fsum(mtcars,1:32,1:10))
+})
+
+test_that("Miscellaneous Issues with Integers", {
+  expect_identical(fsum(NA_integer_), NA_integer_)
+  expect_identical(fsum(NA_integer_, na.rm = FALSE), NA_integer_)
+  expect_identical(fsum(c(NA_integer_, NA_integer_)), NA_integer_)
+  expect_identical(fsum(c(NA_integer_, NA_integer_), na.rm = FALSE), NA_integer_)
+  expect_identical(fsum(c(NA_integer_, 1L)), 1L)
+  expect_identical(fsum(c(NA_integer_, 1L), na.rm = FALSE), NA_integer_)
+  expect_identical(fsum(c(-2147483646L, -2L)), -2147483648)
+  expect_identical(fsum(c(-2147483646L, -2L), na.rm = FALSE), -2147483648)
+  expect_identical(fsum(-c(-2147483646L, -2L)), 2147483648)
+  expect_identical(fsum(-c(-2147483646L, -2L), na.rm = FALSE), 2147483648)
+})
+
+x <- as.integer(wlddev$year*1000000L)
+set.seed(101)
+xNA <- na_insert(x)
+g <- wlddev$iso3c
+test_that("Integer overflow errors", {
+  # With groups
+  expect_error(fsum(x, g))
+  expect_error(fsum(x, g, na.rm = FALSE))
+  expect_error(fsum(xNA, g))
+  expect_error(fsum(xNA, g, na.rm = FALSE))
+})
+
 

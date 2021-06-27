@@ -20,7 +20,7 @@ fmode.default <- function(x, g = NULL, w = NULL, TRA = NULL, na.rm = TRUE, use.g
       g <- qG(g, na.exclude = FALSE)
       return(.Call(Cpp_fmode,x,attr(g,"N.groups"),g,NULL,w,na.rm,ret))
     }
-    if(!is.GRP(g)) g <- GRP.default(g, return.groups = use.g.names, call = FALSE)
+    if(!is_GRP(g)) g <- GRP.default(g, return.groups = use.g.names, call = FALSE)
     if(use.g.names) return(`names<-`(.Call(Cpp_fmode,x,g[[1L]],g[[2L]],g[[3L]],w,na.rm,ret), GRPnames(g)))
     return(.Call(Cpp_fmode,x,g[[1L]],g[[2L]],g[[3L]],w,na.rm,ret))
   }
@@ -30,7 +30,7 @@ fmode.default <- function(x, g = NULL, w = NULL, TRA = NULL, na.rm = TRUE, use.g
     g <- qG(g, na.exclude = FALSE)
     return(.Call(Cpp_TRA,x,.Call(Cpp_fmode,x,attr(g,"N.groups"),g,NULL,w,na.rm,ret),g,TtI(TRA)))
   }
-  if(!is.GRP(g)) g <- GRP.default(g, return.groups = FALSE, call = FALSE)
+  if(!is_GRP(g)) g <- GRP.default(g, return.groups = FALSE, call = FALSE)
   .Call(Cpp_TRA,x,.Call(Cpp_fmode,x,g[[1L]],g[[2L]],g[[3L]],w,na.rm,ret),g[[2L]],TtI(TRA))
 }
 
@@ -49,7 +49,7 @@ fmode.matrix <- function(x, g = NULL, w = NULL, TRA = NULL, na.rm = TRUE, use.g.
       g <- qG(g, na.exclude = FALSE)
       return(.Call(Cpp_fmodem,x,attr(g,"N.groups"),g,NULL,w,na.rm,FALSE,ret))
     }
-    if(!is.GRP(g)) g <- GRP.default(g, return.groups = use.g.names, call = FALSE)
+    if(!is_GRP(g)) g <- GRP.default(g, return.groups = use.g.names, call = FALSE)
     if(use.g.names) return(`dimnames<-`(.Call(Cpp_fmodem,x,g[[1L]],g[[2L]],g[[3L]],w,na.rm,FALSE,ret), list(GRPnames(g), dimnames(x)[[2L]])))
     return(.Call(Cpp_fmodem,x,g[[1L]],g[[2L]],g[[3L]],w,na.rm,FALSE,ret))
   }
@@ -59,7 +59,7 @@ fmode.matrix <- function(x, g = NULL, w = NULL, TRA = NULL, na.rm = TRUE, use.g.
     g <- qG(g, na.exclude = FALSE)
     return(.Call(Cpp_TRAm,x,.Call(Cpp_fmodem,x,attr(g,"N.groups"),g,NULL,w,na.rm,FALSE,ret),g,TtI(TRA)))
   }
-  if(!is.GRP(g)) g <- GRP.default(g, return.groups = FALSE, call = FALSE)
+  if(!is_GRP(g)) g <- GRP.default(g, return.groups = FALSE, call = FALSE)
   .Call(Cpp_TRAm,x,.Call(Cpp_fmodem,x,g[[1L]],g[[2L]],g[[3L]],w,na.rm,FALSE,ret),g[[2L]],TtI(TRA))
 }
 
@@ -78,7 +78,7 @@ fmode.data.frame <- function(x, g = NULL, w = NULL, TRA = NULL, na.rm = TRUE, us
       g <- qG(g, na.exclude = FALSE)
       return(.Call(Cpp_fmodel,x,attr(g,"N.groups"),g,NULL,w,na.rm,ret))
     }
-    if(!is.GRP(g)) g <- GRP.default(g, return.groups = use.g.names, call = FALSE)
+    if(!is_GRP(g)) g <- GRP.default(g, return.groups = use.g.names, call = FALSE)
     if(use.g.names && !inherits(x, "data.table") && length(groups <- GRPnames(g)))
       return(setRnDF(.Call(Cpp_fmodel,x,g[[1L]],g[[2L]],g[[3L]],w,na.rm,ret), groups))
     return(.Call(Cpp_fmodel,x,g[[1L]],g[[2L]],g[[3L]],w,na.rm,ret))
@@ -89,7 +89,7 @@ fmode.data.frame <- function(x, g = NULL, w = NULL, TRA = NULL, na.rm = TRUE, us
     g <- qG(g, na.exclude = FALSE)
     return(.Call(Cpp_TRAl,x,.Call(Cpp_fmodel,x,attr(g,"N.groups"),g,NULL,w,na.rm,ret),g,TtI(TRA)))
   }
-  if(!is.GRP(g)) g <- GRP.default(g, return.groups = FALSE, call = FALSE)
+  if(!is_GRP(g)) g <- GRP.default(g, return.groups = FALSE, call = FALSE)
   .Call(Cpp_TRAl,x,.Call(Cpp_fmodel,x,g[[1L]],g[[2L]],g[[3L]],w,na.rm,ret),g[[2L]],TtI(TRA))
 }
 
@@ -112,7 +112,7 @@ fmode.grouped_df <- function(x, w = NULL, TRA = NULL, na.rm = TRUE, use.g.names 
     if(any(gn == wn)) stop("Weights coincide with grouping variables!")
     gn <- c(gn, wn)
     if(keep.w) {
-      if(nTRAl) sumw <- `names<-`(list(fsumCpp(w,g[[1L]],g[[2L]],NULL,na.rm)), paste0("sum.", wsym)) else if(keep.group_vars)
+      if(nTRAl) sumw <- `names<-`(list(fsumC(w,g[[1L]],g[[2L]],NULL,na.rm)), paste0("sum.", wsym)) else if(keep.group_vars)
         gn2 <- gn else sumw <- gn2 <- wn
     }
   }

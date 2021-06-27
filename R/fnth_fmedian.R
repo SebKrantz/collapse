@@ -18,7 +18,7 @@ fnth.default <- function(x, n = 0.5, g = NULL, w = NULL, TRA = NULL, na.rm = TRU
       g <- qG(g, na.exclude = FALSE)
       return(.Call(Cpp_fnth,x,n,attr(g,"N.groups"),g,NULL,w,na.rm,ret))
     }
-    if(!is.GRP(g)) g <- GRP.default(g, return.groups = use.g.names, call = FALSE)
+    if(!is_GRP(g)) g <- GRP.default(g, return.groups = use.g.names, call = FALSE)
     if(use.g.names) return(`names<-`(.Call(Cpp_fnth,x,n,g[[1L]],g[[2L]],g[[3L]],w,na.rm,ret), GRPnames(g)))
     return(.Call(Cpp_fnth,x,n,g[[1L]],g[[2L]],g[[3L]],w,na.rm,ret))
   }
@@ -28,7 +28,7 @@ fnth.default <- function(x, n = 0.5, g = NULL, w = NULL, TRA = NULL, na.rm = TRU
     g <- qG(g, na.exclude = FALSE)
     return(.Call(Cpp_TRA,x,.Call(Cpp_fnth,x,n,attr(g,"N.groups"),g,NULL,w,na.rm,ret),g,TtI(TRA)))
   }
-  if(!is.GRP(g)) g <- GRP.default(g, return.groups = FALSE, call = FALSE)
+  if(!is_GRP(g)) g <- GRP.default(g, return.groups = FALSE, call = FALSE)
   .Call(Cpp_TRA,x,.Call(Cpp_fnth,x,n,g[[1L]],g[[2L]],g[[3L]],w,na.rm,ret),g[[2L]],TtI(TRA))
 }
 
@@ -47,7 +47,7 @@ fnth.matrix <- function(x, n = 0.5, g = NULL, w = NULL, TRA = NULL, na.rm = TRUE
       g <- qG(g, na.exclude = FALSE)
       return(.Call(Cpp_fnthm,x,n,attr(g,"N.groups"),g,NULL,w,na.rm,FALSE,ret))
     }
-    if(!is.GRP(g)) g <- GRP.default(g, return.groups = use.g.names, call = FALSE)
+    if(!is_GRP(g)) g <- GRP.default(g, return.groups = use.g.names, call = FALSE)
     if(use.g.names) return(`dimnames<-`(.Call(Cpp_fnthm,x,n,g[[1L]],g[[2L]],g[[3L]],w,na.rm,FALSE,ret), list(GRPnames(g), dimnames(x)[[2L]])))
     return(.Call(Cpp_fnthm,x,n,g[[1L]],g[[2L]],g[[3L]],w,na.rm,FALSE,ret))
   }
@@ -57,7 +57,7 @@ fnth.matrix <- function(x, n = 0.5, g = NULL, w = NULL, TRA = NULL, na.rm = TRUE
     g <- qG(g, na.exclude = FALSE)
     return(.Call(Cpp_TRAm,x,.Call(Cpp_fnthm,x,n,attr(g,"N.groups"),g,NULL,w,na.rm,FALSE,ret),g,TtI(TRA)))
   }
-  if(!is.GRP(g)) g <- GRP.default(g, return.groups = FALSE, call = FALSE)
+  if(!is_GRP(g)) g <- GRP.default(g, return.groups = FALSE, call = FALSE)
   .Call(Cpp_TRAm,x,.Call(Cpp_fnthm,x,n,g[[1L]],g[[2L]],g[[3L]],w,na.rm,FALSE,ret),g[[2L]],TtI(TRA))
 }
 
@@ -76,7 +76,7 @@ fnth.data.frame <- function(x, n = 0.5, g = NULL, w = NULL, TRA = NULL, na.rm = 
       g <- qG(g, na.exclude = FALSE)
       return(.Call(Cpp_fnthl,x,n,attr(g,"N.groups"),g,NULL,w,na.rm,FALSE,ret))
     }
-    if(!is.GRP(g)) g <- GRP.default(g, return.groups = use.g.names, call = FALSE)
+    if(!is_GRP(g)) g <- GRP.default(g, return.groups = use.g.names, call = FALSE)
     if(use.g.names && !inherits(x, "data.table") && length(groups <- GRPnames(g)))
       return(setRnDF(.Call(Cpp_fnthl,x,n,g[[1L]],g[[2L]],g[[3L]],w,na.rm,FALSE,ret), groups))
     return(.Call(Cpp_fnthl,x,n,g[[1L]],g[[2L]],g[[3L]],w,na.rm,FALSE,ret))
@@ -87,7 +87,7 @@ fnth.data.frame <- function(x, n = 0.5, g = NULL, w = NULL, TRA = NULL, na.rm = 
     g <- qG(g, na.exclude = FALSE)
     return(.Call(Cpp_TRAl,x,.Call(Cpp_fnthl,x,n,attr(g,"N.groups"),g,NULL,w,na.rm,FALSE,ret),g,TtI(TRA)))
   }
-  if(!is.GRP(g)) g <- GRP.default(g, return.groups = FALSE, call = FALSE)
+  if(!is_GRP(g)) g <- GRP.default(g, return.groups = FALSE, call = FALSE)
   .Call(Cpp_TRAl,x,.Call(Cpp_fnthl,x,n,g[[1L]],g[[2L]],g[[3L]],w,na.rm,FALSE,ret),g[[2L]],TtI(TRA))
 }
 
@@ -110,7 +110,7 @@ fnth.grouped_df <- function(x, n = 0.5, w = NULL, TRA = NULL, na.rm = TRUE, use.
     if(any(gn == wn)) stop("Weights coincide with grouping variables!")
     gn <- c(gn, wn)
     if(keep.w) {
-      if(nTRAl) sumw <- `names<-`(list(fsumCpp(w,g[[1L]],g[[2L]],NULL,na.rm)), paste0("sum.", wsym)) else if(keep.group_vars)
+      if(nTRAl) sumw <- `names<-`(list(fsumC(w,g[[1L]],g[[2L]],NULL,na.rm)), paste0("sum.", wsym)) else if(keep.group_vars)
         gn2 <- gn else sumw <- gn2 <- wn
     }
   }
@@ -164,7 +164,7 @@ fmedian.default <- function(x, g = NULL, w = NULL, TRA = NULL, na.rm = TRUE, use
       g <- qG(g, na.exclude = FALSE)
       return(.Call(Cpp_fnth,x,0.5,attr(g,"N.groups"),g,NULL,w,na.rm,1L))
     }
-    if(!is.GRP(g)) g <- GRP.default(g, return.groups = use.g.names, call = FALSE)
+    if(!is_GRP(g)) g <- GRP.default(g, return.groups = use.g.names, call = FALSE)
     if(use.g.names) return(`names<-`(.Call(Cpp_fnth,x,0.5,g[[1L]],g[[2L]],g[[3L]],w,na.rm,1L), GRPnames(g)))
     return(.Call(Cpp_fnth,x,0.5,g[[1L]],g[[2L]],g[[3L]],w,na.rm,1L))
   }
@@ -174,7 +174,7 @@ fmedian.default <- function(x, g = NULL, w = NULL, TRA = NULL, na.rm = TRUE, use
     g <- qG(g, na.exclude = FALSE)
     return(.Call(Cpp_TRA,x,.Call(Cpp_fnth,x,0.5,attr(g,"N.groups"),g,NULL,w,na.rm,1L),g,TtI(TRA)))
   }
-  if(!is.GRP(g)) g <- GRP.default(g, return.groups = FALSE, call = FALSE)
+  if(!is_GRP(g)) g <- GRP.default(g, return.groups = FALSE, call = FALSE)
   .Call(Cpp_TRA,x,.Call(Cpp_fnth,x,0.5,g[[1L]],g[[2L]],g[[3L]],w,na.rm,1L),g[[2L]],TtI(TRA))
 }
 
@@ -192,7 +192,7 @@ fmedian.matrix <- function(x, g = NULL, w = NULL, TRA = NULL, na.rm = TRUE, use.
       g <- qG(g, na.exclude = FALSE)
       return(.Call(Cpp_fnthm,x,0.5,attr(g,"N.groups"),g,NULL,w,na.rm,FALSE,1L))
     }
-    if(!is.GRP(g)) g <- GRP.default(g, return.groups = use.g.names, call = FALSE)
+    if(!is_GRP(g)) g <- GRP.default(g, return.groups = use.g.names, call = FALSE)
     if(use.g.names) return(`dimnames<-`(.Call(Cpp_fnthm,x,0.5,g[[1L]],g[[2L]],g[[3L]],w,na.rm,FALSE,1L), list(GRPnames(g), dimnames(x)[[2L]])))
     return(.Call(Cpp_fnthm,x,0.5,g[[1L]],g[[2L]],g[[3L]],w,na.rm,FALSE,1L))
   }
@@ -202,7 +202,7 @@ fmedian.matrix <- function(x, g = NULL, w = NULL, TRA = NULL, na.rm = TRUE, use.
     g <- qG(g, na.exclude = FALSE)
     return(.Call(Cpp_TRAm,x,.Call(Cpp_fnthm,x,0.5,attr(g,"N.groups"),g,NULL,w,na.rm,FALSE,1L),g,TtI(TRA)))
   }
-  if(!is.GRP(g)) g <- GRP.default(g, return.groups = FALSE, call = FALSE)
+  if(!is_GRP(g)) g <- GRP.default(g, return.groups = FALSE, call = FALSE)
   .Call(Cpp_TRAm,x,.Call(Cpp_fnthm,x,0.5,g[[1L]],g[[2L]],g[[3L]],w,na.rm,FALSE,1L),g[[2L]],TtI(TRA))
 }
 
@@ -220,7 +220,7 @@ fmedian.data.frame <- function(x, g = NULL, w = NULL, TRA = NULL, na.rm = TRUE, 
       g <- qG(g, na.exclude = FALSE)
       return(.Call(Cpp_fnthl,x,0.5,attr(g,"N.groups"),g,NULL,w,na.rm,FALSE,1L))
     }
-    if(!is.GRP(g)) g <- GRP.default(g, return.groups = use.g.names, call = FALSE)
+    if(!is_GRP(g)) g <- GRP.default(g, return.groups = use.g.names, call = FALSE)
     if(use.g.names && !inherits(x, "data.table") && length(groups <- GRPnames(g)))
       return(setRnDF(.Call(Cpp_fnthl,x,0.5,g[[1L]],g[[2L]],g[[3L]],w,na.rm,FALSE,1L), groups))
     return(.Call(Cpp_fnthl,x,0.5,g[[1L]],g[[2L]],g[[3L]],w,na.rm,FALSE,1L))
@@ -231,7 +231,7 @@ fmedian.data.frame <- function(x, g = NULL, w = NULL, TRA = NULL, na.rm = TRUE, 
     g <- qG(g, na.exclude = FALSE)
     return(.Call(Cpp_TRAl,x,.Call(Cpp_fnthl,x,0.5,attr(g,"N.groups"),g,NULL,w,na.rm,FALSE,1L),g,TtI(TRA)))
   }
-  if(!is.GRP(g)) g <- GRP.default(g, return.groups = FALSE, call = FALSE)
+  if(!is_GRP(g)) g <- GRP.default(g, return.groups = FALSE, call = FALSE)
   .Call(Cpp_TRAl,x,.Call(Cpp_fnthl,x,0.5,g[[1L]],g[[2L]],g[[3L]],w,na.rm,FALSE,1L),g[[2L]],TtI(TRA))
 }
 
@@ -253,7 +253,7 @@ fmedian.grouped_df <- function(x, w = NULL, TRA = NULL, na.rm = TRUE, use.g.name
     if(any(gn == wn)) stop("Weights coincide with grouping variables!")
     gn <- c(gn, wn)
     if(keep.w) {
-      if(nTRAl) sumw <- `names<-`(list(fsumCpp(w,g[[1L]],g[[2L]],NULL,na.rm)), paste0("sum.", wsym)) else if(keep.group_vars)
+      if(nTRAl) sumw <- `names<-`(list(fsumC(w,g[[1L]],g[[2L]],NULL,na.rm)), paste0("sum.", wsym)) else if(keep.group_vars)
         gn2 <- gn else sumw <- gn2 <- wn
     }
   }

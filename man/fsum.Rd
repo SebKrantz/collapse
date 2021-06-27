@@ -51,11 +51,13 @@ fsum(x, \dots)
 
 Missing-value removal as controlled by the \code{na.rm} argument is done very efficiently by simply skipping them in the computation (thus setting \code{na.rm = FALSE} on data with no missing values doesn't give extra speed). Large performance gains can nevertheless be achieved in the presence of missing values if \code{na.rm = FALSE}, since then the corresponding computation is terminated once a \code{NA} is encountered and \code{NA} is returned (unlike \code{\link{sum}} which just runs through without any checks).
 
-The weighted sum (i.e. survey total) is computed as \code{sum(x * w)}. If \code{na.rm = TRUE}, missing values will be removed from both \code{x} and \code{w} i.e. utilizing only \code{x[complete.cases(x,w)]} and \code{w[complete.cases(x,w)]}.
+The weighted sum (i.e. survey total) is computed as \code{sum(x * w)}, but in one pass and about twice as efficient. If \code{na.rm = TRUE}, missing values will be removed from both \code{x} and \code{w} i.e. utilizing only \code{x[complete.cases(x,w)]} and \code{w[complete.cases(x,w)]}.
 
 This all seamlessly generalizes to grouped computations, which are performed in a single pass (without splitting the data) and therefore extremely fast. See Benchmark and Examples below.
 
-When applied to data frames with groups or \code{drop = FALSE}, \code{fsum} preserves all column attributes (such as variable labels) but does not distinguish between classed and unclassed objects. The attributes of the data frame itself are also preserved.
+When applied to data frames with groups or \code{drop = FALSE}, \code{fsum} preserves all column attributes (such as variable labels), unless columns have a class (checked using \code{is.object}). The attributes of the data frame itself are also preserved.
+
+Since v1.6.0 \code{fsum} explicitly supports integers. Integers are summed using the long long type in C which is bounded at +-9,223,372,036,854,775,807 (so ~4.3 billion times greater than the minimum/maximum R integer bounded at +-2,147,483,647). If the value of the sum is outside +-2,147,483,647, a double containing the result is returned, otherwise an integer is returned. With groups, an integer overflow error is provided if the sum in any group is outside +-2,147,483,647.
 
 }
 \value{
@@ -75,7 +77,7 @@ fsum(mpg, mtcars$cyl, mtcars$hp)  # Weighted grouped sum (total)
 fsum(mpg, mtcars[c(2,8:9)])       # More groups..
 g <- GRP(mtcars, ~ cyl + vs + am) # Precomputing groups gives more speed !
 fsum(mpg, g)
-fmean(mpg, g) == fsum(mpg, g) / fNobs(mpg, g)
+fmean(mpg, g) == fsum(mpg, g) / fnobs(mpg, g)
 fsum(mpg, g, TRA = "\%")           # Percentages by group
 
 ## data.frame method
@@ -93,10 +95,10 @@ fsum(m, g, TRA = "\%")
 \donttest{ % No code relying on suggested package
 ## method for grouped data frames - created with dplyr::group_by or fgroup_by
 library(dplyr)
-mtcars \%>\% group_by(cyl,vs,am) \%>\% fsum(hp)  # Weighted grouped sum (total)
-mtcars \%>\% fgroup_by(cyl,vs,am) \%>\% fsum(hp) # Equivalent and faster !!
-mtcars \%>\% fgroup_by(cyl,vs,am) \%>\% fsum(TRA = "\%")
-mtcars \%>\% fgroup_by(cyl,vs,am) \%>\% fselect(mpg) \%>\% fsum
+mtcars |> group_by(cyl,vs,am) |> fsum(hp)  # Weighted grouped sum (total)
+mtcars |> fgroup_by(cyl,vs,am) |> fsum(hp) # Equivalent and faster !!
+mtcars |> fgroup_by(cyl,vs,am) |> fsum(TRA = "\%")
+mtcars |> fgroup_by(cyl,vs,am) |> fselect(mpg) |> fsum()
 }
 }
 }
