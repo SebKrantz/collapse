@@ -48,7 +48,7 @@ This short vignette focuses on using *collapse* with the popular *sf* package by
 
 *collapse* is class-agnostic and can theoretically be used to manipulate any kind of list, matrix or data frame based object. Previous versions of *collapse* could manipulate *sf* data frames, but required users to manually include the geometry column when using functions like in `fselect` and `fsubset`, and exclude it in other functions like `qsu`. 
 
-Version 1.6.0 of the package adds internal support for *sf* data frames where the geometry column is handles by most essential functions (`fselect`, `get_vars`, `num_vars`, `fsubset`, `ss`, `fgroup_by`, `qsu`, `descr`, `varying`, `funique`, `roworder`, `rsplit`, `fcompute`, ...). This largely does not affect previously written code where the geometry column is explicitly selected. To demonstrate these features, we can load a test dataset provided by *sf*:
+Version 1.6.0 of the package adds internal support for *sf* data frames where the geometry column is handled by most essential functions (`fselect`, `get_vars`, `num_vars`, `fsubset`, `ss`, `fgroup_by`, `qsu`, `descr`, `varying`, `funique`, `roworder`, `rsplit`, `fcompute`, ...). This largely does not affect previously written code where the geometry column is explicitly selected. To demonstrate these features, we can load a test dataset provided by *sf*:
 
 ```{r}
 library(collapse)
@@ -59,7 +59,7 @@ options(sf_max_print = 3)
 nc
 ```
 
-## Summarising sf data frames
+## Summarising sf Data Frames
 
 The first thing that *collapse* 1.6.0 adds is summary statistics for *sf* data frames that automatically exclude the 'geometry' column:
 
