@@ -406,6 +406,8 @@ fhdwithin.matrix <- function(x, fl, w = NULL, na.rm = TRUE, fill = FALSE, lm.met
     return(setAttributes(x, ax))
   } else return(setAttributes(demean(x, fl, w, ...), ax))
 }
+
+# x = collapse:::colsubset(pwlddev, is.numeric)
 fhdwithin.pdata.frame <- function(x, effect = seq_col(attr(x, "index")), w = NULL, na.rm = TRUE, fill = TRUE, variable.wise = TRUE, ...) {
   ix <- attr(x, "index")
   namix <- attr(ix, "names")
@@ -424,7 +426,6 @@ fhdwithin.pdata.frame <- function(x, effect = seq_col(attr(x, "index")), w = NUL
   } else if(na.rm && any(miss <- .Call(C_dt_na, x, seq_along(unclass(x))))) {
     cc <- which(!miss)
     gcc <- .Call(C_subsetDT, g, cc, seq_along(g))
-    attr(x, "index") <- NULL
     Y <- demean(.Call(C_subsetDT, x, cc, seq_along(unclass(x))), gcc, w[cc], ...)
     if(fill) {
       ax <- attributes(x)
