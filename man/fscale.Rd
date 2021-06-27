@@ -137,7 +137,7 @@ head(STD(wlddev, ~iso3c, weights, 9:12))
 library(dplyr)
 wlddev |> group_by(iso3c) |> select(PCGDP,LIFEEX) |> STD()
 wlddev |> group_by(iso3c) |> select(PCGDP,LIFEEX) |> STD(weights) # weighted standardizing
-wlddev |> group_by(iso3c) |> select(PCGDP,LIFEEX,ODA) |> STD(ODA) # weighting by ODA ->
+wlddev |> group_by(iso3c) |> select(PCGDP,LIFEEX,POP) |> STD(POP) # weighting by POP ->
 # ..keeps the weight column unless keep.w = FALSE
 }
 }

@@ -70,7 +70,7 @@ The vignette is structured as follows:
 
 * **Part 3** finally provides an example programming application by coding a slightly extended and very efficient Hausman and Taylor (1981) estimator. 
 
-For this vignette we will use a dataset (`wlddev`) supplied with *collapse* containing a panel of 4 key development indicators taken from the World Bank Development Indicators Database:
+For this vignette we will use a dataset (`wlddev`) supplied with *collapse* containing a panel of 5 key development indicators taken from the World Bank Development Indicators Database:
 
 ```{r, eval = NCRAN}
 library(collapse)
@@ -182,20 +182,20 @@ head(W(pwlddev, cols = 9:12), 3) # Here using the cols argument
 
 <!-- The main philosophy behind having transformation operators like `B` and `W` is that they are more parsimonious to use ad-hoc (i.e. to demean a variable in a regression formula), and also offer more convenient output for ad-hoc computations on data.frames, whereas the corresponding functions `fbetween` and `fwithin` are a bit simpler in terms of R-code (and thus a tiny bit faster) and also more convenient for programming since they require all inputs to be provided in terms of data.  -->
 
-`fbetween` / `B` and `fwithin` / `W` also support weighted computations. This of course applies more to panel-survey settings, but for the sake of illustration suppose we wanted to weight our between and within transformations by the amount of ODA these countries received:
+`fbetween` / `B` and `fwithin` / `W` also support weighted computations. This of course applies more to panel-survey settings, but for the sake of illustration suppose we wanted to weight our between and within transformations by the population of these countries:
 
 ```{r, eval = NCRAN}
-# This replaces values by the ODA-weighted group mean and also preserves the weight variable (ODA, argument keep.w = TRUE)
-head(B(pwlddev, w = ~ ODA), 3)
+# This replaces values by the POP-weighted group mean and also preserves the weight variable (POP, argument keep.w = TRUE)
+head(B(pwlddev, w = ~ POP), 3)
 
-# This centers values on the ODA-weighted group mean
-head(W(pwlddev, w = ~ ODA, cols = c("PCGDP","LIFEEX","GINI")), 3)
+# This centers values on the POP-weighted group mean
+head(W(pwlddev, w = ~ POP, cols = c("PCGDP","LIFEEX","GINI")), 3)
 
-# This centers values on the ODA-weighted group mean and also adds the overall ODA-weighted mean of the data
-head(W(pwlddev, w = ~ ODA, cols = c("PCGDP","LIFEEX","GINI"), mean = "overall.mean"), 3)
+# This centers values on the POP-weighted group mean and also adds the overall POP-weighted mean of the data
+head(W(pwlddev, w = ~ POP, cols = c("PCGDP","LIFEEX","GINI"), mean = "overall.mean"), 3)
 ```
 
-As shown above, with `B` and `W` the weight column can also be passed as a formula or character string, whereas `fbetween` and `fwithin` require the all inputs to be passed directly in terms of data (i.e. `fbetween(get_vars(pwlddev, 9:11), w = pwlddev$ODA)`), and the weight vector or id columns are never preserved in the output. Therefore in most applications `B` and `W` are probably more convenient for quick use, whereas `fbetween` and `fwithin` are the preferred programmers choice, also because they have a little less R-overhead which makes them a tiny bit faster.
+As shown above, with `B` and `W` the weight column can also be passed as a formula or character string, whereas `fbetween` and `fwithin` require the all inputs to be passed directly in terms of data (i.e. `fbetween(get_vars(pwlddev, 9:11), w = pwlddev$POP)`), and the weight vector or id columns are never preserved in the output. Therefore in most applications `B` and `W` are probably more convenient for quick use, whereas `fbetween` and `fwithin` are the preferred programmers choice, also because they have a little less R-overhead which makes them a tiny bit faster.
 
 ### 1.2 Higher-Dimensional Between and Within Transformations
 
@@ -254,7 +254,7 @@ tail(attr(res, "na.rm"))
 <!-- Again it is possible to perform weighted higher-order transformations, but the weight vector is not preserved and this -->
 <!-- ```{r, eval = NCRAN} -->
 <!-- # This centers the complete cases of the data data on countries and years, and removes missing cases -->
-<!-- HDW(pwlddev, w = pwlddev$ODA, cols = 9:11, fill = FALSE, variable.wise = FALSE) -->
+<!-- HDW(pwlddev, w = pwlddev$POP, cols = 9:11, fill = FALSE, variable.wise = FALSE) -->
 <!-- ``` -->
 
 *Notes: * (1) Because of the different missing case options and associated challenges, panel-identifiers are not preserved in `HDB` and `HDW`. (2) The default `variable.wise = TRUE` and `fill = TRUE` was only set for the *pseries* and *pdata.frame* methods, to harmonize the default implementations with `fbetween` / `B` and `fwithin` / `W` for these classes. In the standard *default*, *matrix* and *data.frame* methods, the defaults are `variable.wise = FALSE` and `fill = FALSE` (i.e. missing cases are removed beforehand), which is generally more efficient. 
@@ -526,7 +526,7 @@ data <- pdata.frame(data, index = c("iso3c", "year"))
 pdim(data)
 ```
 
-The data has 21600 individuals (countries) each observed for 59 years, the total number of rows is 1274400. We can pull out a series of life expectancy and run some benchmarks. The Windows laptop on which these benchmarks were run has a 2x 2.2 GHZ Intel i5 processor, 8GB DDR3 RAM and a Samsung SSD hard drive. 
+The data has 21600 individuals (countries) observed for up to 61 years (1960-2020), the total number of rows is 1317600. We can pull out a series of life expectancy and run some benchmarks. The Windows laptop on which these benchmarks were run has a 2x 2.2 GHZ Intel i5 processor, 8GB DDR3 RAM and a Samsung SSD hard drive. 
 
 ```{r, eval=RUNBENCH}
 library(microbenchmark)
@@ -633,7 +633,7 @@ varying(pwlddev, effect = "year")
 Another possibility is checking for variation within each group:
 
 ```{r, eval = NCRAN}
-# This checks cross-sectional variation within each year for the 4 indicators. 
+# This checks cross-sectional variation within each year for 4 indicators. 
 head(varying(pwlddev, effect = "year", cols = 9:12, any_group = FALSE))
 ```
 

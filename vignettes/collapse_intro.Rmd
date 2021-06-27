@@ -94,7 +94,7 @@ The name of the package derives from the 'collapse' command for multi-type aggre
 We begin by introducing some powerful summary tools along with the 2 panel datasets *collapse* provides which are used throughout this vignette. If you are just interested in programming you can skip this section. Apart from the 2 datasets that come with *collapse* (`wlddev` and `GGDC10S`), this vignette uses a few well known datasets from base R: `mtcars`, `iris`, `airquality`, and the time series `Airpassengers` and `EuStockMarkets`. 
 
 ### 1.1 `wlddev` - World Bank Development Data
-This dataset contains 4 key World Bank Development Indicators covering 216 countries over 59 years. It is a balanced panel with $216 \times 59 = 12744$ observations.
+This dataset contains 5 key World Bank Development Indicators covering 216 countries for up to 61 years (1960-2020). It is a balanced balanced panel with $216 \times 61 = 13176$ observations. -->
 ```{r, eval=NCRAN}
 library(collapse)
 head(wlddev)
@@ -119,7 +119,7 @@ Note that `descr` does not require data to be labeled. Since `wlddev` is a panel
 ```{r, eval=NCRAN}
 varying(wlddev, wlddev$iso3c)
 ```
-`varying` tells us that all 4 variables `PCGDP`, `LIFEEX`, `GINI` and `ODA` vary over time. However the `OECD` variable does not, so this data does not track when countries entered the OECD. We can also have a more detailed look letting `varying` check the variation in each country:
+`varying` tells us that all 5 variables `PCGDP`, `LIFEEX`, `GINI`, `ODA` and `POP` vary over time. However the `OECD` variable does not, so this data does not track when countries entered the OECD. We can also have a more detailed look letting `varying` check the variation in each country:
 
 ```{r, eval=NCRAN}
 head(varying(wlddev, wlddev$iso3c, any_group = FALSE))
@@ -310,25 +310,25 @@ microbenchmark(fselect = collapse::fselect(wlddev, country, year, PCGDP:ODA),
 in contrast to `dplyr::select`, `fselect` has a replacement method
 ```{r, eval=NCRAN}
 # Computing the log of columns
-fselect(wlddev, PCGDP:ODA) <- lapply(fselect(wlddev, PCGDP:ODA), log)
+fselect(wlddev, PCGDP:POP) <- lapply(fselect(wlddev, PCGDP:POP), log)
 head(wlddev, 2)
 # Efficient deleting
-fselect(wlddev, country, year, PCGDP:ODA) <- NULL
+fselect(wlddev, country, year, PCGDP:POP) <- NULL
 head(wlddev, 2)
 rm(wlddev)
 ```
 and it can also return information about the selected columns other than the data itself.
 ```{r, eval=NCRAN}
-fselect(wlddev, PCGDP:ODA, return = "names")
-fselect(wlddev, PCGDP:ODA, return = "indices")
-fselect(wlddev, PCGDP:ODA, return = "named_indices")
-fselect(wlddev, PCGDP:ODA, return = "logical")
-fselect(wlddev, PCGDP:ODA, return = "named_logical")
+fselect(wlddev, PCGDP:POP, return = "names")
+fselect(wlddev, PCGDP:POP, return = "indices")
+fselect(wlddev, PCGDP:POP, return = "named_indices")
+fselect(wlddev, PCGDP:POP, return = "logical")
+fselect(wlddev, PCGDP:POP, return = "named_logical")
 ```
 
 <!-- `fselect` is a lot faster than `dplyr::select` and maintains this performance on large data.  -->
 
-While `fselect` is radically faster and more flexible than `dplyr::select`, it is also simpler and does not offer special methods for grouped tibbles (e.g. where grouping columns are always selected) and some other *dplyr*-specific features of `select`. We will see that this is not a problem at all when working with statistical functions in *collapse* that have a grouped_df method, but users should be careful replacing `dplyr::select` with `fselect` in *dplyr* scripts. 
+While `fselect` is faster than `dplyr::select`, it is also simpler and does not offer special methods for grouped tibbles (e.g. where grouping columns are always selected) and some other *dplyr*-specific features of `select`. We will see that this is not a problem at all when working with statistical functions in *collapse* that have a grouped_df method, but users should be careful replacing `dplyr::select` with `fselect` in *dplyr* scripts. From *collapse* 1.6.0, `fselect` has explicit support for *sf* data frames. 
 
 <!-- For some reason this does not work in build !! -->
 <!-- ```{r, error=FALSE, warning=FALSE} -->
@@ -341,12 +341,12 @@ While `fselect` is radically faster and more flexible than `dplyr::select`, it i
 The standard-evaluation analogue to `fselect` is the function `get_vars`. `get_vars` can be used to select variables using names, indices, logical vectors, functions or regular expressions evaluated against column names:
 
 ```{r, eval=NCRAN}
-get_vars(wlddev, 9:12) %>% head(1)
-get_vars(wlddev, c("PCGDP","LIFEEX","GINI","ODA")) %>% head(1)
+get_vars(wlddev, 9:13) %>% head(1)
+get_vars(wlddev, c("PCGDP","LIFEEX","GINI","ODA","POP")) %>% head(1)
 get_vars(wlddev, "[[:upper:]]", regex = TRUE) %>% head(1)
-get_vars(wlddev, "PC|LI|GI|OD", regex = TRUE) %>% head(1)
+get_vars(wlddev, "PC|LI|GI|OD|PO", regex = TRUE) %>% head(1)
 # Same as above, vectors of regular expressions are sequentially passed to grep
-get_vars(wlddev, c("PC","LI","GI","OD"), regex = TRUE) %>% head(1)
+get_vars(wlddev, c("PC","LI","GI","OD","PO"), regex = TRUE) %>% head(1)
 get_vars(wlddev, is.numeric) %>% head(1)
 
 # Returning other information
@@ -357,8 +357,8 @@ get_vars(wlddev, "[[:upper:]]", regex = TRUE, return = "named_indices")
 Replacing operations are conducted analogous:
 
 ```{r, eval=NCRAN}
-get_vars(wlddev, 9:12) <- lapply(get_vars(wlddev, 9:12), log)
-get_vars(wlddev, 9:12) <- NULL
+get_vars(wlddev, 9:13) <- lapply(get_vars(wlddev, 9:13), log)
+get_vars(wlddev, 9:13) <- NULL
 head(wlddev, 2)
 rm(wlddev)
 ```
@@ -400,7 +400,7 @@ ss(GGDC10S, 1:2, 6:16)  # or fsubset(GGDC10S, 1:2, 6:16), but not recommended.
 ss(GGDC10S, -(1:2), c("AGR","MIN")) %>% head(2)
 ```
 
-Thanks to the *data.table* C code and optimized R code, `fsubset` is very fast, and also improves upon `[.data.table` for small and medium-sized data.
+Thanks to the *data.table* C code and optimized R code, `fsubset` is very fast.
 
 ```{r, eval=NCRAN}
 microbenchmark(base = subset(GGDC10S, Variable == "VA" & Year > 1990, AGR:SUM), 
@@ -512,7 +512,7 @@ For cases where multiple columns are computed and need to be added to a data fra
 
 ```{r, eval=NCRAN}
 # Efficient adding logged versions of some variables
-add_vars(wlddev) <- get_vars(wlddev, 9:12) %>% lapply(log10) %>% add_stub("log10.")
+add_vars(wlddev) <- get_vars(wlddev, 9:13) %>% lapply(log10) %>% add_stub("log10.")
 head(wlddev, 2)
 rm(wlddev)
 ```
@@ -520,11 +520,11 @@ rm(wlddev)
 By default `add_vars` appends a data frame towards the (right) end, but it can also replace columns in front or at other positions in the data frame:
 
 ```{r, eval=NCRAN}
-add_vars(wlddev, "front") <- get_vars(wlddev, 9:12) %>% lapply(log10) %>% add_stub("log10.")
+add_vars(wlddev, "front") <- get_vars(wlddev, 9:13) %>% lapply(log10) %>% add_stub("log10.")
 head(wlddev, 2)
 rm(wlddev)
 
-add_vars(wlddev, c(10L,12L,14L,16L)) <- get_vars(wlddev, 9:12) %>% lapply(log10) %>% add_stub("log10.")
+add_vars(wlddev, c(10L,12L,14L,16L,18L)) <- get_vars(wlddev, 9:13) %>% lapply(log10) %>% add_stub("log10.")
 head(wlddev, 2)
 rm(wlddev)
 ```
@@ -532,12 +532,12 @@ rm(wlddev)
 `add_vars` can also be used without replacement, where it serves as a more efficient version of `cbind.data.frame`, with the difference that the data structure and attributes of the first argument are preserved:
 
 ```{r, eval=NCRAN}
-add_vars(wlddev, get_vars(wlddev, 9:12) %>% lapply(log) %>% add_stub("log."),
-                 get_vars(wlddev, 9:12) %>% lapply(log10) %>% add_stub("log10.")) %>% head(2)
+add_vars(wlddev, get_vars(wlddev, 9:13) %>% lapply(log) %>% add_stub("log."),
+                 get_vars(wlddev, 9:13) %>% lapply(log10) %>% add_stub("log10.")) %>% head(2)
 
-add_vars(wlddev,  get_vars(wlddev, 9:12) %>% lapply(log) %>% add_stub("log."), 
-                  get_vars(wlddev, 9:12) %>% lapply(log10) %>% add_stub("log10."),
-         pos = c(10L,13L,16L,19L,11L,14L,17L,20L)) %>% head(2)
+add_vars(wlddev,  get_vars(wlddev, 9:13) %>% lapply(log) %>% add_stub("log."), 
+                  get_vars(wlddev, 9:13) %>% lapply(log10) %>% add_stub("log10."),
+         pos = c(10L,13L,16L,19L,22L,11L,14L,17L,20L,23L)) %>% head(2)
 
 identical(cbind(wlddev, wlddev), add_vars(wlddev, wlddev))
 microbenchmark(cbind(wlddev, wlddev), add_vars(wlddev, wlddev))
@@ -955,7 +955,7 @@ collap(X, by, FUN = fmean, catFUN = fmode, cols = NULL, w = NULL, wFUN = fsum,
 
 It is clear that `X` is the data and `by` supplies the grouping information, which can be a one- or two-sided formula or alternatively grouping vectors, factors, lists and `GRP` objects (like the *Fast Statistical Functions*). Then `FUN` provides the function(s) applied only to numeric variables in `X` and defaults to `fmean`, while `catFUN` provides the function(s) applied only to categorical variables in `X` and defaults to `fmode`^[I.e. the most frequent value. By default a first-mode is computed.]. `keep.col.order = TRUE` specifies that the data is to be returned with the original column-order. Thus in the above example it was sufficient to supply `X` and `by` and `collap` did the rest for us.
 
-Suppose we only want to aggregate the 4 series in this dataset. 
+Suppose we only want to aggregate 4 series in this dataset. 
 ```{r, eval=NCRAN}
 # Same as collap(wlddev, ~ iso3c + decade, cols = 9:12)
 collap(wlddev, PCGDP + LIFEEX + GINI + ODA ~ iso3c + decade) %>% head
@@ -986,7 +986,7 @@ Since *collapse* 1.5.0, it is also possible to perform weighted aggregations and
 
 ```{r, eval=NCRAN}
 # This aggregates using weighted mean and mode, and unweighted median, first and last value
-collap(wlddev, ~ iso3c + decade, w = abs(rnorm(fnrow(wlddev))),
+collap(wlddev, ~ region + year, w = ~ POP,
         custom = list(fmean = 9:10, fmedian_uw = 11:12,
                       ffirst_uw = c("country","region","income"),
                       flast_uw = c("year","date"),
@@ -1225,7 +1225,7 @@ all.equal(fbetween(mtcars, mtcars$cyl) + fwithin(mtcars, mtcars$cyl), mtcars)
 ```
 To demonstrate more clearly the utility of the operators which exists for all fast transformation and time series functions, the code below implements the task of demeaning 4 series by country and saving the country-id using the within-operator `W` as opposed to `fwithin` which requires all input to be passed externally like the *Fast Statistical Functions*.
 ```{r, eval=NCRAN}
-# Center the 4 series in this dataset by country
+# Center 4 series in this dataset by country
 W(wlddev, ~ iso3c, cols = 9:12) %>% head  
 
 # Same thing done manually using fwithin...
@@ -1384,7 +1384,7 @@ psacf(wlddev, PCGDP ~ iso3c, ~year)
 # Panel-Partial-ACF of GDP per Capia
 pspacf(wlddev, PCGDP ~ iso3c, ~year)
 # Panel- Cross-Correlation function of GDP per Capia and Life-Expectancy
-psccf(wlddev$PCGDP, wlddev$LIFEEX, wlddev$iso3c, wlddev$year)
+wlddev %$% psccf(PCGDP, LIFEEX, iso3c, year)
 # Multivariate Panel-auto and cross-correlation function of 3 variables:
 psacf(wlddev, PCGDP + LIFEEX + ODA ~ iso3c, ~year)
 ```

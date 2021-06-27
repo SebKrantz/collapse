@@ -145,9 +145,9 @@ head(fbetween(mtcars, mtcars$cyl))
 head(fwithin(mtcars, mtcars$cyl))
 all.equal(fbetween(mtcars, mtcars$cyl) + fwithin(mtcars, mtcars$cyl), mtcars)
 
-head(W(wlddev, ~ iso3c, cols = 9:12))    # Center the 4 series in this dataset by country
+head(W(wlddev, ~ iso3c, cols = 9:13))    # Center the 5 series in this dataset by country
 head(cbind(get_vars(wlddev,"iso3c"),     # Same thing done manually using fwithin..
-      add_stub(fwithin(get_vars(wlddev,9:12), wlddev$iso3c), "W.")))
+      add_stub(fwithin(get_vars(wlddev,9:13), wlddev$iso3c), "W.")))
 
 ## Using B() and W() for fixed-effects regressions:
 

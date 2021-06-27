@@ -143,7 +143,7 @@ get_vars(wlddev, 9:12) <- get_vars(wlddev, 9:12)           # 9x faster wlddev[9:
 add_vars(wlddev) <- STD(gv(wlddev,9:12), wlddev$iso3c)     # Add Standardized columns 9 through 12
 head(wlddev)                                               # gv and av are shortcuts
 
-get_vars(wlddev, 13:16) <- NULL                            # Efficient Deleting added columns again
+get_vars(wlddev, 14:17) <- NULL                            # Efficient Deleting added columns again
 av(wlddev, "front") <- STD(gv(wlddev,9:12), wlddev$iso3c)  # Again adding in Front
 head(wlddev)
 get_vars(wlddev, 1:4) <- NULL                              # Deleting

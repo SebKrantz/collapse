@@ -120,7 +120,7 @@ head(wlddev)                                                    # World Developm
 head(collap(wlddev, ~ country + decade))                        # Aggregate by country and decade
 head(collap(wlddev, ~ country + decade, fmedian, ffirst))       # Different functions
 head(collap(wlddev, ~ country + decade, cols = is.numeric))     # Aggregate only numeric columns
-head(collap(wlddev, ~ country + decade, cols = 9:12))           # Only the 4 series
+head(collap(wlddev, ~ country + decade, cols = 9:13))           # Only the 5 series
 head(collap(wlddev, PCGDP + LIFEEX ~ country + decade))         # Only GDP and life-expactancy
 head(collap(wlddev, PCGDP + LIFEEX ~ country + decade, fsum))   # Using the sum instead
 head(collap(wlddev, PCGDP + LIFEEX ~ country + decade, sum,     # Same using base::sum -> slower!
@@ -140,30 +140,28 @@ head(collap(wlddev, ~ country + decade, catFUN = flast,         # Aggregate only
 
 
 ## Weighted Aggregation ----------------------------------------
-weights <- abs(rnorm(fnrow(wlddev)))                            # Random weight vector
-head(collap(wlddev, ~ country + decade, w = weights))           # Takes weighted mean for numeric..
+# We aggregate to region level using population weights
+head(collap(wlddev, ~ region + year, w = ~ POP))                # Takes weighted mean for numeric..
 # ..and weighted mode for categorical data. The weight vector is aggregated using fsum
-wlddev$weights <- weights                                       # Adding to data
-head(collap(wlddev, ~ country + decade, w = ~ weights))         # Keeps column order
-head(collap(wlddev, ~ country + decade, w = ~ weights,          # Aggregating weights using sum
+
+head(collap(wlddev, ~ region + year, w = ~ POP,                 # Aggregating weights using sum
             wFUN = list(fsum, fmax)))                           # and max (corresponding to mode)
-wlddev$weights <- NULL
 
 
 ## Multi-Function Aggregation ----------------------------------
 head(collap(wlddev, ~ country + decade, list(fmean, fnobs),     # Saving mean and Nobs
-            cols = 9:12))
+            cols = 9:13))
 
 head(collap(wlddev, ~ country + decade,                         # Same using base R -> slower
             list(mean = mean,
                  Nobs = function(x, \dots) sum(!is.na(x))),
-            cols = 9:12, na.rm = TRUE))
+            cols = 9:13, na.rm = TRUE))
 
 lapply(collap(wlddev, ~ country + decade,                       # List output format
-            list(fmean, fnobs), cols = 9:12, return = "list"), head)
+            list(fmean, fnobs), cols = 9:13, return = "list"), head)
 
 head(collap(wlddev, ~ country + decade,                         # Long output format
-            list(fmean, fnobs), cols = 9:12, return = "long"))
+            list(fmean, fnobs), cols = 9:13, return = "long"))
 
 head(collap(wlddev, ~ country + decade,                         # Also aggregating categorical data,
             list(fmean, fnobs), return = "long_dupl"))          # and duplicating it 2 times
@@ -181,7 +179,7 @@ head(collap(wlddev, ~ country + decade,                         # More functions
 
 ## Custom Aggregation ------------------------------------------
 head(collap(wlddev, ~ country + decade,                         # Custom aggregation
-            custom = list(fmean = 9:12, fsd = 9:10, fmode = 7:8)))
+            custom = list(fmean = 9:13, fsd = 9:10, fmode = 7:8)))
 
 head(collap(wlddev, ~ country + decade,                         # Using column names
             custom = list(fmean = "PCGDP", fsd = c("LIFEEX","GINI"),
@@ -189,19 +187,19 @@ head(collap(wlddev, ~ country + decade,                         # Using column n
 
 head(collap(wlddev, ~ country + decade,                         # Weighted parallelized custom
             custom = list(fmean = 9:12, fsd = 9:10,             # aggregation
-                          fmode = 7:8), w = weights,
+                          fmode = 7:8), w = ~ POP,
             wFUN = list(fsum, fmax),
             parallel = TRUE, mc.cores = 1L))
 
 head(collap(wlddev, ~ country + decade,                         # No column reordering
             custom = list(fmean = 9:12, fsd = 9:10,
-                          fmode = 7:8), w = weights,
+                          fmode = 7:8), w = ~ POP,
             wFUN = list(fsum, fmax),
             parallel = TRUE, mc.cores = 1L, keep.col.order = FALSE))
 
 ## Piped Use --------------------------------------------------
 wlddev |> fgroup_by(country, decade) |> collapg() |> head()
-wlddev |> fgroup_by(country, decade) |> collapg(w = ODA) |> head()
+wlddev |> fgroup_by(region, year) |> collapg(w = POP) |> head()
 wlddev |> fgroup_by(country, decade) |> collapg(fmedian, flast) |> head()
 wlddev |> fgroup_by(country, decade) |>
   collapg(custom = list(fmean = 9:12, fmode = 5:7, flast = 3)) |> head()
