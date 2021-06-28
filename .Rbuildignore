@@ -31,3 +31,4 @@ man/figures
 ^misc$
 ^codecov\.yml$
 ^\.covignore$
+^\.github$
