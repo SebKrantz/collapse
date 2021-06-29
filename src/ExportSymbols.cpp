@@ -42,9 +42,9 @@ RcppExport SEXP flastC(SEXP x, SEXP Rng, SEXP g, SEXP Rnarm);
 RcppExport SEXP flastmC(SEXP x, SEXP Rng, SEXP g, SEXP Rnarm, SEXP Rdrop);
 RcppExport SEXP flastlC(SEXP x, SEXP Rng, SEXP g, SEXP Rnarm);
 // fsum rewritten in C:
-RcppExport SEXP fsumC(SEXP x, SEXP Rng, SEXP g, SEXP Rnarm);
-RcppExport SEXP fsummC(SEXP x, SEXP Rng, SEXP g, SEXP Rnarm, SEXP Rdrop);
-RcppExport SEXP fsumlC(SEXP x, SEXP Rng, SEXP g, SEXP Rnarm, SEXP Rdrop);
+RcppExport SEXP fsumC(SEXP x, SEXP Rng, SEXP g, SEXP w, SEXP Rnarm);
+RcppExport SEXP fsummC(SEXP x, SEXP Rng, SEXP g, SEXP w, SEXP Rnarm, SEXP Rdrop);
+RcppExport SEXP fsumlC(SEXP x, SEXP Rng, SEXP g, SEXP w, SEXP Rnarm, SEXP Rdrop);
 // fmin and fmax rewritten in C:
 RcppExport SEXP fminC(SEXP x, SEXP Rng, SEXP g, SEXP Rnarm);
 RcppExport SEXP fminmC(SEXP x, SEXP Rng, SEXP g, SEXP Rnarm, SEXP Rdrop);
