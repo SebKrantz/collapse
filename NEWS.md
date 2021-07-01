@@ -1,3 +1,26 @@
+# collapse 1.6.1
+A patch for 1.6.0 which fixes issues flagged by CRAN and adds a few handy extras. 
+
+### Bug Fixes
+
+* Puts examples using the new base pipe `|>` inside `\donttest{}` so that they don't fail CRAN tests on older R versions.
+
+* Fixes a LTO issue caused by a small mistake in a header file (which does not have any implications to the user but was detected by CRAN checks).
+
+### Additions
+
+* Added a function `fcomputev`, which allows selecting columns and transforming them with a function in one go. The `keep` argument can be used to add columns to the selection that are not transformed. 
+
+* Added a function `setLabels` as a wrapper around `vlabels<-` to facilitate setting variable labels inside pipes. 
+
+* Function `rm_stub` now has an argument `regex = TRUE` which triggers a call to `gsub` and allows general removing of character sequences in column names on the fly. 
+
+### Improvements
+
+* `vlabels<-` and  `setLabels` now support list of variable labels or other attributes (i.e. the `value` is internally subset using `[[`, not `[`). Thus they are now general functions to attach a vector or list of attributes to columns in a list / data frame. 
+
+
+
 # collapse 1.6.0
 *collapse* 1.6.0, released end of June 2021, presents some significant improvements in the user-friendliness, compatibility and programmability of the package, as well as a few function additions. 
 
