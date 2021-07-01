@@ -4,6 +4,7 @@
 \alias{cinv}
 \alias{vlabels}
 \alias{vlabels<-}
+\alias{setLabels}
 \alias{vclasses}
 \alias{vtypes}
 \alias{namlab}
@@ -46,6 +47,7 @@ Convenience functions in the \emph{collapse} package that help to deal with attr
 .c(\dots)                       # Non-standard concatenation i.e. .c(a, b) == c("a", "b")
 vlabels(X, attrn = "label")   # Get labels of variables in X, in attr(X[[i]], attrn)
 vlabels(X, attrn = "label") <- value      # Set labels of variables in X
+setLabels(X, value, attrn = "label")      # Set labels of variables in X and return X
 vclasses(X)                   # Get classes of variables in X
 vtypes(X)                     # Get data storage types of variables in X (calling typeof)
 namlab(X, class = FALSE,      # Return data frame of names, labels and classes

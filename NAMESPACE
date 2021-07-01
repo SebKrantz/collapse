@@ -269,6 +269,7 @@ importFrom("stats", "as.formula", "complete.cases", "cor", "cov", "var", "pt",
  export(vclasses)
  export(vtypes)
  export(`vlabels<-`)
+ export(setLabels)
  export(W)
  export(fwithin)
  export(fwithin.data.frame)

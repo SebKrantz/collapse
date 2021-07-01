@@ -44,7 +44,7 @@
                                "roworder", "roworderv", "rsplit", "sbt", "seq_col", "seq_row", "seqid", "setAttrib",
                                "setColnames", "setDimnames", "setrename", "setRownames", "settfm", "settfmv", "settransform",
                                "settransformv", "slt", "slt<-", "smr", "ss", "STD", "t_list", "tfm", "tfm<-", "tfmv", "TRA",
-                               "unattrib", "unlist2d", "varying", "vclasses", "vlabels", "vlabels<-", "vtypes", "W", "wlddev")))
+                               "unattrib", "unlist2d", "varying", "vclasses", "vlabels", "vlabels<-", "setLabels", "vtypes", "W", "wlddev")))
 
 .COLLAPSE_GENERIC   <-   sort(unique(c("B","BY","D","Dlog","F","fsubset","fbetween","fdiff","ffirst","fgrowth","fhdbetween",
                            "fhdwithin","flag","flast","fmax","fmean","fmedian","fnth","fmin","fmode","varying",

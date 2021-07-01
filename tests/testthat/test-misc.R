@@ -79,6 +79,11 @@ test_that("na_rm works well", {
 
 }
 
+test_that("vlabels works well", {
+  expect_equal(wlddev, setLabels(wlddev, vlabels(wlddev)))
+})
+
+
 test_that("deep matrix dispatch works well", {
 
   tsm <- EuStockMarkets
