@@ -10,6 +10,7 @@
 \alias{settransformv}
 \alias{settfmv}
 \alias{fcompute}
+\alias{fcomputev}
 \title{Fast Transform and Compute Columns on a Data Frame}
 \description{
   \code{ftransform} is a much faster version of \code{\link{transform}} and \code{dplyr::mutate} for data frames. It returns the data frame with new columns computed and/or existing columns modified or deleted. \code{settransform} does all of that by reference i.e. it modifies the data frame in the global environment. \code{fcompute} can be used to compute new columns from the columns in a data frame and returns only the computed columns.
@@ -34,6 +35,7 @@ tfm(.data) <- value           # Shortcut for ftransform<-
 
 # Compute columns, returned as a new data frame
 fcompute(.data, \dots, keep = NULL)
+fcomputev(.data, vars, FUN, \dots, apply = TRUE, keep = NULL)
 }
 \arguments{
     \item{.data}{a data frame or named list of columns.}

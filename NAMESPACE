@@ -48,6 +48,7 @@ importFrom("stats", "as.formula", "complete.cases", "cor", "cov", "var", "pt",
  export(settransformv)
  export(settfmv)
  export(fcompute)
+ export(fcomputev)
  export(BY)
  export(BY.data.frame)
  export(BY.default)

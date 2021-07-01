@@ -28,7 +28,7 @@
                                "char_vars", "char_vars<-", "cinv", "ckmatch", "collap", "collapg", "collapv", "colorder",
                                "colorderv", "copyAttrib", "copyMostAttrib", "D", "dapply", "date_vars", "Date_vars",
                                "date_vars<-", "Date_vars<-", "descr", "Dlog", "F", "fact_vars", "fact_vars<-",
-                               "fbetween", "fcompute", "fcumsum", "fdiff", "fdim", "fdroplevels", "ffirst", "fFtest",
+                               "fbetween", "fcompute", "fcomputev", "fcumsum", "fdiff", "fdim", "fdroplevels", "ffirst", "fFtest",
                                "fgroup_by", "fgroup_vars", "fgrowth", "fhdbetween", "fhdwithin", "finteraction", "flag",
                                "flast", "flm", "fmax", "fmean", "fmedian", "fmin", "fmode", "fncol", "fndistinct",
                                "fnlevels", "fnobs", "fnrow", "fnth", "fprod", "frename", "fscale", "fsd", "fselect",

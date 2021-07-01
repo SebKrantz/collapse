@@ -22,6 +22,10 @@ test_that("sf methods work properly", {
   expect_true(is.data.frame(nc %>% gby(NAME) %>% varying(any_group = FALSE)))
   expect_visible(funique(nc, cols = 1))
   expect_true(length(fcompute(nc, log_AREA = log(AREA))) == 2L)
+  expect_true(length(fcomputev(nc, "AREA", log)) == 2L)
+  expect_true(length(fcomputev(nc, "AREA", log, keep = "PERIMETER")) == 3L)
+  expect_true(length(fcomputev(nc, "AREA", fscale, apply = FALSE)) == 2L)
+  expect_true(length(fcomputev(nc, "AREA", fscale, apply = FALSE, keep = "PERIMETER")) == 3L)
   expect_true(inherits(nc |> fgroup_by(SID74) |>
                          fsummarise(AREA_Ag = fsum(AREA),
                                     Perimeter_Ag = fmedian(PERIMETER),

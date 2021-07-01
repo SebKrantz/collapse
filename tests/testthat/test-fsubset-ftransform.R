@@ -88,6 +88,21 @@ test_that("fcompute works well", {
 
 })
 
+test_that("fcomputev works well", {
+
+  expect_equal(fcomputev(iris, is.numeric, log), dapply(nv(iris), log))
+  expect_equal(fcomputev(iris, is.numeric, fcumsum, apply = FALSE), fcumsum(nv(iris)))
+  expect_equal(fcomputev(iris, is.numeric, `/`, Sepal.Length), nv(iris) %c/% iris$Sepal.Length)
+  expect_equal(fcomputev(iris, is.numeric, fmean, Species, TRA = "replace", apply = FALSE),
+               fmean(nv(iris), iris$Species, TRA = "replace"))
+
+  expect_equal(fcomputev(iris, is.numeric, log, keep = "Species"), ftransformv(iris, is.numeric, log))
+  expect_equal(fcomputev(iris, is.numeric, fcumsum, apply = FALSE, keep = "Species"), ftransformv(iris, is.numeric, fcumsum, apply = FALSE))
+  expect_equal(fcomputev(iris, is.numeric, `/`, Sepal.Length, keep = "Species"), ftransformv(iris, is.numeric, `/`, Sepal.Length))
+  expect_equal(fcomputev(iris, is.numeric, fmean, Species, TRA = "replace", apply = FALSE, keep = "Species"),
+               ftransformv(iris, is.numeric, fmean, Species, TRA = "replace", apply = FALSE))
+})
+
 
 
 # Still do wrong input...
