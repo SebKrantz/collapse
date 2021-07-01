@@ -97,7 +97,7 @@ fmode(wlddev, wlddev$income)             # Grouped statistical modes ..
 m <- qM(mtcars)
 fsum(m)
 fsum(m, g) # ..
-
+\donttest{
 ## method for grouped data frames - created with dplyr::group_by or fgroup_by
 library(dplyr)
 mtcars |> group_by(cyl,vs,am) |> select(mpg,carb) |> fsum()
@@ -105,6 +105,7 @@ mtcars |> fgroup_by(cyl,vs,am) |> fselect(mpg,carb) |> fsum() # equivalent and f
 mtcars |> fgroup_by(cyl,vs,am) |> fsum(TRA = "\%")
 mtcars |> fgroup_by(cyl,vs,am) |> fmean(hp)         # weighted grouped mean, save sum of weights
 mtcars |> fgroup_by(cyl,vs,am) |> fmean(hp, keep.group_vars = FALSE)
+}
 }
 }
 \section{Benchmark}{\preformatted{
