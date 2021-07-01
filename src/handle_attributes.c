@@ -39,6 +39,11 @@ SEXP duplAttributes(SEXP x, SEXP y) { // also look at data.table's keepattribute
 //   return res;
 // }
 
+SEXP copyMostAttributes(SEXP x, SEXP y) {
+  Rf_copyMostAttrib(y, x);
+  return x;
+}
+
 
 SEXP CsetAttrib(SEXP object, SEXP a) {
   int il = isList(object);

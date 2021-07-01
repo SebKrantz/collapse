@@ -43,13 +43,13 @@ fnobsC <- function(x, ng = 0L, g = 0L) {
     .Call(C_fnobs, x, ng, g)
 }
 
-fnobsmC <- function(x, ng = 0L, g = 0L, drop = TRUE) {
-    .Call(C_fnobsm, x, ng, g, drop)
-}
+# fnobsmC <- function(x, ng = 0L, g = 0L, drop = TRUE) {
+#     .Call(C_fnobsm, x, ng, g, drop)
+# }
 
-fnobslC <- function(x, ng = 0L, g = 0L, drop = TRUE) {
-    .Call(C_fnobsl, x, ng, g, drop)
-}
+# fnobslC <- function(x, ng = 0L, g = 0L, drop = TRUE) {
+#     .Call(C_fnobsl, x, ng, g, drop)
+# }
 
 varyingCpp <- function(x, ng = 0L, g = 0L, any_group = TRUE) {
     .Call(Cpp_varying, x, ng, g, any_group)
@@ -99,18 +99,6 @@ flagleadlCpp <- function(x, n = 1L, fill = NULL, ng = 0L, g = 0L, t = NULL, name
     .Call(Cpp_flagleadl, x, n, fill, ng, g, t, names)
 }
 
-# fminmaxC <- function(x, ng = 0L, g = 0L, narm = TRUE, ret = 1L) {
-#     .Call(C_fminmax, x, ng, g, narm, ret)
-# }
-#
-# fminmaxmC <- function(x, ng = 0L, g = 0L, narm = TRUE, drop = TRUE, ret = 1L) {
-#     .Call(C_fminmaxm, x, ng, g, narm, drop, ret)
-# }
-#
-# fminmaxlC <- function(x, ng = 0L, g = 0L, narm = TRUE, drop = TRUE, ret = 1L) {
-#     .Call(C_fminmaxl, x, ng, g, narm, drop, ret)
-# }
-
 fmeanCpp <- function(x, ng = 0L, g = 0L, gs = NULL, w = NULL, narm = TRUE) {
     .Call(Cpp_fmean, x, ng, g, gs, w, narm)
 }
@@ -122,18 +110,6 @@ fmeanmCpp <- function(x, ng = 0L, g = 0L, gs = NULL, w = NULL, narm = TRUE, drop
 fmeanlCpp <- function(x, ng = 0L, g = 0L, gs = NULL, w = NULL, narm = TRUE, drop = TRUE) {
     .Call(Cpp_fmeanl, x, ng, g, gs, w, narm, drop)
 }
-
-# fmedianCpp <- function(x, ng = 0L, g = 0L, gs = NULL, w = NULL, narm = TRUE) {
-#   .Call(Cpp_fmedian, x, ng, g, gs, w, narm)
-# }
-#
-# fmedianmCpp <- function(x, ng = 0L, g = 0L, gs = NULL, w = NULL, narm = TRUE, drop = TRUE) {
-#     .Call(Cpp_fmedianm, x, ng, g, gs, w, narm, drop)
-# }
-#
-# fmedianlCpp <- function(x, ng = 0L, g = 0L, gs = NULL, w = NULL, narm = TRUE, drop = TRUE) {
-#     .Call(Cpp_fmedianl, x, ng, g, gs, w, narm, drop)
-# }
 
 fnthCpp <- function(x, n = 0.5, ng = 0L, g = 0L, gs = NULL, w = NULL, narm = TRUE, ret = 1L) {
   .Call(Cpp_fnth, x, n, ng, g, gs, w, narm, ret)
@@ -187,13 +163,13 @@ fsumC <- function(x, ng = 0L, g = 0L, w = NULL, narm = TRUE) {
     .Call(C_fsum, x, ng, g, w, narm)
 }
 
-fsummC <- function(x, ng = 0L, g = 0L, w = NULL, narm = TRUE, drop = TRUE) {
-    .Call(C_fsumm, x, ng, g, w, narm, drop)
-}
+# fsummC <- function(x, ng = 0L, g = 0L, w = NULL, narm = TRUE, drop = TRUE) {
+#     .Call(C_fsumm, x, ng, g, w, narm, drop)
+# }
 
-fsumlC <- function(x, ng = 0L, g = 0L, w = NULL, narm = TRUE, drop = TRUE) {
-    .Call(C_fsuml, x, ng, g, w, narm, drop)
-}
+# fsumlC <- function(x, ng = 0L, g = 0L, w = NULL, narm = TRUE, drop = TRUE) {
+#     .Call(C_fsuml, x, ng, g, w, narm, drop)
+# }
 
 fvarsdCpp <- function(x, ng = 0L, g = 0L, gs = NULL, w = NULL, narm = TRUE, stable_algo = TRUE, sd = TRUE) {
     .Call(Cpp_fvarsd, x, ng, g, gs, w, narm, stable_algo, sd)
@@ -231,10 +207,6 @@ qFCpp <- function(x, sort = TRUE, ordered = FALSE, na.exclude = TRUE, keep.attr 
     .Call(Cpp_qF, x, sort, ordered, na.exclude, keep.attr, ret)
 }
 
-# qGCpp <- function(x, sort = TRUE, ordered = TRUE, na.exclude = TRUE, retgrp = FALSE) {
-#     .Call(Cpp_qG, x, sort, ordered, na.exclude, retgrp)
-# }
-
 funiqueCpp <- function(x, sort = TRUE) {
     .Call(Cpp_funique, x, sort)
 }
@@ -248,11 +220,13 @@ setAttributes <- function(x, a) {
     .Call(C_setAttributes, x, a)
 }
 
+copyMostAttributes <- function(to, from) {
+  .Call(C_copyMostAttributes, to, from)
+}
+
 setattributes <- function(x, a) {
     invisible(.Call(C_setattributes, x, a))
 }
-
-
 
 setattr <- function(x, a, v) {
     invisible(.Call(C_setattr, x, a, v))
@@ -273,11 +247,6 @@ cond_duplAttributes <- function(x, y) {
 # cond_duplattributes <- function(x, y) {
 #     invisible(.Call(C_cond_duplattributes, x, y))
 # }
-
-# # gapid <- function(x) {
-# #   if(is.integer(unclass(x))) .Call(Cpp_gapid, x) else # good ??
-# #   .Call(Cpp_gapid, qG(x)) # , na.exclude = FALSE not needed... NA is own group... not last group..
-# # }
 
 seqid <- function(x, o = NULL, del = 1L, start = 1L, na.skip = FALSE, skip.seq = FALSE, check.o = TRUE) {
   .Call(Cpp_seqid, x, o, del, start, na.skip, skip.seq, check.o)

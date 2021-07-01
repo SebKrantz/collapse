@@ -27,6 +27,7 @@ RcppExport SEXP cond_duplAttributes(SEXP x, SEXP y);
 RcppExport SEXP CsetAttrib(SEXP object, SEXP a);
 RcppExport SEXP CcopyAttrib(SEXP to, SEXP from);
 RcppExport SEXP CcopyMostAttrib(SEXP to, SEXP from);
+RcppExport SEXP copyMostAttributes(SEXP to, SEXP from);
 RcppExport SEXP lassign(SEXP x, SEXP s, SEXP rows, SEXP fill);
 RcppExport SEXP groups2GRP(SEXP x, SEXP lx, SEXP gs);
 RcppExport SEXP Cna_rm(SEXP x);
@@ -135,6 +136,7 @@ static const R_CallMethodDef CallEntries[] = {
   {"C_duplAttributes", (DL_FUNC) &duplAttributes, 2},
   {"C_duplattributes", (DL_FUNC) &duplattributes, 2},
   {"C_cond_duplAttributes", (DL_FUNC) &cond_duplAttributes, 2},
+  {"C_copyMostAttributes", (DL_FUNC) &copyMostAttributes, 2},
   // {"C_cond_duplattributes", (DL_FUNC) &cond_duplattributes, 2},
   {"C_setAttrib", (DL_FUNC) &CsetAttrib, 2},
   {"C_copyAttrib", (DL_FUNC) &CcopyAttrib, 2},
