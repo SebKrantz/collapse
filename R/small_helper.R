@@ -130,9 +130,12 @@ add_stub <- function(X, stub, pre = TRUE) {
   X
 }
 
-rm_stub <- function(X, stub, pre = TRUE) {
+rm_stub <- function(X, stub, pre = TRUE, regex = FALSE, ...) {
   if(!is.character(stub)) return(X)
-  if(pre)
+  if(regex)
+    rmstubFUN <- function(x) {
+      gsub(stub, "", x, ...)
+    } else if(pre)
     rmstubFUN <- function(x) { # much faster than using sub!
       v <- startsWith(x, stub)
       x[v] <- substr(x[v], nchar(stub)+1L, 1000000L)
