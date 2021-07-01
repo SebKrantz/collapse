@@ -6,11 +6,11 @@ fFUN_add_groups <- function(x) {
 
 othFUN_compute <- function(x) {
   if(length(x) == 2L) # No additional function arguments
-    return(substitute(copyMostAttributes(unlist(lapply(split(a, as_factor_GRP(.g_)), b), FALSE, FALSE), a),
+    return(substitute(copyMostAttrib(unlist(lapply(split(a, as_factor_GRP(.g_)), b), FALSE, FALSE), a),
                       list(a = x[[2L]], b = x[[1L]])))
   # With more arguments, things become more complex..
   lapply_call <- as.call(c(list(quote(lapply), substitute(split(a, as_factor_GRP(.g_)), list(a = x[[2L]]))), as.list(x[-2L])))
-  substitute(copyMostAttributes(unlist(a, FALSE, FALSE), b),
+  substitute(copyMostAttrib(unlist(a, FALSE, FALSE), b),
              list(a = lapply_call, b = x[[2L]]))
 }
 
