@@ -1,4 +1,5 @@
 #include "collapse_c.h"
+// #include <R_ext/Altrep.h>
 
 void fsum_double_impl(double *pout, double *px, int ng, int *pg, int narm, int l) {
   if(ng == 0) {
@@ -137,6 +138,15 @@ void fsum_int_g_impl(int *pout, int *px, int ng, int *pg, int narm, int l) {
 SEXP fsumC(SEXP x, SEXP Rng, SEXP g, SEXP w, SEXP Rnarm) {
   int l = length(x), tx = TYPEOF(x), ng = asInteger(Rng),
     narm = asLogical(Rnarm), nprotect = 1, nwl = isNull(w);
+  // ALTREP methods for compact sequences: not safe yet and not part of the API.
+  // if(ALTREP(x) && ng == 0 && nwl) {
+  // switch(tx) {
+  // case INTSXP: return ALTINTEGER_SUM(x, (Rboolean)narm);
+  // case LGLSXP: return ALTLOGICAL_SUM(x, (Rboolean)narm);
+  // case REALSXP: return ALTREAL_SUM(x, (Rboolean)narm);
+  // default: error("ALTREP object must be integer or real typed");
+  // }
+  // }
   if (l < 1) return x; // Prevents seqfault for numeric(0) #101
   if(ng && l != length(g)) error("length(g) must match length(x)");
   if(tx == LGLSXP) tx = INTSXP;

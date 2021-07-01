@@ -27,6 +27,7 @@ RcppExport SEXP cond_duplAttributes(SEXP x, SEXP y);
 RcppExport SEXP CsetAttrib(SEXP object, SEXP a);
 RcppExport SEXP CcopyAttrib(SEXP to, SEXP from);
 RcppExport SEXP CcopyMostAttrib(SEXP to, SEXP from);
+RcppExport SEXP copyMostAttributes(SEXP to, SEXP from);
 RcppExport SEXP lassign(SEXP x, SEXP s, SEXP rows, SEXP fill);
 RcppExport SEXP groups2GRP(SEXP x, SEXP lx, SEXP gs);
 RcppExport SEXP Cna_rm(SEXP x);
@@ -42,9 +43,9 @@ RcppExport SEXP flastC(SEXP x, SEXP Rng, SEXP g, SEXP Rnarm);
 RcppExport SEXP flastmC(SEXP x, SEXP Rng, SEXP g, SEXP Rnarm, SEXP Rdrop);
 RcppExport SEXP flastlC(SEXP x, SEXP Rng, SEXP g, SEXP Rnarm);
 // fsum rewritten in C:
-RcppExport SEXP fsumC(SEXP x, SEXP Rng, SEXP g, SEXP Rnarm);
-RcppExport SEXP fsummC(SEXP x, SEXP Rng, SEXP g, SEXP Rnarm, SEXP Rdrop);
-RcppExport SEXP fsumlC(SEXP x, SEXP Rng, SEXP g, SEXP Rnarm, SEXP Rdrop);
+RcppExport SEXP fsumC(SEXP x, SEXP Rng, SEXP g, SEXP w, SEXP Rnarm);
+RcppExport SEXP fsummC(SEXP x, SEXP Rng, SEXP g, SEXP w, SEXP Rnarm, SEXP Rdrop);
+RcppExport SEXP fsumlC(SEXP x, SEXP Rng, SEXP g, SEXP w, SEXP Rnarm, SEXP Rdrop);
 // fmin and fmax rewritten in C:
 RcppExport SEXP fminC(SEXP x, SEXP Rng, SEXP g, SEXP Rnarm);
 RcppExport SEXP fminmC(SEXP x, SEXP Rng, SEXP g, SEXP Rnarm, SEXP Rdrop);
@@ -135,6 +136,7 @@ static const R_CallMethodDef CallEntries[] = {
   {"C_duplAttributes", (DL_FUNC) &duplAttributes, 2},
   {"C_duplattributes", (DL_FUNC) &duplattributes, 2},
   {"C_cond_duplAttributes", (DL_FUNC) &cond_duplAttributes, 2},
+  {"C_copyMostAttributes", (DL_FUNC) &copyMostAttributes, 2},
   // {"C_cond_duplattributes", (DL_FUNC) &cond_duplattributes, 2},
   {"C_setAttrib", (DL_FUNC) &CsetAttrib, 2},
   {"C_copyAttrib", (DL_FUNC) &CcopyAttrib, 2},

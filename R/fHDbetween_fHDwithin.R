@@ -341,8 +341,8 @@ fhdwithin.pseries <- function(x, effect = seq_col(attr(x, "index")), w = NULL, n
     nix <- length(unclass(ix))
     if(nix != length(g)) {
       toss <- seq_len(nix)[-effect]
-      reix <- copyMostAttrib(c(.Call(C_subsetDT, ix, cc, toss), g)[namix], ix)
-    } else reix <- copyMostAttrib(g, ix)
+      reix <- copyMostAttributes(c(.Call(C_subsetDT, ix, cc, toss), g)[namix], ix)
+    } else reix <- copyMostAttributes(g, ix)
     attr(reix, "row.names") <- .set_row_names(length(cc))
     return(setAttributes(demean(xcc, g, w[cc], ...),
                          c(attributes(xcc), list(index = reix,
@@ -436,8 +436,8 @@ fhdwithin.pdata.frame <- function(x, effect = seq_col(attr(x, "index")), w = NUL
     nix <- length(unclass(ix))
     if(nix != length(g)) {
       toss <- seq_len(nix)[-effect]
-      reix <- copyMostAttrib(c(.Call(C_subsetDT, ix, cc, toss), gcc)[namix], ix)
-    } else reix <- copyMostAttrib(gcc, ix)
+      reix <- copyMostAttributes(c(.Call(C_subsetDT, ix, cc, toss), gcc)[namix], ix)
+    } else reix <- copyMostAttributes(gcc, ix)
     attr(reix, "row.names") <- .set_row_names(length(cc))
     attr(Y, "index") <- reix
     attr(Y, "na.rm") <- which(miss)

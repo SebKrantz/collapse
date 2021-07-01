@@ -54,13 +54,13 @@
 <li>
   <a href="https://twitter.com/collapse_R" target="_blank">
     <span class="fa fa-twitter"></span>
-     
+
   </a>
 </li>
 <li>
   <a href="https://github.com/SebKrantz/collapse" target="_blank">
     <span class="fa fa-github"></span>
-     
+
   </a>
 </li>
       </ul>
@@ -71,7 +71,7 @@
 </div>
 <!--/.navbar -->
 
-      
+
 
       </header><script src="collapse_and_data.table_files/header-attrs-2.6/header-attrs.js"></script><div class="row">
   <div class="col-md-9 contents">
@@ -81,16 +81,16 @@
 </h1>
             <h3 class="subtitle">Harmony and High Performance</h3>
                         <h4 class="author">Sebastian Krantz</h4>
-            
+
             <h4 class="date">2021-06-27</h4>
-      
+
       <small class="dont-index">Source: <a href="https://github.com/SebKrantz/collapse/blob/master/vignettes/collapse_and_data.table.Rmd"><code>vignettes/collapse_and_data.table.Rmd</code></a></small>
       <div class="hidden name"><code>collapse_and_data.table.Rmd</code></div>
 
     </div>
 
-    
-    
+
+
 <style type="text/css">
 pre {
   max-height: 500px;
@@ -105,18 +105,19 @@ pre[class] {
 *collapse* is a C/C++ based package for data transformation and statistical computing in R. It's aims are:
 
 1. To facilitate complex data transformation, exploration and computing tasks in R.
-2. To help make R code fast, flexible, parsimonious and programmer friendly. 
---><p>This vignette focuses on using <em>collapse</em> with the popular <em>data.table</em> package by Matt Dowle and Arun Srinivasan. In contrast to <em>dplyr</em> and <em>plm</em> whose methods (<em>grouped_df</em>, <em>pseries</em>, <em>pdata.frame</em>) <em>collapse</em> supports, there is no deep integration between <em>collapse</em> and <em>data.table</em>.</p>
-<p>However, <em>collapse</em> functions non-destructively handle <em>data.table</em>’s and the two packages work similarly on the C/C++ side of things, while largely complementary in functionality.</p>
-<div id="purpose-and-strengths-of-each-package" class="section level2">
+2. To help make R code fast, flexible, parsimonious and programmer friendly.
+-->
+<p>This vignette focuses on using <em>collapse</em> with the popular <em>data.table</em> package by Matt Dowle and Arun Srinivasan. In contrast to <em>dplyr</em> and <em>plm</em> whose methods (‘grouped_df’, ‘pseries’, ‘pdata.frame’) <em>collapse</em> supports, the integration between <em>collapse</em> and <em>data.table</em> is hidden in the ‘data.frame’ methods and <em>collapse</em>’s C code.</p>
+<p>From version 1.6.0 <em>collapse</em> seamlessly handles <em>data.tables</em>, permitting reference operations (<code>set*</code>, <code>:=</code>) on data tables created with collapse (<code>qDT</code>) or returned from <em>collapse</em>’s data manipulation functions (= all functions except <code>print(.FAST_FUN)</code>, <code>print(.OPERATOR_FUN)</code>, <code>BY</code> and <code>TRA</code>, see the <a href="https://sebkrantz.github.io/collapse/news/index.html#collapse-1-6-0-2021-06-28">NEWS</a> of <em>collapse</em> 1.6.0 for details on the low-level integration). Apart from <em>data.table</em> reference semantics, both packages work similarly on the C/C++ side of things, and nicely complement each other in functionality.</p>
+<div id="overview-of-both-packages" class="section level2">
 <h2 class="hasAnchor">
-<a href="#purpose-and-strengths-of-each-package" class="anchor"></a>Purpose and Strengths of each Package</h2>
-<p>Needless to say both <em>data.table</em> and <em>collapse</em> are high-performance packages that also work well together, but for effective use it is good to also understand where each has its strengths.</p>
+<a href="#overview-of-both-packages" class="anchor"></a>Overview of Both Packages</h2>
+<p>Both <em>data.table</em> and <em>collapse</em> are high-performance packages that work well together. For effective co-use it is helpful to understand where each has its strengths, what one can do what the other cannot, and where they overlap. Therefore this small comparison:</p>
 <ul>
 <li><p><em>data.table</em> offers an enhanced data frame based class to contain data (including list columns). For this class it provides a concise data manipulation syntax which also includes fast aggregation / slit-apply-combine computing, (rolling, non-equi) joins, keying, reshaping, some time-series functionality like lagging and rolling statistics, set operations on tables and a number of very useful other functions like the fast csv reader, fast switches, list-transpose etc.. <em>data.table</em> makes data management, and computations on data very easy and salable, supporting huge datasets in a very memory efficient way. The package caters well to the end user by compressing an enormous amount of functionality into two square brackets <code>[]</code>. Some of the exported functions are great for programming and also support other classes, but a lot of the functionality and optimization of <em>data.table</em> happens under the hood and can only be accessed through the non-standard evaluation table <code>[i, j, by]</code> syntax. This syntax has a cost of about 1-3 milliseconds for each call. Memory efficiency and thread-parallelization make <em>data.table</em> the star performer on huge data.</p></li>
-<li><p><em>collapse</em> is class-agnostic in nature, supporting vectors, matrices, data frames and non-destructively handling all major R classes and objects. It’s functionality focuses on advanced statistical computations, by proving fast column-wise grouped and weighted statistical functions, fast and complex data aggregation and transformations, liner fitting, time series and panel data computations, some advanced summary statistics, and recursive processing of lists of data objects. It also offers some powerful supporting functions to perform fast data manipulation, grouping, factor generation, recoding, handling outliers and missing values. <em>collapse</em> supports both <em>tidyverse</em> (piped) and base R / standard evaluation programming. It is very programmer friendly by making accessible most of it’s internal C/C++ based functionality (like grouping objects). <em>collapse</em> functions are simple, access the underlying serial C/C++ code quickly and are very strongly optimized on the R side of things (resulting in basic function execution speeds of 10-50 microseconds). This makes <em>collapse</em> ideal for advanced and high-performance statistical computing on matrices and large datasets, and tasks requiring fast programs with repeated function executions.</p></li>
+<li><p><em>collapse</em> is class-agnostic in nature, supporting vectors, matrices, data frames and non-destructively handling most R classes and objects. It focuses on advanced statistical computing, proving fast column-wise grouped and weighted statistical functions, fast and complex data aggregation and transformations, linear fitting, time series and panel data computations, advanced summary statistics, and recursive processing of lists of data objects. It also includes powerful functions for data manipulation, grouping / factor generation, recoding, handling outliers and missing values. The package default for missing values is <code>na.rm = TRUE</code>, which is implemented efficiently in C/C++ in all functions. <em>collapse</em> supports both <em>tidyverse</em> (piped) and base R / standard evaluation programming. It makes accessible most of it’s internal C/C++ based functionality (like grouping objects). <em>collapse</em>’s R functions are simple and strongly optimized, i.e. they access the serial C/C++ code quickly, resulting in baseline execution speeds of 10-50 microseconds. All of this makes <em>collapse</em> ideal for advanced statistical computing on matrices and larger datasets, and tasks requiring fast programs with repeated function executions.</p></li>
 </ul>
-<!-- (< 10 mio obs.). --><!-- 
+<!-- (< 10 mio obs.). --><!--
 Thus you don't need to choose between these two. I created *collapse* because I wanted more flexibility and programmability and *data.table* fell short on my statistical demands. I still manage most of my data using *data.table*. -->
 </div>
 <div id="interoperating-and-some-dos-and-donts" class="section level2">
@@ -328,9 +329,9 @@ Note that `:=` operations (transformations) are not GForce optimized in *data.ta
 <span class="co"># Computing a column containing the sum of ODA received by country</span>
 <span class="va">DT</span><span class="op">[</span>, <span class="va">sum_ODA</span> <span class="op">:=</span> <span class="fu"><a href="https://rdrr.io/r/base/sum.html">sum</a></span><span class="op">(</span><span class="va">ODA</span>, na.rm <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span>, by <span class="op">=</span> <span class="va">country</span><span class="op">]</span>
 <span class="co"># Same using fsum; "replace_fill" overwrites missing values, "replace" keeps the</span>
-<span class="va">DT</span><span class="op">[</span>, <span class="va">sum_ODA</span> <span class="op">:=</span> <span class="fu"><a href="../reference/fsum.html">fsum</a></span><span class="op">(</span><span class="va">ODA</span>, <span class="va">country</span>, TRA <span class="op">=</span> <span class="st">"replace_fill"</span><span class="op">)</span><span class="op">]</span>  
+<span class="va">DT</span><span class="op">[</span>, <span class="va">sum_ODA</span> <span class="op">:=</span> <span class="fu"><a href="../reference/fsum.html">fsum</a></span><span class="op">(</span><span class="va">ODA</span>, <span class="va">country</span>, TRA <span class="op">=</span> <span class="st">"replace_fill"</span><span class="op">)</span><span class="op">]</span>
 <span class="co"># Same: A native collapse solution using settransform (or its shortcut form)</span>
-<span class="fu"><a href="../reference/ftransform.html">settfm</a></span><span class="op">(</span><span class="va">DT</span>, sum_ODA <span class="op">=</span> <span class="fu"><a href="../reference/fsum.html">fsum</a></span><span class="op">(</span><span class="va">ODA</span>, <span class="va">country</span>, TRA <span class="op">=</span> <span class="st">"replace_fill"</span><span class="op">)</span><span class="op">)</span>  
+<span class="fu"><a href="../reference/ftransform.html">settfm</a></span><span class="op">(</span><span class="va">DT</span>, sum_ODA <span class="op">=</span> <span class="fu"><a href="../reference/fsum.html">fsum</a></span><span class="op">(</span><span class="va">ODA</span>, <span class="va">country</span>, TRA <span class="op">=</span> <span class="st">"replace_fill"</span><span class="op">)</span><span class="op">)</span>
 
 <span class="co"># settfm may be more convenient than `:=` for multiple column modifications,</span>
 <span class="co"># each involving a different grouping:</span>
@@ -359,7 +360,7 @@ Note that `:=` operations (transformations) are not GForce optimized in *data.ta
 <span class="va">DT</span><span class="op">[</span>, <span class="va">lag_PCGDP</span> <span class="op">:=</span> <span class="fu"><a href="../reference/fgrowth.html">fgrowth</a></span><span class="op">(</span><span class="va">PCGDP</span>, <span class="fl">1L</span>, <span class="fl">1L</span>, <span class="va">country</span>, <span class="va">year</span><span class="op">)</span><span class="op">]</span> <span class="co"># 1 lag, 1 iteration</span>
 
 <span class="co"># Several Growth rates</span>
-<span class="va">DT</span><span class="op">[</span><span class="fu"><a href="https://rdrr.io/pkg/data.table/man/setorder.html">order</a></span><span class="op">(</span><span class="va">year</span><span class="op">)</span>, <span class="fu"><a href="https://rdrr.io/r/base/paste.html">paste0</a></span><span class="op">(</span><span class="st">"growth_"</span>, <span class="fu"><a href="../reference/small-helper.html">.c</a></span><span class="op">(</span><span class="va">PCGDP</span>, <span class="va">LIFEEX</span>, <span class="va">GINI</span>, <span class="va">ODA</span><span class="op">)</span><span class="op">)</span> <span class="op">:=</span> <span class="op">(</span><span class="va">.SD</span> <span class="op">/</span> <span class="fu"><a href="https://rdrr.io/pkg/data.table/man/shift.html">shift</a></span><span class="op">(</span><span class="va">.SD</span>, <span class="fl">1L</span><span class="op">)</span> <span class="op">-</span> <span class="fl">1</span><span class="op">)</span> <span class="op">*</span> <span class="fl">100</span>, 
+<span class="va">DT</span><span class="op">[</span><span class="fu"><a href="https://rdrr.io/pkg/data.table/man/setorder.html">order</a></span><span class="op">(</span><span class="va">year</span><span class="op">)</span>, <span class="fu"><a href="https://rdrr.io/r/base/paste.html">paste0</a></span><span class="op">(</span><span class="st">"growth_"</span>, <span class="fu"><a href="../reference/small-helper.html">.c</a></span><span class="op">(</span><span class="va">PCGDP</span>, <span class="va">LIFEEX</span>, <span class="va">GINI</span>, <span class="va">ODA</span><span class="op">)</span><span class="op">)</span> <span class="op">:=</span> <span class="op">(</span><span class="va">.SD</span> <span class="op">/</span> <span class="fu"><a href="https://rdrr.io/pkg/data.table/man/shift.html">shift</a></span><span class="op">(</span><span class="va">.SD</span>, <span class="fl">1L</span><span class="op">)</span> <span class="op">-</span> <span class="fl">1</span><span class="op">)</span> <span class="op">*</span> <span class="fl">100</span>,
    by <span class="op">=</span> <span class="va">country</span>, .SDcols <span class="op">=</span> <span class="fl">9</span><span class="op">:</span><span class="fl">13</span><span class="op">]</span>
 
 <span class="co"># Same thing using collapse</span>
@@ -391,13 +392,13 @@ Note that `:=` operations (transformations) are not GForce optimized in *data.ta
 <span class="co"># 5:          NA   24.48259   2.112246       NA  1.448294      NA  24.48259 2.112246</span>
 <span class="co"># 6:          NA   15.51770   2.170793       NA  1.407306      NA  15.51770 2.170793</span></pre></div>
 <!--
-# av(DT) <- DT %>% gby(country) %>% slt(year, 9:13) %>% 
+# av(DT) <- DT %>% gby(country) %>% slt(year, 9:13) %>%
 #     fgrowth(1L, 1L, year, keep.ids = FALSE) %>% add_stub("growth_")
 -->
 <p>Since transformations (<code>:=</code> operations) are not highly optimized in <em>data.table</em>, <em>collapse</em> will be faster in most circumstances. <!-- even on very large data with a strong computer. --> Also time series functionality in <em>collapse</em> is significantly faster as it does not require data to be ordered or balanced to compute. For example <code>flag</code> computes an ordered lag without sorting the entire data first.</p>
 <div class="sourceCode" id="cb14"><pre class="downlit">
 <span class="co"># Lets generate a large dataset and benchmark this stuff</span>
-<span class="va">DT_large</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/lapply.html">replicate</a></span><span class="op">(</span><span class="fl">1000</span>, <span class="fu"><a href="../reference/quick-conversion.html">qDT</a></span><span class="op">(</span><span class="va">wlddev</span><span class="op">)</span>, simplify <span class="op">=</span> <span class="cn">FALSE</span><span class="op">)</span> <span class="op">%&gt;%</span> 
+<span class="va">DT_large</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/lapply.html">replicate</a></span><span class="op">(</span><span class="fl">1000</span>, <span class="fu"><a href="../reference/quick-conversion.html">qDT</a></span><span class="op">(</span><span class="va">wlddev</span><span class="op">)</span>, simplify <span class="op">=</span> <span class="cn">FALSE</span><span class="op">)</span> <span class="op">%&gt;%</span>
     <span class="fu"><a href="https://rdrr.io/r/base/lapply.html">lapply</a></span><span class="op">(</span><span class="va">tfm</span>, country <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/paste.html">paste</a></span><span class="op">(</span><span class="va">country</span>, <span class="fu"><a href="https://rdrr.io/r/stats/Normal.html">rnorm</a></span><span class="op">(</span><span class="fl">1</span><span class="op">)</span><span class="op">)</span><span class="op">)</span> <span class="op">%&gt;%</span>
     <span class="va">rbindlist</span>
 
@@ -441,7 +442,7 @@ Note that `:=` operations (transformations) are not GForce optimized in *data.ta
 <p>As mentioned, <code>qDT</code> is a flexible and very fast function to create / column-wise convert R objects to <em>data.table</em>’s. You can also row-wise convert a matrix to data.table using <code>mrtl</code>:</p>
 <div class="sourceCode" id="cb15"><pre class="downlit">
 <span class="co"># Creating a matrix from mtcars</span>
-<span class="va">m</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/quick-conversion.html">qM</a></span><span class="op">(</span><span class="va">mtcars</span><span class="op">)</span> 
+<span class="va">m</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/quick-conversion.html">qM</a></span><span class="op">(</span><span class="va">mtcars</span><span class="op">)</span>
 <span class="fu"><a href="https://rdrr.io/r/utils/str.html">str</a></span><span class="op">(</span><span class="va">m</span><span class="op">)</span>
 <span class="co">#  num [1:32, 1:11] 21 21 22.8 21.4 18.7 18.1 14.3 24.4 22.8 19.2 ...</span>
 <span class="co">#  - attr(*, "dimnames")=List of 2</span>
@@ -487,12 +488,12 @@ Note that `:=` operations (transformations) are not GForce optimized in *data.ta
 <div class="sourceCode" id="cb17"><pre class="downlit">
 <span class="kw"><a href="https://rdrr.io/r/base/library.html">library</a></span><span class="op">(</span><span class="va">lmtest</span><span class="op">)</span>
 
-<span class="va">wlddev</span> <span class="op">%&gt;%</span> <span class="fu"><a href="../reference/fselect,%20get_vars,%20add_vars.html">fselect</a></span><span class="op">(</span><span class="va">country</span>, <span class="va">PCGDP</span>, <span class="va">LIFEEX</span><span class="op">)</span> <span class="op">%&gt;%</span> 
+<span class="va">wlddev</span> <span class="op">%&gt;%</span> <span class="fu"><a href="../reference/fselect,%20get_vars,%20add_vars.html">fselect</a></span><span class="op">(</span><span class="va">country</span>, <span class="va">PCGDP</span>, <span class="va">LIFEEX</span><span class="op">)</span> <span class="op">%&gt;%</span>
   <span class="co"># This counts missing values on PCGDP and LIFEEX only</span>
-  <span class="fu"><a href="../reference/small-helper.html">na_omit</a></span><span class="op">(</span>cols <span class="op">=</span> <span class="op">-</span><span class="fl">1L</span><span class="op">)</span> <span class="op">%&gt;%</span> 
+  <span class="fu"><a href="../reference/small-helper.html">na_omit</a></span><span class="op">(</span>cols <span class="op">=</span> <span class="op">-</span><span class="fl">1L</span><span class="op">)</span> <span class="op">%&gt;%</span>
   <span class="co"># This removes countries with less than 20 observations</span>
-  <span class="fu"><a href="../reference/fsubset.html">fsubset</a></span><span class="op">(</span><span class="fu"><a href="../reference/fnobs.html">fnobs</a></span><span class="op">(</span><span class="va">PCGDP</span>, <span class="va">country</span>, <span class="st">"replace_fill"</span><span class="op">)</span> <span class="op">&gt;</span> <span class="fl">20L</span><span class="op">)</span> <span class="op">%&gt;%</span> 
-  <span class="va">qDT</span> <span class="op">%&gt;%</span> 
+  <span class="fu"><a href="../reference/fsubset.html">fsubset</a></span><span class="op">(</span><span class="fu"><a href="../reference/fnobs.html">fnobs</a></span><span class="op">(</span><span class="va">PCGDP</span>, <span class="va">country</span>, <span class="st">"replace_fill"</span><span class="op">)</span> <span class="op">&gt;</span> <span class="fl">20L</span><span class="op">)</span> <span class="op">%&gt;%</span>
+  <span class="va">qDT</span> <span class="op">%&gt;%</span>
   <span class="co"># Run estimations by country using data.table</span>
   <span class="va">.</span><span class="op">[</span>, <span class="fu"><a href="../reference/quick-conversion.html">qDT</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/pkg/lmtest/man/coeftest.html">coeftest</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/stats/lm.html">lm</a></span><span class="op">(</span><span class="fu"><a href="../reference/fgrowth.html">G</a></span><span class="op">(</span><span class="va">PCGDP</span><span class="op">)</span> <span class="op">~</span> <span class="fu"><a href="../reference/fgrowth.html">G</a></span><span class="op">(</span><span class="va">LIFEEX</span><span class="op">)</span><span class="op">)</span><span class="op">)</span>, <span class="st">"Coef"</span><span class="op">)</span>, keyby <span class="op">=</span> <span class="va">country</span><span class="op">]</span> <span class="op">%&gt;%</span> <span class="va">head</span>
 <span class="co">#    country        Coef   Estimate Std. Error    t value    Pr(&gt;|t|)</span>
@@ -504,13 +505,13 @@ Note that `:=` operations (transformations) are not GForce optimized in *data.ta
 <span class="co"># 6:  Angola   G(LIFEEX)  4.2362895   1.402380  3.0207852 0.004553260</span></pre></div>
 <p>If we only need the coefficients, not the standard errors, we can also use <code><a href="../reference/flm.html">collapse::flm</a></code> together with <code>mrtl</code>:</p>
 <div class="sourceCode" id="cb18"><pre class="downlit">
-<span class="va">wlddev</span> <span class="op">%&gt;%</span> <span class="fu"><a href="../reference/fselect,%20get_vars,%20add_vars.html">fselect</a></span><span class="op">(</span><span class="va">country</span>, <span class="va">PCGDP</span>, <span class="va">LIFEEX</span><span class="op">)</span> <span class="op">%&gt;%</span> 
-  <span class="fu"><a href="../reference/small-helper.html">na_omit</a></span><span class="op">(</span>cols <span class="op">=</span> <span class="op">-</span><span class="fl">1L</span><span class="op">)</span> <span class="op">%&gt;%</span> 
-  <span class="fu"><a href="../reference/fsubset.html">fsubset</a></span><span class="op">(</span><span class="fu"><a href="../reference/fnobs.html">fnobs</a></span><span class="op">(</span><span class="va">PCGDP</span>, <span class="va">country</span>, <span class="st">"replace_fill"</span><span class="op">)</span> <span class="op">&gt;</span> <span class="fl">20L</span><span class="op">)</span> <span class="op">%&gt;%</span> 
-  <span class="va">qDT</span> <span class="op">%&gt;%</span> 
-  <span class="va">.</span><span class="op">[</span>, <span class="fu"><a href="../reference/quick-conversion.html">mrtl</a></span><span class="op">(</span><span class="fu"><a href="../reference/flm.html">flm</a></span><span class="op">(</span><span class="fu"><a href="../reference/fgrowth.html">fgrowth</a></span><span class="op">(</span><span class="va">PCGDP</span><span class="op">)</span><span class="op">[</span><span class="op">-</span><span class="fl">1L</span><span class="op">]</span>, 
-               <span class="fu"><a href="https://rdrr.io/r/base/cbind.html">cbind</a></span><span class="op">(</span>Intercept <span class="op">=</span> <span class="fl">1</span>, 
-                     LIFEEX <span class="op">=</span> <span class="fu"><a href="../reference/fgrowth.html">fgrowth</a></span><span class="op">(</span><span class="va">LIFEEX</span><span class="op">)</span><span class="op">[</span><span class="op">-</span><span class="fl">1L</span><span class="op">]</span><span class="op">)</span><span class="op">)</span>, <span class="cn">TRUE</span><span class="op">)</span>, 
+<span class="va">wlddev</span> <span class="op">%&gt;%</span> <span class="fu"><a href="../reference/fselect,%20get_vars,%20add_vars.html">fselect</a></span><span class="op">(</span><span class="va">country</span>, <span class="va">PCGDP</span>, <span class="va">LIFEEX</span><span class="op">)</span> <span class="op">%&gt;%</span>
+  <span class="fu"><a href="../reference/small-helper.html">na_omit</a></span><span class="op">(</span>cols <span class="op">=</span> <span class="op">-</span><span class="fl">1L</span><span class="op">)</span> <span class="op">%&gt;%</span>
+  <span class="fu"><a href="../reference/fsubset.html">fsubset</a></span><span class="op">(</span><span class="fu"><a href="../reference/fnobs.html">fnobs</a></span><span class="op">(</span><span class="va">PCGDP</span>, <span class="va">country</span>, <span class="st">"replace_fill"</span><span class="op">)</span> <span class="op">&gt;</span> <span class="fl">20L</span><span class="op">)</span> <span class="op">%&gt;%</span>
+  <span class="va">qDT</span> <span class="op">%&gt;%</span>
+  <span class="va">.</span><span class="op">[</span>, <span class="fu"><a href="../reference/quick-conversion.html">mrtl</a></span><span class="op">(</span><span class="fu"><a href="../reference/flm.html">flm</a></span><span class="op">(</span><span class="fu"><a href="../reference/fgrowth.html">fgrowth</a></span><span class="op">(</span><span class="va">PCGDP</span><span class="op">)</span><span class="op">[</span><span class="op">-</span><span class="fl">1L</span><span class="op">]</span>,
+               <span class="fu"><a href="https://rdrr.io/r/base/cbind.html">cbind</a></span><span class="op">(</span>Intercept <span class="op">=</span> <span class="fl">1</span>,
+                     LIFEEX <span class="op">=</span> <span class="fu"><a href="../reference/fgrowth.html">fgrowth</a></span><span class="op">(</span><span class="va">LIFEEX</span><span class="op">)</span><span class="op">[</span><span class="op">-</span><span class="fl">1L</span><span class="op">]</span><span class="op">)</span><span class="op">)</span>, <span class="cn">TRUE</span><span class="op">)</span>,
     keyby <span class="op">=</span> <span class="va">country</span><span class="op">]</span> <span class="op">%&gt;%</span> <span class="va">head</span>
 <span class="co">#                country   Intercept     LIFEEX</span>
 <span class="co"># 1:             Albania -3.61464113 22.1596308</span>
@@ -523,20 +524,20 @@ Note that `:=` operations (transformations) are not GForce optimized in *data.ta
 <div class="sourceCode" id="cb19"><pre class="downlit">
 
 <span class="fu"><a href="https://rdrr.io/pkg/microbenchmark/man/microbenchmark.html">microbenchmark</a></span><span class="op">(</span>
-  
-A <span class="op">=</span> <span class="va">wlddev</span> <span class="op">%&gt;%</span> <span class="fu"><a href="../reference/fselect,%20get_vars,%20add_vars.html">fselect</a></span><span class="op">(</span><span class="va">country</span>, <span class="va">PCGDP</span>, <span class="va">LIFEEX</span><span class="op">)</span> <span class="op">%&gt;%</span> 
-  <span class="fu"><a href="../reference/small-helper.html">na_omit</a></span><span class="op">(</span>cols <span class="op">=</span> <span class="op">-</span><span class="fl">1L</span><span class="op">)</span> <span class="op">%&gt;%</span> 
-  <span class="fu"><a href="../reference/fsubset.html">fsubset</a></span><span class="op">(</span><span class="fu"><a href="../reference/fnobs.html">fnobs</a></span><span class="op">(</span><span class="va">PCGDP</span>, <span class="va">country</span>, <span class="st">"replace_fill"</span><span class="op">)</span> <span class="op">&gt;</span> <span class="fl">20L</span><span class="op">)</span> <span class="op">%&gt;%</span> 
-  <span class="va">qDT</span> <span class="op">%&gt;%</span> 
+
+A <span class="op">=</span> <span class="va">wlddev</span> <span class="op">%&gt;%</span> <span class="fu"><a href="../reference/fselect,%20get_vars,%20add_vars.html">fselect</a></span><span class="op">(</span><span class="va">country</span>, <span class="va">PCGDP</span>, <span class="va">LIFEEX</span><span class="op">)</span> <span class="op">%&gt;%</span>
+  <span class="fu"><a href="../reference/small-helper.html">na_omit</a></span><span class="op">(</span>cols <span class="op">=</span> <span class="op">-</span><span class="fl">1L</span><span class="op">)</span> <span class="op">%&gt;%</span>
+  <span class="fu"><a href="../reference/fsubset.html">fsubset</a></span><span class="op">(</span><span class="fu"><a href="../reference/fnobs.html">fnobs</a></span><span class="op">(</span><span class="va">PCGDP</span>, <span class="va">country</span>, <span class="st">"replace_fill"</span><span class="op">)</span> <span class="op">&gt;</span> <span class="fl">20L</span><span class="op">)</span> <span class="op">%&gt;%</span>
+  <span class="va">qDT</span> <span class="op">%&gt;%</span>
   <span class="va">.</span><span class="op">[</span>, <span class="fu"><a href="../reference/quick-conversion.html">qDT</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/pkg/lmtest/man/coeftest.html">coeftest</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/stats/lm.html">lm</a></span><span class="op">(</span><span class="fu"><a href="../reference/fgrowth.html">G</a></span><span class="op">(</span><span class="va">PCGDP</span><span class="op">)</span> <span class="op">~</span> <span class="fu"><a href="../reference/fgrowth.html">G</a></span><span class="op">(</span><span class="va">LIFEEX</span><span class="op">)</span><span class="op">)</span><span class="op">)</span>, <span class="st">"Coef"</span><span class="op">)</span>, keyby <span class="op">=</span> <span class="va">country</span><span class="op">]</span>,
 
-B <span class="op">=</span> <span class="va">wlddev</span> <span class="op">%&gt;%</span> <span class="fu"><a href="../reference/fselect,%20get_vars,%20add_vars.html">fselect</a></span><span class="op">(</span><span class="va">country</span>, <span class="va">PCGDP</span>, <span class="va">LIFEEX</span><span class="op">)</span> <span class="op">%&gt;%</span> 
-  <span class="fu"><a href="../reference/small-helper.html">na_omit</a></span><span class="op">(</span>cols <span class="op">=</span> <span class="op">-</span><span class="fl">1L</span><span class="op">)</span> <span class="op">%&gt;%</span> 
-  <span class="fu"><a href="../reference/fsubset.html">fsubset</a></span><span class="op">(</span><span class="fu"><a href="../reference/fnobs.html">fnobs</a></span><span class="op">(</span><span class="va">PCGDP</span>, <span class="va">country</span>, <span class="st">"replace_fill"</span><span class="op">)</span> <span class="op">&gt;</span> <span class="fl">20L</span><span class="op">)</span> <span class="op">%&gt;%</span> 
-  <span class="va">qDT</span> <span class="op">%&gt;%</span> 
-  <span class="va">.</span><span class="op">[</span>, <span class="fu"><a href="../reference/quick-conversion.html">mrtl</a></span><span class="op">(</span><span class="fu"><a href="../reference/flm.html">flm</a></span><span class="op">(</span><span class="fu"><a href="../reference/fgrowth.html">fgrowth</a></span><span class="op">(</span><span class="va">PCGDP</span><span class="op">)</span><span class="op">[</span><span class="op">-</span><span class="fl">1L</span><span class="op">]</span>, 
-               <span class="fu"><a href="https://rdrr.io/r/base/cbind.html">cbind</a></span><span class="op">(</span>Intercept <span class="op">=</span> <span class="fl">1</span>, 
-                     LIFEEX <span class="op">=</span> <span class="fu"><a href="../reference/fgrowth.html">fgrowth</a></span><span class="op">(</span><span class="va">LIFEEX</span><span class="op">)</span><span class="op">[</span><span class="op">-</span><span class="fl">1L</span><span class="op">]</span><span class="op">)</span><span class="op">)</span>, <span class="cn">TRUE</span><span class="op">)</span>, 
+B <span class="op">=</span> <span class="va">wlddev</span> <span class="op">%&gt;%</span> <span class="fu"><a href="../reference/fselect,%20get_vars,%20add_vars.html">fselect</a></span><span class="op">(</span><span class="va">country</span>, <span class="va">PCGDP</span>, <span class="va">LIFEEX</span><span class="op">)</span> <span class="op">%&gt;%</span>
+  <span class="fu"><a href="../reference/small-helper.html">na_omit</a></span><span class="op">(</span>cols <span class="op">=</span> <span class="op">-</span><span class="fl">1L</span><span class="op">)</span> <span class="op">%&gt;%</span>
+  <span class="fu"><a href="../reference/fsubset.html">fsubset</a></span><span class="op">(</span><span class="fu"><a href="../reference/fnobs.html">fnobs</a></span><span class="op">(</span><span class="va">PCGDP</span>, <span class="va">country</span>, <span class="st">"replace_fill"</span><span class="op">)</span> <span class="op">&gt;</span> <span class="fl">20L</span><span class="op">)</span> <span class="op">%&gt;%</span>
+  <span class="va">qDT</span> <span class="op">%&gt;%</span>
+  <span class="va">.</span><span class="op">[</span>, <span class="fu"><a href="../reference/quick-conversion.html">mrtl</a></span><span class="op">(</span><span class="fu"><a href="../reference/flm.html">flm</a></span><span class="op">(</span><span class="fu"><a href="../reference/fgrowth.html">fgrowth</a></span><span class="op">(</span><span class="va">PCGDP</span><span class="op">)</span><span class="op">[</span><span class="op">-</span><span class="fl">1L</span><span class="op">]</span>,
+               <span class="fu"><a href="https://rdrr.io/r/base/cbind.html">cbind</a></span><span class="op">(</span>Intercept <span class="op">=</span> <span class="fl">1</span>,
+                     LIFEEX <span class="op">=</span> <span class="fu"><a href="../reference/fgrowth.html">fgrowth</a></span><span class="op">(</span><span class="va">LIFEEX</span><span class="op">)</span><span class="op">[</span><span class="op">-</span><span class="fl">1L</span><span class="op">]</span><span class="op">)</span><span class="op">)</span>, <span class="cn">TRUE</span><span class="op">)</span>,
     keyby <span class="op">=</span> <span class="va">country</span><span class="op">]</span>
 <span class="op">)</span>
 <span class="co"># Unit: milliseconds</span>
@@ -545,7 +546,7 @@ B <span class="op">=</span> <span class="va">wlddev</span> <span class="op">%&gt
 <span class="co">#     B  10.68583  12.08281  13.33857  12.69528  13.59447  31.5162   100  a</span></pre></div>
 <p>Another feature to highlight at this point are <em>collapse</em>’s list processing functions, in particular <code>rsplit</code>, <code>rapply2d</code>, <code>get_elem</code> and <code>unlist2d</code>. <code>rsplit</code> is an efficient recursive generalization of <code>split</code>:</p>
 <div class="sourceCode" id="cb20"><pre class="downlit">
-<span class="va">DT_list</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/rsplit.html">rsplit</a></span><span class="op">(</span><span class="va">DT</span>, <span class="va">country</span> <span class="op">+</span> <span class="va">year</span> <span class="op">+</span> <span class="va">PCGDP</span> <span class="op">+</span> <span class="va">LIFEEX</span> <span class="op">~</span> <span class="va">region</span> <span class="op">+</span> <span class="va">income</span><span class="op">)</span> 
+<span class="va">DT_list</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/rsplit.html">rsplit</a></span><span class="op">(</span><span class="va">DT</span>, <span class="va">country</span> <span class="op">+</span> <span class="va">year</span> <span class="op">+</span> <span class="va">PCGDP</span> <span class="op">+</span> <span class="va">LIFEEX</span> <span class="op">~</span> <span class="va">region</span> <span class="op">+</span> <span class="va">income</span><span class="op">)</span>
 
 <span class="co"># Note: rsplit(DT, year + PCGDP + LIFEEX ~ region + income, flatten = TRUE) </span>
 <span class="co"># would yield a simple list with interacted categories (like split) </span>
@@ -678,8 +679,8 @@ B <span class="op">=</span> <span class="va">wlddev</span> <span class="op">%&gt
 <div class="sourceCode" id="cb21"><pre class="downlit">
 <span class="co"># This runs region-income level regressions, with country fixed effects</span>
 <span class="co"># following Mundlak (1978)</span>
-<span class="va">lm_summary_list</span> <span class="op">&lt;-</span> <span class="va">DT_list</span> <span class="op">%&gt;%</span> 
-  <span class="fu"><a href="../reference/rapply2d.html">rapply2d</a></span><span class="op">(</span><span class="va">lm</span>, formula <span class="op">=</span> <span class="fu"><a href="../reference/fgrowth.html">G</a></span><span class="op">(</span><span class="va">PCGDP</span><span class="op">)</span> <span class="op">~</span> <span class="fu"><a href="../reference/fgrowth.html">G</a></span><span class="op">(</span><span class="va">LIFEEX</span><span class="op">)</span> <span class="op">+</span> <span class="fu"><a href="../reference/fbetween,%20fwithin.html">B</a></span><span class="op">(</span><span class="fu"><a href="../reference/fgrowth.html">G</a></span><span class="op">(</span><span class="va">LIFEEX</span><span class="op">)</span>, <span class="va">country</span><span class="op">)</span><span class="op">)</span> <span class="op">%&gt;%</span> 
+<span class="va">lm_summary_list</span> <span class="op">&lt;-</span> <span class="va">DT_list</span> <span class="op">%&gt;%</span>
+  <span class="fu"><a href="../reference/rapply2d.html">rapply2d</a></span><span class="op">(</span><span class="va">lm</span>, formula <span class="op">=</span> <span class="fu"><a href="../reference/fgrowth.html">G</a></span><span class="op">(</span><span class="va">PCGDP</span><span class="op">)</span> <span class="op">~</span> <span class="fu"><a href="../reference/fgrowth.html">G</a></span><span class="op">(</span><span class="va">LIFEEX</span><span class="op">)</span> <span class="op">+</span> <span class="fu"><a href="../reference/fbetween,%20fwithin.html">B</a></span><span class="op">(</span><span class="fu"><a href="../reference/fgrowth.html">G</a></span><span class="op">(</span><span class="va">LIFEEX</span><span class="op">)</span>, <span class="va">country</span><span class="op">)</span><span class="op">)</span> <span class="op">%&gt;%</span>
   <span class="co"># Summarizing the results</span>
   <span class="fu"><a href="../reference/rapply2d.html">rapply2d</a></span><span class="op">(</span><span class="va">summary</span>, classes <span class="op">=</span> <span class="st">"lm"</span><span class="op">)</span>
 
@@ -995,9 +996,9 @@ B <span class="op">=</span> <span class="va">wlddev</span> <span class="op">%&gt
 <p>We can turn this list into a <em>data.table</em> again by calling first <code>get_elem</code> to recursively extract the coefficient matrices and then <code>unlist2d</code> to recursively bind them to a new <em>data.table</em>:</p>
 <div class="sourceCode" id="cb22"><pre class="downlit">
 <span class="va">lm_summary_list</span> <span class="op">%&gt;%</span>
-  <span class="fu"><a href="../reference/has_elem,%20get_elem.html">get_elem</a></span><span class="op">(</span><span class="st">"coefficients"</span><span class="op">)</span> <span class="op">%&gt;%</span> 
-  <span class="fu"><a href="../reference/unlist2d.html">unlist2d</a></span><span class="op">(</span>idcols <span class="op">=</span> <span class="fu"><a href="../reference/small-helper.html">.c</a></span><span class="op">(</span><span class="va">Region</span>, <span class="va">Income</span><span class="op">)</span>, 
-           row.names <span class="op">=</span> <span class="st">"Coef"</span>, 
+  <span class="fu"><a href="../reference/has_elem,%20get_elem.html">get_elem</a></span><span class="op">(</span><span class="st">"coefficients"</span><span class="op">)</span> <span class="op">%&gt;%</span>
+  <span class="fu"><a href="../reference/unlist2d.html">unlist2d</a></span><span class="op">(</span>idcols <span class="op">=</span> <span class="fu"><a href="../reference/small-helper.html">.c</a></span><span class="op">(</span><span class="va">Region</span>, <span class="va">Income</span><span class="op">)</span>,
+           row.names <span class="op">=</span> <span class="st">"Coef"</span>,
            DT <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span> <span class="op">%&gt;%</span> <span class="va">head</span>
 <span class="co">#                 Region              Income                  Coef  Estimate Std. Error   t value</span>
 <span class="co"># 1: East Asia &amp; Pacific         High income           (Intercept) 0.5313479  0.7058550 0.7527720</span>
@@ -1016,7 +1017,7 @@ B <span class="op">=</span> <span class="va">wlddev</span> <span class="op">%&gt
 <p>The fact that this is a nested list of matrices, and that we can save both the names of the lists at each level of nesting and the row- and column- names of the matrices make <code>unlist2d</code> a significant generalization of <code>rbindlist</code><a href="#fn3" class="footnote-ref" id="fnref3"><sup>3</sup></a>.</p>
 <p>But why do all this fuzz if we could have simply done:?</p>
 <div class="sourceCode" id="cb23"><pre class="downlit">
-<span class="va">DT</span><span class="op">[</span>, <span class="fu"><a href="../reference/quick-conversion.html">qDT</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/pkg/lmtest/man/coeftest.html">coeftest</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/stats/lm.html">lm</a></span><span class="op">(</span><span class="fu"><a href="../reference/fgrowth.html">G</a></span><span class="op">(</span><span class="va">PCGDP</span><span class="op">)</span> <span class="op">~</span> <span class="fu"><a href="../reference/fgrowth.html">G</a></span><span class="op">(</span><span class="va">LIFEEX</span><span class="op">)</span> <span class="op">+</span> <span class="fu"><a href="../reference/fbetween,%20fwithin.html">B</a></span><span class="op">(</span><span class="fu"><a href="../reference/fgrowth.html">G</a></span><span class="op">(</span><span class="va">LIFEEX</span><span class="op">)</span>, <span class="va">country</span><span class="op">)</span><span class="op">)</span><span class="op">)</span>, <span class="st">"Coef"</span><span class="op">)</span>, 
+<span class="va">DT</span><span class="op">[</span>, <span class="fu"><a href="../reference/quick-conversion.html">qDT</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/pkg/lmtest/man/coeftest.html">coeftest</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/stats/lm.html">lm</a></span><span class="op">(</span><span class="fu"><a href="../reference/fgrowth.html">G</a></span><span class="op">(</span><span class="va">PCGDP</span><span class="op">)</span> <span class="op">~</span> <span class="fu"><a href="../reference/fgrowth.html">G</a></span><span class="op">(</span><span class="va">LIFEEX</span><span class="op">)</span> <span class="op">+</span> <span class="fu"><a href="../reference/fbetween,%20fwithin.html">B</a></span><span class="op">(</span><span class="fu"><a href="../reference/fgrowth.html">G</a></span><span class="op">(</span><span class="va">LIFEEX</span><span class="op">)</span>, <span class="va">country</span><span class="op">)</span><span class="op">)</span><span class="op">)</span>, <span class="st">"Coef"</span><span class="op">)</span>,
    keyby <span class="op">=</span> <span class="fu">.</span><span class="op">(</span><span class="va">region</span>, <span class="va">income</span><span class="op">)</span><span class="op">]</span> <span class="op">%&gt;%</span> <span class="va">head</span>
 <span class="co">#                 region              income                  Coef  Estimate Std. Error   t value</span>
 <span class="co"># 1: East Asia &amp; Pacific         High income           (Intercept) 0.5313479  0.7058550 0.7527720</span>
@@ -1035,9 +1036,9 @@ B <span class="op">=</span> <span class="va">wlddev</span> <span class="op">%&gt
 <p>Well we might want to do more things with that list of linear models first before tidying it, so this is a more general workflow. We might also be interested in additional statistics like the R-squared or the F-statistic:</p>
 <div class="sourceCode" id="cb24"><pre class="downlit">
 <span class="va">DT_sum</span> <span class="op">&lt;-</span> <span class="va">lm_summary_list</span> <span class="op">%&gt;%</span>
-<span class="fu"><a href="../reference/has_elem,%20get_elem.html">get_elem</a></span><span class="op">(</span><span class="st">"coef|r.sq|fstat"</span>, regex <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span> <span class="op">%&gt;%</span> 
-  <span class="fu"><a href="../reference/unlist2d.html">unlist2d</a></span><span class="op">(</span>idcols <span class="op">=</span> <span class="fu"><a href="../reference/small-helper.html">.c</a></span><span class="op">(</span><span class="va">Region</span>, <span class="va">Income</span>, <span class="va">Statistic</span><span class="op">)</span>, 
-           row.names <span class="op">=</span> <span class="st">"Coef"</span>, 
+<span class="fu"><a href="../reference/has_elem,%20get_elem.html">get_elem</a></span><span class="op">(</span><span class="st">"coef|r.sq|fstat"</span>, regex <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span> <span class="op">%&gt;%</span>
+  <span class="fu"><a href="../reference/unlist2d.html">unlist2d</a></span><span class="op">(</span>idcols <span class="op">=</span> <span class="fu"><a href="../reference/small-helper.html">.c</a></span><span class="op">(</span><span class="va">Region</span>, <span class="va">Income</span>, <span class="va">Statistic</span><span class="op">)</span>,
+           row.names <span class="op">=</span> <span class="st">"Coef"</span>,
            DT <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span>
 
 <span class="fu"><a href="https://rdrr.io/r/utils/head.html">head</a></span><span class="op">(</span><span class="va">DT_sum</span><span class="op">)</span>
@@ -1104,7 +1105,7 @@ B <span class="op">=</span> <span class="va">wlddev</span> <span class="op">%&gt
 <span class="co"># 20: 9.494439e-01</span></pre></div>
 <p>As a final example of this kind, lets suppose we are interested in the within-country correlations of all these variables by region and income group:</p>
 <div class="sourceCode" id="cb25"><pre class="downlit">
-<span class="va">DT</span><span class="op">[</span>, <span class="fu"><a href="../reference/quick-conversion.html">qDT</a></span><span class="op">(</span><span class="fu"><a href="../reference/pwcor,%20pwcov,%20pwnobs.html">pwcor</a></span><span class="op">(</span><span class="fu"><a href="../reference/fbetween,%20fwithin.html">W</a></span><span class="op">(</span><span class="va">.SD</span>, <span class="va">country</span><span class="op">)</span><span class="op">)</span>, <span class="st">"Variable"</span><span class="op">)</span>, 
+<span class="va">DT</span><span class="op">[</span>, <span class="fu"><a href="../reference/quick-conversion.html">qDT</a></span><span class="op">(</span><span class="fu"><a href="../reference/pwcor,%20pwcov,%20pwnobs.html">pwcor</a></span><span class="op">(</span><span class="fu"><a href="../reference/fbetween,%20fwithin.html">W</a></span><span class="op">(</span><span class="va">.SD</span>, <span class="va">country</span><span class="op">)</span><span class="op">)</span>, <span class="st">"Variable"</span><span class="op">)</span>,
    keyby <span class="op">=</span> <span class="fu">.</span><span class="op">(</span><span class="va">region</span>, <span class="va">income</span><span class="op">)</span>, .SDcols <span class="op">=</span> <span class="va">PCGDP</span><span class="op">:</span><span class="va">ODA</span><span class="op">]</span> <span class="op">%&gt;%</span> <span class="va">head</span>
 <span class="co">#                 region              income Variable    W.PCGDP   W.LIFEEX    W.GINI       W.ODA</span>
 <span class="co"># 1: East Asia &amp; Pacific         High income  W.PCGDP  1.0000000  0.7562668 0.6253844 -0.25258496</span>
@@ -1157,7 +1158,7 @@ B <span class="op">=</span> <span class="va">wlddev</span> <span class="op">%&gt
       </footer>
 </div>
 
-  
+
 
 
   </body>

@@ -1,4 +1,5 @@
 #include "collapse_c.h"
+// #include <R_ext/Altrep.h>
 
 void fmin_double_impl(double *pout, double *px, int ng, int *pg, int narm, int l) {
   if(ng == 0) {
@@ -142,6 +143,12 @@ SEXP fminC(SEXP x, SEXP Rng, SEXP g, SEXP Rnarm) {
   if (l < 1) return x; // Prevents seqfault for numeric(0) #101
   if(ng && l != length(g)) error("length(g) must match length(x)");
   if(tx == LGLSXP) tx = INTSXP;
+  // ALTREP methods for compact sequences: not safe yet and not part of the API.
+  // if(ALTREP(x) && ng == 0) {
+  // if(tx == INTSXP) return ALTINTEGER_MIN(x, (Rboolean)narm);
+  // if(tx == REALSXP) return ALTREAL_MIN(x, (Rboolean)narm);
+  // error("ALTREP object must be integer or real typed");
+  // }
   SEXP out = PROTECT(allocVector(tx, ng == 0 ? 1 : ng));
   switch(tx) {
   case REALSXP: fmin_double_impl(REAL(out), REAL(x), ng, INTEGER(g), narm, l);
@@ -207,6 +214,12 @@ SEXP fmaxC(SEXP x, SEXP Rng, SEXP g, SEXP Rnarm) {
   if (l < 1) return x; // Prevents seqfault for numeric(0) #101
   if(ng && l != length(g)) error("length(g) must match length(x)");
   if(tx == LGLSXP) tx = INTSXP;
+  // ALTREP methods for compact sequences: not safe yet and not part of the API.
+  // if(ALTREP(x) && ng == 0) {
+  // if(tx == INTSXP) return ALTINTEGER_MAX(x, (Rboolean)narm);
+  // if(tx == REALSXP) return ALTREAL_MAX(x, (Rboolean)narm);
+  // error("ALTREP object must be integer or real typed");
+  // }
   SEXP out = PROTECT(allocVector(tx, ng == 0 ? 1 : ng));
   switch(tx) {
   case REALSXP: fmax_double_impl(REAL(out), REAL(x), ng, INTEGER(g), narm, l);

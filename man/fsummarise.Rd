@@ -42,7 +42,7 @@ fsummarise(mtcars, mean_mpg = fmean(mpg),
 # Using base functions (not a big difference without groups)
 fsummarise(mtcars, mean_mpg = mean(mpg),
                    sd_mpg = sd(mpg))
-
+\donttest{ % No code relying on suggested package or base Pipe
 # Grouped use
 mtcars |> fgroup_by(cyl) |>
   fsummarise(mean_mpg = fmean(mpg),
@@ -58,7 +58,7 @@ mtcars |> fgroup_by(cyl) |>
   fsummarise(w_mean_mpg = fmean(mpg, wt),
              w_sd_mpg = fsd(mpg, wt))
 
-\donttest{ % No code relying on suggested package
+
 ## Can also group with dplyr::group_by, but at a conversion cost, see ?GRP
 library(dplyr)
 mtcars |> group_by(cyl) |>

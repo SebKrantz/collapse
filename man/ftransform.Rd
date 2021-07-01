@@ -10,6 +10,7 @@
 \alias{settransformv}
 \alias{settfmv}
 \alias{fcompute}
+\alias{fcomputev}
 \title{Fast Transform and Compute Columns on a Data Frame}
 \description{
   \code{ftransform} is a much faster version of \code{\link{transform}} and \code{dplyr::mutate} for data frames. It returns the data frame with new columns computed and/or existing columns modified or deleted. \code{settransform} does all of that by reference i.e. it modifies the data frame in the global environment. \code{fcompute} can be used to compute new columns from the columns in a data frame and returns only the computed columns.
@@ -34,10 +35,11 @@ tfm(.data) <- value           # Shortcut for ftransform<-
 
 # Compute columns, returned as a new data frame
 fcompute(.data, \dots, keep = NULL)
+fcomputev(.data, vars, FUN, \dots, apply = TRUE, keep = NULL)
 }
 \arguments{
     \item{.data}{a data frame or named list of columns.}
-    \item{\dots}{further arguments of the form \code{column = value}. The \code{value} can be a combination of other columns, a scalar value, or \code{NULL}, which deletes \code{column}. Alternatively it is also possible to place a single list here, which will be treated like a list of \code{column = value} arguments. For \code{ftransformv}, \code{\dots} can be used to pass further arguments to \code{FUN}. \emph{Note:} The ellipsis (\code{\dots}) is always evaluated within the data frame (\code{.data}) environment. See Examples.}
+    \item{\dots}{further arguments of the form \code{column = value}. The \code{value} can be a combination of other columns, a scalar value, or \code{NULL}, which deletes \code{column}. Alternatively it is also possible to place a single list here, which will be treated like a list of \code{column = value} arguments. For \code{ftransformv} and \code{fcomputev}, \code{\dots} can be used to pass further arguments to \code{FUN}. \emph{Note:} The ellipsis (\code{\dots}) is always evaluated within the data frame (\code{.data}) environment. See Examples.}
     \item{vars}{variables to be transformed by applying \code{FUN} to them: select using names, indices, a logical vector or a selector function (e.g. \code{is.numeric}).}
     \item{FUN}{a single function yielding a result of length \code{NROW(.data)} or 1. See also \code{apply}.}
     \item{apply}{logical. \code{TRUE} (default) will apply \code{FUN} to each column selected in \code{vars}; \code{FALSE} will apply \code{FUN} to the subsetted data frame i.e. \code{FUN(get_vars(.data, vars), ...)}. The latter is useful for \emph{collapse} functions with data frame or grouped / panel data frame methods, yielding performance gains and enabling grouped transformations. See Examples.}
@@ -61,7 +63,10 @@ fcompute(.data, \dots, keep = NULL)
 
   The function \code{settransform} does all of that by reference, but uses base-R's copy-on modify semantics, which is equivalent to replacing the data with \code{<-} (thus it is still memory efficient but the data will have a different memory address afterwards).
 
-The function \code{fcompute} works just like \code{ftransform}, but returns only the changed / computed columns without modifying or appending the data in \code{.data}.
+The function \code{fcompute(v)} works just like \code{ftransform(v)}, but returns only the changed / computed columns without modifying or appending the data in \code{.data}. See Examples.
+}
+\note{
+Please note that unlike \code{dplyr::muatate}, \code{ftransform} does not do anything per se with a grouped data frame. This is not a limitation but an advantage as it affords greater flexibility and performance in programming with the fast functions in this package, through which \emph{collapse} supports various kinds of fully vectorized grouped transformations. See Examples as well as the excellent answer provided \href{https://stackoverflow.com/questions/67349744/using-ftransform-along-with-fgroup-by-from-collapse-r-package}{here}.
 }
 \value{
   The modified data frame \code{.data}, or, for \code{fcompute}, a new data frame with the columns computed on \code{.data}. All attributes of \code{.data} are preserved.
@@ -100,7 +105,7 @@ head(ftransformv(airquality, 1:3, fwithin, Month))
 
 # This calls fwithin.data.frame, and only groups one time -> 5x faster!
 head(ftransformv(airquality, 1:3, fwithin, Month, apply = FALSE))
-\donttest{ % No code relying on suggested package
+
 library(magrittr) # Pipe operators
 # This also works for grouped and panel data frames (calling fwithin.grouped_df)
 airquality \%>\% fgroup_by(Month) \%>\%
@@ -140,7 +145,7 @@ ftransform(airquality, c(fmedian(list(Wind_Day_median = Wind,
                                       Ozone_Day_median = Ozone), Day, TRA = "replace"),
                          fsd(list(Wind_Month_sd = Wind,
                                   Ozone_Month_sd = Ozone), Month, TRA = "replace"))) \%>\% head
-}
+
 ## settransform(v) works like ftransform(v) but modifies a data frame in the global environment..
 settransform(airquality, Ratio = Ozone / Temp, Ozone = NULL, Temp = NULL)
 head(airquality)
@@ -150,7 +155,7 @@ rm(airquality)
 settransformv(airquality, 1:3, fwithin, Month, Temp, apply = FALSE)
 head(airquality)
 rm(airquality)
-\donttest{ % No code relying on suggested package
+
 # Suitably lagged first-differences
 settransform(airquality, get_vars(airquality, 1:3) \%>\% fdiff \%>\% flag(0:2))
 head(airquality)
@@ -165,7 +170,7 @@ rm(airquality)
 ftransform(airquality) <- get_vars(airquality, 1:3) \%>\% fdiff \%>\% flag(0:2)
 head(airquality)
 rm(airquality)
-}
+
 ## fcompute only returns the modified / computed columns
 head(fcompute(airquality, Ozone = -Ozone))
 head(fcompute(airquality, new = -Ozone, Temp = (Temp-32)/1.8))
@@ -177,6 +182,14 @@ head(fcompute(airquality, new = -Ozone, new2 = 1, keep = 1:3))
 # If given same name as preserved columns, preserved columns are replaced in order...
 head(fcompute(airquality, Ozone = -Ozone, new = 1, keep = 1:3))
 
+# Same holds for fcomputev
+head(fcomputev(iris, is.numeric, log)) # Same as:
+iris \%>\% get_vars(is.numeric) \%>\% dapply(log) \%>\% head()
 
+head(fcomputev(iris, is.numeric, log, keep = "Species"))   # Adds in front
+head(fcomputev(iris, is.numeric, log, keep = names(iris))) # Preserve order
+
+# Keep a subset of the data, add standardized columns
+head(fcomputev(iris, 3:4, STD, apply = FALSE, keep = names(iris)[3:5]))
 }
 \keyword{manip}

@@ -28,7 +28,7 @@
                                "char_vars", "char_vars<-", "cinv", "ckmatch", "collap", "collapg", "collapv", "colorder",
                                "colorderv", "copyAttrib", "copyMostAttrib", "D", "dapply", "date_vars", "Date_vars",
                                "date_vars<-", "Date_vars<-", "descr", "Dlog", "F", "fact_vars", "fact_vars<-",
-                               "fbetween", "fcompute", "fcumsum", "fdiff", "fdim", "fdroplevels", "ffirst", "fFtest",
+                               "fbetween", "fcompute", "fcomputev", "fcumsum", "fdiff", "fdim", "fdroplevels", "ffirst", "fFtest",
                                "fgroup_by", "fgroup_vars", "fgrowth", "fhdbetween", "fhdwithin", "finteraction", "flag",
                                "flast", "flm", "fmax", "fmean", "fmedian", "fmin", "fmode", "fncol", "fndistinct",
                                "fnlevels", "fnobs", "fnrow", "fnth", "fprod", "frename", "fscale", "fsd", "fselect",
@@ -44,7 +44,7 @@
                                "roworder", "roworderv", "rsplit", "sbt", "seq_col", "seq_row", "seqid", "setAttrib",
                                "setColnames", "setDimnames", "setrename", "setRownames", "settfm", "settfmv", "settransform",
                                "settransformv", "slt", "slt<-", "smr", "ss", "STD", "t_list", "tfm", "tfm<-", "tfmv", "TRA",
-                               "unattrib", "unlist2d", "varying", "vclasses", "vlabels", "vlabels<-", "vtypes", "W", "wlddev")))
+                               "unattrib", "unlist2d", "varying", "vclasses", "vlabels", "vlabels<-", "setLabels", "vtypes", "W", "wlddev")))
 
 .COLLAPSE_GENERIC   <-   sort(unique(c("B","BY","D","Dlog","F","fsubset","fbetween","fdiff","ffirst","fgrowth","fhdbetween",
                            "fhdwithin","flag","flast","fmax","fmean","fmedian","fnth","fmin","fmode","varying",

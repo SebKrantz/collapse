@@ -142,7 +142,7 @@ ftransformv <- function(.data, vars, FUN, ..., apply = TRUE) {
   if(apply) {
     oldClass(.data) <- NULL
     vars <- cols2int(vars, .data, names(.data), FALSE)
-    value <- unattrib(.data[vars])
+    value <- `names<-`(.data[vars], NULL)
     value <- if(missing(...)) lapply(value, FUN) else
       eval(substitute(lapply(value, FUN, ...)), .data, parent.frame())
   } else {
@@ -160,7 +160,7 @@ ftransformv <- function(.data, vars, FUN, ..., apply = TRUE) {
   if(all(le == nr)) .data[vars] <- value else if(all(le == 1L))
     .data[vars] <- lapply(value, alloc, nr) else {
       if(apply) names(value) <- names(.data)[vars]
-      return(condalc(ftransform_core(.data, value), any(clx == "data.table"))) # stop("lengths of result must be nrow(.data) or 1")
+      .data <- ftransform_core(.data, value)
   }
   return(condalc(`oldClass<-`(.data, clx), any(clx == "data.table")))
 }
@@ -178,12 +178,10 @@ settransformv <- function(.data, vars, FUN, ..., apply = TRUE)
 settfmv <- settransformv
 
 
-fcompute <- function(.data, ..., keep = NULL) { # within ?
+fcompute_core <- function(.data, e, keep = NULL) {
   ax <- attributes(.data)
   nam <- ax[["names"]]
   if(!length(nam) || fanyDuplicated(nam)) stop("All columns of .data have to be uniquely named")
-  e <- eval(substitute(list(...)), .data, parent.frame())
-  if(is.null(names(e)) && length(e) == 1L && is.list(e[[1L]])) e <- unclass(e[[1L]]) # support list input -> added in v1.3.0 # sensible ??? what application ??
   if(length(keep)) {
     keep <- cols2int(keep, .data, nam, FALSE)
     if(any(m <- match(names(e), nam[keep], nomatch = 0L))) {
@@ -206,6 +204,32 @@ fcompute <- function(.data, ..., keep = NULL) { # within ?
 }
 
 
+fcompute <- function(.data, ..., keep = NULL) { # within ?
+  if(!is.list(.data)) stop(".data needs to be a list of equal length columns or a data.frame")
+  e <- eval(substitute(list(...)), .data, parent.frame())
+  if(is.null(names(e)) && length(e) == 1L && is.list(e[[1L]])) e <- unclass(e[[1L]]) # support list input -> added in v1.3.0
+  return(fcompute_core(.data, e, keep))
+}
+
+
+fcomputev <- function(.data, vars, FUN, ..., apply = TRUE, keep = NULL) {
+  if(!is.list(.data)) stop(".data needs to be a list of equal length columns or a data.frame")
+  if(!is.function(FUN)) stop("FUN needs to be a function")
+  if(apply) {
+    nam <- attr(.data, "names")
+    vars <- cols2int(vars, .data, nam, FALSE)
+    value <- `names<-`(.subset(.data, vars), NULL)
+    value <- if(missing(...)) lapply(value, FUN) else
+      eval(substitute(lapply(value, FUN, ...)), .data, parent.frame())
+    names(value) <- nam[vars]
+  } else {
+    vars <- cols2int(vars, .data, attr(.data, "names"), FALSE)
+    value <- .Call(C_subsetCols, .data, vars, FALSE)
+    value <- if(missing(...)) unclass(FUN(value)) else # unclass needed here ? -> yes for lengths...
+      unclass(eval(substitute(FUN(value, ...)), .data, parent.frame()))
+  }
+  return(fcompute_core(.data, value, keep)) # Note: Need to do this, value could be scalars or vectors
+}
 
 
 

@@ -4,6 +4,7 @@
 \alias{cinv}
 \alias{vlabels}
 \alias{vlabels<-}
+\alias{setLabels}
 \alias{vclasses}
 \alias{vtypes}
 \alias{namlab}
@@ -46,12 +47,14 @@ Convenience functions in the \emph{collapse} package that help to deal with attr
 .c(\dots)                       # Non-standard concatenation i.e. .c(a, b) == c("a", "b")
 vlabels(X, attrn = "label")   # Get labels of variables in X, in attr(X[[i]], attrn)
 vlabels(X, attrn = "label") <- value      # Set labels of variables in X
+setLabels(X, value, attrn = "label")      # Set labels of variables in X and return X
 vclasses(X)                   # Get classes of variables in X
 vtypes(X)                     # Get data storage types of variables in X (calling typeof)
 namlab(X, class = FALSE,      # Return data frame of names, labels and classes
           attrn = "label")
 add_stub(X, stub, pre = TRUE) # Add a stub (i.e. prefix or postfix) to column names
-rm_stub(X, stub, pre = TRUE)  # Remove stub from column names
+rm_stub(X, stub, pre = TRUE,  # Remove stub from column names, also supports general
+        regex = FALSE, ...)   # regex matching and removing of characters
 x \%!in\% table                 # The opposite of \%in\%
 ckmatch(x, table,             # Check-match: throws an informative error if non-matched
      e = "Unknown columns:")
@@ -92,11 +95,12 @@ is_date(x)                    # Check if object is of class "Date", "POSIXlt" or
   \item{object, to, from}{a suitable R object.}
   \item{a}{a suitable list of attributes.}
   \item{attrn}{character. Name of attribute to store labels or retrieve labels from.}
-  \item{value}{for \code{alloc}: a single value of any vector type. For \code{vlabels}: a matching character vector of variable labels.}
+  \item{value}{for \code{alloc}: a single value of any vector type. For \code{vlabels<-} and \code{setLabels}: a matching character vector or list of variable labels. }
   \item{n}{integer. The length of the vector to allocate with \code{value}.}
   \item{class}{logical. Also show the classes of variables in X in a column?}
   \item{stub}{a single character stub, i.e. "log.", which by default will be pre-applied to all variables or column names in X.}
   \item{pre}{logical. \code{FALSE} will post-apply \code{stub}.}
+  \item{regex}{logical. Match pattern anywhere in names using a regular expression and remove it with \code{\link{gsub}}.}
   \item{cols}{only removes rows with missing values on these columns. Columns can be selected using column names, indices, a logical vector or a selector function (e.g. \code{is.numeric}).}
   \item{na.attr}{logical. \code{TRUE} adds an attribute containing the removed cases. For compatibility reasons this is exactly the same format as \code{na.omit} i.e. the attribute is called "na.action" and of class "omit".}
   \item{nm}{a suitable vector of row- or column-names.}
@@ -104,7 +108,7 @@ is_date(x)                    # Check if object is of class "Date", "POSIXlt" or
   \item{which}{integer. If \code{NULL}, \code{dn} has to be a list fully specifying the dimension names of the object. Alternatively, a vector or list of names for dimensions \code{which} can be supplied. See Examples. }
   \item{prop}{double. Specify the proportion of observations randomly replaced with \code{NA}.}
   \item{e}{the error message thrown by \code{ckmatch} for non-matched elements. The message is followed by the comma-separated non-matched elements.}
- \item{\dots}{for \code{.c}: Comma-separated expressions. For \code{all_identical / all_obj_equal}: Either multiple comma-separated objects or a single list of objects in which all elements will be checked for exact / numeric equality.}
+ \item{\dots}{for \code{.c}: Comma-separated expressions. For \code{all_identical / all_obj_equal}: Either multiple comma-separated objects or a single list of objects in which all elements will be checked for exact / numeric equality. For \code{rm_stub}: further arguments passed to \code{\link{gsub}}.}
 }
 % \details{
 %%  ~~ If necessary, more details than the description above ~~

@@ -79,6 +79,19 @@ test_that("na_rm works well", {
 
 }
 
+test_that("vlabels works well", {
+  expect_equal(wlddev, setLabels(wlddev, vlabels(wlddev)))
+})
+
+test_that("adding and removing stubs works", {
+  expect_identical(rm_stub(add_stub(iris, "df"), "df"), iris)
+  expect_identical(rm_stub(add_stub(iris, "df", pre = FALSE), "df", pre = FALSE), iris)
+  expect_identical(rm_stub(add_stub(iris, "df", pre = FALSE), "df", regex = TRUE), iris)
+  expect_identical(rm_stub(names(iris), "Sepal")[1], ".Length")
+  expect_identical(rm_stub(names(iris), "Width", pre = FALSE)[4], "Petal.")
+  expect_identical(rm_stub(names(iris), "Width", regex = TRUE)[4], "Petal.")
+})
+
 test_that("deep matrix dispatch works well", {
 
   tsm <- EuStockMarkets
