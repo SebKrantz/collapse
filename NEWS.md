@@ -1,3 +1,6 @@
+# collapse 1.6.2
+CRAN maintainers have asked me to remove a line in a Makevars file intended to reduce the size of Rcpp object files (which has been there since version 1.4). So the installed size of the package may now be larger.  
+
 # collapse 1.6.1
 A patch for 1.6.0 which fixes issues flagged by CRAN and adds a few handy extras. 
 
