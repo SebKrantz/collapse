@@ -1,0 +1,1 @@
+atomic_elem(), list_elem() – get list with atomic / sublist elements, examining only first level of list
