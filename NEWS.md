@@ -1,3 +1,6 @@
+# collapse 1.6.3
+CRAN checks flagged a valgrind issue because of comparing an uninitialized value to something (which was not flagged in previous submissions although nothing changed in the code). So sorry for another patch. If CRAN checks were consistent and if C/C++ developers had options to run all those checks on Win-Builder this would not happen. To make it clear: Nothing added in patches 1.6.1-1.6.3 affects in any way the operation of the package (except for the functions added in 1.6.1). So if you have version 1.6.0 you may as well stick with it. 
+
 # collapse 1.6.2
 CRAN maintainers have asked me to remove a line in a Makevars file intended to reduce the size of Rcpp object files (which has been there since version 1.4). So the installed size of the package may now be larger.  
 
