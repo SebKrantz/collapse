@@ -7,8 +7,7 @@ void matCopyAttr(SEXP out, SEXP x, SEXP Rdrop, int ng) {
     if(length(cn)) setAttrib(out, R_NamesSymbol, cn);
   } else {
     int nprotect = 1;
-    SEXP dim, dn;
-    dim = PROTECT(duplicate(getAttrib(x, R_DimSymbol)));
+    SEXP dim = PROTECT(duplicate(getAttrib(x, R_DimSymbol)));
     INTEGER(dim)[0] = ng == 0 ? 1 : ng;
     dimgets(out, dim);
     if(length(cn)) {
