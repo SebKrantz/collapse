@@ -72,7 +72,7 @@
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">collapse</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">1.6.0</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">1.6.4</span>
       </span>
     </div>
 
@@ -129,12 +129,14 @@
     <pre class="usage"><span class='fu'>.c</span><span class='op'>(</span><span class='va'>...</span><span class='op'>)</span>                       <span class='co'># Non-standard concatenation i.e. .c(a, b) == c("a", "b")</span>
 <span class='fu'>vlabels</span><span class='op'>(</span><span class='va'>X</span>, attrn <span class='op'>=</span> <span class='st'>"label"</span><span class='op'>)</span>   <span class='co'># Get labels of variables in X, in attr(X[[i]], attrn)</span>
 <span class='fu'>vlabels</span><span class='op'>(</span><span class='va'>X</span>, attrn <span class='op'>=</span> <span class='st'>"label"</span><span class='op'>)</span> <span class='op'>&lt;-</span> <span class='va'>value</span>      <span class='co'># Set labels of variables in X</span>
+<span class='fu'>setLabels</span><span class='op'>(</span><span class='va'>X</span>, <span class='va'>value</span>, attrn <span class='op'>=</span> <span class='st'>"label"</span><span class='op'>)</span>      <span class='co'># Set labels of variables in X and return X</span>
 <span class='fu'>vclasses</span><span class='op'>(</span><span class='va'>X</span><span class='op'>)</span>                   <span class='co'># Get classes of variables in X</span>
 <span class='fu'>vtypes</span><span class='op'>(</span><span class='va'>X</span><span class='op'>)</span>                     <span class='co'># Get data storage types of variables in X (calling typeof)</span>
 <span class='fu'>namlab</span><span class='op'>(</span><span class='va'>X</span>, class <span class='op'>=</span> <span class='cn'>FALSE</span>,      <span class='co'># Return data frame of names, labels and classes</span>
           attrn <span class='op'>=</span> <span class='st'>"label"</span><span class='op'>)</span>
 <span class='fu'>add_stub</span><span class='op'>(</span><span class='va'>X</span>, <span class='va'>stub</span>, pre <span class='op'>=</span> <span class='cn'>TRUE</span><span class='op'>)</span> <span class='co'># Add a stub (i.e. prefix or postfix) to column names</span>
-<span class='fu'>rm_stub</span><span class='op'>(</span><span class='va'>X</span>, <span class='va'>stub</span>, pre <span class='op'>=</span> <span class='cn'>TRUE</span><span class='op'>)</span>  <span class='co'># Remove stub from column names</span>
+<span class='fu'>rm_stub</span><span class='op'>(</span><span class='va'>X</span>, <span class='va'>stub</span>, pre <span class='op'>=</span> <span class='cn'>TRUE</span>,  <span class='co'># Remove stub from column names, also supports general</span>
+        regex <span class='op'>=</span> <span class='cn'>FALSE</span>, <span class='va'>...</span><span class='op'>)</span>   <span class='co'># regex matching and removing of characters</span>
 <span class='va'>x</span> <span class='op'>%!in%</span> <span class='va'>table</span>                 <span class='co'># The opposite of %in%</span>
 <span class='fu'>ckmatch</span><span class='op'>(</span><span class='va'>x</span>, <span class='va'>table</span>,             <span class='co'># Check-match: throws an informative error if non-matched</span>
      e <span class='op'>=</span> <span class='st'>"Unknown columns:"</span><span class='op'>)</span>
@@ -192,7 +194,7 @@
     </tr>
     <tr>
       <th>value</th>
-      <td><p>for <code>alloc</code>: a single value of any vector type. For <code>vlabels</code>: a matching character vector of variable labels.</p></td>
+      <td><p>for <code>alloc</code>: a single value of any vector type. For <code>vlabels&lt;-</code> and <code>setLabels</code>: a matching character vector or list of variable labels.</p></td>
     </tr>
     <tr>
       <th>n</th>
@@ -209,6 +211,10 @@
     <tr>
       <th>pre</th>
       <td><p>logical. <code>FALSE</code> will post-apply <code>stub</code>.</p></td>
+    </tr>
+    <tr>
+      <th>regex</th>
+      <td><p>logical. Match pattern anywhere in names using a regular expression and remove it with <code><a href='https://rdrr.io/r/base/grep.html'>gsub</a></code>.</p></td>
     </tr>
     <tr>
       <th>cols</th>
@@ -240,7 +246,7 @@
     </tr>
     <tr>
       <th>...</th>
-      <td><p>for <code>.c</code>: Comma-separated expressions. For <code>all_identical / all_obj_equal</code>: Either multiple comma-separated objects or a single list of objects in which all elements will be checked for exact / numeric equality.</p></td>
+      <td><p>for <code>.c</code>: Comma-separated expressions. For <code>all_identical / all_obj_equal</code>: Either multiple comma-separated objects or a single list of objects in which all elements will be checked for exact / numeric equality. For <code>rm_stub</code>: further arguments passed to <code><a href='https://rdrr.io/r/base/grep.html'>gsub</a></code>.</p></td>
     </tr>
     </table>
 
@@ -467,61 +473,70 @@
 <span class='fu'><a href='fnobs.html'>fnobs</a></span><span class='op'>(</span><span class='va'>mtc_na</span><span class='op'>)</span>                        <span class='co'># See observation count</span>
 </div><div class='output co'>#&gt;  mpg  cyl disp   hp drat   wt qsec   vs   am gear carb 
 #&gt;   28   28   28   28   28   28   28   28   28   28   28 </div><div class='input'><span class='fu'>na_omit</span><span class='op'>(</span><span class='va'>mtc_na</span><span class='op'>)</span>                      <span class='co'># 12x faster than na.omit(mtc_na)</span>
-</div><div class='output co'>#&gt;                      mpg cyl  disp  hp drat    wt  qsec vs am gear carb
-#&gt; Mazda RX4           21.0   6 160.0 110 3.90 2.620 16.46  0  1    4    4
-#&gt; Merc 450SL          17.3   8 275.8 180 3.07 3.730 17.60  0  0    3    3
-#&gt; Lincoln Continental 10.4   8 460.0 215 3.00 5.424 17.82  0  0    3    4
-#&gt; Honda Civic         30.4   4  75.7  52 4.93 1.615 18.52  1  1    4    2
-#&gt; Porsche 914-2       26.0   4 120.3  91 4.43 2.140 16.70  0  1    5    2
-#&gt; Ford Pantera L      15.8   8 351.0 264 4.22 3.170 14.50  0  1    5    4
-#&gt; Maserati Bora       15.0   8 301.0 335 3.54 3.570 14.60  0  1    5    8</div><div class='input'><span class='fu'>na_omit</span><span class='op'>(</span><span class='va'>mtc_na</span>, na.attr <span class='op'>=</span> <span class='cn'>TRUE</span><span class='op'>)</span>      <span class='co'># Adds attribute with removed cases, like na.omit</span>
-</div><div class='output co'>#&gt;                      mpg cyl  disp  hp drat    wt  qsec vs am gear carb
-#&gt; Mazda RX4           21.0   6 160.0 110 3.90 2.620 16.46  0  1    4    4
-#&gt; Merc 450SL          17.3   8 275.8 180 3.07 3.730 17.60  0  0    3    3
-#&gt; Lincoln Continental 10.4   8 460.0 215 3.00 5.424 17.82  0  0    3    4
-#&gt; Honda Civic         30.4   4  75.7  52 4.93 1.615 18.52  1  1    4    2
-#&gt; Porsche 914-2       26.0   4 120.3  91 4.43 2.140 16.70  0  1    5    2
-#&gt; Ford Pantera L      15.8   8 351.0 264 4.22 3.170 14.50  0  1    5    4
-#&gt; Maserati Bora       15.0   8 301.0 335 3.54 3.570 14.60  0  1    5    8</div><div class='input'><span class='fu'>na_omit</span><span class='op'>(</span><span class='va'>mtc_na</span>, cols <span class='op'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span><span class='op'>(</span><span class='st'>"vs"</span>,<span class='st'>"am"</span><span class='op'>)</span><span class='op'>)</span> <span class='co'># Removes only cases missing vs or am</span>
-</div><div class='output co'>#&gt;                      mpg cyl  disp  hp drat    wt  qsec vs am gear carb
-#&gt; Mazda RX4           21.0   6 160.0 110 3.90 2.620 16.46  0  1    4    4
-#&gt; Mazda RX4 Wag         NA   6 160.0 110 3.90 2.875 17.02  0  1    4   NA
-#&gt; Hornet 4 Drive      21.4  NA 258.0 110 3.08 3.215    NA  1  0    3    1
-#&gt; Duster 360            NA   8 360.0 245 3.21 3.570 15.84  0  0    3    4
-#&gt; Merc 240D           24.4   4 146.7  62 3.69 3.190 20.00  1  0   NA    2
-#&gt; Merc 230            22.8  NA 140.8  95 3.92 3.150 22.90  1  0    4    2
-#&gt; Merc 280            19.2   6    NA 123 3.92    NA    NA  1  0    4    4
-#&gt; Merc 280C           17.8   6 167.6  NA 3.92 3.440    NA  1  0    4   NA
-#&gt; Merc 450SE          16.4  NA 275.8 180 3.07 4.070    NA  0  0    3    3
-#&gt; Merc 450SL          17.3   8 275.8 180 3.07 3.730 17.60  0  0    3    3
-#&gt; Lincoln Continental 10.4   8 460.0 215 3.00 5.424 17.82  0  0    3    4
-#&gt; Chrysler Imperial   14.7   8 440.0 230 3.23 5.345 17.42  0  0   NA    4
-#&gt; Honda Civic         30.4   4  75.7  52 4.93 1.615 18.52  1  1    4    2
-#&gt; Dodge Challenger    15.5  NA 318.0 150 2.76 3.520 16.87  0  0   NA    2
-#&gt; AMC Javelin           NA   8 304.0 150 3.15 3.435 17.30  0  0    3    2
-#&gt; Camaro Z28          13.3   8    NA 245   NA 3.840 15.41  0  0    3    4
-#&gt; Pontiac Firebird    19.2   8 400.0 175   NA 3.845 17.05  0  0    3    2
-#&gt; Fiat X1-9           27.3   4  79.0  NA 4.08 1.935 18.90  1  1    4    1
-#&gt; Porsche 914-2       26.0   4 120.3  91 4.43 2.140 16.70  0  1    5    2
-#&gt; Lotus Europa        30.4   4    NA 113 3.77 1.513 16.90  1  1    5    2
-#&gt; Ford Pantera L      15.8   8 351.0 264 4.22 3.170 14.50  0  1    5    4
-#&gt; Ferrari Dino        19.7   6 145.0 175 3.62    NA 15.50  0  1    5   NA
-#&gt; Maserati Bora       15.0   8 301.0 335 3.54 3.570 14.60  0  1    5    8
-#&gt; Volvo 142E          21.4   4    NA  NA 4.11 2.780 18.60  1  1   NA    2</div><div class='input'><span class='fu'>na_omit</span><span class='op'>(</span><span class='fu'><a href='quick-conversion.html'>qM</a></span><span class='op'>(</span><span class='va'>mtc_na</span><span class='op'>)</span><span class='op'>)</span>                  <span class='co'># Also works for matrices</span>
-</div><div class='output co'>#&gt;                      mpg cyl  disp  hp drat    wt  qsec vs am gear carb
-#&gt; Mazda RX4           21.0   6 160.0 110 3.90 2.620 16.46  0  1    4    4
-#&gt; Merc 450SL          17.3   8 275.8 180 3.07 3.730 17.60  0  0    3    3
-#&gt; Lincoln Continental 10.4   8 460.0 215 3.00 5.424 17.82  0  0    3    4
-#&gt; Honda Civic         30.4   4  75.7  52 4.93 1.615 18.52  1  1    4    2
-#&gt; Porsche 914-2       26.0   4 120.3  91 4.43 2.140 16.70  0  1    5    2
-#&gt; Ford Pantera L      15.8   8 351.0 264 4.22 3.170 14.50  0  1    5    4
-#&gt; Maserati Bora       15.0   8 301.0 335 3.54 3.570 14.60  0  1    5    8</div><div class='input'><span class='fu'>na_omit</span><span class='op'>(</span><span class='va'>mtc_na</span><span class='op'>$</span><span class='va'>vs</span>, na.attr <span class='op'>=</span> <span class='cn'>TRUE</span><span class='op'>)</span>   <span class='co'># Also works with vectors</span>
-</div><div class='output co'>#&gt;  [1] 0 0 1 1 0 1 1 1 1 0 0 0 0 0 0 1 1 0 0 0 0 1 0 1 0 0 0 1
+</div><div class='output co'>#&gt;                    mpg cyl  disp  hp drat    wt  qsec vs am gear carb
+#&gt; Mazda RX4         21.0   6 160.0 110 3.90 2.620 16.46  0  1    4    4
+#&gt; Merc 240D         24.4   4 146.7  62 3.69 3.190 20.00  1  0    4    2
+#&gt; Merc 450SLC       15.2   8 275.8 180 3.07 3.780 18.00  0  0    3    3
+#&gt; Chrysler Imperial 14.7   8 440.0 230 3.23 5.345 17.42  0  0    3    4
+#&gt; Fiat 128          32.4   4  78.7  66 4.08 2.200 19.47  1  1    4    1
+#&gt; Honda Civic       30.4   4  75.7  52 4.93 1.615 18.52  1  1    4    2
+#&gt; Toyota Corolla    33.9   4  71.1  65 4.22 1.835 19.90  1  1    4    1
+#&gt; Fiat X1-9         27.3   4  79.0  66 4.08 1.935 18.90  1  1    4    1
+#&gt; Porsche 914-2     26.0   4 120.3  91 4.43 2.140 16.70  0  1    5    2
+#&gt; Lotus Europa      30.4   4  95.1 113 3.77 1.513 16.90  1  1    5    2</div><div class='input'><span class='fu'>na_omit</span><span class='op'>(</span><span class='va'>mtc_na</span>, na.attr <span class='op'>=</span> <span class='cn'>TRUE</span><span class='op'>)</span>      <span class='co'># Adds attribute with removed cases, like na.omit</span>
+</div><div class='output co'>#&gt;                    mpg cyl  disp  hp drat    wt  qsec vs am gear carb
+#&gt; Mazda RX4         21.0   6 160.0 110 3.90 2.620 16.46  0  1    4    4
+#&gt; Merc 240D         24.4   4 146.7  62 3.69 3.190 20.00  1  0    4    2
+#&gt; Merc 450SLC       15.2   8 275.8 180 3.07 3.780 18.00  0  0    3    3
+#&gt; Chrysler Imperial 14.7   8 440.0 230 3.23 5.345 17.42  0  0    3    4
+#&gt; Fiat 128          32.4   4  78.7  66 4.08 2.200 19.47  1  1    4    1
+#&gt; Honda Civic       30.4   4  75.7  52 4.93 1.615 18.52  1  1    4    2
+#&gt; Toyota Corolla    33.9   4  71.1  65 4.22 1.835 19.90  1  1    4    1
+#&gt; Fiat X1-9         27.3   4  79.0  66 4.08 1.935 18.90  1  1    4    1
+#&gt; Porsche 914-2     26.0   4 120.3  91 4.43 2.140 16.70  0  1    5    2
+#&gt; Lotus Europa      30.4   4  95.1 113 3.77 1.513 16.90  1  1    5    2</div><div class='input'><span class='fu'>na_omit</span><span class='op'>(</span><span class='va'>mtc_na</span>, cols <span class='op'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span><span class='op'>(</span><span class='st'>"vs"</span>,<span class='st'>"am"</span><span class='op'>)</span><span class='op'>)</span> <span class='co'># Removes only cases missing vs or am</span>
+</div><div class='output co'>#&gt;                     mpg cyl  disp  hp drat    wt  qsec vs am gear carb
+#&gt; Mazda RX4          21.0   6 160.0 110 3.90 2.620 16.46  0  1    4    4
+#&gt; Hornet Sportabout    NA   8    NA 175 3.15    NA 17.02  0  0    3    2
+#&gt; Valiant            18.1  NA    NA 105 2.76 3.460    NA  1  0   NA    1
+#&gt; Duster 360         14.3   8 360.0 245 3.21 3.570 15.84  0  0   NA    4
+#&gt; Merc 240D          24.4   4 146.7  62 3.69 3.190 20.00  1  0    4    2
+#&gt; Merc 230           22.8   4    NA  95 3.92 3.150 22.90  1  0    4   NA
+#&gt; Merc 280           19.2   6 167.6 123 3.92 3.440 18.30  1  0    4   NA
+#&gt; Merc 280C          17.8   6 167.6 123   NA    NA 18.90  1  0   NA    4
+#&gt; Merc 450SE           NA   8 275.8 180 3.07 4.070    NA  0  0    3    3
+#&gt; Merc 450SL           NA   8 275.8  NA 3.07 3.730 17.60  0  0    3    3
+#&gt; Merc 450SLC        15.2   8 275.8 180 3.07 3.780 18.00  0  0    3    3
+#&gt; Cadillac Fleetwood 10.4  NA 472.0  NA 2.93 5.250 17.98  0  0    3    4
+#&gt; Chrysler Imperial  14.7   8 440.0 230 3.23 5.345 17.42  0  0    3    4
+#&gt; Fiat 128           32.4   4  78.7  66 4.08 2.200 19.47  1  1    4    1
+#&gt; Honda Civic        30.4   4  75.7  52 4.93 1.615 18.52  1  1    4    2
+#&gt; Toyota Corolla     33.9   4  71.1  65 4.22 1.835 19.90  1  1    4    1
+#&gt; Toyota Corona      21.5   4 120.1  97 3.70    NA 20.01  1  0   NA   NA
+#&gt; AMC Javelin          NA   8 304.0 150   NA 3.435 17.30  0  0    3    2
+#&gt; Camaro Z28         13.3   8 350.0  NA 3.73 3.840 15.41  0  0    3    4
+#&gt; Fiat X1-9          27.3   4  79.0  66 4.08 1.935 18.90  1  1    4    1
+#&gt; Porsche 914-2      26.0   4 120.3  91 4.43 2.140 16.70  0  1    5    2
+#&gt; Lotus Europa       30.4   4  95.1 113 3.77 1.513 16.90  1  1    5    2
+#&gt; Ford Pantera L     15.8   8 351.0 264 4.22 3.170    NA  0  1    5    4
+#&gt; Ferrari Dino       19.7   6    NA 175   NA    NA 15.50  0  1    5    6</div><div class='input'><span class='fu'>na_omit</span><span class='op'>(</span><span class='fu'><a href='A4-quick-conversion.html'>qM</a></span><span class='op'>(</span><span class='va'>mtc_na</span><span class='op'>)</span><span class='op'>)</span>                  <span class='co'># Also works for matrices</span>
+</div><div class='output co'>#&gt;                    mpg cyl  disp  hp drat    wt  qsec vs am gear carb
+#&gt; Mazda RX4         21.0   6 160.0 110 3.90 2.620 16.46  0  1    4    4
+#&gt; Merc 240D         24.4   4 146.7  62 3.69 3.190 20.00  1  0    4    2
+#&gt; Merc 450SLC       15.2   8 275.8 180 3.07 3.780 18.00  0  0    3    3
+#&gt; Chrysler Imperial 14.7   8 440.0 230 3.23 5.345 17.42  0  0    3    4
+#&gt; Fiat 128          32.4   4  78.7  66 4.08 2.200 19.47  1  1    4    1
+#&gt; Honda Civic       30.4   4  75.7  52 4.93 1.615 18.52  1  1    4    2
+#&gt; Toyota Corolla    33.9   4  71.1  65 4.22 1.835 19.90  1  1    4    1
+#&gt; Fiat X1-9         27.3   4  79.0  66 4.08 1.935 18.90  1  1    4    1
+#&gt; Porsche 914-2     26.0   4 120.3  91 4.43 2.140 16.70  0  1    5    2
+#&gt; Lotus Europa      30.4   4  95.1 113 3.77 1.513 16.90  1  1    5    2</div><div class='input'><span class='fu'>na_omit</span><span class='op'>(</span><span class='va'>mtc_na</span><span class='op'>$</span><span class='va'>vs</span>, na.attr <span class='op'>=</span> <span class='cn'>TRUE</span><span class='op'>)</span>   <span class='co'># Also works with vectors</span>
+</div><div class='output co'>#&gt;  [1] 0 0 1 0 1 0 1 1 1 1 0 0 0 0 0 1 1 1 1 0 0 0 0 1 0 1 0 0
 #&gt; attr(,"na.action")
-#&gt; [1]  5  6 18 20
+#&gt; [1]  4 16 31 32
 #&gt; attr(,"class")
 #&gt; [1] "omit"</div><div class='input'><span class='fu'>na_rm</span><span class='op'>(</span><span class='va'>mtc_na</span><span class='op'>$</span><span class='va'>vs</span><span class='op'>)</span>                     <span class='co'># For vectors na_rm is faster ...</span>
-</div><div class='output co'>#&gt;  [1] 0 0 1 1 0 1 1 1 1 0 0 0 0 0 0 1 1 0 0 0 0 1 0 1 0 0 0 1</div><div class='input'><span class='fu'><a href='https://rdrr.io/r/base/rm.html'>rm</a></span><span class='op'>(</span><span class='va'>mtc_na</span><span class='op'>)</span>
+</div><div class='output co'>#&gt;  [1] 0 0 1 0 1 0 1 1 1 1 0 0 0 0 0 1 1 1 1 0 0 0 0 1 0 1 0 0</div><div class='input'><span class='fu'><a href='https://rdrr.io/r/base/rm.html'>rm</a></span><span class='op'>(</span><span class='va'>mtc_na</span><span class='op'>)</span>
 </div></pre>
   </div>
   <div class="col-md-3 hidden-xs hidden-sm" id="pkgdown-sidebar">

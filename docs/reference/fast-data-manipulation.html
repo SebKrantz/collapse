@@ -46,7 +46,7 @@ The functions num_vars, cat_vars, char_vars, fact_vars, logi_vars and date_vars 
 add_vars efficiently adds new columns at any position within a data frame (default at the end). This can be done vie replacement (i.e. add_vars(data) &lt;- newdata) or returning the appended data (i.e. add_vars(data, newdata1, newdata2, ...)). Because of the latter, add_vars is also a more efficient alternative to cbind.data.frame.
 fsubset is a much faster version of subset to efficiently subset vectors, matrices and data frames. If the non-standard evaluation offered by fsubset is not needed, the function ss is a much faster and also more secure alternative to [.data.frame.
 fsummarise is a much faster version of dplyr::summarise when used together with the Fast Statistical Functions and fgroup_by, with whom it also supports super fast weighted aggregation.
-ftransform is a much faster version of transform, to modify and delete existing columns or append a data frame with new computed columns. settransform does all of that by reference, i.e. it modifies the data frame in the global environment. fcompute is similar to ftransform but only returns modified and computed columns in a new data frame. 
+ftransform is a much faster version of transform, to modify and delete existing columns or append a data frame with new computed columns. settransform does all of that by reference, i.e. it modifies the data frame in the global environment. fcompute is similar to ftransform but only returns modified and computed columns in a new data frame.
 roworder is a fast substitute for dplyr::arrange, but the syntax is inspired by data.table::setorder.
 colorder efficiently reorders columns in a data frame, see also data.table::setcolorder.
 frename is a fast substitute for dplyr::rename, to efficiently rename various objects. setrename renames objects by reference.
@@ -83,7 +83,7 @@ frename is a fast substitute for dplyr::rename, to efficiently rename various ob
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">collapse</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">1.6.0</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">1.6.4</span>
       </span>
     </div>
 
@@ -106,22 +106,22 @@ frename is a fast substitute for dplyr::rename, to efficiently rename various ob
         <li>
   <a href="https://twitter.com/collapse_R" target="_blank">
     <span class="fa fa-twitter"></span>
-     
+
   </a>
 </li>
 <li>
   <a href="https://github.com/SebKrantz/collapse" target="_blank">
     <span class="fa fa-github"></span>
-     
+
   </a>
 </li>
       </ul>
-      
+
     </div><!--/.nav-collapse -->
   </div><!--/.container -->
 </div><!--/.navbar -->
 
-      
+
 
       </header>
 
@@ -129,7 +129,7 @@ frename is a fast substitute for dplyr::rename, to efficiently rename various ob
   <div class="col-md-9 contents">
     <div class="page-header">
     <h1>Fast Data Manipulation</h1>
-    
+
     <div class="hidden name"><code>fast-data-manipulation.Rd</code></div>
     </div>
 
@@ -162,7 +162,7 @@ frename is a fast substitute for dplyr::rename, to efficiently rename various ob
 <tr><td><code><a href='fsummarise.html'>fsummarise</a></code></td><td></td><td>No methods, for data frames</td><td></td><td>Fast data aggregation</td></tr>
 <tr><td><code><a href='ftransform.html'>(f/set)ftransform(&lt;-)</a></code></td><td></td><td>No methods, for data frames</td><td></td><td>Compute, modify or delete columns (non-standard evaluation)</td></tr>
 <tr><td><!-- %\code{\link{settransform}} \tab\tab No methods, for data frames \tab\tab Compute, modify or delete columns by reference (non-standard evaluation) \cr -->
-                 <code><a href='ftransform.html'>fcompute</a></code></td><td></td><td>No methods, for data frames</td><td></td><td>Compute or modify columns, returned in a new data frame (non-standard evaluation)</td></tr>
+                 <code><a href='ftransform.html'>fcompute(v)</a></code></td><td></td><td>No methods, for data frames</td><td></td><td>Compute or modify columns, returned in a new data frame (non-standard evaluation)</td></tr>
 <tr><td><code><a href='roworder.html'>roworder(v)</a></code></td><td></td><td>No methods, for data frames</td><td></td><td>Reorder rows and return data frame (standard and non-standard evaluation)</td></tr>
 <tr><td><code><a href='colorder.html'>colorder(v)</a></code></td><td></td><td>No methods, for data frames</td><td></td><td>Reorder columns and return data frame (standard and non-standard evaluation)</td></tr>
 <tr><td><code><a href='frename.html'>(f/set)rename</a></code></td><td></td><td>No methods, for all objects with 'names' attribute</td><td></td><td>Rename and return object</td></tr>
@@ -194,7 +194,7 @@ frename is a fast substitute for dplyr::rename, to efficiently rename various ob
       </footer>
    </div>
 
-  
+
 
 
   </body>

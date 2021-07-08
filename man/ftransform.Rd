@@ -66,7 +66,7 @@ fcomputev(.data, vars, FUN, \dots, apply = TRUE, keep = NULL)
 The function \code{fcompute(v)} works just like \code{ftransform(v)}, but returns only the changed / computed columns without modifying or appending the data in \code{.data}. See Examples.
 }
 \note{
-Please note that unlike \code{dplyr::muatate}, \code{ftransform} does not do anything per se with a grouped data frame. This is not a limitation but an advantage as it affords greater flexibility and performance in programming with the fast functions in this package, through which \emph{collapse} supports various kinds of fully vectorized grouped transformations. See Examples as well as the excellent answer provided \href{https://stackoverflow.com/questions/67349744/using-ftransform-along-with-fgroup-by-from-collapse-r-package}{here}.
+Please note that unlike \code{dplyr::mutate}, \code{ftransform} does not do anything per se with a grouped data frame. This is not a limitation as it affords greater flexibility and performance in programming with the \code{.FAST_FUN}, through which \emph{collapse} supports \emph{various kinds} of fully vectorized grouped transformations (see \code{\link{TRA}} for a list of available transformations). See Examples or the answer provided \href{https://stackoverflow.com/questions/67349744/using-ftransform-along-with-fgroup-by-from-collapse-r-package}{here}.
 }
 \value{
   The modified data frame \code{.data}, or, for \code{fcompute}, a new data frame with the columns computed on \code{.data}. All attributes of \code{.data} are preserved.
@@ -121,7 +121,7 @@ airquality \%>\% fgroup_by(Month) \%>\%
              sd_Ozone_m = fsd(Ozone, GRP(.), TRA = "replace"), # In-Month standard deviation
              sd_Ozone = fsd(Ozone, TRA = "replace"),           # Overall standard deviation
              sd_Ozone2 = fsd(Ozone, TRA = "replace_fill"),     # Same, overwriting NA's
-             sd_Ozone3 = fsd(Ozone)) \%>\% head                  # Same thing (calling rep())
+             sd_Ozone3 = fsd(Ozone)) \%>\% head                  # Same thing (calling alloc())
 
 rm(airquality)
 
