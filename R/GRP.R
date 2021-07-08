@@ -351,9 +351,10 @@ print.invisible <- function(x, ...) cat("")
 
 fungroup <- function(X, ...) {
   # if(!missing(...)) unused_arg_action(match.call(), ...)
-  # clx <- oldClass(X)
+  clx <- oldClass(X)
   attr(X, "groups") <- NULL
-  oldClass(X) <- fsetdiff(oldClass(X), c("GRP_df", "grouped_df"))  # clx[clx != "grouped_df"]
+  oldClass(X) <- fsetdiff(clx, c("GRP_df", "grouped_df"))  # clx[clx != "grouped_df"]
+  if(any(clx == "data.table")) return(alc(X))
   X
 }
 

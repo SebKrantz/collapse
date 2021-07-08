@@ -70,6 +70,13 @@ test_that("creating columns and printing works after passing a data.table throug
   }
 
   for(i in 1:n) {
+    dt <- fungroup(fgroup_by(mtcDT, c(2,8:9)))
+    expect_identical(names(dt), names(mtcars))
+    expect_silent(dt[, new := 1])
+    expect_output(print(dt))
+  }
+
+  for(i in 1:n) {
   dt <- funique(copy(mtcDT))
   expect_identical(names(dt), names(mtcars))
   expect_silent(dt[, new := 1])
