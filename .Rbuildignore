@@ -12,6 +12,7 @@
 ^\.build\.timestamp$
 ^doc$
 ^\.RData
+vignettes/collapse_and_sf
 ^Meta$
 ^CRAN-RELEASE$
 ^_pkgdown\.yml$

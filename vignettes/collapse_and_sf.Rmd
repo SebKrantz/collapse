@@ -33,8 +33,6 @@ knitr::opts_chunk$set(error = FALSE, message = FALSE, warning = FALSE,
                       fig.width = 8, fig.height = 5, 
                       out.width = '100%')
 
-RUNBENCH <- identical(Sys.getenv("RUNBENCH"), "TRUE")
-
 oldopts <- options(width = 100L)
 set.seed(101)
 ```
