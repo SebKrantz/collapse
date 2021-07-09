@@ -1,7 +1,5 @@
 ^collapse\.Rproj$
 ^\.Rproj\.user$
-\.Rnw$
-\.pdf$
 \.fsrc$
 \.o$
 \.so$
@@ -24,6 +22,5 @@ man/figures
 ^codecov\.yml$
 ^\.covignore$
 ^\.github$
-\.html$
 \.log$
 _cache$
