@@ -84,8 +84,7 @@ jobs:
           name: ${{ runner.os }}-r${{ matrix.config.r }}-results
           path: check
 
-
- rchk:
+  rchk:
     runs-on: ubuntu-latest
     steps:
     - uses: actions/checkout@v1
