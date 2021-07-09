@@ -83,3 +83,12 @@ jobs:
         with:
           name: ${{ runner.os }}-r${{ matrix.config.r }}-results
           path: check
+
+
+ rchk:
+    runs-on: ubuntu-latest
+    steps:
+    - uses: actions/checkout@v1
+    - uses: randy3k/github-action-rchk@master
+      with:
+        package: collapse
