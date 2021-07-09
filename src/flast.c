@@ -155,12 +155,15 @@ SEXP flastC(SEXP x, SEXP Rng, SEXP g, SEXP Rnarm) {
     pgl = &ng;
     return flast_impl(x, ng, g, narm, pgl);
   }
-  int gl[ng], *pg = INTEGER(g);
-  pgl = &gl[0];
+  SEXP gl = PROTECT(allocVector(INTSXP, ng));
+  int *pg = INTEGER(g);
+  pgl = INTEGER(gl);
   for(int i = ng; i--; ) pgl[i] = NA_INTEGER;
   --pgl;
   for(int i = length(g); i--; ) if(pgl[pg[i]] == NA_INTEGER) pgl[pg[i]] = i;
-  return flast_impl(x, ng, g, narm, ++pgl);
+  SEXP res = flast_impl(x, ng, g, narm, ++pgl);
+  UNPROTECT(1);
+  return res;
 }
 
 SEXP flastlC(SEXP x, SEXP Rng, SEXP g, SEXP Rnarm) {
@@ -303,8 +306,8 @@ SEXP flastmC(SEXP x, SEXP Rng, SEXP g, SEXP Rnarm, SEXP Rdrop) {
       default: error("Unsupported SEXP type!");
       }
     } else {
-      int gl[ng], *pgl;
-      pgl = &gl[0];
+      SEXP gl = PROTECT(allocVector(INTSXP, ng));
+      int *pgl = INTEGER(gl);
       for(int i = ng; i--; ) pgl[i] = NA_INTEGER;
       --pgl;
       for(int i = l; i--; ) if(pgl[pg[i]] == NA_INTEGER) pgl[pg[i]] = i;
@@ -338,6 +341,7 @@ SEXP flastmC(SEXP x, SEXP Rng, SEXP g, SEXP Rnarm, SEXP Rdrop) {
       }
       default: error("Unsupported SEXP type!");
       }
+      UNPROTECT(1);
     }
     matCopyAttr(out, x, Rdrop, ng);
     UNPROTECT(1);

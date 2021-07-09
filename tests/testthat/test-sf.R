@@ -1,5 +1,7 @@
 context("collapse and sf")
 
+if(Sys.getenv("NMAC") == "TRUE") {
+
 library(sf)
 nc <- st_read(system.file("shape/nc.shp", package = "sf"), quiet = TRUE)
 
@@ -31,3 +33,5 @@ test_that("sf methods work properly", {
                                     Perimeter_Ag = fmedian(PERIMETER),
                                     geometry = st_union(geometry)), "sf"))
 })
+
+}

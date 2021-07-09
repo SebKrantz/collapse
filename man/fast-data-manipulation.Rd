@@ -37,7 +37,7 @@
 
                  \code{\link[=ftransform]{(f/set)ftransform(<-)}} \tab\tab No methods, for data frames \tab\tab Compute, modify or delete columns (non-standard evaluation) \cr
                  %\code{\link{settransform}} \tab\tab No methods, for data frames \tab\tab Compute, modify or delete columns by reference (non-standard evaluation) \cr
-                 \code{\link{fcompute}} \tab\tab No methods, for data frames \tab\tab Compute or modify columns, returned in a new data frame (non-standard evaluation) \cr
+                 \code{\link[=fcompute]{fcompute(v)}} \tab\tab No methods, for data frames \tab\tab Compute or modify columns, returned in a new data frame (non-standard evaluation) \cr
                  \code{\link[=roworder]{roworder(v)}} \tab\tab No methods, for data frames \tab\tab Reorder rows and return data frame (standard and non-standard evaluation) \cr
                  \code{\link[=colorder]{colorder(v)}} \tab\tab No methods, for data frames \tab\tab Reorder columns and return data frame (standard and non-standard evaluation) \cr
                  \code{\link[=frename]{(f/set)rename}} \tab\tab No methods, for all objects with 'names' attribute \tab\tab Rename and return object \cr

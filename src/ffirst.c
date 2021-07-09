@@ -175,19 +175,20 @@ SEXP ffirstC(SEXP x, SEXP Rng, SEXP g, SEXP Rnarm) {
     return ffirst_impl(x, ng, g, narm, pgl);
   }
 
-  // Using C-Array -> Error, possibly because unprotected ???
-  int gl[ng], *pg = INTEGER(g), lg = length(g);
-  pgl = &gl[0];
+  // Using C-Array -> Not a good idea, variable length arrays give note on gcc11
+  SEXP gl = PROTECT(allocVector(INTSXP, ng));
+  int *pg = INTEGER(g), lg = length(g);
+  pgl = INTEGER(gl);
   for(int i = ng; i--; ) pgl[i] = NA_INTEGER;
   --pgl; // &gl[0]-1 Or gl-1; // Pointer to -1 array element (since g starts from 1): https://beginnersbook.com/2014/01/c-pointer-to-array-example/
-  for(int i = 0; i != lg; ++i) if(pgl[pg[i]] == NA_INTEGER) pgl[pg[i]] = i; // Correct? even for first value ?
+         // Above gives gcc11 issue !! (works with R INTEGER() pointer, not plain C array)
+  for(int i = 0; i != lg; ++i) if(pgl[pg[i]] == NA_INTEGER) pgl[pg[i]] = i;
 
   //  SEXP gl = PROTECT(allocVector(INTSXP, ng));
   //  memset(gl, 0, sizeof(int)*ng); //
   //  int *pg = INTEGER(g);
   //  pgl = INTEGER(gl)-1; // Pointer to -1 array element (since g starts from 1): https://beginnersbook.com/2014/01/c-pointer-to-array-example/
   //  for(int i = length(g); i--; ) if(!pgl[pg[i]]) pgl[pg[i]] = i; // Correct? even for first value ?
-
 
   // SEXP out = PROTECT(allocVector(INTSXP, ng));
   // int *pout = INTEGER(out);
@@ -196,7 +197,9 @@ SEXP ffirstC(SEXP x, SEXP Rng, SEXP g, SEXP Rnarm) {
   // return out; // Checking pointer: appears to be correct...
   // UNPROTECT(1);
   // return gl;
-  return ffirst_impl(x, ng, g, narm, ++pgl);
+  SEXP res = ffirst_impl(x, ng, g, narm, ++pgl);
+  UNPROTECT(1);
+  return res;
 }
 
 SEXP ffirstlC(SEXP x, SEXP Rng, SEXP g, SEXP Rnarm) {
@@ -341,10 +344,11 @@ SEXP ffirstmC(SEXP x, SEXP Rng, SEXP g, SEXP Rnarm, SEXP Rdrop) {
       default: error("Unsupported SEXP type!");
       }
     } else {
-      int gl[ng], *pgl;
-      pgl = &gl[0];
+      SEXP gl = PROTECT(allocVector(INTSXP, ng));
+      // int gl[ng], *pgl; pgl = &gl[0];
+      int *pgl = INTEGER(gl);
       for(int i = ng; i--; ) pgl[i] = NA_INTEGER;
-      --pgl;
+      --pgl; // gcc11 issue with plain array
       for(int i = 0; i != l; ++i) if(pgl[pg[i]] == NA_INTEGER) pgl[pg[i]] = i;
       ++pgl;
       switch(tx) {
@@ -376,6 +380,7 @@ SEXP ffirstmC(SEXP x, SEXP Rng, SEXP g, SEXP Rnarm, SEXP Rdrop) {
       }
       default: error("Unsupported SEXP type!");
       }
+      UNPROTECT(1);
     }
     matCopyAttr(out, x, Rdrop, ng);
     UNPROTECT(1);

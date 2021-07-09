@@ -1,0 +1,93 @@
+\documentclass[10pt,a4paper,landscape]{article}
+\usepackage[dvipsnames]{xcolor}
+\usepackage{amsmath}
+\usepackage{multicol,multirow}
+\usepackage[colorinlistoftodos]{todonotes}
+\usepackage[landscape]{geometry}
+\usepackage[colorlinks=true,citecolor=blue,linkcolor=blue]{hyperref}
+\usepackage{booktabs}
+\usepackage[english]{babel}
+\usepackage[utf8]{inputenc}
+\usepackage[scaled=1]{helvet}
+\renewcommand\familydefault{\sfdefault} 
+\usepackage[T1]{fontenc}
+
+\usepackage{setspace} % \linespread{1.3}
+\setlength\parindent{0pt}
+
+\usepackage{graphicx}
+\usepackage[section]{placeins}
+\usepackage{adjustbox}
+
+% \title{\textcolor{Gray}{\textbf{POLICY BREIF}}\\ \vspace{2mm} \textcolor{RoyalBlue}
+
+
+\ifthenelse{\lengthtest { \paperwidth = 11in}}
+    { \geometry{top=.2in,left=.3in,right=.3in,bottom=.3in} } %Normally all .5in (L,R=4 before)
+	{\ifthenelse{ \lengthtest{ \paperwidth = 297mm}}
+		{\geometry{top=0.8cm,left=1cm,right=1cm,bottom=1cm} }
+		{\geometry{top=1cm,left=1cm,right=1cm,bottom=1cm} }
+	}
+\pagestyle{empty}
+\makeatletter
+\renewcommand{\section}{\@startsection{section}{1}{0mm}%
+                                {-2ex plus -.5ex minus -.2ex}%before -1
+                                {0.5ex plus .2ex}%x
+                                {\normalfont\large\bfseries}}
+\renewcommand{\subsection}{\@startsection{subsection}{2}{0mm}%
+                                {-2explus -.5ex minus -.2ex}%before -1
+                                {0.5ex plus .2ex}%
+                                {\normalfont\normalsize\bfseries}}
+\renewcommand{\subsubsection}{\@startsection{subsubsection}{3}{0mm}%
+                                {-2ex plus -.5ex minus -.2ex}%set spaces around sections
+                                {0.3ex plus .2ex}%normally 1
+                                {\normalfont\small\bfseries}}
+\makeatother
+
+
+% For pmatrix  equal spacing:
+\renewcommand*{\arraystretch}{1.1}
+\renewcommand*{\arraycolsep}{1.2pt}
+
+\setcounter{secnumdepth}{0}
+\setlength{\parindent}{0pt}
+%\setlength{\parskip}{0pt plus 0.5ex}
+\setlength{\parskip}{0.02em}%Length of space between paragraphs
+
+\setlength{\columnsep}{6mm}
+
+\setlength{\itemsep}{0.2em}
+
+% -----------------------------------------------------------------------
+
+\title{My Title}
+
+\begin{document}
+
+\raggedright
+\footnotesize
+
+\begin{center}
+     \Large{\textbf{My Title}}\\\small{by Sebastian Krantz} %\vspace{mm}
+\end{center} 
+\begin{multicols*}{4}
+\setlength{\premulticols}{1pt}
+\setlength{\postmulticols}{1pt}
+\setlength{\multicolsep}{1pt}
+\setlength{\columnsep}{2pt}
+
+\section{\textcolor{Gray}{Basics}}
+\hline
+
+
+collapse is a powerful (C/C++ based) package supporting advanced (grouped, weighted, time series, panel data and recursive) operations in R. \newline
+
+It also offers a class-agnostic approach to data manipulation - handling matrix and data frame based objects in a uniform \& non-destructive way. \newline
+
+It is particuarly well integrated with data.table, dplyr ((grouped) tibbles) and plm classes for panel data, and can be programmed using pipes \%>\% (magrittr) or standard evaluation.  
+
+\section{Fast Statistical Functions}
+bla bla
+
+\end{multicols*}
+\end{document}

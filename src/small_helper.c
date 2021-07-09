@@ -6,17 +6,19 @@ void matCopyAttr(SEXP out, SEXP x, SEXP Rdrop, int ng) {
   if(ng == 0 && asLogical(Rdrop)) {
     if(length(cn)) setAttrib(out, R_NamesSymbol, cn);
   } else {
-    SEXP dim, dn;
-    dim = PROTECT(duplicate(getAttrib(x, R_DimSymbol)));
+    int nprotect = 1;
+    SEXP dim = PROTECT(duplicate(getAttrib(x, R_DimSymbol)));
     INTEGER(dim)[0] = ng == 0 ? 1 : ng;
     dimgets(out, dim);
     if(length(cn)) {
-      setAttrib(out, R_DimNamesSymbol, dn = allocVector(VECSXP, 2)); // Protected by out..
+      ++nprotect;
+      SEXP dn = PROTECT(allocVector(VECSXP, 2));
       SET_VECTOR_ELT(dn, 0, R_NilValue);
       SET_VECTOR_ELT(dn, 1, cn);
+      dimnamesgets(out, dn);
     }
     if(!isObject(x)) copyMostAttrib(x, out);
-    UNPROTECT(1);
+    UNPROTECT(nprotect);
   }
 }
 
@@ -25,10 +27,11 @@ void DFcopyAttr(SEXP out, SEXP x, int ng) {
   if(ng == 0) {
     setAttrib(out, R_RowNamesSymbol, ScalarInteger(1));
   } else {
-    SEXP rn;
-    setAttrib(out, R_RowNamesSymbol, rn = allocVector(INTSXP, 2));
+    SEXP rn = PROTECT(allocVector(INTSXP, 2)); // Needed here, now unsafe to pass uninitialized vectors to R_RowNamesSymbol.
     INTEGER(rn)[0] = NA_INTEGER;
     INTEGER(rn)[1] = -ng;
+    setAttrib(out, R_RowNamesSymbol, rn);
+    UNPROTECT(1);
   }
 }
 

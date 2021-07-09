@@ -25,15 +25,15 @@ pre[class] {
 ```
 
 ```{r, echo = FALSE, message = FALSE, warning=FALSE}
-library(sf)
+
+NMAC <- Sys.getenv("NMAC") == "TRUE"
+if(NMAC) library(sf)
 library(microbenchmark)
 library(collapse)
 knitr::opts_chunk$set(error = FALSE, message = FALSE, warning = FALSE, 
                       comment = "#", tidy = FALSE, cache = TRUE, collapse = TRUE,
                       fig.width = 8, fig.height = 5, 
                       out.width = '100%')
-
-RUNBENCH <- identical(Sys.getenv("RUNBENCH"), "TRUE")
 
 oldopts <- options(width = 100L)
 set.seed(101)
@@ -50,7 +50,7 @@ This short vignette focuses on using *collapse* with the popular *sf* package by
 
 Version 1.6.0 of the package adds internal support for *sf* data frames where the geometry column is handled by most essential functions (`fselect`, `get_vars`, `num_vars`, `fsubset`, `ss`, `fgroup_by`, `qsu`, `descr`, `varying`, `funique`, `roworder`, `rsplit`, `fcompute`, ...). This largely does not affect previously written code where the geometry column is explicitly selected. To demonstrate these features, we can load a test dataset provided by *sf*:
 
-```{r}
+```{r, eval=NMAC}
 library(collapse)
 library(sf)
 
@@ -63,7 +63,7 @@ nc
 
 The first thing that *collapse* 1.6.0 adds is summary statistics for *sf* data frames that automatically exclude the 'geometry' column:
 
-```{r}
+```{r, eval=NMAC}
 # Which columns have at least 2 non-missing distinct values
 varying(nc) 
 
@@ -79,7 +79,7 @@ descr(nc)
 
 We can now also easily select columns from the *sf* data frame without having to worry about taking along 'geometry':
 
-```{r}
+```{r, eval=NMAC}
 # Selecting a sequence of columns
 fselect(nc, AREA, NAME:FIPSNO)
 
@@ -89,7 +89,7 @@ gv(nc, c("AREA", "NAME", "FIPS", "FIPSNO"))
 
 The same applies to subsetting rows (and columns):
 
-```{r}
+```{r, eval=NMAC}
 # A fast and enhanced version of base::subset, now also supporting sf data 
 fsubset(nc, AREA > fmean(AREA), AREA, NAME:FIPSNO)
 
@@ -99,7 +99,7 @@ ss(nc, 1:10, c("AREA", "NAME", "FIPS", "FIPSNO"))
 
 This is significantly faster than using `[`, `dplyr::select` or `dplyr::filter`: 
 
-```{r}
+```{r, eval=NMAC}
 library(microbenchmark)
 library(dplyr)
 
@@ -122,7 +122,7 @@ It needs to be noted that at this point *collapse* functions don't subset the 'a
 
 The flexibility and speed of `collap` for aggregation can be used on *sf* data frames. A separate method for *sf* objects was not considered necessary as one can simply aggregate the geometry column using `st_union`:
 
-```{r}
+```{r, eval=NMAC}
 # Aggregating by variable SID74 using the median for numeric and the mode for categorical columns
 collap(nc, ~ SID74, custom = list(fmedian = is.numeric, 
                                   fmode = is.character, 
@@ -131,7 +131,7 @@ collap(nc, ~ SID74, custom = list(fmedian = is.numeric,
 
 It needs to be noted here that typically most of the time in aggregation is consumed by `st_union` so that the speed of *collapse* does not really become visible on most datasets. *sf* data frames can also be grouped and then aggregated using `fsummarise`:
 
-```{r}
+```{r, eval=NMAC}
 nc |> fgroup_by(SID74)
 
 nc |> fgroup_by(SID74) |>
@@ -144,14 +144,14 @@ nc |> fgroup_by(SID74) |>
 
 Functions `funique` and `roworder(v)` work on sf data frames and ignore the geometry column for determining the unique values / order of rows. `rsplit` can be used to (recursively) split an *sf* data frame into multiple chunks. 
 
-```{r}
+```{r, eval=NMAC}
 # Splitting by SID74
 rsplit(nc, ~ SID74) |> head(2)
 ```
 
 It should be noted here that the default in `rsplit` for data frames is `simplify = TRUE`, which for a single LHS variable would just split the column-vector. This does not apply to *sf* data frames as the 'geometry' column is always selected as well.
 
-```{r}
+```{r, eval=NMAC}
 # Only splitting Area
 rsplit(nc, AREA ~ SID74) |> head(1)
 
@@ -164,7 +164,7 @@ rsplit(qDF(nc), AREA ~ SID74) |> head(1)
 
 For transforming and computing columns, `ftransform(v)` and `settransform(v)` apply as to any other data frame. 
 
-```{r}
+```{r, eval=NMAC}
 ftransform(nc, scaled_AREA = fscale(AREA), 
                gsum_AREA = fsum(AREA, SID74, TRA = "replace_fill"))
 
@@ -176,7 +176,7 @@ nc
 
 Special attention to *sf* data frames is afforded by `fcompute`, which can be used to compute new columns dropping existing ones - except for the geometry column and any columns selected through the `keep` argument. 
 
-```{r}
+```{r, eval=NMAC}
 fcompute(nc, scaled_AREA = fscale(AREA), 
              gsum_AREA = fsum(AREA, SID74, TRA = "replace_fill"), 
          keep = .c(AREA, SID74))
@@ -186,7 +186,7 @@ fcompute(nc, scaled_AREA = fscale(AREA),
 
 The quick converters `qDF`, `qDT` and `qTBL` can be used to very efficiently convert *sf* data frames to standard data frames, *data.table*'s or *tibbles*, and the result can be converted back to the original *sf* data frame using `setAttrib`, `copyAttrib` or `copyMostAttrib`. 
 
-```{r}
+```{r, eval=NMAC}
 library(data.table)
 qDT(nc)[, list(roll_AREA = frollmean(AREA, 2), geometry), by = SID74] |> copyMostAttrib(nc)
 ```

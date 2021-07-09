@@ -12,7 +12,7 @@ name: test-coverage
 
 jobs:
   test-coverage:
-    runs-on: macOS-latest
+    runs-on: windows-latest
     env:
       GITHUB_PAT: ${{ secrets.GITHUB_TOKEN }}
     steps:
@@ -47,6 +47,6 @@ jobs:
         run: |
           library(covr)
           options(covr.flags = c(CXXFLAGS = "-O2", LDFLAGS=""))
-          Sys.setenv(NCRAN = TRUE)
+          Sys.setenv(NCRAN = TRUE, NMAC = TRUE)
           codecov(type = "all")
         shell: Rscript {0}
