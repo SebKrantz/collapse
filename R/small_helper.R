@@ -209,10 +209,10 @@ cinv <- function(X) chol2inv(chol(X))
 interact_names <- function(l) do.call(paste, c(expand.grid(l, KEEP.OUT.ATTRS = FALSE, stringsAsFactors = FALSE), list(sep = ".")))
 
 # set over-allocation for data.table's
-alc <- function(x, n = options("collapse_DT_alloccol")[[1L]]) .Call(C_alloccol, x, n)
-condalc <- function(x, DT, n = options("collapse_DT_alloccol")[[1L]]) if(DT) .Call(C_alloccol, x, n) else x
-alcSA <- function(x, a, n = options("collapse_DT_alloccol")[[1L]]) .Call(C_alloccol, .Call(C_setAttributes, x, a), n)
-condalcSA <- function(x, a, DT, n = options("collapse_DT_alloccol")[[1L]]) if(DT) .Call(C_alloccol, .Call(C_setAttributes, x, a), n) else .Call(C_setAttributes, x, a)
+alc <- function(x, n = getOption("collapse_DT_alloccol")) .Call(C_alloccol, x, n)
+condalc <- function(x, DT, n = getOption("collapse_DT_alloccol")) if(DT) .Call(C_alloccol, x, n) else x
+alcSA <- function(x, a, n = getOption("collapse_DT_alloccol")) .Call(C_alloccol, .Call(C_setAttributes, x, a), n)
+condalcSA <- function(x, a, DT, n = getOption("collapse_DT_alloccol")) if(DT) .Call(C_alloccol, .Call(C_setAttributes, x, a), n) else .Call(C_setAttributes, x, a)
 
 unattrib <- function(object) `attributes<-`(object, NULL)
 
