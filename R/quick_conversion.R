@@ -75,7 +75,7 @@ qDF <- function(X, row.names.col = FALSE, keep.attr = FALSE, class = "data.frame
   X
 }
 
-qDT_raw <- function(X, row.names.col, keep.attr, DT_class) {
+qDT_raw <- function(X, row.names.col, keep.attr, DT_class, X_nam) {
   if(is.atomic(X)) {
     d <- dim(X)
     ld <- length(d)
@@ -100,10 +100,10 @@ qDT_raw <- function(X, row.names.col, keep.attr, DT_class) {
       return(if(any(axoth)) addAttributes(res, ax[axoth]) else res)
     }
     if(isFALSE(row.names.col) || is.null(nam <- names(X))) {
-      res <- `names<-`(list(X), l1orlst(as.character(substitute(X))))
+      res <- `names<-`(list(X), X_nam)
     } else {
       res <- list(nam, `names<-`(X, NULL))
-      names(res) <- c(if(is.character(row.names.col)) row.names.col[1L] else "row.names", l1orlst(as.character(substitute(X))))
+      names(res) <- c(if(is.character(row.names.col)) row.names.col[1L] else "row.names", X_nam)
     }
     attr(res, "row.names") <- .set_row_names(length(X))
     return(`oldClass<-`(res, DT_class))
@@ -134,11 +134,17 @@ qDT_raw <- function(X, row.names.col, keep.attr, DT_class) {
   return(`oldClass<-`(X, DT_class))
 }
 
-qDT <- function(X, row.names.col = FALSE, keep.attr = FALSE, class = c("data.table", "data.frame"))
-   alc(qDT_raw(X, row.names.col, keep.attr, if(length(class) || keep.attr) class else c("data.table", "data.frame")))
+qDT <- function(X, row.names.col = FALSE, keep.attr = FALSE, class = c("data.table", "data.frame")) {
+   alc(qDT_raw(X, row.names.col, keep.attr,
+               if(length(class) || keep.attr) class else c("data.table", "data.frame"),
+               if(is.atomic(X) && !is.matrix(X)) l1orlst(as.character(substitute(X))) else NULL))
+}
 
-qTBL <- function(X, row.names.col = FALSE, keep.attr = FALSE, class = c("tbl_df", "tbl", "data.frame"))
-       qDT_raw(X, row.names.col, keep.attr, if(length(class) || keep.attr) class else c("tbl_df", "tbl", "data.frame"))
+qTBL <- function(X, row.names.col = FALSE, keep.attr = FALSE, class = c("tbl_df", "tbl", "data.frame")) {
+       qDT_raw(X, row.names.col, keep.attr,
+               if(length(class) || keep.attr) class else c("tbl_df", "tbl", "data.frame"),
+               if(is.atomic(X) && !is.matrix(X)) l1orlst(as.character(substitute(X))) else NULL)
+}
 
 
 qM <- function(X, keep.attr = FALSE, class = NULL) {
