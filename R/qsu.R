@@ -231,7 +231,7 @@ print.qsu <- function(x, digits = 4, nonsci.digits = 9, na.print = "-", return =
   formatfun <- function(x) { # , drop0trailing = FALSE redundat ??
     class(x) <- NULL
     xx <- formatC(vec2mat(round(x, digits)), format = "g", flag = "#",
-                  digits = nonsci.digits, big.mark = ",", big.interval = 6,
+                  digits = nonsci.digits, big.mark = "'", big.interval = 6, # "\u2009": https://stackoverflow.com/questions/30555232/using-a-half-space-as-a-big-mark-for-knitr-output
                   drop0trailing = TRUE, preserve.width = "individual") # format(unclass(round(x,2)), digits = digits, drop0trailing = TRUE, big.mark = ",", big.interval = 6, scientific = FALSE)
     if(any(ina <- is.na(x))) xx[ina] <- na.print
     xx <- gsub(" ", "", xx, fixed = TRUE) # remove some weird white space (qsu(GGDS10S))

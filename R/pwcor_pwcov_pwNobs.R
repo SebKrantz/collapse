@@ -210,7 +210,7 @@ print.pwcor <- function(x, digits = 2L, sig.level = 0.05, show = c("all","lower.
 
 print.pwcov <- function(x, digits = 2L, sig.level = 0.05, show = c("all","lower.tri","upper.tri"), spacing = 1L, ...) {
   formfun <- function(x, adj = FALSE) {
-    xx <- format(round(x, digits), digits = 9, big.mark = ",", big.interval = 6)
+    xx <- format(round(x, digits), digits = 9, big.mark = "'", big.interval = 6)
     # xx <- sub("(-?)0\\.", "\\1.", xx) # Not needed here...
     if(adj) {
       xna <- is.na(x)
@@ -261,4 +261,4 @@ print.pwcov <- function(x, digits = 2L, sig.level = 0.05, show = c("all","lower.
 
 
 # print.pwcov <- function(x, digits = 2, ...) print.default(formatC(round(x, digits), format = "g",
-#                         digits = 9, big.mark = ",", big.interval = 6), quote = FALSE, right = TRUE, ...)
+#                         digits = 9, big.mark = "'", big.interval = 6), quote = FALSE, right = TRUE, ...)
