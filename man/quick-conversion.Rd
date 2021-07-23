@@ -25,7 +25,7 @@ Fast, flexible and precise conversion of common data objects, without method dis
 
  qDF(X, row.names.col = FALSE, keep.attr = FALSE, class = "data.frame")
  qDT(X, row.names.col = FALSE, keep.attr = FALSE, class = c("data.table", "data.frame"))
-qTBL(X, row.names.col = FALSE, keep.attr = FALSE, class = c("tbl_df", "tbl", "data.frame"))
+qTBL(X, row.names.col = FALSE, keep.attr = FALSE, class = c("tbl_df","tbl","data.frame"))
   qM(X,                        keep.attr = FALSE, class = NULL)
 
 # Programmer functions: matrix rows or columns to list / DF / DT - fully in C++
