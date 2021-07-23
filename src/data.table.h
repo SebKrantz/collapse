@@ -38,6 +38,8 @@ typedef R_xlen_t RLEN;
 #define ALTREP(x) 0  // for R<3.5.0, see issue #2866 and grep for "ALTREP" to see comments where it's used
 #endif
 
+#define SEXPPTR(x) ((SEXP *)DATAPTR(x))  // to avoid overhead of looped STRING_ELT and VECTOR_ELT
+
 // init.c // https://stackoverflow.com/questions/1410563/what-is-the-difference-between-a-definition-and-a-declaration
 extern SEXP char_integer64;
 extern SEXP char_nanotime;
@@ -56,6 +58,7 @@ extern SEXP sym_inherits;
 extern SEXP sym_sf_column;
 extern SEXP SelfRefSymbol;
 extern SEXP sym_datatable_locked;
+extern SEXP sym_collapse_DT_alloccol;
 
 long long DtoLL(double x);
 double LLtoD(long long x);
@@ -83,7 +86,7 @@ SEXP setcolorder(SEXP x, SEXP o);
 SEXP subsetVector(SEXP x, SEXP idx);
 SEXP anyNA(SEXP x, SEXP cols);
 // SEXP uniqlengths(SEXP x, SEXP n);
-SEXP Calloccol(SEXP dt, SEXP Rn);
+SEXP Calloccol(SEXP dt); // , SEXP Rn
 
 // frank.c
 SEXP dt_na(SEXP x, SEXP cols);

@@ -30,6 +30,7 @@ SEXP sym_inherits;
 SEXP sym_sf_column;
 SEXP SelfRefSymbol;
 SEXP sym_datatable_locked;
+SEXP sym_collapse_DT_alloccol;
 
 double NA_INT64_D;
 long long NA_INT64_LL;
@@ -143,6 +144,7 @@ SEXP collapse_init(SEXP mess) // void SEXP mess DllInfo *info
   sym_sf_column = install("sf_column");
   SelfRefSymbol = install(".internal.selfref");
   sym_datatable_locked = install(".data.table.locked");
+  sym_collapse_DT_alloccol = install("collapse_DT_alloccol");
 
   return mess;
 }

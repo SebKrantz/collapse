@@ -5,8 +5,6 @@
 
 #include "data.table.h"
 
-#define SEXPPTR(x) ((SEXP *)DATAPTR(x))  // to avoid overhead of looped STRING_ELT and VECTOR_ELT
-
 // selfref stuff is taken from data.tables assign.c
 
 static void finalizer(SEXP p)
@@ -136,11 +134,11 @@ static SEXP shallow(SEXP dt, SEXP cols, R_len_t n)
 }
 
 // Can allocate conditionally on size, for export... use in collap, qDT etc.
-SEXP Calloccol(SEXP dt, SEXP Rn)
+SEXP Calloccol(SEXP dt) // , SEXP Rn
 {
   R_len_t tl, n, l;
   l = LENGTH(dt);
-  n = l + asInteger(Rn);
+  n = l + asInteger(GetOption1(sym_collapse_DT_alloccol));  // asInteger(Rn);
   tl = TRUELENGTH(dt);
   // R <= 2.13.2 and we didn't catch uninitialized tl somehow
   if (tl < 0) error("Internal error, tl of class is marked but tl<0."); // # nocov
@@ -469,7 +467,8 @@ SEXP subsetCols(SEXP x, SEXP cols, SEXP checksf) { // SEXP fretall
   if(INHERITS(x, char_datatable)) {
     setAttrib(ans, sym_datatable_locked, R_NilValue);
     UNPROTECT(nprotect);
-    return shallow(ans, R_NilValue, ncol+100); // 1024 is data.table default..
+    int n = asInteger(GetOption1(sym_collapse_DT_alloccol));
+    return shallow(ans, R_NilValue, ncol + n); // 1024 is data.table default..
     // setselfref(ans); // done by shallow
   }
   UNPROTECT(nprotect);
@@ -589,7 +588,8 @@ SEXP subsetDT(SEXP x, SEXP rows, SEXP cols) { // , SEXP fastret
     setAttrib(ans, sym_sorted, R_NilValue);
     setAttrib(ans, sym_datatable_locked, R_NilValue);
     UNPROTECT(nprotect);
-    return shallow(ans, R_NilValue, ncol+100); // 1024 is data.table default..
+    int n = asInteger(GetOption1(sym_collapse_DT_alloccol));
+    return shallow(ans, R_NilValue, ncol + n); // 1024 is data.table default..
     // setselfref(ans); // done by shallow
   }
   UNPROTECT(nprotect);
