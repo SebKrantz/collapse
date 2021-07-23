@@ -270,7 +270,7 @@ na_omit <- function(X, cols = NULL, na.attr = FALSE) {
       !.Call(C_dt_na, X, cols2int(cols, X, attr(X, "names"))) # gives error if X not list
     rkeep <- which(rl)
     if(length(rkeep) == fnrow2(X)) return(condalc(X, inherits(X, "data.table")))
-    res <- .Call(C_subsetDT, X, rkeep, iX)
+    res <- .Call(C_subsetDT, X, rkeep, iX, FALSE)
     rn <- attr(X, "row.names")
     if(!(is.numeric(rn) || is.null(rn) || rn[1L] == "1")) attr(res, "row.names") <- rn[rkeep]
     if(na.attr) {

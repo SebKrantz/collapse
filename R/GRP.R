@@ -72,8 +72,8 @@ GRP.default <- function(X, by = NULL, sort = TRUE, decreasing = FALSE, na.last =
 
   if(return.groups) {
       ust <- if(sorted) st else o[st]
-      groups <- if(is.list(X)) .Call(C_subsetDT, X, ust, by) else
-        `names<-`(list(.Call(C_subsetVector, X, ust)), namby) # subsetVector preserves attributes (such as "label")
+      groups <- if(is.list(X)) .Call(C_subsetDT, X, ust, by, FALSE) else
+        `names<-`(list(.Call(C_subsetVector, X, ust, FALSE)), namby) # subsetVector preserves attributes (such as "label")
   } else groups <- NULL
 
   return(`oldClass<-`(list(N.groups = length(st),
@@ -421,10 +421,9 @@ GRP.grouped_df <- function(X, ..., return.groups = TRUE, call = TRUE) {
 is_qG <- function(x) inherits(x, "qG")
 is.qG <- is_qG
 
-# TODO: fix na_rm speed for character data...
 na_rm2 <- function(x, sort) {
   if(sort) return(if(is.na(x[length(x)])) x[-length(x)] else x)
-  if(anyNA(x)) x[!is.na(x)] else x # use na_rm here when speed fixed.. (get rid of anyNA then ...)
+  na_rm(x) # if(anyNA(x)) x[!is.na(x)] else x # use na_rm here when speed fixed..
 }
 
 # What about NA last option to radixsort ? -> Nah, vector o becomes too short...
@@ -437,20 +436,18 @@ radixfact <- function(x, sort, ord, fact, naincl, keep, retgrp = FALSE) {
   if(fact) {
     if(keep) duplattributes(f, x) else attributes(f) <- NULL
     if(naincl) {
-      attr(f, "levels") <- if(attr(o, "sorted")) unattrib(tochar(.Call(C_subsetVector, x, st))) else
-            unattrib(tochar(.Call(C_subsetVector, x, o[st]))) # use C_subsetvector ?
+      attr(f, "levels") <- unattrib(tochar(.Call(C_subsetVector, x, if(attr(o, "sorted")) st else o[st], FALSE)))
     } else {
-      attr(f, "levels") <- if(attr(o, "sorted")) unattrib(tochar(na_rm2(.Call(C_subsetVector, x, st), sort))) else
-            unattrib(tochar(na_rm2(.Call(C_subsetVector, x, o[st]), sort)))
+      attr(f, "levels") <- unattrib(tochar(na_rm2(.Call(C_subsetVector, x, if(attr(o, "sorted")) st else o[st], FALSE), sort)))
     }
     oldClass(f) <- c(if(ord) "ordered", "factor", if(naincl) "na.included")
   } else {
     if(naincl) attr(f, "N.groups") <- length(st) # the order is important, this before retgrp !!
     if(retgrp) {
       if(naincl) {
-         attr(f, "groups") <- if(attr(o, "sorted")) .Call(C_subsetVector, x, st) else .Call(C_subsetVector, x, o[st])
+         attr(f, "groups") <- .Call(C_subsetVector, x, if(attr(o, "sorted")) st else o[st], FALSE)
       } else {
-         attr(f, "groups") <- if(attr(o, "sorted")) na_rm2(.Call(C_subsetVector, x, st), sort) else na_rm2(.Call(C_subsetVector, x, o[st]), sort)
+         attr(f, "groups") <- na_rm2(.Call(C_subsetVector, x, if(attr(o, "sorted")) st else o[st], FALSE), sort)
       }
     }
     oldClass(f) <- c(if(ord) "ordered", "qG", if(naincl) "na.included")
@@ -543,8 +540,7 @@ qG <- function(x, ordered = FALSE, na.exclude = TRUE, sort = TRUE, return.groups
 radixuniquevec <- function(x, sort, na.last = TRUE, decreasing = FALSE) {
   o <- .Call(C_radixsort, na.last, decreasing, TRUE, FALSE, sort, pairlist(x))
   if(attr(o, "maxgrpn") == 1L && (!sort || attr(o, "sorted"))) return(x)
-  if(attr(o, "sorted")) .Call(C_subsetVector, x, attr(o, "starts")) else
-    .Call(C_subsetVector, x, o[attr(o, "starts")])
+  .Call(C_subsetVector, x, if(attr(o, "sorted")) attr(o, "starts") else o[attr(o, "starts")], FALSE)
 }
 
 funique <- function(x, ...) UseMethod("funique")
@@ -569,8 +565,8 @@ funique.data.frame <- function(x, cols = NULL, sort = FALSE, ...) {
      return(if(inherits(x, "data.table")) alc(x) else x)
   st <- if(attr(o, "sorted")) attr(o, "starts") else o[attr(o, "starts")]
   rn <- attr(x, "row.names")
-  if(is.numeric(rn) || is.null(rn) || rn[1L] == "1") return(.Call(C_subsetDT, x, st, seq_along(unclass(x))))
-  return(`attr<-`(.Call(C_subsetDT, x, st, seq_along(unclass(x))), "row.names", rn[st]))
+  if(is.numeric(rn) || is.null(rn) || rn[1L] == "1") return(.Call(C_subsetDT, x, st, seq_along(unclass(x)), FALSE))
+  return(`attr<-`(.Call(C_subsetDT, x, st, seq_along(unclass(x)), FALSE), "row.names", rn[st]))
 }
 
 funique.list <- function(x, cols = NULL, sort = FALSE, ...) funique.data.frame(x, cols, sort, ...)
@@ -582,8 +578,8 @@ funique.sf <- function(x, cols = NULL, sort = FALSE, ...) {
   if(attr(o, "maxgrpn") == 1L && (!sort || attr(o, "sorted"))) return(x)
   st <- if(attr(o, "sorted")) attr(o, "starts") else o[attr(o, "starts")]
   rn <- attr(x, "row.names")
-  if(is.numeric(rn) || is.null(rn) || rn[1L] == "1") return(.Call(C_subsetDT, x, st, seq_along(unclass(x))))
-  return(`attr<-`(.Call(C_subsetDT, x, st, seq_along(unclass(x))), "row.names", rn[st]))
+  if(is.numeric(rn) || is.null(rn) || rn[1L] == "1") return(.Call(C_subsetDT, x, st, seq_along(unclass(x)), FALSE))
+  return(`attr<-`(.Call(C_subsetDT, x, st, seq_along(unclass(x)), FALSE), "row.names", rn[st]))
 }
 
 fdroplevels <- function(x, ...) UseMethod("fdroplevels")

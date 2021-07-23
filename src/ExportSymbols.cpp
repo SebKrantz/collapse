@@ -12,9 +12,9 @@ RcppExport SEXP frankds(SEXP, SEXP, SEXP, SEXP);
 RcppExport SEXP pacf1(SEXP, SEXP);
 RcppExport SEXP rbindlist(SEXP, SEXP, SEXP, SEXP);
 RcppExport SEXP setcolorder(SEXP, SEXP);
-RcppExport SEXP subsetDT(SEXP, SEXP, SEXP);
+RcppExport SEXP subsetDT(SEXP, SEXP, SEXP, SEXP);
 RcppExport SEXP subsetCols(SEXP, SEXP, SEXP);
-RcppExport SEXP subsetVector(SEXP, SEXP);
+RcppExport SEXP subsetVector(SEXP, SEXP, SEXP);
 RcppExport SEXP Calloccol(SEXP dt); // , SEXP Rn
 RcppExport SEXP falloc(SEXP, SEXP);
 RcppExport SEXP setAttributes(SEXP x, SEXP a);
@@ -156,8 +156,8 @@ static const R_CallMethodDef CallEntries[] = {
   {"C_setcolorder",   (DL_FUNC) &setcolorder,   2},
   {"C_subsetCols",    (DL_FUNC) &subsetCols,    3},
   {"C_alloc",         (DL_FUNC) &falloc,        2},
-  {"C_subsetDT",      (DL_FUNC) &subsetDT,      3},
-  {"C_subsetVector",  (DL_FUNC) &subsetVector,  2},
+  {"C_subsetDT",      (DL_FUNC) &subsetDT,      4},
+  {"C_subsetVector",  (DL_FUNC) &subsetVector,  3},
   {"C_alloccol",      (DL_FUNC) &Calloccol,     1},
   {"C_fcumsum",       (DL_FUNC) &fcumsumC,      6},
   {"C_fcumsumm",      (DL_FUNC) &fcumsummC,     6},

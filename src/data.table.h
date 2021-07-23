@@ -83,7 +83,8 @@ void savetl_init(), savetl(SEXP s), savetl_end();
 SEXP setcolorder(SEXP x, SEXP o);
 
 // subset.c
-SEXP subsetVector(SEXP x, SEXP idx);
+SEXP subsetDT(SEXP x, SEXP rows, SEXP cols, SEXP checkrows);
+SEXP subsetVector(SEXP x, SEXP idx, SEXP checkidx);
 SEXP anyNA(SEXP x, SEXP cols);
 // SEXP uniqlengths(SEXP x, SEXP n);
 SEXP Calloccol(SEXP dt); // , SEXP Rn
