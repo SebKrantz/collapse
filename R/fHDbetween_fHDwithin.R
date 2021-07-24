@@ -166,11 +166,11 @@ getfl <- function(mf) {
 subsetfl <- function(fl, cc) {
   slopes <- attr(fl, "slope.vars") # fl could be a data.frame, slope vars not (getfl() unclasses)
   if(is.null(names(fl))) names(fl) <- seq_along(unclass(fl))
-  if(is.null(slopes)) return(.Call(C_subsetDT, fl, cc, seq_along(unclass(fl))))
+  if(is.null(slopes)) return(.Call(C_subsetDT, fl, cc, seq_along(unclass(fl)), FALSE))
   attr(fl, "slope.vars") <- NULL
   if(is.null(names(slopes))) names(slopes) <- seq_along(slopes)
-  res <- .Call(C_subsetDT, fl, cc, seq_along(fl))
-  attr(res, "slope.vars") <- .Call(C_subsetDT, slopes, cc, seq_along(slopes)) # fdroplevels ??
+  res <- .Call(C_subsetDT, fl, cc, seq_along(fl), FALSE)
+  attr(res, "slope.vars") <- .Call(C_subsetDT, slopes, cc, seq_along(slopes), FALSE) # fdroplevels ??
   res
 }
 
@@ -178,10 +178,10 @@ subsetfl <- function(fl, cc) {
 # subsetfl <- function(fl, cc) {
 #   lapply(fl, function(f) { # use CsubsetDT or CsubsetVector ?? also check NA in regressors ??
 #     x <- attr(f, "x")
-#     if(is.null(x)) return(.Call(C_subsetVector, f, cc)) else
-#       return(`attr<-`(.Call(C_subsetVector, f, cc), "x",
+#     if(is.null(x)) return(.Call(C_subsetVector, f, cc, FALSE)) else
+#       return(`attr<-`(.Call(C_subsetVector, f, cc, FALSE), "x",
 #                       if(is.matrix(x)) x[cc, , drop = FALSE] else
-#                         .Call(C_subsetVector, x, cc)))
+#                         .Call(C_subsetVector, x, cc, FALSE)))
 #   })
 # }
 
@@ -332,7 +332,7 @@ fhdwithin.pseries <- function(x, effect = seq_col(attr(x, "index")), w = NULL, n
   effect <- cols2int(effect, ix, namix)
   g <- .subset(ix, effect)
   if(na.rm && length(cc <- which(!is.na(x))) != length(x)) {
-     g <- .Call(C_subsetDT, g, cc, seq_along(g)) # lapply(g, `[`, cc) -> slower !
+     g <- .Call(C_subsetDT, g, cc, seq_along(g), FALSE) # lapply(g, `[`, cc) -> slower !
     if(fill) {
       x[cc] <- demean(.subset(`names<-`(x, NULL), cc), g, w[cc], ...) # keeps attributes ?? -> Yes !!
       return(x)
@@ -341,7 +341,7 @@ fhdwithin.pseries <- function(x, effect = seq_col(attr(x, "index")), w = NULL, n
     nix <- length(unclass(ix))
     if(nix != length(g)) {
       toss <- seq_len(nix)[-effect]
-      reix <- copyMostAttributes(c(.Call(C_subsetDT, ix, cc, toss), g)[namix], ix)
+      reix <- copyMostAttributes(c(.Call(C_subsetDT, ix, cc, toss, FALSE), g)[namix], ix)
     } else reix <- copyMostAttributes(g, ix)
     attr(reix, "row.names") <- .set_row_names(length(cc))
     return(setAttributes(demean(xcc, g, w[cc], ...),
@@ -425,8 +425,8 @@ fhdwithin.pdata.frame <- function(x, effect = seq_col(attr(x, "index")), w = NUL
     return(setAttributes(varwisecomp(x, g, w, ...), ax))
   } else if(na.rm && any(miss <- .Call(C_dt_na, x, seq_along(unclass(x))))) {
     cc <- which(!miss)
-    gcc <- .Call(C_subsetDT, g, cc, seq_along(g))
-    Y <- demean(.Call(C_subsetDT, x, cc, seq_along(unclass(x))), gcc, w[cc], ...)
+    gcc <- .Call(C_subsetDT, g, cc, seq_along(g), FALSE)
+    Y <- demean(.Call(C_subsetDT, x, cc, seq_along(unclass(x)), FALSE), gcc, w[cc], ...)
     if(fill) {
       ax <- attributes(x)
       ax[["na.rm"]] <- which(miss)
@@ -436,7 +436,7 @@ fhdwithin.pdata.frame <- function(x, effect = seq_col(attr(x, "index")), w = NUL
     nix <- length(unclass(ix))
     if(nix != length(g)) {
       toss <- seq_len(nix)[-effect]
-      reix <- copyMostAttributes(c(.Call(C_subsetDT, ix, cc, toss), gcc)[namix], ix)
+      reix <- copyMostAttributes(c(.Call(C_subsetDT, ix, cc, toss, FALSE), gcc)[namix], ix)
     } else reix <- copyMostAttributes(gcc, ix)
     attr(reix, "row.names") <- .set_row_names(length(cc))
     attr(Y, "index") <- reix
@@ -457,7 +457,7 @@ fhdwithin.data.frame <- function(x, fl, w = NULL, na.rm = TRUE, fill = FALSE, va
       w <- w[cc]
       if(!variable.wise) {
         if(fill) nrx <- fnrow2(x) else ax[["row.names"]] <- ax[["row.names"]][cc] # best ??
-        x <- .Call(C_subsetDT, x, cc, seq_along(unclass(x)))
+        x <- .Call(C_subsetDT, x, cc, seq_along(unclass(x)), FALSE)
       }
     } else na.rm <- FALSE
   }
@@ -558,7 +558,7 @@ HDW.data.frame <- function(x, fl, w = NULL, cols = is.numeric, na.rm = TRUE, fil
     }
 
     xmat <- NULL
-    list2env(getfl(myModFrame(fl, if(na.rm) .Call(C_subsetDT, x, cc, fvars) else .subset(x, fvars))), envir = environment())
+    list2env(getfl(myModFrame(fl, if(na.rm) .Call(C_subsetDT, x, cc, fvars, FALSE) else .subset(x, fvars))), envir = environment())
     fcl <- !is.null(fl)
     nallfc <- fcl && !is.null(xmat)
     if(nallfc) xmat <- demean(xmat, fl, w, ...)
@@ -583,7 +583,7 @@ HDW.data.frame <- function(x, fl, w = NULL, cols = is.numeric, na.rm = TRUE, fil
         return(y)
       }), ax))
     } else { # at this point missing values are already removed from  fl !!
-      Y <- if(na.rm) .Call(C_subsetDT, x, cc, Xvars) else .subset(x, Xvars)
+      Y <- if(na.rm) .Call(C_subsetDT, x, cc, Xvars, FALSE) else .subset(x, Xvars)
       Y <- if(nallfc || !fcl) flmres(if(nallfc) demean(Y, fl, w, ...) else Y, xmat, w, lm.method, ...) else demean(Y, fl, w, ...)
       if(na.rm && fill)  # x[cc, ] <- Y; x[-cc, ] <- NA
         return(setAttributes(.Call(C_lassign, Y, nrx, cc, NA_real_), ax))
@@ -751,7 +751,7 @@ fhdbetween.data.frame <- function(x, fl, w = NULL, na.rm = TRUE, fill = FALSE, v
       w <- w[cc]
       if(!variable.wise) {
         if(fill) nrx <- fnrow2(x) else ax[["row.names"]] <- ax[["row.names"]][cc] # best ??
-        x <- .Call(C_subsetDT, x, cc, seq_along(unclass(x)))
+        x <- .Call(C_subsetDT, x, cc, seq_along(unclass(x)), FALSE)
       }
     } else na.rm <- FALSE
   }
@@ -855,7 +855,7 @@ HDB.data.frame <- function(x, fl, w = NULL, cols = is.numeric, na.rm = TRUE, fil
     }
 
     xmat <- NULL
-    list2env(getfl(myModFrame(fl, if(na.rm) .Call(C_subsetDT, x, cc, fvars) else .subset(x, fvars))), envir = environment())
+    list2env(getfl(myModFrame(fl, if(na.rm) .Call(C_subsetDT, x, cc, fvars, FALSE) else .subset(x, fvars))), envir = environment())
     fcl <- !is.null(fl)
     nallfc <- fcl && !is.null(xmat)
     if(nallfc) xmat <- demean(xmat, fl, w, ...)
@@ -884,7 +884,7 @@ HDB.data.frame <- function(x, fl, w = NULL, cols = is.numeric, na.rm = TRUE, fil
         return(y)
       }), ax))
     } else { # at this point missing values are already removed from  fl !!
-      x <- if(na.rm) .Call(C_subsetDT, x, cc, Xvars) else .subset(x, Xvars)
+      x <- if(na.rm) .Call(C_subsetDT, x, cc, Xvars, FALSE) else .subset(x, Xvars)
       if(nallfc || !fcl) {
         Y <- if(nallfc) x - flmres(demean(x, fl, w, ...), xmat, w, lm.method, ...) else flmres(x, xmat, w, lm.method, FALSE, ...)
       } else Y <- demean(x, fl, w, ..., means = TRUE)

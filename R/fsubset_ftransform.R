@@ -7,8 +7,8 @@ sbt <- fsubset
 fsubset.default <- function(x, subset, ...) {
   if(is.matrix(x) && !inherits(x, "matrix")) return(fsubset.matrix(x, subset, ...))
   if(!missing(...)) unused_arg_action(match.call(), ...)
-  if(is.logical(subset)) return(.Call(C_subsetVector, x, which(subset)))
-  .Call(C_subsetVector, x, subset)
+  if(is.logical(subset)) return(.Call(C_subsetVector, x, which(subset), FALSE))
+  .Call(C_subsetVector, x, subset, TRUE)
 }
 
 fsubset.matrix <- function(x, subset, ..., drop = FALSE) {
@@ -35,17 +35,19 @@ ss <- function(x, i, j) {
      j <- if(any(j < 0)) seq_along(unclass(x))[j] else as.integer(j)
     } else stop("j needs to be supplied integer indices, character column names, or a suitable logical vector")
   }
+  checkrows <- TRUE
   if(!is.integer(i)) {
     if(is.numeric(i)) i <- as.integer(i) else if(is.logical(i)) {
       nr <- fnrow2(x)
       if(length(i) != nr) stop("i needs to be integer or logical(nrow(x))") # which(r & !is.na(r)) not needed !
       i <- which(i)
       if(length(i) == nr) if(mj) return(x) else return(.Call(C_subsetCols, x, j, TRUE))
+      checkrows <- FALSE
     } else stop("i needs to be integer or logical(nrow(x))")
   }
   rn <- attr(x, "row.names")
-  if(is.numeric(rn) || is.null(rn) || rn[1L] == "1") return(.Call(C_subsetDT, x, i, j))
-  return(`attr<-`(.Call(C_subsetDT, x, i, j), "row.names", rn[i]))
+  if(is.numeric(rn) || is.null(rn) || rn[1L] == "1") return(.Call(C_subsetDT, x, i, j, checkrows))
+  return(`attr<-`(.Call(C_subsetDT, x, i, j, checkrows), "row.names", rn[i]))
 }
 
 fsubset.data.frame <- function(x, subset, ...) {
@@ -67,16 +69,18 @@ fsubset.data.frame <- function(x, subset, ...) {
       attr(x, "names")[vars[nonmiss]] <- nam_vars[nonmiss]
     }
   }
+  checkrows <- TRUE
   if(is.logical(r)) {
     nr <- fnrow2(x)
     if(length(r) != nr) stop("subset needs to be an expression evaluating to logical(nrow(x)) or integer") # which(r & !is.na(r)) not needed !
     r <- which(r)
     if(length(r) == nr) if(missing(...)) return(x) else return(.Call(C_subsetCols, x, vars, TRUE))
+    checkrows <- FALSE
   } else if(is.numeric(r)) r <- as.integer(r) else
     stop("subset needs to be an expression evaluating to logical(nrow(x)) or integer")
   rn <- attr(x, "row.names")
-  if(is.numeric(rn) || is.null(rn) || rn[1L] == "1") return(.Call(C_subsetDT, x, r, vars))
-  return(`attr<-`(.Call(C_subsetDT, x, r, vars), "row.names", rn[r]))
+  if(is.numeric(rn) || is.null(rn) || rn[1L] == "1") return(.Call(C_subsetDT, x, r, vars, checkrows))
+  return(`attr<-`(.Call(C_subsetDT, x, r, vars, checkrows), "row.names", rn[r]))
 }
 
 # Example:
@@ -243,7 +247,7 @@ fcomputev <- function(.data, vars, FUN, ..., apply = TRUE, keep = NULL) {
 #   ax[["dimnames"]][[1L]] <- ax[["dimnames"]][[1L]][subset]
 #   ax[["dim"]] <- c(length(subset), d[2L])
 #   ic <- seq_len(d[2L]) * d[1L] - d[1L]
-#   setAttributes(.Call(C_subsetVector, x, outer(subset, ic, FUN = "+")), ax)
+#   setAttributes(.Call(C_subsetVector, x, outer(subset, ic, FUN = "+"), TRUE), ax)
 # }
 
 # Older version: But classes for [ can also be very useful for certain objects !!
@@ -279,8 +283,8 @@ fcomputev <- function(.data, vars, FUN, ..., apply = TRUE, keep = NULL) {
 #     if(is.logical(r)) r <- which(r) # which(r & !is.na(r)) is.na not needed !!
 #   } # improve qDF !!!
 #   rn <- attr(x, "row.names") # || is.integer(rn) # maybe many have character converted integers ??
-#   if(is.numeric(rn) || is.null(rn) || rn[1L] == "1") return(.Call(C_subsetDT, x, r, vars))
-#   return(`attr<-`(.Call(C_subsetDT, x, r, vars), "row.names", rn[r])) # fast ?? scalable ??
+#   if(is.numeric(rn) || is.null(rn) || rn[1L] == "1") return(.Call(C_subsetDT, x, r, vars, TRUE))
+#   return(`attr<-`(.Call(C_subsetDT, x, r, vars, TRUE), "row.names", rn[r])) # fast ?? scalable ??
 # }
 
 

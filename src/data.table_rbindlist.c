@@ -416,7 +416,7 @@ case VECSXP :
   if (TYPEOF(source)!=VECSXP)
     BODY(SEXP, &, SEXP, val,           SET_VECTOR_ELT(target, off+i, cval))
     else
-      BODY(SEXP, VECTOR_PTR, SEXP, val,  SET_VECTOR_ELT(target, off+i, cval))
+      BODY(SEXP, SEXPPTR, SEXP, val,  SET_VECTOR_ELT(target, off+i, cval))
 default :
       error("Unsupported column type in assign.c:memrecycle '%s'", type2char(TYPEOF(target)));  // # nocov
 }

@@ -8,8 +8,8 @@ roworder <- function(X, ..., na.last = TRUE) {
   o <- .Call(C_radixsort, na.last, dec, FALSE, FALSE, TRUE, z)
   if(!is.na(na.last) && attr(o, "sorted")) return(condalc(X, inherits(X, "data.table")))
   rn <- attr(X, "row.names")
-  if(is.numeric(rn) || is.null(rn) || rn[1L] == "1") return(.Call(C_subsetDT, X, o, seq_along(unclass(X))))
-  return(`attr<-`(.Call(C_subsetDT, X, o, seq_along(unclass(X))), "row.names", rn[o]))
+  if(is.numeric(rn) || is.null(rn) || rn[1L] == "1") return(.Call(C_subsetDT, X, o, seq_along(unclass(X)), FALSE))
+  return(`attr<-`(.Call(C_subsetDT, X, o, seq_along(unclass(X)), FALSE), "row.names", rn[o]))
 }
 
 posord <- function(sq, o, pos) switch(pos, front = c(o, sq[-o]), end = c(sq[-o], o),
@@ -33,8 +33,8 @@ roworderv <- function(X, cols = NULL, neworder = NULL, decreasing = FALSE, na.la
     if(length(neworder) != fnrow2(X)) neworder <- posord(seq_along(.subset2(X, 1L)), neworder, pos[1L])
   }
   rn <- attr(X, "row.names")
-  if(is.numeric(rn) || is.null(rn) || rn[1L] == "1") return(.Call(C_subsetDT, X, neworder, seq_along(unclass(X))))
-  return(`attr<-`(.Call(C_subsetDT, X, neworder, seq_along(unclass(X))), "row.names", rn[neworder]))
+  if(is.numeric(rn) || is.null(rn) || rn[1L] == "1") return(.Call(C_subsetDT, X, neworder, seq_along(unclass(X)), FALSE))
+  return(`attr<-`(.Call(C_subsetDT, X, neworder, seq_along(unclass(X)), FALSE), "row.names", rn[neworder]))
 }
 
 colorder <- function(X, ..., pos = c("front","end","exchange")) { # This also takes names and indices ....

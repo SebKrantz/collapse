@@ -5,8 +5,6 @@
 
 #include "data.table.h"
 
-#define SEXPPTR(x) ((SEXP *)DATAPTR(x))  // to avoid overhead of looped STRING_ELT and VECTOR_ELT
-
 // selfref stuff is taken from data.tables assign.c
 
 static void finalizer(SEXP p)
@@ -136,11 +134,11 @@ static SEXP shallow(SEXP dt, SEXP cols, R_len_t n)
 }
 
 // Can allocate conditionally on size, for export... use in collap, qDT etc.
-SEXP Calloccol(SEXP dt, SEXP Rn)
+SEXP Calloccol(SEXP dt) // , SEXP Rn
 {
   R_len_t tl, n, l;
   l = LENGTH(dt);
-  n = l + asInteger(Rn);
+  n = l + asInteger(GetOption1(sym_collapse_DT_alloccol));  // asInteger(Rn);
   tl = TRUELENGTH(dt);
   // R <= 2.13.2 and we didn't catch uninitialized tl somehow
   if (tl < 0) error("Internal error, tl of class is marked but tl<0."); // # nocov
@@ -216,16 +214,7 @@ static void subsetVectorRaw(SEXP ans, SEXP source, SEXP idx, const bool anyNA)
     //        API interface for package use for STRSXP.
     // Aside: setkey() is a separate special case (a permutation) and does do this in parallel without using SET_*.
     SEXP *sp = STRING_PTR(source), *ap = STRING_PTR(ans);
-    if (anyNA) {
-      for (int i = 0; i != n; ++i) {
-        int elem = idxp[i];
-        ap[i] = elem == NA_INTEGER ? NA_STRING : sp[elem-1];
-      }
-    } else {
-      for (int i = 0; i != n; ++i) {
-        ap[i] = sp[idxp[i]-1];
-      }
-    }
+    PARLOOP(NA_STRING)
   } break;
   case VECSXP : {
     // VECTOR_PTR does exist but returns 'not safe to return vector pointer' when USE_RINTERNALS is not defined.
@@ -235,16 +224,7 @@ static void subsetVectorRaw(SEXP ans, SEXP source, SEXP idx, const bool anyNA)
       // type list case (VECSXP) it might be that some items are ALTREP for example, so we really should use the heavier
       // _ELT accessor (VECTOR_ELT) inside the loop in this case.
       SEXP *sp = SEXPPTR(source), *ap = SEXPPTR(ans);
-      if (anyNA) {
-        for (int i = 0; i != n; ++i) {
-          int elem = idxp[i];
-          ap[i] = elem == NA_INTEGER ? R_NilValue : sp[elem-1];
-        }
-      } else {
-        for (int i = 0; i != n; ++i) {
-          ap[i] = sp[idxp[i]-1];
-        }
-      }
+      PARLOOP(R_NilValue)
     } break;
     case CPLXSXP : {
       Rcomplex *sp = COMPLEX(source), *ap = COMPLEX(ans);
@@ -469,7 +449,8 @@ SEXP subsetCols(SEXP x, SEXP cols, SEXP checksf) { // SEXP fretall
   if(INHERITS(x, char_datatable)) {
     setAttrib(ans, sym_datatable_locked, R_NilValue);
     UNPROTECT(nprotect);
-    return shallow(ans, R_NilValue, ncol+100); // 1024 is data.table default..
+    int n = asInteger(GetOption1(sym_collapse_DT_alloccol));
+    return shallow(ans, R_NilValue, ncol + n); // 1024 is data.table default..
     // setselfref(ans); // done by shallow
   }
   UNPROTECT(nprotect);
@@ -479,13 +460,13 @@ SEXP subsetCols(SEXP x, SEXP cols, SEXP checksf) { // SEXP fretall
 /*
   * subsetDT - Subsets a data.table
 * NOTE:
-  *   1) 'rows' and 'cols' are 1-based, passed from R level
+*   1) 'rows' and 'cols' are 1-based, passed from R level
 *   2) Originally for subsetting vectors in fcast and now the beginnings of [.data.table ported to C
-                                                                             *   3) Immediate need is for R 3.1 as lglVec[1] now returns R's global TRUE and we don't want := to change that global [think 1 row data.tables]
+*   3) Immediate need is for R 3.1 as lglVec[1] now returns R's global TRUE and we don't want := to change that global [think 1 row data.tables]
 *   4) Could do it other ways but may as well go to C now as we were going to do that anyway
 */
 
-SEXP subsetDT(SEXP x, SEXP rows, SEXP cols) { // , SEXP fastret
+SEXP subsetDT(SEXP x, SEXP rows, SEXP cols, SEXP checkrows) { // , SEXP fastret
     int nprotect=0;
     if (!isNewList(x)) error("Internal error. Argument 'x' to CsubsetDT is type '%s' not 'list'", type2char(TYPEOF(rows))); // # nocov
       if (!length(x)) return x;  // return empty list
@@ -498,7 +479,7 @@ SEXP subsetDT(SEXP x, SEXP rows, SEXP cols) { // , SEXP fastret
     // }
     // check index once up front for 0 or NA, for branchless subsetVectorRaw which is repeated for each column
     bool anyNA=false; // , orderedSubset=true;   // true for when rows==null (meaning all rows)
-    if (!isNull(rows) && check_idx(rows, nrow, &anyNA)!=NULL) { // , &orderedSubset
+    if (asLogical(checkrows) && !isNull(rows) && check_idx(rows, nrow, &anyNA)!=NULL) { // , &orderedSubset
       SEXP max = PROTECT(ScalarInteger(nrow)); nprotect++;
       rows = PROTECT(convertNegAndZeroIdx(rows, max, ScalarLogical(TRUE))); nprotect++;
       const char *err = check_idx(rows, nrow, &anyNA); // , &orderedSubset
@@ -589,19 +570,20 @@ SEXP subsetDT(SEXP x, SEXP rows, SEXP cols) { // , SEXP fastret
     setAttrib(ans, sym_sorted, R_NilValue);
     setAttrib(ans, sym_datatable_locked, R_NilValue);
     UNPROTECT(nprotect);
-    return shallow(ans, R_NilValue, ncol+100); // 1024 is data.table default..
+    int n = asInteger(GetOption1(sym_collapse_DT_alloccol));
+    return shallow(ans, R_NilValue, ncol + n); // 1024 is data.table default..
     // setselfref(ans); // done by shallow
   }
   UNPROTECT(nprotect);
   return ans;
 }
 
-SEXP subsetVector(SEXP x, SEXP idx) { // idx is 1-based passed from R level
+SEXP subsetVector(SEXP x, SEXP idx, SEXP checkidx) { // idx is 1-based passed from R level
   bool anyNA = false; //, orderedSubset=false;
   int nprotect=0;
   if (isNull(x))
     error("Internal error: NULL can not be subset. It is invalid for a data.table to contain a NULL column.");      // # nocov
-  if (check_idx(idx, length(x), &anyNA) != NULL) // , &orderedSubset
+  if (asLogical(checkidx) && check_idx(idx, length(x), &anyNA) != NULL) // , &orderedSubset
     error("Internal error: CsubsetVector is internal-use-only but has received negatives, zeros or out-of-range");  // # nocov
   SEXP ans = PROTECT(allocVector(TYPEOF(x), length(idx))); nprotect++;
   copyMostAttrib(x, ans);

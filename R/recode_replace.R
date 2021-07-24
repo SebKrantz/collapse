@@ -333,7 +333,7 @@ pad <- function(X, i, value = NA, method = c("auto", "xpos", "vpos")) { # 1 - i 
   ineg <- i[1L] < 0L
   n <- if(is.list(X)) length(.subset2(X, 1L)) else if(is.matrix(X)) dim(X)[1L] else length(X)
   xpos <- switch(method[1L], auto = if(ilog) sum(i) == n else if(ineg) FALSE else length(i) == n,
-                 xpos = TRUE, vpos = FALSE)
+                 xpos = TRUE, vpos = FALSE, stop("Unknown method: ", method[1L]))
   n <- if(ilog) length(i) else if(xpos && !ineg) max(i) else n + length(i)
   if(is.atomic(X)) return(pad_atomic(X, if(xpos || ineg) i else if(ilog) !i else -i, n, value))
   if(!is.list(X)) stop("X must be atomic or a list")

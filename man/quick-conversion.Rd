@@ -25,7 +25,7 @@ Fast, flexible and precise conversion of common data objects, without method dis
 
  qDF(X, row.names.col = FALSE, keep.attr = FALSE, class = "data.frame")
  qDT(X, row.names.col = FALSE, keep.attr = FALSE, class = c("data.table", "data.frame"))
-qTBL(X, row.names.col = FALSE, keep.attr = FALSE)
+qTBL(X, row.names.col = FALSE, keep.attr = FALSE, class = c("tbl_df","tbl","data.frame"))
   qM(X,                        keep.attr = FALSE, class = NULL)
 
 # Programmer functions: matrix rows or columns to list / DF / DT - fully in C++
@@ -78,9 +78,9 @@ The default \code{keep.attr = FALSE} ensures \emph{hard} conversions so that all
 \code{as_numeric_factor} - returns X with factors converted to numeric variables\cr
 \code{as_character_factor} - returns X with factors converted to character variables
 }
-\note{
-\code{qTBL} is a simple wrapper around \code{qDT} assigning different classes, i.e. \code{qTBL(x)} is equivalent to \code{qDT(x, class = c("tbl_df", "tbl", "data.frame"))}. Similar converters for other data frame based classes are easily created from \code{qDF} and \code{qDT}. The principle difference between them is that \code{qDF} preserves rownames whereas \code{qDT} always assigns integer rownames.
-}
+% \note{
+% \code{qTBL} works similarly to \code{qDT} assigning different classes, i.e. \code{qTBL(x)} is equivalent to \code{qDT(x, class = c("tbl_df", "tbl", "data.frame"))}. Similar converters for other data frame based classes are easily created from \code{qDF} and \code{qDT}. The principle difference between them is that \code{qDF} preserves rownames whereas \code{qDT} always assigns integer rownames.
+% }
 \seealso{
 \code{\link{qF}}, \link[=collapse-documentation]{Collapse Overview}
 }

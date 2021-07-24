@@ -24,7 +24,7 @@ t_list <- function(l) {
 #     split.default(seq_along(.subset2(x, 1L)), .Call(Cpp_fdroplevels, f, !inherits(f, "na.included")), drop = FALSE, ...) else
 #       split.default(seq_along(.subset2(x, 1L)), qF(f), drop = FALSE, ...)
 #
-#   lapply(ind, function(i) .Call(C_subsetDT, x, i, j)) # tryCatch(, error = function(e) print(list(x = x, ind = ind, j = j)))
+#   lapply(ind, function(i) .Call(C_subsetDT, x, i, j, FALSE)) # tryCatch(, error = function(e) print(list(x = x, ind = ind, j = j)))
 # }
 
 # rsplit_default2(mtcars$mpg, slt(mtcars, cyl, vs)) -> Still find source of Bug !! see if it is faster !!
@@ -99,11 +99,11 @@ rsplit.data.frame <- function(x, by, drop = TRUE, flatten = FALSE, # check = TRU
   if(is.numeric(rn) || is.null(rn) || rn[1L] == "1") {
     fsplit_DF <- function(x, f, ...)
       lapply(fsplit(seq_along(.subset2(x, 1L)), f, drop, ...),
-             function(i) .Call(C_subsetDT, x, i, j))
+             function(i) .Call(C_subsetDT, x, i, j, FALSE))
   } else {
     fsplit_DF <- function(x, f, ...)
       lapply(fsplit(seq_along(.subset2(x, 1L)), f, drop, ...),
-             function(i) `attr<-`(.Call(C_subsetDT, x, i, j), "row.names", attr(x, "row.names")[i]))
+             function(i) `attr<-`(.Call(C_subsetDT, x, i, j, FALSE), "row.names", attr(x, "row.names")[i]))
   }
 
   if(is.atomic(by)) return(fsplit_DF(x, by, ...))

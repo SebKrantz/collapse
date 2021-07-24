@@ -1,7 +1,10 @@
+# collapse 1.6.5
+* Use of `VECTOR_PTR` in C API now gives an error on R-devel even if `USE_RINTERNALS` is defined. Thus this patch gets rid of all remaining usage of this macro to avoid errors on CRAN checks using the development version of R. 
+
+* The print method for `qsu` now uses an apostrophe (') to designate million digits, instead of a comma (,). This is to avoid confusion with the decimal point, and the typical use of (,) for thousands (which I don't like). 
+
 # collapse 1.6.4
 Checks on the gcc11 compiler flagged an additional issue with a pointer pointing to element -1 of a C array (which I had done on purpose to index it with an R integer vector). 
-
-Please note that nothing added in 1.6.1-1.6.4 affects in any way the operation of the package (except for the functions added in 1.6.1). This is just pleasing CRAN's strict conventions on how C code should be written.
 
 # collapse 1.6.3
 CRAN checks flagged a valgrind issue because of comparing an uninitialized value to something. 

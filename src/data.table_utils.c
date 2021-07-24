@@ -131,7 +131,7 @@ SEXP copyAsPlain(SEXP x) {
     for (R_xlen_t i=0; i != n; ++i) SET_STRING_ELT(ans, i, xp[i]);
   } break;
   case VECSXP: {
-    const SEXP *xp=VECTOR_PTR(x);                                // # nocov
+    const SEXP *xp=SEXPPTR(x);                                // # nocov
     for (R_xlen_t i=0; i != n; ++i) SET_VECTOR_ELT(ans, i, xp[i]);  // # nocov
   } break;                                                       // # nocov
   default:
@@ -350,7 +350,7 @@ SEXP setcolorder(SEXP x, SEXP o)
   Free(seen);
 
   SEXP *tmp = Calloc(ncol, SEXP);
-  SEXP *xd = VECTOR_PTR(x), *namesd = STRING_PTR(names);
+  SEXP *xd = SEXPPTR(x), *namesd = STRING_PTR(names);
   for (int i=0; i != ncol; ++i) tmp[i] = xd[od[i]-1];
   memcpy(xd, tmp, ncol*sizeof(SEXP)); // sizeof is type size_t so no overflow here
   for (int i=0; i != ncol; ++i) tmp[i] = namesd[od[i]-1];

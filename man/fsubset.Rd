@@ -51,6 +51,9 @@ Factors may have empty levels after subsetting; unused levels are not automatica
   An object similar to \code{x} containing just the selected elements (for
   a vector), rows and columns (for a matrix or data frame).
 }
+\note{
+No replacement method \code{fsubset<-} or \code{ss<-} is offered in \emph{collapse}. For efficient subset relacement (without copying) use \code{data.table::set}, which can also be used with data frames and tibbles.
+}
 \seealso{
   \code{\link{fselect}},
   \code{\link{get_vars}},

@@ -209,10 +209,10 @@ cinv <- function(X) chol2inv(chol(X))
 interact_names <- function(l) do.call(paste, c(expand.grid(l, KEEP.OUT.ATTRS = FALSE, stringsAsFactors = FALSE), list(sep = ".")))
 
 # set over-allocation for data.table's
-alc <- function(x, n = options("collapse_DT_alloccol")[[1L]]) .Call(C_alloccol, x, n)
-condalc <- function(x, DT, n = options("collapse_DT_alloccol")[[1L]]) if(DT) .Call(C_alloccol, x, n) else x
-alcSA <- function(x, a, n = options("collapse_DT_alloccol")[[1L]]) .Call(C_alloccol, .Call(C_setAttributes, x, a), n)
-condalcSA <- function(x, a, DT, n = options("collapse_DT_alloccol")[[1L]]) if(DT) .Call(C_alloccol, .Call(C_setAttributes, x, a), n) else .Call(C_setAttributes, x, a)
+alc <- function(x) .Call(C_alloccol, x)
+condalc <- function(x, DT) if(DT) .Call(C_alloccol, x) else x
+alcSA <- function(x, a) .Call(C_alloccol, .Call(C_setAttributes, x, a))
+condalcSA <- function(x, a, DT) if(DT) .Call(C_alloccol, .Call(C_setAttributes, x, a)) else .Call(C_setAttributes, x, a)
 
 unattrib <- function(object) `attributes<-`(object, NULL)
 
@@ -270,7 +270,7 @@ na_omit <- function(X, cols = NULL, na.attr = FALSE) {
       !.Call(C_dt_na, X, cols2int(cols, X, attr(X, "names"))) # gives error if X not list
     rkeep <- which(rl)
     if(length(rkeep) == fnrow2(X)) return(condalc(X, inherits(X, "data.table")))
-    res <- .Call(C_subsetDT, X, rkeep, iX)
+    res <- .Call(C_subsetDT, X, rkeep, iX, FALSE)
     rn <- attr(X, "row.names")
     if(!(is.numeric(rn) || is.null(rn) || rn[1L] == "1")) attr(res, "row.names") <- rn[rkeep]
     if(na.attr) {
