@@ -72,7 +72,7 @@
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">collapse</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">1.6.4</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">1.6.5</span>
       </span>
     </div>
 
@@ -159,18 +159,18 @@
     <h2 class="hasAnchor" id="examples"><a class="anchor" href="#examples"></a>Examples</h2>
     <pre class="examples"><div class='input'><span class='co'># Simple use</span>
 <span class='fu'>fsummarise</span><span class='op'>(</span><span class='va'>mtcars</span>, mean_mpg <span class='op'>=</span> <span class='fu'><a href='fmean.html'>fmean</a></span><span class='op'>(</span><span class='va'>mpg</span><span class='op'>)</span>,
-                   sd_mpg <span class='op'>=</span> <span class='fu'><a href='fvar_fsd.html'>fsd</a></span><span class='op'>(</span><span class='va'>mpg</span><span class='op'>)</span><span class='op'>)</span>
+                   sd_mpg <span class='op'>=</span> <span class='fu'><a href='fvar, fsd.html'>fsd</a></span><span class='op'>(</span><span class='va'>mpg</span><span class='op'>)</span><span class='op'>)</span>
 </div><div class='output co'>#&gt;   mean_mpg   sd_mpg
 #&gt; 1 20.09062 6.026948</div><div class='input'>
 <span class='co'># Using base functions (not a big difference without groups)</span>
 <span class='fu'>fsummarise</span><span class='op'>(</span><span class='va'>mtcars</span>, mean_mpg <span class='op'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/mean.html'>mean</a></span><span class='op'>(</span><span class='va'>mpg</span><span class='op'>)</span>,
                    sd_mpg <span class='op'>=</span> <span class='fu'><a href='https://rdrr.io/r/stats/sd.html'>sd</a></span><span class='op'>(</span><span class='va'>mpg</span><span class='op'>)</span><span class='op'>)</span>
 </div><div class='output co'>#&gt;   mean_mpg   sd_mpg
-#&gt; 1 20.09062 6.026948</div><div class='input'>
+#&gt; 1 20.09062 6.026948</div><div class='input'> 
 <span class='co'># Grouped use</span>
 <span class='va'>mtcars</span> |&gt; <span class='fu'><a href='GRP, fgroup_by.html'>fgroup_by</a></span><span class='op'>(</span><span class='va'>cyl</span><span class='op'>)</span> |&gt;
   <span class='fu'>fsummarise</span><span class='op'>(</span>mean_mpg <span class='op'>=</span> <span class='fu'><a href='fmean.html'>fmean</a></span><span class='op'>(</span><span class='va'>mpg</span><span class='op'>)</span>,
-             sd_mpg <span class='op'>=</span> <span class='fu'><a href='fvar_fsd.html'>fsd</a></span><span class='op'>(</span><span class='va'>mpg</span><span class='op'>)</span><span class='op'>)</span>
+             sd_mpg <span class='op'>=</span> <span class='fu'><a href='fvar, fsd.html'>fsd</a></span><span class='op'>(</span><span class='va'>mpg</span><span class='op'>)</span><span class='op'>)</span>
 </div><div class='output co'>#&gt;   cyl mean_mpg   sd_mpg
 #&gt; 1   4 26.66364 4.509828
 #&gt; 2   6 19.74286 1.453567
@@ -186,17 +186,17 @@
 <span class='co'># Weighted aggregation</span>
 <span class='va'>mtcars</span> |&gt; <span class='fu'><a href='GRP, fgroup_by.html'>fgroup_by</a></span><span class='op'>(</span><span class='va'>cyl</span><span class='op'>)</span> |&gt;
   <span class='fu'>fsummarise</span><span class='op'>(</span>w_mean_mpg <span class='op'>=</span> <span class='fu'><a href='fmean.html'>fmean</a></span><span class='op'>(</span><span class='va'>mpg</span>, <span class='va'>wt</span><span class='op'>)</span>,
-             w_sd_mpg <span class='op'>=</span> <span class='fu'><a href='fvar_fsd.html'>fsd</a></span><span class='op'>(</span><span class='va'>mpg</span>, <span class='va'>wt</span><span class='op'>)</span><span class='op'>)</span>
+             w_sd_mpg <span class='op'>=</span> <span class='fu'><a href='fvar, fsd.html'>fsd</a></span><span class='op'>(</span><span class='va'>mpg</span>, <span class='va'>wt</span><span class='op'>)</span><span class='op'>)</span>
 </div><div class='output co'>#&gt;   cyl w_mean_mpg w_sd_mpg
 #&gt; 1   4   25.93504 4.275234
 #&gt; 2   6   19.64578 1.397297
 #&gt; 3   8   14.80643 2.638850</div><div class='input'>
- 
+
 <span class='co'>## Can also group with dplyr::group_by, but at a conversion cost, see ?GRP</span>
 <span class='kw'><a href='https://rdrr.io/r/base/library.html'>library</a></span><span class='op'>(</span><span class='va'><a href='https://dplyr.tidyverse.org'>dplyr</a></span><span class='op'>)</span>
 <span class='va'>mtcars</span> |&gt; <span class='fu'><a href='https://dplyr.tidyverse.org/reference/group_by.html'>group_by</a></span><span class='op'>(</span><span class='va'>cyl</span><span class='op'>)</span> |&gt;
   <span class='fu'>fsummarise</span><span class='op'>(</span>mean_mpg <span class='op'>=</span> <span class='fu'><a href='fmean.html'>fmean</a></span><span class='op'>(</span><span class='va'>mpg</span><span class='op'>)</span>,
-             sd_mpg <span class='op'>=</span> <span class='fu'><a href='fvar_fsd.html'>fsd</a></span><span class='op'>(</span><span class='va'>mpg</span><span class='op'>)</span><span class='op'>)</span>
+             sd_mpg <span class='op'>=</span> <span class='fu'><a href='fvar, fsd.html'>fsd</a></span><span class='op'>(</span><span class='va'>mpg</span><span class='op'>)</span><span class='op'>)</span>
 </div><div class='output co'>#&gt; <span style='color: #949494;'># A tibble: 3 x 3</span><span>
 #&gt;     cyl mean_mpg sd_mpg
 #&gt;   </span><span style='color: #949494;font-style: italic;'>&lt;dbl&gt;</span><span>    </span><span style='color: #949494;font-style: italic;'>&lt;dbl&gt;</span><span>  </span><span style='color: #949494;font-style: italic;'>&lt;dbl&gt;</span><span>

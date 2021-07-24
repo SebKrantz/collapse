@@ -75,7 +75,7 @@ collap works with collapse's Fast Statistical Functions, providing extremely fas
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">collapse</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">1.6.4</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">1.6.5</span>
       </span>
     </div>
 
@@ -159,7 +159,7 @@ collap works with collapse's Fast Statistical Functions, providing extremely fas
     </tr>
     <tr>
       <th>by</th>
-      <td><p>for <code>collap</code>: a one-or two sided formula, i.e. <code>~ group1</code> or <code>var1 + var2 ~ group1 + group2</code>, or a atomic vector, list of vectors or <code><a href='GRP, fgroup_by.html'>GRP</a></code> object used to group <code>X</code>. For <code>collapv</code>: names or indices of grouping columns, or a logical vector or selector function such as <code><a href='small-helper.html'>is_categorical</a></code> selecting grouping columns.</p></td>
+      <td><p>for <code>collap</code>: a one-or two sided formula, i.e. <code>~ group1</code> or <code>var1 + var2 ~ group1 + group2</code>, or a atomic vector, list of vectors or <code><a href='GRP, fgroup_by.html'>GRP</a></code> object used to group <code>X</code>. For <code>collapv</code>: names or indices of grouping columns, or a logical vector or selector function such as <code><a href='small-helpers.html'>is_categorical</a></code> selecting grouping columns.</p></td>
     </tr>
     <tr>
       <th>FUN</th>
@@ -167,7 +167,7 @@ collap works with collapse's Fast Statistical Functions, providing extremely fas
     </tr>
     <tr>
       <th>catFUN</th>
-      <td><p>same as <code>FUN</code>, but applied only to categorical (non-numeric) typed columns (<code><a href='small-helper.html'>is_categorical</a></code>).</p></td>
+      <td><p>same as <code>FUN</code>, but applied only to categorical (non-numeric) typed columns (<code><a href='small-helpers.html'>is_categorical</a></code>).</p></td>
     </tr>
     <tr>
       <th>cols</th>
@@ -326,7 +326,7 @@ collap works with collapse's Fast Statistical Functions, providing extremely fas
 </div><div class='output co'>#&gt;   Sepal.Length Sepal.Width Petal.Length Petal.Width    Species
 #&gt; 1        250.3    3.447423     1.465202   0.2480224     setosa
 #&gt; 2        296.8    2.784063     4.290195   1.3352089 versicolor
-#&gt; 3        329.4    2.987948     5.597116   2.0333030  virginica</div><div class='input'><span class='va'>weights</span> <span class='op'>&lt;-</span> <span class='fu'><a href='https://rdrr.io/r/base/MathFun.html'>abs</a></span><span class='op'>(</span><span class='fu'><a href='https://rdrr.io/r/stats/Normal.html'>rnorm</a></span><span class='op'>(</span><span class='fu'><a href='small-helper.html'>fnrow</a></span><span class='op'>(</span><span class='va'>iris</span><span class='op'>)</span><span class='op'>)</span><span class='op'>)</span>
+#&gt; 3        329.4    2.987948     5.597116   2.0333030  virginica</div><div class='input'><span class='va'>weights</span> <span class='op'>&lt;-</span> <span class='fu'><a href='https://rdrr.io/r/base/MathFun.html'>abs</a></span><span class='op'>(</span><span class='fu'><a href='https://rdrr.io/r/stats/Normal.html'>rnorm</a></span><span class='op'>(</span><span class='fu'><a href='small-helpers.html'>fnrow</a></span><span class='op'>(</span><span class='va'>iris</span><span class='op'>)</span><span class='op'>)</span><span class='op'>)</span>
 <span class='fu'>collap</span><span class='op'>(</span><span class='va'>iris</span>, <span class='op'>~</span> <span class='va'>Species</span>, w <span class='op'>=</span> <span class='va'>weights</span><span class='op'>)</span>                           <span class='co'># Some random weights..</span>
 </div><div class='output co'>#&gt;    weights Sepal.Length Sepal.Width Petal.Length Petal.Width    Species
 #&gt; 1 39.05823     4.938751    3.360079     1.439973   0.2210811     setosa
@@ -792,7 +792,7 @@ collap works with collapse's Fast Statistical Functions, providing extremely fas
 #&gt; 3   70613923        NA   2.061847   Low income      FALSE
 #&gt; 4  306818649        NA   1.556185   Low income      FALSE
 #&gt; 5 3240143310  51.11423   1.476279   Low income      FALSE
-#&gt; 6 4942806183  16.37030   1.196725   Low income      FALSE</div><div class='input'>
+#&gt; 6 4942806183  16.37030   1.196725   Low income      FALSE</div><div class='input'><span class='co'># \donttest{</span>
 <span class='co'>## Piped Use --------------------------------------------------</span>
 <span class='va'>wlddev</span> |&gt; <span class='fu'><a href='GRP, fgroup_by.html'>fgroup_by</a></span><span class='op'>(</span><span class='va'>country</span>, <span class='va'>decade</span><span class='op'>)</span> |&gt; <span class='fu'>collapg</span><span class='op'>(</span><span class='op'>)</span> |&gt; <span class='fu'><a href='https://rdrr.io/r/utils/head.html'>head</a></span><span class='op'>(</span><span class='op'>)</span>
 </div><div class='output co'>#&gt;       country decade iso3c       date   year     region     income  OECD
@@ -851,7 +851,7 @@ collap works with collapse's Fast Statistical Functions, providing extremely fas
 #&gt; 3   NA   71666001
 #&gt; 4   NA  317255000
 #&gt; 5   NA 3054051961
-#&gt; 6   NA 5023859033</div><div class='input'>
+#&gt; 6   NA 5023859033</div><div class='input'><span class='co'># }</span>
 </div></pre>
   </div>
   <div class="col-md-3 hidden-xs hidden-sm" id="pkgdown-sidebar">

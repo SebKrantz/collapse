@@ -79,7 +79,7 @@ as_numeric_factor and as_character_factor convert factors, or all factor columns
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">collapse</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">1.6.4</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">1.6.5</span>
       </span>
     </div>
 
@@ -144,7 +144,7 @@ as_numeric_factor and as_character_factor convert factors, or all factor columns
 
  <span class='fu'>qDF</span><span class='op'>(</span><span class='va'>X</span>, row.names.col <span class='op'>=</span> <span class='cn'>FALSE</span>, keep.attr <span class='op'>=</span> <span class='cn'>FALSE</span>, class <span class='op'>=</span> <span class='st'>"data.frame"</span><span class='op'>)</span>
  <span class='fu'>qDT</span><span class='op'>(</span><span class='va'>X</span>, row.names.col <span class='op'>=</span> <span class='cn'>FALSE</span>, keep.attr <span class='op'>=</span> <span class='cn'>FALSE</span>, class <span class='op'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span><span class='op'>(</span><span class='st'>"data.table"</span>, <span class='st'>"data.frame"</span><span class='op'>)</span><span class='op'>)</span>
-<span class='fu'>qTBL</span><span class='op'>(</span><span class='va'>X</span>, row.names.col <span class='op'>=</span> <span class='cn'>FALSE</span>, keep.attr <span class='op'>=</span> <span class='cn'>FALSE</span><span class='op'>)</span>
+<span class='fu'>qTBL</span><span class='op'>(</span><span class='va'>X</span>, row.names.col <span class='op'>=</span> <span class='cn'>FALSE</span>, keep.attr <span class='op'>=</span> <span class='cn'>FALSE</span>, class <span class='op'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span><span class='op'>(</span><span class='st'>"tbl_df"</span>,<span class='st'>"tbl"</span>,<span class='st'>"data.frame"</span><span class='op'>)</span><span class='op'>)</span>
   <span class='fu'>qM</span><span class='op'>(</span><span class='va'>X</span>,                        keep.attr <span class='op'>=</span> <span class='cn'>FALSE</span>, class <span class='op'>=</span> <span class='cn'>NULL</span><span class='op'>)</span>
 
 <span class='co'># Programmer functions: matrix rows or columns to list / DF / DT - fully in C++</span>
@@ -209,9 +209,6 @@ as_numeric_factor and as_character_factor convert factors, or all factor columns
 <code>qF</code> - returns a factor<br />
 <code>as_numeric_factor</code> - returns X with factors converted to numeric variables<br />
 <code>as_character_factor</code> - returns X with factors converted to character variables</p>
-    <h2 class="hasAnchor" id="note"><a class="anchor" href="#note"></a>Note</h2>
-
-    <p><code>qTBL</code> is a simple wrapper around <code>qDT</code> assigning different classes, i.e. <code>qTBL(x)</code> is equivalent to <code>qDT(x, class = c("tbl_df", "tbl", "data.frame"))</code>. Similar converters for other data frame based classes are easily created from <code>qDF</code> and <code>qDT</code>. The principle difference between them is that <code>qDF</code> preserves rownames whereas <code>qDT</code> always assigns integer rownames.</p>
     <h2 class="hasAnchor" id="see-also"><a class="anchor" href="#see-also"></a>See also</h2>
 
     <div class='dont-index'><p><code><a href='qF, qG, finteraction.html'>qF</a></code>, <a href='index.html'>Collapse Overview</a></p></div>

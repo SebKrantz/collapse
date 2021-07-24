@@ -73,7 +73,7 @@ It computes a set of 7 statistics (nobs, mean, sd, min, max, skewness and kurtos
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">collapse</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">1.6.4</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">1.6.5</span>
       </span>
     </div>
 
@@ -197,7 +197,7 @@ It computes a set of 7 statistics (nobs, mean, sd, min, max, skewness and kurtos
     </tr>
     <tr>
       <th>vlabels</th>
-      <td><p>logical. Use variable labels in the summary. See <code><a href='small-helper.html'>vlabels</a></code>.</p></td>
+      <td><p>logical. Use variable labels in the summary. See <code><a href='small-helpers.html'>vlabels</a></code>.</p></td>
     </tr>
     <tr>
       <th>effect</th>
@@ -237,7 +237,7 @@ It computes a set of 7 statistics (nobs, mean, sd, min, max, skewness and kurtos
 <p>More formally, let <b><code>x</code></b> (bold) be a panel vector of data for <code>N</code> individuals indexed by <code>i</code>, recorded for <code>T</code> periods, indexed by <code>t</code>. <code>xit</code> then denotes a single data-point belonging to individual <code>i</code> in time-period <code>t</code> (<code>t/T</code> must not represent time). Then <code>xi.</code> denotes the average of all values for individual <code>i</code> (averaged over <code>t</code>), and by extension <b><code>xN.</code></b> is the vector (length <code>N</code>) of such averages for all individuals. If no groups are supplied to <code>g/by</code>, the 'Between' statistics are computed on <b><code>xN.</code></b>, the vector of individual averages. (This means that for a non-balanced panel or in the presence of missing values, the 'Overall' mean computed on <b><code>x</code></b> can be slightly different than the 'Between' mean computed on <b><code>xN.</code></b>). If groups are supplied to <code>g/by</code>, <b><code>xN.</code></b> is expanded to the vector <b><code>xi.</code></b> (length <code>N x T</code>) by replacing each value <code>xit</code> in <b><code>x</code></b> with <code>xi.</code>, while preserving missing values in <b><code>x</code></b>. Grouped Between-statistics are then computed on <b><code>xi.</code></b>, with the only difference that the number of observations ('Between-N') reported for each group is the number of distinct non-missing values of <b><code>xi.</code></b> in each group (not the total number of non-missing values of <b><code>xi.</code></b> in each group, which is already reported in 'Overall-N').</p>
 <p>'Within' statistics are always computed on the vector <b><code>x - xi. + x..</code></b>, where <b><code>x..</code></b> is simply the 'Overall' mean computed from <b><code>x</code></b>, which is added back to preserve the level of the data. The 'Within' mean computed on this data will always be identical to the 'Overall' mean. In the summary output, <code>qsu</code> reports not 'N', which would be identical to the 'Overall-N', but 'T', the average number of time-periods of data available for each individual obtained as 'T' = 'Overall-N / 'Between-N'. See Examples.</p>
 <p>Apart from 'N/T' and the extrema, the standard-deviations ('SD') computed on between- and within- transformed data are extremely valuable because they indicate how much of the variation in a panel-variable is between-individuals and how much of the variation is within-individuals (over time). At the extremes, variables that have common values across individuals (such as the time-variable(s) 't' in a balanced panel), can readily be identified as individual-invariant because the 'Between-SD' on this variable is 0 and the 'Within-SD' is equal to the 'Overall-SD'. Analogous, time-invariant individual characteristics (such as the individual-id 'i') have a 0 'Within-SD' and a 'Between-SD' equal to the 'Overall-SD'.</p>
-<p><code>qsu</code> comes with it's own print method which by default writes out up to 9 digits at 4 decimal places. Larger numbers are printed in scientific format. for numbers between 7 and 9 digits, a comma ',' is placed after the 6th digit to designate the millions. Missing values are printed using '-'.</p>
+<p><code>qsu</code> comes with it's own print method which by default writes out up to 9 digits at 4 decimal places. Larger numbers are printed in scientific format. for numbers between 7 and 9 digits, an apostrophe (') is placed after the 6th digit to designate the millions. Missing values are printed using '-'.</p>
 <p>The <em>sf</em> method simply ignores the geometry column.</p>
     <h2 class="hasAnchor" id="value"><a class="anchor" href="#value"></a>Value</h2>
 
@@ -250,7 +250,7 @@ It computes a set of 7 statistics (nobs, mean, sd, min, max, skewness and kurtos
     <p>If weights <code>w</code> are used together with <code>pid</code>, transformed data is computed using weighted individual means i.e. weighted <b><code>xi.</code></b> and weighted <b><code>x..</code></b>. Weighted statistics are subsequently computed on this weighted-transformed data.</p>
     <h2 class="hasAnchor" id="see-also"><a class="anchor" href="#see-also"></a>See also</h2>
 
-    <div class='dont-index'><p><code><a href='descr.html'>descr</a></code>, <code><a href='pwcor_pwcov_pwnobs.html'>pwcor</a></code>, <a href='fast-statistical-functions.html'>Fast Statistical Functions</a>, <a href='index.html'>Collapse Overview</a>  <!-- %% ~~objects to See Also as \code{\link{help}}, ~~~ --></p></div>
+    <div class='dont-index'><p><code><a href='descr.html'>descr</a></code>, <code><a href='pwcor, pwcov, pwnobs.html'>pwcor</a></code>, <a href='fast-statistical-functions.html'>Fast Statistical Functions</a>, <a href='index.html'>Collapse Overview</a>  <!-- %% ~~objects to See Also as \code{\link{help}}, ~~~ --></p></div>
 
     <h2 class="hasAnchor" id="examples"><a class="anchor" href="#examples"></a>Examples</h2>
     <pre class="examples"><div class='input'>
@@ -269,8 +269,8 @@ It computes a set of 7 statistics (nobs, mean, sd, min, max, skewness and kurtos
 #&gt; PCGDP     9470    12048.778  19077.6416     132.0776      196061.417
 #&gt; LIFEEX   11670      64.2963     11.4764       18.907         85.4171
 #&gt; GINI      1744      38.5341      9.2006         20.7            65.8
-#&gt; ODA       8608   454,720131  868,712654  -997,679993  2.56715605e+10
-#&gt; POP      12919  24,245971.6  102,120674         2833  1.39771500e+09</div><div class='input'><span class='fu'>qsu</span><span class='op'>(</span><span class='va'>wlddev</span>, vlabels <span class='op'>=</span> <span class='cn'>TRUE</span><span class='op'>)</span>                 <span class='co'># Display variable labels</span>
+#&gt; ODA       8608   454'720131  868'712654  -997'679993  2.56715605e+10
+#&gt; POP      12919  24'245971.6  102'120674         2833  1.39771500e+09</div><div class='input'><span class='fu'>qsu</span><span class='op'>(</span><span class='va'>wlddev</span>, vlabels <span class='op'>=</span> <span class='cn'>TRUE</span><span class='op'>)</span>                 <span class='co'># Display variable labels</span>
 </div><div class='output co'>#&gt;                                                                                             N
 #&gt; country: Country Name                                                                   13176
 #&gt; iso3c: Country Code                                                                     13176
@@ -297,8 +297,8 @@ It computes a set of 7 statistics (nobs, mean, sd, min, max, skewness and kurtos
 #&gt; PCGDP: GDP per capita (constant 2010 US$)                                                 12048.778
 #&gt; LIFEEX: Life expectancy at birth, total (years)                                             64.2963
 #&gt; GINI: Gini index (World Bank estimate)                                                      38.5341
-#&gt; ODA: Net official development assistance and official aid received (constant 2018 US$)   454,720131
-#&gt; POP: Population, total                                                                  24,245971.6
+#&gt; ODA: Net official development assistance and official aid received (constant 2018 US$)   454'720131
+#&gt; POP: Population, total                                                                  24'245971.6
 #&gt;                                                                                                 SD
 #&gt; country: Country Name                                                                            -
 #&gt; iso3c: Country Code                                                                              -
@@ -311,8 +311,8 @@ It computes a set of 7 statistics (nobs, mean, sd, min, max, skewness and kurtos
 #&gt; PCGDP: GDP per capita (constant 2010 US$)                                               19077.6416
 #&gt; LIFEEX: Life expectancy at birth, total (years)                                            11.4764
 #&gt; GINI: Gini index (World Bank estimate)                                                      9.2006
-#&gt; ODA: Net official development assistance and official aid received (constant 2018 US$)  868,712654
-#&gt; POP: Population, total                                                                  102,120674
+#&gt; ODA: Net official development assistance and official aid received (constant 2018 US$)  868'712654
+#&gt; POP: Population, total                                                                  102'120674
 #&gt;                                                                                                 Min
 #&gt; country: Country Name                                                                             -
 #&gt; iso3c: Country Code                                                                               -
@@ -325,7 +325,7 @@ It computes a set of 7 statistics (nobs, mean, sd, min, max, skewness and kurtos
 #&gt; PCGDP: GDP per capita (constant 2010 US$)                                                  132.0776
 #&gt; LIFEEX: Life expectancy at birth, total (years)                                              18.907
 #&gt; GINI: Gini index (World Bank estimate)                                                         20.7
-#&gt; ODA: Net official development assistance and official aid received (constant 2018 US$)  -997,679993
+#&gt; ODA: Net official development assistance and official aid received (constant 2018 US$)  -997'679993
 #&gt; POP: Population, total                                                                         2833
 #&gt;                                                                                                    Max
 #&gt; country: Country Name                                                                                -
@@ -353,8 +353,8 @@ It computes a set of 7 statistics (nobs, mean, sd, min, max, skewness and kurtos
 #&gt; PCGDP     9470    12048.778  19077.6416     132.0776      196061.417   3.1276
 #&gt; LIFEEX   11670      64.2963     11.4764       18.907         85.4171  -0.6748
 #&gt; GINI      1744      38.5341      9.2006         20.7            65.8    0.596
-#&gt; ODA       8608   454,720131  868,712654  -997,679993  2.56715605e+10   6.9832
-#&gt; POP      12919  24,245971.6  102,120674         2833  1.39771500e+09   9.7494
+#&gt; ODA       8608   454'720131  868'712654  -997'679993  2.56715605e+10   6.9832
+#&gt; POP      12919  24'245971.6  102'120674         2833  1.39771500e+09   9.7494
 #&gt;              Kurt
 #&gt; country         -
 #&gt; iso3c           -
@@ -492,40 +492,40 @@ It computes a set of 7 statistics (nobs, mean, sd, min, max, skewness and kurtos
 #&gt; , , ODA: Net official development assistance and official aid received (constant 2018 US$)
 #&gt; 
 #&gt;                                N            Mean              SD           Min
-#&gt; East Asia &amp; Pacific         1537      352,017964      622,847624   -997,679993
-#&gt; Europe &amp; Central Asia        787      402,455286      568,237036   -322,070007
-#&gt; Latin America &amp; Caribbean   1972      172,880081      260,781049   -444,040009
-#&gt; Middle East &amp; North Africa  1105      732,380009  1.52108993e+09   -141,789993
-#&gt; North America                 39      468717.916     10,653560.8  -15,869999.9
-#&gt; South Asia                   466  1.27049955e+09  1.61492889e+09   -247,369995
-#&gt; Sub-Saharan Africa          2702      486,371750      656,336230  -18,409999.8
+#&gt; East Asia &amp; Pacific         1537      352'017964      622'847624   -997'679993
+#&gt; Europe &amp; Central Asia        787      402'455286      568'237036   -322'070007
+#&gt; Latin America &amp; Caribbean   1972      172'880081      260'781049   -444'040009
+#&gt; Middle East &amp; North Africa  1105      732'380009  1.52108993e+09   -141'789993
+#&gt; North America                 39      468717.916     10'653560.8  -15'869999.9
+#&gt; South Asia                   466  1.27049955e+09  1.61492889e+09   -247'369995
+#&gt; Sub-Saharan Africa          2702      486'371750      656'336230  -18'409999.8
 #&gt;                                        Max
 #&gt; East Asia &amp; Pacific         4.04487988e+09
 #&gt; Europe &amp; Central Asia       4.34612988e+09
 #&gt; Latin America &amp; Caribbean   2.99568994e+09
 #&gt; Middle East &amp; North Africa  2.56715605e+10
-#&gt; North America                  61,509998.3
+#&gt; North America                  61'509998.3
 #&gt; South Asia                  8.75425977e+09
 #&gt; Sub-Saharan Africa          1.18790801e+10
 #&gt; 
 #&gt; , , POP: Population, total
 #&gt; 
 #&gt;                                N         Mean           SD    Min
-#&gt; East Asia &amp; Pacific         2160  47,788194.6   184,121276   4375
-#&gt; Europe &amp; Central Asia       3480  14,103754.9  24,686065.8  13411
-#&gt; Latin America &amp; Caribbean   2520  10,371370.7    26,728206   2833
-#&gt; Middle East &amp; North Africa  1227  12,549479.2  17,750818.2  47384
-#&gt; North America                180  93,783656.8   116,925373  44400
-#&gt; South Asia                   480   144,180423   300,282162  89863
-#&gt; Sub-Saharan Africa          2872  11,597636.9  19,916800.8  41700
+#&gt; East Asia &amp; Pacific         2160  47'788194.6   184'121276   4375
+#&gt; Europe &amp; Central Asia       3480  14'103754.9  24'686065.8  13411
+#&gt; Latin America &amp; Caribbean   2520  10'371370.7    26'728206   2833
+#&gt; Middle East &amp; North Africa  1227  12'549479.2  17'750818.2  47384
+#&gt; North America                180  93'783656.8   116'925373  44400
+#&gt; South Asia                   480   144'180423   300'282162  89863
+#&gt; Sub-Saharan Africa          2872  11'597636.9  19'916800.8  41700
 #&gt;                                        Max
 #&gt; East Asia &amp; Pacific         1.39771500e+09
-#&gt; Europe &amp; Central Asia           148,538197
-#&gt; Latin America &amp; Caribbean       211,049527
-#&gt; Middle East &amp; North Africa      100,388073
-#&gt; North America                   326,687501
+#&gt; Europe &amp; Central Asia           148'538197
+#&gt; Latin America &amp; Caribbean       211'049527
+#&gt; Middle East &amp; North Africa      100'388073
+#&gt; North America                   326'687501
 #&gt; South Asia                  1.36641775e+09
-#&gt; Sub-Saharan Africa              200,963599
+#&gt; Sub-Saharan Africa              200'963599
 #&gt; </div><div class='input'><span class='fu'>qsu</span><span class='op'>(</span><span class='va'>wlddev</span>, <span class='va'>PCGDP</span> <span class='op'>+</span> <span class='va'>LIFEEX</span> <span class='op'>~</span> <span class='va'>income</span><span class='op'>)</span>        <span class='co'># Summarize GDP per Capita and Life Expectancy by</span>
 </div><div class='output co'>#&gt; , , PCGDP
 #&gt; 
@@ -758,16 +758,16 @@ It computes a set of 7 statistics (nobs, mean, sd, min, max, skewness and kurtos
 #&gt; , , ODA: Net official development assistance and official aid received (constant 2018 US$)
 #&gt; 
 #&gt;              N/T        Mean          SD              Min             Max
-#&gt; Overall     8608  454,720131  868,712654      -997,679993  2.56715605e+10
-#&gt; Between      178  439,168412  569,049959       468717.916  3.62337432e+09
-#&gt; Within   48.3596  454,720131  650,709624  -2.44379420e+09  2.45610972e+10
+#&gt; Overall     8608  454'720131  868'712654      -997'679993  2.56715605e+10
+#&gt; Between      178  439'168412  569'049959       468717.916  3.62337432e+09
+#&gt; Within   48.3596  454'720131  650'709624  -2.44379420e+09  2.45610972e+10
 #&gt; 
 #&gt; , , POP: Population, total
 #&gt; 
 #&gt;              N/T         Mean           SD          Min             Max
-#&gt; Overall    12919  24,245971.6   102,120674         2833  1.39771500e+09
-#&gt; Between      216    24,178573  98,616506.7    8343.3333  1.08786967e+09
-#&gt; Within   59.8102  24,245971.6  26,803077.4  -405,793067      510,077008
+#&gt; Overall    12919  24'245971.6   102'120674         2833  1.39771500e+09
+#&gt; Between      216    24'178573  98'616506.7    8343.3333  1.08786967e+09
+#&gt; Within   59.8102  24'245971.6  26'803077.4  -405'793067      510'077008
 #&gt; </div><div class='input'><span class='co'># -&gt; They show amongst other things that year and decade are individual-invariant,</span>
 <span class='co'># that we have GINI-data on only 161 countries, with only 8.42 observations per country on average,</span>
 <span class='co'># and that GDP, LIFEEX and GINI vary more between-countries, but ODA received varies more within</span>
@@ -857,16 +857,16 @@ It computes a set of 7 statistics (nobs, mean, sd, min, max, skewness and kurtos
 #&gt; , , ODA
 #&gt; 
 #&gt;              N/T        Mean          SD              Min             Max
-#&gt; Overall     8608  454,720131  868,712654      -997,679993  2.56715605e+10
-#&gt; Between      178  439,168412  569,049959       468717.916  3.62337432e+09
-#&gt; Within   48.3596  454,720131  650,709624  -2.44379420e+09  2.45610972e+10
+#&gt; Overall     8608  454'720131  868'712654      -997'679993  2.56715605e+10
+#&gt; Between      178  439'168412  569'049959       468717.916  3.62337432e+09
+#&gt; Within   48.3596  454'720131  650'709624  -2.44379420e+09  2.45610972e+10
 #&gt; 
 #&gt; , , POP
 #&gt; 
 #&gt;              N/T         Mean           SD          Min             Max
-#&gt; Overall    12919  24,245971.6   102,120674         2833  1.39771500e+09
-#&gt; Between      216    24,178573  98,616506.7    8343.3333  1.08786967e+09
-#&gt; Within   59.8102  24,245971.6  26,803077.4  -405,793067      510,077008
+#&gt; Overall    12919  24'245971.6   102'120674         2833  1.39771500e+09
+#&gt; Between      216    24'178573  98'616506.7    8343.3333  1.08786967e+09
+#&gt; Within   59.8102  24'245971.6  26'803077.4  -405'793067      510'077008
 #&gt; </div><div class='input'><span class='fu'>qsu</span><span class='op'>(</span><span class='va'>pwlddev</span><span class='op'>$</span><span class='va'>PCGDP</span><span class='op'>)</span>                          <span class='co'># Default summary for Panel Series  (class pseries)</span>
 </div><div class='output co'>#&gt;              N/T        Mean          SD          Min         Max
 #&gt; Overall     9470   12048.778  19077.6416     132.0776  196061.417
@@ -996,36 +996,36 @@ It computes a set of 7 statistics (nobs, mean, sd, min, max, skewness and kurtos
 #&gt; , , Overall, ODA
 #&gt; 
 #&gt;                              N/T            Mean              SD           Min
-#&gt; East Asia &amp; Pacific         1537      352,017964      622,847624   -997,679993
-#&gt; Europe &amp; Central Asia        787      402,455286      568,237036   -322,070007
-#&gt; Latin America &amp; Caribbean   1972      172,880081      260,781049   -444,040009
-#&gt; Middle East &amp; North Africa  1105      732,380009  1.52108993e+09   -141,789993
-#&gt; North America                 39      468717.916     10,653560.8  -15,869999.9
-#&gt; South Asia                   466  1.27049955e+09  1.61492889e+09   -247,369995
-#&gt; Sub-Saharan Africa          2702      486,371750      656,336230  -18,409999.8
+#&gt; East Asia &amp; Pacific         1537      352'017964      622'847624   -997'679993
+#&gt; Europe &amp; Central Asia        787      402'455286      568'237036   -322'070007
+#&gt; Latin America &amp; Caribbean   1972      172'880081      260'781049   -444'040009
+#&gt; Middle East &amp; North Africa  1105      732'380009  1.52108993e+09   -141'789993
+#&gt; North America                 39      468717.916     10'653560.8  -15'869999.9
+#&gt; South Asia                   466  1.27049955e+09  1.61492889e+09   -247'369995
+#&gt; Sub-Saharan Africa          2702      486'371750      656'336230  -18'409999.8
 #&gt;                                        Max
 #&gt; East Asia &amp; Pacific         4.04487988e+09
 #&gt; Europe &amp; Central Asia       4.34612988e+09
 #&gt; Latin America &amp; Caribbean   2.99568994e+09
 #&gt; Middle East &amp; North Africa  2.56715605e+10
-#&gt; North America                  61,509998.3
+#&gt; North America                  61'509998.3
 #&gt; South Asia                  8.75425977e+09
 #&gt; Sub-Saharan Africa          1.18790801e+10
 #&gt; 
 #&gt; , , Between, ODA
 #&gt; 
 #&gt;                             N/T            Mean              SD          Min
-#&gt; East Asia &amp; Pacific          31      352,017964      457,183279  1,654615.38
-#&gt; Europe &amp; Central Asia        32      402,455286      438,074771  12,516000.1
-#&gt; Latin America &amp; Caribbean    37      172,880081      167,160838  2,225483.88
-#&gt; Middle East &amp; North Africa   21      732,380009      775,418887   3,112820.5
+#&gt; East Asia &amp; Pacific          31      352'017964      457'183279  1'654615.38
+#&gt; Europe &amp; Central Asia        32      402'455286      438'074771  12'516000.1
+#&gt; Latin America &amp; Caribbean    37      172'880081      167'160838  2'225483.88
+#&gt; Middle East &amp; North Africa   21      732'380009      775'418887   3'112820.5
 #&gt; North America                 1      468717.916               0   468717.916
-#&gt; South Asia                    8  1.27049955e+09  1.18347893e+09  27,152499.9
-#&gt; Sub-Saharan Africa           48      486,371750      397,995105  28,801206.9
+#&gt; South Asia                    8  1.27049955e+09  1.18347893e+09  27'152499.9
+#&gt; Sub-Saharan Africa           48      486'371750      397'995105  28'801206.9
 #&gt;                                        Max
 #&gt; East Asia &amp; Pacific         1.63585532e+09
 #&gt; Europe &amp; Central Asia       2.05456932e+09
-#&gt; Latin America &amp; Caribbean       538,386665
+#&gt; Latin America &amp; Caribbean       538'386665
 #&gt; Middle East &amp; North Africa  2.86174883e+09
 #&gt; North America                   468717.916
 #&gt; South Asia                  3.62337432e+09
@@ -1034,21 +1034,21 @@ It computes a set of 7 statistics (nobs, mean, sd, min, max, skewness and kurtos
 #&gt; , , Within, ODA
 #&gt; 
 #&gt;                                 N/T        Mean              SD
-#&gt; East Asia &amp; Pacific         49.5806  454,720131      422,992450
-#&gt; Europe &amp; Central Asia       24.5938  454,720131      361,916875
-#&gt; Latin America &amp; Caribbean   53.2973  454,720131      200,159960
-#&gt; Middle East &amp; North Africa   52.619  454,720131  1.30860235e+09
-#&gt; North America                    39  454,720131     10,653560.8
-#&gt; South Asia                    58.25  454,720131  1.09880524e+09
-#&gt; Sub-Saharan Africa          56.2917  454,720131      521,897637
+#&gt; East Asia &amp; Pacific         49.5806  454'720131      422'992450
+#&gt; Europe &amp; Central Asia       24.5938  454'720131      361'916875
+#&gt; Latin America &amp; Caribbean   53.2973  454'720131      200'159960
+#&gt; Middle East &amp; North Africa   52.619  454'720131  1.30860235e+09
+#&gt; North America                    39  454'720131     10'653560.8
+#&gt; South Asia                    58.25  454'720131  1.09880524e+09
+#&gt; Sub-Saharan Africa          56.2917  454'720131      521'897637
 #&gt;                                         Min             Max
 #&gt; East Asia &amp; Pacific         -2.04042108e+09  3.59673152e+09
 #&gt; Europe &amp; Central Asia       -1.08796786e+09  3.30549004e+09
-#&gt; Latin America &amp; Caribbean       -527,706542  3.28976141e+09
+#&gt; Latin America &amp; Caribbean       -527'706542  3.28976141e+09
 #&gt; Middle East &amp; North Africa  -2.34610870e+09  2.45610972e+10
-#&gt; North America                    438,381413      515,761411
+#&gt; North America                    438'381413      515'761411
 #&gt; South Asia                  -2.44379420e+09  5.58560558e+09
-#&gt; Sub-Saharan Africa              -952,168698  1.12814455e+10
+#&gt; Sub-Saharan Africa              -952'168698  1.12814455e+10
 #&gt; </div><div class='input'><span class='va'>psr</span> <span class='op'>&lt;-</span> <span class='fu'>qsu</span><span class='op'>(</span><span class='va'>pwlddev</span>, <span class='op'>~</span> <span class='va'>region</span>, cols <span class='op'>=</span> <span class='fl'>9</span><span class='op'>:</span><span class='fl'>12</span><span class='op'>)</span>  <span class='co'># Same on plm pdata.frame</span>
 <span class='va'>psr</span>                                         <span class='co'># -&gt; Gives a 4D array</span>
 </div><div class='output co'>#&gt; , , Overall, PCGDP
@@ -1169,36 +1169,36 @@ It computes a set of 7 statistics (nobs, mean, sd, min, max, skewness and kurtos
 #&gt; , , Overall, ODA
 #&gt; 
 #&gt;                              N/T            Mean              SD           Min
-#&gt; East Asia &amp; Pacific         1537      352,017964      622,847624   -997,679993
-#&gt; Europe &amp; Central Asia        787      402,455286      568,237036   -322,070007
-#&gt; Latin America &amp; Caribbean   1972      172,880081      260,781049   -444,040009
-#&gt; Middle East &amp; North Africa  1105      732,380009  1.52108993e+09   -141,789993
-#&gt; North America                 39      468717.916     10,653560.8  -15,869999.9
-#&gt; South Asia                   466  1.27049955e+09  1.61492889e+09   -247,369995
-#&gt; Sub-Saharan Africa          2702      486,371750      656,336230  -18,409999.8
+#&gt; East Asia &amp; Pacific         1537      352'017964      622'847624   -997'679993
+#&gt; Europe &amp; Central Asia        787      402'455286      568'237036   -322'070007
+#&gt; Latin America &amp; Caribbean   1972      172'880081      260'781049   -444'040009
+#&gt; Middle East &amp; North Africa  1105      732'380009  1.52108993e+09   -141'789993
+#&gt; North America                 39      468717.916     10'653560.8  -15'869999.9
+#&gt; South Asia                   466  1.27049955e+09  1.61492889e+09   -247'369995
+#&gt; Sub-Saharan Africa          2702      486'371750      656'336230  -18'409999.8
 #&gt;                                        Max
 #&gt; East Asia &amp; Pacific         4.04487988e+09
 #&gt; Europe &amp; Central Asia       4.34612988e+09
 #&gt; Latin America &amp; Caribbean   2.99568994e+09
 #&gt; Middle East &amp; North Africa  2.56715605e+10
-#&gt; North America                  61,509998.3
+#&gt; North America                  61'509998.3
 #&gt; South Asia                  8.75425977e+09
 #&gt; Sub-Saharan Africa          1.18790801e+10
 #&gt; 
 #&gt; , , Between, ODA
 #&gt; 
 #&gt;                             N/T            Mean              SD          Min
-#&gt; East Asia &amp; Pacific          31      352,017964      457,183279  1,654615.38
-#&gt; Europe &amp; Central Asia        32      402,455286      438,074771  12,516000.1
-#&gt; Latin America &amp; Caribbean    37      172,880081      167,160838  2,225483.88
-#&gt; Middle East &amp; North Africa   21      732,380009      775,418887   3,112820.5
+#&gt; East Asia &amp; Pacific          31      352'017964      457'183279  1'654615.38
+#&gt; Europe &amp; Central Asia        32      402'455286      438'074771  12'516000.1
+#&gt; Latin America &amp; Caribbean    37      172'880081      167'160838  2'225483.88
+#&gt; Middle East &amp; North Africa   21      732'380009      775'418887   3'112820.5
 #&gt; North America                 1      468717.916               0   468717.916
-#&gt; South Asia                    8  1.27049955e+09  1.18347893e+09  27,152499.9
-#&gt; Sub-Saharan Africa           48      486,371750      397,995105  28,801206.9
+#&gt; South Asia                    8  1.27049955e+09  1.18347893e+09  27'152499.9
+#&gt; Sub-Saharan Africa           48      486'371750      397'995105  28'801206.9
 #&gt;                                        Max
 #&gt; East Asia &amp; Pacific         1.63585532e+09
 #&gt; Europe &amp; Central Asia       2.05456932e+09
-#&gt; Latin America &amp; Caribbean       538,386665
+#&gt; Latin America &amp; Caribbean       538'386665
 #&gt; Middle East &amp; North Africa  2.86174883e+09
 #&gt; North America                   468717.916
 #&gt; South Asia                  3.62337432e+09
@@ -1207,21 +1207,21 @@ It computes a set of 7 statistics (nobs, mean, sd, min, max, skewness and kurtos
 #&gt; , , Within, ODA
 #&gt; 
 #&gt;                                 N/T        Mean              SD
-#&gt; East Asia &amp; Pacific         49.5806  454,720131      422,992450
-#&gt; Europe &amp; Central Asia       24.5938  454,720131      361,916875
-#&gt; Latin America &amp; Caribbean   53.2973  454,720131      200,159960
-#&gt; Middle East &amp; North Africa   52.619  454,720131  1.30860235e+09
-#&gt; North America                    39  454,720131     10,653560.8
-#&gt; South Asia                    58.25  454,720131  1.09880524e+09
-#&gt; Sub-Saharan Africa          56.2917  454,720131      521,897637
+#&gt; East Asia &amp; Pacific         49.5806  454'720131      422'992450
+#&gt; Europe &amp; Central Asia       24.5938  454'720131      361'916875
+#&gt; Latin America &amp; Caribbean   53.2973  454'720131      200'159960
+#&gt; Middle East &amp; North Africa   52.619  454'720131  1.30860235e+09
+#&gt; North America                    39  454'720131     10'653560.8
+#&gt; South Asia                    58.25  454'720131  1.09880524e+09
+#&gt; Sub-Saharan Africa          56.2917  454'720131      521'897637
 #&gt;                                         Min             Max
 #&gt; East Asia &amp; Pacific         -2.04042108e+09  3.59673152e+09
 #&gt; Europe &amp; Central Asia       -1.08796786e+09  3.30549004e+09
-#&gt; Latin America &amp; Caribbean       -527,706542  3.28976141e+09
+#&gt; Latin America &amp; Caribbean       -527'706542  3.28976141e+09
 #&gt; Middle East &amp; North Africa  -2.34610870e+09  2.45610972e+10
-#&gt; North America                    438,381413      515,761411
+#&gt; North America                    438'381413      515'761411
 #&gt; South Asia                  -2.44379420e+09  5.58560558e+09
-#&gt; Sub-Saharan Africa              -952,168698  1.12814455e+10
+#&gt; Sub-Saharan Africa              -952'168698  1.12814455e+10
 #&gt; </div><div class='input'><span class='fu'>print.qsu</span><span class='op'>(</span><span class='va'>psr</span><span class='op'>[</span>,<span class='st'>"N/T"</span>,,<span class='op'>]</span><span class='op'>)</span>                    <span class='co'># Checking out the number of observations:</span>
 </div><div class='output co'>#&gt; , , PCGDP
 #&gt; 
@@ -1305,13 +1305,13 @@ It computes a set of 7 statistics (nobs, mean, sd, min, max, skewness and kurtos
 #&gt; , , ODA
 #&gt; 
 #&gt;                                    Overall         Between          Within
-#&gt; East Asia &amp; Pacific             622,847624      457,183279      422,992450
-#&gt; Europe &amp; Central Asia           568,237036      438,074771      361,916875
-#&gt; Latin America &amp; Caribbean       260,781049      167,160838      200,159960
-#&gt; Middle East &amp; North Africa  1.52108993e+09      775,418887  1.30860235e+09
-#&gt; North America                  10,653560.8               0     10,653560.8
+#&gt; East Asia &amp; Pacific             622'847624      457'183279      422'992450
+#&gt; Europe &amp; Central Asia           568'237036      438'074771      361'916875
+#&gt; Latin America &amp; Caribbean       260'781049      167'160838      200'159960
+#&gt; Middle East &amp; North Africa  1.52108993e+09      775'418887  1.30860235e+09
+#&gt; North America                  10'653560.8               0     10'653560.8
 #&gt; South Asia                  1.61492889e+09  1.18347893e+09  1.09880524e+09
-#&gt; Sub-Saharan Africa              656,336230      397,995105      521,897637
+#&gt; Sub-Saharan Africa              656'336230      397'995105      521'897637
 #&gt; </div><div class='input'><span class='co'># -&gt; In all regions variations in inequality (GINI) between countries are greater than variations</span>
 <span class='co'># in inequality within countries. The opposite is true for Life-Expectancy in all regions apart</span>
 <span class='co'># from Europe, etc..</span>
@@ -1434,35 +1434,35 @@ It computes a set of 7 statistics (nobs, mean, sd, min, max, skewness and kurtos
 #&gt; $ODA
 #&gt; $ODA$Overall
 #&gt;                                N            Mean              SD           Min
-#&gt; East Asia &amp; Pacific         1537      352,017964      622,847624   -997,679993
-#&gt; Europe &amp; Central Asia        787      402,455286      568,237036   -322,070007
-#&gt; Latin America &amp; Caribbean   1972      172,880081      260,781049   -444,040009
-#&gt; Middle East &amp; North Africa  1105      732,380009  1.52108993e+09   -141,789993
-#&gt; North America                 39      468717.916     10,653560.8  -15,869999.9
-#&gt; South Asia                   466  1.27049955e+09  1.61492889e+09   -247,369995
-#&gt; Sub-Saharan Africa          2702      486,371750      656,336230  -18,409999.8
+#&gt; East Asia &amp; Pacific         1537      352'017964      622'847624   -997'679993
+#&gt; Europe &amp; Central Asia        787      402'455286      568'237036   -322'070007
+#&gt; Latin America &amp; Caribbean   1972      172'880081      260'781049   -444'040009
+#&gt; Middle East &amp; North Africa  1105      732'380009  1.52108993e+09   -141'789993
+#&gt; North America                 39      468717.916     10'653560.8  -15'869999.9
+#&gt; South Asia                   466  1.27049955e+09  1.61492889e+09   -247'369995
+#&gt; Sub-Saharan Africa          2702      486'371750      656'336230  -18'409999.8
 #&gt;                                        Max
 #&gt; East Asia &amp; Pacific         4.04487988e+09
 #&gt; Europe &amp; Central Asia       4.34612988e+09
 #&gt; Latin America &amp; Caribbean   2.99568994e+09
 #&gt; Middle East &amp; North Africa  2.56715605e+10
-#&gt; North America                  61,509998.3
+#&gt; North America                  61'509998.3
 #&gt; South Asia                  8.75425977e+09
 #&gt; Sub-Saharan Africa          1.18790801e+10
 #&gt; 
 #&gt; $ODA$Between
 #&gt;                              N            Mean              SD          Min
-#&gt; East Asia &amp; Pacific         31      352,017964      457,183279  1,654615.38
-#&gt; Europe &amp; Central Asia       32      402,455286      438,074771  12,516000.1
-#&gt; Latin America &amp; Caribbean   37      172,880081      167,160838  2,225483.88
-#&gt; Middle East &amp; North Africa  21      732,380009      775,418887   3,112820.5
+#&gt; East Asia &amp; Pacific         31      352'017964      457'183279  1'654615.38
+#&gt; Europe &amp; Central Asia       32      402'455286      438'074771  12'516000.1
+#&gt; Latin America &amp; Caribbean   37      172'880081      167'160838  2'225483.88
+#&gt; Middle East &amp; North Africa  21      732'380009      775'418887   3'112820.5
 #&gt; North America                1      468717.916               0   468717.916
-#&gt; South Asia                   8  1.27049955e+09  1.18347893e+09  27,152499.9
-#&gt; Sub-Saharan Africa          48      486,371750      397,995105  28,801206.9
+#&gt; South Asia                   8  1.27049955e+09  1.18347893e+09  27'152499.9
+#&gt; Sub-Saharan Africa          48      486'371750      397'995105  28'801206.9
 #&gt;                                        Max
 #&gt; East Asia &amp; Pacific         1.63585532e+09
 #&gt; Europe &amp; Central Asia       2.05456932e+09
-#&gt; Latin America &amp; Caribbean       538,386665
+#&gt; Latin America &amp; Caribbean       538'386665
 #&gt; Middle East &amp; North Africa  2.86174883e+09
 #&gt; North America                   468717.916
 #&gt; South Asia                  3.62337432e+09
@@ -1470,21 +1470,21 @@ It computes a set of 7 statistics (nobs, mean, sd, min, max, skewness and kurtos
 #&gt; 
 #&gt; $ODA$Within
 #&gt;                                   N        Mean              SD
-#&gt; East Asia &amp; Pacific         49.5806  454,720131      422,992450
-#&gt; Europe &amp; Central Asia       24.5938  454,720131      361,916875
-#&gt; Latin America &amp; Caribbean   53.2973  454,720131      200,159960
-#&gt; Middle East &amp; North Africa   52.619  454,720131  1.30860235e+09
-#&gt; North America                    39  454,720131     10,653560.8
-#&gt; South Asia                    58.25  454,720131  1.09880524e+09
-#&gt; Sub-Saharan Africa          56.2917  454,720131      521,897637
+#&gt; East Asia &amp; Pacific         49.5806  454'720131      422'992450
+#&gt; Europe &amp; Central Asia       24.5938  454'720131      361'916875
+#&gt; Latin America &amp; Caribbean   53.2973  454'720131      200'159960
+#&gt; Middle East &amp; North Africa   52.619  454'720131  1.30860235e+09
+#&gt; North America                    39  454'720131     10'653560.8
+#&gt; South Asia                    58.25  454'720131  1.09880524e+09
+#&gt; Sub-Saharan Africa          56.2917  454'720131      521'897637
 #&gt;                                         Min             Max
 #&gt; East Asia &amp; Pacific         -2.04042108e+09  3.59673152e+09
 #&gt; Europe &amp; Central Asia       -1.08796786e+09  3.30549004e+09
-#&gt; Latin America &amp; Caribbean       -527,706542  3.28976141e+09
+#&gt; Latin America &amp; Caribbean       -527'706542  3.28976141e+09
 #&gt; Middle East &amp; North Africa  -2.34610870e+09  2.45610972e+10
-#&gt; North America                    438,381413      515,761411
+#&gt; North America                    438'381413      515'761411
 #&gt; South Asia                  -2.44379420e+09  5.58560558e+09
-#&gt; Sub-Saharan Africa              -952,168698  1.12814455e+10
+#&gt; Sub-Saharan Africa              -952'168698  1.12814455e+10
 #&gt; 
 #&gt; </div><div class='input'><span class='fu'><a href='https://rdrr.io/r/utils/head.html'>head</a></span><span class='op'>(</span><span class='fu'><a href='unlist2d.html'>unlist2d</a></span><span class='op'>(</span><span class='va'>psrl</span>, <span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span><span class='op'>(</span><span class='st'>"Variable"</span>,<span class='st'>"Trans"</span><span class='op'>)</span>,
                     row.names <span class='op'>=</span> <span class='st'>"Region"</span><span class='op'>)</span><span class='op'>)</span>
@@ -1518,8 +1518,8 @@ It computes a set of 7 statistics (nobs, mean, sd, min, max, skewness and kurtos
 #&gt; PCGDP     9470   11901.3582  20735.1435     132.0776      196061.417   3.8791
 #&gt; LIFEEX   11670      64.2147     12.7163       18.907         85.4171  -0.8689
 #&gt; GINI      1744      38.5573      10.418         20.7            65.8   1.0764
-#&gt; ODA       8608   453,326487  991,792341  -997,679993  2.56715605e+10  10.6351
-#&gt; POP      12919  23,371153.9  107,652008         2833  1.39771500e+09  14.8475
+#&gt; ODA       8608   453'326487  991'792341  -997'679993  2.56715605e+10  10.6351
+#&gt; POP      12919  23'371153.9  107'652008         2833  1.39771500e+09  14.8475
 #&gt;              Kurt
 #&gt; country         -
 #&gt; iso3c           -
@@ -1548,8 +1548,8 @@ It computes a set of 7 statistics (nobs, mean, sd, min, max, skewness and kurtos
 #&gt; PCGDP     8750   11991.6573      21002.5019     132.0776      196061.417
 #&gt; LIFEEX   10773      64.2732         12.6418       18.907         85.4171
 #&gt; GINI      1597      38.5422         10.3502         20.7            65.8
-#&gt; ODA       7940   453,532601  1.00588351e+09  -997,679993  2.56715605e+10
-#&gt; POP      11944  23,047231.8      106,485419         3372  1.39771500e+09
+#&gt; ODA       7940   453'532601  1.00588351e+09  -997'679993  2.56715605e+10
+#&gt; POP      11944  23'047231.8      106'485419         3372  1.39771500e+09
 #&gt;             Skew      Kurt
 #&gt; country        -         -
 #&gt; iso3c          -         -

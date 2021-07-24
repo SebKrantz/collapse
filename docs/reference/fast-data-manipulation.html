@@ -46,7 +46,7 @@ The functions num_vars, cat_vars, char_vars, fact_vars, logi_vars and date_vars 
 add_vars efficiently adds new columns at any position within a data frame (default at the end). This can be done vie replacement (i.e. add_vars(data) &lt;- newdata) or returning the appended data (i.e. add_vars(data, newdata1, newdata2, ...)). Because of the latter, add_vars is also a more efficient alternative to cbind.data.frame.
 fsubset is a much faster version of subset to efficiently subset vectors, matrices and data frames. If the non-standard evaluation offered by fsubset is not needed, the function ss is a much faster and also more secure alternative to [.data.frame.
 fsummarise is a much faster version of dplyr::summarise when used together with the Fast Statistical Functions and fgroup_by, with whom it also supports super fast weighted aggregation.
-ftransform is a much faster version of transform, to modify and delete existing columns or append a data frame with new computed columns. settransform does all of that by reference, i.e. it modifies the data frame in the global environment. fcompute is similar to ftransform but only returns modified and computed columns in a new data frame.
+ftransform is a much faster version of transform, to modify and delete existing columns or append a data frame with new computed columns. settransform does all of that by reference, i.e. it modifies the data frame in the global environment. fcompute is similar to ftransform but only returns modified and computed columns in a new data frame. 
 roworder is a fast substitute for dplyr::arrange, but the syntax is inspired by data.table::setorder.
 colorder efficiently reorders columns in a data frame, see also data.table::setcolorder.
 frename is a fast substitute for dplyr::rename, to efficiently rename various objects. setrename renames objects by reference.
@@ -83,7 +83,7 @@ frename is a fast substitute for dplyr::rename, to efficiently rename various ob
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">collapse</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">1.6.4</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">1.6.5</span>
       </span>
     </div>
 
@@ -106,22 +106,22 @@ frename is a fast substitute for dplyr::rename, to efficiently rename various ob
         <li>
   <a href="https://twitter.com/collapse_R" target="_blank">
     <span class="fa fa-twitter"></span>
-
+     
   </a>
 </li>
 <li>
   <a href="https://github.com/SebKrantz/collapse" target="_blank">
     <span class="fa fa-github"></span>
-
+     
   </a>
 </li>
       </ul>
-
+      
     </div><!--/.nav-collapse -->
   </div><!--/.container -->
 </div><!--/.navbar -->
 
-
+      
 
       </header>
 
@@ -129,7 +129,7 @@ frename is a fast substitute for dplyr::rename, to efficiently rename various ob
   <div class="col-md-9 contents">
     <div class="page-header">
     <h1>Fast Data Manipulation</h1>
-
+    
     <div class="hidden name"><code>fast-data-manipulation.Rd</code></div>
     </div>
 
@@ -138,9 +138,9 @@ frename is a fast substitute for dplyr::rename, to efficiently rename various ob
 <li><p><code><a href='fselect, get_vars, add_vars.html'>fselect</a></code> is a much faster alternative to <code><a href='https://dplyr.tidyverse.org/reference/select.html'>dplyr::select</a></code> to select columns using expressions involving column names. <code><a href='fselect, get_vars, add_vars.html'>get_vars</a></code> is a more versatile and programmer friendly function to efficiently select and replace columns by names, indices, logical vectors, regular expressions or using functions to identify columns.</p></li>
 <li><p>The functions <code><a href='fselect, get_vars, add_vars.html'>num_vars</a></code>, <code><a href='fselect, get_vars, add_vars.html'>cat_vars</a></code>, <code><a href='fselect, get_vars, add_vars.html'>char_vars</a></code>, <code><a href='fselect, get_vars, add_vars.html'>fact_vars</a></code>, <code><a href='fselect, get_vars, add_vars.html'>logi_vars</a></code> and <code><a href='fselect, get_vars, add_vars.html'>date_vars</a></code> are convenience functions to efficiently select and replace columns by data type.</p></li>
 <li><p><code><a href='fselect, get_vars, add_vars.html'>add_vars</a></code> efficiently adds new columns at any position within a data frame (default at the end). This can be done vie replacement (i.e. <code>add_vars(data) &lt;- newdata</code>) or returning the appended data (i.e. <code><a href='fselect, get_vars, add_vars.html'>add_vars(data, newdata1, newdata2, ...)</a></code>). Because of the latter, <code>add_vars</code> is also a more efficient alternative to <code>cbind.data.frame</code>.</p></li>
-<li><p><code><a href='fsubset.html'>fsubset</a></code> is a much faster version of <code><a href='https://rdrr.io/pkg/data.table/man/subset.data.table.html'>subset</a></code> to efficiently subset vectors, matrices and data frames. If the non-standard evaluation offered by <code><a href='fsubset.html'>fsubset</a></code> is not needed, the function <code><a href='fsubset.html'>ss</a></code> is a much faster and also more secure alternative to <code>[.data.frame</code>.</p></li>
+<li><p><code><a href='fsubset.html'>fsubset</a></code> is a much faster version of <code><a href='https://rdrr.io/r/base/subset.html'>subset</a></code> to efficiently subset vectors, matrices and data frames. If the non-standard evaluation offered by <code><a href='fsubset.html'>fsubset</a></code> is not needed, the function <code><a href='fsubset.html'>ss</a></code> is a much faster and also more secure alternative to <code>[.data.frame</code>.</p></li>
 <li><p><code><a href='fsummarise.html'>fsummarise</a></code> is a much faster version of <code><a href='https://dplyr.tidyverse.org/reference/summarise.html'>dplyr::summarise</a></code> when used together with the <a href='fast-statistical-functions.html'>Fast Statistical Functions</a> and <code><a href='GRP, fgroup_by.html'>fgroup_by</a></code>, with whom it also supports super fast weighted aggregation.</p></li>
-<li><p><code><a href='ftransform.html'>ftransform</a></code> is a much faster version of <code><a href='https://rdrr.io/pkg/data.table/man/transform.data.table.html'>transform</a></code>, to modify and delete existing columns or append a data frame with new computed columns. <code><a href='ftransform.html'>settransform</a></code> does all of that by reference, i.e. it modifies the data frame in the global environment. <code><a href='ftransform.html'>fcompute</a></code> is similar to <code><a href='ftransform.html'>ftransform</a></code> but only returns modified and computed columns in a new data frame. <!-- %As a new feature, it is now possible to bulk-process columns with \code{\link{ftransform}}, i.e. \code{ftransform(data, fscale(data[1:2]))} is the same as \code{ftransform(data, col1 = fscale(col1), col2 = fscale(col2))}, and \code{ftransform(data) &lt;- fscale(data[1:2]))} or \code{settransform(data, fscale(data[1:2]))} are both equivalent to \code{data[1:2] &lt;- fscale(data[1:2]))}. Non-matching columns are added to the data.frame. --></p></li>
+<li><p><code><a href='ftransform.html'>ftransform</a></code> is a much faster version of <code><a href='https://rdrr.io/r/base/transform.html'>transform</a></code>, to modify and delete existing columns or append a data frame with new computed columns. <code><a href='ftransform.html'>settransform</a></code> does all of that by reference, i.e. it modifies the data frame in the global environment. <code><a href='ftransform.html'>fcompute</a></code> is similar to <code><a href='ftransform.html'>ftransform</a></code> but only returns modified and computed columns in a new data frame. <!-- %As a new feature, it is now possible to bulk-process columns with \code{\link{ftransform}}, i.e. \code{ftransform(data, fscale(data[1:2]))} is the same as \code{ftransform(data, col1 = fscale(col1), col2 = fscale(col2))}, and \code{ftransform(data) &lt;- fscale(data[1:2]))} or \code{settransform(data, fscale(data[1:2]))} are both equivalent to \code{data[1:2] &lt;- fscale(data[1:2]))}. Non-matching columns are added to the data.frame. --></p></li>
 <li><p><code><a href='roworder.html'>roworder</a></code> is a fast substitute for <code><a href='https://dplyr.tidyverse.org/reference/arrange.html'>dplyr::arrange</a></code>, but the syntax is inspired by <code><a href='https://rdrr.io/pkg/data.table/man/setorder.html'>data.table::setorder</a></code>.</p></li>
 <li><p><code><a href='colorder.html'>colorder</a></code> efficiently reorders columns in a data frame, see also <code><a href='https://rdrr.io/pkg/data.table/man/setcolorder.html'>data.table::setcolorder</a></code>.</p></li>
 <li><p><code><a href='frename.html'>frename</a></code> is a fast substitute for <code><a href='https://dplyr.tidyverse.org/reference/rename.html'>dplyr::rename</a></code>, to efficiently rename various objects. <code><a href='frename.html'>setrename</a></code> renames objects by reference.</p></li>
@@ -194,7 +194,7 @@ frename is a fast substitute for dplyr::rename, to efficiently rename various ob
       </footer>
    </div>
 
-
+  
 
 
   </body>

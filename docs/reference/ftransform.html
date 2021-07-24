@@ -72,7 +72,7 @@
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">collapse</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">1.6.4</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">1.6.5</span>
       </span>
     </div>
 
@@ -373,7 +373,7 @@
 #&gt; 4 -32.296296 -63.296296  0.9774194 -3.6225806
 #&gt; 5 131.703704 -32.296296 -0.1225806  0.9774194
 #&gt; 6         NA 131.703704  2.6774194 -0.1225806</div><div class='input'>
-<span class='va'>airquality</span> <span class='op'>%&gt;%</span> <span class='fu'>ftransform</span><span class='op'>(</span><span class='fu'><a href='fscale.html'>STD</a></span><span class='op'>(</span><span class='va'>.</span>, cols <span class='op'>=</span> <span class='fl'>1</span><span class='op'>:</span><span class='fl'>3</span><span class='op'>)</span> <span class='op'>%&gt;%</span> <span class='fu'><a href='AA1-recode-replace.html'>replace_NA</a></span><span class='op'>(</span><span class='fl'>0</span><span class='op'>)</span><span class='op'>)</span> <span class='op'>%&gt;%</span> <span class='va'>head</span>
+<span class='va'>airquality</span> <span class='op'>%&gt;%</span> <span class='fu'>ftransform</span><span class='op'>(</span><span class='fu'><a href='fscale.html'>STD</a></span><span class='op'>(</span><span class='va'>.</span>, cols <span class='op'>=</span> <span class='fl'>1</span><span class='op'>:</span><span class='fl'>3</span><span class='op'>)</span> <span class='op'>%&gt;%</span> <span class='fu'><a href='recode-replace.html'>replace_NA</a></span><span class='op'>(</span><span class='fl'>0</span><span class='op'>)</span><span class='op'>)</span> <span class='op'>%&gt;%</span> <span class='va'>head</span>
 </div><div class='output co'>#&gt;   Ozone Solar.R Wind Temp Month Day   STD.Ozone STD.Solar.R   STD.Wind
 #&gt; 1    41     190  7.4   67     5   1 -0.03423409  0.04517615 -0.7259482
 #&gt; 2    36     118  8.0   72     5   2 -0.18580489 -0.75430487 -0.5556388
@@ -393,7 +393,7 @@
 #&gt; 6    28      NA 14.9   66     5   6 12.08975  533.2819</div><div class='input'>
 <span class='co'># Same as above using a grouped data frame (a bit more complex)</span>
 <span class='va'>airquality</span> <span class='op'>%&gt;%</span> <span class='fu'><a href='GRP, fgroup_by.html'>fgroup_by</a></span><span class='op'>(</span><span class='va'>Month</span><span class='op'>)</span> <span class='op'>%&gt;%</span>
-  <span class='fu'>ftransform</span><span class='op'>(</span><span class='fu'><a href='fselect, get_vars, add_vars.html'>fselect</a></span><span class='op'>(</span><span class='va'>.</span>, <span class='va'>Wind</span>, <span class='va'>Ozone</span><span class='op'>)</span> <span class='op'>%&gt;%</span> <span class='fu'><a href='fvar, fsd.html'>fvar</a></span><span class='op'>(</span><span class='va'>Temp</span>, <span class='st'>"replace"</span><span class='op'>)</span> <span class='op'>%&gt;%</span> <span class='fu'><a href='AA2-small-helpers.html'>add_stub</a></span><span class='op'>(</span><span class='st'>"_var"</span>, <span class='cn'>FALSE</span><span class='op'>)</span><span class='op'>)</span> <span class='op'>%&gt;%</span>
+  <span class='fu'>ftransform</span><span class='op'>(</span><span class='fu'><a href='fselect, get_vars, add_vars.html'>fselect</a></span><span class='op'>(</span><span class='va'>.</span>, <span class='va'>Wind</span>, <span class='va'>Ozone</span><span class='op'>)</span> <span class='op'>%&gt;%</span> <span class='fu'><a href='fvar, fsd.html'>fvar</a></span><span class='op'>(</span><span class='va'>Temp</span>, <span class='st'>"replace"</span><span class='op'>)</span> <span class='op'>%&gt;%</span> <span class='fu'><a href='small-helpers.html'>add_stub</a></span><span class='op'>(</span><span class='st'>"_var"</span>, <span class='cn'>FALSE</span><span class='op'>)</span><span class='op'>)</span> <span class='op'>%&gt;%</span>
   <span class='va'>fungroup</span> <span class='op'>%&gt;%</span> <span class='va'>head</span>
 </div><div class='output co'>#&gt;   Ozone Solar.R Wind Temp Month Day Wind_var Ozone_var
 #&gt; 1    41     190  7.4   67     5   1 12.08975  533.2819

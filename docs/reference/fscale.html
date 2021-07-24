@@ -73,7 +73,7 @@ Note: For centering without scaling see fwithin/W. For simple not mean-preservin
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">collapse</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">1.6.4</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">1.6.5</span>
       </span>
     </div>
 
@@ -125,7 +125,7 @@ Note: For centering without scaling see fwithin/W. For simple not mean-preservin
 
     <div class="ref-description">
     <p><code>fscale</code> is a generic function to efficiently standardize (scale and center) data. <code>STD</code> is a wrapper around <code>fscale</code> representing the 'standardization operator', with more options than <code>fscale</code> when applied to matrices and data frames.  Standardization can be simple or groupwise, ordinary or weighted. Arbitrary target means and standard deviations can be set, with special options for grouped scaling and centering. It is also possible to scale data without centering i.e. perform mean-preserving scaling.</p>
-<p><em>Note</em>: For centering without scaling see <code><a href='fbetween_fwithin.html'>fwithin/W</a></code>. For simple not mean-preserving scaling use <code><a href='fvar_fsd.html'>fsd(..., TRA = "/")</a></code>. To sweep pre-computed means and scale-factors out of data see <code><a href='TRA.html'>TRA</a></code>.</p>
+<p><em>Note</em>: For centering without scaling see <code><a href='fbetween, fwithin.html'>fwithin/W</a></code>. For simple not mean-preserving scaling use <code><a href='fvar, fsd.html'>fsd(..., TRA = "/")</a></code>. To sweep pre-computed means and scale-factors out of data see <code><a href='TRA.html'>TRA</a></code>.</p>
     </div>
 
     <pre class="usage"><span class='fu'>fscale</span><span class='op'>(</span><span class='va'>x</span>, <span class='va'>...</span><span class='op'>)</span>
@@ -231,16 +231,16 @@ Note: For centering without scaling see fwithin/W. For simple not mean-preservin
 
     <p>If <code>g = NULL</code>, <code>fscale</code> by default (column-wise) subtracts the mean or weighted mean (if <code>w</code> is supplied) from all data points in <code>x</code>, and then divides this difference by the standard deviation or frequency-weighted standard deviation (if <code>w</code> is supplied). The result is that all columns in <code>x</code> will have mean 0 and standard deviation 1. Alternatively, data can be scaled to have a mean of <code>mean</code> and a standard deviation of <code>sd</code>. If <code>mean = FALSE</code> the data is only scaled (not centered) such that the mean of the data is preserved. <br /></p>
 <p>Means and standard deviations are computed using Welford's numerically stable online algorithm.</p>
-<p>With groups supplied to <code>g</code>, this standardizing becomes groupwise, so that in each group (in each column) the data points will have mean <code>mean</code> and standard deviation <code>sd</code>. Naturally if <code>mean = FALSE</code> then each group is just scaled and the mean is preserved. For centering without scaling see <code><a href='fbetween_fwithin.html'>fwithin</a></code>.</p>
+<p>With groups supplied to <code>g</code>, this standardizing becomes groupwise, so that in each group (in each column) the data points will have mean <code>mean</code> and standard deviation <code>sd</code>. Naturally if <code>mean = FALSE</code> then each group is just scaled and the mean is preserved. For centering without scaling see <code><a href='fbetween, fwithin.html'>fwithin</a></code>.</p>
 <p>If <code>na.rm = FALSE</code> and a <code>NA</code> or <code>NaN</code> is encountered, the mean and sd for that group will be <code>NA</code>, and all data points belonging to that group will also be <code>NA</code> in the output.</p>
 <p>If <code>na.rm = TRUE</code>, means and sd's are computed (column-wise) on the available data points, and also the weight vector can have missing values. In that case, the weighted mean an sd are computed on (column-wise) <code><a href='https://rdrr.io/r/stats/complete.cases.html'>complete.cases(x, w)</a></code>, and <code>x</code> is scaled using these statistics. <em>Note</em> that <code>fscale</code> will not insert a missing value in <code>x</code> if the weight for that value is missing, rather, that value will be scaled using a weighted mean and standard-deviated computed without itself! (The intention here is that a few (randomly) missing weights shouldn't break the computation when <code>na.rm = TRUE</code>, but it is not meant for weight vectors with many missing values. If you don't like this behavior, you should prepare your data using <code>x[is.na(w), ] &lt;- NA</code>, or impute your weight vector for non-missing <code>x</code>).</p>
-<p>Special options for grouped scaling are <code>mean = "overall.mean"</code> and <code>sd = "within.sd"</code>. The former group-centers vectors on the overall mean of the data (see <code><a href='fbetween_fwithin.html'>fwithin</a></code> for more details) and the latter scales the data in each group to have the within-group standard deviation (= the standard deviation of the group-centered data). Thus scaling a grouped vector with options <code>mean = "overall.mean"</code> and <code>sd = "within.sd"</code> amounts to removing all differences in the mean and standard deviations between these groups. In weighted computations, <code>mean = "overall.mean"</code> will subtract weighted group-means from the data and add the overall weighted mean of the data, whereas <code>sd = "within.sd"</code> will compute the weighted within- standard deviation and apply it to each group.</p>
+<p>Special options for grouped scaling are <code>mean = "overall.mean"</code> and <code>sd = "within.sd"</code>. The former group-centers vectors on the overall mean of the data (see <code><a href='fbetween, fwithin.html'>fwithin</a></code> for more details) and the latter scales the data in each group to have the within-group standard deviation (= the standard deviation of the group-centered data). Thus scaling a grouped vector with options <code>mean = "overall.mean"</code> and <code>sd = "within.sd"</code> amounts to removing all differences in the mean and standard deviations between these groups. In weighted computations, <code>mean = "overall.mean"</code> will subtract weighted group-means from the data and add the overall weighted mean of the data, whereas <code>sd = "within.sd"</code> will compute the weighted within- standard deviation and apply it to each group.</p>
     <h2 class="hasAnchor" id="value"><a class="anchor" href="#value"></a>Value</h2>
 
     <p><code>x</code> standardized (mean = mean, standard deviation = sd), grouped by <code>g/by</code>, weighted with <code>w</code>. See Details.</p>
     <h2 class="hasAnchor" id="see-also"><a class="anchor" href="#see-also"></a>See also</h2>
 
-    <div class='dont-index'><p><code><a href='fbetween_fwithin.html'>fwithin</a></code>, <code><a href='fvar_fsd.html'>fsd</a></code>, <code><a href='TRA.html'>TRA</a></code>, <a href='fast-statistical-functions.html'>Fast Statistical Functions</a>, <a href='data-transformations.html'>Data Transformations</a>, <a href='index.html'>Collapse Overview</a></p></div>
+    <div class='dont-index'><p><code><a href='fbetween, fwithin.html'>fwithin</a></code>, <code><a href='fvar, fsd.html'>fsd</a></code>, <code><a href='TRA.html'>TRA</a></code>, <a href='fast-statistical-functions.html'>Fast Statistical Functions</a>, <a href='data-transformations.html'>Data Transformations</a>, <a href='index.html'>Collapse Overview</a></p></div>
 
     <h2 class="hasAnchor" id="examples"><a class="anchor" href="#examples"></a>Examples</h2>
     <pre class="examples"><div class='input'><span class='co'>## Simple Scaling &amp; Centering / Standardizing</span>
@@ -338,7 +338,7 @@ Note: For centering without scaling see fwithin/W. For simple not mean-preservin
 #&gt; 3   AFG        NA  -1.552023       NA -0.6517082
 #&gt; 4   AFG        NA  -1.502678       NA -0.5925063
 #&gt; 5   AFG        NA  -1.454122       NA -0.5649154
-#&gt; 6   AFG        NA  -1.406257       NA -0.5431461</div><div class='input'><span class='fu'><a href='pwcor_pwcov_pwnobs.html'>pwcor</a></span><span class='op'>(</span><span class='fu'>fscale</span><span class='op'>(</span><span class='fu'><a href='fselect, get_vars, add_vars.html'>get_vars</a></span><span class='op'>(</span><span class='va'>wlddev</span>,<span class='fl'>9</span><span class='op'>:</span><span class='fl'>12</span><span class='op'>)</span>, <span class='va'>wlddev</span><span class='op'>$</span><span class='va'>iso3c</span><span class='op'>)</span><span class='op'>)</span>  <span class='co'># Correlaing panel series after standardizing</span>
+#&gt; 6   AFG        NA  -1.406257       NA -0.5431461</div><div class='input'><span class='fu'><a href='pwcor, pwcov, pwnobs.html'>pwcor</a></span><span class='op'>(</span><span class='fu'>fscale</span><span class='op'>(</span><span class='fu'><a href='fselect, get_vars, add_vars.html'>get_vars</a></span><span class='op'>(</span><span class='va'>wlddev</span>,<span class='fl'>9</span><span class='op'>:</span><span class='fl'>12</span><span class='op'>)</span>, <span class='va'>wlddev</span><span class='op'>$</span><span class='va'>iso3c</span><span class='op'>)</span><span class='op'>)</span>  <span class='co'># Correlaing panel series after standardizing</span>
 </div><div class='output co'>#&gt;        PCGDP LIFEEX  GINI   ODA
 #&gt; PCGDP     1     .62  -.20   .09
 #&gt; LIFEEX   .62     1   -.12   .32
@@ -346,7 +346,7 @@ Note: For centering without scaling see fwithin/W. For simple not mean-preservin
 #&gt; ODA      .09    .32  -.09    1 </div><div class='input'>
 <span class='fu'><a href='fmean.html'>fmean</a></span><span class='op'>(</span><span class='fu'><a href='fselect, get_vars, add_vars.html'>get_vars</a></span><span class='op'>(</span><span class='va'>wlddev</span>, <span class='fl'>9</span><span class='op'>:</span><span class='fl'>12</span><span class='op'>)</span><span class='op'>)</span>                       <span class='co'># This calculates the overall means</span>
 </div><div class='output co'>#&gt;        PCGDP       LIFEEX         GINI          ODA 
-#&gt; 1.204878e+04 6.429630e+01 3.853412e+01 4.547201e+08 </div><div class='input'><span class='fu'><a href='fvar_fsd.html'>fsd</a></span><span class='op'>(</span><span class='fu'><a href='fbetween_fwithin.html'>fwithin</a></span><span class='op'>(</span><span class='fu'><a href='fselect, get_vars, add_vars.html'>get_vars</a></span><span class='op'>(</span><span class='va'>wlddev</span>, <span class='fl'>9</span><span class='op'>:</span><span class='fl'>12</span><span class='op'>)</span>, <span class='va'>wlddev</span><span class='op'>$</span><span class='va'>iso3c</span><span class='op'>)</span><span class='op'>)</span>  <span class='co'># This calculates the within standard deviations</span>
+#&gt; 1.204878e+04 6.429630e+01 3.853412e+01 4.547201e+08 </div><div class='input'><span class='fu'><a href='fvar, fsd.html'>fsd</a></span><span class='op'>(</span><span class='fu'><a href='fbetween, fwithin.html'>fwithin</a></span><span class='op'>(</span><span class='fu'><a href='fselect, get_vars, add_vars.html'>get_vars</a></span><span class='op'>(</span><span class='va'>wlddev</span>, <span class='fl'>9</span><span class='op'>:</span><span class='fl'>12</span><span class='op'>)</span>, <span class='va'>wlddev</span><span class='op'>$</span><span class='va'>iso3c</span><span class='op'>)</span><span class='op'>)</span>  <span class='co'># This calculates the within standard deviations</span>
 </div><div class='output co'>#&gt;        PCGDP       LIFEEX         GINI          ODA 
 #&gt; 6.723681e+03 6.084205e+00 2.927700e+00 6.507096e+08 </div><div class='input'><span class='fu'><a href='https://rdrr.io/r/utils/head.html'>head</a></span><span class='op'>(</span><span class='fu'><a href='qsu.html'>qsu</a></span><span class='op'>(</span><span class='fu'>fscale</span><span class='op'>(</span><span class='fu'><a href='fselect, get_vars, add_vars.html'>get_vars</a></span><span class='op'>(</span><span class='va'>wlddev</span>, <span class='fl'>9</span><span class='op'>:</span><span class='fl'>12</span><span class='op'>)</span>,             <span class='co'># This group-centers on the overall mean and</span>
     <span class='va'>wlddev</span><span class='op'>$</span><span class='va'>iso3c</span>,                                   <span class='co'># group-scales to the within standard deviation</span>
@@ -385,12 +385,12 @@ Note: For centering without scaling see fwithin/W. For simple not mean-preservin
 #&gt; , , ODA
 #&gt; 
 #&gt;       N        Mean          SD           Min             Max
-#&gt; ABW  20  454,720131  650,709624   -602,012511  1.95305466e+09
-#&gt; AFG  60  454,720131  650,709624  -2,329374.87  2.03702336e+09
-#&gt; AGO  58  454,720131  650,709624   -273,716512  3.40079708e+09
-#&gt; ALB  32  454,720131  650,709624   -811,507526  2.08091588e+09
+#&gt; ABW  20  454'720131  650'709624   -602'012511  1.95305466e+09
+#&gt; AFG  60  454'720131  650'709624  -2'329374.87  2.03702336e+09
+#&gt; AGO  58  454'720131  650'709624   -273'716512  3.40079708e+09
+#&gt; ALB  32  454'720131  650'709624   -811'507526  2.08091588e+09
 #&gt; AND   0           0           -             0               0
-#&gt; ARE  45  454,720131  650,709624   -177,225365  3.87082416e+09
+#&gt; ARE  45  454'720131  650'709624   -177'225365  3.87082416e+09
 #&gt; </div><div class='input'>
  
 <span class='co'>## Using plm</span>

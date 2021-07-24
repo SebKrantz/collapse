@@ -72,7 +72,7 @@
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">collapse</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">1.6.4</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">1.6.5</span>
       </span>
     </div>
 
@@ -199,7 +199,7 @@
 
     <h2 class="hasAnchor" id="details"><a class="anchor" href="#details"></a>Details</h2>
 
-    <p><code>BY</code> is a frugal re-implementation of the Split-Apply-Combine computing paradigm. It is generally faster than <code><a href='https://rdrr.io/r/base/tapply.html'>tapply</a></code>, <code><a href='https://rdrr.io/r/base/by.html'>by</a></code>, <code><a href='https://r-spatial.github.io/sf/reference/aggregate.sf.html'>aggregate</a></code> and <em>plyr</em>, and preserves data attributes just like <code><a href='dapply.html'>dapply</a></code>.  <!-- % and more versatile though not faster than \emph{dplyr} --></p>
+    <p><code>BY</code> is a frugal re-implementation of the Split-Apply-Combine computing paradigm. It is generally faster than <code><a href='https://rdrr.io/r/base/tapply.html'>tapply</a></code>, <code><a href='https://rdrr.io/r/base/by.html'>by</a></code>, <code><a href='https://rdrr.io/r/stats/aggregate.html'>aggregate</a></code> and <em>plyr</em>, and preserves data attributes just like <code><a href='dapply.html'>dapply</a></code>.  <!-- % and more versatile though not faster than \emph{dplyr} --></p>
 <p><!-- %I note at this point that the philosophy of \emph{collapse} is to move beyond this rather slow computing paradigm, which is why the \link[=A1-fast-statistical-functions]{Fast Statistical Functions} were implemented. However sometimes tasks need to be performed that involve more complex and customized operations on data, and for these cases \code{BY} is a good solution. --></p>
 <p>It is however principally a wrapper around <code><a href='https://rdrr.io/r/base/lapply.html'>lapply(split(x, g), FUN, ...)</a></code>, that strongly optimizes on attribute checking compared to <em>base</em> R functions. For more details look at the documentation for <code><a href='dapply.html'>dapply</a></code> which works very similar (apart from the splitting performed in <code>BY</code>). For larger tasks requiring split-apply-combine computing on data frames use <em>dplyr</em>, <em>data.table</em>, or try to work with the <a href='fast-statistical-functions.html'>Fast Statistical Functions</a>.</p>
 <p><code>BY</code> is used internally in <code><a href='collap.html'>collap</a></code> for functions that are not <a href='fast-statistical-functions.html'>Fast Statistical Functions</a>.</p>
@@ -404,7 +404,14 @@
 #&gt; </div><div class='input'> 
 <span class='co'>## grouped data frame method (faster than dplyr only for small data)</span>
 <span class='kw'><a href='https://rdrr.io/r/base/library.html'>library</a></span><span class='op'>(</span><span class='va'><a href='https://dplyr.tidyverse.org'>dplyr</a></span><span class='op'>)</span>
-<span class='va'>giris</span> <span class='op'>&lt;-</span> <span class='fu'><a href='https://dplyr.tidyverse.org/reference/group_by.html'>group_by</a></span><span class='op'>(</span><span class='va'>iris</span>, <span class='va'>Species</span><span class='op'>)</span>
+</div><div class='output co'>#&gt; <span class='message'></span>
+#&gt; <span class='message'>Attaching package: ‘dplyr’</span></div><div class='output co'>#&gt; <span class='message'>The following object is masked from ‘package:testthat’:</span>
+#&gt; <span class='message'></span>
+#&gt; <span class='message'>    matches</span></div><div class='output co'>#&gt; <span class='message'>The following objects are masked from ‘package:stats’:</span>
+#&gt; <span class='message'></span>
+#&gt; <span class='message'>    filter, lag</span></div><div class='output co'>#&gt; <span class='message'>The following objects are masked from ‘package:base’:</span>
+#&gt; <span class='message'></span>
+#&gt; <span class='message'>    intersect, setdiff, setequal, union</span></div><div class='input'><span class='va'>giris</span> <span class='op'>&lt;-</span> <span class='fu'><a href='https://dplyr.tidyverse.org/reference/group_by.html'>group_by</a></span><span class='op'>(</span><span class='va'>iris</span>, <span class='va'>Species</span><span class='op'>)</span>
 <span class='va'>giris</span> |&gt; <span class='fu'>BY</span><span class='op'>(</span><span class='va'>sum</span><span class='op'>)</span>                      <span class='co'># Compute sum</span>
 </div><div class='output co'>#&gt; <span style='color: #949494;'># A tibble: 3 x 5</span><span>
 #&gt;   Species    Sepal.Length Sepal.Width Petal.Length Petal.Width
