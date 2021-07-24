@@ -72,7 +72,7 @@
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">collapse</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">1.6.4</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">1.6.5</span>
       </span>
     </div>
 
@@ -149,7 +149,7 @@
 
     <h2 class="hasAnchor" id="details"><a class="anchor" href="#details"></a>Details</h2>
 
-    <p><code><a href='https://rdrr.io/r/base/droplevels.html'>droplevels</a></code> passes a factor from which levels are to be dropped to <code><a href='https://rdrr.io/r/base/factor.html'>factor</a></code>, which first calls <code><a href='https://rdrr.io/pkg/data.table/man/duplicated.html'>unique</a></code> and then <code><a href='https://rdrr.io/r/base/match.html'>match</a></code> to drop unused levels. Both functions internally use a hash table, which is highly inefficient. <code>fdroplevels</code> does not require mapping values at all, but uses a super fast boolean vector method to determine which levels are unused and remove those levels. In addition, if no unused levels are found, <code>x</code> is simply returned. Any missing values found in <code>x</code> are efficiently skipped in the process of checking and replacing levels. All other attributes of <code>x</code> are preserved.</p>
+    <p><code><a href='https://rdrr.io/r/base/droplevels.html'>droplevels</a></code> passes a factor from which levels are to be dropped to <code><a href='https://rdrr.io/r/base/factor.html'>factor</a></code>, which first calls <code><a href='https://rdrr.io/r/base/unique.html'>unique</a></code> and then <code><a href='https://rdrr.io/r/base/match.html'>match</a></code> to drop unused levels. Both functions internally use a hash table, which is highly inefficient. <code>fdroplevels</code> does not require mapping values at all, but uses a super fast boolean vector method to determine which levels are unused and remove those levels. In addition, if no unused levels are found, <code>x</code> is simply returned. Any missing values found in <code>x</code> are efficiently skipped in the process of checking and replacing levels. All other attributes of <code>x</code> are preserved.</p>
     <h2 class="hasAnchor" id="value"><a class="anchor" href="#value"></a>Value</h2>
 
     <p><code>x</code> will any unused factor levels removed.</p>
@@ -182,7 +182,7 @@
 #&gt;  [97] versicolor versicolor versicolor versicolor
 #&gt; Levels: setosa versicolor</div><div class='input'><span class='fu'><a href='https://rdrr.io/r/base/identical.html'>identical</a></span><span class='op'>(</span><span class='fu'>fdroplevels</span><span class='op'>(</span><span class='va'>f</span><span class='op'>)</span>, <span class='fu'><a href='https://rdrr.io/r/base/droplevels.html'>droplevels</a></span><span class='op'>(</span><span class='va'>f</span><span class='op'>)</span><span class='op'>)</span>
 </div><div class='output co'>#&gt; [1] TRUE</div><div class='input'>
-<span class='va'>fNA</span> <span class='op'>&lt;-</span> <span class='fu'><a href='small-helper.html'>na_insert</a></span><span class='op'>(</span><span class='va'>f</span><span class='op'>)</span>
+<span class='va'>fNA</span> <span class='op'>&lt;-</span> <span class='fu'><a href='small-helpers.html'>na_insert</a></span><span class='op'>(</span><span class='va'>f</span><span class='op'>)</span>
 <span class='fu'>fdroplevels</span><span class='op'>(</span><span class='va'>fNA</span><span class='op'>)</span>
 </div><div class='output co'>#&gt;   [1] setosa     setosa     setosa     setosa     &lt;NA&gt;       setosa    
 #&gt;   [7] setosa     setosa     setosa     setosa     setosa     &lt;NA&gt;      

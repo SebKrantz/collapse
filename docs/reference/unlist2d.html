@@ -72,7 +72,7 @@
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">collapse</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">1.6.4</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">1.6.5</span>
       </span>
     </div>
 
@@ -93,7 +93,7 @@
       </ul>
       <ul class="nav navbar-nav navbar-right">
         <li>
-  <a href="https://twitter.com/collapse_R" target="_blank">
+  <a href="https://twitter.com/collapse_R">
     <span class="fa fa-twitter"></span>
      
   </a>
@@ -265,7 +265,7 @@
 #&gt; 3       NA
 #&gt; 4       NA
 #&gt; 5 37.48229
-#&gt; 6 39.34710</div><div class='input'><span class='fu'><a href='small-helper.html'>namlab</a></span><span class='op'>(</span><span class='va'>GGDC10S</span>, class <span class='op'>=</span> <span class='cn'>TRUE</span><span class='op'>)</span>
+#&gt; 6 39.34710</div><div class='input'><span class='fu'><a href='small-helpers.html'>namlab</a></span><span class='op'>(</span><span class='va'>GGDC10S</span>, class <span class='op'>=</span> <span class='cn'>TRUE</span><span class='op'>)</span>
 </div><div class='output co'>#&gt;      Variable     Class                                                 Label
 #&gt; 1     Country character                                               Country
 #&gt; 2  Regioncode character                                           Region code
@@ -409,7 +409,7 @@
 #&gt; 3  0.05960032
 #&gt; 4  0.56998662
 #&gt; 5  0.86608973
-#&gt; 6  0.99180468</div><div class='input'><span class='fu'><a href='https://r-spatial.github.io/sf/reference/plot.html'>plot</a></span><span class='op'>(</span><span class='fu'><a href='https://rdrr.io/r/stats/hclust.html'>hclust</a></span><span class='op'>(</span><span class='fu'><a href='https://rdrr.io/r/stats/dist.html'>as.dist</a></span><span class='op'>(</span><span class='fl'>1</span><span class='op'>-</span><span class='fu'><a href='pwcor_pwcov_pwnobs.html'>pwcor</a></span><span class='op'>(</span><span class='va'>dat</span><span class='op'>[</span><span class='op'>-</span><span class='op'>(</span><span class='fl'>1</span><span class='op'>:</span><span class='fl'>3</span><span class='op'>)</span><span class='op'>]</span><span class='op'>)</span><span class='op'>)</span><span class='op'>)</span><span class='op'>)</span>    <span class='co'># Using corrs. as distance metric to cluster sectors</span>
+#&gt; 6  0.99180468</div><div class='input'><span class='fu'><a href='https://rdrr.io/r/graphics/plot.default.html'>plot</a></span><span class='op'>(</span><span class='fu'><a href='https://rdrr.io/r/stats/hclust.html'>hclust</a></span><span class='op'>(</span><span class='fu'><a href='https://rdrr.io/r/stats/dist.html'>as.dist</a></span><span class='op'>(</span><span class='fl'>1</span><span class='op'>-</span><span class='fu'><a href='pwcor, pwcov, pwnobs.html'>pwcor</a></span><span class='op'>(</span><span class='va'>dat</span><span class='op'>[</span><span class='op'>-</span><span class='op'>(</span><span class='fl'>1</span><span class='op'>:</span><span class='fl'>3</span><span class='op'>)</span><span class='op'>]</span><span class='op'>)</span><span class='op'>)</span><span class='op'>)</span><span class='op'>)</span>    <span class='co'># Using corrs. as distance metric to cluster sectors</span>
 </div><div class='img'><img src='unlist2d-1.png' alt='' width='700' height='433' /></div><div class='input'>
 <span class='co'># Together with other functions like psmat, unlist2d can also effectively help reshape data:</span>
 <span class='fu'><a href='https://rdrr.io/r/utils/head.html'>head</a></span><span class='op'>(</span><span class='fu'>unlist2d</span><span class='op'>(</span><span class='fu'><a href='psmat.html'>psmat</a></span><span class='op'>(</span><span class='fu'><a href='https://rdrr.io/pkg/data.table/man/subset.data.table.html'>subset</a></span><span class='op'>(</span><span class='va'>GGDC10S</span>, <span class='va'>Variable</span> <span class='op'>==</span> <span class='st'>"VA"</span><span class='op'>)</span>, <span class='op'>~</span><span class='va'>Country</span>, <span class='op'>~</span><span class='va'>Year</span>, cols <span class='op'>=</span> <span class='fl'>6</span><span class='op'>:</span><span class='fl'>16</span>, array <span class='op'>=</span> <span class='cn'>FALSE</span><span class='op'>)</span>,

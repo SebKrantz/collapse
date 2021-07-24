@@ -71,7 +71,7 @@
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">collapse</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">1.6.4</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">1.6.5</span>
       </span>
     </div>
 
@@ -94,22 +94,22 @@
         <li>
   <a href="https://twitter.com/collapse_R" target="_blank">
     <span class="fa fa-twitter"></span>
-
+     
   </a>
 </li>
 <li>
   <a href="https://github.com/SebKrantz/collapse" target="_blank">
     <span class="fa fa-github"></span>
-
+     
   </a>
 </li>
       </ul>
-
+      
     </div><!--/.nav-collapse -->
   </div><!--/.container -->
 </div><!--/.navbar -->
 
-
+      
 
       </header>
 
@@ -120,12 +120,20 @@
       <small>Source: <a href='https://github.com/SebKrantz/collapse/blob/master/NEWS.md'><code>NEWS.md</code></a></small>
     </div>
 
+    <div id="collapse-165" class="section level1">
+<h1 class="page-header" data-toc-text="1.6.5">
+<a href="#collapse-165" class="anchor"></a>collapse 1.6.5<small> 2021-07-24 </small>
+</h1>
+<ul>
+<li><p>Use of <code>VECTOR_PTR</code> in C API now gives an error on R-devel even if <code>USE_RINTERNALS</code> is defined. Thus this patch gets rid of all remaining usage of this macro to avoid errors on CRAN checks using the development version of R.</p></li>
+<li><p>The print method for <code>qsu</code> now uses an apostrophe (’) to designate million digits, instead of a comma (,). This is to avoid confusion with the decimal point, and the typical use of (,) for thousands (which I don’t like).</p></li>
+</ul>
+</div>
     <div id="collapse-164" class="section level1">
 <h1 class="page-header" data-toc-text="1.6.4">
-<a href="#collapse-164" class="anchor"></a>collapse 1.6.4<small> 2021-07-09 </small>
+<a href="#collapse-164" class="anchor"></a>collapse 1.6.4<small> 2021-07-13 </small>
 </h1>
 <p>Checks on the gcc11 compiler flagged an additional issue with a pointer pointing to element -1 of a C array (which I had done on purpose to index it with an R integer vector).</p>
-<p>Please note that nothing added in 1.6.1-1.6.4 affects in any way the operation of the package (except for the functions added in 1.6.1). This is just pleasing CRAN’s strict conventions on how C code should be written.</p>
 </div>
     <div id="collapse-163" class="section level1">
 <h1 class="page-header" data-toc-text="1.6.3">
@@ -254,13 +262,13 @@
 <li><p>A function <code>fsummarize</code> was added to facilitate translating <em>dplyr</em> / <em>data.table</em> code to <em>collapse</em>. Like <code>collap</code>, it is only very fast when used with the <em>Fast Statistical Functions</em>.</p></li>
 <li><p>A function <code>t_list</code> is made available to efficiently transpose lists of lists.</p></li>
 </ul>
-<!--
+<!-- 
 * A small set of row-wise statistical functions: `rowsums`, `rowmeans`, `rowNobs`, `rowmins` and `rowmaxs` is introduced for fast (grouped, weighted) row-wise computations on matrices and data frames. -->
 </div>
 <div id="improvements-2" class="section level3">
 <h3 class="hasAnchor">
 <a href="#improvements-2" class="anchor"></a>Improvements</h3>
-<!--
+<!-- 
 * `ffirst` and `flast` were rewritten in C, with slightly better performance and reduced file size. -->
 <ul>
 <li>C files are compiled -O3 on Windows, which gives a boost of around 20% for the grouping mechanism applied to character data.</li>
@@ -372,9 +380,9 @@
 <em>Thorough and Controlled Object Conversions:</em> Quick conversion functions <code>qDF</code>, <code>qDT</code> and <code>qM</code> now have additional arguments <code>keep.attr</code> and <code>class</code> providing precise user control over object conversions in terms of classes and other attributes assigned / maintained. The default (<code>keep.attr = FALSE</code>) yields <em>hard</em> conversions removing all but essential attributes from the object. E.g. before <code><a href="../reference/A4-quick-conversion.html">qM(EuStockMarkets)</a></code> would just have returned <code>EuStockMarkets</code> (because <code><a href="https://rdrr.io/r/base/matrix.html">is.matrix(EuStockMarkets)</a></code> is <code>TRUE</code>) whereas now the time series class and ‘tsp’ attribute are removed. <code><a href="../reference/A4-quick-conversion.html">qM(EuStockMarkets, keep.attr = TRUE)</a></code> returns <code>EuStockMarkets</code> as before.</li>
 </ul>
 <!--
-In general `keep.attr = TRUE` gives a *soft* conversion were attributes necessary to establish the new data type ('dim', 'dimnames', 'names', 'row.names', 'class') are modified, but all other attributes are kept.
-This may be useful in some cases, for examples it is now possible to write something like `mtcars %>% fgroup_by(cyl, vs, am) %>% qM(TRUE) %>% fmean(attr(.,"groups"))`.
-
+In general `keep.attr = TRUE` gives a *soft* conversion were attributes necessary to establish the new data type ('dim', 'dimnames', 'names', 'row.names', 'class') are modified, but all other attributes are kept. 
+This may be useful in some cases, for examples it is now possible to write something like `mtcars %>% fgroup_by(cyl, vs, am) %>% qM(TRUE) %>% fmean(attr(.,"groups"))`. 
+ 
  (ensuring that `qDF`, `qDT` and `qM` now truly behave like `as.data.frame`, `as.data.table` and `as.matrix`) --><ul>
 <li>
 <p><em>Smarter Attribute Handling:</em> Drawing on the guidance given in the R Internals manual, the following standards for optimal non-destructive attribute handling are formalized and communicated to the user:</p>
@@ -386,7 +394,7 @@ This may be useful in some cases, for examples it is now possible to write somet
 </ul>
 </li>
 </ul>
-<!-- This simple but thorough (and now formalized) system of attribute handling should be optimal in more than 90% of common applications. --><p><!--
+<!-- This simple but thorough (and now formalized) system of attribute handling should be optimal in more than 90% of common applications. --><p><!--  
   + The default methods of statistical functions returning numeric values (`fmean`, `fmedian`, `fsum`, `fprod`, `fvar`, `fsd`, `fmin`, `fmax` and `fnth`, `fnobs` and `fndistinct`) do not preserve the attributes of classed objects (e.g. univariate time series) in grouped aggregations. This is consistent with the matrix methods of these functions and avoids errors, particularly after computations on time series. --></p>
 <p><!--, random conversions to tibble are not part of its philosophy. --></p>
 <!--
@@ -617,7 +625,7 @@ This may be useful in some cases, for examples it is now possible to write somet
       </footer>
    </div>
 
-
+  
 
 
   </body>

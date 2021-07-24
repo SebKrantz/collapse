@@ -72,7 +72,7 @@
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">collapse</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">1.6.4</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">1.6.5</span>
       </span>
     </div>
 
@@ -162,7 +162,7 @@
     <div class='dont-index'><p><code><a href='wlddev.html'>wlddev</a></code>, <a href='index.html'>Collapse Overview</a></p></div>
 
     <h2 class="hasAnchor" id="examples"><a class="anchor" href="#examples"></a>Examples</h2>
-    <pre class="examples"><div class='input'><span class='fu'><a href='small-helper.html'>namlab</a></span><span class='op'>(</span><span class='va'>GGDC10S</span>, class <span class='op'>=</span> <span class='cn'>TRUE</span><span class='op'>)</span>
+    <pre class="examples"><div class='input'><span class='fu'><a href='small-helpers.html'>namlab</a></span><span class='op'>(</span><span class='va'>GGDC10S</span>, class <span class='op'>=</span> <span class='cn'>TRUE</span><span class='op'>)</span>
 </div><div class='output co'>#&gt;      Variable     Class                                                 Label
 #&gt; 1     Country character                                               Country
 #&gt; 2  Regioncode character                                           Region code
@@ -183,8 +183,14 @@
 
 <span class='co'># \donttest{</span>
 <span class='kw'><a href='https://rdrr.io/r/base/library.html'>library</a></span><span class='op'>(</span><span class='va'><a href='https://r-datatable.com'>data.table</a></span><span class='op'>)</span>
-<span class='kw'><a href='https://rdrr.io/r/base/library.html'>library</a></span><span class='op'>(</span><span class='va'><a href='https://ggplot2.tidyverse.org'>ggplot2</a></span><span class='op'>)</span>
-
+</div><div class='output co'>#&gt; <span class='message'>data.table 1.14.0 using 2 threads (see ?getDTthreads).  Latest news: r-datatable.com</span></div><div class='output co'>#&gt; <span class='message'></span>
+#&gt; <span class='message'>Attaching package: ‘data.table’</span></div><div class='output co'>#&gt; <span class='message'>The following object is masked from ‘package:plm’:</span>
+#&gt; <span class='message'></span>
+#&gt; <span class='message'>    between</span></div><div class='output co'>#&gt; <span class='message'>The following objects are masked from ‘package:dplyr’:</span>
+#&gt; <span class='message'></span>
+#&gt; <span class='message'>    between, first, last</span></div><div class='input'><span class='kw'><a href='https://rdrr.io/r/base/library.html'>library</a></span><span class='op'>(</span><span class='va'><a href='https://ggplot2.tidyverse.org'>ggplot2</a></span><span class='op'>)</span>
+</div><div class='output co'>#&gt; <span class='message'>Use suppressPackageStartupMessages() to eliminate package startup</span>
+#&gt; <span class='message'>messages</span></div><div class='input'>
 <span class='co'>## World Regions Structural Change Plot</span>
 
 <span class='va'>dat</span> <span class='op'>&lt;-</span> <span class='va'>GGDC10S</span>
@@ -211,7 +217,7 @@
 <span class='fu'><a href='fselect, get_vars, add_vars.html'>fselect</a></span><span class='op'>(</span><span class='va'>dat</span>, <span class='va'>AGR</span><span class='op'>:</span><span class='va'>OTH</span><span class='op'>)</span> <span class='op'>&lt;-</span> <span class='fu'><a href='recode-replace.html'>replace_outliers</a></span><span class='op'>(</span><span class='fu'><a href='dapply.html'>dapply</a></span><span class='op'>(</span><span class='fu'><a href='fselect, get_vars, add_vars.html'>fselect</a></span><span class='op'>(</span><span class='va'>dat</span>, <span class='va'>AGR</span><span class='op'>:</span><span class='va'>OTH</span><span class='op'>)</span>, <span class='va'>`*`</span>, <span class='fl'>1</span> <span class='op'>/</span> <span class='va'>dat</span><span class='op'>$</span><span class='va'>SUM</span><span class='op'>)</span>,
                                           <span class='fl'>0</span>, <span class='cn'>NA</span>, <span class='st'>"min"</span><span class='op'>)</span>
 <span class='va'>dat</span><span class='op'>$</span><span class='va'>SUM</span> <span class='op'>&lt;-</span> <span class='cn'>NULL</span>
-<span class='va'>dat</span><span class='op'>$</span><span class='va'>Variable</span> <span class='op'>&lt;-</span> <span class='fu'><a href='AA1-recode-replace.html'>recode_char</a></span><span class='op'>(</span><span class='va'>dat</span><span class='op'>$</span><span class='va'>Variable</span>, VA <span class='op'>=</span> <span class='st'>"Value Added Share"</span>, EMP <span class='op'>=</span> <span class='st'>"Employment Share"</span><span class='op'>)</span>
+<span class='va'>dat</span><span class='op'>$</span><span class='va'>Variable</span> <span class='op'>&lt;-</span> <span class='fu'><a href='recode-replace.html'>recode_char</a></span><span class='op'>(</span><span class='va'>dat</span><span class='op'>$</span><span class='va'>Variable</span>, VA <span class='op'>=</span> <span class='st'>"Value Added Share"</span>, EMP <span class='op'>=</span> <span class='st'>"Employment Share"</span><span class='op'>)</span>
 <span class='va'>dat</span> <span class='op'>&lt;-</span> <span class='fu'><a href='https://rdrr.io/pkg/data.table/man/melt.data.table.html'>melt</a></span><span class='op'>(</span><span class='fu'><a href='quick-conversion.html'>qDT</a></span><span class='op'>(</span><span class='va'>dat</span><span class='op'>)</span>, <span class='fl'>1</span><span class='op'>:</span><span class='fl'>2</span>, variable.name <span class='op'>=</span> <span class='st'>"Sector"</span>, na.rm <span class='op'>=</span> <span class='cn'>TRUE</span><span class='op'>)</span>
 
 <span class='fu'><a href='https://ggplot2.tidyverse.org/reference/ggplot.html'>ggplot</a></span><span class='op'>(</span><span class='fu'><a href='https://ggplot2.tidyverse.org/reference/aes.html'>aes</a></span><span class='op'>(</span>x <span class='op'>=</span> <span class='va'>Year</span>, y <span class='op'>=</span> <span class='va'>value</span>, fill <span class='op'>=</span> <span class='va'>Sector</span><span class='op'>)</span>, data <span class='op'>=</span> <span class='va'>dat</span><span class='op'>)</span> <span class='op'>+</span>

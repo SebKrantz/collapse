@@ -46,7 +46,7 @@ Advanced and Fast Data Transformation — collapse-package" />
 To facilitate complex data transformation, exploration and computing tasks in R.
 To help make R code fast, flexible, parsimonious and programmer friendly. 
 
-It is made compatible with dplyr, data.table and the plm approach to panel data, and non-destructively handles other classes." />
+It is made compatible with dplyr, data.table, sf and the plm approach to panel data, and non-destructively handles other classes such as xts." />
 
 
 
@@ -78,7 +78,7 @@ It is made compatible with dplyr, data.table and the plm approach to panel data,
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">collapse</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">1.6.4</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">1.6.5</span>
       </span>
     </div>
 
@@ -134,15 +134,14 @@ Advanced and Fast Data Transformation</h1>
 <li><p>To facilitate complex data transformation, exploration and computing tasks in R.</p></li>
 <li><p>To help make R code fast, flexible, parsimonious and programmer friendly. <!-- % \emph{collapse} is a fast  %to facilitate (advanced) data manipulation in R   % To achieve the latter, -->
 <!-- % collapse provides a broad set.. -&gt; Nah, it's not a misc package --></p></li>
-</ul><p>It is made compatible with <em>dplyr</em>, <em>data.table</em> and the <em>plm</em> approach to panel data, and non-destructively handles other classes.</p>
+</ul><p>It is made compatible with <em>dplyr</em>, <em>data.table</em>, <em>sf</em> and the <em>plm</em> approach to panel data, and non-destructively handles other classes such as <em>xts</em>.</p>
     </div>
 
 
 
     <h2 class="hasAnchor" id="getting-started"><a class="anchor" href="#getting-started"></a>Getting Started</h2>
 
-    <p>See <a href='index.html'>Collapse Documentation &amp; Overview</a>, or read the <a href='https://sebkrantz.github.io/collapse/articles/collapse_intro.html'>introductory vignette</a>. All vignettes can be accessed on the <a href='https://sebkrantz.github.io/collapse/'>package website</a>. A cheatsheet is available at <a href='https://raw.githubusercontent.com/rstudio/cheatsheets/master/collapse.pdf'>Rstudio</a>.
-A compact introduction for quick-starters is provided in the examples section below.</p>
+    <p>See <a href='index.html'>Collapse Documentation &amp; Overview</a>, or read the <a href='https://sebkrantz.github.io/collapse/articles/collapse_intro.html'>introductory vignette</a>. All vignettes can be accessed on the <a href='https://sebkrantz.github.io/collapse/'>package website</a>. A cheatsheet is available at <a href='https://raw.githubusercontent.com/SebKrantz/cheatsheets/master/collapse.pdf'>here</a>. A compact introduction for quick-starters is provided in the examples section below.</p>
     <h2 class="hasAnchor" id="details"><a class="anchor" href="#details"></a>Details</h2>
 
     <p><!-- % Put this below bullet points ?? % \emph{collapse} provides a carefully conceived % \emph{collapse} provides a compact set of functions % organized roughly into several topics -->
@@ -164,17 +163,17 @@ To facilitate efficient programming, core S3 methods, grouping and ordering func
 <p><!-- %The function \code{fgroup_by} can be used to efficiently create a grouped tibble inside dplyr-like chained calls (constructed with \emph{magrittr} pipes, fast manipulation functions like \code{fselect}, \code{fsubset}, \code{ftransform} and fast statistical functions). Thus \emph{collapse} enables optimized programming in both standard and non-standard evaluation. --></p>
 
 <p><!-- % attributes of atomic objects are preserved if the dimensions are unaltered by the computation, and data frame attributes are always preserved, --></p>
-<p>Additional (hidden) S3 methods provide broad based compatibility with <em>dplyr</em> (grouped tibble), <em>data.table</em> and <em>plm</em> panel data classes. Functions and core methods also seek to preserve object attributes (including column attributes such as variable labels), ensuring flexibility and non-destructive workflows with a very broad range of R objects (including most time-series classes).</p>
-<p>Missing values are efficiently skipped at C/C++ level. The package default is <code>na.rm = TRUE</code>, whereas <code>na.rm = FALSE</code> also yields efficient checking and early termination. Missing weights are supported. Core functionality and all statistical functions / computations are tested with 10,000 unit tests for Base R equivalence, exempting some improvements (e.g. <code><a href='fsum.html'>fsum(NA, na.rm = TRUE)</a></code> evaluates to <code>NA</code>, not 0, similarly for <code>fmin</code> and <code>fmax</code>; no <code>NaN</code> values are generated from computations involving <code>NA</code> values). Generic functions provide some <a href='collapse-options.html'>security</a> against silent swallowing of arguments.</p>
+<p>Additional (hidden) S3 methods and C-level features enable broad based compatibility with <em>dplyr</em> (grouped tibble), <em>data.table</em>, <em>sf</em> and <em>plm</em> panel data classes. Functions and core methods also seek to preserve object attributes (including column attributes such as variable labels), ensuring flexibility and effective workflows with a very broad range of R objects (including most time-series classes).</p>
+<p>Missing values are efficiently skipped at C/C++ level. The package default is <code>na.rm = TRUE</code>, whereas <code>na.rm = FALSE</code> also yields efficient checking and early termination. Missing weights are supported. Core functionality and all statistical functions / computations are tested with 11,000 unit tests for Base R equivalence, exempting some improvements (e.g. <code><a href='fsum.html'>fsum(NA, na.rm = TRUE)</a></code> evaluates to <code>NA</code>, not 0, similarly for <code>fmin</code> and <code>fmax</code>; no <code>NaN</code> values are generated from computations involving <code>NA</code> values). Generic functions provide some <a href='collapse-options.html'>security</a> against silent swallowing of arguments.</p>
 <p><!-- %Hence they also handle various date and time series classes etc., and can easily be integreated into most approaches to data transformation. --></p>
 <p><!-- %A global \code{option("collapse_unused_arg_action")} can be set to regulate the behavior when unused arguments are passed to a generic function. The default is to issue a warning. --></p>
 
-<p><em>collapse</em> installs with a built-in hierarchical <a href='index.html'>documentation</a> facilitating the use of the package. The vignettes are complimentary and also follow a more structured approach. <!-- % and \code{base/stats}. % extra methods warrant, provide ? --></p>
+<p><em>collapse</em> installs with a built-in hierarchical <a href='index.html'>documentation</a> facilitating the use of the package. The <a href='https://sebkrantz.github.io/collapse/articles/index.html'>vignettes</a> are complimentary and also follow a more structured approach. <!-- % and \code{base/stats}. % extra methods warrant, provide ? --></p>
 <p><!-- %Apart from general performance considerations, \emph{collapse} excels at applications involving fast panel data transformations and techniques, fast weighted computations (e.g. weighted aggregation), fast programming and aggregation with categorical and mixed-type data, fast programming with (multivariate) time series, and programming with lists of data objects. --></p>
 <p><!-- %Other broad areas are fast grouped and weighted programming to implement new statistical techniques and packages, and fast data manipulation code (i.e. server-side for \code{shiny} apps). --></p>
 <p><!-- % The package largely avoids non-standard evaluation and exports core methods for maximum programmability.  % Most are S3 generic with methods for common \code{R} objects (vectors, matrices, data frames, \dots) % high computation  %(aggregation and transformations ~10x \emph{data.table} on data &lt;1 Mio obs.). --></p>
 <p><!-- % Beyond speed, flexibility and parsimony in coding, a central objective of \emph{collapse} is to facilitate advanced / complex operations on data. -->
-The package is mainly coded in C++ and built with <em>Rcpp</em>, but also uses C functions from <em>data.table</em> (grouping, ordering, subsetting, row-binding), <em>fixest</em> (centering on multiple factors), <em>weights</em> (weighted pairwise correlations), <em>stats</em> (ACF and PACF) and <em>RcppArmadillo / RcppEigen</em> (fast linear fitting methods). For the moment <em>collapse</em> does not utilize low-level parallelism (such as OpenMP).
+The package is coded both in C and C++ and built with <em>Rcpp</em>, but also uses C/C++ functions from <em>data.table</em> (grouping, ordering, subsetting, row-binding), <em>fixest</em> (centering on multiple factors), <em>weights</em> (weighted pairwise correlations), <em>stats</em> (ACF and PACF) and <em>RcppArmadillo / RcppEigen</em> (fast linear fitting methods). For the moment <em>collapse</em> does not utilize low-level parallelism (such as OpenMP).
 <!-- % \emph{collapse} is built with \code{Rcpp} and imports \code{C} functions from \emph{data.table}, \emph{lfe} and \emph{stats}. %, and uses \code{ggplot2} visualizations. --></p>
 
 
@@ -189,13 +188,12 @@ The package is mainly coded in C++ and built with <em>Rcpp</em>, but also uses C
 <li><p>Josh Pasek (<em>weights</em>)</p></li>
 <li><p>R Core Team and contributors worldwide (<em>stats</em>)</p></li>
 </ul><p>I thank Ralf Stubner, Joseph Wood and Dirk Eddelbuettel for helpful answers on Stackoverflow, Joris Meys for encouraging me and helping to set up the <a href='https://github.com/SebKrantz/collapse'>Github repository</a> for <em>collapse</em>, Matthieu Stigler, Patrice Kiener, Zhiyi Xu and Kevin Tappe for feature requests and helpful suggestions.</p>
-    <h2 class="hasAnchor" id="developing-feature-requests-bug-reporting"><a class="anchor" href="#developing-feature-requests-bug-reporting"></a>Developing / Feature Requests / Bug Reporting</h2>
+    <h2 class="hasAnchor" id="developing-bug-reporting"><a class="anchor" href="#developing-bug-reporting"></a>Developing / Bug Reporting</h2>
 
     
 <ul>
-<li><p>If you are interested in extending or optimizing this package, see the source code at <a href='https://github.com/SebKrantz/collapse/tree/master'>https://github.com/SebKrantz/collapse/tree/master</a>, fork and send pull-requests, or e-mail me.</p></li>
-<li><p>Please send feature requests via e-mail.</p></li>
-<li><p>Please report issues at <a href='https://github.com/SebKrantz/collapse/issues'>https://github.com/SebKrantz/collapse/issues</a> or e-mail me.</p></li>
+<li><p>If you are interested in extending or optimizing this package, see the source code at <a href='https://github.com/SebKrantz/collapse/tree/master'>https://github.com/SebKrantz/collapse/tree/master</a>, fork and send pull-requests to the 'development' branch of the repository, or e-mail me.</p></li>
+<li><p>Please report issues at <a href='https://github.com/SebKrantz/collapse/issues'>https://github.com/SebKrantz/collapse/issues</a>.</p></li>
 </ul>
 
 
@@ -219,7 +217,7 @@ The package is mainly coded in C++ and built with <em>Rcpp</em>, but also uses C
 </div><div class='output co'>#&gt;   Sepal.Length Sepal.Width Petal.Length Petal.Width
 #&gt; 1     5.843333    3.057333        3.758    1.199333</div><div class='input'>
 <span class='co'># Weighted statistics, supported by most functions...</span>
-<span class='va'>w</span> <span class='op'>&lt;-</span> <span class='fu'><a href='https://rdrr.io/r/base/MathFun.html'>abs</a></span><span class='op'>(</span><span class='fu'><a href='https://rdrr.io/r/stats/Normal.html'>rnorm</a></span><span class='op'>(</span><span class='fu'><a href='small-helper.html'>fnrow</a></span><span class='op'>(</span><span class='va'>iris</span><span class='op'>)</span><span class='op'>)</span><span class='op'>)</span>
+<span class='va'>w</span> <span class='op'>&lt;-</span> <span class='fu'><a href='https://rdrr.io/r/base/MathFun.html'>abs</a></span><span class='op'>(</span><span class='fu'><a href='https://rdrr.io/r/stats/Normal.html'>rnorm</a></span><span class='op'>(</span><span class='fu'><a href='small-helpers.html'>fnrow</a></span><span class='op'>(</span><span class='va'>iris</span><span class='op'>)</span><span class='op'>)</span><span class='op'>)</span>
 <span class='fu'><a href='fmean.html'>fmean</a></span><span class='op'>(</span><span class='va'>d</span>, w <span class='op'>=</span> <span class='va'>w</span><span class='op'>)</span>
 </div><div class='output co'>#&gt; Sepal.Length  Sepal.Width Petal.Length  Petal.Width 
 #&gt;     5.787364     3.112572     3.623407     1.169427 </div><div class='input'>
@@ -257,7 +255,7 @@ The package is mainly coded in C++ and built with <em>Rcpp</em>, but also uses C
 #&gt; 3    0.5362236   0.6977758    0.2306191   0.1111729
 #&gt; 4    0.5248146   0.6759703    0.2660990   0.1111729
 #&gt; 5    0.5704507   0.7849978    0.2483591   0.1111729
-#&gt; 6    0.6160867   0.8504143    0.3015789   0.2223457</div><div class='input'><span class='fu'><a href='https://rdrr.io/r/utils/head.html'>head</a></span><span class='op'>(</span><span class='fu'><a href='fvar_fsd.html'>fsd</a></span><span class='op'>(</span><span class='va'>d</span>, TRA <span class='op'>=</span> <span class='st'>"/"</span><span class='op'>)</span><span class='op'>)</span>            <span class='co'># Dividing by the standard-deviation (scaling), etc...</span>
+#&gt; 6    0.6160867   0.8504143    0.3015789   0.2223457</div><div class='input'><span class='fu'><a href='https://rdrr.io/r/utils/head.html'>head</a></span><span class='op'>(</span><span class='fu'><a href='fvar, fsd.html'>fsd</a></span><span class='op'>(</span><span class='va'>d</span>, TRA <span class='op'>=</span> <span class='st'>"/"</span><span class='op'>)</span><span class='op'>)</span>            <span class='co'># Dividing by the standard-deviation (scaling), etc...</span>
 </div><div class='output co'>#&gt;   Sepal.Length Sepal.Width Petal.Length Petal.Width
 #&gt; 1     6.158928    8.029986    0.7930671   0.2623854
 #&gt; 2     5.917402    6.882845    0.7930671   0.2623854
@@ -275,21 +273,21 @@ The package is mainly coded in C++ and built with <em>Rcpp</em>, but also uses C
 #&gt; 5          6.3         3.4          5.1         1.8
 #&gt; 6          6.3         3.4          5.1         1.8</div><div class='input'>
 <span class='co'># Grouped Transformations...</span>
-<span class='fu'><a href='https://rdrr.io/r/utils/head.html'>head</a></span><span class='op'>(</span><span class='fu'><a href='fvar_fsd.html'>fvar</a></span><span class='op'>(</span><span class='va'>d</span>, <span class='va'>f</span>, TRA <span class='op'>=</span> <span class='st'>"replace"</span><span class='op'>)</span><span class='op'>)</span>  <span class='co'># Replacing values with the group variance</span>
+<span class='fu'><a href='https://rdrr.io/r/utils/head.html'>head</a></span><span class='op'>(</span><span class='fu'><a href='fvar, fsd.html'>fvar</a></span><span class='op'>(</span><span class='va'>d</span>, <span class='va'>f</span>, TRA <span class='op'>=</span> <span class='st'>"replace"</span><span class='op'>)</span><span class='op'>)</span>  <span class='co'># Replacing values with the group variance</span>
 </div><div class='output co'>#&gt;   Sepal.Length Sepal.Width Petal.Length Petal.Width
 #&gt; 1     0.124249   0.1436898   0.03015918  0.01110612
 #&gt; 2     0.124249   0.1436898   0.03015918  0.01110612
 #&gt; 3     0.124249   0.1436898   0.03015918  0.01110612
 #&gt; 4     0.124249   0.1436898   0.03015918  0.01110612
 #&gt; 5     0.124249   0.1436898   0.03015918  0.01110612
-#&gt; 6     0.124249   0.1436898   0.03015918  0.01110612</div><div class='input'><span class='fu'><a href='https://rdrr.io/r/utils/head.html'>head</a></span><span class='op'>(</span><span class='fu'><a href='fvar_fsd.html'>fsd</a></span><span class='op'>(</span><span class='va'>d</span>, <span class='va'>f</span>, TRA <span class='op'>=</span> <span class='st'>"/"</span><span class='op'>)</span><span class='op'>)</span>         <span class='co'># Grouped scaling</span>
+#&gt; 6     0.124249   0.1436898   0.03015918  0.01110612</div><div class='input'><span class='fu'><a href='https://rdrr.io/r/utils/head.html'>head</a></span><span class='op'>(</span><span class='fu'><a href='fvar, fsd.html'>fsd</a></span><span class='op'>(</span><span class='va'>d</span>, <span class='va'>f</span>, TRA <span class='op'>=</span> <span class='st'>"/"</span><span class='op'>)</span><span class='op'>)</span>         <span class='co'># Grouped scaling</span>
 </div><div class='output co'>#&gt;   Sepal.Length Sepal.Width Petal.Length Petal.Width
 #&gt; 1     14.46851    9.233260     8.061544    1.897793
 #&gt; 2     13.90112    7.914223     8.061544    1.897793
 #&gt; 3     13.33372    8.441838     7.485720    1.897793
 #&gt; 4     13.05003    8.178031     8.637369    1.897793
 #&gt; 5     14.18481    9.497068     8.061544    1.897793
-#&gt; 6     15.31960   10.288490     9.789018    3.795585</div><div class='input'><span class='fu'><a href='https://rdrr.io/r/utils/head.html'>head</a></span><span class='op'>(</span><span class='fu'><a href='fmin_fmax.html'>fmin</a></span><span class='op'>(</span><span class='va'>d</span>, <span class='va'>f</span>, TRA <span class='op'>=</span> <span class='st'>"-"</span><span class='op'>)</span><span class='op'>)</span>        <span class='co'># Setting the minimum value in each species to 0</span>
+#&gt; 6     15.31960   10.288490     9.789018    3.795585</div><div class='input'><span class='fu'><a href='https://rdrr.io/r/utils/head.html'>head</a></span><span class='op'>(</span><span class='fu'><a href='fmin, fmax.html'>fmin</a></span><span class='op'>(</span><span class='va'>d</span>, <span class='va'>f</span>, TRA <span class='op'>=</span> <span class='st'>"-"</span><span class='op'>)</span><span class='op'>)</span>        <span class='co'># Setting the minimum value in each species to 0</span>
 </div><div class='output co'>#&gt;   Sepal.Length Sepal.Width Petal.Length Petal.Width
 #&gt; 1          0.8         1.2          0.4         0.1
 #&gt; 2          0.6         0.7          0.4         0.1
@@ -310,7 +308,7 @@ The package is mainly coded in C++ and built with <em>Rcpp</em>, but also uses C
 #&gt; 3         -0.3        -0.2         -0.2         0.0
 #&gt; 4         -0.4        -0.3          0.0         0.0
 #&gt; 5          0.0         0.2         -0.1         0.0
-#&gt; 6          0.4         0.5          0.2         0.2</div><div class='input'><span class='fu'><a href='https://rdrr.io/r/utils/head.html'>head</a></span><span class='op'>(</span><span class='fu'><a href='ffirst_flast.html'>ffirst</a></span><span class='op'>(</span><span class='va'>d</span>, <span class='va'>f</span>, TRA <span class='op'>=</span> <span class='st'>"%%"</span><span class='op'>)</span><span class='op'>)</span>     <span class='co'># Taking modulus of first group-value, etc. ...</span>
+#&gt; 6          0.4         0.5          0.2         0.2</div><div class='input'><span class='fu'><a href='https://rdrr.io/r/utils/head.html'>head</a></span><span class='op'>(</span><span class='fu'><a href='ffirst, flast.html'>ffirst</a></span><span class='op'>(</span><span class='va'>d</span>, <span class='va'>f</span>, TRA <span class='op'>=</span> <span class='st'>"%%"</span><span class='op'>)</span><span class='op'>)</span>     <span class='co'># Taking modulus of first group-value, etc. ...</span>
 </div><div class='output co'>#&gt;   Sepal.Length Sepal.Width Petal.Length Petal.Width
 #&gt; 1          0.0         0.0          0.0           0
 #&gt; 2          4.9         3.0          0.0           0
@@ -319,7 +317,7 @@ The package is mainly coded in C++ and built with <em>Rcpp</em>, but also uses C
 #&gt; 5          5.0         0.1          0.0           0
 #&gt; 6          0.3         0.4          0.3           0</div><div class='input'>
 <span class='co'># Grouped and weighted transformations...</span>
-<span class='fu'><a href='https://rdrr.io/r/utils/head.html'>head</a></span><span class='op'>(</span><span class='fu'><a href='fvar_fsd.html'>fsd</a></span><span class='op'>(</span><span class='va'>d</span>, <span class='va'>f</span>, <span class='va'>w</span>, <span class='st'>"/"</span><span class='op'>)</span>, <span class='fl'>3</span><span class='op'>)</span>         <span class='co'># weighted scaling</span>
+<span class='fu'><a href='https://rdrr.io/r/utils/head.html'>head</a></span><span class='op'>(</span><span class='fu'><a href='fvar, fsd.html'>fsd</a></span><span class='op'>(</span><span class='va'>d</span>, <span class='va'>f</span>, <span class='va'>w</span>, <span class='st'>"/"</span><span class='op'>)</span>, <span class='fl'>3</span><span class='op'>)</span>         <span class='co'># weighted scaling</span>
 </div><div class='output co'>#&gt;   Sepal.Length Sepal.Width Petal.Length Petal.Width
 #&gt; 1     14.43269   10.969324     7.791239    1.686259
 #&gt; 2     13.86671    9.402278     7.791239    1.686259
@@ -333,42 +331,42 @@ The package is mainly coded in C++ and built with <em>Rcpp</em>, but also uses C
 #&gt; 2            5         3.4          1.4         0.2
 #&gt; 3            5         3.4          1.4         0.2</div><div class='input'>
 <span class='co'>## Some more advanced transformations...</span>
-<span class='fu'><a href='https://rdrr.io/r/utils/head.html'>head</a></span><span class='op'>(</span><span class='fu'><a href='fbetween_fwithin.html'>fbetween</a></span><span class='op'>(</span><span class='va'>d</span><span class='op'>)</span><span class='op'>)</span>                             <span class='co'># Averaging (faster t.: fmean(d, TRA = "replace"))</span>
+<span class='fu'><a href='https://rdrr.io/r/utils/head.html'>head</a></span><span class='op'>(</span><span class='fu'><a href='fbetween, fwithin.html'>fbetween</a></span><span class='op'>(</span><span class='va'>d</span><span class='op'>)</span><span class='op'>)</span>                             <span class='co'># Averaging (faster t.: fmean(d, TRA = "replace"))</span>
 </div><div class='output co'>#&gt;   Sepal.Length Sepal.Width Petal.Length Petal.Width
 #&gt; 1     5.843333    3.057333        3.758    1.199333
 #&gt; 2     5.843333    3.057333        3.758    1.199333
 #&gt; 3     5.843333    3.057333        3.758    1.199333
 #&gt; 4     5.843333    3.057333        3.758    1.199333
 #&gt; 5     5.843333    3.057333        3.758    1.199333
-#&gt; 6     5.843333    3.057333        3.758    1.199333</div><div class='input'><span class='fu'><a href='https://rdrr.io/r/utils/head.html'>head</a></span><span class='op'>(</span><span class='fu'><a href='fbetween_fwithin.html'>fwithin</a></span><span class='op'>(</span><span class='va'>d</span><span class='op'>)</span><span class='op'>)</span>                              <span class='co'># Centering (faster than: fmean(d, TRA = "-"))</span>
+#&gt; 6     5.843333    3.057333        3.758    1.199333</div><div class='input'><span class='fu'><a href='https://rdrr.io/r/utils/head.html'>head</a></span><span class='op'>(</span><span class='fu'><a href='fbetween, fwithin.html'>fwithin</a></span><span class='op'>(</span><span class='va'>d</span><span class='op'>)</span><span class='op'>)</span>                              <span class='co'># Centering (faster than: fmean(d, TRA = "-"))</span>
 </div><div class='output co'>#&gt;   Sepal.Length Sepal.Width Petal.Length Petal.Width
 #&gt; 1   -0.7433333  0.44266667       -2.358  -0.9993333
 #&gt; 2   -0.9433333 -0.05733333       -2.358  -0.9993333
 #&gt; 3   -1.1433333  0.14266667       -2.458  -0.9993333
 #&gt; 4   -1.2433333  0.04266667       -2.258  -0.9993333
 #&gt; 5   -0.8433333  0.54266667       -2.358  -0.9993333
-#&gt; 6   -0.4433333  0.84266667       -2.058  -0.7993333</div><div class='input'><span class='fu'><a href='https://rdrr.io/r/utils/head.html'>head</a></span><span class='op'>(</span><span class='fu'><a href='fbetween_fwithin.html'>fwithin</a></span><span class='op'>(</span><span class='va'>d</span>, <span class='va'>f</span>, <span class='va'>w</span><span class='op'>)</span><span class='op'>)</span>                        <span class='co'># Grouped and weighted (same as fmean(d, f, w, "-"))</span>
+#&gt; 6   -0.4433333  0.84266667       -2.058  -0.7993333</div><div class='input'><span class='fu'><a href='https://rdrr.io/r/utils/head.html'>head</a></span><span class='op'>(</span><span class='fu'><a href='fbetween, fwithin.html'>fwithin</a></span><span class='op'>(</span><span class='va'>d</span>, <span class='va'>f</span>, <span class='va'>w</span><span class='op'>)</span><span class='op'>)</span>                        <span class='co'># Grouped and weighted (same as fmean(d, f, w, "-"))</span>
 </div><div class='output co'>#&gt;   Sepal.Length  Sepal.Width Petal.Length Petal.Width
 #&gt; 1   0.04363065 -0.004090797  -0.07827839 -0.06170405
 #&gt; 2  -0.15636935 -0.504090797  -0.07827839 -0.06170405
 #&gt; 3  -0.35636935 -0.304090797  -0.17827839 -0.06170405
 #&gt; 4  -0.45636935 -0.404090797   0.02172161 -0.06170405
 #&gt; 5  -0.05636935  0.095909203  -0.07827839 -0.06170405
-#&gt; 6   0.34363065  0.395909203   0.22172161  0.13829595</div><div class='input'><span class='fu'><a href='https://rdrr.io/r/utils/head.html'>head</a></span><span class='op'>(</span><span class='fu'><a href='fbetween_fwithin.html'>fwithin</a></span><span class='op'>(</span><span class='va'>d</span>, <span class='va'>f</span>, <span class='va'>w</span>, mean <span class='op'>=</span> <span class='fl'>5</span><span class='op'>)</span><span class='op'>)</span>              <span class='co'># Setting a custom mean</span>
+#&gt; 6   0.34363065  0.395909203   0.22172161  0.13829595</div><div class='input'><span class='fu'><a href='https://rdrr.io/r/utils/head.html'>head</a></span><span class='op'>(</span><span class='fu'><a href='fbetween, fwithin.html'>fwithin</a></span><span class='op'>(</span><span class='va'>d</span>, <span class='va'>f</span>, <span class='va'>w</span>, mean <span class='op'>=</span> <span class='fl'>5</span><span class='op'>)</span><span class='op'>)</span>              <span class='co'># Setting a custom mean</span>
 </div><div class='output co'>#&gt;   Sepal.Length Sepal.Width Petal.Length Petal.Width
 #&gt; 1     5.043631    4.995909     4.921722    4.938296
 #&gt; 2     4.843631    4.495909     4.921722    4.938296
 #&gt; 3     4.643631    4.695909     4.821722    4.938296
 #&gt; 4     4.543631    4.595909     5.021722    4.938296
 #&gt; 5     4.943631    5.095909     4.921722    4.938296
-#&gt; 6     5.343631    5.395909     5.221722    5.138296</div><div class='input'><span class='fu'><a href='https://rdrr.io/r/utils/head.html'>head</a></span><span class='op'>(</span><span class='fu'><a href='fbetween_fwithin.html'>fwithin</a></span><span class='op'>(</span><span class='va'>d</span>, <span class='va'>f</span>, <span class='va'>w</span>, theta <span class='op'>=</span> <span class='fl'>0.76</span><span class='op'>)</span><span class='op'>)</span>          <span class='co'># Quasi-centering i.e. d - theta*fbetween(d, f, w)</span>
+#&gt; 6     5.343631    5.395909     5.221722    5.138296</div><div class='input'><span class='fu'><a href='https://rdrr.io/r/utils/head.html'>head</a></span><span class='op'>(</span><span class='fu'><a href='fbetween, fwithin.html'>fwithin</a></span><span class='op'>(</span><span class='va'>d</span>, <span class='va'>f</span>, <span class='va'>w</span>, theta <span class='op'>=</span> <span class='fl'>0.76</span><span class='op'>)</span><span class='op'>)</span>          <span class='co'># Quasi-centering i.e. d - theta*fbetween(d, f, w)</span>
 </div><div class='output co'>#&gt;   Sepal.Length Sepal.Width Petal.Length Petal.Width
 #&gt; 1    1.2571593    0.836891    0.2765084 0.001104919
 #&gt; 2    1.0571593    0.336891    0.2765084 0.001104919
 #&gt; 3    0.8571593    0.536891    0.1765084 0.001104919
 #&gt; 4    0.7571593    0.436891    0.3765084 0.001104919
 #&gt; 5    1.1571593    0.936891    0.2765084 0.001104919
-#&gt; 6    1.5571593    1.236891    0.5765084 0.201104919</div><div class='input'><span class='fu'><a href='https://rdrr.io/r/utils/head.html'>head</a></span><span class='op'>(</span><span class='fu'><a href='fbetween_fwithin.html'>fwithin</a></span><span class='op'>(</span><span class='va'>d</span>, <span class='va'>f</span>, <span class='va'>w</span>, mean <span class='op'>=</span> <span class='st'>"overall.mean"</span><span class='op'>)</span><span class='op'>)</span> <span class='co'># Preserving the overall mean of the data</span>
+#&gt; 6    1.5571593    1.236891    0.5765084 0.201104919</div><div class='input'><span class='fu'><a href='https://rdrr.io/r/utils/head.html'>head</a></span><span class='op'>(</span><span class='fu'><a href='fbetween, fwithin.html'>fwithin</a></span><span class='op'>(</span><span class='va'>d</span>, <span class='va'>f</span>, <span class='va'>w</span>, mean <span class='op'>=</span> <span class='st'>"overall.mean"</span><span class='op'>)</span><span class='op'>)</span> <span class='co'># Preserving the overall mean of the data</span>
 </div><div class='output co'>#&gt;   Sepal.Length Sepal.Width Petal.Length Petal.Width
 #&gt; 1     5.830995    3.108481     3.545128    1.107723
 #&gt; 2     5.630995    2.608481     3.545128    1.107723
@@ -434,14 +432,14 @@ The package is mainly coded in C++ and built with <em>Rcpp</em>, but also uses C
 #&gt; 3          4.7         3.2
 #&gt; 4          4.6         3.1
 #&gt; 5          5.0         3.6
-#&gt; 6          5.4         3.9</div><div class='input'><span class='fu'><a href='https://rdrr.io/r/utils/head.html'>head</a></span><span class='op'>(</span><span class='fu'><a href='fhdbetween_fhdwithin.html'>fhdbetween</a></span><span class='op'>(</span><span class='fu'><a href='fselect, get_vars, add_vars.html'>gv</a></span><span class='op'>(</span><span class='va'>iris</span>, <span class='fl'>1</span><span class='op'>:</span><span class='fl'>2</span><span class='op'>)</span>, <span class='fu'><a href='fselect, get_vars, add_vars.html'>gv</a></span><span class='op'>(</span><span class='va'>iris</span>, <span class='fl'>3</span><span class='op'>:</span><span class='fl'>5</span><span class='op'>)</span><span class='op'>)</span><span class='op'>)</span> <span class='co'># Linear prediction with factors and covariates</span>
+#&gt; 6          5.4         3.9</div><div class='input'><span class='fu'><a href='https://rdrr.io/r/utils/head.html'>head</a></span><span class='op'>(</span><span class='fu'><a href='fhdbetween, fhdwithin.html'>fhdbetween</a></span><span class='op'>(</span><span class='fu'><a href='fselect, get_vars, add_vars.html'>gv</a></span><span class='op'>(</span><span class='va'>iris</span>, <span class='fl'>1</span><span class='op'>:</span><span class='fl'>2</span><span class='op'>)</span>, <span class='fu'><a href='fselect, get_vars, add_vars.html'>gv</a></span><span class='op'>(</span><span class='va'>iris</span>, <span class='fl'>3</span><span class='op'>:</span><span class='fl'>5</span><span class='op'>)</span><span class='op'>)</span><span class='op'>)</span> <span class='co'># Linear prediction with factors and covariates</span>
 </div><div class='output co'>#&gt;   Sepal.Length Sepal.Width
 #&gt; 1     4.950107    3.389732
 #&gt; 2     4.950107    3.389732
 #&gt; 3     4.859513    3.374264
 #&gt; 4     5.040702    3.405199
 #&gt; 5     4.950107    3.389732
-#&gt; 6     5.220692    3.560823</div><div class='input'><span class='fu'><a href='https://rdrr.io/r/utils/head.html'>head</a></span><span class='op'>(</span><span class='fu'><a href='fhdbetween_fhdwithin.html'>fhdwithin</a></span><span class='op'>(</span><span class='fu'><a href='fselect, get_vars, add_vars.html'>gv</a></span><span class='op'>(</span><span class='va'>iris</span>, <span class='fl'>1</span><span class='op'>:</span><span class='fl'>2</span><span class='op'>)</span>, <span class='fu'><a href='fselect, get_vars, add_vars.html'>gv</a></span><span class='op'>(</span><span class='va'>iris</span>, <span class='fl'>3</span><span class='op'>:</span><span class='fl'>5</span><span class='op'>)</span><span class='op'>)</span><span class='op'>)</span>  <span class='co'># Linear partialling out factors and covariates</span>
+#&gt; 6     5.220692    3.560823</div><div class='input'><span class='fu'><a href='https://rdrr.io/r/utils/head.html'>head</a></span><span class='op'>(</span><span class='fu'><a href='fhdbetween, fhdwithin.html'>fhdwithin</a></span><span class='op'>(</span><span class='fu'><a href='fselect, get_vars, add_vars.html'>gv</a></span><span class='op'>(</span><span class='va'>iris</span>, <span class='fl'>1</span><span class='op'>:</span><span class='fl'>2</span><span class='op'>)</span>, <span class='fu'><a href='fselect, get_vars, add_vars.html'>gv</a></span><span class='op'>(</span><span class='va'>iris</span>, <span class='fl'>3</span><span class='op'>:</span><span class='fl'>5</span><span class='op'>)</span><span class='op'>)</span><span class='op'>)</span>  <span class='co'># Linear partialling out factors and covariates</span>
 </div><div class='output co'>#&gt;   Sepal.Length Sepal.Width
 #&gt; 1   0.14989286   0.1102684
 #&gt; 2  -0.05010714  -0.3897316
@@ -544,7 +542,7 @@ The package is mainly coded in C++ and built with <em>Rcpp</em>, but also uses C
 #&gt; 
 #&gt; Groups with sizes: 
 #&gt; 4.0.1 4.1.0 4.1.1 6.0.1 6.1.0 8.0.0 8.0.1 
-#&gt;     1     3     7     3     4    12     2 </div><div class='input'><span class='fu'><a href='https://r-spatial.github.io/sf/reference/plot.html'>plot</a></span><span class='op'>(</span><span class='va'>g</span><span class='op'>)</span>                                  <span class='co'># and are directly handed down to C++ code</span>
+#&gt;     1     3     7     3     4    12     2 </div><div class='input'><span class='fu'><a href='https://rdrr.io/r/graphics/plot.default.html'>plot</a></span><span class='op'>(</span><span class='va'>g</span><span class='op'>)</span>                                  <span class='co'># and are directly handed down to C++ code</span>
 </div><div class='img'><img src='collapse-package-1.png' alt='' width='700' height='433' /></div><div class='input'><span class='fu'><a href='fmean.html'>fmean</a></span><span class='op'>(</span><span class='fu'><a href='fselect, get_vars, add_vars.html'>gv</a></span><span class='op'>(</span><span class='va'>mtcars</span>, <span class='op'>-</span><span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span><span class='op'>(</span><span class='fl'>2</span>,<span class='fl'>8</span><span class='op'>:</span><span class='fl'>9</span><span class='op'>)</span><span class='op'>)</span>, <span class='va'>g</span><span class='op'>)</span>          <span class='co'># This can speed up multiple computations over same groups</span>
 </div><div class='output co'>#&gt;            mpg     disp        hp     drat       wt     qsec     gear     carb
 #&gt; 4.0.1 26.00000 120.3000  91.00000 4.430000 2.140000 16.70000 5.000000 2.000000
@@ -553,7 +551,7 @@ The package is mainly coded in C++ and built with <em>Rcpp</em>, but also uses C
 #&gt; 6.0.1 20.56667 155.0000 131.66667 3.806667 2.755000 16.32667 4.333333 4.666667
 #&gt; 6.1.0 19.12500 204.5500 115.25000 3.420000 3.388750 19.21500 3.500000 2.500000
 #&gt; 8.0.0 15.05000 357.6167 194.16667 3.120833 4.104083 17.14250 3.000000 3.083333
-#&gt; 8.0.1 15.40000 326.0000 299.50000 3.880000 3.370000 14.55000 5.000000 6.000000</div><div class='input'><span class='fu'><a href='fvar_fsd.html'>fsd</a></span><span class='op'>(</span><span class='fu'><a href='fselect, get_vars, add_vars.html'>gv</a></span><span class='op'>(</span><span class='va'>mtcars</span>, <span class='op'>-</span><span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span><span class='op'>(</span><span class='fl'>2</span>,<span class='fl'>8</span><span class='op'>:</span><span class='fl'>9</span><span class='op'>)</span><span class='op'>)</span>, <span class='va'>g</span><span class='op'>)</span>
+#&gt; 8.0.1 15.40000 326.0000 299.50000 3.880000 3.370000 14.55000 5.000000 6.000000</div><div class='input'><span class='fu'><a href='fvar, fsd.html'>fsd</a></span><span class='op'>(</span><span class='fu'><a href='fselect, get_vars, add_vars.html'>gv</a></span><span class='op'>(</span><span class='va'>mtcars</span>, <span class='op'>-</span><span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span><span class='op'>(</span><span class='fl'>2</span>,<span class='fl'>8</span><span class='op'>:</span><span class='fl'>9</span><span class='op'>)</span><span class='op'>)</span>, <span class='va'>g</span><span class='op'>)</span>
 </div><div class='output co'>#&gt;             mpg      disp       hp      drat        wt       qsec      gear
 #&gt; 4.0.1        NA        NA       NA        NA        NA         NA        NA
 #&gt; 4.1.0 1.4525839 13.969371 19.65536 0.1300000 0.4075230 1.67143651 0.5773503
@@ -578,9 +576,9 @@ The package is mainly coded in C++ and built with <em>Rcpp</em>, but also uses C
 <span class='kw'><a href='https://rdrr.io/r/base/library.html'>library</a></span><span class='op'>(</span><span class='va'><a href='https://github.com/joshuaulrich/microbenchmark/'>microbenchmark</a></span><span class='op'>)</span>
 <span class='fu'><a href='https://rdrr.io/pkg/microbenchmark/man/microbenchmark.html'>microbenchmark</a></span><span class='op'>(</span><span class='fu'><a href='fmean.html'>fmean</a></span><span class='op'>(</span><span class='va'>mtcars</span>, <span class='va'>f1</span><span class='op'>)</span>, <span class='fu'><a href='fmean.html'>fmean</a></span><span class='op'>(</span><span class='va'>mtcars</span>, <span class='va'>f2</span><span class='op'>)</span><span class='op'>)</span> <span class='co'># A minor difference, larger on larger data</span>
 </div><div class='output co'>#&gt; Unit: microseconds
-#&gt;               expr    min      lq     mean median     uq     max neval cld
-#&gt;  fmean(mtcars, f1) 19.635 21.4200 25.30691 23.651 24.990 103.976   100   a
-#&gt;  fmean(mtcars, f2) 19.635 20.9735 24.13773 22.759 24.097  45.963   100   a</div><div class='input'>
+#&gt;               expr    min     lq     mean median     uq    max neval cld
+#&gt;  fmean(mtcars, f1) 18.296 19.189 20.14839 19.189 19.635 67.830   100   b
+#&gt;  fmean(mtcars, f2) 17.403 18.296 18.68020 18.297 18.743 27.221   100  a </div><div class='input'>
 <span class='fu'><a href='https://rdrr.io/r/base/with.html'>with</a></span><span class='op'>(</span><span class='va'>mtcars</span>, <span class='fu'><a href='qF, qG, finteraction.html'>finteraction</a></span><span class='op'>(</span><span class='va'>cyl</span>, <span class='va'>vs</span>, <span class='va'>am</span><span class='op'>)</span><span class='op'>)</span>  <span class='co'># Efficient interactions of vectors and/or factors</span>
 </div><div class='output co'>#&gt;  [1] 6.0.1 6.0.1 4.1.1 6.1.0 8.0.0 6.1.0 8.0.0 4.1.0 4.1.0 6.1.0 6.1.0 8.0.0
 #&gt; [13] 8.0.0 8.0.0 8.0.0 8.0.0 8.0.0 4.1.1 4.1.1 4.1.1 4.1.0 8.0.0 8.0.0 8.0.0
@@ -678,7 +676,7 @@ The package is mainly coded in C++ and built with <em>Rcpp</em>, but also uses C
 #&gt; 4         2
 #&gt; 6         6
 #&gt; 8         8</div><div class='input'><span class='co'># For efficient (grouped) replacing and sweeping out computed statistics, use TRA()</span>
-<span class='va'>sds</span> <span class='op'>&lt;-</span> <span class='fu'><a href='fvar_fsd.html'>fsd</a></span><span class='op'>(</span><span class='va'>mtcars</span><span class='op'>)</span>
+<span class='va'>sds</span> <span class='op'>&lt;-</span> <span class='fu'><a href='fvar, fsd.html'>fsd</a></span><span class='op'>(</span><span class='va'>mtcars</span><span class='op'>)</span>
 <span class='fu'><a href='https://rdrr.io/r/utils/head.html'>head</a></span><span class='op'>(</span><span class='fu'><a href='TRA.html'>TRA</a></span><span class='op'>(</span><span class='va'>mtcars</span>, <span class='va'>sds</span>, <span class='st'>"/"</span><span class='op'>)</span><span class='op'>)</span>     <span class='co'># Simple scaling (if sd's not needed, use fsd(mtcars, TRA = "/"))</span>
 </div><div class='output co'>#&gt;                        mpg     cyl      disp       hp     drat       wt
 #&gt; Mazda RX4         3.484351 3.35961 1.2909608 1.604367 7.294100 2.677684
@@ -696,13 +694,13 @@ The package is mainly coded in C++ and built with <em>Rcpp</em>, but also uses C
 #&gt; Valiant           11.315413 1.984063 0.000000 4.066120 0.6191184</div><div class='input'> 
 <span class='fu'><a href='https://rdrr.io/pkg/microbenchmark/man/microbenchmark.html'>microbenchmark</a></span><span class='op'>(</span><span class='fu'><a href='TRA.html'>TRA</a></span><span class='op'>(</span><span class='va'>mtcars</span>, <span class='va'>sds</span>, <span class='st'>"/"</span><span class='op'>)</span>, <span class='fu'><a href='https://rdrr.io/r/base/sweep.html'>sweep</a></span><span class='op'>(</span><span class='va'>mtcars</span>, <span class='fl'>2</span>, <span class='va'>sds</span>, <span class='st'>"/"</span><span class='op'>)</span><span class='op'>)</span> <span class='co'># A remarkable performance gain..</span>
 </div><div class='output co'>#&gt; Unit: microseconds
-#&gt;                        expr      min       lq       mean    median        uq
-#&gt;       TRA(mtcars, sds, "/")   11.602   15.172   25.71748   24.3205   34.3615
-#&gt;  sweep(mtcars, 2, sds, "/") 1127.220 1187.018 1309.09284 1266.2260 1399.2080
+#&gt;                        expr      min       lq       mean   median       uq
+#&gt;       TRA(mtcars, sds, "/")   13.387   16.512   23.52194   19.858   29.006
+#&gt;  sweep(mtcars, 2, sds, "/") 1075.012 1089.068 1151.69907 1102.009 1222.050
 #&gt;       max neval cld
-#&gt;    95.944   100  a 
-#&gt;  1965.272   100   b</div><div class='input'>
-<span class='va'>sds</span> <span class='op'>&lt;-</span> <span class='fu'><a href='fvar_fsd.html'>fsd</a></span><span class='op'>(</span><span class='va'>mtcars</span>, <span class='va'>f2</span><span class='op'>)</span>
+#&gt;    51.319   100  a 
+#&gt;  1427.101   100   b</div><div class='input'>
+<span class='va'>sds</span> <span class='op'>&lt;-</span> <span class='fu'><a href='fvar, fsd.html'>fsd</a></span><span class='op'>(</span><span class='va'>mtcars</span>, <span class='va'>f2</span><span class='op'>)</span>
 <span class='fu'><a href='https://rdrr.io/r/utils/head.html'>head</a></span><span class='op'>(</span><span class='fu'><a href='TRA.html'>TRA</a></span><span class='op'>(</span><span class='va'>mtcars</span>, <span class='va'>sds</span>, <span class='st'>"/"</span>, <span class='va'>f2</span><span class='op'>)</span><span class='op'>)</span> <span class='co'># Groupd scaling (if sd's not needed: fsd(mtcars, f2, TRA = "/"))</span>
 </div><div class='output co'>#&gt;                         mpg cyl     disp       hp      drat       wt      qsec
 #&gt; Mazda RX4         14.447218 Inf 3.849628 4.534121  8.192327 7.352414  9.643407
@@ -792,10 +790,12 @@ The package is mainly coded in C++ and built with <em>Rcpp</em>, but also uses C
 #&gt; 4:    Hornet 4 Drive 21.4   6  258 110 3.08 3.215 19.44  1  0    3    1
 #&gt; 5: Hornet Sportabout 18.7   8  360 175 3.15 3.440 17.02  0  0    3    2
 #&gt; 6:           Valiant 18.1   6  225 105 2.76 3.460 20.22  1  0    3    1</div><div class='input'>
- 
 <span class='co'>## Now let's get some real data and see how we can use this power for data manipulation</span>
 <span class='kw'><a href='https://rdrr.io/r/base/library.html'>library</a></span><span class='op'>(</span><span class='va'><a href='https://magrittr.tidyverse.org'>magrittr</a></span><span class='op'>)</span>
-<span class='fu'><a href='https://rdrr.io/r/utils/head.html'>head</a></span><span class='op'>(</span><span class='va'>wlddev</span><span class='op'>)</span> <span class='co'># World Bank World Development Data: 216 countries, 61 years, 5 series (columns 9-13)</span>
+</div><div class='output co'>#&gt; <span class='message'></span>
+#&gt; <span class='message'>Attaching package: ‘magrittr’</span></div><div class='output co'>#&gt; <span class='message'>The following objects are masked from ‘package:testthat’:</span>
+#&gt; <span class='message'></span>
+#&gt; <span class='message'>    equals, is_less_than, not</span></div><div class='input'><span class='fu'><a href='https://rdrr.io/r/utils/head.html'>head</a></span><span class='op'>(</span><span class='va'>wlddev</span><span class='op'>)</span> <span class='co'># World Bank World Development Data: 216 countries, 61 years, 5 series (columns 9-13)</span>
 </div><div class='output co'>#&gt;       country iso3c       date year decade     region     income  OECD PCGDP
 #&gt; 1 Afghanistan   AFG 1961-01-01 1960   1960 South Asia Low income FALSE    NA
 #&gt; 2 Afghanistan   AFG 1962-01-01 1961   1960 South Asia Low income FALSE    NA
@@ -811,7 +811,7 @@ The package is mainly coded in C++ and built with <em>Rcpp</em>, but also uses C
 #&gt; 5 34.463   NA 295920013 9744781
 #&gt; 6 34.948   NA 341839996 9956320</div><div class='input'>
 <span class='co'># Starting with some discriptive tools...</span>
-<span class='fu'><a href='small-helper.html'>namlab</a></span><span class='op'>(</span><span class='va'>wlddev</span>, class <span class='op'>=</span> <span class='cn'>TRUE</span><span class='op'>)</span>           <span class='co'># Show variable names, labels and classes</span>
+<span class='fu'><a href='small-helpers.html'>namlab</a></span><span class='op'>(</span><span class='va'>wlddev</span>, class <span class='op'>=</span> <span class='cn'>TRUE</span><span class='op'>)</span>           <span class='co'># Show variable names, labels and classes</span>
 </div><div class='output co'>#&gt;    Variable     Class
 #&gt; 1   country character
 #&gt; 2     iso3c    factor
@@ -843,7 +843,7 @@ The package is mainly coded in C++ and built with <em>Rcpp</em>, but also uses C
 </div><div class='output co'>#&gt; country   iso3c    date    year  decade  region  income    OECD   PCGDP  LIFEEX 
 #&gt;   13176   13176   13176   13176   13176   13176   13176   13176    9470   11670 
 #&gt;    GINI     ODA     POP 
-#&gt;    1744    8608   12919 </div><div class='input'><span class='fu'><a href='pwcor_pwcov_pwnobs.html'>pwnobs</a></span><span class='op'>(</span><span class='va'>wlddev</span><span class='op'>)</span>                         <span class='co'># Pairwise observation count</span>
+#&gt;    1744    8608   12919 </div><div class='input'><span class='fu'><a href='pwcor, pwcov, pwnobs.html'>pwnobs</a></span><span class='op'>(</span><span class='va'>wlddev</span><span class='op'>)</span>                         <span class='co'># Pairwise observation count</span>
 </div><div class='output co'>#&gt;         country iso3c  date  year decade region income  OECD PCGDP LIFEEX GINI
 #&gt; country   13176 13176 13176 13176  13176  13176  13176 13176  9470  11670 1744
 #&gt; iso3c     13176 13176 13176 13176  13176  13176  13176 13176  9470  11670 1744
@@ -1030,22 +1030,22 @@ The package is mainly coded in C++ and built with <em>Rcpp</em>, but also uses C
 #&gt; ODA (numeric): Net official development assistance and official aid received (constant 2018 US$)
 #&gt; Stats: 
 #&gt;      N  Ndist        Mean          SD          Min             Max  Skew
-#&gt;   8608   7832  454,720131  868,712654  -997,679993  2.56715605e+10  6.98
+#&gt;   8608   7832  454'720131  868'712654  -997'679993  2.56715605e+10  6.98
 #&gt;     Kurt
 #&gt;   114.89
 #&gt; Quant: 
 #&gt;             1%           5%          25%         50%         75%
-#&gt;   -12,593999.7  1,363500.01  44,887499.8  165,970001  495,042503
+#&gt;   -12'593999.7  1'363500.01  44'887499.8  165'970001  495'042503
 #&gt;              95%             99%
 #&gt;   1.93281696e+09  3.73380782e+09
 #&gt; --------------------------------------------------------------------------------
 #&gt; POP (numeric): Population, total
 #&gt; Stats: 
 #&gt;       N  Ndist         Mean          SD   Min             Max  Skew    Kurt
-#&gt;   12919  12877  24,245971.6  102,120674  2833  1.39771500e+09  9.75  108.91
+#&gt;   12919  12877  24'245971.6  102'120674  2833  1.39771500e+09  9.75  108.91
 #&gt; Quant: 
 #&gt;        1%       5%     25%       50%        75%          95%         99%
-#&gt;   8698.84  31083.3  443791  4,072517  12,816178  81,177252.5  308,862641
+#&gt;   8698.84  31083.3  443791  4'072517  12'816178  81'177252.5  308'862641
 #&gt; --------------------------------------------------------------------------------</div><div class='input'><span class='fu'><a href='varying.html'>varying</a></span><span class='op'>(</span><span class='va'>wlddev</span>, <span class='op'>~</span> <span class='va'>country</span><span class='op'>)</span>             <span class='co'># Show which variables vary within countries</span>
 </div><div class='output co'>#&gt;  iso3c   date   year decade region income   OECD  PCGDP LIFEEX   GINI    ODA 
 #&gt;  FALSE   TRUE   TRUE   TRUE  FALSE  FALSE  FALSE   TRUE   TRUE   TRUE   TRUE 
@@ -1076,9 +1076,9 @@ The package is mainly coded in C++ and built with <em>Rcpp</em>, but also uses C
 #&gt; , , ODA: Net official development assistance and official aid received (constant 2018 US$)
 #&gt; 
 #&gt;              N/T        Mean          SD              Min             Max
-#&gt; Overall     8608  454,720131  868,712654      -997,679993  2.56715605e+10
-#&gt; Between      178  439,168412  569,049959       468717.916  3.62337432e+09
-#&gt; Within   48.3596  454,720131  650,709624  -2.44379420e+09  2.45610972e+10
+#&gt; Overall     8608  454'720131  868'712654      -997'679993  2.56715605e+10
+#&gt; Between      178  439'168412  569'049959       468717.916  3.62337432e+09
+#&gt; Within   48.3596  454'720131  650'709624  -2.44379420e+09  2.45610972e+10
 #&gt; </div><div class='input'><span class='fu'><a href='qsu.html'>qsu</a></span><span class='op'>(</span><span class='va'>wlddev</span>, <span class='op'>~</span> <span class='va'>region</span>, <span class='op'>~</span> <span class='va'>country</span>,       <span class='co'># Do all of that by region and also compute higher moments</span>
     cols <span class='op'>=</span> <span class='fl'>9</span><span class='op'>:</span><span class='fl'>12</span>, higher <span class='op'>=</span> <span class='cn'>TRUE</span><span class='op'>)</span>        <span class='co'># -&gt; returns a 4D array</span>
 </div><div class='output co'>#&gt; , , Overall, PCGDP
@@ -1247,36 +1247,36 @@ The package is mainly coded in C++ and built with <em>Rcpp</em>, but also uses C
 #&gt; , , Overall, ODA
 #&gt; 
 #&gt;                              N/T            Mean              SD           Min
-#&gt; East Asia &amp; Pacific         1537      352,017964      622,847624   -997,679993
-#&gt; Europe &amp; Central Asia        787      402,455286      568,237036   -322,070007
-#&gt; Latin America &amp; Caribbean   1972      172,880081      260,781049   -444,040009
-#&gt; Middle East &amp; North Africa  1105      732,380009  1.52108993e+09   -141,789993
-#&gt; North America                 39      468717.916     10,653560.8  -15,869999.9
-#&gt; South Asia                   466  1.27049955e+09  1.61492889e+09   -247,369995
-#&gt; Sub-Saharan Africa          2702      486,371750      656,336230  -18,409999.8
+#&gt; East Asia &amp; Pacific         1537      352'017964      622'847624   -997'679993
+#&gt; Europe &amp; Central Asia        787      402'455286      568'237036   -322'070007
+#&gt; Latin America &amp; Caribbean   1972      172'880081      260'781049   -444'040009
+#&gt; Middle East &amp; North Africa  1105      732'380009  1.52108993e+09   -141'789993
+#&gt; North America                 39      468717.916     10'653560.8  -15'869999.9
+#&gt; South Asia                   466  1.27049955e+09  1.61492889e+09   -247'369995
+#&gt; Sub-Saharan Africa          2702      486'371750      656'336230  -18'409999.8
 #&gt;                                        Max    Skew     Kurt
 #&gt; East Asia &amp; Pacific         4.04487988e+09   2.722  11.5221
 #&gt; Europe &amp; Central Asia       4.34612988e+09  3.1305  15.2525
 #&gt; Latin America &amp; Caribbean   2.99568994e+09  3.3259  22.4569
 #&gt; Middle East &amp; North Africa  2.56715605e+10  6.6304  79.2238
-#&gt; North America                  61,509998.3  4.8602  29.3092
+#&gt; North America                  61'509998.3  4.8602  29.3092
 #&gt; South Asia                  8.75425977e+09  1.7923    6.501
 #&gt; Sub-Saharan Africa          1.18790801e+10  4.5456  48.8447
 #&gt; 
 #&gt; , , Between, ODA
 #&gt; 
 #&gt;                             N/T            Mean              SD          Min
-#&gt; East Asia &amp; Pacific          31      352,017964      457,183279  1,654615.38
-#&gt; Europe &amp; Central Asia        32      402,455286      438,074771  12,516000.1
-#&gt; Latin America &amp; Caribbean    37      172,880081      167,160838  2,225483.88
-#&gt; Middle East &amp; North Africa   21      732,380009      775,418887   3,112820.5
+#&gt; East Asia &amp; Pacific          31      352'017964      457'183279  1'654615.38
+#&gt; Europe &amp; Central Asia        32      402'455286      438'074771  12'516000.1
+#&gt; Latin America &amp; Caribbean    37      172'880081      167'160838  2'225483.88
+#&gt; Middle East &amp; North Africa   21      732'380009      775'418887   3'112820.5
 #&gt; North America                 1      468717.916               0   468717.916
-#&gt; South Asia                    8  1.27049955e+09  1.18347893e+09  27,152499.9
-#&gt; Sub-Saharan Africa           48      486,371750      397,995105  28,801206.9
+#&gt; South Asia                    8  1.27049955e+09  1.18347893e+09  27'152499.9
+#&gt; Sub-Saharan Africa           48      486'371750      397'995105  28'801206.9
 #&gt;                                        Max    Skew    Kurt
 #&gt; East Asia &amp; Pacific         1.63585532e+09  1.7771  5.1361
 #&gt; Europe &amp; Central Asia       2.05456932e+09  2.0449  7.2489
-#&gt; Latin America &amp; Caribbean       538,386665  0.8981  2.4954
+#&gt; Latin America &amp; Caribbean       538'386665  0.8981  2.4954
 #&gt; Middle East &amp; North Africa  2.86174883e+09  1.1363  3.6377
 #&gt; North America                   468717.916       -       -
 #&gt; South Asia                  3.62337432e+09  0.7229  2.4072
@@ -1285,21 +1285,21 @@ The package is mainly coded in C++ and built with <em>Rcpp</em>, but also uses C
 #&gt; , , Within, ODA
 #&gt; 
 #&gt;                                 N/T        Mean              SD
-#&gt; East Asia &amp; Pacific         49.5806  454,720131      422,992450
-#&gt; Europe &amp; Central Asia       24.5938  454,720131      361,916875
-#&gt; Latin America &amp; Caribbean   53.2973  454,720131      200,159960
-#&gt; Middle East &amp; North Africa   52.619  454,720131  1.30860235e+09
-#&gt; North America                    39  454,720131     10,653560.8
-#&gt; South Asia                    58.25  454,720131  1.09880524e+09
-#&gt; Sub-Saharan Africa          56.2917  454,720131      521,897637
+#&gt; East Asia &amp; Pacific         49.5806  454'720131      422'992450
+#&gt; Europe &amp; Central Asia       24.5938  454'720131      361'916875
+#&gt; Latin America &amp; Caribbean   53.2973  454'720131      200'159960
+#&gt; Middle East &amp; North Africa   52.619  454'720131  1.30860235e+09
+#&gt; North America                    39  454'720131     10'653560.8
+#&gt; South Asia                    58.25  454'720131  1.09880524e+09
+#&gt; Sub-Saharan Africa          56.2917  454'720131      521'897637
 #&gt;                                         Min             Max    Skew     Kurt
 #&gt; East Asia &amp; Pacific         -2.04042108e+09  3.59673152e+09  0.2908  14.4428
 #&gt; Europe &amp; Central Asia       -1.08796786e+09  3.30549004e+09  2.3283  18.6937
-#&gt; Latin America &amp; Caribbean       -527,706542  3.28976141e+09  3.7015  41.7506
+#&gt; Latin America &amp; Caribbean       -527'706542  3.28976141e+09  3.7015  41.7506
 #&gt; Middle East &amp; North Africa  -2.34610870e+09  2.45610972e+10  7.8663  117.987
-#&gt; North America                    438,381413      515,761411  4.8602  29.3092
+#&gt; North America                    438'381413      515'761411  4.8602  29.3092
 #&gt; South Asia                  -2.44379420e+09  5.58560558e+09  1.8418   9.4588
-#&gt; Sub-Saharan Africa              -952,168698  1.12814455e+10  5.2349  86.1042
+#&gt; Sub-Saharan Africa              -952'168698  1.12814455e+10  5.2349  86.1042
 #&gt; </div><div class='input'><span class='fu'><a href='qsu.html'>qsu</a></span><span class='op'>(</span><span class='va'>wlddev</span>, <span class='op'>~</span> <span class='va'>region</span>, <span class='op'>~</span> <span class='va'>country</span>, cols <span class='op'>=</span> <span class='fl'>9</span><span class='op'>:</span><span class='fl'>12</span>,
     higher <span class='op'>=</span> <span class='cn'>TRUE</span>, array <span class='op'>=</span> <span class='cn'>FALSE</span><span class='op'>)</span> <span class='op'>%&gt;%</span>                           <span class='co'># Return as a list of matrices..</span>
 <span class='fu'><a href='unlist2d.html'>unlist2d</a></span><span class='op'>(</span><span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span><span class='op'>(</span><span class='st'>"Variable"</span>,<span class='st'>"Trans"</span><span class='op'>)</span>, row.names <span class='op'>=</span> <span class='st'>"Region"</span><span class='op'>)</span> <span class='op'>%&gt;%</span> <span class='va'>head</span>  <span class='co'># and turn into a tidy data.frame</span>
@@ -1316,7 +1316,7 @@ The package is mainly coded in C++ and built with <em>Rcpp</em>, but also uses C
 #&gt; 3  1005.4085  88391.333 4.1701769 29.373869
 #&gt; 4   578.5996 116232.753 2.4177586  9.766883
 #&gt; 5 16405.9053 113236.091 0.9380056  2.968769
-#&gt; 6   265.9625   8476.564 2.7873830 10.340176</div><div class='input'><span class='fu'><a href='pwcor_pwcov_pwnobs.html'>pwcor</a></span><span class='op'>(</span><span class='fu'><a href='fselect, get_vars, add_vars.html'>num_vars</a></span><span class='op'>(</span><span class='va'>wlddev</span><span class='op'>)</span>, P <span class='op'>=</span> <span class='cn'>TRUE</span><span class='op'>)</span>                           <span class='co'># Pairwise correlations with p-value</span>
+#&gt; 6   265.9625   8476.564 2.7873830 10.340176</div><div class='input'><span class='fu'><a href='pwcor, pwcov, pwnobs.html'>pwcor</a></span><span class='op'>(</span><span class='fu'><a href='fselect, get_vars, add_vars.html'>num_vars</a></span><span class='op'>(</span><span class='va'>wlddev</span><span class='op'>)</span>, P <span class='op'>=</span> <span class='cn'>TRUE</span><span class='op'>)</span>                           <span class='co'># Pairwise correlations with p-value</span>
 </div><div class='output co'>#&gt;          year decade  PCGDP LIFEEX   GINI    ODA    POP
 #&gt; year      1     .99*   .16*   .47*  -.20*   .14*   .06*
 #&gt; decade   .99*    1     .15*   .46*  -.20*   .14*   .06*
@@ -1324,7 +1324,7 @@ The package is mainly coded in C++ and built with <em>Rcpp</em>, but also uses C
 #&gt; LIFEEX   .47*   .46*   .57*    1    -.35*  -.02    .03*
 #&gt; GINI    -.20*  -.20*  -.44*  -.35*    1    -.20*   .04 
 #&gt; ODA      .14*   .14*  -.16*  -.02   -.20*    1     .31*
-#&gt; POP      .06*   .06*  -.06*   .03*   .04    .31*    1  </div><div class='input'><span class='fu'><a href='pwcor_pwcov_pwnobs.html'>pwcor</a></span><span class='op'>(</span><span class='fu'><a href='fmean.html'>fmean</a></span><span class='op'>(</span><span class='fu'><a href='fselect, get_vars, add_vars.html'>num_vars</a></span><span class='op'>(</span><span class='va'>wlddev</span><span class='op'>)</span>, <span class='va'>wlddev</span><span class='op'>$</span><span class='va'>country</span><span class='op'>)</span>, P <span class='op'>=</span> <span class='cn'>TRUE</span><span class='op'>)</span>    <span class='co'># Correlating country means</span>
+#&gt; POP      .06*   .06*  -.06*   .03*   .04    .31*    1  </div><div class='input'><span class='fu'><a href='pwcor, pwcov, pwnobs.html'>pwcor</a></span><span class='op'>(</span><span class='fu'><a href='fmean.html'>fmean</a></span><span class='op'>(</span><span class='fu'><a href='fselect, get_vars, add_vars.html'>num_vars</a></span><span class='op'>(</span><span class='va'>wlddev</span><span class='op'>)</span>, <span class='va'>wlddev</span><span class='op'>$</span><span class='va'>country</span><span class='op'>)</span>, P <span class='op'>=</span> <span class='cn'>TRUE</span><span class='op'>)</span>    <span class='co'># Correlating country means</span>
 </div><div class='output co'>#&gt; <span class='warning'>Warning: the standard deviation is zero</span></div><div class='output co'>#&gt;           year  decade   PCGDP  LIFEEX    GINI     ODA     POP
 #&gt; year       NA      NA      NA      NA      NA      NA      NA 
 #&gt; decade     NA      NA      NA      NA      NA      NA      NA 
@@ -1332,7 +1332,7 @@ The package is mainly coded in C++ and built with <em>Rcpp</em>, but also uses C
 #&gt; LIFEEX     NA      NA     .60*     1     -.40*   -.21*   -.02 
 #&gt; GINI       NA      NA    -.42*   -.40*     1     -.19*   -.04 
 #&gt; ODA        NA      NA    -.25*   -.21*   -.19*     1      .50*
-#&gt; POP        NA      NA    -.07    -.02    -.04     .50*     1  </div><div class='input'><span class='fu'><a href='pwcor_pwcov_pwnobs.html'>pwcor</a></span><span class='op'>(</span><span class='fu'><a href='fbetween_fwithin.html'>fwithin</a></span><span class='op'>(</span><span class='fu'><a href='fselect, get_vars, add_vars.html'>num_vars</a></span><span class='op'>(</span><span class='va'>wlddev</span><span class='op'>)</span>, <span class='va'>wlddev</span><span class='op'>$</span><span class='va'>country</span><span class='op'>)</span>, P <span class='op'>=</span> <span class='cn'>TRUE</span><span class='op'>)</span>  <span class='co'># Within-country correlations</span>
+#&gt; POP        NA      NA    -.07    -.02    -.04     .50*     1  </div><div class='input'><span class='fu'><a href='pwcor, pwcov, pwnobs.html'>pwcor</a></span><span class='op'>(</span><span class='fu'><a href='fbetween, fwithin.html'>fwithin</a></span><span class='op'>(</span><span class='fu'><a href='fselect, get_vars, add_vars.html'>num_vars</a></span><span class='op'>(</span><span class='va'>wlddev</span><span class='op'>)</span>, <span class='va'>wlddev</span><span class='op'>$</span><span class='va'>country</span><span class='op'>)</span>, P <span class='op'>=</span> <span class='cn'>TRUE</span><span class='op'>)</span>  <span class='co'># Within-country correlations</span>
 </div><div class='output co'>#&gt;          year decade  PCGDP LIFEEX   GINI    ODA    POP
 #&gt; year      1     .99*   .44*   .84*  -.21*   .19*   .24*
 #&gt; decade   .99*    1     .44*   .83*  -.19*   .18*   .24*
@@ -1456,7 +1456,7 @@ The package is mainly coded in C++ and built with <em>Rcpp</em>, but also uses C
 #&gt; 5 -2.599531   NA -0.1827994 9744781      NA   499.1535
 #&gt; 6 -2.557271   NA -0.1299396 9956320      NA   529.0407</div><div class='input'><span class='fu'><a href='ftransform.html'>settransformv</a></span><span class='op'>(</span><span class='va'>wlddev</span>, <span class='fl'>9</span><span class='op'>:</span><span class='fl'>12</span>, <span class='va'>fscale</span>, apply <span class='op'>=</span> <span class='cn'>FALSE</span><span class='op'>)</span>     <span class='co'># Changing the data by reference</span>
 <span class='fu'><a href='ftransform.html'>ftransform</a></span><span class='op'>(</span><span class='va'>wlddev</span><span class='op'>)</span> <span class='op'>&lt;-</span> <span class='fu'><a href='fscale.html'>fscale</a></span><span class='op'>(</span><span class='fu'><a href='fselect, get_vars, add_vars.html'>gv</a></span><span class='op'>(</span><span class='va'>wlddev</span>, <span class='fl'>9</span><span class='op'>:</span><span class='fl'>12</span><span class='op'>)</span><span class='op'>)</span>         <span class='co'># Same thing (using replacement method)</span>
- 
+
 <span class='va'>wlddev</span> <span class='op'>%&lt;&gt;%</span> <span class='fu'><a href='ftransform.html'>ftransformv</a></span><span class='op'>(</span><span class='fl'>9</span><span class='op'>:</span><span class='fl'>12</span>, <span class='va'>fscale</span>, apply <span class='op'>=</span> <span class='cn'>FALSE</span><span class='op'>)</span> <span class='co'># Same thing, using magrittr</span>
 <span class='va'>wlddev</span> <span class='op'>%&gt;%</span> <span class='fu'><a href='ftransform.html'>ftransform</a></span><span class='op'>(</span><span class='fu'><a href='fselect, get_vars, add_vars.html'>gv</a></span><span class='op'>(</span><span class='va'>.</span>, <span class='fl'>9</span><span class='op'>:</span><span class='fl'>12</span><span class='op'>)</span> <span class='op'>%&gt;%</span>              <span class='co'># With compound pipes: Scaling and lagging</span>
                         <span class='va'>fscale</span> <span class='op'>%&gt;%</span> <span class='fu'><a href='flag.html'>flag</a></span><span class='op'>(</span><span class='fl'>0</span><span class='op'>:</span><span class='fl'>2</span>, <span class='va'>iso3c</span>, <span class='va'>year</span><span class='op'>)</span><span class='op'>)</span> <span class='op'>%&gt;%</span> <span class='va'>head</span>
@@ -1541,7 +1541,7 @@ The package is mainly coded in C++ and built with <em>Rcpp</em>, but also uses C
 #&gt; 3 -2.685969   NA -0.3935480 9351441      NA   317.3678
 #&gt; 4 -2.642402   NA -0.2497951 9543205      NA   453.8627
 #&gt; 5 -2.599531   NA -0.1827994 9744781      NA   499.1535
-#&gt; 6 -2.557271   NA -0.1299396 9956320      NA   529.0407</div><div class='input'> 
+#&gt; 6 -2.557271   NA -0.1299396 9956320      NA   529.0407</div><div class='input'>
 <span class='co'># Fast grouping</span>
 <span class='fu'><a href='GRP, fgroup_by.html'>fgroup_by</a></span><span class='op'>(</span><span class='va'>wlddev</span>, <span class='va'>Ctry</span>, <span class='va'>decade</span><span class='op'>)</span> <span class='op'>%&gt;%</span> <span class='va'>fgroup_vars</span> <span class='op'>%&gt;%</span> <span class='va'>head</span> <span class='co'># fgroup_by is faster than dplyr::group_by</span>
 </div><div class='output co'>#&gt;          Ctry decade
@@ -1554,7 +1554,7 @@ The package is mainly coded in C++ and built with <em>Rcpp</em>, but also uses C
 <span class='fu'><a href='https://rdrr.io/r/base/rm.html'>rm</a></span><span class='op'>(</span><span class='va'>wlddev</span><span class='op'>)</span>                                       <span class='co'># .. but only works with collapse functions</span>
 
 <span class='co'>## Now lets start putting things together</span>
- 
+
 <span class='va'>wlddev</span> <span class='op'>%&gt;%</span> <span class='fu'><a href='fsubset.html'>fsubset</a></span><span class='op'>(</span><span class='va'>year</span> <span class='op'>&gt;</span> <span class='fl'>1990</span>, <span class='va'>region</span>, <span class='va'>income</span>, <span class='va'>PCGDP</span><span class='op'>:</span><span class='va'>ODA</span><span class='op'>)</span> <span class='op'>%&gt;%</span>
   <span class='fu'><a href='GRP, fgroup_by.html'>fgroup_by</a></span><span class='op'>(</span><span class='va'>region</span>, <span class='va'>income</span><span class='op'>)</span> <span class='op'>%&gt;%</span> <span class='va'>fmean</span>            <span class='co'># Fast aggregation using the mean</span>
 </div><div class='output co'>#&gt;                        region              income      PCGDP   LIFEEX     GINI
@@ -1604,7 +1604,7 @@ The package is mainly coded in C++ and built with <em>Rcpp</em>, but also uses C
 #&gt; 20   23040371
 #&gt; 21  811282623
 #&gt; 22  679166286
-#&gt; 23  230775466</div><div class='input'>
+#&gt; 23  230775466</div><div class='input'><span class='co'># \donttest{</span>
 <span class='co'># Same thing using dplyr manipulation verbs</span>
 <span class='kw'><a href='https://rdrr.io/r/base/library.html'>library</a></span><span class='op'>(</span><span class='va'><a href='https://dplyr.tidyverse.org'>dplyr</a></span><span class='op'>)</span>
 <span class='va'>wlddev</span> <span class='op'>%&gt;%</span> <span class='fu'><a href='https://dplyr.tidyverse.org/reference/filter.html'>filter</a></span><span class='op'>(</span><span class='va'>year</span> <span class='op'>&gt;</span> <span class='fl'>1990</span><span class='op'>)</span> <span class='op'>%&gt;%</span> <span class='fu'><a href='https://dplyr.tidyverse.org/reference/select.html'>select</a></span><span class='op'>(</span><span class='va'>region</span>, <span class='va'>income</span>, <span class='va'>PCGDP</span><span class='op'>:</span><span class='va'>ODA</span><span class='op'>)</span> <span class='op'>%&gt;%</span>
@@ -1622,7 +1622,7 @@ The package is mainly coded in C++ and built with <em>Rcpp</em>, but also uses C
 #&gt; </span><span style='color: #BCBCBC;'> 8</span><span> Latin America &amp; Caribbean High income         </span><span style='text-decoration: underline;'>19</span><span>865.   75.6  48.4  31</span><span style='text-decoration: underline;'>307</span><span>379.
 #&gt; </span><span style='color: #BCBCBC;'> 9</span><span> Latin America &amp; Caribbean Low income           </span><span style='text-decoration: underline;'>1</span><span>190.   59.0  41.1 753</span><span style='text-decoration: underline;'>747</span><span>928.
 #&gt; </span><span style='color: #BCBCBC;'>10</span><span> Latin America &amp; Caribbean Lower middle income  </span><span style='text-decoration: underline;'>1</span><span>988.   69.3  50.6 559</span><span style='text-decoration: underline;'>540</span><span>257.
-#&gt; </span><span style='color: #949494;'># ... with 13 more rows</span><span></div><div class='input'>
+#&gt; </span><span style='color: #949494;'># ... with 13 more rows</span><span></div><div class='input'><span class='co'># }</span>
 <span class='va'>wlddev</span> <span class='op'>%&gt;%</span> <span class='fu'><a href='fsubset.html'>fsubset</a></span><span class='op'>(</span><span class='va'>year</span> <span class='op'>&gt;</span> <span class='fl'>1990</span>, <span class='va'>region</span>, <span class='va'>income</span>, <span class='va'>PCGDP</span><span class='op'>:</span><span class='va'>POP</span><span class='op'>)</span> <span class='op'>%&gt;%</span>
   <span class='fu'><a href='GRP, fgroup_by.html'>fgroup_by</a></span><span class='op'>(</span><span class='va'>region</span>, <span class='va'>income</span><span class='op'>)</span> <span class='op'>%&gt;%</span> <span class='fu'><a href='fmean.html'>fmean</a></span><span class='op'>(</span><span class='va'>POP</span><span class='op'>)</span>     <span class='co'># Weighted group means</span>
 </div><div class='output co'>#&gt;                        region              income     sum.POP      PCGDP
@@ -1674,7 +1674,7 @@ The package is mainly coded in C++ and built with <em>Rcpp</em>, but also uses C
 #&gt; 22 53.98607 43.29449 1476705465
 #&gt; 23 59.32147 61.32627  811029665</div><div class='input'>
 <span class='va'>wlddev</span> <span class='op'>%&gt;%</span> <span class='fu'><a href='fsubset.html'>fsubset</a></span><span class='op'>(</span><span class='va'>year</span> <span class='op'>&gt;</span> <span class='fl'>1990</span>, <span class='va'>region</span>, <span class='va'>income</span>, <span class='va'>PCGDP</span><span class='op'>:</span><span class='va'>POP</span><span class='op'>)</span> <span class='op'>%&gt;%</span>
-  <span class='fu'><a href='GRP, fgroup_by.html'>fgroup_by</a></span><span class='op'>(</span><span class='va'>region</span>, <span class='va'>income</span><span class='op'>)</span> <span class='op'>%&gt;%</span> <span class='fu'><a href='fvar_fsd.html'>fsd</a></span><span class='op'>(</span><span class='va'>POP</span><span class='op'>)</span>       <span class='co'># Weighted group standard deviations</span>
+  <span class='fu'><a href='GRP, fgroup_by.html'>fgroup_by</a></span><span class='op'>(</span><span class='va'>region</span>, <span class='va'>income</span><span class='op'>)</span> <span class='op'>%&gt;%</span> <span class='fu'><a href='fvar, fsd.html'>fsd</a></span><span class='op'>(</span><span class='va'>POP</span><span class='op'>)</span>       <span class='co'># Weighted group standard deviations</span>
 </div><div class='output co'>#&gt;                        region              income     sum.POP       PCGDP
 #&gt; 1         East Asia &amp; Pacific         High income  6165902760 11619.90339
 #&gt; 2         East Asia &amp; Pacific Lower middle income 13784998066  1074.84975
@@ -1723,7 +1723,7 @@ The package is mainly coded in C++ and built with <em>Rcpp</em>, but also uses C
 #&gt; 21 6.283442 6.065746 1230899009
 #&gt; 22 6.165921 6.055453 1711070951
 #&gt; 23 4.346604 4.087480  379928950</div><div class='input'>
-<span class='va'>wlddev</span> <span class='op'>%&gt;%</span> <span class='fu'><a href='small-helper.html'>na_omit</a></span><span class='op'>(</span>cols <span class='op'>=</span> <span class='st'>"POP"</span><span class='op'>)</span> <span class='op'>%&gt;%</span> <span class='fu'><a href='GRP, fgroup_by.html'>fgroup_by</a></span><span class='op'>(</span><span class='va'>region</span>, <span class='va'>income</span><span class='op'>)</span> <span class='op'>%&gt;%</span>
+<span class='va'>wlddev</span> <span class='op'>%&gt;%</span> <span class='fu'><a href='small-helpers.html'>na_omit</a></span><span class='op'>(</span>cols <span class='op'>=</span> <span class='st'>"POP"</span><span class='op'>)</span> <span class='op'>%&gt;%</span> <span class='fu'><a href='GRP, fgroup_by.html'>fgroup_by</a></span><span class='op'>(</span><span class='va'>region</span>, <span class='va'>income</span><span class='op'>)</span> <span class='op'>%&gt;%</span>
   <span class='fu'><a href='fselect, get_vars, add_vars.html'>fselect</a></span><span class='op'>(</span><span class='va'>PCGDP</span><span class='op'>:</span><span class='va'>POP</span><span class='op'>)</span> <span class='op'>%&gt;%</span> <span class='fu'><a href='fnth.html'>fnth</a></span><span class='op'>(</span><span class='fl'>0.75</span>, <span class='va'>POP</span><span class='op'>)</span>       <span class='co'># Weighted group third quartile</span>
 </div><div class='output co'>#&gt;                        region              income     sum.POP      PCGDP
 #&gt; 1         East Asia &amp; Pacific         High income 11407808149 42190.8049
@@ -1790,7 +1790,7 @@ The package is mainly coded in C++ and built with <em>Rcpp</em>, but also uses C
 #&gt; 4    NA -16.0145   NA  -23815002
 #&gt; 5    NA -15.5225   NA   34385010
 #&gt; 6    NA -15.0375   NA   80304993</div><div class='input'><span class='co'># Replacing data points by the weighted first quartile:</span>
-<span class='va'>wlddev</span> <span class='op'>%&gt;%</span> <span class='fu'><a href='small-helper.html'>na_omit</a></span><span class='op'>(</span>cols <span class='op'>=</span> <span class='st'>"POP"</span><span class='op'>)</span> <span class='op'>%&gt;%</span> <span class='fu'><a href='GRP, fgroup_by.html'>fgroup_by</a></span><span class='op'>(</span><span class='va'>country</span><span class='op'>)</span> <span class='op'>%&gt;%</span>
+<span class='va'>wlddev</span> <span class='op'>%&gt;%</span> <span class='fu'><a href='small-helpers.html'>na_omit</a></span><span class='op'>(</span>cols <span class='op'>=</span> <span class='st'>"POP"</span><span class='op'>)</span> <span class='op'>%&gt;%</span> <span class='fu'><a href='GRP, fgroup_by.html'>fgroup_by</a></span><span class='op'>(</span><span class='va'>country</span><span class='op'>)</span> <span class='op'>%&gt;%</span>
   <span class='fu'><a href='fselect, get_vars, add_vars.html'>fselect</a></span><span class='op'>(</span><span class='va'>country</span>, <span class='va'>year</span>, <span class='va'>PCGDP</span><span class='op'>:</span><span class='va'>POP</span><span class='op'>)</span> <span class='op'>%&gt;%</span>
   <span class='fu'><a href='ftransform.html'>ftransform</a></span><span class='op'>(</span><span class='fu'><a href='fselect, get_vars, add_vars.html'>fselect</a></span><span class='op'>(</span><span class='va'>.</span>, <span class='op'>-</span><span class='va'>country</span>, <span class='op'>-</span><span class='va'>year</span><span class='op'>)</span> <span class='op'>%&gt;%</span>
   <span class='fu'><a href='fnth.html'>fnth</a></span><span class='op'>(</span><span class='fl'>0.25</span>, <span class='va'>POP</span>, <span class='st'>"replace_fill"</span><span class='op'>)</span><span class='op'>)</span> <span class='op'>%&gt;%</span> <span class='va'>head</span>
@@ -1861,9 +1861,9 @@ The package is mainly coded in C++ and built with <em>Rcpp</em>, but also uses C
 <span class='va'>wlddev</span> <span class='op'>%&gt;%</span> <span class='fu'><a href='fsubset.html'>fsubset</a></span><span class='op'>(</span><span class='va'>year</span> <span class='op'>&gt;</span> <span class='fl'>1990</span>, <span class='va'>region</span>, <span class='va'>income</span>, <span class='va'>PCGDP</span><span class='op'>:</span><span class='va'>ODA</span><span class='op'>)</span> <span class='op'>%&gt;%</span>
   <span class='fu'><a href='GRP, fgroup_by.html'>fgroup_by</a></span><span class='op'>(</span><span class='va'>region</span>, <span class='va'>income</span><span class='op'>)</span> <span class='op'>%&gt;%</span> <span class='op'>{</span>
     <span class='fu'><a href='fselect, get_vars, add_vars.html'>add_vars</a></span><span class='op'>(</span><span class='fu'><a href='GRP, fgroup_by.html'>fgroup_vars</a></span><span class='op'>(</span><span class='va'>.</span>, <span class='st'>"unique"</span><span class='op'>)</span>,
-             <span class='fu'><a href='fmedian.html'>fmedian</a></span><span class='op'>(</span><span class='va'>.</span>, keep.group_vars <span class='op'>=</span> <span class='cn'>FALSE</span><span class='op'>)</span> <span class='op'>%&gt;%</span> <span class='fu'><a href='small-helper.html'>add_stub</a></span><span class='op'>(</span><span class='st'>"median_"</span><span class='op'>)</span>,
-             <span class='fu'><a href='fmean.html'>fmean</a></span><span class='op'>(</span><span class='va'>.</span>, keep.group_vars <span class='op'>=</span> <span class='cn'>FALSE</span><span class='op'>)</span> <span class='op'>%&gt;%</span> <span class='fu'><a href='small-helper.html'>add_stub</a></span><span class='op'>(</span><span class='st'>"mean_"</span><span class='op'>)</span>,
-             <span class='fu'><a href='fvar_fsd.html'>fsd</a></span><span class='op'>(</span><span class='va'>.</span>, keep.group_vars <span class='op'>=</span> <span class='cn'>FALSE</span><span class='op'>)</span> <span class='op'>%&gt;%</span> <span class='fu'><a href='small-helper.html'>add_stub</a></span><span class='op'>(</span><span class='st'>"sd_"</span><span class='op'>)</span><span class='op'>)</span>
+             <span class='fu'><a href='fmedian.html'>fmedian</a></span><span class='op'>(</span><span class='va'>.</span>, keep.group_vars <span class='op'>=</span> <span class='cn'>FALSE</span><span class='op'>)</span> <span class='op'>%&gt;%</span> <span class='fu'><a href='small-helpers.html'>add_stub</a></span><span class='op'>(</span><span class='st'>"median_"</span><span class='op'>)</span>,
+             <span class='fu'><a href='fmean.html'>fmean</a></span><span class='op'>(</span><span class='va'>.</span>, keep.group_vars <span class='op'>=</span> <span class='cn'>FALSE</span><span class='op'>)</span> <span class='op'>%&gt;%</span> <span class='fu'><a href='small-helpers.html'>add_stub</a></span><span class='op'>(</span><span class='st'>"mean_"</span><span class='op'>)</span>,
+             <span class='fu'><a href='fvar, fsd.html'>fsd</a></span><span class='op'>(</span><span class='va'>.</span>, keep.group_vars <span class='op'>=</span> <span class='cn'>FALSE</span><span class='op'>)</span> <span class='op'>%&gt;%</span> <span class='fu'><a href='small-helpers.html'>add_stub</a></span><span class='op'>(</span><span class='st'>"sd_"</span><span class='op'>)</span><span class='op'>)</span>
   <span class='op'>}</span> <span class='op'>%&gt;%</span> <span class='va'>head</span>
 </div><div class='output co'>#&gt;                  region              income median_PCGDP median_LIFEEX
 #&gt; 1   East Asia &amp; Pacific         High income   32573.8177      78.54024
@@ -1890,7 +1890,7 @@ The package is mainly coded in C++ and built with <em>Rcpp</em>, but also uses C
 <span class='va'>wlddev</span> <span class='op'>%&gt;%</span> <span class='fu'><a href='fselect, get_vars, add_vars.html'>fselect</a></span><span class='op'>(</span><span class='va'>country</span>, <span class='va'>year</span>, <span class='va'>PCGDP</span><span class='op'>:</span><span class='va'>ODA</span><span class='op'>)</span> <span class='op'>%&gt;%</span>
   <span class='fu'><a href='GRP, fgroup_by.html'>fgroup_by</a></span><span class='op'>(</span><span class='va'>country</span><span class='op'>)</span> <span class='op'>%&gt;%</span> <span class='op'>{</span>
     <span class='fu'><a href='fselect, get_vars, add_vars.html'>add_vars</a></span><span class='op'>(</span><span class='fu'><a href='fdiff.html'>fdiff</a></span><span class='op'>(</span><span class='va'>.</span>, <span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span><span class='op'>(</span><span class='fl'>1</span>,<span class='fl'>10</span><span class='op'>)</span>, <span class='fl'>1</span>, <span class='va'>year</span><span class='op'>)</span> <span class='op'>%&gt;%</span> <span class='fu'><a href='flag.html'>flag</a></span><span class='op'>(</span><span class='fl'>0</span><span class='op'>:</span><span class='fl'>2</span>, <span class='va'>year</span><span class='op'>)</span>,  <span class='co'># Sequence of lagged differences</span>
-             <span class='fu'><a href='ftransform.html'>ftransform</a></span><span class='op'>(</span><span class='va'>.</span>, <span class='fu'><a href='fselect, get_vars, add_vars.html'>fselect</a></span><span class='op'>(</span><span class='va'>.</span>, <span class='va'>PCGDP</span><span class='op'>:</span><span class='va'>ODA</span><span class='op'>)</span> <span class='op'>%&gt;%</span> <span class='va'>fwithin</span> <span class='op'>%&gt;%</span> <span class='fu'><a href='small-helper.html'>add_stub</a></span><span class='op'>(</span><span class='st'>"W."</span><span class='op'>)</span><span class='op'>)</span> <span class='op'>%&gt;%</span>
+             <span class='fu'><a href='ftransform.html'>ftransform</a></span><span class='op'>(</span><span class='va'>.</span>, <span class='fu'><a href='fselect, get_vars, add_vars.html'>fselect</a></span><span class='op'>(</span><span class='va'>.</span>, <span class='va'>PCGDP</span><span class='op'>:</span><span class='va'>ODA</span><span class='op'>)</span> <span class='op'>%&gt;%</span> <span class='va'>fwithin</span> <span class='op'>%&gt;%</span> <span class='fu'><a href='small-helpers.html'>add_stub</a></span><span class='op'>(</span><span class='st'>"W."</span><span class='op'>)</span><span class='op'>)</span> <span class='op'>%&gt;%</span>
                <span class='fu'><a href='flag.html'>flag</a></span><span class='op'>(</span><span class='fl'>0</span><span class='op'>:</span><span class='fl'>2</span>, <span class='va'>year</span>, keep.ids <span class='op'>=</span> <span class='cn'>FALSE</span><span class='op'>)</span><span class='op'>)</span>             <span class='co'># Sequence of lagged demeaned vars</span>
   <span class='op'>}</span> <span class='op'>%&gt;%</span> <span class='va'>head</span>
 </div><div class='output co'>#&gt;       country year D1.PCGDP L1.D1.PCGDP L2.D1.PCGDP L10D1.PCGDP L1.L10D1.PCGDP
@@ -1952,9 +1952,9 @@ The package is mainly coded in C++ and built with <em>Rcpp</em>, but also uses C
 <span class='co'># With ftransform, can also easily do one or more grouped mutations on the fly..</span>
 <span class='fu'><a href='ftransform.html'>settransform</a></span><span class='op'>(</span><span class='va'>wlddev</span>, median_ODA <span class='op'>=</span> <span class='fu'><a href='fmedian.html'>fmedian</a></span><span class='op'>(</span><span class='va'>ODA</span>, <span class='fu'><a href='https://rdrr.io/r/base/list.html'>list</a></span><span class='op'>(</span><span class='va'>region</span>, <span class='va'>income</span><span class='op'>)</span>, TRA <span class='op'>=</span> <span class='st'>"replace_fill"</span><span class='op'>)</span><span class='op'>)</span>
 
-<span class='fu'><a href='ftransform.html'>settransform</a></span><span class='op'>(</span><span class='va'>wlddev</span>, sd_ODA <span class='op'>=</span> <span class='fu'><a href='fvar_fsd.html'>fsd</a></span><span class='op'>(</span><span class='va'>ODA</span>, <span class='fu'><a href='https://rdrr.io/r/base/list.html'>list</a></span><span class='op'>(</span><span class='va'>region</span>, <span class='va'>income</span><span class='op'>)</span>, TRA <span class='op'>=</span> <span class='st'>"replace_fill"</span><span class='op'>)</span>,
+<span class='fu'><a href='ftransform.html'>settransform</a></span><span class='op'>(</span><span class='va'>wlddev</span>, sd_ODA <span class='op'>=</span> <span class='fu'><a href='fvar, fsd.html'>fsd</a></span><span class='op'>(</span><span class='va'>ODA</span>, <span class='fu'><a href='https://rdrr.io/r/base/list.html'>list</a></span><span class='op'>(</span><span class='va'>region</span>, <span class='va'>income</span><span class='op'>)</span>, TRA <span class='op'>=</span> <span class='st'>"replace_fill"</span><span class='op'>)</span>,
                      mean_GDP <span class='op'>=</span> <span class='fu'><a href='fmean.html'>fmean</a></span><span class='op'>(</span><span class='va'>PCGDP</span>, <span class='va'>country</span>, TRA <span class='op'>=</span> <span class='st'>"replace_fill"</span><span class='op'>)</span><span class='op'>)</span>
- 
+
 <span class='va'>wlddev</span> <span class='op'>%&lt;&gt;%</span> <span class='fu'><a href='ftransform.html'>ftransform</a></span><span class='op'>(</span><span class='fu'><a href='fmedian.html'>fmedian</a></span><span class='op'>(</span><span class='fu'><a href='https://rdrr.io/r/base/list.html'>list</a></span><span class='op'>(</span>median_ODA <span class='op'>=</span> <span class='va'>ODA</span>, median_GDP <span class='op'>=</span> <span class='va'>PCGDP</span><span class='op'>)</span>,
                                <span class='fu'><a href='https://rdrr.io/r/base/list.html'>list</a></span><span class='op'>(</span><span class='va'>region</span>, <span class='va'>income</span><span class='op'>)</span>, TRA <span class='op'>=</span> <span class='st'>"replace_fill"</span><span class='op'>)</span><span class='op'>)</span>
 
@@ -2068,7 +2068,7 @@ The package is mainly coded in C++ and built with <em>Rcpp</em>, but also uses C
 #&gt; 3          NA        NA      46.4176   2.161460       NA   72958531
 #&gt; 4          NA        NA      53.0097   1.695424       NA  160500141
 #&gt; 5    379.3730  53.66524      58.0881   1.565630       NA 2013110021
-#&gt; 6    567.4047  18.07999      63.0715   1.274644       NA 1090075663</div><div class='input'> 
+#&gt; 6    567.4047  18.07999      63.0715   1.274644       NA 1090075663</div><div class='input'>
 <span class='co'># For grouped data frames use collapg</span>
 <span class='va'>wlddev</span> <span class='op'>%&gt;%</span> <span class='fu'><a href='fsubset.html'>fsubset</a></span><span class='op'>(</span><span class='va'>year</span> <span class='op'>&gt;</span> <span class='fl'>1990</span>, <span class='va'>country</span>, <span class='va'>region</span>, <span class='va'>income</span>, <span class='va'>PCGDP</span><span class='op'>:</span><span class='va'>ODA</span><span class='op'>)</span> <span class='op'>%&gt;%</span>
   <span class='fu'><a href='GRP, fgroup_by.html'>fgroup_by</a></span><span class='op'>(</span><span class='va'>country</span><span class='op'>)</span> <span class='op'>%&gt;%</span> <span class='fu'><a href='collap.html'>collapg</a></span><span class='op'>(</span><span class='va'>fmean</span>, <span class='va'>ffirst</span><span class='op'>)</span> <span class='op'>%&gt;%</span>
@@ -2090,7 +2090,7 @@ The package is mainly coded in C++ and built with <em>Rcpp</em>, but also uses C
 #&gt; 6 51.59572 48.66667  412104483  TRUE FALSE</div><div class='input'>
 <span class='co'>## Additional flexibility for data transformation tasks is offerend by tidy transformation operators</span>
 <span class='co'># Within-transformation (centering on overall mean)</span>
-<span class='fu'><a href='https://rdrr.io/r/utils/head.html'>head</a></span><span class='op'>(</span><span class='fu'><a href='fbetween_fwithin.html'>W</a></span><span class='op'>(</span><span class='va'>wlddev</span>, <span class='op'>~</span> <span class='va'>country</span>, cols <span class='op'>=</span> <span class='fl'>9</span><span class='op'>:</span><span class='fl'>12</span>, mean <span class='op'>=</span> <span class='st'>"overall.mean"</span><span class='op'>)</span><span class='op'>)</span>
+<span class='fu'><a href='https://rdrr.io/r/utils/head.html'>head</a></span><span class='op'>(</span><span class='fu'><a href='fbetween, fwithin.html'>W</a></span><span class='op'>(</span><span class='va'>wlddev</span>, <span class='op'>~</span> <span class='va'>country</span>, cols <span class='op'>=</span> <span class='fl'>9</span><span class='op'>:</span><span class='fl'>12</span>, mean <span class='op'>=</span> <span class='st'>"overall.mean"</span><span class='op'>)</span><span class='op'>)</span>
 </div><div class='output co'>#&gt;       country W.PCGDP W.LIFEEX W.GINI      W.ODA
 #&gt; 1 Afghanistan      NA 47.54514     NA -916058371
 #&gt; 2 Afghanistan      NA 48.06114     NA -800748366
@@ -2099,7 +2099,7 @@ The package is mainly coded in C++ and built with <em>Rcpp</em>, but also uses C
 #&gt; 5 Afghanistan      NA 49.56214     NA -736908354
 #&gt; 6 Afghanistan      NA 50.04714     NA -690988371</div><div class='input'><span class='co'># \donttest{</span>
 <span class='co'># Partialling out country and year fixed effects</span>
-<span class='fu'><a href='https://rdrr.io/r/utils/head.html'>head</a></span><span class='op'>(</span><span class='fu'><a href='fhdbetween_fhdwithin.html'>HDW</a></span><span class='op'>(</span><span class='va'>wlddev</span>, <span class='va'>PCGDP</span> <span class='op'>+</span> <span class='va'>LIFEEX</span> <span class='op'>~</span> <span class='fu'><a href='qF, qG, finteraction.html'>qF</a></span><span class='op'>(</span><span class='va'>country</span><span class='op'>)</span> <span class='op'>+</span> <span class='fu'><a href='qF, qG, finteraction.html'>qF</a></span><span class='op'>(</span><span class='va'>year</span><span class='op'>)</span><span class='op'>)</span><span class='op'>)</span>
+<span class='fu'><a href='https://rdrr.io/r/utils/head.html'>head</a></span><span class='op'>(</span><span class='fu'><a href='fhdbetween, fhdwithin.html'>HDW</a></span><span class='op'>(</span><span class='va'>wlddev</span>, <span class='va'>PCGDP</span> <span class='op'>+</span> <span class='va'>LIFEEX</span> <span class='op'>~</span> <span class='fu'><a href='qF, qG, finteraction.html'>qF</a></span><span class='op'>(</span><span class='va'>country</span><span class='op'>)</span> <span class='op'>+</span> <span class='fu'><a href='qF, qG, finteraction.html'>qF</a></span><span class='op'>(</span><span class='va'>year</span><span class='op'>)</span><span class='op'>)</span><span class='op'>)</span>
 </div><div class='output co'>#&gt;    HDW.PCGDP HDW.LIFEEX
 #&gt; 43 1578.6211 -1.3980224
 #&gt; 44 1412.8849 -1.1838196
@@ -2107,7 +2107,7 @@ The package is mainly coded in C++ and built with <em>Rcpp</em>, but also uses C
 #&gt; 46  627.8605 -0.8296048
 #&gt; 47  168.0458 -0.6683027
 #&gt; 48 -234.9535 -0.4708428</div><div class='input'><span class='co'># Same, adding ODA as continuous regressor</span>
-<span class='fu'><a href='https://rdrr.io/r/utils/head.html'>head</a></span><span class='op'>(</span><span class='fu'><a href='fhdbetween_fhdwithin.html'>HDW</a></span><span class='op'>(</span><span class='va'>wlddev</span>, <span class='va'>PCGDP</span> <span class='op'>+</span> <span class='va'>LIFEEX</span> <span class='op'>~</span> <span class='fu'><a href='qF, qG, finteraction.html'>qF</a></span><span class='op'>(</span><span class='va'>country</span><span class='op'>)</span> <span class='op'>+</span> <span class='fu'><a href='qF, qG, finteraction.html'>qF</a></span><span class='op'>(</span><span class='va'>year</span><span class='op'>)</span> <span class='op'>+</span> <span class='va'>ODA</span><span class='op'>)</span><span class='op'>)</span>
+<span class='fu'><a href='https://rdrr.io/r/utils/head.html'>head</a></span><span class='op'>(</span><span class='fu'><a href='fhdbetween, fhdwithin.html'>HDW</a></span><span class='op'>(</span><span class='va'>wlddev</span>, <span class='va'>PCGDP</span> <span class='op'>+</span> <span class='va'>LIFEEX</span> <span class='op'>~</span> <span class='fu'><a href='qF, qG, finteraction.html'>qF</a></span><span class='op'>(</span><span class='va'>country</span><span class='op'>)</span> <span class='op'>+</span> <span class='fu'><a href='qF, qG, finteraction.html'>qF</a></span><span class='op'>(</span><span class='va'>year</span><span class='op'>)</span> <span class='op'>+</span> <span class='va'>ODA</span><span class='op'>)</span><span class='op'>)</span>
 </div><div class='output co'>#&gt;    HDW.PCGDP HDW.LIFEEX
 #&gt; 43 -324.3991 -1.1765307
 #&gt; 44 -439.5404 -0.9751559
@@ -2202,7 +2202,7 @@ The package is mainly coded in C++ and built with <em>Rcpp</em>, but also uses C
  
 <span class='co'># These operators can conveniently be used in regression formulas:</span>
 <span class='co'># Using a Mundlak (1978) procedure to estimate the effect of OECD on LIFEEX, controlling for PCGDP</span>
-<span class='fu'><a href='https://rdrr.io/r/stats/lm.html'>lm</a></span><span class='op'>(</span><span class='va'>LIFEEX</span> <span class='op'>~</span> <span class='fu'><a href='https://rdrr.io/r/base/Log.html'>log</a></span><span class='op'>(</span><span class='va'>PCGDP</span><span class='op'>)</span> <span class='op'>+</span> <span class='va'>OECD</span> <span class='op'>+</span> <span class='fu'><a href='fbetween_fwithin.html'>B</a></span><span class='op'>(</span><span class='fu'><a href='https://rdrr.io/r/base/Log.html'>log</a></span><span class='op'>(</span><span class='va'>PCGDP</span><span class='op'>)</span>, <span class='va'>country</span><span class='op'>)</span>,
+<span class='fu'><a href='https://rdrr.io/r/stats/lm.html'>lm</a></span><span class='op'>(</span><span class='va'>LIFEEX</span> <span class='op'>~</span> <span class='fu'><a href='https://rdrr.io/r/base/Log.html'>log</a></span><span class='op'>(</span><span class='va'>PCGDP</span><span class='op'>)</span> <span class='op'>+</span> <span class='va'>OECD</span> <span class='op'>+</span> <span class='fu'><a href='fbetween, fwithin.html'>B</a></span><span class='op'>(</span><span class='fu'><a href='https://rdrr.io/r/base/Log.html'>log</a></span><span class='op'>(</span><span class='va'>PCGDP</span><span class='op'>)</span>, <span class='va'>country</span><span class='op'>)</span>,
    <span class='va'>wlddev</span> <span class='op'>%&gt;%</span> <span class='fu'><a href='fselect, get_vars, add_vars.html'>fselect</a></span><span class='op'>(</span><span class='va'>country</span>, <span class='va'>OECD</span>, <span class='va'>PCGDP</span>, <span class='va'>LIFEEX</span><span class='op'>)</span> <span class='op'>%&gt;%</span> <span class='va'>na_omit</span><span class='op'>)</span>
 </div><div class='output co'>#&gt; 
 #&gt; Call:
@@ -2217,7 +2217,7 @@ The package is mainly coded in C++ and built with <em>Rcpp</em>, but also uses C
 #&gt;               -2.65428  
 #&gt; </div><div class='input'>
 <span class='co'># Adding 10-year lagged life-expectancy to allow for some convergence effects (dynamic panel model)</span>
-<span class='fu'><a href='https://rdrr.io/r/stats/lm.html'>lm</a></span><span class='op'>(</span><span class='va'>LIFEEX</span> <span class='op'>~</span> <span class='fu'><a href='flag.html'>L</a></span><span class='op'>(</span><span class='va'>LIFEEX</span>, <span class='fl'>10</span>, <span class='va'>country</span><span class='op'>)</span> <span class='op'>+</span> <span class='fu'><a href='https://rdrr.io/r/base/Log.html'>log</a></span><span class='op'>(</span><span class='va'>PCGDP</span><span class='op'>)</span> <span class='op'>+</span> <span class='va'>OECD</span> <span class='op'>+</span> <span class='fu'><a href='fbetween_fwithin.html'>B</a></span><span class='op'>(</span><span class='fu'><a href='https://rdrr.io/r/base/Log.html'>log</a></span><span class='op'>(</span><span class='va'>PCGDP</span><span class='op'>)</span>, <span class='va'>country</span><span class='op'>)</span>,
+<span class='fu'><a href='https://rdrr.io/r/stats/lm.html'>lm</a></span><span class='op'>(</span><span class='va'>LIFEEX</span> <span class='op'>~</span> <span class='fu'><a href='flag.html'>L</a></span><span class='op'>(</span><span class='va'>LIFEEX</span>, <span class='fl'>10</span>, <span class='va'>country</span><span class='op'>)</span> <span class='op'>+</span> <span class='fu'><a href='https://rdrr.io/r/base/Log.html'>log</a></span><span class='op'>(</span><span class='va'>PCGDP</span><span class='op'>)</span> <span class='op'>+</span> <span class='va'>OECD</span> <span class='op'>+</span> <span class='fu'><a href='fbetween, fwithin.html'>B</a></span><span class='op'>(</span><span class='fu'><a href='https://rdrr.io/r/base/Log.html'>log</a></span><span class='op'>(</span><span class='va'>PCGDP</span><span class='op'>)</span>, <span class='va'>country</span><span class='op'>)</span>,
    <span class='va'>wlddev</span> <span class='op'>%&gt;%</span> <span class='fu'><a href='fselect, get_vars, add_vars.html'>fselect</a></span><span class='op'>(</span><span class='va'>country</span>, <span class='va'>OECD</span>, <span class='va'>PCGDP</span>, <span class='va'>LIFEEX</span><span class='op'>)</span> <span class='op'>%&gt;%</span> <span class='va'>na_omit</span><span class='op'>)</span>
 </div><div class='output co'>#&gt; <span class='message'>Panel-lag computed without timevar: Assuming ordered data</span></div><div class='output co'>#&gt; 
 #&gt; Call:
@@ -2233,34 +2233,37 @@ The package is mainly coded in C++ and built with <em>Rcpp</em>, but also uses C
 #&gt; </div><div class='input'>
 <span class='co'># Tranformation functions and operators also support plm panel data classes:</span>
 <span class='kw'><a href='https://rdrr.io/r/base/library.html'>library</a></span><span class='op'>(</span><span class='va'><a href='https://cran.r-project.org/package=plm'>plm</a></span><span class='op'>)</span>
-<span class='va'>pwlddev</span> <span class='op'>&lt;-</span> <span class='fu'><a href='https://rdrr.io/pkg/plm/man/pdata.frame.html'>pdata.frame</a></span><span class='op'>(</span><span class='va'>wlddev</span>, index <span class='op'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span><span class='op'>(</span><span class='st'>"country"</span>,<span class='st'>"year"</span><span class='op'>)</span><span class='op'>)</span>
-<span class='fu'><a href='https://rdrr.io/r/utils/head.html'>head</a></span><span class='op'>(</span><span class='fu'><a href='fbetween_fwithin.html'>W</a></span><span class='op'>(</span><span class='va'>pwlddev</span><span class='op'>$</span><span class='va'>PCGDP</span><span class='op'>)</span><span class='op'>)</span>                      <span class='co'># Country-demeaning</span>
+</div><div class='output co'>#&gt; <span class='message'></span>
+#&gt; <span class='message'>Attaching package: ‘plm’</span></div><div class='output co'>#&gt; <span class='message'>The following objects are masked from ‘package:dplyr’:</span>
+#&gt; <span class='message'></span>
+#&gt; <span class='message'>    between, lag, lead</span></div><div class='input'><span class='va'>pwlddev</span> <span class='op'>&lt;-</span> <span class='fu'><a href='https://rdrr.io/pkg/plm/man/pdata.frame.html'>pdata.frame</a></span><span class='op'>(</span><span class='va'>wlddev</span>, index <span class='op'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span><span class='op'>(</span><span class='st'>"country"</span>,<span class='st'>"year"</span><span class='op'>)</span><span class='op'>)</span>
+<span class='fu'><a href='https://rdrr.io/r/utils/head.html'>head</a></span><span class='op'>(</span><span class='fu'><a href='fbetween, fwithin.html'>W</a></span><span class='op'>(</span><span class='va'>pwlddev</span><span class='op'>$</span><span class='va'>PCGDP</span><span class='op'>)</span><span class='op'>)</span>                      <span class='co'># Country-demeaning</span>
 </div><div class='output co'>#&gt; Afghanistan-1960 Afghanistan-1961 Afghanistan-1962 Afghanistan-1963 
 #&gt;               NA               NA               NA               NA 
 #&gt; Afghanistan-1964 Afghanistan-1965 
-#&gt;               NA               NA </div><div class='input'><span class='fu'><a href='https://rdrr.io/r/utils/head.html'>head</a></span><span class='op'>(</span><span class='fu'><a href='fbetween_fwithin.html'>W</a></span><span class='op'>(</span><span class='va'>pwlddev</span>, cols <span class='op'>=</span> <span class='fl'>9</span><span class='op'>:</span><span class='fl'>12</span><span class='op'>)</span><span class='op'>)</span>
+#&gt;               NA               NA </div><div class='input'><span class='fu'><a href='https://rdrr.io/r/utils/head.html'>head</a></span><span class='op'>(</span><span class='fu'><a href='fbetween, fwithin.html'>W</a></span><span class='op'>(</span><span class='va'>pwlddev</span>, cols <span class='op'>=</span> <span class='fl'>9</span><span class='op'>:</span><span class='fl'>12</span><span class='op'>)</span><span class='op'>)</span>
 </div><div class='output co'>#&gt;                      country year W.PCGDP  W.LIFEEX W.GINI       W.ODA
 #&gt; Afghanistan-1960 Afghanistan 1960      NA -16.75117     NA -1370778502
 #&gt; Afghanistan-1961 Afghanistan 1961      NA -16.23517     NA -1255468497
 #&gt; Afghanistan-1962 Afghanistan 1962      NA -15.72617     NA -1374708502
 #&gt; Afghanistan-1963 Afghanistan 1963      NA -15.22617     NA -1249828497
 #&gt; Afghanistan-1964 Afghanistan 1964      NA -14.73417     NA -1191628485
-#&gt; Afghanistan-1965 Afghanistan 1965      NA -14.24917     NA -1145708502</div><div class='input'><span class='fu'><a href='https://rdrr.io/r/utils/head.html'>head</a></span><span class='op'>(</span><span class='fu'><a href='fbetween_fwithin.html'>W</a></span><span class='op'>(</span><span class='va'>pwlddev</span><span class='op'>$</span><span class='va'>PCGDP</span>, effect <span class='op'>=</span> <span class='fl'>2</span><span class='op'>)</span><span class='op'>)</span>          <span class='co'># Time-demeaning</span>
+#&gt; Afghanistan-1965 Afghanistan 1965      NA -14.24917     NA -1145708502</div><div class='input'><span class='fu'><a href='https://rdrr.io/r/utils/head.html'>head</a></span><span class='op'>(</span><span class='fu'><a href='fbetween, fwithin.html'>W</a></span><span class='op'>(</span><span class='va'>pwlddev</span><span class='op'>$</span><span class='va'>PCGDP</span>, effect <span class='op'>=</span> <span class='fl'>2</span><span class='op'>)</span><span class='op'>)</span>          <span class='co'># Time-demeaning</span>
 </div><div class='output co'>#&gt; Afghanistan-1960 Afghanistan-1961 Afghanistan-1962 Afghanistan-1963 
 #&gt;               NA               NA               NA               NA 
 #&gt; Afghanistan-1964 Afghanistan-1965 
-#&gt;               NA               NA </div><div class='input'><span class='fu'><a href='https://rdrr.io/r/utils/head.html'>head</a></span><span class='op'>(</span><span class='fu'><a href='fbetween_fwithin.html'>W</a></span><span class='op'>(</span><span class='va'>pwlddev</span>, effect <span class='op'>=</span> <span class='fl'>2</span>, cols <span class='op'>=</span> <span class='fl'>9</span><span class='op'>:</span><span class='fl'>12</span><span class='op'>)</span><span class='op'>)</span>
+#&gt;               NA               NA </div><div class='input'><span class='fu'><a href='https://rdrr.io/r/utils/head.html'>head</a></span><span class='op'>(</span><span class='fu'><a href='fbetween, fwithin.html'>W</a></span><span class='op'>(</span><span class='va'>pwlddev</span>, effect <span class='op'>=</span> <span class='fl'>2</span>, cols <span class='op'>=</span> <span class='fl'>9</span><span class='op'>:</span><span class='fl'>12</span><span class='op'>)</span><span class='op'>)</span>
 </div><div class='output co'>#&gt;                      country year W.PCGDP  W.LIFEEX W.GINI      W.ODA
 #&gt; Afghanistan-1960 Afghanistan 1960      NA -21.46606     NA -122241092
 #&gt; Afghanistan-1961 Afghanistan 1961      NA -21.51241     NA  -37552049
 #&gt; Afghanistan-1962 Afghanistan 1962      NA -21.38618     NA -183366702
 #&gt; Afghanistan-1963 Afghanistan 1963      NA -21.23172     NA  -54896550
 #&gt; Afghanistan-1964 Afghanistan 1964      NA -21.20502     NA   -9633789
-#&gt; Afghanistan-1965 Afghanistan 1965      NA -21.18163     NA    5438669</div><div class='input'><span class='fu'><a href='https://rdrr.io/r/utils/head.html'>head</a></span><span class='op'>(</span><span class='fu'><a href='fhdbetween_fhdwithin.html'>HDW</a></span><span class='op'>(</span><span class='va'>pwlddev</span><span class='op'>$</span><span class='va'>PCGDP</span><span class='op'>)</span><span class='op'>)</span>                    <span class='co'># Country- and time-demeaning</span>
+#&gt; Afghanistan-1965 Afghanistan 1965      NA -21.18163     NA    5438669</div><div class='input'><span class='fu'><a href='https://rdrr.io/r/utils/head.html'>head</a></span><span class='op'>(</span><span class='fu'><a href='fhdbetween, fhdwithin.html'>HDW</a></span><span class='op'>(</span><span class='va'>pwlddev</span><span class='op'>$</span><span class='va'>PCGDP</span><span class='op'>)</span><span class='op'>)</span>                    <span class='co'># Country- and time-demeaning</span>
 </div><div class='output co'>#&gt; Afghanistan-1960 Afghanistan-1961 Afghanistan-1962 Afghanistan-1963 
 #&gt;               NA               NA               NA               NA 
 #&gt; Afghanistan-1964 Afghanistan-1965 
-#&gt;               NA               NA </div><div class='input'><span class='fu'><a href='https://rdrr.io/r/utils/head.html'>head</a></span><span class='op'>(</span><span class='fu'><a href='fhdbetween_fhdwithin.html'>HDW</a></span><span class='op'>(</span><span class='va'>pwlddev</span>, cols <span class='op'>=</span> <span class='fl'>9</span><span class='op'>:</span><span class='fl'>12</span><span class='op'>)</span><span class='op'>)</span>
+#&gt;               NA               NA </div><div class='input'><span class='fu'><a href='https://rdrr.io/r/utils/head.html'>head</a></span><span class='op'>(</span><span class='fu'><a href='fhdbetween, fhdwithin.html'>HDW</a></span><span class='op'>(</span><span class='va'>pwlddev</span>, cols <span class='op'>=</span> <span class='fl'>9</span><span class='op'>:</span><span class='fl'>12</span><span class='op'>)</span><span class='op'>)</span>
 </div><div class='output co'>#&gt;                  HDW.PCGDP HDW.LIFEEX HDW.GINI     HDW.ODA
 #&gt; Afghanistan-1960        NA  -6.706423       NA -1093922188
 #&gt; Afghanistan-1961        NA  -6.688440       NA -1032355993

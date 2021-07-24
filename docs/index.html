@@ -60,7 +60,7 @@
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="index.html">collapse</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">1.6.4</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">1.6.5</span>
       </span>
     </div>
 
@@ -167,8 +167,8 @@ devtools::install_github("SebKrantz/collapse")
 <h2 class="hasAnchor">
 <a href="#example-usage" class="anchor"></a>Example Usage</h2>
 <p>This provides a simple set of examples introducing some important features of <em>collapse</em>. It should be easy to follow for readers familiar with R.</p>
-<details><p><summary><b><a style="cursor: pointer;">Click here to expand </a></b> </summary></p>
-<div class="sourceCode" id="cb2"><pre class="downlit">
+<details><summary><b><a style="cursor: pointer;">Click here to expand </a></b>
+</summary><div class="sourceCode" id="cb2"><pre class="downlit">
 <span class="kw"><a href="https://rdrr.io/r/base/library.html">library</a></span><span class="op">(</span><span class="va"><a href="https://sebkrantz.github.io/collapse/">collapse</a></span><span class="op">)</span>
 <span class="fu"><a href="https://rdrr.io/r/utils/data.html">data</a></span><span class="op">(</span><span class="st">"iris"</span><span class="op">)</span>            <span class="co"># iris dataset in base R</span>
 <span class="va">v</span> <span class="op">&lt;-</span> <span class="va">iris</span><span class="op">$</span><span class="va">Sepal.Length</span>  <span class="co"># Vector</span>
@@ -185,7 +185,7 @@ devtools::install_github("SebKrantz/collapse")
 <span class="fu"><a href="reference/fmin,%20fmax.html">fmax</a></span><span class="op">(</span><span class="va">d</span>, drop <span class="op">=</span> <span class="cn">FALSE</span><span class="op">)</span>            <span class="co"># Still a data.frame</span>
 
 <span class="co"># Fast grouped and/or weighted statistics</span>
-<span class="va">w</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/MathFun.html">abs</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/stats/Normal.html">rnorm</a></span><span class="op">(</span><span class="fu"><a href="reference/small-helper.html">fnrow</a></span><span class="op">(</span><span class="va">iris</span><span class="op">)</span><span class="op">)</span><span class="op">)</span>
+<span class="va">w</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/MathFun.html">abs</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/stats/Normal.html">rnorm</a></span><span class="op">(</span><span class="fu"><a href="reference/small-helpers.html">fnrow</a></span><span class="op">(</span><span class="va">iris</span><span class="op">)</span><span class="op">)</span><span class="op">)</span>
 <span class="fu"><a href="reference/fmedian.html">fmedian</a></span><span class="op">(</span><span class="va">d</span>, w <span class="op">=</span> <span class="va">w</span><span class="op">)</span>                 <span class="co"># Simple weighted statistics</span>
 <span class="fu"><a href="reference/fnth.html">fnth</a></span><span class="op">(</span><span class="va">d</span>, <span class="fl">0.75</span>, <span class="va">g</span><span class="op">)</span>                  <span class="co"># Grouped statistics (grouped third quartile)</span>
 <span class="fu"><a href="reference/fmedian.html">fmedian</a></span><span class="op">(</span><span class="va">d</span>, <span class="va">g</span>, <span class="va">w</span><span class="op">)</span>                  <span class="co"># Groupwise-weighted statistics</span>
@@ -333,7 +333,7 @@ devtools::install_github("SebKrantz/collapse")
 
 <span class="co">## Summary Statistics -------------------------------------------------------------------------------------------</span>
 
-<span class="va">irisNA</span> <span class="op">&lt;-</span> <span class="fu"><a href="reference/small-helper.html">na_insert</a></span><span class="op">(</span><span class="va">iris</span>, prop <span class="op">=</span> <span class="fl">0.15</span><span class="op">)</span>  <span class="co"># Randmonly set 15% missing</span>
+<span class="va">irisNA</span> <span class="op">&lt;-</span> <span class="fu"><a href="reference/small-helpers.html">na_insert</a></span><span class="op">(</span><span class="va">iris</span>, prop <span class="op">=</span> <span class="fl">0.15</span><span class="op">)</span>  <span class="co"># Randmonly set 15% missing</span>
 <span class="fu"><a href="reference/fnobs.html">fnobs</a></span><span class="op">(</span><span class="va">irisNA</span><span class="op">)</span>                           <span class="co"># Observation count</span>
 <span class="fu"><a href="reference/pwcor,%20pwcov,%20pwnobs.html">pwnobs</a></span><span class="op">(</span><span class="va">irisNA</span><span class="op">)</span>                          <span class="co"># Pairwise observation count</span>
 <span class="fu"><a href="reference/fnobs.html">fnobs</a></span><span class="op">(</span><span class="va">irisNA</span>, <span class="va">g</span><span class="op">)</span>                        <span class="co"># Grouped observation count</span>

@@ -72,7 +72,7 @@
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">collapse</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">1.6.4</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">1.6.5</span>
       </span>
     </div>
 
@@ -191,7 +191,7 @@
     <p>If <code>return.raw = FALSE</code>, a matrix of coefficients with the rows corresponding to the columns of <code>X</code>, otherwise the raw results from the various methods are returned.</p>
     <h2 class="hasAnchor" id="note"><a class="anchor" href="#note"></a>Note</h2>
 
-    <p>Method "qr" supports sparse matrices, so for an <code>X</code> matrix with many dummy variables consider method "qr" passing <code><a href='https://r-spatial.github.io/sf/reference/coerce-methods.html'>as(X, "dgCMatrix")</a></code> instead of just <code>X</code>.</p>
+    <p>Method "qr" supports sparse matrices, so for an <code>X</code> matrix with many dummy variables consider method "qr" passing <code>as(X, "dgCMatrix")</code> instead of just <code>X</code>.</p>
     <h2 class="hasAnchor" id="see-also"><a class="anchor" href="#see-also"></a>See also</h2>
 
     <div class='dont-index'><p><code><a href='fhdbetween, fhdwithin.html'>fhdwithin/HDW</a></code>, <code><a href='fFtest.html'>fFtest</a></code>, <a href='data-transformations.html'>Data Transformations</a>, <a href='index.html'>Collapse Overview</a></p></div>
@@ -204,14 +204,14 @@
 #&gt; (Intercept) 28.48401839
 #&gt; hp          -0.06834996
 #&gt; carb         0.33207257</div><div class='input'>
-<span class='va'>lmcoef</span> <span class='op'>&lt;-</span> <span class='fu'><a href='https://rdrr.io/pkg/vars/man/coefficients.html'>coef</a></span><span class='op'>(</span><span class='fu'><a href='https://rdrr.io/r/stats/lm.html'>lm</a></span><span class='op'>(</span><span class='va'>mpg</span> <span class='op'>~</span> <span class='va'>hp</span> <span class='op'>+</span> <span class='va'>carb</span>, weights <span class='op'>=</span> <span class='va'>wt</span>, <span class='va'>mtcars</span><span class='op'>)</span><span class='op'>)</span>
+<span class='va'>lmcoef</span> <span class='op'>&lt;-</span> <span class='fu'><a href='https://rdrr.io/r/stats/coef.html'>coef</a></span><span class='op'>(</span><span class='fu'><a href='https://rdrr.io/r/stats/lm.html'>lm</a></span><span class='op'>(</span><span class='va'>mpg</span> <span class='op'>~</span> <span class='va'>hp</span> <span class='op'>+</span> <span class='va'>carb</span>, weights <span class='op'>=</span> <span class='va'>wt</span>, <span class='va'>mtcars</span><span class='op'>)</span><span class='op'>)</span>
 <span class='va'>lmcoef</span>
 </div><div class='output co'>#&gt; (Intercept)          hp        carb 
 #&gt; 28.48401839 -0.06834996  0.33207257 </div><div class='input'>
-<span class='fu'><a href='https://rdrr.io/pkg/data.table/man/all.equal.data.table.html'>all.equal</a></span><span class='op'>(</span><span class='fu'><a href='https://rdrr.io/r/base/drop.html'>drop</a></span><span class='op'>(</span><span class='va'>coef</span><span class='op'>)</span>, <span class='va'>lmcoef</span><span class='op'>)</span>
+<span class='fu'><a href='https://rdrr.io/r/base/all.equal.html'>all.equal</a></span><span class='op'>(</span><span class='fu'><a href='https://rdrr.io/r/base/drop.html'>drop</a></span><span class='op'>(</span><span class='va'>coef</span><span class='op'>)</span>, <span class='va'>lmcoef</span><span class='op'>)</span>
 </div><div class='output co'>#&gt; [1] TRUE</div><div class='input'>
  
-<span class='fu'><a href='small-helper.html'>all_obj_equal</a></span><span class='op'>(</span><span class='fu'><a href='https://rdrr.io/r/base/lapply.html'>lapply</a></span><span class='op'>(</span><span class='fl'>1</span><span class='op'>:</span><span class='fl'>6</span>, <span class='kw'>function</span><span class='op'>(</span><span class='va'>i</span><span class='op'>)</span>
+<span class='fu'><a href='small-helpers.html'>all_obj_equal</a></span><span class='op'>(</span><span class='fu'><a href='https://rdrr.io/r/base/lapply.html'>lapply</a></span><span class='op'>(</span><span class='fl'>1</span><span class='op'>:</span><span class='fl'>6</span>, <span class='kw'>function</span><span class='op'>(</span><span class='va'>i</span><span class='op'>)</span>
   <span class='fu'>flm</span><span class='op'>(</span><span class='va'>mtcars</span><span class='op'>$</span><span class='va'>mpg</span>, <span class='fu'><a href='quick-conversion.html'>qM</a></span><span class='op'>(</span><span class='va'>mtcars</span><span class='op'>[</span><span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span><span class='op'>(</span><span class='st'>"hp"</span>,<span class='st'>"carb"</span><span class='op'>)</span><span class='op'>]</span><span class='op'>)</span>,
       <span class='va'>mtcars</span><span class='op'>$</span><span class='va'>wt</span>, add.icpt <span class='op'>=</span> <span class='cn'>TRUE</span>, method <span class='op'>=</span> <span class='va'>i</span><span class='op'>)</span><span class='op'>)</span><span class='op'>)</span>
 </div><div class='output co'>#&gt; [1] TRUE</div><div class='input'>
