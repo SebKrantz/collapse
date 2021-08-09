@@ -200,7 +200,7 @@ Fast Growth Rates for Time Series and Panel Data</h1>
     </tr>
     <tr>
       <th>g</th>
-      <td><p>a factor, <code><a href='GRP, fgroup_by.html'>GRP</a></code> object, atomic vector (internally converted to factor) or a list of vectors / factors (internally converted to a <code><a href='GRP, fgroup_by.html'>GRP</a></code> object) used to group <code>x</code>.</p></td>
+      <td><p>a factor, <code><a href='GRP.html'>GRP</a></code> object, atomic vector (internally converted to factor) or a list of vectors / factors (internally converted to a <code><a href='GRP.html'>GRP</a></code> object) used to group <code>x</code>.</p></td>
     </tr>
     <tr>
       <th>by</th>
@@ -422,7 +422,7 @@ Fast Growth Rates for Time Series and Panel Data</h1>
 #&gt; </div><div class='input'>                                                    <span class='co'># growth rates of the other indicators</span>
 
 <span class='co'>## World Development Panel Data</span>
-<span class='fu'><a href='https://rdrr.io/r/utils/head.html'>head</a></span><span class='op'>(</span><span class='fu'>fgrowth</span><span class='op'>(</span><span class='fu'><a href='fselect, get_vars, add_vars.html'>num_vars</a></span><span class='op'>(</span><span class='va'>wlddev</span><span class='op'>)</span>, <span class='fl'>1</span>, <span class='fl'>1</span>,                    <span class='co'># Computes growth rates of numeric variables</span>
+<span class='fu'><a href='https://rdrr.io/r/utils/head.html'>head</a></span><span class='op'>(</span><span class='fu'>fgrowth</span><span class='op'>(</span><span class='fu'><a href='select_replace_vars.html'>num_vars</a></span><span class='op'>(</span><span class='va'>wlddev</span><span class='op'>)</span>, <span class='fl'>1</span>, <span class='fl'>1</span>,                    <span class='co'># Computes growth rates of numeric variables</span>
              <span class='va'>wlddev</span><span class='op'>$</span><span class='va'>country</span>, <span class='va'>wlddev</span><span class='op'>$</span><span class='va'>year</span><span class='op'>)</span><span class='op'>)</span>              <span class='co'># fgrowth requires external inputs..</span>
 </div><div class='output co'>#&gt;         year decade PCGDP   LIFEEX GINI       ODA      POP
 #&gt; 1         NA     NA    NA       NA   NA        NA       NA

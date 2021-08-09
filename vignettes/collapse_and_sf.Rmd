@@ -1,7 +1,7 @@
 ---
 title: "*collapse* and *sf*"
 subtitle: "Fast Manipulation of Simple Features Data Frames"
-author: "Sebastian Krantz"
+author: "Sebastian Krantz, with a contribution by Grant McDermott"
 date: "`r Sys.Date()`"
 output: 
   rmarkdown::html_vignette:
@@ -15,12 +15,12 @@ vignette: >
 
 ```{css, echo=FALSE}
 pre {
-  max-height: 500px;
+  max-height: 900px;
   overflow-y: auto;
 }
 
 pre[class] {
-  max-height: 500px;
+  max-height: 900px;
 }
 ```
 
@@ -31,7 +31,7 @@ if(NMAC) library(sf)
 library(microbenchmark)
 library(collapse)
 knitr::opts_chunk$set(error = FALSE, message = FALSE, warning = FALSE, 
-                      comment = "#", tidy = FALSE, cache = TRUE, collapse = TRUE,
+                      comment = "#", tidy = FALSE, cache = FALSE, collapse = TRUE,
                       fig.width = 8, fig.height = 5, 
                       out.width = '100%')
 
@@ -129,7 +129,7 @@ collap(nc, ~ SID74, custom = list(fmedian = is.numeric,
                                   st_union = "geometry")) # or use is.list to fetch the geometry
 ```
 
-It needs to be noted here that typically most of the time in aggregation is consumed by `st_union` so that the speed of *collapse* does not really become visible on most datasets. *sf* data frames can also be grouped and then aggregated using `fsummarise`:
+*sf* data frames can also be grouped and then aggregated using `fsummarise`:
 
 ```{r, eval=NMAC}
 nc |> fgroup_by(SID74)
@@ -139,6 +139,28 @@ nc |> fgroup_by(SID74) |>
              Perimeter_Ag = fmedian(PERIMETER),
              geometry = st_union(geometry))
 ```
+
+It needs to be noted here that typically most of the time in aggregation is consumed by `st_union` so that the speed of *collapse* does not really become visible on most datasets. One exception is spatial panel data when aggregating over the time-dimension with identical geometries for each id over time. Such panels can quickly be aggregated using `ffirst` or `flast` to aggregate the geometry:
+
+```{r, eval=NMAC}
+# Creating a panel-dataset by simply duplicating nc for 2 different years
+pnc <- list(`2000` = nc, `2001` = nc) |> unlist2d("Year") |> copyMostAttrib(nc)
+pnc 
+
+# Aggregating by NAME, using the last value for all categorical data
+collap(pnc, ~ NAME, fmedian, catFUN = flast, cols = -1L)
+
+# Using fsummarise to aggregate just two variables and the geometry
+pnc_ag <- pnc |> fgroup_by(NAME) |>
+  fsummarise(AREA_Ag = fsum(AREA), 
+             Perimeter_Ag = fmedian(PERIMETER),
+             geometry = flast(geometry))
+
+# The geometry is still valid...
+plot(slt(pnc_ag, AREA_Ag))
+
+```
+
 
 ## Unique Values, Ordering, Splitting
 

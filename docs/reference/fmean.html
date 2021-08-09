@@ -155,7 +155,7 @@ The <code><a href='TRA.html'>TRA</a></code> argument can further be used to tran
     </tr>
     <tr>
       <th>g</th>
-      <td><p>a factor, <code><a href='GRP, fgroup_by.html'>GRP</a></code> object, atomic vector (internally converted to factor) or a list of vectors / factors (internally converted to a <code><a href='GRP, fgroup_by.html'>GRP</a></code> object) used to group <code>x</code>.</p></td>
+      <td><p>a factor, <code><a href='GRP.html'>GRP</a></code> object, atomic vector (internally converted to factor) or a list of vectors / factors (internally converted to a <code><a href='GRP.html'>GRP</a></code> object) used to group <code>x</code>.</p></td>
     </tr>
     <tr>
       <th>w</th>
@@ -220,7 +220,7 @@ The <code><a href='TRA.html'>TRA</a></code> argument can further be used to tran
 </div><div class='output co'>#&gt;        4        6        8 
 #&gt; 26.66364 19.74286 15.10000 </div><div class='input'><span class='fu'>fmean</span><span class='op'>(</span><span class='va'>mpg</span>, <span class='va'>mtcars</span><span class='op'>[</span><span class='fl'>8</span><span class='op'>:</span><span class='fl'>9</span><span class='op'>]</span><span class='op'>)</span>            <span class='co'># another grouped mean.</span>
 </div><div class='output co'>#&gt;      0.0      0.1      1.0      1.1 
-#&gt; 15.05000 19.75000 20.74286 28.37143 </div><div class='input'><span class='va'>g</span> <span class='op'>&lt;-</span> <span class='fu'><a href='GRP, fgroup_by.html'>GRP</a></span><span class='op'>(</span><span class='va'>mtcars</span><span class='op'>[</span><span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span><span class='op'>(</span><span class='fl'>2</span>,<span class='fl'>8</span><span class='op'>:</span><span class='fl'>9</span><span class='op'>)</span><span class='op'>]</span><span class='op'>)</span>
+#&gt; 15.05000 19.75000 20.74286 28.37143 </div><div class='input'><span class='va'>g</span> <span class='op'>&lt;-</span> <span class='fu'><a href='GRP.html'>GRP</a></span><span class='op'>(</span><span class='va'>mtcars</span><span class='op'>[</span><span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span><span class='op'>(</span><span class='fl'>2</span>,<span class='fl'>8</span><span class='op'>:</span><span class='fl'>9</span><span class='op'>)</span><span class='op'>]</span><span class='op'>)</span>
 <span class='fu'>fmean</span><span class='op'>(</span><span class='va'>mpg</span>, <span class='va'>g</span><span class='op'>)</span>                      <span class='co'># Pre-computing groups speeds up the computation</span>
 </div><div class='output co'>#&gt;    4.0.1    4.1.0    4.1.1    6.0.1    6.1.0    8.0.0    8.0.1 
 #&gt; 26.00000 22.90000 28.37143 20.56667 19.12500 15.05000 15.40000 </div><div class='input'><span class='fu'>fmean</span><span class='op'>(</span><span class='va'>mpg</span>, <span class='va'>g</span>, <span class='va'>mtcars</span><span class='op'>$</span><span class='va'>hp</span><span class='op'>)</span>           <span class='co'># Grouped weighted mean</span>
@@ -259,7 +259,7 @@ The <code><a href='TRA.html'>TRA</a></code> argument can further be used to tran
 #&gt; 6.0.1 4.666667
 #&gt; 6.1.0 2.500000
 #&gt; 8.0.0 3.083333
-#&gt; 8.0.1 6.000000</div><div class='input'><span class='fu'>fmean</span><span class='op'>(</span><span class='fu'><a href='GRP, fgroup_by.html'>fgroup_by</a></span><span class='op'>(</span><span class='va'>mtcars</span>, <span class='va'>cyl</span>, <span class='va'>vs</span>, <span class='va'>am</span><span class='op'>)</span><span class='op'>)</span>  <span class='co'># Another way of doing it..</span>
+#&gt; 8.0.1 6.000000</div><div class='input'><span class='fu'>fmean</span><span class='op'>(</span><span class='fu'><a href='GRP.html'>fgroup_by</a></span><span class='op'>(</span><span class='va'>mtcars</span>, <span class='va'>cyl</span>, <span class='va'>vs</span>, <span class='va'>am</span><span class='op'>)</span><span class='op'>)</span>  <span class='co'># Another way of doing it..</span>
 </div><div class='output co'>#&gt;   cyl vs am      mpg     disp        hp     drat       wt     qsec     gear
 #&gt; 1   4  0  1 26.00000 120.3000  91.00000 4.430000 2.140000 16.70000 5.000000
 #&gt; 2   4  1  0 22.90000 135.8667  84.66667 3.770000 2.935000 20.97000 3.666667
@@ -381,8 +381,8 @@ The <code><a href='TRA.html'>TRA</a></code> argument can further be used to tran
 #&gt; </span><span style='color: #BCBCBC;'> 9</span><span>     4     1     0    95  0.106 
 #&gt; </span><span style='color: #BCBCBC;'>10</span><span>     6     1     0   123  0.099</span><span style='text-decoration: underline;'>1</span><span>
 #&gt; </span><span style='color: #949494;'># ... with 22 more rows</span><span></div><div class='input'>
-<span class='va'>mtcars</span> |&gt; <span class='fu'><a href='GRP, fgroup_by.html'>fgroup_by</a></span><span class='op'>(</span><span class='va'>cyl</span>,<span class='va'>vs</span>,<span class='va'>am</span><span class='op'>)</span> |&gt;                <span class='co'># Equivalent and faster !</span>
-           <span class='fu'><a href='fselect, get_vars, add_vars.html'>fselect</a></span><span class='op'>(</span><span class='va'>mpg</span>,<span class='va'>hp</span><span class='op'>)</span> |&gt; <span class='fu'>fmean</span><span class='op'>(</span><span class='va'>hp</span>, <span class='st'>"-"</span><span class='op'>)</span>
+<span class='va'>mtcars</span> |&gt; <span class='fu'><a href='GRP.html'>fgroup_by</a></span><span class='op'>(</span><span class='va'>cyl</span>,<span class='va'>vs</span>,<span class='va'>am</span><span class='op'>)</span> |&gt;                <span class='co'># Equivalent and faster !</span>
+           <span class='fu'><a href='select_replace_vars.html'>fselect</a></span><span class='op'>(</span><span class='va'>mpg</span>,<span class='va'>hp</span><span class='op'>)</span> |&gt; <span class='fu'>fmean</span><span class='op'>(</span><span class='va'>hp</span>, <span class='st'>"-"</span><span class='op'>)</span>
 </div><div class='output co'>#&gt;                      hp         mpg
 #&gt; Mazda RX4           110  0.57594937
 #&gt; Mazda RX4 Wag       110  0.57594937

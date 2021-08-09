@@ -153,7 +153,7 @@
     </tr>
     <tr>
       <th>g</th>
-      <td><p>a factor, <code><a href='GRP, fgroup_by.html'>GRP</a></code> object, atomic vector (internally converted to factor) or a list of vectors / factors (internally converted to a <code><a href='GRP, fgroup_by.html'>GRP</a></code> object) used to group <code>x</code>.</p></td>
+      <td><p>a factor, <code><a href='GRP.html'>GRP</a></code> object, atomic vector (internally converted to factor) or a list of vectors / factors (internally converted to a <code><a href='GRP.html'>GRP</a></code> object) used to group <code>x</code>.</p></td>
     </tr>
     <tr>
       <th>w</th>
@@ -224,7 +224,7 @@
 </div><div class='output co'>#&gt;        4.0.1        4.1.0        4.1.1        6.0.1        6.1.0        8.0.0 
 #&gt; 2.600000e+01 1.196088e+04 1.352082e+10 8.687700e+03 1.323773e+05 1.103122e+14 
 #&gt;        8.0.1 
-#&gt; 2.370000e+02 </div><div class='input'><span class='va'>g</span> <span class='op'>&lt;-</span> <span class='fu'><a href='GRP, fgroup_by.html'>GRP</a></span><span class='op'>(</span><span class='va'>mtcars</span>, <span class='op'>~</span> <span class='va'>cyl</span> <span class='op'>+</span> <span class='va'>vs</span> <span class='op'>+</span> <span class='va'>am</span><span class='op'>)</span>  <span class='co'># Precomputing groups gives more speed !</span>
+#&gt; 2.370000e+02 </div><div class='input'><span class='va'>g</span> <span class='op'>&lt;-</span> <span class='fu'><a href='GRP.html'>GRP</a></span><span class='op'>(</span><span class='va'>mtcars</span>, <span class='op'>~</span> <span class='va'>cyl</span> <span class='op'>+</span> <span class='va'>vs</span> <span class='op'>+</span> <span class='va'>am</span><span class='op'>)</span>  <span class='co'># Precomputing groups gives more speed !</span>
 <span class='fu'>fprod</span><span class='op'>(</span><span class='va'>mpg</span>, <span class='va'>g</span><span class='op'>)</span>
 </div><div class='output co'>#&gt;        4.0.1        4.1.0        4.1.1        6.0.1        6.1.0        8.0.0 
 #&gt; 2.600000e+01 1.196088e+04 1.352082e+10 8.687700e+03 1.323773e+05 1.103122e+14 
@@ -353,7 +353,7 @@
 #&gt; </span><span style='color: #BCBCBC;'>5</span><span>     6     1     0 1.75</span><span style='color: #949494;'>e</span><span> 8 2.31</span><span style='color: #949494;'>e</span><span>13 2.85</span><span style='color: #949494;'>e</span><span>17 2.28</span><span style='color: #949494;'>e</span><span>10 2.30</span><span style='color: #949494;'>e</span><span>10 2.38</span><span style='color: #949494;'>e</span><span>13 2.52</span><span style='color: #949494;'>e</span><span>10
 #&gt; </span><span style='color: #BCBCBC;'>6</span><span>     8     0     0 2.45</span><span style='color: #949494;'>e</span><span>27 2.70</span><span style='color: #949494;'>e</span><span>41 8.60</span><span style='color: #949494;'>e</span><span>57 2.03</span><span style='color: #949494;'>e</span><span>33 4.68</span><span style='color: #949494;'>e</span><span>34 1.56</span><span style='color: #949494;'>e</span><span>42 1.30</span><span style='color: #949494;'>e</span><span>33
 #&gt; </span><span style='color: #BCBCBC;'>7</span><span>     8     0     1 8.84</span><span style='color: #949494;'>e</span><span> 4 2.10</span><span style='color: #949494;'>e</span><span> 7 9.34</span><span style='color: #949494;'>e</span><span> 9 1.32</span><span style='color: #949494;'>e</span><span> 6 1.00</span><span style='color: #949494;'>e</span><span> 6 1.87</span><span style='color: #949494;'>e</span><span> 7 2.21</span><span style='color: #949494;'>e</span><span> 6
-#&gt; </span><span style='color: #949494;'># ... with 1 more variable: carb &lt;dbl&gt;</span><span></div><div class='input'><span class='va'>mtcars</span> |&gt; <span class='fu'><a href='GRP, fgroup_by.html'>fgroup_by</a></span><span class='op'>(</span><span class='va'>cyl</span>,<span class='va'>vs</span>,<span class='va'>am</span><span class='op'>)</span> |&gt; <span class='fu'>fprod</span><span class='op'>(</span><span class='va'>hp</span><span class='op'>)</span>  <span class='co'># Equivalent and faster</span>
+#&gt; </span><span style='color: #949494;'># ... with 1 more variable: carb &lt;dbl&gt;</span><span></div><div class='input'><span class='va'>mtcars</span> |&gt; <span class='fu'><a href='GRP.html'>fgroup_by</a></span><span class='op'>(</span><span class='va'>cyl</span>,<span class='va'>vs</span>,<span class='va'>am</span><span class='op'>)</span> |&gt; <span class='fu'>fprod</span><span class='op'>(</span><span class='va'>hp</span><span class='op'>)</span>  <span class='co'># Equivalent and faster</span>
 </div><div class='output co'>#&gt;   cyl vs am      prod.hp          mpg         disp         drat           wt
 #&gt; 1   4  0  1 9.100000e+01 2.366000e+03 1.094730e+04 4.031300e+02 1.947400e+02
 #&gt; 2   4  1  0 5.713300e+05 6.833610e+09 1.417303e+12 3.057744e+07 1.415159e+07
@@ -369,7 +369,7 @@
 #&gt; 4 9.194847e+09 1.694000e+08 2.032800e+08
 #&gt; 5 2.375650e+13 2.516255e+10 2.795839e+09
 #&gt; 6 1.555290e+42 1.299522e+33 1.081713e+33
-#&gt; 7 1.872275e+07 2.211000e+06 2.830080e+06</div><div class='input'><span class='va'>mtcars</span> |&gt; <span class='fu'><a href='GRP, fgroup_by.html'>fgroup_by</a></span><span class='op'>(</span><span class='va'>cyl</span>,<span class='va'>vs</span>,<span class='va'>am</span><span class='op'>)</span> |&gt; <span class='fu'>fprod</span><span class='op'>(</span>TRA <span class='op'>=</span> <span class='st'>"/"</span><span class='op'>)</span>
+#&gt; 7 1.872275e+07 2.211000e+06 2.830080e+06</div><div class='input'><span class='va'>mtcars</span> |&gt; <span class='fu'><a href='GRP.html'>fgroup_by</a></span><span class='op'>(</span><span class='va'>cyl</span>,<span class='va'>vs</span>,<span class='va'>am</span><span class='op'>)</span> |&gt; <span class='fu'>fprod</span><span class='op'>(</span>TRA <span class='op'>=</span> <span class='st'>"/"</span><span class='op'>)</span>
 </div><div class='output co'>#&gt;                     cyl vs am          mpg         disp           hp
 #&gt; Mazda RX4             6  0  1 2.417211e-03 4.310345e-05 5.194805e-05
 #&gt; Mazda RX4 Wag         6  0  1 2.417211e-03 4.310345e-05 5.194805e-05
@@ -470,7 +470,7 @@
 #&gt; Maserati Bora       2.500000e-01
 #&gt; Volvo 142E          2.500000e-01
 #&gt; 
-#&gt; Grouped by:  cyl, vs, am  [7 | 5 (3.8)] </div><div class='input'><span class='va'>mtcars</span> |&gt; <span class='fu'><a href='GRP, fgroup_by.html'>fgroup_by</a></span><span class='op'>(</span><span class='va'>cyl</span>,<span class='va'>vs</span>,<span class='va'>am</span><span class='op'>)</span> |&gt; <span class='fu'><a href='fselect, get_vars, add_vars.html'>fselect</a></span><span class='op'>(</span><span class='va'>mpg</span><span class='op'>)</span> |&gt; <span class='fu'>fprod</span><span class='op'>(</span><span class='op'>)</span>
+#&gt; Grouped by:  cyl, vs, am  [7 | 5 (3.8)] </div><div class='input'><span class='va'>mtcars</span> |&gt; <span class='fu'><a href='GRP.html'>fgroup_by</a></span><span class='op'>(</span><span class='va'>cyl</span>,<span class='va'>vs</span>,<span class='va'>am</span><span class='op'>)</span> |&gt; <span class='fu'><a href='select_replace_vars.html'>fselect</a></span><span class='op'>(</span><span class='va'>mpg</span><span class='op'>)</span> |&gt; <span class='fu'>fprod</span><span class='op'>(</span><span class='op'>)</span>
 </div><div class='output co'>#&gt;   cyl vs am          mpg
 #&gt; 1   4  0  1 2.600000e+01
 #&gt; 2   4  1  0 1.196088e+04

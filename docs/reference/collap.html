@@ -159,7 +159,7 @@ collap works with collapse's Fast Statistical Functions, providing extremely fas
     </tr>
     <tr>
       <th>by</th>
-      <td><p>for <code>collap</code>: a one-or two sided formula, i.e. <code>~ group1</code> or <code>var1 + var2 ~ group1 + group2</code>, or a atomic vector, list of vectors or <code><a href='GRP, fgroup_by.html'>GRP</a></code> object used to group <code>X</code>. For <code>collapv</code>: names or indices of grouping columns, or a logical vector or selector function such as <code><a href='small-helpers.html'>is_categorical</a></code> selecting grouping columns.</p></td>
+      <td><p>for <code>collap</code>: a one-or two sided formula, i.e. <code>~ group1</code> or <code>var1 + var2 ~ group1 + group2</code>, or a atomic vector, list of vectors or <code><a href='GRP.html'>GRP</a></code> object used to group <code>X</code>. For <code>collapv</code>: names or indices of grouping columns, or a logical vector or selector function such as <code><a href='small-helpers.html'>is_categorical</a></code> selecting grouping columns.</p></td>
     </tr>
     <tr>
       <th>FUN</th>
@@ -199,7 +199,7 @@ collap works with collapse's Fast Statistical Functions, providing extremely fas
     </tr>
     <tr>
       <th>sort, decreasing, na.last</th>
-      <td><p>logical. Arguments passed to <code><a href='GRP, fgroup_by.html'>GRP.default</a></code> and affecting the row-order in the aggregated data frame.</p></td>
+      <td><p>logical. Arguments passed to <code><a href='GRP.html'>GRP.default</a></code> and affecting the row-order in the aggregated data frame.</p></td>
     </tr>
     <tr>
       <th>parallel</th>
@@ -345,7 +345,7 @@ collap works with collapse's Fast Statistical Functions, providing extremely fas
 #&gt; 1     4.938751    3.360079     1.439973   0.2210811     setosa
 #&gt; 2     5.918390    2.769699     4.236550   1.3255695 versicolor
 #&gt; 3     6.590353    3.012308     5.572586   2.0047445  virginica</div><div class='input'>
-<span class='va'>iris</span> |&gt; <span class='fu'><a href='GRP, fgroup_by.html'>fgroup_by</a></span><span class='op'>(</span><span class='va'>Species</span><span class='op'>)</span> |&gt; <span class='fu'>collapg</span><span class='op'>(</span><span class='op'>)</span>                        <span class='co'># dplyr style, but faster</span>
+<span class='va'>iris</span> |&gt; <span class='fu'><a href='GRP.html'>fgroup_by</a></span><span class='op'>(</span><span class='va'>Species</span><span class='op'>)</span> |&gt; <span class='fu'>collapg</span><span class='op'>(</span><span class='op'>)</span>                        <span class='co'># dplyr style, but faster</span>
 </div><div class='output co'>#&gt;      Species Sepal.Length Sepal.Width Petal.Length Petal.Width
 #&gt; 1     setosa        5.006       3.428        1.462       0.246
 #&gt; 2 versicolor        5.936       2.770        4.260       1.326
@@ -473,7 +473,7 @@ collap works with collapse's Fast Statistical Functions, providing extremely fas
 #&gt; 4       NA 530.097   NA  3172550003 169319030
 #&gt; 5 3034.984 580.881   NA 30540519608 248700217
 #&gt; 6 5674.047 630.715   NA 50238590332 337411950</div><div class='input'>
-<span class='va'>g</span> <span class='op'>&lt;-</span> <span class='fu'><a href='GRP, fgroup_by.html'>GRP</a></span><span class='op'>(</span><span class='va'>wlddev</span>, <span class='op'>~</span> <span class='va'>country</span> <span class='op'>+</span> <span class='va'>decade</span><span class='op'>)</span>                            <span class='co'># Precomputing the grouping</span>
+<span class='va'>g</span> <span class='op'>&lt;-</span> <span class='fu'><a href='GRP.html'>GRP</a></span><span class='op'>(</span><span class='va'>wlddev</span>, <span class='op'>~</span> <span class='va'>country</span> <span class='op'>+</span> <span class='va'>decade</span><span class='op'>)</span>                            <span class='co'># Precomputing the grouping</span>
 <span class='fu'><a href='https://rdrr.io/r/utils/head.html'>head</a></span><span class='op'>(</span><span class='fu'>collap</span><span class='op'>(</span><span class='va'>wlddev</span>, <span class='va'>g</span>, keep.by <span class='op'>=</span> <span class='cn'>FALSE</span><span class='op'>)</span><span class='op'>)</span>                        <span class='co'># This is slightly faster now</span>
 </div><div class='output co'>#&gt;       country iso3c       date   year decade     region     income  OECD
 #&gt; 1 Afghanistan   AFG 1961-01-01 1964.5   1960 South Asia Low income FALSE
@@ -794,7 +794,7 @@ collap works with collapse's Fast Statistical Functions, providing extremely fas
 #&gt; 5 3240143310  51.11423   1.476279   Low income      FALSE
 #&gt; 6 4942806183  16.37030   1.196725   Low income      FALSE</div><div class='input'><span class='co'># \donttest{</span>
 <span class='co'>## Piped Use --------------------------------------------------</span>
-<span class='va'>wlddev</span> |&gt; <span class='fu'><a href='GRP, fgroup_by.html'>fgroup_by</a></span><span class='op'>(</span><span class='va'>country</span>, <span class='va'>decade</span><span class='op'>)</span> |&gt; <span class='fu'>collapg</span><span class='op'>(</span><span class='op'>)</span> |&gt; <span class='fu'><a href='https://rdrr.io/r/utils/head.html'>head</a></span><span class='op'>(</span><span class='op'>)</span>
+<span class='va'>wlddev</span> |&gt; <span class='fu'><a href='GRP.html'>fgroup_by</a></span><span class='op'>(</span><span class='va'>country</span>, <span class='va'>decade</span><span class='op'>)</span> |&gt; <span class='fu'>collapg</span><span class='op'>(</span><span class='op'>)</span> |&gt; <span class='fu'><a href='https://rdrr.io/r/utils/head.html'>head</a></span><span class='op'>(</span><span class='op'>)</span>
 </div><div class='output co'>#&gt;       country decade iso3c       date   year     region     income  OECD
 #&gt; 1 Afghanistan   1960   AFG 1961-01-01 1964.5 South Asia Low income FALSE
 #&gt; 2 Afghanistan   1970   AFG 1971-01-01 1974.5 South Asia Low income FALSE
@@ -808,7 +808,7 @@ collap works with collapse's Fast Statistical Functions, providing extremely fas
 #&gt; 3       NA 46.4176   NA   71666001 12291854
 #&gt; 4       NA 53.0097   NA  317255000 16931903
 #&gt; 5 379.3730 58.0881   NA 3054051961 24870022
-#&gt; 6 567.4047 63.0715   NA 5023859033 33741195</div><div class='input'><span class='va'>wlddev</span> |&gt; <span class='fu'><a href='GRP, fgroup_by.html'>fgroup_by</a></span><span class='op'>(</span><span class='va'>region</span>, <span class='va'>year</span><span class='op'>)</span> |&gt; <span class='fu'>collapg</span><span class='op'>(</span>w <span class='op'>=</span> <span class='va'>POP</span><span class='op'>)</span> |&gt; <span class='fu'><a href='https://rdrr.io/r/utils/head.html'>head</a></span><span class='op'>(</span><span class='op'>)</span>
+#&gt; 6 567.4047 63.0715   NA 5023859033 33741195</div><div class='input'><span class='va'>wlddev</span> |&gt; <span class='fu'><a href='GRP.html'>fgroup_by</a></span><span class='op'>(</span><span class='va'>region</span>, <span class='va'>year</span><span class='op'>)</span> |&gt; <span class='fu'>collapg</span><span class='op'>(</span>w <span class='op'>=</span> <span class='va'>POP</span><span class='op'>)</span> |&gt; <span class='fu'><a href='https://rdrr.io/r/utils/head.html'>head</a></span><span class='op'>(</span><span class='op'>)</span>
 </div><div class='output co'>#&gt;                region year        POP country iso3c       date decade
 #&gt; 1 East Asia &amp; Pacific 1960 1018832214   China   CHN 1961-01-01   1960
 #&gt; 2 East Asia &amp; Pacific 1961 1021806689   China   CHN 1962-01-01   1960
@@ -822,7 +822,7 @@ collap works with collapse's Fast Statistical Functions, providing extremely fas
 #&gt; 3 Upper middle income FALSE 1463.441 49.39960   NA 915939856
 #&gt; 4 Upper middle income FALSE 1540.621 50.37529   NA 748978431
 #&gt; 5 Upper middle income FALSE 1665.385 51.57330   NA 619226983
-#&gt; 6 Upper middle income FALSE 1733.757 52.94426   NA 702381139</div><div class='input'><span class='va'>wlddev</span> |&gt; <span class='fu'><a href='GRP, fgroup_by.html'>fgroup_by</a></span><span class='op'>(</span><span class='va'>country</span>, <span class='va'>decade</span><span class='op'>)</span> |&gt; <span class='fu'>collapg</span><span class='op'>(</span><span class='va'>fmedian</span>, <span class='va'>flast</span><span class='op'>)</span> |&gt; <span class='fu'><a href='https://rdrr.io/r/utils/head.html'>head</a></span><span class='op'>(</span><span class='op'>)</span>
+#&gt; 6 Upper middle income FALSE 1733.757 52.94426   NA 702381139</div><div class='input'><span class='va'>wlddev</span> |&gt; <span class='fu'><a href='GRP.html'>fgroup_by</a></span><span class='op'>(</span><span class='va'>country</span>, <span class='va'>decade</span><span class='op'>)</span> |&gt; <span class='fu'>collapg</span><span class='op'>(</span><span class='va'>fmedian</span>, <span class='va'>flast</span><span class='op'>)</span> |&gt; <span class='fu'><a href='https://rdrr.io/r/utils/head.html'>head</a></span><span class='op'>(</span><span class='op'>)</span>
 </div><div class='output co'>#&gt;       country decade iso3c       date   year     region     income  OECD
 #&gt; 1 Afghanistan   1960   AFG 1970-01-01 1964.5 South Asia Low income FALSE
 #&gt; 2 Afghanistan   1970   AFG 1980-01-01 1974.5 South Asia Low income FALSE
@@ -836,7 +836,7 @@ collap works with collapse's Fast Statistical Functions, providing extremely fas
 #&gt; 3       NA 46.4005   NA   48539999 12071250
 #&gt; 4       NA 53.1200   NA  285175003 17593192
 #&gt; 5 361.2596 58.0310   NA 2984469971 25190481
-#&gt; 6 572.3641 63.1715   NA 4651180176 33892199</div><div class='input'><span class='va'>wlddev</span> |&gt; <span class='fu'><a href='GRP, fgroup_by.html'>fgroup_by</a></span><span class='op'>(</span><span class='va'>country</span>, <span class='va'>decade</span><span class='op'>)</span> |&gt;
+#&gt; 6 572.3641 63.1715   NA 4651180176 33892199</div><div class='input'><span class='va'>wlddev</span> |&gt; <span class='fu'><a href='GRP.html'>fgroup_by</a></span><span class='op'>(</span><span class='va'>country</span>, <span class='va'>decade</span><span class='op'>)</span> |&gt;
   <span class='fu'>collapg</span><span class='op'>(</span>custom <span class='op'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/list.html'>list</a></span><span class='op'>(</span>fmean <span class='op'>=</span> <span class='fl'>9</span><span class='op'>:</span><span class='fl'>12</span>, fmode <span class='op'>=</span> <span class='fl'>5</span><span class='op'>:</span><span class='fl'>7</span>, flast <span class='op'>=</span> <span class='fl'>3</span><span class='op'>)</span><span class='op'>)</span> |&gt; <span class='fu'><a href='https://rdrr.io/r/utils/head.html'>head</a></span><span class='op'>(</span><span class='op'>)</span>
 </div><div class='output co'>#&gt;       country decade       date decade     region     income    PCGDP  LIFEEX
 #&gt; 1 Afghanistan   1960 1970-01-01   1960 South Asia Low income       NA 34.6908

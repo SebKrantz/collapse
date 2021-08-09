@@ -209,7 +209,7 @@ Fast (Quasi-, Log-) Differences for Time Series and Panel Data</h1>
     </tr>
     <tr>
       <th>g</th>
-      <td><p>a factor, <code><a href='GRP, fgroup_by.html'>GRP</a></code> object, atomic vector (internally converted to factor) or a list of vectors / factors (internally converted to a <code><a href='GRP, fgroup_by.html'>GRP</a></code> object) used to group <code>x</code>.</p></td>
+      <td><p>a factor, <code><a href='GRP.html'>GRP</a></code> object, atomic vector (internally converted to factor) or a list of vectors / factors (internally converted to a <code><a href='GRP.html'>GRP</a></code> object) used to group <code>x</code>.</p></td>
     </tr>
     <tr>
       <th>by</th>
@@ -403,7 +403,7 @@ For computational details and efficiency considerations see the help page for <c
 #&gt; 1958  25  17   6   0   8  13  26  38   0  12   5   1
 #&gt; 1959  20  24  44  48  57  37  57  54  59  48  52  68
 #&gt; 1960  57  49  13  65  52  63  74  47  45  54  28  27</div><div class='input'><span class='fu'>D</span><span class='op'>(</span><span class='va'>AirPassengers</span>,                      <span class='co'># Quasi-difference, see a better example below</span>
-  rho <span class='op'>=</span> <span class='fu'><a href='pwcor, pwcov, pwnobs.html'>pwcor</a></span><span class='op'>(</span><span class='va'>AirPassengers</span>, <span class='fu'><a href='flag.html'>L</a></span><span class='op'>(</span><span class='va'>AirPassengers</span><span class='op'>)</span><span class='op'>)</span><span class='op'>)</span>
+  rho <span class='op'>=</span> <span class='fu'><a href='pwcor_pwcov_pwnobs.html'>pwcor</a></span><span class='op'>(</span><span class='va'>AirPassengers</span>, <span class='fu'><a href='flag.html'>L</a></span><span class='op'>(</span><span class='va'>AirPassengers</span><span class='op'>)</span><span class='op'>)</span><span class='op'>)</span>
 </div><div class='output co'>#&gt;              Jan         Feb         Mar         Apr         May         Jun
 #&gt; 1949          NA  10.4581994  18.6970315   2.2543065  -2.8651096  18.8164476
 #&gt; 1950   1.6970315  15.5776155  20.0154743  -0.3874454  -4.6262775  28.9756690
@@ -476,12 +476,12 @@ For computational details and efficiency considerations see the help page for <c
 #&gt; Multiple R-squared:  0.9943,	Adjusted R-squared:  0.9942 
 #&gt; F-statistic: 3.94e+04 on 7 and 1592 DF,  p-value: &lt; 2.2e-16
 #&gt; </div><div class='input'><span class='va'>r</span> <span class='op'>&lt;-</span> <span class='fu'><a href='https://rdrr.io/r/stats/residuals.html'>residuals</a></span><span class='op'>(</span><span class='va'>mod</span><span class='op'>)</span>                                     <span class='co'># Obtain residuals</span>
-<span class='fu'><a href='pwcor, pwcov, pwnobs.html'>pwcor</a></span><span class='op'>(</span><span class='va'>r</span>, <span class='fu'><a href='flag.html'>L</a></span><span class='op'>(</span><span class='va'>r</span><span class='op'>)</span><span class='op'>)</span>                                          <span class='co'># Residual Autocorrelation</span>
+<span class='fu'><a href='pwcor_pwcov_pwnobs.html'>pwcor</a></span><span class='op'>(</span><span class='va'>r</span>, <span class='fu'><a href='flag.html'>L</a></span><span class='op'>(</span><span class='va'>r</span><span class='op'>)</span><span class='op'>)</span>                                          <span class='co'># Residual Autocorrelation</span>
 </div><div class='output co'>#&gt; [1] .97</div><div class='input'><span class='fu'><a href='fFtest.html'>fFtest</a></span><span class='op'>(</span><span class='va'>r</span>, <span class='fu'><a href='flag.html'>L</a></span><span class='op'>(</span><span class='va'>r</span><span class='op'>)</span><span class='op'>)</span>                                         <span class='co'># F-test of residual autocorrelation</span>
 </div><div class='output co'>#&gt;     R-Sq.       DF1       DF2   F-Stat.   P-value 
 #&gt;     0.937         1      1597 23690.699     0.000 </div><div class='input'>                                                        <span class='co'># (better use lmtest::bgtest)</span>
 <span class='va'>modCO</span> <span class='op'>&lt;-</span> <span class='fu'><a href='https://rdrr.io/r/stats/lm.html'>lm</a></span><span class='op'>(</span><span class='va'>QD1.DAX</span> <span class='op'>~</span><span class='va'>.</span>, <span class='fu'>D</span><span class='op'>(</span><span class='fu'><a href='flag.html'>L</a></span><span class='op'>(</span><span class='va'>EuStockMarkets</span>, <span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span><span class='op'>(</span><span class='fl'>0</span>, <span class='fl'>260</span><span class='op'>)</span><span class='op'>)</span>, <span class='co'># Cochrane-Orcutt (1949) estimation</span>
-                        rho <span class='op'>=</span> <span class='fu'><a href='pwcor, pwcov, pwnobs.html'>pwcor</a></span><span class='op'>(</span><span class='va'>r</span>, <span class='fu'><a href='flag.html'>L</a></span><span class='op'>(</span><span class='va'>r</span><span class='op'>)</span><span class='op'>)</span><span class='op'>)</span><span class='op'>)</span>
+                        rho <span class='op'>=</span> <span class='fu'><a href='pwcor_pwcov_pwnobs.html'>pwcor</a></span><span class='op'>(</span><span class='va'>r</span>, <span class='fu'><a href='flag.html'>L</a></span><span class='op'>(</span><span class='va'>r</span><span class='op'>)</span><span class='op'>)</span><span class='op'>)</span><span class='op'>)</span>
 <span class='fu'><a href='https://rdrr.io/r/base/summary.html'>summary</a></span><span class='op'>(</span><span class='va'>modCO</span><span class='op'>)</span>
 </div><div class='output co'>#&gt; 
 #&gt; Call:
@@ -514,7 +514,7 @@ For computational details and efficiency considerations see the help page for <c
 </div><div class='output co'>#&gt;    R-Sq.      DF1      DF2  F-Stat.  P-value 
 #&gt;    0.001        1     1596    2.326    0.127 </div><div class='input'>
 <span class='co'>## World Development Panel Data</span>
-<span class='fu'><a href='https://rdrr.io/r/utils/head.html'>head</a></span><span class='op'>(</span><span class='fu'>fdiff</span><span class='op'>(</span><span class='fu'><a href='fselect, get_vars, add_vars.html'>num_vars</a></span><span class='op'>(</span><span class='va'>wlddev</span><span class='op'>)</span>, <span class='fl'>1</span>, <span class='fl'>1</span>,                      <span class='co'># Computes differences of numeric variables</span>
+<span class='fu'><a href='https://rdrr.io/r/utils/head.html'>head</a></span><span class='op'>(</span><span class='fu'>fdiff</span><span class='op'>(</span><span class='fu'><a href='select_replace_vars.html'>num_vars</a></span><span class='op'>(</span><span class='va'>wlddev</span><span class='op'>)</span>, <span class='fl'>1</span>, <span class='fl'>1</span>,                      <span class='co'># Computes differences of numeric variables</span>
              <span class='va'>wlddev</span><span class='op'>$</span><span class='va'>country</span>, <span class='va'>wlddev</span><span class='op'>$</span><span class='va'>year</span><span class='op'>)</span><span class='op'>)</span>              <span class='co'># fdiff requires external inputs..</span>
 </div><div class='output co'>#&gt;   year decade PCGDP LIFEEX GINI        ODA    POP
 #&gt; 1   NA     NA    NA     NA   NA         NA     NA

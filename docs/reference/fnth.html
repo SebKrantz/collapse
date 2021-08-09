@@ -158,7 +158,7 @@
     </tr>
     <tr>
       <th>g</th>
-      <td><p>a factor, <code><a href='GRP, fgroup_by.html'>GRP</a></code> object, atomic vector (internally converted to factor) or a list of vectors / factors (internally converted to a <code><a href='GRP, fgroup_by.html'>GRP</a></code> object) used to group <code>x</code>.</p></td>
+      <td><p>a factor, <code><a href='GRP.html'>GRP</a></code> object, atomic vector (internally converted to factor) or a list of vectors / factors (internally converted to a <code><a href='GRP.html'>GRP</a></code> object) used to group <code>x</code>.</p></td>
     </tr>
     <tr>
       <th>w</th>
@@ -237,7 +237,7 @@ but if <code>0 &lt; n &lt; 1</code>, the <code>ties</code> option regulates how 
 </div><div class='output co'>#&gt;    4    6    8 
 #&gt; 30.4 21.0 16.1 </div><div class='input'><span class='fu'>fnth</span><span class='op'>(</span><span class='va'>mpg</span>, <span class='fl'>0.75</span>, <span class='va'>mtcars</span><span class='op'>[</span><span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span><span class='op'>(</span><span class='fl'>2</span>,<span class='fl'>8</span><span class='op'>:</span><span class='fl'>9</span><span class='op'>)</span><span class='op'>]</span><span class='op'>)</span>       <span class='co'># More groups..</span>
 </div><div class='output co'>#&gt; 4.0.1 4.1.0 4.1.1 6.0.1 6.1.0 8.0.0 8.0.1 
-#&gt; 26.00 22.80 30.40 21.00 20.30 16.85 15.40 </div><div class='input'><span class='va'>g</span> <span class='op'>&lt;-</span> <span class='fu'><a href='GRP, fgroup_by.html'>GRP</a></span><span class='op'>(</span><span class='va'>mtcars</span>, <span class='op'>~</span> <span class='va'>cyl</span> <span class='op'>+</span> <span class='va'>vs</span> <span class='op'>+</span> <span class='va'>am</span><span class='op'>)</span>       <span class='co'># Precomputing groups gives more speed !</span>
+#&gt; 26.00 22.80 30.40 21.00 20.30 16.85 15.40 </div><div class='input'><span class='va'>g</span> <span class='op'>&lt;-</span> <span class='fu'><a href='GRP.html'>GRP</a></span><span class='op'>(</span><span class='va'>mtcars</span>, <span class='op'>~</span> <span class='va'>cyl</span> <span class='op'>+</span> <span class='va'>vs</span> <span class='op'>+</span> <span class='va'>am</span><span class='op'>)</span>       <span class='co'># Precomputing groups gives more speed !</span>
 <span class='fu'>fnth</span><span class='op'>(</span><span class='va'>mpg</span>, <span class='fl'>0.75</span>, <span class='va'>g</span><span class='op'>)</span>
 </div><div class='output co'>#&gt; 4.0.1 4.1.0 4.1.1 6.0.1 6.1.0 8.0.0 8.0.1 
 #&gt; 26.00 22.80 30.40 21.00 20.30 16.85 15.40 </div><div class='input'><span class='fu'>fnth</span><span class='op'>(</span><span class='va'>mpg</span>, <span class='fl'>0.75</span>, <span class='va'>g</span>, <span class='va'>mtcars</span><span class='op'>$</span><span class='va'>hp</span><span class='op'>)</span>           <span class='co'># Grouped weighted third quartile</span>
@@ -267,7 +267,7 @@ but if <code>0 &lt; n &lt; 1</code>, the <code>ties</code> option regulates how 
 #&gt; 6.0.1 21.00   6 160.0 110.0 3.90 2.77 16.46  0  1    4    4
 #&gt; 6.1.0 20.30   6 241.5 123.0 3.92 3.45 19.83  1  0    4    4
 #&gt; 8.0.0 16.85   8 420.0 222.5 3.18 4.66 17.71  0  0    3    4
-#&gt; 8.0.1 15.40   8 326.0 299.5 3.88 3.37 14.55  0  1    5    6</div><div class='input'><span class='fu'>fnth</span><span class='op'>(</span><span class='fu'><a href='GRP, fgroup_by.html'>fgroup_by</a></span><span class='op'>(</span><span class='va'>mtcars</span>, <span class='va'>cyl</span>, <span class='va'>vs</span>, <span class='va'>am</span><span class='op'>)</span>, <span class='fl'>0.75</span><span class='op'>)</span>   <span class='co'># Another way of doing it..</span>
+#&gt; 8.0.1 15.40   8 326.0 299.5 3.88 3.37 14.55  0  1    5    6</div><div class='input'><span class='fu'>fnth</span><span class='op'>(</span><span class='fu'><a href='GRP.html'>fgroup_by</a></span><span class='op'>(</span><span class='va'>mtcars</span>, <span class='va'>cyl</span>, <span class='va'>vs</span>, <span class='va'>am</span><span class='op'>)</span>, <span class='fl'>0.75</span><span class='op'>)</span>   <span class='co'># Another way of doing it..</span>
 </div><div class='output co'>#&gt;   cyl vs am   mpg  disp    hp drat   wt  qsec gear carb
 #&gt; 1   4  0  1 26.00 120.3  91.0 4.43 2.14 16.70    5    2
 #&gt; 2   4  1  0 22.80 140.8  95.0 3.70 3.15 20.01    4    2
@@ -326,7 +326,7 @@ but if <code>0 &lt; n &lt; 1</code>, the <code>ties</code> option regulates how 
 #&gt; </span><span style='color: #BCBCBC;'>4</span><span>     6     0     1    395  21    160   3.9   2.88  17.0     5     6
 #&gt; </span><span style='color: #BCBCBC;'>5</span><span>     6     1     0    461  19.2  225   3.92  3.44  19.4     4     4
 #&gt; </span><span style='color: #BCBCBC;'>6</span><span>     8     0     0   </span><span style='text-decoration: underline;'>2</span><span>330  16.4  440   3.21  5.25  17.8     3     4
-#&gt; </span><span style='color: #BCBCBC;'>7</span><span>     8     0     1    599  15.8  351   4.22  3.57  14.6     5     8</div><div class='input'><span class='va'>mtcars</span> |&gt; <span class='fu'><a href='GRP, fgroup_by.html'>fgroup_by</a></span><span class='op'>(</span><span class='va'>cyl</span>,<span class='va'>vs</span>,<span class='va'>am</span><span class='op'>)</span> |&gt; <span class='fu'>fnth</span><span class='op'>(</span><span class='fl'>0.75</span><span class='op'>)</span>              <span class='co'># Faster grouping!</span>
+#&gt; </span><span style='color: #BCBCBC;'>7</span><span>     8     0     1    599  15.8  351   4.22  3.57  14.6     5     8</div><div class='input'><span class='va'>mtcars</span> |&gt; <span class='fu'><a href='GRP.html'>fgroup_by</a></span><span class='op'>(</span><span class='va'>cyl</span>,<span class='va'>vs</span>,<span class='va'>am</span><span class='op'>)</span> |&gt; <span class='fu'>fnth</span><span class='op'>(</span><span class='fl'>0.75</span><span class='op'>)</span>              <span class='co'># Faster grouping!</span>
 </div><div class='output co'>#&gt;   cyl vs am   mpg  disp    hp drat   wt  qsec gear carb
 #&gt; 1   4  0  1 26.00 120.3  91.0 4.43 2.14 16.70    5    2
 #&gt; 2   4  1  0 22.80 140.8  95.0 3.70 3.15 20.01    4    2
@@ -334,7 +334,7 @@ but if <code>0 &lt; n &lt; 1</code>, the <code>ties</code> option regulates how 
 #&gt; 4   6  0  1 21.00 160.0 110.0 3.90 2.77 16.46    4    4
 #&gt; 5   6  1  0 20.30 241.5 123.0 3.92 3.45 19.83    4    4
 #&gt; 6   8  0  0 16.85 420.0 222.5 3.18 4.66 17.71    3    4
-#&gt; 7   8  0  1 15.40 326.0 299.5 3.88 3.37 14.55    5    6</div><div class='input'><span class='va'>mtcars</span> |&gt; <span class='fu'><a href='GRP, fgroup_by.html'>fgroup_by</a></span><span class='op'>(</span><span class='va'>cyl</span>,<span class='va'>vs</span>,<span class='va'>am</span><span class='op'>)</span> |&gt; <span class='fu'>fnth</span><span class='op'>(</span><span class='fl'>0.75</span>, TRA <span class='op'>=</span> <span class='st'>"/"</span><span class='op'>)</span>   <span class='co'># Divide by third quartile</span>
+#&gt; 7   8  0  1 15.40 326.0 299.5 3.88 3.37 14.55    5    6</div><div class='input'><span class='va'>mtcars</span> |&gt; <span class='fu'><a href='GRP.html'>fgroup_by</a></span><span class='op'>(</span><span class='va'>cyl</span>,<span class='va'>vs</span>,<span class='va'>am</span><span class='op'>)</span> |&gt; <span class='fu'>fnth</span><span class='op'>(</span><span class='fl'>0.75</span>, TRA <span class='op'>=</span> <span class='st'>"/"</span><span class='op'>)</span>   <span class='co'># Divide by third quartile</span>
 </div><div class='output co'>#&gt;                     cyl vs am       mpg      disp        hp      drat        wt
 #&gt; Mazda RX4             6  0  1 1.0000000 1.0000000 1.0000000 1.0000000 0.9458484
 #&gt; Mazda RX4 Wag         6  0  1 1.0000000 1.0000000 1.0000000 1.0000000 1.0379061
@@ -402,7 +402,7 @@ but if <code>0 &lt; n &lt; 1</code>, the <code>ties</code> option regulates how 
 #&gt; Maserati Bora       1.0034364 1.00 1.3333333
 #&gt; Volvo 142E          0.9841270 1.00 1.0000000
 #&gt; 
-#&gt; Grouped by:  cyl, vs, am  [7 | 5 (3.8)] </div><div class='input'><span class='va'>mtcars</span> |&gt; <span class='fu'><a href='GRP, fgroup_by.html'>fgroup_by</a></span><span class='op'>(</span><span class='va'>cyl</span>,<span class='va'>vs</span>,<span class='va'>am</span><span class='op'>)</span> |&gt; <span class='fu'><a href='fselect, get_vars, add_vars.html'>fselect</a></span><span class='op'>(</span><span class='va'>mpg</span>, <span class='va'>hp</span><span class='op'>)</span> |&gt;     <span class='co'># Faster selecting</span>
+#&gt; Grouped by:  cyl, vs, am  [7 | 5 (3.8)] </div><div class='input'><span class='va'>mtcars</span> |&gt; <span class='fu'><a href='GRP.html'>fgroup_by</a></span><span class='op'>(</span><span class='va'>cyl</span>,<span class='va'>vs</span>,<span class='va'>am</span><span class='op'>)</span> |&gt; <span class='fu'><a href='select_replace_vars.html'>fselect</a></span><span class='op'>(</span><span class='va'>mpg</span>, <span class='va'>hp</span><span class='op'>)</span> |&gt;     <span class='co'># Faster selecting</span>
       <span class='fu'>fnth</span><span class='op'>(</span><span class='fl'>0.75</span>, <span class='va'>hp</span>, <span class='st'>"/"</span><span class='op'>)</span>  <span class='co'># Divide mpg by its third weighted group-quartile, using hp as weights</span>
 </div><div class='output co'>#&gt;                      hp       mpg
 #&gt; Mazda RX4           110 1.0000000
