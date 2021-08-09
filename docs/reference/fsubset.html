@@ -174,7 +174,7 @@
     <h2 class="hasAnchor" id="details"><a class="anchor" href="#details"></a>Details</h2>
 
     <p><code>fsubset</code> is a generic function, with methods supplied for vectors, matrices, and data
-  frames (including lists). It represents an improvement in both speed and functionality over <code><a href='https://rdrr.io/r/base/subset.html'>subset</a></code>. The function <code>ss</code> is an improvement of <code><a href='https://rdrr.io/r/base/Extract.html'>[</a></code> to subset (vectors) matrices and data frames without dropping dimensions. It is significantly faster than <code>[.data.frame</code>. For subsetting columns alone, please see <a href='fselect, get_vars, add_vars.html'>selecting and replacing columns</a>.</p>
+  frames (including lists). It represents an improvement in both speed and functionality over <code><a href='https://rdrr.io/r/base/subset.html'>subset</a></code>. The function <code>ss</code> is an improvement of <code><a href='https://rdrr.io/r/base/Extract.html'>[</a></code> to subset (vectors) matrices and data frames without dropping dimensions. It is significantly faster than <code>[.data.frame</code>. For subsetting columns alone, please see <a href='select_replace_vars.html'>selecting and replacing columns</a>.</p>
 <p>For ordinary vectors, the result is <code><a href='https://rdrr.io/r/base/CallExternal.html'>.Call(C_subsetVector, x, subset)</a></code>, where <code>C_subsetVector</code> is an internal function in the <em>data.table</em> package. The <code>subset</code> can be integer or logical. Appropriate errors are delivered for wrong use.</p>
 <p>For matrices the implementation is all base-R but slightly more efficient and more versatile than <code><a href='https://rdrr.io/r/base/subset.html'>subset.matrix</a></code>. Thus it is possible to <code>subset</code> matrix rows using logical or integer vectors, or character vectors matching rownames. The <code>drop</code> argument is passed on to the indexing method for matrices.</p>
 <p>For both matrices and data frames, the <code>...</code> argument can be used to subset columns, and is evaluated in a non-standard way. Thus it can support vectors of column names, indices or logical vectors, but also multiple comma separated column names passed without quotes, each of which may also be replaced by a sequence of columns i.e. <code>col1:coln</code>, and new column names may be assigned e.g. <code>fsubset(data, col1 &gt; 20, newname =  col2, col3:col6)</code> (see examples).</p>
@@ -189,8 +189,8 @@
     <p>No replacement method <code>fsubset&lt;-</code> or <code>ss&lt;-</code> is offered in <em>collapse</em>. For efficient subset relacement (without copying) use <code><a href='https://rdrr.io/pkg/data.table/man/assign.html'>data.table::set</a></code>, which can also be used with data frames and tibbles.</p>
     <h2 class="hasAnchor" id="see-also"><a class="anchor" href="#see-also"></a>See also</h2>
 
-    <div class='dont-index'><p><code><a href='fselect, get_vars, add_vars.html'>fselect</a></code>,
-  <code><a href='fselect, get_vars, add_vars.html'>get_vars</a></code>,
+    <div class='dont-index'><p><code><a href='select_replace_vars.html'>fselect</a></code>,
+  <code><a href='select_replace_vars.html'>get_vars</a></code>,
   <code><a href='ftransform.html'>ftransform</a></code>,
 <a href='fast-data-manipulation.html'>Data Frame Manipulation</a>, <a href='index.html'>Collapse Overview</a></p></div>
 
