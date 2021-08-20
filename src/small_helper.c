@@ -175,7 +175,20 @@ SEXP Cna_rm(SEXP x) {
     copyMostAttrib(x, out);
     UNPROTECT(1);
     return out;
-  }}
+  }
+  case VECSXP: {
+    const SEXP *xd = SEXPPTR(x);
+    for (int i = 0; i != n; ++i) if(length(xd[i]) == 0) ++k;
+    if(k == 0) return x;
+    SEXP out = PROTECT(allocVector(VECSXP, n - k));
+    SEXP *pout = SEXPPTR(out);
+    k = 0;
+    for (int i = 0; i != n; ++i) if(length(xd[i]) != 0) pout[k++] = xd[i];
+    copyMostAttrib(x, out);
+    UNPROTECT(1);
+    return out;
+  }
+  }
   error("Unsupported type '%s' passed to na_rm()", type2char(TYPEOF(x)));
 }
 
