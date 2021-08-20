@@ -298,6 +298,7 @@ importFrom("stats", "as.formula", "complete.cases", "cor", "cov", "var", "pt",
  export(na_rm)
  export(na_omit)
  export(na_insert)
+ export(`%=%`)
  export(`%!in%`)
  export(`%rr%`)
  export(`%r+%`)

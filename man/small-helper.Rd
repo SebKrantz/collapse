@@ -11,6 +11,7 @@
 \alias{add_stub}
 \alias{rm_stub}
 \alias{\%!in\%}
+\alias{\%=\%}
 \alias{ckmatch}
 \alias{fnlevels}
 \alias{fnrow}
@@ -46,6 +47,7 @@ Convenience functions in the \emph{collapse} package that help to deal with attr
 }
 \usage{
 .c(\dots)                       # Non-standard concatenation i.e. .c(a, b) == c("a", "b")
+lhs \%=\% rhs                   # Multiple-assignment e.g. .c(x, y) \%=\% list(1, 2)
 vlabels(X, attrn = "label")   # Get labels of variables in X, in attr(X[[i]], attrn)
 vlabels(X, attrn = "label") <- value      # Set labels of variables in X
 setLabels(X, value, attrn = "label")      # Set labels of variables in X and return X
@@ -94,11 +96,12 @@ is_date(x)                    # Check if object is of class "Date", "POSIXlt" or
 %- maybe also 'usage' for other objects documented here.
 \arguments{
   \item{X}{a matrix or data frame (some functions also support vectors and arrays although that is less common).}
-  \item{x, table}{a atomic vector.}
+  \item{x, table}{a (atomic) vector.}
   \item{object, to, from}{a suitable R object.}
   \item{a}{a suitable list of attributes.}
   \item{attrn}{character. Name of attribute to store labels or retrieve labels from.}
-  \item{value}{for \code{alloc}: a single value of any vector type. For \code{vlabels<-} and \code{setLabels}: a matching character vector or list of variable labels. }
+  \item{value}{for \code{whichv} and \code{alloc}: a single value of any vector type. For \code{vlabels<-} and \code{setLabels}: a matching character vector or list of variable labels. }
+  \item{invert}{logical. \code{TRUE} finds the positions of the non-equal values.}
   \item{n}{integer. The length of the vector to allocate with \code{value}.}
   \item{class}{logical. Also show the classes of variables in X in a column?}
   \item{stub}{a single character stub, i.e. "log.", which by default will be pre-applied to all variables or column names in X.}
@@ -111,6 +114,8 @@ is_date(x)                    # Check if object is of class "Date", "POSIXlt" or
   \item{which}{integer. If \code{NULL}, \code{dn} has to be a list fully specifying the dimension names of the object. Alternatively, a vector or list of names for dimensions \code{which} can be supplied. See Examples. }
   \item{prop}{double. Specify the proportion of observations randomly replaced with \code{NA}.}
   \item{e}{the error message thrown by \code{ckmatch} for non-matched elements. The message is followed by the comma-separated non-matched elements.}
+  \item{lhs}{character. A vector of object names.}
+  \item{rhs}{a matching vector or list of objects. Atomic vectors are coerced to list using \code{as.vector(x, "list")}.}
  \item{\dots}{for \code{.c}: Comma-separated expressions. For \code{all_identical / all_obj_equal}: Either multiple comma-separated objects or a single list of objects in which all elements will be checked for exact / numeric equality. For \code{rm_stub}: further arguments passed to \code{\link{gsub}}.}
 }
 % \details{
@@ -141,6 +146,13 @@ is_date(x)                    # Check if object is of class "Date", "POSIXlt" or
 \examples{
 ## Non-standard concatenation
 .c(a, b, "c d", e == f)
+
+## Multiple assignment
+.c(a, b) \%=\% list(1, 2)
+.c(T, N) \%=\% dim(EuStockMarkets)
+names(iris) \%=\% iris
+list2env(iris)          # Same thing done more efficiently
+rm(list = c("a", "b", "T", "N", names(iris)))
 
 ## Variable labels
 namlab(wlddev, class = TRUE)
@@ -173,7 +185,7 @@ whichv(wlddev$PCGDP)                 # Same as which(is.na(wlddev$PCGDP))
 whichv(wlddev$PCGDP, invert = TRUE)  # Same as which(!is.na(wlddev$PCGDP))
 whichv(wlddev$country, "Chad")       # Same as which(wlddev$county == "Chad")
 whichv(wlddev$country, "Chad", TRUE) # Same as which(wlddev$county != "Chad")
-lvec <- wlddev$country == "Italy"    # If we already have a logical vector...
+lvec <- wlddev$country == "Chad"     # If we already have a logical vector...
 whichv(lvec, FALSE)                  # is fastver than which(!lvec)
 rm(lvec)
 

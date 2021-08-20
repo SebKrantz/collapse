@@ -37,6 +37,16 @@
     mapply(`/`, unattrib(X), unattrib(v), USE.NAMES = FALSE, SIMPLIFY = FALSE), X)
 
 
+# Multiple-assignment
+`%=%` <- function(lhs, rhs) { # lhs should be character... use .c...
+  if(!is.character(lhs)) stop("lhs needs to be character")
+  if(!is.list(rhs)) rhs <- as.vector(rhs, "list")
+  if(length(lhs) != length(rhs)) stop("length(lhs) not equal to length(rhs)")
+  list2env(`names<-`(rhs, lhs), envir = parent.frame(),
+           parent = NULL, hash = FALSE, size = 0L)
+  invisible()
+}
+
 
 getenvFUN <- function(nam, efmt1 = "For this method need to install.packages('%s'), then unload [detach('package:collapse', unload = TRUE)] and reload [library(collapse)].")
   if(is.null(FUN <- .collapse_env[[nam]])) stop(sprintf(efmt1, strsplit(nam, "_", fixed = TRUE)[[1L]][1L])) else FUN
