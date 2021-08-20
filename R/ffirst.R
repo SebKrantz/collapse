@@ -89,8 +89,8 @@ ffirst.data.frame <- function(x, g = NULL, TRA = NULL, na.rm = TRUE, use.g.names
   .Call(Cpp_TRAl,x,.Call(C_ffirstl,x,g[[1L]],g[[2L]],na.rm),g[[2L]],TtI(TRA))
 }
 
-ffirst.list <- function(x, g = NULL, TRA = NULL, na.rm = TRUE, use.g.names = TRUE, drop = TRUE, ...)
-  ffirst.data.frame(x, g, TRA, na.rm, use.g.names, drop, ...)
+# ffirst.list <- function(x, g = NULL, TRA = NULL, na.rm = TRUE, use.g.names = TRUE, drop = TRUE, ...)
+#   ffirst.data.frame(x, g, TRA, na.rm, use.g.names, drop, ...)
 
 ffirst.grouped_df <- function(x, TRA = NULL, na.rm = TRUE, use.g.names = FALSE, keep.group_vars = TRUE, ...) {
   if(!missing(...)) unused_arg_action(match.call(), ...)

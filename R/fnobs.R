@@ -89,8 +89,8 @@ fnobs.data.frame <- function(x, g = NULL, TRA = NULL, use.g.names = TRUE, drop =
   .Call(Cpp_TRAl,x,.Call(C_fnobsl,x,g[[1L]],g[[2L]],FALSE),g[[2L]],TtI(TRA))
 }
 
-fnobs.list <- function(x, g = NULL, TRA = NULL, use.g.names = TRUE, drop = TRUE, ...)
-  fnobs.data.frame(x, g, TRA, use.g.names, drop, ...)
+# fnobs.list <- function(x, g = NULL, TRA = NULL, use.g.names = TRUE, drop = TRUE, ...)
+#   fnobs.data.frame(x, g, TRA, use.g.names, drop, ...)
 
 fnobs.grouped_df <- function(x, TRA = NULL, use.g.names = FALSE, keep.group_vars = TRUE, ...) {
   if(!missing(...)) unused_arg_action(match.call(), ...)

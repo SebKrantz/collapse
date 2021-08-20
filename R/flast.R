@@ -89,8 +89,8 @@ flast.data.frame <- function(x, g = NULL, TRA = NULL, na.rm = TRUE, use.g.names 
   .Call(Cpp_TRAl,x,.Call(C_flastl,x,g[[1L]],g[[2L]],na.rm),g[[2L]],TtI(TRA))
 }
 
-flast.list <- function(x, g = NULL, TRA = NULL, na.rm = TRUE, use.g.names = TRUE, drop = TRUE, ...)
-  flast.data.frame(x, g, TRA, na.rm, use.g.names, drop, ...)
+# flast.list <- function(x, g = NULL, TRA = NULL, na.rm = TRUE, use.g.names = TRUE, drop = TRUE, ...)
+#   flast.data.frame(x, g, TRA, na.rm, use.g.names, drop, ...)
 
 flast.grouped_df <- function(x, TRA = NULL, na.rm = TRUE, use.g.names = FALSE, keep.group_vars = TRUE, ...) {
   if(!missing(...)) unused_arg_action(match.call(), ...)

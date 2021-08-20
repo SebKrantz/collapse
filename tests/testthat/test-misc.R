@@ -206,7 +206,7 @@ test_that("fast functions give same result using different grouping mechanisms",
 l <- as.list(mtcars)
 test_that("list and df methods give same results", {
 
-  for (i in setdiff(c(.FAST_FUN, .OPERATOR_FUN), c("fhdbetween", "fhdwithin", "HDB", "HDW"))) {
+  for (i in setdiff(c(.FAST_FUN, .OPERATOR_FUN), c("fhdbetween", "fhdwithin", "HDB", "HDW", "ffirst", "flast", "fnobs"))) {
     FUN <- match.fun(i)
     expect_equal(unattrib(FUN(mtcars)), unattrib(FUN(l)))
   }
