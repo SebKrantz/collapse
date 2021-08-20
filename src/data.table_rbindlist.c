@@ -59,8 +59,8 @@ const char *memrecycle(SEXP target, SEXP where, int start, int len, SEXP source,
     }
   }
   const bool sourceIsFactor=isFactor(source), targetIsFactor=isFactor(target);
-  const bool sourceIsI64=isReal(source) && Rinherits(source, char_integer64);
-  const bool targetIsI64=isReal(target) && Rinherits(target, char_integer64);
+  const bool sourceIsI64=isReal(source) && INHERITS(source, char_integer64);
+  const bool targetIsI64=isReal(target) && INHERITS(target, char_integer64);
   if (sourceIsFactor || targetIsFactor) {
     if (!targetIsFactor) {
       if (!isString(target) && !isNewList(target))
