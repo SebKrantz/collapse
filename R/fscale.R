@@ -45,7 +45,7 @@ fscale.grouped_df <- function(x, w = NULL, na.rm = TRUE, mean = 0, sd = 1, keep.
   nam <- attr(x, "names")
   gn2 <- which(nam %in% g[[5L]])
   gn <- if(keep.group_vars) gn2 else NULL
-  if(length(wsym) && length(wn <- which(wsym == nam))) {
+  if(length(wsym) && length(wn <- whichv(nam, wsym))) {
     w <- .subset2(x, wn)
     if(any(gn2 == wn)) stop("Weights coincide with grouping variables!")
     gn2 <- c(gn2, wn)
@@ -105,7 +105,7 @@ STD.grouped_df <- function(x, w = NULL, na.rm = TRUE, mean = 0, sd = 1, stub = "
   nam <- attr(x, "names")
   gn2 <- which(nam %in% g[[5L]])
   gn <- if(keep.group_vars) gn2 else NULL
-  if(length(wsym) && length(wn <- which(wsym == nam))) {
+  if(length(wsym) && length(wn <- whichv(nam, wsym))) {
     w <- .subset2(x, wn)
     if(any(gn2 == wn)) stop("Weights coincide with grouping variables!")
     gn2 <- c(gn2,wn)

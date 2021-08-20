@@ -16,6 +16,7 @@
 \alias{fnrow}
 \alias{fncol}
 \alias{fdim}
+\alias{whichv}
 \alias{alloc}
 \alias{allNA}
 \alias{missing_cases}
@@ -62,6 +63,8 @@ fnlevels(x)                   # Faster version of nlevels(x) (for factors)
 fnrow(X)                      # Faster nrow for data frames (not faster for matrices)
 fncol(X)                      # Faster ncol for data frames (not faster for matrices)
 fdim(X)                       # Faster dim for data frames (not faster for matrices)
+whichv(x, value = NA,         # Which value. Defaults to which(is.na(x)), or which(!is.na(x))
+       invert = FALSE)        # if invert = TRUE. For all atomic, non-complex vector types.
 alloc(value, n)               # Same as rep_len for a single value, but faster
 allNA(x)                      # Check for all missing cases in a vector
 missing_cases(X, cols = NULL) # Find missing cases in a matrix / data framme
@@ -164,6 +167,15 @@ all_identical(iris, iris, iris, iris)
 l <- replicate(100, fmean(num_vars(iris), iris$Species), simplify = FALSE)
 all_identical(l)
 rm(l)
+
+## Which value
+whichv(wlddev$PCGDP)                 # Same as which(is.na(wlddev$PCGDP))
+whichv(wlddev$PCGDP, invert = TRUE)  # Same as which(!is.na(wlddev$PCGDP))
+whichv(wlddev$country, "Chad")       # Same as which(wlddev$county == "Chad")
+whichv(wlddev$country, "Chad", TRUE) # Same as which(wlddev$county != "Chad")
+lvec <- wlddev$country == "Italy"    # If we already have a logical vector...
+whichv(lvec, FALSE)                  # is fastver than which(!lvec)
+rm(lvec)
 
 ## Missing values
 mtc_na <- na_insert(mtcars, 0.15)    # Set 15\% of values missing at random

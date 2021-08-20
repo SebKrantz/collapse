@@ -572,7 +572,7 @@ funique.data.frame <- function(x, cols = NULL, sort = FALSE, ...) {
 funique.list <- function(x, cols = NULL, sort = FALSE, ...) funique.data.frame(x, cols, sort, ...)
 
 funique.sf <- function(x, cols = NULL, sort = FALSE, ...) {
-  cols <- if(is.null(cols)) which(attr(x, "names") != attr(x, "sf_column")) else
+  cols <- if(is.null(cols)) whichv(attr(x, "names"), attr(x, "sf_column"), TRUE) else
                             cols2int(cols, x, attr(x, "names"), FALSE)
   o <- radixorderv(.subset(x, cols), starts = TRUE, sort = sort, ...)
   if(attr(o, "maxgrpn") == 1L && (!sort || attr(o, "sorted"))) return(x)

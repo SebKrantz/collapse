@@ -83,6 +83,15 @@ test_that("vlabels works well", {
   expect_equal(wlddev, setLabels(wlddev, vlabels(wlddev)))
 })
 
+test_that("whichv works well", {
+  expect_identical(whichv(wlddev$country, "Chad"), which(wlddev$country == "Chad"))
+  expect_identical(whichv(wlddev$country, "Chad", invert = TRUE), which(wlddev$country != "Chad"))
+  expect_identical(whichv(wlddev$PCGDP), which(is.na(wlddev$PCGDP)))
+  expect_identical(whichv(wlddev$PCGDP, invert = TRUE), which(!is.na(wlddev$PCGDP)))
+  expect_identical(whichv(is.na(wlddev$PCGDP), FALSE), which(!is.na(wlddev$PCGDP)))
+})
+
+
 test_that("adding and removing stubs works", {
   expect_identical(rm_stub(add_stub(iris, "df"), "df"), iris)
   expect_identical(rm_stub(add_stub(iris, "df", pre = FALSE), "df", pre = FALSE), iris)

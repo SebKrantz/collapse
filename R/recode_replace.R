@@ -337,7 +337,11 @@ pad <- function(X, i, value = NA, method = c("auto", "xpos", "vpos")) { # 1 - i 
   n <- if(ilog) length(i) else if(xpos && !ineg) max(i) else n + length(i)
   if(is.atomic(X)) return(pad_atomic(X, if(xpos || ineg) i else if(ilog) !i else -i, n, value))
   if(!is.list(X)) stop("X must be atomic or a list")
-  if(ilog) i <- which(if(xpos) i else !i) else if(!xpos) i <- seq_len(n)[if(ineg) i else -i]
+  if(ilog) {
+    i <- if(xpos) which(i) else whichv(i, FALSE)
+  } else if(!xpos) {
+    i <- seq_len(n)[if(ineg) i else -i]
+  }
   ax <- attributes(X)
   attributes(X) <- NULL
   res <- lapply(X, pad_atomic, i, n, value)

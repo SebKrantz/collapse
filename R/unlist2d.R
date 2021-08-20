@@ -61,22 +61,22 @@ unlist2d <- function(l, idcols = ".id", row.names = FALSE, recursive = TRUE, id.
     while(!inherits(l, "data.frame")) l <- ul2d(l)
     if(makeids) {
       nams <- attr(l, "names")
-      ids <- which(nams == id.names)
+      ids <- whichv(nams, id.names)
       nid <- length(ids)
       if(nid > 1L) {
         nids <- seq_len(nid)
         attr(l, "names")[ids] <- if(length(idcols) == nid) idcols else paste(id.names, nids, sep = ".")
         if(keeprn) {
-          rn <- which(nams == row.names) # with more id's, row.names are automatically generated from the sub-data.frames..
+          rn <- whichv(nams, row.names) # with more id's, row.names are automatically generated from the sub-data.frames..
           if(!all(ids == nids) || rn != nid + 1L) .Call(C_setcolorder, l, c(ids, rn, seq_along(nams)[-c(ids, rn)]))
         } else if (!all(ids == nids)) .Call(C_setcolorder, l, c(ids, seq_along(nams)[-ids]))
       } else if(keeprn) { # makes sure row.names comes after ids, even if only one id!
-        rn <- which(nams == row.names) # length(rn) needed when only vectors... no row names column...
+        rn <- whichv(nams, row.names) # length(rn) needed when only vectors... no row names column...
         if(length(rn) && rn != 2L) .Call(C_setcolorder, l,  c(ids, rn, seq_along(nams)[-c(ids, rn)]))
       }
     } else if (keeprn) {
       nams <- attr(l, "names")
-      rn <- which(nams == row.names)
+      rn <- whichv(nams, row.names)
       if(length(rn) && rn != 1L) .Call(C_setcolorder, l, c(rn, seq_along(nams)[-rn]))
     }
     if(DT) return(alc(l))

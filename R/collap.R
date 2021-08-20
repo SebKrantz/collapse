@@ -184,7 +184,7 @@ collap <- function(X, by, FUN = fmean, catFUN = fmode, cols = NULL, w = NULL, wF
       nu <- v[temp] # which(nu & v)
       rm(temp, v)
     } else {
-      nnu <- which(!nu)
+      nnu <- whichv(nu, FALSE)
       nu <- which(nu)
     }
     nul <- length(nu) > 0L

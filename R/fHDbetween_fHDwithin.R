@@ -278,7 +278,7 @@ fhdwithin.default <- function(x, fl, w = NULL, na.rm = TRUE, fill = FALSE, lm.me
   if(na.rm) {
     cc <- complete.cases(x, fl, w) # gives error if lengths don't match, otherwise demeanlist and qr.resid give errors !!
     if(!all(cc)) {
-      ax[["na.rm"]] <- which(!cc)
+      ax[["na.rm"]] <- whichv(cc, FALSE)
       cc <- which(cc)
       w <- w[cc] # Note this here !!
       if(!fill) {
@@ -331,7 +331,7 @@ fhdwithin.pseries <- function(x, effect = seq_col(attr(x, "index")), w = NULL, n
   namix <- attr(ix, "names")
   effect <- cols2int(effect, ix, namix)
   g <- .subset(ix, effect)
-  if(na.rm && length(cc <- which(!is.na(x))) != length(x)) {
+  if(na.rm && length(cc <- whichv(x, NA, TRUE)) != length(x)) {
      g <- .Call(C_subsetDT, g, cc, seq_along(g), FALSE) # lapply(g, `[`, cc) -> slower !
     if(fill) {
       x[cc] <- demean(.subset(`names<-`(x, NULL), cc), g, w[cc], ...) # keeps attributes ?? -> Yes !!
@@ -357,7 +357,7 @@ fhdwithin.matrix <- function(x, fl, w = NULL, na.rm = TRUE, fill = FALSE, lm.met
   if(na.rm) {
     cc <- complete.cases(x, fl, w) # gives error if lengths don't match, otherwise demeanlist and qr.resid give errors !!
     if(!all(cc)) {
-      ax[["na.rm"]] <- which(!cc)
+      ax[["na.rm"]] <- whichv(cc, FALSE)
       cc <- which(cc)
       w <- w[cc]
       if(!fill) {
@@ -418,13 +418,13 @@ fhdwithin.pdata.frame <- function(x, effect = seq_col(attr(x, "index")), w = NUL
     ax <- attributes(x)
     attributes(x) <- NULL
     varwisecomp <- function(x, fl, w, ...) lapply(x, function(y) {
-      ycc <- which(!is.na(y))
+      ycc <- whichv(y, NA, TRUE)
       y[ycc] <- demean(.subset(y, ycc), subsetfl(fl, ycc), w[ycc], ...)
       return(y)
     })
     return(setAttributes(varwisecomp(x, g, w, ...), ax))
   } else if(na.rm && any(miss <- .Call(C_dt_na, x, seq_along(unclass(x))))) {
-    cc <- which(!miss)
+    cc <- whichv(miss, FALSE)
     gcc <- .Call(C_subsetDT, g, cc, seq_along(g), FALSE)
     Y <- demean(.Call(C_subsetDT, x, cc, seq_along(unclass(x)), FALSE), gcc, w[cc], ...)
     if(fill) {
@@ -452,7 +452,7 @@ fhdwithin.data.frame <- function(x, fl, w = NULL, na.rm = TRUE, fill = FALSE, va
   if(na.rm) {
     cc <- if(variable.wise) complete.cases(fl, w) else complete.cases(x, fl, w) # gives error if lengths don't match, otherwise demeanlist and qr.resid give errors !!
     if(!all(cc)) {
-      ax[["na.rm"]] <- which(!cc)
+      ax[["na.rm"]] <- whichv(cc, FALSE)
       cc <- which(cc)
       w <- w[cc]
       if(!variable.wise) {
@@ -492,8 +492,8 @@ fhdwithin.data.frame <- function(x, fl, w = NULL, na.rm = TRUE, fill = FALSE, va
     if(na.rm) { # this means there were mising values in fl, which were already removed!
       return(setAttributes(lapply(unattrib(x), function(y) {
         y[-cc] <- NA # which is not faster !!
-        ycc <- !is.na(y)
-        YC <- which(ycc[cc])
+        ycc <- whichv(y, NA, TRUE)
+        YC <- whichv(y[cc], NA, TRUE)
         wc <- w[YC]
         y[ycc] <- if(nallfc) flmres(demean(y[ycc], subsetfl(fl, YC), wc, ...), xmat[YC, , drop = FALSE], wc, lm.method, ...) else if(fcl)
           demean(y[ycc], subsetfl(fl, YC), wc, ...) else flmres(y[ycc], xmat[YC, , drop = FALSE], wc, lm.method, ...)
@@ -501,7 +501,7 @@ fhdwithin.data.frame <- function(x, fl, w = NULL, na.rm = TRUE, fill = FALSE, va
       }), ax))
     }
     return(setAttributes(lapply(unattrib(x), function(y) {
-      ycc <- which(!is.na(y))
+      ycc <- whichv(y, NA, TRUE)
       wc <- w[ycc]
       y[ycc] <- if(nallfc) flmres(demean(y[ycc], subsetfl(fl, ycc), wc, ...), xmat[ycc, , drop = FALSE], wc, lm.method, ...) else if(fcl)
         demean(y[ycc], subsetfl(fl, ycc), wc, ...) else flmres(y[ycc], xmat[ycc, , drop = FALSE], wc, lm.method, ...)
@@ -551,7 +551,7 @@ HDW.data.frame <- function(x, fl, w = NULL, cols = is.numeric, na.rm = TRUE, fil
       if(missw <- length(w) && anyNA(w)) miss <- miss | is.na(w)
       if(missw || any(miss)) {
         ax[["na.rm"]] <- which(miss)
-        cc <- which(!miss)
+        cc <- whichv(miss, FALSE)
         w <- w[cc]
         if(!variable.wise) if(fill) nrx <- fnrow2(x) else ax[["row.names"]] <- ax[["row.names"]][cc] # best ??
       } else na.rm <- FALSE
@@ -567,8 +567,8 @@ HDW.data.frame <- function(x, fl, w = NULL, cols = is.numeric, na.rm = TRUE, fil
       if(na.rm) {
         return(setAttributes(lapply(.subset(x, Xvars), function(y) {
           y[-cc] <- NA
-          ycc <- !is.na(y)
-          YC <- which(ycc[cc])
+          ycc <- whichv(y, NA, TRUE)
+          YC <- whichv(y[cc], NA, TRUE)
           wc <- w[YC]
           y[ycc] <- if(nallfc) flmres(demean(y[ycc], subsetfl(fl, YC), wc, ...), xmat[YC, , drop = FALSE], wc, lm.method, ...) else if(fcl)
             demean(y[ycc], subsetfl(fl, YC), wc, ...) else  flmres(y[ycc], xmat[YC, , drop = FALSE], wc, lm.method, ...)
@@ -576,7 +576,7 @@ HDW.data.frame <- function(x, fl, w = NULL, cols = is.numeric, na.rm = TRUE, fil
         }), ax))
       }
       return(setAttributes(lapply(.subset(x, Xvars), function(y) {
-        ycc <- which(!is.na(y))
+        ycc <- whichv(y, NA, TRUE)
         wc <- w[ycc]
         y[ycc] <- if(nallfc) flmres(demean(y[ycc], subsetfl(fl, ycc), wc, ...), xmat[ycc, , drop = FALSE], wc, lm.method, ...) else if(fcl)
           demean(y[ycc], subsetfl(fl, ycc), wc, ...) else flmres(y[ycc], xmat[ycc, , drop = FALSE], wc, lm.method, ...)
@@ -620,7 +620,7 @@ fhdbetween.default <- function(x, fl, w = NULL, na.rm = TRUE, fill = FALSE, lm.m
   if(na.rm) {
     cc <- complete.cases(x, fl, w) # gives error if lengths don't match, otherwise demeanlist and qr.resid give errors !!
     if(!all(cc)) {
-      ax[["na.rm"]] <- which(!cc)
+      ax[["na.rm"]] <- whichv(cc, FALSE)
       cc <- which(cc)
       w <- w[cc] # Note this here !!
       if(!fill) {
@@ -682,7 +682,7 @@ fhdbetween.matrix <- function(x, fl, w = NULL, na.rm = TRUE, fill = FALSE, lm.me
   if(na.rm) {
     cc <- complete.cases(x, fl, w) # gives error if lengths don't match, otherwise demeanlist and qr.resid give errors !!
     if(!all(cc)) {
-      ax[["na.rm"]] <- which(!cc)
+      ax[["na.rm"]] <- whichv(cc, FALSE)
       cc <- which(cc)
       w <- w[cc]
       if(!fill) {
@@ -746,7 +746,7 @@ fhdbetween.data.frame <- function(x, fl, w = NULL, na.rm = TRUE, fill = FALSE, v
   if(na.rm) {
     cc <- if(variable.wise) complete.cases(fl, w) else complete.cases(x, fl, w) # gives error if lengths don't match, otherwise demeanlist and qr.resid give errors !!
     if(!all(cc)) {
-      ax[["na.rm"]] <- which(!cc)
+      ax[["na.rm"]] <- whichv(cc, FALSE)
       cc <- which(cc)
       w <- w[cc]
       if(!variable.wise) {
@@ -786,8 +786,8 @@ fhdbetween.data.frame <- function(x, fl, w = NULL, na.rm = TRUE, fill = FALSE, v
     if(na.rm) { # this means there were mising values in fl, which were already removed!
       return(setAttributes(lapply(unattrib(x), function(y) {
         y[-cc] <- NA # which is not faster !!
-        ycc <- !is.na(y)
-        YC <- which(ycc[cc])
+        ycc <- whichv(y, NA, TRUE)
+        YC <- whichv(y[cc], NA, TRUE)
         wc <- w[YC]
         yycc <- y[ycc]
         y[ycc] <- if(nallfc) yycc - flmres(demean(yycc, subsetfl(fl, YC), wc, ...), xmat[YC, , drop = FALSE], wc, lm.method, ...) else if(fcl)
@@ -796,7 +796,7 @@ fhdbetween.data.frame <- function(x, fl, w = NULL, na.rm = TRUE, fill = FALSE, v
       }), ax))
     }
     return(setAttributes(lapply(unattrib(x), function(y) {
-      ycc <- which(!is.na(y))
+      ycc <- whichv(y, NA, TRUE)
       wc <- w[ycc]
       yycc <- y[ycc]
       y[ycc] <- if(nallfc) yycc - flmres(demean(yycc, subsetfl(fl, ycc), wc, ...), xmat[ycc, , drop = FALSE], wc, lm.method, ...) else if(fcl)
@@ -848,7 +848,7 @@ HDB.data.frame <- function(x, fl, w = NULL, cols = is.numeric, na.rm = TRUE, fil
       if(missw <- length(w) && anyNA(w)) miss <- miss | is.na(w)
       if(missw || any(miss)) {
         ax[["na.rm"]] <- which(miss)
-        cc <- which(!miss)
+        cc <- whichv(miss, FALSE)
         w <- w[cc]
         if(!variable.wise) if(fill) nrx <- fnrow2(x) else ax[["row.names"]] <- ax[["row.names"]][cc] # best ??
       } else na.rm <- FALSE
@@ -866,8 +866,8 @@ HDB.data.frame <- function(x, fl, w = NULL, cols = is.numeric, na.rm = TRUE, fil
       if(na.rm) { # this means there were mising values in fl, which were already removed!
         return(setAttributes(lapply(unattrib(x), function(y) {
           y[-cc] <- NA # which is not faster !!
-          ycc <- !is.na(y)
-          YC <- which(ycc[cc])
+          ycc <- whichv(y, NA, TRUE)
+          YC <- whichv(y[cc], NA, TRUE)
           wc <- w[YC]
           yycc <- y[ycc]
           y[ycc] <- if(nallfc) yycc - flmres(demean(yycc, subsetfl(fl, YC), wc, ...), xmat[YC, , drop = FALSE], wc, lm.method, ...) else if(fcl)
@@ -876,7 +876,7 @@ HDB.data.frame <- function(x, fl, w = NULL, cols = is.numeric, na.rm = TRUE, fil
         }), ax))
       }
       return(setAttributes(lapply(unattrib(x), function(y) {
-        ycc <- which(!is.na(y))
+        ycc <- whichv(y, NA, TRUE)
         wc <- w[ycc]
         yycc <- y[ycc]
         y[ycc] <- if(nallfc) yycc - flmres(demean(yycc, subsetfl(fl, ycc), wc, ...), xmat[ycc, , drop = FALSE], wc, lm.method, ...) else if(fcl)

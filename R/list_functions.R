@@ -104,7 +104,7 @@ list_extract_FUN <- function(l, FUN, is.subl, keep.tree = FALSE) {
  regsearch <- function(x) {
   if(any(subl <- vapply(x, is.subl, TRUE, USE.NAMES = FALSE))) { # is.list(x) && a
     wsubl <- which(subl)
-    wnsubl <- which(!subl)
+    wnsubl <- whichv(subl, FALSE)
     matches <- vapply(x[wnsubl], FUN, TRUE, USE.NAMES = FALSE)
     a <- lapply(x[wsubl], regsearch)
     wa <- vapply(a, length, 1L, USE.NAMES = FALSE) > 0L # note that this also gets rid of null elements! could make it length or is.null!

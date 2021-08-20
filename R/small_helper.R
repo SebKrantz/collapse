@@ -251,6 +251,8 @@ is.Date <- is_date
 #   } else duplAttributes(x[!is.na(x)], x)
 # }
 
+whichv <- function(x, value = NA, invert = FALSE) .Call(C_whichv, x, value, invert)
+
 alloc <- function(value, n) .Call(C_alloc, value, n)
 
 allNA <- function(x) .Call(C_allNA, x, TRUE) # True means give error for unsupported vector types, not FALSE.
@@ -274,7 +276,7 @@ na_omit <- function(X, cols = NULL, na.attr = FALSE) {
     rn <- attr(X, "row.names")
     if(!(is.numeric(rn) || is.null(rn) || rn[1L] == "1")) attr(res, "row.names") <- rn[rkeep]
     if(na.attr) {
-      attr(res, "na.action") <- `oldClass<-`(which(!rl), "omit")
+      attr(res, "na.action") <- `oldClass<-`(whichv(rl, FALSE), "omit")
       if(inherits(res, "data.table")) return(alc(res))
     }
   } else {
@@ -282,7 +284,7 @@ na_omit <- function(X, cols = NULL, na.attr = FALSE) {
     rkeep <- which(rl)
     if(length(rkeep) == NROW(X)) return(X)
     res <- if(is.matrix(X)) X[rkeep, , drop = FALSE] else X[rkeep]
-    if(na.attr) attr(res, "na.action") <- `oldClass<-`(which(!rl), "omit")
+    if(na.attr) attr(res, "na.action") <- `oldClass<-`(whichv(rl, FALSE), "omit")
   }
   res
 }

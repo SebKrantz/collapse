@@ -180,3 +180,66 @@ SEXP Cna_rm(SEXP x) {
 }
 
 
+
+SEXP whichv(SEXP x, SEXP val, SEXP Rinvert) {
+
+  int j = 0, n = length(x), invert = asLogical(Rinvert);
+  if(length(val) != 1) error("value needs to be length 1");
+  int *buf = (int *) R_alloc(n, sizeof(int));
+  SEXP ans;
+
+  #define WHICHVLOOP                                             \
+  if(invert) {                                                   \
+    for(int i = 0; i != n; ++i) if(ix[i] != v) buf[j++] = i+1;   \
+  } else {                                                       \
+    for(int i = 0; i != n; ++i) if(ix[i] == v) buf[j++] = i+1;   \
+  }
+
+  switch(TYPEOF(x)) {
+    case INTSXP:
+    case LGLSXP:
+    {
+      const int *ix = INTEGER(x);
+      const int v = asInteger(val);
+      WHICHVLOOP
+      break;
+    }
+    case REALSXP:
+    {
+      const double *ix = REAL(x);
+      const double v = asReal(val);
+      if(ISNAN(v)) {
+        if(invert) {
+          for(int i = 0; i != n; ++i) if(NISNAN(ix[i])) buf[j++] = i+1;
+        } else {
+          for(int i = 0; i != n; ++i) if(ISNAN(ix[i])) buf[j++] = i+1;
+        }
+      } else {
+        WHICHVLOOP
+      }
+      break;
+    }
+    case STRSXP:
+    {
+      const SEXP *ix = STRING_PTR(x);
+      const SEXP v = asChar(val);
+      WHICHVLOOP
+      break;
+    }
+    case RAWSXP :
+    {
+      const Rbyte *ix = RAW(x);
+      const Rbyte v = RAW(val)[0];
+      WHICHVLOOP
+      break;
+    }
+    default: error("Unsupported type '%s' passed to whichv()", type2char(TYPEOF(x)));
+  }
+  PROTECT(ans = allocVector(INTSXP, j));
+  if(j) memcpy(INTEGER(ans), buf, sizeof(int) * j);
+
+  UNPROTECT(1);
+  return(ans);
+}
+
+
