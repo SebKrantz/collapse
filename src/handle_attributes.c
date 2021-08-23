@@ -46,7 +46,7 @@ SEXP copyMostAttributes(SEXP x, SEXP y) {
 
 
 SEXP CsetAttrib(SEXP object, SEXP a) {
-  int il = isList(object);
+  int il = TYPEOF(object) == VECSXP;
   SEXP res = il ? PROTECT(Rf_shallow_duplicate(object)) : object; // needed, otherwise error !!
   SET_ATTRIB(res, PROTECT(Rf_coerceVector(a, LISTSXP)));
   Rf_classgets(res, Rf_getAttrib(res, R_ClassSymbol));
@@ -55,7 +55,7 @@ SEXP CsetAttrib(SEXP object, SEXP a) {
 }
 
 SEXP CcopyAttrib(SEXP to, SEXP from) {
-  int il = isList(to);
+  int il = TYPEOF(to) == VECSXP;
   SEXP res = il ? PROTECT(Rf_shallow_duplicate(to)) : to;
   DUPLICATE_ATTRIB(res, from);
   UNPROTECT(il);
@@ -64,9 +64,12 @@ SEXP CcopyAttrib(SEXP to, SEXP from) {
 
 
 SEXP CcopyMostAttrib(SEXP to, SEXP from) {
-  int il = isList(to);
+  int il = TYPEOF(to) == VECSXP;
   SEXP res = il ? PROTECT(Rf_shallow_duplicate(to)) : to;
   Rf_copyMostAttrib(from, res);
+  if(il && isFrame(from) && length(VECTOR_ELT(to, 0)) != length(VECTOR_ELT(from, 0))) {
+    Rf_setAttrib(res, R_RowNamesSymbol, Rf_getAttrib(to, R_RowNamesSymbol));
+  }
   UNPROTECT(il);
   return res;
 }
