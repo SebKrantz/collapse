@@ -256,3 +256,46 @@ SEXP whichv(SEXP x, SEXP val, SEXP Rinvert) {
 }
 
 
+/* Inspired by:
+ * do_list2env : .Internal(list2env(x, envir))
+ */
+SEXP multiassign(SEXP lhs, SEXP rhs, SEXP envir) {
+  int n = length(lhs), trhs = TYPEOF(rhs);
+  if(LENGTH(rhs) != n) error("length(lhs) must be equal to length(rhs)");
+  if(TYPEOF(lhs) != STRSXP) error("lhs needs to be character");
+  SEXP *plhs = STRING_PTR(lhs);
+  switch(trhs) {
+    case REALSXP: {
+      double *prhs = REAL(rhs);
+      for(int i = 0; i < n; ++i) defineVar(installTrChar(plhs[i]), ScalarReal(prhs[i]), envir);
+      break;
+    }
+    case INTSXP: {
+      int *prhs = INTEGER(rhs);
+      for(int i = 0; i < n; ++i) defineVar(installTrChar(plhs[i]), ScalarInteger(prhs[i]), envir);
+      break;
+    }
+    case STRSXP: {
+      SEXP *prhs = STRING_PTR(rhs);
+      for(int i = 0; i < n; ++i) defineVar(installTrChar(plhs[i]), ScalarString(prhs[i]), envir);
+      break;
+    }
+    case LGLSXP: {
+      int *prhs = LOGICAL(rhs);
+      for(int i = 0; i < n; ++i) defineVar(installTrChar(plhs[i]), ScalarLogical(prhs[i]), envir);
+      break;
+    }
+    case VECSXP: {
+      for(int i = 0; i < n; ++i) defineVar(installTrChar(plhs[i]), lazy_duplicate(VECTOR_ELT(rhs, i)), envir);
+      break;
+    }
+    default: {
+      SEXP rhsl = PROTECT(coerceVector(rhs, VECSXP));
+      for(int i = 0; i < n; ++i) defineVar(installTrChar(plhs[i]), lazy_duplicate(VECTOR_ELT(rhsl, i)), envir);
+      UNPROTECT(1);
+    }
+  }
+  return R_NilValue;
+}
+
+

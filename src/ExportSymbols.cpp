@@ -32,6 +32,7 @@ RcppExport SEXP lassign(SEXP x, SEXP s, SEXP rows, SEXP fill);
 RcppExport SEXP groups2GRP(SEXP x, SEXP lx, SEXP gs);
 RcppExport SEXP Cna_rm(SEXP x);
 RcppExport SEXP whichv(SEXP x, SEXP val, SEXP Rinvert);
+RcppExport SEXP multiassign(SEXP lhs, SEXP rhs, SEXP envir);
 // fnobs rewritten in C:
 RcppExport SEXP fnobsC(SEXP x, SEXP Rng, SEXP g);
 RcppExport SEXP fnobsmC(SEXP x, SEXP Rng, SEXP g, SEXP Rdrop);
@@ -151,6 +152,7 @@ static const R_CallMethodDef CallEntries[] = {
   {"C_allNA",         (DL_FUNC) &allNAv,        2},
   {"C_na_rm",         (DL_FUNC) &Cna_rm,        1},
   {"C_whichv",        (DL_FUNC) &whichv,        3},
+  {"C_multiassign",   (DL_FUNC) &multiassign,   3},
   {"C_radixsort",     (DL_FUNC) &Cradixsort,    6},
   {"C_frankds",       (DL_FUNC) &frankds,       4},
   {"C_pacf1",         (DL_FUNC) &pacf1,         2},
