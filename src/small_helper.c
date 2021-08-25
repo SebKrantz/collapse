@@ -260,11 +260,15 @@ SEXP whichv(SEXP x, SEXP val, SEXP Rinvert) {
  * do_list2env : .Internal(list2env(x, envir))
  */
 SEXP multiassign(SEXP lhs, SEXP rhs, SEXP envir) {
-  int n = length(lhs), trhs = TYPEOF(rhs);
-  if(LENGTH(rhs) != n) error("length(lhs) must be equal to length(rhs)");
   if(TYPEOF(lhs) != STRSXP) error("lhs needs to be character");
+  int n = length(lhs);
+  if(n == 1) { // lazy_duplicate appears not necessary (copy-on modify is automatically implemented, and <- also does not use it).
+    defineVar(installTrChar(STRING_ELT(lhs, 0)), rhs, envir);
+    return R_NilValue;
+  }
+  if(length(rhs) != n) error("length(lhs) must be equal to length(rhs)");
   SEXP *plhs = STRING_PTR(lhs);
-  switch(trhs) {
+  switch(TYPEOF(rhs)) { // installTrChar translates to native encoding, otherwise use installChar (no big performance difference).
     case REALSXP: {
       double *prhs = REAL(rhs);
       for(int i = 0; i < n; ++i) defineVar(installTrChar(plhs[i]), ScalarReal(prhs[i]), envir);
@@ -285,13 +289,13 @@ SEXP multiassign(SEXP lhs, SEXP rhs, SEXP envir) {
       for(int i = 0; i < n; ++i) defineVar(installTrChar(plhs[i]), ScalarLogical(prhs[i]), envir);
       break;
     }
-    case VECSXP: {
-      for(int i = 0; i < n; ++i) defineVar(installTrChar(plhs[i]), lazy_duplicate(VECTOR_ELT(rhs, i)), envir);
+    case VECSXP: { // lazy_duplicate appears not necessary (copy-on modify is automatically implemented, and <- also does not use it).
+      for(int i = 0; i < n; ++i) defineVar(installTrChar(plhs[i]), VECTOR_ELT(rhs, i), envir);
       break;
     }
     default: {
       SEXP rhsl = PROTECT(coerceVector(rhs, VECSXP));
-      for(int i = 0; i < n; ++i) defineVar(installTrChar(plhs[i]), lazy_duplicate(VECTOR_ELT(rhsl, i)), envir);
+      for(int i = 0; i < n; ++i) defineVar(installTrChar(plhs[i]), VECTOR_ELT(rhsl, i), envir);
       UNPROTECT(1);
     }
   }
