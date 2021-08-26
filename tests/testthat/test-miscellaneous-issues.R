@@ -200,7 +200,7 @@ test_that("functions work on plain matrices", {
 Xl <- mctl(X)
 
 test_that("functions work on plain lists", {
-  for(i in setdiff(funs, .c(ffirst, flast, fnobs))) {
+  for(i in funs) {
     expect_visible(match.fun(i)(Xl))
     expect_visible(match.fun(i)(Xl, g = g, by = g))
     expect_visible(match.fun(i)(Xl, g = gf, by = gf))
