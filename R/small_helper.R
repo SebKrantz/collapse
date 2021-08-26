@@ -334,9 +334,9 @@ fdim <- function(X) {
    c(length(X[[1L]]), length(X)) # Faster than c(length(.subset2(X, 1L)), length(unclass(X)))
 }
 
-seq_row <- function(X) if(is.list(X)) seq_along(.subset2(X, 1L)) else seq_len(nrow(X))
+seq_row <- function(X) if(is.list(X)) seq_along(.subset2(X, 1L)) else seq_len(dim(X)[1L])
 
-seq_col <- function(X) if(is.list(X)) seq_along(unclass(X)) else seq_len(ncol(X))
+seq_col <- function(X) if(is.list(X)) seq_along(unclass(X)) else seq_len(dim(X)[2L])
 
 # na.last is false !!
 forder.int <- function(x) .Call(C_radixsort, FALSE, FALSE, FALSE, FALSE, TRUE, pairlist(x)) # if(is.unsorted(x)) .Call(C_forder, x, NULL, FALSE, TRUE, 1L, TRUE) else seq_along(x) # since forder gives integer(0) if sorted !
