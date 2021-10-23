@@ -60,35 +60,38 @@ null2NA <- function(x) if(is.null(x)) NA_character_ else x
 
 # flapply <- function(x, FUN, ...) lapply(unattrib(x), FUN, ...) # not really needed ...
 
-vlabels <- function(X, attrn = "label") {
-  if(is.atomic(X)) return(null2NA(attr(X, attrn)))
-  res <- lapply(X, attr, attrn) # unattrib(X): no names
-  res[vapply(res, is.null, TRUE)] <- NA_character_
-  unlist(res)
-}
-
-# Slower on WDI !!!
-# vlabels2 <- function(X, attrn = "label") {
-#   if(is.atomic(X)) return(null2NA(attr(X, attrn)))
-#   vapply(X, function(x) if(is.null(a <- attr(x, attrn))) NA_character_ else a, character(1L))
+vlabels <- function(X, attrn = "label") .Call(C_vlabels, X, attrn) # {
+  # if(is.atomic(X)) return(null2NA(attr(X, attrn)))
+  # res <- lapply(X, attr, attrn) # unattrib(X): no names
+  # res[vapply(res, is.null, TRUE)] <- NA_character_
+  # unlist(res)
 # }
 
 "vlabels<-" <- function(X, attrn = "label", value) {
-  names(value) <- NULL
   if(is.atomic(X)) return(`attr<-`(X, attrn, value))
-  clx <- oldClass(X)
-  oldClass(X) <- NULL
-  if(is.null(value)) {
-    for (i in seq_along(X)) attr(X[[i]], attrn) <- NULL
-  } else {
-    if(length(X) != length(value)) stop("length(X) must match length(value)")
-    for (i in seq_along(value)) attr(X[[i]], attrn) <- value[[i]]
-  }
-  if(any(clx == "data.table")) return(alc(`oldClass<-`(X, clx)))
-  `oldClass<-`(X, clx)
+  .Call(C_setvlabels, X, attrn, value, NULL)
 }
 
-setLabels <- function(X, value, attrn = "label") `vlabels<-`(X, attrn, value)
+# "vlabels<-" <- function(X, attrn = "label", value) {
+#   names(value) <- NULL
+#   if(is.atomic(X)) return(`attr<-`(X, attrn, value))
+#   clx <- oldClass(X)
+#   oldClass(X) <- NULL
+#   if(is.null(value)) {
+#     for (i in seq_along(X)) attr(X[[i]], attrn) <- NULL
+#   } else {
+#     if(length(X) != length(value)) stop("length(X) must match length(value)")
+#     for (i in seq_along(value)) attr(X[[i]], attrn) <- value[[i]]
+#   }
+#   if(any(clx == "data.table")) return(alc(`oldClass<-`(X, clx)))
+#   `oldClass<-`(X, clx)
+# }
+
+# Note: Shallow copy does not work as it only copies the list, but the attribute is a feature of the atomic elements inside...
+setLabels <- function(X, value, attrn = "label", cols = NULL) { # , sc = TRUE
+  if(is.atomic(X)) return(`attr<-`(X, attrn, value))
+  .Call(C_setvlabels, X, attrn, value, as.integer(cols))
+}
 
 # Also slower on WDI !!
 # "vlabels2<-" <- function(X, attrn = "label", value) {
@@ -217,7 +220,7 @@ all_obj_equal <- function(...) {
 }
 
 cinv <- function(X) chol2inv(chol(X))
-
+# TODO: Use outer here for simple case...
 interact_names <- function(l) do.call(paste, c(expand.grid(l, KEEP.OUT.ATTRS = FALSE, stringsAsFactors = FALSE), list(sep = ".")))
 
 # set over-allocation for data.table's

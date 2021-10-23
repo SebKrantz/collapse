@@ -1,4 +1,5 @@
 #include "collapse_c.h"
+// #include "data.table.h"
 
 void matCopyAttr(SEXP out, SEXP x, SEXP Rdrop, int ng) {
   SEXP dn = getAttrib(x, R_DimNamesSymbol);
@@ -268,7 +269,7 @@ SEXP multiassign(SEXP lhs, SEXP rhs, SEXP envir) {
   }
   if(length(rhs) != n) error("length(lhs) must be equal to length(rhs)");
   SEXP *plhs = STRING_PTR(lhs);
-  switch(TYPEOF(rhs)) { // installTrChar translates to native encoding, otherwise use installChar (no big performance difference).
+  switch(TYPEOF(rhs)) { // installTrChar translates to native encoding, otherwise use installChar (no big performance difference, <- also uses installTrChar).
     case REALSXP: {
       double *prhs = REAL(rhs);
       for(int i = 0; i < n; ++i) defineVar(installTrChar(plhs[i]), ScalarReal(prhs[i]), envir);
@@ -302,4 +303,98 @@ SEXP multiassign(SEXP lhs, SEXP rhs, SEXP envir) {
   return R_NilValue;
 }
 
+
+SEXP vlabels(SEXP x, SEXP attrn) {
+  if(!isString(attrn)) error("'attrn' must be of mode character");
+  if(length(attrn) != 1) error("exactly one attribute 'attrn' must be given");
+  SEXP sym_attrn = PROTECT(installTrChar(STRING_ELT(attrn, 0)));
+  int l = length(x);
+  if(TYPEOF(x) != VECSXP) {
+    SEXP labx = getAttrib(x, sym_attrn);
+    UNPROTECT(1);
+    if(labx == R_NilValue) return ScalarString(NA_STRING);
+    return labx;
+  }
+  SEXP res = PROTECT(allocVector(STRSXP, l));
+  SEXP *pres = STRING_PTR(res), *px = SEXPPTR(x);
+  for(int i = 0; i < l; ++i) {
+    SEXP labxi = getAttrib(px[i], sym_attrn);
+    pres[i] = labxi == R_NilValue ? NA_STRING : STRING_ELT(labxi, 0);
+  }
+  SEXP nam = getAttrib(x, R_NamesSymbol);
+  if(!isNull(nam)) namesgets(res, nam);
+  UNPROTECT(2);
+  return res;
+}
+
+// Note: ind can be NULL...
+SEXP setvlabels(SEXP x, SEXP attrn, SEXP value, SEXP ind) { // , SEXP sc
+ if(!isString(attrn)) error("'attrn' must be of mode character");
+ if(length(attrn) != 1) error("exactly one attribute 'attrn' must be given");
+ if(TYPEOF(x) != VECSXP) error("X must be a list");
+ int nprotect = 1, l = length(x), tv = TYPEOF(value); // , scl = asLogical(sc);
+ SEXP *px = SEXPPTR(x); // , xsc;
+ // if(scl) { // Create shallow copy
+ //   if(INHERITS(x, char_datatable)) {
+ //     xsc = PROTECT(Calloccol(x));
+ //   } else {
+ //     xsc = PROTECT(shallow_duplicate(x));
+ //   }
+ //   ++nprotect;
+ //   px = SEXPPTR(xsc);
+ // }
+ SEXP *pv = px;
+ if(tv != NILSXP) {
+   if(tv == VECSXP || tv == STRSXP) {
+    pv = SEXPPTR(value);
+   } else {
+    SEXP vl = PROTECT(coerceVector(value, VECSXP));
+    pv = SEXPPTR(vl); ++nprotect;
+   }
+ }
+ SEXP sym_attrn = PROTECT(installTrChar(STRING_ELT(attrn, 0)));
+ if(length(ind) == 0) {
+   if(tv != NILSXP && l != length(value)) error("length(x) must match length(value)");
+   if(tv == NILSXP) {
+     for(int i = 0; i < l; ++i) setAttrib(px[i], sym_attrn, R_NilValue);
+   } else if(tv == STRSXP) {
+     for(int i = 0; i < l; ++i) setAttrib(px[i], sym_attrn, ScalarString(pv[i]));
+   } else {
+     for(int i = 0; i < l; ++i) setAttrib(px[i], sym_attrn, pv[i]);
+   }
+ } else {
+   if(TYPEOF(ind) != INTSXP) error("vlabels<-: ind must be of type integer");
+   int li = length(ind), *pind = INTEGER(ind), ii;
+   if(tv != NILSXP && li != length(value)) error("length(ind) must match length(value)");
+   if(li == 0 || li > l) error("vlabels<-: length(ind) must be > 0 and <= length(x)");
+   if(tv == NILSXP) {
+     for(int i = 0; i < li; ++i) {
+       ii = pind[i]-1;
+       if(ii < 0 || ii >= l) error("vlabels<-: ind must be between 1 and length(x)");
+       setAttrib(px[ii], sym_attrn, R_NilValue);
+     }
+   } else if(tv == STRSXP) {
+     for(int i = 0; i < li; ++i) {
+       ii = pind[i]-1;
+       if(ii < 0 || ii >= l) error("vlabels<-: ind must be between 1 and length(x)");
+       setAttrib(px[ii], sym_attrn, ScalarString(pv[i]));
+     }
+   } else {
+     for(int i = 0; i < li; ++i) {
+       ii = pind[i]-1;
+       if(ii < 0 || ii >= l) error("vlabels<-: ind must be between 1 and length(x)");
+       setAttrib(px[ii], sym_attrn, pv[i]);
+     }
+   }
+ }
+ UNPROTECT(nprotect);
+ // return scl ? xsc : x;
+ return x;
+}
+
+
+SEXP setnames(SEXP x, SEXP nam) {
+  setAttrib(x, R_NamesSymbol, nam);
+  return x;
+}
 
