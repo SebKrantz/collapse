@@ -82,6 +82,9 @@ The \emph{sf} method simply ignores the geometry column.
 \value{
 A vector, matrix, array or list of matrices of summary statistics. All matrices and arrays have a class 'qsu' and a class 'table' attached.
 }
+\note{
+In weighted summaries, observations with missing or zero weights are skipped, and thus do not affect any of the calculated statistics, including the observation count. This also implies that a logical vector passed to \code{w} can be used to efficiently summarize a subset of the data.
+}
 \references{
 Welford, B. P. (1962). Note on a method for calculating corrected sums of squares and products. \emph{Technometrics}. 4 (3): 419-420. doi:10.2307/1266577.
 }

@@ -149,10 +149,10 @@ NumericVector fscaleCpp(const NumericVector& x, int ng = 0, const IntegerVector&
       double sumw = 0, mean = 0, M2 = 0, d1 = 0;
       if(narm) {
         int j = l-1;
-        while((std::isnan(x[j]) || std::isnan(wg[j])) && j!=0) --j;
+        while((std::isnan(x[j]) || std::isnan(wg[j]) || wg[j] == 0) && j!=0) --j;
         if(j != 0) {
           for(int i = j+1; i--; ) {
-            if(std::isnan(x[i]) || std::isnan(wg[i])) continue;
+            if(std::isnan(x[i]) || std::isnan(wg[i]) || wg[i] == 0) continue;
             sumw += wg[i];
             d1 = x[i] - mean;
             mean += d1 * (wg[i] / sumw);
@@ -170,6 +170,7 @@ NumericVector fscaleCpp(const NumericVector& x, int ng = 0, const IntegerVector&
             DUPLICATE_ATTRIB(out, x);
             return out;
           } else {
+            if(wg[i] == 0) continue;
             sumw += wg[i];
             d1 = x[i] - mean;
             mean += d1 * (wg[i] / sumw);
@@ -193,7 +194,7 @@ NumericVector fscaleCpp(const NumericVector& x, int ng = 0, const IntegerVector&
       // NumericVector sumw = narm ? no_init_vector(ng) : NumericVector(ng);
       if(narm) {
         for(int i = l; i--; ) {
-          if(std::isnan(x[i]) || std::isnan(wg[i])) continue;
+          if(std::isnan(x[i]) || std::isnan(wg[i]) || wg[i] == 0) continue;
           if(std::isnan(M2[g[i]-1])) {
             sumw[g[i]-1] = wg[i];
             mean[g[i]-1] = x[i];
@@ -218,6 +219,7 @@ NumericVector fscaleCpp(const NumericVector& x, int ng = 0, const IntegerVector&
               return out;
             }
           } else {
+            if(wg[i] == 0) continue;
             sumw[g[i]-1] += wg[i];
             d1 = x[i] - mean[g[i]-1];
             mean[g[i]-1] += d1 * (wg[i] / sumw[g[i]-1]);
@@ -429,10 +431,10 @@ NumericMatrix fscalemCpp(const NumericMatrix& x, int ng = 0, const IntegerVector
         double sumwj = 0, meanj = 0, M2j = 0, d1 = 0;
         if(narm) {
           int k = l-1;
-          while((std::isnan(column[k]) || std::isnan(wg[k])) && k!=0) --k;
+          while((std::isnan(column[k]) || std::isnan(wg[k]) || wg[k] == 0) && k!=0) --k;
           if(k != 0) {
             for(int i = k+1; i--; ) {
-              if(std::isnan(column[i]) || std::isnan(wg[i])) continue;
+              if(std::isnan(column[i]) || std::isnan(wg[i]) || wg[i] == 0) continue;
               sumwj += wg[i];
               d1 = column[i] - meanj;
               meanj += d1 * (wg[i] / sumwj);
@@ -448,6 +450,7 @@ NumericMatrix fscalemCpp(const NumericMatrix& x, int ng = 0, const IntegerVector
               M2j = NA_REAL;
               break;
             } else {
+              if(wg[i] == 0) continue;
               sumwj += wg[i];
               d1 = column[i] - meanj;
               meanj += d1 * (wg[i] / sumwj);
@@ -476,7 +479,7 @@ NumericMatrix fscalemCpp(const NumericMatrix& x, int ng = 0, const IntegerVector
         if(narm) {
           std::fill(M2j.begin(), M2j.end(), NA_REAL);
           for(int i = l; i--; ) {
-            if(std::isnan(column[i]) || std::isnan(wg[i])) continue;
+            if(std::isnan(column[i]) || std::isnan(wg[i]) || wg[i] == 0) continue;
             if(std::isnan(M2j[g[i]-1])) {
               sumwj[g[i]-1] = wg[i];
               meanj[g[i]-1] = column[i];
@@ -501,6 +504,7 @@ NumericMatrix fscalemCpp(const NumericMatrix& x, int ng = 0, const IntegerVector
                 goto loopend2;
               }
             } else {
+              if(wg[i] == 0) continue;
               sumwj[g[i]-1] += wg[i];
               d1 = column[i] - meanj[g[i]-1];
               meanj[g[i]-1] += d1 * (wg[i] / sumwj[g[i]-1]);
@@ -721,10 +725,10 @@ List fscalelCpp(const List& x, int ng = 0, const IntegerVector& g = 0, const SEX
         double sumwj = 0, meanj = 0, M2j = 0, d1 = 0;
         if(narm) {
           int k = wgs-1;
-          while((std::isnan(column[k]) || std::isnan(wg[k])) && k!=0) --k;
+          while((std::isnan(column[k]) || std::isnan(wg[k]) || wg[k] == 0) && k!=0) --k;
           if(k != 0) {
             for(int i = k+1; i--; ) {
-              if(std::isnan(column[i]) || std::isnan(wg[i])) continue;
+              if(std::isnan(column[i]) || std::isnan(wg[i]) || wg[i] == 0) continue;
               sumwj += wg[i];
               d1 = column[i] - meanj;
               meanj += d1 * (wg[i] / sumwj);
@@ -740,6 +744,7 @@ List fscalelCpp(const List& x, int ng = 0, const IntegerVector& g = 0, const SEX
               M2j = NA_REAL;
               break;
             } else {
+              if(wg[i] == 0) continue;
               sumwj += wg[i];
               d1 = column[i] - meanj;
               meanj += d1 * (wg[i] / sumwj);
@@ -772,7 +777,7 @@ List fscalelCpp(const List& x, int ng = 0, const IntegerVector& g = 0, const SEX
         if(narm) {
           std::fill(M2j.begin(), M2j.end(), NA_REAL);
           for(int i = gss; i--; ) {
-            if(std::isnan(column[i]) || std::isnan(wg[i])) continue;
+            if(std::isnan(column[i]) || std::isnan(wg[i]) || wg[i] == 0) continue;
             if(std::isnan(M2j[g[i]-1])) {
               sumwj[g[i]-1] = wg[i];
               meanj[g[i]-1] = column[i];
@@ -797,6 +802,7 @@ List fscalelCpp(const List& x, int ng = 0, const IntegerVector& g = 0, const SEX
                 goto loopend4;
               }
             } else {
+              if(wg[i] == 0) continue;
               sumwj[g[i]-1] += wg[i];
               d1 = column[i] - meanj[g[i]-1];
               meanj[g[i]-1] += d1 * (wg[i] / sumwj[g[i]-1]);

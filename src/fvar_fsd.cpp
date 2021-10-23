@@ -129,10 +129,10 @@ NumericVector fvarsdCpp(const NumericVector& x, int ng = 0, const IntegerVector&
           int j = l-1;
           // long double sumw = 0, mean = 0, M2 = 0, d1 = 0;
           double sumw = 0, mean = 0, M2 = 0, d1 = 0;
-          while((std::isnan(x[j]) || std::isnan(wg[j])) && j!=0) --j;
+          while((std::isnan(x[j]) || std::isnan(wg[j]) || wg[j] == 0) && j!=0) --j;
           if(j != 0) {
             for(int i = j+1; i--; ) {
-              if(std::isnan(x[i]) || std::isnan(wg[i])) continue;
+              if(std::isnan(x[i]) || std::isnan(wg[i]) || wg[i] == 0) continue; // additional check to skip 0 weights has practically zero cost..
               sumw += wg[i];
               d1 = x[i] - mean;
               mean += d1 * (wg[i] / sumw);
@@ -150,6 +150,7 @@ NumericVector fvarsdCpp(const NumericVector& x, int ng = 0, const IntegerVector&
             if(std::isnan(x[i]) || std::isnan(wg[i])) {
               return NumericVector::create(NA_REAL);
             } else {
+              if(wg[i] == 0) continue; // This is necessary to prevent 0 starting weights which will render the mean infinite. Has little computational cost.
               sumw += wg[i];
               d1 = x[i] - mean;
               mean += d1 * (wg[i] / sumw);
@@ -169,7 +170,7 @@ NumericVector fvarsdCpp(const NumericVector& x, int ng = 0, const IntegerVector&
           NumericVector M2(ng, NA_REAL), sumw(ng), mean(ng); // better for valgrind
           // NumericVector sumw = no_init_vector(ng), mean = no_init_vector(ng);
           for(int i = l; i--; ) {
-            if(std::isnan(x[i]) || std::isnan(wg[i])) continue;
+            if(std::isnan(x[i]) || std::isnan(wg[i]) || wg[i] == 0) continue;
             if(std::isnan(M2[g[i]-1])) {
               sumw[g[i]-1] = wg[i];
               mean[g[i]-1] = x[i];
@@ -210,6 +211,7 @@ NumericVector fvarsdCpp(const NumericVector& x, int ng = 0, const IntegerVector&
               ++ngs;
               if(ngs == ng) break;
             } else {
+              if(wg[i] == 0) continue; // This is necessary to prevent 0 starting weights which will render the mean infinite. Has little computational cost.
               sumw[g[i]-1] += wg[i];
               d1 = x[i] - mean[g[i]-1];
               mean[g[i]-1] += d1 * (wg[i] / sumw[g[i]-1]);
@@ -626,10 +628,10 @@ SEXP fvarsdmCpp(const NumericMatrix& x, int ng = 0, const IntegerVector& g = 0,
             int k = l-1;
             // long double sumwi = 0, meani = 0, M2i = 0, d1i = 0;
             double sumwi = 0, meani = 0, M2i = 0, d1i = 0;
-            while((std::isnan(column[k]) || std::isnan(wg[k])) && k!=0) --k;
+            while((std::isnan(column[k]) || std::isnan(wg[k]) || wg[k] == 0) && k!=0) --k;
             if(k != 0) {
               for(int i = k+1; i--; ) {
-                if(std::isnan(column[i]) || std::isnan(wg[i])) continue;
+                if(std::isnan(column[i]) || std::isnan(wg[i]) || wg[i] == 0) continue;
                 sumwi += wg[i];
                 d1i = column[i] - meani;
                 meani += d1i * (wg[i] / sumwi);
@@ -651,6 +653,7 @@ SEXP fvarsdmCpp(const NumericMatrix& x, int ng = 0, const IntegerVector& g = 0,
                 M2i = NA_REAL;
                 break;
               } else {
+                if(wg[i] == 0) continue;
                 sumwi += wg[i];
                 d1i = column[i] - meani;
                 meani += d1i * (wg[i] / sumwi);
@@ -682,7 +685,7 @@ SEXP fvarsdmCpp(const NumericMatrix& x, int ng = 0, const IntegerVector& g = 0,
             double d1j = 0; // meanj[ng], sumwj[ng];
             // NumericVector meanj = no_init_vector(ng), sumwj = no_init_vector(ng); better for valgrind
             for(int i = l; i--; ) {
-              if(std::isnan(column[i]) || std::isnan(wg[i])) continue;
+              if(std::isnan(column[i]) || std::isnan(wg[i]) || wg[i] == 0) continue;
               if(std::isnan(M2j[g[i]-1])) {
                 sumwj[g[i]-1] = wg[i];
                 meanj[g[i]-1] = column[i];
@@ -730,6 +733,7 @@ SEXP fvarsdmCpp(const NumericMatrix& x, int ng = 0, const IntegerVector& g = 0,
                 ++ngs;
                 if(ngs == ng) break;
               } else {
+                if(wg[i] == 0) continue;
                 sumwj[g[i]-1] += wg[i];
                 d1j = column[i] - meanj[g[i]-1];
                 meanj[g[i]-1] += d1j * (wg[i] / sumwj[g[i]-1]);
@@ -1199,10 +1203,10 @@ SEXP fvarsdlCpp(const List& x, int ng = 0, const IntegerVector& g = 0,
             int k = wgs-1;
             // long double sumwi = 0, meani = 0, M2i = 0, d1i = 0;
             double sumwi = 0, meani = 0, M2i = 0, d1i = 0;
-            while((std::isnan(column[k]) || std::isnan(wg[k])) && k!=0) --k;
+            while((std::isnan(column[k]) || std::isnan(wg[k]) || wg[k] == 0) && k!=0) --k;
             if(k != 0) {
               for(int i = k+1; i--; ) {
-                if(std::isnan(column[i]) || std::isnan(wg[i])) continue;
+                if(std::isnan(column[i]) || std::isnan(wg[i]) || wg[i] == 0) continue;
                 sumwi += wg[i];
                 d1i = column[i] - meani;
                 meani += d1i * (wg[i] / sumwi);
@@ -1225,6 +1229,7 @@ SEXP fvarsdlCpp(const List& x, int ng = 0, const IntegerVector& g = 0,
                 M2i = NA_REAL;
                 break;
               } else {
+                if(wg[i] == 0) continue;
                 sumwi += wg[i];
                 d1i = column[i] - meani;
                 meani += d1i * (wg[i] / sumwi);
@@ -1261,7 +1266,7 @@ SEXP fvarsdlCpp(const List& x, int ng = 0, const IntegerVector& g = 0,
             NumericVector M2j(ng, NA_REAL), meanj(ng), sumwj(ng); // better for valgrind //= no_init_vector(ng), sumwj = no_init_vector(ng);
             double d1j = 0; // , sumwj[ng], meanj[ng];
             for(int i = gss; i--; ) {
-              if(std::isnan(column[i]) || std::isnan(wg[i])) continue;
+              if(std::isnan(column[i]) || std::isnan(wg[i]) || wg[i] == 0) continue;
               if(std::isnan(M2j[g[i]-1])) {
                 sumwj[g[i]-1] = wg[i];
                 meanj[g[i]-1] = column[i];
@@ -1308,6 +1313,7 @@ SEXP fvarsdlCpp(const List& x, int ng = 0, const IntegerVector& g = 0,
                 ++ngs;
                 if(ngs == ng) break;
               } else {
+                if(wg[i] == 0) continue;
                 sumwj[g[i]-1] += wg[i];
                 d1j = column[i] - meanj[g[i]-1];
                 meanj[g[i]-1] += d1j * (wg[i] / sumwj[g[i]-1]);

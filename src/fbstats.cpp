@@ -38,10 +38,10 @@ NumericVector fbstatstemp(NumericVector x, bool ext = false, int ng = 0, Integer
         if(l != wg.size()) stop("length(w) must match length(x)");
         // long double sumw = 0;
         double sumw = 0;
-        while((std::isnan(x[j]) || std::isnan(wg[j])) && j!=0) --j;
+        while((std::isnan(x[j]) || std::isnan(wg[j]) || wg[j] == 0) && j!=0) --j;
          if(j != 0) { // if(j == 0) stop("Not enough non-mising obs.");
           for(int i = j+1; i--; ) {
-            if(std::isnan(x[i]) || std::isnan(wg[i])) continue;
+            if(std::isnan(x[i]) || std::isnan(wg[i]) || wg[i] == 0) continue;
             sumw += wg[i];
             d1 = x[i] - mean;
             mean += d1 * (wg[i] / sumw);
@@ -78,11 +78,9 @@ NumericVector fbstatstemp(NumericVector x, bool ext = false, int ng = 0, Integer
           if(std::isnan(x[i])) continue;
           k = g[i]-1;
           if(std::isnan(M2[k])) {
-            mean[k] = x[i];
+            mean[k] = min[k] = max[k] = x[i];
             M2[k] = 0;
             n[k] = 1.0;
-            min[k] = R_PosInf;
-            max[k] = R_NegInf;
           } else {
             d1 = x[i]-mean[k];
             mean[k] += d1 * (1 / ++n[k]);
@@ -97,15 +95,13 @@ NumericVector fbstatstemp(NumericVector x, bool ext = false, int ng = 0, Integer
         if(l != wg.size()) stop("length(w) must match length(x)");
         NumericVector sumw(ng); // = no_init_vector(ng); // better for valgrind
         for(int i = l; i--; ) {
-          if(std::isnan(x[i]) || std::isnan(wg[i])) continue;
+          if(std::isnan(x[i]) || std::isnan(wg[i]) || wg[i] == 0) continue;
           k = g[i]-1;
           if(std::isnan(M2[k])) {
             sumw[k] = wg[i];
-            mean[k] = x[i];
+            mean[k] = min[k] = max[k] = x[i];
             M2[k] = 0;
             n[k] = 1;
-            min[k] = R_PosInf;
-            max[k] = R_NegInf;
           } else {
             sumw[k] += wg[i];
             d1 = x[i] - mean[k];
@@ -155,10 +151,10 @@ NumericVector fbstatstemp(NumericVector x, bool ext = false, int ng = 0, Integer
          if(l != wg.size()) stop("length(w) must match length(x)");
          // long double sumw = 0;
          double sumw = 0;
-         while((std::isnan(x[j]) || std::isnan(wg[j])) && j!=0) --j;
+         while((std::isnan(x[j]) || std::isnan(wg[j]) || wg[j] == 0) && j!=0) --j;
          if(j != 0) {  // if(j == 0) stop("Not enough non-mising obs.");
          for(int i = j+1; i--; ) {
-           if(std::isnan(x[i]) || std::isnan(wg[i])) continue;
+           if(std::isnan(x[i]) || std::isnan(wg[i]) || wg[i] == 0) continue;
            sumw += wg[i]; // great, this is correct:
            d1 = x[i]-mean;
            dn = d1 * (wg[i] / sumw);
@@ -202,11 +198,9 @@ NumericVector fbstatstemp(NumericVector x, bool ext = false, int ng = 0, Integer
            if(std::isnan(x[i])) continue;
            k = g[i]-1;
            if(std::isnan(M2[k])) {
-             mean[k] = x[i];
+             mean[k] = min[k] = max[k] = x[i];
              M2[k] = M3[k] = M4[k] = 0;
              n[k] = 1.0;
-             min[k] = R_PosInf;
-             max[k] = R_NegInf;
            } else {
              d1 = x[i]-mean[k];
              dn = d1 * (1 / ++n[k]);
@@ -230,15 +224,13 @@ NumericVector fbstatstemp(NumericVector x, bool ext = false, int ng = 0, Integer
          if(l != wg.size()) stop("length(w) must match length(x)");
          NumericVector sumw(ng); // = no_init_vector(ng); // better for valgrind
          for(int i = l; i--; ) {
-           if(std::isnan(x[i]) || std::isnan(wg[i])) continue;
+           if(std::isnan(x[i]) || std::isnan(wg[i]) || wg[i] == 0) continue;
            k = g[i]-1;
            if(std::isnan(M2[k])) {
              sumw[k] = wg[i];
-             mean[k] = x[i];
+             mean[k] = min[k] = max[k] = x[i];
              M2[k] = M3[k] = M4[k] = 0;
              n[k] = 1.0;
-             min[k] = R_PosInf;
-             max[k] = R_NegInf;
            } else {
              sumw[k] += wg[i];
              d1 = x[i]-mean[k];
