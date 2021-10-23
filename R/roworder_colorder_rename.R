@@ -95,11 +95,27 @@ setrename <- function(.x, ..., cols = NULL) {
       nam[ind] <- FUN(nam[ind])
     }
   } else nam[ckmatch(namarg, nam)] <- as.character(args)
-  if(inherits(.x, "data.table")) {
-    eval.parent(substitute(.x <- get0("alc", getNamespace("collapse"))(`attr<-`(.x, "names", nam))))
-  } else {
-    eval.parent(substitute(attr(.x, "names") <- nam))
-  }
+  invisible(.Call(C_setnames, .x, nam))
 }
 
 # setrnm <- setrename
+
+relabel <- function(.x, ..., cols = NULL, attrn = "label") { # , sc = TRUE
+  args <- list(...)
+  nam <- attr(.x, "names")
+  namarg <- names(args)
+  if(is.null(namarg) || !all(nzchar(namarg))) {
+    if(!is.function(..1)) stop("... needs to be expressions colname = newname, or a function to apply to the names of columns in cols.")
+    lab <- vlabels(.x)
+    FUN <- if(...length() == 1L) ..1 else # could do special case if ...length() == 2L
+      function(x) do.call(..1, c(list(x), list(...)[-1L]))
+    if(is.null(cols)) return(.Call(C_setvlabels, .x, attrn, FUN(lab), NULL))
+    ind <- cols2int(cols, .x, nam, FALSE)
+    args <- FUN(lab[ind])
+  } else ind <- ckmatch(namarg, nam)
+  .Call(C_setvlabels, .x, attrn, args, ind)
+}
+
+setrelabel <- function(.x, ..., cols = NULL, attrn = "label")
+  invisible(relabel(.x, ..., cols = cols, attrn = attrn))
+
