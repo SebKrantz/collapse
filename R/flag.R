@@ -4,7 +4,7 @@ flag <- function(x, n = 1, ...) UseMethod("flag") # , x
 flag.default <- function(x, n = 1, g = NULL, t = NULL, fill = NA, stubs = TRUE, ...) {
   if(is.matrix(x) && !inherits(x, "matrix")) return(UseMethod("flag", unclass(x)))
   if(!missing(...)) unused_arg_action(match.call(), ...)
-  if(is.null(g)) return(.Call(Cpp_flaglead,x,n,fill,0L,0L,G_t(t,0L),stubs))
+  if(is.null(g)) return(.Call(Cpp_flaglead,x,n,fill,0L,0L,G_t(t),stubs))
   if(is.atomic(g)) {
     if(is.nmfactor(g)) nl <- fnlevels(g) else {
       g <- qG(g, na.exclude = FALSE)
@@ -27,7 +27,7 @@ flag.pseries <- function(x, n = 1, fill = NA, stubs = TRUE, ...) {
 
 flag.matrix <- function(x, n = 1, g = NULL, t = NULL, fill = NA, stubs = length(n) > 1L, ...) {
   if(!missing(...)) unused_arg_action(match.call(), ...)
-  if(is.null(g)) return(.Call(Cpp_flagleadm,x,n,fill,0L,0L,G_t(t,0L),stubs))
+  if(is.null(g)) return(.Call(Cpp_flagleadm,x,n,fill,0L,0L,G_t(t),stubs))
   if(is.atomic(g)) {
     if(is.nmfactor(g)) nl <- fnlevels(g) else {
       g <- qG(g, na.exclude = FALSE)
@@ -66,7 +66,7 @@ flag.grouped_df <- function(x, n = 1, t = NULL, fill = NA, stubs = length(n) > 1
 }
 flag.data.frame <- function(x, n = 1, g = NULL, t = NULL, fill = NA, stubs = length(n) > 1L, ...) {
   if(!missing(...)) unused_arg_action(match.call(), ...)
-  if(is.null(g)) return(.Call(Cpp_flagleadl,x,n,fill,0L,0L,G_t(t,0L),stubs))
+  if(is.null(g)) return(.Call(Cpp_flagleadl,x,n,fill,0L,0L,G_t(t),stubs))
   if(is.atomic(g)) {
     if(is.nmfactor(g)) nl <- fnlevels(g) else {
       g <- qG(g, na.exclude = FALSE)
@@ -152,7 +152,7 @@ L.data.frame <- function(x, n = 1, by = NULL, t = NULL, cols = is.numeric,
     setattributes(x, ax)
   }
 
-  if(is.null(by)) return(.Call(Cpp_flagleadl,x,n,fill,0L,0L,G_t(t,0L),stubs))
+  if(is.null(by)) return(.Call(Cpp_flagleadl,x,n,fill,0L,0L,G_t(t),stubs))
   if(is.atomic(by)) {
     if(is.nmfactor(by)) nl <- fnlevels(by) else {
       by <- qG(by, na.exclude = FALSE)

@@ -512,13 +512,14 @@ at2GRP <- function(x) {
   res
 }
 
-G_t <- function(x, wm = 1L) {
-  if(is.null(x)) {
-    if(wm > 0L) message(switch(wm, "Panel-lag computed without timevar: Assuming ordered data",
-                             "Panel-difference computed without timevar: Assuming ordered data",
-                             "Panel-growth rate computed without timevar: Assuming ordered data"))
-    return(x)
-  } # If integer time variable contains NA, noes not break C++ code..
+G_t <- function(x) { # , wm = 1L
+  if(is.null(x)) return(x) # {
+  #   if(wm > 0L) message(switch(wm, "Panel-lag computed without timevar: Assuming ordered data",
+  #                            "Panel-difference computed without timevar: Assuming ordered data",
+  #                            "Panel-growth rate computed without timevar: Assuming ordered data"))
+  #   return(x)
+  # }
+  # If integer time variable contains NA, noes not break C++ code..
   if(is.atomic(x)) if(is.integer(unclass(x))) return(x) else return(qG(x, na.exclude = FALSE, sort = TRUE, method = "hash")) # make sure it is sorted ! qG already checks factor !
   if(is_GRP(x)) return(x[[2L]]) else return(GRP.default(x, return.groups = FALSE, sort = TRUE, call = FALSE)[[2L]])
 }
