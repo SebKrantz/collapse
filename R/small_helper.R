@@ -128,24 +128,27 @@ namlab <- function(X, class = FALSE, attrn = "label") {
   res
 }
 
-add_stub <- function(X, stub, pre = TRUE) {
+add_stub <- function(X, stub, pre = TRUE, cols = NULL) {
   if(!is.character(stub)) return(X)
   if(is.atomic(X) && is.array(X)) {
     if(length(dim(X)) > 2L) stop("Can't stub higher dimensional arrays!")
     dn <- dimnames(X)
     cn <- dn[[2L]]
-    if(length(cn)) dimnames(X) <- list(dn[[1L]], if(pre) paste0(stub, cn) else paste0(cn, stub))
+    if(length(cols)) cn[cols] <- if(pre) paste0(stub, cn[cols]) else paste0(cn[cols], stub)
+    else cn <- if(pre) paste0(stub, cn) else paste0(cn, stub)
+    if(length(cn)) dimnames(X) <- list(dn[[1L]], cn)
   } else {
     nam <- attr(X, "names")
     if(length(nam)) {
-      attr(X, "names") <- if(pre) paste0(stub, nam) else paste0(nam, stub)
+      if(length(cols)) attr(X, "names")[cols] <- if(pre) paste0(stub, nam[cols]) else paste0(nam[cols], stub)
+      else attr(X, "names") <- if(pre) paste0(stub, nam) else paste0(nam, stub)
       if(inherits(X, "data.table")) X <- alc(X)
     }
   }
   X
 }
 
-rm_stub <- function(X, stub, pre = TRUE, regex = FALSE, ...) {
+rm_stub <- function(X, stub, pre = TRUE, regex = FALSE, cols = NULL, ...) {
   if(!is.character(stub)) return(X)
   if(regex)
     rmstubFUN <- function(x) {
@@ -164,12 +167,14 @@ rm_stub <- function(X, stub, pre = TRUE, regex = FALSE, ...) {
     }
   if(is.atomic(X)) {
     d <- dim(X)
-    if(is.null(d)) if(is.character(X)) return(rmstubFUN(X)) else stop("Cannot modify a vector that is not character")
+    if(is.null(d)) if(is.character(X)) return(if(length(cols)) replace(X, cols, rmstubFUN(X[cols])) else rmstubFUN(X)) else stop("Cannot modify a vector that is not character")
     if(length(d) > 2L) stop("Can't remove stub from higher dimensional arrays!")
     dn <- dimnames(X)
-    dimnames(X) <- list(dn[[1L]], rmstubFUN(dn[[2L]]))
+    cn <- dn[[2L]]
+    dimnames(X) <- list(dn[[1L]], if(length(cols)) replace(cn, cols, rmstubFUN(cn[cols])) else rmstubFUN(cn))
   } else {
-    attr(X, "names") <- rmstubFUN(attr(X, "names"))
+    nam <- attr(X, "names")
+    attr(X, "names") <- if(length(cols)) replace(nam, cols, rmstubFUN(nam[cols])) else rmstubFUN(nam)
     if(inherits(X, "data.table")) X <- alc(X)
   }
   X

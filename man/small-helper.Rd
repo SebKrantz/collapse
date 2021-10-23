@@ -56,9 +56,11 @@ vclasses(X)                   # Get classes of variables in X
 vtypes(X)                     # Get data storage types of variables in X (calling typeof)
 namlab(X, class = FALSE,      # Return data frame of names, labels and classes
           attrn = "label")
-add_stub(X, stub, pre = TRUE) # Add a stub (i.e. prefix or postfix) to column names
+add_stub(X, stub, pre = TRUE, # Add a stub (i.e. prefix or postfix) to column names
+         cols = NULL)
 rm_stub(X, stub, pre = TRUE,  # Remove stub from column names, also supports general
-        regex = FALSE, ...)   # regex matching and removing of characters
+        regex = FALSE,        # regex matching and removing of characters
+        cols = NULL, ...)
 x \%!in\% table                 # The opposite of \%in\%
 ckmatch(x, table,             # Check-match: throws an informative error if non-matched
      e = "Unknown columns:")
