@@ -38,7 +38,7 @@
 
 
 # Multiple-assignment
-"%=%" <- function(lhs, rhs) invisible(.Call(C_multiassign, lhs, rhs, parent.frame()))
+"%=%" <- function(lhs, rhs, env = parent.frame()) invisible(.Call(C_multiassign, lhs, rhs, env))
 # R implementation:
 # "%=%" <- function(lhs, rhs) {
 #   if(!is.character(lhs)) stop("lhs needs to be character")
@@ -48,6 +48,8 @@
 #            parent = NULL, hash = FALSE, size = 0L)
 #   invisible()
 # }
+
+group <- function(x, starts = FALSE, group.sizes = FALSE) .Call(C_group, x, starts, group.sizes)
 
 
 getenvFUN <- function(nam, efmt1 = "For this method need to install.packages('%s'), then unload [detach('package:collapse', unload = TRUE)] and reload [library(collapse)].")
