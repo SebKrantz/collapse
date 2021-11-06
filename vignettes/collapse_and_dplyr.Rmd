@@ -36,7 +36,7 @@ oldopts <- options(width = 100L)
 ```{r, echo = FALSE, message = FALSE, warning=FALSE, eval=NCRAN}
 library(dplyr)
 library(microbenchmark)
-library(collapse)
+library(collapsedev17)
 knitr::opts_chunk$set(error = FALSE, message = FALSE, warning = FALSE, 
                       comment = "#", tidy = FALSE, cache = TRUE, collapse = TRUE,
                       fig.width = 8, fig.height = 5, 
@@ -83,7 +83,7 @@ With that in mind, let's consider some straightforward applications.
 Consider the Groningen Growth and Development Center 10-Sector Database included in *collapse* and introduced in the main vignette:
 
 ```{r, eval=NCRAN}
-library(collapse)
+library(collapsedev17)
 head(GGDC10S)
 
 # Summarize the Data: 

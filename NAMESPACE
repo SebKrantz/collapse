@@ -1,4 +1,4 @@
-useDynLib(collapse, .registration=TRUE) # , .fixes = "C_"
+useDynLib(collapsedev17, .registration=TRUE) # , .fixes = "C_"
 importFrom(Rcpp, evalCpp)
 importFrom("graphics", "hist", "par", "plot")
 importFrom("grDevices", "rainbow")
@@ -327,8 +327,11 @@ importFrom("stats", "as.formula", "complete.cases", "cor", "cov", "var", "pt",
  export(roworderv)
  export(frename)
  export(setrename)
+ export(relabel)
+ export(setrelabel)
  export(colorder)
  export(colorderv)
+ export(group)
  export(funique)
  export(funique.default)
  export(funique.data.frame)

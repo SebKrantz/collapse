@@ -37,7 +37,7 @@ library(vars)
 library(dplyr)  # Needed because otherwise dplyr is loaded in benchmark chunk not run on CRAN !!
 library(magrittr)
 library(microbenchmark) # Same thing
-library(collapse)
+library(collapsedev17)
 library(data.table)
 B <- collapse::B # making sure it masks vars::B by loading into GE
 knitr::opts_chunk$set(error = FALSE, message = FALSE, warning = FALSE, 
@@ -96,7 +96,7 @@ We begin by introducing some powerful summary tools along with the 2 panel datas
 ### 1.1 `wlddev` - World Bank Development Data
 This dataset contains 5 key World Bank Development Indicators covering 216 countries for up to 61 years (1960-2020). It is a balanced balanced panel with $216 \times 61 = 13176$ observations. -->
 ```{r, eval=NCRAN}
-library(collapse)
+library(collapsedev17)
 head(wlddev)
 
 # The variables have "label" attributes. Use vlabels() to get and set labels

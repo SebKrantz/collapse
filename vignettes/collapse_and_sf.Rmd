@@ -29,7 +29,7 @@ pre[class] {
 NMAC <- Sys.getenv("NMAC") == "TRUE"
 if(NMAC) library(sf)
 library(microbenchmark)
-library(collapse)
+library(collapsedev17)
 knitr::opts_chunk$set(error = FALSE, message = FALSE, warning = FALSE, 
                       comment = "#", tidy = FALSE, cache = FALSE, collapse = TRUE,
                       fig.width = 8, fig.height = 5, 
@@ -51,7 +51,7 @@ This short vignette focuses on using *collapse* with the popular *sf* package by
 Version 1.6.0 of the package adds internal support for *sf* data frames where the geometry column is handled by most essential functions (`fselect`, `get_vars`, `num_vars`, `fsubset`, `ss`, `fgroup_by`, `qsu`, `descr`, `varying`, `funique`, `roworder`, `rsplit`, `fcompute`, ...). This largely does not affect previously written code where the geometry column is explicitly selected. To demonstrate these features, we can load a test dataset provided by *sf*:
 
 ```{r, eval=NMAC}
-library(collapse)
+library(collapsedev17)
 library(sf)
 
 nc <- st_read(system.file("shape/nc.shp", package = "sf"), quiet = TRUE)

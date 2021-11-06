@@ -28,7 +28,7 @@ pre[class] {
 ```{r, echo = FALSE, message = FALSE, warning=FALSE}
 library(data.table)
 library(microbenchmark)
-library(collapse)
+library(collapsedev17)
 knitr::opts_chunk$set(error = FALSE, message = FALSE, warning = FALSE, 
                       comment = "#", tidy = FALSE, cache = TRUE, collapse = TRUE,
                       fig.width = 8, fig.height = 5, 
@@ -78,7 +78,7 @@ Thus you don't need to choose between these two. I created *collapse* because I 
 Applying *collapse* functions to a data.table always gives a data.table back e.g. 
 
 ```{r}
-library(collapse)
+library(collapsedev17)
 library(magrittr)
 library(data.table)
 

@@ -1,7 +1,7 @@
 
 .onLoad <- function(libname, pkgname) {
 
-  res <- .Call(C_collapse_init, "init.success")
+  res <- .Call(C_collapsedev17_init, "init.success")
   if(!is.character(res) || res != "init.success") stop("collapse not succesfully loaded!")
 
   # https://stackoverflow.com/questions/12598242/global-variables-in-packages-in-r
@@ -46,15 +46,15 @@
 }
 
 .onAttach <- function(libname, pkgname) {
-  packageStartupMessage(paste0("collapse ",packageVersion("collapse"),", see ?`collapse-package` or ?`collapse-documentation`\nNote: stats::D  ->  D.expression, D.call, D.name"))
+  packageStartupMessage(paste0("collapse ",packageVersion("collapsedev17"),", see ?`collapse-package` or ?`collapse-documentation`\nNote: stats::D  ->  D.expression, D.call, D.name"))
 }
 
 .onUnload <- function (libpath) {
-  library.dynam.unload("collapse", libpath)
+  library.dynam.unload("collapsedev17", libpath)
 }
 
 # Note: To create local dev version of package change package name in DESCRIPTION, NAMESPACE, this file (including C_collapse_init),
-# replace all instances of `_collapse_` in source files, and also rename `R_init_collapse` in ExportSymbols.cpp.
+# replace all instances of `_collapse_` in source files (except for _collapse_DT_alloccol`), and also rename `R_init_collapse` in ExportSymbols.cpp.
 # and in vignetter / Rd files replace library(collapse)
 release_questions <- function() {
   c(
