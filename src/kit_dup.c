@@ -164,7 +164,7 @@ int dupVecSecond(int *pidx, int *pans_i, SEXP x, const int n, const int ng) {
       M += ng; // Here we addd the number of previous groups...
     }
   } else if (tx == LGLSXP) {
-    M = (size_t)ng * 4;
+    M = (size_t)ng * 3 + 1;
   } else error("Type %s is not supported.", type2char(tx)); // # nocov
   int *h = (int*)Calloc(M, int); // Table to save the hash values, table has size M
   size_t id = 0, g = 0, hid = 0;
