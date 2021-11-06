@@ -299,19 +299,14 @@ SEXP groupVec(SEXP X, SEXP starts, SEXP sizes) {
     SEXP ans = PROTECT(allocVector(INTSXP, n)); ++nprotect;
     int i = 1, *pidx = INTEGER(idx), *pans = INTEGER(ans);
     for( ; i < l; ++i) {
+      if(ng == n) break;
       if(i % 2) {
-        if(ng == n) break;
         ng = dupVecSecond(pidx, pans, VECTOR_ELT(X, i), n, ng);
       } else {
-        if(ng == n) break;
         ng = dupVecSecond(pans, pidx, VECTOR_ELT(X, i), n, ng);
       }
     }
-    if(ng == n) {
-      res = i % 2 ? idx : ans;
-    } else {
-      res = i % 2 ? ans : idx;
-    }
+    res = i % 2 ? idx : ans;
     setAttrib(res, sym_ng, ScalarInteger(ng));
   } else res = idx;
   // Cumpoting group starts and sizes attributes
