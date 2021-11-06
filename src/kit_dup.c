@@ -307,7 +307,11 @@ SEXP groupVec(SEXP X, SEXP starts, SEXP sizes) {
         ng = dupVecSecond(pans, pidx, VECTOR_ELT(X, i), n, ng);
       }
     }
-    res = ((ng == n && i % 2) || (ng != n && (i % 2 + 1))) ? idx : ans;
+    if(ng == n) {
+      res = i % 2 ? idx : ans;
+    } else {
+      res = i % 2 ? ans : idx;
+    }
     setAttrib(res, sym_ng, ScalarInteger(ng));
   } else res = idx;
   // Cumpoting group starts and sizes attributes
