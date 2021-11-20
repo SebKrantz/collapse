@@ -281,6 +281,75 @@ test_that("GRP <> qG and factor <> qG conversions work", {
 
 })
 
+base_group <- function(x, sort = FALSE, group.sizes = FALSE) {
+  if(sort) o <- if(is.list(x)) do.call(order, c(x, list(method = "radix"))) else order(x, method = "radix")
+  if(is.list(x)) x <- do.call(paste, c(x, list(sep = ".")))
+  ux <- unique(if(sort) x[o] else x)
+  r <- match(x, ux)
+  attr(r, "N.groups") <- length(ux)
+  if(group.sizes) attr(r, "group.sizes") <- tabulate(r, length(ux))
+  r
+}
+
+test_that("group() works as intended", {
+  wlduo <- wlddev[order(rnorm(nrow(wldNA))), ]
+  dlist <- c(mtcNA, wlddev, wlduo, GGDCNA, airquality)
+  # Single grouping variable
+  expect_identical(lapply(dlist, group, group.sizes = TRUE), lapply(dlist, base_group, group.sizes = TRUE))
+  # Multiple grouping variables
+  g <- replicate(50, sample.int(11, sample.int(6, 1)), simplify = FALSE)
+  expect_identical(lapply(g, function(i) group(.subset(mtcars, i), group.sizes = TRUE)), lapply(g, function(i) base_group(.subset(mtcars, i), group.sizes = TRUE)))
+  g <- replicate(30, sample.int(13, sample.int(4, 1)), simplify = FALSE)
+  expect_identical(lapply(g, function(i) group(.subset(wlduo, i), group.sizes = TRUE)), lapply(g, function(i) base_group(.subset(wlduo, i), group.sizes = TRUE)))
+  g <- replicate(30, sample.int(13, 3, replace = TRUE), simplify = FALSE)
+  expect_identical(lapply(g, function(i) group(.subset(wlduo, i), group.sizes = TRUE)), lapply(g, function(i) base_group(.subset(wlduo, i), group.sizes = TRUE)))
+})
+
+GRP2 <- function(x) {
+  g <- GRP.default(x, sort = TRUE, return.groups = FALSE, call = FALSE)
+  r <- g[[2]]
+  attr(r, "N.groups") <- g[[1]]
+  attr(r, "group.sizes") <- g[[3]]
+  r
+}
+
+qG2 <- function(x, method = "auto") unclass(qG(x, na.exclude = FALSE, method = method))
+
+test_that("GRP2() and qG2 work as intended", {
+  wlduo <- wlddev[order(rnorm(nrow(wldNA))), ]
+  dlist <- c(mtcNA, wlddev, wlduo, GGDCNA, airquality)
+  # Single grouping variable
+  expect_identical(lapply(dlist, GRP2), lapply(dlist, base_group, sort = TRUE, group.sizes = TRUE))
+  bgres <- lapply(dlist, base_group, sort = TRUE)
+  expect_identical(lapply(dlist, qG2), bgres)
+  expect_identical(lapply(dlist, qG2, method = "hash"), bgres)
+  expect_identical(lapply(dlist, qG2, method = "radix"), bgres)
+  # Multiple grouping variables
+  g <- replicate(50, sample.int(11, sample.int(6, 1)), simplify = FALSE)
+  expect_identical(lapply(g, function(i) GRP2(.subset(mtcars, i))), lapply(g, function(i) base_group(.subset(mtcars, i), sort = TRUE, group.sizes = TRUE)))
+  g <- replicate(30, sample.int(13, sample.int(4, 1)), simplify = FALSE)
+  expect_identical(lapply(g, function(i) GRP2(.subset(wlduo, i))), lapply(g, function(i) base_group(.subset(wlduo, i), sort = TRUE, group.sizes = TRUE)))
+  g <- replicate(30, sample.int(13, 3, replace = TRUE), simplify = FALSE)
+  expect_identical(lapply(g, function(i) GRP2(.subset(wlduo, i))), lapply(g, function(i) base_group(.subset(wlduo, i), sort = TRUE, group.sizes = TRUE)))
+})
+
+
+
+test_that("GRP2() works as intended", {
+  wlduo <- wlddev[order(rnorm(nrow(wldNA))), ]
+  dlist <- c(mtcNA, wlddev, wlduo, GGDCNA, airquality)
+  # Single grouping variable
+  expect_identical(lapply(dlist, GRP2), lapply(dlist, base_group, sort = TRUE))
+  # Multiple grouping variables
+  g <- replicate(50, sample.int(11, sample.int(6, 1)), simplify = FALSE)
+  expect_identical(lapply(g, function(i) GRP2(.subset(mtcars, i))), lapply(g, function(i) base_group(.subset(mtcars, i), sort = TRUE)))
+  g <- replicate(30, sample.int(13, sample.int(4, 1)), simplify = FALSE)
+  expect_identical(lapply(g, function(i) GRP2(.subset(wlduo, i))), lapply(g, function(i) base_group(.subset(wlduo, i), sort = TRUE)))
+  g <- replicate(30, sample.int(13, 3, replace = TRUE), simplify = FALSE)
+  expect_identical(lapply(g, function(i) GRP2(.subset(wlduo, i))), lapply(g, function(i) base_group(.subset(wlduo, i), sort = TRUE)))
+})
+
+
 if(identical(Sys.getenv("NCRAN"), "TRUE")) {
 
   # This is to fool very silly checks on CRAN scanning the code of the tests
