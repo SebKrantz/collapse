@@ -79,7 +79,7 @@ NumericVector fbstatstemp(NumericVector x, bool ext = false, int ng = 0, Integer
           k = g[i]-1;
           if(std::isnan(M2[k])) {
             mean[k] = min[k] = max[k] = x[i];
-            M2[k] = 0;
+            M2[k] = 0.0;
             n[k] = 1.0;
           } else {
             d1 = x[i]-mean[k];
@@ -100,8 +100,8 @@ NumericVector fbstatstemp(NumericVector x, bool ext = false, int ng = 0, Integer
           if(std::isnan(M2[k])) {
             sumw[k] = wg[i];
             mean[k] = min[k] = max[k] = x[i];
-            M2[k] = 0;
-            n[k] = 1;
+            M2[k] = 0.0;
+            n[k] = 1.0;
           } else {
             sumw[k] += wg[i];
             d1 = x[i] - mean[k];
@@ -199,7 +199,7 @@ NumericVector fbstatstemp(NumericVector x, bool ext = false, int ng = 0, Integer
            k = g[i]-1;
            if(std::isnan(M2[k])) {
              mean[k] = min[k] = max[k] = x[i];
-             M2[k] = M3[k] = M4[k] = 0;
+             M2[k] = M3[k] = M4[k] = 0.0;
              n[k] = 1.0;
            } else {
              d1 = x[i]-mean[k];
@@ -229,7 +229,7 @@ NumericVector fbstatstemp(NumericVector x, bool ext = false, int ng = 0, Integer
            if(std::isnan(M2[k])) {
              sumw[k] = wg[i];
              mean[k] = min[k] = max[k] = x[i];
-             M2[k] = M3[k] = M4[k] = 0;
+             M2[k] = M3[k] = M4[k] = 0.0;
              n[k] = 1.0;
            } else {
              sumw[k] += wg[i];

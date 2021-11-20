@@ -20,7 +20,7 @@ IntegerVector qFCppImpl(const Vector<RTYPE>& x, bool sort, bool ordered, bool na
                            ordered ? CharacterVector::create("ordered","factor") :
                           (!na_exclude) ? CharacterVector::create("factor","na.included") : CharacterVector::create("factor"));
     } else { // returnin a qG
-      out.attr("N.groups") = levs.size();
+      out.attr("N.groups") = int(levs.size());
       if(ret == 3) {
         DUPLICATE_ATTRIB(levs, x);
         out.attr("groups") = levs;
