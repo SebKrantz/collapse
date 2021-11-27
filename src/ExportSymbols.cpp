@@ -30,8 +30,14 @@ RcppExport SEXP CcopyMostAttrib(SEXP to, SEXP from);
 RcppExport SEXP copyMostAttributes(SEXP to, SEXP from);
 RcppExport SEXP lassign(SEXP x, SEXP s, SEXP rows, SEXP fill);
 RcppExport SEXP groups2GRP(SEXP x, SEXP lx, SEXP gs);
+RcppExport SEXP gsplit(SEXP x, SEXP gobj, SEXP toint);
+RcppExport SEXP greorder(SEXP x, SEXP gobj);
 RcppExport SEXP Cna_rm(SEXP x);
 RcppExport SEXP whichv(SEXP x, SEXP val, SEXP Rinvert);
+RcppExport SEXP anyallv(SEXP x, SEXP val, SEXP Rall);
+RcppExport SEXP setcopyv(SEXP x, SEXP val, SEXP rep, SEXP Rinvert, SEXP Rset, SEXP Rind1);
+RcppExport SEXP setop(SEXP x, SEXP val, SEXP op, SEXP roww);
+RcppExport SEXP vtypes(SEXP x, SEXP isnum);
 RcppExport SEXP multiassign(SEXP lhs, SEXP rhs, SEXP envir);
 RcppExport SEXP vlabels(SEXP x, SEXP attrn);
 RcppExport SEXP setvlabels(SEXP x, SEXP attrn, SEXP value, SEXP ind, SEXP sc);
@@ -148,6 +154,8 @@ static const R_CallMethodDef CallEntries[] = {
   {"C_copyAttrib", (DL_FUNC) &CcopyAttrib, 2},
   {"C_copyMostAttrib", (DL_FUNC) &CcopyMostAttrib, 2},
   {"C_groups2GRP", (DL_FUNC) &groups2GRP, 3},
+  {"C_gsplit", (DL_FUNC) &gsplit, 3},
+  {"C_greorder", (DL_FUNC) &greorder, 2},
   {"C_lassign", (DL_FUNC) &lassign, 4},
   {"Cpp_seqid", (DL_FUNC) &_collapsedev17_seqid, 7},
   {"Cpp_groupid", (DL_FUNC) &_collapsedev17_groupid, 5},
@@ -156,6 +164,10 @@ static const R_CallMethodDef CallEntries[] = {
   {"C_allNA",         (DL_FUNC) &allNAv,        2},
   {"C_na_rm",         (DL_FUNC) &Cna_rm,        1},
   {"C_whichv",        (DL_FUNC) &whichv,        3},
+  {"C_anyallv",       (DL_FUNC) &anyallv,       3},
+  {"C_setcopyv",      (DL_FUNC) &setcopyv,      6},
+  {"C_setop",         (DL_FUNC) &setop,         3},
+  {"C_vtypes",        (DL_FUNC) &vtypes,        2},
   {"C_multiassign",   (DL_FUNC) &multiassign,   3},
   {"C_vlabels",       (DL_FUNC) &vlabels,       2},
   {"C_setvlabels",    (DL_FUNC) &setvlabels,    4},
