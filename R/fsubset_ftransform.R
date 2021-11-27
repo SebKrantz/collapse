@@ -239,6 +239,88 @@ fcomputev <- function(.data, vars, FUN, ..., apply = TRUE, keep = NULL) {
 }
 
 
+# Fmutate
+fFUN_mutate_add_groups <- function(z) {
+  if(!is.call(z)) return(z)
+  cz <- as.character(z[[1L]])
+  if(any(cz == .FAST_FUN)) {
+    z$g <- quote(.g_)
+    if(any(cz == .FAST_STAT_FUN)) {
+      if(is.null(z$TRA)) z$TRA <- 1L
+      z$use.g.names <- FALSE
+    }
+  } # This works for nested calls (nothing more required, but need to put at the end..)
+  if(is.call(z[[2L]])) return(as.call(lapply(z, fFUN_mutate_add_groups)))
+  z
+}
+
+
+# x$g <- quote(.g_)
+# if(any(as.character(x[[1L]]) == .FAST_STAT_FUN)) {
+#   if(is.null(x$TRA)) x$TRA <- 1L
+#   x$use.g.names <- FALSE
+# }
+
+
+# TODO: Improve rsplit...
+# gsplit_multi <- function(x, g)
+#   lapply(gsplit(1L, g, toint = TRUE), .Call, .NAME = C_subsetDT, seq_along(x), FALSE)
+
+gsplit_single_apply <- function(x, g, ex, encl)
+  copyMostAttributes(unlist(lapply(gsplit(x, g), function(i) eval(ex, `names<-`(list(i), v), encl)), FALSE, FALSE), x)
+
+# TODO: enable for fsummarise as well...
+gsplit_multi_apply <- function(x, g, ex, encl) {
+  sx <- seq_along(x)
+  unlist(lapply(gsplit(1L, g, toint = TRUE),
+         function(i) eval(ex, .Call(C_subsetDT, x, i, sx, FALSE), encl)), FALSE, FALSE)
+}
+# Also todo: keep argument...
+fmutate <- function(.data, ...) {# , TRA = "replace_fill" # TODO: Implement TRA !!!
+  if(!is.list(.data)) stop(".data needs to be a list of equal length columns or a data.frame")
+  namdata <- attr(.data, "names")
+  if(!length(namdata) || fanyDuplicated(namdata)) stop("All columns of .data have to be uniquely named")
+  e <- substitute(list(...))
+  nam <- names(e)
+  if(!length(nam)) stop("All replacement expressions have to be named")
+  nr <- length(.subset2(.data, 1L))
+  pe <- parent.frame()
+  cld <- oldClass(.data)
+  oldClass(.data) <- NULL
+  if(any(cld == "grouped_df")) { # What about NULL assignment with grouped data? and what about across??
+    g <- GRP.grouped_df(.data, call = FALSE)
+    .data[[".g_"]] <- g
+    for(i in 2:length(e)) {
+      ei <- e[[i]]
+      eiv <- all.vars(ei, functions = TRUE)
+      if(any(eiv %in% .FAST_FUN)) {
+        ei <- fFUN_mutate_add_groups(ei)
+        .data[[nam[i]]] <- eval(ei, .data, pe)
+      } else {
+        v <- all.vars(ei) # Note: Still issue with copyMostAttrib for othFUN_compute when collapse is not attached...
+        r <- if(length(v) > 1L) gsplit_multi_apply(.data[v], g, ei, pe) else if(length(eiv) == 2L)
+             eval(othFUN_compute(ei), .data, pe) else gsplit_single_apply(.data[[v]], g, ei, pe)
+        r <- if(length(r) == g[[1L]]) copyMostAttributes(r[g[[2L]]], r) else # .Call(Cpp_TRA, .data[[v]], r, g[[2L]], 1L) # Faster than simple subset r[g[[2L]] ??]
+             greorder(r, g) # r[forder.int(forder.int(g[[2L]]))] # Seems twice is necessary...
+        .data[[nam[i]]] <- r
+      }
+    }
+    .data[[".g_"]] <- NULL
+  } else { # Without groups...
+    for(i in 2:length(e)) { # This is good and very fast
+      r <- eval(e[[i]], .data, pe)
+      if(!is.null(r)) {
+        if(length(r) == 1L) r <- alloc(r, nr)
+        else if(length(r) != nr) stop("length mismatch")
+      }
+      .data[[nam[i]]] <- r
+    }
+  }
+  oldClass(.data) <- cld
+  return(condalc(.data, any(cld == "data.table")))
+}
+
+mte <- fmutate
 
 
 
