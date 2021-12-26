@@ -166,7 +166,7 @@ static const R_CallMethodDef CallEntries[] = {
   {"C_whichv",        (DL_FUNC) &whichv,        3},
   {"C_anyallv",       (DL_FUNC) &anyallv,       3},
   {"C_setcopyv",      (DL_FUNC) &setcopyv,      6},
-  {"C_setop",         (DL_FUNC) &setop,         3},
+  {"C_setop",         (DL_FUNC) &setop,         4},
   {"C_vtypes",        (DL_FUNC) &vtypes,        2},
   {"C_multiassign",   (DL_FUNC) &multiassign,   3},
   {"C_vlabels",       (DL_FUNC) &vlabels,       2},

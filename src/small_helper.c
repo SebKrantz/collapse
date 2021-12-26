@@ -672,6 +672,7 @@ SEXP setop_core(SEXP x, SEXP val, SEXP op, SEXP roww) {
   if(nv == 1 || nv == n) {
     switch(tx) {
     case INTSXP:
+    case LGLSXP:
     {
       int *px = INTEGER(x);
       if(nv == 1) {
@@ -679,7 +680,7 @@ SEXP setop_core(SEXP x, SEXP val, SEXP op, SEXP roww) {
         OPSWITCH(v)
       } else {
         if(TYPEOF(val) == REALSXP) {
-          warning("adding real values to an integer: will truncate decimals");
+          // warning("adding real values to an integer: will truncate decimals");
           const double *v = REAL(val);
           OPSWITCH(v[i])
         } else {
@@ -741,10 +742,11 @@ SEXP setop_core(SEXP x, SEXP val, SEXP op, SEXP roww) {
 
     switch(tx) {
     case INTSXP:
+    case LGLSXP:
     {
       int *px = INTEGER(x);
         if(TYPEOF(val) == REALSXP) {
-          warning("adding real values to an integer: will truncate decimals");
+          // warning("adding real values to an integer: will truncate decimals");
           const double *v = REAL(val);
           if(rwl) {
             OPSWITCHMAT(v[j])
