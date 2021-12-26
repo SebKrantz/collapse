@@ -17,10 +17,6 @@ fndistinct_uw <- function(x, g, w, ...) fndistinct(x, g, ...)
 fNobs_uw <- function(x, g, w, ...) fnobs(x, g, ...)
 fNdistinct_uw <- function(x, g, w, ...) fndistinct(x, g, ...)
 
-FSF <- c("fmean","fmedian","fmode","fsum","fprod","fsd","fvar",
-         "fmin","fmax","fnth","ffirst","flast","fnobs","fndistinct", "fNobs","fNdistinct")
-
-.FAST_STAT_FUN_EXT <- c(FSF, paste0(FSF, "_uw"))
 
 mymatchfun <- function(FUN) {
   if(is.function(FUN)) return(FUN)

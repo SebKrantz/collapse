@@ -14,6 +14,7 @@ othFUN_compute <- function(x) {
              list(a = lapply_call, b = x[[2L]]))
 }
 
+
 fsummarise <- function(.data, ..., keep.group_vars = TRUE) {
   if(!is.list(.data)) stop(".data needs to be a list of equal length columns or a data.frame")
   e <- substitute(list(...))
@@ -23,7 +24,7 @@ fsummarise <- function(.data, ..., keep.group_vars = TRUE) {
     ax <- attributes(fungroup(.data))
     for(i in seq_along(e)[-1L]) { # This is good and very fast
       ei <- e[[i]]
-      e[[i]] <- if(any(startsWith(as.character(ei[[1L]]), .FAST_STAT_FUN))) # could pass collapse::flast.default etc..
+      e[[i]] <- if(any(startsWith(as.character(ei[[1L]]), .FAST_STAT_FUN_POLD))) # could pass collapse::flast.default etc..
                   fFUN_add_groups(ei) else othFUN_compute(ei)
     }
     res <- eval(e, c(list(.g_ = g), .data), parent.frame())
@@ -65,10 +66,10 @@ smr <- fsummarise
 #     g <- GRP.grouped_df(.data, call = FALSE)
 #     ax <- attributes(fungroup(.data))
 #     # FUNs <- vapply(e[-1L], function(x) as.character(x[[1L]]), character(1L), USE.NAMES = FALSE)
-#     # if(any(FUNs %!in% .FAST_STAT_FUN)) ...
+#     # if(any(FUNs %!in% .FAST_STAT_FUN_POLD)) ...
 #     for(i in seq_along(e)[-1L]) { # This is good and very fast
 #       ei <- e[[i]]
-#       if(any(startsWith(as.character(ei[[1L]]), .FAST_STAT_FUN))) { # could pass collapse::flast.default etc..
+#       if(any(startsWith(as.character(ei[[1L]]), .FAST_STAT_FUN_POLD))) { # could pass collapse::flast.default etc..
 #         e[[i]] <- fFUN_add_groups(ei)
 #       } else {
 #         if(ofl) {

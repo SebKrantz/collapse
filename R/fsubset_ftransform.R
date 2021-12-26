@@ -243,9 +243,9 @@ fcomputev <- function(.data, vars, FUN, ..., apply = TRUE, keep = NULL) {
 fFUN_mutate_add_groups <- function(z) {
   if(!is.call(z)) return(z)
   cz <- as.character(z[[1L]])
-  if(any(cz == .FAST_FUN)) {
+  if(any(cz == .FAST_FUN_MOPS)) {
     z$g <- quote(.g_)
-    if(any(cz == .FAST_STAT_FUN)) {
+    if(any(cz == .FAST_STAT_FUN_POLD)) {
       if(is.null(z$TRA)) z$TRA <- 1L
       z$use.g.names <- FALSE
     }
@@ -253,14 +253,6 @@ fFUN_mutate_add_groups <- function(z) {
   if(is.call(z[[2L]])) return(as.call(lapply(z, fFUN_mutate_add_groups)))
   z
 }
-
-
-# x$g <- quote(.g_)
-# if(any(as.character(x[[1L]]) == .FAST_STAT_FUN)) {
-#   if(is.null(x$TRA)) x$TRA <- 1L
-#   x$use.g.names <- FALSE
-# }
-
 
 # TODO: Improve rsplit...
 # gsplit_multi <- function(x, g)
@@ -293,7 +285,7 @@ fmutate <- function(.data, ...) {# , TRA = "replace_fill" # TODO: Implement TRA 
     for(i in 2:length(e)) {
       ei <- e[[i]]
       eiv <- all.vars(ei, functions = TRUE)
-      if(any(eiv %in% .FAST_FUN)) {
+      if(any(eiv %in% .FAST_FUN_MOPS)) {
         ei <- fFUN_mutate_add_groups(ei)
         .data[[nam[i]]] <- eval(ei, .data, pe)
       } else {
