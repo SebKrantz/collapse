@@ -604,9 +604,14 @@ G_t <- function(x) { # , wm = 1L
   #                            "Panel-growth rate computed without timevar: Assuming ordered data"))
   #   return(x)
   # }
-  # If integer time variable contains NA, noes not break C++ code..
-  if(is.atomic(x)) if(is.integer(unclass(x))) return(x) else return(qG(x, na.exclude = FALSE, sort = TRUE, method = "hash")) # make sure it is sorted ! qG already checks factor !
-  if(is_GRP(x)) return(x[[2L]]) else return(GRP.default(x, return.groups = FALSE, sort = TRUE, call = FALSE)[[2L]])
+  # If integer time variable contains NA, does not break C++ code..
+  if(is.atomic(x)) {
+    if(is.integer(unclass(x))) return(x)
+    if(is.double(x) && !is.object(x)) return(as.integer(x))
+    return(qG(x, na.exclude = FALSE, sort = TRUE, method = "hash")) # make sure it is sorted ! qG already checks factor !
+  }
+  if(is_GRP(x)) return(x[[2L]])
+  return(GRP.default(x, return.groups = FALSE, sort = TRUE, call = FALSE)[[2L]])
 }
 
 # Not currently used !!
