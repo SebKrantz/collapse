@@ -91,6 +91,7 @@ mtcars |> fwithin() \%r-\% rnorm(11) \%c*\% 5 |>
 % Add one or more standard keywords, see file 'KEYWORDS' in the
 % R documentation directory (show via RShowDoc("KEYWORDS")):
 \keyword{manip}
+\keyword{math}
 % \keyword{ ~kwd2 }
 % Use only one keyword per line.
 % For non-standard keywords, use \concept instead of \keyword:

@@ -152,3 +152,7 @@ rm(mtc_na)
 % \concept{ ~cpt1 }
 % \concept{ ~cpt2 }
 % Use only one concept per line.
+\keyword{utilities} % __ONLY ONE__ keyword per line % use one of  RShowDoc("KEYWORDS")
+\keyword{manip}
+\keyword{math}
+\keyword{documentation}
