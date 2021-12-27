@@ -3,16 +3,9 @@ fcumsum <- function(x, ...) UseMethod("fcumsum") # , x
 fcumsum.default <- function(x, g = NULL, o = NULL, na.rm = TRUE, fill = FALSE, check.o = TRUE, ...) {
   if(is.matrix(x) && !inherits(x, "matrix")) return(UseMethod("fcumsum", unclass(x)))
   if(!missing(...)) unused_arg_action(match.call(), ...)
-  if(!is.null(o) && check.o) o <- ford(o, g)
+  if(length(o) && check.o) o <- ford(o, g)
   if(is.null(g)) return(.Call(C_fcumsum,x,0L,0L,o,na.rm,fill))
-  if(is.atomic(g)) {
-    if(is.nmfactor(g)) nl <- fnlevels(g) else {
-      g <- qG(g, na.exclude = FALSE)
-      nl <- attr(g, "N.groups")
-    }
-    return(.Call(C_fcumsum,x,nl,g,o,na.rm,fill))
-  }
-  if(!is_GRP(g)) g <- GRP.default(g, return.groups = FALSE, call = FALSE)
+  g <- G_guo(g)
   .Call(C_fcumsum,x,g[[1L]],g[[2L]],o,na.rm,fill)
 }
 
@@ -28,16 +21,9 @@ fcumsum.pseries <- function(x, na.rm = TRUE, fill = FALSE, ...) {
 
 fcumsum.matrix <- function(x, g = NULL, o = NULL, na.rm = TRUE, fill = FALSE, check.o = TRUE, ...) {
   if(!missing(...)) unused_arg_action(match.call(), ...)
-  if(!is.null(o) && check.o) o <- ford(o, g)
+  if(length(o) && check.o) o <- ford(o, g)
   if(is.null(g)) return(.Call(C_fcumsumm,x,0L,0L,o,na.rm,fill))
-  if(is.atomic(g)) {
-    if(is.nmfactor(g)) nl <- fnlevels(g) else {
-      g <- qG(g, na.exclude = FALSE)
-      nl <- attr(g, "N.groups")
-    }
-    return(.Call(C_fcumsumm,x,nl,g,o,na.rm,fill))
-  }
-  if(!is_GRP(g)) g <- GRP.default(g, return.groups = FALSE, call = FALSE)
+  g <- G_guo(g)
   .Call(C_fcumsumm,x,g[[1L]],g[[2L]],o,na.rm,fill)
 }
 
@@ -70,16 +56,9 @@ fcumsum.grouped_df <- function(x, o = NULL, na.rm = TRUE, fill = FALSE, check.o 
 
 fcumsum.data.frame <- function(x, g = NULL, o = NULL, na.rm = TRUE, fill = FALSE, check.o = TRUE, ...) {
   if(!missing(...)) unused_arg_action(match.call(), ...)
-  if(!is.null(o) && check.o) o <- ford(o, g)
+  if(length(o) && check.o) o <- ford(o, g)
   if(is.null(g)) return(.Call(C_fcumsuml,x,0L,0L,o,na.rm,fill))
-  if(is.atomic(g)) {
-    if(is.nmfactor(g)) nl <- fnlevels(g) else {
-      g <- qG(g, na.exclude = FALSE)
-      nl <- attr(g, "N.groups")
-    }
-    return(.Call(C_fcumsuml,x,nl,g,o,na.rm,fill))
-  }
-  if(!is_GRP(g)) g <- GRP.default(g, return.groups = FALSE, call = FALSE)
+  g <- G_guo(g)
   .Call(C_fcumsuml,x,g[[1L]],g[[2L]],o,na.rm,fill)
 }
 

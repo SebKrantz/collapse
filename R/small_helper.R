@@ -429,7 +429,7 @@ seq_col <- function(X) if(is.list(X)) seq_along(unclass(X)) else seq_len(dim(X)[
 # na.last is false !!
 forder.int <- function(x) .Call(C_radixsort, FALSE, FALSE, FALSE, FALSE, TRUE, pairlist(x)) # if(is.unsorted(x)) .Call(C_forder, x, NULL, FALSE, TRUE, 1L, TRUE) else seq_along(x) # since forder gives integer(0) if sorted !
 ford <- function(x, g = NULL) {
-  if(!is.null(g)) {
+  if(length(g)) {
     x <- c(if(is.atomic(g)) list(g) else if(is_GRP(g)) g[2L] else g,
            if(is.atomic(x)) list(x) else x, list(method = "radix"))
     return(do.call(order, x))
@@ -589,13 +589,29 @@ fcolsubset <- function(x, ind, checksf = FALSE) { # fastest !
 #   # .Call(C_setAttributes, x[ind], ax)
 # }
 
-at2GRP <- function(x) {
-  if(is.nmfactor(x)) return(list(length(attr(x, "levels")), x, NULL))
-  res <- list(NULL, NULL, NULL)
-  res[[2L]] <- qG(x, sort = FALSE, na.exclude = FALSE)
-  res[[1L]] <- attr(res[[2L]], "N.groups")
-  res
+G_guo <- function(g) {
+  if(is.atomic(g)) {
+    if(inherits(g, "factor")) {
+      if(inherits(g, "na.included") || !anyNA(unclass(g))) return(list(fnlevels(g), g, NULL))
+      ng <- if(anyNA(lev <- attr(g, "levels"))) length(lev) else length(lev) + 1L
+      return(list(ng, copyv(unattrib(g), NA_integer_, ng), NULL))
+    }
+    g <- group(g)
+    return(list(attr(g,"N.groups"), g, NULL))
+  }
+  if(inherits(g, "GRP")) return(g)
+  g <- group(g)
+  return(list(attr(g,"N.groups"), g, NULL))
 }
+
+# Replaced by G_guo...
+# at2GRP <- function(x) {
+#   if(is.nmfactor(x)) return(list(length(attr(x, "levels")), x, NULL))
+#   res <- list(NULL, NULL, NULL)
+#   res[[2L]] <- qG(x, sort = FALSE, na.exclude = FALSE)
+#   res[[1L]] <- attr(res[[2L]], "N.groups")
+#   res
+# }
 
 G_t <- function(x) { # , wm = 1L
   if(is.null(x)) return(x) # {

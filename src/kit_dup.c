@@ -290,6 +290,7 @@ SEXP groupVec(SEXP X, SEXP starts, SEXP sizes) {
 
   int l = length(X), islist = TYPEOF(X) == VECSXP,
     start = asLogical(starts), size = asLogical(sizes), nprotect = 0;
+  if(islist == 0 && OBJECT(X) != 0 && inherits(X, "qG")) return X; // return "qG" objects
   SEXP idx = islist ? dupVecIndex(VECTOR_ELT(X, 0)) : dupVecIndex(X);
   if(!(islist && l > 1) && start == 0 && size == 0) return idx; // l == 1 &&
   PROTECT(idx); ++nprotect;

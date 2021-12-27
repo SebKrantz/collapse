@@ -5,14 +5,7 @@ flag.default <- function(x, n = 1, g = NULL, t = NULL, fill = NA, stubs = TRUE, 
   if(is.matrix(x) && !inherits(x, "matrix")) return(UseMethod("flag", unclass(x)))
   if(!missing(...)) unused_arg_action(match.call(), ...)
   if(is.null(g)) return(.Call(Cpp_flaglead,x,n,fill,0L,0L,G_t(t),stubs))
-  if(is.atomic(g)) {
-    if(is.nmfactor(g)) nl <- fnlevels(g) else {
-      g <- qG(g, na.exclude = FALSE)
-      nl <- attr(g, "N.groups")
-    }
-    return(.Call(Cpp_flaglead,x,n,fill,nl,g,G_t(t),stubs))
-  }
-  if(!is_GRP(g)) g <- GRP.default(g, return.groups = FALSE, call = FALSE)
+  g <- G_guo(g)
   .Call(Cpp_flaglead,x,n,fill,g[[1L]],g[[2L]],G_t(t),stubs)
 }
 
@@ -28,14 +21,7 @@ flag.pseries <- function(x, n = 1, fill = NA, stubs = TRUE, ...) {
 flag.matrix <- function(x, n = 1, g = NULL, t = NULL, fill = NA, stubs = length(n) > 1L, ...) {
   if(!missing(...)) unused_arg_action(match.call(), ...)
   if(is.null(g)) return(.Call(Cpp_flagleadm,x,n,fill,0L,0L,G_t(t),stubs))
-  if(is.atomic(g)) {
-    if(is.nmfactor(g)) nl <- fnlevels(g) else {
-      g <- qG(g, na.exclude = FALSE)
-      nl <- attr(g, "N.groups")
-    }
-    return(.Call(Cpp_flagleadm,x,n,fill,nl,g,G_t(t),stubs))
-  }
-  if(!is_GRP(g)) g <- GRP.default(g, return.groups = FALSE, call = FALSE)
+  g <- G_guo(g)
   .Call(Cpp_flagleadm,x,n,fill,g[[1L]],g[[2L]],G_t(t),stubs)
 }
 
@@ -67,14 +53,7 @@ flag.grouped_df <- function(x, n = 1, t = NULL, fill = NA, stubs = length(n) > 1
 flag.data.frame <- function(x, n = 1, g = NULL, t = NULL, fill = NA, stubs = length(n) > 1L, ...) {
   if(!missing(...)) unused_arg_action(match.call(), ...)
   if(is.null(g)) return(.Call(Cpp_flagleadl,x,n,fill,0L,0L,G_t(t),stubs))
-  if(is.atomic(g)) {
-    if(is.nmfactor(g)) nl <- fnlevels(g) else {
-      g <- qG(g, na.exclude = FALSE)
-      nl <- attr(g, "N.groups")
-    }
-    return(.Call(Cpp_flagleadl,x,n,fill,nl,g,G_t(t),stubs))
-  }
-  if(!is_GRP(g)) g <- GRP.default(g, return.groups = FALSE, call = FALSE)
+  g <- G_guo(g)
   .Call(Cpp_flagleadl,x,n,fill,g[[1L]],g[[2L]],G_t(t),stubs)
 }
 flag.list <- function(x, n = 1, g = NULL, t = NULL, fill = NA, stubs = length(n) > 1L, ...)
@@ -122,19 +101,18 @@ L.data.frame <- function(x, n = 1, by = NULL, t = NULL, cols = is.numeric,
         gn <- ckmatch(all.vars(by), nam, "Unknown variables:")
         cols <- if(is.null(cols)) seq_along(x)[-gn] else cols2int(cols, x, nam)
       }
-      by <- if(length(gn) == 1L) at2GRP(x[[gn]]) else GRP.default(x, gn, return.groups = FALSE, call = FALSE)
+      by <- G_guo(if(length(gn) == 1L) x[[gn]] else x[gn])
       if(!keep.ids) gn <- NULL
     } else {
       gn <- NULL
       if(length(cols)) cols <- cols2int(cols, x, nam)
-      if(!is_GRP(by)) by <- if(is.null(by)) list(0L, 0L, NULL) else if(is.atomic(by)) # Necessary for if by is passed externally !
-        at2GRP(by) else GRP.default(by, return.groups = FALSE, call = FALSE)
+      by <- if(is.null(by)) list(0L, 0L) else G_guo(by)
     }
 
     if(is.call(t)) {
       tn <- ckmatch(all.vars(t), nam, "Unknown variables:")
       t1 <- length(tn) == 1L
-      t <- if(t1) x[[tn]] else GRP.default(x[tn], return.groups = FALSE, call = FALSE)[[2L]]
+      t <- if(t1) x[[tn]] else x[tn]
       cols <- if(is.null(cols)) seq_along(x)[-tn] else if(t1) cols[cols != tn] else fsetdiff(cols, tn)
       if(keep.ids) gn <- c(gn, tn)
     }
@@ -153,14 +131,7 @@ L.data.frame <- function(x, n = 1, by = NULL, t = NULL, cols = is.numeric,
   }
 
   if(is.null(by)) return(.Call(Cpp_flagleadl,x,n,fill,0L,0L,G_t(t),stubs))
-  if(is.atomic(by)) {
-    if(is.nmfactor(by)) nl <- fnlevels(by) else {
-      by <- qG(by, na.exclude = FALSE)
-      nl <- attr(by, "N.groups")
-    }
-    return(.Call(Cpp_flagleadl,x,n,fill,nl,by,G_t(t),stubs))
-  }
-  if(!is_GRP(by)) by <- GRP.default(by, return.groups = FALSE, call = FALSE)
+  by <- G_guo(by)
   .Call(Cpp_flagleadl,x,n,fill,by[[1L]],by[[2L]],G_t(t),stubs)
 }
 

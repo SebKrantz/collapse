@@ -18,14 +18,7 @@ fdiff.default <- function(x, n = 1, diff = 1, g = NULL, t = NULL, fill = NA, log
   if(!missing(...)) if(checkld(...)) log <- list(...)[["logdiff"]] else unused_arg_action(match.call(), ...)
   if(log) x <- baselog(x)
   if(is.null(g)) return(.Call(Cpp_fdiffgrowth,x,n,diff,fill,0L,0L,NULL,G_t(t),1L+log,rho,stubs,1))
-  if(is.atomic(g)) {
-    if(is.nmfactor(g)) nl <- fnlevels(g) else {
-      g <- qG(g, na.exclude = FALSE)
-      nl <- attr(g, "N.groups")
-    }
-    return(.Call(Cpp_fdiffgrowth,x,n,diff,fill,nl,g,NULL,G_t(t),1L+log,rho,stubs,1))
-  }
-  if(!is_GRP(g)) g <- GRP.default(g, return.groups = FALSE, call = FALSE)
+  g <- G_guo(g)
   .Call(Cpp_fdiffgrowth,x,n,diff,fill,g[[1L]],g[[2L]],g[[3L]],G_t(t),1L+log,rho,stubs,1)
 }
 
@@ -43,14 +36,7 @@ fdiff.matrix <- function(x, n = 1, diff = 1, g = NULL, t = NULL, fill = NA, log 
   if(!missing(...)) if(checkld(...)) log <- list(...)[["logdiff"]] else unused_arg_action(match.call(), ...)
   if(log) x <- baselog(x)
   if(is.null(g)) return(.Call(Cpp_fdiffgrowthm,x,n,diff,fill,0L,0L,NULL,G_t(t),1L+log,rho,stubs,1))
-  if(is.atomic(g)) {
-    if(is.nmfactor(g)) nl <- fnlevels(g) else {
-      g <- qG(g, na.exclude = FALSE)
-      nl <- attr(g, "N.groups")
-    }
-    return(.Call(Cpp_fdiffgrowthm,x,n,diff,fill,nl,g,NULL,G_t(t),1L+log,rho,stubs,1))
-  }
-  if(!is_GRP(g)) g <- GRP.default(g, return.groups = FALSE, call = FALSE)
+  g <- G_guo(g)
   .Call(Cpp_fdiffgrowthm,x,n,diff,fill,g[[1L]],g[[2L]],g[[3L]],G_t(t),1L+log,rho,stubs,1)
 }
 
@@ -85,14 +71,7 @@ fdiff.data.frame <- function(x, n = 1, diff = 1, g = NULL, t = NULL, fill = NA, 
   if(!missing(...)) if(checkld(...)) log <- list(...)[["logdiff"]] else unused_arg_action(match.call(), ...)
   if(log) x <- fdapply(x, baselog)
   if(is.null(g)) return(.Call(Cpp_fdiffgrowthl,x,n,diff,fill,0L,0L,NULL,G_t(t),1L+log,rho,stubs,1))
-  if(is.atomic(g)) {
-    if(is.nmfactor(g)) nl <- fnlevels(g) else {
-      g <- qG(g, na.exclude = FALSE)
-      nl <- attr(g, "N.groups")
-    }
-    return(.Call(Cpp_fdiffgrowthl,x,n,diff,fill,nl,g,NULL,G_t(t),1L+log,rho,stubs,1))
-  }
-  if(!is_GRP(g)) g <- GRP.default(g, return.groups = FALSE, call = FALSE)
+  g <- G_guo(g)
   .Call(Cpp_fdiffgrowthl,x,n,diff,fill,g[[1L]],g[[2L]],g[[3L]],G_t(t),1L+log,rho,stubs,1)
 }
 
@@ -117,14 +96,7 @@ fgrowth.default <- function(x, n = 1, diff = 1, g = NULL, t = NULL, fill = NA, l
   if(!missing(...)) unused_arg_action(match.call(), ...)
   if(logdiff) x <- if(scale == 1) baselog(x) else scale * baselog(x)
   if(is.null(g)) return(.Call(Cpp_fdiffgrowth,x,n,diff,fill,0L,0L,NULL,G_t(t),4L-logdiff,scale,stubs,power))
-  if(is.atomic(g)) {
-    if(is.nmfactor(g)) nl <- fnlevels(g) else {
-      g <- qG(g, na.exclude = FALSE)
-      nl <- attr(g, "N.groups")
-    }
-    return(.Call(Cpp_fdiffgrowth,x,n,diff,fill,nl,g,NULL,G_t(t),4L-logdiff,scale,stubs,power))
-  }
-  if(!is_GRP(g)) g <- GRP.default(g, return.groups = FALSE, call = FALSE)
+  g <- G_guo(g)
   .Call(Cpp_fdiffgrowth,x,n,diff,fill,g[[1L]],g[[2L]],g[[3L]],G_t(t),4L-logdiff,scale,stubs,power)
 }
 
@@ -142,14 +114,7 @@ fgrowth.matrix <- function(x, n = 1, diff = 1, g = NULL, t = NULL, fill = NA, lo
   if(!missing(...)) unused_arg_action(match.call(), ...)
   if(logdiff) x <- if(scale == 1) baselog(x) else scale * baselog(x)
   if(is.null(g)) return(.Call(Cpp_fdiffgrowthm,x,n,diff,fill,0L,0L,NULL,G_t(t),4L-logdiff,scale,stubs,power))
-  if(is.atomic(g)) {
-    if(is.nmfactor(g)) nl <- fnlevels(g) else {
-      g <- qG(g, na.exclude = FALSE)
-      nl <- attr(g, "N.groups")
-    }
-    return(.Call(Cpp_fdiffgrowthm,x,n,diff,fill,nl,g,NULL,G_t(t),4L-logdiff,scale,stubs,power))
-  }
-  if(!is_GRP(g)) g <- GRP.default(g, return.groups = FALSE, call = FALSE)
+  g <- G_guo(g)
   .Call(Cpp_fdiffgrowthm,x,n,diff,fill,g[[1L]],g[[2L]],g[[3L]],G_t(t),4L-logdiff,scale,stubs,power)
 }
 
@@ -184,14 +149,7 @@ fgrowth.data.frame <- function(x, n = 1, diff = 1, g = NULL, t = NULL, fill = NA
   if(!missing(...)) unused_arg_action(match.call(), ...)
   if(logdiff) x <- if(scale == 1) fdapply(x, baselog) else fdapply(x, function(y) scale * baselog(y))
   if(is.null(g)) return(.Call(Cpp_fdiffgrowthl,x,n,diff,fill,0L,0L,NULL,G_t(t),4L-logdiff,scale,stubs,power))
-  if(is.atomic(g)) {
-    if(is.nmfactor(g)) nl <- fnlevels(g) else {
-      g <- qG(g, na.exclude = FALSE)
-      nl <- attr(g, "N.groups")
-    }
-    return(.Call(Cpp_fdiffgrowthl,x,n,diff,fill,nl,g,NULL,G_t(t),4L-logdiff,scale,stubs,power))
-  }
-  if(!is_GRP(g)) g <- GRP.default(g, return.groups = FALSE, call = FALSE)
+  g <- G_guo(g)
   .Call(Cpp_fdiffgrowthl,x,n,diff,fill,g[[1L]],g[[2L]],g[[3L]],G_t(t),4L-logdiff,scale,stubs,power)
 }
 
@@ -228,19 +186,18 @@ DG_data_frame_template <- function(x, n = 1, diff = 1, by = NULL, t = NULL, cols
         gn <- ckmatch(all.vars(by), nam)
         cols <- if(is.null(cols)) seq_along(x)[-gn] else cols2int(cols, x, nam)
       }
-      by <- if(length(gn) == 1L) at2GRP(x[[gn]]) else GRP.default(x, gn, return.groups = FALSE, call = FALSE)
+      by <- G_guo(if(length(gn) == 1L) x[[gn]] else x[gn])
       if(!keep.ids) gn <- NULL
     } else {
       gn <- NULL
       if(length(cols)) cols <- cols2int(cols, x, nam)
-      if(!is_GRP(by)) by <- if(is.null(by)) list(0L, 0L, NULL) else if(is.atomic(by)) # Necessary if by is passed externally !
-        at2GRP(by) else GRP.default(by, return.groups = FALSE, call = FALSE)
+      by <- if(is.null(by)) list(0L, 0L, NULL) else G_guo(by)
     }
 
     if(is.call(t)) {
       tn <- ckmatch(all.vars(t), nam)
       t1 <- length(tn) == 1L
-      t <- if(t1) x[[tn]] else GRP.default(x[tn], return.groups = FALSE, call = FALSE)[[2L]]
+      t <- if(t1) x[[tn]] else x[tn]
       cols <- if(is.null(cols)) seq_along(x)[-tn] else if(t1) cols[cols != tn] else fsetdiff(cols, tn)
       if(keep.ids) gn <- c(gn, tn)
     }
@@ -259,14 +216,7 @@ DG_data_frame_template <- function(x, n = 1, diff = 1, by = NULL, t = NULL, cols
   }
 
   if(is.null(by)) return(.Call(Cpp_fdiffgrowthl,cld(x),n,diff,fill,0L,0L,NULL,G_t(t),return,rho,stubs,power))
-  if(is.atomic(by)) {
-    if(is.nmfactor(by)) nl <- fnlevels(by) else {
-      by <- qG(by, na.exclude = FALSE)
-      nl <- attr(by, "N.groups")
-    }
-    return(.Call(Cpp_fdiffgrowthl,cld(x),n,diff,fill,nl,by,NULL,G_t(t),return,rho,stubs,power))
-  }
-  if(!is_GRP(by)) by <- GRP.default(by, return.groups = FALSE, call = FALSE)
+  by <- G_guo(by)
   .Call(Cpp_fdiffgrowthl,cld(x),n,diff,fill,by[[1L]],by[[2L]],by[[3L]],G_t(t),return,rho,stubs,power)
 }
 
