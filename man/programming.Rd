@@ -118,7 +118,7 @@ cinv(x)                     # Choleski (fast) inverse of symmetric PD matrix, e.
 %% ~Make other sections like Warning with \section{Warning }{....} ~
 
 \seealso{
-%% ~~objects to See Also as \code{\link{help}}, ~~~
+\link[=A6-data-transformations]{Data Transformations}, \link[=AA3-small-helpers]{Small (Helper) Functions}, \link[=collapse-documentation]{Collapse Overview}
 }
 \examples{
 
