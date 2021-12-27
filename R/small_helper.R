@@ -20,21 +20,21 @@
 
 
 # othidentity <- function(x, y) y
-"%cr%" <- function(X, v) if(is.atomic(X)) return(duplAttributes(rep(v, NCOL(X)), X)) else # outer(rep.int(1L, dim(X)[2L]), v)
-  if(is.atomic(v)) return(duplAttributes(lapply(vector("list", length(unclass(X))), function(z) v), X)) else
-    copyAttrib(v, X) # copyAttrib first makes a shallow copy of v
-"%c+%" <- function(X, v) if(is.atomic(X)) return(X + v) else
-  duplAttributes(if(is.atomic(v)) lapply(unattrib(X), `+`, v) else
-    mapply(`+`, unattrib(X), unattrib(v), USE.NAMES = FALSE, SIMPLIFY = FALSE), X)
-"%c-%" <- function(X, v) if(is.atomic(X)) return(X - v) else
-  duplAttributes(if(is.atomic(v)) lapply(unattrib(X), `-`, v) else
-    mapply(`-`, unattrib(X), unattrib(v), USE.NAMES = FALSE, SIMPLIFY = FALSE), X)
-"%c*%" <- function(X, v) if(is.atomic(X)) return(X * v) else
-  duplAttributes(if(is.atomic(v)) lapply(unattrib(X), `*`, v) else
-    mapply(`*`, unattrib(X), unattrib(v), USE.NAMES = FALSE, SIMPLIFY = FALSE), X)
-"%c/%" <- function(X, v) if(is.atomic(X)) return(X / v) else  # or * 1L/v ??
-  duplAttributes(if(is.atomic(v)) lapply(unattrib(X), `/`, v) else
-    mapply(`/`, unattrib(X), unattrib(v), USE.NAMES = FALSE, SIMPLIFY = FALSE), X)
+"%cr%" <- function(X, V) if(is.atomic(X)) return(duplAttributes(rep(V, NCOL(X)), X)) else # outer(rep.int(1L, dim(X)[2L]), V)
+  if(is.atomic(V)) return(duplAttributes(lapply(vector("list", length(unclass(X))), function(z) V), X)) else
+    copyAttrib(V, X) # copyAttrib first makes a shallow copy of V
+"%c+%" <- function(X, V) if(is.atomic(X)) return(X + V) else
+  duplAttributes(if(is.atomic(V)) lapply(unattrib(X), `+`, V) else
+    mapply(`+`, unattrib(X), unattrib(V), USE.NAMES = FALSE, SIMPLIFY = FALSE), X)
+"%c-%" <- function(X, V) if(is.atomic(X)) return(X - V) else
+  duplAttributes(if(is.atomic(V)) lapply(unattrib(X), `-`, V) else
+    mapply(`-`, unattrib(X), unattrib(V), USE.NAMES = FALSE, SIMPLIFY = FALSE), X)
+"%c*%" <- function(X, V) if(is.atomic(X)) return(X * V) else
+  duplAttributes(if(is.atomic(V)) lapply(unattrib(X), `*`, V) else
+    mapply(`*`, unattrib(X), unattrib(V), USE.NAMES = FALSE, SIMPLIFY = FALSE), X)
+"%c/%" <- function(X, V) if(is.atomic(X)) return(X / V) else  # or * 1L/V ??
+  duplAttributes(if(is.atomic(V)) lapply(unattrib(X), `/`, V) else
+    mapply(`/`, unattrib(X), unattrib(V), USE.NAMES = FALSE, SIMPLIFY = FALSE), X)
 
 
 # Multiple-assignment
@@ -50,7 +50,8 @@
 # }
 
 group <- function(x, starts = FALSE, group.sizes = FALSE) .Call(C_group, x, starts, group.sizes)
-
+gsplit <- function(x, g, toint = FALSE) .Call(C_gsplit, x, g, toint)
+greorder <- function(x, g) .Call(C_greorder, x, g)
 
 getenvFUN <- function(nam, efmt1 = "For this method need to install.packages('%s'), then unload [detach('package:collapse', unload = TRUE)] and reload [library(collapse)].")
   if(is.null(FUN <- .collapse_env[[nam]])) stop(sprintf(efmt1, strsplit(nam, "_", fixed = TRUE)[[1L]][1L])) else FUN
@@ -115,18 +116,54 @@ vclasses <- function(X) {
   vapply(X, pasteclass, character(1L)) # unattrib(X): no names
 }
 
+# https://github.com/wch/r-source/blob/4a409a1a244d842a3098d2783c5b63c9661fc6be/src/main/util.c
+R_types <- c("NULL",	      # NILSXP
+             "symbol",      # SYMSXP
+             "pairlist",	  # LISTSXP
+             "closure",	    # CLOSXP
+             "environment", # ENVSXP
+             "promise",	    # PROMSXP
+             "language",	  # LANGSXP
+             "special",	    # SPECIALSXP
+             "builtin",	    # BUILTINSXP
+             "char",		    # CHARSXP
+             "logical",	    # LGLSXP
+             "",
+             "",
+             "integer",	    # INTSXP
+             "double",	    # REALSXP
+             "complex",	    # CPLXSXP
+             "character",	  # STRSXP
+             "...",		      # DOTSXP
+             "any",		      # ANYSXP
+             "list",		    # VECSXP
+             "expression",	# EXPRSXP
+             "bytecode",	  # BCODESXP
+             "externalptr",	# EXTPTRSXP
+             "weakref",	    # WEAKREFSXP
+             "raw",		      # RAWSXP
+             "S4")		      # S4SXP
+# /* aliases : */
+# { "numeric",	REALSXP	   },
+# { "name",		SYMSXP	   },
+
+
 vtypes <- function(X) {
   if(is.atomic(X)) return(typeof(X))
-  vapply(X, typeof, character(1L)) # unattrib(X): no names
+  `names<-`(R_types[.Call(C_vtypes, X, 0L)], attr(X, "names"))
+  # vapply(X, typeof, character(1L)) # unattrib(X): no names
 }
 
-namlab <- function(X, class = FALSE, attrn = "label") {
+namlab <- function(X, class = FALSE, attrn = "label", N = FALSE, Ndistinct = FALSE) {
   if(!is.list(X)) stop("namlab only works with lists")
-  res <- if(class) list(attr(X, "names"), vapply(unattrib(X), pasteclass, character(1)), vlabels(X, attrn)) else
-                   list(attr(X, "names"), vlabels(X, attrn)) # could do unattrib(vlabels(X, attrn)) ??
-  attributes(res) <- list(names = if(class) c("Variable","Class","Label") else c("Variable","Label"),
-                          row.names = .set_row_names(length(unclass(X))),
-                          class = "data.frame")
+  res <- list(Variable = attr(X, "names"))
+  attributes(X) <- NULL
+  if(class) res$Class <- vapply(X, pasteclass, character(1))
+  if(N) res$N <- fnobs.data.frame(X)
+  if(Ndistinct) res$Ndist <- fndistinct.data.frame(X)
+  res$Label <- vlabels(X, attrn)
+  attr(res, "row.names") <- c(NA_integer_, -length(X))
+  oldClass(res) <- "data.frame"
   res
 }
 
@@ -273,11 +310,52 @@ is.Date <- is_date
 #   } else duplAttributes(x[!is.na(x)], x)
 # }
 
-whichv <- function(x, value = NA, invert = FALSE) .Call(C_whichv, x, value, invert)
+whichv <- function(x, value, invert = FALSE) .Call(C_whichv, x, value, invert)
+"%==%" <- function(x, value) .Call(C_whichv, x, value, FALSE)
+"%!=%" <- function(x, value) .Call(C_whichv, x, value, TRUE)
+whichNA <- function(x, invert = FALSE) .Call(C_whichv, x, NA, invert)
+
 
 alloc <- function(value, n) .Call(C_alloc, value, n)
 
 allNA <- function(x) .Call(C_allNA, x, TRUE) # True means give error for unsupported vector types, not FALSE.
+anyv <- function(x, value) .Call(C_anyallv, x, value, FALSE)
+allv <- function(x, value) .Call(C_anyallv, x, value, TRUE)
+
+
+copyv <- function(X, v, R, ..., invert = FALSE, vind1 = FALSE) {
+  if(is.list(X, ...)) { # Making sure some error is produced if dots are used
+    if(is.list(R)) {
+      res <- mapply(function(x, r) .Call(C_setcopyv, x, v, r, invert, FALSE, vind1),
+                    unattrib(X), unattrib(R), USE.NAMES = FALSE, SIMPLIFY = FALSE)
+    } else {
+      res <- lapply(unattrib(X), function(x) .Call(C_setcopyv, x, v, R, invert, FALSE, vind1))
+    }
+    return(condalc(duplAttributes(res, X), inherits(X, "data.table")))
+  }
+  .Call(C_setcopyv, X, v, R, invert, FALSE, vind1)
+}
+setv  <- function(X, v, R, ..., invert = FALSE, vind1 = FALSE) {
+  if(is.list(X, ...)) { # Making sure some error is produced if dots are used
+    if(is.list(R)) {
+      mapply(function(x, r) .Call(C_setcopyv, x, v, r, invert, TRUE, vind1),
+             unattrib(X), unattrib(R), USE.NAMES = FALSE, SIMPLIFY = FALSE)
+    } else {
+      lapply(unattrib(X), function(x) .Call(C_setcopyv, x, v, R, invert, TRUE, vind1))
+    }
+    return(invisible(X))
+  }
+  invisible(.Call(C_setcopyv, X, v, R, invert, TRUE, vind1))
+}
+
+setop <- function(X, op, V, ..., rowwise = FALSE) # Making sure some error is produced if dots are used
+  invisible(.Call(C_setop, X, V, switch(op, "+" = 1L, "-" = 2L, "*" = 3L, "/" = 4L, stop("Unsupported operation:", op)), rowwise), ...)
+
+"%+=%" <- function(X, V) invisible(.Call(C_setop, X, V, 1L, FALSE))
+"%-=%" <- function(X, V) invisible(.Call(C_setop, X, V, 2L, FALSE))
+"%*=%" <- function(X, V) invisible(.Call(C_setop, X, V, 3L, FALSE))
+"%/=%" <- function(X, V) invisible(.Call(C_setop, X, V, 4L, FALSE))
+
 
 missing_cases <- function(X, cols = NULL) {
   if(is.list(X)) return(.Call(C_dt_na, X, if(is.null(cols)) seq_along(unclass(X)) else cols2int(cols, X, attr(X, "names"))))

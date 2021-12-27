@@ -11,6 +11,7 @@
 \alias{gby}
 \alias{fgroup_vars}
 \alias{fungroup}
+\alias{gsplit}
 \alias{is_GRP}
 \alias{print.GRP}
 \alias{plot.GRP}
@@ -48,6 +49,9 @@ is_GRP(x)
 GRPnames(x, force.char = TRUE)
 as_factor_GRP(x, ordered = FALSE)
 
+# Split a vector using a grouping object
+gsplit(x, g, toint = FALSE)
+
 # Fast, class-agnostic version of dplyr::group_by for use with fast functions, see details
 fgroup_by(X, \dots, sort = TRUE, decreasing = FALSE, na.last = TRUE,
           return.order = FALSE)
@@ -67,7 +71,7 @@ fungroup(X, \dots)
 \arguments{
   \item{X}{a vector, list of columns or data frame (default method), or a classed object (conversion / extractor methods).}
 
-  \item{x}{a GRP object.}
+  \item{x, g}{a 'GRP' object. For \code{gsplit}, \code{x} can be a vector of any type.}
 
   \item{by}{if \code{X} is a data frame or list, \code{by} can indicate columns to use for the grouping (by default all columns are used). Columns must be passed using a vector of column names, indices, or using a one-sided formula i.e. \code{~ col1 + col2}.}
 
@@ -104,6 +108,8 @@ fungroup(X, \dots)
                  7 \tab\tab "named_logical"     \tab\tab named logical selection vector of grouping columns \cr
       }
   }
+
+  \item{toint}{logical. \code{TRUE} does not return the split vector, but the integer indices of the groups.}
 
  %  \item{untibble}{logical. \code{TRUE} also removes classes \code{c("tbl_df", "tbl")} from \code{X}. \code{fgroup_by} attaches an attribute \code{"was.tibble"} indicating if \code{X} was a tibble prior to grouping. The argument thus defaults to \code{TRUE} if this attribute is attached and equal to \code{FALSE}, so that \code{identical(X, X |> fgroup_by(...) |> fungroup())}, regardless of the nature of \code{X}. }
 
@@ -160,12 +166,14 @@ The method \code{GRP.grouped_df} takes the 'groups' attribute from a grouped dat
 \examples{
 ## default method
 GRP(mtcars$cyl)
-GRP(mtcars, ~ cyl + vs + am)      # Or GRP(mtcars, c("cyl","vs","am")) or GRP(mtcars, c(2,8:9))
-g <- GRP(mtcars, ~ cyl + vs + am) # Saving the object
-print(g)                          # Printing it
-plot(g)                           # Plotting it
-GRPnames(g)                       # Retain group names
-fsum(mtcars, g)                   # Compute the sum of mtcars, grouped by variables cyl, vs and am
+GRP(mtcars, ~ cyl + vs + am)       # Or GRP(mtcars, c("cyl","vs","am")) or GRP(mtcars, c(2,8:9))
+g <- GRP(mtcars, ~ cyl + vs + am)  # Saving the object
+print(g)                           # Printing it
+plot(g)                            # Plotting it
+GRPnames(g)                        # Retain group names
+fsum(mtcars, g)                    # Compute the sum of mtcars, grouped by variables cyl, vs and am
+gsplit(mtcars$mpg, g)              # Use the object to split a vector
+gsplit(mtcars$mpg, g, toint = TRUE)# The indices of the groups
 
 ## Convert factor to GRP object and vice-versa
 GRP(iris$Species)

@@ -41,7 +41,7 @@ setLabels(X, value, attrn = "label",    # Set labels of variables in X (by refer
 vclasses(X)                   # Get classes of variables in X
 vtypes(X)                     # Get data storage types of variables in X (calling typeof)
 namlab(X, class = FALSE,      # Return data frame of names, labels and classes
-          attrn = "label")
+  attrn = "label", N = FALSE, Ndistinct = FALSE)
 add_stub(X, stub, pre = TRUE, # Add a stub (i.e. prefix or postfix) to column names
          cols = NULL)
 rm_stub(X, stub, pre = TRUE,  # Remove stub from column names, also supports general
@@ -73,6 +73,7 @@ is_date(x)                    # Check if object is of class "Date", "POSIXlt" or
   \item{object, to, from}{a suitable R object.}
   \item{a}{a suitable list of attributes.}
   \item{attrn}{character. Name of attribute to store labels or retrieve labels from.}
+  \item{N, Ndistinct}{logical. Options to display the number of observations or number of distinct non-missing values.}
   \item{value}{for \code{whichv} and \code{alloc}: a single value of any vector type. For \code{vlabels<-} and \code{setLabels}: a matching character vector or list of variable labels. }
   \item{cols}{integer. (optional) indices of columns to apply the operation to. Note that for these small functions this needs to be integer, whereas for other functions in the package this argument is more flexible. }
   \item{class}{logical. Also show the classes of variables in X in a column?}
@@ -126,7 +127,8 @@ list2env(iris)          # Same thing
 rm(list = c("a", "b", "T", "N", names(iris)))
 
 ## Variable labels
-namlab(wlddev, class = TRUE)
+namlab(wlddev)
+namlab(wlddev, class = TRUE, N = TRUE, Ndistinct = TRUE)
 vlabels(wlddev)
 vlabels(wlddev) <- vlabels(wlddev)
 
