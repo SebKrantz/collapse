@@ -829,14 +829,23 @@ SEXP vtypes(SEXP x, SEXP isnum) {
   int n = length(x);
   SEXP ans = PROTECT(allocVector(INTSXP, n));
   int *pans = INTEGER(ans);
-  if(asLogical(isnum)) {
+  switch(asInteger(isnum)) {
+  case 0:
+    for(int i = 0; i != n; ++i) pans[i] = TYPEOF(VECTOR_ELT(x, i)) + 1;
+    break;
+  case 1: // Numeric variables: do_is with op = 100: https://github.com/wch/r-source/blob/2b0818a47199a0b64b6aa9b9f0e53a1e886e8e95/src/main/coerce.c
     for(int i = 0; i != n; ++i) {
       SEXP ci = VECTOR_ELT(x, i);
-      pans[i] = isNumeric(ci) && !isLogical(ci);
+      int tci = TYPEOF(ci);
+      pans[i] = (tci == INTSXP || tci == REALSXP) && OBJECT(ci) == 0;
     }
     SET_TYPEOF(ans, LGLSXP);
-  } else {
-    for(int i = 0; i != n; ++i) pans[i] = TYPEOF(VECTOR_ELT(x, i));
+    break;
+  case 2:
+    for(int i = 0; i != n; ++i) pans[i] = (int)isFactor(VECTOR_ELT(x, i));
+    SET_TYPEOF(ans, LGLSXP);
+    break;
+  default: error("Unsupported vtypes option");
   }
   // SEXP nam = getAttrib(x, R_NamesSymbol);
   // if(TYPEOF(nam) != NILSXP) setAttrib(ans, R_NamesSymbol, nam);

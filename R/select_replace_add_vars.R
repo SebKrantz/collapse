@@ -96,28 +96,28 @@ slt <- fselect # good, consistent
 # STD(fselect(GGDC10S, Country, Variable, Year, AGR:SUM))
 # Idea: also do this for replacement functions, replacing characters renames, replacong number reorders, replacing 3 does renaming and reordering?
 
-num_vars <- function(x, return = "data") get_vars_indl(x, vapply(`attributes<-`(x, NULL), is.numeric, TRUE), return)
+num_vars <- function(x, return = "data") get_vars_indl(x, .Call(C_vtypes, x, 1L), return) # vapply(`attributes<-`(x, NULL), is.numeric, TRUE)
 nv <- num_vars
 
-"num_vars<-" <- function(x, value) `get_vars_ind<-`(x, vapply(`attributes<-`(x, NULL), is.numeric, TRUE), value)
+"num_vars<-" <- function(x, value) `get_vars_ind<-`(x, .Call(C_vtypes, x, 1L), value)
 "nv<-" <- `num_vars<-`
 
-char_vars <- function(x, return = "data") get_vars_indl(x, vapply(`attributes<-`(x, NULL), is.character, TRUE), return)
-"char_vars<-" <- function(x, value) `get_vars_ind<-`(x, vapply(`attributes<-`(x, NULL), is.character, TRUE), value)
+char_vars <- function(x, return = "data") get_vars_ind(x, .Call(C_vtypes, x, 0L) %==% 17L, return) # vapply(`attributes<-`(x, NULL), is.character, TRUE)
+"char_vars<-" <- function(x, value) `get_vars_ind<-`(x, .Call(C_vtypes, x, 0L) %==% 17L, value)
 
-fact_vars <- function(x, return = "data") get_vars_indl(x, vapply(`attributes<-`(x, NULL), is.factor, TRUE), return)
-"fact_vars<-" <- function(x, value) `get_vars_ind<-`(x, vapply(`attributes<-`(x, NULL), is.factor, TRUE), value)
+fact_vars <- function(x, return = "data") get_vars_indl(x, .Call(C_vtypes, x, 2L), return) # vapply(`attributes<-`(x, NULL), is.factor, TRUE)
+"fact_vars<-" <- function(x, value) `get_vars_ind<-`(x, .Call(C_vtypes, x, 2L), value)
 
-logi_vars <- function(x, return = "data") get_vars_indl(x, vapply(`attributes<-`(x, NULL), is.logical, TRUE), return)
-"logi_vars<-" <- function(x, value) `get_vars_ind<-`(x, vapply(`attributes<-`(x, NULL), is.logical, TRUE), value)
+logi_vars <- function(x, return = "data") get_vars_ind(x, .Call(C_vtypes, x, 0L) %==% 11L, return) # vapply(`attributes<-`(x, NULL), is.logical, TRUE)
+"logi_vars<-" <- function(x, value) `get_vars_ind<-`(x, .Call(C_vtypes, x, 0L) %==% 11L, value)
 
 date_vars <- function(x, return = "data") get_vars_indl(x, vapply(`attributes<-`(x, NULL), is_date, TRUE), return)
 "date_vars<-" <- function(x, value) `get_vars_ind<-`(x, vapply(`attributes<-`(x, NULL), is_date, TRUE), value)
 Date_vars <- date_vars
 "Date_vars<-" <- `date_vars<-`
 
-cat_vars <- function(x, return = "data") get_vars_indl(x, !vapply(`attributes<-`(x, NULL), is.numeric, TRUE), return)
-"cat_vars<-" <- function(x, value) `get_vars_ind<-`(x, !vapply(`attributes<-`(x, NULL), is.numeric, TRUE), value)
+cat_vars <- function(x, return = "data") get_vars_ind(x, .Call(C_vtypes, x, 1L) %!=% TRUE, return)
+"cat_vars<-" <- function(x, value) `get_vars_ind<-`(x, .Call(C_vtypes, x, 1L) %!=% TRUE, value)
 
 
 get_vars <- function(x, vars, return = "data", regex = FALSE, ...) {
