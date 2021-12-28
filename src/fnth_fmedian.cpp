@@ -551,14 +551,14 @@ SEXP fnthlCpp(const List& x, double Q = 0.5, int ng = 0, const IntegerVector& g 
         Rf_setAttrib(out, R_NamesSymbol, Rf_getAttrib(x, R_NamesSymbol));
         return out;
       } else {
-        List out(l);
+        List outl(l);
         for(int j = l; j--; ) {
-          out[j] = out[j];
-          DUPLICATE_ATTRIB(out[j], x[j]);
+          outl[j] = out[j];
+          DUPLICATE_ATTRIB(outl[j], x[j]);
         }
-        DUPLICATE_ATTRIB(out, x);
-        Rf_setAttrib(out, R_RowNamesSymbol, Rf_ScalarInteger(1));
-        return out;
+        DUPLICATE_ATTRIB(outl, x);
+        Rf_setAttrib(outl, R_RowNamesSymbol, Rf_ScalarInteger(1));
+        return outl;
       }
 
     } else { // with groups
@@ -692,14 +692,14 @@ SEXP fnthlCpp(const List& x, double Q = 0.5, int ng = 0, const IntegerVector& g 
           Rf_setAttrib(out, R_NamesSymbol, Rf_getAttrib(x, R_NamesSymbol));
           return out;
         } else {
-          List out(l);
+          List outl(l);
           for(int j = l; j--; ) {
-            out[j] = out[j];
-            DUPLICATE_ATTRIB(out[j], x[j]);
+            outl[j] = out[j];
+            DUPLICATE_ATTRIB(outl[j], x[j]);
           }
-          DUPLICATE_ATTRIB(out, x);
-          Rf_setAttrib(out, R_RowNamesSymbol, Rf_ScalarInteger(1));
-          return out;
+          DUPLICATE_ATTRIB(outl, x);
+          Rf_setAttrib(outl, R_RowNamesSymbol, Rf_ScalarInteger(1));
+          return outl;
         }
     } else { // with groups and weights
       if(lx1 != g.size()) stop("length(w) must match length(g)");
