@@ -97,28 +97,38 @@ SEXP groups2GRP(SEXP x, SEXP lx, SEXP gs) {
 }
 
 // Faster version of base R's spit based on grouping objects..
-// TODO: Support lists !! And check attribute preservation !!
+// TODO: Support DF's !! And check attribute preservation !!
+// -> works for factors, Date and POSIXct, but not for POSIXlt
 SEXP gsplit(SEXP x, SEXP gobj, SEXP toint) {
   if(TYPEOF(gobj) != VECSXP || !inherits(gobj, "GRP")) error("g needs to be an object of class 'GRP', see ?GRP");
   const SEXP g = VECTOR_ELT(gobj, 1), gs = VECTOR_ELT(gobj, 2),
     ord = VECTOR_ELT(gobj, 5);
   int ng = length(gs), *pgs = INTEGER(gs), tx = TYPEOF(x);
+  if(ng != INTEGER(VECTOR_ELT(gobj, 0))[0]) error("'GRP' object needs to have valid vector of group-sizes");
   SEXP res = PROTECT(allocVector(VECSXP, ng));
   SEXP *pres = SEXPPTR(res);
   // Output as integer or not
   if(asLogical(toint)) {
     for(int i = 0; i != ng; ++i) pres[i] = allocVector(INTSXP, pgs[i]);
-  } else {
+  } else { // Allocate split vectors and copy attributes and object bits
     copyMostAttrib(x, res);
     SEXP ax = ATTRIB(res);
     SET_ATTRIB(res, R_NilValue);
-    for(int i = 0, ox = OBJECT(x); i != ng; ++i) {
-      SET_ATTRIB(pres[i] = allocVector(tx, pgs[i]), ax);
-      SET_OBJECT(pres[i], ox); // TODO: Preserves dates etc...??
+    if(TYPEOF(ax) != NILSXP && OBJECT(x) != 0) {
+      for(int i = 0, ox = OBJECT(x); i != ng; ++i) {
+        SET_ATTRIB(pres[i] = allocVector(tx, pgs[i]), ax);
+        SET_OBJECT(pres[i], ox);
+      }
+    } else if(TYPEOF(ax) != NILSXP) {
+      for(int i = 0; i != ng; ++i) SET_ATTRIB(pres[i] = allocVector(tx, pgs[i]), ax);
+    } else if(OBJECT(x) != 0) { // Is this even possible? Object bits but no attributes?
+      for(int i = 0, ox = OBJECT(x); i != ng; ++i) SET_OBJECT(pres[i] = allocVector(tx, pgs[i]), ox);
+    } else {
+      for(int i = 0; i != ng; ++i) pres[i] = allocVector(tx, pgs[i]);
     }
   }
   // If grouping is sorted or not
-  if(LOGICAL(ord)[1] == 1) {
+  if(LOGICAL(ord)[1] == 1) { // This only works if data is already ordered in order of the groups
     int count = 0;
     if(asLogical(toint)) {
       for(int j = 0; j != ng; ++j) {
@@ -239,11 +249,12 @@ SEXP gsplit(SEXP x, SEXP gobj, SEXP toint) {
 
 // This is for fmutate, to reorder the result of grouped data if the result has the same length as x
 SEXP greorder(SEXP x, SEXP gobj) {
-  if(!inherits(gobj, "GRP")) error("g needs to be an object of class 'GRP', see ?GRP");
+  if(TYPEOF(gobj) != VECSXP || !inherits(gobj, "GRP")) error("g needs to be an object of class 'GRP', see ?GRP");
   if(LOGICAL(VECTOR_ELT(gobj, 5))[1] == 1) return x;
   const SEXP g = VECTOR_ELT(gobj, 1), gs = VECTOR_ELT(gobj, 2);
   const int ng = length(gs), l = length(g), tx = TYPEOF(x),
             *pgs = INTEGER(gs), *pg = INTEGER(g);
+  if(ng != INTEGER(VECTOR_ELT(gobj, 0))[0]) error("'GRP' object needs to have valid vector of group-sizes");
   if(l != length(x)) error("length(x) must match length(g)");
   int *count = (int *) R_alloc(ng+1, sizeof(int));
   int *cgs = (int *) R_alloc(ng+2, sizeof(int)); cgs[1] = 0;
