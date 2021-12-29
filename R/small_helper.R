@@ -50,7 +50,15 @@
 # }
 
 group <- function(x, starts = FALSE, group.sizes = FALSE) .Call(C_group, x, starts, group.sizes)
-gsplit <- function(x, g, toint = FALSE) .Call(C_gsplit, x, g, toint)
+gsplit <- function(x = NULL, g, use.g.names = FALSE, ...) {
+  if(!inherits(g, "GRP")) g <- GRP(g, return.groups = use.g.names, call = FALSE, ...)
+  res <- if(is.null(x)) .Call(C_gsplit, 1L, g, TRUE) else if(length(unclass(x)) == length(g[[2L]]))
+         .Call(C_gsplit, x, g, FALSE) else if(is.object(x))
+         lapply(.Call(C_gsplit, 1L, g, TRUE), function(i) x[i]) else
+         stop("length(x) must match length(g)")
+  if(use.g.names) names(res) <- GRPnames(g, FALSE)
+  res
+}
 greorder <- function(x, g) .Call(C_greorder, x, g)
 
 getenvFUN <- function(nam, efmt1 = "For this method need to install.packages('%s'), then unload [detach('package:collapse', unload = TRUE)] and reload [library(collapse)].")
