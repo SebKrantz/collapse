@@ -20,10 +20,10 @@ RcppExport SEXP falloc(SEXP, SEXP);
 RcppExport SEXP setAttributes(SEXP x, SEXP a);
 RcppExport void setattributes(SEXP x, SEXP a);
 // RcppExport SEXP CsetAttr(SEXP object, SEXP a, SEXP v); -> mot more efficeint than attr i.e. for row.names...
-RcppExport void setattr(SEXP x, SEXP a, SEXP v);
+// RcppExport void setattr(SEXP x, SEXP a, SEXP v);
 RcppExport SEXP duplAttributes(SEXP x, SEXP y);
-RcppExport void duplattributes(SEXP x, SEXP y);
-RcppExport SEXP cond_duplAttributes(SEXP x, SEXP y);
+// RcppExport void duplattributes(SEXP x, SEXP y);
+// RcppExport SEXP cond_duplAttributes(SEXP x, SEXP y);
 RcppExport SEXP CsetAttrib(SEXP object, SEXP a);
 RcppExport SEXP CcopyAttrib(SEXP to, SEXP from);
 RcppExport SEXP CcopyMostAttrib(SEXP to, SEXP from);
@@ -144,10 +144,10 @@ static const R_CallMethodDef CallEntries[] = {
   {"C_setAttributes", (DL_FUNC) &setAttributes, 2},
   {"C_setattributes", (DL_FUNC) &setattributes, 2},
   // {"C_setAttr", (DL_FUNC) &CsetAttr, 3},
-  {"C_setattr", (DL_FUNC) &setattr, 3},
+  // {"C_setattr", (DL_FUNC) &setattr, 3},
   {"C_duplAttributes", (DL_FUNC) &duplAttributes, 2},
-  {"C_duplattributes", (DL_FUNC) &duplattributes, 2},
-  {"C_cond_duplAttributes", (DL_FUNC) &cond_duplAttributes, 2},
+  // {"C_duplattributes", (DL_FUNC) &duplattributes, 2},
+  // {"C_cond_duplAttributes", (DL_FUNC) &cond_duplAttributes, 2},
   {"C_copyMostAttributes", (DL_FUNC) &copyMostAttributes, 2},
   // {"C_cond_duplattributes", (DL_FUNC) &cond_duplattributes, 2},
   {"C_setAttrib", (DL_FUNC) &CsetAttrib, 2},

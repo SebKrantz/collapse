@@ -206,7 +206,7 @@ GRP.qG <- function(X, ..., group.sizes = TRUE, return.groups = TRUE, call = TRUE
     X[is.na(X)] <- ng
     if(grl) groups <- c(groups, NA)
   }
-  ordered <- if(is.ordered(X)) c(TRUE,TRUE) else c(FALSE,FALSE)
+  ordered <- if(is.ordered(X)) c(TRUE, NA) else c(FALSE, NA)
   attributes(X) <- NULL
   return(`oldClass<-`(list(N.groups = ng,
                         group.id = X,
@@ -225,7 +225,7 @@ GRP.factor <- function(X, ..., group.sizes = TRUE, drop = FALSE, return.groups =
   if(drop) X <- .Call(Cpp_fdroplevels, X, FALSE)
   lev <- attr(X, "levels")
   nl <- length(lev)
-  ordered <- if(is.ordered(X)) c(TRUE, TRUE) else c(FALSE, FALSE)
+  ordered <- if(is.ordered(X)) c(TRUE, NA) else c(FALSE, NA)
   attributes(X) <- NULL
   return(`oldClass<-`(list(N.groups = nl,
                         group.id = X,
@@ -251,7 +251,7 @@ GRP.pseries <- function(X, effect = 1L, ..., group.sizes = TRUE, return.groups =
   # }
   lev <- attr(g, "levels")
   nl <- length(lev)
-  ordered <- if(is.ordered(g)) c(TRUE,TRUE) else c(FALSE,FALSE)
+  ordered <- if(is.ordered(g)) c(TRUE, NA) else c(FALSE, NA)
   attributes(g) <- NULL
   return(`oldClass<-`(list(N.groups = nl,
                         group.id = g,
@@ -453,7 +453,7 @@ radixfact <- function(x, sort, ord, fact, naincl, keep, retgrp = FALSE) {
   f <- if(naincl) .Call(C_frankds, o, st, attr(o, "group.sizes"), TRUE) else # Fastest? -> Seems so..
         .Call(Cpp_groupid, x, o, 1L, TRUE, FALSE)
   if(fact) {
-    if(keep) duplattributes(f, x) else attributes(f) <- NULL
+    if(keep) duplAttributes(f, x) else attributes(f) <- NULL
     if(naincl) {
       attr(f, "levels") <- unattrib(tochar(.Call(C_subsetVector, x, if(attr(o, "sorted")) st else o[st], FALSE)))
     } else {

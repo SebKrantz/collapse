@@ -19,9 +19,9 @@ void setattributes(SEXP x, SEXP a) {
 //  return x;
 // }
 
-void setattr(SEXP x, SEXP a, SEXP v) {
-  Rf_setAttrib(x, a, v);
-}
+// void setattr(SEXP x, SEXP a, SEXP v) {
+//  Rf_setAttrib(x, a, v);
+// }
 
 SEXP duplAttributes(SEXP x, SEXP y) { // also look at data.table's keepattributes ...
   DUPLICATE_ATTRIB(x, y); // SET_ATTRIB(x, ATTRIB(y));
@@ -40,7 +40,7 @@ SEXP duplAttributes(SEXP x, SEXP y) { // also look at data.table's keepattribute
 // }
 
 SEXP copyMostAttributes(SEXP x, SEXP y) {
-  Rf_copyMostAttrib(y, x);
+  if(TYPEOF(x) == TYPEOF(y)) Rf_copyMostAttrib(y, x);
   return x;
 }
 
@@ -74,17 +74,19 @@ SEXP CcopyMostAttrib(SEXP to, SEXP from) {
   return res;
 }
 
+// No longer needed...
 // Warning message: In .Call(C_duplattributes, x, y) : converting NULL pointer to R NULL
-void duplattributes(SEXP x, SEXP y) {
-  DUPLICATE_ATTRIB(x, y); // SET_ATTRIB(x, ATTRIB(y));
-  Rf_classgets(x, Rf_getAttrib(y, R_ClassSymbol)); // This solves the warning message !!
+// void duplattributes(SEXP x, SEXP y) {
+//  DUPLICATE_ATTRIB(x, y); // SET_ATTRIB(x, ATTRIB(y));
+//  Rf_classgets(x, Rf_getAttrib(y, R_ClassSymbol)); // This solves the warning message !!
   // just to return R_NilValue; and the SEXP... retrns NULL anyway
-}
+// }
 
-SEXP cond_duplAttributes(SEXP x, SEXP y) {
-  if(TYPEOF(x) == TYPEOF(y)) DUPLICATE_ATTRIB(x, y); // SET_ATTRIB(x, ATTRIB(y));
-  return x;
-}
+// No longer needed... using copyMostAttributes instead
+// SEXP cond_duplAttributes(SEXP x, SEXP y) {
+//  if(TYPEOF(x) == TYPEOF(y)) DUPLICATE_ATTRIB(x, y); // SET_ATTRIB(x, ATTRIB(y));
+//  return x;
+// }
 
 // not used !!
 // void cond_duplattributes(SEXP x, SEXP y) {
