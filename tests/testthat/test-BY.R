@@ -71,8 +71,8 @@ test_that("BY.matrix works as intended", {
   expect_equal(BY(m, g, mean), fmean(m, g))
   expect_equal(BY(m, g, mean, return = "data.frame"), qDF(fmean(m, g)))
   # BY(m, g, scale)
-  expect_equal(BY(m, f2, scale, use.g.names = FALSE),   fscale(m, f2))
-  expect_equal(BY(m, f2, log, use.g.names = FALSE),   log(m))
+  expect_equal(BY(m, f2, scale, use.g.names = FALSE),   setRownames(fscale(m, f2), NULL))
+  expect_equal(BY(m, f2, log, use.g.names = FALSE), setRownames(log(m), NULL))
   expect_equal(BY(m, f2, quantile), qM(lapply(mctl(m, names = TRUE), function(x) unlist(lapply(split(x, f2), quantile)))))
   expect_equal(setDimnames(BY(m, f2, quantile, expand.wide = TRUE), NULL), setDimnames(do.call(cbind, lapply(mctl(m, names = TRUE), function(x) do.call(rbind, lapply(split(x, f2), quantile)))), NULL))
   expect_equal(BY(m, f2, quantile, return = "data.frame"), qDF(qM(lapply(mctl(m, names = TRUE), function(x) unlist(lapply(split(x, f2), quantile))))))
@@ -83,8 +83,8 @@ test_that("BY.matrix works as intended", {
   expect_equal(BY(mNA, g, sum, return = "data.frame", na.rm = TRUE), qDF(na20(fsum(mNA, g))))
   expect_equal(BY(mNA, g, mean, na.rm = TRUE), fmean(mNA, g))
   expect_equal(BY(mNA, g, mean, return = "data.frame", na.rm = TRUE), qDF(fmean(mNA, g)))
-  expect_equal(BY(mNA, f2, scale, use.g.names = FALSE),   fscale(mNA, f2))
-  expect_equal(BY(mNA, f2, log, use.g.names = FALSE),   log(mNA))
+  expect_equal(BY(mNA, f2, scale, use.g.names = FALSE), setRownames(fscale(mNA, f2), NULL))
+  expect_equal(BY(mNA, f2, log, use.g.names = FALSE), setRownames(log(mNA), NULL))
   expect_equal(BY(mNA, f2, quantile, na.rm = TRUE), qM(lapply(mctl(mNA, names = TRUE), function(x) unlist(lapply(split(x, f2), quantile, na.rm = TRUE)))))
   expect_equal(setDimnames(BY(mNA, f2, quantile, expand.wide = TRUE, na.rm = TRUE), NULL), setDimnames(do.call(cbind, lapply(mctl(mNA, names = TRUE), function(x) do.call(rbind, lapply(split(x, f2), quantile, na.rm = TRUE)))), NULL))
   expect_equal(BY(mNA, f2, quantile, return = "data.frame", na.rm = TRUE), qDF(qM(lapply(mctl(mNA, names = TRUE), function(x) unlist(lapply(split(x, f2), quantile, na.rm = TRUE))))))
@@ -110,8 +110,8 @@ test_that("BY.data.frame works as intended", {
   expect_equal(BY(mtcars, g, mean), fmean(mtcars, g))
   expect_equal(BY(mtcars, g, mean, return = "matrix"), qM(fmean(mtcars, g)))
   # BY(mtcars, g, scale)
-  expect_equal(BY(mtcars, f2, scale, use.g.names = FALSE),   fscale(mtcars, f2))
-  expect_equal(BY(mtcars, f2, log, use.g.names = FALSE),   log(mtcars))
+  expect_equal(BY(mtcars, f2, scale, use.g.names = FALSE),  setRownames(fscale(mtcars, f2)))
+  expect_equal(BY(mtcars, f2, log, use.g.names = FALSE),  setRownames(log(mtcars)))
   expect_equal(BY(mtcars, f2, quantile), qDF(qM(lapply(mtcars, function(x) unlist(lapply(split(x, f2), quantile))))))
   expect_equal(unname(BY(mtcars, f2, quantile, expand.wide = TRUE)), unname(qDF(do.call(cbind, lapply(mtcars, function(x) do.call(rbind, lapply(split(x, f2), quantile)))))))
   expect_equal(BY(mtcars, f2, quantile, return = "matrix"), qM(lapply(mtcars, function(x) unlist(lapply(split(x, f2), quantile)))))
@@ -122,8 +122,8 @@ test_that("BY.data.frame works as intended", {
   expect_equal(BY(mtcNA, g, sum, return = "matrix", na.rm = TRUE), na20(qM(fsum(mtcNA, g))))
   expect_equal(BY(mtcNA, g, mean, na.rm = TRUE), fmean(mtcNA, g))
   expect_equal(BY(mtcNA, g, mean, return = "matrix", na.rm = TRUE), qM(fmean(mtcNA, g)))
-  expect_equal(BY(mtcNA, f2, scale, use.g.names = FALSE),   fscale(mtcNA, f2))
-  expect_equal(BY(mtcNA, f2, log, use.g.names = FALSE),   log(mtcNA))
+  expect_equal(BY(mtcNA, f2, scale, use.g.names = FALSE), setRownames(fscale(mtcNA, f2)))
+  expect_equal(BY(mtcNA, f2, log, use.g.names = FALSE), setRownames(log(mtcNA)))
   expect_equal(BY(mtcNA, f2, quantile, na.rm = TRUE), qDF(qM(lapply(mtcNA, function(x) unlist(lapply(split(x, f2), quantile, na.rm = TRUE))))))
   expect_equal(unname(BY(mtcNA, f2, quantile, expand.wide = TRUE, na.rm = TRUE)), unname(qDF(do.call(cbind, lapply(mtcNA, function(x) do.call(rbind, lapply(split(x, f2), quantile, na.rm = TRUE)))))))
   expect_equal(BY(mtcNA, f2, quantile, return = "matrix", na.rm = TRUE), qM(lapply(mtcNA, function(x) unlist(lapply(split(x, f2), quantile, na.rm = TRUE)))))
@@ -172,8 +172,8 @@ test_that("BY matrix <> data.frame conversions run seamlessly", {
 test_that("BY produces errors for wrong input", {
 
   expect_error(BY(~bla, g, sum)) # Not supported type
-  expect_warning(BY(1, g, sum)) # This only gives a wrning in split.default: g is too long
-  expect_warning(BY(x, g, sum)) # This only gives a wrning in split.default: g is too short
+  expect_error(BY(1, g, sum)) # This only gives a warning in gsplit: g is too long
+  expect_error(BY(x, g, sum)) # This only gives a warning in gsplit: g is too short
   expect_error(BY(letters, sample.int(5, length(letters), TRUE), sum)) # wrong type
   expect_error(BY(x, f, sum2)) # unknown object
   expect_error(BY(x, f, "sum2")) # unknown object
