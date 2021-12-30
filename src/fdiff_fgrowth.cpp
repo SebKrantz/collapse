@@ -563,7 +563,7 @@ NumericVector fdiffgrowthCppImpl(const NumericVector& x, const IntegerVector& n 
   if(ncol != 1) {
     Rf_setAttrib(out, R_NamesSymbol, R_NilValue); // if(x.hasAttribute("names")) out.attr("names") = R_NilValue;
     Rf_dimgets(out, Dimension(l, ncol));
-    if(Rf_isObject(x)) {
+    if(Rf_isObject(x)) { //  && !x.inherits("pseries") -> lag matrix in plm is not a pseries anymore anyway...
       CharacterVector classes = Rf_getAttrib(out, R_ClassSymbol);
       classes.push_back("matrix");
       Rf_classgets(out, classes);

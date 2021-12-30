@@ -27,9 +27,15 @@ fdiff.pseries <- function(x, n = 1, diff = 1, fill = NA, log = FALSE, rho = 1, s
   if(log) x <- baselog(x)
   index <- unclass(attr(x, "index"))
   if(length(index) > 2L) index <- list(finteraction(index[-length(index)]), index[[length(index)]])
+  g <- index[[1L]]
+  t <- index[[2L]]
+  tlev <- attr(t, "levels")
+  oldopts <- options(warn = -1L)
+  on.exit(options(oldopts))
+  if(is.finite(as.integer(tlev[1L]))) t <- as.integer(tlev)[t]
   if(is.matrix(x))
-    .Call(Cpp_fdiffgrowthm,x,n,diff,fill,fnlevels(index[[1L]]),index[[1L]],NULL,index[[2L]],1L+log,rho,stubs,1) else
-      .Call(Cpp_fdiffgrowth,x,n,diff,fill,fnlevels(index[[1L]]),index[[1L]],NULL,index[[2L]],1L+log,rho,stubs,1)
+    .Call(Cpp_fdiffgrowthm,x,n,diff,fill,fnlevels(g),g,NULL,t,1L+log,rho,stubs,1) else
+      .Call(Cpp_fdiffgrowth,x,n,diff,fill,fnlevels(g),g,NULL,t,1L+log,rho,stubs,1)
 }
 
 fdiff.matrix <- function(x, n = 1, diff = 1, g = NULL, t = NULL, fill = NA, log = FALSE, rho = 1, stubs = length(n) + length(diff) > 2L, ...) {
@@ -83,7 +89,13 @@ fdiff.pdata.frame <- function(x, n = 1, diff = 1, fill = NA, log = FALSE, rho = 
   if(log) x <- fdapply(x, baselog)
   index <- unclass(attr(x, "index"))
   if(length(index) > 2L) index <- list(finteraction(index[-length(index)]), index[[length(index)]])
-  .Call(Cpp_fdiffgrowthl,x,n,diff,fill,fnlevels(index[[1L]]),index[[1L]],NULL,index[[2L]],1L+log,rho,stubs,1)
+  g <- index[[1L]]
+  t <- index[[2L]]
+  tlev <- attr(t, "levels")
+  oldopts <- options(warn = -1L)
+  on.exit(options(oldopts))
+  if(is.finite(as.integer(tlev[1L]))) t <- as.integer(tlev)[t]
+  .Call(Cpp_fdiffgrowthl,x,n,diff,fill,fnlevels(g),g,NULL,t,1L+log,rho,stubs,1)
 }
 
 
@@ -105,9 +117,15 @@ fgrowth.pseries <- function(x, n = 1, diff = 1, fill = NA, logdiff = FALSE, scal
   if(logdiff) x <- if(scale == 1) baselog(x) else scale * baselog(x)
   index <- unclass(attr(x, "index"))
   if(length(index) > 2L) index <- list(finteraction(index[-length(index)]), index[[length(index)]])
+  g <- index[[1L]]
+  t <- index[[2L]]
+  tlev <- attr(t, "levels")
+  oldopts <- options(warn = -1L)
+  on.exit(options(oldopts))
+  if(is.finite(as.integer(tlev[1L]))) t <- as.integer(tlev)[t]
   if(is.matrix(x))
-    .Call(Cpp_fdiffgrowthm,x,n,diff,fill,fnlevels(index[[1L]]),index[[1L]],NULL,index[[2L]],4L-logdiff,scale,stubs,power) else
-      .Call(Cpp_fdiffgrowth,x,n,diff,fill,fnlevels(index[[1L]]),index[[1L]],NULL,index[[2L]],4L-logdiff,scale,stubs,power)
+    .Call(Cpp_fdiffgrowthm,x,n,diff,fill,fnlevels(g),g,NULL,t,4L-logdiff,scale,stubs,power) else
+      .Call(Cpp_fdiffgrowth,x,n,diff,fill,fnlevels(g),g,NULL,t,4L-logdiff,scale,stubs,power)
 }
 
 fgrowth.matrix <- function(x, n = 1, diff = 1, g = NULL, t = NULL, fill = NA, logdiff = FALSE, scale = 100, power = 1, stubs = length(n) + length(diff) > 2L, ...) {
@@ -161,7 +179,13 @@ fgrowth.pdata.frame <- function(x, n = 1, diff = 1, fill = NA, logdiff = FALSE, 
   if(logdiff) x <- if(scale == 1) fdapply(x, baselog) else fdapply(x, function(y) scale * baselog(y))
   index <- unclass(attr(x, "index"))
   if(length(index) > 2L) index <- list(finteraction(index[-length(index)]), index[[length(index)]])
-  .Call(Cpp_fdiffgrowthl,x,n,diff,fill,fnlevels(index[[1L]]),index[[1L]],NULL,index[[2L]],4L-logdiff,scale,stubs,power)
+  g <- index[[1L]]
+  t <- index[[2L]]
+  tlev <- attr(t, "levels")
+  oldopts <- options(warn = -1L)
+  on.exit(options(oldopts))
+  if(is.finite(as.integer(tlev[1L]))) t <- as.integer(tlev)[t]
+  .Call(Cpp_fdiffgrowthl,x,n,diff,fill,fnlevels(g),g,NULL,t,4L-logdiff,scale,stubs,power)
 }
 
 # Operator data frame methods templates
@@ -234,6 +258,12 @@ DG_pdata_frame_template <- function(x, n = 1, diff = 1, cols = is.numeric, fill 
   } else gn <- NULL
 
   if(length(index) > 2L) index <- list(finteraction(index[-length(index)]), index[[length(index)]])
+  g <- index[[1L]]
+  t <- index[[2L]]
+  tlev <- attr(t, "levels")
+  oldopts <- options(warn = -1L)
+  on.exit(options(oldopts))
+  if(is.finite(as.integer(tlev[1L]))) t <- as.integer(tlev)[t]
 
   cld <- function(y) switch(return, y, fdapply(y, baselog), if(rho == 1) fdapply(y, baselog) else fdapply(y, function(k) rho * baselog(k)), y)
 
@@ -241,12 +271,12 @@ DG_pdata_frame_template <- function(x, n = 1, diff = 1, cols = is.numeric, fill 
 
   if(length(gn) && length(cols)) {
     class(x) <- NULL # Works for multiple lags !
-    res <- c(x[gn], .Call(Cpp_fdiffgrowthl,cld(x[cols]),n,diff,fill,fnlevels(index[[1L]]),index[[1L]],NULL,index[[2L]],return,rho,stubs,power))
+    res <- c(x[gn], .Call(Cpp_fdiffgrowthl,cld(x[cols]),n,diff,fill,fnlevels(g),g,NULL,t,return,rho,stubs,power))
     ax[["names"]] <- names(res)
     return(setAttributes(res, ax))
   } else if(!length(gn)) # could speed up ?
-    return(.Call(Cpp_fdiffgrowthl,cld(fcolsubset(x, cols)),n,diff,fill,fnlevels(index[[1L]]),index[[1L]],NULL,index[[2L]],return,rho,stubs,power))
-  .Call(Cpp_fdiffgrowthl,cld(x),n,diff,fill,fnlevels(index[[1L]]),index[[1L]],NULL,index[[2L]],return,rho,stubs,power)
+    return(.Call(Cpp_fdiffgrowthl,cld(fcolsubset(x, cols)),n,diff,fill,fnlevels(g),g,NULL,t,return,rho,stubs,power))
+  .Call(Cpp_fdiffgrowthl,cld(x),n,diff,fill,fnlevels(g),g,NULL,t,return,rho,stubs,power)
 }
 
 # Difference Operator (masks stats::D)  # use xt instead of by ?

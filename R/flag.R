@@ -13,9 +13,16 @@ flag.pseries <- function(x, n = 1, fill = NA, stubs = TRUE, ...) {
   if(!missing(...)) unused_arg_action(match.call(), ...)
   index <- unclass(attr(x, "index"))
   if(length(index) > 2L) index <- list(finteraction(index[-length(index)]), index[[length(index)]])
+  g <- index[[1L]]
+  t <- index[[2L]]
+  tlev <- attr(t, "levels")
+  oldopts <- options(warn = -1L)
+  on.exit(options(oldopts))
+  if(is.finite(as.integer(tlev[1L]))) t <- as.integer(tlev)[t]
+  if(n > 1 && is.factor(x)) x <- setNames(as.character(x), names(x))
   if(is.matrix(x))
-  .Call(Cpp_flagleadm,x,n,fill,fnlevels(index[[1L]]),index[[1L]],index[[2L]],stubs) else
-  .Call(Cpp_flaglead,x,n,fill,fnlevels(index[[1L]]),index[[1L]],index[[2L]],stubs)
+  .Call(Cpp_flagleadm,x,n,fill,fnlevels(g),g,t,stubs) else
+  .Call(Cpp_flaglead,x,n,fill,fnlevels(g),g,t,stubs)
 }
 
 flag.matrix <- function(x, n = 1, g = NULL, t = NULL, fill = NA, stubs = length(n) > 1L, ...) {
@@ -50,12 +57,14 @@ flag.grouped_df <- function(x, n = 1, t = NULL, fill = NA, stubs = length(n) > 1
   }
   .Call(Cpp_flagleadl,x,n,fill,g[[1L]],g[[2L]],G_t(t),stubs)
 }
+
 flag.data.frame <- function(x, n = 1, g = NULL, t = NULL, fill = NA, stubs = length(n) > 1L, ...) {
   if(!missing(...)) unused_arg_action(match.call(), ...)
   if(is.null(g)) return(.Call(Cpp_flagleadl,x,n,fill,0L,0L,G_t(t),stubs))
   g <- G_guo(g)
   .Call(Cpp_flagleadl,x,n,fill,g[[1L]],g[[2L]],G_t(t),stubs)
 }
+
 flag.list <- function(x, n = 1, g = NULL, t = NULL, fill = NA, stubs = length(n) > 1L, ...)
   flag.data.frame(x, n, g, t, fill, stubs, ...)
 
@@ -63,7 +72,13 @@ flag.pdata.frame <- function(x, n = 1, fill = NA, stubs = length(n) > 1L, ...) {
   if(!missing(...)) unused_arg_action(match.call(), ...)
   index <- unclass(attr(x, "index"))
   if(length(index) > 2L) index <- list(finteraction(index[-length(index)]), index[[length(index)]])
-  .Call(Cpp_flagleadl,x,n,fill,fnlevels(index[[1L]]),index[[1L]],index[[2L]],stubs)
+  g <- index[[1L]]
+  t <- index[[2L]]
+  tlev <- attr(t, "levels")
+  oldopts <- options(warn = -1L)
+  on.exit(options(oldopts))
+  if(is.finite(as.integer(tlev[1L]))) t <- as.integer(tlev)[t]
+  .Call(Cpp_flagleadl,x,n,fill,fnlevels(g),g,t,stubs)
 }
 
 # Lag Operator   # use xt instead of by ?
@@ -150,17 +165,23 @@ L.pdata.frame <- function(x, n = 1, cols = is.numeric, fill = NA, stubs = TRUE, 
   } else gn <- NULL
 
   if(length(index) > 2L) index <- list(finteraction(index[-length(index)]), index[[length(index)]])
+  g <- index[[1L]]
+  t <- index[[2L]]
+  tlev <- attr(t, "levels")
+  oldopts <- options(warn = -1L)
+  on.exit(options(oldopts))
+  if(is.finite(as.integer(tlev[1L]))) t <- as.integer(tlev)[t]
 
   if(length(cols)) cols <- cols2int(cols, x, nam, FALSE)
 
   if(length(gn) && length(cols)) {
     class(x) <- NULL # Works for multiple lags !
-    res <- c(x[gn], .Call(Cpp_flagleadl,x[cols],n,fill,fnlevels(index[[1L]]),index[[1L]],index[[2L]],stubs))
+    res <- c(x[gn], .Call(Cpp_flagleadl,x[cols],n,fill,fnlevels(g),g,t,stubs))
     ax[["names"]] <- names(res)
     return(setAttributes(res, ax))
   } else if(!length(gn)) # could speed up ?
-    return(.Call(Cpp_flagleadl,fcolsubset(x, cols),n,fill,fnlevels(index[[1L]]),index[[1L]],index[[2L]],stubs))
-  .Call(Cpp_flagleadl,x,n,fill,fnlevels(index[[1L]]),index[[1L]],index[[2L]],stubs)
+    return(.Call(Cpp_flagleadl,fcolsubset(x, cols),n,fill,fnlevels(g),g,t,stubs))
+  .Call(Cpp_flagleadl,x,n,fill,fnlevels(g),g,t,stubs)
 }
 
 

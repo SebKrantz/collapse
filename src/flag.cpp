@@ -196,9 +196,10 @@ Vector<RTYPE> flagleadCppImpl(const Vector<RTYPE>& x, const IntegerVector& n, co
   if(ns != 1) {
     Rf_setAttrib(out, R_NamesSymbol, R_NilValue);
     Rf_dimgets(out, Dimension(l, ns));
-    if(Rf_isObject(x)) {
+    if(Rf_isObject(x)) { //  && !x.inherits("pseries") -> lag matrix in plm is not a pseries anymore anyway...
       CharacterVector classes = Rf_getAttrib(out, R_ClassSymbol);
       classes.push_back("matrix");
+      // classes.push_back("array"); // mts does not have class array...
       Rf_classgets(out, classes);
     } // else {
       // Rf_classgets(out, Rf_mkString("matrix"));

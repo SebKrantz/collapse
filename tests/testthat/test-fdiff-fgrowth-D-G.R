@@ -10,13 +10,13 @@ xNA[sample.int(100, 20)] <- NA
 f <- as.factor(rep(1:10, each = 10))
 t <- as.factor(rep(1:10, 10))
 
-data <- wlddev[wlddev$iso3c %in% c("BLZ","IND","USA","SRB","GRL"), ]
+data <- setRownames(wlddev[wlddev$iso3c %in% c("BLZ","IND","USA","SRB","GRL"), ])
 g <- GRP(droplevels(data$iso3c))
 td <- as.factor(data$year)
 data <- num_vars(data)
 dataNA <- na_insert(data)
-m <- as.matrix(data)
-mNA <- as.matrix(dataNA)
+m <- qM(data)
+mNA <- qM(dataNA)
 mNAc <- mNA
 storage.mode(mNAc) <- "character"
 
