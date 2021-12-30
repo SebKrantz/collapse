@@ -448,8 +448,8 @@ SEXP subsetCols(SEXP x, SEXP cols, SEXP checksf) { // SEXP fretall
 
   if(INHERITS(x, char_datatable)) {
     setAttrib(ans, sym_datatable_locked, R_NilValue);
-    UNPROTECT(nprotect);
     int n = asInteger(GetOption1(sym_collapse_DT_alloccol));
+    UNPROTECT(nprotect); // This needs to be here !! (asInteger and GetOption1 are allocating functions)
     return shallow(ans, R_NilValue, ncol + n); // 1024 is data.table default..
     // setselfref(ans); // done by shallow
   }
@@ -569,8 +569,8 @@ SEXP subsetDT(SEXP x, SEXP rows, SEXP cols, SEXP checkrows) { // , SEXP fastret
   if(INHERITS(x, char_datatable)) {
     setAttrib(ans, sym_sorted, R_NilValue);
     setAttrib(ans, sym_datatable_locked, R_NilValue);
-    UNPROTECT(nprotect);
     int n = asInteger(GetOption1(sym_collapse_DT_alloccol));
+    UNPROTECT(nprotect); // This needs to be here !! (asInteger and GetOption1 are allocating functions)
     return shallow(ans, R_NilValue, ncol + n); // 1024 is data.table default..
     // setselfref(ans); // done by shallow
   }
