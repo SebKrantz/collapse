@@ -44,9 +44,7 @@ BY.default <- function(x, g, FUN, ..., use.g.names = TRUE, sort = TRUE,
 
 copysplaplfun <- function(x, g, FUN, ...) copyMostAttributes(unlist(lapply(gsplit(x, g), FUN, ...), FALSE, FALSE), x)
 splaplfun <- function(x, g, FUN, ...) unlist(lapply(gsplit(x, g), FUN, ...), FALSE, FALSE)
-# Problem: BY(wlddev, wlddev$iso3c, length, use.g.names = FALSE) -> malformed factor !
-# but BY(wlddev, wlddev$iso3c, length) does not give this problem !
-# -> There is not really a good solution, because for the latter we check the first column, for the former not...
+
 
 BY.data.frame <- function(x, g, FUN, ..., use.g.names = TRUE, sort = TRUE,
                           expand.wide = FALSE, parallel = FALSE, mc.cores = 1L,
@@ -99,14 +97,14 @@ BY.data.frame <- function(x, g, FUN, ..., use.g.names = TRUE, sort = TRUE,
           if(length(namres1)) ax[["row.names"]] <- namres1 else
           if(length(res[[1L]]) != length(x[[1L]])) ax[["row.names"]] <- .set_row_names(length(res[[1L]]))
         if(length(namres1)) names(res[[1L]]) <- NULL
-        if(!matl && typeof(res[[1L]]) == typeof(x[[1L]])) { # length(res[[1]]) == nrow(x) &&   always safe ?
-          copyMostAttributes(res[[1L]], x[[1L]])
-          if(length(res) > 1L) res[-1L] <- aplyfun(x[-1L], copysplaplfun, g, FUN, ...)
-        } else if(length(res) > 1L) res[-1L] <- aplyfun(x[-1L], splaplfun, g, FUN, ...)
         if(matl) {
+          if(length(res) > 1L) res[-1L] <- aplyfun(x[-1L], splaplfun, g, FUN, ...)
           res <- do.call(cbind, res)
           dimnames(res) <- dn
           return(res)
+        } else {
+          copyMostAttributes(res[[1L]], x[[1L]])
+          if(length(res) > 1L) res[-1L] <- aplyfun(x[-1L], copysplaplfun, g, FUN, ...)
         }
       } else { # Not using names...
         if(matl) {
