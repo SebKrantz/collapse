@@ -1,7 +1,7 @@
 
-fsplit <- function(x, f, drop, ...) if(drop && is.factor(f))
-  split(x, .Call(Cpp_fdroplevels, f, !inherits(f, "na.included")), drop = FALSE, ...) else
-    split(x, qF(f), drop = FALSE, ...)
+# fsplit <- function(x, f, drop, ...) if(drop && is.factor(f))
+#   split(x, .Call(Cpp_fdroplevels, f, !inherits(f, "na.included")), drop = FALSE, ...) else
+#     split(x, qF(f), drop = FALSE, ...)
 
 t_list2 <- function(x) .Call(Cpp_mctl, do.call(rbind, x), TRUE, 0L)
 
@@ -14,46 +14,16 @@ t_list <- function(l) {
 }
 
 
-# fsplit_DF2 <- function(x, f, drop, ...) {
-#
-#   if(!length(x)) return(x)
-#
-#   j <- seq_along(unclass(x))
-#
-#   ind <- if(drop && is.factor(f))
-#     split.default(seq_along(.subset2(x, 1L)), .Call(Cpp_fdroplevels, f, !inherits(f, "na.included")), drop = FALSE, ...) else
-#       split.default(seq_along(.subset2(x, 1L)), qF(f), drop = FALSE, ...)
-#
-#   lapply(ind, function(i) .Call(C_subsetDT, x, i, j, FALSE)) # tryCatch(, error = function(e) print(list(x = x, ind = ind, j = j)))
-# }
-
-# rsplit_default2(mtcars$mpg, slt(mtcars, cyl, vs)) -> Still find source of Bug !! see if it is faster !!
-
-# rsplit_default2 <- function(x, fl, drop = TRUE, flatten = FALSE, ...) { # , check = TRUE
-#   if(is.atomic(fl)) return(fsplit(x, fl, drop, ...))
-#   if(flatten && length(unclass(fl)) > 1L) return(fsplit(x, finteraction(fl), drop, ...))
-#   attributes(fl) <- NULL
-#   # if(check) fl <- lapply(fl, qF) # necessary ? -> split.default is actually faster on non-factor variables !
-#   rspl <- function(y, fly) {
-#     if(length(fly) == 1L) return(fsplit(y, fly[[1L]], drop, ...))
-#     mapply(rspl, y = fsplit(y, fly[[1L]], drop, ...),
-#            fly = fsplit_DF2(fly[-1L], fly[[1L]], drop, ...), SIMPLIFY = FALSE) # Possibility to avoid transpose ? C_subsetDT ??
-#   }
-#   rspl(x, fl)
-# }
-
-
 rsplit <- function(x, ...) UseMethod("rsplit")
 
-rsplit.default <- function(x, fl, drop = TRUE, flatten = FALSE, ...) { # , check = TRUE
-  if(is.atomic(fl)) return(fsplit(x, fl, drop, ...))
-  if(flatten && length(unclass(fl)) > 1L) return(fsplit(x, finteraction(fl), drop, ...))
+rsplit.default <- function(x, fl, drop = TRUE, flatten = FALSE, use.names = TRUE, ...) { # , check = TRUE
+  if(is.atomic(fl) || flatten || is_GRP(fl)) return(gsplit(x, fl, use.names, drop = drop, ...))
   attributes(fl) <- NULL
   # if(check) fl <- lapply(fl, qF) # necessary ? -> split.default is actually faster on non-factor variables !
   rspl <- function(y, fly) {
-    if(length(fly) == 1L) return(fsplit(y, fly[[1L]], drop, ...))
-    mapply(rspl, y = fsplit(y, fly[[1L]], drop, ...),
-           fly = t_list2(lapply(fly[-1L], fsplit, fly[[1L]], drop, ...)), SIMPLIFY = FALSE) # Possibility to avoid transpose ? C_subsetDT ??
+    if(length(fly) == 1L) return(gsplit(y, fly[[1L]], use.names, drop = drop, ...))
+    mapply(rspl, y = gsplit(y, fly[[1L]], use.names, drop = drop, ...),
+           fly = t_list2(lapply(fly[-1L], gsplit, fly[[1L]], use.names, drop = drop, ...)), SIMPLIFY = FALSE) # Possibility to avoid transpose ? C_subsetDT ??
   }
   rspl(x, fl)
 }
@@ -73,7 +43,8 @@ rsplit.default <- function(x, fl, drop = TRUE, flatten = FALSE, ...) { # , check
 # }
 
 rsplit.data.frame <- function(x, by, drop = TRUE, flatten = FALSE, # check = TRUE,
-                              cols = NULL, keep.by = FALSE, simplify = TRUE, ...) {
+                              cols = NULL, keep.by = FALSE, simplify = TRUE,
+                              use.names = TRUE, ...) {
 
   if(is.call(by)) {
     nam <- attr(x, "names")
@@ -91,29 +62,31 @@ rsplit.data.frame <- function(x, by, drop = TRUE, flatten = FALSE, # check = TRU
     x <- fcolsubset(x, cols2int(cols, x, attr(x, "names"), FALSE), TRUE)
 
   if(simplify && length(unclass(x)) == 1L)
-    return(rsplit.default(.subset2(x, 1L), by, drop, flatten, ...))  # , check
+    return(rsplit.default(.subset2(x, 1L), by, drop, flatten, use.names, ...))  # , check
   # Note there is a data.table method: split.data.table, which can also do recursive splitting..
 
   j <- seq_along(unclass(x))
   rn <- attr(x, "row.names")
   if(is.numeric(rn) || is.null(rn) || rn[1L] == "1") {
-    fsplit_DF <- function(x, f, ...)
-      lapply(fsplit(seq_along(.subset2(x, 1L)), f, drop, ...),
-             function(i) .Call(C_subsetDT, x, i, j, FALSE))
+    gsplit_DF <- function(x, f, ...)
+      lapply(gsplit(NULL, f, use.names, drop = drop, ...),
+             function(i) .Call(C_subsetDT, x, i, j, FALSE)) # .Call, .NAME = C_subsetDT, j, FALSE) -> doesn't work!
   } else {
-    fsplit_DF <- function(x, f, ...)
-      lapply(fsplit(seq_along(.subset2(x, 1L)), f, drop, ...),
-             function(i) `attr<-`(.Call(C_subsetDT, x, i, j, FALSE), "row.names", attr(x, "row.names")[i]))
+    gsplit_DF <- function(x, f, ...) {
+      rown <- attr(x, "row.names") # Need to do this, handing down from the function body doesn't work
+      lapply(gsplit(NULL, f, use.names, drop = drop, ...),
+             function(i) `attr<-`(.Call(C_subsetDT, x, i, j, FALSE), "row.names", rown[i]))
+    }
   }
 
-  if(is.atomic(by)) return(fsplit_DF(x, by, ...))
-  if(flatten && length(unclass(by)) > 1L) return(fsplit_DF(x, finteraction(by), ...))
+  if(is.atomic(by) || flatten || is_GRP(by)) return(gsplit_DF(x, by, ...))
+
   attributes(by) <- NULL
   # if(check) by <- lapply(by, qF) # necessary ?
   rspl_DF <- function(y, fly) {
-    if(length(fly) == 1L) return(fsplit_DF(y, fly[[1L]], ...))
-    mapply(rspl_DF, y = fsplit_DF(y, fly[[1L]], ...),
-           fly = t_list2(lapply(fly[-1L], fsplit, fly[[1L]], drop, ...)), SIMPLIFY = FALSE) # Possibility to avoid transpose ?
+    if(length(fly) == 1L) return(gsplit_DF(y, fly[[1L]], ...))
+    mapply(rspl_DF, y = gsplit_DF(y, fly[[1L]], ...),
+           fly = t_list2(lapply(fly[-1L], gsplit, fly[[1L]], use.names, drop = drop, ...)), SIMPLIFY = FALSE) # Possibility to avoid transpose ?
   }                # use C_subsetDT here as well ??? what is faster ???
   rspl_DF(x, by)
 }
