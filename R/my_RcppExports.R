@@ -228,21 +228,22 @@ setattributes <- function(x, a) {
     invisible(.Call(C_setattributes, x, a))
 }
 
-setattr <- function(x, a, v) {
-    invisible(.Call(C_setattr, x, a, v))
-}
-
 duplAttributes <- function(x, y) {
     .Call(C_duplAttributes, x, y)
 }
 
-duplattributes <- function(x, y) {
-    invisible(.Call(C_duplattributes, x, y))
-}
+# No longer needed...
+# setattr <- function(x, a, v) {
+#   invisible(.Call(C_setattr, x, a, v))
+# }
 
-cond_duplAttributes <- function(x, y) {
-    .Call(C_cond_duplAttributes, x, y)
-}
+# duplattributes <- function(x, y) {
+#     invisible(.Call(C_duplattributes, x, y))
+# }
+
+# cond_duplAttributes <- function(x, y) {
+#     .Call(C_cond_duplAttributes, x, y)
+# }
 
 # cond_duplattributes <- function(x, y) {
 #     invisible(.Call(C_cond_duplattributes, x, y))
