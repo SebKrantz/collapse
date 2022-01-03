@@ -1,4 +1,6 @@
 \name{ftransform}
+\alias{fmutate}
+\alias{mte}
 \alias{ftransform}
 \alias{tfm}
 \alias{ftransformv}
@@ -13,7 +15,9 @@
 \alias{fcomputev}
 \title{Fast Transform and Compute Columns on a Data Frame}
 \description{
-  \code{ftransform} is a much faster version of \code{\link{transform}} and \code{dplyr::mutate} for data frames. It returns the data frame with new columns computed and/or existing columns modified or deleted. \code{settransform} does all of that by reference i.e. it modifies the data frame in the global environment. \code{fcompute} can be used to compute new columns from the columns in a data frame and returns only the computed columns.
+  \code{ftransform} is a much faster version of \code{\link{transform}} for data frames. It returns the data frame with new columns computed and/or existing columns modified or deleted. \code{settransform} does all of that by reference. \code{fcompute} computes and returns new columns. These functions evaluate all arguments simultaneously, allow list-input (nested pipelines) and natively disregard grouped data.
+
+Catering to the \emph{tidyverse} user, v1.7.0 introduced \code{fmutate}, providing familiar functionality i.e. arguments are evaluated recursively, and computation on grouped data is done by groups. See also the Details.
 }
 
 \usage{
@@ -59,14 +63,18 @@ fcomputev(.data, vars, FUN, \dots, apply = TRUE, keep = NULL)
 
   % For example \code{ftransformv(data, 1:3, log)} is the same as \code{ftransform(data, lapply(get_vars(data, 1:3), log))}, and \code{ftransformv(data, 1:3, log, apply = FALSE)} is the same as \code{ftransform(data, log(get_vars(data, 1:3)))}.
 
- The function \code{ftransformv} added in v1.3.2 provides a fast replacement for the functions \code{dplyr::mutate_at} and \code{dplyr::mutate_if} facilitating mutations of groups of columns (\code{dplyr::mutate_all} is already accounted for by \code{\link{dapply}}). See Examples.
+ The function \code{ftransformv} added in v1.3.2 provides a fast replacement for the functions \code{dplyr::mutate_at} and \code{dplyr::mutate_if} (without the grouping feature) facilitating mutations of groups of columns (\code{dplyr::mutate_all} is already accounted for by \code{\link{dapply}}). See Examples.
 
   The function \code{settransform} does all of that by reference, but uses base-R's copy-on modify semantics, which is equivalent to replacing the data with \code{<-} (thus it is still memory efficient but the data will have a different memory address afterwards).
 
 The function \code{fcompute(v)} works just like \code{ftransform(v)}, but returns only the changed / computed columns without modifying or appending the data in \code{.data}. See Examples.
+
+ The function \code{fmutate} added in v1.7.0, provides functionality familiar from \emph{dplyr} 1.0.0 and higher. Note however that \emph{collapse} does not depend on \emph{rlang}, so fancy things like data masking or lambda expressions are not available. \emph{Note also} that \code{fmutate} operates differently on grouped data whether you use \code{.FAST_FUN} or base R functions / functions from other packages. With \code{.FAST_FUN} (including \code{.OPERATOR_FUN}, excluding \code{fhdbetween} / \code{fhdwithin} / \code{HDW} / \code{HDB}), \code{fmutate} performs an efficient vectorized execution, i.e. the grouping object from the grouped data frame is passed to the \code{g} argument of these functions, and for \code{.FAST_STAT_FUN} also \code{TRA = "replace_fill"} is set (if not overwritten by the user), yielding internal grouped computation by these functions without the need for splitting the data by groups. For base R and other functions, \code{fmutate} performs classical split-apply combine computing i.e. the relevant columns of the data are selected and split into groups, the expression is evaluated for each group, and the result is recombined and suitably expanded to match the original data frame. \bold{Note} that it is not possible to mix vectorized and standard execution in the same expression!! Vectorized execution is performed if \bold{any} \code{.FAST_FUN} or \code{.OPERATOR_FUN} is part of the expression, thus a code like \code{mtcars |> gby(cyl) |> fmutate(new = fmin(mpg) / min(mpg))} will be expanded to something like \code{mtcars \%>\% gby(cyl) \%>\% ftransform(new = fmin(mpg, g = GRP(.), TRA = "replace_fill") / min(mpg))} and then executed, i.e. \code{fmin(mpg)} will be executed in a vectorized way, and \code{min(mpg)} will not be executed by groups at all.
 }
 \note{
-Please note that unlike \code{dplyr::mutate}, \code{ftransform} does not do anything per se with a grouped data frame. This is not a limitation as it affords greater flexibility and performance in programming with the \code{.FAST_FUN}, through which \emph{collapse} supports \emph{various kinds} of fully vectorized grouped transformations (see \code{\link{TRA}} for a list of available transformations). See Examples or the answer provided \href{https://stackoverflow.com/questions/67349744/using-ftransform-along-with-fgroup-by-from-collapse-r-package}{here}.
+\code{ftransform} does not do anything per se with a grouped data frame. This is on purpose as it affords greater flexibility and performance in programming with the \code{.FAST_FUN}, through which \emph{collapse} supports \emph{various kinds} of fully vectorized grouped transformations (see \code{\link{TRA}} for a list of available transformations). In particular, you can run a nested pipeline inside \code{ftransform}, and decide which expressions should be grouped, and you can use the ad-hoc grouping functionality of the \code{.FAST_FUN}, allowing operations where different groupings are applied simultaneously in an expression. See Examples or the answer provided \href{https://stackoverflow.com/questions/67349744/using-ftransform-along-with-fgroup-by-from-collapse-r-package}{here}.
+
+\code{fmutate} on the other hand supports grouped operations just like \code{dplyr::mutate}, but works in two different ways depending on whether you use \code{.FAST_FUN} in an expression or other functions. See Details.
 }
 \value{
   The modified data frame \code{.data}, or, for \code{fcompute}, a new data frame with the columns computed on \code{.data}. All attributes of \code{.data} are preserved.

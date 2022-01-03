@@ -92,7 +92,7 @@ ftransform_core <- function(X, value) { # value is unclassed, X has all attribut
   nam <- names(value)
   if(!length(nam) || fanyDuplicated(nam)) stop("All replacement expressions have to be uniquely named")
   namX <- names(X) # !length also detects character(0)
-  if(!length(namX) || fanyDuplicated(namX)) stop("All columns of X have to be uniquely named")
+  if(!length(namX) || fanyDuplicated(namX)) stop("All columns of .data have to be uniquely named")
   le <- lengths(value, FALSE)
   nr <- length(X[[1L]])
   rl <- le == nr # checking if computed values have the right length
@@ -101,7 +101,7 @@ ftransform_core <- function(X, value) { # value is unclassed, X has all attribut
   if(all(rl)) { # All computed vectors have the right length
     if(any(matched)) X[inx[matched]] <- value[matched]
   } else { # Some do not
-    if(any(1L < le & !rl)) stop("Lengths of replacements must be equal to nrow(X) or 1, or NULL to delete columns")
+    if(any(1L < le & !rl)) stop("Lengths of replacements must be equal to nrow(.data) or 1, or NULL to delete columns")
     if(any(le1 <- le == 1L)) value[le1] <- lapply(value[le1], alloc, nr) # Length 1 arguments. can use TRA ?, or rep_len, but what about date variables ?
     if(any(le0 <- le == 0L)) { # best order -> yes, ftransform(mtcars, bla = NULL) just returns mtcars, but could also put this error message:
       if(any(le0 & !matched)) stop(paste("Can only delete existing columns, unknown columns:", paste(nam[le0 & !matched], collapse = ", ")))
@@ -239,80 +239,364 @@ fcomputev <- function(.data, vars, FUN, ..., apply = TRUE, keep = NULL) {
 }
 
 
-# Fmutate
+# fmutate
 fFUN_mutate_add_groups <- function(z) {
   if(!is.call(z)) return(z)
   cz <- as.character(z[[1L]])
   if(any(cz == .FAST_FUN_MOPS)) {
     z$g <- quote(.g_)
-    if(any(cz == .FAST_STAT_FUN_POLD)) {
-      if(is.null(z$TRA)) z$TRA <- 1L
-      z$use.g.names <- FALSE
-    }
+    if(any(cz == .FAST_STAT_FUN_POLD) && is.null(z$TRA)) z$TRA <- 1L
+    # if(is.null(z$TRA)) z$TRA <- 1L
+     # z$use.g.names <- FALSE # Not necessary
+
   } # This works for nested calls (nothing more required, but need to put at the end..)
   if(is.call(z[[2L]])) return(as.call(lapply(z, fFUN_mutate_add_groups)))
   z
 }
 
-# TODO: Improve rsplit...
-# gsplit_multi <- function(x, g)
-#   lapply(gsplit(1L, g, toint = TRUE), .Call, .NAME = C_subsetDT, seq_along(x), FALSE)
-
-gsplit_single_apply <- function(x, g, ex, encl)
+gsplit_single_apply <- function(x, g, ex, v, encl)
   copyMostAttributes(unlist(lapply(gsplit(x, g), function(i) eval(ex, `names<-`(list(i), v), encl)), FALSE, FALSE), x)
 
 # TODO: enable for fsummarise as well...
 gsplit_multi_apply <- function(x, g, ex, encl) {
   sx <- seq_along(x)
-  unlist(lapply(gsplit(1L, g, toint = TRUE),
+  unlist(lapply(gsplit(NULL, g),
          function(i) eval(ex, .Call(C_subsetDT, x, i, sx, FALSE), encl)), FALSE, FALSE)
 }
-# Also todo: keep argument...
-fmutate <- function(.data, ...) {# , TRA = "replace_fill" # TODO: Implement TRA !!!
+
+othFUN_compute_mte <- function(x) {
+  if(length(x) == 2L) # No additional function arguments
+    return(substitute(unlist(lapply(gsplit(a, .g_), b), FALSE, FALSE),
+                      list(a = x[[2L]], b = x[[1L]])))
+  # With more arguments, things become more complex..
+  lapply_call <- as.call(c(list(quote(lapply), substitute(gsplit(a, .g_), list(a = x[[2L]]))), as.list(x[-2L])))
+  substitute(unlist(a, FALSE, FALSE),
+             list(a = lapply_call, b = x[[2L]]))
+}
+
+keep_v <- function(d, v) copyMostAttributes(null_rm(.subset(d, unique.default(v))), d)
+
+acr_get_cols <- function(.cols, d, nam, ce) {
+  if(is.null(.cols)) return(seq_along(nam))
+  nl <- `names<-`(as.vector(seq_along(nam), "list"), nam)
+  cols <- eval(.cols, nl, ce)
+  return(if(is.integer(cols)) cols else cols2int(cols, d, nam))
+}
+
+# TODO: make this better... what about programming ??
+# TODO: Implement for collap() ??
+acr_get_funs <- function(.fnsexp, .fns) {
+
+  if(is.function(.fns)) {
+    namfun <- l1orlst(as.character(.fnsexp))
+    .fns <- `names<-`(list(.fns), namfun)
+  } else if(is.list(.fns)) {
+    namfun <- names(.fns)
+    nf <- all.vars(.fnsexp)
+    if(length(nf) != length(.fns)) nf <- vapply(.fnsexp[-1L], function(x) l1orlst(all.vars(x)), character(1L), USE.NAMES = FALSE)
+    names(.fns) <- nf
+    if(is.null(namfun)) namfun <- nf
+  } else if(is.character(.fns)) {
+    namfun <- names(.fns)
+    names(.fns) <- .fns
+    .fns <- lapply(.fns, match.fun)
+    if(is.null(namfun)) namfun <- names(.fns)
+  } else stop(".fns must be a fucntion, list of functions or character vector of function names")
+
+  return(list(namfun = namfun, funs = .fns))
+}
+
+#   if(is.function(.fns)) return(`names<-`(list(.fns), as.character(substitute(.fns))))
+#   if(is.character(.fns)) {
+#     namfun <- if(is.null(names(.fns))) .fns else names(.fns)
+#     funs <- if(length(.fns) > 1L) lapply(.fns, match.fun) else list(match.fun(.fns))
+#     names(funs) <- namfun
+#   } else if(is.list(.fns)) {
+#     namfun <- names(.fns)
+#     funs <- .fns
+#     if(is.null(namfun)) names(funs) <- namfun <- all.vars(substitute(.fns))
+#   } else stop(".fns needs to be a function, character vector of function names or list of functions!")
+
+
+fungroup2 <- function(X, ocl) {
+  attr(X, "groups") <- NULL
+  oldClass(X) <- fsetdiff(ocl, c("GRP_df", "grouped_df"))
+  X
+}
+
+# Adapted from poorman package
+setup_across <- function(.cols, .fnsexp, .fns, .names, .apply, .transpose, .FFUN) {
+  pe <- parent.frame(n = 4L)
+  d <- pe$.data # unclass()
+  g <- pe$g
+  ce <- parent.frame(n = 5L) # Caller environment
+  # return(list(.cols, .fns, .names, d))
+  nam <- names(d)
+  cols <- acr_get_cols(.cols, d, nam, ce)
+  funs <- acr_get_funs(.fnsexp, .fns)
+  namfun <- funs$namfun
+  fun <- funs$funs
+
+  if(length(.names) && !is.logical(.names)) {
+    if(is.function(.names)) names <- .names(nam[cols], namfun)
+    else {
+      if(length(.names) != length(namfun) * length(cols)) stop("length(.names) must match length(.fns) * length(.cols)")
+      names <- .names
+    }
+  } else {
+    # Third version: .names = FALSE does nothing. Allows fmutate(mtcars, across(cyl:vs, list(L, D, G), n = 1:3))
+    # This makes sense, because if .transpose = "auto" and the lengths of generated columns are unequal, you cannot use generated names anyway because they would mismatch..
+    names <- if((is.null(.names) && length(namfun) == 1L) || (isFALSE(.names) && length(namfun) > 1L)) NULL else if(isFALSE(.names)) # this allows you to force names false for a single function...
+             nam[cols] else if(isFALSE(.transpose))
+             as.vector(outer(nam[cols], namfun, paste, sep = "_")) else
+             as.vector(t(outer(nam[cols], namfun, paste, sep = "_")))
+    # Second version: .names = TRUE auto generates names, .names = FALSE yields default names (no change to names by the function),
+    # and .names = NULL (default) yields function names or auto names if multiple functions...
+    # names <- if(is.null(.names) && length(namfun) == 1L) NULL else if(!isFALSE(.names))
+    #          as.vector(t(outer(nam[cols], namfun, paste, sep = "_"))) else if(length(namfun) == 1L)
+    #          nam[cols] else stop("Computed columns need to be uniquely named. If .names = FALSE, can only use one function, or need to supply custom names!")
+
+    # First version: requires .names = FALSE for renaming functions like L, W etc...
+    # names <- if(isFALSE(.names)) NULL else
+    #   if(length(namfun) == 1L && !isTRUE(.names)) nam[cols] else
+    #    as.vector(t(outer(nam[cols], namfun, paste, sep = "_")))
+  }
+
+  if(is.logical(.apply)) {
+    aplvec <- if(.apply) rep_len(TRUE, length(fun)) else rep_len(FALSE, length(fun))
+  } else {
+    .apply <- switch(.apply, auto = NA, stop(".apply must be 'auto', TRUE or FALSE"))
+    aplvec <- names(fun) %!in% .FFUN
+  }
+  .data_ <- if(all(aplvec)) .subset(d, cols) else .Call(C_subsetCols, if(length(g)) fungroup2(d, pe$cld) else `oldClass<-`(d, pe$cld), cols, FALSE)
+
+  # Note: Keep the order and the names !!!
+  list(data = d,
+       .data_ = .data_, # cols = cols,
+       funs = fun,
+       aplvec = `names<-`(aplvec, names(fun)),
+       ce = ce,
+       g = g,
+       names = names)
+}
+
+across <- function(.cols = NULL, .fns, ..., .names = NULL, .apply = "auto", .transpose = "auto") {
+  stop("across() can only work inside fmutate() and fsummarise()")
+  # cols <- setup$cols
+  # n_cols <- length(cols)
+  # if (n_cols == 0L) return(data.frame())
+  # funs <- setup$funs
+  # data <- context$get_columns(cols)
+  # names <- setup$names
+  # if (is.null(funs)) {
+  #   data <- data.frame(data)
+  #   if (is.null(names)) {
+  #     return(data)
+  #   } else {
+  #     return(setNames(data, names))
+  #   }
+  # }
+  # n_fns <- length(funs)
+  # res <- vector(mode = "list", length = n_fns * n_cols)
+  # k <- 1L
+  # for (i in seq_len(n_cols)) {
+  #   context$cur_column <- cols[[i]]
+  #   col <- data[[i]]
+  #   for (j in seq_len(n_fns)) {
+  #     res[[k]] <- funs[[j]](col, ...)
+  #     k <- k + 1L
+  #   }
+  # }
+  # if (is.null(names(res))) names(res) <- names
+  # as.data.frame(res)
+}
+
+# TODO: get function environemnt...
+mutate_across <- function(.cols = NULL, .fns, ..., .names = NULL, .apply = "auto", .transpose = "auto", eval_funi) {
+  # nodots <- missing(...)
+  # return(setup_across(substitute(.cols), substitute(.fns), .fns, .names, .apply, .FAST_FUN_MOPS))
+  setup <- setup_across(substitute(.cols), substitute(.fns), .fns, .names, .apply, .transpose, .FAST_FUN_MOPS)
+  nf <- names(setup$funs)
+  names <- setup$names
+  # return(eval_funi(nf, ...))
+  # return(lapply(nf, eval_funi, ...))
+  if(length(nf) == 1L) {
+    res <- eval_funi(nf, setup[[1L]], setup[[2L]], setup[[3L]], setup[[4L]], setup[[5L]], setup[[6L]], ...)  # eval_funi(nf, aplvec, funs, nodots, .data_, data, ce, ...)
+    # return(res)
+  } else {
+    # motivated by: fmutate(mtcars, across(cyl:vs, list(L, D, G), n = 1:3))
+    r <- lapply(nf, eval_funi, setup[[1L]], setup[[2L]], setup[[3L]], setup[[4L]], setup[[5L]], setup[[6L]], ...) # do.call(lapply, c(list(nf, eval_funi), setup[1:5], list(...))) # lapply(nf, eval_funi, aplvec, funs, nodots, .data_, data, ce, ...)
+    if(isFALSE(.transpose) || (is.character(.transpose) && !all_eq(lengths(r)))) {
+      # stop("reached here")
+      res <- unlist(r, FALSE, use.names = TRUE) # need use.names= TRUE here
+      # return(list(res = res, r = r))
+    } else {
+      res <- unlist(t_list2(r), FALSE, FALSE)
+      if(is.null(names(res)) && is.null(names))
+        names(res) <- unlist(t_list2(lapply(r, names)), FALSE, FALSE)
+    }
+  }
+  # return(res)
+  return(`[<-`(setup$data, if(is.null(names)) names(res) else names, value = res))
+}
+
+mutate_funi_simple <- function(i, data, .data_, funs, aplvec, ce, g, ...) { # g is unused here...
+  .FUN_ <- funs[[i]]
+  if(aplvec[i]) {
+    value <- if(missing(...)) lapply(unattrib(.data_), .FUN_) else
+      do.call(lapply, c(list(unattrib(.data_), .FUN_), eval(substitute(list(...)), data, ce)), envir = ce) # eval(substitute(lapply(unattrib(.data_), .FUN_, ...)), c(list(.data_ = .data_), data), ce)
+    names(value) <- names(.data_)
+  } else if(any(i == .FAST_STAT_FUN)) {
+    if(missing(...)) return(unclass(.FUN_(.data_, TRA = 1L))) # Old way: Not necessary to construct call.. return(unclass(eval(as.call(list(as.name(i), quote(.data_), TRA = 1L))))) # faster than substitute(.FUN_(.data_, TRA = 1L), list(.FUN_ = as.name(i)))
+    # if(any(...names() == "TRA")) # This down not work because it substitutes setup[[]] from mutate_across !!!
+    #   return(unclass(eval(substitute(.FUN_(.data_, ...)), c(list(.data_ = .data_), data), ce)))
+    # return(unclass(eval(substitute(.FUN_(.data_, ..., TRA = 1L)), c(list(.data_ = .data_), data), ce)))
+    fcal <- as.call(c(list(as.name(i), quote(.data_)), as.list(substitute(list(...))[-1L])))
+    if(is.null(fcal$TRA)) fcal$TRA <- 1L
+    return(unclass(eval(fcal, c(list(.data_ = .data_), data), ce)))
+  } else {
+    value <- if(missing(...)) .FUN_(.data_) else
+      do.call(.FUN_, c(list(.data_), eval(substitute(list(...)), data, ce)), envir = ce) # Object setup not found: eval(substitute(.FUN_(.data_, ...)), c(list(.data_ = .data_), data), ce)
+    oldClass(value) <- NULL
+    if(any(i == .FAST_FUN_MOPS)) return(value) # small improvement for fast funs...
+  }
+  # return(unclass(r))
+  # fcal <- if(missing(...)) as.call(list(funs[[i]], quote(.data_))) else
+  #         as.call(c(list(funs[[i]], quote(.data_)), as.list(substitute(list(...))[-1L]))) # , parent.frame()
+  #   # substitute(list(...), parent.frame())
+  #   # substitute(FUN(.data_, ...), list(FUN = funs[[i]], ...))
+  #   # as.call(substitute(list(funs[[i]], quote(.data_), ...)))
+  #   # substitute(FUN(.data_, ...), list(FUN = funs[[i]]))  #
+  # if(any(i == .FAST_STAT_FUN) && is.null(fcal$TRA)) fcal$TRA <- 1L
+  # fast functions have a data.frame method, thus can be applied simultaneously to all columns
+  # return(fcal)
+  # return(eval(fcal, c(list(.data_ = .data_), data), setup$ce))
+  lv <- lengths(value, FALSE)
+  nr <- length(data[[1L]])
+  if(all(lv == nr)) return(value)
+  if(all(lv == 1L)) return(lapply(value, alloc, nr))
+  stop("Without groups, NROW(value) must either be 1 or nrow(.data)")
+}
+
+# TODO: startsWith !!!
+mutate_funi_grouped <- function(i, data, .data_, funs, aplvec, ce, g, ...) {
+  # TODO: What about ... argument splitting ???
+  .FUN_ <- funs[[i]]
+  if(aplvec[i]) {
+    value <- if(missing(...)) lapply(unattrib(.data_), copysplaplfun, g, .FUN_) else
+      do.call(lapply, c(list(unattrib(.data_), copysplaplfun, g, .FUN_), eval(substitute(list(...)), data, ce)), envir = ce)
+    lv <- lengths(value, FALSE)
+    nr <- length(data[[1L]])
+    if(all(lv == nr)) { # Improve efficiency here??
+      if(!isTRUE(g$ordered[2L])) value <- lapply(value, greorder, g)
+      return(`names<-`(value, names(.data_)))
+    }
+    if(!all(lv == g[[1L]])) stop("With groups, NROW(value) must either be ng or nrow(.data)")
+    names(value) <- names(.data_)
+    return(.Call(C_subsetDT, value, g[[2L]], seq_along(value), FALSE))
+  }
+  if(any(i == .FAST_STAT_FUN)) {
+    if(missing(...)) return(unclass(.FUN_(.data_, g = g, TRA = 1L)))
+    fcal <- as.call(c(list(as.name(i), quote(.data_), g = quote(g)), as.list(substitute(list(...))[-1L])))
+    if(is.null(fcal$TRA)) fcal$TRA <- 1L
+    return(unclass(eval(fcal, c(list(.data_ = .data_), data), ce)))
+  }
+  # TODO: In setup_across, do check if g is null, otherwise check here to make sure no non-stat function is passed here...
+  # TODO: Can implement apply = FALSE for arbitrary functions using gsplit_DF !!!
+  if(!any(i == .FAST_FUN_MOPS)) stop("In grouped computations, .apply = FALSE only works with .FAST_FUN and .OPERATOR_FUN")
+  if(any(i == .OPERATOR_FUN)) {
+    value <- if(missing(...)) .FUN_(.data_, by = g) else
+      do.call(.FUN_, c(list(.data_, by = g), eval(substitute(list(...)), data, ce)), envir = ce)
+  } else {
+    value <- if(missing(...)) .FUN_(.data_, g = g) else
+      do.call(.FUN_, c(list(.data_, g = g), eval(substitute(list(...)), data, ce)), envir = ce)
+  }
+  oldClass(value) <- NULL
+  return(value)
+}
+
+
+# TODO: Preserves attributes ?? what about ftransform??
+
+fmutate <- function(.data, ..., .keep = "all") {
   if(!is.list(.data)) stop(".data needs to be a list of equal length columns or a data.frame")
   namdata <- attr(.data, "names")
   if(!length(namdata) || fanyDuplicated(namdata)) stop("All columns of .data have to be uniquely named")
   e <- substitute(list(...))
   nam <- names(e)
-  if(!length(nam)) stop("All replacement expressions have to be named")
+  nullnam <- is.null(nam)
+  # if(!length(nam)) stop("All replacement expressions have to be named")
   nr <- length(.subset2(.data, 1L))
   pe <- parent.frame()
   cld <- oldClass(.data)
   oldClass(.data) <- NULL
-  if(any(cld == "grouped_df")) { # What about NULL assignment with grouped data? and what about across??
-    g <- GRP.grouped_df(.data, call = FALSE)
+  if(!is.character(.keep)) .keep <- cols2char(.keep, .data, namdata) # allowing .keep to be NULL
+  gdfl <- any(cld == "grouped_df")
+  if(gdfl) {
+    g <- GRP.grouped_df(.data, return.groups = FALSE, call = FALSE)
     .data[[".g_"]] <- g
     for(i in 2:length(e)) {
       ei <- e[[i]]
-      eiv <- all.vars(ei, functions = TRUE)
-      if(any(eiv %in% .FAST_FUN_MOPS)) {
-        ei <- fFUN_mutate_add_groups(ei)
-        .data[[nam[i]]] <- eval(ei, .data, pe)
-      } else {
-        v <- all.vars(ei) # Note: Still issue with copyMostAttrib for othFUN_compute when collapse is not attached...
-        r <- if(length(v) > 1L) gsplit_multi_apply(.data[v], g, ei, pe) else if(length(eiv) == 2L)
-             eval(othFUN_compute(ei), .data, pe) else gsplit_single_apply(.data[[v]], g, ei, pe)
-        r <- if(length(r) == g[[1L]]) copyMostAttributes(r[g[[2L]]], r) else # .Call(Cpp_TRA, .data[[v]], r, g[[2L]], 1L) # Faster than simple subset r[g[[2L]] ??]
-             greorder(r, g) # r[forder.int(forder.int(g[[2L]]))] # Seems twice is necessary...
-        .data[[nam[i]]] <- r
+      if(nullnam || nam[i] == "") { # Across
+        if(ei[[1L]] != quote(across)) stop("expressions need to be named or start with across().")
+        ei[[1L]] <- quote(mutate_across)
+        ei$eval_funi <- quote(mutate_funi_grouped)
+        # return(eval(ei, enclos = pe))
+        .data <- eval(ei, enclos = pe) # ftransform_core(.data, eval(ei, pe))
+      } else { # Tagged vector expressions
+        if(is.null(ei)) {
+          .data[[nam[i]]] <- NULL
+          next
+        }
+        eiv <- all.vars(ei, functions = TRUE)
+        if(any(eiv %in% .FAST_FUN_MOPS)) {
+          .data[[nam[i]]] <- eval(fFUN_mutate_add_groups(ei), .data, pe)
+        } else {
+          v <- all.vars(ei) # Note: Still issue with copyMostAttrib for othFUN_compute when collapse is not attached...
+          r <- if(length(v) > 1L) gsplit_multi_apply(.data[v], g, ei, pe) else if(length(eiv) == 2L)
+                copyMostAttributes(eval(othFUN_compute_mte(ei), .data, pe), .data[[v]]) else
+                gsplit_single_apply(.data[[v]], g, ei, v, pe)
+          .data[[nam[i]]] <- if(length(r) == g[[1L]])
+               .Call(C_subsetVector, r, g[[2L]], FALSE) else # .Call(Cpp_TRA, .data[[v]], r, g[[2L]], 1L) # Faster than simple subset r[g[[2L]] ??]
+               greorder(r, g) # r[forder.int(forder.int(g[[2L]]))] # Seems twice is necessary...
+        }
       }
     }
     .data[[".g_"]] <- NULL
   } else { # Without groups...
     for(i in 2:length(e)) { # This is good and very fast
-      r <- eval(e[[i]], .data, pe)
-      if(!is.null(r)) {
-        if(length(r) == 1L) r <- alloc(r, nr)
-        else if(length(r) != nr) stop("length mismatch")
+      ei <- e[[i]]
+      if(nullnam || nam[i] == "") { # Across
+        if(ei[[1L]] != quote(across)) stop("expressions need to be named or start with across().")
+        ei[[1L]] <- quote(mutate_across)
+        ei$eval_funi <- quote(mutate_funi_simple)
+        # return(eval(ei, enclos = pe))
+        .data <- eval(ei, enclos = pe) # ftransform_core(.data, eval(ei, enclos = pe))
+      } else { # Tagged vector expressions
+        r <- eval(ei, .data, pe)
+        if(!is.null(r)) { # don't use length(), because only NULL removes list elements...
+          if(length(r) == 1L) r <- alloc(r, nr)
+          else if(length(r) != nr) stop("length mismatch")
+        }
+        .data[[nam[i]]] <- r
       }
-      .data[[nam[i]]] <- r
     }
   }
+  # Implementing .keep argument
+  .data <- if(length(.keep) > 1L) keep_v(.data, c(.keep, nam[-1L])) else
+    switch(.keep,
+           all = .data,
+           used = keep_v(.data, c(if(gdfl) g$group.vars, unlist(lapply(e[-1L], all.vars), FALSE, FALSE), nam[-1L])),
+           unused = keep_v(.data, c(if(gdfl) g$group.vars, fsetdiff(namdata, unlist(lapply(e[-1L], all.vars), FALSE, FALSE)), nam[-1L])),
+           none = keep_v(.data, c(if(gdfl) g$group.vars, nam[-1L])),
+           keep_v(.data, c(.keep, nam[-1L])))
+
   oldClass(.data) <- cld
   return(condalc(.data, any(cld == "data.table")))
 }
 
-mte <- fmutate
+# TODO: Works ???
+mte <- function(.data, ...) fmutate(.data, ...)
 
 
 

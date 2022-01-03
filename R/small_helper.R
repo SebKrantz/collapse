@@ -372,6 +372,10 @@ missing_cases <- function(X, cols = NULL) {
 }
 
 na_rm <- function(x) .Call(C_na_rm, x)  # x[!is.na(x)]
+# Also takes names along, whereas na_rm does not preserve names of list
+null_rm <- function(l) if(!all(ind <- lengths(l, FALSE) > 0L)) .subset(l, ind) else l
+
+all_eq <- function(x) .Call(C_anyallv, x, x[1L], TRUE)
 
 na_omit <- function(X, cols = NULL, na.attr = FALSE) {
   if(is.list(X)) {
@@ -526,6 +530,25 @@ cols2int <- function(cols, x, nam, topos = TRUE) {
   return(which(cols))
  }
  stop("cols must be a function, character vector, numeric indices or logical vector!")
+}
+
+# Needed for fmutate
+cols2char <- function(cols, x, nam) {
+  if(is.character(cols)) return(cols)
+  if(!length(cols)) return("") # Needed if NULL is passed
+  if(is.numeric(cols)) {
+    l <- length(nam)
+    if(cols[1L] < 0L) {
+      if(-min(cols) > l) stop("Index out of range abs(1:length(x))")
+    } else if(max(cols) > l) stop("Index out of range abs(1:length(x))")
+    return(nam[cols])
+  }
+  if(is.function(cols)) return(nam[vapply(unattrib(x), cols, TRUE)])
+  if(is.logical(cols)) {
+    if(length(cols) != length(nam)) stop("Logical subsetting vector must match columns!")
+    return(nam[cols])
+  }
+  stop("cols must be a function, character vector, numeric indices or logical vector!")
 }
 
 # Not needed anymore !!
