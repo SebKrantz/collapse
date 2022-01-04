@@ -328,7 +328,6 @@ fungroup2 <- function(X, ocl) {
 setup_across <- function(.cols, .fnsexp, .fns, .names, .apply, .transpose, .FFUN) {
   pe <- parent.frame(n = 4L)
   d <- pe$.data # unclass()
-  g <- pe$g
   ce <- parent.frame(n = 5L) # Caller environment
   # return(list(.cols, .fns, .names, d))
   nam <- names(d)
@@ -368,7 +367,7 @@ setup_across <- function(.cols, .fnsexp, .fns, .names, .apply, .transpose, .FFUN
     .apply <- switch(.apply, auto = NA, stop(".apply must be 'auto', TRUE or FALSE"))
     aplvec <- names(fun) %!in% .FFUN
   }
-  .data_ <- if(all(aplvec)) .subset(d, cols) else .Call(C_subsetCols, if(length(g)) fungroup2(d, pe$cld) else `oldClass<-`(d, pe$cld), cols, FALSE)
+  .data_ <- if(all(aplvec)) .subset(d, cols) else .Call(C_subsetCols, if(length(d[[".g_"]])) fungroup2(d, pe$cld) else `oldClass<-`(d, pe$cld), cols, FALSE)
 
   # Note: Keep the order and the names !!!
   list(data = d,
@@ -376,7 +375,6 @@ setup_across <- function(.cols, .fnsexp, .fns, .names, .apply, .transpose, .FFUN
        funs = fun,
        aplvec = `names<-`(aplvec, names(fun)),
        ce = ce,
-       g = g,
        names = names)
 }
 
@@ -421,11 +419,11 @@ mutate_across <- function(.cols = NULL, .fns, ..., .names = NULL, .apply = "auto
   # return(eval_funi(nf, ...))
   # return(lapply(nf, eval_funi, ...))
   if(length(nf) == 1L) {
-    res <- eval_funi(nf, setup[[1L]], setup[[2L]], setup[[3L]], setup[[4L]], setup[[5L]], setup[[6L]], ...)  # eval_funi(nf, aplvec, funs, nodots, .data_, data, ce, ...)
+    res <- eval_funi(nf, setup[[1L]], setup[[2L]], setup[[3L]], setup[[4L]], setup[[5L]], ...)  # eval_funi(nf, aplvec, funs, nodots, .data_, data, ce, ...)
     # return(res)
   } else {
     # motivated by: fmutate(mtcars, across(cyl:vs, list(L, D, G), n = 1:3))
-    r <- lapply(nf, eval_funi, setup[[1L]], setup[[2L]], setup[[3L]], setup[[4L]], setup[[5L]], setup[[6L]], ...) # do.call(lapply, c(list(nf, eval_funi), setup[1:5], list(...))) # lapply(nf, eval_funi, aplvec, funs, nodots, .data_, data, ce, ...)
+    r <- lapply(nf, eval_funi, setup[[1L]], setup[[2L]], setup[[3L]], setup[[4L]], setup[[5L]], ...) # do.call(lapply, c(list(nf, eval_funi), setup[1:5], list(...))) # lapply(nf, eval_funi, aplvec, funs, nodots, .data_, data, ce, ...)
     if(isFALSE(.transpose) || (is.character(.transpose) && !all_eq(lengths(r)))) {
       # stop("reached here")
       res <- unlist(r, FALSE, use.names = TRUE) # need use.names= TRUE here
@@ -440,7 +438,7 @@ mutate_across <- function(.cols = NULL, .fns, ..., .names = NULL, .apply = "auto
   return(`[<-`(setup$data, if(is.null(names)) names(res) else names, value = res))
 }
 
-mutate_funi_simple <- function(i, data, .data_, funs, aplvec, ce, g, ...) { # g is unused here...
+mutate_funi_simple <- function(i, data, .data_, funs, aplvec, ce, ...) { # g is unused here...
   .FUN_ <- funs[[i]]
   if(aplvec[i]) {
     value <- if(missing(...)) lapply(unattrib(.data_), .FUN_) else
@@ -478,46 +476,103 @@ mutate_funi_simple <- function(i, data, .data_, funs, aplvec, ce, g, ...) { # g 
   stop("Without groups, NROW(value) must either be 1 or nrow(.data)")
 }
 
-# TODO: startsWith !!!
-mutate_funi_grouped <- function(i, data, .data_, funs, aplvec, ce, g, ...) {
-  # TODO: What about ... argument splitting ???
-  .FUN_ <- funs[[i]]
-  if(aplvec[i]) {
-    value <- if(missing(...)) lapply(unattrib(.data_), copysplaplfun, g, .FUN_) else
-      do.call(lapply, c(list(unattrib(.data_), copysplaplfun, g, .FUN_), eval(substitute(list(...)), data, ce)), envir = ce)
-    lv <- lengths(value, FALSE)
-    nr <- length(data[[1L]])
-    if(all(lv == nr)) { # Improve efficiency here??
-      if(!isTRUE(g$ordered[2L])) value <- lapply(value, greorder, g)
-      return(`names<-`(value, names(.data_)))
+dots_apply_grouped <- function(d, g, f, dots) {
+  attributes(d) <- NULL
+  n <- length(d[[1L]])
+  if(any(ln <- lengths(dots) == n)) {
+    ln <- which(ln)
+    if(length(ln) > 1L) { # multiple arguments to be split
+      asl <- lapply(dots[ln], gsplit, g)
+      if(length(dots) > length(ln)) {
+        mord <- dots[-ln]
+        FUN <- function(x) do.call(mapply, c(list(f, gsplit(x, g), SIMPLIFY = FALSE, USE.NAMES = FALSE, MoreArgs = mord), asl))
+      } else
+        FUN <- function(x) do.call(mapply, c(list(f, gsplit(x, g), SIMPLIFY = FALSE, USE.NAMES = FALSE), asl))
+    } else { # Only one argument to be split
+      nam <- names(dots)
+      as <- gsplit(dots[[ln]], g)
+      FUN <- quote(function(x) mapply(f, gsplit(x, g), SIMPLIFY = FALSE, USE.NAMES = FALSE))
+      FUN[[3L]][[if(length(nam) && nzchar(nam[ln])) nam[ln] else 6L]] <- quote(as)
+      if(length(dots) > 1L) {
+        mord <- dots[-ln]
+        FUN[[3L]]$MoreArgs <- quote(mord)
+      }
+      FUN <- eval(FUN)
     }
-    if(!all(lv == g[[1L]])) stop("With groups, NROW(value) must either be ng or nrow(.data)")
-    names(value) <- names(.data_)
-    return(.Call(C_subsetDT, value, g[[2L]], seq_along(value), FALSE))
+    return(lapply(d, function(y) copyMostAttributes(unlist(FUN(y), FALSE, FALSE), y)))
   }
-  if(any(i == .FAST_STAT_FUN)) {
+  # No arguments to be split:
+  do.call(lapply, c(list(d, copysplaplfun, g, f), dots))
+}
+
+dots_apply_grouped_bulk <- function(d, g, f, dots) {
+  n <- fnrow2(d)
+  dsp <- rsplit.data.frame(d, g, simplify = FALSE, flatten = TRUE, use.names = FALSE)
+  if(is.null(dots)) return(lapply(dsp, f))
+  if(any(ln <- lengths(dots) == n)) {
+    ln <- which(ln)
+    if(length(ln) > 1L) { # multiple arguments to be split
+      asl <- lapply(dots[ln], gsplit, g)
+      return(do.call(mapply, c(list(f, dsp, SIMPLIFY = FALSE, USE.NAMES = FALSE,
+                             MoreArgs = if(length(dots) > length(ln)) dots[-ln] else NULL), asl)))
+    } else { # Only one argument to be split
+      nam <- names(dots)
+      as <- gsplit(dots[[ln]], g)
+      FUN <- quote(mapply(f, dsp, SIMPLIFY = FALSE, USE.NAMES = FALSE))
+      FUN[[if(length(nam) && nzchar(nam[ln])) nam[ln] else 6L]] <- quote(as)
+      if(length(dots) > 1L) {
+        mord <- dots[-ln]
+        FUN$MoreArgs <- quote(mord)
+      }
+      return(eval(FUN))
+    }
+  }
+  # No arguments to be split:
+  do.call(lapply, c(list(dsp, f), dots))
+}
+
+
+# TODO: startsWith !!!
+mutate_funi_grouped <- function(i, data, .data_, funs, aplvec, ce, ...) {
+  g <- data[[".g_"]]
+  .FUN_ <- funs[[i]]
+  apli <- aplvec[i]
+  if(apli) {
+    value <- if(missing(...)) lapply(unattrib(.data_), copysplaplfun, g, .FUN_) else
+             dots_apply_grouped(.data_, g, .FUN_, eval(substitute(list(...)), data, ce)) # Before: do.call(lapply, c(list(unattrib(.data_), copysplaplfun, g, .FUN_), eval(substitute(list(...)), data, ce)), envir = ce)
+  } else if(any(i == .FAST_STAT_FUN)) {
     if(missing(...)) return(unclass(.FUN_(.data_, g = g, TRA = 1L)))
-    fcal <- as.call(c(list(as.name(i), quote(.data_), g = quote(g)), as.list(substitute(list(...))[-1L])))
+    fcal <- as.call(c(list(as.name(i), quote(.data_), g = quote(.g_)), as.list(substitute(list(...))[-1L])))
     if(is.null(fcal$TRA)) fcal$TRA <- 1L
     return(unclass(eval(fcal, c(list(.data_ = .data_), data), ce)))
+  } else if(any(i == .FAST_FUN_MOPS)) {
+    if(any(i == .OPERATOR_FUN)) {
+      value <- if(missing(...)) .FUN_(.data_, by = g) else
+        do.call(.FUN_, c(list(.data_, by = g), eval(substitute(list(...)), data, ce)), envir = ce)
+    } else {
+      value <- if(missing(...)) .FUN_(.data_, g = g) else
+        do.call(.FUN_, c(list(.data_, g = g), eval(substitute(list(...)), data, ce)), envir = ce)
+    }
+    oldClass(value) <- NULL
+    return(value)
+  } else { # stop("In grouped computations, .apply = FALSE only works with .FAST_FUN and .OPERATOR_FUN")
+    value <- dots_apply_grouped_bulk(.data_, g, .FUN_, if(missing(...)) NULL else eval(substitute(list(...)), data, ce))
+    value <- .Call(C_rbindlist, unclass(value), FALSE, FALSE, NULL)
   }
-  # TODO: In setup_across, do check if g is null, otherwise check here to make sure no non-stat function is passed here...
-  # TODO: Can implement apply = FALSE for arbitrary functions using gsplit_DF !!!
-  if(!any(i == .FAST_FUN_MOPS)) stop("In grouped computations, .apply = FALSE only works with .FAST_FUN and .OPERATOR_FUN")
-  if(any(i == .OPERATOR_FUN)) {
-    value <- if(missing(...)) .FUN_(.data_, by = g) else
-      do.call(.FUN_, c(list(.data_, by = g), eval(substitute(list(...)), data, ce)), envir = ce)
-  } else {
-    value <- if(missing(...)) .FUN_(.data_, g = g) else
-      do.call(.FUN_, c(list(.data_, g = g), eval(substitute(list(...)), data, ce)), envir = ce)
+  lv <- lengths(value, FALSE)
+  nr <- length(data[[1L]])
+  if(all(lv == nr)) { # Improve efficiency here??
+    if(!isTRUE(g$ordered[2L])) value <- lapply(value, greorder, g)
+    if(apli) names(value) <- names(.data_)
+    return(value)
   }
-  oldClass(value) <- NULL
-  return(value)
+  if(!all(lv == g[[1L]])) stop("With groups, NROW(value) must either be ng or nrow(.data)")
+  if(apli) names(value) <- names(.data_)
+  return(.Call(C_subsetDT, value, g[[2L]], seq_along(value), FALSE))
 }
 
 
 # TODO: Preserves attributes ?? what about ftransform??
-
 fmutate <- function(.data, ..., .keep = "all") {
   if(!is.list(.data)) stop(".data needs to be a list of equal length columns or a data.frame")
   namdata <- attr(.data, "names")
