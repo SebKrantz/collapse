@@ -409,7 +409,7 @@ across <- function(.cols = NULL, .fns, ..., .names = NULL, .apply = "auto", .tra
 }
 
 # TODO: get function environemnt...
-mutate_across <- function(.cols = NULL, .fns, ..., .names = NULL, .apply = "auto", .transpose = "auto", eval_funi) {
+do_across <- function(.cols = NULL, .fns, ..., .names = NULL, .apply = "auto", .transpose = "auto", .eval_funi, .summ = TRUE) {
   # nodots <- missing(...)
   # return(setup_across(substitute(.cols), substitute(.fns), .fns, .names, .apply, .FAST_FUN_MOPS))
   setup <- setup_across(substitute(.cols), substitute(.fns), .fns, .names, .apply, .transpose, .FAST_FUN_MOPS)
@@ -418,11 +418,11 @@ mutate_across <- function(.cols = NULL, .fns, ..., .names = NULL, .apply = "auto
   # return(eval_funi(nf, ...))
   # return(lapply(nf, eval_funi, ...))
   if(length(nf) == 1L) {
-    res <- eval_funi(nf, setup[[1L]], setup[[2L]], setup[[3L]], setup[[4L]], setup[[5L]], ...)  # eval_funi(nf, aplvec, funs, nodots, .data_, data, ce, ...)
+    res <- .eval_funi(nf, setup[[1L]], setup[[2L]], setup[[3L]], setup[[4L]], setup[[5L]], ...)  # eval_funi(nf, aplvec, funs, nodots, .data_, data, ce, ...)
     # return(res)
   } else {
     # motivated by: fmutate(mtcars, across(cyl:vs, list(L, D, G), n = 1:3))
-    r <- lapply(nf, eval_funi, setup[[1L]], setup[[2L]], setup[[3L]], setup[[4L]], setup[[5L]], ...) # do.call(lapply, c(list(nf, eval_funi), setup[1:5], list(...))) # lapply(nf, eval_funi, aplvec, funs, nodots, .data_, data, ce, ...)
+    r <- lapply(nf, .eval_funi, setup[[1L]], setup[[2L]], setup[[3L]], setup[[4L]], setup[[5L]], ...) # do.call(lapply, c(list(nf, eval_funi), setup[1:5], list(...))) # lapply(nf, eval_funi, aplvec, funs, nodots, .data_, data, ce, ...)
     if(isFALSE(.transpose) || (is.character(.transpose) && !all_eq(vlengths(r, FALSE)))) {
       # stop("reached here")
       res <- unlist(r, FALSE, use.names = TRUE) # need use.names= TRUE here
@@ -433,7 +433,7 @@ mutate_across <- function(.cols = NULL, .fns, ..., .names = NULL, .apply = "auto
         names(res) <- unlist(t_list2(lapply(r, names)), FALSE, FALSE)
     }
   }
-  # return(res)
+  if(.summ) return(res)
   return(`[<-`(setup$data, if(is.null(names)) names(res) else names, value = res))
 }
 
@@ -443,7 +443,7 @@ mutate_funi_simple <- function(i, data, .data_, funs, aplvec, ce, ...) { # g is 
     value <- if(missing(...)) lapply(unattrib(.data_), .FUN_) else
       do.call(lapply, c(list(unattrib(.data_), .FUN_), eval(substitute(list(...)), data, ce)), envir = ce) # eval(substitute(lapply(unattrib(.data_), .FUN_, ...)), c(list(.data_ = .data_), data), ce)
     names(value) <- names(.data_)
-  } else if(any(i == .FAST_STAT_FUN)) {
+  } else if(any(i == .FAST_STAT_FUN_POLD)) {
     if(missing(...)) return(unclass(.FUN_(.data_, TRA = 1L))) # Old way: Not necessary to construct call.. return(unclass(eval(as.call(list(as.name(i), quote(.data_), TRA = 1L))))) # faster than substitute(.FUN_(.data_, TRA = 1L), list(.FUN_ = as.name(i)))
     # if(any(...names() == "TRA")) # This down not work because it substitutes setup[[]] from mutate_across !!!
     #   return(unclass(eval(substitute(.FUN_(.data_, ...)), c(list(.data_ = .data_), data), ce)))
@@ -464,7 +464,7 @@ mutate_funi_simple <- function(i, data, .data_, funs, aplvec, ce, ...) { # g is 
   #   # substitute(FUN(.data_, ...), list(FUN = funs[[i]], ...))
   #   # as.call(substitute(list(funs[[i]], quote(.data_), ...)))
   #   # substitute(FUN(.data_, ...), list(FUN = funs[[i]]))  #
-  # if(any(i == .FAST_STAT_FUN) && is.null(fcal$TRA)) fcal$TRA <- 1L
+  # if(any(i == .FAST_STAT_FUN_POLD) && is.null(fcal$TRA)) fcal$TRA <- 1L
   # fast functions have a data.frame method, thus can be applied simultaneously to all columns
   # return(fcal)
   # return(eval(fcal, c(list(.data_ = .data_), data), setup$ce))
@@ -539,7 +539,7 @@ mutate_funi_grouped <- function(i, data, .data_, funs, aplvec, ce, ...) {
   if(apli) {
     value <- if(missing(...)) lapply(unattrib(.data_), copysplaplfun, g, .FUN_) else
              dots_apply_grouped(.data_, g, .FUN_, eval(substitute(list(...)), data, ce)) # Before: do.call(lapply, c(list(unattrib(.data_), copysplaplfun, g, .FUN_), eval(substitute(list(...)), data, ce)), envir = ce)
-  } else if(any(i == .FAST_STAT_FUN)) {
+  } else if(any(i == .FAST_STAT_FUN_POLD)) {
     if(missing(...)) return(unclass(.FUN_(.data_, g = g, TRA = 1L)))
     fcal <- as.call(c(list(as.name(i), quote(.data_), g = quote(.g_)), as.list(substitute(list(...))[-1L])))
     if(is.null(fcal$TRA)) fcal$TRA <- 1L
@@ -592,9 +592,10 @@ fmutate <- function(.data, ..., .keep = "all") {
     for(i in 2:length(e)) {
       ei <- e[[i]]
       if(nullnam || nam[i] == "") { # Across
-        if(ei[[1L]] != quote(across)) stop("expressions need to be named or start with across().")
-        ei[[1L]] <- quote(mutate_across)
-        ei$eval_funi <- quote(mutate_funi_grouped)
+        if(ei[[1L]] != quote(across) && ei[[1L]] != quote(acr)) stop("expressions need to be named or start with across(), or its shorthand acr().")
+        ei[[1L]] <- quote(do_across)
+        ei$.eval_funi <- quote(mutate_funi_grouped)
+        ei$.summ <- FALSE
         # return(eval(ei, enclos = pe))
         .data <- eval(ei, enclos = pe) # ftransform_core(.data, eval(ei, pe))
       } else { # Tagged vector expressions
@@ -621,9 +622,10 @@ fmutate <- function(.data, ..., .keep = "all") {
     for(i in 2:length(e)) { # This is good and very fast
       ei <- e[[i]]
       if(nullnam || nam[i] == "") { # Across
-        if(ei[[1L]] != quote(across)) stop("expressions need to be named or start with across().")
-        ei[[1L]] <- quote(mutate_across)
-        ei$eval_funi <- quote(mutate_funi_simple)
+        if(ei[[1L]] != quote(across) && ei[[1L]] != quote(acr)) stop("expressions need to be named or start with across(), or its shorthand acr().")
+        ei[[1L]] <- quote(do_across)
+        ei$.eval_funi <- quote(mutate_funi_simple)
+        ei$.summ <- FALSE
         # return(eval(ei, enclos = pe))
         .data <- eval(ei, enclos = pe) # ftransform_core(.data, eval(ei, enclos = pe))
       } else { # Tagged vector expressions
