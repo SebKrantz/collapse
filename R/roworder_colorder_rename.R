@@ -120,7 +120,7 @@ relabel <- function(.x, ..., cols = NULL, attrn = "label") { # , sc = TRUE
   namarg <- names(args)
   if(is.null(namarg) || !all(nzchar(namarg))) {
     if(!is.function(..1)) stop("... needs to be expressions colname = newname, or a function to apply to the names of columns in cols.")
-    lab <- vlabels(.x)
+    lab <- vlabels(.x, attrn, FALSE)
     FUN <- if(...length() == 1L) ..1 else # could do special case if ...length() == 2L
       function(x) do.call(..1, c(list(x), list(...)[-1L]))
     if(is.null(cols)) return(.Call(C_setvlabels, .x, attrn, FUN(lab), NULL))

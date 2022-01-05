@@ -71,7 +71,7 @@ null2NA <- function(x) if(is.null(x)) NA_character_ else x
 
 # flapply <- function(x, FUN, ...) lapply(unattrib(x), FUN, ...) # not really needed ...
 
-vlabels <- function(X, attrn = "label") .Call(C_vlabels, X, attrn) # {
+vlabels <- function(X, attrn = "label", use.names = TRUE) .Call(C_vlabels, X, attrn, use.names) # {
   # if(is.atomic(X)) return(null2NA(attr(X, attrn)))
   # res <- lapply(X, attr, attrn) # unattrib(X): no names
   # res[vapply(res, is.null, TRUE)] <- NA_character_
@@ -119,9 +119,9 @@ strclp <- function(x) if(length(x) > 1L) paste(x, collapse = " ") else x
 
 pasteclass <- function(x) if(length(cx <- class(x)) > 1L) paste(cx, collapse = " ") else cx
 
-vclasses <- function(X) {
+vclasses <- function(X, use.names = TRUE) {
   if(is.atomic(X)) return(pasteclass(X))
-  vapply(X, pasteclass, character(1L)) # unattrib(X): no names
+  vapply(X, pasteclass, character(1L), USE.NAMES = use.names) # unattrib(X): no names
 }
 
 # https://github.com/wch/r-source/blob/4a409a1a244d842a3098d2783c5b63c9661fc6be/src/main/util.c
@@ -156,20 +156,24 @@ R_types <- c("NULL",	      # NILSXP
 # { "name",		SYMSXP	   },
 
 
-vtypes <- function(X) {
+vtypes <- function(X, use.names = TRUE) {
   if(is.atomic(X)) return(typeof(X))
-  `names<-`(R_types[.Call(C_vtypes, X, 0L)], attr(X, "names"))
+  res <- R_types[.Call(C_vtypes, X, 0L)]
+  if(use.names) names(res) <- attr(X, "names")
+  res
   # vapply(X, typeof, character(1L)) # unattrib(X): no names
 }
+
+vlengths <- function(X, use.names = TRUE) .Call(C_vlengths, X, use.names)
 
 namlab <- function(X, class = FALSE, attrn = "label", N = FALSE, Ndistinct = FALSE) {
   if(!is.list(X)) stop("namlab only works with lists")
   res <- list(Variable = attr(X, "names"))
   attributes(X) <- NULL
-  if(class) res$Class <- vapply(X, pasteclass, character(1))
+  if(class) res$Class <- vapply(X, pasteclass, character(1), USE.NAMES = FALSE)
   if(N) res$N <- fnobs.data.frame(X)
   if(Ndistinct) res$Ndist <- fndistinct.data.frame(X)
-  res$Label <- vlabels(X, attrn)
+  res$Label <- vlabels(X, attrn, FALSE)
   attr(res, "row.names") <- c(NA_integer_, -length(X))
   oldClass(res) <- "data.frame"
   res
@@ -373,7 +377,7 @@ missing_cases <- function(X, cols = NULL) {
 
 na_rm <- function(x) .Call(C_na_rm, x)  # x[!is.na(x)]
 # Also takes names along, whereas na_rm does not preserve names of list
-null_rm <- function(l) if(!all(ind <- lengths(l, FALSE) > 0L)) .subset(l, ind) else l
+null_rm <- function(l) if(!all(ind <- vlengths(l, FALSE) > 0L)) .subset(l, ind) else l
 
 all_eq <- function(x) .Call(C_anyallv, x, x[1L], TRUE)
 

@@ -15,6 +15,8 @@
 \alias{\%*=\%}
 \alias{\%/=\%}
 \alias{cinv}
+\alias{vlengths}
+\alias{vtypes}
 \alias{fnlevels}
 \alias{fnrow}
 \alias{fncol}
@@ -32,7 +34,7 @@
   Small Functions to Make R Programming More Efficient
 }
 \description{
- A small set of functions to addresses some common inefficiencies in R, such as the creation of logical vectors to compare quantities, unnecessary copies of objects in elementary mathematical or subsetting operations, or dealing with missing values. % It makes sense to use them when dealing with > 10,000 obs. on modern computers.
+ A small set of functions to addresses some common inefficiencies in R, such as the creation of logical vectors to compare quantities, unnecessary copies of objects in elementary mathematical or subsetting operations, obtaining information about objects (esp. data frames), or dealing with missing values. % It makes sense to use them when dealing with > 10,000 obs. on modern computers.
 }
 \usage{
 anyv(x, value)              # Faster than any(x == value)
@@ -62,6 +64,8 @@ na_insert(X, prop = 0.1,    # Insert missing values at random
           value = NA)
 missing_cases(X,            # The oposite of complete.cases(), faster for
               cols = NULL)  # data frames
+vlengths(X, use.names=TRUE) # Faster version of lengths() (in C, no method dispatch)
+vtypes(X, use.names = TRUE) # Get data storage types (faster vapply(X, typeof, ...))
 fnlevels(x)                 # Faster version of nlevels(x) (for factors)
 fnrow(X)                    # Faster nrow for data frames (not faster for matrices)
 fncol(X)                    # Faster ncol for data frames (not faster for matrices)
@@ -90,6 +94,7 @@ cinv(x)                     # Choleski (fast) inverse of symmetric PD matrix, e.
   \item{n}{integer. The length of the vector to allocate with \code{value}.}
   \item{na.attr}{logical. \code{TRUE} adds an attribute containing the removed cases. For compatibility reasons this is exactly the same format as \code{na.omit} i.e. the attribute is called "na.action" and of class "omit".}
   \item{prop}{double. Specify the proportion of observations randomly replaced with \code{NA}.}
+  \item{use.names}{logical. Preserve names if \code{X} is a list. }
 }
 \details{
 \code{copyv} and \code{setv} are designed to optimize operations that require replacing a single value in an object e.g. \code{X[X == value] <- r} or \code{X[X == value] <- R[R == value]} or simply copying parts of an existing object into another object e.g. \code{X[v] <- R[v]}. Thus they only cover cases where base R is inefficient by either creating a logical vector or materializing a subset to do some replacement. No alternative is provided in cases where base R is efficient e.g. \code{x[v] <- r} or cases provided by \code{\link[data.table]{set}} and \code{\link[data.table]{copy}} from the \emph{data.table} package. Both functions work equivalently, with the difference that \code{copyv} creates a deep copy of the data before making the replacements and returns the copy, whereas \code{setv} modifies the data directly without creating a copy and returns the modified object invisibly. Thus \code{setv} is considerably more efficient.

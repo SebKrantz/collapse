@@ -858,8 +858,22 @@ SEXP vtypes(SEXP x, SEXP isnum) {
     break;
   default: error("Unsupported vtypes option");
   }
-  // SEXP nam = getAttrib(x, R_NamesSymbol);
-  // if(TYPEOF(nam) != NILSXP) setAttrib(ans, R_NamesSymbol, nam);
+  UNPROTECT(1);
+  return ans;
+}
+
+
+SEXP vlengths(SEXP x, SEXP usenam) {
+  int tx = TYPEOF(x);
+  if(tx != VECSXP) return ScalarInteger(length(x));
+  int n = length(x);
+  SEXP ans = PROTECT(allocVector(INTSXP, n)), *px = SEXPPTR(x);
+  int *pans = INTEGER(ans);
+  for(int i = 0; i != n; ++i) pans[i] = length(px[i]); // VECTOR_ELT(x, i)
+  if(asLogical(usenam)) {
+    SEXP nam = getAttrib(x, R_NamesSymbol);
+    if(TYPEOF(nam) != NILSXP) namesgets(ans, nam);
+  }
   UNPROTECT(1);
   return ans;
 }
@@ -911,7 +925,7 @@ SEXP multiassign(SEXP lhs, SEXP rhs, SEXP envir) {
 }
 
 
-SEXP vlabels(SEXP x, SEXP attrn) {
+SEXP vlabels(SEXP x, SEXP attrn, SEXP usenam) {
   if(!isString(attrn)) error("'attrn' must be of mode character");
   if(length(attrn) != 1) error("exactly one attribute 'attrn' must be given");
   SEXP sym_attrn = PROTECT(installTrChar(STRING_ELT(attrn, 0)));
@@ -928,8 +942,10 @@ SEXP vlabels(SEXP x, SEXP attrn) {
     SEXP labxi = getAttrib(px[i], sym_attrn);
     pres[i] = labxi == R_NilValue ? NA_STRING : STRING_ELT(labxi, 0);
   }
-  SEXP nam = getAttrib(x, R_NamesSymbol);
-  if(!isNull(nam)) namesgets(res, nam);
+  if(asLogical(usenam)) {
+    SEXP nam = getAttrib(x, R_NamesSymbol);
+    if(TYPEOF(nam) != NILSXP) namesgets(res, nam);
+  }
   UNPROTECT(2);
   return res;
 }

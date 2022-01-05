@@ -38,8 +38,9 @@ RcppExport SEXP anyallv(SEXP x, SEXP val, SEXP Rall);
 RcppExport SEXP setcopyv(SEXP x, SEXP val, SEXP rep, SEXP Rinvert, SEXP Rset, SEXP Rind1);
 RcppExport SEXP setop(SEXP x, SEXP val, SEXP op, SEXP roww);
 RcppExport SEXP vtypes(SEXP x, SEXP isnum);
+RcppExport SEXP vlengths(SEXP x, SEXP usenam);
 RcppExport SEXP multiassign(SEXP lhs, SEXP rhs, SEXP envir);
-RcppExport SEXP vlabels(SEXP x, SEXP attrn);
+RcppExport SEXP vlabels(SEXP x, SEXP attrn, SEXP usenam);
 RcppExport SEXP setvlabels(SEXP x, SEXP attrn, SEXP value, SEXP ind, SEXP sc);
 RcppExport SEXP setnames(SEXP x, SEXP nam);
 RcppExport SEXP groupVec(SEXP X, SEXP starts, SEXP sizes);
@@ -168,8 +169,9 @@ static const R_CallMethodDef CallEntries[] = {
   {"C_setcopyv",      (DL_FUNC) &setcopyv,      6},
   {"C_setop",         (DL_FUNC) &setop,         4},
   {"C_vtypes",        (DL_FUNC) &vtypes,        2},
+  {"C_vlengths",      (DL_FUNC) &vlengths,      2},
   {"C_multiassign",   (DL_FUNC) &multiassign,   3},
-  {"C_vlabels",       (DL_FUNC) &vlabels,       2},
+  {"C_vlabels",       (DL_FUNC) &vlabels,       3},
   {"C_setvlabels",    (DL_FUNC) &setvlabels,    4},
   {"C_setnames",      (DL_FUNC) &setnames,      2},
   {"C_group",         (DL_FUNC) &groupVec,      3},

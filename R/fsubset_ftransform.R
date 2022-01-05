@@ -93,7 +93,7 @@ ftransform_core <- function(X, value) { # value is unclassed, X has all attribut
   if(!length(nam) || fanyDuplicated(nam)) stop("All replacement expressions have to be uniquely named")
   namX <- names(X) # !length also detects character(0)
   if(!length(namX) || fanyDuplicated(namX)) stop("All columns of .data have to be uniquely named")
-  le <- lengths(value, FALSE)
+  le <- vlengths(value, FALSE)
   nr <- length(X[[1L]])
   rl <- le == nr # checking if computed values have the right length
   inx <- match(nam, namX) # calling names on a plain list is really fast -> no need to save objects..
@@ -159,7 +159,7 @@ ftransformv <- function(.data, vars, FUN, ..., apply = TRUE) {
       return(condalc(ftransform_core(.data, value), any(clx == "data.table")))
     oldClass(.data) <- NULL
   }
-  le <- lengths(value, FALSE)
+  le <- vlengths(value, FALSE)
   nr <- length(.data[[1L]])
   if(all(le == nr)) .data[vars] <- value else if(all(le == 1L))
     .data[vars] <- lapply(value, alloc, nr) else {
@@ -201,7 +201,7 @@ fcompute_core <- function(.data, e, keep = NULL) {
   if(inherits(.data, "sf") && !any(names(e) == attr(.data, "sf_column")))
         e <- c(e, .subset(.data, attr(.data, "sf_column")))
   ax[["names"]] <- names(e)
-  le <- lengths(e, FALSE)
+  le <- vlengths(e, FALSE)
   nr <- fnrow2(.data)
   rl <- le == nr
   if(all(rl)) return(condalcSA(e, ax, inherits(.data, "data.table"))) # All computed vectors have the right length
@@ -257,7 +257,6 @@ fFUN_mutate_add_groups <- function(z) {
 gsplit_single_apply <- function(x, g, ex, v, encl)
   copyMostAttributes(unlist(lapply(gsplit(x, g), function(i) eval(ex, `names<-`(list(i), v), encl)), FALSE, FALSE), x)
 
-# TODO: enable for fsummarise as well...
 gsplit_multi_apply <- function(x, g, ex, encl) {
   sx <- seq_along(x)
   unlist(lapply(gsplit(NULL, g),
@@ -424,7 +423,7 @@ mutate_across <- function(.cols = NULL, .fns, ..., .names = NULL, .apply = "auto
   } else {
     # motivated by: fmutate(mtcars, across(cyl:vs, list(L, D, G), n = 1:3))
     r <- lapply(nf, eval_funi, setup[[1L]], setup[[2L]], setup[[3L]], setup[[4L]], setup[[5L]], ...) # do.call(lapply, c(list(nf, eval_funi), setup[1:5], list(...))) # lapply(nf, eval_funi, aplvec, funs, nodots, .data_, data, ce, ...)
-    if(isFALSE(.transpose) || (is.character(.transpose) && !all_eq(lengths(r)))) {
+    if(isFALSE(.transpose) || (is.character(.transpose) && !all_eq(vlengths(r, FALSE)))) {
       # stop("reached here")
       res <- unlist(r, FALSE, use.names = TRUE) # need use.names= TRUE here
       # return(list(res = res, r = r))
@@ -469,7 +468,7 @@ mutate_funi_simple <- function(i, data, .data_, funs, aplvec, ce, ...) { # g is 
   # fast functions have a data.frame method, thus can be applied simultaneously to all columns
   # return(fcal)
   # return(eval(fcal, c(list(.data_ = .data_), data), setup$ce))
-  lv <- lengths(value, FALSE)
+  lv <- vlengths(value, FALSE)
   nr <- length(data[[1L]])
   if(all(lv == nr)) return(value)
   if(all(lv == 1L)) return(lapply(value, alloc, nr))
@@ -479,7 +478,7 @@ mutate_funi_simple <- function(i, data, .data_, funs, aplvec, ce, ...) { # g is 
 dots_apply_grouped <- function(d, g, f, dots) {
   attributes(d) <- NULL
   n <- length(d[[1L]])
-  if(any(ln <- lengths(dots) == n)) {
+  if(any(ln <- vlengths(dots, FALSE) == n)) {
     ln <- which(ln)
     if(length(ln) > 1L) { # multiple arguments to be split
       asl <- lapply(dots[ln], gsplit, g)
@@ -509,7 +508,7 @@ dots_apply_grouped_bulk <- function(d, g, f, dots) {
   n <- fnrow2(d)
   dsp <- rsplit.data.frame(d, g, simplify = FALSE, flatten = TRUE, use.names = FALSE)
   if(is.null(dots)) return(lapply(dsp, f))
-  if(any(ln <- lengths(dots) == n)) {
+  if(any(ln <- vlengths(dots, FALSE) == n)) {
     ln <- which(ln)
     if(length(ln) > 1L) { # multiple arguments to be split
       asl <- lapply(dots[ln], gsplit, g)
@@ -559,7 +558,7 @@ mutate_funi_grouped <- function(i, data, .data_, funs, aplvec, ce, ...) {
     value <- dots_apply_grouped_bulk(.data_, g, .FUN_, if(missing(...)) NULL else eval(substitute(list(...)), data, ce))
     value <- .Call(C_rbindlist, unclass(value), FALSE, FALSE, NULL)
   }
-  lv <- lengths(value, FALSE)
+  lv <- vlengths(value, FALSE)
   nr <- length(data[[1L]])
   if(all(lv == nr)) { # Improve efficiency here??
     if(!isTRUE(g$ordered[2L])) value <- lapply(value, greorder, g)

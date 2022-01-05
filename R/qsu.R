@@ -132,7 +132,7 @@ qsu.data.frame <- function(x, by = NULL, pid = NULL, w = NULL, cols = NULL, high
   } else if(length(cols)) x <- .subset(x, cols2int(cols, x, attr(x, "names"), FALSE))
 
   # Get vlabels
-  if(vlabels) attr(x, "names") <- paste(attr(x, "names"), vlabels(x), sep = ": ")
+  if(vlabels) attr(x, "names") <- paste(attr(x, "names"), vlabels(x, use.names = FALSE), sep = ": ")
 
   # original code:
   if(is.null(by)) {
@@ -211,7 +211,7 @@ qsu.pdata.frame <- function(x, by = NULL, w = NULL, cols = NULL, effect = 1L, hi
     } else x <- x[v]
   } else if(length(cols)) x <- .subset(x, cols2int(cols, x, attr(x, "names"), FALSE))
 
-  if(vlabels) attr(x, "names") <- paste(attr(x, "names"), vlabels(x), sep = ": ")
+  if(vlabels) attr(x, "names") <- paste(attr(x, "names"), vlabels(x, use.names = FALSE), sep = ": ")
 
   if(is.null(by)) return(drop(fbstatslCpp(x,higher,0L,0L,fnlevels(pid),pid,w,array)))
   if(is.atomic(by)) {

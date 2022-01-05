@@ -426,7 +426,7 @@ GRP.grouped_df <- function(X, ..., return.groups = TRUE, call = TRUE) {
   lg <- length(g)
   gr <- g[[lg]]
   ng <- length(gr)
-  gs <- lengths(gr, FALSE)
+  gs <- vlengths(gr, FALSE)
   return(`oldClass<-`(list(N.groups = ng, # The C code here speeds up things a lot !!
                         group.id = .Call(C_groups2GRP, gr, fnrow2(X), gs),  # Old: rep(seq_len(ng), gs)[order(unlist(gr, FALSE, FALSE))], # .Internal(radixsort(TRUE, FALSE, FALSE, TRUE, .Internal(unlist(gr, FALSE, FALSE))))
                         group.sizes = gs,
