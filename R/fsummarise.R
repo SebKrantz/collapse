@@ -6,11 +6,11 @@ fFUN_add_groups <- function(x) {
 
 othFUN_compute <- function(x) {
   if(length(x) == 2L) # No additional function arguments
-    return(substitute(copyMostAttrib(unlist(lapply(gsplit(a, .g_), b), FALSE, FALSE), a),
+    return(substitute(.copyMostAttributes_(unlist(lapply(gsplit(a, .g_), b), FALSE, FALSE), a),
                       list(a = x[[2L]], b = x[[1L]])))
   # With more arguments, things become more complex..
   lapply_call <- as.call(c(list(quote(lapply), substitute(gsplit(a, .g_), list(a = x[[2L]]))), as.list(x[-2L])))
-  substitute(copyMostAttrib(unlist(a, FALSE, FALSE), b),
+  substitute(.copyMostAttributes_(unlist(a, FALSE, FALSE), b),
              list(a = lapply_call, b = x[[2L]]))
 }
 
@@ -27,7 +27,7 @@ fsummarise <- function(.data, ..., keep.group_vars = TRUE) {
       e[[i]] <- if(any(startsWith(as.character(ei[[1L]]), .FAST_STAT_FUN_POLD))) # could pass collapse::flast.default etc..
                   fFUN_add_groups(ei) else othFUN_compute(ei)
     }
-    res <- eval(e, c(list(.g_ = g), .data), parent.frame())
+    res <- eval(e, c(list(.g_ = g, .copyMostAttributes_ = copyMostAttributes), .data), parent.frame())
     if(keep.group_vars) res <- c(g[["groups"]], res)
     ax[["names"]] <- names(res)
     ax[["row.names"]] <- .set_row_names(g[[1L]])
