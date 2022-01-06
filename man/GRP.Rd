@@ -13,6 +13,7 @@
 \alias{fungroup}
 \alias{gsplit}
 \alias{is_GRP}
+\alias{length.GRP}
 \alias{print.GRP}
 \alias{plot.GRP}
 \alias{GRPnames}
@@ -44,8 +45,9 @@ GRP(X, \dots)
 
 \method{GRP}{grouped_df}(X, \dots, return.groups = TRUE, call = TRUE)
 
-# Identify, get group names, and convert GRP object to factor
+# Identify, get length, group names, and convert GRP object to factor
 is_GRP(x)
+length(x)
 GRPnames(x, force.char = TRUE)
 as_factor_GRP(x, ordered = FALSE)
 
@@ -130,7 +132,7 @@ The sorting and ordering functionality for \code{GRP} only affects (2), that is 
 
 %This in-turn changes the order of values/rows in the output of \emph{collapse} functions (the row/value corresponding to group 1 always comes out on top). The default setting with \code{sort = TRUE} and \code{decreasing = FALSE} results in groups being sorted in ascending order. This is equivalent to performing grouped operations in \emph{data.table} using \code{keyby}, whereas \code{sort = FALSE} is equivalent to \emph{data.table} grouping with \code{by}, however this only works if the \code{by} columns are character, numeric grouping columns are always ordered.
 
-Next to \code{GRP}, there is the function \code{fgroup_by} as a significantly faster alternative to \code{dplyr::group_by}. It creates a grouped data frame by attaching a 'GRP' object to a data frame. \emph{collapse} functions with a grouped_df method applied to that data frame will yield grouped computations. Note that \code{fgroup_by} can only be used in combination with \emph{collapse} functions, not with \emph{dplyr} verbs such as \code{summarize} or \code{mutate}. The converse is not true, you can group data with \code{dplyr::group_by} and then apply \emph{collapse} functions. Note also the \code{fgroup_by} is class-agnostic, i.e. the classes of the data frame or list passed are preserved, and all standard methods (like subsetting with \code{`[`} or \code{print} methods) apply to the grouped object. Apart from the class 'grouped_df' which is added behind any classes the object might inherit (apart from 'data.frame'), a class 'GRP_df' is added in front. This class responds to \code{print} method and subset (\code{`[`}) methods. Both first call the corresponding method for the object and then print / attach the grouping information. \code{print.GRP_df} prints below the object print one line indicating the grouping variables, followed, in square brackets, by the following information: \code{[number of groups | average group size (standard-deviation of group sizes)]}.
+Next to \code{GRP}, there is the function \code{fgroup_by} as a significantly faster alternative to \code{dplyr::group_by}. It creates a grouped data frame by attaching a 'GRP' object to a data frame. \emph{collapse} functions with a grouped_df method applied to that data frame will yield grouped computations. Note that \code{fgroup_by} can only be used in combination with \emph{collapse} functions, not with \emph{dplyr} verbs such as \code{summarize} or \code{mutate}. The converse is not true, you can group data with \code{dplyr::group_by} and then apply \emph{collapse} functions. Note also the \code{fgroup_by} is class-agnostic, i.e. the classes of the data frame or list passed are preserved, and all standard methods (like subsetting with \code{`[`} or \code{print} methods) apply to the grouped object. Apart from the class 'grouped_df' which is added behind any classes the object might inherit (apart from 'data.frame'), a class 'GRP_df' is added in front. This class responds to \code{print} method and subset (\code{`[`}) methods. Both first call the corresponding method for the object and then print / attach the grouping information. \code{print.GRP_df} prints one line below the object indicating the grouping variables, followed, in square brackets, by some statistics on the group sizes: \code{[N | Mean (SD) Min-Max]}. The mean is rounded to a full number and the standard deviation (SD) to one digit. Minimum and maximum are only displayed if the SD is non-zero.
 
 \code{GRP} is an S3 generic function with one default method supporting vector and list input and several conversion methods:
 

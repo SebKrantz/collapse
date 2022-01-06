@@ -108,6 +108,8 @@ GRP.default <- function(X, by = NULL, sort = TRUE, decreasing = FALSE, na.last =
 is_GRP <- function(x) inherits(x, "GRP")
 is.GRP <- is_GRP
 
+length.GRP <- function(x) length(x[[2L]])
+
 GRPnames <- function(x, force.char = TRUE) { # , ...
   groups <- x[[4L]]
   if(is.null(groups)) return(NULL)
@@ -290,9 +292,12 @@ print.GRP_df <- function(x, ...) {
   g <- attr(x, "groups")
   if(is_GRP(g)) { # Issue Patrice flagged !
     # oldClass(g) <- NULL # could get rid of this if get rid of "data.frame" class.
-    stats <- if(length(g[[3L]]))
-      paste0(" [", g[[1L]], " | ", round(length(g[[2L]]) / g[[1L]]), " (", round(fsd.default(g[[3L]]), 1L), ")]") else
-        paste0(" [", g[[1L]], " | ", round(length(g[[2L]]) / g[[1L]]), "]")
+    if(length(g[[3L]])) {
+      su <- unclass(qsu.default(g[[3L]]))
+      stats <- if(su[4L] == su[5L]) paste0(" [", g[[1L]], " | ", round(su[2L]), " (", round(su[3L], 1L), ")]") else
+        paste0(" [", g[[1L]], " | ", round(su[2L]), " (", round(su[3L], 1L), ") ", su[4L], "-", su[5L], "]")
+    } else
+      stats <- paste0(" [", g[[1L]], " | ", round(length(g[[2L]]) / g[[1L]]), "]")
     # Groups: # if(any(g[[6L]])) "ordered groups" else "unordered groups", -> ordered 99% of times...
     cat("\nGrouped by: ", paste(g[[5L]], collapse = ", "), stats, "\n")
     if(inherits(x, "pdata.frame"))

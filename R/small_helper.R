@@ -445,7 +445,7 @@ seq_col <- function(X) if(is.list(X)) seq_along(unclass(X)) else seq_len(dim(X)[
 # na.last is false !!
 forder.int <- function(x) .Call(C_radixsort, FALSE, FALSE, FALSE, FALSE, TRUE, pairlist(x)) # if(is.unsorted(x)) .Call(C_forder, x, NULL, FALSE, TRUE, 1L, TRUE) else seq_along(x) # since forder gives integer(0) if sorted !
 ford <- function(x, g = NULL) {
-  if(length(g)) {
+  if(!is.null(g)) {
     x <- c(if(is.atomic(g)) list(g) else if(is_GRP(g)) g[2L] else g,
            if(is.atomic(x)) list(x) else x, list(method = "radix"))
     return(do.call(order, x))
