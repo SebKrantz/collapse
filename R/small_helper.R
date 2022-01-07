@@ -628,7 +628,7 @@ G_guo <- function(g) {
   if(is.atomic(g)) {
     if(inherits(g, c("factor", "qG"))) {
       if(inherits(g, "na.included") || !anyNA(unclass(g)))
-        return(list(if(is.factor(g)) fnlevels(g) else attr(g, "N.groups"), g, NULL))
+        return(list(if(is.factor(g)) fnlevels(g) else attr(g, "N.groups"), unattrib(g), NULL))
       if(is.factor(g)) {
         ng <- if(anyNA(lev <- attr(g, "levels"))) length(lev) else length(lev) + 1L
       } else ng <- attr(g, "N.groups") + 1L

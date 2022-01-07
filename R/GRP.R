@@ -479,6 +479,7 @@ radixfact <- function(x, sort, ord, fact, naincl, keep, retgrp = FALSE) {
   f
 }
 
+# TODO: Why is numeric to character conversion so slow?...
 groupfact <- function(x, ord, fact, naincl, keep, retgrp = FALSE) {
   g <- .Call(C_groupat, x, fact || retgrp, naincl)
   if(fact) {
