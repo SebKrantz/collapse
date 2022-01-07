@@ -49,7 +49,7 @@
 #   invisible()
 # }
 
-group <- function(x, starts = FALSE, group.sizes = FALSE) .Call(C_group, x, starts, group.sizes)
+group <- function(x, starts = FALSE, group.sizes = FALSE) `oldClass<-`(.Call(C_group, x, starts, group.sizes), c("qG", "na.included"))
 gsplit <- function(x = NULL, g, use.g.names = FALSE, ...) {
   if(!inherits(g, "GRP")) g <- GRP(g, return.groups = use.g.names, call = FALSE, ...)
   res <- if(is.null(x)) .Call(C_gsplit, 1L, g, TRUE) else if(length(unclass(x)) == length(g[[2L]]))
@@ -682,7 +682,7 @@ fanyDuplicated <- function(x) if(length(x) < 100L) anyDuplicated.default(x) > 0L
 
 charorNULL <- function(x) if(is.character(x)) x else NULL
 
-tochar <- function(x) if(is.character(x)) x else as.character(x)
+tochar <- function(x) if(is.character(x)) x else as.character(x)  # if(is.object(x)) as.character(x) else .Call(C_aschar, x)
 
 # more security here?
 # unique_factor <- function(x) {  # Still needed with new collap solution ? -> Nope !
