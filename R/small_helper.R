@@ -626,16 +626,19 @@ fcolsubset <- function(x, ind, checksf = FALSE) { # fastest !
 
 G_guo <- function(g) {
   if(is.atomic(g)) {
-    if(inherits(g, "factor")) {
-      if(inherits(g, "na.included") || !anyNA(unclass(g))) return(list(fnlevels(g), g, NULL))
-      ng <- if(anyNA(lev <- attr(g, "levels"))) length(lev) else length(lev) + 1L
+    if(inherits(g, c("factor", "qG"))) {
+      if(inherits(g, "na.included") || !anyNA(unclass(g)))
+        return(list(if(is.factor(g)) fnlevels(g) else attr(g, "N.groups"), g, NULL))
+      if(is.factor(g)) {
+        ng <- if(anyNA(lev <- attr(g, "levels"))) length(lev) else length(lev) + 1L
+      } else ng <- attr(g, "N.groups") + 1L
       return(list(ng, copyv(unattrib(g), NA_integer_, ng), NULL))
     }
-    g <- group(g)
+    g <- .Call(C_group, g, FALSE, FALSE)
     return(list(attr(g,"N.groups"), g, NULL))
   }
   if(inherits(g, "GRP")) return(g)
-  g <- group(g)
+  g <- .Call(C_group, g, FALSE, FALSE)
   return(list(attr(g,"N.groups"), g, NULL))
 }
 
