@@ -17,6 +17,7 @@ RcppExport SEXP subsetCols(SEXP, SEXP, SEXP);
 RcppExport SEXP subsetVector(SEXP, SEXP, SEXP);
 RcppExport SEXP Calloccol(SEXP dt); // , SEXP Rn
 RcppExport SEXP falloc(SEXP, SEXP);
+// RcppExport SEXP CasChar(SEXP x);
 RcppExport SEXP setAttributes(SEXP x, SEXP a);
 RcppExport void setattributes(SEXP x, SEXP a);
 // RcppExport SEXP CsetAttr(SEXP object, SEXP a, SEXP v); -> mot more efficeint than attr i.e. for row.names...
@@ -44,6 +45,7 @@ RcppExport SEXP vlabels(SEXP x, SEXP attrn, SEXP usenam);
 RcppExport SEXP setvlabels(SEXP x, SEXP attrn, SEXP value, SEXP ind, SEXP sc);
 RcppExport SEXP setnames(SEXP x, SEXP nam);
 RcppExport SEXP groupVec(SEXP X, SEXP starts, SEXP sizes);
+RcppExport SEXP groupAtVec(SEXP X, SEXP starts, SEXP naincl);
 // fnobs rewritten in C:
 RcppExport SEXP fnobsC(SEXP x, SEXP Rng, SEXP g);
 RcppExport SEXP fnobsmC(SEXP x, SEXP Rng, SEXP g, SEXP Rdrop);
@@ -138,7 +140,7 @@ static const R_CallMethodDef CallEntries[] = {
   {"Cpp_mrtl", (DL_FUNC) &_collapsedev17_mrtl, 3},
   {"Cpp_mctl", (DL_FUNC) &_collapsedev17_mctl, 3},
   {"Cpp_psmat", (DL_FUNC) &_collapsedev17_psmatCpp, 4},
-  {"Cpp_qF", (DL_FUNC) &_collapsedev17_qFCpp, 6},
+  {"Cpp_qF", (DL_FUNC) &_collapsedev17_qFCpp, 5},
   // {"Cpp_qG", (DL_FUNC) &_collapsedev17_qGCpp, 5},
   {"Cpp_funique", (DL_FUNC) &_collapsedev17_funiqueCpp, 2},
   {"Cpp_fdroplevels", (DL_FUNC) &_collapsedev17_fdroplevelsCpp, 2},
@@ -175,6 +177,7 @@ static const R_CallMethodDef CallEntries[] = {
   {"C_setvlabels",    (DL_FUNC) &setvlabels,    4},
   {"C_setnames",      (DL_FUNC) &setnames,      2},
   {"C_group",         (DL_FUNC) &groupVec,      3},
+  {"C_groupat",       (DL_FUNC) &groupAtVec,    3},
   {"C_radixsort",     (DL_FUNC) &Cradixsort,    6},
   {"C_frankds",       (DL_FUNC) &frankds,       4},
   {"C_pacf1",         (DL_FUNC) &pacf1,         2},
@@ -182,6 +185,7 @@ static const R_CallMethodDef CallEntries[] = {
   {"C_setcolorder",   (DL_FUNC) &setcolorder,   2},
   {"C_subsetCols",    (DL_FUNC) &subsetCols,    3},
   {"C_alloc",         (DL_FUNC) &falloc,        2},
+  // {"C_aschar",        (DL_FUNC) &CasChar,       1},
   {"C_subsetDT",      (DL_FUNC) &subsetDT,      4},
   {"C_subsetVector",  (DL_FUNC) &subsetVector,  3},
   {"C_alloccol",      (DL_FUNC) &Calloccol,     1},

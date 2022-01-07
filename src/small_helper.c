@@ -878,6 +878,10 @@ SEXP vlengths(SEXP x, SEXP usenam) {
   return ans;
 }
 
+// SEXP CasChar(SEXP x) {
+//  return coerceVector(x, STRSXP);
+// }
+
 /* Inspired by:
  * do_list2env : .Internal(list2env(x, envir))
  */

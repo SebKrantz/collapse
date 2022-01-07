@@ -203,8 +203,8 @@ psmatCpp <- function(x, g, t = NULL, transpose = FALSE) {
     .Call(Cpp_psmat, x, g, t, transpose)
 }
 
-qFCpp <- function(x, sort = TRUE, ordered = FALSE, na.exclude = TRUE, keep.attr = TRUE, ret = 1L) {
-    .Call(Cpp_qF, x, sort, ordered, na.exclude, keep.attr, ret)
+qFCpp <- function(x, ordered = TRUE, na_exclude = TRUE, keep_attr = TRUE, ret = 1L) {
+  .Call(Cpp_qF, x, ordered, na_exclude, keep_attr, ret)
 }
 
 funiqueCpp <- function(x, sort = TRUE) {

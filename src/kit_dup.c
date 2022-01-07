@@ -136,6 +136,147 @@ SEXP dupVecIndex(SEXP x) {
   return ans_i;
 }
 
+
+SEXP dupVecIndexKeepNA(SEXP x) {
+  const int n = length(x);
+  int K, tx = TYPEOF(x);
+  size_t M;
+  if(n >= INT_MAX) error("Length of 'x' is too large. (Long vector not supported yet)"); // 1073741824
+  if (tx == STRSXP || tx == REALSXP || tx == CPLXSXP ) {
+    const size_t n2 = 2U * (size_t) n;
+    M = 256;
+    K = 8;
+    while (M < n2) {
+      M *= 2;
+      K++;
+    }
+  } else if(tx == INTSXP) {
+    if(isFactor(x)) {
+      tx = 1000;
+      M = (size_t)nlevels(x) + 2;
+    } else M = (size_t)n;
+  } else if (tx == LGLSXP) {
+    M = 3;
+  } else error("Type %s is not supported.", type2char(tx)); // # nocov
+  int *h = (int*)Calloc(M, int); // Table to save the hash values, table has size M
+  // memset(h, 0, M * sizeof(int)); // not needed??
+  SEXP ans_i = PROTECT(allocVector(INTSXP, n));
+  int *pans_i = INTEGER(ans_i);
+  size_t id = 0, g = 0;
+  switch (tx) {
+  case LGLSXP:
+  case 1000: // This is for factors or logical vectors where the size of the table is known
+  {
+    const int *px = INTEGER(x);
+    for (int i = 0, j; i != n; ++i) {
+      if(px[i] == NA_INTEGER) {
+        pans_i[i] = NA_INTEGER;
+        continue;
+      }
+      j = px[i];
+      if(h[j]) pans_i[i] = h[j];
+      else pans_i[i] = h[j] = ++g;
+    }
+  } break;
+  case INTSXP: { // Faster version based on division hash...
+    const int *px = INTEGER(x);
+    for (int i = 0, iid = 0; i != n; ++i) {
+      if(px[i] == NA_INTEGER) {
+        pans_i[i] = NA_INTEGER;
+        continue;
+      }
+      iid = px[i] % n; // HASH(px[i], K); // get the hash value of x[i]
+      while(h[iid]) { // Check if this hash value has been seen before
+        if(px[h[iid]-1] == px[i]) { // Get the element of x that produced his value. if x[i] is the same, assign it the same index.
+          pans_i[i] = pans_i[h[iid]-1]; // h[id];
+          goto ibl;
+        } // else, we move forward to the next slot, until we find an empty one... We need to keep checking against the values,
+        // because if we found the same value before, we would also have put it in another slot after the initial one with the same hash value.
+        ++iid; iid %= n; // # nocov
+      } // We put the index into the empty slot.
+      h[iid] = i + 1; // need + 1 because for zero the while loop gives false..
+      pans_i[i] = ++g; // h[id];
+      ibl:;
+    }
+  } break;
+  case REALSXP: {
+    const double *px = REAL(x);
+    union uno tpv;
+    for (int i = 0; i != n; ++i) {
+      if(ISNAN(px[i])) {
+        pans_i[i] = NA_INTEGER;
+        continue;
+      }
+      tpv.d = px[i];
+      id = HASH(tpv.u[0] + tpv.u[1], K);
+      while(h[id]) {
+        if(REQUAL(px[h[id]-1], px[i])) {
+          pans_i[i] = pans_i[h[id]-1]; // h[id];
+          goto rbl;
+        }
+        ++id; id %= M;
+      }
+      h[id] = i + 1;
+      pans_i[i] = ++g; // h[id];
+      rbl:;
+    }
+  } break;
+  case CPLXSXP: {
+    const Rcomplex *px = COMPLEX(x);
+    unsigned int u;
+    union uno tpv;
+    Rcomplex tmp;
+    for (int i = 0; i != n; ++i) {
+      tmp.r = (px[i].r == 0.0) ? 0.0 : px[i].r;
+      tmp.i = (px[i].i == 0.0) ? 0.0 : px[i].i;
+      if(C_IsNA(tmp) || C_IsNaN(tmp)) {
+        pans_i[i] = NA_INTEGER;
+        continue;
+      }
+      tpv.d = tmp.r;
+      u = tpv.u[0] ^ tpv.u[1];
+      tpv.d = tmp.i;
+      u ^= tpv.u[0] ^ tpv.u[1];
+      id = HASH(u, K);
+      while(h[id]) {
+        if(CEQUAL(px[h[id]-1], px[i])) {
+          pans_i[i] = pans_i[h[id]-1]; // h[id];
+          goto cbl;
+        }
+        ++id; id %= M; // # nocov
+      }
+      h[id] = i + 1;
+      pans_i[i] = ++g; // h[id];
+      cbl:;
+    }
+  } break;
+  case STRSXP: {
+    const SEXP *px = STRING_PTR(x);
+    for (int i = 0; i != n; ++i) {
+      if(px[i] == NA_STRING) {
+        pans_i[i] = NA_INTEGER;
+        continue;
+      }
+      id = HASH(((intptr_t) px[i] & 0xffffffff), K);
+      while(h[id]) {
+        if(px[h[id]-1] == px[i]) {
+          pans_i[i] = pans_i[h[id]-1]; // h[id];
+          goto sbl;
+        }
+        ++id; id %= M;
+      }
+      h[id] = i + 1;
+      pans_i[i] = ++g;
+      sbl:;
+    }
+  } break;
+  }
+  Free(h);
+  setAttrib(ans_i, install("N.groups"), ScalarInteger(g));
+  UNPROTECT(1);
+  return ans_i;
+}
+
 // TODO: Only one M calculation
 // Think: If in the second grouping variable all entries are the same, you loop through the whole table for each value..
 // TODO: Speed up for real values, i.e. system.time(group(DHSBR[1:2])) and system.time(group(wlddev)) (date), especially repeated real values appear slow !!
@@ -290,7 +431,8 @@ SEXP groupVec(SEXP X, SEXP starts, SEXP sizes) {
 
   int l = length(X), islist = TYPEOF(X) == VECSXP,
     start = asLogical(starts), size = asLogical(sizes), nprotect = 0;
-  if(islist == 0 && OBJECT(X) != 0 && inherits(X, "qG")) return X; // return "qG" objects
+  // Better not exceptions to fundamental algorithms, when a couple of user-level functions return qG objects...
+  // if(islist == 0 && OBJECT(X) != 0 && inherits(X, "qG") && inherits(X, "na.included")) return X; // return "qG" objects
   SEXP idx = islist ? dupVecIndex(VECTOR_ELT(X, 0)) : dupVecIndex(X);
   if(!(islist && l > 1) && start == 0 && size == 0) return idx; // l == 1 &&
   PROTECT(idx); ++nprotect;
@@ -348,6 +490,40 @@ SEXP groupVec(SEXP X, SEXP starts, SEXP sizes) {
   return res;
 }
 
+
+// This version is only for atomic vectors (factor generation)
+SEXP groupAtVec(SEXP X, SEXP starts, SEXP naincl) {
+
+  int start = asLogical(starts), nain = asLogical(naincl);
+  // Note: These functions will give errors for unsupported types...
+  SEXP idx = nain ? dupVecIndex(X) : dupVecIndexKeepNA(X);
+  if(start == 0) return idx;
+  PROTECT(idx);
+  SEXP sym_ng = PROTECT(install("N.groups"));
+  int ng = asInteger(getAttrib(idx, sym_ng)), n = length(idx);
+  int *pidx = INTEGER(idx);
+  SEXP st;
+  setAttrib(idx, install("starts"), st = allocVector(INTSXP, ng));
+  int *pst = INTEGER(st), k = 0;
+  memset(pst, 0, sizeof(int) * ng); --pst;
+  if(nain) {
+    for(int i = 0; i != n; ++i) {
+      if(pst[pidx[i]] == 0) {
+        pst[pidx[i]] = i + 1;
+        if(++k == ng) break;
+      }
+    }
+  } else {
+    for(int i = 0; i != n; ++i) {
+      if(pidx[i] != NA_INTEGER && pst[pidx[i]] == 0) {
+        pst[pidx[i]] = i + 1;
+        if(++k == ng) break;
+      }
+    }
+  }
+  UNPROTECT(2);
+  return idx;
+}
 
 
 

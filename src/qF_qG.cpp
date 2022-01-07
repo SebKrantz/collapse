@@ -4,10 +4,8 @@ using namespace Rcpp;
 
 
 template <int RTYPE>
-IntegerVector qFCppImpl(const Vector<RTYPE>& x, bool sort, bool ordered, bool na_exclude, bool keep_attr, int ret) {
-    Vector<RTYPE> levs = (sort && na_exclude) ? na_omit(sort_unique(x)) :
-                          sort ? sort_unique(x) :
-                          na_exclude ? na_omit(unique(x)) : unique(x);
+IntegerVector qFCppImpl(const Vector<RTYPE>& x, bool ordered, bool na_exclude, bool keep_attr, int ret) {
+    Vector<RTYPE> levs = (na_exclude) ? na_omit(sort_unique(x)) : sort_unique(x);
     IntegerVector out = (na_exclude || RTYPE != REALSXP) ? match(x, levs) : as<IntegerVector>(Rf_match(levs, x, NA_INTEGER));
     if(ret == 1) { // returning a factor
       if(keep_attr) SHALLOW_DUPLICATE_ATTRIB(out, x); // works for all atomic objects ?
@@ -34,12 +32,12 @@ IntegerVector qFCppImpl(const Vector<RTYPE>& x, bool sort, bool ordered, bool na
 
 
 // [[Rcpp::export]]   // do Cpp 11 solution using return macro ?
-SEXP qFCpp(SEXP x, bool sort = true, bool ordered = true, bool na_exclude = true, bool keep_attr = true, int ret = 1) {
+SEXP qFCpp(SEXP x, bool ordered = true, bool na_exclude = true, bool keep_attr = true, int ret = 1) {
   switch(TYPEOF(x)) {
-  case INTSXP: return qFCppImpl<INTSXP>(x, sort, ordered, na_exclude, keep_attr, ret);
-  case REALSXP: return qFCppImpl<REALSXP>(x, sort, ordered, na_exclude, keep_attr, ret);
-  case STRSXP: return qFCppImpl<STRSXP>(x, sort, ordered, na_exclude, keep_attr, ret);
-  case LGLSXP: {
+  case INTSXP: return qFCppImpl<INTSXP>(x, ordered, na_exclude, keep_attr, ret);
+  case REALSXP: return qFCppImpl<REALSXP>(x, ordered, na_exclude, keep_attr, ret);
+  case STRSXP: return qFCppImpl<STRSXP>(x, ordered, na_exclude, keep_attr, ret);
+  case LGLSXP: { // Note that this always sorts it
     LogicalVector xl = x;
     int l = xl.size();
     LogicalVector nd(3);
