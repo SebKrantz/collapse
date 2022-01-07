@@ -864,12 +864,16 @@ SEXP vtypes(SEXP x, SEXP isnum) {
 
 
 SEXP vlengths(SEXP x, SEXP usenam) {
-  int tx = TYPEOF(x);
-  if(tx != VECSXP) return ScalarInteger(length(x));
+  if(TYPEOF(x) != VECSXP) return ScalarInteger(length(x));
   int n = length(x);
-  SEXP ans = PROTECT(allocVector(INTSXP, n)), *px = SEXPPTR(x);
+  SEXP ans = PROTECT(allocVector(INTSXP, n));
   int *pans = INTEGER(ans);
-  for(int i = 0; i != n; ++i) pans[i] = length(px[i]); // VECTOR_ELT(x, i)
+  if(ALTREP(x)) {
+    for(int i = 0; i != n; ++i) pans[i] = length(VECTOR_ELT(x, i));
+  } else {
+    SEXP *px = SEXPPTR(x);
+    for(int i = 0; i != n; ++i) pans[i] = length(px[i]);
+  }
   if(asLogical(usenam)) {
     SEXP nam = getAttrib(x, R_NamesSymbol);
     if(TYPEOF(nam) != NILSXP) namesgets(ans, nam);
