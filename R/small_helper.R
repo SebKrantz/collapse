@@ -305,10 +305,17 @@ addAttributes <- function(x, a) .Call(C_setAttributes, x, c(attributes(x), a))
 
 
 is_categorical <- function(x) !is.numeric(x)
-is.categorical <- is_categorical
+is.categorical <- function(x) {
+  message("Note that 'is.categorical' was renamed to 'is_categorical'. It will not be removed anytime soon, but please use updated function names in new code, see help('collapse-renamed')")
+  !is.numeric(x)
+}
 
 is_date <- function(x) inherits(x, c("Date","POSIXlt","POSIXct"))
-is.Date <- is_date
+is.Date <- function(x) {
+  message("Note that 'is.Date' was renamed to 'is_date'. It will not be removed anytime soon, but please use updated function names in new code, see help('collapse-renamed')")
+  inherits(x, c("Date","POSIXlt","POSIXct"))
+}
+
 
 "%!in%" <- function(x, table) match(x, table, nomatch = 0L) == 0L
 
@@ -483,8 +490,16 @@ as_character_factor <- function(X, keep.attr = TRUE) {
   res
 }
 
-as.numeric_factor <- as_numeric_factor
-as.character_factor <- as_character_factor
+as.numeric_factor <- function(X, keep.attr = TRUE) {
+  message("Note that 'as.numeric_factor' was renamed to 'as_numeric_factor'. It will not be removed anytime soon, but please use updated function names in new code, see help('collapse-renamed')")
+  as_numeric_factor(X, keep.attr)
+}
+
+as.character_factor <- function(X, keep.attr = TRUE) {
+  message("Note that 'as.character_factor' was renamed to 'as_character_factor'. It will not be removed anytime soon, but please use updated function names in new code, see help('collapse-renamed')")
+  as_character_factor(X, keep.attr)
+}
+
 
 setRnDF <- function(df, nm) `attr<-`(df, "row.names", nm)
 

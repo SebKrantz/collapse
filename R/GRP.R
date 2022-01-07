@@ -87,7 +87,7 @@ GRP.default <- function(X, by = NULL, sort = TRUE, decreasing = FALSE, na.last =
       if(length(gs) == length(o) && (use.group || sorted)) {
         groups <- if(is.list(X)) .Call(C_subsetCols, X, by, FALSE) else `names<-`(list(X), namby)
       } else {
-        ust <- if(use.group || sorted) st else o[st]
+        ust <- if(use.group || sorted) st else .Call(C_subsetVector, o, st, FALSE) # o[st]
         groups <- if(is.list(X)) .Call(C_subsetDT, X, ust, by, FALSE) else
           `names<-`(list(.Call(C_subsetVector, X, ust, FALSE)), namby) # subsetVector preserves attributes (such as "label")
       }
@@ -106,7 +106,10 @@ GRP.default <- function(X, by = NULL, sort = TRUE, decreasing = FALSE, na.last =
 }
 
 is_GRP <- function(x) inherits(x, "GRP")
-is.GRP <- is_GRP
+is.GRP <- function(x) {
+  message("Note that 'is.GRP' was renamed to 'is_GRP'. It will not be removed anytime soon, but please use updated function names in new code, see help('collapse-renamed')")
+  inherits(x, "GRP")
+}
 
 length.GRP <- function(x) length(x[[2L]])
 
@@ -186,12 +189,10 @@ as_factor_GRP <- function(x, ordered = FALSE) { # , ...
   f
 }
 
-as.factor_GRP <- as_factor_GRP
-
-# as.factor.GRP <- function(x, ordered = FALSE) {
-#   .Deprecated("as_factor_GRP")
-#   as_factor_GRP(x, ordered)
-# }
+as.factor_GRP <- function(x, ordered = FALSE) {
+  message("Note that 'as.factor_GRP' was renamed to 'as_factor_GRP'. It will not be removed anytime soon, but please use updated function names in new code, see help('collapse-renamed')")
+  as_factor_GRP(x, ordered)
+}
 
 finteraction <- function(..., ordered = FALSE, sort = TRUE) { # does it drop levels ? -> Yes !
   if(...length() == 1L && is.list(...)) return(as_factor_GRP(GRP.default(..., sort = sort, call = FALSE), ordered))
@@ -443,7 +444,10 @@ GRP.grouped_df <- function(X, ..., return.groups = TRUE, call = TRUE) {
 }
 
 is_qG <- function(x) inherits(x, "qG")
-is.qG <- is_qG
+is.qG <- function(x) {
+  message("Note that 'is.qG' was renamed to 'is_qG'. It will not be removed anytime soon, but please use updated function names in new code, see help('collapse-renamed')")
+  inherits(x, "qG")
+}
 
 na_rm2 <- function(x, sort) {
   if(sort) return(if(is.na(x[length(x)])) x[-length(x)] else x)
@@ -515,7 +519,10 @@ as_factor_qG <- function(x, ordered = FALSE, na.exclude = TRUE) {
   return(`attributes<-`(x, list(levels = groups, class = clx)))
 }
 
-as.factor_qG <- as_factor_qG
+as.factor_qG <- function(x, ordered = FALSE, na.exclude = TRUE) {
+  message("Note that 'as.factor_qG' was renamed to 'as_factor_qG'. It will not be removed anytime soon, but please use updated function names in new code, see help('collapse-renamed')")
+  as_factor_qG(x, ordered, na.exclude)
+}
 
 qF <- function(x, ordered = FALSE, na.exclude = TRUE, sort = TRUE, drop = FALSE,
                keep.attr = TRUE, method = "auto") {

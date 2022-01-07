@@ -52,7 +52,10 @@ is.regular <- function(x) {
 is_unlistable <- function(l, DF.as.list = FALSE) if(DF.as.list) all(unlist(rapply(l, is.atomic, how = "list"), use.names = FALSE)) else
   all(unlist(rapply2d(l, is_regular), use.names = FALSE)) # fastest way?
 
-is.unlistable <- is_unlistable
+is.unlistable <- function(l, DF.as.list = FALSE) {
+  message("Note that 'is.unlistable' was renamed to 'is_unlistable'. It will not be removed anytime soon, but please use updated function names in new code, see help('collapse-renamed')")
+  is_unlistable(l, DF.as.list)
+}
 
 # If data.frame, search all, otherwise, make optional counting df or not, but don't search them.
 ldepth <- function(l, DF.as.list = FALSE) {

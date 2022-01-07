@@ -1,4 +1,5 @@
-\name{Renamed Functions}
+\name{collapse-renamed}
+\alias{collapse-renamed}
 \alias{fNobs}
 \alias{fNobs.default}
 \alias{fNobs.matrix}
@@ -40,7 +41,7 @@
 Renamed Functions
 }
 \description{
-These functions were renamed moving from collapse 1.5.3 to 1.6.0 to make the namespace more consistent. They will stick around for a while, and be depreciated in 2022.
+These functions were renamed moving from collapse 1.5.3 to 1.6.0 to make the namespace more consistent. With collapse 1.7.0 I have depreciated all methods to \code{fNobs}, \code{fNdistinct}, \code{fHDbetween} and \code{fHDwithin}. The S3 generics and the other functions will be depreciated in 2023 for the earliest. These all now give a message reminding you not to use them in fresh code.
 }
 \section{Renaming}{\preformatted{
 fNobs -> fnobs

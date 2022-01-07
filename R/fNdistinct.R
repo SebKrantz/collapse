@@ -128,7 +128,20 @@ fndistinct.grouped_df <- function(x, TRA = NULL, na.rm = TRUE, use.g.names = FAL
   } else return(.Call(Cpp_TRAl,x,.Call(Cpp_fndistinctl,x,g[[1L]],g[[2L]],g[[3L]],na.rm,FALSE),g[[2L]],TtI(TRA)))
 }
 
-fNdistinct <- fndistinct
-fNdistinct.default <- function(x, ...) fndistinct.default(x, ...)
-fNdistinct.matrix <- function(x, ...) fndistinct.matrix(x, ...)
-fNdistinct.data.frame <- function(x, ...) fndistinct.data.frame(x, ...)
+
+fNdistinct <- function(x, ...) {
+  message("Note that 'fNdistinct' was renamed to 'fndistinct'. The S3 generic will not be removed anytime soon, but please use updated function names in new code, see help('collapse-renamed')")
+  UseMethod("fndistinct")
+}
+fNdistinct.default <- function(x, ...) {
+  .Deprecated(msg = "This method belongs to a renamed function and will be removed end of 2022, see help('collapse-renamed')")
+  fndistinct.default(x, ...)
+}
+fNdistinct.matrix <- function(x, ...) {
+  .Deprecated(msg = "This method belongs to a renamed function and will be removed end of 2022, see help('collapse-renamed')")
+  fndistinct.matrix(x, ...)
+}
+fNdistinct.data.frame <- function(x, ...) {
+  .Deprecated(msg = "This method belongs to a renamed function and will be removed end of 2022, see help('collapse-renamed')")
+  fndistinct.data.frame(x, ...)
+}

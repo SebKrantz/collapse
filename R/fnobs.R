@@ -126,7 +126,19 @@ fnobs.grouped_df <- function(x, TRA = NULL, use.g.names = FALSE, keep.group_vars
   } else return(.Call(Cpp_TRAl,x,.Call(C_fnobsl,x,g[[1L]],g[[2L]],FALSE),g[[2L]],TtI(TRA)))
 }
 
-fNobs <- fnobs
-fNobs.default <- function(x, ...) fnobs.default(x, ...)
-fNobs.matrix <- function(x, ...) fnobs.matrix(x, ...)
-fNobs.data.frame <- function(x, ...) fnobs.data.frame(x, ...)
+fNobs <- function(x, ...) {
+  message("Note that 'fNobs' was renamed to 'fnobs'. The S3 generic will not be removed anytime soon, but please use updated function names in new code, see help('collapse-renamed')")
+  UseMethod("fnobs")
+}
+fNobs.default <- function(x, ...) {
+  .Deprecated(msg = "This method belongs to a renamed function and will be removed end of 2022, see help('collapse-renamed')")
+  fnobs.default(x, ...)
+}
+fNobs.matrix <- function(x, ...) {
+  .Deprecated(msg = "This method belongs to a renamed function and will be removed end of 2022, see help('collapse-renamed')")
+  fnobs.matrix(x, ...)
+}
+fNobs.data.frame <- function(x, ...) {
+  .Deprecated(msg = "This method belongs to a renamed function and will be removed end of 2022, see help('collapse-renamed')")
+  fnobs.data.frame(x, ...)
+}

@@ -902,15 +902,40 @@ HDB.pdata.frame <- function(x, effect = seq_col(attr(x, "index")), w = NULL, col
   add_stub(fhdwithin.pdata.frame(if(is.null(cols)) x else colsubset(x, cols), effect, w, na.rm, fill, variable.wise, ..., means = TRUE), stub)
 
 
-fHDbetween <- fhdbetween
-fHDbetween.default <- function(x, ...) fhdbetween.default(x, ...)
-fHDbetween.matrix <- function(x, ...) fhdbetween.matrix(x, ...)
-fHDbetween.data.frame <- function(x, ...) fhdbetween.data.frame(x, ...)
+fHDbetween <- function(x, ...) {
+  message("Note that 'fHDbetween' was renamed to 'fhdbetween'. The S3 generic will not be removed anytime soon, but please use updated function names in new code, see help('collapse-renamed')")
+  UseMethod("fhdbetween")
+}
+fHDbetween.default <- function(x, ...) {
+  .Deprecated(msg = "This method belongs to a renamed function and will be removed end of 2022, see help('collapse-renamed')")
+  fhdbetween.default(x, ...)
+}
+fHDbetween.matrix <- function(x, ...) {
+  .Deprecated(msg = "This method belongs to a renamed function and will be removed end of 2022, see help('collapse-renamed')")
+  fhdbetween.matrix(x, ...)
+}
+fHDbetween.data.frame <- function(x, ...) {
+  .Deprecated(msg = "This method belongs to a renamed function and will be removed end of 2022, see help('collapse-renamed')")
+  fhdbetween.data.frame(x, ...)
+}
 
-fHDwithin <- fhdwithin
-fHDwithin.default <- function(x, ...) fhdwithin.default(x, ...)
-fHDwithin.matrix <- function(x, ...) fhdwithin.matrix(x, ...)
-fHDwithin.data.frame <- function(x, ...) fhdwithin.data.frame(x, ...)
+
+fHDwithin <- function(x, ...) {
+  message("Note that 'fHDwithin' was renamed to 'fhdwithin'. The S3 generic will not be removed anytime soon, but please use updated function names in new code, see help('collapse-renamed')")
+  UseMethod("fhdwithin")
+}
+fHDwithin.default <- function(x, ...) {
+  .Deprecated(msg = "This method belongs to a renamed function and will be removed end of 2022, see help('collapse-renamed')")
+  fhdwithin.default(x, ...)
+}
+fHDwithin.matrix <- function(x, ...) {
+  .Deprecated(msg = "This method belongs to a renamed function and will be removed end of 2022, see help('collapse-renamed')")
+  fhdwithin.matrix(x, ...)
+}
+fHDwithin.data.frame <- function(x, ...) {
+  .Deprecated(msg = "This method belongs to a renamed function and will be removed end of 2022, see help('collapse-renamed')")
+  fhdwithin.data.frame(x, ...)
+}
 
 
 #

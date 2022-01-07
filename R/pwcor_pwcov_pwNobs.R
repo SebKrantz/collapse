@@ -17,7 +17,10 @@ pwnobs <- function(X) {
   N.mat
 }
 
-pwNobs <- function(X) pwnobs(X)
+pwNobs <- function(X) {
+  message("Note that 'pwNobs' was renamed to 'pwnobs'. It will not be removed anytime soon, but please use updated function names in new code, see help('collapse-renamed')")
+  pwnobs(X)
+}
 # corr.p <- function(r, n) {
 #   if (n < 3L) return(1)
 #   df <- n - 2L
