@@ -51,7 +51,7 @@ SEXP dupVecIndex(SEXP x) {
   case INTSXP: { // Faster version based on division hash...
     const int *px = INTEGER(x);
     for (int i = 0, iid = 0; i != n; ++i) {
-      iid = (px[i] == NA_INTEGER) ? 0 : px[i] % n; // HASH(px[i], K); // get the hash value of x[i]
+      iid = (px[i] == NA_INTEGER) ? 0 : (px[i] < n) ? px[i] : px[i] % n; // HASH(px[i], K); // get the hash value of x[i]
       while(h[iid]) { // Check if this hash value has been seen before
         if(px[h[iid]-1] == px[i]) { // Get the element of x that produced his value. if x[i] is the same, assign it the same index.
           pans_i[i] = pans_i[h[iid]-1]; // h[id];
@@ -185,7 +185,7 @@ SEXP dupVecIndexKeepNA(SEXP x) {
         pans_i[i] = NA_INTEGER;
         continue;
       }
-      iid = px[i] % n; // HASH(px[i], K); // get the hash value of x[i]
+      iid = (px[i] < n) ? px[i] : px[i] % n; // HASH(px[i], K); // get the hash value of x[i]
       while(h[iid]) { // Check if this hash value has been seen before
         if(px[h[iid]-1] == px[i]) { // Get the element of x that produced his value. if x[i] is the same, assign it the same index.
           pans_i[i] = pans_i[h[iid]-1]; // h[id];
