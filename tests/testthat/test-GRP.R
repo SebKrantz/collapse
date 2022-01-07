@@ -303,6 +303,11 @@ test_that("group() works as intended", {
   expect_identical(lapply(g, function(i) group(.subset(wlduo, i), group.sizes = TRUE)), lapply(g, function(i) base_group(.subset(wlduo, i), group.sizes = TRUE)))
   g <- replicate(30, sample.int(13, 3, replace = TRUE), simplify = FALSE)
   expect_identical(lapply(g, function(i) group(.subset(wlduo, i), group.sizes = TRUE)), lapply(g, function(i) base_group(.subset(wlduo, i), group.sizes = TRUE)))
+  # Positive and negative values give the same grouping
+  nwld <- nv(wlduo)
+  expect_identical(lapply(nwld, group), lapply(nwld %c*% -1, group))
+  expect_visible(group(nwld %c*% -1))
+  expect_visible(group(nwld[c(4,2,3)] %c*% -1))
 })
 
 GRP2 <- function(x) {
