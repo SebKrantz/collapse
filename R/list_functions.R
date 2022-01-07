@@ -107,7 +107,7 @@ list_extract_FUN <- function(l, FUN, is.subl, keep.tree = FALSE) {
     wnsubl <- whichv(subl, FALSE)
     matches <- vapply(x[wnsubl], FUN, TRUE, USE.NAMES = FALSE)
     a <- lapply(x[wsubl], regsearch)
-    wa <- vapply(a, length, 1L, USE.NAMES = FALSE) > 0L # note that this also gets rid of null elements! could make it length or is.null!
+    wa <- vlengths(a, FALSE) > 0L # note that this also gets rid of null elements! could make it length or is.null! # vapply(a, length, 1L, USE.NAMES = FALSE)
     x <- c(x[wnsubl][matches], a[wa]) # The problem here: If all elements in a sublist are atomic, it still retains the sublist itself with NULL inside!
     if(keep.tree || length(x) != 1L)
       return(x[forder.int(c(wnsubl[matches], wsubl[wa]))]) else return(x[[1L]]) # fastest way?
@@ -127,7 +127,7 @@ list_extract_regex <- function(l, exp, is.subl, keep.tree = FALSE, ...) {
       wnressubl <- if(length(wres)) which(subl & !matches) else which(subl) # fsetdiff(which(subl), wres)
     if(length(wnressubl)) { # faster way?
       a <- lapply(x[wnressubl], regsearch) # is this part still necessary?, or only for keep.tree
-      wa <- vapply(a, length, 1L) > 0L # note that this also gets rid of null elements!! could make it length or is.null!, length is better for length 0 lists !!
+      wa <- vlengths(a, FALSE) > 0L # note that this also gets rid of null elements!! could make it length or is.null!, length is better for length 0 lists !! #  vapply(a, length, 1L)
       x <- c(x[wres], a[wa])
       if(keep.tree || length(x) != 1L)
         return(x[forder.int(c(wres, wnressubl[wa]))]) else return(x[[1L]])
@@ -148,7 +148,7 @@ list_extract_names <- function(l, nam, is.subl, keep.tree = FALSE) {
       wnressubl <- if(length(wres)) which(subl & !matches) else which(subl) # fsetdiff(which(subl), wres)  # old solution: faster but does not work well if parent list is unnamed ! (i.e. l = list(lm1, lm1))
     if(length(wnressubl)) {
       a <- lapply(x[wnressubl], regsearch)
-      wa <- vapply(a, length, 1L) > 0L
+      wa <- vlengths(a, FALSE) > 0L # vapply(a, length, 1L)
       x <- c(x[wres], a[wa])
       if(keep.tree || length(x) != 1L)
         return(x[forder.int(c(wres, wnressubl[wa]))]) else return(x[[1L]])

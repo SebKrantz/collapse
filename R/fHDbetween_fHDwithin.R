@@ -50,7 +50,7 @@ slinteract <- function(sl, facts, mf) { # sl and facts are  logical
 
 getfl <- function(mf) {
 
-  facts <- vapply(unattrib(mf), is.factor, TRUE)
+  facts <- .Call(C_vtypes, mf, 2L) # vapply(unattrib(mf), is.factor, TRUE)
 
   # Any factors
   if(any(facts)) {
@@ -289,7 +289,7 @@ fhdwithin.default <- function(x, fl, w = NULL, na.rm = TRUE, fill = FALSE, lm.me
   }
 
   if(is.list(fl)) {
-    fc <- vapply(unattrib(fl), is.factor, TRUE)
+    fc <- .Call(C_vtypes, fl, 2L) # vapply(unattrib(fl), is.factor, TRUE)
     fcl <- any(fc)
     # if(!fcl && !missing(...)) unused_arg_action(match.call(), ...)
     nallfc <- fcl && !all(fc)
@@ -369,7 +369,7 @@ fhdwithin.matrix <- function(x, fl, w = NULL, na.rm = TRUE, fill = FALSE, lm.met
   }
 
   if(is.list(fl)) {
-    fc <- vapply(unattrib(fl), is.factor, TRUE)
+    fc <- .Call(C_vtypes, fl, 2L) # vapply(unattrib(fl), is.factor, TRUE)
     fcl <- any(fc)
     # if(!fcl && !missing(...)) unused_arg_action(match.call(), ...)
     nallfc <- fcl && !all(fc)
@@ -463,7 +463,7 @@ fhdwithin.data.frame <- function(x, fl, w = NULL, na.rm = TRUE, fill = FALSE, va
   }
 
   if(is.list(fl)) { # fl is a list !!
-    fc <- vapply(unattrib(fl), is.factor, TRUE)
+    fc <- .Call(C_vtypes, fl, 2L) # vapply(unattrib(fl), is.factor, TRUE)
     fcl <- any(fc)
     # if(!fcl && !missing(...)) unused_arg_action(match.call(), ...)
     nallfc <- fcl && !all(fc)
@@ -631,7 +631,7 @@ fhdbetween.default <- function(x, fl, w = NULL, na.rm = TRUE, fill = FALSE, lm.m
   }
 
   if(is.list(fl)) {
-    fc <- vapply(unattrib(fl), is.factor, TRUE)
+    fc <- .Call(C_vtypes, fl, 2L) # vapply(unattrib(fl), is.factor, TRUE)
     fcl <- any(fc)
     # if(!fcl && !missing(...)) unused_arg_action(match.call(), ...)
     nallfc <- fcl && !all(fc)
@@ -694,7 +694,7 @@ fhdbetween.matrix <- function(x, fl, w = NULL, na.rm = TRUE, fill = FALSE, lm.me
   }
 
   if(is.list(fl)) {
-    fc <- vapply(unattrib(fl), is.factor, TRUE)
+    fc <- .Call(C_vtypes, fl, 2L) # vapply(unattrib(fl), is.factor, TRUE)
     fcl <- any(fc)
     # if(!fcl && !missing(...)) unused_arg_action(match.call(), ...)
     nallfc <- fcl && !all(fc)
@@ -757,7 +757,7 @@ fhdbetween.data.frame <- function(x, fl, w = NULL, na.rm = TRUE, fill = FALSE, v
   }
 
   if(is.list(fl)) { # fl is a list !!
-    fc <- vapply(unattrib(fl), is.factor, TRUE)
+    fc <- .Call(C_vtypes, fl, 2L) # vapply(unattrib(fl), is.factor, TRUE)
     fcl <- any(fc)
     # if(!fcl && !missing(...)) unused_arg_action(match.call(), ...)
     nallfc <- fcl && !all(fc)

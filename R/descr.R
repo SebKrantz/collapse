@@ -35,7 +35,7 @@ descr <- function(X, Ndistinct = TRUE, higher = TRUE, table = TRUE,
   } else X <- unclass(qDF(X))
   if(length(cols)) X <- X[cols2int(cols, X, names(X), FALSE)]
   res <- vector('list', length(X))
-  num <- vapply(unattrib(X), is.numeric, TRUE)
+  num <- .Call(C_vtypes, X, 1L) # vapply(unattrib(X), is.numeric, TRUE)
   res[num] <- lapply(X[num], descrnum, ...)
   if(!all(num)) {
     date <- vapply(unattrib(X), is_date, TRUE)
