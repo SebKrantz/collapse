@@ -139,19 +139,27 @@ tfm <- ftransform
 # Example:
 # ftransform(mtcars, cyl = cyl + 10, vs2 = 1, mpg = NULL)
 
+eval_exp <- function(nam, exp, pe) {
+  nl <- `names<-`(as.vector(seq_along(nam), "list"), nam)
+  eval(exp, nl, pe)
+}
+
 ftransformv <- function(.data, vars, FUN, ..., apply = TRUE) {
   if(!is.list(.data)) stop(".data needs to be a list of equal length columns or a data.frame")
   if(!is.function(FUN)) stop("FUN needs to be a function")
   clx <- oldClass(.data)
+  vs <- tryCatch(vars, error = function(e) NULL)
   if(apply) {
     oldClass(.data) <- NULL
-    vars <- cols2int(vars, .data, names(.data), FALSE)
+    if(is.null(vs)) vs <- eval_exp(names(.data), substitute(vars), parent.frame())
+    vars <- cols2int(vs, .data, names(.data), FALSE)
     value <- `names<-`(.data[vars], NULL)
     value <- if(missing(...)) lapply(value, FUN) else
       eval(substitute(lapply(value, FUN, ...)), .data, parent.frame())
   } else {
     nam <- attr(.data, "names")
-    vars <- cols2int(vars, .data, nam, FALSE)
+    if(is.null(vs)) vs <- eval_exp(nam, substitute(vars), parent.frame())
+    vars <- cols2int(vs, .data, nam, FALSE)
     value <- .Call(C_subsetCols, .data, vars, FALSE)
     value <- if(missing(...)) unclass(FUN(value)) else # unclass needed here ? -> yes for lengths...
       unclass(eval(substitute(FUN(value, ...)), .data, parent.frame()))
@@ -161,7 +169,7 @@ ftransformv <- function(.data, vars, FUN, ..., apply = TRUE) {
   }
   le <- vlengths(value, FALSE)
   nr <- length(.data[[1L]])
-  if(all(le == nr)) .data[vars] <- value else if(all(le == 1L))
+  if(allv(le, nr)) .data[vars] <- value else if(allv(le, 1L))
     .data[vars] <- lapply(value, alloc, nr) else {
       if(apply) names(value) <- names(.data)[vars]
       .data <- ftransform_core(.data, value)
@@ -222,15 +230,16 @@ fcompute <- function(.data, ..., keep = NULL) { # within ?
 fcomputev <- function(.data, vars, FUN, ..., apply = TRUE, keep = NULL) {
   if(!is.list(.data)) stop(".data needs to be a list of equal length columns or a data.frame")
   if(!is.function(FUN)) stop("FUN needs to be a function")
+  vs <- tryCatch(vars, error = function(e) NULL)
+  nam <- attr(.data, "names")
+  if(is.null(vs)) vs <- eval_exp(nam, substitute(vars), parent.frame())
+  vars <- cols2int(vs, .data, nam, FALSE)
   if(apply) {
-    nam <- attr(.data, "names")
-    vars <- cols2int(vars, .data, nam, FALSE)
     value <- `names<-`(.subset(.data, vars), NULL)
     value <- if(missing(...)) lapply(value, FUN) else
       eval(substitute(lapply(value, FUN, ...)), .data, parent.frame())
     names(value) <- nam[vars]
   } else {
-    vars <- cols2int(vars, .data, attr(.data, "names"), FALSE)
     value <- .Call(C_subsetCols, .data, vars, FALSE)
     value <- if(missing(...)) unclass(FUN(value)) else # unclass needed here ? -> yes for lengths...
       unclass(eval(substitute(FUN(value, ...)), .data, parent.frame()))
