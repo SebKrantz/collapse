@@ -527,7 +527,7 @@ as.factor_qG <- function(x, ordered = FALSE, na.exclude = TRUE) {
 qF <- function(x, ordered = FALSE, na.exclude = TRUE, sort = TRUE, drop = FALSE,
                keep.attr = TRUE, method = "auto") {
   if(is.factor(x) && sort) {
-    if(!keep.attr && !all(names(ax <- attributes(x)) == c("levels", "class")))
+    if(!keep.attr && !all(names(ax <- attributes(x)) %in% c("levels", "class")))
       attributes(x) <- ax[c("levels", "class")]
     if(na.exclude || inherits(x, "na.included")) {
       clx <- oldClass(x)
