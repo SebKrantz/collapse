@@ -273,6 +273,16 @@ test_that("creating columns and printing works after passing a data.table throug
   }
 
   for(i in 1:n) {
+    dt <- relabel(copy(wldDT), toupper)
+    expect_silent(dt[, new := 1])
+    expect_output(print(dt))
+    setrelabel(dt, PCGDP = "GRP per cap", LIFEEX = "LE")
+    expect_silent(dt[, new := 1])
+    expect_output(print(dt))
+  }
+
+
+  for(i in 1:n) {
   dt <- qDT(qTBL(qDF(qDT(GGDC10S))))
   expect_identical(names(dt), names(GGDC10S))
   expect_silent(dt[, new := 1])
@@ -441,7 +451,7 @@ test_that("creating columns and printing works after passing a data.table throug
   }
 
   for(i in 1:n) {
-    dt <- replace_NA(copy(mtcDT))
+    dt <- replace_NA(copy(mtcDT), set = TRUE, cols = is.numeric)
     expect_silent(dt[, new := 1])
     expect_output(print(dt))
   }

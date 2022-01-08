@@ -109,6 +109,8 @@ setrename <- function(.x, ..., cols = NULL) {
       nam[ind] <- FUN(nam[ind])
     }
   } else nam[ckmatch(namarg, nam)] <- as.character(args)
+  # Need to allocate here, because the named are captured in ".internal.selfref", so modification be reference still produces an error.
+  if(inherits(.x, "data.table")) assign(as.character(substitute(.x)), alc(`attr<-`(.x, "names", nam)), envir = parent.frame())
   invisible(.Call(C_setnames, .x, nam))
 }
 
