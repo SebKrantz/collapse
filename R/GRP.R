@@ -194,9 +194,9 @@ as.factor_GRP <- function(x, ordered = FALSE) {
   as_factor_GRP(x, ordered)
 }
 
-finteraction <- function(..., ordered = FALSE, sort = TRUE) { # does it drop levels ? -> Yes !
-  if(...length() == 1L && is.list(...)) return(as_factor_GRP(GRP.default(..., sort = sort, call = FALSE), ordered))
-  as_factor_GRP(GRP.default(list(...), sort = sort, call = FALSE), ordered)
+finteraction <- function(..., ordered = FALSE, sort = TRUE, method = "auto") { # does it drop levels ? -> Yes !
+  if(...length() == 1L && is.list(...)) return(as_factor_GRP(GRP.default(..., sort = sort, method = method, call = FALSE), ordered))
+  as_factor_GRP(GRP.default(list(...), sort = sort, method = method, call = FALSE), ordered)
 }
 
 GRP.qG <- function(X, ..., group.sizes = TRUE, return.groups = TRUE, call = TRUE) {

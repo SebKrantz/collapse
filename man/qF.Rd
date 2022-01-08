@@ -25,7 +25,7 @@ is_qG(x)
 
 as_factor_qG(x, ordered = FALSE, na.exclude = TRUE)
 
-finteraction(\dots, ordered = FALSE, sort = TRUE)
+finteraction(\dots, ordered = FALSE, sort = TRUE, method = "auto")
 }
 \arguments{
   \item{x}{a atomic vector, factor or quick-group.}
@@ -36,10 +36,11 @@ finteraction(\dots, ordered = FALSE, sort = TRUE)
   \item{keep.attr}{logical. If \code{TRUE} and \code{x} has additional attributes apart from 'levels' and 'class', these are preserved in the conversion to factor.}
   \item{method}{an integer or character string specifying the method of computation:
         \tabular{lllll}{\emph{ Int. }   \tab\tab \emph{ String }   \tab\tab \emph{ Description }  \cr
-                 1 \tab\tab "auto"   \tab\tab automatic selection: hash for character, logical or if \code{length(x) < 500}, else radix. \cr
+                 1 \tab\tab "auto"   \tab\tab automatic selection: hash for character, logical, if \code{sort = FALSE} or if \code{length(x) < 500}, else radix. \cr
                  2 \tab\tab "radix" \tab\tab use radix ordering to generate factors. See Details. \cr
                  3 \tab\tab "hash"   \tab\tab use index hashing to generate factors. See Details. \cr
   }
+  Note that for \code{finteraction}, \code{method = "hash"} is always unsorted.
 }
 \item{return.groups}{logical. \code{TRUE} returns the unique elements / groups / levels of \code{x} in an attribute called 'groups'. Unlike \code{qF}, they are not converted to character.}
 \item{\dots}{multiple atomic vectors or factors, or a single list of equal-length vectors or factors. See Details. }
@@ -53,7 +54,7 @@ There are two methods of computation: radix ordering and index hashing. Radix or
 
 \code{qG} is in the first place a programmers function. It generates a factor-'light' consisting of only an integer grouping vector and an attribute providing the number of groups. It is faster and more memory efficient than \code{\link{GRP}} for grouping atomic vectors, which is the main reason it exists. The fact that it (optionally) returns the unique groups / levels without converting them to character is an added bonus (this also provides a small performance gain compared to \code{qF}).
 
-\code{finteraction} is simply a wrapper around \code{as_factor_GRP(GRP.default(X, sort = TRUE))}, where X is replaced by the arguments in '\dots' combined in a list. See \code{\link{GRP}} for computational details. In general: All vectors, factors, or lists of vectors / factors passed can be interacted. Interactions always create a level for missing values and always drop any unused levels.
+\code{finteraction} is simply a wrapper around \code{as_factor_GRP(GRP.default(X))}, where X is replaced by the arguments in '\dots' combined in a list. See \code{\link{GRP}} for computational details. In general: All vectors, factors, or lists of vectors / factors passed can be interacted. Interactions always create a level for missing values and always drop any unused levels.
 }
 \value{
 \code{qF} returns an (ordered) factor. \code{qG} returns an object of class 'qG': an integer grouping vector with an attribute 'N.groups' indicating the number of groups, and, if \code{return.groups = TRUE}, an attribute 'groups' containing the vector of unique groups / elements in \code{x} corresponding to the integer-id.
