@@ -36,8 +36,8 @@ test_that("fnobs performs like Nobs (defined above)", {
   expect_equal(fnobs(xNA, f), BY(xNA, f, Nobs))
   expect_equal(fnobs(m, g), BY(m, g, Nobs))
   expect_equal(fnobs(mNA, g), BY(mNA, g, Nobs))
-  expect_equal(dapply(fnobs(data, g), unattrib), BY(data, g, Nobs))
-  expect_equal(dapply(fnobs(dataNA, g), unattrib), BY(dataNA, g, Nobs))
+  expect_equal(fnobs(data, g), BY(data, g, Nobs))
+  expect_equal(fnobs(dataNA, g), BY(dataNA, g, Nobs))
 })
 
 test_that("fnobs performs numerically stable", {
@@ -110,10 +110,10 @@ test_that("fndistinct performs like Ndistinct (defined above)", {
   expect_equal(fndistinct(m, g, na.rm = FALSE), BY(m, g, Ndistinct))
   expect_equal(fndistinct(mNA, g, na.rm = FALSE), BY(mNA, g, Ndistinct))
   expect_equal(fndistinct(mNA, g), BY(mNA, g, Ndistinct, na.rm = TRUE))
-  expect_equal(dapply(fndistinct(data, g), unattrib), BY(data, g, Ndistinct, na.rm = TRUE))
-  expect_equal(dapply(fndistinct(data, g, na.rm = FALSE), unattrib), BY(data, g, Ndistinct))
-  expect_equal(dapply(fndistinct(dataNA, g, na.rm = FALSE), unattrib), BY(dataNA, g, Ndistinct))
-  expect_equal(dapply(fndistinct(dataNA, g), unattrib), BY(dataNA, g, Ndistinct, na.rm = TRUE))
+  expect_equal(fndistinct(data, g), BY(data, g, Ndistinct, na.rm = TRUE))
+  expect_equal(fndistinct(data, g, na.rm = FALSE), BY(data, g, Ndistinct))
+  expect_equal(fndistinct(dataNA, g, na.rm = FALSE), BY(dataNA, g, Ndistinct))
+  expect_equal(fndistinct(dataNA, g), BY(dataNA, g, Ndistinct, na.rm = TRUE))
 })
 
 test_that("fndistinct performs numerically stable", {

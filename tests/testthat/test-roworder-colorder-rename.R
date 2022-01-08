@@ -59,16 +59,16 @@ test_that("frename works as intended", {
   expect_equal(frename(iris, paste, "new", sep = "_", cols = 1:2), setNames(iris, c(paste(names(iris)[1:2], "new", sep = "_"), names(iris)[-(1:2)])))
 
   ## Renaming by reference
-  iris2 <- iris
+  iris2 <- data.table::copy(iris)
   setrename(iris2, tolower)
   expect_equal(iris2, setNames(iris, tolower(names(iris))))
-  iris2 <- iris
+  iris2 <- data.table::copy(iris)
   setrename(iris2, tolower, cols = 1:2)
   expect_equal(iris2, setNames(iris, c(tolower(names(iris)[1:2]), names(iris)[-(1:2)])))
-  iris2 <- iris
+  iris2 <- data.table::copy(iris)
   setrename(iris2, tolower, cols = is.numeric)
   expect_equal(iris2, setNames(iris, c(tolower(names(iris)[1:4]), names(iris)[-(1:4)])))
-  iris2 <- iris
+  iris2 <- data.table::copy(iris)
   setrename(iris2, paste, "new", sep = "_", cols = 1:2)
   expect_equal(iris2, setNames(iris, c(paste(names(iris)[1:2], "new", sep = "_"), names(iris)[-(1:2)])))
   rm(iris2)

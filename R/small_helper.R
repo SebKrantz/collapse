@@ -185,9 +185,11 @@ add_stub <- function(X, stub, pre = TRUE, cols = NULL) {
     if(length(dim(X)) > 2L) stop("Can't stub higher dimensional arrays!")
     dn <- dimnames(X)
     cn <- dn[[2L]]
-    if(length(cols)) cn[cols] <- if(pre) paste0(stub, cn[cols]) else paste0(cn[cols], stub)
-    else cn <- if(pre) paste0(stub, cn) else paste0(cn, stub)
-    if(length(cn)) dimnames(X) <- list(dn[[1L]], cn)
+    if(length(cn)) {
+      if(length(cols)) cn[cols] <- if(pre) paste0(stub, cn[cols]) else paste0(cn[cols], stub)
+      else cn <- if(pre) paste0(stub, cn) else paste0(cn, stub)
+      dimnames(X) <- list(dn[[1L]], cn)
+    }
   } else {
     nam <- attr(X, "names")
     if(length(nam)) {

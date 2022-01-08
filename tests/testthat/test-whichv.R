@@ -2,6 +2,15 @@ context("anyv, allv, whichv, setv, copyv etc.")
 
 # d <- replace_NA(wlddev, cols = 9:13)
 
+test_that("whichv works well", {
+  expect_identical(whichv(wlddev$country, "Chad"), which(wlddev$country == "Chad"))
+  expect_identical(whichv(wlddev$country, "Chad", invert = TRUE), which(wlddev$country != "Chad"))
+  expect_identical(whichNA(wlddev$PCGDP), which(is.na(wlddev$PCGDP)))
+  expect_identical(whichNA(wlddev$PCGDP, invert = TRUE), which(!is.na(wlddev$PCGDP)))
+  expect_identical(whichv(is.na(wlddev$PCGDP), FALSE), which(!is.na(wlddev$PCGDP)))
+})
+
+
 test_that("anyv, allv and whichv work properly", {
   for(i in seq_along(wlddev)) {
     vec <- .subset2(wlddev, i)
