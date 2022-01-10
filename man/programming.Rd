@@ -1,4 +1,5 @@
 \name{AA2-efficient-programming}
+\alias{AA2-efficient-programming}
 \alias{anyv}
 \alias{allv}
 \alias{allNA}
@@ -43,7 +44,7 @@ allNA(x)                    # Faster than all(is.na(x))
 whichv(x, value,            # Faster than which(x == value)
        invert = FALSE)      # or which(x != value)
 whichNA(x, invert = FALSE)  # Faster than which((!)is.na(x))
-x \%==\% value                # Infix for whichv(v, value, FALSE)
+x \%==\% value                # Infix for whichv(v, value, FALSE), use e.g. in fsubset
 x \%!=\% value                # Infix for whichv(v, value, TRUE)
 alloc(value, n)             # Faster than rep_len(value, n)
 copyv(X, v, R, \dots, invert  # Faster than replace(x, x == v, r) or replace(x, v, r[v])
@@ -135,6 +136,10 @@ whichv(wlddev$country, "Chad", TRUE) # Same as which(wlddev$county != "Chad")
 lvec <- wlddev$country == "Chad"     # If we already have a logical vector...
 whichv(lvec, FALSE)                  # is fastver than which(!lvec)
 rm(lvec)
+
+# Using the \%==\% operator can yield tangible performance gains
+fsubset(wlddev, iso3c \%==\% "DEU") # 3x faster than:
+fsubset(wlddev, iso3c == "DEU")
 
 ## Missing values
 mtc_na <- na_insert(mtcars, 0.15)    # Set 15\% of values missing at random
