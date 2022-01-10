@@ -10,7 +10,7 @@ Fast Factor Generation, Interactions and Vector Grouping
 \description{
 \code{qF}, shorthand for 'quick-factor' implements very fast (ordered) factor generation from atomic vectors using either radix ordering or index hashing.
 
-\code{qG}, shorthand for 'quick-group', generates a kind of factor-light without the levels attribute but instead an attribute providing the number of levels. Optionally the levels / groups can be attached, but without converting them to character. Objects have a class 'qG'.
+\code{qG}, shorthand for 'quick-group', generates a kind of factor-light without the levels attribute but instead an attribute providing the number of levels. Optionally the levels / groups can be attached, but without converting them to character. Objects have a class 'qG'. A multivariate version is provided by the function \code{\link{group}}.
 
 \code{finteraction} generates a factor by interacting multiple vectors or factors. In that process missing values are always replaced with a level and unused levels are always dropped.
 }
@@ -63,7 +63,7 @@ There are two methods of computation: radix ordering and index hashing. Radix or
 Neither \code{qF} nor \code{qG} can reorder groups / factor levels. These objects can however be converted into one another using \code{qF/qG} or the direct method \code{as_factor_qG}, and it is also possible to add a class 'ordered' (\code{ordered = TRUE}) and to create am extra level / integer for missing values (\code{na.exclude = FALSE}). % Apart from that \code{qF} and \code{qG} don't do much to each others objects.
 }
 \seealso{
-\code{\link{groupid}}, \code{\link{GRP}}, \link[=A2-fast-grouping-ordering]{Fast Grouping and Ordering}, \link[=collapse-documentation]{Collapse Overview}
+\code{\link{group}}, \code{\link{groupid}}, \code{\link{GRP}}, \link[=A2-fast-grouping-ordering]{Fast Grouping and Ordering}, \link[=collapse-documentation]{Collapse Overview}
 }
 \examples{
 cylF <- qF(mtcars$cyl)     # Factor from atomic vector
