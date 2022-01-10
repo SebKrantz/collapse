@@ -259,7 +259,7 @@ fFUN_mutate_add_groups <- function(z) {
      # z$use.g.names <- FALSE # Not necessary
 
   } # This works for nested calls (nothing more required, but need to put at the end..)
-  if(is.call(z[[2L]])) return(as.call(lapply(z, fFUN_mutate_add_groups)))
+  if(length(z) > 2L || is.call(z[[2L]])) return(as.call(lapply(z, fFUN_mutate_add_groups))) # Need because:  mpg - fmean(mpg)
   z
 }
 
@@ -272,7 +272,7 @@ gsplit_multi_apply <- function(x, g, ex, encl) {
          function(i) eval(ex, .Call(C_subsetDT, x, i, sx, FALSE), encl)), FALSE, FALSE)
 }
 
-othFUN_compute_mte <- function(x) {
+othFUN_compute <- function(x) {
   if(length(x) == 2L) # No additional function arguments
     return(substitute(unlist(lapply(gsplit(a, .g_), b), FALSE, FALSE),
                       list(a = x[[2L]], b = x[[1L]])))
@@ -285,13 +285,15 @@ othFUN_compute_mte <- function(x) {
 keep_v <- function(d, v) copyMostAttributes(null_rm(.subset(d, unique.default(v))), d)
 
 acr_get_cols <- function(.cols, d, nam, ce) {
-  if(is.null(.cols)) return(seq_along(nam))
+  # Note: .cols is passed through substitute() before it enters here. Thus only an explicit NULL is NULL up front
+  if(is.null(.cols)) return(if(is.null(d[[".g_"]])) seq_along(nam) else seq_along(nam)[nam %!in% c(".g_", d[[".g_"]]$group.vars)])
   nl <- `names<-`(as.vector(seq_along(nam), "list"), nam)
   cols <- eval(.cols, nl, ce)
-  return(if(is.integer(cols)) cols else cols2int(cols, d, nam))
+  # Needed for programming usage, because you can pass a variable that is null
+  if(is.null(cols)) return(if(is.null(d[[".g_"]])) seq_along(nam) else seq_along(nam)[nam %!in% c(".g_", d[[".g_"]]$group.vars)])
+  return(cols2int(cols, d, nam)) # if(is.integer(cols)) cols else (you are checking against length(cols) in setup_across)
 }
 
-# TODO: make this better... what about programming ??
 # TODO: Implement for collap() ??
 acr_get_funs <- function(.fnsexp, .fns) {
 
@@ -300,10 +302,18 @@ acr_get_funs <- function(.fnsexp, .fns) {
     .fns <- `names<-`(list(.fns), namfun)
   } else if(is.list(.fns)) {
     namfun <- names(.fns)
-    nf <- all.vars(.fnsexp)
-    if(length(nf) != length(.fns)) nf <- vapply(.fnsexp[-1L], function(x) l1orlst(all.vars(x)), character(1L), USE.NAMES = FALSE)
-    names(.fns) <- nf
-    if(is.null(namfun)) namfun <- nf
+    # In programming usage, could simply pass a list of functions l, in which case this is not a call..
+    if(is.call(.fnsexp) && (.fnsexp[[1L]] == quote(list) || .fnsexp[[1L]] == quote(c))) { # or we could have funlist[[i]] which is also sorted out here..
+      nf <- all.vars(.fnsexp)
+      if(length(nf) == length(.fns)) {
+        names(.fns) <- nf
+        if(is.null(namfun)) namfun <- nf
+      } else {
+        nf <- vapply(.fnsexp[-1L], function(x) l1orlst(all.vars(x)), character(1L), USE.NAMES = FALSE)
+        names(.fns) <- nf
+        if(is.null(namfun)) namfun <- as.character(seq_along(.fns))
+      }
+    } else if(is.null(namfun)) names(.fns) <- namfun <- as.character(seq_along(.fns))
   } else if(is.character(.fns)) {
     namfun <- names(.fns)
     names(.fns) <- .fns
@@ -314,17 +324,6 @@ acr_get_funs <- function(.fnsexp, .fns) {
   return(list(namfun = namfun, funs = .fns))
 }
 
-#   if(is.function(.fns)) return(`names<-`(list(.fns), as.character(substitute(.fns))))
-#   if(is.character(.fns)) {
-#     namfun <- if(is.null(names(.fns))) .fns else names(.fns)
-#     funs <- if(length(.fns) > 1L) lapply(.fns, match.fun) else list(match.fun(.fns))
-#     names(funs) <- namfun
-#   } else if(is.list(.fns)) {
-#     namfun <- names(.fns)
-#     funs <- .fns
-#     if(is.null(namfun)) names(funs) <- namfun <- all.vars(substitute(.fns))
-#   } else stop(".fns needs to be a function, character vector of function names or list of functions!")
-
 
 fungroup2 <- function(X, ocl) {
   attr(X, "groups") <- NULL
@@ -332,10 +331,10 @@ fungroup2 <- function(X, ocl) {
   X
 }
 
-# Adapted from poorman package
+
 setup_across <- function(.cols, .fnsexp, .fns, .names, .apply, .transpose, .FFUN) {
   pe <- parent.frame(n = 4L)
-  d <- pe$.data # unclass()
+  d <- unclass(pe$.data) # Safer to unclass here also...
   ce <- parent.frame(n = 5L) # Caller environment
   # return(list(.cols, .fns, .names, d))
   nam <- names(d)
@@ -375,7 +374,7 @@ setup_across <- function(.cols, .fnsexp, .fns, .names, .apply, .transpose, .FFUN
     .apply <- switch(.apply, auto = NA, stop(".apply must be 'auto', TRUE or FALSE"))
     aplvec <- names(fun) %!in% .FFUN
   }
-  .data_ <- if(all(aplvec)) .subset(d, cols) else .Call(C_subsetCols, if(length(d[[".g_"]])) fungroup2(d, pe$cld) else `oldClass<-`(d, pe$cld), cols, FALSE)
+  .data_ <- if(all(aplvec)) d[cols] else .Call(C_subsetCols, if(is.null(d[[".g_"]])) `oldClass<-`(d, pe$cld) else fungroup2(d, pe$cld), cols, FALSE)
 
   # Note: Keep the order and the names !!!
   list(data = d,
@@ -388,36 +387,8 @@ setup_across <- function(.cols, .fnsexp, .fns, .names, .apply, .transpose, .FFUN
 
 across <- function(.cols = NULL, .fns, ..., .names = NULL, .apply = "auto", .transpose = "auto") {
   stop("across() can only work inside fmutate() and fsummarise()")
-  # cols <- setup$cols
-  # n_cols <- length(cols)
-  # if (n_cols == 0L) return(data.frame())
-  # funs <- setup$funs
-  # data <- context$get_columns(cols)
-  # names <- setup$names
-  # if (is.null(funs)) {
-  #   data <- data.frame(data)
-  #   if (is.null(names)) {
-  #     return(data)
-  #   } else {
-  #     return(setNames(data, names))
-  #   }
-  # }
-  # n_fns <- length(funs)
-  # res <- vector(mode = "list", length = n_fns * n_cols)
-  # k <- 1L
-  # for (i in seq_len(n_cols)) {
-  #   context$cur_column <- cols[[i]]
-  #   col <- data[[i]]
-  #   for (j in seq_len(n_fns)) {
-  #     res[[k]] <- funs[[j]](col, ...)
-  #     k <- k + 1L
-  #   }
-  # }
-  # if (is.null(names(res))) names(res) <- names
-  # as.data.frame(res)
 }
 
-# TODO: get function environemnt...
 do_across <- function(.cols = NULL, .fns, ..., .names = NULL, .apply = "auto", .transpose = "auto", .eval_funi, .summ = TRUE) {
   # nodots <- missing(...)
   # return(setup_across(substitute(.cols), substitute(.fns), .fns, .names, .apply, .FAST_FUN_MOPS))
@@ -432,6 +403,7 @@ do_across <- function(.cols = NULL, .fns, ..., .names = NULL, .apply = "auto", .
   } else {
     # motivated by: fmutate(mtcars, across(cyl:vs, list(L, D, G), n = 1:3))
     r <- lapply(nf, .eval_funi, setup[[1L]], setup[[2L]], setup[[3L]], setup[[4L]], setup[[5L]], ...) # do.call(lapply, c(list(nf, eval_funi), setup[1:5], list(...))) # lapply(nf, eval_funi, aplvec, funs, nodots, .data_, data, ce, ...)
+    # return(r)
     if(isFALSE(.transpose) || (is.character(.transpose) && !all_eq(vlengths(r, FALSE)))) {
       # stop("reached here")
       res <- unlist(r, FALSE, use.names = TRUE) # need use.names= TRUE here
@@ -442,7 +414,7 @@ do_across <- function(.cols = NULL, .fns, ..., .names = NULL, .apply = "auto", .
         names(res) <- unlist(t_list2(lapply(r, names)), FALSE, FALSE)
     }
   }
-  if(.summ) return(res)
+  if(.summ) return(if(is.null(names)) res else `names<-`(res, names))
   return(`[<-`(setup$data, if(is.null(names)) names(res) else names, value = res))
 }
 
@@ -540,7 +512,6 @@ dots_apply_grouped_bulk <- function(d, g, f, dots) {
 }
 
 
-# TODO: startsWith !!!
 mutate_funi_grouped <- function(i, data, .data_, funs, aplvec, ce, ...) {
   g <- data[[".g_"]]
   .FUN_ <- funs[[i]]
@@ -566,6 +537,7 @@ mutate_funi_grouped <- function(i, data, .data_, funs, aplvec, ce, ...) {
   } else { # stop("In grouped computations, .apply = FALSE only works with .FAST_FUN and .OPERATOR_FUN")
     value <- dots_apply_grouped_bulk(.data_, g, .FUN_, if(missing(...)) NULL else eval(substitute(list(...)), data, ce))
     value <- .Call(C_rbindlist, unclass(value), FALSE, FALSE, NULL)
+    oldClass(value) <- NULL
   }
   lv <- vlengths(value, FALSE)
   nr <- length(data[[1L]])
@@ -580,19 +552,32 @@ mutate_funi_grouped <- function(i, data, .data_, funs, aplvec, ce, ...) {
 }
 
 
+do_grouped_expr <- function(ei, eiv, .data, g, pe) {
+  v <- all.vars(ei)
+  if(length(v) > 1L) {
+    # Could include global environemntal variables e.g. fmutate(data, new = mean(var) + q)
+    namd <- names(.data)
+    if(length(wv <- na_rm(match(v, namd))) > 1L) return(gsplit_multi_apply(.data[wv], g, ei, pe))
+    return(gsplit_single_apply(.data[[wv]], g, ei, namd[wv], pe))
+  }
+  if(length(eiv) == 2L) return(copyMostAttributes(eval(othFUN_compute(ei), .data, pe), .data[[v]]))
+  gsplit_single_apply(.data[[v]], g, ei, v, pe)
+}
+
+
 # TODO: Preserves attributes ?? what about ftransform??
 fmutate <- function(.data, ..., .keep = "all") {
   if(!is.list(.data)) stop(".data needs to be a list of equal length columns or a data.frame")
-  namdata <- attr(.data, "names")
-  if(!length(namdata) || fanyDuplicated(namdata)) stop("All columns of .data have to be uniquely named")
   e <- substitute(list(...))
   nam <- names(e)
   nullnam <- is.null(nam)
   # if(!length(nam)) stop("All replacement expressions have to be named")
-  nr <- length(.subset2(.data, 1L))
   pe <- parent.frame()
-  cld <- oldClass(.data)
+  cld <- oldClass(.data) # This needs to be called cld, because across fetches it from here !!
   oldClass(.data) <- NULL
+  nr <- length(.data[[1L]])
+  namdata <- names(.data)
+  if(is.null(namdata) || fanyDuplicated(namdata)) stop("All columns of .data have to be uniquely named")
   if(!is.character(.keep)) .keep <- cols2char(.keep, .data, namdata) # allowing .keep to be NULL
   gdfl <- any(cld == "grouped_df")
   if(gdfl) {
@@ -606,7 +591,7 @@ fmutate <- function(.data, ..., .keep = "all") {
         ei$.eval_funi <- quote(mutate_funi_grouped)
         ei$.summ <- FALSE
         # return(eval(ei, enclos = pe))
-        .data <- eval(ei, enclos = pe) # ftransform_core(.data, eval(ei, pe))
+        .data <- eval(ei, list(do_across = do_across, mutate_funi_grouped = mutate_funi_grouped), pe) # ftransform_core(.data, eval(ei, pe))
       } else { # Tagged vector expressions
         if(is.null(ei)) {
           .data[[nam[i]]] <- NULL
@@ -616,10 +601,7 @@ fmutate <- function(.data, ..., .keep = "all") {
         if(any(eiv %in% .FAST_FUN_MOPS)) {
           .data[[nam[i]]] <- eval(fFUN_mutate_add_groups(ei), .data, pe)
         } else {
-          v <- all.vars(ei) # Note: Still issue with copyMostAttrib for othFUN_compute when collapse is not attached...
-          r <- if(length(v) > 1L) gsplit_multi_apply(.data[v], g, ei, pe) else if(length(eiv) == 2L)
-                copyMostAttributes(eval(othFUN_compute_mte(ei), .data, pe), .data[[v]]) else
-                gsplit_single_apply(.data[[v]], g, ei, v, pe)
+          r <- do_grouped_expr(ei, eiv, .data, g, pe)
           .data[[nam[i]]] <- if(length(r) == g[[1L]])
                .Call(C_subsetVector, r, g[[2L]], FALSE) else # .Call(Cpp_TRA, .data[[v]], r, g[[2L]], 1L) # Faster than simple subset r[g[[2L]] ??]
                greorder(r, g) # r[forder.int(forder.int(g[[2L]]))] # Seems twice is necessary...
@@ -636,7 +618,7 @@ fmutate <- function(.data, ..., .keep = "all") {
         ei$.eval_funi <- quote(mutate_funi_simple)
         ei$.summ <- FALSE
         # return(eval(ei, enclos = pe))
-        .data <- eval(ei, enclos = pe) # ftransform_core(.data, eval(ei, enclos = pe))
+        .data <- eval(ei, list(do_across = do_across, mutate_funi_simple = mutate_funi_simple), pe) # ftransform_core(.data, eval(ei, enclos = pe))
       } else { # Tagged vector expressions
         r <- eval(ei, .data, pe)
         if(!is.null(r)) { # don't use length(), because only NULL removes list elements...
@@ -648,20 +630,21 @@ fmutate <- function(.data, ..., .keep = "all") {
     }
   }
   # Implementing .keep argument
+  # TODO: Implement .keep with across...
   .data <- if(length(.keep) > 1L) keep_v(.data, c(.keep, nam[-1L])) else
     switch(.keep,
            all = .data,
-           used = keep_v(.data, c(if(gdfl) g$group.vars, unlist(lapply(e[-1L], all.vars), FALSE, FALSE), nam[-1L])),
-           unused = keep_v(.data, c(if(gdfl) g$group.vars, fsetdiff(namdata, unlist(lapply(e[-1L], all.vars), FALSE, FALSE)), nam[-1L])),
-           none = keep_v(.data, c(if(gdfl) g$group.vars, nam[-1L])),
+           used = keep_v(.data, c(namdata[namdata %in% c(if(gdfl) g$group.vars, unlist(lapply(e[-1L], all.vars), FALSE, FALSE), nam[-1L])], nam[-1L])),
+           unused = keep_v(.data, c(namdata[namdata %in% c(if(gdfl) g$group.vars, fsetdiff(namdata, unlist(lapply(e[-1L], all.vars), FALSE, FALSE)), nam[-1L])], nam[-1L])),
+           none = keep_v(.data, c(if(gdfl) g$group.vars, nam[-1L])), # g$group.vars[g$group.vars %!in% nam[-1L]] -> inconsistent and inefficient...
            keep_v(.data, c(.keep, nam[-1L])))
 
   oldClass(.data) <- cld
   return(condalc(.data, any(cld == "data.table")))
 }
 
-# TODO: Works ???
-mte <- function(.data, ...) fmutate(.data, ...)
+# or mte? ()
+mut <- function(.data, ...) fmutate(.data, ...)
 
 
 

@@ -12,7 +12,7 @@ fFUN_smr_add_groups <- function(z) {
     z$g <- quote(.g_)
     z$use.g.names <- FALSE
   } # This works for nested calls (nothing more required, but need to put at the end..)
-  if(is.call(z[[2L]])) return(as.call(lapply(z, fFUN_smr_add_groups)))
+  if(length(z) > 2L || is.call(z[[2L]])) return(as.call(lapply(z, fFUN_smr_add_groups)))
   z
 }
 # Works: fFUN_smr_add_groups(quote(mean(fmax(min(fmode(mpg))))/fmean(mpg) + fsd(hp) + sum(bla) / 20))
@@ -28,7 +28,9 @@ fFUN_smr_add_groups <- function(z) {
 #              list(a = lapply_call, b = x[[2L]]))
 # }
 
+# Note: Need unclass here because of t_list() in do_across(), which only works if also the interior of the list is a list!
 smr_funi_simple <- function(i, data, .data_, funs, aplvec, ce, ...) {
+  # return(list(i = i, data = data, .data_ = .data_, funs = funs, aplvec = aplvec, ce = ce))
   .FUN_ <- funs[[i]]
   if(aplvec[i]) {
     value <- if(missing(...)) lapply(unattrib(.data_), .FUN_) else
@@ -64,6 +66,7 @@ smr_funi_grouped <- function(i, data, .data_, funs, aplvec, ce, ...) {
   } else {
     value <- dots_apply_grouped_bulk(.data_, g, .FUN_, if(missing(...)) NULL else eval(substitute(list(...)), data, ce))
     value <- .Call(C_rbindlist, unclass(value), FALSE, FALSE, NULL)
+    oldClass(value) <- NULL
   }
   return(value) # Again checks are done below
 }
@@ -74,17 +77,18 @@ smr_funi_grouped <- function(i, data, .data_, funs, aplvec, ce, ...) {
 fsummarise <- function(.data, ..., keep.group_vars = TRUE) {
   if(!is.list(.data)) stop(".data needs to be a list of equal length columns or a data.frame")
   e <- substitute(list(...))
-  pe <- parent.frame()
-  cld <- oldClass(.data)
   nam <- names(e)
   nullnam <- is.null(nam)
+  pe <- parent.frame()
+  cld <- oldClass(.data) # This needs to be called cld, because across fetches it from here !!
 
-  # With groups ...
   if(any(cld == "grouped_df")) {
     oldClass(.data) <- NULL
     g <- GRP.grouped_df(.data, call = FALSE)
+    attr(.data, "groups") <- NULL
+    ax <- attributes(.data)
+    ax[["class"]] <- fsetdiff(cld, c("GRP_df", "grouped_df"))
     .data[[".g_"]] <- g
-    ax <- attributes(fungroup2(.data, cld))
     res <- vector("list", length(e))
     for(i in 2:length(e)) { # This is good and very fast
       ei <- e[[i]]
@@ -92,21 +96,13 @@ fsummarise <- function(.data, ..., keep.group_vars = TRUE) {
         if(ei[[1L]] != quote(across) && ei[[1L]] != quote(acr)) stop("expressions need to be named or start with across(), or its shorthand acr().")
         ei[[1L]] <- quote(do_across)
         ei$.eval_funi <- quote(smr_funi_grouped)
-        # return(eval(ei, enclos = pe))
-        res[[i]] <- eval(ei, enclos = pe)
+        # return(eval(ei, list(do_across = do_across, smr_funi_grouped = smr_funi_grouped), pe))
+        res[[i]] <- eval(ei, list(do_across = do_across, smr_funi_grouped = smr_funi_grouped), pe)
       } else { # Tagged vector expressions
         eiv <- all.vars(ei, functions = TRUE)
-        if(any(startsWith(eiv, .FAST_STAT_FUN_POLD))) {
-          res[[i]] <- list(eval(fFUN_smr_add_groups(ei), .data, pe))
-        } else {
-          v <- all.vars(ei) # Note: Still issue with copyMostAttrib for othFUN_compute when collapse is not attached...
-          res[[i]] <- list(if(length(v) > 1L) gsplit_multi_apply(.data[v], g, ei, pe) else if(length(eiv) == 2L)
-                       copyMostAttributes(eval(othFUN_compute_mte(ei), .data, pe), .data[[v]]) else
-                       gsplit_single_apply(.data[[v]], g, ei, v, pe))
-        }
-      # Old, simple soltion:
-      # e[[i]] <- if(any(startsWith(as.character(ei[[1L]]), .FAST_STAT_FUN_POLD))) # could pass collapse::flast.default etc..
-      #             fFUN_add_groups(ei) else othFUN_compute(ei)
+        res[[i]] <- list(if(any(eiv %in% .FAST_STAT_FUN_POLD))  # startsWith(eiv, .FAST_STAT_FUN_POLD) Note: startsWith does not reliably capture expressions e.g. e <- quote(list(b = fmean(log(mpg)) + max(qsec))) does not work !!
+                         eval(fFUN_smr_add_groups(ei), .data, pe) else
+                         do_grouped_expr(ei, eiv, .data, g, pe))
       }
     }
     names(res) <- nam
@@ -116,13 +112,14 @@ fsummarise <- function(.data, ..., keep.group_vars = TRUE) {
     if(!all_eq(lr <- vlengths(res, FALSE))) {
       if(!keep.group_vars) stop("all computations need to result in vectors of equal length")
       gi <- seq_along(g$group.vars)
-      ef <- lr[gi+1L] / g[[1L]]
-      if(!all_eq(lr[-gi]) || ef %% 1L > 0) stop("all computations need to result in vectors of equal length")
+      ef <- lr[length(gi)+1L] / g[[1L]]
+      if(!all_eq(lr[-gi]) || ef %% 1 > 0) stop("all computations need to result in vectors of equal length")
       res[gi] <- .Call(C_subsetDT, res[gi], rep(seq_len(g[[1L]]), each = ef), gi, FALSE) # Using C_subsetvector is not really faster... (1-2 microseconds gain)
     }
   } else {
     # Without groups...
     ax <- attributes(.data)
+    oldClass(.data) <- NULL # Not strictrly needed but just to make sure execution is efficient in across etc..
     if(nullnam || sum(!nzchar(nam)) > 1L) { # Likely Across statement...
       for(i in 2:length(e)) {
         ei <- e[[i]]
@@ -133,6 +130,7 @@ fsummarise <- function(.data, ..., keep.group_vars = TRUE) {
           e[[i]] <- ei
         } else e[[i]] <- as.call(list(quote(list), ei))
       }
+      # return(eval(e, c(.data, list(.do_across = do_across, .smr_funi_simple = smr_funi_simple)), pe))
       res <- unlist(eval(e, c(.data, list(.do_across = do_across, .smr_funi_simple = smr_funi_simple)), pe), FALSE, use.names = TRUE)
     } else res <- eval(e, .data, pe)
     # return(res)
