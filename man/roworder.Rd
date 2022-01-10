@@ -12,7 +12,7 @@ A fast substitute for \code{dplyr::arrange}. It returns a sorted copy of the dat
 roworder(X, \dots, na.last = TRUE)
 
 roworderv(X, cols = NULL, neworder = NULL, decreasing = FALSE,
-          na.last = TRUE, pos = c("front","end","exchange"))
+          na.last = TRUE, pos = "front")
 }
 %- maybe also 'usage' for other objects documented here.
 \arguments{
@@ -27,6 +27,8 @@ roworderv(X, cols = NULL, neworder = NULL, decreasing = FALSE,
                  1 \tab\tab "front"   \tab\tab move rows in \code{neworder} to the front (top) of \code{X} (the default). \cr
                  2 \tab\tab "end" \tab\tab move rows in \code{neworder} to the end (bottom) of \code{X}. \cr
                  3 \tab\tab "exchange"   \tab\tab just exchange the order of rows in \code{neworder}, other rows remain in the same position. \cr
+                 4 \tab\tab "after"  \tab\tab place all further selected rows behind the first selected row. \cr
+
   }
   }
 

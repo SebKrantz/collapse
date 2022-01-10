@@ -15,6 +15,7 @@ roworder <- function(X, ..., na.last = TRUE) {
 posord <- function(sq, o, pos) switch(pos,
                                       front = c(o, sq[-o]),
                                       end = c(sq[-o], o),
+                                      exchange = `[<-`(sq, o[forder.int(o)], value = o),
                                       after = {
                                         if(length(o) == 1L) stop('Need o supply at least 2 columns if pos = "after"')
                                         om1 <- o[-1L]
@@ -22,8 +23,7 @@ posord <- function(sq, o, pos) switch(pos,
                                         w1 <- whichv(smo, o[1L])
                                         c(smo[1L:w1], om1, smo[(w1+1L):length(smo)])
                                       },
-                                      exchange = `[<-`(sq, o[forder.int(o)], value = o),
-                                      stop("pos must be 'front', 'end', 'after' or 'exchange'."))
+                                      stop("pos must be 'front', 'end', 'exchange' or 'after'."))
 
 roworderv <- function(X, cols = NULL, neworder = NULL, decreasing = FALSE, na.last = TRUE, pos = "front") {
   if(is.null(neworder)) {
