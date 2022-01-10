@@ -21,9 +21,10 @@ fsubset.matrix <- function(x, subset, ..., drop = FALSE) {
 
 # No lazy eval
 ss <- function(x, i, j) {
-  if(is.atomic(x)) if(is.array(x)) return(if(missing(j)) x[i, , drop = FALSE] else x[i, j, drop = FALSE]) else return(x[i])
+  if(is.atomic(x)) if(is.matrix(x)) return(if(missing(j)) x[i, , drop = FALSE] else if(missing(i)) x[, j, drop = FALSE] else x[i, j, drop = FALSE]) else return(x[i])
   mj <- missing(j)
-  if(mj) j <- seq_along(unclass(x)) else if(is.integer(j)) {
+  if(mj) j <- seq_along(unclass(x)) else if(is.integer(j)) { # if(missing(i)) stop("Need to supply either i or j or both")
+    if(missing(i)) return(.Call(C_subsetCols, x, j, TRUE))
     if(any(j < 0L)) j <- seq_along(unclass(x))[j]
   } else {
     if(is.character(j)) {
@@ -34,6 +35,7 @@ ss <- function(x, i, j) {
     } else if(is.numeric(j)) {
      j <- if(any(j < 0)) seq_along(unclass(x))[j] else as.integer(j)
     } else stop("j needs to be supplied integer indices, character column names, or a suitable logical vector")
+    if(missing(i)) return(.Call(C_subsetCols, x, j, TRUE))
   }
   checkrows <- TRUE
   if(!is.integer(i)) {
