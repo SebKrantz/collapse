@@ -436,9 +436,9 @@ GRP.grouped_df <- function(X, ..., return.groups = TRUE, call = TRUE) {
   return(`oldClass<-`(list(N.groups = ng, # The C code here speeds up things a lot !!
                         group.id = .Call(C_groups2GRP, gr, fnrow2(X), gs),  # Old: rep(seq_len(ng), gs)[order(unlist(gr, FALSE, FALSE))], # .Internal(radixsort(TRUE, FALSE, FALSE, TRUE, .Internal(unlist(gr, FALSE, FALSE))))
                         group.sizes = gs,
-                        groups = if(return.groups) g[-lg] else NULL, # better reclass afterwards ?
+                        groups = if(return.groups) g[-lg] else NULL, # better reclass afterwards ? -> Nope, this is only used in internal codes...
                         group.vars = names(g)[-lg],
-                        ordered = c(TRUE, TRUE),
+                        ordered = c(TRUE, NA), # Important to have NA here, otherwise wrong result in gsplit (wrong optimization)
                         order = NULL, # starts = NULL, maxgrpn = NULL,
                         call = if(call) match.call() else NULL), "GRP"))
 }
