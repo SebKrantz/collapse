@@ -604,8 +604,8 @@ funique.default <- function(x, sort = FALSE, method = "auto", ...) {
   # if(!missing(...)) unused_arg_action(match.call(), ...)
   if(is.array(x)) stop("funique currently only supports atomic vectors and data.frames")
   switch(method,
-         auto = if(is.numeric(x) && length(x) > 500L) radixuniquevec(x, sort, ...) else
-           .Call(Cpp_funique, x, sort),
+         auto = if(sort && is.numeric(x) && length(x) > 500L) radixuniquevec(x, sort, ...) else
+                .Call(Cpp_funique, x, sort),
          radix = radixuniquevec(x, sort, ...),
          hash = .Call(Cpp_funique, x, sort)) # , ... adding dots gives error message too strict, package default is warning..
 }
@@ -619,7 +619,7 @@ funique.data.frame <- function(x, cols = NULL, sort = FALSE, method = "auto", ..
        switchGRP(colsubset(x, cols), starts = TRUE, sort = sort, use.group = use.group, ...) # if(is.call(by)) .subset(x, ckmatch(attr(x, "names"), all.vars(by)))
   if((use.group && length(o) == attr(o, "N.groups")) || (!use.group && attr(o, "maxgrpn") == 1L && (!sort || attr(o, "sorted")))) # return(x)
      return(if(inherits(x, "data.table")) alc(x) else x)
-  st <- if(use.group || attr(o, "sorted")) attr(o, "starts") else o[attr(o, "starts")]
+  st <- if(use.group || attr(o, "sorted")) attr(o, "starts") else .Call(C_subsetVector, o, attr(o, "starts"), FALSE)
   rn <- attr(x, "row.names")
   if(is.numeric(rn) || is.null(rn) || rn[1L] == "1") return(.Call(C_subsetDT, x, st, seq_along(unclass(x)), FALSE))
   return(`attr<-`(.Call(C_subsetDT, x, st, seq_along(unclass(x)), FALSE), "row.names", rn[st]))
@@ -633,7 +633,7 @@ funique.sf <- function(x, cols = NULL, sort = FALSE, method = "auto", ...) {
                             cols2int(cols, x, attr(x, "names"), FALSE)
   o <- switchGRP(.subset(x, cols), starts = TRUE, sort = sort, use.group = use.group, ...)
   if((use.group && length(o) == attr(o, "N.groups")) || (!use.group && attr(o, "maxgrpn") == 1L && (!sort || attr(o, "sorted")))) return(x)
-  st <- if(use.group || attr(o, "sorted")) attr(o, "starts") else o[attr(o, "starts")]
+  st <- if(use.group || attr(o, "sorted")) attr(o, "starts") else .Call(C_subsetVector, o, attr(o, "starts"), FALSE)
   rn <- attr(x, "row.names")
   if(is.numeric(rn) || is.null(rn) || rn[1L] == "1") return(.Call(C_subsetDT, x, st, seq_along(unclass(x)), FALSE))
   return(`attr<-`(.Call(C_subsetDT, x, st, seq_along(unclass(x)), FALSE), "row.names", rn[st]))
