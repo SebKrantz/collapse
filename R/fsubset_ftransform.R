@@ -297,7 +297,7 @@ acr_get_cols <- function(.cols, d, nam, ce) {
 }
 
 # TODO: Implement for collap() ??
-acr_get_funs <- function(.fnsexp, .fns) {
+acr_get_funs <- function(.fnsexp, .fns, ce) {
 
   if(is.function(.fns)) {
     namfun <- l1orlst(as.character(.fnsexp))
@@ -319,7 +319,7 @@ acr_get_funs <- function(.fnsexp, .fns) {
   } else if(is.character(.fns)) {
     namfun <- names(.fns)
     names(.fns) <- .fns
-    .fns <- lapply(.fns, match.fun)
+    .fns <- lapply(.fns, get, mode = "function", envir = ce) # lapply(.fns, match.fun())
     if(is.null(namfun)) namfun <- names(.fns)
   } else stop(".fns must be a fucntion, list of functions or character vector of function names")
 
@@ -341,7 +341,7 @@ setup_across <- function(.cols, .fnsexp, .fns, .names, .apply, .transpose, .FFUN
   # return(list(.cols, .fns, .names, d))
   nam <- names(d)
   cols <- acr_get_cols(.cols, d, nam, ce)
-  funs <- acr_get_funs(.fnsexp, .fns)
+  funs <- acr_get_funs(.fnsexp, .fns, ce)
   namfun <- funs$namfun
   fun <- funs$funs
 
