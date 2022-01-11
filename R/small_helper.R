@@ -68,7 +68,15 @@ gsplit <- function(x = NULL, g, use.g.names = FALSE, ...) {
 greorder <- function(x, g) .Call(C_greorder, x, g)
 
 getenvFUN <- function(nam, efmt1 = "For this method need to install.packages('%s'), then unload [detach('package:collapse', unload = TRUE)] and reload [library(collapse)].")
-  if(is.null(FUN <- .collapse_env[[nam]])) stop(sprintf(efmt1, strsplit(nam, "_", fixed = TRUE)[[1L]][1L])) else FUN
+{
+  if(is.null(FUN <- .collapse_env[[nam]])) {
+    v <- strsplit(nam, "_", fixed = TRUE)[[1L]]
+    .collapse_env[[nam]] <- FUN <- if(requireNamespace(v[1L], quietly = TRUE))
+           get0(v[2L], envir = getNamespace(v[1L])) else NULL
+    if(is.null(FUN)) stop(sprintf(efmt1, v[1L]))
+  }
+  FUN
+}
 
 
 # qM2 <- function(x) if(is.list(x)) do.call(cbind, x) else x

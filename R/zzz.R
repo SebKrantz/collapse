@@ -8,25 +8,26 @@
   # https://stackoverflow.com/questions/49056642/r-how-to-make-variable-available-to-namespace-at-loading-time?noredirect=1&lq=1
   .collapse_env <- new.env()
 
-  suppressMessages({
-
-  .collapse_env$fixest_demean <-
-        if(requireNamespace("fixest", quietly = TRUE)) # fixest::demean else NULL
-           get0("demean", envir = getNamespace("fixest")) else NULL
-
-  .collapse_env$weights_wtd.cors <-
-        if(requireNamespace("weights", quietly = TRUE)) # weights::wtd.cors else NULL
-           get0("wtd.cors", envir = getNamespace("weights")) else NULL
-
-  .collapse_env$RcppArmadillo_fastLm <-
-         if(requireNamespace("RcppArmadillo", quietly = TRUE)) # RcppArmadillo::fastLmPure else NULL
-           get0("fastLmPure", envir = getNamespace("RcppArmadillo")) else NULL # _RcppArmadillo_fastLm_impl
-
-  .collapse_env$RcppEigen_fastLm <-
-         if(requireNamespace("RcppEigen", quietly = TRUE)) # RcppEigen::fastLmPure else NULL
-           get0("fastLmPure", envir = getNamespace("RcppEigen")) else NULL # RcppEigen_fastLm_Impl
-
-  })
+  # This slows down th eloading of collapse too much. Therefore we load those when needed.
+  # suppressMessages({
+  #
+  # .collapse_env$fixest_demean <-
+  #       if(requireNamespace("fixest", quietly = TRUE)) # fixest::demean else NULL
+  #          get0("demean", envir = getNamespace("fixest")) else NULL
+  #
+  # .collapse_env$weights_wtd.cors <-
+  #       if(requireNamespace("weights", quietly = TRUE)) # weights::wtd.cors else NULL
+  #          get0("wtd.cors", envir = getNamespace("weights")) else NULL
+  #
+  # .collapse_env$RcppArmadillo_fastLm <-
+  #        if(requireNamespace("RcppArmadillo", quietly = TRUE)) # RcppArmadillo::fastLmPure else NULL
+  #          get0("fastLmPure", envir = getNamespace("RcppArmadillo")) else NULL # _RcppArmadillo_fastLm_impl
+  #
+  # .collapse_env$RcppEigen_fastLm <-
+  #        if(requireNamespace("RcppEigen", quietly = TRUE)) # RcppEigen::fastLmPure else NULL
+  #          get0("fastLmPure", envir = getNamespace("RcppEigen")) else NULL # RcppEigen_fastLm_Impl
+  #
+  # })
 
   clpns <- parent.env(environment())
   assign(".collapse_env", .collapse_env, envir = clpns)
