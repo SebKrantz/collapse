@@ -215,22 +215,30 @@ SEXP funiqueCpp(SEXP x, bool sort = true) {
   case STRSXP: return funiqueImpl<STRSXP>(x, sort);
   case LGLSXP: {
     LogicalVector xl = x;
-    LogicalVector nd(3);
-    int ndc = 0;
-    for(int i = xl.size(); i--; ) {
+    std::vector<int> nd(3);
+    int ndc = 0, l = xl.size();
+    for(int i = 0; i != l; ++i) {
       if(!nd[2] && xl[i] == NA_LOGICAL) {
-        nd[2] = true;
-        ++ndc;
+        nd[2] = ++ndc;
       } else if(!nd[1] && xl[i]) {
-        nd[1] = true;
-        ++ndc;
+        nd[1] = ++ndc;
       } else if(!nd[0]) {
-        nd[0] = true;
-        ++ndc;
+        nd[0] = ++ndc;
       }
       if(ndc == 3) break;
     }
-    LogicalVector out = LogicalVector::create(false, true, NA_LOGICAL)[nd];
+    LogicalVector out = no_init_vector(ndc);
+    if(sort) {
+      int j = 0;
+      if(nd[0]) out[j++] = false;
+      if(nd[1]) out[j++] = true;
+      if(nd[2]) out[j] = NA_LOGICAL;
+    } else {
+      if(nd[0]) out[nd[0]-1] = false;
+      if(nd[1]) out[nd[1]-1] = true;
+      if(nd[2]) out[nd[2]-1] = NA_LOGICAL;
+    }
+    // LogicalVector::create(false, true, NA_LOGICAL)[nd];
     Rf_copyMostAttrib(x, out);
     return out;
   }
