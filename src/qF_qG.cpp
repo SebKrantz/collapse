@@ -46,7 +46,7 @@ SEXP qFCpp(SEXP x, bool ordered = true, bool na_exclude = true, bool keep_attr =
       for(int i = 0; i != l; ++i) {
         if(xl[i] == NA_LOGICAL) {
           out[i] = NA_INTEGER;
-        } else if(xl[i]) {
+        } else if(xl[i] == true) {
           out[i] = 2;
           nd[1] = true;
         } else {
@@ -60,7 +60,7 @@ SEXP qFCpp(SEXP x, bool ordered = true, bool na_exclude = true, bool keep_attr =
         if(xl[i] == NA_LOGICAL) {
           out[i] = 3;
           nd[2] = true;
-        } else if(xl[i]) {
+        } else if(xl[i] == true) {
           out[i] = 2;
           nd[1] = true;
         } else {
@@ -215,28 +215,27 @@ SEXP funiqueCpp(SEXP x, bool sort = true) {
   case STRSXP: return funiqueImpl<STRSXP>(x, sort);
   case LGLSXP: {
     LogicalVector xl = x;
-    std::vector<int> nd(3);
-    int ndc = 0, l = xl.size();
+    int nc = 0, n0 = 0, n1 = 0, n2 = 0, l = xl.size();
     for(int i = 0; i != l; ++i) {
-      if(!nd[2] && xl[i] == NA_LOGICAL) {
-        nd[2] = ++ndc;
-      } else if(!nd[1] && xl[i]) {
-        nd[1] = ++ndc;
-      } else if(!nd[0]) {
-        nd[0] = ++ndc;
+      if(n2 == 0 && xl[i] == NA_LOGICAL) {
+        n2 = ++nc;
+      } else if(n1 == 0 && xl[i] == true) {
+        n1 = ++nc;
+      } else if(n0 == 0 && xl[i] == false) {
+        n0 = ++nc;
       }
-      if(ndc == 3) break;
+      if(nc == 3) break;
     }
-    LogicalVector out = no_init_vector(ndc);
+    LogicalVector out = no_init_vector(nc);
     if(sort) {
-      int j = 0;
-      if(nd[0]) out[j++] = false;
-      if(nd[1]) out[j++] = true;
-      if(nd[2]) out[j] = NA_LOGICAL;
+      nc = 0;
+      if(n0) out[nc++] = false;
+      if(n1) out[nc++] = true;
+      if(n2) out[nc] = NA_LOGICAL;
     } else {
-      if(nd[0]) out[nd[0]-1] = false;
-      if(nd[1]) out[nd[1]-1] = true;
-      if(nd[2]) out[nd[2]-1] = NA_LOGICAL;
+      if(n0) out[n0-1] = false;
+      if(n1) out[n1-1] = true;
+      if(n2) out[n2-1] = NA_LOGICAL;
     }
     // LogicalVector::create(false, true, NA_LOGICAL)[nd];
     Rf_copyMostAttrib(x, out);
