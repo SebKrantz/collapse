@@ -20,7 +20,7 @@ IntegerVector qFCppImpl(const Vector<RTYPE>& x, bool ordered, bool na_exclude, b
     } else { // returnin a qG
       out.attr("N.groups") = int(levs.size());
       if(ret == 3) {
-        DUPLICATE_ATTRIB(levs, x);
+        Rf_copyMostAttrib(x, levs);
         out.attr("groups") = levs;
       }
       Rf_classgets(out, (ordered && !na_exclude) ? CharacterVector::create("ordered","qG","na.included") :
@@ -90,7 +90,7 @@ SEXP qFCpp(SEXP x, bool ordered = true, bool na_exclude = true, bool keep_attr =
       out.attr("N.groups") = int(nd[0]+nd[1]+nd[2]);
       if(ret == 3) {
         LogicalVector groups = LogicalVector::create(false, true, NA_LOGICAL)[nd];
-        DUPLICATE_ATTRIB(groups, x);
+        Rf_copyMostAttrib(x, groups);
         out.attr("groups") = groups;
       }
       Rf_classgets(out, (ordered && !na_exclude) ? CharacterVector::create("ordered","qG","na.included") :
@@ -144,13 +144,11 @@ template <int RTYPE>
 Vector<RTYPE> funiqueImpl(const Vector<RTYPE>& x, bool sort) {
   if(sort) {
     Vector<RTYPE> out = sort_unique(x);
-    DUPLICATE_ATTRIB(out, x);
-    Rf_setAttrib(out, R_NamesSymbol, R_NilValue);
+    Rf_copyMostAttrib(x, out);
     return out;
   } else {
     Vector<RTYPE> out = uniqueord<RTYPE>(x);
-    DUPLICATE_ATTRIB(out, x);
-    Rf_setAttrib(out, R_NamesSymbol, R_NilValue);
+    Rf_copyMostAttrib(x, out);
     return out;
   }
 }
@@ -178,7 +176,7 @@ IntegerVector funiqueFACT(const IntegerVector& x, bool sort = true) {
     if(!countNA) out[k-1] = NA_INTEGER;
     k = 0;
     for(int i = 1; i != nlevp; ++i) if(!not_seen[i]) out[k++] = i;
-    DUPLICATE_ATTRIB(out, x);
+    Rf_copyMostAttrib(x, out);
     return out;
   } else {
     IntegerVector uxp = no_init_vector(nlevp);
@@ -193,7 +191,7 @@ IntegerVector funiqueFACT(const IntegerVector& x, bool sort = true) {
       if(not_seen[x[i]]) {
         uxp[k++] = x[i];
         if(k == nlevp) {
-          DUPLICATE_ATTRIB(uxp, x);
+          Rf_copyMostAttrib(x, uxp);
           return uxp;
         }
         not_seen[x[i]] = false;
@@ -201,7 +199,7 @@ IntegerVector funiqueFACT(const IntegerVector& x, bool sort = true) {
     }
     IntegerVector out = no_init_vector(k);
     for(int i = 0; i != k; ++i) out[i] = uxp[i];
-    DUPLICATE_ATTRIB(out, x);
+    Rf_copyMostAttrib(x, out);
     return out;
   }
 }
@@ -233,8 +231,7 @@ SEXP funiqueCpp(SEXP x, bool sort = true) {
       if(ndc == 3) break;
     }
     LogicalVector out = LogicalVector::create(false, true, NA_LOGICAL)[nd];
-    DUPLICATE_ATTRIB(out, x);
-    Rf_setAttrib(out, R_NamesSymbol, R_NilValue);
+    Rf_copyMostAttrib(x, out);
     return out;
   }
   default: stop("Not Supported SEXP Type");
