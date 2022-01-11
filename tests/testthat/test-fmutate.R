@@ -1,251 +1,254 @@
 context("fsummarise and fmutate")
 
-library(dplyr)
+bmean <- base::mean
+bsum <- base::sum
+bsd <- stats::sd
+bmax <- base::max
 
-mtc <- as_tibble(mtcars)
-gmtc <- group_by(mtc, cyl, vs, am)
+mtc <- dplyr::as_tibble(mtcars)
+gmtc <- dplyr::group_by(mtc, cyl, vs, am)
 
 expect_equal(gsplit(mtcars$mpg, GRP(gmtc), TRUE), split(mtcars$mpg, as_factor_GRP(GRP(gmtc))))
 
 
-test_that("fsummarise works like summarise for tagged vector expressions", {
+test_that("fsummarise works like dplyr::summarise for tagged vector expressions", {
 
  # Simple computations
- expect_equal(smr(mtc, mu = mean(mpg), sigma = sd(mpg)), summarise(mtc, mu = mean(mpg), sigma = sd(mpg)))
+ expect_equal(smr(mtc, mu = bmean(mpg), sigma = bsd(mpg)), dplyr::summarise(mtc, mu = bmean(mpg), sigma = bsd(mpg)))
  # TODO: Could expand like this as well... but who needs this?
- # expect_false(all_obj_equal(smr(mtc, mu = mean(mpg), sigma = sd(mpg), q = quantile(mpg)),
- #                            summarise(mtc, mu = mean(mpg), sigma = sd(mpg), q = quantile(mpg))))
+ # expect_false(all_obj_equal(smr(mtc, mu = bmean(mpg), sigma = bsd(mpg), q = quantile(mpg)),
+ #                            dplyr::summarise(mtc, mu = bmean(mpg), sigma = bsd(mpg), q = quantile(mpg))))
 
- expect_equal(smr(mtc, mu = mean(mpg) + sd(mpg)), summarise(mtc, mu = mean(mpg) + sd(mpg)))
- expect_equal(smr(mtc, mu = mean(mpg) + 3), summarise(mtc, mu = mean(mpg) + 3))
+ expect_equal(smr(mtc, mu = bmean(mpg) + bsd(mpg)), dplyr::summarise(mtc, mu = bmean(mpg) + bsd(mpg)))
+ expect_equal(smr(mtc, mu = bmean(mpg) + 3), dplyr::summarise(mtc, mu = bmean(mpg) + 3))
  q <- 5
- expect_equal(smr(mtc, mu = mean(mpg) + q), summarise(mtc, mu = mean(mpg) + q))
+ expect_equal(smr(mtc, mu = bmean(mpg) + q), dplyr::summarise(mtc, mu = bmean(mpg) + q))
  v <- mtcars$disp
- expect_equal(smr(mtc, mu = mean(mpg) + mean(v)), summarise(mtc, mu = mean(mpg) + mean(v)))
+ expect_equal(smr(mtc, mu = bmean(mpg) + bmean(v)), dplyr::summarise(mtc, mu = bmean(mpg) + bmean(v)))
 
  # Grouped computations
- expect_equal(smr(gmtc, mpg = fmean(mpg)), summarise(gmtc, mpg = mean(mpg), .groups = "drop"))
+ expect_equal(smr(gmtc, mpg = fmean(mpg)), dplyr::summarise(gmtc, mpg = bmean(mpg), .groups = "drop"))
 
- expect_equal(smr(gmtc, mpg = mean(mpg)), summarise(gmtc, mpg = mean(mpg), .groups = "drop"))
+ expect_equal(smr(gmtc, mpg = bmean(mpg)), dplyr::summarise(gmtc, mpg = bmean(mpg), .groups = "drop"))
 
  expect_equal(smr(gmtc, mpg = fmean(mpg), carb = fmax(carb)),
-              summarise(gmtc, mpg = mean(mpg), carb = max(carb), .groups = "drop"))
- expect_equal(smr(gmtc, mpg = fmean(mpg), carb = max(carb)),
-              summarise(gmtc, mpg = mean(mpg), carb = max(carb), .groups = "drop"))
- expect_equal(smr(gmtc, mpg = mean(mpg), carb = max(carb)),
-              summarise(gmtc, mpg = mean(mpg), carb = max(carb), .groups = "drop"))
- expect_equal(smr(gmtc, mpg = mean(mpg), carb = fmax(carb)),
-              summarise(gmtc, mpg = mean(mpg), carb = max(carb), .groups = "drop"))
+              dplyr::summarise(gmtc, mpg = bmean(mpg), carb = bmax(carb), .groups = "drop"))
+ expect_equal(smr(gmtc, mpg = fmean(mpg), carb = bmax(carb)),
+              dplyr::summarise(gmtc, mpg = bmean(mpg), carb = bmax(carb), .groups = "drop"))
+ expect_equal(smr(gmtc, mpg = bmean(mpg), carb = bmax(carb)),
+              dplyr::summarise(gmtc, mpg = bmean(mpg), carb = bmax(carb), .groups = "drop"))
+ expect_equal(smr(gmtc, mpg = bmean(mpg), carb = fmax(carb)),
+              dplyr::summarise(gmtc, mpg = bmean(mpg), carb = bmax(carb), .groups = "drop"))
 
- expect_equal(fsummarise(gmtc, mpg = mean(mpg), carb = fmax(carb), keep.group_vars = FALSE),
-              fsummarise(gmtc, mpg = mean(mpg), carb = fmax(carb)) |> slt(-cyl,-vs,-am))
+ expect_equal(fsummarise(gmtc, mpg = bmean(mpg), carb = fmax(carb), keep.group_vars = FALSE),
+              fsummarise(gmtc, mpg = bmean(mpg), carb = fmax(carb)) |> slt(-cyl,-vs,-am))
 
  # Multi-return values
  expect_equal(smr(gmtc, mpg = quantile(mpg)),
-              summarise(gmtc, mpg = quantile(mpg), .groups = "drop") |> tfm(mpg = unname(mpg)))
+              dplyr::summarise(gmtc, mpg = quantile(mpg), .groups = "drop") |> tfm(mpg = unname(mpg)))
 
  # More complex expressions
- expect_equal(smr(gmtc, mpg = mean(mpg) + 1),
-              summarise(gmtc, mpg = mean(mpg) + 1, .groups = "drop"))
+ expect_equal(smr(gmtc, mpg = bmean(mpg) + 1),
+              dplyr::summarise(gmtc, mpg = bmean(mpg) + 1, .groups = "drop"))
 
-  expect_equal(smr(gmtc, mpg = mean(mpg) + q),
-              summarise(gmtc, mpg = mean(mpg) + q, .groups = "drop"))
+  expect_equal(smr(gmtc, mpg = bmean(mpg) + q),
+              dplyr::summarise(gmtc, mpg = bmean(mpg) + q, .groups = "drop"))
  expect_equal(smr(gmtc, mpg = quantile(mpg) + q),
-              summarise(gmtc, mpg = quantile(mpg) + q, .groups = "drop") |> tfm(mpg = unname(mpg)))
+              dplyr::summarise(gmtc, mpg = quantile(mpg) + q, .groups = "drop") |> tfm(mpg = unname(mpg)))
 
- expect_equal(smr(gmtc, mpg = mean(mpg) + max(v)),
-              summarise(gmtc, mpg = mean(mpg) + max(v), .groups = "drop"))
+ expect_equal(smr(gmtc, mpg = bmean(mpg) + bmax(v)),
+              dplyr::summarise(gmtc, mpg = bmean(mpg) + bmax(v), .groups = "drop"))
 
- expect_equal(smr(gmtc, mpg = quantile(mpg) + max(v)),
-              summarise(gmtc, mpg = quantile(mpg) + max(v), .groups = "drop") |> tfm(mpg = unname(mpg)))
+ expect_equal(smr(gmtc, mpg = quantile(mpg) + bmax(v)),
+              dplyr::summarise(gmtc, mpg = quantile(mpg) + bmax(v), .groups = "drop") |> tfm(mpg = unname(mpg)))
 
- expect_equal(smr(gmtc, mpg = mean(log(mpg))),
-              summarise(gmtc, mpg = mean(log(mpg)), .groups = "drop"))
+ expect_equal(smr(gmtc, mpg = bmean(log(mpg))),
+              dplyr::summarise(gmtc, mpg = bmean(log(mpg)), .groups = "drop"))
 
- expect_equal(smr(gmtc, mpg = mean(log(mpg)) + max(qsec)),
-              summarise(gmtc, mpg = mean(log(mpg)) + max(qsec), .groups = "drop"))
+ expect_equal(smr(gmtc, mpg = bmean(log(mpg)) + bmax(qsec)),
+              dplyr::summarise(gmtc, mpg = bmean(log(mpg)) + bmax(qsec), .groups = "drop"))
 
- expect_equal(smr(gmtc, mpg = quantile(mpg) + max(qsec)),
-              summarise(gmtc, mpg = quantile(mpg) + max(qsec), .groups = "drop") |> tfm(mpg = unname(mpg)))
+ expect_equal(smr(gmtc, mpg = quantile(mpg) + bmax(qsec)),
+              dplyr::summarise(gmtc, mpg = quantile(mpg) + bmax(qsec), .groups = "drop") |> tfm(mpg = unname(mpg)))
 
  expect_equal(smr(gmtc, mpg = fmean(log(mpg)) + fmax(qsec)),
-              summarise(gmtc, mpg = mean(log(mpg)) + max(qsec), .groups = "drop"))
+              dplyr::summarise(gmtc, mpg = bmean(log(mpg)) + bmax(qsec), .groups = "drop"))
 
- expect_false(all_obj_equal(smr(gmtc, mpg = fmean(log(mpg)) + max(qsec)),
-              summarise(gmtc, mpg = mean(log(mpg)) + max(qsec), .groups = "drop")))
+ expect_false(all_obj_equal(smr(gmtc, mpg = fmean(log(mpg)) + bmax(qsec)),
+              dplyr::summarise(gmtc, mpg = bmean(log(mpg)) + bmax(qsec), .groups = "drop")))
 
  # Weighted computations
- expect_equal(smr(gmtc, mpg = weighted.mean(mpg, wt)), summarise(gmtc, mpg = weighted.mean(mpg, wt), .groups = "drop"))
- expect_equal(smr(gmtc, mpg = fmean(mpg, wt)), summarise(gmtc, mpg = fmean(mpg, w = wt), .groups = "drop"))
+ expect_equal(smr(gmtc, mpg = weighted.mean(mpg, wt)), dplyr::summarise(gmtc, mpg = weighted.mean(mpg, wt), .groups = "drop"))
+ expect_equal(smr(gmtc, mpg = fmean(mpg, wt)), dplyr::summarise(gmtc, mpg = fmean(mpg, w = wt), .groups = "drop"))
 
- expect_equal(smr(gmtc, mpg = weighted.mean(mpg, wt) + 5.5), summarise(gmtc, mpg = weighted.mean(mpg, wt) + 5.5, .groups = "drop"))
- expect_equal(smr(gmtc, mpg = fmean(mpg, wt) + 5.5), summarise(gmtc, mpg = fmean(mpg, w = wt) + 5.5, .groups = "drop"))
+ expect_equal(smr(gmtc, mpg = weighted.mean(mpg, wt) + 5.5), dplyr::summarise(gmtc, mpg = weighted.mean(mpg, wt) + 5.5, .groups = "drop"))
+ expect_equal(smr(gmtc, mpg = fmean(mpg, wt) + 5.5), dplyr::summarise(gmtc, mpg = fmean(mpg, w = wt) + 5.5, .groups = "drop"))
 
- expect_equal(smr(gmtc, mpg = weighted.mean(mpg, wt) + q), summarise(gmtc, mpg = weighted.mean(mpg, wt) + q, .groups = "drop"))
- expect_equal(smr(gmtc, mpg = fmean(mpg, wt) + q), summarise(gmtc, mpg = fmean(mpg, w = wt) + q, .groups = "drop"))
+ expect_equal(smr(gmtc, mpg = weighted.mean(mpg, wt) + q), dplyr::summarise(gmtc, mpg = weighted.mean(mpg, wt) + q, .groups = "drop"))
+ expect_equal(smr(gmtc, mpg = fmean(mpg, wt) + q), dplyr::summarise(gmtc, mpg = fmean(mpg, w = wt) + q, .groups = "drop"))
 
- expect_equal(smr(gmtc, mpg = weighted.mean(mpg, wt) + max(v)), summarise(gmtc, mpg = weighted.mean(mpg, wt) + max(v), .groups = "drop"))
- expect_equal(smr(gmtc, mpg = fmean(mpg, wt) + max(v)), summarise(gmtc, mpg = fmean(mpg, w = wt) + max(v), .groups = "drop"))
+ expect_equal(smr(gmtc, mpg = weighted.mean(mpg, wt) + bmax(v)), dplyr::summarise(gmtc, mpg = weighted.mean(mpg, wt) + bmax(v), .groups = "drop"))
+ expect_equal(smr(gmtc, mpg = fmean(mpg, wt) + bmax(v)), dplyr::summarise(gmtc, mpg = fmean(mpg, w = wt) + bmax(v), .groups = "drop"))
 
- expect_equal(smr(gmtc, mpg = weighted.mean(mpg, wt) + max(qsec)),
-              summarise(gmtc, mpg = weighted.mean(mpg, wt) + max(qsec), .groups = "drop"))
+ expect_equal(smr(gmtc, mpg = weighted.mean(mpg, wt) + bmax(qsec)),
+              dplyr::summarise(gmtc, mpg = weighted.mean(mpg, wt) + bmax(qsec), .groups = "drop"))
 
  expect_equal(smr(gmtc, mpg = fmean(mpg, wt) + fmax(qsec)),
-              summarise(gmtc, mpg = fmean(mpg, w = wt) + max(qsec), .groups = "drop"))
+              dplyr::summarise(gmtc, mpg = fmean(mpg, w = wt) + bmax(qsec), .groups = "drop"))
 
  expect_equal(smr(gmtc, mpg = quantile(mpg) + weighted.mean(mpg, wt)),
-              summarise(gmtc, mpg = quantile(mpg) + weighted.mean(mpg, wt), .groups = "drop") |> tfm(mpg = unname(mpg)))
+              dplyr::summarise(gmtc, mpg = quantile(mpg) + weighted.mean(mpg, wt), .groups = "drop") |> tfm(mpg = unname(mpg)))
 
  expect_warning(smr(gmtc, mpg = quantile(mpg) + fmean(mpg, wt)))
 
 })
 
-wld <- as_tibble(wlddev)
-gwld <- group_by(wlddev, country)
+wld <- dplyr::as_tibble(wlddev)
+gwld <- dplyr::group_by(wlddev, country)
 
-test_that("fsummarise works like summarise with across and simple usage", {
+test_that("fsummarise works like dplyr::summarise with across and simple usage", {
 
   # Simple usage
-  expect_true(all_obj_equal(fsummarise(mtc, across(cyl:drat, sum)),
+  expect_true(all_obj_equal(fsummarise(mtc, across(cyl:drat, bsum)),
                             fsummarise(mtc, across(cyl:drat, fsum)),
-                            summarise(mtc, across(cyl:drat, sum))))
+                            dplyr::summarise(mtc, dplyr::across(cyl:drat, bsum))))
 
-  expect_true(all_obj_equal(fsummarise(mtc, across(5:8, sum)),
+  expect_true(all_obj_equal(fsummarise(mtc, across(5:8, bsum)),
                             fsummarise(mtc, across(5:8, fsum)),
-                            summarise(mtc, across(5:8, sum))))
+                            dplyr::summarise(mtc, dplyr::across(5:8, bsum))))
 
-  expect_true(all_obj_equal(fsummarise(mtc, across(-(5:8), sum)),
+  expect_true(all_obj_equal(fsummarise(mtc, across(-(5:8), bsum)),
                             fsummarise(mtc, across(-(5:8), fsum, .apply = FALSE)),
-                            summarise(mtc, across(-(5:8), sum))))
+                            dplyr::summarise(mtc, dplyr::across(-(5:8), bsum))))
 
-  expect_true(all_obj_equal(fsummarise(wld, across(is.numeric, sum, na.rm = TRUE)),
+  expect_true(all_obj_equal(fsummarise(wld, across(is.numeric, bsum, na.rm = TRUE)),
                             fsummarise(wld, across(is.numeric, fsum)) |> dapply(unattrib, drop = FALSE),
-                            summarise(wld, across(where(is.numeric), sum, na.rm = TRUE))))
+                            dplyr::summarise(wld, dplyr::across(where(is.numeric), bsum, na.rm = TRUE))))
 
-  expect_true(all_obj_equal(fsummarise(mtc, across(NULL, sum, na.rm = TRUE)),
+  expect_true(all_obj_equal(fsummarise(mtc, across(NULL, bsum, na.rm = TRUE)),
                             fsummarise(mtc, across(NULL, fsum)),
-                            summarise(mtc, across(everything(), sum, na.rm = TRUE))))
+                            dplyr::summarise(mtc, dplyr::across(everything(), bsum, na.rm = TRUE))))
 
-  expect_equal(fsummarise(mtc, across(cyl:vs, sum)),
-               fsummarise(mtc, cyl = sum(cyl), across(disp:qsec, fsum), vs = fsum(vs)))
+  expect_equal(fsummarise(mtc, across(cyl:vs, bsum)),
+               fsummarise(mtc, cyl = bsum(cyl), across(disp:qsec, fsum), vs = fsum(vs)))
 
   # Simple programming use
   vlist <- list(mtc |> fselect(cyl:drat, return = "names"), 5:8, NULL) # -(5:8), is.numeric
   for(i in seq_along(vlist)) {
-    expect_true(all_obj_equal(fsummarise(mtc, across(vlist[[i]], sum)),
+    expect_true(all_obj_equal(fsummarise(mtc, across(vlist[[i]], bsum)),
                               fsummarise(mtc, across(vlist[[i]], fsum)),
-                              summarise(mtc, across(if(is.null(vlist[[i]])) everything() else vlist[[i]], sum))))
+                              dplyr::summarise(mtc, dplyr::across(if(is.null(vlist[[i]])) everything() else vlist[[i]], bsum))))
     v <- vlist[[i]]
-    expect_true(all_obj_equal(fsummarise(mtc, across(v, sum)),
+    expect_true(all_obj_equal(fsummarise(mtc, across(v, bsum)),
                               fsummarise(mtc, across(v, fsum)),
-                              summarise(mtc, across(if(is.null(v)) everything() else v, sum))))
+                              dplyr::summarise(mtc, dplyr::across(if(is.null(v)) everything() else v, bsum))))
   }
 
   # Simple usage and multiple functions
-  expect_true(all_obj_equal(fsummarise(mtc, across(cyl:drat, list(mean, sum))),
-                            fsummarise(mtc, across(cyl:drat, list(mean = fmean, sum = fsum))),
-                            summarise(mtc, across(cyl:drat, list(mean = mean, sum = sum)))))
+  expect_true(all_obj_equal(fsummarise(mtc, across(cyl:drat, list(bmean, bsum))),
+                            fsummarise(mtc, across(cyl:drat, list(bmean = fmean, bsum = fsum))),
+                            dplyr::summarise(mtc, dplyr::across(cyl:drat, list(bmean = bmean, bsum = bsum)))))
 
-  expect_true(all_obj_equal(fsummarise(mtc, across(NULL, list(mean, sum))),
-                            fsummarise(mtc, across(NULL, list(mean = fmean, sum = fsum))),
-                            summarise(mtc, across(everything(), list(mean = mean, sum = sum)))))
+  expect_true(all_obj_equal(fsummarise(mtc, across(NULL, list(bmean, bsum))),
+                            fsummarise(mtc, across(NULL, list(bmean = fmean, bsum = fsum))),
+                            dplyr::summarise(mtc, dplyr::across(everything(), list(bmean = bmean, bsum = bsum)))))
 
   # Passing additional arguments
-  expect_true(all_obj_equal(fsummarise(mtc, across(cyl:drat, sum, na.rm = FALSE)),
+  expect_true(all_obj_equal(fsummarise(mtc, across(cyl:drat, bsum, na.rm = FALSE)),
                             fsummarise(mtc, across(cyl:drat, fsum, na.rm = FALSE)),
-                            summarise(mtc, across(cyl:drat, sum, na.rm = FALSE))))
+                            dplyr::summarise(mtc, dplyr::across(cyl:drat, bsum, na.rm = FALSE))))
 
   expect_true(all_obj_equal(fsummarise(mtc, across(cyl:drat, weighted.mean, w = wt)),
                             fsummarise(mtc, across(cyl:drat, fmean, w = wt)),
-                            summarise(mtc, across(cyl:drat, weighted.mean, w = wt))))
+                            dplyr::summarise(mtc, dplyr::across(cyl:drat, weighted.mean, w = wt))))
 
   expect_true(all_obj_equal(fsummarise(mtc, across(cyl:drat, list(mean = weighted.mean, sum = fsum), w = wt)),
                             fsummarise(mtc, across(cyl:drat, list(mean = fmean, sum = fsum), w = wt)),
-                            summarise(mtc, across(cyl:drat, list(mean = weighted.mean, sum = fsum), w = wt))))
+                            dplyr::summarise(mtc, dplyr::across(cyl:drat, list(mean = weighted.mean, sum = fsum), w = wt))))
 
   # Simple programming use
-  flist <- list(sum, list(mean = mean, sum = sum), list(mean, sum)) # c("mean", "sum"), c(mean = "fmean", sum = "fsum")
+  flist <- list(bsum, list(bmean = bmean, bsum = bsum), list(bmean, bsum)) # c("bmean", "bsum"), c(mean = "fmean", sum = "fsum")
   for(i in seq_along(flist)) {
     expect_equal(fsummarise(mtc, across(cyl:drat, flist[[i]])),
-                 summarise(mtc, across(cyl:drat, flist[[i]])))
+                 dplyr::summarise(mtc, dplyr::across(cyl:drat, flist[[i]])))
     f <- flist[[i]]
     expect_equal(fsummarise(mtc, across(cyl:drat, f)),
-                 summarise(mtc, across(cyl:drat, f)))
+                 dplyr::summarise(mtc, dplyr::across(cyl:drat, f)))
   }
 
 })
 
 
-test_that("fsummarise works like summarise with across and grouped usage", {
+test_that("fsummarise works like dplyr::summarise with across and grouped usage", {
 
   # Simple usage
-  expect_true(all_obj_equal(fsummarise(gmtc, across(hp:drat, sum)),
+  expect_true(all_obj_equal(fsummarise(gmtc, across(hp:drat, bsum)),
                             fsummarise(gmtc, across(hp:drat, fsum)),
-                            summarise(gmtc, across(hp:drat, sum), .groups = "drop")))
+                            dplyr::summarise(gmtc, dplyr::across(hp:drat, bsum), .groups = "drop")))
 
-  expect_true(all_obj_equal(fsummarise(gmtc, across(5:7, sum)),
+  expect_true(all_obj_equal(fsummarise(gmtc, across(5:7, bsum)),
                             fsummarise(gmtc, across(5:7, fsum)),
-                            summarise(gmtc, across(4:6, sum), .groups = "drop")))
+                            dplyr::summarise(gmtc, dplyr::across(4:6, bsum), .groups = "drop")))
 
-  expect_true(all_obj_equal(fsummarise(gwld, across(is.numeric, sum, na.rm = TRUE)) |> setLabels(NULL),
+  expect_true(all_obj_equal(fsummarise(gwld, across(is.numeric, bsum, na.rm = TRUE)) |> setLabels(NULL),
                             fsummarise(gwld, across(is.numeric, fsum)) |> replace_NA() |> setLabels(NULL),
-                            summarise(gwld, across(where(is.numeric), sum, na.rm = TRUE))))
+                            dplyr::summarise(gwld, dplyr::across(where(is.numeric), bsum, na.rm = TRUE))))
 
-  expect_true(all_obj_equal(fsummarise(gmtc, across(NULL, sum, na.rm = TRUE)) |> setLabels(NULL),
+  expect_true(all_obj_equal(fsummarise(gmtc, across(NULL, bsum, na.rm = TRUE)) |> setLabels(NULL),
                             fsummarise(gmtc, across(NULL, fsum)) |> setLabels(NULL),
-                            summarise(gmtc, across(everything(), sum, na.rm = TRUE), .groups = "drop")))
+                            dplyr::summarise(gmtc, dplyr::across(everything(), bsum, na.rm = TRUE), .groups = "drop")))
 
-  expect_equal(fsummarise(gmtc, across(NULL, sum, na.rm = TRUE), keep.group_vars = FALSE),
-               fsummarise(gmtc, across(NULL, sum, na.rm = TRUE)) |> slt(-cyl,-vs,-am))
+  expect_equal(fsummarise(gmtc, across(NULL, bsum, na.rm = TRUE), keep.group_vars = FALSE),
+               fsummarise(gmtc, across(NULL, bsum, na.rm = TRUE)) |> slt(-cyl,-vs,-am))
 
-  expect_equal(fsummarise(gmtc, across(cyl:vs, sum)),
-               fsummarise(gmtc, cyl = sum(cyl), across(disp:qsec, fsum), vs = fsum(vs)))
+  expect_equal(fsummarise(gmtc, across(cyl:vs, bsum)),
+               fsummarise(gmtc, cyl = bsum(cyl), across(disp:qsec, fsum), vs = fsum(vs)))
 
   # Simple programming use
   vlist <- list(mtc |> fselect(hp:drat, return = "names"), NULL) # -(5:8), is.numeric
   for(i in seq_along(vlist)) {
-    expect_true(all_obj_equal(fsummarise(gmtc, across(vlist[[i]], sum)),
+    expect_true(all_obj_equal(fsummarise(gmtc, across(vlist[[i]], bsum)),
                               fsummarise(gmtc, across(vlist[[i]], fsum)),
-                              summarise(gmtc, across(if(is.null(vlist[[i]])) everything() else vlist[[i]], sum), .groups = "drop")))
+                              dplyr::summarise(gmtc, dplyr::across(if(is.null(vlist[[i]])) everything() else vlist[[i]], bsum), .groups = "drop")))
     v <- vlist[[i]]
-    expect_true(all_obj_equal(fsummarise(gmtc, across(v, sum)),
+    expect_true(all_obj_equal(fsummarise(gmtc, across(v, bsum)),
                               fsummarise(gmtc, across(v, fsum)),
-                              summarise(gmtc, across(if(is.null(v)) everything() else v, sum), .groups = "drop")))
+                              dplyr::summarise(gmtc, dplyr::across(if(is.null(v)) everything() else v, bsum), .groups = "drop")))
   }
 
   # Simple usage and multiple functions
-  expect_true(all_obj_equal(fsummarise(gmtc, across(hp:drat, list(mean, sum))),
-                            fsummarise(gmtc, across(hp:drat, list(mean = fmean, sum = fsum))),
-                            summarise(gmtc, across(hp:drat, list(mean = mean, sum = sum)), .groups = "drop")))
+  expect_true(all_obj_equal(fsummarise(gmtc, across(hp:drat, list(bmean, bsum))),
+                            fsummarise(gmtc, across(hp:drat, list(bmean = fmean, bsum = fsum))),
+                            dplyr::summarise(gmtc, dplyr::across(hp:drat, list(bmean = bmean, bsum = bsum)), .groups = "drop")))
 
-  expect_true(all_obj_equal(fsummarise(gmtc, across(NULL, list(mean, sum))),
-                            fsummarise(gmtc, across(NULL, list(mean = fmean, sum = fsum))),
-                            summarise(gmtc, across(everything(), list(mean = mean, sum = sum)), .groups = "drop")))
+  expect_true(all_obj_equal(fsummarise(gmtc, across(NULL, list(bmean, bsum))),
+                            fsummarise(gmtc, across(NULL, list(bmean = fmean, bsum = fsum))),
+                            dplyr::summarise(gmtc, dplyr::across(everything(), list(bmean = bmean, bsum = bsum)), .groups = "drop")))
 
   # Passing additional arguments
-  expect_true(all_obj_equal(fsummarise(gwld, across(c("PCGDP", "LIFEEX"), sum, na.rm = TRUE))  |> setLabels(NULL),
+  expect_true(all_obj_equal(fsummarise(gwld, across(c("PCGDP", "LIFEEX"), bsum, na.rm = TRUE))  |> setLabels(NULL),
                             fsummarise(gwld, across(c("PCGDP", "LIFEEX"), fsum, na.rm = TRUE))  |> setLabels(NULL) |> replace_NA(),
-                            summarise(gwld, across(c("PCGDP", "LIFEEX"), sum, na.rm = TRUE), .groups = "drop")))
+                            dplyr::summarise(gwld, dplyr::across(c("PCGDP", "LIFEEX"), bsum, na.rm = TRUE), .groups = "drop")))
 
   expect_true(all_obj_equal(fsummarise(gmtc, across(hp:drat, weighted.mean, w = wt)),
                             fsummarise(gmtc, across(hp:drat, fmean, w = wt)),
-                            summarise(gmtc, across(hp:drat, weighted.mean, w = wt), .groups = "drop")))
+                            dplyr::summarise(gmtc, dplyr::across(hp:drat, weighted.mean, w = wt), .groups = "drop")))
 
   expect_equal(fsummarise(gmtc, across(cyl:vs, weighted.mean, w = wt)),
                fsummarise(gmtc, cyl = weighted.mean(cyl, wt), across(disp:qsec, fmean, w = wt), vs = fmean(vs, wt)))
 
   expect_true(all_obj_equal(fsummarise(gmtc, across(hp:drat, list(mean = weighted.mean, sum = fsum), w = wt)),
                             fsummarise(gmtc, across(hp:drat, list(mean = fmean, sum = fsum), w = wt)),
-                            summarise(gmtc, across(hp:drat, list(mean = weighted.mean, sum = fsum), w = wt), .groups = "drop")))
+                            dplyr::summarise(gmtc, dplyr::across(hp:drat, list(mean = weighted.mean, sum = fsum), w = wt), .groups = "drop")))
 
   # Simple programming use
-  flist <- list(sum, list(mean = mean, sum = sum), list(mean, sum)) # c("mean", "sum"), c(mean = "fmean", sum = "fsum")
+  flist <- list(bsum, list(bmean = bmean, bsum = bsum), list(bmean, bsum)) # c("bmean", "bsum"), c(mean = "fmean", sum = "fsum")
   for(i in seq_along(flist)) {
     expect_equal(fsummarise(gmtc, across(hp:drat, flist[[i]])),
-                 summarise(gmtc, across(hp:drat, flist[[i]]), .groups = "drop"))
+                 dplyr::summarise(gmtc, dplyr::across(hp:drat, flist[[i]]), .groups = "drop"))
     f <- flist[[i]]
     expect_equal(fsummarise(gmtc, across(hp:drat, f)),
-                 summarise(gmtc, across(hp:drat, f), .groups = "drop"))
+                 dplyr::summarise(gmtc, dplyr::across(hp:drat, f), .groups = "drop"))
   }
 
 })
@@ -253,12 +256,12 @@ test_that("fsummarise works like summarise with across and grouped usage", {
 
 test_that("fsummarise miscellaneous things", {
 
-  expect_equal(smr(gmtc, acr(disp:hp, c("mean", "sd"))),
-               fsummarise(gmtc, across(disp:hp, c("mean", "sd"), .transpose = FALSE)) |>
+  expect_equal(smr(gmtc, acr(disp:hp, c("bmean", "bsd"))),
+               fsummarise(gmtc, across(disp:hp, c("bmean", "bsd"), .transpose = FALSE)) |>
                  colorderv(c(4,6,5,7), pos = "exchange"))
 
   expect_identical(names(smr(gmtc, acr(disp:hp, fmean, .names = TRUE)))[4:5], c("disp_fmean", "hp_fmean"))
-  expect_identical(names(smr(gmtc, acr(disp:hp, mean, .names = TRUE)))[4:5], c("disp_mean", "hp_mean"))
+  expect_identical(names(smr(gmtc, acr(disp:hp, bmean, .names = TRUE)))[4:5], c("disp_bmean", "hp_bmean"))
 
   pwcorDF <- function(x, w = NULL) qDF(pwcor(x, w = w), "var")
   expect_equal(
@@ -285,30 +288,30 @@ test_that("fsummarise miscellaneous things", {
 
 test_that("fmutate works as intended for simple usage", {
 
-  expect_equal(fmutate(mtc, mu = mean(mpg)), mutate(mtc, mu = mean(mpg)))
-  expect_equal(fmutate(mtc, mu = mean(mpg), mpg = NULL), mutate(mtc, mu = mean(mpg), mpg = NULL))
-  expect_equal(fmutate(mtc, mu = mean(mpg), dmu = mpg - mu), mutate(mtc, mu = mean(mpg), dmu = mpg - mu))
-  expect_equal(fmutate(mtc, mu = log(mpg)), mutate(mtc, mu = log(mpg)))
-  expect_equal(fmutate(mtc, mu = log(mpg), dmu = mpg - mu), mutate(mtc, mu = log(mpg), dmu = mpg - mu))
+  expect_equal(fmutate(mtc, mu = bmean(mpg)), dplyr::mutate(mtc, mu = bmean(mpg)))
+  expect_equal(fmutate(mtc, mu = bmean(mpg), mpg = NULL), dplyr::mutate(mtc, mu = bmean(mpg), mpg = NULL))
+  expect_equal(fmutate(mtc, mu = bmean(mpg), dmu = mpg - mu), dplyr::mutate(mtc, mu = bmean(mpg), dmu = mpg - mu))
+  expect_equal(fmutate(mtc, mu = log(mpg)), dplyr::mutate(mtc, mu = log(mpg)))
+  expect_equal(fmutate(mtc, mu = log(mpg), dmu = mpg - mu), dplyr::mutate(mtc, mu = log(mpg), dmu = mpg - mu))
 
   expect_true(all_obj_equal(
-    mutate(mtc, dmu = mpg - mean(mpg)),
-    fmutate(mtc, dmu = mpg - mean(mpg)),
+    dplyr::mutate(mtc, dmu = mpg - bmean(mpg)),
+    fmutate(mtc, dmu = mpg - bmean(mpg)),
     fmutate(mtc, dmu = mpg - fmean(mpg)),
     fmutate(mtc, dmu = fmean(mpg, TRA = "-")),
     fmutate(mtc, dmu = fwithin(mpg))
   ))
 
   # With groups:
-  expect_equal(fmutate(gmtc, mu = mean(mpg)), mutate(gmtc, mu = mean(mpg)))
-  expect_equal(fmutate(gmtc, mu = mean(mpg), mpg = NULL), mutate(gmtc, mu = mean(mpg), mpg = NULL))
-  expect_equal(fmutate(gmtc, mu = mean(mpg), dmu = mpg - mu), mutate(gmtc, mu = mean(mpg), dmu = mpg - mu))
-  expect_equal(fmutate(gmtc, mu = log(mpg)), mutate(gmtc, mu = log(mpg)))
-  expect_equal(fmutate(gmtc, mu = log(mpg), dmu = mpg - mu), mutate(gmtc, mu = log(mpg), dmu = mpg - mu))
+  expect_equal(fmutate(gmtc, mu = bmean(mpg)), dplyr::mutate(gmtc, mu = bmean(mpg)))
+  expect_equal(fmutate(gmtc, mu = bmean(mpg), mpg = NULL), dplyr::mutate(gmtc, mu = bmean(mpg), mpg = NULL))
+  expect_equal(fmutate(gmtc, mu = bmean(mpg), dmu = mpg - mu), dplyr::mutate(gmtc, mu = bmean(mpg), dmu = mpg - mu))
+  expect_equal(fmutate(gmtc, mu = log(mpg)), dplyr::mutate(gmtc, mu = log(mpg)))
+  expect_equal(fmutate(gmtc, mu = log(mpg), dmu = mpg - mu), dplyr::mutate(gmtc, mu = log(mpg), dmu = mpg - mu))
 
   expect_true(all_obj_equal(
-    mutate(gmtc, dmu = mpg - mean(mpg)),
-    fmutate(gmtc, dmu = mpg - mean(mpg)),
+    dplyr::mutate(gmtc, dmu = mpg - bmean(mpg)),
+    fmutate(gmtc, dmu = mpg - bmean(mpg)),
     fmutate(gmtc, dmu = mpg - fmean(mpg)),
     fmutate(gmtc, dmu = fmean(mpg, TRA = "-")),
     fmutate(gmtc, dmu = fwithin(mpg))
@@ -336,8 +339,8 @@ test_that("fmutate with across works like ftransformv", {
     fmutate(gmtc, across(cyl:vs, fwithin, .apply = FALSE)) |> qDF(),
     fmutate(gmtc, across(cyl:vs, fmean, TRA = "-", .apply = TRUE)) |> qDF(),
     fmutate(gmtc, across(cyl:vs, fmean, TRA = "-", .apply = FALSE)) |> qDF(),
-    fmutate(gmtc, across(cyl:vs, function(x) x - mean(x), .apply = TRUE)) |> qDF(),
-    fmutate(gmtc, across(cyl:vs, function(x) lapply(x, function(y) y - mean(y)), .apply = FALSE)) |> qDF()
+    fmutate(gmtc, across(cyl:vs, function(x) x - bmean(x), .apply = TRUE)) |> qDF(),
+    fmutate(gmtc, across(cyl:vs, function(x) lapply(x, function(y) y - bmean(y)), .apply = FALSE)) |> qDF()
 
   ))
 
@@ -369,17 +372,17 @@ test_that("fmutate miscellaneous", {
 
   expect_equal(
     fmutate(mtcars, a = mpg, b = a + hp + disp, c = cyl, hp = wt + carb, .keep = "used"),
-    mutate(mtcars, a = mpg, b = a + hp + disp, c = cyl, hp = wt + carb, .keep = "used")
+    dplyr::mutate(mtcars, a = mpg, b = a + hp + disp, c = cyl, hp = wt + carb, .keep = "used")
   )
 
   expect_equal(
     fmutate(mtcars, a = mpg, b = a + hp + disp, c = cyl, hp = wt + carb, .keep = "unused"),
-    mutate(mtcars, a = mpg, b = a + hp + disp, c = cyl, hp = wt + carb, .keep = "unused")
+    dplyr::mutate(mtcars, a = mpg, b = a + hp + disp, c = cyl, hp = wt + carb, .keep = "unused")
   )
 
   expect_equal(
     fmutate(mtcars, a = mpg, b = a + hp + disp, c = cyl, hp = wt + carb, .keep = "none"),
-    mutate(mtcars, a = mpg, b = a + hp + disp, c = cyl, hp = wt + carb, .keep = "none")
+    dplyr::mutate(mtcars, a = mpg, b = a + hp + disp, c = cyl, hp = wt + carb, .keep = "none")
   )
 
   expect_identical(names(fmutate(mtcars, a = mpg, b = a, c = cyl, hp = wt, .keep = "unused")), c(setdiff(names(mtcars), .c(mpg, cyl, wt)), letters[1:3]))
@@ -387,23 +390,23 @@ test_that("fmutate miscellaneous", {
 
   expect_equal(
     fmutate(gmtc, a = fmax(mpg), b = a + hp + disp, c = cyl, hp = wt + carb, .keep = "used"),
-    mutate(gmtc, a = max(mpg), b = a + hp + disp, c = cyl, hp = wt + carb, .keep = "used")
+    dplyr::mutate(gmtc, a = bmax(mpg), b = a + hp + disp, c = cyl, hp = wt + carb, .keep = "used")
   )
 
   expect_equal(
     fmutate(gmtc, a = fmax(mpg), b = a + hp + disp, c = cyl, hp = wt + carb, .keep = "unused"),
-    mutate(gmtc, a = max(mpg), b = a + hp + disp, c = cyl, hp = wt + carb, .keep = "unused")
+    dplyr::mutate(gmtc, a = bmax(mpg), b = a + hp + disp, c = cyl, hp = wt + carb, .keep = "unused")
   )
 
   expect_equal(
     fmutate(gmtc, a = mpg, b = a + hp + disp, c = cyl, hp = wt + carb, .keep = "none"),
-    mutate(gmtc, a = mpg, b = a + hp + disp, c = cyl, hp = wt + carb, .keep = "none")
+    dplyr::mutate(gmtc, a = mpg, b = a + hp + disp, c = cyl, hp = wt + carb, .keep = "none")
   )
 
   # Inconsistent with the above and also inefficient...
   # expect_equal(
   #   fmutate(gmtc, a = mpg, b = a + hp + disp, c = cyl, hp = wt + carb, cyl = cyl, .keep = "none"),
-  #   mutate(gmtc, a = mpg, b = a + hp + disp, c = cyl, hp = wt + carb, cyl = cyl, .keep = "none")
+  #   dplyr::mutate(gmtc, a = mpg, b = a + hp + disp, c = cyl, hp = wt + carb, cyl = cyl, .keep = "none")
   # )
 
   expect_equal(flast(names(fmutate(mtcars, across(cyl:vs, function(x) list(ps = kit::psum(x)), .apply = FALSE)))), "ps")

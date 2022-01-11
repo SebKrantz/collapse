@@ -74,7 +74,7 @@ getfl <- function(mf) {
 
       fctdat <- NULL # best way to do this ?? or as before with pre-allocation ??
       lsf <- length(singlefct)
-      lff <- sum(fctfct)
+      lff <- bsum(fctfct)
       if(lsf) fctdat <- mf[singlefct] # unattrib() -> wrap around at the end... Nah, better with names...
       if(lff) fctdat <- c(fctdat, lapply(intterms[fctfct], finteract, TRUE, mf))
 
@@ -94,7 +94,7 @@ getfl <- function(mf) {
           # Check for duplicate factors in interactions (largely independent of the other stuff)
           dupchk <- factors[, -im, drop = FALSE] > 0L # same as intslopes...
           if(any(dupfct <- rowSums(dupchk) > 1)) { # Check for factors with multiple slopes...
-            if(sum(dupfct) > 1L) stop("Cannot currently support multiple factors with multiple slopes...")
+            if(bsum(dupfct) > 1L) stop("Cannot currently support multiple factors with multiple slopes...")
             dupfct <- which(dupchk[dupfct, ]) # This accounts for im
             fctdat <- c(fctdat, lapply(c(intslope[-im][dupfct[1L]], intslope[-im][-dupfct]), finteract, facts, mf))
           } else
@@ -114,7 +114,7 @@ getfl <- function(mf) {
             }
             if(any(dupfct)) { # reordering if dupfct... putting it in front..
               slopes[-lim] <- c(slopes[-lim][dupfct], slopes[-lim][-dupfct])
-              othmc <- c(sum(othmc[dupfct]), othmc[-dupfct])
+              othmc <- c(bsum(othmc[dupfct]), othmc[-dupfct])
             }
             slflag <- c(slflag, othmc)
           }
@@ -124,7 +124,7 @@ getfl <- function(mf) {
         } else { # No double factor interactions with slopes.. Only simple slopes interactions.. (what about dupfact of two different double interactions with slope, but no factfact?)
           dupchk <- factors > 0L # same as intslopes...
           if(any(dupfct <- rowSums(dupchk) > 1)) { # Check for factors with multiple slopes...
-            if(sum(dupfct) > 1L) stop("Cannot currently support multiple factors with multiple slopes...")
+            if(bsum(dupfct) > 1L) stop("Cannot currently support multiple factors with multiple slopes...")
             dupfct <- which(dupchk[dupfct, ])
             fctdat <- c(fctdat, lapply(c(intslope[dupfct[1L]], intslope[-dupfct]), finteract, facts, mf))
           } else fctdat <- c(fctdat, lapply(intslope, finteract, facts, mf))
@@ -136,7 +136,7 @@ getfl <- function(mf) {
           }
           if(any(dupfct)) { # reordering if dupfct... putting it in front..
             slopes <- c(slopes[dupfct], slopes[-dupfct])
-            lsl <- c(sum(lsl[dupfct]), lsl[-dupfct])
+            lsl <- c(bsum(lsl[dupfct]), lsl[-dupfct])
           }
           slflag <- c(slflag, integer(lff), lsl)
         }

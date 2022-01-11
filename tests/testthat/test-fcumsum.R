@@ -39,11 +39,13 @@ tduo = td[od]
 t2duo = seq_along(od)[od]
 od = order(od)
 
+bcumsum <- base::cumsum
+
 basecumsum <- function(x, na.rm = TRUE, fill = FALSE) {
   ax <- attributes(x)
-  if(!na.rm || !anyNA(x)) return(`attributes<-`(cumsum(x), ax))
+  if(!na.rm || !anyNA(x)) return(`attributes<-`(bcumsum(x), ax))
   cc <- which(!is.na(x))
-  x[cc] <- cumsum(x[cc])
+  x[cc] <- bcumsum(x[cc])
   if(!fill) return(x)
   if(is.na(x[1L])) x[1L] <- 0L
   data.table::nafill(x, type = "locf")

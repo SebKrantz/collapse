@@ -1,5 +1,7 @@
 context("fscale / STD")
 
+bsum <- base::sum
+
 # TODO: Still a few uneccessary infinity values generated with weights when the sd is null. search replace_Inf to find them.
 
 # rm(list = ls())
@@ -23,7 +25,7 @@ mNAc <- mNA
 storage.mode(mNAc) <- "character"
 
 bscale <- function(x, na.rm = FALSE, mean = 0, sd = 1) {
-  if(na.rm || !anyNA(x)) `attributes<-`(drop(scale(x)), NULL) * sd + mean else
+  if(na.rm || !anyNA(x)) `attributes<-`(drop(base::scale(x)), NULL) * sd + mean else
     rep(NA_real_, length(x))
 }
 # NOTE: This is what fscale currently does: If missing values, compute weighted mean and sd on available obs, and scale x using it. but don't insert aditional missing values in x for missing weights ..
@@ -40,10 +42,10 @@ wbscale <- function(x, w, na.rm = FALSE, mean = 0, sd = 1) {
     ck <- all(x[1L] == x[-1L])
     if(is.na(ck) || all(ck)) return(rep(NA_real_, length(x)))
   }
-  sw <- sum(w)
-  wm <- sum(w * x) / sw
+  sw <- bsum(w)
+  wm <- bsum(w * x) / sw
   xdm <- x - wm
-  wsd <- sqrt(sum(w * xdm^2) / (sw - 1)) / sd
+  wsd <- sqrt(bsum(w * xdm^2) / (sw - 1)) / sd
   if(!na.rm) return(xdm / wsd + mean)
   return((x2 - wm) / wsd + mean)
 }

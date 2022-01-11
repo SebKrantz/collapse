@@ -2,9 +2,13 @@ context("qsu")
 
 # rm(list = ls())
 
+bmean <- base::mean
+bsd <- stats::sd
+bsum <- base::sum
+
 bstats <- function(x) {
-  if(!is.numeric(x)) return(c(N = sum(!is.na(x)), Mean = NA_real_, SD = NA_real_, Min = NA_real_, Max = NA_real_))
-  c(N = sum(!is.na(x)), Mean = mean(x, na.rm = TRUE), SD = sd(x, na.rm = TRUE), `names<-`(range(x, na.rm = TRUE), c("Min", "Max")))
+  if(!is.numeric(x)) return(c(N = bsum(!is.na(x)), Mean = NA_real_, SD = NA_real_, Min = NA_real_, Max = NA_real_))
+  c(N = bsum(!is.na(x)), Mean = bmean(x, na.rm = TRUE), SD = bsd(x, na.rm = TRUE), `names<-`(range(x, na.rm = TRUE), c("Min", "Max")))
 }
 base_qsu <- function(x, g = NULL) {
   if(is.atomic(x) && !is.matrix(x)) return(`oldClass<-`(bstats(x), c("qsu", "table")))

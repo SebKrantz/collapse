@@ -70,14 +70,14 @@ print.descr <- function(x, n = 7, perc = TRUE, digits = 2, t.table = TRUE, summa
       if(namxi[4L] == "Table") {
         t <- unclass(xi[[4L]])
         if(length(t) <= 2*n) {
-          if(perc) print.default(cb(Freq = t, Perc = round(t/sum(t)*100, digits)), right = TRUE, print.gap = 2, quote = FALSE) else
+          if(perc) print.default(cb(Freq = t, Perc = round(t/bsum(t)*100, digits)), right = TRUE, print.gap = 2, quote = FALSE) else
             print.table(ct(t))
         } else {
           lt <- length(t)
           t1 <- t[seq_len(n)]
           t2 <- t[seq(lt-n, lt)]
           if(perc) {
-            st <- sum(t)
+            st <- bsum(t)
             print.default(cb(Freq = t1, Perc = round(t1/st*100, digits)), right = TRUE, print.gap = 2, quote = FALSE)
             cat("  ---\n")
             print.default(cb(Freq = t2, Perc = round(t2/st*100, digits)), right = TRUE, print.gap = 2, quote = FALSE)

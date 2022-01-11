@@ -10,10 +10,6 @@
 
   suppressMessages({
 
-  # .collapse_env$lfe_demeanlist <-
-  #        if(requireNamespace("lfe", quietly = TRUE)) # lfe::demeanlist else NULL
-  #            get0("demeanlist", envir = getNamespace("lfe"))
-
   .collapse_env$fixest_demean <-
         if(requireNamespace("fixest", quietly = TRUE)) # fixest::demean else NULL
            get0("demean", envir = getNamespace("fixest")) else NULL
@@ -32,12 +28,52 @@
 
   })
 
-  assign(".collapse_env", .collapse_env, envir = parent.env(environment()))
+  clpns <- parent.env(environment())
+  assign(".collapse_env", .collapse_env, envir = clpns)
 
   # Old solution: does not dynamically update, would have to re-install collapse after installing these packages
   # assign(".RcppArmadillo_fastLm",
   #        if(requireNamespace("RcppArmadillo", quietly = TRUE))
   #        get0("_RcppArmadillo_fastLm_impl", envir = getNamespace("RcppArmadillo")) else NULL, envir = parent.env(environment()))
+
+  if(length(mask <- getOption("collapse_mask")) && is.character(mask)) {
+    # if(!is.character(mask)) stop("Option collapse_mask needs to be character typed")
+    if(any(mask == "all")) mask <- c("helper", "manip", "fast-fun", if(length(mask) > 1L) mask[mask != "all"] else NULL)
+    manipfun <- c("fsubset", "ftransform", "ftransform<-", "ftransformv", "fcompute", "fcomputev", "fselect", "fselect<-", "fgroup_by", "fgroup_vars", "fungroup", "fsummarise", "fmutate", "frename")
+    helperfun <- c("fdroplevels", "finteraction", "fnlevels", "funique", "fnrow", "fncol") # , "fdim": Problem of infinite recursion...
+    if(any(mask == "helper")) mask <- unique.default(c(helperfun, mask[mask != "helper"]))
+    if(any(mask == "manip")) mask <- unique.default(c(manipfun, mask[mask != "manip"]))
+    if(any(mask == "fast-fun")) {
+      mask <- unique.default(c(.FAST_FUN, mask[mask != "fast-fun"]))
+      fsfnonold <- .FAST_STAT_FUN_EXT[!startsWith(.FAST_STAT_FUN_EXT, "fN")]
+      assign(".FAST_STAT_FUN_EXT", c(.FAST_STAT_FUN_EXT, substr(fsfnonold, 2L, 100L)), envir = clpns)
+      assign(".FAST_STAT_FUN_POLD", c(.FAST_STAT_FUN_POLD, substr(.FAST_STAT_FUN, 2L, 100L)), envir = clpns)
+      ffnops <-  setdiff(.FAST_FUN_MOPS, .OPERATOR_FUN)
+      assign(".FAST_FUN_MOPS", c(.FAST_FUN_MOPS, substr(ffnops, 2L, 100L)), envir = clpns)
+    } else {
+      if(any(mask == "fast-stat-fun")) {
+        mask <- unique.default(c(.FAST_STAT_FUN, mask[mask != "fast-stat-fun"]))
+        fsfnonold <- .FAST_STAT_FUN_EXT[!startsWith(.FAST_STAT_FUN_EXT, "fN")]
+        assign(".FAST_STAT_FUN_EXT", c(.FAST_STAT_FUN_EXT, substr(fsfnonold, 2L, 100L)), envir = clpns)
+        assign(".FAST_STAT_FUN_POLD", c(.FAST_STAT_FUN_POLD, substr(.FAST_STAT_FUN, 2L, 100L)), envir = clpns)
+        assign(".FAST_FUN_MOPS", c(.FAST_FUN_MOPS, substr(.FAST_STAT_FUN, 2L, 100L)), envir = clpns)
+      }
+      if(any(mask == "fast-trfm-fun")) {
+        ftf <- fsetdiff(.FAST_FUN, .FAST_STAT_FUN)
+        mask <- unique.default(c(ftf, mask[mask != "fast-trfm-fun"]))
+        assign(".FAST_FUN_MOPS", c(.FAST_FUN_MOPS, substr(fsetdiff(ftf, c("fhdbetween", "fhdwithin")), 2L, 100L)), envir = clpns)
+      }
+    }
+    if(!all(m <- mask %in% names(clpns))) stop("Unknown collapse functions supplied to option 'collapse_mask': ", paste(mask[!m], collapse = ", "))
+    if(!all(m <- startsWith(mask, "f"))) stop("All functions to me masked must start with 'f'. You supplied: ", paste(mask[!m], collapse = ", "))
+    unmask <- substr(mask, 2L, 100L)
+    for(i in seq_along(mask)) assign(unmask[i], clpns[[mask[i]]], envir = clpns)
+    namespaceExport(clpns, unmask)
+  }
+
+  if(isTRUE(getOption("collapse_F_to_FALSE"))) {
+    assign("F", FALSE, envir = clpns)
+  }
 
   options(collapse_unused_arg_action = "warning", # error, warning, message or none
           collapse_DT_alloccol = 100L)
@@ -46,7 +82,7 @@
 }
 
 .onAttach <- function(libname, pkgname) {
-  packageStartupMessage(paste0("collapse ",packageVersion("collapsedev17"),", see ?`collapse-package` or ?`collapse-documentation`\nNote: stats::D  ->  D.expression, D.call, D.name"))
+  packageStartupMessage(paste0("collapse ",packageVersion("collapsedev17"),", see ?`collapse-package` or ?`collapse-documentation`")) # \nNote: stats::D  ->  D.expression, D.call, D.name
 }
 
 .onUnload <- function (libpath) {

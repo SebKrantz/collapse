@@ -1,7 +1,7 @@
 
 getdf <- function(x) {
   if(is.atomic(x)) if(is.factor(x)) return(fnlevels(x)-1L) else return(1L)
-  sum(vapply(unattrib(x), function(i) if(is.factor(i)) fnlevels(i)-1L else 1L, 1L))
+  bsum(vapply(unattrib(x), function(i) if(is.factor(i)) fnlevels(i)-1L else 1L, 1L))
 }
 
 
@@ -30,8 +30,8 @@ fFtest <- function(y, exc, X = NULL, w = NULL, full.df = TRUE, ...) {
       oldClass(data) <- NULL
       data[fc] <- lapply(data[fc], fdroplevels.factor)
       df <- vapply(unattrib(data), function(i) if(is.factor(i)) fnlevels(i)-1L else 1L, 1L) # getdf(data)
-      k <- sum(df) # 1 for intercept added with y
-      p <- sum(df[(Xn+2L):length(df)])
+      k <- bsum(df) # 1 for intercept added with y
+      p <- bsum(df[(Xn+2L):length(df)])
       y <- data[[1L]]
       oldClass(data) <- cld
     } else {

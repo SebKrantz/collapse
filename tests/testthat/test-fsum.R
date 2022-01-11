@@ -1,5 +1,6 @@
 context("fsum")
 
+bsum <- base::sum
 
 # TODO:
 # identical(as.integer(fsum(td, g)), unname(fsum(t, g)))
@@ -39,7 +40,7 @@ wsum <- function(x, w, na.rm = FALSE) {
     x <- x[cc]
     w <- w[cc]
   }
-  sum(x*w)
+  bsum(x*w)
 }
 
 wBY <- function(x, f, FUN, w, ...) {
@@ -51,39 +52,39 @@ wBY <- function(x, f, FUN, w, ...) {
 
 
 test_that("fsum performs like base::sum and base::colSums", {
-  expect_equal(fsum(NA), sum(NA))
-  expect_equal(fsum(NA, na.rm = FALSE), sum(NA))
-  expect_equal(fsum(1), sum(1, na.rm = TRUE))
-  expect_identical(fsum(1:3), sum(1:3, na.rm = TRUE))
-  expect_identical(fsum(-1:1), sum(-1:1, na.rm = TRUE))
-  expect_equal(fsum(1, na.rm = FALSE), sum(1))
-  expect_identical(fsum(1:3, na.rm = FALSE), sum(1:3))
-  expect_identical(fsum(-1:1, na.rm = FALSE), sum(-1:1))
-  expect_equal(fsum(x), sum(x, na.rm = TRUE))
-  expect_equal(fsum(x, na.rm = FALSE), sum(x))
-  expect_equal(fsum(xNA, na.rm = FALSE), sum(xNA))
-  expect_equal(fsum(xNA), sum(xNA, na.rm = TRUE))
+  expect_equal(fsum(NA), bsum(NA))
+  expect_equal(fsum(NA, na.rm = FALSE), bsum(NA))
+  expect_equal(fsum(1), bsum(1, na.rm = TRUE))
+  expect_identical(fsum(1:3), bsum(1:3, na.rm = TRUE))
+  expect_identical(fsum(-1:1), bsum(-1:1, na.rm = TRUE))
+  expect_equal(fsum(1, na.rm = FALSE), bsum(1))
+  expect_identical(fsum(1:3, na.rm = FALSE), bsum(1:3))
+  expect_identical(fsum(-1:1, na.rm = FALSE), bsum(-1:1))
+  expect_equal(fsum(x), bsum(x, na.rm = TRUE))
+  expect_equal(fsum(x, na.rm = FALSE), bsum(x))
+  expect_equal(fsum(xNA, na.rm = FALSE), bsum(xNA))
+  expect_equal(fsum(xNA), bsum(xNA, na.rm = TRUE))
   expect_equal(fsum(mtcars), fsum(m))
   expect_equal(fsum(m), colSums(m, na.rm = TRUE))
   expect_equal(fsum(m, na.rm = FALSE), colSums(m))
   expect_equal(fsum(mNA, na.rm = FALSE), colSums(mNA))
   expect_equal(fsum(mNA), colSums(mNA, na.rm = TRUE))
-  expect_equal(fsum(mtcars), dapply(mtcars, sum, na.rm = TRUE))
-  expect_equal(fsum(mtcars, na.rm = FALSE), dapply(mtcars, sum))
-  expect_equal(fsum(mtcNA, na.rm = FALSE), dapply(mtcNA, sum))
-  expect_equal(fsum(mtcNA), dapply(mtcNA, sum, na.rm = TRUE))
-  expect_equal(fsum(x, f), BY(x, f, sum, na.rm = TRUE))
-  expect_equal(fsum(x, f, na.rm = FALSE), BY(x, f, sum))
-  expect_equal(fsum(xNA, f, na.rm = FALSE), BY(xNA, f, sum))
-  expect_equal(na20(fsum(xNA, f)), BY(xNA, f, sum, na.rm = TRUE))
-  expect_equal(fsum(m, g), BY(m, g, sum, na.rm = TRUE))
-  expect_equal(fsum(m, g, na.rm = FALSE), BY(m, g, sum))
-  expect_equal(fsum(mNA, g, na.rm = FALSE), BY(mNA, g, sum))
-  expect_equal(na20(fsum(mNA, g)), BY(mNA, g, sum, na.rm = TRUE)) # error, sum(NA) give 0
-  expect_equal(fsum(mtcars, g), BY(mtcars, g, sum, na.rm = TRUE))
-  expect_equal(fsum(mtcars, g, na.rm = FALSE), BY(mtcars, g, sum))
-  expect_equal(fsum(mtcNA, g, na.rm = FALSE), BY(mtcNA, g, sum))
-  expect_equal(na20(fsum(mtcNA, g)), BY(mtcNA, g, sum, na.rm = TRUE)) # error, sum(NA) give 0
+  expect_equal(fsum(mtcars), dapply(mtcars, bsum, na.rm = TRUE))
+  expect_equal(fsum(mtcars, na.rm = FALSE), dapply(mtcars, bsum))
+  expect_equal(fsum(mtcNA, na.rm = FALSE), dapply(mtcNA, bsum))
+  expect_equal(fsum(mtcNA), dapply(mtcNA, bsum, na.rm = TRUE))
+  expect_equal(fsum(x, f), BY(x, f, bsum, na.rm = TRUE))
+  expect_equal(fsum(x, f, na.rm = FALSE), BY(x, f, bsum))
+  expect_equal(fsum(xNA, f, na.rm = FALSE), BY(xNA, f, bsum))
+  expect_equal(na20(fsum(xNA, f)), BY(xNA, f, bsum, na.rm = TRUE))
+  expect_equal(fsum(m, g), BY(m, g, bsum, na.rm = TRUE))
+  expect_equal(fsum(m, g, na.rm = FALSE), BY(m, g, bsum))
+  expect_equal(fsum(mNA, g, na.rm = FALSE), BY(mNA, g, bsum))
+  expect_equal(na20(fsum(mNA, g)), BY(mNA, g, bsum, na.rm = TRUE)) # error, bsum(NA) give 0
+  expect_equal(fsum(mtcars, g), BY(mtcars, g, bsum, na.rm = TRUE))
+  expect_equal(fsum(mtcars, g, na.rm = FALSE), BY(mtcars, g, bsum))
+  expect_equal(fsum(mtcNA, g, na.rm = FALSE), BY(mtcNA, g, bsum))
+  expect_equal(na20(fsum(mtcNA, g)), BY(mtcNA, g, bsum, na.rm = TRUE)) # error, bsum(NA) give 0
 })
 
 test_that("fsum with weights performs like wsum (defined above)", {
@@ -344,31 +345,31 @@ toint <- function(x) {
 
 
 test_that("fsum with integers performs like base::sum and base::colSums", {
-  expect_identical(fsum(x), sum(x, na.rm = TRUE))
-  expect_identical(fsum(x, na.rm = FALSE), sum(x))
-  expect_identical(fsum(xNA, na.rm = FALSE), sum(xNA))
-  expect_identical(fsum(xNA), sum(xNA, na.rm = TRUE))
+  expect_identical(fsum(x), bsum(x, na.rm = TRUE))
+  expect_identical(fsum(x, na.rm = FALSE), bsum(x))
+  expect_identical(fsum(xNA, na.rm = FALSE), bsum(xNA))
+  expect_identical(fsum(xNA), bsum(xNA, na.rm = TRUE))
   expect_identical(toint(fsum(mtcars)), fsum(m))
   expect_identical(fsum(m), toint(colSums(m, na.rm = TRUE)))
   expect_identical(fsum(m, na.rm = FALSE), toint(colSums(m)))
   expect_identical(fsum(mNA, na.rm = FALSE), toint(colSums(mNA)))
   expect_identical(fsum(mNA), toint(colSums(mNA, na.rm = TRUE)))
-  expect_identical(toint(fsum(mtcars)), dapply(mtcars, sum, na.rm = TRUE))
-  expect_identical(toint(fsum(mtcars, na.rm = FALSE)), dapply(mtcars, sum))
-  expect_identical(toint(fsum(mtcNA, na.rm = FALSE)), dapply(mtcNA, sum))
-  expect_identical(toint(fsum(mtcNA)), dapply(mtcNA, sum, na.rm = TRUE))
-  expect_identical(fsum(x, f), BY(x, f, sum, na.rm = TRUE))
-  expect_identical(fsum(x, f, na.rm = FALSE), BY(x, f, sum))
-  expect_identical(fsum(xNA, f, na.rm = FALSE), BY(xNA, f, sum))
-  expect_identical(na20(fsum(xNA, f)), BY(xNA, f, sum, na.rm = TRUE))
-  expect_identical(fsum(m, g), BY(m, g, sum, na.rm = TRUE))
-  expect_identical(fsum(m, g, na.rm = FALSE), BY(m, g, sum))
-  expect_identical(fsum(mNA, g, na.rm = FALSE), BY(mNA, g, sum))
-  expect_identical(na20(fsum(mNA, g)), BY(mNA, g, sum, na.rm = TRUE)) # error, sum(NA) give 0
-  expect_identical(fsum(mtcars, g), BY(mtcars, g, sum, na.rm = TRUE))
-  expect_identical(fsum(mtcars, g, na.rm = FALSE), BY(mtcars, g, sum))
-  expect_identical(fsum(mtcNA, g, na.rm = FALSE), BY(mtcNA, g, sum))
-  expect_identical(na20(fsum(mtcNA, g)), BY(mtcNA, g, sum, na.rm = TRUE)) # error, sum(NA) give 0
+  expect_identical(toint(fsum(mtcars)), dapply(mtcars, bsum, na.rm = TRUE))
+  expect_identical(toint(fsum(mtcars, na.rm = FALSE)), dapply(mtcars, bsum))
+  expect_identical(toint(fsum(mtcNA, na.rm = FALSE)), dapply(mtcNA, bsum))
+  expect_identical(toint(fsum(mtcNA)), dapply(mtcNA, bsum, na.rm = TRUE))
+  expect_identical(fsum(x, f), BY(x, f, bsum, na.rm = TRUE))
+  expect_identical(fsum(x, f, na.rm = FALSE), BY(x, f, bsum))
+  expect_identical(fsum(xNA, f, na.rm = FALSE), BY(xNA, f, bsum))
+  expect_identical(na20(fsum(xNA, f)), BY(xNA, f, bsum, na.rm = TRUE))
+  expect_identical(fsum(m, g), BY(m, g, bsum, na.rm = TRUE))
+  expect_identical(fsum(m, g, na.rm = FALSE), BY(m, g, bsum))
+  expect_identical(fsum(mNA, g, na.rm = FALSE), BY(mNA, g, bsum))
+  expect_identical(na20(fsum(mNA, g)), BY(mNA, g, bsum, na.rm = TRUE)) # error, bsum(NA) give 0
+  expect_identical(fsum(mtcars, g), BY(mtcars, g, bsum, na.rm = TRUE))
+  expect_identical(fsum(mtcars, g, na.rm = FALSE), BY(mtcars, g, bsum))
+  expect_identical(fsum(mtcNA, g, na.rm = FALSE), BY(mtcNA, g, bsum))
+  expect_identical(na20(fsum(mtcNA, g)), BY(mtcNA, g, bsum, na.rm = TRUE)) # error, bsum(NA) give 0
 })
 
 test_that("fsum with integers and weights performs like wsum (defined above)", {

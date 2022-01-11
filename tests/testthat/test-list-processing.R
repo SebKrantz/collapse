@@ -22,7 +22,7 @@ test_that("atomic_elem and list_elem work well", {
 
 })
 
-test_that("ldrpth works well", {
+test_that("ldepth works well", {
   expect_identical(ldepth(list(mtcars), DF.as.list = FALSE), 1L)
   expect_identical(ldepth(list(mtcars), DF.as.list = TRUE), 2L)
   expect_identical(ldepth(list(mtcars, l), DF.as.list = FALSE), 3L)

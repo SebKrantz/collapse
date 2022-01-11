@@ -1,3 +1,9 @@
+# Functions needed for internal use because of option(collapse_mask = "fast-stat-fun")
+bsum <- base::sum
+bprod <- base::prod
+bmin <- base::min
+bmax <- base::max
+
 # Row-operations (documented under data transformations...) ... see if any other package has it (i.e. matrixStats etc..)
 # or wirhout r ??? look for %+% function on Rducumentation.. rdio.
 
@@ -535,13 +541,13 @@ cols2int <- function(cols, x, nam, topos = TRUE) {
  if(is.numeric(cols)) {
    l <- length(unclass(x)) # length(nam) ?
    if(cols[1L] < 0L) { # This is sufficient to check negative indices: No R function allows subsetting mixing positive and negative indices.
-     if(-min(cols) > l) stop("Index out of range abs(1:length(x))")
+     if(-bmin(cols) > l) stop("Index out of range abs(1:length(x))")
      if(topos) return(seq_len(l)[cols])
      # cols <- seq_len(l)[cols]
      # if(!length(cols) || anyNA(cols)) stop("Index out of range abs(1:length(x))") -> used to put earlier check after if(topos) and use this one instead. But turns out that doesn't always work well.
      # return(cols)
-   } else if(max(cols) > l) stop("Index out of range abs(1:length(x))")
-   # if(max(abs(cols)) > length(unclass(x))) stop("Index out of range abs(1:length(x))") # Before collapse 1.4.0 !
+   } else if(bmax(cols) > l) stop("Index out of range abs(1:length(x))")
+   # if(bmax(abs(cols)) > length(unclass(x))) stop("Index out of range abs(1:length(x))") # Before collapse 1.4.0 !
    return(as.integer(cols)) # as.integer is necessary (for C_subsetCols), and at very little cost..
  }
  if(is.character(cols)) return(ckmatch(cols, nam))
@@ -560,8 +566,8 @@ cols2char <- function(cols, x, nam) {
   if(is.numeric(cols)) {
     l <- length(nam)
     if(cols[1L] < 0L) {
-      if(-min(cols) > l) stop("Index out of range abs(1:length(x))")
-    } else if(max(cols) > l) stop("Index out of range abs(1:length(x))")
+      if(-bmin(cols) > l) stop("Index out of range abs(1:length(x))")
+    } else if(bmax(cols) > l) stop("Index out of range abs(1:length(x))")
     return(nam[cols])
   }
   if(is.function(cols)) return(nam[vapply(unattrib(x), cols, TRUE)])
@@ -581,7 +587,7 @@ cols2char <- function(cols, x, nam) {
 #   if(is.character(cols)) {
 #     r[ckmatch(cols, nam)] <- TRUE
 #   } else if(is.numeric(cols)) {
-#     if(max(abs(cols)) > lx) stop("Index out of range abs(1:length(x))")
+#     if(bmax(abs(cols)) > lx) stop("Index out of range abs(1:length(x))")
 #     r[cols] <- TRUE
 #   } else stop("cols must be a function, character vector, numeric indices or logical vector!")
 #   r
@@ -605,7 +611,7 @@ colsubset <- function(x, ind, checksf = FALSE) {
 #   ax <- attributes(x)
 #   if(is.numeric(ind)) {
 #     attributes(x) <- NULL # note: attributes(x) <- NULL is very slightly faster than class(x) <- NULL
-#     if(max(abs(ind)) > length(x)) stop("Index out of range abs(1:length(x))")
+#     if(bmax(abs(ind)) > length(x)) stop("Index out of range abs(1:length(x))")
 #     ax[["names"]] <- ax[["names"]][ind]
 #     return(.Call(C_setAttributes, x[ind], ax))
 #   }

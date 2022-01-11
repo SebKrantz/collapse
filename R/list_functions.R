@@ -69,7 +69,7 @@ ldepth <- function(l, DF.as.list = FALSE) {
   } else {
     ld <- function(y,i) if(is.list(y) && !inherits(y, "data.frame")) lapply(y,ld,i+1L) else i
   }
-  max(unlist(ld(l, 0L), use.names = FALSE))
+  base::max(unlist(ld(l, 0L), use.names = FALSE))
 }
 
 has_elem <- function(l, elem, recursive = TRUE, DF.as.list = FALSE, regex = FALSE, ...) {

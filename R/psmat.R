@@ -107,8 +107,8 @@ plot.psmat <- function(x, legend = FALSE,
   colours <- if(isTRUE(colours)) rainbow(d[2L]) else if(isFALSE(colours)) TRUE else colours
   t <- as.numeric(dn[[1L]])
   if(!is.na(t[1L])) {
-    mint <- min(t)
-    maxt <- max(t)
+    mint <- bmin(t)
+    maxt <- bmax(t)
   } else {
     mint <- 1L
     maxt <- length(t)

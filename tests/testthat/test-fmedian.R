@@ -1,5 +1,11 @@
 context("fmedian and fnth")
 
+bmean <- base::mean
+bsum <- base::sum
+bmin <- base::min
+bmax <- base::max
+bmedian <- stats::median
+
 # rm(list = ls())
 set.seed(101)
 x <- rnorm(100)
@@ -30,7 +36,7 @@ nth <- function(x, n, na.rm = FALSE) {
   }
   if(n < 1) {
     n <- as.integer((length(x)-1L)*n)+1L
-    if(n < 2L) return(min(x))
+    if(n < 2L) return(bmin(x))
   }
   sort(x, partial = n)[n]
 }
@@ -42,13 +48,13 @@ wnth <- function(x, n = 0.5, w, na.rm = FALSE, ties = "mean") {
     w <- w[cc]
     if(!length(x)) return(NA_real_)
   } else if(!all(cc)) return(NA_real_)
-  sumwh <- sum(w) * n
+  sumwh <- bsum(w) * n
   if(sumwh == 0) return(NA_real_)
   if(length(x) < 2L) return(x)
   lp1 <- function(x) if(length(x)) x[length(x)] + 1L else 1L
-  mean2 <- function(x) sum(x) / length(x)
+  mean2 <- function(x) bsum(x) / length(x)
   o <- radixorder(x)
-  csumw <- cumsum(w[o])
+  csumw <- base::cumsum(w[o])
   if(csumw[1L] > sumwh) return(x[o[1L]])
   switch(ties,
          mean = mean2(x[o[lp1(which(csumw < sumwh)):lp1(which(csumw <= sumwh))]]),
@@ -69,39 +75,39 @@ wBY <- function(x, f, FUN, w, ...) {
 
 
 test_that("fmedian performs like base::median", {
-  expect_equal(fmedian(NA), as.double(median(NA)))
-  expect_equal(fmedian(NA, na.rm = FALSE), as.double(median(NA)))
-  expect_equal(fmedian(1), median(1, na.rm = TRUE))
-  expect_equal(fmedian(1:3), median(1:3, na.rm = TRUE))
-  expect_equal(fmedian(-1:1), median(-1:1, na.rm = TRUE))
-  expect_equal(fmedian(1, na.rm = FALSE), median(1))
-  expect_equal(fmedian(1:3, na.rm = FALSE), median(1:3))
-  expect_equal(fmedian(-1:1, na.rm = FALSE), median(-1:1))
-  expect_equal(fmedian(x), median(x, na.rm = TRUE))
-  expect_equal(fmedian(x, na.rm = FALSE), median(x))
-  expect_equal(fmedian(xNA, na.rm = FALSE), median(xNA))
-  expect_equal(fmedian(xNA), median(xNA, na.rm = TRUE))
+  expect_equal(fmedian(NA), as.double(bmedian(NA)))
+  expect_equal(fmedian(NA, na.rm = FALSE), as.double(bmedian(NA)))
+  expect_equal(fmedian(1), bmedian(1, na.rm = TRUE))
+  expect_equal(fmedian(1:3), bmedian(1:3, na.rm = TRUE))
+  expect_equal(fmedian(-1:1), bmedian(-1:1, na.rm = TRUE))
+  expect_equal(fmedian(1, na.rm = FALSE), bmedian(1))
+  expect_equal(fmedian(1:3, na.rm = FALSE), bmedian(1:3))
+  expect_equal(fmedian(-1:1, na.rm = FALSE), bmedian(-1:1))
+  expect_equal(fmedian(x), bmedian(x, na.rm = TRUE))
+  expect_equal(fmedian(x, na.rm = FALSE), bmedian(x))
+  expect_equal(fmedian(xNA, na.rm = FALSE), bmedian(xNA))
+  expect_equal(fmedian(xNA), bmedian(xNA, na.rm = TRUE))
   expect_equal(fmedian(mtcars), fmedian(m))
-  expect_equal(fmedian(m), dapply(m, median, na.rm = TRUE))
-  expect_equal(fmedian(m, na.rm = FALSE), dapply(m, median))
-  expect_equal(fmedian(mNA, na.rm = FALSE), dapply(mNA, median))
-  expect_equal(fmedian(mNA), dapply(mNA, median, na.rm = TRUE))
-  expect_equal(fmedian(mtcars), dapply(mtcars, median, na.rm = TRUE))
-  expect_equal(fmedian(mtcars, na.rm = FALSE), dapply(mtcars, median))
-  expect_equal(fmedian(mtcNA, na.rm = FALSE), dapply(mtcNA, median))
-  expect_equal(fmedian(mtcNA), dapply(mtcNA, median, na.rm = TRUE))
-  expect_equal(fmedian(x, f), BY(x, f, median, na.rm = TRUE))
-  expect_equal(fmedian(x, f, na.rm = FALSE), BY(x, f, median))
-  expect_equal(fmedian(xNA, f, na.rm = FALSE), BY(xNA, f, median))
-  expect_equal(fmedian(xNA, f), BY(xNA, f, median, na.rm = TRUE))
-  expect_equal(fmedian(m, g), BY(m, g, median, na.rm = TRUE))
-  expect_equal(fmedian(m, g, na.rm = FALSE), BY(m, g, median))
-  expect_equal(fmedian(mNA, g, na.rm = FALSE), BY(mNA, g, median))
-  expect_equal(fmedian(mNA, g), BY(mNA, g, median, na.rm = TRUE))
-  expect_equal(fmedian(mtcars, g), BY(mtcars, g, median, na.rm = TRUE))
-  expect_equal(fmedian(mtcars, g, na.rm = FALSE), BY(mtcars, g, median))
-  expect_equal(fmedian(mtcNA, g, na.rm = FALSE), BY(mtcNA, g, median))
-  expect_equal(fmedian(mtcNA, g), BY(mtcNA, g, median, na.rm = TRUE))
+  expect_equal(fmedian(m), dapply(m, bmedian, na.rm = TRUE))
+  expect_equal(fmedian(m, na.rm = FALSE), dapply(m, bmedian))
+  expect_equal(fmedian(mNA, na.rm = FALSE), dapply(mNA, bmedian))
+  expect_equal(fmedian(mNA), dapply(mNA, bmedian, na.rm = TRUE))
+  expect_equal(fmedian(mtcars), dapply(mtcars, bmedian, na.rm = TRUE))
+  expect_equal(fmedian(mtcars, na.rm = FALSE), dapply(mtcars, bmedian))
+  expect_equal(fmedian(mtcNA, na.rm = FALSE), dapply(mtcNA, bmedian))
+  expect_equal(fmedian(mtcNA), dapply(mtcNA, bmedian, na.rm = TRUE))
+  expect_equal(fmedian(x, f), BY(x, f, bmedian, na.rm = TRUE))
+  expect_equal(fmedian(x, f, na.rm = FALSE), BY(x, f, bmedian))
+  expect_equal(fmedian(xNA, f, na.rm = FALSE), BY(xNA, f, bmedian))
+  expect_equal(fmedian(xNA, f), BY(xNA, f, bmedian, na.rm = TRUE))
+  expect_equal(fmedian(m, g), BY(m, g, bmedian, na.rm = TRUE))
+  expect_equal(fmedian(m, g, na.rm = FALSE), BY(m, g, bmedian))
+  expect_equal(fmedian(mNA, g, na.rm = FALSE), BY(mNA, g, bmedian))
+  expect_equal(fmedian(mNA, g), BY(mNA, g, bmedian, na.rm = TRUE))
+  expect_equal(fmedian(mtcars, g), BY(mtcars, g, bmedian, na.rm = TRUE))
+  expect_equal(fmedian(mtcars, g, na.rm = FALSE), BY(mtcars, g, bmedian))
+  expect_equal(fmedian(mtcNA, g, na.rm = FALSE), BY(mtcNA, g, bmedian))
+  expect_equal(fmedian(mtcNA, g), BY(mtcNA, g, bmedian, na.rm = TRUE))
 })
 
 test_that("fmedian performs like fmedian with weights all equal", {

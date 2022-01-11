@@ -40,7 +40,7 @@ minwa <- function(x) {
       if(!length(xna)) return(`attributes<-`(NA_real_, attributes(x)))
     }
   }
-  `attributes<-`(`storage.mode<-`(min(xna), storage.mode(x)), attributes(x))
+  `attributes<-`(`storage.mode<-`(base::min(xna), storage.mode(x)), attributes(x))
 }
 maxwa <- function(x) {
   xna <- unattrib(x)
@@ -48,7 +48,7 @@ maxwa <- function(x) {
     xna <- na_rm(xna)
     if(!length(xna)) return(`attributes<-`(NA_real_, attributes(x)))
   }
-  `attributes<-`(`storage.mode<-`(max(xna), storage.mode(x)), attributes(x))
+  `attributes<-`(`storage.mode<-`(base::max(xna), storage.mode(x)), attributes(x))
 }
 
 if(identical(Sys.getenv("NCRAN"), "TRUE")) {
@@ -102,7 +102,7 @@ wMode <- function(x, w, na.rm = FALSE, ties = "first") {
          first = {
            g <- as_factor_GRP(g)
            o <- radixorder(unlist(split.default(seq_along(w), g), use.names = FALSE))
-           sw <- unlist(lapply(split.default(w, g), cumsum), use.names = FALSE)[o]
+           sw <- unlist(lapply(split.default(w, g), base::cumsum), use.names = FALSE)[o]
            fsubset.default(x, which.max(sw))
          },
          min = minwa(fsubset.default(g[["groups"]][[1L]], whichmax(fsum.default(w, g, use.g.names = FALSE)))),

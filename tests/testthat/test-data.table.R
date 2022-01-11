@@ -1,5 +1,7 @@
 context("collapse and data.table integration")
 
+bmean <- base::mean
+
 # TODO: Check memory allocation, particularly where names<- and attr<- are used.
 # Also check attribute handling helpers with atomic and S4 objects !!
 
@@ -125,7 +127,7 @@ test_that("creating columns and printing works after passing a data.table throug
   }
 
   for(i in 1:n) {
-  dt <- copy(mtcDT) %>% smr(mean_mpg = mean(mpg))
+  dt <- copy(mtcDT) %>% smr(mean_mpg = bmean(mpg))
   expect_silent(dt[, new := 1])
   expect_output(print(dt))
   }
@@ -137,7 +139,7 @@ test_that("creating columns and printing works after passing a data.table throug
   }
 
   for(i in 1:n) {
-  dt <- copy(mtcDT) %>% gby(cyl) %>% smr(mean_mpg = mean(mpg))
+  dt <- copy(mtcDT) %>% gby(cyl) %>% smr(mean_mpg = bmean(mpg))
   expect_silent(dt[, new := 1])
   expect_output(print(dt))
   }

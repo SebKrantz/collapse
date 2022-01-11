@@ -347,9 +347,9 @@ pad <- function(X, i, value = NA, method = c("auto", "xpos", "vpos")) { # 1 - i 
   ilog <- is.logical(i)
   ineg <- i[1L] < 0L
   n <- if(is.list(X)) length(.subset2(X, 1L)) else if(is.matrix(X)) dim(X)[1L] else length(X)
-  xpos <- switch(method[1L], auto = if(ilog) sum(i) == n else if(ineg) FALSE else length(i) == n,
+  xpos <- switch(method[1L], auto = if(ilog) bsum(i) == n else if(ineg) FALSE else length(i) == n,
                  xpos = TRUE, vpos = FALSE, stop("Unknown method: ", method[1L]))
-  n <- if(ilog) length(i) else if(xpos && !ineg) max(i) else n + length(i)
+  n <- if(ilog) length(i) else if(xpos && !ineg) bmax(i) else n + length(i)
   if(is.atomic(X)) return(pad_atomic(X, if(xpos || ineg) i else if(ilog) !i else -i, n, value))
   if(!is.list(X)) stop("X must be atomic or a list")
   if(ilog) {
@@ -385,7 +385,7 @@ Recode <- function(X, ..., copy = FALSE, reserve.na.nan = TRUE, regex = FALSE) {
       } else X[is.nan(X)] <- args[[ma[1L]]]
     }
     if(wm[2L]) X[is.na(X)] <- args[[ma[2L]]] # is.na already accounts for NaN, so this needs to the the order!!
-    if(sum(wm) == length(args)) return(X)
+    if(bsum(wm) == length(args)) return(X)
     args <- args[-ma[wm]]
     nam <- names(args)
   }

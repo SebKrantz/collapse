@@ -399,12 +399,12 @@ flNA <- na_insert(fl)
 
 test_that("finteraction works as intended", {
 
-  expect_equal(`oldClass<-`(finteraction(fl), "factor"), interaction(fl, drop = TRUE, lex.order = TRUE))
-  expect_equal(`oldClass<-`(finteraction(ss(fl, 1:300)), "factor"), interaction(ss(fl, 1:300), drop = TRUE, lex.order = TRUE)) # missing levels
+  expect_equal(`oldClass<-`(finteraction(fl), "factor"), base::interaction(fl, drop = TRUE, lex.order = TRUE))
+  expect_equal(`oldClass<-`(finteraction(ss(fl, 1:300)), "factor"), base::interaction(ss(fl, 1:300), drop = TRUE, lex.order = TRUE)) # missing levels
 
   # Missing value behavior is always different !!
-  # expect_equal(`oldClass<-`(finteraction(flNA), "factor"), factor(interaction(flNA, drop = TRUE, lex.order = TRUE), exclude = NULL))
-  # expect_equal(`oldClass<-`(finteraction(ss(flNA, 1:300)), "factor"), interaction(ss(flNA, 1:300), drop = TRUE, lex.order = TRUE))
+  # expect_equal(`oldClass<-`(finteraction(flNA), "factor"), factor(base::interaction(flNA, drop = TRUE, lex.order = TRUE), exclude = NULL))
+  # expect_equal(`oldClass<-`(finteraction(ss(flNA, 1:300)), "factor"), base::interaction(ss(flNA, 1:300), drop = TRUE, lex.order = TRUE))
 
 })
 

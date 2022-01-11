@@ -7,7 +7,7 @@ qDF <- function(X, row.names.col = FALSE, keep.attr = FALSE, class = "data.frame
     if(ld > 1L) {
       if(ld > 2L) {
         dn <- dimnames(X)
-        dim(X) <- c(d[1L], prod(d[-1L]))
+        dim(X) <- c(d[1L], bprod(d[-1L]))
         if(length(dn)) {
           for (i in 2L:ld) if(is.null(dn[[i]])) dn[[i]] <- seq_len(d[i])
           dimnames(X) <- list(dn[[1L]], interact_names(dn[-1L])) # Good?
@@ -82,7 +82,7 @@ qDT_raw <- function(X, row.names.col, keep.attr, DT_class, X_nam) {
     if(ld > 1L) {
       if(ld > 2L) {
         dn <- dimnames(X)
-        dim(X) <- c(d[1L], prod(d[-1L]))
+        dim(X) <- c(d[1L], bprod(d[-1L]))
         if(length(dn)) {
           for (i in 2L:ld) if(is.null(dn[[i]])) dn[[i]] <- seq_len(d[i])
           dimnames(X) <- list(dn[[1L]], interact_names(dn[-1L])) # Good?
@@ -155,7 +155,7 @@ qM <- function(X, keep.attr = FALSE, class = NULL) {
       if(is.array(X)) {
         d <- dim(X)
         dn <- dimnames(X)
-        dim(X) <- c(d[1L], prod(d[-1L]))
+        dim(X) <- c(d[1L], bprod(d[-1L]))
         if(length(dn)) {
           for (i in 2L:length(d)) if(is.null(dn[[i]])) dn[[i]] <- seq_len(d[i])
           dimnames(X) <- list(dn[[1L]], interact_names(dn[-1L])) # Good?
@@ -194,7 +194,7 @@ qM <- function(X, keep.attr = FALSE, class = NULL) {
       dim(X) <- d
       dimnames(X) <- dn
     } else {
-      dim(X) <- c(d[1L], prod(d[-1L]))
+      dim(X) <- c(d[1L], bprod(d[-1L]))
       if(length(dn)) {
         for (i in 2L:ld) if(is.null(dn[[i]])) dn[[i]] <- seq_len(d[i])
         dimnames(X) <- list(dn[[1L]], interact_names(dn[-1L])) # Good?
@@ -234,7 +234,7 @@ qM <- function(X, keep.attr = FALSE, class = NULL) {
 #     ld <- length(d)
 #     if(ld > 2L) {
 #       dn <- dimnames(X)
-#       dim(X) <- c(d[1L], prod(d[-1L]))
+#       dim(X) <- c(d[1L], bprod(d[-1L]))
 #       if(length(dn)) {
 #         for (i in 2L:ld) if(is.null(dn[[i]])) dn[[i]] <- seq_len(d[i])
 #         dimnames(X) <- list(dn[[1L]], interact_names(dn[-1L])) # Good?
@@ -259,7 +259,7 @@ qM <- function(X, keep.attr = FALSE, class = NULL) {
 #     if(ld >= 2L) {
 #       if(ld != 2L) {
 #         dn <- dimnames(X)
-#         dim(X) <- c(d[1L], prod(d[-1L]))
+#         dim(X) <- c(d[1L], bprod(d[-1L]))
 #         if(length(dn)) {
 #           for (i in 2L:ld) if(is.null(dn[[i]])) dn[[i]] <- seq_len(d[i])
 #           dimnames(X) <- list(dn[[1L]], interact_names(dn[-1L])) # Good?
@@ -313,7 +313,7 @@ qM <- function(X, keep.attr = FALSE, class = NULL) {
 #     if(ld >= 2L) {
 #       if(ld != 2L) {
 #         dn <- dimnames(X)
-#         dim(X) <- c(d[1L], prod(d[-1L]))
+#         dim(X) <- c(d[1L], bprod(d[-1L]))
 #         if(length(dn)) {
 #           for (i in 2L:ld) if(is.null(dn[[i]])) dn[[i]] <- seq_len(d[i])
 #           dimnames(X) <- list(dn[[1L]], interact_names(dn[-1L])) # Good?

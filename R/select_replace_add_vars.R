@@ -52,7 +52,7 @@ fselect <- function(x, ..., return = "data") { # This also takes names and indic
   # if(inherits(x, "data.table")) nam <- nam[seq_col(x)] # required because of overallocation... -> Should be solved now, always take shallow copy...
   nl <- `names<-`(as.vector(seq_along(nam), "list"), nam)
   vars <- eval(substitute(c(...)), nl, parent.frame())
-  # if(!is.integer(vars)) stop(paste0("Unknown columns: ", .c(...))) # if(!is.integer(vars) || max(vars) > length(nam)) # nah, a bit redundant..
+  # if(!is.integer(vars)) stop(paste0("Unknown columns: ", .c(...))) # if(!is.integer(vars) || bmax(vars) > length(nam)) # nah, a bit redundant..
   if(!is.atomic(vars) || is.logical(vars)) stop("... needs to be expressions evaluating to integer or character")
   nam_vars <- names(vars)
   vars <- if(is.character(vars)) ckmatch(vars, nam) else as.integer(vars) # needed, otherwise selecting with doubles gives an error
@@ -200,7 +200,7 @@ gvr <- function(x, vars, return = "data", ...) {
     }
     lv <- length(value)
     tl <- lv+lx
-    if(!is.numeric(pos) || length(pos) != lv || max(pos) > tl) stop("pos needs to be 'end', 'front' or a suitable numeric / integer vector of positions!")
+    if(!is.numeric(pos) || length(pos) != lv || bmax(pos) > tl) stop("pos needs to be 'end', 'front' or a suitable numeric / integer vector of positions!")
     o <- forder.int(c(seq_len(tl)[-pos], pos))
     ax[["names"]] <- if(length(nam <- names(value)))  c(ax[["names"]], nam)[o] else
         c(ax[["names"]], paste0("V", pos))[o] # FASTER THIS WAY? -> It seems so...

@@ -265,7 +265,7 @@ collap <- function(X, by, FUN = fmean, catFUN = fmode, cols = NULL, w = NULL, wF
 
     # if(autorn) give.names <- fanyDuplicated(unlist(custom, FALSE, FALSE))
     #lx <- length(X)
-    # custom <- lapply(custom, function(x) if(is.numeric(x) && max(abs(x)) <= lx)
+    # custom <- lapply(custom, function(x) if(is.numeric(x) && bmax(abs(x)) <= lx)
     #                          x else if(is.character(x)) ckmatch(x, nam) else
     #                          stop("custom list content must be variable names or suitable column indices"))
 

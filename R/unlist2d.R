@@ -22,7 +22,7 @@ unlist2d <- function(l, idcols = ".id", row.names = FALSE, recursive = TRUE, id.
     if (length(d <- dim(x)) > 1L) { # is.array(x) # length could also be 0... not NULL
       if (length(d) > 2L) { # breaking down HDA
         dn <- dimnames(x)
-        dim(x) <- c(d[1L], prod(d[-1L]))
+        dim(x) <- c(d[1L], bprod(d[-1L]))
         if (length(dn)) {
           for (i in 2L:length(d)) if(is.null(dn[[i]])) dn[[i]] <- seq_len(d[i])
           dimnames(x) <- list(dn[[1L]], interact_names(dn[-1L])) # Good ?
@@ -108,7 +108,7 @@ unlist2d <- function(l, idcols = ".id", row.names = FALSE, recursive = TRUE, id.
 # str(unlist2d(nl, recursive = FALSE)) # why is .id a character string?? -> names!!
 #
 # # Neat example:
-# # list.elem(IRF) %>% rapply2d(colSums) %>% unlist2d(c("type","shock")) %>% filter(type == "irf") %>% num.vars %>% dapply(function(x)sum(abs(x)),MARGIN = 1)
+# # list.elem(IRF) %>% rapply2d(colSums) %>% unlist2d(c("type","shock")) %>% filter(type == "irf") %>% num.vars %>% dapply(function(x)bsum(abs(x)),MARGIN = 1)
 #
 # unlist2d(qsu(mtcars,~cyl,~vs, data.out = TRUE)) # not dim, but is.data.frame
 #
@@ -139,7 +139,7 @@ unlist2d <- function(l, idcols = ".id", row.names = FALSE, recursive = TRUE, id.
 #       # d <- dim(x)
 #       if (length(d) > 2L) { # breaking down HDA
 #         dn <- dimnames(x)
-#         dim(x) <- c(d[1L], prod(d[-1L]))
+#         dim(x) <- c(d[1L], bprod(d[-1L]))
 #         if (length(dn)) {
 #           for (i in 2L:length(d)) if(is.null(dn[[i]])) dn[[i]] <- seq_len(d[i])
 #           dimnames(x) <- list(dn[[1L]], interact_names(dn[-1L])) # Good ?

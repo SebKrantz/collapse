@@ -37,6 +37,8 @@ storage.mode(mNAc) <- "character"
 # fbetween(xNA, w = wNA) 90.99712 93.71455 107.38818 95.91545 98.16989 328.8951   100    d
 # fwithin(xNA, w = wNA) 80.13678 83.62511 103.55614 86.22361 93.18352 301.7070   100  bcd
 
+bsum <- base::sum
+
 between <- function(x, na.rm = FALSE) {
   if(!na.rm) return(ave(x))
   cc <- !is.na(x)
@@ -46,7 +48,7 @@ between <- function(x, na.rm = FALSE) {
 within <- function(x, na.rm = FALSE, mean = 0) {
   if(!na.rm) return(x - ave(x) + mean)
   cc <- !is.na(x)
-  m <- sum(x[cc]) / sum(cc)
+  m <- bsum(x[cc]) / bsum(cc)
   return(x - m + mean)
 }
 
@@ -56,11 +58,11 @@ wbetween <- function(x, w, na.rm = FALSE) {
     xcc <- !is.na(x)
     cc <- xcc & !is.na(w)
     w <- w[cc]
-    wm <- sum(w * x[cc]) / sum(w)
-    x[xcc] <- rep(wm, sum(xcc))
+    wm <- bsum(w * x[cc]) / bsum(w)
+    x[xcc] <- rep(wm, bsum(xcc))
     return(x)
   } else {
-    wm <- sum(w * x) / sum(w)
+    wm <- bsum(w * x) / bsum(w)
     return(rep(wm, length(x)))
   }
 }
@@ -68,8 +70,8 @@ wwithin <- function(x, w, na.rm = FALSE, mean = 0) {
   if(na.rm) {
     cc <- complete.cases(x, w)
     w <- w[cc]
-    wm <- sum(w * x[cc]) / sum(w)
-  } else wm <- sum(w * x) / sum(w)
+    wm <- bsum(w * x[cc]) / bsum(w)
+  } else wm <- bsum(w * x) / bsum(w)
     return(x - wm + mean)
 }
 

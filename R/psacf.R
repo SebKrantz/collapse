@@ -332,7 +332,7 @@ psccf.pseries <- function(x, y, lag.max = NULL, type = c("correlation", "covaria
 #                                               1L)), 3:1)[-1L, , , drop = FALSE]
 #   var.pred <- aperm(array(z$var, dim = c(nser, nser, order.max +
 #                                            1L)), 3:1)
-#   xaic <- setNames(z$aic - min(z$aic), 0:order.max)
+#   xaic <- setNames(z$aic - bmin(z$aic), 0:order.max)
 #   order <- z$order
 #   resid <- x
 #   if (order > 0) {

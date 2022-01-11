@@ -1,5 +1,8 @@
 context("collap")
 
+bsum <- base::sum
+bmean <- base::mean
+
 # rm(list = ls())
 
 options(warn = -1)
@@ -65,27 +68,27 @@ test_that("collap preserves data attributes", {
 })
 
 test_that("collap performs as intended in simple uses with base/stats functions", {
-  expect_equal(oa(collap(mtcars, mtcars$cyl, sum, keep.by = FALSE)),
+  expect_equal(oa(collap(mtcars, mtcars$cyl, bsum, keep.by = FALSE)),
                oa(fsum(mtcars, mtcars$cyl, use.g.names = FALSE)))
   expect_equal(oa(collap(mtcars, ~cyl, mean.default)),
                oa(fmean(mtcars, mtcars$cyl, use.g.names = FALSE)))
-  expect_equal(oa(collap(mtcars, ~cyl, mean)),
+  expect_equal(oa(collap(mtcars, ~cyl, bmean)),
                oa(fmean(mtcars, mtcars$cyl, use.g.names = FALSE)))
 
-  expect_equal(oa(collap(mtcars, mtcars[2], sum, keep.by = FALSE)),
+  expect_equal(oa(collap(mtcars, mtcars[2], bsum, keep.by = FALSE)),
                oa(fsum(mtcars, mtcars$cyl, use.g.names = FALSE)))
-  expect_equal(oa(collap(mtcars, ~cyl, sum, keep.by = FALSE)),
+  expect_equal(oa(collap(mtcars, ~cyl, bsum, keep.by = FALSE)),
                oa(fsum(mtcars[-2], mtcars$cyl, use.g.names = FALSE)))
-  expect_equal(unattrib(collap(iris, ~Species, sum, keep.by = FALSE)),
+  expect_equal(unattrib(collap(iris, ~Species, bsum, keep.by = FALSE)),
                unattrib(fsum(iris[-5], iris$Species, use.g.names = FALSE)))
-  expect_equal(oa(collap(airquality, ~Month, sum, na.rm = TRUE, keep.by = FALSE)),
+  expect_equal(oa(collap(airquality, ~Month, bsum, na.rm = TRUE, keep.by = FALSE)),
                oa(fsum(airquality[-5], airquality$Month, use.g.names = FALSE)))
 
-  expect_equal(oa(collap(wlddev, ~ country + decade, sum, Mode, na.rm = TRUE, keep.col.order = FALSE)),
-               oa(cbind(g$groups, BY(get_vars(wlddev, c(4,9:13)), g, sum, na.rm = TRUE, use.g.names = FALSE),
+  expect_equal(oa(collap(wlddev, ~ country + decade, bsum, Mode, na.rm = TRUE, keep.col.order = FALSE)),
+               oa(cbind(g$groups, BY(get_vars(wlddev, c(4,9:13)), g, bsum, na.rm = TRUE, use.g.names = FALSE),
                      BY(get_vars(wlddev, c(2:3,6:8)), g, Mode, na.rm = TRUE, use.g.names = FALSE))))
-  expect_equal(oa(collap(wlddev, ~ country + decade, sum, Mode, na.rm = TRUE)),
-               oa(cbind(g$groups, BY(get_vars(wlddev, c(4,9:13)), g, sum, na.rm = TRUE, use.g.names = FALSE),
+  expect_equal(oa(collap(wlddev, ~ country + decade, bsum, Mode, na.rm = TRUE)),
+               oa(cbind(g$groups, BY(get_vars(wlddev, c(4,9:13)), g, bsum, na.rm = TRUE, use.g.names = FALSE),
                      BY(get_vars(wlddev, c(2:3,6:8)), g, Mode, na.rm = TRUE, use.g.names = FALSE)))[order(c(1,5,4,9:13,2:3,6:8))])
 })
 
@@ -327,11 +330,11 @@ test_that("collap gives informative errors", {
   expect_error(collap(wlddev, "country")) # same thing
   expect_error(collap(wlddev, ~ country1))
   expect_error(collap(wlddev, ~ country, w = ~bla))
-  expect_error(collap(wlddev, ~ country, w = ~POP, wFUN = sum))
+  expect_error(collap(wlddev, ~ country, w = ~POP, wFUN = bsum))
   expect_error(collap(wlddev, ~ country + year + bla))
   expect_error(collap(wlddev, bla ~ country))
   expect_warning(collap(wlddev, ~ country, bla = 1)) # passes to fmean.data.frame which give the error.
-  # expect_error(collap(wlddev, ~ country, sum, cols = 9:13, bla = 1)) # This is an issue, sum(1:3, bla = 1) does not give an error
+  # expect_error(collap(wlddev, ~ country, bsum, cols = 9:13, bla = 1)) # This is an issue, bsum(1:3, bla = 1) does not give an error
   expect_error(collap(wlddev, mtcars$cyl)) # again fmean error..
   expect_error(collap(wlddev, ~iso3c, cols = 9:14))
   # expect_error(collap(wlddev, ~iso3c, cols = 0:1)) # no error..
@@ -401,21 +404,21 @@ test_that("collapv preserves data attributes", {
 test_that("collapv performs as intended in simple uses with base/stats functions", {
   expect_equal(oa(collapv(mtcars, "cyl", mean.default)),
                oa(fmean(mtcars, mtcars$cyl, use.g.names = FALSE)))
-  expect_equal(oa(collapv(mtcars, "cyl", mean)),
+  expect_equal(oa(collapv(mtcars, "cyl", bmean)),
                oa(fmean(mtcars, mtcars$cyl, use.g.names = FALSE)))
 
-  expect_equal(oa(collapv(mtcars, 2, sum, keep.by = FALSE)),
+  expect_equal(oa(collapv(mtcars, 2, bsum, keep.by = FALSE)),
                oa(fsum(mtcars[-2], mtcars$cyl, use.g.names = FALSE)))
-  expect_equal(oa(collapv(iris, 5, sum, keep.by = FALSE)),
+  expect_equal(oa(collapv(iris, 5, bsum, keep.by = FALSE)),
                oa(fsum(iris[-5], iris$Species, use.g.names = FALSE)))
-  expect_equal(oa(collapv(airquality, "Month", sum, na.rm = TRUE, keep.by = FALSE)),
+  expect_equal(oa(collapv(airquality, "Month", bsum, na.rm = TRUE, keep.by = FALSE)),
                oa(fsum(airquality[-5], airquality$Month, use.g.names = FALSE)))
 
-  expect_equal(oa(collapv(wlddev, v, sum, Mode, na.rm = TRUE, keep.col.order = FALSE)),
-               oa(cbind(g$groups, BY(get_vars(wlddev, c(4,9:13)), g, sum, na.rm = TRUE, use.g.names = FALSE),
+  expect_equal(oa(collapv(wlddev, v, bsum, Mode, na.rm = TRUE, keep.col.order = FALSE)),
+               oa(cbind(g$groups, BY(get_vars(wlddev, c(4,9:13)), g, bsum, na.rm = TRUE, use.g.names = FALSE),
                      BY(get_vars(wlddev, c(2:3,6:8)), g, Mode, na.rm = TRUE, use.g.names = FALSE))))
-  expect_equal(oa(collapv(wlddev, v, sum, Mode, na.rm = TRUE)),
-               oa(cbind(g$groups, BY(get_vars(wlddev, c(4,9:13)), g, sum, na.rm = TRUE, use.g.names = FALSE),
+  expect_equal(oa(collapv(wlddev, v, bsum, Mode, na.rm = TRUE)),
+               oa(cbind(g$groups, BY(get_vars(wlddev, c(4,9:13)), g, bsum, na.rm = TRUE, use.g.names = FALSE),
                      BY(get_vars(wlddev, c(2:3,6:8)), g, Mode, na.rm = TRUE, use.g.names = FALSE)))[order(c(1,5,4,9:13,2:3,6:8))])
 })
 
@@ -625,7 +628,7 @@ test_that("collapv gives informative errors", {
   expect_error(collapv(wlddev, 14))
   expect_error(collapv(wlddev, 1, w = 14))
   expect_error(collapv(wlddev, 1, w = "bla"))
-  expect_error(collapv(wlddev, 1, w = 13, wFUN = sum))
+  expect_error(collapv(wlddev, 1, w = 13, wFUN = bsum))
   expect_error(collapv(wlddev, c(1,0)))
   expect_error(collapv(wlddev, c(1,14)))
   expect_warning(collapv(wlddev, 1, bla = 1)) # passes to fmean.data.frame which give the error.
