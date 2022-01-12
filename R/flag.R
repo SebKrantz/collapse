@@ -19,7 +19,7 @@ flag.pseries <- function(x, n = 1, fill = NA, stubs = TRUE, ...) {
   oldopts <- options(warn = -1L)
   on.exit(options(oldopts))
   if(is.finite(as.integer(tlev[1L]))) t <- as.integer(tlev)[t]
-  if(n > 1 && is.factor(x)) x <- setNames(as.character(x), names(x))
+  if(length(n) > 1 && is.factor(x)) x <- setNames(as.character(x), names(x))
   if(is.matrix(x))
   .Call(Cpp_flagleadm,x,n,fill,fnlevels(g),g,t,stubs) else
   .Call(Cpp_flaglead,x,n,fill,fnlevels(g),g,t,stubs)
