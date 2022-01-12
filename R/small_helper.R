@@ -44,7 +44,9 @@ bmax <- base::max
 
 
 # Multiple-assignment
-"%=%" <- function(lhs, rhs, env = parent.frame()) invisible(.Call(C_multiassign, lhs, rhs, env))
+"%=%" <- function(nam, values) invisible(.Call(C_multiassign, nam, values, parent.frame()))
+massign <- function(nam, values, envir = parent.frame()) invisible(.Call(C_multiassign, nam, values, envir))
+
 # R implementation:
 # "%=%" <- function(lhs, rhs) {
 #   if(!is.character(lhs)) stop("lhs needs to be character")
@@ -291,7 +293,7 @@ all_obj_equal <- function(...) {
   is.logical(r)
 }
 
-cinv <- function(X) chol2inv(chol(X))
+cinv <- function(x) chol2inv(chol(x))
 # TODO: Use outer here for simple case...
 interact_names <- function(l) do.call(paste, c(expand.grid(l, KEEP.OUT.ATTRS = FALSE, stringsAsFactors = FALSE), list(sep = ".")))
 
@@ -428,16 +430,16 @@ na_omit <- function(X, cols = NULL, na.attr = FALSE) {
   res
 }
 
-na_insert <- function(X, prop = 0.1) {
+na_insert <- function(X, prop = 0.1, value = NA) {
   if(is.list(X)) {
     n <- fnrow2(X)
     nmiss <- floor(n * prop)
-    res <- duplAttributes(lapply(unattrib(X), function(y) `[<-`(y, sample.int(n, nmiss), value = NA)), X)
+    res <- duplAttributes(lapply(unattrib(X), function(y) `[<-`(y, sample.int(n, nmiss), value = value)), X)
     return(if(inherits(X, "data.table")) alc(res) else res)
   }
   if(!is.atomic(X)) stop("X must be an atomic vector, array or data.frame")
   l <- length(X)
-  X[sample.int(l, floor(l * prop))] <- NA
+  X[sample.int(l, floor(l * prop))] <- value
   X
 }
 

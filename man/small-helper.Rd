@@ -1,5 +1,6 @@
-\name{AA3-small-helpers}
+\name{small-helpers}
 \alias{AA3-small-helpers}
+\alias{small-helpers}
 \alias{.c}
 \alias{vlabels}
 \alias{vlabels<-}
@@ -9,6 +10,7 @@
 \alias{add_stub}
 \alias{rm_stub}
 \alias{\%!in\%}
+\alias{massign}
 \alias{\%=\%}
 \alias{ckmatch}
 \alias{all_identical}
@@ -32,15 +34,18 @@ Convenience functions in the \emph{collapse} package that help to deal with obje
 }
 \usage{
 .c(\dots)                       # Non-standard concatenation i.e. .c(a, b) == c("a", "b")
-lhs \%=\% rhs                   # Multiple-assignment e.g. .c(x, y) \%=\% c(1, 2)
-vlabels(X, attrn = "label",     # Get labels of variables in X, in attr(X[[i]], attrn)
+nam \%=\% values                # Multiple-assignment e.g. .c(x, y) \%=\% c(1, 2),
+massign(nam, values,          # can also assign to different environment.
+        envir = parent.frame())
+vlabels(X, attrn = "label",   # Get labels of variables in X, in attr(X[[i]], attrn)
         use.names = TRUE)
 vlabels(X, attrn = "label") <- value    # Set labels of variables in X (by reference)
 setLabels(X, value, attrn = "label",    # Set labels of variables in X (by reference)
           cols = NULL)                  # and return X
 vclasses(X, use.names = TRUE) # Get classes of variables in X
-namlab(X, class = FALSE,      # Return data frame of names, labels and classes
-  attrn = "label", N = FALSE, Ndistinct = FALSE)
+namlab(X, class = FALSE,      # Return data frame of names and labels,
+  attrn = "label", N = FALSE, # and (optionally) classes, number of observations
+  Ndistinct = FALSE)          # and number of non-missing distinct values
 add_stub(X, stub, pre = TRUE, # Add a stub (i.e. prefix or postfix) to column names
          cols = NULL)
 rm_stub(X, stub, pre = TRUE,  # Remove stub from column names, also supports general
@@ -80,14 +85,13 @@ is_date(x)                    # Check if object is of class "Date", "POSIXlt" or
   \item{stub}{a single character stub, i.e. "log.", which by default will be pre-applied to all variables or column names in X.}
   \item{pre}{logical. \code{FALSE} will post-apply \code{stub}.}
   \item{regex}{logical. Match pattern anywhere in names using a regular expression and remove it with \code{\link{gsub}}.}
-  \item{na.attr}{logical. \code{TRUE} adds an attribute containing the removed cases. For compatibility reasons this is exactly the same format as \code{na.omit} i.e. the attribute is called "na.action" and of class "omit".}
   \item{nm}{a suitable vector of row- or column-names.}
   \item{dn}{a suitable vector or list of names for dimension(s).}
   \item{which}{integer. If \code{NULL}, \code{dn} has to be a list fully specifying the dimension names of the object. Alternatively, a vector or list of names for dimensions \code{which} can be supplied. See Examples. }
-  \item{prop}{double. Specify the proportion of observations randomly replaced with \code{NA}.}
   \item{e}{the error message thrown by \code{ckmatch} for non-matched elements. The message is followed by the comma-separated non-matched elements.}
-  \item{lhs}{character. A vector of object names.}
-  \item{rhs}{a matching atomic vector or list of objects.}
+  \item{nam}{character. A vector of object names.}
+  \item{values}{a matching atomic vector or list of objects.}
+  \item{envir}{the environment to assign into.}
  \item{\dots}{for \code{.c}: Comma-separated expressions. For \code{all_identical / all_obj_equal}: Either multiple comma-separated objects or a single list of objects in which all elements will be checked for exact / numeric equality. For \code{rm_stub}: further arguments passed to \code{\link{gsub}}.}
 }
 % \details{
@@ -113,7 +117,7 @@ is_date(x)                    # Check if object is of class "Date", "POSIXlt" or
 %% ~Make other sections like Warning with \section{Warning }{....} ~
 
 \seealso{
-\link[AA2-efficient-programming]{Efficient Programming}, \link[=collapse-documentation]{Collapse Overview} %% \code{\link{pwcor}}, \code{\link{qsu}}
+\link[=efficient-programming]{Efficient Programming}, \link[=collapse-documentation]{Collapse Overview} %% \code{\link{pwcor}}, \code{\link{qsu}}
 }
 \examples{
 ## Non-standard concatenation
