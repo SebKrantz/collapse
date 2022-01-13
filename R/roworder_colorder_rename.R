@@ -93,7 +93,7 @@ frename <- function(.x, ..., cols = NULL) {
   return(condalc(`attr<-`(.x, "names", nam), inherits(.x, "data.table")))
 }
 
-# rnm <- frename # clashes with 2 packages.., rme would work but is inconsistent
+rnm <- frename # rnm clashes with 2 packages.., rme would work but is inconsistent
 
 # A tiny bit faster than setrename <- function(.x, ..., cols = NULL) eval.parent(substitute(.x <- frename(.x, ..., cols = cols))), but not much...
 setrename <- function(.x, ..., cols = NULL) {

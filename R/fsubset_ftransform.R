@@ -645,8 +645,8 @@ fmutate <- function(.data, ..., .keep = "all") {
   return(condalc(.data, any(cld == "data.table")))
 }
 
-# or mte? ()
-mut <- function(.data, ...) fmutate(.data, ...)
+# or mut / mte? () If you need o choose a vowel, u is more distinctive, lut for consistency let's stock with consonants
+mtt <- function(.data, ...) fmutate(.data, ...)
 
 
 
