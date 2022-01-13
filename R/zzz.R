@@ -1,7 +1,7 @@
 
 .onLoad <- function(libname, pkgname) {
 
-  res <- .Call(C_collapsedev17_init, "init.success")
+  res <- .Call(C_collapse_init, "init.success")
   if(!is.character(res) || res != "init.success") stop("collapse not succesfully loaded!")
 
   # https://stackoverflow.com/questions/12598242/global-variables-in-packages-in-r
@@ -78,12 +78,12 @@
 
   # Experimental collapse_remove option: doesn't work because namespace exports not defined yet.
   # if(length(crem <- getOption("collapse_remove")) && is.character(crem)) {
-  #   # clpns <- getNamespace("collapsedev17")
+  #   # clpns <- getNamespace("collapse")
   #   exports <- getNamespaceInfo(clpns, "exports") # clpns[[".__NAMESPACE__."]][["exports"]] # .getNamespaceInfo(clpns, "exports")
   #   stop("length:", length(exports))
   #   remove(list = crem, envir = exports)
   #   # setNamespaceInfo(clpns, "exports", exports)
-  #   # detach("package:collapsedev17")
+  #   # detach("package:collapse")
   #   # attachNamespace(clpns)
   #   # clpns[[".__NAMESPACE__."]][["exports"]] <- exports
   # }
@@ -97,11 +97,11 @@
 }
 
 .onAttach <- function(libname, pkgname) {
-  packageStartupMessage(paste0("collapse ",packageVersion("collapsedev17"),", see ?`collapse-package` or ?`collapse-documentation`")) # \nNote: stats::D  ->  D.expression, D.call, D.name
+  packageStartupMessage(paste0("collapse ",packageVersion("collapse"),", see ?`collapse-package` or ?`collapse-documentation`")) # \nNote: stats::D  ->  D.expression, D.call, D.name
 }
 
 .onUnload <- function (libpath) {
-  library.dynam.unload("collapsedev17", libpath)
+  library.dynam.unload("collapse", libpath)
 }
 
 # Note: To create local dev version of package change package name in DESCRIPTION, NAMESPACE, this file (including C_collapse_init),

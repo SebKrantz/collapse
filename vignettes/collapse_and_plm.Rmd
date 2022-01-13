@@ -35,7 +35,7 @@ oldopts <- options(width = 100L)
 library(data.table)    # Keep here becasue of not run options on CRAN
 library(microbenchmark)
 library(plm)
-library(collapsedev17)
+library(collapse)
 knitr::opts_chunk$set(error = FALSE, message = FALSE, warning = FALSE, 
                       comment = "#", tidy = FALSE, cache = TRUE, collapse = TRUE,
                       fig.width = 8, fig.height = 5, 
@@ -73,7 +73,7 @@ The vignette is structured as follows:
 For this vignette we will use a dataset (`wlddev`) supplied with *collapse* containing a panel of 5 key development indicators taken from the World Bank Development Indicators Database:
 
 ```{r, eval = NCRAN}
-library(collapsedev17)
+library(collapse)
 
 head(wlddev)
 
