@@ -31,10 +31,10 @@ flm <- function(y, X, w = NULL, add.icpt = FALSE, #  sparse = FALSE,
                   },
                   solve = (function(xw) solve(crossprod(xw), crossprod(xw, y * wts), ...))(X * wts),
                   qr = qr.coef(qr(X * wts, ...), y * wts),
-                  arma = getenvFUN("RcppArmadillo_fastLm")(X * wts, y * wts), # .Call("_RcppArmadillo_fastLm_impl", X * wts, y * wts, PACKAGE = "RcppArmadillo"),
+                  arma = getenvFUN("RcppArmadillo_fastLmPure")(X * wts, y * wts), # .Call("_RcppArmadillo_fastLm_impl", X * wts, y * wts, PACKAGE = "RcppArmadillo"),
                   chol = (function(xw) chol2inv(chol(crossprod(xw), ...)) %*% crossprod(xw, y * wts))(X * wts),
                   eigen = {
-                   z <- getenvFUN("RcppEigen_fastLm")(X * wts, y * wts, eigen.method) # .Call("RcppEigen_fastLm_Impl", X * wts, y * wts, eigen.method, PACKAGE = "RcppEigen")
+                   z <- getenvFUN("RcppEigen_fastLmPure")(X * wts, y * wts, eigen.method) # .Call("RcppEigen_fastLm_Impl", X * wts, y * wts, eigen.method, PACKAGE = "RcppEigen")
                    z$residuals <- z$residuals / wts # This is correct !!!
                    z$fitted.values <- y - z$residuals
                    z
@@ -47,9 +47,9 @@ flm <- function(y, X, w = NULL, add.icpt = FALSE, #  sparse = FALSE,
                   lm = .lm.fit(X * wts, y * wts, ...)[[2L]],
                   solve = (function(xw) solve(crossprod(xw), crossprod(xw, y * wts), ...))(X * wts),
                   qr = qr.coef(qr(`dimnames<-`(X, NULL) * wts, ...), y * wts),
-                  arma = getenvFUN("RcppArmadillo_fastLm")(X * wts, y * wts)[[1L]], # .Call("_RcppArmadillo_fastLm_impl", X * wts, y * wts, PACKAGE = "RcppArmadillo"),
+                  arma = getenvFUN("RcppArmadillo_fastLmPure")(X * wts, y * wts)[[1L]], # .Call("_RcppArmadillo_fastLm_impl", X * wts, y * wts, PACKAGE = "RcppArmadillo"),
                   chol = (function(xw) chol2inv(chol(crossprod(xw), ...)) %*% crossprod(xw, y * wts))(X * wts),
-                  eigen = getenvFUN("RcppEigen_fastLm")(X * wts, y * wts, eigen.method)[[1L]], # .Call("RcppEigen_fastLm_Impl", X * wts, y * wts, eigen.method, PACKAGE = "RcppEigen")
+                  eigen = getenvFUN("RcppEigen_fastLmPure")(X * wts, y * wts, eigen.method)[[1L]], # .Call("RcppEigen_fastLm_Impl", X * wts, y * wts, eigen.method, PACKAGE = "RcppEigen")
                   stop("Unknown method!")), ar))
 
   }
@@ -57,9 +57,9 @@ flm <- function(y, X, w = NULL, add.icpt = FALSE, #  sparse = FALSE,
                         lm = .lm.fit(X, y, ...),
                         solve = solve(crossprod(X), crossprod(X, y), ...),
                         qr = qr.coef(qr(X, ...), y),
-                        arma = getenvFUN("RcppArmadillo_fastLm")(X, y),
+                        arma = getenvFUN("RcppArmadillo_fastLmPure")(X, y),
                         chol = chol2inv(chol(crossprod(X), ...)) %*% crossprod(X, y),
-                        eigen = getenvFUN("RcppEigen_fastLm")(X, y, eigen.method),
+                        eigen = getenvFUN("RcppEigen_fastLmPure")(X, y, eigen.method),
                         stop("Unknown method!")))
 
   ar <- if(is.matrix(y)) list(dim = c(dim(X)[2L], dim(y)[2L]), dimnames = list(dimnames(X)[[2L]], dimnames(y)[[2L]])) else
@@ -69,9 +69,9 @@ flm <- function(y, X, w = NULL, add.icpt = FALSE, #  sparse = FALSE,
          lm = .lm.fit(X, y, ...)[[2L]],
          solve = solve(crossprod(X), crossprod(X, y), ...),
          qr = qr.coef(qr(`dimnames<-`(X, NULL), ...), y),
-         arma = getenvFUN("RcppArmadillo_fastLm")(X, y)[[1L]],
+         arma = getenvFUN("RcppArmadillo_fastLmPure")(X, y)[[1L]],
          chol = chol2inv(chol(crossprod(X), ...)) %*% crossprod(X, y),
-         eigen = getenvFUN("RcppEigen_fastLm")(X, y, eigen.method)[[1L]],
+         eigen = getenvFUN("RcppEigen_fastLmPure")(X, y, eigen.method)[[1L]],
          stop("Unknown method!")), ar)
 
   # if(!return.raw) return(switch(method[1L], solve = formatcoef(res$coefficients, X, y), res$coefficients))

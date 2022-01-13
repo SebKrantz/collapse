@@ -76,6 +76,20 @@
     assign("F", FALSE, envir = clpns)
   }
 
+  # Experimental collapse_remove option: doesn't work because namespace exports not defined yet.
+  # if(length(crem <- getOption("collapse_remove")) && is.character(crem)) {
+  #   # clpns <- getNamespace("collapsedev17")
+  #   exports <- getNamespaceInfo(clpns, "exports") # clpns[[".__NAMESPACE__."]][["exports"]] # .getNamespaceInfo(clpns, "exports")
+  #   stop("length:", length(exports))
+  #   remove(list = crem, envir = exports)
+  #   # setNamespaceInfo(clpns, "exports", exports)
+  #   # detach("package:collapsedev17")
+  #   # attachNamespace(clpns)
+  #   # clpns[[".__NAMESPACE__."]][["exports"]] <- exports
+  # }
+
+
+
   options(collapse_unused_arg_action = "warning", # error, warning, message or none
           collapse_DT_alloccol = 100L)
 

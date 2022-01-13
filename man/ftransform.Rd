@@ -84,6 +84,8 @@ The function \code{fcompute(v)} works just like \code{ftransform(v)}, but return
 \value{
   The modified data frame \code{.data}, or, for \code{fcompute}, a new data frame with the columns computed on \code{.data}. All attributes of \code{.data} are preserved.
 }
+
+\seealso{
 \code{\link{across}}, \code{\link{fsummarise}}, \link[=fast-data-manipulation]{Data Frame Manipulation}, \link[=collapse-documentation]{Collapse Overview}
 }
 

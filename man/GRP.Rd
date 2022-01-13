@@ -53,7 +53,7 @@ GRPnames(x, force.char = TRUE)
 as_factor_GRP(x, ordered = FALSE)
 
 # Efficiently split a vector using a grouping object
-gsplit(x, g, use.g.names = FALSE)
+gsplit(x, g, use.g.names = FALSE, ...)
 
 # Fast, class-agnostic version of dplyr::group_by for use with fast functions, see details
 fgroup_by(X, \dots, sort = TRUE, decreasing = FALSE, na.last = TRUE,
@@ -126,7 +126,7 @@ fungroup(X, \dots)
 
   \item{horizontal}{logical. \code{TRUE} arranges plots next to each other, instead of above each other.}
 
-  \item{\dots}{for \code{fgroup_by}: unquoted comma-separated column names of grouping columns. Otherwise: arguments to be passed to or from other methods.}
+  \item{\dots}{for \code{fgroup_by}: unquoted comma-separated column names of grouping columns. For \code{gsplit}: further arguments passed to \code{GRP} (if \code{g} is not already a 'GRP' object).}
 }
 \details{
 \code{GRP} is a central function in the \emph{collapse} package because it provides the key inputs to facilitate easy and efficient groupwise-programming at the \code{C/C++} level: Information about (1) the number of groups (2) an integer group-id indicating which values / rows belong to which group and (3) information about the size of each group. Provided with these informations, \emph{collapse}'s \link[=fast-statistical-functions]{Fast Statistical Functions} pre-allocate intermediate and result vectors of the right sizes and (in most cases) perform grouped statistical computations in a single pass through the data.

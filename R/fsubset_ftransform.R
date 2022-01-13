@@ -646,7 +646,7 @@ fmutate <- function(.data, ..., .keep = "all") {
 }
 
 # or mut / mte? () If you need o choose a vowel, u is more distinctive, lut for consistency let's stock with consonants
-mtt <- function(.data, ...) fmutate(.data, ...)
+mtt <- fmutate # Note: see if function(.data, ...) fmutate(.data, ...) is possible (what about objects in global environment?)
 
 
 
