@@ -1,4 +1,5 @@
 \name{frename}
+\alias{rnm}
 \alias{frename}
 \alias{setrename}
 \alias{relabel}
@@ -12,6 +13,7 @@ A fast substitute for \code{dplyr::rename}. \code{setrename} renames objects by 
 }
 \usage{
 frename(.x, \dots, cols = NULL)
+rnm(.x, \dots, cols = NULL)     # Shortcut for frename()
 
 setrename(.x, \dots, cols = NULL)
 

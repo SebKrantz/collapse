@@ -11,7 +11,7 @@ Apply Functions Across Muliple Columns
 across(.cols = NULL, .fns, ..., .names = NULL,
        .apply = "auto", .transpose = "auto")
 
-acr(...)  # Shortcut for across()
+# acr(...) can be used to abbreviate across(...)
 }
 %- maybe also 'usage' for other objects documented here.
 \arguments{

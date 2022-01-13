@@ -221,7 +221,7 @@ fnobs(GGDC10S)
 fndistinct(GGDC10S)
 
 # The countries included:
-cat(funique(GGDC10S$Country, ordered = TRUE))
+cat(funique(GGDC10S$Country, sort = TRUE))
 
 ```
 The first problem in summarizing this data is that value added (VA) is in local currency, the second that it contains 2 different Variables (VA and EMP) stacked in the same column. One way of solving the first problem could be converting the data to percentages through dividing by the overall VA and EMP contained in the last column. A different solution involving grouped-scaling is introduced in section 6.4. The second problem is again nicely handled by `qsu`, which can also compute panel-statistics by groups. 
@@ -556,6 +556,7 @@ The function `setrename` does this by reference:
 ```{r, eval=NCRAN}
 setrename(GGDC10S, AGR = Agriculture, MIN = Mining)
 head(GGDC10S, 2)
+setrename(GGDC10S, Agriculture = AGR, Mining = MIN)
 rm(GGDC10S)
 ```
 Both functions are not limited to data frames but can be applied to any R object with a 'names' attribute. 
@@ -683,10 +684,11 @@ For the conversion of matrices to list there are also the programmers functions 
 microbenchmark(mrtl(EuStockMarkets))
 ```
 
-For the reverse operation, `qM` converts vectors, higher-dimensional arrays, data frames and suitable lists to matrix. For example probably the most efficient way to calculate row-sums from a data frame is:
+For the reverse operation, `qM` converts vectors, higher-dimensional arrays, data frames and suitable lists to matrix. 
 
 ```{r, eval=NCRAN}
-microbenchmark(rowSums(qM(mtcars)), rowSums(mtcars))
+# Note: kit::psum is the most efficient way to do this
+microbenchmark(rowSums(qM(mtcars)), rowSums(mtcars), kit::psum(mtcars))
 ```
 
 At last, `qF` converts vectors to factor and is quite a bit faster than `as.factor`:
