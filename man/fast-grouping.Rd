@@ -1,5 +1,6 @@
-\name{A2-fast-grouping-ordering}
+\name{fast-grouping-ordering}
 \alias{A2-fast-grouping-ordering}
+\alias{fast-grouping-ordering}
 \title{Fast Grouping and Ordering} % \emph{collapse}
 
 \description{
@@ -45,7 +46,7 @@
 }
 }
 \seealso{
-\link[=collapse-documentation]{Collapse Overview}, \link[=A3-fast-data-manipulation]{Data Frame Manipulation}, \link[=A1-fast-statistical-functions]{Fast Statistical Functions}
+\link[=collapse-documentation]{Collapse Overview}, \link[=fast-data-manipulation]{Data Frame Manipulation}, \link[=fast-statistical-functions]{Fast Statistical Functions}
 }
 \keyword{manip}
 \keyword{documentation}

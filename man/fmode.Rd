@@ -75,7 +75,7 @@ This all seamlessly generalizes to grouped computations, which are performed by 
 The (\code{w} weighted) statistical mode of \code{x}, grouped by \code{g}, or (if \code{\link{TRA}} is used) \code{x} transformed by its mode, grouped by \code{g}. See also Details.
 }
 \seealso{
-\code{\link{fmean}}, \code{\link{fmedian}}, \link[=A1-fast-statistical-functions]{Fast Statistical Functions}, \link[=collapse-documentation]{Collapse Overview}
+\code{\link{fmean}}, \code{\link{fmedian}}, \link[=fast-statistical-functions]{Fast Statistical Functions}, \link[=collapse-documentation]{Collapse Overview}
 }
 \examples{
 x <- c(1, 3, 2, 2, 4, 4, 1, 7, NA, NA, NA)

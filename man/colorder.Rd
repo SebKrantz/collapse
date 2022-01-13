@@ -37,7 +37,7 @@ colorderv(X, neworder = radixorder(names(X)),
 %% ~Make other sections like Warning with \section{Warning }{\dots.} ~
 
 \seealso{
-\code{\link{roworder}}, \link[=A3-fast-data-manipulation]{Data Frame Manipulation}, \link[=collapse-documentation]{Collapse Overview}
+\code{\link{roworder}}, \link[=fast-data-manipulation]{Data Frame Manipulation}, \link[=collapse-documentation]{Collapse Overview}
 }
 \examples{
 head(colorder(mtcars, vs, cyl:hp, am))

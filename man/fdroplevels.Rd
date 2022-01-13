@@ -34,7 +34,7 @@ If \code{x} is malformed i.e. has too few levels, this function can cause a segm
 %% ~Make other sections like Warning with \section{Warning }{....} ~
 
 \seealso{
-\code{\link{qF}}, \code{\link{funique}}, \link[=A2-fast-grouping-ordering]{Fast Grouping and Ordering}, \link[=collapse-documentation]{Collapse Overview}
+\code{\link{qF}}, \code{\link{funique}}, \link[=fast-grouping-ordering]{Fast Grouping and Ordering}, \link[=collapse-documentation]{Collapse Overview}
 }
 \examples{
 f <- iris$Species[1:100]

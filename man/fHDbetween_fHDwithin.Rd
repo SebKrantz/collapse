@@ -1,4 +1,4 @@
-\name{fhdbetween, fhdwithin}
+\name{fhdbetween-fhdwithin}
 \alias{fhdbetween}
 \alias{fhdbetween.default}
 \alias{fhdbetween.matrix}
@@ -133,7 +133,7 @@ The special methods for \code{plm::pseries} and \code{plm::pdata.frame} center a
 %% ~Make other sections like Warning with \section{Warning }{\dots.} ~
 
 \seealso{
-\code{\link[=fbetween]{fbetween, fwithin}}, \code{\link{fscale}}, \code{\link{TRA}}, \code{\link{flm}}, \code{\link{fFtest}}, \link[=A6-data-transformations]{Data Transformations}, \link[=collapse-documentation]{Collapse Overview}
+\code{\link[=fbetween]{fbetween, fwithin}}, \code{\link{fscale}}, \code{\link{TRA}}, \code{\link{flm}}, \code{\link{fFtest}}, \link[=data-transformations]{Data Transformations}, \link[=collapse-documentation]{Collapse Overview}
 }
 \examples{
 HDW(mtcars$mpg, mtcars$carb)                   # Simple regression problems

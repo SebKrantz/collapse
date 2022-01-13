@@ -54,7 +54,7 @@ The performance gain from working with plain lists makes \code{dapply} not much 
 %% ~Make other sections like Warning with \section{Warning }{\dots.} ~
 
 \seealso{
-\code{\link{BY}}, \code{\link{collap}}, \link[=A1-fast-statistical-functions]{Fast Statistical Functions}, \link[=A6-data-transformations]{Data Transformations}, \link[=collapse-documentation]{Collapse Overview}
+\code{\link{BY}}, \code{\link{collap}}, \link[=fast-statistical-functions]{Fast Statistical Functions}, \link[=data-transformations]{Data Transformations}, \link[=collapse-documentation]{Collapse Overview}
 }
 \examples{
 head(dapply(mtcars, log))                      # Take natural log of each variable

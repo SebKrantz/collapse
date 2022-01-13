@@ -1,5 +1,6 @@
-\name{A3-fast-data-manipulation}
+\name{fast-data-manipulation}
 \alias{A3-fast-data-manipulation}
+\alias{fast-data-manipulation}
 \title{Fast Data Manipulation}
 
 \description{
@@ -13,7 +14,7 @@
 
 \item \code{\link{fsubset}} is a much faster version of \code{\link{subset}} to efficiently subset vectors, matrices and data frames. If the non-standard evaluation offered by \code{\link{fsubset}} is not needed, the function \code{\link{ss}} is a much faster and also more secure alternative to \code{[.data.frame}.
 
-\item \code{\link{fsummarise}} is a much faster version of \code{dplyr::summarise} when used together with the \link[=A1-fast-statistical-functions]{Fast Statistical Functions} and \code{\link{fgroup_by}}, with whom it also supports super fast weighted aggregation.
+\item \code{\link{fsummarise}} is a much faster version of \code{dplyr::summarise} when used together with the \link[=fast-statistical-functions]{Fast Statistical Functions} and \code{\link{fgroup_by}}, with whom it also supports super fast weighted aggregation.
 
 \item \code{\link{ftransform}} is a much faster version of \code{\link{transform}}, to modify and delete existing columns or append a data frame with new computed columns. \code{\link{settransform}} does all of that by reference, i.e. it modifies the data frame in the global environment. \code{\link{fcompute}} is similar to \code{\link{ftransform}} but only returns modified and computed columns in a new data frame. %As a new feature, it is now possible to bulk-process columns with \code{\link{ftransform}}, i.e. \code{ftransform(data, fscale(data[1:2]))} is the same as \code{ftransform(data, col1 = fscale(col1), col2 = fscale(col2))}, and \code{ftransform(data) <- fscale(data[1:2]))} or \code{settransform(data, fscale(data[1:2]))} are both equivalent to \code{data[1:2] <- fscale(data[1:2]))}. Non-matching columns are added to the data.frame.
 
@@ -44,7 +45,7 @@
 }
 }
 \seealso{
-\link[=collapse-documentation]{Collapse Overview}, \link[=A4-quick-conversion]{Quick Data Conversion}, \link[=AA1-recode-replace]{Recode and Replace Values}
+\link[=collapse-documentation]{Collapse Overview}, \link[=quick-conversion]{Quick Data Conversion}, \link[=recode-replace]{Recode and Replace Values}
 }
 \keyword{manip}
 \keyword{documentation}

@@ -51,7 +51,7 @@ The C code was taken - with slight modifications, from \href{https://github.com/
 
 
 \seealso{
-\link[=A2-fast-grouping-ordering]{Fast Grouping and Ordering}, \link[=collapse-documentation]{Collapse Overview}
+\link[=fast-grouping-ordering]{Fast Grouping and Ordering}, \link[=collapse-documentation]{Collapse Overview}
 }
 \examples{
 radixorder(mtcars$mpg)

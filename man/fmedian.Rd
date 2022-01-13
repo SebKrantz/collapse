@@ -67,7 +67,7 @@ If \code{x} is a matrix or data frame, these computations are performed independ
 The (\code{w} weighted) median value of \code{x}, grouped by \code{g}, or (if \code{\link{TRA}} is used) \code{x} transformed by its median, grouped by \code{g}.
 }
 \seealso{
-\code{\link{fnth}}, \code{\link{fmean}}, \code{\link{fmode}}, \link[=A1-fast-statistical-functions]{Fast Statistical Functions}, \link[=collapse-documentation]{Collapse Overview}
+\code{\link{fnth}}, \code{\link{fmean}}, \code{\link{fmode}}, \link[=fast-statistical-functions]{Fast Statistical Functions}, \link[=collapse-documentation]{Collapse Overview}
 }
 \examples{
 ## default vector method

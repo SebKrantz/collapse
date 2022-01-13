@@ -37,7 +37,7 @@ setrelabel(.x, \dots, cols = NULL, attrn = "label")
 Note that both \code{relabel} and \code{setrelabel} modify \code{.x} by reference. This is because labels are attached to columns themselves, making it impossible to avoid permanent modification by taking a shallow copy of the encompassing list / data.frame. On the other hand \code{frename} makes a shallow copy whereas \code{setrename} also modifies by reference.
 }
 \seealso{
-\link[=A3-fast-data-manipulation]{Data Frame Manipulation}, \link[=collapse-documentation]{Collapse Overview}
+\link[=fast-data-manipulation]{Data Frame Manipulation}, \link[=collapse-documentation]{Collapse Overview}
 }
 \examples{
 ## Using tagged expressions

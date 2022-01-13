@@ -44,7 +44,7 @@ If you don't require a copy of the data, use \code{data.table::setorder} (you ca
 %% ~Make other sections like Warning with \section{Warning }{\dots.} ~
 
 \seealso{
-\code{\link{colorder}}, \code{\link{fsubset}}, \link[=A2-fast-grouping-ordering]{Fast Grouping and Ordering}, \link[=collapse-documentation]{Collapse Overview}.
+\code{\link{colorder}}, \code{\link{fsubset}}, \link[=fast-grouping-ordering]{Fast Grouping and Ordering}, \link[=collapse-documentation]{Collapse Overview}.
 }
 \examples{
 head(roworder(airquality, Month, -Ozone))

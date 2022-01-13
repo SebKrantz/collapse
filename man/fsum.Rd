@@ -64,7 +64,7 @@ Since v1.6.0 \code{fsum} explicitly supports integers. Integers are summed using
 The (\code{w} weighted) sum of \code{x}, grouped by \code{g}, or (if \code{\link{TRA}} is used) \code{x} transformed by its sum, grouped by \code{g}.
 }
 \section{See Also}{
-\code{\link{fprod}}, \code{\link{fmean}}, \link[=A1-fast-statistical-functions]{Fast Statistical Functions}, \link[=collapse-documentation]{Collapse Overview}
+\code{\link{fprod}}, \code{\link{fmean}}, \link[=fast-statistical-functions]{Fast Statistical Functions}, \link[=collapse-documentation]{Collapse Overview}
 }
 \section{Examples}{\preformatted{
 ## default vector method

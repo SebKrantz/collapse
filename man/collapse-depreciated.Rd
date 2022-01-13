@@ -52,7 +52,7 @@ is.regular(x)
 %% ~Make other sections like Warning with \section{Warning }{\dots.} ~
 
 \seealso{
-\link[=AA1-recode-replace]{Recode and Replace Values}, \link[=collapse-documentation]{Collapse Overview}
+\link[=recode-replace]{Recode and Replace Values}, \link[=collapse-documentation]{Collapse Overview}
 }
 \examples{
 \dontrun{

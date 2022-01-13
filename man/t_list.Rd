@@ -22,7 +22,7 @@ t_list(l)
 %% ~Make other sections like Warning with \section{Warning }{....} ~
 
 \seealso{
-\code{\link{rsplit}}, \link[=A8-list-processing]{List Processing}, \link[=collapse-documentation]{Collapse Overview}
+\code{\link{rsplit}}, \link[=list-processing]{List Processing}, \link[=collapse-documentation]{Collapse Overview}
 }
 \examples{
 # Homogenous list of lists

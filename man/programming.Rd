@@ -1,5 +1,6 @@
-\name{AA2-efficient-programming}
+\name{efficient-programming}
 \alias{AA2-efficient-programming}
+\alias{efficient-programming}
 \alias{anyv}
 \alias{allv}
 \alias{allNA}
@@ -28,8 +29,6 @@
 \alias{na_insert}
 \alias{seq_row}
 \alias{seq_col}
-
-\alias{Efficient Programming}
 %- Also NEED an '\alias' for EACH other topic documented here.
 \title{
   Small Functions to Make R Programming More Efficient
@@ -96,6 +95,7 @@ cinv(x)                     # Choleski (fast) inverse of symmetric PD matrix, e.
   \item{na.attr}{logical. \code{TRUE} adds an attribute containing the removed cases. For compatibility reasons this is exactly the same format as \code{na.omit} i.e. the attribute is called "na.action" and of class "omit".}
   \item{prop}{double. Specify the proportion of observations randomly replaced with \code{NA}.}
   \item{use.names}{logical. Preserve names if \code{X} is a list. }
+  \item{\dots}{not used, reserved for possible future arguments.}
 }
 \details{
 \code{copyv} and \code{setv} are designed to optimize operations that require replacing a single value in an object e.g. \code{X[X == value] <- r} or \code{X[X == value] <- R[R == value]} or simply copying parts of an existing object into another object e.g. \code{X[v] <- R[v]}. Thus they only cover cases where base R is inefficient by either creating a logical vector or materializing a subset to do some replacement. No alternative is provided in cases where base R is efficient e.g. \code{x[v] <- r} or cases provided by \code{\link[data.table]{set}} and \code{\link[data.table]{copy}} from the \emph{data.table} package. Both functions work equivalently, with the difference that \code{copyv} creates a deep copy of the data before making the replacements and returns the copy, whereas \code{setv} modifies the data directly without creating a copy and returns the modified object invisibly. Thus \code{setv} is considerably more efficient.
@@ -104,19 +104,7 @@ cinv(x)                     # Choleski (fast) inverse of symmetric PD matrix, e.
 
 % In this case \code{r} has to be a vector of the same length as \code{x}, and the corresponding elements in \code{v} are replaced with their counterparts in \code{r}. \code{copyv} does all that by first creating a copy of \code{x}, whereas \code{setv} modifies \code{x} directly and is thus more efficient.
 }
-\value{
-%%  ~Describe the value returned
-%%  If it is a LIST, use
-%%  \item{comp1 }{Description of 'comp1'}
-%%  \item{comp2 }{Description of 'comp2'}
-%% ...
-}
-\references{
-%% ~put references to the literature/web site here ~
-}
-\author{
-%%  ~~who you are~~
-}
+
 \note{
 (1) None of these functions currently support complex vectors. (2) It is possible to compare factors by the levels (e.g. \code{iris$Species \%==\% "setosa")}) or using integers (\code{iris$Species \%==\% 1L}). The latter is slightly more efficient. (3) Nothing special is implemented for other objects apart from basic types, e.g. for dates (which are stored as doubles) you need to generate a date object e.g. \code{wlddev$date \%==\% as.Date("2019-01-01")}, \code{wlddev$date \%==\% "2019-01-01"} will give \code{integer(0)}.
 }
@@ -124,15 +112,17 @@ cinv(x)                     # Choleski (fast) inverse of symmetric PD matrix, e.
 %% ~Make other sections like Warning with \section{Warning }{....} ~
 
 \seealso{
-\link[=A6-data-transformations]{Data Transformations}, \link[=AA3-small-helpers]{Small (Helper) Functions}, \link[=collapse-documentation]{Collapse Overview}
+\link[=data-transformations]{Data Transformations}, \link[=small-helpers]{Small (Helper) Functions}, \link[=collapse-documentation]{Collapse Overview}
 }
 \examples{
 
 ## Which value
-whichv(wlddev$PCGDP)                 # Same as which(is.na(wlddev$PCGDP))
-whichv(wlddev$PCGDP, invert = TRUE)  # Same as which(!is.na(wlddev$PCGDP))
+whichNA(wlddev$PCGDP)                # Same as which(is.na(wlddev$PCGDP))
+whichNA(wlddev$PCGDP, invert = TRUE) # Same as which(!is.na(wlddev$PCGDP))
 whichv(wlddev$country, "Chad")       # Same as which(wlddev$county == "Chad")
+wlddev$country \%==\% "Chad"           # Same thing
 whichv(wlddev$country, "Chad", TRUE) # Same as which(wlddev$county != "Chad")
+wlddev$country \%!=\% "Chad"           # Same thing
 lvec <- wlddev$country == "Chad"     # If we already have a logical vector...
 whichv(lvec, FALSE)                  # is fastver than which(!lvec)
 rm(lvec)

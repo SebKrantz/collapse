@@ -1,5 +1,6 @@
-\name{A7-time-series-panel-series} % \name{Time Series and Panel Computations}
+\name{time-series-panel-series} % \name{Time Series and Panel Computations}
 \alias{A7-time-series-panel-series}
+\alias{time-series-panel-series}
 % \alias{tscomp}
 \title{Time Series and Panel Series} % \emph{collapse}
 
@@ -26,7 +27,7 @@
 }
 }
 \seealso{
-\link[=collapse-documentation]{Collapse Overview}, \link[=A6-data-transformations]{Data Transformations}
+\link[=collapse-documentation]{Collapse Overview}, \link[=data-transformations]{Data Transformations}
 }
 \keyword{ts}
 \keyword{manip}

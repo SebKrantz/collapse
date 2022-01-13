@@ -1,5 +1,6 @@
-\name{AA1-recode-replace}
+\name{recode-replace}
 \alias{AA1-recode-replace}
+\alias{recode-replace}
 \alias{recode_num}
 \alias{recode_char}
 \alias{replace_NA}
@@ -78,7 +79,7 @@ Simple replacing tasks on a vector can also effectively be handled by, \code{\li
 %% ~Make other sections like Warning with \section{Warning }{\dots.} ~
 
 \seealso{
-\code{\link{pad}}, \link[AA2-efficient-programming]{Efficient Programming}, \link[=collapse-documentation]{Collapse Overview}
+\code{\link{pad}}, \link[=efficient-programming]{Efficient Programming}, \link[=collapse-documentation]{Collapse Overview}
 }
 \examples{
 recode_char(c("a","b","c"), a = "b", b = "c")

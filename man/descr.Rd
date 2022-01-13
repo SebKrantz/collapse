@@ -64,7 +64,7 @@ A 2-level nested list, the top-level containing the statistics computed for each
 }
 
 \seealso{
-\code{\link{qsu}}, \code{\link{pwcor}}, \link[=A9-summary-statistics]{Summary Statistics}, \link[=A1-fast-statistical-functions]{Fast Statistical Functions}, \link[=collapse-documentation]{Collapse Overview}
+\code{\link{qsu}}, \code{\link{pwcor}}, \link[=summary-statistics]{Summary Statistics}, \link[=fast-statistical-functions]{Fast Statistical Functions}, \link[=collapse-documentation]{Collapse Overview}
 }
 \examples{
 ## Standard Use

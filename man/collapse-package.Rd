@@ -69,7 +69,7 @@ where various efficient algorithms are implemented. %This approach enables flexi
 %when passed to a \emph{collapse} statistical function together with a suitable data object % To provide extra speed and programmability
 To facilitate efficient programming, core S3 methods, grouping and ordering functionality and some C-level helper functions can be accessed by the user.
 
-%For example \code{GRP()} creates grouping objects directly passed to C++ by statistical functions. \code{fgroup_by()} attaches these objects to a data frame, yielding efficient chained calls when combined with \emph{magrittr} pipes, \link[=A3-fast-data-manipulation]{fast manipulation functions} and \link[=A1-fast-statistical-functions]{fast statistical functions}.
+%For example \code{GRP()} creates grouping objects directly passed to C++ by statistical functions. \code{fgroup_by()} attaches these objects to a data frame, yielding efficient chained calls when combined with \emph{magrittr} pipes, \link[=fast-data-manipulation]{fast manipulation functions} and \link[=fast-statistical-functions]{fast statistical functions}.
 
 %Performance gains are also realized when grouping with factors, or computing on grouped (\emph{dplyr}) or panel data (\emph{plm}) frames.
 

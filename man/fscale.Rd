@@ -100,7 +100,7 @@ Special options for grouped scaling are \code{mean = "overall.mean"} and \code{s
 %% ~Make other sections like Warning with \section{Warning }{\dots.} ~
 
 \seealso{
-\code{\link{fwithin}}, \code{\link{fsd}}, \code{\link{TRA}}, \link[=A1-fast-statistical-functions]{Fast Statistical Functions}, \link[=A6-data-transformations]{Data Transformations}, \link[=collapse-documentation]{Collapse Overview}
+\code{\link{fwithin}}, \code{\link{fsd}}, \code{\link{TRA}}, \link[=fast-statistical-functions]{Fast Statistical Functions}, \link[=data-transformations]{Data Transformations}, \link[=collapse-documentation]{Collapse Overview}
 }
 \examples{
 ## Simple Scaling & Centering / Standardizing

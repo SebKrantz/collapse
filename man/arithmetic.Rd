@@ -63,7 +63,7 @@ With a matrix or data frame \code{X}, the default behavior of R when calling \co
 %% ~Make other sections like Warning with \section{Warning }{....} ~
 
 \seealso{
-\code{\link{setop}}, \code{\link{TRA}}, \code{\link{dapply}}, \link[AA2-efficient-programming]{Efficient Programming}, \link[=A6-data-transformations]{Data Transformations}, \link[=collapse-documentation]{Collapse Overview}
+\code{\link{setop}}, \code{\link{TRA}}, \code{\link{dapply}}, \link[=efficient-programming]{Efficient Programming}, \link[=data-transformations]{Data Transformations}, \link[=collapse-documentation]{Collapse Overview}
 }
 
 \examples{

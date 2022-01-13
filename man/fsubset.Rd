@@ -58,7 +58,7 @@ No replacement method \code{fsubset<-} or \code{ss<-} is offered in \emph{collap
   \code{\link{fselect}},
   \code{\link{get_vars}},
   \code{\link{ftransform}},
-\link[=A3-fast-data-manipulation]{Data Frame Manipulation}, \link[=collapse-documentation]{Collapse Overview}
+\link[=fast-data-manipulation]{Data Frame Manipulation}, \link[=collapse-documentation]{Collapse Overview}
 }
 \examples{
 fsubset(airquality, Temp > 90, Ozone, Temp)

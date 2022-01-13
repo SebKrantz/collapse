@@ -6,7 +6,7 @@
 Fast Summarise
 }
 \description{
-\code{fsummarize} is a much faster version of \code{dplyr::summarise}, when used together with the \link[=A1-fast-statistical-functions]{Fast Statistical Functions}.
+\code{fsummarize} is a much faster version of \code{dplyr::summarise}, when used together with the \link[=fast-statistical-functions]{Fast Statistical Functions}.
 }
 \usage{
 fsummarise(.data, ..., keep.group_vars = TRUE)
@@ -18,7 +18,7 @@ smr(.data, ..., keep.group_vars = TRUE)        # Shortcut
  a (grouped) data frame or named list of columns. Grouped data can be created with \code{\link{fgroup_by}} or \code{dplyr::group_by}.
 }
   \item{\dots}{
-  name-value pairs of summary functions, or \code{\link{across}} statements. For fast performance use the \link[=A1-fast-statistical-functions]{Fast Statistical Functions}. % The name will be the name of the variable in the result. Functions when applied to a vector need to return a scalar.
+  name-value pairs of summary functions, or \code{\link{across}} statements. For fast performance use the \link[=fast-statistical-functions]{Fast Statistical Functions}. % The name will be the name of the variable in the result. Functions when applied to a vector need to return a scalar.
 }
   \item{keep.group_vars}{
 logical. \code{FALSE} removes grouping variables after computation.
@@ -28,10 +28,10 @@ logical. \code{FALSE} removes grouping variables after computation.
 If \code{.data} is grouped by \code{\link{fgroup_by}} or \code{dplyr::group_by}, the result is a data frame of the same class and attributes with rows reduced to the number of groups. If \code{.data} is not grouped, the result is a data frame of the same class and attributes with 1 row.
 }
 \note{
-Since v1.7, \code{fsummarise} is fully featured, allowing expressions using functions and columns of the data as well as external scalar values (just like \code{dplyr::sumamrise}). \bold{NOTE} however that once a \link[=A1-fast-statistical-functions]{Fast Statistical Function} is used, the execution will be vectorized and not aplit-apply-combine over groups. Please see the first Example.
+Since v1.7, \code{fsummarise} is fully featured, allowing expressions using functions and columns of the data as well as external scalar values (just like \code{dplyr::sumamrise}). \bold{NOTE} however that once a \link[=fast-statistical-functions]{Fast Statistical Function} is used, the execution will be vectorized and not aplit-apply-combine over groups. Please see the first Example.
 }
 \seealso{
-\code{\link{across}}, \code{\link{collap}}, \link[=A3-fast-data-manipulation]{Data Frame Manipulation}, \link[=A1-fast-statistical-functions]{Fast Statistical Functions}, \link[=collapse-documentation]{Collapse Overview}
+\code{\link{across}}, \code{\link{collap}}, \link[=fast-data-manipulation]{Data Frame Manipulation}, \link[=fast-statistical-functions]{Fast Statistical Functions}, \link[=collapse-documentation]{Collapse Overview}
 
 }
 \examples{
@@ -63,7 +63,8 @@ mtcars |> fgroup_by(cyl) |> fsummarise(across(mpg:hp, list(mu = fmean, sum = sum
 mtcars |> fgroup_by(cyl) |> fsummarise(across(mpg:hp, list(mu = fmean, sum = sum), .apply = TRUE))
 
 # Another argument of across(): Order the result first by function, then by column
-mtcars |> fgroup_by(cyl) |> fsummarise(across(mpg:hp, list(mu = fmean, sum = sum), .transpose = FALSE))
+mtcars |> fgroup_by(cyl) |>
+     fsummarise(across(mpg:hp, list(mu = fmean, sum = sum), .transpose = FALSE))
 
 #----------------------------------------------------------------------------
 # Examples that also work for pre 1.7 versions

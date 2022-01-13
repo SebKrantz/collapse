@@ -3,10 +3,16 @@
 
 # global macros
 
-.COLLAPSE_TOPICS <- c("collapse-documentation","A1-fast-statistical-functions","A2-fast-grouping-ordering",
-                      "A3-fast-data-manipulation","A4-quick-conversion","A5-advanced-aggregation",
-                      "A6-data-transformations","A7-time-series-panel-series","A8-list-processing",
-                      "A9-summary-statistics","AA1-recode-replace","AA2-efficient-programming","AA3-small-helpers")
+
+.COLLAPSE_TOPICS <- c("collapse-documentation","fast-statistical-functions","fast-grouping-ordering",
+                      "fast-data-manipulation","quick-conversion","advanced-aggregation",
+                      "data-transformations","time-series-panel-series","list-processing",
+                      "summary-statistics","recode-replace","efficient-programming","small-helpers")
+
+# .COLLAPSE_TOPICS <- c("collapse-documentation","A1-fast-statistical-functions","A2-fast-grouping-ordering",
+#                       "A3-fast-data-manipulation","A4-quick-conversion","A5-advanced-aggregation",
+#                       "A6-data-transformations","A7-time-series-panel-series","A8-list-processing",
+#                       "A9-summary-statistics","AA1-recode-replace","AA2-efficient-programming","AA3-small-helpers")
 
 # rd <- tools::Rd_db("collapse")
 # .COLLAPSE_HELP <- unlist(lapply(rd, tools:::.Rd_get_metadata, "name"), use.names = FALSE)

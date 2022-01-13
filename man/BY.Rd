@@ -44,10 +44,10 @@ BY(x, \dots)
 \details{
 \code{BY} is a frugal re-implementation of the Split-Apply-Combine computing paradigm. It is faster than \code{\link{tapply}}, \code{\link{by}}, \code{\link{aggregate}} and \emph{plyr}, and preserves data attributes just like \code{\link{dapply}}.  % and more versatile though not faster than \emph{dplyr}
 
-%I note at this point that the philosophy of \emph{collapse} is to move beyond this rather slow computing paradigm, which is why the \link[=A1-fast-statistical-functions]{Fast Statistical Functions} were implemented. However sometimes tasks need to be performed that involve more complex and customized operations on data, and for these cases \code{BY} is a good solution.
+%I note at this point that the philosophy of \emph{collapse} is to move beyond this rather slow computing paradigm, which is why the \link[=fast-statistical-functions]{Fast Statistical Functions} were implemented. However sometimes tasks need to be performed that involve more complex and customized operations on data, and for these cases \code{BY} is a good solution.
 
 It is principally a wrapper around \code{lapply(gsplit(x, g), FUN, \dots)}, that uses \code{\link{gsplit}} for optimized splitting and also strongly optimizes on the internal code compared to \emph{base} R functions. For more details look at the documentation for \code{\link{dapply}} which works very similar (apart from the splitting performed in \code{BY}). The function is intended for simple usage involving data aggregation or flexible computation of summary statistics across groups.
-For larger tasks requiring split-apply-combine computing on data frames, the \link[=A1-fast-statistical-functions]{Fast Statistical Functions} and the \emph{data.table} package are more appropriate tools.
+For larger tasks requiring split-apply-combine computing on data frames, the \link[=fast-statistical-functions]{Fast Statistical Functions} and the \emph{data.table} package are more appropriate tools.
 }
 \note{
 \code{BY} can be used with vector-valued functions preserving the length of the data, note however that data are recombined in the order of the groups, not in the order of the original data. It is thus advisable to sort the data by the grouping variable before using \code{BY} with such a function.
@@ -56,7 +56,7 @@ For larger tasks requiring split-apply-combine computing on data frames, the \li
 \code{X} where \code{FUN} was applied to every column split by \code{g}.
 }
 \seealso{
-\code{\link{dapply}}, \code{\link{collap}}, \link[=A1-fast-statistical-functions]{Fast Statistical Functions}, \link[=A6-data-transformations]{Data Transformations}, \link[=collapse-documentation]{Collapse Overview}
+\code{\link{dapply}}, \code{\link{collap}}, \link[=fast-statistical-functions]{Fast Statistical Functions}, \link[=data-transformations]{Data Transformations}, \link[=collapse-documentation]{Collapse Overview}
 }
 \examples{
 v <- iris$Sepal.Length   # A numeric vector

@@ -1,4 +1,4 @@
-\name{pwcor, pwcov, pwnobs}
+\name{pwcor-pwcov-pwnobs}
 \alias{pwcor}
 \alias{pwcov}
 \alias{pwnobs}
@@ -51,7 +51,7 @@ a numeric matrix, 3D array or list of matrices with the computed statistics. For
 %% ~Make other sections like Warning with \section{Warning }{\dots.} ~
 
 \seealso{
-\code{\link{qsu}}, \link[=A9-summary-statistics]{Summary Statistics}, \link[=collapse-documentation]{Collapse Overview} %% ~~objects to See Also as
+\code{\link{qsu}}, \link[=summary-statistics]{Summary Statistics}, \link[=collapse-documentation]{Collapse Overview} %% ~~objects to See Also as
 }
 \examples{
 mna <- na_insert(mtcars)

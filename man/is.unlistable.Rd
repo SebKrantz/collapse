@@ -34,7 +34,7 @@ is_unlistable(l, DF.as.list = FALSE)
 %% ~Make other sections like Warning with \section{Warning }{\dots.} ~
 
 \seealso{
-\code{\link{ldepth}}, \code{\link{has_elem}}, \link[=A8-list-processing]{List Processing}, \link[=collapse-documentation]{Collapse Overview}
+\code{\link{ldepth}}, \code{\link{has_elem}}, \link[=list-processing]{List Processing}, \link[=collapse-documentation]{Collapse Overview}
 }
 \examples{
 l <- list(1, 2, list(3, 4, "b", FALSE))

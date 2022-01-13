@@ -1,5 +1,6 @@
-\name{A8-list-processing}
+\name{list-processing}
 \alias{A8-list-processing}
+\alias{list-processing}
 \title{List Processing} % \emph{collapse}
 
 \description{

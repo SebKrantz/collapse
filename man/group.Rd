@@ -26,20 +26,14 @@ A data frame is grouped on a column-by-column basis, starting from the leftmost 
 \value{
 An object is of class 'qG' see \code{\link{qG}}.
 }
-\references{
-%% ~put references to the literature/web site here ~
-}
 \author{
 The Hash Function was taken from the excellent \emph{kit} package by Morgan Jacob.
-}
-\note{
-%%  ~~further notes~~
 }
 
 %% ~Make other sections like Warning with \section{Warning }{....} ~
 
 \seealso{
-%% ~~objects to See Also as \code{\link{help}}, ~~~
+\link[=fast-grouping-ordering]{Fast Grouping and Ordering}, \link[=collapse-documentation]{Collapse Overview}
 }
 \examples{
 # Let's replicate what funique does

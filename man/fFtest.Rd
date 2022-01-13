@@ -52,7 +52,7 @@ If \code{X = NULL}, only a vector of the same 5 statistics testing the model (\c
 %% ~Make other sections like Warning with \section{Warning }{\dots.} ~
 
 \seealso{
-\code{\link{flm}}, \code{\link{fhdwithin}}, \link[=A6-data-transformations]{Data Transformations}, \link[=collapse-documentation]{Collapse Overview}
+\code{\link{flm}}, \code{\link{fhdwithin}}, \link[=data-transformations]{Data Transformations}, \link[=collapse-documentation]{Collapse Overview}
 }
 \examples{
 ## We could use fFtest as a seasonality test:

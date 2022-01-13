@@ -32,7 +32,7 @@ rsplit(x, \dots)
 a (nested) list containing the subsets of \code{x}.
 }
 \seealso{
-\code{\link{gsplit}}, \code{\link{rapply2d}}, \code{\link{unlist2d}}, \link[=A8-list-processing]{List Processing}, \link[=collapse-documentation]{Collapse Overview}
+\code{\link{gsplit}}, \code{\link{rapply2d}}, \code{\link{unlist2d}}, \link[=list-processing]{List Processing}, \link[=collapse-documentation]{Collapse Overview}
 }
 \examples{
 rsplit(mtcars$mpg, mtcars$cyl)
