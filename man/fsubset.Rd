@@ -7,7 +7,7 @@
 \alias{fsubset.data.frame}
 \title{Fast Subsetting Matrix-Like Objects}
 \description{
- \code{fsubset} returns subsets of vectors, matrices or data frames which meet conditions. It is programmed very efficiently and uses C source code from the \emph{data.table} package. Especially for data frames it is significantly (4-5 times) faster than \code{\link{subset}} or \code{dplyr::filter}. The methods also provide enhanced functionality compared to \code{\link{subset}}. The function \code{ss} provides an (internal generic) programmers alternative to \code{[} that does not drop dimensions and is significantly faster than \code{[.data.frame}.
+ \code{fsubset} returns subsets of vectors, matrices or data frames which meet conditions. It is programmed very efficiently and uses C source code from the \emph{data.table} package. Especially for data frames it is significantly (4-5 times) faster than \code{\link{subset}} or \code{dplyr::filter}. The methods also provide enhanced functionality compared to \code{\link{subset}}. The function \code{ss} provides an (internal generic) programmers alternative to \code{[} that does not drop dimensions and is significantly faster than \code{[} for data frames.
 }
 \usage{
 fsubset(x, \dots)
@@ -19,7 +19,7 @@ sbt(x, \dots)     # Shortcut for fsubset
 
 \method{fsubset}{data.frame}(x, subset, \dots)
 
-# Fast subsetting (replaces `[`, programmers choice)
+# Fast subsetting (replaces `[` with drop = FALSE, programmers choice)
 ss(x, i, j)
 }
 
@@ -52,13 +52,13 @@ Factors may have empty levels after subsetting; unused levels are not automatica
   a vector), rows and columns (for a matrix or data frame).
 }
 \note{
-No replacement method \code{fsubset<-} or \code{ss<-} is offered in \emph{collapse}. For efficient subset relacement (without copying) use \code{data.table::set}, which can also be used with data frames and tibbles.
+No replacement method \code{fsubset<-} or \code{ss<-} is offered in \emph{collapse}. For efficient subset replacement (without copying) use \code{data.table::set}, which can also be used with data frames and tibbles. To search and replace certain elements without copying, and to efficiently copy elements / rows from an equally sized vector / data frame, see \code{\link{setv}}.
 }
 \seealso{
   \code{\link{fselect}},
   \code{\link{get_vars}},
   \code{\link{ftransform}},
-\link[=A3-fast-data-manipulation]{Data Frame Manipulation}, \link[=collapse-documentation]{Collapse Overview}
+\link[=fast-data-manipulation]{Data Frame Manipulation}, \link[=collapse-documentation]{Collapse Overview}
 }
 \examples{
 fsubset(airquality, Temp > 90, Ozone, Temp)

@@ -16,7 +16,7 @@ It is made compatible with \emph{dplyr}, \emph{data.table}, \emph{sf} and the \e
 
 }
 \section{Getting Started}{
-See \link[=collapse-documentation]{Collapse Documentation & Overview}, or read the \href{https://sebkrantz.github.io/collapse/articles/collapse_intro.html}{introductory vignette}. All vignettes can be accessed on the \href{https://sebkrantz.github.io/collapse/}{package website}. A cheatsheet is available at \href{https://raw.githubusercontent.com/SebKrantz/cheatsheets/master/collapse.pdf}{here}. A compact introduction for quick-starters is provided in the examples section below.
+See \link[=collapse-documentation]{Collapse Documentation & Overview} (the most up-to-date documentation for \emph{collapse} 1.7), or read the \href{https://sebkrantz.github.io/collapse/articles/collapse_intro.html}{introductory vignette}. All vignettes can be accessed on the \href{https://sebkrantz.github.io/collapse/}{package website}. A cheatsheet is available at \href{https://raw.githubusercontent.com/SebKrantz/cheatsheets/master/collapse.pdf}{here}. A compact introduction for quick-starters is provided in the examples section below.
 }
 
 
@@ -69,7 +69,7 @@ where various efficient algorithms are implemented. %This approach enables flexi
 %when passed to a \emph{collapse} statistical function together with a suitable data object % To provide extra speed and programmability
 To facilitate efficient programming, core S3 methods, grouping and ordering functionality and some C-level helper functions can be accessed by the user.
 
-%For example \code{GRP()} creates grouping objects directly passed to C++ by statistical functions. \code{fgroup_by()} attaches these objects to a data frame, yielding efficient chained calls when combined with \emph{magrittr} pipes, \link[=A3-fast-data-manipulation]{fast manipulation functions} and \link[=A1-fast-statistical-functions]{fast statistical functions}.
+%For example \code{GRP()} creates grouping objects directly passed to C++ by statistical functions. \code{fgroup_by()} attaches these objects to a data frame, yielding efficient chained calls when combined with \emph{magrittr} pipes, \link[=fast-data-manipulation]{fast manipulation functions} and \link[=fast-statistical-functions]{fast statistical functions}.
 
 %Performance gains are also realized when grouping with factors, or computing on grouped (\emph{dplyr}) or panel data (\emph{plm}) frames.
 
@@ -98,7 +98,7 @@ To facilitate efficient programming, core S3 methods, grouping and ordering func
 % The package largely avoids non-standard evaluation and exports core methods for maximum programmability.  % Most are S3 generic with methods for common \code{R} objects (vectors, matrices, data frames, \dots) % high computation  %(aggregation and transformations ~10x \emph{data.table} on data <1 Mio obs.).
 
 % Beyond speed, flexibility and parsimony in coding, a central objective of \emph{collapse} is to facilitate advanced / complex operations on data.
-The package is coded both in C and C++ and built with \emph{Rcpp}, but also uses C/C++ functions from \emph{data.table} (grouping, ordering, subsetting, row-binding), \emph{fixest} (centering on multiple factors), \emph{weights} (weighted pairwise correlations), \emph{stats} (ACF and PACF) and \emph{RcppArmadillo / RcppEigen} (fast linear fitting methods). For the moment \emph{collapse} does not utilize low-level parallelism (such as OpenMP).
+The package is coded both in C and C++ and built with \emph{Rcpp}, but also uses C/C++ functions from \emph{data.table} (grouping, ordering, subsetting, row-binding), \emph{kit} (hash-based grouping), \emph{fixest} (centering on multiple factors), \emph{weights} (weighted pairwise correlations), \emph{stats} (ACF and PACF) and \emph{RcppArmadillo / RcppEigen} (fast linear fitting methods). For the moment \emph{collapse} does not utilize low-level parallelism (such as OpenMP).
 % \emph{collapse} is built with \code{Rcpp} and imports \code{C} functions from \emph{data.table}, \emph{lfe} and \emph{stats}. %, and uses \code{ggplot2} visualizations.
 
 
@@ -110,11 +110,12 @@ Other contributors from packages \emph{collapse} utilizes:
 \itemize{
 \item Matt Dowle, Arun Srinivasan and contributors worldwide (\emph{data.table})
 \item Dirk Eddelbuettel and contributors worldwide (\emph{Rcpp}, \emph{RcppArmadillo}, \emph{RcppEigen})
+\item Morgan Jacob (\emph{kit})
 \item Laurent Berge (\emph{fixest})
 \item Josh Pasek (\emph{weights})
 \item R Core Team and contributors worldwide (\emph{stats})
 }
-I thank Ralf Stubner, Joseph Wood and Dirk Eddelbuettel for helpful answers on Stackoverflow, Joris Meys for encouraging me and helping to set up the \href{https://github.com/SebKrantz/collapse}{Github repository} for \emph{collapse}, Matthieu Stigler, Patrice Kiener, Zhiyi Xu and Kevin Tappe for feature requests and helpful suggestions.
+I thank Ralf Stubner, Joseph Wood and Dirk Eddelbuettel and a host of other quant people from diverse fields for helpful answers on Stackoverflow, Joris Meys for encouraging me and helping to set up the \href{https://github.com/SebKrantz/collapse}{Github repository} for \emph{collapse}, Matthieu Stigler, Patrice Kiener, Zhiyi Xu, Kevin Tappe and Grant McDermott for feature requests and helpful suggestions.
 }
 \section{Developing / Bug Reporting}{
 \itemize{

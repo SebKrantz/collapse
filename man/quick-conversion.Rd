@@ -1,5 +1,6 @@
-\name{A4-quick-conversion}
+\name{quick-conversion}
 \alias{A4-quick-conversion}
+\alias{quick-conversion}
 \alias{qDF}
 \alias{qDT}
 \alias{qTBL}

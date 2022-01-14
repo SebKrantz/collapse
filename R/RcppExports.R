@@ -161,8 +161,8 @@ pwnobsmCpp <- function(x) {
     .Call(`_collapse_pwnobsmCpp`, x)
 }
 
-qFCpp <- function(x, sort = TRUE, ordered = TRUE, na_exclude = TRUE, keep_attr = TRUE, ret = 1L) {
-    .Call(`_collapse_qFCpp`, x, sort, ordered, na_exclude, keep_attr, ret)
+qFCpp <- function(x, ordered = TRUE, na_exclude = TRUE, keep_attr = TRUE, ret = 1L) {
+    .Call(`_collapse_qFCpp`, x, ordered, na_exclude, keep_attr, ret)
 }
 
 funiqueCpp <- function(x, sort = TRUE) {

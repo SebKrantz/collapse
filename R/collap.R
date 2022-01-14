@@ -17,10 +17,6 @@ fndistinct_uw <- function(x, g, w, ...) fndistinct(x, g, ...)
 fNobs_uw <- function(x, g, w, ...) fnobs(x, g, ...)
 fNdistinct_uw <- function(x, g, w, ...) fndistinct(x, g, ...)
 
-FSF <- c("fmean","fmedian","fmode","fsum","fprod","fsd","fvar",
-         "fmin","fmax","fnth","ffirst","flast","fnobs","fndistinct", "fNobs","fNdistinct")
-
-.FAST_STAT_FUN_EXT <- c(FSF, paste0(FSF, "_uw"))
 
 mymatchfun <- function(FUN) {
   if(is.function(FUN)) return(FUN)
@@ -64,21 +60,22 @@ mymatchfun <- function(FUN) {
 
 # Column-level parallel implementation
 applyfuns_internal <- function(data, by, FUN, fFUN, parallel, cores, ...) {
+  oldClass(data) <- "data.frame" # Needed for correct method dispatch for fast functions...
   if(is.list(FUN)) {
     if(parallel) return(lapply(seq_along(FUN), function(i)
             if(fFUN[i]) mclapply(data, FUN[[i]], g = by, ..., use.g.names = FALSE, mc.cores = cores) else
-                        BY.data.frame(data, by, FUN[[i]], ..., use.g.names = FALSE, parallel = parallel, mc.cores = cores)))
+                        mclapply(data, copysplaplfun, by, FUN[[i]], ..., mc.cores = cores))) # BY.data.frame(data, by, FUN[[i]], ..., use.g.names = FALSE, parallel = parallel, mc.cores = cores)))
 
       return(lapply(seq_along(FUN), function(i)
               if(fFUN[i]) FUN[[i]](data, g = by, ..., use.g.names = FALSE) else
-                BY.data.frame(data, by, FUN[[i]], ..., use.g.names = FALSE)))
+                          lapply(data, copysplaplfun, by, FUN[[i]], ...))) # BY.data.frame(data, by, FUN[[i]], ..., use.g.names = FALSE)
   }
 
   if(parallel) if(fFUN) return(list(mclapply(data, FUN, g = by, ..., use.g.names = FALSE, mc.cores = cores))) else
-        return(list(BY.data.frame(data, by, FUN, ..., use.g.names = FALSE, parallel = parallel, mc.cores = cores)))
+        return(list(mclapply(data, copysplaplfun, by, FUN, ..., mc.cores = cores))) # list(BY.data.frame(data, by, FUN, ..., use.g.names = FALSE, parallel = parallel, mc.cores = cores))
 
   if(fFUN) return(list(FUN(data, g = by, ..., use.g.names = FALSE)))
-  list(BY.data.frame(data, by, FUN, ..., use.g.names = FALSE))
+  list(lapply(data, copysplaplfun, by, FUN, ...)) # list(BY.data.frame(data, by, FUN, ..., use.g.names = FALSE))
 }
 
 
@@ -177,14 +174,14 @@ collap <- function(X, by, FUN = fmean, catFUN = fmode, cols = NULL, w = NULL, wF
   if(ncustoml) {
 
     # Identifying data
-    nu <- vapply(unattrib(X), is.numeric, TRUE)
+    nu <- .Call(C_vtypes, X, 1L) # vapply(unattrib(X), is.numeric, TRUE)
     if(vl) {
       temp <- nu[v]
       nnu <- v[!temp] # which(!nu & v) # faster way ?
       nu <- v[temp] # which(nu & v)
       rm(temp, v)
     } else {
-      nnu <- which(!nu)
+      nnu <- whichv(nu, FALSE)
       nu <- which(nu)
     }
     nul <- length(nu) > 0L
@@ -230,12 +227,18 @@ collap <- function(X, by, FUN = fmean, catFUN = fmode, cols = NULL, w = NULL, wF
       return(res)
     } # fastest using res list ?? or better combine at the end ??
 
+    # Fixes https://github.com/SebKrantz/collapse/issues/185
+    if(widel && !give.names && ((length(nu) == 1L && !nnul && length(FUN) > 1L) || (length(nnu) == 1L && !nul && length(catFUN) > 1L))) {
+       names(X) <- NULL
+       give.names <- TRUE
+    }
+
     if(nwl) {
-      res <- agg(if(nul) `oldClass<-`(X[nu], "data.frame") else NULL,
-                 if(nnul) `oldClass<-`(X[nnu], "data.frame") else NULL, ...)
+      res <- agg(if(nul) X[nu] else NULL,
+                 if(nnul) X[nnu] else NULL, ...)
     } else {
-      res <- agg(if(nul) `oldClass<-`(X[nu], "data.frame") else NULL,
-                 if(nnul) `oldClass<-`(X[nnu], "data.frame") else NULL, w = w, ...)
+      res <- agg(if(nul) X[nu] else NULL,
+                 if(nnul) X[nnu] else NULL, w = w, ...)
     }
 
 
@@ -260,22 +263,25 @@ collap <- function(X, by, FUN = fmean, catFUN = fmode, cols = NULL, w = NULL, wF
     custom_names <- lapply(custom, names)
     custom <- lapply(custom, cols2int, X, nam) # could integrate below, but then reorder doesn't work !
 
-    if(autorn) give.names <- fanyDuplicated(unlist(custom, FALSE, FALSE))
+    # if(autorn) give.names <- fanyDuplicated(unlist(custom, FALSE, FALSE))
     #lx <- length(X)
-    # custom <- lapply(custom, function(x) if(is.numeric(x) && max(abs(x)) <= lx)
+    # custom <- lapply(custom, function(x) if(is.numeric(x) && bmax(abs(x)) <= lx)
     #                          x else if(is.character(x)) ckmatch(x, nam) else
     #                          stop("custom list content must be variable names or suitable column indices"))
 
     if(nwl) {
-      res[[ind]] <- condsetn(lapply(seq_along(namFUN), function(i)
-                      applyfuns_internal(`oldClass<-`(setnck(X[custom[[i]]], custom_names[[i]]), "data.frame"), by, mymatchfun(namFUN[i]),
-                                         fFUN[i], parallel, mc.cores, ...)[[1L]]), namFUN, give.names)
+      res[[ind]] <- lapply(seq_along(namFUN), function(i)
+                      applyfuns_internal(setnck(X[custom[[i]]], custom_names[[i]]), by, mymatchfun(namFUN[i]),
+                                         fFUN[i], parallel, mc.cores, ...)[[1L]])
     } else {
       if(!all(fFUN)) warning("collap can only perform weighted aggregations with the fast statistical functions (see .FAST_STAT_FUN): Ignoring weights argument to other functions")
-      res[[ind]] <- condsetn(lapply(seq_along(namFUN), function(i)
-                      applyfuns_internal(`oldClass<-`(setnck(X[custom[[i]]], custom_names[[i]]), "data.frame"), by, mymatchfun(namFUN[i]),
-                                         fFUN[i], parallel, mc.cores, w = w, ...)[[1L]]), namFUN, give.names)
+      res[[ind]] <- lapply(seq_along(namFUN), function(i)
+                      applyfuns_internal(setnck(X[custom[[i]]], custom_names[[i]]), by, mymatchfun(namFUN[i]),
+                                         fFUN[i], parallel, mc.cores, w = w, ...)[[1L]])
     }
+    # Better to do this check afterwards, because custom names may make column names unique...
+    if(autorn) give.names <- fanyDuplicated(unlist(lapply(res[[ind]], attr, "names"), FALSE, FALSE))
+    if(give.names) names(res[[ind]]) <- namFUN
 
     if(keep.col.order && return != 2L) { # && widel
       o <- unlist(custom, use.names = FALSE)
@@ -392,7 +398,7 @@ collapv <- function(X, by, FUN = fmean, catFUN = fmode, cols = NULL, w = NULL, w
   if(ncustoml) {
 
     # Identifying data
-    nu <- vapply(unattrib(X), is.numeric, TRUE)
+    nu <- .Call(C_vtypes, X, 1L) # vapply(unattrib(X), is.numeric, TRUE)
     temp <- nu[v]
     nnu <- v[!temp] # which(!nu & v) # faster way ?
     nu <- v[temp] # which(nu & v)
@@ -438,12 +444,18 @@ collapv <- function(X, by, FUN = fmean, catFUN = fmode, cols = NULL, w = NULL, w
       return(res)
     }
 
+    # Fixes https://github.com/SebKrantz/collapse/issues/185
+    if(widel && !give.names && ((length(nu) == 1L && !nnul && length(FUN) > 1L) || (length(nnu) == 1L && !nul && length(catFUN) > 1L))) {
+      names(X) <- NULL
+      give.names <- TRUE
+    }
+
     if(nwl) {
-      res <- agg(if(nul) `oldClass<-`(X[nu], "data.frame") else NULL,
-                 if(nnul) `oldClass<-`(X[nnu], "data.frame") else NULL, ...)
+      res <- agg(if(nul) X[nu] else NULL,
+                 if(nnul) X[nnu] else NULL, ...)
     } else {
-      res <- agg(if(nul) `oldClass<-`(X[nu], "data.frame") else NULL,
-                 if(nnul) `oldClass<-`(X[nnu], "data.frame") else NULL, w = w, ...)
+      res <- agg(if(nul) X[nu] else NULL,
+                 if(nnul) X[nnu] else NULL, w = w, ...)
     }
 
     if(keep.col.order && widel) o <- forder.int(c(if(!keep.by) NULL else numby,
@@ -467,18 +479,19 @@ collapv <- function(X, by, FUN = fmean, catFUN = fmode, cols = NULL, w = NULL, w
     custom_names <- lapply(custom, names)
     custom <- lapply(custom, cols2int, X, nam)
 
-    if(autorn) give.names <- fanyDuplicated(unlist(custom, FALSE, FALSE))
-
     if(nwl) {
-      res[[ind]] <- condsetn(lapply(seq_along(namFUN), function(i)
-        applyfuns_internal(`oldClass<-`(setnck(X[custom[[i]]], custom_names[[i]]), "data.frame"), by, mymatchfun(namFUN[i]),
-                           fFUN[i], parallel, mc.cores, ...)[[1L]]), namFUN, give.names)
+      res[[ind]] <- lapply(seq_along(namFUN), function(i)
+        applyfuns_internal(setnck(X[custom[[i]]], custom_names[[i]]), by, mymatchfun(namFUN[i]),
+                           fFUN[i], parallel, mc.cores, ...)[[1L]])
     } else {
       if(!all(fFUN)) warning("collap can only perform weighted aggregations with the fast statistical functions (see .FAST_STAT_FUN): Ignoring weights argument to other functions")
-      res[[ind]] <- condsetn(lapply(seq_along(namFUN), function(i)
-        applyfuns_internal(`oldClass<-`(setnck(X[custom[[i]]], custom_names[[i]]), "data.frame"), by, mymatchfun(namFUN[i]),
-                           fFUN[i], parallel, mc.cores, w = w, ...)[[1L]]), namFUN, give.names)
+      res[[ind]] <- lapply(seq_along(namFUN), function(i)
+        applyfuns_internal(setnck(X[custom[[i]]], custom_names[[i]]), by, mymatchfun(namFUN[i]),
+                           fFUN[i], parallel, mc.cores, w = w, ...)[[1L]])
     }
+    # Better to do this check afterwards, because custom names may make column names unique...
+    if(autorn) give.names <- fanyDuplicated(unlist(lapply(res[[ind]], attr, "names"), FALSE, FALSE))
+    if(give.names) names(res[[ind]]) <- namFUN
 
     if(keep.col.order && return != 2L) {
       o <- unlist(custom, use.names = FALSE)

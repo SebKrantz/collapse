@@ -1,5 +1,7 @@
 context("fscale / STD")
 
+bsum <- base::sum
+
 # TODO: Still a few uneccessary infinity values generated with weights when the sd is null. search replace_Inf to find them.
 
 # rm(list = ls())
@@ -23,7 +25,7 @@ mNAc <- mNA
 storage.mode(mNAc) <- "character"
 
 bscale <- function(x, na.rm = FALSE, mean = 0, sd = 1) {
-  if(na.rm || !anyNA(x)) `attributes<-`(drop(scale(x)), NULL) * sd + mean else
+  if(na.rm || !anyNA(x)) `attributes<-`(drop(base::scale(x)), NULL) * sd + mean else
     rep(NA_real_, length(x))
 }
 # NOTE: This is what fscale currently does: If missing values, compute weighted mean and sd on available obs, and scale x using it. but don't insert aditional missing values in x for missing weights ..
@@ -40,12 +42,17 @@ wbscale <- function(x, w, na.rm = FALSE, mean = 0, sd = 1) {
     ck <- all(x[1L] == x[-1L])
     if(is.na(ck) || all(ck)) return(rep(NA_real_, length(x)))
   }
-  sw <- sum(w)
-  wm <- sum(w * x) / sw
+  sw <- bsum(w)
+  wm <- bsum(w * x) / sw
   xdm <- x - wm
-  wsd <- sqrt(sum(w * xdm^2) / (sw - 1)) / sd
+  wsd <- sqrt(bsum(w * xdm^2) / (sw - 1)) / sd
   if(!na.rm) return(xdm / wsd + mean)
   return((x2 - wm) / wsd + mean)
+}
+
+rnBY <- function(x, ...) {
+  if(is.list(x) || is.array(x)) return(setRownames(BY(x, ...), rownames(x)))
+  BY(x, ...)
 }
 
 wBY <- function(x, f, FUN, w, ...) {
@@ -82,14 +89,14 @@ test_that("fscale performs like bscale", {
   expect_equal(fscale(x, f, na.rm = FALSE), BY(x, f, bscale, use.g.names = FALSE))
   expect_equal(fscale(xNA, f, na.rm = FALSE), BY(xNA, f, bscale, use.g.names = FALSE))
   expect_equal(fscale(xNA, f), BY(xNA, f, bscale, na.rm = TRUE, use.g.names = FALSE))
-  expect_equal(fscale(m, g), BY(m, g, bscale, na.rm = TRUE, use.g.names = FALSE))
-  expect_equal(fscale(m, g, na.rm = FALSE), BY(m, g, bscale, use.g.names = FALSE))
-  expect_equal(fscale(mNA, g, na.rm = FALSE), BY(mNA, g, bscale, use.g.names = FALSE))
-  expect_equal(fscale(mNA, g), BY(mNA, g, bscale, na.rm = TRUE, use.g.names = FALSE))
-  expect_equal(fscale(mtcars, g), BY(mtcars, g, bscale, na.rm = TRUE, use.g.names = FALSE))
-  expect_equal(fscale(mtcars, g, na.rm = FALSE), BY(mtcars, g, bscale, use.g.names = FALSE))
-  expect_equal(fscale(mtcNA, g, na.rm = FALSE), BY(mtcNA, g, bscale, use.g.names = FALSE))
-  expect_equal(fscale(mtcNA, g), BY(mtcNA, g, bscale, na.rm = TRUE, use.g.names = FALSE))
+  expect_equal(fscale(m, g), rnBY(m, g, bscale, na.rm = TRUE, use.g.names = FALSE))
+  expect_equal(fscale(m, g, na.rm = FALSE), rnBY(m, g, bscale, use.g.names = FALSE))
+  expect_equal(fscale(mNA, g, na.rm = FALSE), rnBY(mNA, g, bscale, use.g.names = FALSE))
+  expect_equal(fscale(mNA, g), rnBY(mNA, g, bscale, na.rm = TRUE, use.g.names = FALSE))
+  expect_equal(fscale(mtcars, g), rnBY(mtcars, g, bscale, na.rm = TRUE, use.g.names = FALSE))
+  expect_equal(fscale(mtcars, g, na.rm = FALSE), rnBY(mtcars, g, bscale, use.g.names = FALSE))
+  expect_equal(fscale(mtcNA, g, na.rm = FALSE), rnBY(mtcNA, g, bscale, use.g.names = FALSE))
+  expect_equal(fscale(mtcNA, g), rnBY(mtcNA, g, bscale, na.rm = TRUE, use.g.names = FALSE))
 })
 
 su <- function(x) if(is.null(dim(x))) `attributes<-`(qsu.default(x)[2:3], NULL) else `attributes<-`(qsu(x)[,2:3], NULL)
@@ -126,14 +133,14 @@ test_that("Unweighted customized scaling works like bscale (defined above)", {
   expect_equal(fscale(x, f, mean = 5.1, sd = 3.9, na.rm = FALSE), BY(x, f, bscale, use.g.names = FALSE, mean = 5.1, sd = 3.9))
   expect_equal(fscale(xNA, f, mean = 5.1, sd = 3.9, na.rm = FALSE), BY(xNA, f, bscale, use.g.names = FALSE, mean = 5.1, sd = 3.9))
   expect_equal(fscale(xNA, f, mean = 5.1, sd = 3.9), BY(xNA, f, bscale, na.rm = TRUE, use.g.names = FALSE, mean = 5.1, sd = 3.9))
-  expect_equal(fscale(m, g, mean = 5.1, sd = 3.9), BY(m, g, bscale, na.rm = TRUE, use.g.names = FALSE, mean = 5.1, sd = 3.9))
-  expect_equal(fscale(m, g, mean = 5.1, sd = 3.9, na.rm = FALSE), BY(m, g, bscale, use.g.names = FALSE, mean = 5.1, sd = 3.9))
-  expect_equal(fscale(mNA, g, mean = 5.1, sd = 3.9, na.rm = FALSE), BY(mNA, g, bscale, use.g.names = FALSE, mean = 5.1, sd = 3.9))
-  expect_equal(fscale(mNA, g, mean = 5.1, sd = 3.9), BY(mNA, g, bscale, na.rm = TRUE, use.g.names = FALSE, mean = 5.1, sd = 3.9))
-  expect_equal(fscale(mtcars, g, mean = 5.1, sd = 3.9), BY(mtcars, g, bscale, na.rm = TRUE, use.g.names = FALSE, mean = 5.1, sd = 3.9))
-  expect_equal(fscale(mtcars, g, mean = 5.1, sd = 3.9, na.rm = FALSE), BY(mtcars, g, bscale, use.g.names = FALSE, mean = 5.1, sd = 3.9))
-  expect_equal(fscale(mtcNA, g, mean = 5.1, sd = 3.9, na.rm = FALSE), BY(mtcNA, g, bscale, use.g.names = FALSE, mean = 5.1, sd = 3.9))
-  expect_equal(fscale(mtcNA, g, mean = 5.1, sd = 3.9), BY(mtcNA, g, bscale, na.rm = TRUE, use.g.names = FALSE, mean = 5.1, sd = 3.9))
+  expect_equal(fscale(m, g, mean = 5.1, sd = 3.9), rnBY(m, g, bscale, na.rm = TRUE, use.g.names = FALSE, mean = 5.1, sd = 3.9))
+  expect_equal(fscale(m, g, mean = 5.1, sd = 3.9, na.rm = FALSE), rnBY(m, g, bscale, use.g.names = FALSE, mean = 5.1, sd = 3.9))
+  expect_equal(fscale(mNA, g, mean = 5.1, sd = 3.9, na.rm = FALSE), rnBY(mNA, g, bscale, use.g.names = FALSE, mean = 5.1, sd = 3.9))
+  expect_equal(fscale(mNA, g, mean = 5.1, sd = 3.9), rnBY(mNA, g, bscale, na.rm = TRUE, use.g.names = FALSE, mean = 5.1, sd = 3.9))
+  expect_equal(fscale(mtcars, g, mean = 5.1, sd = 3.9), rnBY(mtcars, g, bscale, na.rm = TRUE, use.g.names = FALSE, mean = 5.1, sd = 3.9))
+  expect_equal(fscale(mtcars, g, mean = 5.1, sd = 3.9, na.rm = FALSE), rnBY(mtcars, g, bscale, use.g.names = FALSE, mean = 5.1, sd = 3.9))
+  expect_equal(fscale(mtcNA, g, mean = 5.1, sd = 3.9, na.rm = FALSE), rnBY(mtcNA, g, bscale, use.g.names = FALSE, mean = 5.1, sd = 3.9))
+  expect_equal(fscale(mtcNA, g, mean = 5.1, sd = 3.9), rnBY(mtcNA, g, bscale, na.rm = TRUE, use.g.names = FALSE, mean = 5.1, sd = 3.9))
 })
 
 test_that("Unweighted customized scaling special cases perform as intended ", {
@@ -150,56 +157,56 @@ test_that("Unweighted customized scaling special cases perform as intended ", {
   expect_equal(fscale(x, f, na.rm = FALSE, mean = FALSE), BY(x, f, bscale, use.g.names = FALSE) + B(x, f))
   expect_equal(fscale(xNA, f, na.rm = FALSE, mean = FALSE), BY(xNA, f, bscale, use.g.names = FALSE) + B(xNA, f))
   expect_equal(fscale(xNA, f, mean = FALSE), BY(xNA, f, bscale, na.rm = TRUE, use.g.names = FALSE) + B(xNA, f))
-  expect_equal(fscale(m, g, mean = FALSE), BY(m, g, bscale, na.rm = TRUE, use.g.names = FALSE) + B(m, g))
-  expect_equal(fscale(m, g, na.rm = FALSE, mean = FALSE), BY(m, g, bscale, use.g.names = FALSE) + B(m, g))
-  expect_equal(fscale(mNA, g, na.rm = FALSE, mean = FALSE), BY(mNA, g, bscale, use.g.names = FALSE) + B(mNA, g))
-  expect_equal(fscale(mNA, g, mean = FALSE), BY(mNA, g, bscale, na.rm = TRUE, use.g.names = FALSE) + B(mNA, g))
-  expect_equal(fscale(mtcars, g, mean = FALSE), BY(mtcars, g, bscale, na.rm = TRUE, use.g.names = FALSE) + B(mtcars, g))
-  expect_equal(fscale(mtcars, g, na.rm = FALSE, mean = FALSE), BY(mtcars, g, bscale, use.g.names = FALSE) + B(mtcars, g))
-  expect_equal(fscale(mtcNA, g, na.rm = FALSE, mean = FALSE), BY(mtcNA, g, bscale, use.g.names = FALSE) + B(mtcNA, g))
-  expect_equal(fscale(mtcNA, g, mean = FALSE), BY(mtcNA, g, bscale, na.rm = TRUE, use.g.names = FALSE)+ B(mtcNA, g))
+  expect_equal(fscale(m, g, mean = FALSE), rnBY(m, g, bscale, na.rm = TRUE, use.g.names = FALSE) + B(m, g))
+  expect_equal(fscale(m, g, na.rm = FALSE, mean = FALSE), rnBY(m, g, bscale, use.g.names = FALSE) + B(m, g))
+  expect_equal(fscale(mNA, g, na.rm = FALSE, mean = FALSE), rnBY(mNA, g, bscale, use.g.names = FALSE) + B(mNA, g))
+  expect_equal(fscale(mNA, g, mean = FALSE), rnBY(mNA, g, bscale, na.rm = TRUE, use.g.names = FALSE) + B(mNA, g))
+  expect_equal(fscale(mtcars, g, mean = FALSE), rnBY(mtcars, g, bscale, na.rm = TRUE, use.g.names = FALSE) + B(mtcars, g))
+  expect_equal(fscale(mtcars, g, na.rm = FALSE, mean = FALSE), rnBY(mtcars, g, bscale, use.g.names = FALSE) + B(mtcars, g))
+  expect_equal(fscale(mtcNA, g, na.rm = FALSE, mean = FALSE), rnBY(mtcNA, g, bscale, use.g.names = FALSE) + B(mtcNA, g))
+  expect_equal(fscale(mtcNA, g, mean = FALSE), rnBY(mtcNA, g, bscale, na.rm = TRUE, use.g.names = FALSE)+ B(mtcNA, g))
 
   # Centering on overall mean
   expect_equal(fscale(x, f, mean = "overall.mean"), BY(x, f, bscale, na.rm = TRUE, use.g.names = FALSE) + ave(x))
   expect_equal(fscale(x, f, na.rm = FALSE, mean = "overall.mean"), BY(x, f, bscale, use.g.names = FALSE) + ave(x))
   # expect_equal(fscale(xNA, f, na.rm = FALSE, mean = "overall.mean"), BY(xNA, f, bscale, use.g.names = FALSE) + B(xNA)) # Not the same !!
   expect_equal(fscale(xNA, f, mean = "overall.mean"), BY(xNA, f, bscale, na.rm = TRUE, use.g.names = FALSE) + B(xNA))
-  expect_equal(fscale(m, g, mean = "overall.mean"), BY(m, g, bscale, na.rm = TRUE, use.g.names = FALSE) + B(m))
-  expect_equal(fscale(m, g, na.rm = FALSE, mean = "overall.mean"), BY(m, g, bscale, use.g.names = FALSE) + B(m))
-  # expect_equal(fscale(mNA, g, na.rm = FALSE, mean = "overall.mean"), BY(mNA, g, bscale, use.g.names = FALSE) + B(mNA))
-  expect_equal(fscale(mNA, g, mean = "overall.mean"), BY(mNA, g, bscale, na.rm = TRUE, use.g.names = FALSE) + B(mNA))
-  expect_equal(fscale(mtcars, g, mean = "overall.mean"), BY(mtcars, g, bscale, na.rm = TRUE, use.g.names = FALSE) + B(mtcars))
-  expect_equal(fscale(mtcars, g, na.rm = FALSE, mean = "overall.mean"), BY(mtcars, g, bscale, use.g.names = FALSE) + B(mtcars))
-  # expect_equal(fscale(mtcNA, g, na.rm = FALSE, mean = "overall.mean"), BY(mtcNA, g, bscale, use.g.names = FALSE) + B(mtcNA))
-  expect_equal(fscale(mtcNA, g, mean = "overall.mean"), BY(mtcNA, g, bscale, na.rm = TRUE, use.g.names = FALSE)+ B(mtcNA))
+  expect_equal(fscale(m, g, mean = "overall.mean"), rnBY(m, g, bscale, na.rm = TRUE, use.g.names = FALSE) + B(m))
+  expect_equal(fscale(m, g, na.rm = FALSE, mean = "overall.mean"), rnBY(m, g, bscale, use.g.names = FALSE) + B(m))
+  # expect_equal(fscale(mNA, g, na.rm = FALSE, mean = "overall.mean"), rnBY(mNA, g, bscale, use.g.names = FALSE) + B(mNA))
+  expect_equal(fscale(mNA, g, mean = "overall.mean"), rnBY(mNA, g, bscale, na.rm = TRUE, use.g.names = FALSE) + B(mNA))
+  expect_equal(fscale(mtcars, g, mean = "overall.mean"), rnBY(mtcars, g, bscale, na.rm = TRUE, use.g.names = FALSE) + B(mtcars))
+  expect_equal(fscale(mtcars, g, na.rm = FALSE, mean = "overall.mean"), rnBY(mtcars, g, bscale, use.g.names = FALSE) + B(mtcars))
+  # expect_equal(fscale(mtcNA, g, na.rm = FALSE, mean = "overall.mean"), rnBY(mtcNA, g, bscale, use.g.names = FALSE) + B(mtcNA))
+  expect_equal(fscale(mtcNA, g, mean = "overall.mean"), rnBY(mtcNA, g, bscale, na.rm = TRUE, use.g.names = FALSE)+ B(mtcNA))
 
   # Scaling by within-sd
   expect_equal(fscale(x, f, sd = "within.sd"), BY(x, f, bscale, na.rm = TRUE, use.g.names = FALSE) * fsd(W(x, f)))
   expect_equal(fscale(x, f, na.rm = FALSE, sd = "within.sd"), BY(x, f, bscale, use.g.names = FALSE) * fsd(W(x, f)))
   # expect_equal(fscale(xNA, f, na.rm = FALSE, sd = "within.sd"), BY(xNA, f, bscale, use.g.names = FALSE) * fsd(W(xNA, f))) # Not the same !!
   expect_equal(fscale(xNA, f, sd = "within.sd"), BY(xNA, f, bscale, na.rm = TRUE, use.g.names = FALSE) * fsd(W(xNA, f)))
-  expect_equal(fscale(m, g, sd = "within.sd"), BY(m, g, bscale, na.rm = TRUE, use.g.names = FALSE) * TRA(m,fsd(W(m, g)),1L))
-  expect_equal(fscale(m, g, na.rm = FALSE, sd = "within.sd"), BY(m, g, bscale, use.g.names = FALSE) * TRA(m,fsd(W(m, g)),1L))
-  # expect_equal(fscale(mNA, g, na.rm = FALSE, sd = "within.sd"), BY(mNA, g, bscale, use.g.names = FALSE) * TRA(mNA,fsd(W(mNA, g)),1L))
-  expect_equal(fscale(mNA, g, sd = "within.sd"), BY(mNA, g, bscale, na.rm = TRUE, use.g.names = FALSE) * TRA(mNA,fsd(W(mNA, g)),1L))
-  expect_equal(fscale(mtcars, g, sd = "within.sd"), BY(mtcars, g, bscale, na.rm = TRUE, use.g.names = FALSE) * TRA(mtcars,fsd(W(mtcars, g)),1L))
-  expect_equal(fscale(mtcars, g, na.rm = FALSE, sd = "within.sd"), BY(mtcars, g, bscale, use.g.names = FALSE) * TRA(mtcars,fsd(W(mtcars, g)),1L))
-  # expect_equal(fscale(mtcNA, g, na.rm = FALSE, sd = "within.sd"), BY(mtcNA, g, bscale, use.g.names = FALSE) * TRA(mtcNA,fsd(W(mtcNA, g)),1L))
-  expect_equal(fscale(mtcNA, g, sd = "within.sd"), BY(mtcNA, g, bscale, na.rm = TRUE, use.g.names = FALSE) * TRA(mtcNA,fsd(W(mtcNA, g)),1L))
+  expect_equal(fscale(m, g, sd = "within.sd"), rnBY(m, g, bscale, na.rm = TRUE, use.g.names = FALSE) * TRA(m,fsd(W(m, g)),1L))
+  expect_equal(fscale(m, g, na.rm = FALSE, sd = "within.sd"), rnBY(m, g, bscale, use.g.names = FALSE) * TRA(m,fsd(W(m, g)),1L))
+  # expect_equal(fscale(mNA, g, na.rm = FALSE, sd = "within.sd"), rnBY(mNA, g, bscale, use.g.names = FALSE) * TRA(mNA,fsd(W(mNA, g)),1L))
+  expect_equal(fscale(mNA, g, sd = "within.sd"), rnBY(mNA, g, bscale, na.rm = TRUE, use.g.names = FALSE) * TRA(mNA,fsd(W(mNA, g)),1L))
+  expect_equal(fscale(mtcars, g, sd = "within.sd"), rnBY(mtcars, g, bscale, na.rm = TRUE, use.g.names = FALSE) * TRA(mtcars,fsd(W(mtcars, g)),1L))
+  expect_equal(fscale(mtcars, g, na.rm = FALSE, sd = "within.sd"), rnBY(mtcars, g, bscale, use.g.names = FALSE) * TRA(mtcars,fsd(W(mtcars, g)),1L))
+  # expect_equal(fscale(mtcNA, g, na.rm = FALSE, sd = "within.sd"), rnBY(mtcNA, g, bscale, use.g.names = FALSE) * TRA(mtcNA,fsd(W(mtcNA, g)),1L))
+  expect_equal(fscale(mtcNA, g, sd = "within.sd"), rnBY(mtcNA, g, bscale, na.rm = TRUE, use.g.names = FALSE) * TRA(mtcNA,fsd(W(mtcNA, g)),1L))
 
   # Centering on overall mean and scaling by within-sd
   expect_equal(fscale(x, f, mean = "overall.mean", sd = "within.sd"), BY(x, f, bscale, na.rm = TRUE, use.g.names = FALSE) * fsd(W(x, f)) + ave(x))
   expect_equal(fscale(x, f, na.rm = FALSE, mean = "overall.mean", sd = "within.sd"), BY(x, f, bscale, use.g.names = FALSE) * fsd(W(x, f)) + ave(x))
   # expect_equal(fscale(xNA, f, na.rm = FALSE, mean = "overall.mean", sd = "within.sd"), BY(xNA, f, bscale, use.g.names = FALSE) * fsd(W(xNA, f)) + B(xNA)) # Not the same !!
   expect_equal(fscale(xNA, f, mean = "overall.mean", sd = "within.sd"), BY(xNA, f, bscale, na.rm = TRUE, use.g.names = FALSE) * fsd(W(xNA, f)) + B(xNA))
-  expect_equal(fscale(m, g, mean = "overall.mean", sd = "within.sd"), BY(m, g, bscale, na.rm = TRUE, use.g.names = FALSE) * TRA(m,fsd(W(m, g)),1L) + B(m))
-  expect_equal(fscale(m, g, na.rm = FALSE, mean = "overall.mean", sd = "within.sd"), BY(m, g, bscale, use.g.names = FALSE) * TRA(m,fsd(W(m, g)),1L) + B(m))
-  # expect_equal(fscale(mNA, g, na.rm = FALSE, mean = "overall.mean", sd = "within.sd"), BY(mNA, g, bscale, use.g.names = FALSE) * TRA(mNA,fsd(W(mNA, g)),1L) + B(mNA))
-  expect_equal(fscale(mNA, g, mean = "overall.mean", sd = "within.sd"), BY(mNA, g, bscale, na.rm = TRUE, use.g.names = FALSE) * TRA(mNA,fsd(W(mNA, g)),1L) + B(mNA))
-  expect_equal(fscale(mtcars, g, mean = "overall.mean", sd = "within.sd"), BY(mtcars, g, bscale, na.rm = TRUE, use.g.names = FALSE) * TRA(mtcars,fsd(W(mtcars, g)),1L) + B(mtcars))
-  expect_equal(fscale(mtcars, g, na.rm = FALSE, mean = "overall.mean", sd = "within.sd"), BY(mtcars, g, bscale, use.g.names = FALSE) * TRA(mtcars,fsd(W(mtcars, g)),1L) + B(mtcars))
-  # expect_equal(fscale(mtcNA, g, na.rm = FALSE, mean = "overall.mean", sd = "within.sd"), BY(mtcNA, g, bscale, use.g.names = FALSE) * TRA(mtcNA,fsd(W(mtcNA, g)),1L) + B(mtcNA))
-  expect_equal(fscale(mtcNA, g, mean = "overall.mean", sd = "within.sd"), BY(mtcNA, g, bscale, na.rm = TRUE, use.g.names = FALSE) * TRA(mtcNA,fsd(W(mtcNA, g)),1L) + B(mtcNA))
+  expect_equal(fscale(m, g, mean = "overall.mean", sd = "within.sd"), rnBY(m, g, bscale, na.rm = TRUE, use.g.names = FALSE) * TRA(m,fsd(W(m, g)),1L) + B(m))
+  expect_equal(fscale(m, g, na.rm = FALSE, mean = "overall.mean", sd = "within.sd"), rnBY(m, g, bscale, use.g.names = FALSE) * TRA(m,fsd(W(m, g)),1L) + B(m))
+  # expect_equal(fscale(mNA, g, na.rm = FALSE, mean = "overall.mean", sd = "within.sd"), rnBY(mNA, g, bscale, use.g.names = FALSE) * TRA(mNA,fsd(W(mNA, g)),1L) + B(mNA))
+  expect_equal(fscale(mNA, g, mean = "overall.mean", sd = "within.sd"), rnBY(mNA, g, bscale, na.rm = TRUE, use.g.names = FALSE) * TRA(mNA,fsd(W(mNA, g)),1L) + B(mNA))
+  expect_equal(fscale(mtcars, g, mean = "overall.mean", sd = "within.sd"), rnBY(mtcars, g, bscale, na.rm = TRUE, use.g.names = FALSE) * TRA(mtcars,fsd(W(mtcars, g)),1L) + B(mtcars))
+  expect_equal(fscale(mtcars, g, na.rm = FALSE, mean = "overall.mean", sd = "within.sd"), rnBY(mtcars, g, bscale, use.g.names = FALSE) * TRA(mtcars,fsd(W(mtcars, g)),1L) + B(mtcars))
+  # expect_equal(fscale(mtcNA, g, na.rm = FALSE, mean = "overall.mean", sd = "within.sd"), rnBY(mtcNA, g, bscale, use.g.names = FALSE) * TRA(mtcNA,fsd(W(mtcNA, g)),1L) + B(mtcNA))
+  expect_equal(fscale(mtcNA, g, mean = "overall.mean", sd = "within.sd"), rnBY(mtcNA, g, bscale, na.rm = TRUE, use.g.names = FALSE) * TRA(mtcNA,fsd(W(mtcNA, g)),1L) + B(mtcNA))
 
 })
 

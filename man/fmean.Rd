@@ -63,7 +63,7 @@ When applied to data frames with groups or \code{drop = FALSE}, \code{fmean} pre
 The (\code{w} weighted) mean of \code{x}, grouped by \code{g}, or (if \code{\link{TRA}} is used) \code{x} transformed by its mean, grouped by \code{g}.
 }
 \seealso{
-\code{\link{fmedian}}, \code{\link{fmode}}, \link[=A1-fast-statistical-functions]{Fast Statistical Functions}, \link[=collapse-documentation]{Collapse Overview}
+\code{\link{fmedian}}, \code{\link{fmode}}, \link[=fast-statistical-functions]{Fast Statistical Functions}, \link[=collapse-documentation]{Collapse Overview}
 }
 \examples{
 ## default vector method

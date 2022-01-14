@@ -1,4 +1,4 @@
-\name{fvar, fsd}
+\name{fvar-fsd}
 \alias{fvar}
 \alias{fvar.default}
 \alias{fvar.matrix}
@@ -84,7 +84,7 @@ When applied to data frames with groups or \code{drop = FALSE}, \code{fvar/fsd} 
 Welford, B. P. (1962). Note on a method for calculating corrected sums of squares and products. \emph{Technometrics}. 4 (3): 419-420. doi:10.2307/1266577.
 }
 \seealso{
-\link[=A1-fast-statistical-functions]{Fast Statistical Functions}, \link[=collapse-documentation]{Collapse Overview}
+\link[=fast-statistical-functions]{Fast Statistical Functions}, \link[=collapse-documentation]{Collapse Overview}
 }
 \examples{
 ## default vector method

@@ -1,5 +1,7 @@
 context("fprod")
 
+bprod <- base::prod
+
 # rm(list = ls())
 set.seed(101)
 x <- rnorm(100)
@@ -33,7 +35,7 @@ wprod <- function(x, w, na.rm = FALSE) {
     x <- x[cc]
     w <- w[cc]
   }
-  prod(x*w)
+  bprod(x*w)
 }
 
 wBY <- function(x, f, FUN, w, ...) {
@@ -45,39 +47,39 @@ wBY <- function(x, f, FUN, w, ...) {
 
 
 test_that("fprod performs like base::prod", {
-  expect_equal(fprod(NA), as.double(prod(NA)))
-  expect_equal(fprod(NA, na.rm = FALSE), as.double(prod(NA)))
-  expect_equal(fprod(1), prod(1, na.rm = TRUE))
-  expect_equal(fprod(1:3), prod(1:3, na.rm = TRUE))
-  expect_equal(fprod(-1:1), prod(-1:1, na.rm = TRUE))
-  expect_equal(fprod(1, na.rm = FALSE), prod(1))
-  expect_equal(fprod(1:3, na.rm = FALSE), prod(1:3))
-  expect_equal(fprod(-1:1, na.rm = FALSE), prod(-1:1))
-  expect_equal(fprod(x), prod(x, na.rm = TRUE))
-  expect_equal(fprod(x, na.rm = FALSE), prod(x))
-  expect_equal(fprod(xNA, na.rm = FALSE), prod(xNA))
-  expect_equal(fprod(xNA), prod(xNA, na.rm = TRUE))
+  expect_equal(fprod(NA), as.double(bprod(NA)))
+  expect_equal(fprod(NA, na.rm = FALSE), as.double(bprod(NA)))
+  expect_equal(fprod(1), bprod(1, na.rm = TRUE))
+  expect_equal(fprod(1:3), bprod(1:3, na.rm = TRUE))
+  expect_equal(fprod(-1:1), bprod(-1:1, na.rm = TRUE))
+  expect_equal(fprod(1, na.rm = FALSE), bprod(1))
+  expect_equal(fprod(1:3, na.rm = FALSE), bprod(1:3))
+  expect_equal(fprod(-1:1, na.rm = FALSE), bprod(-1:1))
+  expect_equal(fprod(x), bprod(x, na.rm = TRUE))
+  expect_equal(fprod(x, na.rm = FALSE), bprod(x))
+  expect_equal(fprod(xNA, na.rm = FALSE), bprod(xNA))
+  expect_equal(fprod(xNA), bprod(xNA, na.rm = TRUE))
   expect_equal(fprod(mtcars), fprod(m))
-  expect_equal(fprod(m), dapply(m, prod, na.rm = TRUE))
-  expect_equal(fprod(m, na.rm = FALSE), dapply(m, prod))
-  expect_equal(fprod(mNA, na.rm = FALSE), dapply(mNA, prod))
-  expect_equal(fprod(mNA), dapply(mNA, prod, na.rm = TRUE))
-  expect_equal(fprod(mtcars), dapply(mtcars, prod, na.rm = TRUE))
-  expect_equal(fprod(mtcars, na.rm = FALSE), dapply(mtcars, prod))
-  expect_equal(fprod(mtcNA, na.rm = FALSE), dapply(mtcNA, prod))
-  expect_equal(fprod(mtcNA), dapply(mtcNA, prod, na.rm = TRUE))
-  expect_equal(fprod(x, f), BY(x, f, prod, na.rm = TRUE))
-  expect_equal(fprod(x, f, na.rm = FALSE), BY(x, f, prod))
-  expect_equal(fprod(xNA, f, na.rm = FALSE), BY(xNA, f, prod))
-  expect_equal(na21(fprod(xNA, f)), BY(xNA, f, prod, na.rm = TRUE))
-  expect_equal(fprod(m, g), BY(m, g, prod, na.rm = TRUE))
-  expect_equal(fprod(m, g, na.rm = FALSE), BY(m, g, prod))
-  expect_equal(fprod(mNA, g, na.rm = FALSE), BY(mNA, g, prod))
-  expect_equal(na21(fprod(mNA, g)), BY(mNA, g, prod, na.rm = TRUE)) # prod(NA, na.rm = TRUE) gives 1
-  expect_equal(fprod(mtcars, g), BY(mtcars, g, prod, na.rm = TRUE))
-  expect_equal(fprod(mtcars, g, na.rm = FALSE), BY(mtcars, g, prod))
-  expect_equal(fprod(mtcNA, g, na.rm = FALSE), BY(mtcNA, g, prod))
-  expect_equal(na21(fprod(mtcNA, g)), BY(mtcNA, g, prod, na.rm = TRUE)) # prod(NA, na.rm = TRUE) gives 1
+  expect_equal(fprod(m), dapply(m, bprod, na.rm = TRUE))
+  expect_equal(fprod(m, na.rm = FALSE), dapply(m, bprod))
+  expect_equal(fprod(mNA, na.rm = FALSE), dapply(mNA, bprod))
+  expect_equal(fprod(mNA), dapply(mNA, bprod, na.rm = TRUE))
+  expect_equal(fprod(mtcars), dapply(mtcars, bprod, na.rm = TRUE))
+  expect_equal(fprod(mtcars, na.rm = FALSE), dapply(mtcars, bprod))
+  expect_equal(fprod(mtcNA, na.rm = FALSE), dapply(mtcNA, bprod))
+  expect_equal(fprod(mtcNA), dapply(mtcNA, bprod, na.rm = TRUE))
+  expect_equal(fprod(x, f), BY(x, f, bprod, na.rm = TRUE))
+  expect_equal(fprod(x, f, na.rm = FALSE), BY(x, f, bprod))
+  expect_equal(fprod(xNA, f, na.rm = FALSE), BY(xNA, f, bprod))
+  expect_equal(na21(fprod(xNA, f)), BY(xNA, f, bprod, na.rm = TRUE))
+  expect_equal(fprod(m, g), BY(m, g, bprod, na.rm = TRUE))
+  expect_equal(fprod(m, g, na.rm = FALSE), BY(m, g, bprod))
+  expect_equal(fprod(mNA, g, na.rm = FALSE), BY(mNA, g, bprod))
+  expect_equal(na21(fprod(mNA, g)), BY(mNA, g, bprod, na.rm = TRUE)) # bprod(NA, na.rm = TRUE) gives 1
+  expect_equal(fprod(mtcars, g), BY(mtcars, g, bprod, na.rm = TRUE))
+  expect_equal(fprod(mtcars, g, na.rm = FALSE), BY(mtcars, g, bprod))
+  expect_equal(fprod(mtcNA, g, na.rm = FALSE), BY(mtcNA, g, bprod))
+  expect_equal(na21(fprod(mtcNA, g)), BY(mtcNA, g, bprod, na.rm = TRUE)) # bprod(NA, na.rm = TRUE) gives 1
 })
 
 test_that("fprod with weights performs like wprod (defined above)", {

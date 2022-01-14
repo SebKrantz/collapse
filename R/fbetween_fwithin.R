@@ -9,12 +9,7 @@ fwithin.default <- function(x, g = NULL, w = NULL, na.rm = TRUE, mean = 0, theta
   if(is.matrix(x) && !inherits(x, "matrix")) return(fwithin.matrix(x, g, w, na.rm, mean, theta, ...))
   if(!missing(...)) unused_arg_action(match.call(), ...)
   if(is.null(g)) return(.Call(Cpp_BW,x,0L,0L,NULL,w,na.rm,theta,ckm(mean),FALSE,FALSE))
-  if(is.atomic(g)) {
-    if(is.nmfactor(g)) return(.Call(Cpp_BW,x,fnlevels(g),g,NULL,w,na.rm,theta,ckm(mean),FALSE,FALSE))
-    g <- qG(g, sort = FALSE, na.exclude = FALSE)
-    return(.Call(Cpp_BW,x,attr(g,"N.groups"),g,NULL,w,na.rm,theta,ckm(mean),FALSE,FALSE))
-  }
-  if(!is_GRP(g)) g <- GRP.default(g, return.groups = FALSE, call = FALSE)
+  g <- G_guo(g)
   .Call(Cpp_BW,x,g[[1L]],g[[2L]],g[[3L]],w,na.rm,theta,ckm(mean),FALSE,FALSE)
 }
 
@@ -27,24 +22,14 @@ fwithin.pseries <- function(x, effect = 1L, w = NULL, na.rm = TRUE, mean = 0, th
 fwithin.matrix <- function(x, g = NULL, w = NULL, na.rm = TRUE, mean = 0, theta = 1, ...) {
   if(!missing(...)) unused_arg_action(match.call(), ...)
   if(is.null(g)) return(.Call(Cpp_BWm,x,0L,0L,NULL,w,na.rm,theta,ckm(mean),FALSE,FALSE))
-  if(is.atomic(g)) {
-    if(is.nmfactor(g)) return(.Call(Cpp_BWm,x,fnlevels(g),g,NULL,w,na.rm,theta,ckm(mean),FALSE,FALSE))
-    g <- qG(g, sort = FALSE, na.exclude = FALSE)
-    return(.Call(Cpp_BWm,x,attr(g,"N.groups"),g,NULL,w,na.rm,theta,ckm(mean),FALSE,FALSE))
-  }
-  if(!is_GRP(g)) g <- GRP.default(g, return.groups = FALSE, call = FALSE)
+  g <- G_guo(g)
   .Call(Cpp_BWm,x,g[[1L]],g[[2L]],g[[3L]],w,na.rm,theta,ckm(mean),FALSE,FALSE)
 }
 
 fwithin.data.frame <- function(x, g = NULL, w = NULL, na.rm = TRUE, mean = 0, theta = 1, ...) {
   if(!missing(...)) unused_arg_action(match.call(), ...)
   if(is.null(g)) return(.Call(Cpp_BWl,x,0L,0L,NULL,w,na.rm,theta,ckm(mean),FALSE,FALSE))
-  if(is.atomic(g)) {
-    if(is.nmfactor(g)) return(.Call(Cpp_BWl,x,fnlevels(g),g,NULL,w,na.rm,theta,ckm(mean),FALSE,FALSE))
-    g <- qG(g, sort = FALSE, na.exclude = FALSE)
-    return(.Call(Cpp_BWl,x,attr(g,"N.groups"),g,NULL,w,na.rm,theta,ckm(mean),FALSE,FALSE))
-  }
-  if(!is_GRP(g)) g <- GRP.default(g, return.groups = FALSE, call = FALSE)
+  g <- G_guo(g)
   .Call(Cpp_BWl,x,g[[1L]],g[[2L]],g[[3L]],w,na.rm,theta,ckm(mean),FALSE,FALSE)
 }
 
@@ -65,7 +50,7 @@ fwithin.grouped_df <- function(x, w = NULL, na.rm = TRUE, mean = 0, theta = 1,
   nam <- attr(x, "names")
   gn2 <- which(nam %in% g[[5L]])
   gn <- if(keep.group_vars) gn2 else NULL
-  if(length(wsym) && length(wn <- which(wsym == nam))) {
+  if(length(wsym) && length(wn <- whichv(nam, wsym))) {
     w <- .subset2(x, wn)
     if(any(gn2 == wn)) stop("Weights coincide with grouping variables!")
     gn2 <- c(gn2,wn)
@@ -103,7 +88,7 @@ W.grouped_df <- function(x, w = NULL, na.rm = TRUE, mean = 0, theta = 1,
   nam <- attr(x, "names")
   gn2 <- which(nam %in% g[[5L]])
   gn <- if(keep.group_vars) gn2 else NULL
-  if(length(wsym) && length(wn <- which(wsym == nam))) {
+  if(length(wsym) && length(wn <- whichv(nam, wsym))) {
     w <- .subset2(x, wn)
     if(any(gn2 == wn)) stop("Weights coincide with grouping variables!")
     gn2 <- c(gn2,wn)
@@ -171,13 +156,12 @@ W.data.frame <- function(x, by = NULL, w = NULL, cols = is.numeric, na.rm = TRUE
         gn <- ckmatch(all.vars(by), nam)
         cols <- if(is.null(cols)) seq_along(x)[-gn] else cols2int(cols, x, nam)
       }
-      by <- if(length(gn) == 1L) at2GRP(x[[gn]]) else GRP.default(x, gn, return.groups = FALSE, call = FALSE)
+      by <- G_guo(if(length(gn) == 1L) x[[gn]] else x[gn])
       if(!keep.by) gn <- NULL
     } else {
       gn <- NULL
       if(length(cols)) cols <- cols2int(cols, x, nam)
-      if(!is_GRP(by)) by <- if(is.null(by)) list(0L, 0L, NULL) else if(is.atomic(by)) # Necessary if by is passed externally !
-        at2GRP(by) else GRP.default(by, return.groups = FALSE, call = FALSE)
+      by <- if(is.null(by)) list(0L, 0L, NULL) else G_guo(by)
     }
 
     if(is.call(w)) {
@@ -203,12 +187,7 @@ W.data.frame <- function(x, by = NULL, w = NULL, cols = is.numeric, na.rm = TRUE
   if(is.character(stub)) attr(x, "names") <- paste0(stub, attr(x, "names"))
 
   if(is.null(by)) return(.Call(Cpp_BWl,x,0L,0L,NULL,w,na.rm,theta,ckm(mean),FALSE,FALSE))
-  if(is.atomic(by)) {
-    if(is.nmfactor(by)) return(.Call(Cpp_BWl,x,fnlevels(by),by,NULL,w,na.rm,theta,ckm(mean),FALSE,FALSE))
-    by <- qG(by, sort = FALSE, na.exclude = FALSE)
-    return(.Call(Cpp_BWl,x,attr(by,"N.groups"),by,NULL,w,na.rm,theta,ckm(mean),FALSE,FALSE))
-  }
-  if(!is_GRP(by)) by <- GRP.default(by, return.groups = FALSE, call = FALSE)
+  by <- G_guo(by)
   .Call(Cpp_BWl,x,by[[1L]],by[[2L]],by[[3L]],w,na.rm,theta,ckm(mean),FALSE,FALSE)
 }
 
@@ -225,12 +204,7 @@ fbetween.default <- function(x, g = NULL, w = NULL, na.rm = TRUE, fill = FALSE, 
   if(is.matrix(x) && !inherits(x, "matrix")) return(fbetween.matrix(x, g, w, na.rm, fill, ...))
   if(!missing(...)) unused_arg_action(match.call(), ...)
   if(is.null(g)) return(.Call(Cpp_BW,x,0L,0L,NULL,w,na.rm,1,0,TRUE,fill))
-  if(is.atomic(g)) {
-    if(is.nmfactor(g)) return(.Call(Cpp_BW,x,fnlevels(g),g,NULL,w,na.rm,1,0,TRUE,fill))
-    g <- qG(g, sort = FALSE, na.exclude = FALSE)
-    return(.Call(Cpp_BW,x,attr(g,"N.groups"),g,NULL,w,na.rm,1,0,TRUE,fill))
-  }
-  if(!is_GRP(g)) g <- GRP.default(g, return.groups = FALSE, call = FALSE)
+  g <- G_guo(g)
   .Call(Cpp_BW,x,g[[1L]],g[[2L]],g[[3L]],w,na.rm,1,0,TRUE,fill)
 }
 
@@ -243,24 +217,14 @@ fbetween.pseries <- function(x, effect = 1L, w = NULL, na.rm = TRUE, fill = FALS
 fbetween.matrix <- function(x, g = NULL, w = NULL, na.rm = TRUE, fill = FALSE, ...) {
   if(!missing(...)) unused_arg_action(match.call(), ...)
   if(is.null(g)) return(.Call(Cpp_BWm,x,0L,0L,NULL,w,na.rm,1,0,TRUE,fill))
-  if(is.atomic(g)) {
-    if(is.nmfactor(g)) return(.Call(Cpp_BWm,x,fnlevels(g),g,NULL,w,na.rm,1,0,TRUE,fill))
-    g <- qG(g, sort = FALSE, na.exclude = FALSE)
-    return(.Call(Cpp_BWm,x,attr(g,"N.groups"),g,NULL,w,na.rm,1,0,TRUE,fill))
-  }
-  if(!is_GRP(g)) g <- GRP.default(g, return.groups = FALSE, call = FALSE)
+  g <- G_guo(g)
   .Call(Cpp_BWm,x,g[[1L]],g[[2L]],g[[3L]],w,na.rm,1,0,TRUE,fill)
 }
 
 fbetween.data.frame <- function(x, g = NULL, w = NULL, na.rm = TRUE, fill = FALSE, ...) {
   if(!missing(...)) unused_arg_action(match.call(), ...)
   if(is.null(g)) return(.Call(Cpp_BWl,x,0L,0L,NULL,w,na.rm,1,0,TRUE,fill))
-  if(is.atomic(g)) {
-    if(is.nmfactor(g)) return(.Call(Cpp_BWl,x,fnlevels(g),g,NULL,w,na.rm,1,0,TRUE,fill))
-    g <- qG(g, sort = FALSE, na.exclude = FALSE)
-    return(.Call(Cpp_BWl,x,attr(g,"N.groups"),g,NULL,w,na.rm,1,0,TRUE,fill))
-  }
-  if(!is_GRP(g)) g <- GRP.default(g, return.groups = FALSE, call = FALSE)
+  g <- G_guo(g)
   .Call(Cpp_BWl,x,g[[1L]],g[[2L]],g[[3L]],w,na.rm,1,0,TRUE,fill)
 }
 
@@ -281,7 +245,7 @@ fbetween.grouped_df <- function(x, w = NULL, na.rm = TRUE, fill = FALSE,
   nam <- attr(x, "names")
   gn2 <- which(nam %in% g[[5L]])
   gn <- if(keep.group_vars) gn2 else NULL
-  if(length(wsym) && length(wn <- which(wsym == nam))) {
+  if(length(wsym) && length(wn <- whichv(nam, wsym))) {
     w <- .subset2(x, wn)
     if(any(gn2 == wn)) stop("Weights coincide with grouping variables!")
     gn2 <- c(gn2,wn)
@@ -320,7 +284,7 @@ B.grouped_df <- function(x, w = NULL, na.rm = TRUE, fill = FALSE,
   nam <- attr(x, "names")
   gn2 <- which(nam %in% g[[5L]])
   gn <- if(keep.group_vars) gn2 else NULL
-  if(length(wsym) && length(wn <- which(wsym == nam))) {
+  if(length(wsym) && length(wn <- whichv(nam, wsym))) {
     w <- .subset2(x, wn)
     if(any(gn2 == wn)) stop("Weights coincide with grouping variables!")
     gn2 <- c(gn2,wn)
@@ -386,13 +350,12 @@ B.data.frame <- function(x, by = NULL, w = NULL, cols = is.numeric, na.rm = TRUE
         gn <- ckmatch(all.vars(by), nam)
         cols <- if(is.null(cols)) seq_along(x)[-gn] else cols2int(cols, x, nam)
       }
-      by <- if(length(gn) == 1L) at2GRP(x[[gn]]) else GRP.default(x, gn, return.groups = FALSE, call = FALSE)
+      by <- G_guo(if(length(gn) == 1L) x[[gn]] else x[gn])
       if(!keep.by) gn <- NULL
     } else {
       gn <- NULL
       if(length(cols)) cols <- cols2int(cols, x, nam)
-      if(!is_GRP(by)) by <- if(is.null(by)) list(0L, 0L, NULL) else if(is.atomic(by)) # Necessary if by is passed externally !
-        at2GRP(by) else GRP.default(by, return.groups = FALSE, call = FALSE)
+      by <- if(is.null(by)) list(0L, 0L, NULL) else G_guo(by)
     }
 
     if(is.call(w)) {
@@ -418,12 +381,7 @@ B.data.frame <- function(x, by = NULL, w = NULL, cols = is.numeric, na.rm = TRUE
   if(is.character(stub)) attr(x, "names") <- paste0(stub, attr(x, "names"))
 
   if(is.null(by)) return(.Call(Cpp_BWl,x,0L,0L,NULL,w,na.rm,1,0,TRUE,fill))
-  if(is.atomic(by)) {
-    if(is.nmfactor(by)) return(.Call(Cpp_BWl,x,fnlevels(by),by,NULL,w,na.rm,1,0,TRUE,fill))
-    by <- qG(by, sort = FALSE, na.exclude = FALSE)
-    return(.Call(Cpp_BWl,x,attr(by,"N.groups"),by,NULL,w,na.rm,1,0,TRUE,fill))
-  }
-  if(!is_GRP(by)) by <- GRP.default(by, return.groups = FALSE, call = FALSE)
+  by <- G_guo(by)
   .Call(Cpp_BWl,x,by[[1L]],by[[2L]],by[[3L]],w,na.rm,1,0,TRUE,fill)
 }
 

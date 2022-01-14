@@ -1,8 +1,9 @@
-
+# Note: don't change the order of these arguments !!!
+scv <- function(x, v, r, set = FALSE, inv = FALSE) .Call(C_setcopyv, x, v, r, inv, set, FALSE)
 
 # inspired by ?dplyr::recode
 # Think about adopting this code for as_numeric_factor and as_character_factor
-recode_num <- function(X, ..., default = NULL, missing = NULL) {
+recode_num <- function(X, ..., default = NULL, missing = NULL, set = FALSE) {
   if(missing(...)) stop("recode_num requires arguments of the form: value = replacement")
   args <- list(...)
   nam <- as.numeric(names(args))
@@ -17,22 +18,22 @@ recode_num <- function(X, ..., default = NULL, missing = NULL) {
     if(is.null(default)) {
       if(missingl) {
         repfun <- function(y) if(is.numeric(y)) {
-          y[is.na(y)] <- missing
-          `[<-`(y, y == nam, value = args)
+          z <- scv(y, NA, missing, set) # y[is.na(y)] <- missing
+          scv(z, nam, args, TRUE) # `[<-`(y, y == nam, value = args)
           } else y
       } else {
-        repfun <- function(y) if(is.numeric(y)) `[<-`(y, y == nam, value = args) else y
+        repfun <- function(y) if(is.numeric(y)) scv(y, nam, args, set) else y # `[<-`(y, y == nam, value = args)
       }
     } else {
       nr <- if(is.atomic(X)) NROW(X) else fnrow2(X)
       if(missingl) {
         repfun <- function(y) if(is.numeric(y)) {
-          z <- duplAttributes(alloc(default, nr), y)
-          z[is.na(y)] <- missing # could put behind -> better but inconsistent
-          `[<-`(z, y == nam, value = args)
+          z <- scv(y, NA, default, set, TRUE) # duplAttributes(alloc(default, nr), y)
+          scv(z, NA, missing, TRUE) # z[is.na(y)] <- missing # could put behind -> better but inconsistent
+          `[<-`(z, whichv(y, nam), value = args) # y == nam
         } else y
       } else {
-        repfun <- function(y) if(is.numeric(y)) `[<-`(duplAttributes(alloc(default, nr), y), y == nam, value = args) else y
+        repfun <- function(y) if(is.numeric(y)) scv(scv(y, nam, default, set, TRUE), nam, args, TRUE) else y # `[<-`(duplAttributes(alloc(default, nr), y), y == nam, value = args)
       }
     }
   } else {
@@ -40,15 +41,15 @@ recode_num <- function(X, ..., default = NULL, missing = NULL) {
     if(is.null(default)) {
       if(missingl) {
         repfun <- function(y) if(is.numeric(y)) {
-          y[is.na(y)] <- missing
+          y <- scv(y, NA, missing, set) # y[is.na(y)] <- missing
           z <- y
-          for(i in seqarg) z[y == nam[i]] <- args[[i]]
+          for(i in seqarg) z[whichv(y, nam[i])] <- args[[i]]
           z
         } else y
       } else {
         repfun <- function(y) if(is.numeric(y)) {
           z <- y
-          for(i in seqarg) z[y == nam[i]] <- args[[i]]
+          for(i in seqarg) z[whichv(y, nam[i])] <- args[[i]]
           z
         } else y
       }
@@ -56,15 +57,16 @@ recode_num <- function(X, ..., default = NULL, missing = NULL) {
       nr <- if(is.atomic(X)) NROW(X) else fnrow2(X)
       if(missingl) {
         repfun <- function(y) if(is.numeric(y)) {
-          z <- duplAttributes(alloc(default, nr), y)
-          z[is.na(y)] <- missing # could put behind -> better but inconsistent
-          for(i in seqarg) z[y == nam[i]] <- args[[i]]
+          z <- scv(y, NA, default, set, TRUE) # duplAttributes(alloc(default, nr), y)
+          scv(z, NA, missing, TRUE)     # z[is.na(y)] <- missing # could put behind -> better but inconsistent
+          for(i in seqarg) z[whichv(y, nam[i])] <- args[[i]]
           z
         } else y
       } else {
         repfun <- function(y) if(is.numeric(y)) {
-          z <- duplAttributes(alloc(default, nr), y)
-          for(i in seqarg) z[y == nam[i]] <- args[[i]]
+          z <- scv(y, nam[1L], default, set, TRUE) # duplAttributes(alloc(default, nr), y)
+          scv(z, nam[1L], args[[1L]], TRUE)
+          for(i in seqarg[-1L]) z[whichv(y, nam[i])] <- args[[i]]
           z
         } else y
       }
@@ -79,7 +81,7 @@ recode_num <- function(X, ..., default = NULL, missing = NULL) {
 }
 
 recode_char <- function(X, ..., default = NULL, missing = NULL, regex = FALSE,
-                        ignore.case = FALSE, fixed = FALSE) {
+                        ignore.case = FALSE, fixed = FALSE, set = FALSE) {
   if(missing(...)) stop("recode_char requires arguments of the form: value = replacement")
   args <- list(...)
   nam <- names(args)
@@ -93,7 +95,7 @@ recode_char <- function(X, ..., default = NULL, missing = NULL, regex = FALSE,
       if(is.null(default)) {
         if(missingl) {
           repfun <- function(y) if(is.character(y)) {
-            y[is.na(y)] <- missing
+             y <- scv(y, NA, missing, set)  # y[is.na(y)] <- missing
             `[<-`(y, grepl(nam, y, ignore.case, FALSE, fixed), value = args)
           } else y
         } else {
@@ -103,8 +105,8 @@ recode_char <- function(X, ..., default = NULL, missing = NULL, regex = FALSE,
         nr <- if(is.atomic(X)) NROW(X) else fnrow2(X)
         if(missingl) {
           repfun <- function(y) if(is.character(y)) {
-            z <- duplAttributes(alloc(default, nr), y)
-            z[is.na(y)] <- missing # could put behind -> better but inconsistent
+            z <- scv(y, NA, default, set, TRUE)  # duplAttributes(alloc(default, nr), y)
+            scv(z, NA, missing, TRUE) # z[is.na(y)] <- missing # could put behind -> better but inconsistent
             `[<-`(z, grepl(nam, y, ignore.case, FALSE, fixed), value = args)
           } else y
         } else {
@@ -116,7 +118,7 @@ recode_char <- function(X, ..., default = NULL, missing = NULL, regex = FALSE,
       if(is.null(default)) {
         if(missingl) {
           repfun <- function(y) if(is.character(y)) {
-            y[is.na(y)] <- missing
+            y <- scv(y, NA, missing, set) # y[is.na(y)] <- missing
             z <- y
             for(i in seqarg) z[grepl(nam[i], y, ignore.case, FALSE, fixed)] <- args[[i]]
             z
@@ -132,8 +134,8 @@ recode_char <- function(X, ..., default = NULL, missing = NULL, regex = FALSE,
         nr <- if(is.atomic(X)) NROW(X) else fnrow2(X)
         if(missingl) {
           repfun <- function(y) if(is.character(y)) {
-            z <- duplAttributes(alloc(default, nr), y)
-            z[is.na(y)] <- missing # could put behind -> better but inconsistent
+            z <- scv(y, NA, default, set, TRUE)  # duplAttributes(alloc(default, nr), y)
+            scv(z, NA, missing, TRUE)  # z[is.na(y)] <- missing # could put behind -> better but inconsistent
             for(i in seqarg) z[grepl(nam[i], y, ignore.case, FALSE, fixed)] <- args[[i]]
             z
           } else y
@@ -152,22 +154,22 @@ recode_char <- function(X, ..., default = NULL, missing = NULL, regex = FALSE,
       if(is.null(default)) {
         if(missingl) {
           repfun <- function(y) if(is.character(y)) {
-            y[is.na(y)] <- missing
-            `[<-`(y, y == nam, value = args)
+            y <- scv(y, NA, missing, set) # y[is.na(y)] <- missing
+            scv(y, nam, args, TRUE)  # `[<-`(y, y == nam, value = args)
           } else y
         } else {
-          repfun <- function(y) if(is.character(y)) `[<-`(y, y == nam, value = args) else y
+          repfun <- function(y) if(is.character(y)) scv(y, nam, args, set) else y # `[<-`(y, y == nam, value = args)
         }
       } else {
         nr <- if(is.atomic(X)) NROW(X) else fnrow2(X)
         if(missingl) {
           repfun <- function(y) if(is.character(y)) {
-            z <- duplAttributes(alloc(default, nr), y)
-            z[is.na(y)] <- missing # could put behind -> better but inconsistent
-            `[<-`(z, y == nam, value = args)
+            z <- scv(y, NA, default, set, TRUE)  # duplAttributes(alloc(default, nr), y)
+            scv(z, NA, missing, TRUE) #  z[is.na(y)] <- missing # could put behind -> better but inconsistent
+            `[<-`(z, whichv(y, nam), value = args)
           } else y
         } else {
-          repfun <- function(y) if(is.character(y)) `[<-`(duplAttributes(alloc(default, nr), y), y == nam, value = args) else y
+          repfun <- function(y) if(is.character(y)) scv(scv(y, nam, default, set, TRUE), nam, args, TRUE) else y # `[<-`(duplAttributes(alloc(default, nr), y), y == nam, value = args)
         }
       }
     } else {
@@ -175,15 +177,15 @@ recode_char <- function(X, ..., default = NULL, missing = NULL, regex = FALSE,
       if(is.null(default)) {
         if(missingl) {
           repfun <- function(y) if(is.character(y)) {
-            y[is.na(y)] <- missing
+            y <- scv(y, NA, missing, set) # y[is.na(y)] <- missing
             z <- y
-            for(i in seqarg) z[y == nam[i]] <- args[[i]]
+            for(i in seqarg) z[whichv(y, nam[i])] <- args[[i]]
             z
           } else y
         } else {
           repfun <- function(y) if(is.character(y)) {
             z <- y
-            for(i in seqarg) z[y == nam[i]] <- args[[i]]
+            for(i in seqarg) z[whichv(y, nam[i])] <- args[[i]]
             z
           } else y
         }
@@ -191,15 +193,16 @@ recode_char <- function(X, ..., default = NULL, missing = NULL, regex = FALSE,
         nr <- if(is.atomic(X)) NROW(X) else fnrow2(X)
         if(missingl) {
           repfun <- function(y) if(is.character(y)) {
-            z <- duplAttributes(alloc(default, nr), y)
-            z[is.na(y)] <- missing # could put behind -> better but inconsistent
-            for(i in seqarg) z[y == nam[i]] <- args[[i]]
+            z <- scv(y, NA, default, set, TRUE)  # duplAttributes(alloc(default, nr), y)
+            scv(z, NA, missing, TRUE) # z[is.na(y)] <- missing # could put behind -> better but inconsistent
+            for(i in seqarg) z[whichv(y, nam[i])] <- args[[i]]
             z
           } else y
         } else {
           repfun <- function(y) if(is.character(y)) {
-            z <- duplAttributes(alloc(default, nr), y)
-            for(i in seqarg) z[y == nam[i]] <- args[[i]]
+            z <- scv(y, nam[1L], default, set, TRUE)  # duplAttributes(alloc(default, nr), y)
+            scv(z, nam[1L], args[[1L]], TRUE)
+            for(i in seqarg[-1L]) z[whichv(y, nam[i])] <- args[[i]]
             z
           } else y
         }
@@ -214,19 +217,31 @@ recode_char <- function(X, ..., default = NULL, missing = NULL, regex = FALSE,
   repfun(X)
 }
 
-replace_NA <- function(X, value = 0L, cols = NULL) {
+replace_NA <- function(X, value = 0L, cols = NULL, set = FALSE) {
+  if(set) {
+    if(is.list(X)) {
+      if(is.null(cols)) {
+        lapply(unattrib(X), scv, NA, value, TRUE)
+      } else if(is.function(cols)) {
+        lapply(unattrib(X), function(y) if(cols(y)) scv(y, NA, value, TRUE) else y)
+      } else {
+        cols <- cols2int(cols, X, attr(X, "names"), FALSE)
+        lapply(unattrib(X)[cols], scv, NA, value, TRUE)
+      }
+    } else scv(X, NA, value, TRUE) # `[<-`(X, is.na(X), value = value)
+    return(invisible(X))
+  }
   if(is.list(X)) {
-    if(is.null(cols)) return(condalc(duplAttributes(lapply(unattrib(X),
-      function(y) `[<-`(y, is.na(y), value = value)), X), inherits(X, "data.table")))
+    if(is.null(cols)) return(condalc(duplAttributes(lapply(unattrib(X), scv, NA, value), X), inherits(X, "data.table"))) # function(y) `[<-`(y, is.na(y), value = value)
     if(is.function(cols)) return(condalc(duplAttributes(lapply(unattrib(X),
-      function(y) if(cols(y)) `[<-`(y, is.na(y), value = value) else y), X), inherits(X, "data.table")))
+      function(y) if(cols(y)) scv(y, NA, value) else y), X), inherits(X, "data.table")))
     clx <- oldClass(X)
     oldClass(X) <- NULL
     cols <- cols2int(cols, X, names(X), FALSE)
-    X[cols] <- lapply(unattrib(X[cols]), function(y) `[<-`(y, is.na(y), value = value))
+    X[cols] <- lapply(unattrib(X[cols]), scv, NA, value) #  function(y) `[<-`(y, is.na(y), value = value)
     return(condalc(`oldClass<-`(X, clx), any(clx == "data.table")))
   }
-  `[<-`(X, is.na(X), value = value)
+  scv(X, NA, value) # `[<-`(X, is.na(X), value = value)
 }
 
 # Remove Inf (Infinity) and NaN (Not a number) from vectors or data frames:
@@ -263,7 +278,7 @@ replace_outliers <- function(X, limits, value = NA, single.limit = c("SDs", "min
       res <- switch(single.limit[1L], # Allows grouped scaling if X is a grouped_df, but requires extra memory equal to X ... extra argument gSDs ?
            SDs = {
              if(inherits(X, c("grouped_df", "pdata.frame"))) {
-              num <- vapply(unattrib(X), is.numeric, TRUE)
+              num <- .Call(C_vtypes, X, 1L) # vapply(unattrib(X), is.numeric, TRUE)
               num <- if(inherits(X, "grouped_df")) num & !fgroup_vars(X, "logical") else
                       num & attr(attr(X, "index"), "names") %!in% attr(X, "names")
               clx <- oldClass(X)
@@ -332,12 +347,16 @@ pad <- function(X, i, value = NA, method = c("auto", "xpos", "vpos")) { # 1 - i 
   ilog <- is.logical(i)
   ineg <- i[1L] < 0L
   n <- if(is.list(X)) length(.subset2(X, 1L)) else if(is.matrix(X)) dim(X)[1L] else length(X)
-  xpos <- switch(method[1L], auto = if(ilog) sum(i) == n else if(ineg) FALSE else length(i) == n,
+  xpos <- switch(method[1L], auto = if(ilog) bsum(i) == n else if(ineg) FALSE else length(i) == n,
                  xpos = TRUE, vpos = FALSE, stop("Unknown method: ", method[1L]))
-  n <- if(ilog) length(i) else if(xpos && !ineg) max(i) else n + length(i)
+  n <- if(ilog) length(i) else if(xpos && !ineg) bmax(i) else n + length(i)
   if(is.atomic(X)) return(pad_atomic(X, if(xpos || ineg) i else if(ilog) !i else -i, n, value))
   if(!is.list(X)) stop("X must be atomic or a list")
-  if(ilog) i <- which(if(xpos) i else !i) else if(!xpos) i <- seq_len(n)[if(ineg) i else -i]
+  if(ilog) {
+    i <- if(xpos) which(i) else whichv(i, FALSE)
+  } else if(!xpos) {
+    i <- seq_len(n)[if(ineg) i else -i]
+  }
   ax <- attributes(X)
   attributes(X) <- NULL
   res <- lapply(X, pad_atomic, i, n, value)
@@ -366,7 +385,7 @@ Recode <- function(X, ..., copy = FALSE, reserve.na.nan = TRUE, regex = FALSE) {
       } else X[is.nan(X)] <- args[[ma[1L]]]
     }
     if(wm[2L]) X[is.na(X)] <- args[[ma[2L]]] # is.na already accounts for NaN, so this needs to the the order!!
-    if(sum(wm) == length(args)) return(X)
+    if(bsum(wm) == length(args)) return(X)
     args <- args[-ma[wm]]
     nam <- names(args)
   }

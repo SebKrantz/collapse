@@ -16,7 +16,7 @@ vignette: >
 1. To facilitate complex data transformation, exploration and computing tasks in R.
 2. To help make R code fast, flexible, parsimonious and programmer friendly. 
 
-It is among the fastest and most broadly compatible, but also one of the most thoroughly documented packages on CRAN. Documentation comes in 4 different forms:
+Documentation comes in 4 different forms:
 
 ## Built-In Structured Documentation
 
@@ -24,9 +24,9 @@ After installing *collapse*, you can call `help("collapse-documentation")` which
 
 Thus *collapse* comes with a fully structured hierarchical documentation which you can browse within R - and you don't require anything else to fully understand this package. The Documentation is also available [online](<https://sebkrantz.github.io/collapse/reference/index.html>).
 
-In addition, the package page under `help("collapse-package")` provides some more general information about the package and its design philosophy, as well as a very compact set of examples covering important functionality. 
+In addition, the package page under `help("collapse-package")` provides some more general information about the package and its design philosophy, as well as a very compact set of examples covering important functionality (which lacks features introduced in 1.7 though). 
 
-Reading `help("collapse-package")` and `help("collapse-documentation")` and working through the examples on `help("collapse-package")` is probably the fastest way to get acquainted with the package. 
+Reading `help("collapse-package")` and `help("collapse-documentation")` and working through the examples on `help("collapse-package")` is probably the fastest way to get acquainted with the package. `help("collapse-documentation")` is the most up-to-date documentation of the package at the moment (some vignettes need minor updating, because newer versions (esp. 1.7) added significant functionality). 
 
 ## Vignettes
 

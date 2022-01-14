@@ -89,7 +89,7 @@ G(x, n = 1, diff = 1, \dots)
 \code{x} where the growth rate was taken \code{diff} times using lags \code{n} of itself, scaled by \code{scale}. Computations can be grouped by \code{g/by} and/or ordered by \code{t}. See Details and Examples.
 }
 \seealso{
-\code{\link[=flag]{flag/L/F}}, \code{\link[=fdiff]{fdiff/D/Dlog}}, \link[=A7-time-series-panel-series]{Time Series and Panel Series}, \link[=collapse-documentation]{Collapse Overview}
+\code{\link[=flag]{flag/L/F}}, \code{\link[=fdiff]{fdiff/D/Dlog}}, \link[=time-series-panel-series]{Time Series and Panel Series}, \link[=collapse-documentation]{Collapse Overview}
 }
 \examples{
 ## Simple Time Series: AirPassengers

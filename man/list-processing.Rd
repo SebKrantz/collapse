@@ -1,5 +1,6 @@
-\name{A8-list-processing}
+\name{list-processing}
 \alias{A8-list-processing}
+\alias{list-processing}
 \title{List Processing} % \emph{collapse}
 
 \description{
@@ -13,7 +14,7 @@
 
 \item \bold{Subsetting} \itemize{
 \item \code{\link{atomic_elem}} examines the top-level of a list and returns a sublist with the atomic elements. Conversely \code{\link{list_elem}} returns the sublist of elements which are themselves lists or list-like objects.
- \item \code{\link{reg_elem}} and \code{\link{irreg_elem}} are recursive versions of the former. \code{\link{reg_elem}} extracts the 'regular' part of the list-tree leading to atomic elements in the final nodes, while \code{\link{irreg_elem}} extracts the 'irregular' part of the list tree leading to non-atomic elements in the final nodes. (\emph{Tipp}: try calling both on an \code{lm} object). Naturally for all lists \code{l}, \code{is_unlistable(reg_elem(l))} evaluates to \code{TRUE}\dots
+ \item \code{\link{reg_elem}} and \code{\link{irreg_elem}} are recursive versions of the former. \code{\link{reg_elem}} extracts the 'regular' part of the list-tree leading to atomic elements in the final nodes, while \code{\link{irreg_elem}} extracts the 'irregular' part of the list tree leading to non-atomic elements in the final nodes. (\emph{Tip}: try calling both on an \code{lm} object). Naturally for all lists \code{l}, \code{is_unlistable(reg_elem(l))} evaluates to \code{TRUE}\dots
 \item \code{\link{get_elem}} extracts elements from a list using element names, regular expressions applied to element names, a function applied to the elements, or element-indices used to subset the lowest-level sub-lists. by default the result is presented as a simplified list containing all matching elements. With the \code{keep.tree} option however \code{\link{get_elem}} can also be used to subset lists i.e. maintain the full tree but cut off non-matching branches.
 }
 

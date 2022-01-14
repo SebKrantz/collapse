@@ -34,7 +34,7 @@ pad(X, i, value = NA, method = c("auto", "xpos", "vpos"))
 \code{X} with elements / rows filled with \code{value} inserted at positions given by \code{i}.
 }
 \seealso{
-\code{\link{append}}, \link[=AA1-recode-replace]{Recode and Replace Values}, \link[=AA2-small-helpers]{Small (Helper) Functions}, \link[=collapse-documentation]{Collapse Overview}
+\code{\link{append}}, \link[=recode-replace]{Recode and Replace Values}, \link[=small-helpers]{Small (Helper) Functions}, \link[=collapse-documentation]{Collapse Overview}
 }
 \examples{
 v <- 1:3

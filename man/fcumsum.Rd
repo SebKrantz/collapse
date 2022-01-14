@@ -59,7 +59,7 @@ the cumulative sum of values in \code{x}, (optionally) grouped by \code{g} and/o
 }
 
 \seealso{
-\code{\link{fdiff}}, \code{\link{fgrowth}}, \link[=A7-time-series-panel-series]{Time Series and Panel Series}, \link[=collapse-documentation]{Collapse Overview}
+\code{\link{fdiff}}, \code{\link{fgrowth}}, \link[=time-series-panel-series]{Time Series and Panel Series}, \link[=collapse-documentation]{Collapse Overview}
 }
 \examples{
 ## Non-grouped

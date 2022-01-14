@@ -203,8 +203,8 @@ psmatCpp <- function(x, g, t = NULL, transpose = FALSE) {
     .Call(Cpp_psmat, x, g, t, transpose)
 }
 
-qFCpp <- function(x, sort = TRUE, ordered = FALSE, na.exclude = TRUE, keep.attr = TRUE, ret = 1L) {
-    .Call(Cpp_qF, x, sort, ordered, na.exclude, keep.attr, ret)
+qFCpp <- function(x, ordered = TRUE, na_exclude = TRUE, keep_attr = TRUE, ret = 1L) {
+  .Call(Cpp_qF, x, ordered, na_exclude, keep_attr, ret)
 }
 
 funiqueCpp <- function(x, sort = TRUE) {
@@ -228,21 +228,22 @@ setattributes <- function(x, a) {
     invisible(.Call(C_setattributes, x, a))
 }
 
-setattr <- function(x, a, v) {
-    invisible(.Call(C_setattr, x, a, v))
-}
-
 duplAttributes <- function(x, y) {
     .Call(C_duplAttributes, x, y)
 }
 
-duplattributes <- function(x, y) {
-    invisible(.Call(C_duplattributes, x, y))
-}
+# No longer needed...
+# setattr <- function(x, a, v) {
+#   invisible(.Call(C_setattr, x, a, v))
+# }
 
-cond_duplAttributes <- function(x, y) {
-    .Call(C_cond_duplAttributes, x, y)
-}
+# duplattributes <- function(x, y) {
+#     invisible(.Call(C_duplattributes, x, y))
+# }
+
+# cond_duplAttributes <- function(x, y) {
+#     .Call(C_cond_duplAttributes, x, y)
+# }
 
 # cond_duplattributes <- function(x, y) {
 #     invisible(.Call(C_cond_duplattributes, x, y))

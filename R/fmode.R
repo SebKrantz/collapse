@@ -107,7 +107,7 @@ fmode.grouped_df <- function(x, w = NULL, TRA = NULL, na.rm = TRUE, use.g.names 
   nTRAl <- is.null(TRA)
   sumw <- NULL
 
-  if(length(wsym) && length(wn <- which(wsym == nam))) {
+  if(length(wsym) && length(wn <- whichv(nam, wsym))) {
     w <- .subset2(x, wn)
     if(any(gn == wn)) stop("Weights coincide with grouping variables!")
     gn <- c(gn, wn)

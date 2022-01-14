@@ -698,18 +698,17 @@ BEGIN_RCPP
 END_RCPP
 }
 // qFCpp
-SEXP qFCpp(SEXP x, bool sort, bool ordered, bool na_exclude, bool keep_attr, int ret);
-RcppExport SEXP _collapse_qFCpp(SEXP xSEXP, SEXP sortSEXP, SEXP orderedSEXP, SEXP na_excludeSEXP, SEXP keep_attrSEXP, SEXP retSEXP) {
+SEXP qFCpp(SEXP x, bool ordered, bool na_exclude, bool keep_attr, int ret);
+RcppExport SEXP _collapse_qFCpp(SEXP xSEXP, SEXP orderedSEXP, SEXP na_excludeSEXP, SEXP keep_attrSEXP, SEXP retSEXP) {
 BEGIN_RCPP
     Rcpp::RObject rcpp_result_gen;
     Rcpp::RNGScope rcpp_rngScope_gen;
     Rcpp::traits::input_parameter< SEXP >::type x(xSEXP);
-    Rcpp::traits::input_parameter< bool >::type sort(sortSEXP);
     Rcpp::traits::input_parameter< bool >::type ordered(orderedSEXP);
     Rcpp::traits::input_parameter< bool >::type na_exclude(na_excludeSEXP);
     Rcpp::traits::input_parameter< bool >::type keep_attr(keep_attrSEXP);
     Rcpp::traits::input_parameter< int >::type ret(retSEXP);
-    rcpp_result_gen = Rcpp::wrap(qFCpp(x, sort, ordered, na_exclude, keep_attr, ret));
+    rcpp_result_gen = Rcpp::wrap(qFCpp(x, ordered, na_exclude, keep_attr, ret));
     return rcpp_result_gen;
 END_RCPP
 }

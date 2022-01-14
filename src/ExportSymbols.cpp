@@ -17,20 +17,35 @@ RcppExport SEXP subsetCols(SEXP, SEXP, SEXP);
 RcppExport SEXP subsetVector(SEXP, SEXP, SEXP);
 RcppExport SEXP Calloccol(SEXP dt); // , SEXP Rn
 RcppExport SEXP falloc(SEXP, SEXP);
+// RcppExport SEXP CasChar(SEXP x);
 RcppExport SEXP setAttributes(SEXP x, SEXP a);
 RcppExport void setattributes(SEXP x, SEXP a);
 // RcppExport SEXP CsetAttr(SEXP object, SEXP a, SEXP v); -> mot more efficeint than attr i.e. for row.names...
-RcppExport void setattr(SEXP x, SEXP a, SEXP v);
+// RcppExport void setattr(SEXP x, SEXP a, SEXP v);
 RcppExport SEXP duplAttributes(SEXP x, SEXP y);
-RcppExport void duplattributes(SEXP x, SEXP y);
-RcppExport SEXP cond_duplAttributes(SEXP x, SEXP y);
+// RcppExport void duplattributes(SEXP x, SEXP y);
+// RcppExport SEXP cond_duplAttributes(SEXP x, SEXP y);
 RcppExport SEXP CsetAttrib(SEXP object, SEXP a);
 RcppExport SEXP CcopyAttrib(SEXP to, SEXP from);
 RcppExport SEXP CcopyMostAttrib(SEXP to, SEXP from);
 RcppExport SEXP copyMostAttributes(SEXP to, SEXP from);
 RcppExport SEXP lassign(SEXP x, SEXP s, SEXP rows, SEXP fill);
 RcppExport SEXP groups2GRP(SEXP x, SEXP lx, SEXP gs);
+RcppExport SEXP gsplit(SEXP x, SEXP gobj, SEXP toint);
+RcppExport SEXP greorder(SEXP x, SEXP gobj);
 RcppExport SEXP Cna_rm(SEXP x);
+RcppExport SEXP whichv(SEXP x, SEXP val, SEXP Rinvert);
+RcppExport SEXP anyallv(SEXP x, SEXP val, SEXP Rall);
+RcppExport SEXP setcopyv(SEXP x, SEXP val, SEXP rep, SEXP Rinvert, SEXP Rset, SEXP Rind1);
+RcppExport SEXP setop(SEXP x, SEXP val, SEXP op, SEXP roww);
+RcppExport SEXP vtypes(SEXP x, SEXP isnum);
+RcppExport SEXP vlengths(SEXP x, SEXP usenam);
+RcppExport SEXP multiassign(SEXP lhs, SEXP rhs, SEXP envir);
+RcppExport SEXP vlabels(SEXP x, SEXP attrn, SEXP usenam);
+RcppExport SEXP setvlabels(SEXP x, SEXP attrn, SEXP value, SEXP ind, SEXP sc);
+RcppExport SEXP setnames(SEXP x, SEXP nam);
+RcppExport SEXP groupVec(SEXP X, SEXP starts, SEXP sizes);
+RcppExport SEXP groupAtVec(SEXP X, SEXP starts, SEXP naincl);
 // fnobs rewritten in C:
 RcppExport SEXP fnobsC(SEXP x, SEXP Rng, SEXP g);
 RcppExport SEXP fnobsmC(SEXP x, SEXP Rng, SEXP g, SEXP Rdrop);
@@ -125,23 +140,25 @@ static const R_CallMethodDef CallEntries[] = {
   {"Cpp_mrtl", (DL_FUNC) &_collapse_mrtl, 3},
   {"Cpp_mctl", (DL_FUNC) &_collapse_mctl, 3},
   {"Cpp_psmat", (DL_FUNC) &_collapse_psmatCpp, 4},
-  {"Cpp_qF", (DL_FUNC) &_collapse_qFCpp, 6},
+  {"Cpp_qF", (DL_FUNC) &_collapse_qFCpp, 5},
   // {"Cpp_qG", (DL_FUNC) &_collapse_qGCpp, 5},
   {"Cpp_funique", (DL_FUNC) &_collapse_funiqueCpp, 2},
   {"Cpp_fdroplevels", (DL_FUNC) &_collapse_fdroplevelsCpp, 2},
   {"C_setAttributes", (DL_FUNC) &setAttributes, 2},
   {"C_setattributes", (DL_FUNC) &setattributes, 2},
   // {"C_setAttr", (DL_FUNC) &CsetAttr, 3},
-  {"C_setattr", (DL_FUNC) &setattr, 3},
+  // {"C_setattr", (DL_FUNC) &setattr, 3},
   {"C_duplAttributes", (DL_FUNC) &duplAttributes, 2},
-  {"C_duplattributes", (DL_FUNC) &duplattributes, 2},
-  {"C_cond_duplAttributes", (DL_FUNC) &cond_duplAttributes, 2},
+  // {"C_duplattributes", (DL_FUNC) &duplattributes, 2},
+  // {"C_cond_duplAttributes", (DL_FUNC) &cond_duplAttributes, 2},
   {"C_copyMostAttributes", (DL_FUNC) &copyMostAttributes, 2},
   // {"C_cond_duplattributes", (DL_FUNC) &cond_duplattributes, 2},
   {"C_setAttrib", (DL_FUNC) &CsetAttrib, 2},
   {"C_copyAttrib", (DL_FUNC) &CcopyAttrib, 2},
   {"C_copyMostAttrib", (DL_FUNC) &CcopyMostAttrib, 2},
   {"C_groups2GRP", (DL_FUNC) &groups2GRP, 3},
+  {"C_gsplit", (DL_FUNC) &gsplit, 3},
+  {"C_greorder", (DL_FUNC) &greorder, 2},
   {"C_lassign", (DL_FUNC) &lassign, 4},
   {"Cpp_seqid", (DL_FUNC) &_collapse_seqid, 7},
   {"Cpp_groupid", (DL_FUNC) &_collapse_groupid, 5},
@@ -149,6 +166,18 @@ static const R_CallMethodDef CallEntries[] = {
   {"C_dt_na",         (DL_FUNC) &dt_na,         2},
   {"C_allNA",         (DL_FUNC) &allNAv,        2},
   {"C_na_rm",         (DL_FUNC) &Cna_rm,        1},
+  {"C_whichv",        (DL_FUNC) &whichv,        3},
+  {"C_anyallv",       (DL_FUNC) &anyallv,       3},
+  {"C_setcopyv",      (DL_FUNC) &setcopyv,      6},
+  {"C_setop",         (DL_FUNC) &setop,         4},
+  {"C_vtypes",        (DL_FUNC) &vtypes,        2},
+  {"C_vlengths",      (DL_FUNC) &vlengths,      2},
+  {"C_multiassign",   (DL_FUNC) &multiassign,   3},
+  {"C_vlabels",       (DL_FUNC) &vlabels,       3},
+  {"C_setvlabels",    (DL_FUNC) &setvlabels,    4},
+  {"C_setnames",      (DL_FUNC) &setnames,      2},
+  {"C_group",         (DL_FUNC) &groupVec,      3},
+  {"C_groupat",       (DL_FUNC) &groupAtVec,    3},
   {"C_radixsort",     (DL_FUNC) &Cradixsort,    6},
   {"C_frankds",       (DL_FUNC) &frankds,       4},
   {"C_pacf1",         (DL_FUNC) &pacf1,         2},
@@ -156,6 +185,7 @@ static const R_CallMethodDef CallEntries[] = {
   {"C_setcolorder",   (DL_FUNC) &setcolorder,   2},
   {"C_subsetCols",    (DL_FUNC) &subsetCols,    3},
   {"C_alloc",         (DL_FUNC) &falloc,        2},
+  // {"C_aschar",        (DL_FUNC) &CasChar,       1},
   {"C_subsetDT",      (DL_FUNC) &subsetDT,      4},
   {"C_subsetVector",  (DL_FUNC) &subsetVector,  3},
   {"C_alloccol",      (DL_FUNC) &Calloccol,     1},

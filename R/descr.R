@@ -35,7 +35,7 @@ descr <- function(X, Ndistinct = TRUE, higher = TRUE, table = TRUE,
   } else X <- unclass(qDF(X))
   if(length(cols)) X <- X[cols2int(cols, X, names(X), FALSE)]
   res <- vector('list', length(X))
-  num <- vapply(unattrib(X), is.numeric, TRUE)
+  num <- .Call(C_vtypes, X, 1L) # vapply(unattrib(X), is.numeric, TRUE)
   res[num] <- lapply(X[num], descrnum, ...)
   if(!all(num)) {
     date <- vapply(unattrib(X), is_date, TRUE)
@@ -70,14 +70,14 @@ print.descr <- function(x, n = 7, perc = TRUE, digits = 2, t.table = TRUE, summa
       if(namxi[4L] == "Table") {
         t <- unclass(xi[[4L]])
         if(length(t) <= 2*n) {
-          if(perc) print.default(cb(Freq = t, Perc = round(t/sum(t)*100, digits)), right = TRUE, print.gap = 2, quote = FALSE) else
+          if(perc) print.default(cb(Freq = t, Perc = round(t/bsum(t)*100, digits)), right = TRUE, print.gap = 2, quote = FALSE) else
             print.table(ct(t))
         } else {
           lt <- length(t)
           t1 <- t[seq_len(n)]
           t2 <- t[seq(lt-n, lt)]
           if(perc) {
-            st <- sum(t)
+            st <- bsum(t)
             print.default(cb(Freq = t1, Perc = round(t1/st*100, digits)), right = TRUE, print.gap = 2, quote = FALSE)
             cat("  ---\n")
             print.default(cb(Freq = t2, Perc = round(t2/st*100, digits)), right = TRUE, print.gap = 2, quote = FALSE)

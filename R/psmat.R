@@ -13,7 +13,7 @@ psmat.default <- function(x, g, t = NULL, transpose = FALSE, ...) {
   if(!is.nmfactor(g)) if(is.atomic(g)) g <- qF(g, na.exclude = FALSE) else if(is_GRP(g))
                     g <- as_factor_GRP(g) else g <- as_factor_GRP(GRP.default(g, call = FALSE))
   if(is.null(t)) {
-    message("No timevar provided: Assuming Balanced Panel")
+    # message("No timevar provided: Assuming Balanced Panel")
     return(.Call(Cpp_psmat,x, g, NULL, transpose))
   } else {
     if(!is.nmfactor(t)) if(is.atomic(t)) t <- qF(t, na.exclude = FALSE) else if(is_GRP(t))
@@ -59,7 +59,7 @@ psmat.data.frame <- function(x, by, t = NULL, cols = NULL, transpose = FALSE, ar
     if(!is.nmfactor(by)) if(is.atomic(by)) by <- qF(by, na.exclude = FALSE) else if(is_GRP(by))
                          by <- as_factor_GRP(by) else by <- as_factor_GRP(GRP.default(by, call = FALSE))
       if(is.null(t)) {
-        message("No timevar provided: Assuming Balanced Panel")
+        # message("No timevar provided: Assuming Balanced Panel")
         res <- lapply(x, psmatCpp, by, NULL, transpose)
       } else {
         if(!is.nmfactor(t)) if(is.atomic(t)) t <- qF(t, na.exclude = FALSE) else if(is_GRP(t))
@@ -107,8 +107,8 @@ plot.psmat <- function(x, legend = FALSE,
   colours <- if(isTRUE(colours)) rainbow(d[2L]) else if(isFALSE(colours)) TRUE else colours
   t <- as.numeric(dn[[1L]])
   if(!is.na(t[1L])) {
-    mint <- min(t)
-    maxt <- max(t)
+    mint <- bmin(t)
+    maxt <- bmax(t)
   } else {
     mint <- 1L
     maxt <- length(t)

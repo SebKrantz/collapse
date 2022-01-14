@@ -1,4 +1,4 @@
-\name{pwcor, pwcov, pwnobs}
+\name{pwcor-pwcov-pwnobs}
 \alias{pwcor}
 \alias{pwcov}
 \alias{pwnobs}
@@ -21,10 +21,10 @@ pwcov(X, \dots, w = NULL, N = FALSE, P = FALSE, array = TRUE, use = "pairwise.co
 pwnobs(X)
 
 \method{print}{pwcor}(x, digits = 2L, sig.level = 0.05, show = c("all","lower.tri","upper.tri"),
-      spacing = 1L, \dots)
+      spacing = 1L, return = FALSE, \dots)
 
 \method{print}{pwcov}(x, digits = 2L, sig.level = 0.05, show = c("all","lower.tri","upper.tri"),
-      spacing = 1L, \dots)
+      spacing = 1L, return = FALSE, \dots)
 
 }
 %- maybe also 'usage' for other objects documented here.
@@ -40,6 +40,7 @@ pwnobs(X)
   \item{sig.level}{numeric. P-value threshold below which a \code{'*'} is displayed above significant coefficients if \code{P = TRUE}. }
   \item{show}{character. The part of the correlation / covariance matrix to display. }
   \item{spacing}{integer. Controls the spacing between different reported quantities in the printout of the matrix: 0 - compressed, 1 - single space, 2 - double space.}
+  \item{return}{logical. \code{TRUE} returns the formatted object from the print method for exporting. The default is to return \code{x} invisibly.}
   \item{\dots}{other arguments passed to \code{\link{cor}} or \code{\link{cov}}. Only sensible if \code{P = FALSE}. }
 }
 
@@ -50,7 +51,7 @@ a numeric matrix, 3D array or list of matrices with the computed statistics. For
 %% ~Make other sections like Warning with \section{Warning }{\dots.} ~
 
 \seealso{
-\code{\link{qsu}}, \link[=A9-summary-statistics]{Summary Statistics}, \link[=collapse-documentation]{Collapse Overview} %% ~~objects to See Also as
+\code{\link{qsu}}, \link[=summary-statistics]{Summary Statistics}, \link[=collapse-documentation]{Collapse Overview} %% ~~objects to See Also as
 }
 \examples{
 mna <- na_insert(mtcars)

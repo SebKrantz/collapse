@@ -38,10 +38,10 @@ NumericVector fbstatstemp(NumericVector x, bool ext = false, int ng = 0, Integer
         if(l != wg.size()) stop("length(w) must match length(x)");
         // long double sumw = 0;
         double sumw = 0;
-        while((std::isnan(x[j]) || std::isnan(wg[j])) && j!=0) --j;
+        while((std::isnan(x[j]) || std::isnan(wg[j]) || wg[j] == 0) && j!=0) --j;
          if(j != 0) { // if(j == 0) stop("Not enough non-mising obs.");
           for(int i = j+1; i--; ) {
-            if(std::isnan(x[i]) || std::isnan(wg[i])) continue;
+            if(std::isnan(x[i]) || std::isnan(wg[i]) || wg[i] == 0) continue;
             sumw += wg[i];
             d1 = x[i] - mean;
             mean += d1 * (wg[i] / sumw);
@@ -78,11 +78,9 @@ NumericVector fbstatstemp(NumericVector x, bool ext = false, int ng = 0, Integer
           if(std::isnan(x[i])) continue;
           k = g[i]-1;
           if(std::isnan(M2[k])) {
-            mean[k] = x[i];
-            M2[k] = 0;
+            mean[k] = min[k] = max[k] = x[i];
+            M2[k] = 0.0;
             n[k] = 1.0;
-            min[k] = R_PosInf;
-            max[k] = R_NegInf;
           } else {
             d1 = x[i]-mean[k];
             mean[k] += d1 * (1 / ++n[k]);
@@ -97,15 +95,13 @@ NumericVector fbstatstemp(NumericVector x, bool ext = false, int ng = 0, Integer
         if(l != wg.size()) stop("length(w) must match length(x)");
         NumericVector sumw(ng); // = no_init_vector(ng); // better for valgrind
         for(int i = l; i--; ) {
-          if(std::isnan(x[i]) || std::isnan(wg[i])) continue;
+          if(std::isnan(x[i]) || std::isnan(wg[i]) || wg[i] == 0) continue;
           k = g[i]-1;
           if(std::isnan(M2[k])) {
             sumw[k] = wg[i];
-            mean[k] = x[i];
-            M2[k] = 0;
-            n[k] = 1;
-            min[k] = R_PosInf;
-            max[k] = R_NegInf;
+            mean[k] = min[k] = max[k] = x[i];
+            M2[k] = 0.0;
+            n[k] = 1.0;
           } else {
             sumw[k] += wg[i];
             d1 = x[i] - mean[k];
@@ -155,10 +151,10 @@ NumericVector fbstatstemp(NumericVector x, bool ext = false, int ng = 0, Integer
          if(l != wg.size()) stop("length(w) must match length(x)");
          // long double sumw = 0;
          double sumw = 0;
-         while((std::isnan(x[j]) || std::isnan(wg[j])) && j!=0) --j;
+         while((std::isnan(x[j]) || std::isnan(wg[j]) || wg[j] == 0) && j!=0) --j;
          if(j != 0) {  // if(j == 0) stop("Not enough non-mising obs.");
          for(int i = j+1; i--; ) {
-           if(std::isnan(x[i]) || std::isnan(wg[i])) continue;
+           if(std::isnan(x[i]) || std::isnan(wg[i]) || wg[i] == 0) continue;
            sumw += wg[i]; // great, this is correct:
            d1 = x[i]-mean;
            dn = d1 * (wg[i] / sumw);
@@ -202,11 +198,9 @@ NumericVector fbstatstemp(NumericVector x, bool ext = false, int ng = 0, Integer
            if(std::isnan(x[i])) continue;
            k = g[i]-1;
            if(std::isnan(M2[k])) {
-             mean[k] = x[i];
-             M2[k] = M3[k] = M4[k] = 0;
+             mean[k] = min[k] = max[k] = x[i];
+             M2[k] = M3[k] = M4[k] = 0.0;
              n[k] = 1.0;
-             min[k] = R_PosInf;
-             max[k] = R_NegInf;
            } else {
              d1 = x[i]-mean[k];
              dn = d1 * (1 / ++n[k]);
@@ -230,15 +224,13 @@ NumericVector fbstatstemp(NumericVector x, bool ext = false, int ng = 0, Integer
          if(l != wg.size()) stop("length(w) must match length(x)");
          NumericVector sumw(ng); // = no_init_vector(ng); // better for valgrind
          for(int i = l; i--; ) {
-           if(std::isnan(x[i]) || std::isnan(wg[i])) continue;
+           if(std::isnan(x[i]) || std::isnan(wg[i]) || wg[i] == 0) continue;
            k = g[i]-1;
            if(std::isnan(M2[k])) {
              sumw[k] = wg[i];
-             mean[k] = x[i];
-             M2[k] = M3[k] = M4[k] = 0;
+             mean[k] = min[k] = max[k] = x[i];
+             M2[k] = M3[k] = M4[k] = 0.0;
              n[k] = 1.0;
-             min[k] = R_PosInf;
-             max[k] = R_NegInf;
            } else {
              sumw[k] += wg[i];
              d1 = x[i]-mean[k];
@@ -295,7 +287,7 @@ SEXP fbstatsCpp(const NumericVector& x, bool ext = false, int ng = 0, const Inte
 
   if(npg == 0) { // No panel
     if(ng == 0) { // No groups
-      return(fbstatstemp(x, ext, 0L, 0L, w, setn, gn));
+      return(fbstatstemp(x, ext, 0, 0, w, setn, gn));
     } else {
       return(fbstatstemp(x, ext, ng, g, w, setn, gn));
     }
@@ -329,8 +321,9 @@ SEXP fbstatsCpp(const NumericVector& x, bool ext = false, int ng = 0, const Inte
     } else {
       NumericVector wg = w;
       if(l != wg.size()) stop("length(w) must match length(x)");
+      // Note: Skipping zero weights is not really necessary here, but it might be numerically better and also faster if there are many.
       for(int i = l; i--; ) {
-        if(std::isnan(x[i]) || std::isnan(wg[i])) continue;
+        if(std::isnan(x[i]) || std::isnan(wg[i]) || wg[i] == 0) continue;
         if(std::isnan(sum[pg[i]-1])) {
           sum[pg[i]-1] = x[i]*wg[i];
           sumw[pg[i]-1] = wg[i];
@@ -341,12 +334,13 @@ SEXP fbstatsCpp(const NumericVector& x, bool ext = false, int ng = 0, const Inte
       }
       double osumw = 0;
       for(int i = npg; i--; ) {
-        if(std::isnan(sum[i])) continue; // solves the issue
+        if(std::isnan(sum[i]) || sumw[i] == 0) continue; // solves the issue
         osum += sum[i];
         osumw += sumw[i];
         sum[i] /= sumw[i];
       }
       osum = osum/osumw;
+      // for(int i = npg; i--; ) sumw[i] /= osumw;
     }
 
     NumericVector within = no_init_vector(l);
@@ -354,9 +348,9 @@ SEXP fbstatsCpp(const NumericVector& x, bool ext = false, int ng = 0, const Inte
     if(ng == 0) { // No groups
       for(int i = 0; i != l; ++i) within[i] = x[i] - sum[pg[i]-1] + osum; // if-check for NA's is not faster
       NumericMatrix result = no_init_matrix(3, d);
-      result(0, _) = fbstatstemp(x, ext, 0L, 0L, w, false);
-      result(1, _) = (weights) ? fbstatstemp(sum, ext, 0L, 0L, sumw, false) : fbstatstemp(sum, ext, 0L, 0L, w, false);
-      result(2, _) = fbstatstemp(within, ext, 0L, 0L, w, false);
+      result(0, _) = fbstatstemp(x, ext, 0, 0, w, false);
+      result(1, _) = (weights) ? fbstatstemp(sum, ext, 0, 0, sumw, false) : fbstatstemp(sum, ext, 0, 0, w, false);
+      result(2, _) = fbstatstemp(within, ext, 0, 0, w, false);
       result[2] /= result[1];
       if(setn) {
         Rf_dimnamesgets(result, List::create(CharacterVector::create("Overall","Between","Within"),
@@ -420,7 +414,7 @@ SEXP fbstatsmCpp(const NumericMatrix& x, bool ext = false, int ng = 0, const Int
   if(npg == 0) { // No panel
     if(ng == 0) { // No groups
       NumericMatrix out = no_init_matrix(col, d);
-      for(int j = col; j--; ) out(j, _) = fbstatstemp(x(_, j), ext, 0L, 0L, w, false);
+      for(int j = col; j--; ) out(j, _) = fbstatstemp(x(_, j), ext, 0, 0, w, false);
       Rf_dimnamesgets(out, List::create(colnames(x), (ext) ? CharacterVector::create("N","Mean","SD","Min","Max","Skew","Kurt") :
                                             CharacterVector::create("N","Mean","SD","Min","Max")));
       Rf_classgets(out, CharacterVector::create("qsu","matrix","table"));
@@ -446,7 +440,7 @@ SEXP fbstatsmCpp(const NumericMatrix& x, bool ext = false, int ng = 0, const Int
     if(ng == 0) {
       if(array) {
         NumericMatrix out = no_init_matrix(d*3, col);
-        for(int j = col; j--; ) out(_, j) = as<NumericVector>(fbstatsCpp(x(_, j), ext, 0L, 0L, npg, pg, w, true, false)); // or Rf_coerce ?
+        for(int j = col; j--; ) out(_, j) = as<NumericVector>(fbstatsCpp(x(_, j), ext, 0, 0, npg, pg, w, true, false)); // or Rf_coerce ?
         Rf_dimgets(out, Dimension(3, d, col));
         Rf_dimnamesgets(out, List::create(CharacterVector::create("Overall","Between","Within"),
                  (ext) ? CharacterVector::create("N/T","Mean","SD","Min","Max","Skew","Kurt") :
@@ -455,7 +449,7 @@ SEXP fbstatsmCpp(const NumericMatrix& x, bool ext = false, int ng = 0, const Int
         return out;
       } else {
         List out(col);
-        for(int j = col; j--; ) out[j] = fbstatsCpp(x(_, j), ext, 0L, 0L, npg, pg, w, false, true, gn);
+        for(int j = col; j--; ) out[j] = fbstatsCpp(x(_, j), ext, 0, 0, npg, pg, w, false, true, gn);
         Rf_setAttrib(out, R_NamesSymbol, colnames(x));
         return out;
       }
@@ -620,14 +614,14 @@ SEXP fbstatslCpp(const List& x, bool ext = false, int ng = 0, const IntegerVecto
        switch(TYPEOF(x[j])) {
        case REALSXP:{
          NumericVector column = x[j];
-         if(Rf_isObject(column)) out(j, _) = fnobs5Impl<REALSXP>(column, ext, 0L, 0L, true);
-         else out(j, _) = fbstatstemp(column, ext, 0L, 0L, w, false);
+         if(Rf_isObject(column)) out(j, _) = fnobs5Impl<REALSXP>(column, ext, 0, 0, true);
+         else out(j, _) = fbstatstemp(column, ext, 0, 0, w, false);
          break;
        }
        case INTSXP: {
          IntegerVector column = x[j];
          if(Rf_isObject(column)) out(j, _) = fnobs5Impl<INTSXP>(column, ext);
-         else out(j, _) = fbstatstemp(x[j], ext, 0L, 0L, w, false);
+         else out(j, _) = fbstatstemp(x[j], ext, 0, 0, w, false);
          break;
        }
        case STRSXP: out(j, _) = fnobs5Impl<STRSXP>(x[j], ext);
@@ -705,19 +699,19 @@ SEXP fbstatslCpp(const List& x, bool ext = false, int ng = 0, const IntegerVecto
           switch(TYPEOF(x[j])) {
           case REALSXP:{
             NumericVector column = x[j];
-            if(Rf_isObject(column)) out(_, j) = fnobs5pImpl<REALSXP>(column, ext, 0L, 0L, npg, pg, true);
-            else out(_, j) = as<NumericVector>(fbstatsCpp(column, ext, 0L, 0L, npg, pg, w, true, false)); // or Rf_coerce ?
+            if(Rf_isObject(column)) out(_, j) = fnobs5pImpl<REALSXP>(column, ext, 0, 0, npg, pg, true);
+            else out(_, j) = as<NumericVector>(fbstatsCpp(column, ext, 0, 0, npg, pg, w, true, false)); // or Rf_coerce ?
             break;
           }
           case INTSXP: {
             IntegerVector column = x[j];
-            if(Rf_isObject(column)) out(_, j) = fnobs5pImpl<INTSXP>(column, ext, 0L, 0L, npg, pg);
-            else out(_, j) = as<NumericVector>(fbstatsCpp(x[j], ext, 0L, 0L, npg, pg, w, true, false));
+            if(Rf_isObject(column)) out(_, j) = fnobs5pImpl<INTSXP>(column, ext, 0, 0, npg, pg);
+            else out(_, j) = as<NumericVector>(fbstatsCpp(x[j], ext, 0, 0, npg, pg, w, true, false));
             break;
           }
-          case STRSXP: out(_, j) = fnobs5pImpl<STRSXP>(x[j], ext, 0L, 0L, npg, pg);
+          case STRSXP: out(_, j) = fnobs5pImpl<STRSXP>(x[j], ext, 0, 0, npg, pg);
             break;
-          case LGLSXP: out(_, j) = fnobs5pImpl<LGLSXP>(x[j], ext, 0L, 0L, npg, pg);
+          case LGLSXP: out(_, j) = fnobs5pImpl<LGLSXP>(x[j], ext, 0, 0, npg, pg);
             break;
           default: stop("Not supported SEXP type!");
           }
@@ -734,19 +728,19 @@ SEXP fbstatslCpp(const List& x, bool ext = false, int ng = 0, const IntegerVecto
           switch(TYPEOF(x[j])) {
           case REALSXP:{
             NumericVector column = x[j];
-            if(Rf_isObject(column)) out[j] = fnobs5pImpl<REALSXP>(column, ext, 0L, 0L, npg, pg, true, false, gn);
-            else out[j] = fbstatsCpp(column, ext, 0L, 0L, npg, pg, w, false, true, gn);
+            if(Rf_isObject(column)) out[j] = fnobs5pImpl<REALSXP>(column, ext, 0, 0, npg, pg, true, false, gn);
+            else out[j] = fbstatsCpp(column, ext, 0, 0, npg, pg, w, false, true, gn);
             break;
           }
           case INTSXP: {
             IntegerVector column = x[j];
-            if(Rf_isObject(column)) out[j] = fnobs5pImpl<INTSXP>(column, ext, 0L, 0L, npg, pg, false, false, gn);
-            else out[j] = fbstatsCpp(x[j], ext, 0L, 0L, npg, pg, w, false, true, gn);
+            if(Rf_isObject(column)) out[j] = fnobs5pImpl<INTSXP>(column, ext, 0, 0, npg, pg, false, false, gn);
+            else out[j] = fbstatsCpp(x[j], ext, 0, 0, npg, pg, w, false, true, gn);
             break;
           }
-          case STRSXP: out[j] = fnobs5pImpl<STRSXP>(x[j], ext, 0L, 0L, npg, pg, false, false, gn);
+          case STRSXP: out[j] = fnobs5pImpl<STRSXP>(x[j], ext, 0, 0, npg, pg, false, false, gn);
             break;
-          case LGLSXP: out[j] = fnobs5pImpl<LGLSXP>(x[j], ext, 0L, 0L, npg, pg, false, false, gn);
+          case LGLSXP: out[j] = fnobs5pImpl<LGLSXP>(x[j], ext, 0, 0, npg, pg, false, false, gn);
             break;
           default: stop("Not supported SEXP type!");
           }

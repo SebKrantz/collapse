@@ -1,14 +1,15 @@
 Package: collapse
 Title: Advanced and Fast Data Transformation
-Version: 1.6.5
-Date: 2021-07-24
+Version: 1.7.0
+Date: 2022-01-14
 Authors@R: c(
            person("Sebastian", "Krantz", role = c("aut", "cre"), 
                   email = "sebastian.krantz@graduateinstitute.ch"),
            person("Matt", "Dowle", role = "ctb"),
            person("Arun", "Srinivasan", role = "ctb"),
-           person("Laurent", "Berge", role = "ctb"),
+           person("Morgan", "Jacob", role = "ctb"),
            person("Dirk", "Eddelbuettel", role = "ctb"),
+           person("Laurent", "Berge", role = "ctb"),
            person("Josh", "Pasek", role = "ctb"),
            person("Kevin", "Tappe", role = "ctb"),
            person("R Core Team and contributors worldwide", role = "ctb"),
@@ -27,9 +28,9 @@ Description: A C/C++ based package for advanced data transformation and
         supporting grouped and weighted computations on vectors, matrices and 
         data frames. Fast and programmable grouping, ordering, unique values / rows, 
         factor generation and interactions. Fast and flexible functions for data 
-        manipulation and data object conversions.
+        manipulation, data object conversions, and memory efficient R programming.
     (2) Advanced aggregation: Fast and easy multi-data-type, multi-function, 
-        weighted, parallelized and fully customized data aggregation.
+        weighted, parallelized and fully custom data aggregation.
     (3) Advanced transformations: Fast row / column arithmetic, (grouped) replacing 
         and sweeping out of statistics, (grouped, weighted) scaling / standardizing, 
         between (averaging) and (quasi-)within (centering / demeaning) transformations, 
@@ -40,7 +41,7 @@ Description: A C/C++ based package for advanced data transformation and
         growth rates, and cumulative sums on (unordered, irregular) time series and 
         panel data. Multivariate auto-, partial- and cross-correlation functions for panel data. 
         Panel data to (ts-)array conversions.
-    (5) List processing: (Recursive) list search / identification, splitting, 
+    (5) List processing: (Recursive) list search, splitting, 
         extraction / subsetting, data-apply, and generalized recursive 
         row-binding / unlisting in 2D.
     (6) Advanced data exploration: Fast (grouped, weighted, panel-decomposed) 

@@ -81,7 +81,7 @@ The (\code{w} weighted) n'th element of \code{x}, grouped by \code{g}, or (if \c
 
 }
 \seealso{
-\code{\link{fmean}}, \code{\link{fmedian}}, \code{\link{fmode}}, \link[=A1-fast-statistical-functions]{Fast Statistical Functions}, \link[=collapse-documentation]{Collapse Overview}
+\code{\link{fmean}}, \code{\link{fmedian}}, \code{\link{fmode}}, \link[=fast-statistical-functions]{Fast Statistical Functions}, \link[=collapse-documentation]{Collapse Overview}
 }
 \examples{
 ## default vector method

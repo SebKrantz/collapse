@@ -63,7 +63,7 @@ Vector<RTYPE> flagleadCppImpl(const Vector<RTYPE>& x, const IntegerVector& n, co
       }
       if(min == NA_INTEGER) stop("Timevar contains missing values");
       osize = max-min+1;
-      if(osize > 3 * l) warning("Your time series is very irregular. Need to create an internal ordering vector of length %s to represent it.", osize);
+      if(osize > 10000000 && osize > 3 * l) warning("Your time series is very irregular. Need to create an internal ordering vector of length %s to represent it.", osize);
       IntegerVector omap(osize), ord2 = no_init_vector(l);
       for(int i = 0; i != l; ++i) {
         temp = ord[i] - min; // Best ? Or direct assign to ord2[i] ? Also check for panel version..
@@ -155,7 +155,7 @@ Vector<RTYPE> flagleadCppImpl(const Vector<RTYPE>& x, const IntegerVector& n, co
         temp += max[i];
       }
       // omap provides the ordering to order the vector (needed to find previous / next values)
-      if(temp > 3 * l) warning("Your panel is very irregular. Need to create an internal ordering vector of length %s to represent it.", temp);
+      if(temp > 10000000 && temp > 3 * l) warning("Your panel is very irregular. Need to create an internal ordering vector of length %s to represent it.", temp);
       IntegerVector omap(temp), ord2 = no_init_vector(l);
       for(int i = 0; i != l; ++i) {
         ord2[i] = ord[i] - min[g[i]];
@@ -196,9 +196,10 @@ Vector<RTYPE> flagleadCppImpl(const Vector<RTYPE>& x, const IntegerVector& n, co
   if(ns != 1) {
     Rf_setAttrib(out, R_NamesSymbol, R_NilValue);
     Rf_dimgets(out, Dimension(l, ns));
-    if(Rf_isObject(x)) {
+    if(Rf_isObject(x)) { //  && !x.inherits("pseries") -> lag matrix in plm is not a pseries anymore anyway...
       CharacterVector classes = Rf_getAttrib(out, R_ClassSymbol);
       classes.push_back("matrix");
+      // classes.push_back("array"); // mts does not have class array...
       Rf_classgets(out, classes);
     } // else {
       // Rf_classgets(out, Rf_mkString("matrix"));
@@ -311,7 +312,7 @@ Matrix<RTYPE> flagleadmCppImpl(const Matrix<RTYPE>& x, const IntegerVector& n, c
       }
       if(min == NA_INTEGER) stop("Timevar contains missing values");
       osize = max-min+1;
-      if(osize > 3 * l) warning("Your time series is very irregular. Need to create an internal ordering vector of length %s to represent it.", osize);
+      if(osize > 10000000 && osize > 3 * l) warning("Your time series is very irregular. Need to create an internal ordering vector of length %s to represent it.", osize);
       IntegerVector omap(osize), ord2 = no_init_vector(l);
       for(int i = 0; i != l; ++i) {
         temp = ord[i] - min; // Best ? Or direct assign to ord2[i] ? Also check for panel version..
@@ -410,7 +411,7 @@ Matrix<RTYPE> flagleadmCppImpl(const Matrix<RTYPE>& x, const IntegerVector& n, c
         temp += max[i];
       }
       // omap provides the ordering to order the vector (needed to find previous / next values)
-      if(temp > 3 * l) warning("Your panel is very irregular. Need to create an internal ordering vector of length %s to represent it.", temp);
+      if(temp > 10000000 && temp > 3 * l) warning("Your panel is very irregular. Need to create an internal ordering vector of length %s to represent it.", temp);
       IntegerVector omap(temp), ord2 = no_init_vector(l), index = no_init_vector(l);
       for(int i = 0; i != l; ++i) {
         ord2[i] = ord[i] - min[g[i]];
@@ -633,7 +634,7 @@ List flagleadlCpp(const List& x, const IntegerVector& n = 1, const SEXP& fill = 
       }
       if(min == NA_INTEGER) stop("Timevar contains missing values");
       osize = max-min+1;
-      if(osize > 3 * os) warning("Your time series is very irregular. Need to create an internal ordering vector of length %s to represent it.", osize);
+      if(osize > 10000000 && osize > 3 * os) warning("Your time series is very irregular. Need to create an internal ordering vector of length %s to represent it.", osize);
       IntegerVector omap(osize), ord2 = no_init_vector(os);
       for(int i = 0; i != os; ++i) {
         temp = ord[i] - min; // Best ? Or direct assign to ord2[i] ? Also check for panel version..
@@ -938,7 +939,7 @@ List flagleadlCpp(const List& x, const IntegerVector& n = 1, const SEXP& fill = 
       // return List::create(cgs, min, max);
       // index stores the position of the current observation in the ordered vector
       // omap provides the ordering to order the vector (needed to find previous / next values)
-      if(temp > 3 * gss) warning("Your panel is very irregular. Need to create an internal ordering vector of length %s to represent it.", temp);
+      if(temp > 10000000 && temp > 3 * gss) warning("Your panel is very irregular. Need to create an internal ordering vector of length %s to represent it.", temp);
       IntegerVector omap(temp), ord2 = no_init_vector(gss), index = no_init_vector(gss);
       for(int i = 0; i != gss; ++i) {
         ord2[i] = ord[i] - min[g[i]]; // Need ord2 can get rid of any part ?? ??

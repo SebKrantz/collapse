@@ -28,7 +28,7 @@ Fast Lags and Leads for Time Series and Panel Data
 \description{
 \code{flag} is an S3 generic to compute (sequences of) lags and leads. \code{L} and \code{F} are wrappers around \code{flag} representing the lag- and lead-operators, such that \code{L(x,-1) = F(x,1) = F(x)} and \code{L(x,-3:3) = F(x,3:-3)}. \code{L} and \code{F} provide more flexibility than \code{flag} when applied to data frames (i.e.  column subsetting, formula input and id-variable-preservation capabilities\dots), but are otherwise identical.
 
-(\code{flag} is more of a programmers function in style of the \link[=A1-fast-statistical-functions]{Fast Statistical Functions} while \code{L} and \code{F} are more practical to use in regression formulas or for computations on data frames.)
+(\code{flag} is more of a programmers function in style of the \link[=fast-statistical-functions]{Fast Statistical Functions} while \code{L} and \code{F} are more practical to use in regression formulas or for computations on data frames.)
 }
 \usage{
 flag(x, n = 1, \dots)
@@ -94,7 +94,9 @@ Since v1.5.0 \code{flag/L/F} provide full built-in support for irregular time se
 
 % It is also possible to compute lags / leads on unordered time series (thus utilizing \code{t} but leaving \code{g/by} empty), although this is probably more rare to encounter than unordered panels. Irregularly spaced time series can also be lagged using a panel- identifier generated with \code{\link{seqid}}.
 
-Computationally, if both \code{g/by} and \code{t} are supplied, \code{flag/L/F} uses two initial passes to create an ordering through which the data are accessed. First-pass: Calculate minimum and maximum time-value for each individual. Second-pass: Generate the ordering by placing the current element index into the vector slot obtained by adding the cumulative group size and the current time-value subtracted its individual-minimum together. This method of computation is faster than any sort-based method and delivers optimal performance if the panel-id supplied to \code{g/by} is already a factor variable, and if \code{t} is either an integer or factor variable. If \code{g/by} is not factor or \code{t} is not factor or integer, \code{\link{qG}} or \code{\link{GRP}} will be called to group the respective identifier and this can be expensive, so for optimal performance prepare the data (or use \emph{plm} classes). %A caveat of not using sort-based methods is that gaps or repeated values in time are only recognized towards the end of the second pass where they cannot be rectified anymore, and thus \code{flag/L/F} does not natively support irregular panels but throws an error.
+Computationally, if both \code{g/by} and \code{t} are supplied, \code{flag/L/F} uses two initial passes to create an ordering through which the data are accessed. First-pass: Calculate minimum and maximum time-value for each individual. Second-pass: Generate the ordering by placing the current element index into the vector slot obtained by adding the cumulative group size and the current time-value subtracted its individual-minimum together. This method of computation is faster than any sort-based method and delivers optimal performance if the panel-id supplied to \code{g/by} is already a factor variable, and if \code{t} is either an integer or factor variable. If \code{t} is not factor or integer but instead \code{is.double(t) && !is.object(t)}, it is assumed to be integer represented by double and converted using \code{as.integer(t)}. For other objects such as dates, \code{t} is grouped using \code{\link{qG}} or \code{\link{GRP}} (for multiple time identifiers). Similarly, if \code{g/by} is not factor or 'GRP' object, \code{\link{qG}} or \code{\link{GRP}} will be called to group the respective identifier. Since grouping is more expensive than computing lags, prepare the data for optimal performance (or use \emph{plm} classes). See also the Note.
+
+%A caveat of not using sort-based methods is that gaps or repeated values in time are only recognized towards the end of the second pass where they cannot be rectified anymore, and thus \code{flag/L/F} does not natively support irregular panels but throws an error.
 
 
 The methods applying to \emph{plm} objects (panel series and panel data frames) automatically utilize the factor panel-identifiers attached to these objects and thus securely and efficiently compute fully identified panel-lags. If these objects have > 2 panel-identifiers attached to them, the last identifier is assumed to be the time-variable, and the others are taken as grouping-variables and interacted. Note that \code{flag/L/F} is significantly faster than \code{plm::lag/plm::lead} since the latter is written in R and based on a Split-Apply-Combine logic.
@@ -108,14 +110,14 @@ The methods applying to \emph{plm} objects (panel series and panel data frames) 
 % \author{
 %%  ~~who you are~~
 % }
-% \note{
-%%  ~~further notes~~
-% }
+ \note{
+Since v1.7.0, if \code{is.double(t) && !is.object(t)}, it is coerced to integer using \code{as.integer(t)}. This is to avoid the inefficiency of ordered grouping, and owes to the fact that in most data imported into R, the time (year) variables are coded as double although they should be integer.
+ }
 
 %% ~Make other sections like Warning with \section{Warning }{\dots.} ~
 
 \seealso{
-\code{\link{fdiff}}, \code{\link{fgrowth}}, \link[=A7-time-series-panel-series]{Time Series and Panel Series}, \link[=collapse-documentation]{Collapse Overview}
+\code{\link{fdiff}}, \code{\link{fgrowth}}, \link[=time-series-panel-series]{Time Series and Panel Series}, \link[=collapse-documentation]{Collapse Overview}
 }
 \examples{
 ## Simple Time Series: AirPassengers

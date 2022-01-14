@@ -1,5 +1,6 @@
-\name{A9-summary-statistics} % \name{Time Series and Panel Computations}
+\name{summary-statistics} % \name{Time Series and Panel Computations}
 \alias{A9-summary-statistics}
+\alias{summary-statistics}
 % \alias{tscomp}
 \title{Summary Statistics} % \emph{collapse}
 
@@ -30,7 +31,7 @@
 }
 }
 \seealso{
-\link[=collapse-documentation]{Collapse Overview}, \link[=A1-fast-statistical-functions]{Fast Statistical Functions}
+\link[=collapse-documentation]{Collapse Overview}, \link[=fast-statistical-functions]{Fast Statistical Functions}
 }
 \keyword{manip}
 \keyword{documentation}

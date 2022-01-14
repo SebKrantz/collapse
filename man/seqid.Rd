@@ -60,7 +60,7 @@ An integer vector of class 'qG'. See \code{\link{qG}}.
 }
 
 \seealso{
-\code{\link{groupid}}, \code{\link{qG}}, \link[=A2-fast-grouping-ordering]{Fast Grouping and Ordering}, \link[=collapse-documentation]{Collapse Overview}
+\code{\link{groupid}}, \code{\link{qG}}, \link[=fast-grouping-ordering]{Fast Grouping and Ordering}, \link[=collapse-documentation]{Collapse Overview}
 
 }
 \examples{

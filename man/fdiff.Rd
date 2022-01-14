@@ -127,7 +127,7 @@ Prais, S. J. & Winsten, C. B. (1954). Trend Estimators and Serial Correlation. \
 %% ~Make other sections like Warning with \section{Warning }{\dots.} ~
 
 \seealso{
-\code{\link[=flag]{flag/L/F}}, \code{\link[=fgrowth]{fgrowth/G}}, \link[=A7-time-series-panel-series]{Time Series and Panel Series}, \link[=collapse-documentation]{Collapse Overview}
+\code{\link[=flag]{flag/L/F}}, \code{\link[=fgrowth]{fgrowth/G}}, \link[=time-series-panel-series]{Time Series and Panel Series}, \link[=collapse-documentation]{Collapse Overview}
 }
 \examples{
 ## Simple Time Series: AirPassengers

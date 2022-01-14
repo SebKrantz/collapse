@@ -144,7 +144,7 @@ test_that("GRP gives errors for wrong input", {
   expect_error(GRP(mtcars, c("bal","cyl")))
   expect_error(GRP(mtcars, 11:12))
   expect_error(GRP(list(a = 1:3, b = 1:4)))
-  expect_warning(GRP(mtcars, ~ cyl + vs, order = -1L))
+  expect_visible(GRP(mtcars, ~ cyl + vs, order = -1L))
 
 })
 
@@ -242,13 +242,14 @@ test_that("qF and qG work as intended", {
   expect_identical(afnoNA, lapply(wldNA, function(x) unattrib(qG(x, method = "radix", na.exclude = FALSE))))
   expect_identical(afnoNA, lapply(wldNA, function(x) unattrib(qG(x, method = "hash", na.exclude = FALSE))))
 
-  # countryf <- as.factor(wlddev2$country)
-  # expect_identical(countryf, unlab(qF(wlddev2$country)))
-  # expect_identical(countryf, unlab(qF(wlddev2$country, method = "radix")))
+  countryf <- as.factor(wlddev2$country)
+  expect_identical(countryf, unlab(qF(wlddev2$country)))
+  expect_identical(countryf, unlab(qF(wlddev2$country, method = "radix")))
+  expect_identical(countryf, unlab(qF(wlddev2$country, method = "hash")))
   # identical(as.factor(wlddev2$iso3c), wlddev2$iso3c)
-  # expect_identical(levels(wlddev2$iso3c), levels(unlab(qF(wlddev2$iso3c))))
-  # expect_identical(unattrib(wlddev2$iso3c), unattrib(unlab(qF(wlddev2$iso3c))))
-  # expect_identical(class(wlddev2$iso3c), class(unlab(qF(wlddev2$iso3c))))
+  expect_identical(levels(wlddev2$iso3c), levels(unlab(qF(wlddev2$iso3c))))
+  expect_identical(unattrib(wlddev2$iso3c), unattrib(unlab(qF(wlddev2$iso3c))))
+  expect_identical(class(wlddev2$iso3c), class(unlab(qF(wlddev2$iso3c))))
 
   expect_equal(lapply(wlddev2, function(x) qF(x, method = "radix")), lapply(wlddev2, function(x) qF(x, method = "hash")))
   expect_equal(lapply(wldNA, function(x) qF(x, method = "radix")), lapply(wldNA, function(x) qF(x, method = "hash")))
@@ -259,6 +260,21 @@ test_that("qF and qG work as intended", {
   expect_equal(lapply(wldNA, function(x) qF(x, method = "radix", na.exclude = FALSE)), lapply(wldNA, function(x) qF(x, method = "hash", na.exclude = FALSE)))
   expect_equal(lapply(wlddev2, function(x) qG(x, method = "radix", na.exclude = FALSE)), lapply(wlddev2, function(x) qG(x, method = "hash", na.exclude = FALSE)))
   expect_equal(lapply(wldNA, function(x) qG(x, method = "radix", na.exclude = FALSE)), lapply(wldNA, function(x) qG(x, method = "hash", na.exclude = FALSE)))
+
+  # Testing reordering of factor levels
+  expect_identical(qF(wlddev$iso3c), wlddev$iso3c)
+  riso3 <- rev(wlddev$iso3c)
+  expect_identical(qF(riso3), riso3)
+  expect_identical(qF(riso3, sort = FALSE), factor(riso3, levels = funique(riso3)))
+  iso3na <- na_insert(wlddev$iso3c)
+  expect_identical(qF(iso3na), iso3na)
+  expect_identical(unclass(qF(iso3na, na.exclude = FALSE, keep.attr = FALSE)), unclass(addNA(iso3na)))
+  riso3na <- na_insert(riso3)
+  expect_identical(qF(riso3na), riso3na)
+  expect_identical(unclass(qF(riso3na, na.exclude = FALSE, keep.attr = FALSE)), unclass(addNA(riso3na)))
+  expect_identical(qF(riso3na, sort = FALSE), factor(riso3na, levels = funique(riso3)))
+  expect_identical(unclass(qF(riso3na, sort = FALSE, na.exclude = FALSE)), unclass(factor(riso3na, levels = funique(riso3na), exclude = NULL)))
+  expect_identical(unclass(qF(riso3na, sort = FALSE, na.exclude = FALSE)), unclass(factor(riso3na, levels = unique(riso3na), exclude = NULL)))
 
 })
 
@@ -280,6 +296,84 @@ test_that("GRP <> qG and factor <> qG conversions work", {
   expect_equal(qG(unattrib(wlddev$country), return.groups = TRUE), qG(qF(unattrib(wlddev$country)), return.groups = TRUE))
 
 })
+
+base_group <- function(x, sort = FALSE, group.sizes = FALSE) {
+  if(sort) o <- if(is.list(x)) do.call(order, c(x, list(method = "radix"))) else order(x, method = "radix")
+  if(is.list(x)) x <- do.call(paste, c(x, list(sep = ".")))
+  ux <- unique(if(sort) x[o] else x)
+  r <- match(x, ux)
+  attr(r, "N.groups") <- length(ux)
+  if(group.sizes) attr(r, "group.sizes") <- tabulate(r, length(ux))
+  if(!sort) oldClass(r) <- c("qG", "na.included")
+  r
+}
+
+test_that("group() works as intended", {
+  wlduo <- wlddev[order(rnorm(nrow(wldNA))), ]
+  dlist <- c(mtcNA, wlddev, wlduo, GGDCNA, airquality)
+  # Single grouping variable
+  expect_identical(lapply(dlist, group, group.sizes = TRUE), lapply(dlist, base_group, group.sizes = TRUE))
+  # Multiple grouping variables
+  g <- replicate(50, sample.int(11, sample.int(6, 1)), simplify = FALSE)
+  expect_identical(lapply(g, function(i) group(.subset(mtcars, i), group.sizes = TRUE)), lapply(g, function(i) base_group(.subset(mtcars, i), group.sizes = TRUE)))
+  g <- replicate(30, sample.int(13, sample.int(4, 1)), simplify = FALSE)
+  expect_identical(lapply(g, function(i) group(.subset(wlduo, i), group.sizes = TRUE)), lapply(g, function(i) base_group(.subset(wlduo, i), group.sizes = TRUE)))
+  g <- replicate(30, sample.int(13, 3, replace = TRUE), simplify = FALSE)
+  expect_identical(lapply(g, function(i) group(.subset(wlduo, i), group.sizes = TRUE)), lapply(g, function(i) base_group(.subset(wlduo, i), group.sizes = TRUE)))
+  # Positive and negative values give the same grouping
+  nwld <- nv(wlduo)
+  expect_identical(lapply(nwld, group), lapply(nwld %c*% -1, group))
+  expect_visible(group(nwld %c*% -1))
+  expect_visible(group(nwld[c(4,2,3)] %c*% -1))
+})
+
+GRP2 <- function(x) {
+  g <- GRP.default(x, sort = TRUE, return.groups = FALSE, call = FALSE)
+  r <- g[[2]]
+  attr(r, "N.groups") <- g[[1]]
+  attr(r, "group.sizes") <- g[[3]]
+  r
+}
+
+qG2 <- function(x, method = "auto", sort = TRUE) unclass(qG(x, na.exclude = FALSE, sort = sort, method = method))
+
+test_that("GRP2() and qG2 work as intended", {
+  wlduo <- wlddev[order(rnorm(nrow(wldNA))), ]
+  dlist <- c(mtcNA, wlddev, wlduo, GGDCNA, airquality)
+  # Single grouping variable
+  expect_identical(lapply(dlist, GRP2), lapply(dlist, base_group, sort = TRUE, group.sizes = TRUE))
+  bgres <- lapply(dlist, base_group, sort = TRUE)
+  expect_identical(lapply(dlist, qG2), bgres)
+  expect_identical(lapply(dlist, qG2, method = "hash"), bgres)
+  expect_identical(lapply(dlist, qG2, method = "radix"), bgres)
+  expect_true(all_identical(qG2(wlduo$country, method = "radix", sort = FALSE),
+                            qG2(wlduo$country, method = "hash", sort = FALSE),
+                            unclass(base_group(wlduo$country, sort = FALSE))))
+  # Multiple grouping variables
+  g <- replicate(50, sample.int(11, sample.int(6, 1)), simplify = FALSE)
+  expect_identical(lapply(g, function(i) GRP2(.subset(mtcars, i))), lapply(g, function(i) base_group(.subset(mtcars, i), sort = TRUE, group.sizes = TRUE)))
+  g <- replicate(30, sample.int(13, sample.int(4, 1)), simplify = FALSE)
+  expect_identical(lapply(g, function(i) GRP2(.subset(wlduo, i))), lapply(g, function(i) base_group(.subset(wlduo, i), sort = TRUE, group.sizes = TRUE)))
+  g <- replicate(30, sample.int(13, 3, replace = TRUE), simplify = FALSE)
+  expect_identical(lapply(g, function(i) GRP2(.subset(wlduo, i))), lapply(g, function(i) base_group(.subset(wlduo, i), sort = TRUE, group.sizes = TRUE)))
+})
+
+
+
+test_that("GRP2() works as intended", {
+  wlduo <- wlddev[order(rnorm(nrow(wldNA))), ]
+  dlist <- c(mtcNA, wlddev, wlduo, GGDCNA, airquality)
+  # Single grouping variable
+  expect_identical(lapply(dlist, GRP2), lapply(dlist, base_group, sort = TRUE, group.sizes = TRUE))
+  # Multiple grouping variables
+  g <- replicate(50, sample.int(11, sample.int(6, 1)), simplify = FALSE)
+  expect_identical(lapply(g, function(i) GRP2(.subset(mtcars, i))), lapply(g, function(i) base_group(.subset(mtcars, i), sort = TRUE, group.sizes = TRUE)))
+  g <- replicate(30, sample.int(13, sample.int(4, 1)), simplify = FALSE)
+  expect_identical(lapply(g, function(i) GRP2(.subset(wlduo, i))), lapply(g, function(i) base_group(.subset(wlduo, i), sort = TRUE, group.sizes = TRUE)))
+  g <- replicate(30, sample.int(13, 3, replace = TRUE), simplify = FALSE)
+  expect_identical(lapply(g, function(i) GRP2(.subset(wlduo, i))), lapply(g, function(i) base_group(.subset(wlduo, i), sort = TRUE, group.sizes = TRUE)))
+})
+
 
 if(identical(Sys.getenv("NCRAN"), "TRUE")) {
 
@@ -305,12 +399,12 @@ flNA <- na_insert(fl)
 
 test_that("finteraction works as intended", {
 
-  expect_equal(`oldClass<-`(finteraction(fl), "factor"), interaction(fl, drop = TRUE, lex.order = TRUE))
-  expect_equal(`oldClass<-`(finteraction(ss(fl, 1:300)), "factor"), interaction(ss(fl, 1:300), drop = TRUE, lex.order = TRUE)) # missing levels
+  expect_equal(`oldClass<-`(finteraction(fl), "factor"), base::interaction(fl, drop = TRUE, lex.order = TRUE))
+  expect_equal(`oldClass<-`(finteraction(ss(fl, 1:300)), "factor"), base::interaction(ss(fl, 1:300), drop = TRUE, lex.order = TRUE)) # missing levels
 
   # Missing value behavior is always different !!
-  # expect_equal(`oldClass<-`(finteraction(flNA), "factor"), factor(interaction(flNA, drop = TRUE, lex.order = TRUE), exclude = NULL))
-  # expect_equal(`oldClass<-`(finteraction(ss(flNA, 1:300)), "factor"), interaction(ss(flNA, 1:300), drop = TRUE, lex.order = TRUE))
+  # expect_equal(`oldClass<-`(finteraction(flNA), "factor"), factor(base::interaction(flNA, drop = TRUE, lex.order = TRUE), exclude = NULL))
+  # expect_equal(`oldClass<-`(finteraction(ss(flNA, 1:300)), "factor"), base::interaction(ss(flNA, 1:300), drop = TRUE, lex.order = TRUE))
 
 })
 
@@ -354,14 +448,12 @@ test_that("funique works well", {
  expect_equal(funique(rctryNA), unique(rctryNA))
  expect_equal(funique(rctryNA, sort = TRUE), c(sort(unique(rctryNA)), NA))
 
+ expect_equal(funique(mtcars[.c(cyl, vs, am)]),  unique(mtcars[.c(cyl, vs, am)]))
+ expect_equal(funique(mtcNA[.c(cyl, vs, am)]),  unique(mtcNA[.c(cyl, vs, am)]))
 
- expect_equal(funique(mtcars[.c(cyl, vs, am)]),  roworderv(unique(mtcars[.c(cyl, vs, am)])))
- expect_equal(funique(mtcNA[.c(cyl, vs, am)]),  roworderv(unique(mtcNA[.c(cyl, vs, am)])))
-
-
- # expect_equal(funique(rdat), setRownames(unique(rdat))) # This should work!!!
+ expect_equal(funique(rdat), setRownames(unique(rdat)))
  expect_equal(funique(rdat, sort = TRUE), roworderv(unique(rdat)))
- # expect_equal(funique(rdatNA), setRownames(unique(rdatNA))) # Same here
+ expect_equal(funique(rdatNA), setRownames(unique(rdatNA)))
  expect_equal(funique(rdatNA, sort = TRUE), roworderv(unique(rdatNA)))
 
 })

@@ -1,4 +1,4 @@
-\name{fbetween, fwithin}
+\name{fbetween-fwithin}
 \alias{B}
 \alias{B.default}
 \alias{B.matrix}
@@ -36,7 +36,7 @@ Fast Between (Averaging) and (Quasi-)Within (Centering) Transformations
 
 (\code{B} / \code{W} provide more flexibility than \code{fbetween} / \code{fwithin} when applied to data frames (i.e.  column subsetting, formula input, auto-renaming and id-variable-preservation capabilities\dots), but are otherwise identical.)
 
-%(\code{fbetween} and \code{fwithin} are simple programmers functions in style of the \link[=A1-fast-statistical-functions]{Fast Statistical Functions} while \code{B} and \code{W} are more practical to use in regression formulas or for ad-hoc computations on data frames.)
+%(\code{fbetween} and \code{fwithin} are simple programmers functions in style of the \link[=fast-statistical-functions]{Fast Statistical Functions} while \code{B} and \code{W} are more practical to use in regression formulas or for ad-hoc computations on data frames.)
 }
 \usage{
 fbetween(x, \dots)
@@ -130,7 +130,7 @@ Mundlak, Yair. 1978. On the Pooling of Time Series and Cross Section Data. \emph
 %% ~Make other sections like Warning with \section{Warning }{\dots.} ~
 
 \seealso{
-\code{\link[=HDW]{fhdbetween/HDB and fhdwithin/HDW}}, \code{\link[=fscale]{fscale/STD}}, \code{\link{TRA}}, \link[=A6-data-transformations]{Data Transformations}, \link[=collapse-documentation]{Collapse Overview}
+\code{\link[=HDW]{fhdbetween/HDB and fhdwithin/HDW}}, \code{\link[=fscale]{fscale/STD}}, \code{\link{TRA}}, \link[=data-transformations]{Data Transformations}, \link[=collapse-documentation]{Collapse Overview}
 }
 \examples{
 ## Simple centering and averaging

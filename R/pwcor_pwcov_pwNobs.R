@@ -1,4 +1,4 @@
-# sumcc <- function(x, y)  sum(complete.cases(x,y))
+# sumcc <- function(x, y)  bsum(complete.cases(x,y))
 # pwnobs <- function(x) qM(dapply(x, function(y) dapply(x, sumcc, y)))
 
 pwnobs <- function(X) {
@@ -11,18 +11,21 @@ pwnobs <- function(X) {
   N.mat <- diag(dg)
   for (i in 1:(n - 1L)) {
     miss <- is.na(X[[i]]) # faster than complete.cases, also for large data ! // subsetting X[[j]] faster ?? -> NOPE !
-    for (j in (i + 1L):n) N.mat[i, j] <- N.mat[j, i] <- nr - sum(miss | is.na(X[[j]])) # sum(complete.cases(X[[i]], X[[j]]))
+    for (j in (i + 1L):n) N.mat[i, j] <- N.mat[j, i] <- nr - bsum(miss | is.na(X[[j]])) # bsum(complete.cases(X[[i]], X[[j]]))
   }
   dimnames(N.mat) <- list(names(dg), names(dg))
   N.mat
 }
 
-pwNobs <- function(X) pwnobs(X)
+pwNobs <- function(X) {
+  message("Note that 'pwNobs' was renamed to 'pwnobs'. It will not be removed anytime soon, but please use updated function names in new code, see help('collapse-renamed')")
+  pwnobs(X)
+}
 # corr.p <- function(r, n) {
 #   if (n < 3L) return(1)
 #   df <- n - 2L
 #   t <- sqrt(df) * r/sqrt(1 - r^2)
-#   return(2 * min(pt(t, df), pt(t, df, lower.tail = FALSE))) # taken from corr.test
+#   return(2 * bmin(pt(t, df), pt(t, df, lower.tail = FALSE))) # taken from corr.test
 # }
 
 corr.pmat <- function(cm, nm) {
@@ -49,7 +52,7 @@ complpwnobs <- function(X) {
     n <- ncol(X)
     coln <- dimnames(X)[[2L]]
   # }
-  matrix(sum(complete.cases(X)), n, n, dimnames = list(coln, coln))
+  matrix(bsum(complete.cases(X)), n, n, dimnames = list(coln, coln))
 }
 
 # Test:
@@ -119,8 +122,8 @@ pwcov <- function(X, ..., w = NULL, N = FALSE, P = FALSE, array = TRUE, use = "p
   lcc <- FALSE
   if(is.null(w)) r <- cov(X, ..., use = use) else if(use == "pairwise.complete.obs") {
     r <- getenvFUN("weights_wtd.cors")(X, ..., weight = w)
-    # sw <- sum(w, na.rm = TRUE)
-    Xsd <- fsd(X, w = w) # * (sw-1) / (1 - sum((w/sw)^2)) # cov.wt, method = "unbiased" ???
+    # sw <- bsum(w, na.rm = TRUE)
+    Xsd <- fsd(X, w = w) # * (sw-1) / (1 - bsum((w/sw)^2)) # cov.wt, method = "unbiased" ???
     r <- if(missing(...)) r * outer(Xsd, Xsd) else r * outer(Xsd, fsd(..., w = w))
   } else {
     if(!missing(...)) stop("y is currently not supported with weighted correlations and use != 'pairwise.complete.obs'")
@@ -132,9 +135,9 @@ pwcov <- function(X, ..., w = NULL, N = FALSE, P = FALSE, array = TRUE, use = "p
         X <- X[cc, , drop = FALSE]
         w <- w[cc]
       }
-      r <- crossprod(sqrt(w) * BWmCpp(X, w = w, narm = FALSE)) / (sum(w) - 1) # Check numeric accuracy !
-      # w <- w/sum(w) # same method as cov.wt, method = "unbiased"
-      # r <- crossprod(sqrt(w) * BWmCpp(X, w = w, narm = FALSE)) / (1 - sum(w^2))
+      r <- crossprod(sqrt(w) * BWmCpp(X, w = w, narm = FALSE)) / (bsum(w) - 1) # Check numeric accuracy !
+      # w <- w/bsum(w) # same method as cov.wt, method = "unbiased"
+      # r <- crossprod(sqrt(w) * BWmCpp(X, w = w, narm = FALSE)) / (1 - bsum(w^2))
     } else r <- switch(use, complete.obs = stop("no complete element pairs"), namat(X)) # namat correct ??
   }
   if(!(N || P)) return(`oldClass<-`(r, c("pwcov", "matrix")))
@@ -149,7 +152,7 @@ pwcov <- function(X, ..., w = NULL, N = FALSE, P = FALSE, array = TRUE, use = "p
   res
 }
 
-print.pwcor <- function(x, digits = 2L, sig.level = 0.05, show = c("all","lower.tri","upper.tri"), spacing = 1L, ...) {
+print.pwcor <- function(x, digits = 2L, sig.level = 0.05, show = c("all","lower.tri","upper.tri"), spacing = 1L, return = FALSE, ...) {
   formfun <- function(x, dg1 = FALSE) {
     xx <- format(round(x, digits)) # , digits = digits-1
     xx <- sub("(-?)0\\.", "\\1.", xx)
@@ -203,12 +206,13 @@ print.pwcor <- function(x, digits = 2L, sig.level = 0.05, show = c("all","lower.
     if(show != 1L) res <- if(show == 2L) lapply(res, function(i){i[upper.tri(i)] <- ""; i}) else
       lapply(res, function(i){i[lower.tri(i)] <- ""; i})
   } else res <- formfun(x)
+  if(return) return(unclass(res))
   print.default(unclass(res), quote = FALSE, right = TRUE, ...)
   invisible(x)
 } #print.table(dapply(round(x, digits), function(j) sub("^(-?)0.", "\\1.", j)), right = TRUE, ...) # print.table(, right = TRUE)
 
 
-print.pwcov <- function(x, digits = 2L, sig.level = 0.05, show = c("all","lower.tri","upper.tri"), spacing = 1L, ...) {
+print.pwcov <- function(x, digits = 2L, sig.level = 0.05, show = c("all","lower.tri","upper.tri"), spacing = 1L, return = FALSE, ...) {
   formfun <- function(x, adj = FALSE) {
     xx <- format(round(x, digits), digits = 9, big.mark = "'", big.interval = 6)
     # xx <- sub("(-?)0\\.", "\\1.", xx) # Not needed here...
@@ -255,6 +259,7 @@ print.pwcov <- function(x, digits = 2L, sig.level = 0.05, show = c("all","lower.
     if(show != 1L) res <- if(show == 2L) lapply(res, function(i){i[upper.tri(i)] <- ""; i}) else
       lapply(res, function(i){i[lower.tri(i)] <- ""; i})
   } else res <- formfun(x)
+  if(return) return(unclass(res))
   print.default(unclass(res), quote = FALSE, right = TRUE, ...)
   invisible(x)
 } #print.table(dapply(round(x, digits), function(j) sub("^(-?)0.", "\\1.", j)), right = TRUE, ...) # print.table(, right = TRUE)

@@ -1,5 +1,8 @@
 context("fmean")
 
+bmean <- base::mean
+bsum <- base::sum
+
 # rm(list = ls())
 set.seed(101)
 x <- rnorm(100)
@@ -27,7 +30,7 @@ wmean <- function(x, w, na.rm = FALSE) {
     x <- x[cc]
     w <- w[cc]
   }
-  sum(x*w)/sum(w)
+  bsum(x*w)/bsum(w)
 }
 
 wBY <- function(x, f, FUN, w, ...) {
@@ -39,39 +42,39 @@ wBY <- function(x, f, FUN, w, ...) {
 
 
 test_that("fmean performs like base::mean", {
-  expect_equal(fmean(NA), mean(NA))
-  expect_equal(fmean(NA, na.rm = FALSE), mean(NA))
-  expect_equal(fmean(1), mean(1, na.rm = TRUE))
-  expect_equal(fmean(1:3), mean(1:3, na.rm = TRUE))
-  expect_equal(fmean(-1:1), mean(-1:1, na.rm = TRUE))
-  expect_equal(fmean(1, na.rm = FALSE), mean(1))
-  expect_equal(fmean(1:3, na.rm = FALSE), mean(1:3))
-  expect_equal(fmean(-1:1, na.rm = FALSE), mean(-1:1))
-  expect_equal(fmean(x), mean(x, na.rm = TRUE))
-  expect_equal(fmean(x, na.rm = FALSE), mean(x))
-  expect_equal(fmean(xNA, na.rm = FALSE), mean(xNA))
-  expect_equal(fmean(xNA), mean(xNA, na.rm = TRUE))
+  expect_equal(fmean(NA), bmean(NA))
+  expect_equal(fmean(NA, na.rm = FALSE), bmean(NA))
+  expect_equal(fmean(1), bmean(1, na.rm = TRUE))
+  expect_equal(fmean(1:3), bmean(1:3, na.rm = TRUE))
+  expect_equal(fmean(-1:1), bmean(-1:1, na.rm = TRUE))
+  expect_equal(fmean(1, na.rm = FALSE), bmean(1))
+  expect_equal(fmean(1:3, na.rm = FALSE), bmean(1:3))
+  expect_equal(fmean(-1:1, na.rm = FALSE), bmean(-1:1))
+  expect_equal(fmean(x), bmean(x, na.rm = TRUE))
+  expect_equal(fmean(x, na.rm = FALSE), bmean(x))
+  expect_equal(fmean(xNA, na.rm = FALSE), bmean(xNA))
+  expect_equal(fmean(xNA), bmean(xNA, na.rm = TRUE))
   expect_equal(fmean(mtcars), fmean(m))
-  expect_equal(fmean(m), dapply(m, mean, na.rm = TRUE))
-  expect_equal(fmean(m, na.rm = FALSE), dapply(m, mean))
-  expect_equal(fmean(mNA, na.rm = FALSE), dapply(mNA, mean))
-  expect_equal(fmean(mNA), dapply(mNA, mean, na.rm = TRUE))
-  expect_equal(fmean(mtcars), dapply(mtcars, mean, na.rm = TRUE))
-  expect_equal(fmean(mtcars, na.rm = FALSE), dapply(mtcars, mean))
-  expect_equal(fmean(mtcNA, na.rm = FALSE), dapply(mtcNA, mean))
-  expect_equal(fmean(mtcNA), dapply(mtcNA, mean, na.rm = TRUE))
-  expect_equal(fmean(x, f), BY(x, f, mean, na.rm = TRUE))
-  expect_equal(fmean(x, f, na.rm = FALSE), BY(x, f, mean))
-  expect_equal(fmean(xNA, f, na.rm = FALSE), BY(xNA, f, mean))
-  expect_equal(fmean(xNA, f), BY(xNA, f, mean, na.rm = TRUE))
-  expect_equal(fmean(m, g), BY(m, g, mean, na.rm = TRUE))
-  expect_equal(fmean(m, g, na.rm = FALSE), BY(m, g, mean))
-  expect_equal(fmean(mNA, g, na.rm = FALSE), BY(mNA, g, mean))
-  expect_equal(fmean(mNA, g), BY(mNA, g, mean, na.rm = TRUE))
-  expect_equal(fmean(mtcars, g), BY(mtcars, g, mean, na.rm = TRUE))
-  expect_equal(fmean(mtcars, g, na.rm = FALSE), BY(mtcars, g, mean))
-  expect_equal(fmean(mtcNA, g, na.rm = FALSE), BY(mtcNA, g, mean))
-  expect_equal(fmean(mtcNA, g), BY(mtcNA, g, mean, na.rm = TRUE))
+  expect_equal(fmean(m), dapply(m, bmean, na.rm = TRUE))
+  expect_equal(fmean(m, na.rm = FALSE), dapply(m, bmean))
+  expect_equal(fmean(mNA, na.rm = FALSE), dapply(mNA, bmean))
+  expect_equal(fmean(mNA), dapply(mNA, bmean, na.rm = TRUE))
+  expect_equal(fmean(mtcars), dapply(mtcars, bmean, na.rm = TRUE))
+  expect_equal(fmean(mtcars, na.rm = FALSE), dapply(mtcars, bmean))
+  expect_equal(fmean(mtcNA, na.rm = FALSE), dapply(mtcNA, bmean))
+  expect_equal(fmean(mtcNA), dapply(mtcNA, bmean, na.rm = TRUE))
+  expect_equal(fmean(x, f), BY(x, f, bmean, na.rm = TRUE))
+  expect_equal(fmean(x, f, na.rm = FALSE), BY(x, f, bmean))
+  expect_equal(fmean(xNA, f, na.rm = FALSE), BY(xNA, f, bmean))
+  expect_equal(fmean(xNA, f), BY(xNA, f, bmean, na.rm = TRUE))
+  expect_equal(fmean(m, g), BY(m, g, bmean, na.rm = TRUE))
+  expect_equal(fmean(m, g, na.rm = FALSE), BY(m, g, bmean))
+  expect_equal(fmean(mNA, g, na.rm = FALSE), BY(mNA, g, bmean))
+  expect_equal(fmean(mNA, g), BY(mNA, g, bmean, na.rm = TRUE))
+  expect_equal(fmean(mtcars, g), BY(mtcars, g, bmean, na.rm = TRUE))
+  expect_equal(fmean(mtcars, g, na.rm = FALSE), BY(mtcars, g, bmean))
+  expect_equal(fmean(mtcNA, g, na.rm = FALSE), BY(mtcNA, g, bmean))
+  expect_equal(fmean(mtcNA, g), BY(mtcNA, g, bmean, na.rm = TRUE))
 })
 
 test_that("fmean with weights performs as intended (unbiased)", {

@@ -1,4 +1,4 @@
-\name{has_elem, get_elem}
+\name{get_elem}
 % \alias{extract_list}
 \alias{atomic_elem}
 \alias{atomic_elem<-}
@@ -72,7 +72,7 @@ If \code{keep.tree = TRUE}, \code{reg_elem}, \code{irreg_elem} and \code{get_ele
 
 % }
 \seealso{
- \link[=A8-list-processing]{List Processing}, \link[=collapse-documentation]{Collapse Overview}
+ \link[=list-processing]{List Processing}, \link[=collapse-documentation]{Collapse Overview}
 }
 \examples{
 m <- qM(mtcars)

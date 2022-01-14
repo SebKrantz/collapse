@@ -6,7 +6,7 @@
 \alias{fsum.grouped_df}
 \title{Fast (Grouped, Weighted) Sum for Matrix-Like Objects}  % Vectors, Matrix and Data Frame Columns}
 \description{
-\code{fsum} is a generic function that computes the (column-wise) sum of all values in \code{x}, (optionally) grouped by \code{g} and/or weighted by \code{w} (e.g. to calculate survey totals). The \code{\link{TRA}} argument can further be used to transform \code{x} using its (grouped, weighted) sum.
+\code{fsum} is a generic function that computes the (column-wise) sum of all values in \code{x}, (optionally) grouped by \code{g} and/or weighted by \code{w} (e.g., to calculate survey totals). The \code{\link{TRA}} argument can further be used to transform \code{x} using its (grouped, weighted) sum.
 }
 \usage{
 fsum(x, \dots)
@@ -51,9 +51,9 @@ fsum(x, \dots)
 
 Missing-value removal as controlled by the \code{na.rm} argument is done very efficiently by simply skipping them in the computation (thus setting \code{na.rm = FALSE} on data with no missing values doesn't give extra speed). Large performance gains can nevertheless be achieved in the presence of missing values if \code{na.rm = FALSE}, since then the corresponding computation is terminated once a \code{NA} is encountered and \code{NA} is returned (unlike \code{\link{sum}} which just runs through without any checks).
 
-The weighted sum (i.e. survey total) is computed as \code{sum(x * w)}, but in one pass and about twice as efficient. If \code{na.rm = TRUE}, missing values will be removed from both \code{x} and \code{w} i.e. utilizing only \code{x[complete.cases(x,w)]} and \code{w[complete.cases(x,w)]}.
+The weighted sum (e.g., survey total) is computed as \code{sum(x * w)}, but in one pass and about twice as efficient. If \code{na.rm = TRUE}, missing values will be removed from both \code{x} and \code{w} i.e. utilizing only \code{x[complete.cases(x,w)]} and \code{w[complete.cases(x,w)]}.
 
-This all seamlessly generalizes to grouped computations, which are performed in a single pass (without splitting the data) and therefore extremely fast. See Benchmark and Examples below.
+This all seamlessly generalizes to grouped computations, which are performed in a single pass (without splitting the data) and are therefore extremely fast. See Benchmark and Examples below.
 
 When applied to data frames with groups or \code{drop = FALSE}, \code{fsum} preserves all column attributes (such as variable labels), unless columns have a class (checked using \code{is.object}). The attributes of the data frame itself are also preserved.
 
@@ -64,7 +64,7 @@ Since v1.6.0 \code{fsum} explicitly supports integers. Integers are summed using
 The (\code{w} weighted) sum of \code{x}, grouped by \code{g}, or (if \code{\link{TRA}} is used) \code{x} transformed by its sum, grouped by \code{g}.
 }
 \section{See Also}{
-\code{\link{fprod}}, \code{\link{fmean}}, \link[=A1-fast-statistical-functions]{Fast Statistical Functions}, \link[=collapse-documentation]{Collapse Overview}
+\code{\link{fprod}}, \code{\link{fmean}}, \link[=fast-statistical-functions]{Fast Statistical Functions}, \link[=collapse-documentation]{Collapse Overview}
 }
 \section{Examples}{\preformatted{
 ## default vector method

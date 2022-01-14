@@ -1,4 +1,119 @@
+# collapse 1.7.0
+
+*collapse* 1.7.0, released mid January 2022, brings major improvements in the computational backend of the package, it's data manipulation capabilities, and a whole set of new functions that enable more flexible and memory efficiency R programming - significantly enhancing the language itself. For the vast majority of codes, updating to 1.7 should not cause any problems. 
+
+
+
+<!--
+### Changes to functionality
+
+* `ffirst`, `flast` and `fnobs` don't have hidden `*.list` methods anymore. 
+-->
+
+### Changes to functionality
+
+* `num_vars` is now implemented in C, yielding a massive performance increase over checking columns using `vapply(x, is.numeric, logical(1))`. It selects columns where `(is.double(x) || is.integer(x)) && !is.object(x)`. This provides the same results for most common classes found in data frames (e.g. factors and date columns are not numeric), however it is possible for users to define methods for `is.numeric` for other objects, which will not be respected by `num_vars` anymore. A prominent example are base R's 'ts' objects i.e. `is.numeric(AirPassengers)` returns `TRUE`, but `is.object(AirPassengers)` is also `TRUE` so the above yields `FALSE`, implying - if you happened to work with data frames of 'ts' columns - that `num_vars` will now not select those anymore. Please make me aware if there are other important classes that are found in data frames and where `is.numeric` returns `TRUE`. `num_vars` is also used internally in `collap` so this might affect your aggregations. 
+
+* In `flag`, `fdiff` and `fgrowth`, if a plain numeric vector is passed to the `t` argument such that `is.double(t) && !is.object(t)`, it is coerced to integer using `as.integer(t)` and directly used as time variable, rather than applying ordered grouping first. This is to avoid the inefficiency of grouping, and owes to the fact that in most data imported into R with various packages, the time (year) variables are coded as double although they should be integer (I also don't know of any cases where time needs to be indexed by a non-date variable with decimal places). Note that the algorithm internally handles irregularity in the time variable so this is not a problem. Should this break any code, kindly raise an issue on GitHub.
+
+* The function `setrename` now truly renames objects by reference (without creating a shallow copy). The same is true for `vlabels<-` (which was rewritten in C) and a new function `setrelabel`. Thus additional care needs to be taken (with use inside functions etc.) as the renaming will take global effects unless a shallow copy of the data was created by some prior operation inside the function. If in doubt, better use `frename` or `relabel` which do create a shallow copy. 
+
+* Some improvements to the `BY` function, both in terms of performance and security. Performance is enhanced through a new C function `gsplit`, providing split-apply-combine computing speeds competitive with *dplyr* on a much broader range of R objects. Regarding Security: if the result of the computation has the same length as the original data, names / rownames and grouping columns (for grouped data) are only added to the result object if known to be valid, i.e. if the data was originally sorted by the grouping columns (information recorded by `GRP.default(..., sort = TRUE)`, which is called internally on non-factor/GRP/qG objects). This is because `BY` does not reorder data after the split-apply-combine step (unlike `dplyr::mutate`); data are simply recombined in the order of the groups. Because of this, in general, `BY` should be used to compute summary statistics (unless data are sorted before grouping). The added security makes this explicit. 
+
+* Added a method `length.GRP` giving the length of a grouping object. This could break code calling `length` on a grouping object before (which just returned the length of the list).
+
+* Functions renamed in collapse 1.6.0 will now print a message telling you to use the updated names. The functions under the old names will stay around for 1-3 more years. 
+
+<!--
+* A new function `gsplit` is used internally in `collap` and `BY`, and the new `fmutate` function: To perform faster split-apply-combine computing with functions other than those provided in this package. `gsplit` does not support 'POSIXlt' and other complex classes requiring simultaneous splitting of multiple atomic vectors, but works well with all standard classes (including 'factor', 'Date', 'POSIXct') and beyond that all classes consisting of a vector (including lists) with attributes attached. 
+-->
+
+* The passing of argument `order` instead of `sort` in function `GRP` (from a very early version of collapse), is now disabled.
+
+
+### Bug Fixes
+
+* Fixed a bug in some functions using Welfords Online Algorithm (`fvar`, `fsd`, `fscale` and `qsu`) to calculate variances, occurring when initial or final zero weights caused the running sum of weights in the algorithm to be zero, yielding a division by zero and `NA` as output although a value was expected. These functions now skip zero weights alongside missing weights, which also implies that you can pass a logical vector to the weights argument to very efficiently calculate statistics on a subset of data (e.g. using `qsu`). 
+
+### Additions
+
+#### Basic Computational Infrastructure
+
+* Function `group` was added, providing a low-level interface to a new unordered grouping algorithm based on hashing in C and optimized for R's data structures. The algorithm was heavily inspired by the great `kit` package of Morgan Jacob, and now feeds into the package through multiple central functions (including `GRP` / `fgroup_by`, `funique` and `qF`) when invoked with argument `sort = FALSE`. It is also used in internal groupings performed in data transformation functions such as `fwithin` (when no factor or 'GRP' object is provided to the `g` argument). The speed of the algorithm is very promising (often superior to `radixorder`), and it could be used in more places still. I welcome any feedback on it's performance on different datasets.    
+
+* Function `gsplit` provides an efficient alternative to `split` based on grouping objects. It is used as a new backend to `rsplit` (which also supports data frame) as well as `BY`, `collap`, `fsummarise` and `fmutate` - for more efficient grouped operations with functions external to the package. 
+
+* Added multiple functions to facilitate memory efficient programming (written in C). These include elementary mathematical operations by reference (`setop`, `%+=%`, `%-=%`, `%*=%`, `%/=%`), supporting computations involving integers and doubles on vectors, matrices and data frames (including row-wise operations via `setop`) with no copies at all. Furthermore a set of functions which check a single value against a vector without generating logical vectors: `whichv`, `whichNA` (operators `%==%` and `%!=%` which return indices and are significantly faster than `==`, especially inside functions like `fsubset`), `anyv` and `allv` (`allNA` was already added before). Finally, functions `setv` and `copyv` speed up operations involving the replacement of a value (`x[x == 5] <- 6`) or of a sequence of values from a equally sized object (`x[x == 5] <- y[x == 5]`, or `x[ind] <- y[ind]` where `ind` could be pre-computed vectors or indices) in vectors and data frames without generating any logical vectors or materializing vector subsets.
+
+* Function `vlengths` was added as a more efficient alternative to `lengths` (without method dispatch, simply coded in C).
+
+* Function `massign` provides a multivariate version of `assign` (written in C, and supporting all basic vector types). In addition the operator `%=%` was added as an efficient multiple assignment operator. (It is called `%=%` and not `%<-%` to facilitate the translation of Matlab or Python codes into R, and because the [zeallot](<https://cran.r-project.org/package=zeallot>) package already provides multiple-assignment operators (`%<-%` and `%->%`), which are significantly more versatile, but orders of magnitude slower than `%=%`)
+
+#### High-Level Features
+
+* Fully fledged `fmutate` function that provides functionality analogous to `dplyr::mutate` (sequential evaluation of arguments, including arbitrary tagged expressions and `across` statements). `fmutate` is optimized to work together with the packages *Fast Statistical and Data Transformation Functions*, yielding fast, vectorized execution, but also benefits from `gsplit` for other operations. 
+
+* `across()` function implemented for use inside `fsummarise` and `fmutate`. It is also optimized for *Fast Statistical and Data Transformation Functions*, but performs well with other functions too. It has an additional arguments `.apply = FALSE` which will apply functions to the entire subset of the data instead of individual columns, and thus allows for nesting tibbles and estimating models or correlation matrices by groups etc.. `across()` also supports an arbitrary number of additional arguments which are split and evaluated by groups if necessary. Multiple `across()` statements can be combined with tagged vector expressions in a single call to `fsummarise` or `fmutate`. Thus the computational framework is pretty general and similar to *data.table*, although less efficient with big datasets. 
+
+* Added functions `relabel` and `setrelabel` to make interactive dealing with variable labels a bit easier. Note that both functions operate by reference. (Through `vlabels<-` which is implemented in C. Taking a shallow copy of the data frame is useless in this case because variable labels are attributes of the columns, not of the frame). The only difference between the two is that `setrelabel` returns the result invisibly.  
+
+* function shortcuts `rnm` and `mtt` added for `frename` and `fmutate`. `across` can also be abbreviated using `acr`. 
+
+* Added two options that can be invoked before loading of the package to change the namespace: `options(collapse_mask = c(...))` can be set to export copies of selected (or all) functions in the package that start with `f` removing the leading `f` e.g. `fsubset` -> `subset` (both `fsubset` and `subset` will be exported). This allows masking base R and dplyr functions (even basic functions such as `sum`, `mean`, `unique` etc. if desired) with *collapse*'s fast functions, facilitating the optimization of existing codes and allowing you to work with *collapse* using a more natural namespace. The package has been internally insulated against such changes, but of course they might have major effects on existing codes. Also `options(collapse_F_to_FALSE = FALSE)` can be invoked to get rid of the lead operator `F`, which masks `base::F` (an issue raised by some people who like to use `T`/`F` instead of `TRUE`/`FALSE`). Read the help page `?collapse-options` for more information.     
+
+### Improvements
+
+* Package loads faster (because I don't fetch functions from some other C/C++ heavy packages in `.onLoad` anymore, which implied unnecessary loading of a lot of DLLs).
+
+* `fsummarise` is now also fully featured supporting evaluation of arbitrary expressions and `across()` statements. Note that mixing *Fast Statistical Functions* with other functions in a single expression can yield unintended outcomes, read more at `?fsummarise`. 
+
+* `funique` benefits from `group` in the default `sort = FALSE`, configuration, providing extra speed and unique values in first-appearance order in both the default and the data frame method, for all data types. 
+
+* Function `ss` supports both empty `i` or `j`. 
+
+* The printout of `fgroup_by` also shows minimum and maximum group size for unbalanced groupings. 
+* In `ftransformv/settransformv` and `fcomputev`, the `vars` argument is also evaluated inside the data frame environment, allowing NSE specifications using column names e.g. `ftransformv(data, c(col1, col2:coln), FUN)`.
+
+* `qF` with option `sort = FALSE` now generates factors with levels in first-appearance order (instead of a random order assigned by the hash function), and can also be called on an existing factor to recast the levels in first-appearance order. It is also faster with `sort = FALSE` (thanks to `group`). 
+
+* `finteraction` has argument `sort = FALSE` to also take advantage of `group`. 
+
+* `rsplit` has improved performance through `gsplit`, and an additional argument `use.names`, which can be used to return an unnamed list. 
+
+* Speedup in `vtypes` and functions `num_vars`, `cat_vars`, `char_vars`, `logi_vars` and `fact_vars`. Note than `num_vars` behaves slightly differently as discussed above.
+
+* `vlabels(<-)` / `setLabels` rewritten in C, giving a ~20x speed improvement. Note that they now operate by reference. 
+
+* `vlabels`, `vclasses` and `vtypes` have a `use.names` argument. The default is `TRUE` (as before). 
+
+* `colorder` can rename columns on the fly and also has a new mode `pos = "after"` to place all selected  columns after the first selected one, e.g.: `colorder(mtcars, cyl, vs_new = vs, am, pos = "after")`. The `pos = "after"` option was also added to `roworderv`. 
+
++ `add_stub` and `rm_stub` have an additional `cols` argument to apply a stub to certain columns only e.g. `add_stub(mtcars, "new_", cols = 6:9)`.
+
+* `namlab` has additional arguments `N` and `Ndistinct`, allowing to display number of observations and distinct values next to variable names, labels and classes, to get a nice and quick overview of the variables in a large dataset. 
+
+* `copyMostAttrib` only copies the `"row.names"` attribute when known to be valid. 
+
+* `na_rm` can now be used to efficiently remove empty or `NULL` elements from a list. 
+
+* `flag`, `fdiff` and `fgrowth` produce less messages (i.e. no message if you don't use a time variable in grouped operations, and messages about computations on highly irregular panel data only if data length exceeds 10 million obs.).
+
+* The print methods of `pwcor` and `pwcov` now have a `return` argument, allowing users to obtain the formatted correlation matrix, for exporting purposes. 
+
+* `replace_NA`, `recode_num` and `recode_char` have improved performance and an additional argument `set` to take advantage of `setv` to change (some) data by reference. For `replace_NA`, this feature is mature and setting `set = TRUE` will modify all selected columns in place and return the data invisibly. For `recode_num` and `recode_char` only a part of the transformations are done by reference, thus users will still have to assign the data to preserve changes. In the future, this will be improved so that `set = TRUE` toggles all transformations to be done by reference.   
+
+<!-- 
+
+* `TRA`, `varying`, `seqid` and `groupid` rewritten in C. Mainly to reduce the size of compiled code, allowing me to add functions while keeping the package size constant.  
+
+* `TRA` has extra option `"replace_NA"` to only replace missing values with computed statistics. This is useful for example to do extremely fast imputation using `fmean(..., TRA = "replace_NA")` or `fmedian`. 
+
+* C API (Dirk)
+-->
+
+
 # collapse 1.6.5
+
 * Use of `VECTOR_PTR` in C API now gives an error on R-devel even if `USE_RINTERNALS` is defined. Thus this patch gets rid of all remaining usage of this macro to avoid errors on CRAN checks using the development version of R. 
 
 * The print method for `qsu` now uses an apostrophe (') to designate million digits, instead of a comma (,). This is to avoid confusion with the decimal point, and the typical use of (,) for thousands (which I don't like). 
@@ -45,10 +160,10 @@ A patch for 1.6.0 which fixes issues flagged by CRAN and adds a few handy extras
 * *collapse* now directly supports *sf* data frames through functions like `fselect`, `fsubset`, `num_vars`, `qsu`, `descr`, `varying`, `funique`, `roworder`, `rsplit`, `fcompute` etc., which will take along the geometry column even if it is not explicitly selected (mirroring *dplyr* methods for *sf* data frames). This is mostly done internally at C-level, so functions remain simple and fast. Existing code that explicitly selects the geometry column is unaffected by the change, but code of the form `sf_data %>% num_vars %>% qDF %>% ...`, where columns excluding geometry were selected and the object later converted to a data frame, needs to be rewritten as `sf_data %>% qDF %>% num_vars %>% ...`. A short vignette was added describing the integration of *collapse* and *sf*. 
 
 * I've received several requests for increased namespace consistency. *collapse* functions were named to be consistent with base R, *dplyr* and *data.table*, resulting in names like `is.Date`, `fgroup_by` or `settransformv`. To me this makes sense, but I've been convinced that a bit more consistency is advantageous. Towards that end I have decided to eliminate the '.' notation of base R and to remove some unexpected capitalizations in function names giving some people the impression I was using camel-case. The following functions are renamed:
-`fNobs` -> `fnobs`, `fNdistinct` -> `fndistinct`, `pwNobs` -> `pwnobs`, `fHDwithin` -> `fhdwithin`
+`fNobs` -> `fnobs`, `fNdistinct` -> `fndistinct`, `pwNobs` -> `pwnobs`, `fHDwithin` -> `fhdwithin`,
 `fHDbetween` -> `fhdbetween`, `as.factor_GRP` -> `as_factor_GRP`, `as.factor_qG` -> `as_factor_qG`, `is.GRP` -> `is_GRP`, `is.qG` -> `is_qG`, `is.unlistable` -> `is_unlistable`, `is.categorical` -> `is_categorical`, `is.Date` -> `is_date`, `as.numeric_factor` -> `as_numeric_factor`, `as.character_factor` -> `as_character_factor`, 
 `Date_vars` -> `date_vars`. 
-This is done in a very careful manor, the others will stick around for a long while (end of 2022), and the generics of `fNobs`, `fNdistinct`, `fHDbetween` and `fHDwithin` will be kept in the package for an indeterminate period, but their core methods will not be exported beyond 2022. I will start warning about these renamed functions in 2022. In the future I will undogmatically stick to a function naming style with lowercase function names and underslashes where words need to be split. Other function names will be kept. To say something about this: The quick-conversion functions `qDF` `qDT`, `qM`, `qF`, `qG` are consistent and in-line with *data.table* (`setDT` etc.), and similarly the operators `L`, `F`, `D`, `Dlog`, `G`, `B`, `W`, `HDB`, `HDW`. I'll keep `GRP`, `BY` and `TRA`, for lack of better names, parsimony and because they are central to the package. The camel case will be kept in helper functions `setDimnames` etc. because they work like *stats* `setNames` and do not modify the argument by reference (like `settransform` or `setrename` and various *data.table* functions). Functions `copyAttrib` and `copyMostAttrib` are exports of like-named functions in the C API and thus kept as they are. Finally, I want to keep `fFtest` the way it is because the F-distribution is widely recognized by a capital F. 
+This is done in a very careful manner, the others will stick around for a long while (end of 2022), and the generics of `fNobs`, `fNdistinct`, `fHDbetween` and `fHDwithin` will be kept in the package for an indeterminate period, but their core methods will not be exported beyond 2022. I will start warning about these renamed functions in 2022. In the future I will undogmatically stick to a function naming style with lowercase function names and underslashes where words need to be split. Other function names will be kept. To say something about this: The quick-conversion functions `qDF` `qDT`, `qM`, `qF`, `qG` are consistent and in-line with *data.table* (`setDT` etc.), and similarly the operators `L`, `F`, `D`, `Dlog`, `G`, `B`, `W`, `HDB`, `HDW`. I'll keep `GRP`, `BY` and `TRA`, for lack of better names, parsimony and because they are central to the package. The camel case will be kept in helper functions `setDimnames` etc. because they work like *stats* `setNames` and do not modify the argument by reference (like `settransform` or `setrename` and various *data.table* functions). Functions `copyAttrib` and `copyMostAttrib` are exports of like-named functions in the C API and thus kept as they are. Finally, I want to keep `fFtest` the way it is because the F-distribution is widely recognized by a capital F. 
 
 * I've updated the `wlddev` dataset with the latest data from the World Bank, and also added a variable giving the total population (which may be useful e.g. for population-weighted aggregations across regions). The extra column could invalidate codes used to demonstrate something (I had to adjust some examples, tests and code in vignettes).
 
@@ -67,7 +182,7 @@ This is done in a very careful manor, the others will stick around for a long wh
 
 * Programming enabled with `fselect` and `fgroup_by` (you can now pass vectors containing column names or indices). Note that instead of `fselect` you should use `get_vars` for standard eval programming.  
 
-* `fselect` and `fsubset` support in-place renaming e.g. `fselect(data, newname = var1, var3:varN)`,
+* `fselect` and `fsubset` support in-place renaming, e.g. `fselect(data, newname = var1, var3:varN)`,
 `fsubset(data, vark > varp, newname = var1, var3:varN)`.
 
 * `collap` supports renaming columns in the custom argument, e.g. `collap(data, ~ id, custom = list(fmean = c(newname = "var1", "var2"), fmode = c(newname = 3), flast = is_date))`. 

@@ -37,6 +37,8 @@ storage.mode(mNAc) <- "character"
 # fbetween(xNA, w = wNA) 90.99712 93.71455 107.38818 95.91545 98.16989 328.8951   100    d
 # fwithin(xNA, w = wNA) 80.13678 83.62511 103.55614 86.22361 93.18352 301.7070   100  bcd
 
+bsum <- base::sum
+
 between <- function(x, na.rm = FALSE) {
   if(!na.rm) return(ave(x))
   cc <- !is.na(x)
@@ -46,7 +48,7 @@ between <- function(x, na.rm = FALSE) {
 within <- function(x, na.rm = FALSE, mean = 0) {
   if(!na.rm) return(x - ave(x) + mean)
   cc <- !is.na(x)
-  m <- sum(x[cc]) / sum(cc)
+  m <- bsum(x[cc]) / bsum(cc)
   return(x - m + mean)
 }
 
@@ -56,11 +58,11 @@ wbetween <- function(x, w, na.rm = FALSE) {
     xcc <- !is.na(x)
     cc <- xcc & !is.na(w)
     w <- w[cc]
-    wm <- sum(w * x[cc]) / sum(w)
-    x[xcc] <- rep(wm, sum(xcc))
+    wm <- bsum(w * x[cc]) / bsum(w)
+    x[xcc] <- rep(wm, bsum(xcc))
     return(x)
   } else {
-    wm <- sum(w * x) / sum(w)
+    wm <- bsum(w * x) / bsum(w)
     return(rep(wm, length(x)))
   }
 }
@@ -68,8 +70,8 @@ wwithin <- function(x, w, na.rm = FALSE, mean = 0) {
   if(na.rm) {
     cc <- complete.cases(x, w)
     w <- w[cc]
-    wm <- sum(w * x[cc]) / sum(w)
-  } else wm <- sum(w * x) / sum(w)
+    wm <- bsum(w * x[cc]) / bsum(w)
+  } else wm <- bsum(w * x) / bsum(w)
     return(x - wm + mean)
 }
 
@@ -80,6 +82,7 @@ wBY <- function(x, f, FUN, w, ...) {
   qDF(dapply(x, function(xi) unlist(Map(FUN, split(xi, f), wspl, ...), use.names = FALSE), return = "matrix"))
 }
 
+rn <- function(x) setRownames(x, NULL)
 
 # fbetween
 
@@ -109,14 +112,14 @@ test_that("fbetween performs like between", {
   expect_equal(fbetween(x, f, na.rm = FALSE), BY(x, f, between, use.g.names = FALSE))
   expect_equal(fbetween(xNA, f, na.rm = FALSE), BY(xNA, f, between, use.g.names = FALSE))
   expect_equal(fbetween(xNA, f), BY(xNA, f, between, na.rm = TRUE, use.g.names = FALSE))
-  expect_equal(fbetween(m, g), BY(m, g, between, na.rm = TRUE, use.g.names = FALSE))
-  expect_equal(fbetween(m, g, na.rm = FALSE), BY(m, g, between, use.g.names = FALSE))
-  expect_equal(fbetween(mNA, g, na.rm = FALSE), BY(mNA, g, between, use.g.names = FALSE))
-  expect_equal(fbetween(mNA, g), BY(mNA, g, between, na.rm = TRUE, use.g.names = FALSE))
-  expect_equal(fbetween(mtcars, g), BY(mtcars, g, between, na.rm = TRUE, use.g.names = FALSE))
-  expect_equal(fbetween(mtcars, g, na.rm = FALSE), BY(mtcars, g, between, use.g.names = FALSE))
-  expect_equal(fbetween(mtcNA, g, na.rm = FALSE), BY(mtcNA, g, between, use.g.names = FALSE))
-  expect_equal(fbetween(mtcNA, g), BY(mtcNA, g, between, na.rm = TRUE, use.g.names = FALSE))
+  expect_equal(rn(fbetween(m, g)), BY(m, g, between, na.rm = TRUE, use.g.names = FALSE))
+  expect_equal(rn(fbetween(m, g, na.rm = FALSE)), BY(m, g, between, use.g.names = FALSE))
+  expect_equal(rn(fbetween(mNA, g, na.rm = FALSE)), BY(mNA, g, between, use.g.names = FALSE))
+  expect_equal(rn(fbetween(mNA, g)), BY(mNA, g, between, na.rm = TRUE, use.g.names = FALSE))
+  expect_equal(rn(fbetween(mtcars, g)), BY(mtcars, g, between, na.rm = TRUE, use.g.names = FALSE))
+  expect_equal(rn(fbetween(mtcars, g, na.rm = FALSE)), BY(mtcars, g, between, use.g.names = FALSE))
+  expect_equal(rn(fbetween(mtcNA, g, na.rm = FALSE)), BY(mtcNA, g, between, use.g.names = FALSE))
+  expect_equal(rn(fbetween(mtcNA, g)), BY(mtcNA, g, between, na.rm = TRUE, use.g.names = FALSE))
 })
 
 test_that("fbetween performs like fbetween with weights all equal", {
@@ -559,14 +562,14 @@ test_that("fwithin performs like within", {
   expect_equal(fwithin(x, f, na.rm = FALSE), BY(x, f, within, use.g.names = FALSE))
   expect_equal(fwithin(xNA, f, na.rm = FALSE), BY(xNA, f, within, use.g.names = FALSE))
   expect_equal(fwithin(xNA, f), BY(xNA, f, within, na.rm = TRUE, use.g.names = FALSE))
-  expect_equal(fwithin(m, g), BY(m, g, within, na.rm = TRUE, use.g.names = FALSE))
-  expect_equal(fwithin(m, g, na.rm = FALSE), BY(m, g, within, use.g.names = FALSE))
-  expect_equal(fwithin(mNA, g, na.rm = FALSE), BY(mNA, g, within, use.g.names = FALSE))
-  expect_equal(fwithin(mNA, g), BY(mNA, g, within, na.rm = TRUE, use.g.names = FALSE))
-  expect_equal(fwithin(mtcars, g), BY(mtcars, g, within, na.rm = TRUE, use.g.names = FALSE))
-  expect_equal(fwithin(mtcars, g, na.rm = FALSE), BY(mtcars, g, within, use.g.names = FALSE))
-  expect_equal(fwithin(mtcNA, g, na.rm = FALSE), BY(mtcNA, g, within, use.g.names = FALSE))
-  expect_equal(fwithin(mtcNA, g), BY(mtcNA, g, within, na.rm = TRUE, use.g.names = FALSE))
+  expect_equal(rn(fwithin(m, g)), BY(m, g, within, na.rm = TRUE, use.g.names = FALSE))
+  expect_equal(rn(fwithin(m, g, na.rm = FALSE)), BY(m, g, within, use.g.names = FALSE))
+  expect_equal(rn(fwithin(mNA, g, na.rm = FALSE)), BY(mNA, g, within, use.g.names = FALSE))
+  expect_equal(rn(fwithin(mNA, g)), BY(mNA, g, within, na.rm = TRUE, use.g.names = FALSE))
+  expect_equal(rn(fwithin(mtcars, g)), BY(mtcars, g, within, na.rm = TRUE, use.g.names = FALSE))
+  expect_equal(rn(fwithin(mtcars, g, na.rm = FALSE)), BY(mtcars, g, within, use.g.names = FALSE))
+  expect_equal(rn(fwithin(mtcNA, g, na.rm = FALSE)), BY(mtcNA, g, within, use.g.names = FALSE))
+  expect_equal(rn(fwithin(mtcNA, g)), BY(mtcNA, g, within, na.rm = TRUE, use.g.names = FALSE))
 })
 
 test_that("fwithin with custom mean performs like within (defined above)", {
@@ -583,14 +586,14 @@ test_that("fwithin with custom mean performs like within (defined above)", {
   expect_equal(fwithin(x, f, na.rm = FALSE, mean = 4.8456), BY(x, f, within, use.g.names = FALSE, mean = 4.8456))
   expect_equal(fwithin(xNA, f, na.rm = FALSE, mean = 4.8456), BY(xNA, f, within, use.g.names = FALSE, mean = 4.8456))
   expect_equal(fwithin(xNA, f, mean = 4.8456), BY(xNA, f, within, na.rm = TRUE, use.g.names = FALSE, mean = 4.8456))
-  expect_equal(fwithin(m, g, mean = 4.8456), BY(m, g, within, na.rm = TRUE, use.g.names = FALSE, mean = 4.8456))
-  expect_equal(fwithin(m, g, na.rm = FALSE, mean = 4.8456), BY(m, g, within, use.g.names = FALSE, mean = 4.8456))
-  expect_equal(fwithin(mNA, g, na.rm = FALSE, mean = 4.8456), BY(mNA, g, within, use.g.names = FALSE, mean = 4.8456))
-  expect_equal(fwithin(mNA, g, mean = 4.8456), BY(mNA, g, within, na.rm = TRUE, use.g.names = FALSE, mean = 4.8456))
-  expect_equal(fwithin(mtcars, g, mean = 4.8456), BY(mtcars, g, within, na.rm = TRUE, use.g.names = FALSE, mean = 4.8456))
-  expect_equal(fwithin(mtcars, g, na.rm = FALSE, mean = 4.8456), BY(mtcars, g, within, use.g.names = FALSE, mean = 4.8456))
-  expect_equal(fwithin(mtcNA, g, na.rm = FALSE, mean = 4.8456), BY(mtcNA, g, within, use.g.names = FALSE, mean = 4.8456))
-  expect_equal(fwithin(mtcNA, g, mean = 4.8456), BY(mtcNA, g, within, na.rm = TRUE, use.g.names = FALSE, mean = 4.8456))
+  expect_equal(rn(fwithin(m, g, mean = 4.8456)), BY(m, g, within, na.rm = TRUE, use.g.names = FALSE, mean = 4.8456))
+  expect_equal(rn(fwithin(m, g, na.rm = FALSE, mean = 4.8456)), BY(m, g, within, use.g.names = FALSE, mean = 4.8456))
+  expect_equal(rn(fwithin(mNA, g, na.rm = FALSE, mean = 4.8456)), BY(mNA, g, within, use.g.names = FALSE, mean = 4.8456))
+  expect_equal(rn(fwithin(mNA, g, mean = 4.8456)), BY(mNA, g, within, na.rm = TRUE, use.g.names = FALSE, mean = 4.8456))
+  expect_equal(rn(fwithin(mtcars, g, mean = 4.8456)), BY(mtcars, g, within, na.rm = TRUE, use.g.names = FALSE, mean = 4.8456))
+  expect_equal(rn(fwithin(mtcars, g, na.rm = FALSE, mean = 4.8456)), BY(mtcars, g, within, use.g.names = FALSE, mean = 4.8456))
+  expect_equal(rn(fwithin(mtcNA, g, na.rm = FALSE, mean = 4.8456)), BY(mtcNA, g, within, use.g.names = FALSE, mean = 4.8456))
+  expect_equal(rn(fwithin(mtcNA, g, mean = 4.8456)), BY(mtcNA, g, within, na.rm = TRUE, use.g.names = FALSE, mean = 4.8456))
 })
 
 test_that("Centering on overall mean performs as indended", {
@@ -598,14 +601,14 @@ test_that("Centering on overall mean performs as indended", {
   expect_equal(fwithin(x, f, na.rm = FALSE, mean = "overall.mean"), BY(x, f, within, use.g.names = FALSE) + ave(x))
   # expect_equal(fwithin(xNA, f, na.rm = FALSE, mean = "overall.mean"), BY(xNA, f, within, use.g.names = FALSE) + B(xNA)) # Not the same !!
   expect_equal(fwithin(xNA, f, mean = "overall.mean"), BY(xNA, f, within, na.rm = TRUE, use.g.names = FALSE) + B(xNA))
-  expect_equal(fwithin(m, g, mean = "overall.mean"), BY(m, g, within, na.rm = TRUE, use.g.names = FALSE) + B(m))
-  expect_equal(fwithin(m, g, na.rm = FALSE, mean = "overall.mean"), BY(m, g, within, use.g.names = FALSE) + B(m))
+  expect_equal(rn(fwithin(m, g, mean = "overall.mean")), BY(m, g, within, na.rm = TRUE, use.g.names = FALSE) + B(m))
+  expect_equal(rn(fwithin(m, g, na.rm = FALSE, mean = "overall.mean")), BY(m, g, within, use.g.names = FALSE) + B(m))
   # expect_equal(fwithin(mNA, g, na.rm = FALSE, mean = "overall.mean"), BY(mNA, g, within, use.g.names = FALSE) + B(mNA))
-  expect_equal(fwithin(mNA, g, mean = "overall.mean"), BY(mNA, g, within, na.rm = TRUE, use.g.names = FALSE) + B(mNA))
-  expect_equal(fwithin(mtcars, g, mean = "overall.mean"), BY(mtcars, g, within, na.rm = TRUE, use.g.names = FALSE) + B(mtcars))
-  expect_equal(fwithin(mtcars, g, na.rm = FALSE, mean = "overall.mean"), BY(mtcars, g, within, use.g.names = FALSE) + B(mtcars))
+  expect_equal(rn(fwithin(mNA, g, mean = "overall.mean")), BY(mNA, g, within, na.rm = TRUE, use.g.names = FALSE) + B(mNA))
+  expect_equal(rn(fwithin(mtcars, g, mean = "overall.mean")), BY(mtcars, g, within, na.rm = TRUE, use.g.names = FALSE) + B(mtcars))
+  expect_equal(rn(fwithin(mtcars, g, na.rm = FALSE, mean = "overall.mean")), BY(mtcars, g, within, use.g.names = FALSE) + B(mtcars))
   # expect_equal(fwithin(mtcNA, g, na.rm = FALSE, mean = "overall.mean"), BY(mtcNA, g, within, use.g.names = FALSE) + B(mtcNA))
-  expect_equal(fwithin(mtcNA, g, mean = "overall.mean"), BY(mtcNA, g, within, na.rm = TRUE, use.g.names = FALSE)+ B(mtcNA))
+  expect_equal(rn(fwithin(mtcNA, g, mean = "overall.mean")), BY(mtcNA, g, within, na.rm = TRUE, use.g.names = FALSE)+ B(mtcNA))
 })
 
 test_that("fwithin performs like fwithin with weights all equal", {

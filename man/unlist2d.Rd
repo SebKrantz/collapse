@@ -45,7 +45,7 @@ For lists of data frames \code{unlist2d} works just like \code{data.table::rbind
 %% ~Make other sections like Warning with \section{Warning }{....} ~
 
 \seealso{
-\code{\link{rsplit}}, \code{\link{rapply2d}}, \link[=A8-list-processing]{List Processing}, \link[=collapse-documentation]{Collapse Overview}
+\code{\link{rsplit}}, \code{\link{rapply2d}}, \link[=list-processing]{List Processing}, \link[=collapse-documentation]{Collapse Overview}
 }
 \examples{
 ## Basic Examples:

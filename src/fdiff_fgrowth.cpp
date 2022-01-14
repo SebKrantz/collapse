@@ -135,7 +135,7 @@ NumericVector fdiffgrowthCppImpl(const NumericVector& x, const IntegerVector& n 
       bool regular = osize == l;
       IntegerVector omap(osize), ord2 = regular ? no_init_vector(1) : no_init_vector(l);
       if(!regular) { // Irregular time series
-        if(osize > 3 * l) warning("Your time series is very irregular. Need to create an internal ordering vector of length %s to represent it.", osize);
+        if(osize > 10000000 && osize > 3 * l) warning("Your time series is very irregular. Need to create an internal ordering vector of length %s to represent it.", osize);
         if(Rcpp::max(diff) > 1) stop("Iterations are currently only supported for regular time series. See ?seqid to identify the regular sequences in your time series, or just apply this function multiple times.");
         for(int i = 0; i != l; ++i) {
           temp = ord[i] - min; // Best ? Or direct assign to ord2[i] ? Also check for panel version..
@@ -403,7 +403,7 @@ NumericVector fdiffgrowthCppImpl(const NumericVector& x, const IntegerVector& n 
       bool regular = temp == l;
       IntegerVector omap(temp), ord2 = no_init_vector(l);
       if(!regular) { // Irregular panel
-        if(temp > 3 * l) warning("Your panel is very irregular. Need to create an internal ordering vector of length %s to represent it.", temp);
+        if(temp > 10000000 && temp > 3 * l) warning("Your panel is very irregular. Need to create an internal ordering vector of length %s to represent it.", temp);
         if(maxdiff > 1) stop("Iterations are currently only supported for regular panels. See ?seqid to identify the regular sequences in your panel, or just apply this function multiple times.");
         for(int i = 0; i != l; ++i) {
           ord2[i] = ord[i] - min[g[i]];
@@ -563,7 +563,7 @@ NumericVector fdiffgrowthCppImpl(const NumericVector& x, const IntegerVector& n 
   if(ncol != 1) {
     Rf_setAttrib(out, R_NamesSymbol, R_NilValue); // if(x.hasAttribute("names")) out.attr("names") = R_NilValue;
     Rf_dimgets(out, Dimension(l, ncol));
-    if(Rf_isObject(x)) {
+    if(Rf_isObject(x)) { //  && !x.inherits("pseries") -> lag matrix in plm is not a pseries anymore anyway...
       CharacterVector classes = Rf_getAttrib(out, R_ClassSymbol);
       classes.push_back("matrix");
       Rf_classgets(out, classes);
@@ -733,7 +733,7 @@ NumericMatrix fdiffgrowthmCppImpl(const NumericMatrix& x, const IntegerVector& n
       bool regular = osize == l;
       IntegerVector omap(osize), ord2 = regular ? no_init_vector(1) : no_init_vector(l);
       if(!regular) { // Irregular time series
-        if(osize > 3 * l) warning("Your time series is very irregular. Need to create an internal ordering vector of length %s to represent it.", osize);
+        if(osize > 10000000 && osize > 3 * l) warning("Your time series is very irregular. Need to create an internal ordering vector of length %s to represent it.", osize);
         if(Rcpp::max(diff) > 1) stop("Iterations are currently only supported for regular time series. See ?seqid to identify the regular sequences in your time series, or just apply this function multiple times.");
         for(int i = 0; i != l; ++i) {
           temp = ord[i] - min; // Best ? Or direct assign to ord2[i] ? Also check for panel version..
@@ -1007,7 +1007,7 @@ NumericMatrix fdiffgrowthmCppImpl(const NumericMatrix& x, const IntegerVector& n
       bool regular = temp == l;
       IntegerVector omap(temp), ord2 = no_init_vector(l), index = no_init_vector(l);
       if(!regular) { // Irregular panel
-        if(temp > 3 * l) warning("Your panel is very irregular. Need to create an internal ordering vector of length %s to represent it.", temp);
+        if(temp > 10000000 && temp > 3 * l) warning("Your panel is very irregular. Need to create an internal ordering vector of length %s to represent it.", temp);
         if(maxdiff > 1) stop("Iterations are currently only supported for regular panels. See ?seqid to identify the regular sequences in your panel, or just apply this function multiple times.");
         for(int i = 0; i != l; ++i) {
           ord2[i] = ord[i] - min[g[i]];
@@ -1332,7 +1332,7 @@ List fdiffgrowthlCppImpl(const List& x, const IntegerVector& n = 1, const Intege
       bool regular = osize == os;
       IntegerVector omap(osize), ord2 = regular ? no_init_vector(1) : no_init_vector(os);
       if(!regular) { // Irregular time series
-        if(osize > 3 * os) warning("Your time series is very irregular. Need to create an internal ordering vector of length %s to represent it.", osize);
+        if(osize > 10000000 && osize > 3 * os) warning("Your time series is very irregular. Need to create an internal ordering vector of length %s to represent it.", osize);
         if(Rcpp::max(diff) > 1) stop("Iterations are currently only supported for regular time series. See ?seqid to identify the regular sequences in your time series, or just apply this function multiple times.");
         for(int i = 0; i != os; ++i) {
           temp = ord[i] - min; // Best ? Or direct assign to ord2[i] ? Also check for panel version..
@@ -1606,7 +1606,7 @@ List fdiffgrowthlCppImpl(const List& x, const IntegerVector& n = 1, const Intege
       bool regular = temp == gss;
       IntegerVector omap(temp), ord2 = no_init_vector(gss), index = no_init_vector(gss);
       if(!regular) { // Irregular panel
-        if(temp > 3 * gss) warning("Your panel is very irregular. Need to create an internal ordering vector of length %s to represent it.", temp);
+        if(temp > 10000000 && temp > 3 * gss) warning("Your panel is very irregular. Need to create an internal ordering vector of length %s to represent it.", temp);
         if(maxdiff > 1) stop("Iterations are currently only supported for regular panels. See ?seqid to identify the regular sequences in your panel, or just apply this function multiple times.");
         for(int i = 0; i != gss; ++i) {
           ord2[i] = ord[i] - min[g[i]];

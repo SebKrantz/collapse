@@ -12,7 +12,7 @@ t_list(l)
 }
 %- maybe also 'usage' for other objects documented here.
 \arguments{
-  \item{l}{a list of lists. Elements inside the sublists can be heterogenous, including further lists.
+  \item{l}{a list of lists. Elements inside the sublists can be heterogeneous, including further lists.
 }
 }
 \value{
@@ -22,7 +22,7 @@ t_list(l)
 %% ~Make other sections like Warning with \section{Warning }{....} ~
 
 \seealso{
-\code{\link{rsplit}}, \link[=A8-list-processing]{List Processing}, \link[=collapse-documentation]{Collapse Overview}
+\code{\link{rsplit}}, \link[=list-processing]{List Processing}, \link[=collapse-documentation]{Collapse Overview}
 }
 \examples{
 # Homogenous list of lists

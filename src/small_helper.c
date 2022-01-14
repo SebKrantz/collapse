@@ -1,4 +1,5 @@
 #include "collapse_c.h"
+// #include "data.table.h"
 
 void matCopyAttr(SEXP out, SEXP x, SEXP Rdrop, int ng) {
   SEXP dn = getAttrib(x, R_DimNamesSymbol);
@@ -95,6 +96,213 @@ SEXP groups2GRP(SEXP x, SEXP lx, SEXP gs) {
   return out;
 }
 
+// Faster version of base R's spit based on grouping objects..
+// TODO: Support DF's !! And check attribute preservation !!
+// -> works for factors, Date and POSIXct, but not for POSIXlt
+SEXP gsplit(SEXP x, SEXP gobj, SEXP toint) {
+  if(TYPEOF(gobj) != VECSXP || !inherits(gobj, "GRP")) error("g needs to be an object of class 'GRP', see ?GRP");
+  const SEXP g = VECTOR_ELT(gobj, 1), gs = VECTOR_ELT(gobj, 2),
+    ord = VECTOR_ELT(gobj, 5);
+  int ng = length(gs), *pgs = INTEGER(gs), tx = TYPEOF(x);
+  if(ng != INTEGER(VECTOR_ELT(gobj, 0))[0]) error("'GRP' object needs to have valid vector of group-sizes");
+  SEXP res = PROTECT(allocVector(VECSXP, ng));
+  SEXP *pres = SEXPPTR(res);
+  // Output as integer or not
+  if(asLogical(toint)) {
+    for(int i = 0; i != ng; ++i) pres[i] = allocVector(INTSXP, pgs[i]);
+  } else { // Allocate split vectors and copy attributes and object bits
+    copyMostAttrib(x, res);
+    SEXP ax = ATTRIB(res);
+    SET_ATTRIB(res, R_NilValue);
+    if(TYPEOF(ax) != NILSXP && OBJECT(x) != 0) {
+      for(int i = 0, ox = OBJECT(x); i != ng; ++i) {
+        SET_ATTRIB(pres[i] = allocVector(tx, pgs[i]), ax);
+        SET_OBJECT(pres[i], ox);
+      }
+    } else if(TYPEOF(ax) != NILSXP) {
+      for(int i = 0; i != ng; ++i) SET_ATTRIB(pres[i] = allocVector(tx, pgs[i]), ax);
+    } else if(OBJECT(x) != 0) { // Is this even possible? Object bits but no attributes?
+      for(int i = 0, ox = OBJECT(x); i != ng; ++i) SET_OBJECT(pres[i] = allocVector(tx, pgs[i]), ox);
+    } else {
+      for(int i = 0; i != ng; ++i) pres[i] = allocVector(tx, pgs[i]);
+    }
+  }
+  // If grouping is sorted or not
+  if(LOGICAL(ord)[1] == 1) { // This only works if data is already ordered in order of the groups
+    int count = 0;
+    if(asLogical(toint)) {
+      for(int j = 0; j != ng; ++j) {
+        int *pgj = INTEGER(pres[j]), gsj = pgs[j];
+        for(int i = 0; i != gsj; ++i) pgj[i] = ++count;
+      }
+    } else {
+      if(length(x) != length(g)) error("length(x) must match length(g)");
+      switch(tx) {
+      case INTSXP:
+      case LGLSXP: {
+        const int *px = INTEGER(x);
+        for(int j = 0; j != ng; ++j) {
+          int *pgj = INTEGER(pres[j]), gsj = pgs[j];
+          for(int i = 0; i != gsj; ++i) pgj[i] = px[count++];
+        }
+        break;
+      }
+      case REALSXP: {
+        const double *px = REAL(x);
+        for(int j = 0, gsj; j != ng; ++j) {
+          double *pgj = REAL(pres[j]);
+          gsj = pgs[j];
+          for(int i = 0; i != gsj; ++i) pgj[i] = px[count++];
+        }
+        break;
+      }
+      case CPLXSXP: {
+        const Rcomplex *px = COMPLEX(x);
+        for(int j = 0, gsj; j != ng; ++j) {
+          Rcomplex *pgj = COMPLEX(pres[j]);
+          gsj = pgs[j];
+          for(int i = 0; i != gsj; ++i) pgj[i] = px[count++];
+        }
+        break;
+      }
+      case STRSXP: {
+        const SEXP *px = STRING_PTR(x);
+        for(int j = 0, gsj; j != ng; ++j) {
+          SEXP *pgj = STRING_PTR(pres[j]);
+          gsj = pgs[j];
+          for(int i = 0; i != gsj; ++i) pgj[i] = px[count++];
+        }
+        break;
+      }
+      case VECSXP: {
+        const SEXP *px = SEXPPTR(x);
+        for(int j = 0, gsj; j != ng; ++j) {
+          SEXP *pgj = SEXPPTR(pres[j]);
+          gsj = pgs[j];
+          for(int i = 0; i != gsj; ++i) pgj[i] = px[count++];
+        }
+        break;
+      }
+      case RAWSXP: {
+        const Rbyte *px = RAW(x);
+        for(int j = 0, gsj; j != ng; ++j) {
+          Rbyte *pgj = RAW(pres[j]);
+          gsj = pgs[j];
+          for(int i = 0; i != gsj; ++i) pgj[i] = px[count++];
+        }
+        break;
+      }
+      default: error("Unsupported type '%s' passed to gsplit", type2char(tx));
+      }
+    }
+  } else { // Grouping not sorted
+    int *count = (int*)Calloc(ng+1, int);
+    // memset(count, 0, sizeof(int)*(ng+1)); // Needed here ??
+    // int *count = (int *) R_alloc(ng+1, sizeof(int));
+
+    const int l = length(g), *pg = INTEGER(g);
+    --pres;
+    if(asLogical(toint)) {
+      for(int i = 0; i != l; ++i) INTEGER(pres[pg[i]])[count[pg[i]]++] = i+1;
+    } else {
+      if(length(x) != l) error("length(x) must match length(g)");
+      switch(tx) {
+      case INTSXP:
+      case LGLSXP: {
+        const int *px = INTEGER(x);
+        for(int i = 0; i != l; ++i) INTEGER(pres[pg[i]])[count[pg[i]]++] = px[i];
+        break;
+      }
+      case REALSXP: {
+        const double *px = REAL(x);
+        for(int i = 0; i != l; ++i) REAL(pres[pg[i]])[count[pg[i]]++] = px[i];
+        break;
+      }
+      case CPLXSXP: {
+        const Rcomplex *px = COMPLEX(x);
+        for(int i = 0; i != l; ++i) COMPLEX(pres[pg[i]])[count[pg[i]]++] = px[i];
+        break;
+      }
+      case STRSXP: {
+        const SEXP *px = STRING_PTR(x);
+        for(int i = 0; i != l; ++i) STRING_PTR(pres[pg[i]])[count[pg[i]]++] = px[i];
+        break;
+      }
+      case VECSXP: {
+        const SEXP *px = SEXPPTR(x);
+        for(int i = 0; i != l; ++i) SEXPPTR(pres[pg[i]])[count[pg[i]]++] = px[i];
+        break;
+      }
+      case RAWSXP: {
+        const Rbyte *px = RAW(x);
+        for(int i = 0; i != l; ++i) RAW(pres[pg[i]])[count[pg[i]]++] = px[i];
+        break;
+      }
+      default: error("Unsupported type '%s' passed to gsplit", type2char(tx));
+      }
+    }
+    Free(count);
+  }
+  UNPROTECT(1);
+  return res;
+}
+
+// This is for fmutate, to reorder the result of grouped data if the result has the same length as x
+SEXP greorder(SEXP x, SEXP gobj) {
+  if(TYPEOF(gobj) != VECSXP || !inherits(gobj, "GRP")) error("g needs to be an object of class 'GRP', see ?GRP");
+  if(LOGICAL(VECTOR_ELT(gobj, 5))[1] == 1) return x;
+  const SEXP g = VECTOR_ELT(gobj, 1), gs = VECTOR_ELT(gobj, 2);
+  const int ng = length(gs), l = length(g), tx = TYPEOF(x),
+            *pgs = INTEGER(gs), *pg = INTEGER(g);
+  if(ng != INTEGER(VECTOR_ELT(gobj, 0))[0]) error("'GRP' object needs to have valid vector of group-sizes");
+  if(l != length(x)) error("length(x) must match length(g)");
+  int *count = (int *) R_alloc(ng+1, sizeof(int));
+  int *cgs = (int *) R_alloc(ng+2, sizeof(int)); cgs[1] = 0;
+  for(int i = 0; i != ng; ++i) {
+    count[i+1] = 0;
+    cgs[i+2] = cgs[i+1] + pgs[i];
+  }
+  SEXP res = PROTECT(allocVector(tx, l));
+
+  switch(tx) {
+  case INTSXP:
+  case LGLSXP: {
+    int *px = INTEGER(x), *pr = INTEGER(res);
+    for(int i = 0; i != l; ++i) pr[i] = px[cgs[pg[i]]+count[pg[i]]++];
+    break;
+  }
+  case REALSXP: {
+    double *px = REAL(x), *pr = REAL(res);
+    for(int i = 0; i != l; ++i) pr[i] = px[cgs[pg[i]]+count[pg[i]]++];
+    break;
+  }
+  case CPLXSXP: {
+    Rcomplex *px = COMPLEX(x), *pr = COMPLEX(res);
+    for(int i = 0; i != l; ++i) pr[i] = px[cgs[pg[i]]+count[pg[i]]++];
+    break;
+  }
+  case STRSXP: {
+    SEXP *px = STRING_PTR(x), *pr = STRING_PTR(res);
+    for(int i = 0; i != l; ++i) pr[i] = px[cgs[pg[i]]+count[pg[i]]++];
+    break;
+  }
+  case VECSXP: {
+    SEXP *px = SEXPPTR(x), *pr = SEXPPTR(res);
+    for(int i = 0; i != l; ++i) pr[i] = px[cgs[pg[i]]+count[pg[i]]++];
+    break;
+  }
+  case RAWSXP: {
+    Rbyte *px = RAW(x), *pr = RAW(res);
+    for(int i = 0; i != l; ++i) pr[i] = px[cgs[pg[i]]+count[pg[i]]++];
+    break;
+  }
+  default: error("Unsupported type '%s' passed to gsplit", type2char(tx));
+  }
+  DUPLICATE_ATTRIB(res, x);
+  UNPROTECT(1);
+  return res;
+}
+
 // Note: Only supports numeric data!!!!
 SEXP lassign(SEXP x, SEXP s, SEXP rows, SEXP fill) {
   int l = length(x), tr = TYPEOF(rows), ss = asInteger(s), rs = LENGTH(rows);
@@ -175,8 +383,649 @@ SEXP Cna_rm(SEXP x) {
     copyMostAttrib(x, out);
     UNPROTECT(1);
     return out;
-  }}
+  }
+  case VECSXP: {
+    const SEXP *xd = SEXPPTR(x);
+    for (int i = 0; i != n; ++i) if(length(xd[i]) == 0) ++k;
+    if(k == 0) return x;
+    SEXP out = PROTECT(allocVector(VECSXP, n - k));
+    SEXP *pout = SEXPPTR(out);
+    k = 0;
+    for (int i = 0; i != n; ++i) if(length(xd[i]) != 0) pout[k++] = xd[i];
+    copyMostAttrib(x, out);
+    UNPROTECT(1);
+    return out;
+  }
+  }
   error("Unsupported type '%s' passed to na_rm()", type2char(TYPEOF(x)));
 }
 
+// Helper function to find a single sting in factor levels
+int fchmatch(SEXP x, SEXP val, int nomatch) {
+  const SEXP *px = STRING_PTR(x), v = asChar(val);
+  for(int i = 0, l = length(x); i != l; ++i) if(px[i] == v) return i + 1;
+  return nomatch;
+}
+
+SEXP whichv(SEXP x, SEXP val, SEXP Rinvert) {
+
+  int j = 0, n = length(x), invert = asLogical(Rinvert);
+  if(length(val) != 1) error("value needs to be length 1");
+  int *buf = (int *) R_alloc(n, sizeof(int));
+  SEXP ans;
+
+  #define WHICHVLOOP                                             \
+  if(invert) {                                                   \
+    for(int i = 0; i != n; ++i) if(px[i] != v) buf[j++] = i+1;   \
+  } else {                                                       \
+    for(int i = 0; i != n; ++i) if(px[i] == v) buf[j++] = i+1;   \
+  }
+
+  switch(TYPEOF(x)) {
+    case INTSXP:
+    case LGLSXP:
+    {
+      const int *px = INTEGER(x);
+      int v;
+      if(TYPEOF(val) == STRSXP) {
+        if(!isFactor(x)) error("Type mismatch: if value is character, x must be character or factor.");
+        v = fchmatch(getAttrib(x, R_LevelsSymbol), val, 0);
+      } else v = asInteger(val);
+      WHICHVLOOP
+      break;
+    }
+    case REALSXP:
+    {
+      const double *px = REAL(x);
+      const double v = asReal(val);
+      if(ISNAN(v)) {
+        if(invert) {
+          for(int i = 0; i != n; ++i) if(NISNAN(px[i])) buf[j++] = i+1;
+        } else {
+          for(int i = 0; i != n; ++i) if(ISNAN(px[i])) buf[j++] = i+1;
+        }
+      } else {
+        WHICHVLOOP
+      }
+      break;
+    }
+    case STRSXP:
+    {
+      const SEXP *px = STRING_PTR(x);
+      const SEXP v = asChar(val);
+      WHICHVLOOP
+      break;
+    }
+    case RAWSXP :
+    {
+      const Rbyte *px = RAW(x);
+      const Rbyte v = RAW(val)[0];
+      WHICHVLOOP
+      break;
+    }
+    default: error("Unsupported type '%s' passed to whichv()", type2char(TYPEOF(x)));
+  }
+  PROTECT(ans = allocVector(INTSXP, j));
+  if(j) memcpy(INTEGER(ans), buf, sizeof(int) * j);
+
+  UNPROTECT(1);
+  return(ans);
+}
+
+SEXP anyallv(SEXP x, SEXP val, SEXP Rall) {
+
+  int n = length(x), all = asLogical(Rall);
+  if(length(val) != 1) error("value needs to be length 1");
+
+  #define ALLANYVLOOP                                                    \
+  if(all) {                                                              \
+    for(int i = 0; i != n; ++i) if(px[i] != v) return ScalarLogical(0);  \
+    return ScalarLogical(1);                                             \
+  } else {                                                               \
+    for(int i = 0; i != n; ++i) if(px[i] == v) return ScalarLogical(1);  \
+    return ScalarLogical(0);                                             \
+  }
+
+  switch(TYPEOF(x)) {
+case INTSXP:
+case LGLSXP:
+{
+  const int *px = INTEGER(x);
+  int v;
+  if(TYPEOF(val) == STRSXP) {
+    if(!isFactor(x)) error("Type mismatch: if value is character, x must be character or factor.");
+    v = fchmatch(getAttrib(x, R_LevelsSymbol), val, 0);
+  } else v = asInteger(val);
+  ALLANYVLOOP
+  break;
+}
+case REALSXP:
+{
+  const double *px = REAL(x);
+  const double v = asReal(val);
+  if(ISNAN(v)) error("please use allNA()");
+  ALLANYVLOOP
+  break;
+}
+case STRSXP:
+{
+  const SEXP *px = STRING_PTR(x);
+  const SEXP v = asChar(val);
+  ALLANYVLOOP
+  break;
+}
+case RAWSXP :
+{
+  const Rbyte *px = RAW(x);
+  const Rbyte v = RAW(val)[0];
+  ALLANYVLOOP
+  break;
+}
+default: error("Unsupported type '%s' passed to allv() / anyv()", type2char(TYPEOF(x)));
+}
+ return(R_NilValue);
+}
+
+SEXP setcopyv(SEXP x, SEXP val, SEXP rep, SEXP Rinvert, SEXP Rset, SEXP Rind1) {
+
+  int n = length(x), lv = length(val), lr = length(rep),
+    ind1 = asLogical(Rind1), invert = asLogical(Rinvert), set = asLogical(Rset);
+
+  if(lv > 1 || ind1) {
+    if(lr != n) error("If length(v) > 1, length(r) must match length(x). Note that x[v] <- r is efficient in base R, only x[v] <- r[v] is optimized here.");
+    if(TYPEOF(val) == LGLSXP) {
+      if(lv != n) error("If v is a logical vector, length(v) needs to be equal to length(x). Note that x[v] <- r is efficient in base R, only x[v] <- r[v] is optimized here.");
+    } else if(TYPEOF(val) == INTSXP) {
+      if(invert) error("invert = TRUE is only possible if v is a logical vector");
+    } else error("If length(v) > 1, v must be an integer or logical vector used to subset both x and r");
+  } else if(lr != 1 && lr != n) error("If length(v) == 1, length(r) must be 1 or length(x)");
+
+
+  SEXP ans = R_NilValue;
+  if(set == 0) PROTECT(ans = duplicate(x)); // Fastest?? // copies attributes ?? -> Yes
+
+  #define setcopyvLOOP(e)                                   \
+  if(invert) {                                              \
+    for(int i = 0; i != n; ++i) if(px[i] != v) px[i] = e;   \
+  } else {                                                  \
+    for(int i = 0; i != n; ++i) if(px[i] == v) px[i] = e;   \
+  }
+
+  #define setcopyvLOOPLVEC                                      \
+  if(tv == INTSXP) {                                            \
+    for(int i = 0; i != lv; ++i) px[pv[i]-1] = pr[pv[i]-1];     \
+  } else if(invert == 0) {                                      \
+    for(int i = 0; i != n; ++i) if(pv[i]) px[i] = pr[i];        \
+  } else {                                                      \
+    for(int i = 0; i != n; ++i) if(pv[i] == 0) px[i] = pr[i];   \
+  }
+
+  switch(TYPEOF(x)) {
+  case INTSXP:
+  case LGLSXP:
+  {
+    int *px = set ? INTEGER(x) : INTEGER(ans);
+    if(lv == 1 && ind1 == 0) {
+      int v;
+      if(TYPEOF(val) == STRSXP) {
+        if(!isFactor(x)) error("Type mismatch: if value is character, x must be character or factor.");
+        v = fchmatch(getAttrib(x, R_LevelsSymbol), val, 0);
+      } else v = asInteger(val);
+      if(lr == 1) {
+        const int r = asInteger(rep);
+        setcopyvLOOP(r)
+      } else {
+        const int *pr = INTEGER(rep);
+        setcopyvLOOP(pr[i])
+      }
+    } else {
+      const int tv = TYPEOF(val), *pv = tv == INTSXP ? INTEGER(val) : LOGICAL(val), *pr = INTEGER(rep);
+      setcopyvLOOPLVEC
+    }
+    break;
+  }
+  case REALSXP:
+  {
+    double *px = set ? REAL(x) : REAL(ans);
+    if(lv == 1 && ind1 == 0) {
+      const double v = asReal(val);
+      if(lr == 1) {
+        const double r = asReal(rep);
+        if(ISNAN(v)) {
+          if(invert) {
+            for(int i = 0; i != n; ++i) if(NISNAN(px[i])) px[i] = r;
+          } else {
+            for(int i = 0; i != n; ++i) if(ISNAN(px[i])) px[i] = r;
+          }
+        } else {
+          setcopyvLOOP(r)
+        }
+      } else {
+        const double *pr = REAL(rep);
+        if(ISNAN(v)) {
+          if(invert) {
+            for(int i = 0; i != n; ++i) if(NISNAN(px[i])) px[i] = pr[i];
+          } else {
+            for(int i = 0; i != n; ++i) if(ISNAN(px[i])) px[i] = pr[i];
+          }
+        } else {
+          setcopyvLOOP(pr[i])
+        }
+      }
+    } else {
+      const int tv = TYPEOF(val), *pv = tv == INTSXP ? INTEGER(val) : LOGICAL(val);
+      const double *pr = REAL(rep);
+      setcopyvLOOPLVEC
+    }
+    break;
+  }
+  case STRSXP:
+  {
+    SEXP *px = set ? STRING_PTR(x) : STRING_PTR(ans);
+    if(lv == 1 && ind1 == 0) {
+      const SEXP v = asChar(val);
+      if(lr == 1) {
+        const SEXP r = asChar(rep);
+        setcopyvLOOP(r)
+      } else {
+        const SEXP *pr = STRING_PTR(rep);
+        setcopyvLOOP(pr[i])
+      }
+    } else {
+      const int tv = TYPEOF(val), *pv = tv == INTSXP ? INTEGER(val) : LOGICAL(val);
+      const SEXP *pr = STRING_PTR(rep);
+      setcopyvLOOPLVEC
+    }
+    break;
+  }
+  case VECSXP:
+  {
+    SEXP *px = set ? SEXPPTR(x) : SEXPPTR(ans);
+    if(lv == 1 && ind1 == 0) error("Cannot compare lists to a value");
+    const int tv = TYPEOF(val), *pv = tv == INTSXP ? INTEGER(val) : LOGICAL(val);
+    const SEXP *pr = SEXPPTR(rep);
+    setcopyvLOOPLVEC
+    break;
+  }
+  // case RAWSXP:
+  // {
+  //   Rbyte *px = set ? RAW(x) : RAW(ans);
+  //   const Rbyte v = RAW(val)[0], r = RAW(rep)[0];
+  //   setcopyvLOOP
+  //   break;
+  // }
+  default: error("Unsupported type '%s' passed to setv() / copyv()", type2char(TYPEOF(x)));
+  }
+  if(set == 0) {
+    UNPROTECT(1);
+    return(ans);
+  }
+  return(x);
+}
+
+SEXP setop_core(SEXP x, SEXP val, SEXP op, SEXP roww) {
+
+  int n = length(x), nv = length(val), o = asInteger(op), tx = TYPEOF(x);
+
+    #define OPSWITCH(e)                                \
+    switch(o) {                                        \
+    case 1: for(int i = 0; i != n; ++i) px[i] += e;    \
+      break;                                           \
+    case 2: for(int i = 0; i != n; ++i) px[i] -= e;    \
+      break;                                           \
+    case 3: for(int i = 0; i != n; ++i) px[i] *= e;    \
+      break;                                           \
+    case 4: for(int i = 0; i != n; ++i) px[i] /= e;    \
+      break;                                           \
+    default: error("unsupported operation");           \
+    }
+
+  if(nv == 1 || nv == n) {
+    switch(tx) {
+    case INTSXP:
+    case LGLSXP:
+    {
+      int *px = INTEGER(x);
+      if(nv == 1) {
+        const int v = asInteger(val);
+        OPSWITCH(v)
+      } else {
+        if(TYPEOF(val) == REALSXP) {
+          // warning("adding real values to an integer: will truncate decimals");
+          const double *v = REAL(val);
+          OPSWITCH(v[i])
+        } else {
+          const int *v = INTEGER(val);
+          OPSWITCH(v[i])
+        }
+      }
+      break;
+    }
+    case REALSXP:
+    {
+      double *px = REAL(x);
+      if(nv == 1) {
+        const double v = asReal(val);
+        OPSWITCH(v)
+      } else {
+        if(TYPEOF(val) == REALSXP) {
+          const double *v = REAL(val);
+          OPSWITCH(v[i])
+        } else {
+          const int *v = INTEGER(val);
+          OPSWITCH(v[i])
+        }
+      }
+      break;
+    }
+    default: error("Unsupported type '%s'", type2char(tx));
+    }
+  } else {
+    if(!isMatrix(x)) error("unequal argument lengths");
+    int nr = nrows(x), nc = n / nr, rwl = asLogical(roww);
+    if((rwl == 0 && nr != nv) || (rwl && nc != nv))
+      error("length of vector must match matrix rows/columns or the size of the matrix itself");
+
+    #define OPSWITCHMAT(e)                             \
+    switch(o) {                                        \
+    case 1: for(int j = 0, cj; j != nc; ++j)  {        \
+      cj = j * nr;                                     \
+      for(int i = 0; i != nr; ++i) px[cj + i] += e;    \
+      }                                                \
+      break;                                           \
+    case 2: for(int j = 0, cj; j != nc; ++j)  {        \
+      cj = j * nr;                                     \
+      for(int i = 0; i != nr; ++i) px[cj + i] -= e;    \
+      }                                                \
+      break;                                           \
+    case 3: for(int j = 0, cj; j != nc; ++j)  {        \
+      cj = j * nr;                                     \
+      for(int i = 0; i != nr; ++i) px[cj + i] *= e;    \
+    }                                                  \
+    break;                                             \
+    case 4: for(int j = 0, cj; j != nc; ++j)  {        \
+      cj = j * nr;                                     \
+      for(int i = 0; i != nr; ++i) px[cj + i] /= e;    \
+    }                                                  \
+    break;                                             \
+    default: error("unsupported operation");           \
+    }
+
+    switch(tx) {
+    case INTSXP:
+    case LGLSXP:
+    {
+      int *px = INTEGER(x);
+        if(TYPEOF(val) == REALSXP) {
+          // warning("adding real values to an integer: will truncate decimals");
+          const double *v = REAL(val);
+          if(rwl) {
+            OPSWITCHMAT(v[j])
+          } else {
+            OPSWITCHMAT(v[i])
+          }
+        } else {
+          const int *v = INTEGER(val);
+          if(rwl) {
+            OPSWITCHMAT(v[j])
+          } else {
+            OPSWITCHMAT(v[i])
+          }
+        }
+      break;
+    }
+    case REALSXP:
+    {
+      double *px = REAL(x);
+        if(TYPEOF(val) == REALSXP) {
+          const double *v = REAL(val);
+          if(rwl) {
+            OPSWITCHMAT(v[j])
+          } else {
+            OPSWITCHMAT(v[i])
+          }
+        } else {
+          const int *v = INTEGER(val);
+          if(rwl) {
+            OPSWITCHMAT(v[j])
+          } else {
+            OPSWITCHMAT(v[i])
+          }
+        }
+      break;
+    }
+    default: error("Unsupported type '%s'", type2char(tx));
+    }
+
+  }
+  return(x);
+}
+
+SEXP setop(SEXP x, SEXP val, SEXP op, SEXP roww) {
+  // IF x is a list, call function repeatedly..
+  if(TYPEOF(x) == VECSXP) {
+    SEXP *px = SEXPPTR(x);
+    int lx = length(x);
+    if(TYPEOF(val) == VECSXP) { // val is list: must match length(x)
+      SEXP *pv = SEXPPTR(val);
+      if(lx != length(val)) error("length(X) must match length(V)");
+      for(int i = 0; i != lx; ++i) setop_core(px[i], pv[i], op, roww);
+    } else if (length(val) == 1 || asLogical(roww) == 0) { // val is a scalar or vector but rowwise = FALSE
+      for(int i = 0; i != lx; ++i) setop_core(px[i], val, op, roww);
+    } else { // val is a numeric or logical vector to be applied rowwise
+      if(lx != length(val)) error("length(X) must match length(V)");
+      switch(TYPEOF(val)) {
+      case REALSXP: {
+        double *pv = REAL(val);
+        for(int i = 0; i != lx; ++i) setop_core(px[i], ScalarReal(pv[i]), op, roww);
+        break;
+      }
+      case INTSXP:
+      case LGLSXP: {
+        int *pv = INTEGER(val);
+        for(int i = 0; i != lx; ++i) setop_core(px[i], ScalarInteger(pv[i]), op, roww);
+        break;
+      }
+      default: error("Unsupported type '%s'", type2char(TYPEOF(val)));
+      }
+    }
+    return x;
+  }
+  return setop_core(x, val, op, roww);
+}
+
+SEXP vtypes(SEXP x, SEXP isnum) {
+  int tx = TYPEOF(x);
+  if(tx != VECSXP) return ScalarInteger(tx);
+  int n = length(x);
+  SEXP ans = PROTECT(allocVector(INTSXP, n));
+  int *pans = INTEGER(ans);
+  switch(asInteger(isnum)) {
+  case 0:
+    for(int i = 0; i != n; ++i) pans[i] = TYPEOF(VECTOR_ELT(x, i)) + 1;
+    break;
+  case 1: // Numeric variables: do_is with op = 100: https://github.com/wch/r-source/blob/2b0818a47199a0b64b6aa9b9f0e53a1e886e8e95/src/main/coerce.c
+    for(int i = 0; i != n; ++i) {
+      SEXP ci = VECTOR_ELT(x, i);
+      int tci = TYPEOF(ci);
+      pans[i] = (tci == INTSXP || tci == REALSXP) && OBJECT(ci) == 0;
+    }
+    SET_TYPEOF(ans, LGLSXP);
+    break;
+  case 2:
+    for(int i = 0; i != n; ++i) pans[i] = (int)isFactor(VECTOR_ELT(x, i));
+    SET_TYPEOF(ans, LGLSXP);
+    break;
+  default: error("Unsupported vtypes option");
+  }
+  UNPROTECT(1);
+  return ans;
+}
+
+
+SEXP vlengths(SEXP x, SEXP usenam) {
+  if(TYPEOF(x) != VECSXP) return ScalarInteger(length(x));
+  int n = length(x);
+  SEXP ans = PROTECT(allocVector(INTSXP, n));
+  int *pans = INTEGER(ans);
+  if(ALTREP(x)) {
+    for(int i = 0; i != n; ++i) pans[i] = length(VECTOR_ELT(x, i));
+  } else {
+    SEXP *px = SEXPPTR(x);
+    for(int i = 0; i != n; ++i) pans[i] = length(px[i]);
+  }
+  if(asLogical(usenam)) {
+    SEXP nam = getAttrib(x, R_NamesSymbol);
+    if(TYPEOF(nam) != NILSXP) namesgets(ans, nam);
+  }
+  UNPROTECT(1);
+  return ans;
+}
+
+// SEXP CasChar(SEXP x) {
+//  return coerceVector(x, STRSXP);
+// }
+
+/* Inspired by:
+ * do_list2env : .Internal(list2env(x, envir))
+ */
+SEXP multiassign(SEXP lhs, SEXP rhs, SEXP envir) {
+  if(TYPEOF(lhs) != STRSXP) error("lhs needs to be character");
+  int n = length(lhs);
+  if(n == 1) { // lazy_duplicate appears not necessary (copy-on modify is automatically implemented, and <- also does not use it).
+    defineVar(installTrChar(STRING_ELT(lhs, 0)), rhs, envir);
+    return R_NilValue;
+  }
+  if(length(rhs) != n) error("length(lhs) must be equal to length(rhs)");
+  SEXP *plhs = STRING_PTR(lhs);
+  switch(TYPEOF(rhs)) { // installTrChar translates to native encoding, otherwise use installChar (no big performance difference, <- also uses installTrChar).
+    case REALSXP: {
+      double *prhs = REAL(rhs);
+      for(int i = 0; i < n; ++i) defineVar(installTrChar(plhs[i]), ScalarReal(prhs[i]), envir);
+      break;
+    }
+    case INTSXP: {
+      int *prhs = INTEGER(rhs);
+      for(int i = 0; i < n; ++i) defineVar(installTrChar(plhs[i]), ScalarInteger(prhs[i]), envir);
+      break;
+    }
+    case STRSXP: {
+      SEXP *prhs = STRING_PTR(rhs);
+      for(int i = 0; i < n; ++i) defineVar(installTrChar(plhs[i]), ScalarString(prhs[i]), envir);
+      break;
+    }
+    case LGLSXP: {
+      int *prhs = LOGICAL(rhs);
+      for(int i = 0; i < n; ++i) defineVar(installTrChar(plhs[i]), ScalarLogical(prhs[i]), envir);
+      break;
+    }
+    case VECSXP: { // lazy_duplicate appears not necessary (copy-on modify is automatically implemented, and <- also does not use it).
+      for(int i = 0; i < n; ++i) defineVar(installTrChar(plhs[i]), VECTOR_ELT(rhs, i), envir);
+      break;
+    }
+    default: {
+      SEXP rhsl = PROTECT(coerceVector(rhs, VECSXP));
+      for(int i = 0; i < n; ++i) defineVar(installTrChar(plhs[i]), VECTOR_ELT(rhsl, i), envir);
+      UNPROTECT(1);
+    }
+  }
+  return R_NilValue;
+}
+
+
+SEXP vlabels(SEXP x, SEXP attrn, SEXP usenam) {
+  if(!isString(attrn)) error("'attrn' must be of mode character");
+  if(length(attrn) != 1) error("exactly one attribute 'attrn' must be given");
+  SEXP sym_attrn = PROTECT(installTrChar(STRING_ELT(attrn, 0)));
+  int l = length(x);
+  if(TYPEOF(x) != VECSXP) {
+    SEXP labx = getAttrib(x, sym_attrn);
+    UNPROTECT(1);
+    if(labx == R_NilValue) return ScalarString(NA_STRING);
+    return labx;
+  }
+  SEXP res = PROTECT(allocVector(STRSXP, l));
+  SEXP *pres = STRING_PTR(res), *px = SEXPPTR(x);
+  for(int i = 0; i < l; ++i) {
+    SEXP labxi = getAttrib(px[i], sym_attrn);
+    pres[i] = labxi == R_NilValue ? NA_STRING : STRING_ELT(labxi, 0);
+  }
+  if(asLogical(usenam)) {
+    SEXP nam = getAttrib(x, R_NamesSymbol);
+    if(TYPEOF(nam) != NILSXP) namesgets(res, nam);
+  }
+  UNPROTECT(2);
+  return res;
+}
+
+// Note: ind can be NULL...
+SEXP setvlabels(SEXP x, SEXP attrn, SEXP value, SEXP ind) { // , SEXP sc
+ if(!isString(attrn)) error("'attrn' must be of mode character");
+ if(length(attrn) != 1) error("exactly one attribute 'attrn' must be given");
+ if(TYPEOF(x) != VECSXP) error("X must be a list");
+ int nprotect = 1, l = length(x), tv = TYPEOF(value); // , scl = asLogical(sc);
+ SEXP *px = SEXPPTR(x); // , xsc;
+ // if(scl) { // Create shallow copy
+ //   if(INHERITS(x, char_datatable)) {
+ //     xsc = PROTECT(Calloccol(x));
+ //   } else {
+ //     xsc = PROTECT(shallow_duplicate(x));
+ //   }
+ //   ++nprotect;
+ //   px = SEXPPTR(xsc);
+ // }
+ SEXP *pv = px;
+ if(tv != NILSXP) {
+   if(tv == VECSXP || tv == STRSXP) {
+    pv = SEXPPTR(value);
+   } else {
+    SEXP vl = PROTECT(coerceVector(value, VECSXP));
+    pv = SEXPPTR(vl); ++nprotect;
+   }
+ }
+ SEXP sym_attrn = PROTECT(installTrChar(STRING_ELT(attrn, 0)));
+ if(length(ind) == 0) {
+   if(tv != NILSXP && l != length(value)) error("length(x) must match length(value)");
+   if(tv == NILSXP) {
+     for(int i = 0; i < l; ++i) setAttrib(px[i], sym_attrn, R_NilValue);
+   } else if(tv == STRSXP) {
+     for(int i = 0; i < l; ++i) setAttrib(px[i], sym_attrn, ScalarString(pv[i]));
+   } else {
+     for(int i = 0; i < l; ++i) setAttrib(px[i], sym_attrn, pv[i]);
+   }
+ } else {
+   if(TYPEOF(ind) != INTSXP) error("vlabels<-: ind must be of type integer");
+   int li = length(ind), *pind = INTEGER(ind), ii;
+   if(tv != NILSXP && li != length(value)) error("length(ind) must match length(value)");
+   if(li == 0 || li > l) error("vlabels<-: length(ind) must be > 0 and <= length(x)");
+   if(tv == NILSXP) {
+     for(int i = 0; i < li; ++i) {
+       ii = pind[i]-1;
+       if(ii < 0 || ii >= l) error("vlabels<-: ind must be between 1 and length(x)");
+       setAttrib(px[ii], sym_attrn, R_NilValue);
+     }
+   } else if(tv == STRSXP) {
+     for(int i = 0; i < li; ++i) {
+       ii = pind[i]-1;
+       if(ii < 0 || ii >= l) error("vlabels<-: ind must be between 1 and length(x)");
+       setAttrib(px[ii], sym_attrn, ScalarString(pv[i]));
+     }
+   } else {
+     for(int i = 0; i < li; ++i) {
+       ii = pind[i]-1;
+       if(ii < 0 || ii >= l) error("vlabels<-: ind must be between 1 and length(x)");
+       setAttrib(px[ii], sym_attrn, pv[i]);
+     }
+   }
+ }
+ UNPROTECT(nprotect);
+ // return scl ? xsc : x;
+ return x;
+}
+
+
+SEXP setnames(SEXP x, SEXP nam) {
+  setAttrib(x, R_NamesSymbol, nam);
+  return x;
+}
 

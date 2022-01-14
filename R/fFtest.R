@@ -1,7 +1,7 @@
 
 getdf <- function(x) {
   if(is.atomic(x)) if(is.factor(x)) return(fnlevels(x)-1L) else return(1L)
-  sum(vapply(unattrib(x), function(i) if(is.factor(i)) fnlevels(i)-1L else 1L, 1L))
+  bsum(vapply(unattrib(x), function(i) if(is.factor(i)) fnlevels(i)-1L else 1L, 1L))
 }
 
 
@@ -25,13 +25,13 @@ fFtest <- function(y, exc, X = NULL, w = NULL, full.df = TRUE, ...) {
     } else {
       data <- if(atl) na_omit(cbind(y, X, exc)) else na_omit(qDF(c(list(y = y), qDF(X), qDF(exc))))
     }
-    if(full.df && !atl && any(fc <- vapply(unattrib(data), is.factor, TRUE))) {
+    if(full.df && !atl && any(fc <- .Call(C_vtypes, data, 2L))) { # vapply(unattrib(data), is.factor, TRUE)
       cld <- oldClass(data)
       oldClass(data) <- NULL
       data[fc] <- lapply(data[fc], fdroplevels.factor)
       df <- vapply(unattrib(data), function(i) if(is.factor(i)) fnlevels(i)-1L else 1L, 1L) # getdf(data)
-      k <- sum(df) # 1 for intercept added with y
-      p <- sum(df[(Xn+2L):length(df)])
+      k <- bsum(df) # 1 for intercept added with y
+      p <- bsum(df[(Xn+2L):length(df)])
       y <- data[[1L]]
       oldClass(data) <- cld
     } else {
@@ -75,10 +75,10 @@ fFtest <- function(y, exc, X = NULL, w = NULL, full.df = TRUE, ...) {
     miss <- attr(u, "na.rm")
     if(!is.null(miss)) w <- w[-miss]
     if(full.df && length(miss) && !is.atomic(exc) && !is.numeric(exc)) {
-      p <- if(is.factor(exc)) fnlevels(exc[-miss, drop = TRUE])-1L else if(any(vapply(unattrib(exc), is.factor, TRUE)))
+      p <- if(is.factor(exc)) fnlevels(exc[-miss, drop = TRUE])-1L else if(any(.Call(C_vtypes, exc, 2L))) # vapply(unattrib(exc), is.factor, TRUE)
         getdf(fdroplevels.data.frame(ss(exc, -miss))) else length(unclass(exc))
     } else if(full.df) {
-      p <- if(is.factor(exc) || (is.list(exc) && any(vapply(unattrib(exc), is.factor, TRUE)))) getdf(fdroplevels(exc)) else fNCOL(exc)
+      p <- if(is.factor(exc) || (is.list(exc) && any(.Call(C_vtypes, exc, 2L)))) getdf(fdroplevels(exc)) else fNCOL(exc) # vapply(unattrib(exc), is.factor, TRUE)
     } else p <- fNCOL(exc)
     n <- length(u)
     r2 <- 1 - fvar.default(u, w = w)/fvar.default(if(is.null(miss)) y else y[-miss], w = w) # R-Squared

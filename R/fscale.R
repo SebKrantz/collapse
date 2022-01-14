@@ -11,12 +11,7 @@ fscale.default <- function(x, g = NULL, w = NULL, na.rm = TRUE, mean = 0, sd = 1
   if(is.matrix(x) && !inherits(x, "matrix")) return(fscale.matrix(x, g, w, na.rm, mean, sd, ...))
   if(!missing(...)) unused_arg_action(match.call(), ...)
   if(is.null(g)) return(.Call(Cpp_fscale,x,0L,0L,w,na.rm,cm(mean),csd(sd)))
-  if(is.atomic(g)) {
-    if(is.nmfactor(g)) return(.Call(Cpp_fscale,x,fnlevels(g),g,w,na.rm,cm(mean),csd(sd)))
-    g <- qG(g, sort = FALSE, na.exclude = FALSE)
-    return(.Call(Cpp_fscale,x,attr(g,"N.groups"),g,w,na.rm,cm(mean),csd(sd)))
-  }
-  if(!is_GRP(g)) g <- GRP.default(g, return.groups = FALSE, call = FALSE)
+  g <- G_guo(g)
   .Call(Cpp_fscale,x,g[[1L]],g[[2L]],w,na.rm,cm(mean),csd(sd))
 }
 
@@ -29,12 +24,7 @@ fscale.pseries <- function(x, effect = 1L, w = NULL, na.rm = TRUE, mean = 0, sd 
 fscale.matrix <- function(x, g = NULL, w = NULL, na.rm = TRUE, mean = 0, sd = 1, ...) {
   if(!missing(...)) unused_arg_action(match.call(), ...)
   if(is.null(g)) return(.Call(Cpp_fscalem,x,0L,0L,w,na.rm,cm(mean),csd(sd)))
-  if(is.atomic(g)) {
-    if(is.nmfactor(g)) return(.Call(Cpp_fscalem,x,fnlevels(g),g,w,na.rm,cm(mean),csd(sd)))
-    g <- qG(g, sort = FALSE, na.exclude = FALSE)
-    return(.Call(Cpp_fscalem,x,attr(g,"N.groups"),g,w,na.rm,cm(mean),csd(sd)))
-  }
-  if(!is_GRP(g)) g <- GRP.default(g, return.groups = FALSE, call = FALSE)
+  g <- G_guo(g)
   .Call(Cpp_fscalem,x,g[[1L]],g[[2L]],w,na.rm,cm(mean),csd(sd))
 }
 
@@ -45,7 +35,7 @@ fscale.grouped_df <- function(x, w = NULL, na.rm = TRUE, mean = 0, sd = 1, keep.
   nam <- attr(x, "names")
   gn2 <- which(nam %in% g[[5L]])
   gn <- if(keep.group_vars) gn2 else NULL
-  if(length(wsym) && length(wn <- which(wsym == nam))) {
+  if(length(wsym) && length(wn <- whichv(nam, wsym))) {
     w <- .subset2(x, wn)
     if(any(gn2 == wn)) stop("Weights coincide with grouping variables!")
     gn2 <- c(gn2, wn)
@@ -64,12 +54,7 @@ fscale.grouped_df <- function(x, w = NULL, na.rm = TRUE, mean = 0, sd = 1, keep.
 fscale.data.frame <- function(x, g = NULL, w = NULL, na.rm = TRUE, mean = 0, sd = 1, ...) {
   if(!missing(...)) unused_arg_action(match.call(), ...)
   if(is.null(g)) return(.Call(Cpp_fscalel,x,0L,0L,w,na.rm,cm(mean),csd(sd)))
-  if(is.atomic(g)) {
-    if(is.nmfactor(g)) return(.Call(Cpp_fscalel,x,fnlevels(g),g,w,na.rm,cm(mean),csd(sd)))
-    g <- qG(g, sort = FALSE, na.exclude = FALSE)
-    return(.Call(Cpp_fscalel,x,attr(g,"N.groups"),g,w,na.rm,cm(mean),csd(sd)))
-  }
-  if(!is_GRP(g)) g <- GRP.default(g, return.groups = FALSE, call = FALSE)
+  g <- G_guo(g)
   .Call(Cpp_fscalel,x,g[[1L]],g[[2L]],w,na.rm,cm(mean),csd(sd))
 }
 
@@ -105,7 +90,7 @@ STD.grouped_df <- function(x, w = NULL, na.rm = TRUE, mean = 0, sd = 1, stub = "
   nam <- attr(x, "names")
   gn2 <- which(nam %in% g[[5L]])
   gn <- if(keep.group_vars) gn2 else NULL
-  if(length(wsym) && length(wn <- which(wsym == nam))) {
+  if(length(wsym) && length(wn <- whichv(nam, wsym))) {
     w <- .subset2(x, wn)
     if(any(gn2 == wn)) stop("Weights coincide with grouping variables!")
     gn2 <- c(gn2,wn)
@@ -179,13 +164,12 @@ STD.data.frame <- function(x, by = NULL, w = NULL, cols = is.numeric,
         gn <- ckmatch(all.vars(by), nam)
         cols <- if(is.null(cols)) seq_along(x)[-gn] else cols2int(cols, x, nam)
       }
-      by <- if(length(gn) == 1L) at2GRP(x[[gn]]) else GRP.default(x, gn, return.groups = FALSE, call = FALSE)
+      by <- G_guo(if(length(gn) == 1L) x[[gn]] else x[gn])
       if(!keep.by) gn <- NULL
     } else {
       gn <- NULL
       if(length(cols)) cols <- cols2int(cols, x, nam)
-      if(!is_GRP(by)) by <- if(is.null(by)) list(0L, 0L, NULL) else if(is.atomic(by)) # Necessary for if by is passed externally !
-        at2GRP(by) else GRP.default(by, return.groups = FALSE, call = FALSE)
+      by <- if(is.null(by)) list(0L, 0L) else G_guo(by)
     }
 
     if(is.call(w)) {
@@ -211,12 +195,7 @@ STD.data.frame <- function(x, by = NULL, w = NULL, cols = is.numeric,
   if(is.character(stub)) attr(x, "names") <- paste0(stub, attr(x, "names"))
 
   if(is.null(by)) return(.Call(Cpp_fscalel,x,0L,0L,w,na.rm,cm(mean),csd(sd)))
-  if(is.atomic(by)) {
-    if(is.nmfactor(by)) return(.Call(Cpp_fscalel,x,fnlevels(by),by,w,na.rm,cm(mean),csd(sd)))
-    by <- qG(by, sort = FALSE, na.exclude = FALSE)
-    return(.Call(Cpp_fscalel,x,attr(by,"N.groups"),by,w,na.rm,cm(mean),csd(sd)))
-  }
-  if(!is_GRP(by)) by <- GRP.default(by, return.groups = FALSE, call = FALSE)
+  by <- G_guo(by)
   .Call(Cpp_fscalel,x,by[[1L]],by[[2L]],w,na.rm,cm(mean),csd(sd))
 }
 

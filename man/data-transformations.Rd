@@ -1,5 +1,6 @@
-\name{A6-data-transformations}
+\name{data-transformations}
 \alias{A6-data-transformations}
+\alias{data-transformations}
 \alias{.OPERATOR_FUN}
 \title{Data Transformations} % \emph{collapse}
 
@@ -7,9 +8,10 @@
 \emph{collapse} provides an ensemble of functions to perform common data transformations efficiently and user friendly:
 \itemize{
 \item \code{\link{dapply}} \bold{applies functions to rows or columns} of matrices and data frames, preserving the data format.
-\item \code{\link{BY}} is an S3 generic for \bold{Split-Apply-Combine computing} and can perform aggregation as well as grouped transformations (for aggregation please also see \code{\link{collap}} and the \link[=A1-fast-statistical-functions]{Fast Statistical Functions}).
+\item \code{\link{BY}} is an S3 generic for \bold{Split-Apply-Combine computing} and can perform aggregation as well as grouped transformations (for aggregation please also see \code{\link{collap}} and the \link[=fast-statistical-functions]{Fast Statistical Functions}).
+
 \item A set of arithmetic operators facilitates \bold{row-wise} \code{\link{\%rr\%}}, \code{\link{\%r+\%}}, \code{\link{\%r-\%}}, \code{\link{\%r*\%}}, \code{\link{\%r/\%}} and
-\bold{column-wise} \code{\link{\%cr\%}}, \code{\link{\%c+\%}}, \code{\link{\%c-\%}}, \code{\link{\%c*\%}}, \code{\link{\%c/\%}} \bold{replacing and sweeping operations} involving a vector and a matrix or data frame / list.
+\bold{column-wise} \code{\link{\%cr\%}}, \code{\link{\%c+\%}}, \code{\link{\%c-\%}}, \code{\link{\%c*\%}}, \code{\link{\%c/\%}} \bold{replacing and sweeping operations} involving a vector and a matrix or data frame / list. Since v1.7, the operators \code{\link{\%+=\%}}, \code{\link{\%-=\%}}, \code{\link{\%*=\%}} and \code{\link{\%/=\%}} do column- and element- wise math by reference, and the function \code{\link{setop}} can also perform sweeping out rows by reference.
 
 \item \code{\link{TRA}} is a more advanced S3 generic to efficiently perform \bold{(groupwise) replacing and sweeping out of statistics}. %The basic syntax is \code{TRA(x, xag, g)} where \code{x} is data to be transformed, \code{xag} is some set of aggregate statistics to tranform \code{x} and \code{g} is an optional grouping vector for grouped transformations.
 Supported operations are:
@@ -26,7 +28,7 @@ Supported operations are:
                  10 \tab\tab "-\%\%" \tab\tab subtract modulus
 
 }
-All of \emph{collapse}'s \link[=A1-fast-statistical-functions]{Fast Statistical Functions} have a built-in \code{TRA} argument for faster access (i.e. you can compute (groupwise) statistics and use them to transform your data with a single function call).
+All of \emph{collapse}'s \link[=fast-statistical-functions]{Fast Statistical Functions} have a built-in \code{TRA} argument for faster access (i.e. you can compute (groupwise) statistics and use them to transform your data with a single function call).
 
 \item \code{\link[=fscale]{fscale/STD}} is an S3 generic to perform (groupwise and / or weighted) \bold{scaling / standardizing} of data and is orders of magnitude faster than \code{\link{scale}}.
 
@@ -36,7 +38,7 @@ All of \emph{collapse}'s \link[=A1-fast-statistical-functions]{Fast Statistical 
 
 %\item \code{flm} is an efficient function for bare-bones (weighted) \bold{linear model fitting}. It supports 6 different fitting methods, 4 from base R, and 2 utilizing the \emph{RcppArmadillo} or \emph{RcppEigen} packages.
 
-\item \code{\link[=flag]{flag/L/F}}, \code{\link[=fdiff]{fdiff/D/Dlog}} and \code{\link[=fgrowth]{fgrowth/G}} are S3 generics to compute sequences of \bold{lags / leads} and suitably lagged and iterated (quasi-, log-) \bold{differences} and \bold{growth rates} on time series and panel data. \code{\link{fcumsum}} flexibly computes cumulative sums. More in \link[=A7-time-series-panel-series]{Time Series and Panel Series}.
+\item \code{\link[=flag]{flag/L/F}}, \code{\link[=fdiff]{fdiff/D/Dlog}} and \code{\link[=fgrowth]{fgrowth/G}} are S3 generics to compute sequences of \bold{lags / leads} and suitably lagged and iterated (quasi-, log-) \bold{differences} and \bold{growth rates} on time series and panel data. \code{\link{fcumsum}} flexibly computes cumulative sums. More in \link[=time-series-panel-series]{Time Series and Panel Series}.
 
 \item \code{STD, W, B, HDW, HDB, L, D, Dlog} and \code{G} are parsimonious wrappers around the \code{f-} functions above representing the corresponding transformation 'operators'. They have additional capabilities when applied to data-frames (i.e. variable selection, formula input, auto-renaming and id-variable preservation), and are easier to employ in regression formulas, but are otherwise identical in functionality.
 }
@@ -57,7 +59,7 @@ All of \emph{collapse}'s \link[=A1-fast-statistical-functions]{Fast Statistical 
 }
 }
 \seealso{
-\link[=collapse-documentation]{Collapse Overview}, \link[=A1-fast-statistical-functions]{Fast Statistical Functions}, \link[=A7-time-series-panel-series]{Time Series and Panel Series}
+\link[=collapse-documentation]{Collapse Overview}, \link[=fast-statistical-functions]{Fast Statistical Functions}, \link[=time-series-panel-series]{Time Series and Panel Series}
 }
 \keyword{manip}
 \keyword{documentation}

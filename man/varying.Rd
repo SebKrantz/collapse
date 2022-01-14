@@ -78,7 +78,7 @@ A logical vector or (if \code{!is.null(g)} and \code{any_group = FALSE}), a matr
 }
 
 \seealso{
-\link[=A9-summary-statistics]{Summary Statistics}, \link[=A6-data-transformations]{Data Transformations}, \link[=collapse-documentation]{Collapse Overview}
+\link[=summary-statistics]{Summary Statistics}, \link[=data-transformations]{Data Transformations}, \link[=collapse-documentation]{Collapse Overview}
 }
 \examples{
 ## Checks overall variation in all columns

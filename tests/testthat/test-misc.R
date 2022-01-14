@@ -74,7 +74,11 @@ test_that("na_rm works well", {
   expect_equal(sapply(na_insert(wlddev), function(x) vclasses(na_rm(x))), vclasses(wlddev))
   wldNA <- na_insert(wlddev)
   expect_equal(lengths(lapply(wldNA, na_rm)), fnobs(wldNA))
+  expect_equal(lapply(wldNA, na_rm), lapply(wldNA, function(x) copyMostAttrib(x[!is.na(x)], x)))
   rm(wldNA)
+
+  expect_equal(na_rm(list(list(), 1,2,3)), list(1,2,3))
+  expect_equal(na_rm(list(1,2,NULL,3)), list(1,2,3))
 })
 
 }

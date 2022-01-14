@@ -9,7 +9,7 @@ psacf.default <- function(x, g, t = NULL, lag.max = NULL, type = c("correlation"
   typei <- switch(type[1L], correlation = 1L, covariance = 2L, partial = 3L, stop("Unknown type!"))
   series <- l1orlst(as.character(substitute(x)))
   getacf <- function(ng, g) {
-    if(is.null(t)) message("Panel Series ACF computed without timevar: Assuming ordered data") else if(!is.nmfactor(t))
+    if(length(t) && !is.nmfactor(t))
     t <- if(is.atomic(t)) qG(t, na.exclude = FALSE) else GRP.default(t, return.groups = FALSE, call = FALSE)[[2L]] # if(.Internal(islistfactor(t, FALSE))) interaction(t) else
     if(gscale) x <- fscaleCpp(x,ng,g)
     if(typei == 2L)
@@ -72,7 +72,7 @@ psacf.data.frame <- function(x, by, t = NULL, cols = is.numeric, lag.max = NULL,
   snames <- names(x)
   attributes(x) <- NULL # already class is 0... Necessary ?
   getacf <- function(ng, by) {
-    if(is.null(t)) message("Panel Series ACF computed without timevar: Assuming ordered data") else if(!is.nmfactor(t))
+    if(length(t) && !is.nmfactor(t))
       t <- if(is.atomic(t)) qG(t, na.exclude = FALSE) else GRP.default(t, return.groups = FALSE, call = FALSE)[[2L]]
     if(gscale) x <- fscalelCpp(x,ng,by)
     acf <- array(numeric(0), c(lag.max+1, lx, lx))
@@ -219,7 +219,7 @@ psccf.default <- function(x, y, g, t = NULL, lag.max = NULL, type = c("correlati
   typei <- switch(type[1L], correlation = 1L, covariance = 2L, partial = 3L, stop("Unknown type!"))
   snames <- paste(c(l1orlst(as.character(substitute(x))), l1orlst(as.character(substitute(x)))), collapse = " & ")
   getccf <- function(ng, g) {
-    if(is.null(t)) message("Panel Series ACF computed without timevar: Assuming ordered data") else if(!is.nmfactor(t))
+    if(length(t) && !is.nmfactor(t))
       t <- if(is.atomic(t)) qG(t, na.exclude = FALSE) else GRP.default(t, return.groups = FALSE, call = FALSE)[[2L]] # else if(.Internal(islistfactor(t, FALSE))) interaction(t)
     if(gscale) {
       x <- fscaleCpp(x,ng,g)
@@ -332,7 +332,7 @@ psccf.pseries <- function(x, y, lag.max = NULL, type = c("correlation", "covaria
 #                                               1L)), 3:1)[-1L, , , drop = FALSE]
 #   var.pred <- aperm(array(z$var, dim = c(nser, nser, order.max +
 #                                            1L)), 3:1)
-#   xaic <- setNames(z$aic - min(z$aic), 0:order.max)
+#   xaic <- setNames(z$aic - bmin(z$aic), 0:order.max)
 #   order <- z$order
 #   resid <- x
 #   if (order > 0) {

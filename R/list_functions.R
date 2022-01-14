@@ -52,7 +52,10 @@ is.regular <- function(x) {
 is_unlistable <- function(l, DF.as.list = FALSE) if(DF.as.list) all(unlist(rapply(l, is.atomic, how = "list"), use.names = FALSE)) else
   all(unlist(rapply2d(l, is_regular), use.names = FALSE)) # fastest way?
 
-is.unlistable <- is_unlistable
+is.unlistable <- function(l, DF.as.list = FALSE) {
+  message("Note that 'is.unlistable' was renamed to 'is_unlistable'. It will not be removed anytime soon, but please use updated function names in new code, see help('collapse-renamed')")
+  is_unlistable(l, DF.as.list)
+}
 
 # If data.frame, search all, otherwise, make optional counting df or not, but don't search them.
 ldepth <- function(l, DF.as.list = FALSE) {
@@ -66,7 +69,7 @@ ldepth <- function(l, DF.as.list = FALSE) {
   } else {
     ld <- function(y,i) if(is.list(y) && !inherits(y, "data.frame")) lapply(y,ld,i+1L) else i
   }
-  max(unlist(ld(l, 0L), use.names = FALSE))
+  base::max(unlist(ld(l, 0L), use.names = FALSE))
 }
 
 has_elem <- function(l, elem, recursive = TRUE, DF.as.list = FALSE, regex = FALSE, ...) {
@@ -104,10 +107,10 @@ list_extract_FUN <- function(l, FUN, is.subl, keep.tree = FALSE) {
  regsearch <- function(x) {
   if(any(subl <- vapply(x, is.subl, TRUE, USE.NAMES = FALSE))) { # is.list(x) && a
     wsubl <- which(subl)
-    wnsubl <- which(!subl)
+    wnsubl <- whichv(subl, FALSE)
     matches <- vapply(x[wnsubl], FUN, TRUE, USE.NAMES = FALSE)
     a <- lapply(x[wsubl], regsearch)
-    wa <- vapply(a, length, 1L, USE.NAMES = FALSE) > 0L # note that this also gets rid of null elements! could make it length or is.null!
+    wa <- vlengths(a, FALSE) > 0L # note that this also gets rid of null elements! could make it length or is.null! # vapply(a, length, 1L, USE.NAMES = FALSE)
     x <- c(x[wnsubl][matches], a[wa]) # The problem here: If all elements in a sublist are atomic, it still retains the sublist itself with NULL inside!
     if(keep.tree || length(x) != 1L)
       return(x[forder.int(c(wnsubl[matches], wsubl[wa]))]) else return(x[[1L]]) # fastest way?
@@ -127,7 +130,7 @@ list_extract_regex <- function(l, exp, is.subl, keep.tree = FALSE, ...) {
       wnressubl <- if(length(wres)) which(subl & !matches) else which(subl) # fsetdiff(which(subl), wres)
     if(length(wnressubl)) { # faster way?
       a <- lapply(x[wnressubl], regsearch) # is this part still necessary?, or only for keep.tree
-      wa <- vapply(a, length, 1L) > 0L # note that this also gets rid of null elements!! could make it length or is.null!, length is better for length 0 lists !!
+      wa <- vlengths(a, FALSE) > 0L # note that this also gets rid of null elements!! could make it length or is.null!, length is better for length 0 lists !! #  vapply(a, length, 1L)
       x <- c(x[wres], a[wa])
       if(keep.tree || length(x) != 1L)
         return(x[forder.int(c(wres, wnressubl[wa]))]) else return(x[[1L]])
@@ -148,7 +151,7 @@ list_extract_names <- function(l, nam, is.subl, keep.tree = FALSE) {
       wnressubl <- if(length(wres)) which(subl & !matches) else which(subl) # fsetdiff(which(subl), wres)  # old solution: faster but does not work well if parent list is unnamed ! (i.e. l = list(lm1, lm1))
     if(length(wnressubl)) {
       a <- lapply(x[wnressubl], regsearch)
-      wa <- vapply(a, length, 1L) > 0L
+      wa <- vlengths(a, FALSE) > 0L # vapply(a, length, 1L)
       x <- c(x[wres], a[wa])
       if(keep.tree || length(x) != 1L)
         return(x[forder.int(c(wres, wnressubl[wa]))]) else return(x[[1L]])

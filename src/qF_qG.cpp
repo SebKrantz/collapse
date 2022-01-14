@@ -4,10 +4,8 @@ using namespace Rcpp;
 
 
 template <int RTYPE>
-IntegerVector qFCppImpl(const Vector<RTYPE>& x, bool sort, bool ordered, bool na_exclude, bool keep_attr, int ret) {
-    Vector<RTYPE> levs = (sort && na_exclude) ? na_omit(sort_unique(x)) :
-                          sort ? sort_unique(x) :
-                          na_exclude ? na_omit(unique(x)) : unique(x);
+IntegerVector qFCppImpl(const Vector<RTYPE>& x, bool ordered, bool na_exclude, bool keep_attr, int ret) {
+    Vector<RTYPE> levs = (na_exclude) ? na_omit(sort_unique(x)) : sort_unique(x);
     IntegerVector out = (na_exclude || RTYPE != REALSXP) ? match(x, levs) : as<IntegerVector>(Rf_match(levs, x, NA_INTEGER));
     if(ret == 1) { // returning a factor
       if(keep_attr) SHALLOW_DUPLICATE_ATTRIB(out, x); // works for all atomic objects ?
@@ -20,9 +18,9 @@ IntegerVector qFCppImpl(const Vector<RTYPE>& x, bool sort, bool ordered, bool na
                            ordered ? CharacterVector::create("ordered","factor") :
                           (!na_exclude) ? CharacterVector::create("factor","na.included") : CharacterVector::create("factor"));
     } else { // returnin a qG
-      out.attr("N.groups") = levs.size();
+      out.attr("N.groups") = int(levs.size());
       if(ret == 3) {
-        DUPLICATE_ATTRIB(levs, x);
+        Rf_copyMostAttrib(x, levs);
         out.attr("groups") = levs;
       }
       Rf_classgets(out, (ordered && !na_exclude) ? CharacterVector::create("ordered","qG","na.included") :
@@ -34,12 +32,12 @@ IntegerVector qFCppImpl(const Vector<RTYPE>& x, bool sort, bool ordered, bool na
 
 
 // [[Rcpp::export]]   // do Cpp 11 solution using return macro ?
-SEXP qFCpp(SEXP x, bool sort = true, bool ordered = true, bool na_exclude = true, bool keep_attr = true, int ret = 1) {
+SEXP qFCpp(SEXP x, bool ordered = true, bool na_exclude = true, bool keep_attr = true, int ret = 1) {
   switch(TYPEOF(x)) {
-  case INTSXP: return qFCppImpl<INTSXP>(x, sort, ordered, na_exclude, keep_attr, ret);
-  case REALSXP: return qFCppImpl<REALSXP>(x, sort, ordered, na_exclude, keep_attr, ret);
-  case STRSXP: return qFCppImpl<STRSXP>(x, sort, ordered, na_exclude, keep_attr, ret);
-  case LGLSXP: {
+  case INTSXP: return qFCppImpl<INTSXP>(x, ordered, na_exclude, keep_attr, ret);
+  case REALSXP: return qFCppImpl<REALSXP>(x, ordered, na_exclude, keep_attr, ret);
+  case STRSXP: return qFCppImpl<STRSXP>(x, ordered, na_exclude, keep_attr, ret);
+  case LGLSXP: { // Note that this always sorts it
     LogicalVector xl = x;
     int l = xl.size();
     LogicalVector nd(3);
@@ -48,7 +46,7 @@ SEXP qFCpp(SEXP x, bool sort = true, bool ordered = true, bool na_exclude = true
       for(int i = 0; i != l; ++i) {
         if(xl[i] == NA_LOGICAL) {
           out[i] = NA_INTEGER;
-        } else if(xl[i]) {
+        } else if(xl[i] == true) {
           out[i] = 2;
           nd[1] = true;
         } else {
@@ -62,7 +60,7 @@ SEXP qFCpp(SEXP x, bool sort = true, bool ordered = true, bool na_exclude = true
         if(xl[i] == NA_LOGICAL) {
           out[i] = 3;
           nd[2] = true;
-        } else if(xl[i]) {
+        } else if(xl[i] == true) {
           out[i] = 2;
           nd[1] = true;
         } else {
@@ -92,7 +90,7 @@ SEXP qFCpp(SEXP x, bool sort = true, bool ordered = true, bool na_exclude = true
       out.attr("N.groups") = int(nd[0]+nd[1]+nd[2]);
       if(ret == 3) {
         LogicalVector groups = LogicalVector::create(false, true, NA_LOGICAL)[nd];
-        DUPLICATE_ATTRIB(groups, x);
+        Rf_copyMostAttrib(x, groups);
         out.attr("groups") = groups;
       }
       Rf_classgets(out, (ordered && !na_exclude) ? CharacterVector::create("ordered","qG","na.included") :
@@ -146,13 +144,11 @@ template <int RTYPE>
 Vector<RTYPE> funiqueImpl(const Vector<RTYPE>& x, bool sort) {
   if(sort) {
     Vector<RTYPE> out = sort_unique(x);
-    DUPLICATE_ATTRIB(out, x);
-    Rf_setAttrib(out, R_NamesSymbol, R_NilValue);
+    Rf_copyMostAttrib(x, out);
     return out;
   } else {
     Vector<RTYPE> out = uniqueord<RTYPE>(x);
-    DUPLICATE_ATTRIB(out, x);
-    Rf_setAttrib(out, R_NamesSymbol, R_NilValue);
+    Rf_copyMostAttrib(x, out);
     return out;
   }
 }
@@ -180,7 +176,7 @@ IntegerVector funiqueFACT(const IntegerVector& x, bool sort = true) {
     if(!countNA) out[k-1] = NA_INTEGER;
     k = 0;
     for(int i = 1; i != nlevp; ++i) if(!not_seen[i]) out[k++] = i;
-    DUPLICATE_ATTRIB(out, x);
+    Rf_copyMostAttrib(x, out);
     return out;
   } else {
     IntegerVector uxp = no_init_vector(nlevp);
@@ -195,7 +191,7 @@ IntegerVector funiqueFACT(const IntegerVector& x, bool sort = true) {
       if(not_seen[x[i]]) {
         uxp[k++] = x[i];
         if(k == nlevp) {
-          DUPLICATE_ATTRIB(uxp, x);
+          Rf_copyMostAttrib(x, uxp);
           return uxp;
         }
         not_seen[x[i]] = false;
@@ -203,7 +199,7 @@ IntegerVector funiqueFACT(const IntegerVector& x, bool sort = true) {
     }
     IntegerVector out = no_init_vector(k);
     for(int i = 0; i != k; ++i) out[i] = uxp[i];
-    DUPLICATE_ATTRIB(out, x);
+    Rf_copyMostAttrib(x, out);
     return out;
   }
 }
@@ -219,24 +215,30 @@ SEXP funiqueCpp(SEXP x, bool sort = true) {
   case STRSXP: return funiqueImpl<STRSXP>(x, sort);
   case LGLSXP: {
     LogicalVector xl = x;
-    LogicalVector nd(3);
-    int ndc = 0;
-    for(int i = xl.size(); i--; ) {
-      if(!nd[2] && xl[i] == NA_LOGICAL) {
-        nd[2] = true;
-        ++ndc;
-      } else if(!nd[1] && xl[i]) {
-        nd[1] = true;
-        ++ndc;
-      } else if(!nd[0]) {
-        nd[0] = true;
-        ++ndc;
+    int nc = 0, n0 = 0, n1 = 0, n2 = 0, l = xl.size();
+    for(int i = 0; i != l; ++i) {
+      if(n2 == 0 && xl[i] == NA_LOGICAL) {
+        n2 = ++nc;
+      } else if(n1 == 0 && xl[i] == true) {
+        n1 = ++nc;
+      } else if(n0 == 0 && xl[i] == false) {
+        n0 = ++nc;
       }
-      if(ndc == 3) break;
+      if(nc == 3) break;
     }
-    LogicalVector out = LogicalVector::create(false, true, NA_LOGICAL)[nd];
-    DUPLICATE_ATTRIB(out, x);
-    Rf_setAttrib(out, R_NamesSymbol, R_NilValue);
+    LogicalVector out = no_init_vector(nc);
+    if(sort) {
+      nc = 0;
+      if(n0) out[nc++] = false;
+      if(n1) out[nc++] = true;
+      if(n2) out[nc] = NA_LOGICAL;
+    } else {
+      if(n0) out[n0-1] = false;
+      if(n1) out[n1-1] = true;
+      if(n2) out[n2-1] = NA_LOGICAL;
+    }
+    // LogicalVector::create(false, true, NA_LOGICAL)[nd];
+    Rf_copyMostAttrib(x, out);
     return out;
   }
   default: stop("Not Supported SEXP Type");

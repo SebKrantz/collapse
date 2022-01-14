@@ -1,4 +1,4 @@
-\name{fhdbetween, fhdwithin}
+\name{fhdbetween-fhdwithin}
 \alias{fhdbetween}
 \alias{fhdbetween.default}
 \alias{fhdbetween.matrix}
@@ -84,7 +84,7 @@ fhdbetween(x, \dots)
   \item{cols}{\emph{data.frame methods}: Select columns to center (partial-out) or predict using column names, indices, a logical vector or a function. Unless specified otherwise all numeric columns are selected. If \code{NULL}, all variables are selected.}
   \item{na.rm}{remove missing values from both \code{x} and \code{fl}. by default rows with missing values in \code{x} or \code{fl} are removed. In that case an attribute "na.rm" is attached containing the rows removed.}
   \item{fill}{If \code{na.rm = TRUE}, \code{fill = TRUE} will not remove rows with missing values in \code{x} or \code{fl}, but fill them with \code{NA}'s.}
-  \item{variable.wise}{\emph{data.frame methods}: Setting \code{variable.wise = TRUE} will process each column individually i.e. use all non-missing cases in each column and in \code{fl} (\code{fl} is only checked for missing values if \code{na.rm = TRUE}). This is a lot less efficient but uses all data available in each column. }
+  \item{variable.wise}{\emph{(p)data.frame methods}: Setting \code{variable.wise = TRUE} will process each column individually i.e. use all non-missing cases in each column and in \code{fl} (\code{fl} is only checked for missing values if \code{na.rm = TRUE}). This is a lot less efficient but uses all data available in each column. }
 \item{effect}{\emph{plm} methods: Select which panel identifiers should be used for centering. 1L takes the first variable in the \code{plm::index}, 2L the second etc. Index variables can also be called by name using a character vector. }
 \item{stub}{a prefix or stub to rename all transformed columns. \code{FALSE} will not rename columns.}
 \item{lm.method}{character. The linear fitting method. Supported are \code{"chol"} and \code{"qr"}. See \code{\link{flm}}.}
@@ -133,7 +133,7 @@ The special methods for \code{plm::pseries} and \code{plm::pdata.frame} center a
 %% ~Make other sections like Warning with \section{Warning }{\dots.} ~
 
 \seealso{
-\code{\link[=fbetween]{fbetween, fwithin}}, \code{\link{fscale}}, \code{\link{TRA}}, \code{\link{flm}}, \code{\link{fFtest}}, \link[=A6-data-transformations]{Data Transformations}, \link[=collapse-documentation]{Collapse Overview}
+\code{\link[=fbetween]{fbetween, fwithin}}, \code{\link{fscale}}, \code{\link{TRA}}, \code{\link{flm}}, \code{\link{fFtest}}, \link[=data-transformations]{Data Transformations}, \link[=collapse-documentation]{Collapse Overview}
 }
 \examples{
 HDW(mtcars$mpg, mtcars$carb)                   # Simple regression problems

@@ -33,7 +33,7 @@ logical. Should the sort order be increasing or decreasing? Can be a vector of l
 }
   \item{group.sizes}{logical. \code{TRUE} returns an attribute 'group.sizes' containing sizes of each group in the same order as groups are encountered if the data were sorted using the computed ordering vector. See Examples.
 }
-  \item{sort}{logical. This argument only affects character vectors / columns passed. If \code{FALSE}, these are not ordered but simply grouped in the order of first appearance of unique elements. This provides a slight performance gain if only grouping but not alphabetic ordering is required.
+  \item{sort}{logical. This argument only affects character vectors / columns passed. If \code{FALSE}, these are not ordered but simply grouped in the order of first appearance of unique elements. This provides a slight performance gain if only grouping but not alphabetic ordering is required. See also \code{\link{group}}.
 %%     ~~Describe \code{sort} here~~
 }
 }
@@ -45,8 +45,13 @@ logical. Should the sort order be increasing or decreasing? Can be a vector of l
 An integer ordering vector with attributes: Unless \code{na.last = NA} an attribute 'sorted' indicating whether the input data was already sorted is attached. If \code{starts = TRUE}, 'starts' giving a vector of group starts in the ordered data, and if \code{group.sizes = TRUE}, 'group.sizes' giving the vector of group sizes are attached. In either case an attribute 'maxgrpn' providing the size of the largest group is also attached.
 }
 
+\author{
+The C code was taken - with slight modifications, from \href{https://github.com/wch/r-source/blob/79298c499218846d14500255efd622b5021c10ec/src/main/radixsort.c}{base R source code}, and is originally due to \emph{data.table} authors Matt Dowle and Arun Srinivasan.
+}
+
+
 \seealso{
-\link[=A2-fast-grouping-ordering]{Fast Grouping and Ordering}, \link[=collapse-documentation]{Collapse Overview}
+\link[=fast-grouping-ordering]{Fast Grouping and Ordering}, \link[=collapse-documentation]{Collapse Overview}
 }
 \examples{
 radixorder(mtcars$mpg)

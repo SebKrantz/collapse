@@ -1,5 +1,5 @@
 \name{collap}
-\alias{A5-advanced-aggregation}
+\alias{advanced-aggregation}
 \alias{collap}
 \alias{collapv}
 \alias{collapg}
@@ -12,7 +12,7 @@ Advanced Data Aggregation
 
 It performs simple aggregations, multi-type data aggregations applying different functions to numeric and categorical data, weighted aggregations (including weighted multi-type aggregations), multi-function aggregations applying multiple functions to each column, and fully customized aggregations where the user passes a list mapping functions to columns.
 
-\code{collap} works with \emph{collapse}'s \link[=A1-fast-statistical-functions]{Fast Statistical Functions}, providing extremely fast conventional and weighted aggregation. It also works with other functions but this does not deliver high speeds on large data and does not support weighted aggregations.
+\code{collap} works with \emph{collapse}'s \link[=fast-statistical-functions]{Fast Statistical Functions}, providing extremely fast conventional and weighted aggregation. It also works with other functions but this does not deliver high speeds on large data and does not support weighted aggregations.
 
 % \code{collap} supports formula and data (i.e. grouping vectors or lists of vectors) input to \code{by}, whereas \code{collapv} allows names and indices of grouping columns to be passed to \code{by}.
 }
@@ -56,11 +56,11 @@ collapg(X, FUN = fmean, catFUN = fmode, cols = NULL, w = NULL, wFUN = fsum, cust
 \item{give.names}{logical. Create unique names of aggregated columns by adding a prefix 'FUN.var'. \code{'auto'} will automatically create such prefixes whenever multiple functions are applied to a column. % By default \code{"."} is used as a separator between 'FUN' and 'var'. It is also possible to choose a different separator by specifying \code{give.names = "_"}, for example.
 }
 \item{sort.row}{depreciated, renamed to \code{sort}.}
-\item{\dots}{additional arguments passed to all functions supplied to \code{FUN}, \code{catFUN}, \code{wFUN} or \code{custom}. The behavior of \link[=A1-fast-statistical-functions]{Fast Statistical Functions} is regulated by \code{option("collapse_unused_arg_action")} and defaults to \code{"warning"}. }
+\item{\dots}{additional arguments passed to all functions supplied to \code{FUN}, \code{catFUN}, \code{wFUN} or \code{custom}. The behavior of \link[=fast-statistical-functions]{Fast Statistical Functions} is regulated by \code{option("collapse_unused_arg_action")} and defaults to \code{"warning"}. }
 }
 
 \details{
-\code{collap} automatically checks each function passed to it whether it is a \link[=A1-fast-statistical-functions]{Fast Statistical Function} (i.e. whether the function name is contained in \code{.FAST_STAT_FUN}). If the function is a fast statistical function, \code{collap} only does the grouping and then calls the function to carry out the grouped computations. If the function is not one of \code{.FAST_STAT_FUN}, \code{\link{BY}} is called internally to perform the computation. The resulting computations from each function are put into a list and recombined to produce the desired output format as controlled by the \code{return} argument.
+\code{collap} automatically checks each function passed to it whether it is a \link[=fast-statistical-functions]{Fast Statistical Function} (i.e. whether the function name is contained in \code{.FAST_STAT_FUN}). If the function is a fast statistical function, \code{collap} only does the grouping and then calls the function to carry out the grouped computations. If the function is not one of \code{.FAST_STAT_FUN}, \code{\link{BY}} is called internally to perform the computation. The resulting computations from each function are put into a list and recombined to produce the desired output format as controlled by the \code{return} argument.
 
 When setting \code{parallel = TRUE} on a non-windows computer, aggregations will efficiently be parallelized at the column level using \code{\link{mclapply}} utilizing \code{mc.cores} cores.
 }
@@ -74,11 +74,11 @@ When setting \code{parallel = TRUE} on a non-windows computer, aggregations will
 %%  ~~who you are~~
  %}
 \note{
-(1) Since \code{\link{BY}} does not check and split additional arguments passed to it, it is presently not possible to create a weighted function in R and apply it to data by groups with \code{collap}. Weighted aggregations only work with \link[=A1-fast-statistical-functions]{Fast Statistical Functions} supporting weights. User written weighted functions can be applied using the \emph{data.table} package.
+(1) Additional arguments passed are not split by groups. Weighted aggregations with user defined functions should be done with \code{\link{fsummarise}}, or using the \emph{data.table} package.
 
-(2) When the \code{w} argument is used, the weights are passed to all \link[=A1-fast-statistical-functions]{Fast Statistical Functions}. This may be undesirable in settings like \code{collapse::collap(data, ~ id, custom = list(fsum = ..., fmean = ...), w = ~ weights)} where some columns are to be aggregated using the weighted mean, and others using a simple sum or another unweighted statistic. Since many \link[=A1-fast-statistical-functions]{Fast Statistical Functions} including \code{\link{fsum}} support weights, the above computes a weighted mean and a weighted sum. A couple of workarounds were outlined \href{https://github.com/SebKrantz/collapse/issues/96}{here}, but \emph{collapse} 1.5.0 incorporates an easy solution into \code{collap}: It is now possible to simply append \link[=A1-fast-statistical-functions]{Fast Statistical Functions} by \code{_uw} to yield an unweighted computation. So for the above example we can write: \code{collapse::collap(data, ~ id, custom = list(fsum_uw = ..., fmean = ...), w = ~ weights)} to get the weighted mean and the simple sum. \emph{Note} that the \code{_uw} functions are not available for use outside collap. Thus one also needs to quote them when passed to the \code{FUN} or \code{catFUN} arguments, e.g. use \code{collap(data, ~ id, fmean, "fmode_uw", w = ~ weighs)}, since \code{collap(data, ~ id, fmean, fmode_uw, w = ~ weighs)} gives an error stating that \code{fmode_uw} was not found. \emph{Note} also that it is never necessary for functions passed to \code{wFUN} to be appended like this, as the weights are never used to aggregate themselves.
+(2) When the \code{w} argument is used, the weights are passed to all \link[=fast-statistical-functions]{Fast Statistical Functions}. This may be undesirable in settings like \code{collapse::collap(data, ~ id, custom = list(fsum = ..., fmean = ...), w = ~ weights)} where some columns are to be aggregated using the weighted mean, and others using a simple sum or another unweighted statistic. Since many \link[=fast-statistical-functions]{Fast Statistical Functions} including \code{\link{fsum}} support weights, the above computes a weighted mean and a weighted sum. A couple of workarounds were outlined \href{https://github.com/SebKrantz/collapse/issues/96}{here}, but \emph{collapse} 1.5.0 incorporates an easy solution into \code{collap}: It is now possible to simply append \link[=fast-statistical-functions]{Fast Statistical Functions} by \code{_uw} to yield an unweighted computation. So for the above example we can write: \code{collapse::collap(data, ~ id, custom = list(fsum_uw = ..., fmean = ...), w = ~ weights)} to get the weighted mean and the simple sum. \emph{Note} that the \code{_uw} functions are not available for use outside collap. Thus one also needs to quote them when passed to the \code{FUN} or \code{catFUN} arguments, e.g. use \code{collap(data, ~ id, fmean, "fmode_uw", w = ~ weighs)}, since \code{collap(data, ~ id, fmean, fmode_uw, w = ~ weighs)} gives an error stating that \code{fmode_uw} was not found. \emph{Note} also that it is never necessary for functions passed to \code{wFUN} to be appended like this, as the weights are never used to aggregate themselves.
 
-(3) The dispatch between using optimized \link[=A1-fast-statistical-functions]{Fast Statistical Functions} performing grouped computations internally or calling \code{BY} to perform split-apply-combine computing is done by matching the function name against \code{.FAST_STAT_FUN}. Thus code like \code{collapse::collap(data, ~ id, collapse::fmedian)} does not yield an optimized computation, as \code{"collapse::fmedian" \%!in\% .FAST_STAT_FUN}. It is sufficient to write \code{collapse::collap(data, ~ id, "fmedian")} to get the desired result when the \emph{collapse} namespace is not attached.
+(3) The dispatch between using optimized \link[=fast-statistical-functions]{Fast Statistical Functions} performing grouped computations internally or calling \code{BY} to perform split-apply-combine computing is done by matching the function name against \code{.FAST_STAT_FUN}. Thus code like \code{collapse::collap(data, ~ id, collapse::fmedian)} does not yield an optimized computation, as \code{"collapse::fmedian" \%!in\% .FAST_STAT_FUN}. It is sufficient to write \code{collapse::collap(data, ~ id, "fmedian")} to get the desired result when the \emph{collapse} namespace is not attached.
 
 %If you want to perform optimized computations with \code{collap} without loading the pacckage, load the functions beforehand as well, e.g. \code{fmedian <- collapse::fmedian; data, ~ id, fmedian)}. Alternatively it is of course also possible to use \code{collapse::fmedian(collapse::fgroup_by(data, id))}, or something similar...
 
@@ -88,7 +88,7 @@ When setting \code{parallel = TRUE} on a non-windows computer, aggregations will
 %% ~Make other sections like Warning with \section{Warning }{\dots.} ~
 
 \seealso{
-\code{\link{BY}}, \link[=A1-fast-statistical-functions]{Fast Statistical Functions}, \link[=collapse-documentation]{Collapse Overview}
+\code{\link{fsummarise}}, \code{\link{BY}}, \link[=fast-statistical-functions]{Fast Statistical Functions}, \link[=collapse-documentation]{Collapse Overview}
 }
 \examples{
 ## A Simple Introduction --------------------------------------

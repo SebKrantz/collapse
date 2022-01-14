@@ -9,10 +9,10 @@ Fast Reordering of Data Frame Columns
 Efficiently reorder columns in a data frame (no copies). To do this by reference see also \code{data.table::setcolorder}.
 }
 \usage{
-colorder(X, \dots, pos = c("front", "end", "exchange"))
+colorder(X, \dots, pos = "front")
 
-colorderv(X, neworder = radixorder(names(X)), pos = c("front","end","exchange"),
-          regex = FALSE, \dots)
+colorderv(X, neworder = radixorder(names(X)),
+          pos = "front", regex = FALSE, \dots)
 }
 %- maybe also 'usage' for other objects documented here.
 \arguments{
@@ -24,6 +24,7 @@ colorderv(X, neworder = radixorder(names(X)), pos = c("front","end","exchange"),
                  1 \tab\tab "front"   \tab\tab move specified columns to the front of \code{X} (the default). \cr
                  2 \tab\tab "end" \tab\tab move specified columns to the end of \code{X}. \cr
                  3 \tab\tab "exchange"   \tab\tab just exchange the positions of selected columns in \code{X}, other columns remain in the same position. \cr
+                 4 \tab\tab "after"  \tab\tab place all further selected columns behind the first selected column. \cr
   }
 }
 \item{regex}{logical. \code{TRUE} will do regular expression search on the column names of \code{X} using a (vector of) regular expression(s) passed to \code{neworder}. Matching is done using \code{\link{grep}}. \emph{Note} that multiple regular expressions will be matched in the order they are passed, and \code{\link{funique}} will be applied to the resulting set of indices. }
@@ -36,16 +37,18 @@ colorderv(X, neworder = radixorder(names(X)), pos = c("front","end","exchange"),
 %% ~Make other sections like Warning with \section{Warning }{\dots.} ~
 
 \seealso{
-\code{\link{roworder}}, \link[=A3-fast-data-manipulation]{Data Frame Manipulation}, \link[=collapse-documentation]{Collapse Overview}
+\code{\link{roworder}}, \link[=fast-data-manipulation]{Data Frame Manipulation}, \link[=collapse-documentation]{Collapse Overview}
 }
 \examples{
 head(colorder(mtcars, vs, cyl:hp, am))
 head(colorder(mtcars, vs, cyl:hp, am, pos = "end"))
+head(colorder(mtcars, vs, cyl:hp, am, pos = "after"))
 head(colorder(mtcars, vs, cyl, pos = "exchange"))
 
 ## Same in standard evaluation
 head(colorderv(mtcars, c(8, 2:4, 9)))
 head(colorderv(mtcars, c(8, 2:4, 9), pos = "end"))
+head(colorderv(mtcars, c(8, 2:4, 9), pos = "after"))
 head(colorderv(mtcars, c(8, 2), pos = "exchange"))
 }
 % Add one or more standard keywords, see file 'KEYWORDS' in the

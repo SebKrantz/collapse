@@ -1,5 +1,6 @@
-\name{A1-fast-statistical-functions}
+\name{fast-statistical-functions}
 \alias{A1-fast-statistical-functions}
+\alias{fast-statistical-functions}
 \alias{.FAST_STAT_FUN}
 \alias{.FAST_FUN}
 \title{Fast (Grouped, Weighted) Statistical Functions for Matrix-Like Objects}  % Vectors, Matrix and Data Frame Columns}
@@ -60,11 +61,11 @@ Please see the documentation of individual functions.
 \section{Notes}{
 \itemize{
 \item Panel-decomposed (i.e. between and within) statistics as well as grouped and weighted skewness and kurtosis are implemented in \code{\link{qsu}}.
-\item The vector-valued functions and operators \code{\link[=fscale]{fscale/STD}}, \code{\link[=fbetween]{fbetween/B}}, \code{\link[=fhdbetween]{fhdbetween/HDB}}, \code{\link[=fwithin]{fwithin/W}}, \code{\link[=fhdwithin]{fhdwithin/HDW}}, \code{\link[=flag]{flag/L/F}}, \code{\link[=fdiff]{fdiff/D/Dlog}} and \code{\link[=fgrowth]{fgrowth/G}} are documented under \link[=A6-data-transformations]{Data Transformations} and \link[=A7-time-series-panel-series]{Time Series and Panel Series}. These functions also support \code{plm::pseries} and \code{plm::pdata.frame}'s.
+\item The vector-valued functions and operators \code{\link[=fscale]{fscale/STD}}, \code{\link[=fbetween]{fbetween/B}}, \code{\link[=fhdbetween]{fhdbetween/HDB}}, \code{\link[=fwithin]{fwithin/W}}, \code{\link[=fhdwithin]{fhdwithin/HDW}}, \code{\link[=flag]{flag/L/F}}, \code{\link[=fdiff]{fdiff/D/Dlog}} and \code{\link[=fgrowth]{fgrowth/G}} are documented under \link[=data-transformations]{Data Transformations} and \link[=time-series-panel-series]{Time Series and Panel Series}. These functions also support \code{plm::pseries} and \code{plm::pdata.frame}'s.
 }
 }
 \seealso{
-\link[=collapse-documentation]{Collapse Overview}, \link[=A6-data-transformations]{Data Transformations}, \link[=A7-time-series-panel-series]{Time Series and Panel Series}
+\link[=collapse-documentation]{Collapse Overview}, \link[=data-transformations]{Data Transformations}, \link[=time-series-panel-series]{Time Series and Panel Series}
 }
 \section{Examples}{\preformatted{
 ## default vector method

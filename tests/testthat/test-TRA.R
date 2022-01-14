@@ -1,5 +1,7 @@
 context("TRA")
 
+bmean <- base::mean
+
 # rm(list = ls())
 set.seed(101)
 d <- na_insert(iris[1:4])
@@ -12,13 +14,13 @@ replace <- function(x, y) `[<-`(y, is.na(x), value = NA)          # `[<-`(x, !is
 replace_fill <- function(x, y) y                                  # rep(y, length(x))
 "%" <- function(x, y) x * (100 / y)
 "-%%" <- function(x, y) x - (x %% y)
-# "-+" <- function(x, y) x - y + mean(x, na.rm = TRUE)
+# "-+" <- function(x, y) x - y + bmean(x, na.rm = TRUE)
 
 
 test_that("TRA performs like sweep", {
   ops <- c("replace_fill", "replace", "-", "+", "*", "/", "%", "%%", "-%%")
   for(i in ops) {
-    expect_equal(drop(sweep(qM(v), 2L, mean(v, na.rm = TRUE), i)), TRA(v, mean(v, na.rm = TRUE), i))
+    expect_equal(drop(sweep(qM(v), 2L, bmean(v, na.rm = TRUE), i)), TRA(v, bmean(v, na.rm = TRUE), i))
     expect_equal(`attributes<-`(sweep(qM(m), 2L, colMeans(m, na.rm = TRUE), i), attributes(m)), TRA(m, colMeans(m, na.rm = TRUE), i))
     expect_equal(setNames(qDF(sweep(d, 2L, colMeans(qM(d), na.rm = TRUE), i)), names(d)), TRA(d, colMeans(qM(d), na.rm = TRUE), i))
   }

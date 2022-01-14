@@ -52,7 +52,7 @@ fselect <- function(x, ..., return = "data") { # This also takes names and indic
   # if(inherits(x, "data.table")) nam <- nam[seq_col(x)] # required because of overallocation... -> Should be solved now, always take shallow copy...
   nl <- `names<-`(as.vector(seq_along(nam), "list"), nam)
   vars <- eval(substitute(c(...)), nl, parent.frame())
-  # if(!is.integer(vars)) stop(paste0("Unknown columns: ", .c(...))) # if(!is.integer(vars) || max(vars) > length(nam)) # nah, a bit redundant..
+  # if(!is.integer(vars)) stop(paste0("Unknown columns: ", .c(...))) # if(!is.integer(vars) || bmax(vars) > length(nam)) # nah, a bit redundant..
   if(!is.atomic(vars) || is.logical(vars)) stop("... needs to be expressions evaluating to integer or character")
   nam_vars <- names(vars)
   vars <- if(is.character(vars)) ckmatch(vars, nam) else as.integer(vars) # needed, otherwise selecting with doubles gives an error
@@ -96,28 +96,34 @@ slt <- fselect # good, consistent
 # STD(fselect(GGDC10S, Country, Variable, Year, AGR:SUM))
 # Idea: also do this for replacement functions, replacing characters renames, replacong number reorders, replacing 3 does renaming and reordering?
 
-num_vars <- function(x, return = "data") get_vars_indl(x, vapply(`attributes<-`(x, NULL), is.numeric, TRUE), return)
+num_vars <- function(x, return = "data") get_vars_indl(x, .Call(C_vtypes, x, 1L), return) # vapply(`attributes<-`(x, NULL), is.numeric, TRUE)
 nv <- num_vars
 
-"num_vars<-" <- function(x, value) `get_vars_ind<-`(x, vapply(`attributes<-`(x, NULL), is.numeric, TRUE), value)
+"num_vars<-" <- function(x, value) `get_vars_ind<-`(x, .Call(C_vtypes, x, 1L), value)
 "nv<-" <- `num_vars<-`
 
-char_vars <- function(x, return = "data") get_vars_indl(x, vapply(`attributes<-`(x, NULL), is.character, TRUE), return)
-"char_vars<-" <- function(x, value) `get_vars_ind<-`(x, vapply(`attributes<-`(x, NULL), is.character, TRUE), value)
+char_vars <- function(x, return = "data") get_vars_ind(x, .Call(C_vtypes, x, 0L) %==% 17L, return) # vapply(`attributes<-`(x, NULL), is.character, TRUE)
+"char_vars<-" <- function(x, value) `get_vars_ind<-`(x, .Call(C_vtypes, x, 0L) %==% 17L, value)
 
-fact_vars <- function(x, return = "data") get_vars_indl(x, vapply(`attributes<-`(x, NULL), is.factor, TRUE), return)
-"fact_vars<-" <- function(x, value) `get_vars_ind<-`(x, vapply(`attributes<-`(x, NULL), is.factor, TRUE), value)
+fact_vars <- function(x, return = "data") get_vars_indl(x, .Call(C_vtypes, x, 2L), return) # vapply(`attributes<-`(x, NULL), is.factor, TRUE)
+"fact_vars<-" <- function(x, value) `get_vars_ind<-`(x, .Call(C_vtypes, x, 2L), value)
 
-logi_vars <- function(x, return = "data") get_vars_indl(x, vapply(`attributes<-`(x, NULL), is.logical, TRUE), return)
-"logi_vars<-" <- function(x, value) `get_vars_ind<-`(x, vapply(`attributes<-`(x, NULL), is.logical, TRUE), value)
+logi_vars <- function(x, return = "data") get_vars_ind(x, .Call(C_vtypes, x, 0L) %==% 11L, return) # vapply(`attributes<-`(x, NULL), is.logical, TRUE)
+"logi_vars<-" <- function(x, value) `get_vars_ind<-`(x, .Call(C_vtypes, x, 0L) %==% 11L, value)
 
 date_vars <- function(x, return = "data") get_vars_indl(x, vapply(`attributes<-`(x, NULL), is_date, TRUE), return)
 "date_vars<-" <- function(x, value) `get_vars_ind<-`(x, vapply(`attributes<-`(x, NULL), is_date, TRUE), value)
-Date_vars <- date_vars
-"Date_vars<-" <- `date_vars<-`
+Date_vars <- function(x, return = "data") {
+  message("Note that 'Date_vars' was renamed to 'date_vars'. It will not be removed anytime soon, but please use updated function names in new code, see help('collapse-renamed')")
+  date_vars(x, return)
+}
+"Date_vars<-" <- function(x, value) {
+   message("Note that 'Date_vars' was renamed to 'date_vars'. It will not be removed anytime soon, but please use updated function names in new code, see help('collapse-renamed')")
+  `date_vars<-`(x, value)
+}
 
-cat_vars <- function(x, return = "data") get_vars_indl(x, !vapply(`attributes<-`(x, NULL), is.numeric, TRUE), return)
-"cat_vars<-" <- function(x, value) `get_vars_ind<-`(x, !vapply(`attributes<-`(x, NULL), is.numeric, TRUE), value)
+cat_vars <- function(x, return = "data") get_vars_ind(x, .Call(C_vtypes, x, 1L) %!=% TRUE, return)
+"cat_vars<-" <- function(x, value) `get_vars_ind<-`(x, .Call(C_vtypes, x, 1L) %!=% TRUE, value)
 
 
 get_vars <- function(x, vars, return = "data", regex = FALSE, ...) {
@@ -194,7 +200,7 @@ gvr <- function(x, vars, return = "data", ...) {
     }
     lv <- length(value)
     tl <- lv+lx
-    if(!is.numeric(pos) || length(pos) != lv || max(pos) > tl) stop("pos needs to be 'end', 'front' or a suitable numeric / integer vector of positions!")
+    if(!is.numeric(pos) || length(pos) != lv || bmax(pos) > tl) stop("pos needs to be 'end', 'front' or a suitable numeric / integer vector of positions!")
     o <- forder.int(c(seq_len(tl)[-pos], pos))
     ax[["names"]] <- if(length(nam <- names(value)))  c(ax[["names"]], nam)[o] else
         c(ax[["names"]], paste0("V", pos))[o] # FASTER THIS WAY? -> It seems so...
@@ -228,7 +234,7 @@ gvr <- function(x, vars, return = "data", ...) {
 add_vars <- function(x, ..., pos = "end") {
   if(...length() == 1L) return(`add_vars<-`(x, pos, ...))
   l <- c(...)
-  if(!all(fnrow2(x) == lengths(l, FALSE))) stop("if multiple arguments are passed to '...', each needs to be a data.frame/list with column-lengths matching nrow(x)")
+  if(!all(fnrow2(x) == vlengths(l, FALSE))) stop("if multiple arguments are passed to '...', each needs to be a data.frame/list with column-lengths matching nrow(x)")
   return(`add_vars<-`(x, pos, l)) # very minimal ! Doesn't work for vectors etc !
 }
 av <- add_vars
