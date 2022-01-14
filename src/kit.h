@@ -12,7 +12,7 @@
 // #endif
 #include <Rinternals.h>
 // #include <stdlib.h>
-// #include <stdint.h>
+#include <stdint.h> // needed for intptr_t on linux
 // #include <stdbool.h>
 // #ifdef _OPENMP
 // #include<omp.h>
