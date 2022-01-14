@@ -52,7 +52,7 @@ Factors may have empty levels after subsetting; unused levels are not automatica
   a vector), rows and columns (for a matrix or data frame).
 }
 \note{
-No replacement method \code{fsubset<-} or \code{ss<-} is offered in \emph{collapse}. For efficient subset relacement (without copying) use \code{data.table::set}, which can also be used with data frames and tibbles. To search and replace certain elements without copying, and to efficiently copy elements / rows from an equally sized vector / data frame, see \code{\link{setv}}.
+No replacement method \code{fsubset<-} or \code{ss<-} is offered in \emph{collapse}. For efficient subset replacement (without copying) use \code{data.table::set}, which can also be used with data frames and tibbles. To search and replace certain elements without copying, and to efficiently copy elements / rows from an equally sized vector / data frame, see \code{\link{setv}}.
 }
 \seealso{
   \code{\link{fselect}},

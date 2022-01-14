@@ -51,17 +51,29 @@ Fast missing value detection, (random) insertion and removal, fast data lengths 
 \code{anyv}, \code{allv}, \code{allNA}, \code{whichv}, \code{whichNA}, \code{\%==\%},
 \code{\%!=\%}, \code{copyv}, \code{setv}, \code{alloc}, \code{setop}, \code{\%+=\%}, \code{\%-=\%}, \code{\%*=\%}, \code{\%/=\%}, \code{missing_cases}, \code{na_insert}, \code{na_rm}, \code{na_omit}, \code{vlengths}, \code{vtypes}, \code{fnlevels}, \code{fnrow}, \code{fncol}, \code{fdim}, \code{seq_row}, \code{seq_col}, \code{cinv} \cr \cr \cr
 
-\link[=small-helpers]{Small (Helper) Functions} \tab\tab Multiple-assignement, non-standard concatenation, set and extract variable labels, extract variable classes, display variable names and labels together, add / remove prefix or postfix to / from column names, not-in operator, matching with error message for non-matched, check exact or near / numeric equality of multiple objects or of all elements in a list, return object with dimnames, row- or colnames efficiently set, or with all attributes removed, C-level functions to set and duplicate / copy attributes, identify categorical and date(-time) objects. \tab\tab \code{massign}, \code{\%=\%}, \code{.c}, \code{vlabels(<-)}, \code{setLabels}, \code{vclasses}, \code{namlab}, \code{add_stub}, \code{rm_stub}, \code{\%!in\%}, \code{ckmatch}, \code{all_identical}, \code{all_obj_equal}, \code{setDimnames}, \code{setRownames}, \code{setColnames}, \code{unattrib}, \code{setAttrib}, \code{copyAttrib}, \code{copyMostAttrib}, \code{is_categorical}, \code{is_date} \cr \cr \cr
+\link[=small-helpers]{Small (Helper) Functions} \tab\tab Multiple-assignment, non-standard concatenation, set and extract variable labels, extract variable classes, display variable names and labels together, add / remove prefix or postfix to / from column names, not-in operator, matching with error message for non-matched, check exact or near / numeric equality of multiple objects or of all elements in a list, return object with dimnames, row- or colnames efficiently set, or with all attributes removed, C-level functions to set and duplicate / copy attributes, identify categorical and date(-time) objects. \tab\tab \code{massign}, \code{\%=\%}, \code{.c}, \code{vlabels(<-)}, \code{setLabels}, \code{vclasses}, \code{namlab}, \code{add_stub}, \code{rm_stub}, \code{\%!in\%}, \code{ckmatch}, \code{all_identical}, \code{all_obj_equal}, \code{setDimnames}, \code{setRownames}, \code{setColnames}, \code{unattrib}, \code{setAttrib}, \code{copyAttrib}, \code{copyMostAttrib}, \code{is_categorical}, \code{is_date} \cr \cr \cr
 
 
 Data and Global Macros \tab\tab Groningen Growth and Development Centre 10-Sector Database, World Bank World Development dataset, and some global macros containing links to the topical documentation pages (including this page), all exported objects (excluding exported S3 methods), all generic functions, the 2 datasets, all fast functions, all fast statistical (scalar-valued) functions, and all transformation operators (these are not infix functions but function shortcuts resembling operators in a statistical sense, such as the lag/lead operators \code{L}/\code{F}, both wrapping \code{flag}, see \code{\link{.OPERATOR_FUN}}).  \tab\tab \code{\link{GGDC10S}, \link{wlddev}, .COLLAPSE_TOPICS, .COLLAPSE_ALL, .COLLAPSE_GENERIC, .COLLAPSE_DATA, .FAST_FUN, .FAST_STAT_FUN, .OPERATOR_FUN} \cr\cr\cr
 
-\link[=collapse-options]{Package Options} \tab\tab \itemize{
-\item \code{options("collapse_unused_arg_action")} sets the action taken by generic statistical functions when unknown arguments are passed to a method. The default is \code{"warning"}. \item \code{options("collapse_mask")} can be used to export copies of functions starting with \code{"f"} when loading the package, removing the leading \code{"f"} (e.g. also exporting \code{subset} as a clone to \code{fsubset}). This will mask like-named base R or \emph{dplyr} functions. \item \code{options("collapse_F_to_FALSE")} can also be called before loading the package to set the lead operator \code{F} in the package to \code{FALSE}, to avoid problems with \code{base::F}. \item When manipulating \emph{data.table}'s, you can set how many columns \emph{collapse} functions overallocate with \code{option("collapse_DT_alloccol")}. The default is \code{100L}.} \tab\tab  \cr
+}
+}
 
+\section{\link[=collapse-options]{Package Options}}{
+
+\itemize{
+\item \code{options("collapse_unused_arg_action")} sets the action taken by generic statistical functions when unknown arguments are passed to a method. The default is \code{"warning"}.
+
+\item \code{options("collapse_mask")} can be used to export copies of functions starting with \code{"f"} when loading the package, removing the leading \code{"f"} (e.g. also exporting \code{subset} as a clone to \code{fsubset}). This will mask like-named base R or \emph{dplyr} functions.
+
+\item \code{options("collapse_F_to_FALSE")} can also be called before loading the package to set the lead operator \code{F} in the package to \code{FALSE}, to avoid problems with \code{base::F}.
+
+\item When manipulating \emph{data.table}'s, you can set how many columns \emph{collapse} functions overallocate with \code{option("collapse_DT_alloccol")}. The default is \code{100L}.
 }
 
 }
+
+
 \section{Details}{
 The added top-level documentation infrastructure in \emph{collapse} allows you to effectively navigate the package. % (as in other commercial software documentations like Mathematica).
 Calling \code{?FUN} brings up the documentation page documenting the function, which contains links to associated topic pages and closely related functions. You can also call topical documentation pages directly from the console. The links to these pages are contained in the global macro \code{.COLLAPSE_TOPICS} (e.g. calling \code{help(.COLLAPSE_TOPICS[1])} brings up this page).

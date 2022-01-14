@@ -115,7 +115,7 @@ release_questions <- function() {
     "built vignettes properly with Sys.setenv(RUNBENCH = TRUE)?",
     "Have you updated all help files with code changes, even if it's only documenting arguments or links?",
     "updated collapse-package.Rd and collapse-documentation.Rd?",
-    "All function in global_macros.R?",
+    "All functions in global_macros.R?",
     "checked all depreciated functions and arguments?",
     "any changess to arguments or order of arguments in key functions (GRP etc.). Does everything work?"
   )

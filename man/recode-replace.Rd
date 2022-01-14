@@ -73,7 +73,7 @@ replace_outliers(X, limits, value = NA,
 \note{
 These functions are not generic and do not offer support for factors or date(-time) objects. see \code{dplyr::recode_factor}, \emph{forcats} and other appropriate packages for dealing with these classes.
 
-Simple replacing tasks on a vector can also effectively be handled by, \code{\link{setv}} / \code{\link{copyv}}. Fast vectorised switches are offered by package \emph{kit} (functions \code{iif}, \code{nif}, \code{vswitch}, \code{nswitch}) as well as \code{data.table::fcase} and \code{data.table::fifelse}.
+Simple replacing tasks on a vector can also effectively be handled by, \code{\link{setv}} / \code{\link{copyv}}. Fast vectorized switches are offered by package \emph{kit} (functions \code{iif}, \code{nif}, \code{vswitch}, \code{nswitch}) as well as \code{data.table::fcase} and \code{data.table::fifelse}.
 }
 
 %% ~Make other sections like Warning with \section{Warning }{\dots.} ~

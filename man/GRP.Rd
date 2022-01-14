@@ -114,7 +114,7 @@ fungroup(X, \dots)
       }
   }
 
-  \item{use.g.names}{logical. \code{TRUE} returs a named list containing the groups, like \code{\link{split}}. \code{FALSE} is slightly more efficient. }
+  \item{use.g.names}{logical. \code{TRUE} returns a named list, like \code{\link{split}}. \code{FALSE} is slightly more efficient. }
 
  %  \item{untibble}{logical. \code{TRUE} also removes classes \code{c("tbl_df", "tbl")} from \code{X}. \code{fgroup_by} attaches an attribute \code{"was.tibble"} indicating if \code{X} was a tibble prior to grouping. The argument thus defaults to \code{TRUE} if this attribute is attached and equal to \code{FALSE}, so that \code{identical(X, X |> fgroup_by(...) |> fungroup())}, regardless of the nature of \code{X}. }
 

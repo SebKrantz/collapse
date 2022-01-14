@@ -110,7 +110,7 @@ Other contributors from packages \emph{collapse} utilizes:
 \itemize{
 \item Matt Dowle, Arun Srinivasan and contributors worldwide (\emph{data.table})
 \item Dirk Eddelbuettel and contributors worldwide (\emph{Rcpp}, \emph{RcppArmadillo}, \emph{RcppEigen})
-\item Margan Jacob (\emph{kit})
+\item Morgan Jacob (\emph{kit})
 \item Laurent Berge (\emph{fixest})
 \item Josh Pasek (\emph{weights})
 \item R Core Team and contributors worldwide (\emph{stats})

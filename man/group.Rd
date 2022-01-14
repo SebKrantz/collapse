@@ -5,7 +5,7 @@
 Fast Hash-Based Grouping
 }
 \description{
-\code{group()} scans the rows of a data frame (or atomic vector / list of atomic vectors), assigning to each unique row an integer id - startig with 1 and proceeding in first-appearance order of the rows. The function is written in C and optimized for R's data structures. It is the workhorse behind functions like \code{\link{GRP}} / \code{\link{fgroup_by}}, \code{\link{collap}}, \code{\link{qF}}, \code{\link{qG}}, \code{\link{finteraction}} and \code{\link{funique}}, when called with argument \code{sort = FALSE}.
+\code{group()} scans the rows of a data frame (or atomic vector / list of atomic vectors), assigning to each unique row an integer id - starting with 1 and proceeding in first-appearance order of the rows. The function is written in C and optimized for R's data structures. It is the workhorse behind functions like \code{\link{GRP}} / \code{\link{fgroup_by}}, \code{\link{collap}}, \code{\link{qF}}, \code{\link{qG}}, \code{\link{finteraction}} and \code{\link{funique}}, when called with argument \code{sort = FALSE}.
 }
 \usage{
 group(x, starts = FALSE, group.sizes = FALSE)

@@ -17,7 +17,7 @@
 \item \code{"all"} turns on all of the above.
 }
 Note that none of these options will impact internal \emph{collapse} code, but they may change the way your programs run. \code{"manip"} is probably the safest option to start with.
-Specifying \code{"fast-fun"}, \code{"fast-stat-fun"}, \code{"fast-trfm-fun"} or \code{"all"} are ambitious as they replace basic R functions like \code{sum} and \code{max}, introducing \emph{collapse}'s \code{na.rm = TRUE} default and different behvior for matrices and data frames, and these options also changes some internal packge macros so that base R functions like \code{sum} or \code{max} called inside \code{fsummarise}, \code{fmutate} or \code{collap} will also receive vectorized execution. In other words, if you put \code{options(collapse_mask = "all")} before loading the package, and you have a collapse-compatible line of dplyr code like \code{wlddev |> group_by(region, income) |> summarise(across(PCGDP:POP, sum))}, this will now receive fully optimized execution. Note however that because of \code{collapse}'s \code{na.rm = TRUE} default, the result will be different unless you add \code{na.rm = FALSE}. In General, this option is for your convenience, if you want to write visually more appealing code or you want to translate existing dplyr codes to \emph{collapse}. Use with care! For production code I generally recommend not using it.
+Specifying \code{"fast-fun"}, \code{"fast-stat-fun"}, \code{"fast-trfm-fun"} or \code{"all"} are ambitious as they replace basic R functions like \code{sum} and \code{max}, introducing \emph{collapse}'s \code{na.rm = TRUE} default and different behavior for matrices and data frames, and these options also changes some internal macros so that base R functions like \code{sum} or \code{max} called inside \code{fsummarise}, \code{fmutate} or \code{collap} will also receive vectorized execution. In other words, if you put \code{options(collapse_mask = "all")} before loading the package, and you have a collapse-compatible line of dplyr code like \code{wlddev |> group_by(region, income) |> summarise(across(PCGDP:POP, sum))}, this will now receive fully optimized execution. Note however that because of \code{collapse}'s \code{na.rm = TRUE} default, the result will be different unless you add \code{na.rm = FALSE}. In General, this option is for your convenience, if you want to write visually more appealing code or you want to translate existing dplyr codes to \emph{collapse}. Use with care! For production code I generally recommend not using it.
 
 % Note also that I have not yet investigated in much detail the impact on internal codes of replacing basic R functions like \code{sum}, \code{min} and \code{max} in the package. In terms of unit testing it seems to be quite ok (a number of tests break where I compare fast statistical functions to base functions because of the \code{na.rm = TRUE} default, but otherwise no major issues arise). In general, while this option is cool and can be of great help in translating existing \emph{dplyr} codes to \emph{collapse}, it is experimental and not the best idea for new production code.
 
@@ -25,6 +25,10 @@ Specifying \code{"fast-fun"}, \code{"fast-stat-fun"}, \code{"fast-trfm-fun"} or 
 
 \item \code{option("collapse_DT_alloccol")} sets how many empty columns \emph{collapse} data manipulation functions like \code{ftransform} allocate when taking a shallow copy of \emph{data.table}'s. The default is \code{100L}. Note that the \emph{data.table} default is \code{getOption("datatable.alloccol") = 1024L}. I chose a lower default because shallow copies are taken by each data manipulation function if you manipulate \emph{data.table}'s with collapse, and the cost increases with the number of overallocated columns. With 100 columns, the cost is 2-5 microseconds per copy.
 }
+}
+
+\seealso{
+  \link[=collapse-documentation]{Collapse Overview}, \link{collapse-package}
 }
 
 \keyword{documentation}

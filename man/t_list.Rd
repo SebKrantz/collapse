@@ -12,7 +12,7 @@ t_list(l)
 }
 %- maybe also 'usage' for other objects documented here.
 \arguments{
-  \item{l}{a list of lists. Elements inside the sublists can be heterogenous, including further lists.
+  \item{l}{a list of lists. Elements inside the sublists can be heterogeneous, including further lists.
 }
 }
 \value{

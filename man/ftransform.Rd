@@ -17,7 +17,7 @@
 \description{
   \code{ftransform} is a much faster version of \code{\link{transform}} for data frames. It returns the data frame with new columns computed and/or existing columns modified or deleted. \code{settransform} does all of that by reference. \code{fcompute} computes and returns new columns. These functions evaluate all arguments simultaneously, allow list-input (nested pipelines) and natively disregard grouped data.
 
-Catering to the \emph{tidyverse} user, v1.7.0 introduced \code{fmutate}, providing familiar functionality i.e. arguments are evaluated sequentially, computation on grouped data is done by groups, and functions can be applied to multiple colums using \code{\link{across}}. See also the Details.
+Catering to the \emph{tidyverse} user, v1.7.0 introduced \code{fmutate}, providing familiar functionality i.e. arguments are evaluated sequentially, computation on grouped data is done by groups, and functions can be applied to multiple columns using \code{\link{across}}. See also the Details.
 }
 
 \usage{
@@ -48,7 +48,7 @@ mtt(.data, ..., .keep = "all") # Shortcut for fmutate
 \arguments{
     \item{.data}{a data frame or named list of columns.}
     \item{\dots}{further arguments of the form \code{column = value}. The \code{value} can be a combination of other columns, a scalar value, or \code{NULL}, which deletes \code{column}. Alternatively it is also possible to place a single list here, which will be treated like a list of \code{column = value} arguments. For \code{ftransformv} and \code{fcomputev}, \code{\dots} can be used to pass further arguments to \code{FUN}. \emph{Note:} The ellipsis (\code{\dots}) is always evaluated within the data frame (\code{.data}) environment. See Examples. \code{fmutate} supports \code{\link{across}} statements, and evaluates tagged vector expressions sequentially. }
-    \item{vars}{variables to be transformed by applying \code{FUN} to them: select using names, indices, a logical vector or a selector function (e.g. \code{is.numeric}). Since v1.7 \code{vars} is evaluated within the \code{.data} enviroment, permitting expressions on columns e.g. \code{c(col1, col3:coln)}.}
+    \item{vars}{variables to be transformed by applying \code{FUN} to them: select using names, indices, a logical vector or a selector function (e.g. \code{is.numeric}). Since v1.7 \code{vars} is evaluated within the \code{.data} environment, permitting expressions on columns e.g. \code{c(col1, col3:coln)}.}
     \item{FUN}{a single function yielding a result of length \code{NROW(.data)} or 1. See also \code{apply}.}
     \item{apply}{logical. \code{TRUE} (default) will apply \code{FUN} to each column selected in \code{vars}; \code{FALSE} will apply \code{FUN} to the subsetted data frame i.e. \code{FUN(get_vars(.data, vars), ...)}. The latter is useful for \emph{collapse} functions with data frame or grouped / panel data frame methods, yielding performance gains and enabling grouped transformations. See Examples.}
     \item{value}{a named list of replacements, it will be treated like an evaluated list of \code{column = value} arguments.}

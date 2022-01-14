@@ -24,9 +24,9 @@ After installing *collapse*, you can call `help("collapse-documentation")` which
 
 Thus *collapse* comes with a fully structured hierarchical documentation which you can browse within R - and you don't require anything else to fully understand this package. The Documentation is also available [online](<https://sebkrantz.github.io/collapse/reference/index.html>).
 
-In addition, the package page under `help("collapse-package")` provides some more general information about the package and its design philosophy, as well as a very compact set of examples covering important functionality (which lacks featues introduced in 1.7 though). 
+In addition, the package page under `help("collapse-package")` provides some more general information about the package and its design philosophy, as well as a very compact set of examples covering important functionality (which lacks features introduced in 1.7 though). 
 
-Reading `help("collapse-package")` and `help("collapse-documentation")` and working through the examples on `help("collapse-package")` is probably the fastest way to get acquainted with the package. `help("collapse-documentation")` is also the most up-to-date documentation of the package (some vignettes need minor updating, not because the code does not run anymore [*collapse* has a very stable and backwards compatible API], but because newer versions (esp. 1.7) added some functionality). 
+Reading `help("collapse-package")` and `help("collapse-documentation")` and working through the examples on `help("collapse-package")` is probably the fastest way to get acquainted with the package. `help("collapse-documentation")` is the most up-to-date documentation of the package at the moment (some vignettes need minor updating, because newer versions (esp. 1.7) added significant functionality). 
 
 ## Vignettes
 
