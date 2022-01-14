@@ -72,9 +72,10 @@ void fsum_double_impl_omp(double *pout, double *px, int ng, int *pg, int narm, i
     } else {
       memset(pout, 0.0, sizeof(double) * ng);
       --pout;
-      #pragma omp parallel for num_threads(nth) shared(pout)
+      #pragma omp parallel for num_threads(nth) reduction(+:pout[:ng]) // shared(pout)
       for(int i = 0; i < l; ++i) {
-        pout[pg[i]] = px[i]; // Used to stop loop when all groups passed with NA, but probably no speed gain since groups are mostly ordered.
+        #pragma omp atomic
+        pout[pg[i]] += px[i]; // Used to stop loop when all groups passed with NA, but probably no speed gain since groups are mostly ordered.
       }
     }
   }
