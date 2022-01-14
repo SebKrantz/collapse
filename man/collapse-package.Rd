@@ -16,7 +16,7 @@ It is made compatible with \emph{dplyr}, \emph{data.table}, \emph{sf} and the \e
 
 }
 \section{Getting Started}{
-See \link[=collapse-documentation]{Collapse Documentation & Overview} (the most up-to-date form of documentation for \emph{collapse} 1.7), or read the \href{https://sebkrantz.github.io/collapse/articles/collapse_intro.html}{introductory vignette}. All vignettes can be accessed on the \href{https://sebkrantz.github.io/collapse/}{package website}. A cheatsheet is available at \href{https://raw.githubusercontent.com/SebKrantz/cheatsheets/master/collapse.pdf}{here}. A compact introduction for quick-starters is provided in the examples section below.
+See \link[=collapse-documentation]{Collapse Documentation & Overview} (the most up-to-date documentation for \emph{collapse} 1.7), or read the \href{https://sebkrantz.github.io/collapse/articles/collapse_intro.html}{introductory vignette}. All vignettes can be accessed on the \href{https://sebkrantz.github.io/collapse/}{package website}. A cheatsheet is available at \href{https://raw.githubusercontent.com/SebKrantz/cheatsheets/master/collapse.pdf}{here}. A compact introduction for quick-starters is provided in the examples section below.
 }
 
 
