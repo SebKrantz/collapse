@@ -37,16 +37,17 @@ NumericVector fbstatstemp(NumericVector x, bool ext = false, int ng = 0, Integer
             int k = 0;
             long double sum = 0, sq_sum = 0;
             for(int i = j+1; i--; ) {
-              if(std::isnan(x[i])) continue;
-              sum += x[i];
-              sq_sum += pow(x[i],2);
-              if(min > x[i]) min = x[i];
-              if(max < x[i]) max = x[i];
+              d1 = x[i];
+              if(std::isnan(d1)) continue;
+              sum += d1;
+              sq_sum += d1 * d1;
+              if(min > d1) min = d1;
+              if(max < d1) max = d1;
               ++k;
             }
             n = k;
-            mean = (sum / n);
-            M2 = sqrt((sq_sum - pow(mean,2)*n)/(n-1));
+            mean = double(sum / n);
+            M2 = (double)sqrt((sq_sum - pow(mean,2)*n)/(n-1));
           }
         } else mean = M2 = min = max = NA_REAL;
       } else { // with weights
