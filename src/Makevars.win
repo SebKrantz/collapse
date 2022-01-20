@@ -1,2 +1,2 @@
 
-PKG_CFLAGS = -O3
+PKG_CFLAGS += -O3
