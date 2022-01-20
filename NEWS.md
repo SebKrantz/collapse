@@ -1,6 +1,19 @@
+# collapse 1.7.1
+
+* Fixed minor C/C++ issues flagged in CRAN checks. 
+
+* Added option `ties = "last"` to `fmode`. 
+
+* Added argument `stable.algo` to `qsu`. Setting `stable.algo = FALSE` toggles a faster calculation of the standard deviation, yielding 2x speedup on large datasets. 
+
+* *Fast Statistical Functions* now internally use `group` for grouping data if both `g` and `TRA` arguments are used, yielding efficiency gains on unsorted data. 
+
+* Ensured that `fmutate` and `fsummarise` can be called if *collapse* is not attached. 
+
+
 # collapse 1.7.0
 
-*collapse* 1.7.0, released mid January 2022, brings major improvements in the computational backend of the package, it's data manipulation capabilities, and a whole set of new functions that enable more flexible and memory efficiency R programming - significantly enhancing the language itself. For the vast majority of codes, updating to 1.7 should not cause any problems. 
+*collapse* 1.7.0, released mid January 2022, brings major improvements in the computational backend of the package, it's data manipulation capabilities, and a whole set of new functions that enable more flexible and memory efficient R programming - significantly enhancing the language itself. For the vast majority of codes, updating to 1.7 should not cause any problems. 
 
 
 
@@ -16,7 +29,7 @@
 
 * In `flag`, `fdiff` and `fgrowth`, if a plain numeric vector is passed to the `t` argument such that `is.double(t) && !is.object(t)`, it is coerced to integer using `as.integer(t)` and directly used as time variable, rather than applying ordered grouping first. This is to avoid the inefficiency of grouping, and owes to the fact that in most data imported into R with various packages, the time (year) variables are coded as double although they should be integer (I also don't know of any cases where time needs to be indexed by a non-date variable with decimal places). Note that the algorithm internally handles irregularity in the time variable so this is not a problem. Should this break any code, kindly raise an issue on GitHub.
 
-* The function `setrename` now truly renames objects by reference (without creating a shallow copy). The same is true for `vlabels<-` (which was rewritten in C) and a new function `setrelabel`. Thus additional care needs to be taken (with use inside functions etc.) as the renaming will take global effects unless a shallow copy of the data was created by some prior operation inside the function. If in doubt, better use `frename` or `relabel` which do create a shallow copy. 
+* The function `setrename` now truly renames objects by reference (without creating a shallow copy). The same is true for `vlabels<-` (which was rewritten in C) and a new function `setrelabel`. Thus additional care needs to be taken (with use inside functions etc.) as the renaming will take global effects unless a shallow copy of the data was created by some prior operation inside the function. If in doubt, better use `frename` which creates a shallow copy. 
 
 * Some improvements to the `BY` function, both in terms of performance and security. Performance is enhanced through a new C function `gsplit`, providing split-apply-combine computing speeds competitive with *dplyr* on a much broader range of R objects. Regarding Security: if the result of the computation has the same length as the original data, names / rownames and grouping columns (for grouped data) are only added to the result object if known to be valid, i.e. if the data was originally sorted by the grouping columns (information recorded by `GRP.default(..., sort = TRUE)`, which is called internally on non-factor/GRP/qG objects). This is because `BY` does not reorder data after the split-apply-combine step (unlike `dplyr::mutate`); data are simply recombined in the order of the groups. Because of this, in general, `BY` should be used to compute summary statistics (unless data are sorted before grouping). The added security makes this explicit. 
 
@@ -264,7 +277,7 @@ A small patch for 1.5.0 that:
 
 ### Changes to Functionality
 
-* Functions `fhdwithin / HDW` and `fhdbetween / HDB` have been reworked, delivering higher performance and greater functionality: For higher-dimensional centering and heterogenous slopes, the `demean` function from the *fixest* package is imported (conditional on the availability of that package). The linear prediction  and partialling out functionality is now built around `flm` and also allows for weights and different fitting methods. 
+* Functions `fhdwithin / HDW` and `fhdbetween / HDB` have been reworked, delivering higher performance and greater functionality: For higher-dimensional centering and heterogeneous slopes, the `demean` function from the *fixest* package is imported (conditional on the availability of that package). The linear prediction  and partialling out functionality is now built around `flm` and also allows for weights and different fitting methods. 
 
 * In `collap`, the default behavior of `give.names = "auto"` was altered when used together with the `custom` argument. Before the function name was always added to the column names. Now it is only added if a column is aggregated with two different functions. I apologize if this breaks any code dependent on the new names, but this behavior just better reflects most common use (applying only one function per column), as well as STATA's collapse. 
 

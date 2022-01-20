@@ -1,7 +1,7 @@
 Package: collapse
 Title: Advanced and Fast Data Transformation
-Version: 1.7.0
-Date: 2022-01-14
+Version: 1.7.1
+Date: 2022-01-20
 Authors@R: c(
            person("Sebastian", "Krantz", role = c("aut", "cre"), 
                   email = "sebastian.krantz@graduateinstitute.ch"),
@@ -33,13 +33,13 @@ Description: A C/C++ based package for advanced data transformation and
         weighted, parallelized and fully custom data aggregation.
     (3) Advanced transformations: Fast row / column arithmetic, (grouped) replacing 
         and sweeping out of statistics, (grouped, weighted) scaling / standardizing, 
-        between (averaging) and (quasi-)within (centering / demeaning) transformations, 
-        higher-dimensional centering (i.e. multiple fixed effects transformations), 
-        linear prediction / partialling-out, linear model fitting and testing.
+        between (averaging) and (quasi-)within (demeaning) transformations, 
+        higher-dimensional centering (i.e. multiple fixed effects or polynomials), 
+        linear prediction, model fitting and testing exclusion restrictions.
     (4) Advanced time-computations: Fast (sequences of) lags / leads, and 
-        (lagged / leaded, iterated, quasi-, log-) differences, (compounded) 
-        growth rates, and cumulative sums on (unordered, irregular) time series and 
-        panel data. Multivariate auto-, partial- and cross-correlation functions for panel data. 
+        (lagged / leaded, iterated, quasi-, log-) differences and (compounded) 
+        growth rates on (irregular) time series and panel data. 
+        Multivariate auto-, partial- and cross-correlation functions for panel data. 
         Panel data to (ts-)array conversions.
     (5) List processing: (Recursive) list search, splitting, 
         extraction / subsetting, data-apply, and generalized recursive 
