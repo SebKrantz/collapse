@@ -7,7 +7,7 @@
 
 fFUN_smr_add_groups <- function(z) {
   if(!is.call(z)) return(z)
-  cz <- as.character(z[[1L]])
+  cz <- l1orlst(as.character(z[[1L]])) # needed if collapse::fmean etc..
   if(any(cz == .FAST_STAT_FUN_POLD)) {
     z$g <- quote(.g_)
     z$use.g.names <- FALSE
@@ -89,6 +89,7 @@ fsummarise <- function(.data, ..., keep.group_vars = TRUE) {
     ax <- attributes(.data)
     ax[["class"]] <- fsetdiff(cld, c("GRP_df", "grouped_df"))
     .data[[".g_"]] <- g
+    .data[[".gsplit_"]] <- gsplit
     res <- vector("list", length(e))
     for(i in 2:length(e)) { # This is good and very fast
       ei <- e[[i]]
