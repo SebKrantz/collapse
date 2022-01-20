@@ -14,7 +14,7 @@ template <int RTYPE>
 Vector<RTYPE> fmodeImpl(const Vector<RTYPE>& x, int ng, const IntegerVector& g, const SEXP& gs, const SEXP& w, bool narm, int ret) {
   int l = x.size();
   if(l < 1) return x; // Prevents seqfault for numeric(0) #101
-  bool nfirstm = ret != 0, minm = ret == 1;
+  bool minm = ret == 1, nfirstm = ret > 0, lastm = ret == 3;
   typedef typename Rcpp::traits::storage_type<RTYPE>::type storage_t;
   auto isnanT = (RTYPE == REALSXP) ? [](storage_t x) { return x != x; } :
     [](storage_t x) { return x == Vector<RTYPE>::get_na(); };
@@ -46,7 +46,8 @@ Vector<RTYPE> fmodeImpl(const Vector<RTYPE>& x, int ng, const IntegerVector& g, 
             ++hash.size_;
             n[i+1] = 1;
             if(nfirstm && max == 1) { // Could also do this at the end in a separate loop. What is faster ? -> This seems better !
-              if(minm) {
+              if(lastm) mode = val;
+              else if(minm) {
                 if(mode > val) mode = val;
               } else {
                 if(mode < val) mode = val;
@@ -58,7 +59,7 @@ Vector<RTYPE> fmodeImpl(const Vector<RTYPE>& x, int ng, const IntegerVector& g, 
             //   mode = val;
             // }
             if(++n[index] >= max) {
-              if(n[index] > max) {
+              if(lastm || n[index] > max) {
                 max = n[index];
                 mode = val;
               } else if(nfirstm) {
@@ -94,7 +95,8 @@ Vector<RTYPE> fmodeImpl(const Vector<RTYPE>& x, int ng, const IntegerVector& g, 
             ++hash.size_;
             n[i+1] = 1;
             if(nfirstm && max == 1) { // Could also do this at the end in a separate loop. What is faster ? -> This seems better !
-              if(minm) {
+              if(lastm) mode = val;
+              else if(minm) {
                 if(mode > val) mode = val;
               } else {
                 if(mode < val) mode = val;
@@ -106,7 +108,7 @@ Vector<RTYPE> fmodeImpl(const Vector<RTYPE>& x, int ng, const IntegerVector& g, 
             //   mode = val;
             // }
             if(++n[index] >= max) { // good, or create int index
-              if(n[index] > max) {
+              if(lastm || n[index] > max) {
                 max = n[index];
                 mode = val;
               } else if(nfirstm) {
@@ -178,7 +180,8 @@ Vector<RTYPE> fmodeImpl(const Vector<RTYPE>& x, int ng, const IntegerVector& g, 
               ++hash.size_;
               n[i+1] = 1;
               if(nfirstm && max == 1) { // Could also do this at the end in a separate loop. What is faster ? -> This seems better !
-                if(minm) {
+                if(lastm) out[gr] = val;
+                else if(minm) {
                   if(out[gr] > val) out[gr] = val;
                 } else {
                   if(out[gr] < val) out[gr] = val;
@@ -191,7 +194,7 @@ Vector<RTYPE> fmodeImpl(const Vector<RTYPE>& x, int ng, const IntegerVector& g, 
               // }
               // index = hash.data[addr];
               if(++n[index] >= max) {
-                if(n[index] > max) {
+                if(lastm || n[index] > max) {
                   max = n[index];
                   out[gr] = val;
                 } else if(nfirstm) {
@@ -234,7 +237,8 @@ Vector<RTYPE> fmodeImpl(const Vector<RTYPE>& x, int ng, const IntegerVector& g, 
               ++hash.size_;
               n[i+1] = 1;
               if(nfirstm && max == 1) { // Could also do this at the end in a separate loop. What is faster ? -> This seems better !
-                if(minm) {
+                if(lastm) out[gr] = val;
+                else if(minm) {
                   if(out[gr] > val) out[gr] = val;
                 } else {
                   if(out[gr] < val) out[gr] = val;
@@ -246,7 +250,7 @@ Vector<RTYPE> fmodeImpl(const Vector<RTYPE>& x, int ng, const IntegerVector& g, 
               //   out[gr] = val;
               // }
               if(++n[index] >= max) {
-                if(n[index] > max) {
+                if(lastm || n[index] > max) {
                   max = n[index];
                   out[gr] = val;
                 } else if(nfirstm) {
@@ -301,7 +305,7 @@ Vector<RTYPE> fmodeImpl(const Vector<RTYPE>& x, int ng, const IntegerVector& g, 
             ++hash.size_;
             n[i+1] = pwg[i];
             if(pwg[i] >= max) { // necessary, because second loop only entered for more than one occurrence of the same value
-              if(pwg[i] > max) {
+              if(lastm || pwg[i] > max) {
                 max = pwg[i];
                 mode = val;
               } else if(nfirstm) { // Could also do this at the end in a separate loop. What is faster ??
@@ -319,7 +323,7 @@ Vector<RTYPE> fmodeImpl(const Vector<RTYPE>& x, int ng, const IntegerVector& g, 
             //   mode = val;
             // }
             if(n[index] >= max) {
-              if(n[index] > max) {
+              if(lastm || n[index] > max) {
                 max = n[index];
                 mode = val;
               } else if(nfirstm) {
@@ -348,7 +352,7 @@ Vector<RTYPE> fmodeImpl(const Vector<RTYPE>& x, int ng, const IntegerVector& g, 
             ++hash.size_;
             n[i+1] = pwg[i];
             if(pwg[i] >= max) { // necessary, because second loop only entered for more than one occurrence of the same value
-              if(pwg[i] > max) {
+              if(lastm || pwg[i] > max) {
                 max = pwg[i];
                 mode = val;
               } else if(nfirstm) { // Could also do this at the end in a separate loop. What is faster ??
@@ -366,7 +370,7 @@ Vector<RTYPE> fmodeImpl(const Vector<RTYPE>& x, int ng, const IntegerVector& g, 
             //   mode = val;
             // }
             if(n[index] >= max) { // good, or create int index
-              if(n[index] > max) {
+              if(lastm || n[index] > max) {
                 max = n[index];
                 mode = val;
               } else if(nfirstm) {
@@ -440,7 +444,7 @@ Vector<RTYPE> fmodeImpl(const Vector<RTYPE>& x, int ng, const IntegerVector& g, 
                 ++hash.size_;
                 n[i+1] = wtemp[i];
                 if(wtemp[i] >= max) { // necessary, because second loop only entered for more than one occurrence of the same value
-                  if(wtemp[i] > max) {
+                  if(lastm || wtemp[i] > max) {
                     max = wtemp[i];
                     out[gr] = val;
                   } else if(nfirstm) { // Could also do this at the end in a separate loop. What is faster ??
@@ -458,7 +462,7 @@ Vector<RTYPE> fmodeImpl(const Vector<RTYPE>& x, int ng, const IntegerVector& g, 
                 //   out[gr] = val;
                 // }
                 if(n[index] >= max) {
-                  if(n[index] > max) {
+                  if(lastm || n[index] > max) {
                     max = n[index];
                     out[gr] = val;
                   } else if(nfirstm) {
@@ -497,7 +501,7 @@ Vector<RTYPE> fmodeImpl(const Vector<RTYPE>& x, int ng, const IntegerVector& g, 
               ++hash.size_;
               n[i+1] = wtemp[i];
               if(wtemp[i] >= max) { // necessary, because second loop only entered for more than one occurrence of the same value
-                if(wtemp[i] > max) {
+                if(lastm || wtemp[i] > max) {
                   max = wtemp[i];
                   out[gr] = val;
                 } else if(nfirstm) { // Could also do this at the end in a separate loop. What is faster ??
@@ -515,7 +519,7 @@ Vector<RTYPE> fmodeImpl(const Vector<RTYPE>& x, int ng, const IntegerVector& g, 
               //   out[gr] = val;
               // }
               if(n[index] >= max) {
-                if(n[index] > max) {
+                if(lastm || n[index] > max) {
                   max = n[index];
                   out[gr] = val;
                 } else if(nfirstm) {
@@ -541,7 +545,7 @@ Vector<RTYPE> fmodeImpl(const Vector<RTYPE>& x, int ng, const IntegerVector& g, 
 IntegerVector fmodeFACT(const IntegerVector& x, int ng, const IntegerVector& g, const SEXP& gs, const SEXP& w, bool narm, int ret) {
   int l = x.size(), nlevp = Rf_nlevels(x)+1, val = 0;
   if(l < 1) return x; // Prevents seqfault for numeric(0) #101
-  bool nfirstm = ret != 0, minm = ret == 1;
+  bool minm = ret == 1, nfirstm = ret > 0, lastm = ret == 3;
 
   if(Rf_isNull(w)) { // No Weights
     if(ng == 0) { // No Groups
@@ -555,7 +559,7 @@ IntegerVector fmodeFACT(const IntegerVector& x, int ng, const IntegerVector& g, 
             val = x[i];
             if(val == NA_INTEGER) continue;
             if(++n[val] >= max) {
-              if(n[val] > max) {
+              if(lastm || n[val] > max) {
                 max = n[val];
                 mode = val;
               } else if(nfirstm) {
@@ -573,7 +577,7 @@ IntegerVector fmodeFACT(const IntegerVector& x, int ng, const IntegerVector& g, 
           val = x[i];
           if(val == NA_INTEGER) val = 0;
           if(++n[val] >= max) {
-            if(n[val] > max) {
+            if(lastm || n[val] > max) {
               max = n[val];
               mode = val;
             } else if(nfirstm) {
@@ -626,7 +630,7 @@ IntegerVector fmodeFACT(const IntegerVector& x, int ng, const IntegerVector& g, 
               val = temp[i];
               if(val == NA_INTEGER) continue;
               if(++n[val] >= max) {
-                if(n[val] > max) {
+                if(lastm || n[val] > max) {
                   max = n[val];
                   out[gr] = val;
                 } else if(nfirstm) {
@@ -650,7 +654,7 @@ IntegerVector fmodeFACT(const IntegerVector& x, int ng, const IntegerVector& g, 
             val = temp[i];
             if(val == NA_INTEGER) val = 0;
             if(++n[val] >= max) {
-              if(n[val] > max) {
+              if(lastm || n[val] > max) {
                 max = n[val];
                 out[gr] = val;
               } else if(nfirstm) {
@@ -687,7 +691,7 @@ IntegerVector fmodeFACT(const IntegerVector& x, int ng, const IntegerVector& g, 
           if(val == NA_INTEGER || std::isnan(pwg[i])) continue;
           n[val] += pwg[i];
           if(n[val] >= max) {
-            if(n[val] > max) {
+            if(lastm || n[val] > max) {
               max = n[val];
               mode = val;
             } else if(nfirstm) {
@@ -706,7 +710,7 @@ IntegerVector fmodeFACT(const IntegerVector& x, int ng, const IntegerVector& g, 
           if(val == NA_INTEGER) val = 0;
           n[val] += pwg[i];
           if(n[val] >= max) {
-            if(n[val] > max) {
+            if(lastm || n[val] > max) {
               max = n[val];
               mode = val;
             } else if(nfirstm) {
@@ -769,7 +773,7 @@ IntegerVector fmodeFACT(const IntegerVector& x, int ng, const IntegerVector& g, 
               if(val == NA_INTEGER || std::isnan(wtemp[i])) continue;
               n[val] += wtemp[i];
               if(n[val] >= max) {
-                if(n[val] > max) {
+                if(lastm || n[val] > max) {
                   max = n[val];
                   out[gr] = val;
                 } else if(nfirstm) {
@@ -797,7 +801,7 @@ IntegerVector fmodeFACT(const IntegerVector& x, int ng, const IntegerVector& g, 
             if(val == NA_INTEGER) val = 0;
             n[val] += wtemp[i];
             if(n[val] >= max) {
-              if(n[val] > max) {
+              if(lastm || n[val] > max) {
                 max = n[val];
                 out[gr] = val;
               } else if(nfirstm) {
