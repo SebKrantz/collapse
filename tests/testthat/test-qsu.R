@@ -24,6 +24,10 @@ wldNA <- na_insert(wlddev)
 xNA <- na_insert(rnorm(100))
 ones <- rep(1, fnrow(wlddev))
 
+for(i in 1:2) {
+  if(i == 1L) qsu <- function(x, ...) collapse::qsu(x, ..., stable.algo = FALSE)
+  if(i == 2L) qsu <- collapse::qsu
+
 test_that("qsu works properly for simple cases (including unit groups and weights)", {
 
   expect_equal(qsu(1:10), base_qsu(1:10))
@@ -54,6 +58,9 @@ test_that("qsu works properly for simple cases (including unit groups and weight
   expect_equal(t(unclass(qsu(GGDC10S, w = rep(1, fnrow(GGDC10S)), by = rep(1, fnrow(GGDC10S))))), unclass(base_qsu(GGDC10S)))
 
 })
+
+}
+rm(qsu)
 
 test_that("qsu works properly for simple cases with higher-order statistics (including unit groups and weights)", {
 
@@ -89,6 +96,10 @@ test_that("qsu works properly for simple cases with higher-order statistics (inc
 g <- GRP(wlddev, ~ income)
 p <- GRP(wlddev, ~ iso3c)
 
+for(i in 1:2) {
+  if(i == 1L) qsu <- function(x, ...) collapse::qsu(x, ..., stable.algo = FALSE)
+  if(i == 2L) qsu <- collapse::qsu
+
 test_that("qsu works properly for grouped and panel data computations", {
 
   # Grouped Statistics
@@ -119,6 +130,9 @@ test_that("qsu works properly for grouped and panel data computations", {
   expect_equal(unattrib(ps[,-1,"Within",]), unattrib(base_qsu(fwithin(nv(wldNA), p, mean = "overall.mean"), g)[,-1,]))
 
 })
+
+}
+rm(qsu)
 
 test_that("qsu works properly for grouped and panel data computations with higher-order statistics", {
 
@@ -174,3 +188,4 @@ test_that("qsu gives errors for wrong input", {
   expect_error(qsu(wlddev, cols = 9:14))
   expect_error(qsu(wlddev, cols = c("PCGDP","bla")))
 })
+

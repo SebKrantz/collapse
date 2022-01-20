@@ -294,7 +294,7 @@ print.GRP_df <- function(x, ...) {
   if(is_GRP(g)) { # Issue Patrice flagged !
     # oldClass(g) <- NULL # could get rid of this if get rid of "data.frame" class.
     if(length(g[[3L]])) {
-      su <- unclass(qsu.default(g[[3L]]))
+      su <- unclass(qsu.default(g[[3L]], stable.algo = FALSE))
       stats <- if(su[4L] == su[5L]) paste0(" [", g[[1L]], " | ", round(su[2L]), " (", round(su[3L], 1L), ")]") else
         paste0(" [", g[[1L]], " | ", round(su[2L]), " (", round(su[3L], 1L), ") ", su[4L], "-", su[5L], "]")
     } else

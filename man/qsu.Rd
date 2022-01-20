@@ -19,24 +19,27 @@ It computes a set of 7 statistics (nobs, mean, sd, min, max, skewness and kurtos
 \usage{
 qsu(x, \dots)
 
-\method{qsu}{default}(x, g = NULL, pid = NULL, w = NULL, higher = FALSE, array = TRUE, \dots)
+\method{qsu}{default}(x, g = NULL, pid = NULL, w = NULL, higher = FALSE,
+    array = TRUE, stable.algo = TRUE, \dots)
 
-\method{qsu}{matrix}(x, g = NULL, pid = NULL, w = NULL, higher = FALSE, array = TRUE, \dots)
+\method{qsu}{matrix}(x, g = NULL, pid = NULL, w = NULL, higher = FALSE,
+    array = TRUE, stable.algo = TRUE, \dots)
 
-\method{qsu}{data.frame}(x, by = NULL, pid = NULL, w = NULL, cols = NULL,
-    higher = FALSE, array = TRUE, vlabels = FALSE, \dots)
+\method{qsu}{data.frame}(x, by = NULL, pid = NULL, w = NULL, cols = NULL, higher = FALSE,
+    array = TRUE, vlabels = FALSE, stable.algo = TRUE, \dots)
 
 # Methods for compatibility with plm:
 
-\method{qsu}{pseries}(x, g = NULL, w = NULL, effect = 1L, higher = FALSE, array = TRUE, \dots)
+\method{qsu}{pseries}(x, g = NULL, w = NULL, effect = 1L, higher = FALSE,
+    array = TRUE, stable.algo = TRUE, \dots)
 
-\method{qsu}{pdata.frame}(x, by = NULL, w = NULL, cols = NULL, effect = 1L,
-    higher = FALSE, array = TRUE, vlabels = FALSE, \dots)
+\method{qsu}{pdata.frame}(x, by = NULL, w = NULL, cols = NULL, effect = 1L, higher = FALSE,
+    array = TRUE, vlabels = FALSE, stable.algo = TRUE, \dots)
 
 # Methods for compatibility with sf:
 
-\method{qsu}{sf}(x, by = NULL, pid = NULL, w = NULL, cols = NULL,
-    higher = FALSE, array = TRUE, vlabels = FALSE, \dots)
+\method{qsu}{sf}(x, by = NULL, pid = NULL, w = NULL, cols = NULL, higher = FALSE,
+    array = TRUE, vlabels = FALSE, stable.algo = TRUE, \dots)
 
 
 \method{print}{qsu}(x, digits = 4, nonsci.digits = 9, na.print = "-",
@@ -53,6 +56,7 @@ qsu(x, \dots)
 
   \item{higher}{logical. Add higher moments (skewness and kurtosis).}
   \item{array}{logical. If computations have more than 2 dimensions (up to a maximum of 4D: variables, statistics, groups and panel-decomposition) output to array, else output (nested) list of matrices.}
+  \item{stable.algo}{logical. \code{FALSE} uses a faster but less stable method to calculate the standard deviation (see Details of \code{\link{fsd}}). Only available if \code{w = NULL} and \code{higher = FALSE}.}
   \item{vlabels}{logical. Use variable labels in the summary. See \code{\link{vlabels}}.}
   \item{effect}{\emph{plm} methods: Select which panel identifier should be used for between and within transformations of the data. 1L takes the first variable in the \code{plm::index}, 2L the second etc.. Index variables can also be called by name using a character string. More than one variable can be supplied. }
   \item{\dots}{arguments to be passed to or from other methods.}
