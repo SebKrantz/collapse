@@ -23,12 +23,7 @@ fmean.default <- function(x, g = NULL, w = NULL, TRA = NULL, na.rm = TRUE, use.g
     return(.Call(Cpp_fmean,x,g[[1L]],g[[2L]],g[[3L]],w,na.rm))
   }
   if(is.null(g)) return(.Call(Cpp_TRA,x,.Call(Cpp_fmean,x,0L,0L,NULL,w,na.rm),0L,TtI(TRA)))
-  if(is.atomic(g)) {
-    if(is.nmfactor(g)) return(.Call(Cpp_TRA,x,.Call(Cpp_fmean,x,fnlevels(g),g,NULL,w,na.rm),g,TtI(TRA)))
-    g <- qG(g, na.exclude = FALSE)
-    return(.Call(Cpp_TRA,x,.Call(Cpp_fmean,x,attr(g,"N.groups"),g,NULL,w,na.rm),g,TtI(TRA)))
-  }
-  if(!is_GRP(g)) g <- GRP.default(g, return.groups = FALSE, call = FALSE)
+  g <- G_guo(g)
   .Call(Cpp_TRA,x,.Call(Cpp_fmean,x,g[[1L]],g[[2L]],g[[3L]],w,na.rm),g[[2L]],TtI(TRA))
 }
 
@@ -51,12 +46,7 @@ fmean.matrix <- function(x, g = NULL, w = NULL, TRA = NULL, na.rm = TRUE, use.g.
     return(.Call(Cpp_fmeanm,x,g[[1L]],g[[2L]],g[[3L]],w,na.rm,drop))
   }
   if(is.null(g)) return(.Call(Cpp_TRAm,x,.Call(Cpp_fmeanm,x,0L,0L,NULL,w,na.rm,TRUE),0L,TtI(TRA)))
-  if(is.atomic(g)) {
-    if(is.nmfactor(g)) return(.Call(Cpp_TRAm,x,.Call(Cpp_fmeanm,x,fnlevels(g),g,NULL,w,na.rm,drop),g,TtI(TRA)))
-    g <- qG(g, na.exclude = FALSE)
-    return(.Call(Cpp_TRAm,x,.Call(Cpp_fmeanm,x,attr(g,"N.groups"),g,NULL,w,na.rm,drop),g,TtI(TRA)))
-  }
-  if(!is_GRP(g)) g <- GRP.default(g, return.groups = FALSE, call = FALSE)
+  g <- G_guo(g)
   .Call(Cpp_TRAm,x,.Call(Cpp_fmeanm,x,g[[1L]],g[[2L]],g[[3L]],w,na.rm,drop),g[[2L]],TtI(TRA))
 }
 
@@ -80,12 +70,7 @@ fmean.data.frame <- function(x, g = NULL, w = NULL, TRA = NULL, na.rm = TRUE, us
     return(.Call(Cpp_fmeanl,x,g[[1L]],g[[2L]],g[[3L]],w,na.rm,drop))
   }
   if(is.null(g)) return(.Call(Cpp_TRAl,x,.Call(Cpp_fmeanl,x,0L,0L,NULL,w,na.rm,TRUE),0L,TtI(TRA)))
-  if(is.atomic(g)) {
-    if(is.nmfactor(g)) return(.Call(Cpp_TRAl,x,.Call(Cpp_fmeanl,x,fnlevels(g),g,NULL,w,na.rm,drop),g,TtI(TRA)))
-    g <- qG(g, na.exclude = FALSE)
-    return(.Call(Cpp_TRAl,x,.Call(Cpp_fmeanl,x,attr(g,"N.groups"),g,NULL,w,na.rm,drop),g,TtI(TRA)))
-  }
-  if(!is_GRP(g)) g <- GRP.default(g, return.groups = FALSE, call = FALSE)
+  g <- G_guo(g)
   .Call(Cpp_TRAl,x,.Call(Cpp_fmeanl,x,g[[1L]],g[[2L]],g[[3L]],w,na.rm,drop),g[[2L]],TtI(TRA))
 }
 

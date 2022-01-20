@@ -22,12 +22,7 @@ fsum.default <- function(x, g = NULL, w = NULL, TRA = NULL, na.rm = TRUE, use.g.
     return(.Call(C_fsum,x,g[[1L]],g[[2L]],w,na.rm))
   }
   if(is.null(g)) return(.Call(Cpp_TRA,x,.Call(C_fsum,x,0L,0L,w,na.rm),0L,TtI(TRA)))
-  if(is.atomic(g)) {
-    if(is.nmfactor(g)) return(.Call(Cpp_TRA,x,.Call(C_fsum,x,fnlevels(g),g,w,na.rm),g,TtI(TRA)))
-    g <- qG(g, na.exclude = FALSE)
-    return(.Call(Cpp_TRA,x,.Call(C_fsum,x,attr(g,"N.groups"),g,w,na.rm),g,TtI(TRA)))
-  }
-  if(!is_GRP(g)) g <- GRP.default(g, return.groups = FALSE, call = FALSE)
+  g <- G_guo(g)
   .Call(Cpp_TRA,x,.Call(C_fsum,x,g[[1L]],g[[2L]],w,na.rm),g[[2L]],TtI(TRA))
 }
 
@@ -50,12 +45,7 @@ fsum.matrix <- function(x, g = NULL, w = NULL, TRA = NULL, na.rm = TRUE, use.g.n
     return(.Call(C_fsumm,x,g[[1L]],g[[2L]],w,na.rm,FALSE))
   }
   if(is.null(g)) return(.Call(Cpp_TRAm,x,.Call(C_fsumm,x,0L,0L,w,na.rm,TRUE),0L,TtI(TRA)))
-  if(is.atomic(g)) {
-    if(is.nmfactor(g)) return(.Call(Cpp_TRAm,x,.Call(C_fsumm,x,fnlevels(g),g,w,na.rm,FALSE),g,TtI(TRA)))
-    g <- qG(g, na.exclude = FALSE)
-    return(.Call(Cpp_TRAm,x,.Call(C_fsumm,x,attr(g,"N.groups"),g,w,na.rm,FALSE),g,TtI(TRA)))
-  }
-  if(!is_GRP(g)) g <- GRP.default(g, return.groups = FALSE, call = FALSE)
+  g <- G_guo(g)
   .Call(Cpp_TRAm,x,.Call(C_fsumm,x,g[[1L]],g[[2L]],w,na.rm,FALSE),g[[2L]],TtI(TRA))
 }
 
@@ -79,12 +69,7 @@ fsum.data.frame <- function(x, g = NULL, w = NULL, TRA = NULL, na.rm = TRUE, use
     return(.Call(C_fsuml,x,g[[1L]],g[[2L]],w,na.rm,FALSE))
   }
   if(is.null(g)) return(.Call(Cpp_TRAl,x,.Call(C_fsuml,x,0L,0L,w,na.rm,TRUE),0L,TtI(TRA)))
-  if(is.atomic(g)) {
-    if(is.nmfactor(g)) return(.Call(Cpp_TRAl,x,.Call(C_fsuml,x,fnlevels(g),g,w,na.rm,FALSE),g,TtI(TRA)))
-    g <- qG(g, na.exclude = FALSE)
-    return(.Call(Cpp_TRAl,x,.Call(C_fsuml,x,attr(g,"N.groups"),g,w,na.rm,FALSE),g,TtI(TRA)))
-  }
-  if(!is_GRP(g)) g <- GRP.default(g, return.groups = FALSE, call = FALSE)
+  g <- G_guo(g)
   .Call(Cpp_TRAl,x,.Call(C_fsuml,x,g[[1L]],g[[2L]],w,na.rm,FALSE),g[[2L]],TtI(TRA))
 }
 

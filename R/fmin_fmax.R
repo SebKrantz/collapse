@@ -23,12 +23,7 @@ fmin.default <- function(x, g = NULL, TRA = NULL, na.rm = TRUE, use.g.names = TR
     return(.Call(C_fmin,x,g[[1L]],g[[2L]],na.rm))
   }
   if(is.null(g)) return(.Call(Cpp_TRA,x,.Call(C_fmin,x,0L,0L,na.rm),0L,TtI(TRA)))
-  if(is.atomic(g)) {
-    if(is.nmfactor(g)) return(.Call(Cpp_TRA,x,.Call(C_fmin,x,fnlevels(g),g,na.rm),g,TtI(TRA)))
-    g <- qG(g, na.exclude = FALSE)
-    return(.Call(Cpp_TRA,x,.Call(C_fmin,x,attr(g,"N.groups"),g,na.rm),g,TtI(TRA)))
-  }
-  if(!is_GRP(g)) g <- GRP.default(g, return.groups = FALSE, call = FALSE)
+  g <- G_guo(g)
   .Call(Cpp_TRA,x,.Call(C_fmin,x,g[[1L]],g[[2L]],na.rm),g[[2L]],TtI(TRA))
 }
 
@@ -51,12 +46,7 @@ fmin.matrix <- function(x, g = NULL, TRA = NULL, na.rm = TRUE, use.g.names = TRU
     return(.Call(C_fminm,x,g[[1L]],g[[2L]],na.rm,FALSE))
   }
   if(is.null(g)) return(.Call(Cpp_TRAm,x,.Call(C_fminm,x,0L,0L,na.rm,TRUE),0L,TtI(TRA)))
-  if(is.atomic(g)) {
-    if(is.nmfactor(g)) return(.Call(Cpp_TRAm,x,.Call(C_fminm,x,fnlevels(g),g,na.rm,FALSE),g,TtI(TRA)))
-    g <- qG(g, na.exclude = FALSE)
-    return(.Call(Cpp_TRAm,x,.Call(C_fminm,x,attr(g,"N.groups"),g,na.rm,FALSE),g,TtI(TRA)))
-  }
-  if(!is_GRP(g)) g <- GRP.default(g, return.groups = FALSE, call = FALSE)
+  g <- G_guo(g)
   .Call(Cpp_TRAm,x,.Call(C_fminm,x,g[[1L]],g[[2L]],na.rm,FALSE),g[[2L]],TtI(TRA))
 }
 
@@ -80,12 +70,7 @@ fmin.data.frame <- function(x, g = NULL, TRA = NULL, na.rm = TRUE, use.g.names =
     return(.Call(C_fminl,x,g[[1L]],g[[2L]],na.rm,FALSE))
   }
   if(is.null(g)) return(.Call(Cpp_TRAl,x,.Call(C_fminl,x,0L,0L,na.rm,TRUE),0L,TtI(TRA)))
-  if(is.atomic(g)) {
-    if(is.nmfactor(g)) return(.Call(Cpp_TRAl,x,.Call(C_fminl,x,fnlevels(g),g,na.rm,FALSE),g,TtI(TRA)))
-    g <- qG(g, na.exclude = FALSE)
-    return(.Call(Cpp_TRAl,x,.Call(C_fminl,x,attr(g,"N.groups"),g,na.rm,FALSE),g,TtI(TRA)))
-  }
-  if(!is_GRP(g)) g <- GRP.default(g, return.groups = FALSE, call = FALSE)
+  g <- G_guo(g)
   .Call(Cpp_TRAl,x,.Call(C_fminl,x,g[[1L]],g[[2L]],na.rm,FALSE),g[[2L]],TtI(TRA))
 }
 
@@ -149,12 +134,7 @@ fmax.default <- function(x, g = NULL, TRA = NULL, na.rm = TRUE, use.g.names = TR
     return(.Call(C_fmax,x,g[[1L]],g[[2L]],na.rm))
   }
   if(is.null(g)) return(.Call(Cpp_TRA,x,.Call(C_fmax,x,0L,0L,na.rm),0L,TtI(TRA)))
-  if(is.atomic(g)) {
-    if(is.nmfactor(g)) return(.Call(Cpp_TRA,x,.Call(C_fmax,x,fnlevels(g),g,na.rm),g,TtI(TRA)))
-    g <- qG(g, na.exclude = FALSE)
-    return(.Call(Cpp_TRA,x,.Call(C_fmax,x,attr(g,"N.groups"),g,na.rm),g,TtI(TRA)))
-  }
-  if(!is_GRP(g)) g <- GRP.default(g, return.groups = FALSE, call = FALSE)
+  g <- G_guo(g)
   .Call(Cpp_TRA,x,.Call(C_fmax,x,g[[1L]],g[[2L]],na.rm),g[[2L]],TtI(TRA))
 }
 
@@ -177,12 +157,7 @@ fmax.matrix <- function(x, g = NULL, TRA = NULL, na.rm = TRUE, use.g.names = TRU
     return(.Call(C_fmaxm,x,g[[1L]],g[[2L]],na.rm,FALSE))
   }
   if(is.null(g)) return(.Call(Cpp_TRAm,x,.Call(C_fmaxm,x,0L,0L,na.rm,TRUE),0L,TtI(TRA)))
-  if(is.atomic(g)) {
-    if(is.nmfactor(g)) return(.Call(Cpp_TRAm,x,.Call(C_fmaxm,x,fnlevels(g),g,na.rm,FALSE),g,TtI(TRA)))
-    g <- qG(g, na.exclude = FALSE)
-    return(.Call(Cpp_TRAm,x,.Call(C_fmaxm,x,attr(g,"N.groups"),g,na.rm,FALSE),g,TtI(TRA)))
-  }
-  if(!is_GRP(g)) g <- GRP.default(g, return.groups = FALSE, call = FALSE)
+  g <- G_guo(g)
   .Call(Cpp_TRAm,x,.Call(C_fmaxm,x,g[[1L]],g[[2L]],na.rm,FALSE),g[[2L]],TtI(TRA))
 }
 
@@ -206,12 +181,7 @@ fmax.data.frame <- function(x, g = NULL, TRA = NULL, na.rm = TRUE, use.g.names =
     return(.Call(C_fmaxl,x,g[[1L]],g[[2L]],na.rm,FALSE))
   }
   if(is.null(g)) return(.Call(Cpp_TRAl,x,.Call(C_fmaxl,x,0L,0L,na.rm,TRUE),0L,TtI(TRA)))
-  if(is.atomic(g)) {
-    if(is.nmfactor(g)) return(.Call(Cpp_TRAl,x,.Call(C_fmaxl,x,fnlevels(g),g,na.rm,FALSE),g,TtI(TRA)))
-    g <- qG(g, na.exclude = FALSE)
-    return(.Call(Cpp_TRAl,x,.Call(C_fmaxl,x,attr(g,"N.groups"),g,na.rm,FALSE),g,TtI(TRA)))
-  }
-  if(!is_GRP(g)) g <- GRP.default(g, return.groups = FALSE, call = FALSE)
+  g <- G_guo(g)
   .Call(Cpp_TRAl,x,.Call(C_fmaxl,x,g[[1L]],g[[2L]],na.rm,FALSE),g[[2L]],TtI(TRA))
 }
 
