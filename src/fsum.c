@@ -162,7 +162,7 @@ SEXP fsumC(SEXP x, SEXP Rng, SEXP g, SEXP w, SEXP Rnarm) {
         else {
           double sum = fsum_int_impl(INTEGER(x), narm, l);
           if(sum > INT_MAX || sum <= INT_MIN) return ScalarReal(sum); // INT_MIN is NA_INTEGER
-          return ScalarInteger((int)sum);
+          return ScalarInteger(ISNAN(sum) ? NA_INTEGER : (int)sum);
         }
         break;
       }

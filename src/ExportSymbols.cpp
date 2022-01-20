@@ -42,7 +42,7 @@ RcppExport SEXP vtypes(SEXP x, SEXP isnum);
 RcppExport SEXP vlengths(SEXP x, SEXP usenam);
 RcppExport SEXP multiassign(SEXP lhs, SEXP rhs, SEXP envir);
 RcppExport SEXP vlabels(SEXP x, SEXP attrn, SEXP usenam);
-RcppExport SEXP setvlabels(SEXP x, SEXP attrn, SEXP value, SEXP ind, SEXP sc);
+RcppExport SEXP setvlabels(SEXP x, SEXP attrn, SEXP value, SEXP ind);
 RcppExport SEXP setnames(SEXP x, SEXP nam);
 RcppExport SEXP groupVec(SEXP X, SEXP starts, SEXP sizes);
 RcppExport SEXP groupAtVec(SEXP X, SEXP starts, SEXP naincl);
