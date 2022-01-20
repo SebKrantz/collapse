@@ -245,21 +245,20 @@ test_that("collap weighted aggregations work as intended", {
 
 })
 
+if(Sys.getenv("NCRAN") == "TRUE")
 test_that("collap multi-function aggreagtion with weights performs as intended", {
 
-  if(Sys.getenv("NCRAN") == "TRUE")
   expect_equal(oa(collap(wlddev, ~ country + decade, list(fmean, fsd), w = ~ POP, keep.col.order = FALSE, give.names = FALSE)),
                oa(cbind(g$groups, fsum(get_vars(wlddev, 13), g, use.g.names = FALSE), fmean(get_vars(wlddev, c(4,9:12)), g, wlddev$POP, use.g.names = FALSE),
                      fsd(get_vars(wlddev, c(4,9:12)), g, wlddev$POP, use.g.names = FALSE),
                      fmode(get_vars(wlddev, c(2:3,6:8)), g, wlddev$POP, use.g.names = FALSE))))
-  if(Sys.getenv("NCRAN") == "TRUE")
+
   expect_equal(oa(collap(wlddev, ~ country + decade, list(fmean, fsd), list(fmode, flast), w = ~ POP, keep.col.order = FALSE, give.names = FALSE)),
                oa(cbind(g$groups, fsum(get_vars(wlddev, 13), g, use.g.names = FALSE), fmean(get_vars(wlddev, c(4,9:12)), g, wlddev$POP, use.g.names = FALSE),
                      fsd(get_vars(wlddev, c(4,9:12)), g, wlddev$POP, use.g.names = FALSE),
                      fmode(get_vars(wlddev, c(2:3,6:8)), g, wlddev$POP, use.g.names = FALSE), flast(get_vars(wlddev, c(2:3,6:8)), g, use.g.names = FALSE))))
 
   # with column ordering:
-  if(Sys.getenv("NCRAN") == "TRUE")
   expect_equal(unname(oa(collap(wlddev, ~ country + decade, list(fmean, fsd), w = ~ POP, wFUN = list(fsum, fmax)))),
                unname(oa(cbind(g$groups,
                             fsum(get_vars(wlddev, 13), g, use.g.names = FALSE),
@@ -267,7 +266,7 @@ test_that("collap multi-function aggreagtion with weights performs as intended",
                             fmean(get_vars(wlddev, c(4,9:12)), g, wlddev$POP, use.g.names = FALSE),
                             fsd(get_vars(wlddev, c(4,9:12)), g, wlddev$POP, use.g.names = FALSE),
                             fmode(get_vars(wlddev, c(2:3,6:8)), g, wlddev$POP, use.g.names = FALSE)))[order(c(1,5,13,13,4,9:12,4,9:12,2:3,6:8))]))
-  if(Sys.getenv("NCRAN") == "TRUE")
+
   expect_equal(unname(oa(collap(wlddev, ~ country + decade, list(fmean, fsd), list(fmode, flast), w = ~ POP, wFUN = list(fsum, fmax)))),
                unname(oa(cbind(g$groups,
                             fsum(get_vars(wlddev, 13), g, use.g.names = FALSE),
@@ -545,19 +544,19 @@ test_that("collapv weighted aggregations work as intended", {
 
 })
 
+if(Sys.getenv("NCRAN") == "TRUE")
 test_that("collapv multi-function aggreagtion with weights performs as intended", {
-  if(Sys.getenv("NCRAN") == "TRUE")
+
   expect_equal(oa(collapv(wlddev, v, list(fmean, fsd), w = "POP", keep.col.order = FALSE, give.names = FALSE)),
                oa(cbind(g$groups, fsum(get_vars(wlddev, 13), g, use.g.names = FALSE), fmean(get_vars(wlddev, c(4,9:12)), g, wlddev$POP, use.g.names = FALSE),
                      fsd(get_vars(wlddev, c(4,9:12)), g, wlddev$POP, use.g.names = FALSE),
                      fmode(get_vars(wlddev, c(2:3,6:8)), g, wlddev$POP, use.g.names = FALSE))))
-  if(Sys.getenv("NCRAN") == "TRUE")
+
   expect_equal(oa(collapv(wlddev, v, list(fmean, fsd), list(fmode, flast), w = "POP", keep.col.order = FALSE, give.names = FALSE)),
                oa(cbind(g$groups, fsum(get_vars(wlddev, 13), g, use.g.names = FALSE), fmean(get_vars(wlddev, c(4,9:12)), g, wlddev$POP, use.g.names = FALSE),
                      fsd(get_vars(wlddev, c(4,9:12)), g, wlddev$POP, use.g.names = FALSE),
                      fmode(get_vars(wlddev, c(2:3,6:8)), g, wlddev$POP, use.g.names = FALSE), flast(get_vars(wlddev, c(2:3,6:8)), g, use.g.names = FALSE))))
   # with column ordering:
-  if(Sys.getenv("NCRAN") == "TRUE")
   expect_equal(unname(oa(collapv(wlddev, v, list(fmean, fsd), w = "POP", wFUN = list(fsum, fmax)))),
                unname(oa(cbind(g$groups,
                             fsum(get_vars(wlddev, 13), g, use.g.names = FALSE),
@@ -565,7 +564,7 @@ test_that("collapv multi-function aggreagtion with weights performs as intended"
                             fmean(get_vars(wlddev, c(4,9:12)), g, wlddev$POP, use.g.names = FALSE),
                             fsd(get_vars(wlddev, c(4,9:12)), g, wlddev$POP, use.g.names = FALSE),
                             fmode(get_vars(wlddev, c(2:3,6:8)), g, wlddev$POP, use.g.names = FALSE)))[order(c(1,5,13,13,4,9:12,4,9:12,2:3,6:8))]))
-  if(Sys.getenv("NCRAN") == "TRUE")
+
   expect_equal(unattrib(collapv(wlddev, v, list(fmean, fsd), list(fmode, flast), w = "POP", wFUN = list(fsum, fmax))),
                unattrib(cbind(g$groups,
                             fsum(get_vars(wlddev, 13), g, use.g.names = FALSE),
