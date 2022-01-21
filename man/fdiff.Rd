@@ -186,7 +186,7 @@ summary(lm(D(PCGDP,1,1,g) ~ L(PCGDP,1,g) +              # a bit more parsimoniou
 summary(lm(D1.PCGDP ~.,                                 # Now adding level and lagged level of
 L(D(wlddev,0:1,1, ~ country, ~year,9:10),0:1,           # LIFEEX and lagged differences rates
   ~ country, ~year, keep.ids = FALSE)[-1]))
-\donttest{ % No code relying on suggested package
+% \donttest{ % No code relying on suggested package
 ## Using plm can make things easier, but avoid attaching or 'with' calls:
 pwlddev <- plm::pdata.frame(wlddev, index = c("country","year"))
 head(D(pwlddev, 0:1, 1, 9:10))                          # Again differences of LIFEEX and PCGDP
@@ -206,13 +206,13 @@ summary(lm(D(PCGDP) ~ L(D(PCGDP,0:1)) + L(D(LIFEEX,0:1),0:1))) # THIS WORKS !
 
 ## Using dplyr:
 library(dplyr)
-wlddev |> group_by(country) |>
-             select(PCGDP,LIFEEX) |> fdiff(0:1,1:2)       # Adding a first and second difference
-wlddev |> group_by(country) |>
-             select(year,PCGDP,LIFEEX) |> D(0:1,1:2,year) # Also using t (safer)
-wlddev |> group_by(country) |>                            # Dropping id's
-             select(year,PCGDP,LIFEEX) |> D(0:1,1:2,year, keep.ids = FALSE)
-}
+wlddev \%>\% group_by(country) \%>\%
+             select(PCGDP,LIFEEX) \%>\% fdiff(0:1,1:2)       # Adding a first and second difference
+wlddev \%>\% group_by(country) \%>\%
+             select(year,PCGDP,LIFEEX) \%>\% D(0:1,1:2,year) # Also using t (safer)
+wlddev \%>\% group_by(country) \%>\%                            # Dropping id's
+             select(year,PCGDP,LIFEEX) \%>\% D(0:1,1:2,year, keep.ids = FALSE)
+% }
 }
 % Add one or more standard keywords, see file 'KEYWORDS' in the
 % R documentation directory.

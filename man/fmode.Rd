@@ -7,7 +7,7 @@
 \title{Fast (Grouped, Weighted) Statistical Mode for Matrix-Like Objects}  % Vectors, Matrix and Data Frame Columns}
 \description{
 \code{fmode} is a generic function and returns the (column-wise) statistical mode i.e. the most frequent value of \code{x}, (optionally) grouped by \code{g} and/or weighted by \code{w}.
-The \code{\link{TRA}} argument can further be used to transform \code{x} using its (grouped, weighted) mode. Ties between multiple possible modes can be resolved by taking the minimum, maximum or (default) first occurring mode.
+The \code{\link{TRA}} argument can further be used to transform \code{x} using its (grouped, weighted) mode. Ties between multiple possible modes can be resolved by taking the minimum, maximum, (default) first or last occurring mode.
 }
 \usage{
 fmode(x, \dots)
@@ -82,6 +82,7 @@ The (\code{w} weighted) statistical mode of \code{x}, grouped by \code{g}, or (i
 \examples{
 x <- c(1, 3, 2, 2, 4, 4, 1, 7, NA, NA, NA)
 fmode(x)                            # Default is ties = "first"
+fmode(x, ties = "last")
 fmode(x, ties = "min")
 fmode(x, ties = "max")
 fmode(x, na.rm = FALSE)             # Here NA is the mode, regardless of ties option

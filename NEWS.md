@@ -1,3 +1,7 @@
+# collapse 1.7.2
+
+* Ensured that the base pipe `|>` is not used in tests or examples, to avoid errors on CRAN checks with older versions of R. 
+
 # collapse 1.7.1
 
 * Fixed minor C/C++ issues flagged in CRAN checks. 

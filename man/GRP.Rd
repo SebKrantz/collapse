@@ -185,15 +185,15 @@ gsplit(NULL, g)                    # The indices of the groups
 ## Convert factor to GRP object and vice-versa
 GRP(iris$Species)
 as_factor_GRP(g)
-\donttest{ % No code relying on suggested package
+% \donttest{ % No code relying on suggested package
 ## dplyr integration
 library(dplyr)
-mtcars |> group_by(cyl,vs,am) |> GRP()    # Get GRP object from a dplyr grouped tibble
-mtcars |> group_by(cyl,vs,am) |> fmean()  # Grouped mean using dplyr grouping
-mtcars |> fgroup_by(cyl,vs,am) |> fmean() # Faster alternative with collapse grouping
+mtcars \%>\% group_by(cyl,vs,am) \%>\% GRP()    # Get GRP object from a dplyr grouped tibble
+mtcars \%>\% group_by(cyl,vs,am) \%>\% fmean()  # Grouped mean using dplyr grouping
+mtcars \%>\% fgroup_by(cyl,vs,am) \%>\% fmean() # Faster alternative with collapse grouping
 
-mtcars |> fgroup_by(cyl,vs,am)            # Print method for grouped data frame
-}
+mtcars \%>\% fgroup_by(cyl,vs,am)            # Print method for grouped data frame
+% }
 
 }
 \keyword{manip}

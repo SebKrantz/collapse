@@ -133,7 +133,7 @@ summary(lm(G(PCGDP,1,1,g) ~ L(PCGDP,1,g) +              # bit more parsimonious 
 summary(lm(G1.PCGDP ~.,                                 # Now adding level and lagged level of
 L(G(wlddev,0:1,1, ~ country, ~year,9:10),0:1,           # LIFEEX and lagged growth rates
   ~ country, ~year, keep.ids = FALSE)[-1]))
-\donttest{ % No code relying on suggested package
+% \donttest{ % No code relying on suggested package
 ## Using plm can make things easier, but avoid attaching or 'with' calls:
 pwlddev <- plm::pdata.frame(wlddev, index = c("country","year"))
 head(G(pwlddev, 0:1, 1, 9:10))                          # Again growth rates of LIFEEX and PCGDP
@@ -153,12 +153,12 @@ summary(lm(G(PCGDP) ~ L(G(PCGDP,0:1)) + L(G(LIFEEX,0:1),0:1))) # THIS WORKS !
 
 ## Using dplyr:
 library(dplyr)
-wlddev |> group_by(country) |>
-             select(PCGDP,LIFEEX) |> fgrowth(0:1)          # Adding growth rates
-wlddev |> group_by(country) |>
-             select(year,PCGDP,LIFEEX) |>
+wlddev \%>\% group_by(country) \%>\%
+             select(PCGDP,LIFEEX) \%>\% fgrowth(0:1)          # Adding growth rates
+wlddev \%>\% group_by(country) \%>\%
+             select(year,PCGDP,LIFEEX) \%>\%
              fgrowth(0:1, t = year)                        # Also using t (safer)
-}
+% }
 }
 \keyword{manip}
 \keyword{ts}
