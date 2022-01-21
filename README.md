@@ -56,7 +56,7 @@ It further implements a class-agnostic approach to data manipulation in R, suppo
 * **Advanced data exploration**: Fast (grouped, weighted, panel-decomposed) 
         summary statistics for complex multilevel / panel data.
 
-*collapse* is mainly coded in C++ and built with *Rcpp*, but also uses C/C++ functions from *data.table*, *kit*, *fixest*, *weights*, *RcppArmadillo*, *RcppEigen* and *stats*. Currently no low-level parallelism is implemented. Effort has been expended to minimize the execution speed of R code employed. 
+*collapse* utilizes both C and C++ via *Rcpp*, and also uses C/C++ functions from *data.table*, *kit*, *fixest*, *weights*, *RcppArmadillo*, *RcppEigen* and *stats*. Currently no low-level parallelism is implemented. Effort has been expended to minimize the execution speed of R code employed. 
 
 ## Installation
 
