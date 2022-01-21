@@ -27,6 +27,7 @@ build_article("collapse_and_sf")
 build_news()
 # Add favicon:
 # replace <head> by <head><link rel="shortcut icon" href="https://sebkrantz.github.io/collapse/favicon.ico" type="image/x-icon">
+# or <head><meta
 
 # replace "https://twitter.com/collapse_R" target="_blank",
 # href="https://github.com/SebKrantz/collapse" target="_blank" and
