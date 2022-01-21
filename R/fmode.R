@@ -7,7 +7,7 @@ fmode <- function(x, ...) UseMethod("fmode") # , x
 fmode.default <- function(x, g = NULL, w = NULL, TRA = NULL, na.rm = TRUE, use.g.names = TRUE, ties = "first", ...) {
   if(is.matrix(x) && !inherits(x, "matrix")) return(fmode.matrix(x, g, w, TRA, na.rm, use.g.names, ties = ties, ...))
   if(!missing(...)) unused_arg_action(match.call(), ...)
-  ret <- switch(ties, first = 0L, min = 1L, max = 2L, stop("Unknown ties option!"))
+  ret <- switch(ties, first = 0L, min = 1L, max = 2L, last = 3L, stop("Unknown ties option: ", ties))
   if(is.null(TRA)) {
     if(is.null(g)) return(.Call(Cpp_fmode,x,0L,0L,NULL,w,na.rm,ret))
     if(is.atomic(g)) {
@@ -25,18 +25,13 @@ fmode.default <- function(x, g = NULL, w = NULL, TRA = NULL, na.rm = TRUE, use.g
     return(.Call(Cpp_fmode,x,g[[1L]],g[[2L]],g[[3L]],w,na.rm,ret))
   }
   if(is.null(g)) return(.Call(Cpp_TRA,x,.Call(Cpp_fmode,x,0L,0L,NULL,w,na.rm,ret),0L,TtI(TRA)))
-  if(is.atomic(g)) {
-    if(is.nmfactor(g)) return(.Call(Cpp_TRA,x,.Call(Cpp_fmode,x,fnlevels(g),g,NULL,w,na.rm,ret),g,TtI(TRA)))
-    g <- qG(g, na.exclude = FALSE)
-    return(.Call(Cpp_TRA,x,.Call(Cpp_fmode,x,attr(g,"N.groups"),g,NULL,w,na.rm,ret),g,TtI(TRA)))
-  }
-  if(!is_GRP(g)) g <- GRP.default(g, return.groups = FALSE, call = FALSE)
+  g <- G_guo(g)
   .Call(Cpp_TRA,x,.Call(Cpp_fmode,x,g[[1L]],g[[2L]],g[[3L]],w,na.rm,ret),g[[2L]],TtI(TRA))
 }
 
 fmode.matrix <- function(x, g = NULL, w = NULL, TRA = NULL, na.rm = TRUE, use.g.names = TRUE, drop = TRUE, ties = "first", ...) {
   if(!missing(...)) unused_arg_action(match.call(), ...)
-  ret <- switch(ties, first = 0L, min = 1L, max = 2L, stop("Unknown ties option!"))
+  ret <- switch(ties, first = 0L, min = 1L, max = 2L, last = 3L, stop("Unknown ties option: ", ties))
   if(is.null(TRA)) {
     if(is.null(g)) return(.Call(Cpp_fmodem,x,0L,0L,NULL,w,na.rm,drop,ret))
     if(is.atomic(g)) {
@@ -54,18 +49,13 @@ fmode.matrix <- function(x, g = NULL, w = NULL, TRA = NULL, na.rm = TRUE, use.g.
     return(.Call(Cpp_fmodem,x,g[[1L]],g[[2L]],g[[3L]],w,na.rm,FALSE,ret))
   }
   if(is.null(g)) return(.Call(Cpp_TRAm,x,.Call(Cpp_fmodem,x,0L,0L,NULL,w,na.rm,TRUE,ret),0L,TtI(TRA)))
-  if(is.atomic(g)) {
-    if(is.nmfactor(g)) return(.Call(Cpp_TRAm,x,.Call(Cpp_fmodem,x,fnlevels(g),g,NULL,w,na.rm,FALSE,ret),g,TtI(TRA)))
-    g <- qG(g, na.exclude = FALSE)
-    return(.Call(Cpp_TRAm,x,.Call(Cpp_fmodem,x,attr(g,"N.groups"),g,NULL,w,na.rm,FALSE,ret),g,TtI(TRA)))
-  }
-  if(!is_GRP(g)) g <- GRP.default(g, return.groups = FALSE, call = FALSE)
+  g <- G_guo(g)
   .Call(Cpp_TRAm,x,.Call(Cpp_fmodem,x,g[[1L]],g[[2L]],g[[3L]],w,na.rm,FALSE,ret),g[[2L]],TtI(TRA))
 }
 
 fmode.data.frame <- function(x, g = NULL, w = NULL, TRA = NULL, na.rm = TRUE, use.g.names = TRUE, drop = TRUE, ties = "first", ...) {
   if(!missing(...)) unused_arg_action(match.call(), ...)
-  ret <- switch(ties, first = 0L, min = 1L, max = 2L, stop("Unknown ties option!"))
+  ret <- switch(ties, first = 0L, min = 1L, max = 2L, last = 3L, stop("Unknown ties option: ", ties))
   if(is.null(TRA)) {
     if(is.null(g)) if(drop) return(unlist(.Call(Cpp_fmodel,x,0L,0L,NULL,w,na.rm,ret))) else return(.Call(Cpp_fmodel,x,0L,0L,NULL,w,na.rm,ret))
     if(is.atomic(g)) {
@@ -84,12 +74,7 @@ fmode.data.frame <- function(x, g = NULL, w = NULL, TRA = NULL, na.rm = TRUE, us
     return(.Call(Cpp_fmodel,x,g[[1L]],g[[2L]],g[[3L]],w,na.rm,ret))
   }
   if(is.null(g)) return(.Call(Cpp_TRAl,x,.Call(Cpp_fmodel,x,0L,0L,NULL,w,na.rm,ret),0L,TtI(TRA)))
-  if(is.atomic(g)) {
-    if(is.nmfactor(g)) return(.Call(Cpp_TRAl,x,.Call(Cpp_fmodel,x,fnlevels(g),g,NULL,w,na.rm,ret),g,TtI(TRA)))
-    g <- qG(g, na.exclude = FALSE)
-    return(.Call(Cpp_TRAl,x,.Call(Cpp_fmodel,x,attr(g,"N.groups"),g,NULL,w,na.rm,ret),g,TtI(TRA)))
-  }
-  if(!is_GRP(g)) g <- GRP.default(g, return.groups = FALSE, call = FALSE)
+  g <- G_guo(g)
   .Call(Cpp_TRAl,x,.Call(Cpp_fmodel,x,g[[1L]],g[[2L]],g[[3L]],w,na.rm,ret),g[[2L]],TtI(TRA))
 }
 
@@ -99,7 +84,7 @@ fmode.list <- function(x, g = NULL, w = NULL, TRA = NULL, na.rm = TRUE, use.g.na
 fmode.grouped_df <- function(x, w = NULL, TRA = NULL, na.rm = TRUE, use.g.names = FALSE,
                              keep.group_vars = TRUE, keep.w = TRUE, ties = "first", ...) {
   if(!missing(...)) unused_arg_action(match.call(), ...)
-  ret <- switch(ties, first = 0L, min = 1L, max = 2L, stop("Unknown ties option!"))
+  ret <- switch(ties, first = 0L, min = 1L, max = 2L, last = 3L, stop("Unknown ties option: ", ties))
   g <- GRP.grouped_df(x, call = FALSE)
   wsym <- l1orn(as.character(substitute(w)), NULL)
   nam <- attr(x, "names")

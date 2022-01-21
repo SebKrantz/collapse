@@ -59,49 +59,51 @@ reference:
 - title: "Fast Statistical Functions"
   desc: "Fast (grouped and weighted) statistical functions for vector, matrix, data frame and grouped tibble (class 'grouped_df', dplyr compatible)."
 - contents:
-  - "A1-fast-statistical-functions"
+  - "fast-statistical-functions"
   - fmean
   - fmedian
   - fmode
   - fsum
   - fprod
-  - "fvar, fsd"
-  - "fmin, fmax"
+  - "fvar-fsd"
+  - "fmin-fmax"
   - fnth
-  - "ffirst, flast"
+  - "ffirst-flast"
   - fnobs
   - fndistinct
 - title: "Fast Grouping and Ordering"
   desc: "Fast (ordered) groupings from vectors, data.frames, lists. Fast ordering, unique values / rows, factor generation and interactions, run-length type grouping and grouping of time-sequences."
 - contents:
-  - "A2-fast-grouping-ordering"
+  - "fast-grouping-ordering"
   - GRP
   - radixorder
+  - group
   - funique
   - qF
   - fdroplevels
   - groupid
   - seqid
 - title: "Fast Data Manipulation"
-  desc: "Fast and flexible select, replace, add, subset, transform, sort / reorder and rename data / data frame columns."
+  desc: "Fast and flexible select, replace, add, subset, transform, sort / reorder and rename / relabel data / data frame columns."
 - contents:
-  - "A3-fast-data-manipulation"
-  - "fselect, get_vars, add_vars"
+  - "fast-data-manipulation"
+  - "fselect-get_vars-add_vars"
   - fsubset
   - fsummarise
   - ftransform
+  - across
   - roworder
   - colorder
   - frename
 - title: "Quick Data Conversion"
   desc: "Quick conversions between data.frame's, data.table's, tibbles, matrices, arrays, lists, vectors and factors - fast and flexible, without method dispatch or extensive checks."
 - contents:
-  - "A4-quick-conversion"
+  - "quick-conversion"
   - qF
 - title: "Advanced Data Aggregation"
-  desc: "Fast and easy multi-data-type, multi-function, weighted, parallelized and fully customized data aggregation."
+  desc: "Fast and easy multi-data-type, multi-function, weighted, parallelized and fully custom data aggregation."
 - contents:
-  - "A5-advanced-aggregation"
+  - "advanced-aggregation"
   - collap
 - title: "Data Transformations"
   desc: "Fast row / column arithmetic, efficient row / column apply to data objects and Split-Apply-Combine computing. Fast (grouped, weighted) replacing and sweeping out of statistics, scaling / standardizing, (quasi-)centering, higher-dimensional centering, linear prediction / partialling-out."
@@ -112,8 +114,8 @@ reference:
   - BY
   - TRA
   - fscale
-  - "fbetween, fwithin"
-  - "fhdbetween, fhdwithin"
+  - "fbetween-fwithin"
+  - "fhdbetween-fhdwithin"
 - title: "Linear Models"
   desc: "Fast (weighted) linear model fitting. A fast F-test for high-dimensional linear models."
 - contents:
@@ -122,7 +124,7 @@ reference:
 - title: "Time Series and Panel Series"
   desc: "Fast (sequences of) lags / leads, and (lagged / leaded, iterated, quasi-, log-) differences and (compounded) growth rates on (unordered, irregular) time series and panel data. Auto-, partial- and cross-correlation functions for panel data. Panel data to (ts-)array conversion."
 - contents:
-  - "A7-time-series-panel-series"
+  - "time-series-panel-series"
   - flag
   - fdiff
   - fgrowth
@@ -132,10 +134,10 @@ reference:
 - title: "List Processing"
   desc: "Recursive list search / identification, extraction / subsetting, splitting, data-apply, and generalized recursive row-binding / unlisting in 2D."
 - contents:
-  - "A8-list-processing"
+  - "list-processing"
   - is_unlistable
   - ldepth
-  - "has_elem, get_elem"
+  - get_elem
   - rsplit
   - t_list
   - rapply2d
@@ -143,20 +145,24 @@ reference:
 - title: "Summary Statistics"
   desc: "Fast (grouped, weighted, panel-decomposed) summary statistics for cross-sectional and complex multilevel / panel data."
 - contents:
-  - "A9-summary-statistics"
+  - "summary-statistics"
   - qsu
   - descr
-  - "pwcor, pwcov, pwnobs"
+  - "pwcor-pwcov-pwnobs"
   - varying
 - title: "Recode and Replace Values"
   desc: "Efficiently recode and replace values in matrix-like objects."
 - contents:
-  - "AA1-recode-replace"
+  - "recode-replace"
   - pad
+- title: "(Memory) Efficient Programming"
+  desc: "Small Functions to Make R Programming More Efficient."
+- contents:
+  - "efficient-programming"
 - title: "Small (Helper) Functions"
   desc: "Convenience functions that help to deal with variable names, labels, attributes, missing values, matching and object checking etc.. Some functions are performance improved replacements for base R functions."
 - contents:
-  - "AA2-small-helpers"
+  - "small-helpers"
 - title: "Data"
   desc: "Groningen Growth and Development Centre 10-Sector Database and World Bank World Development dataset."
 - contents:

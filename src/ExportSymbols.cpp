@@ -42,7 +42,7 @@ RcppExport SEXP vtypes(SEXP x, SEXP isnum);
 RcppExport SEXP vlengths(SEXP x, SEXP usenam);
 RcppExport SEXP multiassign(SEXP lhs, SEXP rhs, SEXP envir);
 RcppExport SEXP vlabels(SEXP x, SEXP attrn, SEXP usenam);
-RcppExport SEXP setvlabels(SEXP x, SEXP attrn, SEXP value, SEXP ind, SEXP sc);
+RcppExport SEXP setvlabels(SEXP x, SEXP attrn, SEXP value, SEXP ind);
 RcppExport SEXP setnames(SEXP x, SEXP nam);
 RcppExport SEXP groupVec(SEXP X, SEXP starts, SEXP sizes);
 RcppExport SEXP groupAtVec(SEXP X, SEXP starts, SEXP naincl);
@@ -95,9 +95,9 @@ static const R_CallMethodDef CallEntries[] = {
   {"Cpp_varying", (DL_FUNC) &_collapse_varyingCpp, 4},
   {"Cpp_varyingm", (DL_FUNC) &_collapse_varyingmCpp, 5},
   {"Cpp_varyingl", (DL_FUNC) &_collapse_varyinglCpp, 5},
-  {"Cpp_fbstats", (DL_FUNC) &_collapse_fbstatsCpp, 10},
-  {"Cpp_fbstatsm", (DL_FUNC) &_collapse_fbstatsmCpp, 9},
-  {"Cpp_fbstatsl", (DL_FUNC) &_collapse_fbstatslCpp, 9},
+  {"Cpp_fbstats", (DL_FUNC) &_collapse_fbstatsCpp, 11},
+  {"Cpp_fbstatsm", (DL_FUNC) &_collapse_fbstatsmCpp, 10},
+  {"Cpp_fbstatsl", (DL_FUNC) &_collapse_fbstatslCpp, 10},
   {"C_ffirst", (DL_FUNC) &ffirstC, 4},
   {"C_ffirstm", (DL_FUNC) &ffirstmC, 5},
   {"C_ffirstl", (DL_FUNC) &ffirstlC, 4},

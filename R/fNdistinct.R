@@ -25,12 +25,7 @@ fndistinct.default <- function(x, g = NULL, TRA = NULL, na.rm = TRUE, use.g.name
     return(.Call(Cpp_fndistinct,x,g[[1L]],g[[2L]],g[[3L]],na.rm))
   }
   if(is.null(g)) return(.Call(Cpp_TRA,x,.Call(Cpp_fndistinct,x,0L,0L,NULL,na.rm),0L,TtI(TRA)))
-  if(is.atomic(g)) {
-    if(is.nmfactor(g)) return(.Call(Cpp_TRA,x,.Call(Cpp_fndistinct,x,fnlevels(g),g,NULL,na.rm),g,TtI(TRA)))
-    g <- qG(g, na.exclude = FALSE)
-    return(.Call(Cpp_TRA,x,.Call(Cpp_fndistinct,x,attr(g,"N.groups"),g,NULL,na.rm),g,TtI(TRA)))
-  }
-  if(!is_GRP(g)) g <- GRP.default(g, return.groups = FALSE, call = FALSE)
+  g <- G_guo(g)
   .Call(Cpp_TRA,x,.Call(Cpp_fndistinct,x,g[[1L]],g[[2L]],g[[3L]],na.rm),g[[2L]],TtI(TRA))
 }
 
@@ -53,12 +48,7 @@ fndistinct.matrix <- function(x, g = NULL, TRA = NULL, na.rm = TRUE, use.g.names
     return(.Call(Cpp_fndistinctm,x,g[[1L]],g[[2L]],g[[3L]],na.rm,FALSE))
   }
   if(is.null(g)) return(.Call(Cpp_TRAm,x,.Call(Cpp_fndistinctm,x,0L,0L,NULL,na.rm,TRUE),0L,TtI(TRA)))
-  if(is.atomic(g)) {
-    if(is.nmfactor(g)) return(.Call(Cpp_TRAm,x,.Call(Cpp_fndistinctm,x,fnlevels(g),g,NULL,na.rm,FALSE),g,TtI(TRA)))
-    g <- qG(g, na.exclude = FALSE)
-    return(.Call(Cpp_TRAm,x,.Call(Cpp_fndistinctm,x,attr(g,"N.groups"),g,NULL,na.rm,FALSE),g,TtI(TRA)))
-  }
-  if(!is_GRP(g)) g <- GRP.default(g, return.groups = FALSE, call = FALSE)
+  g <- G_guo(g)
   .Call(Cpp_TRAm,x,.Call(Cpp_fndistinctm,x,g[[1L]],g[[2L]],g[[3L]],na.rm,FALSE),g[[2L]],TtI(TRA))
 }
 
@@ -82,12 +72,7 @@ fndistinct.data.frame <- function(x, g = NULL, TRA = NULL, na.rm = TRUE, use.g.n
     return(.Call(Cpp_fndistinctl,x,g[[1L]],g[[2L]],g[[3L]],na.rm,FALSE))
   }
   if(is.null(g)) return(.Call(Cpp_TRAl,x,.Call(Cpp_fndistinctl,x,0L,0L,NULL,na.rm,TRUE),0L,TtI(TRA)))
-  if(is.atomic(g)) {
-    if(is.nmfactor(g)) return(.Call(Cpp_TRAl,x,.Call(Cpp_fndistinctl,x,fnlevels(g),g,NULL,na.rm,FALSE),g,TtI(TRA)))
-    g <- qG(g, na.exclude = FALSE)
-    return(.Call(Cpp_TRAl,x,.Call(Cpp_fndistinctl,x,attr(g,"N.groups"),g,NULL,na.rm,FALSE),g,TtI(TRA)))
-  }
-  if(!is_GRP(g)) g <- GRP.default(g, return.groups = FALSE, call = FALSE)
+  g <- G_guo(g)
   .Call(Cpp_TRAl,x,.Call(Cpp_fndistinctl,x,g[[1L]],g[[2L]],g[[3L]],na.rm,FALSE),g[[2L]],TtI(TRA))
 }
 

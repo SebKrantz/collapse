@@ -63,16 +63,16 @@ varyinglCpp <- function(x, ng = 0L, g = 0L, any_group = TRUE, drop = TRUE) {
     .Call(Cpp_varyingl, x, ng, g, any_group, drop)
 }
 
-fbstatsCpp <- function(x, ext = FALSE, ng = 0L, g = 0L, npg = 0L, pg = 0L, w = NULL, array = TRUE, setn = TRUE, gn = NULL) {
-    .Call(Cpp_fbstats, x, ext, ng, g, npg, pg, w, array, setn, gn)
+fbstatsCpp <- function(x, ext = FALSE, ng = 0L, g = 0L, npg = 0L, pg = 0L, w = NULL, stable.algo = TRUE, array = TRUE, setn = TRUE, gn = NULL) {
+  .Call(Cpp_fbstats, x, ext, ng, g, npg, pg, w, stable.algo, array, setn, gn)
 }
 
-fbstatsmCpp <- function(x, ext = FALSE, ng = 0L, g = 0L, npg = 0L, pg = 0L, w = NULL, array = TRUE, gn = NULL) {
-    .Call(Cpp_fbstatsm, x, ext, ng, g, npg, pg, w, array, gn)
+fbstatsmCpp <- function(x, ext = FALSE, ng = 0L, g = 0L, npg = 0L, pg = 0L, w = NULL, stable.algo = TRUE, array = TRUE, gn = NULL) {
+  .Call(Cpp_fbstatsm, x, ext, ng, g, npg, pg, w, stable.algo, array, gn)
 }
 
-fbstatslCpp <- function(x, ext = FALSE, ng = 0L, g = 0L, npg = 0L, pg = 0L, w = NULL, array = TRUE, gn = NULL) {
-    .Call(Cpp_fbstatsl, x, ext, ng, g, npg, pg, w, array, gn)
+fbstatslCpp <- function(x, ext = FALSE, ng = 0L, g = 0L, npg = 0L, pg = 0L, w = NULL, stable.algo = TRUE, array = TRUE, gn = NULL) {
+  .Call(Cpp_fbstatsl, x, ext, ng, g, npg, pg, w, stable.algo, array, gn)
 }
 
 fdiffgrowthCpp <- function(x, n = 1L, diff = 1L, fill = NA_real_, ng = 0L, g = 0L, gs = NULL, t = NULL, ret = 1L, rho = 1, names = TRUE, power = 1) {

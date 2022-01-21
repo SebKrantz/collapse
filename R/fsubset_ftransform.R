@@ -253,7 +253,7 @@ fcomputev <- function(.data, vars, FUN, ..., apply = TRUE, keep = NULL) {
 # fmutate
 fFUN_mutate_add_groups <- function(z) {
   if(!is.call(z)) return(z)
-  cz <- as.character(z[[1L]])
+  cz <- l1orlst(as.character(z[[1L]]))
   if(any(cz == .FAST_FUN_MOPS)) {
     z$g <- quote(.g_)
     if(any(cz == .FAST_STAT_FUN_POLD) && is.null(z$TRA)) z$TRA <- 1L
@@ -276,10 +276,10 @@ gsplit_multi_apply <- function(x, g, ex, encl) {
 
 othFUN_compute <- function(x) {
   if(length(x) == 2L) # No additional function arguments
-    return(substitute(unlist(lapply(gsplit(a, .g_), b), FALSE, FALSE),
+    return(substitute(unlist(lapply(.gsplit_(a, .g_), b), FALSE, FALSE),
                       list(a = x[[2L]], b = x[[1L]])))
   # With more arguments, things become more complex..
-  lapply_call <- as.call(c(list(quote(lapply), substitute(gsplit(a, .g_), list(a = x[[2L]]))), as.list(x[-2L])))
+  lapply_call <- as.call(c(list(quote(lapply), substitute(.gsplit_(a, .g_), list(a = x[[2L]]))), as.list(x[-2L])))
   substitute(unlist(a, FALSE, FALSE),
              list(a = lapply_call, b = x[[2L]]))
 }
@@ -288,11 +288,11 @@ keep_v <- function(d, v) copyMostAttributes(null_rm(.subset(d, unique.default(v)
 
 acr_get_cols <- function(.cols, d, nam, ce) {
   # Note: .cols is passed through substitute() before it enters here. Thus only an explicit NULL is NULL up front
-  if(is.null(.cols)) return(if(is.null(d[[".g_"]])) seq_along(nam) else seq_along(nam)[nam %!in% c(".g_", d[[".g_"]]$group.vars)])
+  if(is.null(.cols)) return(if(is.null(d[[".g_"]])) seq_along(nam) else seq_along(nam)[nam %!in% c(".g_", ".gsplit_", d[[".g_"]]$group.vars)])
   nl <- `names<-`(as.vector(seq_along(nam), "list"), nam)
   cols <- eval(.cols, nl, ce)
   # Needed for programming usage, because you can pass a variable that is null
-  if(is.null(cols)) return(if(is.null(d[[".g_"]])) seq_along(nam) else seq_along(nam)[nam %!in% c(".g_", d[[".g_"]]$group.vars)])
+  if(is.null(cols)) return(if(is.null(d[[".g_"]])) seq_along(nam) else seq_along(nam)[nam %!in% c(".g_", ".gsplit_", d[[".g_"]]$group.vars)])
   return(cols2int(cols, d, nam)) # if(is.integer(cols)) cols else (you are checking against length(cols) in setup_across)
 }
 
@@ -585,6 +585,7 @@ fmutate <- function(.data, ..., .keep = "all") {
   if(gdfl) {
     g <- GRP.grouped_df(.data, return.groups = FALSE, call = FALSE)
     .data[[".g_"]] <- g
+    .data[[".gsplit_"]] <- gsplit
     for(i in 2:length(e)) {
       ei <- e[[i]]
       if(nullnam || nam[i] == "") { # Across
@@ -610,7 +611,7 @@ fmutate <- function(.data, ..., .keep = "all") {
         }
       }
     }
-    .data[[".g_"]] <- NULL
+    .data[c(".g_", ".gsplit_")] <- NULL
   } else { # Without groups...
     for(i in 2:length(e)) { # This is good and very fast
       ei <- e[[i]]

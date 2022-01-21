@@ -13,6 +13,18 @@ TRAmCpp <- function(x, xAG, g = 0L, ret = 1L) {
     .Call(`_collapse_TRAmCpp`, x, xAG, g, ret)
 }
 
+fndistinctCpp <- function(x, ng = 0L, g = 0L, gs = NULL, narm = TRUE) {
+    .Call(`_collapse_fndistinctCpp`, x, ng, g, gs, narm)
+}
+
+fndistinctlCpp <- function(x, ng = 0L, g = 0L, gs = NULL, narm = TRUE, drop = TRUE) {
+    .Call(`_collapse_fndistinctlCpp`, x, ng, g, gs, narm, drop)
+}
+
+fndistinctmCpp <- function(x, ng = 0L, g = 0L, gs = NULL, narm = TRUE, drop = TRUE) {
+    .Call(`_collapse_fndistinctmCpp`, x, ng, g, gs, narm, drop)
+}
+
 BWCpp <- function(x, ng = 0L, g = 0L, gs = NULL, w = NULL, narm = TRUE, theta = 1, set_mean = 0, B = FALSE, fill = FALSE) {
     .Call(`_collapse_BWCpp`, x, ng, g, gs, w, narm, theta, set_mean, B, fill)
 }
@@ -25,16 +37,16 @@ BWlCpp <- function(x, ng = 0L, g = 0L, gs = NULL, w = NULL, narm = TRUE, theta =
     .Call(`_collapse_BWlCpp`, x, ng, g, gs, w, narm, theta, set_mean, B, fill)
 }
 
-fbstatsCpp <- function(x, ext = FALSE, ng = 0L, g = 0L, npg = 0L, pg = 0L, w = NULL, array = TRUE, setn = TRUE, gn = NULL) {
-    .Call(`_collapse_fbstatsCpp`, x, ext, ng, g, npg, pg, w, array, setn, gn)
+fbstatsCpp <- function(x, ext = FALSE, ng = 0L, g = 0L, npg = 0L, pg = 0L, w = NULL, stable_algo = TRUE, array = TRUE, setn = TRUE, gn = NULL) {
+    .Call(`_collapse_fbstatsCpp`, x, ext, ng, g, npg, pg, w, stable_algo, array, setn, gn)
 }
 
-fbstatsmCpp <- function(x, ext = FALSE, ng = 0L, g = 0L, npg = 0L, pg = 0L, w = NULL, array = TRUE, gn = NULL) {
-    .Call(`_collapse_fbstatsmCpp`, x, ext, ng, g, npg, pg, w, array, gn)
+fbstatsmCpp <- function(x, ext = FALSE, ng = 0L, g = 0L, npg = 0L, pg = 0L, w = NULL, stable_algo = TRUE, array = TRUE, gn = NULL) {
+    .Call(`_collapse_fbstatsmCpp`, x, ext, ng, g, npg, pg, w, stable_algo, array, gn)
 }
 
-fbstatslCpp <- function(x, ext = FALSE, ng = 0L, g = 0L, npg = 0L, pg = 0L, w = NULL, array = TRUE, gn = NULL) {
-    .Call(`_collapse_fbstatslCpp`, x, ext, ng, g, npg, pg, w, array, gn)
+fbstatslCpp <- function(x, ext = FALSE, ng = 0L, g = 0L, npg = 0L, pg = 0L, w = NULL, stable_algo = TRUE, array = TRUE, gn = NULL) {
+    .Call(`_collapse_fbstatslCpp`, x, ext, ng, g, npg, pg, w, stable_algo, array, gn)
 }
 
 fdiffgrowthCpp <- function(x, n = 1L, diff = 1L, fill = NA_real_, ng = 0L, g = 0L, gs = NULL, t = NULL, ret = 1L, rho = 1, names = TRUE, power = 1) {
@@ -83,18 +95,6 @@ fmodelCpp <- function(x, ng = 0L, g = 0L, gs = NULL, w = NULL, narm = TRUE, ret 
 
 fmodemCpp <- function(x, ng = 0L, g = 0L, gs = NULL, w = NULL, narm = TRUE, drop = TRUE, ret = 0L) {
     .Call(`_collapse_fmodemCpp`, x, ng, g, gs, w, narm, drop, ret)
-}
-
-fndistinctCpp <- function(x, ng = 0L, g = 0L, gs = NULL, narm = TRUE) {
-    .Call(`_collapse_fndistinctCpp`, x, ng, g, gs, narm)
-}
-
-fndistinctlCpp <- function(x, ng = 0L, g = 0L, gs = NULL, narm = TRUE, drop = TRUE) {
-    .Call(`_collapse_fndistinctlCpp`, x, ng, g, gs, narm, drop)
-}
-
-fndistinctmCpp <- function(x, ng = 0L, g = 0L, gs = NULL, narm = TRUE, drop = TRUE) {
-    .Call(`_collapse_fndistinctmCpp`, x, ng, g, gs, narm, drop)
 }
 
 fnthCpp <- function(x, Q = 0.5, ng = 0L, g = 0L, gs = NULL, w = NULL, narm = TRUE, ret = 1L) {

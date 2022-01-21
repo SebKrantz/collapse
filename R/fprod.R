@@ -23,12 +23,7 @@ fprod.default <- function(x, g = NULL, w = NULL, TRA = NULL, na.rm = TRUE, use.g
     return(.Call(Cpp_fprod,x,g[[1L]],g[[2L]],w,na.rm))
   }
   if(is.null(g)) return(.Call(Cpp_TRA,x,.Call(Cpp_fprod,x,0L,0L,w,na.rm),0L,TtI(TRA)))
-  if(is.atomic(g)) {
-    if(is.nmfactor(g)) return(.Call(Cpp_TRA,x,.Call(Cpp_fprod,x,fnlevels(g),g,w,na.rm),g,TtI(TRA)))
-    g <- qG(g, na.exclude = FALSE)
-    return(.Call(Cpp_TRA,x,.Call(Cpp_fprod,x,attr(g,"N.groups"),g,w,na.rm),g,TtI(TRA)))
-  }
-  if(!is_GRP(g)) g <- GRP.default(g, return.groups = FALSE, call = FALSE)
+  g <- G_guo(g)
   .Call(Cpp_TRA,x,.Call(Cpp_fprod,x,g[[1L]],g[[2L]],w,na.rm),g[[2L]],TtI(TRA))
 }
 
@@ -51,12 +46,7 @@ fprod.matrix <- function(x, g = NULL, w = NULL, TRA = NULL, na.rm = TRUE, use.g.
     return(.Call(Cpp_fprodm,x,g[[1L]],g[[2L]],w,na.rm,FALSE))
   }
   if(is.null(g)) return(.Call(Cpp_TRAm,x,.Call(Cpp_fprodm,x,0L,0L,w,na.rm,TRUE),0L,TtI(TRA)))
-  if(is.atomic(g)) {
-    if(is.nmfactor(g)) return(.Call(Cpp_TRAm,x,.Call(Cpp_fprodm,x,fnlevels(g),g,w,na.rm,FALSE),g,TtI(TRA)))
-    g <- qG(g, na.exclude = FALSE)
-    return(.Call(Cpp_TRAm,x,.Call(Cpp_fprodm,x,attr(g,"N.groups"),g,w,na.rm,FALSE),g,TtI(TRA)))
-  }
-  if(!is_GRP(g)) g <- GRP.default(g, return.groups = FALSE, call = FALSE)
+  g <- G_guo(g)
   .Call(Cpp_TRAm,x,.Call(Cpp_fprodm,x,g[[1L]],g[[2L]],w,na.rm,FALSE),g[[2L]],TtI(TRA))
 }
 
@@ -80,12 +70,7 @@ fprod.data.frame <- function(x, g = NULL, w = NULL, TRA = NULL, na.rm = TRUE, us
     return(.Call(Cpp_fprodl,x,g[[1L]],g[[2L]],w,na.rm,FALSE))
   }
   if(is.null(g)) return(.Call(Cpp_TRAl,x,.Call(Cpp_fprodl,x,0L,0L,w,na.rm,TRUE),0L,TtI(TRA)))
-  if(is.atomic(g)) {
-    if(is.nmfactor(g)) return(.Call(Cpp_TRAl,x,.Call(Cpp_fprodl,x,fnlevels(g),g,w,na.rm,FALSE),g,TtI(TRA)))
-    g <- qG(g, na.exclude = FALSE)
-    return(.Call(Cpp_TRAl,x,.Call(Cpp_fprodl,x,attr(g,"N.groups"),g,w,na.rm,FALSE),g,TtI(TRA)))
-  }
-  if(!is_GRP(g)) g <- GRP.default(g, return.groups = FALSE, call = FALSE)
+  g <- G_guo(g)
   .Call(Cpp_TRAl,x,.Call(Cpp_fprodl,x,g[[1L]],g[[2L]],w,na.rm,FALSE),g[[2L]],TtI(TRA))
 }
 
