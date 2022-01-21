@@ -64,21 +64,20 @@ the cumulative sum of values in \code{x}, (optionally) grouped by \code{g} and/o
 \examples{
 ## Non-grouped
 fcumsum(AirPassengers)
-\donttest{fcumsum(EuStockMarkets) |> head()}
+head(fcumsum(EuStockMarkets))
 fcumsum(mtcars)
 
 # Non-grouped but ordered
 o <- order(rnorm(nrow(EuStockMarkets)))
 all.equal(copyAttrib(fcumsum(EuStockMarkets[o, ], o = o)[order(o), ], EuStockMarkets),
           fcumsum(EuStockMarkets))
-\donttest{
+
 ## Grouped
-with(wlddev, fcumsum(PCGDP, iso3c)) |> head()
+head(with(wlddev, fcumsum(PCGDP, iso3c)))
 
 ## Grouped and ordered
-with(wlddev, fcumsum(PCGDP, iso3c, year)) |> head()
-with(wlddev, fcumsum(PCGDP, iso3c, year, fill = TRUE)) |> head()
-}
+head(with(wlddev, fcumsum(PCGDP, iso3c, year)))
+head(with(wlddev, fcumsum(PCGDP, iso3c, year, fill = TRUE)))
 }
 % Add one or more standard keywords, see file 'KEYWORDS' in the
 % R documentation directory.

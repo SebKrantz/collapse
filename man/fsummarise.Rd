@@ -35,35 +35,36 @@ Since v1.7, \code{fsummarise} is fully featured, allowing expressions using func
 
 }
 \examples{
+library(magrittr) # Note: Used because |> is not available on older R versions
 ## Since v1.7, fsummarise supports arbitrary expressions, and expressions
 ## containing fast statistical functions receive vectorized execution:
 
 # (a) This is an expression using base R functions which is executed by groups
-mtcars |> fgroup_by(cyl) |> fsummarise(res = mean(mpg) + min(qsec))
+mtcars \%>\% fgroup_by(cyl) \%>\% fsummarise(res = mean(mpg) + min(qsec))
 
 # (b) Here, the use of fmean causes the whole expression to be executed
 # in a vectorized way i.e. the expression is translated to something like
 # fmean(mpg, g = cyl) + min(mpg) and executed, thus the result is different
 # from (a), because the minimum is calculated over the entire sample
-mtcars |> fgroup_by(cyl) |> fsummarise(mpg = fmean(mpg) + min(qsec))
+mtcars \%>\% fgroup_by(cyl) \%>\% fsummarise(mpg = fmean(mpg) + min(qsec))
 
 # (c) For fully vectorized execution, use fmin. This yields the same as (a)
-mtcars |> fgroup_by(cyl) |> fsummarise(mpg = fmean(mpg) + fmin(qsec))
+mtcars \%>\% fgroup_by(cyl) \%>\% fsummarise(mpg = fmean(mpg) + fmin(qsec))
 
 # In across() statements it is fine to mix different functions, each will
 # be executed on its own terms (i.e. vectorized for fmean and standard for sum)
-mtcars |> fgroup_by(cyl) |> fsummarise(across(mpg:hp, list(fmean, sum)))
+mtcars \%>\% fgroup_by(cyl) \%>\% fsummarise(across(mpg:hp, list(fmean, sum)))
 
 # Note that this still detects fmean as a fast function, the names of the list
 # are irrelevant, but the function name must be typed or passed as a character vector,
 # Otherwise functions will be executed by groups e.g. function(x) fmean(x) won't vectorize
-mtcars |> fgroup_by(cyl) |> fsummarise(across(mpg:hp, list(mu = fmean, sum = sum)))
+mtcars \%>\% fgroup_by(cyl) \%>\% fsummarise(across(mpg:hp, list(mu = fmean, sum = sum)))
 
 # We can force none-vectorized execution by setting .apply = TRUE
-mtcars |> fgroup_by(cyl) |> fsummarise(across(mpg:hp, list(mu = fmean, sum = sum), .apply = TRUE))
+mtcars \%>\% fgroup_by(cyl) \%>\% fsummarise(across(mpg:hp, list(mu = fmean, sum = sum), .apply = TRUE))
 
 # Another argument of across(): Order the result first by function, then by column
-mtcars |> fgroup_by(cyl) |>
+mtcars \%>\% fgroup_by(cyl) \%>\%
      fsummarise(across(mpg:hp, list(mu = fmean, sum = sum), .transpose = FALSE))
 
 #----------------------------------------------------------------------------
@@ -76,35 +77,35 @@ fsummarise(mtcars, mean_mpg = fmean(mpg),
 # Using base functions (not a big difference without groups)
 fsummarise(mtcars, mean_mpg = mean(mpg),
                    sd_mpg = sd(mpg))
-\donttest{ % No code relying on suggested package or base Pipe
+% \donttest{ % No code relying on suggested package or base Pipe
 # Grouped use
-mtcars |> fgroup_by(cyl) |>
+mtcars \%>\% fgroup_by(cyl) \%>\%
   fsummarise(mean_mpg = fmean(mpg),
              sd_mpg = fsd(mpg))
 
 # This is still efficient but quite a bit slower on large data (many groups)
-mtcars |> fgroup_by(cyl) |>
+mtcars \%>\% fgroup_by(cyl) \%>\%
   fsummarise(mean_mpg = mean(mpg),
              sd_mpg = sd(mpg))
 
 # Weighted aggregation
-mtcars |> fgroup_by(cyl) |>
+mtcars \%>\% fgroup_by(cyl) \%>\%
   fsummarise(w_mean_mpg = fmean(mpg, wt),
              w_sd_mpg = fsd(mpg, wt))
 
 
 ## Can also group with dplyr::group_by, but at a conversion cost, see ?GRP
 library(dplyr)
-mtcars |> group_by(cyl) |>
+mtcars \%>\% group_by(cyl) \%>\%
   fsummarise(mean_mpg = fmean(mpg),
              sd_mpg = fsd(mpg))
 
 # Again less efficient...
-mtcars |> group_by(cyl) |>
+mtcars \%>\% group_by(cyl) \%>\%
   fsummarise(mean_mpg = mean(mpg),
              sd_mpg = sd(mpg))
 
-}
+% }
 
 
 }

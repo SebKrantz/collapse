@@ -113,7 +113,7 @@ collap(iris, iris$Species, w = weights)                        # Note this behav
 collap(iris, iris$Species, w = weights,
        keep.by = FALSE, keep.w = FALSE)
 
-\donttest{iris |> fgroup_by(Species) |> collapg()}                        # dplyr style, but faster
+% \donttest{iris |> fgroup_by(Species) |> collapg()}                        # dplyr style, but faster
 
 ## Multi-Type Aggregation --------------------------------------
 head(wlddev)                                                    # World Development Panel Data
@@ -196,14 +196,17 @@ head(collap(wlddev, ~ country + decade,                         # No column reor
                           fmode = 7:8), w = ~ POP,
             wFUN = list(fsum, fmax),
             parallel = TRUE, mc.cores = 1L, keep.col.order = FALSE))
-\donttest{
+
+% \donttest{
 ## Piped Use --------------------------------------------------
-wlddev |> fgroup_by(country, decade) |> collapg() |> head()
-wlddev |> fgroup_by(region, year) |> collapg(w = POP) |> head()
-wlddev |> fgroup_by(country, decade) |> collapg(fmedian, flast) |> head()
-wlddev |> fgroup_by(country, decade) |>
-  collapg(custom = list(fmean = 9:12, fmode = 5:7, flast = 3)) |> head()
-}
+library(magrittr) # Note: Used because |> is not available on older R versions
+iris \%>\% fgroup_by(Species) \%>\% collapg()
+wlddev \%>\% fgroup_by(country, decade) \%>\% collapg() \%>\% head()
+wlddev \%>\% fgroup_by(region, year) \%>\% collapg(w = POP) \%>\% head()
+wlddev \%>\% fgroup_by(country, decade) \%>\% collapg(fmedian, flast) \%>\% head()
+wlddev \%>\% fgroup_by(country, decade) \%>\%
+  collapg(custom = list(fmean = 9:12, fmode = 5:7, flast = 3)) \%>\% head()
+% }
 }
 % Add one or more standard keywords, see file 'KEYWORDS' in the
 % R documentation directory.

@@ -75,13 +75,13 @@ head(fndistinct(wlddev, wlddev$iso3c))
 aqm <- qM(airquality)
 fndistinct(aqm)                                  # Also works for character or logical matrices
 fndistinct(aqm, airquality$Month)
-\donttest{ % No code relying on suggested package
+% \donttest{ % No code relying on suggested package
 ## method for grouped data frames - created with dplyr::group_by or fgroup_by
 library(dplyr)
-airquality |> group_by(Month) |> fndistinct()
-wlddev |> group_by(country) |>
-             select(PCGDP,LIFEEX,GINI,ODA) |> fndistinct()
-}
+airquality \%>\% group_by(Month) \%>\% fndistinct()
+wlddev \%>\% group_by(country) \%>\%
+             select(PCGDP,LIFEEX,GINI,ODA) \%>\% fndistinct()
+% }
 }
 \keyword{univar}
 \keyword{manip}

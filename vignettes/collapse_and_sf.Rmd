@@ -110,7 +110,7 @@ microbenchmark(collapse = fselect(nc, AREA, NAME:FIPSNO),
                sf = nc[c("AREA", "NAME", "FIPS", "FIPSNO")])
 # Subsetting
 microbenchmark(collapse = fsubset(nc, AREA > fmean(AREA), AREA, NAME:FIPSNO), 
-               dplyr = select(nc, AREA, NAME:FIPSNO) |> filter(AREA > fmean(AREA)),
+               dplyr = select(nc, AREA, NAME:FIPSNO) %>% filter(AREA > fmean(AREA)),
                collapse2 = ss(nc, 1:10, c("AREA", "NAME", "FIPS", "FIPSNO")), 
                sf = nc[1:10, c("AREA", "NAME", "FIPS", "FIPSNO")])
 
@@ -132,9 +132,9 @@ collap(nc, ~ SID74, custom = list(fmedian = is.numeric,
 *sf* data frames can also be grouped and then aggregated using `fsummarise`:
 
 ```{r, eval=NMAC}
-nc |> fgroup_by(SID74)
+nc %>% fgroup_by(SID74)
 
-nc |> fgroup_by(SID74) |>
+nc %>% fgroup_by(SID74) %>%
   fsummarise(AREA_Ag = fsum(AREA), 
              Perimeter_Ag = fmedian(PERIMETER),
              geometry = st_union(geometry))
@@ -144,14 +144,14 @@ It needs to be noted here that typically most of the time in aggregation is cons
 
 ```{r, eval=NMAC}
 # Creating a panel-dataset by simply duplicating nc for 2 different years
-pnc <- list(`2000` = nc, `2001` = nc) |> unlist2d("Year") |> copyMostAttrib(nc)
+pnc <- list(`2000` = nc, `2001` = nc) %>% unlist2d("Year") %>% copyMostAttrib(nc)
 pnc 
 
 # Aggregating by NAME, using the last value for all categorical data
 collap(pnc, ~ NAME, fmedian, catFUN = flast, cols = -1L)
 
 # Using fsummarise to aggregate just two variables and the geometry
-pnc_ag <- pnc |> fgroup_by(NAME) |>
+pnc_ag <- pnc %>% fgroup_by(NAME) %>%
   fsummarise(AREA_Ag = fsum(AREA), 
              Perimeter_Ag = fmedian(PERIMETER),
              geometry = flast(geometry))
@@ -168,17 +168,17 @@ Functions `funique` and `roworder(v)` work on sf data frames and ignore the geom
 
 ```{r, eval=NMAC}
 # Splitting by SID74
-rsplit(nc, ~ SID74) |> head(2)
+rsplit(nc, ~ SID74) %>% head(2)
 ```
 
 It should be noted here that the default in `rsplit` for data frames is `simplify = TRUE`, which for a single LHS variable would just split the column-vector. This does not apply to *sf* data frames as the 'geometry' column is always selected as well.
 
 ```{r, eval=NMAC}
 # Only splitting Area
-rsplit(nc, AREA ~ SID74) |> head(1)
+rsplit(nc, AREA ~ SID74) %>% head(1)
 
 # For data frames the default simplify = TRUE drops the data frame structure
-rsplit(qDF(nc), AREA ~ SID74) |> head(1)
+rsplit(qDF(nc), AREA ~ SID74) %>% head(1)
 ```
 
 
@@ -210,7 +210,7 @@ The quick converters `qDF`, `qDT` and `qTBL` can be used to very efficiently con
 
 ```{r, eval=NMAC}
 library(data.table)
-qDT(nc)[, list(roll_AREA = frollmean(AREA, 2), geometry), by = SID74] |> copyMostAttrib(nc)
+qDT(nc)[, list(roll_AREA = frollmean(AREA, 2), geometry), by = SID74] %>% copyMostAttrib(nc)
 ```
 
 

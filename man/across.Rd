@@ -35,21 +35,22 @@ In general, my mission with \code{collapse} is not to create a \code{dplyr}-clon
 # Basic (Weighted) Summaries
 fsummarise(wlddev, across(PCGDP:GINI, fmean, w = POP))
 
-wlddev |> fgroup_by(region, income) |>
+library(magrittr) # Note: Used because |> is not available on older R versions
+wlddev \%>\% fgroup_by(region, income) \%>\%
     fsummarise(across(PCGDP:GINI, fmean, w = POP))
 
 # Note that for these we don't actually need across...
-fselect(wlddev, PCGDP:GINI) |> fmean(w = wlddev$POP, drop = FALSE)
-wlddev |> fgroup_by(region, income) |>
-    fselect(PCGDP:GINI, POP) |> fmean(POP, keep.w = FALSE)
+fselect(wlddev, PCGDP:GINI) \%>\% fmean(w = wlddev$POP, drop = FALSE)
+wlddev \%>\% fgroup_by(region, income) \%>\%
+    fselect(PCGDP:GINI, POP) \%>\% fmean(POP, keep.w = FALSE)
 collap(wlddev, PCGDP + LIFEEX + GINI ~ region + income, w = ~ POP, keep.w = FALSE)
 
 # But if we want to use some base R function that reguires argument splitting...
-wlddev |> na_omit(cols = "POP") |> fgroup_by(region, income) |>
+wlddev \%>\% na_omit(cols = "POP") \%>\% fgroup_by(region, income) \%>\%
     fsummarise(across(PCGDP:GINI, weighted.mean, w = POP, na.rm = TRUE))
 
 # Or if we want to apply different functions...
-wlddev |> fgroup_by(region, income) |>
+wlddev \%>\% fgroup_by(region, income) \%>\%
     fsummarise(across(PCGDP:GINI, list(mu = fmean, sd = fsd), w = POP),
                POP_sum = fsum(POP), OECD = fmean(OECD))
 # Note that the above still detects fmean as a fast function, the names of the list
@@ -58,27 +59,27 @@ wlddev |> fgroup_by(region, income) |>
 \donttest{
 # Or we want to do more advanced things..
 # Such as nesting data frames..
-qTBL(wlddev) |> fgroup_by(region, income) |>
+qTBL(wlddev) \%>\% fgroup_by(region, income) \%>\%
     fsummarise(across(c(PCGDP, LIFEEX, ODA),
                function(x) list(Nest = list(x)),
                .apply = FALSE))
 # Or linear models..
-qTBL(wlddev) |> fgroup_by(region, income) |>
+qTBL(wlddev) \%>\% fgroup_by(region, income) \%>\%
     fsummarise(across(c(PCGDP, LIFEEX, ODA),
                function(x) list(Mods = list(lm(PCGDP ~., x))),
                .apply = FALSE))
 # Or cumputing grouped correlation matrices
-qTBL(wlddev) |> fgroup_by(region, income) |>
+qTBL(wlddev) \%>\% fgroup_by(region, income) \%>\%
     fsummarise(across(c(PCGDP, LIFEEX, ODA),
       function(x) qDF(pwcor(x), "Variable"), .apply = FALSE))
 }
 # Here calculating 1- and 10-year lags and growth rates of these variables
-qTBL(wlddev) |> fgroup_by(country) |>
+qTBL(wlddev) \%>\% fgroup_by(country) \%>\%
     fmutate(across(c(PCGDP, LIFEEX, ODA), list(L, G),
                    n = c(1, 10), t = year, .names = FALSE))
 
 # Same but variables in different order
-qTBL(wlddev) |> fgroup_by(country) |>
+qTBL(wlddev) \%>\% fgroup_by(country) \%>\%
     fmutate(across(c(PCGDP, LIFEEX, ODA), list(L, G), n = c(1, 10),
                    t = year, .names = FALSE, .transpose = FALSE))
 
