@@ -1,6 +1,5 @@
 
 # TODO: could use source code of C_acf and adjust for panel: https://github.com/SurajGupta/r-source/blob/a28e609e72ed7c47f6ddfbb86c85279a0750f0b7/src/library/stats/src/filter.c
-# TODO: See test for pspacf -> a bit strange !
 
 psacf <- function(x, ...) UseMethod("psacf") # , x
 
@@ -8,26 +7,12 @@ psacf.default <- function(x, g, t = NULL, lag.max = NULL, type = c("correlation"
   if(!is.numeric(x)) stop("'x' must be a numeric vector")
   typei <- switch(type[1L], correlation = 1L, covariance = 2L, partial = 3L, stop("Unknown type!"))
   series <- l1orlst(as.character(substitute(x)))
-  getacf <- function(ng, g) {
-    if(length(t) && !is.nmfactor(t))
-    t <- if(is.atomic(t)) qG(t, na.exclude = FALSE) else GRP.default(t, return.groups = FALSE, call = FALSE)[[2L]] # if(.Internal(islistfactor(t, FALSE))) interaction(t) else
-    if(gscale) x <- fscaleCpp(x,ng,g)
-    if(typei == 2L)
-      cov(x, .Call(Cpp_flaglead,x,0:lag.max,NA,ng,g,t,FALSE), use = "pairwise.complete.obs") else
-        c(1, cov(x, .Call(Cpp_flaglead,x,seq_len(lag.max),NA,ng,g,t,FALSE), use = "pairwise.complete.obs")/fvar.default(x)) #  or complete obs ?
-  }
-  if(is.atomic(g)) {
-    if(is.nmfactor(g)) ng <- fnlevels(g) else {
-      g <- qG(g, na.exclude = FALSE)
-      ng <- attr(g,"N.groups")
-    }
-    if(is.null(lag.max)) lag.max <- round(2*sqrt(length(x)/ng))
-    acf <- getacf(ng, g)
-  } else {
-    if(!is_GRP(g)) g <- GRP.default(g, return.groups = FALSE, call = FALSE)
-    if(is.null(lag.max)) lag.max <- round(2*sqrt(length(x)/g[[1L]]))
-    acf <- getacf(g[[1L]], g[[2L]])
-  }
+  g <- G_guo(g)
+  if(is.null(lag.max)) lag.max <- round(2*sqrt(length(x)/g[[1L]]))
+  if(gscale) x <- fscaleCpp(x,g[[1L]],g[[2L]])
+  acf <- if(typei == 2L)
+    cov(x, .Call(Cpp_flaglead,x,0:lag.max,NA,g[[1L]],g[[2L]],G_t(t),FALSE), use = "pairwise.complete.obs") else
+    c(1, cov(x, .Call(Cpp_flaglead,x,seq_len(lag.max),NA,g[[1L]],g[[2L]],G_t(t),FALSE), use = "pairwise.complete.obs")/fvar.default(x)) #  or complete obs ?
   d <- c(lag.max+1,1,1)
   if(typei == 3L) {
     acf <- .Call(C_pacf1, array(acf, d), lag.max)
@@ -59,11 +44,11 @@ psacf.data.frame <- function(x, by, t = NULL, cols = is.numeric, lag.max = NULL,
       by <- ckmatch(all.vars(by), nam)
       v <- if(is.null(cols)) seq_along(x)[-by] else fsetdiff(cols2int(cols, x, nam), by)
     }
-    by <- if(length(by) == 1L) x[[by]] else GRP.default(x, by, return.groups = FALSE, call = FALSE)
+    by <- if(length(by) == 1L) x[[by]] else x[by]
     if(is.call(t)) { # If time-variable supplied
       t <- ckmatch(all.vars(t), nam, "Unknown time variable:")
       v <- fsetdiff(v, t)
-      t <- if(length(t) == 1L) x[[t]] else GRP.default(x, t, return.groups = FALSE, call = FALSE)
+      t <- if(length(t) == 1L) x[[t]] else x[t]
     }
     x <- x[v]
   } else if(length(cols)) x <- x[cols2int(cols, x, names(x), FALSE)]
@@ -71,30 +56,20 @@ psacf.data.frame <- function(x, by, t = NULL, cols = is.numeric, lag.max = NULL,
   nrx <- length(x[[1L]])
   snames <- names(x)
   attributes(x) <- NULL # already class is 0... Necessary ?
-  getacf <- function(ng, by) {
-    if(length(t) && !is.nmfactor(t))
-      t <- if(is.atomic(t)) qG(t, na.exclude = FALSE) else GRP.default(t, return.groups = FALSE, call = FALSE)[[2L]]
-    if(gscale) x <- fscalelCpp(x,ng,by)
+  getacf <- function(ng, g) {
+    if(length(t)) t <- G_t(t)
+    if(gscale) x <- fscalelCpp(x,ng,g)
     acf <- array(numeric(0), c(lag.max+1, lx, lx))
     fun <- if(typei == 2L) cov else function(x, y, ...) cov(x, y, ...)/fvar.default(x) # cor
       for(i in seq_len(lx)) {
-        xim <- .Call(Cpp_flaglead,x[[i]],0:lag.max,NA,ng,by,t,FALSE)
+        xim <- .Call(Cpp_flaglead,x[[i]],0:lag.max,NA,ng,g,t,FALSE)
         for(j in seq_len(lx)) acf[ , j, i] <- fun(x[[j]], xim, use = "pairwise.complete.obs") # correct !
       }
     acf
   }
-  if(is.atomic(by)) {
-    if(is.nmfactor(by)) ng <- fnlevels(by) else {
-      by <- qG(by, na.exclude = FALSE)
-      ng <- attr(by, "N.groups")
-    }
-    if(is.null(lag.max)) lag.max <- round(2*sqrt(nrx/ng))
-    acf <- getacf(ng, by)
-  } else {
-    if(!is_GRP(by)) by <- GRP.default(by, return.groups = FALSE, call = FALSE)
-    if(is.null(lag.max)) lag.max <- round(2*sqrt(nrx/by[[1L]]))
-    acf <- getacf(by[[1L]], by[[2L]])
-  }
+  by <- G_guo(by)
+  if(is.null(lag.max)) lag.max <- round(2*sqrt(nrx/by[[1L]]))
+  acf <- getacf(by[[1L]], by[[2L]])
   lag <- matrix(1, lx, lx)
   lag[lower.tri(lag)] <- -1
   if(typei == 3L) {
@@ -120,14 +95,20 @@ psacf.pseries <- function(x, lag.max = NULL, type = c("correlation", "covariance
   if(!is.numeric(x)) stop("'x' must be a numeric pseries ")
   index <- unclass(attr(x, "index"))
   if(length(index) > 2L) index <- list(finteraction(index[-length(index)]), index[[length(index)]])
-  nl <- fnlevels(index[[1L]])
+  g <- index[[1L]]
+  t <- index[[2L]]
+  tlev <- attr(t, "levels")
+  oldopts <- options(warn = -1L)
+  on.exit(options(oldopts))
+  if(is.finite(as.integer(tlev[1L]))) t <- as.integer(tlev)[t]
+  ng <- fnlevels(g)
   typei <- switch(type[1L], correlation = 1L, covariance = 2L, partial = 3L, stop("Unknown type!"))
   series <- l1orlst(as.character(substitute(x))) # faster ?
-  if(is.null(lag.max)) lag.max <- round(2*sqrt(length(x)/nl))
-  if(gscale) x <- fscaleCpp(x,nl,index[[1L]])
+  if(is.null(lag.max)) lag.max <- round(2*sqrt(length(x)/ng))
+  if(gscale) x <- fscaleCpp(x,ng,g)
   acf <- if(typei == 2L)
-    cov(x, .Call(Cpp_flaglead,x,0:lag.max,NA,nl,index[[1L]],index[[2L]],FALSE), use = "pairwise.complete.obs") else
-    c(1, cov(x, .Call(Cpp_flaglead,x,seq_len(lag.max),NA,nl,index[[1L]],index[[2L]],FALSE), use = "pairwise.complete.obs")/fvar.default(x)) # or complete obs ?
+    cov(x, .Call(Cpp_flaglead,x,0:lag.max,NA,ng,g,t,FALSE), use = "pairwise.complete.obs") else
+    c(1, cov(x, .Call(Cpp_flaglead,x,seq_len(lag.max),NA,ng,g,t,FALSE), use = "pairwise.complete.obs")/fvar.default(x)) # or complete obs ?
   d <- c(lag.max+1,1,1)
   if(typei == 3L) {
     acf <- .Call(C_pacf1, array(acf, d), lag.max)
@@ -156,14 +137,20 @@ psacf.pdata.frame <- function(x, cols = is.numeric, lag.max = NULL, type = c("co
   lx <- length(x)
   snames <- names(x)
   if(length(index) > 2L) index <- list(finteraction(index[-length(index)]), index[[length(index)]])
-  ng <- fnlevels(index[[1L]])
+  g <- index[[1L]]
+  t <- index[[2L]]
+  tlev <- attr(t, "levels")
+  oldopts <- options(warn = -1L)
+  on.exit(options(oldopts))
+  if(is.finite(as.integer(tlev[1L]))) t <- as.integer(tlev)[t]
+  ng <- fnlevels(g)
   attributes(x) <- NULL # necessary after unclass above ?
     if(is.null(lag.max)) lag.max <- round(2*sqrt(nrx/ng))
-    if(gscale) x <- fscalelCpp(x,ng,index[[1L]])
+    if(gscale) x <- fscalelCpp(x,ng,g)
     acf <- array(numeric(0), c(lag.max+1, lx, lx))
     fun <- if(typei == 2L) cov else function(x, y, ...) cov(x, y, ...)/fvar.default(x) # cor
     for(i in seq_len(lx)) {
-      xim <- .Call(Cpp_flaglead,x[[i]],0:lag.max,NA,ng,index[[1L]],index[[2L]],FALSE)
+      xim <- .Call(Cpp_flaglead,x[[i]],0:lag.max,NA,ng,g,t,FALSE)
       for(j in seq_len(lx)) acf[ , j, i] <- fun(x[[j]], xim, use = "pairwise.complete.obs") # correct !
     }
   lag <- matrix(1, lx, lx)
@@ -219,8 +206,7 @@ psccf.default <- function(x, y, g, t = NULL, lag.max = NULL, type = c("correlati
   typei <- switch(type[1L], correlation = 1L, covariance = 2L, partial = 3L, stop("Unknown type!"))
   snames <- paste(c(l1orlst(as.character(substitute(x))), l1orlst(as.character(substitute(x)))), collapse = " & ")
   getccf <- function(ng, g) {
-    if(length(t) && !is.nmfactor(t))
-      t <- if(is.atomic(t)) qG(t, na.exclude = FALSE) else GRP.default(t, return.groups = FALSE, call = FALSE)[[2L]] # else if(.Internal(islistfactor(t, FALSE))) interaction(t)
+    if(length(t)) t <- G_t(t)
     if(gscale) {
       x <- fscaleCpp(x,ng,g)
       y <- fscaleCpp(y,ng,g)
@@ -229,18 +215,9 @@ psccf.default <- function(x, y, g, t = NULL, lag.max = NULL, type = c("correlati
       drop(cov(x, .Call(Cpp_flaglead,y,-lag.max:lag.max,NA,ng,g,t,FALSE), use = "pairwise.complete.obs")) else
       drop(cov(x, .Call(Cpp_flaglead,y,-lag.max:lag.max,NA,ng,g,t,FALSE), use = "pairwise.complete.obs")/(fsd.default(x)*fsd.default(y))) # or complete obs ?
   }
-  if(is.atomic(g)) {
-    if(is.nmfactor(g)) ng <- fnlevels(g) else {
-      g <- qG(g, na.exclude = FALSE)
-      ng <- attr(g,"N.groups")
-    }
-    if(is.null(lag.max)) lag.max <- round(2*sqrt(lx/ng))
-    acf <- getccf(ng, g)
-  } else {
-    if(!is_GRP(g)) g <- GRP.default(g, return.groups = FALSE, call = FALSE)
-    if(is.null(lag.max)) lag.max <- round(2*sqrt(lx/g[[1L]]))
-    acf <- getccf(g[[1L]], g[[2L]])
-  }
+  g <- G_guo(g)
+  if(is.null(lag.max)) lag.max <- round(2*sqrt(lx/g[[1L]]))
+  acf <- getccf(g[[1L]], g[[2L]])
   d <- c(2*lag.max+1,1,1)
   dim(acf) <- d
   acf.out <- `oldClass<-`(list(acf = acf, type = type[1L], n.used = lx,
@@ -263,18 +240,24 @@ psccf.pseries <- function(x, y, lag.max = NULL, type = c("correlation", "covaria
   if(!identical(index,attr(y,"index"))) stop("index of x and y differs")
   oldClass(index) <- NULL
   if(length(index) > 2L) index <- list(finteraction(index[-length(index)]), index[[length(index)]])
-  nl <- fnlevels(index[[1L]])
+  g <- index[[1L]]
+  t <- index[[2L]]
+  tlev <- attr(t, "levels")
+  oldopts <- options(warn = -1L)
+  on.exit(options(oldopts))
+  if(is.finite(as.integer(tlev[1L]))) t <- as.integer(tlev)[t]
+  ng <- fnlevels(g)
   typei <- switch(type[1L], correlation = 1L, covariance = 2L, partial = 3L, stop("Unknown type!"))
   snames <- paste(c(l1orlst(as.character(substitute(x))), l1orlst(as.character(substitute(x)))), collapse = " & ")
   if (gscale) {
-    x <- fscaleCpp(x,nl,index[[1L]])
-    y <- fscaleCpp(y,nl,index[[1L]])
+    x <- fscaleCpp(x,ng,g)
+    y <- fscaleCpp(y,ng,g)
   }
-  if (is.null(lag.max)) lag.max <- round(2*sqrt(length(x)/nl))
+  if (is.null(lag.max)) lag.max <- round(2*sqrt(length(x)/ng))
   l_seq <- -lag.max:lag.max
   acf <- if(typei == 2L)
-    drop(cov(x, .Call(Cpp_flaglead,y,l_seq,NA,nl,index[[1L]],index[[2L]],FALSE), use = "pairwise.complete.obs")) else
-    drop(cov(x, .Call(Cpp_flaglead,y,l_seq,NA,nl,index[[1L]],index[[2L]],FALSE), use = "pairwise.complete.obs")/(fsd.default(x)*fsd.default(y))) # or complete obs ?
+    drop(cov(x, .Call(Cpp_flaglead,y,l_seq,NA,ng,g,t,FALSE), use = "pairwise.complete.obs")) else
+    drop(cov(x, .Call(Cpp_flaglead,y,l_seq,NA,ng,g,t,FALSE), use = "pairwise.complete.obs")/(fsd.default(x)*fsd.default(y))) # or complete obs ?
   d <- c(2*lag.max+1,1,1)
   dim(acf) <- d
   acf.out <- `oldClass<-`(list(acf = acf, type = type[1L], n.used = lx,
