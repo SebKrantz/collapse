@@ -697,7 +697,7 @@ G_t <- function(x) { # , wm = 1L
     if(is.double(x) && !is.object(x)) return(as.integer(x))
     return(qG(x, na.exclude = FALSE, sort = TRUE, method = "hash")) # make sure it is sorted ! qG already checks factor !
   }
-  if(is_GRP(x)) return(x[[2L]])
+  # if(is_GRP(x)) return(x[[2L]]) # Not necessary because GRP.default also returns it..
   return(GRP.default(x, return.groups = FALSE, sort = TRUE, call = FALSE)[[2L]])
 }
 
