@@ -306,7 +306,7 @@ acr_get_funs <- function(.fnsexp, .fns, ce) {
     namfun <- names(.fns)
     # In programming usage, could simply pass a list of functions l, in which case this is not a call..
     if(is.call(.fnsexp) && (.fnsexp[[1L]] == quote(list) || .fnsexp[[1L]] == quote(c))) { # or we could have funlist[[i]] which is also sorted out here..
-      nf <- all.vars(.fnsexp)
+      nf <- all.vars(.fnsexp, unique = FALSE)
       if(length(nf) == length(.fns)) {
         names(.fns) <- nf
         if(is.null(namfun)) namfun <- nf
@@ -555,7 +555,7 @@ mutate_funi_grouped <- function(i, data, .data_, funs, aplvec, ce, ...) {
 
 
 do_grouped_expr <- function(ei, eiv, .data, g, pe) {
-  v <- all.vars(ei)
+  v <- all.vars(ei, unique = FALSE)
   if(length(v) > 1L) {
     # Could include global environemntal variables e.g. fmutate(data, new = mean(var) + q)
     namd <- names(.data)

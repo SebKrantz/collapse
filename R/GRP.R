@@ -57,7 +57,7 @@ GRP.default <- function(X, by = NULL, sort = TRUE, decreasing = FALSE, na.last =
       o <- switchGRP(X, na.last, decreasing, return.groups || !use.group, TRUE, sort, use.group)
     } else {
       if(is.call(by)) {
-        namby <- all.vars(by)
+        namby <- all.vars(by, unique = FALSE)
         by <- ckmatch(namby, attr(X, "names"))
       } else if(is.character(by)) {
         namby <- by
@@ -273,7 +273,7 @@ fgroup_by <- function(X, ..., sort = TRUE, decreasing = FALSE, na.last = TRUE, r
   oldClass(X) <- NULL
   m <- match(c("GRP_df", "grouped_df", "data.frame"), clx, nomatch = 0L)
   dots <- substitute(list(...))
-  vars <- all.vars(dots)
+  vars <- all.vars(dots, unique = FALSE)
   # In case sequences of columns are passed...
   if(length(vars)+1L != length(dots) && any(all.names(dots) == ":")) {
   # Note that fgroup_by(mtcars, bla = round(mpg / cyl), vs:am) only groups by vs, and am. fselect(mtcars, bla = round(mpg / cyl), vs:am) also does the wrong thing.
