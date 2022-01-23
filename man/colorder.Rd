@@ -17,7 +17,7 @@ colorderv(X, neworder = radixorder(names(X)),
 %- maybe also 'usage' for other objects documented here.
 \arguments{
   \item{X}{a data frame or list.}
-  \item{\dots}{for \code{colorder}: Column names of \code{X} in the new order (can also use sequences i.e. \code{col1:coln, colk, \dots}). For \code{colorderv}: Further arguments to \code{\link{grep}} if \code{regex = TRUE}.}
+  \item{\dots}{for \code{colorder}: Column names of \code{X} in the new order (can also use sequences i.e. \code{col1:coln, newname = colk, \dots}). For \code{colorderv}: Further arguments to \code{\link{grep}} if \code{regex = TRUE}.}
   \item{neworder}{a vector of column names, positive indices, a suitable logical vector, a function such as \code{is.numeric}, or a vector of regular expressions matching column names (if \code{regex = TRUE}). }
   \item{pos}{integer or character. Different options regarding column arrangement if \code{...length() < ncol(X)} (or \code{length(neworder) < ncol(X)}).
         \tabular{lllll}{\emph{ Int. }   \tab\tab \emph{ String }   \tab\tab \emph{ Description }  \cr
@@ -44,6 +44,7 @@ head(colorder(mtcars, vs, cyl:hp, am))
 head(colorder(mtcars, vs, cyl:hp, am, pos = "end"))
 head(colorder(mtcars, vs, cyl:hp, am, pos = "after"))
 head(colorder(mtcars, vs, cyl, pos = "exchange"))
+head(colorder(mtcars, vs, cyl:hp, new = am))    # renaming
 
 ## Same in standard evaluation
 head(colorderv(mtcars, c(8, 2:4, 9)))
