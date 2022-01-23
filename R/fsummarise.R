@@ -100,7 +100,7 @@ fsummarise <- function(.data, ..., keep.group_vars = TRUE) {
         # return(eval(ei, list(do_across = do_across, smr_funi_grouped = smr_funi_grouped), pe))
         res[[i]] <- eval(ei, list(do_across = do_across, smr_funi_grouped = smr_funi_grouped), pe)
       } else { # Tagged vector expressions
-        eiv <- all.vars(ei, functions = TRUE)
+        eiv <- all.names(ei)
         res[[i]] <- list(if(any(eiv %in% .FAST_STAT_FUN_POLD))  # startsWith(eiv, .FAST_STAT_FUN_POLD) Note: startsWith does not reliably capture expressions e.g. e <- quote(list(b = fmean(log(mpg)) + max(qsec))) does not work !!
                          eval(fFUN_smr_add_groups(ei), .data, pe) else
                          do_grouped_expr(ei, eiv, .data, g, pe))

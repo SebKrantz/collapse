@@ -399,7 +399,7 @@ SEXP extendIntVec(SEXP x, int len, int val) {
 
 SEXP subsetCols(SEXP x, SEXP cols, SEXP checksf) { // SEXP fretall
   if(TYPEOF(x) != VECSXP) error("x is not a list.");
-  int l = LENGTH(x), nprotect = 3;
+  int l = LENGTH(x), nprotect = 3, oxl = OBJECT(x) != 0;
   if(l == 0) return x; //  ncol == 0 -> Nope, need emty selections such as cat_vars(mtcars) !!
   PROTECT_INDEX ipx;
   PROTECT_WITH_INDEX(cols = convertNegAndZeroIdx(cols, ScalarInteger(l), ScalarLogical(FALSE)), &ipx);
@@ -409,7 +409,7 @@ SEXP subsetCols(SEXP x, SEXP cols, SEXP checksf) { // SEXP fretall
   // names
   SEXP nam = PROTECT(getAttrib(x, R_NamesSymbol));
   // sf data frames: Need to add sf_column
-  if(asLogical(checksf) && INHERITS(x, char_sf)) {
+  if(oxl && asLogical(checksf) && INHERITS(x, char_sf)) {
     int sfcoln = NA_INTEGER, sf_col_sel = 0;
     SEXP *pnam = STRING_PTR(nam), sfcol = asChar(getAttrib(x, sym_sf_column));
     for(int i = l; i--; ) {
@@ -446,7 +446,7 @@ SEXP subsetCols(SEXP x, SEXP cols, SEXP checksf) { // SEXP fretall
   // clear any index that was copied over by copyMostAttrib(), e.g. #1760 and #1734 (test 1678)
   // setAttrib(ans, sym_index, R_NilValue); -> deletes "index" attribute of pdata.frame -> don't use!!
 
-  if(INHERITS(x, char_datatable)) {
+  if(oxl && INHERITS(x, char_datatable)) {
     setAttrib(ans, sym_datatable_locked, R_NilValue);
     int n = asInteger(GetOption1(sym_collapse_DT_alloccol));
     UNPROTECT(nprotect); // This needs to be here !! (asInteger and GetOption1 are allocating functions)
@@ -467,7 +467,7 @@ SEXP subsetCols(SEXP x, SEXP cols, SEXP checksf) { // SEXP fretall
 */
 
 SEXP subsetDT(SEXP x, SEXP rows, SEXP cols, SEXP checkrows) { // , SEXP fastret
-    int nprotect=0;
+    int nprotect=0, oxl = OBJECT(x) != 0;
     if (!isNewList(x)) error("Internal error. Argument 'x' to CsubsetDT is type '%s' not 'list'", type2char(TYPEOF(rows))); // # nocov
       if (!length(x)) return x;  // return empty list
 
@@ -493,7 +493,7 @@ SEXP subsetDT(SEXP x, SEXP rows, SEXP cols, SEXP checkrows) { // , SEXP fastret
       }
 
       // Adding sf geometry column if not already selected...
-      if(INHERITS(x, char_sf)) {
+      if(oxl && INHERITS(x, char_sf)) {
         int sfcoln = NA_INTEGER, sf_col_sel = 0;
         SEXP nam = PROTECT(getAttrib(x, R_NamesSymbol));
         SEXP *pnam = STRING_PTR(nam), sfcol = asChar(getAttrib(x, sym_sf_column));
@@ -558,15 +558,16 @@ SEXP subsetDT(SEXP x, SEXP rows, SEXP cols, SEXP checkrows) { // , SEXP fastret
   setAttrib(ans, R_NamesSymbol, tmp);
   subsetVectorRaw(tmp, getAttrib(x, R_NamesSymbol), cols, /*anyNA=*/false);
 
-  tmp = PROTECT(allocVector(INTSXP, 2)); nprotect++;
-  INTEGER(tmp)[0] = NA_INTEGER;
-  INTEGER(tmp)[1] = -ansn;
-  setAttrib(ans, R_RowNamesSymbol, tmp);  // The contents of tmp must be set before being passed to setAttrib(). setAttrib looks at tmp value and copies it in the case of R_RowNamesSymbol. Caused hard to track bug around 28 Sep 2014.
+  if(oxl) {
+    tmp = PROTECT(allocVector(INTSXP, 2)); nprotect++;
+    INTEGER(tmp)[0] = NA_INTEGER;
+    INTEGER(tmp)[1] = -ansn;
+    setAttrib(ans, R_RowNamesSymbol, tmp);  // The contents of tmp must be set before being passed to setAttrib(). setAttrib looks at tmp value and copies it in the case of R_RowNamesSymbol. Caused hard to track bug around 28 Sep 2014.
+    // clear any index that was copied over by copyMostAttrib() above, e.g. #1760 and #1734 (test 1678)
+    setAttrib(ans, sym_index, R_NilValue); // also ok for pdata.frame (can't use on subsetted or ordered data frame)
+  }
 
-  // clear any index that was copied over by copyMostAttrib() above, e.g. #1760 and #1734 (test 1678)
-  setAttrib(ans, sym_index, R_NilValue); // also ok for pdata.frame (can't use on subsetted or ordered data frame)
-
-  if(INHERITS(x, char_datatable)) {
+  if(oxl && INHERITS(x, char_datatable)) {
     setAttrib(ans, sym_sorted, R_NilValue);
     setAttrib(ans, sym_datatable_locked, R_NilValue);
     int n = asInteger(GetOption1(sym_collapse_DT_alloccol));

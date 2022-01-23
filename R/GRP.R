@@ -270,16 +270,45 @@ GRP.pdata.frame <- function(X, effect = 1L, ..., group.sizes = TRUE, return.grou
 
 fgroup_by <- function(X, ..., sort = TRUE, decreasing = FALSE, na.last = TRUE, return.order = FALSE, method = "auto") {          #   e <- substitute(list(...)) # faster but does not preserve attributes of unique groups !
   clx <- oldClass(X)
+  oldClass(X) <- NULL
   m <- match(c("GRP_df", "grouped_df", "data.frame"), clx, nomatch = 0L)
-  if(any(clx == "sf")) oldClass(X) <- clx[clx != "sf"]
-  attr(X, "groups") <- GRP.default(fselect(if(m[2L]) fungroup(X) else X, ...), NULL, sort, decreasing, na.last, TRUE, return.order, method, FALSE)
-  # Needed: wlddev %>% fgroup_by(country) gives error if dplyr is loaded. Also sf objects etc..
-  # .rows needs to be list(), NULL won't work !! Note: attaching a data.frame class calls data frame methods, even if "list" in front! -> Need GRP.grouped_df to restore object !
-  # attr(X, "groups") <- `oldClass<-`(c(g, list(.rows = list())), c("GRP", "data.frame")) # `names<-`(eval(e, X, parent.frame()), all.vars(e))
+  dots <- substitute(list(...))
+  vars <- all.vars(dots)
+  # In case sequences of columns are passed...
+  if(length(vars)+1L != length(dots) && any(all.names(dots) == ":")) {
+  # Note that fgroup_by(mtcars, bla = round(mpg / cyl), vs:am) only groups by vs, and am. fselect(mtcars, bla = round(mpg / cyl), vs:am) also does the wrong thing.
+    nl <- `names<-`(as.vector(seq_along(X), "list"), names(X))
+    vars <- eval(substitute(c(...)), nl, parent.frame())
+    e <- X[vars]
+    # This allows renaming...
+    if(length(nam_vars <- names(vars))) {
+      nonmiss <- nzchar(nam_vars)
+      names(e)[nonmiss] <- nam_vars[nonmiss]
+    }
+    # e <- fselect(if(m[2L]) fungroup(X) else X, ...)
+  } else {
+    e <- eval(dots, X, parent.frame())
+    name <- names(e)
+    # If something else than NSE cols is supplied
+    if(length(e) == 1L && length(e[[1L]]) != length(X[[1L]]) && is.null(name)) {
+      e <- X[cols2int(e[[1L]], X, names(X), FALSE)]
+    } else {
+      if(length(name)) {  # fgroup_by(mtcars, bla = round(mpg / cyl), vs, am)
+        nonmiss <- nzchar(name) # -> using as.character(dots[-1L]) instead of vars
+        if(!all(nonmiss)) names(e) <- `[<-`(as.character(dots[-1L]), nonmiss, value = name[nonmiss])
+      } else names(e) <- vars
+    }
+  }
+  attr(X, "groups") <- GRP.default(e, NULL, sort, decreasing, na.last, TRUE, return.order, method, FALSE)
+  # if(any(clx == "sf")) oldClass(X) <- clx[clx != "sf"]
+  # attr(X, "groups") <- GRP.default(fselect(if(m[2L]) fungroup(X) else X, ...), NULL, sort, decreasing, na.last, TRUE, return.order, method, FALSE)
+    # Needed: wlddev %>% fgroup_by(country) gives error if dplyr is loaded. Also sf objects etc..
+    # .rows needs to be list(), NULL won't work !! Note: attaching a data.frame class calls data frame methods, even if "list" in front! -> Need GRP.grouped_df to restore object !
+    # attr(X, "groups") <- `oldClass<-`(c(g, list(.rows = list())), c("GRP", "data.frame")) # `names<-`(eval(e, X, parent.frame()), all.vars(e))
   oldClass(X) <- c("GRP_df",  if(length(mp <- m[m != 0L])) clx[-mp] else clx, "grouped_df", if(m[3L]) "data.frame") # clx[-m] doesn't work if clx is only "data.table" for example
-  # simplest, but X is coerced to data.frame. Through the above solution it can be a list and only receive the 'grouped_df' class
-  # add_cl <- c("grouped_df", "data.frame")
-  # oldClass(X) <- c(fsetdiff(oldClass(X), add_cl), add_cl)
+    # simplest, but X is coerced to data.frame. Through the above solution it can be a list and only receive the 'grouped_df' class
+    # add_cl <- c("grouped_df", "data.frame")
+    # oldClass(X) <- c(fsetdiff(oldClass(X), add_cl), add_cl)
   if(any(clx == "data.table")) return(alc(X))
   X
 }
@@ -403,14 +432,27 @@ fungroup <- function(X, ...) {
 #   X
 # }
 
+condCopyAttrib <- function(x, d) {
+  if(is.object(x)) return(x)
+  rn <- c(NA_integer_, -length(x[[1L]]))
+  cld <- oldClass(d)
+  oldClass(d) <- NULL
+  attr(d, "groups") <- NULL
+  attr(d, "row.names") <- NULL
+  x <- copyMostAttributes(x, d)
+  attr(x, "row.names") <- rn
+  oldClass(x) <- fsetdiff(cld, c("GRP_df", "grouped_df", "sf"))
+  if(any(cld == "data.table")) return(alc(x))
+  x
+}
 
 fgroup_vars <- function(X, return = "data") {
   g <- attr(X, "groups")
   if(!is.list(g)) stop("attr(X, 'groups') is not a grouping object")
   vars <- if(is_GRP(g)) g[[5L]] else attr(g, "names")[-length(unclass(g))]
-  switch(return[1L],
+  switch(return,
     data = .Call(C_subsetCols, fungroup(X), ckmatch(vars, attr(X, "names")), TRUE),
-    unique = if(is_GRP(g)) g[[4L]] else .Call(C_subsetCols, g, -length(unclass(g)), FALSE), # what about attr(*, ".drop") ??
+    unique = if(is_GRP(g)) condCopyAttrib(g[[4L]], X) else .Call(C_subsetCols, g, -length(unclass(g)), FALSE), # what about attr(*, ".drop") ??
     names = vars,
     indices = ckmatch(vars, attr(X, "names")),
     named_indices = `names<-`(ckmatch(vars, attr(X, "names")), vars),
