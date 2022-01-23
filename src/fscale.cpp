@@ -13,7 +13,7 @@ NumericVector fscaleCpp(const NumericVector& x, int ng = 0, const IntegerVector&
   if(l < 1) return x; // Prevents seqfault for numeric(0) #101
 
   NumericVector out = no_init_vector(l);
-  //   DUPLICATE_ATTRIB(out, x); // Any speed loss or overwriting attributes ?
+  //   SHALLOW_DUPLICATE_ATTRIB(out, x); // Any speed loss or overwriting attributes ?
   if (Rf_isNull(w)) { // No weights
     if (ng == 0) {
       if(set_sd == R_NegInf) stop("within.sd can only be calculated when a grouping vector is supplied");
@@ -32,14 +32,14 @@ NumericVector fscaleCpp(const NumericVector& x, int ng = 0, const IntegerVector&
           M2 = set_sd/sqrt(M2/(n-1)); // good ? -> Yes, works !
         } else { // use goto to make code simpler ?
           std::fill(out.begin(), out.end(), NA_REAL);
-          DUPLICATE_ATTRIB(out, x);
+          SHALLOW_DUPLICATE_ATTRIB(out, x);
           return out;
         }
       } else {
         for(int i = 0; i != l; ++i) {
           if(std::isnan(x[i])) {
             std::fill(out.begin(), out.end(), NA_REAL);
-            DUPLICATE_ATTRIB(out, x);
+            SHALLOW_DUPLICATE_ATTRIB(out, x);
             return out;
           } else {
             d1 = x[i]-mean;
@@ -84,7 +84,7 @@ NumericVector fscaleCpp(const NumericVector& x, int ng = 0, const IntegerVector&
             ++ngs;
             if(ngs == ng) {
               std::fill(out.begin(), out.end(), NA_REAL);
-              DUPLICATE_ATTRIB(out, x);
+              SHALLOW_DUPLICATE_ATTRIB(out, x);
               return out;
             }
           } else {
@@ -160,14 +160,14 @@ NumericVector fscaleCpp(const NumericVector& x, int ng = 0, const IntegerVector&
           }
         } else {
           std::fill(out.begin(), out.end(), NA_REAL);
-          DUPLICATE_ATTRIB(out, x);
+          SHALLOW_DUPLICATE_ATTRIB(out, x);
           return out;
         }
       } else {
         for(int i = 0; i != l; ++i) {
           if(std::isnan(x[i]) || std::isnan(wg[i])) {
             std::fill(out.begin(), out.end(), NA_REAL);
-            DUPLICATE_ATTRIB(out, x);
+            SHALLOW_DUPLICATE_ATTRIB(out, x);
             return out;
           } else {
             if(wg[i] == 0) continue;
@@ -215,7 +215,7 @@ NumericVector fscaleCpp(const NumericVector& x, int ng = 0, const IntegerVector&
             ++ngs;
             if(ngs == ng) {
               std::fill(out.begin(), out.end(), NA_REAL);
-              DUPLICATE_ATTRIB(out, x);
+              SHALLOW_DUPLICATE_ATTRIB(out, x);
               return out;
             }
           } else {
@@ -273,7 +273,7 @@ NumericVector fscaleCpp(const NumericVector& x, int ng = 0, const IntegerVector&
       }
     }
   }
-  DUPLICATE_ATTRIB(out, x);
+  SHALLOW_DUPLICATE_ATTRIB(out, x);
   return out;
 }
 
@@ -560,7 +560,7 @@ NumericMatrix fscalemCpp(const NumericMatrix& x, int ng = 0, const IntegerVector
       }
     }
   }
-  DUPLICATE_ATTRIB(out, x);
+  SHALLOW_DUPLICATE_ATTRIB(out, x);
   return out;
 }
 
@@ -616,7 +616,7 @@ List fscalelCpp(const List& x, int ng = 0, const IntegerVector& g = 0, const SEX
           else outj = (column-meanj)*M2j + set_mean; // best ?
         }
         loopend:;
-        DUPLICATE_ATTRIB(outj, column);
+        SHALLOW_DUPLICATE_ATTRIB(outj, column);
         out[j] = outj;
       }
     } else { // with groups
@@ -708,7 +708,7 @@ List fscalelCpp(const List& x, int ng = 0, const IntegerVector& g = 0, const SEX
           for(int i = 0; i != gss; ++i) outj[i] = (column[i]-meanj[g[i]-1])*M2j[g[i]-1] + gl_meanj; // best ?
         }
         loopend2:;
-        DUPLICATE_ATTRIB(outj, column);
+        SHALLOW_DUPLICATE_ATTRIB(outj, column);
         out[j] = outj;
       }
     }
@@ -761,7 +761,7 @@ List fscalelCpp(const List& x, int ng = 0, const IntegerVector& g = 0, const SEX
           else outj = (column-meanj)*M2j + set_mean; // best ?
         }
         loopend3:;
-        DUPLICATE_ATTRIB(outj, column);
+        SHALLOW_DUPLICATE_ATTRIB(outj, column);
         out[j] = outj;
       }
     } else { // with groups and weights
@@ -855,12 +855,12 @@ List fscalelCpp(const List& x, int ng = 0, const IntegerVector& g = 0, const SEX
           for(int i = 0; i != gss; ++i) outj[i] = (column[i]-meanj[g[i]-1])*M2j[g[i]-1] + gl_meanj; // best ?
         }
         loopend4:;
-        DUPLICATE_ATTRIB(outj, column);
+        SHALLOW_DUPLICATE_ATTRIB(outj, column);
         out[j] = outj;
       }
     }
   }
-  DUPLICATE_ATTRIB(out, x);
+  SHALLOW_DUPLICATE_ATTRIB(out, x);
   return out;
 }
 

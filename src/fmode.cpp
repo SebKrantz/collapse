@@ -130,7 +130,7 @@ Vector<RTYPE> fmodeImpl(const Vector<RTYPE>& x, int ng, const IntegerVector& g, 
         // }
       }
       Vector<RTYPE> out(1, mode);
-      DUPLICATE_ATTRIB(out, x); // could add right name for named vectors
+      SHALLOW_DUPLICATE_ATTRIB(out, x); // could add right name for named vectors
       if(Rf_getAttrib(x, R_NamesSymbol) != R_NilValue) Rf_setAttrib(out, R_NamesSymbol, R_NilValue);
       return out;
     } else {
@@ -272,7 +272,7 @@ Vector<RTYPE> fmodeImpl(const Vector<RTYPE>& x, int ng, const IntegerVector& g, 
           // }
         }
       }
-      DUPLICATE_ATTRIB(out, x);
+      SHALLOW_DUPLICATE_ATTRIB(out, x);
       if(Rf_getAttrib(x, R_NamesSymbol) != R_NilValue) Rf_setAttrib(out, R_NamesSymbol, R_NilValue);
       return out;
     }
@@ -385,7 +385,7 @@ Vector<RTYPE> fmodeImpl(const Vector<RTYPE>& x, int ng, const IntegerVector& g, 
         }
       }
       Vector<RTYPE> out(1, mode);
-      DUPLICATE_ATTRIB(out, x);
+      SHALLOW_DUPLICATE_ATTRIB(out, x);
       if(Rf_getAttrib(x, R_NamesSymbol) != R_NilValue) Rf_setAttrib(out, R_NamesSymbol, R_NilValue);
       return out;
     } else {
@@ -534,7 +534,7 @@ Vector<RTYPE> fmodeImpl(const Vector<RTYPE>& x, int ng, const IntegerVector& g, 
           }
         }
       }
-      DUPLICATE_ATTRIB(out, x);
+      SHALLOW_DUPLICATE_ATTRIB(out, x);
       if(Rf_getAttrib(x, R_NamesSymbol) != R_NilValue) Rf_setAttrib(out, R_NamesSymbol, R_NilValue);
       return out;
     }
@@ -592,7 +592,7 @@ IntegerVector fmodeFACT(const IntegerVector& x, int ng, const IntegerVector& g, 
         if(mode == 0) mode = NA_INTEGER;
       }
       IntegerVector out(1, mode);
-      DUPLICATE_ATTRIB(out, x); // could add right name for names vectors
+      SHALLOW_DUPLICATE_ATTRIB(out, x); // could add right name for names vectors
       if(Rf_getAttrib(x, R_NamesSymbol) != R_NilValue) Rf_setAttrib(out, R_NamesSymbol, R_NilValue);
       return out;
     } else {
@@ -669,7 +669,7 @@ IntegerVector fmodeFACT(const IntegerVector& x, int ng, const IntegerVector& g, 
           if(out[gr] == 0) out[gr] = NA_INTEGER;
         }
       }
-      DUPLICATE_ATTRIB(out, x);
+      SHALLOW_DUPLICATE_ATTRIB(out, x);
       if(Rf_getAttrib(x, R_NamesSymbol) != R_NilValue) Rf_setAttrib(out, R_NamesSymbol, R_NilValue);
       return out;
     }
@@ -725,7 +725,7 @@ IntegerVector fmodeFACT(const IntegerVector& x, int ng, const IntegerVector& g, 
         if(mode == 0) mode = NA_INTEGER;
       }
       IntegerVector out(1, mode);
-      DUPLICATE_ATTRIB(out, x);
+      SHALLOW_DUPLICATE_ATTRIB(out, x);
       if(Rf_getAttrib(x, R_NamesSymbol) != R_NilValue) Rf_setAttrib(out, R_NamesSymbol, R_NilValue);
       return out;
     } else {
@@ -816,7 +816,7 @@ IntegerVector fmodeFACT(const IntegerVector& x, int ng, const IntegerVector& g, 
           if(out[gr] == 0) out[gr] = NA_INTEGER;
         }
       }
-      DUPLICATE_ATTRIB(out, x);
+      SHALLOW_DUPLICATE_ATTRIB(out, x);
       if(Rf_getAttrib(x, R_NamesSymbol) != R_NilValue) Rf_setAttrib(out, R_NamesSymbol, R_NilValue);
       return out;
     }
@@ -851,7 +851,7 @@ Vector<LGLSXP> fmodeImpl(const Vector<LGLSXP>& x, int ng, const IntegerVector& g
         }
         out[0] = (NNA > Ntrue && NNA > Nfalse) ? NA_LOGICAL : (maxm || Ntrue != Nfalse) ? Ntrue >= Nfalse : false;
       }
-      DUPLICATE_ATTRIB(out, x);
+      SHALLOW_DUPLICATE_ATTRIB(out, x);
       if(Rf_getAttrib(x, R_NamesSymbol) != R_NilValue) Rf_setAttrib(out, R_NamesSymbol, R_NilValue);
       return out;
     } else {
@@ -868,7 +868,7 @@ Vector<LGLSXP> fmodeImpl(const Vector<LGLSXP>& x, int ng, const IntegerVector& g
           }
         }
         if(!maxm) for(int i = ng; i--; ) if(truefalse[i] == 0 && out[i] != NA_LOGICAL) out[i] = false;
-        DUPLICATE_ATTRIB(out, x);
+        SHALLOW_DUPLICATE_ATTRIB(out, x);
         if(Rf_getAttrib(x, R_NamesSymbol) != R_NilValue) Rf_setAttrib(out, R_NamesSymbol, R_NilValue);
         return out;
       } else {
@@ -890,7 +890,7 @@ Vector<LGLSXP> fmodeImpl(const Vector<LGLSXP>& x, int ng, const IntegerVector& g
             else out[i] = Ntrue[i] > Nfalse[i];
           }
         }
-        DUPLICATE_ATTRIB(out, x);
+        SHALLOW_DUPLICATE_ATTRIB(out, x);
         if(Rf_getAttrib(x, R_NamesSymbol) != R_NilValue) Rf_setAttrib(out, R_NamesSymbol, R_NilValue);
         return out;
       }
@@ -919,7 +919,7 @@ Vector<LGLSXP> fmodeImpl(const Vector<LGLSXP>& x, int ng, const IntegerVector& g
         }         // important as w could be NA as well..
         out[0] = ((sumwNA > sumwtrue && sumwNA > sumwfalse) || (sumwtrue == 0 && sumwfalse == 0)) ? NA_LOGICAL : (maxm || sumwtrue != sumwfalse) ? sumwtrue >= sumwfalse : false;
       }
-      DUPLICATE_ATTRIB(out, x);
+      SHALLOW_DUPLICATE_ATTRIB(out, x);
       if(Rf_getAttrib(x, R_NamesSymbol) != R_NilValue) Rf_setAttrib(out, R_NamesSymbol, R_NilValue);
       return out;
     } else {
@@ -938,7 +938,7 @@ Vector<LGLSXP> fmodeImpl(const Vector<LGLSXP>& x, int ng, const IntegerVector& g
           }
         }
         if(!maxm) for(int i = ng; i--; ) if(sumwtruefalse[i] == 0 && out[i] != NA_LOGICAL) out[i] = false;
-        DUPLICATE_ATTRIB(out, x);
+        SHALLOW_DUPLICATE_ATTRIB(out, x);
         if(Rf_getAttrib(x, R_NamesSymbol) != R_NilValue) Rf_setAttrib(out, R_NamesSymbol, R_NilValue);
         return out;
       } else {
@@ -963,7 +963,7 @@ Vector<LGLSXP> fmodeImpl(const Vector<LGLSXP>& x, int ng, const IntegerVector& g
             else out[i] = sumwtrue[i] > sumwfalse[i];
           }
         }
-        DUPLICATE_ATTRIB(out, x);
+        SHALLOW_DUPLICATE_ATTRIB(out, x);
         if(Rf_getAttrib(x, R_NamesSymbol) != R_NilValue) Rf_setAttrib(out, R_NamesSymbol, R_NilValue);
         return out;
       }
@@ -1012,7 +1012,7 @@ SEXP fmodelCpp(const List& x, int ng = 0, const IntegerVector& g = 0, const SEXP
     default: stop("Not supported SEXP type !");
     }
   }
-  DUPLICATE_ATTRIB(out, x);
+  SHALLOW_DUPLICATE_ATTRIB(out, x);
   if(ng == 0) Rf_setAttrib(out, R_RowNamesSymbol, Rf_ScalarInteger(1));
   else Rf_setAttrib(out, R_RowNamesSymbol, IntegerVector::create(NA_INTEGER, -ng));
   return out;

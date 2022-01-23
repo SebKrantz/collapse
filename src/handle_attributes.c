@@ -1,6 +1,10 @@
 #include <R.h>
 #include <Rinternals.h>
 
+// See https://github.com/wch/r-source/blob/079f863446b5414dd96f3c29d519e4a654146364/src/main/memory.c
+// and https://github.com/wch/r-source/search?q=copyMostAttrib
+// https://github.com/wch/r-source/blob/b6f046826c87fc10ad08acd8858921fa1a58e488/doc/manual/R-ints.texi
+
 
 SEXP setAttributes(SEXP x, SEXP a) {
   SET_ATTRIB(x, Rf_coerceVector(a, LISTSXP));
@@ -25,7 +29,7 @@ void setattributes(SEXP x, SEXP a) {
 // }
 
 SEXP duplAttributes(SEXP x, SEXP y) { // also look at data.table's keepattributes ...
-  DUPLICATE_ATTRIB(x, y); // SET_ATTRIB(x, ATTRIB(y));
+  SHALLOW_DUPLICATE_ATTRIB(x, y); // SET_ATTRIB(x, ATTRIB(y));
   return x;
 }
 
@@ -49,8 +53,8 @@ SEXP duplAttributes(SEXP x, SEXP y) { // also look at data.table's keepattribute
 // 4 - neither x nor xAG are classed - preserve attributes of x, discard attributes of xAG (if any)
 //
 
-// if(Rf_isObject(xAG)) DUPLICATE_ATTRIB(out, xAG);
-// else if(!Rf_isObject(x) || (tx == txAG && !Rf_isFactor(x))) DUPLICATE_ATTRIB(out, x);
+// if(Rf_isObject(xAG)) SHALLOW_DUPLICATE_ATTRIB(out, xAG);
+// else if(!Rf_isObject(x) || (tx == txAG && !Rf_isFactor(x))) SHALLOW_DUPLICATE_ATTRIB(out, x);
 // else {
 //   SHALLOW_DUPLICATE_ATTRIB(out, x);
 //   Rf_classgets(out, R_NilValue); // OK !
@@ -87,7 +91,7 @@ SEXP CsetAttrib(SEXP object, SEXP a) {
 SEXP CcopyAttrib(SEXP to, SEXP from) {
   int il = TYPEOF(to) == VECSXP;
   SEXP res = il ? PROTECT(Rf_shallow_duplicate(to)) : to;
-  DUPLICATE_ATTRIB(res, from);
+  SHALLOW_DUPLICATE_ATTRIB(res, from);
   UNPROTECT(il);
   return res;
 }
@@ -107,18 +111,18 @@ SEXP CcopyMostAttrib(SEXP to, SEXP from) {
 // No longer needed...
 // Warning message: In .Call(C_duplattributes, x, y) : converting NULL pointer to R NULL
 // void duplattributes(SEXP x, SEXP y) {
-//  DUPLICATE_ATTRIB(x, y); // SET_ATTRIB(x, ATTRIB(y));
+//  SHALLOW_DUPLICATE_ATTRIB(x, y); // SET_ATTRIB(x, ATTRIB(y));
 //  Rf_classgets(x, Rf_getAttrib(y, R_ClassSymbol)); // This solves the warning message !!
   // just to return R_NilValue; and the SEXP... retrns NULL anyway
 // }
 
 // No longer needed... using copyMostAttributes instead
 // SEXP cond_duplAttributes(SEXP x, SEXP y) {
-//  if(TYPEOF(x) == TYPEOF(y)) DUPLICATE_ATTRIB(x, y); // SET_ATTRIB(x, ATTRIB(y));
+//  if(TYPEOF(x) == TYPEOF(y)) SHALLOW_DUPLICATE_ATTRIB(x, y); // SET_ATTRIB(x, ATTRIB(y));
 //  return x;
 // }
 
 // not used !!
 // void cond_duplattributes(SEXP x, SEXP y) {
-//  if(TYPEOF(x) == TYPEOF(y)) DUPLICATE_ATTRIB(x, y); // SET_ATTRIB(x, ATTRIB(y));
+//  if(TYPEOF(x) == TYPEOF(y)) SHALLOW_DUPLICATE_ATTRIB(x, y); // SET_ATTRIB(x, ATTRIB(y));
 // }

@@ -294,7 +294,7 @@ IntegerVector fdroplevelsCpp(const IntegerVector& x, bool check_NA = true) {
   } else {
     for(int i = 0; i != l; ++i) out[i] = uxp[x[i]];
   }
-  DUPLICATE_ATTRIB(out, x);
+  SHALLOW_DUPLICATE_ATTRIB(out, x);
   Rf_setAttrib(out, R_LevelsSymbol, newlevs);
   return out;
 }
