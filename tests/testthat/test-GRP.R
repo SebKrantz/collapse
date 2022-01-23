@@ -150,10 +150,17 @@ test_that("GRP gives errors for wrong input", {
 
 test_that("fgroup_by works as intended", {
 
+  ca <- function(x) {
+    nam <- names(x[[4L]])
+    attributes(x[[4L]]) <- NULL
+    names(x[[4L]]) <- nam
+    x
+  }
+
   expect_output(print(fgroup_by(mtcars, cyl, vs, am)))
-  expect_equal(GRP(fgroup_by(mtcars, cyl, vs, am)), GRP(mtcars, ~ cyl + vs + am, call = FALSE))
-  expect_equal(GRP(fgroup_by(mtcars, c("cyl", "vs", "am"))), GRP(mtcars, ~ cyl + vs + am, call = FALSE))
-  expect_equal(GRP(fgroup_by(mtcars, c(2, 8:9))), GRP(mtcars, ~ cyl + vs + am, call = FALSE))
+  expect_equal(GRP(fgroup_by(mtcars, cyl, vs, am)), ca(GRP(mtcars, ~ cyl + vs + am, call = FALSE)))
+  expect_equal(GRP(fgroup_by(mtcars, c("cyl", "vs", "am"))), ca(GRP(mtcars, ~ cyl + vs + am, call = FALSE)))
+  expect_equal(GRP(fgroup_by(mtcars, c(2, 8:9))), ca(GRP(mtcars, ~ cyl + vs + am, call = FALSE)))
   expect_identical(fungroup(fgroup_by(mtcars, cyl, vs, am)), mtcars)
   expect_equal(fgroup_by(fgroup_by(mtcars, cyl, vs, am), cyl), fgroup_by(mtcars, cyl))
 

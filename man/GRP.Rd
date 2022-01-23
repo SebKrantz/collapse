@@ -128,7 +128,7 @@ fungroup(X, \dots)
 
   \item{horizontal}{logical. \code{TRUE} arranges plots next to each other, instead of above each other.}
 
-  \item{\dots}{for \code{fgroup_by}: unquoted comma-separated column names of grouping columns. For \code{gsplit}: further arguments passed to \code{GRP} (if \code{g} is not already a 'GRP' object).}
+  \item{\dots}{for \code{fgroup_by}: unquoted comma-separated column names, sequences of columns, expressions involving columns, and column names, indices, logical vectors or selector functions. See Examples. For \code{gsplit}: further arguments passed to \code{GRP} (if \code{g} is not already a 'GRP' object).}
 }
 \details{
 \code{GRP} is a central function in the \emph{collapse} package because it provides the key inputs to facilitate easy and efficient groupwise-programming at the \code{C/C++} level: Information about (1) the number of groups (2) an integer group-id indicating which values / rows belong to which group and (3) information about the size of each group. Provided with these informations, \emph{collapse}'s \link[=fast-statistical-functions]{Fast Statistical Functions} pre-allocate intermediate and result vectors of the right sizes and (in most cases) perform grouped statistical computations in a single pass through the data.
@@ -157,7 +157,7 @@ The method \code{GRP.grouped_df} takes the 'groups' attribute from a grouped dat
 
                  [[3]] \tab\tab group.sizes    \tab\tab \code{integer(N.groups)} \tab\tab Vector of group sizes \cr
 
-                 [[4]] \tab\tab groups    \tab\tab \code{unique(X)} or \code{NULL} \tab\tab Unique groups (same format as input, sorted if \code{sort = TRUE}), or \code{NULL} if \code{return.groups = FALSE} \cr
+                 [[4]] \tab\tab groups    \tab\tab \code{unique(X)} or \code{NULL} \tab\tab Unique groups (same format as input, except for \code{fgroup_by} which uses a plain list, sorted if \code{sort = TRUE}), or \code{NULL} if \code{return.groups = FALSE} \cr
 
                  [[5]] \tab\tab group.vars   \tab\tab \code{character} \tab\tab The names of the grouping variables \cr
                  [[6]] \tab\tab ordered   \tab\tab \code{logical(2)} \tab\tab \code{[1]- TRUE} if \code{sort = TRUE}, \code{[2]- TRUE} if \code{X} already sorted \cr
@@ -194,6 +194,13 @@ mtcars \%>\% fgroup_by(cyl,vs,am) \%>\% fmean() # Faster alternative with collap
 
 mtcars \%>\% fgroup_by(cyl,vs,am)            # Print method for grouped data frame
 % }
+## Various options for programming and interactive use
+fgroup_by(GGDC10S, Variable, Decade = floor(Year / 10) * 10) \%>\% head(3)
+fgroup_by(GGDC10S, 1:3, 5) \%>\% head(3)
+fgroup_by(GGDC10S, c("Variable", "Country")) \%>\% head(3)
+fgroup_by(GGDC10S, is.character) \%>\% head(3)
+fgroup_by(GGDC10S, Country:Variable, Year) \%>\% head(3)
+fgroup_by(GGDC10S, Country:Region, Var = Variable, Year) \%>\% head(3)
 
 }
 \keyword{manip}
