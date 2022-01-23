@@ -24,7 +24,7 @@ void matCopyAttr(SEXP out, SEXP x, SEXP Rdrop, int ng) {
 }
 
 void DFcopyAttr(SEXP out, SEXP x, int ng) {
-  DUPLICATE_ATTRIB(out, x);
+  SHALLOW_DUPLICATE_ATTRIB(out, x);
   if(ng == 0) {
     setAttrib(out, R_RowNamesSymbol, ScalarInteger(1));
   } else {
@@ -298,7 +298,7 @@ SEXP greorder(SEXP x, SEXP gobj) {
   }
   default: error("Unsupported type '%s' passed to gsplit", type2char(tx));
   }
-  DUPLICATE_ATTRIB(res, x);
+  SHALLOW_DUPLICATE_ATTRIB(res, x);
   UNPROTECT(1);
   return res;
 }
@@ -336,7 +336,7 @@ SEXP lassign(SEXP x, SEXP s, SEXP rows, SEXP fill) {
       SHALLOW_DUPLICATE_ATTRIB(outj, column);
     }
   } else error("rows must be positive integers or a logical vector");
-  DUPLICATE_ATTRIB(out, x);
+  SHALLOW_DUPLICATE_ATTRIB(out, x);
   UNPROTECT(1);
   return out;
 }

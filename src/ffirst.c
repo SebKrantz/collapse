@@ -162,7 +162,7 @@ SEXP ffirst_impl(SEXP x, int ng, SEXP g, int narm, int *gl) {
       default: error("Unsupported SEXP type!");
       }
     }
-    copyMostAttrib(x, out); // DUPLICATE_ATTRIB(out, x);
+    copyMostAttrib(x, out); // SHALLOW_DUPLICATE_ATTRIB(out, x);
     UNPROTECT(1);
     return out;
   }

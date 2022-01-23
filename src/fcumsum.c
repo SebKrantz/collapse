@@ -239,7 +239,7 @@ SEXP fcumsumC(SEXP x, SEXP Rng, SEXP g, SEXP o, SEXP Rnarm, SEXP Rfill) {
     break;
   default: error("Unsupported SEXP type");
   }
-  DUPLICATE_ATTRIB(out, x);
+  SHALLOW_DUPLICATE_ATTRIB(out, x);
   UNPROTECT(1);
   return out;
 }
@@ -270,7 +270,7 @@ SEXP fcumsummC(SEXP x, SEXP Rng, SEXP g, SEXP o, SEXP Rnarm, SEXP Rfill) {
   }
   default: error("Unsupported SEXP type");
   }
-  DUPLICATE_ATTRIB(out, x);
+  SHALLOW_DUPLICATE_ATTRIB(out, x);
   UNPROTECT(1);
   return out;
 }
@@ -280,7 +280,7 @@ SEXP fcumsumlC(SEXP x, SEXP Rng, SEXP g, SEXP o, SEXP Rnarm, SEXP Rfill) {
   if(l < 1) return x; // Prevents seqfault for numeric(0) #101
   SEXP out = PROTECT(allocVector(VECSXP, l)), *pout = SEXPPTR(out), *px = SEXPPTR(x);
   for(int j = 0; j != l; ++j) pout[j] = fcumsumC(px[j], Rng, g, o, Rnarm, Rfill);
-  DUPLICATE_ATTRIB(out, x);
+  SHALLOW_DUPLICATE_ATTRIB(out, x);
   UNPROTECT(1);
   return out;
 }

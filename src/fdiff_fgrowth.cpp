@@ -556,10 +556,10 @@ NumericVector fdiffgrowthCppImpl(const NumericVector& x, const IntegerVector& n 
     }
   }
   // Previous Version
-  // if(ncol == 1) DUPLICATE_ATTRIB(out, x);
+  // if(ncol == 1) SHALLOW_DUPLICATE_ATTRIB(out, x);
   // else if(names) out.attr("dimnames") = List::create(x.attr("names"), colnam);
 
-  DUPLICATE_ATTRIB(out, x);
+  SHALLOW_DUPLICATE_ATTRIB(out, x);
   if(ncol != 1) {
     Rf_setAttrib(out, R_NamesSymbol, R_NilValue); // if(x.hasAttribute("names")) out.attr("names") = R_NilValue;
     Rf_dimgets(out, Dimension(l, ncol));
@@ -1166,11 +1166,11 @@ NumericMatrix fdiffgrowthmCppImpl(const NumericMatrix& x, const IntegerVector& n
   // if(names) {
   //   out.attr("dimnames") = List::create(rownames(x), colnam);
   // } else {
-  //   if(ns*ds == 1) DUPLICATE_ATTRIB(out, x);
+  //   if(ns*ds == 1) SHALLOW_DUPLICATE_ATTRIB(out, x);
   //   // else rownames(out) = rownames(x); // redundant !!
   // }
 
-  DUPLICATE_ATTRIB(out, x);
+  SHALLOW_DUPLICATE_ATTRIB(out, x);
   if(ncol != col) Rf_dimgets(out, Dimension(l, ncol));
   if(names) {
     Rf_dimnamesgets(out, List::create(rownames(x), colnam)); // colnames(out) = colnam; also deletes rownames !
@@ -1257,7 +1257,7 @@ List fdiffgrowthlCppImpl(const List& x, const IntegerVector& n = 1, const Intege
               for(int i = row-1; i != start; --i) outjp[i] = FUN(outjp[i], outjp[i - np]);
             }
             for(int i = end; i--; ) outjp[i] = fill;
-            DUPLICATE_ATTRIB(outjp, column);
+            SHALLOW_DUPLICATE_ATTRIB(outjp, column);
             out[pos++] = outjp;
             if(ds > 1) {
               NumericVector outtemp = Rf_shallow_duplicate(outjp);
@@ -1283,7 +1283,7 @@ List fdiffgrowthlCppImpl(const List& x, const IntegerVector& n = 1, const Intege
             if(d1 < 1) stop("diff must be a vector of integers > 0");
             if(end <= 0) stop("abs(n * diff) needs to be < nrow(x)");
             NumericVector outjp = no_init_vector(row);
-            DUPLICATE_ATTRIB(outjp, column);
+            SHALLOW_DUPLICATE_ATTRIB(outjp, column);
             if(names) {
               if(F1) nam[pos] = stub2 + diffc[0] + "." + na[j];
               else nam[pos] = "F" + nc[p] + stub + diffc[0] + "." + na[j];
@@ -1359,7 +1359,7 @@ List fdiffgrowthlCppImpl(const List& x, const IntegerVector& n = 1, const Intege
             if(d1 < 1) stop("diff must be a vector of integers > 0");
             if(end >= os) stop("n * diff needs to be < nrow(x)");
             NumericVector outjp = no_init_vector(os);
-            DUPLICATE_ATTRIB(outjp, column);
+            SHALLOW_DUPLICATE_ATTRIB(outjp, column);
             if(names) {
               if(L1) nam[pos] = stub + diffc[0] + "." + na[j];
               else nam[pos] = "L" + nc[p] + stub + diffc[0] + "." + na[j];
@@ -1405,7 +1405,7 @@ List fdiffgrowthlCppImpl(const List& x, const IntegerVector& n = 1, const Intege
             if(d1 < 1) stop("diff must be a vector of integers > 0");
             if(end <= 0) stop("abs(n * diff) needs to be < nrow(x)");
             NumericVector outjp = no_init_vector(os);
-            DUPLICATE_ATTRIB(outjp, column);
+            SHALLOW_DUPLICATE_ATTRIB(outjp, column);
             if(names) {
               if(F1) nam[pos] = stub2 + diffc[0] + "." + na[j];
               else nam[pos] = "F" + nc[p] + stub + diffc[0] + "." + na[j];
@@ -1477,7 +1477,7 @@ List fdiffgrowthlCppImpl(const List& x, const IntegerVector& n = 1, const Intege
             bool L1 = np == 1;
             if(d1 < 1) stop("diff must be a vector of integers > 0");
             NumericVector outjp = no_init_vector(gss);
-            DUPLICATE_ATTRIB(outjp, column);
+            SHALLOW_DUPLICATE_ATTRIB(outjp, column);
             std::vector<int> seen(ngp); // memset(seen, 0, memsize);
             if(names) {
               if(L1) nam[pos] = stub + diffc[0] + "." + na[j];
@@ -1530,7 +1530,7 @@ List fdiffgrowthlCppImpl(const List& x, const IntegerVector& n = 1, const Intege
             bool F1 = np == -1;
             if(d1 < 1) stop("diff must be a vector of integers > 0");
             NumericVector outjp = no_init_vector(gss);
-            DUPLICATE_ATTRIB(outjp, column);
+            SHALLOW_DUPLICATE_ATTRIB(outjp, column);
             std::vector<int> seen(ngp); // memset(seen, 0, memsize);
             if(names) {
               if(F1) nam[pos] = stub2 + diffc[0] + "." + na[j];
@@ -1634,7 +1634,7 @@ List fdiffgrowthlCppImpl(const List& x, const IntegerVector& n = 1, const Intege
             bool L1 = np == 1;
             if(d1 < 1) stop("diff must be a vector of integers > 0");
             NumericVector outjp = no_init_vector(gss);
-            DUPLICATE_ATTRIB(outjp, column);
+            SHALLOW_DUPLICATE_ATTRIB(outjp, column);
             if(names) {
               if(L1) nam[pos] = stub + diffc[0] + "." + na[j];
               else nam[pos] = "L" + nc[p] + stub + diffc[0] + "." + na[j];
@@ -1696,7 +1696,7 @@ List fdiffgrowthlCppImpl(const List& x, const IntegerVector& n = 1, const Intege
             bool F1 = np == -1;
             if(d1 < 1) stop("diff must be a vector of integers > 0");
             NumericVector outjp = no_init_vector(gss);
-            DUPLICATE_ATTRIB(outjp, column);
+            SHALLOW_DUPLICATE_ATTRIB(outjp, column);
             if(names) {
               if(F1) nam[pos] = stub2 + diffc[0] + "." + na[j];
               else nam[pos] = "F" + nc[p] + stub + diffc[0] + "." + na[j];
@@ -1761,7 +1761,7 @@ List fdiffgrowthlCppImpl(const List& x, const IntegerVector& n = 1, const Intege
       }
     }
   }
-  DUPLICATE_ATTRIB(out, x);
+  SHALLOW_DUPLICATE_ATTRIB(out, x);
   if(names) { // best way to code this ?
     Rf_namesgets(out, nam);
   } else if(ncol != l) {

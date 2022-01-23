@@ -2,6 +2,7 @@
 #include <Rcpp.h>
 using namespace Rcpp;
 
+
 // Cases:
 // 1- replace
 // 2- replace with NA rm
@@ -118,8 +119,8 @@ SEXP ret1(const SEXP& x, const SEXP& xAG, const SEXP& g) {
   // 4 - neither x nor xAG are classed - preserve attributes of x, discard attributes of xAG (if any)
   //
 
-  if(Rf_isObject(xAG)) DUPLICATE_ATTRIB(out, xAG);
-  else if(!Rf_isObject(x) || (tx == txAG && !Rf_isFactor(x))) DUPLICATE_ATTRIB(out, x);
+  if(Rf_isObject(xAG)) SHALLOW_DUPLICATE_ATTRIB(out, xAG);
+  else if(!Rf_isObject(x) || (tx == txAG && !Rf_isFactor(x))) SHALLOW_DUPLICATE_ATTRIB(out, x);
   else {
     SHALLOW_DUPLICATE_ATTRIB(out, x);
     Rf_classgets(out, R_NilValue); // OK !
@@ -362,8 +363,8 @@ SEXP ret2(const SEXP& x, const SEXP& xAG, const SEXP& g) {
     stop("Not supported SEXP type!");
   }
 
-  if(Rf_isObject(xAG)) DUPLICATE_ATTRIB(out, xAG);
-  else if(!Rf_isObject(x) || (tx == txAG && !Rf_isFactor(x))) DUPLICATE_ATTRIB(out, x);
+  if(Rf_isObject(xAG)) SHALLOW_DUPLICATE_ATTRIB(out, xAG);
+  else if(!Rf_isObject(x) || (tx == txAG && !Rf_isFactor(x))) SHALLOW_DUPLICATE_ATTRIB(out, x);
   else {
     SHALLOW_DUPLICATE_ATTRIB(out, x);
     Rf_classgets(out, R_NilValue); // OK !
@@ -454,7 +455,7 @@ SEXP retoth(const NumericVector& x, const NumericVector& xAG, const SEXP& g, int
       default: stop("Unknown Transformation");
       }
     }
-    DUPLICATE_ATTRIB(out, x);
+    SHALLOW_DUPLICATE_ATTRIB(out, x);
     return out;
 }
 
@@ -512,7 +513,7 @@ List TRAlCpp(const List& x, const SEXP& xAG, const IntegerVector& g = 0, int ret
   }
   default: stop("Not supported SEXP type!");
   }
-  DUPLICATE_ATTRIB(out, x);
+  SHALLOW_DUPLICATE_ATTRIB(out, x);
   return out;
 }
 
@@ -949,8 +950,8 @@ SEXP TRAmCpp(const SEXP& x, const SEXP& xAG, const IntegerVector& g = 0, int ret
 
     }
 
-    if(Rf_isObject(xAG)) DUPLICATE_ATTRIB(out, xAG);
-    else if(!Rf_isObject(x) || (tx == txAG && !Rf_isFactor(x))) DUPLICATE_ATTRIB(out, x);
+    if(Rf_isObject(xAG)) SHALLOW_DUPLICATE_ATTRIB(out, xAG);
+    else if(!Rf_isObject(x) || (tx == txAG && !Rf_isFactor(x))) SHALLOW_DUPLICATE_ATTRIB(out, x);
     else {
       SHALLOW_DUPLICATE_ATTRIB(out, x);
       Rf_classgets(out, R_NilValue); // OK !
@@ -1126,7 +1127,7 @@ SEXP TRAmCpp(const SEXP& x, const SEXP& xAG, const IntegerVector& g = 0, int ret
     default: stop("Not supported SEXP type!");
     }
 
-    DUPLICATE_ATTRIB(out, x);
+    SHALLOW_DUPLICATE_ATTRIB(out, x);
 
     UNPROTECT(1);
     return out;

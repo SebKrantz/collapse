@@ -50,10 +50,10 @@ NumericVector fmeanCpp(const NumericVector& x, int ng = 0, const IntegerVector& 
           }
         }
         for(int i = ng; i--; ) sum[i] /= n[i]; // if(n[i] == 0) stop("Group size of 0 encountered. This is probably due to unused factor levels. Use fdroplevels(f) to drop them."); -> No check possible when initializing at 1
-        // DUPLICATE_ATTRIB(sum, x);
+        // SHALLOW_DUPLICATE_ATTRIB(sum, x);
         // Rf_copyMostAttrib(x, sum);
         if(!Rf_isObject(x)) Rf_copyMostAttrib(x, sum);  // best !
-        //   DUPLICATE_ATTRIB(sum, x);
+        //   SHALLOW_DUPLICATE_ATTRIB(sum, x);
         //   Rf_setAttrib(sum, R_NamesSymbol, R_NilValue);
         // }
         return sum;
@@ -95,7 +95,7 @@ NumericVector fmeanCpp(const NumericVector& x, int ng = 0, const IntegerVector& 
             sum[i] /= gsv[i]; // This is good because adding n takes twice as long, if factor, supply gs = tabulate(f,nlevels(f))
           }
         }
-        if(!Rf_isObject(x)) Rf_copyMostAttrib(x, sum); // DUPLICATE_ATTRIB(sum, x);
+        if(!Rf_isObject(x)) Rf_copyMostAttrib(x, sum); // SHALLOW_DUPLICATE_ATTRIB(sum, x);
         return sum;
       }
     }
@@ -146,7 +146,7 @@ NumericVector fmeanCpp(const NumericVector& x, int ng = 0, const IntegerVector& 
           }
         }
         sum = sum/sumw; // good ? better return sum/sumw? -> Nope, slower
-        if(!Rf_isObject(x)) Rf_copyMostAttrib(x, sum); // DUPLICATE_ATTRIB(sum, x);
+        if(!Rf_isObject(x)) Rf_copyMostAttrib(x, sum); // SHALLOW_DUPLICATE_ATTRIB(sum, x);
         return sum;
       } else {
         NumericVector sum(ng), sumw(ng); // good? -> yes ! //  = no_init_vector// Not initializing numerically unstable
@@ -164,7 +164,7 @@ NumericVector fmeanCpp(const NumericVector& x, int ng = 0, const IntegerVector& 
           }
         }
         sum = sum/sumw;
-        if(!Rf_isObject(x)) Rf_copyMostAttrib(x, sum); // DUPLICATE_ATTRIB(sum, x);
+        if(!Rf_isObject(x)) Rf_copyMostAttrib(x, sum); // SHALLOW_DUPLICATE_ATTRIB(sum, x);
         return sum;
       }
     }
@@ -467,9 +467,9 @@ SEXP fmeanlCpp(const List& x, int ng = 0, const IntegerVector& g = 0, const SEXP
         List out(l);
         for(int j = l; j--; ) {
           out[j] = sum[j];
-          DUPLICATE_ATTRIB(out[j], x[j]);
+          SHALLOW_DUPLICATE_ATTRIB(out[j], x[j]);
         }
-        DUPLICATE_ATTRIB(out, x);
+        SHALLOW_DUPLICATE_ATTRIB(out, x);
         Rf_setAttrib(out, R_RowNamesSymbol, Rf_ScalarInteger(1)); // out.attr("row.names") = 1;
         return out;
       }
@@ -493,7 +493,7 @@ SEXP fmeanlCpp(const List& x, int ng = 0, const IntegerVector& g = 0, const SEXP
             }
           }
           for(int i = ng; i--; ) sumj[i] /= nj[i];
-          DUPLICATE_ATTRIB(sumj, column);
+          SHALLOW_DUPLICATE_ATTRIB(sumj, column);
           sum[j] = sumj;
         }
       } else {
@@ -518,7 +518,7 @@ SEXP fmeanlCpp(const List& x, int ng = 0, const IntegerVector& g = 0, const SEXP
               }
             }
             for(int i = ng; i--; ) sumj[i] /= gsv[i];
-            DUPLICATE_ATTRIB(sumj, column);
+            SHALLOW_DUPLICATE_ATTRIB(sumj, column);
             sum[j] = sumj;
           }
         } else {
@@ -544,12 +544,12 @@ SEXP fmeanlCpp(const List& x, int ng = 0, const IntegerVector& g = 0, const SEXP
               if(gsv[i] == 0) stop("Group size of 0 encountered. This is probably due to unused factor levels. Use fdroplevels(f) to drop them.");
               sumj[i] /= gsv[i];
             }
-            DUPLICATE_ATTRIB(sumj, column);
+            SHALLOW_DUPLICATE_ATTRIB(sumj, column);
             sum[j] = sumj;
           }
         }
       }
-      DUPLICATE_ATTRIB(sum, x);
+      SHALLOW_DUPLICATE_ATTRIB(sum, x);
       Rf_setAttrib(sum, R_RowNamesSymbol, IntegerVector::create(NA_INTEGER, -ng));
       return sum;
     }
@@ -600,9 +600,9 @@ SEXP fmeanlCpp(const List& x, int ng = 0, const IntegerVector& g = 0, const SEXP
         List out(l);
         for(int j = l; j--; ) {
           out[j] = sum[j];
-          DUPLICATE_ATTRIB(out[j], x[j]);
+          SHALLOW_DUPLICATE_ATTRIB(out[j], x[j]);
         }
-        DUPLICATE_ATTRIB(out, x);
+        SHALLOW_DUPLICATE_ATTRIB(out, x);
         Rf_setAttrib(out, R_RowNamesSymbol, Rf_ScalarInteger(1)); // out.attr("row.names") = 1;
         return out;
       }
@@ -630,7 +630,7 @@ SEXP fmeanlCpp(const List& x, int ng = 0, const IntegerVector& g = 0, const SEXP
           }
           sumj = sumj/sumwj;
           // for(int i = ng; i--; ) sumj[i] /= sumwj[i];
-          DUPLICATE_ATTRIB(sumj, column);
+          SHALLOW_DUPLICATE_ATTRIB(sumj, column);
           sum[j] = sumj;
         }
       } else {
@@ -657,11 +657,11 @@ SEXP fmeanlCpp(const List& x, int ng = 0, const IntegerVector& g = 0, const SEXP
           }
           sumj = sumj/sumwj;
           // for(int i = ng; i--; ) sumj[i] /= sumwj[i];
-          DUPLICATE_ATTRIB(sumj, column);
+          SHALLOW_DUPLICATE_ATTRIB(sumj, column);
           sum[j] = sumj;
         }
       }
-      DUPLICATE_ATTRIB(sum, x);
+      SHALLOW_DUPLICATE_ATTRIB(sum, x);
       Rf_setAttrib(sum, R_RowNamesSymbol, IntegerVector::create(NA_INTEGER, -ng));
       return sum;
     }

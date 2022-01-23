@@ -149,7 +149,7 @@ SEXP varyinglCpp(const List& x, int ng = 0, const IntegerVector& g = 0, bool any
     Rf_setAttrib(outl, R_NamesSymbol, Rf_getAttrib(x, R_NamesSymbol));
     return outl;
   } else {
-    DUPLICATE_ATTRIB(out, x);
+    SHALLOW_DUPLICATE_ATTRIB(out, x);
     if(ng == 0 || any_group) Rf_setAttrib(out, R_RowNamesSymbol, Rf_ScalarInteger(1));
     else Rf_setAttrib(out, R_RowNamesSymbol, IntegerVector::create(NA_INTEGER, -ng));
     return out;

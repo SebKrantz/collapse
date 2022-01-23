@@ -1101,7 +1101,7 @@ SEXP fvarsdlCpp(const List& x, int ng = 0, const IntegerVector& g = 0,
             res[j] = out[j];
             SHALLOW_DUPLICATE_ATTRIB(res[j], x[j]);
           }
-          DUPLICATE_ATTRIB(res, x);
+          SHALLOW_DUPLICATE_ATTRIB(res, x);
           Rf_setAttrib(res, R_RowNamesSymbol, Rf_ScalarInteger(1));
           return res;
         }
@@ -1187,7 +1187,7 @@ SEXP fvarsdlCpp(const List& x, int ng = 0, const IntegerVector& g = 0,
             out[j] = M2j;
           }
         }
-        DUPLICATE_ATTRIB(out, x);
+        SHALLOW_DUPLICATE_ATTRIB(out, x);
         Rf_setAttrib(out, R_RowNamesSymbol, IntegerVector::create(NA_INTEGER, -ng));
         return out;
       }
@@ -1251,7 +1251,7 @@ SEXP fvarsdlCpp(const List& x, int ng = 0, const IntegerVector& g = 0,
             res[j] = out[j];
             SHALLOW_DUPLICATE_ATTRIB(res[j], x[j]);
           }
-          DUPLICATE_ATTRIB(res, x);
+          SHALLOW_DUPLICATE_ATTRIB(res, x);
           Rf_setAttrib(res, R_RowNamesSymbol, Rf_ScalarInteger(1));
           return res;
         }
@@ -1341,7 +1341,7 @@ SEXP fvarsdlCpp(const List& x, int ng = 0, const IntegerVector& g = 0,
             out[j] = M2j;
           }
         }
-        DUPLICATE_ATTRIB(out, x);
+        SHALLOW_DUPLICATE_ATTRIB(out, x);
         Rf_setAttrib(out, R_RowNamesSymbol, IntegerVector::create(NA_INTEGER, -ng));
         return out;
       }
@@ -1404,7 +1404,7 @@ SEXP fvarsdlCpp(const List& x, int ng = 0, const IntegerVector& g = 0,
             res[j] = out[j];
             SHALLOW_DUPLICATE_ATTRIB(res[j], x[j]);
           }
-          DUPLICATE_ATTRIB(res, x);
+          SHALLOW_DUPLICATE_ATTRIB(res, x);
           Rf_setAttrib(res, R_RowNamesSymbol, Rf_ScalarInteger(1));
           return res;
         }
@@ -1520,7 +1520,7 @@ SEXP fvarsdlCpp(const List& x, int ng = 0, const IntegerVector& g = 0,
             }
           }
         }
-        DUPLICATE_ATTRIB(out, x);
+        SHALLOW_DUPLICATE_ATTRIB(out, x);
         Rf_setAttrib(out, R_RowNamesSymbol, IntegerVector::create(NA_INTEGER, -ng));
         return out;
       }
@@ -1581,7 +1581,7 @@ SEXP fvarsdlCpp(const List& x, int ng = 0, const IntegerVector& g = 0,
             res[j] = out[j];
             SHALLOW_DUPLICATE_ATTRIB(res[j], x[j]);
           }
-          DUPLICATE_ATTRIB(res, x);
+          SHALLOW_DUPLICATE_ATTRIB(res, x);
           Rf_setAttrib(res, R_RowNamesSymbol, Rf_ScalarInteger(1));
           return res;
         }
@@ -1659,7 +1659,7 @@ SEXP fvarsdlCpp(const List& x, int ng = 0, const IntegerVector& g = 0,
             out[j] = sq_sumj;
           }
         }
-        DUPLICATE_ATTRIB(out, x);
+        SHALLOW_DUPLICATE_ATTRIB(out, x);
         Rf_setAttrib(out, R_RowNamesSymbol, IntegerVector::create(NA_INTEGER, -ng));
         return out;
       }
