@@ -20,13 +20,13 @@ Documentation comes in 4 different forms:
 
 ## Built-In Structured Documentation
 
-After installing *collapse*, you can call `help("collapse-documentation")` which will produce a central help page providing a broad overview of the entire functionality of the package, including direct links to all function documentation pages and links to 11 further topical documentation pages describing how clusters of related functions work together. The names of these additional help pages are contained in a global macro `.COLLAPSE_TOPICS` and can so easily be called from the R console as well. Function documentation is interlinked with the relevant topical pages, and all documentation pages link back to the central overview page at `help("collapse-documentation")`. 
+After installing *collapse*, you can call `help("collapse-documentation")` which will produce a central help page providing a broad overview of the entire functionality of the package, including direct links to all function documentation pages and links to 13 further topical documentation pages describing how clusters of related functions work together. The names of these additional help pages are contained in a global macro `.COLLAPSE_TOPICS` and can so easily be called from the R console as well. Function documentation is interlinked with the relevant topical pages, and all documentation pages link back to the central overview page at `help("collapse-documentation")`. 
 
-Thus *collapse* comes with a fully structured hierarchical documentation which you can browse within R - and you don't require anything else to fully understand this package. The Documentation is also available [online](<https://sebkrantz.github.io/collapse/reference/index.html>).
+Thus *collapse* comes with a fully structured hierarchical documentation which you can browse within R - and that provides everything necessary to fully understand the package. The Documentation is also available [online](<https://sebkrantz.github.io/collapse/reference/index.html>).
 
-In addition, the package page under `help("collapse-package")` provides some more general information about the package and its design philosophy, as well as a very compact set of examples covering important functionality (which lacks features introduced in 1.7 though). 
+The package page under `help("collapse-package")` additionally provides some more general information about the package and its design philosophy, as well as a very compact set of examples covering important functionality (which lack features introduced in 1.7 though). 
 
-Reading `help("collapse-package")` and `help("collapse-documentation")` and working through the examples on `help("collapse-package")` is probably the fastest way to get acquainted with the package. `help("collapse-documentation")` is the most up-to-date documentation of the package at the moment (some vignettes need minor updating, because newer versions (esp. 1.7) added significant functionality). 
+Reading `help("collapse-package")` and `help("collapse-documentation")` and working through the examples on `help("collapse-package")` is the fastest way to get acquainted with the package. `help("collapse-documentation")` is also the most up-to-date documentation of the package at the time of releasing 1.7 (January 2022).
 
 ## Vignettes
 
@@ -42,10 +42,12 @@ There are also 5 vignettes which are available [online](<https://sebkrantz.githu
 
 * [***collapse* and *sf***](<https://sebkrantz.github.io/collapse/articles/collapse_and_sf.html>): Shows how collapse can be used to efficiently manipulate *sf* data frames
 
+Note that these vignettes currently (January 2022) do not cover features introduced in version 1.7. They have been updated if you see a 2022 in the date of the vignette.   
+
 ## Blog
 
 I maintain a [blog](<https://sebkrantz.github.io/Rblog/>) linked to [Rbloggers.com](<https://www.r-bloggers.com/>) where I introduced *collapse* with some compact posts covering central functionality. Among these, the post about [programming with *collapse*](<https://sebkrantz.github.io/Rblog/2020/09/13/programming-with-collapse/>) is highly recommended for ambitious users and developers willing to build on *collapse*, as it exposes to some degree how central parts of *collapse* work together and provides tips on how to write very efficient *collapse* code. Future blog posts will expose some specialized functionality in more detail. 
 
 ## Cheatsheet
 
-Finally, there is a [cheatsheet](<https://raw.githubusercontent.com/SebKrantz/cheatsheets/master/collapse.pdf>) at Rstudio that compactly summarizes the collapse function space, similar to `help("collapse-documentation")`. 
+Finally, there is a [cheatsheet](<https://raw.githubusercontent.com/SebKrantz/cheatsheets/master/collapse.pdf>) at Rstudio that compactly summarizes the collapse function space, similar to `help("collapse-documentation")`. This one will be updated shortly. 
