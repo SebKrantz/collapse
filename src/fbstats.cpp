@@ -32,6 +32,7 @@ NumericVector fbstatstemp(NumericVector x, bool ext = false, int ng = 0, Integer
               if(min > x[i]) min = x[i];
               if(max < x[i]) max = x[i];
             }
+            M2 = sqrt(M2/(n-1));
           } else {
             int k = 0;
             long double sum = 0, sq_sum = 0;
@@ -46,11 +47,10 @@ NumericVector fbstatstemp(NumericVector x, bool ext = false, int ng = 0, Integer
             }
             sum /= k;
             sq_sum -= sum*sum*k;
+            M2 = (double)sqrt(sq_sum/(k-1));
             n = (double)k;
             mean = (double)sum;
-            M2 = (double)sq_sum;
           }
-          M2 = sqrt(M2/(n-1));
         } else mean = M2 = min = max = NA_REAL;
       } else { // with weights
         NumericVector wg = w;
