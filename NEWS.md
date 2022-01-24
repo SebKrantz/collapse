@@ -4,6 +4,8 @@
 
 * `fgroup_by` is more flexible, supporting computing columns e.g. `fgroup_by(GGDC10S, Variable, Decade = floor(Year / 10) * 10)` and various programming options e.g. `fgroup_by(GGDC10S, 1:3)`, `fgroup_by(GGDC10S, c("Variable", "Country"))`, or `fgroup_by(GGDC10S, is.character)`. You can also use column sequences e.g. `fgroup_by(GGDC10S, Country:Variable, Year)`, but this should not be mixed with computing columns. Compute expressions may also not include the `:` function. 
 
+* More memory efficient attribute handling in C/C++ (using C-API macro `SHALLOW_DUPLICATE_ATTRIB` instead of `DUPLICATE_ATTRIB`) in most places.
+
 # collapse 1.7.2
 
 * Ensured that the base pipe `|>` is not used in tests or examples, to avoid errors on CRAN checks with older versions of R. 

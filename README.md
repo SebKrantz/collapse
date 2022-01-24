@@ -64,7 +64,8 @@ It further implements a class-agnostic approach to data manipulation in R, suppo
 # Install the current version on CRAN
 install.packages("collapse")
 
-# Install a previous version from the CRAN Archive (Requires Rtools)
+# Install previous versions from the CRAN Archive (Requires Rtools)
+install.packages("https://cran.r-project.org/src/contrib/Archive/collapse/collapse_1.6.5.tar.gz", repos = NULL, type = "source")
 install.packages("https://cran.r-project.org/src/contrib/Archive/collapse/collapse_1.5.3.tar.gz", repos = NULL, type = "source")
 
 # Install a stable development version from Github (Requires Rtools)
