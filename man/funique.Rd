@@ -31,7 +31,7 @@ funique(x, \dots)
                  3 \tab\tab "hash"   \tab\tab use index hashing to determine unique values. Supports \code{sort = TRUE} but only for atomic vectors (default method). \cr
   }
   }
-\item{cols}{compute unique rows according to a subset of columns. Columns can be selected using column names, indices, a logical vector or a selector function (i.e. \code{is.character}). \emph{Note:} All columns are returned. }
+\item{cols}{compute unique rows according to a subset of columns. Columns can be selected using column names, indices, a logical vector or a selector function (e.g. \code{is.character}). \emph{Note:} All columns are returned. }
 \item{\dots}{arguments passed to \code{\link{radixorderv}}, e.g. \code{decreasing} or \code{na.last}. Only applicable if \code{method = "radix"}.}
 }
 \details{

@@ -137,10 +137,10 @@ qsu(G(pwlddev$PCGDP))                       # Summarizing GDP growth, see also ?
 qsu(wlddev, ~ region, ~ iso3c, cols = 9:12) # Panel-Statistics by region
 psr <- qsu(pwlddev, ~ region, cols = 9:12)  # Same on plm pdata.frame
 psr                                         # -> Gives a 4D array
-print.qsu(psr[,"N/T",,])                    # Checking out the number of observations:
+psr[,"N/T",,]                               # Checking out the number of observations:
 # In North america we only have 3 countries, for the GINI we only have 3.91 observations on average
 # for 45 Sub-Saharan-African countries, etc..
-print.qsu(psr[,"SD",,])                     # Considering only standard deviations
+psr[,"SD",,]                                # Considering only standard deviations
 # -> In all regions variations in inequality (GINI) between countries are greater than variations
 # in inequality within countries. The opposite is true for Life-Expectancy in all regions apart
 # from Europe, etc..
