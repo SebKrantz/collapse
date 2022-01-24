@@ -62,7 +62,7 @@
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="index.html">collapse</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">1.7.2</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">1.7.3</span>
       </span>
     </div>
 
@@ -129,7 +129,7 @@
 <li><p><strong>List processing</strong>: (Recursive) list search, splitting, extraction / subsetting, data-apply, and generalized recursive row-binding / unlisting in 2D.</p></li>
 <li><p><strong>Advanced data exploration</strong>: Fast (grouped, weighted, panel-decomposed) summary statistics for complex multilevel / panel data.</p></li>
 </ul>
-<p><em>collapse</em> is mainly coded in C++ and built with <em>Rcpp</em>, but also uses C/C++ functions from <em>data.table</em>, <em>kit</em>, <em>fixest</em>, <em>weights</em>, <em>RcppArmadillo</em>, <em>RcppEigen</em> and <em>stats</em>. Currently no low-level parallelism is implemented. Effort has been expended to minimize the execution speed of R code employed.</p>
+<p><em>collapse</em> utilizes both C and C++ via <em>Rcpp</em>, and also uses C/C++ functions from <em>data.table</em>, <em>kit</em>, <em>fixest</em>, <em>weights</em>, <em>RcppArmadillo</em>, <em>RcppEigen</em> and <em>stats</em>. Currently no low-level parallelism is implemented. Effort has been expended to minimize the execution speed of R code employed.</p>
 <div class="section level2">
 <h2 id="installation">Installation<a class="anchor" aria-label="anchor" href="#installation"></a>
 </h2>
@@ -137,7 +137,8 @@
 <code class="sourceCode R"><span class="co"># Install the current version on CRAN</span>
 <span class="fu"><a href="https://rdrr.io/r/utils/install.packages.html" class="external-link">install.packages</a></span><span class="op">(</span><span class="st">"collapse"</span><span class="op">)</span>
 
-<span class="co"># Install a previous version from the CRAN Archive (Requires Rtools)</span>
+<span class="co"># Install previous versions from the CRAN Archive (Requires Rtools)</span>
+<span class="fu"><a href="https://rdrr.io/r/utils/install.packages.html" class="external-link">install.packages</a></span><span class="op">(</span><span class="st">"https://cran.r-project.org/src/contrib/Archive/collapse/collapse_1.6.5.tar.gz"</span>, repos <span class="op">=</span> <span class="cn">NULL</span>, type <span class="op">=</span> <span class="st">"source"</span><span class="op">)</span>
 <span class="fu"><a href="https://rdrr.io/r/utils/install.packages.html" class="external-link">install.packages</a></span><span class="op">(</span><span class="st">"https://cran.r-project.org/src/contrib/Archive/collapse/collapse_1.5.3.tar.gz"</span>, repos <span class="op">=</span> <span class="cn">NULL</span>, type <span class="op">=</span> <span class="st">"source"</span><span class="op">)</span>
 
 <span class="co"># Install a stable development version from Github (Requires Rtools)</span>

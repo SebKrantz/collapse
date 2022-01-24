@@ -10,8 +10,6 @@
 }
 \description{
 Computes (pairwise, weighted) Pearsons correlations, covariances and observation counts. Pairwise correlations and covariances can be computed together with observation counts and p-values, and output as 3D array (default) or list of matrices. \code{pwcor} and \code{pwcov} offer an elaborate print method.
-
-\emph{Notes:} \code{weights::wtd.cors} is imported for weighted pairwise correlations (written in C for speed). For weighted correlations with bootstrap SE's see \code{weights::wtd.cor} (but bootstrap can be slow). Weighted correlations for complex surveys are implemented in \code{jtools::svycor}. An equivalent and faster implementation of \code{pwcor} (without weights) is provided in \code{Hmisc::rcorr} (written in Fortran)
 }
 \usage{
 pwcor(X, \dots, w = NULL, N = FALSE, P = FALSE, array = TRUE, use = "pairwise.complete.obs")
@@ -46,6 +44,10 @@ pwnobs(X)
 
 \value{
 a numeric matrix, 3D array or list of matrices with the computed statistics. For \code{pwcor} and \code{pwcov} the object has a class 'pwcor' and 'pwcov', respectively.
+}
+
+\note{
+\code{weights::wtd.cors} is imported for weighted pairwise correlations (written in C for speed). For weighted correlations with bootstrap SE's see \code{weights::wtd.cor} (but bootstrap can be slow). Weighted correlations for complex surveys are implemented in \code{jtools::svycor}. An equivalent and faster implementation of \code{pwcor} (without weights) is provided in \code{Hmisc::rcorr} (written in Fortran).
 }
 
 %% ~Make other sections like Warning with \section{Warning }{\dots.} ~

@@ -45,9 +45,11 @@ NumericVector fbstatstemp(NumericVector x, bool ext = false, int ng = 0, Integer
               if(max < d1) max = d1;
               ++k;
             }
-            n = k;
-            mean = double(sum / n);
-            M2 = (double)sqrt((sq_sum - pow(mean,2)*n)/(n-1));
+            sum /= k;
+            sq_sum -= sum*sum*k;
+            M2 = (double)sqrt(sq_sum/(k-1));
+            n = (double)k;
+            mean = (double)sum;
           }
         } else mean = M2 = min = max = NA_REAL;
       } else { // with weights

@@ -1,7 +1,7 @@
 Package: collapse
 Title: Advanced and Fast Data Transformation
 Version: 1.7.3
-Date: 2022-01-23
+Date: 2022-01-24
 Authors@R: c(
            person("Sebastian", "Krantz", role = c("aut", "cre"), 
                   email = "sebastian.krantz@graduateinstitute.ch"),
@@ -10,7 +10,6 @@ Authors@R: c(
            person("Morgan", "Jacob", role = "ctb"),
            person("Dirk", "Eddelbuettel", role = "ctb"),
            person("Laurent", "Berge", role = "ctb"),
-           person("Josh", "Pasek", role = "ctb"),
            person("Kevin", "Tappe", role = "ctb"),
            person("R Core Team and contributors worldwide", role = "ctb"),
            person("Martyn", "Plummer", role = "cph"),
@@ -56,8 +55,9 @@ LazyData: true
 Depends: R (>= 2.10)
 Imports: Rcpp (>= 1.0.1)
 LinkingTo: Rcpp
-Suggests: data.table, sf, matrixStats, magrittr, kit, plm, fixest, vars, weights, RcppArmadillo, 
-          RcppEigen, dplyr, ggplot2, scales, microbenchmark, testthat, covr, knitr, rmarkdown
+Suggests: fastverse, data.table, magrittr, kit, sf, plm, fixest, vars, 
+          RcppArmadillo, RcppEigen, dplyr, ggplot2, scales, microbenchmark, 
+          testthat, covr, knitr, rmarkdown
 SystemRequirements: C++11
 VignetteBuilder: knitr
 
