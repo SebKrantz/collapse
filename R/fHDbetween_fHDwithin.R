@@ -9,7 +9,7 @@ demean <- function(x, fl, weights, ..., means = FALSE) {
   }
   msg <- "For higher-dimensional centering and projecting out interactions need to install.packages('%s'), then unload [detach('package:collapse', unload = TRUE)] and reload [library(collapse)]."
   res <- getenvFUN("fixest_demean", msg)(x, fl, attr(fl, "slope.vars"), attr(fl, "slope.flag"),
-                                         weights = weights, ..., im_confident = TRUE)
+                                         weights = weights, ..., notes = FALSE, im_confident = TRUE)
   if(!means) return(duplAttributes(res, x))
     # if(!is.matrix(x)) dim(res) <- NULL # also need for flmres... e.g. with weights... intercept is no longer always added, so res needs to be a matrix...
     # Need matrix dimensions... for subset in variable.wise... do.call(cbind, fl[!fc]) needs to be preserved... # return(if(means) x - drop(res) else drop(res))
