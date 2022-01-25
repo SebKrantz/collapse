@@ -24,7 +24,7 @@ qsu.default <- function(x, g = NULL, pid = NULL, w = NULL, higher = FALSE, array
 
 qsu.pseries <- function(x, g = NULL, w = NULL, effect = 1L, higher = FALSE, array = TRUE, stable.algo = TRUE, ...) {
   if(!missing(...)) unused_arg_action(match.call(), ...)
-  pid <- if(length(effect) == 1L) .subset2(attr(x, "index"), effect) else finteraction(.subset(attr(x, "index"), effect))
+  pid <- if(length(effect) == 1L) .subset2(getpix(attr(x, "index")), effect) else finteraction(.subset(getpix(attr(x, "index")), effect))
   if(is.null(g)) return(fbstatsCpp(x,higher,0L,0L,fnlevels(pid),pid,w,stable.algo))
   if(is.atomic(g)) {
     if(!is.nmfactor(g)) g <- qF(g, na.exclude = FALSE)
@@ -122,7 +122,7 @@ qsu.sf <- function(x, by = NULL, pid = NULL, w = NULL, cols = NULL, higher = FAL
 
 qsu.pdata.frame <- function(x, by = NULL, w = NULL, cols = NULL, effect = 1L, higher = FALSE, array = TRUE, vlabels = FALSE, stable.algo = TRUE, ...) {
   if(!missing(...)) unused_arg_action(match.call(), ...)
-  pid <- if(length(effect) == 1L) .subset2(attr(x, "index"), effect) else finteraction(.subset(attr(x, "index"), effect))
+  pid <- if(length(effect) == 1L) .subset2(getpix(attr(x, "index")), effect) else finteraction(.subset(getpix(attr(x, "index")), effect))
 
   formby <- is.call(by)
   formw <- is.call(w)

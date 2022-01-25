@@ -80,6 +80,13 @@ getenvFUN <- function(nam, efmt1 = "For this method need to install.packages('%s
   FUN
 }
 
+getpix <- function(x) if(is.list(x)) x else .Call(C_geteptr, x)
+
+# getplmindex <- function(x) {
+# ix <- getpix(attr(x, "index"))
+# if(is.list(ix)) return(ix)
+# .Call(C_geteptr, ix)
+# }
 
 # qM2 <- function(x) if(is.list(x)) do.call(cbind, x) else x
 

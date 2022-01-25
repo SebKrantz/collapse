@@ -11,7 +11,7 @@ flag.default <- function(x, n = 1, g = NULL, t = NULL, fill = NA, stubs = TRUE, 
 
 flag.pseries <- function(x, n = 1, fill = NA, stubs = TRUE, ...) {
   if(!missing(...)) unused_arg_action(match.call(), ...)
-  index <- unclass(attr(x, "index"))
+  index <- unclass(getpix(attr(x, "index")))
   if(length(index) > 2L) index <- list(finteraction(index[-length(index)]), index[[length(index)]])
   g <- index[[1L]]
   t <- index[[2L]]
@@ -70,7 +70,7 @@ flag.list <- function(x, n = 1, g = NULL, t = NULL, fill = NA, stubs = length(n)
 
 flag.pdata.frame <- function(x, n = 1, fill = NA, stubs = length(n) > 1L, ...) {
   if(!missing(...)) unused_arg_action(match.call(), ...)
-  index <- unclass(attr(x, "index"))
+  index <- unclass(getpix(attr(x, "index")))
   if(length(index) > 2L) index <- list(finteraction(index[-length(index)]), index[[length(index)]])
   g <- index[[1L]]
   t <- index[[2L]]
@@ -157,7 +157,7 @@ L.pdata.frame <- function(x, n = 1, cols = is.numeric, fill = NA, stubs = TRUE, 
   if(!missing(...)) unused_arg_action(match.call(), ...)
   ax <- attributes(x)
   nam <- ax[["names"]]
-  index <- unclass(ax[["index"]])
+  index <- unclass(getpix(ax[["index"]]))
 
   if(keep.ids) {
     gn <- which(nam %in% names(index))

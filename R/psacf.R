@@ -93,7 +93,7 @@ psacf.data.frame <- function(x, by, t = NULL, cols = is.numeric, lag.max = NULL,
 
 psacf.pseries <- function(x, lag.max = NULL, type = c("correlation", "covariance","partial"), plot = TRUE, gscale = TRUE, ...) {
   if(!is.numeric(x)) stop("'x' must be a numeric pseries ")
-  index <- unclass(attr(x, "index"))
+  index <- unclass(getpix(attr(x, "index")))
   if(length(index) > 2L) index <- list(finteraction(index[-length(index)]), index[[length(index)]])
   g <- index[[1L]]
   t <- index[[2L]]
@@ -130,7 +130,7 @@ psacf.pseries <- function(x, lag.max = NULL, type = c("correlation", "covariance
 psacf.pdata.frame <- function(x, cols = is.numeric, lag.max = NULL, type = c("correlation", "covariance","partial"), plot = TRUE, gscale = TRUE, ...) {
   typei <- switch(type[1L], correlation = 1L, covariance = 2L, partial = 3L, stop("Unknown type!"))
   series <- l1orlst(as.character(substitute(x))) # faster solution ?
-  index <- unclass(attr(x, "index"))
+  index <- unclass(getpix(attr(x, "index")))
   oldClass(x) <- NULL
   nrx <- length(x[[1L]])
   if(length(cols)) x <- x[cols2int(cols, x, names(x), FALSE)]
@@ -236,8 +236,8 @@ psccf.pseries <- function(x, y, lag.max = NULL, type = c("correlation", "covaria
   if(!is.numeric(y) || !inherits(y, "pseries")) stop("'y' must be a numeric pseries")
   lx <- length(x)
   if(lx != length(y)) stop("length(x) must be equal to length(y)")
-  index <- attr(x, "index")
-  if(!identical(index,attr(y,"index"))) stop("index of x and y differs")
+  index <- getpix(attr(x, "index"))
+  if(!identical(index, getpix(attr(y, "index")))) stop("index of x and y differs")
   oldClass(index) <- NULL
   if(length(index) > 2L) index <- list(finteraction(index[-length(index)]), index[[length(index)]])
   g <- index[[1L]]
