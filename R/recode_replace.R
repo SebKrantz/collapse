@@ -280,7 +280,7 @@ replace_outliers <- function(X, limits, value = NA, single.limit = c("SDs", "min
              if(inherits(X, c("grouped_df", "pdata.frame"))) {
               num <- .Call(C_vtypes, X, 1L) # vapply(unattrib(X), is.numeric, TRUE)
               num <- if(inherits(X, "grouped_df")) num & !fgroup_vars(X, "logical") else
-                      num & attr(attr(X, "index"), "names") %!in% attr(X, "names")
+                      num & attr(getpix(attr(X, "index")), "names") %!in% attr(X, "names")
               clx <- oldClass(X)
               STDXnum <- fscale(fcolsubset(X, num))
               oldClass(X) <- NULL

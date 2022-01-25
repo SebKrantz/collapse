@@ -17,7 +17,7 @@ fscale.default <- function(x, g = NULL, w = NULL, na.rm = TRUE, mean = 0, sd = 1
 
 fscale.pseries <- function(x, effect = 1L, w = NULL, na.rm = TRUE, mean = 0, sd = 1, ...) {
   if(!missing(...)) unused_arg_action(match.call(), ...)
-  g <- if(length(effect) == 1L) .subset2(attr(x, "index"), effect) else finteraction(.subset(attr(x, "index"), effect))
+  g <- if(length(effect) == 1L) .subset2(getpix(attr(x, "index")), effect) else finteraction(.subset(getpix(attr(x, "index")), effect))
   .Call(Cpp_fscale,x,fnlevels(g),g,w,na.rm,cm(mean),csd(sd))
 }
 
@@ -63,7 +63,7 @@ fscale.list <- function(x, g = NULL, w = NULL, na.rm = TRUE, mean = 0, sd = 1, .
 
 fscale.pdata.frame <- function(x, effect = 1L, w = NULL, na.rm = TRUE, mean = 0, sd = 1, ...) {
   if(!missing(...)) unused_arg_action(match.call(), ...)
-  g <- if(length(effect) == 1L) .subset2(attr(x, "index"), effect) else finteraction(.subset(attr(x, "index"), effect))
+  g <- if(length(effect) == 1L) .subset2(getpix(attr(x, "index")), effect) else finteraction(.subset(getpix(attr(x, "index")), effect))
   .Call(Cpp_fscale,x,fnlevels(g),g,w,na.rm,cm(mean),csd(sd))
 }
 
@@ -113,11 +113,11 @@ STD.pdata.frame <- function(x, effect = 1L, w = NULL, cols = is.numeric,
   ax <- attributes(x)
   class(x) <- NULL
   nam <- names(x)
-  g <- if(length(effect) == 1L) .subset2(ax[["index"]], effect) else
-    finteraction(.subset(ax[["index"]], effect))
+  g <- if(length(effect) == 1L) .subset2(getpix(ax[["index"]]), effect) else
+    finteraction(.subset(getpix(ax[["index"]]), effect))
 
   if(keep.ids) {
-    gn <- which(nam %in% attr(ax[["index"]], "names"))
+    gn <- which(nam %in% attr(getpix(ax[["index"]]), "names"))
     if(length(gn) && is.null(cols)) cols <- seq_along(x)[-gn]
   } else gn <- NULL
 

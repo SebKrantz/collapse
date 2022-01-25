@@ -36,6 +36,10 @@ void DFcopyAttr(SEXP out, SEXP x, int ng) {
   }
 }
 
+void * geteptr(SEXP x) {
+  return R_ExternalPtrAddr(x);
+}
+
 // Faster than rep_len(value, n) and slightly faster than matrix(value, n) (which in turn is faster than rep_len)...
 SEXP falloc(SEXP value, SEXP n) {
   int l = asInteger(n), tval = TYPEOF(value);

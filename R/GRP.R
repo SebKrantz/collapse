@@ -241,7 +241,7 @@ GRP.factor <- function(X, ..., group.sizes = TRUE, drop = FALSE, return.groups =
 }
 
 GRP.pseries <- function(X, effect = 1L, ..., group.sizes = TRUE, return.groups = TRUE, call = TRUE) {
-  g <- unclass(attr(X, "index")) # index cannot be atomic since plm always adds a time variable !
+  g <- unclass(getpix(attr(X, "index"))) # index cannot be atomic since plm always adds a time variable !
   if(length(effect) > 1L) return(GRP.default(g[effect], ...))
   # if(!missing(...)) unused_arg_action(match.call(), ...)
   # if(length(g) > 2L) {

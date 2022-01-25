@@ -46,6 +46,7 @@ RcppExport SEXP setvlabels(SEXP x, SEXP attrn, SEXP value, SEXP ind);
 RcppExport SEXP setnames(SEXP x, SEXP nam);
 RcppExport SEXP groupVec(SEXP X, SEXP starts, SEXP sizes);
 RcppExport SEXP groupAtVec(SEXP X, SEXP starts, SEXP naincl);
+RcppExport void * geteptr(SEXP x);
 // fnobs rewritten in C:
 RcppExport SEXP fnobsC(SEXP x, SEXP Rng, SEXP g);
 RcppExport SEXP fnobsmC(SEXP x, SEXP Rng, SEXP g, SEXP Rdrop);
@@ -185,6 +186,7 @@ static const R_CallMethodDef CallEntries[] = {
   {"C_setcolorder",   (DL_FUNC) &setcolorder,   2},
   {"C_subsetCols",    (DL_FUNC) &subsetCols,    3},
   {"C_alloc",         (DL_FUNC) &falloc,        2},
+  {"C_geteptr",       (DL_FUNC) &geteptr,       1},
   // {"C_aschar",        (DL_FUNC) &CasChar,       1},
   {"C_subsetDT",      (DL_FUNC) &subsetDT,      4},
   {"C_subsetVector",  (DL_FUNC) &subsetVector,  3},

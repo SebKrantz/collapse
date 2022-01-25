@@ -11,7 +11,7 @@ fcumsum.default <- function(x, g = NULL, o = NULL, na.rm = TRUE, fill = FALSE, c
 
 fcumsum.pseries <- function(x, na.rm = TRUE, fill = FALSE, ...) {
   if(!missing(...)) unused_arg_action(match.call(), ...)
-  index <- unclass(attr(x, "index"))
+  index <- unclass(getpix(attr(x, "index")))
   g <- if(length(index) > 2L) finteraction(index[-length(index)]) else index[[1L]]
   o <- ford(index[[length(index)]], g)
   if(is.matrix(x))
@@ -67,7 +67,7 @@ fcumsum.list <- function(x, g = NULL, o = NULL, na.rm = TRUE, fill = FALSE, chec
 
 fcumsum.pdata.frame <- function(x, na.rm = TRUE, fill = FALSE, ...) {
   if(!missing(...)) unused_arg_action(match.call(), ...)
-  index <- unclass(attr(x, "index"))
+  index <- unclass(getpix(attr(x, "index")))
   g <- if(length(index) > 2L) finteraction(index[-length(index)]) else index[[1L]]
   o <- ford(index[[length(index)]], g)
   .Call(C_fcumsuml,x,fnlevels(g),g,o,na.rm,fill)

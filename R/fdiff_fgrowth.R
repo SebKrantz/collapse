@@ -25,7 +25,7 @@ fdiff.default <- function(x, n = 1, diff = 1, g = NULL, t = NULL, fill = NA, log
 fdiff.pseries <- function(x, n = 1, diff = 1, fill = NA, log = FALSE, rho = 1, stubs = TRUE, ...) {
   if(!missing(...)) if(checkld(...)) log <- list(...)[["logdiff"]] else unused_arg_action(match.call(), ...)
   if(log) x <- baselog(x)
-  index <- unclass(attr(x, "index"))
+  index <- unclass(getpix(attr(x, "index")))
   if(length(index) > 2L) index <- list(finteraction(index[-length(index)]), index[[length(index)]])
   g <- index[[1L]]
   t <- index[[2L]]
@@ -87,7 +87,7 @@ fdiff.list <- function(x, n = 1, diff = 1, g = NULL, t = NULL, fill = NA, log = 
 fdiff.pdata.frame <- function(x, n = 1, diff = 1, fill = NA, log = FALSE, rho = 1, stubs = length(n) + length(diff) > 2L, ...) {
   if(!missing(...)) if(checkld(...)) log <- list(...)[["logdiff"]] else unused_arg_action(match.call(), ...)
   if(log) x <- fdapply(x, baselog)
-  index <- unclass(attr(x, "index"))
+  index <- unclass(getpix(attr(x, "index")))
   if(length(index) > 2L) index <- list(finteraction(index[-length(index)]), index[[length(index)]])
   g <- index[[1L]]
   t <- index[[2L]]
@@ -115,7 +115,7 @@ fgrowth.default <- function(x, n = 1, diff = 1, g = NULL, t = NULL, fill = NA, l
 fgrowth.pseries <- function(x, n = 1, diff = 1, fill = NA, logdiff = FALSE, scale = 100, power = 1, stubs = TRUE, ...) {
   if(!missing(...)) unused_arg_action(match.call(), ...)
   if(logdiff) x <- if(scale == 1) baselog(x) else scale * baselog(x)
-  index <- unclass(attr(x, "index"))
+  index <- unclass(getpix(attr(x, "index")))
   if(length(index) > 2L) index <- list(finteraction(index[-length(index)]), index[[length(index)]])
   g <- index[[1L]]
   t <- index[[2L]]
@@ -177,7 +177,7 @@ fgrowth.list <- function(x, n = 1, diff = 1, g = NULL, t = NULL, fill = NA, logd
 fgrowth.pdata.frame <- function(x, n = 1, diff = 1, fill = NA, logdiff = FALSE, scale = 100, power = 1, stubs = length(n) + length(diff) > 2L, ...) {
   if(!missing(...)) unused_arg_action(match.call(), ...)
   if(logdiff) x <- if(scale == 1) fdapply(x, baselog) else fdapply(x, function(y) scale * baselog(y))
-  index <- unclass(attr(x, "index"))
+  index <- unclass(getpix(attr(x, "index")))
   if(length(index) > 2L) index <- list(finteraction(index[-length(index)]), index[[length(index)]])
   g <- index[[1L]]
   t <- index[[2L]]
@@ -250,7 +250,7 @@ DG_pdata_frame_template <- function(x, n = 1, diff = 1, cols = is.numeric, fill 
   if(!missing(...)) unused_arg_action(match.call(), ...)
   ax <- attributes(x)
   nam <- ax[["names"]]
-  index <- unclass(ax[["index"]])
+  index <- unclass(getpix(ax[["index"]]))
 
   if(keep.ids) {
     gn <- which(nam %in% names(index))
