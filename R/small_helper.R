@@ -80,7 +80,7 @@ getenvFUN <- function(nam, efmt1 = "For this method need to install.packages('%s
   FUN
 }
 
-getpix <- function(x) if(is.list(x)) x else .Call(C_geteptr, x)
+getpix <- function(x) switch(typeof(x), externalptr = .Call(C_geteptr, x), x)
 
 # getplmindex <- function(x) {
 # ix <- getpix(attr(x, "index"))

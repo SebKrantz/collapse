@@ -36,8 +36,8 @@ void DFcopyAttr(SEXP out, SEXP x, int ng) {
   }
 }
 
-void * geteptr(SEXP x) {
-  return R_ExternalPtrAddr(x);
+SEXP geteptr(SEXP x) {
+  return R_ExternalPtrProtected(x);
 }
 
 // Faster than rep_len(value, n) and slightly faster than matrix(value, n) (which in turn is faster than rep_len)...
