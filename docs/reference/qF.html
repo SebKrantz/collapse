@@ -144,9 +144,9 @@ Regarding speed: In general <code>qF</code> is around 5x faster than <code>as.fa
 <span class="r-in"><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://github.com/joshuaulrich/microbenchmark/" class="external-link">microbenchmark</a></span><span class="op">)</span></span>
 <span class="r-in"><span class="fu"><a href="https://rdrr.io/pkg/microbenchmark/man/microbenchmark.html" class="external-link">microbenchmark</a></span><span class="op">(</span><span class="fu"><a href="fmin_fmax.html">fmax</a></span><span class="op">(</span><span class="va">dat</span>, <span class="va">cf</span><span class="op">)</span>, <span class="fu"><a href="fmin_fmax.html">fmax</a></span><span class="op">(</span><span class="va">dat</span>, <span class="va">cf2</span><span class="op">)</span><span class="op">)</span></span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> Unit: microseconds</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>            expr     min       lq     mean   median      uq     max neval</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>   fmax(dat, cf) 205.533 212.5645 218.2508 216.4595 221.892 257.849   100</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>  fmax(dat, cf2) 200.244 205.9430 213.7383 211.3140 217.423 240.301   100</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>            expr    min      lq     mean  median      uq     max neval</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>   fmax(dat, cf) 87.945 88.2935 89.28037 88.5805 89.0725  95.817   100</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  fmax(dat, cf2) 82.902 83.4760 84.79292 83.7425 84.5215 110.823   100</span>
 <span class="r-in"></span>
 <span class="r-in"><span class="fu">finteraction</span><span class="op">(</span><span class="va">mtcars</span><span class="op">$</span><span class="va">cyl</span>, <span class="va">mtcars</span><span class="op">$</span><span class="va">vs</span><span class="op">)</span>  <span class="co"># Interacting two variables (can be factors)</span></span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>  [1] 6.0 6.0 4.1 6.1 8.0 6.1 8.0 4.1 4.1 6.1 6.1 8.0 8.0 8.0 8.0 8.0 8.0 4.1 4.1</span>

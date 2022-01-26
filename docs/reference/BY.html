@@ -345,30 +345,36 @@ For larger tasks requiring split-apply-combine computing on data frames, the <a 
 <span class="r-out co"><span class="r-pr">#&gt;</span> </span>
 <span class="r-in"> </span>
 <span class="r-in"><span class="co">## grouped data frame method</span></span>
+<span class="r-in"><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://magrittr.tidyverse.org" class="external-link">magrittr</a></span><span class="op">)</span> <span class="co"># Note: Used because |&gt; is not available on older R versions</span></span>
+<span class="r-msg co"><span class="r-pr">#&gt;</span> </span>
+<span class="r-msg co"><span class="r-pr">#&gt;</span> Attaching package: ‘magrittr’</span>
+<span class="r-msg co"><span class="r-pr">#&gt;</span> The following objects are masked from ‘package:testthat’:</span>
+<span class="r-msg co"><span class="r-pr">#&gt;</span> </span>
+<span class="r-msg co"><span class="r-pr">#&gt;</span>     equals, is_less_than, not</span>
 <span class="r-in"><span class="va">giris</span> <span class="op">&lt;-</span> <span class="fu"><a href="GRP.html">fgroup_by</a></span><span class="op">(</span><span class="va">iris</span>, <span class="va">Species</span><span class="op">)</span></span>
-<span class="r-in"><span class="va">giris</span> |&gt; <span class="fu">BY</span><span class="op">(</span><span class="va">sum</span><span class="op">)</span>                      <span class="co"># Compute sum</span></span>
+<span class="r-in"><span class="va">giris</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html" class="external-link">%&gt;%</a></span> <span class="fu">BY</span><span class="op">(</span><span class="va">sum</span><span class="op">)</span>                      <span class="co"># Compute sum</span></span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>      Species Sepal.Length Sepal.Width Petal.Length Petal.Width</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> 1     setosa        250.3       171.4         73.1        12.3</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> 2 versicolor        296.8       138.5        213.0        66.3</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> 3  virginica        329.4       148.7        277.6       101.3</span>
-<span class="r-in"><span class="va">giris</span> |&gt; <span class="fu">BY</span><span class="op">(</span><span class="va">sum</span>, use.g.names <span class="op">=</span> <span class="cn">TRUE</span>,  <span class="co"># Use row.names and</span></span>
+<span class="r-in"><span class="va">giris</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html" class="external-link">%&gt;%</a></span> <span class="fu">BY</span><span class="op">(</span><span class="va">sum</span>, use.g.names <span class="op">=</span> <span class="cn">TRUE</span>,  <span class="co"># Use row.names and</span></span>
 <span class="r-in">             keep.group_vars <span class="op">=</span> <span class="cn">FALSE</span><span class="op">)</span> <span class="co"># remove 'Species' and groups attribute</span></span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>            Sepal.Length Sepal.Width Petal.Length Petal.Width</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> setosa            250.3       171.4         73.1        12.3</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> versicolor        296.8       138.5        213.0        66.3</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> virginica         329.4       148.7        277.6       101.3</span>
-<span class="r-in"><span class="va">giris</span> |&gt; <span class="fu">BY</span><span class="op">(</span><span class="va">sum</span>, return <span class="op">=</span> <span class="st">"matrix"</span><span class="op">)</span>   <span class="co"># Return matrix</span></span>
+<span class="r-in"><span class="va">giris</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html" class="external-link">%&gt;%</a></span> <span class="fu">BY</span><span class="op">(</span><span class="va">sum</span>, return <span class="op">=</span> <span class="st">"matrix"</span><span class="op">)</span>   <span class="co"># Return matrix</span></span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>      Sepal.Length Sepal.Width Petal.Length Petal.Width</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> [1,]        250.3       171.4         73.1        12.3</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> [2,]        296.8       138.5        213.0        66.3</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> [3,]        329.4       148.7        277.6       101.3</span>
-<span class="r-in"><span class="va">giris</span> |&gt; <span class="fu">BY</span><span class="op">(</span><span class="va">sum</span>, return <span class="op">=</span> <span class="st">"matrix"</span>,   <span class="co"># Matrix with row.names</span></span>
+<span class="r-in"><span class="va">giris</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html" class="external-link">%&gt;%</a></span> <span class="fu">BY</span><span class="op">(</span><span class="va">sum</span>, return <span class="op">=</span> <span class="st">"matrix"</span>,   <span class="co"># Matrix with row.names</span></span>
 <span class="r-in">             use.g.names <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span></span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>            Sepal.Length Sepal.Width Petal.Length Petal.Width</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> setosa            250.3       171.4         73.1        12.3</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> versicolor        296.8       138.5        213.0        66.3</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> virginica         329.4       148.7        277.6       101.3</span>
-<span class="r-in"><span class="va">giris</span> |&gt; <span class="fu">BY</span><span class="op">(</span><span class="va">quantile</span><span class="op">)</span>                 <span class="co"># Compute quantiles (output is stacked)</span></span>
+<span class="r-in"><span class="va">giris</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html" class="external-link">%&gt;%</a></span> <span class="fu">BY</span><span class="op">(</span><span class="va">quantile</span><span class="op">)</span>                 <span class="co"># Compute quantiles (output is stacked)</span></span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>    Sepal.Length Sepal.Width Petal.Length Petal.Width</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> 1         4.300       2.300        1.000         0.1</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> 2         4.800       3.200        1.400         0.2</span>
@@ -385,7 +391,7 @@ For larger tasks requiring split-apply-combine computing on data frames, the <a 
 <span class="r-out co"><span class="r-pr">#&gt;</span> 13        6.500       3.000        5.550         2.0</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> 14        6.900       3.175        5.875         2.3</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> 15        7.900       3.800        6.900         2.5</span>
-<span class="r-in"><span class="va">giris</span> |&gt; <span class="fu">BY</span><span class="op">(</span><span class="va">quantile</span>,                 <span class="co"># Much better, also keeps 'Species'</span></span>
+<span class="r-in"><span class="va">giris</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html" class="external-link">%&gt;%</a></span> <span class="fu">BY</span><span class="op">(</span><span class="va">quantile</span>,                 <span class="co"># Much better, also keeps 'Species'</span></span>
 <span class="r-in">             expand.wide <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span></span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>      Species Sepal.Length.0% Sepal.Length.25% Sepal.Length.50% Sepal.Length.75%</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> 1     setosa             4.3            4.800              5.0              5.2</span>

@@ -95,9 +95,9 @@ is_date(x)                    # Check if object is of class "Date", "POSIXlt" or
  \item{\dots}{for \code{.c}: Comma-separated expressions. For \code{all_identical / all_obj_equal}: Either multiple comma-separated objects or a single list of objects in which all elements will be checked for exact / numeric equality. For \code{rm_stub}: further arguments passed to \code{\link{gsub}}.}
 }
 \details{
-  \code{copyAttrib} and \code{copyMostAttrib} take a shallow copy of the attribute list, i.e. they don't duplicate in memory the attributes themselves. They also, along with \code{setAttrib}, take a shallow copy of lists pased to the \code{to} argument, so that lists are not modified by reference. Atomic \code{to} arguments are however modified by reference.
+  \code{copyAttrib} and \code{copyMostAttrib} take a shallow copy of the attribute list, i.e. they don't duplicate in memory the attributes themselves. They also, along with \code{setAttrib}, take a shallow copy of lists passed to the \code{to} argument, so that lists are not modified by reference. Atomic \code{to} arguments are however modified by reference.
 
-\code{copyMostAttrib} copies all attributes except for \code{"names"}, \code{"dim"} and \code{"dimnames"} (like the corresponsing C-API function), and further only copies the \code{"row.names"} attribute of data frames if known to be valid. Thus it is a suitable choice if objects should be of the same type but are not of equal dimensions.
+\code{copyMostAttrib} copies all attributes except for \code{"names"}, \code{"dim"} and \code{"dimnames"} (like the corresponding C-API function), and further only copies the \code{"row.names"} attribute of data frames if known to be valid. Thus it is a suitable choice if objects should be of the same type but are not of equal dimensions.
 }
 % \value{
 %%  ~Describe the value returned

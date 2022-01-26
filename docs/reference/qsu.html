@@ -145,9 +145,9 @@ It computes a set of 7 statistics (nobs, mean, sd, min, max, skewness and kurtos
     <p>The algorithm used to compute statistics is well described <a href="https://en.wikipedia.org/wiki/Algorithms_for_calculating_variance" class="external-link">here</a> [see sections <em>Welford's online algorithm</em>, <em>Weighted incremental algorithm</em> and <em>Higher-order statistics</em>. Skewness and kurtosis are calculated as described in <em>Higher-order statistics</em> and are mathematically identical to those implemented in the <em>moments</em> package. Just note that <code>qsu</code> computes the kurtosis (like <code>momens::kurtosis</code>), not the excess-kurtosis (=  kurtosis - 3) defined in <em>Higher-order statistics</em>. The <em>Weighted incremental algorithm</em> described can easily be generalized to higher-order statistics].</p>
 <p>Grouped computations specified with <code>g/by</code> are carried out extremely efficiently as in <code>fsum</code> (in a single pass, without splitting the data).</p>
 <p>If <code>pid</code> is used, <code>qsu</code> performs a panel-decomposition of each variable and computes 3 sets of statistics: Statistics computed on the 'Overall' (raw) data, statistics computed on the 'Between' - transformed (pid - averaged) data, and statistics computed on the 'Within' - transformed (pid - demeaned) data.</p>
-<p>More formally, let <b><code>x</code></b> (bold) be a panel vector of data for <code>N</code> individuals indexed by <code>i</code>, recorded for <code>T</code> periods, indexed by <code>t</code>. <code>xit</code> then denotes a single data-point belonging to individual <code>i</code> in time-period <code>t</code> (<code>t/T</code> must not represent time). Then <code>xi.</code> denotes the average of all values for individual <code>i</code> (averaged over <code>t</code>), and by extension <b><code>xN.</code></b> is the vector (length <code>N</code>) of such averages for all individuals. If no groups are supplied to <code>g/by</code>, the 'Between' statistics are computed on <b><code>xN.</code></b>, the vector of individual averages. (This means that for a non-balanced panel or in the presence of missing values, the 'Overall' mean computed on <b><code>x</code></b> can be slightly different than the 'Between' mean computed on <b><code>xN.</code></b>). If groups are supplied to <code>g/by</code>, <b><code>xN.</code></b> is expanded to the vector <b><code>xi.</code></b> (length <code>N x T</code>) by replacing each value <code>xit</code> in <b><code>x</code></b> with <code>xi.</code>, while preserving missing values in <b><code>x</code></b>. Grouped Between-statistics are then computed on <b><code>xi.</code></b>, with the only difference that the number of observations ('Between-N') reported for each group is the number of distinct non-missing values of <b><code>xi.</code></b> in each group (not the total number of non-missing values of <b><code>xi.</code></b> in each group, which is already reported in 'Overall-N').</p>
+<p>More formally, let <b><code>x</code></b> (bold) be a panel vector of data for <code>N</code> individuals indexed by <code>i</code>, recorded for <code>T</code> periods, indexed by <code>t</code>. <code>xit</code> then denotes a single data-point belonging to individual <code>i</code> in time-period <code>t</code> (<code>t/T</code> must not represent time). Then <code>xi.</code> denotes the average of all values for individual <code>i</code> (averaged over <code>t</code>), and by extension <b><code>xN.</code></b> is the vector (length <code>N</code>) of such averages for all individuals. If no groups are supplied to <code>g/by</code>, the 'Between' statistics are computed on <b><code>xN.</code></b>, the vector of individual averages. (This means that for a non-balanced panel or in the presence of missing values, the 'Overall' mean computed on <b><code>x</code></b> can be slightly different than the 'Between' mean computed on <b><code>xN.</code></b>, and the variance decomposition is not exact). If groups are supplied to <code>g/by</code>, <b><code>xN.</code></b> is expanded to the vector <b><code>xi.</code></b> (length <code>N x T</code>) by replacing each value <code>xit</code> in <b><code>x</code></b> with <code>xi.</code>, while preserving missing values in <b><code>x</code></b>. Grouped Between-statistics are then computed on <b><code>xi.</code></b>, with the only difference that the number of observations ('Between-N') reported for each group is the number of distinct non-missing values of <b><code>xi.</code></b> in each group (not the total number of non-missing values of <b><code>xi.</code></b> in each group, which is already reported in 'Overall-N'). See Examples.</p>
 <p>'Within' statistics are always computed on the vector <b><code>x - xi. + x..</code></b>, where <b><code>x..</code></b> is simply the 'Overall' mean computed from <b><code>x</code></b>, which is added back to preserve the level of the data. The 'Within' mean computed on this data will always be identical to the 'Overall' mean. In the summary output, <code>qsu</code> reports not 'N', which would be identical to the 'Overall-N', but 'T', the average number of time-periods of data available for each individual obtained as 'T' = 'Overall-N / 'Between-N'. See Examples.</p>
-<p>Apart from 'N/T' and the extrema, the standard-deviations ('SD') computed on between- and within- transformed data are extremely valuable because they indicate how much of the variation in a panel-variable is between-individuals and how much of the variation is within-individuals (over time). At the extremes, variables that have common values across individuals (such as the time-variable(s) 't' in a balanced panel), can readily be identified as individual-invariant because the 'Between-SD' on this variable is 0 and the 'Within-SD' is equal to the 'Overall-SD'. Analogous, time-invariant individual characteristics (such as the individual-id 'i') have a 0 'Within-SD' and a 'Between-SD' equal to the 'Overall-SD'.</p>
+<p>Apart from 'N/T' and the extrema, the standard-deviations ('SD') computed on between- and within- transformed data are extremely valuable because they indicate how much of the variation in a panel-variable is between-individuals and how much of the variation is within-individuals (over time). At the extremes, variables that have common values across individuals (such as the time-variable(s) 't' in a balanced panel), can readily be identified as individual-invariant because the 'Between-SD' on this variable is 0 and the 'Within-SD' is equal to the 'Overall-SD'. Analogous, time-invariant individual characteristics (such as the individual-id 'i') have a 0 'Within-SD' and a 'Between-SD' equal to the 'Overall-SD'. See Examples.</p>
 <p><code>qsu</code> comes with it's own print method which by default writes out up to 9 digits at 4 decimal places. Larger numbers are printed in scientific format. for numbers between 7 and 9 digits, an apostrophe (') is placed after the 6th digit to designate the millions. Missing values are printed using '-'.</p>
 <p>The <em>sf</em> method simply ignores the geometry column.</p>
     </div>
@@ -358,99 +358,8 @@ It computes a set of 7 statistics (nobs, mean, sd, min, max, skewness and kurtos
 <span class="r-out co"><span class="r-pr">#&gt;</span> Latin America &amp; Caribbean   2562     -   -    -    -</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> Middle East &amp; North Africa  1281     -   -    -    -</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> North America                183     -   -    -    -</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> South Asia                   488     -   -    -    -</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> Sub-Saharan Africa          2928     -   -    -    -</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> , , OECD: Is OECD Member Country?</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>                                N  Mean  SD  Min  Max</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> East Asia &amp; Pacific         2196     -   -    -    -</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> Europe &amp; Central Asia       3538     -   -    -    -</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> Latin America &amp; Caribbean   2562     -   -    -    -</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> Middle East &amp; North Africa  1281     -   -    -    -</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> North America                183     -   -    -    -</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> South Asia                   488     -   -    -    -</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> Sub-Saharan Africa          2928     -   -    -    -</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> , , PCGDP: GDP per capita (constant 2010 US$)</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>                                N        Mean          SD         Min</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> East Asia &amp; Pacific         1467  10513.2441  14383.5507    132.0776</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> Europe &amp; Central Asia       2243  25992.9618  26435.1316    366.9354</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> Latin America &amp; Caribbean   1976   7628.4477   8818.5055   1005.4085</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> Middle East &amp; North Africa   842  13878.4213  18419.7912    578.5996</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> North America                180    48699.76  24196.2855  16405.9053</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> South Asia                   382   1235.9256   1611.2232    265.9625</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> Sub-Saharan Africa          2380   1840.0259   2596.0104    164.3366</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>                                    Max</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> East Asia &amp; Pacific         71992.1517</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> Europe &amp; Central Asia       196061.417</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> Latin America &amp; Caribbean   88391.3331</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> Middle East &amp; North Africa  116232.753</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> North America               113236.091</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> South Asia                    8476.564</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> Sub-Saharan Africa          20532.9523</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> , , LIFEEX: Life expectancy at birth, total (years)</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>                                N     Mean       SD      Min      Max</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> East Asia &amp; Pacific         1807  65.9445  10.1633   18.907   85.078</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> Europe &amp; Central Asia       3046  72.1625   5.7602   45.369  85.4171</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> Latin America &amp; Caribbean   2107  68.3486   7.3768   41.762  82.1902</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> Middle East &amp; North Africa  1226  66.2508   9.8306   29.919  82.8049</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> North America                144  76.2867   3.5734  68.8978  82.0488</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> South Asia                   480  57.5585  11.3004   32.446   78.921</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> Sub-Saharan Africa          2860   51.581   8.6876   26.172  74.5146</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> , , GINI: Gini index (World Bank estimate)</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>                               N     Mean      SD   Min   Max</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> East Asia &amp; Pacific         154  37.7571  5.0318  27.8  49.1</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> Europe &amp; Central Asia       798  31.9114  4.5809  20.7  48.4</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> Latin America &amp; Caribbean   413  49.9557  5.4821  34.4  63.3</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> Middle East &amp; North Africa   91  36.0143  5.2073    26  47.4</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> North America                49  37.4816  3.6972    31  41.5</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> South Asia                   46  33.8804  3.9898  25.9  43.8</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> Sub-Saharan Africa          193  44.6606  8.2003  29.8  65.8</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> , , ODA: Net official development assistance and official aid received (constant 2018 US$)</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>                                N            Mean              SD           Min</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> East Asia &amp; Pacific         1537      352'017964      622'847624   -997'679993</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> Europe &amp; Central Asia        787      402'455286      568'237036   -322'070007</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> Latin America &amp; Caribbean   1972      172'880081      260'781049   -444'040009</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> Middle East &amp; North Africa  1105      732'380009  1.52108993e+09   -141'789993</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> North America                 39      468717.916     10'653560.8  -15'869999.9</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> South Asia                   466  1.27049955e+09  1.61492889e+09   -247'369995</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> Sub-Saharan Africa          2702      486'371750      656'336230  -18'409999.8</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>                                        Max</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> East Asia &amp; Pacific         4.04487988e+09</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> Europe &amp; Central Asia       4.34612988e+09</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> Latin America &amp; Caribbean   2.99568994e+09</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> Middle East &amp; North Africa  2.56715605e+10</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> North America                  61'509998.3</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> South Asia                  8.75425977e+09</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> Sub-Saharan Africa          1.18790801e+10</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> , , POP: Population, total</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>                                N         Mean           SD    Min</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> East Asia &amp; Pacific         2160  47'788194.6   184'121276   4375</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> Europe &amp; Central Asia       3480  14'103754.9  24'686065.8  13411</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> Latin America &amp; Caribbean   2520  10'371370.7    26'728206   2833</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> Middle East &amp; North Africa  1227  12'549479.2  17'750818.2  47384</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> North America                180  93'783656.8   116'925373  44400</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> South Asia                   480   144'180423   300'282162  89863</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> Sub-Saharan Africa          2872  11'597636.9  19'916800.8  41700</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>                                        Max</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> East Asia &amp; Pacific         1.39771500e+09</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> Europe &amp; Central Asia           148'538197</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> Latin America &amp; Caribbean       211'049527</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> Middle East &amp; North Africa      100'388073</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> North America                   328'239523</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> South Asia                  1.36641775e+09</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> Sub-Saharan Africa              200'963599</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  [ reached getOption("max.print") -- omitted 2 row(s) and 6 matrix slice(s) ]</span>
 <span class="r-in"><span class="fu">qsu</span><span class="op">(</span><span class="va">wlddev</span>, <span class="va">PCGDP</span> <span class="op">+</span> <span class="va">LIFEEX</span> <span class="op">~</span> <span class="va">income</span><span class="op">)</span>        <span class="co"># Summarize GDP per Capita and Life Expectancy by</span></span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> , , PCGDP</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> </span>
@@ -555,60 +464,7 @@ It computes a set of 7 statistics (nobs, mean, sd, min, max, skewness and kurtos
 <span class="r-out co"><span class="r-pr">#&gt;</span> PCGDP   196  2076.3417  920.3099  578.5996  4408.366   0.5759  2.8787</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> LIFEEX  270    62.4798    9.3779    42.021    76.699  -0.2512  1.8235</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> , , Middle East &amp; North Africa.Upper middle income</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>           N       Mean         SD        Min         Max     Skew    Kurt</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> PCGDP   269  4593.4118  2111.7582  1431.6015  12064.7807   1.2241  4.5445</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> LIFEEX  360    65.4501     8.5814     42.609       78.93  -0.6974  2.5476</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> , , North America.High income</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>           N      Mean          SD         Min         Max     Skew    Kurt</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> PCGDP   180  48699.76  24196.2855  16405.9053  113236.091    0.938  2.9688</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> LIFEEX  144   76.2867      3.5734     68.8978     82.0488  -0.1963   1.976</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> , , South Asia.Low income</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>           N      Mean        SD       Min       Max    Skew    Kurt</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> PCGDP    78  429.8696  152.4194  265.9625  859.0237  0.8628  2.9011</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> LIFEEX  120   51.5601   11.0428    32.446    70.778  0.0156   1.767</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> , , South Asia.Lower middle income</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>           N      Mean        SD       Min       Max    Skew    Kurt</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> PCGDP   220  810.8415  578.5148  302.0926  3262.199  2.1093  7.6591</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> LIFEEX  240   56.9501    9.4251    34.526    72.591   -0.34  2.2159</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> , , South Asia.Upper middle income</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>           N       Mean         SD       Min       Max    Skew    Kurt</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> PCGDP    84  3097.7215  2532.6969  585.9084  8476.564   0.736   2.042</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> LIFEEX  120     64.774    11.1413    37.343    78.921  -0.944  2.9181</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> , , Sub-Saharan Africa.High income</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>          N      Mean         SD        Min         Max     Skew    Kurt</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> PCGDP   60  7510.635  3462.9403  2616.8743  15048.7469   0.3697  2.1189</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> LIFEEX  40   71.5749     1.9009    67.9707     74.3098  -0.3487  1.9765</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> , , Sub-Saharan Africa.Low income</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>            N      Mean       SD       Min        Max    Skew    Kurt</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> PCGDP   1108  548.5624  217.068  164.3366  1535.7082  0.7121  3.7279</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> LIFEEX  1440    48.154   7.8474    26.172     69.024  0.1456  2.6414</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> , , Sub-Saharan Africa.Lower middle income</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>            N       Mean        SD       Min        Max    Skew    Kurt</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> PCGDP    908  1528.0373  789.4848  261.7993  4818.1922  1.5382  5.4549</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> LIFEEX  1020     53.697    7.3026    36.095     72.981  0.0644   2.621</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> , , Sub-Saharan Africa.Upper middle income</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>           N       Mean         SD       Min         Max     Skew    Kurt</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> PCGDP   304  6359.7324  3909.8516  407.7823  20532.9523   0.9609  4.3485</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> LIFEEX  360    57.0724     8.2369    36.535     74.5146  -0.1454  2.9076</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  [ reached getOption("max.print") -- omitted 9 matrix slice(s) ]</span>
 <span class="r-in"></span>
 <span class="r-in"><span class="co"># Panel Data Summaries ---------------------</span></span>
 <span class="r-in"><span class="fu">qsu</span><span class="op">(</span><span class="va">wlddev</span>, pid <span class="op">=</span> <span class="op">~</span> <span class="va">iso3c</span>, vlabels <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span>   <span class="co"># Adding between and within countries statistics</span></span>
@@ -700,6 +556,31 @@ It computes a set of 7 statistics (nobs, mean, sd, min, max, skewness and kurtos
 <span class="r-in"><span class="co"># that we have GINI-data on only 161 countries, with only 8.42 observations per country on average,</span></span>
 <span class="r-in"><span class="co"># and that GDP, LIFEEX and GINI vary more between-countries, but ODA received varies more within</span></span>
 <span class="r-in"><span class="co"># countries over time.</span></span>
+<span class="r-in"></span>
+<span class="r-in"><span class="co"># Let's do this manually for PCGDP:</span></span>
+<span class="r-in"><span class="va">x</span> <span class="op">&lt;-</span> <span class="va">wlddev</span><span class="op">$</span><span class="va">PCGDP</span></span>
+<span class="r-in"><span class="va">g</span> <span class="op">&lt;-</span> <span class="va">wlddev</span><span class="op">$</span><span class="va">iso3c</span></span>
+<span class="r-in"></span>
+<span class="r-in"><span class="co"># This is the exact variance decomposion</span></span>
+<span class="r-in"><span class="fu"><a href="https://Rdatatable.gitlab.io/data.table/reference/all.equal.data.table.html" class="external-link">all.equal</a></span><span class="op">(</span><span class="fu"><a href="fvar_fsd.html">fvar</a></span><span class="op">(</span><span class="va">x</span><span class="op">)</span>, <span class="fu"><a href="fvar_fsd.html">fvar</a></span><span class="op">(</span><span class="fu"><a href="fbetween_fwithin.html">B</a></span><span class="op">(</span><span class="va">x</span>, <span class="va">g</span><span class="op">)</span><span class="op">)</span> <span class="op">+</span> <span class="fu"><a href="fvar_fsd.html">fvar</a></span><span class="op">(</span><span class="fu"><a href="fbetween_fwithin.html">W</a></span><span class="op">(</span><span class="va">x</span>, <span class="va">g</span><span class="op">)</span><span class="op">)</span><span class="op">)</span></span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> [1] TRUE</span>
+<span class="r-in"></span>
+<span class="r-in"><span class="co"># What qsu does is calculate</span></span>
+<span class="r-in"><span class="va">r</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://Rdatatable.gitlab.io/data.table/reference/rbindlist.html" class="external-link">rbind</a></span><span class="op">(</span>Overall <span class="op">=</span> <span class="fu">qsu</span><span class="op">(</span><span class="va">x</span><span class="op">)</span>,</span>
+<span class="r-in">           Between <span class="op">=</span> <span class="fu">qsu</span><span class="op">(</span><span class="fu"><a href="fmean.html">fmean</a></span><span class="op">(</span><span class="va">x</span>, <span class="va">g</span><span class="op">)</span><span class="op">)</span>, <span class="co"># Aggregation instead of between-transform</span></span>
+<span class="r-in">           Within <span class="op">=</span> <span class="fu">qsu</span><span class="op">(</span><span class="fu"><a href="fbetween_fwithin.html">fwithin</a></span><span class="op">(</span><span class="va">x</span>, <span class="va">g</span>, mean <span class="op">=</span> <span class="st">"overall.mean"</span><span class="op">)</span><span class="op">)</span><span class="op">)</span> <span class="co"># Same as qsu(W(x, g) + fmean(x))</span></span>
+<span class="r-in"><span class="va">r</span><span class="op">[</span><span class="fl">3</span>, <span class="fl">1</span><span class="op">]</span> <span class="op">&lt;-</span> <span class="va">r</span><span class="op">[</span><span class="fl">1</span>, <span class="fl">1</span><span class="op">]</span> <span class="op">/</span> <span class="va">r</span><span class="op">[</span><span class="fl">2</span>, <span class="fl">1</span><span class="op">]</span></span>
+<span class="r-in"><span class="fu">print.qsu</span><span class="op">(</span><span class="va">r</span><span class="op">)</span></span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>                N        Mean          SD          Min         Max</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> Overall     9470   12048.778  19077.6416     132.0776  196061.417</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> Between      206  12962.6054  20189.9007     253.1886   141200.38</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> Within   45.9709   12048.778   6723.6808  -33504.8721  76767.5254</span>
+<span class="r-in"><span class="co"># Proof:</span></span>
+<span class="r-in"><span class="fu">qsu</span><span class="op">(</span><span class="va">x</span>, pid <span class="op">=</span> <span class="va">g</span><span class="op">)</span></span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>              N/T        Mean          SD          Min         Max</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> Overall     9470   12048.778  19077.6416     132.0776  196061.417</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> Between      206  12962.6054  20189.9007     253.1886   141200.38</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> Within   45.9709   12048.778   6723.6808  -33504.8721  76767.5254</span>
 <span class="r-in"> </span>
 <span class="r-in"><span class="co"># Using plm:</span></span>
 <span class="r-in"><span class="va">pwlddev</span> <span class="op">&lt;-</span> <span class="fu">plm</span><span class="fu">::</span><span class="fu"><a href="https://rdrr.io/pkg/plm/man/pdata.frame.html" class="external-link">pdata.frame</a></span><span class="op">(</span><span class="va">wlddev</span>,         <span class="co"># Creating a Panel Data Frame frame from this data</span></span>
@@ -735,10 +616,10 @@ It computes a set of 7 statistics (nobs, mean, sd, min, max, skewness and kurtos
 <span class="r-out co"><span class="r-pr">#&gt;</span> </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> , , decade</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>            N/T       Mean       SD        Min        Max</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> Overall  13176  1985.5738  17.5117       1960       2020</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> Between    216  1985.5738        0  1985.5738  1985.5738</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> Within      61  1985.5738  17.5117       1960       2020</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>            N/T  Mean  SD  Min  Max</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> Overall  13176     -   -    -    -</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> Between    216     -   -    -    -</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> Within      61     -   -    -    -</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> , , region</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> </span>
@@ -763,38 +644,38 @@ It computes a set of 7 statistics (nobs, mean, sd, min, max, skewness and kurtos
 <span class="r-out co"><span class="r-pr">#&gt;</span> </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> , , PCGDP</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>              N/T        Mean          SD          Min         Max</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> Overall     9470   12048.778  19077.6416     132.0776  196061.417</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> Between      206  12962.6054  20189.9007     253.1886   141200.38</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> Within   45.9709   12048.778   6723.6808  -33504.8721  76767.5254</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>              N/T  Mean  SD  Min  Max</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> Overall     9470     -   -    -    -</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> Between      216     -   -    -    -</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> Within   43.8426     -   -    -    -</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> , , LIFEEX</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>              N/T     Mean       SD      Min      Max</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> Overall    11670  64.2963  11.4764   18.907  85.4171</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> Between      207  64.9537   9.8936  40.9663  85.4171</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> Within   56.3768  64.2963   6.0842  32.9068  84.4198</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>              N/T  Mean  SD  Min  Max</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> Overall    11670     -   -    -    -</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> Between      216     -   -    -    -</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> Within   54.0278     -   -    -    -</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> , , GINI</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>              N/T     Mean      SD      Min      Max</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> Overall     1744  38.5341  9.2006     20.7     65.8</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> Between      167  39.4233  8.1356  24.8667  61.7143</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> Within   10.4431  38.5341  2.9277  25.3917  55.3591</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>             N/T  Mean  SD  Min  Max</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> Overall    1744     -   -    -    -</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> Between     216     -   -    -    -</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> Within   8.0741     -   -    -    -</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> , , ODA</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>              N/T        Mean          SD              Min             Max</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> Overall     8608  454'720131  868'712654      -997'679993  2.56715605e+10</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> Between      178  439'168412  569'049959       468717.916  3.62337432e+09</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> Within   48.3596  454'720131  650'709624  -2.44379420e+09  2.45610972e+10</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>              N/T  Mean  SD  Min  Max</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> Overall     8608     -   -    -    -</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> Between      216     -   -    -    -</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> Within   39.8519     -   -    -    -</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> , , POP</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>              N/T         Mean           SD          Min             Max</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> Overall    12919  24'245971.6   102'120674         2833  1.39771500e+09</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> Between      216    24'178573  98'616506.7    8343.3333  1.08786967e+09</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> Within   59.8102  24'245971.6  26'803077.4  -405'793067      510'077008</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>              N/T  Mean  SD  Min  Max</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> Overall    12919     -   -    -    -</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> Between      216     -   -    -    -</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> Within   59.8102     -   -    -    -</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> </span>
 <span class="r-in"><span class="fu">qsu</span><span class="op">(</span><span class="va">pwlddev</span><span class="op">$</span><span class="va">PCGDP</span><span class="op">)</span>                          <span class="co"># Default summary for Panel Series  (class pseries)</span></span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>              N/T        Mean          SD          Min         Max</span>
@@ -888,274 +769,76 @@ It computes a set of 7 statistics (nobs, mean, sd, min, max, skewness and kurtos
 <span class="r-out co"><span class="r-pr">#&gt;</span> Latin America &amp; Caribbean    52.675  64.2963  5.4965  46.7831  79.5026</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> Middle East &amp; North Africa   58.381  64.2963  7.8467  41.6187  78.8872</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> North America                    48  64.2963  3.3049  54.7766  69.4306</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> South Asia                       60  64.2963  9.8062  41.4342  83.0122</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> Sub-Saharan Africa          59.5833  64.2963  6.5933  41.5678  84.4198</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> , , Overall, GINI</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>                             N/T     Mean      SD   Min   Max</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> East Asia &amp; Pacific         154  37.7571  5.0318  27.8  49.1</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> Europe &amp; Central Asia       798  31.9114  4.5809  20.7  48.4</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> Latin America &amp; Caribbean   413  49.9557  5.4821  34.4  63.3</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> Middle East &amp; North Africa   91  36.0143  5.2073    26  47.4</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> North America                49  37.4816  3.6972    31  41.5</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> South Asia                   46  33.8804  3.9898  25.9  43.8</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> Sub-Saharan Africa          193  44.6606  8.2003  29.8  65.8</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> , , Between, GINI</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>                             N/T     Mean      SD      Min      Max</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> East Asia &amp; Pacific          23  37.7571  4.3005     30.8  45.8857</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> Europe &amp; Central Asia        49  31.9114  4.0611  24.8667   40.935</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> Latin America &amp; Caribbean    25  49.9557  4.0492     41.1     57.9</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> Middle East &amp; North Africa   15  36.0143  4.7002    29.05     42.7</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> North America                 2  37.4816  3.3563  33.1222  40.0129</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> South Asia                    7  33.8804  3.0052  30.3556     38.8</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> Sub-Saharan Africa           46  44.6606  6.8844    34.52  61.7143</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> , , Within, GINI</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>                                 N/T     Mean      SD      Min      Max</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> East Asia &amp; Pacific          6.6957  38.5341  2.6125  31.0187  45.8901</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> Europe &amp; Central Asia       16.2857  38.5341  2.1195  31.2841  50.1387</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> Latin America &amp; Caribbean     16.52  38.5341  3.6955  25.3917  48.8341</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> Middle East &amp; North Africa   6.0667  38.5341  2.2415  31.7675   45.777</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> North America                  24.5  38.5341  1.5507  33.0212  42.7119</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> South Asia                   6.5714  38.5341  2.6244  32.8341  45.0675</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> Sub-Saharan Africa           4.1957  38.5341  4.4553  27.9452  55.3591</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> , , Overall, ODA</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>                              N/T            Mean              SD           Min</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> East Asia &amp; Pacific         1537      352'017964      622'847624   -997'679993</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> Europe &amp; Central Asia        787      402'455286      568'237036   -322'070007</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> Latin America &amp; Caribbean   1972      172'880081      260'781049   -444'040009</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> Middle East &amp; North Africa  1105      732'380009  1.52108993e+09   -141'789993</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> North America                 39      468717.916     10'653560.8  -15'869999.9</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> South Asia                   466  1.27049955e+09  1.61492889e+09   -247'369995</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> Sub-Saharan Africa          2702      486'371750      656'336230  -18'409999.8</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>                                        Max</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> East Asia &amp; Pacific         4.04487988e+09</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> Europe &amp; Central Asia       4.34612988e+09</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> Latin America &amp; Caribbean   2.99568994e+09</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> Middle East &amp; North Africa  2.56715605e+10</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> North America                  61'509998.3</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> South Asia                  8.75425977e+09</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> Sub-Saharan Africa          1.18790801e+10</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> , , Between, ODA</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>                             N/T            Mean              SD          Min</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> East Asia &amp; Pacific          31      352'017964      457'183279  1'654615.38</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> Europe &amp; Central Asia        32      402'455286      438'074771  12'516000.1</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> Latin America &amp; Caribbean    37      172'880081      167'160838  2'225483.88</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> Middle East &amp; North Africa   21      732'380009      775'418887   3'112820.5</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> North America                 1      468717.916               0   468717.916</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> South Asia                    8  1.27049955e+09  1.18347893e+09  27'152499.9</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> Sub-Saharan Africa           48      486'371750      397'995105  28'801206.9</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>                                        Max</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> East Asia &amp; Pacific         1.63585532e+09</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> Europe &amp; Central Asia       2.05456932e+09</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> Latin America &amp; Caribbean       538'386665</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> Middle East &amp; North Africa  2.86174883e+09</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> North America                   468717.916</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> South Asia                  3.62337432e+09</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> Sub-Saharan Africa          1.55049113e+09</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> , , Within, ODA</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>                                 N/T        Mean              SD</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> East Asia &amp; Pacific         49.5806  454'720131      422'992450</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> Europe &amp; Central Asia       24.5938  454'720131      361'916875</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> Latin America &amp; Caribbean   53.2973  454'720131      200'159960</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> Middle East &amp; North Africa   52.619  454'720131  1.30860235e+09</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> North America                    39  454'720131     10'653560.8</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> South Asia                    58.25  454'720131  1.09880524e+09</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> Sub-Saharan Africa          56.2917  454'720131      521'897637</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>                                         Min             Max</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> East Asia &amp; Pacific         -2.04042108e+09  3.59673152e+09</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> Europe &amp; Central Asia       -1.08796786e+09  3.30549004e+09</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> Latin America &amp; Caribbean       -527'706542  3.28976141e+09</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> Middle East &amp; North Africa  -2.34610870e+09  2.45610972e+10</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> North America                    438'381413      515'761411</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> South Asia                  -2.44379420e+09  5.58560558e+09</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> Sub-Saharan Africa              -952'168698  1.12814455e+10</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  [ reached getOption("max.print") -- omitted 2 row(s) and 6 matrix slice(s) ]</span>
 <span class="r-in"><span class="va">psr</span> <span class="op">&lt;-</span> <span class="fu">qsu</span><span class="op">(</span><span class="va">pwlddev</span>, <span class="op">~</span> <span class="va">region</span>, cols <span class="op">=</span> <span class="fl">9</span><span class="op">:</span><span class="fl">12</span><span class="op">)</span>  <span class="co"># Same on plm pdata.frame</span></span>
 <span class="r-in"><span class="va">psr</span>                                         <span class="co"># -&gt; Gives a 4D array</span></span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> , , Overall, PCGDP</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>                              N/T        Mean          SD         Min</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> East Asia &amp; Pacific         1467  10513.2441  14383.5507    132.0776</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> Europe &amp; Central Asia       2243  25992.9618  26435.1316    366.9354</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> Latin America &amp; Caribbean   1976   7628.4477   8818.5055   1005.4085</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> Middle East &amp; North Africa   842  13878.4213  18419.7912    578.5996</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> North America                180    48699.76  24196.2855  16405.9053</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> South Asia                   382   1235.9256   1611.2232    265.9625</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> Sub-Saharan Africa          2380   1840.0259   2596.0104    164.3366</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>                                    Max</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> East Asia &amp; Pacific         71992.1517</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> Europe &amp; Central Asia       196061.417</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> Latin America &amp; Caribbean   88391.3331</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> Middle East &amp; North Africa  116232.753</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> North America               113236.091</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> South Asia                    8476.564</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> Sub-Saharan Africa          20532.9523</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>                              N/T  Mean  SD  Min  Max</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> East Asia &amp; Pacific         1467     -   -    -    -</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> Europe &amp; Central Asia       2243     -   -    -    -</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> Latin America &amp; Caribbean   1976     -   -    -    -</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> Middle East &amp; North Africa   842     -   -    -    -</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> North America                180     -   -    -    -</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> South Asia                   382     -   -    -    -</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> Sub-Saharan Africa          2380     -   -    -    -</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> , , Between, PCGDP</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>                             N/T        Mean          SD         Min         Max</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> East Asia &amp; Pacific          34  10513.2441   12771.742    444.2899  39722.0077</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> Europe &amp; Central Asia        56  25992.9618   24051.035    809.4753   141200.38</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> Latin America &amp; Caribbean    38   7628.4477   8470.9708   1357.3326  77403.7443</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> Middle East &amp; North Africa   20  13878.4213  17251.6962   1069.6596  64878.4021</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> North America                 3    48699.76  18604.4369  35260.4708  74934.5874</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> South Asia                    8   1235.9256   1488.3669      413.68   6621.5002</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> Sub-Saharan Africa           47   1840.0259   2234.3254    253.1886   9922.0052</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>                             N/T  Mean  SD  Min  Max</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> East Asia &amp; Pacific          34     -   -    -    -</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> Europe &amp; Central Asia        56     -   -    -    -</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> Latin America &amp; Caribbean    38     -   -    -    -</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> Middle East &amp; North Africa   20     -   -    -    -</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> North America                 3     -   -    -    -</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> South Asia                    8     -   -    -    -</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> Sub-Saharan Africa           47     -   -    -    -</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> , , Within, PCGDP</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>                                 N/T       Mean          SD          Min</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> East Asia &amp; Pacific         43.1471  12048.778   6615.8248  -11964.6472</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> Europe &amp; Central Asia       40.0536  12048.778  10971.0483  -33504.8721</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> Latin America &amp; Caribbean        52  12048.778   2451.2636    -354.1639</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> Middle East &amp; North Africa     42.1  12048.778   6455.0512  -18674.4049</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> North America                    60  12048.778  15470.4609  -29523.1017</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> South Asia                    47.75  12048.778    617.0934   10026.9155</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> Sub-Saharan Africa          50.6383  12048.778    1321.764    4846.3834</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>                                    Max</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> East Asia &amp; Pacific          49541.463</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> Europe &amp; Central Asia       76767.5254</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> Latin America &amp; Caribbean   23036.3668</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> Middle East &amp; North Africa  63665.0446</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> North America               50350.2816</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> South Asia                   14455.865</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> Sub-Saharan Africa          24883.1246</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>                                 N/T  Mean  SD  Min  Max</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> East Asia &amp; Pacific         43.1471     -   -    -    -</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> Europe &amp; Central Asia       40.0536     -   -    -    -</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> Latin America &amp; Caribbean        52     -   -    -    -</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> Middle East &amp; North Africa     42.1     -   -    -    -</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> North America                    60     -   -    -    -</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> South Asia                    47.75     -   -    -    -</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> Sub-Saharan Africa          50.6383     -   -    -    -</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> , , Overall, LIFEEX</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>                              N/T     Mean       SD      Min      Max</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> East Asia &amp; Pacific         1807  65.9445  10.1633   18.907   85.078</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> Europe &amp; Central Asia       3046  72.1625   5.7602   45.369  85.4171</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> Latin America &amp; Caribbean   2107  68.3486   7.3768   41.762  82.1902</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> Middle East &amp; North Africa  1226  66.2508   9.8306   29.919  82.8049</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> North America                144  76.2867   3.5734  68.8978  82.0488</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> South Asia                   480  57.5585  11.3004   32.446   78.921</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> Sub-Saharan Africa          2860   51.581   8.6876   26.172  74.5146</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>                              N/T  Mean  SD  Min  Max</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> East Asia &amp; Pacific         1807     -   -    -    -</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> Europe &amp; Central Asia       3046     -   -    -    -</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> Latin America &amp; Caribbean   2107     -   -    -    -</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> Middle East &amp; North Africa  1226     -   -    -    -</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> North America                144     -   -    -    -</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> South Asia                   480     -   -    -    -</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> Sub-Saharan Africa          2860     -   -    -    -</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> , , Between, LIFEEX</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>                             N/T     Mean      SD      Min      Max</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> East Asia &amp; Pacific          32  65.9445  7.6833  49.7995  77.9008</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> Europe &amp; Central Asia        55  72.1625  4.4378  60.1129  85.4171</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> Latin America &amp; Caribbean    40  68.3486  4.9199  53.4918  82.1902</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> Middle East &amp; North Africa   21  66.2508   5.922  52.5371  76.7395</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> North America                 3  76.2867  1.3589  74.8065  78.4175</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> South Asia                    8  57.5585  5.6158  49.1972  69.3429</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> Sub-Saharan Africa           48   51.581   5.657  40.9663  71.5749</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>                             N/T  Mean  SD  Min  Max</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> East Asia &amp; Pacific          32     -   -    -    -</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> Europe &amp; Central Asia        55     -   -    -    -</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> Latin America &amp; Caribbean    40     -   -    -    -</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> Middle East &amp; North Africa   21     -   -    -    -</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> North America                 3     -   -    -    -</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> South Asia                    8     -   -    -    -</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> Sub-Saharan Africa           48     -   -    -    -</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> , , Within, LIFEEX</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>                                 N/T     Mean      SD      Min      Max</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> East Asia &amp; Pacific         56.4688  64.2963  6.6528  32.9068  83.9918</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> Europe &amp; Central Asia       55.3818  64.2963  3.6723  46.3045  78.6265</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> Latin America &amp; Caribbean    52.675  64.2963  5.4965  46.7831  79.5026</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> Middle East &amp; North Africa   58.381  64.2963  7.8467  41.6187  78.8872</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> North America                    48  64.2963  3.3049  54.7766  69.4306</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> South Asia                       60  64.2963  9.8062  41.4342  83.0122</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> Sub-Saharan Africa          59.5833  64.2963  6.5933  41.5678  84.4198</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>                                 N/T  Mean  SD  Min  Max</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> East Asia &amp; Pacific         56.4688     -   -    -    -</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> Europe &amp; Central Asia       55.3818     -   -    -    -</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> Latin America &amp; Caribbean    52.675     -   -    -    -</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> Middle East &amp; North Africa   58.381     -   -    -    -</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> North America                    48     -   -    -    -</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> , , Overall, GINI</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>                             N/T     Mean      SD   Min   Max</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> East Asia &amp; Pacific         154  37.7571  5.0318  27.8  49.1</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> Europe &amp; Central Asia       798  31.9114  4.5809  20.7  48.4</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> Latin America &amp; Caribbean   413  49.9557  5.4821  34.4  63.3</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> Middle East &amp; North Africa   91  36.0143  5.2073    26  47.4</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> North America                49  37.4816  3.6972    31  41.5</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> South Asia                   46  33.8804  3.9898  25.9  43.8</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> Sub-Saharan Africa          193  44.6606  8.2003  29.8  65.8</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> , , Between, GINI</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>                             N/T     Mean      SD      Min      Max</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> East Asia &amp; Pacific          23  37.7571  4.3005     30.8  45.8857</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> Europe &amp; Central Asia        49  31.9114  4.0611  24.8667   40.935</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> Latin America &amp; Caribbean    25  49.9557  4.0492     41.1     57.9</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> Middle East &amp; North Africa   15  36.0143  4.7002    29.05     42.7</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> North America                 2  37.4816  3.3563  33.1222  40.0129</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> South Asia                    7  33.8804  3.0052  30.3556     38.8</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> Sub-Saharan Africa           46  44.6606  6.8844    34.52  61.7143</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> , , Within, GINI</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>                                 N/T     Mean      SD      Min      Max</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> East Asia &amp; Pacific          6.6957  38.5341  2.6125  31.0187  45.8901</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> Europe &amp; Central Asia       16.2857  38.5341  2.1195  31.2841  50.1387</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> Latin America &amp; Caribbean     16.52  38.5341  3.6955  25.3917  48.8341</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> Middle East &amp; North Africa   6.0667  38.5341  2.2415  31.7675   45.777</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> North America                  24.5  38.5341  1.5507  33.0212  42.7119</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> South Asia                   6.5714  38.5341  2.6244  32.8341  45.0675</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> Sub-Saharan Africa           4.1957  38.5341  4.4553  27.9452  55.3591</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> , , Overall, ODA</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>                              N/T            Mean              SD           Min</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> East Asia &amp; Pacific         1537      352'017964      622'847624   -997'679993</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> Europe &amp; Central Asia        787      402'455286      568'237036   -322'070007</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> Latin America &amp; Caribbean   1972      172'880081      260'781049   -444'040009</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> Middle East &amp; North Africa  1105      732'380009  1.52108993e+09   -141'789993</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> North America                 39      468717.916     10'653560.8  -15'869999.9</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> South Asia                   466  1.27049955e+09  1.61492889e+09   -247'369995</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> Sub-Saharan Africa          2702      486'371750      656'336230  -18'409999.8</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>                                        Max</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> East Asia &amp; Pacific         4.04487988e+09</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> Europe &amp; Central Asia       4.34612988e+09</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> Latin America &amp; Caribbean   2.99568994e+09</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> Middle East &amp; North Africa  2.56715605e+10</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> North America                  61'509998.3</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> South Asia                  8.75425977e+09</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> Sub-Saharan Africa          1.18790801e+10</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> , , Between, ODA</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>                             N/T            Mean              SD          Min</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> East Asia &amp; Pacific          31      352'017964      457'183279  1'654615.38</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> Europe &amp; Central Asia        32      402'455286      438'074771  12'516000.1</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> Latin America &amp; Caribbean    37      172'880081      167'160838  2'225483.88</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> Middle East &amp; North Africa   21      732'380009      775'418887   3'112820.5</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> North America                 1      468717.916               0   468717.916</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> South Asia                    8  1.27049955e+09  1.18347893e+09  27'152499.9</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> Sub-Saharan Africa           48      486'371750      397'995105  28'801206.9</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>                                        Max</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> East Asia &amp; Pacific         1.63585532e+09</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> Europe &amp; Central Asia       2.05456932e+09</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> Latin America &amp; Caribbean       538'386665</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> Middle East &amp; North Africa  2.86174883e+09</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> North America                   468717.916</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> South Asia                  3.62337432e+09</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> Sub-Saharan Africa          1.55049113e+09</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> , , Within, ODA</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>                                 N/T        Mean              SD</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> East Asia &amp; Pacific         49.5806  454'720131      422'992450</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> Europe &amp; Central Asia       24.5938  454'720131      361'916875</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> Latin America &amp; Caribbean   53.2973  454'720131      200'159960</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> Middle East &amp; North Africa   52.619  454'720131  1.30860235e+09</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> North America                    39  454'720131     10'653560.8</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> South Asia                    58.25  454'720131  1.09880524e+09</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> Sub-Saharan Africa          56.2917  454'720131      521'897637</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>                                         Min             Max</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> East Asia &amp; Pacific         -2.04042108e+09  3.59673152e+09</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> Europe &amp; Central Asia       -1.08796786e+09  3.30549004e+09</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> Latin America &amp; Caribbean       -527'706542  3.28976141e+09</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> Middle East &amp; North Africa  -2.34610870e+09  2.45610972e+10</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> North America                    438'381413      515'761411</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> South Asia                  -2.44379420e+09  5.58560558e+09</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> Sub-Saharan Africa              -952'168698  1.12814455e+10</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
-<span class="r-in"><span class="fu">print.qsu</span><span class="op">(</span><span class="va">psr</span><span class="op">[</span>,<span class="st">"N/T"</span>,,<span class="op">]</span><span class="op">)</span>                    <span class="co"># Checking out the number of observations:</span></span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  [ reached getOption("max.print") -- omitted 2 row(s) and 6 matrix slice(s) ]</span>
+<span class="r-in"><span class="va">psr</span><span class="op">[</span>,<span class="st">"N/T"</span>,,<span class="op">]</span>                               <span class="co"># Checking out the number of observations:</span></span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> , , PCGDP</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>                             Overall  Between   Within</span>
@@ -1202,56 +885,168 @@ It computes a set of 7 statistics (nobs, mean, sd, min, max, skewness and kurtos
 <span class="r-out co"><span class="r-pr">#&gt;</span> </span>
 <span class="r-in"><span class="co"># In North america we only have 3 countries, for the GINI we only have 3.91 observations on average</span></span>
 <span class="r-in"><span class="co"># for 45 Sub-Saharan-African countries, etc..</span></span>
-<span class="r-in"><span class="fu">print.qsu</span><span class="op">(</span><span class="va">psr</span><span class="op">[</span>,<span class="st">"SD"</span>,,<span class="op">]</span><span class="op">)</span>                     <span class="co"># Considering only standard deviations</span></span>
+<span class="r-in"><span class="va">psr</span><span class="op">[</span>,<span class="st">"SD"</span>,,<span class="op">]</span>                                <span class="co"># Considering only standard deviations</span></span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> , , PCGDP</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>                                Overall     Between      Within</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> East Asia &amp; Pacific         14383.5507   12771.742   6615.8248</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> Europe &amp; Central Asia       26435.1316   24051.035  10971.0483</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> Latin America &amp; Caribbean    8818.5055   8470.9708   2451.2636</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> Middle East &amp; North Africa  18419.7912  17251.6962   6455.0512</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> North America               24196.2855  18604.4369  15470.4609</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> South Asia                   1611.2232   1488.3669    617.0934</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> Sub-Saharan Africa           2596.0104   2234.3254    1321.764</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>                             Overall  Between  Within</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> East Asia &amp; Pacific               -        -       -</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> Europe &amp; Central Asia             -        -       -</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> Latin America &amp; Caribbean         -        -       -</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> Middle East &amp; North Africa        -        -       -</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> North America                     -        -       -</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> South Asia                        -        -       -</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> Sub-Saharan Africa                -        -       -</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> , , LIFEEX</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>                             Overall  Between  Within</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> East Asia &amp; Pacific         10.1633   7.6833  6.6528</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> Europe &amp; Central Asia        5.7602   4.4378  3.6723</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> Latin America &amp; Caribbean    7.3768   4.9199  5.4965</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> Middle East &amp; North Africa   9.8306    5.922  7.8467</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> North America                3.5734   1.3589  3.3049</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> South Asia                  11.3004   5.6158  9.8062</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> Sub-Saharan Africa           8.6876    5.657  6.5933</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> East Asia &amp; Pacific               -        -       -</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> Europe &amp; Central Asia             -        -       -</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> Latin America &amp; Caribbean         -        -       -</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> Middle East &amp; North Africa        -        -       -</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> North America                     -        -       -</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> South Asia                        -        -       -</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> Sub-Saharan Africa                -        -       -</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> , , GINI</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>                             Overall  Between  Within</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> East Asia &amp; Pacific          5.0318   4.3005  2.6125</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> Europe &amp; Central Asia        4.5809   4.0611  2.1195</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> Latin America &amp; Caribbean    5.4821   4.0492  3.6955</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> Middle East &amp; North Africa   5.2073   4.7002  2.2415</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> North America                3.6972   3.3563  1.5507</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> South Asia                   3.9898   3.0052  2.6244</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> Sub-Saharan Africa           8.2003   6.8844  4.4553</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> East Asia &amp; Pacific               -        -       -</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> Europe &amp; Central Asia             -        -       -</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> Latin America &amp; Caribbean         -        -       -</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> Middle East &amp; North Africa        -        -       -</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> North America                     -        -       -</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> South Asia                        -        -       -</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> Sub-Saharan Africa                -        -       -</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> , , ODA</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>                                    Overall         Between          Within</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> East Asia &amp; Pacific             622'847624      457'183279      422'992450</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> Europe &amp; Central Asia           568'237036      438'074771      361'916875</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> Latin America &amp; Caribbean       260'781049      167'160838      200'159960</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> Middle East &amp; North Africa  1.52108993e+09      775'418887  1.30860235e+09</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> North America                  10'653560.8               0     10'653560.8</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> South Asia                  1.61492889e+09  1.18347893e+09  1.09880524e+09</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> Sub-Saharan Africa              656'336230      397'995105      521'897637</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>                             Overall  Between  Within</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> East Asia &amp; Pacific               -        -       -</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> Europe &amp; Central Asia             -        -       -</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> Latin America &amp; Caribbean         -        -       -</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> Middle East &amp; North Africa        -        -       -</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> North America                     -        -       -</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> South Asia                        -        -       -</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> Sub-Saharan Africa                -        -       -</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> </span>
 <span class="r-in"><span class="co"># -&gt; In all regions variations in inequality (GINI) between countries are greater than variations</span></span>
 <span class="r-in"><span class="co"># in inequality within countries. The opposite is true for Life-Expectancy in all regions apart</span></span>
 <span class="r-in"><span class="co"># from Europe, etc..</span></span>
 <span class="r-in"></span>
-<span class="r-in"><span class="va">psrl</span> <span class="op">&lt;-</span> <span class="fu">qsu</span><span class="op">(</span><span class="va">wlddev</span>, <span class="op">~</span> <span class="va">region</span>, <span class="op">~</span> <span class="va">iso3c</span>,      <span class="co"># Same, but output as nested list</span></span>
+<span class="r-in"><span class="co"># Again let's do this manually for PDGCP:</span></span>
+<span class="r-in"><span class="va">d</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/cbind.html" class="external-link">cbind</a></span><span class="op">(</span>Overall <span class="op">=</span> <span class="va">x</span>,</span>
+<span class="r-in">           Between <span class="op">=</span> <span class="fu"><a href="fbetween_fwithin.html">fbetween</a></span><span class="op">(</span><span class="va">x</span>, <span class="va">g</span><span class="op">)</span>,</span>
+<span class="r-in">           Within <span class="op">=</span> <span class="fu"><a href="fbetween_fwithin.html">fwithin</a></span><span class="op">(</span><span class="va">x</span>, <span class="va">g</span>, mean <span class="op">=</span> <span class="st">"overall.mean"</span><span class="op">)</span><span class="op">)</span></span>
+<span class="r-in"></span>
+<span class="r-in"><span class="va">r</span> <span class="op">&lt;-</span> <span class="fu">qsu</span><span class="op">(</span><span class="va">d</span>, g <span class="op">=</span> <span class="va">wlddev</span><span class="op">$</span><span class="va">region</span><span class="op">)</span></span>
+<span class="r-in"><span class="va">r</span><span class="op">[</span>,<span class="st">"N"</span>,<span class="st">"Between"</span><span class="op">]</span> <span class="op">&lt;-</span> <span class="fu"><a href="fNdistinct.html">fndistinct</a></span><span class="op">(</span><span class="va">g</span><span class="op">[</span><span class="op">!</span><span class="fu"><a href="https://rdrr.io/r/base/NA.html" class="external-link">is.na</a></span><span class="op">(</span><span class="va">x</span><span class="op">)</span><span class="op">]</span>, <span class="va">wlddev</span><span class="op">$</span><span class="va">region</span><span class="op">[</span><span class="op">!</span><span class="fu"><a href="https://rdrr.io/r/base/NA.html" class="external-link">is.na</a></span><span class="op">(</span><span class="va">x</span><span class="op">)</span><span class="op">]</span><span class="op">)</span></span>
+<span class="r-in"><span class="va">r</span><span class="op">[</span>,<span class="st">"N"</span>,<span class="st">"Within"</span><span class="op">]</span> <span class="op">&lt;-</span> <span class="va">r</span><span class="op">[</span>,<span class="st">"N"</span>,<span class="st">"Overall"</span><span class="op">]</span> <span class="op">/</span> <span class="va">r</span><span class="op">[</span>,<span class="st">"N"</span>,<span class="st">"Between"</span><span class="op">]</span></span>
+<span class="r-in"><span class="va">r</span></span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> , , Overall</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>                                N        Mean          SD         Min</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> East Asia &amp; Pacific         1467  10513.2441  14383.5507    132.0776</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> Europe &amp; Central Asia       2243  25992.9618  26435.1316    366.9354</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> Latin America &amp; Caribbean   1976   7628.4477   8818.5055   1005.4085</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> Middle East &amp; North Africa   842  13878.4213  18419.7912    578.5996</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> North America                180    48699.76  24196.2855  16405.9053</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> South Asia                   382   1235.9256   1611.2232    265.9625</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> Sub-Saharan Africa          2380   1840.0259   2596.0104    164.3366</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>                                    Max</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> East Asia &amp; Pacific         71992.1517</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> Europe &amp; Central Asia       196061.417</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> Latin America &amp; Caribbean   88391.3331</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> Middle East &amp; North Africa  116232.753</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> North America               113236.091</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> South Asia                    8476.564</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> Sub-Saharan Africa          20532.9523</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> , , Between</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>                              N        Mean          SD         Min         Max</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> East Asia &amp; Pacific         34  10513.2441   12771.742    444.2899  39722.0077</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> Europe &amp; Central Asia       56  25992.9618   24051.035    809.4753   141200.38</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> Latin America &amp; Caribbean   38   7628.4477   8470.9708   1357.3326  77403.7443</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> Middle East &amp; North Africa  20  13878.4213  17251.6962   1069.6596  64878.4021</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> North America                3    48699.76  18604.4369  35260.4708  74934.5874</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> South Asia                   8   1235.9256   1488.3669      413.68   6621.5002</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> Sub-Saharan Africa          47   1840.0259   2234.3254    253.1886   9922.0052</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> , , Within</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>                                   N       Mean          SD          Min</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> East Asia &amp; Pacific         43.1471  12048.778   6615.8248  -11964.6472</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> Europe &amp; Central Asia       40.0536  12048.778  10971.0483  -33504.8721</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> Latin America &amp; Caribbean        52  12048.778   2451.2636    -354.1639</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> Middle East &amp; North Africa     42.1  12048.778   6455.0512  -18674.4049</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> North America                    60  12048.778  15470.4609  -29523.1017</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> South Asia                    47.75  12048.778    617.0934   10026.9155</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> Sub-Saharan Africa          50.6383  12048.778    1321.764    4846.3834</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>                                    Max</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> East Asia &amp; Pacific          49541.463</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> Europe &amp; Central Asia       76767.5254</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> Latin America &amp; Caribbean   23036.3668</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> Middle East &amp; North Africa  63665.0446</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> North America               50350.2816</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> South Asia                   14455.865</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> Sub-Saharan Africa          24883.1246</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
+<span class="r-in"></span>
+<span class="r-in"><span class="co"># Proof:</span></span>
+<span class="r-in"><span class="fu">qsu</span><span class="op">(</span><span class="va">wlddev</span>, <span class="va">PCGDP</span> <span class="op">~</span> <span class="va">region</span>, <span class="op">~</span> <span class="va">iso3c</span><span class="op">)</span></span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> , , Overall</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>                              N/T        Mean          SD         Min</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> East Asia &amp; Pacific         1467  10513.2441  14383.5507    132.0776</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> Europe &amp; Central Asia       2243  25992.9618  26435.1316    366.9354</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> Latin America &amp; Caribbean   1976   7628.4477   8818.5055   1005.4085</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> Middle East &amp; North Africa   842  13878.4213  18419.7912    578.5996</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> North America                180    48699.76  24196.2855  16405.9053</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> South Asia                   382   1235.9256   1611.2232    265.9625</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> Sub-Saharan Africa          2380   1840.0259   2596.0104    164.3366</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>                                    Max</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> East Asia &amp; Pacific         71992.1517</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> Europe &amp; Central Asia       196061.417</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> Latin America &amp; Caribbean   88391.3331</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> Middle East &amp; North Africa  116232.753</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> North America               113236.091</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> South Asia                    8476.564</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> Sub-Saharan Africa          20532.9523</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> , , Between</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>                             N/T        Mean          SD         Min         Max</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> East Asia &amp; Pacific          34  10513.2441   12771.742    444.2899  39722.0077</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> Europe &amp; Central Asia        56  25992.9618   24051.035    809.4753   141200.38</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> Latin America &amp; Caribbean    38   7628.4477   8470.9708   1357.3326  77403.7443</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> Middle East &amp; North Africa   20  13878.4213  17251.6962   1069.6596  64878.4021</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> North America                 3    48699.76  18604.4369  35260.4708  74934.5874</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> South Asia                    8   1235.9256   1488.3669      413.68   6621.5002</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> Sub-Saharan Africa           47   1840.0259   2234.3254    253.1886   9922.0052</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> , , Within</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>                                 N/T       Mean          SD          Min</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> East Asia &amp; Pacific         43.1471  12048.778   6615.8248  -11964.6472</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> Europe &amp; Central Asia       40.0536  12048.778  10971.0483  -33504.8721</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> Latin America &amp; Caribbean        52  12048.778   2451.2636    -354.1639</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> Middle East &amp; North Africa     42.1  12048.778   6455.0512  -18674.4049</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> North America                    60  12048.778  15470.4609  -29523.1017</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> South Asia                    47.75  12048.778    617.0934   10026.9155</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> Sub-Saharan Africa          50.6383  12048.778    1321.764    4846.3834</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>                                    Max</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> East Asia &amp; Pacific          49541.463</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> Europe &amp; Central Asia       76767.5254</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> Latin America &amp; Caribbean   23036.3668</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> Middle East &amp; North Africa  63665.0446</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> North America               50350.2816</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> South Asia                   14455.865</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> Sub-Saharan Africa          24883.1246</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
+<span class="r-in"></span>
+<span class="r-in"><span class="co"># Same as above, but output as nested list</span></span>
+<span class="r-in"><span class="va">psrl</span> <span class="op">&lt;-</span> <span class="fu">qsu</span><span class="op">(</span><span class="va">wlddev</span>, <span class="op">~</span> <span class="va">region</span>, <span class="op">~</span> <span class="va">iso3c</span>,</span>
 <span class="r-in">            cols <span class="op">=</span> <span class="fl">9</span><span class="op">:</span><span class="fl">12</span>, array <span class="op">=</span> <span class="cn">FALSE</span><span class="op">)</span></span>
 <span class="r-in"><span class="va">psrl</span>                                        <span class="co"># We can use unlist2d to create a tidy data.frame</span></span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> $PCGDP</span>
@@ -1443,65 +1238,65 @@ It computes a set of 7 statistics (nobs, mean, sd, min, max, skewness and kurtos
 <span class="r-in"><span class="va">n</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/nrow.html" class="external-link">nrow</a></span><span class="op">(</span><span class="va">wlddev</span><span class="op">)</span></span>
 <span class="r-in"><span class="va">weights</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/MathFun.html" class="external-link">abs</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/stats/Normal.html" class="external-link">rnorm</a></span><span class="op">(</span><span class="va">n</span><span class="op">)</span><span class="op">)</span>                    <span class="co"># Generate random weights</span></span>
 <span class="r-in"><span class="fu">qsu</span><span class="op">(</span><span class="va">wlddev</span>, w <span class="op">=</span> <span class="va">weights</span>, higher <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span>     <span class="co"># Computed weighted mean, SD, skewness and kurtosis</span></span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>              N         Mean              SD          Min             Max</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> country  13176            -               -            -               -</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> iso3c    13176            -               -            -               -</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> date     13176            -               -            -               -</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> year     13176    1990.1199         19.8571         1960            2020</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> decade   13176    1985.6967         19.7254         1960            2020</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> region   13176            -               -            -               -</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> income   13176            -               -            -               -</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> OECD     13176            -               -            -               -</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> PCGDP     9470   12118.7293      21822.2335     132.0776      196061.417</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> LIFEEX   11670      64.2874         12.8456       18.907         85.4171</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> GINI      1744       38.505         10.1081         20.7            65.8</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> ODA       8608   465'476785  1.06965130e+09  -997'679993  2.56715605e+10</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> POP      12919  25'463666.7      127'422812         2833  1.39771500e+09</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>             Skew      Kurt</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> country        -         -</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> iso3c          -         -</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> date           -         -</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> year      0.1125    4.3036</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> decade    0.1788    4.3707</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> region         -         -</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> income         -         -</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> OECD           -         -</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> PCGDP     4.3953   35.9276</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> LIFEEX   -0.8452    6.0177</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> GINI      0.6889    4.8229</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> ODA      10.5811  218.7762</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> POP      14.6585  278.8345</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>              N         Mean          SD          Min             Max     Skew</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> country  13176            -           -            -               -        -</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> iso3c    13176            -           -            -               -        -</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> date     13176            -           -            -               -        -</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> year     13176    1990.0417     19.7605         1960            2020  -0.0439</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> decade   13176    1985.6149     19.6906         1960            2020   0.0151</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> region   13176            -           -            -               -        -</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> income   13176            -           -            -               -        -</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> OECD     13176            -           -            -               -        -</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> PCGDP     9470   12067.7872  21881.7392     132.0776      196061.417   4.8417</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> LIFEEX   11670      64.2575      12.939       18.907         85.4171  -1.0351</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> GINI      1744      38.5044     10.2411         20.7            65.8   0.7704</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> ODA       8608   453'109731  918'746559  -997'679993  2.56715605e+10   5.9305</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> POP      12919  23'867746.5  107'410705         2833  1.39771500e+09  12.6289</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>              Kurt</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> country         -</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> iso3c           -</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> date            -</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> year       4.3873</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> decade      4.453</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> region          -</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> income          -</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> OECD            -</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> PCGDP     46.7821</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> LIFEEX     7.7946</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> GINI       5.6166</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> ODA       63.2232</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> POP      207.4274</span>
 <span class="r-in"><span class="va">weightsNA</span> <span class="op">&lt;-</span> <span class="va">weights</span>                        <span class="co"># Weights may contain missing values.. inserting 1000</span></span>
 <span class="r-in"><span class="va">weightsNA</span><span class="op">[</span><span class="fu"><a href="https://rdrr.io/r/base/sample.html" class="external-link">sample.int</a></span><span class="op">(</span><span class="va">n</span>, <span class="fl">1000</span><span class="op">)</span><span class="op">]</span> <span class="op">&lt;-</span> <span class="cn">NA</span></span>
 <span class="r-in"><span class="fu">qsu</span><span class="op">(</span><span class="va">wlddev</span>, w <span class="op">=</span> <span class="va">weightsNA</span>, higher <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span>   <span class="co"># But now these values are removed from all variables</span></span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>              N         Mean              SD          Min             Max</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> country  13176            -               -            -               -</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> iso3c    13176            -               -            -               -</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> date     13176            -               -            -               -</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> year     12176    1990.1341         19.8724         1960            2020</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> decade   12176    1985.7194         19.7202         1960            2020</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> region   13176            -               -            -               -</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> income   13176            -               -            -               -</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> OECD     13176            -               -            -               -</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> PCGDP     8743   12126.1287      21815.8566     132.0776      196061.417</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> LIFEEX   10765      64.3027         12.8246       18.907         85.4171</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> GINI      1623      38.4388           10.21         20.7            65.8</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> ODA       7927   468'128479  1.08992844e+09  -997'679993  2.56715605e+10</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> POP      11933  25'716030.5      129'507396         2833  1.39771500e+09</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>             Skew      Kurt</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> country        -         -</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> iso3c          -         -</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> date           -         -</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> year      0.1059    4.3112</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> decade    0.1753    4.3919</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> region         -         -</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> income         -         -</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> OECD           -         -</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> PCGDP     4.4326   36.8278</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> LIFEEX    -0.868    6.1271</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> GINI      0.7171    4.8594</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> ODA        10.75  220.0766</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> POP      14.5548  274.6472</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>              N        Mean          SD          Min             Max     Skew</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> country  13176           -           -            -               -        -</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> iso3c    13176           -           -            -               -        -</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> date     13176           -           -            -               -        -</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> year     12176   1990.0851     19.8054         1960            2020  -0.0512</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> decade   12176   1985.6575     19.7387         1960            2020   0.0007</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> region   13176           -           -            -               -        -</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> income   13176           -           -            -               -        -</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> OECD     13176           -           -            -               -        -</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> PCGDP     8783  12107.4502  21898.3134     132.0776      196061.417   4.8022</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> LIFEEX   10792      64.286     12.9419       18.907         85.4171  -1.0304</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> GINI      1636     38.3688     10.1552         20.7            65.8   0.7994</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> ODA       7960  455'389532  931'211814  -997'679993  2.56715605e+10   5.9889</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> POP      11945   24'197637  109'966231         2833  1.39771500e+09  12.5211</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>              Kurt</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> country         -</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> iso3c           -</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> date            -</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> year       4.4295</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> decade     4.5051</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> region          -</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> income          -</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> OECD            -</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> PCGDP     46.7173</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> LIFEEX     7.8576</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> GINI       5.7261</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> ODA       63.8184</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> POP      202.3595</span>
 <span class="r-in"></span>
 <span class="r-in"><span class="co"># Grouped and panel-summaries can also be weighted in the same manor</span></span>
 </code></pre></div>
