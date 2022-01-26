@@ -147,6 +147,11 @@
 <dt>...</dt>
 <dd><p>for <code>.c</code>: Comma-separated expressions. For <code>all_identical / all_obj_equal</code>: Either multiple comma-separated objects or a single list of objects in which all elements will be checked for exact / numeric equality. For <code>rm_stub</code>: further arguments passed to <code><a href="https://rdrr.io/r/base/grep.html" class="external-link">gsub</a></code>.</p></dd>
 </dl></div>
+    <div id="details">
+    <h2>Details</h2>
+    <p><code>copyAttrib</code> and <code>copyMostAttrib</code> take a shallow copy of the attribute list, i.e. they don't duplicate in memory the attributes themselves. They also, along with <code>setAttrib</code>, take a shallow copy of lists passed to the <code>to</code> argument, so that lists are not modified by reference. Atomic <code>to</code> arguments are however modified by reference.</p>
+<p><code>copyMostAttrib</code> copies all attributes except for <code>"names"</code>, <code>"dim"</code> and <code>"dimnames"</code> (like the corresponding C-API function), and further only copies the <code>"row.names"</code> attribute of data frames if known to be valid. Thus it is a suitable choice if objects should be of the same type but are not of equal dimensions.</p>
+    </div>
     <div id="see-also">
     <h2>See also</h2>
     <div class="dont-index"><p><a href="programming.html">Efficient Programming</a>, <a href="index.html">Collapse Overview</a> <!-- %% \code{\link{pwcor}}, \code{\link{qsu}} --></p></div>
@@ -163,7 +168,7 @@
 <span class="r-in"><span class="fu">.c</span><span class="op">(</span><span class="cn">T</span>, <span class="va">N</span><span class="op">)</span> <span class="op">%=%</span> <span class="fu"><a href="https://rdrr.io/r/base/dim.html" class="external-link">dim</a></span><span class="op">(</span><span class="va">EuStockMarkets</span><span class="op">)</span></span>
 <span class="r-in"><span class="fu"><a href="https://rdrr.io/r/base/names.html" class="external-link">names</a></span><span class="op">(</span><span class="va">iris</span><span class="op">)</span> <span class="op">%=%</span> <span class="va">iris</span></span>
 <span class="r-in"><span class="fu"><a href="https://rdrr.io/r/base/list2env.html" class="external-link">list2env</a></span><span class="op">(</span><span class="va">iris</span><span class="op">)</span>          <span class="co"># Same thing</span></span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> &lt;environment: 0x14b0b2168&gt;</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> &lt;environment: 0x17920b4a0&gt;</span>
 <span class="r-in"><span class="fu"><a href="https://rdrr.io/r/base/rm.html" class="external-link">rm</a></span><span class="op">(</span>list <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"a"</span>, <span class="st">"b"</span>, <span class="st">"T"</span>, <span class="st">"N"</span>, <span class="fu"><a href="https://rdrr.io/r/base/names.html" class="external-link">names</a></span><span class="op">(</span><span class="va">iris</span><span class="op">)</span><span class="op">)</span><span class="op">)</span></span>
 <span class="r-in"></span>
 <span class="r-in"><span class="co">## Variable labels</span></span>

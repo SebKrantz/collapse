@@ -276,10 +276,10 @@
 <span class="r-out co"><span class="r-pr">#&gt;</span> 6.1.0 1.316358e+02 1.359535e+05  1  0    144     16</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> 8.0.0 1.914897e+07 6.360378e+14  0  0 531441 442368</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> 8.0.1 1.131690e+01 2.117000e+02  0  1     25     32</span>
-<span class="r-in"> </span>
+<span class="r-in"></span>
 <span class="r-in"><span class="co">## method for grouped data frames - created with dplyr::group_by or fgroup_by</span></span>
 <span class="r-in"><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://dplyr.tidyverse.org" class="external-link">dplyr</a></span><span class="op">)</span></span>
-<span class="r-in"><span class="va">mtcars</span> |&gt; <span class="fu"><a href="https://dplyr.tidyverse.org/reference/group_by.html" class="external-link">group_by</a></span><span class="op">(</span><span class="va">cyl</span>,<span class="va">vs</span>,<span class="va">am</span><span class="op">)</span> |&gt; <span class="fu">fprod</span><span class="op">(</span><span class="va">hp</span><span class="op">)</span>   <span class="co"># Weighted grouped product</span></span>
+<span class="r-in"><span class="va">mtcars</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html" class="external-link">%&gt;%</a></span> <span class="fu"><a href="https://dplyr.tidyverse.org/reference/group_by.html" class="external-link">group_by</a></span><span class="op">(</span><span class="va">cyl</span>,<span class="va">vs</span>,<span class="va">am</span><span class="op">)</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html" class="external-link">%&gt;%</a></span> <span class="fu">fprod</span><span class="op">(</span><span class="va">hp</span><span class="op">)</span>   <span class="co"># Weighted grouped product</span></span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #949494;"># A tibble: 7 × 11</span></span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>     cyl    vs    am prod.hp     mpg    disp    drat      wt    qsec    gear</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>   <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span> <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span> <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span>   <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span>   <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span>   <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span>   <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span>   <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span>   <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span>   <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span></span>
@@ -291,7 +291,7 @@
 <span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;">6</span>     8     0     0 2.45<span style="color: #949494;">e</span>27 2.70<span style="color: #949494;">e</span>41 8.60<span style="color: #949494;">e</span>57 2.03<span style="color: #949494;">e</span>33 4.68<span style="color: #949494;">e</span>34 1.56<span style="color: #949494;">e</span>42 1.30<span style="color: #949494;">e</span>33</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;">7</span>     8     0     1 8.84<span style="color: #949494;">e</span> 4 2.10<span style="color: #949494;">e</span> 7 9.34<span style="color: #949494;">e</span> 9 1.32<span style="color: #949494;">e</span> 6 1.00<span style="color: #949494;">e</span> 6 1.87<span style="color: #949494;">e</span> 7 2.21<span style="color: #949494;">e</span> 6</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #949494;"># … with 1 more variable: carb &lt;dbl&gt;</span></span>
-<span class="r-in"><span class="va">mtcars</span> |&gt; <span class="fu"><a href="GRP.html">fgroup_by</a></span><span class="op">(</span><span class="va">cyl</span>,<span class="va">vs</span>,<span class="va">am</span><span class="op">)</span> |&gt; <span class="fu">fprod</span><span class="op">(</span><span class="va">hp</span><span class="op">)</span>  <span class="co"># Equivalent and faster</span></span>
+<span class="r-in"><span class="va">mtcars</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html" class="external-link">%&gt;%</a></span> <span class="fu"><a href="GRP.html">fgroup_by</a></span><span class="op">(</span><span class="va">cyl</span>,<span class="va">vs</span>,<span class="va">am</span><span class="op">)</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html" class="external-link">%&gt;%</a></span> <span class="fu">fprod</span><span class="op">(</span><span class="va">hp</span><span class="op">)</span>  <span class="co"># Equivalent and faster</span></span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>   cyl vs am      prod.hp          mpg         disp         drat           wt</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> 1   4  0  1 9.100000e+01 2.366000e+03 1.094730e+04 4.031300e+02 1.947400e+02</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> 2   4  1  0 5.713300e+05 6.833610e+09 1.417303e+12 3.057744e+07 1.415159e+07</span>
@@ -308,7 +308,7 @@
 <span class="r-out co"><span class="r-pr">#&gt;</span> 5 2.375650e+13 2.516255e+10 2.795839e+09</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> 6 1.555290e+42 1.299522e+33 1.081713e+33</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> 7 1.872275e+07 2.211000e+06 2.830080e+06</span>
-<span class="r-in"><span class="va">mtcars</span> |&gt; <span class="fu"><a href="GRP.html">fgroup_by</a></span><span class="op">(</span><span class="va">cyl</span>,<span class="va">vs</span>,<span class="va">am</span><span class="op">)</span> |&gt; <span class="fu">fprod</span><span class="op">(</span>TRA <span class="op">=</span> <span class="st">"/"</span><span class="op">)</span></span>
+<span class="r-in"><span class="va">mtcars</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html" class="external-link">%&gt;%</a></span> <span class="fu"><a href="GRP.html">fgroup_by</a></span><span class="op">(</span><span class="va">cyl</span>,<span class="va">vs</span>,<span class="va">am</span><span class="op">)</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html" class="external-link">%&gt;%</a></span> <span class="fu">fprod</span><span class="op">(</span>TRA <span class="op">=</span> <span class="st">"/"</span><span class="op">)</span></span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>                     cyl vs am          mpg         disp           hp</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> Mazda RX4             6  0  1 2.417211e-03 4.310345e-05 5.194805e-05</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> Mazda RX4 Wag         6  0  1 2.417211e-03 4.310345e-05 5.194805e-05</span>
@@ -328,20 +328,6 @@
 <span class="r-out co"><span class="r-pr">#&gt;</span> Lincoln Continental   8  0  0 9.427792e-14 1.308545e-28 8.792452e-26</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> Chrysler Imperial     8  0  0 1.332582e-13 1.251652e-28 9.405879e-26</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> Fiat 128              4  1  1 2.396304e-09 1.892421e-12 3.913375e-12</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> Honda Civic           4  1  1 2.248384e-09 1.820283e-12 3.083265e-12</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> Toyota Corolla        4  1  1 2.507244e-09 1.709671e-12 3.854082e-12</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> Toyota Corona         4  1  0 1.797527e-03 4.841358e-05 1.697793e-04</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> Dodge Challenger      8  0  0 1.405104e-13 9.046031e-29 6.134269e-26</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> AMC Javelin           8  0  0 1.377908e-13 8.647778e-29 6.134269e-26</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> Camaro Z28            8  0  0 1.205670e-13 9.956324e-29 1.001931e-25</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> Pontiac Firebird      8  0  0 1.740515e-13 1.137866e-28 7.156647e-26</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> Fiat X1-9             4  1  1 2.019108e-09 1.899635e-12 3.913375e-12</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> Porsche 914-2         4  0  1 1.000000e+00 1.000000e+00 1.000000e+00</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> Lotus Europa          4  1  1 2.248384e-09 2.286776e-12 6.700172e-12</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> Ford Pantera L        8  0  1 6.666667e-02 3.322259e-03 2.985075e-03</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> Ferrari Dino          6  0  1 2.267574e-03 3.906250e-05 8.264463e-05</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> Maserati Bora         8  0  1 6.329114e-02 2.849003e-03 3.787879e-03</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> Volvo 142E            4  1  1 1.582744e-09 2.909567e-12 6.462998e-12</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>                             drat           wt         qsec         gear</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> Mazda RX4           7.083156e-02 1.255690e-01 3.790607e-03 5.000000e-02</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> Mazda RX4 Wag       7.083156e-02 1.377904e-01 3.919570e-03 5.000000e-02</span>
@@ -361,20 +347,6 @@
 <span class="r-out co"><span class="r-pr">#&gt;</span> Lincoln Continental 3.615930e-06 2.832529e-07 2.801720e-14 5.645029e-06</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> Chrysler Imperial   3.893151e-06 2.791273e-07 2.738831e-14 5.645029e-06</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> Fiat 128            1.974861e-04 1.787058e-02 2.454133e-08 1.953125e-04</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> Honda Civic         2.386291e-04 1.311863e-02 2.334389e-08 1.953125e-04</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> Toyota Corolla      2.042626e-04 1.490569e-02 2.508333e-08 1.953125e-04</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> Toyota Corona       6.913334e-02 9.951734e-02 2.183406e-03 6.250000e-02</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> Dodge Challenger    3.326655e-06 1.838219e-07 2.652358e-14 5.645029e-06</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> AMC Javelin         3.796726e-06 1.793830e-07 2.719964e-14 5.645029e-06</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> Camaro Z28          4.495806e-06 2.005330e-07 2.422812e-14 5.645029e-06</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> Pontiac Firebird    3.712354e-06 2.007941e-07 2.680658e-14 5.645029e-06</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> Fiat X1-9           1.974861e-04 1.571799e-02 2.382286e-08 1.953125e-04</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> Porsche 914-2       1.000000e+00 1.000000e+00 1.000000e+00 1.000000e+00</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> Lotus Europa        1.824810e-04 1.229009e-02 2.130193e-08 2.441406e-04</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> Ford Pantera L      2.824859e-01 2.801120e-01 6.849315e-02 2.000000e-01</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> Ferrari Dino        6.574622e-02 1.327580e-01 3.569527e-03 6.250000e-02</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> Maserati Bora       2.369668e-01 3.154574e-01 6.896552e-02 2.000000e-01</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> Volvo 142E          1.989382e-04 2.258192e-02 2.344472e-08 1.953125e-04</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>                             carb</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> Mazda RX4           4.166667e-02</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> Mazda RX4 Wag       4.166667e-02</span>
@@ -394,23 +366,10 @@
 <span class="r-out co"><span class="r-pr">#&gt;</span> Lincoln Continental 9.042245e-06</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> Chrysler Imperial   9.042245e-06</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> Fiat 128            1.250000e-01</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> Honda Civic         2.500000e-01</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> Toyota Corolla      1.250000e-01</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> Toyota Corona       2.500000e-01</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> Dodge Challenger    4.521123e-06</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> AMC Javelin         4.521123e-06</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> Camaro Z28          9.042245e-06</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> Pontiac Firebird    4.521123e-06</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> Fiat X1-9           1.250000e-01</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> Porsche 914-2       1.000000e+00</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> Lotus Europa        2.500000e-01</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> Ford Pantera L      1.250000e-01</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> Ferrari Dino        6.250000e-02</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> Maserati Bora       2.500000e-01</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> Volvo 142E          2.500000e-01</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  [ reached 'max' / getOption("max.print") -- omitted 14 rows ]</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> Grouped by:  cyl, vs, am  [7 | 5 (3.8) 1-12] </span>
-<span class="r-in"><span class="va">mtcars</span> |&gt; <span class="fu"><a href="GRP.html">fgroup_by</a></span><span class="op">(</span><span class="va">cyl</span>,<span class="va">vs</span>,<span class="va">am</span><span class="op">)</span> |&gt; <span class="fu"><a href="select_replace_vars.html">fselect</a></span><span class="op">(</span><span class="va">mpg</span><span class="op">)</span> |&gt; <span class="fu">fprod</span><span class="op">(</span><span class="op">)</span></span>
+<span class="r-in"><span class="va">mtcars</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html" class="external-link">%&gt;%</a></span> <span class="fu"><a href="GRP.html">fgroup_by</a></span><span class="op">(</span><span class="va">cyl</span>,<span class="va">vs</span>,<span class="va">am</span><span class="op">)</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html" class="external-link">%&gt;%</a></span> <span class="fu"><a href="select_replace_vars.html">fselect</a></span><span class="op">(</span><span class="va">mpg</span><span class="op">)</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html" class="external-link">%&gt;%</a></span> <span class="fu">fprod</span><span class="op">(</span><span class="op">)</span></span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>   cyl vs am          mpg</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> 1   4  0  1 2.600000e+01</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> 2   4  1  0 1.196088e+04</span>

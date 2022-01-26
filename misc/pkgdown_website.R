@@ -8,6 +8,8 @@ build_home(preview = FALSE)
 topics <- sort(setdiff(unlist(lapply(tools::Rd_db("collapse"),
                                     tools:::.Rd_get_metadata, "name"), use.names = FALSE),
                       c("collapse-documentation","A0-collapse-documentation","collapse-depreciated","collapse-renamed"))) # "collapse-package"
+# TODO: Update plm method documentation !!!
+options(max.print = 100L)
 build_reference(examples = TRUE, topics = topics) # "collapse-package"
 Sys.setenv(NCRAN = "TRUE")
 Sys.setenv(RUNBENCH = "TRUE")
