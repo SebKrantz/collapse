@@ -46,7 +46,7 @@ RcppExport SEXP setvlabels(SEXP x, SEXP attrn, SEXP value, SEXP ind);
 RcppExport SEXP setnames(SEXP x, SEXP nam);
 RcppExport SEXP groupVec(SEXP X, SEXP starts, SEXP sizes);
 RcppExport SEXP groupAtVec(SEXP X, SEXP starts, SEXP naincl);
-RcppExport void * geteptr(SEXP x);
+RcppExport SEXP geteptr(SEXP x);
 // fnobs rewritten in C:
 RcppExport SEXP fnobsC(SEXP x, SEXP Rng, SEXP g);
 RcppExport SEXP fnobsmC(SEXP x, SEXP Rng, SEXP g, SEXP Rdrop);

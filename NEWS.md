@@ -6,6 +6,9 @@
 
 * More memory efficient attribute handling in C/C++ (using C-API macro `SHALLOW_DUPLICATE_ATTRIB` instead of `DUPLICATE_ATTRIB`) in most places.
 
+<!--
+* *plm* methods for 'pseries' were adjusted to allow fetching of 'index' attribute from an external pointer, to adjust for changes in *plm* which allow computations on 'pseries' to be conducted in data masking environments. 
+-->
 # collapse 1.7.2
 
 * Ensured that the base pipe `|>` is not used in tests or examples, to avoid errors on CRAN checks with older versions of R. 
