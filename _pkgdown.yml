@@ -160,7 +160,7 @@ reference:
 - contents:
   - "efficient-programming"
 - title: "Small (Helper) Functions"
-  desc: "Convenience functions that help to deal with variable names, labels, attributes, missing values, matching and object checking etc.. Some functions are performance improved replacements for base R functions."
+  desc: "Convenience functions to perform multiple-assignment, nonstandard concatenation, and deal with variable names, labels, other attributes, matching and object checking."
 - contents:
   - "small-helpers"
 - title: "Data"
