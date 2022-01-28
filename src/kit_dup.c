@@ -72,7 +72,7 @@ SEXP dupVecIndex(SEXP x) {
     const double *px = REAL(x);
     union uno tpv;
     for (int i = 0; i != n; ++i) {
-      tpv.d = R_IsNA(px[i]) ? NA_REAL : (R_IsNaN(px[i]) ? R_NaN : px[i]);
+      tpv.d = px[i]; // R_IsNA(px[i]) ? NA_REAL : (R_IsNaN(px[i]) ? R_NaN : px[i]);
       id = HASH(tpv.u[0] + tpv.u[1], K);
       while(h[id]) {
         if(REQUAL(px[h[id]-1], px[i])) {
@@ -340,7 +340,7 @@ int dupVecSecond(int *pidx, int *pans_i, SEXP x, const int n, const int ng) {
   case INTSXP: {
     const int *px = INTEGER(x);
     for (int i = 0; i != n; ++i) {
-      id = (px[i] == NA_INTEGER) ? pidx[i] : HASH(px[i] * pidx[i], K) + pidx[i]; // Need multiplication here instead of bitwise, see your benchmark with 100 mio. obs where second group is just sample.int(1e4, 1e8, T), there bitwise is very slow!!
+      id = HASH(px[i] * pidx[i], K) + pidx[i]; // Need multiplication here instead of bitwise, see your benchmark with 100 mio. obs where second group is just sample.int(1e4, 1e8, T), there bitwise is very slow!!
       while(h[id]) {
         hid = h[id]-1;
         if(px[hid] == px[i] && pidx[hid] == pidx[i]) {
@@ -358,7 +358,7 @@ int dupVecSecond(int *pidx, int *pans_i, SEXP x, const int n, const int ng) {
     const double *px = REAL(x);
     union uno tpv;
     for (int i = 0; i != n; ++i) {
-      tpv.d = R_IsNA(px[i]) ? NA_REAL : (R_IsNaN(px[i]) ? R_NaN :px[i]);
+      tpv.d = px[i]; // R_IsNA(px[i]) ? NA_REAL : (R_IsNaN(px[i]) ? R_NaN :px[i]);
       id = HASH((tpv.u[0] + tpv.u[1]) ^ pidx[i], K) + pidx[i]; // Note: This is much faster than just adding pidx[i] to the hash value...
       while(h[id]) { // Problem: This value might be seen before, but not in combination with that pidx value...
         hid = h[id]-1; // The issue here is that REQUAL(px[hid], px[i]) could be true but pidx[hid] == pidx[i] fails, although the same combination of px and pidx could be seen earlier before...
