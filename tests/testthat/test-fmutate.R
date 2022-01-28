@@ -385,7 +385,7 @@ test_that("fmutate miscellaneous", {
 
   expect_equal(
     fmutate(mtcars, a = mpg, b = a + hp + disp, c = cyl, hp = wt + carb, .keep = "none"),
-    dplyr::mutate(mtcars, a = mpg, b = a + hp + disp, c = cyl, hp = wt + carb, .keep = "none")
+    dplyr::transmute(mtcars, a = mpg, b = a + hp + disp, c = cyl, hp = wt + carb)
   )
 
   expect_identical(names(fmutate(mtcars, a = mpg, b = a, c = cyl, hp = wt, .keep = "unused")), c(setdiff(names(mtcars), .c(mpg, cyl, wt)), letters[1:3]))
@@ -403,7 +403,7 @@ test_that("fmutate miscellaneous", {
 
   expect_equal(
     fmutate(gmtc, a = mpg, b = a + hp + disp, c = cyl, hp = wt + carb, .keep = "none"),
-    dplyr::mutate(gmtc, a = mpg, b = a + hp + disp, c = cyl, hp = wt + carb, .keep = "none")
+    dplyr::transmute(gmtc, a = mpg, b = a + hp + disp, c = cyl, hp = wt + carb)
   )
 
   # Inconsistent with the above and also inefficient...
