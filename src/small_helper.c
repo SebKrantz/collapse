@@ -918,39 +918,39 @@ SEXP multiassign(SEXP lhs, SEXP rhs, SEXP envir) {
   if(TYPEOF(lhs) != STRSXP) error("lhs needs to be character");
   int n = length(lhs);
   if(n == 1) { // lazy_duplicate appears not necessary (copy-on modify is automatically implemented, and <- also does not use it).
-    defineVar(installTrChar(STRING_ELT(lhs, 0)), rhs, envir);
+    defineVar(installChar(STRING_ELT(lhs, 0)), rhs, envir);
     return R_NilValue;
   }
   if(length(rhs) != n) error("length(lhs) must be equal to length(rhs)");
   SEXP *plhs = STRING_PTR(lhs);
-  switch(TYPEOF(rhs)) { // installTrChar translates to native encoding, otherwise use installChar (no big performance difference, <- also uses installTrChar).
+  switch(TYPEOF(rhs)) { // installTrChar translates to native encoding, installChar does the same now, but also is available on older systems.
     case REALSXP: {
       double *prhs = REAL(rhs);
-      for(int i = 0; i < n; ++i) defineVar(installTrChar(plhs[i]), ScalarReal(prhs[i]), envir);
+      for(int i = 0; i < n; ++i) defineVar(installChar(plhs[i]), ScalarReal(prhs[i]), envir);
       break;
     }
     case INTSXP: {
       int *prhs = INTEGER(rhs);
-      for(int i = 0; i < n; ++i) defineVar(installTrChar(plhs[i]), ScalarInteger(prhs[i]), envir);
+      for(int i = 0; i < n; ++i) defineVar(installChar(plhs[i]), ScalarInteger(prhs[i]), envir);
       break;
     }
     case STRSXP: {
       SEXP *prhs = STRING_PTR(rhs);
-      for(int i = 0; i < n; ++i) defineVar(installTrChar(plhs[i]), ScalarString(prhs[i]), envir);
+      for(int i = 0; i < n; ++i) defineVar(installChar(plhs[i]), ScalarString(prhs[i]), envir);
       break;
     }
     case LGLSXP: {
       int *prhs = LOGICAL(rhs);
-      for(int i = 0; i < n; ++i) defineVar(installTrChar(plhs[i]), ScalarLogical(prhs[i]), envir);
+      for(int i = 0; i < n; ++i) defineVar(installChar(plhs[i]), ScalarLogical(prhs[i]), envir);
       break;
     }
     case VECSXP: { // lazy_duplicate appears not necessary (copy-on modify is automatically implemented, and <- also does not use it).
-      for(int i = 0; i < n; ++i) defineVar(installTrChar(plhs[i]), VECTOR_ELT(rhs, i), envir);
+      for(int i = 0; i < n; ++i) defineVar(installChar(plhs[i]), VECTOR_ELT(rhs, i), envir);
       break;
     }
     default: {
       SEXP rhsl = PROTECT(coerceVector(rhs, VECSXP));
-      for(int i = 0; i < n; ++i) defineVar(installTrChar(plhs[i]), VECTOR_ELT(rhsl, i), envir);
+      for(int i = 0; i < n; ++i) defineVar(installChar(plhs[i]), VECTOR_ELT(rhsl, i), envir);
       UNPROTECT(1);
     }
   }
@@ -961,7 +961,7 @@ SEXP multiassign(SEXP lhs, SEXP rhs, SEXP envir) {
 SEXP vlabels(SEXP x, SEXP attrn, SEXP usenam) {
   if(!isString(attrn)) error("'attrn' must be of mode character");
   if(length(attrn) != 1) error("exactly one attribute 'attrn' must be given");
-  SEXP sym_attrn = PROTECT(installTrChar(STRING_ELT(attrn, 0)));
+  SEXP sym_attrn = PROTECT(installChar(STRING_ELT(attrn, 0)));
   int l = length(x);
   if(TYPEOF(x) != VECSXP) {
     SEXP labx = getAttrib(x, sym_attrn);
@@ -1008,7 +1008,7 @@ SEXP setvlabels(SEXP x, SEXP attrn, SEXP value, SEXP ind) { // , SEXP sc
     pv = SEXPPTR(vl); ++nprotect;
    }
  }
- SEXP sym_attrn = PROTECT(installTrChar(STRING_ELT(attrn, 0)));
+ SEXP sym_attrn = PROTECT(installChar(STRING_ELT(attrn, 0)));
  if(length(ind) == 0) {
    if(tv != NILSXP && l != length(value)) error("length(x) must match length(value)");
    if(tv == NILSXP) {
