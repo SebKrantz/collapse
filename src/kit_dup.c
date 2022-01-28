@@ -336,11 +336,11 @@ int dupVecSecond(int *pidx, int *pans_i, SEXP x, const int n, const int ng) {
   // TODO: Think further about this! Perhaps you can also do this totally differently with a second vector capturing the unique values of idx!
   // See again what Morgan does to his matrix of single groupings...
 
-  // Note: Combining bitwise i.e. px[i] ^ pidx[i] in all these functions seems slightly faster than multiplying (px[i] * pidx[i]) !
+  // Note: In general, combining bitwise i.e. px[i] ^ pidx[i] seems slightly faster than multiplying (px[i] * pidx[i])...
   case INTSXP: {
     const int *px = INTEGER(x);
     for (int i = 0; i != n; ++i) {
-      id = (px[i] == NA_INTEGER) ? pidx[i] : HASH(px[i] ^ pidx[i], K) + pidx[i]; // This seems to be very fast (DHSBR test...)
+      id = (px[i] == NA_INTEGER) ? pidx[i] : HASH(px[i] * pidx[i], K) + pidx[i]; // Need multiplication here instead of bitwise, see your benchmark with 100 mio. obs where second group is just sample.int(1e4, 1e8, T), there bitwise is very slow!!
       while(h[id]) {
         hid = h[id]-1;
         if(px[hid] == px[i] && pidx[hid] == pidx[i]) {
