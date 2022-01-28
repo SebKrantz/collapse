@@ -153,7 +153,7 @@ summary(lm(PCGDP ~ L(PCGDP,1:2,iso3c,year) + L(LIFEEX,0:2,iso3c,year), wlddev)) 
 summary(lm(PCGDP ~ L(PCGDP,1:2,iso3c) + L(LIFEEX,0:2,iso3c), wlddev))             # 3 - same no year
 g = qF(wlddev$iso3c); t = qF(wlddev$year)                                         # 4- Precomputing
 summary(lm(PCGDP ~ L(PCGDP,1:2,g,t) + L(LIFEEX,0:2,g,t), wlddev))                 # panel-id's
-% \donttest{ % No code relying on suggested package
+\donttest{ % No code relying on suggested package
 ## Using plm:
 pwlddev <- plm::pdata.frame(wlddev, index = c("iso3c","year"))
 head(L(pwlddev, 0:2, 9:10))                                     # Again 2 lags of GDP and LIFEEX
@@ -169,7 +169,7 @@ summary(lm(PCGDP ~ L(PCGDP,1:2) + L(LIFEEX,0:2)))               # THIS WORKS !
 library(dplyr)
 wlddev \%>\% group_by(iso3c) \%>\% select(PCGDP,LIFEEX) \%>\% L(0:2)
 wlddev \%>\% group_by(iso3c) \%>\% select(year,PCGDP,LIFEEX) \%>\% L(0:2,year) # Also using t (safer)
-% }
+}
 }
 % Add one or more standard keywords, see file 'KEYWORDS' in the
 % R documentation directory.

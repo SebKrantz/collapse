@@ -112,7 +112,7 @@ m <- qM(mtcars)
 fnth(m, 0.75)
 head(fnth(m, 0.75, TRA = "-"))
 fnth(m, 0.75, g) # etc..
-% \donttest{ % No code relying on suggested package
+\donttest{ % No code relying on suggested package
 library(dplyr)
 ## grouped_df method
 mtcars \%>\% group_by(cyl,vs,am) \%>\% fnth(0.75)
@@ -121,7 +121,7 @@ mtcars \%>\% fgroup_by(cyl,vs,am) \%>\% fnth(0.75)              # Faster groupin
 mtcars \%>\% fgroup_by(cyl,vs,am) \%>\% fnth(0.75, TRA = "/")   # Divide by third quartile
 mtcars \%>\% fgroup_by(cyl,vs,am) \%>\% fselect(mpg, hp) \%>\%     # Faster selecting
       fnth(0.75, hp, "/")  # Divide mpg by its third weighted group-quartile, using hp as weights
-% }
+}
 }
 \keyword{univar}
 \keyword{manip}

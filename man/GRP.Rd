@@ -185,7 +185,7 @@ gsplit(NULL, g)                    # The indices of the groups
 ## Convert factor to GRP object and vice-versa
 GRP(iris$Species)
 as_factor_GRP(g)
-% \donttest{ % No code relying on suggested package
+\donttest{ % No code relying on suggested package
 ## dplyr integration
 library(dplyr)
 mtcars \%>\% group_by(cyl,vs,am) \%>\% GRP()    # Get GRP object from a dplyr grouped tibble
@@ -193,8 +193,9 @@ mtcars \%>\% group_by(cyl,vs,am) \%>\% fmean()  # Grouped mean using dplyr group
 mtcars \%>\% fgroup_by(cyl,vs,am) \%>\% fmean() # Faster alternative with collapse grouping
 
 mtcars \%>\% fgroup_by(cyl,vs,am)            # Print method for grouped data frame
-% }
+}
 ## Various options for programming and interactive use
+library(magrittr)
 fgroup_by(GGDC10S, Variable, Decade = floor(Year / 10) * 10) \%>\% head(3)
 fgroup_by(GGDC10S, 1:3, 5) \%>\% head(3)
 fgroup_by(GGDC10S, c("Variable", "Country")) \%>\% head(3)
