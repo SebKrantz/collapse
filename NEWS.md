@@ -1,3 +1,11 @@
+# collapse 1.7.4
+
+* Tests needed to be adjusted for the upcoming release of *dplyr* 1.0.8 which involves an API change in `mutate`. `fmutate` will not take over these changes i.e. `fmutate(..., .keep = "none")` will continue to work like `dplyr::transmute`. Furthermore, no more tests involving *dplyr* are run on CRAN, and I will also not follow along with any future *dplyr* API changes.  
+
+* The C-API macro `installTrChar` (used in the new `massign` function) was replaced with `installChar` to maintain backwards compatibility with R versions prior to 3.6.0. Thanks @tedmoorman #213. 
+
+* Minor improvements to `group()`, providing increased performance for doubles and also increased performance when the second grouping variable is integer, which turned out to be very slow in some instances. 
+
 # collapse 1.7.3
 
 * Removed tests involving the *weights* package (which is not available on R-devel CRAN checks).
