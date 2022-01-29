@@ -122,7 +122,7 @@ head(qsu(fscale(get_vars(wlddev, 9:12),             # This group-centers on the 
     mean = "overall.mean", sd = "within.sd"),       # -> data harmonized in the first 2 moments
     by = wlddev$iso3c))
 
-% \donttest{ % No code relying on suggested package
+\donttest{ % No code relying on suggested package
 ## Using plm
 pwlddev <- plm::pdata.frame(wlddev, index = c("iso3c","year"))
 head(STD(pwlddev))                                  # Standardizing all numeric variables by country
@@ -139,7 +139,7 @@ wlddev \%>\% group_by(iso3c) \%>\% select(PCGDP,LIFEEX) \%>\% STD()
 wlddev \%>\% group_by(iso3c) \%>\% select(PCGDP,LIFEEX) \%>\% STD(weights) # weighted standardizing
 wlddev \%>\% group_by(iso3c) \%>\% select(PCGDP,LIFEEX,POP) \%>\% STD(POP) # weighting by POP ->
 # ..keeps the weight column unless keep.w = FALSE
-% }
+}
 }
 % Add one or more standard keywords, see file 'KEYWORDS' in the
 % R documentation directory.

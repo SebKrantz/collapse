@@ -7,11 +7,14 @@ bsum <- base::sum
 bsd <- stats::sd
 bmax <- base::max
 
+NCRAN <- identical(Sys.getenv("NCRAN"), "TRUE")
+
+if(NCRAN) {
+
 mtc <- dplyr::as_tibble(mtcars)
 gmtc <- dplyr::group_by(mtc, cyl, vs, am)
 
 expect_equal(gsplit(mtcars$mpg, GRP(gmtc), TRUE), split(mtcars$mpg, as_factor_GRP(GRP(gmtc))))
-
 
 test_that("fsummarise works like dplyr::summarise for tagged vector expressions", {
 
@@ -420,6 +423,8 @@ test_that("fmutate miscellaneous", {
   )
 
 })
+
+}
 
 if(FALSE) {
 
