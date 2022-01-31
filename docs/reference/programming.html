@@ -309,7 +309,7 @@
 <span class="r-in"></span>
 <span class="r-in"><span class="co">## Missing values</span></span>
 <span class="r-in"><span class="va">mtc_na</span> <span class="op">&lt;-</span> <span class="fu">na_insert</span><span class="op">(</span><span class="va">mtcars</span>, <span class="fl">0.15</span><span class="op">)</span>    <span class="co"># Set 15% of values missing at random</span></span>
-<span class="r-in"><span class="fu"><a href="fNobs.html">fnobs</a></span><span class="op">(</span><span class="va">mtc_na</span><span class="op">)</span>                        <span class="co"># See observation count</span></span>
+<span class="r-in"><span class="fu"><a href="fnobs.html">fnobs</a></span><span class="op">(</span><span class="va">mtc_na</span><span class="op">)</span>                        <span class="co"># See observation count</span></span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>  mpg  cyl disp   hp drat   wt qsec   vs   am gear carb </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>   28   28   28   28   28   28   28   28   28   28   28 </span>
 <span class="r-in"><span class="fu">na_omit</span><span class="op">(</span><span class="va">mtc_na</span><span class="op">)</span>                      <span class="co"># 12x faster than na.omit(mtc_na)</span></span>
