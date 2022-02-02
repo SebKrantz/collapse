@@ -24,7 +24,6 @@ switchGRP <- function(x, na.last = TRUE, decreasing = FALSE, starts = FALSE,
   .Call(C_radixsort, na.last, decreasing, starts, group.sizes, sort, z)
 }
 
-
 # Added... could also do in GRP.default... but this is better, no match.call etc... match.call takes 4 microseconds. could do both ?? think about possible applications...
 GRP.GRP <- function(X, ...) X
 
@@ -94,12 +93,14 @@ GRP.default <- function(X, by = NULL, sort = TRUE, decreasing = FALSE, na.last =
   } else groups <- NULL
 
   return(`oldClass<-`(list(N.groups = length(gs),
-                        group.id = if(use.group) `attributes<-`(o, NULL) else .Call(C_frankds, o, st, gs, TRUE),
+                        group.id = if(use.group) `attributes<-`(o, NULL) else .Call(C_frankds, o, st, gs, sorted), # TODO: optimize if sorted
                         group.sizes = gs,
                         groups = groups,
                         group.vars = namby,
                         ordered = c(GRP.sort = sort, initially.ordered = sorted),
-                        order = if(return.order && !use.group) `attr<-`(o, "group.sizes", NULL) else NULL,
+                        order = if(!return.order) NULL else if(!use.group)
+                          `attr<-`(o, "group.sizes", NULL) else if(return.groups)
+                          .Call(C_setAttributes, integer(0L), pairlist(starts = st)) else integer(0L), # seq_along(o): compact sequences cannot have attributes (yet)
                         # starts = ust, Does not neeed to be computed by group()
                         # maxgrpn = attr(o, "maxgrpn"),
                         call = if(call) match.call() else NULL), "GRP"))
@@ -496,29 +497,26 @@ na_rm2 <- function(x, sort) {
   na_rm(x) # if(anyNA(x)) x[!is.na(x)] else x # use na_rm here when speed fixed..
 }
 
+Csv <- function(x, i) .Call(C_subsetVector, x, i, FALSE)
+
 # What about NA last option to radixsort ? -> Nah, vector o becomes too short...
 
 radixfact <- function(x, sort, ord, fact, naincl, keep, retgrp = FALSE) {
   o <- .Call(C_radixsort, TRUE, FALSE, fact || naincl || retgrp, naincl, sort, pairlist(x))
   st <- attr(o, "starts")
-  f <- if(naincl) .Call(C_frankds, o, st, attr(o, "group.sizes"), TRUE) else # Fastest? -> Seems so..
-        .Call(Cpp_groupid, x, o, 1L, TRUE, FALSE)
+  sorted <- attr(o, "sorted")
+  f <- if(naincl) .Call(C_frankds, o, st, attr(o, "group.sizes"), sorted) else # Fastest? -> Seems so..
+        .Call(Cpp_groupid, x, if(sorted) NULL else o, 1L, TRUE, FALSE)
   if(fact) {
     if(keep) duplAttributes(f, x) else attributes(f) <- NULL
-    if(naincl) {
-      attr(f, "levels") <- unattrib(tochar(.Call(C_subsetVector, x, if(attr(o, "sorted")) st else o[st], FALSE)))
-    } else {
-      attr(f, "levels") <- unattrib(tochar(na_rm2(.Call(C_subsetVector, x, if(attr(o, "sorted")) st else o[st], FALSE), sort)))
-    }
+    rawlev <- Csv(x, if(sorted) st else Csv(o, st))
+    attr(f, "levels") <- unattrib(tochar(if(naincl) rawlev else na_rm2(rawlev, sort)))
     oldClass(f) <- c(if(ord) "ordered", "factor", if(naincl) "na.included")
   } else {
     if(naincl) attr(f, "N.groups") <- length(st) # the order is important, this before retgrp !!
     if(retgrp) {
-      if(naincl) {
-         attr(f, "groups") <- .Call(C_subsetVector, x, if(attr(o, "sorted")) st else o[st], FALSE)
-      } else {
-         attr(f, "groups") <- na_rm2(.Call(C_subsetVector, x, if(attr(o, "sorted")) st else o[st], FALSE), sort)
-      }
+      rawlev <- Csv(x, if(sorted) st else Csv(o, st))
+      attr(f, "groups") <-  if(naincl) rawlev else na_rm2(rawlev, sort)
     }
     oldClass(f) <- c(if(ord) "ordered", "qG", if(naincl) "na.included")
   }
@@ -529,12 +527,12 @@ radixfact <- function(x, sort, ord, fact, naincl, keep, retgrp = FALSE) {
 groupfact <- function(x, ord, fact, naincl, keep, retgrp = FALSE) {
   g <- .Call(C_groupat, x, fact || retgrp, naincl)
   if(fact) {
-    lev <- unattrib(tochar(.Call(C_subsetVector, x, attr(g, "starts"), FALSE)))
+    lev <- unattrib(tochar(Csv(x, attr(g, "starts"))))
     if(keep) duplAttributes(g, x)
     attr(g, "levels") <- lev
     oldClass(g) <- c(if(ord) "ordered", "factor", if(naincl) "na.included")
   } else {
-    if(retgrp) attr(g, "groups") <- .Call(C_subsetVector, x, attr(g, "starts"), FALSE)
+    if(retgrp) attr(g, "groups") <- Csv(x, attr(g, "starts"))
     oldClass(g) <- c(if(ord) "ordered", "qG", if(naincl) "na.included")
   }
   attr(g, "starts") <- NULL
@@ -637,7 +635,7 @@ qG <- function(x, ordered = FALSE, na.exclude = TRUE, sort = TRUE,
 radixuniquevec <- function(x, sort, na.last = TRUE, decreasing = FALSE) {
   o <- .Call(C_radixsort, na.last, decreasing, TRUE, FALSE, sort, pairlist(x))
   if(attr(o, "maxgrpn") == 1L && (!sort || attr(o, "sorted"))) return(x)
-  .Call(C_subsetVector, x, if(attr(o, "sorted")) attr(o, "starts") else o[attr(o, "starts")], FALSE)
+  Csv(x, if(attr(o, "sorted")) attr(o, "starts") else Csv(o, attr(o, "starts")))
 }
 
 funique <- function(x, ...) UseMethod("funique")
@@ -661,7 +659,7 @@ funique.data.frame <- function(x, cols = NULL, sort = FALSE, method = "auto", ..
        switchGRP(colsubset(x, cols), starts = TRUE, sort = sort, use.group = use.group, ...) # if(is.call(by)) .subset(x, ckmatch(attr(x, "names"), all.vars(by)))
   if((use.group && length(o) == attr(o, "N.groups")) || (!use.group && attr(o, "maxgrpn") == 1L && (!sort || attr(o, "sorted")))) # return(x)
      return(if(inherits(x, "data.table")) alc(x) else x)
-  st <- if(use.group || attr(o, "sorted")) attr(o, "starts") else .Call(C_subsetVector, o, attr(o, "starts"), FALSE)
+  st <- if(use.group || attr(o, "sorted")) attr(o, "starts") else Csv(o, attr(o, "starts"))
   rn <- attr(x, "row.names")
   if(is.numeric(rn) || is.null(rn) || rn[1L] == "1") return(.Call(C_subsetDT, x, st, seq_along(unclass(x)), FALSE))
   return(`attr<-`(.Call(C_subsetDT, x, st, seq_along(unclass(x)), FALSE), "row.names", rn[st]))
@@ -675,7 +673,7 @@ funique.sf <- function(x, cols = NULL, sort = FALSE, method = "auto", ...) {
                             cols2int(cols, x, attr(x, "names"), FALSE)
   o <- switchGRP(.subset(x, cols), starts = TRUE, sort = sort, use.group = use.group, ...)
   if((use.group && length(o) == attr(o, "N.groups")) || (!use.group && attr(o, "maxgrpn") == 1L && (!sort || attr(o, "sorted")))) return(x)
-  st <- if(use.group || attr(o, "sorted")) attr(o, "starts") else .Call(C_subsetVector, o, attr(o, "starts"), FALSE)
+  st <- if(use.group || attr(o, "sorted")) attr(o, "starts") else Csv(o, attr(o, "starts"))
   rn <- attr(x, "row.names")
   if(is.numeric(rn) || is.null(rn) || rn[1L] == "1") return(.Call(C_subsetDT, x, st, seq_along(unclass(x)), FALSE))
   return(`attr<-`(.Call(C_subsetDT, x, st, seq_along(unclass(x)), FALSE), "row.names", rn[st]))
