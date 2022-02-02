@@ -83,10 +83,10 @@ cinv(x)                     # Choleski (fast) inverse of symmetric PD matrix, e.
   \item{vind1}{logical. If \code{length(v) == 1L}, setting \code{vind1 = TRUE} will interpret \code{v} as an index of \code{X} and \code{R}, rather than a value to search and replace.}
   \item{op}{an integer or character string indicating the operation to perform.
     \tabular{lllll}{\emph{ Int. }   \tab\tab \emph{ String }   \tab\tab \emph{ Description }  \cr
-                 1 \tab\tab \code{"+"}   \tab\tab add \code{v} \cr
-                 2 \tab\tab \code{"-"} \tab\tab subtract \code{v} \cr
-                 3 \tab\tab \code{"*"}   \tab\tab multiply by \code{v} \cr
-                 4 \tab\tab \code{"/"}  \tab\tab divide by \code{v} \cr
+                 1 \tab\tab \code{"+"}   \tab\tab add \code{V} \cr
+                 2 \tab\tab \code{"-"} \tab\tab subtract \code{V} \cr
+                 3 \tab\tab \code{"*"}   \tab\tab multiply by \code{V} \cr
+                 4 \tab\tab \code{"/"}  \tab\tab divide by \code{V} \cr
     }
   }
   \item{rowwise}{logical. \code{TRUE} performs the operation between \code{v} and each row of \code{x}. Only applicable if \code{x} is a matrix and \code{v} a vector such that \code{length(v) == ncol(x)}.}
