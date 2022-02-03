@@ -87,13 +87,9 @@ applyfuns_internal <- function(data, by, FUN, fFUN, parallel, cores, ...) {
 # keep.w toggle w being kept even if passed externally ? -> Also not done with W, B , etc !! -> but they also don't keep by ..
 collap <- function(X, by, FUN = fmean, catFUN = fmode, cols = NULL, w = NULL, wFUN = fsum, custom = NULL,
                    keep.by = TRUE, keep.w = TRUE, keep.col.order = TRUE, sort = TRUE, decreasing = FALSE,
-                   na.last = TRUE, parallel = FALSE, mc.cores = 2L,
-                   return = c("wide","list","long","long_dupl"), give.names = "auto", sort.row, ...) {
+                   na.last = TRUE, return.order = sort, method = "auto", parallel = FALSE, mc.cores = 2L,
+                   return = c("wide","list","long","long_dupl"), give.names = "auto", ...) {
 
-  if(!missing(sort.row)) {
-    warning("argument sort.row is deprecated; please use sort instead.", call. = FALSE)
-    sort <- sort.row
-  }
   return <- switch(return[1L], wide = 1L, list = 2L, long = 3L, long_dupl = 4L, stop("Unknown return output option"))
   widel <- return == 1L
   ncustoml <- is.null(custom)
@@ -124,16 +120,16 @@ collap <- function(X, by, FUN = fmean, catFUN = fmode, cols = NULL, w = NULL, wF
       numby <- ckmatch(all.vars(by), nam)
       if(ncustoml) v <- if(is.null(cols)) seq_along(X)[-numby] else cols2int(cols, X, nam)
     }
-    by <- GRP.default(X, numby, sort, decreasing, na.last, keep.by, call = FALSE)
+    by <- GRP.default(X, numby, sort, decreasing, na.last, keep.by, return.order, method, call = FALSE)
   } else if(is.atomic(by)) {
     numby <- 1L
     if(ncustoml) if(is.null(cols)) vl <- FALSE else v <- cols2int(cols, X, nam)
-    by <- GRP.default(`names<-`(list(by), l1orlst(as.character(substitute(by)))), NULL, sort, decreasing, na.last, keep.by, call = FALSE)
+    by <- GRP.default(`names<-`(list(by), l1orlst(as.character(substitute(by)))), NULL, sort, decreasing, na.last, keep.by, return.order, method, call = FALSE)
   } else {
     if(ncustoml) if(is.null(cols)) vl <- FALSE else v <- cols2int(cols, X, nam)
     if(!is_GRP(by)) {
       numby <- seq_along(unclass(by))
-      by <- GRP.default(by, numby, sort, decreasing, na.last, keep.by, call = FALSE)
+      by <- GRP.default(by, numby, sort, decreasing, na.last, keep.by, return.order, method, call = FALSE)
     } else numby <- seq_along(by[[5L]])
   }
 
@@ -332,13 +328,9 @@ collap <- function(X, by, FUN = fmean, catFUN = fmode, cols = NULL, w = NULL, wF
 # collapv: allows vector input to by and w
 collapv <- function(X, by, FUN = fmean, catFUN = fmode, cols = NULL, w = NULL, wFUN = fsum, custom = NULL,
                     keep.by = TRUE, keep.w = TRUE, keep.col.order = TRUE, sort = TRUE, decreasing = FALSE,
-                    na.last = TRUE, parallel = FALSE, mc.cores = 2L,
-                    return = c("wide","list","long","long_dupl"), give.names = "auto", sort.row, ...) {
+                    na.last = TRUE, return.order = sort, method = "auto", parallel = FALSE, mc.cores = 2L,
+                    return = c("wide","list","long","long_dupl"), give.names = "auto", ...) {
 
-  if(!missing(sort.row)) {
-    warning("argument sort.row is deprecated; please use sort instead.", call. = FALSE)
-    sort <- sort.row
-  }
   return <- switch(return[1L], wide = 1L, list = 2L, long = 3L, long_dupl = 4L, stop("Unknown return output option"))
   widel <- return == 1L
   ncustoml <- is.null(custom)
@@ -357,7 +349,7 @@ collapv <- function(X, by, FUN = fmean, catFUN = fmode, cols = NULL, w = NULL, w
 
   # identifying by
   numby <- cols2int(by, X, nam)
-  by <- GRP.default(X, numby, sort, decreasing, na.last, keep.by, call = FALSE)
+  by <- GRP.default(X, numby, sort, decreasing, na.last, keep.by, return.order, method, call = FALSE)
   if(ncustoml) v <- if(is.null(cols)) seq_along(X)[-numby] else cols2int(cols, X, nam)
 
 
@@ -541,7 +533,7 @@ collapv <- function(X, by, FUN = fmean, catFUN = fmode, cols = NULL, w = NULL, w
 # For dplyr integration: takes grouped_df as input
 collapg <- function(X, FUN = fmean, catFUN = fmode, cols = NULL, w = NULL, wFUN = fsum, custom = NULL,
                     keep.group_vars = TRUE, keep.w = TRUE, keep.col.order = TRUE, parallel = FALSE, mc.cores = 2L,
-                    return = c("wide","list","long","long_dupl"), give.names = "auto", sort.row, ...) {
+                    return = c("wide","list","long","long_dupl"), give.names = "auto", ...) {
   by <- GRP.grouped_df(X, return.groups = keep.group_vars, call = FALSE)
   if(is.null(custom)) ngn <- attr(X, "names") %!in% by[[5L]] # Note: this always leaves grouping columns on the left still !
   # clx <- oldClass(X)
@@ -552,14 +544,14 @@ collapg <- function(X, FUN = fmean, catFUN = fmode, cols = NULL, w = NULL, wFUN 
       assign(wsym, .subset2(X, wsym)) # needs to be here !! (before subsetting!!)
       if(is.null(custom)) X <- fcolsubset(X, ngn & !windl) # else X <- X # Needed ?? -> nope !!
       expr <- substitute(collap(X, by, FUN, catFUN, cols, NULL, wFUN, custom,
-                                keep.group_vars, keep.w, keep.col.order, TRUE, FALSE, TRUE, parallel,
-                                mc.cores, return, give.names, sort.row, ...))
+                                keep.group_vars, keep.w, keep.col.order, TRUE, FALSE, TRUE, TRUE, "auto", parallel,
+                                mc.cores, return, give.names, ...))
       expr[[7L]] <- as.symbol(wsym) # best solution !!
       return(eval(expr))
     }
   }
   if(is.null(custom)) X <- fcolsubset(X, ngn) # else X <- X # because of non-standard eval.. X is "."
   return(eval(substitute(collap(X, by, FUN, catFUN, cols, w, wFUN, custom,
-         keep.group_vars, keep.w, keep.col.order, TRUE, FALSE, TRUE, parallel,
-         mc.cores, return, give.names, sort.row, ...))))
+         keep.group_vars, keep.w, keep.col.order, TRUE, FALSE, TRUE, TRUE, "auto", parallel,
+         mc.cores, return, give.names, ...))))
 }

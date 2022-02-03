@@ -98,7 +98,7 @@ GRP.default <- function(X, by = NULL, sort = TRUE, decreasing = FALSE, na.last =
                         groups = groups,
                         group.vars = namby,
                         ordered = c(GRP.sort = sort, initially.ordered = sorted),
-                        order = if(!return.order) NULL else if(use.group) `attr<-`(integer(0L), "starts", st) else `attr<-`(o, "group.sizes", NULL),
+                        order = if(!return.order) NULL else if(use.group) `attr<-`(integer(0L), "starts", st) else .Call(C_setAttributes, o, attributes(o)[-2L]), # `attr<-`(o, "group.sizes", NULL): This deep-copies it..
                         # starts = ust, Does not need to be computed by group()
                         # maxgrpn = attr(o, "maxgrpn"),
                         call = if(call) match.call() else NULL), "GRP"))

@@ -122,7 +122,7 @@ gl <- list(g, g2)
 if(identical(Sys.getenv("LOCAL"), "TRUE"))
   demeanlist <- eval(parse(text = paste0("lfe", ":", ":", "demeanlist")))
 
-tol <- if(identical(Sys.getenv("LOCAL"), "TRUE")) 1e-6 else 1e-5
+tol <- if(identical(Sys.getenv("LOCAL"), "TRUE")) 1e-6 else 1e-4
 
 demean <- fixest::demean # eval(parse(text = paste0("fixest", ":", ":", "demean")))
 
@@ -138,7 +138,7 @@ test_that("fhdbetween with two factors performs like demeanlist", {
   expect_visible(fhdbetween(mNA, gl, fill = TRUE))
   expect_equal(fhdbetween(mtcars, gl), demeanlist(mtcars, gl, means = TRUE), tolerance = tol)
   expect_equal(fhdbetween(mtcNA, gl, na.rm = FALSE), demeanlist(mtcNA, gl, means = TRUE), tolerance = tol)
-  expect_equal(setRownames(fhdbetween(mtcNA, gl)), demeanlist(mtcNA, gl, means = TRUE, na.rm = TRUE), tolerance = 1e-5)
+  expect_equal(setRownames(fhdbetween(mtcNA, gl)), demeanlist(mtcNA, gl, means = TRUE, na.rm = TRUE), tolerance = tol)
   expect_visible(fhdbetween(mtcNA, gl, fill = TRUE))
   expect_visible(fhdbetween(mtcNA, gl, variable.wise = TRUE))
 
@@ -188,7 +188,7 @@ test_that("fhdwithin with two factors performs like demean", {
   expect_equal(unattrib(fhdwithin(mtcars, gl, wdat)), unattrib(demean(mtcars, gl, weights = wdat)), tolerance = tol)
   # expect_equal(fhdwithin(mtcNA, gl, wdat, na.rm = FALSE), demean(mtcNA, gl, weights = wdat), tolerance = tol) # can break R
   # Also bug
-  expect_equal(unattrib(fhdwithin(mtcNA, gl, wdat)), unattrib(demean(mtcNA, gl, weights = wdat, na.rm = TRUE)), tolerance = 1e-4)
+  expect_equal(unattrib(fhdwithin(mtcNA, gl, wdat)), unattrib(demean(mtcNA, gl, weights = wdat, na.rm = TRUE)), tolerance = 1e-3)
   expect_equal(fnrow(fhdwithin(mtcNA, gl, wdat, fill = TRUE)), fnrow(mtcNA))
   expect_identical(fnrow(fhdwithin(mtcNA, gl, wdat, variable.wise = TRUE)), fnrow(mtcNA))
 
