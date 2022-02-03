@@ -21,15 +21,15 @@ It performs simple aggregations, multi-type data aggregations applying different
 collap(X, by, FUN = fmean, catFUN = fmode, cols = NULL, w = NULL, wFUN = fsum,
        custom = NULL, keep.by = TRUE, keep.w = TRUE, keep.col.order = TRUE,
        sort = TRUE, decreasing = FALSE, na.last = TRUE, return.order = sort,
-       parallel = FALSE, mc.cores = 2L, return = c("wide","list","long","long_dupl"),
-       give.names = "auto", \dots)
+       method = "auto", parallel = FALSE, mc.cores = 2L,
+       return = c("wide","list","long","long_dupl"), give.names = "auto", \dots)
 
 # Programmer function: allows column names and indices input to `by` and `w` arguments
 collapv(X, by, FUN = fmean, catFUN = fmode, cols = NULL, w = NULL, wFUN = fsum,
         custom = NULL, keep.by = TRUE, keep.w = TRUE, keep.col.order = TRUE,
         sort = TRUE, decreasing = FALSE, na.last = TRUE, return.order = sort,
-        parallel = FALSE, mc.cores = 2L, return = c("wide","list","long","long_dupl"),
-        give.names = "auto", \dots)
+        method = "auto", parallel = FALSE, mc.cores = 2L,
+        return = c("wide","list","long","long_dupl"), give.names = "auto", \dots)
 
 # Auxiliary function: for grouped data ('grouped_df') input + non-standard evaluation
 collapg(X, FUN = fmean, catFUN = fmode, cols = NULL, w = NULL, wFUN = fsum, custom = NULL,
@@ -51,7 +51,7 @@ collapg(X, FUN = fmean, catFUN = fmode, cols = NULL, w = NULL, wFUN = fsum, cust
 \item{keep.by, keep.group_vars}{logical. \code{FALSE} will omit grouping variables from the output. \code{TRUE} keeps the variables, even if passed externally in a list or vector (unlike other \emph{collapse} functions).}
 \item{keep.w}{logical. \code{FALSE} will omit weight variable from the output i.e. no aggregation of the weights. \code{TRUE} aggregates and adds weights, even if passed externally as a vector (unlike other \emph{collapse} functions).}
 \item{keep.col.order}{logical. Retain original column order post-aggregation.}
-\item{sort, decreasing, na.last, return.order}{logical. Arguments passed to \code{\link{GRP.default}} and affecting the row-order in the aggregated data frame, as well as the optimization-memory tradeoff with \code{return.order}.}
+\item{sort, decreasing, na.last, return.order, method}{logical / character. Arguments passed to \code{\link{GRP.default}} and affecting the row-order in the aggregated data frame and the grouping algorithm.}
 \item{parallel}{logical. Use \code{\link{mclapply}} instead of \code{lapply} to parallelize the computation at the column level. Not available for Windows.}
 \item{mc.cores}{integer. Argument to \code{\link{mclapply}} setting the number of cores to use, default is 2.}
 \item{return}{character. Control the output format when aggregating with multiple functions or performing custom aggregation. "wide" (default) returns a wider data frame with added columns for each additional function. "list" returns a list of data frames - one for each function. "long" adds a column "Function" and row-binds the results from different functions using \code{data.table::rbindlist}. "long.dupl" is a special option for aggregating multi-type data using multiple \code{FUN} but only one \code{catFUN} or vice-versa. In that case the format is long and data aggregated using only one function is duplicated. See Examples.}
