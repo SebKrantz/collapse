@@ -232,19 +232,30 @@ SEXP frankds(SEXP xorderArg, SEXP xstartArg, SEXP xlenArg, SEXP dns) {
   SEXP ans = PROTECT(allocVector(INTSXP, n));
   int *ians = INTEGER(ans);
   if(n > 0) {
-    if(asLogical(dns)) {
+    switch(asInteger(dns)) {
+    case 0: // Not Sorted
       k=1;
       for (i = 0; i != ng; i++) {
         for (j = xstart[i]-1, end = xstart[i]+xlen[i]-1; j < end; j++)
           ians[xorder[j]-1] = k;
         k++;
       }
-    } else {
+      break;
+    case 1: // Sorted
+      k=1;
+      for (i = 0; i != ng; i++) {
+        for (j = xstart[i]-1, end = xstart[i]+xlen[i]-1; j < end; j++) ians[j] = k;
+        k++;
+      }
+      break;
+    case 2: // This is basically run-length type group-id
       for (i = 0; i != ng; i++) {
         k=1;
         for (j = xstart[i]-1, end = xstart[i]+xlen[i]-1; j < end; j++)
           ians[xorder[j]-1] = k++;
       }
+      break;
+    default: error("dns must be 0, 1 or 2");
     }
   }
   UNPROTECT(1);

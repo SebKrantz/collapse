@@ -24,7 +24,7 @@
 
 \code{fgroup_by} is similar to \code{dplyr::group_by} but faster. It creates a grouped data frame with a 'GRP' object attached - for faster dplyr-like programming with \emph{collapse}'s fast functions.
 
-There are also several conversion methods to convert to and from 'GRP' objects. Notable among these is \code{GRP.grouped_df}, which returns a 'GRP' object from a grouped data frame created with \code{dplyr::group_by} (or \code{fgroup_by}), and the duo \code{GRP.factor} and \code{as_factor_GRP}.
+There are also several conversion methods to convert to and from 'GRP' objects. Notable among these is \code{GRP.grouped_df}, which returns a 'GRP' object from a grouped data frame created with \code{dplyr::group_by} or \code{fgroup_by}, and the duo \code{GRP.factor} and \code{as_factor_GRP}.
 
 \code{gsplit} efficiently splits a vector based on a grouping object.
 }
@@ -32,7 +32,7 @@ There are also several conversion methods to convert to and from 'GRP' objects. 
 GRP(X, \dots)
 
 \method{GRP}{default}(X, by = NULL, sort = TRUE, decreasing = FALSE, na.last = TRUE,
-    return.groups = TRUE, return.order = FALSE, method = "auto",
+    return.groups = TRUE, return.order = sort, method = "auto",
     call = TRUE, \dots)
 
 \method{GRP}{factor}(X, \dots, group.sizes = TRUE, drop = FALSE, return.groups = TRUE,
@@ -59,10 +59,10 @@ gsplit(x, g, use.g.names = FALSE, ...)
 
 # Fast, class-agnostic version of dplyr::group_by for use with fast functions, see details
 fgroup_by(X, \dots, sort = TRUE, decreasing = FALSE, na.last = TRUE,
-          return.order = FALSE, method = "auto")
+          return.order = sort, method = "auto")
 # Shortcut for fgroup_by
       gby(X, \dots, sort = TRUE, decreasing = FALSE, na.last = TRUE,
-          return.order = FALSE, method = "auto")
+          return.order = sort, method = "auto")
 
 # Get grouping columns from a grouped data frame created with dplyr::group_by or fgroup_by
 fgroup_vars(X, return = "data")
@@ -90,7 +90,7 @@ fungroup(X, \dots)
 
   \item{return.groups}{logical. Include the unique groups in the created GRP object.}
 
-  \item{return.order}{logical. Include the output from \code{\link{radixorderv}} in the created GRP object.}
+  \item{return.order}{logical. Include the output from \code{\link{radixorderv}} (or \code{\link{group}}) in the created GRP object. This brings performance improvements in \code{gsplit} if \code{sort = TRUE} (and thus also benefits grouped execution of base R functions), but has a memory cost by making the object larger. }
 
   \item{method}{character. The algorithm to use for grouping: either \code{"radix"}, \code{"hash"} or \code{"auto"}. \code{"auto"} will chose \code{"radix"} when \code{sort = TRUE}, yielding ordered grouping via \code{\link{radixorderv}}, and \code{"hash"}-based grouping in first-appearance order via \code{\link{group}} otherwise. It is possibly to put \code{method = "radix"} and \code{sort = FALSE}, which will group character data in first appearance order but sort numeric data (a good hybrid option). \code{method = "hash"} currently does not support any sorting, thus putting \code{sort = TRUE} will simply be ignored.}
 
@@ -137,7 +137,7 @@ The sorting and ordering functionality for \code{GRP} only affects (2), that is 
 
 %This in-turn changes the order of values/rows in the output of \emph{collapse} functions (the row/value corresponding to group 1 always comes out on top). The default setting with \code{sort = TRUE} and \code{decreasing = FALSE} results in groups being sorted in ascending order. This is equivalent to performing grouped operations in \emph{data.table} using \code{keyby}, whereas \code{sort = FALSE} is equivalent to \emph{data.table} grouping with \code{by}, however this only works if the \code{by} columns are character, numeric grouping columns are always ordered.
 
-Next to \code{GRP}, there is the function \code{fgroup_by} as a significantly faster alternative to \code{dplyr::group_by}. It creates a grouped data frame by attaching a 'GRP' object to a data frame. \emph{collapse} functions with a grouped_df method applied to that data frame will yield grouped computations. Note that \code{fgroup_by} can only be used in combination with \emph{collapse} functions, not with \code{dplyr::summarize} or \code{dplyr::mutate} (the grouping object and method of computing results is different). The converse is not true, you can group data with \code{dplyr::group_by} and then apply \emph{collapse} functions (which call a C function that converts the grouping object). Note also the \code{fgroup_by} is class-agnostic, i.e. the classes of the data frame or list passed are preserved, and all standard methods (like subsetting with \code{`[`} or \code{print} methods) apply to the grouped object. Apart from the class 'grouped_df' which is added behind any classes the object might inherit (apart from 'data.frame'), a class 'GRP_df' is added in front. This class responds to \code{print} method and subset (\code{`[`}) methods. Both first call the corresponding method for the object and then print / attach the grouping information. \code{print.GRP_df} prints one line below the object indicating the grouping variables, followed, in square brackets, by some statistics on the group sizes: \code{[N | Mean (SD) Min-Max]}. The mean is rounded to a full number and the standard deviation (SD) to one digit. Minimum and maximum are only displayed if the SD is non-zero.
+Next to \code{GRP}, there is the function \code{fgroup_by} as a significantly faster alternative to \code{dplyr::group_by}. It creates a grouped data frame by attaching a 'GRP' object to a data frame. \emph{collapse} functions with a grouped_df method applied to that data frame will yield grouped computations. Note that \code{fgroup_by} can only be used in combination with \emph{collapse} functions, not with \code{dplyr::summarize} or \code{dplyr::mutate} (the grouping object and method of computing results is different). The converse is not true, you can group data with \code{dplyr::group_by} and then apply \emph{collapse} functions. Note also the \code{fgroup_by} is class-agnostic, i.e. the classes of the data frame or list passed are preserved, and all standard methods (like subsetting with \code{`[`} or \code{print} methods) apply to the grouped object. Apart from the class 'grouped_df' which is added behind any classes the object might inherit (apart from 'data.frame'), a class 'GRP_df' is added in front. This class responds to \code{print} method and subset (\code{`[`}) methods. Both first call the corresponding method for the object and then print / attach the grouping information. \code{print.GRP_df} prints one line below the object indicating the grouping variables, followed, in square brackets, by some statistics on the group sizes: \code{[N | Mean (SD) Min-Max]}. The mean is rounded to a full number and the standard deviation (SD) to one digit. Minimum and maximum are only displayed if the SD is non-zero.
 
 \code{GRP} is an S3 generic function with one default method supporting vector and list input and several conversion methods:
 
@@ -148,7 +148,7 @@ The method \code{GRP.grouped_df} takes the 'groups' attribute from a grouped dat
 \emph{Note}: For faster factor generation and a factor-light class 'qG' which avoids the coercion of factor levels to character also see \code{\link{qF}} and \code{\link{qG}}.
 }
 \value{
-  A list-like object of class `GRP' containing information about the number of groups, the observations (rows) belonging to each group, the size of each group, the unique group names / definitions, whether the groups are ordered or not and (optionally) the ordering vector used to perform the ordering. The object is structured as follows:
+  A list-like object of class `GRP' containing information about the number of groups, the observations (rows) belonging to each group, the size of each group, the unique group names / definitions, whether the groups are ordered or not and the ordering vector used to perform the ordering. The object is structured as follows:
   \tabular{lllllll}{\emph{ List-index }  \tab\tab \emph{ Element-name }   \tab\tab \emph{ Content type } \tab\tab \emph{ Content description} \cr
 
                  [[1]] \tab\tab N.groups   \tab\tab \code{integer(1)} \tab\tab Number of Groups \cr
@@ -162,9 +162,9 @@ The method \code{GRP.grouped_df} takes the 'groups' attribute from a grouped dat
                  [[5]] \tab\tab group.vars   \tab\tab \code{character} \tab\tab The names of the grouping variables \cr
                  [[6]] \tab\tab ordered   \tab\tab \code{logical(2)} \tab\tab \code{[1]- TRUE} if \code{sort = TRUE}, \code{[2]- TRUE} if \code{X} already sorted \cr
 
-                 [[7]] \tab\tab order     \tab\tab \code{integer(NROW(X))} or \code{NULL} \tab\tab Ordering vector from \code{radixorderv} or \code{NULL} if \code{return.order = FALSE} (the default) \cr
+                 [[7]] \tab\tab order     \tab\tab \code{integer(NROW(X))} or \code{integer(0)}, with attributes, or \code{NULL} \tab\tab Ordering vector from \code{radixorderv} or \code{group} (with \code{"starts"} attribute) or \code{NULL} if \code{return.order = FALSE} \cr
 
-                 [[8]] \tab\tab call \tab\tab \code{call()} or \code{NULL} \tab\tab The \code{GRP()} call, obtained from \code{match.call()}, or \code{NULL} if \code{call = FALSE}
+                 [[8]] \tab\tab call \tab\tab \code{match.call()} or \code{NULL} \tab\tab The \code{GRP()} call, obtained from \code{match.call()}, or \code{NULL} if \code{call = FALSE}
                  }
 }
 \seealso{

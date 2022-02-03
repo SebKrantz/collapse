@@ -1,3 +1,9 @@
+# collapse 1.7.5
+
+* Also ensuring tidyverse tests are in `\donttest{}` and building without the *dplyr* testing file to avoid issues with static code analysis on CRAN.
+
+* 20-50% Speed improvement in `gsplit` (and therefore in `fsummarise`, `fmutate`, `collap` and `BY` when invoked with base R functions) when grouping with `GRP(..., sort = TRUE, return.order = TRUE)`. To enable this by default, the default for argument `return.order` in `GRP` was set to `sort`, which retains the ordering vector (needed for the optimization). Retaining the ordering vector uses up some memory which can adversely affect computations with big data, but with big data `sort = FALSE` usually gives faster results anyway, and you can also always set `return.order = FALSE` (also in `fgroup_by`), so this default gives the best of both worlds, also considering that including more information in the grouping object can (and will) lead to further optimizations in the future.  
+
 # collapse 1.7.4
 
 * Tests needed to be adjusted for the upcoming release of *dplyr* 1.0.8 which involves an API change in `mutate`. `fmutate` will not take over these changes i.e. `fmutate(..., .keep = "none")` will continue to work like `dplyr::transmute`. Furthermore, no more tests involving *dplyr* are run on CRAN, and I will also not follow along with any future *dplyr* API changes.  
