@@ -28,7 +28,7 @@ switchGRP <- function(x, na.last = TRUE, decreasing = FALSE, starts = FALSE,
 GRP.GRP <- function(X, ...) X
 
 GRP.default <- function(X, by = NULL, sort = TRUE, decreasing = FALSE, na.last = TRUE,
-                        return.groups = TRUE, return.order = FALSE, method = "auto",
+                        return.groups = TRUE, return.order = sort, method = "auto",
                         call = TRUE, ...) { # , gs = TRUE # o
 
   # if(!missing(...)) {
@@ -93,15 +93,13 @@ GRP.default <- function(X, by = NULL, sort = TRUE, decreasing = FALSE, na.last =
   } else groups <- NULL
 
   return(`oldClass<-`(list(N.groups = length(gs),
-                        group.id = if(use.group) `attributes<-`(o, NULL) else .Call(C_frankds, o, st, gs, sorted), # TODO: optimize if sorted
+                        group.id = if(use.group) `attributes<-`(o, NULL) else .Call(C_frankds, o, st, gs, sorted),
                         group.sizes = gs,
                         groups = groups,
                         group.vars = namby,
                         ordered = c(GRP.sort = sort, initially.ordered = sorted),
-                        order = if(!return.order) NULL else if(!use.group)
-                          `attr<-`(o, "group.sizes", NULL) else if(return.groups)
-                          .Call(C_setAttributes, integer(0L), pairlist(starts = st)) else integer(0L), # seq_along(o): compact sequences cannot have attributes (yet)
-                        # starts = ust, Does not neeed to be computed by group()
+                        order = if(!return.order) NULL else if(use.group) `attr<-`(integer(0L), "starts", st) else `attr<-`(o, "group.sizes", NULL),
+                        # starts = ust, Does not need to be computed by group()
                         # maxgrpn = attr(o, "maxgrpn"),
                         call = if(call) match.call() else NULL), "GRP"))
 }
@@ -269,7 +267,7 @@ GRP.pseries <- function(X, effect = 1L, ..., group.sizes = TRUE, return.groups =
 GRP.pdata.frame <- function(X, effect = 1L, ..., group.sizes = TRUE, return.groups = TRUE, call = TRUE)
   GRP.pseries(X, effect, ..., group.sizes = group.sizes, return.groups = return.groups, call = call)
 
-fgroup_by <- function(X, ..., sort = TRUE, decreasing = FALSE, na.last = TRUE, return.order = FALSE, method = "auto") {          #   e <- substitute(list(...)) # faster but does not preserve attributes of unique groups !
+fgroup_by <- function(X, ..., sort = TRUE, decreasing = FALSE, na.last = TRUE, return.order = sort, method = "auto") {          #   e <- substitute(list(...)) # faster but does not preserve attributes of unique groups !
   clx <- oldClass(X)
   oldClass(X) <- NULL
   m <- match(c("GRP_df", "grouped_df", "data.frame"), clx, nomatch = 0L)
