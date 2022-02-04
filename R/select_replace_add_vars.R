@@ -45,11 +45,11 @@ get_vars_indl <- function(x, indl, return = "data")
 }
 
 
-fselect <- function(x, ..., return = "data") { # This also takes names and indices ....
-  # ax <- attributes(x)
-  # oldClass(x) <- NULL # attributes ?
-  nam <- attr(x, "names")
-  # if(inherits(x, "data.table")) nam <- nam[seq_col(x)] # required because of overallocation... -> Should be solved now, always take shallow copy...
+fselect <- function(.x, ..., return = "data") { # This also takes names and indices ....
+  # ax <- attributes(.x)
+  # oldClass(.x) <- NULL # attributes ?
+  nam <- attr(.x, "names")
+  # if(inherits(.x, "data.table")) nam <- nam[seq_col(.x)] # required because of overallocation... -> Should be solved now, always take shallow copy...
   nl <- `names<-`(as.vector(seq_along(nam), "list"), nam)
   vars <- eval(substitute(c(...)), nl, parent.frame())
   # if(!is.integer(vars)) stop(paste0("Unknown columns: ", .c(...))) # if(!is.integer(vars) || bmax(vars) > length(nam)) # nah, a bit redundant..
@@ -62,7 +62,7 @@ fselect <- function(x, ..., return = "data") { # This also takes names and indic
   }
   # if(!is.numeric(vars)) stop("... needs to be column names, or character / integer / logical vectors")
   switch(return, # need this for sf data.frame
-         data = .Call(C_subsetCols, if(length(nam_vars)) `attr<-`(x, "names", nam) else x, vars, TRUE), # setAttributes(x[vars], `[[<-`(ax, "names", nam[vars])), # Also Improvements in code below ?
+         data = .Call(C_subsetCols, if(length(nam_vars)) `attr<-`(.x, "names", nam) else .x, vars, TRUE), # setAttributes(.x[vars], `[[<-`(ax, "names", nam[vars])), # Also Improvements in code below ?
          names = nam[vars],
          indices = vars,
          named_indices = `names<-`(vars, nam[vars]),

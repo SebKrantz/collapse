@@ -46,11 +46,11 @@ roworderv <- function(X, cols = NULL, neworder = NULL, decreasing = FALSE, na.la
   return(`attr<-`(.Call(C_subsetDT, X, neworder, seq_along(unclass(X)), FALSE), "row.names", rn[neworder]))
 }
 
-colorder <- function(X, ..., pos = "front") { # This also takes names and indices ....
-  ax <- attributes(X)
-  oldClass(X) <- NULL # attributes ?
-  nam <- names(X)
-  iX <- seq_along(X)
+colorder <- function(.X, ..., pos = "front") { # This also takes names and indices ....
+  ax <- attributes(.X)
+  oldClass(.X) <- NULL # attributes ?
+  nam <- names(.X)
+  iX <- seq_along(.X)
   nl <- `names<-`(as.vector(iX, "list"), nam)
   vars <- eval(substitute(c(...)), nl, parent.frame())
   if(!is.integer(vars)) stop(paste0("Unknown columns: ", .c(...)))
@@ -60,7 +60,7 @@ colorder <- function(X, ..., pos = "front") { # This also takes names and indice
     nam[vars[nonmiss]] <- nam_vars[nonmiss]
   }
   if(length(vars) != length(iX)) vars <- posord(iX, vars, pos)
-  return(condalcSA(X[vars], `[[<-`(ax, "names", nam[vars]),
+  return(condalcSA(.X[vars], `[[<-`(ax, "names", nam[vars]),
                    any(ax[["class"]] == "data.table")))
 }
 

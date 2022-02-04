@@ -1,22 +1,22 @@
 
 
-fsubset <- function(x, ...) UseMethod("fsubset")
+fsubset <- function(.x, ...) UseMethod("fsubset")
 sbt <- fsubset
 
 # Also not really faster than default for numeric (but a bit faster for factors ...)
-fsubset.default <- function(x, subset, ...) {
-  if(is.matrix(x) && !inherits(x, "matrix")) return(fsubset.matrix(x, subset, ...))
+fsubset.default <- function(.x, subset, ...) {
+  if(is.matrix(.x) && !inherits(.x, "matrix")) return(fsubset.matrix(.x, subset, ...))
   if(!missing(...)) unused_arg_action(match.call(), ...)
-  if(is.logical(subset)) return(.Call(C_subsetVector, x, which(subset), FALSE))
-  .Call(C_subsetVector, x, subset, TRUE)
+  if(is.logical(subset)) return(.Call(C_subsetVector, .x, which(subset), FALSE))
+  .Call(C_subsetVector, .x, subset, TRUE)
 }
 
-fsubset.matrix <- function(x, subset, ..., drop = FALSE) {
-  if(missing(...)) return(x[subset, , drop = drop])  # better row subsetting ? (like df, method? use mctl ?)
-  nl <- `names<-`(as.vector(1L:ncol(x), "list"), dimnames(x)[[2L]])
+fsubset.matrix <- function(.x, subset, ..., drop = FALSE) {
+  if(missing(...)) return(.x[subset, , drop = drop])  # better row subsetting ? (like df, method? use mctl ?)
+  nl <- `names<-`(as.vector(1L:ncol(.x), "list"), dimnames(.x)[[2L]])
   vars <- eval(substitute(c(...)), nl, parent.frame())
-  if(missing(subset)) return(x[, vars, drop = drop])
-  x[subset, vars, drop = drop]
+  if(missing(subset)) return(.x[, vars, drop = drop])
+  .x[subset, vars, drop = drop]
 }
 
 # No lazy eval
@@ -52,11 +52,11 @@ ss <- function(x, i, j) {
   return(`attr<-`(.Call(C_subsetDT, x, i, j, checkrows), "row.names", rn[i]))
 }
 
-fsubset.data.frame <- function(x, subset, ...) {
-  r <- eval(substitute(subset), x, parent.frame()) # Needs to be placed above any column renaming
-  if(missing(...)) vars <- seq_along(unclass(x)) else {
-    ix <- seq_along(unclass(x))
-    nl <- `names<-`(as.vector(ix, "list"), attr(x, "names"))
+fsubset.data.frame <- function(.x, subset, ...) {
+  r <- eval(substitute(subset), .x, parent.frame()) # Needs to be placed above any column renaming
+  if(missing(...)) vars <- seq_along(unclass(.x)) else {
+    ix <- seq_along(unclass(.x))
+    nl <- `names<-`(as.vector(ix, "list"), attr(.x, "names"))
     vars <- eval(substitute(c(...)), nl, parent.frame())
     nam_vars <- names(vars)
     if(is.integer(vars)) {
@@ -68,21 +68,21 @@ fsubset.data.frame <- function(x, subset, ...) {
     }
     if(length(nam_vars)) {
       nonmiss <- nzchar(nam_vars)
-      attr(x, "names")[vars[nonmiss]] <- nam_vars[nonmiss]
+      attr(.x, "names")[vars[nonmiss]] <- nam_vars[nonmiss]
     }
   }
   checkrows <- TRUE
   if(is.logical(r)) {
-    nr <- fnrow2(x)
-    if(length(r) != nr) stop("subset needs to be an expression evaluating to logical(nrow(x)) or integer") # which(r & !is.na(r)) not needed !
+    nr <- fnrow2(.x)
+    if(length(r) != nr) stop("subset needs to be an expression evaluating to logical(nrow(.x)) or integer") # which(r & !is.na(r)) not needed !
     r <- which(r)
-    if(length(r) == nr) if(missing(...)) return(x) else return(.Call(C_subsetCols, x, vars, TRUE))
+    if(length(r) == nr) if(missing(...)) return(.x) else return(.Call(C_subsetCols, .x, vars, TRUE))
     checkrows <- FALSE
   } else if(is.numeric(r)) r <- as.integer(r) else
-    stop("subset needs to be an expression evaluating to logical(nrow(x)) or integer")
-  rn <- attr(x, "row.names")
-  if(is.numeric(rn) || is.null(rn) || rn[1L] == "1") return(.Call(C_subsetDT, x, r, vars, checkrows))
-  return(`attr<-`(.Call(C_subsetDT, x, r, vars, checkrows), "row.names", rn[r]))
+    stop("subset needs to be an expression evaluating to logical(nrow(.x)) or integer")
+  rn <- attr(.x, "row.names")
+  if(is.numeric(rn) || is.null(rn) || rn[1L] == "1") return(.Call(C_subsetDT, .x, r, vars, checkrows))
+  return(`attr<-`(.Call(C_subsetDT, .x, r, vars, checkrows), "row.names", rn[r]))
 }
 
 # Example:

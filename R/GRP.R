@@ -267,30 +267,30 @@ GRP.pseries <- function(X, effect = 1L, ..., group.sizes = TRUE, return.groups =
 GRP.pdata.frame <- function(X, effect = 1L, ..., group.sizes = TRUE, return.groups = TRUE, call = TRUE)
   GRP.pseries(X, effect, ..., group.sizes = group.sizes, return.groups = return.groups, call = call)
 
-fgroup_by <- function(X, ..., sort = TRUE, decreasing = FALSE, na.last = TRUE, return.order = sort, method = "auto") {          #   e <- substitute(list(...)) # faster but does not preserve attributes of unique groups !
-  clx <- oldClass(X)
-  oldClass(X) <- NULL
+fgroup_by <- function(.X, ..., sort = TRUE, decreasing = FALSE, na.last = TRUE, return.order = sort, method = "auto") {          #   e <- substitute(list(...)) # faster but does not preserve attributes of unique groups !
+  clx <- oldClass(.X)
+  oldClass(.X) <- NULL
   m <- match(c("GRP_df", "grouped_df", "data.frame"), clx, nomatch = 0L)
   dots <- substitute(list(...))
   vars <- all.vars(dots, unique = FALSE)
   # In case sequences of columns are passed...
   if(length(vars)+1L != length(dots) && any(all.names(dots) == ":")) {
   # Note that fgroup_by(mtcars, bla = round(mpg / cyl), vs:am) only groups by vs, and am. fselect(mtcars, bla = round(mpg / cyl), vs:am) also does the wrong thing.
-    nl <- `names<-`(as.vector(seq_along(X), "list"), names(X))
+    nl <- `names<-`(as.vector(seq_along(.X), "list"), names(.X))
     vars <- eval(substitute(c(...)), nl, parent.frame())
-    e <- X[vars]
+    e <- .X[vars]
     # This allows renaming...
     if(length(nam_vars <- names(vars))) {
       nonmiss <- nzchar(nam_vars)
       names(e)[nonmiss] <- nam_vars[nonmiss]
     }
-    # e <- fselect(if(m[2L]) fungroup(X) else X, ...)
+    # e <- fselect(if(m[2L]) fungroup(.X) else .X, ...)
   } else {
-    e <- eval(dots, X, parent.frame())
+    e <- eval(dots, .X, parent.frame())
     name <- names(e)
     # If something else than NSE cols is supplied
-    if(length(e) == 1L && length(e[[1L]]) != length(X[[1L]]) && is.null(name)) {
-      e <- X[cols2int(e[[1L]], X, names(X), FALSE)]
+    if(length(e) == 1L && length(e[[1L]]) != length(.X[[1L]]) && is.null(name)) {
+      e <- .X[cols2int(e[[1L]], .X, names(.X), FALSE)]
     } else {
       if(length(name)) {  # fgroup_by(mtcars, bla = round(mpg / cyl), vs, am)
         nonmiss <- nzchar(name) # -> using as.character(dots[-1L]) instead of vars
@@ -298,18 +298,18 @@ fgroup_by <- function(X, ..., sort = TRUE, decreasing = FALSE, na.last = TRUE, r
       } else names(e) <- vars
     }
   }
-  attr(X, "groups") <- GRP.default(e, NULL, sort, decreasing, na.last, TRUE, return.order, method, FALSE)
-  # if(any(clx == "sf")) oldClass(X) <- clx[clx != "sf"]
-  # attr(X, "groups") <- GRP.default(fselect(if(m[2L]) fungroup(X) else X, ...), NULL, sort, decreasing, na.last, TRUE, return.order, method, FALSE)
+  attr(.X, "groups") <- GRP.default(e, NULL, sort, decreasing, na.last, TRUE, return.order, method, FALSE)
+  # if(any(clx == "sf")) oldClass(.X) <- clx[clx != "sf"]
+  # attr(.X, "groups") <- GRP.default(fselect(if(m[2L]) fungroup(.X) else .X, ...), NULL, sort, decreasing, na.last, TRUE, return.order, method, FALSE)
     # Needed: wlddev %>% fgroup_by(country) gives error if dplyr is loaded. Also sf objects etc..
     # .rows needs to be list(), NULL won't work !! Note: attaching a data.frame class calls data frame methods, even if "list" in front! -> Need GRP.grouped_df to restore object !
-    # attr(X, "groups") <- `oldClass<-`(c(g, list(.rows = list())), c("GRP", "data.frame")) # `names<-`(eval(e, X, parent.frame()), all.vars(e))
-  oldClass(X) <- c("GRP_df",  if(length(mp <- m[m != 0L])) clx[-mp] else clx, "grouped_df", if(m[3L]) "data.frame") # clx[-m] doesn't work if clx is only "data.table" for example
-    # simplest, but X is coerced to data.frame. Through the above solution it can be a list and only receive the 'grouped_df' class
+    # attr(.X, "groups") <- `oldClass<-`(c(g, list(.rows = list())), c("GRP", "data.frame")) # `names<-`(eval(e, .X, parent.frame()), all.vars(e))
+  oldClass(.X) <- c("GRP_df",  if(length(mp <- m[m != 0L])) clx[-mp] else clx, "grouped_df", if(m[3L]) "data.frame") # clx[-m] doesn't work if clx is only "data.table" for example
+    # simplest, but .X is coerced to data.frame. Through the above solution it can be a list and only receive the 'grouped_df' class
     # add_cl <- c("grouped_df", "data.frame")
-    # oldClass(X) <- c(fsetdiff(oldClass(X), add_cl), add_cl)
-  if(any(clx == "data.table")) return(alc(X))
-  X
+    # oldClass(.X) <- c(fsetdiff(oldClass(.X), add_cl), add_cl)
+  if(any(clx == "data.table")) return(alc(.X))
+  .X
 }
 
 gby <- fgroup_by
