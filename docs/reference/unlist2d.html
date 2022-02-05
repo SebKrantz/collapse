@@ -18,7 +18,7 @@
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">collapse</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">1.7.3</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">1.7.5</span>
       </span>
     </div>
 
@@ -111,22 +111,22 @@
     <div class="sourceCode"><pre class="sourceCode r"><code><span class="r-in"><span class="co">## Basic Examples:</span></span>
 <span class="r-in"><span class="va">l</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span><span class="va">mtcars</span>, <span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span><span class="va">mtcars</span>, <span class="va">mtcars</span><span class="op">)</span><span class="op">)</span></span>
 <span class="r-in"><span class="fu"><a href="https://rdrr.io/r/utils/head.html" class="external-link">tail</a></span><span class="op">(</span><span class="fu">unlist2d</span><span class="op">(</span><span class="va">l</span><span class="op">)</span><span class="op">)</span></span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>    .id.1 .id.2  mpg cyl  disp  hp drat    wt qsec vs am gear carb</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 91     2     2 26.0   4 120.3  91 4.43 2.140 16.7  0  1    5    2</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 92     2     2 30.4   4  95.1 113 3.77 1.513 16.9  1  1    5    2</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 93     2     2 15.8   8 351.0 264 4.22 3.170 14.5  0  1    5    4</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 94     2     2 19.7   6 145.0 175 3.62 2.770 15.5  0  1    5    6</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 95     2     2 15.0   8 301.0 335 3.54 3.570 14.6  0  1    5    8</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 96     2     2 21.4   4 121.0 109 4.11 2.780 18.6  1  1    4    2</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>    .id.1 .id.2  mpg cyl  disp  hp drat    wt qsec vs am gear carb          X</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 91     2     2 26.0   4 120.3  91 4.43 2.140 16.7  0  1    5    2 -0.5538141</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 92     2     2 30.4   4  95.1 113 3.77 1.513 16.9  1  1    5    2 -0.4040629</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 93     2     2 15.8   8 351.0 264 4.22 3.170 14.5  0  1    5    4 -0.2300432</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 94     2     2 19.7   6 145.0 175 3.62 2.770 15.5  0  1    5    6  0.3223290</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 95     2     2 15.0   8 301.0 335 3.54 3.570 14.6  0  1    5    8 -2.1486097</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 96     2     2 21.4   4 121.0 109 4.11 2.780 18.6  1  1    4    2  1.3451669</span>
 <span class="r-in"><span class="fu">unlist2d</span><span class="op">(</span><span class="fu"><a href="rapply2d.html">rapply2d</a></span><span class="op">(</span><span class="va">l</span>, <span class="va">fmean</span><span class="op">)</span><span class="op">)</span></span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>   .id.1 .id.2      mpg    cyl     disp       hp     drat      wt     qsec</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> 1     1    NA 20.09062 6.1875 230.7219 146.6875 3.596562 3.21725 17.84875</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> 2     2     1 20.09062 6.1875 230.7219 146.6875 3.596562 3.21725 17.84875</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> 3     2     2 20.09062 6.1875 230.7219 146.6875 3.596562 3.21725 17.84875</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>       vs      am   gear   carb</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 1 0.4375 0.40625 3.6875 2.8125</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 2 0.4375 0.40625 3.6875 2.8125</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 3 0.4375 0.40625 3.6875 2.8125</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>       vs      am   gear   carb          X</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 1 0.4375 0.40625 3.6875 2.8125 -0.1307565</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 2 0.4375 0.40625 3.6875 2.8125 -0.1307565</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 3 0.4375 0.40625 3.6875 2.8125 -0.1307565</span>
 <span class="r-in"><span class="va">l</span> <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span>a <span class="op">=</span> <span class="fu"><a href="quick-conversion.html">qM</a></span><span class="op">(</span><span class="va">mtcars</span><span class="op">[</span><span class="fl">1</span><span class="op">:</span><span class="fl">8</span><span class="op">]</span><span class="op">)</span>,</span>
 <span class="r-in">         b <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span>c <span class="op">=</span> <span class="va">mtcars</span><span class="op">[</span><span class="fl">4</span><span class="op">:</span><span class="fl">11</span><span class="op">]</span>, d <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span>e <span class="op">=</span> <span class="va">mtcars</span><span class="op">[</span><span class="fl">2</span><span class="op">:</span><span class="fl">10</span><span class="op">]</span>, f <span class="op">=</span> <span class="va">mtcars</span><span class="op">)</span><span class="op">)</span><span class="op">)</span></span>
 <span class="r-in"><span class="fu"><a href="https://rdrr.io/r/utils/head.html" class="external-link">tail</a></span><span class="op">(</span><span class="fu">unlist2d</span><span class="op">(</span><span class="va">l</span>, row.names <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span><span class="op">)</span></span>
@@ -137,24 +137,24 @@
 <span class="r-out co"><span class="r-pr">#&gt;</span> 126     b     d     f   Ferrari Dino 19.7   6 145.0 175 3.62 2.770 15.5  0  1</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> 127     b     d     f  Maserati Bora 15.0   8 301.0 335 3.54 3.570 14.6  0  1</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> 128     b     d     f     Volvo 142E 21.4   4 121.0 109 4.11 2.780 18.6  1  1</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>     gear carb</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 123    5    2</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 124    5    2</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 125    5    4</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 126    5    6</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 127    5    8</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 128    4    2</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>     gear carb          X</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 123    5    2 -0.5538141</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 124    5    2 -0.4040629</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 125    5    4 -0.2300432</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 126    5    6  0.3223290</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 127    5    8 -2.1486097</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 128    4    2  1.3451669</span>
 <span class="r-in"><span class="fu">unlist2d</span><span class="op">(</span><span class="fu"><a href="rapply2d.html">rapply2d</a></span><span class="op">(</span><span class="va">l</span>, <span class="va">fmean</span><span class="op">)</span><span class="op">)</span></span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>   .id.1 .id.2 .id.3      mpg    cyl     disp       hp     drat      wt     qsec</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> 1     a  &lt;NA&gt;  &lt;NA&gt; 20.09062 6.1875 230.7219 146.6875 3.596562 3.21725 17.84875</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> 2     b     c  &lt;NA&gt;       NA     NA       NA 146.6875 3.596562 3.21725 17.84875</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> 3     b     d     e       NA 6.1875 230.7219 146.6875 3.596562 3.21725 17.84875</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> 4     b     d     f 20.09062 6.1875 230.7219 146.6875 3.596562 3.21725 17.84875</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>       vs      am   gear   carb</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 1 0.4375      NA     NA     NA</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 2 0.4375 0.40625 3.6875 2.8125</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 3 0.4375 0.40625 3.6875     NA</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 4 0.4375 0.40625 3.6875 2.8125</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>       vs      am   gear   carb          X</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 1 0.4375      NA     NA     NA         NA</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 2 0.4375 0.40625 3.6875 2.8125         NA</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 3 0.4375 0.40625 3.6875     NA         NA</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 4 0.4375 0.40625 3.6875 2.8125 -0.1307565</span>
 <span class="r-in"><span class="fu">unlist2d</span><span class="op">(</span><span class="fu"><a href="rapply2d.html">rapply2d</a></span><span class="op">(</span><span class="va">l</span>, <span class="va">fmean</span><span class="op">)</span>, recursive <span class="op">=</span> <span class="cn">FALSE</span><span class="op">)</span></span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> $a</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>        mpg        cyl       disp         hp       drat         wt       qsec </span>
@@ -173,9 +173,9 @@
 <span class="r-out co"><span class="r-pr">#&gt;</span>   .id    cyl     disp       hp     drat      wt     qsec     vs      am   gear</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> 1   e 6.1875 230.7219 146.6875 3.596562 3.21725 17.84875 0.4375 0.40625 3.6875</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> 2   f 6.1875 230.7219 146.6875 3.596562 3.21725 17.84875 0.4375 0.40625 3.6875</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>        mpg   carb</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 1       NA     NA</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 2 20.09062 2.8125</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>        mpg   carb          X</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 1       NA     NA         NA</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 2 20.09062 2.8125 -0.1307565</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> </span>
 <span class="r-in"></span>
@@ -361,34 +361,25 @@
 <span class="r-in">              idcols <span class="op">=</span> <span class="st">"Sector"</span>, row.names <span class="op">=</span> <span class="st">"Country"</span><span class="op">)</span>, <span class="fl">2</span><span class="op">)</span></span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>   Sector Country 1947 1948 1949         1950         1951         1952</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> 1    AGR     ARG   NA   NA   NA 5.887857e-07 9.165327e-07 9.964412e-07</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 2    AGR     BOL   NA   NA   NA           NA           NA           NA</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>           1953         1954         1955         1956         1957         1958</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> 1 1.482589e-06 1.396692e-06 1.574796e-06 2.001253e-06 2.644127e-06 3.741081e-06</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 2           NA           NA           NA           NA           NA 1.824902e-01</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>           1959         1960         1961         1962         1963         1964</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> 1 8.395798e-06 1.028314e-05 9.868339e-06 1.342763e-05 1.902081e-05 2.947121e-05</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 2 1.982476e-01 2.358937e-01 2.649170e-01 2.704523e-01 2.875517e-01 3.012666e-01</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>           1965         1966         1967         1968         1969         1970</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 1 3.549257e-05 3.856346e-05 4.832476e-05 5.232561e-05 6.292321e-05 0.0000761702</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 2 3.247992e-01 3.456743e-01 3.558257e-01 3.999931e-01 3.887203e-01 0.4120399120</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>           1965         1966         1967         1968         1969        1970</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 1 3.549257e-05 3.856346e-05 4.832476e-05 5.232561e-05 6.292321e-05 7.61702e-05</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>           1971         1972         1973         1974        1975        1976</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> 1 0.0001145865 0.0002086401 0.0004172802 0.0004868269 0.001043201 0.005841923</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 2 0.4411801523 0.4819868219 0.7372467948 1.2903295209 1.431004641 1.603998658</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>         1977       1978      1979      1980      1981      1982      1983</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 1 0.01613484 0.03672066 0.1052937 0.1730322 0.4325805  1.816838  8.219029</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 2 1.80422238 2.03217554 2.3801321 3.5636496 3.7604925 17.360661 48.800156</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>        1984     1985      1986     1987     1988      1989     1990      1991</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 1  57.10062 350.3902  673.7874 1633.943 8626.520  269.8437 4843.777 10511.533</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 2 661.51794 711.0373 1773.3427 1401.706 1700.287 1937.4890 2371.077  2973.534</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>        1992      1993      1994      1995      1996     1997      1998</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 1 11757.531 12148.850 13084.820 13808.478 15269.958 15293.02 15702.922</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 2  3170.942  3582.741  4212.963  4789.906  5324.453  6212.54  5911.521</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>        1999      2000      2001      2002      2003      2004      2005</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 1 12638.962 13300.482 12275.652 31903.936 38824.561 43148.468 46330.594</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 2  6384.542  6732.951  7130.259  7343.263  8312.057  9275.858  9083.204</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>       2006     2007     2008     2009      2010      2011 2012 2013</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 1 50759.94 70101.51 93178.70 79362.85 132365.85 178745.30   NA   NA</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 2 10034.96 10312.41 12603.33 13575.46  14325.14  16246.64   NA   NA</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>         1977       1978      1979      1980      1981     1982     1983</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 1 0.01613484 0.03672066 0.1052937 0.1730322 0.4325805 1.816838 8.219029</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>       1984     1985     1986     1987    1988     1989     1990     1991</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 1 57.10062 350.3902 673.7874 1633.943 8626.52 269.8437 4843.777 10511.53</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>       1992     1993     1994     1995     1996     1997     1998     1999</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 1 11757.53 12148.85 13084.82 13808.48 15269.96 15293.02 15702.92 12638.96</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>       2000     2001     2002     2003     2004     2005     2006     2007</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 1 13300.48 12275.65 31903.94 38824.56 43148.47 46330.59 50759.94 70101.51</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>      2008     2009     2010     2011 2012 2013</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 1 93178.7 79362.85 132365.8 178745.3   NA   NA</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  [ reached 'max' / getOption("max.print") -- omitted 1 rows ]</span>
 <span class="r-in"></span>
 <span class="r-in"></span>
 </code></pre></div>

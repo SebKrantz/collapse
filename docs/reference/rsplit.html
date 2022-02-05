@@ -18,7 +18,7 @@
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">collapse</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">1.7.3</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">1.7.5</span>
       </span>
     </div>
 
@@ -105,7 +105,7 @@
     </div>
     <div id="see-also">
     <h2>See also</h2>
-    <div class="dont-index"><p><code><a href="GRP.html">gsplit</a></code>, <code><a href="rapply2d.html">rapply2d</a></code>, <code><a href="unlist2d.html">unlist2d</a></code>, <a href="list-processing.html">List Processing</a>, <a href="index.html">Collapse Overview</a></p></div>
+    <div class="dont-index"><p><code><a href="GRP.html">gsplit</a></code>, <code><a href="rapply2d.html">rapply2d</a></code>, <code><a href="unlist2d.html">unlist2d</a></code>, <a href="list-processing.html">List Processing</a>, <a href="collapse-documentation.html">Collapse Overview</a></p></div>
     </div>
 
     <div id="ref-examples">
@@ -122,28 +122,26 @@
 <span class="r-out co"><span class="r-pr">#&gt;</span> </span>
 <span class="r-in"><span class="fu">rsplit</span><span class="op">(</span><span class="va">mtcars</span>, <span class="va">mtcars</span><span class="op">$</span><span class="va">cyl</span><span class="op">)</span></span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> $`4`</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>                 mpg cyl  disp  hp drat    wt  qsec vs am gear carb</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> Datsun 710     22.8   4 108.0  93 3.85 2.320 18.61  1  1    4    1</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> Merc 240D      24.4   4 146.7  62 3.69 3.190 20.00  1  0    4    2</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> Merc 230       22.8   4 140.8  95 3.92 3.150 22.90  1  0    4    2</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> Fiat 128       32.4   4  78.7  66 4.08 2.200 19.47  1  1    4    1</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> Honda Civic    30.4   4  75.7  52 4.93 1.615 18.52  1  1    4    2</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> Toyota Corolla 33.9   4  71.1  65 4.22 1.835 19.90  1  1    4    1</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> Toyota Corona  21.5   4 120.1  97 3.70 2.465 20.01  1  0    3    1</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> Fiat X1-9      27.3   4  79.0  66 4.08 1.935 18.90  1  1    4    1</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> Porsche 914-2  26.0   4 120.3  91 4.43 2.140 16.70  0  1    5    2</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> Lotus Europa   30.4   4  95.1 113 3.77 1.513 16.90  1  1    5    2</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> Volvo 142E     21.4   4 121.0 109 4.11 2.780 18.60  1  1    4    2</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>                 mpg cyl  disp hp drat    wt  qsec vs am gear carb           X</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> Datsun 710     22.8   4 108.0 93 3.85 2.320 18.61  1  1    4    1  1.38728007</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> Merc 240D      24.4   4 146.7 62 3.69 3.190 20.00  1  0    4    2  0.22512721</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> Merc 230       22.8   4 140.8 95 3.92 3.150 22.90  1  0    4    2 -0.97389777</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> Fiat 128       32.4   4  78.7 66 4.08 2.200 19.47  1  1    4    1  0.54689909</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> Honda Civic    30.4   4  75.7 52 4.93 1.615 18.52  1  1    4    2 -0.03580896</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> Toyota Corolla 33.9   4  71.1 65 4.22 1.835 19.90  1  1    4    1  0.78018236</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> Toyota Corona  21.5   4 120.1 97 3.70 2.465 20.01  1  0    3    1 -0.90357957</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> Fiat X1-9      27.3   4  79.0 66 4.08 1.935 18.90  1  1    4    1  1.36428721</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  [ reached 'max' / getOption("max.print") -- omitted 3 rows ]</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> $`6`</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>                 mpg cyl  disp  hp drat    wt  qsec vs am gear carb</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> Mazda RX4      21.0   6 160.0 110 3.90 2.620 16.46  0  1    4    4</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> Mazda RX4 Wag  21.0   6 160.0 110 3.90 2.875 17.02  0  1    4    4</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> Hornet 4 Drive 21.4   6 258.0 110 3.08 3.215 19.44  1  0    3    1</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> Valiant        18.1   6 225.0 105 2.76 3.460 20.22  1  0    3    1</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> Merc 280       19.2   6 167.6 123 3.92 3.440 18.30  1  0    4    4</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> Merc 280C      17.8   6 167.6 123 3.92 3.440 18.90  1  0    4    4</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> Ferrari Dino   19.7   6 145.0 175 3.62 2.770 15.50  0  1    5    6</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>                 mpg cyl  disp  hp drat    wt  qsec vs am gear carb           X</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> Mazda RX4      21.0   6 160.0 110 3.90 2.620 16.46  0  1    4    4 -0.76272049</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> Mazda RX4 Wag  21.0   6 160.0 110 3.90 2.875 17.02  0  1    4    4 -0.08641398</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> Hornet 4 Drive 21.4   6 258.0 110 3.08 3.215 19.44  1  0    3    1 -0.65361593</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> Valiant        18.1   6 225.0 105 2.76 3.460 20.22  1  0    3    1  0.29165057</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> Merc 280       19.2   6 167.6 123 3.92 3.440 18.30  1  0    4    4 -1.49434781</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> Merc 280C      17.8   6 167.6 123 3.92 3.440 18.90  1  0    4    4 -0.72575648</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> Ferrari Dino   19.7   6 145.0 175 3.62 2.770 15.50  0  1    5    6  0.32232900</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> $`8`</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>                      mpg cyl  disp  hp drat    wt  qsec vs am gear carb</span>
@@ -155,57 +153,61 @@
 <span class="r-out co"><span class="r-pr">#&gt;</span> Cadillac Fleetwood  10.4   8 472.0 205 2.93 5.250 17.98  0  0    3    4</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> Lincoln Continental 10.4   8 460.0 215 3.00 5.424 17.82  0  0    3    4</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> Chrysler Imperial   14.7   8 440.0 230 3.23 5.345 17.42  0  0    3    4</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> Dodge Challenger    15.5   8 318.0 150 2.76 3.520 16.87  0  0    3    2</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> AMC Javelin         15.2   8 304.0 150 3.15 3.435 17.30  0  0    3    2</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> Camaro Z28          13.3   8 350.0 245 3.73 3.840 15.41  0  0    3    4</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> Pontiac Firebird    19.2   8 400.0 175 3.08 3.845 17.05  0  0    3    2</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> Ford Pantera L      15.8   8 351.0 264 4.22 3.170 14.50  0  1    5    4</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> Maserati Bora       15.0   8 301.0 335 3.54 3.570 14.60  0  1    5    8</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>                               X</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> Hornet Sportabout   -0.26870764</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> Duster 360          -0.86896897</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> Merc 450SE          -1.80350382</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> Merc 450SL          -1.96684935</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> Merc 450SLC         -0.31206217</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> Cadillac Fleetwood  -0.07331864</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> Lincoln Continental  0.14952405</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> Chrysler Imperial    1.75274156</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  [ reached 'max' / getOption("max.print") -- omitted 6 rows ]</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> </span>
 <span class="r-in"></span>
 <span class="r-in"><span class="fu">rsplit</span><span class="op">(</span><span class="va">mtcars</span>, <span class="va">mtcars</span><span class="op">[</span><span class="fu"><a href="small-helper.html">.c</a></span><span class="op">(</span><span class="va">cyl</span>, <span class="va">vs</span>, <span class="va">am</span><span class="op">)</span><span class="op">]</span><span class="op">)</span></span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> $`4`</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> $`4`$`0`</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> $`4`$`0`$`1`</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>               mpg cyl  disp hp drat   wt qsec vs am gear carb</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> Porsche 914-2  26   4 120.3 91 4.43 2.14 16.7  0  1    5    2</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>               mpg cyl  disp hp drat   wt qsec vs am gear carb          X</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> Porsche 914-2  26   4 120.3 91 4.43 2.14 16.7  0  1    5    2 -0.5538141</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> $`4`$`1`</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> $`4`$`1`$`0`</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>                mpg cyl  disp hp drat    wt  qsec vs am gear carb</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> Merc 240D     24.4   4 146.7 62 3.69 3.190 20.00  1  0    4    2</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> Merc 230      22.8   4 140.8 95 3.92 3.150 22.90  1  0    4    2</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> Toyota Corona 21.5   4 120.1 97 3.70 2.465 20.01  1  0    3    1</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>                mpg cyl  disp hp drat    wt  qsec vs am gear carb          X</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> Merc 240D     24.4   4 146.7 62 3.69 3.190 20.00  1  0    4    2  0.2251272</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> Merc 230      22.8   4 140.8 95 3.92 3.150 22.90  1  0    4    2 -0.9738978</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> Toyota Corona 21.5   4 120.1 97 3.70 2.465 20.01  1  0    3    1 -0.9035796</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> $`4`$`1`$`1`</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>                 mpg cyl  disp  hp drat    wt  qsec vs am gear carb</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> Datsun 710     22.8   4 108.0  93 3.85 2.320 18.61  1  1    4    1</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> Fiat 128       32.4   4  78.7  66 4.08 2.200 19.47  1  1    4    1</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> Honda Civic    30.4   4  75.7  52 4.93 1.615 18.52  1  1    4    2</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> Toyota Corolla 33.9   4  71.1  65 4.22 1.835 19.90  1  1    4    1</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> Fiat X1-9      27.3   4  79.0  66 4.08 1.935 18.90  1  1    4    1</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> Lotus Europa   30.4   4  95.1 113 3.77 1.513 16.90  1  1    5    2</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> Volvo 142E     21.4   4 121.0 109 4.11 2.780 18.60  1  1    4    2</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>                 mpg cyl  disp  hp drat    wt  qsec vs am gear carb           X</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> Datsun 710     22.8   4 108.0  93 3.85 2.320 18.61  1  1    4    1  1.38728007</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> Fiat 128       32.4   4  78.7  66 4.08 2.200 19.47  1  1    4    1  0.54689909</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> Honda Civic    30.4   4  75.7  52 4.93 1.615 18.52  1  1    4    2 -0.03580896</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> Toyota Corolla 33.9   4  71.1  65 4.22 1.835 19.90  1  1    4    1  0.78018236</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> Fiat X1-9      27.3   4  79.0  66 4.08 1.935 18.90  1  1    4    1  1.36428721</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> Lotus Europa   30.4   4  95.1 113 3.77 1.513 16.90  1  1    5    2 -0.40406286</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> Volvo 142E     21.4   4 121.0 109 4.11 2.780 18.60  1  1    4    2  1.34516688</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> $`6`</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> $`6`$`0`</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> $`6`$`0`$`1`</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>                mpg cyl disp  hp drat    wt  qsec vs am gear carb</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> Mazda RX4     21.0   6  160 110 3.90 2.620 16.46  0  1    4    4</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> Mazda RX4 Wag 21.0   6  160 110 3.90 2.875 17.02  0  1    4    4</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> Ferrari Dino  19.7   6  145 175 3.62 2.770 15.50  0  1    5    6</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>                mpg cyl disp  hp drat    wt  qsec vs am gear carb           X</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> Mazda RX4     21.0   6  160 110 3.90 2.620 16.46  0  1    4    4 -0.76272049</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> Mazda RX4 Wag 21.0   6  160 110 3.90 2.875 17.02  0  1    4    4 -0.08641398</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> Ferrari Dino  19.7   6  145 175 3.62 2.770 15.50  0  1    5    6  0.32232900</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> $`6`$`1`</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> $`6`$`1`$`0`</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>                 mpg cyl  disp  hp drat    wt  qsec vs am gear carb</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> Hornet 4 Drive 21.4   6 258.0 110 3.08 3.215 19.44  1  0    3    1</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> Valiant        18.1   6 225.0 105 2.76 3.460 20.22  1  0    3    1</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> Merc 280       19.2   6 167.6 123 3.92 3.440 18.30  1  0    4    4</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> Merc 280C      17.8   6 167.6 123 3.92 3.440 18.90  1  0    4    4</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>                 mpg cyl  disp  hp drat    wt  qsec vs am gear carb          X</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> Hornet 4 Drive 21.4   6 258.0 110 3.08 3.215 19.44  1  0    3    1 -0.6536159</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> Valiant        18.1   6 225.0 105 2.76 3.460 20.22  1  0    3    1  0.2916506</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> Merc 280       19.2   6 167.6 123 3.92 3.440 18.30  1  0    4    4 -1.4943478</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> Merc 280C      17.8   6 167.6 123 3.92 3.440 18.90  1  0    4    4 -0.7257565</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> </span>
@@ -221,15 +223,21 @@
 <span class="r-out co"><span class="r-pr">#&gt;</span> Cadillac Fleetwood  10.4   8 472.0 205 2.93 5.250 17.98  0  0    3    4</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> Lincoln Continental 10.4   8 460.0 215 3.00 5.424 17.82  0  0    3    4</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> Chrysler Imperial   14.7   8 440.0 230 3.23 5.345 17.42  0  0    3    4</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> Dodge Challenger    15.5   8 318.0 150 2.76 3.520 16.87  0  0    3    2</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> AMC Javelin         15.2   8 304.0 150 3.15 3.435 17.30  0  0    3    2</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> Camaro Z28          13.3   8 350.0 245 3.73 3.840 15.41  0  0    3    4</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> Pontiac Firebird    19.2   8 400.0 175 3.08 3.845 17.05  0  0    3    2</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>                               X</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> Hornet Sportabout   -0.26870764</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> Duster 360          -0.86896897</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> Merc 450SE          -1.80350382</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> Merc 450SL          -1.96684935</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> Merc 450SLC         -0.31206217</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> Cadillac Fleetwood  -0.07331864</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> Lincoln Continental  0.14952405</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> Chrysler Imperial    1.75274156</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  [ reached 'max' / getOption("max.print") -- omitted 4 rows ]</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> $`8`$`0`$`1`</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>                 mpg cyl disp  hp drat   wt qsec vs am gear carb</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> Ford Pantera L 15.8   8  351 264 4.22 3.17 14.5  0  1    5    4</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> Maserati Bora  15.0   8  301 335 3.54 3.57 14.6  0  1    5    8</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>                 mpg cyl disp  hp drat   wt qsec vs am gear carb          X</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> Ford Pantera L 15.8   8  351 264 4.22 3.17 14.5  0  1    5    4 -0.2300432</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> Maserati Bora  15.0   8  301 335 3.54 3.57 14.6  0  1    5    8 -2.1486097</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> </span>
@@ -237,45 +245,45 @@
 <span class="r-out co"><span class="r-pr">#&gt;</span> $`4`</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> $`4`$`0`</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> $`4`$`0`$`1`</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>               mpg cyl  disp hp drat   wt qsec vs am gear carb</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> Porsche 914-2  26   4 120.3 91 4.43 2.14 16.7  0  1    5    2</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>               mpg cyl  disp hp drat   wt qsec vs am gear carb          X</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> Porsche 914-2  26   4 120.3 91 4.43 2.14 16.7  0  1    5    2 -0.5538141</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> $`4`$`1`</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> $`4`$`1`$`0`</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>                mpg cyl  disp hp drat    wt  qsec vs am gear carb</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> Merc 240D     24.4   4 146.7 62 3.69 3.190 20.00  1  0    4    2</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> Merc 230      22.8   4 140.8 95 3.92 3.150 22.90  1  0    4    2</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> Toyota Corona 21.5   4 120.1 97 3.70 2.465 20.01  1  0    3    1</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>                mpg cyl  disp hp drat    wt  qsec vs am gear carb          X</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> Merc 240D     24.4   4 146.7 62 3.69 3.190 20.00  1  0    4    2  0.2251272</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> Merc 230      22.8   4 140.8 95 3.92 3.150 22.90  1  0    4    2 -0.9738978</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> Toyota Corona 21.5   4 120.1 97 3.70 2.465 20.01  1  0    3    1 -0.9035796</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> $`4`$`1`$`1`</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>                 mpg cyl  disp  hp drat    wt  qsec vs am gear carb</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> Datsun 710     22.8   4 108.0  93 3.85 2.320 18.61  1  1    4    1</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> Fiat 128       32.4   4  78.7  66 4.08 2.200 19.47  1  1    4    1</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> Honda Civic    30.4   4  75.7  52 4.93 1.615 18.52  1  1    4    2</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> Toyota Corolla 33.9   4  71.1  65 4.22 1.835 19.90  1  1    4    1</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> Fiat X1-9      27.3   4  79.0  66 4.08 1.935 18.90  1  1    4    1</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> Lotus Europa   30.4   4  95.1 113 3.77 1.513 16.90  1  1    5    2</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> Volvo 142E     21.4   4 121.0 109 4.11 2.780 18.60  1  1    4    2</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>                 mpg cyl  disp  hp drat    wt  qsec vs am gear carb           X</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> Datsun 710     22.8   4 108.0  93 3.85 2.320 18.61  1  1    4    1  1.38728007</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> Fiat 128       32.4   4  78.7  66 4.08 2.200 19.47  1  1    4    1  0.54689909</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> Honda Civic    30.4   4  75.7  52 4.93 1.615 18.52  1  1    4    2 -0.03580896</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> Toyota Corolla 33.9   4  71.1  65 4.22 1.835 19.90  1  1    4    1  0.78018236</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> Fiat X1-9      27.3   4  79.0  66 4.08 1.935 18.90  1  1    4    1  1.36428721</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> Lotus Europa   30.4   4  95.1 113 3.77 1.513 16.90  1  1    5    2 -0.40406286</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> Volvo 142E     21.4   4 121.0 109 4.11 2.780 18.60  1  1    4    2  1.34516688</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> $`6`</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> $`6`$`0`</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> $`6`$`0`$`1`</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>                mpg cyl disp  hp drat    wt  qsec vs am gear carb</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> Mazda RX4     21.0   6  160 110 3.90 2.620 16.46  0  1    4    4</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> Mazda RX4 Wag 21.0   6  160 110 3.90 2.875 17.02  0  1    4    4</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> Ferrari Dino  19.7   6  145 175 3.62 2.770 15.50  0  1    5    6</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>                mpg cyl disp  hp drat    wt  qsec vs am gear carb           X</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> Mazda RX4     21.0   6  160 110 3.90 2.620 16.46  0  1    4    4 -0.76272049</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> Mazda RX4 Wag 21.0   6  160 110 3.90 2.875 17.02  0  1    4    4 -0.08641398</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> Ferrari Dino  19.7   6  145 175 3.62 2.770 15.50  0  1    5    6  0.32232900</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> $`6`$`1`</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> $`6`$`1`$`0`</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>                 mpg cyl  disp  hp drat    wt  qsec vs am gear carb</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> Hornet 4 Drive 21.4   6 258.0 110 3.08 3.215 19.44  1  0    3    1</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> Valiant        18.1   6 225.0 105 2.76 3.460 20.22  1  0    3    1</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> Merc 280       19.2   6 167.6 123 3.92 3.440 18.30  1  0    4    4</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> Merc 280C      17.8   6 167.6 123 3.92 3.440 18.90  1  0    4    4</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>                 mpg cyl  disp  hp drat    wt  qsec vs am gear carb          X</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> Hornet 4 Drive 21.4   6 258.0 110 3.08 3.215 19.44  1  0    3    1 -0.6536159</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> Valiant        18.1   6 225.0 105 2.76 3.460 20.22  1  0    3    1  0.2916506</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> Merc 280       19.2   6 167.6 123 3.92 3.440 18.30  1  0    4    4 -1.4943478</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> Merc 280C      17.8   6 167.6 123 3.92 3.440 18.90  1  0    4    4 -0.7257565</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> </span>
@@ -291,15 +299,21 @@
 <span class="r-out co"><span class="r-pr">#&gt;</span> Cadillac Fleetwood  10.4   8 472.0 205 2.93 5.250 17.98  0  0    3    4</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> Lincoln Continental 10.4   8 460.0 215 3.00 5.424 17.82  0  0    3    4</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> Chrysler Imperial   14.7   8 440.0 230 3.23 5.345 17.42  0  0    3    4</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> Dodge Challenger    15.5   8 318.0 150 2.76 3.520 16.87  0  0    3    2</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> AMC Javelin         15.2   8 304.0 150 3.15 3.435 17.30  0  0    3    2</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> Camaro Z28          13.3   8 350.0 245 3.73 3.840 15.41  0  0    3    4</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> Pontiac Firebird    19.2   8 400.0 175 3.08 3.845 17.05  0  0    3    2</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>                               X</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> Hornet Sportabout   -0.26870764</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> Duster 360          -0.86896897</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> Merc 450SE          -1.80350382</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> Merc 450SL          -1.96684935</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> Merc 450SLC         -0.31206217</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> Cadillac Fleetwood  -0.07331864</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> Lincoln Continental  0.14952405</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> Chrysler Imperial    1.75274156</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  [ reached 'max' / getOption("max.print") -- omitted 4 rows ]</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> $`8`$`0`$`1`</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>                 mpg cyl disp  hp drat   wt qsec vs am gear carb</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> Ford Pantera L 15.8   8  351 264 4.22 3.17 14.5  0  1    5    4</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> Maserati Bora  15.0   8  301 335 3.54 3.57 14.6  0  1    5    8</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>                 mpg cyl disp  hp drat   wt qsec vs am gear carb          X</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> Ford Pantera L 15.8   8  351 264 4.22 3.17 14.5  0  1    5    4 -0.2300432</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> Maserati Bora  15.0   8  301 335 3.54 3.57 14.6  0  1    5    8 -2.1486097</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> </span>
@@ -307,126 +321,126 @@
 <span class="r-out co"><span class="r-pr">#&gt;</span> $`4`</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> $`4`$`0`</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> $`4`$`0`$`1`</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>               mpg  disp hp drat   wt qsec gear carb</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> Porsche 914-2  26 120.3 91 4.43 2.14 16.7    5    2</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>               mpg  disp hp drat   wt qsec gear carb          X</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> Porsche 914-2  26 120.3 91 4.43 2.14 16.7    5    2 -0.5538141</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> $`4`$`1`</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> $`4`$`1`$`0`</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>                mpg  disp hp drat    wt  qsec gear carb</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> Merc 240D     24.4 146.7 62 3.69 3.190 20.00    4    2</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> Merc 230      22.8 140.8 95 3.92 3.150 22.90    4    2</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> Toyota Corona 21.5 120.1 97 3.70 2.465 20.01    3    1</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>                mpg  disp hp drat    wt  qsec gear carb          X</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> Merc 240D     24.4 146.7 62 3.69 3.190 20.00    4    2  0.2251272</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> Merc 230      22.8 140.8 95 3.92 3.150 22.90    4    2 -0.9738978</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> Toyota Corona 21.5 120.1 97 3.70 2.465 20.01    3    1 -0.9035796</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> $`4`$`1`$`1`</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>                 mpg  disp  hp drat    wt  qsec gear carb</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> Datsun 710     22.8 108.0  93 3.85 2.320 18.61    4    1</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> Fiat 128       32.4  78.7  66 4.08 2.200 19.47    4    1</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> Honda Civic    30.4  75.7  52 4.93 1.615 18.52    4    2</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> Toyota Corolla 33.9  71.1  65 4.22 1.835 19.90    4    1</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> Fiat X1-9      27.3  79.0  66 4.08 1.935 18.90    4    1</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> Lotus Europa   30.4  95.1 113 3.77 1.513 16.90    5    2</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> Volvo 142E     21.4 121.0 109 4.11 2.780 18.60    4    2</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>                 mpg  disp  hp drat    wt  qsec gear carb           X</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> Datsun 710     22.8 108.0  93 3.85 2.320 18.61    4    1  1.38728007</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> Fiat 128       32.4  78.7  66 4.08 2.200 19.47    4    1  0.54689909</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> Honda Civic    30.4  75.7  52 4.93 1.615 18.52    4    2 -0.03580896</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> Toyota Corolla 33.9  71.1  65 4.22 1.835 19.90    4    1  0.78018236</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> Fiat X1-9      27.3  79.0  66 4.08 1.935 18.90    4    1  1.36428721</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> Lotus Europa   30.4  95.1 113 3.77 1.513 16.90    5    2 -0.40406286</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> Volvo 142E     21.4 121.0 109 4.11 2.780 18.60    4    2  1.34516688</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> $`6`</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> $`6`$`0`</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> $`6`$`0`$`1`</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>                mpg disp  hp drat    wt  qsec gear carb</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> Mazda RX4     21.0  160 110 3.90 2.620 16.46    4    4</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> Mazda RX4 Wag 21.0  160 110 3.90 2.875 17.02    4    4</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> Ferrari Dino  19.7  145 175 3.62 2.770 15.50    5    6</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>                mpg disp  hp drat    wt  qsec gear carb           X</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> Mazda RX4     21.0  160 110 3.90 2.620 16.46    4    4 -0.76272049</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> Mazda RX4 Wag 21.0  160 110 3.90 2.875 17.02    4    4 -0.08641398</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> Ferrari Dino  19.7  145 175 3.62 2.770 15.50    5    6  0.32232900</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> $`6`$`1`</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> $`6`$`1`$`0`</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>                 mpg  disp  hp drat    wt  qsec gear carb</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> Hornet 4 Drive 21.4 258.0 110 3.08 3.215 19.44    3    1</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> Valiant        18.1 225.0 105 2.76 3.460 20.22    3    1</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> Merc 280       19.2 167.6 123 3.92 3.440 18.30    4    4</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> Merc 280C      17.8 167.6 123 3.92 3.440 18.90    4    4</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>                 mpg  disp  hp drat    wt  qsec gear carb          X</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> Hornet 4 Drive 21.4 258.0 110 3.08 3.215 19.44    3    1 -0.6536159</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> Valiant        18.1 225.0 105 2.76 3.460 20.22    3    1  0.2916506</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> Merc 280       19.2 167.6 123 3.92 3.440 18.30    4    4 -1.4943478</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> Merc 280C      17.8 167.6 123 3.92 3.440 18.90    4    4 -0.7257565</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> $`8`</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> $`8`$`0`</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> $`8`$`0`$`0`</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>                      mpg  disp  hp drat    wt  qsec gear carb</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> Hornet Sportabout   18.7 360.0 175 3.15 3.440 17.02    3    2</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> Duster 360          14.3 360.0 245 3.21 3.570 15.84    3    4</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> Merc 450SE          16.4 275.8 180 3.07 4.070 17.40    3    3</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> Merc 450SL          17.3 275.8 180 3.07 3.730 17.60    3    3</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> Merc 450SLC         15.2 275.8 180 3.07 3.780 18.00    3    3</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> Cadillac Fleetwood  10.4 472.0 205 2.93 5.250 17.98    3    4</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> Lincoln Continental 10.4 460.0 215 3.00 5.424 17.82    3    4</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> Chrysler Imperial   14.7 440.0 230 3.23 5.345 17.42    3    4</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> Dodge Challenger    15.5 318.0 150 2.76 3.520 16.87    3    2</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> AMC Javelin         15.2 304.0 150 3.15 3.435 17.30    3    2</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> Camaro Z28          13.3 350.0 245 3.73 3.840 15.41    3    4</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> Pontiac Firebird    19.2 400.0 175 3.08 3.845 17.05    3    2</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>                      mpg  disp  hp drat    wt  qsec gear carb           X</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> Hornet Sportabout   18.7 360.0 175 3.15 3.440 17.02    3    2 -0.26870764</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> Duster 360          14.3 360.0 245 3.21 3.570 15.84    3    4 -0.86896897</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> Merc 450SE          16.4 275.8 180 3.07 4.070 17.40    3    3 -1.80350382</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> Merc 450SL          17.3 275.8 180 3.07 3.730 17.60    3    3 -1.96684935</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> Merc 450SLC         15.2 275.8 180 3.07 3.780 18.00    3    3 -0.31206217</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> Cadillac Fleetwood  10.4 472.0 205 2.93 5.250 17.98    3    4 -0.07331864</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> Lincoln Continental 10.4 460.0 215 3.00 5.424 17.82    3    4  0.14952405</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> Chrysler Imperial   14.7 440.0 230 3.23 5.345 17.42    3    4  1.75274156</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> Dodge Challenger    15.5 318.0 150 2.76 3.520 16.87    3    2 -0.86590275</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> AMC Javelin         15.2 304.0 150 3.15 3.435 17.30    3    2  0.46707835</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> Camaro Z28          13.3 350.0 245 3.73 3.840 15.41    3    4  0.38320839</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  [ reached 'max' / getOption("max.print") -- omitted 1 rows ]</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> $`8`$`0`$`1`</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>                 mpg disp  hp drat   wt qsec gear carb</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> Ford Pantera L 15.8  351 264 4.22 3.17 14.5    5    4</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> Maserati Bora  15.0  301 335 3.54 3.57 14.6    5    8</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>                 mpg disp  hp drat   wt qsec gear carb          X</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> Ford Pantera L 15.8  351 264 4.22 3.17 14.5    5    4 -0.2300432</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> Maserati Bora  15.0  301 335 3.54 3.57 14.6    5    8 -2.1486097</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> </span>
 <span class="r-in"></span>
 <span class="r-in"><span class="fu">rsplit</span><span class="op">(</span><span class="va">mtcars</span>, <span class="op">~</span> <span class="va">cyl</span> <span class="op">+</span> <span class="va">vs</span> <span class="op">+</span> <span class="va">am</span>, flatten <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span></span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> $`4.0.1`</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>               mpg  disp hp drat   wt qsec gear carb</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> Porsche 914-2  26 120.3 91 4.43 2.14 16.7    5    2</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>               mpg  disp hp drat   wt qsec gear carb          X</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> Porsche 914-2  26 120.3 91 4.43 2.14 16.7    5    2 -0.5538141</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> $`4.1.0`</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>                mpg  disp hp drat    wt  qsec gear carb</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> Merc 240D     24.4 146.7 62 3.69 3.190 20.00    4    2</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> Merc 230      22.8 140.8 95 3.92 3.150 22.90    4    2</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> Toyota Corona 21.5 120.1 97 3.70 2.465 20.01    3    1</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>                mpg  disp hp drat    wt  qsec gear carb          X</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> Merc 240D     24.4 146.7 62 3.69 3.190 20.00    4    2  0.2251272</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> Merc 230      22.8 140.8 95 3.92 3.150 22.90    4    2 -0.9738978</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> Toyota Corona 21.5 120.1 97 3.70 2.465 20.01    3    1 -0.9035796</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> $`4.1.1`</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>                 mpg  disp  hp drat    wt  qsec gear carb</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> Datsun 710     22.8 108.0  93 3.85 2.320 18.61    4    1</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> Fiat 128       32.4  78.7  66 4.08 2.200 19.47    4    1</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> Honda Civic    30.4  75.7  52 4.93 1.615 18.52    4    2</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> Toyota Corolla 33.9  71.1  65 4.22 1.835 19.90    4    1</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> Fiat X1-9      27.3  79.0  66 4.08 1.935 18.90    4    1</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> Lotus Europa   30.4  95.1 113 3.77 1.513 16.90    5    2</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> Volvo 142E     21.4 121.0 109 4.11 2.780 18.60    4    2</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>                 mpg  disp  hp drat    wt  qsec gear carb           X</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> Datsun 710     22.8 108.0  93 3.85 2.320 18.61    4    1  1.38728007</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> Fiat 128       32.4  78.7  66 4.08 2.200 19.47    4    1  0.54689909</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> Honda Civic    30.4  75.7  52 4.93 1.615 18.52    4    2 -0.03580896</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> Toyota Corolla 33.9  71.1  65 4.22 1.835 19.90    4    1  0.78018236</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> Fiat X1-9      27.3  79.0  66 4.08 1.935 18.90    4    1  1.36428721</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> Lotus Europa   30.4  95.1 113 3.77 1.513 16.90    5    2 -0.40406286</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> Volvo 142E     21.4 121.0 109 4.11 2.780 18.60    4    2  1.34516688</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> $`6.0.1`</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>                mpg disp  hp drat    wt  qsec gear carb</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> Mazda RX4     21.0  160 110 3.90 2.620 16.46    4    4</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> Mazda RX4 Wag 21.0  160 110 3.90 2.875 17.02    4    4</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> Ferrari Dino  19.7  145 175 3.62 2.770 15.50    5    6</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>                mpg disp  hp drat    wt  qsec gear carb           X</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> Mazda RX4     21.0  160 110 3.90 2.620 16.46    4    4 -0.76272049</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> Mazda RX4 Wag 21.0  160 110 3.90 2.875 17.02    4    4 -0.08641398</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> Ferrari Dino  19.7  145 175 3.62 2.770 15.50    5    6  0.32232900</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> $`6.1.0`</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>                 mpg  disp  hp drat    wt  qsec gear carb</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> Hornet 4 Drive 21.4 258.0 110 3.08 3.215 19.44    3    1</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> Valiant        18.1 225.0 105 2.76 3.460 20.22    3    1</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> Merc 280       19.2 167.6 123 3.92 3.440 18.30    4    4</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> Merc 280C      17.8 167.6 123 3.92 3.440 18.90    4    4</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>                 mpg  disp  hp drat    wt  qsec gear carb          X</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> Hornet 4 Drive 21.4 258.0 110 3.08 3.215 19.44    3    1 -0.6536159</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> Valiant        18.1 225.0 105 2.76 3.460 20.22    3    1  0.2916506</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> Merc 280       19.2 167.6 123 3.92 3.440 18.30    4    4 -1.4943478</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> Merc 280C      17.8 167.6 123 3.92 3.440 18.90    4    4 -0.7257565</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> $`8.0.0`</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>                      mpg  disp  hp drat    wt  qsec gear carb</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> Hornet Sportabout   18.7 360.0 175 3.15 3.440 17.02    3    2</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> Duster 360          14.3 360.0 245 3.21 3.570 15.84    3    4</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> Merc 450SE          16.4 275.8 180 3.07 4.070 17.40    3    3</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> Merc 450SL          17.3 275.8 180 3.07 3.730 17.60    3    3</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> Merc 450SLC         15.2 275.8 180 3.07 3.780 18.00    3    3</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> Cadillac Fleetwood  10.4 472.0 205 2.93 5.250 17.98    3    4</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> Lincoln Continental 10.4 460.0 215 3.00 5.424 17.82    3    4</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> Chrysler Imperial   14.7 440.0 230 3.23 5.345 17.42    3    4</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> Dodge Challenger    15.5 318.0 150 2.76 3.520 16.87    3    2</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> AMC Javelin         15.2 304.0 150 3.15 3.435 17.30    3    2</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> Camaro Z28          13.3 350.0 245 3.73 3.840 15.41    3    4</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> Pontiac Firebird    19.2 400.0 175 3.08 3.845 17.05    3    2</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>                      mpg  disp  hp drat    wt  qsec gear carb           X</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> Hornet Sportabout   18.7 360.0 175 3.15 3.440 17.02    3    2 -0.26870764</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> Duster 360          14.3 360.0 245 3.21 3.570 15.84    3    4 -0.86896897</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> Merc 450SE          16.4 275.8 180 3.07 4.070 17.40    3    3 -1.80350382</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> Merc 450SL          17.3 275.8 180 3.07 3.730 17.60    3    3 -1.96684935</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> Merc 450SLC         15.2 275.8 180 3.07 3.780 18.00    3    3 -0.31206217</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> Cadillac Fleetwood  10.4 472.0 205 2.93 5.250 17.98    3    4 -0.07331864</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> Lincoln Continental 10.4 460.0 215 3.00 5.424 17.82    3    4  0.14952405</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> Chrysler Imperial   14.7 440.0 230 3.23 5.345 17.42    3    4  1.75274156</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> Dodge Challenger    15.5 318.0 150 2.76 3.520 16.87    3    2 -0.86590275</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> AMC Javelin         15.2 304.0 150 3.15 3.435 17.30    3    2  0.46707835</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> Camaro Z28          13.3 350.0 245 3.73 3.840 15.41    3    4  0.38320839</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  [ reached 'max' / getOption("max.print") -- omitted 1 rows ]</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> $`8.0.1`</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>                 mpg disp  hp drat   wt qsec gear carb</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> Ford Pantera L 15.8  351 264 4.22 3.17 14.5    5    4</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> Maserati Bora  15.0  301 335 3.54 3.57 14.6    5    8</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>                 mpg disp  hp drat   wt qsec gear carb          X</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> Ford Pantera L 15.8  351 264 4.22 3.17 14.5    5    4 -0.2300432</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> Maserati Bora  15.0  301 335 3.54 3.57 14.6    5    8 -2.1486097</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> </span>
 <span class="r-in"></span>
 <span class="r-in"><span class="fu">rsplit</span><span class="op">(</span><span class="va">mtcars</span>, <span class="va">mpg</span> <span class="op">~</span> <span class="va">cyl</span><span class="op">)</span></span>

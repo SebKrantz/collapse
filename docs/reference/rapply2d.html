@@ -17,7 +17,7 @@
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">collapse</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">1.7.3</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">1.7.5</span>
       </span>
     </div>
 
@@ -85,7 +85,7 @@
     </div>
     <div id="see-also">
     <h2>See also</h2>
-    <div class="dont-index"><p><code><a href="rsplit.html">rsplit</a></code>, <code><a href="unlist2d.html">unlist2d</a></code>, <a href="list-processing.html">List Processing</a>, <a href="index.html">Collapse Overview</a></p></div>
+    <div class="dont-index"><p><code><a href="rsplit.html">rsplit</a></code>, <code><a href="unlist2d.html">unlist2d</a></code>, <a href="list-processing.html">List Processing</a>, <a href="collapse-documentation.html">Collapse Overview</a></p></div>
     </div>
 
     <div id="ref-examples">
@@ -93,23 +93,23 @@
     <div class="sourceCode"><pre class="sourceCode r"><code><span class="r-in"><span class="va">l</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span><span class="va">mtcars</span>, <span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span><span class="va">mtcars</span>, <span class="fu"><a href="https://Rdatatable.gitlab.io/data.table/reference/as.matrix.html" class="external-link">as.matrix</a></span><span class="op">(</span><span class="va">mtcars</span><span class="op">)</span><span class="op">)</span><span class="op">)</span></span>
 <span class="r-in"><span class="fu">rapply2d</span><span class="op">(</span><span class="va">l</span>, <span class="va">fmean</span><span class="op">)</span></span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> [[1]]</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>        mpg        cyl       disp         hp       drat         wt       qsec </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>  20.090625   6.187500 230.721875 146.687500   3.596562   3.217250  17.848750 </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>         vs         am       gear       carb </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>   0.437500   0.406250   3.687500   2.812500 </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>         mpg         cyl        disp          hp        drat          wt </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  20.0906250   6.1875000 230.7218750 146.6875000   3.5965625   3.2172500 </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>        qsec          vs          am        gear        carb           X </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  17.8487500   0.4375000   0.4062500   3.6875000   2.8125000  -0.1307565 </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> [[2]]</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> [[2]][[1]]</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>        mpg        cyl       disp         hp       drat         wt       qsec </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>  20.090625   6.187500 230.721875 146.687500   3.596562   3.217250  17.848750 </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>         vs         am       gear       carb </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>   0.437500   0.406250   3.687500   2.812500 </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>         mpg         cyl        disp          hp        drat          wt </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  20.0906250   6.1875000 230.7218750 146.6875000   3.5965625   3.2172500 </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>        qsec          vs          am        gear        carb           X </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  17.8487500   0.4375000   0.4062500   3.6875000   2.8125000  -0.1307565 </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> [[2]][[2]]</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>        mpg        cyl       disp         hp       drat         wt       qsec </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>  20.090625   6.187500 230.721875 146.687500   3.596562   3.217250  17.848750 </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>         vs         am       gear       carb </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>   0.437500   0.406250   3.687500   2.812500 </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>         mpg         cyl        disp          hp        drat          wt </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  20.0906250   6.1875000 230.7218750 146.6875000   3.5965625   3.2172500 </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>        qsec          vs          am        gear        carb           X </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  17.8487500   0.4375000   0.4062500   3.6875000   2.8125000  -0.1307565 </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> </span>
 <span class="r-in"><span class="fu"><a href="unlist2d.html">unlist2d</a></span><span class="op">(</span><span class="fu">rapply2d</span><span class="op">(</span><span class="va">l</span>, <span class="va">fmean</span><span class="op">)</span><span class="op">)</span></span>
@@ -117,10 +117,10 @@
 <span class="r-out co"><span class="r-pr">#&gt;</span> 1     1    NA 20.09062 6.1875 230.7219 146.6875 3.596562 3.21725 17.84875</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> 2     2     1 20.09062 6.1875 230.7219 146.6875 3.596562 3.21725 17.84875</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> 3     2     2 20.09062 6.1875 230.7219 146.6875 3.596562 3.21725 17.84875</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>       vs      am   gear   carb</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 1 0.4375 0.40625 3.6875 2.8125</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 2 0.4375 0.40625 3.6875 2.8125</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 3 0.4375 0.40625 3.6875 2.8125</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>       vs      am   gear   carb          X</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 1 0.4375 0.40625 3.6875 2.8125 -0.1307565</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 2 0.4375 0.40625 3.6875 2.8125 -0.1307565</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 3 0.4375 0.40625 3.6875 2.8125 -0.1307565</span>
 </code></pre></div>
     </div>
   </div>

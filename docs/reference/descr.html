@@ -18,7 +18,7 @@
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">collapse</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">1.7.3</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">1.7.5</span>
       </span>
     </div>
 
@@ -120,7 +120,7 @@
     </div>
     <div id="see-also">
     <h2>See also</h2>
-    <div class="dont-index"><p><code><a href="qsu.html">qsu</a></code>, <code><a href="pwcor_pwcov_pwnobs.html">pwcor</a></code>, <a href="summary-statistics.html">Summary Statistics</a>, <a href="fast-statistical-functions.html">Fast Statistical Functions</a>, <a href="index.html">Collapse Overview</a></p></div>
+    <div class="dont-index"><p><code><a href="qsu.html">qsu</a></code>, <code><a href="pwcor_pwcov_pwnobs.html">pwcor</a></code>, <a href="summary-statistics.html">Summary Statistics</a>, <a href="fast-statistical-functions.html">Fast Statistical Functions</a>, <a href="collapse-documentation.html">Collapse Overview</a></p></div>
     </div>
 
     <div id="ref-examples">
@@ -493,43 +493,19 @@
 <span class="r-out co"><span class="r-pr">#&gt;</span> --------------------------------------------------------------------------------</span>
 <span class="r-in"></span>
 <span class="r-in"><span class="fu"><a href="https://rdrr.io/r/base/as.data.frame.html" class="external-link">as.data.frame</a></span><span class="op">(</span><span class="fu">descr</span><span class="op">(</span><span class="va">wlddev</span><span class="op">)</span><span class="op">)</span></span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>    Variable     Class                                   Label     N Ndist</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 1   country character                            Country Name 13176   216</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 2     iso3c    factor                            Country Code 13176   216</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 3      date      Date              Date Recorded (Fictitious) 13176    61</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 4      year   integer                                    Year 13176    61</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 5    decade   integer                                  Decade 13176     7</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 6    region    factor                                  Region 13176     7</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 7    income    factor                            Income Level 13176     4</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 8      OECD   logical                 Is OECD Member Country? 13176     2</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 9     PCGDP   numeric      GDP per capita (constant 2010 US$)  9470  9470</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 10   LIFEEX   numeric Life expectancy at birth, total (years) 11670 10548</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 11     GINI   numeric        Gini index (World Bank estimate)  1744   368</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>           Min          Max        Mean           SD          Skew      Kurt</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 1          NA           NA          NA           NA            NA        NA</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 2          NA           NA          NA           NA            NA        NA</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 3  -3287.0000  18628.00000          NA           NA            NA        NA</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 4   1960.0000   2020.00000  1990.00000    17.607485 -5.770900e-16  1.799355</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 5   1960.0000   2020.00000  1985.57377    17.511747  3.256512e-02  1.791726</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 6          NA           NA          NA           NA            NA        NA</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 7          NA           NA          NA           NA            NA        NA</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 8          NA           NA          NA           NA            NA        NA</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 9    132.0776 196061.41684 12048.77802 19077.641607  3.127627e+00 17.115442</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 10    18.9070     85.41707    64.29630    11.476418 -6.747681e-01  2.671769</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 11    20.7000     65.80000    38.53412     9.200604  5.960328e-01  2.532903</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>           1%        5%       25%        50%         75%         95%         99%</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 1         NA        NA        NA         NA          NA          NA          NA</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 2         NA        NA        NA         NA          NA          NA          NA</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 3         NA        NA        NA         NA          NA          NA          NA</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 4  1960.0000 1963.0000 1975.0000 1990.00000  2005.00000  2017.00000  2020.00000</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 5  1960.0000 1960.0000 1970.0000 1990.00000  2000.00000  2010.00000  2020.00000</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 6         NA        NA        NA         NA          NA          NA          NA</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 7         NA        NA        NA         NA          NA          NA          NA</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 8         NA        NA        NA         NA          NA          NA          NA</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 9   227.7068  399.6194 1303.1873 3767.16177 14787.03123 48507.84254 92340.27615</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 10   35.8346   42.7653   56.3605   67.44395    72.94575    79.34305    82.36383</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 11   24.6000   26.3000   31.5000   36.40000    45.00000    55.98500    60.50000</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>  [ reached 'max' / getOption("max.print") -- omitted 2 rows ]</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>   Variable     Class                      Label     N Ndist   Min   Max</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 1  country character               Country Name 13176   216    NA    NA</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 2    iso3c    factor               Country Code 13176   216    NA    NA</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 3     date      Date Date Recorded (Fictitious) 13176    61 -3287 18628</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 4     year   integer                       Year 13176    61  1960  2020</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 5   decade   integer                     Decade 13176     7  1960  2020</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>       Mean       SD          Skew     Kurt   1%   5%  25%  50%  75%  95%  99%</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 1       NA       NA            NA       NA   NA   NA   NA   NA   NA   NA   NA</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 2       NA       NA            NA       NA   NA   NA   NA   NA   NA   NA   NA</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 3       NA       NA            NA       NA   NA   NA   NA   NA   NA   NA   NA</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 4 1990.000 17.60749 -5.770900e-16 1.799355 1960 1963 1975 1990 2005 2017 2020</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 5 1985.574 17.51175  3.256512e-02 1.791726 1960 1960 1970 1990 2000 2010 2020</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  [ reached 'max' / getOption("max.print") -- omitted 8 rows ]</span>
 <span class="r-in"></span>
 <span class="r-in"><span class="co">## Passing Arguments down to qsu: For Panel Data Statistics</span></span>
 <span class="r-in"><span class="fu">descr</span><span class="op">(</span><span class="va">iris</span>, pid <span class="op">=</span> <span class="va">iris</span><span class="op">$</span><span class="va">Species</span><span class="op">)</span></span>

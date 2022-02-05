@@ -17,7 +17,7 @@
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">collapse</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">1.7.3</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">1.7.5</span>
       </span>
     </div>
 
@@ -154,7 +154,7 @@
     </div>
     <div id="see-also">
     <h2>See also</h2>
-    <div class="dont-index"><p><a href="programming.html">Efficient Programming</a>, <a href="index.html">Collapse Overview</a> <!-- %% \code{\link{pwcor}}, \code{\link{qsu}} --></p></div>
+    <div class="dont-index"><p><a href="programming.html">Efficient Programming</a>, <a href="collapse-documentation.html">Collapse Overview</a> <!-- %% \code{\link{pwcor}}, \code{\link{qsu}} --></p></div>
     </div>
 
     <div id="ref-examples">
@@ -168,7 +168,7 @@
 <span class="r-in"><span class="fu">.c</span><span class="op">(</span><span class="cn">T</span>, <span class="va">N</span><span class="op">)</span> <span class="op">%=%</span> <span class="fu"><a href="https://rdrr.io/r/base/dim.html" class="external-link">dim</a></span><span class="op">(</span><span class="va">EuStockMarkets</span><span class="op">)</span></span>
 <span class="r-in"><span class="fu"><a href="https://rdrr.io/r/base/names.html" class="external-link">names</a></span><span class="op">(</span><span class="va">iris</span><span class="op">)</span> <span class="op">%=%</span> <span class="va">iris</span></span>
 <span class="r-in"><span class="fu"><a href="https://rdrr.io/r/base/list2env.html" class="external-link">list2env</a></span><span class="op">(</span><span class="va">iris</span><span class="op">)</span>          <span class="co"># Same thing</span></span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> &lt;environment: 0x17920b4a0&gt;</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> &lt;environment: 0x1469bd428&gt;</span>
 <span class="r-in"><span class="fu"><a href="https://rdrr.io/r/base/rm.html" class="external-link">rm</a></span><span class="op">(</span>list <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"a"</span>, <span class="st">"b"</span>, <span class="st">"T"</span>, <span class="st">"N"</span>, <span class="fu"><a href="https://rdrr.io/r/base/names.html" class="external-link">names</a></span><span class="op">(</span><span class="va">iris</span><span class="op">)</span><span class="op">)</span><span class="op">)</span></span>
 <span class="r-in"></span>
 <span class="r-in"><span class="co">## Variable labels</span></span>
@@ -261,6 +261,7 @@
 <span class="r-in"></span>
 <span class="r-in"><span class="co">## Stub-renaming</span></span>
 <span class="r-in"><span class="va">log_mtc</span> <span class="op">&lt;-</span> <span class="fu">add_stub</span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/Log.html" class="external-link">log</a></span><span class="op">(</span><span class="va">mtcars</span><span class="op">)</span>, <span class="st">"log."</span><span class="op">)</span></span>
+<span class="r-wrn co"><span class="r-pr">#&gt;</span> <span class="warning">Warning: </span>NaNs produced</span>
 <span class="r-in"><span class="fu"><a href="https://rdrr.io/r/utils/head.html" class="external-link">head</a></span><span class="op">(</span><span class="va">log_mtc</span><span class="op">)</span></span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>                    log.mpg  log.cyl log.disp   log.hp log.drat    log.wt</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> Mazda RX4         3.044522 1.791759 5.075174 4.700480 1.360977 0.9631743</span>
@@ -269,13 +270,13 @@
 <span class="r-out co"><span class="r-pr">#&gt;</span> Hornet 4 Drive    3.063391 1.791759 5.552960 4.700480 1.124930 1.1678274</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> Hornet Sportabout 2.928524 2.079442 5.886104 5.164786 1.147402 1.2354715</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> Valiant           2.895912 1.791759 5.416100 4.653960 1.015231 1.2412686</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>                   log.qsec log.vs log.am log.gear  log.carb</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> Mazda RX4         2.800933   -Inf      0 1.386294 1.3862944</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> Mazda RX4 Wag     2.834389   -Inf      0 1.386294 1.3862944</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> Datsun 710        2.923699      0      0 1.386294 0.0000000</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> Hornet 4 Drive    2.967333      0   -Inf 1.098612 0.0000000</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> Hornet Sportabout 2.834389   -Inf   -Inf 1.098612 0.6931472</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> Valiant           3.006672      0   -Inf 1.098612 0.0000000</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>                   log.qsec log.vs log.am log.gear  log.carb     log.X</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> Mazda RX4         2.800933   -Inf      0 1.386294 1.3862944       NaN</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> Mazda RX4 Wag     2.834389   -Inf      0 1.386294 1.3862944       NaN</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> Datsun 710        2.923699      0      0 1.386294 0.0000000  0.327345</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> Hornet 4 Drive    2.967333      0   -Inf 1.098612 0.0000000       NaN</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> Hornet Sportabout 2.834389   -Inf   -Inf 1.098612 0.6931472       NaN</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> Valiant           3.006672      0   -Inf 1.098612 0.0000000 -1.232199</span>
 <span class="r-in"><span class="fu"><a href="https://rdrr.io/r/utils/head.html" class="external-link">head</a></span><span class="op">(</span><span class="fu">rm_stub</span><span class="op">(</span><span class="va">log_mtc</span>, <span class="st">"log."</span><span class="op">)</span><span class="op">)</span></span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>                        mpg      cyl     disp       hp     drat        wt</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> Mazda RX4         3.044522 1.791759 5.075174 4.700480 1.360977 0.9631743</span>
@@ -284,24 +285,24 @@
 <span class="r-out co"><span class="r-pr">#&gt;</span> Hornet 4 Drive    3.063391 1.791759 5.552960 4.700480 1.124930 1.1678274</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> Hornet Sportabout 2.928524 2.079442 5.886104 5.164786 1.147402 1.2354715</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> Valiant           2.895912 1.791759 5.416100 4.653960 1.015231 1.2412686</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>                       qsec   vs   am     gear      carb</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> Mazda RX4         2.800933 -Inf    0 1.386294 1.3862944</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> Mazda RX4 Wag     2.834389 -Inf    0 1.386294 1.3862944</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> Datsun 710        2.923699    0    0 1.386294 0.0000000</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> Hornet 4 Drive    2.967333    0 -Inf 1.098612 0.0000000</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> Hornet Sportabout 2.834389 -Inf -Inf 1.098612 0.6931472</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> Valiant           3.006672    0 -Inf 1.098612 0.0000000</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>                       qsec   vs   am     gear      carb         X</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> Mazda RX4         2.800933 -Inf    0 1.386294 1.3862944       NaN</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> Mazda RX4 Wag     2.834389 -Inf    0 1.386294 1.3862944       NaN</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> Datsun 710        2.923699    0    0 1.386294 0.0000000  0.327345</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> Hornet 4 Drive    2.967333    0 -Inf 1.098612 0.0000000       NaN</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> Hornet Sportabout 2.834389 -Inf -Inf 1.098612 0.6931472       NaN</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> Valiant           3.006672    0 -Inf 1.098612 0.0000000 -1.232199</span>
 <span class="r-in"><span class="fu"><a href="https://rdrr.io/r/base/rm.html" class="external-link">rm</a></span><span class="op">(</span><span class="va">log_mtc</span><span class="op">)</span></span>
 <span class="r-in"></span>
 <span class="r-in"><span class="co">## Setting dimension names of an object</span></span>
 <span class="r-in"><span class="fu"><a href="https://rdrr.io/r/utils/head.html" class="external-link">head</a></span><span class="op">(</span><span class="fu">setRownames</span><span class="op">(</span><span class="va">mtcars</span><span class="op">)</span><span class="op">)</span></span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>    mpg cyl disp  hp drat    wt  qsec vs am gear carb</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 1 21.0   6  160 110 3.90 2.620 16.46  0  1    4    4</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 2 21.0   6  160 110 3.90 2.875 17.02  0  1    4    4</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 3 22.8   4  108  93 3.85 2.320 18.61  1  1    4    1</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 4 21.4   6  258 110 3.08 3.215 19.44  1  0    3    1</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 5 18.7   8  360 175 3.15 3.440 17.02  0  0    3    2</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 6 18.1   6  225 105 2.76 3.460 20.22  1  0    3    1</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>    mpg cyl disp  hp drat    wt  qsec vs am gear carb           X</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 1 21.0   6  160 110 3.90 2.620 16.46  0  1    4    4 -0.76272049</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 2 21.0   6  160 110 3.90 2.875 17.02  0  1    4    4 -0.08641398</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 3 22.8   4  108  93 3.85 2.320 18.61  1  1    4    1  1.38728007</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 4 21.4   6  258 110 3.08 3.215 19.44  1  0    3    1 -0.65361593</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 5 18.7   8  360 175 3.15 3.440 17.02  0  0    3    2 -0.26870764</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 6 18.1   6  225 105 2.76 3.460 20.22  1  0    3    1  0.29165057</span>
 <span class="r-in"><span class="va">ar</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/array.html" class="external-link">array</a></span><span class="op">(</span><span class="fl">1</span><span class="op">:</span><span class="fl">9</span>, <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">3</span>,<span class="fl">3</span>,<span class="fl">3</span><span class="op">)</span><span class="op">)</span></span>
 <span class="r-in"><span class="fu">setRownames</span><span class="op">(</span><span class="va">ar</span><span class="op">)</span></span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> , , 1</span>

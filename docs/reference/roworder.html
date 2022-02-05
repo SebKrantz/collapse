@@ -17,7 +17,7 @@
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">collapse</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">1.7.3</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">1.7.5</span>
       </span>
     </div>
 
@@ -98,7 +98,7 @@
     </div>
     <div id="see-also">
     <h2>See also</h2>
-    <div class="dont-index"><p><code><a href="colorder.html">colorder</a></code>, <code><a href="fsubset.html">fsubset</a></code>, <a href="fast-grouping.html">Fast Grouping and Ordering</a>, <a href="index.html">Collapse Overview</a>.</p></div>
+    <div class="dont-index"><p><code><a href="colorder.html">colorder</a></code>, <code><a href="fsubset.html">fsubset</a></code>, <a href="fast-grouping.html">Fast Grouping and Ordering</a>, <a href="collapse-documentation.html">Collapse Overview</a>.</p></div>
     </div>
 
     <div id="ref-examples">
@@ -147,6 +147,13 @@
 <span class="r-out co"><span class="r-pr">#&gt;</span> Mazda RX4 Wag     21.0   6  160 110 3.90 2.875 17.02  0  1    4    4</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> Hornet Sportabout 18.7   8  360 175 3.15 3.440 17.02  0  0    3    2</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> Valiant           18.1   6  225 105 2.76 3.460 20.22  1  0    3    1</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>                             X</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> Datsun 710         1.38728007</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> Hornet 4 Drive    -0.65361593</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> Mazda RX4         -0.76272049</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> Mazda RX4 Wag     -0.08641398</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> Hornet Sportabout -0.26870764</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> Valiant            0.29165057</span>
 <span class="r-in"><span class="fu"><a href="https://rdrr.io/r/utils/head.html" class="external-link">head</a></span><span class="op">(</span><span class="fu">roworderv</span><span class="op">(</span><span class="va">mtcars</span>, neworder <span class="op">=</span> <span class="fl">3</span><span class="op">:</span><span class="fl">4</span>, pos <span class="op">=</span> <span class="st">"end"</span><span class="op">)</span><span class="op">)</span>  <span class="co"># Bring them to the end</span></span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>                    mpg cyl  disp  hp drat    wt  qsec vs am gear carb</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> Mazda RX4         21.0   6 160.0 110 3.90 2.620 16.46  0  1    4    4</span>
@@ -155,14 +162,21 @@
 <span class="r-out co"><span class="r-pr">#&gt;</span> Valiant           18.1   6 225.0 105 2.76 3.460 20.22  1  0    3    1</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> Duster 360        14.3   8 360.0 245 3.21 3.570 15.84  0  0    3    4</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> Merc 240D         24.4   4 146.7  62 3.69 3.190 20.00  1  0    4    2</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>                             X</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> Mazda RX4         -0.76272049</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> Mazda RX4 Wag     -0.08641398</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> Hornet Sportabout -0.26870764</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> Valiant            0.29165057</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> Duster 360        -0.86896897</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> Merc 240D          0.22512721</span>
 <span class="r-in"><span class="fu"><a href="https://rdrr.io/r/utils/head.html" class="external-link">head</a></span><span class="op">(</span><span class="fu">roworderv</span><span class="op">(</span><span class="va">mtcars</span>, neworder <span class="op">=</span> <span class="va">mtcars</span><span class="op">$</span><span class="va">vs</span> <span class="op">==</span> <span class="fl">1</span><span class="op">)</span><span class="op">)</span>    <span class="co"># Bring rows with vs == 1 to the top</span></span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>                 mpg cyl  disp  hp drat    wt  qsec vs am gear carb</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> Datsun 710     22.8   4 108.0  93 3.85 2.320 18.61  1  1    4    1</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> Hornet 4 Drive 21.4   6 258.0 110 3.08 3.215 19.44  1  0    3    1</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> Valiant        18.1   6 225.0 105 2.76 3.460 20.22  1  0    3    1</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> Merc 240D      24.4   4 146.7  62 3.69 3.190 20.00  1  0    4    2</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> Merc 230       22.8   4 140.8  95 3.92 3.150 22.90  1  0    4    2</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> Merc 280       19.2   6 167.6 123 3.92 3.440 18.30  1  0    4    4</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>                 mpg cyl  disp  hp drat    wt  qsec vs am gear carb          X</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> Datsun 710     22.8   4 108.0  93 3.85 2.320 18.61  1  1    4    1  1.3872801</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> Hornet 4 Drive 21.4   6 258.0 110 3.08 3.215 19.44  1  0    3    1 -0.6536159</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> Valiant        18.1   6 225.0 105 2.76 3.460 20.22  1  0    3    1  0.2916506</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> Merc 240D      24.4   4 146.7  62 3.69 3.190 20.00  1  0    4    2  0.2251272</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> Merc 230       22.8   4 140.8  95 3.92 3.150 22.90  1  0    4    2 -0.9738978</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> Merc 280       19.2   6 167.6 123 3.92 3.440 18.30  1  0    4    4 -1.4943478</span>
 </code></pre></div>
     </div>
   </div>

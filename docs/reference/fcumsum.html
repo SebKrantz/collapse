@@ -17,7 +17,7 @@
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">collapse</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">1.7.3</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">1.7.5</span>
       </span>
     </div>
 
@@ -138,10 +138,7 @@
 <span class="r-out co"><span class="r-pr">#&gt;</span> 1954 10506 10694 10929 11156 11390 11654 11956 12249 12508 12737 12940 13169</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> 1955 13411 13644 13911 14180 14450 14765 15129 15476 15788 16062 16299 16577</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> 1956 16861 17138 17455 17768 18086 18460 18873 19278 19633 19939 20210 20516</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 1957 20831 21132 21488 21836 22191 22613 23078 23545 23949 24296 24601 24937</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 1958 25277 25595 25957 26305 26668 27103 27594 28099 28503 28862 29172 29509</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 1959 29869 30211 30617 31013 31433 31905 32453 33012 33475 33882 34244 34649</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 1960 35066 35457 35876 36337 36809 37344 37966 38572 39080 39541 39931 40363</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  [ reached getOption("max.print") -- omitted 4 rows ]</span>
 <span class="r-in"><span class="fu"><a href="https://rdrr.io/r/utils/head.html" class="external-link">head</a></span><span class="op">(</span><span class="fu">fcumsum</span><span class="op">(</span><span class="va">EuStockMarkets</span><span class="op">)</span><span class="op">)</span></span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>          DAX     SMI     CAC    FTSE</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> [1,] 1628.75  1678.1  1772.8  2443.6</span>
@@ -151,26 +148,25 @@
 <span class="r-out co"><span class="r-pr">#&gt;</span> [5,] 8088.09  8415.9  8672.5 12307.1</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> [6,] 9698.70 10087.5 10386.8 14773.9</span>
 <span class="r-in"><span class="fu">fcumsum</span><span class="op">(</span><span class="va">mtcars</span><span class="op">)</span></span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>                       mpg cyl   disp   hp  drat     wt   qsec vs am gear carb</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> Mazda RX4            21.0   6  160.0  110  3.90  2.620  16.46  0  1    4    4</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> Mazda RX4 Wag        42.0  12  320.0  220  7.80  5.495  33.48  0  2    8    8</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> Datsun 710           64.8  16  428.0  313 11.65  7.815  52.09  1  3   12    9</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> Hornet 4 Drive       86.2  22  686.0  423 14.73 11.030  71.53  2  3   15   10</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> Hornet Sportabout   104.9  30 1046.0  598 17.88 14.470  88.55  2  3   18   12</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> Valiant             123.0  36 1271.0  703 20.64 17.930 108.77  3  3   21   13</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> Duster 360          137.3  44 1631.0  948 23.85 21.500 124.61  3  3   24   17</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> Merc 240D           161.7  48 1777.7 1010 27.54 24.690 144.61  4  3   28   19</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> Merc 230            184.5  52 1918.5 1105 31.46 27.840 167.51  5  3   32   21</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> Merc 280            203.7  58 2086.1 1228 35.38 31.280 185.81  6  3   36   25</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> Merc 280C           221.5  64 2253.7 1351 39.30 34.720 204.71  7  3   40   29</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> Merc 450SE          237.9  72 2529.5 1531 42.37 38.790 222.11  7  3   43   32</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> Merc 450SL          255.2  80 2805.3 1711 45.44 42.520 239.71  7  3   46   35</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> Merc 450SLC         270.4  88 3081.1 1891 48.51 46.300 257.71  7  3   49   38</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> Cadillac Fleetwood  280.8  96 3553.1 2096 51.44 51.550 275.69  7  3   52   42</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> Lincoln Continental 291.2 104 4013.1 2311 54.44 56.974 293.51  7  3   55   46</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> Chrysler Imperial   305.9 112 4453.1 2541 57.67 62.319 310.93  7  3   58   50</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> Fiat 128            338.3 116 4531.8 2607 61.75 64.519 330.40  8  4   62   51</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>  [ reached 'max' / getOption("max.print") -- omitted 14 rows ]</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>                     mpg cyl   disp   hp  drat     wt   qsec vs am gear carb</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> Mazda RX4          21.0   6  160.0  110  3.90  2.620  16.46  0  1    4    4</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> Mazda RX4 Wag      42.0  12  320.0  220  7.80  5.495  33.48  0  2    8    8</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> Datsun 710         64.8  16  428.0  313 11.65  7.815  52.09  1  3   12    9</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> Hornet 4 Drive     86.2  22  686.0  423 14.73 11.030  71.53  2  3   15   10</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> Hornet Sportabout 104.9  30 1046.0  598 17.88 14.470  88.55  2  3   18   12</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> Valiant           123.0  36 1271.0  703 20.64 17.930 108.77  3  3   21   13</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> Duster 360        137.3  44 1631.0  948 23.85 21.500 124.61  3  3   24   17</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> Merc 240D         161.7  48 1777.7 1010 27.54 24.690 144.61  4  3   28   19</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>                            X</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> Mazda RX4         -0.7627205</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> Mazda RX4 Wag     -0.8491345</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> Datsun 710         0.5381456</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> Hornet 4 Drive    -0.1154703</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> Hornet Sportabout -0.3841780</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> Valiant           -0.0925274</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> Duster 360        -0.9614964</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> Merc 240D         -0.7363692</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  [ reached 'max' / getOption("max.print") -- omitted 24 rows ]</span>
 <span class="r-in"></span>
 <span class="r-in"><span class="co"># Non-grouped but ordered</span></span>
 <span class="r-in"><span class="va">o</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://Rdatatable.gitlab.io/data.table/reference/setorder.html" class="external-link">order</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/stats/Normal.html" class="external-link">rnorm</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/nrow.html" class="external-link">nrow</a></span><span class="op">(</span><span class="va">EuStockMarkets</span><span class="op">)</span><span class="op">)</span><span class="op">)</span></span>

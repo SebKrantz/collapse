@@ -18,7 +18,7 @@
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">collapse</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">1.7.3</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">1.7.5</span>
       </span>
     </div>
 
@@ -102,7 +102,7 @@
     </div>
     <div id="see-also">
     <h2>See also</h2>
-    <div class="dont-index"><p><a href="fast-grouping.html">Fast Grouping and Ordering</a>, <a href="index.html">Collapse Overview</a></p></div>
+    <div class="dont-index"><p><a href="fast-grouping.html">Fast Grouping and Ordering</a>, <a href="collapse-documentation.html">Collapse Overview</a></p></div>
     </div>
 
     <div id="ref-examples">
@@ -120,6 +120,13 @@
 <span class="r-out co"><span class="r-pr">#&gt;</span> Duster 360          14.3   8  360 245 3.21 3.570 15.84  0  0    3    4</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> Chrysler Imperial   14.7   8  440 230 3.23 5.345 17.42  0  0    3    4</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> Maserati Bora       15.0   8  301 335 3.54 3.570 14.60  0  1    5    8</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>                               X</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> Cadillac Fleetwood  -0.07331864</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> Lincoln Continental  0.14952405</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> Camaro Z28           0.38320839</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> Duster 360          -0.86896897</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> Chrysler Imperial    1.75274156</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> Maserati Bora       -2.14860969</span>
 <span class="r-in"><span class="fu">radixorder</span><span class="op">(</span><span class="va">mtcars</span><span class="op">$</span><span class="va">cyl</span>, <span class="va">mtcars</span><span class="op">$</span><span class="va">vs</span><span class="op">)</span></span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>  [1] 27  3  8  9 18 19 20 21 26 28 32  1  2 30  4  6 10 11  5  7 12 13 14 15 16</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> [26] 17 22 23 24 25 29 31</span>
@@ -129,13 +136,13 @@
 <span class="r-in"><span class="va">o</span> <span class="op">&lt;-</span> <span class="fu">radixorder</span><span class="op">(</span><span class="va">mtcars</span><span class="op">$</span><span class="va">cyl</span>, <span class="va">mtcars</span><span class="op">$</span><span class="va">vs</span>, starts <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span></span>
 <span class="r-in"><span class="va">st</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/attr.html" class="external-link">attr</a></span><span class="op">(</span><span class="va">o</span>, <span class="st">"starts"</span><span class="op">)</span></span>
 <span class="r-in"><span class="fu"><a href="https://rdrr.io/r/utils/head.html" class="external-link">head</a></span><span class="op">(</span><span class="va">mtcars</span><span class="op">[</span><span class="va">o</span>, <span class="op">]</span><span class="op">)</span></span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>                mpg cyl  disp hp drat    wt  qsec vs am gear carb</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> Porsche 914-2 26.0   4 120.3 91 4.43 2.140 16.70  0  1    5    2</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> Datsun 710    22.8   4 108.0 93 3.85 2.320 18.61  1  1    4    1</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> Merc 240D     24.4   4 146.7 62 3.69 3.190 20.00  1  0    4    2</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> Merc 230      22.8   4 140.8 95 3.92 3.150 22.90  1  0    4    2</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> Fiat 128      32.4   4  78.7 66 4.08 2.200 19.47  1  1    4    1</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> Honda Civic   30.4   4  75.7 52 4.93 1.615 18.52  1  1    4    2</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>                mpg cyl  disp hp drat    wt  qsec vs am gear carb           X</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> Porsche 914-2 26.0   4 120.3 91 4.43 2.140 16.70  0  1    5    2 -0.55381411</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> Datsun 710    22.8   4 108.0 93 3.85 2.320 18.61  1  1    4    1  1.38728007</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> Merc 240D     24.4   4 146.7 62 3.69 3.190 20.00  1  0    4    2  0.22512721</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> Merc 230      22.8   4 140.8 95 3.92 3.150 22.90  1  0    4    2 -0.97389777</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> Fiat 128      32.4   4  78.7 66 4.08 2.200 19.47  1  1    4    1  0.54689909</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> Honda Civic   30.4   4  75.7 52 4.93 1.615 18.52  1  1    4    2 -0.03580896</span>
 <span class="r-in"><span class="va">mtcars</span><span class="op">[</span><span class="va">o</span><span class="op">[</span><span class="va">st</span><span class="op">]</span>, <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"cyl"</span>, <span class="st">"vs"</span><span class="op">)</span><span class="op">]</span>  <span class="co"># Unique groups</span></span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>                   cyl vs</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> Porsche 914-2       4  0</span>
