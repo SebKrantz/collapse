@@ -58,6 +58,6 @@
 
 * Some improvements to the `BY` function, both in terms of performance and security. 
 
-* Also adjusted `psacf` / `pspacf` / `psccf` to take advantage of the faster grouping by `group`. 
+* Internally adjusted quite some functions e.g. `fwithin` etc. to take advantage of the faster grouping by `group`, wherever ordered grouping is not required. 
 
 
